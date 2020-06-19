@@ -14,6 +14,9 @@ uses
   procedure WaitFor(const AInterval: Cardinal; const aWaitCondition: Boolean = True);
   function IsService: Boolean;
 
+  // ф-ии TDateTime
+  function TodayNearMidnight: TDateTime;
+  function NearMidnight(const ADate: TDateTime): TDateTime;
 
 implementation
 
@@ -85,6 +88,19 @@ begin
   Result := (Data.dwFlags and WSF_VISIBLE <> WSF_VISIBLE)
   or FindCmdLineSwitch('INSTALL', ['-', '/'], True)
   or FindCmdLineSwitch('UNINSTALL', ['-', '/'], True);
+end;
+
+function TodayNearMidnight: TDateTime;
+begin
+  Result := Date + 1 - c1SecDate;
+end;
+
+function NearMidnight(const ADate: TDateTime): TDateTime;
+var
+  extDate: Extended;
+begin
+  extDate := Int(ADate);
+  Result  := extDate + 1 - c1SecDate;
 end;
 
 end.

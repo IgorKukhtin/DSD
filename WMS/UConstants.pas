@@ -10,6 +10,7 @@ const
 
   // время
   c1Sec = 1000;
+  c1SecDate = 1/24/60/60;
 
   // шаблоны сообщений
   cExceptionMsg       = '[%s] %s';

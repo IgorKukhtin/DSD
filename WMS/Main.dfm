@@ -22,7 +22,7 @@ object MainForm: TMainForm
     Top = 0
     Width = 1384
     Height = 642
-    ActivePage = tsLog
+    ActivePage = tsErrors
     Align = alClient
     TabOrder = 0
     OnChange = pgcMainChange
@@ -450,8 +450,6 @@ object MainForm: TMainForm
         Height = 614
         Align = alClient
         TabOrder = 0
-        ExplicitTop = 8
-        ExplicitHeight = 265
         object pnlWmstMessageTop: TPanel
           Left = 1
           Top = 1

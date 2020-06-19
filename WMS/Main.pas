@@ -155,6 +155,7 @@ uses
   FireDAC.Stan.Param,
   UDefinitions,
   UData,
+  UCommon,
   USettings;
 
 const
@@ -540,13 +541,13 @@ begin
   LogMemo.Font.Size := seFontSize.Value;
 
   dtpStartDateWMS.DateTime := Date;
-  dtpEndDateWMS.DateTime   := Now;
+  dtpEndDateWMS.DateTime   := TodayNearMidnight;
 
   dtpStartDateAlan.DateTime := Date;
-  dtpEndDateAlan.DateTime   := Now;
+  dtpEndDateAlan.DateTime   := TodayNearMidnight;
 
   dtpWmsMsgStart.DateTime := Date;
-  dtpWmsMsgEnd.DateTime   := Now;
+  dtpWmsMsgEnd.DateTime   := TodayNearMidnight;
 
   for I := 0 to Pred(ComponentCount) do
     if Components[I] is TDBGrid then
@@ -685,6 +686,8 @@ end;
 
 procedure TMainForm.UpdateAlanGrid(const ANeedRebuildColumns: Boolean = False);
 begin
+  dtpEndDateAlan.DateTime := NearMidnight(dtpEndDateAlan.DateTime);
+
   with dmData.qryAlanGrid do
   begin
     Close;
@@ -712,6 +715,8 @@ begin
 
   dmData.dsWMS.DataSet := qryWMS;
 
+  dtpEndDateWMS.DateTime := NearMidnight(dtpEndDateWMS.DateTime);
+
   qryWMS.Close;
   qryWMS.ParamByName('StartDate').AsDateTime := dtpStartDateWMS.DateTime;
   qryWMS.ParamByName('EndDate').AsDateTime   := dtpEndDateWMS.DateTime;
@@ -725,6 +730,8 @@ end;
 
 procedure TMainForm.UpdateWmsMsgGrid(const ANeedRebuildColumns: Boolean);
 begin
+  dtpWmsMsgEnd.DateTime := NearMidnight(dtpWmsMsgEnd.DateTime);
+
   with dmData.qryWmsToHostMessage do
   begin
     Close;

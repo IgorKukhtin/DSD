@@ -888,9 +888,8 @@ function TdmData.ImportWMS(const APacket: TPacketKind; AMsgProc: TNotifyMsgProc)
 var
   dataObjects: TDataObjects;
   wmsImport: TImportWMS;
-//  bOrderStatusChanged, bReceivingResult}: Boolean;
 const
-  cStartImport = 'Start import "%s" from WMS'  + #13#10;
+  cStartImport   = 'Start import "%s" from WMS'  + #13#10;
   cSuccessImport = 'Data "%s" successfull imported from WMS' + #13#10;
 begin
   with dataObjects do

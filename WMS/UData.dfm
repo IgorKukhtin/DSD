@@ -112,13 +112,10 @@ object dmData: TdmData
   object insert_wms_to_host_message: TFDQuery
     Connection = FDC_alan
     SQL.Strings = (
+      'select gpInsert_wms_to_host_message('
       
-        'insert into wms_to_host_message(type, header_id, detail_id, move' +
-        'mentid, sku_id, name, qty, weight, weight_biz, operdate, product' +
-        'ion_date) '
-      
-        'values(:type, :header_id, :detail_id, :movementid, :sku_id, :nam' +
-        'e, :qty, :weight, :weight_biz, :operdate, :production_date);')
+        '  :type, :header_id, :detail_id, :movementid, :sku_id, :name, :q' +
+        'ty, :weight, :weight_biz, :operdate, :production_date);')
     Left = 512
     Top = 352
     ParamData = <

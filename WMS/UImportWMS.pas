@@ -72,7 +72,7 @@ const
 
   // имена пакетов
   cpnOrderStatusChanged = 'order_status_changed';
-  cpnReceivingResult = 'receiving_result';
+  cpnReceivingResult    = 'receiving_result';
 
 function GetImpTypeCaption(APacket: TPacketKind): string;
 begin
@@ -227,7 +227,7 @@ end;
 procedure TImportWMS.ProcessOrderStatusChanged(AMsgProc: TNotifyMsgProc);
 const
   cProcName = 'gpInsert_wms_order_status_changed';
-  cSelect   = 'SELECT DISTINCT Id, MovementId, Header_Id FROM wms_to_host_message WHERE (Done = FALSE) AND (Error = FALSE) AND (Type = %s) ORDER BY Id';
+  cSelect   = 'SELECT * FROM gpSelect_wms_to_host_message (inPacketName:= %s)';
   cRunProc  = 'SELECT * FROM %s(inOrderId:= %d, inSession:= %s)';
 var
   sSelect, sSQL: string;
@@ -290,7 +290,7 @@ end;
 procedure TImportWMS.ProcessReceivingResult(AMsgProc: TNotifyMsgProc);
 const
   cProcName  = 'gpUpdate_wms_receiving_result';
-  cSelect    = 'SELECT DISTINCT Id, Header_Id FROM wms_to_host_message WHERE (Done = FALSE) AND (Error = FALSE) AND (Type = %s) ORDER BY Id';
+  cSelect    = 'SELECT * FROM gpSelect_wms_to_host_message (inPacketName:= %s)';
   cRunProc   = 'SELECT * FROM %s(inId:= %d, inSession:= %s)';
 var
   sSelect, sSQL: string;
@@ -628,16 +628,17 @@ begin
 
       with FData.InsertQry do
       begin
-        ParamByName('type').AsString := FValues[I].Message_Type;
-        ParamByName('Header_Id').AsInteger := FValues[I].Header_Id;
-        ParamByName('Detail_Id').AsInteger := FValues[I].Detail_Id;
-        ParamByName('MovementId').AsString := FValues[I].MovementId;
-        ParamByName('SKU_Id').AsString := FValues[I].SKU_Id;
-        ParamByName('Name').AsString := FValues[I].Name;
-        ParamByName('Qty').AsString := FValues[I].Qty;
-        ParamByName('Weight').AsString := FValues[I].Weight;
-        ParamByName('Weight_Biz').AsString := FValues[I].Weight_Biz;
-        ParamByName('OperDate').AsDateTime := FValues[I].OperDate;
+        Close;
+        ParamByName('type').AsString            := FValues[I].Message_Type;
+        ParamByName('Header_Id').AsInteger      := FValues[I].Header_Id;
+        ParamByName('Detail_Id').AsInteger      := FValues[I].Detail_Id;
+        ParamByName('MovementId').AsString      := FValues[I].MovementId;
+        ParamByName('SKU_Id').AsString          := FValues[I].SKU_Id;
+        ParamByName('Name').AsString            := FValues[I].Name;
+        ParamByName('Qty').AsString             := FValues[I].Qty;
+        ParamByName('Weight').AsString          := FValues[I].Weight;
+        ParamByName('Weight_Biz').AsString      := FValues[I].Weight_Biz;
+        ParamByName('OperDate').AsDateTime      := FValues[I].OperDate;
         ParamByName('Production_Date').AsString := FValues[I].Production_Date;
       end;
 
@@ -733,18 +734,20 @@ begin
 
           with FData.InsertQry do
           begin
-            ParamByName('type').AsString := FValues[I].Message_Type;
-            ParamByName('Header_Id').AsInteger := FValues[I].Header_Id;
-            ParamByName('Detail_Id').AsInteger := FValues[I].Detail_Id;
-            ParamByName('MovementId').AsString := FValues[I].MovementId;
-            ParamByName('SKU_Id').AsString := FValues[I].SKU_Id;
-            ParamByName('Name').AsString := FValues[I].Name;
-            ParamByName('Qty').AsString := FValues[I].Qty;
-            ParamByName('Weight').AsString := FValues[I].Weight;
-            ParamByName('Weight_Biz').AsString := FValues[I].Weight_Biz;
-            ParamByName('OperDate').AsDateTime := FValues[I].OperDate;
+            Close;
+            ParamByName('type').AsString            := FValues[I].Message_Type;
+            ParamByName('Header_Id').AsInteger      := FValues[I].Header_Id;
+            ParamByName('Detail_Id').AsInteger      := FValues[I].Detail_Id;
+            ParamByName('MovementId').AsString      := FValues[I].MovementId;
+            ParamByName('SKU_Id').AsString          := FValues[I].SKU_Id;
+            ParamByName('Name').AsString            := FValues[I].Name;
+            ParamByName('Qty').AsString             := FValues[I].Qty;
+            ParamByName('Weight').AsString          := FValues[I].Weight;
+            ParamByName('Weight_Biz').AsString      := FValues[I].Weight_Biz;
+            ParamByName('OperDate').AsDateTime      := FValues[I].OperDate;
             ParamByName('Production_Date').AsString := FValues[I].Production_Date;
-            ExecSQL;
+//            ExecSQL;
+            Open;
           end;
           Inc(iTotCount);
         end;
@@ -793,8 +796,8 @@ var
   sXml, sSite, sDescr, sInsert, sUpdateErr: string;
   thrErr, thrMsg: TQryThread;
 const
-  cInsert    = 'INSERT INTO wms_to_host_error(Header_Id, Site, Type, Description) VALUES(%d, %s, %s, %s)';
-  cUpdateErr = 'UPDATE wms_to_host_message SET Error = TRUE WHERE Header_Id = %d';
+  cInsert    = 'SELECT gpInsert_wms_to_host_error(%d, %s, %s, %s)';
+  cUpdateErr = 'SELECT gpUpdate_wms_to_host_message (%d)';
 begin
   try
     sSite     := 'A'; // если явно не определено, что ошибка относится к WMS, тогда считаем ее своей ошибкой
@@ -833,9 +836,9 @@ begin
       Close;
       SQL.Clear;
       SQL.Add(sInsert);
-//      ExecSQL;
+//      Open;
     end;
-    thrErr := TQryThread.Create(FData.ExecQry, saExec, AMsgProc);
+    thrErr := TQryThread.Create(FData.ExecQry, saOpen, AMsgProc);
     thrErr.Start;
 
     // обновляем поле Error = TRUE в wms_to_host_message
@@ -845,9 +848,9 @@ begin
       Close;
       SQL.Clear;
       SQL.Add(sUpdateErr);
-//      ExecSQL;
+//      Open;
     end;
-    thrMsg := TQryThread.Create(FData.ExecQry, saExec, AMsgProc);
+    thrMsg := TQryThread.Create(FData.ExecQry, saOpen, AMsgProc);
     thrMsg.Start;
 
     // обновление полей to_host_header_message.Status и Err_Descr в WMS
