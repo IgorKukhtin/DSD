@@ -60,4 +60,4 @@ $BODY$
 */
 
 -- тест
--- select * from gpInsertUpdate_MovementItem_LossAsset(ioId := 0 , inMovementId := 16151863 , inGoodsId := 4071624 , inAmount := 0 , inContainerId := 2682725 ,  inSession := '5');
+-- select * from gpInsertUpdate_MovementItem_SaleAsset(ioId := 0 , inMovementId := 16151863 , inGoodsId := 4071624 , inAmount := 0 , inContainerId := 2682725 ,  inSession := '5');
