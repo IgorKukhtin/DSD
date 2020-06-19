@@ -2324,10 +2324,15 @@ CREATE OR REPLACE FUNCTION zc_ObjectLink_Hardware_CashRegister() RETURNS Integer
 INSERT INTO ObjectLinkDesc(Code, ItemName, DescId, ChildObjectDescId)
 SELECT 'zc_ObjectLink_Hardware_CashRegister', 'Связь с Подразделением', zc_Object_Hardware(), zc_Object_CashRegister() WHERE NOT EXISTS (SELECT * FROM ObjectLinkDesc WHERE Code = 'zc_ObjectLink_Hardware_CashRegister');
 
+CREATE OR REPLACE FUNCTION zc_ObjectLink_Goods_DiscountExternal() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM ObjectLinkDesc WHERE Code = 'zc_ObjectLink_Goods_DiscountExternal'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
+INSERT INTO ObjectLinkDesc(Code, ItemName, DescId, ChildObjectDescId)
+SELECT 'zc_ObjectLink_Goods_DiscountExternal', 'Товар для проекта (дисконтные карты)', zc_Object_Goods(), zc_Object_Measure() WHERE NOT EXISTS (SELECT * FROM ObjectLinkDesc WHERE Code = 'zc_ObjectLink_Goods_DiscountExternal');
+
 
 /*-------------------------------------------------------------------------------
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.   Воробкало А.А.   Шаблий О.В.
+ 19.06.20                                                                                      * zc_ObjectLink_Goods_DiscountExternal
  20.05.20         * zc_ObjectLink_ContractCondition_PaidKind
  18.05.20         * zc_ObjectLink_Goods_GoodsPairSun
  13.05.20         * zc_ObjectLink_GoodsByGoodsKind_GoodsKind_Sh

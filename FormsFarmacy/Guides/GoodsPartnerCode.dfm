@@ -5,7 +5,7 @@ inherited GoodsPartnerCodeForm: TGoodsPartnerCodeForm
   AddOnFormData.ChoiceAction = dsdChoiceGuides
   AddOnFormData.Params = FormParams
   ExplicitWidth = 1273
-  ExplicitHeight = 567
+  ExplicitHeight = 568
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
@@ -122,6 +122,20 @@ inherited GoodsPartnerCodeForm: TGoodsPartnerCodeForm
             Properties.ReadOnly = True
             HeaderAlignmentVert = vaCenter
             Width = 110
+          end
+          object DiscountExternalName: TcxGridDBColumn
+            Caption = #1058#1086#1074#1072#1088' '#1076#1083#1103' '#1087#1088#1086#1077#1082#1090#1072' ('#1076#1080#1089#1082#1086#1085#1090#1085#1099#1077' '#1082#1072#1088#1090#1099')'
+            DataBinding.FieldName = 'DiscountExternalName'
+            PropertiesClassName = 'TcxButtonEditProperties'
+            Properties.Buttons = <
+              item
+                Action = DiscountExternalChoiceForm
+                Default = True
+                Kind = bkEllipsis
+              end>
+            Properties.ReadOnly = True
+            HeaderAlignmentVert = vaCenter
+            Width = 119
           end
           object MinimumLot: TcxGridDBColumn
             Caption = #1052#1080#1085'. '#1086#1082#1088#1091#1075#1083'.'
@@ -661,6 +675,9 @@ inherited GoodsPartnerCodeForm: TGoodsPartnerCodeForm
         end
         item
           StoredProc = spUpdate_Goods_isUploadYuriFarm
+        end
+        item
+          StoredProc = spUpdate_Goods_DiscountExternal
         end>
       Caption = 'dsdUpdateDataSet'
       DataSource = MasterDS
@@ -903,6 +920,33 @@ inherited GoodsPartnerCodeForm: TGoodsPartnerCodeForm
           StoredProc = spUpdate_Goods_Promo_False
         end>
       Caption = 'actExecUpdate_Goods_Promo_False'
+    end
+    object DiscountExternalChoiceForm: TOpenChoiceForm
+      Category = 'Insert'
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      Caption = 'DiscountExternalChoiceForm'
+      FormName = 'TDiscountExternalForm'
+      FormNameParam.Value = 'TDiscountExternalForm'
+      FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
+      GuiParams = <
+        item
+          Name = 'Key'
+          Value = Null
+          Component = MasterCDS
+          ComponentItem = 'DiscountExternalId'
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'TextValue'
+          Value = Null
+          Component = MasterCDS
+          ComponentItem = 'DiscountExternalName'
+          DataType = ftString
+          MultiSelectSeparator = ','
+        end>
+      isShowModal = True
     end
   end
   inherited MasterDS: TDataSource
@@ -1908,5 +1952,30 @@ inherited GoodsPartnerCodeForm: TGoodsPartnerCodeForm
     PackSize = 1
     Left = 824
     Top = 376
+  end
+  object spUpdate_Goods_DiscountExternal: TdsdStoredProc
+    StoredProcName = 'gpUpdate_Goods_DiscountExternal'
+    DataSets = <>
+    OutputType = otResult
+    Params = <
+      item
+        Name = 'inId'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'GoodsId'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inDiscountExternalId'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'DiscountExternalId'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end>
+    PackSize = 1
+    Left = 344
+    Top = 416
   end
 end

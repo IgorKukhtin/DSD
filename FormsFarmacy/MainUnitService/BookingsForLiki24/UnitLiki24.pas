@@ -38,7 +38,9 @@ type
 
     function LoadBookings : boolean;
 
-    function SendRemnants(ADrugs, Distributor, AAmount : Integer) : boolean;
+    function UpdateStaus(AbookingId, AexternalBookingId, AStatus : String) : boolean;
+
+    function GetStaus(AbookingId : String; var AStatus : String) : boolean;
 
     property BookingsHeadCDS: TClientDataSet read FBookingsHeadCDS;
     property BookingsBodyCDS: TClientDataSet read FBookingsBodyCDS;
@@ -227,20 +229,20 @@ begin
         begin
           jValue := JSONA.Items[I];
 
-          bookingId := jValue.GetValue<TJSONString>('pharmacyId').ToString;
+          bookingId := DelDoubleQuote(jValue.FindValue('bookingId'));
 
           FBookingsHeadCDS.Last;
           FBookingsHeadCDS.Append;
           FBookingsHeadCDS.FieldByName('bookingId').AsString := bookingId;
           FBookingsHeadCDS.FieldByName('status').AsString := DelDoubleQuote(jValue.FindValue('status'));
           FBookingsHeadCDS.FieldByName('type').AsString := DelDoubleQuote(jValue.FindValue('type'));
-          FBookingsHeadCDS.FieldByName('pharmacyId').AsInteger := jValue.GetValue<TJSONNumber>('pharmacyId').AsInt;
+          FBookingsHeadCDS.FieldByName('pharmacyId').AsString := DelDoubleQuote(jValue.FindValue('pharmacyId'));
           FBookingsHeadCDS.FieldByName('orderId').AsString := DelDoubleQuote(jValue.FindValue('orderId'));
           FBookingsHeadCDS.FieldByName('orderNumber').AsInteger := jValue.GetValue<TJSONNumber>('orderNumber').AsInt;
           FBookingsHeadCDS.Post;
 
           JSONAI := jValue.GetValue<TJSONArray>('items');
-          for J := 0 to JSONA.Count - 1 do
+          for J := 0 to JSONAI.Count - 1 do
           begin
             jValue := JSONAI.Items[J];
 
@@ -248,9 +250,9 @@ begin
             FBookingsBodyCDS.Append;
             FBookingsBodyCDS.FieldByName('bookingId').AsString := bookingId;
             FBookingsBodyCDS.FieldByName('itemId').AsString := DelDoubleQuote(jValue.FindValue('itemId'));
-            FBookingsBodyCDS.FieldByName('productId').AsInteger := jValue.GetValue<TJSONNumber>('productId').AsInt;
+            FBookingsBodyCDS.FieldByName('productId').AsString := DelDoubleQuote(jValue.FindValue('productId'));
             FBookingsBodyCDS.FieldByName('quantity').AsCurrency := jValue.GetValue<TJSONNumber>('quantity').AsDouble;
-            FBookingsBodyCDS.FieldByName('netPrice').AsCurrency := jValue.GetValue<TJSONNumber>('netPrice').AsDouble;
+            FBookingsBodyCDS.FieldByName('price').AsCurrency := jValue.GetValue<TJSONNumber>('price').AsDouble;
             FBookingsBodyCDS.Post;
           end;
         end;
@@ -274,7 +276,7 @@ begin
 
 end;
 
-function TLiki24API.SendRemnants(ADrugs, Distributor, AAmount : Integer) : boolean;
+function TLiki24API.UpdateStaus(AbookingId, AexternalBookingId, AStatus : String) : boolean;
   var jValue : TJSONValue;
       jsonBody: TJSONObject;
 begin
@@ -283,17 +285,17 @@ begin
 
   jsonBody := TJSONObject.Create;
   try
-    jsonBody.AddPair('drugs', TJSONNumber.Create(ADrugs));
-    jsonBody.AddPair('date', TJSONString.Create(FormatDateTime('dd.mm.yyyy', Date)));
-    jsonBody.AddPair('amount', TJSONNumber.Create(AAmount));
-    jsonBody.AddPair('distributor', TJSONNumber.Create(Distributor));
+    jsonBody.AddPair('bookingId', TJSONString.Create(AbookingId));
+    jsonBody.AddPair('externalBookingId', TJSONString.Create(AexternalBookingId));
+    jsonBody.AddPair('status', TJSONString.Create(AStatus));
+    jsonBody.AddPair('bookingCode', TJSONString.Create(''));
 
     FRESTClient.BaseURL := FBaseURL;
     FRESTClient.ContentType := 'application/json';
 
     FRESTRequest.ClearBody;
     FRESTRequest.Method := TRESTRequestMethod.rmPOST;
-    FRESTRequest.Resource := 'remnants/create';
+    FRESTRequest.Resource := 'api/bookings/integration/reportstatus';
     // required parameters
     FRESTRequest.Params.Clear;
     FRESTRequest.AddParameter('Accept', 'application/json', TRESTRequestParameterKind.pkHTTPHEADER,
@@ -314,26 +316,68 @@ begin
   begin
     jValue := FRESTResponse.JSONValue;
 
-    if jValue.FindValue('errors') <> Nil then
+    if (jValue.FindValue('result') <> Nil) and (not jValue.FindValue('result').Null) then
     begin
-      FErrorsText := DelDoubleQuote(jValue.FindValue('errors'));
-    end else if jValue.FindValue('status') <> Nil then
+
+    end else if (jValue.FindValue('error') <> Nil) and (not jValue.FindValue('error').Null) then
     begin
-      case StrToInt(jValue.FindValue('status').ToString) of
-         0 : FErrorsText := 'Дані не вдалося додати';
-         1 : Result := True;
-        -1 : FErrorsText := 'Невірний ключ авторизації "Authorization: Bearer {token}"';
-        -2 : FErrorsText := 'Доступи аптеки відсутні або деактивовані';
-        -3 : FErrorsText := 'Аптека деактивована';
-        -4 : FErrorsText := 'Невірний ID дистриб’ютора';
-        -5 : FErrorsText := 'Невірний ID препарату';
-      end;
+      jValue := jValue.FindValue('error');
+      FErrorsText := DelDoubleQuote(jValue.FindValue('message')) + #13#10 +
+                     DelDoubleQuote(jValue.FindValue('details'));
     end else
     begin
-      FErrorsText := 'Ошибка сохранения остатка.'#13#10 + jValue.ToString;
+      FErrorsText := 'Ошибка изменения статуса.'#13#10 + jValue.ToString;
     end;
   end;
 end;
 
+function TLiki24API.GetStaus(AbookingId : String; var AStatus : String) : boolean;
+  var jValue : TJSONValue;
+begin
+
+  Result := False;
+  AStatus := '';
+
+  try
+
+    FRESTClient.BaseURL := FBaseURL;
+    FRESTClient.ContentType := 'application/json';
+
+    FRESTRequest.ClearBody;
+    FRESTRequest.Method := TRESTRequestMethod.rmGET;
+    FRESTRequest.Resource := 'api/bookings/integration/' + AbookingId;
+    // required parameters
+    FRESTRequest.Params.Clear;
+    FRESTRequest.AddParameter('Accept', 'application/json', TRESTRequestParameterKind.pkHTTPHEADER,
+                                                                            [TRESTRequestParameterOption.poDoNotEncode]);
+    FRESTRequest.AddParameter('Authorization', 'Bearer ' + FToken, TRESTRequestParameterKind.pkHTTPHEADER,
+                                                                            [TRESTRequestParameterOption.poDoNotEncode]);
+
+    try
+      FRESTRequest.Execute;
+    except
+    end;
+  finally
+  end;
+
+  if FRESTResponse.ContentType = 'application/json' then
+  begin
+    jValue := FRESTResponse.JSONValue;
+
+    if (jValue.FindValue('status') <> Nil) and (not jValue.FindValue('status').Null) then
+    begin
+      AStatus := DelDoubleQuote(jValue.FindValue('status'));
+      Result := True;
+    end else if (jValue.FindValue('error') <> Nil) and (not jValue.FindValue('error').Null) then
+    begin
+      jValue := jValue.FindValue('error');
+      FErrorsText := DelDoubleQuote(jValue.FindValue('message')) + #13#10 +
+                     DelDoubleQuote(jValue.FindValue('details'));
+    end else
+    begin
+      FErrorsText := 'Ошибка получения статуса.'#13#10 + jValue.ToString;
+    end;
+  end;
+end;
 
 end.

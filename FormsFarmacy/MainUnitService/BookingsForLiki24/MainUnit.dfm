@@ -24,6 +24,8 @@ object MainForm: TMainForm
     Height = 605
     Align = alLeft
     TabOrder = 0
+    ExplicitLeft = -6
+    ExplicitTop = 39
     object cxGridDBTableView1: TcxGridDBTableView
       Navigator.Buttons.CustomButtons = <>
       DataController.DataSource = dsReport_Upload
@@ -208,7 +210,7 @@ object MainForm: TMainForm
           item
             Format = #1042#1089#1077#1075#1086' '#1089#1090#1088#1086#1082': ,0'
             Kind = skCount
-            Column = quantity
+            Column = itemId
           end>
         DataController.Summary.SummaryGroups = <>
         OptionsBehavior.IncSearch = True
@@ -284,7 +286,7 @@ object MainForm: TMainForm
           item
             Format = #1042#1089#1077#1075#1086' '#1089#1090#1088#1086#1082': ,0'
             Kind = skCount
-            Column = status
+            Column = bookingId
           end>
         DataController.Summary.SummaryGroups = <>
         OptionsBehavior.IncSearch = True
@@ -336,22 +338,14 @@ object MainForm: TMainForm
     Height = 33
     Align = alTop
     TabOrder = 2
-    object btnSendTelegram: TButton
-      Left = 791
+    object btnUpdateStaus: TButton
+      Left = 727
       Top = 0
       Width = 130
       Height = 25
-      Caption = #1054#1090#1087#1088#1072#1074#1080#1090#1100' '#1089#1086#1086#1073#1097#1077#1085#1080#1077
-      TabOrder = 3
-    end
-    object btnExport: TButton
-      Left = 727
-      Top = 0
-      Width = 58
-      Height = 25
-      Caption = #1069#1082#1089#1087#1086#1088#1090
+      Caption = #1048#1079#1084#1077#1085#1080#1090#1100' '#1089#1090#1072#1090#1091#1089#1099
       TabOrder = 2
-      OnClick = btnExportClick
+      OnClick = btnUpdateStausClick
     end
     object btnSaveBookings: TButton
       Left = 615
@@ -368,7 +362,7 @@ object MainForm: TMainForm
       Width = 97
       Height = 25
       Caption = #1042#1089#1077' '#1076#1077#1081#1089#1090#1074#1080#1103'!'
-      TabOrder = 4
+      TabOrder = 3
       OnClick = btnAllClick
     end
     object btnLoadBookings: TButton
@@ -386,7 +380,7 @@ object MainForm: TMainForm
       Width = 25
       Height = 25
       Caption = 'T'
-      TabOrder = 5
+      TabOrder = 4
       OnClick = btnAddTestClick
     end
   end
@@ -503,6 +497,84 @@ object MainForm: TMainForm
       item
         DataType = ftString
         Name = 'inOrderId'
+        ParamType = ptInput
+      end
+      item
+        DataType = ftString
+        Name = 'inSession'
+        ParamType = ptInput
+      end>
+  end
+  object spInsertMovementItem: TZStoredProc
+    Connection = ZConnection1
+    Params = <
+      item
+        DataType = ftInteger
+        Name = 'ioId'
+        ParamType = ptInputOutput
+      end
+      item
+        DataType = ftInteger
+        Name = 'inMovementId'
+        ParamType = ptInput
+      end
+      item
+        DataType = ftString
+        Name = 'inItemId'
+        ParamType = ptInput
+      end
+      item
+        DataType = ftInteger
+        Name = 'inGoodsId'
+        ParamType = ptInput
+      end
+      item
+        DataType = ftCurrency
+        Name = 'inAmount'
+        ParamType = ptInput
+      end
+      item
+        DataType = ftCurrency
+        Name = 'inPrice'
+        ParamType = ptInput
+      end
+      item
+        DataType = ftString
+        Name = 'inSession'
+        ParamType = ptInput
+      end>
+    StoredProcName = 'gpInsertUpdate_MovementItem_Check_Site_Liki24'
+    Left = 64
+    Top = 496
+    ParamData = <
+      item
+        DataType = ftInteger
+        Name = 'ioId'
+        ParamType = ptInputOutput
+      end
+      item
+        DataType = ftInteger
+        Name = 'inMovementId'
+        ParamType = ptInput
+      end
+      item
+        DataType = ftString
+        Name = 'inItemId'
+        ParamType = ptInput
+      end
+      item
+        DataType = ftInteger
+        Name = 'inGoodsId'
+        ParamType = ptInput
+      end
+      item
+        DataType = ftCurrency
+        Name = 'inAmount'
+        ParamType = ptInput
+      end
+      item
+        DataType = ftCurrency
+        Name = 'inPrice'
         ParamType = ptInput
       end
       item

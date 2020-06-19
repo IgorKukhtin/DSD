@@ -26,8 +26,7 @@ type
     Timer1: TTimer;
     BookingsBodyDS: TDataSource;
     Panel2: TPanel;
-    btnSendTelegram: TButton;
-    btnExport: TButton;
+    btnUpdateStaus: TButton;
     btnSaveBookings: TButton;
     btnAll: TButton;
     qryReport_Upload: TZQuery;
@@ -56,10 +55,11 @@ type
     BookingsHeadDS: TDataSource;
     btnAddTest: TButton;
     spInsertMovement: TZStoredProc;
+    spInsertMovementItem: TZStoredProc;
     procedure FormCreate(Sender: TObject);
     procedure Timer1Timer(Sender: TObject);
     procedure btnSaveBookingsClick(Sender: TObject);
-    procedure btnExportClick(Sender: TObject);
+    procedure btnUpdateStausClick(Sender: TObject);
     procedure btnAllClick(Sender: TObject);
     procedure FormClose(Sender: TObject; var Action: TCloseAction);
     procedure btnLoadBookingsClick(Sender: TObject);
@@ -115,7 +115,7 @@ begin
     Add_Log('Начало обработки заказов');
 
     btnSaveBookingsClick(Nil);
-    btnExportClick(Nil);
+    btnUpdateStausClick(Nil);
 
   except
     on E: Exception do
@@ -130,10 +130,9 @@ begin
 
   if not Liki24API.BookingsHeadCDS.Active then Exit;
 
-  CreateGUID(GUID);
   Liki24API.BookingsHeadCDS.Last;
   Liki24API.BookingsHeadCDS.Append;
-  Liki24API.BookingsHeadCDS.FieldByName('bookingId').AsString := GUID.ToString;
+  Liki24API.BookingsHeadCDS.FieldByName('bookingId').AsString := 'ea611433-bfc6-435b-80cf-16b457607dc3';
   Liki24API.BookingsHeadCDS.FieldByName('status').AsString := 'Processing';
   Liki24API.BookingsHeadCDS.FieldByName('type').AsString := 'SelfService';
   Liki24API.BookingsHeadCDS.FieldByName('pharmacyId').AsInteger := 6128298;
@@ -141,56 +140,55 @@ begin
   Liki24API.BookingsHeadCDS.FieldByName('orderNumber').AsInteger := 328202;
   Liki24API.BookingsHeadCDS.Post;
 
-  CreateGUID(GUIDI);
   Liki24API.BookingsBodyCDS.Last;
   Liki24API.BookingsBodyCDS.Append;
-  Liki24API.BookingsBodyCDS.FieldByName('bookingId').AsString := GUID.ToString;
-  Liki24API.BookingsBodyCDS.FieldByName('itemId').AsString := GUIDI.ToString;
+  Liki24API.BookingsBodyCDS.FieldByName('bookingId').AsString := 'ea611433-bfc6-435b-80cf-16b457607dc3';
+  Liki24API.BookingsBodyCDS.FieldByName('itemId').AsString := '69c6e5e1-0981-4945-48d0-08d811ef7799';
   Liki24API.BookingsBodyCDS.FieldByName('productId').AsInteger := 36085;
   Liki24API.BookingsBodyCDS.FieldByName('quantity').AsCurrency := 1;
   Liki24API.BookingsBodyCDS.FieldByName('price').AsCurrency := 36.30;
   Liki24API.BookingsBodyCDS.Post;
 
-  CreateGUID(GUID);
-  Liki24API.BookingsHeadCDS.Last;
-  Liki24API.BookingsHeadCDS.Append;
-  Liki24API.BookingsHeadCDS.FieldByName('bookingId').AsString := GUID.ToString;
-  Liki24API.BookingsHeadCDS.FieldByName('status').AsString := 'Processing';
-  Liki24API.BookingsHeadCDS.FieldByName('type').AsString := 'SelfService';
-  Liki24API.BookingsHeadCDS.FieldByName('pharmacyId').AsInteger := 6128298;
-  Liki24API.BookingsHeadCDS.FieldByName('orderId').AsString := 'bfb4b3dd-affe-11ea-a9f3-00163e3c1eb4';
-  Liki24API.BookingsHeadCDS.FieldByName('orderNumber').AsInteger := 328202;
-  Liki24API.BookingsHeadCDS.Post;
+//  CreateGUID(GUID);
+//  Liki24API.BookingsHeadCDS.Last;
+//  Liki24API.BookingsHeadCDS.Append;
+//  Liki24API.BookingsHeadCDS.FieldByName('bookingId').AsString := GUID.ToString;
+//  Liki24API.BookingsHeadCDS.FieldByName('status').AsString := 'Processing';
+//  Liki24API.BookingsHeadCDS.FieldByName('type').AsString := 'SelfService';
+//  Liki24API.BookingsHeadCDS.FieldByName('pharmacyId').AsInteger := 6128298;
+//  Liki24API.BookingsHeadCDS.FieldByName('orderId').AsString := 'bfb4b3dd-affe-11ea-a9f3-00163e3c1eb4';
+//  Liki24API.BookingsHeadCDS.FieldByName('orderNumber').AsInteger := 328202;
+//  Liki24API.BookingsHeadCDS.Post;
+//
+//  CreateGUID(GUIDI);
+//  Liki24API.BookingsBodyCDS.Last;
+//  Liki24API.BookingsBodyCDS.Append;
+//  Liki24API.BookingsBodyCDS.FieldByName('bookingId').AsString := GUID.ToString;
+//  Liki24API.BookingsBodyCDS.FieldByName('itemId').AsString := GUIDI.ToString;
+//  Liki24API.BookingsBodyCDS.FieldByName('productId').AsInteger := 27292;
+//  Liki24API.BookingsBodyCDS.FieldByName('quantity').AsCurrency := 1;
+//  Liki24API.BookingsBodyCDS.FieldByName('price').AsCurrency := 13.4;
+//  Liki24API.BookingsBodyCDS.Post;
+//
+//  CreateGUID(GUIDI);
+//  Liki24API.BookingsBodyCDS.Last;
+//  Liki24API.BookingsBodyCDS.Append;
+//  Liki24API.BookingsBodyCDS.FieldByName('bookingId').AsString := GUID.ToString;
+//  Liki24API.BookingsBodyCDS.FieldByName('itemId').AsString := GUIDI.ToString;
+//  Liki24API.BookingsBodyCDS.FieldByName('productId').AsInteger := 6317159;
+//  Liki24API.BookingsBodyCDS.FieldByName('quantity').AsCurrency := 2;
+//  Liki24API.BookingsBodyCDS.FieldByName('price').AsCurrency := 1.6;
+//  Liki24API.BookingsBodyCDS.Post;
 
-  CreateGUID(GUIDI);
-  Liki24API.BookingsBodyCDS.Last;
-  Liki24API.BookingsBodyCDS.Append;
-  Liki24API.BookingsBodyCDS.FieldByName('bookingId').AsString := GUID.ToString;
-  Liki24API.BookingsBodyCDS.FieldByName('itemId').AsString := GUIDI.ToString;
-  Liki24API.BookingsBodyCDS.FieldByName('productId').AsInteger := 27292;
-  Liki24API.BookingsBodyCDS.FieldByName('quantity').AsCurrency := 1;
-  Liki24API.BookingsBodyCDS.FieldByName('price').AsCurrency := 13.4;
-  Liki24API.BookingsBodyCDS.Post;
-
-  CreateGUID(GUIDI);
-  Liki24API.BookingsBodyCDS.Last;
-  Liki24API.BookingsBodyCDS.Append;
-  Liki24API.BookingsBodyCDS.FieldByName('bookingId').AsString := GUID.ToString;
-  Liki24API.BookingsBodyCDS.FieldByName('itemId').AsString := GUIDI.ToString;
-  Liki24API.BookingsBodyCDS.FieldByName('productId').AsInteger := 6317159;
-  Liki24API.BookingsBodyCDS.FieldByName('quantity').AsCurrency := 2;
-  Liki24API.BookingsBodyCDS.FieldByName('price').AsCurrency := 1.6;
-  Liki24API.BookingsBodyCDS.Post;
-
-  end;
+end;
 
 procedure TMainForm.btnAllClick(Sender: TObject);
 var
   Ini: TIniFile;
 begin
   try
-   btnSaveBookingsClick(Nil);
-    btnExportClick(Nil);
+    btnSaveBookingsClick(Nil);
+    btnUpdateStausClick(Nil);
 
     if not qryReport_Upload.Active then Exit;
     if qryReport_Upload.IsEmpty then Exit;
@@ -222,17 +220,26 @@ begin
     Liki24API.BookingsHeadCDS.First;
     while not Liki24API.BookingsHeadCDS.Eof  do
     begin
-      spInsertMovement.Params.ParamByName('ioId').Value := 0;
-      spInsertMovement.Params.ParamByName('inUnitId').Value := Liki24API.BookingsHeadCDS.FieldByName('pharmacyId').AsInteger;
+      spInsertMovement.Params.ParamByName('ioId').AsInteger := 0;
+      spInsertMovement.Params.ParamByName('inUnitId').AsInteger := Liki24API.BookingsHeadCDS.FieldByName('pharmacyId').AsInteger;
       spInsertMovement.Params.ParamByName('inDate').Value := Null;
-      spInsertMovement.Params.ParamByName('inBookingId').Value := Liki24API.BookingsHeadCDS.FieldByName('bookingId').AsString;
-      spInsertMovement.Params.ParamByName('inOrderId').Value := Liki24API.BookingsHeadCDS.FieldByName('orderId').AsString;
-      spInsertMovement.Params.ParamByName('inSession').Value := 3;
-      spInsertMovement.ExecSQL;
+      spInsertMovement.Params.ParamByName('inBookingId').AsString := Liki24API.BookingsHeadCDS.FieldByName('bookingId').AsString;
+      spInsertMovement.Params.ParamByName('inOrderId').AsString := Liki24API.BookingsHeadCDS.FieldByName('orderId').AsString;
+      spInsertMovement.Params.ParamByName('inSession').AsString := '3';
+      spInsertMovement.ExecProc;
 
       Liki24API.BookingsBodyCDS.First;
       while not Liki24API.BookingsBodyCDS.Eof  do
       begin
+
+        spInsertMovementItem.Params.ParamByName('ioId').AsInteger := 0;
+        spInsertMovementItem.Params.ParamByName('inMovementId').AsInteger := spInsertMovement.Params.ParamByName('ioId').AsInteger;
+        spInsertMovementItem.Params.ParamByName('inItemId').AsString := Liki24API.BookingsBodyCDS.FieldByName('itemId').AsString;
+        spInsertMovementItem.Params.ParamByName('inGoodsId').AsInteger := Liki24API.BookingsBodyCDS.FieldByName('productId').AsInteger;
+        spInsertMovementItem.Params.ParamByName('inAmount').AsCurrency := Liki24API.BookingsBodyCDS.FieldByName('quantity').AsCurrency;
+        spInsertMovementItem.Params.ParamByName('inPrice').AsCurrency := Liki24API.BookingsBodyCDS.FieldByName('price').AsCurrency;
+        spInsertMovementItem.Params.ParamByName('inSession').AsString := '3';
+        spInsertMovementItem.ExecProc;
 
         Liki24API.BookingsBodyCDS.Next;
       end;
@@ -246,17 +253,25 @@ begin
   end;
 end;
 
-procedure TMainForm.btnExportClick(Sender: TObject);
+procedure TMainForm.btnUpdateStausClick(Sender: TObject);
 var
   Urgently : boolean;
+  S : string;
 begin
-  if not qryReport_Upload.Active then Exit;
-  if qryReport_Upload.IsEmpty then Exit;
-//  if not qryDriver.Active then Exit;
-//  if qryDriver.IsEmpty then Exit;
-//  Add_Log('Начало выгрузки отчета');
+//  if not qryReport_Upload.Active then Exit;
+//  if qryReport_Upload.IsEmpty then Exit;
 
+  Add_Log('Начало выгрузки статусов');
 
+  if not Liki24API.UpdateStaus('ea611433-bfc6-435b-80cf-16b457607dc3', '111', '111') then
+  begin
+    if Liki24API.ErrorsText <> '' then Add_Log(Liki24API.ErrorsText);
+  end;
+
+//  if not Liki24API.GetStaus('ea611433-bfc6-435b-80cf-16b457607dc3', S) then
+//  begin
+//    if Liki24API.ErrorsText <> '' then Add_Log(Liki24API.ErrorsText);
+//  end else ShowMessage(s);
 
 end;
 
@@ -335,8 +350,7 @@ begin
       btnAll.Enabled := false;
       btnLoadBookings.Enabled := false;
       btnSaveBookings.Enabled := false;
-      btnExport.Enabled := false;
-      btnSendTelegram.Enabled := false;
+      btnUpdateStaus.Enabled := false;
       Timer1.Enabled := true;
     end;
   end else

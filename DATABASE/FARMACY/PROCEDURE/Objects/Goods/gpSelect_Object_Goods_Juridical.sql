@@ -14,6 +14,7 @@ RETURNS TABLE (Id Integer, CommonCode Integer
              , CodeUKTZED TVarChar
              , MakerName TVarChar
              , ConditionsKeepId Integer, ConditionsKeepName TVarChar
+             , DiscountExternalId Integer, DiscountExternalName TVarChar
              , AreaId Integer, AreaName TVarChar
              , MinimumLot TFloat
              , IsUpload Boolean, IsPromo Boolean, isSpecCondition Boolean, isUploadBadm Boolean, isUploadTeva Boolean, isUploadYuriFarm Boolean
@@ -108,6 +109,9 @@ BEGIN
          , Object_ConditionsKeep.Id                AS ConditionsKeepId
          , Object_ConditionsKeep.ValueData         AS ConditionsKeepName
 
+         , Object_DiscountExternal.Id              AS DiscountExternalId
+         , Object_DiscountExternal.ValueData       AS DiscountExternalName
+
          , Object_Area.Id                          AS AreaId
          , Object_Area.ValueData                   AS AreaName
 
@@ -176,6 +180,8 @@ BEGIN
           */
           LEFT JOIN Object AS Object_ConditionsKeep ON Object_ConditionsKeep.Id = Object_Goods_Juridical.ConditionsKeepId
 
+          LEFT JOIN Object AS Object_DiscountExternal ON Object_DiscountExternal.Id = Object_Goods_Juridical.DiscountExternalId
+
           /*LEFT JOIN ObjectLink AS ObjectLink_Goods_Area 
                                ON ObjectLink_Goods_Area.ObjectId = ObjectLink_Goods_Object.ObjectId
                               AND ObjectLink_Goods_Area.DescId = zc_ObjectLink_Goods_Area()
@@ -227,6 +233,7 @@ $BODY$
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.  Ярошенко Р.Ф.   Шаблий О.В.
+ 19.06.20                                                                      * DiscountExternal
  06.04.20         *
  23.10.19                                                                      * isUploadYuriFarm
  11.12.17         * Goods_UKTZED
@@ -244,6 +251,5 @@ $BODY$
 */
 
 -- тест
- --select * from gpSelect_Object_Goods_Juridical(inObjectId := 59614 , inIsErased := 'False' ,  inSession := '3');
- 
- select * from gpSelect_Object_Goods_Juridical(inObjectId := 183345 , inIsErased := 'False' ,  inSession := '3');
+--select * from gpSelect_Object_Goods_Juridical(inObjectId := 59614 , inIsErased := 'False' ,  inSession := '3');
+--select * from gpSelect_Object_Goods_Juridical(inObjectId := 183345 , inIsErased := 'False' ,  inSession := '3');

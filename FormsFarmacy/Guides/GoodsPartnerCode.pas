@@ -119,6 +119,9 @@ type
     actExecUpdate_Goods_Promo_False: TdsdExecStoredProc;
     bbUpdate_Goods_Promo_True: TdxBarButton;
     bbUpdate_Goods_Promo_False: TdxBarButton;
+    DiscountExternalName: TcxGridDBColumn;
+    DiscountExternalChoiceForm: TOpenChoiceForm;
+    spUpdate_Goods_DiscountExternal: TdsdStoredProc;
   private
     { Private declarations }
   public
