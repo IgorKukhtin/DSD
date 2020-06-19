@@ -1165,7 +1165,9 @@ uses
   GoodsQuality_Raw in '..\..\Forms\Guides\GoodsQuality_Raw.pas' {GoodsQuality_RawForm: TParentForm},
   Report_SaleReturn_byPromo in '..\..\Forms\Report\Report_SaleReturn_byPromo.pas' {Report_SaleReturn_byPromoForm: TParentForm},
   LossAsset in '..\..\Forms\Document\LossAsset.pas' {LossAssetForm: TParentForm},
-  LossAssetJournal in '..\..\Forms\Document\LossAssetJournal.pas' {LossAssetJournalForm: TParentForm};
+  LossAssetJournal in '..\..\Forms\Document\LossAssetJournal.pas' {LossAssetJournalForm: TParentForm},
+  SaleAssetJournal in '..\..\Forms\Document\SaleAssetJournal.pas' {SaleAssetJournalForm: TParentForm},
+  SaleAsset in '..\..\Forms\Document\SaleAsset.pas' {SaleAssetForm: TParentForm};
 
 {$R *.RES}
 {$R DevExpressRus.res}

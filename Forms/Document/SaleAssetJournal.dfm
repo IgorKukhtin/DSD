@@ -1,5 +1,5 @@
-inherited LossAssetJournalForm: TLossAssetJournalForm
-  Caption = #1046#1091#1088#1085#1072#1083' '#1076#1086#1082#1091#1084#1077#1085#1090#1086#1074' <'#1057#1087#1080#1089#1072#1085#1080#1077' ('#1054#1057')>'
+inherited SaleAssetJournalForm: TSaleAssetJournalForm
+  Caption = #1046#1091#1088#1085#1072#1083' '#1076#1086#1082#1091#1084#1077#1085#1090#1086#1074' <'#1055#1088#1086#1076#1072#1078#1072' ('#1054#1057')>'
   ClientHeight = 419
   ClientWidth = 919
   AddOnFormData.RefreshAction = actRefreshStart
@@ -22,6 +22,8 @@ inherited LossAssetJournalForm: TLossAssetJournalForm
       inherited cxGrid: TcxGrid
         Width = 919
         Height = 362
+        ExplicitLeft = 107
+        ExplicitTop = -3
         ExplicitWidth = 919
         ExplicitHeight = 362
         inherited cxGridDBTableView: TcxGridDBTableView
@@ -42,6 +44,31 @@ inherited LossAssetJournalForm: TLossAssetJournalForm
             item
               Format = ',0.####'
               Kind = skSum
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = TotalCountPartner
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = TotalSummMVAT
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = TotalSummPVAT
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = TotalSummVAT
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = AmountCurrency
             end>
           DataController.Summary.FooterSummaryItems = <
             item
@@ -56,6 +83,31 @@ inherited LossAssetJournalForm: TLossAssetJournalForm
             item
               Format = ',0.####'
               Kind = skSum
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = TotalCountPartner
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = TotalSummMVAT
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = TotalSummPVAT
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = TotalSummVAT
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = AmountCurrency
             end>
           OptionsBehavior.GoToNextCellOnEnter = False
           OptionsBehavior.FocusCellOnCycle = False
@@ -84,12 +136,19 @@ inherited LossAssetJournalForm: TLossAssetJournalForm
             HeaderAlignmentHorz = taCenter
             Width = 80
           end
-          object ItemName_from: TcxGridDBColumn
-            Caption = #1054#1090' '#1082#1086#1075#1086' ('#1101#1083#1077#1084#1077#1085#1090')'
-            DataBinding.FieldName = 'ItemName_from'
+          object OperDatePartner: TcxGridDBColumn
+            Caption = #1044#1072#1090#1072' '#1076#1086#1082'. '#1091' '#1087#1086#1089#1090'.'
+            DataBinding.FieldName = 'OperDatePartner'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Width = 70
+          end
+          object PriceWithVAT: TcxGridDBColumn
+            Caption = #1062#1077#1085#1099' '#1089' '#1053#1044#1057' ('#1076#1072'/'#1085#1077#1090')'
+            DataBinding.FieldName = 'PriceWithVAT'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 80
           end
           object FromName: TcxGridDBColumn
             Caption = #1054#1090' '#1082#1086#1075#1086
@@ -98,13 +157,6 @@ inherited LossAssetJournalForm: TLossAssetJournalForm
             HeaderAlignmentVert = vaCenter
             Width = 130
           end
-          object ItemName_to: TcxGridDBColumn
-            Caption = #1050#1086#1084#1091' ('#1101#1083#1077#1084#1077#1085#1090')'
-            DataBinding.FieldName = 'ItemName_to'
-            HeaderAlignmentHorz = taCenter
-            HeaderAlignmentVert = vaCenter
-            Width = 70
-          end
           object ToName: TcxGridDBColumn
             Caption = #1050#1086#1084#1091
             DataBinding.FieldName = 'ToName'
@@ -112,19 +164,16 @@ inherited LossAssetJournalForm: TLossAssetJournalForm
             HeaderAlignmentVert = vaCenter
             Width = 130
           end
-          object TotalCount: TcxGridDBColumn
-            Caption = #1050#1086#1083'-'#1074#1086
-            DataBinding.FieldName = 'TotalCount'
-            PropertiesClassName = 'TcxCurrencyEditProperties'
-            Properties.DecimalPlaces = 4
-            Properties.DisplayFormat = ',0.####;-,0.####; ;'
+          object PaidKindName: TcxGridDBColumn
+            Caption = #1060#1086#1088#1084#1072' '#1086#1087#1083#1072#1090#1099
+            DataBinding.FieldName = 'PaidKindName'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Width = 70
           end
-          object ArticleLossName: TcxGridDBColumn
-            Caption = #1057#1090#1072#1090#1100#1103' '#1089#1087#1080#1089#1072#1085#1080#1103
-            DataBinding.FieldName = 'ArticleLossName'
+          object ContractName: TcxGridDBColumn
+            Caption = #1044#1086#1075#1086#1074#1086#1088
+            DataBinding.FieldName = 'ContractName'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Width = 150
@@ -136,6 +185,125 @@ inherited LossAssetJournalForm: TLossAssetJournalForm
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
             Width = 120
+          end
+          object CurrencyDocumentName: TcxGridDBColumn
+            Caption = #1042#1072#1083#1102#1090#1072' ('#1076#1086#1082'.)'
+            DataBinding.FieldName = 'CurrencyDocumentName'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 70
+          end
+          object CurrencyPartnerName: TcxGridDBColumn
+            Caption = #1042#1072#1083#1102#1090#1072' ('#1082#1086#1085#1090#1088'.)'
+            DataBinding.FieldName = 'CurrencyPartnerName'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            HeaderHint = #1042#1072#1083#1102#1090#1072' ('#1082#1086#1085#1090#1088#1072#1075#1077#1085#1090#1072')'
+            Width = 97
+          end
+          object VATPercent: TcxGridDBColumn
+            Caption = '% '#1053#1044#1057
+            DataBinding.FieldName = 'VATPercent'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 4
+            Properties.DisplayFormat = ',0.####;-,0.####; ;'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 42
+          end
+          object TotalCount: TcxGridDBColumn
+            Caption = #1050#1086#1083'-'#1074#1086
+            DataBinding.FieldName = 'TotalCount'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 4
+            Properties.DisplayFormat = ',0.####;-,0.####; ;'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 70
+          end
+          object TotalCountPartner: TcxGridDBColumn
+            Caption = #1050#1086#1083'-'#1074#1086' ('#1082#1086#1085#1090#1088'.)'
+            DataBinding.FieldName = 'TotalCountPartner'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 4
+            Properties.DisplayFormat = ',0.####;-,0.####; ;'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            HeaderHint = #1050#1086#1083'-'#1074#1086' ('#1082#1086#1085#1090#1088#1072#1075#1077#1085#1090')'
+            Width = 70
+          end
+          object CurrencyValue: TcxGridDBColumn
+            Caption = #1050#1091#1088#1089' '#1074#1072#1083#1102#1090#1099
+            DataBinding.FieldName = 'CurrencyValue'
+            Visible = False
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 40
+          end
+          object ParValue: TcxGridDBColumn
+            Caption = #1053#1086#1084#1080#1085#1072#1083
+            DataBinding.FieldName = 'ParValue'
+            Visible = False
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 60
+          end
+          object CurrencyPartnerValue: TcxGridDBColumn
+            Caption = #1050#1091#1088#1089' '#1074#1072#1083#1102#1090#1099' ('#1082#1086#1085#1090#1088#1072#1075#1077#1085#1090')'
+            DataBinding.FieldName = 'CurrencyPartnerValue'
+            Visible = False
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 40
+          end
+          object ParPartnerValue: TcxGridDBColumn
+            Caption = #1053#1086#1084#1080#1085#1072#1083' ('#1082#1086#1085#1090#1088#1072#1075#1077#1085#1090')'
+            DataBinding.FieldName = 'ParPartnerValue'
+            Visible = False
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 60
+          end
+          object TotalSummMVAT: TcxGridDBColumn
+            Caption = #1057#1091#1084#1084#1072' '#1073#1077#1079' '#1053#1044#1057
+            DataBinding.FieldName = 'TotalSummMVAT'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 4
+            Properties.DisplayFormat = ',0.####;-,0.####; ;'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 60
+          end
+          object TotalSummPVAT: TcxGridDBColumn
+            Caption = #1057#1091#1084#1084#1072' '#1089' '#1053#1044#1057
+            DataBinding.FieldName = 'TotalSummPVAT'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 4
+            Properties.DisplayFormat = ',0.####;-,0.####; ;'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 60
+          end
+          object TotalSummVAT: TcxGridDBColumn
+            Caption = #1057#1091#1084#1084#1072' '#1053#1044#1057
+            DataBinding.FieldName = 'TotalSummVAT'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 4
+            Properties.DisplayFormat = ',0.####;-,0.####; ;'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 60
+          end
+          object AmountCurrency: TcxGridDBColumn
+            Caption = #1057#1091#1084#1084#1072' '#1089' '#1053#1044#1057' ('#1074#1072#1083')'
+            DataBinding.FieldName = 'AmountCurrency'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 4
+            Properties.DisplayFormat = ',0.####;-,0.####; ;'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            HeaderHint = #1057#1091#1084#1084#1072' '#1089' '#1053#1044#1057' '#1074' '#1074#1072#1083#1102#1090#1077
+            Width = 60
           end
         end
       end
@@ -179,12 +347,12 @@ inherited LossAssetJournalForm: TLossAssetJournalForm
     Left = 31
     Top = 266
     inherited actInsert: TdsdInsertUpdateAction
-      FormName = 'TLossAssetForm'
-      FormNameParam.Value = 'TLossAssetForm'
+      FormName = 'TSaleAssetForm'
+      FormNameParam.Value = 'TSaleAssetForm'
     end
     inherited actUpdate: TdsdInsertUpdateAction
-      FormName = 'TLossAssetForm'
-      FormNameParam.Value = 'TLossAssetForm'
+      FormName = 'TSaleAssetForm'
+      FormNameParam.Value = 'TSaleAssetForm'
       GuiParams = <
         item
           Name = 'Id'
@@ -223,10 +391,10 @@ inherited LossAssetJournalForm: TLossAssetJournalForm
           ToParam.ParamType = ptInputOutput
           ToParam.MultiSelectSeparator = ','
         end>
-      StoredProc = spSelectPrint_Loss
+      StoredProc = spSelectPrint_SaleAsset
       StoredProcList = <
         item
-          StoredProc = spSelectPrint_Loss
+          StoredProc = spSelectPrint_SaleAsset
         end>
       Caption = #1055#1077#1095#1072#1090#1100
       Hint = #1055#1077#1095#1072#1090#1100
@@ -366,7 +534,7 @@ inherited LossAssetJournalForm: TLossAssetJournalForm
     Top = 139
   end
   inherited spSelect: TdsdStoredProc
-    StoredProcName = 'gpSelect_Movement_LossAsset'
+    StoredProcName = 'gpSelect_Movement_SaleAsset'
     Params = <
       item
         Name = 'instartdate'
@@ -529,7 +697,7 @@ inherited LossAssetJournalForm: TLossAssetJournalForm
     Top = 328
   end
   inherited spMovementComplete: TdsdStoredProc
-    StoredProcName = 'gpComplete_Movement_LossAsset'
+    StoredProcName = 'gpComplete_Movement_SaleAsset'
     Params = <
       item
         Name = 'inmovementid'
@@ -543,7 +711,7 @@ inherited LossAssetJournalForm: TLossAssetJournalForm
     Top = 288
   end
   inherited spMovementUnComplete: TdsdStoredProc
-    StoredProcName = 'gpUnComplete_Movement_LossAsset'
+    StoredProcName = 'gpUnComplete_Movement_SaleAsset'
     Params = <
       item
         Name = 'inmovementid'
@@ -557,7 +725,7 @@ inherited LossAssetJournalForm: TLossAssetJournalForm
     Top = 352
   end
   inherited spMovementSetErased: TdsdStoredProc
-    StoredProcName = 'gpSetErased_Movement_LossAsset'
+    StoredProcName = 'gpSetErased_Movement_SaleAsset'
     Params = <
       item
         Name = 'inmovementid'
@@ -617,7 +785,9 @@ inherited LossAssetJournalForm: TLossAssetJournalForm
     Top = 200
   end
   inherited spMovementReComplete: TdsdStoredProc
-    StoredProcName = 'gpReComplete_Movement_LossAsset'
+    StoredProcName = 'gpReComplete_Movement_SaleAsset'
+    Left = 304
+    Top = 304
   end
   object PrintHeaderCDS: TClientDataSet
     Aggregates = <>
@@ -631,8 +801,8 @@ inherited LossAssetJournalForm: TLossAssetJournalForm
     Left = 700
     Top = 270
   end
-  object spSelectPrint_Loss: TdsdStoredProc
-    StoredProcName = 'gpSelect_Movement_LossAsset_Print'
+  object spSelectPrint_SaleAsset: TdsdStoredProc
+    StoredProcName = 'gpSelect_Movement_SaleAsset_Print'
     DataSet = PrintHeaderCDS
     DataSets = <
       item

@@ -136,12 +136,13 @@ procedure TLoadReportTest.LoadAllReportFormTest;
 var
  i : integer;
 begin
+  {
   LoadReportFromFile('PrintMovement_SendAsset', ReportPath + '\Товарный Учет\PrintMovement_SendAsset.fr3');
   exit;
 
   LoadReportFromFile('Print_Object_BarCodeBox', ReportPath + '\Товарный Учет\Print_Object_BarCodeBox.fr3');
   exit;
- {
+
   LoadReportFromFile('PrintMovement_WeighingProductionBarCode', ReportPath + '\Товарный Учет\PrintMovement_WeighingProductionBarCode.fr3');
   exit;
 
@@ -337,10 +338,11 @@ begin
   LoadReportFromFile('Отчет по заявкам по сырью_перемещение (Олап)', ReportPath + '\Отчеты (производство)\Отчет по заявкам по сырью_перемещение (Олап).fr3');
   LoadReportFromFile('Отчет по заявкам по сырью (Олап)', ReportPath + '\Отчеты (производство)\Отчет по заявкам по сырью (Олап).fr3');
   exit;
-
+   }
   LoadReportFromFile('Дефростер по партиям', ReportPath + '\Отчеты (производство)\Дефростер по партиям.fr3');
   LoadReportFromFile('Дефростер(итог)', ReportPath + '\Отчеты (производство)\Дефростер(итог).fr3');
-
+  exit;
+  {
   LoadReportFromFile('Отчет по упаковке', ReportPath + '\Отчеты (производство)\Отчет по упаковке.fr3');
   exit;
 

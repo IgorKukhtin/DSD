@@ -16,14 +16,14 @@ CREATE OR REPLACE FUNCTION gpInsertUpdate_MovementItem_IncomeAsset(
  INOUT ioInvNumber_Asset      TVarChar  , -- 
  INOUT ioInvNumber_Asset_save TVarChar  , -- 
     IN inSession             TVarChar    -- сессия пользователя
-)                              
+)
 RETURNS RECORD
 AS
 $BODY$
    DECLARE vbUserId Integer;
 BEGIN
      -- проверка прав пользователя на вызов процедуры
-    -- vbUserId := lpCheckRight (inSession, zc_Enum_Process_InsertUpdate_MI_IncomeAsset());
+     -- vbUserId := lpCheckRight (inSession, zc_Enum_Process_InsertUpdate_MI_IncomeAsset());
      vbUserId:= lpGetUserBySession (inSession);
 
      -- Заменили свойство <Цена за количество>

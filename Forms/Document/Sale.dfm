@@ -17,6 +17,7 @@ inherited SaleForm: TSaleForm
     ClientRectBottom = 479
     ClientRectRight = 1293
     inherited tsMain: TcxTabSheet
+      ExplicitTop = 0
       ExplicitWidth = 1293
       ExplicitHeight = 455
       inherited cxGrid: TcxGrid
