@@ -1167,7 +1167,9 @@ uses
   LossAsset in '..\..\Forms\Document\LossAsset.pas' {LossAssetForm: TParentForm},
   LossAssetJournal in '..\..\Forms\Document\LossAssetJournal.pas' {LossAssetJournalForm: TParentForm},
   SaleAssetJournal in '..\..\Forms\Document\SaleAssetJournal.pas' {SaleAssetJournalForm: TParentForm},
-  SaleAsset in '..\..\Forms\Document\SaleAsset.pas' {SaleAssetForm: TParentForm};
+  SaleAsset in '..\..\Forms\Document\SaleAsset.pas' {SaleAssetForm: TParentForm},
+  CashFlowEdit in '..\..\Forms\Guides\CashFlowEdit.pas' {CashFlowEditForm: TParentForm},
+  CashFlow in '..\..\Forms\Guides\CashFlow.pas' {CashFlowForm: TParentForm};
 
 {$R *.RES}
 {$R DevExpressRus.res}

@@ -1256,7 +1256,10 @@ INSERT INTO ObjectDesc (Code, ItemName)
   SELECT 'zc_Object_CheckSourceKind', 'Источник чека' WHERE NOT EXISTS (SELECT * FROM ObjectDesc WHERE Code = 'zc_Object_CheckSourceKind');
    
 
-
+CREATE OR REPLACE FUNCTION zc_Object_CashFlow() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM ObjectDesc WHERE Code = 'zc_Object_CashFlow'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
+INSERT INTO ObjectDesc (Code, ItemName)
+  SELECT 'zc_Object_CashFlow', 'Статьи отчета ДДС' WHERE NOT EXISTS (SELECT * FROM ObjectDesc WHERE Code = 'zc_Object_CashFlow');
+   
 --------------------------- !!!!!!!!!!!!!!!!!!!!!!!!!
 --------------------------- !!! ВРЕМЕННЫЕ ОБЪЕКТЫ !!!
 --------------------------- !!!!!!!!!!!!!!!!!!!!!!!!!
@@ -1273,6 +1276,7 @@ INSERT INTO ObjectDesc (Code, ItemName)
 /*-------------------------------------------------------------------------------
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.   Воробкало А. А.   Шаблий О.В.
+ 19.06.20         * zc_Object_CashFlow
  15.06.20                                                                                        * zc_Object_CheckSourceKind
  12.04.20                                                                                        * zc_Object_Hardware
  06.04.20         * zc_Object_SunExclusion

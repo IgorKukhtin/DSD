@@ -36,6 +36,7 @@ type
     procedure LoadBusinessFormTest;
     procedure LoadBoxFormTest;
     procedure LoadCashFormTest;
+    procedure LoadCashFlowFormTest;
     procedure LoadCarFormTest;
     procedure LoadCarExternalFormTest;
     procedure LoadCarModelFormTest;
@@ -358,6 +359,14 @@ begin
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TCash_PersonalJournalForm'));
   TdsdFormStorageFactory.GetStorage.Load('TCash_PersonalJournalForm');
   }
+end;
+
+procedure TLoadFormTest.LoadCashFlowFormTest;
+begin
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TCashFlowForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TCashFlowForm');
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TCashFlowEditForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TCashFlowEditForm');
 end;
 
 procedure TLoadFormTest.LoadContractFormTest;

@@ -1136,6 +1136,8 @@ type
     actSaleAssetJournal: TdsdOpenForm;
     miLossAssetJournal: TMenuItem;
     miSaleAssetJournal: TMenuItem;
+    actCashFlow: TdsdOpenForm;
+    miCashFlow: TMenuItem;
     procedure actReport_OLAPSoldExecute(Sender: TObject);
     procedure FormShow(Sender: TObject);
     procedure FormClose(Sender: TObject; var Action: TCloseAction);
