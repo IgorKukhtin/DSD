@@ -11,6 +11,7 @@ uses
   function getInt(const AttrValue: OleVariant; const ADefValue: Integer): Integer;
   function getFloat(const AttrValue: OleVariant; const ADefValue: Extended): Extended;
 
+  function Coalesce(AValue1, AValue2: Variant): Variant;
   procedure WaitFor(const AInterval: Cardinal; const aWaitCondition: Boolean = True);
   function IsService: Boolean;
 
@@ -101,6 +102,13 @@ var
 begin
   extDate := Int(ADate);
   Result  := extDate + 1 - c1SecDate;
+end;
+
+function Coalesce(AValue1, AValue2: Variant): Variant;
+begin
+  Result := AValue1;
+
+  if VarIsNull(AValue1) then Result := AValue2;
 end;
 
 end.

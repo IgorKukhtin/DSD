@@ -245,12 +245,10 @@ object dmData: TdmData
     Top = 352
   end
   object dsWMS: TDataSource
-    DataSet = qryWMSGridErr
     Left = 64
     Top = 128
   end
   object dsAlan: TDataSource
-    DataSet = qryAlanGrid
     Left = 219
     Top = 128
   end
@@ -362,7 +360,6 @@ object dmData: TdmData
       end>
   end
   object dsWmsToHostMessage: TDataSource
-    DataSet = qryWmsToHostMessage
     Left = 333
     Top = 128
   end

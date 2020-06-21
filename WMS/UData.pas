@@ -95,6 +95,27 @@ type
     procedure CloseConnections;
   end;
 
+  TWorkerThread = class(TThread)
+  strict private
+    FData: TdmData;
+    FMsgProc: TNotifyMsgProc;
+  protected
+    procedure InnerMsgProc(const AMsg: string);
+    property Data: TdmData read FData;
+  public
+    constructor Create(CreateSuspended: Boolean; AMsgProc: TNotifyMsgProc); reintroduce;
+    destructor Destroy; override;
+  end;
+
+  TImportWorkerThread = class(TWorkerThread)
+  strict private
+    FPacket: TPacketKind;
+  protected
+    procedure Execute; override;
+  public
+    constructor Create(CreateSuspended: Boolean; const APacket: TPacketKind; AMsgProc: TNotifyMsgProc); reintroduce;
+  end;
+
   EData = class(Exception);
     EWrongDate = class(EData);
 
@@ -109,6 +130,7 @@ implementation
 
 uses
   System.Variants,
+  Winapi.ActiveX,
   USettings,
   UConstants,
   UImportWMS;
@@ -1048,5 +1070,57 @@ begin
     Result := ParamByName('out_pack_id').AsInteger;
   end;
 end;
+
+
+
+{ TWorkerThread }
+
+constructor TWorkerThread.Create(CreateSuspended: Boolean; AMsgProc: TNotifyMsgProc);
+begin
+  FMsgProc := AMsgProc;
+  FData    := TdmData.Create(nil);
+
+  FreeOnTerminate := True;
+
+  inherited Create(CreateSuspended);
+end;
+
+destructor TWorkerThread.Destroy;
+begin
+  FreeAndNil(FData);
+  inherited;
+end;
+
+procedure TWorkerThread.InnerMsgProc(const AMsg: string);
+begin
+  TThread.Queue(nil, procedure
+                     begin
+                       if Assigned(FMsgProc) then FMsgProc(AMsg);
+                     end);
+end;
+
+
+{ TImportWorkerThread }
+
+constructor TImportWorkerThread.Create(CreateSuspended: Boolean; const APacket: TPacketKind; AMsgProc: TNotifyMsgProc);
+begin
+  FPacket := APacket;
+  inherited Create(CreateSuspended, AMsgProc);
+end;
+
+procedure TImportWorkerThread.Execute;
+begin
+  inherited;
+
+  CoInitialize(nil);
+  try
+    if Data.IsConnectedBoth(InnerMsgProc) then
+      Data.ImportWMS(FPacket, InnerMsgProc);
+  finally
+    CoUninitialize;
+  end;
+end;
+
+
 
 end.

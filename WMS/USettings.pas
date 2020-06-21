@@ -43,10 +43,14 @@ uses
   System.IOUtils
   , System.Classes
   , System.SysUtils
+  , System.SyncObjs
   , System.Win.Registry
   , Winapi.SHFolder
   , Winapi.Windows
   , UConstants;
+
+var
+  mCS: TCriticalSection;
 
 const
   cAppDataFolder = 'SendDataWMS';
@@ -150,7 +154,12 @@ end;
 
 class function TSettings.GetAlanServer: string;
 begin
-  Result := GetStrValue(cAlanServerParam, cAlanServerDef);
+  mCS.Enter;
+  try
+    Result := GetStrValue(cAlanServerParam, cAlanServerDef);
+  finally
+    mCS.Leave;
+  end;
 end;
 
 class function TSettings.GetBoolValue(const AParam: string; const ADefVal: Boolean): Boolean;
@@ -203,7 +212,12 @@ end;
 
 class function TSettings.GetLogFolder: string;
 begin
-  Result := GetAppDataFolder + '\Log' ;
+  mCS.Enter;
+  try
+    Result := GetAppDataFolder + '\Log' ;
+  finally
+    mCS.Leave;
+  end;
 end;
 
 class function TSettings.GetStrValue(const AParam, ADefVal: string): string;
@@ -231,17 +245,32 @@ end;
 
 class function TSettings.GetTimerInterval: Cardinal;
 begin
-  Result := GetIntValue(cTimerIntervalParam, cTimerIntervalDef);
+  mCS.Enter;
+  try
+    Result := GetIntValue(cTimerIntervalParam, cTimerIntervalDef);
+  finally
+    mCS.Leave;
+  end;
 end;
 
 class function TSettings.GetWMSDatabase: string;
 begin
-  Result := GetStrValue(cWMSDatabaseParam, cWMSDatabaseDef);
+  mCS.Enter;
+  try
+    Result := GetStrValue(cWMSDatabaseParam, cWMSDatabaseDef);
+  finally
+    mCS.Leave;
+  end;
 end;
 
 class procedure TSettings.SetAlanServer(const AValue: string);
 begin
-  SetStrValue(cAlanServerParam, AValue);
+  mCS.Enter;
+  try
+    SetStrValue(cAlanServerParam, AValue);
+  finally
+    mCS.Leave;
+  end;
 end;
 
 class procedure TSettings.SetBoolValue(const AParam: string; const AVal: Boolean);
@@ -285,12 +314,28 @@ end;
 
 class procedure TSettings.SetTimerInterval(const AValue: Cardinal);
 begin
-  SetIntValue(cTimerIntervalParam, AValue);
+  mCS.Enter;
+  try
+    SetIntValue(cTimerIntervalParam, AValue);
+  finally
+    mCS.Leave;
+  end;
 end;
 
 class procedure TSettings.SetWMSDatabase(const AValue: string);
 begin
-  SetStrValue(cWMSDatabaseParam, AValue);
+  mCS.Enter;
+  try
+    SetStrValue(cWMSDatabaseParam, AValue);
+  finally
+    mCS.Leave;
+  end;
 end;
+
+initialization
+  mCS := TCriticalSection.Create;
+
+finalization
+  FreeAndNil(mCS);
 
 end.
