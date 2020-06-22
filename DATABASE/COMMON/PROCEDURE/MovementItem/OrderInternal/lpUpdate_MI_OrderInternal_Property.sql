@@ -4,6 +4,7 @@ DROP FUNCTION IF EXISTS lpUpdate_MI_OrderInternal_Property (Integer, Integer, In
 DROP FUNCTION IF EXISTS lpUpdate_MI_OrderInternal_Property (Integer, Integer, Integer, Integer, TFloat, Integer, TFloat, Integer, TFloat, Integer, TFloat, Integer, Boolean, Integer);
 DROP FUNCTION IF EXISTS lpUpdate_MI_OrderInternal_Property (Integer, Integer, Integer, Integer, TFloat, Integer, TFloat, Integer, TFloat, Integer, TFloat, Integer, TFloat, Integer, Boolean, Integer);
 DROP FUNCTION IF EXISTS lpUpdate_MI_OrderInternal_Property (Integer, Integer, Integer, Integer, TFloat, Integer, TFloat, Integer, TFloat, Integer, TFloat, Integer, TFloat, Integer, TFloat, Integer, Boolean, Integer);
+DROP FUNCTION IF EXISTS lpUpdate_MI_OrderInternal_Property (Integer, Integer, Integer, Integer, TFloat, Integer, TFloat, Integer, TFloat, Integer, TFloat, Integer, TFloat, Integer, TFloat, Integer, Boolean, Boolean, Integer);
 
 CREATE OR REPLACE FUNCTION lpUpdate_MI_OrderInternal_Property(
     IN ioId                       Integer   , -- Ключ объекта <Элемент документа>
@@ -16,19 +17,21 @@ CREATE OR REPLACE FUNCTION lpUpdate_MI_OrderInternal_Property(
     IN inDescId_ParamOrder        Integer   ,
     IN inAmount_ParamSecond       TFloat    , --
     IN inDescId_ParamSecond       Integer   ,
-    IN inAmount_ParamAdd          TFloat    DEFAULT 0 , --
-    IN inDescId_ParamAdd          Integer   DEFAULT 0 ,
-    IN inAmount_ParamNext         TFloat    DEFAULT 0 , --
-    IN inDescId_ParamNext         Integer   DEFAULT 0 ,
-    IN inAmount_ParamNextPromo    TFloat    DEFAULT 0 , --
-    IN inDescId_ParamNextPromo    Integer   DEFAULT 0 ,
+    IN inAmount_ParamAdd          TFloat    DEFAULT 0    , --
+    IN inDescId_ParamAdd          Integer   DEFAULT 0    ,
+    IN inAmount_ParamNext         TFloat    DEFAULT 0    , --
+    IN inDescId_ParamNext         Integer   DEFAULT 0    ,
+    IN inAmount_ParamNextPromo    TFloat    DEFAULT 0    , --
+    IN inDescId_ParamNextPromo    Integer   DEFAULT 0    ,
     IN inIsPack                   Boolean   DEFAULT NULL , --
-    IN inUserId                   Integer   DEFAULT 0   -- пользователь
+    IN inIsParentMulti            Boolean   DEFAULT FALSE, -- надо ли раскладывать по разным ГП
+    IN inUserId                   Integer   DEFAULT 0      -- пользователь
 )
 RETURNS VOID
 AS
 $BODY$
    DECLARE vbIsInsert Boolean;
+   DECLARE vbIsParentMulti_goods Boolean;
    DECLARE vbMonth Integer;
    DECLARE vbOperDate TDateTime;
    DECLARE vbFromId Integer;
@@ -49,25 +52,188 @@ BEGIN
      WHERE Movement.Id = inMovementId;
 
 
+    -- таблица -
+     IF EXISTS (SELECT * FROM INFORMATION_SCHEMA.tables WHERE TABLE_NAME ILIKE '_tmpParentMulti')
+     THEN
+         DELETE FROM _tmpParentMulti;
+     ELSE
+         CREATE TEMP TABLE _tmpParentMulti (MovementItemId Integer, GoodsId Integer, GoodsKindId Integer, GoodsId_child Integer, GoodsKindId_child Integer, ReceipId Integer, Amount_Param TFloat, Amount_ParamOrder TFloat) ON COMMIT DROP;
+     END IF;
+     -- нашли - надо ли раскладывать по разным ГП
+     IF inIsParentMulti = TRUE
+     THEN
+         --
+         vbIsParentMulti_goods:= COALESCE ((SELECT ObjectBoolean_ParentMulti.ValueData
+                                            FROM ObjectLink AS ObjectLink_Receipt_Goods
+                                                 INNER JOIN ObjectLink AS ObjectLink_Receipt_GoodsKind
+                                                                       ON ObjectLink_Receipt_GoodsKind.ObjectId      = ObjectLink_Receipt_Goods.ObjectId
+                                                                      AND ObjectLink_Receipt_GoodsKind.DescId        = zc_ObjectLink_Receipt_GoodsKind()
+                                                                      AND ObjectLink_Receipt_GoodsKind.ChildObjectId = inGoodsKindId
+                                                 INNER JOIN Object AS Object_Receipt ON Object_Receipt.Id = ObjectLink_Receipt_Goods.ObjectId
+                                                                                    AND Object_Receipt.isErased = FALSE
+                                                 INNER JOIN ObjectBoolean AS ObjectBoolean_Main
+                                                                          ON ObjectBoolean_Main.ObjectId  = Object_Receipt.Id
+                                                                         AND ObjectBoolean_Main.DescId    = zc_ObjectBoolean_Receipt_Main()
+                                                                         AND ObjectBoolean_Main.ValueData = TRUE
+                                                 INNER JOIN ObjectBoolean AS ObjectBoolean_ParentMulti
+                                                                          ON ObjectBoolean_ParentMulti.ObjectId  = Object_Receipt.Id
+                                                                         AND ObjectBoolean_ParentMulti.DescId    = zc_ObjectBoolean_Receipt_ParentMulti()
+                                                                         AND ObjectBoolean_ParentMulti.ValueData = TRUE
+                                            WHERE ObjectLink_Receipt_Goods.ChildObjectId = inGoodsId
+                                              AND ObjectLink_Receipt_Goods.DescId        = zc_ObjectLink_Receipt_Goods()
+                                           ), FALSE);
+     ELSE
+         vbIsParentMulti_goods:= FALSE;
+     END IF;
+
+     -- если товар раскладывается на несколько
+     IF vbIsParentMulti_goods = TRUE
+     THEN
+         INSERT INTO _tmpParentMulti (MovementItemId, GoodsId, GoodsKindId, GoodsId_child, GoodsKindId_child, ReceipId, Amount_Param, Amount_ParamOrder)
+            WITH -- Рецепт
+                 tmpReceiptChild AS
+              (SELECT ObjectLink_Receipt_Goods.ObjectId               AS ReceiptId
+                    , ObjectLink_Receipt_Goods.ChildObjectId          AS GoodsId
+                    , ObjectLink_Receipt_GoodsKind.ChildObjectId      AS GoodsKindId
+                    , ObjectLink_ReceiptChild_Goods.ChildObjectId     AS GoodsId_child
+                    , ObjectLink_ReceiptChild_GoodsKind.ChildObjectId AS GoodsKindId_child
+                    , ObjectFloat_Value.ValueData * CASE WHEN ObjectLink_Measure.ChildObjectId = zc_Measure_Sh() THEN ObjectFloat_Weight.ValueData ELSE 1 END AS Value
+               FROM ObjectLink AS ObjectLink_Receipt_Goods
+                    INNER JOIN ObjectLink AS ObjectLink_Receipt_GoodsKind
+                                          ON ObjectLink_Receipt_GoodsKind.ObjectId      = ObjectLink_Receipt_Goods.ObjectId
+                                         AND ObjectLink_Receipt_GoodsKind.DescId        = zc_ObjectLink_Receipt_GoodsKind()
+                                         AND ObjectLink_Receipt_GoodsKind.ChildObjectId = inGoodsKindId
+                    INNER JOIN Object AS Object_Receipt ON Object_Receipt.Id = ObjectLink_Receipt_Goods.ObjectId
+                                                       AND Object_Receipt.isErased = FALSE
+                    INNER JOIN ObjectFloat AS ObjectFloat_Value_master
+                                           ON ObjectFloat_Value_master.ObjectId  = Object_Receipt.Id
+                                          AND ObjectFloat_Value_master.DescId    = zc_ObjectFloat_Receipt_Value()
+                                          AND ObjectFloat_Value_master.ValueData <> 0
+                    INNER JOIN ObjectBoolean AS ObjectBoolean_Main
+                                             ON ObjectBoolean_Main.ObjectId  = Object_Receipt.Id
+                                            AND ObjectBoolean_Main.DescId    = zc_ObjectBoolean_Receipt_Main()
+                                            AND ObjectBoolean_Main.ValueData = TRUE
+                    INNER JOIN ObjectLink AS ObjectLink_ReceiptChild_Receipt
+                                          ON ObjectLink_ReceiptChild_Receipt.ChildObjectId = Object_Receipt.Id
+                                         AND ObjectLink_ReceiptChild_Receipt.DescId        = zc_ObjectLink_ReceiptChild_Receipt()
+                    INNER JOIN Object AS Object_ReceiptChild ON Object_ReceiptChild.Id       = ObjectLink_ReceiptChild_Receipt.ObjectId
+                                                            AND Object_ReceiptChild.isErased = FALSE
+                    LEFT JOIN ObjectLink AS ObjectLink_ReceiptChild_Goods
+                                         ON ObjectLink_ReceiptChild_Goods.ObjectId = Object_ReceiptChild.Id
+                                        AND ObjectLink_ReceiptChild_Goods.DescId   = zc_ObjectLink_ReceiptChild_Goods()
+                    LEFT JOIN ObjectLink AS ObjectLink_ReceiptChild_GoodsKind
+                                         ON ObjectLink_ReceiptChild_GoodsKind.ObjectId = Object_ReceiptChild.Id
+                                        AND ObjectLink_ReceiptChild_GoodsKind.DescId   = zc_ObjectLink_ReceiptChild_GoodsKind()
+                    INNER JOIN ObjectFloat AS ObjectFloat_Value
+                                           ON ObjectFloat_Value.ObjectId = Object_ReceiptChild.Id
+                                          AND ObjectFloat_Value.DescId = zc_ObjectFloat_ReceiptChild_Value()
+                                          AND ObjectFloat_Value.ValueData <> 0
+                    LEFT JOIN ObjectLink AS ObjectLink_Goods_InfoMoney
+                                         ON ObjectLink_Goods_InfoMoney.ObjectId = ObjectLink_ReceiptChild_Goods.ChildObjectId
+                                        AND ObjectLink_Goods_InfoMoney.DescId   = zc_ObjectLink_Goods_InfoMoney()
+                    INNER JOIN Object_InfoMoney_View ON Object_InfoMoney_View.InfoMoneyId = ObjectLink_Goods_InfoMoney.ChildObjectId
+                                                    AND (Object_InfoMoney_View.InfoMoneyGroupId = zc_Enum_InfoMoneyGroup_30000()             -- Доходы
+                                                      OR Object_InfoMoney_View.InfoMoneyDestinationId = zc_Enum_InfoMoneyDestination_20900() -- Общефирменные + Ирна
+                                                        )
+                    LEFT JOIN ObjectLink AS ObjectLink_Measure
+                                         ON ObjectLink_Measure.ObjectId = ObjectLink_ReceiptChild_Goods.ChildObjectId
+                                        AND ObjectLink_Measure.DescId = zc_ObjectLink_Goods_Measure()
+                    LEFT JOIN ObjectFloat AS ObjectFloat_Weight
+                                          ON ObjectFloat_Weight.ObjectId = ObjectLink_ReceiptChild_Goods.ChildObjectId
+                                         AND ObjectFloat_Weight.DescId = zc_ObjectFloat_Goods_Weight()
+               WHERE ObjectLink_Receipt_Goods.ChildObjectId = inGoodsId
+                 AND ObjectLink_Receipt_Goods.DescId        = zc_ObjectLink_Receipt_Goods()
+                 AND ObjectFloat_Value.ValueData * CASE WHEN ObjectLink_Measure.ChildObjectId = zc_Measure_Sh() THEN ObjectFloat_Weight.ValueData ELSE 1 END <> 0
+                 AND ObjectLink_Receipt_GoodsKind.ChildObjectId      > 0
+                 AND ObjectLink_ReceiptChild_Goods.ChildObjectId     > 0
+                 AND ObjectLink_ReceiptChild_GoodsKind.ChildObjectId > 0
+              )
+                 -- Элементы
+               , tmpMI AS
+              (SELECT MovementItem.Id                                       AS MovementItemId
+                    , MovementItem.ObjectId                                 AS GoodsId
+                    , COALESCE (MILinkObject_GoodsKind.ObjectId, 0)         AS GoodsKindId
+                    , COALESCE (MILinkObject_Goods.ObjectId, 0)             AS GoodsId_child
+                    , COALESCE (MILinkObject_GoodsKindComplete.ObjectId, 0) AS GoodsKindId_child
+                      -- № п/п
+                    , ROW_NUMBER() OVER (PARTITION BY MovementItem.ObjectId
+                                                    , MILinkObject_GoodsKind.ObjectId
+                                                    , MILinkObject_Goods.ObjectId
+                                                    , MILinkObject_GoodsKindComplete.ObjectId
+                                         ORDER BY MovementItem.Id DESC
+                                        ) AS Ord
+               FROM MovementItem
+                    LEFT JOIN MovementItemLinkObject AS MILinkObject_GoodsKind
+                                                     ON MILinkObject_GoodsKind.MovementItemId = MovementItem.Id
+                                                    AND MILinkObject_GoodsKind.DescId         = zc_MILinkObject_GoodsKind()
+                    LEFT JOIN MovementItemLinkObject AS MILinkObject_Goods
+                                                     ON MILinkObject_Goods.MovementItemId = MovementItem.Id
+                                                    AND MILinkObject_Goods.DescId         = zc_MILinkObject_Goods()
+                    LEFT JOIN MovementItemLinkObject AS MILinkObject_GoodsKindComplete
+                                                     ON MILinkObject_GoodsKindComplete.MovementItemId = MovementItem.Id
+                                                    AND MILinkObject_GoodsKindComplete.DescId         = zc_MILinkObject_GoodsKindComplete()
+                    LEFT JOIN MovementItemFloat AS MIFloat_ContainerId
+                                                ON MIFloat_ContainerId.MovementItemId = MovementItem.Id
+                                               AND MIFloat_ContainerId.DescId = zc_MIFloat_ContainerId()
+               WHERE MovementItem.MovementId = inMovementId
+                 AND MovementItem.ObjectId   = inGoodsId
+                 AND MovementItem.DescId     = zc_MI_Master()
+                 AND MovementItem.isErased   = FALSE
+                 AND COALESCE (MILinkObject_GoodsKind.ObjectId, 0) = COALESCE (inGoodsKindId, 0)
+                 AND COALESCE (MIFloat_ContainerId.ValueData, 0) = 0
+               )
+           --
+           SELECT COALESCE (tmpMI.MovementItemId, 0)                                    AS MovementItemId
+                , COALESCE (tmpReceiptChild.GoodsId, tmpMI.GoodsId)                     AS GoodsId
+                , COALESCE (tmpReceiptChild.GoodsKindId, tmpMI.GoodsKindId)             AS GoodsKindId
+                , COALESCE (tmpReceiptChild.GoodsId_child, tmpMI.GoodsId_child)         AS GoodsId_child
+                , COALESCE (tmpReceiptChild.GoodsKindId_child, tmpMI.GoodsKindId_child) AS GoodsKindId_child
+                , tmpReceiptChild.ReceiptId
+                , CASE WHEN COALESCE (tmpMI.Ord, 1) = 1 THEN tmpReceiptChild.Value * inAmount_Param      / tmpReceiptChild_sum.Value ELSE 0 END AS Amount_Param
+                , CASE WHEN COALESCE (tmpMI.Ord, 1) = 1 THEN tmpReceiptChild.Value * inAmount_ParamOrder / tmpReceiptChild_sum.Value ELSE 0 END AS Amount_ParamOrder
+           FROM tmpMI
+                FULL JOIN tmpReceiptChild ON tmpReceiptChild.GoodsId           = tmpMI.GoodsId
+                                         AND tmpReceiptChild.GoodsKindId       = tmpMI.GoodsKindId
+                                         AND tmpReceiptChild.GoodsId_child     = tmpMI.GoodsId_child
+                                         AND tmpReceiptChild.GoodsKindId_child = tmpMI.GoodsKindId_child
+
+                LEFT JOIN (SELECT SUM (tmpReceiptChild.Value) AS Value FROM tmpReceiptChild) AS tmpReceiptChild_sum ON 1=1
+           ;
+
+     ELSE
+         -- если товар НЕ раскладывается на несколько
+         INSERT INTO _tmpParentMulti (MovementItemId, GoodsId, GoodsKindId, GoodsId_child, GoodsKindId_child, ReceipId, Amount_Param, Amount_ParamOrder)
+            SELECT COALESCE (ioId, 0), inGoodsId, inGoodsKindId, inGoodsId, inGoodsKindId, 0, inAmount_Param, inAmount_ParamOrder
+           ;
+     END IF;
+
      -- !!!только - для Заявки на упаковку по ОСТАТКАМ!!!
      IF COALESCE (ioId, 0) = 0 AND inIsPack IS NULL AND inDescId_ParamOrder = zc_MIFloat_ContainerId() AND COALESCE (inAmount_ParamOrder, 0) = 0
      THEN
          -- !!!нашли!!!
          ioId:= (SELECT MovementItem.Id
-                    FROM MovementItem
-                         LEFT JOIN MovementItemLinkObject AS MILinkObject_GoodsKind
-                                                          ON MILinkObject_GoodsKind.MovementItemId = MovementItem.Id
-                                                         AND MILinkObject_GoodsKind.DescId         = zc_MILinkObject_GoodsKind()
-                         LEFT JOIN MovementItemFloat AS MIFloat_ContainerId
-                                                     ON MIFloat_ContainerId.MovementItemId = MovementItem.Id
-                                                    AND MIFloat_ContainerId.DescId         = zc_MIFloat_ContainerId()
-                    WHERE MovementItem.MovementId = inMovementId
-                      AND MovementItem.ObjectId   = inGoodsId
-                      AND MovementItem.DescId     = zc_MI_Master()
-                      AND MovementItem.isErased   = FALSE
-                      AND COALESCE (MILinkObject_GoodsKind.ObjectId, 0) = COALESCE (inGoodsKindId, 0)
-                      AND COALESCE (MIFloat_ContainerId.ValueData, 0) = 0
-                    );
+                 FROM MovementItem
+                      LEFT JOIN MovementItemLinkObject AS MILinkObject_GoodsKind
+                                                       ON MILinkObject_GoodsKind.MovementItemId = MovementItem.Id
+                                                      AND MILinkObject_GoodsKind.DescId         = zc_MILinkObject_GoodsKind()
+                      LEFT JOIN MovementItemFloat AS MIFloat_ContainerId
+                                                  ON MIFloat_ContainerId.MovementItemId = MovementItem.Id
+                                                 AND MIFloat_ContainerId.DescId         = zc_MIFloat_ContainerId()
+                 WHERE MovementItem.MovementId = inMovementId
+                   AND MovementItem.ObjectId   = inGoodsId
+                   AND MovementItem.DescId     = zc_MI_Master()
+                   AND MovementItem.isErased   = FALSE
+                   AND COALESCE (MILinkObject_GoodsKind.ObjectId, 0) = COALESCE (inGoodsKindId, 0)
+                   AND COALESCE (MIFloat_ContainerId.ValueData, 0) = 0
+                );
+         --
+         UPDATE _tmpParentMulti SET MovementItemId = COALESCE (ioId, 0);
+         -- Проверка, на всякий случай
+         IF (SELECT COUNT(*) FROM _tmpParentMulti) > 1
+         THEN
+             RAISE EXCEPTION 'Ошибка.Найдено больше одной строчки.';
+         END IF;
+         
      END IF;
 
 
@@ -81,7 +247,14 @@ BEGIN
                 WHERE ObjectLink_Goods_InfoMoney.ObjectId = inGoodsId
                   AND ObjectLink_Goods_InfoMoney.DescId = zc_ObjectLink_Goods_InfoMoney()
                )*/
-     THEN vbAmount_calc:= CASE WHEN EXISTS (SELECT 1
+     THEN 
+         -- Проверка, на всякий случай
+         IF (SELECT COUNT(*) FROM _tmpParentMulti) > 1
+         THEN
+             RAISE EXCEPTION 'Ошибка.Найдено больше одной строчки.';
+         END IF;
+         --
+         vbAmount_calc:= CASE WHEN EXISTS (SELECT 1
                                             FROM ObjectLink AS ObjectLink_Goods_GoodsGroup
                                                  LEFT JOIN ObjectLink AS ObjectLink_GoodsGroup_parent
                                                                       ON ObjectLink_GoodsGroup_parent.ObjectId = ObjectLink_Goods_GoodsGroup.ChildObjectId
@@ -158,7 +331,45 @@ BEGIN
      -- определяется признак Создание/Корректировка
      vbIsInsert:= COALESCE (ioId, 0) = 0;
 
-     IF COALESCE (ioId, 0) = 0
+     IF vbIsParentMulti_goods = TRUE
+     THEN
+         -- проверка уникальности
+         IF EXISTS (SELECT 1
+                    FROM _tmpParentMulti
+                    GROUP BY _tmpParentMulti.GoodsId, _tmpParentMulti.GoodsKindId, _tmpParentMulti.GoodsId_child, _tmpParentMulti.GoodsKindId_child
+                    HAVING COUNT(*) > 1
+                    )
+            -- для Заявки на упаковку по ОСТАТКАМ
+            AND (COALESCE (inDescId_ParamOrder, 0) <> zc_MIFloat_ContainerId() OR COALESCE (inAmount_ParamOrder, 0) = 0)
+         THEN
+             RAISE EXCEPTION 'Ошибка.В документе уже существует <%> <%>.Дублирование запрещено. % %', lfGet_Object_ValueData (inGoodsId), lfGet_Object_ValueData (inGoodsKindId), inGoodsId, inGoodsKindId;
+         END IF;
+
+         -- сохранили <Элемент документа>
+         UPDATE _tmpParentMulti SET MovementItemId =
+                 lpInsertUpdate_MovementItem (_tmpParentMulti.MovementItemId, zc_MI_Master(), inGoodsId, inMovementId
+                                            , (SELECT CASE WHEN Object_InfoMoney_View.InfoMoneyDestinationId IN (zc_Enum_InfoMoneyDestination_10200() -- Основное сырье + Прочее сырье
+                                                                                                               , zc_Enum_InfoMoneyDestination_20600() -- Общефирменные  + Прочие материалы
+                                                                                                                )
+                                                          --AND _tmpParentMulti.MovementItemId > 0
+                                                                 THEN COALESCE ((SELECT MI.Amount FROM MovementItem AS MI WHERE MI.Id = _tmpParentMulti.MovementItemId), 0)
+                                                           ELSE COALESCE (CASE WHEN vbAmount_calc > 0 THEN vbAmount_calc ELSE 0 END, 0)
+                                                      END
+                                               FROM ObjectLink AS ObjectLink_Goods_InfoMoney
+                                                    LEFT JOIN Object_InfoMoney_View ON Object_InfoMoney_View.InfoMoneyId = ObjectLink_Goods_InfoMoney.ChildObjectId
+                                               WHERE ObjectLink_Goods_InfoMoney.ObjectId = inGoodsId
+                                                 AND ObjectLink_Goods_InfoMoney.DescId   = zc_ObjectLink_Goods_InfoMoney()
+                                              )
+                                            , NULL
+                                             )
+         WHERE _tmpParentMulti.MovementItemId = 0
+        ;
+
+         -- сохранили связь с <Виды товаров>
+         PERFORM lpInsertUpdate_MovementItemLinkObject (zc_MILinkObject_GoodsKind(), _tmpParentMulti.MovementItemId, inGoodsKindId)
+         FROM _tmpParentMulti;
+
+     ELSEIF COALESCE (ioId, 0) = 0
      THEN
          -- проверка уникальности
          IF EXISTS (SELECT 1
@@ -184,12 +395,13 @@ BEGIN
 
 
          -- сохранили <Элемент документа>
-         ioId := lpInsertUpdate_MovementItem (ioId, zc_MI_Master(), inGoodsId, inMovementId
+         UPDATE _tmpParentMulti SET MovementItemId =
+                 lpInsertUpdate_MovementItem (_tmpParentMulti.MovementItemId, zc_MI_Master(), inGoodsId, inMovementId
                                             , (SELECT CASE WHEN Object_InfoMoney_View.InfoMoneyDestinationId IN (zc_Enum_InfoMoneyDestination_10200() -- Основное сырье + Прочее сырье
                                                                                                                , zc_Enum_InfoMoneyDestination_20600() -- Общефирменные  + Прочие материалы
                                                                                                                 )
-                                                          --AND ioId > 0
-                                                                 THEN COALESCE ((SELECT MI.Amount FROM MovementItem AS MI WHERE MI.Id = ioId), 0)
+                                                          --AND _tmpParentMulti.MovementItemId > 0
+                                                                 THEN COALESCE ((SELECT MI.Amount FROM MovementItem AS MI WHERE MI.Id = _tmpParentMulti.MovementItemId), 0)
                                                            ELSE COALESCE (CASE WHEN vbAmount_calc > 0 THEN vbAmount_calc ELSE 0 END, 0)
                                                       END
                                                FROM ObjectLink AS ObjectLink_Goods_InfoMoney
@@ -201,19 +413,21 @@ BEGIN
                                              );
 
          -- сохранили связь с <Виды товаров>
-         PERFORM lpInsertUpdate_MovementItemLinkObject (zc_MILinkObject_GoodsKind(), ioId, inGoodsKindId);
+         PERFORM lpInsertUpdate_MovementItemLinkObject (zc_MILinkObject_GoodsKind(), _tmpParentMulti.MovementItemId, inGoodsKindId)
+         FROM _tmpParentMulti;
 
      -- ТОЛЬКО для СЫРЬЯ
      ELSEIF inDescId_ParamSecond = zc_MIFloat_AmountPartnerSecond()
      THEN
 
          -- сохранили <Элемент документа>
-         ioId := lpInsertUpdate_MovementItem (ioId, zc_MI_Master(), inGoodsId, inMovementId
-                                            , (SELECT CASE WHEN ioId > 0
+         UPDATE _tmpParentMulti SET MovementItemId =
+                 lpInsertUpdate_MovementItem (_tmpParentMulti.MovementItemId, zc_MI_Master(), inGoodsId, inMovementId
+                                            , (SELECT CASE WHEN _tmpParentMulti.MovementItemId > 0
                                                             AND Object_InfoMoney_View.InfoMoneyDestinationId IN (zc_Enum_InfoMoneyDestination_10200() -- Основное сырье + Прочее сырье
                                                                                                                , zc_Enum_InfoMoneyDestination_20600() -- Общефирменные  + Прочие материалы
                                                                                                                 )
-                                                                 THEN (SELECT MI.Amount FROM MovementItem AS MI WHERE MI.Id = ioId)
+                                                                 THEN (SELECT MI.Amount FROM MovementItem AS MI WHERE MI.Id = _tmpParentMulti.MovementItemId)
                                                            ELSE COALESCE (CASE WHEN vbAmount_calc > 0 THEN vbAmount_calc ELSE 0 END, 0)
                                                       END
                                                FROM ObjectLink AS ObjectLink_Goods_InfoMoney
@@ -230,23 +444,30 @@ BEGIN
          -- ioId := lpInsertUpdate_MovementItem (ioId, zc_MI_Master(), inGoodsId, inMovementId, 0, NULL);
 
      END IF;
-
+     
+     
 
      -- !!!только для заявки на производство!!!
      IF inIsPack = FALSE AND (vbIsInsert = TRUE OR 1=1)
      THEN
+         -- проверка
+         IF EXISTS (SELECT 1 FROM _tmpParentMulti WHERE COALESCE (_tmpParentMulti.MovementItemId, 0) = 0)
+         THEN
+             RAISE EXCEPTION 'Ошибка.В документе _tmpParentMulti.MovementItemId = 0 Кол-во=%', (SELECT COUNT(*) FROM _tmpParentMulti WHERE COALESCE (_tmpParentMulti.MovementItemId, 0) = 0);
+         END IF;
+
          -- сохранили связь с <Рецептуры>
-         PERFORM lpInsertUpdate_MovementItemLinkObject (zc_MILinkObject_ReceiptBasis(), ioId, tmp.ReceiptId_basis)
-               , lpInsertUpdate_MovementItemLinkObject (zc_MILinkObject_Receipt(),      ioId, tmp.ReceiptId)
-               , lpInsertUpdate_MovementItemLinkObject (zc_MILinkObject_GoodsBasis(),   ioId, ObjectLink_Receipt_Goods_basis.ChildObjectId)
-               , lpInsertUpdate_MovementItemLinkObject (zc_MILinkObject_Goods(),        ioId, ObjectLink_Receipt_Goods.ChildObjectId)
-               , lpInsertUpdate_MovementItemLinkObject (zc_MILinkObject_GoodsKindComplete(), ioId, ObjectLink_Receipt_GoodsKind.ChildObjectId)
-               , lpInsertUpdate_MovementItemFloat (zc_MIFloat_TermProduction(),         ioId, COALESCE (ObjectFloat_TermProduction.ValueData, 1))
-               , lpInsertUpdate_MovementItemFloat (zc_MIFloat_NormInDays(),             ioId, COALESCE (ObjectFloat_NormInDays.ValueData, 2))
-               , lpInsertUpdate_MovementItemFloat (zc_MIFloat_Koeff(),                  ioId, COALESCE (ObjectFloat_Koeff.ValueData, 1))
-               , lpInsertUpdate_MovementItemFloat (zc_MIFloat_StartProductionInDays(),  ioId, COALESCE (ObjectFloat_StartProductionInDays.ValueData, 1))
-         FROM (SELECT inGoodsId AS GoodsId) AS tmpGoods
-              LEFT JOIN (SELECT inGoodsId AS GoodsId
+         PERFORM lpInsertUpdate_MovementItemLinkObject (zc_MILinkObject_ReceiptBasis(), _tmpParentMulti.MovementItemId, tmp.ReceiptId_basis)
+               , lpInsertUpdate_MovementItemLinkObject (zc_MILinkObject_Receipt(),      _tmpParentMulti.MovementItemId, tmp.ReceiptId)
+               , lpInsertUpdate_MovementItemLinkObject (zc_MILinkObject_GoodsBasis(),   _tmpParentMulti.MovementItemId, ObjectLink_Receipt_Goods_basis.ChildObjectId)
+               , lpInsertUpdate_MovementItemLinkObject (zc_MILinkObject_Goods(),        _tmpParentMulti.MovementItemId, ObjectLink_Receipt_Goods.ChildObjectId)
+               , lpInsertUpdate_MovementItemLinkObject (zc_MILinkObject_GoodsKindComplete(), _tmpParentMulti.MovementItemId, ObjectLink_Receipt_GoodsKind.ChildObjectId)
+               , lpInsertUpdate_MovementItemFloat (zc_MIFloat_TermProduction(),         _tmpParentMulti.MovementItemId, COALESCE (ObjectFloat_TermProduction.ValueData, 1))
+               , lpInsertUpdate_MovementItemFloat (zc_MIFloat_NormInDays(),             _tmpParentMulti.MovementItemId, COALESCE (ObjectFloat_NormInDays.ValueData, 2))
+               , lpInsertUpdate_MovementItemFloat (zc_MIFloat_Koeff(),                  _tmpParentMulti.MovementItemId, COALESCE (ObjectFloat_Koeff.ValueData, 1))
+               , lpInsertUpdate_MovementItemFloat (zc_MIFloat_StartProductionInDays(),  _tmpParentMulti.MovementItemId, COALESCE (ObjectFloat_StartProductionInDays.ValueData, 1))
+         FROM _tmpParentMulti
+              LEFT JOIN (SELECT _tmpParentMulti.GoodsId_child AS GoodsId
                               , CASE WHEN ObjectLink_Receipt_GoodsKind_Parent_0.ChildObjectId = zc_GoodsKind_WorkProgress()
                                           THEN ObjectLink_Receipt_Parent_0.ChildObjectId
                                      WHEN ObjectLink_Receipt_GoodsKind_Parent_1.ChildObjectId = zc_GoodsKind_WorkProgress()
@@ -265,11 +486,16 @@ BEGIN
                                      WHEN ObjectLink_Receipt_GoodsKind_Parent_3.ChildObjectId = zc_GoodsKind_WorkProgress()
                                           THEN ObjectLink_Receipt_Parent_3.ObjectId
                                 END AS ReceiptId
-                         FROM ObjectLink AS ObjectLink_Receipt_Goods
+                         FROM _tmpParentMulti
+                              INNER JOIN ObjectLink AS ObjectLink_Receipt_Goods
+                                                    ON ObjectLink_Receipt_Goods.ChildObjectId = _tmpParentMulti.GoodsId_child
+                                                   AND ObjectLink_Receipt_Goods.DescId        = zc_ObjectLink_Receipt_Goods()
+                              
                               INNER JOIN ObjectLink AS ObjectLink_Receipt_GoodsKind
-                                                    ON ObjectLink_Receipt_GoodsKind.ObjectId = ObjectLink_Receipt_Goods.ObjectId
-                                                   AND ObjectLink_Receipt_GoodsKind.DescId = zc_ObjectLink_Receipt_GoodsKind()
-                                                   AND ObjectLink_Receipt_GoodsKind.ChildObjectId = inGoodsKindId
+                                                    ON ObjectLink_Receipt_GoodsKind.ObjectId      = ObjectLink_Receipt_Goods.ObjectId
+                                                   AND ObjectLink_Receipt_GoodsKind.DescId        = zc_ObjectLink_Receipt_GoodsKind()
+                                                   AND ObjectLink_Receipt_GoodsKind.ChildObjectId = _tmpParentMulti.GoodsKindId_child
+
                               INNER JOIN Object AS Object_Receipt ON Object_Receipt.Id = ObjectLink_Receipt_Goods.ObjectId
                                                                  AND Object_Receipt.isErased = FALSE
                               INNER JOIN ObjectBoolean AS ObjectBoolean_Main
@@ -304,9 +530,7 @@ BEGIN
                                                    ON ObjectLink_Receipt_GoodsKind_Parent_3.ObjectId = ObjectLink_Receipt_Parent_3.ChildObjectId
                                                   AND ObjectLink_Receipt_GoodsKind_Parent_3.DescId = zc_ObjectLink_Receipt_GoodsKind()
 
-                         WHERE ObjectLink_Receipt_Goods.ChildObjectId = inGoodsId
-                           AND ObjectLink_Receipt_Goods.DescId = zc_ObjectLink_Receipt_Goods()
-                        ) AS tmp ON tmp.GoodsId = inGoodsId
+                        ) AS tmp ON tmp.GoodsId = _tmpParentMulti.GoodsId_child
 
 
                         LEFT JOIN ObjectLink AS ObjectLink_Receipt_Goods_basis
@@ -356,6 +580,9 @@ BEGIN
      -- !!!только для заявки на упаковку!!!
      IF inIsPack = TRUE AND (vbIsInsert = TRUE OR 1=1)
      THEN
+         -- вернулись к старой схеме, за одно и проверим
+         ioId:= (SELECT _tmpParentMulti.MovementItemId FROM _tmpParentMulti);
+
          -- сохранили связь с <Рецептуры>
          PERFORM lpInsertUpdate_MovementItemLinkObject (zc_MILinkObject_ReceiptBasis(), ioId, tmp.ReceiptId_basis)
                , lpInsertUpdate_MovementItemLinkObject (zc_MILinkObject_Receipt(),      ioId, tmp.ReceiptId)
@@ -436,6 +663,9 @@ BEGIN
      -- !!!только для заявки СЫРЬЕ!!!
      IF inIsPack IS NULL AND (vbIsInsert = TRUE OR 1=1) AND COALESCE (inDescId_ParamOrder, 0) <> zc_MIFloat_ContainerId()
      THEN
+         -- вернулись к старой схеме, за одно и проверим
+         ioId:= (SELECT _tmpParentMulti.MovementItemId FROM _tmpParentMulti);
+
          -- сохранили связь с <Рецептуры>
          PERFORM lpInsertUpdate_MovementItemLinkObject (zc_MILinkObject_Receipt(), ioId, tmp.ReceiptId)
          FROM (SELECT inGoodsId AS GoodsId) AS tmpGoods
@@ -459,6 +689,9 @@ BEGIN
      IF inIsPack IS NULL AND (vbIsInsert = TRUE OR 1=1)
         AND (inDescId_ParamOrder = zc_MIFloat_ContainerId() OR inDescId_ParamAdd = zc_MIFloat_AmountPartnerPriorPromo())
      THEN
+         -- вернулись к старой схеме, за одно и проверим
+         ioId:= (SELECT _tmpParentMulti.MovementItemId FROM _tmpParentMulti);
+
          -- сохранили связь с <Рецептуры>
          PERFORM lpInsertUpdate_MovementItemLinkObject (zc_MILinkObject_Receipt(), ioId, tmp.ReceiptId)
                  -- то из чего делается упаковка - НУЛЕВОЙ уровень - Здесь то что делается из ПФ_ГП
@@ -580,14 +813,14 @@ BEGIN
          vbGoodsKindId_add:= (SELECT MILO.ObjectId FROM MovementItemLinkObject AS MILO WHERE MILO.MovementItemId = ioId AND MILO.DescId = zc_MILinkObject_GoodsKindComplete());
 /*
 if ioId = 95103717 --  vbGoodsId_add = and vbGoodsKindId_add
-then 
+then
  RAISE EXCEPTION '<%>  %  <%>  %', vbGoodsId_add, vbGoodsKindId_add,  inGoodsId,  inGoodsKindId;
 -- select * from object where Id =  559324
 end if;
 */
 
          -- !!!Добавили еще!!!
-         IF vbGoodsId_add > 0 AND vbGoodsKindId_add > 0 
+         IF vbGoodsId_add > 0 AND vbGoodsKindId_add > 0
             AND NOT EXISTS (SELECT 1
                             FROM MovementItem
                                  LEFT JOIN MovementItemLinkObject AS MILinkObject_GoodsKind
@@ -603,54 +836,78 @@ end if;
                               AND COALESCE (MILinkObject_GoodsKind.ObjectId, 0) = vbGoodsKindId_add
                               AND COALESCE (MIFloat_ContainerId.ValueData, 0)   = 0
                            )
-         THEN 
+         THEN
              -- RAISE EXCEPTION '<%>   <%>', vbGoodsId_add, vbGoodsKindId_add;
              --
-             PERFORM lpUpdate_MI_OrderInternal_Property (ioId                 := NULL
-                                                        , inMovementId         := inMovementId
-                                                        , inGoodsId            := vbGoodsId_add
-                                                        , inGoodsKindId        := vbGoodsKindId_add
-                                                        , inAmount_Param       := 0
-                                                        , inDescId_Param       := zc_MIFloat_AmountRemains()
-                                                        , inAmount_ParamOrder  := 0
-                                                        , inDescId_ParamOrder  := zc_MIFloat_ContainerId()
-                                                        , inAmount_ParamSecond := NULL
-                                                        , inDescId_ParamSecond := NULL
-                                                        , inIsPack             := NULL -- что б не формировать св-ва
-                                                        , inUserId             := inUserId
+             PERFORM lpUpdate_MI_OrderInternal_Property (ioId                     := NULL
+                                                        , inMovementId            := inMovementId
+                                                        , inGoodsId               := vbGoodsId_add
+                                                        , inGoodsKindId           := vbGoodsKindId_add
+                                                        , inAmount_Param          := 0
+                                                        , inDescId_Param          := zc_MIFloat_AmountRemains()
+                                                        , inAmount_ParamOrder     := 0
+                                                        , inDescId_ParamOrder     := zc_MIFloat_ContainerId()
+                                                        , inAmount_ParamSecond    := NULL
+                                                        , inDescId_ParamSecond    := NULL
+                                                        , inAmount_ParamAdd       := 0
+                                                        , inDescId_ParamAdd       := 0
+                                                        , inAmount_ParamNext      := 0
+                                                        , inDescId_ParamNext      := 0
+                                                        , inAmount_ParamNextPromo := 0
+                                                        , inDescId_ParamNextPromo := 0
+                                                        , inIsPack                := NULL -- что б не формировать св-ва
+                                                        , inIsParentMulti         := TRUE
+                                                        , inUserId                := inUserId
                                                          );
          END IF;
      END IF;
 
 
      -- сохранили свойство
-     PERFORM lpInsertUpdate_MovementItemFloat (inDescId_Param, ioId, inAmount_Param);
+     PERFORM lpInsertUpdate_MovementItemFloat (inDescId_Param, _tmpParentMulti.MovementItemId, _tmpParentMulti.Amount_Param)
+     FROM _tmpParentMulti;
      -- сохранили свойство
      IF inDescId_ParamOrder <> 0
      THEN
-         PERFORM lpInsertUpdate_MovementItemFloat (inDescId_ParamOrder, ioId, inAmount_ParamOrder);
+          PERFORM lpInsertUpdate_MovementItemFloat (inDescId_ParamOrder, _tmpParentMulti.MovementItemId, _tmpParentMulti.Amount_ParamOrder)
+          FROM _tmpParentMulti;
      END IF;
+
      -- сохранили свойство
      IF inDescId_ParamSecond <> 0
      THEN
+         -- вернулись к старой схеме, за одно и проверим
+         ioId:= (SELECT _tmpParentMulti.MovementItemId FROM _tmpParentMulti);
+         --
          PERFORM lpInsertUpdate_MovementItemFloat (inDescId_ParamSecond, ioId, inAmount_ParamSecond);
      END IF;
+
      -- сохранили свойство
      IF inDescId_ParamAdd <> 0
      THEN
+         -- вернулись к старой схеме, за одно и проверим
+         ioId:= (SELECT _tmpParentMulti.MovementItemId FROM _tmpParentMulti);
+         --
          PERFORM lpInsertUpdate_MovementItemFloat (inDescId_ParamAdd, ioId, inAmount_ParamAdd);
      END IF;
+
      -- сохранили свойство
      IF inDescId_ParamNext <> 0
      THEN
+         -- вернулись к старой схеме, за одно и проверим
+         ioId:= (SELECT _tmpParentMulti.MovementItemId FROM _tmpParentMulti);
+         --
          PERFORM lpInsertUpdate_MovementItemFloat (inDescId_ParamNext, ioId, inAmount_ParamNext);
      END IF;
+
      -- сохранили свойство
      IF inDescId_ParamNextPromo <> 0
      THEN
+         -- вернулись к старой схеме, за одно и проверим
+         ioId:= (SELECT _tmpParentMulti.MovementItemId FROM _tmpParentMulti);
+         --
          PERFORM lpInsertUpdate_MovementItemFloat (inDescId_ParamNextPromo, ioId, inAmount_ParamNextPromo);
      END IF;
-    
 
      -- сохранили протокол
      -- !!!что б не росла база!!! PERFORM lpInsert_MovementItemProtocol (ioId, inUserId, vbIsInsert);

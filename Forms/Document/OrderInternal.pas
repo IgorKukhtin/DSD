@@ -159,6 +159,8 @@ type
     actUpdateAmountPartner_dif: TdsdExecStoredProc;
     actUpdateAmountAll_diff: TMultiAction;
     bbUpdateAmountAll_diff: TdxBarButton;
+    bbUpdateAmountPartner_dif: TdxBarButton;
+    MultiUpdateAmountPartner_dif: TMultiAction;
   private
     { Private declarations }
   public

@@ -306,6 +306,12 @@ BEGIN
                                           , COALESCE (MILinkObject_GoodsKind.ObjectId, 0) AS GoodsKindId
                                           , MovementItem.Amount                           AS Amount
                                           , COALESCE (MIFloat_ContainerId.ValueData, 0) :: Integer AS ContainerId
+                                            -- № п/п
+                                          , ROW_NUMBER() OVER (PARTITION BY MovementItem.ObjectId
+                                                                          , COALESCE (MILinkObject_GoodsKind.ObjectId, 0)
+                                                                          , COALESCE (MIFloat_ContainerId.ValueData, 0)
+                                                               ORDER BY MovementItem.Id DESC
+                                                              ) AS Ord
                                      FROM MovementItem
                                           LEFT JOIN MovementItemLinkObject AS MILinkObject_GoodsKind
                                                                            ON MILinkObject_GoodsKind.MovementItemId = MovementItem.Id
@@ -318,7 +324,9 @@ BEGIN
                                      WHERE MovementItem.MovementId = inMovementId
                                        AND MovementItem.isErased   = FALSE
                                     )
-                         , tmpMI_master AS (SELECT MovementItemId, MIDescId, GoodsId, GoodsKindId, Amount, ContainerId FROM tmpMI WHERE MIDescId = zc_MI_Master())
+                         , tmpMI_master AS (SELECT MovementItemId, MIDescId, GoodsId, GoodsKindId, Amount, ContainerId
+                                            FROM tmpMI
+                                            WHERE MIDescId = zc_MI_Master() AND Ord = 1)
                          , tmpMI_child AS (SELECT MovementItemId, MIDescId, GoodsId, GoodsKindId, Amount, ContainerId FROM tmpMI WHERE MIDescId = zc_MI_Child())
                          , tmpContainer_master AS (-- остатки для zc_MI_Master - группируются
                                                    SELECT tmpContainer.GoodsId
@@ -425,21 +433,25 @@ limit 1
 end if;*/
 
        -- сохранили zc_MI_Master
-       PERFORM lpUpdate_MI_OrderInternal_Property (ioId                 := tmpAll.MovementItemId
-                                                 , inMovementId         := inMovementId
-                                                 , inGoodsId            := tmpAll.GoodsId
-                                                 , inGoodsKindId        := tmpAll.GoodsKindId
-                                                 , inAmount_Param       := tmpAll.Amount_start * CASE WHEN ObjectLink_Goods_Measure.ChildObjectId = zc_Measure_Sh() THEN COALESCE (ObjectFloat_Weight.ValueData, 0) ELSE 1 END
-                                                 , inDescId_Param       := zc_MIFloat_AmountRemains()
-                                                 , inAmount_ParamOrder  := NULL
-                                                 , inDescId_ParamOrder  := NULL
-                                                 , inAmount_ParamSecond := NULL
-                                                 , inDescId_ParamSecond := NULL
-                                                 , inIsPack             := CASE WHEN vbIsBasis = FALSE
-                                                                                     THEN vbIsPack
-                                                                                ELSE NULL
-                                                                           END
-                                                 , inUserId             := vbUserId
+       PERFORM lpUpdate_MI_OrderInternal_Property (ioId                    := tmpAll.MovementItemId
+                                                 , inMovementId            := inMovementId
+                                                 , inGoodsId               := tmpAll.GoodsId
+                                                 , inGoodsKindId           := tmpAll.GoodsKindId
+                                                 , inAmount_Param          := tmpAll.Amount_start * CASE WHEN ObjectLink_Goods_Measure.ChildObjectId = zc_Measure_Sh() THEN COALESCE (ObjectFloat_Weight.ValueData, 0) ELSE 1 END
+                                                 , inDescId_Param          := zc_MIFloat_AmountRemains()
+                                                 , inAmount_ParamOrder     := NULL
+                                                 , inDescId_ParamOrder     := NULL
+                                                 , inAmount_ParamSecond    := NULL
+                                                 , inDescId_ParamSecond    := NULL
+                                                 , inAmount_ParamAdd       := 0
+                                                 , inDescId_ParamAdd       := 0
+                                                 , inAmount_ParamNext      := 0
+                                                 , inDescId_ParamNext      := 0
+                                                 , inAmount_ParamNextPromo := 0
+                                                 , inDescId_ParamNextPromo := 0
+                                                 , inIsPack                := CASE WHEN vbIsBasis = FALSE THEN vbIsPack ELSE NULL  END
+                                                 , inIsParentMulti         := CASE WHEN vbIsBasis = FALSE THEN TRUE     ELSE FALSE END
+                                                 , inUserId                := vbUserId
                                                   ) 
        FROM tmpAll
             LEFT JOIN ObjectLink AS ObjectLink_Goods_Measure

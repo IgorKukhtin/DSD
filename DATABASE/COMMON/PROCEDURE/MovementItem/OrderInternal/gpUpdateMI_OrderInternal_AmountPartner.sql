@@ -109,13 +109,21 @@ BEGIN
                                        GROUP BY tmpOrder_all.GoodsId
                                               , CASE WHEN tmpGoods.isGoodsKind = TRUE AND tmpOrder_all.GoodsKindId = 0 THEN zc_GoodsKind_Basis() WHEN tmpGoods.isGoodsKind = TRUE THEN tmpOrder_all.GoodsKindId ELSE 0 END
                                        )
-                     , tmpMI AS (SELECT MovementItem.Id                               AS MovementItemId
+                 , tmpMI_all AS (SELECT MovementItem.Id                               AS MovementItemId
                                       , MovementItem.ObjectId                         AS GoodsId
                                       , CASE WHEN tmpGoods.isGoodsKind = TRUE AND COALESCE (MILinkObject_GoodsKind.ObjectId, 0) = 0 THEN zc_GoodsKind_Basis()
                                              WHEN tmpGoods.isGoodsKind = TRUE THEN COALESCE (MILinkObject_GoodsKind.ObjectId, 0)
                                              ELSE COALESCE (MILinkObject_GoodsKind.ObjectId, 0)
                                         END AS GoodsKindId
                                       , MovementItem.Amount
+                                        -- № п/п
+                                      , ROW_NUMBER() OVER (PARTITION BY MovementItem.ObjectId
+                                                                      , CASE WHEN tmpGoods.isGoodsKind = TRUE AND COALESCE (MILinkObject_GoodsKind.ObjectId, 0) = 0 THEN zc_GoodsKind_Basis()
+                                                                             WHEN tmpGoods.isGoodsKind = TRUE THEN COALESCE (MILinkObject_GoodsKind.ObjectId, 0)
+                                                                             ELSE COALESCE (MILinkObject_GoodsKind.ObjectId, 0)
+                                                                        END
+                                                           ORDER BY MovementItem.Id DESC
+                                                          ) AS Ord
                                  FROM MovementItem 
                                       LEFT JOIN tmpGoods ON tmpGoods.GoodsId = MovementItem.ObjectId
                                       LEFT JOIN MovementItemLinkObject AS MILinkObject_GoodsKind
@@ -124,6 +132,13 @@ BEGIN
                                  WHERE MovementItem.MovementId = inMovementId
                                    AND MovementItem.DescId     = zc_MI_Master()
                                    AND MovementItem.isErased   = FALSE
+                                )
+                     , tmpMI AS (SELECT tmpMI_all.MovementItemId
+                                      , tmpMI_all.GoodsId
+                                      , tmpMI_all.GoodsKindId
+                                      , tmpMI_all.Amount
+                                 FROM tmpMI_all 
+                                 WHERE tmpMI_all.Ord = 1
                                 )
        -- Результат
        SELECT tmp.MovementItemId
@@ -138,18 +153,25 @@ BEGIN
 
 
        -- сохранили
-       PERFORM lpUpdate_MI_OrderInternal_Property (ioId                 := tmpAll.MovementItemId
-                                                 , inMovementId         := inMovementId
-                                                 , inGoodsId            := tmpAll.GoodsId
-                                                 , inGoodsKindId        := tmpAll.GoodsKindId
-                                                 , inAmount_Param       := tmpAll.AmountPartner * CASE WHEN ObjectLink_Goods_Measure.ChildObjectId = zc_Measure_Sh() THEN COALESCE (ObjectFloat_Weight.ValueData, 0) ELSE 1 END
-                                                 , inDescId_Param       := zc_MIFloat_AmountPartner()
-                                                 , inAmount_ParamOrder  := tmpAll.AmountPartnerPrior * CASE WHEN ObjectLink_Goods_Measure.ChildObjectId = zc_Measure_Sh() THEN COALESCE (ObjectFloat_Weight.ValueData, 0) ELSE 1 END
-                                                 , inDescId_ParamOrder  := zc_MIFloat_AmountPartnerPrior()
-                                                 , inAmount_ParamSecond := NULL
-                                                 , inDescId_ParamSecond := NULL
-                                                 , inIsPack             := vbIsPack
-                                                 , inUserId             := vbUserId
+       PERFORM lpUpdate_MI_OrderInternal_Property (ioId                    := tmpAll.MovementItemId
+                                                 , inMovementId            := inMovementId
+                                                 , inGoodsId               := tmpAll.GoodsId
+                                                 , inGoodsKindId           := tmpAll.GoodsKindId
+                                                 , inAmount_Param          := tmpAll.AmountPartner * CASE WHEN ObjectLink_Goods_Measure.ChildObjectId = zc_Measure_Sh() THEN COALESCE (ObjectFloat_Weight.ValueData, 0) ELSE 1 END
+                                                 , inDescId_Param          := zc_MIFloat_AmountPartner()
+                                                 , inAmount_ParamOrder     := tmpAll.AmountPartnerPrior * CASE WHEN ObjectLink_Goods_Measure.ChildObjectId = zc_Measure_Sh() THEN COALESCE (ObjectFloat_Weight.ValueData, 0) ELSE 1 END
+                                                 , inDescId_ParamOrder     := zc_MIFloat_AmountPartnerPrior()
+                                                 , inAmount_ParamSecond    := NULL
+                                                 , inDescId_ParamSecond    := NULL
+                                                 , inAmount_ParamAdd       := 0
+                                                 , inDescId_ParamAdd       := 0
+                                                 , inAmount_ParamNext      := 0
+                                                 , inDescId_ParamNext      := 0
+                                                 , inAmount_ParamNextPromo := 0
+                                                 , inDescId_ParamNextPromo := 0
+                                                 , inIsPack                := vbIsPack
+                                                 , inIsParentMulti         := TRUE
+                                                 , inUserId                := vbUserId
                                                   ) 
        FROM tmpAll
             LEFT JOIN ObjectLink AS ObjectLink_Goods_Measure
