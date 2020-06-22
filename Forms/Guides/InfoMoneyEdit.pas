@@ -47,8 +47,11 @@ type
     dsdFormClose: TdsdFormClose;
     ceisProfitLoss: TcxCheckBox;
     cxLabel4: TcxLabel;
-    edCashFlow: TcxButtonEdit;
-    GuidesCashFlow: TdsdGuides;
+    edCashFlow_in: TcxButtonEdit;
+    GuidesCashFlow_in: TdsdGuides;
+    cxLabel5: TcxLabel;
+    edCashFlow_out: TcxButtonEdit;
+    GuidesCashFlow_out: TdsdGuides;
   private
     { Private declarations }
   public

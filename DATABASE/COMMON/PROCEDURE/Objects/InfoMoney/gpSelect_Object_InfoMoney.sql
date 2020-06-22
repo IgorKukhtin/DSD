@@ -8,6 +8,8 @@ CREATE OR REPLACE FUNCTION gpSelect_Object_InfoMoney(
 RETURNS TABLE (Id Integer, Code Integer, Name TVarChar, NameAll TVarChar,
                InfoMoneyGroupId Integer, InfoMoneyGroupCode Integer, InfoMoneyGroupName TVarChar,
                InfoMoneyDestinationId Integer, InfoMoneyDestinationCode Integer, InfoMoneyDestinationName TVarChar,
+               CashFlowId_in Integer, CashFlowCode_in Integer, CashFlowName_in TVarChar,
+               CashFlowId_out Integer, CashFlowCode_out Integer, CashFlowName_out TVarChar,
                isProfitLoss Boolean,
                isErased Boolean
 )
@@ -31,6 +33,14 @@ BEGIN
          , Object_InfoMoney_View.InfoMoneyDestinationId
          , Object_InfoMoney_View.InfoMoneyDestinationCode
          , Object_InfoMoney_View.InfoMoneyDestinationName
+
+         , Object_InfoMoney_View.CashFlowId_in
+         , Object_InfoMoney_View.CashFlowCode_in
+         , Object_InfoMoney_View.CashFlowName_in
+
+         , Object_InfoMoney_View.CashFlowId_out
+         , Object_InfoMoney_View.CashFlowCode_out
+         , Object_InfoMoney_View.CashFlowName_out
          
          , COALESCE (ObjectBoolean_ProfitLoss.ValueData, False)  AS isProfitLoss
 
@@ -52,6 +62,12 @@ BEGIN
            , 0 AS InfoMoneyDestinationId
            , 0 AS InfoMoneyDestinationCode
            , '' :: TVarChar as InfoMoneyDestinationName
+           , CAST (0 AS Integer)    AS CashFlowId_in
+           , CAST (0 AS Integer)    AS CashFlowCode_in
+           , CAST ('' AS TVarChar)  AS CashFlowName_in
+           , CAST (0 AS Integer)    AS CashFlowId_out
+           , CAST (0 AS Integer)    AS CashFlowCode_out
+           , CAST ('' AS TVarChar)  AS CashFlowName_out
            , FALSE  AS isProfitLoss
            , FALSE  AS isErased
 ;
