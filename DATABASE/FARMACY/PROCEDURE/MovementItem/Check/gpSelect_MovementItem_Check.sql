@@ -18,8 +18,8 @@ RETURNS TABLE (Id Integer, ParentId integer
              , ChangePercent TFloat
              , SummChangePercent TFloat
              , AmountOrder TFloat
-             -- , DiscountCardId Integer
-             -- , DiscountCardName TVarChar
+             , DiscountExternalId Integer
+             , DiscountExternalName TVarChar
              , List_UID TVarChar
              , isErased Boolean
              , isSp Boolean
@@ -129,7 +129,7 @@ BEGIN
    , tmpMILO_PartionDateKind AS (SELECT MovementItemLinkObject.*
                                  FROM MovementItemLinkObject
                                  WHERE MovementItemLinkObject.MovementItemId IN (SELECT DISTINCT tmpMI.Id FROM tmpMI)
-                                   AND MovementItemLinkObject.DescId = zc_MILinkObject_PartionDateKind()
+                                   AND MovementItemLinkObject.DescId IN (zc_MILinkObject_PartionDateKind(), zc_MILinkObject_DiscountExternal())
                                 )
    , tmpNDSKind AS (SELECT ObjectFloat_NDSKind_NDS.ObjectId
                          , ObjectFloat_NDSKind_NDS.ValueData
@@ -153,8 +153,8 @@ BEGIN
            , MovementItem.ChangePercent
            , MovementItem.SummChangePercent
            , MovementItem.AmountOrder
-           -- , MovementItem.DiscountCardId
-           -- , MovementItem.DiscountCardName
+           , Object_DiscountExternal.ID                               AS DiscountCardId
+           , Object_DiscountExternal.ValueData                        AS DiscountCardName
            , MovementItem.List_UID
            , MovementItem.isErased
            , CASE WHEN COALESCE (vbMovementId_SP,0) = 0 THEN False ELSE TRUE END AS isSp
@@ -202,6 +202,10 @@ BEGIN
                                              AND MILinkObject_PartionDateKind.DescId         = zc_MILinkObject_PartionDateKind()
             LEFT JOIN Object AS Object_PartionDateKind ON Object_PartionDateKind.Id = MILinkObject_PartionDateKind.ObjectId
 
+            LEFT JOIN tmpMILO_PartionDateKind AS MILinkObject_DiscountExternal
+                                              ON MILinkObject_DiscountExternal.MovementItemId = MovementItem.Id
+                                             AND MILinkObject_DiscountExternal.DescId         = zc_MILinkObject_DiscountExternal()
+            LEFT JOIN Object AS Object_DiscountExternal ON Object_DiscountExternal.Id = MILinkObject_DiscountExternal.ObjectId
 
             /*LEFT JOIN tmpMIFloat_ContainerId AS MIFloat_ContainerId
                                              ON MIFloat_ContainerId.MovementItemId = MovementItem.Id
@@ -222,6 +226,7 @@ ALTER FUNCTION gpSelect_MovementItem_Check (Integer, TVarChar) OWNER TO postgres
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А. Воробкало А.А   Шаблий О.В.
+ 21.06.20                                                                                   *  DiscountExternal
  03.06.19         *
  25.04.19                                                                                   *
  20.04.19         * 
@@ -237,4 +242,4 @@ ALTER FUNCTION gpSelect_MovementItem_Check (Integer, TVarChar) OWNER TO postgres
 */
 
 -- тест
--- select * from gpSelect_MovementItem_Check(inMovementId := 3959328 ,  inSession := '3');
+-- select * from gpSelect_MovementItem_Check(inMovementId := 19274728  ,  inSession := '3');

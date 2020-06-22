@@ -141,6 +141,12 @@ inherited MainCashForm2: TMainCashForm2
           HeaderAlignmentHorz = taCenter
           Width = 46
         end
+        object CheckDiscountExternalName: TcxGridDBColumn
+          Caption = #1044#1080#1089#1082'. '#1087#1088#1086#1075#1088#1072#1084#1084#1099
+          DataBinding.FieldName = 'DiscountExternalName'
+          Options.Editing = False
+          Width = 75
+        end
       end
       object CheckGridLevel: TcxGridLevel
         GridView = CheckGridDBTableView
@@ -992,6 +998,13 @@ inherited MainCashForm2: TMainCashForm2
           DataBinding.FieldName = 'NotSold60'
           HeaderAlignmentHorz = taCenter
           Width = 100
+        end
+        object MainDiscountExternalName: TcxGridDBColumn
+          Caption = #1044#1083#1103' '#1076#1080#1089#1082#1086#1085#1090#1085#1086#1081' '#1087#1088#1086#1075#1088#1072#1084#1084#1099
+          DataBinding.FieldName = 'DiscountExternalName'
+          HeaderAlignmentHorz = taCenter
+          Options.Editing = False
+          Width = 99
         end
       end
       object MainGridLevel: TcxGridLevel
@@ -4579,6 +4592,15 @@ inherited MainCashForm2: TMainCashForm2
       item
         Name = 'NDSKindId'
         DataType = ftInteger
+      end
+      item
+        Name = 'DiscountExternalID'
+        DataType = ftInteger
+      end
+      item
+        Name = 'DiscountExternalName'
+        DataType = ftString
+        Size = 20
       end>
     IndexDefs = <>
     Params = <>
@@ -5158,6 +5180,13 @@ inherited MainCashForm2: TMainCashForm2
     end
     object MemDataREMAINSSUN: TFloatField
       FieldName = 'REMAINSSUN'
+    end
+    object MemDataDISCEXTID: TIntegerField
+      FieldName = 'DISCEXTID'
+    end
+    object MemDataDISCEXTNAME: TStringField
+      FieldName = 'DISCEXTNAME'
+      Size = 100
     end
   end
   object mdCheck: TdxMemData

@@ -94,80 +94,52 @@ begin
         LFieldDefs := TVKDBFFieldDefs.Create(Owner);
         Open;
 
-        if FindField('DISCOUNTID') = nil then
-          AddIntField(LFieldDefs, 'DISCOUNTID');
-        if FindField('DISCOUNTN') = nil then
-          AddStrField(LFieldDefs, 'DISCOUNTN', 254);
-        if FindField('DISCOUNT') = nil then
-          AddStrField(LFieldDefs, 'DISCOUNT', 50);
+        if FindField('DISCOUNTID') = nil then AddIntField(LFieldDefs, 'DISCOUNTID');
+        if FindField('DISCOUNTN') = nil then AddStrField(LFieldDefs, 'DISCOUNTN', 254);
+        if FindField('DISCOUNT') = nil then AddStrField(LFieldDefs, 'DISCOUNT', 50);
         //***16.08.16
-        if FindField('BAYERPHONE') = nil then
-          AddStrField(LFieldDefs, 'BAYERPHONE', 50);
+        if FindField('BAYERPHONE') = nil then AddStrField(LFieldDefs, 'BAYERPHONE', 50);
         //***16.08.16
-        if FindField('CONFIRMED') = nil then
-          AddStrField(LFieldDefs, 'CONFIRMED', 50);
+        if FindField('CONFIRMED') = nil then AddStrField(LFieldDefs, 'CONFIRMED', 50);
         //***16.08.16
-        if FindField('NUMORDER') = nil then
-          AddStrField(LFieldDefs, 'NUMORDER', 50);
+        if FindField('NUMORDER') = nil then AddStrField(LFieldDefs, 'NUMORDER', 50);
         //***25.08.16
-        if FindField('CONFIRMEDC') = nil then
-          AddStrField(LFieldDefs, 'CONFIRMEDC', 50);
+        if FindField('CONFIRMEDC') = nil then AddStrField(LFieldDefs, 'CONFIRMEDC', 50);
         //***24.01.17
-        if FindField('USERSESION') = nil then
-          AddStrField(LFieldDefs, 'USERSESION', 50);
+        if FindField('USERSESION') = nil then AddStrField(LFieldDefs, 'USERSESION', 50);
         //***08.04.17
-        if FindField('PMEDICALID') = nil then
-          AddIntField(LFieldDefs, 'PMEDICALID');
-        if FindField('PMEDICALN') = nil then
-          AddStrField(LFieldDefs, 'PMEDICALN', 254);
-        if FindField('AMBULANCE') = nil then
-          AddStrField(LFieldDefs, 'AMBULANCE', 55);
-        if FindField('MEDICSP') = nil then
-          AddStrField(LFieldDefs, 'MEDICSP', 254);
-        if FindField('INVNUMSP') = nil then
-          AddStrField(LFieldDefs, 'INVNUMSP', 55);
-        if FindField('OPERDATESP') = nil then
-          AddDateField(LFieldDefs, 'OPERDATESP');
+        if FindField('PMEDICALID') = nil then AddIntField(LFieldDefs, 'PMEDICALID');
+        if FindField('PMEDICALN') = nil then AddStrField(LFieldDefs, 'PMEDICALN', 254);
+        if FindField('AMBULANCE') = nil then AddStrField(LFieldDefs, 'AMBULANCE', 55);
+        if FindField('MEDICSP') = nil then AddStrField(LFieldDefs, 'MEDICSP', 254);
+        if FindField('INVNUMSP') = nil then AddStrField(LFieldDefs, 'INVNUMSP', 55);
+        if FindField('OPERDATESP') = nil then AddDateField(LFieldDefs, 'OPERDATESP');
         //***15.06.17
-        if FindField('SPKINDID') = nil then
-          AddIntField(LFieldDefs, 'SPKINDID');
+        if FindField('SPKINDID') = nil then AddIntField(LFieldDefs, 'SPKINDID');
         //***02.02.18
-        if FindField('PROMOCODE') = nil then
-          AddIntField(LFieldDefs, 'PROMOCODE');
+        if FindField('PROMOCODE') = nil then AddIntField(LFieldDefs, 'PROMOCODE');
         //***28.06.18
-        if FindField('MANUALDISC') = nil then
-          AddIntField(LFieldDefs, 'MANUALDISC');
+        if FindField('MANUALDISC') = nil then AddIntField(LFieldDefs, 'MANUALDISC');
         //***02.10.18
-        if FindField('SUMMPAYADD') = nil then
-          AddFloatField(LFieldDefs,  'SUMMPAYADD');
+        if FindField('SUMMPAYADD') = nil then AddFloatField(LFieldDefs,  'SUMMPAYADD');
         //***14.01.19
-        if FindField('MEMBERSPID') = nil then
-          AddIntField(LFieldDefs,  'MEMBERSPID');
+        if FindField('MEMBERSPID') = nil then AddIntField(LFieldDefs,  'MEMBERSPID');
         //***28.01.19
-        if FindField('SITEDISC') = nil then
-          AddBoolField(LFieldDefs,  'SITEDISC');
+        if FindField('SITEDISC') = nil then AddBoolField(LFieldDefs,  'SITEDISC');
         //***20.02.19
-        if FindField('BANKPOS') = nil then
-          AddIntField(LFieldDefs,  'BANKPOS');
+        if FindField('BANKPOS') = nil then AddIntField(LFieldDefs,  'BANKPOS');
         //***25.02.19
-        if FindField('JACKCHECK') = nil then
-          AddIntField(LFieldDefs,  'JACKCHECK');
+        if FindField('JACKCHECK') = nil then AddIntField(LFieldDefs,  'JACKCHECK');
         //***02.04.19
-        if FindField('ROUNDDOWN') = nil then
-          AddBoolField(LFieldDefs,  'ROUNDDOWN');
+        if FindField('ROUNDDOWN') = nil then AddBoolField(LFieldDefs,  'ROUNDDOWN');
         //***13.05.19
-        if FindField('PDKINDID') = nil then
-          AddIntField(LFieldDefs,  'PDKINDID'); //Тип срок/не срок
-        if FindField('CONFCODESP') = nil then
-          AddStrField(LFieldDefs, 'CONFCODESP', 55);
+        if FindField('PDKINDID') = nil then AddIntField(LFieldDefs,  'PDKINDID'); //Тип срок/не срок
+        if FindField('CONFCODESP') = nil then AddStrField(LFieldDefs, 'CONFCODESP', 55);
         //***07.11.19
-        if FindField('LOYALTYID') = nil then
-          AddIntField(LFieldDefs,  'LOYALTYID');  //Программа лояльности
+        if FindField('LOYALTYID') = nil then AddIntField(LFieldDefs,  'LOYALTYID');  //Программа лояльности
         //***08.01.20
-        if FindField('LOYALTYSM') = nil then
-          AddIntField(LFieldDefs,  'LOYALTYSM');  //Программа лояльности накопительная
-        if FindField('LOYALSMSUM') = nil then
-          AddFloatField(LFieldDefs,  'LOYALSMSUM');
+        if FindField('LOYALTYSM') = nil then AddIntField(LFieldDefs,  'LOYALTYSM');  //Программа лояльности накопительная
+        if FindField('LOYALSMSUM') = nil then AddFloatField(LFieldDefs,  'LOYALSMSUM');
 
         if LFieldDefs.Count <> 0 then
           AddFields(LFieldDefs, 1000);
@@ -283,6 +255,8 @@ begin
       AddFloatField(LocalDataBaseBody, 'PRICEPD');    //Отпускная цена согласно партии
       //***15.04.20
       AddIntField(LocalDataBaseBody,   'NDSKINDID'); //Ставка НДС
+      //***19.06.20
+      AddIntField(LocalDataBaseBody,   'DISCEXTID'); //Дисконтная программы
 
       LocalDataBaseBody.CreateTable;
     end
@@ -293,27 +267,21 @@ begin
         LFieldDefs := TVKDBFFieldDefs.Create(Owner);
         Open;
 
-        if FindField('PRICESALE') = nil then
-          AddFloatField(LFieldDefs, 'PRICESALE');
-        if FindField('CHPERCENT') = nil then
-          AddFloatField(LFieldDefs, 'CHPERCENT');
-        if FindField('SUMMCH') = nil then
-          AddFloatField(LFieldDefs, 'SUMMCH');
+        if FindField('PRICESALE') = nil then AddFloatField(LFieldDefs, 'PRICESALE');
+        if FindField('CHPERCENT') = nil then AddFloatField(LFieldDefs, 'CHPERCENT');
+        if FindField('SUMMCH') = nil then AddFloatField(LFieldDefs, 'SUMMCH');
         //***19.08.16
-        if FindField('AMOUNTORD') = nil then
-          AddFloatField(LFieldDefs, 'AMOUNTORD');
+        if FindField('AMOUNTORD') = nil then AddFloatField(LFieldDefs, 'AMOUNTORD');
         //***10.08.16
-        if FindField('LIST_UID') = nil then
-          AddStrField(LFieldDefs, 'LIST_UID', 50);
+        if FindField('LIST_UID') = nil then AddStrField(LFieldDefs, 'LIST_UID', 50);
         //***03.06.19
-        if FindField('PDKINDID') = nil then
-          AddIntField(LFieldDefs, 'PDKINDID');
+        if FindField('PDKINDID') = nil then AddIntField(LFieldDefs, 'PDKINDID');
         //***24.06.19
-        if FindField('PRICEPD') = nil then
-          AddFloatField(LFieldDefs, 'PRICEPD');
+        if FindField('PRICEPD') = nil then AddFloatField(LFieldDefs, 'PRICEPD');
         //***15.04.20
-        if FindField('NDSKINDID') = nil then
-          AddIntField(LFieldDefs, 'NDSKINDID');
+        if FindField('NDSKINDID') = nil then AddIntField(LFieldDefs, 'NDSKINDID');
+        //***19.06.20
+        if FindField('DISCEXTID') = nil then AddIntField(LFieldDefs, 'DISCEXTID');
 
         if LFieldDefs.Count <> 0 then
           AddFields(LFieldDefs, 1000);
@@ -344,7 +312,9 @@ begin
         //***10.08.16
         (FindField('LIST_UID') = nil) or
         //***15.04.20
-        (FindField('NDSKINDID') = nil));
+        (FindField('NDSKINDID') = nil) or
+        //***19.06.20
+        (FindField('DISCEXTID') = nil));
 
       Close;
 
@@ -388,6 +358,8 @@ begin
       AddFloatField(LocalDataBaseDiff, 'REMAINSSUN'); //Остатки SUN
       AddFloatField(LocalDataBaseDiff, 'NDS'); //НДС
       AddIntField(LocalDataBaseDiff,   'NDSKINDID'); //Ставка НДС
+      AddIntField(LocalDataBaseDiff,   'DISCEXTID'); //Дисконтная программы
+      AddStrField(LocalDataBaseDiff,   'DISCEXTNAME',100); //наименование дисконтной программы
 
       LocalDataBaseDiff.CreateTable;
     end;

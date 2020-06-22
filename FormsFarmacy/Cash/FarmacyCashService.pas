@@ -97,6 +97,8 @@ type
     PRICEPD: Currency;      // Отпускная цена согласно партии
     //***16.04.20
     NDSKINDId: Integer;     // Тип срок/не срок
+    //***20.06.20
+    DISCEXTID: Integer;     // Дисконтная программы
     //***10.08.16
     LIST_UID: String[50]    // UID строки продажи
   end;
@@ -771,6 +773,7 @@ end;
 //end;
 
 procedure TMainCashForm2.SaveCashRemainsDif;
+  var I : integer;
 begin
   tiServise.Hint := 'Получение разницы остатков';
   Add_Log('Start MutexRemains 335');
@@ -788,26 +791,8 @@ begin
           while not DiffCDS.Eof  do
           begin
              FLocalDataBaseDiff.Append;
-             FLocalDataBaseDiff.Fields[0].AsVariant:=DiffCDS.Fields[0].AsVariant;
-             FLocalDataBaseDiff.Fields[1].AsVariant:=DiffCDS.Fields[1].AsVariant;
-             FLocalDataBaseDiff.Fields[2].AsVariant:=DiffCDS.Fields[2].AsVariant;
-             FLocalDataBaseDiff.Fields[3].AsVariant:=DiffCDS.Fields[3].AsVariant;
-             FLocalDataBaseDiff.Fields[4].AsVariant:=DiffCDS.Fields[4].AsVariant;
-             FLocalDataBaseDiff.Fields[5].AsVariant:=DiffCDS.Fields[5].AsVariant;
-             FLocalDataBaseDiff.Fields[6].AsVariant:=DiffCDS.Fields[6].AsVariant;
-             FLocalDataBaseDiff.Fields[7].AsVariant:=DiffCDS.Fields[7].AsVariant;
-             FLocalDataBaseDiff.Fields[8].AsVariant:=DiffCDS.Fields[8].AsVariant;
-             FLocalDataBaseDiff.Fields[9].AsVariant:=DiffCDS.Fields[9].AsVariant;
-             FLocalDataBaseDiff.Fields[10].AsVariant:=DiffCDS.Fields[10].AsVariant;
-             FLocalDataBaseDiff.Fields[11].AsVariant:=DiffCDS.Fields[11].AsVariant;
-             FLocalDataBaseDiff.Fields[12].AsVariant:=DiffCDS.Fields[12].AsVariant;
-             FLocalDataBaseDiff.Fields[13].AsVariant:=DiffCDS.Fields[13].AsVariant;
-             FLocalDataBaseDiff.Fields[14].AsVariant:=DiffCDS.Fields[14].AsVariant;
-             FLocalDataBaseDiff.Fields[15].AsVariant:=DiffCDS.Fields[15].AsVariant;
-             FLocalDataBaseDiff.Fields[16].AsVariant:=DiffCDS.Fields[16].AsVariant;
-             FLocalDataBaseDiff.Fields[17].AsVariant:=DiffCDS.Fields[17].AsVariant;
-             FLocalDataBaseDiff.Fields[18].AsVariant:=DiffCDS.Fields[18].AsVariant;
-             FLocalDataBaseDiff.Fields[19].AsVariant:=DiffCDS.Fields[19].AsVariant;
+             for I := 0 to Min(FLocalDataBaseDiff.FieldCount, DiffCDS.FieldCount) - 1 do
+               FLocalDataBaseDiff.Fields[I].AsVariant:=DiffCDS.Fields[I].AsVariant;
              FLocalDataBaseDiff.Post;
              DiffCDS.Next;
           end;
@@ -1392,6 +1377,8 @@ begin
                     PRICEPD := FieldByName('PRICEPD').AsCurrency;
                     // ***16.04.20
                     NDSKINDID := FieldByName('NDSKINDID').AsInteger;
+                    // ***20.06.20
+                    DISCEXTID := FieldByName('DISCEXTID').AsInteger;
                     // ***10.08.16
                     LIST_UID := trim(FieldByName('LIST_UID').AsString);
                   End;
@@ -1564,6 +1551,8 @@ begin
                   dsdSave.Params.AddParam('inPricePartionDate', ftFloat, ptInput, Null);
                   // ***16.04.20
                   dsdSave.Params.AddParam('inNDSKindId', ftInteger, ptInput, Null);
+                  // ***20.06.20
+                  dsdSave.Params.AddParam('inDiscountExternalID', ftInteger, ptInput, Null);
                   // ***10.08.16
                   dsdSave.Params.AddParam('inList_UID', ftString, ptInput, Null);
                   //
@@ -1589,6 +1578,8 @@ begin
                     dsdSave.ParamByName('inPricePartionDate').Value := Body[I].PRICEPD;
                     // ***16.04.20
                     dsdSave.ParamByName('inNDSKindId').Value := Body[I].NDSKINDId;
+                    // ***20.06.20
+                    dsdSave.ParamByName('inDiscountExternalID').Value := Body[I].DISCEXTID;
                     // ***10.08.16
                     dsdSave.ParamByName('inList_UID').Value := Body[I].LIST_UID;
                     //

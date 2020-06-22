@@ -307,9 +307,15 @@ CREATE OR REPLACE FUNCTION zc_MILinkObject_NDSKind() RETURNS Integer AS $BODY$BE
 INSERT INTO MovementItemLinkObjectDesc (Code, ItemName)
   SELECT 'zc_MILinkObject_NDSKind', 'Типы НДС' WHERE NOT EXISTS (SELECT * FROM MovementItemLinkObjectDesc WHERE Code = 'zc_MILinkObject_NDSKind');
 
+CREATE OR REPLACE FUNCTION zc_MILinkObject_DiscountExternal() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM MovementItemLinkObjectDesc WHERE Code = 'zc_MILinkObject_DiscountExternal'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
+INSERT INTO MovementItemLinkObjectDesc (Code, ItemName)
+  SELECT 'zc_MILinkObject_DiscountExternal', 'Дисконтная программы' WHERE NOT EXISTS (SELECT * FROM MovementItemLinkObjectDesc WHERE Code = 'zc_MILinkObject_DiscountExternal');
+
+
 /*-------------------------------------------------------------------------------
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.  Шаблий О.В.
+ 21.06.20                                                                    * zc_MILinkObject_DiscountExternal
  14.04.20                                                                    * zc_MILinkObject_NDSKind
  27.02.20                                                                    * zc_MILinkObject_CommentTR
  27.01.20         * zc_MILinkObject_MemberExternal

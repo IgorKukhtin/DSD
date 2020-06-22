@@ -243,6 +243,14 @@ inherited CheckForm: TCheckForm
             Options.Editing = False
             Width = 61
           end
+          object DiscountExternalName: TcxGridDBColumn
+            Caption = #1044#1080#1089#1082#1086#1085#1090#1085#1072#1103' '#1087#1088#1086#1075#1088#1072#1084#1084#1099
+            DataBinding.FieldName = 'DiscountExternalName'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 94
+          end
         end
       end
     end
@@ -2562,9 +2570,41 @@ inherited CheckForm: TCheckForm
     Top = 325
   end
   inherited spErasedMIMaster: TdsdStoredProc
+    Params = <
+      item
+        Name = 'inMovementItemId'
+        Component = MasterCDS
+        ComponentItem = 'Id'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'outIsErased'
+        Value = False
+        Component = MasterCDS
+        ComponentItem = 'isErased'
+        DataType = ftBoolean
+        MultiSelectSeparator = ','
+      end>
     Top = 346
   end
   inherited spUnErasedMIMaster: TdsdStoredProc
+    Params = <
+      item
+        Name = 'inMovementItemId'
+        Component = MasterCDS
+        ComponentItem = 'Id'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'outIsErased'
+        Value = False
+        Component = MasterCDS
+        ComponentItem = 'isErased'
+        DataType = ftBoolean
+        MultiSelectSeparator = ','
+      end>
     Left = 406
     Top = 325
   end
@@ -3071,6 +3111,7 @@ inherited CheckForm: TCheckForm
         DataSummaryItemIndex = -1
       end>
     SearchAsFilter = False
+    PropertiesCellList = <>
     Left = 318
     Top = 529
   end
