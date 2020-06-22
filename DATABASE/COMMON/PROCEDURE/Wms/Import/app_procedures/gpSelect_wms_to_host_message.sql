@@ -32,7 +32,10 @@ BEGIN
         FROM  wms_to_host_message AS Msg 
         WHERE ((Msg.Error = inErrorOnly) OR (Msg.Error = TRUE))
           AND Msg.InsertDate BETWEEN inStartDate AND inEndDate
-        ORDER BY Msg.Header_id DESC;
+      --ORDER BY Msg.Header_id DESC
+        ORDER BY Msg.Id DESC
+        
+        ;
 END;
 $BODY$
  LANGUAGE PLPGSQL VOLATILE;     

@@ -29,7 +29,9 @@ BEGIN
           AND Msg.Error = TRUE 
           AND Err.Site = 'A' -- берем ошибки только на нашей стороне
           AND Err.InsertDate BETWEEN inStartDate AND inEndDate
-        ORDER BY Err.Header_id DESC;
+      --ORDER BY Err.Header_id DESC
+        ORDER BY Err.Id DESC
+        ;
 END;
 $BODY$
  LANGUAGE PLPGSQL VOLATILE;     
