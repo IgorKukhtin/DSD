@@ -247,8 +247,8 @@ type
     bbInsertUpdateMISignYes: TdxBarButton;
     bbInsertUpdateMISignNo: TdxBarButton;
     cxLabel21: TcxLabel;
-    edstrSign: TcxTextEdit;
-    edstrSignNo: TcxTextEdit;
+    edStrSign: TcxTextEdit;
+    edStrSignNo: TcxTextEdit;
     cxLabel22: TcxLabel;
     mactInsertUpdateMISignYes: TMultiAction;
     mactInsertUpdateMISignNo: TMultiAction;
@@ -358,7 +358,6 @@ type
     bbInsertRecordPromoStateKind: TdxBarButton;
     bbSetErasedPromoStateKind: TdxBarButton;
     bbSetUnErasedPromoStateKind: TdxBarButton;
-    actOpenProtocoPromoStateKind1: TdsdOpenForm;
     bbProtocoPromoStateKind: TdxBarButton;
     cxLabel25: TcxLabel;
     edSignInternal: TcxButtonEdit;
@@ -411,6 +410,13 @@ type
     bsPromoStateKind: TdxBarSubItem;
     bsCalc: TdxBarSubItem;
     bsSign: TdxBarSubItem;
+    dxBarSeparator1: TdxBarSeparator;
+    actUpdate_SignInternal_One: TdsdExecStoredProc;
+    actUpdate_SignInternal_Two: TdsdExecStoredProc;
+    bbUpdate_SignInternal_One: TdxBarButton;
+    bbUpdate_SignInternal_Two: TdxBarButton;
+    spUpdate_SignInternal_One: TdsdStoredProc;
+    spUpdate_SignInternal_Two: TdsdStoredProc;
   private
     { Private declarations }
   public

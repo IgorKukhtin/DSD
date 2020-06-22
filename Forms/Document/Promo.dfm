@@ -3,6 +3,7 @@
   Caption = #1044#1086#1082#1091#1084#1077#1085#1090' <'#1040#1082#1094#1080#1103'>'
   ClientHeight = 684
   ClientWidth = 1366
+  ExplicitLeft = -254
   ExplicitWidth = 1382
   ExplicitHeight = 719
   PixelsPerInch = 96
@@ -692,9 +693,6 @@
           object tsPromoPartnerList: TcxTabSheet
             Caption = '2.2. '#1050#1086#1085#1090#1088#1072#1075#1077#1085#1090#1099' ('#1076#1077#1090#1072#1083#1100#1085#1086')'
             ImageIndex = 1
-            ExplicitTop = 0
-            ExplicitWidth = 0
-            ExplicitHeight = 0
             object grPartnerList: TcxGrid
               Left = 0
               Top = 0
@@ -1105,9 +1103,6 @@
     object cxTabSheetCalc: TcxTabSheet
       Caption = #1050#1072#1083#1100#1082#1091#1083#1103#1090#1086#1088' - '#1089#1082#1080#1076#1082#1072
       ImageIndex = 2
-      ExplicitTop = 0
-      ExplicitWidth = 0
-      ExplicitHeight = 0
       object cxGridCalc: TcxGrid
         Left = 0
         Top = 0
@@ -1406,9 +1401,6 @@
     object cxTabSheetCalc2: TcxTabSheet
       Caption = #1050#1072#1083#1100#1082#1091#1083#1103#1090#1086#1088' - '#1082#1086#1084#1087#1077#1085#1089#1072#1094#1080#1103
       ImageIndex = 2
-      ExplicitTop = 0
-      ExplicitWidth = 0
-      ExplicitHeight = 0
       object cxGridCalc2: TcxGrid
         Left = 0
         Top = 0
@@ -1810,9 +1802,6 @@
     object cxTabSheetPlan: TcxTabSheet
       Caption = #1055#1083#1072#1085' '#1086#1090#1075#1088#1091#1079#1082#1080
       ImageIndex = 5
-      ExplicitTop = 0
-      ExplicitWidth = 0
-      ExplicitHeight = 0
       object cxGridPlan: TcxGrid
         Left = 0
         Top = 0
@@ -2557,14 +2546,14 @@
     Top = 74
     Caption = #1045#1089#1090#1100' '#1101#1083'. '#1087#1086#1076#1087#1080#1089#1100
   end
-  object edstrSign: TcxTextEdit [5]
+  object edStrSign: TcxTextEdit [5]
     Left = 919
     Top = 90
     Properties.ReadOnly = True
     TabOrder = 9
     Width = 125
   end
-  object edstrSignNo: TcxTextEdit [6]
+  object edStrSignNo: TcxTextEdit [6]
     Left = 1048
     Top = 90
     Properties.ReadOnly = True
@@ -2623,8 +2612,8 @@
     Top = 312
   end
   inherited ActionList: TActionList
-    Left = 127
-    Top = 319
+    Left = 215
+    Top = 215
     object actUpdate_Movement_isTaxPromo: TdsdExecStoredProc [0]
       Category = 'DSDLib'
       MoveParams = <>
@@ -2640,14 +2629,14 @@
         item
           StoredProc = spSelectCalc2
         end>
-      Caption = #1048#1079#1084#1077#1085#1080#1090#1100' % '#1057#1082#1080#1076#1082#1080' ('#1044#1072'/'#1053#1077#1090') / % '#1050#1086#1084#1087#1077#1085#1089#1072#1094#1080#1080' ('#1044#1072'/'#1053#1077#1090')'
-      Hint = #1048#1079#1084#1077#1085#1080#1090#1100' % '#1057#1082#1080#1076#1082#1080' ('#1044#1072'/'#1053#1077#1090') / % '#1050#1086#1084#1087#1077#1085#1089#1072#1094#1080#1080' ('#1044#1072'/'#1053#1077#1090')'
+      Caption = #1047#1072#1084#1077#1085#1080#1090#1100' % '#1057#1082#1080#1076#1082#1080' <=> % '#1050#1086#1084#1087#1077#1085#1089#1072#1094#1080#1080
+      Hint = #1047#1072#1084#1077#1085#1080#1090#1100' % '#1057#1082#1080#1076#1082#1080' <=> % '#1050#1086#1084#1087#1077#1085#1089#1072#1094#1080#1080
       ImageIndex = 27
+      QuestionBeforeExecute = #1044#1077#1081#1089#1090#1074#1080#1090#1077#1083#1100#1085#1086' '#1079#1072#1084#1077#1085#1080#1090#1100' % '#1057#1082#1080#1076#1082#1080' <=> % '#1050#1086#1084#1087#1077#1085#1089#1072#1094#1080#1080
     end
     object actInsertRecordPromoStateKind: TInsertRecord [1]
       Category = 'PromoStateKind'
       MoveParams = <>
-      Enabled = False
       PostDataSetBeforeExecute = False
       View = cxGridDBTableViewPromoStateKind
       Action = actPromoStateKindChoice
@@ -2687,7 +2676,6 @@
       Caption = #1059#1076#1072#1083#1080#1090#1100' <'#1057#1086#1089#1090#1086#1103#1085#1080#1077' '#1040#1082#1094#1080#1080'>'
       Hint = #1059#1076#1072#1083#1080#1090#1100' <'#1057#1086#1089#1090#1086#1103#1085#1080#1077'>'
       ImageIndex = 2
-      ShortCut = 46
       ErasedFieldName = 'isErased'
       DataSource = PromoStateKindDS
       QuestionBeforeExecute = #1044#1077#1081#1089#1090#1074#1080#1090#1077#1083#1100#1085#1086' '#1091#1076#1072#1083#1080#1090#1100' <'#1057#1086#1089#1090#1086#1103#1085#1080#1077'> ?'
@@ -2718,7 +2706,6 @@
       Caption = #1042#1086#1089#1089#1090#1072#1085#1086#1074#1080#1090#1100
       Hint = #1042#1086#1089#1089#1090#1072#1085#1086#1074#1080#1090#1100' '#1076#1072#1085#1085#1099#1077
       ImageIndex = 8
-      ShortCut = 46
       ErasedFieldName = 'isErased'
       isSetErased = False
       DataSource = PromoStateKindDS
@@ -2876,7 +2863,6 @@
     object InsertRecord: TInsertRecord [15]
       Category = 'Goods'
       MoveParams = <>
-      Enabled = False
       PostDataSetBeforeExecute = False
       View = cxGridDBTableView
       Action = actGoodsChoiceForm
@@ -3100,37 +3086,6 @@
       Caption = 'actUpdateMainDS'
       DataSource = ConditionPromoDS
     end
-    object actOpenProtocoPromoStateKind1: TdsdOpenForm [23]
-      Category = 'PromoStateKind'
-      TabSheet = tsMain
-      MoveParams = <>
-      Caption = #1055#1088#1086#1089#1084#1086#1090#1088' <'#1055#1088#1086#1090#1086#1082#1086#1083#1072' '#1089#1090#1088#1086#1082' '#1057#1086#1089#1090#1086#1103#1085#1080#1103'>'
-      Hint = #1055#1088#1086#1089#1084#1086#1090#1088' <'#1055#1088#1086#1090#1086#1082#1086#1083#1072' '#1089#1090#1088#1086#1082' '#1057#1086#1089#1090#1086#1103#1085#1080#1103'>'
-      ImageIndex = 34
-      FormName = 'TMovementProtocolForm'
-      FormNameParam.Value = 'TMovementProtocolForm'
-      FormNameParam.DataType = ftString
-      FormNameParam.MultiSelectSeparator = ','
-      GuiParams = <
-        item
-          Name = 'Id'
-          Value = Null
-          Component = PromoStateKindDCS
-          ComponentItem = 'Id'
-          ParamType = ptInput
-          MultiSelectSeparator = ','
-        end
-        item
-          Name = 'GoodsName'
-          Value = Null
-          Component = PromoStateKindDCS
-          ComponentItem = 'PromoStateKindName'
-          DataType = ftString
-          ParamType = ptInput
-          MultiSelectSeparator = ','
-        end>
-      isShowModal = False
-    end
     inherited actInsertUpdateMovement: TdsdExecStoredProc
       StoredProcList = <
         item
@@ -3141,7 +3096,6 @@
         end>
     end
     inherited actShowErased: TBooleanStoredProcAction
-      Enabled = False
       StoredProcList = <
         item
           StoredProc = spSelect
@@ -3181,17 +3135,6 @@
         item
         end>
     end
-    object actInsertUpdate_MI_Param: TdsdExecStoredProc [29]
-      Category = 'Update_MI_Param'
-      MoveParams = <>
-      PostDataSetBeforeExecute = False
-      StoredProc = spInsertUpdate_MI_Param
-      StoredProcList = <
-        item
-          StoredProc = spInsertUpdate_MI_Param
-        end>
-      Caption = 'actInsertUpdate_MI_Param'
-    end
     inherited actPrint: TdsdPrintAction
       StoredProc = spSelect_Movement_Promo_Print
       StoredProcList = <
@@ -3227,6 +3170,17 @@
         end>
       ReportName = #1040#1082#1094#1080#1103
       ReportNameParam.Value = #1040#1082#1094#1080#1103
+    end
+    object actInsertUpdate_MI_Param: TdsdExecStoredProc [29]
+      Category = 'Update_MI_Param'
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      StoredProc = spInsertUpdate_MI_Param
+      StoredProcList = <
+        item
+          StoredProc = spInsertUpdate_MI_Param
+        end>
+      Caption = 'actInsertUpdate_MI_Param'
     end
     object actPromoStateKindChoice: TOpenChoiceForm [33]
       Category = 'PromoStateKind'
@@ -3460,7 +3414,6 @@
     object actInsertRecordPartner: TInsertRecord
       Category = 'Partner'
       MoveParams = <>
-      Enabled = False
       PostDataSetBeforeExecute = False
       View = cxGridDBTableViewPartner
       Action = actPromoPartnerChoiceForm
@@ -3483,7 +3436,6 @@
       Caption = #1059#1076#1072#1083#1080#1090#1100' <'#1057#1077#1090#1100'/'#1070#1088'.'#1083#1080#1094#1086'/'#1050#1086#1085#1090#1088#1072#1075#1077#1085#1090'>'
       Hint = #1059#1076#1072#1083#1080#1090#1100' <'#1057#1077#1090#1100'/'#1070#1088'.'#1083#1080#1094#1086'/'#1050#1086#1085#1090#1088#1072#1075#1077#1085#1090'>'
       ImageIndex = 2
-      ShortCut = 46
       ErasedFieldName = 'isErased'
       DataSource = PartnerDS
       QuestionBeforeExecute = #1044#1077#1081#1089#1090#1074#1080#1090#1077#1083#1100#1085#1086' '#1091#1076#1072#1083#1080#1090#1100' <'#1055#1072#1088#1090#1085#1077#1088#1072'> ?'
@@ -3502,7 +3454,6 @@
       Caption = #1042#1086#1089#1089#1090#1072#1085#1086#1074#1080#1090#1100
       Hint = #1042#1086#1089#1089#1090#1072#1085#1086#1074#1080#1090#1100' '#1076#1072#1085#1085#1099#1077
       ImageIndex = 8
-      ShortCut = 46
       ErasedFieldName = 'isErased'
       isSetErased = False
       DataSource = PartnerDS
@@ -3582,7 +3533,6 @@
     object actInsertCondition: TInsertRecord
       Category = 'Condition'
       MoveParams = <>
-      Enabled = False
       PostDataSetBeforeExecute = False
       View = grtvConditionPromo
       Action = actConditionPromoChoiceForm
@@ -3605,7 +3555,6 @@
       Caption = #1059#1076#1072#1083#1080#1090#1100' <% '#1076#1086#1087#1086#1083#1085#1080#1090#1077#1083#1100#1085#1086#1081' '#1089#1082#1080#1076#1082#1080'>'
       Hint = #1059#1076#1072#1083#1080#1090#1100' <% '#1076#1086#1087#1086#1083#1085#1080#1090#1077#1083#1100#1085#1086#1081' '#1089#1082#1080#1076#1082#1080'>'
       ImageIndex = 2
-      ShortCut = 46
       ErasedFieldName = 'isErased'
       DataSource = ConditionPromoDS
       QuestionBeforeExecute = #1044#1077#1081#1089#1090#1074#1080#1090#1077#1083#1100#1085#1086' '#1091#1076#1072#1083#1080#1090#1100' <% '#1076#1086#1087#1086#1083#1085#1080#1090#1077#1083#1100#1085#1086#1081' '#1089#1082#1080#1076#1082#1080'> ?'
@@ -3624,7 +3573,6 @@
       Caption = #1042#1086#1089#1089#1090#1072#1085#1086#1074#1080#1090#1100
       Hint = #1042#1086#1089#1089#1090#1072#1085#1086#1074#1080#1090#1100' '#1076#1072#1085#1085#1099#1077
       ImageIndex = 8
-      ShortCut = 46
       ErasedFieldName = 'isErased'
       isSetErased = False
       DataSource = ConditionPromoDS
@@ -3749,7 +3697,6 @@
       Caption = #1059#1076#1072#1083#1080#1090#1100' <'#1056#1077#1082#1083#1072#1084#1085#1072#1103' '#1087#1086#1076#1076#1077#1088#1078#1082#1072'>'
       Hint = #1059#1076#1072#1083#1080#1090#1100' <'#1056#1077#1082#1083#1072#1084#1085#1072#1103' '#1087#1086#1076#1076#1077#1088#1078#1082#1072'>'
       ImageIndex = 2
-      ShortCut = 46
       ErasedFieldName = 'isErased'
       DataSource = AdvertisingDS
       QuestionBeforeExecute = #1044#1077#1081#1089#1090#1074#1080#1090#1077#1083#1100#1085#1086' '#1091#1076#1072#1083#1080#1090#1100' <'#1056#1077#1082#1083#1072#1084#1085#1072#1103' '#1087#1086#1076#1076#1077#1088#1078#1082#1072'> ?'
@@ -3768,7 +3715,6 @@
       Caption = #1042#1086#1089#1089#1090#1072#1085#1086#1074#1080#1090#1100
       Hint = #1042#1086#1089#1089#1090#1072#1085#1086#1074#1080#1090#1100' '#1076#1072#1085#1085#1099#1077
       ImageIndex = 8
-      ShortCut = 46
       ErasedFieldName = 'isErased'
       isSetErased = False
       DataSource = AdvertisingDS
@@ -4110,6 +4056,50 @@
         end>
       isShowModal = False
     end
+    object actUpdate_SignInternal_One: TdsdExecStoredProc
+      Category = 'Sign'
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      StoredProc = spSelectMIPromoStateKind
+      StoredProcList = <
+        item
+          StoredProc = spSelectMIPromoStateKind
+        end
+        item
+          StoredProc = spUpdate_SignInternal_One
+        end
+        item
+          StoredProc = spSelectMISign
+        end
+        item
+          StoredProc = spSelectMIPromoStateKind
+        end>
+      Caption = #1054#1044#1048#1053' '#1087#1086#1076#1087#1080#1089#1072#1085#1090' '#1074' '#1040#1082#1094#1080#1080
+      Hint = #1059#1089#1090#1072#1085#1086#1074#1080#1090#1100' '#1054#1044#1053#1054#1043#1054' '#1087#1086#1076#1087#1080#1089#1072#1085#1090#1072' '#1074' '#1040#1082#1094#1080#1080
+      ImageIndex = 47
+    end
+    object actUpdate_SignInternal_Two: TdsdExecStoredProc
+      Category = 'Sign'
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      StoredProc = spSelectMIPromoStateKind
+      StoredProcList = <
+        item
+          StoredProc = spSelectMIPromoStateKind
+        end
+        item
+          StoredProc = spUpdate_SignInternal_Two
+        end
+        item
+          StoredProc = spSelectMISign
+        end
+        item
+          StoredProc = spSelectMIPromoStateKind
+        end>
+      Caption = #1044#1042#1040' '#1087#1086#1076#1087#1080#1089#1072#1085#1090#1072' '#1074' '#1040#1082#1094#1080#1080
+      Hint = #1059#1089#1090#1072#1085#1086#1074#1080#1090#1100' '#1044#1042#1059#1061' '#1087#1086#1076#1087#1080#1089#1072#1085#1090#1086#1074' '#1074' '#1040#1082#1094#1080#1080
+      ImageIndex = 48
+    end
   end
   inherited MasterDS: TDataSource
     Top = 272
@@ -4244,6 +4234,10 @@
         end
         item
           BeginGroup = True
+          Visible = True
+          ItemName = 'dxBarStatic'
+        end
+        item
           Visible = True
           ItemName = 'bbUpdate_Movement_isTaxPromo'
         end
@@ -4512,6 +4506,18 @@
       ItemLinks = <
         item
           Visible = True
+          ItemName = 'bbUpdate_SignInternal_One'
+        end
+        item
+          Visible = True
+          ItemName = 'bbUpdate_SignInternal_Two'
+        end
+        item
+          Visible = True
+          ItemName = 'dxBarSeparator1'
+        end
+        item
+          Visible = True
           ItemName = 'bbSetErasedPromoStateKind'
         end
         item
@@ -4550,6 +4556,21 @@
           Visible = True
           ItemName = 'bbInsertUpdateMISignNo'
         end>
+    end
+    object dxBarSeparator1: TdxBarSeparator
+      Caption = 'New Separator'
+      Category = 0
+      Hint = 'New Separator'
+      Visible = ivAlways
+      ShowCaption = False
+    end
+    object bbUpdate_SignInternal_One: TdxBarButton
+      Action = actUpdate_SignInternal_One
+      Category = 0
+    end
+    object bbUpdate_SignInternal_Two: TdxBarButton
+      Action = actUpdate_SignInternal_Two
+      Category = 0
     end
   end
   inherited DBViewAddOn: TdsdDBViewAddOn
@@ -4857,14 +4878,14 @@
       item
         Name = 'strSign'
         Value = Null
-        Component = edstrSign
+        Component = edStrSign
         DataType = ftString
         MultiSelectSeparator = ','
       end
       item
         Name = 'strSignNo'
         Value = Null
-        Component = edstrSignNo
+        Component = edStrSignNo
         DataType = ftString
         MultiSelectSeparator = ','
       end
@@ -6153,8 +6174,8 @@
         MultiSelectSeparator = ','
       end>
     PackSize = 1
-    Left = 64
-    Top = 496
+    Left = 120
+    Top = 448
   end
   object dsdDBViewAddOnPartnerList: TdsdDBViewAddOn
     ErasedFieldName = 'isErased'
@@ -6288,7 +6309,7 @@
     SummaryItemList = <>
     PropertiesCellList = <>
     Left = 1272
-    Top = 295
+    Top = 319
   end
   object spSelectMISign: TdsdStoredProc
     StoredProcName = 'gpSelect_MI_Sign'
@@ -6862,8 +6883,8 @@
     ColumnEnterList = <>
     SummaryItemList = <>
     PropertiesCellList = <>
-    Left = 272
-    Top = 591
+    Left = 288
+    Top = 607
   end
   object spSelectMIPromoStateKind: TdsdStoredProc
     StoredProcName = 'gpSelect_MI_Message_PromoStateKind'
@@ -6890,8 +6911,8 @@
         MultiSelectSeparator = ','
       end>
     PackSize = 1
-    Left = 1248
-    Top = 424
+    Left = 616
+    Top = 560
   end
   object spInsertUpdate_MI_PromoStateKind: TdsdStoredProc
     StoredProcName = 'gpInsertUpdate_MI_Message_PromoStateKind'
@@ -7292,7 +7313,113 @@
         MultiSelectSeparator = ','
       end>
     PackSize = 1
-    Left = 928
-    Top = 376
+    Left = 1248
+    Top = 208
+  end
+  object spUpdate_SignInternal_One: TdsdStoredProc
+    StoredProcName = 'gpUpdate_Movement_Promo_SignInternal'
+    DataSets = <>
+    OutputType = otResult
+    Params = <
+      item
+        Name = 'inMovementId'
+        Value = Null
+        Component = FormParams
+        ComponentItem = 'Id'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inIsNull'
+        Value = 'False'
+        DataType = ftBoolean
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'outSignInternalId'
+        Value = Null
+        Component = GuidesSignInternal
+        ComponentItem = 'Key'
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'outSignInternalName'
+        Value = Null
+        Component = GuidesSignInternal
+        ComponentItem = 'TextValue'
+        DataType = ftString
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'outStrSign'
+        Value = 'False'
+        Component = edStrSign
+        DataType = ftString
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'outStrSignNo'
+        Value = 'False'
+        Component = edStrSignNo
+        DataType = ftString
+        MultiSelectSeparator = ','
+      end>
+    PackSize = 1
+    Left = 1248
+    Top = 248
+  end
+  object spUpdate_SignInternal_Two: TdsdStoredProc
+    StoredProcName = 'gpUpdate_Movement_Promo_SignInternal'
+    DataSets = <>
+    OutputType = otResult
+    Params = <
+      item
+        Name = 'inMovementId'
+        Value = Null
+        Component = FormParams
+        ComponentItem = 'Id'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inIsNull'
+        Value = 'True'
+        DataType = ftBoolean
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'outSignInternalId'
+        Value = Null
+        Component = GuidesSignInternal
+        ComponentItem = 'Key'
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'outSignInternalName'
+        Value = Null
+        Component = GuidesSignInternal
+        ComponentItem = 'TextValue'
+        DataType = ftString
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'outStrSign'
+        Value = 'False'
+        Component = edStrSign
+        DataType = ftString
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'outStrSignNo'
+        Value = 'False'
+        Component = edStrSignNo
+        DataType = ftString
+        MultiSelectSeparator = ','
+      end>
+    PackSize = 1
+    Left = 1256
+    Top = 288
   end
 end
