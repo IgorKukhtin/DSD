@@ -69,6 +69,21 @@ object InfoMoneyForm: TInfoMoneyForm
         HeaderAlignmentVert = vaCenter
         Width = 177
       end
+      object CashFlowName: TcxGridDBColumn
+        Caption = #1057#1090#1072#1090#1100#1103' '#1086#1090#1095#1077#1090#1072' '#1044#1044#1057
+        DataBinding.FieldName = 'CashFlowName'
+        PropertiesClassName = 'TcxButtonEditProperties'
+        Properties.Buttons = <
+          item
+            Action = actCashFlowChoiceForm
+            Default = True
+            Kind = bkEllipsis
+          end>
+        Properties.ReadOnly = True
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Width = 100
+      end
       object isProfitLoss: TcxGridDBColumn
         Caption = #1047#1072#1090#1088#1072#1090#1099' '#1087#1086' '#1086#1087#1083#1072#1090#1077
         DataBinding.FieldName = 'isProfitLoss'
@@ -448,6 +463,40 @@ object InfoMoneyForm: TInfoMoneyForm
         end>
       isShowModal = False
     end
+    object actCashFlowChoiceForm: TOpenChoiceForm
+      Category = 'DSDLib'
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      Caption = 'CashFlowForm'
+      FormName = 'TCashFlowForm'
+      FormNameParam.Value = 'TCashFlowForm'
+      FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
+      GuiParams = <
+        item
+          Name = 'Key'
+          Value = Null
+          Component = ClientDataSet
+          ComponentItem = 'CashFlowId'
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'TextValue'
+          Value = Null
+          Component = ClientDataSet
+          ComponentItem = 'CashFlowName'
+          DataType = ftString
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'Code'
+          Value = Null
+          Component = ClientDataSet
+          ComponentItem = 'CashFlowCode'
+          MultiSelectSeparator = ','
+        end>
+      isShowModal = True
+    end
   end
   object dsdStoredProc: TdsdStoredProc
     StoredProcName = 'gpSelect_Object_InfoMoney'
@@ -507,6 +556,7 @@ object InfoMoneyForm: TInfoMoneyForm
     ColumnAddOnList = <>
     ColumnEnterList = <>
     SummaryItemList = <>
+    PropertiesCellList = <>
     Left = 304
     Top = 152
   end
@@ -543,5 +593,30 @@ object InfoMoneyForm: TInfoMoneyForm
     PackSize = 1
     Left = 504
     Top = 147
+  end
+  object spUpdate_CashFlow: TdsdStoredProc
+    StoredProcName = 'gpUpdate_InfoMoney_CashFlow'
+    DataSets = <>
+    OutputType = otResult
+    Params = <
+      item
+        Name = 'inId'
+        Value = Null
+        Component = ClientDataSet
+        ComponentItem = 'Id'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inCashFlowId'
+        Value = Null
+        Component = ClientDataSet
+        ComponentItem = 'CashFlowId'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end>
+    PackSize = 1
+    Left = 480
+    Top = 267
   end
 end
