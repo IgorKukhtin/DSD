@@ -5,7 +5,6 @@ interface
 uses
   System.SysUtils,
   System.Classes,
-  System.Generics.Collections,
   FireDAC.Comp.Client,
   FireDAC.Stan.Param,
   Xml.XMLIntf,

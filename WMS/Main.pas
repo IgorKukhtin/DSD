@@ -86,6 +86,16 @@ type
     dtpWmsMsgEnd: TDateTimePicker;
     cbbWmsMessageMode: TComboBox;
     grdWmsMessage: TDBGrid;
+    grpPackets: TGroupBox;
+    chkOrderStatusChanged: TCheckBox;
+    chkReceivingResult: TCheckBox;
+    chkUseLog: TCheckBox;
+    lbStart_OrderStatusChanged: TLabel;
+    lbEnd_OrderStatusChanged: TLabel;
+    lbStart_ReceivingResult: TLabel;
+    lbEnd_ReceivingResult: TLabel;
+    lbElapsed_OrderStatusChanged: TLabel;
+    lbElapsed_ReceivingResult: TLabel;
     procedure btnFDC_wmsClick(Sender: TObject);
     procedure btnFDC_alanClick(Sender: TObject);
     procedure btnObject_SKU_to_wmsClick(Sender: TObject);
@@ -123,6 +133,8 @@ type
   private
     FLog: TLog;
     FStopTimer: Boolean;
+    FStartOrderStatusChanged: TDateTime;
+    FStartReceivingResult: TDateTime;
   private
     procedure AddToLog_Timer(LogType, S: string);
     procedure myShowSql;
@@ -134,6 +146,8 @@ type
     procedure UpdateAlanGrid(const ANeedRebuildColumns: Boolean = False);
     procedure UpdateWmsMsgGrid(const ANeedRebuildColumns: Boolean = False);
     procedure WMNeedUpdateGrids(var AMessage: TMessage); message WM_NEED_UPDATE_GRIDS;
+    procedure OnTerminateOrderStatusChanged(Sender: TObject);
+    procedure OnTerminateReceivingResult(Sender: TObject);
   public
     constructor Create(AOwner: TComponent); override;
     destructor Destroy; override;
@@ -147,8 +161,6 @@ implementation
 {$R *.dfm}
 
 uses
-  System.Math,
-  System.Variants,
   Winapi.Windows,
   FireDAC.Comp.DataSet,
   FireDAC.Comp.Client,
@@ -156,10 +168,17 @@ uses
   UDefinitions,
   UData,
   UCommon,
-  USettings;
+  USettings,
+  UQryThread;
+
+type
+  THackedGrid = class(TCustomGrid);
 
 const
   cLogFileName = 'Messages.log';
+  cEndPacket = 'завершено  %s';
+  cStartPacket = 'начало выполнения  %s';
+  cElapsedPacket = 'выполнено за  %s';
 
 procedure TMainForm.MyDelay(mySec: Integer);
 var
@@ -223,62 +242,42 @@ begin
   end;
 end;
 
-function Coalesce(AValue1, AValue2: Variant): Variant;
+procedure TMainForm.OnTerminateOrderStatusChanged(Sender: TObject);
 begin
-  Result := AValue1;
+  chkOrderStatusChanged.Checked := False;
 
-  if VarIsNull(AValue1) then Result := AValue2;
+  lbEnd_OrderStatusChanged.Caption     := Format(cEndPacket, [FormatDateTime(cDateTimeStr, Now)]);
+  lbElapsed_OrderStatusChanged.Caption := Format(cElapsedPacket, [FormatDateTime(cTimeStr, Now - FStartOrderStatusChanged)]);
+
+  lbElapsed_OrderStatusChanged.Repaint;
+  lbEnd_OrderStatusChanged.Repaint;
+
+  PostMessage(Handle, WM_NEED_UPDATE_GRIDS, 0, 0);
+end;
+
+procedure TMainForm.OnTerminateReceivingResult(Sender: TObject);
+begin
+  chkReceivingResult.Checked := False;
+
+  lbEnd_ReceivingResult.Caption     := Format(cEndPacket, [FormatDateTime(cDateTimeStr, Now)]);
+  lbElapsed_ReceivingResult.Caption := Format(cElapsedPacket, [FormatDateTime(cTimeStr, Now - FStartReceivingResult)]);
+
+  lbElapsed_ReceivingResult.Repaint;
+  lbEnd_ReceivingResult.Repaint;
+
+  PostMessage(Handle, WM_NEED_UPDATE_GRIDS, 0, 0);
 end;
 
 procedure TMainForm.AdjustColumnWidth(AGrid: TDBGrid);
-type
-  TIntArray = array of Integer;
 var
-  I, iCount, iLetterW: Integer;
-  colWidths: TIntArray;
-  sValue: string;
-  mtbTemp: TFDMemTable;
-const
-  cTestCount = 20;
+  iVisibleRowCount: Integer;
+  tmpWorker: TAdjustColmnWidthThread;
 begin
   Assert(AGrid.DataSource.DataSet <> nil, 'Expected DataSet <> nil');
 
-  mtbTemp := TFDMemTable.Create(nil);
-  try
-    mtbTemp.CloneCursor(AGrid.DataSource.DataSet as TFDDataSet);
-
-    if mtbTemp.RecordCount > 0 then
-      mtbTemp.First
-    else
-      Exit;
-
-    iCount  := 0;
-    SetLength(colWidths, mtbTemp.FieldCount);
-
-    while not mtbTemp.Eof and (iCount < cTestCount)  do
-    begin
-      for I := 0 to Pred(mtbTemp.FieldCount) do
-      begin
-        sValue := VarToStr(Coalesce(mtbTemp.Fields[I].Value, 0));
-        colWidths[I] := Max(colWidths[I], Length(sValue));
-        colWidths[I] := Max(colWidths[I], Length(mtbTemp.Fields[I].FieldName));
-      end;
-      Inc(iCount);
-      mtbTemp.Next;
-    end;
-
-    iLetterW := Canvas.TextWidth('m');
-
-    AGrid.Columns.BeginUpdate;
-    try
-      for I := 0 to Pred(AGrid.Columns.Count) do
-        AGrid.Columns[I].Width := colWidths[I] * iLetterW;
-    finally
-      AGrid.Columns.EndUpdate;
-    end;
-  finally
-    FreeAndNil(mtbTemp)
-  end;
+  iVisibleRowCount := THackedGrid(AGrid).VisibleRowCount;
+  tmpWorker := TAdjustColmnWidthThread.Create(AGrid, iVisibleRowCount, AGrid.DataSource.DataSet as TFDQuery, myShowMsg);
+  tmpWorker.Start;
 end;
 
 procedure TMainForm.pgcMainChange(Sender: TObject);
@@ -317,8 +316,11 @@ const
 var
   sMsg: string;
 begin
-  sMsg := Format(cMsg, [FormatDateTime(cDateTimeStr, Now), AMsg]);
-  mmoMessage.Lines.Add(sMsg);
+  if chkUseLog.Checked then
+  begin
+    sMsg := Format(cMsg, [FormatDateTime(cDateTimeStr, Now), AMsg]);
+    mmoMessage.Lines.Add(sMsg);
+  end;
 
   FLog.Write(cLogFileName, AMsg);
 end;
@@ -344,25 +346,35 @@ begin
 end;
 
 procedure TMainForm.btnImpOrderStatusChangedClick(Sender: TObject);
+var
+  tmpWorker: TImportWorkerThread;
 begin
-  if dmData.IsConnectedBoth(myShowMsg) then
-  begin
-    if dmData.ImportWMS(pknOrderStatusChanged, myShowMsg) then
-      myShowMsg('Success import data from WMS');
+  chkOrderStatusChanged.Checked := True;
+  FStartOrderStatusChanged := Now;
 
-    PostMessage(Handle, WM_NEED_UPDATE_GRIDS, 0, 0);
-  end;
+  lbStart_OrderStatusChanged.Caption   := Format(cStartPacket, [FormatDateTime(cDateTimeStr, Now)]);
+  lbEnd_OrderStatusChanged.Caption     := Format(cEndPacket, ['']);
+  lbElapsed_OrderStatusChanged.Caption := Format(cElapsedPacket, ['']);
+
+  tmpWorker := TImportWorkerThread.Create(cCreateSuspended, pknOrderStatusChanged, myShowMsg);
+  tmpWorker.OnTerminate := OnTerminateOrderStatusChanged;
+  tmpWorker.Start;
 end;
 
 procedure TMainForm.btnImpReceivingResultClick(Sender: TObject);
+var
+  tmpWorker: TImportWorkerThread;
 begin
-  if dmData.IsConnectedBoth(myShowMsg) then
-  begin
-    if dmData.ImportWMS(pknReceivingResult, myShowMsg) then
-      myShowMsg('Success import data from WMS');
+  chkReceivingResult.Checked := True;
+  FStartReceivingResult := Now;
 
-    PostMessage(Handle, WM_NEED_UPDATE_GRIDS, 0, 0);
-  end;
+  lbStart_ReceivingResult.Caption   := Format(cStartPacket, [FormatDateTime(cDateTimeStr, Now)]);
+  lbEnd_ReceivingResult.Caption     := Format(cEndPacket, ['']);
+  lbElapsed_ReceivingResult.Caption := Format(cElapsedPacket, ['']);
+
+  tmpWorker := TImportWorkerThread.Create(cCreateSuspended, pknReceivingResult, myShowMsg);
+  tmpWorker.OnTerminate := OnTerminateReceivingResult;
+  tmpWorker.Start;
 end;
 
 procedure TMainForm.btnFDC_alanClick(Sender: TObject);
@@ -688,12 +700,17 @@ procedure TMainForm.UpdateAlanGrid(const ANeedRebuildColumns: Boolean = False);
 begin
   dtpEndDateAlan.DateTime := NearMidnight(dtpEndDateAlan.DateTime);
 
-  with dmData.qryAlanGrid do
-  begin
-    Close;
-    ParamByName('StartDate').AsDateTime := dtpStartDateAlan.DateTime;
-    ParamByName('EndDate').AsDateTime   := dtpEndDateAlan.DateTime;
-    Open;
+  dmData.dsAlan.DataSet := nil;
+  try
+    with dmData.qryAlanGrid do
+    begin
+      Close;
+      ParamByName('StartDate').AsDateTime := dtpStartDateAlan.DateTime;
+      ParamByName('EndDate').AsDateTime   := dtpEndDateAlan.DateTime;
+      Open;
+    end;
+  finally
+    dmData.dsAlan.DataSet := dmData.qryAlanGrid;
   end;
 
   if ANeedRebuildColumns then
@@ -708,19 +725,22 @@ var
 begin
   qryWMS := nil;
 
-  case cbbWMSShowMode.ItemIndex of
-    0: qryWMS := dmData.qryWMSGridAll;
-    1: qryWMS := dmData.qryWMSGridErr;
+  dmData.dsWMS.DataSet := nil;
+  try
+    case cbbWMSShowMode.ItemIndex of
+      0: qryWMS := dmData.qryWMSGridAll;
+      1: qryWMS := dmData.qryWMSGridErr;
+    end;
+
+    dtpEndDateWMS.DateTime := NearMidnight(dtpEndDateWMS.DateTime);
+
+    qryWMS.Close;
+    qryWMS.ParamByName('StartDate').AsDateTime := dtpStartDateWMS.DateTime;
+    qryWMS.ParamByName('EndDate').AsDateTime   := dtpEndDateWMS.DateTime;
+    qryWMS.Open;
+  finally
+    dmData.dsWMS.DataSet := qryWMS;;
   end;
-
-  dmData.dsWMS.DataSet := qryWMS;
-
-  dtpEndDateWMS.DateTime := NearMidnight(dtpEndDateWMS.DateTime);
-
-  qryWMS.Close;
-  qryWMS.ParamByName('StartDate').AsDateTime := dtpStartDateWMS.DateTime;
-  qryWMS.ParamByName('EndDate').AsDateTime   := dtpEndDateWMS.DateTime;
-  qryWMS.Open;
 
   if ANeedRebuildColumns then
     grdWMS.Columns.RebuildColumns;
@@ -732,13 +752,18 @@ procedure TMainForm.UpdateWmsMsgGrid(const ANeedRebuildColumns: Boolean);
 begin
   dtpWmsMsgEnd.DateTime := NearMidnight(dtpWmsMsgEnd.DateTime);
 
-  with dmData.qryWmsToHostMessage do
-  begin
-    Close;
-    ParamByName('StartDate').AsDateTime := dtpWmsMsgStart.DateTime;
-    ParamByName('EndDate').AsDateTime   := dtpWmsMsgEnd.DateTime;
-    ParamByName('ErrorOnly').AsBoolean  := (cbbWmsMessageMode.ItemIndex = 1);
-    Open;
+  dmData.dsWmsToHostMessage.DataSet := nil;
+  try
+    with dmData.qryWmsToHostMessage do
+    begin
+      Close;
+      ParamByName('StartDate').AsDateTime := dtpWmsMsgStart.DateTime;
+      ParamByName('EndDate').AsDateTime   := dtpWmsMsgEnd.DateTime;
+      ParamByName('ErrorOnly').AsBoolean  := (cbbWmsMessageMode.ItemIndex = 1);
+      Open;
+    end;
+  finally
+    dmData.dsWmsToHostMessage.DataSet := dmData.qryWmsToHostMessage;
   end;
 
   if ANeedRebuildColumns then
@@ -749,9 +774,11 @@ end;
 
 procedure TMainForm.WMNeedUpdateGrids(var AMessage: TMessage);
 begin
-  UpdateWMSGrid;
-  UpdateAlanGrid;
-  UpdateWmsMsgGrid;
+  if not dmData.IsConnectedBoth(nil) then Exit;
+
+  UpdateWMSGrid(True);
+  UpdateAlanGrid(True);
+  UpdateWmsMsgGrid(True);
 end;
 
 procedure TMainForm.FormResize(Sender: TObject);

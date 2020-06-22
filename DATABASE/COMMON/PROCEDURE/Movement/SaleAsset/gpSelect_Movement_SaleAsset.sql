@@ -118,13 +118,14 @@ BEGIN
 
            , MovementBoolean_PriceWithVAT.ValueData      AS PriceWithVAT
            , MovementFloat_VATPercent.ValueData          AS VATPercent
-           , MovementFloat_AmountCurrency.ValueData      AS AmountCurrency
-
+           
            , MovementFloat_TotalCount.ValueData  ::TFloat          AS TotalCount
            , MovementFloat_TotalCountPartner.ValueData  ::TFloat   AS TotalCountPartner
            , MovementFloat_TotalSummMVAT.ValueData  ::TFloat       AS TotalSummMVAT
            , MovementFloat_TotalSummPVAT.ValueData  ::TFloat       AS TotalSummPVAT
            , CAST (COALESCE (MovementFloat_TotalSummPVAT.ValueData, 0) - COALESCE (MovementFloat_TotalSummMVAT.ValueData, 0) AS TFloat)  ::TFloat AS TotalSummVAT
+           , MovementFloat_AmountCurrency.ValueData     :: TFloat  AS AmountCurrency
+
 
            , CAST (COALESCE (MovementFloat_CurrencyValue.ValueData, 0) AS TFloat)  AS CurrencyValue
            , COALESCE (MovementFloat_ParValue.ValueData, 1) :: TFloat              AS ParValue

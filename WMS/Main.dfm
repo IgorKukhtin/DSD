@@ -1,6 +1,7 @@
 object MainForm: TMainForm
   Left = 0
   Top = 0
+  ActiveControl = pgcMain
   Caption = 'MainForm'
   ClientHeight = 642
   ClientWidth = 1384
@@ -33,14 +34,14 @@ object MainForm: TMainForm
         1376
         614)
       object lbFontSize: TLabel
-        Left = 542
+        Left = 695
         Top = 17
         Width = 43
         Height = 13
         Caption = 'Font size'
       end
       object cbRecCount: TCheckBox
-        Left = 218
+        Left = 431
         Top = 16
         Width = 84
         Height = 17
@@ -48,7 +49,7 @@ object MainForm: TMainForm
         TabOrder = 0
       end
       object EditRecCount: TEdit
-        Left = 303
+        Left = 519
         Top = 14
         Width = 36
         Height = 21
@@ -56,7 +57,7 @@ object MainForm: TMainForm
         Text = '1'
       end
       object cbDebug: TCheckBox
-        Left = 345
+        Left = 558
         Top = 16
         Width = 97
         Height = 17
@@ -67,7 +68,7 @@ object MainForm: TMainForm
         Left = 217
         Top = 40
         Width = 596
-        Height = 565
+        Height = 428
         Anchors = [akLeft, akTop, akBottom]
         Color = clBlack
         Font.Charset = DEFAULT_CHARSET
@@ -203,7 +204,7 @@ object MainForm: TMainForm
         Left = 822
         Top = 40
         Width = 545
-        Height = 565
+        Height = 428
         Anchors = [akLeft, akTop, akBottom]
         Color = clBlack
         Font.Charset = DEFAULT_CHARSET
@@ -219,7 +220,7 @@ object MainForm: TMainForm
         TabOrder = 17
       end
       object seFontSize: TSpinEdit
-        Left = 589
+        Left = 742
         Top = 14
         Width = 44
         Height = 22
@@ -248,6 +249,80 @@ object MainForm: TMainForm
         TabOrder = 20
         WordWrap = True
         OnClick = btnImpReceivingResultClick
+      end
+      object grpPackets: TGroupBox
+        Left = 217
+        Top = 488
+        Width = 824
+        Height = 115
+        Caption = ' '#1055#1088#1086#1094#1077#1089#1089' '#1086#1073#1088#1072#1073#1086#1090#1082#1080' '#1087#1072#1082#1077#1090#1086#1074
+        TabOrder = 21
+        object lbStart_OrderStatusChanged: TLabel
+          Left = 167
+          Top = 33
+          Width = 107
+          Height = 13
+          Caption = #1085#1072#1095#1072#1083#1086' '#1074#1099#1087#1086#1083#1085#1077#1085#1080#1103'  '
+        end
+        object lbEnd_OrderStatusChanged: TLabel
+          Left = 438
+          Top = 33
+          Width = 55
+          Height = 13
+          Caption = #1079#1072#1074#1077#1088#1096#1077#1085#1086
+        end
+        object lbStart_ReceivingResult: TLabel
+          Left = 167
+          Top = 72
+          Width = 107
+          Height = 13
+          Caption = #1085#1072#1095#1072#1083#1086' '#1074#1099#1087#1086#1083#1085#1077#1085#1080#1103'  '
+        end
+        object lbEnd_ReceivingResult: TLabel
+          Left = 438
+          Top = 72
+          Width = 55
+          Height = 13
+          Caption = #1079#1072#1074#1077#1088#1096#1077#1085#1086
+        end
+        object lbElapsed_OrderStatusChanged: TLabel
+          Left = 660
+          Top = 33
+          Width = 70
+          Height = 13
+          Caption = #1074#1099#1087#1086#1083#1085#1077#1085#1086' '#1079#1072
+        end
+        object lbElapsed_ReceivingResult: TLabel
+          Left = 660
+          Top = 72
+          Width = 70
+          Height = 13
+          Caption = #1074#1099#1087#1086#1083#1085#1077#1085#1086' '#1079#1072
+        end
+        object chkOrderStatusChanged: TCheckBox
+          Left = 24
+          Top = 32
+          Width = 134
+          Height = 17
+          Caption = 'order_status_changed'
+          TabOrder = 0
+        end
+        object chkReceivingResult: TCheckBox
+          Left = 24
+          Top = 71
+          Width = 121
+          Height = 17
+          Caption = 'receiving_result'
+          TabOrder = 1
+        end
+      end
+      object chkUseLog: TCheckBox
+        Left = 225
+        Top = 16
+        Width = 140
+        Height = 17
+        Caption = #1074#1099#1074#1086#1076#1080#1090#1100' '#1083#1086#1075' '#1085#1072' '#1101#1082#1088#1072#1085
+        TabOrder = 22
       end
     end
     object tsErrors: TTabSheet
@@ -623,7 +698,7 @@ object MainForm: TMainForm
     Enabled = False
     Interval = 10000
     OnTimer = TimerTimer
-    Left = 336
-    Top = 456
+    Left = 40
+    Top = 520
   end
 end

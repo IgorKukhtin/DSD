@@ -9,6 +9,7 @@ CREATE OR REPLACE FUNCTION gpSelect_CashRemains_CashSession(
 RETURNS TABLE (GoodsId             Integer,    -- Товар
                PartionDateKindId   Integer,    -- Типы срок/не срок
                NDSKindId           Integer,    -- Ставка НДС
+               DiscountExternalID  Integer,    -- Товар для проекта (дисконтные карты)
                Price               TFloat,     -- цена
                Remains             TFloat,     -- Остаток
                MCSValue            TFloat,     -- неснижаемый товарный остаток
@@ -34,6 +35,7 @@ $BODY$
    DECLARE vbDate_0 TDateTime;
 
    DECLARE vbDividePartionDate   boolean;
+   DECLARE vbDiscountExternal   boolean;
 BEGIN
 -- if inSession = '3' then return; end if;
 
@@ -135,6 +137,12 @@ BEGIN
       vbDividePartionDate := False;
     END IF;
 
+    IF  zfGet_Unit_DiscountExternal (13216391, vbUnitId, vbUserId) = 13216391
+    THEN
+      vbDiscountExternal := True;
+    ELSE
+      vbDiscountExternal := False;    
+    END IF;
 
     RETURN QUERY
     WITH
@@ -605,6 +613,9 @@ BEGIN
                                  THEN Object_Goods.NDSKindId ELSE MovementLinkObject_NDSKind.ObjectId END  AS NDSKindId
                                , Container.DeferredSend
                                , MIDate_ExpirationDate.ValueData                                           AS ExpirationDate
+                               , CASE WHEN vbDiscountExternal = TRUE
+                                      THEN Object_Goods_Juridical.DiscountExternalID                                 
+                                      ELSE NULL END                                                        AS DiscountExternalID
                           FROM tmpContainerIncome AS Container
                                LEFT OUTER JOIN Object_Goods_Retail AS Object_Goods_Retail ON Object_Goods_Retail.Id = Container.ObjectId
                                LEFT OUTER JOIN Object_Goods_Main AS Object_Goods ON Object_Goods.Id = Object_Goods_Retail.GoodsMainId
@@ -617,9 +628,16 @@ BEGIN
                                LEFT JOIN MovementLinkObject AS MovementLinkObject_NDSKind
                                                             ON MovementLinkObject_NDSKind.MovementId = Container.M_IncomeId
                                                            AND MovementLinkObject_NDSKind.DescId = zc_MovementLinkObject_NDSKind()
+                               LEFT OUTER JOIN MovementItem ON MovementItem.Id = Container.MI_IncomeId
+                               LEFT JOIN MovementItemLinkObject AS MILinkObject_Goods
+                                                                ON MILinkObject_Goods.MovementItemId = Container.MI_IncomeId
+                                                               AND MILinkObject_Goods.DescId = zc_MILinkObject_Goods()
+                               LEFT OUTER JOIN Object_Goods_Juridical ON Object_Goods_Juridical.Id = MILinkObject_Goods.ObjectID
+
                          )
        , tmpGoodsRemains AS (SELECT Container.ObjectId
                                   , Container.NDSKindId
+                                  , Container.DiscountExternalID
                                   , SUM(Container.Amount)                                   AS Remains
                                   , SUM(Container.DeferredSend)                             AS DeferredSend
                                   , MIN(COALESCE (Container.ExpirationDate, zc_DateEnd()))  AS MinExpirationDate
@@ -627,11 +645,13 @@ BEGIN
                              WHERE Container.Amount <> 0
                              GROUP BY Container.ObjectId
                                     , Container.NDSKindId
+                                    , Container.DiscountExternalID
                              HAVING SUM(Container.Amount) <> 0 OR SUM(Container.DeferredSend) <> 0
                              )
        , tmpPDGoodsRemains AS (SELECT Container.ObjectId
-                                    , COALESCE(tmpContainer.NDSKindId, tmpDeferredSendNDSKindId.NDSKindId, 
-                                                                                  Object_Goods.NDSKindId) AS NDSKindId
+                                    , COALESCE(tmpContainer.NDSKindId, tmpDeferredSendNDSKindId.NDSKindId,
+                                                                                  Object_Goods.NDSKindId)  AS NDSKindId
+                                    , tmpContainer.DiscountExternalID                                      AS DiscountExternalID
                                     , Container.PartionDateKindId                                          AS PartionDateKindId
                                     , SUM (Container.Amount)                                               AS Remains
                                     , SUM (Container.Reserve)                                              AS Reserve
@@ -659,11 +679,13 @@ BEGIN
 
                                GROUP BY Container.ObjectId
                                       , COALESCE(tmpContainer.NDSKindId, tmpDeferredSendNDSKindId.NDSKindId, Object_Goods.NDSKindId)
+                                      , tmpContainer.DiscountExternalID
                                       , Container.PartionDateKindId
                                )
           -- Непосредственно остатки
        , GoodsRemains AS (SELECT Container.ObjectId
                                , Container.NDSKindId
+                               , Container.DiscountExternalID
                                , Container.Remains - COALESCE(Reserve.Amount, 0) -
                                             COALESCE(Container.DeferredSend, 0)    AS Remains
                                , Reserve.Amount                                    AS Reserve
@@ -680,6 +702,7 @@ BEGIN
                           UNION ALL
                           SELECT Container.ObjectId
                                , Container.NDSKindId
+                               , Container.DiscountExternalID
                                , Container.Remains - COALESCE(Container.Reserve, 0) -
                                                      COALESCE(Container.DeferredSend, 0)
                                , Container.Reserve
@@ -692,6 +715,7 @@ BEGIN
                           UNION ALL
                           SELECT Reserve.GoodsId                                                       AS GoodsId
                                , Reserve.NDSKindId                                                     AS NDSKindId
+                               , tmpGoodsRemains.DiscountExternalID                                    AS DiscountExternalID
                                , -Reserve.Amount                                                       AS Remains
                                , Reserve.Amount                                                        AS Reserved
                                , NULL                                                                  AS DeferredSend
@@ -737,6 +761,7 @@ BEGIN
     SELECT GoodsRemains.ObjectId                                             AS GoodsId
          , COALESCE (GoodsRemains.PartionDateKindId, 0)                      AS PartionDateKindId
          , GoodsRemains.NDSKindId                                            AS NDSKindId
+         , COALESCE (GoodsRemains.DiscountExternalID, 0)                     AS DiscountExternalID
          , COALESCE(tmpObject_Price.Price,0)::TFloat                         AS Price
          , GoodsRemains.Remains::TFloat                                      AS Remains
          , tmpObject_Price.MCSValue                                          AS MCSValue
@@ -762,6 +787,7 @@ ALTER FUNCTION gpSelect_CashRemains_CashSession (TVarChar) OWNER TO postgres;
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.   Воробкало А.А.  Ярошенко Р.Ф.  Шаблий О.В.
+ 19.06.20                                                                                                    * DiscountExternalID
  13.03.20                                                                                                    * Оптимизация
  15.07.19                                                                                                    *
  28.05.19                                                                                                    * PartionDateKindId
@@ -789,4 +815,5 @@ ALTER FUNCTION gpSelect_CashRemains_CashSession (TVarChar) OWNER TO postgres;
 */
 
 --тест
--- SELECT * FROM gpSelect_CashRemains_CashSession ('3')
+--SELECT * FROM gpSelect_CashRemains_CashSession ('13543334')
+--SELECT * FROM gpSelect_CashRemains_CashSession ('3')

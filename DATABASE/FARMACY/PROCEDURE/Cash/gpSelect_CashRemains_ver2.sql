@@ -14,8 +14,8 @@ RETURNS TABLE (Id Integer, GoodsId_main Integer, GoodsGroupName TVarChar, GoodsN
                isSP boolean,
                IntenalSPName TVarChar,
                MinExpirationDate TDateTime,
-               PartionDateKindId  Integer,
-               PartionDateKindName  TVarChar,
+               DiscountExternalID  Integer, DiscountExternalName  TVarChar,
+               PartionDateKindId  Integer, PartionDateKindName  TVarChar,
                Color_ExpirationDate Integer,
                ConditionsKeepName TVarChar,
                AmountIncome TFloat, PriceSaleIncome TFloat,
@@ -25,7 +25,7 @@ RETURNS TABLE (Id Integer, GoodsId_main Integer, GoodsGroupName TVarChar, GoodsN
                isMCSAuto Boolean, isMCSNotRecalcOld Boolean,
                AccommodationId Integer, AccommodationName TVarChar,
                PriceChange TFloat, FixPercent TFloat, FixDiscount TFloat, Multiplicity TFloat,
-               DoesNotShare boolean, GoodsAnalogId Integer, GoodsAnalogName TVarChar, 
+               DoesNotShare boolean, GoodsAnalogId Integer, GoodsAnalogName TVarChar,
                GoodsAnalog TVarChar, GoodsAnalogATC TVarChar, GoodsActiveSubstance TVarChar,
                CountSP TFloat, IdSP TVarChar, DosageIdSP TVarChar, PriceRetSP TFloat, PaymentSP TFloat,
                AmountMonth TFloat, PricePartionDate TFloat,
@@ -177,11 +177,12 @@ BEGIN
 
     -- Данные
     --залили снапшот
-    INSERT INTO CashSessionSnapShot(CashSessionId,ObjectId,NDSKindId,PartionDateKindId,Price,Remains,MCSValue,Reserved,DeferredSend,MinExpirationDate,AccommodationId,PartionDateDiscount,PriceWithVAT
+    INSERT INTO CashSessionSnapShot(CashSessionId,ObjectId,NDSKindId,DiscountExternalID,PartionDateKindId,Price,Remains,MCSValue,Reserved,DeferredSend,MinExpirationDate,AccommodationId,PartionDateDiscount,PriceWithVAT
     )
     SELECT inCashSessionId                                                  AS CashSession
           , CashRemains.GoodsId
           , CashRemains.NDSKindId
+          , CashRemains.DiscountExternalID
           , CashRemains.PartionDateKindId
           , CashRemains.Price
           , CashRemains.Remains
@@ -749,6 +750,8 @@ BEGIN
             CASE WHEN tmpGoodsSP.GoodsId IS NULL THEN FALSE ELSE TRUE END :: Boolean  AS isSP,
             Object_IntenalSP.ValueData AS IntenalSPName,
             CashSessionSnapShot.MinExpirationDate,
+            NULLIF (CashSessionSnapShot.DiscountExternalID, 0) AS DiscountExternalID,
+            Object_DiscountExternal.ValueData                  AS DiscountExternalName,
             NULLIF (CashSessionSnapShot.PartionDateKindId, 0)  AS PartionDateKindId,
             Object_PartionDateKind.Name                        AS PartionDateKindName,
             CASE WHEN vbDividePartionDate = False
@@ -895,6 +898,9 @@ BEGIN
            -- Тип срок/не срок
            LEFT JOIN tmpPartionDateKind AS Object_PartionDateKind ON Object_PartionDateKind.Id = NULLIF (CashSessionSnapShot.PartionDateKindId, 0)
 
+           -- Товар для проекта (дисконтные карты)
+           LEFT JOIN Object AS Object_DiscountExternal ON Object_DiscountExternal.Id = NULLIF (CashSessionSnapShot.DiscountExternalId, 0)
+
            -- Без Продажи за последнии 100 дней
            LEFT JOIN tmpNotSold ON tmpNotSold.GoodsID = Goods.Id
 
@@ -938,6 +944,7 @@ ALTER FUNCTION gpSelect_CashRemains_ver2 (TVarChar, TVarChar) OWNER TO postgres;
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.   Воробкало А.А.  Ярошенко Р.Ф.  Шаблий О.В.
+ 19.06.20                                                                                                    * DiscountExternalID
  19.02.20                                                                                                    *
  04.12.19                                                                                                    * FixDiscount
  23.09.19                                                                                                    * NotTransferTime
@@ -969,4 +976,4 @@ ALTER FUNCTION gpSelect_CashRemains_ver2 (TVarChar, TVarChar) OWNER TO postgres;
 -- тест
 -- SELECT * FROM gpSelect_CashRemains_ver2 ('{85E257DE-0563-4B9E-BE1C-4D5C123FB33A}-', '10411288')
 -- SELECT * FROM gpSelect_CashRemains_ver2 ('{85E257DE-0563-4B9E-BE1C-4D5C123FB33A}-', '3998773') WHERE GoodsCode = 1240
--- SELECT * FROM gpSelect_CashRemains_ver2 ('{0B05C610-B172-4F81-99B8-25BF5385ADD6}', '3') -- where notsold = True
+-- SELECT * FROM gpSelect_CashRemains_ver2 ('{0B05C610-B172-4F81-99B8-25BF5385ADD6}', '13543334') -- where notsold = True

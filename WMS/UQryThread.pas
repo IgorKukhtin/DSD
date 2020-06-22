@@ -8,6 +8,7 @@ uses
   System.SyncObjs,
   FireDAC.Comp.Client,
   FireDAC.Stan.Param,
+  Vcl.DBGrids,
   {$IFDEF LOG}
   ULog,
   {$ENDIF}
@@ -30,10 +31,10 @@ type
 
   TBaseQryThread = class(TThread)
   strict private
-    FQry: TFDQuery;
     FConn: TFDConnection;
     FAction: TSQLAction;
   protected
+    FQry: TFDQuery;
     FMsgProc: TNotifyMsgProc;
     FDone: Boolean;
     FFailed: Boolean;
@@ -52,6 +53,17 @@ type
   TQryThread = class(TBaseQryThread)
   protected
     procedure Execute; override;
+  end;
+
+  TAdjustColmnWidthThread = class(TQryThread)
+  strict private
+    FGrid: TDBGrid;
+    FVisibleRowCount: Integer;
+  protected
+    procedure Execute; override;
+  public
+    constructor Create(AGrid: TDBGrid; const AVisibleRowCount: Integer; AQry: TFDQuery;
+      AMsgProc: TNotifyMsgProc; AKind: TThreadKind = tknNondriven); reintroduce;
   end;
 
   TProcessPacketThread = class(TBaseQryThread)
@@ -117,9 +129,12 @@ implementation
 
 uses
   System.SysUtils,
-  ActiveX,
+  System.Variants,
+  System.Math,
+  Winapi.ActiveX,
   Xml.XMLIntf,
   Xml.XMLDoc,
+  Data.DB,
   UConstants,
   {$IFDEF LOG}
   System.StrUtils,
@@ -620,6 +635,65 @@ begin
   {$IFDEF LOG}
   FLog.Write(FName + '.txt', AMsg);
   {$ENDIF}
+end;
+
+
+{ TAdjustColmnWidthThread }
+
+constructor TAdjustColmnWidthThread.Create(AGrid: TDBGrid; const AVisibleRowCount: Integer;
+  AQry: TFDQuery; AMsgProc: TNotifyMsgProc; AKind: TThreadKind);
+begin
+  inherited Create(AQry, saOpen, AMsgProc, AKind);
+
+  FGrid := AGrid;
+  FVisibleRowCount := AVisibleRowCount;
+end;
+
+procedure TAdjustColmnWidthThread.Execute;
+type
+  TIntArray = array of Integer;
+var
+  I, J, iCount: Integer;
+  colWidths: TIntArray;
+  sValue: string;
+begin
+  inherited;
+
+  SetLength(colWidths, FQry.Fields.Count);
+
+  for I := 0 to Pred(FQry.Fields.Count) do
+    colWidths[I] := Length(FQry.Fields[I].FieldName) + 2;
+
+  if FQry.RecordCount > 0 then FQry.First;
+
+  iCount  := 0;
+  while not FQry.Eof and (iCount < FVisibleRowCount)  do
+  begin
+    for J := 0 to Pred(FQry.FieldCount) do
+    begin
+      sValue := VarToStr(Coalesce(FQry.Fields[J].Value, 0));
+      colWidths[J] := Max(colWidths[J], Length(sValue));
+    end;
+    Inc(iCount);
+    FQry.Next;
+  end;
+
+  Synchronize(procedure
+              var
+                I, iLetterW: Integer;
+              begin
+                iLetterW := 8;
+                if (FGrid <> nil) and (FGrid.Parent <> nil) then
+                  iLetterW := FGrid.Canvas.TextWidth('M');
+
+                FGrid.Columns.BeginUpdate;
+                try
+                  for I := 0 to Pred(FGrid.Columns.Count) do
+                    FGrid.Columns[I].Width := colWidths[I] * iLetterW;
+                finally
+                  FGrid.Columns.EndUpdate;
+                end;
+              end);
 end;
 
 end.
