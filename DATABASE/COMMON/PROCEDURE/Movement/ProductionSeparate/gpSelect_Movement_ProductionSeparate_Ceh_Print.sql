@@ -212,6 +212,7 @@ BEGIN
             , Object_StorageLine.ObjectCode               AS StorageLineCode
             , Object_StorageLine.ValueData                AS StorageLineName
             , Object_Measure.ValueData                    AS MeasureName
+            , Object_GoodsKind.ValueData                  AS GoodsKindName
             , tmpMI.Amount                      :: TFloat AS Amount
             , tmpMI.LiveWeight                  :: TFloat AS LiveWeight
             , tmpMI.HeadCount                   :: TFloat AS HeadCount
@@ -224,6 +225,7 @@ BEGIN
 
        FROM (SELECT MovementItem.ObjectId                            AS GoodsId
                   , COALESCE (MILinkObject_StorageLine.ObjectId, 0)  AS StorageLineId
+                  , COALESCE (MILinkObject_GoodsKind.ObjectId,0)     AS GoodsKindId
                   , SUM (MovementItem.Amount)                        AS Amount
                   , SUM (COALESCE (MIFloat_LiveWeight.ValueData, 0)) AS LiveWeight
                   , SUM (COALESCE (MIFloat_HeadCount.ValueData, 0))  AS HeadCount
@@ -237,18 +239,24 @@ BEGIN
                   LEFT JOIN MovementItemFloat AS MIFloat_HeadCount
                                               ON MIFloat_HeadCount.MovementItemId = MovementItem.Id
                                              AND MIFloat_HeadCount.DescId = zc_MIFloat_HeadCount()
+                  LEFT JOIN MovementItemLinkObject AS MILinkObject_GoodsKind
+                                             ON MILinkObject_GoodsKind.MovementItemId = MovementItem.Id
+                                            AND MILinkObject_GoodsKind.DescId = zc_MILinkObject_GoodsKind()
+            
              WHERE MovementItem.MovementId = inMovementId
                AND MovementItem.DescId     = zc_MI_Child()
                AND MovementItem.isErased   = FALSE
                AND MovementItem.Amount <> 0
              GROUP BY MovementItem.ObjectId
                     , MILinkObject_StorageLine.ObjectId
+                    , COALESCE (MILinkObject_GoodsKind.ObjectId,0)
             ) AS tmpMI
             FULL JOIN tmpWeighing ON tmpWeighing.GoodsId       = tmpMI.GoodsId
                                  AND tmpWeighing.StorageLineId = tmpMI.StorageLineId
 
             LEFT JOIN Object AS Object_Goods       ON Object_Goods.Id       = COALESCE (tmpMI.GoodsId, tmpWeighing.GoodsId)
             LEFT JOIN Object AS Object_StorageLine ON Object_StorageLine.Id = COALESCE (tmpMI.StorageLineId, tmpWeighing.StorageLineId)
+            LEFT JOIN Object AS Object_GoodsKind   ON Object_GoodsKind.Id   = tmpMI.GoodsKindId
 
             LEFT JOIN ObjectString AS ObjectString_Goods_GoodsGroupFull
                                    ON ObjectString_Goods_GoodsGroupFull.ObjectId = Object_Goods.Id
@@ -262,6 +270,8 @@ BEGIN
             LEFT JOIN ObjectFloat AS ObjectFloat_Weight
                                   ON ObjectFloat_Weight.ObjectId = Object_Goods.Id
                                  AND ObjectFloat_Weight.DescId = zc_ObjectFloat_Goods_Weight()
+
+
       ;
 
     RETURN NEXT Cursor2;

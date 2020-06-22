@@ -2313,18 +2313,18 @@ begin
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_CashDialogForm'));
   TdsdFormStorageFactory.GetStorage.Load('TReport_CashDialogForm');
   exit;
-
+  }
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_BankAccount_Cash_OlapForm'));
   TdsdFormStorageFactory.GetStorage.Load('TReport_BankAccount_Cash_OlapForm');
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_BankAccount_Cash_OlapDialogForm'));
   TdsdFormStorageFactory.GetStorage.Load('TReport_BankAccount_Cash_OlapDialogForm');
-  exit;
 
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_Cash_OlapForm'));
   TdsdFormStorageFactory.GetStorage.Load('TReport_Cash_OlapForm');
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_Cash_OlapDialogForm'));
   TdsdFormStorageFactory.GetStorage.Load('TReport_Cash_OlapDialogForm');
-
+  exit;
+  {
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_CashUserForm'));
   TdsdFormStorageFactory.GetStorage.Load('TReport_CashUserForm');
 
@@ -2679,10 +2679,10 @@ begin
   {
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TInfoMoneyGroupEditForm'));
   TdsdFormStorageFactory.GetStorage.Load('TInfoMoneyGroupEditForm');
-  }
+
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TInfoMoneyGroupForm'));
   TdsdFormStorageFactory.GetStorage.Load('TInfoMoneyGroupForm');
-  {
+
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TInfoMoneyGroup_ObjectForm'));
   TdsdFormStorageFactory.GetStorage.Load('TInfoMoneyGroup_ObjectForm');
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TInfoMoneyGroup_ObjectDescForm'));
@@ -2690,18 +2690,18 @@ begin
 
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TInfoMoneyDestinationEditForm'));
   TdsdFormStorageFactory.GetStorage.Load('TInfoMoneyDestinationEditForm');
-  }
+
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TInfoMoneyDestinationForm'));
   TdsdFormStorageFactory.GetStorage.Load('TInfoMoneyDestinationForm');
-  {
+
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TInfoMoneyDestination_ObjectForm'));
   TdsdFormStorageFactory.GetStorage.Load('TInfoMoneyDestination_ObjectForm');
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TInfoMoneyDestination_ObjectDescForm'));
   TdsdFormStorageFactory.GetStorage.Load('TInfoMoneyDestination_ObjectDescForm');
-
+   }
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TInfoMoneyEditForm'));
   TdsdFormStorageFactory.GetStorage.Load('TInfoMoneyEditForm');
-  }
+
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TInfoMoneyForm'));
   TdsdFormStorageFactory.GetStorage.Load('TInfoMoneyForm');
   {

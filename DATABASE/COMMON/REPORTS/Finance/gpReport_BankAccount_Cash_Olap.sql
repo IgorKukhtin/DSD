@@ -15,6 +15,7 @@ RETURNS TABLE (ContainerId Integer, CashCode Integer, CashName TVarChar, Currenc
              , GroupId Integer, GroupName TVarChar
              , BranchName TVarChar
              , InfoMoneyGroupName TVarChar, InfoMoneyDestinationName TVarChar, InfoMoneyCode Integer, InfoMoneyName TVarChar, InfoMoneyName_all TVarChar
+             , CashFlowCode Integer, CashFlowName TVarChar
              , AccountName TVarChar
              , UnitCode Integer, UnitName TVarChar
              , ProfitLossGroupCode Integer, ProfitLossGroupName TVarChar
@@ -146,6 +147,10 @@ BEGIN
                                     || ' ' || Object_InfoMoneyDestination.ValueData
                                     || CASE WHEN Object_InfoMoneyDestination.ValueData <> Object_InfoMoney.ValueData THEN ' ' || Object_InfoMoney.ValueData ELSE '' END
                                        AS TVarChar)                                        AS InfoMoneyName_all
+                                       
+                                , Object_CashFlow.Id                     AS CashFlowId
+                                , Object_CashFlow.ObjectCode             AS CashFlowCode
+                                , '(' || CAST (Object_CashFlow.ObjectCode AS TVarChar) || ') '|| Object_CashFlow.ValueData AS CashFlowName
                            FROM Object AS Object_InfoMoney
                                 LEFT JOIN ObjectLink AS ObjectLink_InfoMoney_InfoMoneyDestination
                                                      ON ObjectLink_InfoMoney_InfoMoneyDestination.ObjectId = Object_InfoMoney.Id
@@ -156,7 +161,11 @@ BEGIN
                                                      ON ObjectLink_InfoMoney_InfoMoneyGroup.ObjectId = Object_InfoMoney.Id
                                                     AND ObjectLink_InfoMoney_InfoMoneyGroup.DescId = zc_ObjectLink_InfoMoney_InfoMoneyGroup()
                                 LEFT JOIN Object AS Object_InfoMoneyGroup ON Object_InfoMoneyGroup.Id = ObjectLink_InfoMoney_InfoMoneyGroup.ChildObjectId
-                         
+
+                                LEFT JOIN ObjectLink AS ObjectLink_InfoMoney_CashFlow
+                                                     ON ObjectLink_InfoMoney_CashFlow.ObjectId = Object_InfoMoney.Id
+                                                    AND ObjectLink_InfoMoney_CashFlow.DescId = zc_ObjectLink_InfoMoney_CashFlow()
+                                LEFT JOIN Object AS Object_CashFlow ON Object_CashFlow.Id = ObjectLink_InfoMoney_CashFlow.ChildObjectId
                           WHERE Object_InfoMoney.DescId = zc_Object_InfoMoney()
                           )
                                   
@@ -928,6 +937,8 @@ BEGIN
         tmpInfoMoney.InfoMoneyCode                                                                  AS InfoMoneyCode,
         CASE WHEN COALESCE (Operation.InfoMoneyId, 0) = 0 AND (Operation.DebetSumm <> 0 OR Operation.KreditSumm <> 0 OR Operation.DebetSumm_Currency <> 0 OR Operation.KreditSumm_Currency <> 0) THEN 'Курсовая разница' ELSE tmpInfoMoney.InfoMoneyName     END :: TVarChar AS InfoMoneyName,
         CASE WHEN COALESCE (Operation.InfoMoneyId, 0) = 0 AND (Operation.DebetSumm <> 0 OR Operation.KreditSumm <> 0 OR Operation.DebetSumm_Currency <> 0 OR Operation.KreditSumm_Currency <> 0) THEN 'Курсовая разница' ELSE tmpInfoMoney.InfoMoneyName_all END :: TVarChar AS InfoMoneyName_all,
+        tmpInfoMoney.CashFlowCode                 :: Integer                                        AS CashFlowCode,
+        tmpInfoMoney.CashFlowName                 :: TVarChar                                       AS CashFlowName,
         tmpAccount.AccountName_all                                                                  AS AccountName,
         Object_Unit.ObjectCode                                                                      AS UnitCode,
         Object_Unit.ValueData                                                                       AS UnitName,
