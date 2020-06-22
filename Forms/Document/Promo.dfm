@@ -1105,6 +1105,9 @@
     object cxTabSheetCalc: TcxTabSheet
       Caption = #1050#1072#1083#1100#1082#1091#1083#1103#1090#1086#1088' - '#1089#1082#1080#1076#1082#1072
       ImageIndex = 2
+      ExplicitTop = 0
+      ExplicitWidth = 0
+      ExplicitHeight = 0
       object cxGridCalc: TcxGrid
         Left = 0
         Top = 0
@@ -1714,9 +1717,6 @@
     object cxTabSheetSign: TcxTabSheet
       Caption = #1069#1083#1077#1082#1090#1088#1086#1085#1085#1072#1103' '#1087#1086#1076#1087#1080#1089#1100
       ImageIndex = 4
-      ExplicitTop = 0
-      ExplicitWidth = 0
-      ExplicitHeight = 0
       object cxGridSign: TcxGrid
         Left = 0
         Top = 0
@@ -2054,12 +2054,9 @@
         end
       end
     end
-    object cxTabSheetPromoStateKind: TcxTabSheet
+    object cxTabSheetMessage: TcxTabSheet
       Caption = #1057#1086#1086#1073#1097#1077#1085#1080#1103
       ImageIndex = 6
-      ExplicitTop = 0
-      ExplicitWidth = 0
-      ExplicitHeight = 0
       object cxGrid2: TcxGrid
         Left = 0
         Top = 0
@@ -2649,14 +2646,14 @@
     end
     object actInsertRecordPromoStateKind: TInsertRecord [1]
       Category = 'PromoStateKind'
-      TabSheet = tsMain
       MoveParams = <>
+      Enabled = False
       PostDataSetBeforeExecute = False
       View = cxGridDBTableViewPromoStateKind
       Action = actPromoStateKindChoice
       Params = <>
-      Caption = #1044#1086#1073#1072#1074#1080#1090#1100' <'#1057#1086#1089#1090#1086#1103#1085#1080#1077'>'
-      Hint = #1044#1086#1073#1072#1074#1080#1090#1100' <'#1057#1086#1089#1090#1086#1103#1085#1080#1077'>'
+      Caption = #1044#1086#1073#1072#1074#1080#1090#1100' <'#1057#1086#1089#1090#1086#1103#1085#1080#1077' '#1040#1082#1094#1080#1080'>'
+      Hint = #1044#1086#1073#1072#1074#1080#1090#1100' <'#1057#1086#1089#1090#1086#1103#1085#1080#1077' '#1040#1082#1094#1080#1080'>'
       ImageIndex = 0
     end
     object actRefresh_Get: TdsdDataSetRefresh [2]
@@ -2687,7 +2684,7 @@
         end
         item
         end>
-      Caption = #1059#1076#1072#1083#1080#1090#1100' <'#1057#1086#1089#1090#1086#1103#1085#1080#1077'>'
+      Caption = #1059#1076#1072#1083#1080#1090#1100' <'#1057#1086#1089#1090#1086#1103#1085#1080#1077' '#1040#1082#1094#1080#1080'>'
       Hint = #1059#1076#1072#1083#1080#1090#1100' <'#1057#1086#1089#1090#1086#1103#1085#1080#1077'>'
       ImageIndex = 2
       ShortCut = 46
@@ -2878,8 +2875,8 @@
     end
     object InsertRecord: TInsertRecord [15]
       Category = 'Goods'
-      TabSheet = tsMain
       MoveParams = <>
+      Enabled = False
       PostDataSetBeforeExecute = False
       View = cxGridDBTableView
       Action = actGoodsChoiceForm
@@ -2913,8 +2910,8 @@
       Category = 'PromoStateKind'
       TabSheet = tsMain
       MoveParams = <>
-      Caption = #1055#1088#1086#1089#1084#1086#1090#1088' <'#1055#1088#1086#1090#1086#1082#1086#1083#1072' '#1089#1090#1088#1086#1082' '#1057#1086#1089#1090#1086#1103#1085#1080#1103'>'
-      Hint = #1055#1088#1086#1089#1084#1086#1090#1088' <'#1055#1088#1086#1090#1086#1082#1086#1083#1072' '#1089#1090#1088#1086#1082' '#1057#1086#1089#1090#1086#1103#1085#1080#1103'>'
+      Caption = #1055#1088#1086#1090#1086#1082#1086#1083' <'#1057#1086#1089#1090#1086#1103#1085#1080#1077' '#1040#1082#1094#1080#1080'>'
+      Hint = #1055#1088#1086#1089#1084#1086#1090#1088' <'#1055#1088#1086#1090#1086#1082#1086#1083' '#1057#1086#1089#1090#1086#1103#1085#1080#1077' '#1040#1082#1094#1080#1080'>'
       ImageIndex = 34
       FormName = 'TMovementItemProtocolForm'
       FormNameParam.Value = 'TMovementItemProtocolForm'
@@ -2949,7 +2946,7 @@
         end
         item
         end>
-      Caption = #1059#1076#1072#1083#1080#1090#1100' <'#1090#1086#1074#1072#1088'>'
+      Caption = #1059#1076#1072#1083#1080#1090#1100' <'#1058#1086#1074#1072#1088'>'
       Hint = #1059#1076#1072#1083#1080#1090#1100' <'#1058#1086#1074#1072#1088'>'
       ShortCut = 0
       QuestionBeforeExecute = #1044#1077#1081#1089#1090#1074#1080#1090#1077#1083#1100#1085#1086' '#1091#1076#1072#1083#1080#1090#1100' <'#1058#1086#1074#1072#1088'> ?'
@@ -3144,7 +3141,7 @@
         end>
     end
     inherited actShowErased: TBooleanStoredProcAction
-      TabSheet = tsMain
+      Enabled = False
       StoredProcList = <
         item
           StoredProc = spSelect
@@ -3172,8 +3169,8 @@
         end>
       QuestionBeforeExecute = #1044#1077#1081#1089#1090#1074#1080#1090#1077#1083#1100#1085#1086' '#1074#1099#1087#1086#1083#1085#1080#1090#1100' '#1056#1072#1089#1095#1077#1090' = '#1055#1088#1086#1076#1072#1078#1072' + '#1042#1086#1079#1074#1088#1072#1090' + '#1047#1072#1103#1074#1082#1080' ?'
       InfoAfterExecute = #1042#1099#1087#1086#1083#1085#1077#1085' '#1088#1072#1089#1095#1077#1090' = '#1055#1088#1086#1076#1072#1078#1072' + '#1042#1086#1079#1074#1088#1072#1090' + '#1047#1072#1103#1074#1082#1080' '
-      Caption = #1056#1072#1089#1095#1077#1090' = '#1055#1088#1086#1076#1072#1078#1072' + '#1042#1086#1079#1074#1088#1072#1090' + '#1047#1072#1103#1074#1082#1080
-      Hint = #1056#1072#1089#1095#1077#1090' = '#1055#1088#1086#1076#1072#1078#1072' + '#1042#1086#1079#1074#1088#1072#1090' + '#1047#1072#1103#1074#1082#1080
+      Caption = #1056#1072#1089#1095#1077#1090' '#1076#1072#1085#1085#1099#1093': '#1055#1088#1086#1076#1072#1078#1072' + '#1042#1086#1079#1074#1088#1072#1090' + '#1047#1072#1103#1074#1082#1080
+      Hint = #1056#1072#1089#1095#1077#1090' '#1076#1072#1085#1085#1099#1093': '#1055#1088#1086#1076#1072#1078#1072' + '#1042#1086#1079#1074#1088#1072#1090' + '#1047#1072#1103#1074#1082#1080
       ImageIndex = 44
     end
     inherited actUpdateMainDS: TdsdUpdateDataSet
@@ -3260,13 +3257,15 @@
     end
     inherited MovementItemProtocolOpenForm: TdsdOpenForm
       TabSheet = tsMain
+      Caption = #1055#1088#1086#1090#1086#1082#1086#1083' <'#1058#1086#1074#1072#1088'>'
+      Hint = #1055#1088#1086#1089#1084#1086#1090#1088' <'#1055#1088#1086#1090#1086#1082#1086#1083' '#1058#1086#1074#1072#1088'>'
     end
     object actPartnerProtocolOpenForm: TdsdOpenForm [37]
       Category = 'DSDLib'
       TabSheet = tsMain
       MoveParams = <>
-      Caption = #1055#1088#1086#1089#1084#1086#1090#1088' <'#1055#1088#1086#1090#1086#1082#1086#1083#1072' '#1089#1090#1088#1086#1082' '#1055#1072#1088#1090#1085#1077#1088#1099'>'
-      Hint = #1055#1088#1086#1089#1084#1086#1090#1088' <'#1055#1088#1086#1090#1086#1082#1086#1083#1072' '#1089#1090#1088#1086#1082' '#1055#1072#1088#1090#1085#1077#1088#1099'>'
+      Caption = #1055#1088#1086#1090#1086#1082#1086#1083' <'#1057#1077#1090#1100'/'#1070#1088'.'#1083#1080#1094#1086'/'#1050#1086#1085#1090#1088#1072#1075#1077#1085#1090'>'
+      Hint = #1055#1088#1086#1089#1084#1086#1090#1088' <'#1055#1088#1086#1090#1086#1082#1086#1083' '#1087#1086' '#1057#1077#1090#1100'/'#1070#1088'.'#1083#1080#1094#1086'/'#1050#1086#1085#1090#1088#1072#1075#1077#1085#1090'>'
       ImageIndex = 34
       FormName = 'TMovementProtocolForm'
       FormNameParam.Value = 'TMovementProtocolForm'
@@ -3296,8 +3295,8 @@
       Category = 'DSDLib'
       TabSheet = tsMain
       MoveParams = <>
-      Caption = #1055#1088#1086#1089#1084#1086#1090#1088' <'#1055#1088#1086#1090#1086#1082#1086#1083#1072' '#1089#1090#1088#1086#1082' '#1044#1086#1087'. '#1089#1082#1080#1076#1082#1072'>'
-      Hint = #1055#1088#1086#1089#1084#1086#1090#1088' <'#1055#1088#1086#1090#1086#1082#1086#1083#1072' '#1089#1090#1088#1086#1082' '#1044#1086#1087'. '#1089#1082#1080#1076#1082#1072'>'
+      Caption = #1055#1088#1086#1090#1086#1082#1086#1083' <% '#1076#1086#1087#1086#1083#1085#1080#1090#1077#1083#1100#1085#1086#1081' '#1089#1082#1080#1076#1082#1080'>'
+      Hint = #1055#1088#1086#1089#1084#1086#1090#1088' <'#1055#1088#1086#1090#1086#1082#1086#1083' % '#1076#1086#1087#1086#1083#1085#1080#1090#1077#1083#1100#1085#1086#1081' '#1089#1082#1080#1076#1082#1080'>'
       ImageIndex = 34
       FormName = 'TMovementItemProtocolForm'
       FormNameParam.Value = 'TMovementItemProtocolForm'
@@ -3327,8 +3326,8 @@
       Category = 'DSDLib'
       TabSheet = tsMain
       MoveParams = <>
-      Caption = #1055#1088#1086#1089#1084#1086#1090#1088' <'#1055#1088#1086#1090#1086#1082#1086#1083#1072' '#1089#1090#1088#1086#1082' '#1056#1077#1082#1083#1072#1084#1085#1072#1103' '#1087#1086#1076#1076#1077#1088#1078#1082#1072'>'
-      Hint = #1055#1088#1086#1089#1084#1086#1090#1088' <'#1055#1088#1086#1090#1086#1082#1086#1083#1072' '#1089#1090#1088#1086#1082' '#1056#1077#1082#1083#1072#1084#1085#1072#1103' '#1087#1086#1076#1076#1077#1088#1078#1082#1072'>'
+      Caption = #1055#1088#1086#1090#1086#1082#1086#1083' <'#1056#1077#1082#1083#1072#1084#1085#1072#1103' '#1087#1086#1076#1076#1077#1088#1078#1082#1072'>'
+      Hint = #1055#1088#1086#1089#1084#1086#1090#1088' <'#1055#1088#1086#1090#1086#1082#1086#1083' '#1056#1077#1082#1083#1072#1084#1085#1072#1103' '#1087#1086#1076#1076#1077#1088#1078#1082#1072'>'
       ImageIndex = 34
       FormName = 'TMovementProtocolForm'
       FormNameParam.Value = 'TMovementProtocolForm'
@@ -3460,14 +3459,14 @@
     end
     object actInsertRecordPartner: TInsertRecord
       Category = 'Partner'
-      TabSheet = tsMain
       MoveParams = <>
+      Enabled = False
       PostDataSetBeforeExecute = False
       View = cxGridDBTableViewPartner
       Action = actPromoPartnerChoiceForm
       Params = <>
-      Caption = #1044#1086#1073#1072#1074#1080#1090#1100' <'#1055#1072#1088#1090#1085#1077#1088#1072'>'
-      Hint = #1044#1086#1073#1072#1074#1080#1090#1100' <'#1055#1072#1088#1090#1085#1077#1088#1072'>'
+      Caption = #1044#1086#1073#1072#1074#1080#1090#1100' <'#1057#1077#1090#1100'/'#1070#1088'.'#1083#1080#1094#1086'/'#1050#1086#1085#1090#1088#1072#1075#1077#1085#1090'>'
+      Hint = #1044#1086#1073#1072#1074#1080#1090#1100' <'#1057#1077#1090#1100'/'#1070#1088'.'#1083#1080#1094#1086'/'#1050#1086#1085#1090#1088#1072#1075#1077#1085#1090'>'
       ImageIndex = 0
     end
     object actErasedPartner: TdsdUpdateErased
@@ -3481,8 +3480,8 @@
         end
         item
         end>
-      Caption = #1059#1076#1072#1083#1080#1090#1100' <'#1055#1072#1088#1090#1085#1077#1088#1072'>'
-      Hint = #1059#1076#1072#1083#1080#1090#1100' <'#1055#1072#1088#1090#1085#1077#1088#1072'>'
+      Caption = #1059#1076#1072#1083#1080#1090#1100' <'#1057#1077#1090#1100'/'#1070#1088'.'#1083#1080#1094#1086'/'#1050#1086#1085#1090#1088#1072#1075#1077#1085#1090'>'
+      Hint = #1059#1076#1072#1083#1080#1090#1100' <'#1057#1077#1090#1100'/'#1070#1088'.'#1083#1080#1094#1086'/'#1050#1086#1085#1090#1088#1072#1075#1077#1085#1090'>'
       ImageIndex = 2
       ShortCut = 46
       ErasedFieldName = 'isErased'
@@ -3582,8 +3581,8 @@
     end
     object actInsertCondition: TInsertRecord
       Category = 'Condition'
-      TabSheet = tsMain
       MoveParams = <>
+      Enabled = False
       PostDataSetBeforeExecute = False
       View = grtvConditionPromo
       Action = actConditionPromoChoiceForm
@@ -3843,8 +3842,8 @@
         item
           Action = actRefresh
         end>
-      Caption = #1056#1072#1089#1095#1077#1090' '#1076#1072#1085#1085#1099#1093' -'#1040#1085#1072#1083#1086#1075#1080#1095#1085#1099#1081' '#1087#1077#1088#1080#1086#1076' + '#1050#1086#1085#1090#1088#1072#1075#1077#1085#1090#1099' ('#1076#1077#1090#1072#1083#1100#1085#1086')'
-      Hint = #1056#1072#1089#1095#1077#1090' '#1076#1072#1085#1085#1099#1093' -'#1040#1085#1072#1083#1086#1075#1080#1095#1085#1099#1081' '#1087#1077#1088#1080#1086#1076' + '#1050#1086#1085#1090#1088#1072#1075#1077#1085#1090#1099' ('#1076#1077#1090#1072#1083#1100#1085#1086')'
+      Caption = #1056#1072#1089#1095#1077#1090' '#1076#1072#1085#1085#1099#1093': '#1040#1085#1072#1083#1086#1075#1080#1095#1085#1099#1081' '#1087#1077#1088#1080#1086#1076' + '#1050#1086#1085#1090#1088#1072#1075#1077#1085#1090#1099' ('#1076#1077#1090#1072#1083#1100#1085#1086')'
+      Hint = #1056#1072#1089#1095#1077#1090' '#1076#1072#1085#1085#1099#1093': '#1040#1085#1072#1083#1086#1075#1080#1095#1085#1099#1081' '#1087#1077#1088#1080#1086#1076' + '#1050#1086#1085#1090#1088#1072#1075#1077#1085#1090#1099' ('#1076#1077#1090#1072#1083#1100#1085#1086')'
       ImageIndex = 45
     end
     object actPartnerListRefresh: TdsdDataSetRefresh
@@ -4156,6 +4155,10 @@
       ItemLinks = <
         item
           Visible = True
+          ItemName = 'dxBarStatic'
+        end
+        item
+          Visible = True
           ItemName = 'bbInsertUpdateMovement'
         end
         item
@@ -4165,15 +4168,11 @@
         item
           BeginGroup = True
           Visible = True
-          ItemName = 'dxBarButton11'
-        end
-        item
-          Visible = True
           ItemName = 'dxBarStatic'
         end
         item
           Visible = True
-          ItemName = 'bbInsertUpdate_MI_Param'
+          ItemName = 'bsCalc'
         end
         item
           Visible = True
@@ -4189,15 +4188,11 @@
         end
         item
           Visible = True
-          ItemName = 'dxBarButton1'
+          ItemName = 'bbInsertRecord'
         end
         item
           Visible = True
-          ItemName = 'bbErased'
-        end
-        item
-          Visible = True
-          ItemName = 'bbUnErased'
+          ItemName = 'bsGoods'
         end
         item
           Visible = True
@@ -4205,7 +4200,11 @@
         end
         item
           Visible = True
-          ItemName = 'bbMovementItemProtocol'
+          ItemName = 'bbInsertRecordPartner'
+        end
+        item
+          Visible = True
+          ItemName = 'bsPartner'
         end
         item
           Visible = True
@@ -4213,67 +4212,11 @@
         end
         item
           Visible = True
-          ItemName = 'dxBarButton12'
+          ItemName = 'bbInsertCondition'
         end
         item
           Visible = True
-          ItemName = 'dxBarStatic'
-        end
-        item
-          Visible = True
-          ItemName = 'dxBarButton2'
-        end
-        item
-          Visible = True
-          ItemName = 'dxBarButton3'
-        end
-        item
-          Visible = True
-          ItemName = 'dxBarButton4'
-        end
-        item
-          Visible = True
-          ItemName = 'dxBarStatic'
-        end
-        item
-          Visible = True
-          ItemName = 'bbInsertUpdateMISignYes'
-        end
-        item
-          Visible = True
-          ItemName = 'bbInsertUpdateMISignNo'
-        end
-        item
-          Visible = True
-          ItemName = 'dxBarStatic'
-        end
-        item
-          Visible = True
-          ItemName = 'bbPartnerProtocol'
-        end
-        item
-          Visible = True
-          ItemName = 'dxBarStatic'
-        end
-        item
-          Visible = True
-          ItemName = 'dxBarButton5'
-        end
-        item
-          Visible = True
-          ItemName = 'dxBarButton7'
-        end
-        item
-          Visible = True
-          ItemName = 'dxBarButton6'
-        end
-        item
-          Visible = True
-          ItemName = 'dxBarStatic'
-        end
-        item
-          Visible = True
-          ItemName = 'bbPartnerListProtocol'
+          ItemName = 'bsConditionPromo'
         end
         item
           Visible = True
@@ -4285,19 +4228,7 @@
         end
         item
           Visible = True
-          ItemName = 'dxBarButton10'
-        end
-        item
-          Visible = True
-          ItemName = 'dxBarButton9'
-        end
-        item
-          Visible = True
-          ItemName = 'dxBarStatic'
-        end
-        item
-          Visible = True
-          ItemName = 'bbAdvertisingProtocol'
+          ItemName = 'bsAdvertising'
         end
         item
           Visible = True
@@ -4309,40 +4240,12 @@
         end
         item
           Visible = True
-          ItemName = 'bbSetErasedPromoStateKind'
-        end
-        item
-          Visible = True
-          ItemName = 'bbSetUnErasedPromoStateKind'
-        end
-        item
-          Visible = True
-          ItemName = 'dxBarStatic'
-        end
-        item
-          Visible = True
-          ItemName = 'bbUpdate_Movement_isTaxPromo'
-        end
-        item
-          Visible = True
-          ItemName = 'dxBarStatic'
-        end
-        item
-          Visible = True
-          ItemName = 'bbProtocoPromoStateKind'
+          ItemName = 'bsPromoStateKind'
         end
         item
           BeginGroup = True
           Visible = True
-          ItemName = 'dxBarStatic'
-        end
-        item
-          Visible = True
-          ItemName = 'bbOpenReportForm'
-        end
-        item
-          Visible = True
-          ItemName = 'bbOpenReport_SaleReturn_byPromo'
+          ItemName = 'bbUpdate_Movement_isTaxPromo'
         end
         item
           Visible = True
@@ -4374,6 +4277,30 @@
         end
         item
           Visible = True
+          ItemName = 'bbOpenReportForm'
+        end
+        item
+          Visible = True
+          ItemName = 'dxBarStatic'
+        end
+        item
+          Visible = True
+          ItemName = 'bbOpenReport_SaleReturn_byPromo'
+        end
+        item
+          Visible = True
+          ItemName = 'dxBarStatic'
+        end
+        item
+          Visible = True
+          ItemName = 'bsSign'
+        end
+        item
+          Visible = True
+          ItemName = 'dxBarStatic'
+        end
+        item
+          Visible = True
           ItemName = 'bbGridToExcel'
         end
         item
@@ -4390,11 +4317,11 @@
     inherited bbAddMask: TdxBarButton
       Visible = ivNever
     end
-    object dxBarButton1: TdxBarButton
+    object bbInsertRecord: TdxBarButton
       Action = InsertRecord
       Category = 0
     end
-    object dxBarButton2: TdxBarButton
+    object bbInsertRecordPartner: TdxBarButton
       Action = actInsertRecordPartner
       Category = 0
     end
@@ -4406,7 +4333,7 @@
       Action = actUnErasedPartner
       Category = 0
     end
-    object dxBarButton5: TdxBarButton
+    object bbInsertCondition: TdxBarButton
       Action = actInsertCondition
       Category = 0
     end
@@ -4484,9 +4411,7 @@
     end
     object bbSetUnErasedPromoStateKind: TdxBarButton
       Action = actMISetUnErasedPromoStateKind
-      Caption = #1042#1086#1089#1089#1090#1072#1085#1086#1074#1080#1090#1100' <'#1057#1086#1089#1090#1086#1103#1085#1080#1077'>'
       Category = 0
-      Hint = #1042#1086#1089#1089#1090#1072#1085#1086#1074#1080#1090#1100'  <'#1057#1086#1089#1090#1086#1103#1085#1080#1077'>'
     end
     object bbProtocoPromoStateKind: TdxBarButton
       Action = actOpenProtocoPromoStateKind
@@ -4503,6 +4428,128 @@
     object bbOpenReport_SaleReturn_byPromo: TdxBarButton
       Action = actOpenReport_SaleReturn_byPromo
       Category = 0
+    end
+    object bsGoods: TdxBarSubItem
+      Caption = #1058#1086#1074#1072#1088
+      Category = 0
+      Visible = ivAlways
+      ItemLinks = <
+        item
+          Visible = True
+          ItemName = 'bbErased'
+        end
+        item
+          Visible = True
+          ItemName = 'bbUnErased'
+        end
+        item
+          Visible = True
+          ItemName = 'bbMovementItemProtocol'
+        end>
+    end
+    object bsPartner: TdxBarSubItem
+      Caption = #1055#1072#1088#1090#1085#1077#1088
+      Category = 0
+      Visible = ivAlways
+      ItemLinks = <
+        item
+          Visible = True
+          ItemName = 'dxBarButton3'
+        end
+        item
+          Visible = True
+          ItemName = 'dxBarButton4'
+        end
+        item
+          Visible = True
+          ItemName = 'bbPartnerProtocol'
+        end
+        item
+          Visible = True
+          ItemName = 'dxBarButton12'
+        end>
+    end
+    object bsConditionPromo: TdxBarSubItem
+      Caption = '% '#1076#1086#1087'.'#1089#1082#1080#1076#1082#1080
+      Category = 0
+      Visible = ivAlways
+      ItemLinks = <
+        item
+          Visible = True
+          ItemName = 'dxBarButton7'
+        end
+        item
+          Visible = True
+          ItemName = 'dxBarButton6'
+        end
+        item
+          Visible = True
+          ItemName = 'bbPartnerListProtocol'
+        end>
+    end
+    object bsAdvertising: TdxBarSubItem
+      Caption = #1056#1077#1082#1083#1072#1084#1085'. '#1087#1086#1076#1076'.'
+      Category = 0
+      Visible = ivAlways
+      ItemLinks = <
+        item
+          Visible = True
+          ItemName = 'dxBarButton10'
+        end
+        item
+          Visible = True
+          ItemName = 'dxBarButton9'
+        end
+        item
+          Visible = True
+          ItemName = 'bbAdvertisingProtocol'
+        end>
+    end
+    object bsPromoStateKind: TdxBarSubItem
+      Caption = #1057#1086#1089#1090#1086#1103#1085#1080#1077
+      Category = 0
+      Visible = ivAlways
+      ItemLinks = <
+        item
+          Visible = True
+          ItemName = 'bbSetErasedPromoStateKind'
+        end
+        item
+          Visible = True
+          ItemName = 'bbSetUnErasedPromoStateKind'
+        end
+        item
+          Visible = True
+          ItemName = 'bbProtocoPromoStateKind'
+        end>
+    end
+    object bsCalc: TdxBarSubItem
+      Caption = #1056#1072#1089#1095#1077#1090
+      Category = 0
+      Visible = ivAlways
+      ItemLinks = <
+        item
+          Visible = True
+          ItemName = 'bbInsertUpdate_MI_Param'
+        end
+        item
+          Visible = True
+          ItemName = 'dxBarButton11'
+        end>
+    end
+    object bsSign: TdxBarSubItem
+      Caption = #1055#1086#1076#1087#1080#1089#1100
+      Category = 0
+      Visible = ivAlways
+      ItemLinks = <
+        item
+          Visible = True
+          ItemName = 'bbInsertUpdateMISignYes'
+        end
+        item
+          Visible = True
+          ItemName = 'bbInsertUpdateMISignNo'
+        end>
     end
   end
   inherited DBViewAddOn: TdsdDBViewAddOn
@@ -5432,8 +5479,8 @@
         ParamType = ptInput
         MultiSelectSeparator = ','
       end>
-    Left = 460
-    Top = 80
+    Left = 468
+    Top = 72
   end
   object GuidesUnit: TdsdGuides
     KeyField = 'Id'

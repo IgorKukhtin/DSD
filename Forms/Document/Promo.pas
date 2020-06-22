@@ -72,7 +72,7 @@ type
     actGoodsChoiceForm: TOpenChoiceForm;
     InsertRecord: TInsertRecord;
     actGoodsKindChoiceForm: TOpenChoiceForm;
-    dxBarButton1: TdxBarButton;
+    bbInsertRecord: TdxBarButton;
     cxGridPartner: TcxGrid;
     cxGridDBTableViewPartner: TcxGridDBTableView;
     isErased: TcxGridDBColumn;
@@ -91,7 +91,7 @@ type
     spUnErasedMIPartner: TdsdStoredProc;
     spInsertUpdateMIPartner: TdsdStoredProc;
     dsdDBViewAddOnPartner: TdsdDBViewAddOn;
-    dxBarButton2: TdxBarButton;
+    bbInsertRecordPartner: TdxBarButton;
     dxBarButton3: TdxBarButton;
     dxBarButton4: TdxBarButton;
     actUpdateDSPartner: TdsdUpdateDataSet;
@@ -118,7 +118,7 @@ type
     actErasedCondition: TdsdUpdateErased;
     actUnErasedCondition: TdsdUpdateErased;
     actConditionPromoChoiceForm: TOpenChoiceForm;
-    dxBarButton5: TdxBarButton;
+    bbInsertCondition: TdxBarButton;
     dxBarButton6: TdxBarButton;
     dxBarButton7: TdxBarButton;
     dsdDBViewAddOnConditionPromo: TdsdDBViewAddOn;
@@ -404,6 +404,13 @@ type
     bbUpdate_Movement_isTaxPromo: TdxBarButton;
     bbOpenReport_SaleReturn_byPromo: TdxBarButton;
     actOpenReport_SaleReturn_byPromo: TdsdOpenForm;
+    bsGoods: TdxBarSubItem;
+    bsPartner: TdxBarSubItem;
+    bsConditionPromo: TdxBarSubItem;
+    bsAdvertising: TdxBarSubItem;
+    bsPromoStateKind: TdxBarSubItem;
+    bsCalc: TdxBarSubItem;
+    bsSign: TdxBarSubItem;
   private
     { Private declarations }
   public
