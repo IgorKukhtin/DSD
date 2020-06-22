@@ -23,7 +23,9 @@ RETURNS TABLE (id Integer, Code Integer, Name TVarChar,
                SPKindId Integer, SPKindName TVarChar, SPTax TFloat, 
                PartnerMedicalID Integer, PartnerMedicalName TVarChar,
                isPromoCodeDoctor boolean, isTechnicalRediscount Boolean, 
-               isGetHardwareData boolean
+               isGetHardwareData boolean,
+               DiscountExternalId integer, DiscountExternalCode integer, DiscountExternalName TVarChar,
+               GoodsDiscountId integer, GoodsDiscountCode integer, GoodsDiscountName TVarChar
 
               ) AS
 $BODY$
@@ -247,6 +249,12 @@ BEGIN
        , COALESCE (ObjectBoolean_TechnicalRediscount.ValueData, FALSE):: Boolean   AS isTechnicalRediscount
        , COALESCE(ObjectBoolean_GetHardwareData.ValueData, False) OR
          COALESCE(tmpCashSettings.isGetHardwareData, False)                        AS isGetHardwareData
+       , Object_DiscountExternal.Id                                                AS DiscountExternalId
+       , Object_DiscountExternal.ObjectCode                                        AS DiscountExternalCode
+       , Object_DiscountExternal.ValueData                                         AS DiscountExternalName
+       , Object_DiscountCheck.Id                                                   AS GoodsDiscountId
+       , Object_DiscountCheck.ObjectCode                                           AS GoodsDiscountCode
+       , Object_DiscountCheck.ValueData                                            AS GoodsDiscountName
 
    FROM Object AS Object_Unit
 
@@ -348,7 +356,11 @@ BEGIN
         LEFT JOIN ObjectLink AS ObjectLink_Unit_PartnerMedical ON ObjectLink_Unit_PartnerMedical.DescId = zc_ObjectLink_Unit_PartnerMedical()
                                                               AND ObjectLink_Unit_PartnerMedical.ObjectId = Object_Unit.Id
         LEFT JOIN Object AS Object_PartnerMedical ON Object_PartnerMedical.Id = ObjectLink_Unit_PartnerMedical.ChildObjectId
+
+        LEFT JOIN Object AS Object_DiscountExternal ON Object_DiscountExternal.Id = zfGet_Unit_DiscountExternal(inDiscountExternalID := 13216391 , inUnitId := vbUnitId, inUserID := vbUserId)
         
+        LEFT JOIN Object AS Object_DiscountCheck ON Object_DiscountCheck.Id = 13216391
+
         LEFT JOIN tmpPromoCodeDoctor ON 1 = 1
 
    WHERE Object_Unit.Id = vbUnitId
@@ -380,5 +392,4 @@ LANGUAGE plpgsql VOLATILE;
 */
 
 -- тест
--- 
-SELECT * FROM gpSelect_Cash_UnitConfig('3000497773', '3')
+-- SELECT * FROM gpSelect_Cash_UnitConfig('3000497773', '3')

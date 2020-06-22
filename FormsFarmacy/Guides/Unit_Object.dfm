@@ -3,6 +3,7 @@ inherited Unit_ObjectForm: TUnit_ObjectForm
   ClientHeight = 477
   ClientWidth = 1434
   PopupMenu = PopupMenu
+  ExplicitLeft = -98
   ExplicitWidth = 1450
   ExplicitHeight = 516
   PixelsPerInch = 96
@@ -454,6 +455,17 @@ inherited Unit_ObjectForm: TUnit_ObjectForm
             HeaderHint = #1050#1086#1083'-'#1074#1086' '#1076#1085#1077#1081' '#1076#1083#1103' HammerTime ('#1057#1059#1053'-2-'#1055#1048')'
             Options.Editing = False
             Width = 85
+          end
+          object HT_SUN_All: TcxGridDBColumn
+            Caption = #1050#1086#1083'. '#1076#1085'. '#1076#1083#1103' HT ('#1057#1059#1053') ('#1087#1086' '#1074#1089#1077#1084')'
+            DataBinding.FieldName = 'HT_SUN_All'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DisplayFormat = ',0.####;-,0.####; ;'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            HeaderHint = #1082#1086#1083'-'#1074#1086' '#1076#1085#1077#1081' '#1076#1083#1103' HammerTime '#1076#1083#1103' '#1074#1089#1077#1093' '#1057#1059#1053' '#1087#1086' '#1074#1089#1077#1084' '#1087#1077#1088#1077#1084#1077#1097#1077#1085#1080#1103#1084
+            Options.Editing = False
+            Width = 77
           end
           object LimitSUN_N: TcxGridDBColumn
             Caption = #1054#1089#1090#1072#1090#1086#1082' ('#1088#1072#1073#1086#1090#1072#1077#1090' '#1057#1059#1053' v1, v2, v2-'#1055#1048'  '#1076#1083#1103' '#1058'1)'
@@ -977,7 +989,7 @@ inherited Unit_ObjectForm: TUnit_ObjectForm
         end
         item
           Name = 'inisv1'
-          Value = 'true'
+          Value = True
           Component = FormParams
           ComponentItem = 'inisv1'
           DataType = ftBoolean
@@ -986,7 +998,7 @@ inherited Unit_ObjectForm: TUnit_ObjectForm
         end
         item
           Name = 'inisv2'
-          Value = 'true'
+          Value = True
           Component = FormParams
           ComponentItem = 'inisv2'
           DataType = ftBoolean
@@ -995,7 +1007,7 @@ inherited Unit_ObjectForm: TUnit_ObjectForm
         end
         item
           Name = 'inisv4'
-          Value = 'true'
+          Value = True
           Component = FormParams
           ComponentItem = 'inisv4'
           DataType = ftBoolean
@@ -1287,8 +1299,16 @@ inherited Unit_ObjectForm: TUnit_ObjectForm
           MultiSelectSeparator = ','
         end
         item
+          Name = 'inHT_SUN_All'
+          Value = Null
+          Component = FormParams
+          ComponentItem = 'inHT_SUN_All'
+          DataType = ftFloat
+          MultiSelectSeparator = ','
+        end
+        item
           Name = 'inis_v1'
-          Value = 'false'
+          Value = False
           Component = FormParams
           ComponentItem = 'inis_v1'
           DataType = ftBoolean
@@ -1296,7 +1316,7 @@ inherited Unit_ObjectForm: TUnit_ObjectForm
         end
         item
           Name = 'inis_v2'
-          Value = 'false'
+          Value = False
           Component = FormParams
           ComponentItem = 'inis_v2'
           DataType = ftBoolean
@@ -1304,9 +1324,17 @@ inherited Unit_ObjectForm: TUnit_ObjectForm
         end
         item
           Name = 'inis_v4'
-          Value = 'false'
+          Value = False
           Component = FormParams
           ComponentItem = 'inis_v4'
+          DataType = ftBoolean
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'inis_All'
+          Value = Null
+          Component = FormParams
+          ComponentItem = 'inis_All'
           DataType = ftBoolean
           MultiSelectSeparator = ','
         end>
@@ -1950,7 +1978,7 @@ inherited Unit_ObjectForm: TUnit_ObjectForm
         end
         item
           Name = 'inisT1_SUN_v2'
-          Value = 'false'
+          Value = False
           Component = FormParams
           ComponentItem = 'inisT1_SUN_v2'
           DataType = ftBoolean
@@ -1958,7 +1986,7 @@ inherited Unit_ObjectForm: TUnit_ObjectForm
         end
         item
           Name = 'inisT2_SUN_v2'
-          Value = 'false'
+          Value = False
           Component = FormParams
           ComponentItem = 'inisT2_SUN_v2'
           DataType = ftBoolean
@@ -1966,7 +1994,7 @@ inherited Unit_ObjectForm: TUnit_ObjectForm
         end
         item
           Name = 'inisT1_SUN_v4'
-          Value = 'false'
+          Value = False
           Component = FormParams
           ComponentItem = 'inisT1_SUN_v4'
           DataType = ftBoolean
@@ -2518,7 +2546,7 @@ inherited Unit_ObjectForm: TUnit_ObjectForm
         end
         item
           Name = 'inis_v1'
-          Value = 'false'
+          Value = False
           Component = FormParams
           ComponentItem = 'inis_v1'
           DataType = ftBoolean
@@ -2526,7 +2554,7 @@ inherited Unit_ObjectForm: TUnit_ObjectForm
         end
         item
           Name = 'inis_v2'
-          Value = 'false'
+          Value = False
           Component = FormParams
           ComponentItem = 'inis_v2'
           DataType = ftBoolean
@@ -2534,7 +2562,7 @@ inherited Unit_ObjectForm: TUnit_ObjectForm
         end
         item
           Name = 'inis_v4'
-          Value = 'false'
+          Value = False
           Component = FormParams
           ComponentItem = 'inis_v4'
           DataType = ftBoolean
@@ -3603,7 +3631,7 @@ inherited Unit_ObjectForm: TUnit_ObjectForm
       end
       item
         Name = 'inisOver'
-        Value = 'FALSE'
+        Value = False
         DataType = ftBoolean
         ParamType = ptInput
         MultiSelectSeparator = ','
@@ -3635,7 +3663,7 @@ inherited Unit_ObjectForm: TUnit_ObjectForm
       end
       item
         Name = 'inisOver'
-        Value = 'TRUE'
+        Value = True
         DataType = ftBoolean
         ParamType = ptInput
         MultiSelectSeparator = ','
@@ -3844,7 +3872,7 @@ inherited Unit_ObjectForm: TUnit_ObjectForm
       end
       item
         Name = 'inisGoodsCategory'
-        Value = 'TRUE'
+        Value = True
         DataType = ftBoolean
         ParamType = ptInput
         MultiSelectSeparator = ','
@@ -3876,7 +3904,7 @@ inherited Unit_ObjectForm: TUnit_ObjectForm
       end
       item
         Name = 'inisGoodsCategory'
-        Value = 'FALSE'
+        Value = False
         DataType = ftBoolean
         ParamType = ptInput
         MultiSelectSeparator = ','
@@ -3925,7 +3953,7 @@ inherited Unit_ObjectForm: TUnit_ObjectForm
       end
       item
         Name = 'inisSun'
-        Value = 'false'
+        Value = False
         DataType = ftBoolean
         ParamType = ptInput
         MultiSelectSeparator = ','
@@ -4026,7 +4054,7 @@ inherited Unit_ObjectForm: TUnit_ObjectForm
       end
       item
         Name = 'inisSun_v2'
-        Value = 'false'
+        Value = False
         DataType = ftBoolean
         ParamType = ptInput
         MultiSelectSeparator = ','
@@ -4065,7 +4093,7 @@ inherited Unit_ObjectForm: TUnit_ObjectForm
       end
       item
         Name = 'inisSun_in'
-        Value = 'false'
+        Value = False
         DataType = ftBoolean
         ParamType = ptInput
         MultiSelectSeparator = ','
@@ -4097,7 +4125,7 @@ inherited Unit_ObjectForm: TUnit_ObjectForm
       end
       item
         Name = 'inisSun_out'
-        Value = 'false'
+        Value = False
         DataType = ftBoolean
         ParamType = ptInput
         MultiSelectSeparator = ','
@@ -4129,7 +4157,7 @@ inherited Unit_ObjectForm: TUnit_ObjectForm
       end
       item
         Name = 'inisSun_NotSold'
-        Value = 'false'
+        Value = False
         DataType = ftBoolean
         ParamType = ptInput
         MultiSelectSeparator = ','
@@ -4161,7 +4189,7 @@ inherited Unit_ObjectForm: TUnit_ObjectForm
       end
       item
         Name = 'inisSun_v2'
-        Value = 'false'
+        Value = False
         DataType = ftBoolean
         ParamType = ptInput
         MultiSelectSeparator = ','
@@ -4200,7 +4228,7 @@ inherited Unit_ObjectForm: TUnit_ObjectForm
       end
       item
         Name = 'inisSun_v2'
-        Value = 'false'
+        Value = False
         DataType = ftBoolean
         ParamType = ptInput
         MultiSelectSeparator = ','
@@ -4273,7 +4301,7 @@ inherited Unit_ObjectForm: TUnit_ObjectForm
       end
       item
         Name = 'inisSun_v2'
-        Value = 'false'
+        Value = False
         DataType = ftBoolean
         ParamType = ptInput
         MultiSelectSeparator = ','
@@ -4347,7 +4375,7 @@ inherited Unit_ObjectForm: TUnit_ObjectForm
       end
       item
         Name = 'inisSun_v2'
-        Value = 'false'
+        Value = False
         DataType = ftBoolean
         ParamType = ptInput
         MultiSelectSeparator = ','
@@ -4386,7 +4414,7 @@ inherited Unit_ObjectForm: TUnit_ObjectForm
       end
       item
         Name = 'inisSun_v2'
-        Value = 'false'
+        Value = False
         DataType = ftBoolean
         ParamType = ptInput
         MultiSelectSeparator = ','
@@ -4612,7 +4640,7 @@ inherited Unit_ObjectForm: TUnit_ObjectForm
       end
       item
         Name = 'inisSun_v2'
-        Value = 'false'
+        Value = False
         DataType = ftBoolean
         ParamType = ptInput
         MultiSelectSeparator = ','
@@ -4651,7 +4679,7 @@ inherited Unit_ObjectForm: TUnit_ObjectForm
       end
       item
         Name = 'inisSun_v2'
-        Value = 'false'
+        Value = False
         DataType = ftBoolean
         ParamType = ptInput
         MultiSelectSeparator = ','
@@ -4690,7 +4718,7 @@ inherited Unit_ObjectForm: TUnit_ObjectForm
       end
       item
         Name = 'inisSun_v2'
-        Value = 'false'
+        Value = False
         DataType = ftBoolean
         ParamType = ptInput
         MultiSelectSeparator = ','
@@ -4800,7 +4828,7 @@ inherited Unit_ObjectForm: TUnit_ObjectForm
       end
       item
         Name = 'inis_v1'
-        Value = 'false'
+        Value = False
         Component = FormParams
         ComponentItem = 'inis_v1'
         DataType = ftBoolean
@@ -4809,7 +4837,7 @@ inherited Unit_ObjectForm: TUnit_ObjectForm
       end
       item
         Name = 'inis_v2'
-        Value = 'false'
+        Value = False
         Component = FormParams
         ComponentItem = 'inis_v2'
         DataType = ftBoolean
@@ -4818,7 +4846,7 @@ inherited Unit_ObjectForm: TUnit_ObjectForm
       end
       item
         Name = 'inis_v4'
-        Value = 'false'
+        Value = False
         Component = FormParams
         ComponentItem = 'inis_v4'
         DataType = ftBoolean
@@ -4871,7 +4899,7 @@ inherited Unit_ObjectForm: TUnit_ObjectForm
       end
       item
         Name = 'inis_v1'
-        Value = 'false'
+        Value = False
         Component = FormParams
         ComponentItem = 'inis_v1'
         DataType = ftBoolean
@@ -4880,7 +4908,7 @@ inherited Unit_ObjectForm: TUnit_ObjectForm
       end
       item
         Name = 'inis_v2'
-        Value = 'false'
+        Value = False
         Component = FormParams
         ComponentItem = 'inis_v2'
         DataType = ftBoolean
@@ -4889,9 +4917,18 @@ inherited Unit_ObjectForm: TUnit_ObjectForm
       end
       item
         Name = 'inis_v4'
-        Value = 'false'
+        Value = False
         Component = FormParams
         ComponentItem = 'inis_v4'
+        DataType = ftBoolean
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inis_All'
+        Value = False
+        Component = FormParams
+        ComponentItem = 'inis_All'
         DataType = ftBoolean
         ParamType = ptInput
         MultiSelectSeparator = ','
@@ -4919,6 +4956,15 @@ inherited Unit_ObjectForm: TUnit_ObjectForm
         Value = Null
         Component = FormParams
         ComponentItem = 'inHT_SUN_v4'
+        DataType = ftFloat
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inHT_SUN_All'
+        Value = Null
+        Component = FormParams
+        ComponentItem = 'inHT_SUN_All'
         DataType = ftFloat
         ParamType = ptInput
         MultiSelectSeparator = ','
@@ -4968,7 +5014,7 @@ inherited Unit_ObjectForm: TUnit_ObjectForm
       end
       item
         Name = 'inSUN_v2_LockSale'
-        Value = 'FALSE'
+        Value = False
         DataType = ftBoolean
         ParamType = ptInput
         MultiSelectSeparator = ','
@@ -5000,7 +5046,7 @@ inherited Unit_ObjectForm: TUnit_ObjectForm
       end
       item
         Name = 'inSUN_v2_LockSale'
-        Value = 'TRUE'
+        Value = True
         DataType = ftBoolean
         ParamType = ptInput
         MultiSelectSeparator = ','
@@ -5032,7 +5078,7 @@ inherited Unit_ObjectForm: TUnit_ObjectForm
       end
       item
         Name = 'inisv1'
-        Value = 'false'
+        Value = False
         Component = FormParams
         ComponentItem = 'inisv1'
         DataType = ftBoolean
@@ -5041,7 +5087,7 @@ inherited Unit_ObjectForm: TUnit_ObjectForm
       end
       item
         Name = 'inisv2'
-        Value = 'false'
+        Value = False
         Component = FormParams
         ComponentItem = 'inisv2'
         DataType = ftBoolean
@@ -5050,7 +5096,7 @@ inherited Unit_ObjectForm: TUnit_ObjectForm
       end
       item
         Name = 'inisv4'
-        Value = 'false'
+        Value = False
         Component = FormParams
         ComponentItem = 'inisv4'
         DataType = ftBoolean
@@ -5103,7 +5149,7 @@ inherited Unit_ObjectForm: TUnit_ObjectForm
       end
       item
         Name = 'inisSun'
-        Value = 'true'
+        Value = True
         DataType = ftBoolean
         ParamType = ptInput
         MultiSelectSeparator = ','
@@ -5135,7 +5181,7 @@ inherited Unit_ObjectForm: TUnit_ObjectForm
       end
       item
         Name = 'inisSun_v2'
-        Value = 'true'
+        Value = True
         DataType = ftBoolean
         ParamType = ptInput
         MultiSelectSeparator = ','
@@ -5174,7 +5220,7 @@ inherited Unit_ObjectForm: TUnit_ObjectForm
       end
       item
         Name = 'inisSun_v2'
-        Value = 'true'
+        Value = True
         DataType = ftBoolean
         ParamType = ptInput
         MultiSelectSeparator = ','
@@ -5213,7 +5259,7 @@ inherited Unit_ObjectForm: TUnit_ObjectForm
       end
       item
         Name = 'inisSun_in'
-        Value = 'true'
+        Value = True
         DataType = ftBoolean
         ParamType = ptInput
         MultiSelectSeparator = ','
@@ -5245,7 +5291,7 @@ inherited Unit_ObjectForm: TUnit_ObjectForm
       end
       item
         Name = 'inisSun_out'
-        Value = 'true'
+        Value = True
         DataType = ftBoolean
         ParamType = ptInput
         MultiSelectSeparator = ','
@@ -5277,7 +5323,7 @@ inherited Unit_ObjectForm: TUnit_ObjectForm
       end
       item
         Name = 'inisSun_NotSold'
-        Value = 'true'
+        Value = True
         DataType = ftBoolean
         ParamType = ptInput
         MultiSelectSeparator = ','
@@ -5309,7 +5355,7 @@ inherited Unit_ObjectForm: TUnit_ObjectForm
       end
       item
         Name = 'inisSun_v2'
-        Value = 'true'
+        Value = True
         DataType = ftBoolean
         ParamType = ptInput
         MultiSelectSeparator = ','
@@ -5348,7 +5394,7 @@ inherited Unit_ObjectForm: TUnit_ObjectForm
       end
       item
         Name = 'inisSun_v2'
-        Value = 'true'
+        Value = True
         DataType = ftBoolean
         ParamType = ptInput
         MultiSelectSeparator = ','
@@ -5387,7 +5433,7 @@ inherited Unit_ObjectForm: TUnit_ObjectForm
       end
       item
         Name = 'inisSun_v2'
-        Value = 'false'
+        Value = False
         DataType = ftBoolean
         ParamType = ptInput
         MultiSelectSeparator = ','
@@ -5426,7 +5472,7 @@ inherited Unit_ObjectForm: TUnit_ObjectForm
       end
       item
         Name = 'inisSun_v2'
-        Value = 'false'
+        Value = False
         DataType = ftBoolean
         ParamType = ptInput
         MultiSelectSeparator = ','
@@ -5465,7 +5511,7 @@ inherited Unit_ObjectForm: TUnit_ObjectForm
       end
       item
         Name = 'inisSun_v2'
-        Value = 'true'
+        Value = True
         DataType = ftBoolean
         ParamType = ptInput
         MultiSelectSeparator = ','
@@ -5504,7 +5550,7 @@ inherited Unit_ObjectForm: TUnit_ObjectForm
       end
       item
         Name = 'inisSun_v2'
-        Value = 'true'
+        Value = True
         DataType = ftBoolean
         ParamType = ptInput
         MultiSelectSeparator = ','
@@ -5543,7 +5589,7 @@ inherited Unit_ObjectForm: TUnit_ObjectForm
       end
       item
         Name = 'inisSun_v2'
-        Value = 'true'
+        Value = True
         DataType = ftBoolean
         ParamType = ptInput
         MultiSelectSeparator = ','

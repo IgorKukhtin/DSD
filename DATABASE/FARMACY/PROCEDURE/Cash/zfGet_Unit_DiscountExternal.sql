@@ -25,7 +25,7 @@ BEGIN
               AND Object_DiscountExternal.Id = inDiscountExternalID
               AND Object_DiscountExternal.isErased = False)
   THEN
-    IF inUserId = 3
+    IF inUserId = 3 AND False
     THEN
       Return inDiscountExternalID;  
     ELSE
@@ -51,5 +51,4 @@ ALTER FUNCTION zfGet_Unit_DiscountExternal (Integer, Integer, Integer) OWNER TO 
 -- тест
 --
 
--- тест 
-select * from zfGet_Unit_DiscountExternal(inDiscountExternalID := 13216391 , inUnitId := 13711869 , inUserID := 3);
+-- тест select * from zfGet_Unit_DiscountExternal(inDiscountExternalID := 13216391 , inUnitId := 13711869 , inUserID := 3);

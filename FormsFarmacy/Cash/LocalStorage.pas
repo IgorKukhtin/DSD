@@ -359,7 +359,9 @@ begin
       AddFloatField(LocalDataBaseDiff, 'NDS'); //НДС
       AddIntField(LocalDataBaseDiff,   'NDSKINDID'); //Ставка НДС
       AddIntField(LocalDataBaseDiff,   'DISCEXTID'); //Дисконтная программы
-      AddStrField(LocalDataBaseDiff,   'DISCEXTNAME',100); //наименование дисконтной программы
+      AddStrField(LocalDataBaseDiff,   'DISCEXTNAM',100); //наименование дисконтной программы
+      AddIntField(LocalDataBaseDiff,   'GOODSDIID'); //Дисконтная программы товара
+      AddStrField(LocalDataBaseDiff,   'GOODSDINAM',100); //наименование дисконтной программы товара
 
       LocalDataBaseDiff.CreateTable;
     end;
@@ -385,7 +387,12 @@ begin
         (FindField('PDKINDNAME') = nil) or
         (FindField('COLORCALC') = nil) or
         (FindField('DEFERENDS') = nil) or
-        (FindField('REMAINSSUN') = nil));
+        (FindField('REMAINSSUN') = nil) or
+        (FindField('NDS') = nil) or
+        (FindField('NDSKINDID') = nil) or
+        (FindField('DISCEXTNAM') = nil) or
+        (FindField('GOODSDIID') = nil) or
+        (FindField('GOODSDINAM') = nil));
 
       Close;
 

@@ -148,7 +148,7 @@ BEGIN
     FROM MovementProtocol
     WHERE MovementProtocol.MovementId = inMovementId;
                              
-     IF vbOperDate_pr >= '01.06.2020'
+     IF vbOperDate_pr >= '01.06.2020' AND vbIsSUN = TRUE
      THEN
          -- замена inAmountStorage у второго товара по св-ву zc_ObjectLink_Goods_GoodsPairSun - причем  по обеим условиям - ObjectId и ChildObjectId
          -- для ObjectId

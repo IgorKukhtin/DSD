@@ -32,7 +32,8 @@ RETURNS TABLE (Id Integer, GoodsId_main Integer, GoodsGroupName TVarChar, GoodsN
                PartionDateDiscount TFloat,
                NotSold boolean, NotSold60 boolean,
                DeferredSend TFloat,
-               RemainsSUN TFloat
+               RemainsSUN TFloat,
+               GoodsDiscountID  Integer, GoodsDiscountName  TVarChar
 
              , PartionDateKindId_check   Integer
              , Price_check               TFloat
@@ -563,11 +564,27 @@ BEGIN
                                  FROM ObjectFloat AS ObjectFloat_NDSKind_NDS
                                  WHERE ObjectFloat_NDSKind_NDS.DescId = zc_ObjectFloat_NDSKind_NDS()
                                 )
+                 , tmpGoodsDiscount AS (SELECT Object_Goods_Retail.GoodsMainId              AS GoodsMainId
+                                             , Object_Object.Id                             AS GoodsDiscountId
+                                             , Object_Object.ValueData                      AS GoodsDiscountName 
+                                          FROM Object AS Object_BarCode
+                                              INNER JOIN ObjectLink AS ObjectLink_BarCode_Goods
+                                                                    ON ObjectLink_BarCode_Goods.ObjectId = Object_BarCode.Id
+                                                                   AND ObjectLink_BarCode_Goods.DescId = zc_ObjectLink_BarCode_Goods()
+                                              INNER JOIN Object_Goods_Retail AS Object_Goods_Retail ON Object_Goods_Retail.Id = ObjectLink_BarCode_Goods.ChildObjectId
+                                               
+                                              LEFT JOIN ObjectLink AS ObjectLink_BarCode_Object
+                                                                   ON ObjectLink_BarCode_Object.ObjectId = Object_BarCode.Id
+                                                                  AND ObjectLink_BarCode_Object.DescId = zc_ObjectLink_BarCode_Object()
+                                              LEFT JOIN Object AS Object_Object ON Object_Object.Id = ObjectLink_BarCode_Object.ChildObjectId           
+
+                                          WHERE Object_BarCode.DescId = zc_Object_BarCode()
+                                            AND Object_BarCode.isErased = False)
 
         -- Результат
         SELECT
             Goods.Id,
-            ObjectLink_Main.ChildObjectId AS GoodsId_main,
+            Object_Goods_Main.Id          AS GoodsId_main,
             Object_GoodsGroup.ValueData   AS GoodsGroupName,
             Goods.ValueData,
             Goods.ObjectCode,
@@ -818,6 +835,8 @@ BEGIN
           , COALESCE(tmpIlliquidUnit.GoodsID, 0) <> 0              AS NotSold60
           , CashSessionSnapShot.DeferredSend::TFloat               AS DeferredSend
           , tmpRenainsSUN.Amount::TFloat                           AS RemainsSUN
+          , tmpGoodsDiscount.GoodsDiscountId                       AS GoodsDiscountID
+          , tmpGoodsDiscount.GoodsDiscountName                     AS GoodsDiscountName
 
 
           , CashSessionSnapShot.PartionDateKindId   AS PartionDateKindId_check
@@ -826,20 +845,23 @@ BEGIN
           , CashSessionSnapShot.PartionDateDiscount AS PartionDateDiscount_check
 
           , COALESCE (ObjectBoolean_Goods_NotTransferTime.ValueData, False)      AS NotTransferTime
-          , COALESCE(CashSessionSnapShot.NDSKindId, ObjectLink_Goods_NDSKind.ChildObjectId) AS NDSKindId
+          , COALESCE(CashSessionSnapShot.NDSKindId, Object_Goods_Main.NDSKindId) AS NDSKindId
 
          FROM
             CashSessionSnapShot
             INNER JOIN Object AS Goods ON Goods.Id = CashSessionSnapShot.ObjectId
+
+            -- получается GoodsMainId
+            LEFT JOIN Object_Goods_Retail AS Object_Goods_Retail ON Object_Goods_Retail.Id = Goods.Id
+            LEFT JOIN Object_Goods_Main AS Object_Goods_Main ON Object_Goods_Main.Id = Object_Goods_Retail.GoodsMainId
+
+
             LEFT JOIN tmpMCSAuto ON tmpMCSAuto.ObjectId = CashSessionSnapShot.ObjectId
             LEFT OUTER JOIN ObjectLink AS Link_Goods_AlternativeGroup
                                        ON Link_Goods_AlternativeGroup.ObjectId = Goods.Id
                                       AND Link_Goods_AlternativeGroup.DescId = zc_ObjectLink_Goods_AlternativeGroup()
-            LEFT OUTER JOIN ObjectLink AS ObjectLink_Goods_NDSKind
-                                       ON ObjectLink_Goods_NDSKind.ObjectId = Goods.Id
-                                      AND ObjectLink_Goods_NDSKind.DescId = zc_ObjectLink_Goods_NDSKind()
             LEFT OUTER JOIN tmpNDSKind AS ObjectFloat_NDSKind_NDS
-                                       ON ObjectFloat_NDSKind_NDS.ObjectId = COALESCE(CashSessionSnapShot.NDSKindId, ObjectLink_Goods_NDSKind.ChildObjectId)
+                                       ON ObjectFloat_NDSKind_NDS.ObjectId = COALESCE(CashSessionSnapShot.NDSKindId, Object_Goods_Main.NDSKindId)
 
             LEFT JOIN ObjectBoolean AS ObjectBoolean_First
                                     ON ObjectBoolean_First.ObjectId = Goods.Id
@@ -851,32 +873,23 @@ BEGIN
             LEFT JOIN GoodsPromo ON GoodsPromo.GoodsId = Goods.Id
             LEFT JOIN tmpIncome ON tmpIncome.GoodsId = Goods.Id
 
-            -- получается GoodsMainId
-            LEFT JOIN  ObjectLink AS ObjectLink_Child ON ObjectLink_Child.ChildObjectId = Goods.Id
-                                                     AND ObjectLink_Child.DescId = zc_ObjectLink_LinkGoods_Goods()
-            LEFT JOIN  ObjectLink AS ObjectLink_Main ON ObjectLink_Main.ObjectId = ObjectLink_Child.ObjectId
-                                                    AND ObjectLink_Main.DescId = zc_ObjectLink_LinkGoods_GoodsMain()
             -- Соц Проект
-            LEFT JOIN tmpGoodsSP ON tmpGoodsSP.GoodsId = ObjectLink_Main.ChildObjectId
+            LEFT JOIN tmpGoodsSP ON tmpGoodsSP.GoodsId = Object_Goods_Main.Id
                                 AND tmpGoodsSP.Ord     = 1 -- № п/п - на всякий случай
             LEFT JOIN  Object AS Object_IntenalSP ON Object_IntenalSP.Id = tmpGoodsSP.IntenalSPId
 
             -- условия хранения
-            LEFT JOIN ObjectLink AS ObjectLink_Goods_ConditionsKeep
-                                 ON ObjectLink_Goods_ConditionsKeep.ObjectId = Goods.Id
-                                AND ObjectLink_Goods_ConditionsKeep.DescId = zc_ObjectLink_Goods_ConditionsKeep()
-            LEFT JOIN Object AS Object_ConditionsKeep ON Object_ConditionsKeep.Id = ObjectLink_Goods_ConditionsKeep.ChildObjectId
+            LEFT JOIN Object AS Object_ConditionsKeep ON Object_ConditionsKeep.Id = Object_Goods_Main.ConditionsKeepId
             --
-            LEFT JOIN ObjectLink AS ObjectLink_Goods_GoodsGroup
-                                 ON ObjectLink_Goods_GoodsGroup.ObjectId = Goods.Id
-                                AND ObjectLink_Goods_GoodsGroup.DescId = zc_ObjectLink_Goods_GoodsGroup()
-            LEFT JOIN Object AS Object_GoodsGroup ON Object_GoodsGroup.Id = ObjectLink_Goods_GoodsGroup.ChildObjectId
+            LEFT JOIN Object AS Object_GoodsGroup ON Object_GoodsGroup.Id = Object_Goods_Main.GoodsGroupId
             -- штрих-код производителя
-            LEFT JOIN tmpGoodsBarCode ON tmpGoodsBarCode.GoodsMainId = ObjectLink_Main.ChildObjectId
+            LEFT JOIN tmpGoodsBarCode ON tmpGoodsBarCode.GoodsMainId = Object_Goods_Main.Id
             -- код Мориона
-            LEFT JOIN tmpGoodsMorion ON tmpGoodsMorion.GoodsMainId = ObjectLink_Main.ChildObjectId
+            LEFT JOIN tmpGoodsMorion ON tmpGoodsMorion.GoodsMainId = Object_Goods_Main.Id
             -- Размещение товара
             LEFT JOIN Object AS Object_Accommodation  ON Object_Accommodation.ID = CashSessionSnapShot.AccommodationId
+            
+            LEFT JOIN tmpGoodsDiscount ON tmpGoodsDiscount.GoodsMainId = Object_Goods_Main.Id
             -- Цена со скидкой
             LEFT JOIN tmpPriceChange ON tmpPriceChange.GoodsId = Goods.Id
             -- Не делить медикамент на кассах
@@ -886,13 +899,13 @@ BEGIN
 
            -- Аналоги товара
            LEFT JOIN ObjectString AS ObjectString_Goods_Analog
-                                  ON ObjectString_Goods_Analog.ObjectId = ObjectLink_Main.ChildObjectId
+                                  ON ObjectString_Goods_Analog.ObjectId = Object_Goods_Main.Id
                                  AND ObjectString_Goods_Analog.DescId = zc_ObjectString_Goods_Analog()
            LEFT JOIN ObjectString AS ObjectString_Goods_AnalogATC
-                                  ON ObjectString_Goods_AnalogATC.ObjectId = ObjectLink_Main.ChildObjectId
+                                  ON ObjectString_Goods_AnalogATC.ObjectId = Object_Goods_Main.Id
                                  AND ObjectString_Goods_AnalogATC.DescId = zc_ObjectString_Goods_AnalogATC()
            LEFT JOIN ObjectString AS ObjectString_Goods_ActiveSubstance
-                                  ON ObjectString_Goods_ActiveSubstance.ObjectId = ObjectLink_Main.ChildObjectId
+                                  ON ObjectString_Goods_ActiveSubstance.ObjectId = Object_Goods_Main.Id
                                  AND ObjectString_Goods_ActiveSubstance.DescId = zc_ObjectString_Goods_ActiveSubstance()
 
            -- Тип срок/не срок

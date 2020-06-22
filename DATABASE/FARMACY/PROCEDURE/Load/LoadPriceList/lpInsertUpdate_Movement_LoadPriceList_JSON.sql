@@ -399,6 +399,15 @@ BEGIN
     FROM tblJSON
     WHERE COALESCE (inPrice, 0) <> 0 AND NOT EXISTS(SELECT * FROM LoadPriceListItem WHERE LoadPriceListId = vbLoadPriceListId AND GoodsCode = inGoodsCode AND COALESCE(CommonCode, 0) = COALESCE(inCommonCode));
 
+   -- Удаление удаление чего нет в прайсе
+   DELETE FROM LoadPriceListItem 
+   WHERE LoadPriceListItem.LoadPriceListId = vbLoadPriceListId
+     AND LoadPriceListItem.id NOT IN
+         (SELECT LoadPriceListItem.Id FROM LoadPriceListItem 
+                 INNER JOIN tblJSON ON LoadPriceListItem.GoodsCode = tblJSON.inGoodsCode 
+                                   AND COALESCE(LoadPriceListItem.CommonCode, 0) = COALESCE(tblJSON.inCommonCode) 
+          WHERE LoadPriceListItem.LoadPriceListId = vbLoadPriceListId);
+            
 END;
 $BODY$
 LANGUAGE plpgsql VOLATILE;

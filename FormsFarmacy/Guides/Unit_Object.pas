@@ -306,6 +306,7 @@ type
     dxBarSeparator7: TdxBarSeparator;
     dxBarButton7: TdxBarButton;
     dxBarStatic1: TdxBarStatic;
+    HT_SUN_All: TcxGridDBColumn;
   private
     { Private declarations }
   public

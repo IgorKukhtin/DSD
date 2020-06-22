@@ -141,12 +141,6 @@ inherited MainCashForm2: TMainCashForm2
           HeaderAlignmentHorz = taCenter
           Width = 46
         end
-        object CheckDiscountExternalName: TcxGridDBColumn
-          Caption = #1044#1080#1089#1082'. '#1087#1088#1086#1075#1088#1072#1084#1084#1099
-          DataBinding.FieldName = 'DiscountExternalName'
-          Options.Editing = False
-          Width = 75
-        end
       end
       object CheckGridLevel: TcxGridLevel
         GridView = CheckGridDBTableView
@@ -999,9 +993,9 @@ inherited MainCashForm2: TMainCashForm2
           HeaderAlignmentHorz = taCenter
           Width = 100
         end
-        object MainDiscountExternalName: TcxGridDBColumn
+        object MainGoodsDiscountName: TcxGridDBColumn
           Caption = #1044#1083#1103' '#1076#1080#1089#1082#1086#1085#1090#1085#1086#1081' '#1087#1088#1086#1075#1088#1072#1084#1084#1099
-          DataBinding.FieldName = 'DiscountExternalName'
+          DataBinding.FieldName = 'GoodsDiscountName'
           HeaderAlignmentHorz = taCenter
           Options.Editing = False
           Width = 99
@@ -5186,6 +5180,13 @@ inherited MainCashForm2: TMainCashForm2
     end
     object MemDataDISCEXTNAME: TStringField
       FieldName = 'DISCEXTNAME'
+      Size = 100
+    end
+    object MemDataGOODSDIID: TIntegerField
+      FieldName = 'GOODSDIID'
+    end
+    object MemDataGOODSDINAME: TStringField
+      FieldName = 'GOODSDINAME'
       Size = 100
     end
   end
