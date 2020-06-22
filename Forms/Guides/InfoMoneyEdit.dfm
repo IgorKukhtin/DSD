@@ -2,7 +2,7 @@
   Left = 0
   Top = 0
   Caption = #1059#1087#1088#1072#1074#1083#1077#1085#1095#1077#1089#1082#1072#1103' '#1089#1090#1072#1090#1100#1103
-  ClientHeight = 263
+  ClientHeight = 318
   ClientWidth = 306
   Color = clBtnFace
   Font.Charset = DEFAULT_CHARSET
@@ -29,7 +29,7 @@
   end
   object cxButton1: TcxButton
     Left = 40
-    Top = 224
+    Top = 283
     Width = 75
     Height = 25
     Action = dsdInsertUpdateGuides
@@ -38,7 +38,7 @@
   end
   object cxButton2: TcxButton
     Left = 198
-    Top = 224
+    Top = 283
     Width = 75
     Height = 25
     Action = dsdFormClose
@@ -98,6 +98,22 @@
     TabOrder = 10
     Width = 121
   end
+  object cxLabel4: TcxLabel
+    Left = 16
+    Top = 217
+    Caption = #1057#1090#1072#1090#1100#1103' '#1086#1090#1095#1077#1090#1072' '#1044#1044#1057
+  end
+  object edCashFlow: TcxButtonEdit
+    Left = 16
+    Top = 240
+    Properties.Buttons = <
+      item
+        Default = True
+        Kind = bkEllipsis
+      end>
+    TabOrder = 12
+    Width = 273
+  end
   object ActionList: TActionList
     Left = 232
     Top = 64
@@ -144,12 +160,14 @@
         Component = dsdFormParams
         ComponentItem = 'Id'
         ParamType = ptInputOutput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inCode'
         Value = 0.000000000000000000
         Component = ceCode
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inName'
@@ -157,18 +175,29 @@
         Component = edName
         DataType = ftString
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inInfoMoneyGroupId'
         Value = ''
         Component = dsdInfoMoneyGroupGuides
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inInfoMoneyDestinationId'
         Value = ''
         Component = dsdInfoMoneyDestinationGuides
         ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inCashFlowId'
+        Value = Null
+        Component = GuidesCashFlow
+        ComponentItem = 'Key'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inisProfitLoss'
@@ -176,6 +205,7 @@
         Component = ceisProfitLoss
         DataType = ftBoolean
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end>
     PackSize = 1
     Left = 32
@@ -187,9 +217,10 @@
         Name = 'Id'
         Value = Null
         ParamType = ptInputOutput
+        MultiSelectSeparator = ','
       end>
     Left = 144
-    Top = 208
+    Top = 267
   end
   object spGet: TdsdStoredProc
     StoredProcName = 'gpGet_Object_InfoMoney'
@@ -202,47 +233,70 @@
         Component = dsdFormParams
         ComponentItem = 'Id'
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'Name'
         Value = ''
         Component = edName
         DataType = ftString
+        MultiSelectSeparator = ','
       end
       item
         Name = 'Code'
         Value = 0.000000000000000000
         Component = ceCode
+        MultiSelectSeparator = ','
       end
       item
         Name = 'InfoMoneyGroupId'
         Value = ''
         Component = dsdInfoMoneyGroupGuides
         ComponentItem = 'Key'
+        MultiSelectSeparator = ','
       end
       item
         Name = 'InfoMoneyGroupName'
         Value = ''
         Component = dsdInfoMoneyGroupGuides
         ComponentItem = 'TextValue'
+        MultiSelectSeparator = ','
       end
       item
         Name = 'InfoMoneyDestinationId'
         Value = ''
         Component = dsdInfoMoneyDestinationGuides
         ComponentItem = 'Key'
+        MultiSelectSeparator = ','
       end
       item
         Name = 'InfoMoneyDestinationName'
         Value = ''
         Component = dsdInfoMoneyDestinationGuides
         ComponentItem = 'TextValue'
+        MultiSelectSeparator = ','
       end
       item
         Name = 'isProfitLoss'
         Value = Null
         Component = ceisProfitLoss
         DataType = ftBoolean
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'CashFlowId'
+        Value = Null
+        Component = GuidesCashFlow
+        ComponentItem = 'Key'
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'CashFlowName'
+        Value = Null
+        Component = GuidesCashFlow
+        ComponentItem = 'TextValue'
+        DataType = ftString
+        MultiSelectSeparator = ','
       end>
     PackSize = 1
     Top = 120
@@ -252,6 +306,7 @@
     LookupControl = ceInfoMoneyGroup
     FormNameParam.Value = 'TInfoMoneyGroupForm'
     FormNameParam.DataType = ftString
+    FormNameParam.MultiSelectSeparator = ','
     FormName = 'TInfoMoneyGroupForm'
     PositionDataSet = 'ClientDataSet'
     Params = <
@@ -262,6 +317,7 @@
         ComponentItem = 'Key'
         DataType = ftString
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'TextValue'
@@ -270,6 +326,7 @@
         ComponentItem = 'TextValue'
         DataType = ftString
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end>
     Left = 240
     Top = 117
@@ -279,6 +336,7 @@
     LookupControl = ceInfoMoneyDestination
     FormNameParam.Value = 'TInfoMoneyDestinationForm'
     FormNameParam.DataType = ftString
+    FormNameParam.MultiSelectSeparator = ','
     FormName = 'TInfoMoneyDestinationForm'
     PositionDataSet = 'ClientDataSet'
     Params = <
@@ -289,6 +347,7 @@
         ComponentItem = 'Key'
         DataType = ftString
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'TextValue'
@@ -297,6 +356,7 @@
         ComponentItem = 'TextValue'
         DataType = ftString
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end>
     Left = 224
     Top = 181
@@ -317,7 +377,37 @@
     Top = 40
   end
   object dsdUserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn
-    Left = 96
-    Top = 184
+    Left = 112
+    Top = 160
+  end
+  object GuidesCashFlow: TdsdGuides
+    KeyField = 'Id'
+    LookupControl = edCashFlow
+    FormNameParam.Value = 'TInfoMoneyDestinationForm'
+    FormNameParam.DataType = ftString
+    FormNameParam.MultiSelectSeparator = ','
+    FormName = 'TInfoMoneyDestinationForm'
+    PositionDataSet = 'ClientDataSet'
+    Params = <
+      item
+        Name = 'Key'
+        Value = ''
+        Component = GuidesCashFlow
+        ComponentItem = 'Key'
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'TextValue'
+        Value = ''
+        Component = GuidesCashFlow
+        ComponentItem = 'TextValue'
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end>
+    Left = 160
+    Top = 231
   end
 end

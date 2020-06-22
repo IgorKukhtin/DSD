@@ -9,6 +9,7 @@ CREATE OR REPLACE FUNCTION gpGet_Object_InfoMoney(
 RETURNS TABLE (Id Integer, Code Integer, Name TVarChar,
                InfoMoneyGroupId Integer, InfoMoneyGroupCode Integer, InfoMoneyGroupName TVarChar,
                InfoMoneyDestinationId Integer, InfoMoneyDestinationCode Integer, InfoMoneyDestinationName TVarChar,
+               CashFlowId Integer, CashFlowName TVarChar,
                isProfitLoss boolean,
                isErased boolean) AS
 $BODY$
@@ -24,13 +25,15 @@ BEGIN
            , COALESCE (MAX (ObjectCode), 0) + 1 AS Code
            , CAST ('' as TVarChar)  AS Name
           
-           , CAST (0 as Integer)   AS InfoMoneyGroupId
-           , CAST (0 as Integer)   AS InfoMoneyGroupCode
-           , CAST ('' as TVarChar) AS InfoMoneyGroupName
+           , CAST (0 as Integer)    AS InfoMoneyGroupId
+           , CAST (0 as Integer)    AS InfoMoneyGroupCode
+           , CAST ('' as TVarChar)  AS InfoMoneyGroupName
                      
-           , CAST (0 as Integer) AS InfoMoneyDestinationId
-           , CAST (0 as Integer)   AS InfoMoneyDestinationCode
-           , CAST ('' as TVarChar) AS InfoMoneyDestinationName
+           , CAST (0 as Integer)    AS InfoMoneyDestinationId
+           , CAST (0 as Integer)    AS InfoMoneyDestinationCode
+           , CAST ('' as TVarChar)  AS InfoMoneyDestinationName
+           , CAST (0 AS Integer)    AS CashFlowId
+           , CAST ('' AS TVarChar)  AS CashFlowName
            , FALSE                  AS isProfitLoss
            , CAST (NULL AS Boolean) AS isErased
        FROM Object 
@@ -49,10 +52,13 @@ BEGIN
          , Object_InfoMoneyDestination.Id         AS InfoMoneyDestinationId
          , Object_InfoMoneyDestination.ObjectCode AS InfoMoneyDestinationCode
          , Object_InfoMoneyDestination.ValueData  AS InfoMoneyDestinationName
-         
+
+         , Object_CashFlow.Id                     AS CashFlowId
+         , Object_CashFlow.ValueData              AS CashFlowName
+
          , COALESCE (ObjectBoolean_ProfitLoss.ValueData, False)  AS isProfitLoss
 
-         , Object_InfoMoney.isErased             AS isErased
+         , Object_InfoMoney.isErased              AS isErased
       FROM Object AS Object_InfoMoney
           LEFT JOIN ObjectLink AS ObjectLink_InfoMoney_InfoMoneyDestination
                                ON ObjectLink_InfoMoney_InfoMoneyDestination.ObjectId = Object_InfoMoney.Id
@@ -63,6 +69,11 @@ BEGIN
                                ON ObjectLink_InfoMoney_InfoMoneyGroup.ObjectId = Object_InfoMoney.Id
                               AND ObjectLink_InfoMoney_InfoMoneyGroup.DescId = zc_ObjectLink_InfoMoney_InfoMoneyGroup()
           LEFT JOIN Object AS Object_InfoMoneyGroup ON Object_InfoMoneyGroup.Id = ObjectLink_InfoMoney_InfoMoneyGroup.ChildObjectId
+
+          LEFT JOIN ObjectLink AS ObjectLink_InfoMoney_CashFlow
+                               ON ObjectLink_InfoMoney_CashFlow.ObjectId = Object_InfoMoney.Id
+                              AND ObjectLink_InfoMoney_CashFlow.DescId = zc_ObjectLink_InfoMoney_CashFlow()
+          LEFT JOIN Object AS Object_CashFlow ON Object_CashFlow.Id = ObjectLink_InfoMoney_CashFlow.ChildObjectId
 
           LEFT JOIN ObjectBoolean AS ObjectBoolean_ProfitLoss
                                   ON ObjectBoolean_ProfitLoss.ObjectId = Object_InfoMoney.Id
@@ -81,6 +92,7 @@ ALTER FUNCTION gpGet_Object_InfoMoney (integer, TVarChar) OWNER TO postgres;
 /*-------------------------------------------------------------------------------
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
+ 22.06.20          * CashFlow
  21.06.13          * + все поля ; IF COALESCE (inId, 0) = 0....             
  00.06.13         
 

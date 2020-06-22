@@ -105,7 +105,7 @@ BEGIN
                           
                           , MIFloat_PriceWithVAT.ValueData         AS PriceWithVAT           --Цена отгрузки с учетом НДС, с учетом скидки, грн
                     
-                          , MIFloat_AmountPlanMax.ValueData           AS AmountSale          --Максимум планируемого объема продаж на акционный период (в кг)
+                          , SUM (MIFloat_AmountPlanMax.ValueData) OVER (PARTITION BY MovementItem.ObjectId)  AS AmountSale          --Максимум планируемого объема продаж на акционный период (в кг)
 
                           , CASE WHEN COALESCE (vbTaxPromo,FALSE) = TRUE
                                  THEN (MIFloat_AmountPlanMax.ValueData * MIFloat_PriceWithVAT.ValueData)

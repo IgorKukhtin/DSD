@@ -21,7 +21,7 @@ uses
   dsdDB, dsdAction, Vcl.ActnList, dxBarExtItems, dxBar, cxClasses,
   cxPropertiesStore, Datasnap.DBClient, cxGridLevel, cxGridCustomTableView,
   cxGridTableView, cxGridDBTableView, cxGridCustomView, cxGrid, cxCheckBox,
-  DataModul;
+  DataModul, cxButtonEdit;
 
 type
   TInfoMoneyForm = class(TParentForm)
@@ -64,6 +64,9 @@ type
     bbUpdate_ProfitLoss: TdxBarButton;
     ProtocolOpenForm: TdsdOpenForm;
     bbProtocolOpen: TdxBarButton;
+    CashFlowName: TcxGridDBColumn;
+    spUpdate_CashFlow: TdsdStoredProc;
+    actCashFlowChoiceForm: TOpenChoiceForm;
   private
     { Private declarations }
   public
