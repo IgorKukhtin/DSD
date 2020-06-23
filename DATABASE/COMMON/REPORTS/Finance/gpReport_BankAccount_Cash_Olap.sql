@@ -966,10 +966,10 @@ BEGIN
         tmpInfoMoney.InfoMoneyCode                                                                  AS InfoMoneyCode,
         CASE WHEN COALESCE (Operation.InfoMoneyId, 0) = 0 AND (Operation.DebetSumm <> 0 OR Operation.KreditSumm <> 0 OR Operation.DebetSumm_Currency <> 0 OR Operation.KreditSumm_Currency <> 0) THEN 'Курсовая разница' ELSE tmpInfoMoney.InfoMoneyName     END :: TVarChar AS InfoMoneyName,
         CASE WHEN COALESCE (Operation.InfoMoneyId, 0) = 0 AND (Operation.DebetSumm <> 0 OR Operation.KreditSumm <> 0 OR Operation.DebetSumm_Currency <> 0 OR Operation.KreditSumm_Currency <> 0) THEN 'Курсовая разница' ELSE tmpInfoMoney.InfoMoneyName_all END :: TVarChar AS InfoMoneyName_all,
-        CASE WHEN Operation.NomStr = 1 THEN 3405 WHEN Operation.nomstr = 3 THEN 3415 ELSE tmpInfoMoney.CashFlowCode_in END  :: Integer AS CashFlowCode_in,
-        CASE WHEN Operation.nomstr = 1 THEN 'Остаток денежных средств на начало периода' WHEN Operation.nomstr = 3 THEN 'Остаток денежных средств на конец периода' ELSE tmpInfoMoney.CashFlowName_in END :: TVarChar                                    AS CashFlowName_in,
-        CASE WHEN Operation.NomStr = 1 THEN 3405 WHEN Operation.nomstr = 3 THEN 3415 ELSE tmpInfoMoney.CashFlowCode_out END :: Integer AS CashFlowCode_out,
-        CASE WHEN Operation.nomstr = 1 THEN 'Остаток денежных средств на начало периода' WHEN Operation.nomstr = 3 THEN 'Остаток денежных средств на конец периода' ELSE tmpInfoMoney.CashFlowName_out END :: TVarChar                                    AS CashFlowName_out,
+        tmpInfoMoney.CashFlowCode_in   :: Integer   AS CashFlowCode_in,
+        tmpInfoMoney.CashFlowName_in   :: TVarChar  AS CashFlowName_in,
+        tmpInfoMoney.CashFlowCode_out  :: Integer   AS CashFlowCode_out,
+        tmpInfoMoney.CashFlowName_out  :: TVarChar  AS CashFlowName_out,
         tmpAccount.AccountName_all                                                                  AS AccountName,
         Object_Unit.ObjectCode                                                                      AS UnitCode,
         Object_Unit.ValueData                                                                       AS UnitName,
@@ -1015,15 +1015,15 @@ BEGIN
         
         CASE WHEN COALESCE (Operation.DebetSumm,0) <> 0 THEN tmpInfoMoney.CashFlowCode_in
              WHEN COALESCE (Operation.KreditSumm,0) <> 0 THEN tmpInfoMoney.CashFlowCode_out
-             WHEN COALESCE (Operation.StartAmount_Month,0) <> 0 THEN 3405
-             WHEN COALESCE (Operation.EndAmount_Month,0) <> 0 THEN 3415
+             WHEN COALESCE (Operation.StartAmount,0) <> 0 THEN 3405
+             WHEN COALESCE (Operation.EndAmount,0) <> 0 THEN 3415
              ELSE 0
         END  ::Integer   AS CashFlowCode,
 
         CASE WHEN COALESCE (Operation.DebetSumm,0) <> 0 THEN tmpInfoMoney.CashFlowName_in
              WHEN COALESCE (Operation.KreditSumm,0) <> 0 THEN tmpInfoMoney.CashFlowName_out
-             WHEN COALESCE (Operation.StartAmount_Month,0) <> 0 THEN '(3405) Остаток денежных средств на начало периода '
-             WHEN COALESCE (Operation.EndAmount_Month,0) <> 0 THEN '(3415) Остаток денежных средств на конец периода'
+             WHEN COALESCE (Operation.StartAmount,0) <> 0 THEN '(3405) Остаток денежных средств на начало периода '
+             WHEN COALESCE (Operation.EndAmount,0) <> 0 THEN '(3415) Остаток денежных средств на конец периода'
              ELSE ''
         END  :: TVarChar AS CashFlowName,
 
@@ -1048,8 +1048,8 @@ BEGIN
              WHEN COALESCE (Operation.KreditSumm,0) <> 0 AND tmpInfoMoney.CashFlowCode_out BETWEEN 3200 AND 3295 THEN 2
              WHEN COALESCE (Operation.DebetSumm,0) <> 0  AND tmpInfoMoney.CashFlowCode_in  BETWEEN 3300 AND 3395 THEN 3
              WHEN COALESCE (Operation.KreditSumm,0) <> 0 AND tmpInfoMoney.CashFlowCode_out BETWEEN 3300 AND 3395 THEN 3
-             WHEN COALESCE (Operation.StartAmount_Month,0) <> 0 THEN 4
-             WHEN COALESCE (Operation.EndAmount_Month,0) <> 0 THEN 5
+             WHEN COALESCE (Operation.StartAmount,0) <> 0 THEN 4
+             WHEN COALESCE (Operation.EndAmount,0) <> 0 THEN 5
              ELSE 0
         END  ::Integer   AS PrintGroup
      FROM tmpOperation AS Operation
