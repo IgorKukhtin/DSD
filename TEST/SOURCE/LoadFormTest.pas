@@ -1055,6 +1055,9 @@ end;
 
 procedure TLoadFormTest.LoadServiceFormTest;
 begin
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TMovementPromo_DateDialogForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TMovementPromo_DateDialogForm');
+  exit;
 
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TMovement_Period_PaidKind_BranchDialogForm'));
   TdsdFormStorageFactory.GetStorage.Load('TMovement_Period_PaidKind_BranchDialogForm');

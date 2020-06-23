@@ -90,6 +90,8 @@ type
     SignInternalName: TcxGridDBColumn;
     actAllPartner: TBooleanStoredProcAction;
     bbAllPartner: TdxBarButton;
+    cbIsAllPartner: TcxCheckBox;
+    actRefreshPartner: TdsdDataSetRefresh;
   private
     { Private declarations }
   public

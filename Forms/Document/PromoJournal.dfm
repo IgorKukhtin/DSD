@@ -9,19 +9,20 @@ inherited PromoJournalForm: TPromoJournalForm
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
+    Top = 77
     Width = 1084
-    Height = 350
+    Height = 330
     TabOrder = 3
     ExplicitWidth = 1084
     ExplicitHeight = 350
-    ClientRectBottom = 350
+    ClientRectBottom = 330
     ClientRectRight = 1084
     inherited tsMain: TcxTabSheet
       ExplicitWidth = 1084
       ExplicitHeight = 350
       inherited cxGrid: TcxGrid
         Width = 1084
-        Height = 350
+        Height = 330
         ExplicitWidth = 1084
         ExplicitHeight = 350
         inherited cxGridDBTableView: TcxGridDBTableView
@@ -320,7 +321,9 @@ inherited PromoJournalForm: TPromoJournalForm
   end
   inherited Panel: TPanel
     Width = 1084
+    Height = 51
     ExplicitWidth = 1084
+    ExplicitHeight = 51
     inherited deStart: TcxDateEdit
       EditValue = 42736d
     end
@@ -356,18 +359,55 @@ inherited PromoJournalForm: TPromoJournalForm
       TabOrder = 6
       Width = 155
     end
+    object cbIsAllPartner: TcxCheckBox
+      Left = 411
+      Top = 29
+      Hint = #1054#1073#1085#1086#1074#1080#1090#1100' '#1076#1072#1085#1085#1099#1077
+      Caption = #1056#1072#1079#1074#1077#1088#1085#1091#1090#1100' '#1087#1086' '#1082#1086#1085#1090#1088#1072#1075#1077#1085#1090#1072#1084
+      TabOrder = 7
+      Width = 182
+    end
   end
   inherited UserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn
     Left = 99
     Top = 323
   end
   inherited cxPropertiesStore: TcxPropertiesStore
+    Components = <
+      item
+        Component = deEnd
+        Properties.Strings = (
+          'Date')
+      end
+      item
+        Component = deStart
+        Properties.Strings = (
+          'Date')
+      end
+      item
+        Component = cbIsAllPartner
+        Properties.Strings = (
+          'Checked')
+      end>
     Left = 40
     Top = 323
   end
   inherited ActionList: TActionList
     Left = 175
     Top = 122
+    object actRefreshPartner: TdsdDataSetRefresh [0]
+      Category = 'DSDLib'
+      MoveParams = <>
+      StoredProc = spSelect
+      StoredProcList = <
+        item
+          StoredProc = spSelect
+        end>
+      Caption = #1056#1072#1079#1074#1077#1088#1085#1091#1090#1100' '#1087#1086' '#1082#1086#1085#1090#1088#1072#1075#1077#1085#1090#1072#1084
+      Hint = #1054#1073#1085#1086#1074#1080#1090#1100' '#1076#1072#1085#1085#1099#1077
+      ImageIndex = 4
+      RefreshOnTabSetChanges = False
+    end
     inherited actInsert: TdsdInsertUpdateAction
       FormName = 'TPromoForm'
       FormNameParam.Value = 'TPromoForm'
@@ -402,7 +442,7 @@ inherited PromoJournalForm: TPromoJournalForm
           MultiSelectSeparator = ','
         end>
     end
-    object actPrint: TdsdPrintAction [22]
+    object actPrint: TdsdPrintAction [23]
       Category = 'DSDLib'
       MoveParams = <>
       StoredProc = spSelect_Movement_Promo_Print
@@ -549,8 +589,8 @@ inherited PromoJournalForm: TPromoJournalForm
       Caption = #1048#1079#1084#1077#1085#1080#1090#1100' '#1087#1072#1088#1072#1084#1077#1090#1088#1099' '#1086#1090#1095#1077#1090#1072
       Hint = #1048#1079#1084#1077#1085#1080#1090#1100' '#1087#1072#1088#1072#1084#1077#1090#1088#1099' '#1086#1090#1095#1077#1090#1072
       ImageIndex = 35
-      FormName = 'TMovement_DateDialogForm'
-      FormNameParam.Value = 'TMovement_DateDialogForm'
+      FormName = 'TMovementPromo_DateDialogForm'
+      FormNameParam.Value = 'TMovementPromo_DateDialogForm'
       FormNameParam.DataType = ftString
       FormNameParam.MultiSelectSeparator = ','
       GuiParams = <
@@ -574,6 +614,14 @@ inherited PromoJournalForm: TPromoJournalForm
           Name = 'IsPartnerDate'
           Value = 'False'
           Component = chbPeriodForOperDate
+          DataType = ftBoolean
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'IsAllPartner'
+          Value = Null
+          Component = cbIsAllPartner
           DataType = ftBoolean
           ParamType = ptInput
           MultiSelectSeparator = ','
@@ -746,7 +794,7 @@ inherited PromoJournalForm: TPromoJournalForm
       item
         Name = 'inIsAllPartner'
         Value = Null
-        Component = actAllPartner
+        Component = cbIsAllPartner
         DataType = ftBoolean
         ParamType = ptInput
         MultiSelectSeparator = ','
@@ -804,10 +852,6 @@ inherited PromoJournalForm: TPromoJournalForm
         item
           Visible = True
           ItemName = 'bbShowErased'
-        end
-        item
-          Visible = True
-          ItemName = 'bbAllPartner'
         end
         item
           Visible = True
@@ -937,8 +981,8 @@ inherited PromoJournalForm: TPromoJournalForm
     Top = 272
   end
   inherited FormParams: TdsdFormParams
-    Left = 344
-    Top = 320
+    Left = 328
+    Top = 296
   end
   inherited spMovementReComplete: TdsdStoredProc
     StoredProcName = 'gpReComplete_Movement_Promo'
@@ -1066,7 +1110,8 @@ inherited PromoJournalForm: TPromoJournalForm
         ParamType = ptInput
         MultiSelectSeparator = ','
       end>
-    Left = 943
+    Left = 983
+    Top = 8
   end
   object spGet_UserJuridicalBasis: TdsdStoredProc
     StoredProcName = 'gpGet_User_JuridicalBasis'
