@@ -38,7 +38,7 @@ type
 
     function LoadBookings : boolean;
 
-    function UpdateStaus(AbookingId, AexternalBookingId, AStatus : String) : boolean;
+    function UpdateStaus(AbookingId, AexternalBookingId, AStatus, AbookingCode : String; AJSONAItems: TJSONArray) : boolean;
 
     function GetStaus(AbookingId : String; var AStatus : String) : boolean;
 
@@ -276,7 +276,7 @@ begin
 
 end;
 
-function TLiki24API.UpdateStaus(AbookingId, AexternalBookingId, AStatus : String) : boolean;
+function TLiki24API.UpdateStaus(AbookingId, AexternalBookingId, AStatus, AbookingCode : String; AJSONAItems: TJSONArray) : boolean;
   var jValue : TJSONValue;
       jsonBody: TJSONObject;
 begin
@@ -288,7 +288,8 @@ begin
     jsonBody.AddPair('bookingId', TJSONString.Create(AbookingId));
     jsonBody.AddPair('externalBookingId', TJSONString.Create(AexternalBookingId));
     jsonBody.AddPair('status', TJSONString.Create(AStatus));
-    jsonBody.AddPair('bookingCode', TJSONString.Create(''));
+    jsonBody.AddPair('bookingCode', TJSONString.Create(AbookingCode));
+    jsonBody.AddPair('items', AJSONAItems);
 
     FRESTClient.BaseURL := FBaseURL;
     FRESTClient.ContentType := 'application/json';
@@ -328,7 +329,9 @@ begin
     begin
       FErrorsText := 'Ошибка изменения статуса.'#13#10 + jValue.ToString;
     end;
-  end;
+  end else if FRESTResponse.StatusCode = 200 then Result := True
+  else FErrorsText := 'Ошибка изменения статуса.'#13#10 +  FRESTResponse.StatusText;
+
 end;
 
 function TLiki24API.GetStaus(AbookingId : String; var AStatus : String) : boolean;

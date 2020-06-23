@@ -17,190 +17,31 @@ object MainForm: TMainForm
   OnDestroy = FormDestroy
   PixelsPerInch = 96
   TextHeight = 13
-  object grReport: TcxGrid
-    Left = 0
-    Top = 33
-    Width = 521
-    Height = 605
-    Align = alLeft
-    TabOrder = 0
-    ExplicitLeft = -6
-    ExplicitTop = 39
-    object cxGridDBTableView1: TcxGridDBTableView
-      Navigator.Buttons.CustomButtons = <>
-      DataController.DataSource = dsReport_Upload
-      DataController.Filter.Options = [fcoCaseInsensitive, fcoShowOperatorDescription]
-      DataController.Filter.TranslateBetween = True
-      DataController.Filter.TranslateIn = True
-      DataController.Filter.TranslateLike = True
-      DataController.Summary.DefaultGroupSummaryItems = <
-        item
-          Format = ',0.####'
-          Kind = skSum
-        end
-        item
-          Format = ',0.####'
-          Kind = skSum
-        end
-        item
-          Format = ',0.####'
-          Kind = skSum
-        end
-        item
-          Format = ',0.####'
-          Kind = skSum
-        end
-        item
-          Format = ',0.####'
-          Kind = skSum
-        end
-        item
-          Format = ',0.####'
-          Kind = skSum
-        end
-        item
-          Format = ',0.####'
-          Kind = skSum
-        end
-        item
-          Format = ',0.####'
-          Kind = skSum
-        end
-        item
-          Format = ',0.####'
-          Kind = skSum
-        end
-        item
-          Format = ',0.####'
-          Kind = skSum
-        end
-        item
-          Format = ',0.####'
-          Kind = skSum
-        end
-        item
-          Format = ',0.####'
-          Kind = skSum
-        end
-        item
-          Format = ',0.####'
-          Kind = skSum
-        end
-        item
-          Format = ',0.####'
-          Kind = skSum
-        end>
-      DataController.Summary.FooterSummaryItems = <
-        item
-          Format = ',0.####'
-          Kind = skSum
-        end
-        item
-          Format = ',0.####'
-          Kind = skSum
-        end
-        item
-          Format = ',0.####'
-          Kind = skSum
-        end
-        item
-          Format = ',0.####'
-          Kind = skSum
-        end
-        item
-          Format = ',0.####'
-          Kind = skSum
-        end
-        item
-          Format = ',0.####'
-          Kind = skSum
-        end
-        item
-          Format = ',0.####'
-          Kind = skSum
-        end
-        item
-          Format = ',0.####'
-          Kind = skSum
-        end
-        item
-          Format = ',0.####'
-          Kind = skSum
-        end
-        item
-          Format = ',0.####'
-          Kind = skSum
-        end
-        item
-          Format = ',0.####'
-          Kind = skSum
-        end
-        item
-          Format = ',0.####'
-          Kind = skSum
-        end
-        item
-          Format = ',0.####'
-          Kind = skSum
-        end
-        item
-          Format = ',0.####'
-          Kind = skSum
-        end>
-      DataController.Summary.SummaryGroups = <>
-      OptionsCustomize.ColumnHiding = True
-      OptionsCustomize.ColumnsQuickCustomization = True
-      OptionsData.Deleting = False
-      OptionsData.DeletingConfirmation = False
-      OptionsData.Editing = False
-      OptionsData.Inserting = False
-      OptionsView.Footer = True
-      OptionsView.GroupSummaryLayout = gslAlignWithColumns
-      OptionsView.HeaderAutoHeight = True
-      OptionsView.Indicator = True
-      object isUrgently: TcxGridDBColumn
-        Caption = #1057#1088#1086#1095#1085#1086
-        DataBinding.FieldName = 'isUrgently'
-        HeaderAlignmentHorz = taCenter
-        Width = 99
-      end
-      object FromName: TcxGridDBColumn
-        Caption = #1054#1090' '#1082#1086#1075#1086
-        DataBinding.FieldName = 'FromName'
-        HeaderAlignmentHorz = taCenter
-        Width = 176
-      end
-      object ToName: TcxGridDBColumn
-        Caption = #1050#1086#1084#1091
-        DataBinding.FieldName = 'ToName'
-        HeaderAlignmentHorz = taCenter
-        Width = 203
-      end
-    end
-    object cxGridLevel1: TcxGridLevel
-      GridView = cxGridDBTableView1
-    end
-  end
   object Panel1: TPanel
-    Left = 521
+    Left = 529
     Top = 33
-    Width = 504
+    Width = 496
     Height = 605
     Align = alClient
     BevelOuter = bvNone
     Caption = 'Panel1'
-    TabOrder = 1
-    object grChatId: TcxGrid
+    TabOrder = 0
+    ExplicitLeft = 521
+    ExplicitWidth = 504
+    object grBookingsBody: TcxGrid
       Left = 0
-      Top = 250
-      Width = 504
-      Height = 355
+      Top = 378
+      Width = 496
+      Height = 227
       Align = alClient
       TabOrder = 0
       LookAndFeel.Kind = lfStandard
       LookAndFeel.NativeStyle = False
       LookAndFeel.SkinName = ''
-      object grChatIdDBTableView: TcxGridDBTableView
+      ExplicitTop = 250
+      ExplicitWidth = 504
+      ExplicitHeight = 355
+      object grBookingsBodyDBTableView: TcxGridDBTableView
         Navigator.Buttons.CustomButtons = <>
         DataController.DataSource = BookingsBodyDS
         DataController.Filter.Options = [fcoCaseInsensitive]
@@ -262,15 +103,15 @@ object MainForm: TMainForm
           Width = 52
         end
       end
-      object grChatIdLevel: TcxGridLevel
-        GridView = grChatIdDBTableView
+      object grBookingsBodyLevel: TcxGridLevel
+        GridView = grBookingsBodyDBTableView
       end
     end
-    object cxGrid1: TcxGrid
+    object grBookingsHead: TcxGrid
       Left = 0
       Top = 0
-      Width = 504
-      Height = 250
+      Width = 496
+      Height = 378
       Align = alTop
       TabOrder = 1
       LookAndFeel.Kind = lfStandard
@@ -337,10 +178,10 @@ object MainForm: TMainForm
     Width = 1025
     Height = 33
     Align = alTop
-    TabOrder = 2
+    TabOrder = 1
     object btnUpdateStaus: TButton
-      Left = 727
-      Top = 0
+      Left = 839
+      Top = 2
       Width = 130
       Height = 25
       Caption = #1048#1079#1084#1077#1085#1080#1090#1100' '#1089#1090#1072#1090#1091#1089#1099
@@ -348,8 +189,8 @@ object MainForm: TMainForm
       OnClick = btnUpdateStausClick
     end
     object btnSaveBookings: TButton
-      Left = 615
-      Top = 0
+      Left = 479
+      Top = 2
       Width = 106
       Height = 25
       Caption = #1057#1086#1093#1088#1072#1085#1080#1090#1100' '#1079#1072#1082#1072#1079
@@ -366,8 +207,8 @@ object MainForm: TMainForm
       OnClick = btnAllClick
     end
     object btnLoadBookings: TButton
-      Left = 480
-      Top = 0
+      Left = 344
+      Top = 2
       Width = 129
       Height = 25
       Caption = #1047#1072#1075#1088#1091#1079#1080#1090#1100' '#1079#1072#1082#1072#1079#1099
@@ -383,6 +224,377 @@ object MainForm: TMainForm
       TabOrder = 4
       OnClick = btnAddTestClick
     end
+    object btnOpenBooking: TButton
+      Left = 641
+      Top = 2
+      Width = 192
+      Height = 25
+      Caption = #1047#1072#1082#1072#1079#1099' '#1076#1083#1103' '#1080#1079#1084#1077#1085#1077#1085#1080#1103' '#1089#1090#1072#1090#1091#1089#1072
+      TabOrder = 5
+      OnClick = btnOpenBookingClick
+    end
+  end
+  object Panel3: TPanel
+    Left = 0
+    Top = 33
+    Width = 529
+    Height = 605
+    Align = alLeft
+    Caption = 'Panel3'
+    ShowCaption = False
+    TabOrder = 2
+    object grCheckBody: TcxGrid
+      Left = 1
+      Top = 384
+      Width = 527
+      Height = 220
+      Align = alBottom
+      TabOrder = 0
+      object cxGridDBTableView1: TcxGridDBTableView
+        Navigator.Buttons.CustomButtons = <>
+        DataController.DataSource = dsCheckBody
+        DataController.Filter.Options = [fcoCaseInsensitive, fcoShowOperatorDescription]
+        DataController.Filter.TranslateBetween = True
+        DataController.Filter.TranslateIn = True
+        DataController.Filter.TranslateLike = True
+        DataController.Summary.DefaultGroupSummaryItems = <
+          item
+            Format = ',0.####'
+            Kind = skSum
+          end
+          item
+            Format = ',0.####'
+            Kind = skSum
+          end
+          item
+            Format = ',0.####'
+            Kind = skSum
+          end
+          item
+            Format = ',0.####'
+            Kind = skSum
+          end
+          item
+            Format = ',0.####'
+            Kind = skSum
+          end
+          item
+            Format = ',0.####'
+            Kind = skSum
+          end
+          item
+            Format = ',0.####'
+            Kind = skSum
+          end
+          item
+            Format = ',0.####'
+            Kind = skSum
+          end
+          item
+            Format = ',0.####'
+            Kind = skSum
+          end
+          item
+            Format = ',0.####'
+            Kind = skSum
+          end
+          item
+            Format = ',0.####'
+            Kind = skSum
+          end
+          item
+            Format = ',0.####'
+            Kind = skSum
+          end
+          item
+            Format = ',0.####'
+            Kind = skSum
+          end
+          item
+            Format = ',0.####'
+            Kind = skSum
+          end>
+        DataController.Summary.FooterSummaryItems = <
+          item
+            Format = ',0.####'
+            Kind = skSum
+          end
+          item
+            Format = ',0.####'
+            Kind = skSum
+          end
+          item
+            Format = ',0.####'
+            Kind = skSum
+          end
+          item
+            Format = ',0.####'
+            Kind = skSum
+          end
+          item
+            Format = ',0.####'
+            Kind = skSum
+          end
+          item
+            Format = ',0.####'
+            Kind = skSum
+          end
+          item
+            Format = ',0.####'
+            Kind = skSum
+          end
+          item
+            Format = ',0.####'
+            Kind = skSum
+          end
+          item
+            Format = ',0.####'
+            Kind = skSum
+          end
+          item
+            Format = ',0.####'
+            Kind = skSum
+          end
+          item
+            Format = ',0.####'
+            Kind = skSum
+          end
+          item
+            Format = ',0.####'
+            Kind = skSum
+          end
+          item
+            Format = ',0.####'
+            Kind = skSum
+          end
+          item
+            Format = ',0.####'
+            Kind = skSum
+          end>
+        DataController.Summary.SummaryGroups = <>
+        OptionsCustomize.ColumnHiding = True
+        OptionsCustomize.ColumnsQuickCustomization = True
+        OptionsData.Deleting = False
+        OptionsData.DeletingConfirmation = False
+        OptionsData.Editing = False
+        OptionsData.Inserting = False
+        OptionsView.Footer = True
+        OptionsView.GroupByBox = False
+        OptionsView.GroupSummaryLayout = gslAlignWithColumns
+        OptionsView.HeaderAutoHeight = True
+        OptionsView.Indicator = True
+        object cbGoodsId: TcxGridDBColumn
+          Caption = 'ID'
+          DataBinding.FieldName = 'GoodsId'
+          HeaderAlignmentHorz = taCenter
+          Width = 68
+        end
+        object cbGoodsName: TcxGridDBColumn
+          Caption = #1058#1086#1074#1072#1088
+          DataBinding.FieldName = 'GoodsName'
+          HeaderAlignmentHorz = taCenter
+          Width = 176
+        end
+        object cbAmount: TcxGridDBColumn
+          Caption = #1050#1086#1083'-'#1074#1086
+          DataBinding.FieldName = 'Amount'
+          HeaderAlignmentHorz = taCenter
+          Width = 68
+        end
+        object cbPrice: TcxGridDBColumn
+          Caption = #1062#1077#1085#1072
+          DataBinding.FieldName = 'Price'
+          HeaderAlignmentHorz = taCenter
+          Options.Editing = False
+        end
+        object cbItemId: TcxGridDBColumn
+          Caption = 'Id '#1089#1090#1088#1086#1082#1080' '#1090#1086#1074#1072#1088#1072
+          DataBinding.FieldName = 'ItemId'
+          HeaderAlignmentHorz = taCenter
+          Options.Editing = False
+          Width = 116
+        end
+      end
+      object cxGridLevel1: TcxGridLevel
+        GridView = cxGridDBTableView1
+      end
+    end
+    object grCheckHead: TcxGrid
+      Left = 1
+      Top = 1
+      Width = 527
+      Height = 383
+      Align = alClient
+      TabOrder = 1
+      ExplicitHeight = 377
+      object cxGridDBTableView3: TcxGridDBTableView
+        Navigator.Buttons.CustomButtons = <>
+        DataController.DataSource = dsCheckHead
+        DataController.Filter.Options = [fcoCaseInsensitive, fcoShowOperatorDescription]
+        DataController.Filter.TranslateBetween = True
+        DataController.Filter.TranslateIn = True
+        DataController.Filter.TranslateLike = True
+        DataController.Summary.DefaultGroupSummaryItems = <
+          item
+            Format = ',0.####'
+            Kind = skSum
+          end
+          item
+            Format = ',0.####'
+            Kind = skSum
+          end
+          item
+            Format = ',0.####'
+            Kind = skSum
+          end
+          item
+            Format = ',0.####'
+            Kind = skSum
+          end
+          item
+            Format = ',0.####'
+            Kind = skSum
+          end
+          item
+            Format = ',0.####'
+            Kind = skSum
+          end
+          item
+            Format = ',0.####'
+            Kind = skSum
+          end
+          item
+            Format = ',0.####'
+            Kind = skSum
+          end
+          item
+            Format = ',0.####'
+            Kind = skSum
+          end
+          item
+            Format = ',0.####'
+            Kind = skSum
+          end
+          item
+            Format = ',0.####'
+            Kind = skSum
+          end
+          item
+            Format = ',0.####'
+            Kind = skSum
+          end
+          item
+            Format = ',0.####'
+            Kind = skSum
+          end
+          item
+            Format = ',0.####'
+            Kind = skSum
+          end>
+        DataController.Summary.FooterSummaryItems = <
+          item
+            Format = ',0.####'
+            Kind = skSum
+          end
+          item
+            Format = ',0.####'
+            Kind = skSum
+          end
+          item
+            Format = ',0.####'
+            Kind = skSum
+          end
+          item
+            Format = ',0.####'
+            Kind = skSum
+          end
+          item
+            Format = ',0.####'
+            Kind = skSum
+          end
+          item
+            Format = ',0.####'
+            Kind = skSum
+          end
+          item
+            Format = ',0.####'
+            Kind = skSum
+          end
+          item
+            Format = ',0.####'
+            Kind = skSum
+          end
+          item
+            Format = ',0.####'
+            Kind = skSum
+          end
+          item
+            Format = ',0.####'
+            Kind = skSum
+          end
+          item
+            Format = ',0.####'
+            Kind = skSum
+          end
+          item
+            Format = ',0.####'
+            Kind = skSum
+          end
+          item
+            Format = ',0.####'
+            Kind = skSum
+          end
+          item
+            Format = ',0.####'
+            Kind = skSum
+          end>
+        DataController.Summary.SummaryGroups = <>
+        OptionsCustomize.ColumnHiding = True
+        OptionsCustomize.ColumnsQuickCustomization = True
+        OptionsData.Deleting = False
+        OptionsData.DeletingConfirmation = False
+        OptionsData.Editing = False
+        OptionsData.Inserting = False
+        OptionsView.Footer = True
+        OptionsView.GroupByBox = False
+        OptionsView.GroupSummaryLayout = gslAlignWithColumns
+        OptionsView.HeaderAutoHeight = True
+        OptionsView.Indicator = True
+        object chBookingId: TcxGridDBColumn
+          Caption = 'ID '#1079#1072#1082#1072#1079#1072
+          DataBinding.FieldName = 'BookingId'
+          HeaderAlignmentHorz = taCenter
+          Width = 87
+        end
+        object chInvNumber: TcxGridDBColumn
+          Caption = #1053#1086#1084#1077#1088
+          DataBinding.FieldName = 'InvNumber'
+          HeaderAlignmentHorz = taCenter
+          Width = 85
+        end
+        object chBookingStatus: TcxGridDBColumn
+          Caption = #1057#1090#1072#1090#1091#1089
+          DataBinding.FieldName = 'BookingStatus'
+          HeaderAlignmentHorz = taCenter
+          Width = 134
+        end
+        object chBookingStatusNew: TcxGridDBColumn
+          Caption = #1053#1086#1074#1099#1081' '#1089#1090#1072#1090#1091#1089
+          DataBinding.FieldName = 'BookingStatusNew'
+          HeaderAlignmentHorz = taCenter
+          Width = 88
+        end
+        object chOperDate: TcxGridDBColumn
+          Caption = #1044#1072#1090#1072
+          DataBinding.FieldName = 'OperDate'
+          HeaderAlignmentHorz = taCenter
+          Width = 96
+        end
+      end
+      object cxGridLevel3: TcxGridLevel
+        GridView = cxGridDBTableView3
+      end
+    end
   end
   object ZConnection1: TZConnection
     ControlsCodePage = cCP_UTF16
@@ -394,7 +606,7 @@ object MainForm: TMainForm
     Password = ''
     Protocol = 'postgresql-9'
     Left = 120
-    Top = 120
+    Top = 112
   end
   object Timer1: TTimer
     Enabled = False
@@ -403,34 +615,23 @@ object MainForm: TMainForm
     Top = 112
   end
   object BookingsBodyDS: TDataSource
-    Left = 560
-    Top = 368
+    Left = 576
+    Top = 480
   end
-  object qryReport_Upload: TZQuery
+  object qryCheckHead: TZQuery
     Connection = ZConnection1
     SQL.Strings = (
-      'SELECT * FROM gpSelect_Movement_SendDriverVIP (:Date, 0, '#39'3'#39');')
-    Params = <
-      item
-        DataType = ftUnknown
-        Name = 'Date'
-        ParamType = ptUnknown
-      end>
+      'SELECT * FROM gpSelect_Movement_Check_Booking_Liki24 ('#39'3'#39');')
+    Params = <>
     Properties.Strings = (
       '')
-    Left = 68
-    Top = 352
-    ParamData = <
-      item
-        DataType = ftUnknown
-        Name = 'Date'
-        ParamType = ptUnknown
-      end>
+    Left = 52
+    Top = 248
   end
-  object dsReport_Upload: TDataSource
-    DataSet = qryReport_Upload
-    Left = 176
-    Top = 352
+  object dsCheckHead: TDataSource
+    DataSet = qryCheckHead
+    Left = 192
+    Top = 248
   end
   object BookingsHeadDS: TDataSource
     AutoEdit = False
@@ -467,12 +668,17 @@ object MainForm: TMainForm
       end
       item
         DataType = ftString
+        Name = 'inBookingStatus'
+        ParamType = ptInput
+      end
+      item
+        DataType = ftString
         Name = 'inSession'
         ParamType = ptInput
       end>
     StoredProcName = 'gpInsertUpdate_Movement_Check_Site_Liki24'
-    Left = 64
-    Top = 424
+    Left = 568
+    Top = 184
     ParamData = <
       item
         DataType = ftInteger
@@ -497,6 +703,11 @@ object MainForm: TMainForm
       item
         DataType = ftString
         Name = 'inOrderId'
+        ParamType = ptInput
+      end
+      item
+        DataType = ftString
+        Name = 'inBookingStatus'
         ParamType = ptInput
       end
       item
@@ -544,8 +755,8 @@ object MainForm: TMainForm
         ParamType = ptInput
       end>
     StoredProcName = 'gpInsertUpdate_MovementItem_Check_Site_Liki24'
-    Left = 64
-    Top = 496
+    Left = 568
+    Top = 256
     ParamData = <
       item
         DataType = ftInteger
@@ -575,6 +786,62 @@ object MainForm: TMainForm
       item
         DataType = ftCurrency
         Name = 'inPrice'
+        ParamType = ptInput
+      end
+      item
+        DataType = ftString
+        Name = 'inSession'
+        ParamType = ptInput
+      end>
+  end
+  object dsCheckBody: TDataSource
+    DataSet = qryCheckBody
+    Left = 176
+    Top = 480
+  end
+  object qryCheckBody: TZQuery
+    Connection = ZConnection1
+    SQL.Strings = (
+      'SELECT * FROM gpSelect_MovementItem_Check_Booking_Liki24 ('#39'3'#39');')
+    Params = <>
+    Properties.Strings = (
+      '')
+    MasterFields = 'Id'
+    MasterSource = dsCheckHead
+    LinkedFields = 'MovementId'
+    Left = 36
+    Top = 480
+  end
+  object spUpdateMovementStatus: TZStoredProc
+    Connection = ZConnection1
+    Params = <
+      item
+        DataType = ftInteger
+        Name = 'inMovementId'
+        ParamType = ptInput
+      end
+      item
+        DataType = ftString
+        Name = 'inBookingStatus'
+        ParamType = ptInput
+      end
+      item
+        DataType = ftString
+        Name = 'inSession'
+        ParamType = ptInput
+      end>
+    StoredProcName = 'gpUpdate_Movement_Check_Site_Liki24_Status'
+    Left = 568
+    Top = 312
+    ParamData = <
+      item
+        DataType = ftInteger
+        Name = 'inMovementId'
+        ParamType = ptInput
+      end
+      item
+        DataType = ftString
+        Name = 'inBookingStatus'
         ParamType = ptInput
       end
       item
