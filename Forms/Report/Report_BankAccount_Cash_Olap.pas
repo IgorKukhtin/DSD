@@ -76,6 +76,8 @@ type
     PrintHeaderCDS: TClientDataSet;
     PrintItemsCDS: TClientDataSet;
     spSelectPrint: TdsdStoredProc;
+    actPrint: TdsdPrintAction;
+    bbactPrint: TdxBarButton;
   private
   public
   end;

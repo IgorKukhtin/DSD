@@ -604,6 +604,14 @@ object Report_BankAccount_Cash_OlapForm: TReport_BankAccount_Cash_OlapForm
         end
         item
           Visible = True
+          ItemName = 'bbactPrint'
+        end
+        item
+          Visible = True
+          ItemName = 'dxBarStatic'
+        end
+        item
+          Visible = True
           ItemName = 'bbToExcel'
         end
         item
@@ -631,6 +639,10 @@ object Report_BankAccount_Cash_OlapForm: TReport_BankAccount_Cash_OlapForm
     end
     object bbExecuteDialog: TdxBarButton
       Action = ExecuteDialog
+      Category = 0
+    end
+    object bbactPrint: TdxBarButton
+      Action = actPrint
       Category = 0
     end
   end
@@ -759,6 +771,82 @@ object Report_BankAccount_Cash_OlapForm: TReport_BankAccount_Cash_OlapForm
       isShowModal = True
       RefreshDispatcher = RefreshDispatcher
       OpenBeforeShow = True
+    end
+    object actPrint: TdsdPrintAction
+      Category = 'DSDLib'
+      MoveParams = <
+        item
+          FromParam.Name = 'id'
+          FromParam.Value = Null
+          FromParam.ComponentItem = 'id'
+          FromParam.MultiSelectSeparator = ','
+          ToParam.Value = '0'
+          ToParam.Component = FormParams
+          ToParam.ComponentItem = 'Id'
+          ToParam.ParamType = ptInputOutput
+          ToParam.MultiSelectSeparator = ','
+        end
+        item
+          FromParam.Value = 43831d
+          FromParam.Component = deStart
+          FromParam.DataType = ftDateTime
+          FromParam.MultiSelectSeparator = ','
+          ToParam.Name = 'StartDate'
+          ToParam.Value = 'NULL'
+          ToParam.DataType = ftDateTime
+          ToParam.ParamType = ptInputOutput
+          ToParam.MultiSelectSeparator = ','
+        end
+        item
+          FromParam.Value = 43831d
+          FromParam.Component = deEnd
+          FromParam.DataType = ftDateTime
+          FromParam.MultiSelectSeparator = ','
+          ToParam.Name = 'EndDate'
+          ToParam.Value = 'NULL'
+          ToParam.DataType = ftDateTime
+          ToParam.ParamType = ptInputOutput
+          ToParam.MultiSelectSeparator = ','
+        end>
+      StoredProcList = <>
+      Caption = #1055#1077#1095#1072#1090#1100' '#1055#1088#1103#1084#1086#1081' '#1084#1077#1090#1086#1076
+      Hint = #1055#1077#1095#1072#1090#1100' '#1055#1088#1103#1084#1086#1081' '#1084#1077#1090#1086#1076
+      ImageIndex = 3
+      DataSets = <
+        item
+          DataSet = ClientDataSet
+          UserName = 'frxDBDItems'
+          IndexFieldNames = 'CashFlowCode_in;CashFlowCode_out'
+        end>
+      Params = <
+        item
+          Name = 'StartDate'
+          Value = 43831d
+          Component = deStart
+          DataType = ftDateTime
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'EndDate'
+          Value = 43831d
+          Component = deEnd
+          DataType = ftDateTime
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'maintext'
+          Value = #1088'/'#1089#1095#1077#1090#1091
+          DataType = ftString
+          MultiSelectSeparator = ','
+        end>
+      ReportName = #1054#1073#1086#1088#1086#1090#1099' '#1087#1086' '#1082#1072#1089#1089#1077' '#1080' '#1089#1095#1077#1090#1091' ('#1055#1088#1103#1084#1086#1081' '#1084#1077#1090#1086#1076')'
+      ReportNameParam.Value = #1054#1073#1086#1088#1086#1090#1099' '#1087#1086' '#1082#1072#1089#1089#1077' '#1080' '#1089#1095#1077#1090#1091' ('#1055#1088#1103#1084#1086#1081' '#1084#1077#1090#1086#1076')'
+      ReportNameParam.DataType = ftString
+      ReportNameParam.ParamType = ptInput
+      ReportNameParam.MultiSelectSeparator = ','
+      PrinterNameParam.Value = ''
+      PrinterNameParam.DataType = ftString
+      PrinterNameParam.MultiSelectSeparator = ','
     end
   end
   object spReport: TdsdStoredProc
