@@ -38,13 +38,15 @@ RETURNS TABLE (ContainerId Integer, CashCode Integer, CashName TVarChar, Currenc
              , Type_info TVarChar
              , NomStr Integer
              , InfoText TVarChar
-             
+
+             , MonthName1 TVarChar
+             , MonthName2 TVarChar
              , CashFlowCode Integer
              , CashFlowName TVarChar
              , Sum1_CashFlow TFloat
              , Sum2_CashFlow TFloat
-             , MonthName1 TVarChar
-             , MonthName2 TVarChar
+             , PrintGroup Integer
+
               )
 AS
 $BODY$
@@ -1008,36 +1010,48 @@ BEGIN
         Operation.InfoText  :: TVarChar,
         
         -- для печати
+        (SELECT tmpMonth.MonthName FROM tmpMonth WHERE tmpMonth.Ord = 1) :: TVarChar AS MonthName1,
+        (SELECT tmpMonth.MonthName FROM tmpMonth WHERE tmpMonth.Ord = 2) :: TVarChar AS MonthName2,
+        
         CASE WHEN COALESCE (Operation.DebetSumm,0) <> 0 THEN tmpInfoMoney.CashFlowCode_in
              WHEN COALESCE (Operation.KreditSumm,0) <> 0 THEN tmpInfoMoney.CashFlowCode_out
-             WHEN COALESCE (Operation.StartAmount,0) <> 0 THEN 3405
-             WHEN COALESCE (Operation.EndAmount,0) <> 0 THEN 3415
+             WHEN COALESCE (Operation.StartAmount_Month,0) <> 0 THEN 3405
+             WHEN COALESCE (Operation.EndAmount_Month,0) <> 0 THEN 3415
              ELSE 0
         END  ::Integer   AS CashFlowCode,
 
         CASE WHEN COALESCE (Operation.DebetSumm,0) <> 0 THEN tmpInfoMoney.CashFlowName_in
              WHEN COALESCE (Operation.KreditSumm,0) <> 0 THEN tmpInfoMoney.CashFlowName_out
-             WHEN COALESCE (Operation.StartAmount,0) <> 0 THEN '(3405) Остаток денежных средств на начало периода '
-             WHEN COALESCE (Operation.EndAmount,0) <> 0 THEN '(3415) Остаток денежных средств на конец периода'
+             WHEN COALESCE (Operation.StartAmount_Month,0) <> 0 THEN '(3405) Остаток денежных средств на начало периода '
+             WHEN COALESCE (Operation.EndAmount_Month,0) <> 0 THEN '(3415) Остаток денежных средств на конец периода'
              ELSE ''
         END  :: TVarChar AS CashFlowName,
 
         CASE WHEN tmpMonth.Ord = 1 THEN (COALESCE (Operation.DebetSumm,0)
                                        - COALESCE (Operation.KreditSumm,0)
-                                       + COALESCE (Operation.StartAmount,0)
-                                       + COALESCE (Operation.EndAmount,0))
+                                       + COALESCE (Operation.StartAmount_Month,0)
+                                       + COALESCE (Operation.EndAmount_Month,0))
              ELSE 0
         END  ::TFloat    AS Sum1_CashFlow,
 
         CASE WHEN tmpMonth.Ord = 2 THEN (COALESCE (Operation.DebetSumm,0)
                                        - COALESCE (Operation.KreditSumm,0)
-                                       + COALESCE (Operation.StartAmount,0)
-                                       + COALESCE (Operation.EndAmount,0))
+                                       + COALESCE (Operation.StartAmount_Month,0)
+                                       + COALESCE (Operation.EndAmount_Month,0))
              ELSE 0
         END  ::TFloat    AS Sum2_CashFlow,
-        
-        (SELECT tmpMonth.MonthName FROM tmpMonth WHERE tmpMonth.Ord = 1) :: TVarChar AS MonthName1,
-        (SELECT tmpMonth.MonthName FROM tmpMonth WHERE tmpMonth.Ord = 2) :: TVarChar AS MonthName2
+
+        -- для итогов по группам
+        CASE WHEN COALESCE (Operation.DebetSumm,0) <> 0  AND tmpInfoMoney.CashFlowCode_in  BETWEEN 3000 AND 3195 THEN 1
+             WHEN COALESCE (Operation.KreditSumm,0) <> 0 AND tmpInfoMoney.CashFlowCode_out BETWEEN 3000 AND 3195 THEN 1
+             WHEN COALESCE (Operation.DebetSumm,0) <> 0  AND tmpInfoMoney.CashFlowCode_in  BETWEEN 3200 AND 3295 THEN 2
+             WHEN COALESCE (Operation.KreditSumm,0) <> 0 AND tmpInfoMoney.CashFlowCode_out BETWEEN 3200 AND 3295 THEN 2
+             WHEN COALESCE (Operation.DebetSumm,0) <> 0  AND tmpInfoMoney.CashFlowCode_in  BETWEEN 3300 AND 3395 THEN 3
+             WHEN COALESCE (Operation.KreditSumm,0) <> 0 AND tmpInfoMoney.CashFlowCode_out BETWEEN 3300 AND 3395 THEN 3
+             WHEN COALESCE (Operation.StartAmount_Month,0) <> 0 THEN 4
+             WHEN COALESCE (Operation.EndAmount_Month,0) <> 0 THEN 5
+             ELSE 0
+        END  ::Integer   AS PrintGroup
      FROM tmpOperation AS Operation
 
          LEFT JOIN tmpAccount ON tmpAccount.AccountId = Operation.AccountId
