@@ -540,6 +540,12 @@ object Report_BankAccount_Cash_OlapForm: TReport_BankAccount_Cash_OlapForm
         Properties.Strings = (
           'key'
           'TextValue')
+      end
+      item
+        Component = GuidesBankAccount
+        Properties.Strings = (
+          'key'
+          'TextValue')
       end>
     StorageName = 'cxPropertiesStore'
     StorageType = stStream
@@ -816,7 +822,7 @@ object Report_BankAccount_Cash_OlapForm: TReport_BankAccount_Cash_OlapForm
         item
           DataSet = ClientDataSet
           UserName = 'frxDBDItems'
-          IndexFieldNames = 'CashFlowCode_in;CashFlowCode_out'
+          IndexFieldNames = 'CashFlowCode'
         end>
       Params = <
         item

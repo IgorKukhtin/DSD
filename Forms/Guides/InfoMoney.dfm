@@ -70,7 +70,7 @@ object InfoMoneyForm: TInfoMoneyForm
         Width = 177
       end
       object CashFlowName_in: TcxGridDBColumn
-        Caption = #1057#1090#1072#1090#1100#1103' '#1044#1044#1057' '#1088#1072#1089#1093'.'
+        Caption = #1057#1090#1072#1090#1100#1103' '#1044#1044#1057' '#1087#1088#1080#1093'.'
         DataBinding.FieldName = 'CashFlowName_in'
         PropertiesClassName = 'TcxButtonEditProperties'
         Properties.Buttons = <
@@ -82,11 +82,11 @@ object InfoMoneyForm: TInfoMoneyForm
         Properties.ReadOnly = True
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
-        HeaderHint = #1057#1090#1072#1090#1100#1103' '#1044#1044#1057' '#1088#1072#1089#1093#1086#1076
+        HeaderHint = #1057#1090#1072#1090#1100#1103' '#1044#1044#1057' '#1087#1088#1080#1093#1086#1076
         Width = 100
       end
       object CashFlowName_out: TcxGridDBColumn
-        Caption = #1057#1090#1072#1090#1100#1103' '#1044#1044#1057' '#1087#1088#1080#1093'.'
+        Caption = #1057#1090#1072#1090#1100#1103' '#1044#1044#1057' '#1088#1072#1089#1093'.'
         DataBinding.FieldName = 'CashFlowName_out'
         PropertiesClassName = 'TcxButtonEditProperties'
         Properties.Buttons = <
@@ -98,7 +98,7 @@ object InfoMoneyForm: TInfoMoneyForm
         Properties.ReadOnly = True
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
-        HeaderHint = #1057#1090#1072#1090#1100#1103' '#1044#1044#1057' '#1087#1088#1080#1093#1086#1076
+        HeaderHint = #1057#1090#1072#1090#1100#1103' '#1044#1044#1057' '#1088#1072#1089#1093#1086#1076
         Width = 100
       end
       object isProfitLoss: TcxGridDBColumn

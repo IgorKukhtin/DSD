@@ -38,6 +38,13 @@ RETURNS TABLE (ContainerId Integer, CashCode Integer, CashName TVarChar, Currenc
              , Type_info TVarChar
              , NomStr Integer
              , InfoText TVarChar
+             
+             , CashFlowCode Integer
+             , CashFlowName TVarChar
+             , Sum1_CashFlow TFloat
+             , Sum2_CashFlow TFloat
+             , MonthName1 TVarChar
+             , MonthName2 TVarChar
               )
 AS
 $BODY$
@@ -938,9 +945,9 @@ BEGIN
                             )
 
     -- пронумеруем мес€ца, дл€ печати берем первые 2 мес€ца
-    , tmpMonth AS (SELECT DISTINCT tmp.MonthNum
-                        , ROW_NUMBER() OVER (ORDER BY tmp.MonthNum)  ::Integer) AS Ord
-                   FROM (SELECT DISTINCT Operation.MonthNum FROM Operation) AS tmp
+    , tmpMonth AS (SELECT DISTINCT tmp.MonthNum, tmp.MonthName
+                        , ROW_NUMBER() OVER (ORDER BY tmp.MonthNum)  ::Integer AS Ord
+                   FROM (SELECT DISTINCT tmpOperation.MonthNum, zfCalc_MonthName (tmpOperation.OperDate) AS MonthName FROM tmpOperation) AS tmp
                    )
                    
      -- –езультат
@@ -958,9 +965,9 @@ BEGIN
         CASE WHEN COALESCE (Operation.InfoMoneyId, 0) = 0 AND (Operation.DebetSumm <> 0 OR Operation.KreditSumm <> 0 OR Operation.DebetSumm_Currency <> 0 OR Operation.KreditSumm_Currency <> 0) THEN ' урсова€ разница' ELSE tmpInfoMoney.InfoMoneyName     END :: TVarChar AS InfoMoneyName,
         CASE WHEN COALESCE (Operation.InfoMoneyId, 0) = 0 AND (Operation.DebetSumm <> 0 OR Operation.KreditSumm <> 0 OR Operation.DebetSumm_Currency <> 0 OR Operation.KreditSumm_Currency <> 0) THEN ' урсова€ разница' ELSE tmpInfoMoney.InfoMoneyName_all END :: TVarChar AS InfoMoneyName_all,
         CASE WHEN Operation.NomStr = 1 THEN 3405 WHEN Operation.nomstr = 3 THEN 3415 ELSE tmpInfoMoney.CashFlowCode_in END  :: Integer AS CashFlowCode_in,
-        CASE WHEN Operation.nomstr = 1 THEN 'ќстаток денежных средств на начало периода ' WHEN Operation.nomstr = 3 THEN 'ќстаток денежных средств на конец периода' ELSE tmpInfoMoney.CashFlowName_in END :: TVarChar                                    AS CashFlowName_in,
+        CASE WHEN Operation.nomstr = 1 THEN 'ќстаток денежных средств на начало периода' WHEN Operation.nomstr = 3 THEN 'ќстаток денежных средств на конец периода' ELSE tmpInfoMoney.CashFlowName_in END :: TVarChar                                    AS CashFlowName_in,
         CASE WHEN Operation.NomStr = 1 THEN 3405 WHEN Operation.nomstr = 3 THEN 3415 ELSE tmpInfoMoney.CashFlowCode_out END :: Integer AS CashFlowCode_out,
-        CASE WHEN Operation.nomstr = 1 THEN 'ќстаток денежных средств на начало периода ' WHEN Operation.nomstr = 3 THEN 'ќстаток денежных средств на конец периода' ELSE tmpInfoMoney.CashFlowName_out END :: TVarChar                                    AS CashFlowName_out,
+        CASE WHEN Operation.nomstr = 1 THEN 'ќстаток денежных средств на начало периода' WHEN Operation.nomstr = 3 THEN 'ќстаток денежных средств на конец периода' ELSE tmpInfoMoney.CashFlowName_out END :: TVarChar                                    AS CashFlowName_out,
         tmpAccount.AccountName_all                                                                  AS AccountName,
         Object_Unit.ObjectCode                                                                      AS UnitCode,
         Object_Unit.ValueData                                                                       AS UnitName,
@@ -992,13 +999,45 @@ BEGIN
         
         (Operation.MonthNum||'. ' ||zfCalc_MonthName (Operation.OperDate))  ::TVarChar AS MonthName,
         Operation.MonthNum  ::Integer AS MonthNum,
-        tmpMonth.ord        ::Integer AS OrdByPrint
+        tmpMonth.ord        ::Integer AS OrdByPrint,
         EXTRACT (YEAR FROM Operation.OperDate) ::TVarChar AS Year,
         
         Operation.Type_info :: TVarChar,
         
         Operation.NomStr    :: Integer,
-        Operation.InfoText  :: TVarChar
+        Operation.InfoText  :: TVarChar,
+        
+        -- дл€ печати
+        CASE WHEN COALESCE (Operation.DebetSumm,0) <> 0 THEN tmpInfoMoney.CashFlowCode_in
+             WHEN COALESCE (Operation.KreditSumm,0) <> 0 THEN tmpInfoMoney.CashFlowCode_out
+             WHEN COALESCE (Operation.StartAmount,0) <> 0 THEN 3405
+             WHEN COALESCE (Operation.EndAmount,0) <> 0 THEN 3415
+             ELSE 0
+        END  ::Integer   AS CashFlowCode,
+
+        CASE WHEN COALESCE (Operation.DebetSumm,0) <> 0 THEN tmpInfoMoney.CashFlowName_in
+             WHEN COALESCE (Operation.KreditSumm,0) <> 0 THEN tmpInfoMoney.CashFlowName_out
+             WHEN COALESCE (Operation.StartAmount,0) <> 0 THEN '(3405) ќстаток денежных средств на начало периода '
+             WHEN COALESCE (Operation.EndAmount,0) <> 0 THEN '(3415) ќстаток денежных средств на конец периода'
+             ELSE ''
+        END  :: TVarChar AS CashFlowName,
+
+        CASE WHEN tmpMonth.Ord = 1 THEN (COALESCE (Operation.DebetSumm,0)
+                                       - COALESCE (Operation.KreditSumm,0)
+                                       + COALESCE (Operation.StartAmount,0)
+                                       + COALESCE (Operation.EndAmount,0))
+             ELSE 0
+        END  ::TFloat    AS Sum1_CashFlow,
+
+        CASE WHEN tmpMonth.Ord = 2 THEN (COALESCE (Operation.DebetSumm,0)
+                                       - COALESCE (Operation.KreditSumm,0)
+                                       + COALESCE (Operation.StartAmount,0)
+                                       + COALESCE (Operation.EndAmount,0))
+             ELSE 0
+        END  ::TFloat    AS Sum2_CashFlow,
+        
+        (SELECT tmpMonth.MonthName FROM tmpMonth WHERE tmpMonth.Ord = 1) :: TVarChar AS MonthName1,
+        (SELECT tmpMonth.MonthName FROM tmpMonth WHERE tmpMonth.Ord = 2) :: TVarChar AS MonthName2
      FROM tmpOperation AS Operation
 
          LEFT JOIN tmpAccount ON tmpAccount.AccountId = Operation.AccountId
@@ -1419,7 +1458,7 @@ AND CLO_Cash.ObjectId = 14462
                               GROUP BY Operation_all.ContainerId, Operation_all.ObjectId, Operation_all.CashId, Operation_all.CurrencyId, Operation_all.OperDate
                              )
       --
-      , tmpCalc AS 
+      , tmpCalc AS
 (                   --расчет накоп. конечн. остатка
                     SELECT tmp.ContainerId, tmp.ObjectId, tmp.CashId, tmp.CurrencyId, tmp.OperDate
                          , SUM (EndAmount_calc) AS EndAmount_calc
