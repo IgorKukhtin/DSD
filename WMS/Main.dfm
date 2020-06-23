@@ -23,7 +23,7 @@ object MainForm: TMainForm
     Top = 0
     Width = 1384
     Height = 642
-    ActivePage = tsErrors
+    ActivePage = tsLog
     Align = alClient
     TabOrder = 0
     OnChange = pgcMainChange
@@ -64,32 +64,13 @@ object MainForm: TMainForm
         Caption = 'cbDebug'
         TabOrder = 2
       end
-      object LogMemo: TMemo
-        Left = 217
-        Top = 40
-        Width = 596
-        Height = 428
-        Anchors = [akLeft, akTop, akBottom]
-        Color = clBlack
-        Font.Charset = DEFAULT_CHARSET
-        Font.Color = clCream
-        Font.Height = -11
-        Font.Name = 'Courier New'
-        Font.Style = []
-        Lines.Strings = (
-          'Log')
-        ParentFont = False
-        ReadOnly = True
-        ScrollBars = ssVertical
-        TabOrder = 3
-      end
       object btnObject_SKU_to_wms: TButton
         Left = 8
         Top = 40
         Width = 200
         Height = 25
         Caption = 'Object_SKU to wms'
-        TabOrder = 4
+        TabOrder = 3
         OnClick = btnObject_SKU_to_wmsClick
       end
       object btnObject_SKU_CODE_to_wms: TButton
@@ -98,7 +79,7 @@ object MainForm: TMainForm
         Width = 200
         Height = 25
         Caption = 'Object_SKU_CODE to wms'
-        TabOrder = 5
+        TabOrder = 4
         OnClick = btnObject_SKU_CODE_to_wmsClick
       end
       object btnObject_SKU_GROUP_DEPENDS_to_wmsClick: TButton
@@ -107,7 +88,7 @@ object MainForm: TMainForm
         Width = 200
         Height = 25
         Caption = 'Object_SKU_GROUP+DEPENDS to wms'
-        TabOrder = 6
+        TabOrder = 5
         OnClick = btnObject_SKU_GROUP_DEPENDS_to_wmsClickClick
       end
       object btnObject_CLIENT_to_wms: TButton
@@ -116,7 +97,7 @@ object MainForm: TMainForm
         Width = 200
         Height = 25
         Caption = 'Object_CLIENT to wms'
-        TabOrder = 7
+        TabOrder = 6
         OnClick = btnObject_CLIENT_to_wmsClick
       end
       object btnObject_PACK_to_wms: TButton
@@ -125,7 +106,7 @@ object MainForm: TMainForm
         Width = 200
         Height = 25
         Caption = 'Object_PACK to wms'
-        TabOrder = 8
+        TabOrder = 7
         OnClick = btnObject_PACK_to_wmsClick
       end
       object btnObject_USER_to_wms: TButton
@@ -134,7 +115,7 @@ object MainForm: TMainForm
         Width = 200
         Height = 25
         Caption = 'Object_USER to wms'
-        TabOrder = 9
+        TabOrder = 8
         OnClick = btnObject_USER_to_wmsClick
       end
       object btnMovement_INCOMING_to_wms: TButton
@@ -143,7 +124,7 @@ object MainForm: TMainForm
         Width = 200
         Height = 25
         Caption = 'Movement_INCOMING to wms'
-        TabOrder = 10
+        TabOrder = 9
         OnClick = btnMovement_INCOMING_to_wmsClick
       end
       object btnMovement_ASN_LOAD_to_wms: TButton
@@ -152,7 +133,7 @@ object MainForm: TMainForm
         Width = 200
         Height = 25
         Caption = 'Movement_ASN_LOAD to wms'
-        TabOrder = 11
+        TabOrder = 10
         OnClick = btnMovement_ASN_LOAD_to_wmsClick
       end
       object btnMovement_ORDER_to_wms: TButton
@@ -161,7 +142,7 @@ object MainForm: TMainForm
         Width = 200
         Height = 25
         Caption = 'Movement_ORDER to wms'
-        TabOrder = 12
+        TabOrder = 11
         OnClick = btnMovement_ORDER_to_wmsClick
       end
       object btnStartTimer: TButton
@@ -170,7 +151,7 @@ object MainForm: TMainForm
         Width = 93
         Height = 25
         Caption = 'Start Timer'
-        TabOrder = 13
+        TabOrder = 12
         OnClick = btnStartTimerClick
       end
       object btnEndTimer: TButton
@@ -179,7 +160,7 @@ object MainForm: TMainForm
         Width = 98
         Height = 25
         Caption = 'Stop Timer'
-        TabOrder = 14
+        TabOrder = 13
         OnClick = btnEndTimerClick
       end
       object btnFDC_alan: TButton
@@ -188,7 +169,7 @@ object MainForm: TMainForm
         Width = 93
         Height = 25
         Caption = 'test Open alan'
-        TabOrder = 15
+        TabOrder = 14
         OnClick = btnFDC_alanClick
       end
       object btnFDC_wms: TButton
@@ -197,27 +178,8 @@ object MainForm: TMainForm
         Width = 98
         Height = 25
         Caption = 'test Open wms'
-        TabOrder = 16
+        TabOrder = 15
         OnClick = btnFDC_wmsClick
-      end
-      object mmoMessage: TMemo
-        Left = 822
-        Top = 40
-        Width = 545
-        Height = 428
-        Anchors = [akLeft, akTop, akBottom]
-        Color = clBlack
-        Font.Charset = DEFAULT_CHARSET
-        Font.Color = clCream
-        Font.Height = -11
-        Font.Name = 'Courier New'
-        Font.Style = []
-        Lines.Strings = (
-          'Message')
-        ParentFont = False
-        ReadOnly = True
-        ScrollBars = ssVertical
-        TabOrder = 17
       end
       object seFontSize: TSpinEdit
         Left = 742
@@ -226,7 +188,7 @@ object MainForm: TMainForm
         Height = 22
         MaxValue = 12
         MinValue = 8
-        TabOrder = 18
+        TabOrder = 16
         Value = 10
         OnChange = seFontSizeChange
       end
@@ -236,7 +198,7 @@ object MainForm: TMainForm
         Width = 200
         Height = 42
         Caption = #1079#1072#1075#1088#1091#1079#1080#1090#1100' '#1087#1072#1082#1077#1090'    order_status_changed'
-        TabOrder = 19
+        TabOrder = 17
         WordWrap = True
         OnClick = btnImpOrderStatusChangedClick
       end
@@ -246,75 +208,9 @@ object MainForm: TMainForm
         Width = 200
         Height = 42
         Caption = #1079#1072#1075#1088#1091#1079#1080#1090#1100' '#1087#1072#1082#1077#1090'  receiving_result'
-        TabOrder = 20
+        TabOrder = 18
         WordWrap = True
         OnClick = btnImpReceivingResultClick
-      end
-      object grpPackets: TGroupBox
-        Left = 217
-        Top = 488
-        Width = 824
-        Height = 115
-        Caption = ' '#1055#1088#1086#1094#1077#1089#1089' '#1086#1073#1088#1072#1073#1086#1090#1082#1080' '#1087#1072#1082#1077#1090#1086#1074
-        TabOrder = 21
-        object lbStart_OrderStatusChanged: TLabel
-          Left = 167
-          Top = 33
-          Width = 107
-          Height = 13
-          Caption = #1085#1072#1095#1072#1083#1086' '#1074#1099#1087#1086#1083#1085#1077#1085#1080#1103'  '
-        end
-        object lbEnd_OrderStatusChanged: TLabel
-          Left = 438
-          Top = 33
-          Width = 55
-          Height = 13
-          Caption = #1079#1072#1074#1077#1088#1096#1077#1085#1086
-        end
-        object lbStart_ReceivingResult: TLabel
-          Left = 167
-          Top = 72
-          Width = 107
-          Height = 13
-          Caption = #1085#1072#1095#1072#1083#1086' '#1074#1099#1087#1086#1083#1085#1077#1085#1080#1103'  '
-        end
-        object lbEnd_ReceivingResult: TLabel
-          Left = 438
-          Top = 72
-          Width = 55
-          Height = 13
-          Caption = #1079#1072#1074#1077#1088#1096#1077#1085#1086
-        end
-        object lbElapsed_OrderStatusChanged: TLabel
-          Left = 660
-          Top = 33
-          Width = 70
-          Height = 13
-          Caption = #1074#1099#1087#1086#1083#1085#1077#1085#1086' '#1079#1072
-        end
-        object lbElapsed_ReceivingResult: TLabel
-          Left = 660
-          Top = 72
-          Width = 70
-          Height = 13
-          Caption = #1074#1099#1087#1086#1083#1085#1077#1085#1086' '#1079#1072
-        end
-        object chkOrderStatusChanged: TCheckBox
-          Left = 24
-          Top = 32
-          Width = 134
-          Height = 17
-          Caption = 'order_status_changed'
-          TabOrder = 0
-        end
-        object chkReceivingResult: TCheckBox
-          Left = 24
-          Top = 71
-          Width = 121
-          Height = 17
-          Caption = 'receiving_result'
-          TabOrder = 1
-        end
       end
       object chkUseLog: TCheckBox
         Left = 225
@@ -322,7 +218,408 @@ object MainForm: TMainForm
         Width = 140
         Height = 17
         Caption = #1074#1099#1074#1086#1076#1080#1090#1100' '#1083#1086#1075' '#1085#1072' '#1101#1082#1088#1072#1085
-        TabOrder = 22
+        TabOrder = 19
+        OnClick = chkUseLogClick
+      end
+      object pgcLog: TPageControl
+        Left = 219
+        Top = 38
+        Width = 1150
+        Height = 569
+        ActivePage = tsCheckboxView
+        Anchors = [akLeft, akTop, akRight, akBottom]
+        TabOrder = 20
+        object tsLogView: TTabSheet
+          Caption = 'tsLogView'
+          TabVisible = False
+          ExplicitTop = 24
+          ExplicitWidth = 1137
+          ExplicitHeight = 510
+          DesignSize = (
+            1142
+            559)
+          object LogMemo: TMemo
+            Left = 2
+            Top = 4
+            Width = 565
+            Height = 550
+            Anchors = [akLeft, akTop, akBottom]
+            Color = clBlack
+            Font.Charset = DEFAULT_CHARSET
+            Font.Color = clCream
+            Font.Height = -11
+            Font.Name = 'Courier New'
+            Font.Style = []
+            Lines.Strings = (
+              'Log')
+            ParentFont = False
+            ReadOnly = True
+            ScrollBars = ssVertical
+            TabOrder = 0
+          end
+          object mmoMessage: TMemo
+            Left = 572
+            Top = 4
+            Width = 565
+            Height = 550
+            Anchors = [akLeft, akTop, akBottom]
+            Color = clBlack
+            Font.Charset = DEFAULT_CHARSET
+            Font.Color = clCream
+            Font.Height = -11
+            Font.Name = 'Courier New'
+            Font.Style = []
+            Lines.Strings = (
+              'Message')
+            ParentFont = False
+            ReadOnly = True
+            ScrollBars = ssVertical
+            TabOrder = 1
+          end
+        end
+        object tsCheckboxView: TTabSheet
+          Caption = 'tsCheckboxView'
+          ImageIndex = 1
+          TabVisible = False
+          ExplicitTop = 24
+          ExplicitWidth = 1137
+          ExplicitHeight = 509
+          object grpPackets: TGroupBox
+            Left = 33
+            Top = 358
+            Width = 870
+            Height = 108
+            Caption = ' '#1055#1088#1086#1094#1077#1089#1089' '#1086#1073#1088#1072#1073#1086#1090#1082#1080' '#1087#1072#1082#1077#1090#1086#1074' '#1080#1084#1087#1086#1088#1090#1072'  '
+            TabOrder = 0
+            object lbStart_OrderStatusChanged: TLabel
+              Left = 188
+              Top = 33
+              Width = 107
+              Height = 13
+              Caption = #1085#1072#1095#1072#1083#1086' '#1074#1099#1087#1086#1083#1085#1077#1085#1080#1103'  '
+            end
+            object lbEnd_OrderStatusChanged: TLabel
+              Left = 459
+              Top = 33
+              Width = 55
+              Height = 13
+              Caption = #1079#1072#1074#1077#1088#1096#1077#1085#1086
+            end
+            object lbStart_ReceivingResult: TLabel
+              Left = 188
+              Top = 64
+              Width = 107
+              Height = 13
+              Caption = #1085#1072#1095#1072#1083#1086' '#1074#1099#1087#1086#1083#1085#1077#1085#1080#1103'  '
+            end
+            object lbEnd_ReceivingResult: TLabel
+              Left = 459
+              Top = 64
+              Width = 55
+              Height = 13
+              Caption = #1079#1072#1074#1077#1088#1096#1077#1085#1086
+            end
+            object lbElapsed_OrderStatusChanged: TLabel
+              Left = 681
+              Top = 33
+              Width = 70
+              Height = 13
+              Caption = #1074#1099#1087#1086#1083#1085#1077#1085#1086' '#1079#1072
+            end
+            object lbElapsed_ReceivingResult: TLabel
+              Left = 681
+              Top = 64
+              Width = 70
+              Height = 13
+              Caption = #1074#1099#1087#1086#1083#1085#1077#1085#1086' '#1079#1072
+            end
+            object chkOrderStatusChanged: TCheckBox
+              Left = 24
+              Top = 32
+              Width = 134
+              Height = 17
+              Caption = 'order_status_changed'
+              TabOrder = 0
+            end
+            object chkReceivingResult: TCheckBox
+              Left = 24
+              Top = 63
+              Width = 121
+              Height = 17
+              Caption = 'receiving_result'
+              TabOrder = 1
+            end
+          end
+          object grpExpPackets: TGroupBox
+            Left = 33
+            Top = 11
+            Width = 870
+            Height = 318
+            Caption = ' '#1055#1088#1086#1094#1077#1089#1089' '#1086#1073#1088#1072#1073#1086#1090#1082#1080' '#1087#1072#1082#1077#1090#1086#1074' '#1101#1082#1089#1087#1086#1088#1090#1072'  '
+            TabOrder = 1
+            object lbStartwms_Object_SKU: TLabel
+              Left = 189
+              Top = 33
+              Width = 107
+              Height = 13
+              Caption = #1085#1072#1095#1072#1083#1086' '#1074#1099#1087#1086#1083#1085#1077#1085#1080#1103'  '
+            end
+            object lbEndwms_Object_SKU: TLabel
+              Left = 460
+              Top = 33
+              Width = 55
+              Height = 13
+              Caption = #1079#1072#1074#1077#1088#1096#1077#1085#1086
+            end
+            object lbStartwms_Object_SKU_CODE: TLabel
+              Left = 189
+              Top = 64
+              Width = 107
+              Height = 13
+              Caption = #1085#1072#1095#1072#1083#1086' '#1074#1099#1087#1086#1083#1085#1077#1085#1080#1103'  '
+            end
+            object lbEndwms_Object_SKU_CODE: TLabel
+              Left = 460
+              Top = 64
+              Width = 55
+              Height = 13
+              Caption = #1079#1072#1074#1077#1088#1096#1077#1085#1086
+            end
+            object lbElpswms_Object_SKU: TLabel
+              Left = 682
+              Top = 33
+              Width = 70
+              Height = 13
+              Caption = #1074#1099#1087#1086#1083#1085#1077#1085#1086' '#1079#1072
+            end
+            object lbElpswms_Object_SKU_CODE: TLabel
+              Left = 682
+              Top = 64
+              Width = 70
+              Height = 13
+              Caption = #1074#1099#1087#1086#1083#1085#1077#1085#1086' '#1079#1072
+            end
+            object lbStartwms_Object_SKU_GROUP: TLabel
+              Left = 189
+              Top = 95
+              Width = 107
+              Height = 13
+              Caption = #1085#1072#1095#1072#1083#1086' '#1074#1099#1087#1086#1083#1085#1077#1085#1080#1103'  '
+            end
+            object lbEndwms_Object_SKU_GROUP: TLabel
+              Left = 460
+              Top = 95
+              Width = 55
+              Height = 13
+              Caption = #1079#1072#1074#1077#1088#1096#1077#1085#1086
+            end
+            object lbElpswms_Object_SKU_GROUP: TLabel
+              Left = 682
+              Top = 95
+              Width = 70
+              Height = 13
+              Caption = #1074#1099#1087#1086#1083#1085#1077#1085#1086' '#1079#1072
+            end
+            object lbStartwms_Object_CLIENT: TLabel
+              Left = 189
+              Top = 126
+              Width = 107
+              Height = 13
+              Caption = #1085#1072#1095#1072#1083#1086' '#1074#1099#1087#1086#1083#1085#1077#1085#1080#1103'  '
+            end
+            object lbEndwms_Object_CLIENT: TLabel
+              Left = 460
+              Top = 126
+              Width = 55
+              Height = 13
+              Caption = #1079#1072#1074#1077#1088#1096#1077#1085#1086
+            end
+            object lbElpswms_Object_CLIENT: TLabel
+              Left = 682
+              Top = 126
+              Width = 70
+              Height = 13
+              Caption = #1074#1099#1087#1086#1083#1085#1077#1085#1086' '#1079#1072
+            end
+            object lbStartwms_Object_PACK: TLabel
+              Left = 188
+              Top = 157
+              Width = 107
+              Height = 13
+              Caption = #1085#1072#1095#1072#1083#1086' '#1074#1099#1087#1086#1083#1085#1077#1085#1080#1103'  '
+            end
+            object lbEndwms_Object_PACK: TLabel
+              Left = 459
+              Top = 157
+              Width = 55
+              Height = 13
+              Caption = #1079#1072#1074#1077#1088#1096#1077#1085#1086
+            end
+            object lbElpswms_Object_PACK: TLabel
+              Left = 681
+              Top = 157
+              Width = 70
+              Height = 13
+              Caption = #1074#1099#1087#1086#1083#1085#1077#1085#1086' '#1079#1072
+            end
+            object lbStartwms_Object_USER: TLabel
+              Left = 188
+              Top = 188
+              Width = 107
+              Height = 13
+              Caption = #1085#1072#1095#1072#1083#1086' '#1074#1099#1087#1086#1083#1085#1077#1085#1080#1103'  '
+            end
+            object lbEndwms_Object_USER: TLabel
+              Left = 459
+              Top = 188
+              Width = 55
+              Height = 13
+              Caption = #1079#1072#1074#1077#1088#1096#1077#1085#1086
+            end
+            object lbElpswms_Object_USER: TLabel
+              Left = 681
+              Top = 188
+              Width = 70
+              Height = 13
+              Caption = #1074#1099#1087#1086#1083#1085#1077#1085#1086' '#1079#1072
+            end
+            object lbStartwms_Movement_INCOMING: TLabel
+              Left = 188
+              Top = 219
+              Width = 107
+              Height = 13
+              Caption = #1085#1072#1095#1072#1083#1086' '#1074#1099#1087#1086#1083#1085#1077#1085#1080#1103'  '
+            end
+            object lbEndwms_Movement_INCOMING: TLabel
+              Left = 459
+              Top = 219
+              Width = 55
+              Height = 13
+              Caption = #1079#1072#1074#1077#1088#1096#1077#1085#1086
+            end
+            object lbElpswms_Movement_INCOMING: TLabel
+              Left = 681
+              Top = 219
+              Width = 70
+              Height = 13
+              Caption = #1074#1099#1087#1086#1083#1085#1077#1085#1086' '#1079#1072
+            end
+            object lbStartwms_Movement_ASN_LOAD: TLabel
+              Left = 188
+              Top = 250
+              Width = 107
+              Height = 13
+              Caption = #1085#1072#1095#1072#1083#1086' '#1074#1099#1087#1086#1083#1085#1077#1085#1080#1103'  '
+            end
+            object lbEndwms_Movement_ASN_LOAD: TLabel
+              Left = 459
+              Top = 250
+              Width = 55
+              Height = 13
+              Caption = #1079#1072#1074#1077#1088#1096#1077#1085#1086
+            end
+            object lbElpswms_Movement_ASN_LOAD: TLabel
+              Left = 681
+              Top = 250
+              Width = 70
+              Height = 13
+              Caption = #1074#1099#1087#1086#1083#1085#1077#1085#1086' '#1079#1072
+            end
+            object lbStartwms_Movement_ORDER: TLabel
+              Left = 188
+              Top = 281
+              Width = 107
+              Height = 13
+              Caption = #1085#1072#1095#1072#1083#1086' '#1074#1099#1087#1086#1083#1085#1077#1085#1080#1103'  '
+            end
+            object lbEndwms_Movement_ORDER: TLabel
+              Left = 459
+              Top = 281
+              Width = 55
+              Height = 13
+              Caption = #1079#1072#1074#1077#1088#1096#1077#1085#1086
+            end
+            object lbElpswms_Movement_ORDER: TLabel
+              Left = 681
+              Top = 281
+              Width = 70
+              Height = 13
+              Caption = #1074#1099#1087#1086#1083#1085#1077#1085#1086' '#1079#1072
+            end
+            object chkwms_Object_SKU: TCheckBox
+              Left = 24
+              Top = 32
+              Width = 134
+              Height = 17
+              Caption = 'wms_Object_SKU'
+              TabOrder = 0
+            end
+            object chkwms_Object_SKU_CODE: TCheckBox
+              Left = 24
+              Top = 63
+              Width = 160
+              Height = 17
+              Caption = 'wms_Object_SKU_CODE'
+              TabOrder = 1
+            end
+            object chkwms_Object_SKU_GROUP: TCheckBox
+              Left = 24
+              Top = 94
+              Width = 155
+              Height = 17
+              Caption = 'wms_Object_SKU_GROUP'
+              TabOrder = 2
+            end
+            object chkwms_Object_CLIENT: TCheckBox
+              Left = 24
+              Top = 125
+              Width = 121
+              Height = 17
+              Caption = 'wms_Object_CLIENT'
+              TabOrder = 3
+            end
+            object chkwms_Object_PACK: TCheckBox
+              Left = 23
+              Top = 156
+              Width = 134
+              Height = 17
+              Caption = 'wms_Object_PACK'
+              TabOrder = 4
+            end
+            object chkwms_Object_USER: TCheckBox
+              Left = 23
+              Top = 187
+              Width = 121
+              Height = 17
+              Caption = 'wms_Object_USER'
+              TabOrder = 5
+            end
+            object chkwms_Movement_INCOMING: TCheckBox
+              Left = 23
+              Top = 218
+              Width = 160
+              Height = 17
+              Caption = 'wms_Movement_INCOMING'
+              TabOrder = 6
+            end
+            object chkwms_Movement_ASN_LOAD: TCheckBox
+              Left = 23
+              Top = 249
+              Width = 160
+              Height = 17
+              Caption = 'wms_Movement_ASN_LOAD'
+              TabOrder = 7
+            end
+            object chkwms_Movement_ORDER: TCheckBox
+              Left = 23
+              Top = 280
+              Width = 160
+              Height = 17
+              Caption = 'wms_Movement_ORDER'
+              TabOrder = 8
+            end
+          end
+        end
       end
     end
     object tsErrors: TTabSheet

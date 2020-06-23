@@ -17,9 +17,21 @@ uses
   Vcl.DBGrids,
   Winapi.Messages,
   UConstants,
+  UDefinitions,
   ULog;
 
 type
+  TTimeMeter = class
+  strict private
+    FStartTime: TDateTime;
+    FChkbox: TCheckBox;
+    FStart, FEnd, FElapsed: TLabel;
+  public
+    constructor Create(AChkbox: TCheckBox; AStart, AEnd, AElapsed: TLabel);
+    procedure Start;
+    procedure Finish;
+  end;
+
   TMainForm = class(TForm)
     pgcMain: TPageControl;
     tsLog: TTabSheet;
@@ -96,6 +108,46 @@ type
     lbEnd_ReceivingResult: TLabel;
     lbElapsed_OrderStatusChanged: TLabel;
     lbElapsed_ReceivingResult: TLabel;
+    pgcLog: TPageControl;
+    tsLogView: TTabSheet;
+    tsCheckboxView: TTabSheet;
+    grpExpPackets: TGroupBox;
+    lbStartwms_Object_SKU: TLabel;
+    lbEndwms_Object_SKU: TLabel;
+    lbStartwms_Object_SKU_CODE: TLabel;
+    lbEndwms_Object_SKU_CODE: TLabel;
+    lbElpswms_Object_SKU: TLabel;
+    lbElpswms_Object_SKU_CODE: TLabel;
+    chkwms_Object_SKU: TCheckBox;
+    chkwms_Object_SKU_CODE: TCheckBox;
+    chkwms_Object_SKU_GROUP: TCheckBox;
+    lbStartwms_Object_SKU_GROUP: TLabel;
+    lbEndwms_Object_SKU_GROUP: TLabel;
+    lbElpswms_Object_SKU_GROUP: TLabel;
+    chkwms_Object_CLIENT: TCheckBox;
+    lbStartwms_Object_CLIENT: TLabel;
+    lbEndwms_Object_CLIENT: TLabel;
+    lbElpswms_Object_CLIENT: TLabel;
+    chkwms_Object_PACK: TCheckBox;
+    lbStartwms_Object_PACK: TLabel;
+    lbEndwms_Object_PACK: TLabel;
+    lbElpswms_Object_PACK: TLabel;
+    chkwms_Object_USER: TCheckBox;
+    lbStartwms_Object_USER: TLabel;
+    lbEndwms_Object_USER: TLabel;
+    lbElpswms_Object_USER: TLabel;
+    chkwms_Movement_INCOMING: TCheckBox;
+    lbStartwms_Movement_INCOMING: TLabel;
+    lbEndwms_Movement_INCOMING: TLabel;
+    lbElpswms_Movement_INCOMING: TLabel;
+    chkwms_Movement_ASN_LOAD: TCheckBox;
+    lbStartwms_Movement_ASN_LOAD: TLabel;
+    lbEndwms_Movement_ASN_LOAD: TLabel;
+    lbElpswms_Movement_ASN_LOAD: TLabel;
+    chkwms_Movement_ORDER: TCheckBox;
+    lbStartwms_Movement_ORDER: TLabel;
+    lbEndwms_Movement_ORDER: TLabel;
+    lbElpswms_Movement_ORDER: TLabel;
     procedure btnFDC_wmsClick(Sender: TObject);
     procedure btnFDC_alanClick(Sender: TObject);
     procedure btnObject_SKU_to_wmsClick(Sender: TObject);
@@ -130,11 +182,14 @@ type
     procedure cbbWmsMessageModeChange(Sender: TObject);
     procedure dtpWmsMsgStartChange(Sender: TObject);
     procedure dtpWmsMsgEndChange(Sender: TObject);
+    procedure chkUseLogClick(Sender: TObject);
   private
     FLog: TLog;
     FStopTimer: Boolean;
     FStartOrderStatusChanged: TDateTime;
     FStartReceivingResult: TDateTime;
+    FObjectSKU_TM, FObjectSKUCode_TM, FObjectSKUGroup_TM, FObjectClient_TM, FObjectPack_TM, FObjectUser_TM,
+    FMovementInc_TM, FMovementASNLoad_TM, FMovementOrder_TM: TTimeMeter;
   private
     procedure AddToLog_Timer(LogType, S: string);
     procedure myShowSql;
@@ -146,8 +201,18 @@ type
     procedure UpdateAlanGrid(const ANeedRebuildColumns: Boolean = False);
     procedure UpdateWmsMsgGrid(const ANeedRebuildColumns: Boolean = False);
     procedure WMNeedUpdateGrids(var AMessage: TMessage); message WM_NEED_UPDATE_GRIDS;
+    procedure ExportPacket(APacketKind: TPacketKind; AOnTerminate: TNotifyEvent);
     procedure OnTerminateOrderStatusChanged(Sender: TObject);
     procedure OnTerminateReceivingResult(Sender: TObject);
+    procedure OnTerminateWmsMovementASNLoad(Sender: TObject);
+    procedure OnTerminateWmsObjectSKU(Sender: TObject);
+    procedure OnTerminateWmsObjectSKUCode(Sender: TObject);
+    procedure OnTerminateWmsObjectSKUGroup(Sender: TObject);
+    procedure OnTerminateWmsObjectClient(Sender: TObject);
+    procedure OnTerminateWmsObjectPack(Sender: TObject);
+    procedure OnTerminateWmsObjectUser(Sender: TObject);
+    procedure OnTerminateWmsMovementOrder(Sender: TObject);
+    procedure OnTerminateWmsMovementIncoming(Sender: TObject);
   public
     constructor Create(AOwner: TComponent); override;
     destructor Destroy; override;
@@ -165,7 +230,6 @@ uses
   FireDAC.Comp.DataSet,
   FireDAC.Comp.Client,
   FireDAC.Stan.Param,
-  UDefinitions,
   UData,
   UCommon,
   USettings,
@@ -266,6 +330,175 @@ begin
   lbEnd_ReceivingResult.Repaint;
 
   PostMessage(Handle, WM_NEED_UPDATE_GRIDS, 0, 0);
+end;
+
+procedure TMainForm.OnTerminateWmsMovementASNLoad(Sender: TObject);
+var
+  lwResult: LongWord;
+  P: PExportData;
+  lpack_id: Integer;
+  tmpThread: TWorkerThread;
+begin
+  tmpThread := Sender as TWorkerThread;
+  lwResult := tmpThread.MyReturnValue;
+  lpack_id := 0;
+
+  if lwResult > 0 then
+  begin
+    P := PExportData(lwResult);
+    lpack_id := P^.Pack_id;
+    Dispose(P);
+  end;
+
+  FMovementASNLoad_TM.Finish;
+
+  if lpack_id <> 0 then
+    myShowMsg('ok - pack_id = ' + IntToStr(lpack_id) + ' spName = pInsert_to_wms_ASN_LOAD')
+  else
+    myShowMsg('ERROR - pack_id = ' + IntToStr(lpack_id) + ' spName = pInsert_to_wms_ASN_LOAD');
+end;
+
+procedure TMainForm.OnTerminateWmsMovementIncoming(Sender: TObject);
+var
+  lwResult: LongWord;
+  P: PExportData;
+  lpack_id: Integer;
+  tmpThread: TWorkerThread;
+begin
+  tmpThread := Sender as TWorkerThread;
+  lwResult := tmpThread.MyReturnValue;
+  lpack_id := 0;
+
+  if lwResult > 0 then
+  begin
+    P := PExportData(lwResult);
+    lpack_id := P^.Pack_id;
+    Dispose(P);
+  end;
+
+  FMovementInc_TM.Finish;
+
+  if lpack_id <> 0 then
+    myShowMsg('ok - pack_id = ' + IntToStr(lpack_id) + ' spName = fInsert_to_wms_INCOMING')
+  else
+    myShowMsg('ERROR - pack_id = ' + IntToStr(lpack_id) + ' spName = fInsert_to_wms_INCOMING');
+end;
+
+procedure TMainForm.OnTerminateWmsMovementOrder(Sender: TObject);
+var
+  lwResult: LongWord;
+  P: PExportData;
+  lpack_id: Integer;
+  tmpThread: TWorkerThread;
+begin
+  tmpThread := Sender as TWorkerThread;
+  lwResult := tmpThread.MyReturnValue;
+  lpack_id := 0;
+
+  if lwResult > 0 then
+  begin
+    P := PExportData(lwResult);
+    lpack_id := P^.Pack_id;
+    Dispose(P);
+  end;
+
+  FMovementOrder_TM.Finish;
+
+  if lpack_id <> 0 then
+    myShowMsg('ok - pack_id = ' + IntToStr(lpack_id) + ' spName = fInsert_to_wms_ORDER')
+  else
+    myShowMsg('ERROR - pack_id = ' + IntToStr(lpack_id) + ' spName = fInsert_to_wms_ORDER');
+end;
+
+procedure TMainForm.OnTerminateWmsObjectClient(Sender: TObject);
+var
+  vb_pack_id: Integer;
+  tmpThread: TWorkerThread;
+begin
+  tmpThread := Sender as TWorkerThread;
+  vb_pack_id := tmpThread.MyReturnValue;
+  FObjectClient_TM.Finish;
+
+  if vb_pack_id <> 0 then
+    myShowMsg('ok - pack_id = ' + IntToStr(vb_pack_id) + ' spName = fInsert_to_wms_CLIENT')
+  else
+    myShowMsg('ERROR - pack_id = ' + IntToStr(vb_pack_id) + ' spName = fInsert_to_wms_CLIENT');
+end;
+
+procedure TMainForm.OnTerminateWmsObjectPack(Sender: TObject);
+var
+  vb_pack_id: Integer;
+  tmpThread: TWorkerThread;
+begin
+  tmpThread := Sender as TWorkerThread;
+  vb_pack_id := tmpThread.MyReturnValue;
+  FObjectPack_TM.Finish;
+
+  if vb_pack_id <> 0 then
+    myShowMsg('ok - pack_id = ' + IntToStr(vb_pack_id) + ' spName = fInsert_to_wms_PACK')
+  else
+    myShowMsg('ERROR - pack_id = ' + IntToStr(vb_pack_id) + ' spName = fInsert_to_wms_PACK');
+end;
+
+procedure TMainForm.OnTerminateWmsObjectSKU(Sender: TObject);
+var
+  vb_pack_id: Integer;
+  tmpThread: TWorkerThread;
+begin
+  tmpThread := Sender as TWorkerThread;
+  vb_pack_id := tmpThread.MyReturnValue;
+
+  FObjectSKU_TM.Finish;
+
+  if vb_pack_id <> 0 then
+    myShowMsg('ok - pack_id = ' + IntToStr(vb_pack_id) + ' spName = fInsert_to_wms_SKU')
+  else
+    myShowMsg('ERROR - pack_id = ' + IntToStr(vb_pack_id) + ' spName = fInsert_to_wms_SKU');
+end;
+
+procedure TMainForm.OnTerminateWmsObjectSKUCode(Sender: TObject);
+var
+  vb_pack_id: Integer;
+  tmpThread: TWorkerThread;
+begin
+  tmpThread := Sender as TWorkerThread;
+  vb_pack_id := tmpThread.MyReturnValue;
+  FObjectSKUCode_TM.Finish;
+
+  if vb_pack_id <> 0 then
+    myShowMsg('ok - pack_id = ' + IntToStr(vb_pack_id) + ' spName = fInsert_to_wms_SKU_CODE')
+  else
+    myShowMsg('ERROR - pack_id = ' + IntToStr(vb_pack_id) + ' spName = fInsert_to_wms_SKU_CODE');
+end;
+
+procedure TMainForm.OnTerminateWmsObjectSKUGroup(Sender: TObject);
+var
+  vb_pack_id: Integer;
+  tmpThread: TWorkerThread;
+begin
+  tmpThread := Sender as TWorkerThread;
+  vb_pack_id := tmpThread.MyReturnValue;
+  FObjectSKUGroup_TM.Finish;
+
+  if vb_pack_id <> 0 then
+    myShowMsg('ok - pack_id = ' + IntToStr(vb_pack_id) + ' spName = fInsert_to_wms_SKU_GROUP + SKU_DEPENDS')
+  else
+    myShowMsg('ERROR - pack_id = ' + IntToStr(vb_pack_id) + ' spName = fInsert_to_wms_SKU_GROUP + SKU_DEPENDS');
+end;
+
+procedure TMainForm.OnTerminateWmsObjectUser(Sender: TObject);
+var
+  vb_pack_id: Integer;
+  tmpThread: TWorkerThread;
+begin
+  tmpThread := Sender as TWorkerThread;
+  vb_pack_id := tmpThread.MyReturnValue;
+  FObjectUser_TM.Finish;
+
+  if vb_pack_id <> 0 then
+    myShowMsg('ok - pack_id = ' + IntToStr(vb_pack_id) + ' spName = fInsert_to_wms_USER')
+  else
+    myShowMsg('ERROR - pack_id = ' + IntToStr(vb_pack_id) + ' spName = fInsert_to_wms_USER');
 end;
 
 procedure TMainForm.AdjustColumnWidth(AGrid: TDBGrid);
@@ -384,124 +617,57 @@ begin
 end;
 
 procedure TMainForm.btnMovement_INCOMING_to_wmsClick(Sender: TObject);
-var
-  lRecCount, lpack_id: Integer;
 begin
-   // INCOMING
-  dmData.pInsert_to_wms_Movement_INCOMING_all(
-    lRecCount, lpack_id, cbRecCount.Checked, cbDebug.Checked, StrToInt(EditRecCount.Text),
-    myLogSql, myShowSql, myShowMsg);
-  if lpack_id <> 0 then
-    myShowMsg('ok - pack_id = ' + IntToStr(lpack_id) + ' spName = fInsert_to_wms_INCOMING')
-  else
-    myShowMsg('ERROR - pack_id = ' + IntToStr(lpack_id) + ' spName = fInsert_to_wms_INCOMING');
+  FMovementInc_TM.Start;
+  ExportPacket(pknWmsMovementIncoming, OnTerminateWmsMovementIncoming);
 end;
 
 procedure TMainForm.btnMovement_ORDER_to_wmsClick(Sender: TObject);
-var
-  lRecCount, lpack_id: Integer;
 begin
-   // ORDER_all
-  dmData.pInsert_to_wms_Movement_ORDER_all(
-    lRecCount, lpack_id, cbRecCount.Checked, cbDebug.Checked, StrToInt(EditRecCount.Text),
-    myLogSql, myShowSql, myShowMsg);
-  if lpack_id <> 0 then
-    myShowMsg('ok - pack_id = ' + IntToStr(lpack_id) + ' spName = fInsert_to_wms_ORDER')
-  else
-    myShowMsg('ERROR - pack_id = ' + IntToStr(lpack_id) + ' spName = fInsert_to_wms_ORDER');
+  FMovementOrder_TM.Start;
+  ExportPacket(pknWmsMovementOrder, OnTerminateWmsMovementOrder);
 end;
 
 procedure TMainForm.btnMovement_ASN_LOAD_to_wmsClick(Sender: TObject);
-var
-  lRecCount, lpack_id: Integer;
 begin
-   // ASN_LOAD
-  dmData.pInsert_to_wms_Movement_ASN_LOAD_all(
-    lRecCount, lpack_id, cbRecCount.Checked, cbDebug.Checked, StrToInt(EditRecCount.Text),
-    myLogSql, myShowSql, myShowMsg);
-  if lpack_id <> 0 then
-    myShowMsg('ok - pack_id = ' + IntToStr(lpack_id) + ' spName = pInsert_to_wms_ASN_LOAD')
-  else
-    myShowMsg('ERROR - pack_id = ' + IntToStr(lpack_id) + ' spName = pInsert_to_wms_ASN_LOAD');
+  FMovementASNLoad_TM.Start;
+  ExportPacket(pknWmsMovementASNLoad, OnTerminateWmsMovementASNLoad);
 end;
 
 procedure TMainForm.btnObject_SKU_to_wmsClick(Sender: TObject);
-var
-  vb_pack_id: Integer;
 begin
-   // SKU
-  vb_pack_id := dmData.fInsert_to_wms_SKU_all(cbRecCount.Checked, cbDebug.Checked,
-    StrToInt(EditRecCount.Text), myLogSql, myShowSql, myShowMsg);
-  if vb_pack_id <> 0 then
-    myShowMsg('ok - pack_id = ' + IntToStr(vb_pack_id) + ' spName = fInsert_to_wms_SKU')
-  else
-    myShowMsg('ERROR - pack_id = ' + IntToStr(vb_pack_id) + ' spName = fInsert_to_wms_SKU');
+  FObjectSKU_TM.Start;
+  ExportPacket(pknWmsObjectSKU, OnTerminateWmsObjectSKU);
 end;
 
 procedure TMainForm.btnObject_SKU_CODE_to_wmsClick(Sender: TObject);
-var
-  vb_pack_id: Integer;
 begin
-   // SKU_CODE
-  vb_pack_id := dmData.fInsert_to_wms_SKU_CODE_all(cbRecCount.Checked, cbDebug.Checked,
-    StrToInt(EditRecCount.Text), myLogSql, myShowSql, myShowMsg);
-  if vb_pack_id <> 0 then
-    myShowMsg('ok - pack_id = ' + IntToStr(vb_pack_id) + ' spName = fInsert_to_wms_SKU_CODE')
-  else
-    myShowMsg('ERROR - pack_id = ' + IntToStr(vb_pack_id) + ' spName = fInsert_to_wms_SKU_CODE');
+  FObjectSKUCode_TM.Start;
+  ExportPacket(pknWmsObjectSKUCode, OnTerminateWmsObjectSKUCode);
 end;
 
 procedure TMainForm.btnObject_SKU_GROUP_DEPENDS_to_wmsClickClick(Sender: TObject);
-var
-  vb_pack_id: Integer;
 begin
-   // sku_group + sku_depends
-  vb_pack_id := dmData.fInsert_to_wms_SKU_GROUP_all(cbRecCount.Checked, cbDebug.Checked,
-    StrToInt(EditRecCount.Text), myLogSql, myShowSql, myShowMsg);
-  if vb_pack_id <> 0 then
-    myShowMsg('ok - pack_id = ' + IntToStr(vb_pack_id) + ' spName = fInsert_to_wms_SKU_GROUP + SKU_DEPENDS')
-  else
-    myShowMsg('ERROR - pack_id = ' + IntToStr(vb_pack_id) + ' spName = fInsert_to_wms_SKU_GROUP + SKU_DEPENDS');
+  FObjectSKUGroup_TM.Start;
+  ExportPacket(pknWmsObjectSKUGroup, OnTerminateWmsObjectSKUGroup);
 end;
 
 procedure TMainForm.btnObject_CLIENT_to_wmsClick(Sender: TObject);
-var
-  vb_pack_id: Integer;
 begin
-   // sku_group + sku_depends
-  vb_pack_id := dmData.fInsert_to_wms_CLIENT_all(cbRecCount.Checked, cbDebug.Checked,
-    StrToInt(EditRecCount.Text), myLogSql, myShowSql, myShowMsg);
-   //vb_pack_id:= fInsert_to_wms_CLIENT;
-  if vb_pack_id <> 0 then
-    myShowMsg('ok - pack_id = ' + IntToStr(vb_pack_id) + ' spName = fInsert_to_wms_CLIENT')
-  else
-    myShowMsg('ERROR - pack_id = ' + IntToStr(vb_pack_id) + ' spName = fInsert_to_wms_CLIENT');
+  FObjectClient_TM.Start;
+  ExportPacket(pknWmsObjectClient, OnTerminateWmsObjectClient);
 end;
 
 procedure TMainForm.btnObject_PACK_to_wmsClick(Sender: TObject);
-var
-  vb_pack_id: Integer;
 begin
-   // sku_group + sku_depends
-  vb_pack_id := dmData.fInsert_to_wms_PACK_all(cbRecCount.Checked, cbDebug.Checked,
-    StrToInt(EditRecCount.Text), myLogSql, myShowSql, myShowMsg);
-  if vb_pack_id <> 0 then
-    myShowMsg('ok - pack_id = ' + IntToStr(vb_pack_id) + ' spName = fInsert_to_wms_PACK')
-  else
-    myShowMsg('ERROR - pack_id = ' + IntToStr(vb_pack_id) + ' spName = fInsert_to_wms_PACK');
+  FObjectPack_TM.Start;
+  ExportPacket(pknWmsObjectPack, OnTerminateWmsObjectPack);
 end;
 
 procedure TMainForm.btnObject_USER_to_wmsClick(Sender: TObject);
-var
-  vb_pack_id: Integer;
 begin
-   // sku_group + sku_depends
-  vb_pack_id := dmData.fInsert_to_wms_USER_all(cbRecCount.Checked, cbDebug.Checked,
-    StrToInt(EditRecCount.Text), myLogSql, myShowSql, myShowMsg);
-  if vb_pack_id <> 0 then
-    myShowMsg('ok - pack_id = ' + IntToStr(vb_pack_id) + ' spName = fInsert_to_wms_USER')
-  else
-    myShowMsg('ERROR - pack_id = ' + IntToStr(vb_pack_id) + ' spName = fInsert_to_wms_USER');
+  FObjectUser_TM.Start;
+  ExportPacket(pknWmsObjectUser, OnTerminateWmsObjectUser);
 end;
 
 procedure TMainForm.btnStartTimerClick(Sender: TObject);
@@ -538,6 +704,14 @@ begin
   UpdateWMSGrid;
 end;
 
+procedure TMainForm.chkUseLogClick(Sender: TObject);
+begin
+  if chkUseLog.Checked then
+    pgcLog.ActivePage := tsLogView
+  else
+    pgcLog.ActivePage := tsCheckboxView;
+end;
+
 constructor TMainForm.Create(AOwner: TComponent);
 var
   I: Integer;
@@ -561,6 +735,8 @@ begin
   dtpWmsMsgStart.DateTime := Date;
   dtpWmsMsgEnd.DateTime   := TodayNearMidnight;
 
+  pgcLog.ActivePage := tsCheckboxView;
+
   for I := 0 to Pred(ComponentCount) do
     if Components[I] is TDBGrid then
       with Components[I] as TDBGrid do
@@ -568,11 +744,30 @@ begin
         Options := Options - [dgRowSelect] + [dgEditing, dgAlwaysShowSelection];
         ReadOnly := True;
       end;
+
+  FObjectSKU_TM       := TTimeMeter.Create(chkwms_Object_SKU, lbStartwms_Object_SKU, lbEndwms_Object_SKU, lbElpswms_Object_SKU);
+  FObjectSKUCode_TM   := TTimeMeter.Create(chkwms_Object_SKU_CODE, lbStartwms_Object_SKU_CODE, lbEndwms_Object_SKU_CODE, lbElpswms_Object_SKU_CODE);
+  FObjectSKUGroup_TM  := TTimeMeter.Create(chkwms_Object_SKU_GROUP, lbStartwms_Object_SKU_GROUP, lbEndwms_Object_SKU_GROUP, lbElpswms_Object_SKU_GROUP);
+  FObjectClient_TM    := TTimeMeter.Create(chkwms_Object_CLIENT, lbStartwms_Object_CLIENT, lbEndwms_Object_CLIENT, lbElpswms_Object_CLIENT);
+  FObjectPack_TM      := TTimeMeter.Create(chkwms_Object_PACK, lbStartwms_Object_PACK, lbEndwms_Object_PACK, lbElpswms_Object_PACK);
+  FObjectUser_TM      := TTimeMeter.Create(chkwms_Object_USER, lbStartwms_Object_USER, lbEndwms_Object_USER, lbElpswms_Object_USER);
+  FMovementInc_TM     := TTimeMeter.Create(chkwms_Movement_INCOMING, lbStartwms_Movement_INCOMING, lbEndwms_Movement_INCOMING, lbElpswms_Movement_INCOMING);
+  FMovementASNLoad_TM := TTimeMeter.Create(chkwms_Movement_ASN_LOAD, lbStartwms_Movement_ASN_LOAD, lbEndwms_Movement_ASN_LOAD, lbElpswms_Movement_ASN_LOAD);
+  FMovementOrder_TM   := TTimeMeter.Create(chkwms_Movement_ORDER, lbStartwms_Movement_ORDER, lbEndwms_Movement_ORDER, lbElpswms_Movement_ORDER);
 end;
 
 destructor TMainForm.Destroy;
 begin
   FreeAndNil(FLog);
+  FreeAndNil(FObjectSKU_TM);
+  FreeAndNil(FObjectSKUCode_TM);
+  FreeAndNil(FObjectSKUGroup_TM);
+  FreeAndNil(FObjectClient_TM);
+  FreeAndNil(FObjectPack_TM);
+  FreeAndNil(FObjectUser_TM);
+  FreeAndNil(FMovementInc_TM);
+  FreeAndNil(FMovementASNLoad_TM);
+  FreeAndNil(FMovementOrder_TM);
   inherited;
 end;
 
@@ -616,6 +811,26 @@ procedure TMainForm.edtWMSDatabaseExit(Sender: TObject);
 begin
   dmData.CloseConnections;
   TSettings.WMSDatabase := edtWMSDatabase.Text;
+end;
+
+procedure TMainForm.ExportPacket(APacketKind: TPacketKind; AOnTerminate: TNotifyEvent);
+var
+  tmpData: TExportData;
+  expThread: TExportWorkerThread;
+begin
+  with tmpData do
+  begin
+    ThresholdRecCount := StrToInt(EditRecCount.Text);
+    UseRecCount := cbRecCount.Checked;
+    UseDebug    := cbDebug.Checked;
+    LogSqlProc  := myLogSql;
+    ShowSqlProc := myShowSql;
+    ShowMsgProc := myShowMsg;
+  end;
+
+  expThread := TExportWorkerThread.Create(cCreateSuspended, tmpData, APacketKind, myShowMsg);
+  expThread.OnTerminate := AOnTerminate;
+  expThread.Start;
 end;
 
 procedure TMainForm.btnApplyDefSettingsClick(Sender: TObject);
@@ -784,12 +999,44 @@ end;
 procedure TMainForm.FormResize(Sender: TObject);
 begin
   // позиционирование Log memo
-  LogMemo.Width := ((ClientWidth - LogMemo.Left) div 2) - 10;
+  LogMemo.Width := ((tsLogView.Width - LogMemo.Left) div 2) - 10;
   mmoMessage.Left := LogMemo.Left + LogMemo.Width + 10;
-  mmoMessage.Width := ClientWidth - mmoMessage.Left - 20;
+  mmoMessage.Width := tsLogView.Width - mmoMessage.Left - 10;
 
   // позиционирование гридов
   pnlWMS.Height := (tsErrors.Height - splHorz.Height) div 2;
+end;
+
+{ TTimeMeter }
+
+constructor TTimeMeter.Create(AChkbox: TCheckBox; AStart, AEnd, AElapsed: TLabel);
+begin
+  inherited Create;
+  FChkbox  := AChkbox;
+  FStart   := AStart;
+  FEnd     := AEnd;
+  FElapsed := AElapsed;
+end;
+
+procedure TTimeMeter.Finish;
+begin
+  FChkbox.Checked := False;
+
+  FEnd.Caption     := Format(cEndPacket, [FormatDateTime(cDateTimeStr, Now)]);
+  FElapsed.Caption := Format(cElapsedPacket, [FormatDateTime(cTimeStr, Now - FStartTime)]);
+
+  FElapsed.Repaint;
+  FEnd.Repaint;
+end;
+
+procedure TTimeMeter.Start;
+begin
+  FStartTime := Now;
+  FChkbox.Checked := True;
+
+  FStart.Caption   := Format(cStartPacket, [FormatDateTime(cDateTimeStr, Now)]);
+  FEnd.Caption     := Format(cEndPacket, ['']);
+  FElapsed.Caption := Format(cElapsedPacket, ['']);
 end;
 
 end.
