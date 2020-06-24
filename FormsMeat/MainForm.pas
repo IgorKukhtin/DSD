@@ -1138,6 +1138,8 @@ type
     miSaleAssetJournal: TMenuItem;
     actCashFlow: TdsdOpenForm;
     miCashFlow: TMenuItem;
+    actPromoManager: TdsdOpenForm;
+    miPromoManager: TMenuItem;
     procedure actReport_OLAPSoldExecute(Sender: TObject);
     procedure FormShow(Sender: TObject);
     procedure FormClose(Sender: TObject; var Action: TCloseAction);
