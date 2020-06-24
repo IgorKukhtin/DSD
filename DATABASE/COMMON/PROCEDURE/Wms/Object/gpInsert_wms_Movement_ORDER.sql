@@ -88,13 +88,13 @@ BEGIN
                                           when MILO_GoodsKind.ObjectId = 8347
                                                then 58*/
 
-                                          WHEN tmpTest.MovementId > 0
-                                           AND MovementItem.Amount + COALESCE (MIF_AmountSecond.ValueData, 0) > 100
+                                          WHEN MovementItem.Amount + COALESCE (MIF_AmountSecond.ValueData, 0) > 100
+                                         --AND tmpTest.MovementId > 0
                                            AND 1=0
                                                THEN 4
 
-                                          WHEN tmpTest.MovementId > 0
-                                           AND MovementItem.Amount + COALESCE (MIF_AmountSecond.ValueData, 0) > 10
+                                          WHEN MovementItem.Amount + COALESCE (MIF_AmountSecond.ValueData, 0) > 10
+                                         --AND tmpTest.MovementId > 0
                                            AND 1=0
                                                THEN CEIL((MovementItem.Amount + COALESCE (MIF_AmountSecond.ValueData, 0)) / 10)
  
@@ -154,14 +154,14 @@ BEGIN
                                                               ON MIF_AmountSecond.MovementItemId = MovementItem.Id
                                                              AND MIF_AmountSecond.DescId         = zc_MIFloat_AmountSecond()
                                   LEFT JOIN tmpPartnerTag ON tmpPartnerTag.PartnerTagId = OL_Partner_PartnerTag.ChildObjectId
-                                  JOIN tmpTest ON tmpTest.MovementId  = Movement.Id
+                                  /*JOIN tmpTest ON tmpTest.MovementId  = Movement.Id
                                               AND tmpTest.GoodsId     = MovementItem.ObjectId
-                                              AND tmpTest.GoodsKindId = MILO_GoodsKind.ObjectId
+                                              AND tmpTest.GoodsKindId = MILO_GoodsKind.ObjectId*/
                              WHERE Movement.OperDate >= CURRENT_DATE - INTERVAL '12 DAY'
                                AND Movement.DescId   = zc_Movement_OrderExternal()
-                               AND Movement.StatusId = zc_Enum_Status_Complete()
+                             --AND Movement.StatusId = zc_Enum_Status_Complete()
                                AND MovementLinkObject_To.ObjectId = 8459 -- Склад Реализации
-                               -- AND Movement.InvNumber IN ('1035691') -- 952893
+                               AND Movement.InvNumber IN ('1050268', '1050273', '1050278') -- 952893
                                AND MovementItem.Amount + COALESCE (MIF_AmountSecond.ValueData, 0) > 0
                             )
           -- результат - Документы

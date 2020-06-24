@@ -114,7 +114,7 @@ BEGIN
                                                                          AND MLM_Order.DescId          = zc_MovementLinkMovement_Order()
                                            INNER JOIN Movement AS MovementSale
                                                                ON MovementSale.Id     = MLM_Order.MovementId  -- продажа
-                                                              AND MovementSale.DescId = zc_Movement_Sale()
+                                                              AND MovementSale.DescId IN (zc_Movement_Sale(), zc_Movement_SendOnPrice())
                                                             --AND MovementSale.StatusId <> zc_Enum_Status_Erased()
                                                               AND MovementSale.StatusId = zc_Enum_Status_Complete()
                                                               -- обязатательно прошлые продажи, т.к. остаток берем на 8:00
@@ -136,6 +136,7 @@ BEGIN
                                            LEFT JOIN tmpMILO_GoodsKind AS MILinkObject_GoodsKind
                                                                        ON MILinkObject_GoodsKind.MovementItemId = tmpMISale.Id
                                                                       AND MILinkObject_GoodsKind.DescId = zc_MILinkObject_GoodsKind()
+                                      WHERE tmpMISale.Amount > 0
                                       GROUP BY tmpMISale.MovementId_order -- заявка
                                              , tmpMISale.GoodsId
                                              , COALESCE (MILinkObject_GoodsKind.ObjectId, 0)
@@ -213,9 +214,9 @@ BEGIN
                                                  , inMovementId            := inMovementId
                                                  , inGoodsId               := tmpAll.GoodsId
                                                  , inGoodsKindId           := tmpAll.GoodsKindId
-                                                 , inAmount_Param          := tmpAll.AmountPartner * CASE WHEN ObjectLink_Goods_Measure.ChildObjectId = zc_Measure_Sh() THEN COALESCE (ObjectFloat_Weight.ValueData, 0) ELSE 1 END
+                                                 , inAmount_Param          := COALESCE (tmpAll.AmountPartner * CASE WHEN ObjectLink_Goods_Measure.ChildObjectId = zc_Measure_Sh() THEN COALESCE (ObjectFloat_Weight.ValueData, 0) ELSE 1 END, 0)
                                                  , inDescId_Param          := zc_MIFloat_AmountPartner()
-                                                 , inAmount_ParamOrder     := tmpAll.AmountPartnerPrior * CASE WHEN ObjectLink_Goods_Measure.ChildObjectId = zc_Measure_Sh() THEN COALESCE (ObjectFloat_Weight.ValueData, 0) ELSE 1 END
+                                                 , inAmount_ParamOrder     := COALESCE (tmpAll.AmountPartnerPrior * CASE WHEN ObjectLink_Goods_Measure.ChildObjectId = zc_Measure_Sh() THEN COALESCE (ObjectFloat_Weight.ValueData, 0) ELSE 1 END, 0)
                                                  , inDescId_ParamOrder     := zc_MIFloat_AmountPartnerPrior()
                                                  , inAmount_ParamSecond    := NULL
                                                  , inDescId_ParamSecond    := NULL

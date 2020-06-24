@@ -16,6 +16,7 @@ $BODY$
   DECLARE vbIsInsert Boolean;
   DECLARE vbAmount   TFloat;
   DECLARE vbIsChange Boolean;
+  DECLARE vbStrIdSignNo TVarChar;
 BEGIN
      -- проверка прав пользователя на вызов процедуры
      vbUserId := lpCheckRight (inSession, zc_Enum_Process_InsertUpdate_MI_Promo());
@@ -23,6 +24,7 @@ BEGIN
      -- определяется признак Создание/Корректировка
      vbIsInsert:= COALESCE (ioId, 0) = 0;
 
+     -- определяется
      vbAmount := (CASE WHEN inIsQuickly = TRUE THEN 1 ELSE 0 END);
 
 
@@ -58,7 +60,9 @@ BEGIN
                                                     WHERE MI.MovementId = inMovementId
                                                       AND MI.DescId     = zc_MI_Message()
                                                       AND MI.isErased   = FALSE
-                                                      AND MI.Id         < ioId
+                                                      AND (MI.Id        < ioId
+                                                        OR ioId         = 0
+                                                          )
                                                     ORDER BY MI.Id DESC
                                                     LIMIT 1
                                                    ), vbAmount)
@@ -96,16 +100,19 @@ BEGIN
 
      END IF;
 
+     -- данные - кто подписал/не подписал - MovementItemId
+     vbStrIdSignNo:= (SELECT tmp.StrIdSignNo FROM lpSelect_MI_Sign (inMovementId:= inMovementId) AS tmp);
+
      -- нашли последний - и сохранили в шапку
      PERFORM lpInsertUpdate_MovementLinkObject (zc_MovementLinkObject_PromoStateKind(), inMovementId, tmp.ObjectId)
            , lpInsertUpdate_MovementFloat (zc_MovementFloat_PromoStateKind(), inMovementId, tmp.Amount)
               -- сохранили свойство <Дата согласования>
            , lpInsertUpdate_MovementDate (zc_MovementDate_Check(), inMovementId
-                                        , CASE WHEN tmp.ObjectId = zc_Enum_PromoStateKind_Complete() THEN CURRENT_DATE ELSE NULL END
+                                        , CASE WHEN tmp.ObjectId = zc_Enum_PromoStateKind_Complete() AND vbStrIdSignNo = '' THEN CURRENT_DATE ELSE NULL END
                                          )
               -- сохранили свойство <Согласовано>
            , lpInsertUpdate_MovementBoolean (zc_MovementBoolean_Checked(), inMovementId
-                                           , CASE WHEN tmp.ObjectId = zc_Enum_PromoStateKind_Complete() THEN TRUE ELSE FALSE END
+                                           , CASE WHEN tmp.ObjectId = zc_Enum_PromoStateKind_Complete() AND vbStrIdSignNo = '' THEN TRUE ELSE FALSE END
                                             )
      FROM (SELECT MI.ObjectId, MI.Amount
            FROM MovementItem AS MI

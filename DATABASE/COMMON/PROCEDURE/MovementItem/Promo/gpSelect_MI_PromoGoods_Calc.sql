@@ -107,10 +107,11 @@ BEGIN
                     
                           , SUM (MIFloat_AmountPlanMax.ValueData) OVER (PARTITION BY MovementItem.ObjectId)  AS AmountSale          --Максимум планируемого объема продаж на акционный период (в кг)
 
-                          , CASE WHEN COALESCE (vbTaxPromo,FALSE) = TRUE
-                                 THEN (MIFloat_AmountPlanMax.ValueData * MIFloat_PriceWithVAT.ValueData)
-                                 ELSE MIFloat_AmountPlanMax.ValueData * ROUND (MIFloat_Price.ValueData * ((100+vbVAT)/100), 2)
-                            END   AS SummaSale                            --сумма плана продаж
+                          , SUM (CASE WHEN COALESCE (vbTaxPromo,FALSE) = TRUE
+                                      THEN (MIFloat_AmountPlanMax.ValueData * MIFloat_PriceWithVAT.ValueData)
+                                      ELSE MIFloat_AmountPlanMax.ValueData * ROUND (MIFloat_Price.ValueData * ((100+vbVAT)/100), 2)
+                                 END)
+                                 OVER (PARTITION BY MovementItem.ObjectId)  AS SummaSale                            --сумма плана продаж
      
                           , MIFloat_ContractCondition.ValueData    AS ContractCondition      -- Бонус сети, %
                           , MIFloat_TaxRetIn.ValueData             AS TaxRetIn               -- % возврат
