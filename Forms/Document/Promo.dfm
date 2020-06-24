@@ -3,9 +3,8 @@
   Caption = #1044#1086#1082#1091#1084#1077#1085#1090' <'#1040#1082#1094#1080#1103'>'
   ClientHeight = 684
   ClientWidth = 1366
-  ExplicitLeft = -254
   ExplicitWidth = 1382
-  ExplicitHeight = 722
+  ExplicitHeight = 719
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
@@ -693,6 +692,9 @@
           object tsPromoPartnerList: TcxTabSheet
             Caption = '2.2. '#1050#1086#1085#1090#1088#1072#1075#1077#1085#1090#1099' ('#1076#1077#1090#1072#1083#1100#1085#1086')'
             ImageIndex = 1
+            ExplicitTop = 0
+            ExplicitWidth = 0
+            ExplicitHeight = 0
             object grPartnerList: TcxGrid
               Left = 0
               Top = 0
@@ -1103,6 +1105,9 @@
     object cxTabSheetCalc: TcxTabSheet
       Caption = #1050#1072#1083#1100#1082#1091#1083#1103#1090#1086#1088' - '#1089#1082#1080#1076#1082#1072
       ImageIndex = 2
+      ExplicitTop = 0
+      ExplicitWidth = 0
+      ExplicitHeight = 0
       object cxGridCalc: TcxGrid
         Left = 0
         Top = 0
@@ -1401,6 +1406,9 @@
     object cxTabSheetCalc2: TcxTabSheet
       Caption = #1050#1072#1083#1100#1082#1091#1083#1103#1090#1086#1088' - '#1082#1086#1084#1087#1077#1085#1089#1072#1094#1080#1103
       ImageIndex = 2
+      ExplicitTop = 0
+      ExplicitWidth = 0
+      ExplicitHeight = 0
       object cxGridCalc2: TcxGrid
         Left = 0
         Top = 0
@@ -1709,6 +1717,9 @@
     object cxTabSheetSign: TcxTabSheet
       Caption = #1069#1083#1077#1082#1090#1088#1086#1085#1085#1072#1103' '#1087#1086#1076#1087#1080#1089#1100
       ImageIndex = 4
+      ExplicitTop = 0
+      ExplicitWidth = 0
+      ExplicitHeight = 0
       object cxGridSign: TcxGrid
         Left = 0
         Top = 0
@@ -1802,6 +1813,9 @@
     object cxTabSheetPlan: TcxTabSheet
       Caption = #1055#1083#1072#1085' '#1086#1090#1075#1088#1091#1079#1082#1080
       ImageIndex = 5
+      ExplicitTop = 0
+      ExplicitWidth = 0
+      ExplicitHeight = 0
       object cxGridPlan: TcxGrid
         Left = 0
         Top = 0
@@ -2046,6 +2060,9 @@
     object cxTabSheetMessage: TcxTabSheet
       Caption = #1057#1086#1086#1073#1097#1077#1085#1080#1103
       ImageIndex = 6
+      ExplicitTop = 0
+      ExplicitWidth = 0
+      ExplicitHeight = 0
       object cxGrid2: TcxGrid
         Left = 0
         Top = 0
@@ -2664,7 +2681,6 @@
     end
     object actMISetErasedPromoStateKind: TdsdUpdateErased [3]
       Category = 'PromoStateKind'
-      TabSheet = tsMain
       MoveParams = <>
       StoredProc = spErasedPromoStateKind
       StoredProcList = <
@@ -2676,6 +2692,7 @@
       Caption = #1059#1076#1072#1083#1080#1090#1100' <'#1057#1086#1089#1090#1086#1103#1085#1080#1077' '#1040#1082#1094#1080#1080'>'
       Hint = #1059#1076#1072#1083#1080#1090#1100' <'#1057#1086#1089#1090#1086#1103#1085#1080#1077'>'
       ImageIndex = 2
+      ShortCut = 46
       ErasedFieldName = 'isErased'
       DataSource = PromoStateKindDS
       QuestionBeforeExecute = #1044#1077#1081#1089#1090#1074#1080#1090#1077#1083#1100#1085#1086' '#1091#1076#1072#1083#1080#1090#1100' <'#1057#1086#1089#1090#1086#1103#1085#1080#1077'> ?'
@@ -2694,7 +2711,6 @@
     end
     object actMISetUnErasedPromoStateKind: TdsdUpdateErased [5]
       Category = 'PromoStateKind'
-      TabSheet = tsMain
       MoveParams = <>
       StoredProc = spUnErasedPromoStateKind
       StoredProcList = <
@@ -2706,6 +2722,7 @@
       Caption = #1042#1086#1089#1089#1090#1072#1085#1086#1074#1080#1090#1100
       Hint = #1042#1086#1089#1089#1090#1072#1085#1086#1074#1080#1090#1100' '#1076#1072#1085#1085#1099#1077
       ImageIndex = 8
+      ShortCut = 46
       ErasedFieldName = 'isErased'
       isSetErased = False
       DataSource = PromoStateKindDS
@@ -2894,7 +2911,6 @@
     end
     object actOpenProtocoPromoStateKind: TdsdOpenForm [17]
       Category = 'PromoStateKind'
-      TabSheet = tsMain
       MoveParams = <>
       Caption = #1055#1088#1086#1090#1086#1082#1086#1083' <'#1057#1086#1089#1090#1086#1103#1085#1080#1077' '#1040#1082#1094#1080#1080'>'
       Hint = #1055#1088#1086#1089#1084#1086#1090#1088' <'#1055#1088#1086#1090#1086#1082#1086#1083' '#1057#1086#1089#1090#1086#1103#1085#1080#1077' '#1040#1082#1094#1080#1080'>'
@@ -2925,7 +2941,6 @@
     end
     inherited actMISetErased: TdsdUpdateErased
       Category = 'Goods'
-      TabSheet = tsMain
       StoredProcList = <
         item
           StoredProc = spErasedMIMaster
@@ -3061,7 +3076,6 @@
     end
     inherited actMISetUnErased: TdsdUpdateErased
       Category = 'Goods'
-      TabSheet = tsMain
       StoredProcList = <
         item
           StoredProc = spUnErasedMIMaster
@@ -3112,7 +3126,6 @@
     end
     object macInsertUpdate_MI_Param: TMultiAction [26]
       Category = 'Update_MI_Param'
-      TabSheet = tsMain
       MoveParams = <>
       ActionList = <
         item
@@ -3210,13 +3223,11 @@
       isShowModal = True
     end
     inherited MovementItemProtocolOpenForm: TdsdOpenForm
-      TabSheet = tsMain
       Caption = #1055#1088#1086#1090#1086#1082#1086#1083' <'#1058#1086#1074#1072#1088'>'
       Hint = #1055#1088#1086#1089#1084#1086#1090#1088' <'#1055#1088#1086#1090#1086#1082#1086#1083' '#1058#1086#1074#1072#1088'>'
     end
     object actPartnerProtocolOpenForm: TdsdOpenForm [37]
       Category = 'DSDLib'
-      TabSheet = tsMain
       MoveParams = <>
       Caption = #1055#1088#1086#1090#1086#1082#1086#1083' <'#1057#1077#1090#1100'/'#1070#1088'.'#1083#1080#1094#1086'/'#1050#1086#1085#1090#1088#1072#1075#1077#1085#1090'>'
       Hint = #1055#1088#1086#1089#1084#1086#1090#1088' <'#1055#1088#1086#1090#1086#1082#1086#1083' '#1087#1086' '#1057#1077#1090#1100'/'#1070#1088'.'#1083#1080#1094#1086'/'#1050#1086#1085#1090#1088#1072#1075#1077#1085#1090'>'
@@ -3247,7 +3258,6 @@
     end
     object actConditionPromoProtocolOpenForm: TdsdOpenForm [38]
       Category = 'DSDLib'
-      TabSheet = tsMain
       MoveParams = <>
       Caption = #1055#1088#1086#1090#1086#1082#1086#1083' <% '#1076#1086#1087#1086#1083#1085#1080#1090#1077#1083#1100#1085#1086#1081' '#1089#1082#1080#1076#1082#1080'>'
       Hint = #1055#1088#1086#1089#1084#1086#1090#1088' <'#1055#1088#1086#1090#1086#1082#1086#1083' % '#1076#1086#1087#1086#1083#1085#1080#1090#1077#1083#1100#1085#1086#1081' '#1089#1082#1080#1076#1082#1080'>'
@@ -3278,7 +3288,6 @@
     end
     object actAdvertisingProtocolOpenForm: TdsdOpenForm [39]
       Category = 'DSDLib'
-      TabSheet = tsMain
       MoveParams = <>
       Caption = #1055#1088#1086#1090#1086#1082#1086#1083' <'#1056#1077#1082#1083#1072#1084#1085#1072#1103' '#1087#1086#1076#1076#1077#1088#1078#1082#1072'>'
       Hint = #1055#1088#1086#1089#1084#1086#1090#1088' <'#1055#1088#1086#1090#1086#1082#1086#1083' '#1056#1077#1082#1083#1072#1084#1085#1072#1103' '#1087#1086#1076#1076#1077#1088#1078#1082#1072'>'
@@ -3424,7 +3433,6 @@
     end
     object actErasedPartner: TdsdUpdateErased
       Category = 'Partner'
-      TabSheet = tsMain
       MoveParams = <>
       StoredProc = spErasedMIPartner
       StoredProcList = <
@@ -3436,13 +3444,13 @@
       Caption = #1059#1076#1072#1083#1080#1090#1100' <'#1057#1077#1090#1100'/'#1070#1088'.'#1083#1080#1094#1086'/'#1050#1086#1085#1090#1088#1072#1075#1077#1085#1090'>'
       Hint = #1059#1076#1072#1083#1080#1090#1100' <'#1057#1077#1090#1100'/'#1070#1088'.'#1083#1080#1094#1086'/'#1050#1086#1085#1090#1088#1072#1075#1077#1085#1090'>'
       ImageIndex = 2
+      ShortCut = 46
       ErasedFieldName = 'isErased'
       DataSource = PartnerDS
       QuestionBeforeExecute = #1044#1077#1081#1089#1090#1074#1080#1090#1077#1083#1100#1085#1086' '#1091#1076#1072#1083#1080#1090#1100' <'#1055#1072#1088#1090#1085#1077#1088#1072'> ?'
     end
     object actUnErasedPartner: TdsdUpdateErased
       Category = 'Partner'
-      TabSheet = tsMain
       MoveParams = <>
       StoredProc = spUnErasedMIPartner
       StoredProcList = <
@@ -3454,6 +3462,7 @@
       Caption = #1042#1086#1089#1089#1090#1072#1085#1086#1074#1080#1090#1100
       Hint = #1042#1086#1089#1089#1090#1072#1085#1086#1074#1080#1090#1100' '#1076#1072#1085#1085#1099#1077
       ImageIndex = 8
+      ShortCut = 46
       ErasedFieldName = 'isErased'
       isSetErased = False
       DataSource = PartnerDS
@@ -3543,7 +3552,6 @@
     end
     object actErasedCondition: TdsdUpdateErased
       Category = 'Condition'
-      TabSheet = tsMain
       MoveParams = <>
       StoredProc = spErasedMICondition
       StoredProcList = <
@@ -3555,13 +3563,13 @@
       Caption = #1059#1076#1072#1083#1080#1090#1100' <% '#1076#1086#1087#1086#1083#1085#1080#1090#1077#1083#1100#1085#1086#1081' '#1089#1082#1080#1076#1082#1080'>'
       Hint = #1059#1076#1072#1083#1080#1090#1100' <% '#1076#1086#1087#1086#1083#1085#1080#1090#1077#1083#1100#1085#1086#1081' '#1089#1082#1080#1076#1082#1080'>'
       ImageIndex = 2
+      ShortCut = 46
       ErasedFieldName = 'isErased'
       DataSource = ConditionPromoDS
       QuestionBeforeExecute = #1044#1077#1081#1089#1090#1074#1080#1090#1077#1083#1100#1085#1086' '#1091#1076#1072#1083#1080#1090#1100' <% '#1076#1086#1087#1086#1083#1085#1080#1090#1077#1083#1100#1085#1086#1081' '#1089#1082#1080#1076#1082#1080'> ?'
     end
     object actUnErasedCondition: TdsdUpdateErased
       Category = 'Condition'
-      TabSheet = tsMain
       MoveParams = <>
       StoredProc = spUnErasedMICondition
       StoredProcList = <
@@ -3573,6 +3581,7 @@
       Caption = #1042#1086#1089#1089#1090#1072#1085#1086#1074#1080#1090#1100
       Hint = #1042#1086#1089#1089#1090#1072#1085#1086#1074#1080#1090#1100' '#1076#1072#1085#1085#1099#1077
       ImageIndex = 8
+      ShortCut = 46
       ErasedFieldName = 'isErased'
       isSetErased = False
       DataSource = ConditionPromoDS
@@ -3673,7 +3682,6 @@
     end
     object actInsertRecordAdvertising: TInsertRecord
       Category = 'Advertising'
-      TabSheet = tsMain
       MoveParams = <>
       PostDataSetBeforeExecute = False
       View = grtvAdvertising
@@ -3685,7 +3693,6 @@
     end
     object actErasedAdvertising: TdsdUpdateErased
       Category = 'Advertising'
-      TabSheet = tsMain
       MoveParams = <>
       StoredProc = spErasedAdvertising
       StoredProcList = <
@@ -3697,13 +3704,13 @@
       Caption = #1059#1076#1072#1083#1080#1090#1100' <'#1056#1077#1082#1083#1072#1084#1085#1072#1103' '#1087#1086#1076#1076#1077#1088#1078#1082#1072'>'
       Hint = #1059#1076#1072#1083#1080#1090#1100' <'#1056#1077#1082#1083#1072#1084#1085#1072#1103' '#1087#1086#1076#1076#1077#1088#1078#1082#1072'>'
       ImageIndex = 2
+      ShortCut = 46
       ErasedFieldName = 'isErased'
       DataSource = AdvertisingDS
       QuestionBeforeExecute = #1044#1077#1081#1089#1090#1074#1080#1090#1077#1083#1100#1085#1086' '#1091#1076#1072#1083#1080#1090#1100' <'#1056#1077#1082#1083#1072#1084#1085#1072#1103' '#1087#1086#1076#1076#1077#1088#1078#1082#1072'> ?'
     end
     object actunErasedAdvertising: TdsdUpdateErased
       Category = 'Advertising'
-      TabSheet = tsMain
       MoveParams = <>
       StoredProc = spUnErasedAdvertising
       StoredProcList = <
@@ -3715,6 +3722,7 @@
       Caption = #1042#1086#1089#1089#1090#1072#1085#1086#1074#1080#1090#1100
       Hint = #1042#1086#1089#1089#1090#1072#1085#1086#1074#1080#1090#1100' '#1076#1072#1085#1085#1099#1077
       ImageIndex = 8
+      ShortCut = 46
       ErasedFieldName = 'isErased'
       isSetErased = False
       DataSource = AdvertisingDS
@@ -3779,7 +3787,6 @@
     end
     object mactUpdate_Movement_Promo_Data: TMultiAction
       Category = 'Update_Promo_Data'
-      TabSheet = tsMain
       MoveParams = <>
       ActionList = <
         item
@@ -3809,7 +3816,6 @@
     end
     object mactAddAllPartner: TMultiAction
       Category = 'Partner'
-      TabSheet = tsMain
       MoveParams = <>
       ActionList = <
         item
