@@ -240,15 +240,13 @@ BEGIN
 - Отменен заливается строка красным цветом 
 - В работе Отдел маркетинга - заливается строка светло-зеленым цветом
 */
-             , CASE WHEN Object_PromoStateKind.Id = zc_Enum_PromoStateKind_Head() OR Object_PromoStateKind.Id = zc_Enum_PromoStateKind_Main() THEN zc_Color_Yelow() 
-
-                    WHEN Object_PromoStateKind.Id = zc_Enum_PromoStateKind_Main()
-                         -- Исполнительный Директор - зеленый / голубой
-                         THEN CASE WHEN COALESCE (MovementFloat_PromoStateKind.ValueData, 0) = 1 THEN zc_Color_Lime() ELSE zc_Color_Aqua() END
-
+             , CASE WHEN Object_PromoStateKind.Id = zc_Enum_PromoStateKind_Head() OR Object_PromoStateKind.Id = zc_Enum_PromoStateKind_Main() THEN zc_Color_Yelow()     -- В работе Директор по маркетингу или В работе Исполнительный Директор
+                    WHEN Object_PromoStateKind.Id = zc_Enum_PromoStateKind_Return() THEN 8435455                                                                        --  оранжевым (ненасыщенным)
+                    WHEN Object_PromoStateKind.Id = zc_Enum_PromoStateKind_Complete() AND Movement_Promo.StatusId = zc_Enum_Status_UnComplete() THEN zc_Color_Aqua()    --голубой
+                    WHEN Object_PromoStateKind.Id = zc_Enum_PromoStateKind_Canceled() THEN zc_Color_Red()   -- красный
+                    WHEN Object_PromoStateKind.Id = zc_Enum_PromoStateKind_Start() THEN 13041606 --zc_Color_Lime()     -- зеленый
                     -- нет цвета
                     ELSE zc_Color_White()
-
                END AS Color_PromoStateKind
 
 /*             , CASE WHEN Object_PromoStateKind.Id = zc_Enum_PromoStateKind_Head()

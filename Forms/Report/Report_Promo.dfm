@@ -107,6 +107,15 @@ inherited Report_PromoForm: TReport_PromoForm
           Styles.Selection = nil
           Styles.Footer = nil
           Styles.Header = nil
+          object PromoStateKindName: TcxGridDBColumn
+            Caption = #1057#1086#1089#1090#1086#1103#1085#1080#1077
+            DataBinding.FieldName = 'PromoStateKindName'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            HeaderHint = #1057#1086#1089#1090#1086#1103#1085#1080#1077' '#1040#1082#1094#1080#1080
+            Options.Editing = False
+            Width = 111
+          end
           object InvNumber: TcxGridDBColumn
             Caption = #8470' '#1076#1086#1082#1091#1084#1077#1085#1090#1072
             DataBinding.FieldName = 'InvNumber'
@@ -499,6 +508,12 @@ inherited Report_PromoForm: TReport_PromoForm
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             VisibleForCustomization = False
+          end
+          object Color_PromoStateKind: TcxGridDBColumn
+            DataBinding.FieldName = 'Color_PromoStateKind'
+            Visible = False
+            VisibleForCustomization = False
+            Width = 60
           end
         end
       end
@@ -1007,6 +1022,11 @@ inherited Report_PromoForm: TReport_PromoForm
       item
         Action = actOpenPromo
         ShortCut = 13
+      end>
+    ColorRuleList = <
+      item
+        BackGroundValueColumn = Color_PromoStateKind
+        ColorValueList = <>
       end>
   end
   inherited PeriodChoice: TPeriodChoice

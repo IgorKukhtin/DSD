@@ -80,6 +80,8 @@ RETURNS TABLE(
     ,ShowAll              Boolean   --Показывать все данные
     ,isPromo              Boolean   --Акция (да/нет)
     ,Checked              Boolean   --Согласовано (да/нет)
+    , PromoStateKindName    TVarChar --состояние акции
+    , Color_PromoStateKind  Integer  -- подсветка
     )
 AS
 $BODY$
@@ -146,7 +148,7 @@ BEGIN
                              OR (inIsPromo = FALSE AND inIsTender = FALSE)
                              )
                           )                   
-        , tmpMovement_Promo AS ( SELECT     
+        , tmpMovement_Promo AS (SELECT     
                                 Movement_Promo.Id                                                 --Идентификатор
                               , Movement_Promo.InvNumber :: Integer         AS InvNumber          --Номер документа
                               , Movement_Promo.OperDate                                           --Дата документа
@@ -168,6 +170,25 @@ BEGIN
                               , COALESCE (Movement_Promo.isPromo, FALSE)   :: Boolean AS isPromo  -- акция (да/нет)
                               , COALESCE (MovementBoolean_Checked.ValueData, FALSE) :: Boolean AS Checked  -- согласовано (да/нет)
       
+                              , Object_PromoStateKind.Id                    AS PromoStateKindId        --Состояние акции
+                              , Object_PromoStateKind.ValueData             AS PromoStateKindName      --Состояние акции
+
+/*
+- В работе Директор по маркетингу - заливается строка светло-желтым
+- В работе Исполнительный директор - заливается строка светло-желтым
+- Вернули для исправление - заливается строка оранжевым (ненасыщенным)
+- Согласован, но вверху статус Не проведен - заливается строка светло-голубым
+- Отменен заливается строка красным цветом 
+- В работе Отдел маркетинга - заливается строка светло-зеленым цветом
+*/
+                              , CASE WHEN Object_PromoStateKind.Id = zc_Enum_PromoStateKind_Head() OR Object_PromoStateKind.Id = zc_Enum_PromoStateKind_Main() THEN zc_Color_Yelow()     -- В работе Директор по маркетингу или В работе Исполнительный Директор
+                                     WHEN Object_PromoStateKind.Id = zc_Enum_PromoStateKind_Return() THEN 8435455                                                                        --  оранжевым (ненасыщенным)
+                                     WHEN Object_PromoStateKind.Id = zc_Enum_PromoStateKind_Complete() AND Movement_Promo.StatusId = zc_Enum_Status_UnComplete() THEN zc_Color_Aqua()    --голубой
+                                     WHEN Object_PromoStateKind.Id = zc_Enum_PromoStateKind_Canceled() THEN zc_Color_Red()   -- красный
+                                     WHEN Object_PromoStateKind.Id = zc_Enum_PromoStateKind_Start() THEN 13041606 --zc_Color_Lime()     -- зеленый
+                                     -- нет цвета
+                                     ELSE zc_Color_White()
+                                END AS Color_PromoStateKind
                          FROM tmpMovement AS Movement_Promo 
                              LEFT JOIN MovementDate AS MovementDate_StartPromo
                                                      ON MovementDate_StartPromo.MovementId = Movement_Promo.Id
@@ -217,6 +238,11 @@ BEGIN
                                                          AND MovementLinkObject_Personal.DescId = zc_MovementLinkObject_Personal()
                              LEFT JOIN Object AS Object_Personal
                                               ON Object_Personal.Id = MovementLinkObject_Personal.ObjectId
+
+                             LEFT JOIN MovementLinkObject AS MovementLinkObject_PromoStateKind
+                                                          ON MovementLinkObject_PromoStateKind.MovementId = Movement_Promo.Id
+                                                         AND MovementLinkObject_PromoStateKind.DescId = zc_MovementLinkObject_PromoStateKind()
+                             LEFT JOIN Object AS Object_PromoStateKind ON Object_PromoStateKind.Id = MovementLinkObject_PromoStateKind.ObjectId
                         )
 
         , tmpMI AS (SELECT *
@@ -535,6 +561,9 @@ BEGIN
           , vbShowAll                                                             AS ShowAll
           , Movement_Promo.isPromo                                                AS isPromo
           , Movement_Promo.Checked                                                AS Checked
+          
+          , Movement_Promo.PromoStateKindName   ::TVarChar
+          , Movement_Promo.Color_PromoStateKind :: Integer
         FROM
             tmpMovement_Promo AS Movement_Promo
             LEFT OUTER JOIN tmpMI_PromoGoods AS MI_PromoGoods ON MI_PromoGoods.MovementId = Movement_Promo.Id
