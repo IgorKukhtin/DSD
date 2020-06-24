@@ -36,6 +36,7 @@ type
     cxLabel6: TcxLabel;
     cxLabel7: TcxLabel;
     cbPartner: TcxCheckBox;
+    cbPapty: TcxCheckBox;
   private
     { Private declarations }
   public

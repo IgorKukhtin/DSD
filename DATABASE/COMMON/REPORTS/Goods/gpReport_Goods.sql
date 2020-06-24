@@ -2,7 +2,8 @@
 
 DROP FUNCTION IF EXISTS gpReport_Goods (TDateTime, TDateTime, Integer, Integer, TVarChar);
 DROP FUNCTION IF EXISTS gpReport_Goods (TDateTime, TDateTime, Integer, Integer, Integer, Integer, TVarChar);
-DROP FUNCTION IF EXISTS gpReport_Goods (TDateTime, TDateTime, Integer, Integer, Integer, Integer, Boolean, TVarChar);
+--DROP FUNCTION IF EXISTS gpReport_Goods (TDateTime, TDateTime, Integer, Integer, Integer, Integer, Boolean, TVarChar);
+DROP FUNCTION IF EXISTS gpReport_Goods (TDateTime, TDateTime, Integer, Integer, Integer, Integer, Boolean, Boolean, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpReport_Goods (
     IN inStartDate    TDateTime ,
@@ -12,6 +13,7 @@ CREATE OR REPLACE FUNCTION gpReport_Goods (
     IN inGoodsGroupId Integer   ,
     IN inGoodsId      Integer   ,
     IN inIsPartner    Boolean   ,
+    IN inIsPartion    Boolean   ,
     IN inSession      TVarChar    -- ÒÂÒÒËˇ ÔÓÎ¸ÁÓ‚‡ÚÂÎˇ
 )
 RETURNS TABLE  (MovementId Integer, InvNumber TVarChar, OperDate TDateTime, OperDatePartner TDateTime
@@ -91,7 +93,7 @@ BEGIN
                                      , CLO_Location.ObjectId AS LocationId
                                      , Container.ObjectId    AS GoodsId
                                      , COALESCE (CLO_GoodsKind.ObjectId, 0) AS GoodsKindId
-                                     , COALESCE (CLO_PartionGoods.ObjectId, 0) AS PartionGoodsId
+                                     , CASE WHEN inIsPartion = TRUE THEN COALESCE (CLO_PartionGoods.ObjectId, 0) ELSE 0 END AS PartionGoodsId
                                      , Container.Amount
                                 FROM tmpWhere
                                      INNER JOIN Container ON Container.ObjectId = tmpWhere.GoodsId
@@ -529,213 +531,319 @@ BEGIN
                            )
 
    -- –≈«”À‹“¿“
-   SELECT Movement.Id AS MovementId
-        , Movement.InvNumber
-        , Movement.OperDate
-        , MovementDate_OperDatePartner.ValueData AS OperDatePartner
-        , COALESCE (MovementBoolean_Peresort.ValueData, FALSE) :: Boolean AS isPeresort
+  , tmpDataAll AS (SELECT Movement.Id AS MovementId
+                        , Movement.InvNumber
+                        , Movement.OperDate
+                        , MovementDate_OperDatePartner.ValueData AS OperDatePartner
+                        , COALESCE (MovementBoolean_Peresort.ValueData, FALSE) :: Boolean AS isPeresort
+                
+                        , CASE WHEN MovementDesc.Id = zc_Movement_Inventory() AND tmpMIContainer_group.isReprice = TRUE
+                                    THEN MovementDesc.ItemName || ' ÔÂÂÓˆÂÌÍ‡'
+                               WHEN Movement.DescId IN (zc_Movement_Send(), zc_Movement_SendAsset(), zc_Movement_SendOnPrice(), zc_Movement_ProductionUnion(), zc_Movement_ProductionSeparate()) AND tmpMIContainer_group.isActive = TRUE
+                                    THEN MovementDesc.ItemName || ' œ–»’Œƒ'
+                               WHEN Movement.DescId IN (zc_Movement_Send(), zc_Movement_SendAsset(),zc_Movement_SendOnPrice(), zc_Movement_ProductionUnion(), zc_Movement_ProductionSeparate()) AND tmpMIContainer_group.isActive = FALSE
+                                    THEN MovementDesc.ItemName || ' –¿—’Œƒ'
+                               ELSE MovementDesc.ItemName
+                          END :: TVarChar AS MovementDescName
+                
+                        , CASE WHEN Movement.DescId = zc_Movement_Income()
+                                    THEN '01 ' || MovementDesc.ItemName
+                               WHEN Movement.DescId = zc_Movement_ReturnOut()
+                                    THEN '02 ' || MovementDesc.ItemName
+                               WHEN Movement.DescId IN (zc_Movement_Send(), zc_Movement_SendAsset()) AND tmpMIContainer_group.isActive = TRUE
+                                    THEN '03 ' || MovementDesc.ItemName
+                               WHEN Movement.DescId IN (zc_Movement_Send(), zc_Movement_SendAsset()) AND tmpMIContainer_group.isActive = FALSE
+                                    THEN '04 ' || MovementDesc.ItemName
+                               WHEN Movement.DescId = zc_Movement_ProductionUnion() AND tmpMIContainer_group.isActive = TRUE
+                                    THEN '05 ' || MovementDesc.ItemName
+                               WHEN Movement.DescId = zc_Movement_ProductionUnion() AND tmpMIContainer_group.isActive = FALSE
+                                    THEN '06 ' || MovementDesc.ItemName
+                               WHEN Movement.DescId = zc_Movement_ProductionSeparate() AND tmpMIContainer_group.isActive = TRUE
+                                    THEN '07 ' || MovementDesc.ItemName
+                               WHEN Movement.DescId = zc_Movement_ProductionSeparate() AND tmpMIContainer_group.isActive = FALSE
+                                    THEN '08 ' || MovementDesc.ItemName
+                               WHEN Movement.DescId = zc_Movement_SendOnPrice() AND tmpMIContainer_group.isActive = TRUE
+                                    THEN '109 ' || MovementDesc.ItemName
+                               WHEN Movement.DescId = zc_Movement_SendOnPrice() AND tmpMIContainer_group.isActive = FALSE
+                                    THEN '110 ' || MovementDesc.ItemName
+                               WHEN Movement.DescId = zc_Movement_Sale()
+                                    THEN '111 ' || MovementDesc.ItemName
+                               WHEN Movement.DescId = zc_Movement_ReturnIn()
+                                    THEN '112 ' || MovementDesc.ItemName
+                               WHEN Movement.DescId = zc_Movement_Loss()
+                                    THEN '13 ' || MovementDesc.ItemName
+                               WHEN Movement.DescId = zc_Movement_Inventory() AND tmpMIContainer_group.isActive = TRUE  AND tmpMIContainer_group.isRePrice = FALSE
+                                    THEN '14 ' || MovementDesc.ItemName
+                               WHEN Movement.DescId = zc_Movement_Inventory() AND tmpMIContainer_group.isActive = FALSE AND tmpMIContainer_group.isRePrice = FALSE
+                                    THEN '15 ' || MovementDesc.ItemName
+                               WHEN Movement.DescId = zc_Movement_Inventory() AND tmpMIContainer_group.isActive = TRUE  AND tmpMIContainer_group.isRePrice = TRUE
+                                    THEN '16 ' || MovementDesc.ItemName
+                               WHEN Movement.DescId = zc_Movement_Inventory() AND tmpMIContainer_group.isActive = FALSE AND tmpMIContainer_group.isRePrice = TRUE
+                                    THEN '17 ' || MovementDesc.ItemName
+                               ELSE '201 ' || MovementDesc.ItemName
+                          END :: TVarChar AS MovementDescName_order
+                
+                        , CASE WHEN tmpMIContainer_group.MovementId <= 0 THEN NULL ELSE tmpMIContainer_group.isActive END :: Boolean AS isActive
+                        , CASE WHEN tmpMIContainer_group.MovementId <= 0 THEN TRUE ELSE FALSE END :: Boolean AS isRemains
+                        , tmpMIContainer_group.isRePrice
+                        , CASE WHEN Movement.DescId = zc_Movement_Inventory() THEN TRUE ELSE FALSE END :: Boolean AS isInv
+                
+                        , ObjectDesc.ItemName            AS LocationDescName
+                        , Object_Location.ObjectCode     AS LocationCode
+                        , Object_Location.ValueData      AS LocationName
+                        , Object_Car.ObjectCode          AS CarCode
+                        , Object_Car.ValueData           AS CarName
+                        , ObjectDesc_By.ItemName         AS ObjectByDescName
+                        , Object_By.ObjectCode           AS ObjectByCode
+                        , Object_By.ValueData            AS ObjectByName
+                
+                        , Object_PaidKind.ValueData AS PaidKindName
+                
+                        , Object_Goods.ObjectCode AS GoodsCode
+                        , Object_Goods.ValueData  AS GoodsName
+                        , Object_GoodsKind.ValueData AS GoodsKindName
+                        , Object_GoodsKind_complete.ValueData AS GoodsKindName_complete
+                        , COALESCE (CASE WHEN Object_PartionGoods.ValueData <> '' THEN Object_PartionGoods.ValueData ELSE NULL END, CASE WHEN tmpMIContainer_group.PartionGoods_item <> '' THEN '*' || tmpMIContainer_group.PartionGoods_item ELSE '' END) :: TVarChar AS PartionGoods
+                        , Object_Goods_parent.ObjectCode AS GoodsCode_parent
+                        , Object_Goods_parent.ValueData  AS GoodsName_parent
+                        , Object_GoodsKind_parent.ValueData AS GoodsKindName_parent
+                
+                        , CAST (CASE WHEN Movement.DescId = zc_Movement_Income() AND 1=0
+                                          THEN 0 -- MIFloat_Price.ValueData
+                                     WHEN /*tmpMIContainer_group.MovementId = -1 AND */tmpMIContainer_group.AmountStart <> 0
+                                          THEN tmpMIContainer_group.SummStart / tmpMIContainer_group.AmountStart
+                                     /*WHEN tmpMIContainer_group.MovementId = -2 AND tmpMIContainer_group.AmountEnd <> 0
+                                          THEN tmpMIContainer_group.SummEnd / tmpMIContainer_group.AmountEnd*/
+                                     WHEN tmpMIContainer_group.AmountIn <> 0
+                                          THEN tmpMIContainer_group.SummIn / tmpMIContainer_group.AmountIn
+                                     WHEN tmpMIContainer_group.AmountOut <> 0
+                                          THEN tmpMIContainer_group.SummOut / tmpMIContainer_group.AmountOut
+                                     ELSE 0
+                                END AS TFloat) AS Price
+                        , CAST (CASE WHEN Movement.DescId = zc_Movement_Income() AND 1=0
+                                          THEN 0 -- MIFloat_Price.ValueData
+                                     WHEN /*tmpMIContainer_group.MovementId = -1 AND */tmpMIContainer_group.AmountStart <> 0
+                                          THEN tmpMIContainer_group.SummStart_branch / tmpMIContainer_group.AmountStart
+                                     /*WHEN tmpMIContainer_group.MovementId = -2 AND tmpMIContainer_group.AmountEnd <> 0
+                                          THEN tmpMIContainer_group.SummEnd / tmpMIContainer_group.AmountEnd*/
+                                     WHEN tmpMIContainer_group.AmountIn <> 0
+                                          THEN tmpMIContainer_group.SummIn_branch / tmpMIContainer_group.AmountIn
+                                     WHEN tmpMIContainer_group.AmountOut <> 0
+                                          THEN tmpMIContainer_group.SummOut_branch / tmpMIContainer_group.AmountOut
+                                     ELSE 0
+                                END AS TFloat) AS Price_branch
+                
+                        , CAST (CASE WHEN tmpMIContainer_group.AmountEnd <> 0
+                                          THEN tmpMIContainer_group.SummEnd / tmpMIContainer_group.AmountEnd
+                                     ELSE 0
+                                END AS TFloat) AS Price_end
+                        , CAST (CASE WHEN tmpMIContainer_group.AmountEnd <> 0
+                                          THEN tmpMIContainer_group.SummEnd_branch / tmpMIContainer_group.AmountEnd
+                                     ELSE 0
+                                END AS TFloat) AS Price_branch_end
+                
+                        , CAST (CASE WHEN tmpMIContainer_group.AmountIn <> 0
+                                          THEN tmpMIContainer_group.SummPartnerIn / tmpMIContainer_group.AmountIn
+                                     WHEN tmpMIContainer_group.AmountOut <> 0
+                                          THEN tmpMIContainer_group.SummPartnerOut / tmpMIContainer_group.AmountOut
+                                     ELSE 0
+                                END AS TFloat) AS Price_partner
+                
+                        , CAST (tmpMIContainer_group.SummPartnerIn AS TFloat)      AS SummPartnerIn
+                        , CAST (tmpMIContainer_group.SummPartnerOut AS TFloat)     AS SummPartnerOut
+                
+                        , CAST (tmpMIContainer_group.AmountStart AS TFloat) AS AmountStart
+                        , CAST (tmpMIContainer_group.AmountIn AS TFloat)    AS AmountIn
+                        , CAST (tmpMIContainer_group.AmountOut AS TFloat)   AS AmountOut
+                        , CAST (tmpMIContainer_group.AmountEnd AS TFloat)   AS AmountEnd
+                        , CAST ((tmpMIContainer_group.AmountIn - tmpMIContainer_group.AmountOut)
+                              * CASE WHEN Movement.DescId IN (zc_Movement_Sale(), zc_Movement_ReturnOut(), zc_Movement_Loss()) THEN -1 ELSE 1 END
+                              * CASE WHEN Movement.DescId IN (zc_Movement_Send(), zc_Movement_SendAsset(), zc_Movement_SendOnPrice(), zc_Movement_ProductionUnion(), zc_Movement_ProductionSeparate()) AND tmpMIContainer_group.isActive = FALSE THEN -1 ELSE 1 END
+                                AS TFloat) AS Amount
+                
+                        , CAST (tmpMIContainer_group.SummStart AS TFloat)   AS SummStart
+                        , tmpMIContainer_group.SummStart_branch :: TFloat   AS SummStart_branch
+                        , CAST (tmpMIContainer_group.SummIn AS TFloat)      AS SummIn
+                        , tmpMIContainer_group.SummIn_branch :: TFloat      AS SummIn_branch
+                        , CAST (tmpMIContainer_group.SummOut AS TFloat)     AS SummOut
+                        , tmpMIContainer_group.SummOut_branch :: TFloat     AS SummOut_branch
+                        , CAST (tmpMIContainer_group.SummEnd AS TFloat)     AS SummEnd
+                        , tmpMIContainer_group.SummEnd_branch :: TFloat     AS SummEnd_branch
+                        , CAST ((tmpMIContainer_group.SummIn - tmpMIContainer_group.SummOut)
+                              * CASE WHEN Movement.DescId IN (zc_Movement_Sale(), zc_Movement_ReturnOut(), zc_Movement_Loss()) THEN -1 ELSE 1 END
+                              * CASE WHEN Movement.DescId IN (zc_Movement_Send(), zc_Movement_SendAsset(), zc_Movement_SendOnPrice(), zc_Movement_ProductionUnion(), zc_Movement_ProductionSeparate()) AND tmpMIContainer_group.isActive = FALSE THEN -1 ELSE 1 END
+                                AS TFloat) AS Summ
+                        , CAST ((tmpMIContainer_group.SummIn_branch - tmpMIContainer_group.SummOut_branch)
+                              * CASE WHEN Movement.DescId IN (zc_Movement_Sale(), zc_Movement_ReturnOut(), zc_Movement_Loss()) THEN -1 ELSE 1 END
+                              * CASE WHEN Movement.DescId IN (zc_Movement_Send(), zc_Movement_SendAsset(), zc_Movement_SendOnPrice(), zc_Movement_ProductionUnion(), zc_Movement_ProductionSeparate()) AND tmpMIContainer_group.isActive = FALSE THEN -1 ELSE 1 END
+                                AS TFloat) AS Summ_branch
+                
+                        , 0 :: TFloat AS Amount_Change, 0 :: TFloat AS Summ_Change_branch, 0 :: TFloat AS Summ_Change_zavod
+                        , 0 :: TFloat AS Amount_40200,  0 :: TFloat AS Summ_40200_branch,  0 :: TFloat AS Summ_40200_zavod
+                        , 0 :: TFloat AS Amount_Loss,   0 :: TFloat AS Summ_Loss_branch,   0 :: TFloat AS Summ_Loss_zavod
+                
+                        , FALSE AS isPage3
+                        , FALSE AS isExistsPage3
+                
+                   FROM tmpMIContainer_group
+                        LEFT JOIN Movement ON Movement.Id = tmpMIContainer_group.MovementId
+                        LEFT JOIN MovementDesc ON MovementDesc.Id = Movement.DescId
+                
+                        LEFT JOIN ContainerLinkObject AS CLO_Object_By
+                                                      ON CLO_Object_By.ContainerId = tmpMIContainer_group.ContainerId_Analyzer
+                                                     AND CLO_Object_By.DescId IN (zc_ContainerLinkObject_Partner(), zc_ContainerLinkObject_Member())
+                        LEFT JOIN tmpMLO_By AS MovementLinkObject_By
+                                            ON MovementLinkObject_By.MovementId = tmpMIContainer_group.MovementId
+                                           AND MovementLinkObject_By.DescId = CASE WHEN Movement.DescId = zc_Movement_Income() THEN zc_MovementLinkObject_From()
+                                                                                   WHEN Movement.DescId = zc_Movement_ReturnOut() THEN zc_MovementLinkObject_To()
+                                                                                   WHEN Movement.DescId = zc_Movement_Sale() THEN zc_MovementLinkObject_To()
+                                                                                   WHEN Movement.DescId = zc_Movement_ReturnIn() THEN zc_MovementLinkObject_From()
+                                                                                   WHEN Movement.DescId = zc_Movement_Loss() THEN zc_MovementLinkObject_ArticleLoss()
+                                                                                   WHEN Movement.DescId IN (zc_Movement_Send(), zc_Movement_SendAsset(), zc_Movement_SendOnPrice(), zc_Movement_ProductionUnion(), zc_Movement_ProductionSeparate()) AND tmpMIContainer_group.isActive = TRUE THEN zc_MovementLinkObject_From()
+                                                                                   WHEN Movement.DescId IN (zc_Movement_Send(), zc_Movement_SendAsset(), zc_Movement_SendOnPrice(), zc_Movement_ProductionUnion(), zc_Movement_ProductionSeparate()) AND tmpMIContainer_group.isActive = FALSE THEN zc_MovementLinkObject_To()
+                                                                              END
+                        LEFT JOIN tmpMLO_By AS MovementLinkObject_PaidKind
+                                            ON MovementLinkObject_PaidKind.MovementId = tmpMIContainer_group.MovementId
+                                           AND MovementLinkObject_PaidKind.DescId = zc_MovementLinkObject_PaidKind()
+                        LEFT JOIN Object AS Object_PaidKind ON Object_PaidKind.Id = MovementLinkObject_PaidKind.ObjectId
+                
+                        LEFT JOIN tmpMovementDate AS MovementDate_OperDatePartner
+                                                  ON MovementDate_OperDatePartner.MovementId = tmpMIContainer_group.MovementId
+                                                 AND MovementDate_OperDatePartner.DescId = zc_MovementDate_OperDatePartner()
+                
+                        LEFT JOIN tmpMovementBoolean AS MovementBoolean_Peresort
+                                                     ON MovementBoolean_Peresort.MovementId = tmpMIContainer_group.MovementId
+                                                    --AND MovementBoolean_Peresort.DescId = zc_MovementBoolean_Peresort()
+                
+                        LEFT JOIN MovementItem AS MovementItem_parent ON MovementItem_parent.Id = tmpMIContainer_group.ParentId
+                        LEFT JOIN Object AS Object_Goods_parent ON Object_Goods_parent.Id = MovementItem_parent.ObjectId
+                        LEFT JOIN tmpMILO_GoodsKind_parent AS MILinkObject_GoodsKind_parent
+                                                           ON MILinkObject_GoodsKind_parent.MovementItemId = tmpMIContainer_group.ParentId
+                                                          --AND MILinkObject_GoodsKind_parent.DescId = zc_MILinkObject_GoodsKind()
+                        LEFT JOIN Object AS Object_GoodsKind_parent ON Object_GoodsKind_parent.Id = MILinkObject_GoodsKind_parent.ObjectId
+                
+                        LEFT JOIN Object AS Object_Goods ON Object_Goods.Id = tmpMIContainer_group.GoodsId
+                        LEFT JOIN Object AS Object_GoodsKind ON Object_GoodsKind.Id = tmpMIContainer_group.GoodsKindId
+                
+                        LEFT JOIN Object AS Object_Location_find ON Object_Location_find.Id = tmpMIContainer_group.LocationId
+                        LEFT JOIN ObjectDesc ON ObjectDesc.Id = Object_Location_find.DescId
+                        LEFT JOIN ObjectLink AS ObjectLink_Car_Unit ON ObjectLink_Car_Unit.ObjectId = tmpMIContainer_group.LocationId
+                                                                   AND ObjectLink_Car_Unit.DescId = zc_ObjectLink_Car_Unit()
+                        LEFT JOIN Object AS Object_Location ON Object_Location.Id = CASE WHEN Object_Location_find.DescId = zc_Object_Car() THEN ObjectLink_Car_Unit.ChildObjectId ELSE tmpMIContainer_group.LocationId END
+                        LEFT JOIN Object AS Object_Car ON Object_Car.Id = CASE WHEN Object_Location_find.DescId = zc_Object_Car() THEN tmpMIContainer_group.LocationId END
+                        LEFT JOIN Object AS Object_By ON Object_By.Id = CASE WHEN CLO_Object_By.ObjectId > 0 THEN CLO_Object_By.ObjectId ELSE MovementLinkObject_By.ObjectId END
+                        LEFT JOIN ObjectDesc AS ObjectDesc_By ON ObjectDesc_By.Id = Object_By.DescId
+                        LEFT JOIN Object AS Object_PartionGoods ON Object_PartionGoods.Id = tmpMIContainer_group.PartionGoodsId
+                        LEFT JOIN ObjectLink AS ObjectLink_GoodsKindComplete
+                                             ON ObjectLink_GoodsKindComplete.ObjectId = tmpMIContainer_group.PartionGoodsId
+                                            AND ObjectLink_GoodsKindComplete.DescId = zc_ObjectLink_PartionGoods_GoodsKindComplete()
+                        LEFT JOIN Object AS Object_GoodsKind_complete ON Object_GoodsKind_complete.Id = ObjectLink_GoodsKindComplete.ChildObjectId
+                   )
+   -- –≈«”À‹“¿“
+   SELECT CASE WHEN inIsPartion = TRUE THEN tmpDataAll.MovementId ELSE 0 END AS MovementId
+        , CASE WHEN inIsPartion = TRUE THEN tmpDataAll.InvNumber ELSE NULL END ::TVarChar AS InvNumber
+        , tmpDataAll.OperDate
+        , CASE WHEN inIsPartion = TRUE THEN tmpDataAll.OperDatePartner ELSE NULL END ::TDateTime AS OperDatePartner
+        , tmpDataAll.isPeresort
 
-        , CASE WHEN MovementDesc.Id = zc_Movement_Inventory() AND tmpMIContainer_group.isReprice = TRUE
-                    THEN MovementDesc.ItemName || ' ÔÂÂÓˆÂÌÍ‡'
-               WHEN Movement.DescId IN (zc_Movement_Send(), zc_Movement_SendAsset(), zc_Movement_SendOnPrice(), zc_Movement_ProductionUnion(), zc_Movement_ProductionSeparate()) AND tmpMIContainer_group.isActive = TRUE
-                    THEN MovementDesc.ItemName || ' œ–»’Œƒ'
-               WHEN Movement.DescId IN (zc_Movement_Send(), zc_Movement_SendAsset(),zc_Movement_SendOnPrice(), zc_Movement_ProductionUnion(), zc_Movement_ProductionSeparate()) AND tmpMIContainer_group.isActive = FALSE
-                    THEN MovementDesc.ItemName || ' –¿—’Œƒ'
-               ELSE MovementDesc.ItemName
-          END :: TVarChar AS MovementDescName
+        , CASE WHEN inIsPartion = TRUE THEN tmpDataAll.MovementDescName ELSE NULL END ::TVarChar AS MovementDescName
 
-        , CASE WHEN Movement.DescId = zc_Movement_Income()
-                    THEN '01 ' || MovementDesc.ItemName
-               WHEN Movement.DescId = zc_Movement_ReturnOut()
-                    THEN '02 ' || MovementDesc.ItemName
-               WHEN Movement.DescId IN (zc_Movement_Send(), zc_Movement_SendAsset()) AND tmpMIContainer_group.isActive = TRUE
-                    THEN '03 ' || MovementDesc.ItemName
-               WHEN Movement.DescId IN (zc_Movement_Send(), zc_Movement_SendAsset()) AND tmpMIContainer_group.isActive = FALSE
-                    THEN '04 ' || MovementDesc.ItemName
-               WHEN Movement.DescId = zc_Movement_ProductionUnion() AND tmpMIContainer_group.isActive = TRUE
-                    THEN '05 ' || MovementDesc.ItemName
-               WHEN Movement.DescId = zc_Movement_ProductionUnion() AND tmpMIContainer_group.isActive = FALSE
-                    THEN '06 ' || MovementDesc.ItemName
-               WHEN Movement.DescId = zc_Movement_ProductionSeparate() AND tmpMIContainer_group.isActive = TRUE
-                    THEN '07 ' || MovementDesc.ItemName
-               WHEN Movement.DescId = zc_Movement_ProductionSeparate() AND tmpMIContainer_group.isActive = FALSE
-                    THEN '08 ' || MovementDesc.ItemName
-               WHEN Movement.DescId = zc_Movement_SendOnPrice() AND tmpMIContainer_group.isActive = TRUE
-                    THEN '109 ' || MovementDesc.ItemName
-               WHEN Movement.DescId = zc_Movement_SendOnPrice() AND tmpMIContainer_group.isActive = FALSE
-                    THEN '110 ' || MovementDesc.ItemName
-               WHEN Movement.DescId = zc_Movement_Sale()
-                    THEN '111 ' || MovementDesc.ItemName
-               WHEN Movement.DescId = zc_Movement_ReturnIn()
-                    THEN '112 ' || MovementDesc.ItemName
-               WHEN Movement.DescId = zc_Movement_Loss()
-                    THEN '13 ' || MovementDesc.ItemName
-               WHEN Movement.DescId = zc_Movement_Inventory() AND tmpMIContainer_group.isActive = TRUE  AND tmpMIContainer_group.isRePrice = FALSE
-                    THEN '14 ' || MovementDesc.ItemName
-               WHEN Movement.DescId = zc_Movement_Inventory() AND tmpMIContainer_group.isActive = FALSE AND tmpMIContainer_group.isRePrice = FALSE
-                    THEN '15 ' || MovementDesc.ItemName
-               WHEN Movement.DescId = zc_Movement_Inventory() AND tmpMIContainer_group.isActive = TRUE  AND tmpMIContainer_group.isRePrice = TRUE
-                    THEN '16 ' || MovementDesc.ItemName
-               WHEN Movement.DescId = zc_Movement_Inventory() AND tmpMIContainer_group.isActive = FALSE AND tmpMIContainer_group.isRePrice = TRUE
-                    THEN '17 ' || MovementDesc.ItemName
-               ELSE '201 ' || MovementDesc.ItemName
-          END :: TVarChar AS MovementDescName_order
+        , CASE WHEN inIsPartion = TRUE THEN tmpDataAll.MovementDescName_order ELSE NULL END ::TVarChar AS MovementDescName_order
 
-        , CASE WHEN tmpMIContainer_group.MovementId <= 0 THEN NULL ELSE tmpMIContainer_group.isActive END :: Boolean AS isActive
-        , CASE WHEN tmpMIContainer_group.MovementId <= 0 THEN TRUE ELSE FALSE END :: Boolean AS isRemains
-        , tmpMIContainer_group.isRePrice
-        , CASE WHEN Movement.DescId = zc_Movement_Inventory() THEN TRUE ELSE FALSE END :: Boolean AS isInv
+        , tmpDataAll.isActive
+        , tmpDataAll.isRemains
+        , tmpDataAll.isRePrice
+        , tmpDataAll.isInv
 
-        , ObjectDesc.ItemName            AS LocationDescName
-        , Object_Location.ObjectCode     AS LocationCode
-        , Object_Location.ValueData      AS LocationName
-        , Object_Car.ObjectCode          AS CarCode
-        , Object_Car.ValueData           AS CarName
-        , ObjectDesc_By.ItemName         AS ObjectByDescName
-        , Object_By.ObjectCode           AS ObjectByCode
-        , Object_By.ValueData            AS ObjectByName
+        , tmpDataAll.LocationDescName
+        , tmpDataAll.LocationCode
+        , tmpDataAll.LocationName
+        , tmpDataAll.CarCode
+        , tmpDataAll.CarName
+        , tmpDataAll.ObjectByDescName
+        , tmpDataAll.ObjectByCode
+        , tmpDataAll.ObjectByName
 
-        , Object_PaidKind.ValueData AS PaidKindName
+        , tmpDataAll.PaidKindName
 
-        , Object_Goods.ObjectCode AS GoodsCode
-        , Object_Goods.ValueData  AS GoodsName
-        , Object_GoodsKind.ValueData AS GoodsKindName
-        , Object_GoodsKind_complete.ValueData AS GoodsKindName_complete
-        , COALESCE (CASE WHEN Object_PartionGoods.ValueData <> '' THEN Object_PartionGoods.ValueData ELSE NULL END, CASE WHEN tmpMIContainer_group.PartionGoods_item <> '' THEN '*' || tmpMIContainer_group.PartionGoods_item ELSE '' END) :: TVarChar AS PartionGoods
-        , Object_Goods_parent.ObjectCode AS GoodsCode_parent
-        , Object_Goods_parent.ValueData  AS GoodsName_parent
-        , Object_GoodsKind_parent.ValueData AS GoodsKindName_parent
+        , tmpDataAll.GoodsCode
+        , tmpDataAll.GoodsName
+        , tmpDataAll.GoodsKindName
+        , tmpDataAll.GoodsKindName_complete
+        , CASE WHEN inIsPartion = TRUE THEN tmpDataAll.PartionGoods ELSE NULL END ::TVarChar AS PartionGoods
+        , tmpDataAll.GoodsCode_parent
+        , tmpDataAll.GoodsName_parent
+        , tmpDataAll.GoodsKindName_parent
 
-        , CAST (CASE WHEN Movement.DescId = zc_Movement_Income() AND 1=0
-                          THEN 0 -- MIFloat_Price.ValueData
-                     WHEN /*tmpMIContainer_group.MovementId = -1 AND */tmpMIContainer_group.AmountStart <> 0
-                          THEN tmpMIContainer_group.SummStart / tmpMIContainer_group.AmountStart
-                     /*WHEN tmpMIContainer_group.MovementId = -2 AND tmpMIContainer_group.AmountEnd <> 0
-                          THEN tmpMIContainer_group.SummEnd / tmpMIContainer_group.AmountEnd*/
-                     WHEN tmpMIContainer_group.AmountIn <> 0
-                          THEN tmpMIContainer_group.SummIn / tmpMIContainer_group.AmountIn
-                     WHEN tmpMIContainer_group.AmountOut <> 0
-                          THEN tmpMIContainer_group.SummOut / tmpMIContainer_group.AmountOut
-                     ELSE 0
-                END AS TFloat) AS Price
-        , CAST (CASE WHEN Movement.DescId = zc_Movement_Income() AND 1=0
-                          THEN 0 -- MIFloat_Price.ValueData
-                     WHEN /*tmpMIContainer_group.MovementId = -1 AND */tmpMIContainer_group.AmountStart <> 0
-                          THEN tmpMIContainer_group.SummStart_branch / tmpMIContainer_group.AmountStart
-                     /*WHEN tmpMIContainer_group.MovementId = -2 AND tmpMIContainer_group.AmountEnd <> 0
-                          THEN tmpMIContainer_group.SummEnd / tmpMIContainer_group.AmountEnd*/
-                     WHEN tmpMIContainer_group.AmountIn <> 0
-                          THEN tmpMIContainer_group.SummIn_branch / tmpMIContainer_group.AmountIn
-                     WHEN tmpMIContainer_group.AmountOut <> 0
-                          THEN tmpMIContainer_group.SummOut_branch / tmpMIContainer_group.AmountOut
-                     ELSE 0
-                END AS TFloat) AS Price_branch
+        , AVG (tmpDataAll.Price)            ::TFloat AS Price
+        , AVG (tmpDataAll.Price_branch)     ::TFloat AS Price_branch
 
-        , CAST (CASE WHEN tmpMIContainer_group.AmountEnd <> 0
-                          THEN tmpMIContainer_group.SummEnd / tmpMIContainer_group.AmountEnd
-                     ELSE 0
-                END AS TFloat) AS Price_end
-        , CAST (CASE WHEN tmpMIContainer_group.AmountEnd <> 0
-                          THEN tmpMIContainer_group.SummEnd_branch / tmpMIContainer_group.AmountEnd
-                     ELSE 0
-                END AS TFloat) AS Price_branch_end
+        , AVG (tmpDataAll.Price_end)        ::TFloat AS Price_end
+        , AVG (tmpDataAll.Price_branch_end) ::TFloat AS Price_branch_end
 
-        , CAST (CASE WHEN tmpMIContainer_group.AmountIn <> 0
-                          THEN tmpMIContainer_group.SummPartnerIn / tmpMIContainer_group.AmountIn
-                     WHEN tmpMIContainer_group.AmountOut <> 0
-                          THEN tmpMIContainer_group.SummPartnerOut / tmpMIContainer_group.AmountOut
-                     ELSE 0
-                END AS TFloat) AS Price_partner
+        , AVG (tmpDataAll.Price_partner)    ::TFloat AS Price_partner
 
-        , CAST (tmpMIContainer_group.SummPartnerIn AS TFloat)      AS SummPartnerIn
-        , CAST (tmpMIContainer_group.SummPartnerOut AS TFloat)     AS SummPartnerOut
-
-        , CAST (tmpMIContainer_group.AmountStart AS TFloat) AS AmountStart
-        , CAST (tmpMIContainer_group.AmountIn AS TFloat)    AS AmountIn
-        , CAST (tmpMIContainer_group.AmountOut AS TFloat)   AS AmountOut
-        , CAST (tmpMIContainer_group.AmountEnd AS TFloat)   AS AmountEnd
-        , CAST ((tmpMIContainer_group.AmountIn - tmpMIContainer_group.AmountOut)
-              * CASE WHEN Movement.DescId IN (zc_Movement_Sale(), zc_Movement_ReturnOut(), zc_Movement_Loss()) THEN -1 ELSE 1 END
-              * CASE WHEN Movement.DescId IN (zc_Movement_Send(), zc_Movement_SendAsset(), zc_Movement_SendOnPrice(), zc_Movement_ProductionUnion(), zc_Movement_ProductionSeparate()) AND tmpMIContainer_group.isActive = FALSE THEN -1 ELSE 1 END
-                AS TFloat) AS Amount
-
-        , CAST (tmpMIContainer_group.SummStart AS TFloat)   AS SummStart
-        , tmpMIContainer_group.SummStart_branch :: TFloat   AS SummStart_branch
-        , CAST (tmpMIContainer_group.SummIn AS TFloat)      AS SummIn
-        , tmpMIContainer_group.SummIn_branch :: TFloat      AS SummIn_branch
-        , CAST (tmpMIContainer_group.SummOut AS TFloat)     AS SummOut
-        , tmpMIContainer_group.SummOut_branch :: TFloat     AS SummOut_branch
-        , CAST (tmpMIContainer_group.SummEnd AS TFloat)     AS SummEnd
-        , tmpMIContainer_group.SummEnd_branch :: TFloat     AS SummEnd_branch
-        , CAST ((tmpMIContainer_group.SummIn - tmpMIContainer_group.SummOut)
-              * CASE WHEN Movement.DescId IN (zc_Movement_Sale(), zc_Movement_ReturnOut(), zc_Movement_Loss()) THEN -1 ELSE 1 END
-              * CASE WHEN Movement.DescId IN (zc_Movement_Send(), zc_Movement_SendAsset(), zc_Movement_SendOnPrice(), zc_Movement_ProductionUnion(), zc_Movement_ProductionSeparate()) AND tmpMIContainer_group.isActive = FALSE THEN -1 ELSE 1 END
-                AS TFloat) AS Summ
-        , CAST ((tmpMIContainer_group.SummIn_branch - tmpMIContainer_group.SummOut_branch)
-              * CASE WHEN Movement.DescId IN (zc_Movement_Sale(), zc_Movement_ReturnOut(), zc_Movement_Loss()) THEN -1 ELSE 1 END
-              * CASE WHEN Movement.DescId IN (zc_Movement_Send(), zc_Movement_SendAsset(), zc_Movement_SendOnPrice(), zc_Movement_ProductionUnion(), zc_Movement_ProductionSeparate()) AND tmpMIContainer_group.isActive = FALSE THEN -1 ELSE 1 END
-                AS TFloat) AS Summ_branch
+        , SUM (tmpDataAll.SummPartnerIn)    ::TFloat  AS SummPartnerIn    
+        , SUM (tmpDataAll.SummPartnerOut)   ::TFloat  AS SummPartnerOut   
+        , SUM (tmpDataAll.AmountStart)      ::TFloat  AS AmountStart      
+        , SUM (tmpDataAll.AmountIn)         ::TFloat  AS AmountIn         
+        , SUM (tmpDataAll.AmountOut)        ::TFloat  AS AmountOut        
+        , SUM (tmpDataAll.AmountEnd)        ::TFloat  AS AmountEnd        
+        , SUM (tmpDataAll.Amount)           ::TFloat  AS Amount 
+        , SUM (tmpDataAll.SummStart)        ::TFloat  AS SummStart        
+        , SUM (tmpDataAll.SummStart_branch) ::TFloat  AS SummStart_branch 
+        , SUM (tmpDataAll.SummIn)           ::TFloat  AS SummIn           
+        , SUM (tmpDataAll.SummIn_branch)    ::TFloat  AS SummIn_branch    
+        , SUM (tmpDataAll.SummOut)          ::TFloat  AS SummOut          
+        , SUM (tmpDataAll.SummOut_branch)   ::TFloat  AS SummOut_branch   
+        , SUM (tmpDataAll.SummEnd)          ::TFloat  AS SummEnd          
+        , SUM (tmpDataAll.SummEnd_branch)   ::TFloat  AS SummEnd_branch   
+        , SUM (tmpDataAll.Summ)             ::TFloat  AS Summ             
+        , SUM (tmpDataAll.Summ_branch)      ::TFloat  AS Summ_branch      
 
         , 0 :: TFloat AS Amount_Change, 0 :: TFloat AS Summ_Change_branch, 0 :: TFloat AS Summ_Change_zavod
         , 0 :: TFloat AS Amount_40200,  0 :: TFloat AS Summ_40200_branch,  0 :: TFloat AS Summ_40200_zavod
-        , 0 :: TFloat AS Amount_Loss,   0 :: TFloat AS Summ_Loss_branch,   0 :: TFloat AS Summ_Loss_zavod
+        , 0 :: TFloat AS Amount_Loss,   0 :: TFloat AS Summ_Loss_branch,   0 :: TFloat AS Summ_Loss_zavod 
 
-        , FALSE AS isPage3
-        , FALSE AS isExistsPage3
+        , tmpDataAll.isPage3
+        , tmpDataAll.isExistsPage3
 
-   FROM tmpMIContainer_group
-        LEFT JOIN Movement ON Movement.Id = tmpMIContainer_group.MovementId
-        LEFT JOIN MovementDesc ON MovementDesc.Id = Movement.DescId
-
-        LEFT JOIN ContainerLinkObject AS CLO_Object_By
-                                      ON CLO_Object_By.ContainerId = tmpMIContainer_group.ContainerId_Analyzer
-                                     AND CLO_Object_By.DescId IN (zc_ContainerLinkObject_Partner(), zc_ContainerLinkObject_Member())
-        LEFT JOIN tmpMLO_By AS MovementLinkObject_By
-                            ON MovementLinkObject_By.MovementId = tmpMIContainer_group.MovementId
-                           AND MovementLinkObject_By.DescId = CASE WHEN Movement.DescId = zc_Movement_Income() THEN zc_MovementLinkObject_From()
-                                                                   WHEN Movement.DescId = zc_Movement_ReturnOut() THEN zc_MovementLinkObject_To()
-                                                                   WHEN Movement.DescId = zc_Movement_Sale() THEN zc_MovementLinkObject_To()
-                                                                   WHEN Movement.DescId = zc_Movement_ReturnIn() THEN zc_MovementLinkObject_From()
-                                                                   WHEN Movement.DescId = zc_Movement_Loss() THEN zc_MovementLinkObject_ArticleLoss()
-                                                                   WHEN Movement.DescId IN (zc_Movement_Send(), zc_Movement_SendAsset(), zc_Movement_SendOnPrice(), zc_Movement_ProductionUnion(), zc_Movement_ProductionSeparate()) AND tmpMIContainer_group.isActive = TRUE THEN zc_MovementLinkObject_From()
-                                                                   WHEN Movement.DescId IN (zc_Movement_Send(), zc_Movement_SendAsset(), zc_Movement_SendOnPrice(), zc_Movement_ProductionUnion(), zc_Movement_ProductionSeparate()) AND tmpMIContainer_group.isActive = FALSE THEN zc_MovementLinkObject_To()
-                                                              END
-        LEFT JOIN tmpMLO_By AS MovementLinkObject_PaidKind
-                            ON MovementLinkObject_PaidKind.MovementId = tmpMIContainer_group.MovementId
-                           AND MovementLinkObject_PaidKind.DescId = zc_MovementLinkObject_PaidKind()
-        LEFT JOIN Object AS Object_PaidKind ON Object_PaidKind.Id = MovementLinkObject_PaidKind.ObjectId
-
-        LEFT JOIN tmpMovementDate AS MovementDate_OperDatePartner
-                                  ON MovementDate_OperDatePartner.MovementId = tmpMIContainer_group.MovementId
-                                 AND MovementDate_OperDatePartner.DescId = zc_MovementDate_OperDatePartner()
-
-        LEFT JOIN tmpMovementBoolean AS MovementBoolean_Peresort
-                                     ON MovementBoolean_Peresort.MovementId = tmpMIContainer_group.MovementId
-                                    --AND MovementBoolean_Peresort.DescId = zc_MovementBoolean_Peresort()
-
-        LEFT JOIN MovementItem AS MovementItem_parent ON MovementItem_parent.Id = tmpMIContainer_group.ParentId
-        LEFT JOIN Object AS Object_Goods_parent ON Object_Goods_parent.Id = MovementItem_parent.ObjectId
-        LEFT JOIN tmpMILO_GoodsKind_parent AS MILinkObject_GoodsKind_parent
-                                           ON MILinkObject_GoodsKind_parent.MovementItemId = tmpMIContainer_group.ParentId
-                                          --AND MILinkObject_GoodsKind_parent.DescId = zc_MILinkObject_GoodsKind()
-        LEFT JOIN Object AS Object_GoodsKind_parent ON Object_GoodsKind_parent.Id = MILinkObject_GoodsKind_parent.ObjectId
-
-        LEFT JOIN Object AS Object_Goods ON Object_Goods.Id = tmpMIContainer_group.GoodsId
-        LEFT JOIN Object AS Object_GoodsKind ON Object_GoodsKind.Id = tmpMIContainer_group.GoodsKindId
-
-        LEFT JOIN Object AS Object_Location_find ON Object_Location_find.Id = tmpMIContainer_group.LocationId
-        LEFT JOIN ObjectDesc ON ObjectDesc.Id = Object_Location_find.DescId
-        LEFT JOIN ObjectLink AS ObjectLink_Car_Unit ON ObjectLink_Car_Unit.ObjectId = tmpMIContainer_group.LocationId
-                                                   AND ObjectLink_Car_Unit.DescId = zc_ObjectLink_Car_Unit()
-        LEFT JOIN Object AS Object_Location ON Object_Location.Id = CASE WHEN Object_Location_find.DescId = zc_Object_Car() THEN ObjectLink_Car_Unit.ChildObjectId ELSE tmpMIContainer_group.LocationId END
-        LEFT JOIN Object AS Object_Car ON Object_Car.Id = CASE WHEN Object_Location_find.DescId = zc_Object_Car() THEN tmpMIContainer_group.LocationId END
-        LEFT JOIN Object AS Object_By ON Object_By.Id = CASE WHEN CLO_Object_By.ObjectId > 0 THEN CLO_Object_By.ObjectId ELSE MovementLinkObject_By.ObjectId END
-        LEFT JOIN ObjectDesc AS ObjectDesc_By ON ObjectDesc_By.Id = Object_By.DescId
-        LEFT JOIN Object AS Object_PartionGoods ON Object_PartionGoods.Id = tmpMIContainer_group.PartionGoodsId
-        LEFT JOIN ObjectLink AS ObjectLink_GoodsKindComplete
-                             ON ObjectLink_GoodsKindComplete.ObjectId = tmpMIContainer_group.PartionGoodsId
-                            AND ObjectLink_GoodsKindComplete.DescId = zc_ObjectLink_PartionGoods_GoodsKindComplete()
-        LEFT JOIN Object AS Object_GoodsKind_complete ON Object_GoodsKind_complete.Id = ObjectLink_GoodsKindComplete.ChildObjectId
+   FROM tmpDataAll
+   GROUP BY CASE WHEN inIsPartion = TRUE THEN tmpDataAll.MovementId ELSE 0 END
+        , CASE WHEN inIsPartion = TRUE THEN tmpDataAll.InvNumber ELSE NULL END 
+        , tmpDataAll.OperDate
+        , CASE WHEN inIsPartion = TRUE THEN tmpDataAll.OperDatePartner ELSE NULL END
+        , tmpDataAll.isPeresort
+        , CASE WHEN inIsPartion = TRUE THEN tmpDataAll.MovementDescName ELSE NULL END
+        , CASE WHEN inIsPartion = TRUE THEN tmpDataAll.MovementDescName_order ELSE NULL END
+        , tmpDataAll.isActive
+        , tmpDataAll.isRemains
+        , tmpDataAll.isRePrice
+        , tmpDataAll.isInv
+        , tmpDataAll.LocationDescName
+        , tmpDataAll.LocationCode
+        , tmpDataAll.LocationName
+        , tmpDataAll.CarCode
+        , tmpDataAll.CarName
+        , tmpDataAll.ObjectByDescName
+        , tmpDataAll.ObjectByCode
+        , tmpDataAll.ObjectByName
+        , tmpDataAll.PaidKindName
+        , tmpDataAll.GoodsCode
+        , tmpDataAll.GoodsName
+        , tmpDataAll.GoodsKindName
+        , tmpDataAll.GoodsKindName_complete
+        , CASE WHEN inIsPartion = TRUE THEN tmpDataAll.PartionGoods ELSE NULL END
+        , tmpDataAll.GoodsCode_parent
+        , tmpDataAll.GoodsName_parent
+        , tmpDataAll.GoodsKindName_parent
+       /* , tmpDataAll.Price
+        , tmpDataAll.Price_branch
+        , tmpDataAll.Price_end
+        , tmpDataAll.Price_branch_end
+        , tmpDataAll.Price_partner
+        */, tmpDataAll.isPage3
+        , tmpDataAll.isExistsPage3
    ;
 
    END IF;
@@ -761,4 +869,4 @@ ALTER FUNCTION gpReport_Goods (TDateTime, TDateTime, Integer, Integer, Integer, 
 
 -- ÚÂÒÚ
 -- SELECT * FROM gpReport_Goods (inStartDate:= '01.01.2017', inEndDate:= '01.01.2017', inUnitGroupId:= 0, inLocationId:= 0, inGoodsGroupId:= 0, inGoodsId:= 1826, inIsPartner:= FALSE, inSession:= zfCalc_UserAdmin());
--- select * from gpReport_Goods(inStartDate := ('02.03.2020')::TDateTime , inEndDate := ('03.03.2020')::TDateTime , inUnitGroupId := 0 , inLocationId := 8451 , inGoodsGroupId := 1858 , inGoodsId := 341913 , inIsPartner := 'False' ,  inSession := '5');
+-- select * from gpReport_Goods(inStartDate := ('02.03.2020')::TDateTime , inEndDate := ('03.03.2020')::TDateTime , inUnitGroupId := 0 , inLocationId := 8451 , inGoodsGroupId := 1858 , inGoodsId := 341913 , inIsPartner := 'False' , inIsPartion := 'False', inSession := '5');

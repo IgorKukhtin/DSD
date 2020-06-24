@@ -14,17 +14,17 @@ inherited Report_GoodsForm: TReport_GoodsForm
     Height = 261
     TabOrder = 3
     ExplicitTop = 80
-    ExplicitWidth = 1026
+    ExplicitWidth = 1071
     ExplicitHeight = 261
     ClientRectBottom = 261
     ClientRectRight = 1071
     inherited tsMain: TcxTabSheet
-      ExplicitWidth = 1026
+      ExplicitWidth = 1071
       ExplicitHeight = 261
       inherited cxGrid: TcxGrid
         Width = 1071
         Height = 261
-        ExplicitWidth = 1026
+        ExplicitWidth = 1071
         ExplicitHeight = 261
         inherited cxGridDBTableView: TcxGridDBTableView
           DataController.Summary.DefaultGroupSummaryItems = <
@@ -278,6 +278,11 @@ inherited Report_GoodsForm: TReport_GoodsForm
               Format = ',0.####'
               Kind = skSum
               Column = Summ
+            end
+            item
+              Format = #1057#1090#1088#1086#1082': ,0'
+              Kind = skCount
+              Column = ObjectByName
             end>
           OptionsData.CancelOnExit = True
           OptionsData.Deleting = False
@@ -862,7 +867,7 @@ inherited Report_GoodsForm: TReport_GoodsForm
   inherited Panel: TPanel
     Width = 1071
     Height = 54
-    ExplicitWidth = 1026
+    ExplicitWidth = 1071
     ExplicitHeight = 54
     inherited deStart: TcxDateEdit
       Left = 118
@@ -965,7 +970,7 @@ inherited Report_GoodsForm: TReport_GoodsForm
       TabOrder = 12
       Width = 113
     end
-    object cbPaption: TcxCheckBox
+    object cbPapty: TcxCheckBox
       Left = 938
       Top = 30
       Caption = #1055#1086' '#1087#1072#1088#1090#1080#1103#1084
@@ -1019,6 +1024,11 @@ inherited Report_GoodsForm: TReport_GoodsForm
         Properties.Strings = (
           'Key'
           'TextValue')
+      end
+      item
+        Component = cbPapty
+        Properties.Strings = (
+          'Checked')
       end>
   end
   inherited ActionList: TActionList
@@ -1208,6 +1218,14 @@ inherited Report_GoodsForm: TReport_GoodsForm
           DataType = ftBoolean
           ParamType = ptInput
           MultiSelectSeparator = ','
+        end
+        item
+          Name = 'isPapty'
+          Value = Null
+          Component = cbPapty
+          DataType = ftBoolean
+          ParamType = ptInput
+          MultiSelectSeparator = ','
         end>
       isShowModal = True
       RefreshDispatcher = RefreshDispatcher
@@ -1338,6 +1356,14 @@ inherited Report_GoodsForm: TReport_GoodsForm
         Name = 'inIsPartner'
         Value = Null
         Component = cbPartner
+        DataType = ftBoolean
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inIsPartion'
+        Value = Null
+        Component = cbPapty
         DataType = ftBoolean
         ParamType = ptInput
         MultiSelectSeparator = ','

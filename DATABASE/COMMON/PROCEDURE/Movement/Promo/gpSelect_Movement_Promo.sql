@@ -232,7 +232,26 @@ BEGIN
              , CASE WHEN COALESCE (MovementFloat_PromoStateKind.ValueData,0) = 1 THEN  TRUE ELSE FALSE END :: Boolean AS isPromoStateKind  
 
                -- цвет
-             , CASE WHEN Object_PromoStateKind.Id = zc_Enum_PromoStateKind_Head()
+/*
+- В работе Директор по маркетингу - заливается строка светло-желтым
+- В работе Исполнительный директор - заливается строка светло-желтым
+- Вернули для исправление - заливается строка оранжевым (ненасыщенным)
+- Согласован, но вверху статус Не проведен - заливается строка светло-голубым
+- Отменен заливается строка красным цветом 
+- В работе Отдел маркетинга - заливается строка светло-зеленым цветом
+*/
+             , CASE WHEN Object_PromoStateKind.Id = zc_Enum_PromoStateKind_Head() OR Object_PromoStateKind.Id = zc_Enum_PromoStateKind_Main() THEN zc_Color_Yelow() 
+
+                    WHEN Object_PromoStateKind.Id = zc_Enum_PromoStateKind_Main()
+                         -- Исполнительный Директор - зеленый / голубой
+                         THEN CASE WHEN COALESCE (MovementFloat_PromoStateKind.ValueData, 0) = 1 THEN zc_Color_Lime() ELSE zc_Color_Aqua() END
+
+                    -- нет цвета
+                    ELSE zc_Color_White()
+
+               END AS Color_PromoStateKind
+
+/*             , CASE WHEN Object_PromoStateKind.Id = zc_Enum_PromoStateKind_Head()
                       OR (tmpSign.strSign ILIKE '%Старецкая М.В.%' AND Object_PromoStateKind.Id NOT IN (zc_Enum_PromoStateKind_Main(), zc_Enum_PromoStateKind_Complete()))
                         -- Исполнительный Директор - желтый / розовый
                         THEN CASE WHEN COALESCE (MovementFloat_PromoStateKind.ValueData, 0) = 1 THEN zc_Color_Yelow() ELSE zc_Color_Pink() END
@@ -245,7 +264,7 @@ BEGIN
                     ELSE zc_Color_White()
 
                END AS Color_PromoStateKind
-
+*/
              , tmpSign.strSign
              , tmpSign.strSignNo
 

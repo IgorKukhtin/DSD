@@ -106,7 +106,7 @@ type
     bbOpenDocument: TdxBarButton;
     FormParams: TdsdFormParams;
     isPeresort: TcxGridDBColumn;
-    cbPaption: TcxCheckBox;
+    cbPapty: TcxCheckBox;
   private
     { Private declarations }
   public
