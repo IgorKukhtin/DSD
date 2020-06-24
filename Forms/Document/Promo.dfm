@@ -2729,7 +2729,6 @@
     end
     object mactUpdate_Movement_Promo_Calc: TMultiAction [6]
       Category = 'Update_Promo_Data'
-      TabSheet = cxTabSheetCalc
       MoveParams = <>
       Enabled = False
       ActionList = <
@@ -2826,7 +2825,6 @@
           StoredProc = spSelect_Movement_PromoAdvertising
         end
         item
-          TabSheet = tsPromoPartnerList
           StoredProc = spSelect_MovementItem_PromoPartner
         end
         item
@@ -3801,7 +3799,6 @@
     end
     object actPartnerListRefresh: TdsdDataSetRefresh
       Category = 'Partner'
-      TabSheet = tsPromoPartnerList
       MoveParams = <>
       Enabled = False
       StoredProc = spSelect_MovementItem_PromoPartner
