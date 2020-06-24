@@ -17,7 +17,7 @@ uses
   IdExplicitTLSClientServerBase, IdMessageClient, IdSMTPBase, IdSMTP,
   Vcl.ActnList, IdText, IdSSLOpenSSL, IdGlobal, strUtils, IdAttachmentFile,
   IdFTP, cxCurrencyEdit, cxCheckBox, Vcl.Menus, DateUtils, cxButtonEdit, ZLibExGZ,
-  cxImageComboBox, cxNavigator, UnitLiki24,
+  cxImageComboBox, cxNavigator, UnitLiki24, System.JSON,
   cxDataControllerConditionalFormattingRulesManagerDialog, ZStoredProcedure;
 
 type
@@ -29,24 +29,24 @@ type
     btnUpdateStaus: TButton;
     btnSaveBookings: TButton;
     btnAll: TButton;
-    qryReport_Upload: TZQuery;
-    dsReport_Upload: TDataSource;
-    grChatId: TcxGrid;
-    grChatIdDBTableView: TcxGridDBTableView;
+    qryCheckHead: TZQuery;
+    dsCheckHead: TDataSource;
+    grBookingsBody: TcxGrid;
+    grBookingsBodyDBTableView: TcxGridDBTableView;
     productId: TcxGridDBColumn;
     quantity: TcxGridDBColumn;
     price: TcxGridDBColumn;
     itemId: TcxGridDBColumn;
-    grChatIdLevel: TcxGridLevel;
+    grBookingsBodyLevel: TcxGridLevel;
     btnLoadBookings: TButton;
-    grReport: TcxGrid;
+    grCheckBody: TcxGrid;
     cxGridDBTableView1: TcxGridDBTableView;
-    isUrgently: TcxGridDBColumn;
-    FromName: TcxGridDBColumn;
-    ToName: TcxGridDBColumn;
+    cbGoodsId: TcxGridDBColumn;
+    cbGoodsName: TcxGridDBColumn;
+    cbAmount: TcxGridDBColumn;
     cxGridLevel1: TcxGridLevel;
     Panel1: TPanel;
-    cxGrid1: TcxGrid;
+    grBookingsHead: TcxGrid;
     cxGridDBTableView2: TcxGridDBTableView;
     bookingId: TcxGridDBColumn;
     status: TcxGridDBColumn;
@@ -56,6 +56,21 @@ type
     btnAddTest: TButton;
     spInsertMovement: TZStoredProc;
     spInsertMovementItem: TZStoredProc;
+    Panel3: TPanel;
+    grCheckHead: TcxGrid;
+    cxGridDBTableView3: TcxGridDBTableView;
+    chBookingId: TcxGridDBColumn;
+    chInvNumber: TcxGridDBColumn;
+    chBookingStatus: TcxGridDBColumn;
+    cxGridLevel3: TcxGridLevel;
+    btnOpenBooking: TButton;
+    chBookingStatusNew: TcxGridDBColumn;
+    chOperDate: TcxGridDBColumn;
+    cbPrice: TcxGridDBColumn;
+    cbItemId: TcxGridDBColumn;
+    dsCheckBody: TDataSource;
+    qryCheckBody: TZQuery;
+    spUpdateMovementStatus: TZStoredProc;
     procedure FormCreate(Sender: TObject);
     procedure Timer1Timer(Sender: TObject);
     procedure btnSaveBookingsClick(Sender: TObject);
@@ -65,6 +80,7 @@ type
     procedure btnLoadBookingsClick(Sender: TObject);
     procedure FormDestroy(Sender: TObject);
     procedure btnAddTestClick(Sender: TObject);
+    procedure btnOpenBookingClick(Sender: TObject);
   private
     { Private declarations }
 
@@ -187,12 +203,20 @@ var
   Ini: TIniFile;
 begin
   try
+    // Получаем и сохранякм новые заказы
+    btnLoadBookingsClick(Nil);
+    Application.ProcessMessages;
     btnSaveBookingsClick(Nil);
+    Application.ProcessMessages;
+
+    // Получаем заказы для изменения статуса
+    btnOpenBookingClick(Nil);
+    Application.ProcessMessages;
+    if not qryCheckHead.Active then Exit;
+    if qryCheckHead.IsEmpty then Exit;
+
+    // Изменяем статусы
     btnUpdateStausClick(Nil);
-
-    if not qryReport_Upload.Active then Exit;
-    if qryReport_Upload.IsEmpty then Exit;
-
     Application.ProcessMessages;
 
   except
@@ -207,6 +231,21 @@ begin
   begin
      if Liki24API.ErrorsText = '' then Add_Log('Нет новых заказов.')
      else Add_Log(Liki24API.ErrorsText);
+  end;
+end;
+
+procedure TMainForm.btnOpenBookingClick(Sender: TObject);
+begin
+  try
+    qryCheckHead.Close;
+    qryCheckHead.Open;
+
+    qryCheckBody.Close;
+    qryCheckBody.Open;
+
+  except
+    on E: Exception do
+      Add_Log(E.Message);
   end;
 end;
 
@@ -225,6 +264,7 @@ begin
       spInsertMovement.Params.ParamByName('inDate').Value := Null;
       spInsertMovement.Params.ParamByName('inBookingId').AsString := Liki24API.BookingsHeadCDS.FieldByName('bookingId').AsString;
       spInsertMovement.Params.ParamByName('inOrderId').AsString := Liki24API.BookingsHeadCDS.FieldByName('orderId').AsString;
+      spInsertMovement.Params.ParamByName('inBookingStatus').AsString := Liki24API.BookingsHeadCDS.FieldByName('status').AsString;
       spInsertMovement.Params.ParamByName('inSession').AsString := '3';
       spInsertMovement.ExecProc;
 
@@ -256,22 +296,72 @@ end;
 procedure TMainForm.btnUpdateStausClick(Sender: TObject);
 var
   Urgently : boolean;
-  S : string;
-begin
-//  if not qryReport_Upload.Active then Exit;
-//  if qryReport_Upload.IsEmpty then Exit;
+  Status : string;
 
-  Add_Log('Начало выгрузки статусов');
-
-  if not Liki24API.UpdateStaus('ea611433-bfc6-435b-80cf-16b457607dc3', '111', '111') then
+  function GetJSONAItems : TJSONArray;
+    var  jsonItem: TJSONObject;
   begin
-    if Liki24API.ErrorsText <> '' then Add_Log(Liki24API.ErrorsText);
+    Result := TJSONArray.Create;
+    qryCheckBody.First;
+    while not qryCheckBody.Eof do
+    begin
+      jsonItem := TJSONObject.Create;
+      jsonItem.AddPair('productId', TJSONString.Create(qryCheckBody.FieldByName('GoodsId').AsString));
+      jsonItem.AddPair('quantity', TJSONNumber.Create(qryCheckBody.FieldByName('Amount').AsCurrency));
+      jsonItem.AddPair('price', TJSONNumber.Create(qryCheckBody.FieldByName('Price').AsCurrency));
+      Result.AddElement(jsonItem);
+      qryCheckBody.Next;
+    end;
   end;
 
-//  if not Liki24API.GetStaus('ea611433-bfc6-435b-80cf-16b457607dc3', S) then
-//  begin
-//    if Liki24API.ErrorsText <> '' then Add_Log(Liki24API.ErrorsText);
-//  end else ShowMessage(s);
+begin
+  if not qryCheckHead.Active then Exit;
+  if qryCheckHead.IsEmpty then Exit;
+
+  Add_Log('Начало изменения статусов');
+
+  try
+    qryCheckHead.First;
+    while not qryCheckHead.Eof do
+    begin
+
+      if Liki24API.GetStaus(qryCheckHead.FieldByName('BookingId').AsString, Status) then
+      begin
+        if Status = 'Cancelled' then
+        begin
+          spUpdateMovementStatus.Params.ParamByName('inMovementId').AsInteger := qryCheckHead.FieldByName('Id').AsInteger;
+          spUpdateMovementStatus.Params.ParamByName('inBookingStatus').AsString := Status;
+          spUpdateMovementStatus.Params.ParamByName('inSession').AsString := '3';
+          spUpdateMovementStatus.ExecProc;
+        end else if Status <> qryCheckHead.FieldByName('BookingStatusNew').AsString then
+        begin
+          if Liki24API.UpdateStaus(qryCheckHead.FieldByName('BookingId').AsString,
+                                   qryCheckHead.FieldByName('Id').AsString, Status,
+                                   qryCheckHead.FieldByName('InvNumber').AsString, GetJSONAItems) then
+          begin
+            spUpdateMovementStatus.Params.ParamByName('inMovementId').AsInteger := qryCheckHead.FieldByName('Id').AsInteger;
+            spUpdateMovementStatus.Params.ParamByName('inBookingStatus').AsString := qryCheckHead.FieldByName('BookingStatusNew').AsString;
+            spUpdateMovementStatus.Params.ParamByName('inSession').AsString := '3';
+            spUpdateMovementStatus.ExecProc;
+          end;
+        end else if qryCheckHead.FieldByName('BookingStatus').AsString <> qryCheckHead.FieldByName('BookingStatusNew').AsString then
+        begin
+          spUpdateMovementStatus.Params.ParamByName('inMovementId').AsInteger := qryCheckHead.FieldByName('Id').AsInteger;
+          spUpdateMovementStatus.Params.ParamByName('inBookingStatus').AsString := qryCheckHead.FieldByName('BookingStatusNew').AsString;
+          spUpdateMovementStatus.Params.ParamByName('inSession').AsString := '3';
+          spUpdateMovementStatus.ExecProc;
+        end;
+      end else
+      begin
+        Add_Log('Ошибка получения статуса: ' + Liki24API.ErrorsText);
+      end;
+
+      qryCheckHead.Next;
+    end;
+  except
+    on E: Exception do
+      Add_Log(E.Message);
+  end;
 
 end;
 
@@ -350,6 +440,7 @@ begin
       btnAll.Enabled := false;
       btnLoadBookings.Enabled := false;
       btnSaveBookings.Enabled := false;
+      btnOpenBooking.Enabled := false;
       btnUpdateStaus.Enabled := false;
       Timer1.Enabled := true;
     end;

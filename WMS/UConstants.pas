@@ -27,7 +27,7 @@ const
   cErrXmlAttributeNotExists = Low(Integer);
   cErrStrXmlAttributeNotExists = 'Error XML Attribute not exists';
 
-  // Status
+  // статус
   cStatusReady = 'ready';
   cStatusDone  = 'done';
   cStatusError = 'error';
@@ -35,18 +35,33 @@ const
   // Zero DateTime
   cZeroDateTime: TDateTime = 0;
 
-  // Import error codes
+  // имена пакетов импорта
+  cpnOrderStatusChanged = 'order_status_changed';
+  cpnReceivingResult    = 'receiving_result';
+
+  // имена пакетов экспорта
+   cpnWmsMovementASNLoad  = 'wms_Movement_ASN_LOAD';
+   cpnWmsObjectClient     = 'wms_Object_CLIENT';
+   cpnWmsObjectPack       = 'wms_Object_PACK';
+   cpnWmsObjectSKU        = 'wms_Object_SKU';
+   cpnWmsObjectSKUCode    = 'wms_Object_SKU_CODE';
+   cpnWmsObjectSKUGroup   = 'wms_Object_SKU_GROUP';
+   cpnWmsObjectUser       = 'wms_Object_USER';
+   cpnWmsMovementIncoming = 'wms_Movement_INCOMING';
+   cpnWmsMovementOrder    = 'wms_Movement_ORDER';
+
+  // коды ошибок импорта
   cImpErrZero             = 0;
   cImpErrWrongType        = 1; // значение атрибута пакета имеет неправильный тип
   cImpErrInvalidDateTime  = 2; // неверный формат даты
   cImpErrAttrNotExists    = 3; // атрибут с заданным именем не найден в пакете
   cImpErrWrongPacketData  = 4; // ошибка возникла на этапе обработки данных пакета
 
-  // Import error description
-  cImpErrDescr_NotInteger   = '"%s" contain not Integer value; ';
-  cImpErrDescr_NotNumeric   = '"%s" contain not Numeric value; ';
-  cImpErrDescr_InvalidDate  = '"%s" contain invalid DateTime string. Expected date string in format "dd-mm-yyyy hh:mm"; ';
-  cImpErrDecr_AttrNotExists = 'Attribute "%s" not exist in message';
+  // описание ошибок импорта
+  cImpErrDescr_NotInteger   = '"%s" не может быть преобразовано в Integer значение; ';
+  cImpErrDescr_NotNumeric   = '"%s" не может быть преобразовано в числовое значение; ';
+  cImpErrDescr_InvalidDate  = '"%s" содержит неверный формат даты. Ожидается строка в формате "dd-mm-yyyy hh:mm"; ';
+  cImpErrDecr_AttrNotExists = 'Атрибут "%s" отсутствует в сообщении';
 
   // сообщения Windows
   WM_NEED_UPDATE_GRIDS = WM_USER + 1;

@@ -2,7 +2,7 @@
   Left = 0
   Top = 0
   Caption = #1059#1087#1088#1072#1074#1083#1077#1085#1095#1077#1089#1082#1072#1103' '#1089#1090#1072#1090#1100#1103
-  ClientHeight = 318
+  ClientHeight = 371
   ClientWidth = 306
   Color = clBtnFace
   Font.Charset = DEFAULT_CHARSET
@@ -28,8 +28,8 @@
     Caption = #1053#1072#1080#1084#1077#1085#1086#1074#1072#1085#1080#1077
   end
   object cxButton1: TcxButton
-    Left = 40
-    Top = 283
+    Left = 36
+    Top = 335
     Width = 75
     Height = 25
     Action = dsdInsertUpdateGuides
@@ -37,8 +37,8 @@
     TabOrder = 3
   end
   object cxButton2: TcxButton
-    Left = 198
-    Top = 283
+    Left = 194
+    Top = 335
     Width = 75
     Height = 25
     Action = dsdFormClose
@@ -101,9 +101,9 @@
   object cxLabel4: TcxLabel
     Left = 16
     Top = 217
-    Caption = #1057#1090#1072#1090#1100#1103' '#1086#1090#1095#1077#1090#1072' '#1044#1044#1057
+    Caption = #1057#1090#1072#1090#1100#1103' '#1044#1044#1057' '#1087#1088#1080#1093#1086#1076
   end
-  object edCashFlow: TcxButtonEdit
+  object edCashFlow_in: TcxButtonEdit
     Left = 16
     Top = 240
     Properties.Buttons = <
@@ -111,7 +111,25 @@
         Default = True
         Kind = bkEllipsis
       end>
+    Properties.ReadOnly = True
     TabOrder = 12
+    Width = 273
+  end
+  object cxLabel5: TcxLabel
+    Left = 16
+    Top = 268
+    Caption = #1057#1090#1072#1090#1100#1103' '#1044#1044#1057' '#1088#1072#1089#1093#1086#1076
+  end
+  object edCashFlow_out: TcxButtonEdit
+    Left = 16
+    Top = 291
+    Properties.Buttons = <
+      item
+        Default = True
+        Kind = bkEllipsis
+      end>
+    Properties.ReadOnly = True
+    TabOrder = 14
     Width = 273
   end
   object ActionList: TActionList
@@ -192,9 +210,17 @@
         MultiSelectSeparator = ','
       end
       item
-        Name = 'inCashFlowId'
+        Name = 'inCashFlowId_in'
         Value = Null
-        Component = GuidesCashFlow
+        Component = GuidesCashFlow_in
+        ComponentItem = 'Key'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inCashFlowId_out'
+        Value = Null
+        Component = GuidesCashFlow_out
         ComponentItem = 'Key'
         ParamType = ptInput
         MultiSelectSeparator = ','
@@ -219,8 +245,8 @@
         ParamType = ptInputOutput
         MultiSelectSeparator = ','
       end>
-    Left = 144
-    Top = 267
+    Left = 140
+    Top = 319
   end
   object spGet: TdsdStoredProc
     StoredProcName = 'gpGet_Object_InfoMoney'
@@ -284,16 +310,31 @@
         MultiSelectSeparator = ','
       end
       item
-        Name = 'CashFlowId'
+        Name = 'CashFlowId_in'
         Value = Null
-        Component = GuidesCashFlow
+        Component = GuidesCashFlow_in
         ComponentItem = 'Key'
         MultiSelectSeparator = ','
       end
       item
-        Name = 'CashFlowName'
+        Name = 'CashFlowName_in'
         Value = Null
-        Component = GuidesCashFlow
+        Component = GuidesCashFlow_in
+        ComponentItem = 'TextValue'
+        DataType = ftString
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'CashFlowId_out'
+        Value = Null
+        Component = GuidesCashFlow_out
+        ComponentItem = 'Key'
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'CashFlowName_out'
+        Value = Null
+        Component = GuidesCashFlow_out
         ComponentItem = 'TextValue'
         DataType = ftString
         MultiSelectSeparator = ','
@@ -380,19 +421,19 @@
     Left = 112
     Top = 160
   end
-  object GuidesCashFlow: TdsdGuides
+  object GuidesCashFlow_in: TdsdGuides
     KeyField = 'Id'
-    LookupControl = edCashFlow
-    FormNameParam.Value = 'TInfoMoneyDestinationForm'
+    LookupControl = edCashFlow_in
+    FormNameParam.Value = 'TCashFlowForm'
     FormNameParam.DataType = ftString
     FormNameParam.MultiSelectSeparator = ','
-    FormName = 'TInfoMoneyDestinationForm'
+    FormName = 'TCashFlowForm'
     PositionDataSet = 'ClientDataSet'
     Params = <
       item
         Name = 'Key'
         Value = ''
-        Component = GuidesCashFlow
+        Component = GuidesCashFlow_in
         ComponentItem = 'Key'
         DataType = ftString
         ParamType = ptInput
@@ -401,7 +442,7 @@
       item
         Name = 'TextValue'
         Value = ''
-        Component = GuidesCashFlow
+        Component = GuidesCashFlow_in
         ComponentItem = 'TextValue'
         DataType = ftString
         ParamType = ptInput
@@ -409,5 +450,35 @@
       end>
     Left = 160
     Top = 231
+  end
+  object GuidesCashFlow_out: TdsdGuides
+    KeyField = 'Id'
+    LookupControl = edCashFlow_out
+    FormNameParam.Value = 'TCashFlowForm'
+    FormNameParam.DataType = ftString
+    FormNameParam.MultiSelectSeparator = ','
+    FormName = 'TCashFlowForm'
+    PositionDataSet = 'ClientDataSet'
+    Params = <
+      item
+        Name = 'Key'
+        Value = ''
+        Component = GuidesCashFlow_out
+        ComponentItem = 'Key'
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'TextValue'
+        Value = ''
+        Component = GuidesCashFlow_out
+        ComponentItem = 'TextValue'
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end>
+    Left = 152
+    Top = 274
   end
 end

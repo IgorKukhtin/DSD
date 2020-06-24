@@ -1169,7 +1169,10 @@ uses
   SaleAssetJournal in '..\..\Forms\Document\SaleAssetJournal.pas' {SaleAssetJournalForm: TParentForm},
   SaleAsset in '..\..\Forms\Document\SaleAsset.pas' {SaleAssetForm: TParentForm},
   CashFlowEdit in '..\..\Forms\Guides\CashFlowEdit.pas' {CashFlowEditForm: TParentForm},
-  CashFlow in '..\..\Forms\Guides\CashFlow.pas' {CashFlowForm: TParentForm};
+  CashFlow in '..\..\Forms\Guides\CashFlow.pas' {CashFlowForm: TParentForm},
+  MovementPromo_DateDialog in '..\..\Forms\Document\MovementPromo_DateDialog.pas' {MovementPromo_DateDialogForm: TParentForm},
+  PromoManager in '..\..\Forms\Document\PromoManager.pas' {PromoManagerForm: TParentForm},
+  PromoManagerJournal in '..\..\Forms\Document\PromoManagerJournal.pas' {PromoManagerJournalForm: TParentForm};
 
 {$R *.RES}
 {$R DevExpressRus.res}

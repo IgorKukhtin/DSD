@@ -1055,6 +1055,9 @@ end;
 
 procedure TLoadFormTest.LoadServiceFormTest;
 begin
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TMovementPromo_DateDialogForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TMovementPromo_DateDialogForm');
+  exit;
 
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TMovement_Period_PaidKind_BranchDialogForm'));
   TdsdFormStorageFactory.GetStorage.Load('TMovement_Period_PaidKind_BranchDialogForm');
@@ -2815,6 +2818,10 @@ end;
 
 procedure TLoadFormTest.LoadPromoFormTest;
 begin
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TPromoManagerJournalForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TPromoManagerJournalForm');
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TPromoManagerForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TPromoManagerForm');
 
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TPromoJournalForm'));
   TdsdFormStorageFactory.GetStorage.Load('TPromoJournalForm');

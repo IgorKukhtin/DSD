@@ -69,10 +69,6 @@ uses
 const
   cWmsMessageType = '<message_type type="%s"/>';
 
-  // имена пакетов
-  cpnOrderStatusChanged = 'order_status_changed';
-  cpnReceivingResult    = 'receiving_result';
-
 function GetImpTypeCaption(APacket: TPacketKind): string;
 begin
   case APacket of

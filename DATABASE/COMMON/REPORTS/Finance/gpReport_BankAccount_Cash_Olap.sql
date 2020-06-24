@@ -15,7 +15,8 @@ RETURNS TABLE (ContainerId Integer, CashCode Integer, CashName TVarChar, Currenc
              , GroupId Integer, GroupName TVarChar
              , BranchName TVarChar
              , InfoMoneyGroupName TVarChar, InfoMoneyDestinationName TVarChar, InfoMoneyCode Integer, InfoMoneyName TVarChar, InfoMoneyName_all TVarChar
-             , CashFlowCode Integer, CashFlowName TVarChar
+             , CashFlowCode_in Integer, CashFlowName_in TVarChar
+             , CashFlowCode_out Integer, CashFlowName_out TVarChar
              , AccountName TVarChar
              , UnitCode Integer, UnitName TVarChar
              , ProfitLossGroupCode Integer, ProfitLossGroupName TVarChar
@@ -31,10 +32,21 @@ RETURNS TABLE (ContainerId Integer, CashCode Integer, CashName TVarChar, Currenc
              , EndAmount_Month TFloat
              , OperDate TDateTime
              , MonthName TVarChar
+             , MonthNum  Integer
+             , OrdByPrint Integer
              , Year      TVarChar
              , Type_info TVarChar
              , NomStr Integer
              , InfoText TVarChar
+
+             , MonthName1 TVarChar
+             , MonthName2 TVarChar
+             , CashFlowCode Integer
+             , CashFlowName TVarChar
+             , Sum1_CashFlow TFloat
+             , Sum2_CashFlow TFloat
+             , PrintGroup Integer
+
               )
 AS
 $BODY$
@@ -148,9 +160,13 @@ BEGIN
                                     || CASE WHEN Object_InfoMoneyDestination.ValueData <> Object_InfoMoney.ValueData THEN ' ' || Object_InfoMoney.ValueData ELSE '' END
                                        AS TVarChar)                                        AS InfoMoneyName_all
                                        
-                                , Object_CashFlow.Id                     AS CashFlowId
-                                , Object_CashFlow.ObjectCode             AS CashFlowCode
-                                , '(' || CAST (Object_CashFlow.ObjectCode AS TVarChar) || ') '|| Object_CashFlow.ValueData AS CashFlowName
+                                , Object_CashFlow_in.Id                     AS CashFlowId_in
+                                , Object_CashFlow_in.ObjectCode             AS CashFlowCode_in
+                                , '(' || CAST (Object_CashFlow_in.ObjectCode AS TVarChar) || ') '|| Object_CashFlow_in.ValueData AS CashFlowName_in
+
+                                , Object_CashFlow_out.Id                     AS CashFlowId_out
+                                , Object_CashFlow_out.ObjectCode             AS CashFlowCode_out
+                                , '(' || CAST (Object_CashFlow_out.ObjectCode AS TVarChar) || ') '|| Object_CashFlow_out.ValueData AS CashFlowName_out
                            FROM Object AS Object_InfoMoney
                                 LEFT JOIN ObjectLink AS ObjectLink_InfoMoney_InfoMoneyDestination
                                                      ON ObjectLink_InfoMoney_InfoMoneyDestination.ObjectId = Object_InfoMoney.Id
@@ -162,10 +178,15 @@ BEGIN
                                                     AND ObjectLink_InfoMoney_InfoMoneyGroup.DescId = zc_ObjectLink_InfoMoney_InfoMoneyGroup()
                                 LEFT JOIN Object AS Object_InfoMoneyGroup ON Object_InfoMoneyGroup.Id = ObjectLink_InfoMoney_InfoMoneyGroup.ChildObjectId
 
-                                LEFT JOIN ObjectLink AS ObjectLink_InfoMoney_CashFlow
-                                                     ON ObjectLink_InfoMoney_CashFlow.ObjectId = Object_InfoMoney.Id
-                                                    AND ObjectLink_InfoMoney_CashFlow.DescId = zc_ObjectLink_InfoMoney_CashFlow()
-                                LEFT JOIN Object AS Object_CashFlow ON Object_CashFlow.Id = ObjectLink_InfoMoney_CashFlow.ChildObjectId
+                                LEFT JOIN ObjectLink AS ObjectLink_InfoMoney_CashFlow_in
+                                                     ON ObjectLink_InfoMoney_CashFlow_in.ObjectId = Object_InfoMoney.Id
+                                                    AND ObjectLink_InfoMoney_CashFlow_in.DescId = zc_ObjectLink_InfoMoney_CashFlow_in()
+                                LEFT JOIN Object AS Object_CashFlow_in ON Object_CashFlow_in.Id = ObjectLink_InfoMoney_CashFlow_in.ChildObjectId
+
+                                LEFT JOIN ObjectLink AS ObjectLink_InfoMoney_CashFlow_out
+                                                     ON ObjectLink_InfoMoney_CashFlow_out.ObjectId = Object_InfoMoney.Id
+                                                    AND ObjectLink_InfoMoney_CashFlow_out.DescId = zc_ObjectLink_InfoMoney_CashFlow_out()
+                                LEFT JOIN Object AS Object_CashFlow_out ON Object_CashFlow_out.Id = ObjectLink_InfoMoney_CashFlow_out.ChildObjectId
                           WHERE Object_InfoMoney.DescId = zc_Object_InfoMoney()
                           )
                                   
@@ -875,6 +896,7 @@ BEGIN
                             SELECT Operation.ContainerId, Operation.ObjectId AS AccountId, Operation.CashId, Operation.InfoMoneyId, Operation.CurrencyId
                                   , Operation.UnitId, Operation.MoneyPlaceId, Operation.ContractId
                                   , Operation.OperDate
+                                  , EXTRACT (MONTH FROM Operation.OperDate)  ::Integer AS MonthNum
                                   , Operation.DebetSumm
                                   , Operation.KreditSumm
                                   , Operation.DebetSumm_Currency
@@ -901,6 +923,7 @@ BEGIN
                             SELECT Operation.ContainerId, Operation.AccountId, Operation.BankAccountId AS CashId, Operation.InfoMoneyId, Operation.CurrencyId
                                   , Operation.UnitId, Operation.MoneyPlaceId, Operation.ContractId
                                   , Operation.OperDate
+                                  , EXTRACT (MONTH FROM Operation.OperDate)  ::Integer AS MonthNum
                                   , Operation.DebetSumm
                                   , Operation.KreditSumm
                                   , Operation.DebetSumm_Currency
@@ -923,6 +946,12 @@ BEGIN
                             FROM tmpOperation_2 AS Operation
                             )
 
+    -- пронумеруем мес€ца, дл€ печати берем первые 2 мес€ца
+    , tmpMonth AS (SELECT DISTINCT tmp.MonthNum, tmp.MonthName
+                        , ROW_NUMBER() OVER (ORDER BY tmp.MonthNum)  ::Integer AS Ord
+                   FROM (SELECT DISTINCT tmpOperation.MonthNum, zfCalc_MonthName (tmpOperation.OperDate) AS MonthName FROM tmpOperation) AS tmp
+                   )
+                   
      -- –езультат
      SELECT
         Operation.ContainerId,
@@ -937,8 +966,10 @@ BEGIN
         tmpInfoMoney.InfoMoneyCode                                                                  AS InfoMoneyCode,
         CASE WHEN COALESCE (Operation.InfoMoneyId, 0) = 0 AND (Operation.DebetSumm <> 0 OR Operation.KreditSumm <> 0 OR Operation.DebetSumm_Currency <> 0 OR Operation.KreditSumm_Currency <> 0) THEN ' урсова€ разница' ELSE tmpInfoMoney.InfoMoneyName     END :: TVarChar AS InfoMoneyName,
         CASE WHEN COALESCE (Operation.InfoMoneyId, 0) = 0 AND (Operation.DebetSumm <> 0 OR Operation.KreditSumm <> 0 OR Operation.DebetSumm_Currency <> 0 OR Operation.KreditSumm_Currency <> 0) THEN ' урсова€ разница' ELSE tmpInfoMoney.InfoMoneyName_all END :: TVarChar AS InfoMoneyName_all,
-        tmpInfoMoney.CashFlowCode                 :: Integer                                        AS CashFlowCode,
-        tmpInfoMoney.CashFlowName                 :: TVarChar                                       AS CashFlowName,
+        tmpInfoMoney.CashFlowCode_in   :: Integer   AS CashFlowCode_in,
+        tmpInfoMoney.CashFlowName_in   :: TVarChar  AS CashFlowName_in,
+        tmpInfoMoney.CashFlowCode_out  :: Integer   AS CashFlowCode_out,
+        tmpInfoMoney.CashFlowName_out  :: TVarChar  AS CashFlowName_out,
         tmpAccount.AccountName_all                                                                  AS AccountName,
         Object_Unit.ObjectCode                                                                      AS UnitCode,
         Object_Unit.ValueData                                                                       AS UnitName,
@@ -968,13 +999,59 @@ BEGIN
 
         Operation.OperDate         :: TDateTime,
         
-        (EXTRACT (MONTH FROM Operation.OperDate)||'. ' ||zfCalc_MonthName (Operation.OperDate))  ::TVarChar AS MonthName,
+        (Operation.MonthNum||'. ' ||zfCalc_MonthName (Operation.OperDate))  ::TVarChar AS MonthName,
+        Operation.MonthNum  ::Integer AS MonthNum,
+        tmpMonth.ord        ::Integer AS OrdByPrint,
         EXTRACT (YEAR FROM Operation.OperDate) ::TVarChar AS Year,
         
         Operation.Type_info :: TVarChar,
         
         Operation.NomStr    :: Integer,
-        Operation.InfoText  :: TVarChar
+        Operation.InfoText  :: TVarChar,
+        
+        -- дл€ печати
+        (SELECT tmpMonth.MonthName FROM tmpMonth WHERE tmpMonth.Ord = 1) :: TVarChar AS MonthName1,
+        (SELECT tmpMonth.MonthName FROM tmpMonth WHERE tmpMonth.Ord = 2) :: TVarChar AS MonthName2,
+        
+        CASE WHEN COALESCE (Operation.DebetSumm,0) <> 0 THEN tmpInfoMoney.CashFlowCode_in
+             WHEN COALESCE (Operation.KreditSumm,0) <> 0 THEN tmpInfoMoney.CashFlowCode_out
+             WHEN COALESCE (Operation.StartAmount,0) <> 0 THEN 3405
+             WHEN COALESCE (Operation.EndAmount,0) <> 0 THEN 3415
+             ELSE 0
+        END  ::Integer   AS CashFlowCode,
+
+        CASE WHEN COALESCE (Operation.DebetSumm,0) <> 0 THEN tmpInfoMoney.CashFlowName_in
+             WHEN COALESCE (Operation.KreditSumm,0) <> 0 THEN tmpInfoMoney.CashFlowName_out
+             WHEN COALESCE (Operation.StartAmount,0) <> 0 THEN '(3405) ќстаток денежных средств на начало периода '
+             WHEN COALESCE (Operation.EndAmount,0) <> 0 THEN '(3415) ќстаток денежных средств на конец периода'
+             ELSE ''
+        END  :: TVarChar AS CashFlowName,
+
+        CASE WHEN tmpMonth.Ord = 1 THEN (COALESCE (Operation.DebetSumm,0)
+                                       - COALESCE (Operation.KreditSumm,0)
+                                       + COALESCE (Operation.StartAmount_Month,0)
+                                       + COALESCE (Operation.EndAmount_Month,0))
+             ELSE 0
+        END  ::TFloat    AS Sum1_CashFlow,
+
+        CASE WHEN tmpMonth.Ord = 2 THEN (COALESCE (Operation.DebetSumm,0)
+                                       - COALESCE (Operation.KreditSumm,0)
+                                       + COALESCE (Operation.StartAmount_Month,0)
+                                       + COALESCE (Operation.EndAmount_Month,0))
+             ELSE 0
+        END  ::TFloat    AS Sum2_CashFlow,
+
+        -- дл€ итогов по группам
+        CASE WHEN COALESCE (Operation.DebetSumm,0) <> 0  AND tmpInfoMoney.CashFlowCode_in  BETWEEN 3000 AND 3195 THEN 1
+             WHEN COALESCE (Operation.KreditSumm,0) <> 0 AND tmpInfoMoney.CashFlowCode_out BETWEEN 3000 AND 3195 THEN 1
+             WHEN COALESCE (Operation.DebetSumm,0) <> 0  AND tmpInfoMoney.CashFlowCode_in  BETWEEN 3200 AND 3295 THEN 2
+             WHEN COALESCE (Operation.KreditSumm,0) <> 0 AND tmpInfoMoney.CashFlowCode_out BETWEEN 3200 AND 3295 THEN 2
+             WHEN COALESCE (Operation.DebetSumm,0) <> 0  AND tmpInfoMoney.CashFlowCode_in  BETWEEN 3300 AND 3395 THEN 3
+             WHEN COALESCE (Operation.KreditSumm,0) <> 0 AND tmpInfoMoney.CashFlowCode_out BETWEEN 3300 AND 3395 THEN 3
+             WHEN COALESCE (Operation.StartAmount,0) <> 0 THEN 4
+             WHEN COALESCE (Operation.EndAmount,0) <> 0 THEN 5
+             ELSE 0
+        END  ::Integer   AS PrintGroup
      FROM tmpOperation AS Operation
 
          LEFT JOIN tmpAccount ON tmpAccount.AccountId = Operation.AccountId
@@ -993,6 +1070,7 @@ BEGIN
          LEFT JOIN Object AS Object_Branch ON Object_Branch.Id = ObjectLink_Cash_Branch.ChildObjectId
     
          LEFT JOIN tmpContract ON tmpContract.ContractId = Operation.ContractId
+         LEFT JOIN tmpMonth ON tmpMonth.MonthNum = Operation.MonthNum
      ;
 
 
@@ -1394,7 +1472,7 @@ AND CLO_Cash.ObjectId = 14462
                               GROUP BY Operation_all.ContainerId, Operation_all.ObjectId, Operation_all.CashId, Operation_all.CurrencyId, Operation_all.OperDate
                              )
       --
-      , tmpCalc AS 
+      , tmpCalc AS
 (                   --расчет накоп. конечн. остатка
                     SELECT tmp.ContainerId, tmp.ObjectId, tmp.CashId, tmp.CurrencyId, tmp.OperDate
                          , SUM (EndAmount_calc) AS EndAmount_calc

@@ -1,10 +1,11 @@
 -- Function: gpUpdate_InfoMoney_CashFlow()
 
-DROP FUNCTION IF EXISTS gpUpdate_InfoMoney_CashFlow(Integer, Integer, TVarChar);
+DROP FUNCTION IF EXISTS gpUpdate_InfoMoney_CashFlow(Integer, Integer, Integer, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpUpdate_InfoMoney_CashFlow(
     IN inId                  Integer   ,    -- ключ объекта
-    IN inCashFlowId          Integer   ,    -- 
+    IN inCashFlowId_in       Integer   ,    -- 
+    IN inCashFlowId_out      Integer   ,    -- 
     IN inSession             TVarChar       -- текущий пользователь
 )
 RETURNS Void AS
@@ -18,8 +19,10 @@ BEGIN
 
    vbUserId := lpCheckRight (inSession, zc_Enum_Process_Update_InfoMoney_CashFlow());
    
-   -- сохранили связь с <Статья отчета ДДС>
-   PERFORM lpInsertUpdate_ObjectLink( zc_ObjectLink_InfoMoney_CashFlow(), inId, inCashFlowId);
+   -- сохранили связь с <Статья отчета ДДС расход>
+   PERFORM lpInsertUpdate_ObjectLink( zc_ObjectLink_InfoMoney_CashFlow_in(), ioId, inCashFlowId_in);
+   -- сохранили связь с <Статья отчета ДДС приход>
+   PERFORM lpInsertUpdate_ObjectLink( zc_ObjectLink_InfoMoney_CashFlow_out(), ioId, inCashFlowId_out);
 
    -- сохранили протокол
    PERFORM lpInsert_ObjectProtocol (inId, vbUserId);

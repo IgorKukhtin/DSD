@@ -73,6 +73,11 @@ type
     cxLabel5: TcxLabel;
     ceBankAccount: TcxButtonEdit;
     GuidesBankAccount: TdsdGuides;
+    PrintHeaderCDS: TClientDataSet;
+    PrintItemsCDS: TClientDataSet;
+    spSelectPrint: TdsdStoredProc;
+    actPrint: TdsdPrintAction;
+    bbactPrint: TdxBarButton;
   private
   public
   end;

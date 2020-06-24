@@ -13,7 +13,9 @@ type
     HeaderQry, DetailQry, InsertQry, ErrorQry, SelectQry, DoneQry, ExecQry: TFDQuery;
   end;
 
-  TPacketKind = (pknOrderStatusChanged, pknReceivingResult);
+  TPacketKind = (pknOrderStatusChanged, pknReceivingResult, pknWmsMovementASNLoad, pknWmsObjectClient,
+                 pknWmsObjectPack, pknWmsObjectSKU, pknWmsObjectSKUCode, pknWmsObjectSKUGroup, pknWmsObjectUser,
+                 pknWmsMovementIncoming, pknWmsMovementOrder);
 
   TPacketValues = record
     Message_Type: string;

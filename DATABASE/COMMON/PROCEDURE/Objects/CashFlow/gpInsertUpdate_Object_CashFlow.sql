@@ -23,7 +23,7 @@ BEGIN
    vbCode_calc:=lfGet_ObjectCode (inCode, zc_Object_CashFlow());
    
    -- проверка прав уникальности дл€ свойства <Ќаименование>
-   PERFORM lpCheckUnique_Object_ValueData(ioId, zc_Object_CashFlow(), inName);
+   --PERFORM lpCheckUnique_Object_ValueData(ioId, zc_Object_CashFlow(), inName);
    -- проверка прав уникальности дл€ свойства < од>
    PERFORM lpCheckUnique_Object_ObjectCode (ioId, zc_Object_CashFlow(), vbCode_calc);
 

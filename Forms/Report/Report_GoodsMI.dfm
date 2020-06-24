@@ -2076,6 +2076,8 @@ inherited Report_GoodsMIForm: TReport_GoodsMIForm
           'Key'
           'TextValue')
       end>
+    Left = 48
+    Top = 392
   end
   inherited ActionList: TActionList
     object actPrint: TdsdPrintAction

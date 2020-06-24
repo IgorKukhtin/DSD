@@ -37,6 +37,8 @@ RETURNS TABLE (Id Integer
              , TypeDiscount Integer
              , PriceDiscount TFloat
              , NDSKindId Integer
+             , DiscountExternalID Integer
+             , DiscountExternalName TVarChar
               )
 AS
 $BODY$
@@ -175,6 +177,8 @@ BEGIN
            , 0::Integer                                                          AS TypeDiscount
            , COALESCE(MIFloat_MovementItem.ValueData, MovementItem.PriceSale)    AS PriceDiscount
            , MovementItem.NDSKindId                                              AS NDSKindId
+           , Object_DiscountExternal.ID                                          AS DiscountCardId
+           , Object_DiscountExternal.ValueData                                   AS DiscountCardName
        FROM tmpMI AS MovementItem
 
             LEFT JOIN MovementItemFloat AS MIFloat_MovementItem
@@ -203,6 +207,11 @@ BEGIN
             LEFT JOIN ObjectFloat AS ObjectFloatDay
                                   ON ObjectFloatDay.ObjectId = Object_PartionDateKind.Id
                                  AND ObjectFloatDay.DescId = zc_ObjectFloat_PartionDateKind_Day()
+
+            LEFT JOIN MovementItemLinkObject AS MILinkObject_DiscountExternal
+                                             ON MILinkObject_DiscountExternal.MovementItemId = MovementItem.Id
+                                            AND MILinkObject_DiscountExternal.DescId         = zc_MILinkObject_DiscountExternal()
+            LEFT JOIN Object AS Object_DiscountExternal ON Object_DiscountExternal.Id = MILinkObject_DiscountExternal.ObjectId
        ;
 END;
 $BODY$

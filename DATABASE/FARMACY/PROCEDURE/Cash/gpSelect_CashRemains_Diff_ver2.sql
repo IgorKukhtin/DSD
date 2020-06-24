@@ -26,7 +26,8 @@ RETURNS TABLE (
     RemainsSun TFloat,
     NDS TFloat,
     NDSKindId Integer,
-    DiscountExternalID  Integer, DiscountExternalName  TVarChar
+    DiscountExternalID  Integer, DiscountExternalName  TVarChar,
+    GoodsDiscountID  Integer, GoodsDiscountName  TVarChar
 )
 AS
 $BODY$
@@ -475,6 +476,23 @@ WITH tmp as (SELECT tmp.*, ROW_NUMBER() OVER (PARTITION BY TextValue_calc ORDER 
                                  FROM ObjectFloat AS ObjectFloat_NDSKind_NDS
                                  WHERE ObjectFloat_NDSKind_NDS.DescId = zc_ObjectFloat_NDSKind_NDS()
                                 )
+                 , tmpGoodsDiscount AS (SELECT Object_Goods_Retail.GoodsMainId              AS GoodsMainId
+                                             , Object_Object.Id                             AS GoodsDiscountId
+                                             , Object_Object.ValueData                      AS GoodsDiscountName 
+                                          FROM Object AS Object_BarCode
+                                              INNER JOIN ObjectLink AS ObjectLink_BarCode_Goods
+                                                                    ON ObjectLink_BarCode_Goods.ObjectId = Object_BarCode.Id
+                                                                   AND ObjectLink_BarCode_Goods.DescId = zc_ObjectLink_BarCode_Goods()
+                                              INNER JOIN Object_Goods_Retail AS Object_Goods_Retail ON Object_Goods_Retail.Id = ObjectLink_BarCode_Goods.ChildObjectId
+                                               
+                                              LEFT JOIN ObjectLink AS ObjectLink_BarCode_Object
+                                                                   ON ObjectLink_BarCode_Object.ObjectId = Object_BarCode.Id
+                                                                  AND ObjectLink_BarCode_Object.DescId = zc_ObjectLink_BarCode_Object()
+                                              LEFT JOIN Object AS Object_Object ON Object_Object.Id = ObjectLink_BarCode_Object.ChildObjectId           
+
+                                          WHERE Object_BarCode.DescId = zc_Object_BarCode()
+                                            AND Object_BarCode.isErased = False)
+
         SELECT
             _DIFF.ObjectId,
             _DIFF.GoodsCode,
@@ -511,7 +529,9 @@ WITH tmp as (SELECT tmp.*, ROW_NUMBER() OVER (PARTITION BY TextValue_calc ORDER 
             ObjectFloat_NDSKind_NDS.ValueData AS NDS,
             COALESCE(_DIFF.NDSKindId, ObjectLink_Goods_NDSKind.ChildObjectId) AS NDSKindId,
             NULLIF (_DIFF.DiscountExternalID, 0)                              AS DiscountExternalId,
-            Object_DiscountExternal.ValueData                                 AS DiscountExternalName
+            Object_DiscountExternal.ValueData                                 AS DiscountExternalName,
+            tmpGoodsDiscount.GoodsDiscountId                                  AS GoodsDiscountID,
+            tmpGoodsDiscount.GoodsDiscountName                                AS GoodsDiscountName
         FROM _DIFF
 
             -- Тип срок/не срок
@@ -519,6 +539,11 @@ WITH tmp as (SELECT tmp.*, ROW_NUMBER() OVER (PARTITION BY TextValue_calc ORDER 
 
             -- Товар для проекта (дисконтные карты)
             LEFT JOIN Object AS Object_DiscountExternal ON Object_DiscountExternal.Id = NULLIF (_DIFF.DiscountExternalId, 0)
+
+            -- получается GoodsMainId
+            LEFT JOIN Object_Goods_Retail AS Object_Goods_Retail ON Object_Goods_Retail.Id = _DIFF.ObjectId
+            LEFT JOIN Object_Goods_Main AS Object_Goods_Main ON Object_Goods_Main.Id = Object_Goods_Retail.GoodsMainId
+            LEFT JOIN tmpGoodsDiscount ON tmpGoodsDiscount.GoodsMainId = Object_Goods_Main.Id
 
             LEFT JOIN Object AS Object_Accommodation  ON Object_Accommodation.ID = _DIFF.AccommodationId
             -- Остаток товара по СУН

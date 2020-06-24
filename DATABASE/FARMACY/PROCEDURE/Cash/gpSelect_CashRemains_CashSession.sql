@@ -2,7 +2,7 @@
 
 DROP FUNCTION IF EXISTS gpSelect_CashRemains_CashSession (TVarChar);
 
-CREATE OR REPLACE FUNCTION gpSelect_CashRemains_CashSession(
+CREATE OR REPLACE FUNCTION gpSelect_CashRemains_CashSession (
     IN inSession       TVarChar    -- сессия пользователя
 )
 
@@ -141,7 +141,7 @@ BEGIN
     THEN
       vbDiscountExternal := True;
     ELSE
-      vbDiscountExternal := False;    
+      vbDiscountExternal := False;
     END IF;
 
     RETURN QUERY
@@ -257,6 +257,7 @@ BEGIN
                              )
        , tmpReserve AS (SELECT MovementItemMaster.ObjectId                                          AS GoodsId
                              , COALESCE (MILinkObject_NDSKind.ObjectId, Object_Goods.NDSKindId)     AS NDSKindId
+                             ,MILinkObject_DiscountExternal.ObjectId                                AS DiscountExternalId
                              , SUM(COALESCE (MovementItemChild.Amount, MovementItemMaster.Amount))  AS Amount
                              , MIFloat_ContainerId.ValueData::Integer                               AS ContainerId
                         FROM tmpMovReserveId AS Movement
@@ -278,6 +279,10 @@ BEGIN
                                                               ON MILinkObject_NDSKind.MovementItemId = MovementItemMaster.Id
                                                              AND MILinkObject_NDSKind.DescId = zc_MILinkObject_NDSKind()
 
+                             LEFT JOIN MovementItemLinkObject AS MILinkObject_DiscountExternal
+                                                              ON MILinkObject_DiscountExternal.MovementItemId = MovementItemMaster.Id
+                                                             AND MILinkObject_DiscountExternal.DescId         = zc_MILinkObject_DiscountExternal()
+
                              LEFT JOIN MovementItem AS MovementItemChild
                                                     ON MovementItemChild.MovementId = Movement.Id
                                                    AND MovementItemChild.ParentId = MovementItemMaster.Id
@@ -288,9 +293,11 @@ BEGIN
                              LEFT JOIN MovementItemFloat AS MIFloat_ContainerId
                                                          ON MIFloat_ContainerId.MovementItemId = MovementItemChild.Id
                                                         AND MIFloat_ContainerId.DescId = zc_MIFloat_ContainerId()
+
                         GROUP BY MovementItemMaster.ObjectId
                                , MIFloat_ContainerId.ValueData
                                , COALESCE (MILinkObject_NDSKind.ObjectId, Object_Goods.NDSKindId)
+                               , MILinkObject_DiscountExternal.ObjectId
                         )
        , tmpContainerAll AS (SELECT Container.DescId
                                   , Container.Id
@@ -614,7 +621,7 @@ BEGIN
                                , Container.DeferredSend
                                , MIDate_ExpirationDate.ValueData                                           AS ExpirationDate
                                , CASE WHEN vbDiscountExternal = TRUE
-                                      THEN Object_Goods_Juridical.DiscountExternalID                                 
+                                      THEN Object_Goods_Juridical.DiscountExternalID
                                       ELSE NULL END                                                        AS DiscountExternalID
                           FROM tmpContainerIncome AS Container
                                LEFT OUTER JOIN Object_Goods_Retail AS Object_Goods_Retail ON Object_Goods_Retail.Id = Container.ObjectId
@@ -696,8 +703,9 @@ BEGIN
                                , NULL::TFloat                                      AS PriceWithVAT
                           FROM tmpGoodsRemains AS Container
                                LEFT JOIN tmpReserve AS Reserve
-                                                    ON Reserve.GoodsId = Container.ObjectId
-                                                   AND Reserve.NDSKindId = Container.NDSKindId
+                                                    ON Reserve.GoodsId            = Container.ObjectId
+                                                   AND Reserve.NDSKindId          = Container.NDSKindId
+                                                   AND COALESCE (Reserve.DiscountExternalId, 0) = COALESCE (Container.DiscountExternalId, 0)
                                                    AND COALESCE (Reserve.ContainerId, 0 ) = 0
                           UNION ALL
                           SELECT Container.ObjectId
@@ -715,7 +723,7 @@ BEGIN
                           UNION ALL
                           SELECT Reserve.GoodsId                                                       AS GoodsId
                                , Reserve.NDSKindId                                                     AS NDSKindId
-                               , tmpGoodsRemains.DiscountExternalID                                    AS DiscountExternalID
+                               , Reserve.DiscountExternalID                                            AS DiscountExternalID
                                , -Reserve.Amount                                                       AS Remains
                                , Reserve.Amount                                                        AS Reserved
                                , NULL                                                                  AS DeferredSend
@@ -724,8 +732,9 @@ BEGIN
                                , NULL                                                                  AS PartionDateDiscount
                                , NULL                                                                  AS PriceWithVAT
                           FROM tmpReserve AS Reserve
-                             LEFT OUTER JOIN tmpGoodsRemains ON Reserve.GoodsId = tmpGoodsRemains.ObjectId
-                                                            AND Reserve.NDSKindId = tmpGoodsRemains.NDSKindId
+                             LEFT OUTER JOIN tmpGoodsRemains ON Reserve.GoodsId            = tmpGoodsRemains.ObjectId
+                                                            AND Reserve.NDSKindId          = tmpGoodsRemains.NDSKindId
+                                                            AND COALESCE (Reserve.DiscountExternalID, 0) = COALESCE (tmpGoodsRemains.DiscountExternalID, 0)
                           WHERE COALESCE(tmpGoodsRemains.ObjectId, 0) = 0
                             AND COALESCE (Reserve.ContainerId, 0 ) = 0
                             AND Reserve.Amount <> 0
@@ -816,4 +825,5 @@ ALTER FUNCTION gpSelect_CashRemains_CashSession (TVarChar) OWNER TO postgres;
 
 --тест
 --SELECT * FROM gpSelect_CashRemains_CashSession ('13543334')
---SELECT * FROM gpSelect_CashRemains_CashSession ('3')
+--
+SELECT * FROM gpSelect_CashRemains_CashSession ('3')

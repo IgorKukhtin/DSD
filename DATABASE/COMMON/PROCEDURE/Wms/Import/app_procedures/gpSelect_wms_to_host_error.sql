@@ -24,14 +24,12 @@ BEGIN
     RETURN QUERY
         SELECT Err.Header_id, Err.Site, Err.Type, Msg.Name, Msg.Qty, Msg.Weight, Msg.Operdate, Msg.Done, Msg.Error, Err.Description, Err.InsertDate
         FROM wms_to_host_error AS Err 
-          INNER JOIN wms_to_host_message AS Msg ON Err.Header_id = Msg.Header_id 
-        WHERE Msg.Done = FALSE 
-          AND Msg.Error = TRUE 
-          AND Err.Site = 'A' -- берем ошибки только на нашей стороне
+          LEFT JOIN wms_to_host_message AS Msg ON Err.Header_id = Msg.Header_id
+        WHERE Err.Site = 'A' -- берем ошибки только на нашей стороне
           AND Err.InsertDate BETWEEN inStartDate AND inEndDate
-      --ORDER BY Err.Header_id DESC
-        ORDER BY Err.Id DESC
-        ;
+          AND (Msg.Done = FALSE) OR (Msg.Done IS NULL) 
+          AND (Msg.Error = TRUE) OR (Msg.Error IS NULL) 
+        ORDER BY Err.Id DESC;
 END;
 $BODY$
  LANGUAGE PLPGSQL VOLATILE;     

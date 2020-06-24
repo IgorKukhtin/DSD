@@ -109,6 +109,8 @@ BEGIN
     PERFORM lpInsertUpdate_MovementItemFloat (zc_MIFloat_Price(), ioId, inPrice);
     -- сохранили свойство <Цена без скидки>
     PERFORM lpInsertUpdate_MovementItemFloat (zc_MIFloat_PriceSale(), ioId, inPrice);
+    -- сохранили свойство <Id строки товара в заказе>
+    PERFORM lpInsertUpdate_MovementItemString (zc_MIString_ItemId(), ioId, inItemId);
 
     -- пересчитали Итоговые суммы
     PERFORM lpInsertUpdate_MovementFloat_TotalSummCheck (inMovementId);

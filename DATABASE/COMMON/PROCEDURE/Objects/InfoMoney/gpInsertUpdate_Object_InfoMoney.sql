@@ -1,7 +1,7 @@
 -- Function: gpInsertUpdate_Object_InfoMoney()
 DROP FUNCTION IF EXISTS gpInsertUpdate_Object_InfoMoney(Integer, Integer, TVarChar, Integer, Integer, TVarChar);
 --DROP FUNCTION IF EXISTS gpInsertUpdate_Object_InfoMoney(Integer, Integer, TVarChar, Integer, Integer, Boolean, TVarChar);
-DROP FUNCTION IF EXISTS gpInsertUpdate_Object_InfoMoney(Integer, Integer, TVarChar, Integer, Integer, Integer, Boolean, TVarChar);
+DROP FUNCTION IF EXISTS gpInsertUpdate_Object_InfoMoney(Integer, Integer, TVarChar, Integer, Integer, Integer, Integer, Boolean, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpInsertUpdate_Object_InfoMoney(
  INOUT ioId                     Integer   ,    -- ключ объекта <Статья назначения>
@@ -9,7 +9,8 @@ CREATE OR REPLACE FUNCTION gpInsertUpdate_Object_InfoMoney(
     IN inName                   TVarChar  ,    -- Название объекта <Статья назначения>
     IN inInfoMoneyGroupId       Integer   ,    -- ссылка на <Группы управленческих назначений>
     IN inInfoMoneyDestinationId Integer   ,    -- ссылка на <Управленческие назначения>
-    IN inCashFlowId             Integer   ,    -- ссылка на <Статья отчета ДДС>
+    IN inCashFlowId_in          Integer   ,    -- ссылка на <Статья отчета ДДС расход>
+    IN inCashFlowId_out         Integer   ,    -- ссылка на <Статья отчета ДДС приход>
     IN inisProfitLoss           Boolean   ,    -- затраты по оплате
     IN inSession                TVarChar       -- сессия пользователя
 )
@@ -41,9 +42,11 @@ BEGIN
    -- сохранили связь с <Управленческие назначения>
    PERFORM lpInsertUpdate_ObjectLink( zc_ObjectLink_InfoMoney_InfoMoneyDestination(), ioId, inInfoMoneyDestinationId);
    
-   -- сохранили связь с <Статья отчета ДДС>
-   PERFORM lpInsertUpdate_ObjectLink( zc_ObjectLink_InfoMoney_CashFlow(), ioId, inCashFlowId);
-      
+   -- сохранили связь с <Статья отчета ДДС расход>
+   PERFORM lpInsertUpdate_ObjectLink( zc_ObjectLink_InfoMoney_CashFlow_in(), ioId, inCashFlowId_in);
+   -- сохранили связь с <Статья отчета ДДС приход>
+   PERFORM lpInsertUpdate_ObjectLink( zc_ObjectLink_InfoMoney_CashFlow_out(), ioId, inCashFlowId_out);
+         
    -- сохранили свойство <>
    PERFORM lpInsertUpdate_ObjectBoolean (zc_ObjectBoolean_InfoMoney_ProfitLoss(), ioId, inisProfitLoss);
 

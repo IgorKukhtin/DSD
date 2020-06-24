@@ -1,13 +1,14 @@
 -- Function: gpInsertUpdate_Movement_Check_Site_Liki24()
 
-DROP FUNCTION IF EXISTS gpInsertUpdate_Movement_Check_Site_Liki24 (Integer, Integer, TDateTime, TVarChar, TVarChar, TVarChar);
+DROP FUNCTION IF EXISTS gpInsertUpdate_Movement_Check_Site_Liki24 (Integer, Integer, TDateTime, TVarChar, TVarChar, TVarChar, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpInsertUpdate_Movement_Check_Site_Liki24(
  INOUT ioId                Integer   , -- Ключ объекта <Документ ЧЕК>
     IN inUnitId            Integer   , -- Ключ объекта <Подразделение>
     IN inDate              TDateTime , -- Дата/время документа
     IN inBookingId         TVarChar  , -- ID заказа на сайте
-    IN inOrderId           TVarChar  , -- Статус заказа
+    IN inOrderId           TVarChar  , -- ID заказа в системе источника
+    IN inBookingStatus     TVarChar  , -- Статус заказа
     IN inSession           TVarChar    -- сессия пользователя
 )
 RETURNS Integer
@@ -86,8 +87,10 @@ BEGIN
 
     -- сохранили ID заказа на сайте
     PERFORM lpInsertUpdate_MovementString (zc_MovementString_BookingId(), ioId, inBookingId);
-    -- сохранили Контактный телефон (Покупателя)
+    -- сохранили ID заказа в системе источника
     PERFORM lpInsertUpdate_MovementString (zc_MovementString_OrderId(), ioId, inOrderId);
+    -- сохранили Статус заказа
+    PERFORM lpInsertUpdate_MovementString (zc_MovementString_BookingStatus(), ioId, inBookingStatus);
     -- Отмечаем документ как отложенный
     PERFORM lpInsertUpdate_MovementBoolean (zc_MovementBoolean_Deferred(), ioId, TRUE);
 

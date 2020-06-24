@@ -69,19 +69,36 @@ object InfoMoneyForm: TInfoMoneyForm
         HeaderAlignmentVert = vaCenter
         Width = 177
       end
-      object CashFlowName: TcxGridDBColumn
-        Caption = #1057#1090#1072#1090#1100#1103' '#1086#1090#1095#1077#1090#1072' '#1044#1044#1057
-        DataBinding.FieldName = 'CashFlowName'
+      object CashFlowName_in: TcxGridDBColumn
+        Caption = #1057#1090#1072#1090#1100#1103' '#1044#1044#1057' '#1087#1088#1080#1093'.'
+        DataBinding.FieldName = 'CashFlowName_in'
         PropertiesClassName = 'TcxButtonEditProperties'
         Properties.Buttons = <
           item
-            Action = actCashFlowChoiceForm
+            Action = actCashFlowChoiceForm_in
             Default = True
             Kind = bkEllipsis
           end>
         Properties.ReadOnly = True
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
+        HeaderHint = #1057#1090#1072#1090#1100#1103' '#1044#1044#1057' '#1087#1088#1080#1093#1086#1076
+        Width = 100
+      end
+      object CashFlowName_out: TcxGridDBColumn
+        Caption = #1057#1090#1072#1090#1100#1103' '#1044#1044#1057' '#1088#1072#1089#1093'.'
+        DataBinding.FieldName = 'CashFlowName_out'
+        PropertiesClassName = 'TcxButtonEditProperties'
+        Properties.Buttons = <
+          item
+            Action = actCashFlowChoiceForm_out
+            Default = True
+            Kind = bkEllipsis
+          end>
+        Properties.ReadOnly = True
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        HeaderHint = #1057#1090#1072#1090#1100#1103' '#1044#1044#1057' '#1088#1072#1089#1093#1086#1076
         Width = 100
       end
       object isProfitLoss: TcxGridDBColumn
@@ -213,6 +230,14 @@ object InfoMoneyForm: TInfoMoneyForm
         end
         item
           Visible = True
+          ItemName = 'bbStartLoad'
+        end
+        item
+          Visible = True
+          ItemName = 'dxBarStatic1'
+        end
+        item
+          Visible = True
           ItemName = 'bbProtocolOpen'
         end
         item
@@ -282,6 +307,10 @@ object InfoMoneyForm: TInfoMoneyForm
     end
     object bbProtocolOpen: TdxBarButton
       Action = ProtocolOpenForm
+      Category = 0
+    end
+    object bbStartLoad: TdxBarButton
+      Action = macStartLoad
       Category = 0
     end
   end
@@ -463,7 +492,7 @@ object InfoMoneyForm: TInfoMoneyForm
         end>
       isShowModal = False
     end
-    object actCashFlowChoiceForm: TOpenChoiceForm
+    object actCashFlowChoiceForm_out: TOpenChoiceForm
       Category = 'DSDLib'
       MoveParams = <>
       PostDataSetBeforeExecute = False
@@ -477,14 +506,14 @@ object InfoMoneyForm: TInfoMoneyForm
           Name = 'Key'
           Value = Null
           Component = ClientDataSet
-          ComponentItem = 'CashFlowId'
+          ComponentItem = 'CashFlowId_out'
           MultiSelectSeparator = ','
         end
         item
           Name = 'TextValue'
           Value = Null
           Component = ClientDataSet
-          ComponentItem = 'CashFlowName'
+          ComponentItem = 'CashFlowName_out'
           DataType = ftString
           MultiSelectSeparator = ','
         end
@@ -492,10 +521,92 @@ object InfoMoneyForm: TInfoMoneyForm
           Name = 'Code'
           Value = Null
           Component = ClientDataSet
-          ComponentItem = 'CashFlowCode'
+          ComponentItem = 'CashFlowCode_out'
           MultiSelectSeparator = ','
         end>
       isShowModal = True
+    end
+    object actCashFlowChoiceForm_in: TOpenChoiceForm
+      Category = 'DSDLib'
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      Caption = 'CashFlowForm'
+      FormName = 'TCashFlowForm'
+      FormNameParam.Value = 'TCashFlowForm'
+      FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
+      GuiParams = <
+        item
+          Name = 'Key'
+          Value = Null
+          Component = ClientDataSet
+          ComponentItem = 'CashFlowId_in'
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'TextValue'
+          Value = Null
+          Component = ClientDataSet
+          ComponentItem = 'CashFlowName_in'
+          DataType = ftString
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'Code'
+          Value = Null
+          Component = ClientDataSet
+          ComponentItem = 'CashFlowCode_in'
+          MultiSelectSeparator = ','
+        end>
+      isShowModal = True
+    end
+    object actDoLoad: TExecuteImportSettingsAction
+      Category = #1047#1072#1075#1088#1091#1079#1082#1072
+      MoveParams = <>
+      ImportSettingsId.Value = Null
+      ImportSettingsId.Component = FormParams
+      ImportSettingsId.ComponentItem = 'ImportSettingId'
+      ImportSettingsId.MultiSelectSeparator = ','
+      ExternalParams = <
+        item
+          Name = 'inOperDate'
+          Value = 43101d
+          DataType = ftDateTime
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end>
+    end
+    object actGetImportSetting: TdsdExecStoredProc
+      Category = #1047#1072#1075#1088#1091#1079#1082#1072
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      StoredProc = spGetImportSettingId
+      StoredProcList = <
+        item
+          StoredProc = spGetImportSettingId
+        end>
+      Caption = 'actGetImportSetting'
+      Hint = #1047#1072#1075#1088#1091#1079#1080#1090#1100' '#1057#1090#1072#1090#1100#1080' '#1044#1044#1057' '#1080#1079' '#1092#1072#1081#1083#1072
+    end
+    object macStartLoad: TMultiAction
+      Category = #1047#1072#1075#1088#1091#1079#1082#1072
+      MoveParams = <>
+      ActionList = <
+        item
+          Action = actGetImportSetting
+        end
+        item
+          Action = actDoLoad
+        end
+        item
+          Action = actRefresh
+        end>
+      QuestionBeforeExecute = #1047#1072#1075#1088#1091#1079#1080#1090#1100' '#1057#1090#1072#1090#1100#1080' '#1044#1044#1057' '#1080#1079' '#1092#1072#1081#1083#1072'?'
+      InfoAfterExecute = #1047#1072#1075#1088#1091#1079#1082#1072' '#1079#1072#1074#1077#1088#1096#1077#1085#1072'?'
+      Caption = #1047#1072#1075#1088#1091#1079#1080#1090#1100' '#1057#1090#1072#1090#1100#1080' '#1044#1044#1057
+      Hint = #1047#1072#1075#1088#1091#1079#1080#1090#1100' '#1057#1090#1072#1090#1100#1080' '#1044#1044#1057
+      ImageIndex = 41
+      WithoutNext = True
     end
   end
   object dsdStoredProc: TdsdStoredProc
@@ -608,15 +719,65 @@ object InfoMoneyForm: TInfoMoneyForm
         MultiSelectSeparator = ','
       end
       item
-        Name = 'inCashFlowId'
+        Name = 'inCashFlowId_in'
         Value = Null
         Component = ClientDataSet
-        ComponentItem = 'CashFlowId'
+        ComponentItem = 'CashFlowId_in'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inCashFlowId_out'
+        Value = Null
+        Component = ClientDataSet
+        ComponentItem = 'CashFlowId_out'
         ParamType = ptInput
         MultiSelectSeparator = ','
       end>
     PackSize = 1
     Left = 480
     Top = 267
+  end
+  object FormParams: TdsdFormParams
+    Params = <
+      item
+        Name = 'ImportSettingId'
+        Value = Null
+        MultiSelectSeparator = ','
+      end>
+    Left = 664
+    Top = 136
+  end
+  object spGetImportSettingId: TdsdStoredProc
+    StoredProcName = 'gpGet_DefaultValue'
+    DataSets = <
+      item
+      end>
+    OutputType = otResult
+    Params = <
+      item
+        Name = 'inDefaultKey'
+        Value = 'TCashFlowForm;zc_Object_ImportSetting_CashFlow'
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inUserKeyId'
+        Value = '0'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'gpGet_DefaultValue'
+        Value = Null
+        Component = FormParams
+        ComponentItem = 'ImportSettingId'
+        DataType = ftString
+        MultiSelectSeparator = ','
+      end>
+    PackSize = 1
+    Left = 664
+    Top = 200
   end
 end

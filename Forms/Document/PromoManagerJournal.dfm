@@ -1,5 +1,5 @@
-inherited PromoJournalForm: TPromoJournalForm
-  Caption = #1046#1091#1088#1085#1072#1083' '#1076#1086#1082#1091#1084#1077#1085#1090#1086#1074' <'#1040#1082#1094#1080#1080'>'
+inherited PromoManagerJournalForm: TPromoManagerJournalForm
+  Caption = #1046#1091#1088#1085#1072#1083' '#1076#1086#1082#1091#1084#1077#1085#1090#1086#1074' <'#1040#1082#1094#1080#1080'> ('#1088#1091#1082#1086#1074#1086#1076#1080#1090#1077#1083#1100')'
   ClientHeight = 407
   ClientWidth = 1084
   AddOnFormData.RefreshAction = actRefreshStart
@@ -13,18 +13,19 @@ inherited PromoJournalForm: TPromoJournalForm
     Width = 1084
     Height = 330
     TabOrder = 3
+    ExplicitTop = 77
     ExplicitWidth = 1084
-    ExplicitHeight = 350
+    ExplicitHeight = 330
     ClientRectBottom = 330
     ClientRectRight = 1084
     inherited tsMain: TcxTabSheet
       ExplicitWidth = 1084
-      ExplicitHeight = 350
+      ExplicitHeight = 330
       inherited cxGrid: TcxGrid
         Width = 1084
         Height = 330
         ExplicitWidth = 1084
-        ExplicitHeight = 350
+        ExplicitHeight = 330
         inherited cxGridDBTableView: TcxGridDBTableView
           DataController.Summary.FooterSummaryItems = <
             item
@@ -406,19 +407,20 @@ inherited PromoJournalForm: TPromoJournalForm
       Caption = #1056#1072#1079#1074#1077#1088#1085#1091#1090#1100' '#1087#1086' '#1082#1086#1085#1090#1088#1072#1075#1077#1085#1090#1072#1084
       Hint = #1054#1073#1085#1086#1074#1080#1090#1100' '#1076#1072#1085#1085#1099#1077
       ImageIndex = 4
+      ShortCut = 116
       RefreshOnTabSetChanges = False
     end
     inherited actInsert: TdsdInsertUpdateAction
-      FormName = 'TPromoForm'
-      FormNameParam.Value = 'TPromoForm'
+      FormName = 'TPromoManagerForm'
+      FormNameParam.Value = 'TPromoManagerForm'
     end
     inherited actInsertMask: TdsdInsertUpdateAction
       FormName = 'TPromoForm'
       FormNameParam.Value = 'TPromoForm'
     end
     inherited actUpdate: TdsdInsertUpdateAction
-      FormName = 'TPromoForm'
-      FormNameParam.Value = 'TPromoForm'
+      FormName = 'TPromoManagerForm'
+      FormNameParam.Value = 'TPromoManagerForm'
       GuiParams = <
         item
           Name = 'Id'
@@ -864,10 +866,6 @@ inherited PromoJournalForm: TPromoJournalForm
         item
           Visible = True
           ItemName = 'dxBarStatic'
-        end
-        item
-          Visible = True
-          ItemName = 'dxBarButton2'
         end
         item
           Visible = True

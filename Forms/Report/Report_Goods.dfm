@@ -1,31 +1,29 @@
 inherited Report_GoodsForm: TReport_GoodsForm
   Caption = #1054#1090#1095#1077#1090' <'#1087#1086' '#1090#1086#1074#1072#1088#1091'>'
   ClientHeight = 341
-  ClientWidth = 1026
+  ClientWidth = 1071
   AddOnFormData.ExecuteDialogAction = ExecuteDialog
   AddOnFormData.Params = FormParams
-  ExplicitWidth = 1042
+  ExplicitWidth = 1087
   ExplicitHeight = 379
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
     Top = 80
-    Width = 1026
+    Width = 1071
     Height = 261
     TabOrder = 3
     ExplicitTop = 80
     ExplicitWidth = 1026
     ExplicitHeight = 261
     ClientRectBottom = 261
-    ClientRectRight = 1026
+    ClientRectRight = 1071
     inherited tsMain: TcxTabSheet
       ExplicitWidth = 1026
       ExplicitHeight = 261
       inherited cxGrid: TcxGrid
-        Width = 1026
+        Width = 1071
         Height = 261
-        ExplicitLeft = 3
-        ExplicitTop = 40
         ExplicitWidth = 1026
         ExplicitHeight = 261
         inherited cxGridDBTableView: TcxGridDBTableView
@@ -862,7 +860,7 @@ inherited Report_GoodsForm: TReport_GoodsForm
     end
   end
   inherited Panel: TPanel
-    Width = 1026
+    Width = 1071
     Height = 54
     ExplicitWidth = 1026
     ExplicitHeight = 54
@@ -966,6 +964,14 @@ inherited Report_GoodsForm: TReport_GoodsForm
       State = cbsChecked
       TabOrder = 12
       Width = 113
+    end
+    object cbPaption: TcxCheckBox
+      Left = 938
+      Top = 30
+      Caption = #1055#1086' '#1087#1072#1088#1090#1080#1103#1084
+      Properties.ReadOnly = False
+      TabOrder = 13
+      Width = 95
     end
   end
   inherited cxPropertiesStore: TcxPropertiesStore

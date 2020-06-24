@@ -232,7 +232,7 @@ BEGIN
                                                        ON MI_Send.MovementId = Movement_Send.Id
                                                       AND MI_Send.DescId = zc_MI_Master()
                                                       AND MI_Send.isErased = FALSE
-                        WHERE Movement_Send.OperDate >= inStartDate - INTERVAL '1 DAY' AND Movement_Send.OperDate < inStartDate + INTERVAL '1 DAY'
+                        WHERE Movement_Send.OperDate >= inStartDate - INTERVAL '30 DAY' AND Movement_Send.OperDate < inStartDate + INTERVAL '7 DAY'   ---INTERVAL '1 DAY' AND Movement_Send.OperDate < inStartDate + INTERVAL '1 DAY'
                           AND Movement_Send.DescId = zc_Movement_Send()
                           AND Movement_Send.StatusId IN (zc_Enum_Status_Complete(), zc_Enum_Status_UnComplete())
                           AND COALESCE (MovementBoolean_Deferred.ValueData, FALSE) = FALSE

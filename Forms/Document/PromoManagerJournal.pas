@@ -1,4 +1,4 @@
-unit PromoJournal;
+unit PromoManagerJournal;
 
 interface
 
@@ -27,7 +27,7 @@ uses
   dxSkinXmas2008Blue;
 
 type
-  TPromoJournalForm = class(TAncestorJournalForm)
+  TPromoManagerJournalForm = class(TAncestorJournalForm)
     PromoKindName: TcxGridDBColumn;
     PriceListName: TcxGridDBColumn;
     StartPromo: TcxGridDBColumn;
@@ -103,6 +103,6 @@ implementation
 {$R *.dfm}
 
 initialization
-  RegisterClass(TPromoJournalForm);
+  RegisterClass(TPromoManagerJournalForm);
 
 end.

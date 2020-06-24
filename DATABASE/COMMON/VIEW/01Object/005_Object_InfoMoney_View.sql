@@ -1,4 +1,5 @@
 -- View: Object_InfoMoney_View
+--DROP VIEW IF EXISTS Object_InfoMoney_View CASCADE;
 
 CREATE OR REPLACE VIEW Object_InfoMoney_View AS
   SELECT ObjectLink_InfoMoney_InfoMoneyGroup.ChildObjectId               AS InfoMoneyGroupId
@@ -19,9 +20,13 @@ CREATE OR REPLACE VIEW Object_InfoMoney_View AS
 
        , Object_InfoMoney.isErased              AS isErased
 
-       , Object_CashFlow.Id                     AS CashFlowId
-       , Object_CashFlow.ObjectCode             AS CashFlowCode
-       , Object_CashFlow.ValueData              AS CashFlowName
+       , Object_CashFlow_in.Id                  AS CashFlowId_in
+       , Object_CashFlow_in.ObjectCode          AS CashFlowCode_in
+       , Object_CashFlow_in.ValueData           AS CashFlowName_in
+       
+       , Object_CashFlow_out.Id                 AS CashFlowId_out
+       , Object_CashFlow_out.ObjectCode         AS CashFlowCode_out
+       , Object_CashFlow_out.ValueData          AS CashFlowName_out
   FROM Object AS Object_InfoMoney
        LEFT JOIN ObjectLink AS ObjectLink_InfoMoney_InfoMoneyDestination
                             ON ObjectLink_InfoMoney_InfoMoneyDestination.ObjectId = Object_InfoMoney.Id
@@ -33,10 +38,15 @@ CREATE OR REPLACE VIEW Object_InfoMoney_View AS
                            AND ObjectLink_InfoMoney_InfoMoneyGroup.DescId = zc_ObjectLink_InfoMoney_InfoMoneyGroup()
        LEFT JOIN Object AS Object_InfoMoneyGroup ON Object_InfoMoneyGroup.Id = ObjectLink_InfoMoney_InfoMoneyGroup.ChildObjectId
 
-       LEFT JOIN ObjectLink AS ObjectLink_InfoMoney_CashFlow
-                            ON ObjectLink_InfoMoney_CashFlow.ObjectId = Object_InfoMoney.Id
-                           AND ObjectLink_InfoMoney_CashFlow.DescId = zc_ObjectLink_InfoMoney_CashFlow()
-       LEFT JOIN Object AS Object_CashFlow ON Object_CashFlow.Id = ObjectLink_InfoMoney_CashFlow.ChildObjectId
+       LEFT JOIN ObjectLink AS ObjectLink_InfoMoney_CashFlow_in
+                            ON ObjectLink_InfoMoney_CashFlow_in.ObjectId = Object_InfoMoney.Id
+                           AND ObjectLink_InfoMoney_CashFlow_in.DescId = zc_ObjectLink_InfoMoney_CashFlow_in()
+       LEFT JOIN Object AS Object_CashFlow_in ON Object_CashFlow_in.Id = ObjectLink_InfoMoney_CashFlow_in.ChildObjectId
+
+       LEFT JOIN ObjectLink AS ObjectLink_InfoMoney_CashFlow_out
+                            ON ObjectLink_InfoMoney_CashFlow_out.ObjectId = Object_InfoMoney.Id
+                           AND ObjectLink_InfoMoney_CashFlow_out.DescId = zc_ObjectLink_InfoMoney_CashFlow_out()
+       LEFT JOIN Object AS Object_CashFlow_out ON Object_CashFlow_out.Id = ObjectLink_InfoMoney_CashFlow_out.ChildObjectId
 
  WHERE Object_InfoMoney.DescId = zc_Object_InfoMoney();
 

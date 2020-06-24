@@ -473,10 +473,11 @@ type
     actOpenFormPUSH: TdsdOpenForm;
     actSendCashJournalVip: TdsdOpenForm;
     VIP5: TMenuItem;
-    MainDiscountExternalName: TcxGridDBColumn;
+    MainGoodsDiscountName: TcxGridDBColumn;
     MemDataDISCEXTID: TIntegerField;
     MemDataDISCEXTNAME: TStringField;
-    CheckDiscountExternalName: TcxGridDBColumn;
+    MemDataGOODSDIID: TIntegerField;
+    MemDataGOODSDINAME: TStringField;
     procedure WM_KEYDOWN(var Msg: TWMKEYDOWN);
     procedure FormCreate(Sender: TObject);
     procedure actChoiceGoodsInRemainsGridExecute(Sender: TObject);
@@ -1050,8 +1051,6 @@ begin
         ('NDS').AsFloat;
       MemData.FieldByName('NDSKINDID').AsInteger :=
         FLocalDataBaseDiff.FieldByName('NDSKINDID').AsInteger;
-      MemData.FieldByName('DISCEXTID').AsInteger :=
-        FLocalDataBaseDiff.FieldByName('DISCEXTID').AsInteger;
       MemData.FieldByName('REMAINS').AsFloat := FLocalDataBaseDiff.FieldByName
         ('REMAINS').AsFloat;
       MemData.FieldByName('MCSVALUE').AsFloat := FLocalDataBaseDiff.FieldByName
@@ -1088,6 +1087,20 @@ begin
         FLocalDataBaseDiff.FieldByName('DEFERENDS').AsVariant;
       MemData.FieldByName('REMAINSSUN').AsVariant :=
         FLocalDataBaseDiff.FieldByName('REMAINSSUN').AsVariant;
+      MemData.FieldByName('DISCEXTID').AsVariant :=
+        FLocalDataBaseDiff.FieldByName('DISCEXTID').AsVariant;
+      if FLocalDataBaseDiff.FieldByName('DISCEXTNAM').IsNull then
+        MemData.FieldByName('DISCEXTNAME').AsVariant :=
+          FLocalDataBaseDiff.FieldByName('DISCEXTNAM').AsVariant
+      else MemData.FieldByName('DISCEXTNAME').AsString :=
+          Trim(FLocalDataBaseDiff.FieldByName('DISCEXTNAM').AsString);
+      MemData.FieldByName('GOODSDIID').AsVariant :=
+        FLocalDataBaseDiff.FieldByName('GOODSDIID').AsVariant;
+      if FLocalDataBaseDiff.FieldByName('GOODSDINAM').IsNull then
+        MemData.FieldByName('GOODSDINAME').AsVariant :=
+          FLocalDataBaseDiff.FieldByName('GOODSDINAM').AsVariant
+      else MemData.FieldByName('GOODSDINAME').AsString :=
+          Trim(FLocalDataBaseDiff.FieldByName('GOODSDINAM').AsString);
       FLocalDataBaseDiff.Edit;
       FLocalDataBaseDiff.DeleteRecord;
       FLocalDataBaseDiff.Post;
@@ -2524,6 +2537,8 @@ var
   HelsiError: Boolean;
   nOldColor: Integer;
   nSumAll: Currency;
+  GoodsId: Integer;
+  PartionDateKindId, NDSKindId, DiscountExternalID: Variant;
 begin
   if CheckCDS.RecordCount = 0 then
     exit;
@@ -2588,36 +2603,100 @@ begin
       exit;
 
   // Контроль чека до печати
-  with CheckCDS do
-  begin
-    First;
-    while not Eof do
+  GoodsId := RemainsCDS.FieldByName('Id').AsInteger;
+  PartionDateKindId := RemainsCDS.FieldByName('PartionDateKindId').AsVariant;
+  NDSKindId := RemainsCDS.FieldByName('NDSKindId').AsVariant;
+  DiscountExternalID := RemainsCDS.FieldByName('DiscountExternalID').AsVariant;
+  try
+    RemainsCDS.DisableControls;
+    RemainsCDS.Filtered := false;
+    with CheckCDS do
     begin
-
-      if (FieldByName('Multiplicity').asCurrency <> 0) and
-        (FieldByName('Price').asCurrency <> FieldByName('PriceSale').asCurrency)
-        and (trunc(FieldByName('Amount').asCurrency /
-        FieldByName('Multiplicity').asCurrency * 100) mod 100 <> 0) then
+      First;
+      while not Eof do
       begin
-        ShowMessage('Для медикамента '#13#10 + FieldByName('GoodsName').AsString
-          + #13#10'установлена кратность при отпуске со скидкой.'#13#10#13#10 +
-          'Отпускать со скидкой разрешено кратно ' + FieldByName('Multiplicity')
-          .AsString + ' упаковки.');
-        exit;
-      end;
 
-      if (FieldByName('PartionDateKindId').AsInteger <> 0) and
-        (FieldByName('AmountMonth').AsInteger = 0) and
-        not(actSpecCorr.Checked or actSpec.Checked) and
-        (FieldByName('Amount').AsCurrency <> 0) then
-      begin
-        ShowMessage('Ошибка.В чеке использован прсроченный товар '#13#10 +
-          FieldByName('GoodsName').AsString);
-        exit;
-      end;
+        RemainsCDS.Locate('ID;PartionDateKindId;NDSKindId;DiscountExternalID',
+            VarArrayOf([FieldByName('GoodsId').AsInteger,
+            FieldByName('PartionDateKindId').AsVariant,
+            FieldByName('NDSKindId').AsVariant,
+            FieldByName('DiscountExternalID').AsVariant]), []);
 
-      Next;
+        if (FieldByName('Multiplicity').asCurrency <> 0) and
+          (FieldByName('Price').asCurrency <> FieldByName('PriceSale').asCurrency)
+          and (trunc(FieldByName('Amount').asCurrency /
+          FieldByName('Multiplicity').asCurrency * 100) mod 100 <> 0) then
+        begin
+          ShowMessage('Для медикамента '#13#10 + FieldByName('GoodsName').AsString
+            + #13#10'установлена кратность при отпуске со скидкой.'#13#10#13#10 +
+            'Отпускать со скидкой разрешено кратно ' + FieldByName('Multiplicity')
+            .AsString + ' упаковки.');
+          exit;
+        end;
+
+        if (FieldByName('PartionDateKindId').AsInteger <> 0) and
+          (FieldByName('AmountMonth').AsInteger = 0) and
+          not(actSpecCorr.Checked or actSpec.Checked) and
+          (FieldByName('Amount').AsCurrency <> 0) then
+        begin
+          ShowMessage('Ошибка.В чеке использован прсроченный товар '#13#10 +
+            FieldByName('GoodsName').AsString);
+          exit;
+        end;
+
+        if UnitConfigCDS.FindField('DiscountExternalId').AsInteger <> 0 then
+        begin
+          if (DiscountServiceForm.gCode = UnitConfigCDS.FindField('DiscountExternalCode').AsInteger) then
+          begin
+            if FieldByName('DiscountExternalID').AsInteger <> UnitConfigCDS.FindField('DiscountExternalId').AsInteger then
+            begin
+              ShowMessage('Ошибка.Товар <' + FieldByName('GoodsName').AsString + '> не участвует в дисконтной программе ' + UnitConfigCDS.FindField('DiscountExternalName').AsString + '!');
+              exit;
+            end;
+          end else if FieldByName('DiscountExternalID').AsInteger <> 0 then
+          begin
+            ShowMessage('Ошибка.Товар <' + FieldByName('GoodsName').AsString + '> предназначен для дисконтной программе ' + UnitConfigCDS.FindField('DiscountExternalName').AsString + '!');
+            exit;
+          end;
+        end;
+
+//        if UnitConfigCDS.FindField('DiscountExternalId').AsInteger <> 0 then
+//        begin
+//          if (DiscountServiceForm.gCode = UnitConfigCDS.FindField('DiscountExternalCode').AsInteger) then
+//          begin
+//            if FieldByName('DiscountExternalID').AsInteger <> UnitConfigCDS.FindField('DiscountExternalId').AsInteger then
+//            begin
+//              ShowMessage('Ошибка.Товар <' + FieldByName('GoodsName').AsString + '> не участвует в дисконтной программе ' + UnitConfigCDS.FindField('DiscountExternalName').AsString + '!');
+//              exit;
+//            end;
+//          end else if FieldByName('DiscountExternalID').AsInteger <> 0 then
+//          begin
+//            ShowMessage('Ошибка.Товар <' + FieldByName('GoodsName').AsString + '> предназначен для дисконтной программе ' + UnitConfigCDS.FindField('DiscountExternalName').AsString + '!');
+//            exit;
+//          end;
+//        end;
+
+        if (DiscountServiceForm.gCode = UnitConfigCDS.FindField('GoodsDiscountCode').AsInteger) then
+        begin
+          if RemainsCDS.FieldByName('GoodsDiscountId').AsInteger <> UnitConfigCDS.FindField('GoodsDiscountId').AsInteger then
+          begin
+            ShowMessage('Ошибка.Товар <' + FieldByName('GoodsName').AsString + '> не участвует в дисконтной программе ' + UnitConfigCDS.FindField('GoodsDiscountName').AsString + '!');
+            exit;
+          end;
+        end else if RemainsCDS.FieldByName('GoodsDiscountId').AsInteger = UnitConfigCDS.FindField('GoodsDiscountId').AsInteger then
+        begin
+          ShowMessage('Ошибка.Товар <' + FieldByName('GoodsName').AsString + '> предназначен для дисконтной программе ' + UnitConfigCDS.FindField('GoodsDiscountName').AsString + '!');
+          exit;
+        end;
+
+        Next;
+      end;
     end;
+  finally
+    RemainsCDS.Filtered := True;
+    RemainsCDS.Locate('Id;PartionDateKindId;NDSKindId;DiscountExternalID',
+      VarArrayOf([GoodsId, PartionDateKindId, NDSKindId, DiscountExternalID]), []);
+    RemainsCDS.EnableControls;
   end;
 
   if UnitConfigCDS.FieldByName('LoyaltySaveMoneyCount').AsInteger > 0 then
@@ -3066,8 +3145,7 @@ begin
             vipList.FieldByName('Price').AsFloat;
         // ***21.10.18
         GoodsId := RemainsCDS.FieldByName('Id').AsInteger;
-        PartionDateKindId := RemainsCDS.FieldByName('PartionDateKindId')
-          .AsVariant;
+        PartionDateKindId := RemainsCDS.FieldByName('PartionDateKindId').AsVariant;
         NDSKindId := RemainsCDS.FieldByName('NDSKindId').AsVariant;
         DiscountExternalID := RemainsCDS.FieldByName('DiscountExternalID').AsVariant;
         RemainsCDS.DisableControls;
@@ -4019,7 +4097,7 @@ begin
         IntToStr(MemData.FieldByName('Id').AsInteger) +
         ' and PartionDateKindId = ' + IntToSVar(MemData.FieldByName('PDKINDID').AsVariant) +
         ' and NDSKindId = ' + IntToSVar(MemData.FieldByName('NDSKindId').AsVariant) +
-        ' and DiscountExternalID = ' + IntToSVar(MemData.FieldByName('DiscountExternalID').AsVariant);
+        ' and DiscountExternalID = ' + IntToSVar(MemData.FieldByName('DISCEXTID').AsVariant);
       CheckCDS.Filtered := True;
       CheckCDS.First;
       while not CheckCDS.Eof do
@@ -4081,6 +4159,10 @@ begin
           MemData.FieldByName('REMAINSSUN').AsVariant;
         RemainsCDS.FieldByName('Color_calc').AsVariant :=
           MemData.FieldByName('COLORCALC').AsVariant;
+        RemainsCDS.FieldByName('GoodsDiscountID').AsVariant :=
+          MemData.FieldByName('GOODSDIID').AsVariant;
+        RemainsCDS.FieldByName('GoodsDiscountName').AsVariant :=
+          MemData.FieldByName('GOODSDINAME').AsVariant;
         RemainsCDS.Post;
       End
       else
@@ -4130,6 +4212,10 @@ begin
             MemData.FieldByName('REMAINSSUN').AsVariant;
           RemainsCDS.FieldByName('Color_calc').AsVariant :=
             MemData.FieldByName('COLORCALC').AsVariant;
+          RemainsCDS.FieldByName('GoodsDiscountID').AsVariant :=
+            MemData.FieldByName('GOODSDIID').AsVariant;
+          RemainsCDS.FieldByName('GoodsDiscountName').AsVariant :=
+            MemData.FieldByName('GOODSDINAME').AsVariant;
           RemainsCDS.Post;
         End;
       End;
@@ -4442,6 +4528,18 @@ begin
   edPrice.Visible := lblPrice.Visible;
   lblAmount.Visible := lblPrice.Visible;
   edDiscountAmount.Visible := lblAmount.Visible;
+
+  if pnlDiscount.Visible then
+  begin
+    try
+      RemainsCDS.DisableControls;
+      RemainsCDS.Filtered := false;
+      RemainsCDS.Filter := '(Remains <> 0 or Reserved <> 0 or DeferredSend <> 0) and GoodsDiscountID = ' + IntToStr(DiscountServiceForm.gDiscountExternalId)
+    finally
+      RemainsCDS.Filtered := true;
+      RemainsCDS.EnableControls;
+    end;
+  end;
 end;
 
 // ***28.01.19
@@ -6092,6 +6190,36 @@ begin
         exit;
       end;
     end;
+
+//    if UnitConfigCDS.FindField('DiscountExternalId').AsInteger <> 0 then
+//    begin
+//      if (DiscountServiceForm.gCode = UnitConfigCDS.FindField('DiscountExternalCode').AsInteger) then
+//      begin
+//        if SourceClientDataSet.FieldByName('DiscountExternalID').AsInteger <> UnitConfigCDS.FindField('DiscountExternalId').AsInteger then
+//        begin
+//          ShowMessage('Ошибка.Выбранный код товара не участвует в дисконтной программе ' + UnitConfigCDS.FindField('DiscountExternalName').AsString + '!');
+//          exit;
+//        end;
+//      end else if SourceClientDataSet.FieldByName('DiscountExternalID').AsInteger <> 0 then
+//      begin
+//        ShowMessage('Ошибка.Выбранный код товара предназначен для дисконтной программе ' + UnitConfigCDS.FindField('DiscountExternalName').AsString + '!');
+//        exit;
+//      end;
+//    end;
+
+    if DiscountServiceForm.gCode = 3 then
+    begin
+      if SourceClientDataSet.FieldByName('GoodsDiscountId').AsInteger <> UnitConfigCDS.FindField('GoodsDiscountId').AsInteger then
+      begin
+        ShowMessage('Ошибка.Выбранный код товара не участвует в дисконтной программе ' + UnitConfigCDS.FindField('GoodsDiscountName').AsString + '!');
+        exit;
+      end;
+    end else if SourceClientDataSet.FieldByName('GoodsDiscountId').AsInteger = UnitConfigCDS.FindField('GoodsDiscountId').AsInteger then
+    begin
+      ShowMessage('Ошибка.Выбранный код товара предназначен для дисконтной программе ' + UnitConfigCDS.FindField('GoodsDiscountName').AsString + '!');
+      exit;
+    end;
+
   end;
 
   //
@@ -6715,7 +6843,7 @@ begin
         IntToStr(ADiffCDS.FieldByName('Id').AsInteger) +
         ' and PartionDateKindId = ' + IntToSVar(ADiffCDS.FieldByName('PDKINDID').AsVariant) +
         ' and NDSKindId = ' + IntToSVar(ADiffCDS.FieldByName('NDSKindId').AsVariant) +
-        ' and DiscountExternalID = ' + IntToSVar(ADiffCDS.FieldByName('DiscountExternalID').AsVariant);
+        ' and DiscountExternalID = ' + IntToSVar(ADiffCDS.FieldByName('DISCEXTID').AsVariant);
       CheckCDS.Filtered := True;
       CheckCDS.First;
       Amount_find := 0;
@@ -7890,7 +8018,7 @@ begin
       if ((AGoodsId = 0) or (CheckCDS.FieldByName('GoodsId').AsInteger = AGoodsId)
         and (CheckCDS.FieldByName('PartionDateKindId').AsInteger = APartionDateKindId)
         and (CheckCDS.FieldByName('NDSKindId').AsInteger = ANDSKindId)
-        and (CheckCDS.FieldByName('DiscountExternalID').AsInteger = DiscountExternalID)
+        and (CheckCDS.FieldByName('DiscountExternalID').AsInteger = ADiscountExternalID)
         and (CheckCDS.FieldByName('PriceSale').asCurrency = APriceSale))
         and RemainsCDS.Locate('Id;PartionDateKindId;NDSKindId;DiscountExternalID',
         VarArrayOf([CheckCDS.FieldByName('GoodsId').AsInteger,

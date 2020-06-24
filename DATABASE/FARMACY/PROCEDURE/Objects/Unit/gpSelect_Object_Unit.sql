@@ -31,7 +31,7 @@ RETURNS TABLE (Id Integer, Code Integer, Name TVarChar
              , KoeffInSUN_v3 TFloat, KoeffOutSUN_v3 TFloat
              , T1_SUN_v2 TFloat, T2_SUN_v2 TFloat, T1_SUN_v4 TFloat
              , SunIncome TFloat, Sun_v2Income TFloat, Sun_v4Income TFloat
-             , HT_SUN_v1 TFloat, HT_SUN_v2 TFloat, HT_SUN_v4 TFloat
+             , HT_SUN_v1 TFloat, HT_SUN_v2 TFloat, HT_SUN_v4 TFloat, HT_SUN_All TFloat
              , LimitSUN_N TFloat
              , DeySupplSun1 TFloat, MonthSupplSun1 TFloat
              , StartServiceNigth TDateTime, EndServiceNigth TDateTime
@@ -155,6 +155,7 @@ BEGIN
       , COALESCE (ObjectFloat_HT_SUN_v1.ValueData,0) ::TFloat AS HT_SUN_v1
       , COALESCE (ObjectFloat_HT_SUN_v2.ValueData,0) ::TFloat AS HT_SUN_v2
       , COALESCE (ObjectFloat_HT_SUN_v4.ValueData,0) ::TFloat AS HT_SUN_v4
+      , COALESCE (ObjectFloat_HT_SUN_All.ValueData,0) ::TFloat AS HT_SUN_All
       
       , COALESCE (ObjectFloat_LimitSUN_N.ValueData,0) ::TFloat AS LimitSUN_N
 
@@ -462,6 +463,9 @@ BEGIN
         LEFT JOIN ObjectFloat AS ObjectFloat_HT_SUN_v4
                               ON ObjectFloat_HT_SUN_v4.ObjectId = Object_Unit.Id
                              AND ObjectFloat_HT_SUN_v4.DescId = zc_ObjectFloat_Unit_HT_SUN_v4()
+        LEFT JOIN ObjectFloat AS ObjectFloat_HT_SUN_All
+                              ON ObjectFloat_HT_SUN_All.ObjectId = Object_Unit.Id
+                             AND ObjectFloat_HT_SUN_All.DescId = zc_ObjectFloat_Unit_HT_SUN_All()
 
         LEFT JOIN ObjectFloat AS ObjectFloat_LimitSUN_N
                               ON ObjectFloat_LimitSUN_N.ObjectId = Object_Unit.Id
