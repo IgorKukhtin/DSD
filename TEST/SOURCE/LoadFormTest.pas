@@ -2818,6 +2818,9 @@ end;
 
 procedure TLoadFormTest.LoadPromoFormTest;
 begin
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TPromoManagerDialogForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TPromoManagerDialogForm');
+
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TPromoManagerJournalForm'));
   TdsdFormStorageFactory.GetStorage.Load('TPromoManagerJournalForm');
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TPromoManagerForm'));

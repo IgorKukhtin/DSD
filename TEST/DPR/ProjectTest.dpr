@@ -1172,7 +1172,8 @@ uses
   CashFlow in '..\..\Forms\Guides\CashFlow.pas' {CashFlowForm: TParentForm},
   MovementPromo_DateDialog in '..\..\Forms\Document\MovementPromo_DateDialog.pas' {MovementPromo_DateDialogForm: TParentForm},
   PromoManager in '..\..\Forms\Document\PromoManager.pas' {PromoManagerForm: TParentForm},
-  PromoManagerJournal in '..\..\Forms\Document\PromoManagerJournal.pas' {PromoManagerJournalForm: TParentForm};
+  PromoManagerJournal in '..\..\Forms\Document\PromoManagerJournal.pas' {PromoManagerJournalForm: TParentForm},
+  PromoManagerDialog in '..\..\Forms\Document\PromoManagerDialog.pas' {PromoManagerDialogForm: TParentForm};
 
 {$R *.RES}
 {$R DevExpressRus.res}

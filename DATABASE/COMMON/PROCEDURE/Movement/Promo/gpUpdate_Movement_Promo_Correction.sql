@@ -1,9 +1,12 @@
--- Function: gpUpdate_Movement_Promo_Checked()
+-- Function: gpUpdate_Movement_Promo_Correction()
 
-DROP FUNCTION IF EXISTS gpUpdate_Movement_Promo_Checked (Integer, TVarChar);
+DROP FUNCTION IF EXISTS gpUpdate_Movement_Promo_Correction (Integer, TVarChar);
+DROP FUNCTION IF EXISTS gpUpdate_Movement_Promo_Correction (Integer, Integer, TVarChar, TVarChar);
 
-CREATE OR REPLACE FUNCTION gpUpdate_Movement_Promo_Checked(
+CREATE OR REPLACE FUNCTION gpUpdate_Movement_Promo_Correction(
     IN inId                    Integer   , --  люч объекта <Ёлемент документа>
+    IN inPromoStateKindId      Integer   , 
+    IN inComment               TVarChar  , 
     IN inSession               TVarChar    -- сесси€ пользовател€
 )
 RETURNS RECORD
