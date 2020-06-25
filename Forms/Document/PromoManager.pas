@@ -199,21 +199,9 @@ type
     mactUpdate_Movement_Promo_Data: TMultiAction;
     dxBarButton11: TdxBarButton;
     tsPromoPartnerList: TcxTabSheet;
-    grPartnerList: TcxGrid;
-    grtvPartnerList: TcxGridDBTableView;
-    PartnerListRetailName: TcxGridDBColumn;
-    PartnerListJuridicalName: TcxGridDBColumn;
-    PartnerListCode: TcxGridDBColumn;
-    PartnerListName: TcxGridDBColumn;
-    PartnerListAreaName: TcxGridDBColumn;
-    grlPartnerList: TcxGridLevel;
     PartnerListCDS: TClientDataSet;
     PartnerLisrDS: TDataSource;
     spSelect_MovementItem_PromoPartner: TdsdStoredProc;
-    PartnerListContractCode: TcxGridDBColumn;
-    PartnerListContractName: TcxGridDBColumn;
-    PartnerListContractTagName: TcxGridDBColumn;
-    PartnerListIsErased: TcxGridDBColumn;
     dsdDBViewAddOnPartnerList: TdsdDBViewAddOn;
     actPartnerListRefresh: TdsdDataSetRefresh;
     mactAddAllPartner: TMultiAction;
@@ -270,8 +258,6 @@ type
     dsdDBViewAddOnPlan: TdsdDBViewAddOn;
     actGoodsKindCompleteChoiceForm: TOpenChoiceForm;
     PriceTender: TcxGridDBColumn;
-    cxSplitter4: TcxSplitter;
-    cxSplitter2: TcxSplitter;
     actUserChoice: TOpenChoiceForm;
     actUpdateDataSetMessage: TdsdUpdateDataSet;
     edPromoStateKind: TcxButtonEdit;
@@ -310,16 +296,6 @@ type
     cxLabel25: TcxLabel;
     edSignInternal: TcxButtonEdit;
     GuidesSignInternal: TdsdGuides;
-    cxGridPromoStateKind: TcxGrid;
-    cxGridDBTableViewPromoStateKind: TcxGridDBTableView;
-    psOrd: TcxGridDBColumn;
-    psisQuickly: TcxGridDBColumn;
-    psPromoStateKindName: TcxGridDBColumn;
-    psComment: TcxGridDBColumn;
-    psInsertName: TcxGridDBColumn;
-    psInsertDate: TcxGridDBColumn;
-    psIsErased: TcxGridDBColumn;
-    cxGridLevel4: TcxGridLevel;
     actOpenProtocoPromoStateKind: TdsdOpenForm;
     cbPromoStateKind: TcxCheckBox;
     PromoStateKindPopupMenu: TPopupMenu;
@@ -386,6 +362,29 @@ type
     ññGroupNum: TcxGridDBColumn;
     cxGridLevel5: TcxGridLevel;
     cxSplitter5: TcxSplitter;
+    grPartnerList: TcxGrid;
+    grtvPartnerList: TcxGridDBTableView;
+    PartnerListRetailName: TcxGridDBColumn;
+    PartnerListJuridicalName: TcxGridDBColumn;
+    PartnerListCode: TcxGridDBColumn;
+    PartnerListName: TcxGridDBColumn;
+    PartnerListAreaName: TcxGridDBColumn;
+    PartnerListContractCode: TcxGridDBColumn;
+    PartnerListContractName: TcxGridDBColumn;
+    PartnerListContractTagName: TcxGridDBColumn;
+    PartnerListIsErased: TcxGridDBColumn;
+    grlPartnerList: TcxGridLevel;
+    cxGridPromoStateKind: TcxGrid;
+    cxGridDBTableViewPromoStateKind: TcxGridDBTableView;
+    psOrd: TcxGridDBColumn;
+    psisQuickly: TcxGridDBColumn;
+    psPromoStateKindName: TcxGridDBColumn;
+    psComment: TcxGridDBColumn;
+    psInsertName: TcxGridDBColumn;
+    psInsertDate: TcxGridDBColumn;
+    psIsErased: TcxGridDBColumn;
+    cxGridLevel4: TcxGridLevel;
+    cxSplitter4: TcxSplitter;
   private
     { Private declarations }
   public

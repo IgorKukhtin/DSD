@@ -740,15 +740,15 @@ BEGIN
                         LEFT JOIN Object AS Object_GoodsKind_complete ON Object_GoodsKind_complete.Id = ObjectLink_GoodsKindComplete.ChildObjectId
                    )
    -- –≈«”À‹“¿“
-   SELECT CASE WHEN inIsPartion = TRUE THEN tmpDataAll.MovementId ELSE 0 END AS MovementId
-        , CASE WHEN inIsPartion = TRUE THEN tmpDataAll.InvNumber ELSE NULL END ::TVarChar AS InvNumber
+   SELECT tmpDataAll.MovementId AS MovementId
+        , tmpDataAll.InvNumber  ::TVarChar AS InvNumber
         , tmpDataAll.OperDate
-        , CASE WHEN inIsPartion = TRUE THEN tmpDataAll.OperDatePartner ELSE NULL END ::TDateTime AS OperDatePartner
+        , tmpDataAll.OperDatePartner ::TDateTime AS OperDatePartner
         , tmpDataAll.isPeresort
 
-        , CASE WHEN inIsPartion = TRUE THEN tmpDataAll.MovementDescName ELSE NULL END ::TVarChar AS MovementDescName
+        , tmpDataAll.MovementDescName ::TVarChar AS MovementDescName
 
-        , CASE WHEN inIsPartion = TRUE THEN tmpDataAll.MovementDescName_order ELSE NULL END ::TVarChar AS MovementDescName_order
+        , tmpDataAll.MovementDescName_order  ::TVarChar AS MovementDescName_order
 
         , tmpDataAll.isActive
         , tmpDataAll.isRemains
@@ -809,13 +809,13 @@ BEGIN
         , tmpDataAll.isExistsPage3
 
    FROM tmpDataAll
-   GROUP BY CASE WHEN inIsPartion = TRUE THEN tmpDataAll.MovementId ELSE 0 END
-        , CASE WHEN inIsPartion = TRUE THEN tmpDataAll.InvNumber ELSE NULL END 
+   GROUP BY tmpDataAll.MovementId
+        , tmpDataAll.InvNumber
         , tmpDataAll.OperDate
-        , CASE WHEN inIsPartion = TRUE THEN tmpDataAll.OperDatePartner ELSE NULL END
+        , tmpDataAll.OperDatePartner
         , tmpDataAll.isPeresort
-        , CASE WHEN inIsPartion = TRUE THEN tmpDataAll.MovementDescName ELSE NULL END
-        , CASE WHEN inIsPartion = TRUE THEN tmpDataAll.MovementDescName_order ELSE NULL END
+        , tmpDataAll.MovementDescName
+        , tmpDataAll.MovementDescName_order
         , tmpDataAll.isActive
         , tmpDataAll.isRemains
         , tmpDataAll.isRePrice
