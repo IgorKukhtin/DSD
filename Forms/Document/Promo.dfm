@@ -3,6 +3,7 @@
   Caption = #1044#1086#1082#1091#1084#1077#1085#1090' <'#1040#1082#1094#1080#1103'>'
   ClientHeight = 684
   ClientWidth = 1366
+  ExplicitLeft = -593
   ExplicitWidth = 1382
   ExplicitHeight = 719
   PixelsPerInch = 96
@@ -4549,7 +4550,7 @@
     object bsSign: TdxBarSubItem
       Caption = #1055#1086#1076#1087#1080#1089#1100
       Category = 0
-      Visible = ivAlways
+      Visible = ivNever
       ItemLinks = <
         item
           Visible = True
