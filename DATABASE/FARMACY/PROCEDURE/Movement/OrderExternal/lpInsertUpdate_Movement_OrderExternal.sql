@@ -29,7 +29,7 @@ BEGIN
      -- сохранили <Документ>
      ioId := lpInsertUpdate_Movement (ioId, zc_Movement_OrderExternal(), inInvNumber, inOperDate, NULL);
 
-     IF COALESCE(inLetterSubject, '') = '' AND COALESCE (inToId, 0) <> 0 AND COALESCE (inFromId, 0) <> 0
+     IF COALESCE(inLetterSubject, '') = '' AND COALESCE (inToId, 0) <> 0 AND COALESCE (inContractId, 0) <> 0
      THEN
        WITH tmpObject_ImportExportLink AS (SELECT Object_ImportExportLink.ValueData    AS StringKey
                                                 , ObjectLink_ObjectMain.ChildObjectId  AS ObjectMainId
@@ -55,7 +55,7 @@ BEGIN
        INTO inLetterSubject
        FROM tmpObject_ImportExportLink 
        WHERE tmpObject_ImportExportLink.ObjectMainId = inToId
-         AND tmpObject_ImportExportLink.ObjectChildId = inFromId
+         AND tmpObject_ImportExportLink.ObjectChildId = inContractId
        LIMIT 1;
      END IF;
 

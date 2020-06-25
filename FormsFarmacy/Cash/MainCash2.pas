@@ -2567,7 +2567,7 @@ begin
     exit;
   end;
 
-  if not DiscountServiceForm.isBeforeSale and (DiscountServiceForm.gCode = 3) then
+  if not DiscountServiceForm.isBeforeSale and (DiscountServiceForm.gCode in [3, 5]) then
   begin
     ShowMessage('По дисконтрой программе не запрошена возможность продажи!');
     exit;

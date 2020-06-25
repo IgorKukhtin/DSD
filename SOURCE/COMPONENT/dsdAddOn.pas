@@ -262,7 +262,7 @@ type
     FColorRuleList: TCollection;
     FColumnAddOnList: TCollection;
     FColumnEnterList: TCollection;
-    TPropertiesCellList: TCollection;
+    FPropertiesCellList: TCollection;
     FSummaryItemList: TOwnedCollection;
     FGridFocusedItemChangedEvent: TcxGridFocusedItemChangedEvent;
     FSearchAsFilter: boolean;
@@ -345,7 +345,7 @@ type
     // При установке в True сохраняется цвет шрифта и фон для выделенной строчки
     property KeepSelectColor: boolean read FKeepSelectColor write FKeepSelectColor default false;
     // Правила Properties ячейки
-    property PropertiesCellList: TCollection read TPropertiesCellList write TPropertiesCellList;
+    property PropertiesCellList: TCollection read FPropertiesCellList write FPropertiesCellList;
 
   end;
 
@@ -1117,7 +1117,7 @@ begin
   FColorRuleList := TCollection.Create(TColorRule);
   FColumnAddOnList := TCollection.Create(TColumnAddOn);
   FColumnEnterList := TCollection.Create(TColumnCollectionItem);
-  TPropertiesCellList := TCollection.Create(TPropertiesCell);
+  FPropertiesCellList := TCollection.Create(TPropertiesCell);
   FSummaryItemList := TOwnedCollection.Create(Self, TSummaryItemAddOn);
 
   SearchAsFilter := true;
@@ -1181,6 +1181,7 @@ var Column: TcxGridColumn; i, j : integer; bManual : boolean;
 begin
 
   bManual := False;
+//  ACanvas.Font.Color := clWindowText;
 
   if FKeepSelectColor and (AViewInfo.Selected or AViewInfo.Focused) then begin
     // Работаем с условиями
@@ -1484,7 +1485,7 @@ begin
   FErasedStyle.Free;
   FreeAndNil(FColumnAddOnList);
   FreeAndNil(FColumnEnterList);
-  FreeAndNil(TPropertiesCellList);
+  FreeAndNil(FPropertiesCellList);
   inherited;
 end;
 
@@ -4578,16 +4579,13 @@ end;
 
 procedure TPropertiesCell.SetColumn(const Value: TcxGridColumn);
 begin
-  if not Assigned(Value) then
+  if Assigned(FColumn) then
   begin
-    if Assigned(FColumn) then
-    begin
-      FColumn.OnGetProperties := FOnGetProperties;
-    end;
-    FColumn := Value;
-    FOnGetProperties := FColumn.OnGetProperties;
-    FColumn.OnGetProperties := GetProperties;
-  end else raise Exception.Create(Value.ClassName + ' не поддерживаеться');
+    FColumn.OnGetProperties := FOnGetProperties;
+  end;
+  FColumn := Value;
+  FOnGetProperties := FColumn.OnGetProperties;
+  FColumn.OnGetProperties := GetProperties;
 end;
 
 procedure TPropertiesCell.GetProperties(Sender: TcxCustomGridTableItem; ARecord: TcxCustomGridRecord;

@@ -7,7 +7,7 @@ uses
   Vcl.Controls, Vcl.Forms, Vcl.Dialogs, Soap.InvokeRegistry, Vcl.StdCtrls, System.Contnrs,
   Soap.Rio, Soap.SOAPHTTPClient, uCardService, dsdDB, Datasnap.DBClient, Data.DB,
   MediCard.Intf, REST.Types, REST.Client, Data.Bind.Components, Soap.EncdDecd,
-  Data.Bind.ObjectScope, Math;
+  Data.Bind.ObjectScope, Math, System.Net.URLClient;
 
 type
   TMorionCode = class
@@ -754,7 +754,7 @@ begin
       else
 
       //если программа Medicard
-      if (gCode = 3) then
+      if (gCode = 3) or (gCode = 5) then
       begin
 
         if (FIdCasual = '') or (FSupplier = 0) or (FBarCode_find = '') then
@@ -1376,7 +1376,7 @@ begin
       then lPriceSale:= CheckCDS.FieldByName('PriceSale').asFloat
       else lPriceSale:= CheckCDS.FieldByName('Price').asFloat;
       //
-      if (lDiscountExternalId > 0) and ((gCode = 1) or (gCode = 2) and (gUserName <> '') or (gCode = 3) or (gCode = 4)) and
+      if (lDiscountExternalId > 0) and ((gCode = 1) or (gCode = 2) and (gUserName <> '') or (gCode = 3) or (gCode = 4) or (gCode = 5)) and
          (CheckCDS.FieldByName('Amount').AsFloat > 0)
       then
         //поиск Штрих-код
@@ -1554,7 +1554,7 @@ begin
       end // if BarCode_find <> ''
 
       //если Штрих-код нашелся и программа Medicard card
-      else  if (BarCode_find <> '') and (gCode = 3) then
+      else  if (BarCode_find <> '') and ((gCode = 3) or (gCode = 5)) then
       begin
 
           if CheckCDS.FieldByName('Amount').AsInteger <> CheckCDS.FieldByName('Amount').AsCurrency then
@@ -2108,7 +2108,7 @@ end;
 
 function TDiscountServiceForm.GetBeforeSale : boolean;
 begin
-  if (gCode = 3) and (FIdCasual <> '') then
+  if ((gCode = 3) or (gCode = 5)) and (FIdCasual <> '') then
   begin
     Result := True;
   end else Result := False;

@@ -34,7 +34,7 @@ BEGIN
     END IF;
     vbUnitId := vbUnitKey::Integer;
 
-    IF (SELECT Object.ObjectCode FROM Object WHERE Object.ID = inDiscountExternal) = 3
+    IF (SELECT Object.ObjectCode FROM Object WHERE Object.ID = inDiscountExternal) in (3, 5)
     THEN
       inAmount := 1;
       WITH
