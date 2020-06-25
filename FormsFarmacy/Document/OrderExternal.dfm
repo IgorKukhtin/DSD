@@ -4,7 +4,7 @@ inherited OrderExternalForm: TOrderExternalForm
   ClientWidth = 821
   AddOnFormData.PUSHMessage = actPUSHInfo
   ExplicitWidth = 837
-  ExplicitHeight = 649
+  ExplicitHeight = 650
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
@@ -418,6 +418,18 @@ inherited OrderExternalForm: TOrderExternalForm
       TabOrder = 15
       Width = 133
     end
+    object edLetterSubject: TcxTextEdit
+      Left = 400
+      Top = 137
+      Properties.ReadOnly = False
+      TabOrder = 16
+      Width = 250
+    end
+    object cxLabel14: TcxLabel
+      Left = 12
+      Top = 122
+      Caption = #1055#1088#1080#1084#1077#1095#1072#1085#1080#1077
+    end
   end
   object cxLabel5: TcxLabel [2]
     Left = 656
@@ -440,12 +452,12 @@ inherited OrderExternalForm: TOrderExternalForm
     Top = 137
     Properties.ReadOnly = False
     TabOrder = 8
-    Width = 638
+    Width = 380
   end
   object cxLabel7: TcxLabel [5]
-    Left = 12
+    Left = 400
     Top = 122
-    Caption = #1055#1088#1080#1084#1077#1095#1072#1085#1080#1077
+    Caption = #1058#1077#1084#1072' '#1087#1080#1089#1100#1084#1072' '
   end
   object cxLabel8: TcxLabel [6]
     Left = 400
@@ -1246,6 +1258,13 @@ inherited OrderExternalForm: TOrderExternalForm
         Component = cbDifferent
         DataType = ftBoolean
         MultiSelectSeparator = ','
+      end
+      item
+        Name = 'LetterSubject'
+        Value = Null
+        Component = edLetterSubject
+        DataType = ftString
+        MultiSelectSeparator = ','
       end>
     Left = 216
     Top = 248
@@ -1332,6 +1351,14 @@ inherited OrderExternalForm: TOrderExternalForm
         DataType = ftBoolean
         ParamType = ptInput
         MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inLetterSubject'
+        Value = Null
+        Component = edLetterSubject
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
       end>
     Left = 162
     Top = 312
@@ -1366,6 +1393,9 @@ inherited OrderExternalForm: TOrderExternalForm
       end
       item
         Control = cbDifferent
+      end
+      item
+        Control = edLetterSubject
       end>
     Left = 232
     Top = 193
@@ -1378,11 +1408,43 @@ inherited OrderExternalForm: TOrderExternalForm
   end
   inherited spErasedMIMaster: TdsdStoredProc
     StoredProcName = 'gpMovementItem_OrderExternal_SetErased'
+    Params = <
+      item
+        Name = 'inMovementItemId'
+        Component = MasterCDS
+        ComponentItem = 'Id'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'outIsErased'
+        Value = False
+        Component = MasterCDS
+        ComponentItem = 'isErased'
+        DataType = ftBoolean
+        MultiSelectSeparator = ','
+      end>
     Left = 718
     Top = 512
   end
   inherited spUnErasedMIMaster: TdsdStoredProc
     StoredProcName = 'gpMovementItem_OrderExternal_SetUnErased'
+    Params = <
+      item
+        Name = 'inMovementItemId'
+        Component = MasterCDS
+        ComponentItem = 'Id'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'outIsErased'
+        Value = False
+        Component = MasterCDS
+        ComponentItem = 'isErased'
+        DataType = ftBoolean
+        MultiSelectSeparator = ','
+      end>
     Left = 662
     Top = 496
   end
@@ -1819,7 +1881,7 @@ inherited OrderExternalForm: TOrderExternalForm
       end
       item
         Name = 'inisDeferred'
-        Value = 'TRUE'
+        Value = True
         DataType = ftBoolean
         ParamType = ptInput
         MultiSelectSeparator = ','

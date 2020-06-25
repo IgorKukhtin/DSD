@@ -19,6 +19,7 @@ RETURNS TABLE (Id Integer, InvNumber TVarChar, OperDate TDateTime, StatusCode In
              , OrderSumm TVarChar, OrderTime TVarChar, OrderSummComment TVarChar
              , isDeferred Boolean
              , isDifferent Boolean
+             , LetterSubject      TVarChar
               )
 AS
 $BODY$
@@ -55,6 +56,7 @@ BEGIN
              , CAST ('' AS TVarChar) 		                AS OrderSummComment
              , FALSE                                            AS isDeferred
              , FALSE                                            AS isDifferent
+             , CAST ('' AS TVarChar) 		                AS LetterSubject
 
           FROM lfGet_Object_Status(zc_Enum_Status_UnComplete()) AS Object_Status;
 
@@ -134,6 +136,8 @@ BEGIN
 
            , COALESCE (MovementBoolean_Deferred.ValueData, FALSE)  :: Boolean  AS isDeferred
            , COALESCE (MovementBoolean_Different.ValueData, FALSE) :: Boolean  AS isDifferent
+           
+           , MovementString_LetterSubject.ValueData                            AS LetterSubject
 
        FROM Movement
             LEFT JOIN Object AS Object_Status ON Object_Status.Id = Movement.StatusId
@@ -150,6 +154,10 @@ BEGIN
             LEFT JOIN MovementBoolean AS MovementBoolean_Different
                                       ON MovementBoolean_Different.MovementId = Movement.Id
                                      AND MovementBoolean_Different.DescId = zc_MovementBoolean_Different()
+
+            LEFT JOIN MovementString AS MovementString_LetterSubject
+                                     ON MovementString_LetterSubject.MovementId = Movement.Id
+                                    AND MovementString_LetterSubject.DescId = zc_MovementString_LetterSubject()
 
             LEFT JOIN MovementLinkObject AS MovementLinkObject_From
                                          ON MovementLinkObject_From.MovementId = Movement.Id

@@ -208,6 +208,14 @@ inherited OrderExternalJournalForm: TOrderExternalJournalForm
             Options.Editing = False
             Width = 81
           end
+          object LetterSubject: TcxGridDBColumn
+            Caption = #1058#1077#1084#1072' '#1087#1080#1089#1100#1084#1072
+            DataBinding.FieldName = 'LetterSubject'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 89
+          end
           object UpdateName: TcxGridDBColumn
             Caption = #1055#1086#1083#1100#1079#1086#1074#1072#1090#1077#1083#1100' ('#1086#1090#1087#1088#1072#1074#1082#1080')'
             DataBinding.FieldName = 'UpdateName'
@@ -506,7 +514,7 @@ inherited OrderExternalJournalForm: TOrderExternalJournalForm
         MultiSelectSeparator = ','
       end
       item
-        Value = 'False'
+        Value = False
         DataType = ftBoolean
         ParamType = ptUnknown
         MultiSelectSeparator = ','
@@ -825,7 +833,7 @@ inherited OrderExternalJournalForm: TOrderExternalJournalForm
       end
       item
         Name = 'inisDeferred'
-        Value = 'TRUE'
+        Value = True
         DataType = ftBoolean
         ParamType = ptInput
         MultiSelectSeparator = ','
@@ -857,7 +865,7 @@ inherited OrderExternalJournalForm: TOrderExternalJournalForm
       end
       item
         Name = 'inisDeferred'
-        Value = 'FALSE'
+        Value = False
         DataType = ftBoolean
         ParamType = ptInput
         MultiSelectSeparator = ','
