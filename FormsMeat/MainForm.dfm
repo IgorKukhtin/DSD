@@ -4,6 +4,7 @@
   Position = poDesigned
   OnClose = FormClose
   ExplicitWidth = 1376
+  ExplicitHeight = 228
   PixelsPerInch = 96
   TextHeight = 13
   object cxGrid: TcxGrid [0]
