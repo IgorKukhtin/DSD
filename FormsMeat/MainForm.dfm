@@ -5,7 +5,7 @@
   Position = poDesigned
   OnClose = FormClose
   ExplicitWidth = 1376
-  ExplicitHeight = 255
+  ExplicitHeight = 252
   PixelsPerInch = 96
   TextHeight = 13
   object cxGrid: TcxGrid [0]
@@ -79,9 +79,6 @@
     Visible = False
     LookAndFeel.Kind = lfStandard
     LookAndFeel.NativeStyle = True
-    ExplicitLeft = 176
-    ExplicitTop = 97
-    ExplicitHeight = 126
     object cxGridGetMsgDBTableView: TcxGridDBTableView
       Navigator.Buttons.CustomButtons = <>
       DataController.DataSource = DSGetMsg
@@ -7325,6 +7322,7 @@
       ShortCut = 115
       ImageIndex = 1
       FormName = 'TPromoForm'
+      FormNameParam.Value = ''
       FormNameParam.Component = FormParams
       FormNameParam.ComponentItem = 'FormName'
       FormNameParam.DataType = ftString
@@ -7370,6 +7368,9 @@
       Category = 'DSDLib'
       MoveParams = <>
       ActionList = <
+        item
+          Action = actRefreshMsg
+        end
         item
           Action = actGetForm
         end
