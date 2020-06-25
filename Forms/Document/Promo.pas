@@ -24,7 +24,7 @@ uses
   dxSkinSevenClassic, dxSkinSharp, dxSkinSharpPlus, dxSkinSilver,
   dxSkinSpringTime, dxSkinStardust, dxSkinSummer2008, dxSkinTheAsphaltWorld,
   dxSkinValentine, dxSkinVS2010, dxSkinWhiteprint, dxSkinXmas2008Blue,
-  cxCheckBox;
+  cxCheckBox, cxEditRepositoryItems;
 
 type
   TPromoForm = class(TAncestorDocumentForm)
@@ -420,6 +420,9 @@ type
     spSelectCalc_Print: TdsdStoredProc;
     actPrint_CalcAll: TdsdPrintAction;
     bbPrint_CalcAll: TdxBarButton;
+    test1: TcxGridDBColumn;
+    cxEditRepository1: TcxEditRepository;
+    cxEditRepository1CurrencyItem1: TcxEditRepositoryCurrencyItem;
   private
     { Private declarations }
   public
