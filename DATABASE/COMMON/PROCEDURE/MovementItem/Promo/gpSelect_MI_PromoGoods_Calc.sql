@@ -34,6 +34,7 @@ RETURNS TABLE (NUM Integer , GroupNum Integer --
       , SummaProfit             TFloat --прибыль
       , SummaProfit_Condition   TFloat --
       --, SummaDiscount           TFloat -- скидка
+      , test1   TFloat --
       
       
       , Color_PriceIn           Integer
@@ -45,7 +46,8 @@ RETURNS TABLE (NUM Integer , GroupNum Integer --
       , Color_PriceWithVAT      Integer
       , Color_PromoCond         Integer
       , Color_SummaProfit       Integer
-       , Text                   TVarChar
+      , Text                    TVarChar
+      , Repository              Integer
 )
 AS
 $BODY$
@@ -217,6 +219,7 @@ BEGIN
                          , zc_Color_White()          AS Color_PromoCond      --11658012
                          , zc_Color_White()          AS Color_SummaProfit
                          , 'Фактическая'             AS Text
+                         , 1                         AS Repository
                     FROM tmpData
                   UNION
                     SELECT 2                           AS NUM
@@ -265,6 +268,7 @@ BEGIN
                          , 16764159                    AS Color_SummaProfit
                          
                          , 'Фактическая'               AS Text
+                         , 2                         AS Repository
                     FROM tmpData
                   UNION
                     SELECT 3                         AS NUM
@@ -301,6 +305,7 @@ BEGIN
                          , zc_Color_White()          AS Color_PromoCond      --11658012
                          , zc_Color_White()          AS Color_SummaProfit
                          , 'Плановая'                AS Text
+                         , 1                         AS Repository
                     FROM tmpData
                   UNION
                     SELECT 4                           AS NUM
@@ -349,6 +354,7 @@ BEGIN
                          , 16764159                    AS Color_SummaProfit
                          
                          , 'Плановая'                AS Text
+                         , 2                         AS Repository
                     FROM tmpData
                          LEFT JOIN tmpMIChild ON 1=1
                   UNION
@@ -385,6 +391,7 @@ BEGIN
                          , zc_Color_White() AS Color_PromoCond
                          , zc_Color_White() AS Color_SummaProfit
                          , ''               AS Text
+                         , 2                AS Repository
                     FROM tmpData
                     WHERE tmpData.Ord <> 1
                    )   
@@ -418,6 +425,7 @@ BEGIN
          , tmpData_All.PromoCondition          :: TFloat
          , tmpData_All.SummaProfit             :: TFloat
          , tmpData_All.SummaProfit_Condition   :: TFloat
+         , 25 :: TFloat AS test1
          
         -- , (tmpData_All.Price * (100-tmpData_All.TaxPromo)/100)  :: TFloat AS SummaDiscount               -- скидка
          
@@ -431,6 +439,7 @@ BEGIN
          , tmpData_All.Color_PromoCond
          , tmpData_All.Color_SummaProfit
          , tmpData_All.Text                    ::TVarChar
+         , tmpData_All.Repository  ::Integer
     FROM tmpData_All
          LEFT JOIN ObjectLink AS ObjectLink_Goods_Measure
                               ON ObjectLink_Goods_Measure.ObjectId = tmpData_All.GoodsId

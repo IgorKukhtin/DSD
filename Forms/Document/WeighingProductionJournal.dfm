@@ -64,6 +64,8 @@ object WeighingProductionJournalForm: TWeighingProductionJournalForm
     Align = alClient
     TabOrder = 0
     LookAndFeel.NativeStyle = False
+    ExplicitLeft = 168
+    ExplicitTop = 169
     object cxGridDBTableView: TcxGridDBTableView
       Navigator.Buttons.CustomButtons = <>
       DataController.DataSource = DataSource
@@ -1397,7 +1399,7 @@ object WeighingProductionJournalForm: TWeighingProductionJournalForm
       end
       item
         Name = 'inIsDiffTax'
-        Value = 'FALSE'
+        Value = False
         DataType = ftBoolean
         ParamType = ptInput
         MultiSelectSeparator = ','

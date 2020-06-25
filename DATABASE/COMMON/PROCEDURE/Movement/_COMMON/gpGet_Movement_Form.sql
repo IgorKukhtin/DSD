@@ -9,13 +9,17 @@ CREATE OR REPLACE FUNCTION gpGet_Movement_Form(
 RETURNS TABLE (FormName TVarChar)
 AS
 $BODY$
+    DECLARE vbUserId Integer;
 BEGIN
      -- проверка прав пользователя на вызов процедуры
      -- PERFORM lpCheckRight (inSession, zc_Enum_Process_Get_Movement_ZakazInternal());
+     vbUserId = inSession;
 
      RETURN QUERY 
        SELECT
-            COALESCE (Object_Form.ValueData, '')::TVarChar    AS FromName
+            CASE WHEN Movement.DescId = zc_Movement_Promo() AND vbUserId IN (280164, 5, 133035, 9463) THEN 'TPromoManagerForm'
+                 ELSE COALESCE (Object_Form.ValueData, '')
+            END ::TVarChar AS FromName
 
        FROM Movement                          
             JOIN MovementDesc ON MovementDesc.Id = Movement.DescId
@@ -29,6 +33,7 @@ $BODY$
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
+ 26.06.20         *
  24.01.14                        *
 
 */

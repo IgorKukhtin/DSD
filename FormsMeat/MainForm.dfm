@@ -1,10 +1,11 @@
 ﻿inherited MainForm: TMainForm
+  ClientHeight = 197
   ClientWidth = 1360
   KeyPreview = True
   Position = poDesigned
   OnClose = FormClose
   ExplicitWidth = 1376
-  ExplicitHeight = 228
+  ExplicitHeight = 255
   PixelsPerInch = 96
   TextHeight = 13
   object cxGrid: TcxGrid [0]
@@ -69,7 +70,7 @@
     Left = 0
     Top = 81
     Width = 1360
-    Height = 89
+    Height = 116
     Align = alClient
     BevelInner = bvNone
     BevelOuter = bvNone
@@ -78,6 +79,9 @@
     Visible = False
     LookAndFeel.Kind = lfStandard
     LookAndFeel.NativeStyle = True
+    ExplicitLeft = 176
+    ExplicitTop = 97
+    ExplicitHeight = 126
     object cxGridGetMsgDBTableView: TcxGridDBTableView
       Navigator.Buttons.CustomButtons = <>
       DataController.DataSource = DSGetMsg
@@ -683,7 +687,7 @@
         end
         item
           Name = 'isRemains'
-          Value = 'FALSE'
+          Value = False
           DataType = ftBoolean
           MultiSelectSeparator = ','
         end>
@@ -734,7 +738,7 @@
         end
         item
           Name = 'isRemains'
-          Value = 'FALSE'
+          Value = False
           DataType = ftBoolean
           MultiSelectSeparator = ','
         end>
@@ -820,7 +824,7 @@
         end
         item
           Name = 'isRemains'
-          Value = 'FALSE'
+          Value = False
           DataType = ftBoolean
           MultiSelectSeparator = ','
         end>
@@ -6528,7 +6532,7 @@
         end
         item
           Name = 'isRemains'
-          Value = 'FALSE'
+          Value = False
           DataType = ftBoolean
           MultiSelectSeparator = ','
         end>
@@ -6556,7 +6560,7 @@
         end
         item
           Name = 'isRemains'
-          Value = 'FALSE'
+          Value = False
           DataType = ftBoolean
           MultiSelectSeparator = ','
         end>
@@ -6819,7 +6823,7 @@
         end
         item
           Name = 'isRemains'
-          Value = 'FALSE'
+          Value = False
           DataType = ftBoolean
           MultiSelectSeparator = ','
         end>
@@ -6859,7 +6863,7 @@
         end
         item
           Name = 'isRemains'
-          Value = 'FALSE'
+          Value = False
           DataType = ftBoolean
           MultiSelectSeparator = ','
         end>
@@ -7082,7 +7086,7 @@
         end
         item
           Name = 'isRemains'
-          Value = 'FALSE'
+          Value = False
           DataType = ftBoolean
           MultiSelectSeparator = ','
         end>
@@ -7110,7 +7114,7 @@
         end
         item
           Name = 'isRemains'
-          Value = 'TRUE'
+          Value = True
           DataType = ftBoolean
           MultiSelectSeparator = ','
         end>
@@ -7321,7 +7325,8 @@
       ShortCut = 115
       ImageIndex = 1
       FormName = 'TPromoForm'
-      FormNameParam.Value = 'TPromoForm'
+      FormNameParam.Component = FormParams
+      FormNameParam.ComponentItem = 'FormName'
       FormNameParam.DataType = ftString
       FormNameParam.MultiSelectSeparator = ','
       GuiParams = <
@@ -7350,13 +7355,39 @@
       DataSetRefresh = actRefresh
       IdFieldName = 'Id'
     end
+    object actGetForm: TdsdExecStoredProc
+      Category = 'DSDLib'
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      StoredProc = getMovementForm
+      StoredProcList = <
+        item
+          StoredProc = getMovementForm
+        end>
+      Caption = 'actGetForm'
+    end
+    object macOpenDocument: TMultiAction
+      Category = 'DSDLib'
+      MoveParams = <>
+      ActionList = <
+        item
+          Action = actGetForm
+        end
+        item
+          Action = actUpdate
+        end>
+      Caption = #1055#1088#1086#1089#1084#1086#1090#1088' '#1075#1083'. '#1076#1086#1082#1091#1084#1077#1085#1090#1072
+      Hint = #1055#1088#1086#1089#1084#1086#1090#1088' '#1075#1083#1072#1074#1085#1086#1075#1086' '#1076#1086#1082#1091#1084#1077#1085#1090#1072
+      ImageIndex = 28
+    end
   end
   inherited UserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn
     Left = 48
     Top = 64
   end
   inherited StoredProc: TdsdStoredProc
-    Top = 112
+    Left = 40
+    Top = 120
   end
   inherited ClientDataSet: TClientDataSet
     Left = 136
@@ -9367,7 +9398,7 @@
     View = cxGridGetMsgDBTableView
     OnDblClickActionList = <
       item
-        Action = actUpdate
+        Action = macOpenDocument
       end>
     ActionItemList = <>
     OnlyEditingCellOnEnter = False
@@ -9403,5 +9434,30 @@
     PropertiesCellList = <>
     Left = 432
     Top = 8
+  end
+  object getMovementForm: TdsdStoredProc
+    StoredProcName = 'gpGet_Movement_Form'
+    DataSets = <>
+    OutputType = otResult
+    Params = <
+      item
+        Name = 'inMovementId'
+        Value = Null
+        Component = CDSGetMsg
+        ComponentItem = 'MovementId'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'FormName'
+        Value = Null
+        Component = FormParams
+        ComponentItem = 'FormName'
+        DataType = ftString
+        MultiSelectSeparator = ','
+      end>
+    PackSize = 1
+    Left = 792
+    Top = 40
   end
 end

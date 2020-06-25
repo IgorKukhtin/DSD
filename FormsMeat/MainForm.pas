@@ -1140,6 +1140,9 @@ type
     miCashFlow: TMenuItem;
     actPromoManager: TdsdOpenForm;
     miPromoManager: TMenuItem;
+    actGetForm: TdsdExecStoredProc;
+    macOpenDocument: TMultiAction;
+    getMovementForm: TdsdStoredProc;
     procedure actReport_OLAPSoldExecute(Sender: TObject);
     procedure FormShow(Sender: TObject);
     procedure FormClose(Sender: TObject; var Action: TCloseAction);

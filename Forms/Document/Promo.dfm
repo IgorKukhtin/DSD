@@ -3,7 +3,6 @@
   Caption = #1044#1086#1082#1091#1084#1077#1085#1090' <'#1040#1082#1094#1080#1103'>'
   ClientHeight = 684
   ClientWidth = 1366
-  ExplicitLeft = -593
   ExplicitWidth = 1382
   ExplicitHeight = 722
   PixelsPerInch = 96
@@ -1111,6 +1110,8 @@
         Align = alClient
         TabOrder = 0
         LookAndFeel.NativeStyle = False
+        ExplicitLeft = -152
+        ExplicitTop = -82
         object cxGridDBTableViewCalc: TcxGridDBTableView
           Navigator.Buttons.CustomButtons = <>
           DataController.DataSource = CalcDS
@@ -1395,7 +1396,14 @@
           object test1: TcxGridDBColumn
             DataBinding.FieldName = 'test1'
             Visible = False
+            VisibleForCustomization = False
             Width = 70
+          end
+          object Repository: TcxGridDBColumn
+            DataBinding.FieldName = 'Repository'
+            Visible = False
+            VisibleForCustomization = False
+            Width = 50
           end
         end
         object cxGridLevel2: TcxGridLevel
@@ -6495,9 +6503,12 @@
     SummaryItemList = <>
     PropertiesCellList = <
       item
+        Column = test1
+        ValueColumn = Repository
+        EditRepository = cxEditRepository1
       end>
-    Left = 1208
-    Top = 359
+    Left = 976
+    Top = 583
   end
   object spSelectCalc: TdsdStoredProc
     StoredProcName = 'gpSelect_MI_PromoGoods_Calc'
@@ -6940,15 +6951,15 @@
   end
   object PromoStateKindDS: TDataSource
     DataSet = PromoStateKindDCS
-    Left = 936
-    Top = 576
+    Left = 672
+    Top = 472
   end
   object PromoStateKindDCS: TClientDataSet
     Aggregates = <>
     FilterOptions = [foCaseInsensitive]
     Params = <>
-    Left = 872
-    Top = 552
+    Left = 720
+    Top = 472
   end
   object dsdDBViewAddOnPromoStateKind: TdsdDBViewAddOn
     ErasedFieldName = 'isErased'
@@ -7542,10 +7553,13 @@
     Top = 456
   end
   object cxEditRepository1: TcxEditRepository
-    Left = 688
-    Top = 464
+    Left = 968
+    Top = 640
     object cxEditRepository1CurrencyItem1: TcxEditRepositoryCurrencyItem
       Properties.DisplayFormat = ',0.00 %;-,0.00 %'
+    end
+    object cxEditRepository1CurrencyItem2: TcxEditRepositoryCurrencyItem
+      Properties.DisplayFormat = ',0.00;-,0.00'
     end
   end
 end
