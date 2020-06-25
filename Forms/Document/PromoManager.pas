@@ -388,6 +388,7 @@ type
     actPrint_CalcAll: TdsdPrintAction;
     spSelectCalc_Print: TdsdStoredProc;
     bbPrint_CalcAll: TdxBarButton;
+    TaxRetIn_n: TcxGridDBColumn;
   private
     { Private declarations }
   public
