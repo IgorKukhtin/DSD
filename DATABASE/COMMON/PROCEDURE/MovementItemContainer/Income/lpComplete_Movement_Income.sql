@@ -690,6 +690,7 @@ BEGIN
             , _tmp.GoodsKindId
             , _tmp.AssetId
             , CASE WHEN _tmp.UnitId_Asset > 0 THEN _tmp.UnitId_Asset ELSE vbUnitId END AS UnitId_Asset
+          --, vbUnitId AS UnitId_Asset
             , _tmp.PartionGoods
             , _tmp.PartionGoodsDate
 

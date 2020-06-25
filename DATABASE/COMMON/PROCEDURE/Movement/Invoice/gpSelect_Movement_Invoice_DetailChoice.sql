@@ -38,6 +38,8 @@ $BODY$
    DECLARE vbUserId Integer;
 BEGIN
 
+if inStartDate < inEndDate - INTERVAL '1 YEAR' THEN inStartDate:= inEndDate; end If;
+
 -- inStartDate:= '01.01.2013';
 -- inEndDate:= '01.01.2100';
 

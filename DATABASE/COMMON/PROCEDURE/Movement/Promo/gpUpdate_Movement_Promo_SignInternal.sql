@@ -72,6 +72,30 @@ BEGIN
      END IF;
 
 
+     -- если последний - В работе Отдел Маркетинга
+     IF zc_Enum_PromoStateKind_Start() = (SELECT MI.ObjectId
+                                          FROM MovementItem AS MI
+                                               JOIN Object ON Object.Id = MI.ObjectId AND Object.DescId = zc_Object_PromoStateKind()
+                                          WHERE MI.MovementId = inMovementId
+                                            AND MI.DescId     = zc_MI_Message()
+                                            AND MI.isErased   = FALSE
+                                          ORDER BY MI.Id DESC
+                                          LIMIT 1
+                                         )
+     THEN
+         -- добавили состояние
+         PERFORM gpInsertUpdate_MI_Message_PromoStateKind (ioId                  := 0
+                                                         , inMovementId          := inMovementId
+                                                         , inPromoStateKindId    := zc_Enum_PromoStateKind_Head()
+                                                         , inIsQuickly           := TRUE
+                                                         , inComment             := ''
+                                                         , inSession             := inSession
+                                                          );
+     ELSE
+         RAISE EXCEPTION 'Ошибка.Изменение кол-ва подписантов возможно только для состояния <%>.', lfGet_Object_ValueData_sh (zc_Enum_PromoStateKind_Start());
+     END IF;
+
+
      -- вернули информацию о подписи
      SELECT tmpRes.SignInternalId
           , tmpRes.SignInternalName
