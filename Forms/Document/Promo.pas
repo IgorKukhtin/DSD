@@ -417,6 +417,9 @@ type
     bbUpdate_SignInternal_Two: TdxBarButton;
     spUpdate_SignInternal_One: TdsdStoredProc;
     spUpdate_SignInternal_Two: TdsdStoredProc;
+    spSelectCalc_Print: TdsdStoredProc;
+    actPrint_CalcAll: TdsdPrintAction;
+    bbPrint_CalcAll: TdxBarButton;
   private
     { Private declarations }
   public

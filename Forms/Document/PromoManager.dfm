@@ -28,7 +28,6 @@
         Align = alClient
         TabOrder = 0
         LookAndFeel.NativeStyle = False
-        ExplicitHeight = 113
         object cxGridDBTableViewCalc: TcxGridDBTableView
           Navigator.Buttons.CustomButtons = <>
           DataController.DataSource = CalcDS
@@ -629,7 +628,6 @@
         HotZoneClassName = 'TcxMediaPlayer8Style'
         AlignSplitter = salBottom
         Control = cxGridCalc2
-        ExplicitTop = 0
       end
       object cxGridPromoStateKind: TcxGrid
         Left = 0
@@ -639,8 +637,6 @@
         Align = alBottom
         PopupMenu = PromoStateKindPopupMenu
         TabOrder = 3
-        ExplicitLeft = 8
-        ExplicitTop = 342
         object cxGridDBTableViewPromoStateKind: TcxGridDBTableView
           Navigator.Buttons.CustomButtons = <>
           DataController.DataSource = PromoStateKindDS
@@ -740,7 +736,6 @@
         HotZoneClassName = 'TcxMediaPlayer8Style'
         AlignSplitter = salBottom
         Control = cxGridPromoStateKind
-        ExplicitTop = 340
       end
     end
     inherited tsMain: TcxTabSheet
@@ -751,7 +746,7 @@
         Width = 1366
         Height = 348
         ExplicitWidth = 1366
-        ExplicitHeight = 340
+        ExplicitHeight = 348
         inherited cxGridDBTableView: TcxGridDBTableView
           DataController.Summary.DefaultGroupSummaryItems = <
             item
@@ -2149,7 +2144,7 @@
   end
   inherited ActionList: TActionList
     Left = 215
-    Top = 295
+    Top = 191
     object actGetRefresh: TdsdDataSetRefresh [0]
       Category = 'Update'
       MoveParams = <>
@@ -2364,7 +2359,68 @@
       Caption = 'actUpdatePromoStateKindDS'
       DataSource = PromoStateKindDS
     end
-    object actUpdateCalcDS2: TdsdUpdateDataSet [13]
+    object actPrint_CalcAll: TdsdPrintAction [13]
+      Category = 'DSDLib'
+      MoveParams = <>
+      StoredProc = spSelectCalc_Print
+      StoredProcList = <
+        item
+          StoredProc = spSelectCalc_Print
+        end>
+      Caption = #1055#1083#1072#1085#1080#1088#1091#1077#1084#1099#1077' '#1088#1077#1079#1091#1083#1100#1090#1072#1090#1099' '#1072#1082#1094#1080#1080
+      Hint = #1055#1083#1072#1085#1080#1088#1091#1077#1084#1099#1077' '#1088#1077#1079#1091#1083#1100#1090#1072#1090#1099' '#1072#1082#1094#1080#1080
+      ImageIndex = 15
+      DataSets = <
+        item
+          DataSet = PrintHead
+          UserName = 'frxHead'
+          IndexFieldNames = 'GoodsName;Num'
+        end>
+      Params = <
+        item
+          Name = 'InvNumber'
+          Value = ''
+          Component = edInvNumber
+          DataType = ftString
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'Comment'
+          Value = ''
+          Component = edComment
+          DataType = ftString
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'CommentMain'
+          Value = ''
+          Component = edCommentMain
+          DataType = ftString
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'isTaxPromo'
+          Value = Null
+          Component = cbisTaxPromo
+          DataType = ftBoolean
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'isTaxPromo_Condition'
+          Value = Null
+          Component = cbisTaxPromo_Condition
+          DataType = ftBoolean
+          MultiSelectSeparator = ','
+        end>
+      ReportName = #1055#1083#1072#1085#1080#1088#1091#1077#1084#1099#1077' '#1088#1077#1079#1091#1083#1100#1090#1072#1090#1099' '#1072#1082#1094#1080#1080
+      ReportNameParam.Value = #1055#1083#1072#1085#1080#1088#1091#1077#1084#1099#1077' '#1088#1077#1079#1091#1083#1100#1090#1072#1090#1099' '#1072#1082#1094#1080#1080
+      ReportNameParam.DataType = ftString
+      ReportNameParam.MultiSelectSeparator = ','
+      PrinterNameParam.Value = ''
+      PrinterNameParam.DataType = ftString
+      PrinterNameParam.MultiSelectSeparator = ','
+    end
+    object actUpdateCalcDS2: TdsdUpdateDataSet [14]
       Category = 'DSDLib'
       MoveParams = <>
       PostDataSetBeforeExecute = False
@@ -2422,7 +2478,7 @@
         item
         end>
     end
-    object actUpdateDataSetMessage: TdsdUpdateDataSet [15]
+    object actUpdateDataSetMessage: TdsdUpdateDataSet [16]
       Category = 'DSDLib'
       MoveParams = <>
       PostDataSetBeforeExecute = False
@@ -2436,7 +2492,7 @@
     inherited actGridToExcel: TdsdGridToExcel
       Enabled = False
     end
-    object InsertRecord: TInsertRecord [17]
+    object InsertRecord: TInsertRecord [18]
       Category = 'Goods'
       MoveParams = <>
       Enabled = False
@@ -2448,7 +2504,7 @@
       Hint = #1044#1086#1073#1072#1074#1080#1090#1100' <'#1058#1086#1074#1072#1088'>'
       ImageIndex = 0
     end
-    object actUpdateCalcDS: TdsdUpdateDataSet [18]
+    object actUpdateCalcDS: TdsdUpdateDataSet [19]
       Category = 'DSDLib'
       MoveParams = <>
       PostDataSetBeforeExecute = False
@@ -2469,7 +2525,7 @@
       Caption = 'actUpdateCalcDS'
       DataSource = CalcDS
     end
-    object actOpenProtocoPromoStateKind: TdsdOpenForm [19]
+    object actOpenProtocoPromoStateKind: TdsdOpenForm [20]
       Category = 'PromoStateKind'
       TabSheet = tsMain
       MoveParams = <>
@@ -2516,7 +2572,7 @@
       ShortCut = 0
       QuestionBeforeExecute = #1044#1077#1081#1089#1090#1074#1080#1090#1077#1083#1100#1085#1086' '#1091#1076#1072#1083#1080#1090#1100' <'#1058#1086#1074#1072#1088'> ?'
     end
-    object actPrint_Calc: TdsdPrintAction [21]
+    object actPrint_Calc: TdsdPrintAction [22]
       Category = 'DSDLib'
       MoveParams = <>
       StoredProc = spSelectCalc
@@ -2577,7 +2633,7 @@
       PrinterNameParam.DataType = ftString
       PrinterNameParam.MultiSelectSeparator = ','
     end
-    object actPrint_Calc2: TdsdPrintAction [22]
+    object actPrint_Calc2: TdsdPrintAction [23]
       Category = 'DSDLib'
       MoveParams = <>
       StoredProc = spSelectCalc2
@@ -2652,7 +2708,7 @@
       Hint = #1042#1086#1089#1089#1090#1072#1085#1086#1074#1080#1090#1100' <'#1058#1086#1074#1072#1088'>'
       ShortCut = 0
     end
-    object actUpdateConditionDS: TdsdUpdateDataSet [24]
+    object actUpdateConditionDS: TdsdUpdateDataSet [25]
       Category = 'Condition'
       MoveParams = <>
       PostDataSetBeforeExecute = False
@@ -2666,7 +2722,7 @@
       Caption = 'actUpdateMainDS'
       DataSource = ConditionPromoDS
     end
-    object actOpenProtocoPromoStateKind1: TdsdOpenForm [25]
+    object actOpenProtocoPromoStateKind1: TdsdOpenForm [26]
       Category = 'PromoStateKind'
       TabSheet = tsMain
       MoveParams = <>
@@ -2722,7 +2778,7 @@
           StoredProc = spSelectMIPromoStateKind
         end>
     end
-    object macInsertUpdate_MI_Param: TMultiAction [28]
+    object macInsertUpdate_MI_Param: TMultiAction [29]
       Category = 'Update_MI_Param'
       TabSheet = tsMain
       MoveParams = <>
@@ -2748,7 +2804,7 @@
         item
         end>
     end
-    object actInsertUpdate_MI_Param: TdsdExecStoredProc [31]
+    object actInsertUpdate_MI_Param: TdsdExecStoredProc [32]
       Category = 'Update_MI_Param'
       MoveParams = <>
       PostDataSetBeforeExecute = False
@@ -2795,7 +2851,7 @@
       ReportName = #1040#1082#1094#1080#1103
       ReportNameParam.Value = #1040#1082#1094#1080#1103
     end
-    object actPromoStateKindChoice: TOpenChoiceForm [35]
+    object actPromoStateKindChoice: TOpenChoiceForm [36]
       Category = 'PromoStateKind'
       MoveParams = <>
       PostDataSetBeforeExecute = False
@@ -2828,7 +2884,7 @@
       Caption = #1055#1088#1086#1090#1086#1082#1086#1083' <'#1058#1086#1074#1072#1088'>'
       Hint = #1055#1088#1086#1089#1084#1086#1090#1088' <'#1055#1088#1086#1090#1086#1082#1086#1083' '#1058#1086#1074#1072#1088'>'
     end
-    object actPartnerProtocolOpenForm: TdsdOpenForm [39]
+    object actPartnerProtocolOpenForm: TdsdOpenForm [40]
       Category = 'DSDLib'
       TabSheet = tsMain
       MoveParams = <>
@@ -2860,7 +2916,7 @@
         end>
       isShowModal = False
     end
-    object actConditionPromoProtocolOpenForm: TdsdOpenForm [40]
+    object actConditionPromoProtocolOpenForm: TdsdOpenForm [41]
       Category = 'DSDLib'
       TabSheet = tsMain
       MoveParams = <>
@@ -2892,7 +2948,7 @@
         end>
       isShowModal = False
     end
-    object actAdvertisingProtocolOpenForm: TdsdOpenForm [41]
+    object actAdvertisingProtocolOpenForm: TdsdOpenForm [42]
       Category = 'DSDLib'
       TabSheet = tsMain
       MoveParams = <>
@@ -3818,19 +3874,11 @@
         end
         item
           Visible = True
-          ItemName = 'bbPrint_Calc'
-        end
-        item
-          Visible = True
           ItemName = 'dxBarStatic'
         end
         item
           Visible = True
-          ItemName = 'bbPrint_Calc2'
-        end
-        item
-          Visible = True
-          ItemName = 'dxBarStatic'
+          ItemName = 'bbPrint_CalcAll'
         end
         item
           Visible = True
@@ -4100,6 +4148,10 @@
     end
     object bbUpdateMovement_Correction: TdxBarButton
       Action = macUpdateMovement_Correction
+      Category = 0
+    end
+    object bbPrint_CalcAll: TdxBarButton
+      Action = actPrint_CalcAll
       Category = 0
     end
   end
@@ -5269,8 +5321,8 @@
     ColumnEnterList = <>
     SummaryItemList = <>
     PropertiesCellList = <>
-    Left = 134
-    Top = 385
+    Left = 118
+    Top = 441
   end
   object ConditionPromoDS: TDataSource
     DataSet = ConditionPromoCDS
@@ -5478,8 +5530,8 @@
     Aggregates = <>
     FilterOptions = [foCaseInsensitive]
     Params = <>
-    Left = 800
-    Top = 232
+    Left = 808
+    Top = 208
   end
   object spSelect_Movement_Promo_Print: TdsdStoredProc
     StoredProcName = 'gpSelect_Movement_Promo_Print'
@@ -5498,8 +5550,8 @@
         MultiSelectSeparator = ','
       end>
     PackSize = 1
-    Left = 760
-    Top = 216
+    Left = 864
+    Top = 280
   end
   object AdvertisingCDS: TClientDataSet
     Aggregates = <>
@@ -6150,6 +6202,7 @@
   end
   object dsdDBViewAddOnCalc2: TdsdDBViewAddOn
     ErasedFieldName = 'isErased'
+    View = cxGridDBTableViewCalc2
     OnDblClickActionList = <
       item
       end>
@@ -6210,8 +6263,8 @@
       end>
     SummaryItemList = <>
     PropertiesCellList = <>
-    Left = 1256
-    Top = 375
+    Left = 1216
+    Top = 383
   end
   object spSelectCalc2: TdsdStoredProc
     StoredProcName = 'gpSelect_MI_PromoGoods_Calc'
@@ -6544,5 +6597,41 @@
     PackSize = 1
     Left = 530
     Top = 600
+  end
+  object spSelectCalc_Print: TdsdStoredProc
+    StoredProcName = 'gpSelect_MI_PromoGoods_Calc'
+    DataSet = PrintHead
+    DataSets = <
+      item
+        DataSet = PrintHead
+      end>
+    Params = <
+      item
+        Name = 'inMovementId'
+        Value = Null
+        Component = FormParams
+        ComponentItem = 'Id'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inIsErased'
+        Value = False
+        Component = actShowErased
+        DataType = ftBoolean
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inisTaxPormo'
+        Value = 'true'
+        Component = cbisTaxPromo
+        DataType = ftBoolean
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end>
+    PackSize = 1
+    Left = 988
+    Top = 440
   end
 end

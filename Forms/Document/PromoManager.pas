@@ -385,6 +385,9 @@ type
     psIsErased: TcxGridDBColumn;
     cxGridLevel4: TcxGridLevel;
     cxSplitter4: TcxSplitter;
+    actPrint_CalcAll: TdsdPrintAction;
+    spSelectCalc_Print: TdsdStoredProc;
+    bbPrint_CalcAll: TdxBarButton;
   private
     { Private declarations }
   public
