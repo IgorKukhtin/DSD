@@ -3,6 +3,7 @@
 DROP FUNCTION IF EXISTS lpInsertUpdate_Movement_OrderExternal (Integer, TVarChar, TDateTime, Integer, Integer, Integer, Integer);
 DROP FUNCTION IF EXISTS lpInsertUpdate_Movement_OrderExternal (Integer, TVarChar, TDateTime, Integer, Integer, Integer, Integer, Integer);
 DROP FUNCTION IF EXISTS lpInsertUpdate_Movement_OrderExternal (Integer, TVarChar, TDateTime, Integer, Integer, Integer, Integer, Boolean, Integer);
+DROP FUNCTION IF EXISTS lpInsertUpdate_Movement_OrderExternal (Integer, TVarChar, TDateTime, Integer, Integer, Integer, Integer, Boolean, TVarChar, Integer);
 
 CREATE OR REPLACE FUNCTION lpInsertUpdate_Movement_OrderExternal(
  INOUT ioId                  Integer   , -- Ключ объекта <Документ Перемещение>
@@ -13,6 +14,7 @@ CREATE OR REPLACE FUNCTION lpInsertUpdate_Movement_OrderExternal(
     IN inContractId          Integer   , -- Договор
     IN inInternalOrderId     Integer   , -- Сыылка на внутренний заказ 
     IN inisDeferred          Boolean   , -- отложен
+    IN inLetterSubject       TVarChar  , -- Тема письма
     IN inUserId              Integer    -- сессия пользователя
 )
 RETURNS Integer AS
@@ -20,12 +22,42 @@ $BODY$
    DECLARE vbUserId Integer;
 BEGIN
 
-     IF (COALESCE(ioId, 0) = 0) AND (COALESCE(inInvNumber, '') = '') THEN
+    IF (COALESCE(ioId, 0) = 0) AND (COALESCE(inInvNumber, '') = '') THEN
         inInvNumber := (NEXTVAL ('Movement_OrderExternal_seq'))::TVarChar;
      END IF;
 
      -- сохранили <Документ>
      ioId := lpInsertUpdate_Movement (ioId, zc_Movement_OrderExternal(), inInvNumber, inOperDate, NULL);
+
+     IF COALESCE(inLetterSubject, '') = '' AND COALESCE (inToId, 0) <> 0 AND COALESCE (inFromId, 0) <> 0
+     THEN
+       WITH tmpObject_ImportExportLink AS (SELECT Object_ImportExportLink.ValueData    AS StringKey
+                                                , ObjectLink_ObjectMain.ChildObjectId  AS ObjectMainId
+                                                , ObjectLink_ObjectChild.ChildObjectId AS ObjectChildId
+                                           FROM Object AS Object_ImportExportLink
+                                               LEFT JOIN ObjectLink AS ObjectLink_ObjectMain
+                                                                    ON ObjectLink_ObjectMain.ObjectId = Object_ImportExportLink.Id
+                                                                   AND ObjectLink_ObjectMain.DescId = zc_ObjectLink_ImportExportLink_ObjectMain()
+
+                                               LEFT JOIN ObjectLink AS ObjectLink_ObjectChild
+                                                                    ON ObjectLink_ObjectChild.ObjectId = Object_ImportExportLink.Id
+                                                                   AND ObjectLink_ObjectChild.DescId = zc_ObjectLink_ImportExportLink_ObjectChild()
+
+                                               LEFT JOIN ObjectLink AS ObjectLink_LinkType
+                                                                    ON ObjectLink_LinkType.ObjectId = Object_ImportExportLink.Id
+                                                                   AND ObjectLink_LinkType.DescId = zc_ObjectLink_ImportExportLink_LinkType()
+                                                                       
+                                          WHERE Object_ImportExportLink.DescId = zc_Object_ImportExportLink()
+                                            AND COALESCE (Object_ImportExportLink.isErased, False) = False
+                                            AND ObjectLink_LinkType.ChildObjectId = 399921)
+
+       SELECT tmpObject_ImportExportLink.StringKey
+       INTO inLetterSubject
+       FROM tmpObject_ImportExportLink 
+       WHERE tmpObject_ImportExportLink.ObjectMainId = inToId
+         AND tmpObject_ImportExportLink.ObjectChildId = inFromId
+       LIMIT 1;
+     END IF;
 
      -- сохранили связь с <От кого (в документе)>
      PERFORM lpInsertUpdate_MovementLinkObject (zc_MovementLinkObject_From(), ioId, inFromId);
@@ -39,6 +71,9 @@ BEGIN
 
      -- сохранили связь с <документом заявкой>
      PERFORM lpInsertUpdate_MovementLinkMovement (zc_MovementLinkMovement_Master(), ioId, inInternalOrderId);
+
+     -- сохранили <Тема письма>
+     PERFORM lpInsertUpdate_MovementString (zc_MovementString_LetterSubject(), ioId, inLetterSubject);
 
      -- пересчитали Итоговые суммы по накладной
 --     PERFORM lpInsertUpdate_MovementFloat_TotalSumm (ioId);

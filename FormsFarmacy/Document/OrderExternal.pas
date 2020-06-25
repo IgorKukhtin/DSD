@@ -100,6 +100,8 @@ type
     spPUSHError: TdsdStoredProc;
     cbDifferent: TcxCheckBox;
     NDS_PriceList: TcxGridDBColumn;
+    edLetterSubject: TcxTextEdit;
+    cxLabel14: TcxLabel;
   private
     { Private declarations }
   public

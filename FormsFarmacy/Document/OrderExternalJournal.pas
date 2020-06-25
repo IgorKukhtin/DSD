@@ -51,6 +51,7 @@ type
     macUpdateisODeferredYes: TMultiAction;
     bbDeferredYes: TdxBarButton;
     bbDeferredNo: TdxBarButton;
+    LetterSubject: TcxGridDBColumn;
   private
     { Private declarations }
   public

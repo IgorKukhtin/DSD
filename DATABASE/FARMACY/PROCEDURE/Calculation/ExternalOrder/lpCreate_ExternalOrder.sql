@@ -63,6 +63,7 @@ BEGIN
                   inContractId := inContractId , -- Кому
              inInternalOrderId := inInternalOrder, -- Сыылка на внутренний заказ
                   inisDeferred := FALSE :: Boolean , -- отложен
+               inLetterSubject := '' :: TVarChar , -- Тема письма
                       inUserId := inUserId);
     END IF;
  
@@ -97,7 +98,8 @@ ALTER FUNCTION lpCreate_ExternalOrder(Integer, Integer, Integer, Integer, Intege
 
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
-               Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.  Воробкало А.А.
+               Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.  Воробкало А.А.   Шаблий О.В.
+ 25.06ю20                                                                                     * 
  05.08.15                                                                      * inComment
  06.11.14                         *
  02.10.14                         *

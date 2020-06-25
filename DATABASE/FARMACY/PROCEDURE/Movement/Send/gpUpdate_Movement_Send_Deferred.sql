@@ -29,6 +29,7 @@ $BODY$
    DECLARE vbPartionDateKindId Integer;
    DECLARE vbisReceived Boolean;
    DECLARE vbInsertDate TDateTime;
+   DECLARE vbConfirmed Boolean;
 BEGIN
 
    IF COALESCE(inMovementId, 0) = 0 THEN
@@ -52,7 +53,8 @@ BEGIN
         MovementLinkObject_PartionDateKind.ObjectId,
         COALESCE (MovementBoolean_Received.ValueData, FALSE),
         DATE_TRUNC ('DAY', MovementDate_Insert.ValueData),
-        COALESCE (MovementBoolean_VIP.ValueData, FALSE)
+        COALESCE (MovementBoolean_VIP.ValueData, FALSE),
+        COALESCE (MovementBoolean_Confirmed.ValueData, FALSE)
     INTO
         vbStatusId,
         vbisDeferred,
@@ -67,7 +69,8 @@ BEGIN
         vbPartionDateKindId,
         vbisReceived,
         vbInsertDate,
-        vbisVIP
+        vbisVIP,
+        vbConfirmed
     FROM Movement
         LEFT JOIN MovementBoolean AS MovementBoolean_Deferred
                                   ON MovementBoolean_Deferred.MovementId = Movement.Id
@@ -119,6 +122,9 @@ BEGIN
         LEFT JOIN MovementBoolean AS MovementBoolean_VIP
                                   ON MovementBoolean_VIP.MovementId = Movement.Id
                                  AND MovementBoolean_VIP.DescId = zc_MovementBoolean_VIP()
+        LEFT JOIN MovementBoolean AS MovementBoolean_Confirmed
+                                  ON MovementBoolean_Confirmed.MovementId = Movement.Id
+                                 AND MovementBoolean_Confirmed.DescId = zc_MovementBoolean_Confirmed()
     WHERE Movement.Id = inMovementId;
    
     IF vbisDefSUN = TRUE AND inisDeferred = TRUE
@@ -169,6 +175,11 @@ BEGIN
               AND COALESCE(vbPartionDateKindId, 0) <> zc_Enum_PartionDateKind_0()
            THEN
              RAISE EXCEPTION 'ÂÍÅÑÈÒÅ Â ß×ÅÉÊÓ ÊÎÌÌÅÍÒÀÐÈÉ - ÏÐÈ×ÈÍÓ ÏÅÐÅÄÀ×È!!!';
+           END IF;
+           
+           IF vbisVIP = TRUE AND vbConfirmed = FALSE
+           THEN
+             PERFORM gpUpdate_Movement_Confirmed(inMovementId, TRUE, inSession);
            END IF;
            
            IF (vbOccupancySUN > 0) AND vbisSUN = TRUE AND vbisReceived = FALSE

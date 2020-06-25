@@ -232,7 +232,24 @@ BEGIN
              , CASE WHEN COALESCE (MovementFloat_PromoStateKind.ValueData,0) = 1 THEN  TRUE ELSE FALSE END :: Boolean AS isPromoStateKind  
 
                -- цвет
-             , CASE WHEN Object_PromoStateKind.Id = zc_Enum_PromoStateKind_Head()
+/*
+- В работе Директор по маркетингу - заливается строка светло-желтым
+- В работе Исполнительный директор - заливается строка светло-желтым
+- Вернули для исправление - заливается строка оранжевым (ненасыщенным)
+- Согласован, но вверху статус Не проведен - заливается строка светло-голубым
+- Отменен заливается строка красным цветом 
+- В работе Отдел маркетинга - заливается строка светло-зеленым цветом
+*/
+             , CASE WHEN Object_PromoStateKind.Id = zc_Enum_PromoStateKind_Head() OR Object_PromoStateKind.Id = zc_Enum_PromoStateKind_Main() THEN zc_Color_Yelow()     -- В работе Директор по маркетингу или В работе Исполнительный Директор
+                    WHEN Object_PromoStateKind.Id = zc_Enum_PromoStateKind_Return() THEN 8435455                                                                        --  оранжевым (ненасыщенным)
+                    WHEN Object_PromoStateKind.Id = zc_Enum_PromoStateKind_Complete() AND Movement_Promo.StatusId = zc_Enum_Status_UnComplete() THEN zc_Color_Aqua()    --голубой
+                    WHEN Object_PromoStateKind.Id = zc_Enum_PromoStateKind_Canceled() THEN zc_Color_Red()   -- красный
+                    WHEN Object_PromoStateKind.Id = zc_Enum_PromoStateKind_Start() THEN 13041606 --zc_Color_Lime()     -- зеленый
+                    -- нет цвета
+                    ELSE zc_Color_White()
+               END AS Color_PromoStateKind
+
+/*             , CASE WHEN Object_PromoStateKind.Id = zc_Enum_PromoStateKind_Head()
                       OR (tmpSign.strSign ILIKE '%Старецкая М.В.%' AND Object_PromoStateKind.Id NOT IN (zc_Enum_PromoStateKind_Main(), zc_Enum_PromoStateKind_Complete()))
                         -- Исполнительный Директор - желтый / розовый
                         THEN CASE WHEN COALESCE (MovementFloat_PromoStateKind.ValueData, 0) = 1 THEN zc_Color_Yelow() ELSE zc_Color_Pink() END
@@ -245,7 +262,7 @@ BEGIN
                     ELSE zc_Color_White()
 
                END AS Color_PromoStateKind
-
+*/
              , tmpSign.strSign
              , tmpSign.strSignNo
 

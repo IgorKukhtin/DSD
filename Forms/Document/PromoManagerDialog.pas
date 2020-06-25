@@ -1,4 +1,4 @@
-unit Report_GoodsDialog;
+unit PromoManagerDialog;
 
 interface
 
@@ -9,34 +9,19 @@ uses
   cxContainer, cxEdit, Vcl.ComCtrls, dxCore, cxDateUtils, ChoicePeriod,
   dsdGuides, cxDropDownEdit, cxCalendar, cxTextEdit, cxMaskEdit, cxButtonEdit,
   cxPropertiesStore, dsdAddOn, dsdDB, cxLabel, dxSkinsCore,
-  dxSkinsDefaultPainters, cxCheckBox;
+  dxSkinsDefaultPainters, cxCheckBox, cxCurrencyEdit;
 
 type
-  TReport_GoodsDialogForm = class(TParentForm)
+  TPromoManagerDialogForm = class(TParentForm)
     cxButton1: TcxButton;
     cxButton2: TcxButton;
-    deEnd: TcxDateEdit;
-    deStart: TcxDateEdit;
-    PeriodChoice: TPeriodChoice;
     dsdUserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn;
     cxPropertiesStore: TcxPropertiesStore;
     FormParams: TdsdFormParams;
-    edGoods: TcxButtonEdit;
-    edGoodsGroup: TcxButtonEdit;
-    edLocation: TcxButtonEdit;
-    GuidesGoods: TdsdGuides;
-    GuidesGoodsGroup: TdsdGuides;
-    GuidesLocation: TdsdGuides;
-    edUnitGroup: TcxButtonEdit;
-    cxLabel3: TcxLabel;
-    cxLabel4: TcxLabel;
     cxLabel1: TcxLabel;
-    cxLabel2: TcxLabel;
-    GuidesUnitGroup: TdsdGuides;
-    cxLabel6: TcxLabel;
-    cxLabel7: TcxLabel;
-    cbPartner: TcxCheckBox;
-    cbPapty: TcxCheckBox;
+    edComment: TcxTextEdit;
+    cxLabel5: TcxLabel;
+    edPromoStateKindName: TcxTextEdit;
   private
     { Private declarations }
   public
@@ -48,6 +33,6 @@ implementation
 {$R *.dfm}
 
 initialization
-  RegisterClass(TReport_GoodsDialogForm);
+  RegisterClass(TPromoManagerDialogForm);
 
 end.

@@ -1079,7 +1079,7 @@ inherited PromoManagerJournalForm: TPromoManagerJournalForm
       end>
     PackSize = 1
     Left = 488
-    Top = 242
+    Top = 290
   end
   object JuridicalBasisGuides: TdsdGuides
     KeyField = 'Id'

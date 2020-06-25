@@ -25,6 +25,7 @@ RETURNS TABLE (Id Integer, InvNumber TVarChar, OperDate TDateTime, StatusCode In
              , OperDate_Dostavka  TVarChar
              , Zakaz_Text         TVarChar
              , Dostavka_Text      TVarChar
+             , LetterSubject      TVarChar
               )
 
 AS
@@ -211,6 +212,7 @@ BEGIN
 
            , tmpOrderSheduleText.Zakaz_Text
            , tmpOrderSheduleText.Dostavka_Text
+           , MovementString_LetterSubject.ValueData                            AS LetterSubject
      FROM tmpUnit
           LEFT JOIN Movement_OrderExternal_View ON Movement_OrderExternal_View.ToId = tmpUnit.UnitId
                                                AND Movement_OrderExternal_View.OperDate BETWEEN inStartDate AND inEndDate
@@ -241,6 +243,10 @@ BEGIN
           LEFT JOIN MovementBoolean AS MovementBoolean_Different
                                     ON MovementBoolean_Different.MovementId = Movement_OrderExternal_View.Id
                                    AND MovementBoolean_Different.DescId = zc_MovementBoolean_Different()
+
+          LEFT JOIN MovementString AS MovementString_LetterSubject
+                                   ON MovementString_LetterSubject.MovementId = Movement_OrderExternal_View.Id
+                                  AND MovementString_LetterSubject.DescId = zc_MovementString_LetterSubject()
     ;
 
 END;
