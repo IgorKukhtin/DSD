@@ -162,8 +162,20 @@ BEGIN
                                               AND Object_ImportExportLink_View.ValueId = ObjectId
    WHERE MovementLinkObject.DescId = zc_MovementLinkObject_Contract()
      AND MovementLinkObject.MovementId = inId;
+     
+   IF COALESCE(vbSubject, '') = '' THEN
+     SELECT Movement.InvNumber, Object_ImportExportLink_View.StringKey
+            INTO vbInvNumber, vbSubject
+     FROM MovementLinkObject
+          LEFT JOIN Movement ON Movement.Id = MovementLinkObject.MovementId
+          LEFT JOIN Object_ImportExportLink_View ON Object_ImportExportLink_View.MainId = vbUnitId
+                                                AND Object_ImportExportLink_View.LinkTypeId = zc_Enum_ImportExportLinkType_ClientEmailSubject()
+                                                AND Object_ImportExportLink_View.ValueId = ObjectId
+     WHERE MovementLinkObject.DescId = zc_MovementLinkObject_From()
+       AND MovementLinkObject.MovementId = inId;
+   END IF;
 
-
+   
     -- проверка
     IF COALESCE (vbMail, '') = '' THEN
        RAISE EXCEPTION 'У юридического лица нет контактактных лиц с e-mail';
@@ -254,4 +266,4 @@ $BODY$
 */
 
 -- тест
--- SELECT * FROM gpGet_DocumentDataForEmail (inId:= 8141142, inSession:= '377790');
+-- SELECT * FROM gpGet_DocumentDataForEmail (inId:= 19329018  , inSession:= '377790');

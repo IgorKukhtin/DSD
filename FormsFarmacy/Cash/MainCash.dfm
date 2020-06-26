@@ -2063,6 +2063,7 @@ inherited MainCashForm: TMainCashForm
     ColumnEnterList = <>
     SummaryItemList = <>
     SearchAsFilter = False
+    PropertiesCellList = <>
     Left = 640
     Top = 120
   end
@@ -2501,6 +2502,7 @@ inherited MainCashForm: TMainCashForm
     ColumnEnterList = <>
     SummaryItemList = <>
     SearchAsFilter = False
+    PropertiesCellList = <>
     Left = 472
     Top = 336
   end
@@ -2567,6 +2569,7 @@ inherited MainCashForm: TMainCashForm
     ColumnEnterList = <>
     SummaryItemList = <>
     SearchAsFilter = False
+    PropertiesCellList = <>
     Left = 592
     Top = 320
   end

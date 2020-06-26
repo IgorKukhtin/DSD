@@ -284,6 +284,7 @@ BEGIN
             -- минимальна€ цена поставщика - дл€ товара "сети"
           , MIN (PriceList.Amount) OVER (PARTITION BY _tmpMinPrice_RemainsList.ObjectId) AS MinPrice
           , PriceList.Id                       AS PriceListMovementItemId
+          , PriceList.MovementId               AS PriceListMovementId
           , MIDate_PartionGoods.ValueData      AS PartionGoodsDate
 
           /*, CASE -- если ÷ена поставщика >= PriceLimit (до какой цены учитывать бонус при расчете миним. цены)
@@ -470,6 +471,10 @@ BEGIN
 
           , tmpMinPrice_RemainsPrice.AreaId
           , tmpMinPrice_RemainsPrice.AreaName
+          , ROW_NUMBER() OVER (PARTITION BY tmpMinPrice_RemainsPrice.PriceListMovementId
+                                          , tmpMinPrice_RemainsPrice.GoodsId
+                                            ORDER BY tmpMinPrice_RemainsPrice.Price DESC) AS Ord
+
         FROM tmpMinPrice_RemainsPrice
         WHERE  COALESCE (tmpMinPrice_RemainsPrice.JuridicalIsPriceClose, FALSE) <> TRUE
 
@@ -478,6 +483,7 @@ BEGIN
        LEFT JOIN PriceSettings    ON ddd.MinPrice   BETWEEN PriceSettings.MinPrice    AND PriceSettings.MaxPrice
        LEFT JOIN PriceSettingsTOP ON ddd.MinPrice   BETWEEN PriceSettingsTOP.MinPrice AND PriceSettingsTOP.MaxPrice
        LEFT JOIN tmpCostCredit    ON ddd.MinPrice   BETWEEN tmpCostCredit.MinPrice    AND tmpCostCredit.PriceLimit
+       WHERE ddd.Ord = 1
    )
     -- отсортировали по цене + ƒней отсрочки и получили первого
   , MinPriceList AS (SELECT *
