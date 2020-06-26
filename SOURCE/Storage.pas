@@ -581,6 +581,8 @@ begin
    end
    else
 
+      Logger.AddToLog(' try ... AttemptCount = ' + IntToStr(AttemptCount));
+
             idHTTP.Post(CString + GetAddConnectString(pExecOnServer), FSendList, FReceiveStream,
               {$IFDEF DELPHI103RIO} IndyTextEncoding(1251) {$ELSE} TIdTextEncoding.GetEncoding(1251) {$ENDIF});
 
@@ -640,8 +642,12 @@ begin
               End
               else
               Begin
-                if Midle then
+                if Midle then begin
+                  Logger.AddToLog(' ... Sleep - 2 - idHTTP.Disconnect...');
                   idHTTP.Disconnect;
+                end
+                else
+                  Logger.AddToLog(' ... Sleep - 1...');
                 Sleep(1000);
               End;
             End;
@@ -653,8 +659,12 @@ begin
               End
               else
               Begin
-                if Midle then
+                if Midle then begin
+                  Logger.AddToLog(' ... Sleep - 2 - idHTTP.Disconnect...');
                   idHTTP.Disconnect;
+                end
+                else
+                  Logger.AddToLog(' ... Sleep - 2...');
                 Sleep(1000);
               End;
             End;
@@ -681,18 +691,18 @@ begin
     // Определяем тип возвращаемого результата
     if Ok then
     begin
-      Logger.AddToLog(' TStorage.ExecuteProc( ... if Ok then ...');
-
       DString := FReceiveStream.DataString;
 
-      Logger.AddToLog(' TStorage.ExecuteProc( ... Length(FReceiveStream.DataString) = ' + IntToStr(Length(DString)) + ' ...');
-      Logger.AddToLog(DString);
+      Logger.AddToLog(' TStorage.ExecuteProc( ... if Ok then Length = ' + IntToStr(Length(DString)) + ' ...');
+
+      //Logger.AddToLog(' TStorage.ExecuteProc( ... Length(FReceiveStream.DataString) = ' + IntToStr(Length(DString)) + ' ...');
+      //Logger.AddToLog(DString);
 
       ResultType := trim(Copy(DString, 1, ResultTypeLenght));
       isArchive := trim(lowercase(Copy(DString, ResultTypeLenght + 1, IsArchiveLenght))) = 't';
       Str := Copy(DString, ResultTypeLenght + IsArchiveLenght + 1, MaxInt);
 
-      Logger.AddToLog(' TStorage.ExecuteProc( ... if ResultType = gc' + ResultType + ' then ...');
+      //Logger.AddToLog(' TStorage.ExecuteProc( ... if ResultType = gc' + ResultType + ' then ...');
 
       if ResultType = gcMultiDataSet then
       begin
@@ -703,11 +713,14 @@ begin
       else if (ResultType = gcResult) or (ResultType = gcDataSet) then
         Result := PrepareStr;
 
-      Logger.AddToLog(Result);
+      //Logger.AddToLog(Result);
     end else
-      Logger.AddToLog(' TStorage.ExecuteProc( ... else ...');
+      //Logger.AddToLog(' TStorage.ExecuteProc( ... else ...');
   finally
     Logger.AddToLog(' TStorage.ExecuteProc( ... finally ...');
+    Logger.AddToLog(' ');
+    Logger.AddToLog(' ');
+    Logger.AddToLog(' ');
     // Выход из критической секции
     FCriticalSection.Leave;
   end;
