@@ -23,8 +23,8 @@ BEGIN
      -- проверка прав пользователя на вызов процедуры
      vbUserId:= lpCheckRight (inSession, zc_Enum_Process_Select_Movement_Income());
      -- vbUserId:= lpGetUserBySession (inSession);
-     
-     
+
+
      --
      vbMovementDescId:= (SELECT Movement.DescId FROM Movement WHERE Movement.Id = inMovementId);
 
@@ -102,7 +102,8 @@ BEGIN
                , (CASE WHEN Object_Composition.ValueData NOT IN ('-', '') THEN CASE WHEN LENGTH (Object_Composition.ValueData) <= 25 AND zc_Enum_GlobalConst_isTerry() = TRUE THEN 'сост: ' ELSE '' END || Object_Composition.ValueData ELSE '' END) :: TVarChar AS CompositionName
                , Object_GoodsInfo.ValueData     AS GoodsInfoName
                , Object_LineFabrica.ValueData   AS LineFabricaName
-               , Object_Label.ValueData         AS LabelName
+               , CASE WHEN TRIM (ObjectString_Label_UKR.ValueData) <> '' THEN ObjectString_Label_UKR.ValueData ELSE Object_Label.ValueData END :: TVarChar AS LabelName
+               , ObjectString_Label_UKR.ValueData AS LabelName_UKR
                , Object_GoodsSize.ValueData     AS GoodsSizeName
                , Object_Brand.ValueData         AS BrandName
                , Object_CountryBrand.ValueData  AS CountryBrandName
@@ -134,6 +135,11 @@ BEGIN
                 LEFT JOIN Object AS Object_Label       ON Object_Label.Id       = Object_PartionGoods.LabelId
                 LEFT JOIN Object AS Object_GoodsSize   ON Object_GoodsSize.Id   = Object_PartionGoods.GoodsSizeId
                 LEFT JOIN Object AS Object_Brand       ON Object_Brand.Id       = Object_PartionGoods.BrandId
+
+                LEFT JOIN ObjectString AS ObjectString_Label_UKR
+                                       ON ObjectString_Label_UKR.ObjectId = Object_PartionGoods.LabelId
+                                      AND ObjectString_Label_UKR.DescId   = zc_ObjectString_Label_UKR()
+                                      AND 1=0
 
                 LEFT JOIN ObjectLink AS Object_Brand_CountryBrand
                                      ON Object_Brand_CountryBrand.ObjectId = Object_Brand.Id
@@ -212,7 +218,8 @@ BEGIN
                , (CASE WHEN Object_Composition.ValueData NOT IN ('-', '') THEN CASE WHEN LENGTH (Object_Composition.ValueData) <= 25 THEN 'сост: ' ELSE '' END || Object_Composition.ValueData ELSE '' END) :: TVarChar AS CompositionName
                , Object_GoodsInfo.ValueData     AS GoodsInfoName
                , Object_LineFabrica.ValueData   AS LineFabricaName
-               , Object_Label.ValueData         AS LabelName
+               , CASE WHEN TRIM (ObjectString_Label_UKR.ValueData) <> '' THEN ObjectString_Label_UKR.ValueData ELSE Object_Label.ValueData END :: TVarChar AS LabelName
+               , ObjectString_Label_UKR.ValueData AS LabelName_UKR
                , Object_GoodsSize.ValueData     AS GoodsSizeName
                , Object_Brand.ValueData         AS BrandName
                , Object_CountryBrand.ValueData  AS CountryBrandName
@@ -245,6 +252,11 @@ BEGIN
                 LEFT JOIN Object AS Object_GoodsSize   ON Object_GoodsSize.Id   = Object_PartionGoods.GoodsSizeId
                 LEFT JOIN Object AS Object_Brand       ON Object_Brand.Id       = Object_PartionGoods.BrandId
 
+                LEFT JOIN ObjectString AS ObjectString_Label_UKR
+                                       ON ObjectString_Label_UKR.ObjectId = Object_PartionGoods.LabelId
+                                      AND ObjectString_Label_UKR.DescId   = zc_ObjectString_Label_UKR()
+                                      AND 1=0
+
                 LEFT JOIN ObjectLink AS Object_Brand_CountryBrand
                                      ON Object_Brand_CountryBrand.ObjectId = Object_Brand.Id
                                     AND Object_Brand_CountryBrand.DescId = zc_ObjectLink_Brand_CountryBrand()
@@ -272,4 +284,4 @@ $BODY$
 */
 
 -- тест
--- SELECT * FROM gpSelect_Movement_Income_PrintSticker (inMovementId := 432692, inUserId:= 2, inGoodsPrintId:= 0, inIsGoodsPrint:= FALSE, inSession:= '2'); -- FETCH ALL "<unnamed portal 1>";
+-- SELECT * FROM gpSelect_Movement_Income_PrintSticker (inMovementId := 432692, inUserId:= 2, inGoodsPrintId:= 0, inIsGoodsPrint:= FALSE, inSession:= zfCalc_UserAdmin()); -- FETCH ALL "<unnamed portal 1>";
