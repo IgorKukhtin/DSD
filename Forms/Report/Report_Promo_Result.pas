@@ -88,6 +88,7 @@ type
     cbGoodsKind: TcxCheckBox;
     OpenReport_SaleReturn_byPromo: TdsdOpenForm;
     bbReport_SaleReturn_byPromo: TdxBarButton;
+    CommentMain: TcxGridDBColumn;
   private
     { Private declarations }
   public

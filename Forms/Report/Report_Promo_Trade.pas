@@ -24,7 +24,7 @@ uses
   dxSkinSevenClassic, dxSkinSharp, dxSkinSharpPlus, dxSkinSilver,
   dxSkinSpringTime, dxSkinStardust, dxSkinSummer2008, dxSkinTheAsphaltWorld,
   dxSkinValentine, dxSkinVS2010, dxSkinWhiteprint, dxSkinXmas2008Blue,
-  cxCheckBox;
+  cxCheckBox, cxImageComboBox;
 
 type
   TReport_Promo_TradeForm = class(TAncestorReportForm)
@@ -53,6 +53,7 @@ type
     CostPromo: TcxGridDBColumn;
     AdvertisingName: TcxGridDBColumn;
     OperDate: TcxGridDBColumn;
+    StatusCode: TcxGridDBColumn;
     PriceSale: TcxGridDBColumn;
     Comment: TcxGridDBColumn;
     actPrint: TdsdPrintAction;

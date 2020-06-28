@@ -5,7 +5,7 @@ inherited Report_Promo_ResultForm: TReport_Promo_ResultForm
   AddOnFormData.ExecuteDialogAction = actReport_PromoDialog
   AddOnFormData.Params = FormParams
   ExplicitWidth = 1091
-  ExplicitHeight = 472
+  ExplicitHeight = 469
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
@@ -564,6 +564,14 @@ inherited Report_Promo_ResultForm: TReport_Promo_ResultForm
             HeaderAlignmentVert = vaCenter
             Width = 164
           end
+          object CommentMain: TcxGridDBColumn
+            Caption = #1055#1088#1080#1084#1077#1095#1072#1085#1080#1077' ('#1048#1090#1086#1075')'
+            DataBinding.FieldName = 'CommentMain'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 70
+          end
         end
       end
     end
@@ -869,7 +877,7 @@ inherited Report_Promo_ResultForm: TReport_Promo_ResultForm
         end
         item
           Name = 'ShowAll'
-          Value = 'False'
+          Value = False
           DataType = ftBoolean
           MultiSelectSeparator = ','
         end

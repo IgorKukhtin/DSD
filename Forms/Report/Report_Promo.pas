@@ -24,7 +24,7 @@ uses
   dxSkinSevenClassic, dxSkinSharp, dxSkinSharpPlus, dxSkinSilver,
   dxSkinSpringTime, dxSkinStardust, dxSkinSummer2008, dxSkinTheAsphaltWorld,
   dxSkinValentine, dxSkinVS2010, dxSkinWhiteprint, dxSkinXmas2008Blue,
-  cxCheckBox;
+  cxCheckBox, cxImageComboBox;
 
 type
   TReport_PromoForm = class(TAncestorReportForm)
@@ -62,6 +62,7 @@ type
     actReport_PromoDialog: TExecuteDialog;
     dxBarButton2: TdxBarButton;
     InvNumber: TcxGridDBColumn;
+    StatusCode: TcxGridDBColumn;
     UnitName: TcxGridDBColumn;
     PersonalTradeName: TcxGridDBColumn;
     PersonalName: TcxGridDBColumn;

@@ -4,7 +4,7 @@ inherited Report_Promo_TradeForm: TReport_Promo_TradeForm
   ClientWidth = 833
   AddOnFormData.ExecuteDialogAction = actReport_PromoDialog
   ExplicitWidth = 849
-  ExplicitHeight = 472
+  ExplicitHeight = 469
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
@@ -107,12 +107,37 @@ inherited Report_Promo_TradeForm: TReport_Promo_TradeForm
           Styles.Selection = nil
           Styles.Footer = nil
           Styles.Header = nil
+          object StatusCode: TcxGridDBColumn
+            Caption = #1057#1090#1072#1090#1091#1089
+            DataBinding.FieldName = 'StatusCode'
+            PropertiesClassName = 'TcxImageComboBoxProperties'
+            Properties.Images = dmMain.ImageList
+            Properties.Items = <
+              item
+                Description = #1053#1077' '#1087#1088#1086#1074#1077#1076#1077#1085
+                ImageIndex = 11
+                Value = 1
+              end
+              item
+                Description = #1055#1088#1086#1074#1077#1076#1077#1085
+                ImageIndex = 12
+                Value = 2
+              end
+              item
+                Description = #1059#1076#1072#1083#1077#1085
+                ImageIndex = 13
+                Value = 3
+              end>
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 55
+          end
           object InvNumber: TcxGridDBColumn
             Caption = #8470' '#1076#1086#1082#1091#1084#1077#1085#1090#1072
             DataBinding.FieldName = 'InvNumber'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
-            Width = 41
+            Width = 55
           end
           object UnitName: TcxGridDBColumn
             Caption = #1057#1082#1083#1072#1076
@@ -544,13 +569,13 @@ inherited Report_Promo_TradeForm: TReport_Promo_TradeForm
     ExplicitHeight = 57
     inherited deStart: TcxDateEdit
       Left = 114
-      EditValue = 42736d
+      EditValue = 43831d
       ExplicitLeft = 114
     end
     inherited deEnd: TcxDateEdit
       Left = 114
       Top = 32
-      EditValue = 42736d
+      EditValue = 43831d
       ExplicitLeft = 114
       ExplicitTop = 32
     end
@@ -800,7 +825,7 @@ inherited Report_Promo_TradeForm: TReport_Promo_TradeForm
         end
         item
           Name = 'ShowAll'
-          Value = 'False'
+          Value = False
           DataType = ftBoolean
           MultiSelectSeparator = ','
         end
