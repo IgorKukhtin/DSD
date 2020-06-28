@@ -13,6 +13,10 @@ AS
 $BODY$
 BEGIN
 
+IF inOperDate < DATE_TRUNC ('MONTH', CURRENT_DATE) - INTERVAL '1 MONTH'
+THEN RETURN;
+ELSE
+
     RETURN QUERY
      WITH tmpProductionRemains AS (SELECT ddd.GoodsId, ddd.goodskindid, ddd.partiongoodsid, ObjectDate.valuedata 
                                    FROM (SELECT dd.GoodsId, dd.goodskindid, dd.partiongoodsid, SUM(StartAmount) AS Summ 
@@ -135,6 +139,8 @@ BEGIN
                                         AND ObjectLink_Goods_Measure.DescId = zc_ObjectLink_Goods_Measure()
                     LEFT JOIN Object AS Object_Measure ON Object_Measure.Id = ObjectLink_Goods_Measure.ChildObjectId
        WHERE MiddleSumm <> 0;
+END IF;
+
 
 END;
 $BODY$

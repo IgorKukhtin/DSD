@@ -46,6 +46,21 @@ BEGIN
           RAISE EXCEPTION 'Ошибка.Нет Прав.';
       END IF;
 
+      -- Алексєєва О.С. + Бакал Л.І. + Штепа О.М. + Стогнієнко Н.В.
+      IF vbUserId IN (5416822, 5416811, 5416834, 5416838)
+         AND COALESCE (inVATPercent, 0) = 0
+      THEN
+          -- inVATPercent:= 20;
+          RAISE EXCEPTION 'Ошибка. % НДС = 0', '%';
+      END IF;
+
+
+      -- Стогнієнко Н.В.
+      /*IF vbUserId IN (5416838)
+      THEN
+          -- inVATPercent:= 20;
+          RAISE EXCEPTION 'Ошибка. % НДС = %', '% ';
+      END IF;*/
 
       -- получаем Id документа по GUID
       SELECT MovementString_GUID.MovementId 

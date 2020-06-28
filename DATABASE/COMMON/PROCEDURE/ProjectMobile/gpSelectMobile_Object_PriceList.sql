@@ -48,7 +48,7 @@ BEGIN
                                                           , zc_PriceList_Basis()) AS PriceListId
                                                  , COALESCE(ObjectLink_Partner_PriceListPrior.ChildObjectId
                                                           , ObjectLink_Juridical_PriceListPrior.ChildObjectId
-                                                          , zc_PriceList_BasisPrior()) AS PriceListPriorId
+                                                          , zc_PriceList_Basis() /*zc_PriceList_BasisPrior()*/) AS PriceListPriorId
                                    FROM lfSelectMobile_Object_Partner (inIsErased:= FALSE, inSession:= inSession) AS OP
                                         LEFT JOIN ObjectLink AS ObjectLink_Partner_PriceList
                                                              ON ObjectLink_Partner_PriceList.ObjectId = OP.Id

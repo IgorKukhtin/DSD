@@ -16,7 +16,7 @@ CREATE OR REPLACE FUNCTION gpInsertUpdate_Object_Receipt(
     IN inWeightPackage       TFloat    , -- Вес упаковки
     IN inStartDate           TDateTime , -- Начальная дата
     IN inEndDate             TDateTime , -- Конечная дата
-    IN inIsMain                Boolean   , -- Признак главный
+    IN inIsMain              Boolean   , -- Признак главный
     IN inGoodsId             Integer   , -- ссылка на Товары
     IN inGoodsKindId         Integer   , -- ссылка на Виды товаров
     IN inGoodsKindCompleteId Integer   , -- Виды товаров (готовая продукция)
@@ -104,6 +104,55 @@ BEGIN
  
    -- сохранили свойство <Признак главный>
    PERFORM lpInsertUpdate_ObjectBoolean (zc_ObjectBoolean_Receipt_Main(), ioId, inIsMain);
+
+   -- Проверка
+   IF inIsMain = TRUE
+   THEN
+       IF EXISTS (SELECT 1
+                  FROM ObjectLink AS ObjectLink_Receipt_Goods
+                     --INNER JOIN Object AS Object_Receipt ON Object_Receipt.Id       = ObjectLink_Receipt_Goods.ObjectId
+                     --                                   AND Object_Receipt.isErased = FALSE
+                       INNER JOIN ObjectBoolean AS ObjectBoolean_Main
+                                                ON ObjectBoolean_Main.ObjectId  = ObjectLink_Receipt_Goods.ObjectId
+                                               AND ObjectBoolean_Main.DescId    = zc_ObjectBoolean_Receipt_Main()
+                                               AND ObjectBoolean_Main.ValueData = TRUE
+                       LEFT JOIN ObjectLink AS ObjectLink_Receipt_GoodsKind
+                                            ON ObjectLink_Receipt_GoodsKind.ObjectId = ObjectLink_Receipt_Goods.ObjectId
+                                           AND ObjectLink_Receipt_GoodsKind.DescId   = zc_ObjectLink_Receipt_GoodsKind()
+                       LEFT JOIN ObjectLink AS ObjectLink_Receipt_GoodsKindComplete
+                                            ON ObjectLink_Receipt_GoodsKindComplete.ObjectId = ObjectLink_Receipt_Goods.ObjectId
+                                           AND ObjectLink_Receipt_GoodsKindComplete.DescId   = zc_ObjectLink_Receipt_GoodsKindComplete()
+                  WHERE ObjectLink_Receipt_Goods.ChildObjectId = inGoodsId
+                    AND ObjectLink_Receipt_Goods.DescId = zc_ObjectLink_Receipt_Goods()
+                    AND COALESCE (ObjectLink_Receipt_GoodsKind.ChildObjectId, 0) = COALESCE (inGoodsKindId, 0)
+                    AND COALESCE (ObjectLink_Receipt_GoodsKindComplete.ChildObjectId, zc_GoodsKind_Basis()) = CASE WHEN COALESCE (inGoodsKindCompleteId, 0) = 0 THEN zc_GoodsKind_Basis() ELSE inGoodsKindCompleteId END
+                    AND ObjectLink_Receipt_Goods.ObjectId <> COALESCE (ioId, 0)
+                 )
+       THEN
+           RAISE EXCEPTION 'Ошибка.Код существующей главной рецептуры с такими параметрами = <%>.Дублирование запрещено'
+               , (SELECT Object_Receipt.ObjectCode
+                  FROM ObjectLink AS ObjectLink_Receipt_Goods
+                       LEFT JOIN Object AS Object_Receipt ON Object_Receipt.Id       = ObjectLink_Receipt_Goods.ObjectId
+                                                      -- AND Object_Receipt.isErased = FALSE
+                       INNER JOIN ObjectBoolean AS ObjectBoolean_Main
+                                                ON ObjectBoolean_Main.ObjectId  = ObjectLink_Receipt_Goods.ObjectId
+                                               AND ObjectBoolean_Main.DescId    = zc_ObjectBoolean_Receipt_Main()
+                                               AND ObjectBoolean_Main.ValueData = TRUE
+                       LEFT JOIN ObjectLink AS ObjectLink_Receipt_GoodsKind
+                                            ON ObjectLink_Receipt_GoodsKind.ObjectId = ObjectLink_Receipt_Goods.ObjectId
+                                           AND ObjectLink_Receipt_GoodsKind.DescId   = zc_ObjectLink_Receipt_GoodsKind()
+                       LEFT JOIN ObjectLink AS ObjectLink_Receipt_GoodsKindComplete
+                                            ON ObjectLink_Receipt_GoodsKindComplete.ObjectId = ObjectLink_Receipt_Goods.ObjectId
+                                           AND ObjectLink_Receipt_GoodsKindComplete.DescId   = zc_ObjectLink_Receipt_GoodsKindComplete()
+                  WHERE ObjectLink_Receipt_Goods.ChildObjectId = inGoodsId
+                    AND ObjectLink_Receipt_Goods.DescId = zc_ObjectLink_Receipt_Goods()
+                    AND COALESCE (ObjectLink_Receipt_GoodsKind.ChildObjectId, 0) = COALESCE (inGoodsKindId, 0)
+                    AND COALESCE (ObjectLink_Receipt_GoodsKindComplete.ChildObjectId, zc_GoodsKind_Basis()) = CASE WHEN COALESCE (inGoodsKindCompleteId, 0) = 0 THEN zc_GoodsKind_Basis() ELSE inGoodsKindCompleteId END
+                    AND ObjectLink_Receipt_Goods.ObjectId <> COALESCE (ioId, 0)
+                 )
+           ;
+       END IF;
+   END IF;
 
    IF COALESCE (inMaskId, 0) <> 0
       THEN

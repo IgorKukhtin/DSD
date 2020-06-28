@@ -408,4 +408,4 @@ $BODY$
 
 -- тест
 -- SELECT * FROM gpSelectMobile_Object_Partner (inSyncDateIn:= zc_DateStart(), inSession:= zfCalc_UserAdmin())
--- SELECT * FROM gpSelectMobile_Object_Partner (inSyncDateIn:= zc_DateStart(), inSession:= '1839161')
+-- SELECT * FROM gpSelectMobile_Object_Partner (inSyncDateIn:= zc_DateStart(), inSession:= '5416822')

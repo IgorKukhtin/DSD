@@ -79,7 +79,7 @@ BEGIN
                                    UNION                                    
                                    SELECT COALESCE(ObjectLink_Partner_PriceListPrior.ChildObjectId
                                                  , ObjectLink_Juridical_PriceListPrior.ChildObjectId
-                                                 , zc_PriceList_BasisPrior()) AS PriceListId
+                                                 , zc_PriceList_Basis() /*zc_PriceList_BasisPrior()*/) AS PriceListId
                                    FROM tmpPartner
                                         LEFT JOIN ObjectLink AS ObjectLink_Partner_PriceListPrior
                                                              ON ObjectLink_Partner_PriceListPrior.ObjectId = tmpPartner.PartnerId
