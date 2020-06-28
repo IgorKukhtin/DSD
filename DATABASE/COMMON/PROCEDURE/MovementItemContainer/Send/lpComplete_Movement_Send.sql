@@ -338,6 +338,7 @@ BEGIN
                                                                               )
                                           -- только не ОС
                                           AND tmpMI.ContainerId_asset = 0
+
                                        UNION ALL
                                         SELECT tmpMI.MovementItemId                                  AS MovementItemId
                                              , Container.Id                                          AS ContainerId
