@@ -202,7 +202,7 @@ BEGIN
                                                                           AND ObjectLink_Contract_JuridicalBasis.DescId   = zc_ObjectLink_Contract_JuridicalBasis()
 
            WHERE Movement.Id = inMovementId
-             AND Movement.DescId = zc_Movement_Loss()
+             AND Movement.DescId IN (zc_Movement_Loss(), zc_Movement_LossAsset())
              AND Movement.StatusId IN (zc_Enum_Status_UnComplete(), zc_Enum_Status_Erased())
           ) AS _tmp;
 
@@ -227,9 +227,12 @@ BEGIN
                                    ELSE 0
                               END AS GoodsKindId
                             , COALESCE (MILinkObject_GoodsKindComplete.ObjectId, zc_GoodsKind_Basis()) AS GoodsKindId_complete
-                            , COALESCE (MILinkObject_Asset.ObjectId, 0)              AS AssetId
+                            , CASE WHEN vbMovementDescId = zc_Movement_LossAsset() AND Object_Goods.DescId = zc_Object_Asset() THEN Object_Goods.Id ELSE COALESCE (MILinkObject_Asset.ObjectId, 0) END AS AssetId
                             , COALESCE (MIString_PartionGoods.ValueData, '')         AS PartionGoods
                             , COALESCE (MIDate_PartionGoods.ValueData, zc_DateEnd()) AS PartionGoodsDate
+
+                            , COALESCE (MIFloat_ContainerId.ValueData, 0) :: Integer AS ContainerId_asset
+                            , COALESCE (CLO_PartionGoods.ObjectId, 0)                AS PartionGoodsId_asset
 
                             , MovementItem.Amount AS OperCount
 
@@ -266,6 +269,14 @@ BEGIN
                                                        ON MIDate_PartionGoods.MovementItemId = MovementItem.Id
                                                       AND MIDate_PartionGoods.DescId = zc_MIDate_PartionGoods()
 
+                             LEFT JOIN MovementItemFloat AS MIFloat_ContainerId
+                                                         ON MIFloat_ContainerId.MovementItemId = MovementItem.Id
+                                                        AND MIFloat_ContainerId.DescId         = zc_MIFloat_ContainerId()
+                                                        AND vbMovementDescId                   = zc_Movement_LossAsset()
+                             LEFT JOIN ContainerLinkObject AS CLO_PartionGoods
+                                                           ON CLO_PartionGoods.ContainerId = MIFloat_ContainerId.ValueData :: Integer
+                                                          AND CLO_PartionGoods.DescId      = zc_ContainerLinkObject_PartionGoods()
+
                             LEFT JOIN ObjectBoolean AS ObjectBoolean_PartionCount
                                                     ON ObjectBoolean_PartionCount.ObjectId = MovementItem.ObjectId
                                                    AND ObjectBoolean_PartionCount.DescId = zc_ObjectBoolean_Goods_PartionCount()
@@ -275,11 +286,30 @@ BEGIN
                             LEFT JOIN ObjectLink AS ObjectLink_Goods_InfoMoney
                                                  ON ObjectLink_Goods_InfoMoney.ObjectId = MovementItem.ObjectId
                                                 AND ObjectLink_Goods_InfoMoney.DescId = zc_ObjectLink_Goods_InfoMoney()
-                            LEFT JOIN Object_InfoMoney_View AS View_InfoMoney ON View_InfoMoney.InfoMoneyId = ObjectLink_Goods_InfoMoney.ChildObjectId
+
+                            LEFT JOIN Object AS Object_Goods ON Object_Goods.Id = MovementItem.ObjectId
+                            LEFT JOIN Object_InfoMoney_View AS View_InfoMoney
+                                                            ON View_InfoMoney.InfoMoneyId = CASE WHEN Object_Goods.DescId = zc_Object_Asset()
+                                                                                                      THEN -- !!!временно захардкодил!!! - Капитальные инвестиции + Производственное оборудование
+                                                                                                           zc_Enum_InfoMoney_70102()
+                                                                                                 ELSE ObjectLink_Goods_InfoMoney.ChildObjectId
+                                                                                            END
 
                        WHERE Movement.Id = inMovementId
-                         AND Movement.StatusId = zc_Enum_Status_UnComplete()
+                         AND Movement.StatusId IN (zc_Enum_Status_UnComplete(), zc_Enum_Status_Erased())
                       )
+, tmpContainer_asset AS (SELECT tmpMI.ContainerId_asset
+                                -- тоже на всякий случай - Капитальные инвестиции + Производственное оборудование
+                              , COALESCE (CLO_InfoMoney.ObjectId, zc_Enum_InfoMoney_70102()) AS InfoMoneyId
+                              , ROW_NUMBER()     OVER (PARTITION BY tmpMI.ContainerId_asset ORDER BY CLO_InfoMoney.ObjectId ASC) AS Ord -- !!!на всякий случай!!!
+                         FROM tmpMI
+                              LEFT JOIN Container ON Container.ParentId = tmpMI.ContainerId_asset
+                                                 AND Container.DescId   = zc_Container_Summ()
+                              LEFT JOIN ContainerLinkObject AS CLO_InfoMoney
+                                                            ON CLO_InfoMoney.ContainerId = Container.Id
+                                                           AND CLO_InfoMoney.DescId      = zc_ContainerLinkObject_InfoMoney()
+                         WHERE tmpMI.ContainerId_asset > 0
+                        )
         , tmpContainer_find
                    AS (SELECT tmpMI.MovementItemId
                             , tmpMI.GoodsId
@@ -310,6 +340,8 @@ BEGIN
                          AND ((CLO_Unit.ObjectId   = vbUnitId   AND vbUnitId    > 0)
                            OR (CLO_Member.ObjectId = vbMemberId AND vbMemberId  > 0)
                              )
+                         -- только не ОС
+                         AND tmpMI.ContainerId_asset = 0
                       )
         , tmpContainer_calc
                    AS (SELECT tmpContainer_find.ContainerId
@@ -349,20 +381,21 @@ BEGIN
         -- Результат
         SELECT
               tmpMI.MovementItemId
-            , COALESCE (tmpContainer.ContainerId, 0) AS ContainerId_Goods -- сформируем позже - !!!или подбор партий!!!
+              -- !!!или подбор партий ИЛИ ОС!!!
+            , CASE WHEN vbMovementDescId = zc_Movement_LossAsset() THEN tmpMI.ContainerId_asset ELSE COALESCE (tmpContainer.ContainerId, 0) END AS ContainerId_Goods
             , tmpMI.GoodsId
             , tmpMI.GoodsKindId
             , tmpMI.GoodsKindId_complete
             , 0 AS AssetId -- tmpMI.AssetId -- !!!временно отключил, т.к. не должно участвовать в партии!!!
             , tmpMI.PartionGoods
             , tmpMI.PartionGoodsDate
-            , COALESCE (tmpContainer.PartionGoodsId, 0) AS PartionGoodsId_Item
+            , CASE WHEN vbMovementDescId = zc_Movement_LossAsset() THEN tmpMI.PartionGoodsId_asset ELSE COALESCE (tmpContainer.PartionGoodsId, 0) END AS PartionGoodsId_Item
 
             , COALESCE (tmpContainer.Amount, tmpMI.OperCount) AS OperCount
 
-            , tmpMI.InfoMoneyGroupId       -- Управленческая группа
-            , tmpMI.InfoMoneyDestinationId -- Управленческие назначения
-            , tmpMI.InfoMoneyId            -- Статьи назначения
+            , COALESCE (View_InfoMoney.InfoMoneyGroupId, tmpMI.InfoMoneyGroupId)             AS InfoMoneyGroupId       -- Управленческая группа
+            , COALESCE (View_InfoMoney.InfoMoneyDestinationId, tmpMI.InfoMoneyDestinationId) AS InfoMoneyDestinationId -- Управленческие назначения
+            , COALESCE (View_InfoMoney.InfoMoneyId, tmpMI.InfoMoneyId)                       AS InfoMoneyId            -- Статьи назначения
 
               -- Бизнес баланса: не используется
             , tmpMI.BusinessId
@@ -370,11 +403,16 @@ BEGIN
             , tmpMI.isPartionCount
             , tmpMI.isPartionSumm
 
-            , 0 AS PartionGoodsId -- Партии товара, сформируем позже
+              -- Партии товара, сформируем позже
+            , CASE WHEN vbMovementDescId = zc_Movement_LossAsset() THEN tmpMI.PartionGoodsId_asset ELSE 0 END AS PartionGoodsId
 
         FROM tmpMI
              LEFT JOIN tmpContainer ON tmpContainer.MovementItemId = tmpMI.MovementItemId
-       ;
+             LEFT JOIN tmpContainer_asset ON tmpContainer_asset.ContainerId_asset = tmpMI.ContainerId_asset
+                                       AND tmpContainer_asset.Ord                 = 1
+             LEFT JOIN Object_InfoMoney_View AS View_InfoMoney
+                                             ON View_InfoMoney.InfoMoneyId = tmpContainer_asset.InfoMoneyId
+     ;
 
 /*     IF inUserId = 5
      THEN
@@ -382,6 +420,22 @@ BEGIN
               , (SELECT _tmpItem.PartionGoodsId_Item FROM _tmpItem WHERE _tmpItem.MovementItemId = 165388198)
                ;
      END IF;*/
+
+     -- Проверка - для ОС
+     IF vbMovementDescId = zc_Movement_LossAsset()
+        AND EXISTS (SELECT 1
+                    FROM _tmpItem
+                    WHERE COALESCE (_tmpItem.ContainerId_Goods, 0) = 0 OR COALESCE (_tmpItem.PartionGoodsId, 0) = 0
+                   )
+     THEN
+          RAISE EXCEPTION 'Ошибка.Для ОС <%> должна быть указана партия.'
+                        , lfGet_Object_ValueData_sh ((SELECT _tmpItem.GoodsId
+                                                      FROM _tmpItem
+                                                      WHERE COALESCE (_tmpItem.ContainerId_Goods, 0) = 0 OR COALESCE (_tmpItem.PartionGoodsId, 0) = 0
+                                                      LIMIT 1
+                                                     ))
+                                                     ;
+     END IF;
 
      -- Проверка - т.к.для этих УП-статей могли искать партии - надо что б товар был уникальным
      IF EXISTS (SELECT _tmpItem.GoodsId FROM (SELECT DISTINCT _tmpItem.MovementItemId, _tmpItem.GoodsId
@@ -751,7 +805,7 @@ BEGIN
 
      -- 6.2. ФИНИШ - Обязательно меняем статус документа + сохранили протокол
      PERFORM lpComplete_Movement (inMovementId := inMovementId
-                                , inDescId     := zc_Movement_Loss()
+                                , inDescId     := vbMovementDescId
                                 , inUserId     := inUserId
                                  );
 

@@ -38,14 +38,14 @@ BEGIN
          CREATE TEMP TABLE _tmpItem_SummClient (MovementItemId Integer, ContainerId_Summ Integer, ContainerId_Summ_20102 Integer, ContainerId_Goods Integer, AccountId Integer, AccountId_20102 Integer
                                               , InfoMoneyGroupId Integer, InfoMoneyDestinationId Integer, InfoMoneyId Integer
                                               , GoodsId Integer, PartionId Integer, GoodsSizeId Integer, PartionId_MI Integer
-                                              , OperCount TFloat, OperSumm     TFloat, OperSumm_ToPay     TFloat, TotalPay     TFloat
-                                                                , OperSumm_val TFloat, OperSumm_ToPay_val TFloat, TotalPay_val TFloat
-                                              , OperCount_sale TFloat, OperSumm_sale     TFloat, OperSummPriceList_sale    TFloat
-                                                                     , OperSumm_sale_val TFloat, OperSummPriceList_sale_val TFloat
-                                              , Summ_10201     TFloat, Summ_10202     TFloat, Summ_10203     TFloat, Summ_10204     TFloat
-                                              , Summ_10201_val TFloat, Summ_10202_val TFloat, Summ_10203_val TFloat, Summ_10204_val TFloat
-                                              , ContainerId_ProfitLoss_10101     Integer, ContainerId_ProfitLoss_10201     Integer, ContainerId_ProfitLoss_10202     Integer, ContainerId_ProfitLoss_10203     Integer, ContainerId_ProfitLoss_10204     Integer, ContainerId_ProfitLoss_10301     Integer
-                                              , ContainerId_ProfitLoss_10101_val Integer, ContainerId_ProfitLoss_10201_val Integer, ContainerId_ProfitLoss_10202_val Integer, ContainerId_ProfitLoss_10203_val Integer, ContainerId_ProfitLoss_10204_val Integer, ContainerId_ProfitLoss_10301_val Integer
+                                              , OperCount TFloat, OperSumm      TFloat, OperSumm_ToPay      TFloat, TotalPay      TFloat
+                                                                , OperSumm_curr TFloat, OperSumm_ToPay_curr TFloat, TotalPay_curr TFloat
+                                              , OperCount_sale TFloat, OperSumm_sale      TFloat, OperSummPriceList_sale     TFloat
+                                                                     , OperSumm_sale_curr TFloat, OperSummPriceList_sale_curr TFloat
+                                              , Summ_10201      TFloat, Summ_10202      TFloat, Summ_10203      TFloat, Summ_10204      TFloat
+                                              , Summ_10201_curr TFloat, Summ_10202_curr TFloat, Summ_10203_curr TFloat, Summ_10204_curr TFloat
+                                              , ContainerId_ProfitLoss_10101      Integer, ContainerId_ProfitLoss_10201      Integer, ContainerId_ProfitLoss_10202      Integer, ContainerId_ProfitLoss_10203      Integer, ContainerId_ProfitLoss_10204      Integer, ContainerId_ProfitLoss_10301      Integer
+                                              , ContainerId_ProfitLoss_10101_curr Integer, ContainerId_ProfitLoss_10201_curr Integer, ContainerId_ProfitLoss_10202_curr Integer, ContainerId_ProfitLoss_10203_curr Integer, ContainerId_ProfitLoss_10204_curr Integer, ContainerId_ProfitLoss_10301_curr Integer
                                                ) ON COMMIT DROP;
 
          -- таблица - элементы документа, со всеми свойствами для формирования Аналитик в проводках

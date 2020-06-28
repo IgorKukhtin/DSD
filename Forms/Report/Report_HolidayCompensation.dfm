@@ -286,13 +286,13 @@ object Report_HolidayCompensationForm: TReport_HolidayCompensationForm
         Width = 90
       end
       object Amount: TcxGridDBColumn
-        Caption = #1057#1091#1084#1084#1072' '#1047#1055' '#1079#1072' '#1087#1077#1088#1080#1086#1076
+        Caption = #1057#1091#1084#1084#1072' '#1047#1055' '#1079#1072' '#1043#1086#1076
         DataBinding.FieldName = 'Amount'
         PropertiesClassName = 'TcxCurrencyEditProperties'
         Properties.DisplayFormat = ',0.##;-,0.##; ;'
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
-        HeaderHint = #1057#1091#1084#1084#1072' '#1053#1072#1095#1080#1089#1083#1077#1085#1086' + '#1054#1090#1087#1091#1089#1082#1085#1099#1077
+        HeaderHint = #1057#1091#1084#1084#1072' '#1053#1072#1095#1080#1089#1083#1077#1085#1086' + '#1054#1090#1087#1091#1089#1082#1085#1099#1077' '#1079#1072' '#1043#1086#1076
         Width = 90
       end
       object Day_calendar: TcxGridDBColumn
@@ -302,6 +302,17 @@ object Report_HolidayCompensationForm: TReport_HolidayCompensationForm
         Properties.DisplayFormat = ',0.##;-,0.##; ;'
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
+        HeaderHint = #1050#1072#1083#1077#1085#1076#1072#1088#1085#1099#1077' '#1076#1085#1080' '#1084#1080#1085#1091#1089' '#1076#1085#1080' '#1086#1090#1087#1091#1089#1082#1072' - '#1079#1072' '#1087#1077#1088#1080#1086#1076
+        Width = 90
+      end
+      object Day_calendar_year: TcxGridDBColumn
+        Caption = #1056#1072#1073#1086#1095'. '#1076#1085#1077#1081' ('#1075#1086#1076')'
+        DataBinding.FieldName = 'Day_calendar_year'
+        PropertiesClassName = 'TcxCurrencyEditProperties'
+        Properties.DisplayFormat = ',0.##;-,0.##; ;'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        HeaderHint = #1050#1072#1083#1077#1085#1076#1072#1088#1085#1099#1077' '#1076#1085#1080' '#1084#1080#1085#1091#1089' '#1076#1085#1080' '#1086#1090#1087#1091#1089#1082#1072' - '#1079#1072' '#1075#1086#1076
         Width = 90
       end
     end
@@ -319,7 +330,7 @@ object Report_HolidayCompensationForm: TReport_HolidayCompensationForm
     object deStart: TcxDateEdit
       Left = 65
       Top = 5
-      EditValue = 43466d
+      EditValue = 43831d
       Properties.SaveTime = False
       Properties.ShowTime = False
       TabOrder = 1
@@ -873,13 +884,13 @@ object Report_HolidayCompensationForm: TReport_HolidayCompensationForm
         end
         item
           Name = 'inIsDay'
-          Value = 'False'
+          Value = False
           DataType = ftBoolean
           MultiSelectSeparator = ','
         end
         item
           Name = 'isPrint'
-          Value = 'False'
+          Value = False
           DataType = ftBoolean
           MultiSelectSeparator = ','
         end>
@@ -937,13 +948,13 @@ object Report_HolidayCompensationForm: TReport_HolidayCompensationForm
         end
         item
           Name = 'inIsDay'
-          Value = 'False'
+          Value = False
           DataType = ftBoolean
           MultiSelectSeparator = ','
         end
         item
           Name = 'isPrint'
-          Value = 'True'
+          Value = True
           DataType = ftBoolean
           MultiSelectSeparator = ','
         end>
@@ -1016,6 +1027,7 @@ object Report_HolidayCompensationForm: TReport_HolidayCompensationForm
       end>
     ColumnEnterList = <>
     SummaryItemList = <>
+    PropertiesCellList = <>
     Left = 432
     Top = 344
   end

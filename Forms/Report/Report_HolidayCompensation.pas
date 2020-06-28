@@ -82,6 +82,7 @@ type
     cxLabel2: TcxLabel;
     edPersonalServiceList: TcxButtonEdit;
     GuidesPersonalServiceList: TdsdGuides;
+    Day_calendar_year: TcxGridDBColumn;
   private
   public
   end;

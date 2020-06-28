@@ -20,16 +20,11 @@ BEGIN
 
      -- создаются временные таблицы - для формирование данных для проводок
      PERFORM lpComplete_Movement_Loss_CreateTemp();
-  
+
      -- !!!проводки!!!
-     /*PERFORM lpComplete_Movement_Loss (inMovementId:= inMovementId
+     PERFORM lpComplete_Movement_Loss (inMovementId:= inMovementId
                                      , inUserId    := vbUserId
                                       );
-       */
-     PERFORM lpComplete_Movement (inMovementId := inMovementId
-                                 , inDescId     := zc_Movement_LossAsset()
-                                 , inUserId     := vbUserId
-                                  );
 
 END;
 $BODY$

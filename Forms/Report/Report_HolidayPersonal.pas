@@ -83,6 +83,9 @@ type
     Day_Hol: TcxGridDBColumn;
     PersonalServiceListName: TcxGridDBColumn;
     isNotCompensation: TcxGridDBColumn;
+    Day_Hol_year: TcxGridDBColumn;
+    Day_real_year: TcxGridDBColumn;
+    Day_calendar_year: TcxGridDBColumn;
   private
   public
   end;

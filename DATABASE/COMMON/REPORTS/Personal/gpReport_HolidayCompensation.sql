@@ -21,15 +21,16 @@ RETURNS TABLE(MemberId Integer
             , DateIn TDateTime, DateOut TDateTime
             , isDateOut Boolean, isMain Boolean, isOfficial Boolean
             , isNotCompensation Boolean
-            , Day_vacation  TFloat
-            , Day_holiday   TFloat
-            , Day_diff      TFloat
-            , AmountCompensation TFloat
-            , SummaCompensation  TFloat
+            , Day_vacation           TFloat
+            , Day_holiday            TFloat -- Дней отпуска ЗА ПЕРИОД
+            , Day_diff               TFloat
+            , AmountCompensation     TFloat
+            , SummaCompensation      TFloat
             , SummaCompensation_fact TFloat -- компенсация из док. ведомости начисления
             , SummaCompensation_diff TFloat
-            , Day_calendar       TFloat -- Рабоч. дней
-            , Amount             TFloat -- Сумма ЗП за период (Сумма Начислено + Отпускные) 
+            , Day_calendar           TFloat -- Рабоч. дней - ЗА ПЕРИОД
+            , Day_calendar_year      TFloat -- Рабоч. дней - ЗА ГОД
+            , Amount                 TFloat -- Сумма ЗП за период (Сумма Начислено + Отпускные)
             )
 AS
 $BODY$
@@ -42,7 +43,7 @@ BEGIN
     -- проверка прав пользователя на вызов процедуры
     -- PERFORM lpCheckRight (inSession, zc_Enum_Process_Select_MI_SheetWorkTime());
     vbUserId := inSession::Integer;
-    
+
     -- кол-во месяцев после чего положен отпуск - 1 отпуск - после 6 м. непрерывного стажа
     vbMonthHoliday := 6;
     -- кол-во положенных дней отпуска
@@ -131,9 +132,10 @@ BEGIN
                        , tmp.isOfficial
                        , tmp.isNotCompensation
                        , tmp.Day_vacation
-                       , tmp.Day_holiday   -- использовано 
-                       , tmp.Day_diff      -- не использовано   
-                       , tmp.Day_calendar
+                       , tmp.Day_holiday       -- использовано дней отпуска
+                       , tmp.Day_diff          -- не использовано дней отпуска
+                       , tmp.Day_calendar      -- Рабоч. дней
+                       , tmp.Day_calendar_year -- Рабоч. дней
                     FROM gpReport_HolidayPersonal (inStartDate:= inStartDate, inUnitId:= inUnitId, inMemberId:= inMemberId, inPersonalServiceListId := inPersonalServiceListId, inisDetail:= FALSE, inSession:= inSession) AS tmp
                    )
 
@@ -142,7 +144,7 @@ BEGIN
                          INNER JOIN Movement ON Movement.Id       = MovementDate.MovementId
                                             AND Movement.DescId   = zc_Movement_PersonalService()
                                             AND Movement.StatusId = zc_Enum_Status_Complete()
-                    WHERE MovementDate.ValueData BETWEEN inStartDate - INTERVAL '1 YEAR' AND inStartDate - INTERVAL '1 DAY' 
+                    WHERE MovementDate.ValueData BETWEEN inStartDate - INTERVAL '1 YEAR' + INTERVAL '1 DAY' AND inStartDate
                       AND MovementDate.DescId = zc_MIDate_ServiceDate()
                    )
   , tmpPersonalService AS (SELECT ObjectLink_Personal_Member.ChildObjectId AS MemberId
@@ -151,7 +153,7 @@ BEGIN
                                 INNER JOIN MovementItem ON MovementItem.MovementId = Movement.Id
                                                        AND MovementItem.DescId = zc_MI_Master()
                                                        AND MovementItem.isErased = FALSE
-                                                                
+
                                 INNER JOIN MovementItemLinkObject AS MILinkObject_Unit
                                                                   ON MILinkObject_Unit.MovementItemId = MovementItem.Id
                                                                  AND MILinkObject_Unit.DescId = zc_MILinkObject_Unit()
@@ -177,20 +179,20 @@ BEGIN
                              AND (ObjectLink_Personal_PersonalServiceList.ChildObjectId = inPersonalServiceListId OR inPersonalServiceListId = 0)
                            GROUP BY ObjectLink_Personal_Member.ChildObjectId
                            )
-  -- выбор док. для определения выплаты компенсации по отпускам  
+  -- выбор док. для определения выплаты компенсации по отпускам
   -- ВАЖНО - если в отчете 31.12.2019, тогда выбираем zc_Movement_PersonalService за период с 01.01.2020 по 30.06.2020, т.е. + 6 месяцев, т.к. начисляют компенсацию в будущих месяцах
   , tmpMovementCompens AS (SELECT Movement.Id
                            FROM Movement
                            WHERE Movement.DescId   = zc_Movement_PersonalService()
                              AND Movement.StatusId = zc_Enum_Status_Complete()
-                             AND Movement.OperDate BETWEEN inStartDate + INTERVAL '1 DAY' AND inStartDate + INTERVAL '6 MONTH' 
+                             AND Movement.OperDate BETWEEN inStartDate + INTERVAL '1 DAY' AND inStartDate + INTERVAL '6 MONTH'
                           )
   , tmpMICompens AS (SELECT ObjectLink_Personal_Member.ChildObjectId AS MemberId
                           , SUM (COALESCE (MIFloat_SummCompensation.ValueData,0)) ::TFloat AS SummCompensation
                      FROM tmpMovementCompens AS Movement
                           INNER JOIN MovementItem ON MovementItem.MovementId = Movement.Id
                                                 AND MovementItem.DescId = zc_MI_Master()
-                                                AND MovementItem.isErased = FALSE                         
+                                                AND MovementItem.isErased = FALSE
                           INNER JOIN MovementItemLinkObject AS MILinkObject_Unit
                                                             ON MILinkObject_Unit.MovementItemId = MovementItem.Id
                                                            AND MILinkObject_Unit.DescId = zc_MILinkObject_Unit()
@@ -227,25 +229,35 @@ BEGIN
          , tmpReport.isMain
          , tmpReport.isOfficial
          , tmpReport.isNotCompensation
+           -- Положен отпуск, дней
          , tmpReport.Day_vacation   :: TFloat
-         , tmpReport.Day_holiday    :: TFloat       -- использовано 
-         , CASE WHEN tmpReport.isNotCompensation = FALSE THEN tmpReport.Day_diff ELSE 0 END   :: TFloat  AS Day_diff     -- не использовано   
+           -- использовано дней отпуска
+         , tmpReport.Day_holiday      :: TFloat
+           -- не использовано дней отпуска
+         , CASE WHEN tmpReport.isNotCompensation = FALSE THEN tmpReport.Day_diff ELSE 0 END :: TFloat AS Day_diff
 
-         , CASE WHEN tmpReport.Day_calendar <> 0 THEN tmpPersonalService.Amount / tmpReport.Day_calendar ELSE 0 END                        :: TFloat AS AmountCompensation
+           -- Ср. ЗП за день
+         , CASE WHEN tmpReport.Day_calendar_year <> 0 THEN tmpPersonalService.Amount / tmpReport.Day_calendar_year ELSE 0 END :: TFloat AS AmountCompensation
+           -- Сумма компенс. за неисп. отпуск
          , CAST (CASE WHEN tmpReport.Day_diff > 0 AND tmpReport.isNotCompensation = FALSE
-                           THEN tmpReport.Day_diff * CASE WHEN tmpReport.Day_calendar <> 0 THEN tmpPersonalService.Amount / tmpReport.Day_calendar ELSE 0.0 END
+                           THEN tmpReport.Day_diff * CASE WHEN tmpReport.Day_calendar_year <> 0 THEN tmpPersonalService.Amount / tmpReport.Day_calendar_year ELSE 0.0 END
                       ELSE 0.0
                  END AS NUMERIC (16, 2)) :: TFloat AS SummaCompensation
+           -- Сумма компенс. за неисп. отпуск (факт)
          , tmpMICompens.SummCompensation :: TFloat AS SummaCompensation_fact
+           -- Откл. по сумме компенс. расчет и факт
          , (CAST (CASE WHEN tmpReport.Day_diff > 0 AND tmpReport.isNotCompensation = FALSE
-                            THEN tmpReport.Day_diff * CASE WHEN tmpReport.Day_calendar <> 0 THEN tmpPersonalService.Amount / tmpReport.Day_calendar ELSE 0.0 END
+                            THEN tmpReport.Day_diff * CASE WHEN tmpReport.Day_calendar_year <> 0 THEN tmpPersonalService.Amount / tmpReport.Day_calendar_year ELSE 0.0 END
                        ELSE 0.0
                   END AS NUMERIC (16, 2))
           - COALESCE (tmpMICompens.SummCompensation, 0)) :: TFloat AS SummaCompensation_diff
 
+           -- Рабоч. дней
          , tmpReport.Day_calendar        :: TFloat
+         , tmpReport.Day_calendar_year   :: TFloat
+           -- Сумма ЗП за период
          , tmpPersonalService.Amount     :: TFloat
-         
+
     FROM tmpReport
          LEFT JOIN tmpPersonalService ON tmpPersonalService.MemberId = tmpReport.MemberId
                                      AND COALESCE (tmpPersonalService.Amount, 0) > 0

@@ -25,13 +25,16 @@ RETURNS TABLE(MemberId Integer, PersonalId Integer
             , isDateOut Boolean, isMain Boolean, isOfficial Boolean
             , isNotCompensation Boolean
            -- , Age_work      TVarChar
-            , Month_work    TFloat
-            , Day_calendar  TFloat -- Рабоч. дней
-            , Day_real      TFloat -- Календ. дней
-            , Day_Hol       TFloat -- Больничн. дней
-            , Day_vacation  TFloat
-            , Day_holiday   TFloat
-            , Day_diff      TFloat
+            , Month_work         TFloat
+            , Day_calendar       TFloat    -- Рабоч. дней - ЗА ПЕРИОД
+            , Day_calendar_year  TFloat    -- Рабоч. дней - ЗА ГОД
+            , Day_real           TFloat    -- Календ. дней - ЗА ПЕРИОД
+            , Day_real_year      TFloat    -- Календ. дней - ЗА ГОД
+            , Day_Hol            TFloat    -- Отпуск. дней по табелю - ЗА ПЕРИОД
+            , Day_Hol_year       TFloat    -- Отпуск. дней по табелю - ЗА ГОД
+            , Day_vacation       TFloat
+            , Day_holiday        TFloat
+            , Day_diff           TFloat
 
             , InvNumber          TVarChar
             , OperDate           TDateTime
@@ -47,6 +50,7 @@ $BODY$
     DECLARE vbMonthHoliday_6 Integer;
     DECLARE vbDayHoliday     Integer;
     DECLARE vbStartDate      TDateTime;
+    DECLARE vbStartDate_year TDateTime;
     DECLARE vbEndDate        TDateTime;
 BEGIN
     -- проверка прав пользователя на вызов процедуры
@@ -54,8 +58,9 @@ BEGIN
     vbUserId := inSession::Integer;
 
     -- начальная дата - ровно год
-  --vbStartDate := inStartDate - INTERVAL '1 YEAR' + INTERVAL '1 DAY';
     vbStartDate := DATE_TRUNC ('YEAR', inStartDate);
+    -- начальная дата - ровно год
+    vbStartDate_year := inStartDate - INTERVAL '1 YEAR' + INTERVAL '1 DAY';
     -- дата !!!ОКОНЧАНИЯ!!! периода - как правило последний день месяца
     vbEndDate   := inStartDate;
 
@@ -303,6 +308,8 @@ BEGIN
                          , tmpStart.DateIn AS DateIn_real
                            -- замена - или дата начала отчета - или дата принятия на работу - для расчета реально отработанных дней ТОЛЬКО за период
                          , CASE WHEN tmpStart.DateIn > vbStartDate THEN tmpStart.DateIn ELSE vbStartDate END AS DateIn_Calc
+                           -- замена - или дата начала отчета - или дата принятия на работу - для расчета реально отработанных дней ЗА ГОД
+                         , CASE WHEN tmpStart.DateIn > vbStartDate_year THEN tmpStart.DateIn ELSE vbStartDate_year END AS DateIn_Calc_year
                            -- замена - или дата окончания отчета - или дата увольнения - для расчета реально отработанных дней ТОЛЬКО за период
                          , CASE WHEN tmpList_one.DateOut < vbEndDate THEN tmpList_one.DateOut ELSE vbEndDate END AS DateOut_Calc
                     FROM tmpList_one
@@ -327,23 +334,28 @@ BEGIN
                                                                                                           , 1580416                        -- Отпуск без сохр.ЗП
                                                                                                            )
                          WHERE Movement.DescId = zc_Movement_SheetWorkTime()
-                           AND Movement.OperDate BETWEEN vbStartDate AND vbEndDate
+                           AND Movement.OperDate BETWEEN vbStartDate_year AND vbEndDate
                         )
     -- расчет отработанных месяцев и календарных дней
   , tmpWork AS (SELECT tmp.MemberId
-                     , SUM (tmp.Month_work)   AS Month_work
-                  -- , SUM (tmp.Day_calendar) AS Day_calendar -- Рабоч. дней
-                     , SUM (tmp.Day_real)     AS Day_real     -- Календ. дней
-                  -- , SUM (tmp.Day_Hol)      AS Day_Hol      -- Праздничные дни
+                     , SUM (tmp.Month_work)    AS Month_work
+                  -- , SUM (tmp.Day_calendar)  AS Day_calendar  -- Рабоч. дней
+                     , SUM (tmp.Day_real)      AS Day_real      -- Календ. дней - ЗА ПЕРИОД
+                     , SUM (tmp.Day_real_year) AS Day_real_year -- Календ. дней - ЗА ГОД
+                  -- , SUM (tmp.Day_Hol)       AS Day_Hol       -- Праздничные дни
                 FROM (SELECT tmpList.MemberId
                              -- кол-во календарных дней без праздничных
                         -- , (SELECT COUNT (*) - SUM (CASE WHEN gpSelect.isHoliday = TRUE THEN 1 ELSE 0 END)
                         --    FROM gpSelect_Object_Calendar (inStartDate:= tmpList.DateIn_Calc, inEndDate:= tmpList.DateOut_Calc, inSession:= inSession) AS gpSelect
                         --   ) :: TFloat AS Day_calendar
-                             -- кол-во календарных дней
+                             -- кол-во календарных дней - ЗА ПЕРИОД
                            , (SELECT COUNT (*)
                               FROM gpSelect_Object_Calendar (inStartDate:= tmpList.DateIn_Calc, inEndDate:= tmpList.DateOut_Calc, inSession:= inSession) AS gpSelect
                              ) :: TFloat AS Day_real
+                             -- кол-во календарных дней - ЗА ГОД
+                           , (SELECT COUNT (*)
+                              FROM gpSelect_Object_Calendar (inStartDate:= tmpList.DateIn_Calc_year, inEndDate:= tmpList.DateOut_Calc, inSession:= inSession) AS gpSelect
+                             ) :: TFloat AS Day_real_year
                              -- кол-во Праздничных дней
                         -- , (SELECT SUM (CASE WHEN gpSelect.isHoliday = TRUE THEN 1 ELSE 0 END)
                         --    FROM gpSelect_Object_Calendar (inStartDate := tmp1.DateIn_Calc, inEndDate := tmp2.DateOut_Calc , inSession := inSession) AS gpSelect
@@ -457,15 +469,21 @@ BEGIN
          --, tmpPersonal.Age_work      :: TVarChar
          , tmpVacation.Month_work        :: TFloat
            -- так считаются - Рабоч. дней
-         , (tmpVacation.Day_real - COALESCE (MI_SheetWorkTime.Day_bol, 0)) :: TFloat AS Day_calendar
+         , (tmpVacation.Day_real      - COALESCE (MI_SheetWorkTime.Day_Hol, 0))      :: TFloat AS Day_calendar      -- ЗА ПЕРИОД
+         , (tmpVacation.Day_real_year - COALESCE (MI_SheetWorkTime_year.Day_Hol, 0)) :: TFloat AS Day_calendar_year -- ЗА ГОД
            -- Календ. дней
-         , tmpVacation.Day_real                                            :: TFloat AS Day_real
-           -- Больничн. дней
-         , COALESCE (MI_SheetWorkTime.Day_bol, 0)                          :: TFloat AS Day_Hol
+         , tmpVacation.Day_real                                            :: TFloat AS Day_real      -- ЗА ПЕРИОД
+         , tmpVacation.Day_real_year                                       :: TFloat AS Day_real_year -- ЗА ГОД
+           -- Дней отпуска
+         , COALESCE (MI_SheetWorkTime.Day_Hol, 0)                          :: TFloat AS Day_Hol      -- ЗА ПЕРИОД
+         , COALESCE (MI_SheetWorkTime_year.Day_Hol, 0)                     :: TFloat AS Day_Hol_year -- ЗА ГОД
            --
          , CASE WHEN tmpHoliday.Ord = 1 OR tmpHoliday.Ord IS NULL THEN tmpVacation.Day_vacation ELSE 0 END :: TFloat AS Day_vacation
-         , tmpHoliday.Day_holiday        :: TFloat                                                                       -- использовано
-         , CASE WHEN tmpHoliday.Ord = 1 OR tmpHoliday.Ord IS NULL THEN (COALESCE (tmpVacation.Day_vacation, 0) - COALESCE (tmpHoliday.Day_holiday_All, 0)) ELSE 0 END  :: TFloat AS Day_diff   -- не использовано
+           -- использовано дней отпуска
+         , tmpHoliday.Day_holiday        :: TFloat
+           -- не использовано дней отпуска
+         , CASE WHEN tmpHoliday.Ord = 1 OR tmpHoliday.Ord IS NULL THEN (COALESCE (tmpVacation.Day_vacation, 0) - COALESCE (tmpHoliday.Day_holiday_All, 0)) ELSE 0 END  :: TFloat AS Day_diff
+           --
          , tmpHoliday.InvNumber          :: TVarChar
          , tmpHoliday.OperDate           :: TDateTime
          , tmpHoliday.OperDateStart      :: TDateTime
@@ -476,8 +494,12 @@ BEGIN
     FROM tmpVacation
          LEFT JOIN tmpHoliday ON tmpHoliday.MemberId = tmpVacation.MemberId
          LEFT JOIN tmpList AS tmpPersonal ON tmpPersonal.MemberId   = tmpVacation.MemberId
-         LEFT JOIN (SELECT COUNT(*) AS Day_bol, MI_SheetWorkTime.MemberId FROM MI_SheetWorkTime GROUP BY MI_SheetWorkTime.MemberId
+         -- Дни отпуска - ЗА ПЕРИОД
+         LEFT JOIN (SELECT COUNT(*) AS Day_Hol, MI_SheetWorkTime.MemberId FROM MI_SheetWorkTime WHERE MI_SheetWorkTime.OperDate BETWEEN vbStartDate AND vbEndDate GROUP BY MI_SheetWorkTime.MemberId
                    ) AS MI_SheetWorkTime ON MI_SheetWorkTime.MemberId = tmpVacation.MemberId
+         -- Дни отпуска - ЗА ГОД
+         LEFT JOIN (SELECT COUNT(*) AS Day_Hol, MI_SheetWorkTime.MemberId FROM MI_SheetWorkTime GROUP BY MI_SheetWorkTime.MemberId
+                   ) AS MI_SheetWorkTime_year ON MI_SheetWorkTime_year.MemberId = tmpVacation.MemberId
 
     ORDER BY tmpPersonal.UnitName
            , tmpPersonal.PersonalName

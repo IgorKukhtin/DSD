@@ -22,14 +22,9 @@ BEGIN
      PERFORM lpComplete_Movement_Sale_CreateTemp();
   
      -- !!!проводки!!!
-     /*PERFORM lpComplete_Movement_Sale (inMovementId:= inMovementId
+     PERFORM lpComplete_Movement_Sale (inMovementId:= inMovementId
                                      , inUserId    := vbUserId
                                       );
-       */
-     PERFORM lpComplete_Movement (inMovementId := inMovementId
-                                 , inDescId     := zc_Movement_SaleAsset()
-                                 , inUserId     := vbUserId
-                                  );
 
 END;
 $BODY$
