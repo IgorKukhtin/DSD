@@ -423,8 +423,6 @@ type
     test1: TcxGridDBColumn;
     cxEditRepository1: TcxEditRepository;
     cxEditRepository1CurrencyItem1: TcxEditRepositoryCurrencyItem;
-    Repository: TcxGridDBColumn;
-    cxEditRepository1CurrencyItem2: TcxEditRepositoryCurrencyItem;
   private
     { Private declarations }
   public

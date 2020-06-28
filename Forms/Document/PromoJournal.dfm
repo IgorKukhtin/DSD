@@ -5,7 +5,7 @@ inherited PromoJournalForm: TPromoJournalForm
   AddOnFormData.RefreshAction = actRefreshStart
   AddOnFormData.ExecuteDialogAction = ExecuteDialog
   ExplicitWidth = 1100
-  ExplicitHeight = 445
+  ExplicitHeight = 442
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
@@ -13,18 +13,19 @@ inherited PromoJournalForm: TPromoJournalForm
     Width = 1084
     Height = 330
     TabOrder = 3
+    ExplicitTop = 77
     ExplicitWidth = 1084
-    ExplicitHeight = 350
+    ExplicitHeight = 330
     ClientRectBottom = 330
     ClientRectRight = 1084
     inherited tsMain: TcxTabSheet
       ExplicitWidth = 1084
-      ExplicitHeight = 350
+      ExplicitHeight = 330
       inherited cxGrid: TcxGrid
         Width = 1084
         Height = 330
         ExplicitWidth = 1084
-        ExplicitHeight = 350
+        ExplicitHeight = 330
         inherited cxGridDBTableView: TcxGridDBTableView
           DataController.Summary.FooterSummaryItems = <
             item
@@ -325,10 +326,10 @@ inherited PromoJournalForm: TPromoJournalForm
     ExplicitWidth = 1084
     ExplicitHeight = 51
     inherited deStart: TcxDateEdit
-      EditValue = 42736d
+      EditValue = 43831d
     end
     inherited deEnd: TcxDateEdit
-      EditValue = 42736d
+      EditValue = 43831d
     end
     inherited cxLabel2: TcxLabel
       Left = 198
@@ -406,6 +407,7 @@ inherited PromoJournalForm: TPromoJournalForm
       Caption = #1056#1072#1079#1074#1077#1088#1085#1091#1090#1100' '#1087#1086' '#1082#1086#1085#1090#1088#1072#1075#1077#1085#1090#1072#1084
       Hint = #1054#1073#1085#1086#1074#1080#1090#1100' '#1076#1072#1085#1085#1099#1077
       ImageIndex = 4
+      ShortCut = 116
       RefreshOnTabSetChanges = False
     end
     inherited actInsert: TdsdInsertUpdateAction
@@ -612,7 +614,7 @@ inherited PromoJournalForm: TPromoJournalForm
         end
         item
           Name = 'IsPartnerDate'
-          Value = 'False'
+          Value = False
           Component = chbPeriodForOperDate
           DataType = ftBoolean
           ParamType = ptInput
@@ -868,18 +870,6 @@ inherited PromoJournalForm: TPromoJournalForm
         item
           Visible = True
           ItemName = 'dxBarButton2'
-        end
-        item
-          Visible = True
-          ItemName = 'dxBarStatic'
-        end
-        item
-          Visible = True
-          ItemName = 'bbInsertUpdateMISignYesList'
-        end
-        item
-          Visible = True
-          ItemName = 'bbInsertUpdateMISignNoList'
         end
         item
           Visible = True
@@ -1152,7 +1142,7 @@ inherited PromoJournalForm: TPromoJournalForm
       end
       item
         Name = 'inisSign'
-        Value = 'True'
+        Value = True
         DataType = ftBoolean
         ParamType = ptInput
         MultiSelectSeparator = ','
@@ -1176,7 +1166,7 @@ inherited PromoJournalForm: TPromoJournalForm
       end
       item
         Name = 'inisSign'
-        Value = 'False'
+        Value = False
         DataType = ftBoolean
         ParamType = ptInput
         MultiSelectSeparator = ','

@@ -318,17 +318,14 @@ type
     bsPromoStateKind: TdxBarSubItem;
     bsCalc: TdxBarSubItem;
     bsSign: TdxBarSubItem;
-    spUpdateMovement_Checked: TdsdStoredProc;
-    spUpdateMovement_Correction: TdsdStoredProc;
-    actUpdateMovement_Checked: TdsdExecStoredProc;
-    actUpdateMovement_Correction: TdsdExecStoredProc;
+    spUpdate_PromoStateKind: TdsdStoredProc;
+    actUpdateMovement_PromoStateKind: TdsdExecStoredProc;
     bbUpdateMovement_Checked: TdxBarButton;
     bbUpdateMovement_Correction: TdxBarButton;
-    actPromoManagerDialog_Checked: TExecuteDialog;
-    macUpdateMovement_Checked: TMultiAction;
-    actGetRefresh: TdsdDataSetRefresh;
-    actPromoManagerDialog_Correction: TExecuteDialog;
-    macUpdateMovement_Correction: TMultiAction;
+    actPromoManagerDialog: TExecuteDialog;
+    macUpdatePromoStateKind_Complete: TMultiAction;
+    actGetPromoStateKind_Complete: TdsdDataSetRefresh;
+    macUpdatePromoStateKind_Return: TMultiAction;
     cxGridCalc2: TcxGrid;
     cxGridDBTableViewCalc2: TcxGridDBTableView;
     ccText: TcxGridDBColumn;
@@ -388,7 +385,8 @@ type
     actPrint_CalcAll: TdsdPrintAction;
     spSelectCalc_Print: TdsdStoredProc;
     bbPrint_CalcAll: TdxBarButton;
-    TaxRetIn_n: TcxGridDBColumn;
+    spGetPromoStateKind: TdsdStoredProc;
+    actGetPromoStateKind_Return: TdsdDataSetRefresh;
   private
     { Private declarations }
   public

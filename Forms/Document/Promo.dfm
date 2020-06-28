@@ -4,7 +4,7 @@
   ClientHeight = 684
   ClientWidth = 1366
   ExplicitWidth = 1382
-  ExplicitHeight = 722
+  ExplicitHeight = 719
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
@@ -1110,8 +1110,6 @@
         Align = alClient
         TabOrder = 0
         LookAndFeel.NativeStyle = False
-        ExplicitLeft = -152
-        ExplicitTop = -82
         object cxGridDBTableViewCalc: TcxGridDBTableView
           Navigator.Buttons.CustomButtons = <>
           DataController.DataSource = CalcDS
@@ -1396,14 +1394,7 @@
           object test1: TcxGridDBColumn
             DataBinding.FieldName = 'test1'
             Visible = False
-            VisibleForCustomization = False
             Width = 70
-          end
-          object Repository: TcxGridDBColumn
-            DataBinding.FieldName = 'Repository'
-            Visible = False
-            VisibleForCustomization = False
-            Width = 50
           end
         end
         object cxGridLevel2: TcxGridLevel
@@ -2398,6 +2389,7 @@
     object edComment: TcxTextEdit
       Left = 579
       Top = 54
+      Properties.MaxLength = 255
       TabOrder = 11
       Width = 257
     end
@@ -2463,6 +2455,7 @@
     object edCommentMain: TcxTextEdit
       Left = 579
       Top = 90
+      Properties.MaxLength = 255
       TabOrder = 15
       Width = 334
     end
@@ -2685,6 +2678,7 @@
           StoredProc = spErasedPromoStateKind
         end
         item
+          StoredProc = spGet
         end>
       Caption = #1059#1076#1072#1083#1080#1090#1100' <'#1057#1086#1089#1090#1086#1103#1085#1080#1077' '#1040#1082#1094#1080#1080'>'
       Hint = #1059#1076#1072#1083#1080#1090#1100' <'#1057#1086#1089#1090#1086#1103#1085#1080#1077'>'
@@ -2715,6 +2709,7 @@
           StoredProc = spUnErasedPromoStateKind
         end
         item
+          StoredProc = spGet
         end>
       Caption = #1042#1086#1089#1089#1090#1072#1085#1086#1074#1080#1090#1100
       Hint = #1042#1086#1089#1089#1090#1072#1085#1086#1074#1080#1090#1100' '#1076#1072#1085#1085#1099#1077
@@ -2765,6 +2760,9 @@
         end
         item
           StoredProc = spSelectMIPromoStateKind
+        end
+        item
+          StoredProc = spGet
         end>
       Caption = 'actUpdatePromoStateKindDS'
       DataSource = PromoStateKindDS
@@ -4073,6 +4071,9 @@
         end
         item
           StoredProc = spSelectMIPromoStateKind
+        end
+        item
+          StoredProc = spGet
         end>
       Caption = #1054#1044#1048#1053' '#1087#1086#1076#1087#1080#1089#1072#1085#1090' '#1074' '#1040#1082#1094#1080#1080
       Hint = #1059#1089#1090#1072#1085#1086#1074#1080#1090#1100' '#1054#1044#1053#1054#1043#1054' '#1087#1086#1076#1087#1080#1089#1072#1085#1090#1072' '#1074' '#1040#1082#1094#1080#1080
@@ -4095,6 +4096,9 @@
         end
         item
           StoredProc = spSelectMIPromoStateKind
+        end
+        item
+          StoredProc = spGet
         end>
       Caption = #1044#1042#1040' '#1087#1086#1076#1087#1080#1089#1072#1085#1090#1072' '#1074' '#1040#1082#1094#1080#1080
       Hint = #1059#1089#1090#1072#1085#1086#1074#1080#1090#1100' '#1044#1042#1059#1061' '#1087#1086#1076#1087#1080#1089#1072#1085#1090#1086#1074' '#1074' '#1040#1082#1094#1080#1080
@@ -6503,12 +6507,9 @@
     SummaryItemList = <>
     PropertiesCellList = <
       item
-        Column = test1
-        ValueColumn = Repository
-        EditRepository = cxEditRepository1
       end>
-    Left = 976
-    Top = 583
+    Left = 1208
+    Top = 359
   end
   object spSelectCalc: TdsdStoredProc
     StoredProcName = 'gpSelect_MI_PromoGoods_Calc'
@@ -6951,15 +6952,15 @@
   end
   object PromoStateKindDS: TDataSource
     DataSet = PromoStateKindDCS
-    Left = 672
-    Top = 472
+    Left = 936
+    Top = 576
   end
   object PromoStateKindDCS: TClientDataSet
     Aggregates = <>
     FilterOptions = [foCaseInsensitive]
     Params = <>
-    Left = 720
-    Top = 472
+    Left = 872
+    Top = 552
   end
   object dsdDBViewAddOnPromoStateKind: TdsdDBViewAddOn
     ErasedFieldName = 'isErased'
@@ -7553,13 +7554,10 @@
     Top = 456
   end
   object cxEditRepository1: TcxEditRepository
-    Left = 968
-    Top = 640
+    Left = 688
+    Top = 464
     object cxEditRepository1CurrencyItem1: TcxEditRepositoryCurrencyItem
       Properties.DisplayFormat = ',0.00 %;-,0.00 %'
-    end
-    object cxEditRepository1CurrencyItem2: TcxEditRepositoryCurrencyItem
-      Properties.DisplayFormat = ',0.00;-,0.00'
     end
   end
 end

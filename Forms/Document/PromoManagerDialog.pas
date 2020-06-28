@@ -9,7 +9,7 @@ uses
   cxContainer, cxEdit, Vcl.ComCtrls, dxCore, cxDateUtils, ChoicePeriod,
   dsdGuides, cxDropDownEdit, cxCalendar, cxTextEdit, cxMaskEdit, cxButtonEdit,
   cxPropertiesStore, dsdAddOn, dsdDB, cxLabel, dxSkinsCore,
-  dxSkinsDefaultPainters, cxCheckBox, cxCurrencyEdit;
+  dxSkinsDefaultPainters, cxCheckBox, cxCurrencyEdit, cxMemo;
 
 type
   TPromoManagerDialogForm = class(TParentForm)
@@ -19,9 +19,9 @@ type
     cxPropertiesStore: TcxPropertiesStore;
     FormParams: TdsdFormParams;
     cxLabel1: TcxLabel;
-    edComment: TcxTextEdit;
     cxLabel5: TcxLabel;
     edPromoStateKindName: TcxTextEdit;
+    MemoComment: TcxMemo;
   private
     { Private declarations }
   public
