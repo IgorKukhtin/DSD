@@ -112,7 +112,10 @@ BEGIN
                                     AND (COALESCE (ObjectFloat_TaxExit.ValueData, 0) <= 0 OR COALESCE(ObjectFloat_Value.ValueData, 0) <= 0
                                       OR COALESCE (MIFloat_AmountRemains.ValueData, 0) < ObjectFloat_TaxExit.ValueData * 0.20 -- !!!так учитываем если партия НЕ закрыта!!!
                                         )
-                                        THEN CASE WHEN ABS (COALESCE(MIFloat_AmountRemains.ValueData, 0)) < 2
+                                        THEN CASE WHEN COALESCE (ObjectFloat_Value.ValueData, 0) = 0
+                                                       THEN 0
+                                                  
+                                                  WHEN ABS (COALESCE(MIFloat_AmountRemains.ValueData, 0)) < 2
                                                   THEN COALESCE (MIFloat_AmountRemains.ValueData, 0) * ObjectFloat_TaxExit.ValueData / ObjectFloat_Value.ValueData * CASE WHEN ObjectLink_Goods_Measure.ChildObjectId = zc_Measure_Sh() THEN COALESCE (ObjectFloat_Weight.ValueData, 0) ELSE 1 END
                                                   ELSE     CAST (MIFloat_AmountRemains.ValueData     * ObjectFloat_TaxExit.ValueData / ObjectFloat_Value.ValueData * CASE WHEN ObjectLink_Goods_Measure.ChildObjectId = zc_Measure_Sh() THEN COALESCE (ObjectFloat_Weight.ValueData, 0) ELSE 1 END AS NUMERIC (16, 1))
                                              END

@@ -1624,4 +1624,5 @@ ALTER FUNCTION gpSelect_Movement_Sale_Print (Integer,TVarChar) OWNER TO postgres
 ++ PrintMovement_Transport36003603.fr3
 */
 -- тест
--- SELECT * FROM gpSelect_Movement_Sale_Print (inMovementId:= 4115668 , inSession:= zfCalc_UserAdmin()); -- FETCH ALL "<unnamed portal 1>";
+-- SELECT * FROM gpSelect_Movement_Sale_Print (inMovementId:= 17040004 , inSession:= zfCalc_UserAdmin()); -- FETCH ALL "<unnamed portal 1>";
+-- SELECT * FROM gpSelect_Movement_Sale_Print (inMovementId:= 17040004 , inSession:= '4723136'); -- FETCH ALL "<unnamed portal 1>";

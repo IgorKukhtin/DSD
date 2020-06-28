@@ -1,4 +1,4 @@
--- Function: gpSelect_MI_Promo_Message (Integer, Boolean, Boolean, TVarChar)
+-- Function: gpSelect_MI_Message_PromoStateKind (Integer, Boolean, Boolean, TVarChar)
 
 DROP FUNCTION IF EXISTS gpSelect_MI_Message_PromoStateKind (Integer, Boolean, TVarChar);
 
@@ -58,6 +58,7 @@ BEGIN
        AND MovementItem.DescId     = zc_MI_Message()
        AND (MovementItem.isErased = inIsErased OR inIsErased = TRUE)
        AND Object_PromoStateKind.DescId = zc_Object_PromoStateKind()
+     ORDER BY 2 DESC
   /*  UNION
      SELECT 0                  AS Id
           , (SELECT COUNT(*)+1 

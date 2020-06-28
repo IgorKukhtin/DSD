@@ -118,3 +118,4 @@ ALTER FUNCTION gpGet_Movement_Sale_ReportName (Integer, TVarChar) OWNER TO postg
 
 -- тест
 -- SELECT gpGet_Movement_Sale_ReportName FROM gpGet_Movement_Sale_ReportName(inMovementId := 3924205,  inSession := zfCalc_UserAdmin()); -- все
+-- SELECT gpGet_Movement_Sale_ReportName FROM gpGet_Movement_Sale_ReportName(inMovementId := 17040004 , inSession:= '4723136'); -- все
