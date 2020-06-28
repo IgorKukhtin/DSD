@@ -57,6 +57,20 @@ BEGIN
        WHERE MovementLinkObject.DescId = zc_MovementLinkObject_Contract()
          AND MovementLinkObject.MovementId = inMovementId;
 
+       IF COALESCE(vbSubject, '') = '' THEN
+         SELECT REPLACE(REPLACE(Object_ImportExportLink_View.StringKey, '|', ''), '*', ' ')
+                INTO vbSubject
+         FROM MovementLinkObject 
+              LEFT JOIN MovementLinkObject AS UnitLink ON UnitLink.DescId = zc_MovementLinkObject_To()
+                                                      AND UnitLink.movementid = MovementLinkObject.MovementId
+              LEFT JOIN Object_ImportExportLink_View ON Object_ImportExportLink_View.MainId = UnitLink.objectid
+                                                    AND Object_ImportExportLink_View.LinkTypeId = zc_Enum_ImportExportLinkType_ClientEmailSubject()
+                                                     AND Object_ImportExportLink_View.ValueId = MovementLinkObject.ObjectId  
+   
+         WHERE MovementLinkObject.DescId = zc_MovementLinkObject_From()
+           AND MovementLinkObject.MovementId = inMovementId;
+       END IF;
+
        -- Результат - ДЛЯ Оптима
        RETURN QUERY
          SELECT COALESCE(vbSubject, ('Заказ - ' || COALESCE (vbMainJuridicalName, '') || ' от ' || COALESCE (vbUnitName, ''))) :: TVarChar
@@ -100,6 +114,20 @@ BEGIN
        WHERE MLO_From.DescId     = zc_MovementLinkObject_From()
          AND MLO_From.MovementId = inMovementId;
 
+       IF COALESCE(vbSubject, '') = '' THEN
+         SELECT REPLACE (REPLACE (REPLACE (Object_ImportExportLink_View.StringKey, '|', ''), '\', '_'),  '*', ' ')
+                INTO vbSubject
+         FROM MovementLinkObject AS MLO_From
+                   LEFT JOIN MovementLinkObject AS MLO_To 
+                                                ON MLO_To.DescId     = zc_MovementLinkObject_To()
+                                               AND MLO_To.MovementId = MLO_From.MovementId
+                   LEFT JOIN Object_ImportExportLink_View ON Object_ImportExportLink_View.MainId     = MLO_To.objectid
+                                                         AND Object_ImportExportLink_View.LinkTypeId = zc_Enum_ImportExportLinkType_ClientEmailSubject()
+                                                         AND Object_ImportExportLink_View.ValueId    = MLO_From.ObjectId  
+         WHERE MLO_From.DescId     = zc_MovementLinkObject_Contract()
+           AND MLO_From.MovementId = inMovementId;
+       END IF;
+
        -- Результат - ДЛЯ ВЕНТА
        RETURN QUERY
          SELECT COALESCE(vbSubject, ('Заказ - '||COALESCE(vbMainJuridicalName, '')||' от '||COALESCE(vbUnitName, ''))) :: TVarChar
@@ -127,7 +155,7 @@ LANGUAGE plpgsql VOLATILE;
 ALTER FUNCTION gpGet_OrderExternal_ExportParam(integer, TVarChar) OWNER TO postgres;
 
 
-/*-------------------------------------------------------------------------------
+/*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.
  14.01.15                         *  
@@ -136,4 +164,4 @@ ALTER FUNCTION gpGet_OrderExternal_ExportParam(integer, TVarChar) OWNER TO postg
 */
 
 -- тест
--- SELECT * FROM gpGet_OrderExternal_ExportParam (8112483, '2')
+-- SELECT * FROM gpGet_OrderExternal_ExportParam (19329018, '3')

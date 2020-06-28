@@ -56,6 +56,7 @@ BEGIN
     FROM json_populate_recordset(null::tblJSON, replace(replace(replace(inJSON, '&quot;', '\"'), CHR(9),''), CHR(10),'')::json);
     --FROM json_populate_recordset(null::tblJSON, inJSON::json);
 
+
     CREATE INDEX idx_tblJSON_CommonCode ON tblJSON USING btree (inCommonCode);
     CREATE INDEX idx_tblJSON_BarCode ON tblJSON USING btree (inBarCode);
 
@@ -147,6 +148,7 @@ BEGIN
     SELECT Id INTO vbLoadPriceListId
     FROM LoadPriceList
     WHERE JuridicalId = inJuridicalId AND OperDate = CURRENT_DATE AND COALESCE (ContractId, 0) = inContractId AND COALESCE (AreaId, 0) = COALESCE (inAreaId, 0);
+
 
     -- если нет "шапки" - создадим
     IF COALESCE (vbLoadPriceListId, 0) = 0
@@ -368,6 +370,7 @@ BEGIN
     DELETE FROM tblJSON
     WHERE COALESCE(inPrice, 0) = 0;
 
+
     -- обновляем старое
     UPDATE LoadPriceListItem
     SET GoodsName = inGoodsName, CommonCode = inCommonCode, BarCode = COALESCE(inBarCode, ''), CodeUKTZED = COALESCE(inCodeUKTZED, ''), GoodsNDS = inGoodsNDS, GoodsId = tblJSON.GoodsId,
@@ -405,7 +408,8 @@ BEGIN
      AND LoadPriceListItem.id NOT IN
          (SELECT LoadPriceListItem.Id FROM LoadPriceListItem 
                  INNER JOIN tblJSON ON LoadPriceListItem.GoodsCode = tblJSON.inGoodsCode 
-                                   AND COALESCE(LoadPriceListItem.CommonCode, 0) = COALESCE(tblJSON.inCommonCode) 
+                                   AND COALESCE(LoadPriceListItem.GoodsCode, '') = COALESCE(tblJSON.inGoodsCode, '') 
+                                   AND COALESCE(LoadPriceListItem.GoodsName, '') = COALESCE(tblJSON.inGoodsName, '') 
           WHERE LoadPriceListItem.LoadPriceListId = vbLoadPriceListId);
             
 END;

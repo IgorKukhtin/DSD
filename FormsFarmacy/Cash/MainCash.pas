@@ -452,7 +452,7 @@ implementation
 
 uses CashFactory, IniUtils, CashCloseDialog, VIPDialog, DiscountDialog, SPDialog, CashWork, MessagesUnit,
      LocalWorkUnit, Splash, DiscountService, MainCash2, UnilWin,
-     MediCard.Intf, PromoCodeDialog;
+     PromoCodeDialog;
 
 const
   StatusUnCompleteCode = 1;
@@ -622,7 +622,6 @@ begin
   chbNotMCS.Checked := False;
   UpdateRemainsFromCheck;
   CheckCDS.EmptyDataSet;
-  MCDesigner.CasualCache.Clear;
   pnlPromoCode.Visible := false;
   lblPromoName.Caption := '';
   lblPromoCode.Caption := '';
@@ -1879,8 +1878,6 @@ begin
           DiscountServiceForm.SaveMorionCode(SourceClientDataSet.FieldByName('Id').AsInteger,
             SourceClientDataSet.FieldByName('MorionCode').AsInteger);
 
-          if DiscountServiceForm.gCode = 3 then
-            MCDesigner.CasualCache.Save(SourceClientDataSet.FieldByName('Id').AsInteger, lPriceSale);
         end;
       End;
     finally
@@ -2181,7 +2178,6 @@ begin
   finally
     CheckCDS.EnableControls;
   end;
-  MCDesigner.CasualCache.Clear;
 
   MainCashForm.SoldRegim := true;
   MainCashForm.actSpec.Checked := false;
