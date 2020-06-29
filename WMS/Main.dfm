@@ -147,7 +147,7 @@ object MainForm: TMainForm
       end
       object btnStartTimer: TButton
         Left = 8
-        Top = 444
+        Top = 499
         Width = 93
         Height = 25
         Caption = 'Start Timer'
@@ -156,7 +156,7 @@ object MainForm: TMainForm
       end
       object btnEndTimer: TButton
         Left = 110
-        Top = 444
+        Top = 499
         Width = 98
         Height = 25
         Caption = 'Stop Timer'
@@ -165,7 +165,7 @@ object MainForm: TMainForm
       end
       object btnFDC_alan: TButton
         Left = 8
-        Top = 407
+        Top = 462
         Width = 93
         Height = 25
         Caption = 'test Open alan'
@@ -174,7 +174,7 @@ object MainForm: TMainForm
       end
       object btnFDC_wms: TButton
         Left = 110
-        Top = 407
+        Top = 462
         Width = 98
         Height = 25
         Caption = 'test Open wms'
@@ -194,7 +194,7 @@ object MainForm: TMainForm
       end
       object btnImpOrderStatusChanged: TButton
         Left = 8
-        Top = 301
+        Top = 356
         Width = 200
         Height = 42
         Caption = #1079#1072#1075#1088#1091#1079#1080#1090#1100' '#1087#1072#1082#1077#1090'    order_status_changed'
@@ -204,7 +204,7 @@ object MainForm: TMainForm
       end
       object btnImpReceivingResult: TButton
         Left = 8
-        Top = 347
+        Top = 403
         Width = 200
         Height = 42
         Caption = #1079#1072#1075#1088#1091#1079#1080#1090#1100' '#1087#1072#1082#1077#1090'  receiving_result'
@@ -232,9 +232,6 @@ object MainForm: TMainForm
         object tsLogView: TTabSheet
           Caption = 'tsLogView'
           TabVisible = False
-          ExplicitTop = 24
-          ExplicitWidth = 1137
-          ExplicitHeight = 510
           DesignSize = (
             1142
             559)
@@ -281,12 +278,9 @@ object MainForm: TMainForm
           Caption = 'tsCheckboxView'
           ImageIndex = 1
           TabVisible = False
-          ExplicitTop = 24
-          ExplicitWidth = 1137
-          ExplicitHeight = 509
           object grpPackets: TGroupBox
             Left = 33
-            Top = 358
+            Top = 388
             Width = 870
             Height = 108
             Caption = ' '#1055#1088#1086#1094#1077#1089#1089' '#1086#1073#1088#1072#1073#1086#1090#1082#1080' '#1087#1072#1082#1077#1090#1086#1074' '#1080#1084#1087#1086#1088#1090#1072'  '
@@ -354,7 +348,7 @@ object MainForm: TMainForm
             Left = 33
             Top = 11
             Width = 870
-            Height = 318
+            Height = 352
             Caption = ' '#1055#1088#1086#1094#1077#1089#1089' '#1086#1073#1088#1072#1073#1086#1090#1082#1080' '#1087#1072#1082#1077#1090#1086#1074' '#1101#1082#1089#1087#1086#1088#1090#1072'  '
             TabOrder = 1
             object lbStartwms_Object_SKU: TLabel
@@ -546,6 +540,27 @@ object MainForm: TMainForm
               Height = 13
               Caption = #1074#1099#1087#1086#1083#1085#1077#1085#1086' '#1079#1072
             end
+            object lbStartProcessExpErr: TLabel
+              Left = 188
+              Top = 310
+              Width = 107
+              Height = 13
+              Caption = #1085#1072#1095#1072#1083#1086' '#1074#1099#1087#1086#1083#1085#1077#1085#1080#1103'  '
+            end
+            object lbEndProcessExpErr: TLabel
+              Left = 459
+              Top = 310
+              Width = 55
+              Height = 13
+              Caption = #1079#1072#1074#1077#1088#1096#1077#1085#1086
+            end
+            object lbElpsProcessExpErr: TLabel
+              Left = 681
+              Top = 310
+              Width = 70
+              Height = 13
+              Caption = #1074#1099#1087#1086#1083#1085#1077#1085#1086' '#1079#1072
+            end
             object chkwms_Object_SKU: TCheckBox
               Left = 24
               Top = 32
@@ -618,8 +633,27 @@ object MainForm: TMainForm
               Caption = 'wms_Movement_ORDER'
               TabOrder = 8
             end
+            object chkProcessExpErr: TCheckBox
+              Left = 23
+              Top = 306
+              Width = 160
+              Height = 34
+              Caption = ' '#1095#1090#1077#1085#1080#1077' '#1086#1096#1080#1073#1086#1082' '#1086#1073#1088#1072#1073#1086#1090#1082#1080'  '#1076#1072#1085#1085#1099#1093' '#1101#1082#1089#1087#1086#1088#1090#1072
+              TabOrder = 9
+              WordWrap = True
+            end
           end
         end
+      end
+      object btnDataExportErrors: TButton
+        Left = 8
+        Top = 302
+        Width = 200
+        Height = 49
+        Caption = ' '#1087#1088#1086#1095#1080#1090#1072#1090#1100' '#1086#1096#1080#1073#1082#1080' '#1086#1073#1088#1072#1073#1086#1090#1082#1080' '#1076#1072#1085#1085#1099#1093' '#1101#1082#1089#1087#1086#1088#1090#1072
+        TabOrder = 21
+        WordWrap = True
+        OnClick = btnDataExportErrorsClick
       end
     end
     object tsErrors: TTabSheet
@@ -793,6 +827,20 @@ object MainForm: TMainForm
             Time = 43997.546522673610000000
             TabOrder = 2
             OnChange = dtpEndDateAlanChange
+          end
+          object cbbErrTable: TComboBox
+            Left = 218
+            Top = 3
+            Width = 145
+            Height = 21
+            Style = csDropDownList
+            ItemIndex = 0
+            TabOrder = 3
+            Text = 'wms_to_host_error'
+            OnChange = cbbErrTableChange
+            Items.Strings = (
+              'wms_to_host_error'
+              'wms_from_host_error')
           end
         end
         object grdAlan: TDBGrid
@@ -995,7 +1043,7 @@ object MainForm: TMainForm
     Enabled = False
     Interval = 10000
     OnTimer = TimerTimer
-    Left = 40
-    Top = 520
+    Left = 48
+    Top = 592
   end
 end

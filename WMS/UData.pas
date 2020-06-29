@@ -36,8 +36,11 @@ type
     qryWMSGridAll: TFDQuery;
     qryWmsToHostMessage: TFDQuery;
     dsWmsToHostMessage: TDataSource;
+    wms_from_host_header_error: TFDQuery;
+    max_headerId_from_host_header_error: TFDQuery;
+    qryAlanGridFromHost: TFDQuery;
   private
-    procedure Insert_wms_to_host_error(const AHeaderId: Integer; const ASite: TSite;
+    procedure Insert_wms_from_host_error(const AHeaderId: Integer; const ASite: TSite;
       const APacketName, AErrDescription: string; AMsgProc: TNotifyMsgProc);
   public
     // вызов spName - делает Insert в табл. Postresql.wms_Message - для GUID
@@ -79,6 +82,7 @@ type
       const ACheckRecCount, ADebug: Boolean;
       const AThresholdRecCount: Integer; AMyLogSql, AMyShowSql: TNotifyProc;
       AMsgProc: TNotifyMsgProc);
+    procedure Select_error_from_host_header_message(AMsgProc: TNotifyMsgProc);
 
     // Только Postresql.CLOCK_TIMESTAMP
     function fGet_GUID_pg: string;
@@ -147,6 +151,11 @@ type
   public
     constructor Create(CreateSuspended: Boolean; AExportData: TExportData; const APacket: TPacketKind;
       AMsgProc: TNotifyMsgProc; AKind: TThreadKind = tknNondriven); reintroduce;
+  end;
+
+  TProcessExportDataErrorThread = class(TWorkerThread)
+  protected
+    procedure Execute; override;
   end;
 
   EData = class(Exception);
@@ -304,7 +313,7 @@ begin
           except
             on E: Exception do
             begin
-              Insert_wms_to_host_error(-1, stAlan, aPacketName, E.Message, AMsgProc);
+              Insert_wms_from_host_error(-1, stAlan, aPacketName, E.Message, AMsgProc);
               if Assigned(AMsgProc) then AMsgProc(Format(cExceptionMsg, [E.ClassName, E.Message]));
               if Assigned(AMyLogSql) then AMyLogSql;
               if Assigned(AMyShowSql) then AMyShowSql;
@@ -366,7 +375,7 @@ begin
     except
       on E: Exception do
       begin
-        Insert_wms_to_host_error(-1, stAlan, aPacketName, E.Message, AMsgProc);
+        Insert_wms_from_host_error(-1, stAlan, aPacketName, E.Message, AMsgProc);
         if Assigned(AMsgProc) then AMsgProc(Format(cExceptionMsg, [E.ClassName, E.Message]));
         if Assigned(AMyLogSql) then AMyLogSql;
         if Assigned(AMyShowSql) then AMyShowSql;
@@ -857,7 +866,7 @@ begin
         except
           on E: Exception do
           begin
-            Insert_wms_to_host_error(-1, stAlan, aPacketName, E.Message, AMsgProc);
+            Insert_wms_from_host_error(-1, stAlan, aPacketName, E.Message, AMsgProc);
             if Assigned(AMsgProc) then AMsgProc(Format(cExceptionMsg, [E.ClassName, E.Message]));
             if Assigned(AMyLogSql) then AMyLogSql;
             if Assigned(AMyShowSql) then AMyShowSql;
@@ -906,7 +915,7 @@ begin
   except
     on E: Exception do
     begin
-      Insert_wms_to_host_error(-1, stAlan, aPacketName, E.Message, AMsgProc);
+      Insert_wms_from_host_error(-1, stAlan, aPacketName, E.Message, AMsgProc);
       if Assigned(AMsgProc) then AMsgProc(Format(cExceptionMsg, [E.ClassName, E.Message]));
       if Assigned(AMyLogSql) then AMyLogSql;
       if Assigned(AMyShowSql) then AMyShowSql;
@@ -983,10 +992,10 @@ begin
   end;
 end;
 
-procedure TdmData.Insert_wms_to_host_error(const AHeaderId: Integer; const ASite: TSite; const APacketName,
+procedure TdmData.Insert_wms_from_host_error(const AHeaderId: Integer; const ASite: TSite; const APacketName,
   AErrDescription: string; AMsgProc: TNotifyMsgProc);
 const
-  cInsert = 'SELECT gpInsert_wms_to_host_error(%d, %s, %s, %s)';
+  cInsert = 'SELECT gpInsert_wms_from_host_error(%d, %s, %s, %s)';
 var
   sInsert, sSite: string;
   thrErr: TQryThread;
@@ -996,7 +1005,7 @@ begin
     stWMS:  sSite := 'W';
   end;
 
-  // записываем данные в таб. wms_to_host_error
+  // записываем данные в таб. wms_from_host_error
   sInsert := Format(cInsert, [AHeaderId, QuotedStr(sSite), QuotedStr(APacketName), QuotedStr(AErrDescription)]);
   with alan_exec_qry do
   begin
@@ -1133,7 +1142,98 @@ begin
   end;
 end;
 
+procedure TdmData.Select_error_from_host_header_message(AMsgProc: TNotifyMsgProc);
+var
+  iMaxHeaderId: Integer;
+  sSQL, sErr_Descr: string;
+const
+  cProcName = 'gpInsert_wms_from_host_error';
+  cRunProc  = 'SELECT * FROM %s(inHeader_Id:= %d, inSite:= %s, inPacketName:= %s, inErrDescription:= %s)';
+begin
+  // Данные были успешно вставлены в таб. WMS.from_host_header_message, но в результате обработки этих данных возникли ошибки.
+  // Собираем эти ошибки и записываем в таб. ALAN.wms_to_host_error
 
+  // Сначала исключим те записи, которые уже были добавлены в таб. ALAN.wms_to_host_error в предыдущих чтениях таб. WMS.from_host_header_message
+
+  // Ищем Header_Id в таб. wms_to_host_error, который соответствует последнему чтению из таб. WMS.from_host_header_message
+  iMaxHeaderId := 0;
+  if IsConnectedBoth(AMsgProc) then
+  begin
+    try
+      with max_headerId_from_host_header_error do
+      begin
+        Close;
+        Open;
+        if not Fields[0].IsNull then
+          iMaxHeaderId := Fields[0].AsInteger;
+        Close;
+      end;
+    except
+      on E: Exception do
+        if Assigned(AMsgProc) then AMsgProc(Format(cExceptionMsg, [
+          E.ClassName, max_headerId_from_host_header_error.Name + '.' + E.Message]));
+    end;
+  end;
+
+  // Получим список последних ошибок из  WMS.from_host_header_message
+  try
+    with wms_from_host_header_error do
+    begin
+      Close;
+      ParamByName('Id').AsInteger := iMaxHeaderId;
+      Open;
+    end;
+  except
+    on E: Exception do
+      if Assigned(AMsgProc) then AMsgProc(Format(cExceptionMsg, [
+        E.ClassName, wms_from_host_header_error.Name + '.' + E.Message]));
+  end;
+
+  wms_from_host_header_error.First;
+
+  while not wms_from_host_header_error.Eof do
+  try
+    with wms_from_host_header_error do
+    begin
+      sErr_Descr := '';
+      if not FieldByName('Err_Descr').IsNull then
+        sErr_Descr := FieldByName('Err_Descr').AsString;
+      // замена кавычек необходима, чтобы избежать порчи текста SQL-запроса
+      sErr_Descr := StringReplace(sErr_Descr, Char(39), '`', [rfReplaceAll]); // замена одинарной кавычки
+      sErr_Descr := StringReplace(sErr_Descr, '"', '`', [rfReplaceAll]);
+
+      sSQL := Format(cRunProc, [cProcName,
+                                FieldByName('Id').AsInteger,             // Header_Id
+                                QuotedStr('A'),                          // ошибка по нашей вине, пишем 'A'
+                                QuotedStr(FieldByName('Type').AsString), // имя пакета экспорта, например 'asn_load'
+                                QuotedStr(sErr_Descr)                    // текст ошибки
+                               ]);
+    end;
+
+    try
+      // записываем ошибку обработки экспорта в таб. ALAN.wms_to_host_error
+      with alan_exec_qry do
+      begin
+        Close;
+        SQL.Clear;
+        SQL.Add(sSQL);
+        Open;
+      end;
+    except
+      on E: Exception do
+        if Assigned(AMsgProc) then AMsgProc(Format(cExceptionMsg, [
+          E.ClassName, alan_exec_qry.Name + '.' + E.Message]));
+    end;
+
+    wms_from_host_header_error.Next;
+
+  except
+    on E: Exception do
+      if Assigned(AMsgProc) then AMsgProc(Format(cExceptionMsg, [E.ClassName, E.Message]));
+  end;
+
+  wms_from_host_header_error.Close;
+end;
 
 { TWorkerThread }
 
@@ -1282,6 +1382,15 @@ begin
           ReturnValue := LongWord(P);
         end;
     end;
+end;
+
+
+{ TProcessExportDataErrorThread }
+
+procedure TProcessExportDataErrorThread.Execute;
+begin
+  inherited;
+  Data.Select_error_from_host_header_message(InnerMsgProc);
 end;
 
 end.

@@ -337,8 +337,8 @@ object dmData: TdmData
       
         'select * from gpSelect_wms_to_host_message(inStartDate:= :startD' +
         'ate, inEndDate:= :endDate, inErrorOnly:= :errorOnly)')
-    Left = 328
-    Top = 184
+    Left = 456
+    Top = 192
     ParamData = <
       item
         Name = 'STARTDATE'
@@ -360,7 +360,51 @@ object dmData: TdmData
       end>
   end
   object dsWmsToHostMessage: TDataSource
-    Left = 333
-    Top = 128
+    Left = 461
+    Top = 136
+  end
+  object wms_from_host_header_error: TFDQuery
+    Connection = FDC_wms
+    SQL.Strings = (
+      'select   id, type, err_descr'
+      'from     from_host_header_message'
+      'where    (status = '#39'error'#39') and (id > :id)'
+      'order by id')
+    Left = 464
+    Top = 32
+    ParamData = <
+      item
+        Name = 'ID'
+        ParamType = ptInput
+      end>
+  end
+  object max_headerId_from_host_header_error: TFDQuery
+    Connection = FDC_alan
+    SQL.Strings = (
+      'select * from gpSelect_wms_from_host_error()')
+    Left = 112
+    Top = 440
+  end
+  object qryAlanGridFromHost: TFDQuery
+    Connection = FDC_alan
+    SQL.Strings = (
+      
+        'select * from gpSelect_wms_from_host_error(inStartDate:= :startD' +
+        'ate, inEndDate:= :endDate)')
+    Left = 315
+    Top = 184
+    ParamData = <
+      item
+        Name = 'STARTDATE'
+        DataType = ftDateTime
+        ParamType = ptInput
+        Value = Null
+      end
+      item
+        Name = 'ENDDATE'
+        DataType = ftDateTime
+        ParamType = ptInput
+        Value = Null
+      end>
   end
 end
