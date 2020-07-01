@@ -2,8 +2,9 @@ inherited ProductionOrderReportForm: TProductionOrderReportForm
   Caption = #1047#1072#1103#1074#1082#1072' '#1085#1072' '#1087#1088#1086#1080#1079#1074#1086#1076#1089#1090#1074#1086
   ClientHeight = 363
   ClientWidth = 806
-  ExplicitWidth = 814
-  ExplicitHeight = 390
+  AddOnFormData.ExecuteDialogAction = ExecuteDialog
+  ExplicitWidth = 822
+  ExplicitHeight = 401
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
@@ -11,6 +12,7 @@ inherited ProductionOrderReportForm: TProductionOrderReportForm
     Width = 806
     Height = 304
     TabOrder = 3
+    ExplicitTop = 59
     ExplicitWidth = 806
     ExplicitHeight = 304
     ClientRectBottom = 304
@@ -24,11 +26,25 @@ inherited ProductionOrderReportForm: TProductionOrderReportForm
         ExplicitWidth = 806
         ExplicitHeight = 304
         inherited cxGridDBTableView: TcxGridDBTableView
+          DataController.Summary.FooterSummaryItems = <
+            item
+              Format = #1057#1090#1088#1086#1082': ,0'
+              Kind = skCount
+              Column = colGoodsName
+            end>
+          OptionsData.Editing = False
           Styles.Content = nil
           Styles.Inactive = nil
           Styles.Selection = nil
           Styles.Footer = nil
           Styles.Header = nil
+          object ToName: TcxGridDBColumn
+            Caption = #1055#1086#1076#1088#1072#1079#1076#1077#1083#1077#1085#1080#1077
+            DataBinding.FieldName = 'ToName'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 128
+          end
           object colCode: TcxGridDBColumn
             Caption = #1050#1086#1076
             DataBinding.FieldName = 'Code'
@@ -94,15 +110,6 @@ inherited ProductionOrderReportForm: TProductionOrderReportForm
             HeaderAlignmentVert = vaCenter
             Width = 52
           end
-          object cxGridDBTableViewColumn12: TcxGridDBColumn
-            HeaderAlignmentVert = vaCenter
-          end
-          object cxGridDBTableViewColumn13: TcxGridDBColumn
-            HeaderAlignmentVert = vaCenter
-          end
-          object cxGridDBTableViewColumn14: TcxGridDBColumn
-            HeaderAlignmentVert = vaCenter
-          end
         end
       end
     end
@@ -117,15 +124,19 @@ inherited ProductionOrderReportForm: TProductionOrderReportForm
       Visible = False
     end
     inherited cxLabel2: TcxLabel
+      Left = 751
+      Top = 8
       Visible = False
+      ExplicitLeft = 751
+      ExplicitTop = 8
     end
     object cxLabel4: TcxLabel
       Left = 200
       Top = 6
-      Caption = #1055#1086#1076#1088#1072#1079#1076#1077#1083#1077#1085#1080#1077
+      Caption = #1055#1086#1076#1088#1072#1079#1076#1077#1083#1077#1085#1080#1077':'
     end
     object edUnit: TcxButtonEdit
-      Left = 290
+      Left = 294
       Top = 5
       Properties.Buttons = <
         item
@@ -133,7 +144,49 @@ inherited ProductionOrderReportForm: TProductionOrderReportForm
           Kind = bkEllipsis
         end>
       TabOrder = 5
-      Width = 144
+      Width = 215
+    end
+  end
+  inherited ActionList: TActionList
+    object ExecuteDialog: TExecuteDialog
+      Category = 'DSDLib'
+      MoveParams = <>
+      Caption = #1048#1079#1084#1077#1085#1080#1090#1100' '#1087#1072#1088#1072#1084#1077#1090#1088#1099' '#1086#1090#1095#1077#1090#1072
+      Hint = #1048#1079#1084#1077#1085#1080#1090#1100' '#1087#1072#1088#1072#1084#1077#1090#1088#1099' '#1086#1090#1095#1077#1090#1072
+      ImageIndex = 35
+      FormName = 'TReport_ProductionOrderDialogForm'
+      FormNameParam.Value = 'TReport_ProductionOrderDialogForm'
+      FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
+      GuiParams = <
+        item
+          Name = 'StartDate'
+          Value = 42370d
+          Component = deStart
+          DataType = ftDateTime
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'UnitId'
+          Value = ''
+          Component = GuidesUnit
+          ComponentItem = 'Key'
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'UnitName'
+          Value = ''
+          Component = GuidesUnit
+          ComponentItem = 'TextValue'
+          DataType = ftString
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end>
+      isShowModal = True
+      RefreshDispatcher = RefreshDispatcher
+      OpenBeforeShow = True
     end
   end
   inherited MasterDS: TDataSource
@@ -151,12 +204,15 @@ inherited ProductionOrderReportForm: TProductionOrderReportForm
         Component = deStart
         DataType = ftDateTime
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inUnitId'
         Value = Null
         Component = GuidesUnit
+        ComponentItem = 'Key'
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end>
     Top = 112
   end
@@ -172,15 +228,23 @@ inherited ProductionOrderReportForm: TProductionOrderReportForm
     Top = 144
   end
   inherited RefreshDispatcher: TRefreshDispatcher
+    ComponentList = <
+      item
+        Component = PeriodChoice
+      end
+      item
+        Component = GuidesUnit
+      end>
     Top = 152
   end
   object GuidesUnit: TdsdGuides
     KeyField = 'Id'
     LookupControl = edUnit
-    FormNameParam.Value = 'TUnit_ObjectForm'
+    FormNameParam.Value = 'TUnitTreeForm'
     FormNameParam.DataType = ftString
-    FormName = 'TUnit_ObjectForm'
-    PositionDataSet = 'MasterCDS'
+    FormNameParam.MultiSelectSeparator = ','
+    FormName = 'TUnitTreeForm'
+    PositionDataSet = 'ClientDataSet'
     Params = <
       item
         Name = 'Key'
@@ -189,6 +253,7 @@ inherited ProductionOrderReportForm: TProductionOrderReportForm
         ComponentItem = 'Key'
         DataType = ftString
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'TextValue'
@@ -197,8 +262,8 @@ inherited ProductionOrderReportForm: TProductionOrderReportForm
         ComponentItem = 'TextValue'
         DataType = ftString
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end>
-    Left = 600
-    Top = 48
+    Left = 328
   end
 end

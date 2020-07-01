@@ -2530,6 +2530,9 @@ procedure TLoadFormTest.LoadReportProductionOrderFormTest;
 begin
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TProductionOrderReportForm'));
   TdsdFormStorageFactory.GetStorage.Load('TProductionOrderReportForm');
+
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_ProductionOrderDialogForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TReport_ProductionOrderDialogForm');
 end;
 
 procedure TLoadFormTest.LoadReportProductionAnalyzeFormTest;

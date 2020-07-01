@@ -1173,7 +1173,8 @@ uses
   MovementPromo_DateDialog in '..\..\Forms\Document\MovementPromo_DateDialog.pas' {MovementPromo_DateDialogForm: TParentForm},
   PromoManager in '..\..\Forms\Document\PromoManager.pas' {PromoManagerForm: TParentForm},
   PromoManagerJournal in '..\..\Forms\Document\PromoManagerJournal.pas' {PromoManagerJournalForm: TParentForm},
-  PromoManagerDialog in '..\..\Forms\Document\PromoManagerDialog.pas' {PromoManagerDialogForm: TParentForm};
+  PromoManagerDialog in '..\..\Forms\Document\PromoManagerDialog.pas' {PromoManagerDialogForm: TParentForm},
+  Report_ProductionOrderDialog in '..\..\Forms\Report\Report_ProductionOrderDialog.pas' {Report_ProductionOrderDialogForm: TParentForm};
 
 {$R *.RES}
 {$R DevExpressRus.res}

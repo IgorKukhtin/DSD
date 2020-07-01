@@ -12,7 +12,8 @@ uses
   dsdAction, Vcl.ActnList, cxPropertiesStore, cxLabel, cxTextEdit, cxMaskEdit,
   cxDropDownEdit, cxCalendar, Vcl.ExtCtrls, cxGridLevel, cxGridCustomView,
   cxGridCustomTableView, cxGridTableView, cxGridDBTableView, cxGrid, cxPC,
-  dsdGuides, cxButtonEdit;
+  dsdGuides, cxButtonEdit, dxSkinsCore, dxSkinsDefaultPainters,
+  dxSkinscxPCPainter, dxSkinsdxBarPainter;
 
 type
   TProductionOrderReportForm = class(TAncestorReportForm)
@@ -30,9 +31,8 @@ type
     colNotShippedOrder: TcxGridDBColumn;
     colTodayOrder: TcxGridDBColumn;
     colKoeff: TcxGridDBColumn;
-    cxGridDBTableViewColumn12: TcxGridDBColumn;
-    cxGridDBTableViewColumn13: TcxGridDBColumn;
-    cxGridDBTableViewColumn14: TcxGridDBColumn;
+    ExecuteDialog: TExecuteDialog;
+    ToName: TcxGridDBColumn;
   private
     { Private declarations }
   public
