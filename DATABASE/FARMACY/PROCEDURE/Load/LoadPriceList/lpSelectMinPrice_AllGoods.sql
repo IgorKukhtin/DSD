@@ -488,7 +488,13 @@ BEGIN
     -- отсортировали по цене + Дней отсрочки и получили первого
   , MinPriceList AS (SELECT *
                      FROM (SELECT FinalList.*
-                                , ROW_NUMBER() OVER (PARTITION BY FinalList.GoodsId ORDER BY FinalList.SuperFinalPrice ASC, FinalList.Deferment DESC, FinalList.PriceListMovementItemId ASC) AS Ord
+                                , ROW_NUMBER() OVER (PARTITION BY FinalList.GoodsId 
+                                                     ORDER BY CASE WHEN FinalList.PartionGoodsDate IS NULL 
+                                                                     OR FinalList.PartionGoodsDate >= CURRENT_DATE + INTERVAL '6 month'
+                                                              THEN 0 ELSE 1 END 
+                                                            , FinalList.SuperFinalPrice ASC
+                                                            , FinalList.Deferment DESC
+                                                            , FinalList.PriceListMovementItemId ASC) AS Ord
                            FROM FinalList
                           ) AS T0
                      WHERE T0.Ord = 1
@@ -550,4 +556,6 @@ ALTER FUNCTION lpSelectMinPrice_AllGoods (Integer, Integer, Integer) OWNER TO po
 -- SELECT * FROM lpSelectMinPrice_AllGoods (2144918, 2140932, 3) WHERE GoodsCode = 4797 -- !!!Никополь!!!
 -- SELECT * FROM lpSelectMinPrice_AllGoods (1781716 , 4, 3) WHERE GoodsCode = 8969 -- "Аптека_"
 -- SELECT * FROM lpSelectMinPrice_AllGoods (183292, 4, 3) WHERE GoodsCode = 8969 -- "Аптека_1 пр_Правды_6"
---SELECT * FROM lpSelectMinPrice_AllGoods (183292, 4, 3) 
+-- SELECT * FROM lpSelectMinPrice_AllGoods (183292, 4, 3) 
+
+-- SELECT * FROM lpSelectMinPrice_AllGoods (183292, 4, 3) 

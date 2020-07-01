@@ -10,27 +10,6 @@ uses
   Data.Bind.ObjectScope, Math, System.Net.URLClient;
 
 type
-  TMorionCode = class
-  private
-    FGoodsId: Integer;
-    FMorionCode: Integer;
-    function GetGoodsId: Integer;
-    function GetMorionCode: Integer;
-  public
-    constructor Create(AGoodsId, AMorionCode: Integer);
-    property GoodsId: Integer read GetGoodsId;
-    property MorionCode: Integer read GetMorionCode;
-  end;
-
-  TMorionList = class(TObjectList)
-  private
-    function GetMorionCode(Index: Integer): TMorionCode;
-    procedure SetMorionCode(Index: Integer; const Value: TMorionCode);
-  public
-    function Find(AGoodsId: Integer): Integer;
-    procedure Save(AGoodsId, AMorionCode: Integer);
-    property Items[Index: Integer]: TMorionCode read GetMorionCode write SetMorionCode; default;
-  end;
 
   TDiscountServiceForm = class(TForm)
     HTTPRIO: THTTPRIO;
@@ -47,7 +26,6 @@ type
     spGet_Goods_CodeRazom: TdsdStoredProc;
     procedure FormCreate(Sender: TObject);
   private
-    FMorionList: TMorionList;
     FIdCasual : string;
     FDiscont : Currency;
     FDiscontАbsolute : Currency;
@@ -56,7 +34,6 @@ type
     FSIdAlter : String;
     FInvoiceNumber : String;
 
-    function GetMorionList: TMorionList;
     function myFloatToStr(aValue: Double) : String;
     function myStrToFloat(aValue: String) : Double;
     function GetBeforeSale : boolean;
@@ -65,12 +42,6 @@ type
     // так криво будем хранить "текущие" параметры-Main
     gURL, gService, gPort, gUserName, gPassword, gCardNumber, gExternalUnit: string;
     gDiscountExternalId, gCode: Integer;
-    // так криво будем хранить "текущие" параметры-Item
-    //gGoodsId : Integer;
-    //gPriceSale, gPrice, gChangePercent, gSummChangePercent : Currency;
-    //
-    procedure AfterConstruction; override;
-    procedure BeforeDestruction; override;
     // обнулим "нужные" параметры-Item
     //procedure pSetParamItemNull;
     // попробуем обновить "нужные" параметры-Main
@@ -99,9 +70,6 @@ type
                                lToOKPO, lToName : String;
                                var lMsg : string) :Boolean;
 
-    function FindMorionCode(AGoodsId: Integer): Integer;
-    procedure SaveMorionCode(AGoodsId, AMorionCode: Integer);
-
     property isBeforeSale : boolean read GetBeforeSale write SetBeforeSale;
 
 //    property Discont : Currency read FDiscont;
@@ -115,7 +83,7 @@ implementation
 {$R *.dfm}
 uses Soap.XSBuiltIns
    , MainCash2, UtilConvert
-   , XMLIntf, XMLDoc, OPToSOAPDomConv;
+   , XMLIntf, XMLDoc, OPToSOAPDomConv, MessagesUnit;
 
 function GenerateIdCasual: string;
   var GUID: TGUID;
@@ -133,25 +101,6 @@ begin
   else Result := '0';
 end;
 
-function TDiscountServiceForm.GetMorionList: TMorionList;
-begin
-  if not Assigned(FMorionList) then
-    FMorionList := TMorionList.Create;
-  Result := FMorionList;
-end;
-
-procedure TDiscountServiceForm.AfterConstruction;
-begin
-  inherited AfterConstruction;
-  FMorionList := nil;
-end;
-
-procedure TDiscountServiceForm.BeforeDestruction;
-begin
-  if Assigned(FMorionList) then
-    FreeAndNil(FMorionList);
-  inherited BeforeDestruction;
-end;
 //
 function TDiscountServiceForm.myFloatToStr(aValue: Double) : String;
 //var lValue:String;
@@ -423,10 +372,6 @@ begin
      end;
 end;
 
-procedure TDiscountServiceForm.SaveMorionCode(AGoodsId, AMorionCode: Integer);
-begin
-  GetMorionList.Save(AGoodsId, AMorionCode);
-end;
 
 // Commit Дисконт из CDS - по всем
 function TDiscountServiceForm.fCommitCDS_Discount (fCheckNumber:String; CheckCDS : TClientDataSet; var lMsg : string; lDiscountExternalId : Integer; lCardNumber : string) :Boolean;
@@ -450,9 +395,11 @@ var
   XMLNode : IXMLNode;
   OperationResult : String;
   CodeRazom : Integer;
+  cExchangeHistory : String;
 begin
   Result:=false;
   lMsg:='';
+  cExchangeHistory := '';
   //Если пусто - ничего не делаем
   CheckCDS.DisableControls;
   CheckCDS.filtered := False;
@@ -972,6 +919,8 @@ begin
                                                        '<Amount>' + StringReplace(CheckCDS.FieldByName('Amount').AsString, FormatSettings.DecimalSeparator, '.', [rfReplaceAll, rfIgnoreCase])  + '</Amount>'+
                                                '</request>', TRESTRequestParameterKind.pkGETorPOST);
 
+              cExchangeHistory := 'URL' + gURL + #13#10 +
+                                  'XML звпроса'#13#10 + RESTRequest.Params.ParameterByName('data').Value;
               try
                 RESTRequest.Execute;
               except  on E: Exception do
@@ -984,6 +933,9 @@ begin
                   exit;
                 end;
               end;
+
+              cExchangeHistory := cExchangeHistory + #13#10 +
+                                  'Ответ:'#13#10 + RESTResponse.Content;
 
               if RESTResponse.StatusCode = 200 then
               begin
@@ -1043,13 +995,10 @@ begin
     if GoodsId <> 0 then
       CheckCDS.Locate('GoodsId',GoodsId,[]);
     CheckCDS.EnableControls;
+//    if (lMsg <> '') and (cExchangeHistory <> '')  then
+//       TMessagesForm.Create(nil).Execute('Результат обмена данными', cExchangeHistory, True);
   end;
 
-end;
-
-function TDiscountServiceForm.FindMorionCode(AGoodsId: Integer): Integer;
-begin
-  Result := GetMorionList.Find(AGoodsId);
 end;
 
 procedure TDiscountServiceForm.FormCreate(Sender: TObject);
@@ -1279,9 +1228,11 @@ var
   XMLNode : IXMLNode;
   OperationResult : String;
   CodeRazom : Integer;
+  cExchangeHistory : String;
 begin
   Result:= false;
   lMsg  := '';
+  cExchangeHistory := '';
   //Если пусто - ничего не делаем
   CheckCDS.DisableControls;
   CheckCDS.filtered := False;
@@ -1701,6 +1652,8 @@ begin
                                                        '<PharmPrice>' + StringReplace(CheckCDS.FieldByName('PriceSale').AsString, FormatSettings.DecimalSeparator, '.', [rfReplaceAll, rfIgnoreCase])  + '</PharmPrice>'+
                                                        '<Amount>' + StringReplace(CheckCDS.FieldByName('Amount').AsString, FormatSettings.DecimalSeparator, '.', [rfReplaceAll, rfIgnoreCase])  + '</Amount>'+
                                                '</request>', TRESTRequestParameterKind.pkGETorPOST);
+              cExchangeHistory := 'URL' + gURL + #13#10 +
+                                  'XML звпроса'#13#10 + RESTRequest.Params.ParameterByName('data').Value;
 
               try
                 RESTRequest.Execute;
@@ -1715,6 +1668,9 @@ begin
                 end;
               end;
 
+              cExchangeHistory := cExchangeHistory + #13#10 +
+                                  'Ответ:'#13#10 + RESTResponse.Content;
+
               if RESTResponse.StatusCode = 200 then
               begin
                 // 00000003
@@ -1725,6 +1681,7 @@ begin
                 OperationResult := XML.DocumentElement.ChildNodes[0].ChildNodes[0].Text;
                 if AnsiLowerCase(OperationResult) = 'ok' then
                 begin
+
                   if TryStrToCurr(StringReplace(XML.DocumentElement.ChildNodes[0].ChildNodes[2].Text, '.', FormatSettings.DecimalSeparator, [rfReplaceAll]), lPrice) then
                   begin
                      //Предполагаемое кол-во товара
@@ -1945,10 +1902,13 @@ begin
     //
     List_GoodsId.Free;
     List_BarCode.Free;
+
+    // Вернули есть ли ошибка
+    Result := lMsg = '';
+//    if not Result and (cExchangeHistory <> '')  then
+//       TMessagesForm.Create(nil).Execute('Результат обмена данными', cExchangeHistory, True);
   end;
 
-  // Вернули есть ли ошибка
-  Result := lMsg = '';
 
 end;
 
@@ -1966,56 +1926,6 @@ begin
   FDiscontАbsolute := 0;
   FIdCasual := '';
   FBarCode_find := '';
-end;
-
-{ TMorionCode }
-
-constructor TMorionCode.Create(AGoodsId, AMorionCode: Integer);
-begin
-  inherited Create;
-  FGoodsId := AGoodsId;
-  FMorionCode := AMorionCode;
-end;
-
-function TMorionCode.GetGoodsId: Integer;
-begin
-  Result := FGoodsId;
-end;
-
-function TMorionCode.GetMorionCode: Integer;
-begin
-  Result := FMorionCode;
-end;
-
-{ TMorionList }
-
-function TMorionList.Find(AGoodsId: Integer): Integer;
-var
-  I: Integer;
-begin
-  Result := -1;
-  for I := 0 to Pred(Count) do
-    if Items[I].GoodsId = AGoodsId then
-    begin
-      Result := Items[I].MorionCode;
-      Break;
-    end;
-end;
-
-function TMorionList.GetMorionCode(Index: Integer): TMorionCode;
-begin
-  Result := inherited GetItem(Index) as TMorionCode;
-end;
-
-procedure TMorionList.Save(AGoodsId, AMorionCode: Integer);
-begin
-  if Find(AGoodsId) = -1 then
-    Add(TMorionCode.Create(AGoodsId, AMorionCode));
-end;
-
-procedure TMorionList.SetMorionCode(Index: Integer; const Value: TMorionCode);
-begin
-  inherited SetItem(Index, Value);
 end;
 
 end.

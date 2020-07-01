@@ -24,8 +24,8 @@ type
 //    function StringToXML(S: String): String;
     procedure SaveToFormData(DataKey: string);
   public
-    function LoadFile(FileName: string): AnsiString;
-    function LoadFileVersion(FileName: string): TVersionInfo;
+    function LoadFile(FileName: string; Suffics : String): AnsiString;
+    function LoadFileVersion(FileName: string; Suffics : String): TVersionInfo;
     procedure Save(Form: TComponent);
     function Load(FormName: String): TParentForm;
     procedure SaveReport(Stream: TStream; ReportName: string);
@@ -86,6 +86,7 @@ begin
         Free;
     end;
 end;
+
 
 { TdsdFormStorage }
 
@@ -216,15 +217,15 @@ begin
          TdsdUserSettingsStorageAddOn(Result.Components[i]).LoadUserSettings;
 end;
 
-function TdsdFormStorage.LoadFile(FileName: string): AnsiString;
+function TdsdFormStorage.LoadFile(FileName: string; Suffics : String): AnsiString;
 begin
-  LoadProgramProc.ParamByName('inProgramName').Value := FileName;
+  LoadProgramProc.ParamByName('inProgramName').Value := FileName + Suffics;
   result := ReConvertConvert(LoadProgramProc.Execute);
 end;
 
-function TdsdFormStorage.LoadFileVersion(FileName: string): TVersionInfo;
+function TdsdFormStorage.LoadFileVersion(FileName: string; Suffics : String): TVersionInfo;
 begin
-  LoadProgramVersionProc.ParamByName('inProgramName').Value := FileName;
+  LoadProgramVersionProc.ParamByName('inProgramName').Value := FileName + Suffics;
   LoadProgramVersionProc.Execute;
   result.VerHigh := StrToInt(LoadProgramVersionProc.ParamByName('outMajorVersion').asString);
   result.VerLow := StrToInt(LoadProgramVersionProc.ParamByName('outMinorVersion').asString);
