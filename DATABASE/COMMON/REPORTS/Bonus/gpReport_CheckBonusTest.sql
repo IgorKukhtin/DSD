@@ -346,7 +346,7 @@ inisMovement:= FALSE;
                        --   AND Container.ObjectId <> zc_Enum_AccountDirection_70300() нужно убрать проводки по оплате маркетинга
                        )
                        */
-    , tmpContainer AS (SELECT DISTINCT
+    , tmpContainer1 AS (SELECT DISTINCT
                               Container.Id  AS ContainerId
                             , tmpContractGroup.JuridicalId
                             , tmpContractGroup.ContractId_child
@@ -366,19 +366,20 @@ inisMovement:= FALSE;
                             JOIN ContainerLinkObject AS ContainerLO_PaidKind ON ContainerLO_PaidKind.ContainerId = Container.Id
                                                                             AND ContainerLO_PaidKind.DescId = zc_ContainerLinkObject_PaidKind() 
 
-                            LEFT JOIN ContainerLinkObject AS CLO_Partner
-                                                     ON CLO_Partner.ContainerId = Container.Id
-                                                    AND CLO_Partner.DescId = zc_ContainerLinkObject_Partner()
-                            -- ограничиваем контрагентами --
-                            -- ограничиваем контрагентами --
-                            INNER JOIN tmpContractPartner ON (tmpContractPartner.PartnerId = CLO_Partner.ObjectId
-                                                             ) OR ContainerLO_PaidKind.ObjectId = zc_Enum_PaidKind_FirstForm()
-
                             -- ограничение по 4-м ключам
                             JOIN tmpContractGroup ON tmpContractGroup.JuridicalId       = ContainerLO_Juridical.ObjectId 
                                                  AND tmpContractGroup.ContractId_child  = ContainerLO_Contract.ObjectId
                                                  AND tmpContractGroup.InfoMoneyId_child = ContainerLO_InfoMoney.ObjectId
                                                  AND tmpContractGroup.PaidKindId_byBase = ContainerLO_PaidKind.ObjectId
+
+                            LEFT JOIN ContainerLinkObject AS CLO_Partner
+                                                     ON CLO_Partner.ContainerId = Container.Id
+                                                    AND CLO_Partner.DescId = zc_ContainerLinkObject_Partner()
+                                                    AND inPaidKindId <> zc_Enum_PaidKind_FirstForm()
+                            -- ограничиваем контрагентами --
+                            -- ограничиваем контрагентами --
+                            --INNER JOIN tmpContractPartner ON (tmpContractPartner.PartnerId = CLO_Partner.ObjectId
+                              --                               ) OR ContainerLO_PaidKind.ObjectId = zc_Enum_PaidKind_FirstForm()
                                                  
                             LEFT JOIN ContainerLinkObject AS ContainerLO_Branch
                                                           ON ContainerLO_Branch.ContainerId = Container.Id
@@ -386,8 +387,24 @@ inisMovement:= FALSE;
                        WHERE COALESCE (ContainerLO_Branch.ObjectId,0) = inBranchId OR inBranchId = 0
                        -- WHERE Container.ObjectId <> zc_Enum_Account_50401() -- "Маркетинг"
                        --   AND Container.ObjectId <> zc_Enum_AccountDirection_70300() нужно убрать проводки по оплате маркетинга
+                         AND (inPaidKindId <> zc_Enum_PaidKind_FirstForm() AND CLO_Partner.ObjectId IN (SELECT DISTINCT tmpContractPartner.PartnerId FROM tmpContractPartner) )
                        )
  
+     , tmpContainer AS (SELECT *
+                       FROM tmpContainer1
+                       WHERE inPaidKindId = zc_Enum_PaidKind_FirstForm()
+                       UNION
+                       -- для НАЛ ограничиваем контргентами
+                       SELECT tmpContainer.*
+                       FROM tmpContainer1 As tmpContainer
+                            INNER JOIN ContainerLinkObject AS CLO_Partner
+                                                          ON CLO_Partner.ContainerId = tmpContainer.ContainerId
+                                                         AND CLO_Partner.DescId = zc_ContainerLinkObject_Partner()
+                                                         AND CLO_Partner.ObjectId IN (SELECT DISTINCT tmpContractPartner.PartnerId FROM tmpContractPartner)
+                       WHERE inPaidKindId <> zc_Enum_PaidKind_FirstForm()
+                       )
+ 
+
       , tmpMovementCont AS (SELECT tmpContainer.JuridicalId
                                  , tmpContainer.ContractId_child
                                  , tmpContainer.InfoMoneyId_child
