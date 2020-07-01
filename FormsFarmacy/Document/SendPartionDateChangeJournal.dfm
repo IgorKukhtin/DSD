@@ -439,77 +439,6 @@ inherited SendPartionDateChangeJournalForm: TSendPartionDateChangeJournalForm
       Hint = #1048#1079#1084#1077#1085#1080#1090#1100' '#1076#1072#1090#1091' '#1080' '#1087#1088#1086#1074#1077#1089#1090#1080' '#1076#1086#1082#1091#1084#1077#1085#1090
       ImageIndex = 67
     end
-    object actUpdatePercent: TMultiAction
-      Category = 'DSDLib'
-      MoveParams = <>
-      ActionList = <
-        item
-          Action = actExecuteUpdatePercent
-        end
-        item
-          Action = actExecUpdatePercent
-        end
-        item
-          Action = actRefresh
-        end>
-      Caption = #1048#1079#1084#1077#1085#1080#1090#1100' % '#1089#1082#1080#1076#1082#1080' '#1076#1083#1103' '#1089#1088#1086#1082#1086#1074#1086#1075#1086' '#1090#1086#1074#1072#1088#1072
-      Hint = #1048#1079#1084#1077#1085#1080#1090#1100' % '#1089#1082#1080#1076#1082#1080' '#1076#1083#1103' '#1089#1088#1086#1082#1086#1074#1086#1075#1086' '#1090#1086#1074#1072#1088#1072
-      ImageIndex = 43
-    end
-    object actExecuteUpdatePercent: TExecuteDialog
-      Category = 'DSDLib'
-      MoveParams = <>
-      Caption = 'actExecuteUpdatePercent'
-      FormName = 'TSendPartionDateChange_UpdatePercentDialogForm'
-      FormNameParam.Value = 'TSendPartionDateChange_UpdatePercentDialogForm'
-      FormNameParam.DataType = ftString
-      FormNameParam.MultiSelectSeparator = ','
-      GuiParams = <
-        item
-          Name = 'UnitId'
-          Value = Null
-          Component = FormParams
-          ComponentItem = 'UnitId'
-          MultiSelectSeparator = ','
-        end
-        item
-          Name = 'UnitName'
-          Value = Null
-          Component = FormParams
-          ComponentItem = 'UnitName'
-          DataType = ftString
-          MultiSelectSeparator = ','
-        end
-        item
-          Name = 'ChangePercent'
-          Value = Null
-          Component = FormParams
-          ComponentItem = 'ChangePercent'
-          DataType = ftFloat
-          MultiSelectSeparator = ','
-        end
-        item
-          Name = 'ChangePercentMin'
-          Value = Null
-          Component = FormParams
-          ComponentItem = 'ChangePercentMin'
-          DataType = ftFloat
-          MultiSelectSeparator = ','
-        end>
-      isShowModal = True
-      OpenBeforeShow = True
-    end
-    object actExecUpdatePercent: TdsdExecStoredProc
-      Category = 'DSDLib'
-      MoveParams = <>
-      PostDataSetBeforeExecute = False
-      StoredProc = spExecUpdatePercent
-      StoredProcList = <
-        item
-          StoredProc = spExecUpdatePercent
-        end>
-      Caption = 'actExecUpdatePercent'
-    end
   end
   inherited MasterDS: TDataSource
     Left = 64
@@ -556,79 +485,6 @@ inherited SendPartionDateChangeJournalForm: TSendPartionDateChangeJournalForm
       0
       26
       0)
-    inherited Bar: TdxBar
-      ItemLinks = <
-        item
-          Visible = True
-          ItemName = 'bbInsert'
-        end
-        item
-          Visible = True
-          ItemName = 'bbEdit'
-        end
-        item
-          BeginGroup = True
-          Visible = True
-          ItemName = 'dxBarStatic'
-        end
-        item
-          Visible = True
-          ItemName = 'bbComplete'
-        end
-        item
-          Visible = True
-          ItemName = 'bbUnComplete'
-        end
-        item
-          Visible = True
-          ItemName = 'bbDelete'
-        end
-        item
-          BeginGroup = True
-          Visible = True
-          ItemName = 'dxBarStatic'
-        end
-        item
-          Visible = True
-          ItemName = 'bbShowErased'
-        end
-        item
-          Visible = True
-          ItemName = 'bbRefresh'
-        end
-        item
-          Visible = True
-          ItemName = 'dxBarStatic'
-        end
-        item
-          Visible = True
-          ItemName = 'bbMovementItemContainer'
-        end
-        item
-          Visible = True
-          ItemName = 'dxBarButton1'
-        end
-        item
-          Visible = True
-          ItemName = 'dxBarStatic'
-        end
-        item
-          Visible = True
-          ItemName = 'bbMovementProtocol'
-        end
-        item
-          Visible = True
-          ItemName = 'dxBarStatic'
-        end
-        item
-          Visible = True
-          ItemName = 'bbGridToExcel'
-        end
-        item
-          Visible = True
-          ItemName = 'dxBarStatic'
-        end>
-    end
     object bbPrint: TdxBarButton
       Action = actPrint
       Category = 0
@@ -652,8 +508,11 @@ inherited SendPartionDateChangeJournalForm: TSendPartionDateChangeJournalForm
       ImageIndex = 77
     end
     object dxBarButton1: TdxBarButton
-      Action = actUpdatePercent
+      Caption = #1048#1079#1084#1077#1085#1080#1090#1100' % '#1089#1082#1080#1076#1082#1080' '#1076#1083#1103' '#1089#1088#1086#1082#1086#1074#1086#1075#1086' '#1090#1086#1074#1072#1088#1072
       Category = 0
+      Hint = #1048#1079#1084#1077#1085#1080#1090#1100' % '#1089#1082#1080#1076#1082#1080' '#1076#1083#1103' '#1089#1088#1086#1082#1086#1074#1086#1075#1086' '#1090#1086#1074#1072#1088#1072
+      Visible = ivAlways
+      ImageIndex = 43
     end
   end
   inherited DBViewAddOn: TdsdDBViewAddOn
@@ -857,40 +716,5 @@ inherited SendPartionDateChangeJournalForm: TSendPartionDateChangeJournalForm
     PackSize = 1
     Left = 784
     Top = 147
-  end
-  object spExecUpdatePercent: TdsdStoredProc
-    StoredProcName = 'gpUpdatePercent_Movement_SendPartionDateChange'
-    DataSets = <>
-    OutputType = otResult
-    Params = <
-      item
-        Name = 'inUnitID'
-        Value = Null
-        Component = FormParams
-        ComponentItem = 'UnitId'
-        ParamType = ptInput
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'inChangePercent'
-        Value = Null
-        Component = FormParams
-        ComponentItem = 'ChangePercent'
-        DataType = ftFloat
-        ParamType = ptInput
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'inChangePercentMin'
-        Value = Null
-        Component = FormParams
-        ComponentItem = 'ChangePercentMin'
-        DataType = ftFloat
-        ParamType = ptInput
-        MultiSelectSeparator = ','
-      end>
-    PackSize = 1
-    Left = 336
-    Top = 376
   end
 end

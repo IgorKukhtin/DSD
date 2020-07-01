@@ -384,14 +384,19 @@ CREATE OR REPLACE FUNCTION zc_Movement_SaleAsset() RETURNS Integer AS $BODY$BEGI
 INSERT INTO MovementDesc (Code, ItemName)
   SELECT 'zc_Movement_SaleAsset', 'Продажа ОС' WHERE NOT EXISTS (SELECT * FROM MovementDesc WHERE Code = 'zc_Movement_SaleAsset');
 
-
 CREATE OR REPLACE FUNCTION zc_Movement_ProjectsImprovements() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM MovementDesc WHERE Code = 'zc_Movement_ProjectsImprovements'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
 INSERT INTO MovementDesc (Code, ItemName)
   SELECT 'zc_Movement_ProjectsImprovements', 'Проекты/Доработки' WHERE NOT EXISTS (SELECT * FROM MovementDesc WHERE Code = 'zc_Movement_ProjectsImprovements');
 
+CREATE OR REPLACE FUNCTION zc_Movement_SendPartionDateChange() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM MovementDesc WHERE Code = 'zc_Movement_SendPartionDateChange'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
+INSERT INTO MovementDesc (Code, ItemName)
+  SELECT 'zc_Movement_SendPartionDateChange', 'Заявки изменения срока годности' WHERE NOT EXISTS (SELECT * FROM MovementDesc WHERE Code = 'zc_Movement_SendPartionDateChange');
+
+
 /*-------------------------------------------------------------------------------
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.   Воробкало А.А.  Шаблий О.В.
+ 01.07.20                                                                                     * zc_Movement_SendPartionDateChange
  18.06.20         * zc_Movement_LossAsset
                     zc_Movement_SaleAsset
  12.05.20                                                                                     * zc_Movement_ProjectsImprovements

@@ -35,7 +35,6 @@ type
     GoodsName: TcxGridDBColumn;
     Amount: TcxGridDBColumn;
     AmountRemains: TcxGridDBColumn;
-    ChangePercent: TcxGridDBColumn;
     PrintItemsCDS: TClientDataSet;
     PrintHeaderCDS: TClientDataSet;
     cxLabel7: TcxLabel;
@@ -59,16 +58,14 @@ type
     edUpdateDate: TcxDateEdit;
     GuidesUpdate: TdsdGuides;
     actUpdateDetailDS: TdsdUpdateDataSet;
-    spInsertMI: TdsdStoredProc;
-    actInsertMI: TdsdExecStoredProc;
     RefreshDispatcher: TRefreshDispatcher;
     actRefreshUnit: TdsdDataSetRefresh;
     actOpenFormIncome: TdsdOpenForm;
     bbOpenFormIncome: TdxBarButton;
-    minExpirationDate: TcxGridDBColumn;
+    ExpirationDate: TcxGridDBColumn;
     actOpenPartionDateKind: TdsdOpenForm;
     bbMIChildProtocolOpenForm: TdxBarButton;
-    cxLabel4: TcxLabel;
+    dxBarButton1: TdxBarButton;
   private
     { Private declarations }
   public

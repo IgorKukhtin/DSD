@@ -890,7 +890,8 @@ uses
   RecalcMCSShedulerSunDialog in '..\..\FormsFarmacy\Object\RecalcMCSShedulerSunDialog.pas' {RecalcMCSShedulerSunDialogForm: TParentForm},
   Report_Movement_Send_RemainsSun_Supplement in '..\..\FormsFarmacy\Report\Report_Movement_Send_RemainsSun_Supplement.pas' {Report_Movement_Send_RemainsSun_SupplementForm: TParentForm},
   SendPartionDateChange in '..\..\FormsFarmacy\Document\SendPartionDateChange.pas' {SendPartionDateChangeForm: TParentForm},
-  SendPartionDateChangeJournal in '..\..\FormsFarmacy\Document\SendPartionDateChangeJournal.pas' {SendPartionDateChangeJournalForm: TParentForm};
+  SendPartionDateChangeJournal in '..\..\FormsFarmacy\Document\SendPartionDateChangeJournal.pas' {SendPartionDateChangeJournalForm: TParentForm},
+  CheckSummCard in '..\..\FormsFarmacy\Document\CheckSummCard.pas' {CheckSummCardForm: TParentForm};
 
 {$R *.res}
 {$R DevExpressRus.res}

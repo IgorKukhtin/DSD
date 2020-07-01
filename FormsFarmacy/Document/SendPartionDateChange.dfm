@@ -23,7 +23,7 @@ inherited SendPartionDateChangeForm: TSendPartionDateChangeForm
         Width = 1048
         Height = 381
         ExplicitWidth = 1048
-        ExplicitHeight = 210
+        ExplicitHeight = 381
         inherited cxGridDBTableView: TcxGridDBTableView
           DataController.Summary.DefaultGroupSummaryItems = <
             item
@@ -39,22 +39,18 @@ inherited SendPartionDateChangeForm: TSendPartionDateChangeForm
             item
               Format = ',0.####'
               Kind = skSum
-              Column = Amount_0
             end
             item
               Format = ',0.####'
               Kind = skSum
-              Column = Amount_1
             end
             item
               Format = ',0.####'
               Kind = skSum
-              Column = Amount_2
             end
             item
               Format = ',0.####'
               Kind = skSum
-              Column = Amount_all
             end
             item
               Format = ',0.####'
@@ -95,22 +91,18 @@ inherited SendPartionDateChangeForm: TSendPartionDateChangeForm
             item
               Format = ',0.####'
               Kind = skSum
-              Column = Amount_0
             end
             item
               Format = ',0.####'
               Kind = skSum
-              Column = Amount_1
             end
             item
               Format = ',0.####'
               Kind = skSum
-              Column = Amount_2
             end
             item
               Format = ',0.####'
               Kind = skSum
-              Column = Amount_all
             end
             item
               Format = ',0.####'
@@ -157,8 +149,8 @@ inherited SendPartionDateChangeForm: TSendPartionDateChangeForm
             Options.Editing = False
             Width = 217
           end
-          object minExpirationDate: TcxGridDBColumn
-            Caption = #1052#1080#1085'. '#1089#1088#1086#1082' '#1075#1086#1076#1085#1086#1089#1090#1080
+          object ExpirationDate: TcxGridDBColumn
+            Caption = 'C'#1088#1086#1082' '#1075#1086#1076#1085#1086#1089#1090#1080
             DataBinding.FieldName = 'ExpirationDate'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
@@ -186,79 +178,6 @@ inherited SendPartionDateChangeForm: TSendPartionDateChangeForm
             Options.Editing = False
             Width = 70
           end
-          object Amount_0: TcxGridDBColumn
-            Caption = #1055#1088#1086#1089#1088#1086#1095#1077#1085#1086
-            DataBinding.FieldName = 'Amount_0'
-            PropertiesClassName = 'TcxCurrencyEditProperties'
-            Properties.DecimalPlaces = 3
-            Properties.DisplayFormat = ',0.####;-,0.####; ;'
-            HeaderAlignmentHorz = taCenter
-            HeaderAlignmentVert = vaCenter
-            Options.Editing = False
-            Width = 53
-          end
-          object Amount_1: TcxGridDBColumn
-            Caption = #1057#1088#1086#1082' '#1084#1077#1085#1100#1096#1077' 50 '#1076#1085'..'
-            DataBinding.FieldName = 'Amount_1'
-            PropertiesClassName = 'TcxCurrencyEditProperties'
-            Properties.DecimalPlaces = 3
-            Properties.DisplayFormat = ',0.####;-,0.####; ;'
-            HeaderAlignmentHorz = taCenter
-            HeaderAlignmentVert = vaCenter
-            Options.Editing = False
-            Width = 52
-          end
-          object Amount_2: TcxGridDBColumn
-            Caption = #1057#1088#1086#1082' '#1084#1077#1085#1100#1096#1077' 200 '#1076#1085'..'
-            DataBinding.FieldName = 'Amount_2'
-            PropertiesClassName = 'TcxCurrencyEditProperties'
-            Properties.DecimalPlaces = 3
-            Properties.DisplayFormat = ',0.####;-,0.####; ;'
-            HeaderAlignmentHorz = taCenter
-            HeaderAlignmentVert = vaCenter
-            Options.Editing = False
-            Width = 52
-          end
-          object Amount_all: TcxGridDBColumn
-            Caption = #1057#1088#1086#1082' '#1073#1086#1083#1077#1077' 200 '#1076#1085'.'
-            DataBinding.FieldName = 'Amount_all'
-            PropertiesClassName = 'TcxCurrencyEditProperties'
-            Properties.DecimalPlaces = 3
-            Properties.DisplayFormat = ',0.####;-,0.####; ;'
-            HeaderAlignmentHorz = taCenter
-            HeaderAlignmentVert = vaCenter
-            Options.Editing = False
-            Width = 49
-          end
-          object ChangePercent: TcxGridDBColumn
-            Caption = '% '#1089#1082#1080#1076#1082#1080' ('#1086#1090' 50 '#1076#1086' 200 '#1076#1085'.)'
-            DataBinding.FieldName = 'ChangePercent'
-            PropertiesClassName = 'TcxCurrencyEditProperties'
-            Properties.DecimalPlaces = 4
-            Properties.DisplayFormat = ',0.####;-,0.####; ;'
-            HeaderAlignmentHorz = taCenter
-            HeaderAlignmentVert = vaCenter
-            Width = 78
-          end
-          object ChangePercentMin: TcxGridDBColumn
-            Caption = '% '#1089#1082#1080#1076#1082#1080' ('#1084#1077#1085#1100#1096#1077' 50 '#1076#1085'.)'
-            DataBinding.FieldName = 'ChangePercentMin'
-            PropertiesClassName = 'TcxCurrencyEditProperties'
-            Properties.DecimalPlaces = 4
-            Properties.DisplayFormat = ',0.####;-,0.####; ;'
-            HeaderAlignmentHorz = taCenter
-            HeaderAlignmentVert = vaCenter
-            Width = 104
-          end
-          object isExpirationDateDiff: TcxGridDBColumn
-            Caption = #1048#1079#1084#1077#1085#1077#1085#1080#1077' '#1087#1072#1088#1090#1080#1080
-            DataBinding.FieldName = 'isExpirationDateDiff'
-            HeaderAlignmentHorz = taCenter
-            HeaderAlignmentVert = vaCenter
-            HeaderHint = #1048#1079#1084#1077#1085#1077#1085#1080#1077' '#1087#1072#1088#1090#1080#1080
-            Options.Editing = False
-            Width = 82
-          end
         end
       end
       object cxSplitter1: TcxSplitter
@@ -268,7 +187,6 @@ inherited SendPartionDateChangeForm: TSendPartionDateChangeForm
         Height = 8
         HotZoneClassName = 'TcxMediaPlayer8Style'
         AlignSplitter = salBottom
-        ExplicitTop = 210
       end
     end
   end
@@ -409,14 +327,6 @@ inherited SendPartionDateChangeForm: TSendPartionDateChangeForm
       TabOrder = 17
       Width = 120
     end
-    object cxLabel4: TcxLabel
-      Left = 9
-      Top = 91
-      Caption = 
-        #1056#1072#1089#1095#1077#1090' '#1094#1077#1085#1099' ('#1086#1090' 50 '#1076#1086' 200 '#1076#1085'.) '#1079#1072' 100% '#1073#1077#1088#1077#1090#1089#1103' '#1090#1086#1074#1072#1088#1085#1072#1103' '#1085#1072#1094#1077#1085#1082#1072'.' +
-        ' '#1054#1090' '#1085#1077#1077' '#1088#1072#1089#1089#1095#1080#1090#1099#1074#1072#1077#1090#1089#1103' '#1087#1088#1086#1094#1077#1085#1090' '#1080' '#1074#1099#1095#1080#1090#1072#1077#1090#1089#1103' '#1080#1079' '#1086#1090#1087#1091#1089#1082#1085#1086#1081' '#1094#1077#1085#1099'.  ' +
-        ' '#1044#1083#1103' '#1090#1086#1074#1072#1088#1086#1074' '#1084#1077#1085#1100#1096#1077' 50 '#1076#1085'. '#1087#1088#1086#1094#1077#1085#1090' '#1086#1090' '#1086#1090#1087#1091#1089#1082#1085#1086#1081' '#1094#1077#1085#1099'.'
-    end
   end
   inherited ActionList: TActionList
     object actRefreshUnit: TdsdDataSetRefresh [0]
@@ -428,9 +338,6 @@ inherited SendPartionDateChangeForm: TSendPartionDateChangeForm
           StoredProc = spInsertUpdateMovement
         end
         item
-          StoredProc = spGetTotalSumm
-        end
-        item
           StoredProc = spSelect
         end>
       Caption = #1055#1077#1088#1077#1095#1080#1090#1072#1090#1100
@@ -438,14 +345,6 @@ inherited SendPartionDateChangeForm: TSendPartionDateChangeForm
       ImageIndex = 4
       ShortCut = 116
       RefreshOnTabSetChanges = False
-    end
-    inherited actInsertUpdateMovement: TdsdExecStoredProc
-      StoredProcList = <
-        item
-          StoredProc = spInsertUpdateMovement
-        end
-        item
-        end>
     end
     inherited actShowAll: TBooleanStoredProcAction
       StoredProcList = <
@@ -464,31 +363,10 @@ inherited SendPartionDateChangeForm: TSendPartionDateChangeForm
         end>
       Caption = 'actUpdateMainDS'
     end
-    object actInsertMI: TdsdExecStoredProc [9]
-      Category = 'DSDLib'
-      MoveParams = <>
-      PostDataSetBeforeExecute = False
-      StoredProc = spInsertMI
-      StoredProcList = <
-        item
-          StoredProc = spInsertMI
-        end
-        item
-          StoredProc = spSelect
-        end>
-      Caption = #1047#1072#1087#1086#1083#1085#1080#1090#1100' '#1076#1072#1085#1085#1099#1077' '#1087#1086' '#1089#1088#1086#1082#1072#1084
-      Hint = #1047#1072#1087#1086#1083#1085#1080#1090#1100' '#1076#1072#1085#1085#1099#1077' '#1087#1086' '#1089#1088#1086#1082#1072#1084
-      ImageIndex = 74
-      QuestionBeforeExecute = #1047#1072#1087#1086#1083#1085#1080#1090#1100' '#1076#1072#1085#1085#1099#1077' '#1089#1086#1075#1083#1072#1089#1085#1086' '#1089#1088#1086#1082#1072#1084' '#1075#1086#1076#1085#1086#1089#1090#1080'?'
-      InfoAfterExecute = #1044#1072#1085#1085#1099#1077' '#1079#1072#1087#1086#1083#1085#1077#1085#1099
-    end
     inherited actUpdateMainDS: TdsdUpdateDataSet
       StoredProcList = <
         item
           StoredProc = spInsertUpdateMIMaster
-        end
-        item
-          StoredProc = spGetTotalSumm
         end
         item
           StoredProc = spSelect
@@ -688,19 +566,20 @@ inherited SendPartionDateChangeForm: TSendPartionDateChangeForm
   end
   inherited spSelect: TdsdStoredProc
     StoredProcName = 'gpSelect_MovementItem_SendPartionDateChange'
-    DataSets = <
-      item
-        DataSet = MasterCDS
-      end
-      item
-      end>
-    OutputType = otMultiDataSet
     Params = <
       item
         Name = 'inMovementId'
         Value = Null
         Component = FormParams
         ComponentItem = 'Id'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inShowAll'
+        Value = Null
+        Component = actShowAll
+        DataType = ftBoolean
         ParamType = ptInput
         MultiSelectSeparator = ','
       end
@@ -748,6 +627,10 @@ inherited SendPartionDateChangeForm: TSendPartionDateChangeForm
         end
         item
           Visible = True
+          ItemName = 'dxBarButton1'
+        end
+        item
+          Visible = True
           ItemName = 'dxBarStatic'
         end
         item
@@ -765,10 +648,6 @@ inherited SendPartionDateChangeForm: TSendPartionDateChangeForm
         item
           Visible = True
           ItemName = 'dxBarStatic'
-        end
-        item
-          Visible = True
-          ItemName = 'bbInsertMI'
         end
         item
           Visible = True
@@ -812,8 +691,11 @@ inherited SendPartionDateChangeForm: TSendPartionDateChangeForm
       Category = 0
     end
     object bbInsertMI: TdxBarButton
-      Action = actInsertMI
+      Caption = #1047#1072#1087#1086#1083#1085#1080#1090#1100' '#1076#1072#1085#1085#1099#1077' '#1087#1086' '#1089#1088#1086#1082#1072#1084
       Category = 0
+      Hint = #1047#1072#1087#1086#1083#1085#1080#1090#1100' '#1076#1072#1085#1085#1099#1077' '#1087#1086' '#1089#1088#1086#1082#1072#1084
+      Visible = ivAlways
+      ImageIndex = 74
     end
     object bbOpenFormIncome: TdxBarButton
       Action = actOpenFormIncome
@@ -825,6 +707,10 @@ inherited SendPartionDateChangeForm: TSendPartionDateChangeForm
       Hint = #1055#1088#1086#1089#1084#1086#1090#1088' <'#1055#1088#1086#1090#1086#1082#1086#1083#1072' '#1048#1079#1084#1077#1085#1077#1085#1080#1103' '#1087#1072#1088#1090#1080#1080'>'
       Visible = ivAlways
       ImageIndex = 34
+    end
+    object dxBarButton1: TdxBarButton
+      Action = actShowAll
+      Category = 0
     end
   end
   inherited DBViewAddOn: TdsdDBViewAddOn
@@ -864,19 +750,19 @@ inherited SendPartionDateChangeForm: TSendPartionDateChangeForm
       end
       item
         Name = 'TotalCount'
-        Value = Null
+        Value = '0'
         DataType = ftFloat
         MultiSelectSeparator = ','
       end
       item
         Name = 'TotalSumm'
-        Value = Null
+        Value = '0'
         DataType = ftFloat
         MultiSelectSeparator = ','
       end
       item
         Name = 'TotalSummPrimeCost'
-        Value = Null
+        Value = '0'
         DataType = ftFloat
         MultiSelectSeparator = ','
       end>
@@ -1059,20 +945,6 @@ inherited SendPartionDateChangeForm: TSendPartionDateChangeForm
         Value = Null
         Component = GuidesUnit
         ComponentItem = 'Key'
-        ParamType = ptInput
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'inChangePercent'
-        Value = Null
-        DataType = ftFloat
-        ParamType = ptInput
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'inChangePercentMin'
-        Value = Null
-        DataType = ftFloat
         ParamType = ptInput
         MultiSelectSeparator = ','
       end
@@ -1409,39 +1281,6 @@ inherited SendPartionDateChangeForm: TSendPartionDateChangeForm
       end>
     Left = 986
     Top = 14
-  end
-  object spInsertMI: TdsdStoredProc
-    StoredProcName = 'gpInsert_MI_SendPartionDateChange'
-    DataSets = <>
-    OutputType = otResult
-    Params = <
-      item
-        Name = 'inMovementId'
-        Value = Null
-        Component = FormParams
-        ComponentItem = 'Id'
-        ParamType = ptInput
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'inUnitId'
-        Value = ''
-        Component = GuidesUnit
-        ComponentItem = 'Key'
-        ParamType = ptInput
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'inOperDate'
-        Value = 'NULL'
-        Component = edOperDate
-        DataType = ftDateTime
-        ParamType = ptInput
-        MultiSelectSeparator = ','
-      end>
-    PackSize = 1
-    Left = 568
-    Top = 408
   end
   object RefreshDispatcher: TRefreshDispatcher
     IdParam.Value = Null

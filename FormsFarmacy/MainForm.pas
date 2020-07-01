@@ -693,6 +693,8 @@ type
     v11: TMenuItem;
     actSendPartionDateChangeJournal: TdsdOpenForm;
     N237: TMenuItem;
+    actCheckSummCard: TdsdOpenForm;
+    N238: TMenuItem;
     procedure actSaveDataExecute(Sender: TObject);
 
     procedure miRepriceClick(Sender: TObject);

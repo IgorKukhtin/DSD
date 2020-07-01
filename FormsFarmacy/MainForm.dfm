@@ -3698,6 +3698,18 @@ inherited MainForm: TMainForm
       GuiParams = <>
       isShowModal = False
     end
+    object actCheckSummCard: TdsdOpenForm
+      Category = #1044#1086#1082#1091#1084#1077#1085#1090#1099
+      MoveParams = <>
+      Caption = #1047#1072#1087#1086#1085#1077#1085#1080#1077' '#1087#1088#1077#1076#1086#1087#1083#1072#1090#1099' '#1085#1072' '#1082#1072#1088#1090#1091
+      ShortCut = 119
+      FormName = 'TCheckSummCardForm'
+      FormNameParam.Value = 'TCheckSummCardForm'
+      FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
+      GuiParams = <>
+      isShowModal = False
+    end
   end
   inherited UserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn
     Left = 496
@@ -4098,6 +4110,9 @@ inherited MainForm: TMainForm
       end
       object miReport_GoodsPartionDate: TMenuItem
         Action = actReport_GoodsPartionDate
+      end
+      object N238: TMenuItem
+        Action = actCheckSummCard
       end
       object N33: TMenuItem
         Caption = '-'

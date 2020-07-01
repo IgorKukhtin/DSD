@@ -48,11 +48,7 @@ type
     bbDeferredYes: TdxBarButton;
     bbDeferredNo: TdxBarButton;
     Transfer: TcxGridDBColumn;
-    actUpdatePercent: TMultiAction;
-    actExecuteUpdatePercent: TExecuteDialog;
-    actExecUpdatePercent: TdsdExecStoredProc;
     dxBarButton1: TdxBarButton;
-    spExecUpdatePercent: TdsdStoredProc;
   private
     { Private declarations }
   public
