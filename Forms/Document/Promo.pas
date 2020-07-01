@@ -270,10 +270,6 @@ type
     calcGroupNum: TcxGridDBColumn;
     actOpenReportForm: TdsdOpenForm;
     bbOpenReportForm: TdxBarButton;
-    mactUpdate_Movement_Promo_Calc: TMultiAction;
-    actUpdate_Movement_Promo_Calc: TdsdExecStoredProc;
-    spUpdate_Movement_Promo_Calc: TdsdStoredProc;
-    bbUpdate_Movement_Promo_Calc: TdxBarButton;
     AmountRetInWeight: TcxGridDBColumn;
     AmountRetIn: TcxGridDBColumn;
     GoodsKindName_List: TcxGridDBColumn;
