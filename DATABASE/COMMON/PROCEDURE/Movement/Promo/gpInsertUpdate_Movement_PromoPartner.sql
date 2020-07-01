@@ -55,9 +55,17 @@ $BODY$
    DECLARE vbPartnerDescId Integer;
 BEGIN
     -- проверка прав пользователя на вызов процедуры
-    --vbUserId:= lpCheckRight (inSession, zc_Enum_Process_InsertUpdate_Movement_Promo());
-    vbUserId := inSession;
-    -- сохранили <Документ>
+    -- vbUserId:= lpCheckRight (inSession, zc_Enum_Process_InsertUpdate_Movement_Promo());
+    vbUserId := lpGetUserBySession (inSession);
+
+
+    -- проверка - если есть подписи, корректировать нельзя
+    PERFORM lpCheck_Movement_Promo_Sign (inMovementId:= inParentId
+                                       , inIsComplete:= FALSE
+                                       , inIsUpdate  := TRUE
+                                       , inUserId    := vbUserId
+                                        );
+
     -- определяем признак Создание/Корректировка
     vbIsInsert:= COALESCE (ioId, 0) = 0;
     

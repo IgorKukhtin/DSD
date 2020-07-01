@@ -50,8 +50,8 @@ BEGIN
       IF vbUserId IN (5416822, 5416811, 5416834, 5416838)
          AND COALESCE (inVATPercent, 0) = 0
       THEN
-          -- inVATPercent:= 20;
-          RAISE EXCEPTION 'Ошибка. % НДС = 0', '%';
+           -- RAISE EXCEPTION 'Ошибка. % НДС = 0', '%';
+           inVATPercent:= 20;
       END IF;
 
 

@@ -32,6 +32,13 @@ BEGIN
     vbTaxPromo := (REPLACE(REPLACE ('15,33 %', '%', ''), ',', '.')) :: TFloat;
     vbGoodsId  := (SELECT MovementItem.ObjectId FROM MovementItem WHERE MovementItem.Id = inId);
     
+    -- проверка - если есть подписи, корректировать нельзя
+    PERFORM lpCheck_Movement_Promo_Sign (inMovementId:= inMovementId
+                                       , inIsComplete:= FALSE
+                                       , inIsUpdate  := TRUE
+                                       , inUserId    := vbUserId
+                                        );
+
     -- Проверили уникальность товар/вид товара
     IF inNum IN (3)
     THEN

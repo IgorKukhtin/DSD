@@ -18,6 +18,9 @@ BEGIN
      vbUserId:= lpCheckRight (inSession, zc_Enum_Process_SetErased_MI_Promo());
 
 
+     -- нашли
+     vbMovementId:= (SELECT MI.MovementId FROM MovementItem AS MI WHERE MI.Id = inMovementItemId);
+
      -- если это Состояние Акции
      IF EXISTS (SELECT 1
                 FROM MovementItem AS MI
@@ -26,9 +29,6 @@ BEGIN
                   AND MI.DescId    = zc_MI_Message()
                )
      THEN
-         -- нашли
-         vbMovementId:= (SELECT MI.MovementId FROM MovementItem AS MI WHERE MI.Id = inMovementItemId);
-
          -- если НЕ последний
          IF inMovementItemId <> (SELECT MAX (MI.Id)
                                  FROM MovementItem AS MI
@@ -90,6 +90,12 @@ BEGIN
               ) AS tmp;
 
      ELSE
+         -- проверка - если есть подписи, корректировать нельзя
+         PERFORM lpCheck_Movement_Promo_Sign (inMovementId:= vbMovementId
+                                            , inIsComplete:= FALSE
+                                            , inIsUpdate  := TRUE
+                                            , inUserId    := vbUserId
+                                             );
          -- удаление
          outIsErased:= lpSetErased_MovementItem (inMovementItemId:= inMovementItemId, inUserId:= vbUserId);
 

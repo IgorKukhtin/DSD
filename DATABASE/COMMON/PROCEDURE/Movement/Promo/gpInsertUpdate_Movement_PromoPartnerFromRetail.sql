@@ -18,12 +18,18 @@ $BODY$
    DECLARE vbUserId Integer;
 BEGIN
     -- проверка прав пользователя на вызов процедуры
-    --vbUserId:= lpCheckRight (inSession, zc_Enum_Process_InsertUpdate_Movement_Promo());
-    vbUserId := inSession;
-    -- сохранили <Документ>
-    -- определяем признак Создание/Корректировка
+    -- vbUserId:= lpCheckRight (inSession, zc_Enum_Process_InsertUpdate_Movement_Promo());
+    vbUserId := lpGetUserBySession (inSession);
+
     
-    --проверили сохранен ли документ
+    -- проверка - если есть подписи, корректировать нельзя
+    PERFORM lpCheck_Movement_Promo_Sign (inMovementId:= inParentId
+                                       , inIsComplete:= FALSE
+                                       , inIsUpdate  := TRUE
+                                       , inUserId    := vbUserId
+                                        );
+
+    -- проверили сохранен ли документ
     IF NOT EXISTS(SELECT 1 FROM Movement 
                   WHERE Movement.Id = inParentId
                     AND Movement.StatusId = zc_Enum_Status_UnComplete())

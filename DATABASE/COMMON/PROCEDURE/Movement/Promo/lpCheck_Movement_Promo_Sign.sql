@@ -46,7 +46,7 @@ BEGIN
      THEN
          RAISE EXCEPTION 'Ошибка.Нельзя установить статус <%>.Ожидается подписание документа пользователем <%>.'
                         , lfGet_Object_ValueData_sh (zc_Enum_Status_Complete())
-                        , lfGet_Object_ValueData_sh (zfCalc_Word_Split (vbStrIdSignNo, ',', 1))
+                        , lfGet_Object_ValueData_sh (zfConvert_StringToFloat (zfCalc_Word_Split (vbStrIdSignNo, ',', 1)) :: Integer)
                          ;
      END IF;
      
@@ -54,7 +54,7 @@ BEGIN
      IF inIsUpdate = TRUE AND vbStrIdSign <> ''
      THEN
          RAISE EXCEPTION 'Ошибка.Документ уже подписан пользователем <%>.Корректировка не возможна.'
-                        , lfGet_Object_ValueData_sh (zfCalc_Word_Split (vbStrIdSign, ',', 1))
+                        , lfGet_Object_ValueData_sh (zfConvert_StringToFloat (zfCalc_Word_Split (vbStrIdSign, ',', 1)) :: Integer)
                          ;
      END IF;
 

@@ -16,10 +16,19 @@ $BODY$
    DECLARE vbUserId Integer;
 BEGIN
     -- проверка прав пользователя на вызов процедуры
-    --vbUserId := lpCheckRight (inSession, zc_Enum_Process_InsertUpdate_MI_PromoGoods());
-    vbUserId := inSession;
-    --Проверили уникальность условия в документе
-    IF EXISTS(SELECT 1 
+    -- vbUserId := lpCheckRight (inSession, zc_Enum_Process_InsertUpdate_MI_PromoGoods());
+    vbUserId := lpGetUserBySession (inSession);
+
+
+    -- проверка - если есть подписи, корректировать нельзя
+    PERFORM lpCheck_Movement_Promo_Sign (inMovementId:= inMovementId
+                                       , inIsComplete:= FALSE
+                                       , inIsUpdate  := TRUE
+                                       , inUserId    := vbUserId
+                                        );
+
+    -- Проверили уникальность условия в документе
+    IF EXISTS(SELECT 1
               FROM
                   MovementItem_PromoCondition_View AS MI_PromoCondition
               WHERE
@@ -31,7 +40,8 @@ BEGIN
     THEN
         RAISE EXCEPTION 'Ошибка. В документе уже указано выбранное условие <%>', (SELECT ValueData FROM Object WHERE id = inConditionPromoId);
     END IF;
-    
+
+
     -- сохранили
     ioId := lpInsertUpdate_MovementItem_PromoCondition (ioId                 := ioId
                                                       , inMovementId         := inMovementId

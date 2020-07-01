@@ -17,6 +17,14 @@ BEGIN
      -- проверка прав пользователя на вызов процедуры
      vbUserId:= lpCheckRight (inSession, zc_Enum_Process_InsertUpdate_Movement_Promo());
 
+
+     -- проверка - если есть подписи, корректировать нельзя
+     PERFORM lpCheck_Movement_Promo_Sign (inMovementId:= inMovementId
+                                        , inIsComplete:= FALSE
+                                        , inIsUpdate  := TRUE
+                                        , inUserId    := vbUserId
+                                         );
+
      -- определили признак
      inisTaxPromo:= NOT inisTaxPromo;
 
