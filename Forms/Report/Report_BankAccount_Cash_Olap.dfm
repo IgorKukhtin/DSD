@@ -3,7 +3,7 @@ object Report_BankAccount_Cash_OlapForm: TReport_BankAccount_Cash_OlapForm
   Top = 0
   Caption = #1054#1090#1095#1077#1090' <'#1054#1073#1086#1088#1086#1090#1099' '#1087#1086' '#1088'/'#1089#1095#1077#1090#1091' '#1080' '#1082#1072#1089#1089#1077'> ('#1054#1051#1040#1055')'
   ClientHeight = 448
-  ClientWidth = 1219
+  ClientWidth = 1140
   Color = clBtnFace
   Font.Charset = DEFAULT_CHARSET
   Font.Color = clWindowText
@@ -21,7 +21,7 @@ object Report_BankAccount_Cash_OlapForm: TReport_BankAccount_Cash_OlapForm
   object PanelHead: TPanel
     Left = 0
     Top = 0
-    Width = 1219
+    Width = 1140
     Height = 55
     Align = alTop
     TabOrder = 0
@@ -127,7 +127,7 @@ object Report_BankAccount_Cash_OlapForm: TReport_BankAccount_Cash_OlapForm
   object cxDBPivotGrid: TcxDBPivotGrid
     Left = 0
     Top = 81
-    Width = 1219
+    Width = 1140
     Height = 367
     Align = alClient
     DataSource = DataSource
@@ -159,14 +159,14 @@ object Report_BankAccount_Cash_OlapForm: TReport_BankAccount_Cash_OlapForm
       UniqueName = #1054#1073#1098#1077#1082#1090' '#1085#1072#1087#1088#1072#1074#1083#1077#1085#1080#1077
     end
     object pvGroupName: TcxDBPivotGridField
-      AreaIndex = 17
+      AreaIndex = 19
       IsCaptionAssigned = True
       Caption = #1042#1080#1076
       DataBinding.FieldName = 'GroupName'
       UniqueName = #1057#1090#1072#1090#1100#1103' '#1085#1072#1079#1085#1072#1095#1077#1085#1080#1103
     end
     object pvCurrencyName: TcxDBPivotGridField
-      AreaIndex = 10
+      AreaIndex = 12
       IsCaptionAssigned = True
       Caption = #1042#1072#1083#1102#1090#1072
       DataBinding.FieldName = 'CurrencyName'
@@ -197,21 +197,38 @@ object Report_BankAccount_Cash_OlapForm: TReport_BankAccount_Cash_OlapForm
       Visible = True
       UniqueName = #1057#1090#1072#1090#1100#1103' '#1085#1072#1079#1085#1072#1095#1077#1085#1080#1103
     end
+    object pvCashFlowCode: TcxDBPivotGridField
+      AreaIndex = 8
+      IsCaptionAssigned = True
+      Caption = #1050#1086#1076' ('#1057#1090#1072#1090#1100#1103' '#1044#1044#1057')'
+      DataBinding.FieldName = 'CashFlowCode'
+      Width = 55
+      UniqueName = #1050#1086#1083'-'#1074#1086' '#1044#1086#1083#1075'.'
+    end
+    object pvCashFlowName: TcxDBPivotGridField
+      AreaIndex = 9
+      IsCaptionAssigned = True
+      Caption = #1057#1090#1072#1090#1100#1103' '#1044#1044#1057
+      DataBinding.FieldName = 'CashFlowName'
+      Visible = True
+      Width = 55
+      UniqueName = #1050#1086#1083'-'#1074#1086' '#1044#1086#1083#1075'.'
+    end
     object pvCashFlowName_in: TcxDBPivotGridField
       AreaIndex = 7
       IsCaptionAssigned = True
       Caption = #1057#1090#1072#1090#1100#1103' '#1044#1044#1057' '#1087#1088#1080#1093#1086#1076
       DataBinding.FieldName = 'CashFlowName_in'
-      Visible = True
+      Hidden = True
       Width = 55
       UniqueName = #1050#1086#1083'-'#1074#1086' '#1044#1086#1083#1075'.'
     end
     object pvCashFlowName_out: TcxDBPivotGridField
-      AreaIndex = 8
+      AreaIndex = 10
       IsCaptionAssigned = True
       Caption = #1057#1090#1072#1090#1100#1103' '#1044#1044#1057' '#1088#1072#1089#1093#1086#1076
       DataBinding.FieldName = 'CashFlowName_out'
-      Visible = True
+      Hidden = True
       Width = 55
       UniqueName = #1050#1086#1083'-'#1074#1086' '#1044#1086#1083#1075'.'
     end
@@ -225,7 +242,7 @@ object Report_BankAccount_Cash_OlapForm: TReport_BankAccount_Cash_OlapForm
       UniqueName = #1057#1095#1077#1090'-'#1075#1088#1091#1087#1087#1072
     end
     object pvCashName: TcxDBPivotGridField
-      AreaIndex = 9
+      AreaIndex = 11
       IsCaptionAssigned = True
       Caption = #1050#1072#1089#1089#1072
       DataBinding.FieldName = 'CashName'
@@ -233,14 +250,14 @@ object Report_BankAccount_Cash_OlapForm: TReport_BankAccount_Cash_OlapForm
       UniqueName = #1057#1086#1089#1090#1072#1074
     end
     object pvMoneyPlaceCode: TcxDBPivotGridField
-      AreaIndex = 12
+      AreaIndex = 14
       IsCaptionAssigned = True
       Caption = #1050#1086#1076' ('#1086#1090' '#1082#1086#1075#1086', '#1082#1086#1084#1091')'
       DataBinding.FieldName = 'MoneyPlaceCode'
       UniqueName = #1057#1086#1089#1090#1072#1074
     end
     object pvMoneyPlaceName: TcxDBPivotGridField
-      AreaIndex = 22
+      AreaIndex = 24
       IsCaptionAssigned = True
       Caption = #1054#1090' '#1050#1086#1075#1086', '#1050#1086#1084#1091
       DataBinding.FieldName = 'MoneyPlaceName'
@@ -248,7 +265,7 @@ object Report_BankAccount_Cash_OlapForm: TReport_BankAccount_Cash_OlapForm
       UniqueName = #1057#1086#1089#1090#1072#1074
     end
     object pvItemName: TcxDBPivotGridField
-      AreaIndex = 23
+      AreaIndex = 25
       IsCaptionAssigned = True
       Caption = #1069#1083#1077#1084#1077#1085#1090
       DataBinding.FieldName = 'ItemName'
@@ -256,21 +273,21 @@ object Report_BankAccount_Cash_OlapForm: TReport_BankAccount_Cash_OlapForm
       UniqueName = #1057#1086#1089#1090#1072#1074
     end
     object pvContractInvNumber: TcxDBPivotGridField
-      AreaIndex = 13
+      AreaIndex = 15
       IsCaptionAssigned = True
       Caption = #8470' '#1076#1086#1075'.'
       DataBinding.FieldName = 'ContractInvNumber'
       UniqueName = #1057#1086#1089#1090#1072#1074
     end
     object pvContractTagName: TcxDBPivotGridField
-      AreaIndex = 14
+      AreaIndex = 16
       IsCaptionAssigned = True
       Caption = #1055#1088#1080#1079#1085#1072#1082' '#1076#1086#1075'.'
       DataBinding.FieldName = 'ContractTagName'
       UniqueName = #1057#1086#1089#1090#1072#1074
     end
     object pvInfoMoneyCode: TcxDBPivotGridField
-      AreaIndex = 18
+      AreaIndex = 20
       IsCaptionAssigned = True
       Caption = #1050#1086#1076' '#1059#1055
       DataBinding.FieldName = 'InfoMoneyCode'
@@ -278,7 +295,7 @@ object Report_BankAccount_Cash_OlapForm: TReport_BankAccount_Cash_OlapForm
       UniqueName = #1050#1086#1083'-'#1074#1086' '#1044#1086#1083#1075'.'
     end
     object pvInfoMoneyName: TcxDBPivotGridField
-      AreaIndex = 21
+      AreaIndex = 23
       IsCaptionAssigned = True
       Caption = #1059#1055' '#1089#1090#1072#1090#1100#1103' '#1085#1072#1079#1085#1072#1095#1077#1085#1080#1103
       DataBinding.FieldName = 'InfoMoneyName'
@@ -296,7 +313,7 @@ object Report_BankAccount_Cash_OlapForm: TReport_BankAccount_Cash_OlapForm
       UniqueName = #1050#1086#1083'-'#1074#1086' '#1044#1086#1083#1075'.'
     end
     object pvInfoMoneyGroupName: TcxDBPivotGridField
-      AreaIndex = 19
+      AreaIndex = 21
       IsCaptionAssigned = True
       Caption = #1059#1055' '#1075#1088#1091#1087#1087#1072' '#1085#1072#1079#1085#1072#1095#1077#1085#1080#1103
       DataBinding.FieldName = 'InfoMoneyGroupName'
@@ -304,7 +321,7 @@ object Report_BankAccount_Cash_OlapForm: TReport_BankAccount_Cash_OlapForm
       UniqueName = #1050#1086#1083'-'#1074#1086' '#1044#1086#1083#1075'.'
     end
     object pvInfoMoneyDestinationName: TcxDBPivotGridField
-      AreaIndex = 20
+      AreaIndex = 22
       IsCaptionAssigned = True
       Caption = #1059#1055' '#1085#1072#1079#1085#1072#1095#1077#1085#1080#1077
       DataBinding.FieldName = 'InfoMoneyDestinationName'
@@ -312,14 +329,14 @@ object Report_BankAccount_Cash_OlapForm: TReport_BankAccount_Cash_OlapForm
       UniqueName = #1050#1086#1083'-'#1074#1086' '#1044#1086#1083#1075'.'
     end
     object pvUnitCode: TcxDBPivotGridField
-      AreaIndex = 15
+      AreaIndex = 17
       IsCaptionAssigned = True
       Caption = #1050#1086#1076' '#1087#1086#1076#1088'.'
       DataBinding.FieldName = 'UnitCode'
       UniqueName = #1043#1088#1091#1087#1087#1072' 2'
     end
     object pvUnitName: TcxDBPivotGridField
-      AreaIndex = 16
+      AreaIndex = 18
       IsCaptionAssigned = True
       Caption = #1055#1086#1076#1088#1072#1079#1076#1077#1083#1077#1085#1080#1077
       DataBinding.FieldName = 'UnitName'
@@ -451,7 +468,7 @@ object Report_BankAccount_Cash_OlapForm: TReport_BankAccount_Cash_OlapForm
       UniqueName = #1055#1088#1080#1093'. '#1073#1077#1079' '#1091#1095'. '#1073#1088#1072#1082' '#1074' '#1074#1072#1083'.'
     end
     object pvProfitLossGroupCode: TcxDBPivotGridField
-      AreaIndex = 25
+      AreaIndex = 27
       IsCaptionAssigned = True
       Caption = #1050#1086#1076' '#1054#1055#1080#1059' '#1075#1088'. ('#1076#1083#1103' '#1087#1086#1076#1088'. )'
       DataBinding.FieldName = 'ProfitLossGroupCode'
@@ -459,7 +476,7 @@ object Report_BankAccount_Cash_OlapForm: TReport_BankAccount_Cash_OlapForm
       UniqueName = #1050#1086#1083'-'#1074#1086' '#1044#1086#1083#1075'.'
     end
     object pvProfitLossGroupName: TcxDBPivotGridField
-      AreaIndex = 24
+      AreaIndex = 26
       IsCaptionAssigned = True
       Caption = #1054#1055#1080#1059' '#1075#1088#1091#1087#1087#1072' ('#1076#1083#1103' '#1055#1086#1076#1088#1072#1079#1076#1077#1083#1077#1085#1080#1103')'
       DataBinding.FieldName = 'ProfitLossGroupName'
@@ -467,7 +484,7 @@ object Report_BankAccount_Cash_OlapForm: TReport_BankAccount_Cash_OlapForm
       UniqueName = #1050#1086#1083'-'#1074#1086' '#1044#1086#1083#1075'.'
     end
     object pvProfitLossDirectionCode: TcxDBPivotGridField
-      AreaIndex = 26
+      AreaIndex = 28
       IsCaptionAssigned = True
       Caption = #1050#1086#1076' '#1054#1055#1080#1059' '#1085#1072#1087#1088'.  ('#1076#1083#1103' '#1087#1086#1076#1088'.)'
       DataBinding.FieldName = 'ProfitLossDirectionCode'
@@ -475,7 +492,7 @@ object Report_BankAccount_Cash_OlapForm: TReport_BankAccount_Cash_OlapForm
       UniqueName = #1050#1086#1083'-'#1074#1086' '#1044#1086#1083#1075'.'
     end
     object pvProfitLossDirectionName: TcxDBPivotGridField
-      AreaIndex = 27
+      AreaIndex = 29
       IsCaptionAssigned = True
       Caption = #1054#1055#1080#1059' '#1085#1072#1087#1088#1072#1074#1083#1077#1085#1080#1077'  ('#1076#1083#1103' '#1055#1086#1076#1088#1072#1079#1076#1077#1083#1077#1085#1080#1103')'
       DataBinding.FieldName = 'ProfitLossDirectionName'
@@ -483,7 +500,7 @@ object Report_BankAccount_Cash_OlapForm: TReport_BankAccount_Cash_OlapForm
       UniqueName = #1050#1086#1083'-'#1074#1086' '#1044#1086#1083#1075'.'
     end
     object pvAccountName: TcxDBPivotGridField
-      AreaIndex = 11
+      AreaIndex = 13
       IsCaptionAssigned = True
       Caption = #1057#1095#1077#1090
       DataBinding.FieldName = 'AccountName'
@@ -1057,8 +1074,8 @@ object Report_BankAccount_Cash_OlapForm: TReport_BankAccount_Cash_OlapForm
     Top = 11
   end
   object PeriodChoice2: TPeriodChoice
-    Left = 520
-    Top = 328
+    Left = 528
+    Top = 336
   end
   object cfPrice: TdsdPivotGridCalcFields
     PivotGrid = cxDBPivotGrid
@@ -1067,8 +1084,8 @@ object Report_BankAccount_Cash_OlapForm: TReport_BankAccount_Cash_OlapForm
         Field = pvTotalSumm
       end>
     CalcFieldsType = cfDivision
-    Left = 736
-    Top = 88
+    Left = 944
+    Top = 152
   end
   object cfPricePartner: TdsdPivotGridCalcFields
     PivotGrid = cxDBPivotGrid
@@ -1077,7 +1094,7 @@ object Report_BankAccount_Cash_OlapForm: TReport_BankAccount_Cash_OlapForm
         Field = pvDebetSumm
       end>
     CalcFieldsType = cfDivision
-    Left = 656
+    Left = 872
     Top = 152
   end
   object cfPriceSaleReal: TdsdPivotGridCalcFields
@@ -1087,8 +1104,8 @@ object Report_BankAccount_Cash_OlapForm: TReport_BankAccount_Cash_OlapForm
         Field = pvDebetSumm
       end>
     CalcFieldsType = cfDivision
-    Left = 656
-    Top = 312
+    Left = 616
+    Top = 336
   end
   object GuidesBankAccount: TdsdGuides
     KeyField = 'Id'
