@@ -5620,6 +5620,11 @@ begin
     CheckCDS.FieldByName('PartionDateKindName').AsVariant := Null;
     CheckCDS.FieldByName('PricePartionDate').AsVariant := Null;
   end;
+  if CheckCDS.FieldByName('DiscountExternalID').AsVariant = 0 then
+  begin
+    CheckCDS.FieldByName('DiscountExternalID').AsVariant := Null;
+    CheckCDS.FieldByName('DiscountExternalName').AsVariant := Null;
+  end;
 end;
 
 procedure TMainCashForm2.CheckGridDBTableViewFocusedRecordChanged
