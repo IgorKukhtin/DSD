@@ -425,7 +425,7 @@ BEGIN
          , tmpData_All.PromoCondition          :: TFloat
          , tmpData_All.SummaProfit             :: TFloat
          , tmpData_All.SummaProfit_Condition   :: TFloat
-         , 25 :: TFloat AS test1
+         , 0 :: TFloat AS test1
          
         -- , (tmpData_All.Price * (100-tmpData_All.TaxPromo)/100)  :: TFloat AS SummaDiscount               -- скидка
          
