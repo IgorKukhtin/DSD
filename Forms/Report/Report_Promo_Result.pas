@@ -89,6 +89,8 @@ type
     OpenReport_SaleReturn_byPromo: TdsdOpenForm;
     bbReport_SaleReturn_byPromo: TdxBarButton;
     CommentMain: TcxGridDBColumn;
+    spUpdate_MainDiscount: TdsdStoredProc;
+    actUpdateDataSet: TdsdUpdateDataSet;
   private
     { Private declarations }
   public

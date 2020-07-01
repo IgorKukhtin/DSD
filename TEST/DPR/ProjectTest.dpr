@@ -946,7 +946,6 @@ uses
   Report_ReceiptSaleAnalyze in '..\..\Forms\Report\Report_ReceiptSaleAnalyze.pas' {Report_ReceiptSaleAnalyzeForm: TParentForm},
   AssetGoods_Object in '..\..\Forms\Guides\AssetGoods_Object.pas' {AssetGoods_ObjectForm: TParentForm},
   IFIN_J1201009 in '..\..\SOURCE\MeDOC\IFIN_J1201009.pas',
-  Report_Promo_Result in '..\..\Forms\Report\Report_Promo_Result.pas' {Report_Promo_ResultForm: TParentForm},
   Report_Promo_ResultDialog in '..\..\Forms\Report\Report_Promo_ResultDialog.pas' {Report_Promo_ResultDialogForm: TParentForm},
   ProductionSeparateItemJournal in '..\..\Forms\Document\ProductionSeparateItemJournal.pas' {ProductionSeparateItemJournalForm: TParentForm},
   IFIN_J1201209 in '..\..\SOURCE\MeDOC\IFIN_J1201209.pas',
@@ -1174,7 +1173,8 @@ uses
   PromoManager in '..\..\Forms\Document\PromoManager.pas' {PromoManagerForm: TParentForm},
   PromoManagerJournal in '..\..\Forms\Document\PromoManagerJournal.pas' {PromoManagerJournalForm: TParentForm},
   PromoManagerDialog in '..\..\Forms\Document\PromoManagerDialog.pas' {PromoManagerDialogForm: TParentForm},
-  Report_ProductionOrderDialog in '..\..\Forms\Report\Report_ProductionOrderDialog.pas' {Report_ProductionOrderDialogForm: TParentForm};
+  Report_ProductionOrderDialog in '..\..\Forms\Report\Report_ProductionOrderDialog.pas' {Report_ProductionOrderDialogForm: TParentForm},
+  Report_Promo_Result in '..\..\Forms\Report\Report_Promo_Result.pas' {Report_Promo_ResultForm: TParentForm};
 
 {$R *.RES}
 {$R DevExpressRus.res}

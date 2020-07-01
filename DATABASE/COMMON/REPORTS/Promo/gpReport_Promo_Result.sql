@@ -32,6 +32,7 @@ RETURNS TABLE(
     ,AreaName             TBlob     --Регион
     ,GoodsName            TVarChar  --Позиция
     ,GoodsCode            Integer   --Код позиции
+    ,GoodsId              Integer
     ,MeasureName          TVarChar  --единица измерения
     ,TradeMarkName        TVarChar  --Торговая марка
     ,GoodsGroupNameFull   TVarChar -- группа товара
@@ -114,6 +115,7 @@ BEGIN
                     )
   , tmpMI AS (SELECT 
                      MI_PromoGoods.MovementId          --ИД документа <Акция>
+                   , MI_PromoGoods.GoodsId             --Ид объекта  <товар>
                    , MI_PromoGoods.GoodsCode           --код объекта  <товар>
                    , MI_PromoGoods.GoodsName           --наименование объекта <товар>
                    , MI_PromoGoods.Measure             --Единица измерения
@@ -143,13 +145,11 @@ BEGIN
                    , SUM (MI_PromoGoods.AmountIn)         AS AmountIn          --Кол-во возврат (факт)
                    , SUM (MI_PromoGoods.AmountInWeight)   AS AmountInWeight    --Кол-во возврат (факт) Вес
              
-
-     
-      
-      
                    , SUM (COALESCE (MI_PromoGoods.AmountOut, 0) - COALESCE (MI_PromoGoods.AmountIn, 0))             :: TFloat  AS AmountSale       -- продажа - возврат 
                    , SUM(COALESCE (MI_PromoGoods.AmountOutWeight, 0) - COALESCE (MI_PromoGoods.AmountInWeight, 0)) :: TFloat  AS AmountSaleWeight -- продажа - возврат 
                    , SUM(COALESCE (MI_PromoGoods.Price, 0) - COALESCE (MI_PromoGoods.PriceWithVAT,0))              :: TFloat  AS Price_Diff
+                   
+                   , SUM (COALESCE (MI_PromoGoods.MainDiscount,0))                                              ::TFloat   AS MainDiscount
                    , MIFloat_PriceIn1.ValueData                                                                 :: TFloat  AS PriceIn1               --себестоимость факт,  за кг
                    , ObjectString_Goods_GoodsGroupFull.ValueData                                                           AS GoodsGroupNameFull
               FROM tmpMovement AS Movement_Promo
@@ -164,6 +164,7 @@ BEGIN
                                           ON ObjectString_Goods_GoodsGroupFull.ObjectId = MI_PromoGoods.GoodsId
                                          AND ObjectString_Goods_GoodsGroupFull.DescId = zc_ObjectString_Goods_GroupNameFull()
               GROUP BY MI_PromoGoods.MovementId
+                   , MI_PromoGoods.GoodsId
                    , MI_PromoGoods.GoodsCode
                    , MI_PromoGoods.GoodsName
                    , MI_PromoGoods.Measure
@@ -247,6 +248,7 @@ BEGIN
             
           , MI_PromoGoods.GoodsName
           , MI_PromoGoods.GoodsCode
+          , MI_PromoGoods.GoodsId
           , MI_PromoGoods.Measure
           , MI_PromoGoods.TradeMark
           , MI_PromoGoods.GoodsGroupNameFull
@@ -306,7 +308,7 @@ BEGIN
                AND MovementItem_PromoCondition.Amount     <> 0
               ) :: TBlob   AS Discount_Condition
                  
-          , 0                                 :: TFloat AS MainDiscount
+          , MI_PromoGoods.MainDiscount        :: TFloat AS MainDiscount
                  
           , MI_PromoGoods.PriceWithVAT        :: TFloat
           , MI_PromoGoods.Price               :: TFloat

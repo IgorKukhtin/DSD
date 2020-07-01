@@ -17,6 +17,7 @@ RETURNS TABLE (
       , MeasureName         TVarChar --Единица измерения
       , TradeMarkName       TVarChar --Торговая марка
       , Amount              TFloat --% скидки на товар
+      , MainDiscount        TFloat -- Общая скидка для покупателя, %
       , Price               TFloat --Цена в прайсе
       , PriceSale           TFloat --Цена на полке
       , PriceWithOutVAT     TFloat --Цена отгрузки без учета НДС, с учетом скидки, грн
@@ -129,6 +130,7 @@ BEGIN
              , Object_Measure.ValueData               AS Measure             --Единица измерения
              , Object_TradeMark.ValueData             AS TradeMark           --Торговая марка
              , MovementItem.Amount                    AS Amount              --% скидки на товар
+             , MIFloat_MainDiscount.ValueData ::TFloat AS MainDiscount       -- Общая скидка для покупателя, %
              , MIFloat_Price.ValueData                AS Price               --Цена в прайсе
              , MIFloat_PriceSale.ValueData            AS PriceSale           --Цена на полке
              , MIFloat_PriceWithOutVAT.ValueData      AS PriceWithOutVAT     --Цена отгрузки без учета НДС, с учетом скидки, грн
@@ -239,6 +241,10 @@ BEGIN
                                          ON MIFloat_PriceTender.MovementItemId = MovementItem.Id 
                                         AND MIFloat_PriceTender.DescId = zc_MIFloat_PriceTender() 
 
+             LEFT JOIN MovementItemFloat AS MIFloat_MainDiscount
+                                         ON MIFloat_MainDiscount.MovementItemId = MovementItem.Id 
+                                        AND MIFloat_MainDiscount.DescId = zc_MIFloat_MainDiscount()
+
              LEFT JOIN Object AS Object_Goods ON Object_Goods.Id = MovementItem.ObjectId
 
              LEFT JOIN MovementItemLinkObject AS MILinkObject_GoodsKind 
@@ -284,6 +290,7 @@ ALTER FUNCTION gpSelect_MovementItem_PromoGoods (Integer, Boolean, TVarChar) OWN
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.    Воробкало А.А.
+ 01.07.20         * add MainDiscount
  24.01.18         * add PriceTender
  28.11.17         * add GoodsKindComplete
  10.11.17         *

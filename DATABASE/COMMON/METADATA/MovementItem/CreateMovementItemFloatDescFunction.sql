@@ -864,6 +864,10 @@ CREATE OR REPLACE FUNCTION zc_MIFloat_SummReestr() RETURNS Integer AS $BODY$BEGI
 INSERT INTO MovementItemFloatDesc (Code, ItemName)
   SELECT 'zc_MIFloat_SummReestr', 'Сумма отгрузки' WHERE NOT EXISTS (SELECT * FROM MovementItemFloatDesc WHERE Code = 'zc_MIFloat_SummReestr');
 
+CREATE OR REPLACE FUNCTION zc_MIFloat_MainDiscount() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM MovementItemFloatDesc WHERE Code = 'zc_MIFloat_MainDiscount'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
+INSERT INTO MovementItemFloatDesc (Code, ItemName)
+  SELECT 'zc_MIFloat_MainDiscount', 'Общая скидка для покупателя, %' WHERE NOT EXISTS (SELECT * FROM MovementItemFloatDesc WHERE Code = 'zc_MIFloat_MainDiscount');
+
 ----!!!!!!Farmacy
 
 CREATE OR REPLACE FUNCTION zc_MIFloat_JuridicalPrice() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM MovementItemFloatDesc WHERE Code = 'zc_MIFloat_JuridicalPrice'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
@@ -1351,6 +1355,7 @@ INSERT INTO MovementItemFloatDesc (Code, ItemName)
 /*-------------------------------------------------------------------------------
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.   Воробкало А.А.  Ярошенко Р.Ф.   Шаблий О.В.
+ 01.07.20         * zc_MIFloat_MainDiscount
  04.06.20         * zc_MIFloat_DayAudit
  28.05.20         * zc_MIFloat_SummReestr
  22.04.20                                                                                                     * zc_MIFloat_SummaFullChargeMonth

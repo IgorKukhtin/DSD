@@ -48,6 +48,7 @@ CREATE OR REPLACE VIEW MovementItem_PromoGoods_View AS
       , CASE WHEN ObjectLink_Goods_Measure.ChildObjectId = zc_Measure_Sh() THEN ObjectFloat_Goods_Weight.ValueData ELSE 1 END::TFloat as GoodsWeight -- Вес
       , MILinkObject_GoodsKindComplete.ObjectId        AS GoodsKindCompleteId         --ИД обьекта <Вид товара (примечание)>
       , Object_GoodsKindComplete.ValueData             AS GoodsKindCompleteName       --Наименование обьекта <Вид товара (примечание)>
+      , MIFloat_MainDiscount.ValueData ::TFloat AS MainDiscount       -- Общая скидка для покупателя, %
     FROM MovementItem
         LEFT JOIN MovementItemFloat AS MIFloat_Price
                                     ON MIFloat_Price.MovementItemId = MovementItem.Id
@@ -82,6 +83,10 @@ CREATE OR REPLACE VIEW MovementItem_PromoGoods_View AS
         LEFT JOIN MovementItemFloat AS MIFloat_AmountPlanMax
                                     ON MIFloat_AmountPlanMax.MovementItemId = MovementItem.Id
                                    AND MIFloat_AmountPlanMax.DescId = zc_MIFloat_AmountPlanMax()
+
+        LEFT JOIN MovementItemFloat AS MIFloat_MainDiscount
+                                    ON MIFloat_MainDiscount.MovementItemId = MovementItem.Id 
+                                   AND MIFloat_MainDiscount.DescId = zc_MIFloat_MainDiscount()
 
         LEFT JOIN Object AS Object_Goods ON Object_Goods.Id = MovementItem.ObjectId
 

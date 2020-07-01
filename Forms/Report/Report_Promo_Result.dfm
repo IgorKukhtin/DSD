@@ -5,7 +5,7 @@ inherited Report_Promo_ResultForm: TReport_Promo_ResultForm
   AddOnFormData.ExecuteDialogAction = actReport_PromoDialog
   AddOnFormData.Params = FormParams
   ExplicitWidth = 1091
-  ExplicitHeight = 469
+  ExplicitHeight = 472
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
@@ -126,7 +126,6 @@ inherited Report_Promo_ResultForm: TReport_Promo_ResultForm
             end>
           OptionsData.Deleting = False
           OptionsData.DeletingConfirmation = False
-          OptionsData.Editing = False
           OptionsView.GroupByBox = True
           Styles.Content = nil
           Styles.Inactive = nil
@@ -157,6 +156,7 @@ inherited Report_Promo_ResultForm: TReport_Promo_ResultForm
             DataBinding.FieldName = 'PersonalName'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
+            Options.Editing = False
             Width = 79
           end
           object PersonalTradeName: TcxGridDBColumn
@@ -165,6 +165,7 @@ inherited Report_Promo_ResultForm: TReport_Promo_ResultForm
             Visible = False
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
+            Options.Editing = False
             Width = 79
           end
           object InvNumber: TcxGridDBColumn
@@ -172,6 +173,7 @@ inherited Report_Promo_ResultForm: TReport_Promo_ResultForm
             DataBinding.FieldName = 'InvNumber'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
+            Options.Editing = False
             Width = 49
           end
           object OperDate: TcxGridDBColumn
@@ -197,6 +199,7 @@ inherited Report_Promo_ResultForm: TReport_Promo_ResultForm
             Visible = False
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
+            Options.Editing = False
             Width = 95
           end
           object RetailName: TcxGridDBColumn
@@ -204,6 +207,7 @@ inherited Report_Promo_ResultForm: TReport_Promo_ResultForm
             DataBinding.FieldName = 'RetailName'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
+            Options.Editing = False
             Width = 114
           end
           object AreaName: TcxGridDBColumn
@@ -211,6 +215,7 @@ inherited Report_Promo_ResultForm: TReport_Promo_ResultForm
             DataBinding.FieldName = 'AreaName'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
+            Options.Editing = False
             Width = 89
           end
           object GoodsCode: TcxGridDBColumn
@@ -218,6 +223,7 @@ inherited Report_Promo_ResultForm: TReport_Promo_ResultForm
             DataBinding.FieldName = 'GoodsCode'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
+            Options.Editing = False
             Width = 66
           end
           object GoodsName: TcxGridDBColumn
@@ -225,6 +231,7 @@ inherited Report_Promo_ResultForm: TReport_Promo_ResultForm
             DataBinding.FieldName = 'GoodsName'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
+            Options.Editing = False
             Width = 123
           end
           object GoodsKindName: TcxGridDBColumn
@@ -232,6 +239,7 @@ inherited Report_Promo_ResultForm: TReport_Promo_ResultForm
             DataBinding.FieldName = 'GoodsKindName'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
+            Options.Editing = False
             Width = 66
           end
           object GoodsKindCompleteName: TcxGridDBColumn
@@ -240,6 +248,7 @@ inherited Report_Promo_ResultForm: TReport_Promo_ResultForm
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             HeaderHint = #1042#1080#1076' '#1091#1087#1072#1082#1086#1074#1082#1080' ('#1087#1088#1080#1084#1077#1095#1072#1085#1080#1077')'
+            Options.Editing = False
             Width = 87
           end
           object TradeMarkName: TcxGridDBColumn
@@ -247,6 +256,7 @@ inherited Report_Promo_ResultForm: TReport_Promo_ResultForm
             DataBinding.FieldName = 'TradeMarkName'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
+            Options.Editing = False
             Width = 80
           end
           object MeasureName: TcxGridDBColumn
@@ -254,6 +264,7 @@ inherited Report_Promo_ResultForm: TReport_Promo_ResultForm
             DataBinding.FieldName = 'MeasureName'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
+            Options.Editing = False
             Width = 42
           end
           object GoodsWeight: TcxGridDBColumn
@@ -265,6 +276,7 @@ inherited Report_Promo_ResultForm: TReport_Promo_ResultForm
             Visible = False
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
+            Options.Editing = False
             Width = 43
           end
           object Discount: TcxGridDBColumn
@@ -272,6 +284,7 @@ inherited Report_Promo_ResultForm: TReport_Promo_ResultForm
             DataBinding.FieldName = 'Discount'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
+            Options.Editing = False
             Width = 59
           end
           object Discount_Condition: TcxGridDBColumn
@@ -279,11 +292,14 @@ inherited Report_Promo_ResultForm: TReport_Promo_ResultForm
             DataBinding.FieldName = 'Discount_Condition'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
+            Options.Editing = False
             Width = 59
           end
           object MainDiscount: TcxGridDBColumn
             Caption = #1054#1073#1097#1072#1103' '#1089#1082#1080#1076#1082#1072' '#1076#1083#1103' '#1087#1086#1082#1091#1087#1072#1090#1077#1083#1103', %'
             DataBinding.FieldName = 'MainDiscount'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DisplayFormat = ',0.####;-,0.####; ;'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Width = 80
@@ -296,6 +312,7 @@ inherited Report_Promo_ResultForm: TReport_Promo_ResultForm
             Properties.DisplayFormat = ',0.####;-,0.####; ;'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
+            Options.Editing = False
             Width = 71
           end
           object AmountPlanMin: TcxGridDBColumn
@@ -306,6 +323,7 @@ inherited Report_Promo_ResultForm: TReport_Promo_ResultForm
             Properties.DisplayFormat = ',0.####;-,0.####; ;'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
+            Options.Editing = False
             Width = 117
           end
           object AmountPlanMinWeight: TcxGridDBColumn
@@ -317,6 +335,7 @@ inherited Report_Promo_ResultForm: TReport_Promo_ResultForm
             Visible = False
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
+            Options.Editing = False
             Width = 111
           end
           object AmountPlanMax: TcxGridDBColumn
@@ -327,6 +346,7 @@ inherited Report_Promo_ResultForm: TReport_Promo_ResultForm
             Properties.DisplayFormat = ',0.####;-,0.####; ;'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
+            Options.Editing = False
             Width = 99
           end
           object AmountPlanMaxWeight: TcxGridDBColumn
@@ -338,6 +358,7 @@ inherited Report_Promo_ResultForm: TReport_Promo_ResultForm
             Visible = False
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
+            Options.Editing = False
             Width = 104
           end
           object AmountReal: TcxGridDBColumn
@@ -349,6 +370,7 @@ inherited Report_Promo_ResultForm: TReport_Promo_ResultForm
             Visible = False
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
+            Options.Editing = False
             Width = 71
           end
           object AmountRealWeight: TcxGridDBColumn
@@ -359,6 +381,7 @@ inherited Report_Promo_ResultForm: TReport_Promo_ResultForm
             Properties.DisplayFormat = ',0.####;-,0.####; ;'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
+            Options.Editing = False
             Width = 79
           end
           object AmountOut: TcxGridDBColumn
@@ -370,6 +393,7 @@ inherited Report_Promo_ResultForm: TReport_Promo_ResultForm
             Visible = False
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
+            Options.Editing = False
             Width = 67
           end
           object AmountOutWeight: TcxGridDBColumn
@@ -381,6 +405,7 @@ inherited Report_Promo_ResultForm: TReport_Promo_ResultForm
             Visible = False
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
+            Options.Editing = False
             Width = 66
           end
           object AmountIn: TcxGridDBColumn
@@ -392,6 +417,7 @@ inherited Report_Promo_ResultForm: TReport_Promo_ResultForm
             Visible = False
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
+            Options.Editing = False
             Width = 62
           end
           object AmountInWeight: TcxGridDBColumn
@@ -403,6 +429,7 @@ inherited Report_Promo_ResultForm: TReport_Promo_ResultForm
             Visible = False
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
+            Options.Editing = False
             Width = 63
           end
           object AmountSale: TcxGridDBColumn
@@ -415,6 +442,7 @@ inherited Report_Promo_ResultForm: TReport_Promo_ResultForm
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             HeaderHint = #1055#1088#1086#1076#1072#1078#1080' '#1074' '#1072#1082#1094#1080#1086#1085#1085#1099#1081' '#1087#1077#1088#1080#1086#1076', '#1082#1075
+            Options.Editing = False
             Width = 76
           end
           object AmountSaleWeight: TcxGridDBColumn
@@ -426,6 +454,7 @@ inherited Report_Promo_ResultForm: TReport_Promo_ResultForm
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             HeaderHint = #1055#1088#1086#1076#1072#1078#1080' '#1074' '#1072#1082#1094#1080#1086#1085#1085#1099#1081' '#1087#1077#1088#1080#1086#1076', '#1082#1075
+            Options.Editing = False
             Width = 76
           end
           object PersentResult: TcxGridDBColumn
@@ -436,6 +465,7 @@ inherited Report_Promo_ResultForm: TReport_Promo_ResultForm
             Properties.DisplayFormat = ',0.####;-,0.####; ;'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
+            Options.Editing = False
             Width = 73
           end
           object DateStartSale: TcxGridDBColumn
@@ -443,6 +473,7 @@ inherited Report_Promo_ResultForm: TReport_Promo_ResultForm
             DataBinding.FieldName = 'DateStartSale'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
+            Options.Editing = False
             Width = 70
           end
           object DeteFinalSale: TcxGridDBColumn
@@ -450,6 +481,7 @@ inherited Report_Promo_ResultForm: TReport_Promo_ResultForm
             DataBinding.FieldName = 'DeteFinalSale'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
+            Options.Editing = False
             Width = 70
           end
           object DateStartPromo: TcxGridDBColumn
@@ -457,6 +489,7 @@ inherited Report_Promo_ResultForm: TReport_Promo_ResultForm
             DataBinding.FieldName = 'DateStartPromo'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
+            Options.Editing = False
             Width = 73
           end
           object DateFinalPromo: TcxGridDBColumn
@@ -464,6 +497,7 @@ inherited Report_Promo_ResultForm: TReport_Promo_ResultForm
             DataBinding.FieldName = 'DateFinalPromo'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
+            Options.Editing = False
             Width = 76
           end
           object Price: TcxGridDBColumn
@@ -474,6 +508,7 @@ inherited Report_Promo_ResultForm: TReport_Promo_ResultForm
             Properties.DisplayFormat = ',0.####;-,0.####; ;'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
+            Options.Editing = False
             Width = 76
           end
           object PriceWithVAT: TcxGridDBColumn
@@ -484,6 +519,7 @@ inherited Report_Promo_ResultForm: TReport_Promo_ResultForm
             Properties.DisplayFormat = ',0.####;-,0.####; ;'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
+            Options.Editing = False
             Width = 98
           end
           object PriceSale: TcxGridDBColumn
@@ -495,6 +531,7 @@ inherited Report_Promo_ResultForm: TReport_Promo_ResultForm
             Visible = False
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
+            Options.Editing = False
             Width = 88
           end
           object Profit_Virt: TcxGridDBColumn
@@ -506,6 +543,7 @@ inherited Report_Promo_ResultForm: TReport_Promo_ResultForm
             Visible = False
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
+            Options.Editing = False
             Width = 90
           end
           object SummReal: TcxGridDBColumn
@@ -516,6 +554,7 @@ inherited Report_Promo_ResultForm: TReport_Promo_ResultForm
             Properties.DisplayFormat = ',0.####;-,0.####; ;'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
+            Options.Editing = False
             Width = 71
           end
           object SummPromo: TcxGridDBColumn
@@ -526,6 +565,7 @@ inherited Report_Promo_ResultForm: TReport_Promo_ResultForm
             Properties.DisplayFormat = ',0.####;-,0.####; ;'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
+            Options.Editing = False
             Width = 71
           end
           object PriceIn1: TcxGridDBColumn
@@ -535,6 +575,7 @@ inherited Report_Promo_ResultForm: TReport_Promo_ResultForm
             Properties.DisplayFormat = ',0.####;-,0.####; ;'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
+            Options.Editing = False
             Width = 50
           end
           object ContractCondition: TcxGridDBColumn
@@ -545,6 +586,7 @@ inherited Report_Promo_ResultForm: TReport_Promo_ResultForm
             Properties.DisplayFormat = ',0.####;-,0.####; ;'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
+            Options.Editing = False
             Width = 71
           end
           object Profit: TcxGridDBColumn
@@ -555,6 +597,7 @@ inherited Report_Promo_ResultForm: TReport_Promo_ResultForm
             Properties.DisplayFormat = ',0.####;-,0.####; ;'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
+            Options.Editing = False
             Width = 71
           end
           object Comment: TcxGridDBColumn
@@ -562,6 +605,7 @@ inherited Report_Promo_ResultForm: TReport_Promo_ResultForm
             DataBinding.FieldName = 'Comment'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
+            Options.Editing = False
             Width = 164
           end
           object CommentMain: TcxGridDBColumn
@@ -940,6 +984,18 @@ inherited Report_Promo_ResultForm: TReport_Promo_ResultForm
       PrinterNameParam.DataType = ftString
       PrinterNameParam.MultiSelectSeparator = ','
     end
+    object actUpdateDataSet: TdsdUpdateDataSet
+      Category = 'DSDLib'
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      StoredProc = spUpdate_MainDiscount
+      StoredProcList = <
+        item
+          StoredProc = spUpdate_MainDiscount
+        end>
+      Caption = 'actUpdateDataSet'
+      DataSource = MasterDS
+    end
   end
   inherited MasterDS: TDataSource
     Top = 144
@@ -1306,5 +1362,39 @@ inherited Report_Promo_ResultForm: TReport_Promo_ResultForm
     PackSize = 1
     Left = 832
     Top = 248
+  end
+  object spUpdate_MainDiscount: TdsdStoredProc
+    StoredProcName = 'gpUpdate_MI_PromoGoods_MainDiscount'
+    DataSets = <>
+    OutputType = otResult
+    Params = <
+      item
+        Name = 'inMovementId'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'MovementId'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inGoodsId'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'GoodsId'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inMainDiscount'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'MainDiscount'
+        DataType = ftFloat
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end>
+    PackSize = 1
+    Left = 648
+    Top = 320
   end
 end

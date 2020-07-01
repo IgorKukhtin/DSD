@@ -3128,10 +3128,6 @@
 				<DesignClass>TParentForm</DesignClass>
 			</DCCReference>
 			<DCCReference Include="..\..\SOURCE\MeDOC\IFIN_J1201009.pas"/>
-			<DCCReference Include="..\..\Forms\Report\Report_Promo_Result.pas">
-				<Form>Report_Promo_ResultForm</Form>
-				<DesignClass>TParentForm</DesignClass>
-			</DCCReference>
 			<DCCReference Include="..\..\Forms\Report\Report_Promo_ResultDialog.pas">
 				<Form>Report_Promo_ResultDialogForm</Form>
 				<DesignClass>TParentForm</DesignClass>
@@ -4014,6 +4010,10 @@
 			</DCCReference>
 			<DCCReference Include="..\..\Forms\Report\Report_ProductionOrderDialog.pas">
 				<Form>Report_ProductionOrderDialogForm</Form>
+				<DesignClass>TParentForm</DesignClass>
+			</DCCReference>
+			<DCCReference Include="..\..\Forms\Report\Report_Promo_Result.pas">
+				<Form>Report_Promo_ResultForm</Form>
 				<DesignClass>TParentForm</DesignClass>
 			</DCCReference>
 			<BuildConfiguration Include="Release">
