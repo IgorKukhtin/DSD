@@ -44,10 +44,9 @@ uses
   , System.Classes
   , System.SysUtils
   , System.SyncObjs
-  , System.Win.Registry
   , Winapi.SHFolder
   , Winapi.Windows
-  , UConstants;
+  ;
 
 var
   mCS: TCriticalSection;

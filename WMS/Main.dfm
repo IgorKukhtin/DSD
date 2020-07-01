@@ -23,7 +23,7 @@ object MainForm: TMainForm
     Top = 0
     Width = 1384
     Height = 642
-    ActivePage = tsLog
+    ActivePage = tsWmsMessage
     Align = alClient
     TabOrder = 0
     OnChange = pgcMainChange
@@ -860,10 +860,10 @@ object MainForm: TMainForm
         end
       end
     end
-    object tsWmsMessage: TTabSheet
+    object tsWmsToHostMessage: TTabSheet
       Caption = 'wms_to_host_message'
       ImageIndex = 3
-      object pnlWmsMessage: TPanel
+      object pnlWmsToHostMessage: TPanel
         Left = 0
         Top = 0
         Width = 1376
@@ -945,7 +945,7 @@ object MainForm: TMainForm
               #1090#1086#1083#1100#1082#1086' '#1086#1096#1080#1073#1082#1080)
           end
         end
-        object grdWmsMessage: TDBGrid
+        object grdWmsToHostMessage: TDBGrid
           Left = 1
           Top = 27
           Width = 1374
@@ -959,6 +959,110 @@ object MainForm: TMainForm
           TitleFont.Height = -11
           TitleFont.Name = 'Tahoma'
           TitleFont.Style = []
+        end
+      end
+    end
+    object tsWmsMessage: TTabSheet
+      Caption = 'wms_message'
+      ImageIndex = 4
+      object pnlWmsMessage: TPanel
+        Left = 0
+        Top = 0
+        Width = 1376
+        Height = 614
+        Align = alClient
+        TabOrder = 0
+        object pnlWmsMsgTop: TPanel
+          Left = 1
+          Top = 1
+          Width = 1374
+          Height = 26
+          Align = alTop
+          Alignment = taLeftJustify
+          BevelOuter = bvLowered
+          TabOrder = 0
+          object lbMsgStart: TLabel
+            Left = 402
+            Top = 6
+            Width = 63
+            Height = 13
+            Caption = 'InsertDate '#1089' '
+          end
+          object lbMsgEnd: TLabel
+            Left = 670
+            Top = 6
+            Width = 12
+            Height = 13
+            Caption = #1087#1086
+          end
+          object lbWmsMsgMode: TLabel
+            Left = 189
+            Top = 7
+            Width = 61
+            Height = 13
+            Caption = #1087#1086#1082#1072#1079#1099#1074#1072#1090#1100
+          end
+          object btnUpdateWmsMsg: TButton
+            Left = 90
+            Top = 3
+            Width = 75
+            Height = 20
+            Caption = #1054#1073#1085#1086#1074#1080#1090#1100
+            TabOrder = 0
+            TabStop = False
+            OnClick = btnUpdateWmsMsgClick
+          end
+          object dtpInsertStart: TDateTimePicker
+            Left = 472
+            Top = 2
+            Width = 186
+            Height = 21
+            Date = 43997.546522673610000000
+            Time = 43997.546522673610000000
+            TabOrder = 1
+            OnChange = dtpInsertStartChange
+          end
+          object dtpInsertEnd: TDateTimePicker
+            Left = 699
+            Top = 2
+            Width = 186
+            Height = 21
+            Date = 43997.546522673610000000
+            Time = 43997.546522673610000000
+            TabOrder = 2
+            OnChange = dtpInsertEndChange
+          end
+          object cbbWmsMsgMode: TComboBox
+            Left = 254
+            Top = 3
+            Width = 107
+            Height = 21
+            Style = csDropDownList
+            ItemIndex = 1
+            TabOrder = 3
+            Text = #1090#1086#1083#1100#1082#1086' '#1086#1096#1080#1073#1082#1080
+            OnChange = cbbWmsMsgModeChange
+            Items.Strings = (
+              #1074#1089#1105
+              #1090#1086#1083#1100#1082#1086' '#1086#1096#1080#1073#1082#1080)
+          end
+        end
+        object grdWmsMessage: TDBGrid
+          Left = 1
+          Top = 27
+          Width = 1374
+          Height = 586
+          Align = alClient
+          DataSource = dmData.dsWmsMessage
+          DefaultDrawing = False
+          ReadOnly = True
+          TabOrder = 1
+          TitleFont.Charset = DEFAULT_CHARSET
+          TitleFont.Color = clWindowText
+          TitleFont.Height = -11
+          TitleFont.Name = 'Tahoma'
+          TitleFont.Style = []
+          OnDrawColumnCell = grdWmsMessageDrawColumnCell
         end
       end
     end

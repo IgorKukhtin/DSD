@@ -30,8 +30,8 @@ object dmData: TdmData
   object sp_alan_insert_packets_to_wms: TFDStoredProc
     Connection = FDC_wms
     StoredProcName = 'alan_insert_packets_to_wms'
-    Left = 591
-    Top = 79
+    Left = 983
+    Top = 71
     ParamData = <
       item
         Position = 1
@@ -59,8 +59,8 @@ object dmData: TdmData
   end
   object spInsert_wms_Message: TFDStoredProc
     Connection = FDC_alan
-    Left = 590
-    Top = 144
+    Left = 982
+    Top = 120
   end
   object to_wms_Packets_query: TFDQuery
     Connection = FDC_wms
@@ -231,8 +231,8 @@ object dmData: TdmData
     Connection = FDC_alan
     FetchOptions.AssignedValues = [evCache]
     FetchOptions.Cache = [fiBlobs, fiDetails]
-    Left = 840
-    Top = 80
+    Left = 984
+    Top = 25
   end
   object select_wms_to_host_message: TFDQuery
     Connection = FDC_alan
@@ -366,16 +366,26 @@ object dmData: TdmData
   object wms_from_host_header_error: TFDQuery
     Connection = FDC_wms
     SQL.Strings = (
-      'select   id, type, err_descr'
+      'select   id, type, message, err_descr'
       'from     from_host_header_message'
-      'where    (status = '#39'error'#39') and (id > :id)'
+      
+        'where    (status = '#39'error'#39') and (id > :id) and (start_date > :st' +
+        'art_date)'
       'order by id')
     Left = 464
     Top = 32
     ParamData = <
       item
         Name = 'ID'
+        DataType = ftInteger
         ParamType = ptInput
+        Value = Null
+      end
+      item
+        Name = 'START_DATE'
+        DataType = ftDateTime
+        ParamType = ptInput
+        Value = Null
       end>
   end
   object max_headerId_from_host_header_error: TFDQuery
@@ -402,6 +412,54 @@ object dmData: TdmData
       end
       item
         Name = 'ENDDATE'
+        DataType = ftDateTime
+        ParamType = ptInput
+        Value = Null
+      end>
+  end
+  object dsWmsMessage: TDataSource
+    Left = 632
+    Top = 128
+  end
+  object qryWmsMessageAll: TFDQuery
+    Connection = FDC_alan
+    SQL.Strings = (
+      
+        'select * from gpSelect_wms_message_all(inStartDate:= :inStartDat' +
+        'e, inEndDate:= :inEndDate)')
+    Left = 632
+    Top = 184
+    ParamData = <
+      item
+        Name = 'INSTARTDATE'
+        DataType = ftDateTime
+        ParamType = ptInput
+        Value = Null
+      end
+      item
+        Name = 'INENDDATE'
+        DataType = ftDateTime
+        ParamType = ptInput
+        Value = Null
+      end>
+  end
+  object qryWmsMessageErr: TFDQuery
+    Connection = FDC_alan
+    SQL.Strings = (
+      
+        'select * from gpSelect_wms_message_err(inStartDate:= :inStartDat' +
+        'e, inEndDate:= :inEndDate)')
+    Left = 752
+    Top = 184
+    ParamData = <
+      item
+        Name = 'INSTARTDATE'
+        DataType = ftDateTime
+        ParamType = ptInput
+        Value = Null
+      end
+      item
+        Name = 'INENDDATE'
         DataType = ftDateTime
         ParamType = ptInput
         Value = Null

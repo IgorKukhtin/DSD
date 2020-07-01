@@ -16,6 +16,7 @@ uses
   Vcl.Grids,
   Vcl.DBGrids,
   Winapi.Messages,
+  Winapi.Windows,
   UConstants,
   UDefinitions,
   ULog;
@@ -87,8 +88,8 @@ type
     btnImpReceivingResult: TButton;
     lbWMSShowMode: TLabel;
     cbbWMSShowMode: TComboBox;
-    tsWmsMessage: TTabSheet;
-    pnlWmsMessage: TPanel;
+    tsWmsToHostMessage: TTabSheet;
+    pnlWmsToHostMessage: TPanel;
     pnlWmstMessageTop: TPanel;
     lbWmsMsgStart: TLabel;
     lbWmsMsgEnd: TLabel;
@@ -97,7 +98,7 @@ type
     dtpWmsMsgStart: TDateTimePicker;
     dtpWmsMsgEnd: TDateTimePicker;
     cbbWmsMessageMode: TComboBox;
-    grdWmsMessage: TDBGrid;
+    grdWmsToHostMessage: TDBGrid;
     grpPackets: TGroupBox;
     chkOrderStatusChanged: TCheckBox;
     chkReceivingResult: TCheckBox;
@@ -154,6 +155,17 @@ type
     lbEndProcessExpErr: TLabel;
     lbElpsProcessExpErr: TLabel;
     cbbErrTable: TComboBox;
+    tsWmsMessage: TTabSheet;
+    pnlWmsMessage: TPanel;
+    pnlWmsMsgTop: TPanel;
+    lbMsgStart: TLabel;
+    lbMsgEnd: TLabel;
+    lbWmsMsgMode: TLabel;
+    btnUpdateWmsMsg: TButton;
+    dtpInsertStart: TDateTimePicker;
+    dtpInsertEnd: TDateTimePicker;
+    cbbWmsMsgMode: TComboBox;
+    grdWmsMessage: TDBGrid;
     procedure btnFDC_wmsClick(Sender: TObject);
     procedure btnFDC_alanClick(Sender: TObject);
     procedure btnObject_SKU_to_wmsClick(Sender: TObject);
@@ -191,6 +203,12 @@ type
     procedure chkUseLogClick(Sender: TObject);
     procedure btnDataExportErrorsClick(Sender: TObject);
     procedure cbbErrTableChange(Sender: TObject);
+    procedure btnUpdateWmsMsgClick(Sender: TObject);
+    procedure cbbWmsMsgModeChange(Sender: TObject);
+    procedure dtpInsertStartChange(Sender: TObject);
+    procedure dtpInsertEndChange(Sender: TObject);
+    procedure grdWmsMessageDrawColumnCell(Sender: TObject; const Rect: TRect; DataCol: Integer; Column: TColumn;
+      State: TGridDrawState);
   private
     FLog: TLog;
     FStopTimer: Boolean;
@@ -207,7 +225,8 @@ type
     procedure AdjustColumnWidth(AGrid: TDBGrid);
     procedure UpdateWMSGrid(const ANeedRebuildColumns: Boolean = False);
     procedure UpdateAlanGrid(const ANeedRebuildColumns: Boolean = False);
-    procedure UpdateWmsMsgGrid(const ANeedRebuildColumns: Boolean = False);
+    procedure UpdateWmsToHostMsgGrid(const ANeedRebuildColumns: Boolean = False);
+    procedure UpdateWmsMessageGrid(const ANeedRebuildColumns: Boolean = False);
     procedure WMNeedUpdateGrids(var AMessage: TMessage); message WM_NEED_UPDATE_GRIDS;
     procedure ExportPacket(APacketKind: TPacketKind; AOnTerminate: TNotifyEvent);
     procedure OnTerminateOrderStatusChanged(Sender: TObject);
@@ -235,7 +254,6 @@ implementation
 {$R *.dfm}
 
 uses
-  Winapi.Windows,
   FireDAC.Comp.DataSet,
   FireDAC.Comp.Client,
   FireDAC.Stan.Param,
@@ -534,16 +552,20 @@ begin
 
   if pgcMain.ActivePage = tsErrors then
   begin
-    if not dmData.qryWMSGridErr.Active then
+    if not dmData.qryWMSGridErr.Active and not dmData.qryWMSGridAll.Active then
       UpdateWMSGrid(True);
 
-    if not dmData.qryAlanGrid.Active then
+    if not dmData.qryAlanGrid.Active and not dmData.qryAlanGridFromHost.Active then
       UpdateAlanGrid(True);
   end;
 
-  if pgcMain.ActivePage = tsWmsMessage then
+  if pgcMain.ActivePage = tsWmsToHostMessage then
     if not dmData.qryWmsToHostMessage.Active then
-      UpdateWmsMsgGrid(True);
+      UpdateWmsToHostMsgGrid(True);
+
+  if pgcMain.ActivePage = tsWmsMessage then
+    if not dmData.qryWmsMessageAll.Active and not dmData.qryWmsMessageErr.Active then
+      UpdateWmsMessageGrid(True);
 end;
 
 procedure TMainForm.seFontSizeChange(Sender: TObject);
@@ -706,7 +728,12 @@ end;
 
 procedure TMainForm.btnUpdateWmsMessageClick(Sender: TObject);
 begin
-  UpdateWmsMsgGrid;
+  UpdateWmsToHostMsgGrid;
+end;
+
+procedure TMainForm.btnUpdateWmsMsgClick(Sender: TObject);
+begin
+  UpdateWmsMessageGrid;
 end;
 
 procedure TMainForm.cbbErrTableChange(Sender: TObject);
@@ -716,7 +743,12 @@ end;
 
 procedure TMainForm.cbbWmsMessageModeChange(Sender: TObject);
 begin
-  UpdateWmsMsgGrid;
+  UpdateWmsToHostMsgGrid;
+end;
+
+procedure TMainForm.cbbWmsMsgModeChange(Sender: TObject);
+begin
+  UpdateWmsMessageGrid;
 end;
 
 procedure TMainForm.cbbWMSShowModeChange(Sender: TObject);
@@ -754,6 +786,9 @@ begin
 
   dtpWmsMsgStart.DateTime := Date;
   dtpWmsMsgEnd.DateTime   := TodayNearMidnight;
+
+  dtpInsertStart.DateTime := Date;
+  dtpInsertEnd.DateTime   := TodayNearMidnight;
 
   pgcLog.ActivePage := tsCheckboxView;
 
@@ -803,6 +838,16 @@ begin
   UpdateWMSGrid;
 end;
 
+procedure TMainForm.dtpInsertEndChange(Sender: TObject);
+begin
+  UpdateWmsMessageGrid;
+end;
+
+procedure TMainForm.dtpInsertStartChange(Sender: TObject);
+begin
+  UpdateWmsMessageGrid;
+end;
+
 procedure TMainForm.dtpStartDateAlanChange(Sender: TObject);
 begin
   UpdateAlanGrid;
@@ -815,12 +860,12 @@ end;
 
 procedure TMainForm.dtpWmsMsgEndChange(Sender: TObject);
 begin
-  UpdateWmsMsgGrid;
+  UpdateWmsToHostMsgGrid;
 end;
 
 procedure TMainForm.dtpWmsMsgStartChange(Sender: TObject);
 begin
-  UpdateWmsMsgGrid;
+  UpdateWmsToHostMsgGrid;
 end;
 
 procedure TMainForm.edtAlanServerExit(Sender: TObject);
@@ -951,11 +996,14 @@ var
   tmpDS: TFDQuery;
 begin
   dtpEndDateAlan.DateTime := NearMidnight(dtpEndDateAlan.DateTime);
+  tmpDS := nil;
 
   case cbbErrTable.ItemIndex of
     0:  tmpDS := dmData.qryAlanGrid;
     1:  tmpDS := dmData.qryAlanGridFromHost;
   end;
+
+  if tmpDS = nil then Exit;
 
   dmData.dsAlan.DataSet := nil;
   try
@@ -981,6 +1029,7 @@ var
   qryWMS: TFDQuery;
 begin
   qryWMS := nil;
+  dtpEndDateWMS.DateTime := NearMidnight(dtpEndDateWMS.DateTime);
 
   dmData.dsWMS.DataSet := nil;
   try
@@ -989,6 +1038,8 @@ begin
       1: qryWMS := dmData.qryWMSGridErr;
     end;
 
+    if qryWMS = nil then Exit;
+
     dtpEndDateWMS.DateTime := NearMidnight(dtpEndDateWMS.DateTime);
 
     qryWMS.Close;
@@ -996,7 +1047,7 @@ begin
     qryWMS.ParamByName('EndDate').AsDateTime   := dtpEndDateWMS.DateTime;
     qryWMS.Open;
   finally
-    dmData.dsWMS.DataSet := qryWMS;;
+    dmData.dsWMS.DataSet := qryWMS;
   end;
 
   if ANeedRebuildColumns then
@@ -1005,7 +1056,39 @@ begin
   AdjustColumnWidth(grdWMS);
 end;
 
-procedure TMainForm.UpdateWmsMsgGrid(const ANeedRebuildColumns: Boolean);
+procedure TMainForm.UpdateWmsMessageGrid(const ANeedRebuildColumns: Boolean);
+var
+  qryWmsMsg: TFDQuery;
+begin
+  qryWmsMsg := nil;
+  dtpInsertEnd.DateTime := NearMidnight(dtpInsertEnd.DateTime);
+
+  dmData.dsWmsMessage.DataSet := nil;
+  try
+    case cbbWmsMsgMode.ItemIndex of
+      0: qryWmsMsg := dmData.qryWmsMessageAll;
+      1: qryWmsMsg := dmData.qryWmsMessageErr;
+    end;
+
+    if qryWmsMsg = nil then Exit;
+
+    dtpInsertEnd.DateTime := NearMidnight(dtpInsertEnd.DateTime);
+
+    qryWmsMsg.Close;
+    qryWmsMsg.ParamByName('inStartDate').AsDateTime := dtpInsertStart.DateTime;
+    qryWmsMsg.ParamByName('inEndDate').AsDateTime   := dtpInsertEnd.DateTime;
+    qryWmsMsg.Open;
+  finally
+    dmData.dsWmsMessage.DataSet := qryWmsMsg;
+  end;
+
+  if ANeedRebuildColumns then
+    grdWmsMessage.Columns.RebuildColumns;
+
+  AdjustColumnWidth(grdWmsMessage);
+end;
+
+procedure TMainForm.UpdateWmsToHostMsgGrid(const ANeedRebuildColumns: Boolean);
 begin
   dtpWmsMsgEnd.DateTime := NearMidnight(dtpWmsMsgEnd.DateTime);
 
@@ -1024,18 +1107,24 @@ begin
   end;
 
   if ANeedRebuildColumns then
-    grdWmsMessage.Columns.RebuildColumns;
+    grdWmsToHostMessage.Columns.RebuildColumns;
 
-  AdjustColumnWidth(grdWmsMessage);
+  AdjustColumnWidth(grdWmsToHostMessage);
 end;
 
 procedure TMainForm.WMNeedUpdateGrids(var AMessage: TMessage);
 begin
   if not dmData.IsConnectedBoth(nil) then Exit;
 
-  UpdateWMSGrid(True);
-  UpdateAlanGrid(True);
-  UpdateWmsMsgGrid(True);
+  try
+    UpdateWMSGrid(True);
+    UpdateAlanGrid(True);
+    UpdateWmsToHostMsgGrid(True);
+    UpdateWmsMessageGrid(True);
+  except
+    on E: Exception do
+      myShowMsg(Format(cExceptionMsg, [E.ClassName, E.Message]));
+  end;
 end;
 
 procedure TMainForm.FormResize(Sender: TObject);
@@ -1048,6 +1137,34 @@ begin
   // позиционирование гридов
   pnlWMS.Height := (tsErrors.Height - splHorz.Height) div 2;
 end;
+
+procedure TMainForm.grdWmsMessageDrawColumnCell(Sender: TObject; const Rect: TRect; DataCol: Integer; Column: TColumn;
+  State: TGridDrawState);
+var
+  Grid: TStringGrid;
+  Texto: String;
+  R: TRect;
+begin
+  R := Rect;
+  R.Top  := R.Top + 2;
+  R.Left := R.Left + 2;
+
+  Grid := TStringGrid(Sender);
+  if Column.Field.IsBlob then
+  begin
+    Grid.Canvas.FillRect(Rect);
+    Texto := Column.Field.AsString;
+    DrawText(Grid.Canvas.Handle,
+             PChar(Texto),
+             StrLen(PChar(Texto)),
+             R,
+             DT_WORDBREAK);
+  end
+  else
+    (Sender as TDBGrid).DefaultDrawColumnCell(Rect, DataCol, Column, State);
+end;
+
+
 
 { TTimeMeter }
 

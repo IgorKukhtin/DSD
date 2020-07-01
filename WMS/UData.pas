@@ -39,9 +39,15 @@ type
     wms_from_host_header_error: TFDQuery;
     max_headerId_from_host_header_error: TFDQuery;
     qryAlanGridFromHost: TFDQuery;
+    dsWmsMessage: TDataSource;
+    qryWmsMessageAll: TFDQuery;
+    qryWmsMessageErr: TFDQuery;
   private
     procedure Insert_wms_from_host_error(const AHeaderId: Integer; const ASite: TSite;
       const APacketName, AErrDescription: string; AMsgProc: TNotifyMsgProc);
+  private
+    function InjectAttributeToXml(const AOrigXml, AAttributeName, AAttributeValue: string): string;
+    function GetIdFromAttribute(const AMessage, AAttribute: string; AMsgProc: TNotifyMsgProc): Integer;
   public
     // вызов spName - делает Insert в табл. Postresql.wms_Message - для GUID
     function gpInsert_wms_Message(spName, GUID: string): Integer;
@@ -82,7 +88,7 @@ type
       const ACheckRecCount, ADebug: Boolean;
       const AThresholdRecCount: Integer; AMyLogSql, AMyShowSql: TNotifyProc;
       AMsgProc: TNotifyMsgProc);
-    procedure Select_error_from_host_header_message(AMsgProc: TNotifyMsgProc);
+    procedure Insert_error_from_host_header_message(AMsgProc: TNotifyMsgProc);
 
     // Только Postresql.CLOCK_TIMESTAMP
     function fGet_GUID_pg: string;
@@ -173,9 +179,12 @@ implementation
 uses
   System.Variants,
   Winapi.ActiveX,
+  Xml.XMLIntf,
+  Xml.XMLDoc,
   USettings,
   UConstants,
-  UImportWMS;
+  UImportWMS,
+  UCommon;
 
 { TdmData }
 
@@ -329,30 +338,43 @@ begin
         to_wms_Packets_query.SQL.Add('  vb_id WMS.from_host_header_message.id%TYPE;');
         to_wms_Packets_query.SQL.Add('begin');
                   // заголовок
-        to_wms_Packets_query.SQL.Add('insert into WMS.from_host_header_message' + ' (SRC_HOST_ID, DST_HOST_ID' + ', TYPE'          // VARCHAR2(64)    - Тип сообщения (тэг сообщения)
+        to_wms_Packets_query.SQL.Add('insert into WMS.from_host_header_message' + ' (SRC_HOST_ID, DST_HOST_ID' + ', TYPE' // VARCHAR2(64) - Тип сообщения (тэг сообщения)
           + ', ACTION'        // VARCHAR2(16)    - Действие (update/insert/delete)
             //              +', CREATED'        // DATE            - Дата создания записи (заполняется автоматически)
-          + ', STATUS'        // VARCHAR2(16)    - текущий статус сообщения (ready – данные готовы к обработке                                     done – данные успешно обработаны                            error – данные обработаны с ошибкой)
+          + ', STATUS'        // VARCHAR2(16)    - текущий статус сообщения (ready – данные готовы к обработке done – данные успешно обработаны error – данные обработаны с ошибкой)
             //              +', START_DATE'     // DATE            - Дата начала обработки
             //                +', FINISH_DATE'    // DATE            - Дата окончания обработки
           + ', MESSAGE'       // VARCHAR2(2048)  - Xml-сообщения для обработки
             //              +', ERR_CODE'       // NUMBER          - Код ошибки при обработке с                                                                                        ошибкой
             //              +', ERR_DESCR'      // VARCHAR2(2048)  - Описание ошибки
-          + ')' + ' values (' + chr(39) + 'kpl' + chr(39) + '        ,' + chr(39) + 'kpl' + chr(39) + '        ,' + chr(39) + FieldByName('TagName').AsString + chr(39) + '        ,' + chr(39) + FieldByName('ActionName').AsString + chr(39) + '        ,' + chr(39) + 'ready' + chr(39) + '        ,' + chr(39) + FieldByName('RowData').AsString + chr(39) + '         )' + '       returning id into vb_id;');
+          + ')' + ' values (' + chr(39) + 'kpl' + chr(39) + '        ,' +
+                                chr(39) + 'kpl' + chr(39) + '        ,' +
+                                chr(39) + FieldByName('TagName').AsString + chr(39) + '        ,' +
+                                chr(39) + FieldByName('ActionName').AsString + chr(39) + '        ,' +
+                                chr(39) + 'ready' + chr(39) + '        ,' +
+                                chr(39) + InjectAttributeToXml(
+                                            FieldByName('RowData').AsString,
+                                            cWms_message_Id_Attr,
+                                            to_wms_Message_query.FieldByName('Id').AsString) + chr(39) + '         )' +
+          '       returning id into vb_id;');
                   //
         to_wms_Packets_query.SQL.Add('commit;');
       end
       else                //строчная часть
-        to_wms_Packets_query.SQL.Add('insert into WMS.from_host_detail_message' + ' (HEADER_ID' + ', TYPE'          // VARCHAR2(64)    - Тип сообщения (тэг сообщения)
+        to_wms_Packets_query.SQL.Add('insert into WMS.from_host_detail_message' + ' (HEADER_ID' + ', TYPE'  // VARCHAR2(64)    - Тип сообщения (тэг сообщения)
           + ', ACTION'        // VARCHAR2(16)    - Действие (update/insert/delete)
           //        +', CREATED'        // DATE            - Дата создания записи (заполняется автоматически)
-          + ', STATUS'        // VARCHAR2(16)    - текущий статус сообщения (ready – данные готовы к обработке                                     done – данные успешно обработаны                            error – данные обработаны с ошибкой)
+          + ', STATUS'        // VARCHAR2(16)    - текущий статус сообщения (ready – данные готовы к обработке done – данные успешно обработаны error – данные обработаны с ошибкой)
           //        +', START_DATE'     // DATE            - Дата начала обработки
           //        +', FINISH_DATE'    // DATE            - Дата окончания обработки
           + ', MESSAGE'       // VARCHAR2(2048)  - Xml-сообщения для обработки
           //        +', ERR_CODE'       // NUMBER          - Код ошибки при обработке с                                                                                        ошибкой
           //        +', ERR_DESCR'      // VARCHAR2(2048)  - Описание ошибки
-          + ')' + ' values (vb_id' + '        ,' + chr(39) + FieldByName('TagName').AsString + chr(39) + '        ,' + chr(39) + FieldByName('ActionName').AsString + chr(39) + '        ,' + chr(39) + 'ready' + chr(39) + '        ,' + chr(39) + FieldByName('RowData').AsString + chr(39) + '         );');
+          + ')' + ' values (vb_id' + '        ,' + chr(39) +
+                            FieldByName('TagName').AsString + chr(39) + '        ,' +
+                            chr(39) + FieldByName('ActionName').AsString + chr(39) + '        ,' +
+                            chr(39) + 'ready' + chr(39) + '        ,' +
+                            chr(39) + FieldByName('RowData').AsString + chr(39) + '         );');
             //
             // куртим дальше
       Next;
@@ -880,26 +902,34 @@ begin
       end;
 
             // формируются несколько XML в пакет
-      to_wms_Packets_query.SQL.Add('insert into WMS.from_host_header_message' + ' (SRC_HOST_ID, DST_HOST_ID' + ', TYPE'          // VARCHAR2(64)    - Тип сообщения (тэг сообщения)
+      to_wms_Packets_query.SQL.Add('insert into WMS.from_host_header_message' + ' (SRC_HOST_ID, DST_HOST_ID' + ', TYPE' // VARCHAR2(64) - Тип сообщения (тэг сообщения)
         + ', ACTION'        // VARCHAR2(16)    - Действие (update/insert/delete)
 //              +', CREATED'        // DATE            - Дата создания записи (заполняется автоматически)
-        + ', STATUS'        // VARCHAR2(16)    - текущий статус сообщения (ready – данные готовы к обработке                                     done – данные успешно обработаны                            error – данные обработаны с ошибкой)
+        + ', STATUS'        // VARCHAR2(16)    - текущий статус сообщения (ready – данные готовы к обработке   done – данные успешно обработаны  error – данные обработаны с ошибкой)
 //              +', START_DATE'     // DATE            - Дата начала обработки
 //                +', FINISH_DATE'    // DATE            - Дата окончания обработки
         + ', MESSAGE'       // VARCHAR2(2048)  - Xml-сообщения для обработки
-//              +', ERR_CODE'       // NUMBER          - Код ошибки при обработке с                                                                                        ошибкой
+//              +', ERR_CODE'       // NUMBER          - Код ошибки при обработке с ошибкой
 //              +', ERR_DESCR'      // VARCHAR2(2048)  - Описание ошибки
-        + ')' + ' values (' + chr(39) + 'kpl' + chr(39) + '        ,' + chr(39) + 'kpl' + chr(39) + '        ,' + chr(39) + FieldByName('TagName').AsString + chr(39) + '        ,' + chr(39) + FieldByName('ActionName').AsString + chr(39) + '        ,' + chr(39) + 'ready' + chr(39) + '        ,' + chr(39) + FieldByName('RowData').AsString + chr(39) + '         );');
+        + ')' + ' values (' + chr(39) + 'kpl' + chr(39) + '        ,' +
+                              chr(39) + 'kpl' + chr(39) + '        ,' +
+                              chr(39) + FieldByName('TagName').AsString + chr(39) + '        ,' +
+                              chr(39) + FieldByName('ActionName').AsString + chr(39) + '        ,' +
+                              chr(39) + 'ready' + chr(39) + '        ,' +
+                              chr(39) + InjectAttributeToXml(
+                                FieldByName('RowData').AsString,
+                                cWms_message_Id_Attr,
+                                to_wms_Message_query.FieldByName('Id').AsString) + chr(39) +
+        '         );');
             //
       if ACheckRecCount and (AThresholdRecCount = ii) then
         break;
-            //
       Next;
     end;
-       //
+
     Close;
   end;
-     //
+
      // строчки завершают скрипт
   to_wms_Packets_query.SQL.Add('commit;');
   to_wms_Packets_query.SQL.Add('end;');
@@ -924,6 +954,44 @@ begin
   end;
      //
   Result := -1;
+end;
+
+// получим wms_message.Id, который был сохранен в поле 'Message' в xml-элементе WMS.from_host_header_message в атрибуте 'wms_message_id'
+function TdmData.GetIdFromAttribute(const AMessage, AAttribute: string; AMsgProc: TNotifyMsgProc): Integer;
+var
+  xmlDocument: IXMLDocument;
+  rootNode, dataNode: IXMLNode;
+  sXml: string;
+  tmpStream: TMemoryStream;
+const
+  cXml = '<?xml version="1.0"?><root>%s</root>';
+begin
+  Result := -1;
+
+  try
+    sXml := Format(cXml, [AMessage]);
+
+    tmpStream := TMemoryStream.Create;
+    try
+      tmpStream.Size := 0;
+      tmpStream.Write(sXml[1], ByteLength(sXml));
+      tmpStream.Position := 0;
+
+      xmlDocument := TXMLDocument.Create(nil);
+      xmlDocument.LoadFromStream(tmpStream);
+    finally
+      FreeAndNil(tmpStream);
+    end;
+
+    xmlDocument.Active := True;
+    rootNode := xmlDocument.DocumentElement;
+    dataNode := rootNode.ChildNodes[0];
+
+    Result := getInt(dataNode.Attributes[AAttribute], -1);
+  except
+    on E: Exception do
+      if Assigned(AMsgProc) then AMsgProc(Format(cExceptionMsg, [E.ClassName, E.Message]));
+  end;
 end;
 
 function TdmData.gpInsert_wms_Message(spName, GUID: string): Integer;
@@ -989,6 +1057,30 @@ begin
     end;
   finally
     FreeAndNil(wmsImport);
+  end;
+end;
+
+// Ф-ия предназначена для вставки wms_message.Id в уже готовый xml-элемент пакета экспорта.
+// Это сделано для того, чтобы установить связь между записями WMS.from_host_header_message и записями Alan.wms_message
+// Пример значения WMS.from_host_header_message.Message:
+// <asn_load sync_id="625459" action="set" name="AHC-00303" sku_id="796772" qty="32.0000" production_date="25-06-2020" real_weight="15.7700" pack_weight="2.0000" inc_id="40267"></asn_load>
+
+function TdmData.InjectAttributeToXml(const AOrigXml, AAttributeName, AAttributeValue: string): string;
+const
+  cEnd = '></';
+  cNewAttribute = ' %s="%s"';
+var
+  iPos, iLenOrig: Integer;
+  sNewAttribute: string;
+begin
+  Result := '';
+  iPos := Pos(cEnd, AOrigXml);
+
+  if iPos > 0 then
+  begin
+    iLenOrig := Length(AOrigXml);
+    sNewAttribute := Format(cNewAttribute, [AAttributeName, AAttributeValue]);
+    Result := Copy(AOrigXml, 1, iPos - 1) + sNewAttribute + Copy(AOrigXml, iPos, iLenOrig - iPos + 1);
   end;
 end;
 
@@ -1142,13 +1234,13 @@ begin
   end;
 end;
 
-procedure TdmData.Select_error_from_host_header_message(AMsgProc: TNotifyMsgProc);
+procedure TdmData.Insert_error_from_host_header_message(AMsgProc: TNotifyMsgProc);
 var
-  iMaxHeaderId: Integer;
+  iMaxHeaderId, iWmsMessageId: Integer;
   sSQL, sErr_Descr: string;
 const
   cProcName = 'gpInsert_wms_from_host_error';
-  cRunProc  = 'SELECT * FROM %s(inHeader_Id:= %d, inSite:= %s, inPacketName:= %s, inErrDescription:= %s)';
+  cRunProc  = 'SELECT * FROM %s(inHeader_Id:= %d, inWms_Message_Id:= %d, inSite:= %s, inPacketName:= %s, inErrDescription:= %s)';
 begin
   // Данные были успешно вставлены в таб. WMS.from_host_header_message, но в результате обработки этих данных возникли ошибки.
   // Собираем эти ошибки и записываем в таб. ALAN.wms_to_host_error
@@ -1181,6 +1273,7 @@ begin
     begin
       Close;
       ParamByName('Id').AsInteger := iMaxHeaderId;
+      ParamByName('Start_Date').AsDateTime := StrToDateTime(cStartDate_TrackingError_from_host_header_message);
       Open;
     end;
   except
@@ -1202,8 +1295,14 @@ begin
       sErr_Descr := StringReplace(sErr_Descr, Char(39), '`', [rfReplaceAll]); // замена одинарной кавычки
       sErr_Descr := StringReplace(sErr_Descr, '"', '`', [rfReplaceAll]);
 
+      // получим wms_message.Id, который был сохранен в поле 'Message' в xml-элементе WMS.from_host_header_message в атрибуте 'wms_message_id'
+      iWmsMessageId := -1;
+      if not FieldByName('Message').IsNull then
+        iWmsMessageId := GetIdFromAttribute(FieldByName('Message').AsString, cWms_message_Id_Attr, AMsgProc);
+
       sSQL := Format(cRunProc, [cProcName,
                                 FieldByName('Id').AsInteger,             // Header_Id
+                                iWmsMessageId,                           // wms_message.Id
                                 QuotedStr('A'),                          // ошибка по нашей вине, пишем 'A'
                                 QuotedStr(FieldByName('Type').AsString), // имя пакета экспорта, например 'asn_load'
                                 QuotedStr(sErr_Descr)                    // текст ошибки
@@ -1390,7 +1489,12 @@ end;
 procedure TProcessExportDataErrorThread.Execute;
 begin
   inherited;
-  Data.Select_error_from_host_header_message(InnerMsgProc);
+  CoInitialize(nil);
+  try
+    Data.Insert_error_from_host_header_message(InnerMsgProc);
+  finally
+    CoUninitialize;
+  end;
 end;
 
 end.

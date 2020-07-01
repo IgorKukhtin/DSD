@@ -40,15 +40,21 @@ const
   cpnReceivingResult    = 'receiving_result';
 
   // имена пакетов экспорта
-   cpnWmsMovementASNLoad  = 'wms_Movement_ASN_LOAD';
-   cpnWmsObjectClient     = 'wms_Object_CLIENT';
-   cpnWmsObjectPack       = 'wms_Object_PACK';
-   cpnWmsObjectSKU        = 'wms_Object_SKU';
-   cpnWmsObjectSKUCode    = 'wms_Object_SKU_CODE';
-   cpnWmsObjectSKUGroup   = 'wms_Object_SKU_GROUP';
-   cpnWmsObjectUser       = 'wms_Object_USER';
-   cpnWmsMovementIncoming = 'wms_Movement_INCOMING';
-   cpnWmsMovementOrder    = 'wms_Movement_ORDER';
+  cpnWmsMovementASNLoad  = 'wms_Movement_ASN_LOAD';
+  cpnWmsObjectClient     = 'wms_Object_CLIENT';
+  cpnWmsObjectPack       = 'wms_Object_PACK';
+  cpnWmsObjectSKU        = 'wms_Object_SKU';
+  cpnWmsObjectSKUCode    = 'wms_Object_SKU_CODE';
+  cpnWmsObjectSKUGroup   = 'wms_Object_SKU_GROUP';
+  cpnWmsObjectUser       = 'wms_Object_USER';
+  cpnWmsMovementIncoming = 'wms_Movement_INCOMING';
+  cpnWmsMovementOrder    = 'wms_Movement_ORDER';
+
+  // имя атрибута, который вставляется в уже готовый xml-элемент  пакета экспорта
+  cWms_message_Id_Attr = 'wms_message_id';
+
+  // дата, начиная с которой отслеживаем ошибки в таб. WMS.from_host_header_message
+  cStartDate_TrackingError_from_host_header_message = '01.07.2020';
 
   // коды ошибок импорта
   cImpErrZero             = 0;
