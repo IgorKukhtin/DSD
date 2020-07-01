@@ -4,7 +4,7 @@ inherited MainForm: TMainForm
   ClientWidth = 730
   KeyPreview = True
   ExplicitWidth = 746
-  ExplicitHeight = 203
+  ExplicitHeight = 204
   PixelsPerInch = 96
   TextHeight = 13
   object cxGrid: TcxGrid [0]
@@ -3687,6 +3687,17 @@ inherited MainForm: TMainForm
       GuiParams = <>
       isShowModal = False
     end
+    object actSendPartionDateChangeJournal: TdsdOpenForm
+      Category = #1044#1086#1082#1091#1084#1077#1085#1090#1099
+      MoveParams = <>
+      Caption = #1047#1072#1103#1074#1082#1080' '#1080#1079#1084#1077#1085#1077#1085#1080#1103' '#1089#1088#1086#1082#1072' '#1075#1086#1076#1085#1086#1089#1090#1080
+      FormName = 'TSendPartionDateChangeJournalForm'
+      FormNameParam.Value = 'TSendPartionDateChangeJournalForm'
+      FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
+      GuiParams = <>
+      isShowModal = False
+    end
   end
   inherited UserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn
     Left = 496
@@ -4135,6 +4146,9 @@ inherited MainForm: TMainForm
       end
       object miSendPartionDate: TMenuItem
         Action = actSendPartionDate
+      end
+      object N237: TMenuItem
+        Action = actSendPartionDateChangeJournal
       end
       object N84: TMenuItem
         Action = actOver

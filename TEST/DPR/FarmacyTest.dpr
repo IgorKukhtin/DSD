@@ -888,7 +888,9 @@ uses
   Report_RemainsOverGoods_N in '..\..\FormsFarmacy\Report\Report_RemainsOverGoods_N.pas' {Report_RemainsOverGoods_NForm: TParentForm},
   IntegerDialog in '..\..\FormsFarmacy\Guides\IntegerDialog.pas' {IntegerDialogForm: TParentForm},
   RecalcMCSShedulerSunDialog in '..\..\FormsFarmacy\Object\RecalcMCSShedulerSunDialog.pas' {RecalcMCSShedulerSunDialogForm: TParentForm},
-  Report_Movement_Send_RemainsSun_Supplement in '..\..\FormsFarmacy\Report\Report_Movement_Send_RemainsSun_Supplement.pas' {Report_Movement_Send_RemainsSun_SupplementForm: TParentForm};
+  Report_Movement_Send_RemainsSun_Supplement in '..\..\FormsFarmacy\Report\Report_Movement_Send_RemainsSun_Supplement.pas' {Report_Movement_Send_RemainsSun_SupplementForm: TParentForm},
+  SendPartionDateChange in '..\..\FormsFarmacy\Document\SendPartionDateChange.pas' {SendPartionDateChangeForm: TParentForm},
+  SendPartionDateChangeJournal in '..\..\FormsFarmacy\Document\SendPartionDateChangeJournal.pas' {SendPartionDateChangeJournalForm: TParentForm};
 
 {$R *.res}
 {$R DevExpressRus.res}

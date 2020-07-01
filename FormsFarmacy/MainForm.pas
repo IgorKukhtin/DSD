@@ -691,6 +691,8 @@ type
     miReport_RemainsOverGoods_test: TMenuItem;
     actReport_Sun_Supplement: TdsdOpenForm;
     v11: TMenuItem;
+    actSendPartionDateChangeJournal: TdsdOpenForm;
+    N237: TMenuItem;
     procedure actSaveDataExecute(Sender: TObject);
 
     procedure miRepriceClick(Sender: TObject);

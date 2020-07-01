@@ -133,6 +133,7 @@ type
     procedure LoadSeasonalityCoefficientFormTest;
     procedure LoadSendFormTest;
     procedure LoadSendPartionDateFormTest;
+    procedure LoadSendPartionDateChangeFormTest;
     procedure LoadSendOnPriceFormTest;
     procedure LoadSystemFormTest;
     procedure LoadSPObjectFormTest;
@@ -2373,6 +2374,14 @@ begin
   TdsdFormStorageFactory.GetStorage.Load('TSendPartionDateForm');
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TSendPartionDate_UpdatePercentDialogForm'));
   TdsdFormStorageFactory.GetStorage.Load('TSendPartionDate_UpdatePercentDialogForm');
+end;
+
+procedure TLoadFormTest.LoadSendPartionDateChangeFormTest;
+begin
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TSendPartionDateChangeForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TSendPartionDateChangeForm');
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TSendPartionDateChangeJournalForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TSendPartionDateChangeJournalForm');
 end;
 
 procedure TLoadFormTest.LoadSendOnPriceFormTest;
