@@ -63,7 +63,7 @@ BEGIN
                                                   )
                     , tmpOrder_all AS (SELECT Movement.Id                                                              AS MovementId
                                             , MovementItem.ObjectId                                                    AS GoodsId
-                                            , COALESCE (MILinkObject_GoodsKind.ObjectId, 0)                            AS GoodsKindId
+                                            , CASE WHEN tmpGoods.isGoodsKind = TRUE AND COALESCE (MILinkObject_GoodsKind.ObjectId, 0) = 0 THEN zc_GoodsKind_Basis() ELSE COALESCE (MILinkObject_GoodsKind.ObjectId, 0) END AS GoodsKindId
                                             , SUM (CASE WHEN Movement.OperDate = inOperDate THEN MovementItem.Amount + COALESCE (MIFloat_AmountSecond.ValueData, 0) ELSE 0 END) AS AmountPartner
                                             , SUM (CASE WHEN Movement.OperDate < inOperDate
                                                          AND MovementDate_OperDatePartner.ValueData >= inOperDate
@@ -82,6 +82,8 @@ BEGIN
                                                                    AND MovementItem.DescId     = zc_MI_Master()
                                                                    AND MovementItem.isErased   = FALSE
 
+                                            LEFT JOIN tmpGoods ON tmpGoods.GoodsId = MovementItem.ObjectId
+
                                             LEFT JOIN MovementItemLinkObject AS MILinkObject_GoodsKind
                                                                              ON MILinkObject_GoodsKind.MovementItemId = MovementItem.Id
                                                                             AND MILinkObject_GoodsKind.DescId = zc_MILinkObject_GoodsKind()
@@ -93,7 +95,7 @@ BEGIN
                                          AND Movement.DescId   = zc_Movement_OrderExternal()
                                          AND Movement.StatusId = zc_Enum_Status_Complete()
                                        GROUP BY MovementItem.ObjectId
-                                              , MILinkObject_GoodsKind.ObjectId
+                                              , CASE WHEN tmpGoods.isGoodsKind = TRUE AND COALESCE (MILinkObject_GoodsKind.ObjectId, 0) = 0 THEN zc_GoodsKind_Basis() ELSE COALESCE (MILinkObject_GoodsKind.ObjectId, 0) END
                                               , Movement.Id
                                        HAVING SUM (CASE WHEN Movement.OperDate = inOperDate THEN MovementItem.Amount + COALESCE (MIFloat_AmountSecond.ValueData, 0) ELSE 0 END) <> 0
                                            OR SUM (CASE WHEN Movement.OperDate < inOperDate
@@ -130,16 +132,17 @@ BEGIN
                                                 )
                         , tmpSale AS (SELECT tmpMISale.MovementId_order -- за€вка
                                            , tmpMISale.GoodsId
-                                           , COALESCE (MILinkObject_GoodsKind.ObjectId, 0)   AS GoodsKindId
+                                           , CASE WHEN tmpGoods.isGoodsKind = TRUE AND COALESCE (MILinkObject_GoodsKind.ObjectId, 0) = 0 THEN zc_GoodsKind_Basis() ELSE COALESCE (MILinkObject_GoodsKind.ObjectId, 0) END AS GoodsKindId
                                            , SUM (tmpMISale.Amount)  AS Amount
                                       FROM tmpMISale
                                            LEFT JOIN tmpMILO_GoodsKind AS MILinkObject_GoodsKind
                                                                        ON MILinkObject_GoodsKind.MovementItemId = tmpMISale.Id
                                                                       AND MILinkObject_GoodsKind.DescId = zc_MILinkObject_GoodsKind()
+                                           LEFT JOIN tmpGoods ON tmpGoods.GoodsId = tmpMISale.GoodsId
                                       WHERE tmpMISale.Amount > 0
                                       GROUP BY tmpMISale.MovementId_order -- за€вка
                                              , tmpMISale.GoodsId
-                                             , COALESCE (MILinkObject_GoodsKind.ObjectId, 0)
+                                             , CASE WHEN tmpGoods.isGoodsKind = TRUE AND COALESCE (MILinkObject_GoodsKind.ObjectId, 0) = 0 THEN zc_GoodsKind_Basis() ELSE COALESCE (MILinkObject_GoodsKind.ObjectId, 0) END
                                       )
 
                           --  вычитаем факт отгрузку по за€вкам
@@ -148,9 +151,9 @@ BEGIN
                                                  , SUM (CASE WHEN COALESCE (tmpOrder_all.AmountPartner,0) - COALESCE (tmpSale.Amount, 0) > 0 THEN COALESCE (tmpOrder_all.AmountPartner,0) - COALESCE (tmpSale.Amount, 0) ELSE 0 END)           AS AmountPartner
                                                  , SUM (CASE WHEN COALESCE (tmpOrder_all.AmountPartnerPrior,0) - COALESCE (tmpSale.Amount, 0) > 0 THEN COALESCE (tmpOrder_all.AmountPartnerPrior,0) - COALESCE (tmpSale.Amount, 0) ELSE 0 END) AS AmountPartnerPrior
                                             FROM tmpOrder_all
-                                                LEFT JOIN tmpSale ON tmpSale.MovementId_order = tmpOrder_all.MovementId
-                                                                 AND tmpSale.GoodsId          = tmpOrder_all.GoodsId
-                                                                 AND tmpSale.GoodsKindId      = tmpOrder_all.GoodsKindId
+                                                 LEFT JOIN tmpSale ON tmpSale.MovementId_order = tmpOrder_all.MovementId
+                                                                  AND tmpSale.GoodsId          = tmpOrder_all.GoodsId
+                                                                  AND tmpSale.GoodsKindId      = tmpOrder_all.GoodsKindId
                                             GROUP BY tmpOrder_all.GoodsId
                                                    , tmpOrder_all.GoodsKindId
                                             HAVING SUM (CASE WHEN COALESCE (tmpOrder_all.AmountPartner,0) - COALESCE (tmpSale.Amount, 0) > 0 THEN COALESCE (tmpOrder_all.AmountPartner,0) - COALESCE (tmpSale.Amount, 0) ELSE 0 END) > 0

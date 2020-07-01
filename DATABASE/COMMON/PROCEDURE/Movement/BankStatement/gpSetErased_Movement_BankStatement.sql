@@ -16,7 +16,7 @@ BEGIN
 
 
      /*IF (SELECT StatusId FROM Movement WHERE Id = inMovementId) = zc_Enum_Status_Complete() THEN
-        RAISE EXCEPTION 'По выписке сформированы документы. Удаление не возможно';
+        RAISE EXCEPTION 'По выписке сформированы документы.Удаление не возможно';
      END IF;*/
 
 

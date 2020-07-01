@@ -27,6 +27,19 @@
    VACUUM ANALYZE HistoryCost;
    VACUUM FULL SoldTable;
    VACUUM ANALYZE SoldTable;
+   
+   VACUUM FULL wms_Message;
+   VACUUM ANALYZE wms_Message;
+   VACUUM FULL wms_MI_Incoming;
+   VACUUM ANALYZE wms_MI_Incoming;
+   VACUUM FULL wms_MI_WeighingProduction;
+   VACUUM ANALYZE wms_MI_WeighingProduction;
+   VACUUM FULL wms_Movement_WeighingProduction;
+   VACUUM ANALYZE wms_Movement_WeighingProduction;
+   VACUUM FULL wms_Object_GoodsByGoodsKind;
+   VACUUM ANALYZE wms_Object_GoodsByGoodsKind;
+   VACUUM FULL wms_Object_Pack;
+   VACUUM ANALYZE wms_Object_Pack;
 */
 
  VACUUM FULL pg_catalog.pg_statistic;

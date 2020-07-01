@@ -1023,7 +1023,7 @@ begin
               ParamByName('Weight_gd').AsFloat        := DataSet.FieldByName('Weight_gd').AsFloat;
               ParamByName('WeightTare_gd').AsFloat    := DataSet.FieldByName('WeightTare_gd').AsFloat;
               ParamByName('CountForWeight_gd').AsFloat:= DataSet.FieldByName('CountForWeight_gd').AsFloat;
-              // —хема - втулки - только дл€ программы ScaleCeh
+              // —хема - втулки - перевод из веса - только дл€ программы ScaleCeh
               if (ParamByName('MeasureId').AsInteger <> zc_Measure_Kg)
               and(ParamByName('MeasureId').AsInteger <> zc_Measure_Sh)
               and(ParamByName('Weight_gd').AsFloat   > 0)
@@ -1031,6 +1031,7 @@ begin
                 or(SettingMain.BranchCode = 102))
               and(ParamsMovement.ParamByName('MovementDescId').AsInteger= zc_Movement_Inventory)
               then ParamByName('isWeight_gd').AsBoolean := true
+             //else ParamByName('isWeight_gd').AsBoolean := false;
               else ParamByName('isWeight_gd').AsBoolean := false;
 
               // только дл€ программы ScaleCeh - всегда ввод кол-ва - надо дл€ тары
@@ -1480,6 +1481,10 @@ begin
          Params.ParamByName('inSqlText').Value:='SELECT zc_Measure_Kg() :: TVarChar';
          Execute;
          zc_Measure_Kg:=DataSet.FieldByName('Value').asInteger;
+
+         Params.ParamByName('inSqlText').Value:='SELECT zc_Measure_Kgg() :: TVarChar';
+         Execute;
+         zc_Measure_Kgg:=DataSet.FieldByName('Value').asInteger;
 
          //BarCodePref
          Params.ParamByName('inSqlText').Value:='SELECT zc_BarCodePref_Object() :: TVarChar';

@@ -195,6 +195,7 @@ var
 
   zc_Measure_Sh: Integer;
   zc_Measure_Kg: Integer;
+  zc_Measure_Kgg: Integer;
 
   zc_BarCodePref_Object  :String;
   zc_BarCodePref_Movement:String;

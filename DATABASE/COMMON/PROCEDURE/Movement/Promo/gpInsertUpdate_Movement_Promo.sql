@@ -48,6 +48,8 @@ BEGIN
     vbUserId:= lpCheckRight (inSession, zc_Enum_Process_InsertUpdate_Movement_Promo());
 
 
+    -- проверили - если подписан, корректировать нельзя
+
     -- сохранили <Документ>
     ioId := lpInsertUpdate_Movement_Promo (ioId            := ioId
                                         , inInvNumber      := inInvNumber

@@ -1,9 +1,11 @@
 -- Function: lpCheck_Movement_Promo_Sign()
 
-DROP FUNCTION IF EXISTS lpCheck_Movement_Promo_Sign (Integer, Integer);
+DROP FUNCTION IF EXISTS lpCheck_Movement_Promo_Sign (Integer, Boolean, Boolean, Integer);
 
 CREATE OR REPLACE FUNCTION lpCheck_Movement_Promo_Sign(
     IN inMovementId          Integer   , -- ключ Документа
+    IN inIsComplete          Boolean   , -- 
+    IN inIsUpdate            Boolean   , -- 
     IN inUserId              Integer     -- Пользователь
 )
 RETURNS VOID
@@ -17,6 +19,9 @@ $BODY$
   DECLARE vbIndexNo              Integer; -- № п/п в очереди - кто остался подписать
   DECLARE vbPromoStateKindId_old Integer;
 BEGIN
+
+     -- если без проверки
+     -- IF zc_isPromo_Sign_check() = FALSE THEN RETURN; END IF;
 
      -- данные - кто подписал/не подписал
      SELECT -- Модель для подписи
@@ -36,8 +41,22 @@ BEGIN
 
      FROM lpSelect_MI_Sign (inMovementId:= inMovementId) AS tmp;
       
-     -- если действие - проведение, должны быть все записи 
-     -- если действие - изменения чего-либо - 
+     -- если действие - проведение, должны быть все подписи 
+     IF inIsComplete = TRUE AND vbStrIdSignNo <> '' AND zc_isPromo_Sign_check() = TRUE
+     THEN
+         RAISE EXCEPTION 'Ошибка.Нельзя установить статус <%>.Ожидается подписание документа пользователем <%>.'
+                        , lfGet_Object_ValueData_sh (zc_Enum_Status_Complete())
+                        , lfGet_Object_ValueData_sh (zfCalc_Word_Split (vbStrIdSignNo, ',', 1))
+                         ;
+     END IF;
+     
+     -- если действие - изменения чего-либо, не должно быть подписей вообще
+     IF inIsUpdate = TRUE AND vbStrIdSign <> ''
+     THEN
+         RAISE EXCEPTION 'Ошибка.Документ уже подписан пользователем <%>.Корректировка не возможна.'
+                        , lfGet_Object_ValueData_sh (zfCalc_Word_Split (vbStrIdSign, ',', 1))
+                         ;
+     END IF;
 
 END;
 $BODY$

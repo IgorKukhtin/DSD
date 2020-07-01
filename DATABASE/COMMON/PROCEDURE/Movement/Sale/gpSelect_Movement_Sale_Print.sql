@@ -1249,7 +1249,7 @@ BEGIN
              END                             AS AmountPartner
 
            , tmpMI_Order.Amount              AS AmountOrder
-           , tmpMI.Price                     AS Price
+           , CASE WHEN tmpMI.CountForPrice > 1 THEN tmpMI.Price / tmpMI.CountForPrice ELSE tmpMI.Price END AS Price
            , tmpMI.CountForPrice             AS CountForPrice
 
            , CASE WHEN COALESCE (tmpObject_GoodsPropertyValue.BoxCount, COALESCE (tmpObject_GoodsPropertyValueGroup.BoxCount, 0)) > 0

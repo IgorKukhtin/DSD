@@ -33,7 +33,7 @@ BEGIN
                                                 ) AS tmp;
 
 -- дл€ отладки
-if inSession = '5'
+if inSession = '5' AND 1=0
 then
     RAISE EXCEPTION 'gpInsertUpdate_Movement_Tax_From_Kind - Adim';
     -- 'ѕовторите действие через 3 мин.'

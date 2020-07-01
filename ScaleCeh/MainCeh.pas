@@ -589,8 +589,10 @@ begin
         else calcOperCount:=ParamByName('RealWeight').AsFloat - GetOldRealWeight;
         //
         if  ((ParamByName('MeasureId').AsInteger <> zc_Measure_Kg)
-          and((SettingMain.isCalc_sht = FALSE)
-            // если НЕ Схема - втулки
+          and(ParamByName('MeasureId').AsInteger <> zc_Measure_Kgg)
+          and(// если НЕ Схема - втулки
+              (SettingMain.isCalc_sht = FALSE)
+              // если НЕТ веса для Схемы - втулки
             or(ParamByName('isWeight_gd').AsBoolean = FALSE)
              )
             )
@@ -605,9 +607,11 @@ begin
                                               ;
         //
         if  ((ParamByName('MeasureId').AsInteger = zc_Measure_Kg)
-           or((SettingMain.isCalc_sht = TRUE)
-            // если Схема - втулки
-            and(ParamByName('isWeight_gd').AsBoolean = TRUE)
+           or(ParamByName('MeasureId').AsInteger = zc_Measure_Kgg)
+           or(// если Схема - втулки
+              (SettingMain.isCalc_sht = TRUE)
+              //если ЕСТЬ вес для Схемы - втулки
+           and(ParamByName('isWeight_gd').AsBoolean = TRUE)
              )
             )
         and (ParamByName('MeasureId').AsInteger <> zc_Measure_Sh)
@@ -1892,10 +1896,12 @@ begin
           PanelGoodsName.Caption:= ParamsMI.ParamByName('GoodsName').asString;
           WriteParamsMovement;
           if ((ParamsMI.ParamByName('MeasureId').AsInteger <> zc_Measure_Kg)
-               and((SettingMain.isCalc_sht = FALSE)
-                 // если НЕ Схема - втулки
-                 or(ParamsMI.ParamByName('isWeight_gd').AsBoolean = FALSE)
-                  )
+           and(ParamsMI.ParamByName('MeasureId').AsInteger <> zc_Measure_Kgg)
+           and(//если НЕ Схема - втулки
+               (SettingMain.isCalc_sht = FALSE)
+               // если НЕТ веса для Схемы - втулки
+            or(ParamsMI.ParamByName('isWeight_gd').AsBoolean = FALSE)
+              )
              )
            or(ParamsMI.ParamByName('MeasureId').AsInteger = zc_Measure_Sh)
            or(ParamsMI.ParamByName('isEnterCount').AsBoolean = TRUE)
@@ -1911,7 +1917,7 @@ begin
           // поменяем на Втулки или обратно - если надо
           if SettingMain.isGoodsComplete = TRUE
           then
-              // если Схема - втулки
+              // если ЕСТЬ вес для Схемы - втулки
               if (ParamsMI.ParamByName('isWeight_gd').AsBoolean = TRUE)
               then begin LabelCount.Caption:='Втулки';
                          LabelCountPack.Caption:='-';
@@ -1939,8 +1945,10 @@ begin
      //
      if (ParamsMI.ParamByName('OperCount').AsFloat<=0)
      and((ParamsMI.ParamByName('MeasureId').AsInteger = zc_Measure_Kg)
-       or((SettingMain.isCalc_sht = TRUE)
-       // если Схема - втулки
+       or(ParamsMI.ParamByName('MeasureId').AsInteger = zc_Measure_Kgg)
+       or(//если Схема - втулки
+          (SettingMain.isCalc_sht = TRUE)
+          //если ЕСТЬ вес для Схемы - втулки
        and(ParamsMI.ParamByName('isWeight_gd').AsBoolean = TRUE)
          )
         )
@@ -2290,9 +2298,11 @@ end;
 procedure TMainCehForm.EditEnterCountPropertiesChange(Sender: TObject);
 begin
      if ((ParamsMI.ParamByName('MeasureId').AsInteger <> zc_Measure_Kg)
-      and((SettingMain.isCalc_sht = FALSE)
-        // если НЕ Схема - втулки
-        or(ParamsMI.ParamByName('isWeight_gd').AsBoolean = FALSE)
+      and(ParamsMI.ParamByName('MeasureId').AsInteger <> zc_Measure_Kgg)
+      and(//если НЕ Схема - втулки
+          (SettingMain.isCalc_sht = FALSE)
+          //если НЕТ веса для Схемы - втулки
+       or(ParamsMI.ParamByName('isWeight_gd').AsBoolean = FALSE)
          )
         )
       or(ParamsMI.ParamByName('MeasureId').AsInteger = zc_Measure_Sh)
@@ -2308,8 +2318,10 @@ end;
 procedure TMainCehForm.EditEnterCountEnter(Sender: TObject);
 begin
      if ((ParamsMI.ParamByName('MeasureId').AsInteger = zc_Measure_Kg)
-       or((SettingMain.isCalc_sht = TRUE)
-          // если Схема - втулки
+       or(ParamsMI.ParamByName('MeasureId').AsInteger = zc_Measure_Kgg)
+       or(//если Схема - втулки
+          (SettingMain.isCalc_sht = TRUE)
+          //если ЕСТЬ вес для Схемы - втулки
        and(ParamsMI.ParamByName('isWeight_gd').AsBoolean = TRUE)
          )
         )
@@ -3084,9 +3096,11 @@ end;
 function TMainCehForm.fGetScale_CurrentWeight:Double;
 begin
      if (((ParamsMI.ParamByName('MeasureId').AsInteger = zc_Measure_Kg)
+        or(ParamsMI.ParamByName('MeasureId').AsInteger = zc_Measure_Kgg)
         or(ParamsMI.ParamByName('MeasureId').AsInteger = 0)
-        or((SettingMain.isCalc_sht = TRUE)
-         // если Схема - втулки
+        or(//если Схема - втулки
+           (SettingMain.isCalc_sht = TRUE)
+           //если ЕСТЬ вес для Схемы - втулки
         and(ParamsMI.ParamByName('isWeight_gd').AsBoolean = TRUE)
           )
          )

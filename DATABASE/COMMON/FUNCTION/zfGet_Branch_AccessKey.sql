@@ -115,7 +115,7 @@ BEGIN
      -- проверка
      IF COALESCE (vbBranchId, 0) = 0
      THEN
-         RAISE EXCEPTION 'Ошибка.Невозможно определить <Филиал>.<%>', inAccessKeyId;
+         RAISE EXCEPTION 'Ошибка.Не возможно определить <Филиал>.<%>', inAccessKeyId;
      END IF;
      --
      RETURN (vbBranchId);
