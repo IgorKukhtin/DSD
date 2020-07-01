@@ -1,5 +1,7 @@
 unit Report_ImplementationPlanEmployee;
 
+{$I ..\..\SOURCE\dsdVer.inc}
+
 interface
 
 uses
@@ -26,7 +28,7 @@ uses
   cxDropDownEdit, cxCalendar, Vcl.ExtCtrls, cxCurrencyEdit, cxCustomPivotGrid,
   cxDBPivotGrid, cxLabel, ChoicePeriod, dxBarExtItems, cxCheckBox, cxSplitter,
   Vcl.StdCtrls, Vcl.Menus, cxButtons, cxExportPivotGridLink, dsdGuides,
-  cxButtonEdit, cxGridBandedTableView, cxGridDBBandedTableView;
+  cxButtonEdit, cxGridBandedTableView, cxGridDBBandedTableView, cxNavigator;
 
 type
   TReport_ImplementationPlanEmployeeForm = class(TForm)
@@ -141,7 +143,7 @@ type
     procedure cdsUnitAfterOpen(DataSet: TDataSet);
     procedure colGroupNameStylesGetContentStyle(Sender: TcxCustomGridTableView;
       ARecord: TcxCustomGridRecord; AItem: TcxCustomGridTableItem;
-      out AStyle: TcxStyle);
+      {$IFDEF DELPHI103RIO} var {$ELSE} out {$ENDIF} AStyle: TcxStyle);
     procedure cbHighlightStringsClick(Sender: TObject);
     procedure cbFilter1Click(Sender: TObject);
     procedure ClientDataSetFilterRecord(DataSet: TDataSet; var Accept: Boolean);
@@ -365,7 +367,7 @@ begin
           TcxCurrencyEditProperties(Properties).DisplayFormat := ',0.00';
         end;
       end;
-      Styles.OnGetContentStyle := colGroupNameStylesGetContentStyle;
+    //  Styles.OnGetContentStyle := colGroupNameStylesGetContentStyle;
     end;
 
     cdsListBands.Next;
@@ -762,7 +764,7 @@ end;
 
 procedure TReport_ImplementationPlanEmployeeForm.colGroupNameStylesGetContentStyle(
   Sender: TcxCustomGridTableView; ARecord: TcxCustomGridRecord;
-  AItem: TcxCustomGridTableItem; out AStyle: TcxStyle);
+  AItem: TcxCustomGridTableItem; {$IFDEF DELPHI103RIO} var {$ELSE} out {$ENDIF} AStyle: TcxStyle);
 begin
   if cbHighlightStrings.Checked then
   begin

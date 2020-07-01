@@ -44,6 +44,8 @@ procedure FileWriteString(const FileName: String; Data: AnsiString);
 function Execute(const CommandLine, WorkingDirectory : string) : integer;
 {ищем файлы в директории}
 function FilesInDir(sMask, sDirPath: String; var iFilesCount: Integer; var saFound: TStrings; bRecurse: Boolean = True): Integer;
+{Функция возвращает суффикс к 64 разрядным EXE файлам}
+function GetBinaryPlatfotmSuffics(aFileName: string): string;
 
 implementation
 
@@ -215,5 +217,19 @@ Begin
     FreeMem(Data);
   End;
 End;
+
+// Функция возвращает суффикс к 64 разрядным EXE файлам
+function GetBinaryPlatfotmSuffics(aFileName: string): string;
+var
+  bt: Cardinal;
+begin
+  Result := '';
+  if (POS('.exe', LowerCase(aFileName)) > 0) then
+  begin
+  if FileExists(aFileName) then
+    if GetBinaryType(PWideChar(aFileName), bt) then
+      if bt = 6 then Result := '.win64';
+  end;
+end;
 
 end.

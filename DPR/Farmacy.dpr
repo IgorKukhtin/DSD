@@ -1,6 +1,7 @@
 program Farmacy;
 
 uses
+  {$IFDEF VER340} MidasLib, {$ENDIF}
   Windows,
   Vcl.Forms,
   Controls,

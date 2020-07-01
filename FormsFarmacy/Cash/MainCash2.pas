@@ -478,6 +478,7 @@ type
     MemDataDISCEXTNAME: TStringField;
     MemDataGOODSDIID: TIntegerField;
     MemDataGOODSDINAME: TStringField;
+    mdCheckDISCEXTID: TIntegerField;
     procedure WM_KEYDOWN(var Msg: TWMKEYDOWN);
     procedure FormCreate(Sender: TObject);
     procedure actChoiceGoodsInRemainsGridExecute(Sender: TObject);
@@ -2159,7 +2160,8 @@ begin
     begin
       if FUpdatePUSH = 0 then
       begin
-        BaseVersionInfo := TdsdFormStorageFactory.GetStorage.LoadFileVersion(ExtractFileName(ParamStr(0)));
+        BaseVersionInfo := TdsdFormStorageFactory.GetStorage.LoadFileVersion(ExtractFileName(ParamStr(0)),
+                           GetBinaryPlatfotmSuffics(ParamStr(0)));
         LocalVersionInfo := UnilWin.GetFileVersion(ParamStr(0));
         if (BaseVersionInfo.VerHigh > LocalVersionInfo.VerHigh) or
            ((BaseVersionInfo.VerHigh = LocalVersionInfo.VerHigh) and (BaseVersionInfo.VerLow > LocalVersionInfo.VerLow)) then
@@ -5383,7 +5385,8 @@ var LocalVersionInfo, BaseVersionInfo: TVersionInfo; Step : Integer;
   Begin
     try
       Application.ProcessMessages;
-      BaseVersionInfo := TdsdFormStorageFactory.GetStorage.LoadFileVersion(ExtractFileName(ParamStr(0)));
+      BaseVersionInfo := TdsdFormStorageFactory.GetStorage.LoadFileVersion(ExtractFileName(ParamStr(0)),
+                         GetBinaryPlatfotmSuffics(ParamStr(0)));
       LocalVersionInfo := UnilWin.GetFileVersion(ParamStr(0));
       if (BaseVersionInfo.VerHigh > LocalVersionInfo.VerHigh) or
          ((BaseVersionInfo.VerHigh = LocalVersionInfo.VerHigh) and (BaseVersionInfo.VerLow > LocalVersionInfo.VerLow)) then
@@ -6745,14 +6748,6 @@ begin
         CheckCDS.FieldByName('Multiplicity').AsVariant := nMultiplicity;
         CheckCDS.Post;
 
-        if (FormParams.ParamByName('DiscountExternalId').Value > 0) and
-          (SourceClientDataSet.FindField('MorionCode') <> nil) then
-        begin
-          DiscountServiceForm.SaveMorionCode
-            (SourceClientDataSet.FieldByName('Id').AsInteger,
-            SourceClientDataSet.FieldByName('MorionCode').AsInteger);
-
-        end;
       End;
     finally
       CheckCDS.Filtered := True;
@@ -9036,7 +9031,7 @@ begin
           // сохранили отгруженные препараты для корректировки полных остатков
           if FSaveCheckToMemData then
           begin
-            if mdCheck.Locate('ID;PDKINDID;NDSKINDId;DiscountExternalID',
+            if mdCheck.Locate('ID;PDKINDID;NDSKINDId;DISCEXTID',
               VarArrayOf([ADS.FieldByName('GoodsId').AsInteger,
               ADS.FieldByName('PartionDateKindId').AsVariant,
               ADS.FieldByName('NDSKindId').AsVariant,

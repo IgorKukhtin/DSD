@@ -2363,6 +2363,10 @@
 				<Form>Report_GoodsRemainsCashDialogForm</Form>
 				<DesignClass>TParentForm</DesignClass>
 			</DCCReference>
+			<DCCReference Include="..\..\FormsFarmacy\Guides\Unit_Object.pas">
+				<Form>Unit_ObjectForm</Form>
+				<DesignClass>TParentForm</DesignClass>
+			</DCCReference>
 			<DCCReference Include="..\..\FormsFarmacy\Report\Report_GoodsPartionMoveCash.pas">
 				<Form>Report_GoodsPartionMoveCashForm</Form>
 				<DesignClass>TParentForm</DesignClass>

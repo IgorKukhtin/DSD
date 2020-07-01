@@ -76,7 +76,7 @@ BEGIN
 
     -- % наценки для срока годности < 6 мес.
     vbMarginPercent_ExpirationDate:= (SELECT ObjectFloat.ValueData FROM ObjectFloat WHERE ObjectFloat.DescId = zc_ObjectFloat_Retail_MarginPercent() AND ObjectFloat.ObjectId = vbObjectId);
-    -- 
+    --
     -- vbInterval_ExpirationDate:= zc_Interval_ExpirationDate();
     vbInterval_ExpirationDate:= '6 MONTH' :: Interval;
 
@@ -254,7 +254,7 @@ BEGIN
                       END
             END::TFloat AS MarginPercent
           , (SelectMinPrice_AllGoods.Price * (100 + Object_Goods.NDS)/100)::TFloat AS Juridical_Price
-          , zfCalc_SalePrice( 
+          , zfCalc_SalePrice(
                               (SelectMinPrice_AllGoods.Price * (100 + Object_Goods.NDS)/100)               -- Цена С НДС
                              --  * CASE WHEN vbObjectId = 4 THEN 1.015 ELSE 1 END                          -- 23.03. убрали  -- для сети НЕ БОЛЕЙ!!! к цене поставщика дополнительные +1.5 19.03.2020      ----  +3% - 17,03,2020 Люба
                             , CASE -- % наценки для срока годности < 6 мес.
@@ -278,11 +278,11 @@ BEGIN
                             , CASE WHEN vbisTopNo_Unit = TRUE THEN SelectMinPrice_AllGoods.isTOP_Price   ELSE SelectMinPrice_AllGoods.isTop END                  -- ТОП позиция
                             , CASE WHEN vbisTopNo_Unit = TRUE THEN SelectMinPrice_AllGoods.PercentMarkup ELSE COALESCE (NULLIF (SelectMinPrice_AllGoods.PercentMarkup, 0), Object_Goods.PercentMarkup) END -- % наценки у товара
                             , 0 /*ObjectFloat_Juridical_Percent.ValueData*/                                         -- % корректировки у Юр Лица для ТОПа
-                            , CASE WHEN vbisTopNo_Unit = TRUE THEN 
-                                        CASE WHEN Object_Price.Fix = TRUE 
+                            , CASE WHEN vbisTopNo_Unit = TRUE THEN
+                                        CASE WHEN Object_Price.Fix = TRUE
                                              THEN Object_Price.Price ELSE 0
-                                        END      
-                                   ELSE CASE WHEN Object_Price.Fix = TRUE 
+                                        END
+                                   ELSE CASE WHEN Object_Price.Fix = TRUE
                                              THEN Object_Price.Price ELSE Object_Goods.Price
                                         END -- Цена у товара (почти фиксированная)
                               END
@@ -433,7 +433,11 @@ BEGIN
         vbisTopNo_Unit AS isTopNo_Unit,
         ResultSet.IsPromo,
         ResultSet.isResolution_224,
-        CASE WHEN COALESCE (ResultSet.IsTop_Goods, FALSE) = FALSE
+        CASE WHEN (COALESCE (inUnitId_to, 0) = 0) 
+                        AND (ResultSet.ExpirationDate + INTERVAL '6 month' < ResultSet.MinExpirationDate)
+                        AND (ResultSet.ExpirationDate < CURRENT_DATE + INTERVAL '6 month')
+                  THEN FALSE
+             WHEN COALESCE (ResultSet.IsTop_Goods, FALSE) = FALSE
                         AND ResultSet.MinExpirationDate > zc_DateStart()
                         AND ResultSet.MinExpirationDate <= CURRENT_DATE
                   THEN FALSE
@@ -464,7 +468,7 @@ BEGIN
                   THEN TRUE
 
              ELSE FALSE
-        END 
+        END
         -- Временно прикрыл товар постановление для переоценки
         AND ResultSet.isResolution_224 = FALSE AS Reprice,
 
@@ -541,4 +545,4 @@ $BODY$
 */
 
 -- тест
--- SELECT * FROM gpSelect_AllGoodsPrice (183292, 0, 30, True, 0, 0, '3')  -- Аптека_1 пр_Правды_6
+-- SELECT * FROM gpSelect_AllGoodsPrice (183292, 0, 30, True, 0, 0, '3') where Reprice = False -- ExpirationDate < CURRENT_DATE + INTERVAL '6 month'  -- Аптека_1 пр_Правды_6

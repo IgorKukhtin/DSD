@@ -27,8 +27,8 @@ BEGIN
           LEFT JOIN wms_to_host_message AS Msg ON Err.Header_id = Msg.Header_id
         WHERE Err.Site = 'A' -- берем ошибки только на нашей стороне
           AND Err.InsertDate BETWEEN inStartDate AND inEndDate
-          AND (Msg.Done = FALSE) OR (Msg.Done IS NULL) 
-          AND (Msg.Error = TRUE) OR (Msg.Error IS NULL) 
+          AND (Msg.Done = FALSE OR Msg.Done IS NULL) 
+          AND (Msg.Error = TRUE OR Msg.Error IS NULL) 
         ORDER BY Err.Id DESC;
 END;
 $BODY$

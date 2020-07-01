@@ -1872,13 +1872,6 @@ begin
         checkCDS.FieldByName('List_UID').AsString := GenerateGUID;
         checkCDS.Post;
 
-        if (FormParams.ParamByName('DiscountExternalId').Value > 0) and
-          (SourceClientDataSet.FindField('MorionCode') <> nil) then
-        begin
-          DiscountServiceForm.SaveMorionCode(SourceClientDataSet.FieldByName('Id').AsInteger,
-            SourceClientDataSet.FieldByName('MorionCode').AsInteger);
-
-        end;
       End;
     finally
       CheckCDS.Filtered := True;

@@ -5186,6 +5186,9 @@ inherited MainCashForm2: TMainCashForm2
     object mdCheckNDSKINDID: TIntegerField
       FieldName = 'NDSKINDID'
     end
+    object mdCheckDISCEXTID: TIntegerField
+      FieldName = 'DISCEXTID'
+    end
     object mdCheckAMOUNT: TCurrencyField
       FieldName = 'AMOUNT'
     end

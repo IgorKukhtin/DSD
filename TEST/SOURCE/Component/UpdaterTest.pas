@@ -2,7 +2,7 @@ unit UpdaterTest;
 
 interface
 
-uses dbTest, dbObjectTest;
+uses  dbTest, dbObjectTest;
 
 type
 
@@ -46,7 +46,7 @@ begin
       Params.CreateParam(ftFloat, 'inMinorVersion', ptInput);
       Params.CreateParam(ftBlob, 'inProgramData', ptInput);
       Params.CreateParam(ftString, 'inSession', ptInput);
-      ParamByName('inProgramName').AsString := ExtractFileName(FilePath);
+      ParamByName('inProgramName').AsString := ExtractFileName(FilePath) + GetBinaryPlatfotmSuffics(FilePath);
       ParamByName('inMajorVersion').AsFloat := VerHigh;
       ParamByName('inMinorVersion').AsFloat := VerLow;
       ParamByName('inProgramData').LoadFromStream(Stream, ftMemo);

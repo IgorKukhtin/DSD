@@ -148,6 +148,12 @@ type
     lbStartwms_Movement_ORDER: TLabel;
     lbEndwms_Movement_ORDER: TLabel;
     lbElpswms_Movement_ORDER: TLabel;
+    btnDataExportErrors: TButton;
+    chkProcessExpErr: TCheckBox;
+    lbStartProcessExpErr: TLabel;
+    lbEndProcessExpErr: TLabel;
+    lbElpsProcessExpErr: TLabel;
+    cbbErrTable: TComboBox;
     procedure btnFDC_wmsClick(Sender: TObject);
     procedure btnFDC_alanClick(Sender: TObject);
     procedure btnObject_SKU_to_wmsClick(Sender: TObject);
@@ -183,13 +189,15 @@ type
     procedure dtpWmsMsgStartChange(Sender: TObject);
     procedure dtpWmsMsgEndChange(Sender: TObject);
     procedure chkUseLogClick(Sender: TObject);
+    procedure btnDataExportErrorsClick(Sender: TObject);
+    procedure cbbErrTableChange(Sender: TObject);
   private
     FLog: TLog;
     FStopTimer: Boolean;
     FStartOrderStatusChanged: TDateTime;
     FStartReceivingResult: TDateTime;
     FObjectSKU_TM, FObjectSKUCode_TM, FObjectSKUGroup_TM, FObjectClient_TM, FObjectPack_TM, FObjectUser_TM,
-    FMovementInc_TM, FMovementASNLoad_TM, FMovementOrder_TM: TTimeMeter;
+    FMovementInc_TM, FMovementASNLoad_TM, FMovementOrder_TM, FProcessExpErr_TM: TTimeMeter;
   private
     procedure AddToLog_Timer(LogType, S: string);
     procedure myShowSql;
@@ -213,6 +221,7 @@ type
     procedure OnTerminateWmsObjectUser(Sender: TObject);
     procedure OnTerminateWmsMovementOrder(Sender: TObject);
     procedure OnTerminateWmsMovementIncoming(Sender: TObject);
+    procedure OnTerminateProcessExportDataErr(Sender: TObject);
   public
     constructor Create(AOwner: TComponent); override;
     destructor Destroy; override;
@@ -316,6 +325,12 @@ begin
   lbElapsed_OrderStatusChanged.Repaint;
   lbEnd_OrderStatusChanged.Repaint;
 
+  PostMessage(Handle, WM_NEED_UPDATE_GRIDS, 0, 0);
+end;
+
+procedure TMainForm.OnTerminateProcessExportDataErr(Sender: TObject);
+begin
+  FProcessExpErr_TM.Finish;
   PostMessage(Handle, WM_NEED_UPDATE_GRIDS, 0, 0);
 end;
 
@@ -694,6 +709,11 @@ begin
   UpdateWmsMsgGrid;
 end;
 
+procedure TMainForm.cbbErrTableChange(Sender: TObject);
+begin
+  UpdateAlanGrid(True);
+end;
+
 procedure TMainForm.cbbWmsMessageModeChange(Sender: TObject);
 begin
   UpdateWmsMsgGrid;
@@ -754,6 +774,7 @@ begin
   FMovementInc_TM     := TTimeMeter.Create(chkwms_Movement_INCOMING, lbStartwms_Movement_INCOMING, lbEndwms_Movement_INCOMING, lbElpswms_Movement_INCOMING);
   FMovementASNLoad_TM := TTimeMeter.Create(chkwms_Movement_ASN_LOAD, lbStartwms_Movement_ASN_LOAD, lbEndwms_Movement_ASN_LOAD, lbElpswms_Movement_ASN_LOAD);
   FMovementOrder_TM   := TTimeMeter.Create(chkwms_Movement_ORDER, lbStartwms_Movement_ORDER, lbEndwms_Movement_ORDER, lbElpswms_Movement_ORDER);
+  FProcessExpErr_TM   := TTimeMeter.Create(chkProcessExpErr, lbStartProcessExpErr, lbEndProcessExpErr, lbElpsProcessExpErr);
 end;
 
 destructor TMainForm.Destroy;
@@ -768,6 +789,7 @@ begin
   FreeAndNil(FMovementInc_TM);
   FreeAndNil(FMovementASNLoad_TM);
   FreeAndNil(FMovementOrder_TM);
+  FreeAndNil(FProcessExpErr_TM);
   inherited;
 end;
 
@@ -843,6 +865,19 @@ begin
   seTimerInterval.Value := TSettings.TimerInterval div 1000;
 end;
 
+procedure TMainForm.btnDataExportErrorsClick(Sender: TObject);
+var
+  tmpWorker: TProcessExportDataErrorThread;
+begin
+  // Данные были успешно вставлены в таб. WMS.from_host_header_message, но в результате обработки этих данных возникли ошибки.
+  // Собираем эти ошибки и записываем в таб. ALAN.wms_to_host_error
+
+  FProcessExpErr_TM.Start;
+  tmpWorker := TProcessExportDataErrorThread.Create(True, myShowMsg);
+  tmpWorker.OnTerminate := OnTerminateProcessExportDataErr;
+  tmpWorker.Start;
+end;
+
 procedure TMainForm.btnEndTimerClick(Sender: TObject);
 begin
   FStopTimer := True;
@@ -912,12 +947,19 @@ begin
 end;
 
 procedure TMainForm.UpdateAlanGrid(const ANeedRebuildColumns: Boolean = False);
+var
+  tmpDS: TFDQuery;
 begin
   dtpEndDateAlan.DateTime := NearMidnight(dtpEndDateAlan.DateTime);
 
+  case cbbErrTable.ItemIndex of
+    0:  tmpDS := dmData.qryAlanGrid;
+    1:  tmpDS := dmData.qryAlanGridFromHost;
+  end;
+
   dmData.dsAlan.DataSet := nil;
   try
-    with dmData.qryAlanGrid do
+    with tmpDS do
     begin
       Close;
       ParamByName('StartDate').AsDateTime := dtpStartDateAlan.DateTime;
@@ -925,7 +967,7 @@ begin
       Open;
     end;
   finally
-    dmData.dsAlan.DataSet := dmData.qryAlanGrid;
+    dmData.dsAlan.DataSet := tmpDS;
   end;
 
   if ANeedRebuildColumns then
