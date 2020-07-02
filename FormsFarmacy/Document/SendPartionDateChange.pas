@@ -34,7 +34,7 @@ type
     GoodsCode: TcxGridDBColumn;
     GoodsName: TcxGridDBColumn;
     Amount: TcxGridDBColumn;
-    AmountRemains: TcxGridDBColumn;
+    Remains: TcxGridDBColumn;
     PrintItemsCDS: TClientDataSet;
     PrintHeaderCDS: TClientDataSet;
     cxLabel7: TcxLabel;
@@ -66,6 +66,12 @@ type
     actOpenPartionDateKind: TdsdOpenForm;
     bbMIChildProtocolOpenForm: TdxBarButton;
     dxBarButton1: TdxBarButton;
+    PartionDateKindName: TcxGridDBColumn;
+    NewExpirationDate: TcxGridDBColumn;
+    NewPartionDateKindName: TcxGridDBColumn;
+    MI_InvNumber: TcxGridDBColumn;
+    MI_OperDate: TcxGridDBColumn;
+    ContainerId: TcxGridDBColumn;
   private
     { Private declarations }
   public
