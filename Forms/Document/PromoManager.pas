@@ -24,7 +24,7 @@ uses
   dxSkinSevenClassic, dxSkinSharp, dxSkinSharpPlus, dxSkinSilver,
   dxSkinSpringTime, dxSkinStardust, dxSkinSummer2008, dxSkinTheAsphaltWorld,
   dxSkinValentine, dxSkinVS2010, dxSkinWhiteprint, dxSkinXmas2008Blue,
-  cxCheckBox;
+  cxCheckBox, cxEditRepositoryItems;
 
 type
   TPromoManagerForm = class(TAncestorDocumentForm)
@@ -383,6 +383,11 @@ type
     bbPrint_CalcAll: TdxBarButton;
     spGetPromoStateKind: TdsdStoredProc;
     actGetPromoStateKind_Return: TdsdDataSetRefresh;
+    cxEditRepository1: TcxEditRepository;
+    cxEditRepository1CurrencyItem1: TcxEditRepositoryCurrencyItem;
+    cxEditRepository1CurrencyItem2: TcxEditRepositoryCurrencyItem;
+    Repository: TcxGridDBColumn;
+    Repository2: TcxGridDBColumn;
   private
     { Private declarations }
   public
