@@ -1035,7 +1035,7 @@ begin
           if (FValue <> '') AND (FValue <> 'NULL') then
              (Component as TcxDateEdit).Date := gfXSStrToDate(FValue) // convert to TDateTime
           else
-             (Component as TcxDateEdit).Text := '';
+             (Component as TcxDateEdit).Clear;
         end;
      if Component is TEDI then
         (Component as TEDI).Directory := FValue;
