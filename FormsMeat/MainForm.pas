@@ -1143,6 +1143,8 @@ type
     actGetForm: TdsdExecStoredProc;
     macOpenDocument: TMultiAction;
     getMovementForm: TdsdStoredProc;
+    actReport_Promo_Result_Trade: TdsdOpenForm;
+    miReport_Promo_Result_Trade: TMenuItem;
     procedure actReport_OLAPSoldExecute(Sender: TObject);
     procedure FormShow(Sender: TObject);
     procedure FormClose(Sender: TObject; var Action: TCloseAction);
