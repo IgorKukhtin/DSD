@@ -46,7 +46,8 @@ RETURNS TABLE (ContainerId Integer, CashCode Integer, CashName TVarChar, Currenc
              , Sum1_CashFlow TFloat
              , Sum2_CashFlow TFloat
              , PrintGroup Integer
-
+             , CashFlowGroupCode Integer
+             , CashFlowGroupName TVarChar
               )
 AS
 $BODY$
@@ -989,7 +990,7 @@ BEGIN
                                        WHEN COALESCE (Operation.KreditSumm,0) <> 0 THEN tmpInfoMoney.CashFlowCode_out
                                        WHEN COALESCE (Operation.StartAmount,0) <> 0 THEN 3405
                                        WHEN COALESCE (Operation.EndAmount,0) <> 0 THEN 3415
-                                       ELSE 0
+                                       ELSE NULL
                                   END  ::Integer   AS CashFlowCode
                           
                                 , CASE WHEN COALESCE (Operation.DebetSumm,0) <> 0 THEN tmpInfoMoney.CashFlowName_in
@@ -1054,7 +1055,24 @@ BEGIN
                                 , tmpCashFlow.Name AS CashFlowName
                                 , 0 AS Sum1_CashFlow
                                 , 0 AS Sum2_CashFlow
+                                
                                   -- для итогов по группам
+                                , CASE WHEN tmpCashFlow.Code BETWEEN 3000 AND 3195 THEN 3195
+                                       WHEN tmpCashFlow.Code BETWEEN 3200 AND 3295 THEN 3295
+                                       WHEN tmpCashFlow.Code BETWEEN 3300 AND 3395 THEN 3395
+                                       WHEN tmpCashFlow.Code = 3405 THEN 3405
+                                       WHEN tmpCashFlow.Code = 3415 THEN 3415
+                                       ELSE NULL
+                                  END  ::Integer   AS CashFlowGroupCode
+
+                                , CASE WHEN tmpCashFlow.Code BETWEEN 3000 AND 3195 THEN 'Чистое движение денежных средств от операционной деятельности'
+                                       WHEN tmpCashFlow.Code BETWEEN 3200 AND 3295 THEN 'Чистое движение денежных средств от инвистиционной деятельности'
+                                       WHEN tmpCashFlow.Code BETWEEN 3300 AND 3395 THEN 'Чистое движение денежных средств от финансовой деятельности'
+                                       WHEN tmpCashFlow.Code = 3405 THEN 'Начальный остаток'
+                                       WHEN tmpCashFlow.Code = 3415 THEN 'Конечный остаток'
+                                       ELSE ''
+                                  END  ::TVarChar   AS CashFlowGroupName
+                                  
                                 , CASE WHEN tmpCashFlow.Code BETWEEN 3000 AND 3195 THEN 1
                                        WHEN tmpCashFlow.Code BETWEEN 3200 AND 3295 THEN 2
                                        WHEN tmpCashFlow.Code BETWEEN 3300 AND 3395 THEN 3
@@ -1087,107 +1105,25 @@ BEGIN
                                 , Operation.CashFlowName
                                 , Operation.Sum1_CashFlow
                                 , Operation.Sum2_CashFlow
+
+                                , CASE WHEN Operation.CashFlowCode BETWEEN 3000 AND 3195 THEN 3195
+                                       WHEN Operation.CashFlowCode BETWEEN 3200 AND 3295 THEN 3295
+                                       WHEN Operation.CashFlowCode BETWEEN 3300 AND 3395 THEN 3395
+                                       WHEN Operation.CashFlowCode = 3405 THEN 3405
+                                       WHEN Operation.CashFlowCode = 3415 THEN 3415
+                                       ELSE NULL
+                                  END  ::Integer   AS CashFlowGroupCode
+
+                                , CASE WHEN Operation.CashFlowCode BETWEEN 3000 AND 3195 THEN 'Чистое движение денежных средств от операционной деятельности'
+                                       WHEN Operation.CashFlowCode BETWEEN 3200 AND 3295 THEN 'Чистое движение денежных средств от инвистиционной деятельности'
+                                       WHEN Operation.CashFlowCode BETWEEN 3300 AND 3395 THEN 'Чистое движение денежных средств от финансовой деятельности'
+                                       WHEN Operation.CashFlowCode = 3405 THEN 'Начальный остаток'
+                                       WHEN Operation.CashFlowCode = 3415 THEN 'Конечный остаток'
+                                       ELSE ''
+                                  END  ::TVarChar  AS CashFlowGroupName
+
                                 , Operation.PrintGroup
                            FROM tmp_DDC AS Operation
-                          UNION
-                          -- Итоговые данные 1
-                           SELECT 0 AS ContainerId, 0 AS AccountId, 0 AS CashId, 0 AS InfoMoneyId, 0 AS CurrencyId
-                                , 0 AS UnitId, 0 AS MoneyPlaceId, 0 AS ContractId
-                                , DATE_TRUNC ('MONTH', Operation.OperDate) AS OperDate
-                                , Operation.MonthNum
-                                , SUM (COALESCE (Operation.DebetSumm          )) AS DebetSumm
-                                , SUM (COALESCE (Operation.KreditSumm         )) AS KreditSumm
-                                , SUM (COALESCE (Operation.DebetSumm_Currency )) AS DebetSumm_Currency
-                                , SUM (COALESCE (Operation.KreditSumm_Currency)) AS KreditSumm_Currency
-                                , SUM (COALESCE (Operation.Summ_Currency      )) AS Summ_Currency
-                                , SUM (COALESCE (Operation.Summ_Currency_pl   )) AS Summ_Currency_pl
-                                , SUM (COALESCE (Operation.StartAmount        )) AS StartAmount
-                                , SUM (COALESCE (Operation.EndAmount          )) AS EndAmount
-                                , SUM (COALESCE (Operation.StartAmount_Month  )) AS StartAmount_Month
-                                , SUM (COALESCE (Operation.EndAmount_Month    )) AS EndAmount_Month
-                                , '' :: TVarChar AS Type_info
-                                , 1 AS NomStr
-                                , '1. Нач. сальдо'  ::tvarchar  AS InfoText
-                                
-                                , Operation.MonthName1
-                                , Operation.MonthName2
-                                , 3195 AS CashFlowCode
-                                , 'Чистое движение денежных средств от операционной деятельности' AS CashFlowName
-                                , SUM (Operation.Sum1_CashFlow) AS Sum1_CashFlow
-                                , SUM (Operation.Sum2_CashFlow) AS Sum2_CashFlow
-                                , 1 AS PrintGroup
-                           FROM tmp_DDC AS Operation
-                           WHERE Operation.PrintGroup = 1
-                           GROUP BY Operation.MonthName1
-                                  , Operation.MonthName2
-                                  , DATE_TRUNC ('MONTH', Operation.OperDate)
-                                  , Operation.MonthNum
-                          UNION
-                          -- Итоговые данные 2
-                           SELECT 0 AS ContainerId, 0 AS AccountId, 0 AS CashId, 0 AS InfoMoneyId, 0 AS CurrencyId
-                                , 0 AS UnitId, 0 AS MoneyPlaceId, 0 AS ContractId
-                                , DATE_TRUNC ('MONTH', Operation.OperDate) AS OperDate
-                                , Operation.MonthNum
-                                , SUM (COALESCE (Operation.DebetSumm          )) AS DebetSumm
-                                , SUM (COALESCE (Operation.KreditSumm         )) AS KreditSumm
-                                , SUM (COALESCE (Operation.DebetSumm_Currency )) AS DebetSumm_Currency
-                                , SUM (COALESCE (Operation.KreditSumm_Currency)) AS KreditSumm_Currency
-                                , SUM (COALESCE (Operation.Summ_Currency      )) AS Summ_Currency
-                                , SUM (COALESCE (Operation.Summ_Currency_pl   )) AS Summ_Currency_pl
-                                , SUM (COALESCE (Operation.StartAmount        )) AS StartAmount
-                                , SUM (COALESCE (Operation.EndAmount          )) AS EndAmount
-                                , SUM (COALESCE (Operation.StartAmount_Month  )) AS StartAmount_Month
-                                , SUM (COALESCE (Operation.EndAmount_Month    )) AS EndAmount_Month
-                                , '' :: TVarChar AS Type_info
-                                , 1 AS NomStr
-                                , '1. Нач. сальдо'  ::tvarchar  AS InfoText
-                                
-                                , Operation.MonthName1
-                                , Operation.MonthName2
-                                , 3295 AS CashFlowCode
-                                , 'Чистое движение денежных средств от инвистиционной деятельности' AS CashFlowName
-                                , SUM (Operation.Sum1_CashFlow) AS Sum1_CashFlow
-                                , SUM (Operation.Sum2_CashFlow) AS Sum2_CashFlow
-                                , 2 AS PrintGroup
-                           FROM tmp_DDC AS Operation
-                           WHERE Operation.PrintGroup = 2
-                           GROUP BY Operation.MonthName1
-                                  , Operation.MonthName2
-                                  , DATE_TRUNC ('MONTH', Operation.OperDate)
-                                  , Operation.MonthNum
-                          UNION
-                          -- Итоговые данные 3
-                           SELECT 0 AS ContainerId, 0 AS AccountId, 0 AS CashId, 0 AS InfoMoneyId, 0 AS CurrencyId
-                                , 0 AS UnitId, 0 AS MoneyPlaceId, 0 AS ContractId
-                                , DATE_TRUNC ('MONTH', Operation.OperDate) AS OperDate
-                                , Operation.MonthNum
-                                , SUM (COALESCE (Operation.DebetSumm          )) AS DebetSumm
-                                , SUM (COALESCE (Operation.KreditSumm         )) AS KreditSumm
-                                , SUM (COALESCE (Operation.DebetSumm_Currency )) AS DebetSumm_Currency
-                                , SUM (COALESCE (Operation.KreditSumm_Currency)) AS KreditSumm_Currency
-                                , SUM (COALESCE (Operation.Summ_Currency      )) AS Summ_Currency
-                                , SUM (COALESCE (Operation.Summ_Currency_pl   )) AS Summ_Currency_pl
-                                , SUM (COALESCE (Operation.StartAmount        )) AS StartAmount
-                                , SUM (COALESCE (Operation.EndAmount          )) AS EndAmount
-                                , SUM (COALESCE (Operation.StartAmount_Month  )) AS StartAmount_Month
-                                , SUM (COALESCE (Operation.EndAmount_Month    )) AS EndAmount_Month
-                                , '' :: TVarChar AS Type_info
-                                , 1 AS NomStr
-                                , '1. Нач. сальдо'  ::tvarchar  AS InfoText
-                                
-                                , Operation.MonthName1
-                                , Operation.MonthName2
-                                , 3395 AS CashFlowCode
-                                , 'Чистое движение денежных средств от финансовой деятельности' AS CashFlowName
-                                , SUM (COALESCE (Operation.Sum1_CashFlow)) AS Sum1_CashFlow
-                                , SUM (COALESCE (Operation.Sum2_CashFlow)) AS Sum2_CashFlow
-                                , 3 AS PrintGroup
-                           FROM tmp_DDC AS Operation
-                           WHERE Operation.PrintGroup = 3
-                           GROUP BY Operation.MonthName1
-                                  , Operation.MonthName2
-                                  , DATE_TRUNC ('MONTH', Operation.OperDate)
-                                  , Operation.MonthNum
                            )
                            
     
@@ -1252,11 +1188,15 @@ BEGIN
         Operation.MonthName1     :: TVarChar AS MonthName1,
         Operation.MonthName2     :: TVarChar AS MonthName2,
         Operation.CashFlowCode   ::Integer   AS CashFlowCode,
+        --если статья ДДС пустая - подставляем Статью назначения
         Operation.CashFlowName   ::TVarChar  AS CashFlowName,
+        
         Operation.Sum1_CashFlow  ::TFloat    AS Sum1_CashFlow,
         Operation.Sum2_CashFlow  ::TFloat    AS Sum2_CashFlow,
         -- для итогов по группам
-        Operation.PrintGroup     ::Integer   AS PrintGroup
+        Operation.PrintGroup     ::Integer   AS PrintGroup,
+        Operation.CashFlowGroupCode ::Integer,
+        Operation.CashFlowGroupName ::TVarChar
      FROM tmpOperation_DDC AS Operation
 
          LEFT JOIN tmpAccount ON tmpAccount.AccountId = Operation.AccountId
