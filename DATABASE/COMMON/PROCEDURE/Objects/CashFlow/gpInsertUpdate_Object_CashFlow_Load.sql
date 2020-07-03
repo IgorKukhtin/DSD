@@ -1,12 +1,13 @@
 -- Название для ценника
 
 DROP FUNCTION IF EXISTS gpInsertUpdate_Object_CashFlow_Load (Integer, TVarChar, Integer, TVarChar, TVarChar, TVarChar);
+--gpinsertupdate_object_cashflow_from_excel
 
 CREATE OR REPLACE FUNCTION gpInsertUpdate_Object_CashFlow_Load(
-    IN inCashFlowCode_out         Integer,       -- код статьи ДДС приход
-    IN inCashFlowName_out         TVarChar,      -- Название статьи ДДС приход
     IN inCashFlowCode_in          Integer,       -- код статьи ДДС расход
     IN inCashFlowName_in          TVarChar,      -- Название статьи ДДС расход
+    IN inCashFlowCode_out         Integer,       -- код статьи ДДС приход
+    IN inCashFlowName_out         TVarChar,      -- Название статьи ДДС приход
     IN inInfoMoneyName            TVarChar,      -- Название статьи УП
     IN inSession      TVarChar       -- сессия пользователя
 )
@@ -30,7 +31,7 @@ BEGIN
 
    IF COALESCE (inCashFlowCode_out,0) <> 0
    THEN
-       -- поиск в спр. статьей ДДС сначала приход
+       -- поиск в спр. статьей ДДС сначала расход
        vbCashFlowId := (SELECT Object.Id FROM Object WHERE Object.DescId = zc_Object_CashFlow() AND Object.isErased = FALSE AND Object.ObjectCode = inCashFlowCode_out limit 1);
        
        -- Eсли не нашли записываем
@@ -47,7 +48,7 @@ BEGIN
        IF COALESCE (vbInfoMoneyId,0) <> 0 AND COALESCE (vbCashFlowId,0) <> 0
           AND NOT EXISTS (SELECT 1 FROM ObjectLink WHERE ObjectLink.DescId = zc_ObjectLink_InfoMoney_CashFlow_out() AND ObjectLink.ObjectId = vbInfoMoneyId AND ObjectLink.ChildObjectId = vbCashFlowId)
        THEN
-           -- сохранили связь с <Статья отчета ДДС приход>
+           -- сохранили связь с <Статья отчета ДДС расход>
            PERFORM lpInsertUpdate_ObjectLink( zc_ObjectLink_InfoMoney_CashFlow_out(), vbInfoMoneyId, vbCashFlowId);
            
            -- сохранили протокол
@@ -56,7 +57,7 @@ BEGIN
        END IF;
    END IF;
    
-   -- аналогично со статьей ДДС расход
+   -- аналогично со статьей ДДС приход
        
    IF COALESCE (inCashFlowCode_in,0) <> 0
    THEN
@@ -77,7 +78,7 @@ BEGIN
        IF COALESCE (vbInfoMoneyId,0) <> 0 AND COALESCE (vbCashFlowId,0) <> 0
           AND NOT EXISTS (SELECT 1 FROM ObjectLink WHERE ObjectLink.DescId = zc_ObjectLink_InfoMoney_CashFlow_in() AND ObjectLink.ObjectId = vbInfoMoneyId AND ObjectLink.ChildObjectId = vbCashFlowId)
        THEN
-           -- сохранили связь с <Статья отчета ДДС расход>
+           -- сохранили связь с <Статья отчета ДДС приход>
            PERFORM lpInsertUpdate_ObjectLink( zc_ObjectLink_InfoMoney_CashFlow_in(), vbInfoMoneyId, vbCashFlowId);
 
            -- сохранили протокол

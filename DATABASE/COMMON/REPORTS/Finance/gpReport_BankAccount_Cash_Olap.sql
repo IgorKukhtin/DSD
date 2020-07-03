@@ -107,11 +107,14 @@ BEGIN
                                 , Container.ObjectId                      AS ObjectId
                                 , CLO_Cash.ObjectId                       AS CashId
                                 , COALESCE (CLO_Currency.ObjectId, 0)     AS CurrencyId
+                                , COALESCE (CLO_Branch.ObjectId, 0)       AS BranchId
                                 , COALESCE (Container.Amount,0)           AS Amount
                                 , COALESCE (Container_Currency.Amount, 0) AS Amount_Currency
                            FROM ContainerLinkObject AS CLO_Cash
                                INNER JOIN Container ON Container.Id = CLO_Cash.ContainerId AND Container.DescId = zc_Container_Summ()
                                LEFT JOIN ContainerLinkObject AS CLO_Currency ON CLO_Currency.ContainerId = Container.Id AND CLO_Currency.DescId = zc_ContainerLinkObject_Currency()
+                               LEFT JOIN ContainerLinkObject AS CLO_Branch   ON CLO_Branch.ContainerId   = Container.Id AND CLO_Branch.DescId = zc_ContainerLinkObject_Branch()
+                               
                                LEFT JOIN Container AS Container_Currency ON Container_Currency.ParentId = Container.Id AND Container_Currency.DescId = zc_Container_SummCurrency()
                            WHERE CLO_Cash.DescId = zc_ContainerLinkObject_Cash()
                              AND (Container.ObjectId = inAccountId OR inAccountId = 0)
@@ -212,6 +215,7 @@ BEGIN
                                        , tmpContainer.ObjectId
                                        , tmpContainer.CashId
                                        , tmpContainer.CurrencyId
+                                       , tmpContainer.BranchId
                                        , SUM (CASE WHEN MIContainer.OperDate <= inEndDate THEN CASE WHEN MIContainer.Amount > 0 THEN MIContainer.Amount ELSE 0 END ELSE 0 END)         AS DebetSumm
                                        , SUM (CASE WHEN MIContainer.OperDate <= inEndDate THEN CASE WHEN MIContainer.Amount < 0 THEN -1 * MIContainer.Amount ELSE 0 END ELSE 0 END)    AS KreditSumm
                                        , SUM (CASE WHEN MIContainer.MovementDescId = zc_Movement_Currency() THEN MIContainer.Amount ELSE 0 END)                                        AS Summ_Currency
@@ -229,6 +233,7 @@ BEGIN
                                   GROUP BY tmpContainer.ObjectId
                                          , tmpContainer.CashId
                                          , tmpContainer.CurrencyId
+                                         , tmpContainer.BranchId
                                          , MIContainer.isActive
                                          , MIContainer.MovementItemId
                                          , MIContainer.ContainerId
@@ -271,6 +276,7 @@ BEGIN
                                         , tmpContainer.ObjectId
                                         , tmpContainer.CashId
                                         , tmpContainer.CurrencyId
+                                        , tmpContainer.BranchId
                                         , SUM (CASE WHEN MIContainer.Amount > 0 THEN MIContainer.Amount ELSE 0 END)      AS DebetSumm_Currency
                                         , SUM (CASE WHEN MIContainer.Amount < 0 THEN -1 * MIContainer.Amount ELSE 0 END) AS KreditSumm_Currency
                                         , MIContainer.isActive
@@ -285,6 +291,7 @@ BEGIN
                                           , tmpContainer.CurrencyId
                                           , MIContainer.isActive
                                           , MIContainer.OperDate
+                                          , tmpContainer.BranchId
                                   )
           -- ВСЕ св-ва
         , tmpMovementItemLinkObject_сurr AS (SELECT MovementItemLinkObject.*
@@ -323,6 +330,7 @@ BEGIN
                                  , tmpContainer.ObjectId
                                  , tmpContainer.CashId
                                  , tmpContainer.CurrencyId
+                                 , tmpContainer.BranchId
                                  , 0                         AS InfoMoneyId
                                  , 0                         AS UnitId
                                  , 0                         AS MoneyPlaceId
@@ -342,7 +350,7 @@ BEGIN
                             FROM tmpContainer
                                  LEFT JOIN MovementItemContainer AS MIContainer ON MIContainer.Containerid = tmpContainer.ContainerId
                                                                 AND MIContainer.OperDate >= inStartDate
-                            GROUP BY tmpContainer.ContainerId, tmpContainer.ObjectId, tmpContainer.CashId, tmpContainer.Amount, tmpContainer.CurrencyId
+                            GROUP BY tmpContainer.ContainerId, tmpContainer.ObjectId, tmpContainer.CashId, tmpContainer.Amount, tmpContainer.CurrencyId, tmpContainer.BranchId
                  
                             UNION ALL
                            -- конечн. остаток  в валюте баланса
@@ -350,6 +358,7 @@ BEGIN
                                  , tmpContainer.ObjectId
                                  , tmpContainer.CashId
                                  , tmpContainer.CurrencyId
+                                 , tmpContainer.BranchId
                                  , 0                         AS InfoMoneyId
                                  , 0                         AS UnitId
                                  , 0                         AS MoneyPlaceId
@@ -370,7 +379,7 @@ BEGIN
                             FROM tmpContainer
                                  LEFT JOIN MovementItemContainer AS MIContainer ON MIContainer.Containerid = tmpContainer.ContainerId
                                                                 AND MIContainer.OperDate > inEndDate
-                            GROUP BY tmpContainer.ContainerId, tmpContainer.ObjectId, tmpContainer.CashId, tmpContainer.Amount, tmpContainer.CurrencyId
+                            GROUP BY tmpContainer.ContainerId, tmpContainer.ObjectId, tmpContainer.CashId, tmpContainer.Amount, tmpContainer.CurrencyId, tmpContainer.BranchId
                  
                             UNION ALL
                             -- движение в валюте баланса
@@ -378,6 +387,7 @@ BEGIN
                                  , tmpContainer.ObjectId                     AS ObjectId
                                  , tmpContainer.CashId                       AS CashId
                                  , tmpContainer.CurrencyId                   AS CurrencyId
+                                 , tmpContainer.BranchId
                                  , MILO_InfoMoney.ObjectId                   AS InfoMoneyId
                                  , MILO_Unit.ObjectId                        AS UnitId
                                  , MILO_MoneyPlace.ObjectId                  AS MoneyPlaceId
@@ -406,13 +416,15 @@ BEGIN
                                      MILO_Unit.ObjectId,
                                      MILO_MoneyPlace.ObjectId, 
                                      MILO_Contract.ObjectId,
-                                     tmpContainer.OperDate
+                                     tmpContainer.OperDate,
+                                     tmpContainer.BranchId
                             UNION ALL
                             -- движение  в валюте операции
                             SELECT 0                                         AS ContainerId
                                  , tmpContainer.ObjectId                     AS ObjectId
                                  , tmpContainer.CashId                       AS CashId
                                  , tmpContainer.CurrencyId                   AS CurrencyId
+                                 , tmpContainer.BranchId
                                  , MILO_InfoMoney.ObjectId                   AS InfoMoneyId
                                  , MILO_Unit.ObjectId                        AS UnitId
                                  , MILO_MoneyPlace.ObjectId                  AS MoneyPlaceId
@@ -440,10 +452,11 @@ BEGIN
                                      MILO_Unit.ObjectId, 
                                      MILO_MoneyPlace.ObjectId, 
                                      MILO_Contract.ObjectId,
-                                     tmpContainer.OperDate
+                                     tmpContainer.OperDate,
+                                     tmpContainer.BranchId
                             )
 
-      , tmpOperation_11 AS (SELECT Operation_all.ContainerId, Operation_all.ObjectId, Operation_all.CashId, Operation_all.InfoMoneyId, Operation_all.CurrencyId
+      , tmpOperation_11 AS (SELECT Operation_all.ContainerId, Operation_all.ObjectId, Operation_all.CashId, Operation_all.InfoMoneyId, Operation_all.CurrencyId, Operation_all.BranchId
                                     , Operation_all.UnitId, Operation_all.MoneyPlaceId, Operation_all.ContractId
                                     , Operation_all.OperDate
                                     , Operation_all.NomStr
@@ -457,7 +470,7 @@ BEGIN
                                     , SUM (Operation_all.StartAmount)          AS StartAmount
                                     , SUM (Operation_all.EndAmount)            AS EndAmount
                               FROM Operation_all
-                              GROUP BY Operation_all.ContainerId, Operation_all.ObjectId, Operation_all.CashId, Operation_all.CurrencyId
+                              GROUP BY Operation_all.ContainerId, Operation_all.ObjectId, Operation_all.CashId, Operation_all.CurrencyId, Operation_all.BranchId
                                      , Operation_all.InfoMoneyId, Operation_all.UnitId, Operation_all.MoneyPlaceId, Operation_all.ContractId
                                      , Operation_all.isActive, Operation_all.OperDate
                                      , Operation_all.NomStr
@@ -470,7 +483,7 @@ BEGIN
                                   OR SUM (Operation_all.EndAmount)            <> 0
                              )
       -- считаем нач.сальдо для всех дат
-      , tmpOperation_Group AS (SELECT Operation_all.ContainerId, Operation_all.ObjectId, Operation_all.CashId, Operation_all.CurrencyId
+      , tmpOperation_Group AS (SELECT Operation_all.ContainerId, Operation_all.ObjectId, Operation_all.CashId, Operation_all.CurrencyId, Operation_all.BranchId
                                     , Operation_all.OperDate
                                     , SUM (Operation_all.DebetSumm)   AS DebetSumm
                                     , SUM (Operation_all.KreditSumm)  AS KreditSumm
@@ -478,11 +491,11 @@ BEGIN
                                     , SUM (Operation_all.StartAmount) AS StartAmount
                                     , SUM (Operation_all.EndAmount)   AS EndAmount
                               FROM tmpOperation_11 AS Operation_all
-                              GROUP BY Operation_all.ContainerId, Operation_all.ObjectId, Operation_all.CashId, Operation_all.CurrencyId, Operation_all.OperDate
+                              GROUP BY Operation_all.ContainerId, Operation_all.ObjectId, Operation_all.CashId, Operation_all.CurrencyId, Operation_all.OperDate, Operation_all.BranchId
                              )
       --
       , tmpCalc AS (--расчет накоп. нач. остатка
-                    SELECT tmp.ContainerId, tmp.ObjectId, tmp.CashId, tmp.CurrencyId, tmp.OperDate
+                    SELECT tmp.ContainerId, tmp.ObjectId, tmp.CashId, tmp.CurrencyId, tmp.OperDate, tmp.BranchId
                          , SUM (StartAmount_calc) AS Amount_calc
                          , 1                      AS NomStr
                          , '1. Нач. сальдо'  ::tvarchar AS InfoText
@@ -493,11 +506,11 @@ BEGIN
                          LEFT JOIN tmpOperation_Group AS ttt1 ON ttt1.ContainerId = ttt.ContainerId
                          and ttt1.OperDate < ttt.OperDate
                          ) AS tmp
-                    GROUP BY tmp.ContainerId, tmp.ObjectId, tmp.CashId, tmp.CurrencyId, tmp.OperDate
+                    GROUP BY tmp.ContainerId, tmp.ObjectId, tmp.CashId, tmp.CurrencyId, tmp.OperDate, tmp.BranchId
                     HAVING SUM (StartAmount_calc) <> 0
                    UNION
                    --расчет накоп. конечн. остатка
-                    SELECT tmp.ContainerId, tmp.ObjectId, tmp.CashId, tmp.CurrencyId, tmp.OperDate
+                    SELECT tmp.ContainerId, tmp.ObjectId, tmp.CashId, tmp.CurrencyId, tmp.OperDate, tmp.BranchId
                          , SUM (EndAmount_calc) AS Amount_calc
                          , 3                    AS NomStr
                          , '3. Конечн. сальдо'  ::tvarchar AS InfoText
@@ -508,11 +521,11 @@ BEGIN
                          LEFT JOIN tmpOperation_Group AS ttt1 ON ttt1.ContainerId = ttt.ContainerId
                          and ttt1.OperDate > ttt.OperDate
                          ) AS tmp
-                    GROUP BY tmp.ContainerId, tmp.ObjectId, tmp.CashId, tmp.CurrencyId, tmp.OperDate
+                    GROUP BY tmp.ContainerId, tmp.ObjectId, tmp.CashId, tmp.CurrencyId, tmp.OperDate, tmp.BranchId
                     HAVING SUM (EndAmount_calc) <> 0 
                     )
 
-      , tmpOperation_1 AS (SELECT Operation_all.ContainerId, Operation_all.ObjectId, Operation_all.CashId, Operation_all.InfoMoneyId, Operation_all.CurrencyId
+      , tmpOperation_1 AS (SELECT Operation_all.ContainerId, Operation_all.ObjectId, Operation_all.CashId, Operation_all.InfoMoneyId, Operation_all.CurrencyId, Operation_all.BranchId
                                     , Operation_all.UnitId, Operation_all.MoneyPlaceId, Operation_all.ContractId
                                     , Operation_all.OperDate
                                     , Operation_all.NomStr
@@ -527,7 +540,7 @@ BEGIN
                                     , Operation_all.EndAmount            AS EndAmount
                            FROM tmpOperation_11 AS Operation_all
                           UNION 
-                           SELECT tmpCalc.ContainerId, tmpCalc.ObjectId, tmpCalc.CashId
+                           SELECT tmpCalc.ContainerId, tmpCalc.ObjectId, tmpCalc.CashId, tmpCalc.BranchId
                                 , 0 AS InfoMoneyId
                                 , tmpCalc.CurrencyId
                                 , 0 as UnitId, 0 AS MoneyPlaceId, 0 AS ContractId
@@ -586,6 +599,7 @@ BEGIN
                                   , Container.ObjectId                      AS AccountId
                                   , COALESCE (CLO_BankAccount.ObjectId, CLO_Juridical.ObjectId) AS BankAccountId
                                   , COALESCE (CLO_Currency.ObjectId, 0)     AS CurrencyId
+                                  , COALESCE (CLO_Branch.ObjectId, 0)       AS BranchId
                                   , Container.Amount                        AS Amount
                                   , COALESCE (Container_Currency.Amount, 0) AS Amount_Currency
                              FROM tmpAccount_2 AS tmpAccount
@@ -597,6 +611,7 @@ BEGIN
                                   INNER JOIN tmpBankAccount ON tmpBankAccount.Id = COALESCE (CLO_BankAccount.ObjectId, CLO_Juridical.ObjectId) -- ограничиваем по гл. юр.лицу
                                   
                                   LEFT JOIN ContainerLinkObject AS CLO_Currency ON CLO_Currency.ContainerId = Container.Id AND CLO_Currency.DescId = zc_ContainerLinkObject_Currency()
+                                  LEFT JOIN ContainerLinkObject AS CLO_Branch ON CLO_Branch.ContainerId = Container.Id AND CLO_Branch.DescId = zc_ContainerLinkObject_Branch()
                                   LEFT JOIN Container AS Container_Currency ON Container_Currency.ParentId = Container.Id AND Container_Currency.DescId = zc_Container_SummCurrency()
   
                              WHERE (CLO_BankAccount.ContainerId IS NOT NULL OR CLO_Juridical.ContainerId IS NOT NULL)
@@ -612,6 +627,7 @@ BEGIN
                                  , tmpContainer.AccountId
                                  , tmpContainer.BankAccountId
                                  , tmpContainer.CurrencyId
+                                 , tmpContainer.BranchId
                                  , 0                         AS InfoMoneyId
                                  , 0                         AS MoneyPlaceId
                                  , 0                         AS ContractId
@@ -630,13 +646,14 @@ BEGIN
                             FROM tmpContainer_2 AS tmpContainer
                                  LEFT JOIN MovementItemContainer AS MIContainer ON MIContainer.ContainerId = tmpContainer.ContainerId
                                                                                AND MIContainer.OperDate >= inStartDate
-                            GROUP BY tmpContainer.ContainerId , tmpContainer.AccountId, tmpContainer.BankAccountId, tmpContainer.CurrencyId, tmpContainer.Amount
+                            GROUP BY tmpContainer.ContainerId , tmpContainer.AccountId, tmpContainer.BankAccountId, tmpContainer.CurrencyId, tmpContainer.Amount, tmpContainer.BranchId
                            UNION ALL
                            -- 1.1. конечн. остаток в валюте баланса
                             SELECT tmpContainer.ContainerId
                                  , tmpContainer.AccountId
                                  , tmpContainer.BankAccountId
                                  , tmpContainer.CurrencyId
+                                 , tmpContainer.BranchId
                                  , 0                         AS InfoMoneyId
                                  , 0                         AS MoneyPlaceId
                                  , 0                         AS ContractId
@@ -655,13 +672,14 @@ BEGIN
                             FROM tmpContainer_2 AS tmpContainer
                                  LEFT JOIN MovementItemContainer AS MIContainer ON MIContainer.ContainerId = tmpContainer.ContainerId
                                                                                AND MIContainer.OperDate >= inStartDate
-                            GROUP BY tmpContainer.ContainerId , tmpContainer.AccountId, tmpContainer.BankAccountId, tmpContainer.CurrencyId, tmpContainer.Amount
+                            GROUP BY tmpContainer.ContainerId , tmpContainer.AccountId, tmpContainer.BankAccountId, tmpContainer.CurrencyId, tmpContainer.Amount, tmpContainer.BranchId
                            UNION ALL
                              -- 2.1. движение в валюте баланса
                             SELECT tmpContainer.ContainerId
                                  , tmpContainer.AccountId
                                  , tmpContainer.BankAccountId
                                  , tmpContainer.CurrencyId
+                                 , tmpContainer.BranchId
                                  , COALESCE (MILO_InfoMoney.ObjectId, 0)   AS InfoMoneyId
                                  , COALESCE (MILO_MoneyPlace.ObjectId, CASE WHEN MIContainer.MovementDescId = zc_Movement_Currency() THEN zc_Enum_ProfitLoss_80103() ELSE 0 END)  AS MoneyPlaceId
                                  , COALESCE (MILO_Contract.ObjectId, 0)    AS ContractId
@@ -700,12 +718,14 @@ BEGIN
                                    , MILO_InfoMoney.ObjectId, MILO_MoneyPlace.ObjectId, MILO_Contract.ObjectId, MILO_Unit.ObjectId
                                    , MIContainer.MovementDescId
                                    , MIContainer.OperDate :: TDatetime
+                                   , tmpContainer.BranchId
                            UNION ALL
                             -- 2.2. движение в валюте операции
                             SELECT tmpContainer.ContainerId
                                  , tmpContainer.AccountId
                                  , tmpContainer.BankAccountId
                                  , tmpContainer.CurrencyId
+                                 , tmpContainer.BranchId
                                  , COALESCE (MILO_InfoMoney.ObjectId, 0)   AS InfoMoneyId
                                  , COALESCE (MILO_MoneyPlace.ObjectId, 0)  AS MoneyPlaceId
                                  , COALESCE (MILO_Contract.ObjectId, 0)    AS ContractId
@@ -741,13 +761,15 @@ BEGIN
                             WHERE tmpContainer.ContainerId_Currency > 0
                             GROUP BY tmpContainer.ContainerId , tmpContainer.AccountId, tmpContainer.BankAccountId, tmpContainer.CurrencyId
                                    , MILO_InfoMoney.ObjectId, MILO_MoneyPlace.ObjectId, MILO_Contract.ObjectId, MILO_Unit.ObjectId
-                                   , MIContainer.OperDate :: TDatetime
+                                   , MIContainer.OperDate
+                                   , tmpContainer.BranchId
                            UNION ALL
                             -- 2.2. курсовая разница (!!!только не для ввода курса!!!)
                             SELECT tmpContainer.ContainerId
                                  , tmpContainer.AccountId
                                  , tmpContainer.BankAccountId
                                  , tmpContainer.CurrencyId
+                                 , tmpContainer.BranchId
                                  , COALESCE (MILO_InfoMoney.ObjectId, 0)   AS InfoMoneyId
                                  , COALESCE (MILO_MoneyPlace.ObjectId, 0)  AS MoneyPlaceId
                                  , COALESCE (MILO_Contract.ObjectId, 0)    AS ContractId
@@ -785,10 +807,11 @@ BEGIN
 
                             GROUP BY tmpContainer.ContainerId, tmpContainer.AccountId, tmpContainer.BankAccountId, tmpContainer.CurrencyId
                                    , MILO_InfoMoney.ObjectId, MILO_MoneyPlace.ObjectId, MILO_Contract.ObjectId, MILO_Unit.ObjectId
-                                   , MIContainer.OperDate :: TDatetime
+                                   , MIContainer.OperDate
+                                   , tmpContainer.BranchId
                            )
 
-        , tmpOperation_22 AS  (SELECT Operation_all.ContainerId, Operation_all.AccountId, Operation_all.BankAccountId, Operation_all.CurrencyId
+        , tmpOperation_22 AS  (SELECT Operation_all.ContainerId, Operation_all.AccountId, Operation_all.BankAccountId, Operation_all.CurrencyId, Operation_all.BranchId
                                 , Operation_all.InfoMoneyId, Operation_all.MoneyPlaceId, Operation_all.ContractId, Operation_all.UnitId
                                 , Operation_all.OperDate
                                 , Operation_all.NomStr
@@ -802,7 +825,7 @@ BEGIN
                                 , SUM (Operation_all.StartAmount)          AS StartAmount
                                 , SUM (Operation_all.EndAmount)            AS EndAmount
                            FROM Operation_all_2 AS Operation_all
-                           GROUP BY Operation_all.ContainerId, Operation_all.AccountId, Operation_all.BankAccountId, Operation_all.CurrencyId
+                           GROUP BY Operation_all.ContainerId, Operation_all.AccountId, Operation_all.BankAccountId, Operation_all.CurrencyId, Operation_all.BranchId
                                   , Operation_all.InfoMoneyId, Operation_all.MoneyPlaceId, Operation_all.ContractId, Operation_all.UnitId
                                   , Operation_all.OperDate
                                   , Operation_all.NomStr
@@ -818,7 +841,7 @@ BEGIN
                           ) 
 
       -- считаем нач.сальдо для всех дат
-      , tmpOperation_Group2 AS (SELECT Operation_all.ContainerId, Operation_all.AccountId, Operation_all.BankAccountId, Operation_all.CurrencyId
+      , tmpOperation_Group2 AS (SELECT Operation_all.ContainerId, Operation_all.AccountId, Operation_all.BankAccountId, Operation_all.CurrencyId, Operation_all.BranchId
                                     , Operation_all.OperDate
                                     , SUM (Operation_all.DebetSumm)   AS DebetSumm
                                     , SUM (Operation_all.KreditSumm)  AS KreditSumm
@@ -826,10 +849,10 @@ BEGIN
                                     , SUM (Operation_all.StartAmount) AS StartAmount
                                     , SUM (Operation_all.EndAmount)   AS EndAmount
                               FROM tmpOperation_22 AS Operation_all
-                              GROUP BY Operation_all.ContainerId, Operation_all.AccountId, Operation_all.BankAccountId, Operation_all.CurrencyId, Operation_all.OperDate
+                              GROUP BY Operation_all.ContainerId, Operation_all.AccountId, Operation_all.BankAccountId, Operation_all.CurrencyId, Operation_all.OperDate, Operation_all.BranchId
                              )
       --
-      , tmpCalc2 AS (SELECT tmp.ContainerId, tmp.AccountId, tmp.BankAccountId, tmp.CurrencyId, tmp.OperDate
+      , tmpCalc2 AS (SELECT tmp.ContainerId, tmp.AccountId, tmp.BankAccountId, tmp.CurrencyId, tmp.OperDate, tmp.BranchId
                           , SUM (StartAmount_calc) AS Amount_calc
                           , 1                      AS NomStr
                           , '1. Нач. сальдо'  ::tvarchar AS InfoText
@@ -841,11 +864,11 @@ BEGIN
                                                        ON ttt1.ContainerId = ttt.ContainerId
                                                       AND ttt1.OperDate < ttt.OperDate
                          ) AS tmp
-                    GROUP BY tmp.ContainerId, tmp.AccountId, tmp.BankAccountId, tmp.CurrencyId, tmp.OperDate
+                    GROUP BY tmp.ContainerId, tmp.AccountId, tmp.BankAccountId, tmp.CurrencyId, tmp.OperDate, tmp.BranchId
                     HAVING SUM (StartAmount_calc) <> 0
                    UNION
                    --расчет накоп. конечн. остатка
-                    SELECT tmp.ContainerId, tmp.AccountId, tmp.BankAccountId, tmp.CurrencyId, tmp.OperDate
+                    SELECT tmp.ContainerId, tmp.AccountId, tmp.BankAccountId, tmp.CurrencyId, tmp.OperDate, tmp.BranchId
                          , SUM (EndAmount_calc) AS Amount_calc
                          , 3                    AS NomStr
                          , '3. Конечн. сальдо'  ::tvarchar AS InfoText
@@ -857,11 +880,11 @@ BEGIN
                                                       ON ttt1.ContainerId = ttt.ContainerId
                                                      AND ttt1.OperDate > ttt.OperDate
                          ) AS tmp
-                    GROUP BY tmp.ContainerId, tmp.AccountId, tmp.BankAccountId, tmp.CurrencyId, tmp.OperDate
+                    GROUP BY tmp.ContainerId, tmp.AccountId, tmp.BankAccountId, tmp.CurrencyId, tmp.OperDate, tmp.BranchId
                     HAVING SUM (EndAmount_calc) <> 0 
                     )
 
-      , tmpOperation_2 AS (SELECT Operation_all.ContainerId, Operation_all.AccountId, Operation_all.BankAccountId, Operation_all.InfoMoneyId, Operation_all.CurrencyId
+      , tmpOperation_2 AS (SELECT Operation_all.ContainerId, Operation_all.AccountId, Operation_all.BankAccountId, Operation_all.InfoMoneyId, Operation_all.CurrencyId, Operation_all.BranchId
                                     , Operation_all.UnitId, Operation_all.MoneyPlaceId, Operation_all.ContractId
                                     , Operation_all.OperDate
                                     , Operation_all.NomStr
@@ -879,6 +902,7 @@ BEGIN
                            SELECT tmpCalc.ContainerId, tmpCalc.AccountId, tmpCalc.BankAccountId
                                 , 0 AS InfoMoneyId
                                 , tmpCalc.CurrencyId
+                                , tmpCalc.BranchId
                                 , 0 as UnitId, 0 AS MoneyPlaceId, 0 AS ContractId
                                 , tmpCalc.OperDate
                                 , tmpCalc.NomStr
@@ -896,7 +920,7 @@ BEGIN
 
    ---
          , tmpOperation AS (--результат касса
-                            SELECT Operation.ContainerId, Operation.ObjectId AS AccountId, Operation.CashId, Operation.InfoMoneyId, Operation.CurrencyId
+                            SELECT Operation.ContainerId, Operation.ObjectId AS AccountId, Operation.CashId, Operation.InfoMoneyId, Operation.CurrencyId, Operation.BranchId
                                   , Operation.UnitId, Operation.MoneyPlaceId, Operation.ContractId
                                   , Operation.OperDate
                                   , EXTRACT (MONTH FROM Operation.OperDate)  ::Integer AS MonthNum
@@ -923,7 +947,7 @@ BEGIN
                             FROM tmpOperation_1 AS Operation
                            UNION
                             -- результат р.счет
-                            SELECT Operation.ContainerId, Operation.AccountId, Operation.BankAccountId AS CashId, Operation.InfoMoneyId, Operation.CurrencyId
+                            SELECT Operation.ContainerId, Operation.AccountId, Operation.BankAccountId AS CashId, Operation.InfoMoneyId, Operation.CurrencyId, Operation.BranchId
                                   , Operation.UnitId, Operation.MoneyPlaceId, Operation.ContractId
                                   , Operation.OperDate
                                   , EXTRACT (MONTH FROM Operation.OperDate)  ::Integer AS MonthNum
@@ -965,7 +989,7 @@ BEGIN
  
     -- связываем со статьями ДДС
 
-    , tmp_DDC AS (SELECT Operation.ContainerId, Operation.AccountId, Operation.CashId, Operation.InfoMoneyId, Operation.CurrencyId
+    , tmp_DDC AS (SELECT Operation.ContainerId, Operation.AccountId, Operation.CashId, Operation.InfoMoneyId, Operation.CurrencyId, Operation.BranchId
                                 , Operation.UnitId, Operation.MoneyPlaceId, Operation.ContractId
                                 , Operation.OperDate
                                 , Operation.MonthNum
@@ -1031,7 +1055,7 @@ BEGIN
                                 LEFT JOIN tmpMonth ON tmpMonth.MonthNum = Operation.MonthNum
                            )
     
-        , tmpOperation_DDC AS (SELECT 0 AS ContainerId, 0 AS AccountId, 0 AS CashId, 0 AS InfoMoneyId, 0 AS CurrencyId
+        , tmpOperation_DDC AS (SELECT 0 AS ContainerId, 0 AS AccountId, 0 AS CashId, 0 AS InfoMoneyId, 0 AS CurrencyId, 0 AS BranchId
                                 , 0 AS UnitId, 0 AS MoneyPlaceId, 0 AS ContractId
                                 , inStartDate AS OperDate
                                 , EXTRACT (MONTH FROM inStartDate)  ::Integer AS MonthNum
@@ -1081,7 +1105,7 @@ BEGIN
                            FROM tmpCashFlow
                           UNION
                           -- все данные
-                           SELECT Operation.ContainerId, Operation.AccountId, Operation.CashId, Operation.InfoMoneyId, Operation.CurrencyId
+                           SELECT Operation.ContainerId, Operation.AccountId, Operation.CashId, Operation.InfoMoneyId, Operation.CurrencyId, Operation.BranchId
                                 , Operation.UnitId, Operation.MoneyPlaceId, Operation.ContractId
                                 , Operation.OperDate
                                 , Operation.MonthNum
@@ -1142,9 +1166,9 @@ BEGIN
         CASE WHEN COALESCE (Operation.InfoMoneyId, 0) = 0 AND (Operation.DebetSumm <> 0 OR Operation.KreditSumm <> 0 OR Operation.DebetSumm_Currency <> 0 OR Operation.KreditSumm_Currency <> 0) THEN 'Курсовая разница' ELSE tmpInfoMoney.InfoMoneyName     END :: TVarChar AS InfoMoneyName,
         CASE WHEN COALESCE (Operation.InfoMoneyId, 0) = 0 AND (Operation.DebetSumm <> 0 OR Operation.KreditSumm <> 0 OR Operation.DebetSumm_Currency <> 0 OR Operation.KreditSumm_Currency <> 0) THEN 'Курсовая разница' ELSE tmpInfoMoney.InfoMoneyName_all END :: TVarChar AS InfoMoneyName_all,
         tmpInfoMoney.CashFlowCode_in   :: Integer   AS CashFlowCode_in,
-        tmpInfoMoney.CashFlowName_in   :: TVarChar  AS CashFlowName_in,
+        ('(' || CAST (tmpInfoMoney.CashFlowCode_in AS TVarChar) || ') '|| tmpInfoMoney.CashFlowName_in)     :: TVarChar  AS CashFlowName_in,
         tmpInfoMoney.CashFlowCode_out  :: Integer   AS CashFlowCode_out,
-        tmpInfoMoney.CashFlowName_out  :: TVarChar  AS CashFlowName_out,
+        ('(' || CAST (tmpInfoMoney.CashFlowCode_out AS TVarChar) || ') '|| tmpInfoMoney.CashFlowName_out)   :: TVarChar  AS CashFlowName_out,
         tmpAccount.AccountName_all                                                                  AS AccountName,
         Object_Unit.ObjectCode                                                                      AS UnitCode,
         Object_Unit.ValueData                                                                       AS UnitName,
@@ -1212,7 +1236,7 @@ BEGIN
          LEFT JOIN ObjectLink AS ObjectLink_Cash_Branch
                               ON ObjectLink_Cash_Branch.ObjectId = Operation.CashId
                              AND ObjectLink_Cash_Branch.DescId = zc_ObjectLink_Cash_Branch()
-         LEFT JOIN Object AS Object_Branch ON Object_Branch.Id = ObjectLink_Cash_Branch.ChildObjectId
+         LEFT JOIN Object AS Object_Branch ON Object_Branch.Id = COALESCE (ObjectLink_Cash_Branch.ChildObjectId, Operation.BranchId)
     
          LEFT JOIN tmpContract ON tmpContract.ContractId = Operation.ContractId
          LEFT JOIN tmpMonth ON tmpMonth.MonthNum = Operation.MonthNum
