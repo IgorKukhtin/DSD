@@ -13,10 +13,17 @@ BEGIN
 
    RETURN QUERY 
    SELECT 11
+          -- UPDATE
         , ', CASE WHEN table_update_data.Operation = ' || CHR (39) || 'UPDATE' || CHR (39) || ' THEN UPDATE ' || table_update_data.table_name ||' SET '|| zfCalc_WordText_Split_replica (upd_cols,1) || ' = '|| table_update_data.table_name ||'.'||zfCalc_WordText_Split_replica (upd_cols,1)
-          ||''|| CASE WHEN zfCalc_WordText_Split_replica (upd_cols, 2) <> '' THEN ' , '||zfCalc_WordText_Split_replica (upd_cols, 2)||' = '|| table_update_data.table_name ||'.'||zfCalc_WordText_Split_replica (upd_cols,2) ELSE '' END --zfCalc_WordText_Split_replica (upd_cols, 2) = table_update_data.table_name '|| CHR (39) || '.' || CHR (39) ||'zfCalc_WordText_Split_replica (upd_cols, 2) '
-          ||''|| CASE WHEN zfCalc_WordText_Split_replica (upd_cols, 3) <> '' THEN ' , '||zfCalc_WordText_Split_replica (upd_cols, 3)||' = '|| table_update_data.table_name ||'.'||zfCalc_WordText_Split_replica (upd_cols,3) ELSE '' END
-          ||''|| CASE WHEN zfCalc_WordText_Split_replica (upd_cols, 4) <> '' THEN ' , '||zfCalc_WordText_Split_replica (upd_cols, 4)||' = '|| table_update_data.table_name ||'.'||zfCalc_WordText_Split_replica (upd_cols,4) ELSE '' END
+          ||''|| CASE WHEN zfCalc_WordText_Split_replica (upd_cols, 2) <> '' THEN ', '||zfCalc_WordText_Split_replica (upd_cols, 2)||' = '|| table_update_data.table_name ||'.'||zfCalc_WordText_Split_replica (upd_cols,2) ELSE '' END
+          ||''|| CASE WHEN zfCalc_WordText_Split_replica (upd_cols, 3) <> '' THEN ', '||zfCalc_WordText_Split_replica (upd_cols, 3)||' = '|| table_update_data.table_name ||'.'||zfCalc_WordText_Split_replica (upd_cols,3) ELSE '' END
+          ||''|| CASE WHEN zfCalc_WordText_Split_replica (upd_cols, 4) <> '' THEN ', '||zfCalc_WordText_Split_replica (upd_cols, 4)||' = '|| table_update_data.table_name ||'.'||zfCalc_WordText_Split_replica (upd_cols,4) ELSE '' END
+          -- DELETE
+          ||' WHEN table_update_data.Operation = ' || CHR (39) || 'DELETE' || CHR (39) || ' THEN DELETE FROM ' || table_update_data.table_name ||' WHERE '|| zfCalc_WordText_Split_replica (upd_cols,1) || ' = '|| table_update_data.table_name ||'.'||zfCalc_WordText_Split_replica (upd_cols,1)
+          ||''|| CASE WHEN zfCalc_WordText_Split_replica (upd_cols, 2) <> '' THEN ' AND '||zfCalc_WordText_Split_replica (upd_cols, 2)||' = '|| table_update_data.table_name ||'.'||zfCalc_WordText_Split_replica (upd_cols,2) ELSE '' END
+          ||''|| CASE WHEN zfCalc_WordText_Split_replica (upd_cols, 3) <> '' THEN ' AND '||zfCalc_WordText_Split_replica (upd_cols, 3)||' = '|| table_update_data.table_name ||'.'||zfCalc_WordText_Split_replica (upd_cols,3) ELSE '' END
+          ||''|| CASE WHEN zfCalc_WordText_Split_replica (upd_cols, 4) <> '' THEN ' AND '||zfCalc_WordText_Split_replica (upd_cols, 4)||' = '|| table_update_data.table_name ||'.'||zfCalc_WordText_Split_replica (upd_cols,4) ELSE '' END
+          --
           ||' ELSE ' || CHR (39) || CHR (39) || ' END'
    FROM (SELECT DISTINCT Operation, table_name, upd_cols
          FROM _replica.table_update_data AS tmp
@@ -35,7 +42,7 @@ LANGUAGE plpgsql VOLATILE;
 /*
  »—“Œ–»ﬂ –¿«–¿¡Œ“ »: ƒ¿“¿, ¿¬“Œ–
                ‘ÂÎÓÌ˛Í ».¬.    ÛıÚËÌ ».¬.    ÎËÏÂÌÚ¸Â‚  .».
- 04.07.20          *
+ 34.07.20          *
 
 */
 
