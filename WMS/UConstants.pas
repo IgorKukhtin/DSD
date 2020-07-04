@@ -69,6 +69,9 @@ const
   cImpErrDescr_InvalidDate  = '"%s" содержит неверный формат даты. Ожидается строка в формате "dd-mm-yyyy hh:mm"; ';
   cImpErrDecr_AttrNotExists = 'Атрибут "%s" отсутствует в сообщении';
 
+  // стандартные слова в тексте сообщения об ошибке, которые можно игнорировать
+  cSystemErrWords: array[0..0] of string = ('[FireDAC][Phys][PG][libpq]');
+
   // сообщения Windows
   WM_NEED_UPDATE_GRIDS = WM_USER + 1;
 

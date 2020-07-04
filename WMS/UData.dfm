@@ -1,7 +1,7 @@
 object dmData: TdmData
   OldCreateOrder = False
-  Height = 584
-  Width = 1151
+  Height = 659
+  Width = 1366
   object FDC_alan: TFDConnection
     ConnectionName = 'alan_shluz'
     Params.Strings = (
@@ -30,7 +30,7 @@ object dmData: TdmData
   object sp_alan_insert_packets_to_wms: TFDStoredProc
     Connection = FDC_wms
     StoredProcName = 'alan_insert_packets_to_wms'
-    Left = 983
+    Left = 1175
     Top = 71
     ParamData = <
       item
@@ -55,17 +55,17 @@ object dmData: TdmData
     SQL.Strings = (
       'SELECT * FROM Object_VMS WHERE ProcName = '#39'???'#39)
     Left = 101
-    Top = 256
+    Top = 394
   end
   object spInsert_wms_Message: TFDStoredProc
     Connection = FDC_alan
-    Left = 982
+    Left = 1174
     Top = 120
   end
   object to_wms_Packets_query: TFDQuery
     Connection = FDC_wms
     Left = 301
-    Top = 261
+    Top = 399
   end
   object from_wms_PacketsHeader_query: TFDQuery
     Connection = FDC_wms
@@ -74,7 +74,7 @@ object dmData: TdmData
         'select * from to_host_header_message where (type=:type) and (sta' +
         'tus=:status) and (err_code=:err_code) order by id')
     Left = 102
-    Top = 349
+    Top = 487
     ParamData = <
       item
         Name = 'TYPE'
@@ -100,7 +100,7 @@ object dmData: TdmData
     SQL.Strings = (
       'select * from to_host_detail_message where header_id=:header_id')
     Left = 302
-    Top = 349
+    Top = 487
     ParamData = <
       item
         Name = 'HEADER_ID'
@@ -117,7 +117,7 @@ object dmData: TdmData
         '  :type, :header_id, :detail_id, :movementid, :sku_id, :name, :q' +
         'ty, :weight, :weight_biz, :operdate, :production_date);')
     Left = 512
-    Top = 352
+    Top = 490
     ParamData = <
       item
         Name = 'TYPE'
@@ -198,7 +198,7 @@ object dmData: TdmData
         'update to_host_header_message set status='#39'error'#39', err_code=:err_' +
         'code, err_descr=:err_descr where id=:header_id')
     Left = 512
-    Top = 272
+    Top = 410
     ParamData = <
       item
         Name = 'ERR_CODE'
@@ -224,25 +224,25 @@ object dmData: TdmData
     SQL.Strings = (
       '')
     Left = 760
-    Top = 272
+    Top = 410
   end
   object sp_alan_insert_packets_from_wms: TFDStoredProc
     CachedUpdates = True
     Connection = FDC_alan
     FetchOptions.AssignedValues = [evCache]
     FetchOptions.Cache = [fiBlobs, fiDetails]
-    Left = 984
+    Left = 1176
     Top = 25
   end
   object select_wms_to_host_message: TFDQuery
     Connection = FDC_alan
     Left = 752
-    Top = 352
+    Top = 490
   end
   object alan_exec_qry: TFDQuery
     Connection = FDC_alan
     Left = 911
-    Top = 352
+    Top = 490
   end
   object dsWMS: TDataSource
     Left = 64
@@ -315,8 +315,8 @@ object dmData: TdmData
         ')) '
       '  and (start_date between :startdate and :enddate)   '
       'order by id desc')
-    Left = 136
-    Top = 185
+    Left = 54
+    Top = 241
     ParamData = <
       item
         Name = 'STARTDATE'
@@ -337,7 +337,7 @@ object dmData: TdmData
       
         'select * from gpSelect_wms_to_host_message(inStartDate:= :startD' +
         'ate, inEndDate:= :endDate, inErrorOnly:= :errorOnly)')
-    Left = 456
+    Left = 785
     Top = 192
     ParamData = <
       item
@@ -360,7 +360,7 @@ object dmData: TdmData
       end>
   end
   object dsWmsToHostMessage: TDataSource
-    Left = 461
+    Left = 790
     Top = 136
   end
   object wms_from_host_header_error: TFDQuery
@@ -393,7 +393,7 @@ object dmData: TdmData
     SQL.Strings = (
       'select * from gpSelect_wms_from_host_error()')
     Left = 112
-    Top = 440
+    Top = 578
   end
   object qryAlanGridFromHost: TFDQuery
     Connection = FDC_alan
@@ -418,26 +418,26 @@ object dmData: TdmData
       end>
   end
   object dsWmsMessage: TDataSource
-    Left = 632
+    Left = 961
     Top = 128
   end
   object qryWmsMessageAll: TFDQuery
     Connection = FDC_alan
     SQL.Strings = (
       
-        'select * from gpSelect_wms_message_all(inStartDate:= :inStartDat' +
-        'e, inEndDate:= :inEndDate)')
-    Left = 632
+        'select * from gpSelect_wms_message_all(inStartDate:= :StartDate,' +
+        ' inEndDate:= :EndDate)')
+    Left = 961
     Top = 184
     ParamData = <
       item
-        Name = 'INSTARTDATE'
+        Name = 'STARTDATE'
         DataType = ftDateTime
         ParamType = ptInput
         Value = Null
       end
       item
-        Name = 'INENDDATE'
+        Name = 'ENDDATE'
         DataType = ftDateTime
         ParamType = ptInput
         Value = Null
@@ -447,22 +447,112 @@ object dmData: TdmData
     Connection = FDC_alan
     SQL.Strings = (
       
-        'select * from gpSelect_wms_message_err(inStartDate:= :inStartDat' +
-        'e, inEndDate:= :inEndDate)')
-    Left = 752
-    Top = 184
+        'select * from gpSelect_wms_message_err(inStartDate:= :StartDate,' +
+        ' inEndDate:= :EndDate)')
+    Left = 962
+    Top = 235
     ParamData = <
       item
-        Name = 'INSTARTDATE'
+        Name = 'STARTDATE'
         DataType = ftDateTime
         ParamType = ptInput
         Value = Null
       end
       item
-        Name = 'INENDDATE'
+        Name = 'ENDDATE'
         DataType = ftDateTime
         ParamType = ptInput
         Value = Null
       end>
+  end
+  object dsWmsFromHostError: TDataSource
+    DataSet = qryAlanGridFromHost
+    Left = 312
+    Top = 128
+  end
+  object dsWMSDetail: TDataSource
+    DataSet = qryWMSDetail
+    Left = 136
+    Top = 127
+  end
+  object qryWMSDetail: TFDQuery
+    IndexFieldNames = 'header_id'
+    MasterSource = dsWMS
+    MasterFields = 'id'
+    Connection = FDC_wms
+    SQL.Strings = (
+      'select * from to_host_detail_message order by id')
+    Left = 134
+    Top = 183
+  end
+  object dsFromHostMessage: TDataSource
+    Left = 464
+    Top = 128
+  end
+  object qryFromHostMessageAll: TFDQuery
+    Connection = FDC_wms
+    SQL.Strings = (
+      
+        'select id, type, status, start_date, err_code, err_descr, messag' +
+        'e '
+      'from from_host_header_message '
+      'where (start_date between :startdate and :enddate)   '
+      'order by id desc')
+    Left = 459
+    Top = 184
+    ParamData = <
+      item
+        Name = 'STARTDATE'
+        DataType = ftDateTime
+        ParamType = ptInput
+        Value = Null
+      end
+      item
+        Name = 'ENDDATE'
+        DataType = ftDateTime
+        ParamType = ptInput
+        Value = Null
+      end>
+  end
+  object qryFromHostMessageErr: TFDQuery
+    Connection = FDC_wms
+    SQL.Strings = (
+      
+        'select id, type, status, start_date, err_code, err_descr, messag' +
+        'e '
+      'from from_host_header_message '
+      'where (status = '#39'error'#39')'
+      '  and (start_date between :startdate and :enddate)   '
+      'order by id desc')
+    Left = 464
+    Top = 248
+    ParamData = <
+      item
+        Name = 'STARTDATE'
+        DataType = ftDateTime
+        ParamType = ptInput
+        Value = Null
+      end
+      item
+        Name = 'ENDDATE'
+        DataType = ftDateTime
+        ParamType = ptInput
+        Value = Null
+      end>
+  end
+  object dsFromHostDetail: TDataSource
+    DataSet = qryFromHostDetail
+    Left = 608
+    Top = 136
+  end
+  object qryFromHostDetail: TFDQuery
+    IndexFieldNames = 'header_id'
+    MasterSource = dsFromHostMessage
+    MasterFields = 'id'
+    Connection = FDC_wms
+    SQL.Strings = (
+      'select * from from_host_detail_message order by id')
+    Left = 605
+    Top = 184
   end
 end
