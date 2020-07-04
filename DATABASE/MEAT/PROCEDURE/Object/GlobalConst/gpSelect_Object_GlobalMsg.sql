@@ -204,6 +204,7 @@ BEGIN
             AND Movement_Promo.StatusId <> zc_Enum_Status_Erased()
             AND Movement_Promo.OperDate BETWEEN CURRENT_DATE - INTERVAL '5 MONTH' AND CURRENT_DATE + INTERVAL '25 MONTH'
             AND MovementDate_StartSale.ValueData >= CURRENT_DATE - INTERVAL '7 DAY'
+            AND (Movement_Promo.Id <> 16390310 OR vbUserId = 5)
          ;
      END IF;
 

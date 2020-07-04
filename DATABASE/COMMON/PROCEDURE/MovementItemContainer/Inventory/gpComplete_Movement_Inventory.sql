@@ -631,26 +631,6 @@ BEGIN
                                        JOIN Container ON Container.ParentId = tmpContainerList.Id
                                                      AND Container.DescId   = zc_Container_CountCount()
                                  )
-               , tmpContainer AS (SELECT tmpContainerList.Id       AS ContainerId_Goods
-                                       , tmpContainerList.ObjectId AS GoodsId
-                                       , tmpContainerList.Amount - COALESCE (SUM (MIContainer.Amount), 0) AS OperCount
-                                       , SUM (CASE WHEN MIContainer.OperDate BETWEEN (vbOperDate + INTERVAL '1 DAY') AND (DATE_TRUNC ('MONTH', vbOperDate) + INTERVAL '1 MONTH' - INTERVAL '1 DAY')
-                                                        THEN ABS (MIContainer.Amount)
-                                                   ELSE 0
-                                              END) AS OperCount_find -- здесь только движение до конца мес€ца
-                                  FROM tmpContainerList
-                                       LEFT JOIN MovementItemContainer AS MIContainer
-                                                                       ON MIContainer.ContainerId = tmpContainerList.Id
-                                                                      AND MIContainer.OperDate > vbOperDate
-                                  GROUP BY tmpContainerList.Id
-                                         , tmpContainerList.ObjectId
-                                         , tmpContainerList.Amount
-                                  HAVING tmpContainerList.Amount - COALESCE (SUM (MIContainer.Amount), 0) <> 0
-                                      OR SUM (CASE WHEN MIContainer.OperDate BETWEEN (vbOperDate + INTERVAL '1 DAY') AND (DATE_TRUNC ('MONTH', vbOperDate) + INTERVAL '1 MONTH' - INTERVAL '1 DAY')
-                                                        THEN ABS (MIContainer.Amount)
-                                                   ELSE 0
-                                              END) <> 0
-                                 )
          , tmpContainer_count AS (SELECT tmpContainerList.ParentId AS ContainerId_Goods
                                        , tmpContainerList.Id       AS ContainerId_count
                                        , tmpContainerList.ObjectId AS GoodsId
@@ -672,6 +652,31 @@ BEGIN
                                                         THEN ABS (MIContainer.Amount)
                                                    ELSE 0
                                               END) <> 0
+                                 )
+           -- список, т.к. нужны батоны
+       --, tmpList_count AS (SELECT DISTINCT tmpContainer_count.ContainerId_Goods FROM tmpContainer_count)
+                 -- ќстаток, кол-во
+               , tmpContainer AS (SELECT tmpContainerList.Id       AS ContainerId_Goods
+                                       , tmpContainerList.ObjectId AS GoodsId
+                                       , tmpContainerList.Amount - COALESCE (SUM (MIContainer.Amount), 0) AS OperCount
+                                       , SUM (CASE WHEN MIContainer.OperDate BETWEEN (vbOperDate + INTERVAL '1 DAY') AND (DATE_TRUNC ('MONTH', vbOperDate) + INTERVAL '1 MONTH' - INTERVAL '1 DAY')
+                                                        THEN ABS (MIContainer.Amount)
+                                                   ELSE 0
+                                              END) AS OperCount_find -- здесь только движение до конца мес€ца
+                                  FROM tmpContainerList
+                                     --LEFT JOIN tmpList_count ON tmpList_count.ContainerId_Goods = tmpContainerList.Id
+                                       LEFT JOIN MovementItemContainer AS MIContainer
+                                                                       ON MIContainer.ContainerId = tmpContainerList.Id
+                                                                      AND MIContainer.OperDate > vbOperDate
+                                  GROUP BY tmpContainerList.Id
+                                         , tmpContainerList.ObjectId
+                                         , tmpContainerList.Amount
+                                  HAVING tmpContainerList.Amount - COALESCE (SUM (MIContainer.Amount), 0) <> 0
+                                      OR SUM (CASE WHEN MIContainer.OperDate BETWEEN (vbOperDate + INTERVAL '1 DAY') AND (DATE_TRUNC ('MONTH', vbOperDate) + INTERVAL '1 MONTH' - INTERVAL '1 DAY')
+                                                        THEN ABS (MIContainer.Amount)
+                                                   ELSE 0
+                                              END) <> 0
+                                    --OR SUM (CASE WHEN tmpList_count.ContainerId_Goods > 0 THEN 1 ELSE 0 END) <> 0
                                  )
         -- –езультат
         SELECT COALESCE (tmpMI_find.MovementItemId, 0)            AS MovementItemId
@@ -716,6 +721,7 @@ BEGIN
              LEFT JOIN ObjectLink AS ObjectLink_InfoMoneyDestination ON ObjectLink_InfoMoneyDestination.ObjectId = ObjectLink_Goods_InfoMoney.ChildObjectId AND ObjectLink_InfoMoneyDestination.DescId = zc_ObjectLink_InfoMoney_InfoMoneyDestination()
         WHERE tmpContainer.ContainerId_Goods IS NULL
      ;
+
 
      -- заполн€ем таблицу - суммовой расчетный остаток на конец vbOperDate (ContainerId_Goods - значит в разрезе товарных остатков)
      INSERT INTO _tmpRemainsSumm (ContainerId_Goods, ContainerId, AccountId, GoodsId, InfoMoneyGroupId, InfoMoneyDestinationId, OperSumm, InfoMoneyId, InfoMoneyId_Detail)
@@ -865,8 +871,8 @@ BEGIN
 
      -- добавл€ем в список дл€ проводок те товары, которые только что были добавлены в строчную часть (MovementItem), причем !!!без!!! аналитик дл€ суммовых проводок (т.к. они не нужны)
      INSERT INTO _tmpItem (MovementItemId
-                         , ContainerId_Goods, GoodsId, GoodsKindId, GoodsKindId_complete, AssetId, PartionGoods, PartionGoodsDate
-                         , OperCount, OperSumm
+                         , ContainerId_Goods, ContainerId_count, GoodsId, GoodsKindId, GoodsKindId_complete, AssetId, PartionGoods, PartionGoodsDate
+                         , OperCount, OperCountCount, OperSumm
                          , InfoMoneyDestinationId, InfoMoneyId
                          , BusinessId
                          , UnitId_Item, StorageId_Item, UnitId_Partion, Price_Partion
@@ -874,6 +880,7 @@ BEGIN
                          , PartionGoodsId)
         SELECT _tmpRemainsCount.MovementItemId
              , _tmpRemainsCount.ContainerId_Goods
+             , _tmpRemainsCount.ContainerId_count
              , _tmpRemainsCount.GoodsId
              , ContainerLinkObject_GoodsKind.ObjectId AS GoodsKindId
              , 0 AS GoodsKindId_complete
@@ -881,6 +888,7 @@ BEGIN
              , '' AS PartionGoods
              , zc_DateEnd() AS PartionGoodsDate
              , 0 AS OperCount
+             , 0 AS OperCountCount
              , 0 AS OperSumm
                -- ”правленческие назначени€
              , CASE WHEN Object.DescId = zc_Object_Fuel() THEN COALESCE (View_InfoMoney_Fuel.InfoMoneyDestinationId, 0)
@@ -978,6 +986,13 @@ BEGIN
        WHERE (_tmpItem.OperCountCount - COALESCE (_tmpRemainsCount.OperCountCount, 0)) <> 0;
 
 
+-- if inSession = '5' -- OR inUserId = 5 OR inMovementId = 691308 
+-- then
+--    RAISE EXCEPTION 'ќшибка.<%>'
+--     , (select _tmpRemainsCount.OperCountCount from _tmpRemainsCount where _tmpRemainsCount.ContainerId_count = 3050116)
+--    ;
+     -- INSERT INTO _tmpRemainsCount (MovementItemId, ContainerId_Goods, ContainerId_count, GoodsId, InfoMoneyGroupId, InfoMoneyDestinationId, OperCount, OperCountCount, OperCount_find, OperCountCount_find)
+-- end if;
 
      -- 3. Start
       -- таблица -  ÷ены из прайса

@@ -15,6 +15,13 @@ BEGIN
      vbUserId:= lpCheckRight (inSession, zc_Enum_Process_Complete_Promo());
 
 
+     -- проверка - если нет ВСЕХ подписей, проводить нельзя
+     PERFORM lpCheck_Movement_Promo_Sign (inMovementId:= inMovementId
+                                        , inIsComplete:= TRUE
+                                        , inIsUpdate  := FALSE
+                                        , inUserId    := vbUserId
+                                         );
+
     -- Проверили inPriceTender
     IF EXISTS (SELECT 1
                 FROM MovementItem

@@ -491,6 +491,8 @@ BEGIN
                           SELECT _tmpContainer.ContainerDescId
                                , CASE WHEN inIsInfoMoney = TRUE THEN _tmpContainer.ContainerId_count ELSE 0 END AS ContainerId_count
                                , CASE WHEN inIsInfoMoney = TRUE THEN _tmpContainer.ContainerId_begin ELSE 0 END AS ContainerId_begin
+--                               , MAX (_tmpContainer.ContainerId_count)  AS ContainerId_count
+--                               , MAX (_tmpContainer.ContainerId_begin)  AS ContainerId_begin
                                , _tmpContainer.LocationId
                                , _tmpContainer.GoodsId
                                , _tmpContainer.GoodsKindId
@@ -709,6 +711,7 @@ BEGIN
                                         , SUM (tmp.AmountIn)    AS AmountIn_byCount
                                         , SUM (tmp.AmountOut)   AS AmountOut_byCount
                                         , SUM (tmp.AmountInventory) AS AmountInventory_byCount
+                                        , MAX (tmp.ContainerId_begin) AS ContainerId_begin
                                    FROM (SELECT tmpContainer_Count.LocationId
                                               , tmpContainer_Count.GoodsId
                                               , tmpContainer_Count.GoodsKindId
@@ -719,6 +722,7 @@ BEGIN
                                               , SUM (CASE WHEN MIContainer.OperDate <= inEndDate AND MIContainer.isActive = FALSE AND MIContainer.MovementDescId <> zc_Movement_Inventory() THEN -1 * COALESCE (MIContainer.Amount,0) ELSE 0 END) AS AmountOut
                                          
                                               , SUM (CASE WHEN MIContainer.MovementDescId = zc_Movement_Inventory() AND MIContainer.OperDate <= inEndDate THEN MIContainer.Amount ELSE 0 END) AS AmountInventory
+                                              , MAX (tmpContainer_Count.ContainerId_begin) AS ContainerId_begin
 
                                          FROM tmpContainer_Count
                                                INNER JOIN Container ON Container.ParentId = tmpContainer_Count.ContainerId_begin
@@ -814,7 +818,7 @@ BEGIN
                          )
          , tmpResult AS (-- ВСЕ данные, т.е. собираются в 1 строку
                          SELECT tmpAll.ContainerId_count
-                              , tmpAll.ContainerId_begin
+                              , MAX (tmpAll.ContainerId_begin) AS ContainerId_begin
                               , tmpAll.LocationId
                               , tmpAll.GoodsId
                               , tmpAll.GoodsKindId
@@ -1137,7 +1141,7 @@ BEGIN
                               UNION ALL
                                -- остатки и движение батонов
                                SELECT 0 AS ContainerId_count
-                                    , 0 AS ContainerId_begin
+                                    , tmpContainer_CountCount.ContainerId_begin AS ContainerId_begin
                                     , tmpContainer_CountCount.LocationId
                                     , tmpContainer_CountCount.GoodsId
                                     , tmpContainer_CountCount.GoodsKindId
@@ -1193,7 +1197,7 @@ BEGIN
                               ) AS tmpAll
 
                         GROUP BY tmpAll.ContainerId_count
-                               , tmpAll.ContainerId_begin
+                           -- , tmpAll.ContainerId_begin
                                , tmpAll.LocationId
                                , tmpAll.GoodsId
                                , tmpAll.GoodsKindId

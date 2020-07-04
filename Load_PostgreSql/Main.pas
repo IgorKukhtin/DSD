@@ -2433,9 +2433,10 @@ begin
      //
      if (Hour_calc = 22) and (beginVACUUM > 0) then beginVACUUM:= 0;
      if (Hour_calc = 0) and (beginVACUUM > 0) then beginVACUUM:= 0;
+     if (Hour_calc = 6) and (beginVACUUM > 0) then beginVACUUM:= 0;
      //
      if ((Hour_calc = 7) or ((Hour_calc = 21) and (Minute_calc > 20)) or (Hour_calc = 23)
-      or ((Hour_calc = 5) and (Minute_calc > 40) and ((ParamStr(6)='VAC_5')or(ParamStr(7)='VAC_5')or(ParamStr(8)='VAC_5')))
+      or ((Hour_calc = 5) and (Minute_calc > 35) and (Minute_calc < 55) and ((ParamStr(6)='VAC_5')or(ParamStr(7)='VAC_5')or(ParamStr(8)='VAC_5')))
          )
         and (beginVACUUM < 4) and (ParamStr(2)='autoALL')
      //if (Hour_calc = 14) and (beginVACUUM < 4) and (ParamStr(2)='autoALL')
