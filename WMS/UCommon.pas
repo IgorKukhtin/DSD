@@ -11,6 +11,9 @@ uses
   function getInt(const AttrValue: OleVariant; const ADefValue: Integer): Integer;
   function getFloat(const AttrValue: OleVariant; const ADefValue: Extended): Extended;
 
+  // ф-ия позволяет исключить стандартные слова из текста сообщения об ошибке, например, "[FireDAC][Phys][PG][libpq]"
+  function SkipSystemErrWords(const AErrMessage: string): string;
+
   function Coalesce(AValue1, AValue2: Variant): Variant;
   procedure WaitFor(const AInterval: Cardinal; const aWaitCondition: Boolean = True);
   function IsService: Boolean;
@@ -109,6 +112,16 @@ begin
   Result := AValue1;
 
   if VarIsNull(AValue1) then Result := AValue2;
+end;
+
+function SkipSystemErrWords(const AErrMessage: string): string;
+var
+  I: Integer;
+begin
+  Result := AErrMessage;
+
+  for I := Low(cSystemErrWords) to High(cSystemErrWords) do
+    Result := StringReplace(Result, cSystemErrWords[I], EmptyStr, [rfIgnoreCase, rfReplaceAll]);
 end;
 
 end.

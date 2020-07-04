@@ -310,6 +310,12 @@
             Visible = False
             VisibleForCustomization = False
           end
+          object Repository: TcxGridDBColumn
+            DataBinding.FieldName = 'Repository'
+            Visible = False
+            VisibleForCustomization = False
+            Width = 20
+          end
         end
         object cxGridLevel2: TcxGridLevel
           GridView = cxGridDBTableViewCalc
@@ -614,6 +620,12 @@
             Visible = False
             VisibleForCustomization = False
             Width = 30
+          end
+          object Repository2: TcxGridDBColumn
+            DataBinding.FieldName = 'Repository'
+            Visible = False
+            VisibleForCustomization = False
+            Width = 20
           end
         end
         object cxGridLevel5: TcxGridLevel
@@ -1428,9 +1440,6 @@
           object tsPromoPartnerList: TcxTabSheet
             Caption = '2.2. '#1050#1086#1085#1090#1088#1072#1075#1077#1085#1090#1099' ('#1076#1077#1090#1072#1083#1100#1085#1086')'
             ImageIndex = 1
-            ExplicitTop = 0
-            ExplicitWidth = 0
-            ExplicitHeight = 0
             object grPartnerList: TcxGrid
               Left = 0
               Top = 0
@@ -5934,7 +5943,22 @@
       item
       end>
     SummaryItemList = <>
-    PropertiesCellList = <>
+    PropertiesCellList = <
+      item
+        Column = calcTaxRetIn
+        ValueColumn = Repository
+        EditRepository = cxEditRepository1
+      end
+      item
+        Column = calcContractCondition
+        ValueColumn = Repository
+        EditRepository = cxEditRepository1
+      end
+      item
+        Column = calcTaxPromo
+        ValueColumn = Repository
+        EditRepository = cxEditRepository1
+      end>
     Left = 1288
     Top = 367
   end
@@ -6292,9 +6316,24 @@
       item
       end>
     SummaryItemList = <>
-    PropertiesCellList = <>
-    Left = 1216
-    Top = 383
+    PropertiesCellList = <
+      item
+        Column = ссTaxPromo_Condition
+        ValueColumn = Repository2
+        EditRepository = cxEditRepository1
+      end
+      item
+        Column = ссTaxRetIn
+        ValueColumn = Repository2
+        EditRepository = cxEditRepository1
+      end
+      item
+        Column = ссContractCondition
+        ValueColumn = Repository2
+        EditRepository = cxEditRepository1
+      end>
+    Left = 1200
+    Top = 343
   end
   object spSelectCalc2: TdsdStoredProc
     StoredProcName = 'gpSelect_MI_PromoGoods_Calc'
@@ -6710,5 +6749,15 @@
     PackSize = 1
     Left = 280
     Top = 280
+  end
+  object cxEditRepository1: TcxEditRepository
+    Left = 776
+    Top = 416
+    object cxEditRepository1CurrencyItem1: TcxEditRepositoryCurrencyItem
+      Properties.DisplayFormat = ',0.## %;-,0.## %'
+    end
+    object cxEditRepository1CurrencyItem2: TcxEditRepositoryCurrencyItem
+      Properties.DisplayFormat = ',0.##;-,0.##; ;'
+    end
   end
 end

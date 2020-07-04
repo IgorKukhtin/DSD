@@ -2687,7 +2687,7 @@ BEGIN
     vbImportTypeId := gpInsertUpdate_Object_ImportType(ioId            := COALESCE(vbImportTypeId,0), 
                                                        inCode          := COALESCE(vbImportTypeCode,0), 
                                                        inName          := 'Загрузка Статьи ДДС приход/расход, связь с УП статьей', 
-                                                       inProcedureName := 'gpInsertUpdate_Object_CashFlow_From_Excel', 
+                                                       inProcedureName := 'gpInsertUpdate_Object_CashFlow_Load', 
                                                        inSession       := vbUserId::TVarChar);
     --Создали Enum
     PERFORM lpInsertUpdate_ObjectString (zc_ObjectString_Enum(), vbImportTypeId, 'zc_Enum_ImportType_CashFlow');
@@ -2715,10 +2715,10 @@ BEGIN
     --Добавляем Итемы
     vbImportTypeItemId := 0;
 
-    Select id INTO vbImportTypeItemId FROM Object_ImportTypeItems_View WHERE ImportTypeId = vbImportTypeId AND Name = 'inCashFlowCode_out';
+    Select id INTO vbImportTypeItemId FROM Object_ImportTypeItems_View WHERE ImportTypeId = vbImportTypeId AND Name = 'inCashFlowCode_in';
     vbImportTypeItemId := gpInsertUpdate_Object_ImportTypeItems(ioId            := COALESCE(vbImportTypeItemId,0), 
                                                                 inParamNumber   := 1, 
-                                                                inName          := 'inCashFlowCode_out', 
+                                                                inName          := 'inCashFlowCode_in', 
                                                                 inParamType     := 'ftInteger', 
                                                                 inUserParamName := 'Код статьи ДДС приход',
                                                                 inImportTypeId  := vbImportTypeId, 
@@ -2732,10 +2732,10 @@ BEGIN
                                                       inDefaultValue      := NULL::TVarCHar,
                                                       inSession           := vbUserId::TVarChar);
 
-    Select id INTO vbImportTypeItemId FROM Object_ImportTypeItems_View WHERE ImportTypeId = vbImportTypeId AND Name = 'inCashFlowName_out';
+    Select id INTO vbImportTypeItemId FROM Object_ImportTypeItems_View WHERE ImportTypeId = vbImportTypeId AND Name = 'inCashFlowName_in';
     vbImportTypeItemId := gpInsertUpdate_Object_ImportTypeItems(ioId            := COALESCE(vbImportTypeItemId,0), 
                                                                 inParamNumber   := 2, 
-                                                                inName          := 'inCashFlowName_out', 
+                                                                inName          := 'inCashFlowName_in', 
                                                                 inParamType     := 'ftString', 
                                                                 inUserParamName := 'Статья ДДС приход',
                                                                 inImportTypeId  := vbImportTypeId, 
@@ -2750,10 +2750,10 @@ BEGIN
                                                       inSession           := vbUserId::TVarChar);
     
     vbImportTypeItemId := 0;
-    Select id INTO vbImportTypeItemId FROM Object_ImportTypeItems_View WHERE ImportTypeId = vbImportTypeId AND Name = 'inCashFlowCode_in';
+    Select id INTO vbImportTypeItemId FROM Object_ImportTypeItems_View WHERE ImportTypeId = vbImportTypeId AND Name = 'inCashFlowCode_out';
     vbImportTypeItemId := gpInsertUpdate_Object_ImportTypeItems(ioId            := COALESCE(vbImportTypeItemId,0), 
                                                                 inParamNumber   := 3, 
-                                                                inName          := 'inCashFlowCode_in', 
+                                                                inName          := 'inCashFlowCode_out', 
                                                                 inParamType     := 'ftInteger', 
                                                                 inUserParamName := 'Код статьи ДДС расход',
                                                                 inImportTypeId  := vbImportTypeId, 
@@ -2768,10 +2768,10 @@ BEGIN
                                                       inSession           := vbUserId::TVarChar);
     
     vbImportTypeItemId := 0;
-    Select id INTO vbImportTypeItemId FROM Object_ImportTypeItems_View WHERE ImportTypeId = vbImportTypeId AND Name = 'inCashFlowName_in';
+    Select id INTO vbImportTypeItemId FROM Object_ImportTypeItems_View WHERE ImportTypeId = vbImportTypeId AND Name = 'inCashFlowName_out';
     vbImportTypeItemId := gpInsertUpdate_Object_ImportTypeItems(ioId            := COALESCE(vbImportTypeItemId,0), 
                                                                 inParamNumber   := 4, 
-                                                                inName          := 'inCashFlowName_in', 
+                                                                inName          := 'inCashFlowName_out', 
                                                                 inParamType     := 'ftString', 
                                                                 inUserParamName := 'Статья ДДС расход',
                                                                 inImportTypeId  := vbImportTypeId, 

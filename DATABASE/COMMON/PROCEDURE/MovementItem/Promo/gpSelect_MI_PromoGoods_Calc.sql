@@ -21,10 +21,10 @@ RETURNS TABLE (NUM Integer , GroupNum Integer --
 
       , PriceIn                 TFloat --Себ-ть прод, грн/кг
       --, AmountRetIn             TFloat --Кол-во возврат грн/кг
-      , ContractCondition       TVarChar --бонус сети грн/кг
-      , TaxRetIn                TVarChar --
-      , TaxPromo                TVarChar --
-      , TaxPromo_Condition      TVarChar --
+      , ContractCondition       TFloat --TVarChar --бонус сети грн/кг
+      , TaxRetIn                TFloat --TVarChar --
+      , TaxPromo                TFloat --TVarChar --
+      , TaxPromo_Condition      TFloat --TVarChar --
       , AmountSale              TFloat --Максимум планируемого объема продаж на акционный период (шт)
       , AmountSaleWeight        TFloat -- вес
       , SummaSale               TFloat --Максимум планируемого объема продаж на акционный период 
@@ -196,11 +196,15 @@ BEGIN
 
                          , 0                         AS PriceIn  
                          --, tmpData.RetIn_Percent     AS AmountRetIn           
-                         , (CAST (tmpData.ContractCondition AS NUMERIC (16,2)) ||' %') ::TVarChar AS ContractCondition
+                         /*, (CAST (tmpData.ContractCondition AS NUMERIC (16,2)) ||' %') ::TVarChar AS ContractCondition
                          , (CAST (tmpData.TaxRetIn          AS NUMERIC (16,2)) ||' %') ::TVarChar AS TaxRetIn
                          , (CAST (tmpData.TaxPromo          AS NUMERIC (16,2)) ||' %') ::TVarChar AS TaxPromo
                          , (CAST (tmpData.PromoCondition    AS NUMERIC (16,2)) ||' %') ::TVarChar AS TaxPromo_Condition
-                         
+                         */
+                         , CAST (tmpData.ContractCondition AS NUMERIC (16,2))  AS ContractCondition
+                         , CAST (tmpData.TaxRetIn          AS NUMERIC (16,2))  AS TaxRetIn
+                         , CAST (tmpData.TaxPromo          AS NUMERIC (16,2))  AS TaxPromo
+                         , CAST (tmpData.PromoCondition    AS NUMERIC (16,2))  AS TaxPromo_Condition
                          , 0                         AS AmountSale
                          , 0                         AS SummaSale
                          , 0                         AS Price
@@ -232,11 +236,16 @@ BEGIN
 
                          , tmpData.PriceIn2            AS PriceIn  
                          --, CAST (COALESCE (CASE WHEN tmpData.AmountSale <> 0 THEN (tmpData.SummaSale * tmpData.RetIn_Percent /100) / tmpData.AmountSale ELSE 0 END, 0) AS NUMERIC (16,2)) AS AmountRetIn           
-                         , (CAST (COALESCE (CASE WHEN tmpData.AmountSale <> 0 THEN tmpData.SummaSale * tmpData.ContractCondition /100 / tmpData.AmountSale ELSE 0 END, 0)  AS NUMERIC (16,2))) ::TVarChar AS ContractCondition   -- бонус сети
+                         /*, (CAST (COALESCE (CASE WHEN tmpData.AmountSale <> 0 THEN tmpData.SummaSale * tmpData.ContractCondition /100 / tmpData.AmountSale ELSE 0 END, 0)  AS NUMERIC (16,2))) ::TVarChar AS ContractCondition   -- бонус сети
                          , (CAST (COALESCE (CASE WHEN tmpData.AmountSale <> 0 THEN tmpData.SummaSale * tmpData.TaxRetIn /100 / tmpData.AmountSale ELSE 0 END, 0)  AS NUMERIC (16,2)))          ::TVarChar AS TaxRetIn
                          , (CAST (COALESCE (CASE WHEN tmpData.AmountSale <> 0 THEN tmpData.Price * (100-tmpData.TaxPromo) /100 ELSE 0 END, 0)  AS NUMERIC (16,2)))                             ::TVarChar AS TaxPromo
                          , (CAST (COALESCE (CASE WHEN tmpData.AmountSale <> 0 THEN tmpData.SummaSale * tmpData.PromoCondition /100/ tmpData.AmountSale ELSE 0 END, 0)  AS NUMERIC (16,2)))     ::TVarChar AS TaxPromo_Condition
-                         
+                         */
+                         , CAST (COALESCE (CASE WHEN tmpData.AmountSale <> 0 THEN tmpData.SummaSale * tmpData.ContractCondition /100 / tmpData.AmountSale ELSE 0 END, 0)  AS NUMERIC (16,2))  AS ContractCondition   -- бонус сети
+                         , CAST (COALESCE (CASE WHEN tmpData.AmountSale <> 0 THEN tmpData.SummaSale * tmpData.TaxRetIn /100 / tmpData.AmountSale ELSE 0 END, 0)  AS NUMERIC (16,2))           AS TaxRetIn
+                         , CAST (COALESCE (CASE WHEN tmpData.AmountSale <> 0 THEN tmpData.Price * (100-tmpData.TaxPromo) /100 ELSE 0 END, 0)  AS NUMERIC (16,2))                              AS TaxPromo
+                         , CAST (COALESCE (CASE WHEN tmpData.AmountSale <> 0 THEN tmpData.SummaSale * tmpData.PromoCondition /100/ tmpData.AmountSale ELSE 0 END, 0)  AS NUMERIC (16,2))      AS TaxPromo_Condition
+
                          , tmpData.AmountSale       AS AmountSale
                          , tmpData.SummaSale
                          , tmpData.Price               AS Price
@@ -281,10 +290,16 @@ BEGIN
                    
                          , 0                         AS PriceIn  
                          --, tmpData.RetIn_Percent     AS AmountRetIn           
-                         , (CAST (tmpData.ContractCondition AS NUMERIC (16,2))  ||' %') ::TVarChar AS ContractCondition   -- бонус сети
+                         /*, (CAST (tmpData.ContractCondition AS NUMERIC (16,2))  ||' %') ::TVarChar AS ContractCondition   -- бонус сети
                          , (CAST (tmpData.TaxRetIn          AS NUMERIC (16,2))  ||' %') ::TVarChar AS TaxRetIn
                          , (CAST (tmpData.TaxPromo          AS NUMERIC (16,2))  ||' %') ::TVarChar AS TaxPromo
                          , (CAST (tmpData.PromoCondition    AS NUMERIC (16,2))  ||' %') ::TVarChar AS TaxPromo_Condition
+                         */
+                         , CAST (tmpData.ContractCondition AS NUMERIC (16,2))  AS ContractCondition   -- бонус сети
+                         , CAST (tmpData.TaxRetIn          AS NUMERIC (16,2))  AS TaxRetIn
+                         , CAST (tmpData.TaxPromo          AS NUMERIC (16,2))  AS TaxPromo
+                         , CAST (tmpData.PromoCondition    AS NUMERIC (16,2))  AS TaxPromo_Condition
+
                          , 0                         AS AmountSale
                          , 0                         AS SummaSale
                          , 0                         AS Price
@@ -318,10 +333,15 @@ BEGIN
 
                          , tmpData.PriceIn1            AS PriceIn  
                          --, CAST (COALESCE (CASE WHEN tmpData.AmountSale <> 0 THEN (tmpData.SummaSale * tmpData.RetIn_Percent /100) / tmpData.AmountSale ELSE 0 END, 0) AS NUMERIC (16,2)) AS AmountRetIn           
-                         , (CAST (COALESCE (CASE WHEN tmpData.AmountSale <> 0 THEN tmpData.SummaSale * tmpData.ContractCondition /100 / tmpData.AmountSale ELSE 0 END, 0)  AS NUMERIC (16,2))) ::TVarChar AS ContractCondition   -- бонус сети
+                         /*, (CAST (COALESCE (CASE WHEN tmpData.AmountSale <> 0 THEN tmpData.SummaSale * tmpData.ContractCondition /100 / tmpData.AmountSale ELSE 0 END, 0)  AS NUMERIC (16,2))) ::TVarChar AS ContractCondition   -- бонус сети
                          , (CAST (COALESCE (CASE WHEN tmpData.AmountSale <> 0 THEN tmpData.SummaSale * tmpData.TaxRetIn /100 / tmpData.AmountSale ELSE 0 END, 0)  AS NUMERIC (16,2)))          ::TVarChar AS TaxRetIn   -- 
                          , (CAST (COALESCE (CASE WHEN tmpData.AmountSale <> 0 THEN tmpData.Price * (100-tmpData.TaxPromo) /100 ELSE 0 END, 0)  AS NUMERIC (16,2)))                             ::TVarChar AS TaxPromo   -- 
                          , (CAST (COALESCE (CASE WHEN tmpData.AmountSale <> 0 THEN tmpData.SummaSale * tmpData.PromoCondition /100/ tmpData.AmountSale ELSE 0 END, 0)  AS NUMERIC (16,2)))     ::TVarChar AS TaxPromo_Condition   -- 
+                         */
+                         , CAST (COALESCE (CASE WHEN tmpData.AmountSale <> 0 THEN tmpData.SummaSale * tmpData.ContractCondition /100 / tmpData.AmountSale ELSE 0 END, 0)  AS NUMERIC (16,2))  AS ContractCondition   -- бонус сети
+                         , CAST (COALESCE (CASE WHEN tmpData.AmountSale <> 0 THEN tmpData.SummaSale * tmpData.TaxRetIn /100 / tmpData.AmountSale ELSE 0 END, 0)  AS NUMERIC (16,2))           AS TaxRetIn   -- 
+                         , CAST (COALESCE (CASE WHEN tmpData.AmountSale <> 0 THEN tmpData.Price * (100-tmpData.TaxPromo) /100 ELSE 0 END, 0)  AS NUMERIC (16,2))                              AS TaxPromo   -- 
+                         , CAST (COALESCE (CASE WHEN tmpData.AmountSale <> 0 THEN tmpData.SummaSale * tmpData.PromoCondition /100/ tmpData.AmountSale ELSE 0 END, 0)  AS NUMERIC (16,2))      AS TaxPromo_Condition   -- 
                          
                          , tmpData.AmountSale       AS AmountSale
                          , tmpData.SummaSale
@@ -369,10 +389,10 @@ BEGIN
                          , ''
                          , 0                AS PriceIn  
                          --, 0                AS AmountRetIn           
-                         , ''               AS ContractCondition   -- бонус сети
-                         , ''               AS TaxRetIn   -- бонус сети
-                         , ''               AS TaxPromo   -- бонус сети
-                         , ''               AS TaxPromo_Condition
+                         , 0                AS ContractCondition   -- бонус сети
+                         , 0                AS TaxRetIn   -- бонус сети
+                         , 0                AS TaxPromo   -- бонус сети
+                         , 0                AS TaxPromo_Condition
                          , 0                AS AmountSale
                          , 0                AS SummaSale
                          , 0                AS Price   
@@ -412,10 +432,10 @@ BEGIN
 
          , tmpData_All.PriceIn                 :: TFloat
         -- , tmpData_All.AmountRetIn             :: TFloat
-         , CASE WHEN tmpData_All.ContractCondition = '0.00' THEN '' ELSE tmpData_All.ContractCondition END       :: TVarChar
-         , tmpData_All.TaxRetIn                :: TVarChar
-         , tmpData_All.TaxPromo                :: TVarChar
-         , tmpData_All.TaxPromo_Condition      :: TVarChar
+         , tmpData_All.ContractCondition       :: TFloat --TVarChar
+         , tmpData_All.TaxRetIn                :: TFloat --TVarChar
+         , tmpData_All.TaxPromo                :: TFloat --TVarChar
+         , tmpData_All.TaxPromo_Condition      :: TFloat --TVarChar
          , tmpData_All.AmountSale              :: TFloat
          , (tmpData_All.AmountSale
             * CASE WHEN ObjectLink_Goods_Measure.ChildObjectId = zc_Measure_Sh() THEN ObjectFloat_Goods_Weight.ValueData ELSE 1 END) :: TFloat AS AmountSaleWeight    -- Вес

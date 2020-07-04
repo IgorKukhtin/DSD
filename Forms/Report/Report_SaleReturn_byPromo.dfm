@@ -39,6 +39,16 @@ object Report_SaleReturn_byPromoForm: TReport_SaleReturn_byPromoForm
           Format = ',0.####'
           Kind = skSum
           Column = AmountInWeight
+        end
+        item
+          Format = ',0.####'
+          Kind = skSum
+          Column = AmountOrder
+        end
+        item
+          Format = ',0.####'
+          Kind = skSum
+          Column = AmountOrderWeight
         end>
       DataController.Summary.FooterSummaryItems = <
         item
@@ -55,6 +65,16 @@ object Report_SaleReturn_byPromoForm: TReport_SaleReturn_byPromoForm
           Format = ',0.####'
           Kind = skSum
           Column = AmountInWeight
+        end
+        item
+          Format = ',0.####'
+          Kind = skSum
+          Column = AmountOrder
+        end
+        item
+          Format = ',0.####'
+          Kind = skSum
+          Column = AmountOrderWeight
         end>
       DataController.Summary.SummaryGroups = <>
       Images = dmMain.SortImageList
@@ -210,6 +230,29 @@ object Report_SaleReturn_byPromoForm: TReport_SaleReturn_byPromoForm
         Properties.DisplayFormat = ',0.####;-,0.####; ;'
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
+        Width = 70
+      end
+      object AmountOrder: TcxGridDBColumn
+        Caption = #1047#1072#1103#1074#1082#1072
+        DataBinding.FieldName = 'AmountOrder'
+        PropertiesClassName = 'TcxCurrencyEditProperties'
+        Properties.DecimalPlaces = 4
+        Properties.DisplayFormat = ',0.####;-,0.####; ;'
+        Visible = False
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Options.Editing = False
+        Width = 80
+      end
+      object AmountOrderWeight: TcxGridDBColumn
+        Caption = #1047#1072#1103#1074#1082#1072', '#1074#1077#1089
+        DataBinding.FieldName = 'AmountOrderWeight'
+        PropertiesClassName = 'TcxCurrencyEditProperties'
+        Properties.DecimalPlaces = 4
+        Properties.DisplayFormat = ',0.####;-,0.####; ;'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Options.Editing = False
         Width = 70
       end
     end
@@ -710,7 +753,7 @@ object Report_SaleReturn_byPromoForm: TReport_SaleReturn_byPromoForm
       end
       item
         Name = 'inIsDiffTax'
-        Value = 'False'
+        Value = False
         DataType = ftBoolean
         ParamType = ptInput
         MultiSelectSeparator = ','

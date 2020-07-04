@@ -42,6 +42,14 @@ type
     dsWmsMessage: TDataSource;
     qryWmsMessageAll: TFDQuery;
     qryWmsMessageErr: TFDQuery;
+    dsWmsFromHostError: TDataSource;
+    dsWMSDetail: TDataSource;
+    qryWMSDetail: TFDQuery;
+    dsFromHostMessage: TDataSource;
+    qryFromHostMessageAll: TFDQuery;
+    qryFromHostMessageErr: TFDQuery;
+    dsFromHostDetail: TDataSource;
+    qryFromHostDetail: TFDQuery;
   private
     procedure Insert_wms_from_host_error(const AHeaderId: Integer; const ASite: TSite;
       const APacketName, AErrDescription: string; AMsgProc: TNotifyMsgProc);
@@ -1137,27 +1145,20 @@ var
   lGUID: string;
 begin
   lpack_id := 0;
-//  try
-    if not dmData.IsConnectedBoth(AMsgProc) then Exit;
 
-     //
-     // формируем и передаем данные - Movement_INCOMING
-    spName := 'gpInsert_wms_Movement_ASN_LOAD';
-    lGUID := fGet_GUID_pg;
-     //
-     // Только формируются данные в табл. Postresql.wms_Message
-    lRecCount := fInsert_wms_Message_pg(spName, lGUID, AMsgProc);
-    if lRecCount < 0 then
-      exit;
-     //
-     // открываются данные из табл. Postresql.wms_Message и переносятся в oracle
-    lpack_id := fInsert_wms_Message_to_wms(
-      spName, lGUID, cpnWmsMovementASNLoad, ACheckRecCount, ADebug, AThresholdRecCount, AMyLogSql, AMyShowSql, AMsgProc);
-     //
-//  finally
-//    FDC_wms.Connected := false;
-//    FDC_alan.Connected := false;
-//  end;
+  if not dmData.IsConnectedBoth(AMsgProc) then Exit;
+
+  // формируем и передаем данные - Movement_INCOMING
+  spName := 'gpInsert_wms_Movement_ASN_LOAD';
+  lGUID := fGet_GUID_pg;
+
+  // Только формируются данные в табл. Postresql.wms_Message
+  lRecCount := fInsert_wms_Message_pg(spName, lGUID, AMsgProc);
+  if lRecCount < 0 then exit;
+
+  // открываются данные из табл. Postresql.wms_Message и переносятся в oracle
+  lpack_id := fInsert_wms_Message_to_wms(
+    spName, lGUID, cpnWmsMovementASNLoad, ACheckRecCount, ADebug, AThresholdRecCount, AMyLogSql, AMyShowSql, AMsgProc);
 end;
 
 procedure TdmData.pInsert_to_wms_Movement_INCOMING_all(var lRecCount, lpack_id: Integer;
@@ -1168,28 +1169,21 @@ var
   lGUID: string;
 begin
   lpack_id := 0;
-//  try
-    if not dmData.IsConnectedBoth(AMsgProc) then Exit;
 
-     //
-     // формируем и передаем данные - Movement_INCOMING
-    spName := 'gpInsert_wms_Movement_INCOMING';
-    lGUID := fGet_GUID_pg;
-     //
-     // Только формируются данные в табл. Postresql.wms_Message
-    lRecCount := fInsert_wms_Message_pg(spName, lGUID, AMsgProc);
-    if lRecCount < 0 then
-      exit;
-     //
-     // открываются данные из табл. Postresql.wms_Message и переносятся в oracle
-     //Result:= fInsert_wms_Message_to_wms (spName, lGUID);
-    lpack_id := fInsert_Movement_to_wms(
-      spName, lGUID, cpnWmsMovementIncoming, ACheckRecCount, ADebug, AThresholdRecCount, AMyLogSql, AMyShowSql, AMsgProc);
-     //
-//  finally
-//    FDC_wms.Connected := false;
-//    FDC_alan.Connected := false;
-//  end;
+  if not dmData.IsConnectedBoth(AMsgProc) then Exit;
+
+  // формируем и передаем данные - Movement_INCOMING
+  spName := 'gpInsert_wms_Movement_INCOMING';
+  lGUID := fGet_GUID_pg;
+
+  // Только формируются данные в табл. Postresql.wms_Message
+  lRecCount := fInsert_wms_Message_pg(spName, lGUID, AMsgProc);
+  if lRecCount < 0 then  exit;
+
+  // открываются данные из табл. Postresql.wms_Message и переносятся в oracle
+  // Result:= fInsert_wms_Message_to_wms (spName, lGUID);
+  lpack_id := fInsert_Movement_to_wms(
+    spName, lGUID, cpnWmsMovementIncoming, ACheckRecCount, ADebug, AThresholdRecCount, AMyLogSql, AMyShowSql, AMsgProc);
 end;
 
 procedure TdmData.pInsert_to_wms_Movement_ORDER_all(var lRecCount, lpack_id: Integer;

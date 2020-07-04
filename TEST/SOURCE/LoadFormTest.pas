@@ -2321,7 +2321,7 @@ begin
   TdsdFormStorageFactory.GetStorage.Load('TReport_BankAccount_Cash_OlapForm');
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_BankAccount_Cash_OlapDialogForm'));
   TdsdFormStorageFactory.GetStorage.Load('TReport_BankAccount_Cash_OlapDialogForm');
-
+  exit;
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_Cash_OlapForm'));
   TdsdFormStorageFactory.GetStorage.Load('TReport_Cash_OlapForm');
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_Cash_OlapDialogForm'));
@@ -2574,15 +2574,18 @@ end;
 
 procedure TLoadFormTest.LoadReportPromoFormTest;
 begin
-  {
+
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_SaleReturn_byPromoForm'));
   TdsdFormStorageFactory.GetStorage.Load('TReport_SaleReturn_byPromoForm');
-
+  {
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_Promo_TradeForm'));
   TdsdFormStorageFactory.GetStorage.Load('TReport_Promo_TradeForm');
   }
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_Promo_ResultForm'));
   TdsdFormStorageFactory.GetStorage.Load('TReport_Promo_ResultForm');
+
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_Promo_Result_TradeForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TReport_Promo_Result_TradeForm');
   {
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_Promo_ResultDialogForm'));
   TdsdFormStorageFactory.GetStorage.Load('TReport_Promo_ResultDialogForm');

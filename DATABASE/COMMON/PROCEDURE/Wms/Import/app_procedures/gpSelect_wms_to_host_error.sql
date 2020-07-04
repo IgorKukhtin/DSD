@@ -6,15 +6,15 @@ CREATE OR REPLACE FUNCTION gpSelect_wms_to_host_error (
     IN inStartDate  TDateTime, -- левая граница временного интервала
     IN inEndDate    TDateTime  -- правая граница временного интервала
 )
-RETURNS TABLE (Header_id    Integer,   -- шапка в Oracle
-               Site         TVarChar,  -- к какой базе данных относится ошибка. Ожидаются значения 'A' или 'W' ('A' -> ALAN    'W' -> WMS)
+RETURNS TABLE (--Site         TVarChar,  -- к какой базе данных относится ошибка. Ожидаются значения 'A' или 'W' ('A' -> ALAN    'W' -> WMS)
+               Header_id    Integer,   -- шапка в Oracle
                Type         TVarChar,  -- название пакета -> WMS to_host_header_message.Type
                Name         TVarChar,  -- имя груза
                Qty          TVarChar,  -- Кол-во, используется только когда Шт
                Weight       TVarChar,  -- Вес, используется только когда НЕ Шт
                Operdate     TDateTime, -- Дата, время когда документ проведен в WMS, т.е. в Oracle это from_host_header_message.CREATED 
-               Done         Boolean,   -- статус "выполнено\невыполнено"
-               Error        Boolean,   -- статус "есть ошибка\ без ошибок"
+               --Done         Boolean,   -- статус "выполнено\невыполнено"
+               --Error        Boolean,   -- статус "есть ошибка\ без ошибок"
                Description  TVarChar,  -- текст ошибки
                InsertDate   TDateTime  -- дата вставки записи
 )    
@@ -22,7 +22,7 @@ AS
 $BODY$      
 BEGIN
     RETURN QUERY
-        SELECT Err.Header_id, Err.Site, Err.Type, Msg.Name, Msg.Qty, Msg.Weight, Msg.Operdate, Msg.Done, Msg.Error, Err.Description, Err.InsertDate
+        SELECT Err.Header_id, Err.Type, Msg.Name, Msg.Qty, Msg.Weight, Msg.Operdate, Err.Description, Err.InsertDate
         FROM wms_to_host_error AS Err 
           LEFT JOIN wms_to_host_message AS Msg ON Err.Header_id = Msg.Header_id
         WHERE Err.Site = 'A' -- берем ошибки только на нашей стороне

@@ -1174,7 +1174,8 @@ uses
   PromoManagerJournal in '..\..\Forms\Document\PromoManagerJournal.pas' {PromoManagerJournalForm: TParentForm},
   PromoManagerDialog in '..\..\Forms\Document\PromoManagerDialog.pas' {PromoManagerDialogForm: TParentForm},
   Report_ProductionOrderDialog in '..\..\Forms\Report\Report_ProductionOrderDialog.pas' {Report_ProductionOrderDialogForm: TParentForm},
-  Report_Promo_Result in '..\..\Forms\Report\Report_Promo_Result.pas' {Report_Promo_ResultForm: TParentForm};
+  Report_Promo_Result in '..\..\Forms\Report\Report_Promo_Result.pas' {Report_Promo_ResultForm: TParentForm},
+  Report_Promo_Result_Trade in '..\..\Forms\Report\Report_Promo_Result_Trade.pas' {Report_Promo_Result_TradeForm: TParentForm};
 
 {$R *.RES}
 {$R DevExpressRus.res}

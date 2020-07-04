@@ -36,11 +36,13 @@ BEGIN
 
          , Object_InfoMoney_View.CashFlowId_in
          , Object_InfoMoney_View.CashFlowCode_in
-         , Object_InfoMoney_View.CashFlowName_in
+         --, Object_InfoMoney_View.CashFlowName_in
+         ,('(' || CAST (Object_InfoMoney_View.CashFlowCode_in AS TVarChar) || ') '|| Object_InfoMoney_View.CashFlowName_in)     :: TVarChar  AS CashFlowName_in
 
          , Object_InfoMoney_View.CashFlowId_out
          , Object_InfoMoney_View.CashFlowCode_out
-         , Object_InfoMoney_View.CashFlowName_out
+         --, Object_InfoMoney_View.CashFlowName_out
+         ,('(' || CAST (Object_InfoMoney_View.CashFlowCode_out AS TVarChar) || ') '|| Object_InfoMoney_View.CashFlowName_out)     :: TVarChar  AS CashFlowName_out
          
          , COALESCE (ObjectBoolean_ProfitLoss.ValueData, False)  AS isProfitLoss
 

@@ -416,9 +416,11 @@ type
     spSelectCalc_Print: TdsdStoredProc;
     actPrint_CalcAll: TdsdPrintAction;
     bbPrint_CalcAll: TdxBarButton;
-    test1: TcxGridDBColumn;
     cxEditRepository1: TcxEditRepository;
     cxEditRepository1CurrencyItem1: TcxEditRepositoryCurrencyItem;
+    cxEditRepository1CurrencyItem2: TcxEditRepositoryCurrencyItem;
+    Repository: TcxGridDBColumn;
+    Repository2: TcxGridDBColumn;
   private
     { Private declarations }
   public

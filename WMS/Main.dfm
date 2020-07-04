@@ -23,7 +23,7 @@ object MainForm: TMainForm
     Top = 0
     Width = 1384
     Height = 642
-    ActivePage = tsWmsMessage
+    ActivePage = tsOraExport
     Align = alClient
     TabOrder = 0
     OnChange = pgcMainChange
@@ -657,123 +657,27 @@ object MainForm: TMainForm
       end
     end
     object tsErrors: TTabSheet
-      Caption = 'Errors'
+      Caption = #1054#1096#1080#1073#1082#1080
       ImageIndex = 2
       object splHorz: TSplitter
         Left = 0
-        Top = 265
+        Top = 262
         Width = 1376
         Height = 5
         Cursor = crVSplit
         Align = alTop
+        ExplicitTop = 265
         ExplicitWidth = 1199
-      end
-      object pnlWMS: TPanel
-        Left = 0
-        Top = 0
-        Width = 1376
-        Height = 265
-        Align = alTop
-        TabOrder = 0
-        object pnlWmsTop: TPanel
-          Left = 1
-          Top = 1
-          Width = 1374
-          Height = 26
-          Align = alTop
-          Alignment = taLeftJustify
-          BevelOuter = bvLowered
-          Caption = '  '#1054#1096#1080#1073#1082#1080' WMS'
-          TabOrder = 0
-          object lbDateStart: TLabel
-            Left = 402
-            Top = 6
-            Width = 64
-            Height = 13
-            Caption = 'Start_Date '#1089' '
-          end
-          object lbEndDate: TLabel
-            Left = 670
-            Top = 6
-            Width = 12
-            Height = 13
-            Caption = #1087#1086
-          end
-          object lbWMSShowMode: TLabel
-            Left = 189
-            Top = 7
-            Width = 61
-            Height = 13
-            Caption = #1087#1086#1082#1072#1079#1099#1074#1072#1090#1100
-          end
-          object btnUpdateWMS: TButton
-            Left = 90
-            Top = 3
-            Width = 75
-            Height = 20
-            Caption = #1054#1073#1085#1086#1074#1080#1090#1100
-            TabOrder = 0
-            TabStop = False
-            OnClick = btnUpdateWMSClick
-          end
-          object dtpStartDateWMS: TDateTimePicker
-            Left = 472
-            Top = 2
-            Width = 186
-            Height = 21
-            Date = 43997.546522673610000000
-            Time = 43997.546522673610000000
-            TabOrder = 1
-            OnChange = dtpStartDateWMSChange
-          end
-          object dtpEndDateWMS: TDateTimePicker
-            Left = 699
-            Top = 2
-            Width = 186
-            Height = 21
-            Date = 43997.546522673610000000
-            Time = 43997.546522673610000000
-            TabOrder = 2
-            OnChange = dtpEndDateWMSChange
-          end
-          object cbbWMSShowMode: TComboBox
-            Left = 254
-            Top = 3
-            Width = 107
-            Height = 21
-            Style = csDropDownList
-            ItemIndex = 1
-            TabOrder = 3
-            Text = #1090#1086#1083#1100#1082#1086' '#1086#1096#1080#1073#1082#1080
-            OnChange = cbbWMSShowModeChange
-            Items.Strings = (
-              #1074#1089#1105
-              #1090#1086#1083#1100#1082#1086' '#1086#1096#1080#1073#1082#1080)
-          end
-        end
-        object grdWMS: TDBGrid
-          Left = 1
-          Top = 27
-          Width = 1374
-          Height = 237
-          Align = alClient
-          DataSource = dmData.dsWMS
-          ReadOnly = True
-          TabOrder = 1
-          TitleFont.Charset = DEFAULT_CHARSET
-          TitleFont.Color = clWindowText
-          TitleFont.Height = -11
-          TitleFont.Name = 'Tahoma'
-          TitleFont.Style = []
-        end
       end
       object pnlAlan: TPanel
         Left = 0
-        Top = 270
+        Top = 267
         Width = 1376
-        Height = 344
+        Height = 347
         Align = alClient
-        TabOrder = 1
+        TabOrder = 0
+        ExplicitTop = 270
+        ExplicitHeight = 344
         object pnlAlanTop: TPanel
           Left = 1
           Top = 1
@@ -782,24 +686,24 @@ object MainForm: TMainForm
           Align = alTop
           Alignment = taLeftJustify
           BevelOuter = bvLowered
-          Caption = '  '#1054#1096#1080#1073#1082#1080' Alan'
+          Caption = '  wms_to_host_error'
           TabOrder = 0
           object lbStartDateAlan: TLabel
-            Left = 403
+            Left = 241
             Top = 7
             Width = 63
             Height = 13
             Caption = 'InsertDate '#1089' '
           end
           object lbEndDateAlan: TLabel
-            Left = 670
+            Left = 508
             Top = 7
             Width = 12
             Height = 13
             Caption = #1087#1086
           end
           object btnUpdateAlan: TButton
-            Left = 90
+            Left = 132
             Top = 3
             Width = 75
             Height = 20
@@ -809,7 +713,7 @@ object MainForm: TMainForm
             OnClick = btnUpdateAlanClick
           end
           object dtpStartDateAlan: TDateTimePicker
-            Left = 472
+            Left = 310
             Top = 3
             Width = 186
             Height = 21
@@ -819,7 +723,7 @@ object MainForm: TMainForm
             OnChange = dtpStartDateAlanChange
           end
           object dtpEndDateAlan: TDateTimePicker
-            Left = 699
+            Left = 537
             Top = 3
             Width = 186
             Height = 21
@@ -828,26 +732,12 @@ object MainForm: TMainForm
             TabOrder = 2
             OnChange = dtpEndDateAlanChange
           end
-          object cbbErrTable: TComboBox
-            Left = 218
-            Top = 3
-            Width = 145
-            Height = 21
-            Style = csDropDownList
-            ItemIndex = 0
-            TabOrder = 3
-            Text = 'wms_to_host_error'
-            OnChange = cbbErrTableChange
-            Items.Strings = (
-              'wms_to_host_error'
-              'wms_from_host_error')
-          end
         end
         object grdAlan: TDBGrid
           Left = 1
           Top = 27
           Width = 1374
-          Height = 316
+          Height = 319
           Align = alClient
           DataSource = dmData.dsAlan
           ReadOnly = True
@@ -857,6 +747,85 @@ object MainForm: TMainForm
           TitleFont.Height = -11
           TitleFont.Name = 'Tahoma'
           TitleFont.Style = []
+        end
+      end
+      object pnlWmsFromHostError: TPanel
+        Left = 0
+        Top = 0
+        Width = 1376
+        Height = 262
+        Align = alTop
+        TabOrder = 1
+        object grdWmsFromHostError: TDBGrid
+          Left = 1
+          Top = 27
+          Width = 1374
+          Height = 234
+          Align = alClient
+          DataSource = dmData.dsWmsFromHostError
+          ReadOnly = True
+          TabOrder = 0
+          TitleFont.Charset = DEFAULT_CHARSET
+          TitleFont.Color = clWindowText
+          TitleFont.Height = -11
+          TitleFont.Name = 'Tahoma'
+          TitleFont.Style = []
+        end
+        object pnlpnlWmsFromHostErrorTop: TPanel
+          Left = 1
+          Top = 1
+          Width = 1374
+          Height = 26
+          Align = alTop
+          Alignment = taLeftJustify
+          BevelOuter = bvLowered
+          Caption = '  wms_from_host_error'
+          TabOrder = 1
+          ExplicitWidth = 1372
+          object lbStartWmsFromHostError: TLabel
+            Left = 241
+            Top = 7
+            Width = 63
+            Height = 13
+            Caption = 'InsertDate '#1089' '
+          end
+          object lbEndWmsFromHostError: TLabel
+            Left = 508
+            Top = 7
+            Width = 12
+            Height = 13
+            Caption = #1087#1086
+          end
+          object btnUpdateWmsFromHostError: TButton
+            Left = 132
+            Top = 3
+            Width = 75
+            Height = 20
+            Caption = #1054#1073#1085#1086#1074#1080#1090#1100
+            TabOrder = 0
+            TabStop = False
+            OnClick = btnUpdateWmsFromHostErrorClick
+          end
+          object dtpStartWmsFromHostError: TDateTimePicker
+            Left = 310
+            Top = 3
+            Width = 186
+            Height = 21
+            Date = 43997.546522673610000000
+            Time = 43997.546522673610000000
+            TabOrder = 1
+            OnChange = dtpStartWmsFromHostErrorChange
+          end
+          object dtpEndWmsFromHostError: TDateTimePicker
+            Left = 537
+            Top = 3
+            Width = 186
+            Height = 21
+            Date = 43997.546522673610000000
+            Time = 43997.546522673610000000
+            TabOrder = 2
+            OnChange = dtpEndWmsFromHostErrorChange
+          end
         end
       end
     end
@@ -1066,8 +1035,283 @@ object MainForm: TMainForm
         end
       end
     end
+    object tsOraExport: TTabSheet
+      Caption = #1054#1090#1087#1088#1072#1074#1082#1072' '#1074' Oracle'
+      ImageIndex = 5
+      object splFromHostHeader: TSplitter
+        Left = 0
+        Top = 305
+        Width = 1376
+        Height = 5
+        Cursor = crVSplit
+        Align = alTop
+      end
+      object pnlFromHostHeaderMessage: TPanel
+        Left = 0
+        Top = 0
+        Width = 1376
+        Height = 305
+        Align = alTop
+        TabOrder = 0
+        ExplicitTop = 8
+        object pnlFromHostHeaderMessageTop: TPanel
+          Left = 1
+          Top = 1
+          Width = 1374
+          Height = 26
+          Align = alTop
+          Alignment = taLeftJustify
+          BevelOuter = bvLowered
+          Caption = '  WMS.from_host_header_message'
+          TabOrder = 0
+          object lbStartFromHostHeaderMessage: TLabel
+            Left = 496
+            Top = 6
+            Width = 64
+            Height = 13
+            Caption = 'Start_Date '#1089' '
+          end
+          object lbEndFromHostHeaderMessage: TLabel
+            Left = 764
+            Top = 6
+            Width = 12
+            Height = 13
+            Caption = #1087#1086
+          end
+          object lb3: TLabel
+            Left = 283
+            Top = 7
+            Width = 61
+            Height = 13
+            Caption = #1087#1086#1082#1072#1079#1099#1074#1072#1090#1100
+          end
+          object btnUpdateFromHostHeaderMessage: TButton
+            Left = 184
+            Top = 3
+            Width = 75
+            Height = 20
+            Caption = #1054#1073#1085#1086#1074#1080#1090#1100
+            TabOrder = 0
+            TabStop = False
+            OnClick = btnUpdateFromHostHeaderMessageClick
+          end
+          object dtpStartFromHostHeaderMessage: TDateTimePicker
+            Left = 566
+            Top = 2
+            Width = 186
+            Height = 21
+            Date = 43997.546522673610000000
+            Time = 43997.546522673610000000
+            TabOrder = 1
+            OnChange = dtpStartFromHostHeaderMessageChange
+          end
+          object dtpEndFromHostHeaderMessage: TDateTimePicker
+            Left = 793
+            Top = 2
+            Width = 186
+            Height = 21
+            Date = 43997.546522673610000000
+            Time = 43997.546522673610000000
+            TabOrder = 2
+            OnChange = dtpEndFromHostHeaderMessageChange
+          end
+          object cbbFromHostHeaderMessage: TComboBox
+            Left = 348
+            Top = 3
+            Width = 107
+            Height = 21
+            Style = csDropDownList
+            ItemIndex = 1
+            TabOrder = 3
+            Text = #1090#1086#1083#1100#1082#1086' '#1086#1096#1080#1073#1082#1080
+            OnChange = cbbFromHostHeaderMessageChange
+            Items.Strings = (
+              #1074#1089#1105
+              #1090#1086#1083#1100#1082#1086' '#1086#1096#1080#1073#1082#1080)
+          end
+        end
+        object grdFromHostHeaderMessage: TDBGrid
+          Left = 1
+          Top = 27
+          Width = 1374
+          Height = 277
+          Align = alClient
+          DataSource = dmData.dsFromHostMessage
+          ReadOnly = True
+          TabOrder = 1
+          TitleFont.Charset = DEFAULT_CHARSET
+          TitleFont.Color = clWindowText
+          TitleFont.Height = -11
+          TitleFont.Name = 'Tahoma'
+          TitleFont.Style = []
+        end
+      end
+      object pnlFromHostDetailMessage: TPanel
+        Left = 0
+        Top = 310
+        Width = 1376
+        Height = 304
+        Align = alClient
+        TabOrder = 1
+        ExplicitLeft = 32
+        ExplicitTop = 360
+        ExplicitWidth = 369
+        ExplicitHeight = 177
+        object grdFromHostDetailMessage: TDBGrid
+          Left = 1
+          Top = 1
+          Width = 1374
+          Height = 302
+          Align = alClient
+          DataSource = dmData.dsFromHostDetail
+          TabOrder = 0
+          TitleFont.Charset = DEFAULT_CHARSET
+          TitleFont.Color = clWindowText
+          TitleFont.Height = -11
+          TitleFont.Name = 'Tahoma'
+          TitleFont.Style = []
+        end
+      end
+    end
+    object tsOraImport: TTabSheet
+      Caption = #1055#1088#1080#1077#1084' '#1080#1079' Oracle'
+      ImageIndex = 6
+      object splOraImport: TSplitter
+        Left = 0
+        Top = 305
+        Width = 1376
+        Height = 5
+        Cursor = crVSplit
+        Align = alTop
+      end
+      object pnlWMS: TPanel
+        Left = 0
+        Top = 0
+        Width = 1376
+        Height = 305
+        Align = alTop
+        TabOrder = 0
+        object pnlWmsTop: TPanel
+          Left = 1
+          Top = 1
+          Width = 1374
+          Height = 26
+          Align = alTop
+          Alignment = taLeftJustify
+          BevelOuter = bvLowered
+          Caption = '  WMS.to_host_header_message'
+          TabOrder = 0
+          object lbDateStart: TLabel
+            Left = 496
+            Top = 6
+            Width = 64
+            Height = 13
+            Caption = 'Start_Date '#1089' '
+          end
+          object lbEndDate: TLabel
+            Left = 764
+            Top = 6
+            Width = 12
+            Height = 13
+            Caption = #1087#1086
+          end
+          object lbWMSShowMode: TLabel
+            Left = 283
+            Top = 7
+            Width = 61
+            Height = 13
+            Caption = #1087#1086#1082#1072#1079#1099#1074#1072#1090#1100
+          end
+          object btnUpdateWMS: TButton
+            Left = 184
+            Top = 3
+            Width = 75
+            Height = 20
+            Caption = #1054#1073#1085#1086#1074#1080#1090#1100
+            TabOrder = 0
+            TabStop = False
+            OnClick = btnUpdateWMSClick
+          end
+          object dtpStartDateWMS: TDateTimePicker
+            Left = 566
+            Top = 2
+            Width = 186
+            Height = 21
+            Date = 43997.546522673610000000
+            Time = 43997.546522673610000000
+            TabOrder = 1
+            OnChange = dtpStartDateWMSChange
+          end
+          object dtpEndDateWMS: TDateTimePicker
+            Left = 793
+            Top = 2
+            Width = 186
+            Height = 21
+            Date = 43997.546522673610000000
+            Time = 43997.546522673610000000
+            TabOrder = 2
+            OnChange = dtpEndDateWMSChange
+          end
+          object cbbWMSShowMode: TComboBox
+            Left = 348
+            Top = 3
+            Width = 107
+            Height = 21
+            Style = csDropDownList
+            ItemIndex = 1
+            TabOrder = 3
+            Text = #1090#1086#1083#1100#1082#1086' '#1086#1096#1080#1073#1082#1080
+            OnChange = cbbWMSShowModeChange
+            Items.Strings = (
+              #1074#1089#1105
+              #1090#1086#1083#1100#1082#1086' '#1086#1096#1080#1073#1082#1080)
+          end
+        end
+        object grdWMS: TDBGrid
+          Left = 1
+          Top = 27
+          Width = 1374
+          Height = 277
+          Align = alClient
+          DataSource = dmData.dsWMS
+          ReadOnly = True
+          TabOrder = 1
+          TitleFont.Charset = DEFAULT_CHARSET
+          TitleFont.Color = clWindowText
+          TitleFont.Height = -11
+          TitleFont.Name = 'Tahoma'
+          TitleFont.Style = []
+        end
+      end
+      object pnlOraImpDetail: TPanel
+        Left = 0
+        Top = 310
+        Width = 1376
+        Height = 304
+        Align = alClient
+        TabOrder = 1
+        ExplicitLeft = 32
+        ExplicitTop = 360
+        ExplicitWidth = 369
+        ExplicitHeight = 177
+        object grdWMSDetail: TDBGrid
+          Left = 1
+          Top = 1
+          Width = 1374
+          Height = 302
+          Align = alClient
+          DataSource = dmData.dsWMSDetail
+          TabOrder = 0
+          TitleFont.Charset = DEFAULT_CHARSET
+          TitleFont.Color = clWindowText
+          TitleFont.Height = -11
+          TitleFont.Name = 'Tahoma'
+          TitleFont.Style = []
+        end
+      end
+    end
     object tsSettings: TTabSheet
-      Caption = 'Settings'
+      Caption = #1053#1072#1089#1090#1088#1086#1081#1082#1080
       ImageIndex = 1
       DesignSize = (
         1376

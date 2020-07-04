@@ -25,6 +25,8 @@ RETURNS TABLE(MovementId           Integer   --
             , AmountOutWeight      TFloat    --Кол-во реализация (факт) Вес
             , AmountIn             TFloat    --Кол-во возврат (факт)
             , AmountInWeight       TFloat    --Кол-во возврат (факт) Вес
+            , AmountOrder          TFloat    --Кол-во заявка (факт)
+            , AmountOrderWeight    TFloat    --Кол-во заявка (факт) Вес
             )
 AS
 $BODY$
@@ -44,12 +46,13 @@ BEGIN
                                , MovementItem.Id AS MovementItemId
                                , MovementItem.ObjectId                         AS GoodsId
                                , MIFloat_PromoMovement.ValueData
+                               , MovementItem.Amount
                           FROM MovementItemFloat AS MIFloat_PromoMovement
                                INNER JOIN MovementItem ON MovementItem.Id       = MIFloat_PromoMovement.MovementItemId
                                                       AND MovementItem.isErased = FALSE
                                INNER JOIN Movement ON Movement.Id = MovementItem.MovementId
                                                  AND Movement.StatusId = zc_Enum_Status_Complete()
-                                                 AND Movement.DescId IN ( zc_Movement_Sale(), zc_Movement_ReturnIn())
+                                                 AND Movement.DescId IN ( zc_Movement_Sale(), zc_Movement_ReturnIn(), zc_Movement_OrderExternal())
                           WHERE MIFloat_PromoMovement.ValueData = inMovementId
                             AND MIFloat_PromoMovement.DescId = zc_MIFloat_PromoMovementId()
                         )
@@ -103,8 +106,8 @@ BEGIN
                                    FROM MovementItemFloat 
                                    WHERE MovementItemFloat.MovementItemId IN (SELECT DISTINCT tmpMovement.MovementItemId FROM tmpMovement)
                                      AND MovementItemFloat.DescId   IN (zc_MIFloat_AmountPartner()
-                                                                , zc_MIFloat_AmountSecond()
-                                                                , zc_MIFloat_ChangePercent())
+                                                                      , zc_MIFloat_AmountSecond()
+                                                                      , zc_MIFloat_ChangePercent())
                                    )
 
 
@@ -131,6 +134,10 @@ BEGIN
              ,  (CASE WHEN tmpMovement.DescId = zc_Movement_ReturnIn() THEN COALESCE (MIFloat_AmountPartner.ValueData, 0) ELSE 0 END)      :: TFloat AS AmountIn
              ,  (CASE WHEN tmpMovement.DescId = zc_Movement_ReturnIn() THEN COALESCE (MIFloat_AmountPartner.ValueData, 0) ELSE 0 END
                  * CASE WHEN ObjectLink_Goods_Measure.ChildObjectId = zc_Measure_Sh() THEN ObjectFloat_Goods_Weight.ValueData ELSE 1 END ) :: TFloat AS AmountInWeight
+
+             ,  (CASE WHEN tmpMovement.DescId = zc_Movement_OrderExternal() THEN COALESCE (tmpMovement.Amount, 0) + COALESCE (MIFloat_AmountSecond.ValueData, 0) ELSE 0 END) :: TFloat AS AmountOrder
+             ,  (CASE WHEN tmpMovement.DescId = zc_Movement_OrderExternal() THEN COALESCE (tmpMovement.Amount, 0) + COALESCE (MIFloat_AmountSecond.ValueData, 0) ELSE 0 END
+                 * CASE WHEN ObjectLink_Goods_Measure.ChildObjectId = zc_Measure_Sh() THEN ObjectFloat_Goods_Weight.ValueData ELSE 1 END ) :: TFloat AS AmountOrderWeight
 
         FROM tmpMovement
         LEFT JOIN tmpMovementLinkObject_From ON tmpMovementLinkObject_From.MovementId = tmpMovement.Id

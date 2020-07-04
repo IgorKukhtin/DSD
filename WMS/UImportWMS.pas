@@ -822,7 +822,7 @@ begin
       sDescr    := getStr(dataNode.Attributes['Descr'], '');
     end
     else
-      sDescr := AErrMsg;
+      sDescr := SkipSystemErrWords(AErrMsg);// исключаем стандартные слова из текста сообщени€ об ошибке, например, "[FireDAC][Phys][PG][libpq]"
 
     // записываем данные в таб. wms_to_host_error
     sInsert := Format(cInsert, [AHeaderId, QuotedStr(sSite), QuotedStr(APacketName), QuotedStr(sDescr)]);

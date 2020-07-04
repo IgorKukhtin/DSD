@@ -536,6 +536,7 @@ BEGIN
      --- !!! Типы срок/не срок
      PERFORM lpInsertUpdate_Object_Enum (inId:= zc_Enum_PartionDateKind_0(), inDescId:= zc_Object_PartionDateKind(), inCode:= 1, inName:= '0 или меньше',             inEnumName:= 'zc_Enum_PartionDateKind_0');
      PERFORM lpInsertUpdate_Object_Enum (inId:= zc_Enum_PartionDateKind_1(), inDescId:= zc_Object_PartionDateKind(), inCode:= 2, inName:= 'больше 0 мес. и <=1 мес.', inEnumName:= 'zc_Enum_PartionDateKind_1');
+     PERFORM lpInsertUpdate_Object_Enum (inId:= zc_Enum_PartionDateKind_3(), inDescId:= zc_Object_PartionDateKind(), inCode:= 6, inName:= 'больше 50 дн. и <=90 дн.', inEnumName:= 'zc_Enum_PartionDateKind_3');
      PERFORM lpInsertUpdate_Object_Enum (inId:= zc_Enum_PartionDateKind_6(), inDescId:= zc_Object_PartionDateKind(), inCode:= 3, inName:= 'больше 1 мес. и <=6 мес.', inEnumName:= 'zc_Enum_PartionDateKind_6');
      PERFORM lpInsertUpdate_Object_Enum (inId:= zc_Enum_PartionDateKind_Good(), inDescId:= zc_Object_PartionDateKind(), inCode:= 4, inName:= 'больше 6 мес. после изменения срока.', inEnumName:= 'zc_Enum_PartionDateKind_Good');
      PERFORM lpInsertUpdate_Object_Enum (inId:= zc_Enum_PartionDateKind_Cat_5(), inDescId:= zc_Object_PartionDateKind(), inCode:= 5, inName:= '5 кат. (просрочка без наценки).', inEnumName:= 'zc_Enum_PartionDateKind_Cat_5');

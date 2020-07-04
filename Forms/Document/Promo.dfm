@@ -1403,10 +1403,11 @@
             Visible = False
             VisibleForCustomization = False
           end
-          object test1: TcxGridDBColumn
-            DataBinding.FieldName = 'test1'
+          object Repository: TcxGridDBColumn
+            DataBinding.FieldName = 'Repository'
             Visible = False
-            Width = 70
+            VisibleForCustomization = False
+            Width = 50
           end
         end
         object cxGridLevel2: TcxGridLevel
@@ -1715,6 +1716,12 @@
             Visible = False
             VisibleForCustomization = False
             Width = 30
+          end
+          object Repository2: TcxGridDBColumn
+            DataBinding.FieldName = 'Repository'
+            Visible = False
+            VisibleForCustomization = False
+            Width = 20
           end
         end
         object cxGridLevel5: TcxGridLevel
@@ -6488,6 +6495,19 @@
     SummaryItemList = <>
     PropertiesCellList = <
       item
+        Column = calcTaxRetIn
+        ValueColumn = Repository
+        EditRepository = cxEditRepository1
+      end
+      item
+        Column = calcContractCondition
+        ValueColumn = Repository
+        EditRepository = cxEditRepository1
+      end
+      item
+        Column = calcTaxPromo
+        ValueColumn = Repository
+        EditRepository = cxEditRepository1
       end>
     Left = 1208
     Top = 359
@@ -6589,7 +6609,7 @@
         Value = Null
         Component = CalcCDS
         ComponentItem = 'ContractCondition'
-        DataType = ftString
+        DataType = ftFloat
         ParamType = ptInput
         MultiSelectSeparator = ','
       end
@@ -6598,7 +6618,7 @@
         Value = Null
         Component = CalcCDS
         ComponentItem = 'TaxRetIn'
-        DataType = ftString
+        DataType = ftFloat
         ParamType = ptInput
         MultiSelectSeparator = ','
       end
@@ -6607,7 +6627,7 @@
         Value = Null
         Component = CalcCDS
         ComponentItem = 'TaxPromo'
-        DataType = ftString
+        DataType = ftFloat
         ParamType = ptInput
         MultiSelectSeparator = ','
       end
@@ -7090,7 +7110,22 @@
       item
       end>
     SummaryItemList = <>
-    PropertiesCellList = <>
+    PropertiesCellList = <
+      item
+        Column = ссTaxPromo_Condition
+        ValueColumn = Repository2
+        EditRepository = cxEditRepository1
+      end
+      item
+        Column = ссTaxRetIn
+        ValueColumn = Repository2
+        EditRepository = cxEditRepository1
+      end
+      item
+        Column = ссContractCondition
+        ValueColumn = Repository2
+        EditRepository = cxEditRepository1
+      end>
     Left = 1176
     Top = 407
   end
@@ -7191,7 +7226,7 @@
         Value = Null
         Component = CalcCDS2
         ComponentItem = 'ContractCondition'
-        DataType = ftString
+        DataType = ftFloat
         ParamType = ptInput
         MultiSelectSeparator = ','
       end
@@ -7200,7 +7235,7 @@
         Value = Null
         Component = CalcCDS2
         ComponentItem = 'TaxRetIn'
-        DataType = ftString
+        DataType = ftFloat
         ParamType = ptInput
         MultiSelectSeparator = ','
       end
@@ -7209,7 +7244,7 @@
         Value = Null
         Component = CalcCDS2
         ComponentItem = 'TaxPromo_Condition'
-        DataType = ftString
+        DataType = ftFloat
         ParamType = ptInput
         MultiSelectSeparator = ','
       end
@@ -7521,7 +7556,10 @@
     Left = 688
     Top = 464
     object cxEditRepository1CurrencyItem1: TcxEditRepositoryCurrencyItem
-      Properties.DisplayFormat = ',0.00 %;-,0.00 %'
+      Properties.DisplayFormat = ',0.## %;-,0.## %'
+    end
+    object cxEditRepository1CurrencyItem2: TcxEditRepositoryCurrencyItem
+      Properties.DisplayFormat = ',0.##;-,0.##; ;'
     end
   end
 end
