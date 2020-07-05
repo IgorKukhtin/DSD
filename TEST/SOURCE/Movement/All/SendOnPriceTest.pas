@@ -126,6 +126,6 @@ end;
 
 initialization
 
-  TestFramework.RegisterTest('Документы', TSendOnPriceTest.Suite);
+//  TestFramework.RegisterTest('Документы', TSendOnPriceTest.Suite);
 
 end.

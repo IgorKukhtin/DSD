@@ -27,7 +27,7 @@ end;
 
 initialization
 
-  TestFramework.RegisterTest('Контейнеры', TCommonContainerProcedure.Suite);
-  TestFramework.RegisterTest('Процедуры', TCommonContainerProcedure.Suite);
+//  TestFramework.RegisterTest('Контейнеры', TCommonContainerProcedure.Suite);
+//  TestFramework.RegisterTest('Процедуры', TCommonContainerProcedure.Suite);
 
 end.

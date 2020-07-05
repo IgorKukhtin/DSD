@@ -73,6 +73,7 @@ begin
     ObjectTest.Delete(Id);
   end;
 end;
-   initialization
-  TestFramework.RegisterTest('Объекты', TGoodsPropertyTest.Suite);
+
+initialization
+//  TestFramework.RegisterTest('Объекты', TGoodsPropertyTest.Suite);
 end.

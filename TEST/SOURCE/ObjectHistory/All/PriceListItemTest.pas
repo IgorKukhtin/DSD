@@ -170,8 +170,8 @@ end;
 
 initialization
   InsertedIdObjectHistoryList := TStringList.Create;
-  InsertedIdObjectHistoryList.Sorted := true;;
+  InsertedIdObjectHistoryList.Sorted := true;
 
-  TestFramework.RegisterTest('Истории', TPriceListItemTest.Suite);
+//  TestFramework.RegisterTest('Истории', TPriceListItemTest.Suite);
 
 end.

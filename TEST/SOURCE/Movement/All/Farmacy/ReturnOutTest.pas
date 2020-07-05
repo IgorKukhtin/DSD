@@ -128,6 +128,6 @@ end;
 
 initialization
 
-  TestFramework.RegisterTest('Документы', TReturnOutTest.Suite);
+//  TestFramework.RegisterTest('Документы', TReturnOutTest.Suite);
 
 end.

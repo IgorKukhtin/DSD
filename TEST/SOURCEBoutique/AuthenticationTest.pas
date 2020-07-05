@@ -58,6 +58,6 @@ begin
 end;
 
 initialization
-  TestFramework.RegisterTest('Тест идентификации', TAuthenticationTest.Suite);
+//  TestFramework.RegisterTest('Тест идентификации', TAuthenticationTest.Suite);
 
 end.

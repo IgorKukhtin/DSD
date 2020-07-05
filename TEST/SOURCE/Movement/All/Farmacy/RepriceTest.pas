@@ -93,6 +93,6 @@ end;
 
 initialization
 
-  TestFramework.RegisterTest('Документы', TRepriceTest.Suite);
+//  TestFramework.RegisterTest('Документы', TRepriceTest.Suite);
 
 end.

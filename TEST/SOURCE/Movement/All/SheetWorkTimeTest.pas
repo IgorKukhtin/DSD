@@ -100,6 +100,6 @@ end;
   *)
 initialization
 
-  TestFramework.RegisterTest('Документы', TSheetWorkTimeTest.Suite);
+//  TestFramework.RegisterTest('Документы', TSheetWorkTimeTest.Suite);
 
 end.

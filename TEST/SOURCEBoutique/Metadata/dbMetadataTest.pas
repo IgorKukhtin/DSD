@@ -111,6 +111,6 @@ begin
 end;
 
 initialization
-  TestFramework.RegisterTest('Метаданные', TdbMetaDataTest.Suite);
+//  TestFramework.RegisterTest('Метаданные', TdbMetaDataTest.Suite);
 
 end.

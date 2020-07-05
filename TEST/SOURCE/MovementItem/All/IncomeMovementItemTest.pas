@@ -132,6 +132,7 @@ begin
 end;
 
 initialization
-  TestFramework.RegisterTest('Строки Документов', TIncomeMovementItemTest.Suite);
+
+//  TestFramework.RegisterTest('Строки Документов', TIncomeMovementItemTest.Suite);
 
 end.

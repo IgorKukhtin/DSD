@@ -99,6 +99,6 @@ end;
 
 initialization
 
-  TestFramework.RegisterTest('Документы', TPersonalSendCashTest.Suite);
+//  TestFramework.RegisterTest('Документы', TPersonalSendCashTest.Suite);
 
 end.

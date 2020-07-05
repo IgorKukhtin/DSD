@@ -27,6 +27,7 @@ begin
 end;
 
 initialization
-  TestFramework.RegisterTest('Данные для загрузки 1С', TdbMeatTest.Suite);
+
+//  TestFramework.RegisterTest('Данные для загрузки 1С', TdbMeatTest.Suite);
 
 end.

@@ -29,7 +29,7 @@ end;
 
 initialization
 
-  TestFramework.RegisterTest('Документы', TCommonMovementProcedure.Suite);
-  TestFramework.RegisterTest('Процедуры', TCommonMovementProcedure.Suite);
+//  TestFramework.RegisterTest('Документы', TCommonMovementProcedure.Suite);
+//  TestFramework.RegisterTest('Процедуры', TCommonMovementProcedure.Suite);
 
 end.

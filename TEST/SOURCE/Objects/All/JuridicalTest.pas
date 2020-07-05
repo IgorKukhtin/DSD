@@ -153,6 +153,7 @@ begin
 end;
 
 initialization
-  TestFramework.RegisterTest('Объекты', TJuridicalTest.Suite);
+
+//  TestFramework.RegisterTest('Объекты', TJuridicalTest.Suite);
 
 end.

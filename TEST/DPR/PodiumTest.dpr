@@ -8,7 +8,7 @@ uses
   dbMetadataTest in '..\SOURCEBoutique\METADATA\dbMetadataTest.pas',
   zLibUtil in '..\SOURCEBoutique\zLibUtil.pas',
   CommonFunctionTest in '..\SOURCEBoutique\Function\CommonFunctionTest.pas',
-  dbProcedurePodiumTest in '..\SOURCEBoutique\dbProcedurePodiumTest.pas',
+  dbPodiumProcedureTest in '..\SOURCEBoutique\dbPodiumProcedureTest.pas',
   UtilConst in '..\SOURCEBoutique\UtilConst.pas',
   dbEnumTest in '..\SOURCEBoutique\dbEnumTest.pas',
   ProcessTest in '..\SOURCEBoutique\Process\ProcessTest.pas',

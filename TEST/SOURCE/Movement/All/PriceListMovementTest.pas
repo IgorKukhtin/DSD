@@ -102,6 +102,6 @@ end;
 
 initialization
 
-  TestFramework.RegisterTest('Документы', TPriceListMovementTest.Suite);
+//  TestFramework.RegisterTest('Документы', TPriceListMovementTest.Suite);
 
 end.

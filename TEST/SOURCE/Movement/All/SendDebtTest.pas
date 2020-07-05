@@ -93,6 +93,6 @@ end;
 
 initialization
 
-  TestFramework.RegisterTest('Документы', TSendDebtTest.Suite);
+//  TestFramework.RegisterTest('Документы', TSendDebtTest.Suite);
 
 end.

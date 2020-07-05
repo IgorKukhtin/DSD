@@ -110,7 +110,8 @@ begin
 end;
 
 initialization
-  TestFramework.RegisterTest('Строки Документов', TTaxCorrectiveMovementItemTest.Suite);
 
+//  TestFramework.RegisterTest('Строки Документов', TTaxCorrectiveMovementItemTest.Suite);
+ 
 end.
 

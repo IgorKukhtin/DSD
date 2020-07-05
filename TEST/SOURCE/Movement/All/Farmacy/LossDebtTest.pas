@@ -82,6 +82,6 @@ end;
 
 initialization
 
-  TestFramework.RegisterTest('Документы', TLossDebtTest.Suite);
+//  TestFramework.RegisterTest('Документы', TLossDebtTest.Suite);
 
 end.

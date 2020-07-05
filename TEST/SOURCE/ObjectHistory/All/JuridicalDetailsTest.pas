@@ -168,6 +168,6 @@ end;
   *)
 initialization
 
-  TestFramework.RegisterTest('Истории', TJuridicalDetailsTest.Suite);
+//  TestFramework.RegisterTest('Истории', TJuridicalDetailsTest.Suite);
 
 end.

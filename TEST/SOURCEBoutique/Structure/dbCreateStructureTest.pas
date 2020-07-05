@@ -228,6 +228,6 @@ begin
 end;
 
 initialization
-  TestFramework.RegisterTest('Создание базы', TdbCreateStructureTest.Suite);
+//  TestFramework.RegisterTest('Создание базы', TdbCreateStructureTest.Suite);
 
 end.

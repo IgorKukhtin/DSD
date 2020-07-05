@@ -61,6 +61,6 @@ begin
 end;
 
 initialization
-  TestFramework.RegisterTest('Перечисления и служебные', TdbEnumTest.Suite);
+//  TestFramework.RegisterTest('Перечисления и служебные', TdbEnumTest.Suite);
 
 end.

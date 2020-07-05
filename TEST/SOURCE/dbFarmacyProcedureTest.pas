@@ -346,7 +346,7 @@ begin
 end;
 
 initialization
-  TestFramework.RegisterTest('Процедуры', TdbProcedureTest.Suite);
+//  TestFramework.RegisterTest('Процедуры', TdbProcedureTest.Suite);
 
 
 end.

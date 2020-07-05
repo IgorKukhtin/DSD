@@ -92,6 +92,6 @@ end;
 
 initialization
 
-  TestFramework.RegisterTest('Документы', TBankStatementTest.Suite);
+//  TestFramework.RegisterTest('Документы', TBankStatementTest.Suite);
 
 end.

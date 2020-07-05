@@ -70,6 +70,6 @@ end;
 
 initialization
 
-  TestFramework.RegisterTest('EDI', TdbEDITest.Suite);
+//  TestFramework.RegisterTest('EDI', TdbEDITest.Suite);
 
 end.

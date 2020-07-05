@@ -170,6 +170,6 @@ end;
 
 initialization
 
-  TestFramework.RegisterTest('Документы', TCashOperationTest.Suite);
+//  TestFramework.RegisterTest('Документы', TCashOperationTest.Suite);
 
 end.

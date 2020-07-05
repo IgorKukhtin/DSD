@@ -95,6 +95,7 @@ begin
 end;
 
 initialization
-  TestFramework.RegisterTest('Строки Документов', TSheetWorkTimeMovementItemTest.Suite);
+
+//  TestFramework.RegisterTest('Строки Документов', TSheetWorkTimeMovementItemTest.Suite);
 
 end.

@@ -129,6 +129,6 @@ end;
 
 initialization
 
-TestFramework.RegisterTest('Документы', TReturnInTest.Suite);
+// TestFramework.RegisterTest('Документы', TReturnInTest.Suite);
 
 end.

@@ -75,6 +75,7 @@ begin
 end;
 
 initialization
-  TestFramework.RegisterTest('Объекты', TCarModelTest.Suite);
+
+//  TestFramework.RegisterTest('Объекты', TCarModelTest.Suite);
 
 end.

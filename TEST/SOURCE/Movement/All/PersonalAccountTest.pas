@@ -93,6 +93,6 @@ end;
 
 initialization
 
-  TestFramework.RegisterTest('Документы', TPersonalAccountTest.Suite);
+//  TestFramework.RegisterTest('Документы', TPersonalAccountTest.Suite);
 
 end.

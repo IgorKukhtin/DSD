@@ -113,6 +113,6 @@ end;
 
 initialization
 
-  TestFramework.RegisterTest('Документы', TZakazExternalTest.Suite);
+//  TestFramework.RegisterTest('Документы', TZakazExternalTest.Suite);
 
 end.

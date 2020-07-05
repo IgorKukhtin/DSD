@@ -27,6 +27,6 @@ end;
 
 initialization
 
-  TestFramework.RegisterTest('Процедуры', TCommonObjectDescProcedure.Suite);
+//  TestFramework.RegisterTest('Процедуры', TCommonObjectDescProcedure.Suite);
 
 end.

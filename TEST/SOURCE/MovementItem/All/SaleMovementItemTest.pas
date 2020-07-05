@@ -131,6 +131,7 @@ begin
 end;
 
 initialization
-  TestFramework.RegisterTest('Строки Документов', TSaleMovementItemTest.Suite);
+
+//  TestFramework.RegisterTest('Строки Документов', TSaleMovementItemTest.Suite);
 
 end.
