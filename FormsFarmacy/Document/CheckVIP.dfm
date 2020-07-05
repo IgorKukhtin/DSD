@@ -83,6 +83,17 @@ inherited CheckVIPForm: TCheckVIPForm
             DataBinding.FieldName = 'TotalSumm'
             Width = 50
           end
+          object SummCard: TcxGridDBColumn
+            Caption = #1055#1088#1077#1076#1086#1087#1083#1072#1090#1072' ('#1092#1072#1082#1090#1080#1095#1077#1089#1082#1072#1103')'
+            DataBinding.FieldName = 'SummCard'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DisplayFormat = ',0.00;-,0.00; ;'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Styles.Content = dmMain.cxHeaderL3Style
+            Width = 99
+          end
           object CashRegisterName: TcxGridDBColumn
             Caption = #1050#1072#1089#1089#1072
             DataBinding.FieldName = 'CashRegisterName'
@@ -601,6 +612,14 @@ inherited CheckVIPForm: TCheckVIPForm
           ComponentItem = 'LoyaltyChangeSumma'
           DataType = ftFloat
           MultiSelectSeparator = ','
+        end
+        item
+          Name = 'SummCard'
+          Value = Null
+          Component = MasterCDS
+          ComponentItem = 'SummCard'
+          DataType = ftFloat
+          MultiSelectSeparator = ','
         end>
       Caption = #1047#1072#1075#1088#1091#1079#1080#1090#1100' '#1074' '#1088#1072#1073#1086#1090#1091
       Hint = #1047#1072#1075#1088#1091#1079#1080#1090#1100' '#1074' '#1088#1072#1073#1086#1090#1091
@@ -688,7 +707,7 @@ inherited CheckVIPForm: TCheckVIPForm
         end
         item
           Name = 'ShowAll'
-          Value = 'False'
+          Value = False
           DataType = ftBoolean
           ParamType = ptInput
           MultiSelectSeparator = ','
@@ -947,6 +966,7 @@ inherited CheckVIPForm: TCheckVIPForm
     ColumnAddOnList = <>
     ColumnEnterList = <>
     SummaryItemList = <>
+    PropertiesCellList = <>
     Left = 544
     Top = 256
   end

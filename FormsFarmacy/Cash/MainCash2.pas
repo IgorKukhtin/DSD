@@ -479,6 +479,12 @@ type
     MemDataGOODSDIID: TIntegerField;
     MemDataGOODSDINAME: TStringField;
     mdCheckDISCEXTID: TIntegerField;
+    ceSummCard: TcxCurrencyEdit;
+    Label29: TLabel;
+    Panel4: TPanel;
+    plSummCard: TPanel;
+    actSendPartionDateChangeCashJournal: TdsdOpenForm;
+    N42: TMenuItem;
     procedure WM_KEYDOWN(var Msg: TWMKEYDOWN);
     procedure FormCreate(Sender: TObject);
     procedure actChoiceGoodsInRemainsGridExecute(Sender: TObject);
@@ -1233,6 +1239,7 @@ begin
   FormParams.ParamByName('CheckId').Value := 0;
   FormParams.ParamByName('ManagerId').Value := 0;
   FormParams.ParamByName('BayerName').Value := '';
+  FormParams.ParamByName('ManagerName').Value := '';
   // ***20.07.16
   FormParams.ParamByName('DiscountExternalId').Value := 0;
   FormParams.ParamByName('DiscountExternalName').Value := '';
@@ -1242,6 +1249,7 @@ begin
   FormParams.ParamByName('ConfirmedKindName').Value := '';
   FormParams.ParamByName('InvNumberOrder').Value := '';
   FormParams.ParamByName('ConfirmedKindClientName').Value := '';
+  FormParams.ParamByName('SummCard').Value := 0;
   // ***10.04.17
   FormParams.ParamByName('PartnerMedicalId').Value := 0;
   FormParams.ParamByName('PartnerMedicalName').Value := '';
@@ -1306,6 +1314,8 @@ begin
   pnlSP.Visible := false;
   lblCashMember.Caption := '';
   lblBayer.Caption := '';
+  ceSummCard.Value := 0;
+  plSummCard.Visible := False;
   chbNotMCS.Checked := false;
   UpdateRemainsFromCheck;
   CheckCDS.EmptyDataSet;
@@ -1546,6 +1556,8 @@ begin
       FormParams.ParamByName('InvNumberOrder').AsString;
 
   lblBayer.Caption := FormParams.ParamByName('BayerName').AsString;
+  ceSummCard.Value := FormParams.ParamByName('SummCard').Value;
+  plSummCard.Visible := ceSummCard.Value > 0;
   if (FormParams.ParamByName('BayerPhone').AsString <> '') then
     lblBayer.Caption := lblBayer.Caption + ' * ' + FormParams.ParamByName
       ('BayerPhone').AsString;
@@ -7217,6 +7229,7 @@ begin
   FormParams.ParamByName('ManagerId').Value := 0;
   FormParams.ParamByName('ManagerName').Value := '';
   FormParams.ParamByName('BayerName').Value := '';
+  FormParams.ParamByName('ManagerName').Value := '';
   // ***20.07.16
   FormParams.ParamByName('DiscountExternalId').Value := 0;
   FormParams.ParamByName('DiscountExternalName').Value := '';
@@ -7227,6 +7240,7 @@ begin
   FormParams.ParamByName('InvNumberOrder').Value := '';
   FormParams.ParamByName('ConfirmedKindClientName').Value := '';
   FormParams.ParamByName('UserSession').Value := gc_User.Session;
+  FormParams.ParamByName('SummCard').Value := 0;
   // ***10.04.17
   FormParams.ParamByName('PartnerMedicalId').Value := 0;
   FormParams.ParamByName('PartnerMedicalName').Value := '';
@@ -7289,6 +7303,8 @@ begin
   pnlSP.Visible := false;
   lblCashMember.Caption := '';
   lblBayer.Caption := '';
+  ceSummCard.Value := 0;
+  plSummCard.Visible := false;
   CheckCDS.DisableControls;
   chbNotMCS.Checked := false;
   pnlPromoCode.Visible := false;

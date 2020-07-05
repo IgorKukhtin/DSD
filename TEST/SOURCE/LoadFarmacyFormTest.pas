@@ -386,11 +386,10 @@ end;
 
 procedure TLoadFormTest.LoadCheckFormTest;
 begin
+  {
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TCheckSummCardForm'));
   TdsdFormStorageFactory.GetStorage.Load('TCheckSummCardForm');
-  Exit;
 
-  {
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TCheckJournalDiscountExternalForm'));
   TdsdFormStorageFactory.GetStorage.Load('TCheckJournalDiscountExternalForm');
   Exit;
@@ -406,10 +405,10 @@ begin
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TChoiceDeferredCheckForm'));
   TdsdFormStorageFactory.GetStorage.Load('TChoiceDeferredCheckForm');
   exit;
-
+}
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TCheckForm'));
   TdsdFormStorageFactory.GetStorage.Load('TCheckForm');
-
+ {
 
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TPartionGoodsListForm'));
   TdsdFormStorageFactory.GetStorage.Load('TPartionGoodsListForm');
@@ -2386,6 +2385,11 @@ begin
   TdsdFormStorageFactory.GetStorage.Load('TSendPartionDateChangeForm');
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TSendPartionDateChangeJournalForm'));
   TdsdFormStorageFactory.GetStorage.Load('TSendPartionDateChangeJournalForm');
+
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TSendPartionDateChangeCashForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TSendPartionDateChangeCashForm');
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TSendPartionDateChangeCashJournalForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TSendPartionDateChangeCashJournalForm');
 end;
 
 procedure TLoadFormTest.LoadSendOnPriceFormTest;

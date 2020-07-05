@@ -107,7 +107,7 @@ inherited CheckSummCardForm: TCheckSummCardForm
             Width = 79
           end
           object colSummCard: TcxGridDBColumn
-            Caption = #1055#1088#1077#1076#1086#1087#1083#1072#1090#1072' '#1085#1072' '#1082#1072#1088#1090#1091
+            Caption = #1055#1088#1077#1076#1086#1087#1083#1072#1090#1072' ('#1092#1072#1082#1090#1080#1095#1077#1089#1082#1072#1103')'
             DataBinding.FieldName = 'SummCard'
             PropertiesClassName = 'TcxCurrencyEditProperties'
             Properties.DisplayFormat = ',0.00;-,0.00; ;'
@@ -115,7 +115,7 @@ inherited CheckSummCardForm: TCheckSummCardForm
             HeaderAlignmentVert = vaCenter
             Styles.Content = dmMain.cxHeaderL1Style
             Styles.Header = dmMain.cxHeaderL1Style
-            Width = 84
+            Width = 104
           end
           object colBayer: TcxGridDBColumn
             Caption = #1055#1086#1082#1091#1087#1072#1090#1077#1083#1100

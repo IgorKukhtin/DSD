@@ -28,7 +28,7 @@ uses
   cxDropDownEdit, cxCalendar, Vcl.ExtCtrls, cxCurrencyEdit, cxCustomPivotGrid,
   cxDBPivotGrid, cxLabel, ChoicePeriod, dxBarExtItems, cxCheckBox, cxSplitter,
   Vcl.StdCtrls, Vcl.Menus, cxButtons, cxExportPivotGridLink, dsdGuides,
-  cxButtonEdit, cxGridBandedTableView, cxGridDBBandedTableView, cxNavigator;
+  cxButtonEdit, cxGridBandedTableView, cxGridDBBandedTableView;
 
 type
   TReport_ImplementationPlanEmployeeForm = class(TForm)
@@ -367,7 +367,7 @@ begin
           TcxCurrencyEditProperties(Properties).DisplayFormat := ',0.00';
         end;
       end;
-    //  Styles.OnGetContentStyle := colGroupNameStylesGetContentStyle;
+      Styles.OnGetContentStyle := colGroupNameStylesGetContentStyle;
     end;
 
     cdsListBands.Next;

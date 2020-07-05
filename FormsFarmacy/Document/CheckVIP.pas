@@ -79,6 +79,7 @@ type
     actUpdateOperDate: TdsdExecStoredProc;
     bbUpdateOperDate: TdxBarButton;
     spUpdateOperDate: TdsdStoredProc;
+    SummCard: TcxGridDBColumn;
   private
     { Private declarations }
   public
