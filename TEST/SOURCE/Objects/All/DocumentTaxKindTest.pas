@@ -93,6 +93,6 @@ begin
 end;
 
 initialization
-  TestFramework.RegisterTest('Объекты', TDocumentTaxKindTest.Suite);
+ // TestFramework.RegisterTest('Объекты', TDocumentTaxKindTest.Suite);
 
 end.

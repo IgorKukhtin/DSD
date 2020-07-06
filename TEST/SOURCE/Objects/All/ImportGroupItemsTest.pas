@@ -80,7 +80,7 @@ begin
 end;
 
 initialization
-  TestFramework.RegisterTest('Объекты', TImportGroupItemsTest.Suite);
+ // TestFramework.RegisterTest('Объекты', TImportGroupItemsTest.Suite);
 
 end.
 

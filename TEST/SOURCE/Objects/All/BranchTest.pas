@@ -89,7 +89,7 @@ begin
 end;
 
 initialization
-  TestFramework.RegisterTest('Объекты', TBranchTest.Suite);
+ // TestFramework.RegisterTest('Объекты', TBranchTest.Suite);
 
 
 end.

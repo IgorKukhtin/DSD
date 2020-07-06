@@ -74,6 +74,6 @@ begin
 end;
 
 initialization
-  TestFramework.RegisterTest('Объекты', TAccountDirectionTest.Suite);
+  //TestFramework.RegisterTest('Объекты', TAccountDirectionTest.Suite);
 
 end.

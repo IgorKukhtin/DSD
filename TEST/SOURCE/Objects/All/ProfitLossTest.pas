@@ -83,6 +83,6 @@ begin
 end;
 
 initialization
-  TestFramework.RegisterTest('Объекты', TProfitLossTest.Suite);
+ // TestFramework.RegisterTest('Объекты', TProfitLossTest.Suite);
 
 end.

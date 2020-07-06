@@ -37,6 +37,6 @@ begin
 end;
 
 initialization
-  TestFramework.RegisterTest('Объекты', TNDSKindTest.Suite);
+ // TestFramework.RegisterTest('Объекты', TNDSKindTest.Suite);
 
 end.

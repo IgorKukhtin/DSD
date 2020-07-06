@@ -88,5 +88,5 @@ begin
 end;
 
 initialization
-  TestFramework.RegisterTest('Объекты', TReceiptChildTest.Suite);
+  //TestFramework.RegisterTest('Объекты', TReceiptChildTest.Suite);
 end.

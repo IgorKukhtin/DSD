@@ -94,6 +94,6 @@ end;
 
 
 initialization
-  TestFramework.RegisterTest('Объекты', TPersonalTest.Suite);
+ // TestFramework.RegisterTest('Объекты', TPersonalTest.Suite);
 
 end.

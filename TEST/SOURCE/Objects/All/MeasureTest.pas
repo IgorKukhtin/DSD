@@ -76,7 +76,5 @@ end;
 
 
 initialization
-  TestFramework.RegisterTest('Îáúåêòû', TMeasureTest.Suite);
-
-
+ // TestFramework.RegisterTest('Îáúåêòû', TMeasureTest.Suite);
 end.

@@ -115,6 +115,6 @@ begin
 end;
 
 initialization
-  TestFramework.RegisterTest('Объекты', TGoodsGroupTest.Suite);
+  //TestFramework.RegisterTest('Объекты', TGoodsGroupTest.Suite);
 
 end.

@@ -82,7 +82,7 @@ begin
 end;
 
 initialization
-  TestFramework.RegisterTest('Объекты', TJuridicalSettingsTest.Suite);
+ // TestFramework.RegisterTest('Объекты', TJuridicalSettingsTest.Suite);
 
 
 end.

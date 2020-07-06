@@ -29,7 +29,7 @@ begin
 end;
 
 initialization
-  TestFramework.RegisterTest('Объекты', TLinkGoodsTest.Suite);
+ // TestFramework.RegisterTest('Объекты', TLinkGoodsTest.Suite);
 
 end.
 

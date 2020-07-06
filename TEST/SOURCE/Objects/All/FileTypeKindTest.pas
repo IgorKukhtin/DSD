@@ -37,6 +37,6 @@ begin
 end;
 
 initialization
-  TestFramework.RegisterTest('Объекты', TFileTypeKindTest.Suite);
+  //TestFramework.RegisterTest('Объекты', TFileTypeKindTest.Suite);
 
 end.

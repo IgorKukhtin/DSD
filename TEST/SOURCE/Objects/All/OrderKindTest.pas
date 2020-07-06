@@ -72,6 +72,6 @@ begin
 end;
 
 initialization
-  TestFramework.RegisterTest('Объекты', TOrderKindTest.Suite);
+ // TestFramework.RegisterTest('Объекты', TOrderKindTest.Suite);
 
 end.

@@ -75,6 +75,6 @@ end;
 
 
 initialization
-  TestFramework.RegisterTest('Объекты', TPaidKindTest.Suite);
+//  TestFramework.RegisterTest('Объекты', TPaidKindTest.Suite);
 
 end.

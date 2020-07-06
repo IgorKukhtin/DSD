@@ -75,6 +75,6 @@ begin
 end;
 
 initialization
-  TestFramework.RegisterTest('Объекты', TAdvertisingTest.Suite);
+  //TestFramework.RegisterTest('Объекты', TAdvertisingTest.Suite);
 
 end.

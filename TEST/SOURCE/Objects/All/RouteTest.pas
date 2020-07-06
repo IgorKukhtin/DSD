@@ -79,7 +79,5 @@ begin
   end;
 end;
 initialization
-  TestFramework.RegisterTest('Объекты', TRouteTest.Suite);
-
-
+  //TestFramework.RegisterTest('Объекты', TRouteTest.Suite);
 end.

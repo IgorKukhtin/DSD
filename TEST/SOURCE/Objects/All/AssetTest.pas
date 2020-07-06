@@ -94,6 +94,6 @@ begin
 end;
 
 initialization
-  TestFramework.RegisterTest('Объекты', TAssetTest.Suite);
+  //TestFramework.RegisterTest('Объекты', TAssetTest.Suite);
 
 end.

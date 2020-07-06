@@ -91,6 +91,6 @@ begin
 end;
 
 initialization
-  TestFramework.RegisterTest('Объекты', TCashTest.Suite);
+  //TestFramework.RegisterTest('Объекты', TCashTest.Suite);
 
 end.

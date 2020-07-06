@@ -78,6 +78,6 @@ begin
 end;
 
 initialization
-  TestFramework.RegisterTest('Объекты', TRoleTest.Suite);
+  //TestFramework.RegisterTest('Объекты', TRoleTest.Suite);
 
 end.

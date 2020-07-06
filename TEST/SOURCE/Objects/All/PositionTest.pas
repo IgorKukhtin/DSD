@@ -71,6 +71,6 @@ RecordCount := ObjectTest.GetDataSet.RecordCount;
     ObjectTest.Delete(Id);
   end;
 end;
-     initialization
-  TestFramework.RegisterTest('Объекты', TPositionTest.Suite);
+initialization
+  //TestFramework.RegisterTest('Объекты', TPositionTest.Suite);
 end.

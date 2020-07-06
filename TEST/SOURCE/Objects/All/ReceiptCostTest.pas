@@ -71,6 +71,6 @@ begin
 end;
 
 initialization
-  TestFramework.RegisterTest('Объекты', TReceiptCostTest.Suite);
+ // TestFramework.RegisterTest('Объекты', TReceiptCostTest.Suite);
 
 end.

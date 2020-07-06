@@ -80,6 +80,6 @@ begin
 end;
 
 initialization
-  TestFramework.RegisterTest('Объекты', TCarTest.Suite);
+  //TestFramework.RegisterTest('Объекты', TCarTest.Suite);
 
 end.

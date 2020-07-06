@@ -75,6 +75,6 @@ begin
 end;
 
 initialization
-  TestFramework.RegisterTest('Объекты', TConditionPromoTest.Suite);
+  //TestFramework.RegisterTest('Объекты', TConditionPromoTest.Suite);
 
 end.
