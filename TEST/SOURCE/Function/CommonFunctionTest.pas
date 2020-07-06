@@ -25,6 +25,6 @@ end;
 
 initialization
 
-  TestFramework.RegisterTest('Функции', TFunction.Suite);
-  TestFramework.RegisterTest('Процедуры', TFunction.Suite);
+//  TestFramework.RegisterTest('Функции', TFunction.Suite);
+//  TestFramework.RegisterTest('Процедуры', TFunction.Suite);
 end.

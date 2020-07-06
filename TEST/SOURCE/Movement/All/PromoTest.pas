@@ -182,6 +182,6 @@ end;
 
 initialization
 
-  TestFramework.RegisterTest('Документы', TPromoTest.Suite);
+//  TestFramework.RegisterTest('Документы', TPromoTest.Suite);
 
 end.

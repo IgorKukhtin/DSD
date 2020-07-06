@@ -26,7 +26,7 @@ end;
 
 initialization
 
-  TestFramework.RegisterTest('Проведение Документов', TCommonMovementItemContainerProcedure.Suite);
-  TestFramework.RegisterTest('Процедуры', TCommonMovementItemContainerProcedure.Suite);
+//  TestFramework.RegisterTest('Проведение Документов', TCommonMovementItemContainerProcedure.Suite);
+//  TestFramework.RegisterTest('Процедуры', TCommonMovementItemContainerProcedure.Suite);
 
 end.

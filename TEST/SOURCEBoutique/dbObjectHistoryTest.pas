@@ -142,6 +142,6 @@ begin
 end;
 
 initialization
-  TestFramework.RegisterTest('Истории', TdbObjectHistoryTest.Suite);
+//  TestFramework.RegisterTest('Истории', TdbObjectHistoryTest.Suite);
 
 end.

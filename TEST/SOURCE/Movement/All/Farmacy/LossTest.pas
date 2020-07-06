@@ -93,6 +93,6 @@ end;
 
 initialization
 
-  TestFramework.RegisterTest('Документы', TLossTest.Suite);
+//  TestFramework.RegisterTest('Документы', TLossTest.Suite);
 
 end.

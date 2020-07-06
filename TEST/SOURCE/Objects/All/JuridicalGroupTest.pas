@@ -110,5 +110,5 @@ begin
 end;
 
 initialization
-  TestFramework.RegisterTest('Объекты', TJuridicalGroupTest.Suite);
+//  TestFramework.RegisterTest('Объекты', TJuridicalGroupTest.Suite);
 end.

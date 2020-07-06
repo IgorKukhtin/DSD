@@ -122,6 +122,6 @@ end;
 
 initialization
 
-  TestFramework.RegisterTest('Документы', TTransportTest.Suite);
+//  TestFramework.RegisterTest('Документы', TTransportTest.Suite);
 
 end.

@@ -109,7 +109,8 @@ begin
 end;
 
 initialization
-  TestFramework.RegisterTest('Строки Документов', TTaxMovementItemTest.Suite);
+
+//  TestFramework.RegisterTest('Строки Документов', TTaxMovementItemTest.Suite);
 
 end.
 

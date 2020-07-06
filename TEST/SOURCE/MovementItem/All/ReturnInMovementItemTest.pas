@@ -125,7 +125,8 @@ begin
 end;
 
 initialization
-  TestFramework.RegisterTest('Строки Документов', TReturnInMovementItemTest.Suite);
+
+//  TestFramework.RegisterTest('Строки Документов', TReturnInMovementItemTest.Suite);
 
 end.
 

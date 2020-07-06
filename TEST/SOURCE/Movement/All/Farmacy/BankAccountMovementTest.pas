@@ -146,6 +146,6 @@ end;
 
 initialization
 
-  TestFramework.RegisterTest('Документы', TBankAccountMovementTest.Suite);
+//  TestFramework.RegisterTest('Документы', TBankAccountMovementTest.Suite);
 
 end.

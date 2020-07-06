@@ -103,6 +103,6 @@ end;
 
 initialization
 
-  TestFramework.RegisterTest('Документы', TOrderInternalTest.Suite);
+//  TestFramework.RegisterTest('Документы', TOrderInternalTest.Suite);
 
 end.

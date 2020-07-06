@@ -83,6 +83,6 @@ end;
 
 initialization
 
-  TestFramework.RegisterTest('Документы', TProductionSeparateTest.Suite);
+//  TestFramework.RegisterTest('Документы', TProductionSeparateTest.Suite);
 
 end.

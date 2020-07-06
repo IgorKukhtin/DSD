@@ -530,6 +530,6 @@ end;
 
 initialization
 
-  TestFramework.RegisterTest('Строки Документов', TdbMovementItemTest.Suite);
+//  TestFramework.RegisterTest('Строки Документов', TdbMovementItemTest.Suite);
 
 end.

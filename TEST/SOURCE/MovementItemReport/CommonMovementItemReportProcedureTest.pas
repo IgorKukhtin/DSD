@@ -26,6 +26,6 @@ end;
 
 initialization
 
-  TestFramework.RegisterTest('Процедуры', TCommonMovementItemReportProcedure.Suite);
+//  TestFramework.RegisterTest('Процедуры', TCommonMovementItemReportProcedure.Suite);
 
 end.

@@ -94,6 +94,6 @@ end;
 
 initialization
 
-  TestFramework.RegisterTest('Документы', TInventoryTest.Suite);
+//  TestFramework.RegisterTest('Документы', TInventoryTest.Suite);
 
 end.

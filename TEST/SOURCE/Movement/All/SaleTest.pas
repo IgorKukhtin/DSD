@@ -148,6 +148,6 @@ end;
 
 initialization
 
-  TestFramework.RegisterTest('Документы', TSaleTest.Suite);
+//  TestFramework.RegisterTest('Документы', TSaleTest.Suite);
 
 end.

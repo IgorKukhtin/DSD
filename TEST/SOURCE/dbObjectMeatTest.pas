@@ -439,6 +439,6 @@ end;
   *)
 initialization
 
-  TestFramework.RegisterTest('Объекты', TdbObjectTest.Suite);
+//  TestFramework.RegisterTest('Объекты', TdbObjectTest.Suite);
 
 end.

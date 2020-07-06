@@ -82,6 +82,6 @@ end;
 
 initialization
 
-  TestFramework.RegisterTest('Документы', TProductionUnionTest.Suite);
+//  TestFramework.RegisterTest('Документы', TProductionUnionTest.Suite);
 
 end.

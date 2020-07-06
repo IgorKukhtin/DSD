@@ -1111,6 +1111,6 @@ end;
 
 initialization
 
-  TestFramework.RegisterTest('Документы', TdbMovementTest.Suite);
+//  TestFramework.RegisterTest('Документы', TdbMovementTest.Suite);
 
 end.

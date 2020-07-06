@@ -94,6 +94,6 @@ end;
 
 initialization
 
-  TestFramework.RegisterTest('Документы', TSendTest.Suite);
+//  TestFramework.RegisterTest('Документы', TSendTest.Suite);
 
 end.

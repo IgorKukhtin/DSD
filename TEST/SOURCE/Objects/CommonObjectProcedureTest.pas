@@ -36,7 +36,7 @@ begin
 end;
 
 initialization
-  TestFramework.RegisterTest('Объекты', TCommonObjectProcedure.Suite);
-  TestFramework.RegisterTest('Процедуры', TCommonObjectProcedure.Suite);
+//  TestFramework.RegisterTest('Объекты', TCommonObjectProcedure.Suite);
+//  TestFramework.RegisterTest('Процедуры', TCommonObjectProcedure.Suite);
 
 end.

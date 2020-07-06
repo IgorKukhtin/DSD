@@ -72,6 +72,7 @@ begin
 end;
 
 initialization
-  TestFramework.RegisterTest('Объекты', TInfoMoneyGroupTest.Suite);
+
+//  TestFramework.RegisterTest('Объекты', TInfoMoneyGroupTest.Suite);
 
 end.

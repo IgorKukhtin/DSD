@@ -98,6 +98,6 @@ end;
 
 initialization
 
-  TestFramework.RegisterTest('Документы', TExchangeCurrencyTest.Suite);
+//  TestFramework.RegisterTest('Документы', TExchangeCurrencyTest.Suite);
 
 end.

@@ -27,7 +27,7 @@ end;
 
 initialization
 
-  TestFramework.RegisterTest('Себестоимость', TObjectCostProcedure.Suite);
-  TestFramework.RegisterTest('Процедуры', TObjectCostProcedure.Suite);
+//  TestFramework.RegisterTest('Себестоимость', TObjectCostProcedure.Suite);
+//  TestFramework.RegisterTest('Процедуры', TObjectCostProcedure.Suite);
 
 end.

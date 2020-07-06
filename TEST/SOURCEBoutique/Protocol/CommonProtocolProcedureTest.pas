@@ -25,6 +25,6 @@ end;
 
 initialization
 
-  TestFramework.RegisterTest('Протокол', TProtocolProcedure.Suite);
-  TestFramework.RegisterTest('Процедуры', TProtocolProcedure.Suite);
+//  TestFramework.RegisterTest('Протокол', TProtocolProcedure.Suite);
+//  TestFramework.RegisterTest('Процедуры', TProtocolProcedure.Suite);
 end.

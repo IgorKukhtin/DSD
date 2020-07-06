@@ -108,6 +108,6 @@ end;
 
 initialization
 
-  TestFramework.RegisterTest('Документы', TPersonalServiceTest.Suite);
+//  TestFramework.RegisterTest('Документы', TPersonalServiceTest.Suite);
 
 end.

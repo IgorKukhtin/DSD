@@ -110,6 +110,6 @@ end;
 
 initialization
 
-  TestFramework.RegisterTest('Документы', TIncomeTest.Suite);
+//  TestFramework.RegisterTest('Документы', TIncomeTest.Suite);
 
 end.

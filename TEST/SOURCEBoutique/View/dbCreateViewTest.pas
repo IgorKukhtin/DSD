@@ -27,6 +27,6 @@ begin
 end;
 
 initialization
-  TestFramework.RegisterTest('VIEW', TView.Suite);
+//  TestFramework.RegisterTest('VIEW', TView.Suite);
 
 end.

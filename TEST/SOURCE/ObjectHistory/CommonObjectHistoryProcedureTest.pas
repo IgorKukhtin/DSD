@@ -49,6 +49,6 @@ end;
 
 initialization
 
-  TestFramework.RegisterTest('Истории', TObjectHistoryProcedure.Suite);
-  TestFramework.RegisterTest('Процедуры', TObjectHistoryProcedure.Suite);
+//  TestFramework.RegisterTest('Истории', TObjectHistoryProcedure.Suite);
+//  TestFramework.RegisterTest('Процедуры', TObjectHistoryProcedure.Suite);
 end.

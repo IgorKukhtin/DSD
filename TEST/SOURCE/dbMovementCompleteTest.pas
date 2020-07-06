@@ -63,7 +63,7 @@ begin
 end;
 
 initialization
-  TestFramework.RegisterTest('Проведение Документов', TdbMovementCompleteTest.Suite);
+//  TestFramework.RegisterTest('Проведение Документов', TdbMovementCompleteTest.Suite);
 
 end.
 

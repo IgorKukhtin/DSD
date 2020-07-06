@@ -123,7 +123,7 @@ end;
 
 initialization
 
-  TestFramework.RegisterTest('Документы', TTaxTest.Suite);
+//  TestFramework.RegisterTest('Документы', TTaxTest.Suite);
 
 end.
 

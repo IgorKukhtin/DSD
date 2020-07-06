@@ -95,6 +95,6 @@ end;
 
 initialization
 
-  TestFramework.RegisterTest('Документы', TZakazInternalTest.Suite);
+//  TestFramework.RegisterTest('Документы', TZakazInternalTest.Suite);
 
 end.

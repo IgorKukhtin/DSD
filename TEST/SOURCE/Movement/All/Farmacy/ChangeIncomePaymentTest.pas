@@ -117,6 +117,6 @@ end;
 
 initialization
 
-  TestFramework.RegisterTest('Документы', TChangeIncomePaymentTest.Suite);
+//  TestFramework.RegisterTest('Документы', TChangeIncomePaymentTest.Suite);
 
 end.

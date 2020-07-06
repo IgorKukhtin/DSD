@@ -88,6 +88,7 @@ end;
 
 
 initialization
+
   TestFramework.RegisterTest('Объекты', TAccountTest.Suite);
 
 end.

@@ -27,7 +27,7 @@ end;
 
 initialization
 
-  TestFramework.RegisterTest('Отчеты', TCommonReportsProcedureProcedure.Suite);
-  TestFramework.RegisterTest('Процедуры', TCommonReportsProcedureProcedure.Suite);
+//  TestFramework.RegisterTest('Отчеты', TCommonReportsProcedureProcedure.Suite);
+//  TestFramework.RegisterTest('Процедуры', TCommonReportsProcedureProcedure.Suite);
 
 end.

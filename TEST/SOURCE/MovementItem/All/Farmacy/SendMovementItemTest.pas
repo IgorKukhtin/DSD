@@ -105,6 +105,7 @@ begin
 end;
 
 initialization
-  TestFramework.RegisterTest('Строки Документов', TSendMovementItemTest.Suite);
+
+//  TestFramework.RegisterTest('Строки Документов', TSendMovementItemTest.Suite);
 
 end.
