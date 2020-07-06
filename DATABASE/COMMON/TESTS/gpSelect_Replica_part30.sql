@@ -20,7 +20,7 @@ BEGIN
          FROM _replica.table_update_data AS tmp
          WHERE tmp.Id BETWEEN inId_start AND inId_end
          ) AS tmpData;
-     
+
 END;
 $BODY$
 
@@ -33,7 +33,7 @@ LANGUAGE plpgsql VOLATILE;
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
- 34.07.20          *
+ 04.07.20          *
 
 */
 
