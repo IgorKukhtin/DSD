@@ -26,7 +26,7 @@ CREATE OR REPLACE FUNCTION lpInsertUpdate_Movement_Promo(
     IN inEndReturn             TDateTime  , -- Дата окончания возвратов по акционной цене
     IN inOperDateStart         TDateTime  , -- Дата начала расч. продаж до акции
     IN inOperDateEnd           TDateTime  , -- Дата окончания расч. продаж до акции
-    IN inMonthPromo            TDateTime  , -- Месяц акции
+ INOUT ioMonthPromo            TDateTime  , -- Месяц акции
     IN inCheckDate             TDateTime  , -- Дата согласования
     IN inChecked               Boolean    , -- Согласовано
     IN inIsPromo               Boolean    , -- Акция
@@ -39,7 +39,7 @@ CREATE OR REPLACE FUNCTION lpInsertUpdate_Movement_Promo(
 --    IN inSignInternalId        Integer    , 
     IN inUserId                Integer      -- пользователь
 )
-RETURNS Integer AS
+RETURNS RECORD AS
 $BODY$
    DECLARE vbIsInsert Boolean;
 BEGIN
@@ -98,8 +98,16 @@ BEGIN
     PERFORM lpInsertUpdate_MovementDate (zc_MovementDate_OperDateStart(), ioId, inOperDateStart);
     -- Дата окончания расч. продаж до акции
     PERFORM lpInsertUpdate_MovementDate (zc_MovementDate_OperDateEnd(), ioId, inOperDateEnd);
+    
+    --если Акция = TRUE определяем месяц
+    IF inIsPromo = TRUE
+    THEN
+      -- месяц акции определяем в зависимости от zc_MovementDate_EndSale (если дата 10,11, и до конца мес, тогда это тек. месяц, если с 1 по 9, тогда брать пред месяц) --06.07.2020
+      ioMonthPromo:=(CASE WHEN EXTRACT (DAY FROM inEndSale) BETWEEN 1 AND 9 THEN DATE_TRUNC ('MONTH', (inEndSale - INTERVAL '1 Month') ) ELSE DATE_TRUNC ('MONTH', inEndSale) END) :: TDateTime;
+    END IF;
+    
     -- месяц акции
-    PERFORM lpInsertUpdate_MovementDate (zc_MovementDate_Month(), ioId, inMonthPromo);
+    PERFORM lpInsertUpdate_MovementDate (zc_MovementDate_Month(), ioId, ioMonthPromo);
     
     -- дату согласования сохраняем только когда  inChecked = TRUE
     IF inChecked = TRUE
@@ -142,6 +150,7 @@ $BODY$
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.   Воробкало А.А.
+ 06.07.20         *
  01.08.17         *
  25.07.17         *
  31.10.15                                                                       *

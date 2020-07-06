@@ -61,6 +61,31 @@
               Format = ',0.####'
               Kind = skSum
               Column = AmountRetInWeight
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = AmountReal
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = AmountRealPromo
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = AmountRealPromoWeight
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = AmountReal_diff
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = AmountRealWeight_diff
             end>
           DataController.Summary.FooterSummaryItems = <
             item
@@ -97,6 +122,31 @@
               Format = ',0.####'
               Kind = skSum
               Column = AmountRetInWeight
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = AmountReal
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = AmountRealPromo
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = AmountRealPromoWeight
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = AmountReal_diff
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = AmountRealWeight_diff
             end>
           OptionsData.CancelOnExit = True
           OptionsData.Deleting = False
@@ -294,7 +344,53 @@
             Options.Editing = False
             Width = 80
           end
-          object AmountRetIn: TcxGridDBColumn [17]
+          object AmountRealPromo: TcxGridDBColumn [17]
+            Caption = #1055#1088#1086#1076#1072#1085#1086' '#1074' '#1072#1085#1072#1083#1086#1075'. '#1087#1077#1088#1080#1086#1076' ('#1072#1082#1094#1080#1103')'
+            DataBinding.FieldName = 'AmountRealPromo'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 4
+            Properties.DisplayFormat = ',0.####;-,0.####; ;'
+            Visible = False
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 80
+          end
+          object AmountRealPromoWeight: TcxGridDBColumn [18]
+            Caption = #1055#1088#1086#1076#1072#1085#1086' '#1074' '#1072#1085#1072#1083#1086#1075'. '#1087#1077#1088#1080#1086#1076' ('#1072#1082#1094#1080#1103') '#1042#1077#1089
+            DataBinding.FieldName = 'AmountRealPromoWeight'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 4
+            Properties.DisplayFormat = ',0.####;-,0.####; ;'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 80
+          end
+          object AmountReal_diff: TcxGridDBColumn [19]
+            Caption = #1055#1088#1086#1076#1072#1085#1086' '#1074' '#1072#1085#1072#1083#1086#1075'. '#1087#1077#1088#1080#1086#1076' ('#1085#1077' '#1072#1082#1094#1080#1103')'
+            DataBinding.FieldName = 'AmountReal_diff'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 4
+            Properties.DisplayFormat = ',0.####;-,0.####; ;'
+            Visible = False
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 80
+          end
+          object AmountRealWeight_diff: TcxGridDBColumn [20]
+            Caption = #1055#1088#1086#1076#1072#1085#1086' '#1074' '#1072#1085#1072#1083#1086#1075'. '#1087#1077#1088#1080#1086#1076'  ('#1085#1077' '#1072#1082#1094#1080#1103') '#1042#1077#1089
+            DataBinding.FieldName = 'AmountRealWeight_diff'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 4
+            Properties.DisplayFormat = ',0.####;-,0.####; ;'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 80
+          end
+          object AmountRetIn: TcxGridDBColumn [21]
             Caption = #1042#1086#1079#1074#1088'. '#1074' '#1072#1085#1072#1083#1086#1075'. '#1087#1077#1088#1080#1086#1076
             DataBinding.FieldName = 'AmountRetIn'
             PropertiesClassName = 'TcxCurrencyEditProperties'
@@ -306,7 +402,7 @@
             Options.Editing = False
             Width = 80
           end
-          object AmountRetInWeight: TcxGridDBColumn [18]
+          object AmountRetInWeight: TcxGridDBColumn [22]
             Caption = #1042#1086#1079#1074#1088'. '#1074' '#1072#1085#1072#1083#1086#1075'. '#1087#1077#1088#1080#1086#1076' '#1042#1077#1089
             DataBinding.FieldName = 'AmountRetInWeight'
             PropertiesClassName = 'TcxCurrencyEditProperties'
@@ -317,7 +413,7 @@
             Options.Editing = False
             Width = 80
           end
-          object AmountPlanMin: TcxGridDBColumn [19]
+          object AmountPlanMin: TcxGridDBColumn [23]
             Caption = #1055#1083#1072#1085' '#1084#1080#1085'.'
             DataBinding.FieldName = 'AmountPlanMin'
             PropertiesClassName = 'TcxCurrencyEditProperties'
@@ -327,7 +423,7 @@
             HeaderAlignmentVert = vaCenter
             Width = 70
           end
-          object AmountPlanMinWeight: TcxGridDBColumn [20]
+          object AmountPlanMinWeight: TcxGridDBColumn [24]
             Caption = #1055#1083#1072#1085' '#1084#1080#1085'. '#1042#1077#1089
             DataBinding.FieldName = 'AmountPlanMinWeight'
             PropertiesClassName = 'TcxCurrencyEditProperties'
@@ -338,7 +434,7 @@
             Options.Editing = False
             Width = 70
           end
-          object AmountPlanMax: TcxGridDBColumn [21]
+          object AmountPlanMax: TcxGridDBColumn [25]
             Caption = #1055#1083#1072#1085' '#1084#1072#1082#1089'.'
             DataBinding.FieldName = 'AmountPlanMax'
             PropertiesClassName = 'TcxCurrencyEditProperties'
@@ -348,7 +444,7 @@
             HeaderAlignmentVert = vaCenter
             Width = 70
           end
-          object AmountPlanMaxWeight: TcxGridDBColumn [22]
+          object AmountPlanMaxWeight: TcxGridDBColumn [26]
             Caption = #1055#1083#1072#1085' '#1084#1072#1082#1089'. '#1042#1077#1089
             DataBinding.FieldName = 'AmountPlanMaxWeight'
             PropertiesClassName = 'TcxCurrencyEditProperties'
@@ -359,7 +455,7 @@
             Options.Editing = False
             Width = 70
           end
-          object AmountOrder: TcxGridDBColumn [23]
+          object AmountOrder: TcxGridDBColumn [27]
             Caption = #1047#1072#1103#1074#1082#1072' ('#1092#1072#1082#1090')'
             DataBinding.FieldName = 'AmountOrder'
             PropertiesClassName = 'TcxCurrencyEditProperties'
@@ -371,7 +467,7 @@
             Options.Editing = False
             Width = 80
           end
-          object AmountOrderWeight: TcxGridDBColumn [24]
+          object AmountOrderWeight: TcxGridDBColumn [28]
             Caption = #1047#1072#1103#1074#1082#1072' ('#1092#1072#1082#1090') '#1042#1077#1089
             DataBinding.FieldName = 'AmountOrderWeight'
             PropertiesClassName = 'TcxCurrencyEditProperties'
@@ -382,7 +478,7 @@
             Options.Editing = False
             Width = 70
           end
-          object AmountOut: TcxGridDBColumn [25]
+          object AmountOut: TcxGridDBColumn [29]
             Caption = #1055#1088#1086#1076#1072#1085#1086' ('#1092#1072#1082#1090')'
             DataBinding.FieldName = 'AmountOut'
             PropertiesClassName = 'TcxCurrencyEditProperties'
@@ -394,7 +490,7 @@
             Options.Editing = False
             Width = 80
           end
-          object AmountOutWeight: TcxGridDBColumn [26]
+          object AmountOutWeight: TcxGridDBColumn [30]
             Caption = #1055#1088#1086#1076#1072#1085#1086' ('#1092#1072#1082#1090') '#1042#1077#1089
             DataBinding.FieldName = 'AmountOutWeight'
             PropertiesClassName = 'TcxCurrencyEditProperties'
@@ -405,7 +501,7 @@
             Options.Editing = False
             Width = 70
           end
-          object AmountIn: TcxGridDBColumn [27]
+          object AmountIn: TcxGridDBColumn [31]
             Caption = #1042#1086#1079#1074#1088#1072#1090' ('#1092#1072#1082#1090')'
             DataBinding.FieldName = 'AmountIn'
             PropertiesClassName = 'TcxCurrencyEditProperties'
@@ -417,7 +513,7 @@
             Options.Editing = False
             Width = 80
           end
-          object AmountInWeight: TcxGridDBColumn [28]
+          object AmountInWeight: TcxGridDBColumn [32]
             Caption = #1042#1086#1079#1074#1088#1072#1090' ('#1092#1072#1082#1090') '#1042#1077#1089
             DataBinding.FieldName = 'AmountInWeight'
             PropertiesClassName = 'TcxCurrencyEditProperties'
@@ -428,7 +524,7 @@
             Options.Editing = False
             Width = 70
           end
-          object clAmountPlan1: TcxGridDBColumn [29]
+          object clAmountPlan1: TcxGridDBColumn [33]
             Caption = #1050#1086#1083'-'#1087#1083#1072#1085' '#1079#1072' 1'
             DataBinding.FieldName = 'AmountPlan1'
             PropertiesClassName = 'TcxCurrencyEditProperties'
@@ -441,7 +537,7 @@
             Options.Editing = False
             Width = 55
           end
-          object clAmountPlan2: TcxGridDBColumn [30]
+          object clAmountPlan2: TcxGridDBColumn [34]
             Caption = #1050#1086#1083'-'#1087#1083#1072#1085' '#1079#1072' 2'
             DataBinding.FieldName = 'AmountPlan2'
             PropertiesClassName = 'TcxCurrencyEditProperties'
@@ -453,7 +549,7 @@
             Options.Editing = False
             Width = 55
           end
-          object clAmountPlan3: TcxGridDBColumn [31]
+          object clAmountPlan3: TcxGridDBColumn [35]
             Caption = #1050#1086#1083'-'#1087#1083#1072#1085' '#1079#1072' 3'
             DataBinding.FieldName = 'AmountPlan3'
             PropertiesClassName = 'TcxCurrencyEditProperties'
@@ -465,7 +561,7 @@
             Options.Editing = False
             Width = 55
           end
-          object clAmountPlan4: TcxGridDBColumn [32]
+          object clAmountPlan4: TcxGridDBColumn [36]
             Caption = #1050#1086#1083'-'#1087#1083#1072#1085' '#1079#1072' 4'
             DataBinding.FieldName = 'AmountPlan4'
             PropertiesClassName = 'TcxCurrencyEditProperties'
@@ -477,7 +573,7 @@
             Options.Editing = False
             Width = 55
           end
-          object clAmountPlan5: TcxGridDBColumn [33]
+          object clAmountPlan5: TcxGridDBColumn [37]
             Caption = #1050#1086#1083'-'#1087#1083#1072#1085' '#1079#1072' 5'
             DataBinding.FieldName = 'AmountPlan5'
             PropertiesClassName = 'TcxCurrencyEditProperties'
@@ -489,7 +585,7 @@
             Options.Editing = False
             Width = 55
           end
-          object clAmountPlan6: TcxGridDBColumn [34]
+          object clAmountPlan6: TcxGridDBColumn [38]
             Caption = #1050#1086#1083'-'#1087#1083#1072#1085' '#1079#1072' 6'
             DataBinding.FieldName = 'AmountPlan66'
             PropertiesClassName = 'TcxCurrencyEditProperties'
@@ -501,7 +597,7 @@
             Options.Editing = False
             Width = 55
           end
-          object clAmountPlan7: TcxGridDBColumn [35]
+          object clAmountPlan7: TcxGridDBColumn [39]
             Caption = #1050#1086#1083'-'#1087#1083#1072#1085' '#1079#1072' 7'
             DataBinding.FieldName = 'AmountPlan7'
             PropertiesClassName = 'TcxCurrencyEditProperties'
@@ -5118,11 +5214,11 @@
         MultiSelectSeparator = ','
       end
       item
-        Name = 'inMonthPromo'
+        Name = 'ioMonthPromo'
         Value = 'NULL'
         Component = deMonthPromo
         DataType = ftDateTime
-        ParamType = ptInput
+        ParamType = ptInputOutput
         MultiSelectSeparator = ','
       end
       item
@@ -6950,7 +7046,8 @@
         ParamType = ptInput
         MultiSelectSeparator = ','
       end>
-    Left = 948
+    Left = 940
+    Top = 40
   end
   object PromoStateKindDS: TDataSource
     DataSet = PromoStateKindDCS
