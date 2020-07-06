@@ -56,7 +56,6 @@ object MainForm: TMainForm
       DragMode = dmAutomatic
       Enabled = False
       TabOrder = 0
-      OnClick = OKGuideButtonClick
     end
     object StopButton: TButton
       Left = 502
@@ -100,7 +99,6 @@ object MainForm: TMainForm
       Height = 25
       Caption = #1047#1072#1075#1088#1091#1079#1080#1090#1100' '#1076#1086#1082#1091#1084#1077#1085#1090#1099
       TabOrder = 5
-      OnClick = OKDocumentButtonClick
     end
     object OKCompleteDocumentButton: TButton
       Left = 326
@@ -2370,33 +2368,9 @@ object MainForm: TMainForm
     end
   end
   object DataSource: TDataSource
-    DataSet = fromQuery
+    DataSet = fromZQuery
     Left = 176
     Top = 184
-  end
-  object fromADOConnection: TADOConnection
-    ConnectionString = 
-      'Provider=MSDASQL.1;Password=qazqazint;Persist Security Info=True' +
-      ';User ID=dba_adm;Data Source=tmpProfiMeatingDS'
-    LoginPrompt = False
-    Provider = 'MSDASQL.1'
-    Left = 176
-    Top = 240
-  end
-  object fromQuery: TADOQuery
-    Connection = fromADOConnection
-    CursorType = ctStatic
-    Parameters = <>
-    SQL.Strings = (
-      'select * from Goods where HasChildren<>-1 order by 1 desc')
-    Left = 128
-    Top = 296
-  end
-  object fromSqlQuery: TADOQuery
-    Connection = fromADOConnection
-    Parameters = <>
-    Left = 200
-    Top = 320
   end
   object toSqlQuery: TZQuery
     Connection = toZConnection
@@ -2422,52 +2396,20 @@ object MainForm: TMainForm
     Left = 48
     Top = 160
   end
-  object fromQuery_two: TADOQuery
-    Connection = fromADOConnection
-    CursorType = ctStatic
-    Parameters = <>
-    SQL.Strings = (
-      'select * from Goods where HasChildren<>-1 order by 1 desc')
-    Left = 184
-    Top = 376
-  end
   object toZConnection: TZConnection
     ControlsCodePage = cCP_UTF16
     UTF8StringsAsWideField = True
     Catalog = 'public'
+    Connected = True
     DesignConnection = True
-    HostName = 'localhost'
+    HostName = '192.168.0.194'
     Port = 0
-    Database = 'project'
-    User = 'postgres'
-    Password = 'postgres'
+    Database = 'project_master'
+    User = 'admin'
+    Password = 'vas6ok'
     Protocol = 'postgresql-9'
     Left = 40
     Top = 328
-  end
-  object fromFlADOConnection: TADOConnection
-    ConnectionString = 
-      'Provider=MSDASQL.1;Password=qazqazflo;Persist Security Info=True' +
-      ';User ID=dba;Data Source=v9_2ProfiMeatingDS'
-    LoginPrompt = False
-    Provider = 'MSDASQL.1'
-    Left = 176
-    Top = 24
-  end
-  object fromFlQuery: TADOQuery
-    Connection = fromFlADOConnection
-    CursorType = ctStatic
-    Parameters = <>
-    SQL.Strings = (
-      'select * from Goods where HasChildren<>-1 order by 1 desc')
-    Left = 216
-    Top = 24
-  end
-  object fromFlSqlQuery: TADOQuery
-    Connection = fromFlADOConnection
-    Parameters = <>
-    Left = 264
-    Top = 14
   end
   object toStoredProc_three: TdsdStoredProc
     DataSets = <>
@@ -2486,34 +2428,13 @@ object MainForm: TMainForm
     Left = 88
     Top = 544
   end
-  object fromQueryDate: TADOQuery
-    Connection = fromADOConnection
-    CursorType = ctStatic
-    Parameters = <>
-    SQL.Strings = (
-      'select * from Goods where HasChildren<>-1 order by 1 desc')
-    Left = 168
-    Top = 456
-  end
-  object fromQueryDate_recalc: TADOQuery
-    Connection = fromADOConnection
-    CursorType = ctStatic
-    Parameters = <>
-    SQL.Strings = (
-      'select * from Goods where HasChildren<>-1 order by 1 desc')
-    Left = 168
-    Top = 512
-  end
   object zConnection_vacuum: TZConnection
     ControlsCodePage = cCP_UTF16
     UTF8StringsAsWideField = True
     Catalog = 'public'
     DesignConnection = True
-    HostName = 'localhost'
+    HostName = '192.168.0.194'
     Port = 0
-    Database = 'project'
-    User = 'postgres'
-    Password = 'postgres'
     Protocol = 'postgresql-9'
     Left = 56
     Top = 384
@@ -2524,5 +2445,52 @@ object MainForm: TMainForm
     OnTimer = TimerTimer
     Left = 432
     Top = 136
+  end
+  object fromZQuery: TZQuery
+    Connection = fromZConnection
+    SQL.Strings = (
+      'select DATE_TRUNC ('#39'MONTH'#39', '#39'3.7.2020'#39' :: TDateTime) as RetV')
+    Params = <>
+    Left = 264
+    Top = 272
+  end
+  object fromSqlZQuery: TZQuery
+    Connection = fromZConnection
+    Params = <>
+    Left = 280
+    Top = 328
+  end
+  object fromZQuery_two: TZQuery
+    Connection = fromZConnection
+    Params = <>
+    Left = 288
+    Top = 384
+  end
+  object fromZQueryDate_recalc: TZQuery
+    Connection = fromZConnection
+    Params = <>
+    Left = 280
+    Top = 504
+  end
+  object fromZQueryDate: TZQuery
+    Connection = fromZConnection
+    Params = <>
+    Left = 272
+    Top = 448
+  end
+  object fromZConnection: TZConnection
+    ControlsCodePage = cCP_UTF16
+    UTF8StringsAsWideField = True
+    Catalog = 'public'
+    Connected = True
+    DesignConnection = True
+    HostName = '192.168.0.194'
+    Port = 0
+    Database = 'project_master'
+    User = 'admin'
+    Password = 'vas6ok'
+    Protocol = 'postgresql-9'
+    Left = 40
+    Top = 272
   end
 end
