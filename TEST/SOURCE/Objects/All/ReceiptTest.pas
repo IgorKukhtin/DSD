@@ -96,7 +96,7 @@ begin
     ObjectTest.Delete(Id);
   end;
 end;
-    initialization
-  TestFramework.RegisterTest('Объекты', TReceiptTest.Suite);
+initialization
+  //TestFramework.RegisterTest('Объекты', TReceiptTest.Suite);
 
 end.

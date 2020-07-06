@@ -85,6 +85,6 @@ end;
 
 
 initialization
-  TestFramework.RegisterTest('Объекты', TCorrespondentAccountTest.Suite);
+  //TestFramework.RegisterTest('Объекты', TCorrespondentAccountTest.Suite);
 
 end.

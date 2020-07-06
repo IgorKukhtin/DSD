@@ -163,6 +163,5 @@ end;
 
 
 initialization
-  TestFramework.RegisterTest('Объекты', TUnitTest.Suite);
-
+//  TestFramework.RegisterTest('Объекты', TUnitTest.Suite);
 end.

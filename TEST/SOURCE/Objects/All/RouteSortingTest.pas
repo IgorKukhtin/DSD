@@ -73,6 +73,6 @@ begin
 end;
 
 initialization
-  TestFramework.RegisterTest('Объекты', TRouteSortingTest.Suite);
+  //TestFramework.RegisterTest('Объекты', TRouteSortingTest.Suite);
 
 end.

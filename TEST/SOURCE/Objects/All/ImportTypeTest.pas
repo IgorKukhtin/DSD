@@ -79,6 +79,6 @@ begin
 end;
 
 initialization
-  TestFramework.RegisterTest('Объекты', TImportTypeTest.Suite);
+ // TestFramework.RegisterTest('Объекты', TImportTypeTest.Suite);
 
 end.

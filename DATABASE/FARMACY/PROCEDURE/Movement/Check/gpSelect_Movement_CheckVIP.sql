@@ -47,7 +47,8 @@ RETURNS TABLE (
   PartionDateKindName TVarChar, 
   AmountMonth TFloat,
   DateDelay TDateTime,
-  LoyaltyChangeSumma TFloat
+  LoyaltyChangeSumma TFloat,
+  SummCard TFloat
  )
 AS
 $BODY$
@@ -178,6 +179,7 @@ BEGIN
             , CASE WHEN Movement_PromoCode.DescId = zc_Movement_Loyalty() THEN 
                    CASE WHEN COALESCE(MovementFloat_TotalSummChangePercent.ValueData, 0) < MI_PromoCode.Amount THEN
                       COALESCE(MovementFloat_TotalSummChangePercent.ValueData, 0) ELSE MI_PromoCode.Amount END ELSE NULL END::TFloat AS LoyaltyChangeSumma
+            , MovementFloat_TotalSummCard.ValueData                        AS SummCard
        FROM tmpMov
             LEFT JOIN tmpErr ON tmpErr.MovementId = tmpMov.Id
             LEFT JOIN Movement ON Movement.Id = tmpMov.Id
@@ -320,6 +322,9 @@ BEGIN
             LEFT JOIN MovementDate AS MovementDate_Delay
                                    ON MovementDate_Delay.MovementId = Movement.Id
                                   AND MovementDate_Delay.DescId = zc_MovementDate_Delay()
+            LEFT JOIN MovementFloat AS MovementFloat_TotalSummCard
+                                    ON MovementFloat_TotalSummCard.MovementId = Movement.Id
+                                   AND MovementFloat_TotalSummCard.DescId = zc_MovementFloat_TotalSummCard()
        ;
 
 END;

@@ -313,7 +313,7 @@ BEGIN
           , MI_PromoGoods.PriceWithVAT        :: TFloat
           , MI_PromoGoods.Price               :: TFloat
           , Movement_Promo.CostPromo          :: TFloat
-          , MI_PromoGoods.PriceSale           :: TFloat    
+          , MI_PromoGoods.PriceSale           :: TFloat
 
           , MI_PromoGoods.PriceIn1            --себестоимость факт,  за кг
           , (MI_PromoGoods.Price_Diff * COALESCE (MI_PromoGoods.AmountSaleWeight, 0))    :: TFloat AS Profit_Virt

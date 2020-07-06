@@ -120,6 +120,6 @@ begin
   end;
 end;
 initialization
-  TestFramework.RegisterTest('Объекты', TPartnerTest.Suite);
+ // TestFramework.RegisterTest('Объекты', TPartnerTest.Suite);
 
 end.

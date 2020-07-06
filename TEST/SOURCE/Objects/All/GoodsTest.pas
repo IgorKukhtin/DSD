@@ -86,5 +86,5 @@ begin
   end;
 end;
 initialization
-  TestFramework.RegisterTest('Объекты', TGoodsTest.Suite);
+  //TestFramework.RegisterTest('Объекты', TGoodsTest.Suite);
 end.

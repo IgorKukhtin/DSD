@@ -1115,8 +1115,10 @@ inherited CheckForm: TCheckForm
       Category = 'EditMovement'
       MoveParams = <>
       PostDataSetBeforeExecute = False
+      StoredProc = spInsertUpdateMovement
       StoredProcList = <
         item
+          StoredProc = spInsertUpdateMovement
         end>
     end
     object actEditDocument: TMultiAction
@@ -2542,17 +2544,18 @@ inherited CheckForm: TCheckForm
         MultiSelectSeparator = ','
       end
       item
-        Name = 'inCashRegisterId'
-        Value = ''
+        Name = 'inPaidTypeId'
+        Value = Null
         Component = FormParams
-        ComponentItem = 'CashRegisterId'
+        ComponentItem = 'PaidTypeId'
         ParamType = ptInput
         MultiSelectSeparator = ','
       end
       item
-        Name = 'inPaidTypeId'
-        Value = Null
-        Component = edOperDate
+        Name = 'inCashRegisterId'
+        Value = ''
+        Component = FormParams
+        ComponentItem = 'CashRegisterId'
         ParamType = ptInput
         MultiSelectSeparator = ','
       end>

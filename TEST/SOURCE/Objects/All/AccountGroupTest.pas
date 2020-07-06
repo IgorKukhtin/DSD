@@ -71,6 +71,6 @@ begin
 end;
 
 initialization
-  TestFramework.RegisterTest('Объекты', TAccountGroupTest.Suite);
+  //TestFramework.RegisterTest('Объекты', TAccountGroupTest.Suite);
 
 end.

@@ -72,6 +72,6 @@ begin
 end;
 
 initialization
-  TestFramework.RegisterTest('Объекты', TReturnTypeTest.Suite);
+ // TestFramework.RegisterTest('Объекты', TReturnTypeTest.Suite);
 
 end.

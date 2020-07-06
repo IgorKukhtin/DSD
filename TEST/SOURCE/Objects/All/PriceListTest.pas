@@ -71,6 +71,6 @@ procedure TPriceListTest.Test;
 begin
 
 end;
-     initialization
-  TestFramework.RegisterTest('Объекты', TPriceListTest.Suite);
+ initialization
+ // TestFramework.RegisterTest('Объекты', TPriceListTest.Suite);
 end.

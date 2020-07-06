@@ -26,7 +26,7 @@ CREATE OR REPLACE FUNCTION gpInsertUpdate_Movement_Promo(
     IN inEndReturn             TDateTime  , -- Дата окончания возвратов по акционной цене
     IN inOperDateStart         TDateTime  , -- Дата начала расч. продаж до акции
     IN inOperDateEnd           TDateTime  , -- Дата окончания расч. продаж до акции
-    IN inMonthPromo            TDateTime  , -- Месяц акции
+ INOUT ioMonthPromo            TDateTime  , -- Месяц акции
     IN inCheckDate             TDateTime  , -- Дата согласования
     IN inChecked               Boolean    , -- Согласовано
     IN inIsPromo               Boolean    , -- Акция
@@ -39,7 +39,7 @@ CREATE OR REPLACE FUNCTION gpInsertUpdate_Movement_Promo(
     --IN inSignInternalId        Integer    , -- модель подписи
     IN inSession               TVarChar     -- сессия пользователя
 )
-RETURNS Integer
+RETURNS RECORD
 AS
 $BODY$
    DECLARE vbUserId Integer;
@@ -55,8 +55,10 @@ BEGIN
                                        , inUserId    := vbUserId
                                         );
 
-    -- сохранили <Документ>
-    ioId := lpInsertUpdate_Movement_Promo (ioId            := ioId
+     -- сохранили <Документ>
+     SELECT tmp.ioId, tmp.ioMonthPromo
+  INTO ioId, ioMonthPromo
+     FROM  lpInsertUpdate_Movement_Promo (ioId             := ioId
                                         , inInvNumber      := inInvNumber
                                         , inOperDate       := inOperDate
                                         , inPromoKindId    := inPromoKindId     --Вид акции
@@ -68,7 +70,7 @@ BEGIN
                                         , inEndReturn      := inEndReturn       --Дата окончания возвратов по акционной цене
                                         , inOperDateStart  := inOperDateStart   --Дата начала расч. продаж до акции
                                         , inOperDateEnd    := inOperDateEnd     --Дата окончания расч. продаж до акции
-                                        , inMonthPromo     := inMonthPromo      --месяц акции
+                                        , ioMonthPromo     := ioMonthPromo      --месяц акции
                                         , inCheckDate      := inCheckDate       --Дата согласования
                                         , inChecked        := inChecked         --Согласовано
                                         , inIsPromo        := inIsPromo	        --акция
@@ -80,7 +82,7 @@ BEGIN
                                         , inPersonalId     := inPersonalId      --Ответственный представитель маркетингового отдела
                                         --, inSignInternalId := inSignInternalId  -- модель подписи
                                         , inUserId         := vbUserId
-                                        );
+                                        ) AS tmp;
 
 END;
 $BODY$

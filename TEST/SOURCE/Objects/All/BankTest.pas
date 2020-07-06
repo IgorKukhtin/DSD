@@ -86,6 +86,6 @@ end;
 
 
 initialization
-  TestFramework.RegisterTest('Объекты', TBankTest.Suite);
+  //TestFramework.RegisterTest('Объекты', TBankTest.Suite);
 
 end.

@@ -336,7 +336,8 @@ begin
         end else if Status <> qryCheckHead.FieldByName('BookingStatusNew').AsString then
         begin
           if Liki24API.UpdateStaus(qryCheckHead.FieldByName('BookingId').AsString,
-                                   qryCheckHead.FieldByName('Id').AsString, Status,
+                                   qryCheckHead.FieldByName('Id').AsString,
+                                   qryCheckHead.FieldByName('BookingStatusNew').AsString,
                                    qryCheckHead.FieldByName('InvNumber').AsString, GetJSONAItems) then
           begin
             spUpdateMovementStatus.Params.ParamByName('inMovementId').AsInteger := qryCheckHead.FieldByName('Id').AsInteger;

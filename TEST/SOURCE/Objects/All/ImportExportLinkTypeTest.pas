@@ -37,6 +37,6 @@ begin
 end;
 
 initialization
-  TestFramework.RegisterTest('Объекты', TImportExportLinkTypeTest.Suite);
+ // TestFramework.RegisterTest('Объекты', TImportExportLinkTypeTest.Suite);
 
 end.

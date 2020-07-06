@@ -77,7 +77,7 @@ object Report_ImplementationPlanEmployeeForm: TReport_ImplementationPlanEmployee
       State = cbsChecked
       TabOrder = 6
       OnClick = cbHighlightStringsClick
-      Width = 121
+      Width = 154
     end
     object cbFilter1: TcxCheckBox
       Left = 681
@@ -87,7 +87,7 @@ object Report_ImplementationPlanEmployeeForm: TReport_ImplementationPlanEmployee
       Style.TextColor = clRed
       TabOrder = 7
       OnClick = cbFilter1Click
-      Width = 121
+      Width = 224
     end
     object cbFilter2: TcxCheckBox
       Left = 681
@@ -97,7 +97,7 @@ object Report_ImplementationPlanEmployeeForm: TReport_ImplementationPlanEmployee
       Style.TextColor = clGreen
       TabOrder = 8
       OnClick = cbFilter1Click
-      Width = 121
+      Width = 283
     end
     object cbFilter3: TcxCheckBox
       Left = 681
@@ -107,7 +107,7 @@ object Report_ImplementationPlanEmployeeForm: TReport_ImplementationPlanEmployee
       Style.TextColor = clBlue
       TabOrder = 9
       OnClick = cbFilter1Click
-      Width = 121
+      Width = 283
     end
   end
   object Panel2: TPanel
@@ -119,13 +119,11 @@ object Report_ImplementationPlanEmployeeForm: TReport_ImplementationPlanEmployee
     BevelOuter = bvNone
     ShowCaption = False
     TabOrder = 5
-    ExplicitTop = 87
-    ExplicitHeight = 573
     object cxImplementationPlanEmployee: TcxGrid
       Left = 0
       Top = 0
       Width = 1252
-      Height = 426
+      Height = 428
       Align = alClient
       TabOrder = 0
       object cxImplementationPlanEmployeeDBBandedTableView1: TcxGridDBBandedTableView
@@ -172,6 +170,7 @@ object Report_ImplementationPlanEmployeeForm: TReport_ImplementationPlanEmployee
           DataBinding.FieldName = 'GroupName'
           HeaderAlignmentHorz = taCenter
           Options.Editing = False
+          Styles.OnGetContentStyle = colGroupNameStylesGetContentStyle
           Width = 140
           Position.BandIndex = 0
           Position.ColIndex = 0
@@ -182,6 +181,7 @@ object Report_ImplementationPlanEmployeeForm: TReport_ImplementationPlanEmployee
           DataBinding.FieldName = 'GoodsCode'
           HeaderAlignmentHorz = taCenter
           Options.Editing = False
+          Styles.OnGetContentStyle = colGroupNameStylesGetContentStyle
           Width = 49
           Position.BandIndex = 0
           Position.ColIndex = 1
@@ -192,6 +192,7 @@ object Report_ImplementationPlanEmployeeForm: TReport_ImplementationPlanEmployee
           DataBinding.FieldName = 'GoodsName'
           HeaderAlignmentHorz = taCenter
           Options.Editing = False
+          Styles.OnGetContentStyle = colGroupNameStylesGetContentStyle
           Width = 234
           Position.BandIndex = 0
           Position.ColIndex = 2
@@ -206,6 +207,7 @@ object Report_ImplementationPlanEmployeeForm: TReport_ImplementationPlanEmployee
           Properties.DisplayFormat = ',0.000'
           HeaderAlignmentHorz = taCenter
           Options.Editing = False
+          Styles.OnGetContentStyle = colGroupNameStylesGetContentStyle
           Width = 80
           Position.BandIndex = 1
           Position.ColIndex = 0
@@ -220,6 +222,7 @@ object Report_ImplementationPlanEmployeeForm: TReport_ImplementationPlanEmployee
           Properties.DisplayFormat = ',0.00'
           HeaderAlignmentHorz = taCenter
           Options.Editing = False
+          Styles.OnGetContentStyle = colGroupNameStylesGetContentStyle
           Width = 80
           Position.BandIndex = 1
           Position.ColIndex = 1
@@ -233,6 +236,7 @@ object Report_ImplementationPlanEmployeeForm: TReport_ImplementationPlanEmployee
           Properties.DisplayFormat = ',0.00'
           HeaderAlignmentHorz = taCenter
           Options.Editing = False
+          Styles.OnGetContentStyle = colGroupNameStylesGetContentStyle
           Position.BandIndex = 1
           Position.ColIndex = 2
           Position.RowIndex = 0
@@ -246,6 +250,7 @@ object Report_ImplementationPlanEmployeeForm: TReport_ImplementationPlanEmployee
           Properties.DisplayFormat = ',0.00'
           HeaderAlignmentHorz = taCenter
           Options.Editing = False
+          Styles.OnGetContentStyle = colGroupNameStylesGetContentStyle
           Width = 80
           Position.BandIndex = 1
           Position.ColIndex = 3
@@ -259,6 +264,7 @@ object Report_ImplementationPlanEmployeeForm: TReport_ImplementationPlanEmployee
           Properties.DisplayFormat = ',0.00'
           HeaderAlignmentHorz = taCenter
           Options.Editing = False
+          Styles.OnGetContentStyle = colGroupNameStylesGetContentStyle
           Position.BandIndex = 1
           Position.ColIndex = 4
           Position.RowIndex = 0
@@ -317,7 +323,7 @@ object Report_ImplementationPlanEmployeeForm: TReport_ImplementationPlanEmployee
     end
     object cxSplitter1: TcxSplitter
       Left = 0
-      Top = 426
+      Top = 428
       Width = 1252
       Height = 8
       AlignSplitter = salBottom
@@ -325,7 +331,7 @@ object Report_ImplementationPlanEmployeeForm: TReport_ImplementationPlanEmployee
     end
     object Panel3: TPanel
       Left = 0
-      Top = 434
+      Top = 436
       Width = 1252
       Height = 139
       Align = alBottom
@@ -464,6 +470,7 @@ object Report_ImplementationPlanEmployeeForm: TReport_ImplementationPlanEmployee
             PropertiesClassName = 'TcxCurrencyEditProperties'
             Properties.DisplayFormat = ',0.00'
             HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
             HeaderHint = #1054#1073#1097#1080#1081' % '#1074#1099#1087#1086#1083#1085#1077#1085#1080#1103' '#1087#1086#1089#1090#1088#1086#1095#1085#1099#1081' '#1087#1088#1080' 100% '#1087#1088#1080#1089#1091#1090#1089#1090#1074#1080#1080' '#1074' '#1072#1087#1090#1077#1082#1077'.'
             Options.Editing = False
             Width = 77
@@ -893,6 +900,7 @@ object Report_ImplementationPlanEmployeeForm: TReport_ImplementationPlanEmployee
     Top = 384
   end
   object cdsResult: TClientDataSet
+    Active = True
     Aggregates = <>
     FieldDefs = <
       item
@@ -906,6 +914,9 @@ object Report_ImplementationPlanEmployeeForm: TReport_ImplementationPlanEmployee
     OnCalcFields = cdsResultCalcFields
     Left = 40
     Top = 384
+    Data = {
+      370000009619E0BD010000001800000001000000000003000000370008417761
+      7264696E6701004900000001000557494454480200020003000000}
     object cdsResultTotalExecutionLine: TCurrencyField
       FieldKind = fkCalculated
       FieldName = 'TotalExecutionLine'

@@ -79,6 +79,6 @@ begin
 end;
 
 initialization
-  TestFramework.RegisterTest('Îáúåêòû', TTradeMarkTest.Suite);
+ // TestFramework.RegisterTest('Îáúåêòû', TTradeMarkTest.Suite);
 
 end.

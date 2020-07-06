@@ -70,6 +70,6 @@ begin
   end;
 end;
 initialization
-  TestFramework.RegisterTest('Объекты', TContractKindTest.Suite);
+  //TestFramework.RegisterTest('Объекты', TContractKindTest.Suite);
 
 end.

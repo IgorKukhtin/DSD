@@ -108,7 +108,5 @@ end;
 
 
 initialization
-  TestFramework.RegisterTest('Объекты', TContactPersonTest.Suite);
-
-
+  //TestFramework.RegisterTest('Объекты', TContactPersonTest.Suite);
 end.

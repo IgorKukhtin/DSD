@@ -36,7 +36,7 @@ BEGIN
              , Object_Status.Name                               AS StatusName
              , 0                     				AS UnitId
              , CAST ('' AS TVarChar) 				AS UnitName
-             , CAST (100  AS TFloat)                             AS ChangePercent
+             , CAST (50  AS TFloat)                             AS ChangePercent
              , CAST (20  AS TFloat)                              AS ChangePercentMin
              , CAST ('' AS TVarChar) 		                AS Comment
              , False                		                AS Transfer

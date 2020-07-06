@@ -172,6 +172,6 @@ end;
 
 
 initialization
-  TestFramework.RegisterTest('Объекты', TContractTest.Suite);
+  //TestFramework.RegisterTest('Объекты', TContractTest.Suite);
 
 end.

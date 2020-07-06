@@ -24,6 +24,10 @@ RETURNS TABLE (
       , PriceWithVAT        TFloat --Цена отгрузки с учетом НДС, с учетом скидки, грн
       , AmountReal          TFloat --Объем продаж в аналогичный период, кг
       , AmountRealWeight    TFloat --Объем продаж в аналогичный период, кг Вес
+      , AmountRealPromo     TFloat --Объем Акционных продаж в аналогичный период, кг
+      , AmountRealPromoWeight TFloat --Объем Акционных продаж в аналогичный период, кг Вес
+      , AmountReal_diff     TFloat --Объем НЕ Акционных продаж в аналогичный период, кг
+      , AmountRealWeight_diff TFloat --Объем НЕ Акционных продаж в аналогичный период, кг Вес
       , AmountRetIn         TFloat --Объем возврат в аналогичный период, кг
       , AmountRetInWeight   TFloat --Объем возврат в аналогичный период, кг Вес
       , AmountPlanMin       TFloat --Минимум планируемого объема продаж на акционный период (в кг)
@@ -140,6 +144,15 @@ BEGIN
              , MIFloat_AmountReal.ValueData           AS AmountReal          --Объем продаж в аналогичный период, кг
              , (MIFloat_AmountReal.ValueData
                  * CASE WHEN ObjectLink_Goods_Measure.ChildObjectId = zc_Measure_Sh() THEN ObjectFloat_Goods_Weight.ValueData ELSE 1 END) :: TFloat AS AmountRealWeight    --Объем продаж в аналогичный период, кг Вес
+
+             , MIFloat_AmountRealPromo.ValueData      AS AmountRealPromo          --Объем Акционных продаж в аналогичный период, кг
+             , (MIFloat_AmountRealPromo.ValueData
+                 * CASE WHEN ObjectLink_Goods_Measure.ChildObjectId = zc_Measure_Sh() THEN ObjectFloat_Goods_Weight.ValueData ELSE 1 END) :: TFloat AS AmountRealPromoWeight    --Объем Акционных продаж в аналогичный период, кг Вес
+
+             , (COALESCE (MIFloat_AmountReal.ValueData,0) - COALESCE (MIFloat_AmountRealPromo.ValueData,0)) ::TFloat      AS AmountReal_diff          --Объем НЕ Акционных продаж в аналогичный период, кг
+             , ((COALESCE (MIFloat_AmountReal.ValueData,0) - COALESCE (MIFloat_AmountRealPromo.ValueData,0))
+                 * CASE WHEN ObjectLink_Goods_Measure.ChildObjectId = zc_Measure_Sh() THEN ObjectFloat_Goods_Weight.ValueData ELSE 1 END) :: TFloat AS AmountRealWeight_diff    --Объем не Акционных продаж в аналогичный период, кг Вес
+
        
              , MIFloat_AmountRetIn.ValueData          AS AmountRetIn          --Объем возврат в аналогичный период, кг
              , (MIFloat_AmountRetIn.ValueData
@@ -205,6 +218,9 @@ BEGIN
              LEFT JOIN MovementItemFloat AS MIFloat_AmountReal
                                          ON MIFloat_AmountReal.MovementItemId = MovementItem.Id
                                         AND MIFloat_AmountReal.DescId = zc_MIFloat_AmountReal()
+             LEFT JOIN MovementItemFloat AS MIFloat_AmountRealPromo
+                                         ON MIFloat_AmountRealPromo.MovementItemId = MovementItem.Id
+                                        AND MIFloat_AmountRealPromo.DescId = zc_MIFloat_AmountRealPromo()
              LEFT JOIN MovementItemFloat AS MIFloat_AmountRetIn
                                          ON MIFloat_AmountRetIn.MovementItemId = MovementItem.Id
                                         AND MIFloat_AmountRetIn.DescId = zc_MIFloat_AmountRetIn()
@@ -290,6 +306,7 @@ ALTER FUNCTION gpSelect_MovementItem_PromoGoods (Integer, Boolean, TVarChar) OWN
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.    Воробкало А.А.
+ 06.07.20         * add AmountRealPromo
  01.07.20         * add MainDiscount
  24.01.18         * add PriceTender
  28.11.17         * add GoodsKindComplete

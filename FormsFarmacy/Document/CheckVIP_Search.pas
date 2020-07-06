@@ -69,6 +69,7 @@ type
     DateDelay: TcxGridDBColumn;
     PartionDateKindName: TcxGridDBColumn;
     ListPartionDateKindName: TcxGridDBColumn;
+    SummCard: TcxGridDBColumn;
   private
     { Private declarations }
   public

@@ -56,6 +56,6 @@ begin
 end;
 
   initialization
-  TestFramework.RegisterTest('Объекты', TCurrencyTest.Suite);
+ // TestFramework.RegisterTest('Объекты', TCurrencyTest.Suite);
 
 end.

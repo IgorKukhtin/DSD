@@ -7,7 +7,7 @@ CREATE OR REPLACE FUNCTION gpSelect_Movement_Sale_Print(
     IN inSession           TVarChar    -- сессия пользователя
 )
 RETURNS SETOF refcursor
-AS
+AS 
 $BODY$
     DECLARE vbUserId Integer;
 
@@ -761,7 +761,7 @@ BEGIN
                                              AND MovementLinkMovement_Order.DescId = zc_MovementLinkMovement_Order()
             LEFT JOIN Movement AS Movement_order ON Movement_order.Id = MovementLinkMovement_Order.MovementChildId
             LEFT JOIN tmpMovementString_ord AS MovementString_InvNumberPartner_order
-                                            ON MovementString_InvNumberPartner_order.MovementId =  Movement_order.Id
+                                            ON MovementString_InvNumberPartner_order.MovementId = Movement_order.Id
                                            AND MovementString_InvNumberPartner_order.DescId = zc_MovementString_InvNumberPartner()
 
             LEFT JOIN tmpMovementString AS MovementString_InvNumberOrder
@@ -1027,9 +1027,9 @@ BEGIN
             LEFT JOIN tmpMovementLinkMovement AS MovementLinkMovement_Master
                                               ON MovementLinkMovement_Master.MovementId = Movement.Id
                                              AND MovementLinkMovement_Master.DescId = zc_MovementLinkMovement_Master()
-            LEFT JOIN tmpMovementString AS MS_InvNumberPartner_Master 
-                                        ON MS_InvNumberPartner_Master.MovementId = MovementLinkMovement_Master.MovementChildId
-                                       AND MS_InvNumberPartner_Master.DescId = zc_MovementString_InvNumberPartner()
+            LEFT JOIN tmpMovementString_ord AS MS_InvNumberPartner_Master 
+                                            ON MS_InvNumberPartner_Master.MovementId = MovementLinkMovement_Master.MovementChildId
+                                           AND MS_InvNumberPartner_Master.DescId = zc_MovementString_InvNumberPartner()
 
 
 

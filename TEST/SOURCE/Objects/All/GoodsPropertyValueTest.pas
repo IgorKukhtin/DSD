@@ -95,5 +95,5 @@ begin
   end;
 end;
   initialization
-  TestFramework.RegisterTest('Объекты', TGoodsPropertyValueTest.Suite);
+ // TestFramework.RegisterTest('Объекты', TGoodsPropertyValueTest.Suite);
 end.
