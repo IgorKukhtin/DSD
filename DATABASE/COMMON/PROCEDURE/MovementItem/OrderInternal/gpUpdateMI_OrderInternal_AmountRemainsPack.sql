@@ -114,16 +114,26 @@ BEGIN
                         AND MovementItem.isErased   = FALSE
                      )
        -- результат - для SKLAD
-       SELECT tmpMI.MovementItemId
-            , 0                                                       AS ContainerId
-            , COALESCE (tmpContainer.GoodsId,      tmpMI.GoodsId)     AS GoodsId
-            , COALESCE (tmpContainer.GoodsKindId,  tmpMI.GoodsKindId) AS GoodsKindId
-            , COALESCE (tmpContainer.Amount_start, 0)                 AS Amount_start
-       FROM (SELECT * FROM tmpContainer WHERE tmpContainer.ContainerId = 0
-            ) AS tmpContainer
-            FULL JOIN (SELECT * FROM tmpMI WHERE tmpMI.ContainerId = 0
-                      ) AS tmpMI ON tmpMI.GoodsId     = tmpContainer.GoodsId
-                                AND tmpMI.GoodsKindId = tmpContainer.GoodsKindId
+       SELECT tmp.MovementItemId
+            , tmp.ContainerId
+            , tmp.GoodsId
+            , tmp.GoodsKindId
+            , SUM (tmp.Amount_start) AS Amount_start
+       FROM (SELECT COALESCE (tmpMI.MovementItemId, 0)                      AS MovementItemId
+                  , 0                                                       AS ContainerId
+                  , COALESCE (tmpContainer.GoodsId,      tmpMI.GoodsId)     AS GoodsId
+                  , COALESCE (tmpContainer.GoodsKindId,  tmpMI.GoodsKindId) AS GoodsKindId
+                  , COALESCE (tmpContainer.Amount_start, 0)                 AS Amount_start
+             FROM (SELECT * FROM tmpContainer WHERE tmpContainer.ContainerId = 0
+                  ) AS tmpContainer
+                  FULL JOIN (SELECT * FROM tmpMI WHERE tmpMI.ContainerId = 0
+                            ) AS tmpMI ON tmpMI.GoodsId     = tmpContainer.GoodsId
+                                      AND tmpMI.GoodsKindId = tmpContainer.GoodsKindId
+            ) AS tmp
+       GROUP BY tmp.MovementItemId
+              , tmp.ContainerId
+              , tmp.GoodsId
+              , tmp.GoodsKindId
       UNION ALL
        -- результат - для CEH
        SELECT tmpMI.MovementItemId
@@ -139,7 +149,15 @@ BEGIN
 
 --    RAISE EXCEPTION '<%>', (select count(*) from tmpAll where tmpAll.ContainerId = 0 and tmpAll.GoodsId = 593238 and tmpAll.GoodsKindId = 8335);
 
-
+/*
+if inSession = '5'
+then
+    RAISE EXCEPTION 'Ошибка.<%>  %   %', (select min (tmpAll.Amount_start) from tmpAll where tmpAll.GoodsId = 2062)
+    , (select count (*) from tmpAll where tmpAll.GoodsId = 2062 and tmpAll.Amount_start<> 0)
+    , (select max (tmpAll.ContainerId) from tmpAll where tmpAll.GoodsId = 2062)
+    ;
+end if;
+*/
     -- сохранили св-ва для zc_MI_Master
     PERFORM lpUpdate_MI_OrderInternal_Property (ioId                 := tmpAll.MovementItemId
                                               , inMovementId         := inMovementId
@@ -155,7 +173,15 @@ BEGIN
                                               , inUserId             := vbUserId
                                                ) 
     FROM tmpAll;
-
+/*
+if inSession = '5'
+then
+    RAISE EXCEPTION 'Ошибка.<%>  %   %', (select min (tmpAll.Amount_start) from tmpAll where tmpAll.GoodsId = 2062)
+    , (select max (tmpAll.Amount_start) from tmpAll where tmpAll.GoodsId = 2062)
+    , (select max (tmpAll.ContainerId) from tmpAll where tmpAll.GoodsId = 2062)
+    ;
+end if;
+*/
 
 END;
 $BODY$
