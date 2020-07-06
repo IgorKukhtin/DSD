@@ -534,10 +534,14 @@ CREATE OR REPLACE FUNCTION zc_MovementFloat_TotalDayAudit() RETURNS Integer AS $
 INSERT INTO MovementFloatDesc(Code, ItemName)
   SELECT 'zc_MovementFloat_TotalDayAudit', 'Дней доплата за ревизию' WHERE NOT EXISTS (SELECT * FROM MovementFloatDesc WHERE Code = 'zc_MovementFloat_TotalDayAudit');
 
+CREATE OR REPLACE FUNCTION zc_MovementFloat_ChangePercentLoss() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM MovementFloatDesc WHERE Code = 'zc_MovementFloat_ChangePercentLoss'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
+INSERT INTO MovementFloatDesc (Code, ItemName)
+  SELECT 'zc_MovementFloat_ChangePercentLoss', '% скидки(срок от 1 мес до 3 мес)' WHERE NOT EXISTS (SELECT * FROM MovementFloatDesc WHERE Code = 'zc_MovementFloat_ChangePercentLoss');
  
 /*-------------------------------------------------------------------------------
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.   Воробкало А.А.   Шаблий.О.В.
+ 06.07.20                                                                                     * zc_MovementFloat_SummaFund
  04.06.20         * zc_MovementFloat_TotalDayAudit
  23.04.20                                                                                     * zc_MovementFloat_SummaFund
  01.04.20         * zc_MovementFloat_PromoStateKind

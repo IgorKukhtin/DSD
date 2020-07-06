@@ -5932,7 +5932,7 @@ begin
   ChangeStatus('Установка первоначальных параметров');
   // CashSessionId только в службе
   FormParams.ParamByName('CashSessionId').Value := iniLocalGUIDGet;
-  FormParams.ParamByName('ZReportName').Value := iniLocalUnitNameGet;
+  FormParams.ParamByName('ZReportName').Value := StringReplace(iniLocalUnitNameGet, '/', ',', [rfReplaceAll]);
   actSaveCashSesionIdToFile.Execute; // только 2 форма
   FormParams.ParamByName('ClosedCheckId').Value := 0;
   FormParams.ParamByName('CheckId').Value := 0;

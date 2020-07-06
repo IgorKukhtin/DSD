@@ -271,7 +271,7 @@ inherited Report_ProfitabilityForm: TReport_ProfitabilityForm
             Position.RowIndex = 0
           end
           object SummChange: TcxGridDBBandedColumn
-            Caption = #1082#1086#1084#1087#1077#1085#1089#1072#1094#1103
+            Caption = #1082#1086#1084#1087#1077#1085#1089#1072#1094#1080#1103
             DataBinding.FieldName = 'SummChange'
             PropertiesClassName = 'TcxCurrencyEditProperties'
             Properties.DisplayFormat = ',0.00;-,0.00; ;'

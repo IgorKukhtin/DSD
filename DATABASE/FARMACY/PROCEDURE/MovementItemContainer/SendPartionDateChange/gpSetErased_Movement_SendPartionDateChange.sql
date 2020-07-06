@@ -10,9 +10,23 @@ RETURNS VOID
 AS
 $BODY$
   DECLARE vbUserId Integer;
+  DECLARE vbMovementId Integer;
+  DECLARE vbStatusId Integer;
 BEGIN
      -- проверка прав пользователя на вызов процедуры
      vbUserId:= lpCheckRight(inSession, zc_Enum_Process_SetErased_SendPartionDateChange());
+
+     -- Распроводим документ изменения сроков
+     SELECT Movement.ID, Movement.StatusId
+     INTO vbMovementId, vbStatusId
+     FROM Movement
+     WHERE Movement.DescId = zc_Movement_SendPartionDate()
+       AND Movement.ParentId = inMovementId;
+       
+     IF COALESCE (vbMovementId, 0) > 0 AND vbStatusId <> zc_Enum_Status_Erased()
+     THEN
+       PERFORM gpSetErased_Movement_SendPartionDate (vbMovementId, inSession);    
+     END IF;
 
      -- проверка - если <Master> Проведен, то <Ошибка>
      PERFORM lfCheck_Movement_ParentStatus (inMovementId:= inMovementId, inNewStatusId:= zc_Enum_Status_Erased(), inComment:= 'удалить');

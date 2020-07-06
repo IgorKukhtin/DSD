@@ -26,8 +26,6 @@ object MainForm: TMainForm
     BevelOuter = bvNone
     Caption = 'Panel1'
     TabOrder = 0
-    ExplicitLeft = 521
-    ExplicitWidth = 504
     object grBookingsBody: TcxGrid
       Left = 0
       Top = 378
@@ -38,9 +36,6 @@ object MainForm: TMainForm
       LookAndFeel.Kind = lfStandard
       LookAndFeel.NativeStyle = False
       LookAndFeel.SkinName = ''
-      ExplicitTop = 250
-      ExplicitWidth = 504
-      ExplicitHeight = 355
       object grBookingsBodyDBTableView: TcxGridDBTableView
         Navigator.Buttons.CustomButtons = <>
         DataController.DataSource = BookingsBodyDS
@@ -426,7 +421,6 @@ object MainForm: TMainForm
       Height = 383
       Align = alClient
       TabOrder = 1
-      ExplicitHeight = 377
       object cxGridDBTableView3: TcxGridDBTableView
         Navigator.Buttons.CustomButtons = <>
         DataController.DataSource = dsCheckHead

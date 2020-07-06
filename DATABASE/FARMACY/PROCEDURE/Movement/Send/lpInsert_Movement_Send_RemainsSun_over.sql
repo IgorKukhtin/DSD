@@ -787,7 +787,7 @@ BEGIN
              -- 25.05.20 -- временно отключил - 13.05.20
              LEFT JOIN ObjectBoolean AS ObjectBoolean_Goods_isClose
                                      ON ObjectBoolean_Goods_isClose.ObjectId  = tmpObject_Price.GoodsId
-                                    AND ObjectBoolean_Goods_isClose.DescId    = zc_ObjectBoolean_Goods_Close()   
+                                    AND ObjectBoolean_Goods_isClose.DescId    = zc_ObjectBoolean_Goods_Close()
                                     AND ObjectBoolean_Goods_isClose.ValueData = TRUE
              -- !!!
              LEFT JOIN _tmpUnit_SUN ON _tmpUnit_SUN.UnitId = tmpObject_Price.UnitId
@@ -1316,7 +1316,7 @@ BEGIN
           ;
 
      -- Правим количество распределения если остаток меньше отгружать товар по СУН , если у него остаток больше чем N
-     UPDATE _tmpRemains_Partion SET Amount = FLOOR (CASE WHEN _tmpRemains_Partion.Amount_save - COALESCE(_tmpUnit_SUN.Limit_N, 0) <= 0 THEN 0 
+     UPDATE _tmpRemains_Partion SET Amount = FLOOR (CASE WHEN _tmpRemains_Partion.Amount_save - COALESCE(_tmpUnit_SUN.Limit_N, 0) <= 0 THEN 0
                                                          ELSE  _tmpRemains_Partion.Amount_save - COALESCE(_tmpUnit_SUN.Limit_N, 0) END)
      FROM _tmpUnit_SUN
      WHERE _tmpRemains_Partion.UnitId = _tmpUnit_SUN.UnitId
@@ -1652,6 +1652,41 @@ BEGIN
                                                 AND _tmpResult_Partion_check.UnitId_to   = _tmpResult_Partion.UnitId_to
                WHERE _tmpResult_Partion_check.GoodsId IS NULL
               );
+
+
+     -- Добавили парный товар
+     INSERT INTO _tmpResult_Partion (DriverId, UnitId_from, UnitId_to, GoodsId, Amount, Summ, Amount_next, Summ_next, MovementId, MovementItemId)
+     SELECT _tmpResult_Partion.DriverId
+          , _tmpResult_Partion.UnitId_from
+          , _tmpResult_Partion.UnitId_to
+            -- может оказаться что для двух товаров
+          , GoodsPair.GoodsId_PairSun
+            -- с учетом кратности - vbKoeffSUN
+          , _tmpResult_Partion.Amount
+          , _tmpResult_Partion.Amount * _tmpRemains.Price
+            --
+          , 0 AS Amount_next
+          , 0 AS Summ_next
+          , 0 AS MovementId
+          , 0 AS MovementItemId
+     FROM _tmpResult_Partion
+          LEFT JOIN (SELECT OL_GoodsPairSun.ObjectId      AS GoodsId
+                          , OL_GoodsPairSun.ChildObjectId AS GoodsId_PairSun
+                     FROM ObjectLink AS OL_GoodsPairSun
+                     WHERE OL_GoodsPairSun.ChildObjectId > 0 AND OL_GoodsPairSun.DescId = zc_ObjectLink_Goods_GoodsPairSun()) AS GoodsPair
+                                                                                                                               ON GoodsPair.GoodsId =  _tmpResult_Partion.GoodsId
+
+          LEFT JOIN _tmpResult_Partion AS MI_PairSun
+                                  ON MI_PairSun.GoodsId =  GoodsPair.GoodsId_PairSun
+                                 AND MI_PairSun.UnitId_From =  _tmpResult_Partion.UnitId_From
+                                 AND MI_PairSun.UnitId_To =  _tmpResult_Partion.UnitId_To
+
+          LEFT JOIN _tmpRemains ON _tmpRemains.GoodsId = GoodsPair.GoodsId_PairSun
+                               AND _tmpRemains.UnitId = _tmpResult_Partion.UnitId_From
+
+     WHERE _tmpResult_Partion.GoodsId in (SELECT OL_GoodsPairSun.ObjectId      AS GoodsId
+                                          FROM ObjectLink AS OL_GoodsPairSun
+                                          WHERE OL_GoodsPairSun.ChildObjectId > 0 AND OL_GoodsPairSun.DescId = zc_ObjectLink_Goods_GoodsPairSun());
 
 
      -- !!! Добавили парные, которых нет в Прайсе ...

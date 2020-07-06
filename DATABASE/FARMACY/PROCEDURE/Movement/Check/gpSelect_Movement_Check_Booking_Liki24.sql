@@ -27,9 +27,13 @@ BEGIN
           , MovementString_BookingStatus.ValueData             AS BookingStatus
 
           , CASE WHEN MovementString_BookingStatus.ValueData = 'Processing'
-                  AND Movement.StatusId <> zc_Enum_Status_Erased()  THEN 'PreAproved'
-                 WHEN MovementString_BookingStatus.ValueData = 'Processing'
+                  AND Movement.StatusId <> zc_Enum_Status_Erased()  THEN 'PreApproved'
+                 WHEN MovementString_BookingStatus.ValueData <> 'Cancelled'
                   AND Movement.StatusId = zc_Enum_Status_Erased()  THEN 'Cancelled'
+                 WHEN MovementString_BookingStatus.ValueData = 'PreApproved'
+                  AND COALESCE (MovementLinkObject_ConfirmedKind.ObjectId, 0) = zc_Enum_ConfirmedKind_Complete()    THEN 'Approved'
+                 WHEN MovementString_BookingStatus.ValueData = 'Approved'
+                  AND Movement.StatusId = zc_Enum_Status_Complete()    THEN 'Collected'
                  END :: TVarChar AS BookingStatusNew
 
      FROM MovementLinkObject
@@ -47,9 +51,19 @@ BEGIN
                                     ON MovementString_BookingStatus.MovementId = Movement.Id
                                    AND MovementString_BookingStatus.DescId = zc_MovementString_BookingStatus()
 
+          LEFT JOIN MovementLinkObject AS MovementLinkObject_ConfirmedKind
+                                       ON MovementLinkObject_ConfirmedKind.MovementId = Movement.Id
+                                      AND MovementLinkObject_ConfirmedKind.DescId = zc_MovementLinkObject_ConfirmedKind()
+
      WHERE MovementLinkObject.DescId = zc_MovementLinkObject_CheckSourceKind()
        AND MovementLinkObject.ObjectId = zc_Enum_CheckSourceKind_Liki24()
        AND (MovementString_BookingStatus.ValueData = 'Processing'
+        OR MovementString_BookingStatus.ValueData = 'PreApproved'
+           AND COALESCE (MovementLinkObject_ConfirmedKind.ObjectId, 0) = zc_Enum_ConfirmedKind_Complete()
+        OR MovementString_BookingStatus.ValueData = 'Approved'
+           AND Movement.StatusId = zc_Enum_Status_Complete()
+        OR MovementString_BookingStatus.ValueData <> 'Cancelled'
+           AND Movement.StatusId = zc_Enum_Status_Erased()
            )
 
       ;
@@ -65,4 +79,5 @@ $BODY$
 */
 
 -- тест
+-- select * from Movement_Check_View where id = 19292671
 -- SELECT * FROM gpSelect_Movement_Check_Booking_Liki24 (inSession:= '3')

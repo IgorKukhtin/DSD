@@ -300,7 +300,7 @@ BEGIN
              , ROUND(tmpRealization.AmountSumJuridical, 2) ::TFloat
              , ROUND(tmpRealization.AmountSum, 2) ::TFloat
              , ROUND(tmpSPKind.SummChange, 2) ::TFloat
-             , ROUND(COALESCE(tmpRealization.AmountSum, 0)::TFloat + COALESCE(tmpSPKind.SummChange, 0)::TFloat - COALESCE(tmpRealization.AmountSumJuridical, 0), 2)::TFloat ::TFloat
+             , ROUND(COALESCE(tmpRealization.AmountSum, 0)::TFloat + COALESCE(tmpSPKind.SummChange, 0)::TFloat - COALESCE(tmpRealization.AmountSumJuridical, 0), 2)::TFloat
 
              , ROUND(tmpRemains.Saldo, 2)::TFloat
              , ROUND(tmpRemains.SaldoSum, 2)::TFloat
@@ -309,7 +309,7 @@ BEGIN
              , ROUND(COALESCE(tmpAdditionalExpenses.Amount, 0)::TFloat + COALESCE(tmpWagesRest.Amount, 0)::TFloat, 2)::TFloat
              
              , ROUND(COALESCE(tmpRealization.AmountSum, 0)::TFloat + COALESCE(tmpSPKind.SummChange, 0)::TFloat - COALESCE(tmpRealization.AmountSumJuridical, 0)::TFloat - 
-                COALESCE(tmpWages.Amount, 0)::TFloat - COALESCE(tmpAdditionalExpenses.Amount, 0)::TFloat, 2) ::TFloat
+                COALESCE(tmpWages.Amount, 0)::TFloat - COALESCE(tmpAdditionalExpenses.Amount, 0)::TFloat - COALESCE(tmpWagesRest.Amount, 0)::TFloat, 2) ::TFloat
         FROM tmpUnit
 
              LEFT JOIN Object AS Object_Unit ON Object_Unit.Id = tmpUnit.UnitId
