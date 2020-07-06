@@ -517,7 +517,7 @@ inherited Report_Promo_Result_TradeForm: TReport_Promo_Result_TradeForm
             Width = 98
           end
           object PriceSale: TcxGridDBColumn
-            Caption = #1062#1077#1085#1072' '#1085#1072' '#1087#1086#1083#1082#1077'/'#1089#1082#1080#1076#1082#1072' '#1076#1083#1103' '#1087#1086#1082#1091#1087#1072#1090#1077#1083#1103
+            Caption = #1062#1077#1085#1072' '#1085#1072' '#1087#1086#1083#1082#1077', '#1075#1088#1085
             DataBinding.FieldName = 'PriceSale'
             PropertiesClassName = 'TcxCurrencyEditProperties'
             Properties.DecimalPlaces = 4
@@ -525,7 +525,6 @@ inherited Report_Promo_Result_TradeForm: TReport_Promo_Result_TradeForm
             Visible = False
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
-            Options.Editing = False
             Width = 88
           end
           object Comment: TcxGridDBColumn
@@ -1317,6 +1316,15 @@ inherited Report_Promo_Result_TradeForm: TReport_Promo_Result_TradeForm
         Value = Null
         Component = MasterCDS
         ComponentItem = 'MainDiscount'
+        DataType = ftFloat
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inPriceSale'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'PriceSale'
         DataType = ftFloat
         ParamType = ptInput
         MultiSelectSeparator = ','
