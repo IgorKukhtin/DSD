@@ -20,6 +20,7 @@ BEGIN
                   INNER JOIN MovementItem PromoGoods ON Promo.id = PromoGoods.movementid 
                                                     AND PromoGoods.descid = zc_MI_Master()                  
                                                     AND PromoGoods.Amount = 1
+                                                    AND PromoGoods.isErased = False
               WHERE PromoCode.id = inPromoCodeId) THEN
     	IF EXISTS(SELECT  * 
               FROM MovementItem PromoCode
@@ -27,6 +28,7 @@ BEGIN
                   INNER JOIN MovementItem PromoGoods ON Promo.id = PromoGoods.movementid 
                                                     AND PromoGoods.descid = zc_MI_Master()                  
                                                     AND PromoGoods.Amount = 1
+                                                    AND PromoGoods.isErased = False
               WHERE PromoCode.id = inPromoCodeId AND PromoGoods.objectid = inGoodsId) THEN
         	outResult := True;
         END IF;
@@ -43,3 +45,6 @@ $BODY$
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.   Воробкало А.А.   Подмогильный В.В.
  02.02.18                                                                                        *
 */
+
+-- select * from gpGet_IsGoodsInPromo(inPromoCodeId := 356725110, inGoodsId := 4351, inSession := '3');
+

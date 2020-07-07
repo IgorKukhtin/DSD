@@ -1,7 +1,6 @@
 -- Function: gpInsertUpdate_MI_SendPartionDate_Master()
 
-DROP FUNCTION IF EXISTS gpInsertUpdate_MI_SendPartionDate_Master (Integer, Integer, Integer, TFloat, TFloat, TFloat, TFloat, TVarChar);
-DROP FUNCTION IF EXISTS gpInsertUpdate_MI_SendPartionDate_Master (Integer, Integer, Integer, TFloat, TFloat, TFloat, TFloat, Integer, TVarChar);
+DROP FUNCTION IF EXISTS gpInsertUpdate_MI_SendPartionDate_Master (Integer, Integer, Integer, TFloat, TFloat, TFloat, TFloat, TFloat, Integer, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpInsertUpdate_MI_SendPartionDate_Master(
  INOUT ioId                  Integer   , -- Ключ объекта <Элемент документа>
@@ -9,7 +8,8 @@ CREATE OR REPLACE FUNCTION gpInsertUpdate_MI_SendPartionDate_Master(
     IN inGoodsId             Integer   , -- Товары
     IN inAmount              TFloat    , -- Количество
     IN inAmountRemains       TFloat    , --
-    IN inChangePercent       TFloat    , -- % (срок от 1 мес до 6 мес)
+    IN inChangePercent       TFloat    , -- % (срок от 3 мес до 6 мес)
+    IN inChangePercentLess   TFloat    , -- % (срок от 1 мес до 3 мес)
     IN inChangePercentMin    TFloat    , -- % (срок меньше месяца)
     IN inContainerId         Integer   , -- Контейнер для изменения срока
     IN inSession             TVarChar    -- сессия пользователя
@@ -22,14 +22,9 @@ $BODY$
    DECLARE vbIsInsert Boolean;
    DECLARE vbOperDate TDateTime;
    DECLARE vbDate180  TDateTime;
+   DECLARE vbDate90   TDateTime;
    DECLARE vbDate30   TDateTime;
    DECLARE vbDate0    TDateTime;
-   DECLARE vbMonth_0  TFloat;
-   DECLARE vbMonth_1  TFloat;
-   DECLARE vbMonth_6  TFloat;
-   DECLARE vbDay_0  Integer;
-   DECLARE vbDay_1  Integer;
-   DECLARE vbDay_6  Integer;
 BEGIN
     -- проверка прав пользователя на вызов процедуры
     --vbUserId := lpCheckRight (inSession, zc_Enum_Process_InsertUpdate_MI_SendPartionDate());
@@ -50,53 +45,10 @@ BEGIN
     vbOperDate := (SELECT Movement.OperDate FROM Movement WHERE Movement.Id = inMovementId);
 
     -- получаем значения из справочника
-/*    vbMonth_0 := (SELECT ObjectFloat_Month.ValueData
-                  FROM Object  AS Object_PartionDateKind
-                       LEFT JOIN ObjectFloat AS ObjectFloat_Month
-                                             ON ObjectFloat_Month.ObjectId = Object_PartionDateKind.Id
-                                            AND ObjectFloat_Month.DescId = zc_ObjectFloat_PartionDateKind_Month()
-                  WHERE Object_PartionDateKind.Id = zc_Enum_PartionDateKind_0());
-    vbMonth_1 := (SELECT ObjectFloat_Month.ValueData
-                  FROM Object  AS Object_PartionDateKind
-                       LEFT JOIN ObjectFloat AS ObjectFloat_Month
-                                             ON ObjectFloat_Month.ObjectId = Object_PartionDateKind.Id
-                                            AND ObjectFloat_Month.DescId = zc_ObjectFloat_PartionDateKind_Month()
-                  WHERE Object_PartionDateKind.Id = zc_Enum_PartionDateKind_1());
-    vbMonth_6 := (SELECT ObjectFloat_Month.ValueData
-                  FROM Object  AS Object_PartionDateKind
-                       LEFT JOIN ObjectFloat AS ObjectFloat_Month
-                                             ON ObjectFloat_Month.ObjectId = Object_PartionDateKind.Id
-                                            AND ObjectFloat_Month.DescId = zc_ObjectFloat_PartionDateKind_Month()
-                  WHERE Object_PartionDateKind.Id = zc_Enum_PartionDateKind_6());
-
-    -- даты + 6 месяцев, + 1 месяц
-    vbDate180 := CURRENT_DATE + (vbMonth_6||' MONTH' ) ::INTERVAL;
-    vbDate30  := CURRENT_DATE + (vbMonth_1||' MONTH' ) ::INTERVAL;
-    vbDate0   := CURRENT_DATE + (vbMonth_0||' MONTH' ) ::INTERVAL; */
-
-    vbDay_0 := (SELECT COALESCE(ObjectFloat_Day.ValueData, 0)::Integer
-                FROM Object  AS Object_PartionDateKind
-                     LEFT JOIN ObjectFloat AS ObjectFloat_Day
-                                           ON ObjectFloat_Day.ObjectId = Object_PartionDateKind.Id
-                                          AND ObjectFloat_Day.DescId = zc_ObjectFloat_PartionDateKind_Day()
-                WHERE Object_PartionDateKind.Id = zc_Enum_PartionDateKind_0());
-    vbDay_1 := (SELECT ObjectFloat_Day.ValueData::Integer
-                FROM Object  AS Object_PartionDateKind
-                     LEFT JOIN ObjectFloat AS ObjectFloat_Day
-                                           ON ObjectFloat_Day.ObjectId = Object_PartionDateKind.Id
-                                          AND ObjectFloat_Day.DescId = zc_ObjectFloat_PartionDateKind_Day()
-                WHERE Object_PartionDateKind.Id = zc_Enum_PartionDateKind_1());
-    vbDay_6 := (SELECT ObjectFloat_Day.ValueData::Integer
-                FROM Object  AS Object_PartionDateKind
-                     LEFT JOIN ObjectFloat AS ObjectFloat_Day
-                                           ON ObjectFloat_Day.ObjectId = Object_PartionDateKind.Id
-                                          AND ObjectFloat_Day.DescId = zc_ObjectFloat_PartionDateKind_Day()
-                WHERE Object_PartionDateKind.Id = zc_Enum_PartionDateKind_6());
-
-    -- даты + 6 месяцев, + 1 месяц
-    vbDate180 := CURRENT_DATE + (vbDay_6||' DAY' ) ::INTERVAL;
-    vbDate30  := CURRENT_DATE + (vbDay_1||' DAY' ) ::INTERVAL;
-    vbDate0   := CURRENT_DATE + (vbDay_0||' DAY' ) ::INTERVAL;
+    -- получаем значения из справочника
+    SELECT Date_6, Date_3, Date_1, Date_0
+    INTO vbDate180, vbDate90, vbDate30, vbDate0
+    FROM lpSelect_PartionDateKind_SetDate ();
 
 
     -- определяется признак Создание/Корректировка
@@ -107,6 +59,8 @@ BEGIN
 
     -- сохранили <цену>
     PERFORM lpInsertUpdate_MovementItemFloat (zc_MIFloat_ChangePercent(), ioId, inChangePercent);
+    -- сохранили <>
+    PERFORM lpInsertUpdate_MovementItemFloat (zc_MIFloat_ChangePercentLess(), ioId, inChangePercentLess);
     -- сохранили <>
     PERFORM lpInsertUpdate_MovementItemFloat (zc_MIFloat_ChangePercentMin(), ioId, inChangePercentMin);
     -- сохранили <>
@@ -282,6 +236,7 @@ BEGIN
           , tmpCalc.Amount_Calc               AS Amount
           , CASE WHEN tmpCalc.ExpirationDate <= vbDate0   THEN zc_Enum_PartionDateKind_0()
                  WHEN tmpCalc.ExpirationDate <= vbDate30  THEN zc_Enum_PartionDateKind_1()
+                 WHEN tmpCalc.ExpirationDate <= vbDate90  THEN zc_Enum_PartionDateKind_3()
                  WHEN tmpCalc.ExpirationDate <= vbDate180 THEN zc_Enum_PartionDateKind_6()
                  ELSE 0
             END                       AS PartionDateKindId
@@ -339,6 +294,7 @@ $BODY$
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Шаблий О.В.
+ 06.07.20                                                       *
  15.07.19                                                       * 
  26.06.19                                                       *
  18.06.19                                                       *

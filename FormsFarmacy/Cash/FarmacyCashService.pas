@@ -2374,7 +2374,10 @@ begin
       IdFTP.Connect;
       if IdFTP.Connected then
       try
-        if not ChangeDirFTP(GetFtpDIR + iniLocalUnitNameGet, True) then Exit;
+        if Pos('/', iniLocalUnitNameGet) > 0 then
+        begin
+          if not ChangeDirFTP(GetFtpDIR + Copy(iniLocalUnitNameGet, 1, Pos('/', iniLocalUnitNameGet) - 1), True) then Exit;
+        end else if not ChangeDirFTP(GetFtpDIR + iniLocalUnitNameGet, True) then Exit;
         for i := 0 to sl.Count - 1 do
         begin
           IdFTP.Put(p + sl.Strings[i], sl.Strings[i], False);
@@ -2423,12 +2426,12 @@ begin
     try
       try
 
-        BaseVersionInfo := TdsdFormStorageFactory.GetStorage.LoadFileVersion('FarmacyCash.exe');
+        BaseVersionInfo := TdsdFormStorageFactory.GetStorage.LoadFileVersion('FarmacyCash.exe', GetBinaryPlatfotmSuffics(ExtractFileDir(ParamStr(0)) + '\FarmacyCash.exe'));
         LocalVersionInfo := UnilWin.GetFileVersion(ExtractFileDir(ParamStr(0)) + '\FarmacyCash.exe');
         if (BaseVersionInfo.VerHigh > LocalVersionInfo.VerHigh) or
            ((BaseVersionInfo.VerHigh = LocalVersionInfo.VerHigh) and (BaseVersionInfo.VerLow > LocalVersionInfo.VerLow)) then OldProgram := True;
 
-        BaseVersionInfo := TdsdFormStorageFactory.GetStorage.LoadFileVersion(ExtractFileName(ParamStr(0)));
+        BaseVersionInfo := TdsdFormStorageFactory.GetStorage.LoadFileVersion(ExtractFileName(ParamStr(0)), GetBinaryPlatfotmSuffics(ParamStr(0)));
         LocalVersionInfo := UnilWin.GetFileVersion(ParamStr(0));
         if (BaseVersionInfo.VerHigh > LocalVersionInfo.VerHigh) or
            ((BaseVersionInfo.VerHigh = LocalVersionInfo.VerHigh) and (BaseVersionInfo.VerLow > LocalVersionInfo.VerLow)) then OldServise := True;
@@ -2545,12 +2548,12 @@ begin
   OldProgram := False;
   OldServise := False;
   try
-    BaseVersionInfo := TdsdFormStorageFactory.GetStorage.LoadFileVersion('FarmacyCash.exe');
+    BaseVersionInfo := TdsdFormStorageFactory.GetStorage.LoadFileVersion('FarmacyCash.exe', GetBinaryPlatfotmSuffics(ExtractFileDir(ParamStr(0)) + '\FarmacyCash.exe'));
     LocalVersionInfo := UnilWin.GetFileVersion(ExtractFileDir(ParamStr(0)) + '\FarmacyCash.exe');
     if (BaseVersionInfo.VerHigh > LocalVersionInfo.VerHigh) or
        ((BaseVersionInfo.VerHigh = LocalVersionInfo.VerHigh) and (BaseVersionInfo.VerLow > LocalVersionInfo.VerLow)) then OldProgram := True;
 
-    BaseVersionInfo := TdsdFormStorageFactory.GetStorage.LoadFileVersion(ExtractFileName(ParamStr(0)));
+    BaseVersionInfo := TdsdFormStorageFactory.GetStorage.LoadFileVersion(ExtractFileName(ParamStr(0)), GetBinaryPlatfotmSuffics(ParamStr(0)));
     LocalVersionInfo := UnilWin.GetFileVersion(ParamStr(0));
     if (BaseVersionInfo.VerHigh > LocalVersionInfo.VerHigh) or
        ((BaseVersionInfo.VerHigh = LocalVersionInfo.VerHigh) and (BaseVersionInfo.VerLow > LocalVersionInfo.VerLow)) then OldServise := True;

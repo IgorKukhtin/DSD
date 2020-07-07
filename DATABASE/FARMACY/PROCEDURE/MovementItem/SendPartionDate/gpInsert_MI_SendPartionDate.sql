@@ -13,15 +13,10 @@ AS
 $BODY$
    DECLARE vbUserId   Integer;
    DECLARE vbDate180  TDateTime;
+   DECLARE vbDate90   TDateTime;
    DECLARE vbDate30   TDateTime;
    DECLARE vbDate0    TDateTime;
    DECLARE vbOperDate TDateTime;
-   DECLARE vbMonth_0  TFloat;
-   DECLARE vbMonth_1  TFloat;
-   DECLARE vbMonth_6  TFloat;
-   DECLARE vbDay_0  Integer;
-   DECLARE vbDay_1  Integer;
-   DECLARE vbDay_6  Integer;
 
    DECLARE vbId_err            Integer;
    DECLARE vbAmount_master_err TFloat;
@@ -36,53 +31,9 @@ BEGIN
     vbOperDate := (SELECT Movement.Operdate FROM Movement WHERE Movement.Id = inMovementId);
 
     -- получаем значения из справочника
-/*    vbMonth_0 := (SELECT ObjectFloat_Month.ValueData
-                  FROM Object  AS Object_PartionDateKind
-                       LEFT JOIN ObjectFloat AS ObjectFloat_Month
-                                             ON ObjectFloat_Month.ObjectId = Object_PartionDateKind.Id
-                                            AND ObjectFloat_Month.DescId = zc_ObjectFloat_PartionDateKind_Month()
-                  WHERE Object_PartionDateKind.Id = zc_Enum_PartionDateKind_0());
-    vbMonth_1 := (SELECT ObjectFloat_Month.ValueData
-                  FROM Object  AS Object_PartionDateKind
-                       LEFT JOIN ObjectFloat AS ObjectFloat_Month
-                                             ON ObjectFloat_Month.ObjectId = Object_PartionDateKind.Id
-                                            AND ObjectFloat_Month.DescId = zc_ObjectFloat_PartionDateKind_Month()
-                  WHERE Object_PartionDateKind.Id = zc_Enum_PartionDateKind_1());
-    vbMonth_6 := (SELECT ObjectFloat_Month.ValueData
-                  FROM Object  AS Object_PartionDateKind
-                       LEFT JOIN ObjectFloat AS ObjectFloat_Month
-                                             ON ObjectFloat_Month.ObjectId = Object_PartionDateKind.Id
-                                            AND ObjectFloat_Month.DescId = zc_ObjectFloat_PartionDateKind_Month()
-                  WHERE Object_PartionDateKind.Id = zc_Enum_PartionDateKind_6());
-
-    -- даты + 6 месяцев, + 1 месяц
-    vbDate180 := vbOperDate + (vbMonth_6||' MONTH' ) ::INTERVAL;
-    vbDate30  := vbOperDate + (vbMonth_1||' MONTH' ) ::INTERVAL;
-    vbDate0   := vbOperDate + (vbMonth_0||' MONTH' ) ::INTERVAL; */
-
-    vbDay_0 := (SELECT COALESCE(ObjectFloat_Day.ValueData, 0)::Integer
-                FROM Object  AS Object_PartionDateKind
-                     LEFT JOIN ObjectFloat AS ObjectFloat_Day
-                                           ON ObjectFloat_Day.ObjectId = Object_PartionDateKind.Id
-                                          AND ObjectFloat_Day.DescId = zc_ObjectFloat_PartionDateKind_Day()
-                WHERE Object_PartionDateKind.Id = zc_Enum_PartionDateKind_0());
-    vbDay_1 := (SELECT ObjectFloat_Day.ValueData::Integer
-                FROM Object  AS Object_PartionDateKind
-                     LEFT JOIN ObjectFloat AS ObjectFloat_Day
-                                           ON ObjectFloat_Day.ObjectId = Object_PartionDateKind.Id
-                                          AND ObjectFloat_Day.DescId = zc_ObjectFloat_PartionDateKind_Day()
-                WHERE Object_PartionDateKind.Id = zc_Enum_PartionDateKind_1());
-    vbDay_6 := (SELECT ObjectFloat_Day.ValueData::Integer
-                FROM Object  AS Object_PartionDateKind
-                     LEFT JOIN ObjectFloat AS ObjectFloat_Day
-                                           ON ObjectFloat_Day.ObjectId = Object_PartionDateKind.Id
-                                          AND ObjectFloat_Day.DescId = zc_ObjectFloat_PartionDateKind_Day()
-                WHERE Object_PartionDateKind.Id = zc_Enum_PartionDateKind_6());
-
-    -- даты + 6 месяцев, + 1 месяц
-    vbDate180 := CURRENT_DATE + (vbDay_6||' DAY' ) ::INTERVAL;
-    vbDate30  := CURRENT_DATE + (vbDay_1||' DAY' ) ::INTERVAL;
-    vbDate0   := CURRENT_DATE + (vbDay_0||' DAY' ) ::INTERVAL;
+    SELECT Date_6, Date_3, Date_1, Date_0
+    INTO vbDate180, vbDate90, vbDate30, vbDate0
+    FROM lpSelect_PartionDateKind_SetDate ();
 
 
     -- !!!снимаем удаление со всех строк!!!
@@ -251,19 +202,23 @@ BEGIN
      THEN
          DELETE FROM tmpMaster;
      ELSE
-         CREATE TEMP TABLE tmpMaster (Id Integer, GoodsId Integer, Amount TFloat, AmountRemains TFloat, ChangePercent TFloat, ChangePercentMin TFloat, isErased Boolean) ON COMMIT DROP;
+         CREATE TEMP TABLE tmpMaster (Id Integer, GoodsId Integer, Amount TFloat, AmountRemains TFloat, ChangePercent TFloat, ChangePercentLess TFloat, ChangePercentMin TFloat, isErased Boolean) ON COMMIT DROP;
      END IF;    
      
-    INSERT INTO tmpMaster (Id, GoodsId, Amount, AmountRemains, ChangePercent, ChangePercentMin, isErased)
+    INSERT INTO tmpMaster (Id, GoodsId, Amount, AmountRemains, ChangePercent, ChangePercentLess, ChangePercentMin, isErased)
        WITH -- существующие
             MI_Master AS (SELECT MovementItem.Id                    AS Id
                                , MovementItem.ObjectId              AS GoodsId
                                , MIFloat_ChangePercent.ValueData    AS ChangePercent
+                               , MIFloat_ChangePercentLess.ValueData AS ChangePercentLess
                                , MIFloat_ChangePercentMin.ValueData AS ChangePercentMin
                           FROM MovementItem
                                LEFT JOIN MovementItemFloat AS MIFloat_ChangePercent
                                                            ON MIFloat_ChangePercent.MovementItemId = MovementItem.Id
                                                           AND MIFloat_ChangePercent.DescId         = zc_MIFloat_ChangePercent()
+                               LEFT JOIN MovementItemFloat AS MIFloat_ChangePercentLess
+                                                           ON MIFloat_ChangePercentLess.MovementItemId = MovementItem.Id
+                                                          AND MIFloat_ChangePercentLess.DescId         = zc_MIFloat_ChangePercentLess()
                                LEFT JOIN MovementItemFloat AS MIFloat_ChangePercentMin
                                                            ON MIFloat_ChangePercentMin.MovementItemId = MovementItem.Id
                                                           AND MIFloat_ChangePercentMin.DescId         = zc_MIFloat_ChangePercentMin()
@@ -277,6 +232,7 @@ BEGIN
                  , tmpRemains.Amount                         AS Amount
                  , tmpRemains.AmountRemains                  AS AmountRemains
                  , COALESCE (MI_Master.ChangePercent, 0)     AS ChangePercent
+                 , COALESCE (MI_Master.ChangePercentLess, 0) AS ChangePercentLess
                  , COALESCE (MI_Master.ChangePercentMin, 0)  AS ChangePercentMin
                    -- удалим если лишний
                  , CASE WHEN tmpRemains.GoodsId > 0 THEN FALSE ELSE TRUE END AS isErased
@@ -302,7 +258,8 @@ BEGIN
                                                    , inGoodsId       := tmpMaster.GoodsId
                                                    , inAmount        := COALESCE (tmpMaster.Amount,0)        :: TFloat     -- Количество
                                                    , inAmountRemains := COALESCE (tmpMaster.AmountRemains,0) :: TFloat     --
-                                                   , inChangePercent    := COALESCE (tmpMaster.ChangePercent,0)         :: TFloat     -- % скидки(срок от 1 мес до 6 мес)
+                                                   , inChangePercent    := COALESCE (tmpMaster.ChangePercent,0)         :: TFloat     -- % скидки(срок от 1 мес до 3 мес)
+                                                   , inChangePercentLess:= COALESCE (tmpMaster.ChangePercentLess,0)     :: TFloat     -- % скидки(срок от 3 мес до 6 мес)
                                                    , inChangePercentMin := COALESCE (tmpMaster.ChangePercentMin,0)      :: TFloat     -- % скидки(срок меньше месяца)
                                                    , inUserId        := vbUserId)
     FROM tmpMaster
@@ -440,6 +397,7 @@ $BODY$
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.  Шаблий О.В.
+ 06.07.20                                                      *
  18.09.19                                                      * 
  15.07.19                                                      * 
  07.07.19                                                      *

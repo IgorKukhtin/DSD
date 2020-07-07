@@ -10,7 +10,7 @@ CREATE OR REPLACE FUNCTION gpGet_Movement_SendPartionDate(
 RETURNS TABLE (Id Integer, InvNumber TVarChar, OperDate TDateTime
              , StatusCode Integer, StatusName TVarChar
              , UnitId Integer, UnitName TVarChar
-             , ChangePercent TFloat, ChangePercentMin TFloat
+             , ChangePercent TFloat, ChangePercentLess TFloat, ChangePercentMin TFloat
              , Comment TVarChar
              , Transfer Boolean
              , InsertId Integer, InsertName TVarChar, InsertDate TDateTime
@@ -34,12 +34,13 @@ BEGIN
              , CURRENT_DATE::TDateTime                          AS OperDate
              , Object_Status.Code                               AS StatusCode
              , Object_Status.Name                               AS StatusName
-             , 0                     				AS UnitId
-             , CAST ('' AS TVarChar) 				AS UnitName
+             , 0                     			                AS UnitId
+             , CAST ('' AS TVarChar) 			                AS UnitName
              , CAST (50  AS TFloat)                             AS ChangePercent
-             , CAST (20  AS TFloat)                              AS ChangePercentMin
-             , CAST ('' AS TVarChar) 		                AS Comment
-             , False                		                AS Transfer
+             , CAST (50  AS TFloat)                             AS ChangePercentLess
+             , CAST (20  AS TFloat)                             AS ChangePercentMin
+             , CAST ('' AS TVarChar) 		                    AS Comment
+             , False                		                    AS Transfer
              , Object_Insert.Id                                 AS InsertId
              , Object_Insert.ValueData                          AS InsertName
              , CURRENT_TIMESTAMP                   :: TDateTime AS InsertDate
@@ -61,6 +62,7 @@ BEGIN
            , Object_Unit.Id                       AS UnitId
            , Object_Unit.ValueData                AS UnitName
            , MovementFloat_ChangePercent.ValueData     AS ChangePercent
+           , MovementFloat_ChangePercentLess.ValueData AS ChangePercentLess
            , MovementFloat_ChangePercentMin.ValueData  AS ChangePercentMin
            , COALESCE (MovementString_Comment.ValueData,'') ::TVarChar AS Comment
            , COALESCE (MovementBoolean_Transfer.ValueData, False)           AS Transfer
@@ -80,6 +82,10 @@ BEGIN
             LEFT JOIN MovementFloat AS MovementFloat_ChangePercent
                                     ON MovementFloat_ChangePercent.MovementId =  Movement.Id
                                    AND MovementFloat_ChangePercent.DescId = zc_MovementFloat_ChangePercent()
+
+            LEFT JOIN MovementFloat AS MovementFloat_ChangePercentLess
+                                    ON MovementFloat_ChangePercentLess.MovementId =  Movement.Id
+                                   AND MovementFloat_ChangePercentLess.DescId = zc_MovementFloat_ChangePercentLess()
 
             LEFT JOIN MovementFloat AS MovementFloat_ChangePercentMin
                                     ON MovementFloat_ChangePercentMin.MovementId =  Movement.Id
@@ -126,6 +132,7 @@ $BODY$
 /*
  »—“Œ–»ﬂ –¿«–¿¡Œ“ »: ƒ¿“¿, ¿¬“Œ–
                ‘ÂÎÓÌ˛Í ».¬.    ÛıÚËÌ ».¬.    ÎËÏÂÌÚ¸Â‚  .».   ÿ‡·ÎËÈ Œ.¬.
+ 06.07.20                                                       *
  26.06.19                                                       *
  27.05.19         *
  02.04.19         *

@@ -80,7 +80,7 @@ BEGIN
                                                , MovementId_in Integer, PartionId_in Integer
                                                , PartionGoodsId Integer
                                                , ExpirationDate TDateTime
-                                               , PriceWithVAT TFloat, ChangePercentMin TFloat, ChangePercent TFloat
+                                               , PriceWithVAT TFloat, ChangePercentMin TFloat, ChangePercentLess TFloat, ChangePercent TFloat
                                                , ContainerId_Transfer Integer
                                                 ) ON COMMIT DROP;
      END IF;    
@@ -106,7 +106,8 @@ BEGIN
             ) AS tmp;
 
        -- таблица - элементы документа, со всеми свойствами для формирования Аналитик в проводках
-       INSERT INTO _tmpItem_PartionDate (MovementItemId, GoodsId, Amount, ContainerId_in, ContainerId, MovementId_in, PartionId_in, PartionGoodsId, ExpirationDate, PriceWithVAT, ChangePercentMin, ChangePercent, ContainerId_Transfer)
+       INSERT INTO _tmpItem_PartionDate (MovementItemId, GoodsId, Amount, ContainerId_in, ContainerId, MovementId_in, PartionId_in, 
+                                         PartionGoodsId, ExpirationDate, PriceWithVAT, ChangePercentMin, ChangePercentLess, ChangePercent, ContainerId_Transfer)
           SELECT MovementItem.Id                    AS MovementItemId
                , MovementItem.ObjectId              AS GoodsId
                , CASE WHEN MIDate_ExpirationDate.ValueData <= vbDate180 THEN MovementItem.Amount ELSE 0 END AS Amount
@@ -124,7 +125,12 @@ BEGIN
                       WHEN MF_ChangePercentMin.ValueData      <> 0 THEN MF_ChangePercentMin.ValueData
                       ELSE 0
                  END AS ChangePercentMin
-                 -- % скидки(срок от 1 мес до 6 мес)
+                 -- % скидки(срок от 1 мес до 3 мес)
+               , CASE WHEN MIFloat_ChangePercentLess.ValueData <> 0 THEN MIFloat_ChangePercentLess.ValueData
+                      WHEN MF_ChangePercentLess.ValueData      <> 0 THEN MF_ChangePercentLess.ValueData
+                      ELSE 0
+                 END AS ChangePercent
+                 -- % скидки(срок от 3 мес до 6 мес)
                , CASE WHEN MIFloat_ChangePercent.ValueData <> 0 THEN MIFloat_ChangePercent.ValueData
                       WHEN MF_ChangePercent.ValueData      <> 0 THEN MF_ChangePercent.ValueData
                       ELSE 0
@@ -138,6 +144,9 @@ BEGIN
               LEFT JOIN MovementFloat AS MF_ChangePercent
                                       ON MF_ChangePercent.MovementId = MovementItem.MovementId
                                      AND MF_ChangePercent.DescId     = zc_MovementFloat_ChangePercent()
+              LEFT JOIN MovementFloat AS MF_ChangePercentLess
+                                      ON MF_ChangePercentLess.MovementId = MovementItem.MovementId
+                                     AND MF_ChangePercentLess.DescId     = zc_MovementFloat_ChangePercentLess()
               LEFT JOIN MovementFloat AS MF_ChangePercentMin
                                       ON MF_ChangePercentMin.MovementId = MovementItem.MovementId
                                      AND MF_ChangePercentMin.DescId     = zc_MovementFloat_ChangePercentMin()
@@ -145,6 +154,9 @@ BEGIN
               LEFT JOIN MovementItemFloat AS MIFloat_ChangePercent
                                           ON MIFloat_ChangePercent.MovementItemId = MovementItem.ParentId
                                          AND MIFloat_ChangePercent.DescId         = zc_MIFloat_ChangePercent()
+              LEFT JOIN MovementItemFloat AS MIFloat_ChangePercentLess
+                                          ON MIFloat_ChangePercentLess.MovementItemId = MovementItem.ParentId
+                                         AND MIFloat_ChangePercentLess.DescId         = zc_MIFloat_ChangePercentLess()
               LEFT JOIN MovementItemFloat AS MIFloat_ChangePercentMin
                                           ON MIFloat_ChangePercentMin.MovementItemId = MovementItem.ParentId
                                          AND MIFloat_ChangePercentMin.DescId         = zc_MIFloat_ChangePercentMin()
@@ -173,7 +185,8 @@ BEGIN
      ELSE
 
        -- таблица - элементы документа, со всеми свойствами для формирования Аналитик в проводках
-       INSERT INTO _tmpItem_PartionDate (MovementItemId, GoodsId, Amount, ContainerId_in, ContainerId, MovementId_in, PartionId_in, PartionGoodsId, ExpirationDate, PriceWithVAT, ChangePercentMin, ChangePercent, ContainerId_Transfer)
+       INSERT INTO _tmpItem_PartionDate (MovementItemId, GoodsId, Amount, ContainerId_in, ContainerId, MovementId_in, PartionId_in, PartionGoodsId, 
+                                         ExpirationDate, PriceWithVAT, ChangePercentMin, ChangePercentLess, ChangePercent, ContainerId_Transfer)
           SELECT MovementItem.Id                    AS MovementItemId
                , MovementItem.ObjectId              AS GoodsId
                , MovementItem.Amount                AS Amount
@@ -191,7 +204,12 @@ BEGIN
                       WHEN MF_ChangePercentMin.ValueData      <> 0 THEN MF_ChangePercentMin.ValueData
                       ELSE 0
                  END AS ChangePercentMin
-                 -- % скидки(срок от 1 мес до 6 мес)
+                 -- % скидки(срок от 1 мес до 3 мес)
+               , CASE WHEN MIFloat_ChangePercentLess.ValueData <> 0 THEN MIFloat_ChangePercentLess.ValueData
+                      WHEN MF_ChangePercentLess.ValueData      <> 0 THEN MF_ChangePercentLess.ValueData
+                      ELSE 0
+                 END AS ChangePercent
+                 -- % скидки(срок от 3 мес до 6 мес)
                , CASE WHEN MIFloat_ChangePercent.ValueData <> 0 THEN MIFloat_ChangePercent.ValueData
                       WHEN MF_ChangePercent.ValueData      <> 0 THEN MF_ChangePercent.ValueData
                       ELSE 0
@@ -205,6 +223,9 @@ BEGIN
               LEFT JOIN MovementFloat AS MF_ChangePercent
                                       ON MF_ChangePercent.MovementId = MovementItem.MovementId
                                      AND MF_ChangePercent.DescId     = zc_MovementFloat_ChangePercent()
+              LEFT JOIN MovementFloat AS MF_ChangePercentLess
+                                      ON MF_ChangePercentLess.MovementId = MovementItem.MovementId
+                                     AND MF_ChangePercentLess.DescId     = zc_MovementFloat_ChangePercentLess()
               LEFT JOIN MovementFloat AS MF_ChangePercentMin
                                       ON MF_ChangePercentMin.MovementId = MovementItem.MovementId
                                      AND MF_ChangePercentMin.DescId     = zc_MovementFloat_ChangePercentMin()
@@ -212,6 +233,9 @@ BEGIN
               LEFT JOIN MovementItemFloat AS MIFloat_ChangePercent
                                           ON MIFloat_ChangePercent.MovementItemId = MovementItem.ParentId
                                          AND MIFloat_ChangePercent.DescId         = zc_MIFloat_ChangePercent()
+              LEFT JOIN MovementItemFloat AS MIFloat_ChangePercentLess
+                                          ON MIFloat_ChangePercentLess.MovementItemId = MovementItem.ParentId
+                                         AND MIFloat_ChangePercentLess.DescId         = zc_MIFloat_ChangePercentLess()
               LEFT JOIN MovementItemFloat AS MIFloat_ChangePercentMin
                                           ON MIFloat_ChangePercentMin.MovementItemId = MovementItem.ParentId
                                          AND MIFloat_ChangePercentMin.DescId         = zc_MIFloat_ChangePercentMin()
@@ -262,7 +286,9 @@ BEGIN
                                                                                       , inGoodsId         := _tmpItem_PartionDate.GoodsId
                                                                                         -- % скидки на срок от 0 мес. до 1 мес.
                                                                                       , inChangePercentMin:= _tmpItem_PartionDate.ChangePercentMin
-                                                                                        -- % скидки на срок от 1 мес. до 6 мес.
+                                                                                        -- % скидки на срок от 1 мес. до 3 мес.
+                                                                                      , inChangePercentLess:= _tmpItem_PartionDate.ChangePercentLess
+                                                                                        -- % скидки на срок от 3 мес. до 6 мес.
                                                                                       , inChangePercent   := _tmpItem_PartionDate.ChangePercent
                                                                                         -- Цена закупки с НДС
                                                                                       , inPriceWithVAT    := _tmpItem_PartionDate.PriceWithVAT
@@ -346,6 +372,7 @@ $BODY$
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Шаблий О.В.
+ 06.07.20                                                       *
  15.07.19                                                       * 
  07.07.19                                                       *
  27.06.19                                                       *

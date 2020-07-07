@@ -1,10 +1,11 @@
 -- Function: gpUpdatePercent_Movement_SendPartionDate()
 
-DROP FUNCTION IF EXISTS gpUpdatePercent_Movement_SendPartionDate (Integer, TFloat, TFloat, TVarChar);
+DROP FUNCTION IF EXISTS gpUpdatePercent_Movement_SendPartionDate (Integer, TFloat, TFloat, TFloat, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpUpdatePercent_Movement_SendPartionDate(
     IN inUnitID              Integer   , -- Подразделение
     IN inChangePercent       TFloat    , -- Номер документа
+    IN inChangePercentLess   TFloat    , -- Дата документа
     IN inChangePercentMin    TFloat    , -- Дата документа
     IN inSession             TVarChar    -- сессия пользователя
 )
@@ -27,6 +28,7 @@ BEGIN
     
       -- Поменяли процент в Документе
     PERFORM lpInsertUpdate_MovementFloat (zc_MovementFloat_ChangePercent(), Movement.Id, inChangePercent),
+            lpInsertUpdate_MovementFloat (zc_MovementFloat_ChangePercentLess(), Movement.Id, inChangePercentLess),
             lpInsertUpdate_MovementFloat (zc_MovementFloat_ChangePercentMin(), Movement.Id, inChangePercentMin)
     FROM Movement 
          INNER JOIN MovementLinkObject AS MovementLinkObject_Unit
@@ -53,6 +55,23 @@ BEGIN
       AND MovementLinkObject_Unit.ObjectId = inUnitID;
 
       -- Поменяли процент в содtржимом
+    PERFORM lpInsertUpdate_MovementItemFloat (zc_MIFloat_ChangePercentLess(), MovementItem.Id, inChangePercentLess)
+    FROM Movement 
+         INNER JOIN MovementLinkObject AS MovementLinkObject_Unit
+                                       ON MovementLinkObject_Unit.MovementId = Movement.Id
+                                      AND MovementLinkObject_Unit.DescId = zc_MovementLinkObject_Unit()
+
+         INNER JOIN MovementItem ON MovementItem.MovementId = Movement.Id
+                                AND MovementItem.DescId = zc_MI_Master() 
+                                
+         INNER JOIN MovementItemFloat AS MIFloat_ChangePercentLess
+                                      ON MIFloat_ChangePercentLess.MovementItemId = MovementItem.Id
+                                     AND MIFloat_ChangePercentLess.DescId = zc_MIFloat_ChangePercentLess()
+                                
+    WHERE Movement.DescId = zc_Movement_SendPartionDate()
+      AND MovementLinkObject_Unit.ObjectId = inUnitID;
+
+      -- Поменяли процент в содtржимом
     PERFORM lpInsertUpdate_MovementItemFloat (zc_MIFloat_ChangePercentMin(), MovementItem.Id, inChangePercentMin)
     FROM Movement 
          INNER JOIN MovementLinkObject AS MovementLinkObject_Unit
@@ -70,6 +89,7 @@ BEGIN
       AND MovementLinkObject_Unit.ObjectId = inUnitID;
       
     PERFORM lpInsertUpdate_ObjectFloat (zc_ObjectFloat_PartionGoods_ValueMin(), ContainerLinkObject.ObjectId, inChangePercentMin),
+            lpInsertUpdate_ObjectFloat (zc_ObjectFloat_PartionGoods_ValueLess(), ContainerLinkObject.ObjectId, inChangePercentLess),
             lpInsertUpdate_ObjectFloat (zc_ObjectFloat_PartionGoods_Value(), ContainerLinkObject.ObjectId, inChangePercent)
     FROM Container
 
@@ -85,6 +105,7 @@ $BODY$
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Шаблий О.В.
+ 06.07.20                                                       *
  19.07.19                                                       *
 */
 

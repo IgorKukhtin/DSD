@@ -37,8 +37,10 @@ type
     actGet_UserUnit: TdsdExecStoredProc;
     edChangePercentMin: TcxCurrencyEdit;
     cxLabel1: TcxLabel;
-    edChangePercent: TcxCurrencyEdit;
+    edChangePercentLess: TcxCurrencyEdit;
     cxLabel9: TcxLabel;
+    edChangePercent: TcxCurrencyEdit;
+    cxLabel2: TcxLabel;
   private
     { Private declarations }
   public

@@ -1,7 +1,6 @@
 -- Function: lpInsertUpdate_Movement_SendPartionDate()
 
-DROP FUNCTION IF EXISTS lpInsertUpdate_Movement_SendPartionDate (Integer, TVarChar, TDateTime, Integer, TVarChar, Integer);
-DROP FUNCTION IF EXISTS lpInsertUpdate_Movement_SendPartionDate (Integer, TVarChar, TDateTime, Integer, TFloat, TFloat, TVarChar, Integer);
+DROP FUNCTION IF EXISTS lpInsertUpdate_Movement_SendPartionDate (Integer, TVarChar, TDateTime, Integer, TFloat, TFloat, TFloat, TVarChar, Integer, Integer);
 
 
 CREATE OR REPLACE FUNCTION lpInsertUpdate_Movement_SendPartionDate(
@@ -9,9 +8,11 @@ CREATE OR REPLACE FUNCTION lpInsertUpdate_Movement_SendPartionDate(
     IN inInvNumber           TVarChar  , -- Номер документа
     IN inOperDate            TDateTime , -- Дата документа
     IN inUnitId              Integer   , -- 
-    IN inChangePercent       TFloat    , -- % скидки (срок от 1 мес до 6 мес)
+    IN inChangePercent       TFloat    , -- % скидки (срок от 3 мес до 6 мес)
+    IN inChangePercentLess   TFloat    , -- % скидки (срок от 1 мес до 3 мес)
     IN inChangePercentMin    TFloat    , -- % скидки (срок меньше месяца)
     IN inComment             TVarChar   , -- Примечание
+    IN inParentId            Integer   , -- 
     IN inUserId              Integer     -- пользователь
 )
 RETURNS Integer AS
@@ -30,7 +31,7 @@ BEGIN
      vbIsInsert:= COALESCE (ioId, 0) = 0;
 
      -- сохранили <Документ>
-     ioId := lpInsertUpdate_Movement (ioId, zc_Movement_SendPartionDate(), inInvNumber, inOperDate, NULL, vbAccessKeyId);
+     ioId := lpInsertUpdate_Movement (ioId, zc_Movement_SendPartionDate(), inInvNumber, inOperDate, inParentId, vbAccessKeyId);
 
      -- сохранили связь с <>
      PERFORM lpInsertUpdate_MovementLinkObject (zc_MovementLinkObject_Unit(), ioId, inUnitId);
@@ -40,6 +41,8 @@ BEGIN
 
      -- сохранили <>
      PERFORM lpInsertUpdate_MovementFloat (zc_MovementFloat_ChangePercent(), ioId, inChangePercent);
+     -- сохранили <>
+     PERFORM lpInsertUpdate_MovementFloat (zc_MovementFloat_ChangePercentLess(), ioId, inChangePercentLess);
      -- сохранили <>
      PERFORM lpInsertUpdate_MovementFloat (zc_MovementFloat_ChangePercentMin(), ioId, inChangePercentMin);
 
@@ -73,6 +76,7 @@ $BODY$
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
+ 06.07.20                                                         *
  27.05.19         *
  02.04.19         *
  */

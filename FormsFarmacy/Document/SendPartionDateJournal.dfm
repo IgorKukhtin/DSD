@@ -193,7 +193,7 @@ inherited SendPartionDateJournalForm: TSendPartionDateJournalForm
             Width = 109
           end
           object ChangePercent: TcxGridDBColumn
-            Caption = '% '#1089#1082#1080#1076#1082#1080' ('#1089#1088#1086#1082' '#1086#1090' 1 '#1084#1077#1089' '#1076#1086' 6 '#1084#1077#1089')'
+            Caption = '% '#1089#1082#1080#1076#1082#1080' ('#1089#1088#1086#1082' '#1086#1090' 3 '#1084#1077#1089' '#1076#1086' 6 '#1084#1077#1089')'
             DataBinding.FieldName = 'ChangePercent'
             PropertiesClassName = 'TcxCurrencyEditProperties'
             Properties.DecimalPlaces = 4
@@ -203,6 +203,17 @@ inherited SendPartionDateJournalForm: TSendPartionDateJournalForm
             HeaderHint = '% '#1089#1082#1080#1076#1082#1080'('#1089#1088#1086#1082' '#1086#1090' 1 '#1084#1077#1089' '#1076#1086' 6 '#1084#1077#1089')'
             Options.Editing = False
             Width = 89
+          end
+          object ChangePercentLess: TcxGridDBColumn
+            Caption = '% '#1089#1082#1080#1076#1082#1080' ('#1089#1088#1086#1082' '#1086#1090' 1 '#1084#1077#1089' '#1076#1086' 3 '#1084#1077#1089')'
+            DataBinding.FieldName = 'ChangePercentLess'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 4
+            Properties.DisplayFormat = ',0.####;-,0.####; ;'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 90
           end
           object ChangePercentMin: TcxGridDBColumn
             Caption = '% '#1089#1082#1080#1076#1082#1080' ('#1089#1088#1086#1082' '#1084#1077#1085#1100#1096#1077' '#1084#1077#1089#1103#1094#1072')'
@@ -513,6 +524,14 @@ inherited SendPartionDateJournalForm: TSendPartionDateJournalForm
           MultiSelectSeparator = ','
         end
         item
+          Name = 'ChangePercentLess'
+          Value = Null
+          Component = FormParams
+          ComponentItem = 'ChangePercentLess'
+          DataType = ftFloat
+          MultiSelectSeparator = ','
+        end
+        item
           Name = 'ChangePercentMin'
           Value = Null
           Component = FormParams
@@ -795,14 +814,21 @@ inherited SendPartionDateJournalForm: TSendPartionDateJournalForm
       end
       item
         Name = 'ChangePercent'
-        Value = 100.000000000000000000
+        Value = 20.000000000000000000
+        DataType = ftFloat
+        ParamType = ptInputOutput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'ChangePercentLess'
+        Value = '50'
         DataType = ftFloat
         ParamType = ptInputOutput
         MultiSelectSeparator = ','
       end
       item
         Name = 'ChangePercentMin'
-        Value = 20.000000000000000000
+        Value = '100'
         DataType = ftFloat
         ParamType = ptInputOutput
         MultiSelectSeparator = ','
@@ -900,6 +926,15 @@ inherited SendPartionDateJournalForm: TSendPartionDateJournalForm
         Value = Null
         Component = FormParams
         ComponentItem = 'ChangePercent'
+        DataType = ftFloat
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inChangePercentLess'
+        Value = Null
+        Component = FormParams
+        ComponentItem = 'ChangePercentLess'
         DataType = ftFloat
         ParamType = ptInput
         MultiSelectSeparator = ','

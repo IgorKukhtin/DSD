@@ -16,9 +16,12 @@ BEGIN
     -- проверка прав пользователя на вызов процедуры
     vbUserId:= lpCheckRight(inSession, zc_Enum_Process_UnComplete_SendPartionDateChange());
 
-
     -- проверка - если <Master> Удален, то <Ошибка>
     PERFORM lfCheck_Movement_ParentStatus (inMovementId:= inMovementId, inNewStatusId:= zc_Enum_Status_UnComplete(), inComment:= 'распровести');
+
+    -- Распроводим Документ
+    PERFORM lpUnComplete_Movement (inMovementId := inMovementId
+                                 , inUserId     := vbUserId);
 
     -- Распроводим документ изменения сроков
     SELECT Movement.ID, Movement.StatusId
@@ -26,15 +29,11 @@ BEGIN
     FROM Movement
     WHERE Movement.DescId = zc_Movement_SendPartionDate()
       AND Movement.ParentId = inMovementId;
-      
+
     IF COALESCE (vbMovementId, 0) > 0 AND vbStatusId <> zc_Enum_Status_UnComplete()
     THEN
-      PERFORM gpUnComplete_Movement_SendPartionDate (vbMovementId, vbStatusId);    
+      PERFORM gpUnComplete_Movement_SendPartionDate (vbMovementId, inSession);
     END IF;
-
-    -- Распроводим Документ
-    PERFORM lpUnComplete_Movement (inMovementId := inMovementId
-                                 , inUserId     := vbUserId);
 
     --пересчитываем сумму документа по приходным ценам
     --PERFORM lpInsertUpdate_MovementFloat_TotalSumm (inMovementId);

@@ -55,6 +55,7 @@ type
     actExecUpdatePercent: TdsdExecStoredProc;
     dxBarButton1: TdxBarButton;
     spExecUpdatePercent: TdsdStoredProc;
+    ChangePercentLess: TcxGridDBColumn;
   private
     { Private declarations }
   public

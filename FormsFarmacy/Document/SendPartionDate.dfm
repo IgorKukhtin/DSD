@@ -209,7 +209,7 @@ inherited SendPartionDateForm: TSendPartionDateForm
             Width = 52
           end
           object Amount_2: TcxGridDBColumn
-            Caption = #1057#1088#1086#1082' '#1084#1077#1085#1100#1096#1077' 200 '#1076#1085'..'
+            Caption = #1057#1088#1086#1082' '#1084#1077#1085#1100#1096#1077' 90 '#1076#1085'..'
             DataBinding.FieldName = 'Amount_2'
             PropertiesClassName = 'TcxCurrencyEditProperties'
             Properties.DecimalPlaces = 3
@@ -218,6 +218,16 @@ inherited SendPartionDateForm: TSendPartionDateForm
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
             Width = 52
+          end
+          object Amount_3: TcxGridDBColumn
+            Caption = #1057#1088#1086#1082' '#1084#1077#1085#1100#1096#1077' 200 '#1076#1085'..'
+            DataBinding.FieldName = 'Amount_3'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 3
+            Properties.DisplayFormat = ',0.####;-,0.####; ;'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
           end
           object Amount_all: TcxGridDBColumn
             Caption = #1057#1088#1086#1082' '#1073#1086#1083#1077#1077' 200 '#1076#1085'.'
@@ -228,17 +238,27 @@ inherited SendPartionDateForm: TSendPartionDateForm
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
-            Width = 49
+            Width = 55
           end
           object ChangePercent: TcxGridDBColumn
-            Caption = '% '#1089#1082#1080#1076#1082#1080' ('#1086#1090' 50 '#1076#1086' 200 '#1076#1085'.)'
+            Caption = '% '#1089#1082#1080#1076#1082#1080' ('#1086#1090' 90 '#1076#1086' 200 '#1076#1085'.)'
             DataBinding.FieldName = 'ChangePercent'
             PropertiesClassName = 'TcxCurrencyEditProperties'
             Properties.DecimalPlaces = 4
             Properties.DisplayFormat = ',0.####;-,0.####; ;'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
-            Width = 78
+            Width = 88
+          end
+          object ChangePercentLess: TcxGridDBColumn
+            Caption = '% '#1089#1082#1080#1076#1082#1080' ('#1086#1090' 50 '#1076#1086' 90 '#1076#1085'.)'
+            DataBinding.FieldName = 'ChangePercentLess'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 4
+            Properties.DisplayFormat = ',0.####;-,0.####; ;'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 80
           end
           object ChangePercentMin: TcxGridDBColumn
             Caption = '% '#1089#1082#1080#1076#1082#1080' ('#1084#1077#1085#1100#1096#1077' 50 '#1076#1085'.)'
@@ -248,7 +268,7 @@ inherited SendPartionDateForm: TSendPartionDateForm
             Properties.DisplayFormat = ',0.####;-,0.####; ;'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
-            Width = 104
+            Width = 87
           end
           object isExpirationDateDiff: TcxGridDBColumn
             Caption = #1048#1079#1084#1077#1085#1077#1085#1080#1077' '#1087#1072#1088#1090#1080#1080
@@ -591,9 +611,9 @@ inherited SendPartionDateForm: TSendPartionDateForm
       Width = 120
     end
     object cxLabel9: TcxLabel
-      Left = 221
+      Left = 215
       Top = 46
-      Caption = '% '#1089#1082#1080#1076#1082#1080' ('#1086#1090' 50 '#1076#1086' 200 '#1076#1085'.)'
+      Caption = '% ('#1086#1090' 90 '#1076#1086' 200 '#1076#1085'.)'
     end
     object edChangePercent: TcxCurrencyEdit
       Left = 221
@@ -602,7 +622,7 @@ inherited SendPartionDateForm: TSendPartionDateForm
       Properties.DisplayFormat = ',0.####'
       Properties.ReadOnly = False
       TabOrder = 19
-      Width = 164
+      Width = 100
     end
     object cxLabel4: TcxLabel
       Left = 9
@@ -625,20 +645,34 @@ inherited SendPartionDateForm: TSendPartionDateForm
       TabOrder = 21
       Width = 143
     end
+    object edChangePercentLess: TcxCurrencyEdit
+      Left = 329
+      Top = 64
+      Properties.DecimalPlaces = 4
+      Properties.DisplayFormat = ',0.####'
+      Properties.ReadOnly = False
+      TabOrder = 22
+      Width = 100
+    end
+    object cxLabel5: TcxLabel
+      Left = 325
+      Top = 46
+      Caption = '% ('#1086#1090' 50 '#1076#1086' 90 '#1076#1085'.)'
+    end
   end
   object cxLabel3: TcxLabel [2]
-    Left = 391
+    Left = 435
     Top = 46
-    Caption = '% '#1089#1082#1080#1076#1082#1080' ('#1084#1077#1085#1100#1096#1077' 50 '#1076#1085'.)'
+    Caption = '% ('#1084#1077#1085#1100#1096#1077' 50 '#1076#1085'.)'
   end
   object edChangePercentMin: TcxCurrencyEdit [3]
-    Left = 391
+    Left = 436
     Top = 64
     Properties.DecimalPlaces = 4
     Properties.DisplayFormat = ',0.####'
     Properties.ReadOnly = False
     TabOrder = 7
-    Width = 149
+    Width = 100
   end
   inherited ActionList: TActionList
     object actRefreshUnit: TdsdDataSetRefresh [0]
@@ -881,7 +915,7 @@ inherited SendPartionDateForm: TSendPartionDateForm
         end
         item
           Name = 'ShowAll'
-          Value = 'False'
+          Value = False
           DataType = ftBoolean
           MultiSelectSeparator = ','
         end
@@ -1242,6 +1276,13 @@ inherited SendPartionDateForm: TSendPartionDateForm
         MultiSelectSeparator = ','
       end
       item
+        Name = 'ChangePercentLess'
+        Value = Null
+        Component = edChangePercentLess
+        DataType = ftFloat
+        MultiSelectSeparator = ','
+      end
+      item
         Name = 'ChangePercentMin'
         Value = Null
         Component = edChangePercentMin
@@ -1297,6 +1338,14 @@ inherited SendPartionDateForm: TSendPartionDateForm
         Name = 'inChangePercent'
         Value = Null
         Component = edChangePercent
+        DataType = ftFloat
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inChangePercentLess'
+        Value = Null
+        Component = edChangePercentLess
         DataType = ftFloat
         ParamType = ptInput
         MultiSelectSeparator = ','
@@ -1375,10 +1424,42 @@ inherited SendPartionDateForm: TSendPartionDateForm
     Top = 312
   end
   inherited spErasedMIMaster: TdsdStoredProc
+    Params = <
+      item
+        Name = 'inMovementItemId'
+        Component = MasterCDS
+        ComponentItem = 'Id'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'outIsErased'
+        Value = False
+        Component = MasterCDS
+        ComponentItem = 'isErased'
+        DataType = ftBoolean
+        MultiSelectSeparator = ','
+      end>
     Left = 758
     Top = 200
   end
   inherited spUnErasedMIMaster: TdsdStoredProc
+    Params = <
+      item
+        Name = 'inMovementItemId'
+        Component = MasterCDS
+        ComponentItem = 'Id'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'outIsErased'
+        Value = False
+        Component = MasterCDS
+        ComponentItem = 'isErased'
+        DataType = ftBoolean
+        MultiSelectSeparator = ','
+      end>
     Left = 654
     Top = 208
   end
@@ -1434,6 +1515,14 @@ inherited SendPartionDateForm: TSendPartionDateForm
         ComponentItem = 'ChangePercent'
         DataType = ftFloat
         ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inChangePercentLess'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'ChangePercentLess'
+        DataType = ftFloat
         MultiSelectSeparator = ','
       end
       item
@@ -1551,6 +1640,7 @@ inherited SendPartionDateForm: TSendPartionDateForm
         DataSummaryItemIndex = -1
       end>
     SearchAsFilter = False
+    PropertiesCellList = <>
     Left = 318
     Top = 409
   end

@@ -92,6 +92,10 @@ type
     cxLabel4: TcxLabel;
     cxGridDBTableView1Column1: TcxGridDBColumn;
     cbTransfer: TcxCheckBox;
+    edChangePercentLess: TcxCurrencyEdit;
+    cxLabel5: TcxLabel;
+    ChangePercentLess: TcxGridDBColumn;
+    Amount_3: TcxGridDBColumn;
   private
     { Private declarations }
   public

@@ -137,8 +137,9 @@ BEGIN
                                                   inGoodsId          := vbGoodsId, -- Товары
                                                   inAmount           := inAmount, -- Количество
                                                   inAmountRemains    := vbRemains, --
-                                                  inChangePercent    := ObjectFloat_PartionGoods_Value.ValueData, -- % (срок от 1 мес до 6 мес)
-                                                  inChangePercentMin := ObjectFloat_PartionGoods_ValueMin.ValueData, -- % (срок меньше месяца)
+                                                  inChangePercent    := ObjectFloat_PartionGoods_Value.ValueData,     -- % (срок от 1 мес до 3 мес)
+                                                  inChangePercentLess:= ObjectFloat_PartionGoods_ValueLess.ValueData, -- % (срок от 3 мес до 6 мес)
+                                                  inChangePercentMin := ObjectFloat_PartionGoods_ValueMin.ValueData,  -- % (срок меньше месяца)
                                                   inContainerId      := inContainerID, -- Контейнер для изменения срока
                                                   inSession          := inSession    -- сессия пользователя
                                                   )
@@ -151,6 +152,10 @@ BEGIN
        LEFT JOIN ObjectFloat AS ObjectFloat_PartionGoods_ValueMin
                              ON ObjectFloat_PartionGoods_ValueMin.ObjectId =  ContainerLinkObject.ObjectId
                             AND ObjectFloat_PartionGoods_ValueMin.DescId = zc_ObjectFloat_PartionGoods_ValueMin()
+
+       LEFT JOIN ObjectFloat AS ObjectFloat_PartionGoods_ValueLess
+                             ON ObjectFloat_PartionGoods_ValueLess.ObjectId =  ContainerLinkObject.ObjectId
+                            AND ObjectFloat_PartionGoods_ValueLess.DescId = zc_ObjectFloat_PartionGoods_ValueLess()
 
        LEFT JOIN ObjectFloat AS ObjectFloat_PartionGoods_Value
                              ON ObjectFloat_PartionGoods_Value.ObjectId =  ContainerLinkObject.ObjectId
@@ -176,6 +181,7 @@ $BODY$
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Шаблий О.В.
+ 06.07.20                                                       *
  26.06.19                                                       *
 */
 

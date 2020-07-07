@@ -175,25 +175,30 @@ BEGIN
 
     ELSE
       vbInvNumber := CAST (NEXTVAL ('Movement_SendPartionDate_seq') AS TVarChar);
-      vbMovementId := lpInsertUpdate_Movement (0, zc_Movement_SendPartionDate(), vbInvNumber, CURRENT_DATE, inMovementId);
-
+      vbMovementId := 0;
     END IF;
 
-    SELECT gpInsertUpdate_Movement_SendPartionDate(ioId               := vbMovementId,
-                                                   inInvNumber        := vbInvNumber,
-                                                   inOperDate         := CURRENT_DATE,
-                                                   inUnitId           := vbUnitId,
-                                                   inChangePercent    := MovementFloat_ChangePercent.ValueData,
-                                                   inChangePercentMin := MovementFloat_ChangePercentMin.ValueData,
-                                                   inComment          := 'Сформирован по заявке '||(SELECT Movement.InvNumber FROM Movement WHERE Movement.Id = inMovementId),
-                                                   inSession          := inUserId::TVarChar
-                                                   )
+    SELECT lpInsertUpdate_Movement_SendPartionDate(ioId                := vbMovementId,
+                                                  inInvNumber         := vbInvNumber,
+                                                  inOperDate          := CURRENT_DATE,
+                                                  inUnitId            := vbUnitId,
+                                                  inChangePercent     := MovementFloat_ChangePercent.ValueData,
+                                                  inChangePercentLess := MovementFloat_ChangePercentLess.ValueData,
+                                                  inChangePercentMin  := MovementFloat_ChangePercentMin.ValueData,
+                                                  inComment           := 'Сформирован по заявке '||(SELECT Movement.InvNumber FROM Movement WHERE Movement.Id = inMovementId),
+                                                  inParentId          := inMovementId,
+                                                  inUserId            := inUserId
+                                                  )
     INTO vbMovementId
     FROM Movement
 
               LEFT JOIN MovementFloat AS MovementFloat_ChangePercent
                                       ON MovementFloat_ChangePercent.MovementId =  Movement.Id
                                      AND MovementFloat_ChangePercent.DescId = zc_MovementFloat_ChangePercent()
+
+              LEFT JOIN MovementFloat AS MovementFloat_ChangePercentLess
+                                      ON MovementFloat_ChangePercentLess.MovementId =  Movement.Id
+                                     AND MovementFloat_ChangePercentLess.DescId = zc_MovementFloat_ChangePercentLess()
 
               LEFT JOIN MovementFloat AS MovementFloat_ChangePercentMin
                                       ON MovementFloat_ChangePercentMin.MovementId =  Movement.Id
@@ -216,9 +221,10 @@ BEGIN
                                                      inGoodsId          := MovementItem.ObjectId, -- Товары
                                                      inAmount           := MovementItem.Amount,   -- Количество
                                                      inAmountRemains    := Container.Amount,      --
-                                                     inChangePercent    := COALESCE(ObjectFloat_PartionGoods_Value.ValueData, 0),    -- % (срок от 1 мес до 6 мес)
-                                                     inChangePercentMin := COALESCE(ObjectFloat_PartionGoods_ValueMin.ValueData, 0), -- % (срок меньше месяца)
-                                                     inContainerId      := MIFloat_ContainerId.ValueData::Integer,                   -- Контейнер для изменения срока
+                                                     inChangePercent    := COALESCE(ObjectFloat_PartionGoods_Value.ValueData, 0),     -- % (срок от 1 мес до 3 мес)
+                                                     inChangePercentLess:= COALESCE(ObjectFloat_PartionGoods_ValueLess.ValueData, 0), -- % (срок от 3 мес до 6 мес)
+                                                     inChangePercentMin := COALESCE(ObjectFloat_PartionGoods_ValueMin.ValueData, 0),  -- % (срок меньше месяца)
+                                                     inContainerId      := MIFloat_ContainerId.ValueData::Integer,                    -- Контейнер для изменения срока
                                                      inSession          := inUserId::TVarChar     -- сессия пользователя
                                                      )
     FROM MovementItem
@@ -243,6 +249,10 @@ BEGIN
          LEFT JOIN ObjectFloat AS ObjectFloat_PartionGoods_Value
                                ON ObjectFloat_PartionGoods_Value.ObjectId =  ContainerLinkObject.ObjectId
                               AND ObjectFloat_PartionGoods_Value.DescId = zc_ObjectFloat_PartionGoods_Value()
+
+         LEFT JOIN ObjectFloat AS ObjectFloat_PartionGoods_ValueLess
+                               ON ObjectFloat_PartionGoods_ValueLess.ObjectId =  ContainerLinkObject.ObjectId
+                              AND ObjectFloat_PartionGoods_ValueLess.DescId = zc_ObjectFloat_PartionGoods_ValueLess()
 
          LEFT JOIN (SELECT MovementItem.id,  MIFloat_ContainerId.ValueData::Integer AS ContainerId
                     FROM MovementItem
@@ -269,7 +279,7 @@ BEGIN
     -- Проводим документ сроков
     PERFORM gpUpdate_Status_SendPartionDate(inMovementId := vbMovementId , inStatusCode := 2 ,  inSession := inUserId::TVarChar);
 
-    RAISE EXCEPTION 'Ошибка. В разработке.';
+--    RAISE EXCEPTION 'Ошибка. В разработке.';
 
     -- 5.2. ФИНИШ - Обязательно меняем статус документа + сохранили протокол
     PERFORM lpComplete_Movement (inMovementId := inMovementId
@@ -292,3 +302,4 @@ $BODY$
 
 -- тест
 -- select * from gpUpdate_Status_SendPartionDateChange(inMovementId := 19386934 , inStatusCode := 2 ,  inSession := '3');
+

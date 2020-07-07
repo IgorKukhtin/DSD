@@ -22,10 +22,10 @@ BEGIN
      FROM Movement
      WHERE Movement.DescId = zc_Movement_SendPartionDate()
        AND Movement.ParentId = inMovementId;
-       
+
      IF COALESCE (vbMovementId, 0) > 0 AND vbStatusId <> zc_Enum_Status_Erased()
      THEN
-       PERFORM gpSetErased_Movement_SendPartionDate (vbMovementId, inSession);    
+       PERFORM gpSetErased_Movement_SendPartionDate (vbMovementId, inSession);
      END IF;
 
      -- проверка - если <Master> Проведен, то <Ошибка>
@@ -45,7 +45,7 @@ $BODY$
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Шаблий О.В.
- 02.07.20                                                       * 
+ 02.07.20                                                       *
 */
 
 -- тест

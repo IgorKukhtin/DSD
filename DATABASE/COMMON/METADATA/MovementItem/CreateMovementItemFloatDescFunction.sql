@@ -1355,15 +1355,15 @@ CREATE OR REPLACE FUNCTION zc_MIFloat_DayAudit() RETURNS Integer AS $BODY$BEGIN 
 INSERT INTO MovementItemFloatDesc (Code, ItemName)
   SELECT 'zc_MIFloat_DayAudit', 'Дней доплата за ревизию' WHERE NOT EXISTS (SELECT * FROM MovementItemFloatDesc WHERE Code = 'zc_MIFloat_DayAudit');
 
-  CREATE OR REPLACE FUNCTION zc_MIFloat_ChangePercentLoss() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM MovementItemFloatDesc WHERE Code = 'zc_MIFloat_ChangePercentLoss'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
+  CREATE OR REPLACE FUNCTION zc_MIFloat_ChangePercentLess() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM MovementItemFloatDesc WHERE Code = 'zc_MIFloat_ChangePercentLess'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
 INSERT INTO MovementItemFloatDesc (Code, ItemName)
-  SELECT 'zc_MIFloat_ChangePercentLoss', '% скидки(срок от 1 мес до 3 мес)' WHERE NOT EXISTS (SELECT * FROM MovementItemFloatDesc WHERE Code = 'zc_MIFloat_ChangePercentLoss');
+  SELECT 'zc_MIFloat_ChangePercentLess', '% скидки(срок от 1 мес до 3 мес)' WHERE NOT EXISTS (SELECT * FROM MovementItemFloatDesc WHERE Code = 'zc_MIFloat_ChangePercentLess');
 
 
 /*-------------------------------------------------------------------------------
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.   Воробкало А.А.  Ярошенко Р.Ф.   Шаблий О.В.
- 06.07.20                                                                                                     * zc_MIFloat_ChangePercentLoss
+ 06.07.20                                                                                                     * zc_MIFloat_ChangePercentLess
  06.07.20         * zc_MIFloat_AmountRealPromo
  01.07.20         * zc_MIFloat_MainDiscount
  04.06.20         * zc_MIFloat_DayAudit

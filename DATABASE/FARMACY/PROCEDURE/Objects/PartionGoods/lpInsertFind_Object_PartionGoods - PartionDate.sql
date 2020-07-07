@@ -7,14 +7,15 @@ DROP FUNCTION IF EXISTS lpInsertFind_Object_PartionGoods (Integer, Integer, TDat
 DROP FUNCTION IF EXISTS lpInsertFind_Object_PartionGoods (Integer, Integer, TDateTime, Integer, Integer, TFloat, TFloat, TFloat);
 
 CREATE OR REPLACE FUNCTION lpInsertFind_Object_PartionGoods(
-    IN inMovementId       Integer,   -- Документ "Приход от поставщика"
-    IN inMovementId_send  Integer,   -- Документ zc_Movement_SendPartionDate
-    IN inOperDate         TDateTime, -- срок годности - по нему учет - ExpirationDate
-    IN inUnitId           Integer,   -- Подразделение
-    IN inGoodsId          Integer,   -- товар
-    IN inChangePercentMin TFloat,    -- % скидки(срок меньше месяца)
-    IN inChangePercent    TFloat,    -- % скидки(срок от 1 мес до 6 мес)
-    IN inPriceWithVAT     TFloat     -- Цена закупки с НДС
+    IN inMovementId         Integer,   -- Документ "Приход от поставщика"
+    IN inMovementId_send    Integer,   -- Документ zc_Movement_SendPartionDate
+    IN inOperDate           TDateTime, -- срок годности - по нему учет - ExpirationDate
+    IN inUnitId             Integer,   -- Подразделение
+    IN inGoodsId            Integer,   -- товар
+    IN inChangePercentMin   TFloat,    -- % скидки(срок меньше месяца)
+    IN inChangePercentLess  TFloat,    -- % скидки(срок от 1 мес до 3 мес)
+    IN inChangePercent      TFloat,    -- % скидки(срок от 3 мес до 6 мес)
+    IN inPriceWithVAT       TFloat     -- Цена закупки с НДС
 )
 RETURNS Integer
 AS
@@ -66,7 +67,7 @@ BEGIN
                   AND Container.DescId        = zc_Container_CountPartionDate()
                   AND Container.WhereObjectId = inUnitId
                )
-     THEN 
+     THEN
          vbContainerId_err:=  (WITH tmpObject_Partion AS (SELECT CLO_PartionGoods.ContainerId
                                                           FROM Object
                                                                INNER JOIN ObjectLink AS ObjectLink_Goods
@@ -122,7 +123,7 @@ BEGIN
                                         ON ObjectLink_Unit.ObjectId      = Object.Id
                                        AND ObjectLink_Unit.DescId        = zc_ObjectLink_PartionGoods_Unit()
                                        AND ObjectLink_Unit.ChildObjectId = inUnitId
-                                       
+
                   INNER JOIN ObjectFloat AS ObjectFloat_MovementId
                                          ON ObjectFloat_MovementId.ObjectId = Object.Id
                                         AND ObjectFloat_MovementId.DescId    = zc_ObjectFloat_PartionGoods_MovementId()
@@ -132,7 +133,7 @@ BEGIN
                AND Object.ValueData  = vbOperDate_str
                AND Object.DescId     = zc_Object_PartionGoods()
             )
-     THEN 
+     THEN
          RAISE EXCEPTION 'Ошибка.Найдено несколько партий с одинаковым inMovementId = <%> + OperDate =  <%>.', inMovementId, vbOperDate_str;
      END IF;
 
@@ -157,7 +158,7 @@ BEGIN
                               -- по "срок годности"
                            AND Object.ValueData  = vbOperDate_str
                         );
-                        
+
 
 
      -- Если не нашли
@@ -170,7 +171,7 @@ BEGIN
          PERFORM lpInsertUpdate_ObjectLink (zc_ObjectLink_PartionGoods_Goods(), vbPartionGoodsId, inGoodsId);
          -- сохранили <Подразделение>
          PERFORM lpInsertUpdate_ObjectLink (zc_ObjectLink_PartionGoods_Unit(), vbPartionGoodsId, inUnitId);
-         
+
 
          -- сохранили - срок годности - по нему учет - ExpirationDate
          PERFORM lpInsertUpdate_ObjectDate (zc_ObjectDate_PartionGoods_Value(), vbPartionGoodsId, inOperDate);
@@ -178,9 +179,12 @@ BEGIN
          -- сохранили - % скидки(срок меньше месяца)
          PERFORM lpInsertUpdate_ObjectFloat (zc_ObjectFloat_PartionGoods_ValueMin(), vbPartionGoodsId, inChangePercentMin);
 
-         -- сохранили - % скидки(срок от 1 мес до 6 мес)
+         -- сохранили - % скидки(срок от 1 мес до 3 мес)
+         PERFORM lpInsertUpdate_ObjectFloat (zc_ObjectFloat_PartionGoods_ValueLess(), vbPartionGoodsId, inChangePercentLess);
+
+         -- сохранили - % скидки(срок от 4 мес до 6 мес)
          PERFORM lpInsertUpdate_ObjectFloat (zc_ObjectFloat_PartionGoods_Value(), vbPartionGoodsId, inChangePercent);
-         
+
          -- сохранили - Цена закупки с НДС
          PERFORM lpInsertUpdate_ObjectFloat (zc_ObjectFloat_PartionGoods_PriceWithVAT(), vbPartionGoodsId, inPriceWithVAT);
 
@@ -211,6 +215,7 @@ $BODY$
 /*-------------------------------------------------------------------------------
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Шаблий О.В.
+ 06.07.20                                                       *
  26.06.19                                                       *
  19.04.19                                        *
 */

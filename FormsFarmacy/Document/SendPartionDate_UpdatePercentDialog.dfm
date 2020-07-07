@@ -3,7 +3,7 @@ object SendPartionDate_UpdatePercentDialogForm: TSendPartionDate_UpdatePercentDi
   Top = 0
   BorderStyle = bsDialog
   Caption = #1048#1079#1084#1077#1085#1077#1085#1080#1077' '#1087#1088#1086#1094#1077#1085#1090#1086#1074' '#1087#1086' '#1087#1086#1076#1088#1072#1079#1076#1077#1083#1077#1085#1080#1102
-  ClientHeight = 233
+  ClientHeight = 274
   ClientWidth = 342
   Color = clBtnFace
   Font.Charset = DEFAULT_CHARSET
@@ -18,7 +18,7 @@ object SendPartionDate_UpdatePercentDialogForm: TSendPartionDate_UpdatePercentDi
   TextHeight = 13
   object cxButton1: TcxButton
     Left = 42
-    Top = 190
+    Top = 230
     Width = 75
     Height = 25
     Caption = 'Ok'
@@ -28,7 +28,7 @@ object SendPartionDate_UpdatePercentDialogForm: TSendPartionDate_UpdatePercentDi
   end
   object cxButton2: TcxButton
     Left = 216
-    Top = 190
+    Top = 230
     Width = 75
     Height = 25
     Caption = #1054#1090#1084#1077#1085#1072
@@ -55,7 +55,7 @@ object SendPartionDate_UpdatePercentDialogForm: TSendPartionDate_UpdatePercentDi
   object edChangePercentMin: TcxCurrencyEdit
     Left = 8
     Top = 88
-    EditValue = 20.000000000000000000
+    EditValue = 100.000000000000000000
     Properties.DecimalPlaces = 4
     Properties.DisplayFormat = ',0.####'
     Properties.ReadOnly = False
@@ -67,10 +67,10 @@ object SendPartionDate_UpdatePercentDialogForm: TSendPartionDate_UpdatePercentDi
     Top = 65
     Caption = '% '#1089#1082#1080#1076#1082#1080' ('#1089#1088#1086#1082' '#1084#1077#1085#1100#1096#1077' 50 '#1076#1085'.)'
   end
-  object edChangePercent: TcxCurrencyEdit
+  object edChangePercentLess: TcxCurrencyEdit
     Left = 8
     Top = 138
-    EditValue = 100.000000000000000000
+    EditValue = 50.000000000000000000
     Properties.DecimalPlaces = 4
     Properties.DisplayFormat = ',0.####'
     Properties.ReadOnly = False
@@ -80,7 +80,22 @@ object SendPartionDate_UpdatePercentDialogForm: TSendPartionDate_UpdatePercentDi
   object cxLabel9: TcxLabel
     Left = 8
     Top = 117
-    Caption = '% '#1089#1082#1080#1076#1082#1080' ('#1089#1088#1086#1082' '#1086#1090' 50 '#1076#1086' 200 '#1076#1085'.)'
+    Caption = '% '#1089#1082#1080#1076#1082#1080' ('#1089#1088#1086#1082' '#1086#1090' 50 '#1076#1086' 90 '#1076#1085'.)'
+  end
+  object edChangePercent: TcxCurrencyEdit
+    Left = 8
+    Top = 192
+    EditValue = 20.000000000000000000
+    Properties.DecimalPlaces = 4
+    Properties.DisplayFormat = ',0.####'
+    Properties.ReadOnly = False
+    TabOrder = 8
+    Width = 167
+  end
+  object cxLabel2: TcxLabel
+    Left = 8
+    Top = 171
+    Caption = '% '#1089#1082#1080#1076#1082#1080' ('#1089#1088#1086#1082' '#1086#1090' 90 '#1076#1086' 200 '#1076#1085'.)'
   end
   object dsdUserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn
     Left = 286
@@ -121,6 +136,14 @@ object SendPartionDate_UpdatePercentDialogForm: TSendPartionDate_UpdatePercentDi
         Name = 'ChangePercent'
         Value = 100.000000000000000000
         Component = edChangePercent
+        DataType = ftFloat
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'ChangePercentLess'
+        Value = Null
+        Component = edChangePercentLess
         DataType = ftFloat
         ParamType = ptInput
         MultiSelectSeparator = ','

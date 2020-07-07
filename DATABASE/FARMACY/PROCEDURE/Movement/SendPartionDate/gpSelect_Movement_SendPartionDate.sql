@@ -11,7 +11,7 @@ CREATE OR REPLACE FUNCTION gpSelect_Movement_SendPartionDate(
 RETURNS TABLE (Id Integer, InvNumber TVarChar, OperDate TDateTime
              , StatusCode Integer, StatusName TVarChar
              , TotalCount TFloat
-             , ChangePercent TFloat, ChangePercentMin TFloat
+             , ChangePercent TFloat, ChangePercentLess TFloat, ChangePercentMin TFloat
              , UnitId Integer, UnitName TVarChar, ProvinceCityName TVarChar
              , Comment TVarChar
              , Transfer Boolean
@@ -78,6 +78,7 @@ BEGIN
            , Object_Status.ValueData              AS StatusName
            , MovementFloat_TotalCount.ValueData   AS TotalCount
            , MovementFloat_ChangePercent.ValueData     AS ChangePercent
+           , MovementFloat_ChangePercentLess.ValueData AS ChangePercentLess
            , MovementFloat_ChangePercentMin.ValueData  AS ChangePercentMin
 
            , Object_Unit.Id                       AS UnitId
@@ -108,6 +109,10 @@ BEGIN
             LEFT JOIN MovementFloat AS MovementFloat_ChangePercent
                                     ON MovementFloat_ChangePercent.MovementId =  Movement.Id
                                    AND MovementFloat_ChangePercent.DescId = zc_MovementFloat_ChangePercent()
+
+            LEFT JOIN MovementFloat AS MovementFloat_ChangePercentLess
+                                    ON MovementFloat_ChangePercentLess.MovementId =  Movement.Id
+                                   AND MovementFloat_ChangePercentLess.DescId = zc_MovementFloat_ChangePercentLess()
 
             LEFT JOIN MovementFloat AS MovementFloat_ChangePercentMin
                                     ON MovementFloat_ChangePercentMin.MovementId =  Movement.Id
@@ -157,6 +162,7 @@ $BODY$
 /*
  »—“Œ–»ﬂ –¿«–¿¡Œ“ »: ƒ¿“¿, ¿¬“Œ–
                ‘ÂÎÓÌ˛Í ».¬.    ÛıÚËÌ ».¬.    ÎËÏÂÌÚ¸Â‚  .».   ÿ‡·ÎËÈ Œ.¬.
+ 06.07.20                                                       *
  26.06.19                                                       *
  27.05.19         *
  02.04.19         *

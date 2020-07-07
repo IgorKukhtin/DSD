@@ -1,6 +1,6 @@
 -- Function: gpInsertUpdate_MI_SendPartionDate_Master()
 
-DROP FUNCTION IF EXISTS lpInsertUpdate_MI_SendPartionDate_Master (Integer, Integer, Integer, TFloat, TFloat, TFloat, TFloat, Integer);
+DROP FUNCTION IF EXISTS lpInsertUpdate_MI_SendPartionDate_Master (Integer, Integer, Integer, TFloat, TFloat, TFloat, TFloat, TFloat, Integer);
 
 CREATE OR REPLACE FUNCTION lpInsertUpdate_MI_SendPartionDate_Master(
  INOUT ioId                  Integer   , -- Ключ объекта <Элемент документа>
@@ -8,7 +8,8 @@ CREATE OR REPLACE FUNCTION lpInsertUpdate_MI_SendPartionDate_Master(
     IN inGoodsId             Integer   , -- Товары
     IN inAmount              TFloat    , -- Количество
     IN inAmountRemains       TFloat    , --
-    IN inChangePercent       TFloat    , -- % (срок от 1 мес до 6 мес)
+    IN inChangePercent       TFloat    , -- % (срок от 1 мес до 3 мес)
+    IN inChangePercentLess   TFloat    , -- % (срок от 3 мес до 6 мес)
     IN inChangePercentMin    TFloat    , -- % (срок меньше месяца)
     IN inUserId              Integer    -- сессия пользователя
 )
@@ -27,6 +28,8 @@ BEGIN
     -- сохранили <цену>
     PERFORM lpInsertUpdate_MovementItemFloat (zc_MIFloat_ChangePercent(), ioId, inChangePercent);
     -- сохранили <>
+    PERFORM lpInsertUpdate_MovementItemFloat (zc_MIFloat_ChangePercentLess(), ioId, inChangePercentLess);
+    -- сохранили <>
     PERFORM lpInsertUpdate_MovementItemFloat (zc_MIFloat_ChangePercentMin(), ioId, inChangePercentMin);
     -- сохранили <>
     PERFORM lpInsertUpdate_MovementItemFloat (zc_MIFloat_AmountRemains(), ioId, inAmountRemains);
@@ -43,7 +46,8 @@ $BODY$
 
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
-               Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
+               Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.  Шаблий О.В.
+ 06.07.20                                                      *
  27.05.19         *
  03.04.19         *
 */
