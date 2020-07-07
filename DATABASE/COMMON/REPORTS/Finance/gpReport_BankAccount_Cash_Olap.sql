@@ -324,7 +324,13 @@ BEGIN
                                   WHERE MIString_Comment.DescId = zc_MIString_Comment()
                                     AND MIString_Comment.MovementItemId IN (SELECT DISTINCT tmpContainerCurrency.MovementItemId FROM tmpContainerCurrency)
                                  ) 
-                                   
+
+        , tmpMIContainer AS (SELECT *
+                             FROM MovementItemContainer
+                             WHERE MovementItemContainer.Containerid IN (SELECT DISTINCT tmpContainer.ContainerId FROM tmpContainer)
+                               AND MovementItemContainer.OperDate >= inStartDate
+                             )
+
         , Operation_all AS (-- нач. остаток  в валюте баланса
                             SELECT tmpContainer.ContainerId
                                  , tmpContainer.ObjectId
@@ -348,8 +354,9 @@ BEGIN
                                  , 1                         AS NomStr
                                  , '1. Нач. сальдо'          AS InfoText
                             FROM tmpContainer
-                                 LEFT JOIN MovementItemContainer AS MIContainer ON MIContainer.Containerid = tmpContainer.ContainerId
-                                                                AND MIContainer.OperDate >= inStartDate
+                                 LEFT JOIN tmpMIContainer AS MIContainer 
+                                                          ON MIContainer.Containerid = tmpContainer.ContainerId
+                                                         AND MIContainer.OperDate >= inStartDate
                             GROUP BY tmpContainer.ContainerId, tmpContainer.ObjectId, tmpContainer.CashId, tmpContainer.Amount, tmpContainer.CurrencyId, tmpContainer.BranchId
                  
                             UNION ALL
@@ -377,8 +384,9 @@ BEGIN
                                  , 3                         AS NomStr
                                  , '3. Конечн. сальдо'       AS InfoText
                             FROM tmpContainer
-                                 LEFT JOIN MovementItemContainer AS MIContainer ON MIContainer.Containerid = tmpContainer.ContainerId
-                                                                AND MIContainer.OperDate > inEndDate
+                                 LEFT JOIN tmpMIContainer AS MIContainer
+                                                          ON MIContainer.Containerid = tmpContainer.ContainerId
+                                                         AND MIContainer.OperDate > inEndDate
                             GROUP BY tmpContainer.ContainerId, tmpContainer.ObjectId, tmpContainer.CashId, tmpContainer.Amount, tmpContainer.CurrencyId, tmpContainer.BranchId
                  
                             UNION ALL
@@ -621,6 +629,12 @@ BEGIN
                               AND (COALESCE (CLO_BankAccount.ObjectId, CLO_Juridical.ObjectId) IN (SELECT DISTINCT tmpBankAccount.Id FROM tmpBankAccount)) -- ограничиваем по гл. юр.лицу)
                             )
 
+        , tmpMIContainer_2 AS (SELECT *
+                               FROM MovementItemContainer
+                               WHERE MovementItemContainer.Containerid IN (SELECT DISTINCT tmpContainer_2.ContainerId FROM tmpContainer_2)
+                                 AND MovementItemContainer.OperDate >= inStartDate
+                               )
+
         , Operation_all_2 AS (
                            -- 1.1. нач. остаток в валюте баланса
                             SELECT tmpContainer.ContainerId
@@ -644,8 +658,9 @@ BEGIN
                                  , 1                         AS NomStr
                                  , '1. Нач. сальдо'          AS InfoText
                             FROM tmpContainer_2 AS tmpContainer
-                                 LEFT JOIN MovementItemContainer AS MIContainer ON MIContainer.ContainerId = tmpContainer.ContainerId
-                                                                               AND MIContainer.OperDate >= inStartDate
+                                 LEFT JOIN tmpMIContainer_2 AS MIContainer
+                                                            ON MIContainer.ContainerId = tmpContainer.ContainerId
+                                                           AND MIContainer.OperDate >= inStartDate
                             GROUP BY tmpContainer.ContainerId , tmpContainer.AccountId, tmpContainer.BankAccountId, tmpContainer.CurrencyId, tmpContainer.Amount, tmpContainer.BranchId
                            UNION ALL
                            -- 1.1. конечн. остаток в валюте баланса
@@ -670,8 +685,9 @@ BEGIN
                                  , 3                         AS NomStr
                                  , '3. Конечн. сальдо'       AS InfoText
                             FROM tmpContainer_2 AS tmpContainer
-                                 LEFT JOIN MovementItemContainer AS MIContainer ON MIContainer.ContainerId = tmpContainer.ContainerId
-                                                                               AND MIContainer.OperDate >= inStartDate
+                                 LEFT JOIN tmpMIContainer_2 AS MIContainer
+                                                            ON MIContainer.ContainerId = tmpContainer.ContainerId
+                                                           AND MIContainer.OperDate >= inStartDate
                             GROUP BY tmpContainer.ContainerId , tmpContainer.AccountId, tmpContainer.BankAccountId, tmpContainer.CurrencyId, tmpContainer.Amount, tmpContainer.BranchId
                            UNION ALL
                              -- 2.1. движение в валюте баланса
@@ -699,9 +715,9 @@ BEGIN
                                  , 2 AS NomStr
                                  , '2. Обороты' AS InfoText
                             FROM tmpContainer_2 AS tmpContainer
-                                 INNER JOIN MovementItemContainer AS MIContainer
-                                                                  ON MIContainer.ContainerId = tmpContainer.ContainerId
-                                                                 AND MIContainer.OperDate BETWEEN inStartDate AND inEndDate
+                                 INNER JOIN tmpMIContainer_2 AS MIContainer
+                                                             ON MIContainer.ContainerId = tmpContainer.ContainerId
+                                                            AND MIContainer.OperDate BETWEEN inStartDate AND inEndDate
                                  LEFT JOIN MovementItemLinkObject AS MILO_MoneyPlace
                                                                   ON MILO_MoneyPlace.MovementItemId = MIContainer.MovementItemId
                                                                  AND MILO_MoneyPlace.DescId = zc_MILinkObject_MoneyPlace()
@@ -743,9 +759,9 @@ BEGIN
                                  , 2 AS NomStr
                                  , '2. Обороты' AS InfoText
                             FROM tmpContainer_2 AS tmpContainer
-                                 INNER JOIN MovementItemContainer AS MIContainer
-                                                                  ON MIContainer.ContainerId = tmpContainer.ContainerId_Currency
-                                                                 AND MIContainer.OperDate BETWEEN inStartDate AND inEndDate
+                                 INNER JOIN tmpMIContainer_2 AS MIContainer
+                                                             ON MIContainer.ContainerId = tmpContainer.ContainerId_Currency
+                                                            AND MIContainer.OperDate BETWEEN inStartDate AND inEndDate
                                  LEFT JOIN MovementItemLinkObject AS MILO_MoneyPlace
                                                                   ON MILO_MoneyPlace.MovementItemId = MIContainer.MovementItemId
                                                                  AND MILO_MoneyPlace.DescId = zc_MILinkObject_MoneyPlace()
@@ -787,11 +803,11 @@ BEGIN
                                  , 2 AS NomStr
                                  , '2. Обороты' AS InfoText
                             FROM tmpContainer_2 AS tmpContainer
-                                 INNER JOIN MovementItemContainer AS MIContainer 
-                                                                  ON MIContainer.ContainerId = tmpContainer.ContainerId
-                                                                 AND MIContainer.OperDate BETWEEN inStartDate AND inEndDate
-                                                                 AND MIContainer.MovementDescId <> zc_Movement_Currency()
-                                                                 AND MIContainer.AnalyzerId = zc_Enum_AnalyzerId_ProfitLoss() -- то что относится к ОПиУ, кроме проводок с товарами
+                                 INNER JOIN tmpMIContainer_2 AS MIContainer 
+                                                             ON MIContainer.ContainerId = tmpContainer.ContainerId
+                                                            AND MIContainer.OperDate BETWEEN inStartDate AND inEndDate
+                                                            AND MIContainer.MovementDescId <> zc_Movement_Currency()
+                                                            AND MIContainer.AnalyzerId = zc_Enum_AnalyzerId_ProfitLoss() -- то что относится к ОПиУ, кроме проводок с товарами
                                  LEFT JOIN MovementItemLinkObject AS MILO_MoneyPlace
                                                                   ON MILO_MoneyPlace.MovementItemId = MIContainer.MovementItemId
                                                                  AND MILO_MoneyPlace.DescId = zc_MILinkObject_MoneyPlace()
@@ -1149,8 +1165,7 @@ BEGIN
                                 , Operation.PrintGroup
                            FROM tmp_DDC AS Operation
                            )
-                           
-    
+
      -- Результат
      SELECT
         Operation.ContainerId,

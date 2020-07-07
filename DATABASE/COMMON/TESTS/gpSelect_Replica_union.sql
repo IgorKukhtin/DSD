@@ -17,7 +17,7 @@ UNION SELECT * FROM gpSelect_Replica_part11 (inId_start, inId_end)
 UNION SELECT 12, ' AS RESULT'
 UNION SELECT 20, 'FROM table_update_data'
 UNION SELECT * FROM gpSelect_Replica_part30 (inId_start, inId_end)
-UNION SELECT  40, 'ORDER BY'
+UNION SELECT  40, 'ORDER BY 1'
 ORDER BY 1;
      
 END;
