@@ -140,7 +140,8 @@ end if;
                                , COALESCE (tmpMI_promo_all_find.GoodsKindId, tmpMI_promo_all.GoodsKindId)
                        )
         , tmpMI_sale AS (SELECT tmpMI_promo.MovementItemId AS MovementItemId_promo
-                              , SUM (CASE WHEN COALESCE (MIFloat_PromoMovement.MovementItemId, 0) = 0 THEN COALESCE (MIFloat_AmountPartner.ValueData, 0) ELSE 0 END) AS AmountPartner
+                              , SUM (COALESCE (MIFloat_AmountPartner.ValueData, 0)) AS AmountPartner
+                              , SUM (CASE WHEN COALESCE (MIFloat_PromoMovement.MovementItemId, 0) > 0 THEN COALESCE (MIFloat_AmountPartner.ValueData, 0) ELSE 0 END) AS AmountPartnerPromo
                          FROM tmpMovement_sale
                               INNER JOIN MovementItem ON MovementItem.MovementId = tmpMovement_sale.MovementId
                                                      AND MovementItem.DescId = zc_MI_Master()
@@ -161,7 +162,8 @@ end if;
                         )
    
    , tmpMI_ReturnIn AS (SELECT tmpMI_promo.MovementItemId AS MovementItemId_promo
-                             , SUM (CASE WHEN COALESCE (MIFloat_PromoMovement.MovementItemId, 0) = 0 THEN COALESCE (MIFloat_AmountPartner.ValueData, 0) ELSE 0 END) AS AmountPartner
+                             , SUM (COALESCE (MIFloat_AmountPartner.ValueData, 0)) AS AmountPartner
+                             , SUM (CASE WHEN COALESCE (MIFloat_PromoMovement.MovementItemId, 0) > 0 THEN COALESCE (MIFloat_AmountPartner.ValueData, 0) ELSE 0 END) AS AmountPartnerPromo
                         FROM tmpMovement_ReturnIn
                              INNER JOIN MovementItem ON MovementItem.MovementId = tmpMovement_ReturnIn.MovementId
                                                     AND MovementItem.DescId     = zc_MI_Master()
@@ -186,6 +188,17 @@ end if;
                 FROM (SELECT CASE lpInsertUpdate_MovementItemFloat (inDescId        := zc_MIFloat_AmountReal()
                                                                   , inMovementItemId:= tmpMI_promo_all.MovementItemId
                                                                   , inValueData     := COALESCE (tmpMI_sale.AmountPartner, 0)
+                                                                   )
+                                   WHEN TRUE THEN 0
+                                   ELSE -1 -- т.е. показать ошибку
+                             END AS tmpId
+                      FROM tmpMI_promo_all
+                           LEFT JOIN tmpMI_promo ON tmpMI_promo.MovementItemId      = tmpMI_promo_all.MovementItemId
+                           LEFT JOIN tmpMI_sale  ON tmpMI_sale.MovementItemId_promo = tmpMI_promo.MovementItemId
+                     UNION
+                      SELECT CASE lpInsertUpdate_MovementItemFloat (inDescId        := zc_MIFloat_AmountRealPromo()
+                                                                  , inMovementItemId:= tmpMI_promo_all.MovementItemId
+                                                                  , inValueData     := COALESCE (tmpMI_sale.AmountPartnerPromo, 0)
                                                                    )
                                    WHEN TRUE THEN 0
                                    ELSE -1 -- т.е. показать ошибку
