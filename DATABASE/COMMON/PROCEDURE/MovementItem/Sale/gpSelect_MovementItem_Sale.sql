@@ -699,8 +699,9 @@ BEGIN
                                            AND MIFloat_PriceWithOutVAT.DescId = zc_MIFloat_PriceWithOutVAT()
                                         )
            -- Акции по товарам для существующих MovementItem
-         , tmpMIPromo AS (SELECT tmpMIPromo_all.MovementId_Promo
-                               , tmpMIPromo_all.MovementItemId
+         , tmpMIPromo AS (SELECT DISTINCT
+                                 tmpMIPromo_all.MovementId_Promo
+                             --, tmpMIPromo_all.MovementItemId
                                , tmpMIPromo_all.GoodsId
                                , tmpMIPromo_all.TaxPromo
                                , COALESCE (MILinkObject_GoodsKind.ObjectId, 0) AS GoodsKindId
@@ -730,141 +731,207 @@ BEGIN
                                                              AND ObjectLink_GoodsByGoodsKind_GoodsKindSub.DescId = zc_ObjectLink_GoodsByGoodsKind_GoodsKindSub()
                                        WHERE COALESCE(ObjectLink_GoodsByGoodsKind_GoodsSub.ChildObjectId ,0)<>0 OR COALESCE(ObjectLink_GoodsByGoodsKind_GoodsKindSub.ChildObjectId,0) <> 0 
                                        )
+            -- Результат - tmp
+          , tmpResult AS (SELECT
+                                ROW_NUMBER() OVER (PARTITION BY tmpMI_Goods.MovementItemId ORDER BY CASE WHEN tmpMIPromo.MovementId_Promo = tmpPromo.MovementId THEN 1 ELSE 2 END) AS Ord
+                              , tmpMI_Goods.MovementItemId             AS Id
+                              , CAST (ROW_NUMBER() OVER (ORDER BY tmpMI_Goods.MovementItemId) AS Integer) AS LineNum
+                              , Object_Goods.Id                        AS GoodsId
+                              , Object_Goods.ObjectCode                AS GoodsCode
+                              , Object_Goods.ValueData                 AS GoodsName
+                              , ObjectString_Goods_GoodsGroupFull.ValueData AS GoodsGroupNameFull
+                   
+                              , tmpMI_Goods.Amount                     AS Amount
+                              , tmpMI_Goods.AmountChangePercent
+                              , tmpMI_Goods.AmountPartner
+                              , tmpMI_Goods.ChangePercentAmount
+                              , (tmpMI_Goods.Amount - COALESCE (tmpMI_Goods.AmountChangePercent, 0)) :: TFloat AS TotalPercentAmount
+                              , tmpMI_Goods.ChangePercent      :: TFloat AS ChangePercent
+                   
+                              , tmpMI_Goods.Price
+                              , tmpMI_Goods.CountForPrice
+                              , CASE WHEN tmpMI_Goods.Amount <> 0 THEN tmpPriceCost.SumCost / tmpMI_Goods.Amount ELSE 0 END  ::TFloat AS PriceCost
+                              , tmpPriceCost.SumCost :: TFloat         AS SumCost
+                   
+                              , COALESCE (tmpPriceList_kind.Price_Pricelist, tmpPriceList.Price_Pricelist)         :: TFloat AS Price_Pricelist
+                              , COALESCE (tmpPriceList_kind.Price_Pricelist_vat, tmpPriceList.Price_Pricelist_vat) :: TFloat AS Price_Pricelist_vat
+                   
+                              , tmpMI_Goods.HeadCount
+                              , tmpMI_Goods.BoxCount
+                   
+                              , tmpMI_Goods.PartionGoods
+                              , tmpMI_Goods.PartionGoodsDate :: TDateTime AS PartionGoodsDate
+                              , Object_GoodsKind.Id                    AS GoodsKindId
+                              , Object_GoodsKind.ValueData             AS GoodsKindName
+                              , Object_Measure.ValueData               AS MeasureName
+                   
+                              , Object_Asset.Id                        AS AssetId
+                              , Object_Asset.ValueData                 AS AssetName
+                   
+                              , Object_Box.Id                          AS BoxId
+                              , Object_Box.ValueData                   AS BoxName
+                   
+                              , CAST (CASE WHEN tmpMI_Goods.CountForPrice > 0
+                                              THEN CAST ( (COALESCE (tmpMI_Goods.AmountPartner, 0)) * tmpMI_Goods.Price / tmpMI_Goods.CountForPrice AS NUMERIC (16, 2))
+                                              ELSE CAST ( (COALESCE (tmpMI_Goods.AmountPartner, 0)) * tmpMI_Goods.Price AS NUMERIC (16, 2))
+                                      END AS TFloat)                   AS AmountSumm
+                                      
+                              , tmpMI_Goods.CountPack
+                              , tmpMI_Goods.WeightTotal
+                              , tmpMI_Goods.WeightPack
+                              , tmpMI_Goods.isBarCode
+                   
+                              , CASE WHEN tmpPromo.TaxPromo <> 0 AND vbPriceWithVAT = TRUE AND tmpPromo.PriceWithVAT = tmpMI_Goods.Price
+                                          THEN FALSE
+                                     WHEN tmpPromo.TaxPromo <> 0 AND tmpPromo.PriceWithOutVAT = tmpMI_Goods.Price
+                                          THEN FALSE
+                                     WHEN ((COALESCE (tmpMI_Goods.Price, 0) = COALESCE (tmpPriceList_kind.Price_Pricelist, tmpPriceList.Price_Pricelist, 0)     AND vbPriceWithVAT = FALSE)
+                                        OR (COALESCE (tmpMI_Goods.Price, 0) = COALESCE (tmpPriceList_kind.Price_Pricelist_vat, tmpPriceList.Price_Pricelist_vat, 0) AND vbPriceWithVAT = TRUE))
+                                       AND COALESCE (tmpMIPromo.MovementId_Promo, 0) = 0
+                                       AND COALESCE (tmpPromo.MovementId, 0)         = 0
+                                          THEN FALSE
+                                     ELSE TRUE
+                                END :: Boolean AS isCheck_PricelistBoolean
+                   
+                              , COALESCE (tmpPromo.MovementId, tmpMI_Goods.MovementId_Promo) ::Integer AS MovementId_Promo
+                              , (CASE WHEN (tmpPromo.isChangePercent = TRUE  AND tmpMI_Goods.ChangePercent <> vbChangePercent)
+                                        OR (tmpPromo.isChangePercent = FALSE AND tmpMI_Goods.ChangePercent <> 0)
+                                           THEN 'ОШИБКА <(-)% Скидки (+)% Наценки>'
+                                      ELSE ''
+                                 END
+                              || CASE WHEN tmpMIPromo.MovementId_Promo = tmpPromo.MovementId
+                                           THEN tmpPromo.MovementPromo
+                                      WHEN tmpMIPromo.MovementId_Promo <> COALESCE (tmpPromo.MovementId, 0)
+                                           THEN 'ОШИБКА ' || zfCalc_PromoMovementName (NULL, Movement_Promo_View.InvNumber :: TVarChar, Movement_Promo_View.OperDate, Movement_Promo_View.StartSale, Movement_Promo_View.EndSale)
+                                             -- || ' 1)' || COALESCE (tmpMIPromo.MovementId_Promo, 0) :: TVarChar || ' <> ' || COALESCE (tmpPromo.MovementId, 0) :: TVarChar
+                                      WHEN COALESCE (tmpMIPromo.MovementId_Promo, 0) <> tmpPromo.MovementId
+                                           THEN 'ОШИБКА ' || tmpPromo.MovementPromo
+                                             -- || ' 2)' || COALESCE (tmpMIPromo.MovementId_Promo, 0) :: TVarChar || ' <> ' || COALESCE (tmpPromo.MovementId, 0) :: TVarChar
+                                      ELSE ''
+                                 END) :: TVarChar AS MovementPromo
+                   
+                              , CASE WHEN 1 = 0 AND tmpMIPromo.PricePromo <> 0 THEN tmpMIPromo.PricePromo
+                                     WHEN tmpPromo.TaxPromo <> 0 AND vbPriceWithVAT = TRUE THEN tmpPromo.PriceWithVAT
+                                     WHEN tmpPromo.TaxPromo <> 0 THEN tmpPromo.PriceWithOutVAT
+                                     ELSE 0
+                                END :: TFloat AS PricePromo
+                   
+                              , Object_InfoMoney_View.InfoMoneyCode
+                              , Object_InfoMoney_View.InfoMoneyGroupName
+                              , Object_InfoMoney_View.InfoMoneyDestinationName
+                              , Object_InfoMoney_View.InfoMoneyName
+                              , Object_InfoMoney_View.InfoMoneyName_all
+                   
+                              , tmpMI_Goods.isErased
+                              , COALESCE (tmpGoodsByGoodsKindSub.isPeresort, False) AS isPeresort
+                   
+                          FROM tmpMI_Goods
+                               LEFT JOIN tmpMIPromo ON tmpMIPromo.MovementId_Promo = tmpMI_Goods.MovementId_Promo
+                                                   AND tmpMIPromo.GoodsId          = tmpMI_Goods.GoodsId
+                                                   AND (tmpMIPromo.GoodsKindId     = tmpMI_Goods.GoodsKindId
+                                                     OR tmpMIPromo.GoodsKindId     = 0)
+                               LEFT JOIN tmpPromo ON tmpPromo.GoodsId      = tmpMI_Goods.GoodsId
+                                                 AND (tmpPromo.GoodsKindId = tmpMI_Goods.GoodsKindId OR tmpPromo.GoodsKindId = 0)
+                   
+                               LEFT JOIN Object AS Object_Goods ON Object_Goods.Id = tmpMI_Goods.GoodsId
+                               LEFT JOIN ObjectLink AS ObjectLink_Goods_Measure
+                                                    ON ObjectLink_Goods_Measure.ObjectId = tmpMI_Goods.GoodsId
+                                                   AND ObjectLink_Goods_Measure.DescId = zc_ObjectLink_Goods_Measure()
+                               LEFT JOIN Object AS Object_Measure ON Object_Measure.Id = ObjectLink_Goods_Measure.ChildObjectId
+                   
+                   
+                               LEFT JOIN Object AS Object_GoodsKind ON Object_GoodsKind.Id = tmpMI_Goods.GoodsKindId
+                   
+                               LEFT JOIN Object AS Object_Box ON Object_Box.Id = tmpMI_Goods.BoxId
+                               LEFT JOIN Object AS Object_Asset ON Object_Asset.Id = tmpMI_Goods.AssetId
+                   
+                               LEFT JOIN ObjectString AS ObjectString_Goods_GoodsGroupFull
+                                                      ON ObjectString_Goods_GoodsGroupFull.ObjectId = tmpMI_Goods.GoodsId
+                                                     AND ObjectString_Goods_GoodsGroupFull.DescId = zc_ObjectString_Goods_GroupNameFull()
+                   
+                               LEFT JOIN Movement_Promo_View ON Movement_Promo_View.Id = COALESCE (tmpPromo.MovementId, tmpMI_Goods.MovementId_Promo)
+                                                     
+                               LEFT JOIN tmpPriceCost ON tmpPriceCost.MovementItemId = tmpMI_Goods.MovementItemId
+                               
+                               -- привязываем 2 раза цены по виду товара и без
+                               LEFT JOIN tmpPriceList ON tmpPriceList.GoodsId = tmpMI_Goods.GoodsId
+                                                     AND tmpPriceList.GoodsKindId IS NULL
+                               LEFT JOIN tmpPriceList AS tmpPriceList_kind
+                                                      ON tmpPriceList_kind.GoodsId = tmpMI_Goods.GoodsId
+                                                     AND COALESCE (tmpPriceList_kind.GoodsKindId,0) = COALESCE (tmpMI_Goods.GoodsKindId,0)
+                   
+                               LEFT JOIN ObjectLink AS ObjectLink_Goods_InfoMoney
+                                                    ON ObjectLink_Goods_InfoMoney.ObjectId = Object_Goods.Id
+                                                   AND ObjectLink_Goods_InfoMoney.DescId = zc_ObjectLink_Goods_InfoMoney()
+                               LEFT JOIN Object_InfoMoney_View ON Object_InfoMoney_View.InfoMoneyId = ObjectLink_Goods_InfoMoney.ChildObjectId
+                   
+                               LEFT JOIN tmpGoodsByGoodsKindSub ON tmpGoodsByGoodsKindSub.GoodsId = tmpMI_Goods.GoodsId
+                                                               AND tmpGoodsByGoodsKindSub.GoodsKindId = tmpMI_Goods.GoodsKindId
+                         )
        -- Результат     
        SELECT
-             tmpMI_Goods.MovementItemId             AS Id
-           , CAST (ROW_NUMBER() OVER (ORDER BY tmpMI_Goods.MovementItemId) AS Integer) AS LineNum
-           , Object_Goods.Id                        AS GoodsId
-           , Object_Goods.ObjectCode                AS GoodsCode
-           , Object_Goods.ValueData                 AS GoodsName
-           , ObjectString_Goods_GoodsGroupFull.ValueData AS GoodsGroupNameFull
+             tmpResult.Id
+           , tmpResult.LineNum
+           , tmpResult.GoodsId
+           , tmpResult.GoodsCode
+           , tmpResult.GoodsName
+           , tmpResult.GoodsGroupNameFull
 
-           , tmpMI_Goods.Amount                     AS Amount
-           , tmpMI_Goods.AmountChangePercent
-           , tmpMI_Goods.AmountPartner
-           , tmpMI_Goods.ChangePercentAmount
-           , (tmpMI_Goods.Amount - COALESCE (tmpMI_Goods.AmountChangePercent, 0)) :: TFloat AS TotalPercentAmount
-           , tmpMI_Goods.ChangePercent      :: TFloat AS ChangePercent
+           , CASE WHEN tmpResult.Ord = 1 THEN tmpResult.Amount ELSE 0 END :: TFloat AS Amount
+           , CASE WHEN tmpResult.Ord = 1 THEN tmpResult.AmountChangePercent ELSE 0 END :: TFloat AS AmountChangePercent
+           , CASE WHEN tmpResult.Ord = 1 THEN tmpResult.AmountPartner ELSE 0 END :: TFloat AS AmountPartner
+           , tmpResult.ChangePercentAmount
+           , CASE WHEN tmpResult.Ord = 1 THEN tmpResult.TotalPercentAmount ELSE 0 END :: TFloat AS TotalPercentAmount
+           , tmpResult.ChangePercent
 
-           , tmpMI_Goods.Price
-           , tmpMI_Goods.CountForPrice
-           , CASE WHEN tmpMI_Goods.Amount <> 0 THEN tmpPriceCost.SumCost / tmpMI_Goods.Amount ELSE 0 END  ::TFloat AS PriceCost
-           , tmpPriceCost.SumCost :: TFloat         AS SumCost
+           , tmpResult.Price
+           , tmpResult.CountForPrice
+           , tmpResult.PriceCost
+           , CASE WHEN tmpResult.Ord = 1 THEN tmpResult.SumCost ELSE 0 END :: TFloat AS SumCost
 
-           , COALESCE (tmpPriceList_kind.Price_Pricelist, tmpPriceList.Price_Pricelist)         :: TFloat AS Price_Pricelist
-           , COALESCE (tmpPriceList_kind.Price_Pricelist_vat, tmpPriceList.Price_Pricelist_vat) :: TFloat AS Price_Pricelist_vat
+           , tmpResult.Price_Pricelist
+           , tmpResult.Price_Pricelist_vat
 
-           , tmpMI_Goods.HeadCount
-           , tmpMI_Goods.BoxCount
+           , CASE WHEN tmpResult.Ord = 1 THEN tmpResult.HeadCount ELSE 0 END :: TFloat AS HeadCount
+           , CASE WHEN tmpResult.Ord = 1 THEN tmpResult.BoxCount ELSE 0 END :: TFloat AS BoxCount
 
-           , tmpMI_Goods.PartionGoods
-           , tmpMI_Goods.PartionGoodsDate :: TDateTime
-           , Object_GoodsKind.Id                    AS GoodsKindId
-           , Object_GoodsKind.ValueData             AS GoodsKindName
-           , Object_Measure.ValueData               AS MeasureName
+           , tmpResult.PartionGoods
+           , tmpResult.PartionGoodsDate
+           , tmpResult.GoodsKindId
+           , tmpResult.GoodsKindName
+           , tmpResult.MeasureName
 
-           , Object_Asset.Id                        AS AssetId
-           , Object_Asset.ValueData                 AS AssetName
+           , tmpResult.AssetId
+           , tmpResult.AssetName
 
-           , Object_Box.Id                          AS BoxId
-           , Object_Box.ValueData                   AS BoxName
+           , tmpResult.BoxId
+           , tmpResult.BoxName
 
-           , CAST (CASE WHEN tmpMI_Goods.CountForPrice > 0
-                           THEN CAST ( (COALESCE (tmpMI_Goods.AmountPartner, 0)) * tmpMI_Goods.Price / tmpMI_Goods.CountForPrice AS NUMERIC (16, 2))
-                           ELSE CAST ( (COALESCE (tmpMI_Goods.AmountPartner, 0)) * tmpMI_Goods.Price AS NUMERIC (16, 2))
-                   END AS TFloat)                   AS AmountSumm
+           , CASE WHEN tmpResult.Ord = 1 THEN tmpResult.AmountSumm ELSE 0 END :: TFloat AS AmountSumm
                    
-           , tmpMI_Goods.CountPack
-           , tmpMI_Goods.WeightTotal
-           , tmpMI_Goods.WeightPack
-           , tmpMI_Goods.isBarCode
+           , CASE WHEN tmpResult.Ord = 1 THEN tmpResult.CountPack ELSE 0 END :: TFloat AS CountPack
+           , CASE WHEN tmpResult.Ord = 1 THEN tmpResult.WeightTotal ELSE 0 END :: TFloat AS WeightTotal
+           , CASE WHEN tmpResult.Ord = 1 THEN tmpResult.WeightPack ELSE 0 END :: TFloat AS WeightPack
 
-           , CASE WHEN tmpPromo.TaxPromo <> 0 AND vbPriceWithVAT = TRUE AND tmpPromo.PriceWithVAT = tmpMI_Goods.Price
-                       THEN FALSE
-                  WHEN tmpPromo.TaxPromo <> 0 AND tmpPromo.PriceWithOutVAT = tmpMI_Goods.Price
-                       THEN FALSE
-                  WHEN ((COALESCE (tmpMI_Goods.Price, 0) = COALESCE (tmpPriceList_kind.Price_Pricelist, tmpPriceList.Price_Pricelist, 0)     AND vbPriceWithVAT = FALSE)
-                     OR (COALESCE (tmpMI_Goods.Price, 0) = COALESCE (tmpPriceList_kind.Price_Pricelist_vat, tmpPriceList.Price_Pricelist_vat, 0) AND vbPriceWithVAT = TRUE))
-                    AND COALESCE (tmpMIPromo.MovementId_Promo, 0) = 0
-                    AND COALESCE (tmpPromo.MovementId, 0)         = 0
-                       THEN FALSE
-                  ELSE TRUE
-             END :: Boolean AS isCheck_PricelistBoolean
+           , tmpResult.isBarCode
 
-           , COALESCE (tmpPromo.MovementId, tmpMI_Goods.MovementId_Promo) ::Integer AS MovementId_Promo
-           , (CASE WHEN (tmpPromo.isChangePercent = TRUE  AND tmpMI_Goods.ChangePercent <> vbChangePercent)
-                     OR (tmpPromo.isChangePercent = FALSE AND tmpMI_Goods.ChangePercent <> 0)
-                        THEN 'ОШИБКА <(-)% Скидки (+)% Наценки>'
-                   ELSE ''
-              END
-           || CASE WHEN tmpMIPromo.MovementId_Promo = tmpPromo.MovementId
-                        THEN tmpPromo.MovementPromo
-                   WHEN tmpMIPromo.MovementId_Promo <> COALESCE (tmpPromo.MovementId, 0)
-                        THEN 'ОШИБКА ' || zfCalc_PromoMovementName (NULL, Movement_Promo_View.InvNumber :: TVarChar, Movement_Promo_View.OperDate, Movement_Promo_View.StartSale, Movement_Promo_View.EndSale)
-                          -- || ' 1)' || COALESCE (tmpMIPromo.MovementId_Promo, 0) :: TVarChar || ' <> ' || COALESCE (tmpPromo.MovementId, 0) :: TVarChar
-                   WHEN COALESCE (tmpMIPromo.MovementId_Promo, 0) <> tmpPromo.MovementId
-                        THEN 'ОШИБКА ' || tmpPromo.MovementPromo
-                          -- || ' 2)' || COALESCE (tmpMIPromo.MovementId_Promo, 0) :: TVarChar || ' <> ' || COALESCE (tmpPromo.MovementId, 0) :: TVarChar
-                   ELSE ''
-              END) :: TVarChar AS MovementPromo
+           , tmpResult.isCheck_PricelistBoolean
 
-           , CASE WHEN 1 = 0 AND tmpMIPromo.PricePromo <> 0 THEN tmpMIPromo.PricePromo
-                  WHEN tmpPromo.TaxPromo <> 0 AND vbPriceWithVAT = TRUE THEN tmpPromo.PriceWithVAT
-                  WHEN tmpPromo.TaxPromo <> 0 THEN tmpPromo.PriceWithOutVAT
-                  ELSE 0
-             END :: TFloat AS PricePromo
+           , tmpResult.MovementId_Promo
+           , tmpResult.MovementPromo
 
-           , Object_InfoMoney_View.InfoMoneyCode
-           , Object_InfoMoney_View.InfoMoneyGroupName
-           , Object_InfoMoney_View.InfoMoneyDestinationName
-           , Object_InfoMoney_View.InfoMoneyName
-           , Object_InfoMoney_View.InfoMoneyName_all
+           , tmpResult.PricePromo
 
-           , tmpMI_Goods.isErased
-           , COALESCE (tmpGoodsByGoodsKindSub.isPeresort, False) AS isPeresort
+           , tmpResult.InfoMoneyCode
+           , tmpResult.InfoMoneyGroupName
+           , tmpResult.InfoMoneyDestinationName
+           , tmpResult.InfoMoneyName
+           , tmpResult.InfoMoneyName_all
 
-       FROM tmpMI_Goods
-            LEFT JOIN tmpMIPromo ON tmpMIPromo.MovementId_Promo = tmpMI_Goods.MovementId_Promo
-                                AND tmpMIPromo.GoodsId          = tmpMI_Goods.GoodsId
-                                AND (tmpMIPromo.GoodsKindId     = tmpMI_Goods.GoodsKindId
-                                  OR tmpMIPromo.GoodsKindId     = 0)
-            LEFT JOIN tmpPromo ON tmpPromo.GoodsId      = tmpMI_Goods.GoodsId
-                              AND (tmpPromo.GoodsKindId = tmpMI_Goods.GoodsKindId OR tmpPromo.GoodsKindId = 0)
+           , tmpResult.isErased
+           , tmpResult.isPeresort
 
-            LEFT JOIN Object AS Object_Goods ON Object_Goods.Id = tmpMI_Goods.GoodsId
-            LEFT JOIN ObjectLink AS ObjectLink_Goods_Measure
-                                 ON ObjectLink_Goods_Measure.ObjectId = tmpMI_Goods.GoodsId
-                                AND ObjectLink_Goods_Measure.DescId = zc_ObjectLink_Goods_Measure()
-            LEFT JOIN Object AS Object_Measure ON Object_Measure.Id = ObjectLink_Goods_Measure.ChildObjectId
-
-
-            LEFT JOIN Object AS Object_GoodsKind ON Object_GoodsKind.Id = tmpMI_Goods.GoodsKindId
-
-            LEFT JOIN Object AS Object_Box ON Object_Box.Id = tmpMI_Goods.BoxId
-            LEFT JOIN Object AS Object_Asset ON Object_Asset.Id = tmpMI_Goods.AssetId
-
-            LEFT JOIN ObjectString AS ObjectString_Goods_GoodsGroupFull
-                                   ON ObjectString_Goods_GoodsGroupFull.ObjectId = tmpMI_Goods.GoodsId
-                                  AND ObjectString_Goods_GoodsGroupFull.DescId = zc_ObjectString_Goods_GroupNameFull()
-
-            LEFT JOIN Movement_Promo_View ON Movement_Promo_View.Id = COALESCE (tmpPromo.MovementId, tmpMI_Goods.MovementId_Promo)
-                                  
-            LEFT JOIN tmpPriceCost ON tmpPriceCost.MovementItemId = tmpMI_Goods.MovementItemId
-            
-            -- привязываем 2 раза цены по виду товара и без
-            LEFT JOIN tmpPriceList ON tmpPriceList.GoodsId = tmpMI_Goods.GoodsId
-                                  AND tmpPriceList.GoodsKindId IS NULL
-            LEFT JOIN tmpPriceList AS tmpPriceList_kind
-                                   ON tmpPriceList_kind.GoodsId = tmpMI_Goods.GoodsId
-                                  AND COALESCE (tmpPriceList_kind.GoodsKindId,0) = COALESCE (tmpMI_Goods.GoodsKindId,0)
-
-            LEFT JOIN ObjectLink AS ObjectLink_Goods_InfoMoney
-                                 ON ObjectLink_Goods_InfoMoney.ObjectId = Object_Goods.Id
-                                AND ObjectLink_Goods_InfoMoney.DescId = zc_ObjectLink_Goods_InfoMoney()
-            LEFT JOIN Object_InfoMoney_View ON Object_InfoMoney_View.InfoMoneyId = ObjectLink_Goods_InfoMoney.ChildObjectId
-
-            LEFT JOIN tmpGoodsByGoodsKindSub ON tmpGoodsByGoodsKindSub.GoodsId = tmpMI_Goods.GoodsId
-                                            AND tmpGoodsByGoodsKindSub.GoodsKindId = tmpMI_Goods.GoodsKindId
+       FROM tmpResult
            ;
 
      END IF;
