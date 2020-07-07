@@ -268,6 +268,39 @@ BEGIN
       AND MovementItem.iserased = False
       AND MovementItem.Amount > 0;
 
+    -- Прописали сроки
+    PERFORM lpInsertUpdate_MovementItemDate (zc_MIDate_ExpirationDate(), MI_Child.Id, MIDate_ExpirationDate.ValueData)
+    FROM MovementItem
+
+         LEFT JOIN MovementItemFloat AS MIFloat_ContainerId
+                                     ON MIFloat_ContainerId.MovementItemId = MovementItem.Id
+                                    AND MIFloat_ContainerId.DescId = zc_MIFloat_ContainerId()
+
+         LEFT JOIN MovementItemDate AS MIDate_ExpirationDate
+                                    ON MIDate_ExpirationDate.MovementItemId = MovementItem.Id
+                                   AND MIDate_ExpirationDate.DescId = zc_MIDate_ExpirationDate()
+
+         LEFT JOIN (SELECT MovementItem.id,  MIFloat_ContainerId.ValueData::Integer AS ContainerId
+                    FROM MovementItem
+                         LEFT JOIN MovementItemFloat AS MIFloat_ContainerId
+                                                     ON MIFloat_ContainerId.MovementItemId = MovementItem.Id
+                                                    AND MIFloat_ContainerId.DescId = zc_MIFloat_ContainerId()
+                    WHERE MovementItem.MovementId = vbMovementID
+                      AND MovementItem.DescId = zc_MI_Master()) AS MI_SendPartionDate
+                                                                ON MI_SendPartionDate.ContainerId = MIFloat_ContainerId.ValueData::Integer
+                                                                
+         LEFT JOIN MovementItem AS MI_Child
+                                ON MI_Child.ParentId = MI_SendPartionDate.ID
+                               AND MI_Child.MovementId = vbMovementID
+                               AND MI_Child.DescId = zc_MI_Child()   
+                                
+
+    WHERE MovementItem.MovementId = inMovementID
+      AND MovementItem.DescId = zc_MI_Master()
+      AND MovementItem.iserased = False
+      AND MovementItem.Amount > 0
+      AND COALESCE (MI_Child.Id, 0) > 0;
+
       -- Удалили записи которые уже ненужны
     PERFORM gpMovementItem_Send_SetErased (inMovementItemId        := MovementItem.ID,
                                            inSession               := inUserId::TVarChar)

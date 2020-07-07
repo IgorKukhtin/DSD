@@ -3,7 +3,6 @@ inherited SendPartionDateChangeCashForm: TSendPartionDateChangeCashForm
   TextHeight = 13
   inherited PageControl: TcxPageControl
     inherited tsMain: TcxTabSheet
-      ExplicitTop = 24
       inherited cxGrid: TcxGrid
         inherited cxGridDBTableView: TcxGridDBTableView
           Styles.Content = nil
@@ -11,11 +10,22 @@ inherited SendPartionDateChangeCashForm: TSendPartionDateChangeCashForm
           Styles.Selection = nil
           Styles.Footer = nil
           Styles.Header = nil
+          inherited MI_InvNumber: TcxGridDBColumn
+            Visible = False
+          end
+          inherited MI_OperDate: TcxGridDBColumn
+            Visible = False
+          end
+          inherited PartionDateKindName: TcxGridDBColumn
+            Visible = False
+          end
+          inherited NewPartionDateKindName: TcxGridDBColumn
+            Visible = False
+          end
+          inherited ContainerId: TcxGridDBColumn
+            Visible = False
+          end
         end
-      end
-      inherited cxSplitter1: TcxSplitter
-        Width = 1059
-        ExplicitWidth = 1059
       end
     end
   end

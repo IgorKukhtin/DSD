@@ -239,6 +239,14 @@ object OverdueJournalForm: TOverdueJournalForm
         end
         item
           Visible = True
+          ItemName = 'bbSendPartionDateChange'
+        end
+        item
+          Visible = True
+          ItemName = 'dxBarStatic'
+        end
+        item
+          Visible = True
           ItemName = 'bbGridToExcel'
         end>
       OneOnRow = True
@@ -313,7 +321,7 @@ object OverdueJournalForm: TOverdueJournalForm
       ImageIndex = 63
     end
     object dxBarButton2: TdxBarButton
-      Action = MultiAction1
+      Action = actOverdue
       Category = 0
     end
     object dxBarButton3: TdxBarButton
@@ -322,6 +330,10 @@ object OverdueJournalForm: TOverdueJournalForm
     end
     object dxBarButton4: TdxBarButton
       Action = actUpdateRangeCat5
+      Category = 0
+    end
+    object bbSendPartionDateChange: TdxBarButton
+      Action = actSendPartionDateChange
       Category = 0
     end
   end
@@ -352,7 +364,7 @@ object OverdueJournalForm: TOverdueJournalForm
       ImageIndex = 6
       ShortCut = 16472
     end
-    object MultiAction1: TMultiAction
+    object actOverdue: TMultiAction
       Category = 'DSDLib'
       MoveParams = <>
       ActionList = <
@@ -408,9 +420,6 @@ object OverdueJournalForm: TOverdueJournalForm
           StoredProc = spTransfer_SendPartionDate
         end>
       Caption = 'actTransfer_SendPartionDate'
-    end
-    object Action1: TAction
-      Caption = 'Action1'
     end
     object actUpdate_Cat_5: TdsdExecStoredProc
       Category = 'DSDLib'
@@ -483,6 +492,34 @@ object OverdueJournalForm: TOverdueJournalForm
           StoredProc = spUpdateRangeCat5
         end>
       Caption = 'actExecUpdateRangeCat5'
+    end
+    object actSendPartionDateChange: TMultiAction
+      Category = 'DSDLib'
+      MoveParams = <>
+      ActionList = <
+        item
+          Action = actExecuteOverdueDialog
+        end
+        item
+          Action = actTransfer_SendPartionDateChange
+        end
+        item
+          Action = actRefresh
+        end>
+      Caption = #1044#1086#1073#1072#1074#1080#1090#1100' '#1074' '#1079#1072#1103#1074#1082#1091' '#1085#1072' '#1080#1080#1079#1084#1077#1085#1077#1085#1080#1103' '#1089#1088#1086#1082#1072' '#1075#1086#1076#1085#1086#1089#1090#1080' '#1087#1072#1088#1090#1080#1102
+      Hint = #1044#1086#1073#1072#1074#1080#1090#1100' '#1074' '#1079#1072#1103#1074#1082#1091' '#1085#1072' '#1080#1080#1079#1084#1077#1085#1077#1085#1080#1103' '#1089#1088#1086#1082#1072' '#1075#1086#1076#1085#1086#1089#1090#1080' '#1087#1072#1088#1090#1080#1102
+      ImageIndex = 30
+    end
+    object actTransfer_SendPartionDateChange: TdsdExecStoredProc
+      Category = 'DSDLib'
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      StoredProc = spTransfer_SendPartionDateChange
+      StoredProcList = <
+        item
+          StoredProc = spTransfer_SendPartionDateChange
+        end>
+      Caption = 'actTransfer_SendPartionDateChange'
     end
   end
   object dsdStoredProc: TdsdStoredProc
@@ -557,6 +594,7 @@ object OverdueJournalForm: TOverdueJournalForm
     ColumnAddOnList = <>
     ColumnEnterList = <>
     SummaryItemList = <>
+    PropertiesCellList = <>
     Left = 168
     Top = 224
   end
@@ -639,5 +677,40 @@ object OverdueJournalForm: TOverdueJournalForm
       end>
     Left = 470
     Top = 97
+  end
+  object spTransfer_SendPartionDateChange: TdsdStoredProc
+    StoredProcName = 'gpInsert_MovementTransfer_SendPartionDateChange'
+    DataSets = <>
+    OutputType = otResult
+    Params = <
+      item
+        Name = 'inContainerID'
+        Value = Null
+        Component = ClientDataSet
+        ComponentItem = 'Id'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inExpirationDate'
+        Value = 'NULL'
+        Component = ClientDataSet
+        ComponentItem = 'ExpirationDateDialog'
+        DataType = ftDateTime
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inAmount'
+        Value = Null
+        Component = ClientDataSet
+        ComponentItem = 'AmountDialog'
+        DataType = ftFloat
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end>
+    PackSize = 1
+    Left = 312
+    Top = 296
   end
 end
