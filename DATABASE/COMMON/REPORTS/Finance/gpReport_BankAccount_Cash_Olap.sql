@@ -1165,8 +1165,7 @@ BEGIN
                                 , Operation.PrintGroup
                            FROM tmp_DDC AS Operation
                            )
-                           
-    
+
      -- Результат
      SELECT
         Operation.ContainerId,
