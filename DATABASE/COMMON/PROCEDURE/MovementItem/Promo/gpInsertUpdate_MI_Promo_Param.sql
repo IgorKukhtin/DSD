@@ -48,7 +48,7 @@ BEGIN
         GROUP BY MovementItem.ObjectId
                , COALESCE (MILinkObject_GoodsKind.ObjectId, 0)
                 ;
-
+/*
      -- Результат - если нет товара в док.акция записываем новый
      PERFORM gpInsertUpdate_MovementItem_PromoGoods (ioId                 := 0
                                                    , inMovementId         := inMovementId
@@ -106,7 +106,7 @@ BEGIN
                                  AND tmpFind.Ord     = 1
           ) AS tmp
     ;    
-
+*/
      -- Результат - записываем в MovementItem Акция
      PERFORM lpInsertUpdate_MovementItemFloat (zc_MIFloat_AmountOut()  , tmp.Id, CASE WHEN tmp.isErased = TRUE THEN 0 ELSE COALESCE (tmp.AmountOut, 0) END)
            , lpInsertUpdate_MovementItemFloat (zc_MIFloat_AmountOrder(), tmp.Id, CASE WHEN tmp.isErased = TRUE THEN 0 ELSE COALESCE (tmp.AmountOrder, 0) END)
