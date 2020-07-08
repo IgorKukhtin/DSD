@@ -113,10 +113,10 @@ BEGIN
          RAISE EXCEPTION 'Ошибка. При первом переводе контейнера в срокм количество должно быть равно остатку.';
        END IF;
 
-       IF COALESCE(inNewExpirationDate, vbDate_6 + INTERVAL '1 DAY') > vbDate_6
+/*       IF COALESCE(inNewExpirationDate, vbDate_6 + INTERVAL '1 DAY') > vbDate_6
        THEN
          RAISE EXCEPTION 'Ошибка. Срок годности остатка <%> больше максимально допустимого <%> для перевода в сроки.', inNewExpirationDate, vbDate_6;
-       END IF;
+       END IF;*/
 
      ELSE
        IF COALESCE (inAmount, 0) > COALESCE (vbAmount, 0)

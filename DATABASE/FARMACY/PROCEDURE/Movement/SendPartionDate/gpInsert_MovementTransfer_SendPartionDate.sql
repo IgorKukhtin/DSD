@@ -108,13 +108,14 @@ BEGIN
     AND COALESCE(MovementBoolean_Transfer.ValueData, False) = False;
 
   SELECT gpInsertUpdate_Movement_SendPartionDate(ioId               := 0,
-                                                          inInvNumber        := CAST (NEXTVAL ('Movement_SendPartionDate_seq') AS TVarChar),
-                                                          inOperDate         := CURRENT_DATE,
-                                                          inUnitId           := vbUnitId,
-                                                          inChangePercent    := MovementFloat_ChangePercent.ValueData,
-                                                          inChangePercentMin := MovementFloat_ChangePercentMin.ValueData,
-                                                          inComment          := '',
-                                                          inSession          := inSession
+                                                          inInvNumber         := CAST (NEXTVAL ('Movement_SendPartionDate_seq') AS TVarChar),
+                                                          inOperDate          := CURRENT_DATE,
+                                                          inUnitId            := vbUnitId,
+                                                          inChangePercent     := COALESCE(MovementFloat_ChangePercent.ValueData, 0),
+                                                          inChangePercentLess := COALESCE(MovementFloat_ChangePercentLess.ValueData, 0),
+                                                          inChangePercentMin  := COALESCE(MovementFloat_ChangePercentMin.ValueData, 0),
+                                                          inComment           := '',
+                                                          inSession           := inSession
                                                           )
   INTO vbMovementId
   FROM Movement
@@ -122,6 +123,10 @@ BEGIN
             LEFT JOIN MovementFloat AS MovementFloat_ChangePercent
                                     ON MovementFloat_ChangePercent.MovementId =  Movement.Id
                                    AND MovementFloat_ChangePercent.DescId = zc_MovementFloat_ChangePercent()
+
+            LEFT JOIN MovementFloat AS MovementFloat_ChangePercentLess
+                                    ON MovementFloat_ChangePercentLess.MovementId =  Movement.Id
+                                   AND MovementFloat_ChangePercentLess.DescId = zc_MovementFloat_ChangePercentLess()
 
             LEFT JOIN MovementFloat AS MovementFloat_ChangePercentMin
                                     ON MovementFloat_ChangePercentMin.MovementId =  Movement.Id
@@ -137,9 +142,9 @@ BEGIN
                                                   inGoodsId          := vbGoodsId, -- Товары
                                                   inAmount           := inAmount, -- Количество
                                                   inAmountRemains    := vbRemains, --
-                                                  inChangePercent    := ObjectFloat_PartionGoods_Value.ValueData,     -- % (срок от 1 мес до 3 мес)
-                                                  inChangePercentLess:= ObjectFloat_PartionGoods_ValueLess.ValueData, -- % (срок от 3 мес до 6 мес)
-                                                  inChangePercentMin := ObjectFloat_PartionGoods_ValueMin.ValueData,  -- % (срок меньше месяца)
+                                                  inChangePercent    := COALESCE(ObjectFloat_PartionGoods_Value.ValueData, 0),     -- % (срок от 1 мес до 3 мес)
+                                                  inChangePercentLess:= COALESCE(ObjectFloat_PartionGoods_ValueLess.ValueData, 0), -- % (срок от 3 мес до 6 мес)
+                                                  inChangePercentMin := COALESCE(ObjectFloat_PartionGoods_ValueMin.ValueData, 0),  -- % (срок меньше месяца)
                                                   inContainerId      := inContainerID, -- Контейнер для изменения срока
                                                   inSession          := inSession    -- сессия пользователя
                                                   )

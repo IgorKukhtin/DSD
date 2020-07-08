@@ -177,7 +177,7 @@ inherited SendPartionDateChangeForm: TSendPartionDateChangeForm
             Width = 81
           end
           object ExpirationDate: TcxGridDBColumn
-            Caption = 'C'#1088#1086#1082' '#1075#1086#1076#1085#1086#1089#1090#1080' '#1086#1089#1072#1090#1082#1072
+            Caption = 'C'#1088#1086#1082' '#1075#1086#1076#1085#1086#1089#1090#1080' '#1086#1089#1090#1072#1082#1072
             DataBinding.FieldName = 'ExpirationDate'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
@@ -200,6 +200,8 @@ inherited SendPartionDateChangeForm: TSendPartionDateChangeForm
             Properties.DisplayFormat = ',0.####;-,0.####; ;'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
+            Styles.Content = dmMain.cxHeaderL1Style
+            Styles.Header = dmMain.cxHeaderL1Style
             Width = 80
           end
           object NewExpirationDate: TcxGridDBColumn
@@ -207,6 +209,8 @@ inherited SendPartionDateChangeForm: TSendPartionDateChangeForm
             DataBinding.FieldName = 'NewExpirationDate'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
+            Styles.Content = dmMain.cxHeaderL1Style
+            Styles.Header = dmMain.cxHeaderL1Style
             Width = 78
           end
           object NewPartionDateKindName: TcxGridDBColumn

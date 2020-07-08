@@ -11,7 +11,8 @@ AS
 $BODY$
   DECLARE vbUserId    Integer;
 BEGIN
-    vbUserId:= inSession;
+  -- проверка прав пользователя на вызов процедуры
+  vbUserId:= lpCheckRight(inSession, zc_Enum_Process_Complete_SendPartionDateChange());
     
   -- пересчитали Итоговые суммы
   --PERFORM lpInsertUpdate_MovementFloat_TotalSumm (inMovementId);

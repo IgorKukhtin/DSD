@@ -1315,6 +1315,131 @@ begin
           end;
           //finally
 
+          //отсортировали, т.к. будем искать
+          List_GoodsId.Sort;
+          List_BarCode.Sort;
+
+
+          //Второй цикл
+
+          // если была хоть одна продажа со штрих-кодом
+          if i > 1 then
+          try
+                //
+                //ResItem := CardCheckResultItem.Create;
+
+                //!!!для теста!!!
+                //***SaveToXMLFile_CheckItem(SendList);
+                //!!!для теста!!!
+
+                // Отправили запрос на ВСЕ элементы
+                ResList := (HTTPRIO as CardServiceSoap).checkCardSale(SendList, gUserName, gPassword);
+
+                //!!!для теста!!!
+                //***SaveToXMLFile_CheckItemResult(ResList);
+                //!!!для теста!!!
+
+                // начало второго цикла - по результату каждого элемента
+                for i := 0 to Length(ResList) - 1 do
+                begin
+
+                // Получили результат - по элементу
+                ResItem := ResList[i];
+
+                //конечно такой код не найдется, но выходить не надо
+                if ResItem.ProductFormCode = ''
+                then // ничего не делаем, хотя надо будет обнулить ВСЕМ элементам скидку
+                else
+                //позиционируем checkCDS для Update
+                if not List_BarCode.Find(ResItem.ProductFormCode,index)
+                then begin ShowMessage('Не найден BarCode в списке - List_BarCode.Find(' + ResItem.ProductFormCode + ')');
+                           lMsg:= 'Error';
+                           exit;
+                     end
+                else
+                if not checkCDS.Locate('GoodsId',List_GoodsId[index],[])
+                then begin ShowMessage('Не найден GoodsId - checkCDS.Locate(List_GoodsId[index])');
+                           lMsg:= 'Error';
+                           exit;
+                     end;
+
+                //Предполагаемое кол-во товара
+                lQuantity          := CheckCDS.FieldByName('Amount').asFloat;
+                // на всяк случай - с условием
+                if CheckCDS.FieldByName('PriceSale').asFloat > 0
+                then lPriceSale:= CheckCDS.FieldByName('PriceSale').asFloat
+                else lPriceSale:= CheckCDS.FieldByName('Price').asFloat;
+
+                //обработали результат
+                llMsg:= ResItem.ResultDescription;
+                lMsg:= lMsg + llMsg;
+                Result:= LowerCase(llMsg) = LowerCase('Продажа доступна');
+
+                //получили остальные значения
+                if Result then
+                begin
+                     //Рекомендованная скидка в виде % от цены
+                     lChangePercent     := ResItem.ResultDiscountPercent;
+                     //Рекомендованная скидка в виде фиксированной суммы от общей цены за все кол-во товара (общая сумма скидки за все кол-во товара)
+                     lSummChangePercent := ResItem.ResultDiscountAmount;
+
+                     //!!! расчет Цена - уже со скидкой !!!
+                     if lSummChangePercent > 0
+                     then
+                         // типа как для кол-ва = 1, может так правильно округлит?
+                         lPrice:= GetSumm(1, (GetSumm(lQuantity, lPriceSale,False) - lSummChangePercent) / lQuantity, False)
+                     else begin
+                         // тоже типа как для кол-ва = 1, может так правильно округлит?
+                         lPrice:= GetSumm(1, lPriceSale * (1 - lChangePercent / 100), False);
+                         // а еще досчитаем сумму скидки
+                         lSummChangePercent := GetSumm(lQuantity, lPriceSale, False) - GetSumm(lQuantity, lPrice, False)
+                     end;
+
+                     //проверка
+                     if lSummChangePercent >= GetSumm(lQuantity, lPriceSale, False) then
+                     begin
+                          ShowMessage ('Ошибка.Сумма скидки  <' + myFloatToStr(lSummChangePercent) + '> не может быть больше чем <' + myFloatToStr(GetSumm(lQuantity, lPriceSale, False)) + '>.'
+                          + #10+ #13 + 'Для карты № <' + lCardNumber + '>.'
+                          + #10+ #13 + 'Товар (' + CheckCDS.FieldByName('GoodsCode').AsString + ')' + CheckCDS.FieldByName('GoodsName').AsString);
+                          //ошибка
+                          lMsg:=lMsg + 'Error';
+                          //
+                          lPrice             := lPriceSale;
+                          lChangePercent     := 0;
+                          lSummChangePercent := 0;
+                     end;
+                end
+                else begin
+                          lPrice             := lPriceSale;
+                          lChangePercent     := 0;
+                          lSummChangePercent := 0;
+                          //
+                          ShowMessage ('Ошибка <' + gService + '>.Карта № <' + gCardNumber + '>.' + #10+ #13 + llMsg);
+                     end;
+
+
+                 //Update
+                 CheckCDS.Edit;
+                 CheckCDS.FieldByName('Price').asCurrency             :=lPrice;
+                 CheckCDS.FieldByName('PriceSale').asCurrency         :=lPriceSale;
+                 //Рекомендованная скидка в виде % от цены
+                 CheckCDS.FieldByName('ChangePercent').asCurrency     :=lChangePercent;
+                 //Рекомендованная скидка в виде фиксированной суммы от общей цены за все кол-во товара (общая сумма скидки за все кол-во товара)
+                 CheckCDS.FieldByName('SummChangePercent').asCurrency :=lSummChangePercent;
+                 CheckCDS.FieldByName('Summ').asCurrency := GetSumm(lQuantity, lPrice, MainCashForm.FormParams.ParamByName('RoundingDown').Value);
+                 CheckCDS.Post;
+
+                end; // for i := 0 to Length(ResList) - 1
+
+          except
+              ShowMessage ('Ошибка на сервере <' + gURL + '>.' + #10+ #13
+              + #10+ #13 + 'Для карты № <' + lCardNumber + '>.'
+              + #10+ #13 + 'Товар (' + CheckCDS.FieldByName('GoodsCode').AsString + ')' + CheckCDS.FieldByName('GoodsName').AsString);
+              //ошибка
+              lMsg:='Error';
+          end; // if i > 1 // если была хоть одна продажа со штрих-кодом
+
+
       end // if BarCode_find <> ''
 
       //если Штрих-код нашелся и программа Abbott card
@@ -1762,130 +1887,6 @@ begin
       CheckCDS.Next;
 
     end; // while not CheckCDS.Eof
-
-    //отсортировали, т.к. будем искать
-    List_GoodsId.Sort;
-    List_BarCode.Sort;
-
-
-    //Второй цикл
-
-    // если была хоть одна продажа со штрих-кодом
-    if i > 1 then
-    try
-          //
-          //ResItem := CardCheckResultItem.Create;
-
-          //!!!для теста!!!
-          //***SaveToXMLFile_CheckItem(SendList);
-          //!!!для теста!!!
-
-          // Отправили запрос на ВСЕ элементы
-          ResList := (HTTPRIO as CardServiceSoap).checkCardSale(SendList, gUserName, gPassword);
-
-          //!!!для теста!!!
-          //***SaveToXMLFile_CheckItemResult(ResList);
-          //!!!для теста!!!
-
-          // начало второго цикла - по результату каждого элемента
-          for i := 0 to Length(ResList) - 1 do
-          begin
-
-          // Получили результат - по элементу
-          ResItem := ResList[i];
-
-          //конечно такой код не найдется, но выходить не надо
-          if ResItem.ProductFormCode = ''
-          then // ничего не делаем, хотя надо будет обнулить ВСЕМ элементам скидку
-          else
-          //позиционируем checkCDS для Update
-          if not List_BarCode.Find(ResItem.ProductFormCode,index)
-          then begin ShowMessage('Не найден BarCode в списке - List_BarCode.Find(' + ResItem.ProductFormCode + ')');
-                     lMsg:= 'Error';
-                     exit;
-               end
-          else
-          if not checkCDS.Locate('GoodsId',List_GoodsId[index],[])
-          then begin ShowMessage('Не найден GoodsId - checkCDS.Locate(List_GoodsId[index])');
-                     lMsg:= 'Error';
-                     exit;
-               end;
-
-          //Предполагаемое кол-во товара
-          lQuantity          := CheckCDS.FieldByName('Amount').asFloat;
-          // на всяк случай - с условием
-          if CheckCDS.FieldByName('PriceSale').asFloat > 0
-          then lPriceSale:= CheckCDS.FieldByName('PriceSale').asFloat
-          else lPriceSale:= CheckCDS.FieldByName('Price').asFloat;
-
-          //обработали результат
-          llMsg:= ResItem.ResultDescription;
-          lMsg:= lMsg + llMsg;
-          Result:= LowerCase(llMsg) = LowerCase('Продажа доступна');
-
-          //получили остальные значения
-          if Result then
-          begin
-               //Рекомендованная скидка в виде % от цены
-               lChangePercent     := ResItem.ResultDiscountPercent;
-               //Рекомендованная скидка в виде фиксированной суммы от общей цены за все кол-во товара (общая сумма скидки за все кол-во товара)
-               lSummChangePercent := ResItem.ResultDiscountAmount;
-
-               //!!! расчет Цена - уже со скидкой !!!
-               if lSummChangePercent > 0
-               then
-                   // типа как для кол-ва = 1, может так правильно округлит?
-                   lPrice:= GetSumm(1, (GetSumm(lQuantity, lPriceSale,False) - lSummChangePercent) / lQuantity, False)
-               else begin
-                   // тоже типа как для кол-ва = 1, может так правильно округлит?
-                   lPrice:= GetSumm(1, lPriceSale * (1 - lChangePercent / 100), False);
-                   // а еще досчитаем сумму скидки
-                   lSummChangePercent := GetSumm(lQuantity, lPriceSale, False) - GetSumm(lQuantity, lPrice, False)
-               end;
-
-               //проверка
-               if lSummChangePercent >= GetSumm(lQuantity, lPriceSale, False) then
-               begin
-                    ShowMessage ('Ошибка.Сумма скидки  <' + myFloatToStr(lSummChangePercent) + '> не может быть больше чем <' + myFloatToStr(GetSumm(lQuantity, lPriceSale, False)) + '>.'
-                    + #10+ #13 + 'Для карты № <' + lCardNumber + '>.'
-                    + #10+ #13 + 'Товар (' + CheckCDS.FieldByName('GoodsCode').AsString + ')' + CheckCDS.FieldByName('GoodsName').AsString);
-                    //ошибка
-                    lMsg:=lMsg + 'Error';
-                    //
-                    lPrice             := lPriceSale;
-                    lChangePercent     := 0;
-                    lSummChangePercent := 0;
-               end;
-          end
-          else begin
-                    lPrice             := lPriceSale;
-                    lChangePercent     := 0;
-                    lSummChangePercent := 0;
-                    //
-                    ShowMessage ('Ошибка <' + gService + '>.Карта № <' + gCardNumber + '>.' + #10+ #13 + llMsg);
-               end;
-
-
-           //Update
-           CheckCDS.Edit;
-           CheckCDS.FieldByName('Price').asCurrency             :=lPrice;
-           CheckCDS.FieldByName('PriceSale').asCurrency         :=lPriceSale;
-           //Рекомендованная скидка в виде % от цены
-           CheckCDS.FieldByName('ChangePercent').asCurrency     :=lChangePercent;
-           //Рекомендованная скидка в виде фиксированной суммы от общей цены за все кол-во товара (общая сумма скидки за все кол-во товара)
-           CheckCDS.FieldByName('SummChangePercent').asCurrency :=lSummChangePercent;
-           CheckCDS.FieldByName('Summ').asCurrency := GetSumm(lQuantity, lPrice, MainCashForm.FormParams.ParamByName('RoundingDown').Value);
-           CheckCDS.Post;
-
-          end; // for i := 0 to Length(ResList) - 1
-
-    except
-        ShowMessage ('Ошибка на сервере <' + gURL + '>.' + #10+ #13
-        + #10+ #13 + 'Для карты № <' + lCardNumber + '>.'
-        + #10+ #13 + 'Товар (' + CheckCDS.FieldByName('GoodsCode').AsString + ')' + CheckCDS.FieldByName('GoodsName').AsString);
-        //ошибка
-        lMsg:='Error';
-    end; // if i > 1 // если была хоть одна продажа со штрих-кодом
 
     // завершили - очистили
     SendList:= nil;

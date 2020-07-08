@@ -59,13 +59,12 @@ type
     FromName: TcxGridDBColumn;
     ContractName: TcxGridDBColumn;
     dxBarButton2: TdxBarButton;
-    MultiAction1: TMultiAction;
+    actOverdue: TMultiAction;
     actExecuteOverdueDialog: TExecuteDialog;
     actTransfer_SendPartionDate: TdsdExecStoredProc;
     ORD: TcxGridDBColumn;
     Cat_5: TcxGridDBColumn;
     spUpdate_Cat_5: TdsdStoredProc;
-    Action1: TAction;
     actUpdate_Cat_5: TdsdExecStoredProc;
     dxBarButton3: TdxBarButton;
     actUpdateRangeCat5: TMultiAction;
@@ -76,6 +75,10 @@ type
     FormParams: TdsdFormParams;
     Price: TcxGridDBColumn;
     DatePartionGoodsCat5: TcxGridDBColumn;
+    actSendPartionDateChange: TMultiAction;
+    actTransfer_SendPartionDateChange: TdsdExecStoredProc;
+    spTransfer_SendPartionDateChange: TdsdStoredProc;
+    bbSendPartionDateChange: TdxBarButton;
   private
     { Private declarations }
   public
