@@ -894,7 +894,9 @@ uses
   CheckSummCard in '..\..\FormsFarmacy\Document\CheckSummCard.pas' {CheckSummCardForm: TParentForm},
   SendPartionDateChangeCash in '..\..\FormsFarmacy\Document\SendPartionDateChangeCash.pas' {SendPartionDateChangeCashForm: TParentForm},
   SendPartionDateChangeCashJournal in '..\..\FormsFarmacy\Document\SendPartionDateChangeCashJournal.pas' {SendPartionDateChangeCashJournalForm: TParentForm},
-  OverdueChangeCashJournal in '..\..\FormsFarmacy\Cash\OverdueChangeCashJournal.pas' {OverdueChangeCashJournalForm: TParentForm};
+  OverdueChangeCashJournal in '..\..\FormsFarmacy\Cash\OverdueChangeCashJournal.pas' {OverdueChangeCashJournalForm: TParentForm},
+  Report_Check_NumberChecks in '..\..\FormsFarmacy\Report\Report_Check_NumberChecks.pas' {Report_Check_NumberChecksForm: TParentForm},
+  Report_Check_NumberChecksDialog in '..\..\FormsFarmacy\Report\Report_Check_NumberChecksDialog.pas' {Report_Check_NumberChecksDialogForm: TParentForm};
 
 {$R *.res}
 {$R DevExpressRus.res}
