@@ -695,6 +695,12 @@ type
     N237: TMenuItem;
     actCheckSummCard: TdsdOpenForm;
     N238: TMenuItem;
+    mmServiceFunctions: TMenuItem;
+    actTReport_Check_NumberChecks: TdsdOpenForm;
+    N239: TMenuItem;
+    actHouseholdInventory: TdsdOpenForm;
+    N240: TMenuItem;
+    N241: TMenuItem;
     procedure actSaveDataExecute(Sender: TObject);
 
     procedure miRepriceClick(Sender: TObject);

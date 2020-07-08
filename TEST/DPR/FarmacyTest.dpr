@@ -896,7 +896,9 @@ uses
   SendPartionDateChangeCashJournal in '..\..\FormsFarmacy\Document\SendPartionDateChangeCashJournal.pas' {SendPartionDateChangeCashJournalForm: TParentForm},
   OverdueChangeCashJournal in '..\..\FormsFarmacy\Cash\OverdueChangeCashJournal.pas' {OverdueChangeCashJournalForm: TParentForm},
   Report_Check_NumberChecks in '..\..\FormsFarmacy\Report\Report_Check_NumberChecks.pas' {Report_Check_NumberChecksForm: TParentForm},
-  Report_Check_NumberChecksDialog in '..\..\FormsFarmacy\Report\Report_Check_NumberChecksDialog.pas' {Report_Check_NumberChecksDialogForm: TParentForm};
+  Report_Check_NumberChecksDialog in '..\..\FormsFarmacy\Report\Report_Check_NumberChecksDialog.pas' {Report_Check_NumberChecksDialogForm: TParentForm},
+  HouseholdInventory in '..\..\FormsFarmacy\Guides\HouseholdInventory.pas' {HouseholdInventoryForm: TParentForm},
+  HouseholdInventoryEdit in '..\..\FormsFarmacy\Guides\HouseholdInventoryEdit.pas' {HouseholdInventoryEditForm: TParentForm};
 
 {$R *.res}
 {$R DevExpressRus.res}

@@ -18,18 +18,10 @@ uses
 
 type
   TReport_Check_NumberChecksForm = class(TAncestorReportForm)
-    cxLabel4: TcxLabel;
-    edUnit: TcxButtonEdit;
-    cxLabel3: TcxLabel;
-    edGoods: TcxButtonEdit;
-    GuidesGoods: TdsdGuides;
-    StatusName: TcxGridDBColumn;
     UnitName: TcxGridDBColumn;
-    MovementName: TcxGridDBColumn;
-    OperDate: TcxGridDBColumn;
     FormParams: TdsdFormParams;
-    InvNumber: TcxGridDBColumn;
-    Amount: TcxGridDBColumn;
+    UnitCode: TcxGridDBColumn;
+    NumberChecks: TcxGridDBColumn;
     ExecuteDialog: TExecuteDialog;
     bbExecuteDialog: TdxBarButton;
     actGet_MovementFormClass: TdsdExecStoredProc;
@@ -38,8 +30,13 @@ type
     actOpenDocument: TdsdOpenForm;
     MovementProtocolOpenForm: TdsdOpenForm;
     dxBarButton1: TdxBarButton;
-    isErased: TcxGridDBColumn;
-    UnitGuides: TdsdGuides;
+    edRetail: TcxButtonEdit;
+    cxLabel3: TcxLabel;
+    RetailGuides: TdsdGuides;
+    ceSummaMax: TcxCurrencyEdit;
+    cxLabel4: TcxLabel;
+    ceSummaMin: TcxCurrencyEdit;
+    cxLabel5: TcxLabel;
   private
     { Private declarations }
   public

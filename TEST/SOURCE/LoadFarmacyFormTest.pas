@@ -60,6 +60,7 @@ type
     procedure LoadGoodsSPMovementFormTest;
     procedure LoadGoodsRepriceFormTest;
     procedure LoadHardwareFormTest;
+    procedure LoadHouseholdInventoryFormTest;
     procedure LoadImportSettingsFormTest;
     procedure LoadImportTypeFormTest;
     procedure LoadIncomeFormTest;
@@ -880,10 +881,16 @@ end;
 
 procedure TLoadFormTest.LoadReportFormTest;
 begin
-  TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_Movement_Send_RemainsSun_SupplementForm'));
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_Check_NumberChecksDialogForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TReport_Check_NumberChecksDialogForm');
+
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_Check_NumberChecksForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TReport_Check_NumberChecksForm');
+
+{  TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_Movement_Send_RemainsSun_SupplementForm'));
   TdsdFormStorageFactory.GetStorage.Load('TReport_Movement_Send_RemainsSun_SupplementForm');
 
-{  TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_RemainsOverGoods_NForm'));
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_RemainsOverGoods_NForm'));
   TdsdFormStorageFactory.GetStorage.Load('TReport_RemainsOverGoods_NForm');
   exit;
 
@@ -1615,6 +1622,14 @@ begin
   TdsdFormStorageFactory.GetStorage.Load('THardwareForm');
   TdsdFormStorageFactory.GetStorage.Save(GetForm('THardwareEditForm'));
   TdsdFormStorageFactory.GetStorage.Load('THardwareEditForm');
+end;
+
+procedure TLoadFormTest.LoadHouseholdInventoryFormTest;
+begin
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('THouseholdInventoryForm'));
+  TdsdFormStorageFactory.GetStorage.Load('THouseholdInventoryForm');
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('THouseholdInventoryEditForm'));
+  TdsdFormStorageFactory.GetStorage.Load('THouseholdInventoryEditForm');
 end;
 
 procedure TLoadFormTest.LoadTaxUnitFormTest;

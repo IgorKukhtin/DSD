@@ -2,7 +2,7 @@ object Report_Check_NumberChecksDialogForm: TReport_Check_NumberChecksDialogForm
   Left = 0
   Top = 0
   BorderStyle = bsDialog
-  Caption = #1055#1072#1088#1072#1084#1077#1090#1088#1099' '#1086#1090#1095#1077#1090#1072' <'#1042#1093#1086#1078#1076#1077#1085#1080#1077' '#1084#1077#1076#1080#1082#1072#1084#1077#1085#1090#1072' '#1074' '#1076#1086#1082#1091#1084#1077#1085#1090#1099'>'
+  Caption = #1055#1072#1088#1072#1084#1077#1090#1088#1099' '#1086#1090#1095#1077#1090#1072' <'#1050#1086#1083#1080#1095#1077#1089#1090#1074#1086' '#1095#1077#1082#1086#1074' '#1079#1072' '#1087#1077#1088#1080#1086#1076'>'
   ClientHeight = 224
   ClientWidth = 324
   Color = clBtnFace
@@ -51,7 +51,7 @@ object Report_Check_NumberChecksDialogForm: TReport_Check_NumberChecksDialogForm
     TabOrder = 3
     Width = 90
   end
-  object edUnit: TcxButtonEdit
+  object edRetail: TcxButtonEdit
     Left = 10
     Top = 77
     Properties.Buttons = <
@@ -66,7 +66,7 @@ object Report_Check_NumberChecksDialogForm: TReport_Check_NumberChecksDialogForm
   object cxLabel3: TcxLabel
     Left = 10
     Top = 57
-    Caption = #1055#1086#1076#1088#1072#1079#1076#1077#1083#1077#1085#1080#1077':'
+    Caption = #1057#1077#1090#1100':'
   end
   object cxLabel6: TcxLabel
     Left = 10
@@ -81,19 +81,26 @@ object Report_Check_NumberChecksDialogForm: TReport_Check_NumberChecksDialogForm
   object cxLabel1: TcxLabel
     Left = 10
     Top = 105
-    Caption = #1058#1086#1074#1072#1088
+    Caption = #1054#1090' '#1089#1091#1084#1084#1099' '#1095#1077#1082#1072
   end
-  object edGoods: TcxButtonEdit
+  object cxLabel2: TcxLabel
+    Left = 132
+    Top = 105
+    Caption = #1044#1086' '#1089#1091#1084#1084#1099' '#1095#1077#1082#1072' (0 '#1073#1077#1079' '#1086#1075#1088#1072#1085#1080#1095#1077#1085#1080#1103')'
+  end
+  object ceSummaMin: TcxCurrencyEdit
     Left = 10
-    Top = 123
-    Properties.Buttons = <
-      item
-        Default = True
-        Kind = bkEllipsis
-      end>
-    Properties.ReadOnly = True
-    TabOrder = 9
-    Width = 305
+    Top = 127
+    Properties.DisplayFormat = ',0.00;-,0.00'
+    TabOrder = 10
+    Width = 121
+  end
+  object ceSummaMax: TcxCurrencyEdit
+    Left = 137
+    Top = 127
+    Properties.DisplayFormat = ',0.00;-,0.00'
+    TabOrder = 11
+    Width = 121
   end
   object PeriodChoice: TPeriodChoice
     DateStart = deStart
@@ -118,20 +125,20 @@ object Report_Check_NumberChecksDialogForm: TReport_Check_NumberChecksDialogForm
     Left = 247
     Top = 180
   end
-  object UnitGuides: TdsdGuides
+  object RetailGuides: TdsdGuides
     KeyField = 'Id'
-    LookupControl = edUnit
+    LookupControl = edRetail
     Key = '0'
-    FormNameParam.Value = 'TUnitTreeForm'
+    FormNameParam.Value = 'TRetailForm'
     FormNameParam.DataType = ftString
     FormNameParam.MultiSelectSeparator = ','
-    FormName = 'TUnitTreeForm'
+    FormName = 'TRetailForm'
     PositionDataSet = 'ClientDataSet'
     Params = <
       item
         Name = 'Key'
         Value = ''
-        Component = UnitGuides
+        Component = RetailGuides
         ComponentItem = 'Key'
         DataType = ftString
         ParamType = ptInput
@@ -140,7 +147,7 @@ object Report_Check_NumberChecksDialogForm: TReport_Check_NumberChecksDialogForm
       item
         Name = 'TextValue'
         Value = ''
-        Component = UnitGuides
+        Component = RetailGuides
         ComponentItem = 'TextValue'
         DataType = ftString
         ParamType = ptInput
@@ -163,35 +170,6 @@ object Report_Check_NumberChecksDialogForm: TReport_Check_NumberChecksDialogForm
       RefreshOnTabSetChanges = False
     end
   end
-  object GuidesGoods: TdsdGuides
-    KeyField = 'Id'
-    LookupControl = edGoods
-    FormNameParam.Value = 'TGoodsLiteForm'
-    FormNameParam.DataType = ftString
-    FormNameParam.MultiSelectSeparator = ','
-    FormName = 'TGoodsLiteForm'
-    PositionDataSet = 'MasterCDS'
-    Params = <
-      item
-        Name = 'Key'
-        Value = ''
-        Component = GuidesGoods
-        ComponentItem = 'Key'
-        ParamType = ptInput
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'TextValue'
-        Value = ''
-        Component = GuidesGoods
-        ComponentItem = 'TextValue'
-        DataType = ftString
-        ParamType = ptInput
-        MultiSelectSeparator = ','
-      end>
-    Left = 152
-    Top = 112
-  end
   object FormParams: TdsdFormParams
     Params = <
       item
@@ -211,36 +189,35 @@ object Report_Check_NumberChecksDialogForm: TReport_Check_NumberChecksDialogForm
         MultiSelectSeparator = ','
       end
       item
-        Name = 'UnitId'
+        Name = 'RetailId'
         Value = '0'
-        Component = UnitGuides
+        Component = RetailGuides
         ComponentItem = 'Key'
         ParamType = ptInput
         MultiSelectSeparator = ','
       end
       item
-        Name = 'UnitName'
+        Name = 'RetailName'
         Value = ''
-        Component = UnitGuides
+        Component = RetailGuides
         ComponentItem = 'TextValue'
         DataType = ftString
         ParamType = ptInput
         MultiSelectSeparator = ','
       end
       item
-        Name = 'GoodsId'
+        Name = 'SummaMin'
         Value = ''
-        Component = GuidesGoods
-        ComponentItem = 'Key'
+        Component = ceSummaMin
+        DataType = ftFloat
         ParamType = ptInput
         MultiSelectSeparator = ','
       end
       item
-        Name = 'GoodsName'
+        Name = 'SummaMax'
         Value = ''
-        Component = GuidesGoods
-        ComponentItem = 'TextValue'
-        DataType = ftString
+        Component = ceSummaMax
+        DataType = ftFloat
         ParamType = ptInput
         MultiSelectSeparator = ','
       end>

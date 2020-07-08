@@ -9,7 +9,7 @@ uses
   cxContainer, cxEdit, Vcl.ComCtrls, dxCore, cxDateUtils, ChoicePeriod,
   dsdGuides, cxDropDownEdit, cxCalendar, cxTextEdit, cxMaskEdit, cxButtonEdit,
   cxPropertiesStore, dsdAddOn, dsdDB, cxLabel, dxSkinsCore,
-  dxSkinsDefaultPainters, cxCheckBox, dsdAction, Vcl.ActnList;
+  dxSkinsDefaultPainters, cxCheckBox, dsdAction, Vcl.ActnList, cxCurrencyEdit;
 
 type
   TReport_Check_NumberChecksDialogForm = class(TParentForm)
@@ -20,17 +20,18 @@ type
     PeriodChoice: TPeriodChoice;
     dsdUserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn;
     cxPropertiesStore: TcxPropertiesStore;
-    edUnit: TcxButtonEdit;
+    edRetail: TcxButtonEdit;
     cxLabel3: TcxLabel;
     cxLabel6: TcxLabel;
     cxLabel7: TcxLabel;
-    UnitGuides: TdsdGuides;
+    RetailGuides: TdsdGuides;
     ActionList: TActionList;
     actRefresh: TdsdDataSetRefresh;
     cxLabel1: TcxLabel;
-    edGoods: TcxButtonEdit;
-    GuidesGoods: TdsdGuides;
     FormParams: TdsdFormParams;
+    cxLabel2: TcxLabel;
+    ceSummaMin: TcxCurrencyEdit;
+    ceSummaMax: TcxCurrencyEdit;
   private
     { Private declarations }
   public
