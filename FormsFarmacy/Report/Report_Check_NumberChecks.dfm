@@ -1,32 +1,50 @@
 inherited Report_Check_NumberChecksForm: TReport_Check_NumberChecksForm
   Caption = #1050#1086#1083#1080#1095#1077#1089#1090#1074#1086' '#1095#1077#1082#1086#1074' '#1079#1072' '#1087#1077#1088#1080#1086#1076
   ClientHeight = 375
-  ClientWidth = 654
+  ClientWidth = 706
   AddOnFormData.ExecuteDialogAction = ExecuteDialog
   AddOnFormData.Params = FormParams
-  ExplicitWidth = 670
+  ExplicitWidth = 722
   ExplicitHeight = 414
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
-    Top = 77
-    Width = 654
-    Height = 298
+    Top = 83
+    Width = 706
+    Height = 292
     TabOrder = 3
     ExplicitTop = 77
     ExplicitWidth = 654
     ExplicitHeight = 298
-    ClientRectBottom = 298
-    ClientRectRight = 654
+    ClientRectBottom = 292
+    ClientRectRight = 706
     inherited tsMain: TcxTabSheet
       ExplicitWidth = 654
       ExplicitHeight = 298
       inherited cxGrid: TcxGrid
-        Width = 654
-        Height = 298
+        Width = 706
+        Height = 292
         ExplicitWidth = 654
         ExplicitHeight = 298
         inherited cxGridDBTableView: TcxGridDBTableView
+          DataController.Summary.DefaultGroupSummaryItems = <
+            item
+              Format = ',0;-,0;'
+              Kind = skSum
+              Position = spFooter
+              Column = NumberChecks
+            end
+            item
+              Format = ',0;-,0;'
+              Kind = skSum
+              Column = NumberChecks
+            end>
+          DataController.Summary.FooterSummaryItems = <
+            item
+              Format = ',0;-,0;'
+              Kind = skSum
+              Column = NumberChecks
+            end>
           OptionsData.Deleting = False
           OptionsData.DeletingConfirmation = False
           OptionsData.Editing = False
@@ -35,41 +53,14 @@ inherited Report_Check_NumberChecksForm: TReport_Check_NumberChecksForm
           Styles.Selection = nil
           Styles.Footer = nil
           Styles.Header = nil
-          object OperDate: TcxGridDBColumn
-            Caption = #1044#1072#1090#1072' '#1087#1072#1088#1090#1080#1080
-            DataBinding.FieldName = 'OperDate'
-            HeaderAlignmentHorz = taCenter
-            HeaderAlignmentVert = vaCenter
-            HeaderGlyphAlignmentHorz = taCenter
-            Options.Editing = False
-            Width = 60
-          end
-          object InvNumber: TcxGridDBColumn
-            Caption = #1053#1086#1084#1077#1088' '#1087#1072#1088#1090#1080#1080
-            DataBinding.FieldName = 'InvNumber'
+          object UnitCode: TcxGridDBColumn
+            Caption = #1050#1086#1076
+            DataBinding.FieldName = 'UnitCode'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             HeaderGlyphAlignmentHorz = taCenter
             Options.Editing = False
             Width = 91
-          end
-          object MovementName: TcxGridDBColumn
-            Caption = #1058#1080#1087' '#1076#1086#1082#1091#1084#1077#1085#1090#1072
-            DataBinding.FieldName = 'MovementName'
-            HeaderAlignmentHorz = taCenter
-            HeaderAlignmentVert = vaCenter
-            HeaderGlyphAlignmentHorz = taCenter
-            Options.Editing = False
-            Width = 87
-          end
-          object StatusName: TcxGridDBColumn
-            Caption = #1057#1090#1072#1090#1091#1089
-            DataBinding.FieldName = 'StatusName'
-            HeaderAlignmentHorz = taCenter
-            HeaderAlignmentVert = vaCenter
-            HeaderGlyphAlignmentHorz = taCenter
-            Options.Editing = False
-            Width = 93
           end
           object UnitName: TcxGridDBColumn
             Caption = #1055#1086#1076#1088#1072#1079#1076#1077#1083#1077#1085#1080#1077
@@ -78,65 +69,69 @@ inherited Report_Check_NumberChecksForm: TReport_Check_NumberChecksForm
             HeaderAlignmentVert = vaCenter
             HeaderGlyphAlignmentHorz = taCenter
             Options.Editing = False
-            Width = 167
+            Width = 408
           end
-          object Amount: TcxGridDBColumn
-            Caption = #1050#1086#1083#1080#1095#1077#1089#1090#1074#1086
-            DataBinding.FieldName = 'Amount'
+          object NumberChecks: TcxGridDBColumn
+            Caption = #1050#1086#1083#1080#1095#1077#1089#1090#1074#1086' '#1095#1077#1082#1086#1074
+            DataBinding.FieldName = 'NumberChecks'
             PropertiesClassName = 'TcxCurrencyEditProperties'
-            Properties.DisplayFormat = ',0.####;-,0.####; ;'
+            Properties.DecimalPlaces = 0
+            Properties.DisplayFormat = ',0;-,0;'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             HeaderGlyphAlignmentHorz = taCenter
             Options.Editing = False
-            Width = 119
-          end
-          object isErased: TcxGridDBColumn
-            DataBinding.FieldName = 'isErased'
-            Visible = False
+            Width = 129
           end
         end
       end
     end
   end
   inherited Panel: TPanel
-    Width = 654
-    Height = 51
-    ExplicitWidth = 654
-    ExplicitHeight = 51
-    object cxLabel4: TcxLabel
-      Left = 16
-      Top = 29
-      Caption = #1055#1086#1076#1088#1072#1079#1076#1077#1083#1077#1085#1080#1077
-    end
-    object edUnit: TcxButtonEdit
-      Left = 101
-      Top = 27
+    Width = 706
+    Height = 57
+    ExplicitWidth = 706
+    ExplicitHeight = 57
+    object edRetail: TcxButtonEdit
+      Left = 49
+      Top = 28
       Properties.Buttons = <
         item
           Default = True
           Kind = bkEllipsis
         end>
       Properties.ReadOnly = True
-      TabOrder = 5
-      Width = 184
+      TabOrder = 4
+      Width = 346
     end
     object cxLabel3: TcxLabel
-      Left = 289
-      Top = 32
-      Caption = #1058#1086#1074#1072#1088
+      Left = 10
+      Top = 29
+      Caption = #1057#1077#1090#1100':'
     end
-    object edGoods: TcxButtonEdit
-      Left = 329
-      Top = 27
-      Properties.Buttons = <
-        item
-          Default = True
-          Kind = bkEllipsis
-        end>
-      Properties.ReadOnly = True
-      TabOrder = 7
-      Width = 184
+    object ceSummaMax: TcxCurrencyEdit
+      Left = 492
+      Top = 28
+      Properties.DisplayFormat = ',0.00;-,0.00'
+      TabOrder = 6
+      Width = 121
+    end
+    object cxLabel4: TcxLabel
+      Left = 492
+      Top = 6
+      Caption = #1044#1086' '#1089#1091#1084#1084#1099' '#1095#1077#1082#1072' (0 '#1073#1077#1079' '#1086#1075#1088#1072#1085#1080#1095#1077#1085#1080#1103')'
+    end
+    object ceSummaMin: TcxCurrencyEdit
+      Left = 401
+      Top = 28
+      Properties.DisplayFormat = ',0.00;-,0.00'
+      TabOrder = 8
+      Width = 85
+    end
+    object cxLabel5: TcxLabel
+      Left = 401
+      Top = 6
+      Caption = #1054#1090' '#1089#1091#1084#1084#1099' '#1095#1077#1082#1072
     end
   end
   inherited cxPropertiesStore: TcxPropertiesStore
@@ -152,13 +147,7 @@ inherited Report_Check_NumberChecksForm: TReport_Check_NumberChecksForm
           'Date')
       end
       item
-        Component = GuidesGoods
-        Properties.Strings = (
-          'Key'
-          'TextValue')
-      end
-      item
-        Component = UnitGuides
+        Component = RetailGuides
         Properties.Strings = (
           'Key'
           'TextValue')
@@ -193,36 +182,34 @@ inherited Report_Check_NumberChecksForm: TReport_Check_NumberChecksForm
           MultiSelectSeparator = ','
         end
         item
-          Name = 'UnitId'
+          Name = 'RetailId'
           Value = ''
-          Component = UnitGuides
+          Component = RetailGuides
           ComponentItem = 'Key'
           ParamType = ptInput
           MultiSelectSeparator = ','
         end
         item
-          Name = 'UnitName'
+          Name = 'RetailName'
           Value = ''
-          Component = UnitGuides
+          Component = RetailGuides
           ComponentItem = 'TextValue'
           DataType = ftString
           ParamType = ptInput
           MultiSelectSeparator = ','
         end
         item
-          Name = 'GoodsId'
+          Name = 'SummaMin'
           Value = Null
-          Component = GuidesGoods
-          ComponentItem = 'Key'
+          Component = ceSummaMin
+          DataType = ftFloat
           ParamType = ptInput
           MultiSelectSeparator = ','
         end
         item
-          Name = 'GoodsName'
+          Name = 'SummaMax'
           Value = Null
-          Component = GuidesGoods
-          ComponentItem = 'TextValue'
-          DataType = ftString
+          Component = ceSummaMax
           ParamType = ptInput
           MultiSelectSeparator = ','
         end>
@@ -319,7 +306,7 @@ inherited Report_Check_NumberChecksForm: TReport_Check_NumberChecksForm
     StoredProcName = 'gpReport_Check_NumberChecks'
     Params = <
       item
-        Name = 'inStartDate'
+        Name = 'inDateStart'
         Value = 41395d
         Component = deStart
         DataType = ftDateTime
@@ -327,7 +314,7 @@ inherited Report_Check_NumberChecksForm: TReport_Check_NumberChecksForm
         MultiSelectSeparator = ','
       end
       item
-        Name = 'inEndDate'
+        Name = 'inDateFinal'
         Value = 41395d
         Component = deEnd
         DataType = ftDateTime
@@ -335,16 +322,26 @@ inherited Report_Check_NumberChecksForm: TReport_Check_NumberChecksForm
         MultiSelectSeparator = ','
       end
       item
-        Name = 'inUnitId'
+        Name = 'inRetailId'
         Value = Null
+        Component = RetailGuides
+        ComponentItem = 'Key'
         ParamType = ptInput
         MultiSelectSeparator = ','
       end
       item
-        Name = 'inGoodsId'
+        Name = 'inSummaMin'
         Value = Null
-        Component = GuidesGoods
-        ComponentItem = 'Key'
+        Component = ceSummaMin
+        DataType = ftFloat
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inSummaMax'
+        Value = Null
+        Component = ceSummaMax
+        DataType = ftFloat
         ParamType = ptInput
         MultiSelectSeparator = ','
       end>
@@ -416,35 +413,6 @@ inherited Report_Check_NumberChecksForm: TReport_Check_NumberChecksForm
     Left = 80
     Top = 152
   end
-  object GuidesGoods: TdsdGuides
-    KeyField = 'Id'
-    LookupControl = edGoods
-    FormNameParam.Value = 'TGoodsLiteForm'
-    FormNameParam.DataType = ftString
-    FormNameParam.MultiSelectSeparator = ','
-    FormName = 'TGoodsLiteForm'
-    PositionDataSet = 'MasterCDS'
-    Params = <
-      item
-        Name = 'Key'
-        Value = ''
-        Component = GuidesGoods
-        ComponentItem = 'Key'
-        ParamType = ptInput
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'TextValue'
-        Value = ''
-        Component = GuidesGoods
-        ComponentItem = 'TextValue'
-        DataType = ftString
-        ParamType = ptInput
-        MultiSelectSeparator = ','
-      end>
-    Left = 424
-    Top = 24
-  end
   object FormParams: TdsdFormParams
     Params = <
       item
@@ -464,29 +432,21 @@ inherited Report_Check_NumberChecksForm: TReport_Check_NumberChecksForm
       item
         Name = 'UnitId'
         Value = Null
-        Component = UnitGuides
-        ComponentItem = 'Key'
         MultiSelectSeparator = ','
       end
       item
         Name = 'UnitName'
         Value = Null
-        Component = UnitGuides
-        ComponentItem = 'TextValue'
         MultiSelectSeparator = ','
       end
       item
         Name = 'GoodsId'
         Value = Null
-        Component = GuidesGoods
-        ComponentItem = 'Key'
         MultiSelectSeparator = ','
       end
       item
         Name = 'GoodsName'
         Value = Null
-        Component = GuidesGoods
-        ComponentItem = 'TextValue'
         MultiSelectSeparator = ','
       end
       item
@@ -523,20 +483,20 @@ inherited Report_Check_NumberChecksForm: TReport_Check_NumberChecksForm
     Left = 296
     Top = 216
   end
-  object UnitGuides: TdsdGuides
+  object RetailGuides: TdsdGuides
     KeyField = 'Id'
-    LookupControl = edUnit
+    LookupControl = edRetail
     Key = '0'
-    FormNameParam.Value = 'TUnitTreeForm'
+    FormNameParam.Value = 'TRetailForm'
     FormNameParam.DataType = ftString
     FormNameParam.MultiSelectSeparator = ','
-    FormName = 'TUnitTreeForm'
+    FormName = 'TRetailForm'
     PositionDataSet = 'ClientDataSet'
     Params = <
       item
         Name = 'Key'
         Value = '0'
-        Component = UnitGuides
+        Component = RetailGuides
         ComponentItem = 'Key'
         DataType = ftString
         ParamType = ptInput
@@ -545,13 +505,13 @@ inherited Report_Check_NumberChecksForm: TReport_Check_NumberChecksForm
       item
         Name = 'TextValue'
         Value = ''
-        Component = UnitGuides
+        Component = RetailGuides
         ComponentItem = 'TextValue'
         DataType = ftString
         ParamType = ptInput
         MultiSelectSeparator = ','
       end>
     Left = 206
-    Top = 22
+    Top = 14
   end
 end
