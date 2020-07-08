@@ -13,7 +13,7 @@ BEGIN
 
    RETURN QUERY 
       SELECT  9,0, 'SELECT table_update_data.Id'
- UNION SELECT 10,0, ', CASE table_update_data.table_name '
+ UNION SELECT 10,0, ', CASE table_update_data.Operation || ' || zfStr_CHR_39 ('-') || ' || table_update_data.table_name || ' || zfStr_CHR_39 ('-') || ' || table_update_data.upd_cols || ' || zfStr_CHR_39 ('-') || ' || table_update_data.pk_keys '
  UNION SELECT a.Part , a.Sort , a.Value FROM gpSelect_Replica_part11 (inId_start, inId_end) as a
  UNION SELECT 18,0, ' END :: TVarChar AS RESULT'
 UNION SELECT 19,0, ', table_update_data.*'
