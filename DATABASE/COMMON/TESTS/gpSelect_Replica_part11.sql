@@ -1,8 +1,8 @@
--- Function: gpSelect_Replica_part11()
+-- Function: gpSELECT_Replica_part11()
 
-DROP FUNCTION IF EXISTS gpSelect_Replica_part11 (Integer, Integer);
+DROP FUNCTION IF EXISTS gpSELECT_Replica_part11 (Integer, Integer);
 
-CREATE OR REPLACE FUNCTION gpSelect_Replica_part11(
+CREATE OR REPLACE FUNCTION gpSELECT_Replica_part11(
     IN inId_start     Integer,
     IN inId_end       Integer
 )
@@ -13,7 +13,8 @@ $BODY$
 BEGIN
 
    RETURN QUERY 
-   select 11, 1
+   WITH tmpRes AS (
+      SELECT 11 AS Part, 1 AS Sort
         , case when a.operation ILIKE 'update'
                   then ' when ' || zfStr_CHR_39 (a.Operation || '-' || a.table_name || '-' || a.upd_cols || '-' || a.pk_keys) || ' THEN '
                    ||  zfStr_CHR_39 ('update ' || a.table_name || ' SET ' || zfCalc_WordText_Split_replica (a.upd_cols, 1) || ' = ')
@@ -54,12 +55,12 @@ BEGIN
                         || zfCalc_WordText_Split_replica (a.pk_keys, 4) || ' = ') || '||' || a.table_name || '.' || zfCalc_WordText_Split_replica (a.pk_keys, 4)|| ' :: TVarChar '
                       ELSE '' END
            end :: Text as res
-  from
-  ( SELECT DISTINCT tmp.Operation, tmp.table_name, tmp.upd_cols, tmp.pk_keys--, pk_values
-           FROM _replica.table_update_data AS tmp
-           WHERE tmp.Id BETWEEN inId_start AND inId_end
-            AND tmp.operation ILIKE 'update'
-  ) as a
+      FROM
+       (SELECT DISTINCT tmp.Operation, tmp.table_name, tmp.upd_cols, tmp.pk_keys--, pk_values
+        FROM _replica.table_update_data AS tmp
+        WHERE tmp.Id BETWEEN inId_start AND inId_end
+         AND tmp.operation ILIKE 'update'
+       ) AS a
 
    -- DELETE
 UNION SELECT 11 AS Part, 20 AS Sort
@@ -83,31 +84,33 @@ UNION SELECT 11 AS Part, 20 AS Sort
                         || zfCalc_WordText_Split_replica (a.pk_keys, 4) || ' = ') || '|| zfCalc_WordText_Split_replica (table_update_data.pk_values, 4)'
                    ||' :: TVarChar'
                       ELSE '' END
-           end :: Text as res
-
-  from
-  ( SELECT DISTINCT tmp.Operation, tmp.table_name, tmp.upd_cols, tmp.pk_keys--, pk_values
+           end :: Text AS res
+      FROM
+         ( SELECT DISTINCT tmp.Operation, tmp.table_name, tmp.upd_cols, tmp.pk_keys--, pk_values
            FROM _replica.table_update_data AS tmp
            WHERE tmp.Id BETWEEN inId_start AND inId_end
             AND tmp.operation ILIKE 'delete'
-  ) as a
+          ) AS a
 
 -- INSERT
 UNION SELECT 11, 30
         , case when a.operation ILIKE 'INSERT'
                   then ' when ' || zfStr_CHR_39 (a.Operation || '-' || a.table_name || '-' || COALESCE (a.upd_cols,a.pk_keys) || '-' || a.pk_keys) || ' THEN '
                    || zfStr_CHR_39 ('INSERT INTO ' || a.table_name || ' (' || tmpColumn.COLUMN_NAME|| ') VALUES ( ' || zfStr_CHR_39 ('||' || tmpColumn.COLUMN_NAME_full ||'||' ) ||')' ) 
-            end :: Text as res
-  from
-  ( SELECT DISTINCT tmp.Operation, tmp.table_name, tmp.upd_cols, tmp.pk_keys
+            end :: Text AS res
+      FROM
+         ( SELECT DISTINCT tmp.Operation, tmp.table_name, tmp.upd_cols, tmp.pk_keys
            FROM _replica.table_update_data AS tmp
            WHERE tmp.Id BETWEEN inId_start AND inId_end
             AND tmp.operation ILIKE 'INSERT'
-  ) as a
-  LEFT JOIN gpSelect_Replica_Column(inId_start,inId_end) AS tmpColumn ON tmpColumn.Table_Name = a.Table_Name
+         ) AS a
+         LEFT JOIN gpSelect_Replica_Column(inId_start,inId_end) AS tmpColumn ON tmpColumn.Table_Name = a.Table_Name
 
-order by 1,2
-   ;
+      ORDER BY 1,2
+                   )
+
+    SELECT tmpRes.Part, tmpRes.Sort, tmpRes.res AS Value
+    FROM tmpRes;
      
 END;
 $BODY$
