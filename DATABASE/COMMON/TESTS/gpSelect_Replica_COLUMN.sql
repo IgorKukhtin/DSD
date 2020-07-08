@@ -12,9 +12,9 @@ $BODY$
 BEGIN
 
    RETURN QUERY 
-    SELECT tmp.TABLE_NAME
-     , STRING_AGG (tmp.COLUMN_NAME , ',' ORDER BY COLUMN_POSITION)                       AS COLUMN_NAME
-     , STRING_AGG (tmp.TABLE_NAME ||'.'||tmp.COLUMN_NAME , ',' ORDER BY COLUMN_POSITION) AS COLUMN_NAME_full
+    SELECT tmp.TABLE_NAME :: TVarChar
+     , STRING_AGG (tmp.COLUMN_NAME , ',' ORDER BY COLUMN_POSITION)    :: TVarChar                   AS COLUMN_NAME
+     , STRING_AGG ( tmp.TABLE_NAME ||'.'||tmp.COLUMN_NAME , '||'',''||' ORDER BY COLUMN_POSITION)  :: TVarChar AS  COLUMN_NAME_full
     FROM (
           SELECT 
                 C.RELNAME          AS TABLE_NAME, 
@@ -51,4 +51,4 @@ LANGUAGE plpgsql VOLATILE;
 */
 
 -- тест
---SELECT * FROM gpSelect_Replica_Column(507132, 507179)
+--SELECT * FROM gpSelect_Replica_Column(507132, 657179)
