@@ -1,89 +1,108 @@
-﻿inherited HouseholdInventoryEditForm: THouseholdInventoryEditForm
-  Caption = #1044#1086#1073#1072#1074#1080#1090#1100'/'#1048#1079#1084#1077#1085#1080#1090#1100' <'#1061#1086#1079#1103#1081#1089#1090#1074#1077#1085#1085#1099#1081' '#1080#1085#1074#1077#1085#1090#1072#1088#1100' >'
-  ClientHeight = 146
-  ClientWidth = 467
-  ExplicitWidth = 473
-  ExplicitHeight = 175
+﻿object HouseholdInventoryEditForm: THouseholdInventoryEditForm
+  Left = 0
+  Top = 0
+  Caption = #1044#1086#1073#1072#1074#1080#1090#1100'/'#1080#1079#1084#1077#1085#1080#1090#1100' <'#1061#1086#1079#1103#1081#1089#1090#1074#1077#1085#1085#1099#1081' '#1080#1085#1074#1077#1085#1090#1072#1088#1100'>'
+  ClientHeight = 166
+  ClientWidth = 436
+  Color = clBtnFace
+  Font.Charset = DEFAULT_CHARSET
+  Font.Color = clWindowText
+  Font.Height = -11
+  Font.Name = 'Tahoma'
+  Font.Style = []
+  KeyPreview = True
+  OldCreateOrder = False
+  AddOnFormData.RefreshAction = dsdDataSetRefresh
+  AddOnFormData.Params = dsdFormParams
   PixelsPerInch = 96
   TextHeight = 13
-  inherited bbOk: TcxButton
-    Left = 97
-    Top = 103
-    TabOrder = 2
-    ExplicitLeft = 97
-    ExplicitTop = 103
+  object edName: TcxTextEdit
+    Left = 20
+    Top = 71
+    TabOrder = 0
+    Width = 400
   end
-  inherited bbCancel: TcxButton
-    Left = 270
-    Top = 103
-    TabOrder = 3
-    ExplicitLeft = 270
-    ExplicitTop = 103
-  end
-  object edName: TcxTextEdit [2]
-    Left = 7
-    Top = 66
-    TabOrder = 1
-    Width = 434
-  end
-  object cxLabel1: TcxLabel [3]
-    Left = 7
-    Top = 50
+  object cxLabel1: TcxLabel
+    Left = 20
+    Top = 48
     Caption = #1053#1072#1079#1074#1072#1085#1080#1077
   end
-  object Код: TcxLabel [4]
-    Left = 7
-    Top = 4
+  object cxButton1: TcxButton
+    Left = 91
+    Top = 122
+    Width = 75
+    Height = 25
+    Action = dsdInsertUpdateGuides
+    Default = True
+    ModalResult = 8
+    TabOrder = 2
+  end
+  object cxButton2: TcxButton
+    Left = 241
+    Top = 122
+    Width = 75
+    Height = 25
+    Action = dsdFormClose
+    Cancel = True
+    Caption = #1054#1090#1084#1077#1085#1072
+    ModalResult = 8
+    TabOrder = 3
+  end
+  object Код: TcxLabel
+    Left = 20
+    Top = 3
     Caption = #1050#1086#1076
   end
-  object ceCode: TcxCurrencyEdit [5]
-    Left = 7
-    Top = 22
+  object ceCode: TcxCurrencyEdit
+    Left = 20
+    Top = 26
     Properties.DecimalPlaces = 0
     Properties.DisplayFormat = '0'
-    TabOrder = 0
-    Width = 74
+    TabOrder = 5
+    Width = 400
   end
-  inherited UserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn
-    Left = 67
-    Top = 88
-  end
-  inherited cxPropertiesStore: TcxPropertiesStore
-    Left = 400
-    Top = 32
-  end
-  inherited ActionList: TActionList
-    Images = dmMain.ImageList
-    Left = 175
-    Top = 79
-    inherited actRefresh: TdsdDataSetRefresh
+  object ActionList: TActionList
+    Left = 252
+    Top = 20
+    object dsdDataSetRefresh: TdsdDataSetRefresh
+      Category = 'DSDLib'
+      MoveParams = <>
+      StoredProc = spGet
       StoredProcList = <
         item
           StoredProc = spGet
-        end
-        item
         end>
+      Caption = #1055#1077#1088#1077#1095#1080#1090#1072#1090#1100
+      Hint = #1054#1073#1085#1086#1074#1080#1090#1100' '#1076#1072#1085#1085#1099#1077
+      ShortCut = 116
+      RefreshOnTabSetChanges = False
     end
-    inherited InsertUpdateGuides: TdsdInsertUpdateGuides
+    object dsdInsertUpdateGuides: TdsdInsertUpdateGuides
+      Category = 'DSDLib'
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      StoredProc = spInsertUpdate
       StoredProcList = <
         item
           StoredProc = spInsertUpdate
-        end
-        item
         end>
+      Caption = 'Ok'
+    end
+    object dsdFormClose: TdsdFormClose
+      Category = 'DSDLib'
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
     end
   end
-  inherited FormParams: TdsdFormParams
-    Left = 368
-    Top = 80
-  end
-  inherited spInsertUpdate: TdsdStoredProc
+  object spInsertUpdate: TdsdStoredProc
     StoredProcName = 'gpInsertUpdate_Object_HouseholdInventory'
+    DataSets = <>
+    OutputType = otResult
     Params = <
       item
         Name = 'ioId'
         Value = Null
-        Component = FormParams
+        Component = dsdFormParams
         ComponentItem = 'Id'
         ParamType = ptInputOutput
         MultiSelectSeparator = ','
@@ -103,24 +122,32 @@
         ParamType = ptInput
         MultiSelectSeparator = ','
       end>
-    Left = 328
-    Top = 32
+    PackSize = 1
+    Left = 188
+    Top = 56
   end
-  inherited spGet: TdsdStoredProc
-    StoredProcName = 'gpGet_Object_HouseholdInventory'
+  object dsdFormParams: TdsdFormParams
     Params = <
       item
-        Name = 'inId'
+        Name = 'Id'
         Value = Null
-        Component = FormParams
+        ParamType = ptInputOutput
+        MultiSelectSeparator = ','
+      end>
+    Left = 4
+    Top = 32
+  end
+  object spGet: TdsdStoredProc
+    StoredProcName = 'gpGet_Object_HouseholdInventory'
+    DataSets = <>
+    OutputType = otResult
+    Params = <
+      item
+        Name = 'Id'
+        Value = Null
+        Component = dsdFormParams
         ComponentItem = 'Id'
         ParamType = ptInput
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'Code'
-        Value = 0.000000000000000000
-        Component = ceCode
         MultiSelectSeparator = ','
       end
       item
@@ -129,8 +156,34 @@
         Component = edName
         DataType = ftString
         MultiSelectSeparator = ','
+      end
+      item
+        Name = 'Code'
+        Value = 0.000000000000000000
+        Component = ceCode
+        MultiSelectSeparator = ','
       end>
-    Left = 272
-    Top = 88
+    PackSize = 1
+    Left = 324
+    Top = 16
+  end
+  object dsdUserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn
+    Left = 188
+    Top = 7
+  end
+  object cxPropertiesStore: TcxPropertiesStore
+    Components = <
+      item
+        Component = Owner
+        Properties.Strings = (
+          'Height'
+          'Left'
+          'Top'
+          'Width')
+      end>
+    StorageName = 'cxPropertiesStore'
+    StorageType = stStream
+    Left = 324
+    Top = 64
   end
 end

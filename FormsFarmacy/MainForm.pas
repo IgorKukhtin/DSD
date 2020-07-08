@@ -701,6 +701,9 @@ type
     actHouseholdInventory: TdsdOpenForm;
     N240: TMenuItem;
     N241: TMenuItem;
+    actIncomeHouseholdInventory: TdsdOpenForm;
+    N242: TMenuItem;
+    N243: TMenuItem;
     procedure actSaveDataExecute(Sender: TObject);
 
     procedure miRepriceClick(Sender: TObject);
