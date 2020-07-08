@@ -2561,6 +2561,9 @@ begin
             DESADV.DELIVERYNOTENUMBER := HeaderDataSet.FieldByName('InvNumber').asString;
             DESADV.DELIVERYNOTEDATE := FormatDateTime('yyyy-mm-dd',
               HeaderDataSet.FieldByName('OperDatePartner').asDateTime);
+            //
+            if HeaderDataSet.FieldByName('INFO_RoomNumber').asString <> ''
+            then DESADV.INFO := HeaderDataSet.FieldByName('INFO_RoomNumber').asString;
 
             if HeaderDataSet.FieldByName('SupplierGLNCode').asString <> ''
             then
@@ -2623,6 +2626,7 @@ begin
     FileName := 'desadv_' + FormatDateTime('yyyymmddhhnn', Now) + '_' + lNumber + '.xml';
     // !временно!
     if (FisEDISaveLocal) or (HeaderDataSet.FieldByName('isSchema_fozz').asBoolean = TRUE)
+   //or (1=1)
     then
        try
          if HeaderDataSet.FieldByName('isSchema_fozz').asBoolean = TRUE

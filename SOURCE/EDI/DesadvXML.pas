@@ -26,6 +26,7 @@ type
     function Get_ORDERDATE: UnicodeString;
     function Get_DELIVERYNOTENUMBER: UnicodeString;
     function Get_DELIVERYNOTEDATE: UnicodeString;
+    function Get_INFO: UnicodeString;
     function Get_HEAD: IXMLHEADType;
     procedure Set_NUMBER(Value: UnicodeString);
     procedure Set_DATE(Value: UnicodeString);
@@ -34,7 +35,8 @@ type
     procedure Set_ORDERDATE(Value: UnicodeString);
     procedure Set_DELIVERYNOTENUMBER(Value: UnicodeString);
     procedure Set_DELIVERYNOTEDATE(Value: UnicodeString);
-    { Methods & Properties }
+    procedure Set_INFO(Value: UnicodeString);
+   { Methods & Properties }
     property NUMBER: UnicodeString read Get_NUMBER write Set_NUMBER;
     property DATE: UnicodeString read Get_DATE write Set_DATE;
     property DELIVERYDATE: UnicodeString read Get_DELIVERYDATE write Set_DELIVERYDATE;
@@ -42,6 +44,7 @@ type
     property ORDERDATE: UnicodeString read Get_ORDERDATE write Set_ORDERDATE;
     property DELIVERYNOTENUMBER: UnicodeString read Get_DELIVERYNOTENUMBER write Set_DELIVERYNOTENUMBER;
     property DELIVERYNOTEDATE: UnicodeString read Get_DELIVERYNOTEDATE write Set_DELIVERYNOTEDATE;
+    property INFO: UnicodeString read Get_INFO write Set_INFO;
     property HEAD: IXMLHEADType read Get_HEAD;
   end;
 
@@ -153,6 +156,7 @@ type
     function Get_ORDERDATE: UnicodeString;
     function Get_DELIVERYNOTENUMBER: UnicodeString;
     function Get_DELIVERYNOTEDATE: UnicodeString;
+    function Get_INFO: UnicodeString;
     function Get_HEAD: IXMLHEADType;
     procedure Set_NUMBER(Value: UnicodeString);
     procedure Set_DATE(Value: UnicodeString);
@@ -161,6 +165,7 @@ type
     procedure Set_ORDERDATE(Value: UnicodeString);
     procedure Set_DELIVERYNOTENUMBER(Value: UnicodeString);
     procedure Set_DELIVERYNOTEDATE(Value: UnicodeString);
+    procedure Set_INFO(Value: UnicodeString);
   public
     procedure AfterConstruction; override;
   end;
@@ -344,6 +349,16 @@ end;
 procedure TXMLDESADVType.Set_DELIVERYNOTEDATE(Value: UnicodeString);
 begin
   ChildNodes['DELIVERYNOTEDATE'].NodeValue := Value;
+end;
+
+function TXMLDESADVType.Get_INFO: UnicodeString;
+begin
+  Result := ChildNodes['INFO'].Text;
+end;
+
+procedure TXMLDESADVType.Set_INFO(Value: UnicodeString);
+begin
+  ChildNodes['INFO'].NodeValue := Value;
 end;
 
 function TXMLDESADVType.Get_HEAD: IXMLHEADType;

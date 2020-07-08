@@ -118,7 +118,7 @@ BEGIN
     -- очень важная проверка
     IF COALESCE (vbStatusId, 0) <> zc_Enum_Status_Complete()
     THEN
-        IF vbStatusId = zc_Enum_Status_Erased()
+        IF vbStatusId = zc_Enum_Status_Erased() -- AND inSession <> zfCalc_UserAdmin()
         THEN
             RAISE EXCEPTION 'Ошибка.Документ <%> № <%> от <%> удален.', (SELECT ItemName FROM MovementDesc WHERE Id = vbDescId), (SELECT InvNumber FROM Movement WHERE Id = inMovementId), (SELECT DATE (OperDate) FROM Movement WHERE Id = inMovementId);
         END IF;
@@ -377,6 +377,9 @@ BEGIN
            , MovementDate_Payment.ValueData             AS PaymentDate
            , CASE WHEN MovementDate_Payment.ValueData IS NOT NULL THEN TRUE ELSE FALSE END AS isPaymentDate
            , COALESCE (Movement_EDI.OperDate, COALESCE (Movement_order.OperDate, Movement.OperDate)) AS OperDateOrder
+
+           , ObjectString_RoomNumber.ValueData                  AS INFO_RoomNumber
+
            , vbPriceWithVAT                             AS PriceWithVAT
            , vbVATPercent                               AS VATPercent
            , vbExtraChargesPercent - vbDiscountPercent  AS ChangePercent
@@ -598,6 +601,10 @@ BEGIN
             LEFT JOIN ObjectString AS ObjectString_Partner_ShortName
                                    ON ObjectString_Partner_ShortName.ObjectId = COALESCE (MovementLinkObject_Partner.ObjectId, Object_To.Id)
                                   AND ObjectString_Partner_ShortName.DescId = zc_ObjectString_Partner_ShortName()
+            LEFT JOIN ObjectString AS ObjectString_RoomNumber
+                                   ON ObjectString_RoomNumber.ObjectId = COALESCE (MovementLinkObject_Partner.ObjectId, Object_To.Id)
+                                  AND ObjectString_RoomNumber.DescId = zc_ObjectString_Partner_RoomNumber()
+                                  AND ObjectString_RoomNumber.ValueData <> ''
 
             /*LEFT JOIN MovementLinkObject AS MovementLinkObject_PaidKind
                                          ON MovementLinkObject_PaidKind.MovementId = Movement.Id

@@ -63,6 +63,12 @@ BEGIN
      WHERE Sum_Bonus <> 0
     ;
 
+-- if inSession = '5' 
+-- then
+--     RAISE EXCEPTION 'Ошибка. test end';
+-- end if;
+
+
 END;
 $BODY$
   LANGUAGE plpgsql VOLATILE;
@@ -77,3 +83,4 @@ $BODY$
 
 -- тест
 -- SELECT * FROM gpInsertUpdate_Movement_ProfitLossService_ByReport (inStartDate := '01.01.2013', inEndDate := '01.01.2013' , inSession:= zfCalc_UserAdmin())
+-- SELECT * FROM gpInsertUpdate_Movement_ProfitLossService_ByReport(inStartDate := ('01.06.2020')::TDateTime , inEndDate := ('30.06.2020')::TDateTime , inPaidKindId := 3 , inJuridicalId := 0 , inBranchId := 0 ,  inSession := zfCalc_UserAdmin());
