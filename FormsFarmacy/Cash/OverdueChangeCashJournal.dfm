@@ -1,7 +1,7 @@
-object OverdueJournalForm: TOverdueJournalForm
+object OverdueChangeCashJournalForm: TOverdueChangeCashJournalForm
   Left = 0
   Top = 0
-  Caption = #1048#1079#1084#1077#1085#1077#1085#1080#1077' '#1089#1088#1086#1082#1072' '#1087#1088#1086#1089#1088#1086#1095#1077#1085#1085#1099#1093' '#1084#1077#1076#1080#1082#1072#1084#1077#1085#1090#1086#1074' Ctrl+S - '#1050#1072#1090#1077#1075#1086#1088#1080#1103' 4'
+  Caption = #1044#1086#1073#1072#1074#1083#1077#1085#1080#1077' '#1087#1072#1088#1090#1080#1081' '#1074' '#1079#1072#1103#1074#1082#1091' '#1085#1072' '#1080#1079#1084#1077#1085#1077#1085#1080#1103' '#1089#1088#1086#1082#1072
   ClientHeight = 407
   ClientWidth = 707
   Color = clBtnFace
@@ -13,13 +13,14 @@ object OverdueJournalForm: TOverdueJournalForm
   KeyPreview = True
   OldCreateOrder = False
   AddOnFormData.RefreshAction = actRefresh
+  AddOnFormData.Params = FormParams
   PixelsPerInch = 96
   TextHeight = 13
   object cxGrid: TcxGrid
     Left = 0
-    Top = 26
+    Top = 67
     Width = 707
-    Height = 381
+    Height = 340
     Align = alClient
     TabOrder = 0
     LookAndFeel.Kind = lfStandard
@@ -34,13 +35,12 @@ object OverdueJournalForm: TOverdueJournalForm
       DataController.Summary.FooterSummaryItems = <
         item
           Kind = skSum
-          Column = Amount
+          Column = AmountPG
           DisplayText = ',0.###'
         end>
       DataController.Summary.SummaryGroups = <>
       Images = dmMain.SortImageList
       OptionsBehavior.IncSearch = True
-      OptionsBehavior.IncSearchItem = GoodsName
       OptionsCustomize.ColumnHiding = True
       OptionsCustomize.ColumnsQuickCustomization = True
       OptionsData.Deleting = False
@@ -53,59 +53,12 @@ object OverdueJournalForm: TOverdueJournalForm
       OptionsView.HeaderAutoHeight = True
       OptionsView.Indicator = True
       Styles.StyleSheet = dmMain.cxGridTableViewStyleSheet
-      object ORD: TcxGridDBColumn
-        Caption = #8470' '#1087'/'#1087
-        DataBinding.FieldName = 'ORD'
+      object Invnumber: TcxGridDBColumn
+        Caption = #1055#1088#1080#1093#1086#1076
+        DataBinding.FieldName = 'Invnumber'
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
-        Width = 48
-      end
-      object Cat_5: TcxGridDBColumn
-        Caption = '5 '#1082#1072#1090'.'
-        DataBinding.FieldName = 'Cat_5'
-        HeaderAlignmentHorz = taCenter
-        HeaderAlignmentVert = vaCenter
-        Width = 50
-      end
-      object GoodsCode: TcxGridDBColumn
-        Caption = #1050#1086#1076
-        DataBinding.FieldName = 'GoodsCode'
-        HeaderAlignmentHorz = taCenter
-        HeaderAlignmentVert = vaCenter
-        Width = 59
-      end
-      object GoodsName: TcxGridDBColumn
-        Caption = #1053#1072#1079#1074#1072#1085#1080#1077' '#1084#1077#1076#1080#1082#1072#1084#1077#1085#1090#1072
-        DataBinding.FieldName = 'GoodsName'
-        HeaderAlignmentHorz = taCenter
-        HeaderAlignmentVert = vaCenter
-        Width = 192
-      end
-      object Amount: TcxGridDBColumn
-        Caption = #1054#1089#1090#1072#1090#1086#1082
-        DataBinding.FieldName = 'Amount'
-        PropertiesClassName = 'TcxCurrencyEditProperties'
-        Properties.DecimalPlaces = 3
-        Properties.DisplayFormat = ',0.###'
-        HeaderAlignmentHorz = taCenter
-        HeaderAlignmentVert = vaCenter
-        Width = 76
-      end
-      object Price: TcxGridDBColumn
-        Caption = #1062#1077#1085#1072' '#1086#1090#1087#1091#1089#1082#1085#1072#1103' '#1087#1086' '#1087#1088#1072#1081#1089#1091
-        DataBinding.FieldName = 'Price'
-        PropertiesClassName = 'TcxCurrencyEditProperties'
-        Properties.DisplayFormat = ',0.00'
-        HeaderAlignmentHorz = taCenter
-        HeaderAlignmentVert = vaCenter
-        Width = 78
-      end
-      object ExpirationDate: TcxGridDBColumn
-        Caption = #1057#1088#1086#1082' '#1075#1086#1076#1085#1086#1089#1090#1080
-        DataBinding.FieldName = 'ExpirationDate'
-        HeaderAlignmentHorz = taCenter
-        HeaderAlignmentVert = vaCenter
-        Width = 93
+        Width = 89
       end
       object BranchDate: TcxGridDBColumn
         Caption = #1044#1072#1090#1072' '#1087#1088#1080#1093#1086#1076#1072
@@ -114,12 +67,36 @@ object OverdueJournalForm: TOverdueJournalForm
         HeaderAlignmentVert = vaCenter
         Width = 86
       end
-      object Invnumber: TcxGridDBColumn
-        Caption = #1055#1088#1080#1093#1086#1076
-        DataBinding.FieldName = 'Invnumber'
+      object Cat_5: TcxGridDBColumn
+        Caption = '5 '#1082#1072#1090'.'
+        DataBinding.FieldName = 'Cat_5'
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
-        Width = 89
+        Width = 46
+      end
+      object ExpirationDate: TcxGridDBColumn
+        Caption = #1057#1088#1086#1082' '#1075#1086#1076#1085#1086#1089#1090#1080' '#1087#1086' '#1087#1088#1080#1093#1086#1076#1091
+        DataBinding.FieldName = 'ExpirationDate'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Width = 74
+      end
+      object ExpirationDatePG: TcxGridDBColumn
+        Caption = #1057#1088#1086#1082' '#1075#1086#1076#1085#1086#1089#1090#1080' '#1087#1086' '#1087#1072#1088#1090#1080#1080
+        DataBinding.FieldName = 'ExpirationDatePG'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Width = 83
+      end
+      object AmountPG: TcxGridDBColumn
+        Caption = #1054#1089#1090#1072#1090#1086#1082
+        DataBinding.FieldName = 'AmountPG'
+        PropertiesClassName = 'TcxCurrencyEditProperties'
+        Properties.DecimalPlaces = 3
+        Properties.DisplayFormat = ',0.###'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Width = 76
       end
       object FromName: TcxGridDBColumn
         Caption = #1055#1086#1089#1090#1072#1074#1097#1080#1082
@@ -140,11 +117,42 @@ object OverdueJournalForm: TOverdueJournalForm
         DataBinding.FieldName = 'DatePartionGoodsCat5'
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
-        Width = 127
+        Width = 112
       end
     end
     object cxGridLevel: TcxGridLevel
       GridView = cxGridDBTableView
+    end
+  end
+  object Panel: TPanel
+    Left = 0
+    Top = 0
+    Width = 707
+    Height = 41
+    Align = alTop
+    Caption = 'Panel'
+    ShowCaption = False
+    TabOrder = 5
+    object edGoodsCode: TcxTextEdit
+      Left = 15
+      Top = 16
+      TabStop = False
+      Properties.ReadOnly = True
+      TabOrder = 0
+      Width = 67
+    end
+    object cxLabel1: TcxLabel
+      Left = 15
+      Top = -1
+      Caption = #1052#1077#1076#1080#1082#1072#1084#1077#1085#1090
+    end
+    object edGoodsName: TcxTextEdit
+      Left = 83
+      Top = 16
+      TabStop = False
+      Properties.ReadOnly = True
+      TabOrder = 2
+      Width = 414
     end
   end
   object DataSource: TDataSource
@@ -227,22 +235,6 @@ object OverdueJournalForm: TOverdueJournalForm
         end
         item
           Visible = True
-          ItemName = 'dxBarButton3'
-        end
-        item
-          Visible = True
-          ItemName = 'dxBarButton4'
-        end
-        item
-          Visible = True
-          ItemName = 'dxBarStatic'
-        end
-        item
-          Visible = True
-          ItemName = 'bbSendPartionDateChange'
-        end
-        item
-          Visible = True
           ItemName = 'dxBarStatic'
         end
         item
@@ -321,18 +313,6 @@ object OverdueJournalForm: TOverdueJournalForm
       ImageIndex = 63
     end
     object dxBarButton2: TdxBarButton
-      Action = actOverdue
-      Category = 0
-    end
-    object dxBarButton3: TdxBarButton
-      Action = actUpdate_Cat_5
-      Category = 0
-    end
-    object dxBarButton4: TdxBarButton
-      Action = actUpdateRangeCat5
-      Category = 0
-    end
-    object bbSendPartionDateChange: TdxBarButton
       Action = actSendPartionDateChange
       Category = 0
     end
@@ -364,7 +344,7 @@ object OverdueJournalForm: TOverdueJournalForm
       ImageIndex = 6
       ShortCut = 16472
     end
-    object actOverdue: TMultiAction
+    object actSendPartionDateChange: TMultiAction
       Category = 'DSDLib'
       MoveParams = <>
       ActionList = <
@@ -377,16 +357,16 @@ object OverdueJournalForm: TOverdueJournalForm
         item
           Action = actRefresh
         end>
-      Caption = #1048#1079#1084#1077#1085#1080#1090#1100' '#1089#1088#1086#1082' '#1075#1086#1076#1085#1086#1089#1090#1080' '#1087#1072#1088#1090#1080#1080
-      Hint = #1048#1079#1084#1077#1085#1080#1090#1100' '#1089#1088#1086#1082' '#1075#1086#1076#1085#1086#1089#1090#1080' '#1087#1072#1088#1090#1080#1080
-      ImageIndex = 35
+      Caption = #1044#1086#1073#1072#1074#1080#1090#1100' '#1074' '#1079#1072#1103#1074#1082#1091' '#1085#1072' '#1080#1079#1084#1077#1085#1077#1085#1080#1103' '#1089#1088#1086#1082#1072' '#1075#1086#1076#1085#1086#1089#1090#1080' '#1087#1072#1088#1090#1080#1102
+      Hint = #1044#1086#1073#1072#1074#1080#1090#1100' '#1074' '#1079#1072#1103#1074#1082#1091' '#1085#1072' '#1080#1079#1084#1077#1085#1077#1085#1080#1103' '#1089#1088#1086#1082#1072' '#1075#1086#1076#1085#1086#1089#1090#1080' '#1087#1072#1088#1090#1080#1102
+      ImageIndex = 30
     end
     object actExecuteOverdueDialog: TExecuteDialog
       Category = 'DSDLib'
       MoveParams = <>
       Caption = 'actExecuteOverdueDialog'
-      FormName = 'TOverdueDialogForm'
-      FormNameParam.Value = 'TOverdueDialogForm'
+      FormName = 'TOverdueChangeDialogForm'
+      FormNameParam.Value = 'TOverdueChangeDialogForm'
       FormNameParam.DataType = ftString
       FormNameParam.MultiSelectSeparator = ','
       GuiParams = <
@@ -421,115 +401,29 @@ object OverdueJournalForm: TOverdueJournalForm
         end>
       Caption = 'actTransfer_SendPartionDate'
     end
-    object actUpdate_Cat_5: TdsdExecStoredProc
-      Category = 'DSDLib'
-      MoveParams = <>
-      PostDataSetBeforeExecute = False
-      StoredProc = spUpdate_Cat_5
-      StoredProcList = <
-        item
-          StoredProc = spUpdate_Cat_5
-        end>
-      Caption = #1048#1079#1084#1077#1085#1080#1090#1100' '#1087#1088#1080#1079#1085#1072#1082' 5 '#1082#1072#1090' ('#1087#1088#1086#1089#1088#1086#1095#1082#1072' '#1073#1077#1079' '#1085#1072#1094#1077#1085#1082#1080')'
-      Hint = #1048#1079#1084#1077#1085#1080#1090#1100' '#1087#1088#1080#1079#1085#1072#1082' 5 '#1082#1072#1090' ('#1087#1088#1086#1089#1088#1086#1095#1082#1072' '#1073#1077#1079' '#1085#1072#1094#1077#1085#1082#1080')'
-      ImageIndex = 12
-      QuestionBeforeExecute = #1048#1079#1084#1077#1085#1080#1090#1100' '#1087#1088#1080#1079#1085#1072#1082' 5 '#1082#1072#1090' ('#1087#1088#1086#1089#1088#1086#1095#1082#1072' '#1073#1077#1079' '#1085#1072#1094#1077#1085#1082#1080') ?'
-    end
-    object actUpdateRangeCat5: TMultiAction
-      Category = 'DSDLib'
-      MoveParams = <>
-      ActionList = <
-        item
-          Action = actExecuteDialogUpdateRangeCat5
-        end
-        item
-          Action = actExecUpdateRangeCat5
-        end
-        item
-          Action = actRefresh
-        end>
-      Caption = #1055#1077#1088#1077#1074#1086#1076' '#1090#1086#1074#1072#1088#1072' '#1074' 5 '#1082#1072#1090#1077#1075#1086#1088#1080#1102' '#1087#1086' '#1094#1077#1085#1077
-      Hint = #1055#1077#1088#1077#1074#1086#1076' '#1090#1086#1074#1072#1088#1072' '#1074' 5 '#1082#1072#1090#1077#1075#1086#1088#1080#1102' '#1087#1086' '#1094#1077#1085#1077
-      ImageIndex = 38
-    end
-    object actExecuteDialogUpdateRangeCat5: TExecuteDialog
-      Category = 'DSDLib'
-      MoveParams = <>
-      Caption = 'actExecuteDialogUpdateRangeCat5'
-      FormName = 'TOverdue_UpdateRangeCat5DialogForm'
-      FormNameParam.Value = 'TOverdue_UpdateRangeCat5DialogForm'
-      FormNameParam.DataType = ftString
-      FormNameParam.MultiSelectSeparator = ','
-      GuiParams = <
-        item
-          Name = 'PriceMax'
-          Value = 0.000000000000000000
-          Component = FormParams
-          ComponentItem = 'PriceMax'
-          DataType = ftFloat
-          ParamType = ptInputOutput
-          MultiSelectSeparator = ','
-        end
-        item
-          Name = 'PriceMin'
-          Value = 0.000000000000000000
-          Component = FormParams
-          ComponentItem = 'PriceMin'
-          DataType = ftFloat
-          ParamType = ptInputOutput
-          MultiSelectSeparator = ','
-        end>
-      isShowModal = True
-      OpenBeforeShow = True
-    end
-    object actExecUpdateRangeCat5: TdsdExecStoredProc
-      Category = 'DSDLib'
-      MoveParams = <>
-      PostDataSetBeforeExecute = False
-      StoredProc = spUpdateRangeCat5
-      StoredProcList = <
-        item
-          StoredProc = spUpdateRangeCat5
-        end>
-      Caption = 'actExecUpdateRangeCat5'
-    end
-    object actSendPartionDateChange: TMultiAction
-      Category = 'DSDLib'
-      MoveParams = <>
-      ActionList = <
-        item
-          Action = actExecuteOverdueDialog
-        end
-        item
-          Action = actTransfer_SendPartionDateChange
-        end
-        item
-          Action = actRefresh
-        end>
-      Caption = #1044#1086#1073#1072#1074#1080#1090#1100' '#1074' '#1079#1072#1103#1074#1082#1091' '#1085#1072' '#1080#1079#1084#1077#1085#1077#1085#1080#1103' '#1089#1088#1086#1082#1072' '#1075#1086#1076#1085#1086#1089#1090#1080' '#1087#1072#1088#1090#1080#1102
-      Hint = #1044#1086#1073#1072#1074#1080#1090#1100' '#1074' '#1079#1072#1103#1074#1082#1091' '#1085#1072' '#1080#1079#1084#1077#1085#1077#1085#1080#1103' '#1089#1088#1086#1082#1072' '#1075#1086#1076#1085#1086#1089#1090#1080' '#1087#1072#1088#1090#1080#1102
-      ImageIndex = 30
-    end
-    object actTransfer_SendPartionDateChange: TdsdExecStoredProc
-      Category = 'DSDLib'
-      MoveParams = <>
-      PostDataSetBeforeExecute = False
-      StoredProc = spTransfer_SendPartionDateChange
-      StoredProcList = <
-        item
-          StoredProc = spTransfer_SendPartionDateChange
-        end>
-      Caption = 'actTransfer_SendPartionDateChange'
-    end
   end
   object dsdStoredProc: TdsdStoredProc
-    StoredProcName = 'gpSelect_Cash_Overdue'
+    StoredProcName = 'gpSelect_Cash_OverdueChange'
     DataSet = ClientDataSet
     DataSets = <
       item
         DataSet = ClientDataSet
       end>
-    Params = <>
+    Params = <
+      item
+        Name = 'inUnitId'
+        Value = '0'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inGoodsId'
+        Value = Null
+        Component = FormParams
+        ComponentItem = 'GoodsId'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end>
     PackSize = 1
     Left = 48
     Top = 224
@@ -539,7 +433,7 @@ object OverdueJournalForm: TOverdueJournalForm
     Top = 160
   end
   object spTransfer_SendPartionDate: TdsdStoredProc
-    StoredProcName = 'gpInsert_MovementTransfer_SendPartionDate'
+    StoredProcName = 'gpInsert_MovementTransfer_SendPartionDateChange'
     DataSets = <>
     OutputType = otResult
     Params = <
@@ -547,7 +441,7 @@ object OverdueJournalForm: TOverdueJournalForm
         Name = 'inContainerID'
         Value = Null
         Component = ClientDataSet
-        ComponentItem = 'Id'
+        ComponentItem = 'ContainerChangeID'
         ParamType = ptInput
         MultiSelectSeparator = ','
       end
@@ -598,119 +492,28 @@ object OverdueJournalForm: TOverdueJournalForm
     Left = 168
     Top = 224
   end
-  object spUpdate_Cat_5: TdsdStoredProc
-    StoredProcName = 'gpUpdate_Object_PartionGoods_Cat_5'
-    DataSets = <>
-    OutputType = otResult
-    Params = <
-      item
-        Name = 'inPartionGoodsId'
-        Value = Null
-        Component = ClientDataSet
-        ComponentItem = 'PartionGoodsId'
-        ParamType = ptInput
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'inCat_5'
-        Value = Null
-        Component = ClientDataSet
-        ComponentItem = 'Cat_5'
-        DataType = ftBoolean
-        ParamType = ptInput
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'outCat_5'
-        Value = Null
-        Component = ClientDataSet
-        ComponentItem = 'Cat_5'
-        DataType = ftBoolean
-        MultiSelectSeparator = ','
-      end>
-    PackSize = 1
-    Left = 472
-    Top = 160
-  end
-  object spUpdateRangeCat5: TdsdStoredProc
-    StoredProcName = 'gpUpdate_Object_Range_Cat_5'
-    DataSets = <>
-    OutputType = otResult
-    Params = <
-      item
-        Name = 'inPriceMin'
-        Value = Null
-        Component = FormParams
-        ComponentItem = 'PriceMin'
-        DataType = ftFloat
-        ParamType = ptInput
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'inPriceMax'
-        Value = Null
-        Component = FormParams
-        ComponentItem = 'PriceMax'
-        DataType = ftFloat
-        ParamType = ptInput
-        MultiSelectSeparator = ','
-      end>
-    PackSize = 1
-    Left = 472
-    Top = 232
-  end
   object FormParams: TdsdFormParams
     Params = <
       item
-        Name = 'PriceMax'
-        Value = 0.000000000000000000
-        DataType = ftFloat
-        ParamType = ptInputOutput
+        Name = 'GoodsId'
+        Value = Null
         MultiSelectSeparator = ','
       end
       item
-        Name = 'PriceMin'
-        Value = 0.000000000000000000
-        DataType = ftFloat
-        ParamType = ptInputOutput
+        Name = 'GoodsCode'
+        Value = Null
+        Component = edGoodsCode
+        DataType = ftString
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'GoodsName'
+        Value = Null
+        Component = edGoodsName
+        DataType = ftString
         MultiSelectSeparator = ','
       end>
-    Left = 470
-    Top = 97
-  end
-  object spTransfer_SendPartionDateChange: TdsdStoredProc
-    StoredProcName = 'gpInsert_MovementTransfer_SendPartionDateChange'
-    DataSets = <>
-    OutputType = otResult
-    Params = <
-      item
-        Name = 'inContainerID'
-        Value = Null
-        Component = ClientDataSet
-        ComponentItem = 'Id'
-        ParamType = ptInput
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'inExpirationDate'
-        Value = 'NULL'
-        Component = ClientDataSet
-        ComponentItem = 'ExpirationDateDialog'
-        DataType = ftDateTime
-        ParamType = ptInput
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'inAmount'
-        Value = Null
-        Component = ClientDataSet
-        ComponentItem = 'AmountDialog'
-        DataType = ftFloat
-        ParamType = ptInput
-        MultiSelectSeparator = ','
-      end>
-    PackSize = 1
-    Left = 312
+    Left = 48
     Top = 296
   end
 end

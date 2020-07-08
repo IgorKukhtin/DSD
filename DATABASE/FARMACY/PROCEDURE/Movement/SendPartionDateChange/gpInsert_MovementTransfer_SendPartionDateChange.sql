@@ -23,7 +23,7 @@ BEGIN
   inExpirationDate := DATE_TRUNC ('DAY', inExpirationDate);
 
   IF NOT EXISTS(SELECT 1 FROM Container
-                WHERE Container.DescId    = zc_Container_CountPartionDate()
+                WHERE Container.DescId    in (zc_Container_Count(), zc_Container_CountPartionDate())
                   AND Container.Id        = inContainerID)
   THEN
     RAISE EXCEPTION 'Ошибка. Контейнкр не найден.';
@@ -48,7 +48,7 @@ BEGIN
                             ON ObjectLink_Juridical_Retail.ObjectId = ObjectLink_Unit_Juridical.ChildObjectId
                            AND ObjectLink_Juridical_Retail.DescId = zc_ObjectLink_Juridical_Retail()
                            
-  WHERE Container.DescId    = zc_Container_CountPartionDate()
+  WHERE Container.DescId    in (zc_Container_Count(), zc_Container_CountPartionDate())
     AND Container.Id        = inContainerID;
 
   IF vbRemains < inAmount
@@ -56,7 +56,7 @@ BEGIN
     RAISE EXCEPTION 'Ошибка. Количество на изменения срока <%> больше остатка <%>.', inAmount, vbRemains;
   END IF;
 
-  IF vbExpirationDate > CURRENT_DATE
+/*  IF vbExpirationDate > CURRENT_DATE
   THEN
     RAISE EXCEPTION 'Ошибка. Изменять срок можно только у просроченного товара.';
   END IF;
@@ -65,6 +65,7 @@ BEGIN
   THEN
     RAISE EXCEPTION 'Ошибка. Изменять срок можно только на непросроченный.';
   END IF;
+*/
 
   IF EXISTS(SELECT 1  FROM Movement
 
@@ -91,7 +92,7 @@ BEGIN
       AND MovementLinkObject_Unit.ObjectId = vbUnitId;
   ELSE
     vbMovementId :=  gpInsertUpdate_Movement_SendPartionDateChange(ioId               := 0,
-                                                                   inInvNumber        := CAST (NEXTVAL ('Movement_SendPartionDate_seq') AS TVarChar),
+                                                                   inInvNumber        := CAST (NEXTVAL ('Movement_SendPartionDateChange_seq') AS TVarChar),
                                                                    inOperDate         := CURRENT_DATE,
                                                                    inUnitId           := vbUnitId,
                                                                    inComment          := '',

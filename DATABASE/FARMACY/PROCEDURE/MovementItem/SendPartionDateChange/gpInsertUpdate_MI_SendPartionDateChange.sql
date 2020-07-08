@@ -13,15 +13,16 @@ CREATE OR REPLACE FUNCTION gpInsertUpdate_MI_SendPartionDateChange(
 )
 AS
 $BODY$
-   DECLARE vbUserId Integer;
-   DECLARE vbUnitId Integer;
-   DECLARE vbUnitKey TVarChar;
+   DECLARE vbUserId     Integer;
+   DECLARE vbUnitId     Integer;
+   DECLARE vbInvNumber  TVarChar;
+   DECLARE vbUnitKey    TVarChar;
    DECLARE vbUserUnitId Integer;
 
    DECLARE vbAmount         TFloat;
    DECLARE vbDescId         Integer;
    DECLARE vbExpirationDate TDateTime;
-   DECLARE vbDate_6            TDateTime;
+   DECLARE vbDate_6         TDateTime;
 BEGIN
     -- проверка прав пользователя на вызов процедуры
     --vbUserId := lpCheckRight (inSession, zc_Enum_Process_InsertUpdate_MI_Send());
@@ -40,6 +41,15 @@ BEGIN
       END IF;
     END IF;
 
+    --определяем данные документа
+    SELECT MovementLinkObject_Unit.ObjectId                             AS UnitId, Movement.InvNumber
+    INTO vbUnitId, vbInvNumber 
+    FROM Movement
+          LEFT JOIN MovementLinkObject AS MovementLinkObject_Unit
+                                       ON MovementLinkObject_Unit.MovementId = Movement.Id
+                                      AND MovementLinkObject_Unit.DescId = zc_MovementLinkObject_Unit()
+    WHERE Movement.Id = inMovementId;
+
     IF EXISTS(SELECT MovementItem.Id
               FROM MovementItem
                    LEFT JOIN MovementItemFloat AS MIFloat_ContainerId
@@ -50,17 +60,8 @@ BEGIN
                 AND MIFloat_ContainerId.ValueData::Integer = inContainerId
                 AND MovementItem.Id         <> ioId)
     THEN
-      RAISE EXCEPTION 'Ошибка. Контейнер может быть использован только раз в документе.';
+      RAISE EXCEPTION 'Ошибка. Контейнер уже добавлен в заявку <%>.', vbInvNumber;
     END IF;
-
-    --определяем данные документа
-    SELECT MovementLinkObject_Unit.ObjectId                             AS UnitId
-    INTO vbUnitId
-    FROM Movement
-          LEFT JOIN MovementLinkObject AS MovementLinkObject_Unit
-                                       ON MovementLinkObject_Unit.MovementId = Movement.Id
-                                      AND MovementLinkObject_Unit.DescId = zc_MovementLinkObject_Unit()
-    WHERE Movement.Id = inMovementId;
 
     -- Получение даты по последнему  сроку
     SELECT Date_6 INTO vbDate_6 FROM lpSelect_PartionDateKind_SetDate ();

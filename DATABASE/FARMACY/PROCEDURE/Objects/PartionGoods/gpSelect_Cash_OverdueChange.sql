@@ -13,7 +13,8 @@ RETURNS TABLE (ContainerID Integer,
                ContainerPGID Integer, AmountPG TFloat, ExpirationDatePG TDateTime,
                BranchDate TDateTime, Invnumber TVarChar, FromName TVarChar, ContractName TVarChar,
                ExpirationDateDialog TDateTime, AmountDialog TFloat,
-               Cat_5 boolean, DatePartionGoodsCat5 TDateTime
+               Cat_5 boolean, DatePartionGoodsCat5 TDateTime,
+               ContainerChangeID Integer
               ) AS
 $BODY$
    DECLARE vbUserId Integer;
@@ -25,6 +26,14 @@ BEGIN
    -- PERFORM lpCheckRight (inSession, zc_Enum_Process_Select_Movement_Income());
    vbUserId:= lpGetUserBySession (inSession);
 
+  IF COALESCE (inUnitId, 0) = 0
+  THEN
+    vbUnitKey := COALESCE(lpGet_DefaultValue('zc_Object_Unit', vbUserId), '');
+    IF vbUnitKey = '' THEN
+       vbUnitKey := '0';
+    END IF;
+    inUnitId := vbUnitKey::Integer;
+  END IF;
 
   RETURN QUERY
   WITH   tmpContainer AS (SELECT Container.Id, Container.ObjectId, Container.Amount
@@ -63,8 +72,8 @@ BEGIN
        , Container.Amount                                                  AS Amount
        , COALESCE (tmpExpirationDate.ValueData, zc_DateEnd()) :: TDateTime AS ExpirationDate
 
-       , Container_PG.Id                                                   AS ContainerPGID
-       , COALESCE (Container_PG.Amount, Container.Amount)                  AS AmountPG
+       , Container_PD.Id                                                   AS ContainerPGID
+       , COALESCE (Container_PD.Amount, Container.Amount)                  AS AmountPG
        , ObjectFloat_PartionGoods_ExpirationDate.ValueData                 AS ExpirationDatePG
 
        , MovementDate_Branch.ValueData                                     AS BranchDate
@@ -74,23 +83,25 @@ BEGIN
 
        , COALESCE (ObjectFloat_PartionGoods_ExpirationDate.ValueData,
                    tmpExpirationDate.ValueData, zc_DateEnd())              AS ExpirationDateDialog
-       , COALESCE (Container_PG.Amount, Container.Amount)                  AS AmountDialog
+       , COALESCE (Container_PD.Amount, Container.Amount)                  AS AmountDialog
 
        , COALESCE(ObjectBoolean_PartionGoods_Cat_5.ValueData, FALSE)       AS Cat_5
        , ObjectDate_PartionGoods_Cat_5.ValueData                           AS DatePartionGoodsCat5
+
+       , COALESCE (Container_PD.Id, Container.ID)                          AS ContainerChangeID
   FROM tmpContainer AS Container
 
        LEFT JOIN tmpExpirationDate ON tmpExpirationDate.ContainerId = Container.Id
 
-       LEFT JOIN Container AS Container_PG
-                           ON Container_PG.ParentId = Container.Id
-                          AND Container_PG.DescId = zc_Container_CountPartionDate()
-                          AND Container_PG.Amount <> 0
+       LEFT JOIN Container AS Container_PD
+                           ON Container_PD.ParentId = Container.Id
+                          AND Container_PD.DescId = zc_Container_CountPartionDate()
+                          AND Container_PD.Amount <> 0
 
        LEFT JOIN Object AS Object_Goods ON Object_Goods.ID = Container.ObjectId
 
 
-       LEFT JOIN ContainerLinkObject ON ContainerLinkObject.ContainerId = Container_PG.Id
+       LEFT JOIN ContainerLinkObject ON ContainerLinkObject.ContainerId = Container_PD.Id
                                     AND ContainerLinkObject.DescId = zc_ContainerLinkObject_PartionGoods()
        LEFT JOIN Object AS Object_PartionGoods ON Object_PartionGoods.ID = ContainerLinkObject.ObjectId
 
@@ -133,7 +144,8 @@ LANGUAGE plpgsql VOLATILE;
 /*
  »—“Œ–»ﬂ –¿«–¿¡Œ“ »: ƒ¿“¿, ¿¬“Œ–
                ‘ÂÎÓÌ˛Í ».¬.    ÛıÚËÌ ».¬.    ÎËÏÂÌÚ¸Â‚  .».   ÿ‡·ÎËÈ Œ.¬.
+ 07.07.20                                                       *
  07.07.19                                                       *
 */
 
--- ÚÂÒÚ
+-- ÚÂÒÚ select * from gpSelect_Cash_OverdueChange(inUnitId := 0 , inGoodsId := 634 ,  inSession := '3');

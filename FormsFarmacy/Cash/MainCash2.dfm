@@ -3576,6 +3576,40 @@ inherited MainCashForm2: TMainCashForm2
       GuiParams = <>
       isShowModal = False
     end
+    object actOverdueChangeCashJournal: TdsdOpenForm
+      Category = #1044#1086#1082#1091#1084#1077#1085#1090#1099
+      MoveParams = <>
+      Caption = #1044#1086#1073#1072#1074#1083#1077#1085#1080#1077' '#1087#1072#1088#1090#1080#1081' '#1090#1086#1074#1072#1088#1072' '#1074' '#1079#1072#1103#1074#1082#1091' '#1085#1072' '#1080#1079#1084#1077#1085#1077#1085#1080#1103' '#1089#1088#1086#1082#1072
+      ShortCut = 16457
+      FormName = 'TOverdueChangeCashJournalForm'
+      FormNameParam.Value = 'TOverdueChangeCashJournalForm'
+      FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
+      GuiParams = <
+        item
+          Name = 'GoodsId'
+          Value = Null
+          Component = RemainsCDS
+          ComponentItem = 'Id'
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'GoodsCode'
+          Value = Null
+          Component = RemainsCDS
+          ComponentItem = 'GoodsCode'
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'GoodsName'
+          Value = Null
+          Component = RemainsCDS
+          ComponentItem = 'GoodsName'
+          DataType = ftString
+          MultiSelectSeparator = ','
+        end>
+      isShowModal = False
+    end
     object actDeleteAccommodationAllId: TAction
       Category = 'DSDLib'
       Caption = #1059#1076#1072#1083#1080#1090#1100' '#1074#1089#1077' '#1087#1088#1080#1074#1103#1079#1082#1080' '#1082' '#1090#1077#1082#1091#1097#1077#1084#1091' '#1088#1072#1079#1084#1077#1097#1077#1085#1080#1080#1102
@@ -4194,6 +4228,9 @@ inherited MainCashForm2: TMainCashForm2
     object N41: TMenuItem
       Action = actUpdateProgram
       ShortCut = 16469
+    end
+    object N43: TMenuItem
+      Action = actOverdueChangeCashJournal
     end
   end
   object FormParams: TdsdFormParams

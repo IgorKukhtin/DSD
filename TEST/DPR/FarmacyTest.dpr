@@ -893,7 +893,8 @@ uses
   SendPartionDateChangeJournal in '..\..\FormsFarmacy\Document\SendPartionDateChangeJournal.pas' {SendPartionDateChangeJournalForm: TParentForm},
   CheckSummCard in '..\..\FormsFarmacy\Document\CheckSummCard.pas' {CheckSummCardForm: TParentForm},
   SendPartionDateChangeCash in '..\..\FormsFarmacy\Document\SendPartionDateChangeCash.pas' {SendPartionDateChangeCashForm: TParentForm},
-  SendPartionDateChangeCashJournal in '..\..\FormsFarmacy\Document\SendPartionDateChangeCashJournal.pas' {SendPartionDateChangeCashJournalForm: TParentForm};
+  SendPartionDateChangeCashJournal in '..\..\FormsFarmacy\Document\SendPartionDateChangeCashJournal.pas' {SendPartionDateChangeCashJournalForm: TParentForm},
+  OverdueChangeCashJournal in '..\..\FormsFarmacy\Cash\OverdueChangeCashJournal.pas' {OverdueChangeCashJournalForm: TParentForm};
 
 {$R *.res}
 {$R DevExpressRus.res}

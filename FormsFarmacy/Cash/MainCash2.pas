@@ -485,6 +485,8 @@ type
     plSummCard: TPanel;
     actSendPartionDateChangeCashJournal: TdsdOpenForm;
     N42: TMenuItem;
+    actOverdueChangeCashJournal: TdsdOpenForm;
+    N43: TMenuItem;
     procedure WM_KEYDOWN(var Msg: TWMKEYDOWN);
     procedure FormCreate(Sender: TObject);
     procedure actChoiceGoodsInRemainsGridExecute(Sender: TObject);
