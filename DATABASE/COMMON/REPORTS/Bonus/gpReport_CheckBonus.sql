@@ -39,6 +39,38 @@ declare inisMovement          Boolean ; -- по документам
 
 BEGIN
 
+
+    RETURN QUERY
+
+      SELECT tmp.OperDate_Movement, tmp.InvNumber_Movement, tmp.DescName_Movement
+           , tmp.ContractId_master, tmp.ContractId_child, tmp.ContractId_find, tmp.InvNumber_master, tmp.InvNumber_child, tmp.InvNumber_find
+           , tmp.ContractTagName_child, tmp.ContractStateKindCode_child
+           , tmp.InfoMoneyId_master, tmp.InfoMoneyId_find
+           , tmp.InfoMoneyName_master, tmp.InfoMoneyName_child, tmp.InfoMoneyName_find
+           , tmp.JuridicalId, tmp.JuridicalName
+           , tmp.PaidKindId, tmp.PaidKindName
+           , tmp.ConditionKindId, tmp.ConditionKindName
+           , tmp.BonusKindId, tmp.BonusKindName
+           , tmp.BranchId, tmp.BranchName
+           , tmp.Value
+           , tmp.Sum_CheckBonus
+           , tmp.Sum_CheckBonusFact
+           , tmp.Sum_Bonus
+           , tmp.Sum_BonusFact
+           , tmp.Sum_SaleFact
+           , tmp.Comment
+      FROM gpReport_CheckBonusTest (inStartDate           := inStartDate
+                                  , inEndDate             := inEndDate
+                                  , inPaidKindID          := inPaidKindID
+                                  , inJuridicalId         := inJuridicalId
+                                  , inBranchId            := inBranchId
+                                --, inIsMovement          := inIsMovement
+                                  , inSession             := inSession
+                                   ) AS tmp;
+
+/*
+-- старый вариант
+
 inisMovement:= FALSE;
 
 
@@ -310,45 +342,6 @@ inisMovement:= FALSE;
                           
       -- список ContractId по которым будет расчет "базы"
     , tmpAccount AS (SELECT Object_Account_View.AccountId FROM Object_Account_View WHERE Object_Account_View.AccountGroupId <> zc_Enum_AccountGroup_110000()) -- Транзит
-/*    , tmpContainer AS (SELECT Container.Id AS ContainerId
-                            , tmpContractGroup.JuridicalId
-                            , tmpContractGroup.ContractId_child
-                            , tmpContractGroup.InfoMoneyId_child
-                            , tmpContractGroup.PaidKindId_byBase
-                            , COALESCE (ContainerLO_Branch.ObjectId,0) AS BranchId
-                       FROM tmpAccount
-                            JOIN Container ON Container.ObjectId = tmpAccount.AccountId
-                                          AND Container.DescId = zc_Container_Summ()
-
-                            JOIN ContainerLinkObject AS ContainerLO_Juridical ON ContainerLO_Juridical.ContainerId = Container.Id
-                                                                             AND ContainerLO_Juridical.DescId = zc_ContainerLinkObject_Juridical() 
-                            JOIN ContainerLinkObject AS ContainerLO_Contract ON ContainerLO_Contract.ContainerId = Container.Id
-                                                                            AND ContainerLO_Contract.DescId = zc_ContainerLinkObject_Contract() 
-                            JOIN ContainerLinkObject AS ContainerLO_InfoMoney ON ContainerLO_InfoMoney.ContainerId = Container.Id
-                                                                             AND ContainerLO_InfoMoney.DescId = zc_ContainerLinkObject_InfoMoney()                               
-                            JOIN ContainerLinkObject AS ContainerLO_PaidKind ON ContainerLO_PaidKind.ContainerId = Container.Id
-                                                                            AND ContainerLO_PaidKind.DescId = zc_ContainerLinkObject_PaidKind() 
-
-                            JOIN ContainerLinkObject AS CLO_Partner
-                                                     ON CLO_Partner.ContainerId = Container.Id
-                                                    AND CLO_Partner.DescId = zc_ContainerLinkObject_Partner()
-                            -- ограничиваем контрагентами --
-                            INNER JOIN tmpContractPartner ON tmpContractPartner.PartnerId = CLO_Partner.ObjectId
-                                                                                                         
-                            -- ограничение по 4-м ключам
-                            JOIN tmpContractGroup ON tmpContractGroup.JuridicalId       = ContainerLO_Juridical.ObjectId
-                                                 AND tmpContractGroup.ContractId_child  = ContainerLO_Contract.ObjectId
-                                                 AND tmpContractGroup.InfoMoneyId_child = ContainerLO_InfoMoney.ObjectId
-                                                 AND tmpContractGroup.PaidKindId_byBase = ContainerLO_PaidKind.ObjectId
-
-                            LEFT JOIN ContainerLinkObject AS ContainerLO_Branch
-                                                          ON ContainerLO_Branch.ContainerId = Container.Id
-                                                         AND ContainerLO_Branch.DescId = zc_ContainerLinkObject_Branch()
-                       WHERE COALESCE (ContainerLO_Branch.ObjectId,0) = inBranchId OR inBranchId = 0
-                       -- WHERE Container.ObjectId <> zc_Enum_Account_50401() -- "Маркетинг"
-                       --   AND Container.ObjectId <> zc_Enum_AccountDirection_70300() нужно убрать проводки по оплате маркетинга
-                       )
-                       */
     , tmpContainer AS (SELECT DISTINCT
                               Container.Id  AS ContainerId
                             , tmpContractGroup.JuridicalId
@@ -707,12 +700,11 @@ inisMovement:= FALSE;
               , Object_Branch.Id
               , Object_Branch.ValueData
               -- , tmpAll.Comment
-    ;
+    ;*/
 
 END;
 $BODY$
   LANGUAGE plpgsql VOLATILE;
---ALTER FUNCTION gpReport_CheckBonus (TDateTime, TDateTime, TVarChar) OWNER TO postgres;
 
 /*-------------------------------------------------------------------------------
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР

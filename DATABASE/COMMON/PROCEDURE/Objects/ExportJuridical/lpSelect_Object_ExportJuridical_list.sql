@@ -93,7 +93,7 @@ BEGIN
                            ) AS tmp
                            LEFT JOIN Object ON Object.Id = tmp.ObjectId
                            )
-           , tmpPartner AS (-- из ёр. лиц
+       , tmpPartner_jur AS (-- из ёр. лиц
                             SELECT tmpList_all.*
                                  , ObjectLink_Partner_Juridical.ObjectId AS PartnerId
                             FROM tmpList_all
@@ -101,6 +101,10 @@ BEGIN
                                                        ON ObjectLink_Partner_Juridical.ChildObjectId = tmpList_all.ObjectId
                                                       AND ObjectLink_Partner_Juridical.DescId = zc_ObjectLink_Partner_Juridical()
                             WHERE tmpList_all.ObjectDescId = zc_Object_Juridical()
+                           )
+           , tmpPartner AS (-- из ёр. лиц
+                            SELECT tmpPartner_jur.*
+                            FROM tmpPartner_jur
                            UNION
                             -- из “орговой сети
                             SELECT tmpList_all.*
@@ -112,7 +116,9 @@ BEGIN
                                  INNER JOIN ObjectLink AS ObjectLink_Partner_Juridical
                                                        ON ObjectLink_Partner_Juridical.ChildObjectId = ObjectLink_Juridical_Retail.ObjectId
                                                       AND ObjectLink_Partner_Juridical.DescId = zc_ObjectLink_Partner_Juridical()
+                                 LEFT JOIN tmpPartner_jur ON tmpPartner_jur.PartnerId = ObjectLink_Partner_Juridical.ObjectId
                             WHERE tmpList_all.ObjectDescId = zc_Object_Retail()
+                              AND tmpPartner_jur.PartnerId ID NULL
                            )
 
        SELECT 

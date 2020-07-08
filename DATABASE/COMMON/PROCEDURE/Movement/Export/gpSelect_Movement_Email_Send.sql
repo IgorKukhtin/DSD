@@ -1079,7 +1079,7 @@ BEGIN
      ELSE
 
 
-     -- !!!4.Формат CSV - zc_Enum_ExportKind_Dakort39135074!!!
+     -- !!!6.Формат CSV - zc_Enum_ExportKind_Avion40110917!!!
 
      IF vbExportKindId = zc_Enum_ExportKind_Avion40110917()
      THEN
@@ -1408,8 +1408,8 @@ BEGIN
              LEFT JOIN Object AS Object_GoodsKind ON Object_GoodsKind.Id = MILinkObject_GoodsKind.ObjectId
              LEFT JOIN Object AS Object_Measure   ON Object_Measure.Id   = ObjectLink_Goods_Measure.ChildObjectId
 
-             LEFT JOIN tmpStickerProperty ON tmpStickerProperty.GoodsId     = tmpMovementItem.GoodsId
-                                         AND tmpStickerProperty.GoodsKindId = tmpMovementItem.GoodsKindId
+             LEFT JOIN tmpStickerProperty ON tmpStickerProperty.GoodsId     = MovementItem.ObjectId
+                                         AND tmpStickerProperty.GoodsKindId = MILinkObject_GoodsKind.ObjectId
                                          AND tmpStickerProperty.Ord         = 1
 
         WHERE MovementItem.MovementId = inMovementId

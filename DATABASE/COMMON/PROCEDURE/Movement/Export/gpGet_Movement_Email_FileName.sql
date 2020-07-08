@@ -32,7 +32,15 @@ BEGIN
                       THEN COALESCE (ObjectString_GLNCode.ValueData, '')
                  || '_' || REPLACE (zfConvert_DateShortToString (MovementDate_OperDatePartner.ValueData), '.', '')
                  || '_' || Movement.InvNumber
-                 -- || '.xml'
+
+                 -- Avion
+                 WHEN tmpExportJuridical.ExportKindId IN (zc_Enum_ExportKind_Avion40110917())
+                      THEN COALESCE (Object_JuridicalBasis.ValueData, 'Alan')
+                 || '_' || Movement.InvNumber
+                 || '_' || COALESCE (Object_Juridical.ValueData, 'о№_ышію') || ' Й' || COALESCE (ObjectString_RoomNumber.ValueData, '0')
+
+
+                 -- Vez+Brusn
                  WHEN tmpExportJuridical.ExportKindId IN (zc_Enum_ExportKind_Vez37171990(), zc_Enum_ExportKind_Brusn34604386())
                       THEN COALESCE (Object_JuridicalBasis.ValueData, 'Alan')
                  || '_' || Movement.InvNumber
@@ -40,6 +48,7 @@ BEGIN
                                                                                                     THEN Object_Partner.Id :: TVarChar -- COALESCE (ObjectString_RoomNumber.ValueData, '0')
                                                                                                ELSE COALESCE (ObjectString_RoomNumber.ValueData, '0')
                                                                                           END
+                 -- Dakort
                  WHEN tmpExportJuridical.ExportKindId IN (zc_Enum_ExportKind_Dakort39135074())
                       THEN COALESCE (Object_JuridicalBasis.ValueData, 'Alan')
                  || '_' || Movement.InvNumber
@@ -50,6 +59,7 @@ BEGIN
                  --|| '_' || zfConvert_DateShortToString (MovementDate_OperDatePartner.ValueData)
                  -- || '.csv'
                  
+                 -- Glad
                  WHEN tmpExportJuridical.ExportKindId IN (zc_Enum_ExportKind_Glad2514900150())
                       THEN 'Zakaz'
                  || '_' || '1024'
@@ -57,14 +67,15 @@ BEGIN
                  || '_' || Movement.InvNumber
 
             END AS outFileName
+
           , CASE WHEN tmpExportJuridical.ExportKindId IN (zc_Enum_ExportKind_Mida35273055(), zc_Enum_ExportKind_Brusn34604386(), zc_Enum_ExportKind_Glad2514900150())
                       THEN 'xml'
-                 WHEN tmpExportJuridical.ExportKindId IN (zc_Enum_ExportKind_Vez37171990(), zc_Enum_ExportKind_Dakort39135074())
+                 WHEN tmpExportJuridical.ExportKindId IN (zc_Enum_ExportKind_Vez37171990(), zc_Enum_ExportKind_Dakort39135074(), zc_Enum_ExportKind_Avion40110917())
                       THEN 'csv'
             END AS outDefaultFileExt
           , CASE WHEN tmpExportJuridical.ExportKindId IN (zc_Enum_ExportKind_Mida35273055(), zc_Enum_ExportKind_Brusn34604386(), zc_Enum_ExportKind_Glad2514900150())
                       THEN FALSE
-                 WHEN tmpExportJuridical.ExportKindId IN (zc_Enum_ExportKind_Vez37171990(), zc_Enum_ExportKind_Dakort39135074())
+                 WHEN tmpExportJuridical.ExportKindId IN (zc_Enum_ExportKind_Vez37171990(), zc_Enum_ExportKind_Dakort39135074(), zc_Enum_ExportKind_Avion40110917())
                       THEN TRUE
             END AS outEncodingANSI
             
@@ -105,6 +116,7 @@ BEGIN
           LEFT JOIN ObjectLink AS ObjectLink_Partner_Juridical
                                ON ObjectLink_Partner_Juridical.ObjectId = Object_Partner.Id
                               AND ObjectLink_Partner_Juridical.DescId = zc_ObjectLink_Partner_Juridical()
+          LEFT JOIN Object AS Object_Juridical ON Object_Juridical.Id = ObjectLink_Partner_Juridical.ChildObjectId
           LEFT JOIN ObjectLink AS ObjectLink_Juridical_Retail
                                ON ObjectLink_Juridical_Retail.ObjectId = ObjectLink_Partner_Juridical.ChildObjectId
                               AND ObjectLink_Juridical_Retail.DescId = zc_ObjectLink_Juridical_Retail()
@@ -140,3 +152,4 @@ $BODY$
 -- SELECT * FROM gpGet_Movement_Email_FileName (inMovementId:= 3252496, inSession:= zfCalc_UserAdmin()) -- zc_Enum_ExportKind_Vez37171990()
 -- SELECT * FROM gpGet_Movement_Email_FileName (inMovementId:= 3438890, inSession:= zfCalc_UserAdmin()) -- zc_Enum_ExportKind_Brusn34604386()
 -- SELECT * FROM gpGet_Movement_Email_FileName (inMovementId:= 15595974, inSession:= zfCalc_UserAdmin()) -- zc_Enum_ExportKind_Glad2514900150()
+-- SELECT * FROM gpGet_Movement_Email_FileName (inMovementId:= 17125578, inSession:= zfCalc_UserAdmin()) -- zc_Enum_ExportKind_Avion40110917()
