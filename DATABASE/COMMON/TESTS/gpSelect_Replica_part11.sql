@@ -120,7 +120,8 @@ UNION SELECT 13 AS Part
                      , CEIL (LENGTH (tmpRes_all.res) :: TFloat / vbLen_start :: TFloat) AS part_count
                      , tmpRes_all.*
                 FROM tmpRes_all)
-    --
+
+    --Результат
     SELECT tmpRes.Part, (Ord * 10 + 1) :: Integer AS Sort
          , tmpRes.res AS Value
          , tmpRes.len_str    :: Integer
@@ -128,23 +129,47 @@ UNION SELECT 13 AS Part
     FROM tmpRes
     WHERE tmpRes.part_count = 1 
 
-   UNION ALL
-    --
+    -- 2
+  UNION ALL
     SELECT tmpRes.Part, (Ord * 10 + 1) :: Integer AS Sort
-         , tmpRes.res AS Value
+         , SUBSTRING (tmpRes.res, 1, vbLen_start + zfCalc_Position( tmpRes.res, '||', vbLen_start) - 2 ) AS Value
+         , tmpRes.len_str    :: Integer
+         , tmpRes.part_count :: Integer
+    FROM tmpRes
+    WHERE tmpRes.part_count = 2 
+   UNION ALL
+    SELECT tmpRes.Part, (Ord * 10 + 2) :: Integer AS Sort
+         , SUBSTRING (tmpRes.res, vbLen_start + zfCalc_Position( tmpRes.res, '||', vbLen_start) - 1 , tmpRes.len_str) AS Value
          , tmpRes.len_str    :: Integer
          , tmpRes.part_count :: Integer
     FROM tmpRes
     WHERE tmpRes.part_count = 2 
 
-   UNION ALL
-    --
+  --3
+  UNION ALL
     SELECT tmpRes.Part, (Ord * 10 + 1) :: Integer AS Sort
-         , tmpRes.res AS Value
+         , SUBSTRING (tmpRes.res, 1, vbLen_start + zfCalc_Position( tmpRes.res, '||', vbLen_start) - 2 ) AS Value
          , tmpRes.len_str    :: Integer
          , tmpRes.part_count :: Integer
     FROM tmpRes
-    WHERE tmpRes.part_count = 2 
+    WHERE tmpRes.part_count = 3 
+
+   UNION ALL
+    SELECT tmpRes.Part, (Ord * 10 + 2) :: Integer AS Sort
+         , SUBSTRING (tmpRes.res, vbLen_start + zfCalc_Position( tmpRes.res, '||', vbLen_start) - 1 , (2*vbLen_start + zfCalc_Position( tmpRes.res, '||', 2*vbLen_start)) -  (vbLen_start + zfCalc_Position( tmpRes.res, '||', vbLen_start)) )  AS Value
+         , tmpRes.len_str    :: Integer
+         , tmpRes.part_count :: Integer
+    FROM tmpRes
+    WHERE tmpRes.part_count = 3 
+UNION ALL
+    --
+    SELECT tmpRes.Part, (Ord * 10 + 3) :: Integer AS Sort
+         , SUBSTRING (tmpRes.res, 2*vbLen_start + zfCalc_Position( tmpRes.res, '||', 2*vbLen_start) - 1, tmpRes.len_str )  AS Value
+         , tmpRes.len_str    :: Integer
+         , tmpRes.part_count :: Integer
+    FROM tmpRes
+    WHERE tmpRes.part_count = 3
+   ORDER BY 1,2
     ;
 
 END;
