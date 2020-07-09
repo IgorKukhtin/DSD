@@ -13,7 +13,7 @@ BEGIN
 
    RETURN QUERY 
     SELECT tmp.TABLE_NAME :: TVarChar
-     , STRING_AGG (tmp.COLUMN_NAME , ',' ORDER BY COLUMN_POSITION)    :: TVarChar                   AS COLUMN_NAME
+     , STRING_AGG (tmp.COLUMN_NAME , ',''||''' ORDER BY COLUMN_POSITION)    :: TVarChar                   AS COLUMN_NAME
      , STRING_AGG ( tmp.TABLE_NAME ||'.'||tmp.COLUMN_NAME , '||'',''||' ORDER BY COLUMN_POSITION)  :: TVarChar AS  COLUMN_NAME_full
     FROM (
           SELECT 
@@ -51,4 +51,5 @@ LANGUAGE plpgsql VOLATILE;
 */
 
 -- тест
---SELECT * FROM gpSelect_Replica_Column(507132, 657179)
+--
+SELECT * FROM gpSelect_Replica_Column(507132, 657179)

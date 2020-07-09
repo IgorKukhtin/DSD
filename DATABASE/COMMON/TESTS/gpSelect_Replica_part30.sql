@@ -14,8 +14,8 @@ BEGIN
    RETURN QUERY 
    SELECT 30 AS Part, 0 AS Sort
         , ('LEFT JOIN ' || tmpData.table_name || ' ON ' || tmpData.table_name ||'.' || zfCalc_WordText_Split_replica (tmpData.pk_keys, 1) || ' = zfCalc_WordText_Split_replica (table_update_data.pk_values, 1) ::Integer'
-          || CASE WHEN zfCalc_WordText_Split_replica (tmpData.pk_keys, 2) <> '' THEN ' AND ' || tmpData.table_name ||'.' || zfCalc_WordText_Split_replica (tmpData.pk_keys, 2) || ' = zfCalc_WordText_Split_replica (table_update_data.pk_values, 2) ::Integer' ELSE '' END
-          || CASE WHEN zfCalc_WordText_Split_replica (tmpData.pk_keys, 3) <> '' THEN ' AND ' || tmpData.table_name ||'.' || zfCalc_WordText_Split_replica (tmpData.pk_keys, 3) || ' = zfCalc_WordText_Split_replica (table_update_data.pk_values, 3) ::Integer' ELSE '' END) :: Text AS Value
+          || CASE WHEN zfCalc_WordText_Split_replica (tmpData.pk_keys, 2) <> '' THEN ' AND ' || tmpData.table_name ||'.' || zfCalc_WordText_Split_replica (tmpData.pk_keys, 2) || ' = COALESCE (zfCalc_WordText_Split_replica (table_update_data.pk_values, 2),0) ::Integer' ELSE '' END
+          || CASE WHEN zfCalc_WordText_Split_replica (tmpData.pk_keys, 3) <> '' THEN ' AND ' || tmpData.table_name ||'.' || zfCalc_WordText_Split_replica (tmpData.pk_keys, 3) || ' = COALESCE (zfCalc_WordText_Split_replica (table_update_data.pk_values, 3),0) ::Integer' ELSE '' END) :: Text AS Value
    FROM (SELECT DISTINCT table_name, pk_keys
          FROM _replica.table_update_data AS tmp
          WHERE tmp.Id BETWEEN inId_start AND inId_end
@@ -39,3 +39,50 @@ LANGUAGE plpgsql VOLATILE;
 
 -- ÚÂÒÚ
 --SELECT * FROM gpSelect_Replica_part30(307930, 307930)
+
+/*
+
+-- Function: gpSelect_Replica_part30()
+
+DROP FUNCTION IF EXISTS gpSelect_Replica_part30 (Integer, Integer);
+
+CREATE OR REPLACE FUNCTION gpSelect_Replica_part30(
+    IN inId_start     Integer,
+    IN inId_end       Integer
+)
+RETURNS TABLE (Part Integer,  Sort Integer, Value Text
+) AS
+$BODY$
+BEGIN
+
+   RETURN QUERY 
+   SELECT 30 AS Part, 0 AS Sort
+        , ('LEFT JOIN ' || tmpData.table_name || ' ON '  ||zfStr_CHR_39(tmpData.table_name)|| '= table_update_data.table_name AND ' 
+          || tmpData.table_name ||'.' || zfCalc_WordText_Split_replica (tmpData.pk_keys, 1) || ' = zfCalc_WordText_Split_replica (table_update_data.pk_values, 1) ::Integer'
+          || CASE WHEN zfCalc_WordText_Split_replica (tmpData.pk_keys, 2) <> '' THEN ' AND ' || tmpData.table_name ||'.' || zfCalc_WordText_Split_replica (tmpData.pk_keys, 2) || ' = COALESCE (zfCalc_WordText_Split_replica (table_update_data.pk_values, 2),0) ::Integer' ELSE '' END
+          || CASE WHEN zfCalc_WordText_Split_replica (tmpData.pk_keys, 3) <> '' THEN ' AND ' || tmpData.table_name ||'.' || zfCalc_WordText_Split_replica (tmpData.pk_keys, 3) || ' = COALESCE (zfCalc_WordText_Split_replica (table_update_data.pk_values, 3),0) ::Integer' ELSE '' END) :: Text AS Value
+   FROM (SELECT DISTINCT table_name, pk_keys
+         FROM _replica.table_update_data AS tmp
+         WHERE tmp.Id BETWEEN inId_start AND inId_end
+         ) AS tmpData;
+
+END;
+$BODY$
+
+
+LANGUAGE plpgsql VOLATILE;
+
+
+
+/*-------------------------------------------------------------------------------*/
+/*
+ »—“Œ–»ﬂ –¿«–¿¡Œ“ »: ƒ¿“¿, ¿¬“Œ–
+               ‘ÂÎÓÌ˛Í ».¬.    ÛıÚËÌ ».¬.    ÎËÏÂÌÚ¸Â‚  .».
+ 04.07.20          *
+
+*/
+
+-- ÚÂÒÚ
+--
+SELECT * FROM gpSelect_Replica_part30(607930, 707950)
+*/
