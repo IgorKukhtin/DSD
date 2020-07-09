@@ -898,7 +898,9 @@ uses
   Report_Check_NumberChecks in '..\..\FormsFarmacy\Report\Report_Check_NumberChecks.pas' {Report_Check_NumberChecksForm: TParentForm},
   Report_Check_NumberChecksDialog in '..\..\FormsFarmacy\Report\Report_Check_NumberChecksDialog.pas' {Report_Check_NumberChecksDialogForm: TParentForm},
   HouseholdInventory in '..\..\FormsFarmacy\Guides\HouseholdInventory.pas' {HouseholdInventoryForm: TParentForm},
-  HouseholdInventoryEdit in '..\..\FormsFarmacy\Guides\HouseholdInventoryEdit.pas' {HouseholdInventoryEditForm: TParentForm};
+  HouseholdInventoryEdit in '..\..\FormsFarmacy\Guides\HouseholdInventoryEdit.pas' {HouseholdInventoryEditForm: TParentForm},
+  IncomeHouseholdInventory in '..\..\FormsFarmacy\Document\IncomeHouseholdInventory.pas' {IncomeHouseholdInventoryForm: TParentForm},
+  IncomeHouseholdInventoryJournal in '..\..\FormsFarmacy\Document\IncomeHouseholdInventoryJournal.pas' {IncomeHouseholdInventoryJournalForm: TParentForm};
 
 {$R *.res}
 {$R DevExpressRus.res}

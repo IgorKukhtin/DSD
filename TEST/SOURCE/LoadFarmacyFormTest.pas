@@ -64,6 +64,7 @@ type
     procedure LoadImportSettingsFormTest;
     procedure LoadImportTypeFormTest;
     procedure LoadIncomeFormTest;
+    procedure LoadIncomeHouseholdInventoryFormTest;
     procedure LoadInfoMoneyGroupFormTest;
     procedure LoadInfoMoneyDestinationFormTest;
     procedure LoadInfoMoneyFormTest;
@@ -2109,6 +2110,15 @@ begin
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TIncomeCheckDialogForm'));
   TdsdFormStorageFactory.GetStorage.Load('TIncomeCheckDialogForm');
   }
+end;
+
+procedure TLoadFormTest.LoadIncomeHouseholdInventoryFormTest;
+begin
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TIncomeHouseholdInventoryForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TIncomeHouseholdInventoryForm');
+
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TIncomeHouseholdInventoryJournalForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TIncomeHouseholdInventoryJournalForm');
 end;
 
 procedure TLoadFormTest.LoadAdditionalGoodsFormTest;

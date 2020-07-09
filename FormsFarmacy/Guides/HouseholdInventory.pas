@@ -3,22 +3,70 @@ unit HouseholdInventory;
 interface
 
 uses
-  Winapi.Windows, AncestorGuides, cxGraphics, cxControls, cxLookAndFeels,
-  cxLookAndFeelPainters, cxPCdxBarPopupMenu, cxStyles, cxCustomData, cxFilter,
-  cxData, cxDataStorage, cxEdit, Data.DB, cxDBData, dsdAddOn, dxBarExtItems,
-  dxBar, cxClasses, dsdDB, Datasnap.DBClient, dsdAction, System.Classes,
-  Vcl.ActnList, cxPropertiesStore, cxGridLevel, cxGridCustomView,
-  cxGridCustomTableView, cxGridTableView, cxGridDBTableView, cxGrid, cxPC,
-  Vcl.Controls, dxSkinsCore, dxSkinsDefaultPainters, dxSkinscxPCPainter,
-  dxSkinsdxBarPainter, Vcl.Menus, dxBarBuiltInMenu, cxNavigator, cxCalendar;
+  Winapi.Windows, Winapi.Messages, System.SysUtils, System.Variants, System.Classes, Vcl.Graphics,
+  Vcl.Controls, Vcl.Forms, Vcl.Dialogs, cxGraphics, cxControls, cxLookAndFeels,
+  cxLookAndFeelPainters, cxStyles, cxCustomData, cxFilter, cxData,
+  cxDataStorage, cxEdit, Data.DB, cxDBData, cxGridLevel, cxClasses,
+  cxGridCustomView, cxGridCustomTableView, cxGridTableView, cxGridDBTableView,
+  cxGrid, Datasnap.DBClient, cxPropertiesStore, dxBar,
+  Vcl.ActnList, DataModul, ParentForm, dsdDB, dsdAction, dsdAddOn, dxBarExtItems,
+  cxGridBandedTableView, cxGridDBBandedTableView, cxCheckBox, dxSkinsCore,
+  dxSkinBlack, dxSkinBlue, dxSkinBlueprint, dxSkinCaramel, dxSkinCoffee,
+  dxSkinDarkRoom, dxSkinDarkSide, dxSkinDevExpressDarkStyle,
+  dxSkinDevExpressStyle, dxSkinFoggy, dxSkinGlassOceans, dxSkinHighContrast,
+  dxSkiniMaginary, dxSkinLilian, dxSkinLiquidSky, dxSkinLondonLiquidSky,
+  dxSkinMcSkin, dxSkinMoneyTwins, dxSkinOffice2007Black, dxSkinOffice2007Blue,
+  dxSkinOffice2007Green, dxSkinOffice2007Pink, dxSkinOffice2007Silver,
+  dxSkinOffice2010Black, dxSkinOffice2010Blue, dxSkinOffice2010Silver,
+  dxSkinPumpkin, dxSkinSeven, dxSkinSevenClassic, dxSkinSharp, dxSkinSharpPlus,
+  dxSkinSilver, dxSkinSpringTime, dxSkinStardust, dxSkinSummer2008,
+  dxSkinTheAsphaltWorld, dxSkinsDefaultPainters, dxSkinValentine, dxSkinVS2010,
+  dxSkinWhiteprint, dxSkinXmas2008Blue, dxSkinscxPCPainter, dxSkinsdxBarPainter,
+  Vcl.Menus;
 
 type
-  THouseholdInventoryForm = class(TAncestorGuidesForm)
-    dxBarButton1: TdxBarButton;
-    dxBarButton2: TdxBarButton;
+  THouseholdInventoryForm = class(TParentForm)
+    cxGridLevel: TcxGridLevel;
+    cxGrid: TcxGrid;
+    DataSource: TDataSource;
+    ClientDataSet: TClientDataSet;
+    cxPropertiesStore: TcxPropertiesStore;
+    dxBarManager: TdxBarManager;
+    dxBarManagerBar1: TdxBar;
+    ActionList: TActionList;
+    bbRefresh: TdxBarButton;
+    actRefresh: TdsdDataSetRefresh;
+    bbInsert: TdxBarButton;
+    spSelect: TdsdStoredProc;
+    actUpdate: TdsdInsertUpdateAction;
+    bbEdit: TdxBarButton;
+    bbSetErased: TdxBarButton;
+    bbSetUnErased: TdxBarButton;
+    dsdGridToExcel: TdsdGridToExcel;
+    bbToExcel: TdxBarButton;
+    dxBarStatic: TdxBarStatic;
+    spErasedUnErased: TdsdStoredProc;
+    bbChoice: TdxBarButton;
+    cxGridDBTableView: TcxGridDBTableView;
+    Code: TcxGridDBColumn;
+    Name: TcxGridDBColumn;
+    isErased: TcxGridDBColumn;
+    dsdUserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn;
+    dsdChoiceGuides: TdsdChoiceGuides;
+    dsdDBViewAddOn: TdsdDBViewAddOn;
+    actInsert: TdsdInsertUpdateAction;
+    pmGrid: TPopupMenu;
+    pmAdd: TMenuItem;
+    N1: TMenuItem;
+    N2: TMenuItem;
+    dsdSetUnErased: TdsdUpdateErased;
+    dsdSetErased: TdsdUpdateErased;
+    N3: TMenuItem;
+    N4: TMenuItem;
+    ProtocolOpenForm: TdsdOpenForm;
+    bbProtocolOpenForm: TdxBarButton;
     actShowErased: TBooleanStoredProcAction;
-    bbShowErased: TdxBarButton;
-    dxBarButton3: TdxBarButton;
+    dxBarButton1: TdxBarButton;
   private
     { Private declarations }
   public

@@ -392,6 +392,10 @@ CREATE OR REPLACE FUNCTION zc_Movement_SendPartionDateChange() RETURNS Integer A
 INSERT INTO MovementDesc (Code, ItemName)
   SELECT 'zc_Movement_SendPartionDateChange', 'Заявки изменения срока годности' WHERE NOT EXISTS (SELECT * FROM MovementDesc WHERE Code = 'zc_Movement_SendPartionDateChange');
 
+CREATE OR REPLACE FUNCTION zc_Movement_IncomeHouseholdInventory() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM MovementDesc WHERE Code = 'zc_Movement_IncomeHouseholdInventory'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
+INSERT INTO MovementDesc (Code, ItemName)
+  SELECT 'zc_Movement_IncomeHouseholdInventory', 'Приходы хозяйственного инвентаря ' WHERE NOT EXISTS (SELECT * FROM MovementDesc WHERE Code = 'zc_Movement_IncomeHouseholdInventory');
+ 
 
 /*-------------------------------------------------------------------------------
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР

@@ -538,9 +538,18 @@ CREATE OR REPLACE FUNCTION zc_MovementFloat_ChangePercentLess() RETURNS Integer 
 INSERT INTO MovementFloatDesc (Code, ItemName)
   SELECT 'zc_MovementFloat_ChangePercentLess', '% скидки(срок от 1 мес до 3 мес)' WHERE NOT EXISTS (SELECT * FROM MovementFloatDesc WHERE Code = 'zc_MovementFloat_ChangePercentLess');
  
+
+CREATE OR REPLACE FUNCTION zc_MovementFloat_InvNumber() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM MovementFloatDesc WHERE Code = 'zc_MovementFloat_InvNumber'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
+INSERT INTO MovementFloatDesc(Code, ItemName)
+  SELECT 'zc_MovementFloat_InvNumber', 'Инвентарный номер' WHERE NOT EXISTS (SELECT * FROM MovementFloatDesc WHERE Code = 'zc_MovementFloat_InvNumber');
+  
+  
+  
+
 /*-------------------------------------------------------------------------------
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.   Воробкало А.А.   Шаблий.О.В.
+ 08.07.20                                                                                     * zc_MovementFloat_InvNumber
  06.07.20                                                                                     * zc_MovementFloat_ChangePercentLess
  04.06.20         * zc_MovementFloat_TotalDayAudit
  23.04.20                                                                                     * zc_MovementFloat_SummaFund
