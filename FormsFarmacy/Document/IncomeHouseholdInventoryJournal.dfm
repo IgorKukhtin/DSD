@@ -85,6 +85,11 @@ inherited IncomeHouseholdInventoryJournalForm: TIncomeHouseholdInventoryJournalF
             item
               Format = ',0.####'
               Kind = skSum
+            end
+            item
+              Format = ',0.00;-,0.00; ;'
+              Kind = skSum
+              Column = TotalSumm
             end>
           DataController.Summary.FooterSummaryItems = <
             item
@@ -143,6 +148,11 @@ inherited IncomeHouseholdInventoryJournalForm: TIncomeHouseholdInventoryJournalF
             item
               Format = ',0.####'
               Kind = skSum
+            end
+            item
+              Format = ',0.00;-,0.00; ;'
+              Kind = skSum
+              Column = TotalSumm
             end>
           OptionsBehavior.GoToNextCellOnEnter = False
           OptionsBehavior.FocusCellOnCycle = False
@@ -161,18 +171,11 @@ inherited IncomeHouseholdInventoryJournalForm: TIncomeHouseholdInventoryJournalF
             HeaderAlignmentHorz = taCenter
             Width = 55
           end
-          object Transfer: TcxGridDBColumn [1]
-            Caption = #1048#1079#1084'. '#1089#1088#1086#1082#1072
-            DataBinding.FieldName = 'Transfer'
-            HeaderAlignmentHorz = taCenter
-            HeaderAlignmentVert = vaCenter
-            Width = 47
-          end
-          inherited colOperDate: TcxGridDBColumn [2]
+          inherited colOperDate: TcxGridDBColumn [1]
             HeaderAlignmentHorz = taCenter
             Width = 64
           end
-          inherited colInvNumber: TcxGridDBColumn [3]
+          inherited colInvNumber: TcxGridDBColumn [2]
             Caption = #8470' '#1076#1086#1082'.'
             HeaderAlignmentHorz = taCenter
             Width = 65
@@ -182,15 +185,7 @@ inherited IncomeHouseholdInventoryJournalForm: TIncomeHouseholdInventoryJournalF
             DataBinding.FieldName = 'UnitName'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
-            Width = 176
-          end
-          object ProvinceCityName_From: TcxGridDBColumn
-            Caption = #1056#1072#1081#1086#1085
-            DataBinding.FieldName = 'ProvinceCityName_From'
-            HeaderAlignmentHorz = taCenter
-            HeaderAlignmentVert = vaCenter
-            Options.Editing = False
-            Width = 109
+            Width = 200
           end
           object TotalCount: TcxGridDBColumn
             Caption = #1050#1086#1083'-'#1074#1086
@@ -202,12 +197,22 @@ inherited IncomeHouseholdInventoryJournalForm: TIncomeHouseholdInventoryJournalF
             HeaderAlignmentVert = vaCenter
             Width = 70
           end
+          object TotalSumm: TcxGridDBColumn
+            Caption = #1057#1091#1084#1084#1072
+            DataBinding.FieldName = 'TotalSumm'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DisplayFormat = ',0.00;-,0.00; ;'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 70
+          end
           object Comment: TcxGridDBColumn
             Caption = #1050#1086#1084#1084#1077#1085#1090#1072#1088#1080#1081
             DataBinding.FieldName = 'Comment'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
-            Width = 147
+            Width = 196
           end
           object lInsertName: TcxGridDBColumn
             Caption = #1055#1086#1083#1100#1079#1086#1074#1072#1090#1077#1083#1100' ('#1089#1086#1079#1076'.)'

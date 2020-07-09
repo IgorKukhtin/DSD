@@ -47,8 +47,8 @@ type
     bbUpdate_OperDateList: TdxBarButton;
     bbDeferredYes: TdxBarButton;
     bbDeferredNo: TdxBarButton;
-    Transfer: TcxGridDBColumn;
     dxBarButton1: TdxBarButton;
+    TotalSumm: TcxGridDBColumn;
   private
     { Private declarations }
   public
