@@ -67,6 +67,7 @@ type
     dxBarButton1: TdxBarButton;
     Comment: TcxGridDBColumn;
     InvNumber: TcxGridDBColumn;
+    Remains: TcxGridDBColumn;
   private
     { Private declarations }
   public

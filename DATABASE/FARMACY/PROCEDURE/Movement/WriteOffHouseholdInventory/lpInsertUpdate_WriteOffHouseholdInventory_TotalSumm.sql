@@ -26,11 +26,11 @@ BEGIN
       WHERE MovementItem.MovementId = inMovementId
         AND MovementItem.isErased = FALSE
         AND MovementItem.DescId = zc_MI_Master();
-
+        
       -- Сохранили свойство <Итого количество>
-      PERFORM lpInsertUpdate_MovementFloat (zc_MovementFloat_TotalCount(), inMovementId, COALESCE(vbTotalCount));
+      PERFORM lpInsertUpdate_MovementFloat (zc_MovementFloat_TotalCount(), inMovementId, COALESCE(vbTotalCount, 0));
       -- Сохранили свойство <Итого сумма>
-      PERFORM lpInsertUpdate_MovementFloat (zc_MovementFloat_TotalSumm(), inMovementId, COALESCE(vbTotalSum));
+      PERFORM lpInsertUpdate_MovementFloat (zc_MovementFloat_TotalSumm(), inMovementId, COALESCE(vbTotalSum, 0));
 
 END;
 $BODY$
@@ -42,3 +42,4 @@ ALTER FUNCTION lpInsertUpdate_WriteOffHouseholdInventory_TotalSumm (Integer) OWN
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.   Шаблий О.В.
  09.07.20                                                                      * 
 */
+

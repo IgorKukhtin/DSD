@@ -67,6 +67,11 @@ inherited WriteOffHouseholdInventoryForm: TWriteOffHouseholdInventoryForm
             item
               Format = ',0.####'
               Kind = skSum
+            end
+            item
+              Format = ',0;-,0; ;'
+              Kind = skSum
+              Column = Remains
             end>
           DataController.Summary.FooterSummaryItems = <
             item
@@ -119,6 +124,11 @@ inherited WriteOffHouseholdInventoryForm: TWriteOffHouseholdInventoryForm
             item
               Format = ',0.####'
               Kind = skSum
+            end
+            item
+              Format = ',0;-,0; ;'
+              Kind = skSum
+              Column = Remains
             end>
           OptionsBehavior.IncSearch = True
           OptionsData.CancelOnExit = True
@@ -160,16 +170,16 @@ inherited WriteOffHouseholdInventoryForm: TWriteOffHouseholdInventoryForm
             Options.Editing = False
             Width = 101
           end
-          object Amount: TcxGridDBColumn
+          object Remains: TcxGridDBColumn
             Caption = #1054#1089#1090#1072#1090#1086#1082
-            DataBinding.FieldName = 'Amount'
+            DataBinding.FieldName = 'Remains'
             PropertiesClassName = 'TcxCurrencyEditProperties'
             Properties.DecimalPlaces = 0
             Properties.DisplayFormat = ',0;-,0; ;'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
-            Width = 80
+            Width = 75
           end
           object CountForPrice: TcxGridDBColumn
             Caption = #1057#1077#1073#1077#1089#1090#1086#1080#1084#1086#1089#1090#1100
@@ -179,17 +189,29 @@ inherited WriteOffHouseholdInventoryForm: TWriteOffHouseholdInventoryForm
             Properties.DisplayFormat = ',0.00;-,0.00; ;'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 108
+          end
+          object Amount: TcxGridDBColumn
+            Caption = #1050#1086#1083#1080#1095#1077#1089#1090#1074#1086
+            DataBinding.FieldName = 'Amount'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 0
+            Properties.DisplayFormat = ',0;-,0; ;'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
             Styles.Content = dmMain.cxHeaderL1Style
             Styles.Header = dmMain.cxHeaderL1Style
-            Width = 108
+            Width = 80
           end
           object Comment: TcxGridDBColumn
             Caption = #1050#1086#1084#1084#1077#1085#1090#1072#1088#1080#1081
             DataBinding.FieldName = 'Comment'
             HeaderAlignmentVert = vaCenter
+            Options.Editing = False
             Styles.Content = dmMain.cxHeaderL1Style
             Styles.Header = dmMain.cxHeaderL1Style
-            Width = 397
+            Width = 364
           end
         end
       end
@@ -678,19 +700,11 @@ inherited WriteOffHouseholdInventoryForm: TWriteOffHouseholdInventoryForm
         end
         item
           Visible = True
-          ItemName = 'bbOpenFormIncome'
-        end
-        item
-          Visible = True
           ItemName = 'dxBarStatic'
         end
         item
           Visible = True
           ItemName = 'dxBarStatic'
-        end
-        item
-          Visible = True
-          ItemName = 'bbOpenPartionDateKind'
         end
         item
           Visible = True
@@ -1029,6 +1043,7 @@ inherited WriteOffHouseholdInventoryForm: TWriteOffHouseholdInventoryForm
     Top = 312
   end
   inherited spErasedMIMaster: TdsdStoredProc
+    StoredProcName = 'gpSetErased_MovementItem_WriteOffHouseholdInventory'
     Params = <
       item
         Name = 'inMovementItemId'
@@ -1049,6 +1064,7 @@ inherited WriteOffHouseholdInventoryForm: TWriteOffHouseholdInventoryForm
     Top = 200
   end
   inherited spUnErasedMIMaster: TdsdStoredProc
+    StoredProcName = 'gpSetUnErased_MovementItem_WriteOffHouseholdInventory'
     Params = <
       item
         Name = 'inMovementItemId'
@@ -1088,10 +1104,10 @@ inherited WriteOffHouseholdInventoryForm: TWriteOffHouseholdInventoryForm
         MultiSelectSeparator = ','
       end
       item
-        Name = 'inHouseholdInventoryId'
+        Name = 'inPartionHouseholdInventoryId'
         Value = Null
         Component = MasterCDS
-        ComponentItem = 'HouseholdInventoryId'
+        ComponentItem = 'PartionHouseholdInventoryId'
         ParamType = ptInput
         MultiSelectSeparator = ','
       end
@@ -1100,15 +1116,6 @@ inherited WriteOffHouseholdInventoryForm: TWriteOffHouseholdInventoryForm
         Value = Null
         Component = MasterCDS
         ComponentItem = 'Amount'
-        DataType = ftFloat
-        ParamType = ptInput
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'inCountForPrice'
-        Value = 'NULL'
-        Component = MasterCDS
-        ComponentItem = 'CountForPrice'
         DataType = ftFloat
         ParamType = ptInput
         MultiSelectSeparator = ','
