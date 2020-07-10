@@ -21,9 +21,9 @@ BEGIN
    WITH
    tmpRes_all AS (
                   SELECT 30 AS Part, 0 AS Sort
-                       , ('LEFT JOIN '||tmpData.table_name||' ON '||tmpData.table_name||'.'||zfCalc_WordText_Split_replica(tmpData.pk_keys,1)||' = CASE WHEN '||zfStr_CHR_39(tmpData.table_name)||'= table_update_data.table_name THEN zfCalc_WordText_Split_replica (table_update_data.pk_values,1)::Integer ELSE NULL END'
-                         ||CASE WHEN zfCalc_WordText_Split_replica (tmpData.pk_keys, 2)<> '' THEN ' AND '||tmpData.table_name ||'.'|| zfCalc_WordText_Split_replica (tmpData.pk_keys, 2)||' = CASE WHEN '||zfStr_CHR_39(tmpData.table_name)||'= table_update_data.table_name THEN zfCalc_WordText_Split_replica (table_update_data.pk_values, 2) ::Integer' ELSE '' END
-                         ||CASE WHEN zfCalc_WordText_Split_replica (tmpData.pk_keys, 3)<> '' THEN ' AND '||tmpData.table_name ||'.'|| zfCalc_WordText_Split_replica (tmpData.pk_keys, 3)||' = CASE WHEN '||zfStr_CHR_39(tmpData.table_name)||'= table_update_data.table_name THEN zfCalc_WordText_Split_replica (table_update_data.pk_values, 3) ::Integer' ELSE '' END) ::Text AS res
+                       , ('LEFT JOIN '||tmpData.table_name||' ON '||tmpData.table_name||'.'||zfCalc_WordText_Split_replica(tmpData.pk_keys,1)||' = CASE WHEN '||zfStr_CHR_39(tmpData.table_name)||'= table_update_data.table_name THEN CAST (zfCalc_WordText_Split_replica (table_update_data.pk_values,1) AS Integer) ELSE NULL END'
+                         ||CASE WHEN zfCalc_WordText_Split_replica (tmpData.pk_keys, 2)<> '' THEN ' AND '||tmpData.table_name ||'.'|| zfCalc_WordText_Split_replica (tmpData.pk_keys, 2)||' = CASE WHEN '||zfStr_CHR_39(tmpData.table_name)||'= table_update_data.table_name THEN CAST (zfCalc_WordText_Split_replica (table_update_data.pk_values, 2) AS Integer) ELSE NULL END' ELSE '' END
+                         ||CASE WHEN zfCalc_WordText_Split_replica (tmpData.pk_keys, 3)<> '' THEN ' AND '||tmpData.table_name ||'.'|| zfCalc_WordText_Split_replica (tmpData.pk_keys, 3)||' = CASE WHEN '||zfStr_CHR_39(tmpData.table_name)||'= table_update_data.table_name THEN CAST (zfCalc_WordText_Split_replica (table_update_data.pk_values, 3) AS Integer) ELSE NULL END' ELSE '' END) ::Text AS res
                   FROM (SELECT DISTINCT table_name, pk_keys
                         FROM _replica.table_update_data AS tmp
                         WHERE tmp.Id BETWEEN inId_start AND inId_end
@@ -39,7 +39,7 @@ BEGIN
     SELECT tmpRes.Part, (Ord * 10 + 1) :: Integer AS Sort
          , tmpRes.res AS Value
     FROM tmpRes
-    WHERE tmpRes.part_count = 1 
+/*    WHERE tmpRes.part_count = 1 
 
     -- 2
   UNION ALL
@@ -53,6 +53,7 @@ BEGIN
     FROM tmpRes
     WHERE tmpRes.part_count = 2
    AND SUBSTRING (tmpRes.res, vbLen_start + zfCalc_Position( tmpRes.res, 'AND', vbLen_start) - 1 , CASE WHEN zfCalc_Position( tmpRes.res, 'AND', vbLen_start) <> 0 THEN (2*vbLen_start + zfCalc_Position( tmpRes.res, 'AND', 2*vbLen_start)) -  (vbLen_start + zfCalc_Position( tmpRes.res, 'AND', vbLen_start)) ELSE 0 END ) <> ''
+   */
 order by 1,2
 ;
 
@@ -73,4 +74,4 @@ LANGUAGE plpgsql VOLATILE;
 */
 
 -- тест
---SELECT * FROM gpSelect_Replica_part30(307930, 997930)
+-- SELECT * FROM gpSelect_Replica_part30 (1, 594837 * 100)
