@@ -148,6 +148,7 @@ type
     procedure LoadUnionFormTest;
     procedure LoadUnnamedEnterprisesFormTest;
     procedure LoadWagesFormTest;
+    procedure LoadWriteOffHouseholdInventoryFormTest;
     procedure FormTest;
   end;
 
@@ -1771,6 +1772,15 @@ begin
 //
 //  TdsdFormStorageFactory.GetStorage.Save(GetForm('TWagesUserForm'));
 //  TdsdFormStorageFactory.GetStorage.Load('TWagesUserForm');
+end;
+
+procedure TLoadFormTest.LoadWriteOffHouseholdInventoryFormTest;
+begin
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TWriteOffHouseholdInventoryForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TWriteOffHouseholdInventoryForm');
+
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TWriteOffHouseholdInventoryJournalForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TWriteOffHouseholdInventoryJournalForm');
 end;
 
 

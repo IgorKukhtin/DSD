@@ -3755,6 +3755,17 @@ inherited MainForm: TMainForm
       GuiParams = <>
       isShowModal = False
     end
+    object actWriteOffHouseholdInventory: TdsdOpenForm
+      Category = #1055#1077#1088#1089#1086#1085#1072#1083
+      MoveParams = <>
+      Caption = #1057#1087#1080#1089#1072#1085#1080#1077' '#1093#1086#1079#1103#1081#1089#1090#1074#1077#1085#1085#1086#1075#1086' '#1080#1085#1074#1077#1085#1090#1072#1088#1103
+      FormName = 'TWriteOffHouseholdInventoryJournalForm'
+      FormNameParam.Value = 'TWriteOffHouseholdInventoryJournalForm'
+      FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
+      GuiParams = <>
+      isShowModal = False
+    end
   end
   inherited UserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn
     Left = 496
@@ -4082,6 +4093,9 @@ inherited MainForm: TMainForm
         end
         object N243: TMenuItem
           Action = actIncomeHouseholdInventory
+        end
+        object N246: TMenuItem
+          Action = actWriteOffHouseholdInventory
         end
         object N244: TMenuItem
           Caption = '-'
