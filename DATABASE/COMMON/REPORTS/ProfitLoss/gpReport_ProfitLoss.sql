@@ -269,15 +269,15 @@ BEGIN
 
            , tmpReport.Amount :: TFloat AS Amount
            
-           , CASE WHEN Object_Branch_ProfitLoss.ValueData LIKE '%Днепр%'     THEN tmpReport.Amount ELSE 0 END :: TFloat AS Amount_Dn 
-           , CASE WHEN Object_Branch_ProfitLoss.ValueData LIKE '%Харьков%'   THEN tmpReport.Amount ELSE 0 END :: TFloat AS Amount_Kh
-           , CASE WHEN Object_Branch_ProfitLoss.ValueData LIKE '%Одесса%'    THEN tmpReport.Amount ELSE 0 END :: TFloat AS Amount_Od
-           , CASE WHEN Object_Branch_ProfitLoss.ValueData LIKE '%Запорожье%' THEN tmpReport.Amount ELSE 0 END :: TFloat AS Amount_Zp
-           , CASE WHEN Object_Branch_ProfitLoss.ValueData LIKE '%Киев%'      THEN tmpReport.Amount ELSE 0 END :: TFloat AS Amount_Kv
-           , CASE WHEN Object_Branch_ProfitLoss.ValueData LIKE '%Кр.Рог%'    THEN tmpReport.Amount ELSE 0 END :: TFloat AS Amount_Kr
-           , CASE WHEN Object_Branch_ProfitLoss.ValueData LIKE '%Николаев%'  THEN tmpReport.Amount ELSE 0 END :: TFloat AS Amount_Nik
-           , CASE WHEN Object_Branch_ProfitLoss.ValueData LIKE '%Черкассы%'  THEN tmpReport.Amount ELSE 0 END :: TFloat AS Amount_Ch
-           , CASE WHEN Object_Branch_ProfitLoss.ValueData LIKE '%Львов%'     THEN tmpReport.Amount ELSE 0 END :: TFloat AS Amount_Lv
+           , CASE WHEN Object_Branch_ProfitLoss.ValueData ILIKE '%Днепр%'     THEN tmpReport.Amount ELSE 0 END :: TFloat AS Amount_Dn 
+           , CASE WHEN Object_Branch_ProfitLoss.ValueData ILIKE '%Харьков%'   THEN tmpReport.Amount ELSE 0 END :: TFloat AS Amount_Kh
+           , CASE WHEN Object_Branch_ProfitLoss.ValueData ILIKE '%Одесса%'    THEN tmpReport.Amount ELSE 0 END :: TFloat AS Amount_Od
+           , CASE WHEN Object_Branch_ProfitLoss.ValueData ILIKE '%Запорожье%' THEN tmpReport.Amount ELSE 0 END :: TFloat AS Amount_Zp
+           , CASE WHEN Object_Branch_ProfitLoss.ValueData ILIKE '%Киев%'      THEN tmpReport.Amount ELSE 0 END :: TFloat AS Amount_Kv
+           , CASE WHEN Object_Branch_ProfitLoss.ValueData ILIKE '%Кр.Рог%'    THEN tmpReport.Amount ELSE 0 END :: TFloat AS Amount_Kr
+           , CASE WHEN Object_Branch_ProfitLoss.ValueData ILIKE '%Николаев%'  THEN tmpReport.Amount ELSE 0 END :: TFloat AS Amount_Nik
+           , CASE WHEN Object_Branch_ProfitLoss.ValueData ILIKE '%Черкассы%'  THEN tmpReport.Amount ELSE 0 END :: TFloat AS Amount_Ch
+           , CASE WHEN Object_Branch_ProfitLoss.ValueData ILIKE '%Львов%'     THEN tmpReport.Amount ELSE 0 END :: TFloat AS Amount_Lv
            , CASE WHEN COALESCE (Object_Branch_ProfitLoss.ValueData,'') =''  THEN tmpReport.Amount ELSE 0 END :: TFloat AS Amount_0
            
            -- доп.группа для промежуточного итога   "итого сумма у покупателя"
@@ -301,6 +301,80 @@ BEGIN
            LEFT JOIN MovementDesc ON MovementDesc.Id = tmpReport.MovementDescId
 
       WHERE View_ProfitLoss.ProfitLossCode <> 90101 -- 
+
+     UNION ALL
+      SELECT
+             COALESCE ('Расходы финансовые-Дивиденды', View_ProfitLoss.ProfitLossGroupName, Object_ProfitLoss.ValueData)     :: TVarChar AS ProfitLossGroupName
+           , COALESCE ('Расходы финансовые-Дивиденды', View_ProfitLoss.ProfitLossDirectionName, Object_ProfitLoss.ValueData) :: TVarChar AS ProfitLossDirectionName
+           , COALESCE ('Расходы финансовые-Дивиденды', View_ProfitLoss.ProfitLossName, Object_ProfitLoss.ValueData)          :: TVarChar AS ProfitLossName
+           --для печатной формы без кода
+             COALESCE ('Расходы финансовые-Дивиденды', View_ProfitLoss.ProfitLossGroupName_original, Object_ProfitLoss.ValueData)     :: TVarChar AS ProfitLossGroupName_original
+           , COALESCE ('Расходы финансовые-Дивиденды', View_ProfitLoss.ProfitLossDirectionName_original, Object_ProfitLoss.ValueData) :: TVarChar AS ProfitLossDirectionName_original
+           , COALESCE ('Расходы финансовые-Дивиденды', View_ProfitLoss.ProfitLossName_original, Object_ProfitLoss.ValueData)          :: TVarChar AS ProfitLossName_original
+
+           , View_ProfitLoss.onComplete
+
+           , Object_Business.ValueData          AS BusinessName
+           , Object_JuridicalBasis.ValueData    AS JuridicalName_Basis
+           , Object_Branch_ProfitLoss.ValueData AS BranchName_ProfitLoss
+           , Object_Unit_ProfitLoss.ValueData   AS UnitName_ProfitLoss
+
+           , View_InfoMoney.InfoMoneyGroupCode
+           , View_InfoMoney.InfoMoneyDestinationCode
+           , View_InfoMoney.InfoMoneyCode
+           , View_InfoMoney.InfoMoneyGroupName
+           , View_InfoMoney.InfoMoneyDestinationName
+           , View_InfoMoney.InfoMoneyName
+
+           , View_InfoMoney_Detail.InfoMoneyGroupCode       AS InfoMoneyGroupCode_Detail
+           , View_InfoMoney_Detail.InfoMoneyDestinationCode AS InfoMoneyDestinationCode_Detail
+           , View_InfoMoney_Detail.InfoMoneyCode            AS InfoMoneyCode_Detail
+           , View_InfoMoney_Detail.InfoMoneyGroupName       AS InfoMoneyGroupName_Detail
+           , View_InfoMoney_Detail.InfoMoneyDestinationName AS InfoMoneyDestinationName_Detail
+           , View_InfoMoney_Detail.InfoMoneyName            AS InfoMoneyName_Detail
+
+           , Object_Direction.ObjectCode   AS DirectionObjectCode
+           , Object_Direction.ValueData    AS DirectionObjectName
+           , Object_Destination.ObjectCode AS DestinationObjectCode
+           , Object_Destination.ValueData  AS DestinationObjectName
+
+           , MovementDesc.ItemName         AS MovementDescName
+
+           , tmpReport.Amount :: TFloat AS Amount
+           
+           , CASE WHEN Object_Branch_ProfitLoss.ValueData ILIKE '%Днепр%'     THEN tmpReport.Amount ELSE 0 END :: TFloat AS Amount_Dn 
+           , CASE WHEN Object_Branch_ProfitLoss.ValueData ILIKE '%Харьков%'   THEN tmpReport.Amount ELSE 0 END :: TFloat AS Amount_Kh
+           , CASE WHEN Object_Branch_ProfitLoss.ValueData ILIKE '%Одесса%'    THEN tmpReport.Amount ELSE 0 END :: TFloat AS Amount_Od
+           , CASE WHEN Object_Branch_ProfitLoss.ValueData ILIKE '%Запорожье%' THEN tmpReport.Amount ELSE 0 END :: TFloat AS Amount_Zp
+           , CASE WHEN Object_Branch_ProfitLoss.ValueData ILIKE '%Киев%'      THEN tmpReport.Amount ELSE 0 END :: TFloat AS Amount_Kv
+           , CASE WHEN Object_Branch_ProfitLoss.ValueData ILIKE '%Кр.Рог%'    THEN tmpReport.Amount ELSE 0 END :: TFloat AS Amount_Kr
+           , CASE WHEN Object_Branch_ProfitLoss.ValueData ILIKE '%Николаев%'  THEN tmpReport.Amount ELSE 0 END :: TFloat AS Amount_Nik
+           , CASE WHEN Object_Branch_ProfitLoss.ValueData ILIKE '%Черкассы%'  THEN tmpReport.Amount ELSE 0 END :: TFloat AS Amount_Ch
+           , CASE WHEN Object_Branch_ProfitLoss.ValueData ILIKE '%Львов%'     THEN tmpReport.Amount ELSE 0 END :: TFloat AS Amount_Lv
+           , CASE WHEN COALESCE (Object_Branch_ProfitLoss.ValueData,'') =''  THEN tmpReport.Amount ELSE 0 END :: TFloat AS Amount_0
+           
+           -- доп.группа для промежуточного итога   "итого сумма у покупателя"
+           ,  CASE WHEN ProfitLossDirectionId IN (9221, 9222, 565318, 9223) THEN 1 ELSE 2 END ProfitLossGroup_dop
+
+      FROM tmpReport
+
+           LEFT JOIN Object_ProfitLoss_View AS View_ProfitLoss ON View_ProfitLoss.ProfitLossId = tmpReport.ProfitLossId
+           LEFT JOIN Object AS Object_ProfitLoss ON Object_ProfitLoss.Id = tmpReport.ProfitLossId
+           
+           LEFT JOIN Object AS Object_Business          ON Object_Business.Id = tmpReport.BusinessId
+           LEFT JOIN Object AS Object_JuridicalBasis    ON Object_JuridicalBasis.Id = tmpReport.JuridicalId_Basis
+           LEFT JOIN Object AS Object_Unit_ProfitLoss   ON Object_Unit_ProfitLoss.Id = tmpReport.UnitId_ProfitLoss
+           LEFT JOIN Object AS Object_Branch_ProfitLoss ON Object_Branch_ProfitLoss.Id = tmpReport.BranchId_ProfitLoss
+
+           LEFT JOIN Object_InfoMoney_View AS View_InfoMoney        ON View_InfoMoney.InfoMoneyId = tmpReport.InfoMoneyId
+           LEFT JOIN Object_InfoMoney_View AS View_InfoMoney_Detail ON View_InfoMoney_Detail.InfoMoneyId = tmpReport.InfoMoneyId_Detail
+                                                                   -- AND zc_isHistoryCost_byInfoMoneyDetail() = TRUE
+           LEFT JOIN Object AS Object_Direction   ON Object_Direction.Id = tmpReport.DirectionId
+           LEFT JOIN Object AS Object_Destination ON Object_Destination.Id = tmpReport.ObjectId_inf
+
+           LEFT JOIN MovementDesc ON MovementDesc.Id = tmpReport.MovementDescId
+
+      WHERE View_ProfitLoss.ProfitLossId IS NULL
       ;
   
 END;
