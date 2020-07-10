@@ -3183,6 +3183,20 @@
 				<Form>WriteOffHouseholdInventoryJournalForm</Form>
 				<DesignClass>TParentForm</DesignClass>
 			</DCCReference>
+			<DCCReference Include="..\..\FormsFarmacy\Document\IncomeHouseholdInventoryCash.pas">
+				<Form>IncomeHouseholdInventoryCashForm</Form>
+				<FormType>dfm</FormType>
+				<DesignClass>TParentForm</DesignClass>
+			</DCCReference>
+			<DCCReference Include="..\..\FormsFarmacy\Document\IncomeHouseholdInventoryCashJournal.pas">
+				<Form>IncomeHouseholdInventoryCashJournalForm</Form>
+				<FormType>dfm</FormType>
+				<DesignClass>TParentForm</DesignClass>
+			</DCCReference>
+			<DCCReference Include="..\..\FormsFarmacy\Report\Report_HouseholdInventoryRemainsCash.pas">
+				<Form>Report_HouseholdInventoryRemainsCashForm</Form>
+				<DesignClass>TParentForm</DesignClass>
+			</DCCReference>
 			<BuildConfiguration Include="Release">
 				<Key>Cfg_2</Key>
 				<CfgParent>Base</CfgParent>

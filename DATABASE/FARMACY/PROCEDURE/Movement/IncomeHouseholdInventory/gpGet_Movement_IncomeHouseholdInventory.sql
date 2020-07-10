@@ -35,6 +35,18 @@ BEGIN
           vbUnitKey := '0';
        END IF;   
        vbUnitId := vbUnitKey::Integer;
+
+        IF EXISTS(SELECT Movement.id
+                  FROM Movement 
+                       LEFT JOIN MovementLinkObject AS MovementLinkObject_Unit
+                                                    ON MovementLinkObject_Unit.MovementId = Movement.Id
+                                                   AND MovementLinkObject_Unit.DescId = zc_MovementLinkObject_Unit()
+                  WHERE Movement.DescId = zc_Movement_IncomeHouseholdInventory() 
+                    AND Movement.StatusId = zc_Enum_Status_UnComplete()
+                    AND MovementLinkObject_Unit.ObjectId = vbUnitId)
+        THEN
+          RAISE EXCEPTION 'Ошибка. По подразделению <%> уже создан документ прихода хоз. инвентаря.', (SELECT Object.ValueData FROM Object WHERE Object.ID = vbUnitId);             
+        END IF;
      ELSE
        vbUnitId := 0;
      END IF;
