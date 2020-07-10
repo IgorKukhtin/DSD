@@ -1145,6 +1145,8 @@ type
     getMovementForm: TdsdStoredProc;
     actReport_Promo_Result_Trade: TdsdOpenForm;
     miReport_Promo_Result_Trade: TMenuItem;
+    actReport_JuridicalDefermentDebet: TdsdOpenForm;
+    miReport_JuridicalDefermentDebet: TMenuItem;
     procedure actReport_OLAPSoldExecute(Sender: TObject);
     procedure FormShow(Sender: TObject);
     procedure FormClose(Sender: TObject; var Action: TCloseAction);
