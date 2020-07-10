@@ -487,6 +487,11 @@ type
     N42: TMenuItem;
     actOverdueChangeCashJournal: TdsdOpenForm;
     N43: TMenuItem;
+    actIncomeHouseholdInventoryCashJournal: TdsdOpenForm;
+    N44: TMenuItem;
+    N45: TMenuItem;
+    actReport_HouseholdInventoryRemainsCash: TdsdOpenForm;
+    N46: TMenuItem;
     procedure WM_KEYDOWN(var Msg: TWMKEYDOWN);
     procedure FormCreate(Sender: TObject);
     procedure actChoiceGoodsInRemainsGridExecute(Sender: TObject);

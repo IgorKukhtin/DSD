@@ -904,7 +904,10 @@ uses
   Report_HouseholdInventoryRemainsDialog in '..\..\FormsFarmacy\Report\Report_HouseholdInventoryRemainsDialog.pas' {Report_HouseholdInventoryRemainsDialogForm: TParentForm},
   Report_HouseholdInventoryRemains in '..\..\FormsFarmacy\Report\Report_HouseholdInventoryRemains.pas' {Report_HouseholdInventoryRemainsForm: TParentForm},
   WriteOffHouseholdInventory in '..\..\FormsFarmacy\Document\WriteOffHouseholdInventory.pas' {WriteOffHouseholdInventoryForm: TParentForm},
-  WriteOffHouseholdInventoryJournal in '..\..\FormsFarmacy\Document\WriteOffHouseholdInventoryJournal.pas' {WriteOffHouseholdInventoryJournalForm: TParentForm};
+  WriteOffHouseholdInventoryJournal in '..\..\FormsFarmacy\Document\WriteOffHouseholdInventoryJournal.pas' {WriteOffHouseholdInventoryJournalForm: TParentForm},
+  IncomeHouseholdInventoryCash in '..\..\FormsFarmacy\Document\IncomeHouseholdInventoryCash.pas' {IncomeHouseholdInventoryCashForm: TParentForm},
+  IncomeHouseholdInventoryCashJournal in '..\..\FormsFarmacy\Document\IncomeHouseholdInventoryCashJournal.pas' {IncomeHouseholdInventoryCashJournalForm: TParentForm},
+  Report_HouseholdInventoryRemainsCash in '..\..\FormsFarmacy\Report\Report_HouseholdInventoryRemainsCash.pas' {Report_HouseholdInventoryRemainsCashForm: TParentForm};
 
 {$R *.res}
 {$R DevExpressRus.res}

@@ -3895,6 +3895,72 @@ inherited MainCashForm2: TMainCashForm2
         end>
       isShowModal = False
     end
+    object actIncomeHouseholdInventoryCashJournal: TdsdOpenForm
+      Category = #1044#1086#1082#1091#1084#1077#1085#1090#1099
+      MoveParams = <>
+      Caption = #1055#1088#1080#1093#1086#1076#1099' '#1093#1086#1079#1103#1081#1089#1090#1074#1077#1085#1085#1086#1075#1086' '#1080#1085#1074#1077#1085#1090#1072#1088#1103
+      FormName = 'TIncomeHouseholdInventoryCashJournalForm'
+      FormNameParam.Value = 'TIncomeHouseholdInventoryCashJournalForm'
+      FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
+      GuiParams = <
+        item
+          Name = 'GoodsId'
+          Value = Null
+          Component = RemainsCDS
+          ComponentItem = 'Id'
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'GoodsCode'
+          Value = Null
+          Component = RemainsCDS
+          ComponentItem = 'GoodsCode'
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'GoodsName'
+          Value = Null
+          Component = RemainsCDS
+          ComponentItem = 'GoodsName'
+          DataType = ftString
+          MultiSelectSeparator = ','
+        end>
+      isShowModal = False
+    end
+    object actReport_HouseholdInventoryRemainsCash: TdsdOpenForm
+      Category = #1044#1086#1082#1091#1084#1077#1085#1090#1099
+      MoveParams = <>
+      Caption = #1054#1089#1090#1072#1090#1082#1080' '#1093#1086#1079#1103#1081#1089#1090#1074#1077#1085#1085#1086#1075#1086' '#1080#1085#1074#1077#1085#1090#1072#1088#1103
+      FormName = 'TReport_HouseholdInventoryRemainsCashForm'
+      FormNameParam.Value = 'TReport_HouseholdInventoryRemainsCashForm'
+      FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
+      GuiParams = <
+        item
+          Name = 'GoodsId'
+          Value = Null
+          Component = RemainsCDS
+          ComponentItem = 'Id'
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'GoodsCode'
+          Value = Null
+          Component = RemainsCDS
+          ComponentItem = 'GoodsCode'
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'GoodsName'
+          Value = Null
+          Component = RemainsCDS
+          ComponentItem = 'GoodsName'
+          DataType = ftString
+          MultiSelectSeparator = ','
+        end>
+      isShowModal = False
+    end
   end
   object dsdDBViewAddOnMain: TdsdDBViewAddOn
     ErasedFieldName = 'isErased'
@@ -4116,6 +4182,15 @@ inherited MainCashForm2: TMainCashForm2
       end
       object N34: TMenuItem
         Action = actInventoryEveryMonth
+      end
+      object N44: TMenuItem
+        Caption = '-'
+      end
+      object N45: TMenuItem
+        Action = actIncomeHouseholdInventoryCashJournal
+      end
+      object N46: TMenuItem
+        Action = actReport_HouseholdInventoryRemainsCash
       end
     end
     object N12: TMenuItem

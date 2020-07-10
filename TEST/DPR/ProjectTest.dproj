@@ -4020,6 +4020,10 @@
 				<Form>Report_Promo_Result_TradeForm</Form>
 				<DesignClass>TParentForm</DesignClass>
 			</DCCReference>
+			<DCCReference Include="..\..\Forms\Report\Report_JuridicalDefermentDebet.pas">
+				<Form>Report_JuridicalDefermentDebetForm</Form>
+				<DesignClass>TParentForm</DesignClass>
+			</DCCReference>
 			<BuildConfiguration Include="Release">
 				<Key>Cfg_2</Key>
 				<CfgParent>Base</CfgParent>

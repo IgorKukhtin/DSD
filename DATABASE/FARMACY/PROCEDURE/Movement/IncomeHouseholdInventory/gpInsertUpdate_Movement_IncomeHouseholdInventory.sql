@@ -38,6 +38,19 @@ BEGIN
         THEN 
           RAISE EXCEPTION 'Ошибка. Вам разрешено работать только с подразделением <%>.', (SELECT ValueData FROM Object WHERE ID = vbUserUnitId);     
         END IF;     
+        
+        IF COALESCE (ioId, 0) = 0 AND
+           EXISTS(SELECT Movement.id
+                  FROM Movement 
+                       LEFT JOIN MovementLinkObject AS MovementLinkObject_Unit
+                                                    ON MovementLinkObject_Unit.MovementId = Movement.Id
+                                                   AND MovementLinkObject_Unit.DescId = zc_MovementLinkObject_Unit()
+                  WHERE Movement.DescId = zc_Movement_IncomeHouseholdInventory() 
+                    AND Movement.StatusId = zc_Enum_Status_UnComplete()
+                    AND MovementLinkObject_Unit.ObjectId = inUnitId)
+        THEN
+          RAISE EXCEPTION 'Ошибка. По подразделению <%> уже создан документ прихода хоз. инвентаря.', (SELECT ValueData FROM Object WHERE ID = inUnitId);             
+        END IF;
      END IF;     
      
      -- сохранили <Документ>

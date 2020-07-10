@@ -44,7 +44,6 @@ inherited Report_JuridicalDefermentDebetForm: TReport_JuridicalDefermentDebetFor
             item
               Format = ',0.00##'
               Kind = skSum
-              Column = DefermentPaymentRemains
             end
             item
               Format = ',0.00##'
@@ -90,7 +89,6 @@ inherited Report_JuridicalDefermentDebetForm: TReport_JuridicalDefermentDebetFor
             item
               Format = ',0.00##'
               Kind = skSum
-              Column = DefermentPaymentRemains
             end
             item
               Format = ',0.00##'
@@ -453,22 +451,10 @@ inherited Report_JuridicalDefermentDebetForm: TReport_JuridicalDefermentDebetFor
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
-            Width = 75
-          end
-          object DefermentPaymentRemains: TcxGridDBColumn
-            Caption = #1044#1086#1083#1075' '#1089' '#1086#1090#1089#1088#1086#1095#1082#1086#1081
-            DataBinding.FieldName = 'DefermentPaymentRemains'
-            PropertiesClassName = 'TcxCurrencyEditProperties'
-            Properties.AssignedValues.EditFormat = True
-            Properties.DecimalPlaces = 4
-            Properties.DisplayFormat = ',0.00##;-,0.00##; ;'
-            HeaderAlignmentHorz = taCenter
-            HeaderAlignmentVert = vaCenter
-            Options.Editing = False
-            Width = 75
+            Width = 102
           end
           object SaleSumm1: TcxGridDBColumn
-            Caption = '7 '#1076#1085'.'
+            Caption = '60 '#1076#1085'.'
             DataBinding.FieldName = 'SaleSumm1'
             PropertiesClassName = 'TcxCurrencyEditProperties'
             Properties.AssignedValues.EditFormat = True
@@ -480,7 +466,7 @@ inherited Report_JuridicalDefermentDebetForm: TReport_JuridicalDefermentDebetFor
             Width = 75
           end
           object SaleSumm2: TcxGridDBColumn
-            Caption = '14 '#1076#1085'.'
+            Caption = '90 '#1076#1085'.'
             DataBinding.FieldName = 'SaleSumm2'
             PropertiesClassName = 'TcxCurrencyEditProperties'
             Properties.AssignedValues.EditFormat = True
@@ -492,7 +478,7 @@ inherited Report_JuridicalDefermentDebetForm: TReport_JuridicalDefermentDebetFor
             Width = 75
           end
           object SaleSumm3: TcxGridDBColumn
-            Caption = '21 '#1076#1085'.'
+            Caption = '120 '#1076#1085'.'
             DataBinding.FieldName = 'SaleSumm3'
             PropertiesClassName = 'TcxCurrencyEditProperties'
             Properties.AssignedValues.EditFormat = True
@@ -504,7 +490,7 @@ inherited Report_JuridicalDefermentDebetForm: TReport_JuridicalDefermentDebetFor
             Width = 75
           end
           object SaleSumm4: TcxGridDBColumn
-            Caption = '28 '#1076#1085'.'
+            Caption = '360 '#1076#1085'.'
             DataBinding.FieldName = 'SaleSumm4'
             PropertiesClassName = 'TcxCurrencyEditProperties'
             Properties.AssignedValues.EditFormat = True
@@ -516,7 +502,7 @@ inherited Report_JuridicalDefermentDebetForm: TReport_JuridicalDefermentDebetFor
             Width = 75
           end
           object SaleSumm5: TcxGridDBColumn
-            Caption = '>28 '#1076#1085'.'
+            Caption = '>360 '#1076#1085'.'
             DataBinding.FieldName = 'SaleSumm5'
             PropertiesClassName = 'TcxCurrencyEditProperties'
             Properties.AssignedValues.EditFormat = True

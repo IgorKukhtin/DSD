@@ -33,7 +33,6 @@ type
     KreditRemains: TcxGridDBColumn;
     DebetRemains: TcxGridDBColumn;
     SaleSumm: TcxGridDBColumn;
-    DefermentPaymentRemains: TcxGridDBColumn;
     SaleSumm1: TcxGridDBColumn;
     SaleSumm2: TcxGridDBColumn;
     SaleSumm3: TcxGridDBColumn;
