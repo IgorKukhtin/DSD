@@ -47,6 +47,47 @@ BEGIN
            RAISE EXCEPTION 'Ошибка.Период должен быть строго за 1 месяц с <%> по <%>.', zfConvert_DateToString (DATE_TRUNC ('MONTH', inStartDate)), zfConvert_DateToString (inStartDate + INTERVAL '1 MONTH' - INTERVAL '1 DAY');
        END IF;*/
 
+       IF 1 < (SELECT COUNT(*)
+               FROM ObjectDate AS ObjectDate_Start
+                  INNER JOIN Object ON Object.Id       = ObjectDate_Start.ObjectId
+                                   AND Object.isErased = FALSE
+                  INNER JOIN ObjectDate AS ObjectDate_End
+                                        ON ObjectDate_End.ObjectId  = ObjectDate_Start.ObjectId
+                                       AND ObjectDate_End.DescId    = zc_ObjectDate_ReportCollation_End()
+                                       AND ObjectDate_End.ValueData = inEndDate
+
+                  LEFT JOIN ObjectLink AS ObjectLink_ReportCollation_PaidKind
+                                       ON ObjectLink_ReportCollation_PaidKind.ObjectId = ObjectDate_Start.ObjectId
+                                      AND ObjectLink_ReportCollation_PaidKind.DescId = zc_ObjectLink_ReportCollation_PaidKind()
+
+                  LEFT JOIN ObjectLink AS ObjectLink_ReportCollation_Juridical
+                                       ON ObjectLink_ReportCollation_Juridical.ObjectId = ObjectDate_Start.ObjectId
+                                      AND ObjectLink_ReportCollation_Juridical.DescId = zc_ObjectLink_ReportCollation_Juridical()
+
+                  LEFT JOIN ObjectLink AS ObjectLink_ReportCollation_Partner
+                                       ON ObjectLink_ReportCollation_Partner.ObjectId = ObjectDate_Start.ObjectId
+                                      AND ObjectLink_ReportCollation_Partner.DescId = zc_ObjectLink_ReportCollation_Partner()
+
+                  LEFT JOIN ObjectLink AS ObjectLink_ReportCollation_Contract
+                                       ON ObjectLink_ReportCollation_Contract.ObjectId = ObjectDate_Start.ObjectId
+                                      AND ObjectLink_ReportCollation_Contract.DescId = zc_ObjectLink_ReportCollation_Contract()
+
+                  LEFT JOIN ObjectLink AS ObjectLink_ReportCollation_InfoMoney
+                                       ON ObjectLink_ReportCollation_InfoMoney.ObjectId = ObjectDate_Start.ObjectId
+                                      AND ObjectLink_ReportCollation_InfoMoney.DescId = zc_ObjectLink_ReportCollation_InfoMoney()
+
+              WHERE ObjectDate_Start.DescId = zc_ObjectDate_ReportCollation_Start()
+                AND ObjectDate_Start.ValueData= inStartDate
+                AND (ObjectLink_ReportCollation_PaidKind.ChildObjectId  = COALESCE (inPaidKindId, 0)  OR COALESCE (inPaidKindId, 0)  = 0)
+                AND (ObjectLink_ReportCollation_Juridical.ChildObjectId = COALESCE (inJuridicalId, 0) OR COALESCE (inJuridicalId, 0) = 0)
+                AND (ObjectLink_ReportCollation_Partner.ChildObjectId   = COALESCE (inPartnerId, 0)   OR COALESCE (inPartnerId, 0)   = 0)
+                AND (ObjectLink_ReportCollation_Contract.ChildObjectId  = COALESCE (inContractId, 0)  OR COALESCE (inContractId, 0)  = 0)
+                AND (ObjectLink_ReportCollation_InfoMoney.ChildObjectId = COALESCE (inInfoMoneyId, 0) OR COALESCE (inInfoMoneyId, 0) = 0)
+             )
+       THEN
+           RAISE EXCEPTION 'Ошибка.В реестре уже есть акт сверки с такими параметрами.'
+                          ;
+       END IF;
 
        -- поиск существующего акта сверки: период, юр.лицо, контрагент, договор, форма оплаты, УП Статья
        vbId:= (SELECT ObjectDate_Start.ObjectId
