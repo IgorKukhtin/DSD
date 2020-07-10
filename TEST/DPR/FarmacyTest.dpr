@@ -900,7 +900,11 @@ uses
   HouseholdInventory in '..\..\FormsFarmacy\Guides\HouseholdInventory.pas' {HouseholdInventoryForm: TParentForm},
   HouseholdInventoryEdit in '..\..\FormsFarmacy\Guides\HouseholdInventoryEdit.pas' {HouseholdInventoryEditForm: TParentForm},
   IncomeHouseholdInventory in '..\..\FormsFarmacy\Document\IncomeHouseholdInventory.pas' {IncomeHouseholdInventoryForm: TParentForm},
-  IncomeHouseholdInventoryJournal in '..\..\FormsFarmacy\Document\IncomeHouseholdInventoryJournal.pas' {IncomeHouseholdInventoryJournalForm: TParentForm};
+  IncomeHouseholdInventoryJournal in '..\..\FormsFarmacy\Document\IncomeHouseholdInventoryJournal.pas' {IncomeHouseholdInventoryJournalForm: TParentForm},
+  Report_HouseholdInventoryRemainsDialog in '..\..\FormsFarmacy\Report\Report_HouseholdInventoryRemainsDialog.pas' {Report_HouseholdInventoryRemainsDialogForm: TParentForm},
+  Report_HouseholdInventoryRemains in '..\..\FormsFarmacy\Report\Report_HouseholdInventoryRemains.pas' {Report_HouseholdInventoryRemainsForm: TParentForm},
+  WriteOffHouseholdInventory in '..\..\FormsFarmacy\Document\WriteOffHouseholdInventory.pas' {WriteOffHouseholdInventoryForm: TParentForm},
+  WriteOffHouseholdInventoryJournal in '..\..\FormsFarmacy\Document\WriteOffHouseholdInventoryJournal.pas' {WriteOffHouseholdInventoryJournalForm: TParentForm};
 
 {$R *.res}
 {$R DevExpressRus.res}

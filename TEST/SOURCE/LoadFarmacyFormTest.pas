@@ -148,6 +148,7 @@ type
     procedure LoadUnionFormTest;
     procedure LoadUnnamedEnterprisesFormTest;
     procedure LoadWagesFormTest;
+    procedure LoadWriteOffHouseholdInventoryFormTest;
     procedure FormTest;
   end;
 
@@ -882,13 +883,19 @@ end;
 
 procedure TLoadFormTest.LoadReportFormTest;
 begin
-  TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_Check_NumberChecksDialogForm'));
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_HouseholdInventoryRemainsDialogForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TReport_HouseholdInventoryRemainsDialogForm');
+
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_HouseholdInventoryRemainsForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TReport_HouseholdInventoryRemainsForm');
+
+{  TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_Check_NumberChecksDialogForm'));
   TdsdFormStorageFactory.GetStorage.Load('TReport_Check_NumberChecksDialogForm');
 
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_Check_NumberChecksForm'));
   TdsdFormStorageFactory.GetStorage.Load('TReport_Check_NumberChecksForm');
 
-{  TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_Movement_Send_RemainsSun_SupplementForm'));
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_Movement_Send_RemainsSun_SupplementForm'));
   TdsdFormStorageFactory.GetStorage.Load('TReport_Movement_Send_RemainsSun_SupplementForm');
 
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_RemainsOverGoods_NForm'));
@@ -1765,6 +1772,15 @@ begin
 //
 //  TdsdFormStorageFactory.GetStorage.Save(GetForm('TWagesUserForm'));
 //  TdsdFormStorageFactory.GetStorage.Load('TWagesUserForm');
+end;
+
+procedure TLoadFormTest.LoadWriteOffHouseholdInventoryFormTest;
+begin
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TWriteOffHouseholdInventoryForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TWriteOffHouseholdInventoryForm');
+
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TWriteOffHouseholdInventoryJournalForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TWriteOffHouseholdInventoryJournalForm');
 end;
 
 

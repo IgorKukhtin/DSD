@@ -3167,6 +3167,22 @@
 				<Form>IncomeHouseholdInventoryJournalForm</Form>
 				<DesignClass>TParentForm</DesignClass>
 			</DCCReference>
+			<DCCReference Include="..\..\FormsFarmacy\Report\Report_HouseholdInventoryRemainsDialog.pas">
+				<Form>Report_HouseholdInventoryRemainsDialogForm</Form>
+				<DesignClass>TParentForm</DesignClass>
+			</DCCReference>
+			<DCCReference Include="..\..\FormsFarmacy\Report\Report_HouseholdInventoryRemains.pas">
+				<Form>Report_HouseholdInventoryRemainsForm</Form>
+				<DesignClass>TParentForm</DesignClass>
+			</DCCReference>
+			<DCCReference Include="..\..\FormsFarmacy\Document\WriteOffHouseholdInventory.pas">
+				<Form>WriteOffHouseholdInventoryForm</Form>
+				<DesignClass>TParentForm</DesignClass>
+			</DCCReference>
+			<DCCReference Include="..\..\FormsFarmacy\Document\WriteOffHouseholdInventoryJournal.pas">
+				<Form>WriteOffHouseholdInventoryJournalForm</Form>
+				<DesignClass>TParentForm</DesignClass>
+			</DCCReference>
 			<BuildConfiguration Include="Release">
 				<Key>Cfg_2</Key>
 				<CfgParent>Base</CfgParent>

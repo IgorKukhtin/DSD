@@ -35,6 +35,10 @@ BEGIN
                INNER JOIN Object AS Object_BarCode ON Object_BarCode.Id = ObjectLink_BarCode_Goods.ObjectId
                                                   AND Object_BarCode.isErased = FALSE
                                                   AND Object_BarCode.ValueData <> ''
+               INNER JOIN ObjectLink AS ObjectLink_BarCode_Object
+                                     ON ObjectLink_BarCode_Object.ObjectId = Object_BarCode.Id
+                                    AND ObjectLink_BarCode_Object.DescId = zc_ObjectLink_BarCode_Object()
+                                    AND ObjectLink_BarCode_Object.ChildObjectId = 2807930
                LEFT JOIN Object AS Object_Goods ON Object_Goods.Id = MovementItem.ObjectId
 
                LEFT JOIN MovementItemFloat AS MIFloat_Price
@@ -58,9 +62,10 @@ $BODY$
 
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
-               Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.   Воробкало А.А.
+               Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.   Шаблий О.В.
+ 09.07.20                                                                     *
  06.12.16                                        *
 */
 
 -- тест
--- SELECT * FROM gpSelect_MovementItem_Income_Pfizer (inMovementId:= 3269551, inSession:= '3')
+-- SELECT * FROM gpSelect_MovementItem_Income_Pfizer (inMovementId:= 19377024, inSession:= '3')

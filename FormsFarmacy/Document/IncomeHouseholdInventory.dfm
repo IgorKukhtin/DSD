@@ -8,22 +8,22 @@ inherited IncomeHouseholdInventoryForm: TIncomeHouseholdInventoryForm
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
-    Top = 133
+    Top = 117
     Width = 1059
-    Height = 413
-    ExplicitTop = 133
+    Height = 429
+    ExplicitTop = 117
     ExplicitWidth = 1059
-    ExplicitHeight = 413
-    ClientRectBottom = 413
+    ExplicitHeight = 429
+    ClientRectBottom = 429
     ClientRectRight = 1059
     inherited tsMain: TcxTabSheet
       ExplicitWidth = 1059
-      ExplicitHeight = 389
+      ExplicitHeight = 405
       inherited cxGrid: TcxGrid
         Width = 1059
-        Height = 381
+        Height = 397
         ExplicitWidth = 1059
-        ExplicitHeight = 381
+        ExplicitHeight = 397
         inherited cxGridDBTableView: TcxGridDBTableView
           DataController.Summary.DefaultGroupSummaryItems = <
             item
@@ -154,7 +154,7 @@ inherited IncomeHouseholdInventoryForm: TIncomeHouseholdInventoryForm
             DataBinding.FieldName = 'InvNumber'
             PropertiesClassName = 'TcxCurrencyEditProperties'
             Properties.DecimalPlaces = 0
-            Properties.DisplayFormat = ',0'
+            Properties.DisplayFormat = ',0;-,0; ;'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
@@ -165,7 +165,7 @@ inherited IncomeHouseholdInventoryForm: TIncomeHouseholdInventoryForm
             DataBinding.FieldName = 'Amount'
             PropertiesClassName = 'TcxCurrencyEditProperties'
             Properties.DecimalPlaces = 0
-            Properties.DisplayFormat = ',0;-,0.; ;'
+            Properties.DisplayFormat = ',0;-,0; ;'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
@@ -179,7 +179,6 @@ inherited IncomeHouseholdInventoryForm: TIncomeHouseholdInventoryForm
             Properties.DisplayFormat = ',0.00;-,0.00; ;'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
-            Options.Editing = False
             Styles.Content = dmMain.cxHeaderL1Style
             Styles.Header = dmMain.cxHeaderL1Style
             Width = 108
@@ -188,7 +187,6 @@ inherited IncomeHouseholdInventoryForm: TIncomeHouseholdInventoryForm
             Caption = #1050#1086#1084#1084#1077#1085#1090#1072#1088#1080#1081
             DataBinding.FieldName = 'Comment'
             HeaderAlignmentVert = vaCenter
-            Options.Editing = False
             Styles.Content = dmMain.cxHeaderL1Style
             Styles.Header = dmMain.cxHeaderL1Style
             Width = 397
@@ -197,7 +195,7 @@ inherited IncomeHouseholdInventoryForm: TIncomeHouseholdInventoryForm
       end
       object cxSplitter1: TcxSplitter
         Left = 0
-        Top = 381
+        Top = 397
         Width = 1059
         Height = 8
         HotZoneClassName = 'TcxMediaPlayer8Style'
@@ -207,10 +205,10 @@ inherited IncomeHouseholdInventoryForm: TIncomeHouseholdInventoryForm
   end
   inherited DataPanel: TPanel
     Width = 1059
-    Height = 107
+    Height = 91
     TabOrder = 3
     ExplicitWidth = 1059
-    ExplicitHeight = 107
+    ExplicitHeight = 91
     inherited edInvNumber: TcxTextEdit
       Left = 9
       Top = 22
@@ -402,6 +400,26 @@ inherited IncomeHouseholdInventoryForm: TIncomeHouseholdInventoryForm
         end>
       ReportName = #1055#1088#1086#1076#1072#1078#1072
       ReportNameParam.Value = #1055#1088#1086#1076#1072#1078#1072
+    end
+    inherited MovementItemProtocolOpenForm: TdsdOpenForm
+      GuiParams = <
+        item
+          Name = 'Id'
+          Value = Null
+          Component = MasterCDS
+          ComponentItem = 'Id'
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'GoodsName'
+          Value = Null
+          Component = MasterCDS
+          ComponentItem = 'HouseholdInventoryName'
+          DataType = ftString
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end>
     end
     object actPrintCheck: TdsdPrintAction
       Category = 'DSDLib'
@@ -660,19 +678,11 @@ inherited IncomeHouseholdInventoryForm: TIncomeHouseholdInventoryForm
         end
         item
           Visible = True
-          ItemName = 'bbOpenFormIncome'
-        end
-        item
-          Visible = True
           ItemName = 'dxBarStatic'
         end
         item
           Visible = True
           ItemName = 'dxBarStatic'
-        end
-        item
-          Visible = True
-          ItemName = 'bbOpenPartionDateKind'
         end
         item
           Visible = True
@@ -908,24 +918,6 @@ inherited IncomeHouseholdInventoryForm: TIncomeHouseholdInventoryForm
         Component = edUpdateDate
         DataType = ftDateTime
         MultiSelectSeparator = ','
-      end
-      item
-        Name = 'ChangePercent'
-        Value = Null
-        DataType = ftFloat
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'ChangePercentMin'
-        Value = Null
-        DataType = ftFloat
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'Transfer'
-        Value = Null
-        DataType = ftBoolean
-        MultiSelectSeparator = ','
       end>
     Left = 432
     Top = 200
@@ -1088,10 +1080,10 @@ inherited IncomeHouseholdInventoryForm: TIncomeHouseholdInventoryForm
         MultiSelectSeparator = ','
       end
       item
-        Name = 'inGoodsId'
+        Name = 'inHouseholdInventoryId'
         Value = Null
         Component = MasterCDS
-        ComponentItem = 'GoodsId'
+        ComponentItem = 'HouseholdInventoryId'
         ParamType = ptInput
         MultiSelectSeparator = ','
       end
@@ -1105,19 +1097,20 @@ inherited IncomeHouseholdInventoryForm: TIncomeHouseholdInventoryForm
         MultiSelectSeparator = ','
       end
       item
-        Name = 'inNewExpirationDate'
+        Name = 'inCountForPrice'
         Value = 'NULL'
         Component = MasterCDS
-        ComponentItem = 'NewExpirationDate'
-        DataType = ftDateTime
+        ComponentItem = 'CountForPrice'
+        DataType = ftFloat
         ParamType = ptInput
         MultiSelectSeparator = ','
       end
       item
-        Name = 'inContainerId'
+        Name = 'inComment'
         Value = Null
         Component = MasterCDS
-        ComponentItem = 'ContainerId'
+        ComponentItem = 'Comment'
+        DataType = ftString
         ParamType = ptInput
         MultiSelectSeparator = ','
       end>

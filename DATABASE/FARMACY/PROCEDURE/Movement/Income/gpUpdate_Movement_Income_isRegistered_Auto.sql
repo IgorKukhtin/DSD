@@ -31,6 +31,10 @@ BEGIN
                INNER JOIN Object AS Object_BarCode ON Object_BarCode.Id = ObjectLink_BarCode_Goods.ObjectId
                                                   AND Object_BarCode.isErased = FALSE
                                                   AND Object_BarCode.ValueData <> ''
+               INNER JOIN ObjectLink AS ObjectLink_BarCode_Object
+                                     ON ObjectLink_BarCode_Object.ObjectId = Object_BarCode.Id
+                                    AND ObjectLink_BarCode_Object.DescId = zc_ObjectLink_BarCode_Object()
+                                    AND ObjectLink_BarCode_Object.ChildObjectId = 2807930
           WHERE Movement.OperDate BETWEEN inStartDate AND inEndDate
             AND Movement.DescId   = zc_Movement_Income()
             AND Movement.StatusId = zc_Enum_Status_Complete()
@@ -44,7 +48,8 @@ $BODY$
 
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
-               Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.
+               Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.   Шаблий О.В.
+ 09.07.20                                                                     *
  19.11.16                                        *
 */
 
