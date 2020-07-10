@@ -2337,10 +2337,14 @@ CREATE OR REPLACE FUNCTION zc_ObjectLink_Goods_DiscountExternal() RETURNS Intege
 INSERT INTO ObjectLinkDesc(Code, ItemName, DescId, ChildObjectDescId)
 SELECT 'zc_ObjectLink_Goods_DiscountExternal', 'Товар для проекта (дисконтные карты)', zc_Object_Goods(), zc_Object_Measure() WHERE NOT EXISTS (SELECT * FROM ObjectLinkDesc WHERE Code = 'zc_ObjectLink_Goods_DiscountExternal');
 
+CREATE OR REPLACE FUNCTION zc_ObjectLink_PartionHouseholdInventory_Unit() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM ObjectLinkDesc WHERE Code = 'zc_ObjectLink_PartionHouseholdInventory_Unit'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
+INSERT INTO ObjectLinkDesc(Code, ItemName, DescId, ChildObjectDescId)
+SELECT 'zc_ObjectLink_PartionHouseholdInventory_Unit', 'Связь с Подразделением', zc_Object_PartionHouseholdInventory(), zc_Object_Unit() WHERE NOT EXISTS (SELECT * FROM ObjectLinkDesc WHERE Code = 'zc_ObjectLink_PartionHouseholdInventory_Unit');
 
 /*-------------------------------------------------------------------------------
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.   Воробкало А.А.   Шаблий О.В.
+ 09.07.20                                                                                      * zc_ObjectLink_PartionHouseholdInventory_Unit
  22.06.20         * zc_ObjectLink_InfoMoney_CashFlow_in
                     zc_ObjectLink_InfoMoney_CashFlow_out
  19.06.20                                                                                      * zc_ObjectLink_Goods_DiscountExternal

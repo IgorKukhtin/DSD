@@ -882,13 +882,19 @@ end;
 
 procedure TLoadFormTest.LoadReportFormTest;
 begin
-  TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_Check_NumberChecksDialogForm'));
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_HouseholdInventoryRemainsDialogForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TReport_HouseholdInventoryRemainsDialogForm');
+
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_HouseholdInventoryRemainsForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TReport_HouseholdInventoryRemainsForm');
+
+{  TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_Check_NumberChecksDialogForm'));
   TdsdFormStorageFactory.GetStorage.Load('TReport_Check_NumberChecksDialogForm');
 
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_Check_NumberChecksForm'));
   TdsdFormStorageFactory.GetStorage.Load('TReport_Check_NumberChecksForm');
 
-{  TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_Movement_Send_RemainsSun_SupplementForm'));
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_Movement_Send_RemainsSun_SupplementForm'));
   TdsdFormStorageFactory.GetStorage.Load('TReport_Movement_Send_RemainsSun_SupplementForm');
 
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_RemainsOverGoods_NForm'));

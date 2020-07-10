@@ -1264,6 +1264,9 @@ CREATE OR REPLACE FUNCTION zc_Object_HouseholdInventory() RETURNS Integer AS $BO
 INSERT INTO ObjectDesc (Code, ItemName)
   SELECT 'zc_Object_HouseholdInventory', 'Хозяйственный инвентарь' WHERE NOT EXISTS (SELECT * FROM ObjectDesc WHERE Code = 'zc_Object_HouseholdInventory');
    
+CREATE OR REPLACE FUNCTION zc_Object_PartionHouseholdInventory() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM ObjectDesc WHERE Code = 'zc_Object_PartionHouseholdInventory'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
+INSERT INTO ObjectDesc (Code, ItemName)
+  SELECT 'zc_Object_PartionHouseholdInventory', 'Партии хозяйственного инвентаря' WHERE NOT EXISTS (SELECT * FROM ObjectDesc WHERE Code = 'zc_Object_PartionHouseholdInventory');
 
 --------------------------- !!!!!!!!!!!!!!!!!!!!!!!!!
 --------------------------- !!! ВРЕМЕННЫЕ ОБЪЕКТЫ !!!
@@ -1281,6 +1284,7 @@ INSERT INTO ObjectDesc (Code, ItemName)
 /*-------------------------------------------------------------------------------
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.   Воробкало А. А.   Шаблий О.В.
+ 09.07.20                                                                                        * zc_Object_PartionHouseholdInventory
  08.07.20                                                                                        * zc_Object_HouseholdInventory
  19.06.20         * zc_Object_CashFlow
  15.06.20                                                                                        * zc_Object_CheckSourceKind

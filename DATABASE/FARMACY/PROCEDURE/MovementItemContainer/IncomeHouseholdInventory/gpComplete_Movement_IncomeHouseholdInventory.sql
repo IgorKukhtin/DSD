@@ -54,7 +54,27 @@ BEGIN
 
        RAISE EXCEPTION 'Ошибка.Как минимум по одному хоз. инвентарю <%> <%> не заполнено количество.', vbInvNumber, vbGoodsName;
     END IF;
-                                      
+    
+    -- Создание партий
+    PERFORM lpInsertUpdate_Object_PartionHouseholdInventory(ioId               := 0,                                     -- ключ объекта <>
+                                                            inInvNumber        := MIFloat_InvNumber.ValueData::Integer,  -- Инвентарный номер
+                                                            inUnitId           := MovementLinkObject_Unit.ObjectId,      -- Подразделение
+                                                            inMovementItemId   := MI_Master.ID,                          -- Ключ элемента прихода хозяйственного инвентаря
+                                                            inUserId           := vbUserId)
+    FROM MovementItem AS MI_Master
+
+         LEFT JOIN MovementItemFloat AS MIFloat_InvNumber
+                                     ON MIFloat_InvNumber.MovementItemId = MI_Master.Id
+                                    AND MIFloat_InvNumber.DescId = zc_MIFloat_InvNumber()
+                                       
+         LEFT JOIN MovementLinkObject AS MovementLinkObject_Unit
+                                       ON MovementLinkObject_Unit.MovementId = MI_Master.MovementId
+                                    AND MovementLinkObject_Unit.DescId = zc_MovementLinkObject_Unit()    WHERE MI_Master.MovementId = inMovementId
+      AND MI_Master.DescId     = zc_MI_Master()
+      AND MI_Master.Amount     > 0
+      AND MI_Master.IsErased   = FALSE;    
+         
+    -- Провели документ
     PERFORM lpComplete_Movement (inMovementId := inMovementId
                                , inDescId     := zc_Movement_IncomeHouseholdInventory()
                                , inUserId     := vbUserId
@@ -71,4 +91,5 @@ $BODY$
  */
 
 -- тест
--- SELECT * FROM gpComplete_Movement_IncomeHouseholdInventory (inMovementId:= 29207, inIsCurrentData:= TRUe, inSession:= '2')
+-- select * from gpUpdate_Status_IncomeHouseholdInventory(inMovementId := 19469516 , inStatusCode := 2 ,  inSession := '3');
+
