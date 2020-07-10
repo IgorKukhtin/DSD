@@ -132,14 +132,14 @@ UNION SELECT 13 AS Part
     -- 2
   UNION ALL
     SELECT tmpRes.Part, (Ord * 10 + 1) :: Integer AS Sort
-         , SUBSTRING (tmpRes.res, 1, vbLen_start + zfCalc_Position( tmpRes.res, '||', vbLen_start) - 2 ) AS Value
+         , SUBSTRING (tmpRes.res, 1, CASE WHEN zfCalc_Position( tmpRes.res, '||', vbLen_start) <> 0 THEN vbLen_start + zfCalc_Position( tmpRes.res, '||', vbLen_start) - 2 ELSE tmpRes.len_str END) AS Value
          , tmpRes.len_str    :: Integer
          , tmpRes.part_count :: Integer
     FROM tmpRes
     WHERE tmpRes.part_count = 2 
    UNION ALL
     SELECT tmpRes.Part, (Ord * 10 + 2) :: Integer AS Sort
-         , SUBSTRING (tmpRes.res, vbLen_start + zfCalc_Position( tmpRes.res, '||', vbLen_start) - 1 , tmpRes.len_str) AS Value
+         , SUBSTRING (tmpRes.res, vbLen_start + zfCalc_Position( tmpRes.res, '||', vbLen_start) - 1 , CASE WHEN zfCalc_Position( tmpRes.res, '||', vbLen_start) <> 0 THEN (2*vbLen_start + zfCalc_Position( tmpRes.res, '||', 2*vbLen_start)) -  (vbLen_start + zfCalc_Position( tmpRes.res, '||', vbLen_start)) ELSE 0 END )  AS Value
          , tmpRes.len_str    :: Integer
          , tmpRes.part_count :: Integer
     FROM tmpRes
@@ -192,4 +192,4 @@ LANGUAGE plpgsql VOLATILE;
 
 */
 -- тест
--- SELECT * FROM gpSelect_Replica_part11 (1, 594837 * 1000)
+--  SELECT * FROM gpSelect_Replica_part11 (1, 99983000)
