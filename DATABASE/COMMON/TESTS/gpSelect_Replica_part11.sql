@@ -1,8 +1,9 @@
--- Function: gpSELECT_Replica_part11()
+-- Function: gpSELECT_Replica_part10()
 
 DROP FUNCTION IF EXISTS gpSELECT_Replica_part11 (Integer, Integer);
+DROP FUNCTION IF EXISTS gpSELECT_Replica_part10 (Integer, Integer);
 
-CREATE OR REPLACE FUNCTION gpSELECT_Replica_part11(
+CREATE OR REPLACE FUNCTION gpSELECT_Replica_part10(
     IN inId_start     Integer,
     IN inId_end       Integer
 )
@@ -22,45 +23,45 @@ BEGIN
    RETURN QUERY
    WITH tmpRes_all AS 
        -- UPDATE
-      (SELECT 11 AS Part
+      (SELECT 10 AS Part
             , case when a.operation ILIKE 'update'
                       then ' when ' || zfStr_CHR_39 (a.Operation || '-' || a.table_name || '-' || a.upd_cols || '-' || a.pk_keys) || ' THEN '
                        ||  zfStr_CHR_39 ('update ' || a.table_name || ' SET ' || zfCalc_WordText_Split_replica (a.upd_cols, 1) || ' = ')
                        || '|| CAST('
-                       || a.table_name || '.' || zfCalc_WordText_Split_replica (a.upd_cols, 1) || ' AS TVarChar) ||'
+                       || a.table_name || '.' || zfCalc_WordText_Split_replica (a.upd_cols, 1) || ' AS Text) ||'
     
                        || CASE WHEN zfCalc_WordText_Split_replica (a.upd_cols, 2) <> ''
                           THEN  zfStr_CHR_39 ( ', ' || zfCalc_WordText_Split_replica (a.upd_cols, 2) || ' = ')
                        || '|| CAST('
-                       || a.table_name || '.' || zfCalc_WordText_Split_replica (a.upd_cols, 2) || ' AS TVarChar) ||'
+                       || a.table_name || '.' || zfCalc_WordText_Split_replica (a.upd_cols, 2) || ' AS Text) ||'
                           ELSE '' END
     
                        || CASE WHEN zfCalc_WordText_Split_replica (a.upd_cols, 3) <> ''
                           THEN  zfStr_CHR_39 ( ' , ' || zfCalc_WordText_Split_replica (a.upd_cols, 3) || ' = ')
                        || '|| CAST('
-                       || a.table_name || '.' || zfCalc_WordText_Split_replica (a.upd_cols, 3) || ' AS TVarChar) ||'
+                       || a.table_name || '.' || zfCalc_WordText_Split_replica (a.upd_cols, 3) || ' AS Text) ||'
                           ELSE '' END
     
                        || CASE WHEN zfCalc_WordText_Split_replica (a.upd_cols, 4) <> ''
                           THEN  zfStr_CHR_39 ( ', ' || zfCalc_WordText_Split_replica (a.upd_cols, 4) || ' = ')
                        || '|| CAST('
-                       || a.table_name || '.' || zfCalc_WordText_Split_replica (a.upd_cols, 4) || ' AS TVarChar) ||'
+                       || a.table_name || '.' || zfCalc_WordText_Split_replica (a.upd_cols, 4) || ' AS Text) ||'
                           ELSE '' END
     
                        || zfStr_CHR_39 (' where '
-                       || zfCalc_WordText_Split_replica (a.pk_keys, 1)  || ' = ') || ' || CAST(' || a.table_name || '.' || zfCalc_WordText_Split_replica (a.pk_keys, 1)|| ' AS TVarChar)'
+                       || zfCalc_WordText_Split_replica (a.pk_keys, 1)  || ' = ') || ' || CAST(' || a.table_name || '.' || zfCalc_WordText_Split_replica (a.pk_keys, 1)|| ' AS Text)'
     
                        || CASE WHEN zfCalc_WordText_Split_replica (a.pk_keys, 2) <> ''
                           THEN '||' ||zfStr_CHR_39 (' AND '
-                            || zfCalc_WordText_Split_replica (a.pk_keys, 2) || ' = ') || ' || CAST(' || a.table_name || '.' || zfCalc_WordText_Split_replica (a.pk_keys, 2)|| ' AS TVarChar)'
+                            || zfCalc_WordText_Split_replica (a.pk_keys, 2) || ' = ') || ' || CAST(' || a.table_name || '.' || zfCalc_WordText_Split_replica (a.pk_keys, 2)|| ' AS Text)'
                           ELSE '' END
                        || CASE WHEN zfCalc_WordText_Split_replica (a.pk_keys, 3) <> ''
                           THEN '||' ||zfStr_CHR_39 (' AND '
-                            || zfCalc_WordText_Split_replica (a.pk_keys, 3) || ' = ') || ' || CAST(' || a.table_name || '.' || zfCalc_WordText_Split_replica (a.pk_keys, 3)|| ' AS TVarChar)'
+                            || zfCalc_WordText_Split_replica (a.pk_keys, 3) || ' = ') || ' || CAST(' || a.table_name || '.' || zfCalc_WordText_Split_replica (a.pk_keys, 3)|| ' AS Text)'
                           ELSE '' END
                        || CASE WHEN zfCalc_WordText_Split_replica (a.pk_keys, 4) <> ''
                           THEN '||' ||zfStr_CHR_39 (' AND '
-                            || zfCalc_WordText_Split_replica (a.pk_keys, 4) || ' = ') || ' || CAST(' || a.table_name || '.' || zfCalc_WordText_Split_replica (a.pk_keys, 4)|| ' AS TVarChar)'
+                            || zfCalc_WordText_Split_replica (a.pk_keys, 4) || ' = ') || ' || CAST(' || a.table_name || '.' || zfCalc_WordText_Split_replica (a.pk_keys, 4)|| ' AS Text)'
                           ELSE '' END
                end :: Text as res
           FROM
@@ -72,26 +73,26 @@ BEGIN
     
          -- DELETE
          UNION
-          SELECT 12 AS Part
+          SELECT 11 AS Part
                , case when a.operation ILIKE 'delete'
                       then ' when ' || zfStr_CHR_39  (a.Operation || '-' || a.table_name || '-' || COALESCE (a.upd_cols,a.pk_keys) || '-' || a.pk_keys) || ' THEN '
                        || zfStr_CHR_39 ('DELETE FROM  '|| a.table_name || ' where ' || zfCalc_WordText_Split_replica (a.pk_keys, 1) || ' = ') || '|| CAST (zfCalc_WordText_Split_replica (table_update_data.pk_values, 1)'
-                       ||' AS TVarChar)'
+                       ||' AS Text)'
     
                        || CASE WHEN zfCalc_WordText_Split_replica (a.pk_keys, 2) <> ''
                           THEN zfStr_CHR_39 (' AND '
                             || zfCalc_WordText_Split_replica (a.pk_keys, 2) || ' = ') || '|| CAST (zfCalc_WordText_Split_replica (table_update_data.pk_values, 2)'
-                       ||' AS TVarChar)'
+                       ||' AS Text)'
                           ELSE '' END
                        || CASE WHEN zfCalc_WordText_Split_replica (a.pk_keys, 3) <> ''
                           THEN zfStr_CHR_39 (' AND '
                             || zfCalc_WordText_Split_replica (a.pk_keys, 3) || ' = ') || '|| CAST (zfCalc_WordText_Split_replica (table_update_data.pk_values, 3)'
-                       ||' AS TVarChar)'
+                       ||' AS Text)'
                           ELSE '' END
                        || CASE WHEN zfCalc_WordText_Split_replica (a.pk_keys, 4) <> ''
                           THEN zfStr_CHR_39 (' AND '
                             || zfCalc_WordText_Split_replica (a.pk_keys, 4) || ' = ') || '|| CAST (zfCalc_WordText_Split_replica (table_update_data.pk_values, 4)'
-                       ||' AS TVarChar)'
+                       ||' AS Text)'
                           ELSE '' END
                end :: Text AS res
           FROM
@@ -103,7 +104,7 @@ BEGIN
     
       -- INSERT
       UNION
-       SELECT 13 AS Part
+       SELECT 12 AS Part
             , case when a.operation ILIKE 'INSERT'
                       then ' when ' || zfStr_CHR_39 (a.Operation || '-' || a.table_name || '-' || COALESCE (a.upd_cols,a.pk_keys) || '-' || a.pk_keys) || ' THEN '
                        || zfStr_CHR_39 ('INSERT INTO ' || a.table_name || ' (' || tmpColumn.COLUMN_NAME|| ') VALUES ( ' || zfStr_CHR_39 ('||' || tmpColumn.COLUMN_NAME_full ||'||' ) ||')' )
@@ -195,4 +196,4 @@ LANGUAGE plpgsql VOLATILE;
 
 */
 -- тест
---  SELECT * FROM gpSelect_Replica_part11 (1, 594837 * 100)
+--  SELECT * FROM gpSELECT_Replica_part10 (1, 594837 * 100)

@@ -1,4 +1,3 @@
-
 -- Function: gpSelect_Replica_part30()
 
 DROP FUNCTION IF EXISTS gpSelect_Replica_part30 (Integer, Integer);

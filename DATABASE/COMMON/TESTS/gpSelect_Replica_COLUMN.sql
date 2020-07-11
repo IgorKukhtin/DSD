@@ -14,15 +14,15 @@ BEGIN
    RETURN QUERY 
     SELECT tmp.TABLE_NAME :: Text
          , STRING_AGG (tmp.COLUMN_NAME , ',''||''' ORDER BY COLUMN_POSITION)    :: Text                   AS COLUMN_NAME
-         , STRING_AGG ( 'CASE WHEN CAST (' || tmp.TABLE_NAME ||'.'||tmp.COLUMN_NAME || ' AS TVarChar) IS NULL'
+         , STRING_AGG ( 'CASE WHEN CAST (' || tmp.TABLE_NAME ||'.'||tmp.COLUMN_NAME || ' AS Text) IS NULL'
                         || ' THEN ' || zfStr_CHR_39 ('NULL')
                         || ' ELSE CAST (' || CASE WHEN tmp.COLUMN_TYPENAME ILIKE 'TVarChar'
                                                     OR tmp.COLUMN_TYPENAME ILIKE 'TDateTime'
                                                     OR tmp.COLUMN_TYPENAME ILIKE 'Text'
-                                                    OR tmp.COLUMN_TYPENAME ILIKE 'Text'
+                                                    OR tmp.COLUMN_TYPENAME ILIKE 'TBlob'
                                                THEN zfStr_CHR_39 ('n/e/ /p/r/i/d/u/m/a/l') || '||' || tmp.TABLE_NAME ||'.'||tmp.COLUMN_NAME || '||' || zfStr_CHR_39 ('n/e/ /p/r/i/d/u/m/a/l')
                                              ELSE tmp.TABLE_NAME ||'.'||tmp.COLUMN_NAME
-                                             END || '  AS TVarChar)'
+                                             END || '  AS Text)'
                         || ' END' , '||'',''||' ORDER BY COLUMN_POSITION)  :: Text AS  COLUMN_NAME_full
 
     FROM (SELECT * FROM gpSelect_Replica_Table (inId_start, inId_end)) AS tmp
