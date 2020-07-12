@@ -19,7 +19,7 @@ object MainForm: TMainForm
   object DBGrid: TDBGrid
     Left = 0
     Top = 0
-    Width = 364
+    Width = 459
     Height = 664
     Align = alClient
     DataSource = DataSource
@@ -119,7 +119,7 @@ object MainForm: TMainForm
     end
   end
   object GuidePanel: TPanel
-    Left = 652
+    Left = 703
     Top = 0
     Width = 9
     Height = 664
@@ -127,6 +127,7 @@ object MainForm: TMainForm
     BevelOuter = bvNone
     TabOrder = 2
     Visible = False
+    ExplicitLeft = 652
     object cbGoodsGroup: TCheckBox
       Tag = 10
       Left = 15
@@ -722,14 +723,13 @@ object MainForm: TMainForm
     end
   end
   object DocumentPanel: TPanel
-    Left = 661
+    Left = 712
     Top = 0
-    Width = 224
+    Width = 173
     Height = 664
     Align = alRight
     BevelOuter = bvNone
     TabOrder = 3
-    OnClick = DocumentPanelClick
     object Label1: TLabel
       Left = 6
       Top = 22
@@ -758,6 +758,7 @@ object MainForm: TMainForm
       Font.Style = [fsBold]
       ParentFont = False
       TabOrder = 0
+      Visible = False
       OnClick = cbAllDocumentClick
     end
     object cbIncomeBN: TCheckBox
@@ -779,12 +780,14 @@ object MainForm: TMainForm
       Left = 15
       Top = 18
       TabOrder = 2
+      Visible = False
       Width = 90
     end
     object EndDateEdit: TcxDateEdit
       Left = 122
       Top = 18
       TabOrder = 3
+      Visible = False
       Width = 90
     end
     object cbIncomePacker: TCheckBox
@@ -1054,14 +1057,14 @@ object MainForm: TMainForm
     end
     object OKPOEdit: TEdit
       Left = 6
-      Top = 626
+      Top = 641
       Width = 104
       Height = 21
       TabOrder = 21
     end
     object cbOKPO: TCheckBox
       Left = 3
-      Top = 606
+      Top = 621
       Width = 104
       Height = 17
       Caption = #1058#1086#1083#1100#1082#1086' '#1054#1050#1055#1054
@@ -1222,7 +1225,7 @@ object MainForm: TMainForm
     end
     object cbBill_List: TCheckBox
       Left = 3
-      Top = 591
+      Top = 606
       Width = 235
       Height = 17
       Caption = #1054#1075#1088#1072#1085#1080#1095#1077#1085#1080#1077' '#1087#1086' '#1089#1087#1080#1089#1082#1091' '#1085#1072#1082#1083#1072#1076#1085#1099#1093
@@ -1357,6 +1360,7 @@ object MainForm: TMainForm
       Font.Style = []
       ParentFont = False
       TabOrder = 40
+      Visible = False
       WordWrap = True
     end
     object cbWeighingPartner: TCheckBox
@@ -1393,7 +1397,7 @@ object MainForm: TMainForm
     end
     object cbBranchSendOnPrice: TCheckBox
       Left = 137
-      Top = 606
+      Top = 621
       Width = 110
       Height = 17
       Caption = #1050#1086#1076' '#1087'. '#1076#1083#1103' 2.2.'
@@ -1408,7 +1412,7 @@ object MainForm: TMainForm
     end
     object UnitCodeSendOnPriceEdit: TEdit
       Left = 129
-      Top = 625
+      Top = 640
       Width = 104
       Height = 21
       TabOrder = 44
@@ -1416,7 +1420,7 @@ object MainForm: TMainForm
     end
     object cbFillSoldTable: TCheckBox
       Left = 3
-      Top = 539
+      Top = 545
       Width = 104
       Height = 17
       Caption = 'FillSoldTable'
@@ -1480,7 +1484,7 @@ object MainForm: TMainForm
     end
     object cbGoodsListSale: TCheckBox
       Left = 3
-      Top = 522
+      Top = 526
       Width = 163
       Height = 17
       Caption = 'GoodsListSale + Income'
@@ -1491,11 +1495,10 @@ object MainForm: TMainForm
       Font.Style = [fsBold]
       ParentFont = False
       TabOrder = 49
-      Visible = False
     end
     object cbFillAuto: TCheckBox
-      Left = 113
-      Top = 539
+      Left = 3
+      Top = 564
       Width = 105
       Height = 17
       Caption = 'FillAuto 1+2+3'
@@ -1509,7 +1512,7 @@ object MainForm: TMainForm
     end
     object BranchEdit: TEdit
       Left = 3
-      Top = 563
+      Top = 585
       Width = 222
       Height = 21
       TabOrder = 51
@@ -2324,9 +2327,9 @@ object MainForm: TMainForm
     end
   end
   object LogPanel: TPanel
-    Left = 364
+    Left = 459
     Top = 0
-    Width = 288
+    Width = 244
     Height = 664
     Align = alRight
     Font.Charset = DEFAULT_CHARSET
@@ -2336,10 +2339,11 @@ object MainForm: TMainForm
     Font.Style = []
     ParentFont = False
     TabOrder = 5
+    ExplicitLeft = 408
     object PanelErr: TPanel
       Left = 1
       Top = 1
-      Width = 286
+      Width = 242
       Height = 38
       Align = alTop
       Font.Charset = DEFAULT_CHARSET
@@ -2349,12 +2353,32 @@ object MainForm: TMainForm
       Font.Style = []
       ParentFont = False
       TabOrder = 0
+      OnDblClick = PanelErrDblClick
+      ExplicitWidth = 286
+      object EditRepl1: TEdit
+        Left = 141
+        Top = 17
+        Width = 48
+        Height = 21
+        TabOrder = 0
+        Text = '1'
+        Visible = False
+      end
+      object EditRepl2: TEdit
+        Left = 191
+        Top = 17
+        Width = 48
+        Height = 21
+        TabOrder = 1
+        Text = '1000000'
+        Visible = False
+      end
     end
     object LogMemo: TMemo
       Left = 1
       Top = 39
-      Width = 286
-      Height = 624
+      Width = 242
+      Height = 309
       Align = alClient
       Font.Charset = DEFAULT_CHARSET
       Font.Color = clBlack
@@ -2365,6 +2389,28 @@ object MainForm: TMainForm
         'LogMemo')
       ParentFont = False
       TabOrder = 1
+      ExplicitWidth = 286
+      ExplicitHeight = 315
+    end
+    object LogMemo2: TMemo
+      Left = 1
+      Top = 348
+      Width = 242
+      Height = 315
+      Align = alBottom
+      Font.Charset = DEFAULT_CHARSET
+      Font.Color = clBlack
+      Font.Height = -11
+      Font.Name = 'MS Sans Serif'
+      Font.Style = []
+      Lines.Strings = (
+        'LogMemo2')
+      ParentFont = False
+      TabOrder = 2
+      Visible = False
+      ExplicitLeft = -15
+      ExplicitTop = 343
+      ExplicitWidth = 286
     end
   end
   object DataSource: TDataSource
@@ -2400,12 +2446,10 @@ object MainForm: TMainForm
     ControlsCodePage = cCP_UTF16
     UTF8StringsAsWideField = True
     Catalog = 'public'
-    Connected = True
     DesignConnection = True
     HostName = '192.168.0.194'
     Port = 0
     Database = 'project_master'
-    User = 'admin'
     Password = 'vas6ok'
     Protocol = 'postgresql-9'
     Left = 40
@@ -2482,7 +2526,6 @@ object MainForm: TMainForm
     ControlsCodePage = cCP_UTF16
     UTF8StringsAsWideField = True
     Catalog = 'public'
-    Connected = True
     DesignConnection = True
     HostName = '192.168.0.194'
     Port = 0
@@ -2492,5 +2535,398 @@ object MainForm: TMainForm
     Protocol = 'postgresql-9'
     Left = 40
     Top = 272
+  end
+  object ZConnection_test: TZConnection
+    ControlsCodePage = cCP_UTF16
+    UTF8StringsAsWideField = True
+    Catalog = 'public'
+    Connected = True
+    DesignConnection = True
+    HostName = 'project-vds.vds.colocall.com'
+    Port = 0
+    Database = 'pod_test'
+    User = 'admin'
+    Password = 'vas6ok'
+    Protocol = 'postgresql-9'
+    Left = 472
+    Top = 360
+  end
+  object ZQuery_test: TZQuery
+    Connection = ZConnection_test
+    SQL.Strings = (
+      'SELECT * FROM gpSelect_Replica_union (1 , 594837 * 100)')
+    Params = <>
+    Left = 536
+    Top = 344
+  end
+  object ZQuery_test2: TZQuery
+    Connection = ZConnection_test
+    SQL.Strings = (
+      'SELECT * FROM gpSelect_Replica_union (1 , 594837 * 100)')
+    Params = <>
+    Properties.Strings = (
+      'SELECT table_update_data.Id'
+      ''
+      
+        ', CASE table_update_data.Operation || '#39'-'#39' || table_update_data.t' +
+        'able_name || '#39'-'#39' || COALESCE (table_update_data.upd_cols,table_u' +
+        'pdate_data.pk_keys) || '#39'-'#39' || table_update_data.pk_keys '
+      ''
+      
+        ' when '#39'UPDATE-container-{amount}-id'#39' THEN '#39'update container SET ' +
+        'amount = '#39'||container.amount ::TVarChar ||'#39' where id = '#39'||contai' +
+        'ner.id ::TVarChar'
+      ''
+      
+        ' when '#39'UPDATE-movement-{statusid}-id'#39' THEN '#39'update movement SET ' +
+        'statusid = '#39'||movement.statusid ::TVarChar ||'#39' where id = '#39'||mov' +
+        'ement.id ::TVarChar'
+      ''
+      
+        ' when '#39'UPDATE-movementfloat-{valuedata}-{descid, movementid}'#39' TH' +
+        'EN '#39'update movementfloat SET valuedata = '#39'||movementfloat.valued' +
+        'ata ::TVarChar ||'#39' where descid = '#39'||movementfloat.descid ::TVar' +
+        'Char||'#39' AND movementid = '#39'||movementfloat.movementid ::TVarChar'
+      ''
+      
+        ' when '#39'UPDATE-movementitem-{amount}-id'#39' THEN '#39'update movementite' +
+        'm SET amount = '#39'||movementitem.amount ::TVarChar ||'#39' where id = ' +
+        #39'||movementitem.id ::TVarChar'
+      ''
+      
+        ' when '#39'UPDATE-movementitemfloat-{valuedata}-{descid, movementite' +
+        'mid}'#39' THEN '#39'update movementitemfloat SET valuedata = '#39'||movement' +
+        'itemfloat.valuedata ::TVarChar ||'#39' where descid = '#39'||movementite' +
+        'mfloat.descid ::TVarChar||'#39' AND movementitemid = '#39'||movementitem' +
+        'float.movementitemid ::TVarChar'
+      ''
+      
+        ' when '#39'UPDATE-movementlinkobject-{objectid}-{descid, movementid}' +
+        #39' THEN '#39'update movementlinkobject SET objectid = '#39'||movementlink' +
+        'object.objectid ::TVarChar ||'#39' where descid = '#39'||movementlinkobj' +
+        'ect.descid ::TVarChar||'#39' AND movementid = '#39'||movementlinkobject.' +
+        'movementid ::TVarChar'
+      ''
+      
+        ' when '#39'UPDATE-object-{valuedata}-id'#39' THEN '#39'update object SET val' +
+        'uedata = '#39'||object.valuedata ::TVarChar ||'#39' where id = '#39'||object' +
+        '.id ::TVarChar'
+      ''
+      
+        ' when '#39'UPDATE-object_partiongoods-{amount}-movementitemid'#39' THEN ' +
+        #39'update object_partiongoods SET amount = '#39'||object_partiongoods.' +
+        'amount ::TVarChar ||'#39' where movementitemid = '#39'||object_partiongo' +
+        'ods.movementitemid ::TVarChar'
+      ''
+      
+        ' when '#39'UPDATE-object_partiongoods-{brandid,partnerid,periodyear}' +
+        '-movementitemid'#39' THEN '#39'update object_partiongoods SET brandid = ' +
+        #39'||object_partiongoods.brandid ::TVarChar ||'#39', partnerid = '#39'||ob' +
+        'ject_partiongoods.partnerid ::TVarChar||'#39' , periodyear = '#39'||obje' +
+        'ct_partiongoods.periodyear ::TVarChar||'#39' where movementitemid = ' +
+        #39'||object_partiongoods.movementitemid ::TVarChar'
+      ''
+      
+        ' when '#39'UPDATE-object_partiongoods-{brandid,periodid,partnerid}-m' +
+        'ovementitemid'#39' THEN '#39'update object_partiongoods SET brandid = '#39'|' +
+        '|object_partiongoods.brandid ::TVarChar ||'#39', periodid = '#39'||objec' +
+        't_partiongoods.periodid ::TVarChar||'#39' , partnerid = '#39'||object_pa' +
+        'rtiongoods.partnerid ::TVarChar||'#39' where movementitemid = '#39'||obj' +
+        'ect_partiongoods.movementitemid ::TVarChar'
+      ''
+      
+        ' when '#39'UPDATE-object_partiongoods-{fabrikaid}-movementitemid'#39' TH' +
+        'EN '#39'update object_partiongoods SET fabrikaid = '#39'||object_partion' +
+        'goods.fabrikaid ::TVarChar ||'#39' where movementitemid = '#39'||object_' +
+        'partiongoods.movementitemid ::TVarChar'
+      ''
+      
+        ' when '#39'UPDATE-object_partiongoods-{isarc,amount,iserased}-moveme' +
+        'ntitemid'#39' THEN '#39'update object_partiongoods SET isarc = '#39'||object' +
+        '_partiongoods.isarc ::TVarChar ||'#39', amount = '#39'||object_partiongo' +
+        'ods.amount ::TVarChar||'#39' , iserased = '#39'||object_partiongoods.ise' +
+        'rased ::TVarChar||'#39' where movementitemid = '#39'||object_partiongood' +
+        's.movementitemid ::TVarChar'
+      ''
+      
+        ' when '#39'UPDATE-object_partiongoods-{isarc,iserased}-movementitemi' +
+        'd'#39' THEN '#39'update object_partiongoods SET isarc = '#39'||object_partio' +
+        'ngoods.isarc ::TVarChar ||'#39', iserased = '#39'||object_partiongoods.i' +
+        'serased ::TVarChar||'#39' where movementitemid = '#39'||object_partiongo' +
+        'ods.movementitemid ::TVarChar'
+      ''
+      
+        ' when '#39'UPDATE-object_partiongoods-{operprice,compositionid,operp' +
+        'ricelist}-movementitemid'#39' THEN '#39'update object_partiongoods SET o' +
+        'perprice = '#39'||object_partiongoods.operprice ::TVarChar ||'#39', comp' +
+        'ositionid = '#39'||object_partiongoods.compositionid ::TVarChar||'#39' ,' +
+        ' operpricelist = '#39'||object_partiongoods.operpricelist ::TVarChar' +
+        '||'#39' where movementitemid = '#39'||object_partiongoods.movementitemid' +
+        ' ::TVarChar'
+      ''
+      
+        ' when '#39'UPDATE-object_partiongoods-{operprice,operpricelist}-move' +
+        'mentitemid'#39' THEN '#39'update object_partiongoods SET operprice = '#39'||' +
+        'object_partiongoods.operprice ::TVarChar ||'#39', operpricelist = '#39'|' +
+        '|object_partiongoods.operpricelist ::TVarChar||'#39' where movementi' +
+        'temid = '#39'||object_partiongoods.movementitemid ::TVarChar'
+      ''
+      
+        ' when '#39'UPDATE-objectdate-{valuedata}-{descid, objectid}'#39' THEN '#39'u' +
+        'pdate objectdate SET valuedata = '#39'||objectdate.valuedata ::TVarC' +
+        'har ||'#39' where descid = '#39'||objectdate.descid ::TVarChar||'#39' AND ob' +
+        'jectid = '#39'||objectdate.objectid ::TVarChar'
+      ''
+      
+        ' when '#39'UPDATE-objecthistoryfloat-{valuedata}-{descid, objecthist' +
+        'oryid}'#39' THEN '#39'update objecthistoryfloat SET valuedata = '#39'||objec' +
+        'thistoryfloat.valuedata ::TVarChar ||'#39' where descid = '#39'||objecth' +
+        'istoryfloat.descid ::TVarChar||'#39' AND objecthistoryid = '#39'||object' +
+        'historyfloat.objecthistoryid ::TVarChar'
+      ''
+      
+        ' when '#39'UPDATE-objectlink-{childobjectid}-{descid, objectid}'#39' THE' +
+        'N '#39'update objectlink SET childobjectid = '#39'||objectlink.childobje' +
+        'ctid ::TVarChar ||'#39' where descid = '#39'||objectlink.descid ::TVarCh' +
+        'ar||'#39' AND objectid = '#39'||objectlink.objectid ::TVarChar'
+      ''
+      
+        ' when '#39'DELETE-movementitemcontainer-id-id'#39' THEN '#39'DELETE FROM  mo' +
+        'vementitemcontainer where id = '#39'|| zfCalc_WordText_Split_replica' +
+        ' (table_update_data.pk_values, 1) :: TVarChar'
+      ''
+      
+        ' when '#39'INSERT-movementitemcontainer-id-id'#39' THEN '#39'INSERT INTO mov' +
+        'ementitemcontainer (id,'#39'||'#39'descid,'#39'||'#39'movementid,'#39'||'#39'containerid' +
+        ','#39'||'#39'amount,'#39'||'#39'operdate,'#39'||'#39'movementitemid,'#39'||'#39'parentid,'#39'||'#39'isa' +
+        'ctive,'#39'||'#39'movementdescid,'#39'||'#39'analyzerid,'#39'||'#39'accountid,'#39'||'#39'object' +
+        'id_analyzer,'#39'||'#39'whereobjectid_analyzer,'#39'||'#39'containerid_analyzer,' +
+        #39'||'#39'accountid_analyzer,'#39'||'#39'containerintid_analyzer,'#39'||'#39'objectint' +
+        'id_analyzer,'#39'||'#39'objectextid_analyzer,'#39'||'#39'partionid) VALUES ( '#39'||' +
+        'CASE WHEN movementitemcontainer.id :: TVarChar IS NULL THEN '#39'NUL' +
+        'L'#39' ELSE movementitemcontainer.id :: TVarChar  END||'#39','#39'||CASE WHE' +
+        'N movementitemcontainer.descid :: TVarChar IS NULL THEN '#39'NULL'#39' E' +
+        'LSE movementitemcontainer.descid :: TVarChar  END||'#39','#39'||CASE WHE' +
+        'N movementitemcontainer.movementid :: TVarChar IS NULL THEN '#39'NUL' +
+        'L'#39' ELSE movementitemcontainer.movementid :: TVarChar  END||'#39','#39'||' +
+        'CASE WHEN movementitemcontainer.containerid :: TVarChar IS NULL ' +
+        'THEN '#39'NULL'#39' ELSE movementitemcontainer.containerid :: TVarChar  ' +
+        'END||'#39','#39'||CASE WHEN movementitemcontainer.amount :: TVarChar IS ' +
+        'NULL THEN '#39'NULL'#39' ELSE movementitemcontainer.amount :: TVarChar  ' +
+        'END||'#39','#39'||CASE WHEN movementitemcontainer.operdate :: TVarChar I' +
+        'S NULL THEN '#39'NULL'#39' ELSE movementitemcontainer.operdate :: TVarCh' +
+        'ar  END||'#39','#39'||CASE WHEN movementitemcontainer.movementitemid :: ' +
+        'TVarChar IS NULL THEN '#39'NULL'#39' ELSE movementitemcontainer.movement' +
+        'itemid :: TVarChar  END||'#39','#39'||CASE WHEN movementitemcontainer.pa' +
+        'rentid :: TVarChar IS NULL THEN '#39'NULL'#39' ELSE movementitemcontaine' +
+        'r.parentid :: TVarChar  END||'#39','#39'||CASE WHEN movementitemcontaine' +
+        'r.isactive :: TVarChar IS NULL THEN '#39'NULL'#39' ELSE movementitemcont' +
+        'ainer.isactive :: TVarChar  END||'#39','#39'||CASE WHEN movementitemcont' +
+        'ainer.movementdescid :: TVarChar IS NULL THEN '#39'NULL'#39' ELSE moveme' +
+        'ntitemcontainer.movementdescid :: TVarChar  END||'#39','#39'||CASE WHEN ' +
+        'movementitemcontainer.analyzerid :: TVarChar IS NULL THEN '#39'NULL'#39 +
+        ' ELSE movementitemcontainer.analyzerid :: TVarChar  END||'#39','#39'||CA' +
+        'SE WHEN movementitemcontainer.accountid :: TVarChar IS NULL THEN' +
+        ' '#39'NULL'#39' ELSE movementitemcontainer.accountid :: TVarChar  END||'#39 +
+        ','#39'||CASE WHEN movementitemcontainer.objectid_analyzer :: TVarCha' +
+        'r IS NULL THEN '#39'NULL'#39' ELSE movementitemcontainer.objectid_analyz' +
+        'er :: TVarChar  END||'#39','#39'||CASE WHEN movementitemcontainer.whereo' +
+        'bjectid_analyzer :: TVarChar IS NULL THEN '#39'NULL'#39' ELSE movementit' +
+        'emcontainer.whereobjectid_analyzer :: TVarChar  END||'#39','#39'||CASE W' +
+        'HEN movementitemcontainer.containerid_analyzer :: TVarChar IS NU' +
+        'LL THEN '#39'NULL'#39' ELSE movementitemcontainer.containerid_analyzer :' +
+        ': TVarChar  END||'#39','#39'||CASE WHEN movementitemcontainer.accountid_' +
+        'analyzer :: TVarChar IS NULL THEN '#39'NULL'#39' ELSE movementitemcontai' +
+        'ner.accountid_analyzer :: TVarChar  END||'#39','#39'||CASE WHEN movement' +
+        'itemcontainer.containerintid_analyzer :: TVarChar IS NULL THEN '#39 +
+        'NULL'#39' ELSE movementitemcontainer.containerintid_analyzer :: TVar' +
+        'Char  END||'#39','#39'||CASE WHEN movementitemcontainer.objectintid_anal' +
+        'yzer :: TVarChar IS NULL THEN '#39'NULL'#39' ELSE movementitemcontainer.' +
+        'objectintid_analyzer :: TVarChar  END||'#39','#39'||CASE WHEN movementit' +
+        'emcontainer.objectextid_analyzer :: TVarChar IS NULL THEN '#39'NULL'#39 +
+        ' ELSE movementitemcontainer.objectextid_analyzer :: TVarChar  EN' +
+        'D||'#39','#39'||CASE WHEN movementitemcontainer.partionid :: TVarChar IS' +
+        ' NULL THEN '#39'NULL'#39' ELSE movementitemcontainer.partionid :: TVarCh' +
+        'ar  END||'#39')'#39
+      ''
+      
+        ' when '#39'INSERT-movementitemprotocol-id-id'#39' THEN '#39'INSERT INTO move' +
+        'mentitemprotocol (id,'#39'||'#39'movementitemid,'#39'||'#39'userid,'#39'||'#39'operdate,' +
+        #39'||'#39'protocoldata,'#39'||'#39'isinsert) VALUES ( '#39'||CASE WHEN movementite' +
+        'mprotocol.id :: TVarChar IS NULL THEN '#39'NULL'#39' ELSE movementitempr' +
+        'otocol.id :: TVarChar  END||'#39','#39'||CASE WHEN movementitemprotocol.' +
+        'movementitemid :: TVarChar IS NULL THEN '#39'NULL'#39' ELSE movementitem' +
+        'protocol.movementitemid :: TVarChar  END||'#39','#39'||CASE WHEN movemen' +
+        'titemprotocol.userid :: TVarChar IS NULL THEN '#39'NULL'#39' ELSE moveme' +
+        'ntitemprotocol.userid :: TVarChar  END||'#39','#39'||CASE WHEN movementi' +
+        'temprotocol.operdate :: TVarChar IS NULL THEN '#39'NULL'#39' ELSE moveme' +
+        'ntitemprotocol.operdate :: TVarChar  END||'#39','#39'||CASE WHEN movemen' +
+        'titemprotocol.protocoldata :: TVarChar IS NULL THEN '#39'NULL'#39' ELSE ' +
+        'movementitemprotocol.protocoldata :: TVarChar  END||'#39','#39'||CASE WH' +
+        'EN movementitemprotocol.isinsert :: TVarChar IS NULL THEN '#39'NULL'#39 +
+        ' ELSE movementitemprotocol.isinsert :: TVarChar  END||'#39')'#39
+      ''
+      
+        ' when '#39'INSERT-movementprotocol-id-id'#39' THEN '#39'INSERT INTO movement' +
+        'protocol (id,'#39'||'#39'movementid,'#39'||'#39'userid,'#39'||'#39'operdate,'#39'||'#39'protocol' +
+        'data,'#39'||'#39'isinsert) VALUES ( '#39'||CASE WHEN movementprotocol.id :: ' +
+        'TVarChar IS NULL THEN '#39'NULL'#39' ELSE movementprotocol.id :: TVarCha' +
+        'r  END||'#39','#39'||CASE WHEN movementprotocol.movementid :: TVarChar I' +
+        'S NULL THEN '#39'NULL'#39' ELSE movementprotocol.movementid :: TVarChar ' +
+        ' END||'#39','#39'||CASE WHEN movementprotocol.userid :: TVarChar IS NULL' +
+        ' THEN '#39'NULL'#39' ELSE movementprotocol.userid :: TVarChar  END||'#39','#39'|' +
+        '|CASE WHEN movementprotocol.operdate :: TVarChar IS NULL THEN '#39'N' +
+        'ULL'#39' ELSE movementprotocol.operdate :: TVarChar  END||'#39','#39'||CASE ' +
+        'WHEN movementprotocol.protocoldata :: TVarChar IS NULL THEN '#39'NUL' +
+        'L'#39' ELSE movementprotocol.protocoldata :: TVarChar  END||'#39','#39'||CAS' +
+        'E WHEN movementprotocol.isinsert :: TVarChar IS NULL THEN '#39'NULL'#39 +
+        ' ELSE movementprotocol.isinsert :: TVarChar  END||'#39')'#39
+      ''
+      
+        ' when '#39'INSERT-object-id-id'#39' THEN '#39'INSERT INTO object (id,'#39'||'#39'des' +
+        'cid,'#39'||'#39'objectcode,'#39'||'#39'valuedata,'#39'||'#39'accesskeyid,'#39'||'#39'iserased) V' +
+        'ALUES ( '#39'||CASE WHEN object.id :: TVarChar IS NULL THEN '#39'NULL'#39' E' +
+        'LSE object.id :: TVarChar  END||'#39','#39'||CASE WHEN object.descid :: ' +
+        'TVarChar IS NULL THEN '#39'NULL'#39' ELSE object.descid :: TVarChar  END' +
+        '||'#39','#39'||CASE WHEN object.objectcode :: TVarChar IS NULL THEN '#39'NUL' +
+        'L'#39' ELSE object.objectcode :: TVarChar  END||'#39','#39'||CASE WHEN objec' +
+        't.valuedata :: TVarChar IS NULL THEN '#39'NULL'#39' ELSE object.valuedat' +
+        'a :: TVarChar  END||'#39','#39'||CASE WHEN object.accesskeyid :: TVarCha' +
+        'r IS NULL THEN '#39'NULL'#39' ELSE object.accesskeyid :: TVarChar  END||' +
+        #39','#39'||CASE WHEN object.iserased :: TVarChar IS NULL THEN '#39'NULL'#39' E' +
+        'LSE object.iserased :: TVarChar  END||'#39')'#39
+      ''
+      
+        ' when '#39'INSERT-objectprotocol-id-id'#39' THEN '#39'INSERT INTO objectprot' +
+        'ocol (id,'#39'||'#39'objectid,'#39'||'#39'userid,'#39'||'#39'operdate,'#39'||'#39'protocoldata,'#39 +
+        '||'#39'isinsert) VALUES ( '#39'||CASE WHEN objectprotocol.id :: TVarChar' +
+        ' IS NULL THEN '#39'NULL'#39' ELSE objectprotocol.id :: TVarChar  END||'#39',' +
+        #39'||CASE WHEN objectprotocol.objectid :: TVarChar IS NULL THEN '#39'N' +
+        'ULL'#39' ELSE objectprotocol.objectid :: TVarChar  END||'#39','#39'||CASE WH' +
+        'EN objectprotocol.userid :: TVarChar IS NULL THEN '#39'NULL'#39' ELSE ob' +
+        'jectprotocol.userid :: TVarChar  END||'#39','#39'||CASE WHEN objectproto' +
+        'col.operdate :: TVarChar IS NULL THEN '#39'NULL'#39' ELSE objectprotocol' +
+        '.operdate :: TVarChar  END||'#39','#39'||CASE WHEN objectprotocol.protoc' +
+        'oldata :: TVarChar IS NULL THEN '#39'NULL'#39' ELSE objectprotocol.proto' +
+        'coldata :: TVarChar  END||'#39','#39'||CASE WHEN objectprotocol.isinsert' +
+        ' :: TVarChar IS NULL THEN '#39'NULL'#39' ELSE objectprotocol.isinsert ::' +
+        ' TVarChar  END||'#39')'#39
+      ''
+      ' END :: TVarChar AS RESULT'
+      ''
+      ', table_update_data.*'
+      ''
+      'FROM _replica.table_update_data'
+      ''
+      
+        'LEFT JOIN movement ON movement.id = CASE WHEN '#39'movement'#39'= table_' +
+        'update_data.table_name THEN zfCalc_WordText_Split_replica (table' +
+        '_update_data.pk_values,1)::Integer ELSE NULL END'
+      ''
+      
+        'LEFT JOIN movementitemcontainer ON movementitemcontainer.id = CA' +
+        'SE WHEN '#39'movementitemcontainer'#39'= table_update_data.table_name TH' +
+        'EN zfCalc_WordText_Split_replica (table_update_data.pk_values,1)' +
+        '::Integer ELSE NULL END'
+      ''
+      
+        'LEFT JOIN object_partiongoods ON object_partiongoods.movementite' +
+        'mid = CASE WHEN '#39'object_partiongoods'#39'= table_update_data.table_n' +
+        'ame THEN zfCalc_WordText_Split_replica (table_update_data.pk_val' +
+        'ues,1)::Integer ELSE NULL END'
+      ''
+      
+        'LEFT JOIN objecthistoryfloat ON objecthistoryfloat.descid = CASE' +
+        ' WHEN '#39'objecthistoryfloat'#39'= table_update_data.table_name THEN zf' +
+        'Calc_WordText_Split_replica (table_update_data.pk_values,1)::Int' +
+        'eger ELSE NULL END AND objecthistoryfloat.objecthistoryid = CASE' +
+        ' WHEN '#39'objecthistoryfloat'#39'= table_update_data.table_name THEN zf' +
+        'Calc_WordText_Split_replica (table_update_data.pk_values, 2) ::I' +
+        'nteger ELSE NULL END'
+      ''
+      
+        'LEFT JOIN object ON object.id = CASE WHEN '#39'object'#39'= table_update' +
+        '_data.table_name THEN zfCalc_WordText_Split_replica (table_updat' +
+        'e_data.pk_values,1)::Integer ELSE NULL END'
+      ''
+      
+        'LEFT JOIN movementitem ON movementitem.id = CASE WHEN '#39'movementi' +
+        'tem'#39'= table_update_data.table_name THEN zfCalc_WordText_Split_re' +
+        'plica (table_update_data.pk_values,1)::Integer ELSE NULL END'
+      ''
+      
+        'LEFT JOIN container ON container.id = CASE WHEN '#39'container'#39'= tab' +
+        'le_update_data.table_name THEN zfCalc_WordText_Split_replica (ta' +
+        'ble_update_data.pk_values,1)::Integer ELSE NULL END'
+      ''
+      
+        'LEFT JOIN objectlink ON objectlink.descid = CASE WHEN '#39'objectlin' +
+        'k'#39'= table_update_data.table_name THEN zfCalc_WordText_Split_repl' +
+        'ica (table_update_data.pk_values,1)::Integer ELSE NULL END AND o' +
+        'bjectlink.objectid = CASE WHEN '#39'objectlink'#39'= table_update_data.t' +
+        'able_name THEN zfCalc_WordText_Split_replica (table_update_data.' +
+        'pk_values, 2) ::Integer ELSE NULL END'
+      ''
+      
+        'LEFT JOIN movementlinkobject ON movementlinkobject.descid = CASE' +
+        ' WHEN '#39'movementlinkobject'#39'= table_update_data.table_name THEN zf' +
+        'Calc_WordText_Split_replica (table_update_data.pk_values,1)::Int' +
+        'eger ELSE NULL END AND movementlinkobject.movementid = CASE WHEN' +
+        ' '#39'movementlinkobject'#39'= table_update_data.table_name THEN zfCalc_' +
+        'WordText_Split_replica (table_update_data.pk_values, 2) ::Intege' +
+        'r ELSE NULL END'
+      ''
+      
+        'LEFT JOIN objectdate ON objectdate.descid = CASE WHEN '#39'objectdat' +
+        'e'#39'= table_update_data.table_name THEN zfCalc_WordText_Split_repl' +
+        'ica (table_update_data.pk_values,1)::Integer ELSE NULL END AND o' +
+        'bjectdate.objectid = CASE WHEN '#39'objectdate'#39'= table_update_data.t' +
+        'able_name THEN zfCalc_WordText_Split_replica (table_update_data.' +
+        'pk_values, 2) ::Integer ELSE NULL END'
+      ''
+      
+        'LEFT JOIN movementfloat ON movementfloat.descid = CASE WHEN '#39'mov' +
+        'ementfloat'#39'= table_update_data.table_name THEN zfCalc_WordText_S' +
+        'plit_replica (table_update_data.pk_values,1)::Integer ELSE NULL ' +
+        'END AND movementfloat.movementid = CASE WHEN '#39'movementfloat'#39'= ta' +
+        'ble_update_data.table_name THEN zfCalc_WordText_Split_replica (t' +
+        'able_update_data.pk_values, 2) ::Integer ELSE NULL END'
+      ''
+      
+        'LEFT JOIN objectprotocol ON objectprotocol.id = CASE WHEN '#39'objec' +
+        'tprotocol'#39'= table_update_data.table_name THEN zfCalc_WordText_Sp' +
+        'lit_replica (table_update_data.pk_values,1)::Integer ELSE NULL E' +
+        'ND'
+      ''
+      
+        'LEFT JOIN movementitemfloat ON movementitemfloat.descid = CASE W' +
+        'HEN '#39'movementitemfloat'#39'= table_update_data.table_name THEN zfCal' +
+        'c_WordText_Split_replica (table_update_data.pk_values,1)::Intege' +
+        'r ELSE NULL END AND movementitemfloat.movementitemid = CASE WHEN' +
+        ' '#39'movementitemfloat'#39'= table_update_data.table_name THEN zfCalc_W' +
+        'ordText_Split_replica (table_update_data.pk_values, 2) ::Integer' +
+        ' ELSE NULL END'
+      ''
+      
+        'LEFT JOIN movementprotocol ON movementprotocol.id = CASE WHEN '#39'm' +
+        'ovementprotocol'#39'= table_update_data.table_name THEN zfCalc_WordT' +
+        'ext_Split_replica (table_update_data.pk_values,1)::Integer ELSE ' +
+        'NULL END'
+      ''
+      
+        'LEFT JOIN movementitemprotocol ON movementitemprotocol.id = CASE' +
+        ' WHEN '#39'movementitemprotocol'#39'= table_update_data.table_name THEN ' +
+        'zfCalc_WordText_Split_replica (table_update_data.pk_values,1)::I' +
+        'nteger ELSE NULL END'
+      ''
+      
+        'LEFT JOIN gpSelect_Replica_Column(785413,1000000 ) AS tmpColumn ' +
+        'ON tmpColumn.Table_Name = table_update_data.Table_Name'
+      ''
+      'WHERE table_update_data.Id BETWEEN 785413 AND 1000000'
+      ''
+      'ORDER BY table_update_data.Id')
+    Left = 552
+    Top = 392
   end
 end
