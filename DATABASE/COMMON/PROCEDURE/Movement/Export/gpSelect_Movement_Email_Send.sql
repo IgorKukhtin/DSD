@@ -1092,7 +1092,7 @@ BEGIN
 	--Номер РН
 	|| ';' || Movement.InvNumber
 	-- Адрес доставки (в ObjectString_RoomNumber.ValueData хранится номер магазина)
-	|| ';' || 'DN:V'|| COALESCE (ObjectString_RoomNumber.ValueData, '') ||' - '||COALESCE (ObjectString_ShortName.ValueData, '')||' №' || COALESCE (ObjectString_RoomNumber.ValueData, '') || ' ' ||COALESCE(Object_PartnerAdress.ValueData, '')
+	|| ';' || 'KH:V'|| COALESCE (ObjectString_RoomNumber.ValueData, '') ||' - '||COALESCE (ObjectString_ShortName.ValueData, '')||' №' || COALESCE (ObjectString_RoomNumber.ValueData, '') || ' ' ||COALESCE(Object_PartnerAdress.ValueData, '')
 	-- Версия формата
 	|| ';' || '14'
 	-- Вид документа : RN – расходная накладная or VN – возвратная накладная or SP - спецификация
