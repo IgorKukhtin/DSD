@@ -121,6 +121,9 @@ inherited Report_HouseholdInventoryRemainsCashForm: TReport_HouseholdInventoryRe
           object InvNumber: TcxGridDBColumn
             Caption = #1048#1085#1074'. '#1085#1086#1084#1077#1088
             DataBinding.FieldName = 'InvNumber'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 0
+            Properties.DisplayFormat = '0000'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             HeaderHint = #1048#1085#1074#1077#1085#1090#1072#1088#1085#1099#1081' '#1085#1086#1084#1077#1088

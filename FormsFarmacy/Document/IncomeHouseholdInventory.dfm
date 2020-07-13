@@ -154,7 +154,7 @@ inherited IncomeHouseholdInventoryForm: TIncomeHouseholdInventoryForm
             DataBinding.FieldName = 'InvNumber'
             PropertiesClassName = 'TcxCurrencyEditProperties'
             Properties.DecimalPlaces = 0
-            Properties.DisplayFormat = ',0;-,0; ;'
+            Properties.DisplayFormat = '0000'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
@@ -168,7 +168,7 @@ inherited IncomeHouseholdInventoryForm: TIncomeHouseholdInventoryForm
             Properties.DisplayFormat = ',0;-,0; ;'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
-            Options.Editing = False
+            Styles.Content = dmMain.cxHeaderL1Style
             Width = 80
           end
           object CountForPrice: TcxGridDBColumn
