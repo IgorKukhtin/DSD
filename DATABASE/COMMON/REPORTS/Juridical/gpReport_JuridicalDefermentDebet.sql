@@ -26,7 +26,8 @@ RETURNS TABLE (AccountId Integer, AccountName TVarChar, JuridicalId Integer, Jur
              , DebetRemains TFloat, KreditRemains TFloat
              , SaleSumm TFloat--, DefermentPaymentRemains TFloat
              , SaleSumm1 TFloat, SaleSumm2 TFloat, SaleSumm3 TFloat, SaleSumm4 TFloat, SaleSumm5 TFloat
-             , Condition TVarChar, StartContractDate TDateTime, Remains TFloat
+             , Remains TFloat
+             , Condition TVarChar, StartContractDate TDateTime
              , InfoMoneyGroupName TVarChar, InfoMoneyDestinationName TVarChar, InfoMoneyCode Integer, InfoMoneyName TVarChar
              , AreaName TVarChar, AreaName_Partner TVarChar
               )
@@ -197,13 +198,13 @@ BEGIN
                                  LEFT JOIN tmpContractCondition AS ContractCondition_DefermentPayment
                                                                 ON ContractCondition_DefermentPayment.ContractId = View_Contract_ContractKey.ContractId_Key 
                                            
-                                 LEFT JOIN Object AS Object_Contract ON Object_Contract.Id = CLO_Contract.ObjectId
+                                 LEFT JOIN Object AS Object_Contract ON Object_Contract.Id = View_Contract_ContractKey.ContractId_Key
                                  LEFT JOIN ObjectLink AS ObjectLink_Contract_ContractStateKind
-                                                      ON ObjectLink_Contract_ContractStateKind.ObjectId = CLO_Contract.ObjectId
+                                                      ON ObjectLink_Contract_ContractStateKind.ObjectId = View_Contract_ContractKey.ContractId_Key
                                                      AND ObjectLink_Contract_ContractStateKind.DescId = zc_ObjectLink_Contract_ContractStateKind() 
              
                                  LEFT JOIN tmpContractCondition_CreditLimit AS ContractCondition_CreditLimit
-                                                                            ON ContractCondition_CreditLimit.ContractId = CLO_Contract.ObjectId
+                                                                            ON ContractCondition_CreditLimit.ContractId = View_Contract_ContractKey.ContractId_Key
                                                                            AND ContractCondition_CreditLimit.PaidKindId = CLO_PaidKind.ObjectId
 
 
@@ -258,8 +259,8 @@ BEGIN
 
                        FROM tmpSale_60 AS Container
                            LEFT JOIN tmpMIContainer AS MIContainer 
-                                                           ON MIContainer.Containerid = Container.Id
-                                                          AND MIContainer.OperDate between inOperDate::TDateTime  - interval '90 day' AND inOperDate::TDateTime  - interval '61 day'
+                                                    ON MIContainer.Containerid = Container.Id
+                                                   AND MIContainer.OperDate between inOperDate::TDateTime  - interval '90 day' AND inOperDate::TDateTime  - interval '61 day'
                        WHERE Container.Remains > COALESCE (Container.SaleSumm,0)
                        GROUP BY Container.Id
                               , Container.Remains - COALESCE (Container.SaleSumm,0) 
@@ -516,10 +517,18 @@ BEGIN
                    , tmpData.PersonalCollationName
                    , tmpData.PersonalTradeName_Partner
                    , tmpData.StartDate, tmpData.EndDate
-                   , tmpData.DebetRemains, tmpData.KreditRemains
-                   , tmpData.SaleSumm--, tmpData.DefermentPaymentRemains
-                   , tmpData.SaleSumm1, tmpData.SaleSumm2, tmpData.SaleSumm3, tmpData.SaleSumm4, tmpData.SaleSumm5
-                   , tmpData.Condition, tmpData.StartContractDate, tmpData.Remains
+                   
+                   , SUM (tmpData.DebetRemains) ::TFloat AS DebetRemains
+                   , SUM (tmpData.KreditRemains) ::TFloat AS KreditRemains
+                   , SUM (tmpData.SaleSumm) ::TFloat AS SaleSumm
+                   --, tmpData.DefermentPaymentRemains
+                   , SUM (tmpData.SaleSumm1) ::TFloat AS SaleSumm1
+                   , SUM (tmpData.SaleSumm2) ::TFloat AS SaleSumm2
+                   , SUM (tmpData.SaleSumm3) ::TFloat AS SaleSumm3
+                   , SUM (tmpData.SaleSumm4) ::TFloat AS SaleSumm4
+                   , SUM (tmpData.SaleSumm5) ::TFloat AS SaleSumm5
+                   , SUM (tmpData.Remains)   ::TFloat AS Remains
+                   , tmpData.Condition, tmpData.StartContractDate
                    , tmpData.InfoMoneyGroupName, tmpData.InfoMoneyDestinationName, tmpData.InfoMoneyCode, tmpData.InfoMoneyName
                    , tmpData.AreaName, tmpData.AreaName_Partner
            FROM tmpData
@@ -528,7 +537,23 @@ BEGIN
              OR  tmpData.SaleSumm1 <> 0 OR tmpData.SaleSumm2 <> 0 OR tmpData.SaleSumm3 <> 0 OR tmpData.SaleSumm4 <> 0 OR tmpData.SaleSumm5 <> 0
              OR  tmpData.Remains <> 0)
               AND (tmpData.PaidKindId = inPaidKindId OR inPaidKindId = 0)
-              AND (tmpData.BranchId = inBranchId OR inBranchId = 0) ;
+              AND (tmpData.BranchId = inBranchId OR inBranchId = 0)
+           GROUP BY  tmpData.AccountId, tmpData.AccountName, tmpData.JuridicalId, tmpData.JuridicalName, tmpData.RetailName, tmpData.RetailName_main, tmpData.OKPO, tmpData.JuridicalGroupName
+                   , tmpData.PartnerId, tmpData.PartnerCode, tmpData.PartnerName 
+                   , tmpData.BranchId, tmpData.BranchCode, tmpData.BranchName
+                   , tmpData.PaidKindId, tmpData.PaidKindName
+                   , tmpData.ContractId, tmpData.ContractCode, tmpData.ContractNumber
+                   , tmpData.ContractTagGroupName, tmpData.ContractTagName, tmpData.ContractStateKindCode
+                   , tmpData.ContractJuridicalDocId, tmpData.ContractJuridicalDocCode, tmpData.ContractJuridicalDocName
+                   , tmpData.PersonalName
+                   , tmpData.PersonalTradeName
+                   , tmpData.PersonalCollationName
+                   , tmpData.PersonalTradeName_Partner
+                   , tmpData.StartDate, tmpData.EndDate
+                   , tmpData.Condition, tmpData.StartContractDate
+                   , tmpData.InfoMoneyGroupName, tmpData.InfoMoneyDestinationName, tmpData.InfoMoneyCode, tmpData.InfoMoneyName
+                   , tmpData.AreaName, tmpData.AreaName_Partner
+                   ;
 
     -- Конец. Добавили строковые данные. 
     -- КОНЕЦ ЗАПРОСА
@@ -546,3 +571,8 @@ $BODY$
 -- тест zc_Enum_PaidKind_SecondForm
 -- SELECT * FROM gpReport_JuridicalDefermentDebet (inOperDate:= '01.06.2015', inEmptyParam:= NULL :: TDateTime, inAccountId:= 0, inPaidKindId:= zc_Enum_PaidKind_FirstForm(),  inBranchId:= 0, inJuridicalGroupId:= null, inSession:= zfCalc_UserAdmin());
 -- SELECT * FROM gpReport_JuridicalDefermentDebet (inOperDate:= '01.08.2020', inEmptyParam:= NULL :: TDateTime, inAccountId:= 9128 , inPaidKindId:= zc_Enum_PaidKind_FirstForm(), inBranchId:= 0, inJuridicalGroupId:= 0, inSession:= zfCalc_UserAdmin());
+/*
+SELECT * FROM gpReport_JuridicalDefermentDebet (inOperDate:= '31.12.2019', inEmptyParam:= NULL :: TDateTime, inAccountId:= 9128 , inPaidKindId:= zc_Enum_PaidKind_FirstForm(), inBranchId:= 0, inJuridicalGroupId:= 0, inSession:= zfCalc_UserAdmin()) as tt
+where tt.JuridicalName like '%Ашан%'
+;
+*/
