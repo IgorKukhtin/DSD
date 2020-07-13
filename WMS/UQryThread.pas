@@ -16,7 +16,6 @@ uses
 
 type
   TSQLAction = (saOpen, saExec);
-  TThreadKind = (tknDriven, tknNondriven);
 
   TErrData = record
     HeaderId: Integer;

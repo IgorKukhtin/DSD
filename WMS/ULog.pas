@@ -11,7 +11,7 @@ uses
 type
   TLogItem = class
   strict private
-    FLogFile: TextFile;
+    FFileStream: TFileStream;
     FCS: TCriticalSection;
   public
     constructor Create(const AFileName: string);
@@ -37,13 +37,14 @@ uses
   USettings;
 
 const
-  cLogMsg = '%s  %s';
+  cLogMsg = '%s  %s' + #13#10;
 
 { TLogItem }
 
 constructor TLogItem.Create(const AFileName: string);
 var
   sFileName: string;
+  byteOrderMark: TBytes;
 begin
   inherited Create;
   FCS := TCriticalSection.Create;
@@ -51,16 +52,24 @@ begin
   sFileName := IncludeTrailingPathDelimiter(TSettings.GetLogFolder) + AFileName;
   ForceDirectories(ExtractFilePath(sFileName));
 
-  AssignFile(FLogFile, sFileName);
+  if not FileExists(sFileName) then
+  begin
+    FFileStream := TFileStream.Create(sFileName, fmCreate or fmShareExclusive);
+    byteOrderMark := TEncoding.Unicode.GetPreamble;
+    FFileStream.Write(byteOrderMark[0], Length(byteOrderMark));
+    FreeAndNil(FFileStream);
+  end;
+
   if FileExists(sFileName) then
-    Append(FLogFile)
-  else
-    Rewrite(FLogFile);
+  begin
+    FFileStream := TFileStream.Create(sFileName, fmOpenReadWrite or fmShareDenyNone);
+    FFileStream.Position := FFileStream.Size;
+  end;
 end;
 
 destructor TLogItem.Destroy;
 begin
-  CloseFile(FLogFile);
+  FreeAndNil(FFileStream);
   FreeAndNil(FCS);
   inherited;
 end;
@@ -69,11 +78,12 @@ procedure TLogItem.Write(const AMsg: string);
 var
   sMsg: string;
 begin
+  if not TSettings.UseLog then Exit;
+
   FCS.Enter;
   try
     sMsg := Format(cLogMsg, [FormatDateTime(cDateTimeStr, Now), AMsg]);
-    WriteLn(FLogFile, sMsg);
-    Flush(FLogFile);
+    FFileStream.WriteBuffer(sMsg[1], Length(sMsg) * SizeOf(Char));
   finally
     FCS.Leave;
   end;

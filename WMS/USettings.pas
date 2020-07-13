@@ -23,8 +23,12 @@ type
     class procedure SetWMSDatabase(const AValue: string); static;
     class function GetAlanServer: string; static;
     class procedure SetAlanServer(const AValue: string); static;
+    class function GetGatewayIntervalMinute: Cardinal; static;
+    class procedure SetGatewayIntervalMinute(const AValue: Cardinal); static;
     class function GetTimerInterval: Cardinal; static;
     class procedure SetTimerInterval(const AValue: Cardinal); static;
+    class function GetUseLog: Boolean; static;
+    class procedure SetUseLog(const AValue: Boolean); static;
   public
     class constructor Create;
     class destructor Destroy;
@@ -33,6 +37,8 @@ type
     class property WMSDatabase: string read GetWMSDatabase write SetWMSDatabase;
     class property AlanServer: string read GetAlanServer write SetAlanServer;
     class property TimerInterval: Cardinal read GetTimerInterval write SetTimerInterval;
+    class property GatewayIntervalMinute: Cardinal read GetGatewayIntervalMinute write SetGatewayIntervalMinute;
+    class property UseLog: Boolean read GetUseLog write SetUseLog;
   end;
 
 function IsService: Boolean;
@@ -46,22 +52,24 @@ uses
   , System.SyncObjs
   , Winapi.SHFolder
   , Winapi.Windows
+  , UConstants
   ;
 
 var
   mCS: TCriticalSection;
 
 const
-  cAppDataFolder = 'SendDataWMS';
-
   // INI params
   cINI_Section = 'Settings';
+  cUseLogParam = 'UseLog';
   cAlanServerParam = 'AlanServer';
   cWMSDatabaseParam = 'WMSDatabase';
   cTimerIntervalParam = 'TimerInterval';
+  cGatewayIntervalParam = 'GatewayIntervalMinute';
 
   // Default values
   cTimerIntervalDef = 10000;
+  cGatewayIntervalMinuteDef = 3; // интервал 3 минуты
   cAlanServerDef = 'integer-srv.alan.dp.ua';
   cWMSDatabaseDef = '(DESCRIPTION=(ADDRESS=(PROTOCOL=TCP)(HOST=wms-db-1.alan.dp.ua)(PORT=1521))(CONNECT_DATA=(SERVICE_NAME=wmsdb)))';
 
@@ -115,9 +123,10 @@ end;
 
 class procedure TSettings.ApplyDefault;
 begin
-  WMSDatabase := cWMSDatabaseDef;
-  AlanServer := cAlanServerDef;
+  WMSDatabase   := cWMSDatabaseDef;
+  AlanServer    := cAlanServerDef;
   TimerInterval := cTimerIntervalDef;
+  UseLog        := True;
 end;
 
 class constructor TSettings.Create;
@@ -183,6 +192,16 @@ begin
     finally
       System.TMonitor.Exit(FIni);
     end;
+  end;
+end;
+
+class function TSettings.GetGatewayIntervalMinute: Cardinal;
+begin
+  mCS.Enter;
+  try
+    Result := GetIntValue(cGatewayIntervalParam, cGatewayIntervalMinuteDef);
+  finally
+    mCS.Leave;
   end;
 end;
 
@@ -252,6 +271,16 @@ begin
   end;
 end;
 
+class function TSettings.GetUseLog: Boolean;
+begin
+  mCS.Enter;
+  try
+    Result := GetBoolValue(cUseLogParam, False);
+  finally
+    mCS.Leave;
+  end;
+end;
+
 class function TSettings.GetWMSDatabase: string;
 begin
   mCS.Enter;
@@ -282,6 +311,16 @@ begin
     finally
       System.TMonitor.Exit(FIni);
     end;
+  end;
+end;
+
+class procedure TSettings.SetGatewayIntervalMinute(const AValue: Cardinal);
+begin
+  mCS.Enter;
+  try
+    SetIntValue(cGatewayIntervalParam, AValue);
+  finally
+    mCS.Leave;
   end;
 end;
 
@@ -316,6 +355,16 @@ begin
   mCS.Enter;
   try
     SetIntValue(cTimerIntervalParam, AValue);
+  finally
+    mCS.Leave;
+  end;
+end;
+
+class procedure TSettings.SetUseLog(const AValue: Boolean);
+begin
+  mCS.Enter;
+  try
+    SetBoolValue(cUseLogParam, AValue);
   finally
     mCS.Leave;
   end;

@@ -9,6 +9,8 @@ type
   TNotifyProc = procedure of object;
   TNotifyMsgProc = procedure(const AMsg: string) of object;
 
+  TThreadKind = (tknDriven, tknNondriven);
+
   TDataObjects = record
     HeaderQry, DetailQry, InsertQry, ErrorQry, SelectQry, DoneQry, ExecQry: TFDQuery;
   end;

@@ -22,7 +22,8 @@ uses
   FireDAC.Stan.Param,
   UConstants,
   UDefinitions,
-  ULog;
+  ULog,
+  UGateway;
 
 type
   TTimeMeter = class
@@ -194,6 +195,9 @@ type
     splFromHostHeader: TSplitter;
     pnlFromHostDetailMessage: TPanel;
     grdFromHostDetailMessage: TDBGrid;
+    chkWriteLog: TCheckBox;
+    btnStartGateway: TButton;
+    btnStopGateway: TButton;
     procedure btnFDC_wmsClick(Sender: TObject);
     procedure btnFDC_alanClick(Sender: TObject);
     procedure btnObject_SKU_to_wmsClick(Sender: TObject);
@@ -243,9 +247,14 @@ type
     procedure cbbFromHostHeaderMessageChange(Sender: TObject);
     procedure dtpStartFromHostHeaderMessageChange(Sender: TObject);
     procedure dtpEndFromHostHeaderMessageChange(Sender: TObject);
+    procedure chkWriteLogClick(Sender: TObject);
+    procedure btnStartGatewayClick(Sender: TObject);
+    procedure btnStopGatewayClick(Sender: TObject);
   private
     FLog: TLog;
     FStopTimer: Boolean;
+    FExpThread: TExporterThread;
+    FImpThread: TImporterThread;
     FStartOrderStatusChanged: TDateTime;
     FStartReceivingResult: TDateTime;
     FObjectSKU_TM, FObjectSKUCode_TM, FObjectSKUGroup_TM, FObjectClient_TM, FObjectPack_TM, FObjectUser_TM,
@@ -657,8 +666,8 @@ end;
 
 procedure TMainForm.seTimerIntervalChange(Sender: TObject);
 begin
-  TSettings.TimerInterval := seTimerInterval.Value * 1000;
-  Timer.Interval := seTimerInterval.Value * 1000;
+  TSettings.TimerInterval := seTimerInterval.Value * c1Sec;
+  Timer.Interval := seTimerInterval.Value * c1Sec;
 end;
 
 procedure TMainForm.myShowMsg(const AMsg: string);
@@ -846,14 +855,21 @@ begin
     pgcLog.ActivePage := tsCheckboxView;
 end;
 
+procedure TMainForm.chkWriteLogClick(Sender: TObject);
+begin
+  TSettings.UseLog := chkWriteLog.Checked;
+end;
+
 constructor TMainForm.Create(AOwner: TComponent);
 var
   I: Integer;
 begin
   inherited;
   FLog := TLog.Create;
+  chkWriteLog.Checked := TSettings.UseLog;
+
   Timer.Interval := TSettings.TimerInterval;
-  seTimerInterval.Value := TSettings.TimerInterval div 1000;
+  seTimerInterval.Value := TSettings.TimerInterval div c1Sec;
   FStopTimer := True;
 
   edtWMSDatabase.Text := TSettings.WMSDatabase;
@@ -904,7 +920,6 @@ end;
 
 destructor TMainForm.Destroy;
 begin
-  FreeAndNil(FLog);
   FreeAndNil(FObjectSKU_TM);
   FreeAndNil(FObjectSKUCode_TM);
   FreeAndNil(FObjectSKUGroup_TM);
@@ -915,6 +930,10 @@ begin
   FreeAndNil(FMovementASNLoad_TM);
   FreeAndNil(FMovementOrder_TM);
   FreeAndNil(FProcessExpErr_TM);
+  FreeAndNil(FExpThread);
+  FreeAndNil(FImpThread);
+  FreeAndNil(FLog);
+
   inherited;
 end;
 
@@ -1018,6 +1037,7 @@ begin
   edtWMSDatabase.Text   := TSettings.WMSDatabase;
   edtAlanServer.Text    := TSettings.AlanServer;
   seTimerInterval.Value := TSettings.TimerInterval div 1000;
+  chkWriteLog.Checked   := TSettings.UseLog;
 end;
 
 procedure TMainForm.btnDataExportErrorsClick(Sender: TObject);
@@ -1031,6 +1051,24 @@ begin
   tmpWorker := TProcessExportDataErrorThread.Create(True, myShowMsg);
   tmpWorker.OnTerminate := OnTerminateProcessExportDataErr;
   tmpWorker.Start;
+end;
+
+procedure TMainForm.btnStartGatewayClick(Sender: TObject);
+begin
+  FImpThread := TImporterThread.Create(cCreateRunning, myShowMsg, tknDriven);
+  FExpThread   := TExporterThread.Create(cCreateRunning, myShowMsg, tknDriven);
+end;
+
+procedure TMainForm.btnStopGatewayClick(Sender: TObject);
+begin
+  FImpThread.Terminate;
+  FExpThread.Terminate;
+
+  FImpThread.WaitFor(c1Sec * 30);
+  FExpThread.WaitFor(c1Sec * 30);
+
+  FreeAndNil(FImpThread);
+  FreeAndNil(FExpThread);
 end;
 
 procedure TMainForm.btnStartTimerClick(Sender: TObject);
@@ -1201,6 +1239,11 @@ end;
 
 procedure TMainForm.UpdateWmsToHostMsgGrid(const ANeedRebuildColumns: Boolean);
 begin
+  case cbbWmsMessageMode.ItemIndex of
+    0: dmData.qryWmsToHostMessage.ParamByName('ErrorOnly').AsBoolean := False;
+    1: dmData.qryWmsToHostMessage.ParamByName('ErrorOnly').AsBoolean := True;
+  end;
+
   UpdateGrid(
     dmData.qryWmsToHostMessage,
     dmData.dsWmsToHostMessage,

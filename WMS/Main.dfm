@@ -23,7 +23,7 @@ object MainForm: TMainForm
     Top = 0
     Width = 1384
     Height = 642
-    ActivePage = tsOraExport
+    ActivePage = tsLog
     Align = alClient
     TabOrder = 0
     OnChange = pgcMainChange
@@ -34,7 +34,7 @@ object MainForm: TMainForm
         1376
         614)
       object lbFontSize: TLabel
-        Left = 695
+        Left = 723
         Top = 17
         Width = 43
         Height = 13
@@ -43,13 +43,13 @@ object MainForm: TMainForm
       object cbRecCount: TCheckBox
         Left = 431
         Top = 16
-        Width = 84
+        Width = 101
         Height = 17
-        Caption = 'cbRecCount'
+        Caption = 'check RecCount'
         TabOrder = 0
       end
       object EditRecCount: TEdit
-        Left = 519
+        Left = 538
         Top = 14
         Width = 36
         Height = 21
@@ -57,11 +57,11 @@ object MainForm: TMainForm
         Text = '1'
       end
       object cbDebug: TCheckBox
-        Left = 558
+        Left = 616
         Top = 16
-        Width = 97
+        Width = 71
         Height = 17
-        Caption = 'cbDebug'
+        Caption = 'Debug'
         TabOrder = 2
       end
       object btnObject_SKU_to_wms: TButton
@@ -182,7 +182,7 @@ object MainForm: TMainForm
         OnClick = btnFDC_wmsClick
       end
       object seFontSize: TSpinEdit
-        Left = 742
+        Left = 770
         Top = 14
         Width = 44
         Height = 22
@@ -655,6 +655,24 @@ object MainForm: TMainForm
         WordWrap = True
         OnClick = btnDataExportErrorsClick
       end
+      object btnStartGateway: TButton
+        Left = 8
+        Top = 533
+        Width = 93
+        Height = 25
+        Caption = 'Start Gateway'
+        TabOrder = 22
+        OnClick = btnStartGatewayClick
+      end
+      object btnStopGateway: TButton
+        Left = 110
+        Top = 533
+        Width = 98
+        Height = 25
+        Caption = 'Stop Gateway'
+        TabOrder = 23
+        OnClick = btnStopGatewayClick
+      end
     end
     object tsErrors: TTabSheet
       Caption = #1054#1096#1080#1073#1082#1080
@@ -676,8 +694,6 @@ object MainForm: TMainForm
         Height = 347
         Align = alClient
         TabOrder = 0
-        ExplicitTop = 270
-        ExplicitHeight = 344
         object pnlAlanTop: TPanel
           Left = 1
           Top = 1
@@ -781,7 +797,6 @@ object MainForm: TMainForm
           BevelOuter = bvLowered
           Caption = '  wms_from_host_error'
           TabOrder = 1
-          ExplicitWidth = 1372
           object lbStartWmsFromHostError: TLabel
             Left = 241
             Top = 7
@@ -1053,7 +1068,6 @@ object MainForm: TMainForm
         Height = 305
         Align = alTop
         TabOrder = 0
-        ExplicitTop = 8
         object pnlFromHostHeaderMessageTop: TPanel
           Left = 1
           Top = 1
@@ -1153,10 +1167,6 @@ object MainForm: TMainForm
         Height = 304
         Align = alClient
         TabOrder = 1
-        ExplicitLeft = 32
-        ExplicitTop = 360
-        ExplicitWidth = 369
-        ExplicitHeight = 177
         object grdFromHostDetailMessage: TDBGrid
           Left = 1
           Top = 1
@@ -1290,10 +1300,6 @@ object MainForm: TMainForm
         Height = 304
         Align = alClient
         TabOrder = 1
-        ExplicitLeft = 32
-        ExplicitTop = 360
-        ExplicitWidth = 369
-        ExplicitHeight = 177
         object grdWMSDetail: TDBGrid
           Left = 1
           Top = 1
@@ -1317,24 +1323,27 @@ object MainForm: TMainForm
         1376
         614)
       object lbWMSDatabase: TLabel
-        Left = 40
+        Left = 10
         Top = 43
-        Width = 73
+        Width = 100
         Height = 13
+        Alignment = taRightJustify
         Caption = 'WMS Database'
       end
       object lbAlanServer: TLabel
-        Left = 40
+        Left = 10
         Top = 87
-        Width = 56
+        Width = 100
         Height = 13
+        Alignment = taRightJustify
         Caption = 'Alan Server'
       end
       object lbTimerInterval: TLabel
-        Left = 40
-        Top = 123
-        Width = 65
+        Left = 10
+        Top = 126
+        Width = 100
         Height = 13
+        Alignment = taRightJustify
         Caption = 'Timer interval'
       end
       object lbIntervalSec: TLabel
@@ -1366,7 +1375,7 @@ object MainForm: TMainForm
       end
       object seTimerInterval: TSpinEdit
         Left = 117
-        Top = 120
+        Top = 123
         Width = 70
         Height = 22
         MaxValue = 10000
@@ -1384,6 +1393,15 @@ object MainForm: TMainForm
         TabOrder = 3
         TabStop = False
         OnClick = btnApplyDefSettingsClick
+      end
+      object chkWriteLog: TCheckBox
+        Left = 117
+        Top = 160
+        Width = 156
+        Height = 17
+        Caption = ' '#1079#1072#1087#1080#1089#1099#1074#1072#1090#1100' '#1083#1086#1075' '#1074' '#1092#1072#1081#1083
+        TabOrder = 4
+        OnClick = chkWriteLogClick
       end
     end
   end
