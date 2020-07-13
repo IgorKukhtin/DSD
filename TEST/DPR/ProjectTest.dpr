@@ -1176,7 +1176,8 @@ uses
   Report_ProductionOrderDialog in '..\..\Forms\Report\Report_ProductionOrderDialog.pas' {Report_ProductionOrderDialogForm: TParentForm},
   Report_Promo_Result in '..\..\Forms\Report\Report_Promo_Result.pas' {Report_Promo_ResultForm: TParentForm},
   Report_Promo_Result_Trade in '..\..\Forms\Report\Report_Promo_Result_Trade.pas' {Report_Promo_Result_TradeForm: TParentForm},
-  Report_JuridicalDefermentDebet in '..\..\Forms\Report\Report_JuridicalDefermentDebet.pas' {Report_JuridicalDefermentDebetForm: TParentForm};
+  Report_JuridicalDefermentDebet in '..\..\Forms\Report\Report_JuridicalDefermentDebet.pas' {Report_JuridicalDefermentDebetForm: TParentForm},
+  Goods_Param in '..\..\Forms\Guides\Goods_Param.pas' {Goods_ParamForm: TParentForm};
 
 {$R *.RES}
 {$R DevExpressRus.res}

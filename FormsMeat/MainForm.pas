@@ -1147,6 +1147,8 @@ type
     miReport_Promo_Result_Trade: TMenuItem;
     actReport_JuridicalDefermentDebet: TdsdOpenForm;
     miReport_JuridicalDefermentDebet: TMenuItem;
+    actGoods_Param: TdsdOpenForm;
+    T1: TMenuItem;
     procedure actReport_OLAPSoldExecute(Sender: TObject);
     procedure FormShow(Sender: TObject);
     procedure FormClose(Sender: TObject; var Action: TCloseAction);
