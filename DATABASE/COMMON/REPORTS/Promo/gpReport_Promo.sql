@@ -83,6 +83,7 @@ RETURNS TABLE(
     ,Checked              Boolean   --Согласовано (да/нет)
     , PromoStateKindName    TVarChar --состояние акции
     , Color_PromoStateKind  Integer  -- подсветка
+    , strSign             TVarChar   --эл. подпись
     )
 AS
 $BODY$
@@ -395,6 +396,15 @@ BEGIN
                                       , MIFloat_PriceWithVAT.ValueData
                                       , MIFloat_PriceSale.ValueData
                                )
+           -- эл. подпись, выбираем те что уже подписаны полностью 
+           , tmpSign AS (SELECT tmpMovement.Id
+                              , tmpSign.strSign
+                              , tmpSign.strSignNo
+                         FROM tmpMovement
+                              LEFT JOIN lpSelect_MI_Sign (inMovementId:= tmpMovement.Id ) AS tmpSign ON tmpSign.Id = tmpMovement.Id
+                         WHERE COALESCE (tmpSign.strSignNo,'') =''
+                         )
+                         
         --
         SELECT
             Movement_Promo.Id                --ИД документа акции
@@ -573,9 +583,11 @@ BEGIN
 
           , Movement_Promo.PromoStateKindName   ::TVarChar
           , Movement_Promo.Color_PromoStateKind :: Integer
+          , tmpSign.strSign                     ::TVarChar-- -- эл.подписи  --
         FROM
             tmpMovement_Promo AS Movement_Promo
             LEFT OUTER JOIN tmpMI_PromoGoods AS MI_PromoGoods ON MI_PromoGoods.MovementId = Movement_Promo.Id
+            LEFT JOIN tmpSign ON tmpSign.Id = Movement_Promo.Id   -- эл.подписи  --
 
                ;
 
