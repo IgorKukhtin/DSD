@@ -2831,6 +2831,9 @@ end;
 
 procedure TLoadFormTest.LoadPromoFormTest;
 begin
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TChangePercentDialogForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TChangePercentDialogForm');
+
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TPromoManagerDialogForm'));
   TdsdFormStorageFactory.GetStorage.Load('TPromoManagerDialogForm');
 

@@ -747,7 +747,6 @@ uses
   PromoKind in '..\..\Forms\Guides\PromoKind.pas' {PromoKindForm: TParentForm},
   ConditionPromo in '..\..\Forms\Guides\ConditionPromo.pas' {ConditionPromoForm: TParentForm},
   PromoTest in '..\SOURCE\Movement\All\PromoTest.pas',
-  PromoJournal in '..\..\Forms\Document\PromoJournal.pas' {PromoJournalForm: TParentForm},
   PromoPartner in '..\..\Forms\Guides\PromoPartner.pas' {PromoPartnerForm: TParentForm},
   Report_Branch_App7Dialog in '..\..\Forms\Report\Report_Branch_App7Dialog.pas' {Report_Branch_App7DialogForm: TParentForm},
   Report_Branch_App7 in '..\..\Forms\Report\Report_Branch_App7.pas' {Report_Branch_App7Form: TParentForm},
@@ -1177,7 +1176,9 @@ uses
   Report_Promo_Result in '..\..\Forms\Report\Report_Promo_Result.pas' {Report_Promo_ResultForm: TParentForm},
   Report_Promo_Result_Trade in '..\..\Forms\Report\Report_Promo_Result_Trade.pas' {Report_Promo_Result_TradeForm: TParentForm},
   Report_JuridicalDefermentDebet in '..\..\Forms\Report\Report_JuridicalDefermentDebet.pas' {Report_JuridicalDefermentDebetForm: TParentForm},
-  Goods_Param in '..\..\Forms\Guides\Goods_Param.pas' {Goods_ParamForm: TParentForm};
+  Goods_Param in '..\..\Forms\Guides\Goods_Param.pas' {Goods_ParamForm: TParentForm},
+  ChangePercentDialog in '..\..\Forms\Document\ChangePercentDialog.pas' {ChangePercentDialogForm: TParentForm},
+  PromoJournal in '..\..\Forms\Document\PromoJournal.pas' {PromoJournalForm: TParentForm};
 
 {$R *.RES}
 {$R DevExpressRus.res}
