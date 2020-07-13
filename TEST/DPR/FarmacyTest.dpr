@@ -907,7 +907,8 @@ uses
   WriteOffHouseholdInventoryJournal in '..\..\FormsFarmacy\Document\WriteOffHouseholdInventoryJournal.pas' {WriteOffHouseholdInventoryJournalForm: TParentForm},
   IncomeHouseholdInventoryCash in '..\..\FormsFarmacy\Document\IncomeHouseholdInventoryCash.pas' {IncomeHouseholdInventoryCashForm: TParentForm},
   IncomeHouseholdInventoryCashJournal in '..\..\FormsFarmacy\Document\IncomeHouseholdInventoryCashJournal.pas' {IncomeHouseholdInventoryCashJournalForm: TParentForm},
-  Report_HouseholdInventoryRemainsCash in '..\..\FormsFarmacy\Report\Report_HouseholdInventoryRemainsCash.pas' {Report_HouseholdInventoryRemainsCashForm: TParentForm};
+  Report_HouseholdInventoryRemainsCash in '..\..\FormsFarmacy\Report\Report_HouseholdInventoryRemainsCash.pas' {Report_HouseholdInventoryRemainsCashForm: TParentForm},
+  Report_PercentageOccupancySUN in '..\..\FormsFarmacy\Report\Report_PercentageOccupancySUN.pas' {Report_PercentageOccupancySUNForm: TParentForm};
 
 {$R *.res}
 {$R DevExpressRus.res}
