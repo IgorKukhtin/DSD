@@ -23,7 +23,7 @@ BEGIN
      UNION SELECT  40,0, 'WHERE table_update_data.Id BETWEEN ' || inId_start :: TVarChar || ' AND ' || inId_end  :: TVarChar
      UNION SELECT  47,0, '  AND (table_update_data.Operation ILIKE ' || zfStr_CHR_39 ('DELETE')
      UNION SELECT  48,0, '    OR CASE '
-     UNION SELECT gpSelect.Part, gpSelect.Sort, gpSelect.Value FROM gpSelect_Replica_part50 (inId_start, inId_end)
+     UNION SELECT gpSelect.Part, gpSelect.Sort, gpSelect.Value FROM gpSelect_Replica_part50 (inId_start, inId_end) AS gpSelect
      UNION SELECT  54,0, '      END > 0)'
      UNION SELECT  55,0, 'ORDER BY table_update_data.Id'
 
