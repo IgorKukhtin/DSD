@@ -5,7 +5,7 @@
   Position = poDesigned
   OnClose = FormClose
   ExplicitWidth = 1376
-  ExplicitHeight = 255
+  ExplicitHeight = 252
   PixelsPerInch = 96
   TextHeight = 13
   object cxGrid: TcxGrid [0]
@@ -326,7 +326,7 @@
     object actReport_JuridicalDefermentDebet: TdsdOpenForm [14]
       Category = #1054#1090#1095#1077#1090#1099' ('#1092#1080#1085'.)'
       MoveParams = <>
-      Caption = #1044#1086#1083#1075' '#1055#1086#1082#1091#1087#1072#1090#1077#1083#1077#1081
+      Caption = #1055#1086#1082#1091#1087#1072#1090#1077#1083#1080' '#1089' '#1086#1090#1089#1088#1086#1095#1082#1086#1081' ('#1076#1086#1083#1075#1080' '#1076#1077#1090#1072#1083#1100#1085#1086')'
       FormName = 'TReport_JuridicalDefermentDebetForm'
       FormNameParam.Value = 'TReport_JuridicalDefermentDebetForm'
       FormNameParam.DataType = ftString
