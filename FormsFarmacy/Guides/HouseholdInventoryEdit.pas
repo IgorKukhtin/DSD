@@ -39,6 +39,8 @@ type
     spGet: TdsdStoredProc;
     dsdUserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn;
     cxPropertiesStore: TcxPropertiesStore;
+    ceCountForPrice: TcxCurrencyEdit;
+    cxLabel2: TcxLabel;
   private
     { Private declarations }
   public

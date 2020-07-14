@@ -67,6 +67,10 @@ type
     dxBarButton1: TdxBarButton;
     Comment: TcxGridDBColumn;
     InvNumber: TcxGridDBColumn;
+    actSetCountForPrice: TMultiAction;
+    actUpdateCountForPrice: TdsdExecStoredProc;
+    spUpdateCountForPrice: TdsdStoredProc;
+    dxBarButton2: TdxBarButton;
   private
     { Private declarations }
   public

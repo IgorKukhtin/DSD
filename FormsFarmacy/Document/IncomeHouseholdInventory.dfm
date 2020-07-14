@@ -592,6 +592,31 @@ inherited IncomeHouseholdInventoryForm: TIncomeHouseholdInventoryForm
       GuiParams = <>
       isShowModal = False
     end
+    object actSetCountForPrice: TMultiAction
+      Category = 'DSDLib'
+      MoveParams = <>
+      AfterAction = actRefresh
+      ActionList = <
+        item
+          Action = actUpdateCountForPrice
+        end>
+      View = cxGridDBTableView
+      QuestionBeforeExecute = #1047#1072#1087#1086#1083#1085#1080#1090#1100' '#1087#1091#1089#1090#1099#1077' '#1079#1085#1072#1095#1077#1085#1080#1103' '#1089#1077#1073#1077#1089#1090#1086#1080#1084#1086#1089#1090#1080' '#1087#1086' '#1089#1087#1088#1072#1074#1086#1095#1085#1080#1082#1091'?'
+      Caption = #1047#1072#1087#1086#1083#1085#1077#1085#1080#1077' '#1089#1077#1073#1077#1089#1090#1086#1080#1084#1086#1089#1090#1080' '#1087#1086' '#1089#1087#1088#1072#1074#1086#1095#1085#1080#1082#1091
+      Hint = #1047#1072#1087#1086#1083#1085#1077#1085#1080#1077' '#1089#1077#1073#1077#1089#1090#1086#1080#1084#1086#1089#1090#1080' '#1087#1086' '#1089#1087#1088#1072#1074#1086#1095#1085#1080#1082#1091
+      ImageIndex = 79
+    end
+    object actUpdateCountForPrice: TdsdExecStoredProc
+      Category = 'DSDLib'
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      StoredProc = spUpdateCountForPrice
+      StoredProcList = <
+        item
+          StoredProc = spUpdateCountForPrice
+        end>
+      Caption = 'actUpdateCountForPrice'
+    end
   end
   inherited MasterDS: TDataSource
     Top = 224
@@ -682,6 +707,10 @@ inherited IncomeHouseholdInventoryForm: TIncomeHouseholdInventoryForm
         end
         item
           Visible = True
+          ItemName = 'dxBarButton2'
+        end
+        item
+          Visible = True
           ItemName = 'dxBarStatic'
         end
         item
@@ -737,6 +766,10 @@ inherited IncomeHouseholdInventoryForm: TIncomeHouseholdInventoryForm
     end
     object dxBarButton1: TdxBarButton
       Action = actShowAll
+      Category = 0
+    end
+    object dxBarButton2: TdxBarButton
+      Action = actSetCountForPrice
       Category = 0
     end
   end
@@ -1294,5 +1327,49 @@ inherited IncomeHouseholdInventoryForm: TIncomeHouseholdInventoryForm
       end>
     Left = 536
     Top = 200
+  end
+  object spUpdateCountForPrice: TdsdStoredProc
+    StoredProcName = 'gpUpdate_IncomeHouseholdInventory_CountForPrice'
+    DataSets = <>
+    OutputType = otResult
+    Params = <
+      item
+        Name = 'inId'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'Id'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inMovementId'
+        Value = Null
+        Component = FormParams
+        ComponentItem = 'Id'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inHouseholdInventoryId'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'HouseholdInventoryId'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inCountForPrice'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'CountForPrice'
+        DataType = ftFloat
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end>
+    PackSize = 1
+    NeedResetData = True
+    ParamKeyField = 'inMovementId'
+    Left = 448
+    Top = 384
   end
 end

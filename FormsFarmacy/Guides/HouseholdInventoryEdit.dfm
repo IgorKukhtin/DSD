@@ -2,7 +2,7 @@
   Left = 0
   Top = 0
   Caption = #1044#1086#1073#1072#1074#1080#1090#1100'/'#1080#1079#1084#1077#1085#1080#1090#1100' <'#1061#1086#1079#1103#1081#1089#1090#1074#1077#1085#1085#1099#1081' '#1080#1085#1074#1077#1085#1090#1072#1088#1100'>'
-  ClientHeight = 166
+  ClientHeight = 190
   ClientWidth = 436
   Color = clBtnFace
   Font.Charset = DEFAULT_CHARSET
@@ -29,7 +29,7 @@
   end
   object cxButton1: TcxButton
     Left = 91
-    Top = 122
+    Top = 152
     Width = 75
     Height = 25
     Action = dsdInsertUpdateGuides
@@ -39,7 +39,7 @@
   end
   object cxButton2: TcxButton
     Left = 241
-    Top = 122
+    Top = 152
     Width = 75
     Height = 25
     Action = dsdFormClose
@@ -60,6 +60,18 @@
     Properties.DisplayFormat = '0'
     TabOrder = 5
     Width = 400
+  end
+  object ceCountForPrice: TcxCurrencyEdit
+    Left = 20
+    Top = 120
+    Properties.DisplayFormat = ',0.00;-,0.00; ;'
+    TabOrder = 6
+    Width = 121
+  end
+  object cxLabel2: TcxLabel
+    Left = 20
+    Top = 98
+    Caption = #1057#1077#1073#1077#1089#1090#1086#1080#1084#1086#1089#1090#1100
   end
   object ActionList: TActionList
     Left = 252
@@ -121,6 +133,14 @@
         DataType = ftString
         ParamType = ptInput
         MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inCountForPrice'
+        Value = Null
+        Component = ceCountForPrice
+        DataType = ftFloat
+        ParamType = ptInput
+        MultiSelectSeparator = ','
       end>
     PackSize = 1
     Left = 188
@@ -134,8 +154,8 @@
         ParamType = ptInputOutput
         MultiSelectSeparator = ','
       end>
-    Left = 4
-    Top = 32
+    Left = 68
+    Top = 8
   end
   object spGet: TdsdStoredProc
     StoredProcName = 'gpGet_Object_HouseholdInventory'
@@ -161,6 +181,13 @@
         Name = 'Code'
         Value = 0.000000000000000000
         Component = ceCode
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'CountForPrice'
+        Value = Null
+        Component = ceCountForPrice
+        DataType = ftFloat
         MultiSelectSeparator = ','
       end>
     PackSize = 1

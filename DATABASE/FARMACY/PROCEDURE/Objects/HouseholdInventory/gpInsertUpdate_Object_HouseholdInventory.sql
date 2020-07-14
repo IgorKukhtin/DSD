@@ -1,11 +1,12 @@
 -- Function: gpInsertUpdate_Object_HouseholdInventory()
 
-DROP FUNCTION IF EXISTS gpInsertUpdate_Object_HouseholdInventory (Integer, Integer, TVarChar, TVarChar);
+DROP FUNCTION IF EXISTS gpInsertUpdate_Object_HouseholdInventory (Integer, Integer, TVarChar, TFloat, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpInsertUpdate_Object_HouseholdInventory(
  INOUT ioId                     Integer   ,     -- ключ объекта <Город>
     IN inCode                   Integer   ,     -- Код объекта
     IN inName                   TVarChar  ,     -- Название объекта
+    IN inCountForPrice          TFloat    ,     -- Себестоимость
     IN inSession                TVarChar        -- сессия пользователя
 )
   RETURNS integer AS
@@ -36,12 +37,15 @@ BEGIN
    -- сохранили <Объект>
    ioId := lpInsertUpdate_Object (ioId, zc_Object_HouseholdInventory(), vbCode_calc, inName);
 
+   -- сохранили свойство <Себестоимость>
+   PERFORM lpInsertUpdate_ObjectFloat(zc_ObjectFloat_HouseholdInventory_CountForPrice(), ioId, inCountForPrice);
+
    -- сохранили протокол
    PERFORM lpInsert_ObjectProtocol (ioId, vbUserId);
 
 END;$BODY$
   LANGUAGE plpgsql VOLATILE;
-ALTER FUNCTION gpInsertUpdate_Object_HouseholdInventory (Integer, Integer, TVarChar, TVarChar) OWNER TO postgres;
+ALTER FUNCTION gpInsertUpdate_Object_HouseholdInventory (Integer, Integer, TVarChar, TFloat, TVarChar) OWNER TO postgres;
 
 
 -------------------------------------------------------------------------------
