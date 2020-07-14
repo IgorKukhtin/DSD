@@ -18,7 +18,8 @@ RETURNS TABLE (
       , TradeMarkName       TVarChar --Торговая марка
       , Amount              TFloat --% скидки на товар
       , MainDiscount        TFloat -- Общая скидка для покупателя, %
-      , Price               TFloat --Цена в прайсе
+      , Price               TFloat --Цена в прайсе c учетом скидки по договору
+      , OperPriceList       TFloat --Цена в прайсе 
       , PriceSale           TFloat --Цена на полке
       , PriceWithOutVAT     TFloat --Цена отгрузки без учета НДС, с учетом скидки, грн
       , PriceWithVAT        TFloat --Цена отгрузки с учетом НДС, с учетом скидки, грн
@@ -135,7 +136,8 @@ BEGIN
              , Object_TradeMark.ValueData             AS TradeMark           --Торговая марка
              , MovementItem.Amount                    AS Amount              --% скидки на товар
              , MIFloat_MainDiscount.ValueData ::TFloat AS MainDiscount       -- Общая скидка для покупателя, %
-             , MIFloat_Price.ValueData                AS Price               --Цена в прайсе
+             , MIFloat_Price.ValueData                AS Price               --Цена в прайсе с учетом скидки по договору
+             , MIFloat_OperPriceList.ValueData ::TFloat AS OperPriceList     -- Цена в прайсе
              , MIFloat_PriceSale.ValueData            AS PriceSale           --Цена на полке
              , MIFloat_PriceWithOutVAT.ValueData      AS PriceWithOutVAT     --Цена отгрузки без учета НДС, с учетом скидки, грн
              , MIFloat_PriceWithVAT.ValueData         AS PriceWithVAT        --Цена отгрузки с учетом НДС, с учетом скидки, грн
@@ -206,6 +208,9 @@ BEGIN
              LEFT JOIN MovementItemFloat AS MIFloat_PriceSale
                                          ON MIFloat_PriceSale.MovementItemId = MovementItem.Id
                                         AND MIFloat_PriceSale.DescId = zc_MIFloat_PriceSale()
+             LEFT JOIN MovementItemFloat AS MIFloat_OperPriceList
+                                         ON MIFloat_OperPriceList.MovementItemId = MovementItem.Id
+                                        AND MIFloat_OperPriceList.DescId = zc_MIFloat_OperPriceList()
              LEFT JOIN MovementItemFloat AS MIFloat_AmountOrder
                                          ON MIFloat_AmountOrder.MovementItemId = MovementItem.Id
                                         AND MIFloat_AmountOrder.DescId = zc_MIFloat_AmountOrder()
@@ -306,6 +311,7 @@ ALTER FUNCTION gpSelect_MovementItem_PromoGoods (Integer, Boolean, TVarChar) OWN
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.    Воробкало А.А.
+ 14.07.20         * add OperPriceList
  06.07.20         * add AmountRealPromo
  01.07.20         * add MainDiscount
  24.01.18         * add PriceTender
