@@ -1248,7 +1248,8 @@ BEGIN
                              
         -- результат
         SELECT --*** Артикул
-               COALESCE (tmpObject_GoodsPropertyValue.Article, tmpObject_GoodsPropertyValueGroup.Article, tmpObject_GoodsPropertyValue_basis.Article, '')
+               Object_Goods.ObjectCode :: TVarChar
+             --COALESCE (tmpObject_GoodsPropertyValue.Article, tmpObject_GoodsPropertyValueGroup.Article, tmpObject_GoodsPropertyValue_basis.Article, '')
                -- Внутренний код - справочник - "Параметры Товар и вид товара"
                --tmpGoodsByGoodsKind.ObjectId :: TVarChar
                -- Кол-во

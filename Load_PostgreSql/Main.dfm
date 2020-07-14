@@ -127,7 +127,6 @@ object MainForm: TMainForm
     BevelOuter = bvNone
     TabOrder = 2
     Visible = False
-    ExplicitLeft = 652
     object cbGoodsGroup: TCheckBox
       Tag = 10
       Left = 15
@@ -2339,7 +2338,6 @@ object MainForm: TMainForm
     Font.Style = []
     ParentFont = False
     TabOrder = 5
-    ExplicitLeft = 408
     object PanelErr: TPanel
       Left = 1
       Top = 1
@@ -2354,7 +2352,6 @@ object MainForm: TMainForm
       ParentFont = False
       TabOrder = 0
       OnDblClick = PanelErrDblClick
-      ExplicitWidth = 286
       object EditRepl1: TEdit
         Left = 141
         Top = 17
@@ -2373,6 +2370,31 @@ object MainForm: TMainForm
         Text = '1000000'
         Visible = False
       end
+      object EditRepl3: TEdit
+        Left = 139
+        Top = -2
+        Width = 98
+        Height = 21
+        TabOrder = 2
+        Text = 'Project_master'
+        Visible = False
+      end
+      object cbRepl4: TCheckBox
+        Left = 11
+        Top = 4
+        Width = 122
+        Height = 17
+        Caption = #1045#1097#1077' test2'
+        Font.Charset = DEFAULT_CHARSET
+        Font.Color = clWindowText
+        Font.Height = -11
+        Font.Name = 'MS Sans Serif'
+        Font.Style = [fsBold]
+        ParentFont = False
+        TabOrder = 3
+        Visible = False
+        OnClick = cbCompleteClick
+      end
     end
     object LogMemo: TMemo
       Left = 1
@@ -2389,8 +2411,6 @@ object MainForm: TMainForm
         'LogMemo')
       ParentFont = False
       TabOrder = 1
-      ExplicitWidth = 286
-      ExplicitHeight = 315
     end
     object LogMemo2: TMemo
       Left = 1
@@ -2408,9 +2428,6 @@ object MainForm: TMainForm
       ParentFont = False
       TabOrder = 2
       Visible = False
-      ExplicitLeft = -15
-      ExplicitTop = 343
-      ExplicitWidth = 286
     end
   end
   object DataSource: TDataSource

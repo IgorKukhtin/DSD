@@ -218,6 +218,8 @@ type
     EditRepl2: TEdit;
     LogMemo2: TMemo;
     ZQuery_test2: TZQuery;
+    EditRepl3: TEdit;
+    cbRepl4: TCheckBox;
     procedure cbAllGuideClick(Sender: TObject);
     procedure FormCreate(Sender: TObject);
     procedure StopButtonClick(Sender: TObject);
@@ -1214,7 +1216,7 @@ begin
      if (Hour_calc = 6) and (beginVACUUM > 0) then beginVACUUM:= 0;
      //
      if ((Hour_calc = 7) or ((Hour_calc = 21) and (Minute_calc > 20)) or (Hour_calc = 23)
-      or ((Hour_calc = 5) and (Minute_calc > 35) and (Minute_calc < 55) and ((ParamStr(6)='VAC_5')or(ParamStr(7)='VAC_5')or(ParamStr(8)='VAC_5')))
+      or ((Hour_calc = 4) and (Minute_calc > 45) {and (Minute_calc < 55)} and ((ParamStr(6)='VAC_5')or(ParamStr(7)='VAC_5')or(ParamStr(8)='VAC_5')))
          )
         and (beginVACUUM < 4) and (ParamStr(2)='autoALL')
      //if (Hour_calc = 14) and (beginVACUUM < 4) and (ParamStr(2)='autoALL')
@@ -1250,9 +1252,10 @@ begin
               with zConnection_vacuum do
               try
                   Connected:=false;
-                  HostName:='integer-srv.alan.dp.ua';
-                  User:='admin';
-                  Password:='vas6ok';
+                  HostName:=toZConnection.HostName;
+                  User:=toZConnection.User;
+                  Password:=toZConnection.Password;
+                  Database:=toZConnection.Database;
                   Connected:=true;
               except
                   myLogMemo_add('!!! err zConnection_vacuum !!!');
@@ -1264,7 +1267,7 @@ begin
                //
                myLogMemo_add('('+IntToStr(Hour_calc)+') start all VACUUM ('+IntToStr(beginVACUUM)+')');
                //
-               lVACUUM_all (Hour_calc = 23);
+               lVACUUM_all ((Hour_calc = 23)or(Hour_calc = 4));
                beginVACUUM:= beginVACUUM + 1;
                //
                myLogMemo_add('end all VACUUM');
@@ -1456,8 +1459,36 @@ begin
      begin
           EditRepl1.Visible:= true;
           EditRepl2.Visible:= true;
+          EditRepl3.Visible:= true;
+          cbRepl4.Visible:= true;
+          //
+          DBGrid.Visible:= false;
+          DocumentPanel.Visible:= false;
+          CompleteDocumentPanel.Visible:= false;
+          LogPanel.Align:= alClient;
+          //
           exit;
      end;
+     //
+     if EditRepl3.Text = 'Project_master'
+     then
+       with ZConnection_test do begin
+          Connected:=false;
+          HostName:='192.168.0.194';
+          User:='admin';
+          Password:='vas6ok';
+          Database:='project_master';
+          Connected:=true;
+       end
+     else
+       with ZConnection_test do begin
+          Connected:=false;
+          HostName:='project-vds.vds.colocall.com';
+          User:='admin';
+          Password:='vas6ok';
+          Database:='pod_test';
+          Connected:=true;
+       end;
      //
      LogMemo.Clear;
      LogMemo2.Clear;
@@ -1483,6 +1514,8 @@ begin
       end;
      //
      //
+     if cbRepl4.Checked = true
+     then
       with ZQuery_test2 do begin
         //
         for i:=0 to Sql.Count-1 do LogMemo2.Lines.Add(Sql[i]);
@@ -1492,7 +1525,11 @@ begin
         LogMemo2.Clear;
         while not eof do
          begin
+         LogMemo2.Lines.Add('-- Id = ' + FieldByName('Id').AsString);
+         LogMemo2.Lines.Add('-- Transaction_Id =' + FieldByName('Transaction_Id').AsString);
+         LogMemo2.Lines.Add('-- table_name =' + FieldByName('table_name').AsString);
          LogMemo2.Lines.Add(FieldByName('Result').AsString);
+         LogMemo2.Lines.Add('');
          LogMemo2.Lines.Add('');
          next;
         end;
@@ -2295,55 +2332,12 @@ begin
      //
      myEnabledCB(cbReturnIn_Auto);
      //
-     // !!!заливка в сибасе!!!
-     fOpenSqToQuery ('select * from gpComplete_SelectAll_Sybase_ReturnIn_Auto('+FormatToVarCharServer_isSpace(StartDateCompleteEdit.Text)+','+FormatToVarCharServer_isSpace(EndDateCompleteEdit.Text)+')');
-
-     // delete Data on Sybase
-     fromZConnection.Connected:=false;
-     fExecSqlFromZQuery('delete dba._pgMovementReComlete');
-     fExecSqlFromZQuery('insert into dba._pgMovementReComlete select * from _pgMovementReComlete_add');
-
-     SaveRecord:=toSqlQuery.RecordCount;
-     Gauge.Progress:=0;
-     Gauge.MaxValue:=SaveRecord;
-     cbReturnIn_Auto.Caption:='('+IntToStr(SaveRecord)+') !!!Cписок накладных!!!';
-
-     with toSqlQuery do
-        while not EOF do
-        begin
-             // insert into Sybase
-             ExecStr1:='insert into dba._pgMovementReComlete(MovementId,OperDate,InvNumber,Code,ItemName)'
-                     +myAdd;
-             ExecStr2:='';
-             ExecStr3:='';
-             ExecStr4:='';
-             for i:=1 to 100 do
-             begin
-                  Next;
-                  addStr:=myAdd;
-                  if addStr <> '' then
-                  if LengTh(ExecStr1) < 3500
-                  then ExecStr1:=ExecStr1 + ' union all ' + addStr
-                  else if LengTh(ExecStr2) < 3500
-                       then ExecStr2:=ExecStr2 + ' union all ' + addStr
-                        else if LengTh(ExecStr3) < 3500
-                             then ExecStr3:=ExecStr3 + ' union all ' + addStr
-                             else ExecStr4:=ExecStr4 + ' union all ' + addStr;
-                  Application.ProcessMessages;
-                  Application.ProcessMessages;
-                  Application.ProcessMessages;
-             end;
-             fromZConnection.Connected:=false;
-             fExecSqlFromZQuery(ExecStr1+ExecStr2+ExecStr3+ExecStr4);
-             Next;
-        end;
      //
      fromZConnection.Connected:=false;
      with fromZQuery,Sql do begin
         Close;
         Clear;
-        Add('select _pgMovementReComlete.*');
-        Add('from dba._pgMovementReComlete');
+        Add('select * from gpComplete_SelectAll_Sybase_ReturnIn_Auto('+FormatToVarCharServer_isSpace(StartDateCompleteEdit.Text)+','+FormatToVarCharServer_isSpace(EndDateCompleteEdit.Text)+')');
         Add('order by OperDate,MovementId,InvNumber');
         Open;
 
@@ -2415,56 +2409,20 @@ begin
      //
      myEnabledCB(cbCurrency);
      //
-     // !!!заливка в сибасе!!!
-     fOpenSqToQuery ('select * from gpComplete_SelectAll_Sybase_Currency_Auto('+FormatToVarCharServer_isSpace(StartDateCompleteEdit.Text)+','+FormatToVarCharServer_isSpace(EndDateCompleteEdit.Text)+')');
-
-     // delete Data on Sybase
-     fromZConnection.Connected:=false;
-     fExecSqlFromZQuery('delete dba._pgMovementReComlete');
-
-     SaveRecord:=toSqlQuery.RecordCount;
-     Gauge.Progress:=0;
-     Gauge.MaxValue:=SaveRecord;
      cbCurrency.Caption:='('+IntToStr(SaveRecord)+') !!!Расчет курсовых разн.!!!';
 
-     with toSqlQuery do
-        while not EOF do
-        begin
-             // insert into Sybase
-             ExecStr1:='insert into dba._pgMovementReComlete(MovementId,OperDate,InvNumber,Code,ItemName)'
-                     +myAdd;
-             ExecStr2:='';
-             ExecStr3:='';
-             ExecStr4:='';
-             for i:=1 to 100 do
-             begin
-                  Next;
-                  addStr:=myAdd;
-                  if addStr <> '' then
-                  if LengTh(ExecStr1) < 3500
-                  then ExecStr1:=ExecStr1 + ' union all ' + addStr
-                  else if LengTh(ExecStr2) < 3500
-                       then ExecStr2:=ExecStr2 + ' union all ' + addStr
-                        else if LengTh(ExecStr3) < 3500
-                             then ExecStr3:=ExecStr3 + ' union all ' + addStr
-                             else ExecStr4:=ExecStr4 + ' union all ' + addStr;
-                  Application.ProcessMessages;
-                  Application.ProcessMessages;
-                  Application.ProcessMessages;
-             end;
-             fromZConnection.Connected:=false;
-             fExecSqlFromZQuery(ExecStr1+ExecStr2+ExecStr3+ExecStr4);
-             Next;
-        end;
      //
      fromZConnection.Connected:=false;
      with fromZQuery,Sql do begin
         Close;
         Clear;
-        Add('select _pgMovementReComlete.*');
-        Add('from dba._pgMovementReComlete');
+        Add('select * from gpComplete_SelectAll_Sybase_Currency_Auto('+FormatToVarCharServer_isSpace(StartDateCompleteEdit.Text)+','+FormatToVarCharServer_isSpace(EndDateCompleteEdit.Text)+')');
         Add('order by OperDate,MovementId,InvNumber');
         Open;
+
+        //
+        Gauge.Progress:=0;
+        Gauge.MaxValue:=RecordCount;
 
         cbCurrency.Caption:='('+IntToStr(RecordCount)+') Расчет курс. разн.';
         //
