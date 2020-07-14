@@ -12,17 +12,17 @@ inherited ComputerAccessoriesRegisterForm: TComputerAccessoriesRegisterForm
     Width = 923
     Height = 429
     ExplicitTop = 117
-    ExplicitWidth = 1059
+    ExplicitWidth = 923
     ExplicitHeight = 429
     ClientRectBottom = 429
     ClientRectRight = 923
     inherited tsMain: TcxTabSheet
-      ExplicitWidth = 1059
+      ExplicitWidth = 923
       ExplicitHeight = 405
       inherited cxGrid: TcxGrid
         Width = 923
         Height = 397
-        ExplicitWidth = 1059
+        ExplicitWidth = 923
         ExplicitHeight = 397
         inherited cxGridDBTableView: TcxGridDBTableView
           DataController.Summary.DefaultGroupSummaryItems = <
@@ -151,9 +151,7 @@ inherited ComputerAccessoriesRegisterForm: TComputerAccessoriesRegisterForm
           object ReplacementDate: TcxGridDBColumn
             Caption = #1044#1072#1090#1072' '#1079#1072#1084#1077#1085#1099
             DataBinding.FieldName = 'ReplacementDate'
-            PropertiesClassName = 'TcxCurrencyEditProperties'
-            Properties.DecimalPlaces = 0
-            Properties.DisplayFormat = '0000'
+            PropertiesClassName = 'TcxDateEditProperties'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Styles.Content = dmMain.cxHeaderL1Style
@@ -189,7 +187,6 @@ inherited ComputerAccessoriesRegisterForm: TComputerAccessoriesRegisterForm
         Height = 8
         HotZoneClassName = 'TcxMediaPlayer8Style'
         AlignSplitter = salBottom
-        ExplicitWidth = 1059
       end
     end
   end
@@ -197,7 +194,7 @@ inherited ComputerAccessoriesRegisterForm: TComputerAccessoriesRegisterForm
     Width = 923
     Height = 91
     TabOrder = 3
-    ExplicitWidth = 1059
+    ExplicitWidth = 923
     ExplicitHeight = 91
     inherited edInvNumber: TcxTextEdit
       Left = 9
@@ -1094,20 +1091,20 @@ inherited ComputerAccessoriesRegisterForm: TComputerAccessoriesRegisterForm
         MultiSelectSeparator = ','
       end
       item
-        Name = 'inReplacementDate'
-        Value = 'NULL'
-        Component = MasterCDS
-        ComponentItem = 'ReplacementDate'
-        DataType = ftDateTime
-        ParamType = ptInput
-        MultiSelectSeparator = ','
-      end
-      item
         Name = 'inAmount'
         Value = Null
         Component = MasterCDS
         ComponentItem = 'Amount'
         DataType = ftFloat
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inReplacementDate'
+        Value = 'NULL'
+        Component = MasterCDS
+        ComponentItem = 'ReplacementDate'
+        DataType = ftDateTime
         ParamType = ptInput
         MultiSelectSeparator = ','
       end
