@@ -3205,6 +3205,22 @@
 				<Form>Report_OrderInternalPromo_DistributionCalculationForm</Form>
 				<DesignClass>TParentForm</DesignClass>
 			</DCCReference>
+			<DCCReference Include="..\..\FormsFarmacy\Guides\ComputerAccessories.pas">
+				<Form>ComputerAccessoriesForm</Form>
+				<DesignClass>TParentForm</DesignClass>
+			</DCCReference>
+			<DCCReference Include="..\..\FormsFarmacy\Guides\ComputerAccessoriesEdit.pas">
+				<Form>ComputerAccessoriesEditForm</Form>
+				<DesignClass>TParentForm</DesignClass>
+			</DCCReference>
+			<DCCReference Include="..\..\FormsFarmacy\Document\ComputerAccessoriesRegister.pas">
+				<Form>ComputerAccessoriesRegisterForm</Form>
+				<DesignClass>TParentForm</DesignClass>
+			</DCCReference>
+			<DCCReference Include="..\..\FormsFarmacy\Document\ComputerAccessoriesRegisterJournal.pas">
+				<Form>ComputerAccessoriesRegisterJournalForm</Form>
+				<DesignClass>TParentForm</DesignClass>
+			</DCCReference>
 			<BuildConfiguration Include="Release">
 				<Key>Cfg_2</Key>
 				<CfgParent>Base</CfgParent>

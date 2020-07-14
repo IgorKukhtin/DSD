@@ -909,7 +909,11 @@ uses
   IncomeHouseholdInventoryCashJournal in '..\..\FormsFarmacy\Document\IncomeHouseholdInventoryCashJournal.pas' {IncomeHouseholdInventoryCashJournalForm: TParentForm},
   Report_HouseholdInventoryRemainsCash in '..\..\FormsFarmacy\Report\Report_HouseholdInventoryRemainsCash.pas' {Report_HouseholdInventoryRemainsCashForm: TParentForm},
   Report_PercentageOccupancySUN in '..\..\FormsFarmacy\Report\Report_PercentageOccupancySUN.pas' {Report_PercentageOccupancySUNForm: TParentForm},
-  Report_OrderInternalPromo_DistributionCalculation in '..\..\FormsFarmacy\Report\Report_OrderInternalPromo_DistributionCalculation.pas' {Report_OrderInternalPromo_DistributionCalculationForm: TParentForm};
+  Report_OrderInternalPromo_DistributionCalculation in '..\..\FormsFarmacy\Report\Report_OrderInternalPromo_DistributionCalculation.pas' {Report_OrderInternalPromo_DistributionCalculationForm: TParentForm},
+  ComputerAccessories in '..\..\FormsFarmacy\Guides\ComputerAccessories.pas' {ComputerAccessoriesForm: TParentForm},
+  ComputerAccessoriesEdit in '..\..\FormsFarmacy\Guides\ComputerAccessoriesEdit.pas' {ComputerAccessoriesEditForm: TParentForm},
+  ComputerAccessoriesRegister in '..\..\FormsFarmacy\Document\ComputerAccessoriesRegister.pas' {ComputerAccessoriesRegisterForm: TParentForm},
+  ComputerAccessoriesRegisterJournal in '..\..\FormsFarmacy\Document\ComputerAccessoriesRegisterJournal.pas' {ComputerAccessoriesRegisterJournalForm: TParentForm};
 
 {$R *.res}
 {$R DevExpressRus.res}

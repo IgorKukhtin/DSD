@@ -113,10 +113,16 @@ CREATE OR REPLACE FUNCTION zc_MIDate_IssuedBy() RETURNS Integer AS $BODY$BEGIN R
 INSERT INTO MovementItemDateDesc (Code, ItemName)
   SELECT 'zc_MIDate_IssuedBy', 'Дата выдачи' WHERE NOT EXISTS (SELECT * FROM MovementItemDateDesc WHERE Code = 'zc_MIDate_IssuedBy');
 
+
+CREATE OR REPLACE FUNCTION zc_MIDate_ReplacementDate() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM MovementItemDateDesc WHERE Code = 'zc_MIDate_ReplacementDate'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
+INSERT INTO MovementItemDateDesc (Code, ItemName)
+  SELECT 'zc_MIDate_ReplacementDate', 'Дата замены' WHERE NOT EXISTS (SELECT * FROM MovementItemDateDesc WHERE Code = 'zc_MIDate_ReplacementDate');
+
   
 /*-------------------------------------------------------------------------------
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.    Воробкало А.А.  Шаблий О.В.
+ 14.07.20                                                                         * zc_MIDate_ReplacementDate
  01.09.19                                                                         * zc_MIDate_IssuedBy
  23.08.19                                                                         * zc_MIDate_Start, zc_MIDate_End
  27.08.19                                                                         * zc_MIDate_Calculation
