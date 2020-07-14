@@ -1,26 +1,26 @@
 inherited OrderInternalPromoForm: TOrderInternalPromoForm
   Caption = #1047#1072#1103#1074#1082#1080' '#1074#1085#1091#1090#1088#1077#1085#1085#1080#1077' ('#1084#1072#1088#1082#1077#1090'-'#1090#1086#1074#1072#1088#1099')'
   ClientHeight = 564
-  ClientWidth = 824
+  ClientWidth = 814
   AddOnFormData.AddOnFormRefresh.ParentList = 'Sale'
-  ExplicitWidth = 840
+  ExplicitWidth = 830
   ExplicitHeight = 603
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
     Top = 116
-    Width = 824
+    Width = 814
     Height = 348
     ExplicitTop = 116
     ExplicitWidth = 824
     ExplicitHeight = 348
     ClientRectBottom = 348
-    ClientRectRight = 824
+    ClientRectRight = 814
     inherited tsMain: TcxTabSheet
       ExplicitWidth = 824
       ExplicitHeight = 324
       inherited cxGrid: TcxGrid
-        Width = 824
+        Width = 814
         Height = 144
         ExplicitWidth = 824
         ExplicitHeight = 144
@@ -305,11 +305,12 @@ inherited OrderInternalPromoForm: TOrderInternalPromoForm
       object cxGrid1: TcxGrid
         Left = 0
         Top = 152
-        Width = 824
+        Width = 814
         Height = 172
         Align = alBottom
         PopupMenu = PopupMenu
         TabOrder = 1
+        ExplicitWidth = 824
         object cxGridDBTableView1: TcxGridDBTableView
           Navigator.Buttons.CustomButtons = <>
           DataController.DataSource = DetailDS
@@ -519,17 +520,18 @@ inherited OrderInternalPromoForm: TOrderInternalPromoForm
       object cxSplitter1: TcxSplitter
         Left = 0
         Top = 144
-        Width = 824
+        Width = 814
         Height = 8
         Touch.ParentTabletOptions = False
         Touch.TabletOptions = [toPressAndHold]
         AlignSplitter = salBottom
         Control = cxGrid1
+        ExplicitWidth = 824
       end
     end
   end
   inherited DataPanel: TPanel
-    Width = 824
+    Width = 814
     Height = 90
     TabOrder = 3
     ExplicitWidth = 824
@@ -624,21 +626,23 @@ inherited OrderInternalPromoForm: TOrderInternalPromoForm
   object cxSplitter2: TcxSplitter [4]
     Left = 0
     Top = 464
-    Width = 824
+    Width = 814
     Height = 8
     Touch.ParentTabletOptions = False
     Touch.TabletOptions = [toPressAndHold]
     AlignSplitter = salBottom
     Control = cxGrid2
+    ExplicitWidth = 824
   end
   object cxGrid2: TcxGrid [5]
     Left = 0
     Top = 472
-    Width = 824
+    Width = 814
     Height = 92
     Align = alBottom
     PopupMenu = PopupMenu
     TabOrder = 9
+    ExplicitWidth = 824
     object cxGridDBTableView2: TcxGridDBTableView
       Navigator.Buttons.CustomButtons = <>
       DataController.DataSource = PartnerDS
@@ -1613,6 +1617,26 @@ inherited OrderInternalPromoForm: TOrderInternalPromoForm
       QuestionBeforeExecute = #1057#1092#1086#1088#1084#1080#1088#1086#1074#1072#1090#1100' '#1087#1077#1088#1077#1084#1077#1097#1077#1085#1080#1103' '#1087#1086' '#1088#1072#1089#1087#1088#1077#1076#1077#1083#1105#1085#1085#1086#1084#1091' '#1090#1086#1074#1072#1088#1091'?'
       InfoAfterExecute = #1042#1099#1087#1086#1083#1085#1077#1085#1086
     end
+    object actDistributionCalculation: TdsdOpenForm
+      Category = 'DSDLib'
+      MoveParams = <>
+      Caption = #1056#1072#1089#1087#1088#1077#1076#1077#1083#1077#1085#1080#1077' '#1087#1086' '#1089#1091#1084#1084#1077
+      Hint = #1056#1072#1089#1087#1088#1077#1076#1077#1083#1077#1085#1080#1077' '#1087#1086' '#1089#1091#1084#1084#1077
+      ImageIndex = 42
+      FormName = 'TReport_OrderInternalPromo_DistributionCalculationForm'
+      FormNameParam.Value = 'TReport_OrderInternalPromo_DistributionCalculationForm'
+      FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
+      GuiParams = <
+        item
+          Name = 'Id'
+          Value = Null
+          Component = FormParams
+          ComponentItem = 'Id'
+          MultiSelectSeparator = ','
+        end>
+      isShowModal = False
+    end
   end
   inherited spSelect: TdsdStoredProc
     StoredProcName = 'gpSelect_MI_OrderInternalPromo'
@@ -1778,6 +1802,10 @@ inherited OrderInternalPromoForm: TOrderInternalPromoForm
         end
         item
           Visible = True
+          ItemName = 'dxBarButton2'
+        end
+        item
+          Visible = True
           ItemName = 'dxBarStatic'
         end
         item
@@ -1896,6 +1924,10 @@ inherited OrderInternalPromoForm: TOrderInternalPromoForm
     end
     object bbInsert_Movement_Send: TdxBarButton
       Action = actInsert_Movement_Send
+      Category = 0
+    end
+    object dxBarButton2: TdxBarButton
+      Action = actDistributionCalculation
       Category = 0
     end
   end
@@ -2156,10 +2188,42 @@ inherited OrderInternalPromoForm: TOrderInternalPromoForm
     Top = 312
   end
   inherited spErasedMIMaster: TdsdStoredProc
+    Params = <
+      item
+        Name = 'inMovementItemId'
+        Component = MasterCDS
+        ComponentItem = 'Id'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'outIsErased'
+        Value = False
+        Component = MasterCDS
+        ComponentItem = 'isErased'
+        DataType = ftBoolean
+        MultiSelectSeparator = ','
+      end>
     Left = 590
     Top = 208
   end
   inherited spUnErasedMIMaster: TdsdStoredProc
+    Params = <
+      item
+        Name = 'inMovementItemId'
+        Component = MasterCDS
+        ComponentItem = 'Id'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'outIsErased'
+        Value = False
+        Component = MasterCDS
+        ComponentItem = 'isErased'
+        DataType = ftBoolean
+        MultiSelectSeparator = ','
+      end>
     Left = 654
     Top = 248
   end
@@ -2794,8 +2858,8 @@ inherited OrderInternalPromoForm: TOrderInternalPromoForm
     PackSize = 1
     NeedResetData = True
     ParamKeyField = 'inMovementId'
-    Left = 728
-    Top = 96
+    Left = 720
+    Top = 120
   end
   object spInsertByPromo: TdsdStoredProc
     StoredProcName = 'gpInsert_MI_OrderInternalPromo_byPromo'
