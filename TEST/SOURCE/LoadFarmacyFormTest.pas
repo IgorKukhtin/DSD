@@ -883,10 +883,13 @@ end;
 
 procedure TLoadFormTest.LoadReportFormTest;
 begin
-  TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_PercentageOccupancySUNForm'));
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_OrderInternalPromo_DistributionCalculationForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TReport_OrderInternalPromo_DistributionCalculationForm');
+
+{  TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_PercentageOccupancySUNForm'));
   TdsdFormStorageFactory.GetStorage.Load('TReport_PercentageOccupancySUNForm');
 
-{  TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_HouseholdInventoryRemainsDialogForm'));
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_HouseholdInventoryRemainsDialogForm'));
   TdsdFormStorageFactory.GetStorage.Load('TReport_HouseholdInventoryRemainsDialogForm');
 
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_HouseholdInventoryRemainsForm'));

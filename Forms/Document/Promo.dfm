@@ -800,9 +800,6 @@
           object tsPromoPartnerList: TcxTabSheet
             Caption = '2.2. '#1050#1086#1085#1090#1088#1072#1075#1077#1085#1090#1099' ('#1076#1077#1090#1072#1083#1100#1085#1086')'
             ImageIndex = 1
-            ExplicitTop = 0
-            ExplicitWidth = 0
-            ExplicitHeight = 0
             object grPartnerList: TcxGrid
               Left = 0
               Top = 0
@@ -1213,9 +1210,6 @@
     object cxTabSheetCalc: TcxTabSheet
       Caption = #1050#1072#1083#1100#1082#1091#1083#1103#1090#1086#1088' - '#1089#1082#1080#1076#1082#1072
       ImageIndex = 2
-      ExplicitTop = 0
-      ExplicitWidth = 0
-      ExplicitHeight = 0
       object cxGridCalc: TcxGrid
         Left = 0
         Top = 0
@@ -1520,9 +1514,6 @@
     object cxTabSheetCalc2: TcxTabSheet
       Caption = #1050#1072#1083#1100#1082#1091#1083#1103#1090#1086#1088' - '#1082#1086#1084#1087#1077#1085#1089#1072#1094#1080#1103
       ImageIndex = 2
-      ExplicitTop = 0
-      ExplicitWidth = 0
-      ExplicitHeight = 0
       object cxGridCalc2: TcxGrid
         Left = 0
         Top = 0
@@ -1837,9 +1828,6 @@
     object cxTabSheetSign: TcxTabSheet
       Caption = #1069#1083#1077#1082#1090#1088#1086#1085#1085#1072#1103' '#1087#1086#1076#1087#1080#1089#1100
       ImageIndex = 4
-      ExplicitTop = 0
-      ExplicitWidth = 0
-      ExplicitHeight = 0
       object cxGridSign: TcxGrid
         Left = 0
         Top = 0
@@ -1933,9 +1921,6 @@
     object cxTabSheetPlan: TcxTabSheet
       Caption = #1055#1083#1072#1085' '#1086#1090#1075#1088#1091#1079#1082#1080
       ImageIndex = 5
-      ExplicitTop = 0
-      ExplicitWidth = 0
-      ExplicitHeight = 0
       object cxGridPlan: TcxGrid
         Left = 0
         Top = 0
@@ -2180,9 +2165,6 @@
     object cxTabSheetMessage: TcxTabSheet
       Caption = #1057#1086#1086#1073#1097#1077#1085#1080#1103
       ImageIndex = 6
-      ExplicitTop = 0
-      ExplicitWidth = 0
-      ExplicitHeight = 0
       object cxGrid2: TcxGrid
         Left = 0
         Top = 0
@@ -2590,7 +2572,7 @@
       Top = 90
       Properties.MaxLength = 255
       TabOrder = 15
-      Width = 334
+      Width = 225
     end
     object deEndReturn: TcxDateEdit
       Left = 278
@@ -2663,6 +2645,23 @@
       ShowHint = True
       TabOrder = 42
       Width = 66
+    end
+    object cxLabel24: TcxLabel
+      Left = 810
+      Top = 72
+      Hint = '(-)% '#1057#1082#1080#1076#1082#1080' (+)% '#1053#1072#1094#1077#1085#1082#1080' '#1044#1086#1075'.'
+      Caption = '(-)% '#1057#1082'. (+)% '#1053#1072#1094'.'
+      ParentShowHint = False
+      ShowHint = True
+    end
+    object edChangePercent: TcxCurrencyEdit
+      Left = 810
+      Top = 90
+      Properties.DecimalPlaces = 4
+      Properties.DisplayFormat = ',0.####'
+      Properties.ReadOnly = True
+      TabOrder = 44
+      Width = 103
     end
   end
   object deMonthPromo: TcxDateEdit [2]
@@ -3973,6 +3972,20 @@
         end>
       Caption = 'actInsertUpdate_Movement_PromoPartnerFromRetail'
     end
+    object actUpdateChangePercent: TdsdUpdateDataSet
+      Category = 'Partner'
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      StoredProc = spUpdate_Movement_ChangePercent
+      StoredProcList = <
+        item
+          StoredProc = spUpdate_Movement_ChangePercent
+        end
+        item
+        end>
+      Caption = 'actUpdateChangePercent'
+      DataSource = PartnerDS
+    end
     object actInsertUpdateMISignYes: TdsdExecStoredProc
       Category = 'Sign'
       MoveParams = <>
@@ -4271,6 +4284,39 @@
       PrinterNameParam.DataType = ftString
       PrinterNameParam.MultiSelectSeparator = ','
     end
+    object macChangePercent: TMultiAction
+      Category = 'Partner'
+      MoveParams = <>
+      ActionList = <
+        item
+          Action = actChangePercentDialog
+        end
+        item
+          Action = actUpdateChangePercent
+        end>
+      Caption = #1059#1089#1090#1072#1085#1086#1074#1080#1090#1100' (-)% '#1057#1082#1080#1076#1082#1080' (+)% '#1053#1072#1094#1077#1085#1082#1080
+      ImageIndex = 43
+    end
+    object actChangePercentDialog: TExecuteDialog
+      Category = 'Partner'
+      MoveParams = <>
+      Caption = 'actChangePercentDialog'
+      FormName = 'TChangePercentDialogForm'
+      FormNameParam.Value = 'TChangePercentDialogForm'
+      FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
+      GuiParams = <
+        item
+          Name = 'inChangePercent'
+          Value = Null
+          Component = edChangePercent
+          DataType = ftFloat
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end>
+      isShowModal = True
+      OpenBeforeShow = True
+    end
   end
   inherited MasterDS: TDataSource
     Top = 272
@@ -4405,6 +4451,10 @@
         end
         item
           BeginGroup = True
+          Visible = True
+          ItemName = 'bbChangePercent'
+        end
+        item
           Visible = True
           ItemName = 'dxBarStatic'
         end
@@ -4733,6 +4783,10 @@
     end
     object bbPrint_CalcAll: TdxBarButton
       Action = actPrint_CalcAll
+      Category = 0
+    end
+    object bbChangePercent: TdxBarButton
+      Action = macChangePercent
       Category = 0
     end
   end
@@ -5109,6 +5163,13 @@
         Component = GuidesSignInternal
         ComponentItem = 'TextValue'
         DataType = ftString
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'ChangePercent'
+        Value = Null
+        Component = edChangePercent
+        DataType = ftFloat
         MultiSelectSeparator = ','
       end>
     Left = 320
@@ -7047,7 +7108,7 @@
         MultiSelectSeparator = ','
       end>
     Left = 940
-    Top = 40
+    Top = 24
   end
   object PromoStateKindDS: TDataSource
     DataSet = PromoStateKindDCS
@@ -7676,5 +7737,30 @@
     object cxEditRepository1CurrencyItem2: TcxEditRepositoryCurrencyItem
       Properties.DisplayFormat = ',0.##;-,0.##; ;'
     end
+  end
+  object spUpdate_Movement_ChangePercent: TdsdStoredProc
+    StoredProcName = 'gpUpdate_Movement_Promo_ChangePercent'
+    DataSets = <>
+    OutputType = otResult
+    Params = <
+      item
+        Name = 'inMovementId'
+        Value = Null
+        Component = FormParams
+        ComponentItem = 'Id'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inChangePercent'
+        Value = Null
+        Component = edChangePercent
+        DataType = ftFloat
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end>
+    PackSize = 1
+    Left = 376
+    Top = 248
   end
 end

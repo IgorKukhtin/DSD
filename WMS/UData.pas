@@ -50,6 +50,7 @@ type
     qryFromHostMessageErr: TFDQuery;
     dsFromHostDetail: TDataSource;
     qryFromHostDetail: TFDQuery;
+    qryInsert_wms_Message: TFDQuery;
   private
     procedure Insert_wms_from_host_error(const AHeaderId: Integer; const ASite: TSite;
       const APacketName, AErrDescription: string; AMsgProc: TNotifyMsgProc);
@@ -139,6 +140,7 @@ type
     procedure InnerMsgProc(const AMsg: string);
     procedure InnerLogSqlProc;
     procedure InnerShowSqlProc;
+    procedure MySleep(const AInterval: Cardinal);
     property Data: TdmData read FData;
   public
     constructor Create(CreateSuspended: Boolean; AMsgProc: TNotifyMsgProc; AKind: TThreadKind = tknNondriven); reintroduce;
@@ -160,11 +162,14 @@ type
   strict private
     FPacket: TPacketKind;
     FData: TExportData;
+  strict private
+    function GetPacketName: string;
   protected
     procedure Execute; override;
   public
     constructor Create(CreateSuspended: Boolean; AExportData: TExportData; const APacket: TPacketKind;
       AMsgProc: TNotifyMsgProc; AKind: TThreadKind = tknNondriven); reintroduce;
+    property PacketName: string read GetPacketName;
   end;
 
   TProcessExportDataErrorThread = class(TWorkerThread)
@@ -186,6 +191,7 @@ implementation
 
 uses
   System.Variants,
+  System.TypInfo,
   Winapi.ActiveX,
   Xml.XMLIntf,
   Xml.XMLDoc,
@@ -427,7 +433,7 @@ var
 begin
   Result := 0;
   try
-    if not dmData.IsConnectedBoth(AMsgProc) then Exit;
+    if not IsConnectedBoth(AMsgProc) then Exit;
 
      //
      // формируем и передаем данные - SKU
@@ -532,7 +538,7 @@ var
 begin
   Result := 0;
   try
-    if not dmData.IsConnectedBoth(AMsgProc) then Exit;
+    if not IsConnectedBoth(AMsgProc) then Exit;
 
      //
      // формируем и передаем данные - SKU_GROUP + SKU_DEPENDS
@@ -562,7 +568,7 @@ var
 begin
   Result := 0;
   try
-    if not dmData.IsConnectedBoth(AMsgProc) then Exit;
+    if not IsConnectedBoth(AMsgProc) then Exit;
 
      //
      // формируем и передаем данные - SKU_GROUP + SKU_DEPENDS
@@ -607,7 +613,7 @@ var
 begin
   Result := 0;
   try
-    if not dmData.IsConnectedBoth(AMsgProc) then Exit;
+    if not IsConnectedBoth(AMsgProc) then Exit;
 
      //
      // формируем и передаем данные - SKU
@@ -712,7 +718,15 @@ var
 begin
   Result := 0;
   try
-    if not dmData.IsConnectedBoth(AMsgProc) then Exit;
+    if not IsConnectedBoth(AMsgProc) then
+    begin
+      if Assigned(AMsgProc) then
+        AMsgProc('Ќет подключени€');
+      Exit;
+    end
+    else
+      if Assigned(AMsgProc) then
+        AMsgProc('ѕодключилс€ к базе данных');
 
      //
      // формируем и передаем данные - SKU
@@ -742,7 +756,7 @@ var
 begin
   Result := 0;
   try
-    if not dmData.IsConnectedBoth(AMsgProc) then Exit;
+    if not IsConnectedBoth(AMsgProc) then Exit;
 
      //
      // формируем и передаем данные - SKU
@@ -772,7 +786,7 @@ var
 begin
   Result := 0;
   try
-    if not dmData.IsConnectedBoth(AMsgProc) then Exit;
+    if not IsConnectedBoth(AMsgProc) then Exit;
 
      //
      // формируем и передаем данные - SKU_GROUP + SKU_DEPENDS
@@ -802,7 +816,7 @@ var
 begin
   Result := 0;
   try
-    if not dmData.IsConnectedBoth(AMsgProc) then Exit;
+    if not IsConnectedBoth(AMsgProc) then Exit;
 
      //
      // формируем и передаем данные - SKU_GROUP + SKU_DEPENDS
@@ -827,7 +841,11 @@ end;
 function TdmData.fInsert_wms_Message_pg(pgProcName, GUID: string; AMsgProc: TNotifyMsgProc): Integer;
 begin
   try
+//    if Assigned(AMsgProc) then
+//      AMsgProc('«апись данных в wms_message с помощью ' + pgProcName);
     Result := gpInsert_wms_Message(pgProcName, GUID);
+    if Assigned(AMsgProc) then
+      AMsgProc('«аписано в wms_message с помощью ' + pgProcName + '  ' + IntToStr(Result) + ' записей');
   except
     on E: Exception do
     begin
@@ -835,7 +853,7 @@ begin
       if Assigned(AMsgProc) then AMsgProc(Format(cExceptionMsg, [E.ClassName, E.Message]));
     end;
   end;
-     //
+
   if Result < 0 then
     if Assigned(AMsgProc) then AMsgProc('ERR on pg = ' + pgProcName);
 end;
@@ -949,6 +967,7 @@ begin
   end;
      // сохранили несколько XML в wms
   try
+    AMsgProc('«апись в WMS пакета ' + aPacketName);
     to_wms_Packets_query.ExecSQL;
   except
     on E: Exception do
@@ -1003,28 +1022,21 @@ begin
 end;
 
 function TdmData.gpInsert_wms_Message(spName, GUID: string): Integer;
+const
+  cSQL = 'select * from %s(inGUID:= %s, inSession:= %s)';
+var
+  sSQL: string;
 begin
-  with spInsert_wms_Message do
+  sSQL := Format(cSQL, [spName, QuotedStr(GUID), QuotedStr('5')]);
+
+  with qryInsert_wms_Message do
   begin
-    StoredProcName := spName;
-    FetchOptions.Items := FetchOptions.Items - [fiMeta];
-    Params.Clear;
-    Params.Add('inGUID', ftString, ptInput);
-    Params.Add('outRecCount', ftInteger, ptOutput);
-    Params.Add('inSession', ftString, ptInput);
-    Params[0].ParamType := ptInput;
-    Params[0].FDDataType := dtWideString;
-    Params[1].ParamType := ptOutput;
-    Params[1].FDDataType := dtInt32;
-    Params[2].ParamType := ptInput;
-    Params[2].FDDataType := dtWideString;
-    ParamByName('inGUID').AsString := GUID;
-    ParamByName('inSession').AsString := '5';
-    Prepare;
-
-    ExecProc;
-
-    Result := ParamByName('outRecCount').AsInteger;
+    Close;
+    SQL.Clear;
+    SQL.Add(sSQL);
+    Open;
+    Result := Fields[0].AsInteger;
+    Close;
   end;
 end;
 
@@ -1033,8 +1045,8 @@ var
   dataObjects: TDataObjects;
   wmsImport: TImportWMS;
 const
-  cStartImport   = 'Start import "%s" from WMS'  + #13#10;
-  cSuccessImport = 'Data "%s" successfull imported from WMS' + #13#10;
+  cStartImport   = '—тарт импорта "%s"';
+  cSuccessImport = 'ƒанные "%s" успешно импортированы';
 begin
   with dataObjects do
   begin
@@ -1113,6 +1125,7 @@ begin
     SQL.Clear;
     SQL.Add(sInsert);
   end;
+  AMsgProc('«апись ошибок в wms_from_host_error');
   thrErr := TQryThread.Create(alan_exec_qry, saOpen, AMsgProc);
   thrErr.Start;
 end;
@@ -1146,7 +1159,7 @@ var
 begin
   lpack_id := 0;
 
-  if not dmData.IsConnectedBoth(AMsgProc) then Exit;
+  if not IsConnectedBoth(AMsgProc) then Exit;
 
   // формируем и передаем данные - Movement_INCOMING
   spName := 'gpInsert_wms_Movement_ASN_LOAD';
@@ -1170,7 +1183,7 @@ var
 begin
   lpack_id := 0;
 
-  if not dmData.IsConnectedBoth(AMsgProc) then Exit;
+  if not IsConnectedBoth(AMsgProc) then Exit;
 
   // формируем и передаем данные - Movement_INCOMING
   spName := 'gpInsert_wms_Movement_INCOMING';
@@ -1196,7 +1209,7 @@ var
 begin
   lpack_id := 0;
   try
-    if not dmData.IsConnectedBoth(AMsgProc) then Exit;
+    if not IsConnectedBoth(AMsgProc) then Exit;
 
      //
      // формируем и передаем данные - Movement_INCOMING
@@ -1359,6 +1372,7 @@ begin
                      end);
 end;
 
+{TODO: добавить аргумент со значением по умолчанию DetailLevel: Integer = 0  чтобы регулировать степень подробности логов }
 procedure TWorkerThread.InnerMsgProc(const AMsg: string);
 begin
   TThread.Queue(nil, procedure
@@ -1375,13 +1389,23 @@ begin
                      end);
 end;
 
+procedure TWorkerThread.MySleep(const AInterval: Cardinal);
+var
+  Start: Cardinal;
+begin
+  // метод имитирует действие стандартного Sleep, но в отличие от него может выйти досрочно если поток Terminated
+  Start := GetTickCount;
+  while ((GetTickCount - Start) < AInterval) and not Terminated do
+    Sleep(1);
+end;
+
 { TImportWorkerThread }
 
 constructor TImportWorkerThread.Create(CreateSuspended: Boolean; const APacket: TPacketKind; AMsgProc: TNotifyMsgProc;
   AKind: TThreadKind);
 begin
   FPacket := APacket;
-  inherited Create(CreateSuspended, AMsgProc);
+  inherited Create(CreateSuspended, AMsgProc, AKind);
 end;
 
 procedure TImportWorkerThread.Execute;
@@ -1410,6 +1434,7 @@ begin
   FShowSql := AExportData.ShowSqlProc;
 
   inherited Create(CreateSuspended, AMsgProc, AKind);
+//  InnerMsgProc('—оздан поток экспорта дл€ пакета ' + PacketName);
 end;
 
 procedure TExportWorkerThread.Execute;
@@ -1417,6 +1442,8 @@ var
   P: PExportData;
 begin
   inherited;
+
+  InnerMsgProc('—тарт экспорта пакета ' + PacketName);
 
   if Data.IsConnectedBoth(InnerMsgProc) then
     case FPacket of
@@ -1474,9 +1501,17 @@ begin
           P^.Pack_id := FData.Pack_id;
           ReturnValue := LongWord(P);
         end;
-    end;
+    else
+        InnerMsgProc('Ќеизвестный тип пакета');
+    end
+    else
+      InnerMsgProc('Ќет подключени€');
 end;
 
+function TExportWorkerThread.GetPacketName: string;
+begin
+  Result := GetEnumName(System.TypeInfo(TPacketKind), Ord(FPacket));
+end;
 
 { TProcessExportDataErrorThread }
 

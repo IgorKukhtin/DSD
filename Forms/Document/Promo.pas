@@ -421,6 +421,13 @@ type
     cxEditRepository1CurrencyItem2: TcxEditRepositoryCurrencyItem;
     Repository: TcxGridDBColumn;
     Repository2: TcxGridDBColumn;
+    cxLabel24: TcxLabel;
+    edChangePercent: TcxCurrencyEdit;
+    macChangePercent: TMultiAction;
+    actUpdateChangePercent: TdsdUpdateDataSet;
+    spUpdate_Movement_ChangePercent: TdsdStoredProc;
+    actChangePercentDialog: TExecuteDialog;
+    bbChangePercent: TdxBarButton;
   private
     { Private declarations }
   public

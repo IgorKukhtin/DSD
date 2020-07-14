@@ -555,4 +555,38 @@ object dmData: TdmData
     Left = 605
     Top = 184
   end
+  object qryInsert_wms_Message: TFDQuery
+    Connection = FDC_alan
+    SQL.Strings = (
+      
+        'select * from :proc_name(inGUID:= :inGUID, outRecCount:= :outRec' +
+        'Count, inSession:= :inSession)')
+    Left = 656
+    Top = 29
+    ParamData = <
+      item
+        Name = 'PROC_NAME'
+        DataType = ftString
+        ParamType = ptInput
+        Value = Null
+      end
+      item
+        Name = 'INGUID'
+        DataType = ftString
+        ParamType = ptInput
+        Value = Null
+      end
+      item
+        Name = 'OUTRECCOUNT'
+        DataType = ftInteger
+        ParamType = ptInput
+        Value = Null
+      end
+      item
+        Name = 'INSESSION'
+        DataType = ftString
+        ParamType = ptInput
+        Value = Null
+      end>
+  end
 end

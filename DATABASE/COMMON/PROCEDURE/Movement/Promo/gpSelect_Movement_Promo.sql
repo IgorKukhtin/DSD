@@ -35,6 +35,7 @@ RETURNS TABLE (Id               Integer     --Идентификатор
              , MonthPromo       TDateTime   --Месяц акции
              , CheckDate        TDateTime   --Дата Согласования
              , CostPromo        TFloat      --Стоимость участия в акции
+             , ChangePercent    TFloat      --(-)% Скидки (+)% Наценки по договору
 
              , Comment          TVarChar    --Примечание
              , CommentMain      TVarChar    --Примечание (Общее)
@@ -186,6 +187,7 @@ BEGIN
              , MovementDate_Month.ValueData                AS MonthPromo         -- месяц акции
              , MovementDate_CheckDate.ValueData            AS CheckDate          --Дата согласования
              , MovementFloat_CostPromo.ValueData           AS CostPromo          --Стоимость участия в акции
+             , MovementFloat_ChangePercent.ValueData       AS ChangePercent      --(-)% Скидки (+)% Наценки по договору
 
              , MovementString_Comment.ValueData            AS Comment            --Примечание
              , MovementString_CommentMain.ValueData        AS CommentMain        --Примечание (общее)
@@ -315,6 +317,10 @@ BEGIN
                                      ON MovementFloat_PromoStateKind.MovementId = Movement_Promo.Id
                                     AND MovementFloat_PromoStateKind.DescId = zc_MovementFloat_PromoStateKind()
 
+             LEFT JOIN MovementFloat AS MovementFloat_ChangePercent
+                                     ON MovementFloat_ChangePercent.MovementId = Movement_Promo.Id
+                                    AND MovementFloat_ChangePercent.DescId = zc_MovementFloat_ChangePercent()
+
              LEFT JOIN MovementString AS MovementString_Comment
                                       ON MovementString_Comment.MovementId = Movement_Promo.Id
                                      AND MovementString_Comment.DescId = zc_MovementString_Comment()
@@ -380,6 +386,7 @@ $BODY$
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.   Воробкало А.А.
+ 13.07.20         * ChangePercent
  01.04.20         *
  01.08.17         *
  25.07.17         *

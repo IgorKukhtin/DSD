@@ -29,6 +29,7 @@ RETURNS TABLE (Id               Integer     --Идентификатор
              , MonthPromo       TDateTime   --Месяц акции
              , CheckDate        TDateTime   --Дата Согласования
              , CostPromo        TFloat      --Стоимость участия в акции
+             , ChangePercent    TFloat      --(-)% Скидки (+)% Наценки по договору
 
              , Comment          TVarChar    --Примечание
              , CommentMain      TVarChar    --Примечание (Общее)
@@ -96,6 +97,7 @@ BEGIN
           , NULL::TDateTime                                   AS MonthPromo          --Месяц акции
           , inOperDate                                        AS CheckDate           --Дата Согласования
           , NULL::TFloat                                      AS CostPromo           --Стоимость участия в акции
+          , NULL::TFloat                                      AS ChangePercent       --(-)% Скидки (+)% Наценки по договору
           , NULL::TVarChar                                    AS Comment             --Примечание
           , NULL::TVarChar                                    AS CommentMain         --Примечание (Общее)
           , NULL::Integer                                     AS UnitId              --Подразделение
@@ -143,6 +145,7 @@ BEGIN
           , Movement_Promo.MonthPromo         -- месяц акции
           , Movement_Promo.CheckDate          --Дата Согласования
           , Movement_Promo.CostPromo          --Стоимость участия в акции
+          , Movement_Promo.ChangePercent      --(-)% Скидки (+)% Наценки по договору
           , Movement_Promo.Comment            --Примечание
           , Movement_Promo.CommentMain        --Примечание (Общее)
           , Movement_Promo.UnitId             --Подразделение
@@ -176,6 +179,7 @@ $BODY$
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.  Воробкало А.А.
+ 13.07.20         * ChangePercent
  01.04.20         *
  01.08.17         * CheckedDate
  25.07.17         *

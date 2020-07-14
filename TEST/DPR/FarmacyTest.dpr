@@ -908,7 +908,8 @@ uses
   IncomeHouseholdInventoryCash in '..\..\FormsFarmacy\Document\IncomeHouseholdInventoryCash.pas' {IncomeHouseholdInventoryCashForm: TParentForm},
   IncomeHouseholdInventoryCashJournal in '..\..\FormsFarmacy\Document\IncomeHouseholdInventoryCashJournal.pas' {IncomeHouseholdInventoryCashJournalForm: TParentForm},
   Report_HouseholdInventoryRemainsCash in '..\..\FormsFarmacy\Report\Report_HouseholdInventoryRemainsCash.pas' {Report_HouseholdInventoryRemainsCashForm: TParentForm},
-  Report_PercentageOccupancySUN in '..\..\FormsFarmacy\Report\Report_PercentageOccupancySUN.pas' {Report_PercentageOccupancySUNForm: TParentForm};
+  Report_PercentageOccupancySUN in '..\..\FormsFarmacy\Report\Report_PercentageOccupancySUN.pas' {Report_PercentageOccupancySUNForm: TParentForm},
+  Report_OrderInternalPromo_DistributionCalculation in '..\..\FormsFarmacy\Report\Report_OrderInternalPromo_DistributionCalculation.pas' {Report_OrderInternalPromo_DistributionCalculationForm: TParentForm};
 
 {$R *.res}
 {$R DevExpressRus.res}

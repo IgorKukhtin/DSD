@@ -1,29 +1,29 @@
 inherited PromoJournalForm: TPromoJournalForm
   Caption = #1046#1091#1088#1085#1072#1083' '#1076#1086#1082#1091#1084#1077#1085#1090#1086#1074' <'#1040#1082#1094#1080#1080'>'
-  ClientHeight = 407
+  ClientHeight = 415
   ClientWidth = 1084
   AddOnFormData.RefreshAction = actRefreshStart
   AddOnFormData.ExecuteDialogAction = ExecuteDialog
   ExplicitWidth = 1100
-  ExplicitHeight = 442
+  ExplicitHeight = 453
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
     Top = 77
     Width = 1084
-    Height = 330
+    Height = 338
     TabOrder = 3
     ExplicitTop = 77
     ExplicitWidth = 1084
     ExplicitHeight = 330
-    ClientRectBottom = 330
+    ClientRectBottom = 338
     ClientRectRight = 1084
     inherited tsMain: TcxTabSheet
       ExplicitWidth = 1084
       ExplicitHeight = 330
       inherited cxGrid: TcxGrid
         Width = 1084
-        Height = 330
+        Height = 338
         ExplicitWidth = 1084
         ExplicitHeight = 330
         inherited cxGridDBTableView: TcxGridDBTableView
@@ -83,6 +83,17 @@ inherited PromoJournalForm: TPromoJournalForm
             HeaderAlignmentVert = vaCenter
             Width = 70
           end
+          object ChangePercent: TcxGridDBColumn
+            Caption = '(-)% '#1057#1082#1080#1076#1082#1080' (+)% '#1053#1072#1094#1077#1085#1082#1080
+            DataBinding.FieldName = 'ChangePercent'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 4
+            Properties.DisplayFormat = ',0.####;-,0.####; ;'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            HeaderHint = '(-)% '#1057#1082#1080#1076#1082#1080' (+)% '#1053#1072#1094#1077#1085#1082#1080' '#1087#1086' '#1076#1086#1075#1086#1074#1086#1088#1091
+            Width = 84
+          end
           object Checked: TcxGridDBColumn
             Caption = #1057#1086#1075#1083#1072#1089#1086#1074#1072#1085#1086
             DataBinding.FieldName = 'Checked'
@@ -115,7 +126,7 @@ inherited PromoJournalForm: TPromoJournalForm
             HeaderAlignmentVert = vaCenter
             HeaderHint = #1089#1093#1077#1084#1072' % '#1057#1082#1080#1076#1082#1080
             Options.Editing = False
-            Width = 70
+            Width = 75
           end
           object isTaxPromo_Condition: TcxGridDBColumn
             Caption = '% '#1050#1086#1084#1087#1077#1085#1089#1072#1094#1080#1080

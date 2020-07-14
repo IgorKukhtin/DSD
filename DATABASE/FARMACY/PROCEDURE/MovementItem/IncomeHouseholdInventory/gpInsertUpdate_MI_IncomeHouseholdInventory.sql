@@ -29,6 +29,10 @@ BEGIN
                                       AND MovementLinkObject_Unit.DescId = zc_MovementLinkObject_Unit()
     WHERE Movement.Id = inMovementId;
 
+    IF COALESCE (inAmount, 0) <> 1
+    THEN
+        RAISE EXCEPTION 'Ошибка.Количество должно быть 1.';    
+    END IF;
 
      -- сохранили
     ioId := lpInsertUpdate_MI_IncomeHouseholdInventory (ioId                    := ioId

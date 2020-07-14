@@ -4,7 +4,7 @@ inherited Report_PromoForm: TReport_PromoForm
   ClientWidth = 833
   AddOnFormData.ExecuteDialogAction = actReport_PromoDialog
   ExplicitWidth = 849
-  ExplicitHeight = 469
+  ExplicitHeight = 472
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
@@ -212,6 +212,14 @@ inherited Report_PromoForm: TReport_PromoForm
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Width = 89
+          end
+          object strSign: TcxGridDBColumn
+            Caption = #1060#1048#1054' '#1087#1086#1083#1100#1079'. - '#1077#1089#1090#1100' '#1101#1083'. '#1087#1086#1076#1087#1080#1089#1100
+            DataBinding.FieldName = 'strSign'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 100
           end
           object GoodsCode: TcxGridDBColumn
             Caption = #1050#1086#1076' '#1087#1086#1079#1080#1094#1080#1080

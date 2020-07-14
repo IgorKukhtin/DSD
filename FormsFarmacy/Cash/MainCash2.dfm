@@ -4183,9 +4183,9 @@ inherited MainCashForm2: TMainCashForm2
       object N34: TMenuItem
         Action = actInventoryEveryMonth
       end
-      object N44: TMenuItem
-        Caption = '-'
-      end
+    end
+    object N47: TMenuItem
+      Caption = #1061#1086#1079#1103#1081#1089#1090#1074#1077#1085#1085#1099#1081' '#1080#1085#1074#1077#1085#1090#1072#1088#1100
       object N45: TMenuItem
         Action = actIncomeHouseholdInventoryCashJournal
       end

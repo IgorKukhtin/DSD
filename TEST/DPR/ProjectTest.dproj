@@ -2328,11 +2328,6 @@
 				<DesignClass>TParentForm</DesignClass>
 			</DCCReference>
 			<DCCReference Include="..\SOURCE\Movement\All\PromoTest.pas"/>
-			<DCCReference Include="..\..\Forms\Document\PromoJournal.pas">
-				<Form>PromoJournalForm</Form>
-				<FormType>dfm</FormType>
-				<DesignClass>TParentForm</DesignClass>
-			</DCCReference>
 			<DCCReference Include="..\..\Forms\Guides\PromoPartner.pas">
 				<Form>PromoPartnerForm</Form>
 				<DesignClass>TParentForm</DesignClass>
@@ -4022,6 +4017,18 @@
 			</DCCReference>
 			<DCCReference Include="..\..\Forms\Report\Report_JuridicalDefermentDebet.pas">
 				<Form>Report_JuridicalDefermentDebetForm</Form>
+				<DesignClass>TParentForm</DesignClass>
+			</DCCReference>
+			<DCCReference Include="..\..\Forms\Guides\Goods_Param.pas">
+				<Form>Goods_ParamForm</Form>
+				<DesignClass>TParentForm</DesignClass>
+			</DCCReference>
+			<DCCReference Include="..\..\Forms\Document\ChangePercentDialog.pas">
+				<Form>ChangePercentDialogForm</Form>
+				<DesignClass>TParentForm</DesignClass>
+			</DCCReference>
+			<DCCReference Include="..\..\Forms\Document\PromoJournal.pas">
+				<Form>PromoJournalForm</Form>
 				<DesignClass>TParentForm</DesignClass>
 			</DCCReference>
 			<BuildConfiguration Include="Release">

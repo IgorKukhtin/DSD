@@ -1,7 +1,7 @@
-object Goods_UKTZEDForm: TGoods_UKTZEDForm
+object Goods_ParamForm: TGoods_ParamForm
   Left = 0
   Top = 0
-  Caption = #1057#1087#1088#1072#1074#1086#1095#1085#1080#1082' <T'#1086#1074#1072#1088#1099'> ('#1082#1086#1076#1099' '#1059#1050#1058' '#1047#1045#1044')'
+  Caption = #1057#1087#1088#1072#1074#1086#1095#1085#1080#1082' <T'#1086#1074#1072#1088#1099'> ('#1055#1088'.'#1080#1084#1087#1086#1088#1090#1072'/'#1050#1086#1076' '#1074#1080#1076#1072' '#1076#1077#1103#1090'./'#1059#1089#1083#1091#1075#1080' '#1044#1050#1055#1055')'
   ClientHeight = 404
   ClientWidth = 982
   Color = clBtnFace
@@ -91,6 +91,7 @@ object Goods_UKTZEDForm: TGoods_UKTZEDForm
         DataBinding.FieldName = 'CodeUKTZED'
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
+        Options.Editing = False
         Width = 50
       end
       object CodeUKTZED_calc: TcxGridDBColumn
@@ -139,7 +140,6 @@ object Goods_UKTZEDForm: TGoods_UKTZEDForm
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         HeaderHint = #1055#1088#1080#1079#1085#1072#1082' '#1080#1084#1087#1086#1088#1090#1080#1088#1086#1074#1072#1085#1085#1086#1075#1086' '#1090#1086#1074#1072#1088#1072
-        Options.Editing = False
         Width = 57
       end
       object TaxImport_calc: TcxGridDBColumn
@@ -163,7 +163,6 @@ object Goods_UKTZEDForm: TGoods_UKTZEDForm
         DataBinding.FieldName = 'DKPP'
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
-        Options.Editing = False
         Width = 61
       end
       object DKPP_calc: TcxGridDBColumn
@@ -188,7 +187,6 @@ object Goods_UKTZEDForm: TGoods_UKTZEDForm
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         HeaderHint = #1050#1086#1076' '#1074#1080#1076#1072' '#1076#1077#1103#1090#1077#1083#1100#1085#1086#1089#1090#1080' '#1089#1077#1083#1100#1089#1082#1086'-'#1093#1086#1079#1103#1081#1089#1090#1074'. '#1090#1086#1074#1072#1088#1086#1087#1088#1086#1080#1079#1074#1086#1076#1080#1090#1077#1083#1103' '
-        Options.Editing = False
         Width = 60
       end
       object TaxAction_calc: TcxGridDBColumn
@@ -615,7 +613,7 @@ object Goods_UKTZEDForm: TGoods_UKTZEDForm
     Top = 184
   end
   object spUpdateParams: TdsdStoredProc
-    StoredProcName = 'gpUpdateObject_Goods_UKTZED'
+    StoredProcName = 'gpUpdateObject_Goods_Param'
     DataSets = <>
     OutputType = otResult
     Params = <
@@ -628,10 +626,28 @@ object Goods_UKTZEDForm: TGoods_UKTZEDForm
         MultiSelectSeparator = ','
       end
       item
-        Name = 'inUKTZED'
+        Name = 'inTaxImport'
         Value = Null
         Component = ClientDataSet
-        ComponentItem = 'CodeUKTZED'
+        ComponentItem = 'TaxImport'
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inDKPP'
+        Value = Null
+        Component = ClientDataSet
+        ComponentItem = 'DKPP'
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inTaxAction'
+        Value = Null
+        Component = ClientDataSet
+        ComponentItem = 'TaxAction'
         DataType = ftString
         ParamType = ptInput
         MultiSelectSeparator = ','

@@ -45,6 +45,9 @@ CREATE OR REPLACE VIEW Movement_Promo_View AS
 
       , Object_SignInternal.Id                      AS SignInternalId
       , Object_SignInternal.ValueData               AS SignInternalName
+
+      , MovementFloat_ChangePercent.ValueData       AS ChangePercent      --(-)% Скидки (+)% Наценки по договору
+
     FROM Movement AS Movement_Promo 
         LEFT JOIN Object AS Object_Status ON Object_Status.Id = Movement_Promo.StatusId
 
@@ -95,7 +98,11 @@ CREATE OR REPLACE VIEW Movement_Promo_View AS
         LEFT JOIN MovementFloat AS MovementFloat_CostPromo
                                 ON MovementFloat_CostPromo.MovementId = Movement_Promo.Id
                                AND MovementFloat_CostPromo.DescId = zc_MovementFloat_CostPromo()
-        
+
+        LEFT JOIN MovementFloat AS MovementFloat_ChangePercent
+                                ON MovementFloat_ChangePercent.MovementId = Movement_Promo.Id
+                               AND MovementFloat_ChangePercent.DescId = zc_MovementFloat_ChangePercent()
+
         LEFT JOIN MovementString AS MovementString_Comment
                                  ON MovementString_Comment.MovementId = Movement_Promo.Id
                                 AND MovementString_Comment.DescId = zc_MovementString_Comment()

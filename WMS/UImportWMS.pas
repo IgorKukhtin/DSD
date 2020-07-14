@@ -247,7 +247,7 @@ begin
 
       sSQL := Format(cRunProc, [cProcName, inOrderId, QuotedStr('5')]);
       {$IFDEF DEBUG}
-      if Assigned(AMsgProc) then AMsgProc(sSQL);
+//      if Assigned(AMsgProc) then AMsgProc(sSQL);
       {$ENDIF}
 
       // обработка пакета
@@ -678,7 +678,7 @@ var
   rootNode: IXMLNode;
   tmpStream: TMemoryStream;
 const
-  cNoData = 'No data <%s> to import from WMS';
+  cNoData = 'Нет данных <%s> для импорта';
   cRecCountSwitch = 500;
 begin
   tmpStream := FetchPacket(APacket);
@@ -688,10 +688,8 @@ begin
   begin
     if Assigned(FMsgProc) then
       FMsgProc(Format(cNoData, [GetImpTypeCaption(APacket)]));
-    Exit(True);
-  end
-  else
-    Result := False;
+    Exit(False);
+  end;
 
   SetLength(FValues, 0);
   xmlDocument := TXMLDocument.Create(nil);
@@ -715,7 +713,7 @@ begin
     try
       // записываем данные в таб. Alan wms_to_host_message
       if Assigned(FMsgProc) then
-        FMsgProc('Start write data into wms_to_host_message');
+        FMsgProc('Старт записи данных в ALAN.wms_to_host_message');
 
       dtmStart := Now;
 
@@ -748,15 +746,15 @@ begin
         end;
 
         if Assigned(FMsgProc) then
-          FMsgProc('Total record count = ' + IntToStr(iTotCount));
+          FMsgProc('Общее число записей = ' + IntToStr(iTotCount));
       end;
 
       dtmDiff := Now - dtmStart;
-      if Assigned(FMsgProc) then
-        FMsgProc('Elapsed time: ' + FormatDateTime('hh:nn:ss_zzz', dtmDiff));
+//      if Assigned(FMsgProc) then
+//        FMsgProc('Прошло времени: ' + FormatDateTime('hh:nn:ss_zzz', dtmDiff));
 
-      if Assigned(FMsgProc) then
-        FMsgProc('Finish write data into wms_to_host_message');
+//      if Assigned(FMsgProc) then
+//        FMsgProc('Закончил записывать данные в ALAN.wms_to_host_message');
 
       // обработка пакетов
       case APacket of

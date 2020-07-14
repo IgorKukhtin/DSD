@@ -148,6 +148,8 @@ type
     actInsert_Movement_Send: TdsdExecStoredProc;
     spInsert_Movement_Send: TdsdStoredProc;
     bbInsert_Movement_Send: TdxBarButton;
+    actDistributionCalculation: TdsdOpenForm;
+    dxBarButton2: TdxBarButton;
   private
     { Private declarations }
   public

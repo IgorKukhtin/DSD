@@ -11,6 +11,7 @@ const
   // время
   c1Sec = 1000;
   c1SecDate = 1/24/60/60;
+  c1Minute = c1Sec * 60;
 
   // thread
   cCreateSuspended = True;
@@ -22,6 +23,12 @@ const
   cDateTimeShortStr   = 'yyyy-mm-dd hh:nn:ss';
   cDateTimeStr        = 'yyyy-mm-dd hh:nn:ss_zzz';
   cTimeStr            = 'hh:nn:ss_zzz';
+
+  // имена файлов
+  cSvcLog       = 'service.log';
+  cExportMsgLog = 'export.log';
+  cImportMsgLog = 'import.log';
+
 
   // Error Xml Attribute not exists
   cErrXmlAttributeNotExists = Low(Integer);
@@ -54,7 +61,7 @@ const
   cWms_message_Id_Attr = 'wms_message_id';
 
   // дата, начиная с которой отслеживаем ошибки в таб. WMS.from_host_header_message
-  cStartDate_TrackingError_from_host_header_message = '01.07.2020';
+  cStartDate_TrackingError_from_host_header_message = '12.07.2020';
 
   // коды ошибок импорта
   cImpErrZero             = 0;
