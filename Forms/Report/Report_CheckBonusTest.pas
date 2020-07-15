@@ -64,6 +64,11 @@ type
     cxLabel6: TcxLabel;
     edBranch: TcxButtonEdit;
     GuidesBranch: TdsdGuides;
+    actPrint: TdsdPrintAction;
+    bbPrint: TdxBarButton;
+    RetailName: TcxGridDBColumn;
+    PersonalName: TcxGridDBColumn;
+    PartnerName: TcxGridDBColumn;
   private
     { Private declarations }
   public
