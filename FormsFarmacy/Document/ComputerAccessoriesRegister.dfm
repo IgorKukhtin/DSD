@@ -178,6 +178,12 @@ inherited ComputerAccessoriesRegisterForm: TComputerAccessoriesRegisterForm
             Styles.Header = dmMain.cxHeaderL1Style
             Width = 397
           end
+          object Color_calc: TcxGridDBColumn
+            DataBinding.FieldName = 'Color_calc'
+            Visible = False
+            Options.Editing = False
+            VisibleForCustomization = False
+          end
         end
       end
       object cxSplitter1: TcxSplitter
@@ -744,6 +750,11 @@ inherited ComputerAccessoriesRegisterForm: TComputerAccessoriesRegisterForm
     end
   end
   inherited DBViewAddOn: TdsdDBViewAddOn
+    ColorRuleList = <
+      item
+        BackGroundValueColumn = Color_calc
+        ColorValueList = <>
+      end>
     SummaryItemList = <
       item
         Param.Value = Null
@@ -1020,7 +1031,7 @@ inherited ComputerAccessoriesRegisterForm: TComputerAccessoriesRegisterForm
     Top = 201
   end
   inherited RefreshAddOn: TRefreshAddOn
-    Left = 72
+    Left = 104
     Top = 312
   end
   inherited spErasedMIMaster: TdsdStoredProc

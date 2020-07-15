@@ -11,6 +11,9 @@ inherited IncomeHouseholdInventoryCashForm: TIncomeHouseholdInventoryCashForm
           Styles.Selection = nil
           Styles.Footer = nil
           Styles.Header = nil
+          inherited HouseholdInventoryName: TcxGridDBColumn
+            Options.Editing = False
+          end
         end
       end
       inherited cxSplitter1: TcxSplitter

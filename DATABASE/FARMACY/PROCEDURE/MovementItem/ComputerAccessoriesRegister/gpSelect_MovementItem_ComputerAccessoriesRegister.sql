@@ -11,6 +11,7 @@ CREATE OR REPLACE FUNCTION gpSelect_MovementItem_ComputerAccessoriesRegister(
 RETURNS TABLE (Id Integer, ComputerAccessoriesId Integer, ComputerAccessoriesCode Integer, ComputerAccessoriesName TVarChar
              , InvNumber Integer, Amount TFloat, ReplacementDate TDateTime
              , Comment TVarChar
+             , Color_calc Integer
              , isErased Boolean)
  AS
 $BODY$
@@ -51,6 +52,7 @@ BEGIN
                                       , MIFloat_InvNumber.ValueData::Integer      AS InvNumber
                                       , MIDate_ReplacementDate.ValueData          AS ReplacementDate
                                       , MIString_Comment.ValueData                AS Comment
+                                      , CASE WHEN MIDate_ReplacementDate.ValueData < (CURRENT_DATE + INTERVAL '1 YEAR') THEN zc_Color_Red() ELSE zc_Color_Greenl() END                         AS Color_calc
                                       , MovementItem.isErased                     AS isErased
                                  FROM MovementItem
                                      LEFT JOIN MovementItemFloat AS MIFloat_InvNumber
@@ -74,6 +76,7 @@ BEGIN
                                     , MI_Master.Amount                                  AS Amount
                                     , MI_Master.ReplacementDate                         AS ReplacementDate
                                     , MI_Master.Comment                                 AS Comment
+                                    , MI_Master.Color_calc                              AS Color_calc
                                     , MI_Master.IsErased                                AS isErased
                                FROM MI_Master
                                UNION ALL
@@ -83,6 +86,7 @@ BEGIN
                                     , NULL::TFloat                                 AS Amount
                                     , NULL::TDateTime                              AS ReplacementDate
                                     , NULL::TVarChar                               AS Comment
+                                    , zc_Color_White()                             AS Color_calc
                                     , Object_ComputerAccessories.isErased          AS isErased
                                FROM Object AS Object_ComputerAccessories
                                WHERE Object_ComputerAccessories.DescId = zc_Object_ComputerAccessories()
@@ -97,6 +101,7 @@ BEGIN
                     , MI_Master.Amount                                  AS Amount
                     , MI_Master.ReplacementDate                         AS ReplacementDate
                     , MI_Master.Comment                                 AS Comment
+                    , MI_Master.Color_calc                              AS Color_calc
                     , COALESCE(MI_Master.IsErased, False)               AS isErased
                FROM tmpData AS MI_Master
 
@@ -116,6 +121,7 @@ BEGIN
                                       , MIFloat_InvNumber.ValueData::Integer      AS InvNumber
                                       , MIDate_ReplacementDate.ValueData          AS ReplacementDate
                                       , MIString_Comment.ValueData                AS Comment
+                                      , CASE WHEN MIDate_ReplacementDate.ValueData < (CURRENT_DATE + INTERVAL '1 YEAR') THEN zc_Color_Red() ELSE zc_Color_Greenl() END                         AS Color_calc
                                       , MovementItem.isErased                     AS isErased
                                  FROM MovementItem
                                      LEFT JOIN MovementItemFloat AS MIFloat_InvNumber
@@ -144,6 +150,7 @@ BEGIN
                     , MI_Master.Amount                                  AS Amount
                     , MI_Master.ReplacementDate                         AS ReplacementDate
                     , MI_Master.Comment                                 AS Comment
+                    , MI_Master.Color_calc                              AS Color_calc
                     , MI_Master.IsErased                                AS isErased
                FROM MI_Master
 
@@ -163,3 +170,4 @@ $BODY$
  14.07.20                                                      *
 */
 --
+select * from gpSelect_MovementItem_ComputerAccessoriesRegister(inMovementId := 19530660 , inShowAll := 'False' , inIsErased := 'False' ,  inSession := '3');
