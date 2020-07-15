@@ -1719,19 +1719,30 @@ END IF;
      RETURN QUERY
        SELECT vbMovementId_begin AS MovementId_begin
              , CASE WHEN vbMovementDescId = zc_Movement_Sale()
-                         -- Øåð³
-                     AND EXISTS (SELECT
-                                 FROM MovementLinkObject AS MovementLinkObject_To
-                                      INNER JOIN ObjectLink AS OL_Juridical
-                                                            ON OL_Juridical.ObjectId = MovementLinkObject_To.ObjectId
-                                                           AND OL_Juridical.DescId   = zc_ObjectLink_Partner_Juridical()
-                                      INNER JOIN ObjectLink AS OL_Retail
-                                                            ON OL_Retail.ObjectId      = OL_Juridical.ChildObjectId
-                                                           AND OL_Retail.DescId        = zc_ObjectLink_Juridical_Retail()
-                                                           AND OL_Retail.ChildObjectId = 341162 -- Øåð³
-                                 WHERE MovementLinkObject_To.MovementId = vbMovementId_begin
-                                   AND MovementLinkObject_To.DescId     = zc_MovementLinkObject_To()
-                                )
+                          -- Øåð³
+                     AND (EXISTS (SELECT
+                                  FROM MovementLinkObject AS MovementLinkObject_To
+                                       INNER JOIN ObjectLink AS OL_Juridical
+                                                             ON OL_Juridical.ObjectId = MovementLinkObject_To.ObjectId
+                                                            AND OL_Juridical.DescId   = zc_ObjectLink_Partner_Juridical()
+                                       INNER JOIN ObjectLink AS OL_Retail
+                                                             ON OL_Retail.ObjectId      = OL_Juridical.ChildObjectId
+                                                            AND OL_Retail.DescId        = zc_ObjectLink_Juridical_Retail()
+                                                            AND OL_Retail.ChildObjectId = 341162 -- Øåð³
+                                  WHERE MovementLinkObject_To.MovementId = vbMovementId_begin
+                                    AND MovementLinkObject_To.DescId     = zc_MovementLinkObject_To()
+                                 )
+                          -- Àâ³îí+ ÒÎÂ
+                       OR EXISTS (SELECT
+                                  FROM MovementLinkObject AS MovementLinkObject_To
+                                       INNER JOIN ObjectLink AS OL_Juridical
+                                                             ON OL_Juridical.ObjectId = MovementLinkObject_To.ObjectId
+                                                            AND OL_Juridical.DescId   = zc_ObjectLink_Partner_Juridical()
+                                                            AND OL_Juridical.ChildObjectId = 4978325 -- "Àâ³îí+ ÒÎÂ"
+                                  WHERE MovementLinkObject_To.MovementId = vbMovementId_begin
+                                    AND MovementLinkObject_To.DescId     = zc_MovementLinkObject_To()
+                                 )
+                         )
                          THEN TRUE
                     ELSE FALSE
                END :: Boolean AS isExportEmail

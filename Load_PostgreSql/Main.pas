@@ -969,7 +969,7 @@ begin
                StartDateEdit.Text:=DateToStr(fromSqlZQuery.FieldByName('RetV').AsDateTime);
 
              //fOpenSqlFromZQuery ('select zf_CalcDate_onMonthEnd('+FormatToDateServer_notNULL(Date-28)+') as RetV');
-               fOpenSqlFromZQuery ('select DATE_TRUNC (' + FormatToVarCharServer_notNULL('MONTH') + ', CAST ('+FormatToDateServer_notNULL(Date-28)+' AS TDateTime)) + INTERVAL 1 ' + FormatToVarCharServer_notNULL('MONTH') + ' - INTERVAL 1 ' + FormatToVarCharServer_notNULL('DAY') + ' as RetV');
+               fOpenSqlFromZQuery ('select DATE_TRUNC (' + FormatToVarCharServer_notNULL('MONTH') + ', CAST ('+FormatToDateServer_notNULL(Date-28)+' AS TDateTime)) + INTERVAL ' + FormatToVarCharServer_notNULL('1 MONTH') + ' - INTERVAL ' + FormatToVarCharServer_notNULL('1 DAY') + ' as RetV');
                EndDateEdit.Text:=DateToStr(fromSqlZQuery.FieldByName('RetV').AsDateTime);
                //if Date<fromSqlZQuery.FieldByName('RetV').AsDateTime
                //then EndDateEdit.Text:=DateToStr(Date-1)
@@ -977,7 +977,7 @@ begin
 
                // текущий месяц
              //fOpenSqlFromZQuery ('select zf_CalcDate_onMonthEnd('+FormatToDateServer_notNULL(Date-5)+') as RetV');
-               fOpenSqlFromZQuery ('select DATE_TRUNC (' + FormatToVarCharServer_notNULL('MONTH') + ', CAST ('+FormatToDateServer_notNULL(Date-5)+' AS TDateTime)) + INTERVAL 1 ' + FormatToVarCharServer_notNULL('MONTH') + ' - INTERVAL 1 ' + FormatToVarCharServer_notNULL('DAY') + ' as RetV');
+               fOpenSqlFromZQuery ('select DATE_TRUNC (' + FormatToVarCharServer_notNULL('MONTH') + ', CAST ('+FormatToDateServer_notNULL(Date-5)+' AS TDateTime)) + INTERVAL ' + FormatToVarCharServer_notNULL('1 MONTH') + ' - INTERVAL ' + FormatToVarCharServer_notNULL('1 DAY') + ' as RetV');
 
                // !!!этот пересчет - всегда!!!
                cbGoodsListSale.Checked:=true;
@@ -1216,7 +1216,7 @@ begin
      if (Hour_calc = 6) and (beginVACUUM > 0) then beginVACUUM:= 0;
      //
      if ((Hour_calc = 7) or ((Hour_calc = 21) and (Minute_calc > 20)) or (Hour_calc = 23)
-      or ((Hour_calc = 4) and (Minute_calc > 45) {and (Minute_calc < 55)} and ((ParamStr(6)='VAC_5')or(ParamStr(7)='VAC_5')or(ParamStr(8)='VAC_5')))
+      or ((Hour_calc = 4) and (Minute_calc > 25) {and (Minute_calc < 55)} and ((ParamStr(6)='VAC_5')or(ParamStr(7)='VAC_5')or(ParamStr(8)='VAC_5')))
          )
         and (beginVACUUM < 4) and (ParamStr(2)='autoALL')
      //if (Hour_calc = 14) and (beginVACUUM < 4) and (ParamStr(2)='autoALL')
@@ -1812,11 +1812,11 @@ begin
           Date1:=fromSqlZQuery.FieldByName('RetV').AsDateTime;
 
         //fOpenSqlFromZQuery ('select zf_CalcDate_onMonthEnd('+FormatToDateServer_notNULL(Date-28)+') as RetV');
-          fOpenSqlFromZQuery ('select DATE_TRUNC (' + FormatToVarCharServer_notNULL('MONTH') + ', CAST ('+FormatToDateServer_notNULL(Date-28)+' AS TDateTime)) + INTERVAL 1 ' + FormatToVarCharServer_notNULL('MONTH') + ' - INTERVAL 1 ' + FormatToVarCharServer_notNULL('DAY') + ' as RetV');
+          fOpenSqlFromZQuery ('select DATE_TRUNC (' + FormatToVarCharServer_notNULL('MONTH') + ', CAST ('+FormatToDateServer_notNULL(Date-28)+' AS TDateTime)) + INTERVAL ' + FormatToVarCharServer_notNULL('1 MONTH') + ' - INTERVAL ' + FormatToVarCharServer_notNULL('1 DAY') + ' as RetV');
           Date2:=fromSqlZQuery.FieldByName('RetV').AsDateTime;
           // текущий месяц
         //fOpenSqlFromZQuery ('select zf_CalcDate_onMonthEnd('+FormatToDateServer_notNULL(Date-2)+') as RetV');
-          fOpenSqlFromZQuery ('select DATE_TRUNC (' + FormatToVarCharServer_notNULL('MONTH') + ', CAST ('+FormatToDateServer_notNULL(Date-2)+' AS TDateTime)) + INTERVAL 1 ' + FormatToVarCharServer_notNULL('MONTH') + ' - INTERVAL 1 ' + FormatToVarCharServer_notNULL('DAY') + ' as RetV');
+          fOpenSqlFromZQuery ('select DATE_TRUNC (' + FormatToVarCharServer_notNULL('MONTH') + ', CAST ('+FormatToDateServer_notNULL(Date-2)+' AS TDateTime)) + INTERVAL ' + FormatToVarCharServer_notNULL('1 MONTH') + ' - INTERVAL ' + FormatToVarCharServer_notNULL('1 DAY') + ' as RetV');
           // !!!за "текущий" - надо!!! -2 дня
           if Date2 = fromSqlZQuery.FieldByName('RetV').AsDateTime
           then Date2:= Date-2;
@@ -1847,7 +1847,7 @@ begin
      if (not cbFillAuto.Checked)or(not cbFillAuto.Enabled) then exit;
      //
      // 15 MONTH
-     fOpenSqToQuery ('select * from gpUpdate_Object_Goods_In (DATE_TRUNC (' + chr(39) + 'MONTH' + chr(39) + ', CURRENT_DATE - INTERVAL ' + chr(39) + '15 MONTH' + chr(39) + ')'
+     fOpenSqToQuery ('select * from gpUpdate_Object_Goods_In (DATE_TRUNC (' + chr(39) + 'MONTH' + chr(39) + ', CURRENT_DATE - INTERVAL' +  chr(39) + '15 MONTH' + chr(39) + ')'
                                                          + ', CURRENT_DATE'
                                                          + ', zfCalc_UserAdmin())');
      //

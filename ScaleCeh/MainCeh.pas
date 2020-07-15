@@ -3406,7 +3406,7 @@ begin
                // попробуем сохранить
                Save_MI;
                //
-               MyDelay(100);
+               MyDelay(5);
           end;
 
 

@@ -1091,8 +1091,8 @@ BEGIN
 	|| ';' || COALESCE (OH_JuridicalDetails_From.OKPO, '')
 	--Номер РН
 	|| ';' || Movement.InvNumber
-	-- Адрес доставки (в ObjectString_RoomNumber.ValueData хранится номер магазина)
-	|| ';' || 'KH:V'|| COALESCE (ObjectString_RoomNumber.ValueData, '') ||' - '||COALESCE (ObjectString_ShortName.ValueData, '')||' №' || COALESCE (ObjectString_RoomNumber.ValueData, '') || ' ' ||COALESCE(Object_PartnerAdress.ValueData, '')
+	-- Адрес доставки: Позначення регіону:KH – Херсон DN – Дніпро KV – Київ ZD – Захід + VНомер магазину
+	|| ';' || 'KH:V749'
 	-- Версия формата
 	|| ';' || '14'
 	-- Вид документа : RN – расходная накладная or VN – возвратная накладная or SP - спецификация
@@ -1103,7 +1103,7 @@ BEGIN
 	|| ';' || COALESCE (View_Contract.InvNumber, '')
 	-- Форма накладной
 	|| ';' || CASE WHEN MovementLinkObject_PaidKind.ObjectId = zc_Enum_PaidKind_FirstForm() THEN '10' ELSE '11' END
-	-- Код складу
+	-- Код складу, куди здійснюється доставка - 1 – товарний РЦ Некрасова 2 * 16 - сигарети РЦ Некрасова 2 * 15 – СВЗ** Некрасова 2 * 2 - РЦ Первомайськ * 17 – СВЗ** Первомайськ
 	|| ';' || COALESCE (ObjectString_RoomNumber.ValueData, '')
         || ';'
         FROM Movement
