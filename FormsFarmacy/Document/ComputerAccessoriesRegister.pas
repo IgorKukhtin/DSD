@@ -1,4 +1,4 @@
-unit IncomeHouseholdInventory;
+unit ComputerAccessoriesRegister;
 
 interface
 
@@ -27,14 +27,13 @@ uses
   cxCheckBox, DataModul;
 
 type
-  TIncomeHouseholdInventoryForm = class(TAncestorDocumentForm)
+  TComputerAccessoriesRegisterForm = class(TAncestorDocumentForm)
     lblUnit: TcxLabel;
     edUnit: TcxButtonEdit;
     GuidesUnit: TdsdGuides;
-    HouseholdInventoryCode: TcxGridDBColumn;
-    HouseholdInventoryName: TcxGridDBColumn;
+    ComputerAccessoriesCode: TcxGridDBColumn;
+    ComputerAccessoriesName: TcxGridDBColumn;
     Amount: TcxGridDBColumn;
-    CountForPrice: TcxGridDBColumn;
     PrintItemsCDS: TClientDataSet;
     PrintHeaderCDS: TClientDataSet;
     cxLabel7: TcxLabel;
@@ -62,15 +61,13 @@ type
     actRefreshUnit: TdsdDataSetRefresh;
     actOpenFormIncome: TdsdOpenForm;
     bbOpenFormIncome: TdxBarButton;
-    actOpenPartionDateKind: TdsdOpenForm;
+    actOpenComputerAccessories: TdsdOpenForm;
     bbMIChildProtocolOpenForm: TdxBarButton;
     dxBarButton1: TdxBarButton;
     Comment: TcxGridDBColumn;
-    InvNumber: TcxGridDBColumn;
-    actSetCountForPrice: TMultiAction;
-    actUpdateCountForPrice: TdsdExecStoredProc;
-    spUpdateCountForPrice: TdsdStoredProc;
+    ReplacementDate: TcxGridDBColumn;
     dxBarButton2: TdxBarButton;
+    dxBarButton3: TdxBarButton;
   private
     { Private declarations }
   public
@@ -82,6 +79,6 @@ implementation
 {$R *.dfm}
 
 initialization
-  RegisterClass(TIncomeHouseholdInventoryForm);
+  RegisterClass(TComputerAccessoriesRegisterForm);
 
 end.

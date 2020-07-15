@@ -1,4 +1,4 @@
-unit HouseholdInventory;
+unit ComputerAccessories;
 
 interface
 
@@ -22,10 +22,10 @@ uses
   dxSkinSilver, dxSkinSpringTime, dxSkinStardust, dxSkinSummer2008,
   dxSkinTheAsphaltWorld, dxSkinsDefaultPainters, dxSkinValentine, dxSkinVS2010,
   dxSkinWhiteprint, dxSkinXmas2008Blue, dxSkinscxPCPainter, dxSkinsdxBarPainter,
-  Vcl.Menus, cxCurrencyEdit;
+  Vcl.Menus;
 
 type
-  THouseholdInventoryForm = class(TParentForm)
+  TComputerAccessoriesForm = class(TParentForm)
     cxGridLevel: TcxGridLevel;
     cxGrid: TcxGrid;
     DataSource: TDataSource;
@@ -65,9 +65,6 @@ type
     N4: TMenuItem;
     ProtocolOpenForm: TdsdOpenForm;
     bbProtocolOpenForm: TdxBarButton;
-    actShowErased: TBooleanStoredProcAction;
-    dxBarButton1: TdxBarButton;
-    CountForPrice: TcxGridDBColumn;
   private
     { Private declarations }
   public
@@ -79,6 +76,6 @@ implementation
 {$R *.dfm}
 
 initialization
-  RegisterClass(THouseholdInventoryForm);
+  RegisterClass(TComputerAccessoriesForm);
 
 end.

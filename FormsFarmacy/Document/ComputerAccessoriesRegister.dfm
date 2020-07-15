@@ -1,28 +1,28 @@
-inherited IncomeHouseholdInventoryForm: TIncomeHouseholdInventoryForm
-  Caption = #1055#1088#1080#1093#1086#1076' '#1093#1086#1079#1103#1081#1089#1090#1074#1077#1085#1085#1086#1075#1086' '#1080#1085#1074#1077#1085#1090#1072#1088#1103
+inherited ComputerAccessoriesRegisterForm: TComputerAccessoriesRegisterForm
+  Caption = #1050#1086#1084#1087#1100#1102#1090#1077#1088#1085#1099#1077' '#1072#1082#1089#1077#1089#1089#1091#1072#1088#1099
   ClientHeight = 546
-  ClientWidth = 1059
+  ClientWidth = 923
   AddOnFormData.AddOnFormRefresh.ParentList = 'Sale'
-  ExplicitWidth = 1075
+  ExplicitWidth = 939
   ExplicitHeight = 585
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
     Top = 117
-    Width = 1059
+    Width = 923
     Height = 429
     ExplicitTop = 117
-    ExplicitWidth = 1059
+    ExplicitWidth = 923
     ExplicitHeight = 429
     ClientRectBottom = 429
-    ClientRectRight = 1059
+    ClientRectRight = 923
     inherited tsMain: TcxTabSheet
-      ExplicitWidth = 1059
+      ExplicitWidth = 923
       ExplicitHeight = 405
       inherited cxGrid: TcxGrid
-        Width = 1059
+        Width = 923
         Height = 397
-        ExplicitWidth = 1059
+        ExplicitWidth = 923
         ExplicitHeight = 397
         inherited cxGridDBTableView: TcxGridDBTableView
           DataController.Summary.DefaultGroupSummaryItems = <
@@ -34,7 +34,6 @@ inherited IncomeHouseholdInventoryForm: TIncomeHouseholdInventoryForm
             item
               Format = ',0.00;-,0.00; ;'
               Kind = skSum
-              Column = CountForPrice
             end
             item
               Format = ',0.####'
@@ -81,12 +80,11 @@ inherited IncomeHouseholdInventoryForm: TIncomeHouseholdInventoryForm
             item
               Format = #1057#1090#1088#1086#1082': ,0'
               Kind = skCount
-              Column = HouseholdInventoryName
+              Column = ComputerAccessoriesName
             end
             item
               Format = ',0.00;-,0.00; ;'
               Kind = skSum
-              Column = CountForPrice
             end
             item
               Format = ',0.####'
@@ -133,31 +131,31 @@ inherited IncomeHouseholdInventoryForm: TIncomeHouseholdInventoryForm
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
           end
-          object HouseholdInventoryCode: TcxGridDBColumn
+          object ComputerAccessoriesCode: TcxGridDBColumn
             Caption = #1050#1086#1076
-            DataBinding.FieldName = 'HouseholdInventoryCode'
+            DataBinding.FieldName = 'ComputerAccessoriesCode'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
             Width = 70
           end
-          object HouseholdInventoryName: TcxGridDBColumn
-            Caption = #1061#1086#1079#1103#1081#1089#1090#1074#1077#1085#1085#1099#1081' '#1080#1085#1074#1077#1085#1090#1072#1088#1100
-            DataBinding.FieldName = 'HouseholdInventoryName'
+          object ComputerAccessoriesName: TcxGridDBColumn
+            AlternateCaption = 'ComputerAccessoriesName'
+            Caption = #1050#1086#1084#1087#1100#1102#1090#1077#1088#1085#1099#1081' '#1072#1082#1089#1077#1089#1089#1091#1072#1088
+            DataBinding.FieldName = 'ComputerAccessoriesName'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
             Width = 223
           end
-          object InvNumber: TcxGridDBColumn
-            Caption = #1048#1085#1074#1077#1085#1090#1072#1088#1085#1099#1081' '#1085#1086#1084#1077#1088
-            DataBinding.FieldName = 'InvNumber'
-            PropertiesClassName = 'TcxCurrencyEditProperties'
-            Properties.DecimalPlaces = 0
-            Properties.DisplayFormat = '0000'
+          object ReplacementDate: TcxGridDBColumn
+            Caption = #1044#1072#1090#1072' '#1079#1072#1084#1077#1085#1099
+            DataBinding.FieldName = 'ReplacementDate'
+            PropertiesClassName = 'TcxDateEditProperties'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
-            Options.Editing = False
+            Styles.Content = dmMain.cxHeaderL1Style
+            Styles.Header = dmMain.cxHeaderL1Style
             Width = 101
           end
           object Amount: TcxGridDBColumn
@@ -172,18 +170,6 @@ inherited IncomeHouseholdInventoryForm: TIncomeHouseholdInventoryForm
             Styles.Header = dmMain.cxHeaderL1Style
             Width = 80
           end
-          object CountForPrice: TcxGridDBColumn
-            Caption = #1057#1077#1073#1077#1089#1090#1086#1080#1084#1086#1089#1090#1100
-            DataBinding.FieldName = 'CountForPrice'
-            PropertiesClassName = 'TcxCurrencyEditProperties'
-            Properties.DecimalPlaces = 2
-            Properties.DisplayFormat = ',0.00;-,0.00; ;'
-            HeaderAlignmentHorz = taCenter
-            HeaderAlignmentVert = vaCenter
-            Styles.Content = dmMain.cxHeaderL1Style
-            Styles.Header = dmMain.cxHeaderL1Style
-            Width = 108
-          end
           object Comment: TcxGridDBColumn
             Caption = #1050#1086#1084#1084#1077#1085#1090#1072#1088#1080#1081
             DataBinding.FieldName = 'Comment'
@@ -197,7 +183,7 @@ inherited IncomeHouseholdInventoryForm: TIncomeHouseholdInventoryForm
       object cxSplitter1: TcxSplitter
         Left = 0
         Top = 397
-        Width = 1059
+        Width = 923
         Height = 8
         HotZoneClassName = 'TcxMediaPlayer8Style'
         AlignSplitter = salBottom
@@ -205,10 +191,10 @@ inherited IncomeHouseholdInventoryForm: TIncomeHouseholdInventoryForm
     end
   end
   inherited DataPanel: TPanel
-    Width = 1059
+    Width = 923
     Height = 91
     TabOrder = 3
-    ExplicitWidth = 1059
+    ExplicitWidth = 923
     ExplicitHeight = 91
     inherited edInvNumber: TcxTextEdit
       Left = 9
@@ -275,7 +261,7 @@ inherited IncomeHouseholdInventoryForm: TIncomeHouseholdInventoryForm
       Top = 64
       Properties.ReadOnly = False
       TabOrder = 9
-      Width = 823
+      Width = 696
     end
     object cxLabel10: TcxLabel
       Left = 546
@@ -416,7 +402,7 @@ inherited IncomeHouseholdInventoryForm: TIncomeHouseholdInventoryForm
           Name = 'GoodsName'
           Value = Null
           Component = MasterCDS
-          ComponentItem = 'HouseholdInventoryName'
+          ComponentItem = 'ComputerAccessoriesName'
           DataType = ftString
           ParamType = ptInput
           MultiSelectSeparator = ','
@@ -581,42 +567,18 @@ inherited IncomeHouseholdInventoryForm: TIncomeHouseholdInventoryForm
         end>
       isShowModal = False
     end
-    object actOpenPartionDateKind: TdsdOpenForm
+    object actOpenComputerAccessories: TdsdOpenForm
       Category = 'DSDLib'
       MoveParams = <>
-      Caption = #1057#1087#1088#1072#1074#1086#1095#1085#1080#1082' <'#1058#1080#1087#1099' '#1089#1088#1086#1082'/'#1085#1077' '#1089#1088#1086#1082'>'
+      Caption = #1057#1087#1088#1072#1074#1086#1095#1085#1080#1082' <'#1050#1086#1084#1087#1100#1102#1090#1077#1088#1085#1099#1077' '#1072#1082#1089#1077#1089#1089#1091#1072#1088#1099'>'
+      Hint = #1057#1087#1088#1072#1074#1086#1095#1085#1080#1082' <'#1050#1086#1084#1087#1100#1102#1090#1077#1088#1085#1099#1077' '#1072#1082#1089#1077#1089#1089#1091#1072#1088#1099'>'
       ImageIndex = 24
-      FormName = 'TPartionDateKindForm'
-      FormNameParam.Value = 'TPartionDateKindForm'
+      FormName = 'TComputerAccessoriesForm'
+      FormNameParam.Value = 'TComputerAccessoriesForm'
       FormNameParam.DataType = ftString
       FormNameParam.MultiSelectSeparator = ','
       GuiParams = <>
       isShowModal = False
-    end
-    object actSetCountForPrice: TMultiAction
-      Category = 'DSDLib'
-      MoveParams = <>
-      AfterAction = actRefresh
-      ActionList = <
-        item
-          Action = actUpdateCountForPrice
-        end>
-      View = cxGridDBTableView
-      QuestionBeforeExecute = #1047#1072#1087#1086#1083#1085#1080#1090#1100' '#1087#1091#1089#1090#1099#1077' '#1079#1085#1072#1095#1077#1085#1080#1103' '#1089#1077#1073#1077#1089#1090#1086#1080#1084#1086#1089#1090#1080' '#1087#1086' '#1089#1087#1088#1072#1074#1086#1095#1085#1080#1082#1091'?'
-      Caption = #1047#1072#1087#1086#1083#1085#1077#1085#1080#1077' '#1089#1077#1073#1077#1089#1090#1086#1080#1084#1086#1089#1090#1080' '#1087#1086' '#1089#1087#1088#1072#1074#1086#1095#1085#1080#1082#1091
-      Hint = #1047#1072#1087#1086#1083#1085#1077#1085#1080#1077' '#1089#1077#1073#1077#1089#1090#1086#1080#1084#1086#1089#1090#1080' '#1087#1086' '#1089#1087#1088#1072#1074#1086#1095#1085#1080#1082#1091
-      ImageIndex = 79
-    end
-    object actUpdateCountForPrice: TdsdExecStoredProc
-      Category = 'DSDLib'
-      MoveParams = <>
-      PostDataSetBeforeExecute = False
-      StoredProc = spUpdateCountForPrice
-      StoredProcList = <
-        item
-          StoredProc = spUpdateCountForPrice
-        end>
-      Caption = 'actUpdateCountForPrice'
     end
   end
   inherited MasterDS: TDataSource
@@ -626,7 +588,7 @@ inherited IncomeHouseholdInventoryForm: TIncomeHouseholdInventoryForm
     Top = 224
   end
   inherited spSelect: TdsdStoredProc
-    StoredProcName = 'gpSelect_MovementItem_IncomeHouseholdInventory'
+    StoredProcName = 'gpSelect_MovementItem_ComputerAccessoriesRegister'
     Params = <
       item
         Name = 'inMovementId'
@@ -708,7 +670,7 @@ inherited IncomeHouseholdInventoryForm: TIncomeHouseholdInventoryForm
         end
         item
           Visible = True
-          ItemName = 'dxBarButton2'
+          ItemName = 'dxBarButton3'
         end
         item
           Visible = True
@@ -744,7 +706,7 @@ inherited IncomeHouseholdInventoryForm: TIncomeHouseholdInventoryForm
         end>
     end
     object bbOpenPartionDateKind: TdxBarButton
-      Action = actOpenPartionDateKind
+      Action = actOpenComputerAccessories
       Category = 0
     end
     object bbInsertMI: TdxBarButton
@@ -770,7 +732,14 @@ inherited IncomeHouseholdInventoryForm: TIncomeHouseholdInventoryForm
       Category = 0
     end
     object dxBarButton2: TdxBarButton
-      Action = actSetCountForPrice
+      Caption = #1047#1072#1087#1086#1083#1085#1077#1085#1080#1077' '#1089#1077#1073#1077#1089#1090#1086#1080#1084#1086#1089#1090#1080' '#1087#1086' '#1089#1087#1088#1072#1074#1086#1095#1085#1080#1082#1091
+      Category = 0
+      Hint = #1047#1072#1087#1086#1083#1085#1077#1085#1080#1077' '#1089#1077#1073#1077#1089#1090#1086#1080#1084#1086#1089#1090#1080' '#1087#1086' '#1089#1087#1088#1072#1074#1086#1095#1085#1080#1082#1091
+      Visible = ivAlways
+      ImageIndex = 79
+    end
+    object dxBarButton3: TdxBarButton
+      Action = actOpenComputerAccessories
       Category = 0
     end
   end
@@ -834,14 +803,14 @@ inherited IncomeHouseholdInventoryForm: TIncomeHouseholdInventoryForm
     Top = 232
   end
   inherited spChangeStatus: TdsdStoredProc
-    StoredProcName = 'gpUpdate_Status_IncomeHouseholdInventory'
+    StoredProcName = 'gpUpdate_Status_ComputerAccessoriesRegister'
     NeedResetData = True
     ParamKeyField = 'inMovementId'
     Left = 176
     Top = 256
   end
   inherited spGet: TdsdStoredProc
-    StoredProcName = 'gpGet_Movement_IncomeHouseholdInventory'
+    StoredProcName = 'gpGet_Movement_ComputerAccessoriesRegister'
     Params = <
       item
         Name = 'inMovementId'
@@ -957,7 +926,7 @@ inherited IncomeHouseholdInventoryForm: TIncomeHouseholdInventoryForm
     Top = 200
   end
   inherited spInsertUpdateMovement: TdsdStoredProc
-    StoredProcName = 'gpInsertUpdate_Movement_IncomeHouseholdInventory'
+    StoredProcName = 'gpInsertUpdate_Movement_ComputerAccessoriesRegister'
     Params = <
       item
         Name = 'ioId'
@@ -1095,7 +1064,7 @@ inherited IncomeHouseholdInventoryForm: TIncomeHouseholdInventoryForm
     Top = 208
   end
   inherited spInsertUpdateMIMaster: TdsdStoredProc
-    StoredProcName = 'gpInsertUpdate_MI_IncomeHouseholdInventory'
+    StoredProcName = 'gpInsertUpdate_MI_ComputerAccessoriesRegister'
     Params = <
       item
         Name = 'ioId'
@@ -1114,10 +1083,10 @@ inherited IncomeHouseholdInventoryForm: TIncomeHouseholdInventoryForm
         MultiSelectSeparator = ','
       end
       item
-        Name = 'inHouseholdInventoryId'
+        Name = 'inComputerAccessoriesId'
         Value = Null
         Component = MasterCDS
-        ComponentItem = 'HouseholdInventoryId'
+        ComponentItem = 'ComputerAccessoriesId'
         ParamType = ptInput
         MultiSelectSeparator = ','
       end
@@ -1131,11 +1100,11 @@ inherited IncomeHouseholdInventoryForm: TIncomeHouseholdInventoryForm
         MultiSelectSeparator = ','
       end
       item
-        Name = 'inCountForPrice'
+        Name = 'inReplacementDate'
         Value = 'NULL'
         Component = MasterCDS
-        ComponentItem = 'CountForPrice'
-        DataType = ftFloat
+        ComponentItem = 'ReplacementDate'
+        DataType = ftDateTime
         ParamType = ptInput
         MultiSelectSeparator = ','
       end
@@ -1328,49 +1297,5 @@ inherited IncomeHouseholdInventoryForm: TIncomeHouseholdInventoryForm
       end>
     Left = 536
     Top = 200
-  end
-  object spUpdateCountForPrice: TdsdStoredProc
-    StoredProcName = 'gpUpdate_IncomeHouseholdInventory_CountForPrice'
-    DataSets = <>
-    OutputType = otResult
-    Params = <
-      item
-        Name = 'inId'
-        Value = Null
-        Component = MasterCDS
-        ComponentItem = 'Id'
-        ParamType = ptInput
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'inMovementId'
-        Value = Null
-        Component = FormParams
-        ComponentItem = 'Id'
-        ParamType = ptInput
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'inHouseholdInventoryId'
-        Value = Null
-        Component = MasterCDS
-        ComponentItem = 'HouseholdInventoryId'
-        ParamType = ptInput
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'inCountForPrice'
-        Value = Null
-        Component = MasterCDS
-        ComponentItem = 'CountForPrice'
-        DataType = ftFloat
-        ParamType = ptInput
-        MultiSelectSeparator = ','
-      end>
-    PackSize = 1
-    NeedResetData = True
-    ParamKeyField = 'inMovementId'
-    Left = 448
-    Top = 384
   end
 end

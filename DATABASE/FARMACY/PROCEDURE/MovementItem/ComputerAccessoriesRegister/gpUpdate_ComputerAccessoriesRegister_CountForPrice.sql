@@ -1,0 +1,55 @@
+-- Function: gpUpdate_ComputerAccessoriesRegister_CountForPrice()
+
+DROP FUNCTION IF EXISTS gpUpdate_ComputerAccessoriesRegister_CountForPrice (Integer, Integer, Integer, TFloat, TVarChar);
+
+CREATE OR REPLACE FUNCTION gpUpdate_ComputerAccessoriesRegister_CountForPrice(
+    IN inId                    Integer   , -- Ключ объекта <Элемент документа>
+    IN inMovementId            Integer   , -- Ключ объекта <Документ>
+    IN inComputerAccessoriesId  Integer   , -- Компьютерный аксессуар
+    IN inCountForPrice         TFloat    , -- Себестоимость 
+    IN inSession               TVarChar    -- сессия пользователя
+)
+RETURNS Void
+AS
+$BODY$
+   DECLARE vbUserId     Integer;
+   DECLARE vbUnitId     Integer;
+   DECLARE vbInvNumber  TVarChar;
+BEGIN
+    -- проверка прав пользователя на вызов процедуры
+    vbUserId:= lpCheckRight (inSession, zc_Enum_Process_InsertUpdate_MI_ComputerAccessoriesRegister());
+
+    IF COALESCE (inId, 0) = 0 OR COALESCE (inCountForPrice, 0) <> 0
+    THEN
+        RETURN;    
+    END IF;
+    
+    inCountForPrice := COALESCE ((SELECT ObjectFloat_CountForPrice.ValueData FROM ObjectFloat AS ObjectFloat_CountForPrice
+                                  WHERE ObjectFloat_CountForPrice.ObjectId = inComputerAccessoriesId
+                                    AND ObjectFloat_CountForPrice.DescId = zc_ObjectFloat_ComputerAccessories_CountForPrice()), 0);
+
+    IF COALESCE (inCountForPrice, 0) = 0
+    THEN
+        RETURN;    
+    END IF;
+
+    -- Сохранили <Себестоимость>
+    PERFORM lpInsertUpdate_MovementItemFloat (zc_MIFloat_CountForPrice(), inId, inCountForPrice);
+      
+    -- пересчитали Итоговые суммы по документу
+    PERFORM lpInsertUpdate_ComputerAccessoriesRegister_TotalSumm (inMovementId);
+     
+    -- сохранили протокол
+    PERFORM lpInsert_MovementItemProtocol (inId, vbUserId, False);
+END;
+$BODY$
+  LANGUAGE plpgsql VOLATILE;
+--ALTER FUNCTION gpUpdate_ComputerAccessoriesRegister_CountForPrice (Integer, Integer, TFloat, TVarChar) OWNER TO postgres;
+/*
+ ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
+               Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.   Шаблий О.В.
+ 14.07.20                                                                      *
+*/
+
+-- тест
+-- select * from gpUpdate_ComputerAccessoriesRegister_CountForPrice(ioId := 0 , inMovementId := 19386934 , inGoodsId := 427 , inAmount := 10 , inNewExpirationDate := ('22.07.2020')::TDateTime , inContainerId := 20253754 ,  inSession := '3');

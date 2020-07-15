@@ -38,6 +38,7 @@ type
     procedure LoadConditionsKeepFormTest;
     procedure LoadContactPersonFormTest;
     procedure LoadClientsByBankFormTest;
+    procedure LoadComputerAccessoriesFormTest;
     procedure LoadContractFormTest;
     procedure LoadCreditLimitDistributorFormTest;
     procedure LoadCurrencyFormTest;
@@ -476,6 +477,22 @@ begin
 
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TClientsByBankEditForm'));
   TdsdFormStorageFactory.GetStorage.Load('TClientsByBankEditForm');
+end;
+
+procedure TLoadFormTest.LoadComputerAccessoriesFormTest;
+begin
+
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TComputerAccessoriesForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TComputerAccessoriesForm');
+
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TComputerAccessoriesEditForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TComputerAccessoriesEditForm');
+
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TComputerAccessoriesRegisterForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TComputerAccessoriesRegisterForm');
+
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TComputerAccessoriesRegisterJournalForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TComputerAccessoriesRegisterJournalForm');
 end;
 
 procedure TLoadFormTest.LoadContractFormTest;

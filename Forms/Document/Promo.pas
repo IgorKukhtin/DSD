@@ -428,6 +428,8 @@ type
     spUpdate_Movement_ChangePercent: TdsdStoredProc;
     actChangePercentDialog: TExecuteDialog;
     bbChangePercent: TdxBarButton;
+    dsdDBViewAddOnAdvertising: TdsdDBViewAddOn;
+    spUpdate_PromoPartner_ChangePercent: TdsdStoredProc;
   private
     { Private declarations }
   public

@@ -7,6 +7,7 @@ CREATE OR REPLACE FUNCTION gpSelect_Object_HouseholdInventory(
     IN inSession     TVarChar       -- сессия пользователя
 )
 RETURNS TABLE (Id Integer, Code Integer, Name TVarChar
+             , CountForPrice TFloat
              , isErased boolean) AS
 $BODY$BEGIN
 
@@ -19,10 +20,17 @@ $BODY$BEGIN
           Object_HouseholdInventory.Id                 AS Id
         , Object_HouseholdInventory.ObjectCode         AS Code
         , Object_HouseholdInventory.ValueData          AS Name
+        
+        , ObjectFloat_CountForPrice.ValueData          AS CountForPrice
 
         , Object_HouseholdInventory.isErased           AS isErased
 
    FROM Object AS Object_HouseholdInventory
+
+        LEFT JOIN ObjectFloat AS ObjectFloat_CountForPrice
+                              ON ObjectFloat_CountForPrice.ObjectId = Object_HouseholdInventory.Id
+                             AND ObjectFloat_CountForPrice.DescId = zc_ObjectFloat_HouseholdInventory_CountForPrice()
+
    WHERE Object_HouseholdInventory.DescId = zc_Object_HouseholdInventory()
      AND (Object_HouseholdInventory.isErased = False or inIsErased = True);
 

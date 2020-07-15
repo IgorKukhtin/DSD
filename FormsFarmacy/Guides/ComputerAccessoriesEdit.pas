@@ -1,4 +1,4 @@
-unit HouseholdInventoryEdit;
+unit ComputerAccessoriesEdit;
 
 interface
 
@@ -23,7 +23,7 @@ uses
   cxButtonEdit, Vcl.ComCtrls, dxCore, cxDateUtils, cxCalendar;
 
 type
-  THouseholdInventoryEditForm = class(TParentForm)
+  TComputerAccessoriesEditForm = class(TParentForm)
     edName: TcxTextEdit;
     cxLabel1: TcxLabel;
     cxButton1: TcxButton;
@@ -39,8 +39,6 @@ type
     spGet: TdsdStoredProc;
     dsdUserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn;
     cxPropertiesStore: TcxPropertiesStore;
-    ceCountForPrice: TcxCurrencyEdit;
-    cxLabel2: TcxLabel;
   private
     { Private declarations }
   public
@@ -51,6 +49,6 @@ implementation
 
 {$R *.dfm}
 initialization
-  RegisterClass(THouseholdInventoryEditForm);
+  RegisterClass(TComputerAccessoriesEditForm);
 
 end.

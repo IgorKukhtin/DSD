@@ -5,14 +5,16 @@ DROP FUNCTION IF EXISTS gpInsertUpdate_MovementItem_PromoGoods (Integer, Integer
 DROP FUNCTION IF EXISTS gpInsertUpdate_MovementItem_PromoGoods (Integer, Integer, Integer, TFloat, TFloat, TFloat, TFloat, TFloat, Integer, TVarChar, TVarChar);
 DROP FUNCTION IF EXISTS gpInsertUpdate_MovementItem_PromoGoods (Integer, Integer, Integer, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, Integer, TVarChar, TVarChar);
 DROP FUNCTION IF EXISTS gpInsertUpdate_MovementItem_PromoGoods (Integer, Integer, Integer, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, Integer, Integer, TVarChar, TVarChar);
-DROP FUNCTION IF EXISTS gpInsertUpdate_MovementItem_PromoGoods (Integer, Integer, Integer, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, Integer, Integer, TVarChar, TVarChar);
+--DROP FUNCTION IF EXISTS gpInsertUpdate_MovementItem_PromoGoods (Integer, Integer, Integer, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, Integer, Integer, TVarChar, TVarChar);
+DROP FUNCTION IF EXISTS gpInsertUpdate_MovementItem_PromoGoods (Integer, Integer, Integer, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, Integer, Integer, TVarChar, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpInsertUpdate_MovementItem_PromoGoods(
  INOUT ioId                   Integer   , -- Ключ объекта <Элемент документа>
     IN inMovementId           Integer   , -- Ключ объекта <Документ>
     IN inGoodsId              Integer   , -- Товары
     IN inAmount               TFloat    , -- % скидки на товар
- INOUT ioPrice                TFloat    , -- Цена в прайсе
+ INOUT ioPrice                TFloat    , -- Цена в прайсе с учетом скидки по договору
+ INOUT ioOperPriceList        TFloat    , -- Цена в прайсе
     IN inPriceSale            TFloat    , -- Цена на полке
    OUT outPriceWithOutVAT     TFloat    , -- Цена отгрузки без учета НДС, с учетом скидки, грн
    OUT outPriceWithVAT        TFloat    , -- Цена отгрузки с учетом НДС, с учетом скидки, грн
@@ -35,6 +37,7 @@ $BODY$
    DECLARE vbPriceList Integer;
    DECLARE vbPriceWithWAT Boolean;
    DECLARE vbVAT TFloat;
+   DECLARE vbChangePercent TFloat;
 BEGIN
     -- проверка прав пользователя на вызов процедуры
     vbUserId := CASE WHEN inSession = '-12345' THEN inSession :: Integer ELSE lpCheckRight (inSession, zc_Enum_Process_InsertUpdate_MI_Promo()) END;
@@ -70,7 +73,8 @@ BEGIN
     
     -- поиск прайс-лист
     SELECT COALESCE (Movement_Promo.PriceListId, zc_PriceList_Basis())
-           INTO vbPriceList
+         , COALESCE (Movement_Promo.ChangePercent, 0) 
+           INTO vbPriceList, vbChangePercent
     FROM Movement_Promo_View AS Movement_Promo
     WHERE Movement_Promo.Id = inMovementId;
 
@@ -80,7 +84,7 @@ BEGIN
     FROM gpGet_Object_PriceList(vbPriceList,inSession) AS PriceList;
     
     -- поиск цены по базовому прайсу
-    IF COALESCE (ioPrice, 0) = 0 OR COALESCE (ioId, 0) = 0
+    IF COALESCE (ioOperPriceList, 0) = 0 OR COALESCE (ioId, 0) = 0
     THEN
          --
          IF EXISTS (SELECT * FROM INFORMATION_SCHEMA.tables WHERE TABLE_NAME ILIKE ('tmpPriceList'))
@@ -97,25 +101,28 @@ BEGIN
                   , lfSelect.ValuePrice  AS ValuePrice
              FROM lfSelect_ObjectHistory_PriceListItem (inPriceListId:= vbPriceList, inOperDate:= (SELECT OperDate FROM Movement WHERE Id = inMovementId)) AS lfSelect;
 
-       ioPrice := COALESCE ((SELECT tmpPriceList.ValuePrice FROM tmpPriceList WHERE tmpPriceList.GoodsId = inGoodsId AND tmpPriceList.GoodsKindId = inGoodsKindId)
+       ioOperPriceList := COALESCE ((SELECT tmpPriceList.ValuePrice FROM tmpPriceList WHERE tmpPriceList.GoodsId = inGoodsId AND tmpPriceList.GoodsKindId = inGoodsKindId)
                           , (SELECT tmpPriceList.ValuePrice FROM tmpPriceList WHERE tmpPriceList.GoodsId = inGoodsId AND tmpPriceList.GoodsKindId IS NULL)
                           ,0);
         
         /*SELECT Price.ValuePrice
-               INTO ioPrice
+               INTO ioOperPriceList
         FROM lfSelect_ObjectHistory_PriceListItem (inPriceListId:= vbPriceList
                                                  , inOperDate   := (SELECT OperDate FROM Movement WHERE Id = inMovementId)
                                                   ) AS Price
         WHERE Price.GoodsId = inGoodsId;
         */
     
-        -- Если необходимо - привести цену к цене с НДС
+        -- Если необходимо - привести цену к цене без НДС
         IF vbPriceWithWAT = TRUE
         THEN
-            ioPrice := ROUND (ioPrice / (vbVAT / 100.0 + 1), 2);
+            ioOperPriceList := ROUND (ioOperPriceList / (vbVAT / 100.0 + 1), 2);
         END IF;
+        
+        -- цену прайса с учетом скидки по дог.
+        ioPrice := ROUND (ioOperPriceList * (1+ vbChangePercent/100.0), 2);
     END IF;
-    
+
     -- Так для Тендера
     IF inPriceTender > 0
     THEN
@@ -151,6 +158,7 @@ BEGIN
                                                   , inGoodsId              := inGoodsId
                                                   , inAmount               := inAmount
                                                   , inPrice                := ioPrice
+                                                  , inOperPriceList        := ioOperPriceList
                                                   , inPriceSale            := inPriceSale
                                                   , inPriceWithOutVAT      := outPriceWithOutVAT
                                                   , inPriceWithVAT         := outPriceWithVAT

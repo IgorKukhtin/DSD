@@ -1,8 +1,8 @@
-﻿object HouseholdInventoryEditForm: THouseholdInventoryEditForm
+﻿object ComputerAccessoriesEditForm: TComputerAccessoriesEditForm
   Left = 0
   Top = 0
-  Caption = #1044#1086#1073#1072#1074#1080#1090#1100'/'#1080#1079#1084#1077#1085#1080#1090#1100' <'#1061#1086#1079#1103#1081#1089#1090#1074#1077#1085#1085#1099#1081' '#1080#1085#1074#1077#1085#1090#1072#1088#1100'>'
-  ClientHeight = 190
+  Caption = #1044#1086#1073#1072#1074#1080#1090#1100'/'#1080#1079#1084#1077#1085#1080#1090#1100' <'#1050#1086#1084#1087#1100#1102#1090#1077#1088#1085#1099#1081' '#1072#1082#1089#1077#1089#1089#1091#1072#1088'>'
+  ClientHeight = 166
   ClientWidth = 436
   Color = clBtnFace
   Font.Charset = DEFAULT_CHARSET
@@ -29,7 +29,7 @@
   end
   object cxButton1: TcxButton
     Left = 91
-    Top = 152
+    Top = 122
     Width = 75
     Height = 25
     Action = dsdInsertUpdateGuides
@@ -39,7 +39,7 @@
   end
   object cxButton2: TcxButton
     Left = 241
-    Top = 152
+    Top = 122
     Width = 75
     Height = 25
     Action = dsdFormClose
@@ -60,18 +60,6 @@
     Properties.DisplayFormat = '0'
     TabOrder = 5
     Width = 400
-  end
-  object ceCountForPrice: TcxCurrencyEdit
-    Left = 20
-    Top = 120
-    Properties.DisplayFormat = ',0.00;-,0.00; ;'
-    TabOrder = 6
-    Width = 121
-  end
-  object cxLabel2: TcxLabel
-    Left = 20
-    Top = 98
-    Caption = #1057#1077#1073#1077#1089#1090#1086#1080#1084#1086#1089#1090#1100
   end
   object ActionList: TActionList
     Left = 252
@@ -107,7 +95,7 @@
     end
   end
   object spInsertUpdate: TdsdStoredProc
-    StoredProcName = 'gpInsertUpdate_Object_HouseholdInventory'
+    StoredProcName = 'gpInsertUpdate_Object_ComputerAccessories'
     DataSets = <>
     OutputType = otResult
     Params = <
@@ -133,14 +121,6 @@
         DataType = ftString
         ParamType = ptInput
         MultiSelectSeparator = ','
-      end
-      item
-        Name = 'inCountForPrice'
-        Value = Null
-        Component = ceCountForPrice
-        DataType = ftFloat
-        ParamType = ptInput
-        MultiSelectSeparator = ','
       end>
     PackSize = 1
     Left = 188
@@ -154,11 +134,11 @@
         ParamType = ptInputOutput
         MultiSelectSeparator = ','
       end>
-    Left = 68
-    Top = 8
+    Left = 4
+    Top = 32
   end
   object spGet: TdsdStoredProc
-    StoredProcName = 'gpGet_Object_HouseholdInventory'
+    StoredProcName = 'gpGet_Object_ComputerAccessories'
     DataSets = <>
     OutputType = otResult
     Params = <
@@ -181,13 +161,6 @@
         Name = 'Code'
         Value = 0.000000000000000000
         Component = ceCode
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'CountForPrice'
-        Value = Null
-        Component = ceCountForPrice
-        DataType = ftFloat
         MultiSelectSeparator = ','
       end>
     PackSize = 1

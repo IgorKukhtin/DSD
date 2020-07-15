@@ -1,13 +1,15 @@
 -- Function: lpInsertUpdate_MovementItem_PromoGoods()
 
-DROP FUNCTION IF EXISTS lpInsertUpdate_MovementItem_PromoGoods (Integer, Integer, Integer, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, Integer, Integer, TVarChar, Integer);
+--DROP FUNCTION IF EXISTS lpInsertUpdate_MovementItem_PromoGoods (Integer, Integer, Integer, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, Integer, Integer, TVarChar, Integer);
+DROP FUNCTION IF EXISTS lpInsertUpdate_MovementItem_PromoGoods (Integer, Integer, Integer, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, Integer, Integer, TVarChar, Integer);
 
 CREATE OR REPLACE FUNCTION lpInsertUpdate_MovementItem_PromoGoods(
  INOUT ioId                    Integer   , -- Ключ объекта <Элемент документа>
     IN inMovementId            Integer   , -- Ключ объекта <Документ>
     IN inGoodsId               Integer   , -- Товары
     IN inAmount                TFloat    , -- % скидки на товар
-    IN inPrice                 TFloat    , --Цена в прайсе
+    IN inPrice                 TFloat    , --Цена в прайсе учетом скидки 
+    IN inOperPriceList         TFloat    , --Цена в прайсе
     IN inPriceSale             TFloat    , --Цена на полке
     IN inPriceWithOutVAT       TFloat    , --Цена отгрузки без учета НДС, с учетом скидки, грн
     IN inPriceWithVAT          TFloat    , --Цена отгрузки с учетом НДС, с учетом скидки, грн
@@ -38,9 +40,12 @@ BEGIN
     -- сохранили <Элемент документа>
     ioId := lpInsertUpdate_MovementItem (ioId, zc_MI_Master(), inGoodsId, inMovementId, inAmount, NULL, inUserId);
     
-    -- сохранили <цена в прайсе>
+    -- сохранили <цена в прайсе> без учета % скидки (договор)
+    PERFORM lpInsertUpdate_MovementItemFloat (zc_MIFloat_OperPriceList(), ioId, COALESCE(inOperPriceList,0));
+
+    -- сохранили <цена в прайсе> c учетом % скидки (договор)
     PERFORM lpInsertUpdate_MovementItemFloat (zc_MIFloat_Price(), ioId, COALESCE(inPrice,0));
-    
+
     -- сохранили <цена на полке>
     PERFORM lpInsertUpdate_MovementItemFloat (zc_MIFloat_PriceSale(), ioId, COALESCE(inPriceSale,0));
     
@@ -84,6 +89,7 @@ $BODY$
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.  Воробкало А.А.
+ 14.07.20         * inOperPriceList
  24.01.18         * inPriceTender
  28.11.17         * inGoodsKindCompleteId
  13.10.15                                                                       *

@@ -7,6 +7,7 @@ CREATE OR REPLACE FUNCTION gpGet_Object_HouseholdInventory(
     IN inSession       TVarChar       -- сессия пользователя
 )
 RETURNS TABLE (Id Integer, Code Integer, Name TVarChar
+             , CountForPrice TFloat
 ) AS
 $BODY$
 BEGIN
@@ -23,7 +24,8 @@ BEGIN
        SELECT
              CAST (0 as Integer)       AS Id
            , lfGet_ObjectCode(0, zc_Object_HouseholdInventory()) AS Code
-           , CAST ('' as TVarChar)     AS Name;
+           , CAST ('' as TVarChar)     AS Name
+           , CAST (0 as TFloat)     AS CountForPrice;
 
    ELSE
        RETURN QUERY
@@ -31,8 +33,14 @@ BEGIN
              Object_HouseholdInventory.Id         AS Id
            , Object_HouseholdInventory.ObjectCode AS Code
            , Object_HouseholdInventory.ValueData  AS Name
+           , ObjectFloat_CountForPrice.ValueData  AS CountForPrice
 
        FROM Object AS Object_HouseholdInventory
+
+            LEFT JOIN ObjectFloat AS ObjectFloat_CountForPrice
+                                  ON ObjectFloat_CountForPrice.ObjectId = Object_HouseholdInventory.Id
+                                 AND ObjectFloat_CountForPrice.DescId = zc_ObjectFloat_HouseholdInventory_CountForPrice()
+
        WHERE Object_HouseholdInventory.Id = inId;
    END IF;
 
