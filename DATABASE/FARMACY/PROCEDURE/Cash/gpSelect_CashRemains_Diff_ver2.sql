@@ -1,3 +1,4 @@
+
 -- Function: gpSelect_CashRemains_Diff_ver2()
 
  DROP FUNCTION IF EXISTS gpSelect_CashRemains_Diff_ver2 (TVarChar, TVarChar);
@@ -393,11 +394,11 @@ WITH tmp as (SELECT tmp.*, ROW_NUMBER() OVER (PARTITION BY TextValue_calc ORDER 
            WITH tmpPartionDateKind AS (SELECT Object_PartionDateKind.Id           AS Id
                                             , Object_PartionDateKind.ObjectCode   AS Code
                                             , Object_PartionDateKind.ValueData    AS Name
-                                            , COALESCE (ObjectFloat_Month.ValueData, 0) :: TFLoat AS AmountMonth
+                                            , COALESCE (ObjectFloatDay.ValueData / 30, 0) :: TFLoat AS AmountMonth
                                        FROM Object AS Object_PartionDateKind
-                                            LEFT JOIN ObjectFloat AS ObjectFloat_Month
-                                                                  ON ObjectFloat_Month.ObjectId = Object_PartionDateKind.Id
-                                                                 AND ObjectFloat_Month.DescId = zc_ObjectFloat_PartionDateKind_Month()
+                                            LEFT JOIN ObjectFloat AS ObjectFloatDay
+                                                                  ON ObjectFloatDay.ObjectId = Object_PartionDateKind.Id
+                                                                 AND ObjectFloatDay.DescId = zc_ObjectFloat_PartionDateKind_Day()
                                        WHERE Object_PartionDateKind.DescId = zc_Object_PartionDateKind()
                                       )
                  -- Все перемещения по СУН

@@ -700,7 +700,7 @@ begin
       else
 
       //если программа Medicard
-      if (gCode = 3) or (gCode = 5) then
+      if gCode in [3, 5, 6] then
       begin
 
         if (FIdCasual = '') or (FSupplier = 0) or (FBarCode_find = '') then
@@ -1260,7 +1260,7 @@ begin
       then lPriceSale:= CheckCDS.FieldByName('PriceSale').asFloat
       else lPriceSale:= CheckCDS.FieldByName('Price').asFloat;
       //
-      if (lDiscountExternalId > 0) and ((gCode = 1) or (gCode = 2) and (gUserName <> '') or (gCode = 3) or (gCode = 4) or (gCode = 5)) and
+      if (lDiscountExternalId > 0) and ((gCode = 1) or (gCode = 2) and (gUserName <> '') or (gCode in [3, 4, 5, 6])) and
          (CheckCDS.FieldByName('Amount').AsFloat > 0)
       then
         //поиск Штрих-код
@@ -1563,7 +1563,7 @@ begin
       end // if BarCode_find <> ''
 
       //если Штрих-код нашелся и программа Medicard card
-      else  if (BarCode_find <> '') and ((gCode = 3) or (gCode = 5)) then
+      else  if (BarCode_find <> '') and (gCode in [3, 5, 6]) then
       begin
 
           if CheckCDS.FieldByName('Amount').AsInteger <> CheckCDS.FieldByName('Amount').AsCurrency then
@@ -1915,7 +1915,7 @@ end;
 
 function TDiscountServiceForm.GetBeforeSale : boolean;
 begin
-  if ((gCode = 3) or (gCode = 5)) and (FIdCasual <> '') then
+  if (gCode in [3, 5, 6]) and (FIdCasual <> '') then
   begin
     Result := True;
   end else Result := False;

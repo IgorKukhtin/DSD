@@ -12,17 +12,17 @@ inherited OrderInternalPromoForm: TOrderInternalPromoForm
     Width = 814
     Height = 348
     ExplicitTop = 116
-    ExplicitWidth = 824
+    ExplicitWidth = 814
     ExplicitHeight = 348
     ClientRectBottom = 348
     ClientRectRight = 814
     inherited tsMain: TcxTabSheet
-      ExplicitWidth = 824
+      ExplicitWidth = 814
       ExplicitHeight = 324
       inherited cxGrid: TcxGrid
         Width = 814
         Height = 144
-        ExplicitWidth = 824
+        ExplicitWidth = 814
         ExplicitHeight = 144
         inherited cxGridDBTableView: TcxGridDBTableView
           DataController.Summary.DefaultGroupSummaryItems = <
@@ -310,7 +310,6 @@ inherited OrderInternalPromoForm: TOrderInternalPromoForm
         Align = alBottom
         PopupMenu = PopupMenu
         TabOrder = 1
-        ExplicitWidth = 824
         object cxGridDBTableView1: TcxGridDBTableView
           Navigator.Buttons.CustomButtons = <>
           DataController.DataSource = DetailDS
@@ -526,7 +525,6 @@ inherited OrderInternalPromoForm: TOrderInternalPromoForm
         Touch.TabletOptions = [toPressAndHold]
         AlignSplitter = salBottom
         Control = cxGrid1
-        ExplicitWidth = 824
       end
     end
   end
@@ -534,7 +532,7 @@ inherited OrderInternalPromoForm: TOrderInternalPromoForm
     Width = 814
     Height = 90
     TabOrder = 3
-    ExplicitWidth = 824
+    ExplicitWidth = 814
     ExplicitHeight = 90
     inherited edInvNumber: TcxTextEdit
       Left = 168
@@ -632,7 +630,6 @@ inherited OrderInternalPromoForm: TOrderInternalPromoForm
     Touch.TabletOptions = [toPressAndHold]
     AlignSplitter = salBottom
     Control = cxGrid2
-    ExplicitWidth = 824
   end
   object cxGrid2: TcxGrid [5]
     Left = 0
@@ -642,7 +639,6 @@ inherited OrderInternalPromoForm: TOrderInternalPromoForm
     Align = alBottom
     PopupMenu = PopupMenu
     TabOrder = 9
-    ExplicitWidth = 824
     object cxGridDBTableView2: TcxGridDBTableView
       Navigator.Buttons.CustomButtons = <>
       DataController.DataSource = PartnerDS
@@ -1377,13 +1373,10 @@ inherited OrderInternalPromoForm: TOrderInternalPromoForm
         item
           StoredProc = spSelect
         end>
-      Caption = 
-        #1056#1072#1089#1089#1095#1080#1090#1072#1090#1100' '#1082#1086#1083'-'#1074#1072' '#1076#1083#1103' '#1088#1072#1089#1087#1088#1077#1076#1077#1083#1077#1085#1080#1103' '#1089#1086#1075#1083#1072'c'#1085#1086' '#1057#1091#1084#1084#1077' '#1087#1086' '#1094#1077#1085#1072#1084' '#1087#1088#1072#1081 +
-        #1089#1072' / '#1057#1048#1055
-      Hint = 
-        #1056#1072#1089#1089#1095#1080#1090#1072#1090#1100' '#1082#1086#1083'-'#1074#1072' '#1076#1083#1103' '#1088#1072#1089#1087#1088#1077#1076#1077#1083#1077#1085#1080#1103' '#1089#1086#1075#1083#1072'c'#1085#1086' '#1057#1091#1084#1084#1077' '#1087#1086' '#1094#1077#1085#1072#1084' '#1087#1088#1072#1081 +
-        #1089#1072' / '#1057#1048#1055
+      Caption = #1056#1072#1089#1089#1095#1080#1090#1072#1090#1100' '#1082#1086#1083#1080#1095#1077#1089#1090#1074#1086' '#1076#1083#1103' '#1088#1072#1089#1087#1088#1077#1076#1077#1083#1077#1085#1080#1103
+      Hint = #1056#1072#1089#1089#1095#1080#1090#1072#1090#1100' '#1082#1086#1083#1080#1095#1077#1089#1090#1074#1086' '#1076#1083#1103' '#1088#1072#1089#1087#1088#1077#1076#1077#1083#1077#1085#1080#1103
       ImageIndex = 45
+      QuestionBeforeExecute = #1056#1072#1089#1089#1095#1080#1090#1072#1090#1100' '#1082#1086#1083#1080#1095#1077#1089#1090#1074#1086' '#1076#1083#1103' '#1088#1072#1089#1087#1088#1077#1076#1077#1083#1077#1085#1080#1103'?'
     end
     object macInsertPromoPartner: TMultiAction
       Category = 'DSDLib'
@@ -1907,7 +1900,6 @@ inherited OrderInternalPromoForm: TOrderInternalPromoForm
     object bbUpdateMasterAmount: TdxBarButton
       Action = actUpdateMasterAmount
       Category = 0
-      Hint = #1056#1072#1089#1089#1095#1080#1090#1072#1090#1100' '#1082#1086#1083'-'#1074#1072' '#1076#1083#1103' '#1088#1072#1089#1087#1088#1077#1076'. '#1089#1086#1075#1083#1072'c'#1085#1086' '#1057#1091#1084#1084#1077
     end
     object bbInsertByPromo: TdxBarButton
       Action = macInsertByPromo

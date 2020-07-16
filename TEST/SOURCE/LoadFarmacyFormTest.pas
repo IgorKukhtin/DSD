@@ -350,18 +350,15 @@ end;
 
 procedure TLoadFormTest.LoadCashRegisterFormTest;
 begin
-  TdsdFormStorageFactory.GetStorage.Save(GetForm('TOverdueChangeCashJournalForm'));
-  TdsdFormStorageFactory.GetStorage.Load('TOverdueChangeCashJournalForm');
 
-  Exit;
+{  TdsdFormStorageFactory.GetStorage.Save(GetForm('TOverdueChangeCashJournalForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TOverdueChangeCashJournalForm');
 
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TCashRegisterForm'));
   TdsdFormStorageFactory.GetStorage.Load('TCashRegisterForm');
 
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TCashRegisterEditForm'));
   TdsdFormStorageFactory.GetStorage.Load('TCashRegisterEditForm');
-
-  Exit;
 
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TCashRegisterKindForm'));
   TdsdFormStorageFactory.GetStorage.Load('TCashRegisterKindForm');
@@ -375,9 +372,6 @@ begin
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TCashGoodsOneToExpirationDateForm'));
   TdsdFormStorageFactory.GetStorage.Load('TCashGoodsOneToExpirationDateForm');
 
-  TdsdFormStorageFactory.GetStorage.Save(GetForm('TOverdueJournalForm'));
-  TdsdFormStorageFactory.GetStorage.Load('TOverdueJournalForm');
-
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TOverdueDialogForm'));
   TdsdFormStorageFactory.GetStorage.Load('TOverdueDialogForm');
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TOverdueJournalForm'));
@@ -385,6 +379,7 @@ begin
 
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TOverdue_UpdateRangeCat5DialogForm'));
   TdsdFormStorageFactory.GetStorage.Load('TOverdue_UpdateRangeCat5DialogForm');
+  }
 end;
 
 procedure TLoadFormTest.LoadCalendarFormTest;
