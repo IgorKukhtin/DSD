@@ -592,21 +592,21 @@ inherited OrderInternalPromoForm: TOrderInternalPromoForm
       Top = 62
       Properties.ReadOnly = False
       TabOrder = 9
-      Width = 464
+      Width = 412
     end
-    object edReplays: TcxCurrencyEdit
-      Left = 478
+    object ceTotalAmount: TcxCurrencyEdit
+      Left = 678
       Top = 62
       Properties.DecimalPlaces = 0
       Properties.DisplayFormat = '0'
       Properties.ReadOnly = False
       TabOrder = 10
-      Width = 157
+      Width = 120
     end
     object cxLabel5: TcxLabel
-      Left = 478
+      Left = 678
       Top = 46
-      Caption = #1057#1091#1084#1084#1072' '#1087#1086' '#1094#1077#1085#1072#1084' '#1087#1088#1072#1081#1089#1072
+      Caption = #1050#1088#1083#1080#1095#1077#1089#1090#1074#1086' '#1076#1083#1103' '#1088#1072#1089#1087#1088'.'
     end
   end
   object edStartSale: TcxDateEdit [2]
@@ -706,30 +706,30 @@ inherited OrderInternalPromoForm: TOrderInternalPromoForm
     end
   end
   object ceTotalSummPrice: TcxCurrencyEdit [6]
-    Left = 478
+    Left = 426
     Top = 62
     Properties.DecimalPlaces = 0
     Properties.DisplayFormat = '0'
     Properties.ReadOnly = False
     TabOrder = 10
-    Width = 157
+    Width = 120
   end
   object cxLabel4: TcxLabel [7]
-    Left = 478
+    Left = 426
     Top = 46
     Caption = #1057#1091#1084#1084#1072' '#1087#1086' '#1094#1077#1085#1072#1084' '#1087#1088#1072#1081#1089#1072
   end
   object ceTotalSummSIP: TcxCurrencyEdit [8]
-    Left = 641
+    Left = 552
     Top = 62
     Properties.DecimalPlaces = 0
     Properties.DisplayFormat = '0'
     Properties.ReadOnly = False
     TabOrder = 12
-    Width = 157
+    Width = 120
   end
   object cxLabel6: TcxLabel [9]
-    Left = 641
+    Left = 552
     Top = 46
     Caption = #1057#1091#1084#1084#1072' '#1087#1086' '#1094#1077#1085#1072#1084' '#1057#1048#1055
   end
@@ -2060,6 +2060,13 @@ inherited OrderInternalPromoForm: TOrderInternalPromoForm
         Component = ceTotalSummPrice
         DataType = ftFloat
         MultiSelectSeparator = ','
+      end
+      item
+        Name = 'TotalAmount'
+        Value = Null
+        Component = ceTotalAmount
+        DataType = ftFloat
+        MultiSelectSeparator = ','
       end>
     Left = 160
     Top = 240
@@ -2111,6 +2118,14 @@ inherited OrderInternalPromoForm: TOrderInternalPromoForm
         Name = 'inTotalSummSIP'
         Value = Null
         Component = ceTotalSummSIP
+        DataType = ftFloat
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inTotalAmount'
+        Value = Null
+        Component = ceTotalAmount
         DataType = ftFloat
         ParamType = ptInput
         MultiSelectSeparator = ','
@@ -2171,6 +2186,9 @@ inherited OrderInternalPromoForm: TOrderInternalPromoForm
       end
       item
         Control = ceTotalSummPrice
+      end
+      item
+        Control = ceTotalAmount
       end>
     Left = 200
     Top = 177

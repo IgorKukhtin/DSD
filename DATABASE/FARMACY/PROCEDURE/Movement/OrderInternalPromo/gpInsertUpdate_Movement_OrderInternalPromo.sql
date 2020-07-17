@@ -3,6 +3,7 @@
 DROP FUNCTION IF EXISTS gpInsertUpdate_Movement_OrderInternalPromo (Integer, TVarChar, TDateTime, TDateTime, TFloat, Integer, TVarChar, TVarChar);
 DROP FUNCTION IF EXISTS gpInsertUpdate_Movement_OrderInternalPromo (Integer, TVarChar, TDateTime, TDateTime, Integer, TVarChar, TVarChar);
 DROP FUNCTION IF EXISTS gpInsertUpdate_Movement_OrderInternalPromo (Integer, TVarChar, TDateTime, TDateTime, TFloat, TFloat, Integer, TVarChar, TVarChar);
+DROP FUNCTION IF EXISTS gpInsertUpdate_Movement_OrderInternalPromo (Integer, TVarChar, TDateTime, TDateTime, TFloat, TFloat, TFloat, Integer, TVarChar, TVarChar);
 
 
 CREATE OR REPLACE FUNCTION gpInsertUpdate_Movement_OrderInternalPromo(
@@ -12,6 +13,7 @@ CREATE OR REPLACE FUNCTION gpInsertUpdate_Movement_OrderInternalPromo(
     IN inStartSale             TDateTime  , -- Дата начала продаж
     IN inTotalSummPrice        TFloat     , -- итого сумма по ценам прайса
     IN inTotalSummSIP          TFloat     , -- итого сумма по ценам сип
+    IN inTotalAmount           TFloat     , -- Крличество для распр.
     IN inRetailId              Integer    , -- Торговая сеть
     IN inComment               TVarChar   , -- Примечание
     IN inSession               TVarChar     -- сессия пользователя
@@ -56,6 +58,7 @@ BEGIN
                                                       , inRetailId      := inRetailId
                                                       , inTotalSummPrice:= inTotalSummPrice
                                                       , inTotalSummSIP  := inTotalSummSIP
+                                                      , inTotalAmount   := inTotalAmount
                                                       , inComment       := inComment
                                                       , inUserId        := vbUserId
                                                       );

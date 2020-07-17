@@ -17,16 +17,10 @@ $BODY$
    DECLARE vbAmount            TFloat ;
    DECLARE vbUnitId            Integer;
 
-   DECLARE vbMonth_0           TFloat;
-   DECLARE vbMonth_1           TFloat;
-   DECLARE vbMonth_6           TFloat;
-   DECLARE vbDay_0  Integer;
-   DECLARE vbDay_1  Integer;
-   DECLARE vbDay_6  Integer;
-
-   DECLARE vbDate0             TDateTime;
-   DECLARE vbDate180           TDateTime;
-   DECLARE vbDate30            TDateTime;
+   DECLARE vbDate_0             TDateTime;
+   DECLARE vbDate_1           TDateTime;
+   DECLARE vbDate_3            TDateTime;
+   DECLARE vbDate_6            TDateTime;
 
    DECLARE vbRemains           refcursor;
    DECLARE vbContainerId       Integer;
@@ -93,56 +87,10 @@ BEGIN
     FROM MovementItem WHERE MovementItem.MovementId = vbMovementId AND MovementItem.DescID = zc_MI_Child() AND MovementItem.ParentId = inMovementItemId;
   END IF;
 
-
-  -- получаем значени€ из справочника дл€ разделени€ по срокам
-/*  vbMonth_0 := (SELECT ObjectFloat_Month.ValueData
-                FROM Object  AS Object_PartionDateKind
-                     LEFT JOIN ObjectFloat AS ObjectFloat_Month
-                                           ON ObjectFloat_Month.ObjectId = Object_PartionDateKind.Id
-                                          AND ObjectFloat_Month.DescId = zc_ObjectFloat_PartionDateKind_Month()
-                WHERE Object_PartionDateKind.Id = zc_Enum_PartionDateKind_0());
-  vbMonth_1 := (SELECT ObjectFloat_Month.ValueData
-                FROM Object  AS Object_PartionDateKind
-                     LEFT JOIN ObjectFloat AS ObjectFloat_Month
-                                           ON ObjectFloat_Month.ObjectId = Object_PartionDateKind.Id
-                                          AND ObjectFloat_Month.DescId = zc_ObjectFloat_PartionDateKind_Month()
-                WHERE Object_PartionDateKind.Id = zc_Enum_PartionDateKind_1());
-  vbMonth_6 := (SELECT ObjectFloat_Month.ValueData
-                FROM Object  AS Object_PartionDateKind
-                     LEFT JOIN ObjectFloat AS ObjectFloat_Month
-                                           ON ObjectFloat_Month.ObjectId = Object_PartionDateKind.Id
-                                          AND ObjectFloat_Month.DescId = zc_ObjectFloat_PartionDateKind_Month()
-                WHERE Object_PartionDateKind.Id = zc_Enum_PartionDateKind_6());
-
-  -- даты + 6 мес€цев, + 1 мес€ц
-  vbDate180 := CURRENT_DATE + (vbMonth_6||' MONTH' ) ::INTERVAL;
-  vbDate30  := CURRENT_DATE + (vbMonth_1||' MONTH' ) ::INTERVAL;
-  vbDate0   := CURRENT_DATE + (vbMonth_0||' MONTH' ) ::INTERVAL; */
-
-    vbDay_0 := (SELECT COALESCE(ObjectFloat_Day.ValueData, 0)::Integer
-                FROM Object  AS Object_PartionDateKind
-                     LEFT JOIN ObjectFloat AS ObjectFloat_Day
-                                           ON ObjectFloat_Day.ObjectId = Object_PartionDateKind.Id
-                                          AND ObjectFloat_Day.DescId = zc_ObjectFloat_PartionDateKind_Day()
-                WHERE Object_PartionDateKind.Id = zc_Enum_PartionDateKind_0());
-    vbDay_1 := (SELECT ObjectFloat_Day.ValueData::Integer
-                FROM Object  AS Object_PartionDateKind
-                     LEFT JOIN ObjectFloat AS ObjectFloat_Day
-                                           ON ObjectFloat_Day.ObjectId = Object_PartionDateKind.Id
-                                          AND ObjectFloat_Day.DescId = zc_ObjectFloat_PartionDateKind_Day()
-                WHERE Object_PartionDateKind.Id = zc_Enum_PartionDateKind_1());
-    vbDay_6 := (SELECT ObjectFloat_Day.ValueData::Integer
-                FROM Object  AS Object_PartionDateKind
-                     LEFT JOIN ObjectFloat AS ObjectFloat_Day
-                                           ON ObjectFloat_Day.ObjectId = Object_PartionDateKind.Id
-                                          AND ObjectFloat_Day.DescId = zc_ObjectFloat_PartionDateKind_Day()
-                WHERE Object_PartionDateKind.Id = zc_Enum_PartionDateKind_6());
-
-    -- даты + 6 мес€цев, + 1 мес€ц
-    vbDate180 := CURRENT_DATE + (vbDay_6||' DAY' ) ::INTERVAL;
-    vbDate30  := CURRENT_DATE + (vbDay_1||' DAY' ) ::INTERVAL;
-    vbDate0   := CURRENT_DATE + (vbDay_0||' DAY' ) ::INTERVAL;
-
+  -- значени€ дл€ разделени€ по срокам
+  SELECT Date_6, Date_3, Date_1, Date_0
+  INTO vbDate_6, vbDate_3, vbDate_1, vbDate_0
+  FROM lpSelect_PartionDateKind_SetDate ();
 
   -- ѕрикрепление к контейнерам
   OPEN vbRemains FOR
@@ -174,12 +122,13 @@ BEGIN
                                                          AND ObjectBoolean_PartionGoods_Cat_5.DescID = zc_ObjectBoolean_PartionGoods_Cat_5() 
                                                          
                                   LEFT OUTER JOIN Object AS Object_PartionDateKind ON Object_PartionDateKind.Id =
-                                       CASE WHEN ObjectDate_ExpirationDate.ValueData <= vbDate0 AND
+                                       CASE WHEN ObjectDate_ExpirationDate.ValueData <= vbDate_0 AND
                                                  COALESCE (ObjectBoolean_PartionGoods_Cat_5.ValueData, FALSE) = TRUE 
-                                                                                                THEN zc_Enum_PartionDateKind_Cat_5()   -- 5 кат (просрочка без наценки)
-                                            WHEN ObjectDate_ExpirationDate.ValueData <= vbDate0 THEN zc_Enum_PartionDateKind_0()       -- просрочено
-                                            WHEN ObjectDate_ExpirationDate.ValueData <= vbDate30 THEN zc_Enum_PartionDateKind_1()      -- ћеньше 1 мес€ца
-                                            WHEN ObjectDate_ExpirationDate.ValueData <= vbDate180 THEN zc_Enum_PartionDateKind_6()     -- ћеньше 6 мес€ца
+                                                                                                 THEN zc_Enum_PartionDateKind_Cat_5()  -- 5 кат (просрочка без наценки)
+                                            WHEN ObjectDate_ExpirationDate.ValueData <= vbDate_0 THEN zc_Enum_PartionDateKind_0()      -- просрочено
+                                            WHEN ObjectDate_ExpirationDate.ValueData <= vbDate_1 THEN zc_Enum_PartionDateKind_1()      -- ћеньше 1 мес€ца
+                                            WHEN ObjectDate_ExpirationDate.ValueData <= vbDate_3 THEN zc_Enum_PartionDateKind_3()      -- ћеньше 3 мес€ца
+                                            WHEN ObjectDate_ExpirationDate.ValueData <= vbDate_6 THEN zc_Enum_PartionDateKind_6()      -- ћеньше 6 мес€ца
                                             ELSE zc_Enum_PartionDateKind_Good() END                                                    -- ¬остановлен с просрочки
                             )
 

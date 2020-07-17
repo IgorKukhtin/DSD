@@ -45,67 +45,17 @@ $BODY$
 
    DECLARE vbOperDate TDateTime;
    DECLARE vbDate180  TDateTime;
+   DECLARE vbDate90   TDateTime;
    DECLARE vbDate30   TDateTime;
-
-   DECLARE vbMonth_0  TFloat;
-   DECLARE vbMonth_1  TFloat;
-   DECLARE vbMonth_6  TFloat;
-   DECLARE vbDay_0  Integer;
-   DECLARE vbDay_1  Integer;
-   DECLARE vbDay_6  Integer;
 BEGIN
 
     -- проверка прав пользовател€ на вызов процедуры
     vbUserId:= lpGetUserBySession (inSession);
 
-    -- получаем значени€ из справочника
- /*   vbMonth_0 := (SELECT ObjectFloat_Month.ValueData
-                  FROM Object  AS Object_PartionDateKind
-                       LEFT JOIN ObjectFloat AS ObjectFloat_Month
-                                             ON ObjectFloat_Month.ObjectId = Object_PartionDateKind.Id
-                                            AND ObjectFloat_Month.DescId = zc_ObjectFloat_PartionDateKind_Month()
-                  WHERE Object_PartionDateKind.Id = zc_Enum_PartionDateKind_0());
-    vbMonth_1 := (SELECT ObjectFloat_Month.ValueData
-                  FROM Object  AS Object_PartionDateKind
-                       LEFT JOIN ObjectFloat AS ObjectFloat_Month
-                                             ON ObjectFloat_Month.ObjectId = Object_PartionDateKind.Id
-                                            AND ObjectFloat_Month.DescId = zc_ObjectFloat_PartionDateKind_Month()
-                  WHERE Object_PartionDateKind.Id = zc_Enum_PartionDateKind_1());
-    vbMonth_6 := (SELECT ObjectFloat_Month.ValueData
-                  FROM Object  AS Object_PartionDateKind
-                       LEFT JOIN ObjectFloat AS ObjectFloat_Month
-                                             ON ObjectFloat_Month.ObjectId = Object_PartionDateKind.Id
-                                            AND ObjectFloat_Month.DescId = zc_ObjectFloat_PartionDateKind_Month()
-                  WHERE Object_PartionDateKind.Id = zc_Enum_PartionDateKind_6());
-
-    -- даты + 6 мес€цев, + 1 мес€ц
-    vbDate180 := CURRENT_DATE + (vbMonth_6||' MONTH' ) ::INTERVAL;
-    vbDate30  := CURRENT_DATE + (vbMonth_1||' MONTH' ) ::INTERVAL;
-    vbOperDate:= CURRENT_DATE + (vbMonth_0||' MONTH' ) ::INTERVAL; */
-
-    vbDay_0 := (SELECT COALESCE(ObjectFloat_Day.ValueData, 0)::Integer
-                FROM Object  AS Object_PartionDateKind
-                     LEFT JOIN ObjectFloat AS ObjectFloat_Day
-                                           ON ObjectFloat_Day.ObjectId = Object_PartionDateKind.Id
-                                          AND ObjectFloat_Day.DescId = zc_ObjectFloat_PartionDateKind_Day()
-                WHERE Object_PartionDateKind.Id = zc_Enum_PartionDateKind_0());
-    vbDay_1 := (SELECT ObjectFloat_Day.ValueData::Integer
-                FROM Object  AS Object_PartionDateKind
-                     LEFT JOIN ObjectFloat AS ObjectFloat_Day
-                                           ON ObjectFloat_Day.ObjectId = Object_PartionDateKind.Id
-                                          AND ObjectFloat_Day.DescId = zc_ObjectFloat_PartionDateKind_Day()
-                WHERE Object_PartionDateKind.Id = zc_Enum_PartionDateKind_1());
-    vbDay_6 := (SELECT ObjectFloat_Day.ValueData::Integer
-                FROM Object  AS Object_PartionDateKind
-                     LEFT JOIN ObjectFloat AS ObjectFloat_Day
-                                           ON ObjectFloat_Day.ObjectId = Object_PartionDateKind.Id
-                                          AND ObjectFloat_Day.DescId = zc_ObjectFloat_PartionDateKind_Day()
-                WHERE Object_PartionDateKind.Id = zc_Enum_PartionDateKind_6());
-
-    -- даты + 6 мес€цев, + 1 мес€ц
-    vbDate180 := CURRENT_DATE + (vbDay_6||' DAY' ) ::INTERVAL;
-    vbDate30  := CURRENT_DATE + (vbDay_1||' DAY' ) ::INTERVAL;
-    vbOperDate:= CURRENT_DATE + (vbDay_0||' DAY' ) ::INTERVAL;
+    -- значени€ дл€ разделени€ по срокам
+    SELECT Date_6, Date_3, Date_1, Date_0
+    INTO vbDate180, vbDate90, vbDate30, vbOperDate
+    FROM lpSelect_PartionDateKind_SetDate ();
 
 
     -- –езультат
@@ -174,7 +124,8 @@ BEGIN
                               , CASE WHEN inIsPartionDateKind = TRUE
                                      THEN CASE WHEN COALESCE (ObjectDate_PartionGoods.ValueData, zc_DateEnd()) <= vbOperDate THEN zc_Enum_PartionDateKind_0()
                                                WHEN COALESCE (ObjectDate_PartionGoods.ValueData, zc_DateEnd()) > vbOperDate AND COALESCE (ObjectDate_PartionGoods.ValueData, zc_DateEnd()) <= vbDate30 THEN zc_Enum_PartionDateKind_1()
-                                               WHEN COALESCE (ObjectDate_PartionGoods.ValueData, zc_DateEnd()) > vbDate30   AND COALESCE (ObjectDate_PartionGoods.ValueData, zc_DateEnd()) <= vbDate180 THEN zc_Enum_PartionDateKind_6()
+                                               WHEN COALESCE (ObjectDate_PartionGoods.ValueData, zc_DateEnd()) > vbDate30 AND COALESCE (ObjectDate_PartionGoods.ValueData, zc_DateEnd()) <= vbDate90 THEN zc_Enum_PartionDateKind_3()
+                                               WHEN COALESCE (ObjectDate_PartionGoods.ValueData, zc_DateEnd()) > vbDate90   AND COALESCE (ObjectDate_PartionGoods.ValueData, zc_DateEnd()) <= vbDate180 THEN zc_Enum_PartionDateKind_6()
                                                ELSE 0
                                           END
                                      ELSE 0
@@ -347,5 +298,5 @@ $BODY$
 */
 
 -- тест
---SELECT * FROM gpReport_CheckPartionDate (inUnitId :=494882, inRetailId:= 0, inJuridicalId:=0, inStartDate := '21.06.2019' ::TDateTime, inEndDate := '23.07.2019' ::TDateTime, inIsExpirationDate:= TRUE, inIsPartionDateKind:=True, inisUnitList := false, inSession := '3' :: TVarChar);
+--SELECT * FROM gpReport_CheckPartionDate (inUnitId :=494882, inRetailId:= 0, inJuridicalId:=0, inStartDate := '01.06.2020' ::TDateTime, inEndDate := '02.06.2020' ::TDateTime, inIsExpirationDate:= TRUE, inIsPartionDateKind:=True, inisUnitList := false, inSession := '3' :: TVarChar);
 
