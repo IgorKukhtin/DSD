@@ -18,7 +18,7 @@ $BODY$
 BEGIN
 
    -- проверка прав пользователя на вызов процедуры
-   vbUserId := lpCheckRight(inSession, zc_Enum_Process_InsertUpdate_Object_MemberPersonalServiceList());
+   vbUserId := lpCheckRight(inSession, zc_Enum_Process_InsertUpdate_Object_MemberSheetWorkTime());
    --vbUserId := inSession;
 
    -- проверка

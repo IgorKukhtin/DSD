@@ -99,6 +99,7 @@ object MainForm: TMainForm
       Height = 25
       Caption = #1047#1072#1075#1088#1091#1079#1080#1090#1100' '#1076#1086#1082#1091#1084#1077#1085#1090#1099
       TabOrder = 5
+      OnClick = OKDocumentButtonClick
     end
     object OKCompleteDocumentButton: TButton
       Left = 326

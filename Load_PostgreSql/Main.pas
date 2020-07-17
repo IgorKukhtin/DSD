@@ -233,6 +233,7 @@ type
     procedure FormShow(Sender: TObject);
     procedure TimerTimer(Sender: TObject);
     procedure PanelErrDblClick(Sender: TObject);
+    procedure OKDocumentButtonClick(Sender: TObject);
   private
     fStop:Boolean;
     isGlobalLoad,zc_rvYes,zc_rvNo:Integer;
@@ -273,8 +274,6 @@ type
     function fExecSqToQuery_noErr_two (mySql:String):Boolean;
 
 
-    procedure pSetNullGuide_Id_Postgres;
-    procedure pSetNullDocument_Id_Postgres;
 
     procedure pInsertHistoryCost(isFirst:Boolean);
     procedure pInsertHistoryCost_Period(StartDate,EndDate:TDateTime;isPeriodTwo:Boolean);
@@ -997,7 +996,7 @@ begin
                else
                     cbFillSoldTable.Checked:=false;
                //Загружаем
-               //OKDocumentButtonClick(Self);
+               OKDocumentButtonClick(Self);
      end;
 
 
@@ -1452,6 +1451,45 @@ begin
      fStop:=true;
 end;
 //----------------------------------------------------------------------------------------------------------------------------------------------------
+procedure TMainForm.OKDocumentButtonClick(Sender: TObject);
+begin
+     if System.Pos('auto',ParamStr(2))<=0
+     then
+     if MessageDlg('Действительно загрузить выбранные документы?',mtConfirmation,[mbYes,mbNo],0)<>mrYes then exit;
+     {if not cbBeforeSave.Checked
+     then begin
+               if MessageDlg('Сохранение отключено.Продолжить?',mtConfirmation,[mbYes,mbNo],0)<>mrYes then exit;
+          end
+     else fExecSqToQuery (' select * from _lpSaveData_beforeLoad('+StartDateEdit.Text+','+EndDateEdit.Text+')');}
+
+
+     if cbShowContract.Checked then cbOnlyOpen.Checked:=true;
+
+     fStop:=false;
+     DBGrid.Enabled:=false;
+     OKGuideButton.Enabled:=false;
+     OKDocumentButton.Enabled:=false;
+     OKCompleteDocumentButton.Enabled:=false;
+     //
+     Gauge.Visible:=true;
+     //
+     //
+     if not fStop then pLoadGoodsListSale;
+     //
+     if not fStop then pLoadFillSoldTable;
+     //
+     if not fStop then pLoadFillAuto;
+     //
+     Gauge.Visible:=false;
+     DBGrid.Enabled:=true;
+     //OKGuideButton.Enabled:=true;
+     OKDocumentButton.Enabled:=true;
+     OKCompleteDocumentButton.Enabled:=true;
+     //
+     //
+     fStop:=true;
+end;
+//----------------------------------------------------------------------------------------------------------------------------------------------------
 procedure TMainForm.PanelErrDblClick(Sender: TObject);
 var i : Integer;
 begin
@@ -1740,15 +1778,6 @@ begin
 end;
 //----------------------------------------------------------------------------------------------------------------------------------------------------
 //----------------------------------------------------------------------------------------------------------------------------------------------------
-//----------------------------------------------------------------------------------------------------------------------------------------------------
-procedure TMainForm.pSetNullGuide_Id_Postgres;
-begin
-
-end;
-//----------------------------------------------------------------------------------------------------------------------------------------------------
-procedure TMainForm.pSetNullDocument_Id_Postgres;
-begin
-end;
 //----------------------------------------------------------------------------------------------------------------------------------------------------
 procedure TMainForm.pLoadGoodsListSale;
 var mySql:String;

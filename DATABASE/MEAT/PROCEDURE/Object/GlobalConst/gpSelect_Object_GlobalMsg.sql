@@ -38,6 +38,8 @@ BEGIN
      vbIsMsg_PromoStateKind:= EXISTS (SELECT 1 FROM ObjectLink_UserRole_View AS UserRole_View WHERE UserRole_View.RoleId IN (zc_Enum_Role_Admin(), 876016) AND UserRole_View.UserId = vbUserId);
      -- Договора-ввод справочников
      vbIsMsg_Contract:= vbUserId = zfCalc_UserAdmin() :: Integer OR EXISTS (SELECT 1 FROM ObjectLink_UserRole_View AS UserRole_View WHERE UserRole_View.RoleId IN (78432) AND UserRole_View.UserId = vbUserId);
+
+     --
      IF vbIsMsg_Contract = TRUE
      THEN
          -- Юридический отдел
@@ -46,7 +48,7 @@ BEGIN
                                     FROM ObjectLink AS ObjectLink_User_Member
                                          LEFT JOIN ObjectLink AS ObjectLink_Personal_Member
                                                               ON ObjectLink_Personal_Member.ChildObjectId = ObjectLink_User_Member.ChildObjectId
-                                                             AND ObjectLink_Personal_Member.DescId        = zc_ObjectLink_Personal_Unit()
+                                                             AND ObjectLink_Personal_Member.DescId        = zc_ObjectLink_Personal_Member()
                                          INNER JOIN ObjectLink AS ObjectLink_Personal_Unit
                                                                ON ObjectLink_Personal_Unit.ObjectId      = ObjectLink_Personal_Member.ObjectId
                                                               AND ObjectLink_Personal_Unit.DescId        = zc_ObjectLink_Personal_Unit()
