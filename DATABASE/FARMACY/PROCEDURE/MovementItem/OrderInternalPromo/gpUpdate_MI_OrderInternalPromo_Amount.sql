@@ -19,7 +19,34 @@ BEGIN
     -- проверка прав пользователя на вызов процедуры
     vbUserId := inSession;
 
-     SELECT CASE WHEN COALESCE (MovementFloat_TotalSummPrice.ValueData,0) <> 0
+    PERFORM gpReport_OrderInternalPromo_DistributionCalculation(inMovementID := inMovementId, inSession := inSession);
+
+    PERFORM lpInsertUpdate_MovementItem (tmpData.Id, zc_MI_Master(), tmpData.GoodsId, inMovementId, tmpData.AmountCalc, NULL)
+    FROM (WITH
+               -- строки мастера с кол-вом для распределения
+               tmpMI AS (SELECT MovementItem.Id
+                              , MovementItem.ObjectId             AS GoodsId
+                              , MovementItem.Amount               AS Amount
+                         FROM MovementItem
+                         WHERE MovementItem.MovementId = inMovementId
+                           AND MovementItem.DescId = zc_MI_Master()
+                           AND MovementItem.isErased = FALSE
+                        ),
+               tmpCalculation AS (SELECT tmpData.GoodsId
+                                       , SUM(tmpData.Distributed) AS AmountCalc
+                                  FROM tmpData
+                                  WHERE tmpData.Distributed > 0
+                                  GROUP BY tmpData.GoodsId
+                                  )
+
+             SELECT tmpMI.Id
+                  , tmpMI.GoodsId
+                  , COALESCE (tmpCalculation.AmountCalc, 0)  AS AmountCalc
+             FROM tmpMI
+                  LEFT OUTER JOIN tmpCalculation ON tmpCalculation.GoodsId = tmpMI.GoodsId) AS tmpData;
+
+
+/*     SELECT CASE WHEN COALESCE (MovementFloat_TotalSummPrice.ValueData,0) <> 0
                  THEN COALESCE (MovementFloat_TotalSummPrice.ValueData,0)
                  ELSE COALESCE (MovementFloat_TotalSummSIP.ValueData,0)
             END :: TFloat    AS TotalSumm
@@ -32,7 +59,7 @@ BEGIN
           , MovementLinkObject_Retail.ObjectId AS RetailId
           , DATE_PART ( 'day', ((Movement.OperDate - MovementDate_StartSale.ValueData)+ INTERVAL '1 DAY'))
     INTO vbTotalSumm, vbisSIP, vbStartDate, vbEndDate, vbRetailId, vbDays
-     FROM Movement 
+     FROM Movement
         LEFT JOIN MovementFloat AS MovementFloat_TotalSummPrice
                                 ON MovementFloat_TotalSummPrice.MovementId = Movement.Id
                                AND MovementFloat_TotalSummPrice.DescId = zc_MovementFloat_TotalSummPrice()
@@ -51,10 +78,10 @@ BEGIN
     THEN
         RAISE EXCEPTION 'Ошибка.Один из реквизитов Сумма по ценам райса или Сумма по ценам СИП должен быть оличен от Нуля.';
     END IF;
-    
+
     CREATE TEMP TABLE tmpData (Id Integer, GoodsId Integer, AmountCalc TFloat) ON COMMIT DROP;
           INSERT INTO tmpData (Id, GoodsId, AmountCalc)
-          WITH 
+          WITH
                -- строки мастера с кол-вом для распределения
                tmpMI_Price AS (SELECT MovementItem.Id
                                     , MovementItem.ObjectId             AS GoodsId
@@ -72,14 +99,14 @@ BEGIN
                                  AND MovementItem.DescId = zc_MI_Master()
                                  AND MovementItem.isErased = FALSE
                                )
-                                
+
 
              , tmpMI_PriceSIP AS (SELECT tmpMI_Price.Id
                                        , tmpMI_Price.GoodsId
                                        , MIFloat_Price.ValueData     ::TFloat AS Price
                                        , SUM (MIFloat_Price.ValueData) OVER (ORDER BY tmpMI_Price.Id) AS Price_SUM
                                   FROM tmpMI_Price
-                                     LEFT JOIN MovementItem AS MI_Promo 
+                                     LEFT JOIN MovementItem AS MI_Promo
                                                             ON MI_Promo.MovementId = tmpMI_Price.PromoMovementId
                                                            AND MI_Promo.DescId   = zc_MI_Master()
                                                            AND MI_Promo.ObjectId = tmpMI_Price.GoodsId
@@ -127,7 +154,7 @@ BEGIN
                                        AND MIContainer.MovementDescId = zc_Movement_Check()
                                        AND MIContainer.OperDate > vbStartDate AND MIContainer.OperDate < vbEndDate
                                        --AND MIContainer.OperDate > '30.04.2019' AND MIContainer.OperDate < '20.05.2019'
-                                     GROUP BY MIContainer.ObjectId_analyzer 
+                                     GROUP BY MIContainer.ObjectId_analyzer
                                      HAVING SUM (COALESCE (-1 * MIContainer.Amount, 0)) <> 0
                                      )
 
@@ -164,7 +191,7 @@ BEGIN
                                                                 AND tmpPrice_Unit.UnitId  = Container.WhereObjectId
                                      WHERE Container.DescId = zc_Container_Count()
                                      GROUP BY Container.ObjectId
-                                            , Container.Amount 
+                                            , Container.Amount
                                             , tmpPrice_Unit.Price
                                             , Container.Id
                                      HAVING Container.Amount - COALESCE (SUM (MovementItemContainer.Amount), 0) <> 0
@@ -225,7 +252,7 @@ BEGIN
                                    , ROW_NUMBER() OVER (ORDER BY tmpData1.AmountOut DESC) AS DOrd
                               FROM tmpData1
                               )
-             -- непосредственно распределение 
+             -- непосредственно распределение
              SELECT DD.Id
                   , DD.GoodsId
                   , CASE WHEN vbTotalSumm - DD.Amount_CalcSUM > 0 AND DD.DOrd <> 1
@@ -235,10 +262,11 @@ BEGIN
              FROM tmpData111 AS DD
              WHERE vbTotalSumm - (DD.Amount_CalcSUM - DD.Amount_Calc) > 0
           ;
-           
-    --- сохраняем данные мастера      
+
+    --- сохраняем данные мастера
     PERFORM lpInsertUpdate_MovementItem (tmpData.Id, zc_MI_Master(), tmpData.GoodsId, inMovementId, tmpData.AmountCalc, NULL)
     FROM tmpData;
+*/
 
 END;
 $BODY$
@@ -252,7 +280,7 @@ $BODY$
 */
 --select * from gpUpdate_MI_OrderInternalPromo_Amount(inMovementId := 14257740 ,  inSession := '3');
 /*
-          WITH 
+          WITH
                -- строки мастера с кол-вом для распределения
                tmpMI_Price AS (SELECT MovementItem.Id
                                     , MovementItem.ObjectId             AS GoodsId
@@ -270,13 +298,13 @@ $BODY$
                                  AND MovementItem.DescId = zc_MI_Master()
                                  AND MovementItem.isErased = FALSE
                                )
-                                
+
              , tmpMI_PriceSIP AS (SELECT tmpMI_Price.Id
                                        , tmpMI_Price.GoodsId
                                        , MIFloat_Price.ValueData     ::TFloat AS Price
                                        , SUM (MIFloat_Price.ValueData) OVER (ORDER BY tmpMI_Price.Id) AS Price_SUM
                                   FROM tmpMI_Price
-                                     LEFT JOIN MovementItem AS MI_Promo 
+                                     LEFT JOIN MovementItem AS MI_Promo
                                                             ON MI_Promo.MovementId = tmpMI_Price.PromoMovementId
                                                            AND MI_Promo.DescId   = zc_MI_Master()
                                                            AND MI_Promo.ObjectId = tmpMI_Price.GoodsId
@@ -320,7 +348,7 @@ $BODY$
                                        AND MIContainer.MovementDescId = zc_Movement_Check()
                                        AND MIContainer.OperDate > vbStartDate AND MIContainer.OperDate < vbEndDate
                                        --AND MIContainer.OperDate > '30.04.2019' AND MIContainer.OperDate < '20.05.2019'
-                                     GROUP BY MIContainer.ObjectId_analyzer 
+                                     GROUP BY MIContainer.ObjectId_analyzer
                                      HAVING SUM (COALESCE (-1 * MIContainer.Amount, 0)) <> 0
                                      )
 
@@ -357,7 +385,7 @@ $BODY$
                                                                 AND tmpPrice_Unit.UnitId  = Container.WhereObjectId
                                      WHERE Container.DescId = zc_Container_Count()
                                      GROUP BY Container.ObjectId
-                                            , Container.Amount 
+                                            , Container.Amount
                                             , tmpPrice_Unit.Price
                                      HAVING Container.Amount - COALESCE (SUM (MovementItemContainer.Amount), 0) <> 0
                                      ) AS tmp
@@ -373,7 +401,7 @@ $BODY$
                                   , CASE WHEN COALESCE (tmpContainer.TotalSummSale, 0) <> 0 AND COALESCE (21, 0) <> 0
                                          THEN tmpRemains.TotalSumm_rem / (tmpContainer.TotalSummSale / 21)
                                          ELSE 0
-                                    END AS RemainsDay                                  
+                                    END AS RemainsDay
                              FROM tmpMI_Master
                                   LEFT JOIN tmpRemains ON tmpRemains.GoodsId = tmpMI_Master.GoodsId
                                   LEFT JOIN tmpContainer ON tmpContainer.GoodsId = tmpMI_Master.GoodsId
@@ -416,7 +444,7 @@ $BODY$
                                    , ROW_NUMBER() OVER (ORDER BY tmpData1.AmountOut DESC) AS DOrd
                               FROM tmpData1
                               )
-             -- непосредственно распределение 
+             -- непосредственно распределение
              SELECT DD.Id
                   , DD.GoodsId
                   , CASE WHEN vbTotalSumm - DD.Amount_CalcSUM > 0 AND DD.DOrd <> 1

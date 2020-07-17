@@ -144,9 +144,16 @@ inherited IncomeHouseholdInventoryForm: TIncomeHouseholdInventoryForm
           object HouseholdInventoryName: TcxGridDBColumn
             Caption = #1061#1086#1079#1103#1081#1089#1090#1074#1077#1085#1085#1099#1081' '#1080#1085#1074#1077#1085#1090#1072#1088#1100
             DataBinding.FieldName = 'HouseholdInventoryName'
+            PropertiesClassName = 'TcxButtonEditProperties'
+            Properties.Buttons = <
+              item
+                Action = actHouseholdInventoryChoice
+                Default = True
+                Kind = bkEllipsis
+              end>
+            Properties.ReadOnly = True
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
-            Options.Editing = False
             Width = 223
           end
           object InvNumber: TcxGridDBColumn
@@ -617,6 +624,40 @@ inherited IncomeHouseholdInventoryForm: TIncomeHouseholdInventoryForm
           StoredProc = spUpdateCountForPrice
         end>
       Caption = 'actUpdateCountForPrice'
+    end
+    object actHouseholdInventoryChoice: TOpenChoiceForm
+      Category = 'DSDLib'
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      Caption = 'actHouseholdInventoryChoice'
+      FormName = 'THouseholdInventoryForm'
+      FormNameParam.Value = 'THouseholdInventoryForm'
+      FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
+      GuiParams = <
+        item
+          Name = 'Key'
+          Value = Null
+          Component = MasterCDS
+          ComponentItem = 'HouseholdInventoryId'
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'TextValue'
+          Value = Null
+          Component = MasterCDS
+          ComponentItem = 'HouseholdInventoryName'
+          DataType = ftString
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'Code'
+          Value = Null
+          Component = MasterCDS
+          ComponentItem = 'HouseholdInventoryCode'
+          MultiSelectSeparator = ','
+        end>
+      isShowModal = False
     end
   end
   inherited MasterDS: TDataSource

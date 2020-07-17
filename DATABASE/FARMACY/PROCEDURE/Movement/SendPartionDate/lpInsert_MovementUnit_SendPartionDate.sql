@@ -84,20 +84,25 @@
     END IF;
 
 
-    SELECT gpInsertUpdate_Movement_SendPartionDate(ioId               := 0,
-                                                   inInvNumber        := CAST (NEXTVAL ('Movement_SendPartionDate_seq') AS TVarChar),
-                                                   inOperDate         := CURRENT_DATE,
-                                                   inUnitId           := inUnitID,
-                                                   inChangePercent    := MovementFloat_ChangePercent.ValueData,
-                                                   inChangePercentMin := MovementFloat_ChangePercentMin.ValueData,
-                                                   inComment          := '',
-                                                   inSession          := inSession
+    SELECT gpInsertUpdate_Movement_SendPartionDate(ioId                := 0,
+                                                   inInvNumber         := CAST (NEXTVAL ('Movement_SendPartionDate_seq') AS TVarChar),
+                                                   inOperDate          := CURRENT_DATE,
+                                                   inUnitId            := inUnitID,
+                                                   inChangePercent     := MovementFloat_ChangePercent.ValueData,
+                                                   inChangePercentLess := MovementFloat_ChangePercentLess.ValueData,
+                                                   inChangePercentMin  := MovementFloat_ChangePercentMin.ValueData,
+                                                   inComment           := '',
+                                                   inSession           := inSession
                                                    )
     INTO vbMovementID
     FROM Movement
          LEFT JOIN MovementFloat AS MovementFloat_ChangePercent
                                  ON MovementFloat_ChangePercent.MovementId =  Movement.Id
                                 AND MovementFloat_ChangePercent.DescId = zc_MovementFloat_ChangePercent()
+
+         LEFT JOIN MovementFloat AS MovementFloat_ChangePercentLess
+                                 ON MovementFloat_ChangePercentLess.MovementId =  Movement.Id
+                                AND MovementFloat_ChangePercentLess.DescId = zc_MovementFloat_ChangePercentLess()
 
          LEFT JOIN MovementFloat AS MovementFloat_ChangePercentMin
                                  ON MovementFloat_ChangePercentMin.MovementId =  Movement.Id
@@ -134,4 +139,3 @@
    */
 
   -- тест
---

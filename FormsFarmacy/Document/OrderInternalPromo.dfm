@@ -12,17 +12,17 @@ inherited OrderInternalPromoForm: TOrderInternalPromoForm
     Width = 814
     Height = 348
     ExplicitTop = 116
-    ExplicitWidth = 824
+    ExplicitWidth = 814
     ExplicitHeight = 348
     ClientRectBottom = 348
     ClientRectRight = 814
     inherited tsMain: TcxTabSheet
-      ExplicitWidth = 824
+      ExplicitWidth = 814
       ExplicitHeight = 324
       inherited cxGrid: TcxGrid
         Width = 814
         Height = 144
-        ExplicitWidth = 824
+        ExplicitWidth = 814
         ExplicitHeight = 144
         inherited cxGridDBTableView: TcxGridDBTableView
           DataController.Summary.DefaultGroupSummaryItems = <
@@ -310,7 +310,6 @@ inherited OrderInternalPromoForm: TOrderInternalPromoForm
         Align = alBottom
         PopupMenu = PopupMenu
         TabOrder = 1
-        ExplicitWidth = 824
         object cxGridDBTableView1: TcxGridDBTableView
           Navigator.Buttons.CustomButtons = <>
           DataController.DataSource = DetailDS
@@ -526,7 +525,6 @@ inherited OrderInternalPromoForm: TOrderInternalPromoForm
         Touch.TabletOptions = [toPressAndHold]
         AlignSplitter = salBottom
         Control = cxGrid1
-        ExplicitWidth = 824
       end
     end
   end
@@ -534,7 +532,7 @@ inherited OrderInternalPromoForm: TOrderInternalPromoForm
     Width = 814
     Height = 90
     TabOrder = 3
-    ExplicitWidth = 824
+    ExplicitWidth = 814
     ExplicitHeight = 90
     inherited edInvNumber: TcxTextEdit
       Left = 168
@@ -594,21 +592,21 @@ inherited OrderInternalPromoForm: TOrderInternalPromoForm
       Top = 62
       Properties.ReadOnly = False
       TabOrder = 9
-      Width = 464
+      Width = 412
     end
-    object edReplays: TcxCurrencyEdit
-      Left = 478
+    object ceTotalAmount: TcxCurrencyEdit
+      Left = 678
       Top = 62
       Properties.DecimalPlaces = 0
       Properties.DisplayFormat = '0'
       Properties.ReadOnly = False
       TabOrder = 10
-      Width = 157
+      Width = 120
     end
     object cxLabel5: TcxLabel
-      Left = 478
+      Left = 678
       Top = 46
-      Caption = #1057#1091#1084#1084#1072' '#1087#1086' '#1094#1077#1085#1072#1084' '#1087#1088#1072#1081#1089#1072
+      Caption = #1050#1088#1083#1080#1095#1077#1089#1090#1074#1086' '#1076#1083#1103' '#1088#1072#1089#1087#1088'.'
     end
   end
   object edStartSale: TcxDateEdit [2]
@@ -632,7 +630,6 @@ inherited OrderInternalPromoForm: TOrderInternalPromoForm
     Touch.TabletOptions = [toPressAndHold]
     AlignSplitter = salBottom
     Control = cxGrid2
-    ExplicitWidth = 824
   end
   object cxGrid2: TcxGrid [5]
     Left = 0
@@ -642,7 +639,6 @@ inherited OrderInternalPromoForm: TOrderInternalPromoForm
     Align = alBottom
     PopupMenu = PopupMenu
     TabOrder = 9
-    ExplicitWidth = 824
     object cxGridDBTableView2: TcxGridDBTableView
       Navigator.Buttons.CustomButtons = <>
       DataController.DataSource = PartnerDS
@@ -710,30 +706,30 @@ inherited OrderInternalPromoForm: TOrderInternalPromoForm
     end
   end
   object ceTotalSummPrice: TcxCurrencyEdit [6]
-    Left = 478
+    Left = 426
     Top = 62
     Properties.DecimalPlaces = 0
     Properties.DisplayFormat = '0'
     Properties.ReadOnly = False
     TabOrder = 10
-    Width = 157
+    Width = 120
   end
   object cxLabel4: TcxLabel [7]
-    Left = 478
+    Left = 426
     Top = 46
     Caption = #1057#1091#1084#1084#1072' '#1087#1086' '#1094#1077#1085#1072#1084' '#1087#1088#1072#1081#1089#1072
   end
   object ceTotalSummSIP: TcxCurrencyEdit [8]
-    Left = 641
+    Left = 552
     Top = 62
     Properties.DecimalPlaces = 0
     Properties.DisplayFormat = '0'
     Properties.ReadOnly = False
     TabOrder = 12
-    Width = 157
+    Width = 120
   end
   object cxLabel6: TcxLabel [9]
-    Left = 641
+    Left = 552
     Top = 46
     Caption = #1057#1091#1084#1084#1072' '#1087#1086' '#1094#1077#1085#1072#1084' '#1057#1048#1055
   end
@@ -1377,13 +1373,10 @@ inherited OrderInternalPromoForm: TOrderInternalPromoForm
         item
           StoredProc = spSelect
         end>
-      Caption = 
-        #1056#1072#1089#1089#1095#1080#1090#1072#1090#1100' '#1082#1086#1083'-'#1074#1072' '#1076#1083#1103' '#1088#1072#1089#1087#1088#1077#1076#1077#1083#1077#1085#1080#1103' '#1089#1086#1075#1083#1072'c'#1085#1086' '#1057#1091#1084#1084#1077' '#1087#1086' '#1094#1077#1085#1072#1084' '#1087#1088#1072#1081 +
-        #1089#1072' / '#1057#1048#1055
-      Hint = 
-        #1056#1072#1089#1089#1095#1080#1090#1072#1090#1100' '#1082#1086#1083'-'#1074#1072' '#1076#1083#1103' '#1088#1072#1089#1087#1088#1077#1076#1077#1083#1077#1085#1080#1103' '#1089#1086#1075#1083#1072'c'#1085#1086' '#1057#1091#1084#1084#1077' '#1087#1086' '#1094#1077#1085#1072#1084' '#1087#1088#1072#1081 +
-        #1089#1072' / '#1057#1048#1055
+      Caption = #1056#1072#1089#1089#1095#1080#1090#1072#1090#1100' '#1082#1086#1083#1080#1095#1077#1089#1090#1074#1086' '#1076#1083#1103' '#1088#1072#1089#1087#1088#1077#1076#1077#1083#1077#1085#1080#1103
+      Hint = #1056#1072#1089#1089#1095#1080#1090#1072#1090#1100' '#1082#1086#1083#1080#1095#1077#1089#1090#1074#1086' '#1076#1083#1103' '#1088#1072#1089#1087#1088#1077#1076#1077#1083#1077#1085#1080#1103
       ImageIndex = 45
+      QuestionBeforeExecute = #1056#1072#1089#1089#1095#1080#1090#1072#1090#1100' '#1082#1086#1083#1080#1095#1077#1089#1090#1074#1086' '#1076#1083#1103' '#1088#1072#1089#1087#1088#1077#1076#1077#1083#1077#1085#1080#1103'?'
     end
     object macInsertPromoPartner: TMultiAction
       Category = 'DSDLib'
@@ -1907,7 +1900,6 @@ inherited OrderInternalPromoForm: TOrderInternalPromoForm
     object bbUpdateMasterAmount: TdxBarButton
       Action = actUpdateMasterAmount
       Category = 0
-      Hint = #1056#1072#1089#1089#1095#1080#1090#1072#1090#1100' '#1082#1086#1083'-'#1074#1072' '#1076#1083#1103' '#1088#1072#1089#1087#1088#1077#1076'. '#1089#1086#1075#1083#1072'c'#1085#1086' '#1057#1091#1084#1084#1077
     end
     object bbInsertByPromo: TdxBarButton
       Action = macInsertByPromo
@@ -2068,6 +2060,13 @@ inherited OrderInternalPromoForm: TOrderInternalPromoForm
         Component = ceTotalSummPrice
         DataType = ftFloat
         MultiSelectSeparator = ','
+      end
+      item
+        Name = 'TotalAmount'
+        Value = Null
+        Component = ceTotalAmount
+        DataType = ftFloat
+        MultiSelectSeparator = ','
       end>
     Left = 160
     Top = 240
@@ -2119,6 +2118,14 @@ inherited OrderInternalPromoForm: TOrderInternalPromoForm
         Name = 'inTotalSummSIP'
         Value = Null
         Component = ceTotalSummSIP
+        DataType = ftFloat
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inTotalAmount'
+        Value = Null
+        Component = ceTotalAmount
         DataType = ftFloat
         ParamType = ptInput
         MultiSelectSeparator = ','
@@ -2179,6 +2186,9 @@ inherited OrderInternalPromoForm: TOrderInternalPromoForm
       end
       item
         Control = ceTotalSummPrice
+      end
+      item
+        Control = ceTotalAmount
       end>
     Left = 200
     Top = 177

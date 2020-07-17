@@ -9,7 +9,7 @@ inherited OrderInternalPromoJournalForm: TOrderInternalPromoJournalForm
   AddOnFormData.AddOnFormRefresh.KeyParam = 'inMovementId'
   AddOnFormData.AddOnFormRefresh.GetStoredProc = spGet_Movement_OrderInternalPromo
   ExplicitWidth = 785
-  ExplicitHeight = 529
+  ExplicitHeight = 530
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
@@ -44,6 +44,11 @@ inherited OrderInternalPromoJournalForm: TOrderInternalPromoJournalForm
               Format = ',0.####'
               Kind = skSum
               Column = TotalSummSIP
+            end
+            item
+              Format = ',0;-,0; ;'
+              Kind = skSum
+              Column = TotalAmount
             end>
           DataController.Summary.FooterSummaryItems = <
             item
@@ -68,6 +73,11 @@ inherited OrderInternalPromoJournalForm: TOrderInternalPromoJournalForm
               Format = ',0.####'
               Kind = skSum
               Column = TotalSummSIP
+            end
+            item
+              Format = ',0;-,0; ;'
+              Kind = skSum
+              Column = TotalAmount
             end>
           OptionsData.Deleting = False
           OptionsData.DeletingConfirmation = False
@@ -140,6 +150,15 @@ inherited OrderInternalPromoJournalForm: TOrderInternalPromoJournalForm
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Width = 80
+          end
+          object TotalAmount: TcxGridDBColumn
+            Caption = #1050#1088#1083#1080#1095#1077#1089#1090#1074#1086' '#1076#1083#1103' '#1088#1072#1089#1087#1088'.'
+            DataBinding.FieldName = 'TotalAmount'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DisplayFormat = ',0;-,0; ;'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 85
           end
           object Comment: TcxGridDBColumn
             Caption = #1050#1086#1084#1084#1077#1085#1090#1072#1088#1080#1081

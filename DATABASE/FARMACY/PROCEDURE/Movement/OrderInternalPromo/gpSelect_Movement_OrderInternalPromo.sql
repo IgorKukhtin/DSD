@@ -16,7 +16,7 @@ RETURNS TABLE (Id Integer
              , StatusName TVarChar
              , StartSale TDateTime
              , Amount TFloat
-             , TotalSummPrice TFloat, TotalSummSIP TFloat
+             , TotalSummPrice TFloat, TotalSummSIP TFloat, TotalAmount TFloat
              , RetailId Integer
              , RetailName TVarChar
              , Comment TVarChar
@@ -42,6 +42,7 @@ BEGIN
           , COALESCE (MovementFloat_Amount.ValueData,0)       :: TFloat    AS Amount
           , COALESCE (MovementFloat_TotalSummPrice.ValueData,0):: TFloat   AS TotalSummPrice
           , COALESCE (MovementFloat_TotalSummSIP.ValueData,0) :: TFloat    AS TotalSummSIP
+          , COALESCE (MovementFloat_TotalAmount.ValueData,0) :: TFloat     AS TotalAmount
           , MovementLinkObject_Retail.ObjectId                             AS RetailId
           , Object_Retail.ValueData                                        AS RetailName
           , MovementString_Comment.ValueData                               AS Comment
@@ -60,6 +61,10 @@ BEGIN
         LEFT JOIN MovementFloat AS MovementFloat_TotalSummSIP
                                 ON MovementFloat_TotalSummSIP.MovementId =  Movement.Id
                                AND MovementFloat_TotalSummSIP.DescId = zc_MovementFloat_TotalSummSIP()
+
+        LEFT JOIN MovementFloat AS MovementFloat_TotalAmount
+                                ON MovementFloat_TotalAmount.MovementId =  Movement.Id
+                               AND MovementFloat_TotalAmount.DescId = zc_MovementFloat_TotalAmount()
 
         LEFT JOIN MovementDate AS MovementDate_StartSale
                                ON MovementDate_StartSale.MovementId = Movement.Id
@@ -89,5 +94,5 @@ $BODY$
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
  15.04.19         *
 */
---select * from gpSelect_Movement_OrderInternalPromo(inStartDate := ('13.03.2019')::TDateTime ,inEndDate := ('13.03.2019')::TDateTime , inIsErased:= False, inSession := '3');
+-- select * from gpSelect_Movement_OrderInternalPromo(inStartDate := ('13.03.2019')::TDateTime ,inEndDate := ('13.03.2021')::TDateTime , inIsErased:= False, inSession := '3');
 

@@ -5365,7 +5365,6 @@ inherited MainCashForm2: TMainCashForm2
     object MemDataACCOMNAME: TStringField
       DisplayWidth = 20
       FieldName = 'ACCOMNAME'
-      Size = 3
     end
     object MemDataAMOUNTMON: TFloatField
       FieldName = 'AMOUNTMON'

@@ -265,6 +265,7 @@ BEGIN
         OR inJuridicalId_from = 59611 -- СП "Оптима-Фарм, ЛТД"
           )
           AND inOperDate + INTERVAL '4 DAY' < inPaymentDate
+          AND vbContractId <> 14589420 -- Исключили Оптима Никополь Отсрочка
        THEN vbContractId:= 183358; -- Оптима отсрочка
        END IF;
 
@@ -467,6 +468,7 @@ LANGUAGE PLPGSQL VOLATILE;
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.   Воробкало А.А.   Шаблий О.В.
+ 15.07.20                                                                                     * Исключил замену прайса для Оптима Никополь Отсрочка
  14.04.20                                                                                     * UseNDSKind
  11.05.18                                                                                     * 
  21.12.17         * del inCodeUKTZED

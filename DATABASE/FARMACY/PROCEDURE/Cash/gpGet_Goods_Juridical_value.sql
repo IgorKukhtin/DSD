@@ -5,8 +5,8 @@ select * from gpGet_Object_BarCode_value(inObjectId := 13216391 , inGoodsId := 5
 
 -- Function: gpGet_Goods_Juridical_value()
 
---DROP FUNCTION IF EXISTS gpGet_Goods_Juridical_value (Integer, TVarChar);
---DROP FUNCTION IF EXISTS gpGet_Goods_Juridical_value (Integer, TFloat, TVarChar);
+DROP FUNCTION IF EXISTS gpGet_Goods_Juridical_value (Integer, TVarChar);
+DROP FUNCTION IF EXISTS gpGet_Goods_Juridical_value (Integer, TFloat, TVarChar);
 DROP FUNCTION IF EXISTS gpGet_Goods_Juridical_value (Integer, Integer, TFloat, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpGet_Goods_Juridical_value(
@@ -34,11 +34,12 @@ BEGIN
     END IF;
     vbUnitId := vbUnitKey::Integer;
 
-    IF (SELECT Object.ObjectCode FROM Object WHERE Object.ID = inDiscountExternal) in (3, 5)
+    IF (SELECT Object.ObjectCode FROM Object WHERE Object.ID = inDiscountExternal) in (3, 5, 6)
     THEN
       inAmount := 1;
       WITH
-          tmpContainerAll AS (SELECT Container.Id
+          tmpDiscountExternal AS (SELECT Object.ObjectCode FROM Object WHERE Object.ID = inDiscountExternal)
+         , tmpContainerAll AS (SELECT Container.Id
                                    , Container.Amount
                                  FROM Container
                                  WHERE Container.DescId = zc_Container_Count()
@@ -52,6 +53,7 @@ BEGIN
                                  , COALESCE(ObjectFloat_CodeMedicard.ValueData, 0)::Integer  AS CodeRazom
                                  , Movement_Income.InvNumber                                 AS InvoiceNumber
                             FROM tmpContainerAll AS Container
+                                  LEFT JOIN tmpDiscountExternal ON 1 = 1
                                   LEFT JOIN ContainerlinkObject AS ContainerLinkObject_MovementItem
                                                                 ON ContainerLinkObject_MovementItem.Containerid = Container.Id
                                                                AND ContainerLinkObject_MovementItem.DescId = zc_ContainerLinkObject_PartionMovementItem()
@@ -74,6 +76,7 @@ BEGIN
                                   LEFT JOIN ObjectFloat AS ObjectFloat_CodeMedicard
                                                         ON ObjectFloat_CodeMedicard.ObjectId = MovementLinkObject_From.ObjectId
                                                        AND ObjectFloat_CodeMedicard.DescId = zc_ObjectFloat_Juridical_CodeMedicard()
+                                                       AND (ObjectFloat_CodeMedicard.ValueData = 1 OR tmpDiscountExternal.ObjectCode <> 6)
 
                             WHERE COALESCE(ObjectFloat_CodeMedicard.ValueData, 0) > 0
                             ORDER BY Movement.OperDate, Container.Id
@@ -144,7 +147,7 @@ BEGIN
 END;
 $BODY$
   LANGUAGE plpgsql VOLATILE;
-ALTER FUNCTION gpGet_Goods_Juridical_value (Integer, TFloat, TVarChar) OWNER TO postgres;
+ALTER FUNCTION gpGet_Goods_Juridical_value (Integer, Integer, TFloat, TVarChar) OWNER TO postgres;
 
 /*
  »—“Œ–»ﬂ –¿«–¿¡Œ“ »: ƒ¿“¿, ¿¬“Œ–

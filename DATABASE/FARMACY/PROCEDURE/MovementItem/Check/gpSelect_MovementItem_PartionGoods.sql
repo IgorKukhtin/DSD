@@ -15,62 +15,21 @@ AS
 $BODY$
    DECLARE vbUserId Integer;
 
-   DECLARE vbDate0     TDateTime;
-   DECLARE vbDate180   TDateTime;
-   DECLARE vbDate30    TDateTime;
+   DECLARE vbDate_0     TDateTime;
+   DECLARE vbDate_1    TDateTime;
+   DECLARE vbDate_3    TDateTime;
+   DECLARE vbDate_6   TDateTime;
 
-   DECLARE vbMonth_0   TFloat;
-   DECLARE vbMonth_1   TFloat;
-   DECLARE vbMonth_6   TFloat;
-   DECLARE vbIsMonth_0 Boolean;
-   DECLARE vbIsMonth_1 Boolean;
-   DECLARE vbIsMonth_6 Boolean;
 BEGIN
 
      -- проверка прав пользовател€ на вызов процедуры
      -- vbUserId := PERFORM lpCheckRight (inSession, zc_Enum_Process_Select_MovementItem_Income());
      vbUserId := inSession;
-    -- получаем значени€ из справочника 
-    SELECT CASE WHEN ObjectFloat_Day.ValueData > 0 THEN ObjectFloat_Day.ValueData ELSE COALESCE (ObjectFloat_Month.ValueData, 0) END
-         , CASE WHEN ObjectFloat_Day.ValueData > 0 THEN FALSE ELSE TRUE END
-           INTO vbMonth_0, vbIsMonth_0
-    FROM Object  AS Object_PartionDateKind
-         LEFT JOIN ObjectFloat AS ObjectFloat_Month
-                               ON ObjectFloat_Month.ObjectId = Object_PartionDateKind.Id
-                              AND ObjectFloat_Month.DescId = zc_ObjectFloat_PartionDateKind_Month()
-         LEFT JOIN ObjectFloat AS ObjectFloat_Day
-                               ON ObjectFloat_Day.ObjectId = Object_PartionDateKind.Id
-                              AND ObjectFloat_Day.DescId = zc_ObjectFloat_PartionDateKind_Day()
-    WHERE Object_PartionDateKind.Id = zc_Enum_PartionDateKind_0();
-    --
-    SELECT CASE WHEN ObjectFloat_Day.ValueData > 0 THEN ObjectFloat_Day.ValueData ELSE COALESCE (ObjectFloat_Month.ValueData, 0) END
-         , CASE WHEN ObjectFloat_Day.ValueData > 0 THEN FALSE ELSE TRUE END
-           INTO vbMonth_1, vbIsMonth_1
-    FROM Object  AS Object_PartionDateKind
-         LEFT JOIN ObjectFloat AS ObjectFloat_Month
-                               ON ObjectFloat_Month.ObjectId = Object_PartionDateKind.Id
-                              AND ObjectFloat_Month.DescId = zc_ObjectFloat_PartionDateKind_Month()
-         LEFT JOIN ObjectFloat AS ObjectFloat_Day
-                               ON ObjectFloat_Day.ObjectId = Object_PartionDateKind.Id
-                              AND ObjectFloat_Day.DescId = zc_ObjectFloat_PartionDateKind_Day()
-    WHERE Object_PartionDateKind.Id = zc_Enum_PartionDateKind_1();
-    --
-    SELECT CASE WHEN ObjectFloat_Day.ValueData > 0 THEN ObjectFloat_Day.ValueData ELSE COALESCE (ObjectFloat_Month.ValueData, 0) END
-         , CASE WHEN ObjectFloat_Day.ValueData > 0 THEN FALSE ELSE TRUE END
-           INTO vbMonth_6, vbIsMonth_6
-    FROM Object  AS Object_PartionDateKind
-         LEFT JOIN ObjectFloat AS ObjectFloat_Month
-                               ON ObjectFloat_Month.ObjectId = Object_PartionDateKind.Id
-                              AND ObjectFloat_Month.DescId = zc_ObjectFloat_PartionDateKind_Month()
-         LEFT JOIN ObjectFloat AS ObjectFloat_Day
-                               ON ObjectFloat_Day.ObjectId = Object_PartionDateKind.Id
-                              AND ObjectFloat_Day.DescId = zc_ObjectFloat_PartionDateKind_Day()
-    WHERE Object_PartionDateKind.Id = zc_Enum_PartionDateKind_6();
 
-    -- даты + 6 мес€цев, + 1 мес€ц
-    vbDate180 := CURRENT_DATE + CASE WHEN vbIsMonth_6 = TRUE THEN vbMonth_6 ||' MONTH'  ELSE vbMonth_6 ||' DAY' END :: INTERVAL;
-    vbDate30  := CURRENT_DATE + CASE WHEN vbIsMonth_1 = TRUE THEN vbMonth_1 ||' MONTH'  ELSE vbMonth_1 ||' DAY' END :: INTERVAL;
-    vbDate0   := CURRENT_DATE + CASE WHEN vbIsMonth_0 = TRUE THEN vbMonth_0 ||' MONTH'  ELSE vbMonth_0 ||' DAY' END :: INTERVAL;
+    -- значени€ дл€ разделени€ по срокам
+    SELECT Date_6, Date_3, Date_1, Date_0
+    INTO vbDate_6, vbDate_3, vbDate_1, vbDate_0
+    FROM lpSelect_PartionDateKind_SetDate ();
     
     RETURN QUERY
     WITH           -- ќстатки по срокам
@@ -91,12 +50,13 @@ BEGIN
        , tmpPDContainer AS (SELECT Container.Id,
                                    Container.ObjectId,
                                    Container.Amount,
-                                   CASE WHEN ObjectDate_ExpirationDate.ValueData <= vbDate0 AND 
+                                   CASE WHEN ObjectDate_ExpirationDate.ValueData <= vbDate_0 AND 
                                              COALESCE (ObjectBoolean_PartionGoods_Cat_5.ValueData, FALSE) = TRUE 
                                                                                               THEN zc_Enum_PartionDateKind_Cat_5() -- 5 кат (просрочка без наценки)
-                                        WHEN ObjectDate_ExpirationDate.ValueData <= vbDate0   THEN zc_Enum_PartionDateKind_0()     -- просрочено
-                                        WHEN ObjectDate_ExpirationDate.ValueData <= vbDate30  THEN zc_Enum_PartionDateKind_1()     -- ћеньше 1 мес€ца
-                                        WHEN ObjectDate_ExpirationDate.ValueData <= vbDate180 THEN zc_Enum_PartionDateKind_6()     -- ћеньше 6 мес€ца
+                                        WHEN ObjectDate_ExpirationDate.ValueData <= vbDate_0   THEN zc_Enum_PartionDateKind_0()     -- просрочено
+                                        WHEN ObjectDate_ExpirationDate.ValueData <= vbDate_1  THEN zc_Enum_PartionDateKind_1()     -- ћеньше 1 мес€ца
+                                        WHEN ObjectDate_ExpirationDate.ValueData <= vbDate_3  THEN zc_Enum_PartionDateKind_3()     -- ћеньше 3 мес€ца
+                                        WHEN ObjectDate_ExpirationDate.ValueData <= vbDate_6  THEN zc_Enum_PartionDateKind_6()     -- ћеньше 6 мес€ца
                                         ELSE zc_Enum_PartionDateKind_Good() END                  AS PartionDateKindId              -- ¬остановлен с просрочки
                             FROM tmpPDContainerAll AS Container
 

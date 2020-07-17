@@ -543,12 +543,15 @@ CREATE OR REPLACE FUNCTION zc_MovementFloat_InvNumber() RETURNS Integer AS $BODY
 INSERT INTO MovementFloatDesc(Code, ItemName)
   SELECT 'zc_MovementFloat_InvNumber', 'Инвентарный номер' WHERE NOT EXISTS (SELECT * FROM MovementFloatDesc WHERE Code = 'zc_MovementFloat_InvNumber');
   
-  
+CREATE OR REPLACE FUNCTION zc_MovementFloat_TotalAmount() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM MovementFloatDesc WHERE Code = 'zc_MovementFloat_TotalAmount'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
+INSERT INTO MovementFloatDesc(Code, ItemName)
+  SELECT 'zc_MovementFloat_TotalAmount', 'Итого количество' WHERE NOT EXISTS (SELECT * FROM MovementFloatDesc WHERE Code = 'zc_MovementFloat_TotalAmount');
   
 
 /*-------------------------------------------------------------------------------
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.   Воробкало А.А.   Шаблий.О.В.
+ 16.07.20                                                                                     * zc_MovementFloat_TotalAmount
  08.07.20                                                                                     * zc_MovementFloat_InvNumber
  06.07.20                                                                                     * zc_MovementFloat_ChangePercentLess
  04.06.20         * zc_MovementFloat_TotalDayAudit

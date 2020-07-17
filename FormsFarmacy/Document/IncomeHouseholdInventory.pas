@@ -71,6 +71,7 @@ type
     actUpdateCountForPrice: TdsdExecStoredProc;
     spUpdateCountForPrice: TdsdStoredProc;
     dxBarButton2: TdxBarButton;
+    actHouseholdInventoryChoice: TOpenChoiceForm;
   private
     { Private declarations }
   public

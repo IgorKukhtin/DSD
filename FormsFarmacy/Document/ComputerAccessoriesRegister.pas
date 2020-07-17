@@ -68,6 +68,7 @@ type
     ReplacementDate: TcxGridDBColumn;
     dxBarButton2: TdxBarButton;
     dxBarButton3: TdxBarButton;
+    Color_calc: TcxGridDBColumn;
   private
     { Private declarations }
   public

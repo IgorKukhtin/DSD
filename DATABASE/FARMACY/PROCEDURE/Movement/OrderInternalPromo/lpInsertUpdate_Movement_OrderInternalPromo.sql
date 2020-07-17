@@ -2,6 +2,7 @@
 
 DROP FUNCTION IF EXISTS lpInsertUpdate_Movement_OrderInternalPromo (Integer, TVarChar, TDateTime, TDateTime, Tfloat, Integer, TVarChar, Integer);
 DROP FUNCTION IF EXISTS lpInsertUpdate_Movement_OrderInternalPromo (Integer, TVarChar, TDateTime, TDateTime, Tfloat,Tfloat, Tfloat, Integer, TVarChar, Integer);
+DROP FUNCTION IF EXISTS lpInsertUpdate_Movement_OrderInternalPromo (Integer, TVarChar, TDateTime, TDateTime, Tfloat,Tfloat, Tfloat, Tfloat, Integer, TVarChar, Integer);
 
 
 CREATE OR REPLACE FUNCTION lpInsertUpdate_Movement_OrderInternalPromo(
@@ -12,6 +13,7 @@ CREATE OR REPLACE FUNCTION lpInsertUpdate_Movement_OrderInternalPromo(
     IN inAmount                Tfloat     , -- 
     IN inTotalSummPrice        TFloat     , -- итого сумма по ценам прайса
     IN inTotalSummSIP          TFloat     , -- итого сумма по ценам сип
+    IN inTotalAmount           TFloat     , -- Крличество для распр.
     IN inRetailId              Integer    , -- Торг. сеть
     IN inComment               TVarChar   , -- Примечание
     IN inUserId                Integer     -- сессия пользователя
@@ -41,6 +43,8 @@ BEGIN
     PERFORM lpInsertUpdate_MovementFloat (zc_MovementFloat_TotalSummPrice(), ioId, inTotalSummPrice);
     -- сохранили <>
     PERFORM lpInsertUpdate_MovementFloat (zc_MovementFloat_TotalSummSIP(), ioId, inTotalSummSIP);
+    -- сохранили <>
+    PERFORM lpInsertUpdate_MovementFloat (zc_MovementFloat_TotalAmount(), ioId, inTotalAmount);
 
     -- сохранили <Примечание>
     PERFORM lpInsertUpdate_MovementString (zc_MovementString_Comment(), ioId, inComment);
