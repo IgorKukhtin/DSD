@@ -147,6 +147,7 @@ type
     edInvNumberBranch: TcxDBTextEdit;
     cxLabel23: TcxLabel;
     cbisPriceWithVAT: TcxCheckBox;
+    spCheckOKPO: TdsdStoredProc;
   private
     { Private declarations }
   public

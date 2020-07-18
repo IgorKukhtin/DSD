@@ -72,11 +72,12 @@ BEGIN
    THEN
        RAISE EXCEPTION 'Ошибка.Не установлено <Юридическое лицо>.';
    END IF;
+
    -- проверка
-   IF TRIM (COALESCE (inOKPO, '')) = '' AND NOT EXISTS (SELECT 1 AS Id FROM ObjectLink_UserRole_View WHERE ObjectLink_UserRole_View.RoleId = zc_Enum_Role_Admin() AND ObjectLink_UserRole_View.UserId = vbUserId)
-   THEN
-       RAISE EXCEPTION 'Ошибка.Нет прав добавлять с пустым <ОКПО>.';
-   END IF;
+ --IF TRIM (COALESCE (inOKPO, '')) = '' AND NOT EXISTS (SELECT 1 AS Id FROM ObjectLink_UserRole_View WHERE ObjectLink_UserRole_View.RoleId = zc_Enum_Role_Admin() AND ObjectLink_UserRole_View.UserId = vbUserId)
+ --THEN
+ --    RAISE EXCEPTION 'Ошибка.Нет прав добавлять с пустым <ОКПО>.';
+ --END IF;
    
 
 

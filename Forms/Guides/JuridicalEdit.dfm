@@ -2,10 +2,9 @@
   Caption = #1044#1086#1073#1072#1074#1080#1090#1100'/'#1048#1079#1084#1077#1085#1080#1090#1100' <'#1070#1088#1080#1076#1080#1095#1077#1089#1082#1086#1077' '#1083#1080#1094#1086'>'
   ClientHeight = 599
   ClientWidth = 1127
-  ExplicitLeft = -114
-  ExplicitTop = -109
+  ExplicitTop = -167
   ExplicitWidth = 1133
-  ExplicitHeight = 628
+  ExplicitHeight = 624
   PixelsPerInch = 96
   TextHeight = 13
   inherited bbOk: TcxButton
@@ -780,8 +779,11 @@
       Category = 'DSDLib'
       MoveParams = <>
       PostDataSetBeforeExecute = False
-      StoredProc = spInsertUpdate
+      StoredProc = spCheckOKPO
       StoredProcList = <
+        item
+          StoredProc = spCheckOKPO
+        end
         item
           StoredProc = spInsertUpdate
         end
@@ -985,8 +987,11 @@
       Category = 'DSDLib'
       MoveParams = <>
       PostDataSetBeforeExecute = False
-      StoredProc = spInsertUpdate
+      StoredProc = spCheckOKPO
       StoredProcList = <
+        item
+          StoredProc = spCheckOKPO
+        end
         item
           StoredProc = spInsertUpdate
         end>
@@ -1133,7 +1138,7 @@
       end
       item
         Name = 'inisCorporate'
-        Value = 'False'
+        Value = False
         Component = cbisCorporate
         DataType = ftBoolean
         ParamType = ptInput
@@ -1782,6 +1787,7 @@
     ColumnAddOnList = <>
     ColumnEnterList = <>
     SummaryItemList = <>
+    PropertiesCellList = <>
     Left = 184
     Top = 8
   end
@@ -1803,6 +1809,7 @@
     ColumnAddOnList = <>
     ColumnEnterList = <>
     SummaryItemList = <>
+    PropertiesCellList = <>
     Left = 384
     Top = 304
   end
@@ -1817,6 +1824,7 @@
     ColumnAddOnList = <>
     ColumnEnterList = <>
     SummaryItemList = <>
+    PropertiesCellList = <>
     Left = 480
     Top = 296
   end
@@ -2096,5 +2104,22 @@
       end>
     Left = 472
     Top = 437
+  end
+  object spCheckOKPO: TdsdStoredProc
+    StoredProcName = 'gpCheckRight_ObjectHistory_JuridicalDetails_OKPO'
+    DataSets = <>
+    OutputType = otResult
+    Params = <
+      item
+        Name = 'inOKPO'
+        Value = ''
+        Component = edOKPO
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end>
+    PackSize = 1
+    Left = 568
+    Top = 344
   end
 end
