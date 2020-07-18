@@ -1452,6 +1452,9 @@ begin
 end;
 //----------------------------------------------------------------------------------------------------------------------------------------------------
 procedure TMainForm.OKDocumentButtonClick(Sender: TObject);
+var tmpDate1,tmpDate2:TDateTime;
+    Year, Month, Day, Hour, Min, Sec, MSec: Word;
+    StrTime:String;
 begin
      if System.Pos('auto',ParamStr(2))<=0
      then
@@ -1474,6 +1477,9 @@ begin
      Gauge.Visible:=true;
      //
      //
+     tmpDate1:=NOw;
+     //
+     //
      if not fStop then pLoadGoodsListSale;
      //
      if not fStop then pLoadFillSoldTable;
@@ -1485,6 +1491,26 @@ begin
      //OKGuideButton.Enabled:=true;
      OKDocumentButton.Enabled:=true;
      OKCompleteDocumentButton.Enabled:=true;
+     //
+     //
+     toZConnection.Connected:=false;
+     if not cbOnlyOpen.Checked then fromZConnection.Connected:=false;
+     //
+     tmpDate2:=NOw;
+     if (tmpDate2-tmpDate1)>=1
+     then StrTime:=DateTimeToStr(tmpDate2-tmpDate1)
+     else begin
+               DecodeTime(tmpDate2-tmpDate1, Hour, Min, Sec, MSec);
+               StrTime:=IntToStr(Hour)+':'+IntToStr(Min)+':'+IntToStr(Sec);
+     end;
+
+     if fStop then ShowMessage('Документы НЕ загружены. Time=('+StrTime+').')
+     else
+         if System.Pos('auto',ParamStr(2))<=0
+         then ShowMessage('Документы загружены. Time=('+StrTime+').')
+         else begin myLogMemo_add(StrTime+':Doc');
+                    OKPOEdit.Text:=StrTime+':Doc' + ' ' + OKPOEdit.Text;
+              end;
      //
      //
      fStop:=true;
