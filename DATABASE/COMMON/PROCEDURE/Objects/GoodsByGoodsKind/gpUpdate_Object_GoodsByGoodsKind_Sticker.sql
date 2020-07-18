@@ -15,6 +15,14 @@ BEGIN
    -- проверка прав пользователя на вызов процедуры
    vbUserId := lpCheckRight (inSession, zc_Enum_Process_Update_Object_GoodsByGoodsKind_Sticker());
 
+
+   -- проверка - что б Админ ничего не ломал
+   IF inSession = zfCalc_UserAdmin()
+   THEN
+       RAISE EXCEPTION 'Ошибка.Нет прав - что б Админ ничего не ломал.';
+   END IF;
+
+
    -- сохранили свойство <вес 1-ого пакета>
    PERFORM lpInsertUpdate_ObjectFloat (zc_ObjectFloat_GoodsByGoodsKind_WeightPackageSticker(), inId, inWeightPackageSticker);
 

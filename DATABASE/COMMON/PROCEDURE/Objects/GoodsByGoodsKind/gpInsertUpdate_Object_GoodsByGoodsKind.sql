@@ -72,6 +72,12 @@ BEGIN
        RAISE EXCEPTION 'Ошибка.Значение Вид (пересорт. - расход) = <%>  и Вид (упак., главный) = <%> должны совпадать.', lfGet_Object_ValueData (inGoodsKindSubId), lfGet_Object_ValueData (inGoodsKindPackId);
    END IF;   
 
+   -- проверка - что б Админ ничего не ломал
+   IF inSession = zfCalc_UserAdmin()
+   THEN
+       RAISE EXCEPTION 'Ошибка.Нет прав - что б Админ ничего не ломал.';
+   END IF;
+
 
    -- сохранили <Объект>
    ioId := lpInsertUpdate_Object (ioId, zc_Object_GoodsByGoodsKind(), 0, '');
