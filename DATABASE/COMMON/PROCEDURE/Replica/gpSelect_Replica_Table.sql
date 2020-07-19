@@ -1,8 +1,8 @@
--- Function: gpSelect_Replica_Table()
+-- Function: _replica.gpSelect_Replica_Table()
 
-DROP FUNCTION IF EXISTS gpSelect_Replica_Table (Integer, Integer);
+DROP FUNCTION IF EXISTS _replica.gpSelect_Replica_Table (Integer, Integer);
 
-CREATE OR REPLACE FUNCTION gpSelect_Replica_Table(
+CREATE OR REPLACE FUNCTION _replica.gpSelect_Replica_Table(
     IN inId_start     Integer,
     IN inId_end       Integer
 )
@@ -33,7 +33,7 @@ BEGIN
      
 END;
 $BODY$
-LANGUAGE plpgsql VOLATILE;
+  LANGUAGE plpgsql VOLATILE;
 
 /*-------------------------------------------------------------------------------*/
 /*
@@ -44,4 +44,4 @@ LANGUAGE plpgsql VOLATILE;
 
 -- тест
 --
--- SELECT * FROM gpSelect_Replica_Table(507132, 657179)
+-- SELECT * FROM _replica.gpSelect_Replica_Table(1, 657179)

@@ -1,8 +1,8 @@
--- Function: gpSelect_Replica_part30()
+-- Function: _replica.gpSelect_Replica_part30()
 
-DROP FUNCTION IF EXISTS gpSelect_Replica_part30 (Integer, Integer);
+DROP FUNCTION IF EXISTS _replica.gpSelect_Replica_part30 (Integer, Integer);
 
-CREATE OR REPLACE FUNCTION gpSelect_Replica_part30(
+CREATE OR REPLACE FUNCTION _replica.gpSelect_Replica_part30(
     IN inId_start     Integer,
     IN inId_end       Integer
 )
@@ -20,9 +20,9 @@ BEGIN
    WITH
    tmpRes_all AS (
                   SELECT 30 AS Part, 0 AS Sort
-                       , ('LEFT JOIN '||tmpData.table_name||' ON '||tmpData.table_name||'.'||zfCalc_WordText_Split_replica(tmpData.pk_keys,1)||' = CASE WHEN '||zfStr_CHR_39(tmpData.table_name)||'= table_update_data.table_name THEN CAST (zfCalc_WordText_Split_replica (table_update_data.pk_values,1) AS Integer) ELSE NULL END'
-                         ||CASE WHEN zfCalc_WordText_Split_replica (tmpData.pk_keys, 2)<> '' THEN ' AND '||tmpData.table_name ||'.'|| zfCalc_WordText_Split_replica (tmpData.pk_keys, 2)||' = CASE WHEN '||zfStr_CHR_39(tmpData.table_name)||'= table_update_data.table_name THEN CAST (zfCalc_WordText_Split_replica (table_update_data.pk_values, 2) AS Integer) ELSE NULL END' ELSE '' END
-                         ||CASE WHEN zfCalc_WordText_Split_replica (tmpData.pk_keys, 3)<> '' THEN ' AND '||tmpData.table_name ||'.'|| zfCalc_WordText_Split_replica (tmpData.pk_keys, 3)||' = CASE WHEN '||zfStr_CHR_39(tmpData.table_name)||'= table_update_data.table_name THEN CAST (zfCalc_WordText_Split_replica (table_update_data.pk_values, 3) AS Integer) ELSE NULL END' ELSE '' END) ::Text AS res
+                       , ('LEFT JOIN '||tmpData.table_name||' ON '||tmpData.table_name||'.'||_replica.zfCalc_WordText_Split_replica(tmpData.pk_keys,1)||' = CASE WHEN '||_replica.zfStr_CHR_39(tmpData.table_name)||'= table_update_data.table_name THEN CAST (_replica.zfCalc_WordText_Split_replica (table_update_data.pk_values,1) AS Integer) ELSE NULL END'
+                         ||CASE WHEN _replica.zfCalc_WordText_Split_replica (tmpData.pk_keys, 2)<> '' THEN ' AND '||tmpData.table_name ||'.'|| _replica.zfCalc_WordText_Split_replica (tmpData.pk_keys, 2)||' = CASE WHEN '||_replica.zfStr_CHR_39(tmpData.table_name)||'= table_update_data.table_name THEN CAST (_replica.zfCalc_WordText_Split_replica (table_update_data.pk_values, 2) AS Integer) ELSE NULL END' ELSE '' END
+                         ||CASE WHEN _replica.zfCalc_WordText_Split_replica (tmpData.pk_keys, 3)<> '' THEN ' AND '||tmpData.table_name ||'.'|| _replica.zfCalc_WordText_Split_replica (tmpData.pk_keys, 3)||' = CASE WHEN '||_replica.zfStr_CHR_39(tmpData.table_name)||'= table_update_data.table_name THEN CAST (_replica.zfCalc_WordText_Split_replica (table_update_data.pk_values, 3) AS Integer) ELSE NULL END' ELSE '' END) ::Text AS res
                   FROM (SELECT DISTINCT table_name, pk_keys
                         FROM _replica.table_update_data AS tmp
                         WHERE tmp.Id BETWEEN inId_start AND inId_end
@@ -58,11 +58,7 @@ order by 1,2
 
 END;
 $BODY$
-
-
-LANGUAGE plpgsql VOLATILE;
-
-
+  LANGUAGE plpgsql VOLATILE;
 
 /*-------------------------------------------------------------------------------*/
 /*
@@ -73,4 +69,4 @@ LANGUAGE plpgsql VOLATILE;
 */
 
 -- тест
--- SELECT * FROM gpSelect_Replica_part30 (1, 594837 * 100)
+-- SELECT * FROM _replica.gpSelect_Replica_part30 (1, 594837 * 100)

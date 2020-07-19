@@ -1,8 +1,8 @@
--- Function: gpSelect_Replica_part50()
+-- Function: _replica.gpSelect_Replica_part50()
 
-DROP FUNCTION IF EXISTS gpSelect_Replica_part50 (Integer, Integer);
+DROP FUNCTION IF EXISTS _replica.gpSelect_Replica_part50 (Integer, Integer);
 
-CREATE OR REPLACE FUNCTION gpSelect_Replica_part50(
+CREATE OR REPLACE FUNCTION _replica.gpSelect_Replica_part50(
     IN inId_start     Integer,
     IN inId_end       Integer
 )
@@ -20,7 +20,7 @@ BEGIN
    WITH
    tmpRes_all AS (
                   SELECT 50 AS Part, 0 AS Sort
-                       , '  WHEN table_update_data.table_name = ' || zfStr_CHR_39 (tmpData.table_name)||' THEN ' || tmpData.table_name ||'.'|| zfCalc_WordText_Split_replica (tmpData.pk_keys, 1) AS res
+                       , '  WHEN table_update_data.table_name = ' || _replica.zfStr_CHR_39 (tmpData.table_name)||' THEN ' || tmpData.table_name ||'.'|| _replica.zfCalc_WordText_Split_replica (tmpData.pk_keys, 1) AS res
                   FROM (SELECT DISTINCT table_name, pk_keys
                         FROM _replica.table_update_data AS tmp
                         WHERE tmp.Id BETWEEN inId_start AND inId_end
@@ -40,11 +40,7 @@ BEGIN
 
 END;
 $BODY$
-
-
-LANGUAGE plpgsql VOLATILE;
-
-
+  LANGUAGE plpgsql VOLATILE;
 
 /*-------------------------------------------------------------------------------*/
 /*
@@ -55,4 +51,4 @@ LANGUAGE plpgsql VOLATILE;
 */
 
 -- тест
--- SELECT * FROM gpSelect_Replica_part50 (1, 594837 * 100)
+-- SELECT * FROM _replica.gpSelect_Replica_part50 (1, 594837 * 100)
