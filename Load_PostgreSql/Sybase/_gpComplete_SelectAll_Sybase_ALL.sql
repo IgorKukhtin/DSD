@@ -19,8 +19,8 @@ BEGIN
 IF inIsBefoHistoryCost = TRUE
 THEN
     inGroupId:= -1;
- ELSE
-    inGroupId:= -1; -- Все
+-- ELSE
+--    inGroupId:= -1; -- Все
 --  inGroupId:=  0; -- ф.Днепр
 --  inGroupId:=  1; -- ф.Киев
 --  inGroupId:=  2; -- остальные филиалы

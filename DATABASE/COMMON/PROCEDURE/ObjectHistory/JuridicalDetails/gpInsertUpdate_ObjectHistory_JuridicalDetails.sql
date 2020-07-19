@@ -74,12 +74,27 @@ BEGIN
    END IF;
 
    -- проверка
- --IF TRIM (COALESCE (inOKPO, '')) = '' AND NOT EXISTS (SELECT 1 AS Id FROM ObjectLink_UserRole_View WHERE ObjectLink_UserRole_View.RoleId = zc_Enum_Role_Admin() AND ObjectLink_UserRole_View.UserId = vbUserId)
- --THEN
- --    RAISE EXCEPTION 'Ошибка.Нет прав добавлять с пустым <ОКПО>.';
- --END IF;
+   IF TRIM (COALESCE (inOKPO, '')) = '' AND NOT EXISTS (SELECT 1 AS Id FROM ObjectLink_UserRole_View WHERE ObjectLink_UserRole_View.RoleId = zc_Enum_Role_Admin() AND ObjectLink_UserRole_View.UserId = vbUserId)
+   THEN
+       IF COALESCE (ioId, 0) = 0
+       THEN
+           inOKPO:= (SELECT ObjectHistoryString_OKPO.ValueData
+                     FROM ObjectHistory
+                          LEFT JOIN ObjectHistoryString AS ObjectHistoryString_OKPO
+                                                        ON ObjectHistoryString_OKPO.ObjectHistoryId = ObjectHistory.Id
+                                                       AND ObjectHistoryString_OKPO.DescId          = zc_ObjectHistoryString_JuridicalDetails_OKPO()
+                     WHERE ObjectHistory.ObjectID = inJuridicalId
+                     ORDER BY ObjectHistory.StartDate DESC
+                     LIMIT 1
+                    );
+       END IF;
+       --
+       IF TRIM (COALESCE (inOKPO, '')) = ''
+       THEN
+           RAISE EXCEPTION 'Ошибка.Нет прав добавлять с пустым <ОКПО>.';
+       END IF;
+   END IF;
    
-
 
    -- Вставляем или меняем объект историю
    ioId := lpInsertUpdate_ObjectHistory(ioId, zc_ObjectHistory_JuridicalDetails(), inJuridicalId, inOperDate, vbUserId);

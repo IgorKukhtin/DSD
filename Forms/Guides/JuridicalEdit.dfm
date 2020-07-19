@@ -2113,7 +2113,8 @@
       item
         Name = 'inOKPO'
         Value = ''
-        Component = edOKPO
+        Component = JuridicalDetailsCDS
+        ComponentItem = 'OKPO'
         DataType = ftString
         ParamType = ptInput
         MultiSelectSeparator = ','
