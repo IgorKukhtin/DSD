@@ -35,7 +35,7 @@ BEGIN
      -- проверка прав пользователя на вызов процедуры
      -- vbUserId:= lpCheckRight (inSession, zc_Enum_Process_Select_Movement_Sale());
      vbUserId:= lpGetUserBySession (inSession);
-     
+
 
      -- !!!ОПРЕДЕЛИЛИ - НОВАЯ схема с 30.03.18!!!
      vbIsNPP_calc:= EXISTS (SELECT 1
@@ -49,7 +49,7 @@ BEGIN
                                  LEFT JOIN MovementItemFloat AS MIFloat_AmountTax_calc
                                                              ON MIFloat_AmountTax_calc.MovementItemId = MovementItem.Id
                                                             AND MIFloat_AmountTax_calc.DescId         = zc_MIFloat_AmountTax_calc()
-                                                            
+
                             WHERE MovementItem.MovementId = inMovementId
                               AND MovementItem.DescId     = zc_MI_Master()
                               AND MovementItem.isErased   = FALSE
@@ -125,7 +125,7 @@ BEGIN
                                        ON MovementLinkObject_From.MovementId = tmpMovement.MovementId_TaxCorrective
                                       AND MovementLinkObject_From.DescId = zc_MovementLinkObject_From()
           LEFT JOIN ObjectBoolean AS ObjectBoolean_isLongUKTZED
-                                  ON ObjectBoolean_isLongUKTZED.ObjectId = MovementLinkObject_From.ObjectId 
+                                  ON ObjectBoolean_isLongUKTZED.ObjectId = MovementLinkObject_From.ObjectId
                                  AND ObjectBoolean_isLongUKTZED.DescId = zc_ObjectBoolean_Juridical_isLongUKTZED()
           LEFT JOIN MovementLinkMovement AS MovementLinkMovement_Child
                                          ON MovementLinkMovement_Child.MovementId = tmpMovement.MovementId_TaxCorrective
@@ -196,7 +196,7 @@ BEGIN
                 LEFT JOIN MovementBoolean AS MovementBoolean_isPartner
                                           ON MovementBoolean_isPartner.MovementId = MovementLinkMovement_Master.MovementChildId
                                          AND MovementBoolean_isPartner.DescId    = zc_MovementBoolean_isPartner()
-                
+
            WHERE Movement.Id       = inMovementId
              AND Movement.DescId   = zc_Movement_TaxCorrective()
              AND Movement_find.Id  = inMovementId
@@ -214,7 +214,7 @@ BEGIN
                                                       AND Movement_Master.StatusId = zc_Enum_Status_Complete()
                 LEFT JOIN MovementBoolean AS MovementBoolean_isPartner
                                           ON MovementBoolean_isPartner.MovementId = Movement.Id
-                                         AND MovementBoolean_isPartner.DescId     = zc_MovementBoolean_isPartner()   
+                                         AND MovementBoolean_isPartner.DescId     = zc_MovementBoolean_isPartner()
 
            WHERE Movement.Id     = inMovementId
              AND Movement.DescId IN (zc_Movement_ReturnIn(), zc_Movement_TransferDebtIn(), zc_Movement_PriceCorrective())
@@ -227,7 +227,7 @@ BEGIN
              , Movement.OperDate	              AS OperDate
              , MovementItem.ObjectId                  AS GoodsId
              , MovementItem.Amount                    AS Amount
-             , COALESCE (MIBoolean_isAuto.ValueData, TRUE)   AS isAuto	
+             , COALESCE (MIBoolean_isAuto.ValueData, TRUE)   AS isAuto
              , ObjectLink_GoodsGroup.ChildObjectId    AS GoodsGroupId
              , tmpMovement.isPartner
         FROM tmpMovement
@@ -237,7 +237,7 @@ BEGIN
                                     AND MovementItem.DescId     = zc_MI_Master()
                                     AND MovementItem.isErased   = FALSE
                                     AND MovementItem.Amount     <> 0
-             
+
              LEFT JOIN MovementItemBoolean AS MIBoolean_isAuto
                                            ON MIBoolean_isAuto.MovementItemId = MovementItem.Id
                                           AND MIBoolean_isAuto.DescId = zc_MIBoolean_isAuto()
@@ -248,13 +248,13 @@ BEGIN
         )
     , tmpMIFloat AS (SELECT MovementItemFloat.*
                      FROM MovementItemFloat
-                     WHERE MovementItemFloat.MovementItemId IN (SELECT tmpMI_All.Id FROM tmpMI_All) 
+                     WHERE MovementItemFloat.MovementItemId IN (SELECT tmpMI_All.Id FROM tmpMI_All)
                      )
     , tmpGoodsKind AS (SELECT MovementItemLinkObject.*
                        FROM MovementItemLinkObject
                        WHERE MovementItemLinkObject.MovementItemId IN (SELECT tmpMI_All.Id FROM tmpMI_All)
                          AND MovementItemLinkObject.DescId = zc_MILinkObject_GoodsKind()
-                       ) 
+                       )
 
     , tmpMI AS
        (SELECT tmpMI_All.Id                           AS Id
@@ -285,11 +285,11 @@ BEGIN
              , COALESCE (MIFloat_NPPTax_calc.ValueData, 0)      AS NPPTax_calc
              , COALESCE (MIFloat_NPP_calc.ValueData, 0)         AS NPP_calc
              , COALESCE (MIFloat_NPPTaxNew_calc.ValueData, 0)   AS NPPTaxNew_calc
-             
+
              , COALESCE (MIFloat_AmountTax_calc.ValueData, 0)   AS AmountTax_calc
              , COALESCE (MIFloat_SummTaxDiff_calc.ValueData, 0) AS SummTaxDiff_calc
              , COALESCE (MIFloat_PriceTax_calc.ValueData, 0)    AS PriceTax_calc
-             
+
         FROM tmpMI_All
             LEFT JOIN tmpMIFloat AS MIFloat_NPP
                                  ON MIFloat_NPP.MovementItemId = tmpMI_All.Id
@@ -323,8 +323,8 @@ BEGIN
 
             LEFT JOIN tmpGoodsKind AS MILinkObject_GoodsKind
                                    ON MILinkObject_GoodsKind.MovementItemId = tmpMI_All.Id
-                                  AND MILinkObject_GoodsKind.DescId = zc_MILinkObject_GoodsKind() 
-            LEFT JOIN Object AS Object_GoodsKind ON Object_GoodsKind.Id = MILinkObject_GoodsKind.ObjectId 
+                                  AND MILinkObject_GoodsKind.DescId = zc_MILinkObject_GoodsKind()
+            LEFT JOIN Object AS Object_GoodsKind ON Object_GoodsKind.Id = MILinkObject_GoodsKind.ObjectId
                                                 AND Object_GoodsKind.DescId = zc_Object_GoodsKind()
         )
     , tmpGoods AS (SELECT tmp.GoodsId                              AS GoodsId
@@ -361,7 +361,7 @@ BEGIN
                                              ON ObjectLink_Goods_Measure.ObjectId = tmp.GoodsId
                                             AND ObjectLink_Goods_Measure.DescId = zc_ObjectLink_Goods_Measure()
                         LEFT JOIN Object AS Object_Measure ON Object_Measure.Id = COALESCE (ObjectLink_Goods_Measure.ChildObjectId, zc_Measure_Sh())
-                        
+
                         LEFT JOIN ObjectLink AS ObjectLink_Goods_InfoMoney
                                              ON ObjectLink_Goods_InfoMoney.ObjectId = tmp.GoodsId
                                             AND ObjectLink_Goods_InfoMoney.DescId = zc_ObjectLink_Goods_InfoMoney()
@@ -447,29 +447,29 @@ BEGIN
     , tmpMITax AS (SELECT * FROM lpSelect_TaxFromTaxCorrective ((SELECT MLM.MovementChildId FROM MovementLinkMovement AS MLM WHERE MLM.MovementId = inMovementId AND MLM.DescId = zc_MovementLinkMovement_Child())))
 
     , tmpPersonalBookkeeper AS (SELECT ObjectLink_Branch_PersonalBookkeeper.ObjectId AS BranchId
-                                     , Object_PersonalBookkeeper_View.MemberId 
+                                     , Object_PersonalBookkeeper_View.MemberId
                                      , PersonalBookkeeper_INN.ValueData AS PersonalBookkeeper_INN
                                      , Object_PersonalBookkeeper_View.PersonalName AS PersonalName
                                 FROM ObjectLink AS ObjectLink_Branch_PersonalBookkeeper
                                      LEFT JOIN Object_Personal_View AS Object_PersonalBookkeeper_View ON Object_PersonalBookkeeper_View.PersonalId = ObjectLink_Branch_PersonalBookkeeper.ChildObjectId
                                      LEFT JOIN ObjectString AS PersonalBookkeeper_INN
-                                                            ON PersonalBookkeeper_INN.ObjectId = Object_PersonalBookkeeper_View.MemberId 
+                                                            ON PersonalBookkeeper_INN.ObjectId = Object_PersonalBookkeeper_View.MemberId
                                                            AND PersonalBookkeeper_INN.DescId = zc_ObjectString_Member_INN()
                                 WHERE ObjectLink_Branch_PersonalBookkeeper.DescId = zc_ObjectLink_Branch_PersonalBookkeeper()
-                                ) 
-                
+                                )
+
     , tmpPersonalSigning AS (SELECT ObjectLink_Contract_PersonalSigning.ObjectId AS ContractId
-                                  , Object_PersonalSigning.MemberId 
+                                  , Object_PersonalSigning.MemberId
                                   , PersonalSigning_INN.ValueData AS PersonalSigning_INN
                                   , Object_PersonalSigning.PersonalName AS PersonalName
                              FROM ObjectLink AS ObjectLink_Contract_PersonalSigning
-                                  LEFT JOIN Object_Personal_View AS Object_PersonalSigning ON Object_PersonalSigning.PersonalId = ObjectLink_Contract_PersonalSigning.ChildObjectId   
+                                  LEFT JOIN Object_Personal_View AS Object_PersonalSigning ON Object_PersonalSigning.PersonalId = ObjectLink_Contract_PersonalSigning.ChildObjectId
                                   LEFT JOIN ObjectString AS PersonalSigning_INN
-                                                         ON PersonalSigning_INN.ObjectId = Object_PersonalSigning.MemberId 
+                                                         ON PersonalSigning_INN.ObjectId = Object_PersonalSigning.MemberId
                                                         AND PersonalSigning_INN.DescId = zc_ObjectString_Member_INN()
                              WHERE ObjectLink_Contract_PersonalSigning.DescId = zc_ObjectLink_Contract_PersonalSigning()
                             )
-    
+
     , tmpMovementFloat AS (SELECT MovementFloat.*
                            FROM MovementFloat
                            WHERE MovementFloat.MovementId IN (SELECT DISTINCT tmpMovement.Id FROM tmpMovement)
@@ -484,11 +484,11 @@ BEGIN
                            LEFT JOIN MovementString AS MovementString_InvNumberMark
                                                     ON MovementString_InvNumberMark.MovementId = Movement_ReturnIn.Id
                                                    AND MovementString_InvNumberMark.DescId = zc_MovementString_InvNumberMark()
-               
+
                            LEFT JOIN MovementDate AS MovementDate_OperDatePartner
                                                   ON MovementDate_OperDatePartner.MovementId = Movement_ReturnIn.Id
                                                  AND MovementDate_OperDatePartner.DescId = zc_MovementDate_OperDatePartner()
-               
+
                            LEFT JOIN MovementString AS MovementString_InvNumberPartner
                                                     ON MovementString_InvNumberPartner.MovementId = Movement_ReturnIn.Id
                                                    AND MovementString_InvNumberPartner.DescId = zc_MovementString_InvNumberPartner()
@@ -520,11 +520,11 @@ BEGIN
                                    LEFT JOIN MovementFloat AS MovementFloat_Amount
                                                            ON MovementFloat_Amount.MovementId =  MovementLinkMovement_ChildEDI.MovementChildId
                                                           AND MovementFloat_Amount.DescId = zc_MovementFloat_Amount()
-                       
+
                                    LEFT JOIN MovementDate AS MovementDate_OperDatePartnerEDI
                                                           ON MovementDate_OperDatePartnerEDI.MovementId =  MovementLinkMovement_ChildEDI.MovementChildId
                                                          AND MovementDate_OperDatePartnerEDI.DescId = zc_MovementDate_OperDatePartner()
-                       
+
                                    LEFT JOIN MovementString AS MovementString_InvNumberPartnerEDI
                                                             ON MovementString_InvNumberPartnerEDI.MovementId = MovementLinkMovement_ChildEDI.MovementChildId
                                                            AND MovementString_InvNumberPartnerEDI.DescId = zc_MovementString_InvNumberPartner()
@@ -541,13 +541,13 @@ BEGIN
                        , COALESCE (ObjectString_PartnerCode.ValueData, '') :: TVarChar AS PartnerCode
                   FROM MovementLinkObject AS MovementLinkObject_Contract
                        LEFT JOIN Object AS Object_Contract ON Object_Contract.Id = MovementLinkObject_Contract.ObjectId
-           
+
                        LEFT JOIN ObjectLink AS ObjectLink_Contract_ContractKind
                                             ON ObjectLink_Contract_ContractKind.ObjectId = MovementLinkObject_Contract.ObjectId
                                            AND ObjectLink_Contract_ContractKind.DescId = zc_ObjectLink_Contract_ContractKind()
                                            AND Object_Contract.ValueData <> '-'
                        LEFT JOIN Object AS Object_ContractKind ON Object_ContractKind.Id = ObjectLink_Contract_ContractKind.ChildObjectId
-           
+
                        LEFT JOIN ObjectDate AS ObjectDate_Signing
                                             ON ObjectDate_Signing.ObjectId = MovementLinkObject_Contract.ObjectId
                                            AND ObjectDate_Signing.DescId = zc_ObjectDate_Contract_Signing()
@@ -571,11 +571,11 @@ BEGIN
                         , MovementString_InvNumberOrder_Sale.ValueData   AS InvNumberOrder_Sale
                         , MovementDate_OperDatePartner_Sale.ValueData    AS OperDatePartner_Sale
                         , CASE WHEN MovementDate_DateRegistered_Child.ValueData         > Movement_child.OperDate
-                             -- AND MovementString_InvNumberRegistered_Child.ValueData <> '' 
+                             -- AND MovementString_InvNumberRegistered_Child.ValueData <> ''
                                     THEN MovementDate_DateRegistered_Child.ValueData
                                ELSE Movement_child.OperDate
                           END AS OperDate_begin_Child
-                        , CASE WHEN MovementString_InvNumberRegistered_Child.ValueData <> '' 
+                        , CASE WHEN MovementString_InvNumberRegistered_Child.ValueData <> ''
                                     THEN COALESCE (MovementDate_DateRegistered_Child.ValueData, Movement_child.OperDate)
                                ELSE CURRENT_DATE
                           END AS OperDate_rus
@@ -584,7 +584,7 @@ BEGIN
                         INNER JOIN MovementLinkMovement AS MovementLinkMovement_Child
                                                         ON MovementLinkMovement_Child.MovementId = tmpMovement.Id
                                                        AND MovementLinkMovement_Child.DescId = zc_MovementLinkMovement_Child()
-                        INNER JOIN Movement AS Movement_child 
+                        INNER JOIN Movement AS Movement_child
                                             ON Movement_child.Id = MovementLinkMovement_Child.MovementChildId
                                            AND Movement_child.StatusId IN (zc_Enum_Status_UnComplete(), zc_Enum_Status_Complete())
 
@@ -598,30 +598,30 @@ BEGIN
                         LEFT JOIN MovementString AS MovementString_InvNumberBranch_Child
                                                  ON MovementString_InvNumberBranch_Child.MovementId = Movement_child.Id
                                                 AND MovementString_InvNumberBranch_Child.DescId = zc_MovementString_InvNumberBranch()
-            
-                        LEFT JOIN MovementString AS MS_DocumentChild_InvNumberPartner 
+
+                        LEFT JOIN MovementString AS MS_DocumentChild_InvNumberPartner
                                                  ON MS_DocumentChild_InvNumberPartner.MovementId = Movement_child.Id
                                                 AND MS_DocumentChild_InvNumberPartner.DescId = zc_MovementString_InvNumberPartner()
-            
+
                         LEFT JOIN MovementLinkObject AS MovementLinkObject_DocumentTaxKind_Child
                                                      ON MovementLinkObject_DocumentTaxKind_Child.MovementId = MovementLinkMovement_Child.MovementChildId
-                                                    AND MovementLinkObject_DocumentTaxKind_Child.DescId = zc_MovementLinkObject_DocumentTaxKind() 
-            
+                                                    AND MovementLinkObject_DocumentTaxKind_Child.DescId = zc_MovementLinkObject_DocumentTaxKind()
+
                         LEFT JOIN MovementLinkMovement AS MovementLinkMovement_Child_Sale
                                                        ON MovementLinkMovement_Child_Sale.MovementChildId = MovementLinkMovement_Child.MovementChildId
                                                       AND MovementLinkMovement_Child_Sale.DescId = zc_MovementLinkMovement_Master()
                                                       AND MovementLinkObject_DocumentTaxKind_Child.ObjectId = zc_Enum_DocumentTaxKind_Tax() -- налоговая
-            
+
                         LEFT JOIN Movement AS Movement_Sale ON Movement_Sale.Id = MovementLinkMovement_Child_Sale.MovementId
-            
+
                         LEFT JOIN MovementString AS MovementString_InvNumberPartner_Sale
                                                  ON MovementString_InvNumberPartner_Sale.MovementId =  MovementLinkMovement_Child_Sale.MovementId
                                                 AND MovementString_InvNumberPartner_Sale.DescId = zc_MovementString_InvNumberPartner()
-            
+
                         LEFT JOIN MovementString AS MovementString_InvNumberOrder_Sale
                                                  ON MovementString_InvNumberOrder_Sale.MovementId =  MovementLinkMovement_Child_Sale.MovementId
                                                 AND MovementString_InvNumberOrder_Sale.DescId = zc_MovementString_InvNumberOrder()
-            
+
                         LEFT JOIN MovementDate AS MovementDate_OperDatePartner_Sale
                                                ON MovementDate_OperDatePartner_Sale.MovementId =  MovementLinkMovement_Child_Sale.MovementId
                                               AND MovementDate_OperDatePartner_Sale.DescId = zc_MovementDate_OperDatePartner()
@@ -670,7 +670,7 @@ BEGIN
                             , tmpDocumentTaxKind.MeasureName                   AS Measure_DocumentTaxKind
                             , tmpDocumentTaxKind.MeasureCode                  AS MeasureCode_DocumentTaxKind
                             , tmpDocumentTaxKind.Price                        AS Price_DocumentTaxKind
-                            
+
                             --, CASE WHEN COALESCE (ObjectString_DocumentTaxKind_Code.ValueData,'') = '' THEN '0' ELSE  ObjectString_DocumentTaxKind_Code.ValueData END  AS Code_DocumentTaxKind
                             , MovementLinkObject_Branch.ObjectId              AS BranchId
                             , MovementString_FromINN.ValueData                AS INN_From
@@ -682,27 +682,27 @@ BEGIN
                             LEFT JOIN MovementLinkObject AS MovementLinkObject_To
                                                          ON MovementLinkObject_To.MovementId = tmpMovement.Id
                                                         AND MovementLinkObject_To.DescId = zc_MovementLinkObject_To()
-                
+
                             LEFT JOIN MovementLinkObject AS MovementLinkObject_Partner
                                                          ON MovementLinkObject_Partner.MovementId = tmpMovement.Id
                                                         AND MovementLinkObject_Partner.DescId = zc_MovementLinkObject_Partner()
-                
+
                             LEFT JOIN MovementLinkObject AS MovementLinkObject_DocumentTaxKind
                                                          ON MovementLinkObject_DocumentTaxKind.MovementId = tmpMovement.Id
                                                         AND MovementLinkObject_DocumentTaxKind.DescId = zc_MovementLinkObject_DocumentTaxKind()
-                
+
                             LEFT JOIN MovementLinkObject AS MovementLinkObject_Branch
                                                          ON MovementLinkObject_Branch.MovementId = tmpMovement.Id
                                                         AND MovementLinkObject_Branch.DescId = zc_MovementLinkObject_Branch()
-                
+
                             LEFT JOIN ObjectString AS ObjectString_FromAddress
                                                    ON ObjectString_FromAddress.ObjectId = MovementLinkObject_Partner.ObjectId
                                                   AND ObjectString_FromAddress.DescId = zc_ObjectString_Partner_Address()
-                
+
                             LEFT JOIN ObjectString AS ObjectString_Partner_GLNCodeJuridical
                                                    ON ObjectString_Partner_GLNCodeJuridical.ObjectId = COALESCE (MovementLinkObject_Partner.ObjectId, MovementLinkObject_From.ObjectId)
                                                   AND ObjectString_Partner_GLNCodeJuridical.DescId = zc_ObjectString_Partner_GLNCodeJuridical()
-                
+
                             LEFT JOIN ObjectString AS ObjectString_Partner_GLNCodeCorporate
                                                    ON ObjectString_Partner_GLNCodeCorporate.ObjectId = COALESCE (MovementLinkObject_Partner.ObjectId, MovementLinkObject_From.ObjectId)
                                                   AND ObjectString_Partner_GLNCodeCorporate.DescId = zc_ObjectString_Partner_GLNCodeCorporate()
@@ -715,15 +715,15 @@ BEGIN
                             LEFT JOIN ObjectLink AS ObjectLink_Juridical_Retail
                                                  ON ObjectLink_Juridical_Retail.ObjectId = MovementLinkObject_From.ObjectId
                                                 AND ObjectLink_Juridical_Retail.DescId = zc_ObjectLink_Juridical_Retail()
-                
+
                             LEFT JOIN ObjectString AS ObjectString_Juridical_GLNCode
                                                    ON ObjectString_Juridical_GLNCode.ObjectId = MovementLinkObject_From.ObjectId
                                                   AND ObjectString_Juridical_GLNCode.DescId = zc_ObjectString_Juridical_GLNCode()
-                
+
                             LEFT JOIN ObjectString AS ObjectString_Retail_GLNCodeCorporate
                                                    ON ObjectString_Retail_GLNCodeCorporate.ObjectId = ObjectLink_Juridical_Retail.ChildObjectId
                                                   AND ObjectString_Retail_GLNCodeCorporate.DescId = zc_ObjectString_Retail_GLNCodeCorporate()
-                
+
                             LEFT JOIN ObjectString AS ObjectString_JuridicalTo_GLNCode
                                                    ON ObjectString_JuridicalTo_GLNCode.ObjectId = MovementLinkObject_To.ObjectId
                                                   AND ObjectString_JuridicalTo_GLNCode.DescId = zc_ObjectString_Juridical_GLNCode()
@@ -740,7 +740,7 @@ BEGIN
 . "Зменшення обсягу при нульовій кількості".
 . "Зменшення кількості при нульовому обсязі".
 . "Усунення неоднозначностей"  --zc_Enum_DocumentTaxKind_Change
-*/ 
+*/
    , tmpData_all AS
       -- РЕЗУЛЬТАТ
      (SELECT inMovementId                                                   AS inMovementId
@@ -754,20 +754,20 @@ BEGIN
                   ELSE 'J1201210'
              END ::TVarChar AS CHARCODE
            -- , 'Неграш О.В.'::TVarChar                                        AS N10
-           , CASE WHEN tmpPersonalSigning.PersonalName <> '' 
+           , CASE WHEN tmpPersonalSigning.PersonalName <> ''
                   THEN zfConvert_FIO (tmpPersonalSigning.PersonalName, 1, FALSE)
-                  ELSE CASE WHEN tmpPersonalBookkeeper.PersonalName <> '' 
-                            THEN zfConvert_FIO (tmpPersonalBookkeeper.PersonalName, 1, FALSE) 
-                            ELSE 'Рудик Н.В.' 
+                  ELSE CASE WHEN tmpPersonalBookkeeper.PersonalName <> ''
+                            THEN zfConvert_FIO (tmpPersonalBookkeeper.PersonalName, 1, FALSE)
+                            ELSE 'Рудик Н.В.'
                        END
              END                                                :: TVarChar AS N10
            -- , 'А.В. МАРУХНО'::TVarChar                                        AS N10
-           , CASE WHEN tmpPersonalSigning.PersonalName <> '' 
+           , CASE WHEN tmpPersonalSigning.PersonalName <> ''
                   THEN UPPER (zfConvert_FIO (tmpPersonalSigning.PersonalName, 1, TRUE))
-                  ELSE CASE WHEN tmpPersonalBookkeeper.PersonalName <> '' 
+                  ELSE CASE WHEN tmpPersonalBookkeeper.PersonalName <> ''
                             THEN UPPER (zfConvert_FIO (tmpPersonalBookkeeper.PersonalName, 1, TRUE))
                             ELSE UPPER ('Н. В. Рудик')
-                       END 
+                       END
              END                            :: TVarChar AS N10_ifin
 
            , 'оплата з поточного рахунка'::TVarChar                         AS N9
@@ -779,7 +779,7 @@ BEGIN
 
                   WHEN tmpMovement_Data.DocumentTaxKind IN (zc_Enum_DocumentTaxKind_CorrectivePrice(), zc_Enum_DocumentTaxKind_CorrectivePriceSummaryJuridical())
                        THEN 'Зміна ціни'
-                       
+
                   WHEN MovementBoolean_isCopy.ValueData = TRUE
                        THEN 'ВИПРАВЛЕННЯ ПОМИЛКИ'
 
@@ -837,7 +837,7 @@ BEGIN
                        THEN 'X'
                   WHEN vbOperDate_begin >= '01.04.2016' AND (COALESCE (tmpMovement_Data.INN_From, OH_JuridicalDetails_From.INN) = vbNotNDSPayer_INN OR vbCalcNDSPayer_INN <> '')
                        THEN 'X'
-                  WHEN vbOperDate_begin >= '01.04.2016' 
+                  WHEN vbOperDate_begin >= '01.04.2016'
                         THEN ''
                   WHEN tmpMI.OperDate < '01.01.2015' AND (COALESCE (MovementFloat_TotalSummPVAT.ValueData, 0) - COALESCE (MovementFloat_TotalSummMVAT.ValueData, 0)) > 10000
                        THEN 'X'
@@ -852,7 +852,7 @@ BEGIN
              END :: TVarChar AS ERPN2 -- Підлягає реєстрації в ЄРПН покупцем
 
            , CASE WHEN COALESCE (tmpMovement_Data.INN_From, OH_JuridicalDetails_From.INN) = vbNotNDSPayer_INN OR vbCalcNDSPayer_INN <> '' THEN 'X'
-                  ELSE '' 
+                  ELSE ''
              END :: TVarChar AS NotNDSPayer
            , CASE WHEN COALESCE (tmpMovement_Data.INN_From, OH_JuridicalDetails_From.INN) = vbNotNDSPayer_INN OR vbCalcNDSPayer_INN <> ''
                   THEN TRUE ELSE FALSE END :: Boolean                       AS isNotNDSPayer
@@ -866,7 +866,7 @@ BEGIN
            , OH_JuridicalDetails_To.FullName                                AS JuridicalName_To
            , OH_JuridicalDetails_To.JuridicalAddress                        AS JuridicalAddress_To
 
-           , CASE WHEN vbOperDate_begin >= '01.12.2018' 
+           , CASE WHEN vbOperDate_begin >= '01.12.2018'
                    AND OH_JuridicalDetails_To.INN IN ('100000000000', '300000000000')
                   THEN ''
                   ELSE OH_JuridicalDetails_To.OKPO
@@ -878,20 +878,20 @@ BEGIN
            --, (REPEAT ('0', 10 - LENGTH (OH_JuridicalDetails_To.OKPO)) ||  OH_JuridicalDetails_To.OKPO) :: TVarChar AS OKPO_To_ifin
            , OH_JuridicalDetails_To.INN                                     AS INN_To
            , OH_JuridicalDetails_To.NumberVAT                               AS NumberVAT_To
-         -- , COALESCE (Object_Personal_View.PersonalName, OH_JuridicalDetails_To.AccounterName) :: TVarChar AS AccounterName_To 
-           , CASE WHEN tmpPersonalSigning.PersonalName <> '' 
+         -- , COALESCE (Object_Personal_View.PersonalName, OH_JuridicalDetails_To.AccounterName) :: TVarChar AS AccounterName_To
+           , CASE WHEN tmpPersonalSigning.PersonalName <> ''
                   THEN zfConvert_FIO (tmpPersonalSigning.PersonalName, 1, FALSE)
-                  ELSE CASE WHEN COALESCE (tmpPersonalBookkeeper.PersonalName,'') <> '' 
+                  ELSE CASE WHEN COALESCE (tmpPersonalBookkeeper.PersonalName,'') <> ''
                             THEN zfConvert_FIO (tmpPersonalBookkeeper.PersonalName, 1, FALSE)
-                            ELSE 'Рудик Н.В.' /*'А.В. Марухно'*/ 
-                       END  
+                            ELSE 'Рудик Н.В.' /*'А.В. Марухно'*/
+                       END
              END                                                :: TVarChar AS AccounterName_To
-           , CASE WHEN tmpPersonalSigning.PersonalName <> '' 
+           , CASE WHEN tmpPersonalSigning.PersonalName <> ''
                   THEN tmpPersonalSigning.PersonalSigning_INN
-                  ELSE CASE WHEN tmpPersonalBookkeeper.PersonalName <> '' 
+                  ELSE CASE WHEN tmpPersonalBookkeeper.PersonalName <> ''
                             THEN tmpPersonalBookkeeper.PersonalBookkeeper_INN
-                            ELSE '2649713447' 
-                       END                                                    
+                            ELSE '2649713447'
+                       END
               END                                               :: TVarChar AS AccounterINN_To
            , OH_JuridicalDetails_To.BankAccount                             AS BankAccount_To
            , OH_JuridicalDetails_To.BankName                                AS BankName_To
@@ -922,7 +922,7 @@ BEGIN
                   THEN 'Неплатник'
              ELSE OH_JuridicalDetails_From.JuridicalAddress END             AS JuridicalAddress_From
 
-           , CASE WHEN vbOperDate_begin >= '01.12.2018' 
+           , CASE WHEN vbOperDate_begin >= '01.12.2018'
                    AND OH_JuridicalDetails_From.INN IN ('100000000000', '300000000000')
                   THEN ''
                   ELSE COALESCE (ObjectString_Retail_OKPO.ValueData, OH_JuridicalDetails_From.OKPO)
@@ -984,17 +984,17 @@ BEGIN
            , (CASE WHEN tmpMovement_Data.DocumentTaxKind = zc_Enum_DocumentTaxKind_Prepay() THEN CASE WHEN vbOperDate_begin >= '01.12.2018' AND COALESCE (tmpMovement_Data.Goods_DocumentTaxKind, '') <> '' THEN tmpMovement_Data.Goods_DocumentTaxKind
                                                                                                       ELSE 'ПРЕДОПЛАТА ЗА КОЛБ.ИЗДЕЛИЯ'
                                                                                                  END
-                   WHEN tmpObject_GoodsPropertyValue.Name <> '' THEN tmpObject_GoodsPropertyValue.Name 
-                   WHEN tmpObject_GoodsPropertyValue_basis.Name <> '' THEN tmpObject_GoodsPropertyValue_basis.Name 
-                   ELSE CASE WHEN tmpMLM_Child.OperDate_rus < zc_DateEnd_GoodsRus() AND tmpGoods.GoodsName_RUS <> '' THEN tmpGoods.GoodsName_RUS ELSE tmpGoods.GoodsName END || CASE WHEN COALESCE (tmpMI.GoodsKindId, zc_Enum_GoodsKind_Main()) = zc_Enum_GoodsKind_Main() THEN '' ELSE ' ' || tmpMI.GoodsKindName END 
+                   WHEN tmpObject_GoodsPropertyValue.Name <> '' THEN tmpObject_GoodsPropertyValue.Name
+                   WHEN tmpObject_GoodsPropertyValue_basis.Name <> '' THEN tmpObject_GoodsPropertyValue_basis.Name
+                   ELSE CASE WHEN tmpMLM_Child.OperDate_rus < zc_DateEnd_GoodsRus() AND tmpGoods.GoodsName_RUS <> '' THEN tmpGoods.GoodsName_RUS ELSE tmpGoods.GoodsName END || CASE WHEN COALESCE (tmpMI.GoodsKindId, zc_Enum_GoodsKind_Main()) = zc_Enum_GoodsKind_Main() THEN '' ELSE ' ' || tmpMI.GoodsKindName END
                    END) :: TVarChar AS GoodsName
 
            , CASE WHEN tmpMovement_Data.DocumentTaxKind = zc_Enum_DocumentTaxKind_Prepay() THEN CASE WHEN vbOperDate_begin >= '01.12.2018' AND COALESCE (tmpMovement_Data.Goods_DocumentTaxKind, '') <> '' THEN tmpMovement_Data.Goods_DocumentTaxKind
-                                                                                                     ELSE 'ПРЕДОПЛАТА ЗА КОЛБ.ИЗДЕЛИЯ' 
+                                                                                                     ELSE 'ПРЕДОПЛАТА ЗА КОЛБ.ИЗДЕЛИЯ'
                                                                                                 END
-                  WHEN tmpObject_GoodsPropertyValue.Name <> '' THEN tmpObject_GoodsPropertyValue.Name 
-                  WHEN tmpObject_GoodsPropertyValue_basis.Name <> '' THEN tmpObject_GoodsPropertyValue_basis.Name 
-                  ELSE CASE WHEN tmpMLM_Child.OperDate_rus < zc_DateEnd_GoodsRus() AND tmpGoods.GoodsName_RUS <> '' THEN tmpGoods.GoodsName_RUS ELSE tmpGoods.GoodsName END 
+                  WHEN tmpObject_GoodsPropertyValue.Name <> '' THEN tmpObject_GoodsPropertyValue.Name
+                  WHEN tmpObject_GoodsPropertyValue_basis.Name <> '' THEN tmpObject_GoodsPropertyValue_basis.Name
+                  ELSE CASE WHEN tmpMLM_Child.OperDate_rus < zc_DateEnd_GoodsRus() AND tmpGoods.GoodsName_RUS <> '' THEN tmpGoods.GoodsName_RUS ELSE tmpGoods.GoodsName END
              END AS GoodsName_two
 
            , tmpMI.GoodsKindName                                            AS GoodsKindName
@@ -1050,6 +1050,8 @@ BEGIN
                                                       )
                   THEN tmpMI.Amount
                   ELSE NULL  END                                            AS Amount_for_PriceCor
+             -- кол-во для корр цены - если все кол-во
+           , tmpMI.Amount                                                   AS Amount_for_PriceCor_two
 
              -- цена для корр цены - КРОМЕ сводной
            , CASE -- корр цены НЕ для сводной
@@ -1061,6 +1063,9 @@ BEGIN
                                                       )
                   THEN tmpMI.Price / CASE WHEN tmpMI.CountForPrice > 0 THEN tmpMI.CountForPrice ELSE 1 END
                   ELSE NULL  END                                            AS Price_for_PriceCor
+             -- цена для корр цены - если все кол-во
+           , tmpMI.Price / CASE WHEN tmpMI.CountForPrice > 0 THEN tmpMI.CountForPrice ELSE 1 END
+                                                                            AS Price_for_PriceCor_two
 
            , tmpMI.Amount        AS Amount_orig
            , tmpMI.Price         AS Price_orig
@@ -1090,9 +1095,9 @@ BEGIN
 
            --, COALESCE (tmpMITax1.LineNum, tmpMITax2.LineNum) :: Integer AS LineNum
            , CASE WHEN tmpMI.isAuto = TRUE THEN COALESCE (tmpMITax1.LineNum, tmpMITax2.LineNum) ELSE tmpMI.NPP END :: Integer AS LineNum
-           , CASE WHEN tmpMovement_Data.DocumentTaxKind NOT IN (zc_Enum_DocumentTaxKind_CorrectivePrice(), zc_Enum_DocumentTaxKind_Corrective(),zc_Enum_DocumentTaxKind_Prepay()) AND vbOperDate_begin < '01.12.2018' THEN 'X' 
+           , CASE WHEN tmpMovement_Data.DocumentTaxKind NOT IN (zc_Enum_DocumentTaxKind_CorrectivePrice(), zc_Enum_DocumentTaxKind_Corrective(),zc_Enum_DocumentTaxKind_Prepay()) AND vbOperDate_begin < '01.12.2018' THEN 'X'
                   WHEN tmpMovement_Data.DocumentTaxKind NOT IN (zc_Enum_DocumentTaxKind_CorrectivePrice(), zc_Enum_DocumentTaxKind_Corrective(),zc_Enum_DocumentTaxKind_Prepay()) AND vbOperDate_begin >= '01.12.2018' THEN '4'
-                  ELSE '' 
+                  ELSE ''
              END    AS TaxKind --признак  сводной корректировки
 
            , tmpMI.NPPTax_calc           :: Integer AS NPPTax_calc
@@ -1115,7 +1120,7 @@ BEGIN
        FROM tmpMI
 
             LEFT JOIN tmpMovement_ChildEDI ON tmpMovement_ChildEDI.MovementId = tmpMI.MovementId
-           
+
             LEFT JOIN tmpMovementFloat AS MovementFloat_TotalSumm
                                        ON MovementFloat_TotalSumm.MovementId = tmpMI.MovementId
                                       AND MovementFloat_TotalSumm.DescId     = zc_MovementFloat_TotalSumm()
@@ -1135,7 +1140,7 @@ BEGIN
             LEFT JOIN tmpMB_isCopy AS MovementBoolean_isCopy ON MovementBoolean_isCopy.MovementId = tmpMI.MovementId
             LEFT JOIN tmpMB_PriceWithVAT AS MovementBoolean_PriceWithVAT
                                       ON MovementBoolean_PriceWithVAT.MovementId = tmpMI.MovementId
-                                     
+
             LEFT JOIN tmpMovementString AS MovementString_InvNumberBranch
                                      ON MovementString_InvNumberBranch.MovementId = tmpMI.MovementId
                                     AND MovementString_InvNumberBranch.DescId = zc_MovementString_InvNumberBranch()
@@ -1146,10 +1151,10 @@ BEGIN
 
             LEFT JOIN tmpMovement_Data ON tmpMovement_Data.MovementId = tmpMI.MovementId
             LEFT JOIN Object As Object_DocumentTaxKind ON Object_DocumentTaxKind.Id = tmpMovement_Data.DocumentTaxKind
-            
+
             LEFT JOIN tmpPersonalBookkeeper ON tmpPersonalBookkeeper.BranchId = tmpMovement_Data.BranchId
             LEFT JOIN tmpMLM_Child ON tmpMLM_Child.MovementId = tmpMI.MovementId
-                                          
+
             LEFT JOIN ObjectHistory_JuridicalDetails_ViewByDate AS OH_JuridicalDetails_To
                                                                 ON OH_JuridicalDetails_To.JuridicalId = tmpMovement_Data.ToId
                                                                AND COALESCE (tmpMLM_Child.OperDate_Child, tmpMI.OperDate) >= OH_JuridicalDetails_To.StartDate AND COALESCE (tmpMLM_Child.OperDate_Child, tmpMI.OperDate) < OH_JuridicalDetails_To.EndDate
@@ -1164,7 +1169,7 @@ BEGIN
             LEFT JOIN ObjectString AS ObjectString_Retail_OKPO
                                    ON ObjectString_Retail_OKPO.ObjectId = ObjectLink_Juridical_Retail.ChildObjectId
                                   AND ObjectString_Retail_OKPO.DescId = zc_ObjectString_Retail_OKPO()
-                                  
+
 
             LEFT JOIN tmpUKTZED ON tmpUKTZED.GoodsGroupId = tmpMI.GoodsGroupId
             LEFT JOIN tmpTaxImport ON tmpTaxImport.GoodsGroupId = tmpMI.GoodsGroupId
@@ -1197,14 +1202,14 @@ BEGIN
                        , tmpData_all.Ord AS LineNum_order -- tmpData_all.LineNum AS LineNum_order
                          -- !!! ПЕРВАЯ Строка !!!
                        , (CASE WHEN vbIsNPP_calc = TRUE THEN tmpData_all.NPPTax_calc ELSE tmpData_all.LineNum END) :: Integer AS LineNum
-            
+
                        , tmpData_all.GoodsName
                        , tmpData_all.GoodsKindName
-            
+
                        , tmpData_all.GoodsName_two
                        , tmpData_all.MeasureName
                        , tmpData_all.MeasureCode
-            
+
                        , tmpData_all.inMovementId
                        , tmpData_all.MovementId
                        , tmpData_all.InvNumber
@@ -1212,103 +1217,107 @@ BEGIN
                        , tmpData_all.CHARCODE
                        , tmpData_all.N10
                        , tmpData_all.N10_ifin
-            
+
                        , tmpData_all.N9
                        , CASE WHEN tmpData_all.DocumentTaxKind NOT IN (zc_Enum_DocumentTaxKind_CorrectivePrice(), zc_Enum_DocumentTaxKind_CorrectivePriceSummaryJuridical()
-                                                                     , zc_Enum_DocumentTaxKind_Goods(), zc_Enum_DocumentTaxKind_Change()
-                                                                      )
+                                                                     , zc_Enum_DocumentTaxKind_Goods(), zc_Enum_DocumentTaxKind_Change())
                                AND tmpData_all.AmountTax_calc = tmpData_all.Amount
                                    THEN '103'  --4 --'Повернення товару або авансових платежів'
+
                               WHEN tmpData_all.DocumentTaxKind IN (zc_Enum_DocumentTaxKind_CorrectivePrice()
-                                                                 , zc_Enum_DocumentTaxKind_CorrectivePriceSummaryJuridical()
-                                                                  )
+                                                                 , zc_Enum_DocumentTaxKind_CorrectivePriceSummaryJuridical())
+                               AND tmpData_all.AmountTax_calc = tmpData_all.Amount
+                                   THEN tmpData_all.KindCode
+
+                              WHEN tmpData_all.DocumentTaxKind IN (zc_Enum_DocumentTaxKind_CorrectivePrice()
+                                                                 , zc_Enum_DocumentTaxKind_CorrectivePriceSummaryJuridical())
                                AND vbDocumentTaxKindId_tax IN (zc_Enum_DocumentTaxKind_TaxSummaryJuridicalS()
                                                              , zc_Enum_DocumentTaxKind_TaxSummaryJuridicalSR()
                                                              , zc_Enum_DocumentTaxKind_TaxSummaryPartnerS()
-                                                             , zc_Enum_DocumentTaxKind_TaxSummaryPartnerSR()
-                                                              )
+                                                             , zc_Enum_DocumentTaxKind_TaxSummaryPartnerSR())
                                    THEN '104'
+
                               ELSE tmpData_all.KindCode
                          END AS KindCode
-            
+
                        , CASE WHEN (tmpData_all.DocumentTaxKind NOT IN (zc_Enum_DocumentTaxKind_CorrectivePrice(), zc_Enum_DocumentTaxKind_CorrectivePriceSummaryJuridical()
-                                                                     , zc_Enum_DocumentTaxKind_Goods(), zc_Enum_DocumentTaxKind_Change()
-                                                                      )
+                                                                      , zc_Enum_DocumentTaxKind_Goods(), zc_Enum_DocumentTaxKind_Change())
                                  OR vbDocumentTaxKindId_tax IN (zc_Enum_DocumentTaxKind_TaxSummaryJuridicalS()
                                                               , zc_Enum_DocumentTaxKind_TaxSummaryJuridicalSR()
                                                               , zc_Enum_DocumentTaxKind_TaxSummaryPartnerS()
-                                                              , zc_Enum_DocumentTaxKind_TaxSummaryPartnerSR()
-                                                               ))
+                                                              , zc_Enum_DocumentTaxKind_TaxSummaryPartnerSR()))
                                AND tmpData_all.AmountTax_calc = tmpData_all.Amount
                                    THEN 'Повернення товару або авансових платежів'
+
                               ELSE tmpData_all.KindName
+
                          END :: TVarChar AS KindName
-            
+
                        , tmpData_all.PriceWithVAT
                        , tmpData_all.VATPercent
                        , tmpData_all.InvNumberPartner_ifin
-            
+
                        , tmpData_all.TotalSummVAT
                        , tmpData_all.TotalSummMVAT
                        , tmpData_all.TotalSummPVAT
                        , tmpData_all.TotalSumm
-            
+
                        , tmpData_all.ContractName
                        , tmpData_all.ContractSigningDate
                        , tmpData_all.ContractKind
                        , tmpData_all.PartnerCode
-            
+
                        , tmpData_all.InvNumber_Child
                        , tmpData_all.OperDate_Child
                        , tmpData_all.OperDate_begin_Child
-            
+
                        , tmpData_all.CopyForClient
                        , tmpData_all.CopyForUs
-            
+
                        , tmpData_all.x11
                        , tmpData_all.x12
                        , tmpData_all.PZOB           -- поле для Медка
                        , tmpData_all.OperDate_begin -- поле для Медка
-            
+
                        , tmpData_all.isERPN -- Підлягає реєстрації в ЄРПН покупцем !!!так криво для медка до 01.04.2016!!!
-            
+
                        , tmpData_all.ERPN -- Підлягає реєстрації в ЄРПН постачальником (продавцем)
-            
+
                        , tmpData_all.ERPN2 -- Підлягає реєстрації в ЄРПН покупцем
-            
+
                        , tmpData_all.NotNDSPayer
                        , tmpData_all.isNotNDSPayer
                        , tmpData_all.NotNDSPayerC1
                        , tmpData_all.NotNDSPayerC2
-            
+
                        , tmpData_all.PartnerAddress_From
-            
+
                        , tmpData_all.JuridicalName_To
                        , tmpData_all.JuridicalAddress_To
-            
+
                        , tmpData_all.OKPO_To
                        , tmpData_all.OKPO_To_ifin
                        , tmpData_all.INN_To
                        , tmpData_all.NumberVAT_To
                        , tmpData_all.AccounterName_To
                        , tmpData_all.AccounterINN_To
-            
+
                        , tmpData_all.BankAccount_To
                        , tmpData_all.BankName_To
                        , tmpData_all.BankMFO_To
                        , tmpData_all.Phone_To
-            
+
                        , tmpData_all.BuyerGLNCode
-            
+
                        , tmpData_all.SupplierGLNCode
-            
+
                        , tmpData_all.JuridicalName_From
                        , tmpData_all.JuridicalAddress_From
-            
+
                        , tmpData_all.OKPO_From
                        , tmpData_all.OKPO_From_ifin
                        , tmpData_all.INN_From
-            
+
                        , tmpData_all.InvNumberBranch_From
                        , tmpData_all.NumberVAT_From
                        , tmpData_all.AccounterName_From
@@ -1316,58 +1325,94 @@ BEGIN
                        , tmpData_all.BankName_From
                        , tmpData_all.BankMFO_From
                        , tmpData_all.Phone_From
-            
+
                        , tmpData_all.Id
                        , tmpData_all.GoodsCode
-            
+
                        , tmpData_all.GoodsCodeUKTZED
-            
+
                        , tmpData_all.GoodsCodeTaxImport
-            
+
                        , tmpData_all.GoodsCodeDKPP
-            
+
                        , tmpData_all.GoodsCodeTaxAction
-            
-            
+
+
                        , tmpData_all.Article_Juridical
                        , tmpData_all.BarCode_Juridical
                        , tmpData_all.ArticleGLN_Juridical
                        , tmpData_all.BarCodeGLN_Juridical
-            
+
                        , tmpData_all.Amount_orig
                        , (CASE WHEN tmpData_all.DocumentTaxKind IN (zc_Enum_DocumentTaxKind_CorrectivePrice(), zc_Enum_DocumentTaxKind_CorrectivePriceSummaryJuridical())
+                                AND vbIsNPP_calc = TRUE
+                                AND tmpData_all.AmountTax_calc = tmpData_all.Amount
+                                    -- !!!Корр. цены - Все кол-во!!!
+                                    THEN (tmpData_all.Amount_orig * tmpData_all.Price_orig / CASE WHEN tmpData_all.CountForPrice_orig > 0 THEN tmpData_all.CountForPrice_orig ELSE 1 END) :: NUMERIC (16, 2)
+
+                               WHEN tmpData_all.DocumentTaxKind IN (zc_Enum_DocumentTaxKind_CorrectivePrice(), zc_Enum_DocumentTaxKind_CorrectivePriceSummaryJuridical())
                                 AND vbIsNPP_calc = TRUE
                                 AND vbDocumentTaxKindId_tax NOT IN (zc_Enum_DocumentTaxKind_TaxSummaryJuridicalS()
                                                                   , zc_Enum_DocumentTaxKind_TaxSummaryJuridicalSR()
                                                                   , zc_Enum_DocumentTaxKind_TaxSummaryPartnerS()
-                                                                  , zc_Enum_DocumentTaxKind_TaxSummaryPartnerSR()
-                                                                   )
+                                                                  , zc_Enum_DocumentTaxKind_TaxSummaryPartnerSR())
                                     -- !!!Корр. цены!!!
                                     THEN 0 -- (tmpData_all.Amount_for_PriceCor * tmpData_all.PriceTax_calc) :: NUMERIC (16, 2)
-            
+
                                WHEN tmpData_all.CountForPrice_orig > 0
                                     THEN (tmpData_all.Amount_orig * tmpData_all.Price_orig / tmpData_all.CountForPrice_orig) :: NUMERIC (16, 2)
+
                                ELSE (tmpData_all.Amount_orig * tmpData_all.Price_orig) :: NUMERIC (16, 2)
                           END
                          ) :: TFloat AS AmountSumm_orig
 
                          -- !!! ПЕРВАЯ Строка !!!
                        , CASE WHEN tmpData_all.DocumentTaxKind IN (zc_Enum_DocumentTaxKind_CorrectivePrice(), zc_Enum_DocumentTaxKind_CorrectivePriceSummaryJuridical())
+                                AND tmpData_all.AmountTax_calc = tmpData_all.Amount
+                                   THEN -- !!!Корр. цены - Все кол-во!!!
+                                        0
+
+                              WHEN tmpData_all.DocumentTaxKind IN (zc_Enum_DocumentTaxKind_CorrectivePrice(), zc_Enum_DocumentTaxKind_CorrectivePriceSummaryJuridical())
                                AND vbDocumentTaxKindId_tax NOT IN (zc_Enum_DocumentTaxKind_TaxSummaryJuridicalS()
                                                                  , zc_Enum_DocumentTaxKind_TaxSummaryJuridicalSR()
                                                                  , zc_Enum_DocumentTaxKind_TaxSummaryPartnerS()
-                                                                 , zc_Enum_DocumentTaxKind_TaxSummaryPartnerSR()
-                                                                  )
+                                                                 , zc_Enum_DocumentTaxKind_TaxSummaryPartnerSR())
                                    THEN 0 -- !!!Корр. цены!!!
+
                               ELSE CASE WHEN vbIsNPP_calc = TRUE THEN tmpData_all.AmountTax_calc ELSE tmpData_all.Amount END
+
                          END :: TFloat AS Amount
-            
-                       , tmpData_all.Price
-            
-                       , tmpData_all.Amount_for_PriceCor
+
+                       , CASE WHEN tmpData_all.DocumentTaxKind IN (zc_Enum_DocumentTaxKind_CorrectivePrice(), zc_Enum_DocumentTaxKind_CorrectivePriceSummaryJuridical())
+                                AND tmpData_all.AmountTax_calc = tmpData_all.Amount
+                                   THEN -- !!!Корр. цены - Все кол-во!!!
+                                        0
+                              ELSE tmpData_all.Price
+                         END :: TFloat AS Price
+
+                         -- !!!Корр. цены!!!
+                       , CASE WHEN tmpData_all.DocumentTaxKind IN (zc_Enum_DocumentTaxKind_CorrectivePrice(), zc_Enum_DocumentTaxKind_CorrectivePriceSummaryJuridical())
+                                AND tmpData_all.AmountTax_calc = tmpData_all.Amount
+                                   THEN -- Все кол-во
+                                        tmpData_all.Amount_for_PriceCor_two
+                              ELSE tmpData_all.Amount_for_PriceCor
+                         END :: TFloat AS Amount_for_PriceCor
+
                          -- !!! ПЕРВАЯ Строка - Корр. цены!!!
                        , CASE WHEN vbIsNPP_calc = FALSE
-                                    THEN tmpData_all.Price_for_PriceCor
+                               AND tmpData_all.DocumentTaxKind IN (zc_Enum_DocumentTaxKind_CorrectivePrice(), zc_Enum_DocumentTaxKind_CorrectivePriceSummaryJuridical())
+                               AND tmpData_all.AmountTax_calc = tmpData_all.Amount
+                                   THEN -- Все кол-во
+                                        tmpData_all.Price_for_PriceCor_two
+
+                              WHEN vbIsNPP_calc = FALSE
+                                   THEN tmpData_all.Price_for_PriceCor
+
+                              WHEN tmpData_all.DocumentTaxKind IN (zc_Enum_DocumentTaxKind_CorrectivePrice(), zc_Enum_DocumentTaxKind_CorrectivePriceSummaryJuridical())
+                               AND tmpData_all.AmountTax_calc = tmpData_all.Amount
+                                   THEN -- Все кол-во
+                                        tmpData_all.PriceTax_calc
+
                               WHEN tmpData_all.DocumentTaxKind IN (zc_Enum_DocumentTaxKind_CorrectivePrice(), zc_Enum_DocumentTaxKind_CorrectivePriceSummaryJuridical())
                                AND vbDocumentTaxKindId_tax NOT IN (zc_Enum_DocumentTaxKind_TaxSummaryJuridicalS()
                                                                  , zc_Enum_DocumentTaxKind_TaxSummaryJuridicalSR()
@@ -1377,18 +1422,24 @@ BEGIN
                                    THEN tmpData_all.PriceTax_calc
                               ELSE 0
                          END :: TFloat AS Price_for_PriceCor
-                       
+
                          -- !!! ПЕРВАЯ Строка !!!
                        , (CASE WHEN tmpData_all.DocumentTaxKind IN (zc_Enum_DocumentTaxKind_CorrectivePrice(), zc_Enum_DocumentTaxKind_CorrectivePriceSummaryJuridical())
-                               AND vbDocumentTaxKindId_tax NOT IN (zc_Enum_DocumentTaxKind_TaxSummaryJuridicalS()
-                                                                 , zc_Enum_DocumentTaxKind_TaxSummaryJuridicalSR()
-                                                                 , zc_Enum_DocumentTaxKind_TaxSummaryPartnerS()
-                                                                 , zc_Enum_DocumentTaxKind_TaxSummaryPartnerSR()
-                                                                  )
+                                AND tmpData_all.AmountTax_calc = tmpData_all.Amount
+                                AND vbIsNPP_calc = TRUE
+                                    -- !!!Корр. цены - Все кол-во!!!
+                                    THEN (tmpData_all.AmountTax_calc * tmpData_all.PriceTax_calc) :: NUMERIC (16, 2)
+
+                               WHEN tmpData_all.DocumentTaxKind IN (zc_Enum_DocumentTaxKind_CorrectivePrice(), zc_Enum_DocumentTaxKind_CorrectivePriceSummaryJuridical())
+                                AND vbDocumentTaxKindId_tax NOT IN (zc_Enum_DocumentTaxKind_TaxSummaryJuridicalS()
+                                                                  , zc_Enum_DocumentTaxKind_TaxSummaryJuridicalSR()
+                                                                  , zc_Enum_DocumentTaxKind_TaxSummaryPartnerS()
+                                                                  , zc_Enum_DocumentTaxKind_TaxSummaryPartnerSR()
+                                                                   )
                                 AND vbIsNPP_calc = TRUE
                                     -- !!!Корр. цены - НЕ СВОДНАЯ НАЛОГ!!!
                                     THEN (tmpData_all.Amount_for_PriceCor * tmpData_all.PriceTax_calc) :: NUMERIC (16, 2)
-            
+
                                WHEN tmpData_all.DocumentTaxKind IN (zc_Enum_DocumentTaxKind_CorrectivePrice(), zc_Enum_DocumentTaxKind_CorrectivePriceSummaryJuridical())
                                AND vbDocumentTaxKindId_tax IN (zc_Enum_DocumentTaxKind_TaxSummaryJuridicalS()
                                                              , zc_Enum_DocumentTaxKind_TaxSummaryJuridicalSR()
@@ -1398,7 +1449,7 @@ BEGIN
                                 AND vbIsNPP_calc = TRUE
                                     -- !!!Корр. цены - СВОДНАЯ НАЛОГ!!!
                                     THEN (tmpData_all.AmountTax_calc * tmpData_all.PriceTax_calc) :: NUMERIC (16, 2)
-            
+
                                WHEN tmpData_all.CountForPrice_orig > 0
                                     THEN ((COALESCE (CASE WHEN vbIsNPP_calc = TRUE THEN tmpData_all.AmountTax_calc ELSE tmpData_all.Amount_orig END, 0))
                                         * tmpData_all.Price_orig / tmpData_all.CountForPrice_orig) :: NUMERIC (16, 2)
@@ -1406,42 +1457,42 @@ BEGIN
                           END
                         + tmpData_all.SummTaxDiff_calc
                          ) :: TFloat AS AmountSumm
-            
+
                        , tmpData_all.InvNumberBranch
                        , tmpData_all.InvNumberBranch_Child
-            
+
                        , tmpData_all.InvNumberMark
                        , tmpData_all.OperDatePartner_ReturnIn
                        , tmpData_all.InvNumberPartner_ReturnIn
-            
+
                        , tmpData_all.InvNumber_Sale
                        , tmpData_all.InvNumberPartner_Sale
                        , tmpData_all.InvNumberOrder_Sale
                        , tmpData_all.OperDatePartner_Sale
-            
+
                        , tmpData_all.InvNumberPartnerEDI
                        , tmpData_all.OperDatePartnerEDI
                        , tmpData_all.EDIId
                        , tmpData_all.SendDeclarAmount
-            
+
                        , tmpData_all.TaxKind -- признак  сводной корректировки
-            
+
                   FROM tmpData_all
                  UNION ALL
-                  SELECT 
+                  SELECT
                          tmpData_all.InvNumberPartner
                          -- !!! только для сортировки !!!
                        , tmpData_all.Ord AS LineNum_order -- tmpData_all.LineNum AS LineNum_order
                          -- !!! ВТОРАЯ Строка !!!
                        , tmpData_all.NPP_calc AS LineNum
-            
+
                        , tmpData_all.GoodsName
                        , tmpData_all.GoodsKindName
-            
+
                        , tmpData_all.GoodsName_two
                        , tmpData_all.MeasureName
                        , tmpData_all.MeasureCode
-            
+
                        , tmpData_all.inMovementId
                        , tmpData_all.MovementId
                        , tmpData_all.InvNumber
@@ -1449,7 +1500,7 @@ BEGIN
                        , tmpData_all.CHARCODE
                        , tmpData_all.N10
                        , tmpData_all.N10_ifin
-            
+
                        , tmpData_all.N9
                        , CASE WHEN tmpData_all.DocumentTaxKind IN (zc_Enum_DocumentTaxKind_CorrectivePrice()
                                                                  , zc_Enum_DocumentTaxKind_CorrectivePriceSummaryJuridical()
@@ -1466,68 +1517,68 @@ BEGIN
                        , tmpData_all.PriceWithVAT
                        , tmpData_all.VATPercent
                        , tmpData_all.InvNumberPartner_ifin
-            
+
                        , tmpData_all.TotalSummVAT
                        , tmpData_all.TotalSummMVAT
                        , tmpData_all.TotalSummPVAT
                        , tmpData_all.TotalSumm
-            
+
                        , tmpData_all.ContractName
                        , tmpData_all.ContractSigningDate
                        , tmpData_all.ContractKind
                        , tmpData_all.PartnerCode
-            
+
                        , tmpData_all.InvNumber_Child
                        , tmpData_all.OperDate_Child
                        , tmpData_all.OperDate_begin_Child
-            
+
                        , tmpData_all.CopyForClient
                        , tmpData_all.CopyForUs
-            
+
                        , tmpData_all.x11
                        , tmpData_all.x12
                        , tmpData_all.PZOB           -- поле для Медка
                        , tmpData_all.OperDate_begin -- поле для Медка
-            
+
                        , tmpData_all.isERPN -- Підлягає реєстрації в ЄРПН покупцем !!!так криво для медка до 01.04.2016!!!
-            
+
                        , tmpData_all.ERPN -- Підлягає реєстрації в ЄРПН постачальником (продавцем)
-            
+
                        , tmpData_all.ERPN2 -- Підлягає реєстрації в ЄРПН покупцем
-            
+
                        , tmpData_all.NotNDSPayer
                        , tmpData_all.isNotNDSPayer
                        , tmpData_all.NotNDSPayerC1
                        , tmpData_all.NotNDSPayerC2
-            
+
                        , tmpData_all.PartnerAddress_From
-            
+
                        , tmpData_all.JuridicalName_To
                        , tmpData_all.JuridicalAddress_To
-            
+
                        , tmpData_all.OKPO_To
                        , tmpData_all.OKPO_To_ifin
                        , tmpData_all.INN_To
                        , tmpData_all.NumberVAT_To
                        , tmpData_all.AccounterName_To
                        , tmpData_all.AccounterINN_To
-            
+
                        , tmpData_all.BankAccount_To
                        , tmpData_all.BankName_To
                        , tmpData_all.BankMFO_To
                        , tmpData_all.Phone_To
-            
+
                        , tmpData_all.BuyerGLNCode
-            
+
                        , tmpData_all.SupplierGLNCode
-            
+
                        , tmpData_all.JuridicalName_From
                        , tmpData_all.JuridicalAddress_From
-            
+
                        , tmpData_all.OKPO_From
                        , tmpData_all.OKPO_From_ifin
                        , tmpData_all.INN_From
-            
+
                        , tmpData_all.InvNumberBranch_From
                        , tmpData_all.NumberVAT_From
                        , tmpData_all.AccounterName_From
@@ -1535,23 +1586,23 @@ BEGIN
                        , tmpData_all.BankName_From
                        , tmpData_all.BankMFO_From
                        , tmpData_all.Phone_From
-            
+
                        , tmpData_all.Id
                        , tmpData_all.GoodsCode
-            
+
                        , tmpData_all.GoodsCodeUKTZED
-            
+
                        , tmpData_all.GoodsCodeTaxImport
-            
+
                        , tmpData_all.GoodsCodeDKPP
-            
+
                        , tmpData_all.GoodsCodeTaxAction
-            
+
                        , tmpData_all.Article_Juridical
                        , tmpData_all.BarCode_Juridical
                        , tmpData_all.ArticleGLN_Juridical
                        , tmpData_all.BarCodeGLN_Juridical
-            
+
                        , tmpData_all.Amount_orig
                        , CASE WHEN tmpData_all.DocumentTaxKind IN (zc_Enum_DocumentTaxKind_CorrectivePrice(), zc_Enum_DocumentTaxKind_CorrectivePriceSummaryJuridical())
                                AND vbDocumentTaxKindId_tax NOT IN (zc_Enum_DocumentTaxKind_TaxSummaryJuridicalS()
@@ -1561,7 +1612,7 @@ BEGIN
                                                                   )
                                    -- !!!Корр. цены!!!
                                     THEN 0 -- (tmpData_all.Amount_for_PriceCor * tmpData_all.PriceTax_calc) :: NUMERIC (16, 2)
-            
+
                                WHEN tmpData_all.CountForPrice_orig > 0
                                     THEN (tmpData_all.Amount_orig * tmpData_all.Price_orig / tmpData_all.CountForPrice_orig) :: NUMERIC (16, 2)
                                ELSE (tmpData_all.Amount_orig * tmpData_all.Price_orig) :: NUMERIC (16, 2)
@@ -1577,9 +1628,9 @@ BEGIN
                                    THEN 0 -- !!!Корр. цены!!!
                               ELSE -1 * (tmpData_all.AmountTax_calc - tmpData_all.Amount)
                          END :: TFloat AS Amount
-            
+
                        , tmpData_all.Price
-            
+
                        , tmpData_all.Amount_for_PriceCor
                          -- !!! ВТОРАЯ Строка - Корр. цены!!!
                        , CASE WHEN tmpData_all.DocumentTaxKind IN (zc_Enum_DocumentTaxKind_CorrectivePrice(), zc_Enum_DocumentTaxKind_CorrectivePriceSummaryJuridical())
@@ -1591,7 +1642,7 @@ BEGIN
                                     THEN -1 * (tmpData_all.PriceTax_calc - tmpData_all.Price_for_PriceCor)
                                ELSE 0
                          END :: TFloat AS Price_for_PriceCor
-            
+
                          -- !!! ВТОРАЯ Строка !!!
                        , CASE WHEN tmpData_all.DocumentTaxKind IN (zc_Enum_DocumentTaxKind_CorrectivePrice(), zc_Enum_DocumentTaxKind_CorrectivePriceSummaryJuridical())
                                AND vbDocumentTaxKindId_tax NOT IN (zc_Enum_DocumentTaxKind_TaxSummaryJuridicalS()
@@ -1601,7 +1652,7 @@ BEGIN
                                                                   )
                                    -- !!!Корр. цены - НЕ СВОДНАЯ НАЛОГ!!!
                                    THEN (tmpData_all.Amount_for_PriceCor * -1 * (tmpData_all.PriceTax_calc - tmpData_all.Price_for_PriceCor)) :: NUMERIC (16, 2)
-            
+
                               WHEN tmpData_all.DocumentTaxKind IN (zc_Enum_DocumentTaxKind_CorrectivePrice(), zc_Enum_DocumentTaxKind_CorrectivePriceSummaryJuridical())
                                AND vbDocumentTaxKindId_tax IN (zc_Enum_DocumentTaxKind_TaxSummaryJuridicalS()
                                                              , zc_Enum_DocumentTaxKind_TaxSummaryJuridicalSR()
@@ -1610,34 +1661,36 @@ BEGIN
                                                               )
                                    -- !!!Корр. цены - СВОДНАЯ НАЛОГ!!!
                                    THEN ((COALESCE (-1 * (tmpData_all.AmountTax_calc - tmpData_all.Amount), 0)) * tmpData_all.PriceTax_calc) :: NUMERIC (16, 2)
-            
+
                               WHEN tmpData_all.CountForPrice_orig > 0
                                    THEN ((COALESCE (-1 * (tmpData_all.AmountTax_calc - tmpData_all.Amount), 0)) * tmpData_all.Price_orig / tmpData_all.CountForPrice_orig) :: NUMERIC (16, 2)
                               ELSE ((COALESCE (-1 * (tmpData_all.AmountTax_calc - tmpData_all.Amount), 0)) * tmpData_all.Price_orig) :: NUMERIC (16, 2)
                          END :: TFloat AS AmountSumm
-            
+
                        , tmpData_all.InvNumberBranch
                        , tmpData_all.InvNumberBranch_Child
-            
+
                        , tmpData_all.InvNumberMark
                        , tmpData_all.OperDatePartner_ReturnIn
                        , tmpData_all.InvNumberPartner_ReturnIn
-            
+
                        , tmpData_all.InvNumber_Sale
                        , tmpData_all.InvNumberPartner_Sale
                        , tmpData_all.InvNumberOrder_Sale
                        , tmpData_all.OperDatePartner_Sale
-            
+
                        , tmpData_all.InvNumberPartnerEDI
                        , tmpData_all.OperDatePartnerEDI
                        , tmpData_all.EDIId
                        , tmpData_all.SendDeclarAmount
-            
+
                        , tmpData_all.TaxKind -- признак  сводной корректировки
-            
+
                    FROM tmpData_all
                    WHERE vbIsNPP_calc = TRUE
-                          -- !!!важно - показали ТОЛЬКО если есть еще что возвращать!!!
+                         -- !!!важно - если НЕ все кол-во!!!
+                     AND tmpData_all.AmountTax_calc <> tmpData_all.Amount
+                         -- !!!важно - показали ТОЛЬКО если есть еще что возвращать!!!
                      AND (tmpData_all.AmountTax_calc <> tmpData_all.Amount
                           -- или !!!Корр. цены!!!
                        OR tmpData_all.DocumentTaxKind IN (zc_Enum_DocumentTaxKind_CorrectivePrice(), zc_Enum_DocumentTaxKind_CorrectivePriceSummaryJuridical()
@@ -1646,20 +1699,20 @@ BEGIN
 
 
                  UNION ALL
-                  SELECT 
+                  SELECT
                          tmpData_all.InvNumberPartner
                          -- !!! только для сортировки !!!
                        , tmpData_all.Ord AS LineNum_order -- tmpData_all.LineNum AS LineNum_order
                          -- !!! ТРЕТЬЯ Строка !!!
                        , tmpData_all.NPPTaxNew_calc AS LineNum
-            
+
                        , tmpData_all.GoodsName
                        , tmpData_all.GoodsKindName
-            
+
                        , tmpData_all.GoodsName_two
                        , tmpData_all.MeasureName
                        , tmpData_all.MeasureCode
-            
+
                        , tmpData_all.inMovementId
                        , tmpData_all.MovementId
                        , tmpData_all.InvNumber
@@ -1667,9 +1720,14 @@ BEGIN
                        , tmpData_all.CHARCODE
                        , tmpData_all.N10
                        , tmpData_all.N10_ifin
-            
+
                        , tmpData_all.N9
                        , CASE WHEN tmpData_all.DocumentTaxKind IN (zc_Enum_DocumentTaxKind_CorrectivePrice()
+                                                                 , zc_Enum_DocumentTaxKind_CorrectivePriceSummaryJuridical()
+                                                                  )
+                               AND tmpData_all.AmountTax_calc = tmpData_all.Amount
+                                   THEN tmpData_all.KindCode
+                              WHEN tmpData_all.DocumentTaxKind IN (zc_Enum_DocumentTaxKind_CorrectivePrice()
                                                                  , zc_Enum_DocumentTaxKind_CorrectivePriceSummaryJuridical()
                                                                   )
                                AND vbDocumentTaxKindId_tax IN (zc_Enum_DocumentTaxKind_TaxSummaryJuridicalS()
@@ -1678,74 +1736,75 @@ BEGIN
                                                              , zc_Enum_DocumentTaxKind_TaxSummaryPartnerSR()
                                                               )
                                    THEN '104'
+                              
                               ELSE tmpData_all.KindCode
                          END AS KindCode
                        , tmpData_all.KindName
                        , tmpData_all.PriceWithVAT
                        , tmpData_all.VATPercent
                        , tmpData_all.InvNumberPartner_ifin
-            
+
                        , tmpData_all.TotalSummVAT
                        , tmpData_all.TotalSummMVAT
                        , tmpData_all.TotalSummPVAT
                        , tmpData_all.TotalSumm
-            
+
                        , tmpData_all.ContractName
                        , tmpData_all.ContractSigningDate
                        , tmpData_all.ContractKind
                        , tmpData_all.PartnerCode
-            
+
                        , tmpData_all.InvNumber_Child
                        , tmpData_all.OperDate_Child
                        , tmpData_all.OperDate_begin_Child
-            
+
                        , tmpData_all.CopyForClient
                        , tmpData_all.CopyForUs
-            
+
                        , tmpData_all.x11
                        , tmpData_all.x12
                        , tmpData_all.PZOB           -- поле для Медка
                        , tmpData_all.OperDate_begin -- поле для Медка
-            
+
                        , tmpData_all.isERPN -- Підлягає реєстрації в ЄРПН покупцем !!!так криво для медка до 01.04.2016!!!
-            
+
                        , tmpData_all.ERPN -- Підлягає реєстрації в ЄРПН постачальником (продавцем)
-            
+
                        , tmpData_all.ERPN2 -- Підлягає реєстрації в ЄРПН покупцем
-            
+
                        , tmpData_all.NotNDSPayer
                        , tmpData_all.isNotNDSPayer
                        , tmpData_all.NotNDSPayerC1
                        , tmpData_all.NotNDSPayerC2
-            
+
                        , tmpData_all.PartnerAddress_From
-            
+
                        , tmpData_all.JuridicalName_To
                        , tmpData_all.JuridicalAddress_To
-            
+
                        , tmpData_all.OKPO_To
                        , tmpData_all.OKPO_To_ifin
                        , tmpData_all.INN_To
                        , tmpData_all.NumberVAT_To
                        , tmpData_all.AccounterName_To
                        , tmpData_all.AccounterINN_To
-            
+
                        , tmpData_all.BankAccount_To
                        , tmpData_all.BankName_To
                        , tmpData_all.BankMFO_To
                        , tmpData_all.Phone_To
-            
+
                        , tmpData_all.BuyerGLNCode
-            
+
                        , tmpData_all.SupplierGLNCode
-            
+
                        , tmpData_all.JuridicalName_From
                        , tmpData_all.JuridicalAddress_From
-            
+
                        , tmpData_all.OKPO_From
                        , tmpData_all.OKPO_From_ifin
                        , tmpData_all.INN_From
-            
+
                        , tmpData_all.InvNumberBranch_From
                        , tmpData_all.NumberVAT_From
                        , tmpData_all.AccounterName_From
@@ -1753,75 +1812,91 @@ BEGIN
                        , tmpData_all.BankName_From
                        , tmpData_all.BankMFO_From
                        , tmpData_all.Phone_From
-            
+
                        , tmpData_all.Id
                        , tmpData_all.GoodsCode
-            
+
                        , tmpData_all.GoodsCodeUKTZED
-            
+
                        , tmpData_all.GoodsCodeTaxImport
-            
+
                        , tmpData_all.GoodsCodeDKPP
-            
+
                        , tmpData_all.GoodsCodeTaxAction
-            
+
                        , tmpData_all.Article_Juridical
                        , tmpData_all.BarCode_Juridical
                        , tmpData_all.ArticleGLN_Juridical
                        , tmpData_all.BarCodeGLN_Juridical
-            
+
                        , tmpData_all.Amount_orig
                        , CASE WHEN tmpData_all.DocumentTaxKind IN (zc_Enum_DocumentTaxKind_CorrectivePrice(), zc_Enum_DocumentTaxKind_CorrectivePriceSummaryJuridical())
+                               AND tmpData_all.AmountTax_calc = tmpData_all.Amount
+                                   -- !!!Корр. цены!!!
+                                    THEN (tmpData_all.Amount_orig * tmpData_all.Price_orig / CASE WHEN tmpData_all.CountForPrice_orig > 0 THEN tmpData_all.CountForPrice_orig ELSE 1 END) :: NUMERIC (16, 2)
+
+                              WHEN tmpData_all.DocumentTaxKind IN (zc_Enum_DocumentTaxKind_CorrectivePrice(), zc_Enum_DocumentTaxKind_CorrectivePriceSummaryJuridical())
                                AND vbDocumentTaxKindId_tax NOT IN (zc_Enum_DocumentTaxKind_TaxSummaryJuridicalS()
                                                                  , zc_Enum_DocumentTaxKind_TaxSummaryJuridicalSR()
                                                                  , zc_Enum_DocumentTaxKind_TaxSummaryPartnerS()
-                                                                 , zc_Enum_DocumentTaxKind_TaxSummaryPartnerSR()
-                                                                  )
+                                                                 , zc_Enum_DocumentTaxKind_TaxSummaryPartnerSR())
                                    -- !!!Корр. цены!!!
                                     THEN 0 -- (tmpData_all.Amount_for_PriceCor * tmpData_all.PriceTax_calc) :: NUMERIC (16, 2)
-            
-                               WHEN tmpData_all.CountForPrice_orig > 0
-                                    THEN (tmpData_all.Amount_orig * tmpData_all.Price_orig / tmpData_all.CountForPrice_orig) :: NUMERIC (16, 2)
-                               ELSE (tmpData_all.Amount_orig * tmpData_all.Price_orig) :: NUMERIC (16, 2)
+
+                              WHEN tmpData_all.CountForPrice_orig > 0
+                                   THEN (tmpData_all.Amount_orig * tmpData_all.Price_orig / tmpData_all.CountForPrice_orig) :: NUMERIC (16, 2)
+                              ELSE (tmpData_all.Amount_orig * tmpData_all.Price_orig) :: NUMERIC (16, 2)
                          END :: TFloat AS AmountSumm_orig
 
                          -- !!! ТРЕТЬЯ Строка !!!
                        , CASE WHEN 1=0
                                    THEN 0 -- !!!Корр. цены!!!
+                              WHEN tmpData_all.AmountTax_calc = tmpData_all.Amount
+                                   THEN 0 -- !!!Корр. цены!!!
                               ELSE -1 * tmpData_all.Amount
                          END :: TFloat AS Amount
-            
-                       , (tmpData_all.PriceTax_calc - tmpData_all.Price_orig) :: TFloat AS Price
-            
-                       , 0  :: TFloat AS Amount_for_PriceCor
+
+                       , CASE WHEN tmpData_all.AmountTax_calc = tmpData_all.Amount
+                                   THEN 0 -- !!!Корр. цены!!!
+                              ELSE (tmpData_all.PriceTax_calc - tmpData_all.Price_orig)
+                         END :: TFloat AS Price
+
+                       , CASE WHEN tmpData_all.AmountTax_calc = tmpData_all.Amount
+                                   THEN 1 * tmpData_all.Amount -- !!!Корр. цены!!!
+                              ELSE 0
+                         END :: TFloat AS Amount_for_PriceCor
+
                          -- !!! ТРЕТЬЯ Строка - Корр. цены!!!
-                       , 0 :: TFloat AS Price_for_PriceCor
-            
+                       , CASE WHEN tmpData_all.AmountTax_calc = tmpData_all.Amount
+                                   THEN -1 * (tmpData_all.PriceTax_calc - tmpData_all.Price_orig) -- !!!Корр. цены!!!
+                              ELSE 0
+                         END :: TFloat AS Price_for_PriceCor
+
                          -- !!! ТРЕТЬЯ Строка !!!
                        , CASE WHEN tmpData_all.CountForPrice_orig > 0
                                    THEN (COALESCE (-1 * tmpData_all.Amount, 0) * (tmpData_all.PriceTax_calc - tmpData_all.Price_orig) / tmpData_all.CountForPrice_orig) :: NUMERIC (16, 2)
                               ELSE (COALESCE (-1 * tmpData_all.Amount, 0) * (tmpData_all.PriceTax_calc - tmpData_all.Price_orig)) :: NUMERIC (16, 2)
                          END :: TFloat AS AmountSumm
-            
+
                        , tmpData_all.InvNumberBranch
                        , tmpData_all.InvNumberBranch_Child
-            
+
                        , tmpData_all.InvNumberMark
                        , tmpData_all.OperDatePartner_ReturnIn
                        , tmpData_all.InvNumberPartner_ReturnIn
-            
+
                        , tmpData_all.InvNumber_Sale
                        , tmpData_all.InvNumberPartner_Sale
                        , tmpData_all.InvNumberOrder_Sale
                        , tmpData_all.OperDatePartner_Sale
-            
+
                        , tmpData_all.InvNumberPartnerEDI
                        , tmpData_all.OperDatePartnerEDI
                        , tmpData_all.EDIId
                        , tmpData_all.SendDeclarAmount
-            
+
                        , tmpData_all.TaxKind -- признак  сводной корректировки
-            
+
                    FROM tmpData_all
                    WHERE vbIsNPP_calc = TRUE
                      AND tmpData_all.DocumentTaxKind IN (zc_Enum_DocumentTaxKind_CorrectivePrice(), zc_Enum_DocumentTaxKind_CorrectivePriceSummaryJuridical())
@@ -1866,7 +1941,7 @@ BEGIN
            /*, CASE WHEN vbOperDate_begin <  '01.12.2018' THEN tmpData_all.TotalSummVAT
                   WHEN vbOperDate_begin >= '01.12.2018' THEN tmpMI_SummVat.SummVat
              END AS TotalSummVAT*/
-             
+
            , tmpData_all.TotalSummVAT
            , tmpData_all.TotalSummMVAT
            , tmpData_all.TotalSummPVAT
@@ -2046,7 +2121,7 @@ BEGIN
                                  FROM MovementItem
                                       LEFT JOIN MovementItemFloat AS MIFloat_MovementId
                                                                   ON MIFloat_MovementId.MovementItemId = MovementItem.Id
-                                                                 AND MIFloat_MovementId.DescId         = zc_MIFloat_MovementId()                         
+                                                                 AND MIFloat_MovementId.DescId         = zc_MIFloat_MovementId()
                                       LEFT JOIN Movement AS Movement_Sale ON Movement_Sale.Id = MIFloat_MovementId.ValueData :: Integer
                                       LEFT JOIN MovementLinkMovement AS MovementLinkMovement_Tax
                                                                      ON MovementLinkMovement_Tax.MovementId = Movement_Sale.Id
@@ -2154,7 +2229,7 @@ BEGIN
                                                           -- AND MIFloat_Price.ValueData <> 0
                              GROUP BY tmpTaxCorrective_MI.GoodsId
                                     , MIFloat_Price.ValueData
-                     
+
                             )
        -- сам запрос
        SELECT COALESCE (tmp.GoodsId, 1) AS GoodsId
