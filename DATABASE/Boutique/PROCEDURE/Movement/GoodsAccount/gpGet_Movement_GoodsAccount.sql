@@ -39,7 +39,7 @@ BEGIN
      IF inOperDate < '01.01.2017' OR vbUnitId_User > 0 OR 1=1 THEN inOperDate:= CURRENT_DATE; END IF;
 
      -- пытаемся найти последний непроведенный документ
-     IF COALESCE (inMovementId, 0) = 0
+     /*IF COALESCE (inMovementId, 0) = 0
      THEN
          inMovementId:= (SELECT tmp.Id
                          FROM (SELECT Movement.Id
@@ -58,7 +58,7 @@ BEGIN
                                  AND Movement.OperDate = CURRENT_DATE
                                ) AS tmp
                          WHERE tmp.Ord = 1);
-     END IF;
+     END IF;*/
 
 
      IF COALESCE (inMovementId, 0) = 0
