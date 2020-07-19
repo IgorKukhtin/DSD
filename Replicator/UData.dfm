@@ -33,7 +33,9 @@ object dmData: TdmData
   object qrySelectReplicaSQL: TZReadOnlyQuery
     Connection = conMaster
     SQL.Strings = (
-      'select * from gpSelect_Replica_commands(:id_start, :rec_count);')
+      
+        'select * from _replica.gpSelect_Replica_commands(:id_start, :rec' +
+        '_count);')
     Params = <
       item
         DataType = ftInteger
@@ -74,7 +76,9 @@ object dmData: TdmData
   object qryLastId: TZReadOnlyQuery
     Connection = conMaster
     SQL.Strings = (
-      'select * from gpSelect_Replica_LastId(:id_start, :rec_count)')
+      
+        'select * from _replica.gpSelect_Replica_LastId(:id_start, :rec_c' +
+        'ount)')
     Params = <
       item
         DataType = ftInteger
