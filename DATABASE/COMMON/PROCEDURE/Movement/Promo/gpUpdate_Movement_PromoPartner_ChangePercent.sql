@@ -23,12 +23,12 @@ BEGIN
 
      -- вытягиваем скидку из договоров. 
      INSERT INTO _tmpChangePercent (ChangePercent, Count)
-     SELECT DISTINCT View_ContractCondition_Value.ChangePercent
+     SELECT DISTINCT COALESCE (View_ContractCondition_Value.ChangePercent,0) AS ChangePercent
           , 1 AS Count
      FROM Movement AS Movement_Promo 
-        INNER JOIN MovementLinkObject AS MovementLinkObject_Contract
-                                      ON MovementLinkObject_Contract.MovementId = Movement_Promo.Id
-                                     AND MovementLinkObject_Contract.DescId = zc_MovementLinkObject_Contract()
+        LEFT JOIN MovementLinkObject AS MovementLinkObject_Contract
+                                     ON MovementLinkObject_Contract.MovementId = Movement_Promo.Id
+                                    AND MovementLinkObject_Contract.DescId = zc_MovementLinkObject_Contract()
         LEFT JOIN Object_ContractCondition_ValueView AS View_ContractCondition_Value ON View_ContractCondition_Value.ContractId = MovementLinkObject_Contract.ObjectId
      WHERE Movement_Promo.DescId = zc_Movement_PromoPartner()
        AND Movement_Promo.ParentId = inMovementId
