@@ -1,8 +1,8 @@
--- Function: gpSelect_Replica_commands()
+-- Function: _replica.gpSelect_Replica_commands()
 
-DROP FUNCTION IF EXISTS gpSelect_Replica_commands (Integer, Integer);
+DROP FUNCTION IF EXISTS _replica.gpSelect_Replica_commands (Integer, Integer);
 
-CREATE OR REPLACE FUNCTION gpSelect_Replica_commands (
+CREATE OR REPLACE FUNCTION _replica.gpSelect_Replica_commands (
     IN inId_start     Integer, -- значение table_update_data.Id, начиная с которого будем реплицировать данные
     IN inRec_count    Integer  -- количество записей из table_update_data, которое предполагается реплицировать
 )
@@ -27,7 +27,7 @@ BEGIN
 
     RETURN QUERY
         SELECT SRU.Value 
-        FROM   gpSelect_Replica_union(inId_start := inId_start,
+        FROM   _replica.gpSelect_Replica_union(inId_start := inId_start,
                                       inId_end   := vbId_End
                                      )
         AS SRU;
@@ -42,4 +42,4 @@ $BODY$
 */
 
 -- тест
--- SELECT * FROM gpSelect_Replica_commands (inId_start:= 1, inRec_count:= 10000)
+-- SELECT * FROM _replica.gpSelect_Replica_commands (inId_start:= 1, inRec_count:= 10000)

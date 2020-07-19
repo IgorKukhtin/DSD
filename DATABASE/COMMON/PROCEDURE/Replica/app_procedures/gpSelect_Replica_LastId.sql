@@ -1,8 +1,8 @@
--- Function: gpSelect_Replica_LastId()
+-- Function: _replica.gpSelect_Replica_LastId()
 
-DROP FUNCTION IF EXISTS gpSelect_Replica_LastId (Integer, Integer);
+DROP FUNCTION IF EXISTS _replica.gpSelect_Replica_LastId (Integer, Integer);
 
-CREATE OR REPLACE FUNCTION gpSelect_Replica_LastId (
+CREATE OR REPLACE FUNCTION _replica.gpSelect_Replica_LastId (
     IN inId_start     Integer, -- значение table_update_data.Id, начиная с которого будем реплицировать данные
     IN inRec_count    Integer  -- количество записей из table_update_data, которое предполагается реплицировать
 )
@@ -36,4 +36,4 @@ $BODY$
 */
 
 -- тест
--- SELECT * FROM gpSelect_Replica_LastId (inId_start:= 1, inRec_count:= 10000)
+-- SELECT * FROM _replica.gpSelect_Replica_LastId (inId_start:= 1, inRec_count:= 10000)
