@@ -233,16 +233,18 @@ procedure TfrmMain.btnReplicaCommandsSQLClick(Sender: TObject);
 const
   cStartPerlica = 'Старт репликации: %d, диапазон: %d, SQL:' + #13#10 + '%s';
   cCmdCountMsg = 'В пакете всего команд: %d';
+var
+  iStart, iRange: Integer;
 begin
+  iStart := StrToIntDef(edtStartReplica.Text, 0);
+  iRange := seRange.Value;
+
   // формирование SelectSQL для ZQuery, который вернет набор команд репликации
-  FData.BuildReplicaCommandsSQL( TSettings.ReplicaStart, TSettings.ReplicaRange);
+  FData.BuildReplicaCommandsSQL(iStart, iRange);
   LogMessage(
     Format(
-      cStartPerlica, [
-        StrToIntDef(edtStartReplica.Text, 0),
-        seRange.Value,
-        FData.qrySelectReplicaCmd.SQL.Text
-      ])
+      cStartPerlica, [iStart, iRange, FData.qrySelectReplicaCmd.SQL.Text]
+    )
   );
 
   // количество команд репликации
@@ -303,7 +305,8 @@ end;
 
 procedure TfrmMain.btnUseMinIdClick(Sender: TObject);
 begin
-  edtStartReplica.Text := IntToStr(FData.MinId);
+  edtStartReplica.Text   := IntToStr(FData.MinId);
+  TSettings.ReplicaStart := StrToIntDef(edtStartReplica.Text, 0);
 end;
 
 procedure TfrmMain.chkShowLogClick(Sender: TObject);
