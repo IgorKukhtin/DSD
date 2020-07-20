@@ -4031,6 +4031,10 @@
 				<Form>Report_CheckBonusForm</Form>
 				<DesignClass>TParentForm</DesignClass>
 			</DCCReference>
+			<DCCReference Include="..\..\Forms\Report\Report_CheckBonus_SaleReturn.pas">
+				<Form>Report_CheckBonus_SaleReturnForm</Form>
+				<DesignClass>TParentForm</DesignClass>
+			</DCCReference>
 			<BuildConfiguration Include="Release">
 				<Key>Cfg_2</Key>
 				<CfgParent>Base</CfgParent>
