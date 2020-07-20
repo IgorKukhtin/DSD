@@ -93,6 +93,8 @@ BEGIN
     PERFORM lpInsertUpdate_MovementString (zc_MovementString_BookingStatus(), ioId, inBookingStatus);
     -- Отмечаем документ как отложенный
     PERFORM lpInsertUpdate_MovementBoolean (zc_MovementBoolean_Deferred(), ioId, TRUE);
+    -- сохранили менеджера
+    PERFORM lpInsertUpdate_MovementLinkObject(zc_MovementLinkObject_CheckMember(), ioId, 682919);
 
     -- сохранили протокол
     PERFORM lpInsert_MovementProtocol (ioId, vbUserId, vbIsInsert);

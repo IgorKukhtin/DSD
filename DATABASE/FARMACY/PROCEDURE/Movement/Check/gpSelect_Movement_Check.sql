@@ -108,7 +108,8 @@ BEGIN
            , Object_DiscountCard.ValueData                      AS DiscountCardName
            , Object_DiscountExternal.ValueData                  AS DiscountExternalName
            , MovementString_BayerPhone.ValueData                AS BayerPhone
-           , MovementString_InvNumberOrder.ValueData            AS InvNumberOrder
+           , COALESCE(MovementString_InvNumberOrder.ValueData,
+             MovementString_BookingId.ValueData)                AS InvNumberOrder
            , Object_ConfirmedKind.ValueData                     AS ConfirmedKindName
            , Object_ConfirmedKindClient.ValueData               AS ConfirmedKindClientName
 
@@ -355,6 +356,10 @@ BEGIN
                                          ON MovementLinkObject_CheckSourceKind.MovementId =  Movement_Check.Id
                                         AND MovementLinkObject_CheckSourceKind.DescId = zc_MovementLinkObject_CheckSourceKind()
             LEFT JOIN Object AS Object_CheckSourceKind ON Object_CheckSourceKind.Id = MovementLinkObject_CheckSourceKind.ObjectId
+
+            LEFT JOIN MovementString AS MovementString_BookingId
+                                     ON MovementString_BookingId.MovementId = Movement_Check.Id
+                                    AND MovementString_BookingId.DescId = zc_MovementString_BookingId()
       ;
 
 END;

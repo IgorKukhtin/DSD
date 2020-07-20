@@ -113,6 +113,11 @@ type
     actPUSHCompile: TdsdShowPUSHMessage;
     actShowDeviated: TBooleanStoredProcAction;
     dxBarButton2: TdxBarButton;
+    actOpenInventoryHouseholdInventory: TMultiAction;
+    bbOpenInventoryHouseholdInventory: TdxBarButton;
+    actExecGetInventoryHouseholdInventoryID: TdsdExecStoredProc;
+    actOFInventoryHouseholdInventory: TdsdOpenForm;
+    spGetInventoryHouseholdInventoryID: TdsdStoredProc;
   private
     { Private declarations }
   public

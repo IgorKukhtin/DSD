@@ -1,28 +1,28 @@
 inherited OrderInternalPromoForm: TOrderInternalPromoForm
   Caption = #1047#1072#1103#1074#1082#1080' '#1074#1085#1091#1090#1088#1077#1085#1085#1080#1077' ('#1084#1072#1088#1082#1077#1090'-'#1090#1086#1074#1072#1088#1099')'
   ClientHeight = 564
-  ClientWidth = 814
+  ClientWidth = 1032
   AddOnFormData.AddOnFormRefresh.ParentList = 'Sale'
-  ExplicitWidth = 830
+  ExplicitWidth = 1048
   ExplicitHeight = 603
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
     Top = 116
-    Width = 814
+    Width = 1032
     Height = 348
     ExplicitTop = 116
-    ExplicitWidth = 814
+    ExplicitWidth = 1032
     ExplicitHeight = 348
     ClientRectBottom = 348
-    ClientRectRight = 814
+    ClientRectRight = 1032
     inherited tsMain: TcxTabSheet
-      ExplicitWidth = 814
+      ExplicitWidth = 1032
       ExplicitHeight = 324
       inherited cxGrid: TcxGrid
-        Width = 814
+        Width = 1032
         Height = 144
-        ExplicitWidth = 814
+        ExplicitWidth = 1032
         ExplicitHeight = 144
         inherited cxGridDBTableView: TcxGridDBTableView
           DataController.Summary.DefaultGroupSummaryItems = <
@@ -100,6 +100,13 @@ inherited OrderInternalPromoForm: TOrderInternalPromoForm
             HeaderHint = #1055#1086#1089#1090'. '#1074' '#1089#1087#1080#1089#1082#1077' '#1076#1083#1103' '#1086#1090#1095#1077#1090#1072
             Options.Editing = False
             Width = 63
+          end
+          object isChecked: TcxGridDBColumn
+            Caption = #1044#1083#1103' '#1088#1072#1089#1095#1077#1090#1072
+            DataBinding.FieldName = 'isChecked'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 57
           end
           object GoodsGroupName: TcxGridDBColumn
             Caption = #1043#1088#1091#1087#1087#1072' '#1090#1086#1074#1072#1088#1072
@@ -305,7 +312,7 @@ inherited OrderInternalPromoForm: TOrderInternalPromoForm
       object cxGrid1: TcxGrid
         Left = 0
         Top = 152
-        Width = 814
+        Width = 1032
         Height = 172
         Align = alBottom
         PopupMenu = PopupMenu
@@ -519,7 +526,7 @@ inherited OrderInternalPromoForm: TOrderInternalPromoForm
       object cxSplitter1: TcxSplitter
         Left = 0
         Top = 144
-        Width = 814
+        Width = 1032
         Height = 8
         Touch.ParentTabletOptions = False
         Touch.TabletOptions = [toPressAndHold]
@@ -529,10 +536,10 @@ inherited OrderInternalPromoForm: TOrderInternalPromoForm
     end
   end
   inherited DataPanel: TPanel
-    Width = 814
+    Width = 1032
     Height = 90
     TabOrder = 3
-    ExplicitWidth = 814
+    ExplicitWidth = 1032
     ExplicitHeight = 90
     inherited edInvNumber: TcxTextEdit
       Left = 168
@@ -606,7 +613,7 @@ inherited OrderInternalPromoForm: TOrderInternalPromoForm
     object cxLabel5: TcxLabel
       Left = 678
       Top = 46
-      Caption = #1050#1088#1083#1080#1095#1077#1089#1090#1074#1086' '#1076#1083#1103' '#1088#1072#1089#1087#1088'.'
+      Caption = #1050#1086#1083#1080#1095#1077#1089#1090#1074#1086' '#1076#1083#1103' '#1088#1072#1089#1087#1088'.'
     end
   end
   object edStartSale: TcxDateEdit [2]
@@ -624,7 +631,7 @@ inherited OrderInternalPromoForm: TOrderInternalPromoForm
   object cxSplitter2: TcxSplitter [4]
     Left = 0
     Top = 464
-    Width = 814
+    Width = 1032
     Height = 8
     Touch.ParentTabletOptions = False
     Touch.TabletOptions = [toPressAndHold]
@@ -634,7 +641,7 @@ inherited OrderInternalPromoForm: TOrderInternalPromoForm
   object cxGrid2: TcxGrid [5]
     Left = 0
     Top = 472
-    Width = 814
+    Width = 1032
     Height = 92
     Align = alBottom
     PopupMenu = PopupMenu
@@ -1630,6 +1637,56 @@ inherited OrderInternalPromoForm: TOrderInternalPromoForm
         end>
       isShowModal = False
     end
+    object actSetChecked: TMultiAction
+      Category = 'DSDLib'
+      MoveParams = <>
+      AfterAction = actRefreshMI
+      ActionList = <
+        item
+          Action = actExecSetChecked
+        end>
+      View = cxGridDBTableView
+      QuestionBeforeExecute = #1059#1089#1090#1072#1085#1086#1074#1080#1090#1100' "'#1044#1083#1103' '#1088#1072#1089#1095#1077#1090#1072'" '#1085#1072' '#1074#1099#1073#1088#1072#1085#1085#1099#1077' '#1087#1086#1079#1080#1094#1080#1080'?'
+      Caption = #1059#1089#1090#1072#1085#1086#1074#1080#1090#1100' "'#1044#1083#1103' '#1088#1072#1089#1095#1077#1090#1072'"'
+      Hint = #1059#1089#1090#1072#1085#1086#1074#1080#1090#1100' "'#1044#1083#1103' '#1088#1072#1089#1095#1077#1090#1072'"'
+      ImageIndex = 79
+    end
+    object actExecSetChecked: TdsdExecStoredProc
+      Category = 'DSDLib'
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      StoredProc = spSetChecked
+      StoredProcList = <
+        item
+          StoredProc = spSetChecked
+        end>
+      Caption = 'actExecSetChecked'
+    end
+    object actClearChecked: TMultiAction
+      Category = 'DSDLib'
+      MoveParams = <>
+      AfterAction = actRefreshMI
+      ActionList = <
+        item
+          Action = actExecClearChecked
+        end>
+      View = cxGridDBTableView
+      QuestionBeforeExecute = #1054#1095#1080#1089#1090#1080#1090#1100' "'#1044#1083#1103' '#1088#1072#1089#1095#1077#1090#1072'" '#1085#1072' '#1074#1099#1073#1088#1072#1085#1085#1099#1077' '#1087#1086#1079#1080#1094#1080#1080'?'
+      Caption = #1054#1095#1080#1089#1090#1080#1090#1100' "'#1044#1083#1103' '#1088#1072#1089#1095#1077#1090#1072'"'
+      Hint = #1054#1095#1080#1089#1090#1080#1090#1100' "'#1044#1083#1103' '#1088#1072#1089#1095#1077#1090#1072'"'
+      ImageIndex = 52
+    end
+    object actExecClearChecked: TdsdExecStoredProc
+      Category = 'DSDLib'
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      StoredProc = spClearChecked
+      StoredProcList = <
+        item
+          StoredProc = spClearChecked
+        end>
+      Caption = 'actExecClearChecked'
+    end
   end
   inherited spSelect: TdsdStoredProc
     StoredProcName = 'gpSelect_MI_OrderInternalPromo'
@@ -1803,6 +1860,18 @@ inherited OrderInternalPromoForm: TOrderInternalPromoForm
         end
         item
           Visible = True
+          ItemName = 'bbSetChecked'
+        end
+        item
+          Visible = True
+          ItemName = 'bbClearChecked'
+        end
+        item
+          Visible = True
+          ItemName = 'dxBarStatic'
+        end
+        item
+          Visible = True
           ItemName = 'bbMovementItemContainer'
         end
         item
@@ -1920,6 +1989,14 @@ inherited OrderInternalPromoForm: TOrderInternalPromoForm
     end
     object dxBarButton2: TdxBarButton
       Action = actDistributionCalculation
+      Category = 0
+    end
+    object bbSetChecked: TdxBarButton
+      Action = actSetChecked
+      Category = 0
+    end
+    object bbClearChecked: TdxBarButton
+      Action = actClearChecked
       Category = 0
     end
   end
@@ -2941,5 +3018,57 @@ inherited OrderInternalPromoForm: TOrderInternalPromoForm
     PackSize = 1
     Left = 106
     Top = 368
+  end
+  object spSetChecked: TdsdStoredProc
+    StoredProcName = 'gpUpdate_MI_OrderInternalPromo_Checked'
+    DataSets = <>
+    OutputType = otResult
+    Params = <
+      item
+        Name = 'inId'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'Id'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inisChecked'
+        Value = True
+        DataType = ftBoolean
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end>
+    PackSize = 1
+    NeedResetData = True
+    ParamKeyField = 'inMovementId'
+    Left = 536
+    Top = 408
+  end
+  object spClearChecked: TdsdStoredProc
+    StoredProcName = 'gpUpdate_MI_OrderInternalPromo_Checked'
+    DataSets = <>
+    OutputType = otResult
+    Params = <
+      item
+        Name = 'inId'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'Id'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inisChecked'
+        Value = False
+        DataType = ftBoolean
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end>
+    PackSize = 1
+    NeedResetData = True
+    ParamKeyField = 'inMovementId'
+    Left = 608
+    Top = 408
   end
 end

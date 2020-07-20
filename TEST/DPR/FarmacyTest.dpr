@@ -913,7 +913,9 @@ uses
   ComputerAccessories in '..\..\FormsFarmacy\Guides\ComputerAccessories.pas' {ComputerAccessoriesForm: TParentForm},
   ComputerAccessoriesEdit in '..\..\FormsFarmacy\Guides\ComputerAccessoriesEdit.pas' {ComputerAccessoriesEditForm: TParentForm},
   ComputerAccessoriesRegister in '..\..\FormsFarmacy\Document\ComputerAccessoriesRegister.pas' {ComputerAccessoriesRegisterForm: TParentForm},
-  ComputerAccessoriesRegisterJournal in '..\..\FormsFarmacy\Document\ComputerAccessoriesRegisterJournal.pas' {ComputerAccessoriesRegisterJournalForm: TParentForm};
+  ComputerAccessoriesRegisterJournal in '..\..\FormsFarmacy\Document\ComputerAccessoriesRegisterJournal.pas' {ComputerAccessoriesRegisterJournalForm: TParentForm},
+  InventoryHouseholdInventory in '..\..\FormsFarmacy\Document\InventoryHouseholdInventory.pas' {InventoryHouseholdInventoryForm: TParentForm},
+  InventoryHouseholdInventoryJournal in '..\..\FormsFarmacy\Document\InventoryHouseholdInventoryJournal.pas' {InventoryHouseholdInventoryJournalForm: TParentForm};
 
 {$R *.res}
 {$R DevExpressRus.res}

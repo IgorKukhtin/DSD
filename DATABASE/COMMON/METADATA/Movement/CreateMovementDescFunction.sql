@@ -405,9 +405,14 @@ CREATE OR REPLACE FUNCTION zc_Movement_ComputerAccessoriesRegister() RETURNS Int
 INSERT INTO MovementDesc (Code, ItemName)
   SELECT 'zc_Movement_ComputerAccessoriesRegister', 'Компьютерные аксессуары' WHERE NOT EXISTS (SELECT * FROM MovementDesc WHERE Code = 'zc_Movement_ComputerAccessoriesRegister');
 
+CREATE OR REPLACE FUNCTION zc_Movement_InventoryHouseholdInventory() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM MovementDesc WHERE Code = 'zc_Movement_InventoryHouseholdInventory'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
+INSERT INTO MovementDesc (Code, ItemName)
+  SELECT 'zc_Movement_InventoryHouseholdInventory', 'Инвентаризация хозяйственного инвентаря' WHERE NOT EXISTS (SELECT * FROM MovementDesc WHERE Code = 'zc_Movement_InventoryHouseholdInventory');
+ 
 /*-------------------------------------------------------------------------------
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.   Воробкало А.А.  Шаблий О.В.
+ 17.07.20                                                                                     * zc_Movement_InventoryHouseholdInventory
  14.07.20                                                                                     * zc_Movement_ComputerAccessoriesRegister
  10.07.20                                                                                     * zc_Movement_WriteOffHouseholdInventory
  01.07.20                                                                                     * zc_Movement_SendPartionDateChange

@@ -1210,6 +1210,56 @@ inherited InventoryForm: TInventoryForm
       ImageIndexTrue = 77
       ImageIndexFalse = 76
     end
+    object actOpenInventoryHouseholdInventory: TMultiAction
+      Category = 'DSDLib'
+      MoveParams = <>
+      ActionList = <
+        item
+          Action = actExecGetInventoryHouseholdInventoryID
+        end
+        item
+          Action = actOFInventoryHouseholdInventory
+        end>
+      Caption = #1048#1085#1074#1077#1085#1090#1072#1088#1080#1079#1072#1094#1080#1103' '#1093#1086#1079#1103#1081#1089#1090#1074#1077#1085#1085#1086#1075#1086' '#1080#1085#1074#1077#1085#1090#1072#1088#1103
+      Hint = #1048#1085#1074#1077#1085#1090#1072#1088#1080#1079#1072#1094#1080#1103' '#1093#1086#1079#1103#1081#1089#1090#1074#1077#1085#1085#1086#1075#1086' '#1080#1085#1074#1077#1085#1090#1072#1088#1103
+      ImageIndex = 42
+    end
+    object actExecGetInventoryHouseholdInventoryID: TdsdExecStoredProc
+      Category = 'DSDLib'
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      StoredProc = spGetInventoryHouseholdInventoryID
+      StoredProcList = <
+        item
+          StoredProc = spGetInventoryHouseholdInventoryID
+        end>
+      Caption = 'actExecGetInventoryHouseholdInventoryID'
+    end
+    object actOFInventoryHouseholdInventory: TdsdOpenForm
+      Category = 'DSDLib'
+      MoveParams = <>
+      Caption = 'actOFInventoryHouseholdInventory'
+      FormName = 'TInventoryHouseholdInventoryForm'
+      FormNameParam.Value = 'TInventoryHouseholdInventoryForm'
+      FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
+      GuiParams = <
+        item
+          Name = 'Id'
+          Value = Null
+          Component = FormParams
+          ComponentItem = 'InventoryHouseholdInventoryId'
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'inOperDate'
+          Value = 'NULL'
+          Component = edOperDate
+          DataType = ftDateTime
+          MultiSelectSeparator = ','
+        end>
+      isShowModal = False
+    end
   end
   inherited MasterDS: TDataSource
     Left = 32
@@ -1248,7 +1298,7 @@ inherited InventoryForm: TInventoryForm
       end
       item
         Name = 'inShowDeviated'
-        Value = ''
+        Value = False
         Component = actShowDeviated
         DataType = ftBoolean
         ParamType = ptInput
@@ -1330,6 +1380,14 @@ inherited InventoryForm: TInventoryForm
         item
           Visible = True
           ItemName = 'bbStatic'
+        end
+        item
+          Visible = True
+          ItemName = 'bbOpenInventoryHouseholdInventory'
+        end
+        item
+          Visible = True
+          ItemName = 'dxBarStatic'
         end
         item
           Visible = True
@@ -1416,6 +1474,10 @@ inherited InventoryForm: TInventoryForm
       Action = actShowDeviated
       Category = 0
     end
+    object bbOpenInventoryHouseholdInventory: TdxBarButton
+      Action = actOpenInventoryHouseholdInventory
+      Category = 0
+    end
   end
   inherited DBViewAddOn: TdsdDBViewAddOn
     SummaryItemList = <
@@ -1496,6 +1558,11 @@ inherited InventoryForm: TInventoryForm
         DataType = ftBoolean
         ParamType = ptInput
         MultiSelectSeparator = ','
+      end
+      item
+        Name = 'InventoryHouseholdInventoryId'
+        Value = Null
+        MultiSelectSeparator = ','
       end>
     Left = 160
     Top = 144
@@ -1575,7 +1642,7 @@ inherited InventoryForm: TInventoryForm
       end
       item
         Name = 'FullInvent'
-        Value = ''
+        Value = False
         Component = FormParams
         ComponentItem = 'FullInvent'
         DataType = ftBoolean
@@ -1628,7 +1695,7 @@ inherited InventoryForm: TInventoryForm
       end
       item
         Name = 'inFullInvent'
-        Value = ''
+        Value = False
         Component = FormParams
         ComponentItem = 'FullInvent'
         DataType = ftBoolean
@@ -1712,11 +1779,43 @@ inherited InventoryForm: TInventoryForm
   end
   inherited spErasedMIMaster: TdsdStoredProc
     StoredProcName = 'gpMovementItem_Inventory_SetErased'
+    Params = <
+      item
+        Name = 'inMovementItemId'
+        Component = MasterCDS
+        ComponentItem = 'Id'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'outIsErased'
+        Value = False
+        Component = MasterCDS
+        ComponentItem = 'isErased'
+        DataType = ftBoolean
+        MultiSelectSeparator = ','
+      end>
     Left = 486
     Top = 464
   end
   inherited spUnErasedMIMaster: TdsdStoredProc
     StoredProcName = 'gpMovementItem_Inventory_SetUnErased'
+    Params = <
+      item
+        Name = 'inMovementItemId'
+        Component = MasterCDS
+        ComponentItem = 'Id'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'outIsErased'
+        Value = False
+        Component = MasterCDS
+        ComponentItem = 'isErased'
+        DataType = ftBoolean
+        MultiSelectSeparator = ','
+      end>
     Left = 486
     Top = 416
   end
@@ -2065,6 +2164,7 @@ inherited InventoryForm: TInventoryForm
         DataSummaryItemIndex = -1
       end>
     SearchAsFilter = False
+    PropertiesCellList = <>
     Left = 526
     Top = 553
   end
@@ -2087,6 +2187,7 @@ inherited InventoryForm: TInventoryForm
       item
       end>
     SummaryItemList = <>
+    PropertiesCellList = <>
     Left = 560
     Top = 152
   end
@@ -2278,5 +2379,37 @@ inherited InventoryForm: TInventoryForm
     PackSize = 1
     Left = 754
     Top = 440
+  end
+  object spGetInventoryHouseholdInventoryID: TdsdStoredProc
+    StoredProcName = 'gpGet_InventoryHouseholdInventoryID'
+    DataSets = <>
+    OutputType = otResult
+    Params = <
+      item
+        Name = 'inUnitID'
+        Value = ''
+        Component = GuidesUnit
+        ComponentItem = 'Key'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inOperDate'
+        Value = 0.000000000000000000
+        Component = edOperDate
+        DataType = ftDateTime
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'outMovementId'
+        Value = Null
+        Component = FormParams
+        ComponentItem = 'InventoryHouseholdInventoryId'
+        MultiSelectSeparator = ','
+      end>
+    PackSize = 1
+    Left = 748
+    Top = 499
   end
 end
