@@ -21,15 +21,21 @@ RETURNS TABLE (OperDate_Movement TDateTime, InvNumber_Movement TVarChar, DescNam
              , InfoMoneyName_master TVarChar, InfoMoneyName_child TVarChar, InfoMoneyName_find TVarChar
              , JuridicalId Integer, JuridicalName TVarChar
              , PaidKindId Integer, PaidKindName TVarChar
+             , PaidKindName_Child TVarChar
              , ConditionKindId Integer, ConditionKindName TVarChar
              , BonusKindId Integer, BonusKindName TVarChar
              , BranchId Integer, BranchName TVarChar
+             , RetailName TVarChar, PersonalName TVarChar, PartnerName TVarChar
              , Value TFloat
              , Sum_CheckBonus TFloat
              , Sum_CheckBonusFact TFloat 
              , Sum_Bonus TFloat
              , Sum_BonusFact TFloat
              , Sum_SaleFact TFloat
+             , Sum_SaleReturnIn  TFloat
+             , Sum_Account  TFloat
+             , PercentRetBonus  TFloat
+             , PercentRetBonus_fact  TFloat
              , Comment TVarChar
               )  
 AS
@@ -49,24 +55,32 @@ BEGIN
            , tmp.InfoMoneyName_master, tmp.InfoMoneyName_child, tmp.InfoMoneyName_find
            , tmp.JuridicalId, tmp.JuridicalName
            , tmp.PaidKindId, tmp.PaidKindName
+           , tmp.PaidKindName_Child
            , tmp.ConditionKindId, tmp.ConditionKindName
            , tmp.BonusKindId, tmp.BonusKindName
            , tmp.BranchId, tmp.BranchName
+           , tmp.RetailName
+           , tmp.PersonalName
+           , tmp.PartnerName
            , tmp.Value
            , tmp.Sum_CheckBonus
            , tmp.Sum_CheckBonusFact
            , tmp.Sum_Bonus
            , tmp.Sum_BonusFact
            , tmp.Sum_SaleFact
+           , tmp.Sum_SaleReturnIn
+           , tmp.Sum_Account
+           , tmp.PercentRetBonus
+           , tmp.PercentRetBonus_fact
            , tmp.Comment
-      FROM gpReport_CheckBonusTest (inStartDate           := inStartDate
-                                  , inEndDate             := inEndDate
-                                  , inPaidKindID          := inPaidKindID
-                                  , inJuridicalId         := inJuridicalId
-                                  , inBranchId            := inBranchId
-                                --, inIsMovement          := inIsMovement
-                                  , inSession             := inSession
-                                   ) AS tmp;
+      FROM gpReport_CheckBonusTest2 (inStartDate           := inStartDate
+                                   , inEndDate             := inEndDate
+                                   , inPaidKindID          := inPaidKindID
+                                   , inJuridicalId         := inJuridicalId
+                                   , inBranchId            := inBranchId
+                                 --, inIsMovement          := inIsMovement
+                                   , inSession             := inSession
+                                    ) AS tmp;
 
 /*
 -- старый вариант
