@@ -924,6 +924,8 @@ BEGIN
      PERFORM lpInsertUpdate_Object_Enum (inId:= zc_Enum_ReestrKind_Buh()        , inDescId:= zc_Object_ReestrKind(), inCode:= 6, inName:= 'Бухгалтерия'                , inEnumName:= 'zc_Enum_ReestrKind_Buh');
      PERFORM lpInsertUpdate_Object_Enum (inId:= zc_Enum_ReestrKind_TransferIn() , inDescId:= zc_Object_ReestrKind(), inCode:= 7, inName:= 'Транзит получен'            , inEnumName:= 'zc_Enum_ReestrKind_TransferIn');
      PERFORM lpInsertUpdate_Object_Enum (inId:= zc_Enum_ReestrKind_TransferOut(), inDescId:= zc_Object_ReestrKind(), inCode:= 8, inName:= 'Транзит возвращен'          , inEnumName:= 'zc_Enum_ReestrKind_TransferOut');
+     PERFORM lpInsertUpdate_Object_Enum (inId:= zc_Enum_ReestrKind_Log()        , inDescId:= zc_Object_ReestrKind(), inCode:= 9, inName:= 'Отдел логистики'            , inEnumName:= 'zc_Enum_ReestrKind_Log');
+     PERFORM lpInsertUpdate_Object_Enum (inId:= zc_Enum_ReestrKind_Econom()     , inDescId:= zc_Object_ReestrKind(), inCode:= 10,inName:= 'Экономисты'                 , inEnumName:= 'zc_Enum_ReestrKind_Econom');
 END $$;
 
 
