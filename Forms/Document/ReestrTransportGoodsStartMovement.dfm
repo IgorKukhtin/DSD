@@ -581,7 +581,7 @@ inherited ReestrTransportGoodsStartMovementForm: TReestrTransportGoodsStartMovem
         end
         item
           Name = 'isGroup'
-          Value = 'TRUE'
+          Value = True
           DataType = ftBoolean
           MultiSelectSeparator = ','
         end>
@@ -686,7 +686,7 @@ inherited ReestrTransportGoodsStartMovementForm: TReestrTransportGoodsStartMovem
         end
         item
           Name = 'isGroup'
-          Value = 'TRUE'
+          Value = True
           DataType = ftBoolean
           MultiSelectSeparator = ','
         end>
@@ -758,7 +758,7 @@ inherited ReestrTransportGoodsStartMovementForm: TReestrTransportGoodsStartMovem
         end
         item
           Name = 'isGroup'
-          Value = 'FALSE'
+          Value = False
           DataType = ftBoolean
           MultiSelectSeparator = ','
         end>
@@ -1050,7 +1050,7 @@ inherited ReestrTransportGoodsStartMovementForm: TReestrTransportGoodsStartMovem
         end
         item
           Name = 'isGroup'
-          Value = 'FALSE'
+          Value = False
           DataType = ftBoolean
           MultiSelectSeparator = ','
         end>
@@ -1257,7 +1257,7 @@ inherited ReestrTransportGoodsStartMovementForm: TReestrTransportGoodsStartMovem
         MultiSelectSeparator = ','
       end
       item
-        Value = 42663d
+        Value = False
         DataType = ftBoolean
         ParamType = ptUnknown
         MultiSelectSeparator = ','
@@ -1453,10 +1453,42 @@ inherited ReestrTransportGoodsStartMovementForm: TReestrTransportGoodsStartMovem
   end
   inherited spErasedMIMaster: TdsdStoredProc
     StoredProcName = 'gpMovementItem_Send_SetErased'
+    Params = <
+      item
+        Name = 'inMovementItemId'
+        Component = MasterCDS
+        ComponentItem = 'Id'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'outIsErased'
+        Value = False
+        Component = MasterCDS
+        ComponentItem = 'isErased'
+        DataType = ftBoolean
+        MultiSelectSeparator = ','
+      end>
     Left = 414
   end
   inherited spUnErasedMIMaster: TdsdStoredProc
     StoredProcName = 'gpMovementItem_Send_SetUnErased'
+    Params = <
+      item
+        Name = 'inMovementItemId'
+        Component = MasterCDS
+        ComponentItem = 'Id'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'outIsErased'
+        Value = False
+        Component = MasterCDS
+        ComponentItem = 'isErased'
+        DataType = ftBoolean
+        MultiSelectSeparator = ','
+      end>
     Left = 510
     Top = 320
   end
@@ -1688,6 +1720,7 @@ inherited ReestrTransportGoodsStartMovementForm: TReestrTransportGoodsStartMovem
         Column = BarCode
       end>
     SummaryItemList = <>
+    PropertiesCellList = <>
     Left = 598
     Top = 105
   end
@@ -1747,7 +1780,7 @@ inherited ReestrTransportGoodsStartMovementForm: TReestrTransportGoodsStartMovem
       end
       item
         Name = 'inIsShowAll'
-        Value = 'false'
+        Value = False
         Component = FormParams
         ComponentItem = 'IsShowAllPrint'
         DataType = ftBoolean

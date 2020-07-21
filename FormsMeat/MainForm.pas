@@ -1151,6 +1151,8 @@ type
     T1: TMenuItem;
     actReport_CheckBonus_SaleReturn: TdsdOpenForm;
     miReport_CheckBonus_SaleReturn: TMenuItem;
+    actReestrLogTTN: TdsdOpenForm;
+    N217: TMenuItem;
     procedure actReport_OLAPSoldExecute(Sender: TObject);
     procedure FormShow(Sender: TObject);
     procedure FormClose(Sender: TObject; var Action: TCloseAction);
