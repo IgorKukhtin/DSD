@@ -13,8 +13,8 @@ RETURNS TABLE ( Id Integer, MovementId Integer, LineNum Integer
               , OperDate TDateTime, InvNumber TVarChar
               , UpdateName TVarChar, UpdateDate TDateTime
               , Date_Insert TDateTime, MemberName_Insert TVarChar
-              , Date_PartnerIn TDateTime, Date_Buh TDateTime
-              , Member_PartnerInTo TVarChar, Member_Buh TVarChar
+              , Date_Log TDateTime, Date_PartnerIn TDateTime, Date_Buh TDateTime
+              , Member_Log TVarChar, Member_PartnerInTo TVarChar, Member_Buh TVarChar
               , BarCode_TTN TVarChar, OperDate_TTN TDateTime, InvNumber_TTN TVarChar
               , InvNumberMark TVarChar, StatusCode_TTN Integer, StatusName_TTN TVarChar
               , TotalCountKg TFloat, TotalSumm TFloat
@@ -47,11 +47,13 @@ BEGIN
      -- Определяется
      vbDateDescId := (SELECT CASE WHEN inReestrKindId = zc_Enum_ReestrKind_PartnerIn() THEN zc_MIDate_PartnerIn()
                                   WHEN inReestrKindId = zc_Enum_ReestrKind_Buh()       THEN zc_MIDate_Buh()
+                                  WHEN inReestrKindId = zc_Enum_ReestrKind_Log()       THEN zc_MIDate_Log()
                              END AS DateDescId
                       );
      -- Определяется
      vbMILinkObjectId := (SELECT CASE WHEN inReestrKindId = zc_Enum_ReestrKind_PartnerIn() THEN zc_MILinkObject_PartnerInTo()
                                       WHEN inReestrKindId = zc_Enum_ReestrKind_Buh()       THEN zc_MILinkObject_Buh()
+                                      WHEN inReestrKindId = zc_Enum_ReestrKind_Log()       THEN zc_MILinkObject_Log()
                                  END AS MILinkObjectId
                       );
 
@@ -103,19 +105,21 @@ BEGIN
             , CAST (ROW_NUMBER() OVER (ORDER BY MovementItem.Id) AS Integer) AS LineNum
             , Object_Status.ObjectCode          AS StatusCode
             , Object_Status.ValueData           AS StatusName
-            , Movement_Reestr.OperDate                  AS OperDate
-            , Movement_Reestr.InvNumber                 AS InvNumber
+            , Movement_Reestr.OperDate          AS OperDate
+            , Movement_Reestr.InvNumber         AS InvNumber
 
             , Object_Update.ValueData           AS UpdateName
             , MovementDate_Update.ValueData     AS UpdateDate
 
-            , MIDate_Insert.ValueData                   AS Date_Insert
-            , Object_Member.ValueData                   AS MemberName_Insert
+            , MIDate_Insert.ValueData           AS Date_Insert
+            , Object_Member.ValueData           AS MemberName_Insert
 
-            , MIDate_PartnerIn.ValueData                AS Date_PartnerIn
-            , MIDate_Buh.ValueData                      AS Date_Buh
-            , Object_PartnerInTo.ValueData                AS Member_PartnerInTo
-            , Object_Buh.ValueData                      AS Member_Buh
+            , MIDate_Log.ValueData              AS Date_Log
+            , MIDate_PartnerIn.ValueData        AS Date_PartnerIn
+            , MIDate_Buh.ValueData              AS Date_Buh
+            , Object_Log.ValueData              AS Member_Log
+            , Object_PartnerInTo.ValueData      AS Member_PartnerInTo
+            , Object_Buh.ValueData              AS Member_Buh
 
             , zfFormat_BarCode (zc_BarCodePref_Movement(), Movement_TTN.Id) AS BarCode_TTN
             , Movement_TTN.OperDate                AS OperDate_TTN
@@ -177,6 +181,9 @@ BEGIN
             LEFT JOIN MovementItemDate AS MIDate_Buh
                                        ON MIDate_Buh.MovementItemId = MovementItem.Id
                                       AND MIDate_Buh.DescId = zc_MIDate_Buh()
+            LEFT JOIN MovementItemDate AS MIDate_Log
+                                       ON MIDate_Log.MovementItemId = MovementItem.Id
+                                      AND MIDate_Log.DescId = zc_MIDate_Log()
 
             LEFT JOIN MovementItemLinkObject AS MILinkObject_PartnerInTo
                                              ON MILinkObject_PartnerInTo.MovementItemId = MovementItem.Id
@@ -188,6 +195,10 @@ BEGIN
                                             AND MILinkObject_Buh.DescId = zc_MILinkObject_Buh()
             LEFT JOIN Object AS Object_Buh ON Object_Buh.Id = MILinkObject_Buh.ObjectId
 
+            LEFT JOIN MovementItemLinkObject AS MILinkObject_Log
+                                             ON MILinkObject_Log.MovementItemId = MovementItem.Id
+                                            AND MILinkObject_Log.DescId = zc_MILinkObject_Log()
+            LEFT JOIN Object AS Object_Log ON Object_Log.Id = MILinkObject_Log.ObjectId
             --
             LEFT JOIN Movement AS Movement_TTN ON Movement_TTN.Id = tmpMI.MovementId_TTN  -- док. возврата
             LEFT JOIN Object AS Object_Status_TTN ON Object_Status_TTN.Id = Movement_TTN.StatusId
@@ -275,6 +286,7 @@ $BODY$
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
+ 21.07.20         * log
  01.02.20         *
 */
 

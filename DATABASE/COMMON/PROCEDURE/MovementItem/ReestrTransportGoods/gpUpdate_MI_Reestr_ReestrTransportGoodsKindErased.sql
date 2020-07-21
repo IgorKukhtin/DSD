@@ -25,6 +25,13 @@ BEGIN
                      AND MF_MovementItemId.ValueData ::integer = inId
                    );
 
+    IF inReestrKindId = zc_Enum_ReestrKind_Log() THEN 
+       -- сохранили <когда сформирована виза "Отдел логистики">   
+       PERFORM lpInsertUpdate_MovementItemDate (zc_MIDate_Log(), inId, Null);
+       -- сохранили связь с <кто сформировал визу "Бухгалтерия">
+       PERFORM lpInsertUpdate_MovementItemLinkObject (zc_MILinkObject_Log(), inId, Null);
+    END IF;
+
     IF inReestrKindId = zc_Enum_ReestrKind_TransferIn() THEN 
        -- сохранили <когда сформирована виза "вывезено со склада">   
        PERFORM lpInsertUpdate_MovementItemDate (zc_MIDate_TransferIn(), inId, Null);
@@ -67,8 +74,9 @@ BEGIN
        PERFORM lpInsertUpdate_MovementItemLinkObject (zc_MILinkObject_Buh(), inId, Null);
     END IF;
 
-    -- Находим предыдущее значение <Состояние по реестру> документа возврат
-    vbReestrKindId := (SELECT CASE WHEN tmp.DescId = zc_MIDate_PartnerIn()   THEN zc_Enum_ReestrKind_PartnerIn()
+    -- Находим предыдущее значение <Состояние по реестру> документа 
+    vbReestrKindId := (SELECT CASE WHEN tmp.DescId = zc_MIDate_Log()         THEN zc_Enum_ReestrKind_Log()
+                                   WHEN tmp.DescId = zc_MIDate_PartnerIn()   THEN zc_Enum_ReestrKind_PartnerIn()
                                    WHEN tmp.DescId = zc_MIDate_TransferIn()  THEN zc_Enum_ReestrKind_TransferIn()
                                    WHEN tmp.DescId = zc_MIDate_Buh()         THEN zc_Enum_ReestrKind_Buh()
                                    WHEN tmp.DescId = zc_MIDate_RemakeIn()    THEN zc_Enum_ReestrKind_RemakeIn()
@@ -78,14 +86,14 @@ BEGIN
                        FROM (SELECT ROW_NUMBER() OVER(ORDER BY MID.ValueData desc) AS Num, MID.DescId 
                              FROM MovementItemDate AS MID
                              WHERE MID.MovementItemId = inId
-                               AND MID.DescId IN (zc_MIDate_TransferIn(), zc_MIDate_PartnerIn(), zc_MIDate_Buh()
+                               AND MID.DescId IN (zc_MIDate_Log(), zc_MIDate_TransferIn(), zc_MIDate_PartnerIn(), zc_MIDate_Buh()
                                                 , zc_MIDate_RemakeIn(), zc_MIDate_RemakeBuh(), zc_MIDate_Remake())
                                AND MID.ValueData IS NOT NULL
                        ) AS tmp
                        WHERE tmp.Num = 1);
 
 
-    -- Изменили <Состояние по реестру> в документе возврата на предыдущее
+    -- Изменили <Состояние по реестру> в документе  на предыдущее
     PERFORM lpInsertUpdate_MovementLinkObject (zc_MovementLinkObject_ReestrKind(), vbId_miReturn, COALESCE (vbReestrKindId, zc_Enum_ReestrKind_TransferIn()));
 
     -- сохранили протокол
@@ -98,6 +106,7 @@ $BODY$
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
+ 21.07.20         *
  01.02.20         *
 */
 

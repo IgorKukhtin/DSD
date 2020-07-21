@@ -75,16 +75,15 @@ BEGIN
                                                    ON MovementFloat_MovementItemId.ValueData ::integer = MovementItem.Id
                                                   AND MovementFloat_MovementItemId.DescId = zc_MovementFloat_MovementItemId()
 
-            LEFT JOIN MovementLinkMovement AS MovementLinkMovement_TransportGoods
-                                           ON MovementLinkMovement_TransportGoods.MovementChildId = MovementFloat_MovementItemId.MovementId
-                                          AND MovementLinkMovement_TransportGoods.DescId = zc_MovementLinkMovement_TransportGoods()
+                           LEFT JOIN MovementLinkMovement AS MovementLinkMovement_TransportGoods
+                                                          ON MovementLinkMovement_TransportGoods.MovementChildId = MovementFloat_MovementItemId.MovementId
+                                                         AND MovementLinkMovement_TransportGoods.DescId = zc_MovementLinkMovement_TransportGoods()
 
-            LEFT JOIN Movement AS Movement_Sale ON Movement_Sale.Id = MovementLinkMovement_TransportGoods.MovementId
-                                               AND Movement_Sale.StatusId = zc_Enum_Status_Complete()
-            LEFT JOIN MovementLinkObject AS MovementLinkObject_To
-                                         ON MovementLinkObject_To.MovementId = MovementLinkMovement_TransportGoods.MovementId
-                                        AND MovementLinkObject_To.DescId = zc_MovementLinkObject_To()
-
+                           LEFT JOIN Movement AS Movement_Sale ON Movement_Sale.Id = MovementLinkMovement_TransportGoods.MovementId
+                                                              AND Movement_Sale.StatusId = zc_Enum_Status_Complete()
+                           LEFT JOIN MovementLinkObject AS MovementLinkObject_To
+                                                        ON MovementLinkObject_To.MovementId = MovementLinkMovement_TransportGoods.MovementId
+                                                       AND MovementLinkObject_To.DescId = zc_MovementLinkObject_To()
 
                       WHERE MovementItem.MovementId = inMovementId
                         AND MovementItem.DescId     = zc_MI_Master()
@@ -151,7 +150,9 @@ BEGIN
                                                              , zc_MILinkObject_RemakeInFrom()
                                                              , zc_MILinkObject_RemakeBuh()
                                                              , zc_MILinkObject_Remake()
-                                                             , zc_MILinkObject_Buh())
+                                                             , zc_MILinkObject_Buh()
+                                                             , zc_MILinkObject_Log()
+                                                             )
                        )
 
          , tmpMIDate AS (SELECT MovementItemDate.*
@@ -162,7 +163,9 @@ BEGIN
                                                          , zc_MIDate_RemakeIn()
                                                          , zc_MIDate_RemakeBuh()
                                                          , zc_MIDate_Remake()
-                                                         , zc_MIDate_Buh())
+                                                         , zc_MIDate_Buh()
+                                                         , zc_MIDate_Log()
+                                                         )
                        )
 
        ---
@@ -191,6 +194,7 @@ BEGIN
            , MovementFloat_TotalSumm.ValueData      AS TotalSumm
 
            , COALESCE (MIDate_Insert.ValueData, NULL) ::TDateTime         AS Date_Insert
+           , COALESCE (MIDate_Log.ValueData, NULL) ::TDateTime            AS Date_Log
            , COALESCE (MIDate_PartnerIn.ValueData, NULL) ::TDateTime      AS Date_PartnerIn
            , COALESCE (MIDate_RemakeIn.ValueData, NULL) ::TDateTime       AS Date_RemakeIn
            , COALESCE (MIDate_RemakeBuh.ValueData, NULL) ::TDateTime      AS Date_RemakeBuh
@@ -199,6 +203,7 @@ BEGIN
 
            , CASE WHEN MIDate_Insert.DescId IS NOT NULL THEN Object_ObjectMember.ValueData ELSE '' END :: TVarChar AS Member_Insert -- т.к. в "пустышках" - "криво" формируется это свойство
 
+           , Object_Log.ValueData            AS Member_Log
            , Object_PartnerInTo.ValueData    AS Member_PartnerInTo
            , Object_RemakeInTo.ValueData     AS Member_RemakeInTo
            , Object_RemakeInFrom.ValueData   AS Member_RemakeInFrom
@@ -219,6 +224,9 @@ BEGIN
             LEFT JOIN tmpMIDate AS MIDate_Buh
                                 ON MIDate_Buh.MovementItemId = tmpMI.MovementItemId
                                AND MIDate_Buh.DescId = zc_MIDate_Buh()
+            LEFT JOIN tmpMIDate AS MIDate_Log
+                                ON MIDate_Log.MovementItemId = tmpMI.MovementItemId
+                               AND MIDate_Log.DescId = zc_MIDate_Log()
 
             LEFT JOIN tmpMIDate AS MIDate_RemakeIn
                                 ON MIDate_RemakeIn.MovementItemId = tmpMI.MovementItemId
@@ -259,7 +267,11 @@ BEGIN
                               ON MILinkObject_Buh.MovementItemId = tmpMI.MovementItemId
                              AND MILinkObject_Buh.DescId = zc_MILinkObject_Buh()
             LEFT JOIN Object AS Object_Buh ON Object_Buh.Id = MILinkObject_Buh.ObjectId
-            
+
+            LEFT JOIN tmpMILO AS MILinkObject_Log
+                              ON MILinkObject_Log.MovementItemId = tmpMI.MovementItemId
+                             AND MILinkObject_Log.DescId = zc_MILinkObject_Log()
+            LEFT JOIN Object AS Object_Log ON Object_Log.Id = MILinkObject_Log.ObjectId
             --
             LEFT JOIN Movement AS Movement_TransportGoods ON Movement_TransportGoods.id = tmpMI.MovementId_TransportGoods
 
@@ -330,6 +342,7 @@ $BODY$
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
+ 21.07.20         * add Object_Log
  31.01.20         *
 */
 

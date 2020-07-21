@@ -195,7 +195,15 @@ BEGIN
 
      END IF; -- if COALESCE (vbId_mi, 0) = 0
 
-
+    -- <Отдел логистики>
+    IF inReestrKindId = zc_Enum_ReestrKind_Log()
+    THEN 
+       -- сохранили <когда сформирована виза>
+       PERFORM lpInsertUpdate_MovementItemDate (zc_MIDate_Log(), vbId_mi, CURRENT_TIMESTAMP);
+       -- сохранили связь с <кто сформировал визу>
+       PERFORM lpInsertUpdate_MovementItemLinkObject (zc_MILinkObject_Log(), vbId_mi, vbMemberId_user);
+    END IF;
+    
     -- <Получено от клиента>
     IF inReestrKindId = zc_Enum_ReestrKind_PartnerIn()
     THEN 
@@ -265,6 +273,7 @@ $BODY$
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
+ 21.07.20         *
  01.02.20         *
 */
 

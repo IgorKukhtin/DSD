@@ -47,6 +47,14 @@ CREATE OR REPLACE FUNCTION zc_MIDate_Buh() RETURNS Integer AS $BODY$BEGIN RETURN
 INSERT INTO MovementItemDateDesc (Code, ItemName)
   SELECT 'zc_MIDate_Buh', 'когда сформирована виза Ѕухгалтери€ (финиш)' WHERE NOT EXISTS (SELECT * FROM MovementItemDateDesc WHERE Code = 'zc_MIDate_Buh');
 
+CREATE OR REPLACE FUNCTION zc_MIDate_Log() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM MovementItemDateDesc WHERE Code = 'zc_MIDate_Log'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
+INSERT INTO MovementItemDateDesc (Code, ItemName)
+  SELECT 'zc_MIDate_Log', 'когда сформирована виза ќтдел логистики' WHERE NOT EXISTS (SELECT * FROM MovementItemDateDesc WHERE Code = 'zc_MIDate_Log');
+
+CREATE OR REPLACE FUNCTION zc_MIDate_Econom() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM MovementItemDateDesc WHERE Code = 'zc_MIDate_Econom'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
+INSERT INTO MovementItemDateDesc (Code, ItemName)
+  SELECT 'zc_MIDate_Econom', 'когда сформирована виза Ёкономисты' WHERE NOT EXISTS (SELECT * FROM MovementItemDateDesc WHERE Code = 'zc_MIDate_Econom');
+
 CREATE OR REPLACE FUNCTION zc_MIDate_TransferIn() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM MovementItemDateDesc WHERE Code = 'zc_MIDate_TransferIn'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
 INSERT INTO MovementItemDateDesc (Code, ItemName)
   SELECT 'zc_MIDate_TransferIn', 'когда сформирована виза "“ранзит получен"' WHERE NOT EXISTS (SELECT * FROM MovementItemDateDesc WHERE Code = 'zc_MIDate_TransferIn');
