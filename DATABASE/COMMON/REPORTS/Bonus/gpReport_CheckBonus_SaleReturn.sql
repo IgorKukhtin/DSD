@@ -45,8 +45,8 @@ BEGIN
 
    inisMovement:= FALSE;
 
-
-    RETURN QUERY
+   -- временные таблицы
+   CREATE TEMP TABLE tmpResult ON COMMIT DROP AS (
       WITH 
            tmpContract_full AS (SELECT View_Contract.*
                                 FROM Object_Contract_View AS View_Contract
@@ -523,6 +523,7 @@ BEGIN
                   
                             , COALESCE (tmpMovement.MovementId,0) AS MovementId
                             , tmpMovement.MovementDescId
+                            , 0                                   AS MovementId_ProfitLossService
                             , COALESCE (tmpMovement.BranchId,0)   AS BranchId
                        FROM tmpContract
                             INNER JOIN tmpMovement ON tmpMovement.JuridicalId       = tmpContract.JuridicalId
@@ -571,6 +572,7 @@ BEGIN
 
                             , CASE WHEN inisMovement = TRUE THEN Movement.Id ELSE 0 END      AS MovementId
                             , CASE WHEN inisMovement = TRUE THEN Movement.DescId ELSE 0 END  AS MovementDescId
+                            , Movement.Id                                    AS MovementId_ProfitLossService
                             , COALESCE (MILinkObject_Branch.ObjectId,0)      AS BranchId
                      FROM Movement 
                             LEFT JOIN MovementItem ON MovementItem.MovementId = Movement.Id AND MovementItem.DescId = zc_MI_Master()
@@ -619,16 +621,15 @@ BEGIN
                             LEFT JOIN tmpContract_all AS View_Contract_InvNumber_master ON View_Contract_InvNumber_master.ContractId = MILinkObject_ContractMaster.ObjectId
                             LEFT JOIN tmpContract_full AS View_Contract_InvNumber_child ON View_Contract_InvNumber_child.ContractId = MILinkObject_ContractChild.ObjectId
            
-                            --LEFT JOIN (SELECT tmpMovement.JuridicalId, MAX (tmpMovement.PartnerId) AS PartnerId FROM tmpMovement GROUP BY tmpMovement.JuridicalId) tmpInf ON tmpInf.JuridicalId = MovementItem.ObjectId 
                        WHERE Movement.DescId = zc_Movement_ProfitLossService()
                          AND Movement.StatusId = zc_Enum_Status_Complete()
                          AND Movement.OperDate BETWEEN inStartDate AND inEndDate
                          AND MILinkObject_InfoMoney.ObjectId IN (zc_Enum_InfoMoney_21501() -- Маркетинг + Бонусы за продукцию
                                                                , zc_Enum_InfoMoney_21502()) -- Маркетинг + Бонусы за мясное сырье
                          AND (MovementItem.ObjectId = inJuridicalId OR inJuridicalId = 0)
-                         -- AND MILinkObject_ContractConditionKind.ObjectId IN (zc_Enum_ContractConditionKind_BonusPercentAccount(), zc_Enum_ContractConditionKind_BonusPercentSaleReturn(), zc_Enum_ContractConditionKind_BonusPercentSale())
-                      )
-      , tmpData AS (SELECT tmpAll.ContractId_master
+                    )
+ 
+                    SELECT tmpAll.ContractId_master
                          , tmpAll.ContractId_child
                          , tmpAll.ContractId_find
                          , tmpAll.InvNumber_master
@@ -647,6 +648,7 @@ BEGIN
                          , tmpAll.BonusKindId
                          , tmpAll.MovementId
                          , tmpAll.MovementDescId
+                         , MAX (tmpAll.MovementId_ProfitLossService) AS MovementId_ProfitLossService
                          , tmpAll.BranchId
                          , tmpAll.Value
 
@@ -689,9 +691,12 @@ BEGIN
                             , tmpAll.Value
                             , tmpAll.MovementId
                             , tmpAll.MovementDescId
+                            --, tmpAll.MovementId_ProfitLossService
                             , tmpAll.BranchId
                             , tmpAll.PaidKindId_child
-                    )
+                      );  
+
+    RETURN QUERY
 
 
       SELECT  Movement.OperDate                             AS OperDate_Movement
@@ -749,7 +754,7 @@ BEGIN
             , CAST (tmpData.Sum_Account    AS TFloat)     AS Sum_Account
             , CAST (tmpData.Sum_SaleReturnIn AS TFloat)   AS Sum_SaleReturnIn
             , tmpData.Comment :: TVarChar                 AS Comment
-      FROM tmpData
+      FROM tmpResult AS tmpData
             LEFT JOIN Object AS Object_Juridical ON Object_Juridical.Id = tmpData.JuridicalId
             LEFT JOIN Object AS Object_Partner ON Object_Partner.Id = tmpData.PartnerId
             LEFT JOIN Object AS Object_PaidKind ON Object_PaidKind.Id = tmpData.PaidKindId
@@ -762,8 +767,8 @@ BEGIN
             LEFT JOIN Object AS Object_InfoMoney_child ON Object_InfoMoney_child.Id = tmpData.InfoMoneyId_child
             LEFT JOIN Object AS Object_InfoMoney_find ON Object_InfoMoney_find.Id = tmpData.InfoMoneyId_find
 
-            LEFT JOIN Movement ON Movement.Id = tmpData.MovementId
-            LEFT JOIN MovementDesc ON MovementDesc.Id = tmpData.MovementDescId
+            LEFT JOIN Movement ON Movement.Id = tmpData.MovementId_ProfitLossService
+            LEFT JOIN MovementDesc ON MovementDesc.Id = Movement.DescId
 
             LEFT JOIN ObjectLink AS ObjectLink_Juridical_Retail
                                  ON ObjectLink_Juridical_Retail.ObjectId = tmpData.JuridicalId

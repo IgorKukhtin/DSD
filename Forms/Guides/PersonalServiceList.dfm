@@ -715,7 +715,7 @@ object PersonalServiceListForm: TPersonalServiceListForm
           Action = actRefresh
         end>
       Caption = #1056#1072#1079#1088#1077#1096#1077#1085#1086' '#1076#1083#1103' '#1091#1074#1086#1083#1077#1085#1085#1099#1093' ('#1044#1072'/'#1053#1077#1090')'
-      ImageIndex = 5
+      ImageIndex = 77
     end
   end
   object dsdStoredProc: TdsdStoredProc

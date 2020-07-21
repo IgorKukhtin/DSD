@@ -396,6 +396,12 @@ BEGIN
                            AND Movement.DescId = zc_Movement_Promo()
                         )
 
+          , tmpOL_Goods_ConditionsKeep AS (SELECT ObjectLink_Goods_ConditionsKeep.*
+                                           FROM ObjectLink AS ObjectLink_Goods_ConditionsKeep
+                                           WHERE ObjectLink_Goods_ConditionsKeep.ObjectId IN (SELECT Object_Goods_Retail.Id FROM Object_Goods_Retail WHERE Object_Goods_Retail.RetailId = vbRetailId)
+                                             AND ObjectLink_Goods_ConditionsKeep.DescId = zc_ObjectLink_Goods_ConditionsKeep()
+                                           )
+
             -- результат
             SELECT
                 COALESCE(MovementItem_Send.Id,0)                  AS Id
@@ -466,9 +472,9 @@ BEGIN
                                   
                 LEFT JOIN tmpCheck ON tmpCheck.GoodsId = Object_Goods.Id
                 -- условия хранения
-                LEFT JOIN ObjectLink AS ObjectLink_Goods_ConditionsKeep 
-                                     ON ObjectLink_Goods_ConditionsKeep.ObjectId = Object_Goods.Id
-                                    AND ObjectLink_Goods_ConditionsKeep.DescId = zc_ObjectLink_Goods_ConditionsKeep()
+                LEFT JOIN tmpOL_Goods_ConditionsKeep AS ObjectLink_Goods_ConditionsKeep 
+                                                     ON ObjectLink_Goods_ConditionsKeep.ObjectId = Object_Goods.Id
+                                    --AND ObjectLink_Goods_ConditionsKeep.DescId = zc_ObjectLink_Goods_ConditionsKeep()
                 LEFT JOIN Object AS Object_ConditionsKeep ON Object_ConditionsKeep.Id = ObjectLink_Goods_ConditionsKeep.ChildObjectId
 
                 LEFT JOIN tmpGoodsParam ON tmpGoodsParam.GoodsId = COALESCE(MovementItem_Send.ObjectId,tmpRemains.GoodsId)
