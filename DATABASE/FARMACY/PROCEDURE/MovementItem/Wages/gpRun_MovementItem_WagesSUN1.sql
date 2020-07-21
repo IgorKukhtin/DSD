@@ -25,6 +25,8 @@ BEGIN
     vbOparDate3 := vbOparDate2 - INTERVAL '1 DAY';
     IF date_part('DOW', vbOparDate3)::Integer = 0 THEN vbOparDate3 := vbOparDate3 - INTERVAL '2 DAY'; END IF;
 
+--    raise notice 'Прошло. % % %', vbOparDate1, vbOparDate2, vbOparDate3;
+
      -- Расчет необходимости штрафа
     BEGIN
         PERFORM lpInsertUpdate_MovementItem_WagesSUN1 (inSummaSUN1 := SummaSUN1, inUnitID := T1.UnitID, inUserId := vbUserId)
@@ -68,9 +70,9 @@ BEGIN
 
 
               SELECT MovementLinkObject_From.ObjectId                                           AS UnitID
-                   , CASE WHEN date_trunc('day', MovementDate_Insert.ValueData) = vbOparDate1 THEN 200
-                          WHEN date_trunc('day', MovementDate_Insert.ValueData) = vbOparDate2 THEN 200
-                          WHEN date_trunc('day', MovementDate_Insert.ValueData) = vbOparDate3 THEN 350 END::TFloat AS SummaSUN1
+                   , CASE WHEN date_trunc('day', MovementDate_Insert.ValueData) = vbOparDate1 THEN - 200
+                          WHEN date_trunc('day', MovementDate_Insert.ValueData) = vbOparDate2 THEN - 200
+                          WHEN date_trunc('day', MovementDate_Insert.ValueData) = vbOparDate3 THEN - 350 END::TFloat AS SummaSUN1
               FROM tmpMovement AS Movement
                    LEFT JOIN MovementLinkObject AS MovementLinkObject_From
                                                 ON MovementLinkObject_From.MovementId = Movement.Id
