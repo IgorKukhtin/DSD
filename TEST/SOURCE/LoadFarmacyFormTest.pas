@@ -868,6 +868,9 @@ begin
 
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_Loyalty_UsedPromocodeForm'));
   TdsdFormStorageFactory.GetStorage.Load('TReport_Loyalty_UsedPromocodeForm');
+
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TLoyaltyInsertPromoCodeDialogForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TLoyaltyInsertPromoCodeDialogForm');
 end;
 
 procedure TLoadFormTest.LoadLoyaltySaveMoneyFormTest;

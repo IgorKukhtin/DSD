@@ -30,6 +30,7 @@ $BODY$
    DECLARE vbEndSale TDateTime;
    DECLARE vbMovementChackId Integer;
    DECLARE vbMonthCount Integer;
+   DECLARE vbisElectron Boolean;
 BEGIN
 
       -- проверка прав пользователя на вызов процедуры
@@ -37,7 +38,13 @@ BEGIN
     vbUserId:= lpGetUserBySession (inSession);
 
 
-    SELECT MovementItem.ID, MovementItem.MovementID, MovementItem.Amount, MovementItem.isErased, MovementItem.ParentId, MovementFloat_MovementItemId.MovementId, MIDate_OperDate.ValueData
+    SELECT MovementItem.ID, 
+           MovementItem.MovementID, 
+           MovementItem.Amount, 
+           MovementItem.isErased, 
+           MovementItem.ParentId, 
+           MovementFloat_MovementItemId.MovementId, 
+           MIDate_OperDate.ValueData
     INTO vbMovementItemId, vbMovementId, vbDiscountAmount, vbisErased, vbParentId, vbMovementChackId, vbOperDate
     FROM MovementItem_Loyalty_GUID
          INNER JOIN MovementItem ON MovementItem.ID = MovementItem_Loyalty_GUID.MovementItemID
@@ -70,15 +77,13 @@ BEGIN
       RETURN;
     END IF;
 
-    IF COALESCE(vbParentId, 0) = 0
-    THEN
-      RETURN QUERY
-      SELECT 0::TFloat, 0::Integer, Null::TDateTime, ('По промокоду '||COALESCE(inGUID, '')||' нет подтверждения продажи.')::TVarChar;
-      RETURN;
-    END IF;
-
-    SELECT Movement.InvNumber::Integer, Movement.StatusId, MovementDate_StartSale.ValueData, MovementDate_EndSale.ValueData, MovementFloat_MonthCount.ValueData::Integer
-    INTO vbInvNumber, vbStatusId, vbStartSale, vbEndSale, vbMonthCount
+    SELECT Movement.InvNumber::Integer, 
+           Movement.StatusId, 
+           MovementDate_StartSale.ValueData, 
+           MovementDate_EndSale.ValueData, 
+           MovementFloat_MonthCount.ValueData::Integer,
+           COALESCE(MovementBoolean_Electron.ValueData, FALSE) ::Boolean
+    INTO vbInvNumber, vbStatusId, vbStartSale, vbEndSale, vbMonthCount, vbisElectron
     FROM Movement
          LEFT JOIN MovementDate AS MovementDate_StartSale
                                 ON MovementDate_StartSale.MovementId = Movement.Id
@@ -89,7 +94,17 @@ BEGIN
          LEFT JOIN MovementFloat AS MovementFloat_MonthCount
                                  ON MovementFloat_MonthCount.MovementId =  Movement.Id
                                 AND MovementFloat_MonthCount.DescId = zc_MovementFloat_MonthCount()
+         LEFT JOIN MovementBoolean AS MovementBoolean_Electron
+                                   ON MovementBoolean_Electron.MovementId =  Movement.Id
+                                  AND MovementBoolean_Electron.DescId = zc_MovementBoolean_Electron()
     WHERE Movement.ID = vbMovementId;
+
+    IF COALESCE(vbParentId, 0) = 0 AND vbisElectron = FALSE
+    THEN
+      RETURN QUERY
+      SELECT 0::TFloat, 0::Integer, Null::TDateTime, ('По промокоду '||COALESCE(inGUID, '')||' нет подтверждения продажи.')::TVarChar;
+      RETURN;
+    END IF;
 
     -- Если документ неподписан
     IF COALESCE(vbStatusId, 0) <> zc_Enum_Status_Complete()
@@ -144,4 +159,5 @@ $BODY$
 -- zfCalc_FromHex
 
 -- SELECT * FROM gpSelect_PromoCodeLoyalty_ForSite ('1119-A887-001F-A46F', 0, '3');
--- SELECT DiscountAmount, PromoCodeId, DateValid, Error FROM gpSelect_PromoCodeLoyalty_ForSite (inGUID := '1119-2300-7A19-8EDC', inUnitID := '0', inSession := zfCalc_UserSite());
+-- 
+SELECT DiscountAmount, PromoCodeId, DateValid, Error FROM gpSelect_PromoCodeLoyalty_ForSite (inGUID := '0720-4215-7340-3485', inUnitID := '0', inSession := zfCalc_UserSite());

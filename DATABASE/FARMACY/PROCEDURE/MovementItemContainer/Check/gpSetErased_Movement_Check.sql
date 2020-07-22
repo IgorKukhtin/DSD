@@ -20,6 +20,10 @@ BEGIN
                   AND
                   StatusId = zc_Enum_Status_Complete())
     THEN
+        IF inSession = zfCalc_UserSite()
+        THEN
+          RETURN;
+        END IF;
         vbUserId:= lpCheckRight(inSession, zc_Enum_Process_SetErased_Income());
     END IF;
 

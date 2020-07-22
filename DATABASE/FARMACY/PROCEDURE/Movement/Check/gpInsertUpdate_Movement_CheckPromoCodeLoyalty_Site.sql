@@ -36,6 +36,7 @@ $BODY$
    DECLARE vbStartSale TDateTime;
    DECLARE vbEndSale TDateTime;
    DECLARE vbMonthCount Integer;
+   DECLARE vbisElectron Boolean;
 BEGIN
     -- проверка прав пользователя на вызов процедуры
     -- PERFORM lpCheckRight (inSession, zc_Enum_Process_InsertUpdate_Movement_...());
@@ -61,9 +62,9 @@ BEGIN
 
     SELECT MovementItem.MovementID, MovementItem.Amount, MovementItem.isErased, MovementItem.ParentId, MIDate_OperDate.ValueData, MIString_GUID.ValueData,
            Movement.InvNumber::Integer, Movement.StatusId, MovementDate_StartSale.ValueData, MovementDate_EndSale.ValueData,
-           MovementFloat_MonthCount.ValueData::Integer
+           MovementFloat_MonthCount.ValueData::Integer, COALESCE(MovementBoolean_Electron.ValueData, FALSE) ::Boolean
     INTO vbMovementId, vbDiscountAmount, vbisErased, vbParentId, vbOperDate, vbGUID,
-         vbInvNumber, vbStatusId, vbStartSale, vbEndSale, vbMonthCount
+         vbInvNumber, vbStatusId, vbStartSale, vbEndSale, vbMonthCount, vbisElectron
     FROM MovementItem
 
          LEFT JOIN MovementItemString AS MIString_GUID
@@ -85,6 +86,10 @@ BEGIN
          LEFT JOIN MovementFloat AS MovementFloat_MonthCount
                                  ON MovementFloat_MonthCount.MovementId =  Movement.Id
                                 AND MovementFloat_MonthCount.DescId = zc_MovementFloat_MonthCount()
+
+         LEFT JOIN MovementBoolean AS MovementBoolean_Electron
+                                   ON MovementBoolean_Electron.MovementId =  Movement.Id
+                                  AND MovementBoolean_Electron.DescId = zc_MovementBoolean_Electron()
 
     WHERE MovementItem.Id = inPromoCodeId;
 
@@ -109,7 +114,7 @@ BEGIN
       RAISE EXCEPTION 'Ошибка. Промокод <%> удален.', vbGUID;
     END IF;
 
-    IF COALESCE(vbParentId, 0) = 0
+    IF COALESCE(vbParentId, 0) = 0 AND vbisElectron = FALSE
     THEN
       RAISE EXCEPTION 'Ошибка. По промокоду <%> нет подтверждения продажи.', vbGUID;
     END IF;

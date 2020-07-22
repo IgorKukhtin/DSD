@@ -107,11 +107,16 @@ BEGIN
                                                     AND MI_Loyalty.DescId = zc_MI_Child()
                                                     AND MI_Loyalty.isErased = FALSE
                                                     AND MI_Loyalty.ObjectId = vbUnitId
+                                                    
+                             LEFT JOIN MovementBoolean AS MovementBoolean_Electron
+                                                       ON MovementBoolean_Electron.MovementId =  Movement.Id
+                                                      AND MovementBoolean_Electron.DescId = zc_MovementBoolean_Electron()
 
                         WHERE Movement.DescId = zc_Movement_Loyalty()
                           AND Movement.StatusId = zc_Enum_Status_Complete()
                           AND MovementDate_StartPromo.ValueData <= CURRENT_DATE
                           AND MovementDate_EndPromo.ValueData >= CURRENT_DATE
+                          AND COALESCE(MovementBoolean_Electron.ValueData, FALSE) = FALSE
                         ORDER BY Movement.OperDate DESC
                         LIMIT 1
                         )
@@ -392,4 +397,5 @@ LANGUAGE plpgsql VOLATILE;
 */
 
 -- тест
--- SELECT * FROM gpSelect_Cash_UnitConfig('3000497773', '3')
+-- 
+SELECT LoyaltyID, * FROM gpSelect_Cash_UnitConfig('3000497773', '3')

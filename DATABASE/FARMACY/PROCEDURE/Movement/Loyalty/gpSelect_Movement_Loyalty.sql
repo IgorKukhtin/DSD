@@ -32,6 +32,7 @@ RETURNS TABLE (Id Integer
              , UpdateName    TVarChar
              , UpdateDate    TDateTime
              , Comment       TVarChar
+             , isElectron    Boolean
               )
 
 AS
@@ -68,6 +69,7 @@ BEGIN
           , Object_Update.ValueData                                        AS UpdateName
           , MovementDate_Update.ValueData                                  AS UpdateDate
           , MovementString_Comment.ValueData                               AS Comment
+          , COALESCE(MovementBoolean_Electron.ValueData, FALSE) ::Boolean  AS isElectron
      FROM Movement
         INNER JOIN tmpStatus ON Movement.StatusId = tmpStatus.StatusId
         LEFT JOIN Object AS Object_Status ON Object_Status.Id = Movement.StatusId
@@ -129,6 +131,10 @@ BEGIN
                                      ON MovementLinkObject_Update.MovementId = Movement.Id
                                     AND MovementLinkObject_Update.DescId = zc_MovementLinkObject_Update()
         LEFT JOIN Object AS Object_Update ON Object_Update.Id = MovementLinkObject_Update.ObjectId
+
+        LEFT JOIN MovementBoolean AS MovementBoolean_Electron
+                                  ON MovementBoolean_Electron.MovementId =  Movement.Id
+                                 AND MovementBoolean_Electron.DescId = zc_MovementBoolean_Electron()
 
      WHERE Movement.DescId = zc_Movement_Loyalty()
        AND Movement.OperDate BETWEEN inStartDate AND inEndDate

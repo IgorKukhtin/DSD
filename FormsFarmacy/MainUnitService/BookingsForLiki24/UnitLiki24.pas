@@ -238,7 +238,7 @@ begin
           FBookingsHeadCDS.FieldByName('type').AsString := DelDoubleQuote(jValue.FindValue('type'));
           FBookingsHeadCDS.FieldByName('pharmacyId').AsString := DelDoubleQuote(jValue.FindValue('pharmacyId'));
           FBookingsHeadCDS.FieldByName('orderId').AsString := DelDoubleQuote(jValue.FindValue('orderId'));
-          FBookingsHeadCDS.FieldByName('orderNumber').AsInteger := jValue.GetValue<TJSONNumber>('orderNumber').AsInt;
+          FBookingsHeadCDS.FieldByName('orderNumber').AsInteger := StrToInt(DelDoubleQuote(jValue.FindValue('orderNumber')));
           FBookingsHeadCDS.Post;
 
           JSONAI := jValue.GetValue<TJSONArray>('items');

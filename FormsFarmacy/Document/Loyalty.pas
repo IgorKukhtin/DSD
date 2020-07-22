@@ -167,6 +167,17 @@ type
     spUnhook_Movement: TdsdStoredProc;
     actUnhook_Movement: TdsdExecStoredProc;
     dxBarButton5: TdxBarButton;
+    cbisElectron: TcxCheckBox;
+    actInsertPromoCode: TMultiAction;
+    actExecSPInsertPromoCode: TdsdExecStoredProc;
+    actExecuteDialogPromoCode: TExecuteDialog;
+    bbInsertPromoCode: TdxBarButton;
+    spInsertPromoCode: TdsdStoredProc;
+    actPrintSticker: TdsdExportToXLS;
+    ExecSPPrintSticker: TdsdExecStoredProc;
+    ExecutePromoCodeSignUnitName: TExecuteDialog;
+    spSelectPrintSticker: TdsdStoredProc;
+    dxBarButton6: TdxBarButton;
   private
     { Private declarations }
   public
