@@ -57,6 +57,13 @@ BEGIN
        PERFORM lpInsertUpdate_MovementItemLinkObject (zc_MILinkObject_Remake(), inId, Null);
     END IF;
 
+    IF inReestrKindId = zc_Enum_ReestrKind_Econom() THEN 
+       -- сохранили <когда сформирована виза "Ёкономисты">   
+       PERFORM lpInsertUpdate_MovementItemDate (zc_MIDate_Econom(), inId, Null);
+       -- сохранили св€зь с <кто сформировал визу "Ёкономисты">
+       PERFORM lpInsertUpdate_MovementItemLinkObject (zc_MILinkObject_Econom(), inId, Null);
+    END IF;
+
     IF inReestrKindId = zc_Enum_ReestrKind_Buh() THEN 
        -- сохранили <когда сформирована виза "Ѕухгалтери€">   
        PERFORM lpInsertUpdate_MovementItemDate (zc_MIDate_Buh(), inId, Null);
@@ -83,6 +90,7 @@ BEGIN
                                    WHEN tmp.DescId = zc_MIDate_RemakeIn()    THEN zc_Enum_ReestrKind_RemakeIn()
                                    WHEN tmp.DescId = zc_MIDate_RemakeBuh()   THEN zc_Enum_ReestrKind_RemakeBuh()
                                    WHEN tmp.DescId = zc_MIDate_Remake()      THEN zc_Enum_ReestrKind_Remake()
+                                   WHEN tmp.DescId = zc_MIDate_Econom()      THEN zc_Enum_ReestrKind_Econom()
                                    WHEN tmp.DescId = zc_MIDate_Buh()         THEN zc_Enum_ReestrKind_Buh()
                                    WHEN tmp.DescId = zc_MIDate_TransferIn()  THEN zc_Enum_ReestrKind_TransferIn()
                                    WHEN tmp.DescId = zc_MIDate_TransferOut() THEN zc_Enum_ReestrKind_TransferOut()
@@ -90,7 +98,7 @@ BEGIN
                        FROM (SELECT ROW_NUMBER() OVER(ORDER BY MID.ValueData desc) AS Num, MID.DescId 
                              FROM MovementItemDate AS MID
                              WHERE MID.MovementItemId = inId
-                               AND MID.DescId IN (zc_MIDate_PartnerIn(), zc_MIDate_RemakeIn(), zc_MIDate_RemakeBuh()
+                               AND MID.DescId IN (zc_MIDate_PartnerIn(), zc_MIDate_RemakeIn(), zc_MIDate_RemakeBuh(), zc_MIDate_Econom()
                                                 , zc_MIDate_Remake(), zc_MIDate_Buh(), zc_MIDate_TransferIn(), zc_MIDate_TransferOut())
                                AND MID.ValueData IS NOT NULL
                        ) AS tmp

@@ -13,8 +13,8 @@ RETURNS TABLE ( Id Integer, MovementId Integer, LineNum Integer
               , OperDate TDateTime, InvNumber TVarChar
               , UpdateName TVarChar, UpdateDate TDateTime
               , Date_Insert TDateTime, MemberName_Insert TVarChar
-              , Date_RemakeBuh TDateTime, Date_Buh TDateTime
-              , Member_RemakeBuh TVarChar, Member_Buh TVarChar
+              , Date_RemakeBuh TDateTime, Date_Econom TDateTime, Date_Buh TDateTime
+              , Member_RemakeBuh TVarChar, Member_Econom TVarChar, Member_Buh TVarChar
               , BarCode_ReturnIn TVarChar, OperDate_ReturnIn TDateTime, InvNumber_ReturnIn TVarChar
               , OperDatePartner TDateTime, InvNumberPartner TVarChar, StatusCode_ReturnIn Integer, StatusName_ReturnIn TVarChar
               , TotalCountKg TFloat, TotalSumm TFloat
@@ -46,11 +46,13 @@ BEGIN
 
      -- Определяется
      vbDateDescId := (SELECT CASE WHEN inReestrKindId = zc_Enum_ReestrKind_RemakeBuh() THEN zc_MIDate_RemakeBuh()
+                                  WHEN inReestrKindId = zc_Enum_ReestrKind_Econom()    THEN zc_MIDate_Econom()
                                   WHEN inReestrKindId = zc_Enum_ReestrKind_Buh()       THEN zc_MIDate_Buh()
                              END AS DateDescId
                       );
      -- Определяется
      vbMILinkObjectId := (SELECT CASE WHEN inReestrKindId = zc_Enum_ReestrKind_RemakeBuh() THEN zc_MILinkObject_RemakeBuh()
+                                      WHEN inReestrKindId = zc_Enum_ReestrKind_Econom()    THEN zc_MILinkObject_Econom()
                                       WHEN inReestrKindId = zc_Enum_ReestrKind_Buh()       THEN zc_MILinkObject_Buh()
                                  END AS MILinkObjectId
                       );
@@ -112,8 +114,10 @@ BEGIN
             , Object_Member.ValueData                   AS MemberName_Insert
 
             , MIDate_RemakeBuh.ValueData                AS Date_RemakeBuh
+            , MIDate_Econom.ValueData                   AS Date_Econom
             , MIDate_Buh.ValueData                      AS Date_Buh
             , Object_RemakeBuh.ValueData                AS Member_RemakeBuh
+            , Object_Econom.ValueData                   AS Member_Econom
             , Object_Buh.ValueData                      AS Member_Buh
 
             , zfFormat_BarCode (zc_BarCodePref_Movement(), Movement_ReturnIn.Id) AS BarCode_ReturnIn
@@ -173,6 +177,9 @@ BEGIN
             LEFT JOIN MovementItemDate AS MIDate_RemakeBuh
                                        ON MIDate_RemakeBuh.MovementItemId = MovementItem.Id
                                       AND MIDate_RemakeBuh.DescId = zc_MIDate_RemakeBuh()
+            LEFT JOIN MovementItemDate AS MIDate_Econom
+                                       ON MIDate_Econom.MovementItemId = MovementItem.Id
+                                      AND MIDate_Econom.DescId = zc_MIDate_Econom()
             LEFT JOIN MovementItemDate AS MIDate_Buh
                                        ON MIDate_Buh.MovementItemId = MovementItem.Id
                                       AND MIDate_Buh.DescId = zc_MIDate_Buh()
@@ -181,6 +188,11 @@ BEGIN
                                              ON MILinkObject_RemakeBuh.MovementItemId = MovementItem.Id
                                             AND MILinkObject_RemakeBuh.DescId = zc_MILinkObject_RemakeBuh()
             LEFT JOIN Object AS Object_RemakeBuh ON Object_RemakeBuh.Id = MILinkObject_RemakeBuh.ObjectId
+
+            LEFT JOIN MovementItemLinkObject AS MILinkObject_Econom
+                                             ON MILinkObject_Econom.MovementItemId = MovementItem.Id
+                                            AND MILinkObject_Econom.DescId = zc_MILinkObject_Econom()
+            LEFT JOIN Object AS Object_Econom ON Object_Econom.Id = MILinkObject_Econom.ObjectId
 
             LEFT JOIN MovementItemLinkObject AS MILinkObject_Buh
                                              ON MILinkObject_Buh.MovementItemId = MovementItem.Id
@@ -267,7 +279,8 @@ $BODY$
 
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
-               Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.
+               Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
+ 22.07.20         *
  12.03.17         *
 */
 
