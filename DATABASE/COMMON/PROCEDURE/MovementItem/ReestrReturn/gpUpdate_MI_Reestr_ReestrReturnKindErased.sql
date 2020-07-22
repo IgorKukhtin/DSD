@@ -57,7 +57,7 @@ BEGIN
                                    WHEN tmp.DescId = zc_MIDate_RemakeBuh() THEN zc_Enum_ReestrKind_RemakeBuh()
                                    WHEN tmp.DescId = zc_MIDate_Econom()    THEN zc_Enum_ReestrKind_Econom()
                                    WHEN tmp.DescId = zc_MIDate_Buh()       THEN zc_Enum_ReestrKind_Buh()
-                              END 
+                              END
                        FROM (SELECT ROW_NUMBER() OVER(ORDER BY MID.ValueData desc) AS Num, MID.DescId 
                              FROM MovementItemDate AS MID
                              WHERE MID.MovementItemId = inId
@@ -65,7 +65,6 @@ BEGIN
                                AND MID.ValueData IS NOT NULL
                        ) AS tmp
                        WHERE tmp.Num = 1);
-
 
     -- Изменили <Состояние по реестру> в документе возврата на предыдущее
     PERFORM lpInsertUpdate_MovementLinkObject (zc_MovementLinkObject_ReestrKind(), vbId_miReturn, COALESCE (vbReestrKindId, zc_Enum_ReestrKind_PartnerIn()));

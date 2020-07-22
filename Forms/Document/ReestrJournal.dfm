@@ -487,6 +487,22 @@ inherited ReestrJournalForm: TReestrJournalForm
             HeaderAlignmentVert = vaCenter
             Width = 140
           end
+          object Date_Econom: TcxGridDBColumn
+            Caption = #1044#1072#1090#1072'/'#1074#1088#1077#1084#1103' ('#1074#1080#1079#1072' '#1069#1082#1086#1085#1086#1084#1080#1089#1090#1099')'
+            DataBinding.FieldName = 'Date_Econom'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            HeaderHint = #1044#1072#1085#1085#1099#1077' '#1080#1079' '#1056#1077#1077#1089#1090#1088#1072
+            Width = 120
+          end
+          object Member_Econom: TcxGridDBColumn
+            Caption = #1060#1048#1054' ('#1074#1080#1079#1072' '#1069#1082#1086#1085#1086#1084#1080#1089#1090#1099')'
+            DataBinding.FieldName = 'Member_Econom'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            HeaderHint = #1044#1072#1085#1085#1099#1077' '#1080#1079' '#1056#1077#1077#1089#1090#1088#1072
+            Width = 120
+          end
           object Date_Buh: TcxGridDBColumn
             Caption = #1044#1072#1090#1072'/'#1074#1088#1077#1084#1103' ('#1074#1080#1079#1072' '#1041#1091#1093#1075#1072#1083#1090#1077#1088#1080#1103')'
             DataBinding.FieldName = 'Date_Buh'
@@ -631,7 +647,7 @@ inherited ReestrJournalForm: TReestrJournalForm
         end
         item
           Name = 'isGroup'
-          Value = 'FALSE'
+          Value = False
           DataType = ftBoolean
           MultiSelectSeparator = ','
         end>
@@ -675,7 +691,7 @@ inherited ReestrJournalForm: TReestrJournalForm
         end
         item
           Name = 'isGroup'
-          Value = 'FALSE'
+          Value = False
           DataType = ftBoolean
           MultiSelectSeparator = ','
         end>
@@ -1141,7 +1157,7 @@ inherited ReestrJournalForm: TReestrJournalForm
       end
       item
         Name = 'inIsReestrKind'
-        Value = 'FALSE'
+        Value = False
         DataType = ftBoolean
         ParamType = ptInput
         MultiSelectSeparator = ','

@@ -25,7 +25,6 @@ inherited Sale_ReestrJournalForm: TSale_ReestrJournalForm
       inherited cxGrid: TcxGrid
         Width = 1177
         Height = 476
-        ExplicitLeft = 664
         ExplicitWidth = 1177
         ExplicitHeight = 476
         inherited cxGridDBTableView: TcxGridDBTableView
@@ -728,6 +727,22 @@ inherited Sale_ReestrJournalForm: TSale_ReestrJournalForm
             HeaderAlignmentVert = vaCenter
             HeaderHint = #1044#1072#1085#1085#1099#1077' '#1080#1079' '#1056#1077#1077#1089#1090#1088#1072
             Width = 140
+          end
+          object Date_Econom: TcxGridDBColumn
+            Caption = #1044#1072#1090#1072'/'#1074#1088#1077#1084#1103' ('#1074#1080#1079#1072' '#1069#1082#1086#1085#1086#1084#1080#1089#1090#1099')'
+            DataBinding.FieldName = 'Date_Econom'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            HeaderHint = #1044#1072#1085#1085#1099#1077' '#1080#1079' '#1056#1077#1077#1089#1090#1088#1072
+            Width = 120
+          end
+          object Member_Econom: TcxGridDBColumn
+            Caption = #1060#1048#1054' ('#1074#1080#1079#1072' '#1069#1082#1086#1085#1086#1084#1080#1089#1090#1099')'
+            DataBinding.FieldName = 'Member_Econom'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            HeaderHint = #1044#1072#1085#1085#1099#1077' '#1080#1079' '#1056#1077#1077#1089#1090#1088#1072
+            Width = 120
           end
           object Date_Buh: TcxGridDBColumn
             Caption = #1044#1072#1090#1072'/'#1074#1088#1077#1084#1103' ('#1074#1080#1079#1072' '#1041#1091#1093#1075#1072#1083#1090#1077#1088#1080#1103')'
@@ -2648,7 +2663,7 @@ inherited Sale_ReestrJournalForm: TSale_ReestrJournalForm
         end
         item
           Name = 'IsPartnerDate'
-          Value = 'False'
+          Value = False
           Component = edIsPartnerDate
           DataType = ftBoolean
           ParamType = ptInput
@@ -3128,7 +3143,7 @@ inherited Sale_ReestrJournalForm: TSale_ReestrJournalForm
       end
       item
         Name = 'inIsPartnerDate'
-        Value = 'False'
+        Value = False
         Component = edIsPartnerDate
         DataType = ftBoolean
         ParamType = ptInput
@@ -3683,7 +3698,7 @@ inherited Sale_ReestrJournalForm: TSale_ReestrJournalForm
       end
       item
         Name = 'inislastcomplete'
-        Value = 'False'
+        Value = False
         DataType = ftBoolean
         ParamType = ptInput
         MultiSelectSeparator = ','
@@ -4338,7 +4353,7 @@ inherited Sale_ReestrJournalForm: TSale_ReestrJournalForm
       end
       item
         Name = 'inIsDiffTax'
-        Value = 'FALSE'
+        Value = False
         DataType = ftBoolean
         ParamType = ptInput
         MultiSelectSeparator = ','
@@ -4410,7 +4425,7 @@ inherited Sale_ReestrJournalForm: TSale_ReestrJournalForm
       end
       item
         Name = 'inNewPrinted'
-        Value = 'True'
+        Value = True
         Component = FormParams
         ComponentItem = 'isPrinted'
         DataType = ftBoolean
@@ -4419,7 +4434,7 @@ inherited Sale_ReestrJournalForm: TSale_ReestrJournalForm
       end
       item
         Name = 'outPrinted'
-        Value = 'False'
+        Value = False
         Component = MasterCDS
         ComponentItem = 'isPrinted'
         DataType = ftBoolean
@@ -4527,7 +4542,7 @@ inherited Sale_ReestrJournalForm: TSale_ReestrJournalForm
       end
       item
         Name = 'inIsList'
-        Value = 'FALSE'
+        Value = False
         DataType = ftBoolean
         ParamType = ptInput
         MultiSelectSeparator = ','
@@ -4638,7 +4653,7 @@ inherited Sale_ReestrJournalForm: TSale_ReestrJournalForm
       end
       item
         Name = 'inIsList'
-        Value = 'FALSE'
+        Value = False
         DataType = ftBoolean
         ParamType = ptInput
         MultiSelectSeparator = ','
@@ -4742,7 +4757,7 @@ inherited Sale_ReestrJournalForm: TSale_ReestrJournalForm
       end
       item
         Name = 'inisList'
-        Value = 'True'
+        Value = True
         DataType = ftBoolean
         ParamType = ptInput
         MultiSelectSeparator = ','
@@ -4786,7 +4801,7 @@ inherited Sale_ReestrJournalForm: TSale_ReestrJournalForm
       end
       item
         Name = 'inIsDiffTax'
-        Value = 'TRUE'
+        Value = True
         DataType = ftBoolean
         ParamType = ptInput
         MultiSelectSeparator = ','

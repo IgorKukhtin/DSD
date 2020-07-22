@@ -34,8 +34,8 @@ RETURNS TABLE (Id Integer, InvNumber TVarChar, OperDate TDateTime
              , Date_RemakeIn    TDateTime
              , Date_RemakeBuh   TDateTime
              , Date_Remake      TDateTime
-             , Date_Buh         TDateTime
              , Date_Econom      TDateTime
+             , Date_Buh         TDateTime
              , Date_TransferIn  TDateTime
              , Date_TransferOut TDateTime
 
