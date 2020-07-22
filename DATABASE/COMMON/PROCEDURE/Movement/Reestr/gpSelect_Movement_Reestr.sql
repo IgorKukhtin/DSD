@@ -35,6 +35,7 @@ RETURNS TABLE (Id Integer, InvNumber TVarChar, OperDate TDateTime
              , Date_RemakeBuh   TDateTime
              , Date_Remake      TDateTime
              , Date_Buh         TDateTime
+             , Date_Econom      TDateTime
              , Date_TransferIn  TDateTime
              , Date_TransferOut TDateTime
 
@@ -45,6 +46,7 @@ RETURNS TABLE (Id Integer, InvNumber TVarChar, OperDate TDateTime
              , Member_RemakeInFrom  TVarChar
              , Member_RemakeBuh     TVarChar
              , Member_Remake        TVarChar
+             , Member_Econom        TVarChar
              , Member_Buh           TVarChar
              , Member_TransferIn    TVarChar
              , Member_TransferOut   TVarChar
@@ -130,6 +132,7 @@ BEGIN
            , MIDate_RemakeIn.ValueData       AS Date_RemakeIn
            , MIDate_RemakeBuh.ValueData      AS Date_RemakeBuh
            , MIDate_Remake.ValueData         AS Date_Remake
+           , MIDate_Econom.ValueData         AS Date_Econom
            , MIDate_Buh.ValueData            AS Date_Buh
            , MIDate_TransferIn.ValueData     AS Date_TransferIn
            , MIDate_TransferOut.ValueData    AS Date_TransferOut
@@ -141,6 +144,7 @@ BEGIN
            , Object_RemakeInFrom.ValueData   AS Member_RemakeInFrom
            , Object_RemakeBuh.ValueData      AS Member_RemakeBuh
            , Object_Remake.ValueData         AS Member_Remake
+           , Object_Econom.ValueData         AS Member_Econom
            , Object_Buh.ValueData            AS Member_Buh
            , Object_TransferIn.ValueData     AS Member_TransferIn
            , Object_TransferOut.ValueData    AS Member_TransferOut
@@ -211,6 +215,9 @@ BEGIN
             LEFT JOIN MovementItemDate AS MIDate_Remake
                                        ON MIDate_Remake.MovementItemId = MovementItem.Id
                                       AND MIDate_Remake.DescId = zc_MIDate_Remake()
+            LEFT JOIN MovementItemDate AS MIDate_Econom
+                                       ON MIDate_Econom.MovementItemId = MovementItem.Id
+                                      AND MIDate_Econom.DescId = zc_MIDate_Econom()
             LEFT JOIN MovementItemDate AS MIDate_Buh
                                        ON MIDate_Buh.MovementItemId = MovementItem.Id
                                       AND MIDate_Buh.DescId = zc_MIDate_Buh()
@@ -250,6 +257,11 @@ BEGIN
                                              ON MILinkObject_Remake.MovementItemId = MovementItem.Id
                                             AND MILinkObject_Remake.DescId = zc_MILinkObject_Remake()
             LEFT JOIN Object AS Object_Remake ON Object_Remake.Id = MILinkObject_Remake.ObjectId
+
+            LEFT JOIN MovementItemLinkObject AS MILinkObject_Econom
+                                             ON MILinkObject_Econom.MovementItemId = MovementItem.Id
+                                            AND MILinkObject_Econom.DescId = zc_MILinkObject_Econom()
+            LEFT JOIN Object AS Object_Econom ON Object_Econom.Id = MILinkObject_Econom.ObjectId
 
             LEFT JOIN MovementItemLinkObject AS MILinkObject_Buh
                                              ON MILinkObject_Buh.MovementItemId = MovementItem.Id
@@ -360,6 +372,7 @@ $BODY$
 /*
  »—“Œ–»ﬂ –¿«–¿¡Œ“ »: ƒ¿“¿, ¿¬“Œ–
                ‘ÂÎÓÌ˛Í ».¬.    ÛıÚËÌ ».¬.    ÎËÏÂÌÚ¸Â‚  .».   Ã‡Ì¸ÍÓ ƒ.
+ 22.07.20         *
  20.07.17         *
  20.10.16         *
 */

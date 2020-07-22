@@ -61,6 +61,7 @@ BEGIN
                                   WHEN inReestrKindId = zc_Enum_ReestrKind_RemakeIn()  THEN zc_MIDate_RemakeIn()
                                   WHEN inReestrKindId = zc_Enum_ReestrKind_RemakeBuh() THEN zc_MIDate_RemakeBuh()
                                   WHEN inReestrKindId = zc_Enum_ReestrKind_Remake()    THEN zc_MIDate_Remake()
+                                  WHEN inReestrKindId = zc_Enum_ReestrKind_Econom()    THEN zc_MIDate_Econom()
                                   WHEN inReestrKindId = zc_Enum_ReestrKind_Buh()       THEN zc_MIDate_Buh()
                              END AS DateDescId
                       );
@@ -69,6 +70,7 @@ BEGIN
                                       WHEN inReestrKindId = zc_Enum_ReestrKind_RemakeIn()  THEN zc_MILinkObject_RemakeInTo()
                                       WHEN inReestrKindId = zc_Enum_ReestrKind_RemakeBuh() THEN zc_MILinkObject_RemakeBuh()
                                       WHEN inReestrKindId = zc_Enum_ReestrKind_Remake()    THEN zc_MILinkObject_Remake()
+                                      WHEN inReestrKindId = zc_Enum_ReestrKind_Econom()    THEN zc_MILinkObject_Econom()
                                       WHEN inReestrKindId = zc_Enum_ReestrKind_Buh()       THEN zc_MILinkObject_Buh()
                                  END AS MILinkObjectId
                       );
@@ -149,6 +151,7 @@ BEGIN
            , COALESCE (MIDate_RemakeIn.ValueData, NULL) ::TDateTime       AS Date_RemakeIn
            , COALESCE (MIDate_RemakeBuh.ValueData, NULL) ::TDateTime      AS Date_RemakeBuh
            , COALESCE (MIDate_Remake.ValueData, NULL) ::TDateTime         AS Date_Remake
+           , COALESCE (MIDate_Econom.ValueData, NULL) ::TDateTime         AS Date_Econom
            , COALESCE (MIDate_Buh.ValueData, NULL) ::TDateTime            AS Date_Buh
 
            , CASE WHEN MIDate_Insert.DescId IS NOT NULL THEN Object_ObjectMember.ValueData ELSE '' END :: TVarChar AS Member_Insert -- т.к. в "пустышках" - "криво" формируется это свойство
@@ -158,6 +161,7 @@ BEGIN
            , Object_RemakeInFrom.ValueData   AS Member_RemakeInFrom
            , Object_RemakeBuh.ValueData      AS Member_RemakeBuh
            , Object_Remake.ValueData         AS Member_Remake
+           , Object_Econom.ValueData         AS Member_Econom
            , Object_Buh.ValueData            AS Member_Buh
 
        FROM tmpMI
@@ -178,6 +182,9 @@ BEGIN
             LEFT JOIN MovementItemDate AS MIDate_Remake
                                        ON MIDate_Remake.MovementItemId = tmpMI.MovementItemId
                                       AND MIDate_Remake.DescId = zc_MIDate_Remake()
+            LEFT JOIN MovementItemDate AS MIDate_Econom
+                                       ON MIDate_Econom.MovementItemId = tmpMI.MovementItemId
+                                      AND MIDate_Econom.DescId = zc_MIDate_Econom()
             LEFT JOIN MovementItemDate AS MIDate_Buh
                                        ON MIDate_Buh.MovementItemId = tmpMI.MovementItemId
                                       AND MIDate_Buh.DescId = zc_MIDate_Buh()
@@ -211,6 +218,11 @@ BEGIN
                                              ON MILinkObject_Remake.MovementItemId = tmpMI.MovementItemId
                                             AND MILinkObject_Remake.DescId = zc_MILinkObject_Remake()
             LEFT JOIN Object AS Object_Remake ON Object_Remake.Id = MILinkObject_Remake.ObjectId
+
+            LEFT JOIN MovementItemLinkObject AS MILinkObject_Econom
+                                             ON MILinkObject_Econom.MovementItemId = tmpMI.MovementItemId
+                                            AND MILinkObject_Econom.DescId = zc_MILinkObject_Econom()
+            LEFT JOIN Object AS Object_Econom ON Object_Econom.Id = MILinkObject_Econom.ObjectId
 
             LEFT JOIN MovementItemLinkObject AS MILinkObject_Buh
                                              ON MILinkObject_Buh.MovementItemId = tmpMI.MovementItemId
@@ -291,6 +303,7 @@ $BODY$
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
+ 22.07.20         *
  24.01.18         *
  19.01.18         *
  03.12.16         *

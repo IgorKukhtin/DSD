@@ -218,7 +218,8 @@ BEGIN
                                                             , zc_MILinkObject_RemakeInFrom()
                                                             , zc_MILinkObject_RemakeBuh()
                                                             , zc_MILinkObject_Remake()
-                                                            , zc_MILinkObject_Buh())
+                                                            , zc_MILinkObject_Buh()
+                                                            , zc_MILinkObject_Econom())
                       )
 
         , tmpMIDate AS (SELECT MovementItemDate.*
@@ -229,7 +230,8 @@ BEGIN
                                                         , zc_MIDate_RemakeIn()
                                                         , zc_MIDate_RemakeBuh()
                                                         , zc_MIDate_Remake()
-                                                        , zc_MIDate_Buh())
+                                                        , zc_MIDate_Buh()
+                                                        , zc_MIDate_Econom())
                       )
                                       
 
@@ -263,6 +265,7 @@ BEGIN
            , COALESCE (MIDate_RemakeIn.ValueData, NULL) ::TDateTime       AS Date_RemakeIn
            , COALESCE (MIDate_RemakeBuh.ValueData, NULL) ::TDateTime      AS Date_RemakeBuh
            , COALESCE (MIDate_Remake.ValueData, NULL) ::TDateTime         AS Date_Remake
+           , COALESCE (MIDate_Econom.ValueData, NULL) ::TDateTime         AS Date_Econom
            , COALESCE (MIDate_Buh.ValueData, NULL) ::TDateTime            AS Date_Buh
 
            , CASE WHEN MIDate_Insert.DescId IS NOT NULL THEN Object_ObjectMember.ValueData ELSE '' END :: TVarChar AS Member_Insert -- т.к. в "пустышках" - "криво" формируется это свойство
@@ -272,6 +275,7 @@ BEGIN
            , Object_RemakeInFrom.ValueData   AS Member_RemakeInFrom
            , Object_RemakeBuh.ValueData      AS Member_RemakeBuh
            , Object_Remake.ValueData         AS Member_Remake
+           , Object_Econom.ValueData         AS Member_Econom
            , Object_Buh.ValueData            AS Member_Buh
            , tmpMI.GroupNum
            , MovementString_Comment.ValueData       AS Comment_Order
@@ -297,6 +301,9 @@ BEGIN
             LEFT JOIN tmpMIDate AS MIDate_Buh
                                 ON MIDate_Buh.MovementItemId = tmpMI.MovementItemId
                                AND MIDate_Buh.DescId = zc_MIDate_Buh()
+            LEFT JOIN tmpMIDate AS MIDate_Econom
+                                ON MIDate_Econom.MovementItemId = tmpMI.MovementItemId
+                               AND MIDate_Econom.DescId = zc_MIDate_Econom()
 
             LEFT JOIN tmpMILO AS MILinkObject_PartnerInTo
                               ON MILinkObject_PartnerInTo.MovementItemId = tmpMI.MovementItemId
@@ -327,6 +334,11 @@ BEGIN
                               ON MILinkObject_Remake.MovementItemId = tmpMI.MovementItemId
                              AND MILinkObject_Remake.DescId = zc_MILinkObject_Remake()
             LEFT JOIN Object AS Object_Remake ON Object_Remake.Id = MILinkObject_Remake.ObjectId
+
+            LEFT JOIN tmpMILO AS MILinkObject_Econom
+                              ON MILinkObject_Econom.MovementItemId = tmpMI.MovementItemId
+                             AND MILinkObject_Econom.DescId = zc_MILinkObject_Econom()
+            LEFT JOIN Object AS Object_Econom ON Object_Econom.Id = MILinkObject_Econom.ObjectId
 
             LEFT JOIN tmpMILO AS MILinkObject_Buh
                               ON MILinkObject_Buh.MovementItemId = tmpMI.MovementItemId
@@ -414,6 +426,7 @@ $BODY$
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
+ 22.07.20         *
  19.01.18         *
  25.10.16         *
 */

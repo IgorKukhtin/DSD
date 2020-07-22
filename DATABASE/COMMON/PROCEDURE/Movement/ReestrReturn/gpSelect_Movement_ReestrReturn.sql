@@ -24,10 +24,12 @@ RETURNS TABLE (Id Integer, InvNumber TVarChar, OperDate TDateTime
 
              , Date_Insert    TDateTime
              , Date_RemakeBuh TDateTime
+             , Date_Econom    TDateTime
              , Date_Buh       TDateTime
 
              , Member_Insert        TVarChar
              , Member_RemakeBuh     TVarChar
+             , Member_Econom        TVarChar
              , Member_Buh           TVarChar
 
              , PersonalName            TVarChar
@@ -95,10 +97,12 @@ BEGIN
 
            , MIDate_Insert.ValueData         AS Date_Insert
            , MIDate_RemakeBuh.ValueData      AS Date_RemakeBuh
+           , MIDate_Econom.ValueData         AS Date_Econom
            , MIDate_Buh.ValueData            AS Date_Buh
 
            , CASE WHEN MIDate_Insert.DescId IS NOT NULL THEN Object_ObjectMember.ValueData ELSE '' END :: TVarChar AS Member_Insert -- т.к. в "пустышках" - "криво" формируется это свойство
            , Object_RemakeBuh.ValueData      AS Member_RemakeBuh
+           , Object_Econom.ValueData         AS Member_Econom
            , Object_Buh.ValueData            AS Member_Buh
 
            , Object_Personal.ValueData                 AS PersonalName
@@ -137,6 +141,9 @@ BEGIN
             LEFT JOIN MovementItemDate AS MIDate_RemakeBuh
                                        ON MIDate_RemakeBuh.MovementItemId = MovementItem.Id
                                       AND MIDate_RemakeBuh.DescId = zc_MIDate_RemakeBuh()
+            LEFT JOIN MovementItemDate AS MIDate_Econom
+                                       ON MIDate_Econom.MovementItemId = MovementItem.Id
+                                      AND MIDate_Econom.DescId = zc_MIDate_Econom()
             LEFT JOIN MovementItemDate AS MIDate_Buh
                                        ON MIDate_Buh.MovementItemId = MovementItem.Id
                                       AND MIDate_Buh.DescId = zc_MIDate_Buh()
@@ -145,6 +152,11 @@ BEGIN
                                              ON MILinkObject_RemakeBuh.MovementItemId = MovementItem.Id
                                             AND MILinkObject_RemakeBuh.DescId = zc_MILinkObject_RemakeBuh()
             LEFT JOIN Object AS Object_RemakeBuh ON Object_RemakeBuh.Id = MILinkObject_RemakeBuh.ObjectId
+
+            LEFT JOIN MovementItemLinkObject AS MILinkObject_Econom
+                                             ON MILinkObject_Econom.MovementItemId = MovementItem.Id
+                                            AND MILinkObject_Econom.DescId = zc_MILinkObject_Econom()
+            LEFT JOIN Object AS Object_Econom ON Object_Econom.Id = MILinkObject_Econom.ObjectId
 
             LEFT JOIN MovementItemLinkObject AS MILinkObject_Buh
                                              ON MILinkObject_Buh.MovementItemId = MovementItem.Id
@@ -230,8 +242,9 @@ $BODY$
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.
+ 22.07.20         *
  12.03.17         *
 */
 
 -- тест
--- SELECT * FROM gpSelect_Movement_ReestrReturn (inStartDate:= '20.10.2016', inEndDate:= '25.10.2016', inIsErased:= FALSE, inSession:= zfCalc_UserAdmin())
+-- SELECT * FROM gpSelect_Movement_ReestrReturn (inStartDate:= '20.02.2020', inEndDate:= '25.02.2020', inIsErased:= FALSE, inSession:= zfCalc_UserAdmin())
