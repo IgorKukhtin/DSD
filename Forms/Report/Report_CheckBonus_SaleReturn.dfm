@@ -23,7 +23,6 @@ inherited Report_CheckBonus_SaleReturnForm: TReport_CheckBonus_SaleReturnForm
       inherited cxGrid: TcxGrid
         Width = 1180
         Height = 258
-        ExplicitLeft = 3
         ExplicitWidth = 1180
         ExplicitHeight = 258
         inherited cxGridDBTableView: TcxGridDBTableView
@@ -118,6 +117,11 @@ inherited Report_CheckBonus_SaleReturnForm: TReport_CheckBonus_SaleReturnForm
               Format = ',0.00##'
               Kind = skSum
               Column = Sum_Bonus_real
+            end
+            item
+              Format = #1057#1090#1088#1086#1082': ,0'
+              Kind = skCount
+              Column = JuridicalName
             end>
           OptionsData.Editing = False
           OptionsView.GroupByBox = True

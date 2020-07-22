@@ -315,46 +315,8 @@ inisMovement:= FALSE;
                           
       -- список ContractId по которым будет расчет "базы"
     , tmpAccount AS (SELECT Object_Account_View.AccountId FROM Object_Account_View WHERE Object_Account_View.AccountGroupId <> zc_Enum_AccountGroup_110000()) -- “ранзит
-/*    , tmpContainer AS (SELECT Container.Id AS ContainerId
-                            , tmpContractGroup.JuridicalId
-                            , tmpContractGroup.ContractId_child
-                            , tmpContractGroup.InfoMoneyId_child
-                            , tmpContractGroup.PaidKindId_byBase
-                            , COALESCE (ContainerLO_Branch.ObjectId,0) AS BranchId
-                       FROM tmpAccount
-                            JOIN Container ON Container.ObjectId = tmpAccount.AccountId
-                                          AND Container.DescId = zc_Container_Summ()
 
-                            JOIN ContainerLinkObject AS ContainerLO_Juridical ON ContainerLO_Juridical.ContainerId = Container.Id
-                                                                             AND ContainerLO_Juridical.DescId = zc_ContainerLinkObject_Juridical() 
-                            JOIN ContainerLinkObject AS ContainerLO_Contract ON ContainerLO_Contract.ContainerId = Container.Id
-                                                                            AND ContainerLO_Contract.DescId = zc_ContainerLinkObject_Contract() 
-                            JOIN ContainerLinkObject AS ContainerLO_InfoMoney ON ContainerLO_InfoMoney.ContainerId = Container.Id
-                                                                             AND ContainerLO_InfoMoney.DescId = zc_ContainerLinkObject_InfoMoney()                               
-                            JOIN ContainerLinkObject AS ContainerLO_PaidKind ON ContainerLO_PaidKind.ContainerId = Container.Id
-                                                                            AND ContainerLO_PaidKind.DescId = zc_ContainerLinkObject_PaidKind() 
-
-                            JOIN ContainerLinkObject AS CLO_Partner
-                                                     ON CLO_Partner.ContainerId = Container.Id
-                                                    AND CLO_Partner.DescId = zc_ContainerLinkObject_Partner()
-                            -- ограничиваем контрагентами --
-                            INNER JOIN tmpContractPartner ON tmpContractPartner.PartnerId = CLO_Partner.ObjectId
-                                                                                                         
-                            -- ограничение по 4-м ключам
-                            JOIN tmpContractGroup ON tmpContractGroup.JuridicalId       = ContainerLO_Juridical.ObjectId
-                                                 AND tmpContractGroup.ContractId_child  = ContainerLO_Contract.ObjectId
-                                                 AND tmpContractGroup.InfoMoneyId_child = ContainerLO_InfoMoney.ObjectId
-                                                 AND tmpContractGroup.PaidKindId_byBase = ContainerLO_PaidKind.ObjectId
-
-                            LEFT JOIN ContainerLinkObject AS ContainerLO_Branch
-                                                          ON ContainerLO_Branch.ContainerId = Container.Id
-                                                         AND ContainerLO_Branch.DescId = zc_ContainerLinkObject_Branch()
-                       WHERE COALESCE (ContainerLO_Branch.ObjectId,0) = inBranchId OR inBranchId = 0
-                       -- WHERE Container.ObjectId <> zc_Enum_Account_50401() -- "ћаркетинг"
-                       --   AND Container.ObjectId <> zc_Enum_AccountDirection_70300() нужно убрать проводки по оплате маркетинга
-                       )
-                       */
-    , tmpContainer1 AS (SELECT DISTINCT
+/*    , tmpContainer1 AS (SELECT DISTINCT
                               Container.Id  AS ContainerId
                             , tmpContractGroup.JuridicalId
                             , tmpContractGroup.ContractId_child
@@ -397,7 +359,54 @@ inisMovement:= FALSE;
                        --   AND Container.ObjectId <> zc_Enum_AccountDirection_70300() нужно убрать проводки по оплате маркетинга
                        --  AND (inPaidKindId <> zc_Enum_PaidKind_FirstForm() AND CLO_Partner.ObjectId IN (SELECT DISTINCT tmpContractPartner.PartnerId FROM tmpContractPartner) )
                        )
+*/
+
+    , tmpContainerAll AS (SELECT Container.*
+                             , ContainerLO_Juridical.ObjectId  AS JuridicalId
+                             , ContainerLO_Contract.ObjectId   AS ContractId
+                             , ContainerLO_InfoMoney.ObjectId  AS InfoMoneyId
+                             , ContainerLO_PaidKind.ObjectId   AS PaidKindId
+
+                        FROM Container
+                            JOIN ContainerLinkObject AS ContainerLO_Juridical ON ContainerLO_Juridical.ContainerId = Container.Id
+                                                                             AND ContainerLO_Juridical.DescId = zc_ContainerLinkObject_Juridical() 
+                            JOIN ContainerLinkObject AS ContainerLO_Contract ON ContainerLO_Contract.ContainerId = Container.Id
+                                                                            AND ContainerLO_Contract.DescId = zc_ContainerLinkObject_Contract() 
+                            JOIN ContainerLinkObject AS ContainerLO_InfoMoney ON ContainerLO_InfoMoney.ContainerId = Container.Id
+                                                                             AND ContainerLO_InfoMoney.DescId = zc_ContainerLinkObject_InfoMoney()                               
+                            JOIN ContainerLinkObject AS ContainerLO_PaidKind ON ContainerLO_PaidKind.ContainerId = Container.Id
+                                                                            AND ContainerLO_PaidKind.DescId = zc_ContainerLinkObject_PaidKind() 
+                        WHERE Container.ObjectId IN (SELECT DISTINCT tmpAccount.AccountId FROM tmpAccount)
+                          AND Container.DescId = zc_Container_Summ()
+                        )
+
+    , tmpContainer1 AS (SELECT  DISTINCT
+                              tmpContainerAll.Id  AS ContainerId
+                            , tmpContractGroup.JuridicalId
+                            , tmpContractGroup.ContractId_child
+                            , tmpContractGroup.InfoMoneyId_child
+                            , tmpContractGroup.PaidKindId_byBase
+                            , COALESCE (ContainerLO_Branch.ObjectId,0) AS BranchId
+                        FROM tmpContainerAll 
+                            -- ограничение по 4-м ключам
+                            JOIN tmpContractGroup ON tmpContractGroup.JuridicalId       = tmpContainerAll.JuridicalId 
+                                                 AND tmpContractGroup.ContractId_child  = tmpContainerAll.ContractId
+                                                 AND tmpContractGroup.InfoMoneyId_child = tmpContainerAll.InfoMoneyId
+                                                 AND tmpContractGroup.PaidKindId_byBase = tmpContainerAll.PaidKindId
+                            LEFT JOIN ContainerLinkObject AS ContainerLO_Branch
+                                                          ON ContainerLO_Branch.ContainerId = tmpContainerAll.Id
+                                                         AND ContainerLO_Branch.DescId = zc_ContainerLinkObject_Branch()
+                        WHERE COALESCE (ContainerLO_Branch.ObjectId,0) = inBranchId OR inBranchId = 0 
+                       )
  
+     , tmpCLO_Partner AS (SELECT ContainerLinkObject.*
+                          FROM ContainerLinkObject
+                          WHERE ContainerLinkObject.ContainerId IN (SELECT DISTINCT tmpContainer1.ContainerId
+                                                                    FROM tmpContainer1
+                                                                    WHERE tmpContainer1.PaidKindId_byBase = zc_Enum_PaidKind_SecondForm())
+                            AND ContainerLinkObject.DescId = zc_ContainerLinkObject_Partner()
+                            AND ContainerLinkObject.ObjectId IN (SELECT DISTINCT tmpContractPartner.PartnerId FROM tmpContractPartner)
+                          )
      , tmpContainer AS (SELECT tmpContainer1.*
                              , 0 AS PartnerId    
                        FROM tmpContainer1
@@ -407,7 +416,7 @@ inisMovement:= FALSE;
                        SELECT tmpContainer.*
                             , CLO_Partner.ObjectId AS PartnerId  --, 0 AS PartnerId    --,
                        FROM tmpContainer1 As tmpContainer
-                           INNER JOIN ContainerLinkObject AS CLO_Partner
+                           INNER JOIN tmpCLO_Partner AS CLO_Partner
                                                           ON CLO_Partner.ContainerId = tmpContainer.ContainerId
                                                          AND CLO_Partner.DescId = zc_ContainerLinkObject_Partner()
                                                          AND CLO_Partner.ObjectId IN (SELECT DISTINCT tmpContractPartner.PartnerId FROM tmpContractPartner)
@@ -813,4 +822,7 @@ $BODY$
 -- select * from gpReport_CheckBonusTest (inStartDate:= '15.03.2016', inEndDate:= '15.03.2016', inPaidKindID:= zc_Enum_PaidKind_FirstForm(), inJuridicalId:= 0, inBranchId:= 0, inSession:= zfCalc_UserAdmin());
 -- select * from gpReport_CheckBonusTest2(inStartDate := ('28.05.2020')::TDateTime , inEndDate := ('28.05.2020')::TDateTime , inPaidKindId := 4 , inJuridicalId := 344240 , inBranchId := 0 ,  inSession := '5');--
 
--- select * from gpReport_CheckBonusTest2(inStartDate := ('01.05.2020')::TDateTime , inEndDate := ('30.06.2020')::TDateTime , inPaidKindId := 4 , inJuridicalId := 3834632 , inBranchId := 0 ,  inSession := '5');
+ --select * from gpReport_CheckBonusTest2(inStartDate := ('01.07.2020')::TDateTime , inEndDate := ('03.07.2020')::TDateTime , inPaidKindId := 4 , inJuridicalId := 0 , inBranchId := 0 ,  inSession := '5');
+ --select * from gpReport_CheckBonusTest2(inStartDate := ('01.06.2020')::TDateTime , inEndDate := ('30.06.2020')::TDateTime , inPaidKindId := 3 , inJuridicalId := 0 , inBranchId := 0 ,  inSession := '5')
+--where JuridicalId =862910 ;
+ 

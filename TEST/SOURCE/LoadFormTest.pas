@@ -2252,7 +2252,7 @@ begin
   }
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_CheckBonus_SaleReturnForm'));
   TdsdFormStorageFactory.GetStorage.Load('TReport_CheckBonus_SaleReturnForm');
-  exit;
+  //exit;
 
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_CheckBonusTestForm'));
   TdsdFormStorageFactory.GetStorage.Load('TReport_CheckBonusTestForm');
