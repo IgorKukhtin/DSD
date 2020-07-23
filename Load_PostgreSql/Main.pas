@@ -1550,7 +1550,7 @@ begin
           HostName:='project-vds.vds.colocall.com';
           User:='admin';
           Password:='vas6ok';
-          Database:='pod_test';
+          Database:='pod_test_ok';
           Connected:=true;
        end;
      //
@@ -1564,7 +1564,7 @@ begin
       with ZQuery_test do begin
         close;
         Sql.Clear;
-        Sql.Add('SELECT * FROM gpSelect_Replica_union (' + EditRepl1.Text+ ' , ' +EditRepl2.Text+')');
+        Sql.Add('SELECT * FROM _replica.gpSelect_Replica_union (' + EditRepl1.Text+ ' , ' +EditRepl2.Text+')');
         Open;
         while not eof do
          begin
@@ -1592,7 +1592,7 @@ begin
          LogMemo2.Lines.Add('-- Id = ' + FieldByName('Id').AsString);
          LogMemo2.Lines.Add('-- Transaction_Id =' + FieldByName('Transaction_Id').AsString);
          LogMemo2.Lines.Add('-- table_name =' + FieldByName('table_name').AsString);
-         LogMemo2.Lines.Add(FieldByName('Result').AsString);
+         LogMemo2.Lines.Add(FieldByName('Result').AsString+';');
          LogMemo2.Lines.Add('');
          LogMemo2.Lines.Add('');
          next;

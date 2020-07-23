@@ -65,7 +65,7 @@ BEGIN
      -- проверка
      IF COALESCE (inMovementId, 0) = 0
      THEN
-         RAISE EXCEPTION 'Ошибка.Документ не сохрнен.';
+         RAISE EXCEPTION 'Ошибка.Документ не сохранен.';
      END IF;
      -- проверка
      IF COALESCE (inPersonalId, 0) = 0

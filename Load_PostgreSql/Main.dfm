@@ -2572,7 +2572,7 @@ object MainForm: TMainForm
   object ZQuery_test: TZQuery
     Connection = ZConnection_test
     SQL.Strings = (
-      'SELECT * FROM gpSelect_Replica_union (1 , 594837 * 100)')
+      'SELECT * FROM _replica.gpSelect_Replica_union (1 , 594837 * 100)')
     Params = <>
     Left = 536
     Top = 344

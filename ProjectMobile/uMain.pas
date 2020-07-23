@@ -6150,11 +6150,16 @@ begin
   UnitNameRet.Text := DM.tblObject_ConstUnitName_ret.AsString;
   eCashName.Text := DM.tblObject_ConstCashName.AsString;
   eMemberName.Text := DM.tblObject_ConstMemberName.AsString;
-  eWebService.Text := DM.tblObject_ConstWebService.AsString;
+  eWebService.Text := DM.tblObject_ConstWebService.AsString
+            + ' ; ' + DM.tblObject_ConstWebService_two.AsString
+            + ' ; ' + DM.tblObject_ConstWebService_three.AsString
+            + ' ; ' + DM.tblObject_ConstWebService_four.AsString
+    ;
+
   if not SameText(gc_WebService, DM.tblObject_ConstWebService.AsString) then
   begin
     lCurWebService.Height := 60;
-    eCurWebService.Text := gc_WebService;
+    eCurWebService.Text := gc_WebService + ' ; ' + gc_WebServers[1] + ' ; ' + gc_WebServers_r[0] + ' ; ' + gc_WebServers_r[1];
   end
   else
     lCurWebService.Height := 0;

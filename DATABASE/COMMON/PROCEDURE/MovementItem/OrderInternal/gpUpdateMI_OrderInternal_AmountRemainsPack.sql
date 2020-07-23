@@ -176,9 +176,9 @@ end if;
 /*
 if inSession = '5'
 then
-    RAISE EXCEPTION 'Ошибка.<%>  %   %', (select min (tmpAll.Amount_start) from tmpAll where tmpAll.GoodsId = 2062)
-    , (select max (tmpAll.Amount_start) from tmpAll where tmpAll.GoodsId = 2062)
-    , (select max (tmpAll.ContainerId) from tmpAll where tmpAll.GoodsId = 2062)
+    RAISE EXCEPTION 'Ошибка. end <%>  %   %', (select sum (tmpAll.Amount_start) from tmpAll where tmpAll.GoodsId = 6749 and tmpAll.GoodsKindId = 8352)
+    , (select min (tmpAll.Amount_start) from tmpAll where tmpAll.GoodsId = 6749 and tmpAll.GoodsKindId = 8352)
+    , (select max (tmpAll.ContainerId) from tmpAll where tmpAll.GoodsId = 6749 and tmpAll.GoodsKindId = 8352)
     ;
 end if;
 */

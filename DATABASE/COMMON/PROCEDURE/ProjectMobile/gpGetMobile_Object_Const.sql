@@ -159,15 +159,15 @@ BEGIN
             , Object_User.ValueData        AS UserLogin
             , ObjectString_User_.ValueData AS UserPassword
 
---          , 'http://project-vds.vds.colocall.com/projectmobile/index.php' :: TVarChar AS WebService
---          , 'http://project-vds.vds.colocall.com/projectmobile/index.php' :: TVarChar AS WebService_two
---          , 'http://project-vds.vds.colocall.com/projectmobile/index.php' :: TVarChar AS WebService_three
---          , 'http://project-vds.vds.colocall.com/projectmobile/index.php' :: TVarChar AS WebService_four
+--          , 'http//project-vds.vds.colocall.com/projectmobile/index.php' :: TVarChar AS WebService
+--          , 'http//project-vds.vds.colocall.com/projectmobile/index.php' :: TVarChar AS WebService_two
+--          , 'http//project-vds.vds.colocall.com/projectmobile/index.php' :: TVarChar AS WebService_three
+--          , 'http//project-vds.vds.colocall.com/projectmobile/index.php' :: TVarChar AS WebService_four
 
---            , LOWER ('http://integer-srv.alan.dp.ua/projectmobile/index.php')   :: TVarChar AS WebService
-  --          , LOWER ('http://integer-srv2.alan.dp.ua/projectmobile/index.php')    :: TVarChar AS WebService_two
-    --        , LOWER ('http://integer-srv-r.alan.dp.ua/projectmobile/index.php') :: TVarChar AS WebService_three
-      --      , LOWER ('http://integer-srv2-r.alan.dp.ua/projectmobile/index.php')  :: TVarChar AS WebService_four
+--            , LOWER ('http//integer-srv.alan.dp.ua/projectmobile/index.php')   :: TVarChar AS WebService
+  --          , LOWER ('http//integer-srv2.alan.dp.ua/projectmobile/index.php')    :: TVarChar AS WebService_two
+    --        , LOWER ('http//integer-srv-r.alan.dp.ua/projectmobile/index.php') :: TVarChar AS WebService_three
+      --      , LOWER ('http//integer-srv2-r.alan.dp.ua/projectmobile/index.php')  :: TVarChar AS WebService_four
 
             , LOWER ('http://integer-srv2.alan.dp.ua/projectmobile/index.php')    :: TVarChar AS WebService
             , LOWER ('http://integer-srv.alan.dp.ua/projectmobile/index.php')   :: TVarChar AS WebService_two
