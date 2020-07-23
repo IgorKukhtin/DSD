@@ -136,13 +136,13 @@ procedure TLoadReportTest.LoadAllReportFormTest;
 var
  i : integer;
 begin
-
+   {
   LoadReportFromFile('Проверка начислений по бонусам', ReportPath + '\Отчеты (финансы)\Проверка начислений по бонусам.fr3');
   exit;
 
   LoadReportFromFile('Обороты по кассе и счету (Прямой метод)', ReportPath + '\Отчеты (финансы)\Обороты по кассе и счету (Прямой метод).fr3');
   exit;
-  {
+
   LoadReportFromFile('PrintMovement_SendAsset', ReportPath + '\Товарный Учет\PrintMovement_SendAsset.fr3');
   exit;
 
@@ -359,10 +359,10 @@ begin
 
   LoadReportFromFile('Акт обвалки', ReportPath + '\Производство\Акт обвалки.fr3');
 
-  }
+
   LoadReportFromFile('Накладная по обвалке', ReportPath + '\Производство\Накладная по обвалке.fr3');
   exit;
-  {LoadReportFromFile('Накладная по взвешиванию куттера', ReportPath + '\Производство\Накладная по взвешиванию куттера.fr3');
+  LoadReportFromFile('Накладная по взвешиванию куттера', ReportPath + '\Производство\Накладная по взвешиванию куттера.fr3');
 
    LoadReportFromFile('Производство (по дням для сырья)', ReportPath + '\Производство\Производство (по дням для сырья).fr3');
    //LoadReportFromFile('Производство (по дням для специй)', ReportPath + '\Производство\Производство (по дням для специй).fr3');
@@ -381,10 +381,10 @@ begin
 
   LoadReportFromFile('Заявка на производство (скан)', ReportPath + '\Производство\Заявка на производство (скан).fr3');
   LoadReportFromFile('Заявка на упаковку (скан)', ReportPath + '\Производство\Заявка на упаковку (скан).fr3');
-  }
+
   LoadReportFromFile('Заявка на сырье (скан)', ReportPath + '\Производство\Заявка на сырье (скан).fr3');
    exit;
-   {
+
   LoadReportFromFile('Заявка на упаковку (пленка)', ReportPath + '\Производство\Заявка на упаковку (пленка).fr3');
   exit;
 
@@ -398,6 +398,7 @@ begin
   LoadReportFromFile('Отчет - заявки (по Маршрутам-итого)', ReportPath + '\Отчеты (товарные)\Отчет - заявки (по Маршрутам-итого).fr3');
   LoadReportFromFile('Отчет - заявки (кросс)', ReportPath + '\Отчеты (товарные)\Отчет - заявки (кросс).fr3');
   exit;
+  }
   // Печатные формы накладных
    LoadReportFromFile('PrintMovement_ReestrReturn', ReportPath + '\Товарный Учет\PrintMovement_ReestrReturn.fr3');
    LoadReportFromFile('PrintMovement_ReestrReturnPeriod', ReportPath + '\Товарный Учет\PrintMovement_ReestrReturnPeriod.fr3');
@@ -406,16 +407,14 @@ begin
    LoadReportFromFile('PrintMovement_ReestrTransportGoods', ReportPath + '\Товарный Учет\PrintMovement_ReestrTransportGoods.fr3');
    LoadReportFromFile('PrintMovement_ReestrTransportGoodsStartPeriod', ReportPath + '\Товарный Учет\PrintMovement_ReestrTransportGoodsStartPeriod.fr3');
    LoadReportFromFile('PrintMovement_ReestrTransportGoodsPeriod', ReportPath + '\Товарный Учет\PrintMovement_ReestrTransportGoodsPeriod.fr3');
-   exit;
 
    LoadReportFromFile('PrintMovement_Reestr', ReportPath + '\Товарный Учет\PrintMovement_Reestr.fr3');
-
    LoadReportFromFile('PrintMovement_ReestrDriver', ReportPath + '\Товарный Учет\PrintMovement_ReestrDriver.fr3');
-   exit;
 
    LoadReportFromFile('PrintMovement_ReestrPeriod', ReportPath + '\Товарный Учет\PrintMovement_ReestrPeriod.fr3');
-
    LoadReportFromFile('PrintMovement_ReestrStartPeriod', ReportPath + '\Товарный Учет\PrintMovement_ReestrStartPeriod.fr3');
+   exit;
+   {
   LoadReportFromFile('PrintMovement_TransferDebtOut', ReportPath + '\Товарный Учет\PrintMovement_TransferDebtOut.fr3');
   LoadReportFromFile('PrintMovement_Sale1', ReportPath + '\Товарный Учет\PrintMovement_Sale1.fr3');
   LoadReportFromFile('PrintMovement_Sale2', ReportPath + '\Товарный Учет\PrintMovement_Sale2.fr3');
