@@ -511,7 +511,7 @@ begin
                  try IdIMAP4.Connect(TRUE);     //IMAP
                  except
                       on E: Exception do begin
-                         PanelError.Caption:= ' ERROR - IdIMAP4.Connect(TRUE)  : ' + E.Message;
+                         PanelError.Caption:= ' ERROR - IdIMAP4.Connect(TRUE) for ' + UserName + '  : ' + E.Message;
                          PanelError.Repaint;
                        exit;
                       end;

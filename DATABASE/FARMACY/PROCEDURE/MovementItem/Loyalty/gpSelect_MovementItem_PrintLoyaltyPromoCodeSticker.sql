@@ -11,10 +11,13 @@ CREATE OR REPLACE FUNCTION gpSelect_MovementItem_PrintLoyaltyPromoCodeSticker(
 )
 RETURNS TABLE (Column1            Text
              , GUID1              TVarChar
+             , SITE1              TVarChar
              , Column2            Text
              , GUID2              TVarChar
+             , SITE2              TVarChar
              , Column3            Text
              , GUID3              TVarChar
+             , SITE3              TVarChar
               )
 AS
 $BODY$
@@ -47,17 +50,17 @@ BEGIN
 
     , tmpMIMax AS (SELECT Max(tmpMI.Amount) AS Amount FROM tmpMI)
     , tmpResult AS (SELECT Chr(13)||Chr(10)||
-                           'Скидка для клиента до '||to_char(tmpMIMax.Amount,'FM9999990.00')::Text||' грн.'||Chr(13)||Chr(10)||
-                           'код промо '||tmpMI.GUID::Text||Chr(13)||Chr(10)||
+                           'Скидка для клиента '||to_char(tmpMI.Amount,'FM9999990.00')::Text||' грн.'||Chr(13)||Chr(10)||
+                           'код промо '||Chr(13)||Chr(10)||tmpMI.GUID::Text||Chr(13)||Chr(10)||
                            inUnitName||Chr(13)||Chr(10)            AS ResultData
                          , tmpMI.GUID
                          , tmpMI.Ord
                     FROM tmpMI
                          LEFT JOIN tmpMIMax ON 1 = 1)
 
-  SELECT Result1.ResultData, Result1.GUID
-       , Result2.ResultData, Result2.GUID
-       , Result3.ResultData, Result3.GUID
+  SELECT Result1.ResultData, Result1.GUID, 'neboley.dp.ua'::TVarChar
+       , Result2.ResultData, Result2.GUID, 'neboley.dp.ua'::TVarChar
+       , Result3.ResultData, Result3.GUID, 'neboley.dp.ua'::TVarChar
   FROM tmpResult  AS Result1
        LEFT JOIN tmpResult AS Result2 ON Result2.Ord = Result1.Ord + 1
        LEFT JOIN tmpResult AS Result3 ON Result3.Ord = Result1.Ord + 2
@@ -79,5 +82,4 @@ $BODY$
 */
 
 
---
-select * from gpSelect_MovementItem_PrintLoyaltyPromoCodeSticker(inMovementId := 19620044 , inUnitName := 'Использовать только на сайте' , inOperDate := ('22.07.2020')::TDateTime ,  inSession := '3');
+-- select * from gpSelect_MovementItem_PrintLoyaltyPromoCodeSticker(inMovementId := 19620044 , inUnitName := 'Использовать только на сайте' , inOperDate := ('22.07.2020')::TDateTime ,  inSession := '3');

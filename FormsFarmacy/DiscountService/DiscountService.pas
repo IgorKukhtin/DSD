@@ -771,7 +771,7 @@ begin
                              '  <qty>' + CurrToStrXML(CheckCDS.FieldByName('Amount').AsCurrency) + '</qty>'#13#10 +
                              '  <rezerv>' + CurrToStrXML(Max(0, CheckCDS.FieldByName('Remains').AsCurrency - CheckCDS.FieldByName('Amount').AsCurrency)) + '</rezerv>'#13#10 +
                              '  <discont_percent>' + CurrToStrXML(FDiscont) + '</discont_percent>'#13#10 +
-                             '  <discont_value>' + CurrToStrXML(FDiscont¿bsolute) + '</discont_value>'#13#10 +
+                             '  <discont_value>' + CurrToStrXML(CheckCDS.FieldByName('SummChangePercent').AsCurrency) + '</discont_value>'#13#10 +
                              '  <sale_date>' + FormatDateTime('yyyy-mm-dd hh:nn:ss', Now) + '</sale_date >'#13#10 +
                              '  <login>' + gUserName + '</login>'#13#10 +
                              '  <password>' + gPassword + '</password>'#13#10 +

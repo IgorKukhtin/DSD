@@ -178,6 +178,11 @@ type
     ExecutePromoCodeSignUnitName: TExecuteDialog;
     spSelectPrintSticker: TdsdStoredProc;
     dxBarButton6: TdxBarButton;
+    actInsertPromoCodeScales: TMultiAction;
+    actExecSPInsertPromoCodeScales: TdsdExecStoredProc;
+    actExecuteDialogPromoCodeScales: TExecuteDialog;
+    spInsertPromoCodeScales: TdsdStoredProc;
+    dxBarButton7: TdxBarButton;
   private
     { Private declarations }
   public

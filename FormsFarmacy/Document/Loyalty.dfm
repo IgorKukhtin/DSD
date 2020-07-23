@@ -22,6 +22,7 @@ inherited LoyaltyForm: TLoyaltyForm
       inherited cxGrid: TcxGrid
         Width = 1125
         Height = 263
+        ExplicitTop = 2
         ExplicitWidth = 1125
         ExplicitHeight = 263
         inherited cxGridDBTableView: TcxGridDBTableView
@@ -1491,10 +1492,10 @@ inherited LoyaltyForm: TLoyaltyForm
         item
           Action = actRefresh
         end>
-      QuestionBeforeExecute = #1044#1077#1081#1089#1090#1074#1080#1090#1077#1083#1100#1085#1086' '#1089#1075#1077#1085#1077#1088#1080#1088#1086#1074#1072#1090#1100' '#1087#1088#1086#1084#1086' - '#1082#1086#1076#1099'?'
+      QuestionBeforeExecute = #1044#1077#1081#1089#1090#1074#1080#1090#1077#1083#1100#1085#1086' '#1089#1075#1077#1085#1077#1088#1080#1088#1086#1074#1072#1090#1100' '#1087#1088#1086#1084#1086' - '#1082#1086#1076#1099' '#1089' '#1091#1082#1072#1079#1072#1085#1085#1086#1081' '#1089#1091#1084#1084#1086#1081'?'
       InfoAfterExecute = #1055#1088#1086#1084#1086' - '#1082#1086#1076#1099' '#1089#1075#1077#1085#1077#1088#1080#1088#1086#1074#1072#1085#1099
-      Caption = #1057#1075#1077#1085#1077#1088#1080#1088#1086#1074#1072#1090#1100' '#1087#1088#1086#1084#1086' - '#1082#1086#1076#1099
-      Hint = #1057#1075#1077#1085#1077#1088#1080#1088#1086#1074#1072#1090#1100' '#1087#1088#1086#1084#1086' - '#1082#1086#1076#1099
+      Caption = #1057#1075#1077#1085#1077#1088#1080#1088#1086#1074#1072#1090#1100' '#1087#1088#1086#1084#1086' - '#1082#1086#1076#1099' '#1089' '#1091#1082#1072#1079#1072#1085#1085#1086#1081' '#1089#1091#1084#1084#1086#1081
+      Hint = #1057#1075#1077#1085#1077#1088#1080#1088#1086#1074#1072#1090#1100' '#1087#1088#1086#1084#1086' - '#1082#1086#1076#1099' '#1089' '#1091#1082#1072#1079#1072#1085#1085#1086#1081' '#1089#1091#1084#1084#1086#1081
       ImageIndex = 27
     end
     object actExecSPInsertPromoCode: TdsdExecStoredProc
@@ -1509,7 +1510,6 @@ inherited LoyaltyForm: TLoyaltyForm
         end>
       Caption = #1057#1075#1077#1085#1077#1088#1080#1088#1086#1074#1072#1090#1100' '#1087#1088#1086#1084#1086' '#1082#1086#1076#1099
       Hint = #1057#1075#1077#1085#1077#1088#1080#1088#1086#1074#1072#1090#1100' '#1087#1088#1086#1084#1086' '#1082#1086#1076#1099
-      ImageIndex = 27
     end
     object actExecuteDialogPromoCode: TExecuteDialog
       Category = 'DSDLib'
@@ -1518,7 +1518,6 @@ inherited LoyaltyForm: TLoyaltyForm
       PostDataSetAfterExecute = True
       Caption = #1057#1075#1077#1085#1077#1088#1080#1088#1086#1074#1072#1090#1100' '#1087#1088#1086#1084#1086' '#1082#1086#1076
       Hint = #1057#1075#1077#1085#1077#1088#1080#1088#1086#1074#1072#1090#1100' '#1087#1088#1086#1084#1086' '#1082#1086#1076
-      ImageIndex = 26
       FormName = 'TLoyaltyInsertPromoCodeDialogForm'
       FormNameParam.Value = 'TLoyaltyInsertPromoCodeDialogForm'
       FormNameParam.DataType = ftString
@@ -1583,6 +1582,14 @@ inherited LoyaltyForm: TLoyaltyForm
               Font.Height = -13
               Font.Name = 'Tahoma'
               Font.Style = [fsBold]
+            end
+            item
+              FieldName = 'SITE1'
+              Font.Charset = DEFAULT_CHARSET
+              Font.Color = clWindowText
+              Font.Height = -13
+              Font.Name = 'Tahoma'
+              Font.Style = [fsBold]
             end>
         end
         item
@@ -1604,6 +1611,14 @@ inherited LoyaltyForm: TLoyaltyForm
               Font.Height = -13
               Font.Name = 'Tahoma'
               Font.Style = [fsBold]
+            end
+            item
+              FieldName = 'SITE2'
+              Font.Charset = DEFAULT_CHARSET
+              Font.Color = clWindowText
+              Font.Height = -13
+              Font.Name = 'Tahoma'
+              Font.Style = [fsBold]
             end>
         end
         item
@@ -1620,6 +1635,14 @@ inherited LoyaltyForm: TLoyaltyForm
           DetailedTexts = <
             item
               FieldName = 'GUID3'
+              Font.Charset = DEFAULT_CHARSET
+              Font.Color = clWindowText
+              Font.Height = -13
+              Font.Name = 'Tahoma'
+              Font.Style = [fsBold]
+            end
+            item
+              FieldName = 'SITE3'
               Font.Charset = DEFAULT_CHARSET
               Font.Color = clWindowText
               Font.Height = -13
@@ -1658,6 +1681,60 @@ inherited LoyaltyForm: TLoyaltyForm
           Component = FormParams
           ComponentItem = 'UnitName'
           DataType = ftWideString
+          MultiSelectSeparator = ','
+        end>
+      isShowModal = True
+      OpenBeforeShow = True
+    end
+    object actInsertPromoCodeScales: TMultiAction
+      Category = 'DSDLib'
+      MoveParams = <>
+      ActionList = <
+        item
+          Action = actExecuteDialogPromoCodeScales
+        end
+        item
+          Action = actExecSPInsertPromoCodeScales
+        end
+        item
+          Action = actRefresh
+        end>
+      QuestionBeforeExecute = #1044#1077#1081#1089#1090#1074#1080#1090#1077#1083#1100#1085#1086' '#1089#1075#1077#1085#1077#1088#1080#1088#1086#1074#1072#1090#1100' '#1087#1088#1086#1084#1086' - '#1082#1086#1076#1099'  '#1089#1086#1075#1083#1072#1089#1085#1086' '#1096#1082#1072#1083#1099'?'
+      InfoAfterExecute = #1055#1088#1086#1084#1086' - '#1082#1086#1076#1099' '#1089#1075#1077#1085#1077#1088#1080#1088#1086#1074#1072#1085#1099
+      Caption = #1057#1075#1077#1085#1077#1088#1080#1088#1086#1074#1072#1090#1100' '#1087#1088#1086#1084#1086' - '#1082#1086#1076#1099' '#1089#1086#1075#1083#1072#1089#1085#1086' '#1096#1082#1072#1083#1099
+      Hint = #1057#1075#1077#1085#1077#1088#1080#1088#1086#1074#1072#1090#1100' '#1087#1088#1086#1084#1086' - '#1082#1086#1076#1099' '#1089#1086#1075#1083#1072#1089#1085#1086' '#1096#1082#1072#1083#1099
+      ImageIndex = 54
+    end
+    object actExecSPInsertPromoCodeScales: TdsdExecStoredProc
+      Category = 'DSDLib'
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      PostDataSetAfterExecute = True
+      StoredProc = spInsertPromoCodeScales
+      StoredProcList = <
+        item
+          StoredProc = spInsertPromoCodeScales
+        end>
+      Caption = #1057#1075#1077#1085#1077#1088#1080#1088#1086#1074#1072#1090#1100' '#1087#1088#1086#1084#1086' '#1082#1086#1076#1099
+      Hint = #1057#1075#1077#1085#1077#1088#1080#1088#1086#1074#1072#1090#1100' '#1087#1088#1086#1084#1086' '#1082#1086#1076#1099
+    end
+    object actExecuteDialogPromoCodeScales: TExecuteDialog
+      Category = 'DSDLib'
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      PostDataSetAfterExecute = True
+      Caption = #1057#1075#1077#1085#1077#1088#1080#1088#1086#1074#1072#1090#1100' '#1087#1088#1086#1084#1086' '#1082#1086#1076
+      Hint = #1057#1075#1077#1085#1077#1088#1080#1088#1086#1074#1072#1090#1100' '#1087#1088#1086#1084#1086' '#1082#1086#1076
+      FormName = 'TPromoCodeSignDialogForm'
+      FormNameParam.Value = 'TPromoCodeSignDialogForm'
+      FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
+      GuiParams = <
+        item
+          Name = 'inCount_GUID'
+          Value = '0'
+          Component = FormParams
+          ComponentItem = 'Count'
           MultiSelectSeparator = ','
         end>
       isShowModal = True
@@ -1783,6 +1860,10 @@ inherited LoyaltyForm: TLoyaltyForm
         item
           Visible = True
           ItemName = 'bbInsertPromoCode'
+        end
+        item
+          Visible = True
+          ItemName = 'dxBarButton7'
         end
         item
           Visible = True
@@ -1936,6 +2017,10 @@ inherited LoyaltyForm: TLoyaltyForm
     end
     object dxBarButton6: TdxBarButton
       Action = actPrintSticker
+      Category = 0
+    end
+    object dxBarButton7: TdxBarButton
+      Action = actInsertPromoCodeScales
       Category = 0
     end
   end
@@ -3342,5 +3427,32 @@ inherited LoyaltyForm: TLoyaltyForm
     PackSize = 1
     Left = 1007
     Top = 272
+  end
+  object spInsertPromoCodeScales: TdsdStoredProc
+    StoredProcName = 'gpInsert_MovementItem_Loyalty_PromoCodeScales'
+    DataSets = <>
+    OutputType = otResult
+    Params = <
+      item
+        Name = 'inMovementId'
+        Value = Null
+        Component = FormParams
+        ComponentItem = 'Id'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inCount'
+        Value = '0'
+        Component = FormParams
+        ComponentItem = 'Count'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end>
+    PackSize = 1
+    NeedResetData = True
+    ParamKeyField = 'inMovementId'
+    Left = 888
+    Top = 328
   end
 end
