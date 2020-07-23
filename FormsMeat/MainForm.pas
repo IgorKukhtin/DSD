@@ -1157,6 +1157,8 @@ type
     actReestrReturnEconom: TdsdOpenForm;
     miReestrEconom: TMenuItem;
     miReestrReturnEconom: TMenuItem;
+    actReport_CheckBonus_Income: TdsdOpenForm;
+    miReport_CheckBonus_Income: TMenuItem;
     procedure actReport_OLAPSoldExecute(Sender: TObject);
     procedure FormShow(Sender: TObject);
     procedure FormClose(Sender: TObject; var Action: TCloseAction);

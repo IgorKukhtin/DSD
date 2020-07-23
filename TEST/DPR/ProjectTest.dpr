@@ -1179,7 +1179,8 @@ uses
   ChangePercentDialog in '..\..\Forms\Document\ChangePercentDialog.pas' {ChangePercentDialogForm: TParentForm},
   PromoJournal in '..\..\Forms\Document\PromoJournal.pas' {PromoJournalForm: TParentForm},
   Report_CheckBonus in '..\..\Forms\Report\Report_CheckBonus.pas' {Report_CheckBonusForm: TParentForm},
-  Report_CheckBonus_SaleReturn in '..\..\Forms\Report\Report_CheckBonus_SaleReturn.pas' {Report_CheckBonus_SaleReturnForm: TParentForm};
+  Report_CheckBonus_SaleReturn in '..\..\Forms\Report\Report_CheckBonus_SaleReturn.pas' {Report_CheckBonus_SaleReturnForm: TParentForm},
+  Report_CheckBonus_Income in '..\..\Forms\Report\Report_CheckBonus_Income.pas' {Report_CheckBonus_IncomeForm: TParentForm};
 
 {$R *.RES}
 {$R DevExpressRus.res}
