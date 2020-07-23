@@ -19,6 +19,7 @@ CREATE OR REPLACE FUNCTION lpInsertUpdate_Movement_Loyalty(
     IN inComment               TVarChar   , -- Примечание
     IN inChangePercent         TFloat     , -- Процент от реализации для выдачи скидки
     IN inisBeginning           Boolean    , -- Генерация скидак с начало акции
+    IN inisElectron            Boolean    , -- для Сайта
     IN inUserId                Integer      -- сессия пользователя
 )
 RETURNS Integer AS
@@ -65,6 +66,8 @@ BEGIN
 
     -- сохранили <>
     PERFORM lpInsertUpdate_MovementBoolean (zc_MovementBoolean_Beginning(), ioId, inisBeginning);
+    -- сохранили <>
+    PERFORM lpInsertUpdate_MovementBoolean (zc_MovementBoolean_Electron(), ioId, inisElectron);
 
     IF vbIsInsert = True
     THEN

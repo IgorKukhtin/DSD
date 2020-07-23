@@ -351,7 +351,6 @@ uses
   ReturnOutMovementItemTest in '..\SOURCE\MovementItem\All\ReturnOutMovementItemTest.pas',
   ReturnOutPartnerJournal in '..\..\Forms\Document\ReturnOutPartnerJournal.pas' {ReturnOutPartnerJournalForm: TParentForm},
   ReturnOutPartner in '..\..\Forms\Document\ReturnOutPartner.pas' {ReturnOutPartnerForm: TParentForm},
-  Report_CheckBonus in '..\..\Forms\Report\Report_CheckBonus.pas' {Report_CheckBonusForm: TParentForm},
   PersonalReportJournal in '..\..\Forms\Document\PersonalReportJournal.pas' {PersonalReportJournalForm: TParentForm},
   ProfitLossServiceJournal in '..\..\Forms\Document\ProfitLossServiceJournal.pas' {ProfitLossServiceJournalForm: TParentForm},
   PersonalReport in '..\..\Forms\Document\PersonalReport.pas' {PersonalReportForm: TParentForm},
@@ -1178,7 +1177,9 @@ uses
   Report_JuridicalDefermentDebet in '..\..\Forms\Report\Report_JuridicalDefermentDebet.pas' {Report_JuridicalDefermentDebetForm: TParentForm},
   Goods_Param in '..\..\Forms\Guides\Goods_Param.pas' {Goods_ParamForm: TParentForm},
   ChangePercentDialog in '..\..\Forms\Document\ChangePercentDialog.pas' {ChangePercentDialogForm: TParentForm},
-  PromoJournal in '..\..\Forms\Document\PromoJournal.pas' {PromoJournalForm: TParentForm};
+  PromoJournal in '..\..\Forms\Document\PromoJournal.pas' {PromoJournalForm: TParentForm},
+  Report_CheckBonus in '..\..\Forms\Report\Report_CheckBonus.pas' {Report_CheckBonusForm: TParentForm},
+  Report_CheckBonus_SaleReturn in '..\..\Forms\Report\Report_CheckBonus_SaleReturn.pas' {Report_CheckBonus_SaleReturnForm: TParentForm};
 
 {$R *.RES}
 {$R DevExpressRus.res}

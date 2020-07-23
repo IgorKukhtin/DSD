@@ -232,8 +232,9 @@ BEGIN
                                    AND ObjectFloat_Contract_Percent.DescId = zc_ObjectFloat_Contract_Percent()
 
               LEFT JOIN Object_MarginCategoryLink_View AS Object_MarginCategoryLink
-                                                       ON (Object_MarginCategoryLink.UnitId = 183292)
+                                                       ON (Object_MarginCategoryLink.UnitId = vbUnitId)
                                                       AND Object_MarginCategoryLink.JuridicalId = LoadPriceList.JuridicalId
+                                                      AND Object_MarginCategoryLink.isErased    = FALSE
 
               LEFT JOIN Object_MarginCategoryLink_View AS Object_MarginCategoryLink_all
                                                        ON COALESCE (Object_MarginCategoryLink_all.UnitId, 0) = 0
@@ -328,5 +329,4 @@ $BODY$
  11.09.18        *
 */
 
--- тест
-SELECT * FROM gpSelect_CashGoods('3');
+-- тест SELECT * FROM gpSelect_CashGoods('3');

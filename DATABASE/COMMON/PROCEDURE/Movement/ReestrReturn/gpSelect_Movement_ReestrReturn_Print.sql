@@ -107,9 +107,9 @@ BEGIN
                                                   AND MovementFloat_MovementItemId.DescId = zc_MovementFloat_MovementItemId()
                            
                            INNER JOIN MovementLinkObject AS MovementLinkObject_ReestrKind
-                                         ON MovementLinkObject_ReestrKind.MovementId = MovementFloat_MovementItemId.MovementId
-                                        AND MovementLinkObject_ReestrKind.DescId = zc_MovementLinkObject_ReestrKind()
-                                        AND MovementLinkObject_ReestrKind.ObjectId IN (zc_Enum_ReestrKind_PartnerOut(), zc_Enum_ReestrKind_Remake())
+                                                         ON MovementLinkObject_ReestrKind.MovementId = MovementFloat_MovementItemId.MovementId
+                                                        AND MovementLinkObject_ReestrKind.DescId = zc_MovementLinkObject_ReestrKind()
+                                                        AND MovementLinkObject_ReestrKind.ObjectId IN (zc_Enum_ReestrKind_PartnerOut(), zc_Enum_ReestrKind_Remake())
       
                            LEFT JOIN MovementLinkObject AS MovementLinkObject_From
                                                         ON MovementLinkObject_From.MovementId = MovementFloat_MovementItemId.MovementId
@@ -160,11 +160,13 @@ BEGIN
 
            , COALESCE (MIDate_Insert.ValueData, NULL) ::TDateTime         AS Date_Insert
            , COALESCE (MIDate_RemakeBuh.ValueData, NULL) ::TDateTime      AS Date_RemakeBuh
+           , COALESCE (MIDate_Econom.ValueData, NULL) ::TDateTime         AS Date_Econom
            , COALESCE (MIDate_Buh.ValueData, NULL) ::TDateTime            AS Date_Buh
 
            , CASE WHEN MIDate_Insert.DescId IS NOT NULL THEN Object_ObjectMember.ValueData ELSE '' END :: TVarChar AS Member_Insert -- т.к. в "пустышках" - "криво" формируется это свойство
 
            , Object_RemakeBuh.ValueData      AS Member_RemakeBuh
+           , Object_Econom.ValueData         AS Member_Econom
            , Object_Buh.ValueData            AS Member_Buh
            , tmpMI.GroupNum
 
@@ -177,6 +179,9 @@ BEGIN
             LEFT JOIN MovementItemDate AS MIDate_RemakeBuh
                                        ON MIDate_RemakeBuh.MovementItemId = tmpMI.MovementItemId
                                       AND MIDate_RemakeBuh.DescId = zc_MIDate_RemakeBuh()
+            LEFT JOIN MovementItemDate AS MIDate_Econom
+                                       ON MIDate_Econom.MovementItemId = tmpMI.MovementItemId
+                                      AND MIDate_Econom.DescId = zc_MIDate_Econom()
             LEFT JOIN MovementItemDate AS MIDate_Buh
                                        ON MIDate_Buh.MovementItemId = tmpMI.MovementItemId
                                       AND MIDate_Buh.DescId = zc_MIDate_Buh()
@@ -186,10 +191,16 @@ BEGIN
                                             AND MILinkObject_RemakeBuh.DescId = zc_MILinkObject_RemakeBuh()
             LEFT JOIN Object AS Object_RemakeBuh ON Object_RemakeBuh.Id = MILinkObject_RemakeBuh.ObjectId
 
+            LEFT JOIN MovementItemLinkObject AS MILinkObject_Econom
+                                             ON MILinkObject_Econom.MovementItemId = tmpMI.MovementItemId
+                                            AND MILinkObject_Econom.DescId = zc_MILinkObject_Econom()
+            LEFT JOIN Object AS Object_Econom ON Object_Econom.Id = MILinkObject_Econom.ObjectId
+
             LEFT JOIN MovementItemLinkObject AS MILinkObject_Buh
                                              ON MILinkObject_Buh.MovementItemId = tmpMI.MovementItemId
                                             AND MILinkObject_Buh.DescId = zc_MILinkObject_Buh()
             LEFT JOIN Object AS Object_Buh ON Object_Buh.Id = MILinkObject_Buh.ObjectId
+
             --
             LEFT JOIN Movement AS Movement_ReturnIn ON Movement_ReturnIn.id = tmpMI.MovementId_ReturnIn
 
@@ -255,6 +266,7 @@ $BODY$
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.
+ 22.07.20         *
  01.02.18         *
  12.03.17         *
 */

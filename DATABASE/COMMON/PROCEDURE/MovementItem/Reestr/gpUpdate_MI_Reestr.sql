@@ -183,6 +183,14 @@ BEGIN
        PERFORM lpInsertUpdate_MovementItemLinkObject (zc_MILinkObject_Remake(), vbId_mi, vbMemberId_user);
     END IF;
 
+    -- <Экономисты>
+    IF inReestrKindId = zc_Enum_ReestrKind_Econom()
+    THEN 
+       -- сохранили <когда сформирована виза>
+       PERFORM lpInsertUpdate_MovementItemDate (zc_MIDate_Econom(), vbId_mi, CURRENT_TIMESTAMP);
+       -- сохранили связь с <кто сформировал визу>
+       PERFORM lpInsertUpdate_MovementItemLinkObject (zc_MILinkObject_Econom(), vbId_mi, vbMemberId_user);
+    END IF;
 
     -- <Бухгалтерия>
     IF inReestrKindId = zc_Enum_ReestrKind_Buh()
@@ -230,6 +238,7 @@ $BODY$
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.
+ 22.07.20         *
  20.07.17         *
  23.10.16         *
 */

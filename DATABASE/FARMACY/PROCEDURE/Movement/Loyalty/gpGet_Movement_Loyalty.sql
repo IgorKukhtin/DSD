@@ -32,7 +32,8 @@ RETURNS TABLE (Id Integer
              , UpdateDate    TDateTime
              , Comment       TVarChar
              , PercentUsed   TFloat
-             , isBeginning   Boolean)
+             , isBeginning   Boolean
+             , isElectron    Boolean)
 AS
 $BODY$
     DECLARE vbUserId Integer;
@@ -72,6 +73,7 @@ BEGIN
           , NULL  ::TVarChar            AS Comment
           , 0     ::TFloat              AS PercentUsed
           , FALSE                       AS isBeginning
+          , FALSE                       AS isElectron
         FROM lfGet_Object_Status(zc_Enum_Status_UnComplete()) AS Object_Status
              LEFT JOIN Object AS Object_Insert ON Object_Insert.Id = vbUserId;
   
@@ -156,6 +158,7 @@ BEGIN
           , MovementString_Comment.ValueData                               AS Comment
           , tmpPercentUsed.PercentUsed::TFloat                             AS PercentUsed
           , COALESCE(MovementBoolean_Beginning.ValueData, FALSE)           AS isBeginning
+          , COALESCE(MovementBoolean_Electron.ValueData, FALSE) ::Boolean  AS isElectron
      FROM Movement 
         LEFT JOIN Object AS Object_Status ON Object_Status.Id = Movement.StatusId
 
@@ -220,6 +223,10 @@ BEGIN
                                      ON MovementLinkObject_Update.MovementId = Movement.Id
                                     AND MovementLinkObject_Update.DescId = zc_MovementLinkObject_Update()
         LEFT JOIN Object AS Object_Update ON Object_Update.Id = MovementLinkObject_Update.ObjectId  
+
+        LEFT JOIN MovementBoolean AS MovementBoolean_Electron
+                                  ON MovementBoolean_Electron.MovementId =  Movement.Id
+                                 AND MovementBoolean_Electron.DescId = zc_MovementBoolean_Electron()
 
         LEFT JOIN tmpPercentUsed ON 1 = 1
         

@@ -1,6 +1,6 @@
 -- Function: gpInsertUpdate_Movement_Loyalty()
 
-DROP FUNCTION IF EXISTS gpInsertUpdate_Movement_Loyalty (Integer, TVarChar, TDateTime, Integer, TDateTime, TDateTime, TDateTime, TDateTime, TFloat, Integer, Integer, TFloat, TVarChar, TFloat, Boolean, TVarChar);
+DROP FUNCTION IF EXISTS gpInsertUpdate_Movement_Loyalty (Integer, TVarChar, TDateTime, Integer, TDateTime, TDateTime, TDateTime, TDateTime, TFloat, Integer, Integer, TFloat, TVarChar, TFloat, Boolean, Boolean, TVarChar);
 
 
 CREATE OR REPLACE FUNCTION gpInsertUpdate_Movement_Loyalty(
@@ -19,6 +19,7 @@ CREATE OR REPLACE FUNCTION gpInsertUpdate_Movement_Loyalty(
     IN inComment               TVarChar   , -- Примечание
     IN inChangePercent         TFloat     , -- Процент от реализации для выдачи скидки
     IN inisBeginning           Boolean    , -- Генерация скидак с начало акции
+    IN inisElectron            Boolean    , -- для Сайта
     IN inSession               TVarChar     -- сессия пользователя
 )
 RETURNS Integer AS
@@ -44,6 +45,7 @@ BEGIN
                                            , inComment       := inComment
                                            , inChangePercent := inChangePercent
                                            , inisBeginning   := inisBeginning
+                                           , inisElectron    := inisElectron
                                            , inUserId        := vbUserId
                                            );
 

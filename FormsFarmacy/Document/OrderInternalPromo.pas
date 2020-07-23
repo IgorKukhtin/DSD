@@ -150,6 +150,15 @@ type
     bbInsert_Movement_Send: TdxBarButton;
     actDistributionCalculation: TdsdOpenForm;
     dxBarButton2: TdxBarButton;
+    isChecked: TcxGridDBColumn;
+    actSetChecked: TMultiAction;
+    actClearChecked: TMultiAction;
+    bbSetChecked: TdxBarButton;
+    bbClearChecked: TdxBarButton;
+    actExecSetChecked: TdsdExecStoredProc;
+    actExecClearChecked: TdsdExecStoredProc;
+    spSetChecked: TdsdStoredProc;
+    spClearChecked: TdsdStoredProc;
   private
     { Private declarations }
   public

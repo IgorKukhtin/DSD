@@ -80,7 +80,8 @@ BEGIN
            , Object_DiscountCard.ValueData                      AS DiscountCardName
            , Object_DiscountExternal.ValueData                  AS DiscountExternalName
            , MovementString_BayerPhone.ValueData                AS BayerPhone
-           , MovementString_InvNumberOrder.ValueData            AS InvNumberOrder
+           , COALESCE(MovementString_InvNumberOrder.ValueData,
+             CASE WHEN COALESCE (MovementLinkObject_CheckSourceKind.ObjectId, 0) <> 0 THEN Movement_Check.Id::TVarChar END)::TVarChar   AS InvNumberOrder
            , Object_ConfirmedKind.ValueData                     AS ConfirmedKindName
            , Object_ConfirmedKindClient.ValueData               AS ConfirmedKindClientName
 
@@ -169,7 +170,7 @@ BEGIN
              LEFT JOIN MovementString AS MovementString_InvNumberOrder
                                       ON MovementString_InvNumberOrder.MovementId = Movement_Check.Id
                                      AND MovementString_InvNumberOrder.DescId = zc_MovementString_InvNumberOrder()
-	     LEFT JOIN MovementString AS MovementString_Bayer
+	         LEFT JOIN MovementString AS MovementString_Bayer
                                       ON MovementString_Bayer.MovementId = Movement_Check.Id
                                      AND MovementString_Bayer.DescId = zc_MovementString_Bayer()
              LEFT JOIN MovementString AS MovementString_BayerPhone
@@ -302,6 +303,10 @@ BEGIN
                                          ON MovementLinkObject_CheckSourceKind.MovementId =  Movement_Check.Id
                                         AND MovementLinkObject_CheckSourceKind.DescId = zc_MovementLinkObject_CheckSourceKind()
             LEFT JOIN Object AS Object_CheckSourceKind ON Object_CheckSourceKind.Id = MovementLinkObject_CheckSourceKind.ObjectId
+
+            LEFT JOIN MovementString AS MovementString_BookingId
+                                     ON MovementString_BookingId.MovementId = Movement_Check.Id
+                                    AND MovementString_BookingId.DescId = zc_MovementString_BookingId()
       ;
 
 END;
@@ -317,3 +322,5 @@ $BODY$
 
 -- тест
 -- SELECT * FROM gpSelect_Movement_CheckSummCard (inStartDate:= '30.06.2020', inEndDate:= '30.06.2020', inIsErased := FALSE, inSession:= '3')
+
+select * from gpSelect_Movement_CheckSummCard(inStartDate := ('16.07.2020')::TDateTime , inEndDate := ('16.07.2020')::TDateTime , inIsErased := 'False' ,  inSession := '3');

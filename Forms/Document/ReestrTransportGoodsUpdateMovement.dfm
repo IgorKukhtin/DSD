@@ -349,6 +349,20 @@ inherited ReestrTransportGoodsUpdateMovementForm: TReestrTransportGoodsUpdateMov
             HeaderAlignmentVert = vaCenter
             Width = 200
           end
+          object Date_Log: TcxGridDBColumn
+            Caption = #1044#1072#1090#1072'/'#1074#1088#1077#1084#1103' ('#1074#1080#1079#1072' '#1051#1086#1075#1080#1089#1090#1080#1082#1072')'
+            DataBinding.FieldName = 'Date_Log'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 120
+          end
+          object Member_Log: TcxGridDBColumn
+            Caption = #1060#1048#1054' ('#1074#1080#1079#1072' '#1051#1086#1075#1080#1089#1090#1080#1082#1072')'
+            DataBinding.FieldName = 'Member_Log'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 120
+          end
           object Date_PartnerIn: TcxGridDBColumn
             Caption = #1044#1072#1090#1072'/'#1074#1088#1077#1084#1103' ('#1074#1080#1079#1072' '#1055#1086#1083#1091#1095#1077#1085#1086' '#1086#1090' '#1082#1083#1080#1077#1085#1090#1072')'
             DataBinding.FieldName = 'Date_PartnerIn'
@@ -742,7 +756,7 @@ inherited ReestrTransportGoodsUpdateMovementForm: TReestrTransportGoodsUpdateMov
         end
         item
           Name = 'isGroup'
-          Value = 'TRUE'
+          Value = True
           DataType = ftBoolean
           MultiSelectSeparator = ','
         end>
@@ -787,7 +801,7 @@ inherited ReestrTransportGoodsUpdateMovementForm: TReestrTransportGoodsUpdateMov
         end
         item
           Name = 'isGroup'
-          Value = 'TRUE'
+          Value = True
           DataType = ftBoolean
           MultiSelectSeparator = ','
         end>
@@ -909,7 +923,7 @@ inherited ReestrTransportGoodsUpdateMovementForm: TReestrTransportGoodsUpdateMov
         end
         item
           Name = 'IsPartnerDate'
-          Value = 'False'
+          Value = False
           DataType = ftBoolean
           ParamType = ptInput
           MultiSelectSeparator = ','
@@ -1055,7 +1069,7 @@ inherited ReestrTransportGoodsUpdateMovementForm: TReestrTransportGoodsUpdateMov
         end
         item
           Name = 'isGroup'
-          Value = 'FALSE'
+          Value = False
           DataType = ftBoolean
           MultiSelectSeparator = ','
         end>
@@ -1099,7 +1113,7 @@ inherited ReestrTransportGoodsUpdateMovementForm: TReestrTransportGoodsUpdateMov
         end
         item
           Name = 'isGroup'
-          Value = 'FALSE'
+          Value = False
           DataType = ftBoolean
           MultiSelectSeparator = ','
         end>
@@ -1541,7 +1555,7 @@ inherited ReestrTransportGoodsUpdateMovementForm: TReestrTransportGoodsUpdateMov
       end
       item
         Name = 'inislastcomplete'
-        Value = 'False'
+        Value = False
         DataType = ftBoolean
         ParamType = ptInput
         MultiSelectSeparator = ','
@@ -1661,6 +1675,7 @@ inherited ReestrTransportGoodsUpdateMovementForm: TReestrTransportGoodsUpdateMov
         Column = BarCode
       end>
     SummaryItemList = <>
+    PropertiesCellList = <>
     Left = 376
     Top = 16
   end
@@ -1785,7 +1800,7 @@ inherited ReestrTransportGoodsUpdateMovementForm: TReestrTransportGoodsUpdateMov
       end
       item
         Name = 'inIsShowAll'
-        Value = 'True'
+        Value = True
         Component = edIsShowAll
         DataType = ftBoolean
         ParamType = ptInput
@@ -1949,7 +1964,7 @@ inherited ReestrTransportGoodsUpdateMovementForm: TReestrTransportGoodsUpdateMov
       end
       item
         Name = 'inIsShowAll'
-        Value = 'True'
+        Value = True
         Component = edIsShowAll
         DataType = ftBoolean
         ParamType = ptInput

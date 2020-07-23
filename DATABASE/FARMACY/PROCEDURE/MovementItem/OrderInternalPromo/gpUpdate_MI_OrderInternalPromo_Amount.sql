@@ -15,10 +15,26 @@ $BODY$
    DECLARE vbStartDate TDateTime;
    DECLARE vbEndDate   TDateTime;
    DECLARE vbDays      TFloat;
+   DECLARE vbisChecked Boolean;
 BEGIN
     -- проверка прав пользователя на вызов процедуры
     vbUserId := inSession;
 
+    IF EXISTS(SELECT MovementItem.Id
+              FROM MovementItem
+                   LEFT JOIN MovementItemBoolean AS MIBoolean_Checked
+                                                 ON MIBoolean_Checked.MovementItemId = MovementItem.Id
+                                                AND MIBoolean_Checked.DescId = zc_MIBoolean_Checked()
+              WHERE MovementItem.MovementId = inMovementId
+                AND MovementItem.DescId = zc_MI_Master()
+                AND MovementItem.isErased = False
+                AND COALESCE (MIBoolean_Checked.ValueData, False) = True)
+    THEN
+      vbisChecked := True;
+    ELSE
+      vbisChecked := False;
+    END IF;
+     
     PERFORM gpReport_OrderInternalPromo_DistributionCalculation(inMovementID := inMovementId, inSession := inSession);
 
     PERFORM lpInsertUpdate_MovementItem (tmpData.Id, zc_MI_Master(), tmpData.GoodsId, inMovementId, tmpData.AmountCalc, NULL)
@@ -43,7 +59,11 @@ BEGIN
                   , tmpMI.GoodsId
                   , COALESCE (tmpCalculation.AmountCalc, 0)  AS AmountCalc
              FROM tmpMI
-                  LEFT OUTER JOIN tmpCalculation ON tmpCalculation.GoodsId = tmpMI.GoodsId) AS tmpData;
+                  LEFT OUTER JOIN tmpCalculation ON tmpCalculation.GoodsId = tmpMI.GoodsId
+                  LEFT JOIN MovementItemBoolean AS MIBoolean_Checked
+                                                ON MIBoolean_Checked.MovementItemId = tmpMI.Id
+                                               AND MIBoolean_Checked.DescId = zc_MIBoolean_Checked()
+             WHERE (COALESCE (MIBoolean_Checked.ValueData, False) = True OR vbisChecked = False)) AS tmpData;
 
 
 /*     SELECT CASE WHEN COALESCE (MovementFloat_TotalSummPrice.ValueData,0) <> 0

@@ -30,6 +30,7 @@ $BODY$
    DECLARE vbIsInsert Boolean;
    DECLARE vbLimit TFloat;
    DECLARE vbisBeginning Boolean;
+   DECLARE vbisElectron Boolean;
 BEGIN
 
       -- проверка прав пользователя на вызов процедуры
@@ -56,8 +57,9 @@ BEGIN
            COALESCE(MovementFloat_ChangePercent.ValueData, 0) AS ChangePercent,
            MovementDate_ServiceDate.ValueData                 AS ServiceDate,
            MovementFloat_MonthCount.ValueData::Integer ,
-           COALESCE(MovementBoolean_Beginning.ValueData, FALSE)
-    INTO vbInvNumber, vbStatusId, vbStartPromo, vbEndPromo, vbChangePercent, vbServiceDate, vbMonthCount, vbisBeginning
+           COALESCE(MovementBoolean_Beginning.ValueData, FALSE),
+           COALESCE(MovementBoolean_Electron.ValueData, FALSE) ::Boolean
+    INTO vbInvNumber, vbStatusId, vbStartPromo, vbEndPromo, vbChangePercent, vbServiceDate, vbMonthCount, vbisBeginning, vbisElectron
     FROM Movement
          LEFT JOIN MovementDate AS MovementDate_StartPromo
                                 ON MovementDate_StartPromo.MovementId = Movement.Id
@@ -78,6 +80,9 @@ BEGIN
          LEFT JOIN MovementBoolean AS MovementBoolean_Beginning
                                    ON MovementBoolean_Beginning.MovementId = Movement.Id
                                   AND MovementBoolean_Beginning.DescId = zc_MovementBoolean_Beginning()
+         LEFT JOIN MovementBoolean AS MovementBoolean_Electron
+                                   ON MovementBoolean_Electron.MovementId =  Movement.Id
+                                  AND MovementBoolean_Electron.DescId = zc_MovementBoolean_Electron()
     WHERE Movement.ID = inMovementId;
 
     IF COALESCE(vbChangePercent, 0) > 0 AND COALESCE(vbServiceDate, CURRENT_DATE - INTERVAL '1 DAY') <> CURRENT_DATE
@@ -91,6 +96,12 @@ BEGIN
     IF vbIsInsert = TRUE
     THEN
 
+        -- Если документ для сайта то неформируем
+        IF vbisElectron = TRUE
+        THEN
+          RETURN;
+        END IF;
+         
         -- Если документ неподписан или неподходят даты то неформируем
         IF vbStatusId <> zc_Enum_Status_Complete() OR
            vbStartPromo > CURRENT_DATE OR

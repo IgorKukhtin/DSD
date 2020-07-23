@@ -19,6 +19,7 @@ $BODY$
   DECLARE vbDaySale Integer;
   DECLARE vbDayCalc Integer;
   DECLARE vbQueryText Text;
+  DECLARE vbisChecked Boolean;
 
   DECLARE vbUnitID Integer;
   DECLARE vbGoodsId Integer;
@@ -68,6 +69,21 @@ BEGIN
 
      WHERE Movement.Id = inMovementID;
 
+     IF EXISTS(SELECT MovementItem.Id
+               FROM MovementItem
+                    LEFT JOIN MovementItemBoolean AS MIBoolean_Checked
+                                                  ON MIBoolean_Checked.MovementItemId = MovementItem.Id
+                                                 AND MIBoolean_Checked.DescId = zc_MIBoolean_Checked()
+               WHERE MovementItem.MovementId = inMovementId
+                 AND MovementItem.DescId = zc_MI_Master()
+                 AND MovementItem.isErased = False
+                 AND COALESCE (MIBoolean_Checked.ValueData, False) = True)
+     THEN
+       vbisChecked := True;
+     ELSE
+       vbisChecked := False;
+     END IF;
+
      vbDaySale := DATE_PART('day', vbOperDate - vbStartSale)::Integer;
 
      IF vbDaySale <= 1
@@ -97,7 +113,9 @@ BEGIN
                     WHEN COALESCE(vbTotalSummSIP, 0) <> 0 THEN OIPromo.PriceSIP
                     ELSE 1 END AS PriceCalc
         FROM gpSelect_MI_OrderInternalPromo(inMovementId := inMovementID, inIsErased := 'False' ,  inSession := '3') AS OIPromo
-        WHERE CASE WHEN COALESCE(vbTotalSummSIP, 0) <> 0 THEN OIPromo.PriceSIP ELSE OIPromo.Price END > 0;
+        WHERE CASE WHEN COALESCE(vbTotalSummSIP, 0) <> 0 THEN OIPromo.PriceSIP ELSE OIPromo.Price END > 0
+          AND OIPromo.Price > 0
+          AND (OIPromo.isChecked = True OR vbisChecked = False);
 
      IF COALESCE(vbTotalSummSIP, 0) <> 0
      THEN
@@ -325,4 +343,4 @@ ALTER FUNCTION gpReport_OrderInternalPromo_DistributionCalculation (Integer, TVa
 */
 
 -- тест
--- select * from gpReport_OrderInternalPromo_DistributionCalculation(inMovementID := 19522677, inSession := '3');
+--  select * from gpReport_OrderInternalPromo_DistributionCalculation(inMovementID := 19522677, inSession := '3');

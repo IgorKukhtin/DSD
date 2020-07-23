@@ -25,6 +25,7 @@ RETURNS TABLE (Id Integer
              , GoodsGroupPromoId Integer, GoodsGroupPromoName TVarChar
              , MinExpirationDate TDateTime
              , isReport Boolean
+             , isChecked Boolean
              , isErased Boolean
               )
 AS
@@ -260,6 +261,7 @@ BEGIN
                 , tmpMinExpirationDate.MinExpirationDate :: TDateTime AS MinExpirationDate
 
                 , CASE WHEN tmpPartner.JuridicalId IS NOT NULL THEN TRUE ELSE FALSE END AS isReport
+                , COALESCE (MIBoolean_Checked.ValueData, False)                         AS isChecked
                 , MovementItem.IsErased       AS IsErased
            FROM tmpMI_Master AS MovementItem
               LEFT JOIN Object AS Object_Goods ON Object_Goods.Id = MovementItem.ObjectId    
@@ -271,6 +273,10 @@ BEGIN
               LEFT JOIN tmpMIFloat_PromoMovement AS MIFloat_PromoMovement
                                                  ON MIFloat_PromoMovement.MovementItemId = MovementItem.Id
                                                 --AND MIFloat_PromoMovement.DescId = zc_MIFloat_PromoMovementId()
+              LEFT JOIN MovementItemBoolean AS MIBoolean_Checked
+                                            ON MIBoolean_Checked.MovementItemId = MovementItem.Id
+                                           AND MIBoolean_Checked.DescId = zc_MIBoolean_Checked()
+
               LEFT JOIN Movement AS Movement_Promo ON Movement_Promo.Id = MIFloat_PromoMovement.ValueData
             
               LEFT JOIN tmpMLO_Maker AS MovementLinkObject_Maker
@@ -316,4 +322,4 @@ $BODY$
 --select * from gpSelect_MovementItem_OrderInternalPromoChild(inMovementId := 0, inIsErased := 'False' ,  inSession := '3');
 
 -- select * from gpSelect_MI_OrderInternalPromo(inMovementId := 13840564 , inIsErased := 'False' ,  inSession := '3');
---select * from gpSelect_MI_OrderInternalPromo(inMovementId := 15291839 , inIsErased := 'False' ,  inSession := '3');
+-- select * from gpSelect_MI_OrderInternalPromo(inMovementId := 15291839 , inIsErased := 'False' ,  inSession := '3');

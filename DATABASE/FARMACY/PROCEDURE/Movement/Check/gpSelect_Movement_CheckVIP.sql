@@ -139,7 +139,8 @@ BEGIN
 	        , MovementString_Bayer.ValueData             AS Bayer
 
             , MovementString_BayerPhone.ValueData        AS BayerPhone
-            , MovementString_InvNumberOrder.ValueData    AS InvNumberOrder
+            , COALESCE(MovementString_InvNumberOrder.ValueData,
+              CASE WHEN COALESCE (MovementLinkObject_CheckSourceKind.ObjectId, 0) <> 0 THEN Movement.Id::TVarChar END)::TVarChar   AS InvNumberOrder
             , Object_ConfirmedKind.ValueData             AS ConfirmedKindName
             , Object_ConfirmedKindClient.ValueData       AS ConfirmedKindClientName
 
@@ -325,6 +326,15 @@ BEGIN
             LEFT JOIN MovementFloat AS MovementFloat_TotalSummCard
                                     ON MovementFloat_TotalSummCard.MovementId = Movement.Id
                                    AND MovementFloat_TotalSummCard.DescId = zc_MovementFloat_TotalSummCard()
+
+            LEFT JOIN MovementLinkObject AS MovementLinkObject_CheckSourceKind
+                                         ON MovementLinkObject_CheckSourceKind.MovementId =  Movement.Id
+                                        AND MovementLinkObject_CheckSourceKind.DescId = zc_MovementLinkObject_CheckSourceKind()
+            LEFT JOIN Object AS Object_CheckSourceKind ON Object_CheckSourceKind.Id = MovementLinkObject_CheckSourceKind.ObjectId
+
+            LEFT JOIN MovementString AS MovementString_BookingId
+                                     ON MovementString_BookingId.MovementId = Movement.Id
+                                    AND MovementString_BookingId.DescId = zc_MovementString_BookingId()
        ;
 
 END;
@@ -356,5 +366,6 @@ where Movement.Id = MovementBoolean.MovementId
   AND ValueData = TRUE
 */
 -- тест
--- SELECT * FROM gpSelect_Movement_CheckVIP (inIsErased := FALSE, inSession:= '3')
+-- 
+SELECT * FROM gpSelect_Movement_CheckVIP (inIsErased := FALSE, inSession:= '3')
 

@@ -24,7 +24,7 @@ BEGIN
         RAISE EXCEPTION 'Ошибка. Документ не сохранен!';
     END IF;
 
-    IF EXISTS(SELECT 1 FROM Movement WHERE Movement.Id = inMovementId AND Movement.InvNumber <> inInvNumber)
+    IF EXISTS(SELECT 1 FROM Movement WHERE Movement.Id = inMovementId AND (Movement.InvNumber <> inInvNumber OR Movement.OperDate <> inOperDate))
     THEN
         UPDATE Movement SET
             InvNumber = inInvNumber, OperDate = inOperDate

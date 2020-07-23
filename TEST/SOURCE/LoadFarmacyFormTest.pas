@@ -62,6 +62,7 @@ type
     procedure LoadGoodsRepriceFormTest;
     procedure LoadHardwareFormTest;
     procedure LoadHouseholdInventoryFormTest;
+    procedure LoadInventoryHouseholdInventoryJournalFormTest;
     procedure LoadImportSettingsFormTest;
     procedure LoadImportTypeFormTest;
     procedure LoadIncomeFormTest;
@@ -867,6 +868,9 @@ begin
 
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_Loyalty_UsedPromocodeForm'));
   TdsdFormStorageFactory.GetStorage.Load('TReport_Loyalty_UsedPromocodeForm');
+
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TLoyaltyInsertPromoCodeDialogForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TLoyaltyInsertPromoCodeDialogForm');
 end;
 
 procedure TLoadFormTest.LoadLoyaltySaveMoneyFormTest;
@@ -1659,6 +1663,14 @@ begin
   TdsdFormStorageFactory.GetStorage.Load('THouseholdInventoryForm');
   TdsdFormStorageFactory.GetStorage.Save(GetForm('THouseholdInventoryEditForm'));
   TdsdFormStorageFactory.GetStorage.Load('THouseholdInventoryEditForm');
+end;
+
+procedure TLoadFormTest.LoadInventoryHouseholdInventoryJournalFormTest;
+begin
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TInventoryHouseholdInventoryForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TInventoryHouseholdInventoryForm');
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TInventoryHouseholdInventoryJournalForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TInventoryHouseholdInventoryJournalForm');
 end;
 
 procedure TLoadFormTest.LoadTaxUnitFormTest;

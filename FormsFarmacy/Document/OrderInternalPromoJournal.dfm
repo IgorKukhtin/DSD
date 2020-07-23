@@ -152,7 +152,7 @@ inherited OrderInternalPromoJournalForm: TOrderInternalPromoJournalForm
             Width = 80
           end
           object TotalAmount: TcxGridDBColumn
-            Caption = #1050#1088#1083#1080#1095#1077#1089#1090#1074#1086' '#1076#1083#1103' '#1088#1072#1089#1087#1088'.'
+            Caption = #1050#1086#1083#1080#1095#1077#1089#1090#1074#1086' '#1076#1083#1103' '#1088#1072#1089#1087#1088'.'
             DataBinding.FieldName = 'TotalAmount'
             PropertiesClassName = 'TcxCurrencyEditProperties'
             Properties.DisplayFormat = ',0;-,0; ;'

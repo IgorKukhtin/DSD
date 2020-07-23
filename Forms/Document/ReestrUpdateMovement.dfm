@@ -560,6 +560,22 @@ inherited ReestrUpdateMovementForm: TReestrUpdateMovementForm
             HeaderAlignmentVert = vaCenter
             Width = 140
           end
+          object Date_Econom: TcxGridDBColumn
+            Caption = #1044#1072#1090#1072'/'#1074#1088#1077#1084#1103' ('#1074#1080#1079#1072' '#1069#1082#1086#1085#1086#1084#1080#1089#1090#1099')'
+            DataBinding.FieldName = 'Date_Econom'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            HeaderHint = #1044#1072#1085#1085#1099#1077' '#1080#1079' '#1056#1077#1077#1089#1090#1088#1072
+            Width = 120
+          end
+          object Member_Econom: TcxGridDBColumn
+            Caption = #1060#1048#1054' ('#1074#1080#1079#1072' '#1069#1082#1086#1085#1086#1084#1080#1089#1090#1099')'
+            DataBinding.FieldName = 'Member_Econom'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            HeaderHint = #1044#1072#1085#1085#1099#1077' '#1080#1079' '#1056#1077#1077#1089#1090#1088#1072
+            Width = 120
+          end
           object Date_Buh: TcxGridDBColumn
             Caption = #1044#1072#1090#1072'/'#1074#1088#1077#1084#1103' ('#1074#1080#1079#1072' '#1041#1091#1093#1075#1072#1083#1090#1077#1088#1080#1103')'
             DataBinding.FieldName = 'Date_Buh'
@@ -968,7 +984,7 @@ inherited ReestrUpdateMovementForm: TReestrUpdateMovementForm
         end
         item
           Name = 'isGroup'
-          Value = 'TRUE'
+          Value = True
           DataType = ftBoolean
           MultiSelectSeparator = ','
         end>
@@ -978,6 +994,9 @@ inherited ReestrUpdateMovementForm: TReestrUpdateMovementForm
       ReportNameParam.DataType = ftString
       ReportNameParam.ParamType = ptInput
       ReportNameParam.MultiSelectSeparator = ','
+      PrinterNameParam.Value = ''
+      PrinterNameParam.DataType = ftString
+      PrinterNameParam.MultiSelectSeparator = ','
     end
     object actPrintGroup: TdsdPrintAction [2]
       Category = 'Print'
@@ -1009,7 +1028,7 @@ inherited ReestrUpdateMovementForm: TReestrUpdateMovementForm
         end
         item
           Name = 'isGroup'
-          Value = 'TRUE'
+          Value = True
           DataType = ftBoolean
           MultiSelectSeparator = ','
         end>
@@ -1019,6 +1038,9 @@ inherited ReestrUpdateMovementForm: TReestrUpdateMovementForm
       ReportNameParam.DataType = ftString
       ReportNameParam.ParamType = ptInput
       ReportNameParam.MultiSelectSeparator = ','
+      PrinterNameParam.Value = ''
+      PrinterNameParam.DataType = ftString
+      PrinterNameParam.MultiSelectSeparator = ','
     end
     inherited actInsert: TdsdInsertUpdateAction
       FormName = 'TSale_OrderForm'
@@ -1142,7 +1164,7 @@ inherited ReestrUpdateMovementForm: TReestrUpdateMovementForm
         end
         item
           Name = 'IsPartnerDate'
-          Value = 'False'
+          Value = False
           DataType = ftBoolean
           ParamType = ptInput
           MultiSelectSeparator = ','
@@ -1288,7 +1310,7 @@ inherited ReestrUpdateMovementForm: TReestrUpdateMovementForm
         end
         item
           Name = 'isGroup'
-          Value = 'FALSE'
+          Value = False
           DataType = ftBoolean
           MultiSelectSeparator = ','
         end>
@@ -1298,6 +1320,9 @@ inherited ReestrUpdateMovementForm: TReestrUpdateMovementForm
       ReportNameParam.DataType = ftString
       ReportNameParam.ParamType = ptInput
       ReportNameParam.MultiSelectSeparator = ','
+      PrinterNameParam.Value = ''
+      PrinterNameParam.DataType = ftString
+      PrinterNameParam.MultiSelectSeparator = ','
     end
     object actPrint: TdsdPrintAction
       Category = 'Print'
@@ -1329,7 +1354,7 @@ inherited ReestrUpdateMovementForm: TReestrUpdateMovementForm
         end
         item
           Name = 'isGroup'
-          Value = 'FALSE'
+          Value = False
           DataType = ftBoolean
           MultiSelectSeparator = ','
         end>
@@ -1339,6 +1364,9 @@ inherited ReestrUpdateMovementForm: TReestrUpdateMovementForm
       ReportNameParam.DataType = ftString
       ReportNameParam.ParamType = ptInput
       ReportNameParam.MultiSelectSeparator = ','
+      PrinterNameParam.Value = ''
+      PrinterNameParam.DataType = ftString
+      PrinterNameParam.MultiSelectSeparator = ','
     end
     object actExternalDialog: TExecuteDialog
       Category = 'DSDLib'
@@ -1780,7 +1808,7 @@ inherited ReestrUpdateMovementForm: TReestrUpdateMovementForm
       end
       item
         Name = 'inislastcomplete'
-        Value = 'False'
+        Value = False
         DataType = ftBoolean
         ParamType = ptInput
         MultiSelectSeparator = ','
@@ -1937,6 +1965,7 @@ inherited ReestrUpdateMovementForm: TReestrUpdateMovementForm
         Column = BarCode
       end>
     SummaryItemList = <>
+    PropertiesCellList = <>
     Left = 472
     Top = 96
   end
@@ -2015,7 +2044,7 @@ inherited ReestrUpdateMovementForm: TReestrUpdateMovementForm
       end
       item
         Name = 'inIsReestrKind'
-        Value = 'FALSE'
+        Value = False
         DataType = ftBoolean
         ParamType = ptInput
         MultiSelectSeparator = ','
@@ -2074,14 +2103,14 @@ inherited ReestrUpdateMovementForm: TReestrUpdateMovementForm
       end
       item
         Name = 'inIsReestrKind'
-        Value = 'FALSE'
+        Value = False
         DataType = ftBoolean
         ParamType = ptInput
         MultiSelectSeparator = ','
       end
       item
         Name = 'inIsShowAll'
-        Value = 'True'
+        Value = True
         Component = edIsShowAll
         DataType = ftBoolean
         ParamType = ptInput
@@ -2137,7 +2166,7 @@ inherited ReestrUpdateMovementForm: TReestrUpdateMovementForm
       end
       item
         Name = 'inIsReestrKind'
-        Value = 'FALSE'
+        Value = False
         Component = cbReestrKind
         DataType = ftBoolean
         ParamType = ptInput
@@ -2261,7 +2290,7 @@ inherited ReestrUpdateMovementForm: TReestrUpdateMovementForm
       end
       item
         Name = 'inIsReestrKind'
-        Value = 'FALSE'
+        Value = False
         Component = cbReestrKind
         DataType = ftBoolean
         ParamType = ptInput
@@ -2269,7 +2298,7 @@ inherited ReestrUpdateMovementForm: TReestrUpdateMovementForm
       end
       item
         Name = 'inIsShowAll'
-        Value = 'True'
+        Value = True
         Component = edIsShowAll
         DataType = ftBoolean
         ParamType = ptInput

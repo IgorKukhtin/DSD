@@ -23,10 +23,12 @@ RETURNS TABLE (Id Integer, InvNumber TVarChar, OperDate TDateTime
              , JuridicalName_To TVarChar, OKPO_To TVarChar 
 
              , Date_Insert    TDateTime
+             , Date_Log       TDateTime
              , Date_PartnerIn TDateTime
              , Date_Buh       TDateTime
 
              , Member_Insert        TVarChar
+             , Member_Log           TVarChar
              , Member_PartnerInTo   TVarChar
              , Member_Buh           TVarChar
 
@@ -93,10 +95,12 @@ BEGIN
            , ObjectHistory_JuridicalDetails_View.OKPO  AS OKPO_To
 
            , MIDate_Insert.ValueData         AS Date_Insert
+           , MIDate_Log.ValueData            AS Date_Log
            , MIDate_PartnerIn.ValueData      AS Date_PartnerIn
            , MIDate_Buh.ValueData            AS Date_Buh
 
            , CASE WHEN MIDate_Insert.DescId IS NOT NULL THEN Object_ObjectMember.ValueData ELSE '' END :: TVarChar AS Member_Insert -- т.к. в "пустышках" - "криво" формируется это свойство
+           , Object_Log.ValueData            AS Member_Log
            , Object_PartnerInTo.ValueData    AS Member_PartnerInTo
            , Object_Buh.ValueData            AS Member_Buh
 
@@ -139,6 +143,9 @@ BEGIN
             LEFT JOIN MovementItemDate AS MIDate_Buh
                                        ON MIDate_Buh.MovementItemId = MovementItem.Id
                                       AND MIDate_Buh.DescId = zc_MIDate_Buh()
+            LEFT JOIN MovementItemDate AS MIDate_Log
+                                       ON MIDate_Log.MovementItemId = MovementItem.Id
+                                      AND MIDate_Log.DescId = zc_MIDate_Log()
 
             LEFT JOIN MovementItemLinkObject AS MILinkObject_PartnerInTo
                                              ON MILinkObject_PartnerInTo.MovementItemId = MovementItem.Id
@@ -149,6 +156,11 @@ BEGIN
                                              ON MILinkObject_Buh.MovementItemId = MovementItem.Id
                                             AND MILinkObject_Buh.DescId = zc_MILinkObject_Buh()
             LEFT JOIN Object AS Object_Buh ON Object_Buh.Id = MILinkObject_Buh.ObjectId
+
+            LEFT JOIN MovementItemLinkObject AS MILinkObject_Log
+                                             ON MILinkObject_Log.MovementItemId = MovementItem.Id
+                                            AND MILinkObject_Log.DescId = zc_MILinkObject_Log()
+            LEFT JOIN Object AS Object_Log ON Object_Log.Id = MILinkObject_Log.ObjectId
 
             LEFT JOIN MovementFloat AS MovementFloat_MovementItemId
                                     ON MovementFloat_MovementItemId.ValueData ::integer = MovementItem.Id -- tmpMI.MovementItemId
@@ -232,6 +244,7 @@ $BODY$
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
+ 21.07.20         * _Log
  31.01.20         *
 */
 

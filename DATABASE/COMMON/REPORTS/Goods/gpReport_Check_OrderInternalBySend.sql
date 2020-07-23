@@ -41,15 +41,18 @@ BEGIN
     RETURN QUERY
       WITH 
       tmpMovOrder  AS  (SELECT Movement.Id
+                             , MovementLinkObject_From.ObjectId AS FromId
+                             , MovementLinkObject_To.ObjectId   AS ToId
                         FROM Movement 
-                             INNER JOIN MovementLinkObject AS MovementLinkObject_From
-                                                           ON MovementLinkObject_From.MovementId = Movement.Id 
-                                                          AND MovementLinkObject_From.DescId = zc_MovementLinkObject_From()
-                                                          AND MovementLinkObject_From.ObjectId = inToId
                              INNER JOIN MovementLinkObject AS MovementLinkObject_To
                                                            ON MovementLinkObject_To.MovementId = Movement.Id 
                                                           AND MovementLinkObject_To.DescId = zc_MovementLinkObject_To()
-                                                          AND MovementLinkObject_To.ObjectId = inToId
+                                                          AND MovementLinkObject_To.ObjectId = inFromId
+                             LEFT JOIN MovementLinkObject AS MovementLinkObject_From
+                                                          ON MovementLinkObject_From.MovementId = Movement.Id 
+                                                         AND MovementLinkObject_From.DescId = zc_MovementLinkObject_From()
+                                                         --AND MovementLinkObject_From.ObjectId = inToId
+                            
                         WHERE Movement.DescId   = zc_Movement_OrderInternal()
                           AND Movement.StatusId = zc_Enum_Status_Complete()
                           AND Movement.OperDate BETWEEN inStartDate AND inEndDate
@@ -63,6 +66,7 @@ BEGIN
                                                   AND MI_Master.DescId     = zc_MI_Master()
                                                   AND MI_Master.isErased   = FALSE
                            INNER JOIN _tmpGoods ON _tmpGoods.GoodsId = MI_Master.ObjectId
+
                            LEFT JOIN MovementItemLinkObject AS MILinkObject_GoodsKind
                                                             ON MILinkObject_GoodsKind.MovementItemId = MI_Master.Id
                                                            AND MILinkObject_GoodsKind.DescId = zc_MILinkObject_GoodsKind()
@@ -70,6 +74,19 @@ BEGIN
                            LEFT JOIN MovementItemFloat AS MIFloat_AmountSecond
                                                        ON MIFloat_AmountSecond.MovementItemId = MI_Master.Id
                                                       AND MIFloat_AmountSecond.DescId = zc_MIFloat_AmountSecond()
+
+                           LEFT JOIN ObjectLink AS ObjectLink_Goods_InfoMoney
+                                                ON ObjectLink_Goods_InfoMoney.ObjectId = MI_Master.ObjectId
+                                               AND ObjectLink_Goods_InfoMoney.DescId = zc_ObjectLink_Goods_InfoMoney()
+                           LEFT JOIN Object_InfoMoney_View ON Object_InfoMoney_View.InfoMoneyId = ObjectLink_Goods_InfoMoney.ChildObjectId
+
+                           LEFT JOIN Object AS Object_Unit ON Object_Unit.Id = CASE WHEN Object_InfoMoney_View.InfoMoneyDestinationId IN (zc_Enum_InfoMoneyDestination_10200() -- Основное сырье + Прочее сырье
+                                                                                                                                        , zc_Enum_InfoMoneyDestination_20600() -- Общефирменные  + Прочие материалы
+                                                                                                                                         )
+                                                                                    THEN 8455 -- Склад специй
+                                                                                    ELSE tmpMovOrder.FromId
+                                                                               END
+                      WHERE Object_Unit.Id = inToId
                       GROUP BY MI_Master.ObjectId  
                            , COALESCE (MILinkObject_GoodsKind.ObjectId,0)
                       HAVING SUM (MI_Master.Amount + COALESCE (MIFloat_AmountSecond.ValueData, 0)) <> 0

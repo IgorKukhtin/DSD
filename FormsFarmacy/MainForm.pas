@@ -713,6 +713,8 @@ type
     actReportPercentageOccupancySUN1: TMenuItem;
     actComputerAccessoriesRegister: TdsdOpenForm;
     N247: TMenuItem;
+    actInventoryHouseholdInventory: TdsdOpenForm;
+    N248: TMenuItem;
     procedure actSaveDataExecute(Sender: TObject);
 
     procedure miRepriceClick(Sender: TObject);

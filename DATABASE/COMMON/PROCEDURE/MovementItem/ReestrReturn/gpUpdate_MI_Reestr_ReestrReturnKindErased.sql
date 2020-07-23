@@ -38,6 +38,13 @@ BEGIN
        PERFORM lpInsertUpdate_MovementItemLinkObject (zc_MILinkObject_RemakeBuh(), inId, Null);
     END IF;
 
+    IF inReestrKindId = zc_Enum_ReestrKind_Econom() THEN 
+       -- сохранили <когда сформирована виза "Экономисты">   
+       PERFORM lpInsertUpdate_MovementItemDate (zc_MIDate_Econom(), inId, Null);
+       -- сохранили связь с <кто сформировал визу "Экономисты">
+       PERFORM lpInsertUpdate_MovementItemLinkObject (zc_MILinkObject_Econom(), inId, Null);
+    END IF;
+
     IF inReestrKindId = zc_Enum_ReestrKind_Buh() THEN 
        -- сохранили <когда сформирована виза "Бухгалтерия">   
        PERFORM lpInsertUpdate_MovementItemDate (zc_MIDate_Buh(), inId, Null);
@@ -48,16 +55,16 @@ BEGIN
     -- Находим предыдущее значение <Состояние по реестру> документа возврат
     vbReestrKindId := (SELECT CASE WHEN tmp.DescId = zc_MIDate_PartnerIn() THEN zc_Enum_ReestrKind_PartnerIn()
                                    WHEN tmp.DescId = zc_MIDate_RemakeBuh() THEN zc_Enum_ReestrKind_RemakeBuh()
+                                   WHEN tmp.DescId = zc_MIDate_Econom()    THEN zc_Enum_ReestrKind_Econom()
                                    WHEN tmp.DescId = zc_MIDate_Buh()       THEN zc_Enum_ReestrKind_Buh()
-                              END 
+                              END
                        FROM (SELECT ROW_NUMBER() OVER(ORDER BY MID.ValueData desc) AS Num, MID.DescId 
                              FROM MovementItemDate AS MID
                              WHERE MID.MovementItemId = inId
-                               AND MID.DescId IN (zc_MIDate_PartnerIn(), zc_MIDate_RemakeBuh(), zc_MIDate_Buh())
+                               AND MID.DescId IN (zc_MIDate_PartnerIn(), zc_MIDate_RemakeBuh(), zc_MIDate_Econom(), zc_MIDate_Buh())
                                AND MID.ValueData IS NOT NULL
                        ) AS tmp
                        WHERE tmp.Num = 1);
-
 
     -- Изменили <Состояние по реестру> в документе возврата на предыдущее
     PERFORM lpInsertUpdate_MovementLinkObject (zc_MovementLinkObject_ReestrKind(), vbId_miReturn, COALESCE (vbReestrKindId, zc_Enum_ReestrKind_PartnerIn()));
@@ -71,7 +78,8 @@ $BODY$
 
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
-               Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.
+               Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
+ 22.07.20         *
  18.04.17         *
 */
 

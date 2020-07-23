@@ -452,7 +452,7 @@ begin
   if (FRESTResponse.StatusCode = 200) and (FRESTResponse.ContentType = 'application/json') then
   begin
     try
-      jValue := FRESTResponse.JSONValue ;
+      jValue := FRESTResponse.JSONValue;
       if jValue.FindValue('data') <> Nil then
       begin
         jValue := jValue.FindValue('data');
@@ -483,6 +483,12 @@ begin
             JSONA := jValue.GetValue<TJSONArray>('qualify');
             if JSONA.Count > 0 then
             begin
+
+              if (FMedical_program_id = '') and (JSONA.Items[0].FindValue('program_id') <> Nil) then
+              begin
+                FMedical_program_id := DelDoubleQuote(JSONA.Items[0].FindValue('program_id').ToString);
+              end;
+
               if JSONA.Items[0].FindValue('participants') <> Nil then
               begin
                 JSONA := JSONA.Items[0].GetValue<TJSONArray>('participants');

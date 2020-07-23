@@ -1728,7 +1728,7 @@ begin
 
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TReestrJournal_byReportForm'));
   TdsdFormStorageFactory.GetStorage.Load('TReestrJournal_byReportForm');
- {
+
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TReestrJournalForm'));
   TdsdFormStorageFactory.GetStorage.Load('TReestrJournalForm');
 
@@ -1748,7 +1748,7 @@ begin
 
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TReestrPrintDialogForm'));
   TdsdFormStorageFactory.GetStorage.Load('TReestrPrintDialogForm');
-  }
+
 end;
 
 procedure TLoadFormTest.LoadReestrTransportGoodsFormTest;
@@ -2250,12 +2250,17 @@ begin
   exit;
 
   }
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_CheckBonus_SaleReturnForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TReport_CheckBonus_SaleReturnForm');
+  //exit;
+
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_CheckBonusTestForm'));
   TdsdFormStorageFactory.GetStorage.Load('TReport_CheckBonusTestForm');
-  exit;
-  {
+
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_CheckBonusForm'));
   TdsdFormStorageFactory.GetStorage.Load('TReport_CheckBonusForm');
+    exit;
+  {
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_CheckBonusDialogForm'));
   TdsdFormStorageFactory.GetStorage.Load('TReport_CheckBonusDialogForm');
   exit;
