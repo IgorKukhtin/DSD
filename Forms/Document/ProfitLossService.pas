@@ -25,10 +25,10 @@ type
     ceAmountDebet: TcxCurrencyEdit;
     cxLabel7: TcxLabel;
     PaidKindGuides: TdsdGuides;
-    UnitGuides: TdsdGuides;
-    InfoMoneyGuides: TdsdGuides;
+    GuidesUnit: TdsdGuides;
+    GuidesInfoMoney: TdsdGuides;
     ceJuridical: TcxButtonEdit;
-    JuridicalGuides: TdsdGuides;
+    GuidesJuridical: TdsdGuides;
     cxLabel6: TcxLabel;
     GuidesFiller: TGuidesFiller;
     ceContract: TcxButtonEdit;
@@ -55,6 +55,9 @@ type
     cxLabel15: TcxLabel;
     edBranch: TcxButtonEdit;
     GuidesBranch: TdsdGuides;
+    cxLabel16: TcxLabel;
+    cePartner: TcxButtonEdit;
+    GuidesPartner: TdsdGuides;
   private
     { Private declarations }
   public

@@ -40,12 +40,12 @@ RETURNS TABLE (OperDate_Movement TDateTime, InvNumber_Movement TVarChar, DescNam
 AS
 $BODY$
 
-declare inisMovement          Boolean ; -- по документам
-
+declare inisMovement  Boolean ; -- по документам
+DECLARE vbEndDate     TDateTime;
 BEGIN
 
-inisMovement:= FALSE;
-
+     inisMovement:= FALSE;
+     vbEndDate := inEndDate + INTERVAL '1 Day';
 
     RETURN QUERY
       WITH 
@@ -443,7 +443,7 @@ inisMovement:= FALSE;
                             FROM MovementItemContainer AS MIContainer
                                  JOIN tmpContainer ON tmpContainer.ContainerId = MIContainer.ContainerId
                             WHERE MIContainer.DescId = zc_MIContainer_Summ()
-                              AND MIContainer.OperDate BETWEEN inStartDate AND inEndDate
+                              AND (MIContainer.OperDate >= inStartDate AND MIContainer.OperDate < vbEndDate)
                               AND MIContainer.MovementDescId IN (zc_Movement_Sale(), zc_Movement_ReturnIn(), zc_Movement_BankAccount(),zc_Movement_Cash(), zc_Movement_SendDebt())
                             GROUP BY tmpContainer.JuridicalId
                                    , tmpContainer.ContractId_child
@@ -579,8 +579,8 @@ inisMovement:= FALSE;
                             , View_Contract_InvNumber_child.InfoMoneyId      AS InfoMoneyId_child
                             , MILinkObject_InfoMoney.ObjectId                AS InfoMoneyId_find
 
-                            , MovementItem.ObjectId                          AS JuridicalId
-                            , 0                 AS PartnerId
+                            , Object_Juridical.Id                            AS JuridicalId
+                            , COALESCE (ObjectLink_Partner_Juridical.ObjectId,0) AS PartnerId
                             , MILinkObject_PaidKind.ObjectId                 AS PaidKindId
                             , View_Contract_InvNumber_child.PaidKindId       AS PaidKindId_child
                             , MILinkObject_ContractConditionKind.ObjectId    AS ContractConditionKindId
@@ -604,6 +604,12 @@ inisMovement:= FALSE;
                             , COALESCE (MILinkObject_Branch.ObjectId,0)      AS BranchId
                      FROM Movement 
                             LEFT JOIN MovementItem ON MovementItem.MovementId = Movement.Id AND MovementItem.DescId = zc_MI_Master()
+
+                            LEFT JOIN ObjectLink AS ObjectLink_Partner_Juridical
+                                                 ON ObjectLink_Partner_Juridical.ObjectId = MovementItem.ObjectId
+                                                AND ObjectLink_Partner_Juridical.DescId = zc_ObjectLink_Partner_Juridical()
+                            
+                            LEFT JOIN Object AS Object_Juridical ON Object_Juridical.Id = COALESCE (ObjectLink_Partner_Juridical.ChildObjectId, MovementItem.ObjectId)
 
                             LEFT JOIN MovementItemFloat AS MIFloat_BonusValue
                                                         ON MIFloat_BonusValue.MovementItemId = MovementItem.Id
@@ -652,10 +658,10 @@ inisMovement:= FALSE;
                             --LEFT JOIN (SELECT tmpMovement.JuridicalId, MAX (tmpMovement.PartnerId) AS PartnerId FROM tmpMovement GROUP BY tmpMovement.JuridicalId) tmpInf ON tmpInf.JuridicalId = MovementItem.ObjectId 
                        WHERE Movement.DescId = zc_Movement_ProfitLossService()
                          AND Movement.StatusId = zc_Enum_Status_Complete()
-                         AND Movement.OperDate BETWEEN inStartDate AND inEndDate
+                         AND (Movement.OperDate >= inStartDate AND Movement.OperDate < vbEndDate)
                          AND MILinkObject_InfoMoney.ObjectId IN (zc_Enum_InfoMoney_21501() -- Маркетинг + Бонусы за продукцию
                                                                , zc_Enum_InfoMoney_21502()) -- Маркетинг + Бонусы за мясное сырье
-                         AND (MovementItem.ObjectId = inJuridicalId OR inJuridicalId = 0)
+                         AND (Object_Juridical.Id = inJuridicalId OR inJuridicalId = 0)
                          -- AND MILinkObject_ContractConditionKind.ObjectId IN (zc_Enum_ContractConditionKind_BonusPercentAccount(), zc_Enum_ContractConditionKind_BonusPercentSaleReturn(), zc_Enum_ContractConditionKind_BonusPercentSale())
                       )
       , tmpData AS (SELECT tmpAll.ContractId_master

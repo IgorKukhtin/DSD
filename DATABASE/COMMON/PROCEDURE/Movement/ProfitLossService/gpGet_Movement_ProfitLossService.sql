@@ -16,6 +16,7 @@ RETURNS TABLE (Id Integer, InvNumber TVarChar, OperDate TDateTime
              , BonusValue TFloat
              , Comment TVarChar
              , JuridicalId Integer, JuridicalName TVarChar
+             , PartnerId Integer, PartnerName TVarChar
              , InfoMoneyId Integer, InfoMoneyName TVarChar
              , ContractId Integer, ContractInvNumber TVarChar
              , ContractMasterId Integer, ContractMasterInvNumber TVarChar
@@ -49,6 +50,8 @@ BEGIN
            , ''::TVarChar                     AS Comment
            , 0                                AS JuridicalId
            , CAST ('' as TVarChar)            AS JuridicalName
+           , 0                                AS PartnerId
+           , CAST ('' as TVarChar)            AS PartnerName
            , 0                                AS InfoMoneyId
            , CAST ('' as TVarChar)            AS InfoMoneyName
            , 0                                AS ContractId
@@ -102,6 +105,8 @@ BEGIN
            , MIString_Comment.ValueData             AS Comment
            , Object_Juridical.Id                    AS JuridicalId
            , Object_Juridical.ValueData             AS JuridicalName
+           , Object_Partner.Id                      AS PartnerId
+           , Object_Partner.ValueData               AS PartnerName
            , View_InfoMoney.InfoMoneyId             AS InfoMoneyId
            , View_InfoMoney.InfoMoneyName_all       AS InfoMoneyName
            , View_Contract_InvNumber.ContractId     AS ContractId
@@ -132,7 +137,12 @@ BEGIN
                                              ON MILinkObject_MoneyPlace.MovementItemId = MovementItem.Id
                                             AND MILinkObject_MoneyPlace.DescId = zc_MILinkObject_MoneyPlace()
 
-            LEFT JOIN Object AS Object_Juridical ON Object_Juridical.Id = COALESCE(MILinkObject_MoneyPlace.ObjectId, MovementItem.ObjectId)
+            LEFT JOIN ObjectLink AS ObjectLink_Partner_Juridical
+                                 ON ObjectLink_Partner_Juridical.ObjectId = MovementItem.ObjectId
+                                AND ObjectLink_Partner_Juridical.DescId = zc_ObjectLink_Partner_Juridical()
+            LEFT JOIN Object AS Object_Partner ON Object_Partner.Id = ObjectLink_Partner_Juridical.ObjectId
+
+            LEFT JOIN Object AS Object_Juridical ON Object_Juridical.Id = COALESCE(MILinkObject_MoneyPlace.ObjectId, ObjectLink_Partner_Juridical.ChildObjectId, MovementItem.ObjectId)
 
             LEFT JOIN MovementItemFloat AS MIFloat_BonusValue
                                         ON MIFloat_BonusValue.MovementItemId = MovementItem.Id
@@ -202,6 +212,7 @@ ALTER FUNCTION gpGet_Movement_ProfitLossService (Integer, Integer, TDateTime, TV
 /*
  »—“Œ–»ﬂ –¿«–¿¡Œ“ »: ƒ¿“¿, ¿¬“Œ–
                ‘ÂÎÓÌ˛Í ».¬.    ÛıÚËÌ ».¬.    ÎËÏÂÌÚ¸Â‚  .».    Ã‡Ì¸ÍÓ ƒ.¿
+ 24.07.20         *
  18.02.15         * add ContractMaster, ContractChild
  23.06.14                        * 
  19.02.14         * add BonusKind

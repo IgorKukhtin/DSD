@@ -16,18 +16,19 @@ inherited ProfitLossServiceJournalForm: TProfitLossServiceJournalForm
     Width = 990
     Height = 221
     TabOrder = 3
+    ExplicitTop = 81
     ExplicitWidth = 990
-    ExplicitHeight = 245
+    ExplicitHeight = 221
     ClientRectBottom = 221
     ClientRectRight = 990
     inherited tsMain: TcxTabSheet
       ExplicitWidth = 990
-      ExplicitHeight = 245
+      ExplicitHeight = 221
       inherited cxGrid: TcxGrid
         Width = 990
         Height = 221
         ExplicitWidth = 990
-        ExplicitHeight = 245
+        ExplicitHeight = 221
         inherited cxGridDBTableView: TcxGridDBTableView
           DataController.Summary.DefaultGroupSummaryItems = <
             item
@@ -185,6 +186,22 @@ inherited ProfitLossServiceJournalForm: TProfitLossServiceJournalForm
             HeaderAlignmentVert = vaCenter
             Width = 55
           end
+          object PartnerCode: TcxGridDBColumn
+            Caption = #1050#1086#1076' '#1082#1086#1085#1090#1088#1072#1075#1077#1085#1090#1072
+            DataBinding.FieldName = 'PartnerCode'
+            Visible = False
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 50
+          end
+          object PartnerName: TcxGridDBColumn
+            Caption = #1050#1086#1085#1090#1088#1072#1075#1077#1085#1090
+            DataBinding.FieldName = 'PartnerName'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 85
+          end
           object PaidKindName: TcxGridDBColumn
             Caption = #1060#1086#1088#1084#1072' '#1086#1087#1083#1072#1090#1099
             DataBinding.FieldName = 'PaidKindName'
@@ -324,8 +341,16 @@ inherited ProfitLossServiceJournalForm: TProfitLossServiceJournalForm
             Width = 89
           end
           object ItemName: TcxGridDBColumn
-            Caption = #1069#1083#1077#1084#1077#1085#1090
+            Caption = #1069#1083#1077#1084#1077#1085#1090' ('#1102#1088'.'#1083#1080#1094#1086')'
             DataBinding.FieldName = 'ItemName'
+            Visible = False
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 55
+          end
+          object ItemName_Partner: TcxGridDBColumn
+            Caption = #1069#1083#1077#1084#1077#1085#1090' ('#1082#1086#1085#1090#1088#1072#1075#1077#1085#1090')'
+            DataBinding.FieldName = 'ItemName_Partner'
             Visible = False
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter

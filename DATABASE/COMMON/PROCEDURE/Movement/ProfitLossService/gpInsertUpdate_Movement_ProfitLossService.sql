@@ -3,7 +3,8 @@
 DROP FUNCTION IF EXISTS gpInsertUpdate_Movement_ProfitLossService (Integer, TVarChar, TDateTime, TFloat, TFloat, TVarChar, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Boolean, TVarChar);
 DROP FUNCTION IF EXISTS gpInsertUpdate_Movement_ProfitLossService (Integer, TVarChar, TDateTime, TFloat, TFloat, TVarChar, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Boolean, TVarChar);
 --DROP FUNCTION IF EXISTS gpInsertUpdate_Movement_ProfitLossService (Integer, TVarChar, TDateTime, TFloat, TFloat, TFloat, TVarChar, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Boolean, TVarChar);
-DROP FUNCTION IF EXISTS gpInsertUpdate_Movement_ProfitLossService (Integer, TVarChar, TDateTime, TFloat, TFloat, TFloat, TVarChar, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Boolean, TVarChar);
+--DROP FUNCTION IF EXISTS gpInsertUpdate_Movement_ProfitLossService (Integer, TVarChar, TDateTime, TFloat, TFloat, TFloat, TVarChar, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Boolean, TVarChar);
+DROP FUNCTION IF EXISTS gpInsertUpdate_Movement_ProfitLossService (Integer, TVarChar, TDateTime, TFloat, TFloat, TFloat, TVarChar, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Boolean, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpInsertUpdate_Movement_ProfitLossService(
  INOUT ioId                       Integer   , -- Ключ объекта <Документ>
@@ -18,6 +19,7 @@ CREATE OR REPLACE FUNCTION gpInsertUpdate_Movement_ProfitLossService(
     IN inContractChildId          Integer   , -- Договор(база)
     IN inInfoMoneyId              Integer   , -- Статьи назначения
     IN inJuridicalId              Integer   , -- Юр. лицо
+    IN inPartnerId                Integer   , -- Контрагент
     IN inPaidKindId               Integer   , -- Виды форм оплаты
     IN inUnitId                   Integer   , -- Подразделение
     IN inContractConditionKindId  Integer   , -- Типы условий договоров
@@ -48,7 +50,7 @@ BEGIN
                                                       , inContractMasterId  := inContractMasterId
                                                       , inContractChildId   := inContractChildId
                                                       , inInfoMoneyId       := inInfoMoneyId
-                                                      , inJuridicalId       := inJuridicalId
+                                                      , inJuridicalId       := COALESCE (inPartnerId, inJuridicalId)  -- если выбран контрагент - записываем его а по нему уже понятно кто юр.лицо
                                                       , inPaidKindId        := inPaidKindId
                                                       , inUnitId            := inUnitId
                                                       , inContractConditionKindId := inContractConditionKindId
