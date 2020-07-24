@@ -44,8 +44,17 @@ BEGIN
    inisMovement:= FALSE;
 
    -- временные таблицы
+   --поставщики
+   CREATE TEMP TABLE tmpJuridical ON COMMIT DROP AS (SELECT ObjectLink_Juridical_JuridicalGroup.ObjectId AS JuridicalId
+                                                     FROM ObjectLink AS ObjectLink_Juridical_JuridicalGroup
+                                                     WHERE ObjectLink_Juridical_JuridicalGroup.DescId = zc_ObjectLink_Juridical_JuridicalGroup()
+                                                         AND ObjectLink_Juridical_JuridicalGroup.ChildObjectId = 8357
+                                                     );
+
    CREATE TEMP TABLE tmpContract_full ON COMMIT DROP AS (SELECT View_Contract.*
                                                          FROM Object_Contract_View AS View_Contract
+                                                            --только поставщики
+                                                            INNER JOIN tmpJuridical ON tmpJuridical.JuridicalId = View_Contract.JuridicalId
                                                          WHERE (View_Contract.JuridicalId = inJuridicalId OR COALESCE (inJuridicalId, 0) = 0)
                                                          );
    CREATE TEMP TABLE tmpContract_all ON COMMIT DROP AS (SELECT *
@@ -613,6 +622,7 @@ BEGIN
                        , COALESCE (MILinkObject_Branch.ObjectId,0)      AS BranchId
                 FROM Movement 
                        LEFT JOIN MovementItem ON MovementItem.MovementId = Movement.Id AND MovementItem.DescId = zc_MI_Master()
+                       INNER JOIN tmpJuridical ON tmpJuridical.JuridicalId = MovementItem.ObjectId
 
                        LEFT JOIN MovementItemFloat AS MIFloat_BonusValue
                                                    ON MIFloat_BonusValue.MovementItemId = MovementItem.Id

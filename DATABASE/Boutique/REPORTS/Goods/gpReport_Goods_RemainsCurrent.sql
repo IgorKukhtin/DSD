@@ -1,3 +1,4 @@
+
 -- Function:  gpReport_Goods_RemainsCurrent()
 
 DROP FUNCTION IF EXISTS gpReport_Goods_RemainsCurrent (Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Boolean, Boolean, Boolean, Boolean, Boolean, TVarChar);
@@ -62,6 +63,11 @@ RETURNS TABLE (PartionId            Integer
              , OperPriceList_curr      TFloat -- *Цена по прайсу в валюте по курсу на тек дату
              , OperPriceList_curr_doc  TFloat -- *Цена по прайсу в валюте по курсу документа  
              , PriceJur                TFloat -- Цена вх. без ск. в валюте (информативно)
+             
+             , OperPriceList_disc           TFloat -- Цена по прайсу в ГРН по курсу на тек дату c учетом Сезонной скидки
+             , OperPriceList_doc_disc       TFloat -- Цена по прайсу в ГРН по курсу документа c учетом Сезонной скидки
+             , OperPriceList_curr_disc      TFloat -- *Цена по прайсу в валюте по курсу на тек дату c учетом Сезонной скидки
+             , OperPriceList_curr_doc_disc  TFloat -- *Цена по прайсу в валюте по курсу документа c учетом Сезонной скидки
 
              , Remains                 TFloat -- Кол-во - остаток в магазине
              , RemainsDebt             TFloat -- Кол-во - долги по магазину
@@ -691,6 +697,24 @@ BEGIN
                   ELSE 0
              END :: TFloat AS PriceJur
 
+             --c учетом сезонной скидки
+             -- Цена по прайсу в ГРН  тек.курс
+           , CAST (tmpData.OperPriceList * (1 - COALESCE (tmpDiscount.DiscountTax,0) /100) AS NUMERIC (16, 2))     :: TFloat AS OperPriceList_disc
+             -- Цена по прайсу в ГРН курс.документа
+           , CAST (tmpData.OperPriceList_doc * (1 - COALESCE (tmpDiscount.DiscountTax,0) /100) AS NUMERIC (16, 2)) :: TFloat AS OperPriceList_doc_disc
+           
+             -- *Цена по прайсу в валюте по курсу на тек.дату
+           , CAST (tmpData.OperPriceList / CASE WHEN tmpData.CurrencyId = zc_Currency_Basis() THEN 1 WHEN tmpData.CurrencyValue <> 0 THEN tmpData.CurrencyValue ELSE 1 END
+                                         * CASE WHEN tmpData.CurrencyId = zc_Currency_Basis() THEN 1 WHEN tmpData.ParValue <> 0      THEN tmpData.ParValue      ELSE 1 END
+                          * (1 - COALESCE (tmpDiscount.DiscountTax,0) /100)    
+                   AS NUMERIC (16, 2)) :: TFloat AS OperPriceList_curr_disc
+             -- *Цена по прайсу в валюте по курсу документа
+           , CAST (tmpData.OperPriceList_doc / CASE WHEN tmpData.CurrencyId = zc_Currency_Basis() THEN 1 WHEN tmpData.CurrencyValue_doc <> 0 THEN tmpData.CurrencyValue_doc ELSE 1 END
+                                             * CASE WHEN tmpData.CurrencyId = zc_Currency_Basis() THEN 1 WHEN tmpData.ParValue_doc <> 0      THEN tmpData.ParValue_doc      ELSE 1 END
+                          * (1 - COALESCE (tmpDiscount.DiscountTax,0) /100)
+                   AS NUMERIC (16, 2)) :: TFloat AS OperPriceList_curr_doc_disc
+           /***********************/
+
              -- Кол-во - остаток в магазине
            , tmpData.Remains                 :: TFloat AS Remains
              -- Кол-во - долги по магазину
@@ -828,3 +852,5 @@ CREATE UNIQUE INDEX idx_objecthistory_objectid_enddate_descid
 
 -- тест
 -- SELECT * FROM gpReport_Goods_RemainsCurrent (inUnitId:= 1531, inBrandId:= 0, inPartnerId:= 0, inPeriodId:= 0, inStartYear:= 0, inEndYear:= 0, inUserId:= 0, inGoodsPrintId:= 0, inisPartion:= FALSE, inisPartner:= FALSE, inisSize:= TRUE, inIsYear:= FALSE, inIsRemains:= FALSE, inSession:= zfCalc_UserAdmin())
+
+-- select * from gpReport_Goods_RemainsCurrent(inUnitId := 0 , inBrandId := 0 , inPartnerId := 0 , inPeriodId := 0 , inStartYear := 0 , inEndYear := 0 , inUserId := 2 , inGoodsPrintId := 0 , inIsPartion := 'True' , inIsPartner := 'False' , inIsSize := 'False' , inIsYear := 'False' , inIsRemains := 'False' ,  inSession := '2');
