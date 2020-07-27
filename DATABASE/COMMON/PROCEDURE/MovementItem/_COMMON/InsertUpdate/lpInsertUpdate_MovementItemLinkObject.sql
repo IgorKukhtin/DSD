@@ -25,12 +25,21 @@ BEGIN
         -- вставить <свойство>
         INSERT INTO MovementItemLinkObject (DescId, MovementItemId, ObjectId)
                                     VALUES (inDescId, inMovementItemId, inObjectId);
-    ELSE
+    /*ELSE
         -- сохранили протокол - !!!ЛОВИМ ОШИБКУ!!!
         IF inDescId = zc_MILinkObject_Receipt()
         THEN
+            IF EXISTS (SELECT 1 FROM MovementItem WHERE MovementItem.Id = inMovementItemId AND MovementItem.MovementId = 17266213)
+            THEN
+                RAISE EXCEPTION 'Ошибка.<%>  %  %  %', inObjectId
+                , lfGet_Object_ValueData((SELECT MovementItem.ObjectId FROM MovementItem WHERE MovementItem.Id = inMovementItemId AND MovementItem.MovementId = 17266213))
+                , lfGet_Object_ValueData((SELECT M.ObjectId FROM MovementItemLinkObject AS M WHERE M.MovementItemId = inMovementItemId AND M.DescId = zc_MILinkObject_GoodsKind()))
+                , lfGet_Object_ValueData((SELECT M.ObjectId FROM MovementItemLinkObject AS M WHERE M.MovementItemId = inMovementItemId AND M.DescId = zc_MILinkObject_GoodsKindComplete()))
+                ;
+            END IF;
+            --
             PERFORM lpInsert_MovementItemProtocol (inMovementItemId, zc_Enum_Process_Auto_PrimeCost() :: Integer, FALSE);
-        END IF;
+        END IF;*/
     END IF;             
 
     RETURN TRUE;

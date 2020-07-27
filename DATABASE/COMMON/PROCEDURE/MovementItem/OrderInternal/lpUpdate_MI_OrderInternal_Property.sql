@@ -39,6 +39,15 @@ $BODY$
 
    DECLARE vbGoodsId_add     Integer;
    DECLARE vbGoodsKindId_add Integer;
+   
+   DECLARE vbMovementItemId_tmp Integer;
+   DECLARE vbGoodsId_tmp Integer;
+   DECLARE vbGoodsKindId_tmp Integer;
+   DECLARE vbGoodsId_child_tmp Integer;
+   DECLARE vbGoodsKindId_child_tmp Integer;
+   DECLARE vbReceipId_tmp Integer;
+   DECLARE vbAmount_Param_tmp TFloat;
+   DECLARE vbAmount_ParamOrder_tmp TFloat;
 BEGIN
      -- определяется
      SELECT EXTRACT (MONTH FROM (Movement.OperDate + INTERVAL '1 DAY'))
@@ -837,6 +846,17 @@ end if;
                               AND COALESCE (MIFloat_ContainerId.ValueData, 0)   = 0
                            )
          THEN
+             -- запомнили
+             vbMovementItemId_tmp    := (SELECT _tmpParentMulti.MovementItemId    FROM _tmpParentMulti);
+             vbGoodsId_tmp           := (SELECT _tmpParentMulti.GoodsId           FROM _tmpParentMulti);
+             vbGoodsKindId_tmp       := (SELECT _tmpParentMulti.GoodsKindId       FROM _tmpParentMulti);
+             vbGoodsId_child_tmp     := (SELECT _tmpParentMulti.GoodsId_child     FROM _tmpParentMulti);
+             vbGoodsKindId_child_tmp := (SELECT _tmpParentMulti.GoodsKindId_child FROM _tmpParentMulti);
+             vbReceipId_tmp          := (SELECT _tmpParentMulti.ReceipId          FROM _tmpParentMulti);
+             vbAmount_Param_tmp      := (SELECT _tmpParentMulti.Amount_Param      FROM _tmpParentMulti);
+             vbAmount_ParamOrder_tmp := (SELECT _tmpParentMulti.Amount_ParamOrder FROM _tmpParentMulti);
+
+             --
              -- RAISE EXCEPTION '<%>   <%>', vbGoodsId_add, vbGoodsKindId_add;
              --
              PERFORM lpUpdate_MI_OrderInternal_Property (ioId                     := NULL
@@ -859,7 +879,15 @@ end if;
                                                         , inIsParentMulti         := TRUE
                                                         , inUserId                := inUserId
                                                          );
+
+             -- удалили
+             DELETE FROM _tmpParentMulti;
+             -- восстановили
+             INSERT INTO _tmpParentMulti (MovementItemId, GoodsId, GoodsKindId, GoodsId_child, GoodsKindId_child, ReceipId, Amount_Param, Amount_ParamOrder)
+                VALUES (vbMovementItemId_tmp, vbGoodsId_tmp, vbGoodsKindId_tmp, vbGoodsId_child_tmp, vbGoodsKindId_child_tmp, vbReceipId_tmp, vbAmount_Param_tmp, vbAmount_ParamOrder_tmp);
+
          END IF;
+
      END IF;
 
 
@@ -910,7 +938,8 @@ end if;
      END IF;
 
      -- сохранили протокол
-     -- !!!что б не росла база!!! PERFORM lpInsert_MovementItemProtocol (ioId, inUserId, vbIsInsert);
+     -- !!!что б росла база!!! 
+     PERFORM lpInsert_MovementItemProtocol (ioId, inUserId, vbIsInsert);
 
 END;
 $BODY$
