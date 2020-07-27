@@ -1,5 +1,5 @@
 inherited Report_CheckBonus_SaleReturnForm: TReport_CheckBonus_SaleReturnForm
-  Caption = #1054#1090#1095#1077#1090' <'#1055#1088#1086#1074#1077#1088#1082#1072' '#1085#1072#1095#1080#1089#1083#1077#1085#1080#1081' '#1087#1086' '#1073#1086#1085#1091#1089#1072#1084'>'
+  Caption = #1054#1090#1095#1077#1090' <'#1055#1088#1086#1074#1077#1088#1082#1072' '#1085#1072#1095#1080#1089#1083#1077#1085#1080#1081' '#1087#1086' '#1073#1086#1085#1091#1089#1072#1084'>('#1087#1088#1086#1076#1072#1078#1072'/'#1074#1086#1079#1074#1088#1072#1090')'
   ClientHeight = 341
   ClientWidth = 1180
   AddOnFormData.ExecuteDialogAction = ExecuteDialog
@@ -192,6 +192,12 @@ inherited Report_CheckBonus_SaleReturnForm: TReport_CheckBonus_SaleReturnForm
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Width = 85
+          end
+          object BranchName: TcxGridDBColumn
+            Caption = #1060#1080#1083#1080#1072#1083
+            DataBinding.FieldName = 'BranchName'
+            HeaderAlignmentVert = vaCenter
+            Width = 104
           end
           object JuridicalName: TcxGridDBColumn
             Caption = #1070#1088#1080#1076#1080#1095#1077#1089#1082#1086#1077' '#1083#1080#1094#1086

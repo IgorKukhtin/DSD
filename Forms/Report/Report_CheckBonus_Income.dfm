@@ -189,6 +189,12 @@ inherited Report_CheckBonus_IncomeForm: TReport_CheckBonus_IncomeForm
             HeaderAlignmentVert = vaCenter
             Width = 85
           end
+          object BranchName: TcxGridDBColumn
+            Caption = #1060#1080#1083#1080#1072#1083
+            DataBinding.FieldName = 'BranchName'
+            HeaderAlignmentVert = vaCenter
+            Width = 104
+          end
           object JuridicalName: TcxGridDBColumn
             Caption = #1070#1088#1080#1076#1080#1095#1077#1089#1082#1086#1077' '#1083#1080#1094#1086
             DataBinding.FieldName = 'JuridicalName'

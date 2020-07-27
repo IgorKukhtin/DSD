@@ -50,8 +50,8 @@ BEGIN
                                                       , inContractMasterId  := ContractId_master
                                                       , inContractChildId   := ContractId_Child
                                                       , inInfoMoneyId       := InfoMoneyId_find
-                                                      , inJuridicalId       := JuridicalId
-                                                      , inPaidKindId        := PaidKindID
+                                                      , inJuridicalId       := COALESCE (PartnerId, JuridicalId)  -- если выбран контрагент - записываем его а по нему уже понятно кто юр.лицо JuridicalId
+                                                      , inPaidKindId        := PaidKindId
                                                       , inUnitId            := 0 :: Integer
                                                       , inContractConditionKindId   := ConditionKindId
                                                       , inBonusKindId       := BonusKindId
