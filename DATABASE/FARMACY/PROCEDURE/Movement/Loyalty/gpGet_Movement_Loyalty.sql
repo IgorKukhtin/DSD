@@ -33,7 +33,9 @@ RETURNS TABLE (Id Integer
              , Comment       TVarChar
              , PercentUsed   TFloat
              , isBeginning   Boolean
-             , isElectron    Boolean)
+             , isElectron    Boolean
+             , SummRepay   TFloat
+             )
 AS
 $BODY$
     DECLARE vbUserId Integer;
@@ -74,6 +76,7 @@ BEGIN
           , 0     ::TFloat              AS PercentUsed
           , FALSE                       AS isBeginning
           , FALSE                       AS isElectron
+          , 0     ::TFloat              AS SummRepay
         FROM lfGet_Object_Status(zc_Enum_Status_UnComplete()) AS Object_Status
              LEFT JOIN Object AS Object_Insert ON Object_Insert.Id = vbUserId;
   
@@ -159,6 +162,7 @@ BEGIN
           , tmpPercentUsed.PercentUsed::TFloat                             AS PercentUsed
           , COALESCE(MovementBoolean_Beginning.ValueData, FALSE)           AS isBeginning
           , COALESCE(MovementBoolean_Electron.ValueData, FALSE) ::Boolean  AS isElectron
+          , MovementFloat_SummRepay.ValueData                              AS SummRepay
      FROM Movement 
         LEFT JOIN Object AS Object_Status ON Object_Status.Id = Movement.StatusId
 
@@ -177,6 +181,9 @@ BEGIN
         LEFT JOIN MovementFloat AS MovementFloat_ChangePercent
                                 ON MovementFloat_ChangePercent.MovementId =  Movement.Id
                                AND MovementFloat_ChangePercent.DescId = zc_MovementFloat_ChangePercent()
+        LEFT JOIN MovementFloat AS MovementFloat_SummRepay
+                                ON MovementFloat_SummRepay.MovementId =  Movement.Id
+                               AND MovementFloat_SummRepay.DescId = zc_MovementFloat_SummRepay()
 
         LEFT JOIN MovementDate AS MovementDate_StartPromo
                                ON MovementDate_StartPromo.MovementId = Movement.Id

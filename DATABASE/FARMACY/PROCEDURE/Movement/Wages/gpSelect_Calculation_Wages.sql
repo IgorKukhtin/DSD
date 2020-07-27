@@ -27,6 +27,10 @@ BEGIN
    -- последнее число мес€ца
    vbEndDate := DATE_TRUNC ('MONTH', inOperDate) + INTERVAL '1 MONTH' - INTERVAL '1 second';
 
+
+   CREATE TEMP TABLE tmpPayrollRatio ON COMMIT DROP AS
+     SELECT 1::Integer  AS Id, 3997718::Integer  AS UserId, 183289 ::Integer  AS UnitId, 50::TFloat AS PayrollRatio;
+
    CREATE TEMP TABLE tmpOperDate ON COMMIT DROP AS
       SELECT GENERATE_SERIES (DATE_TRUNC ('MONTH', inOperDate), DATE_TRUNC ('MONTH', inOperDate) + INTERVAL '1 MONTH' - INTERVAL '1 DAY', '1 DAY' :: INTERVAL) AS OperDate;
 
@@ -102,7 +106,7 @@ BEGIN
               SELECT Movement.ID                                                             AS ID
                    , Movement.OperDate                                                       AS OperDate
                    , MovementLinkObject_Unit.ObjectId                                        AS UnitId
-                   , MLO_Insert.ObjectId                                                     AS UserID 
+                   , MLO_Insert.ObjectId                                                     AS UserID
                    , MovementFloat_TotalSumm.ValueData                                       AS TotalSumm
               FROM Movement
 
@@ -135,11 +139,22 @@ BEGIN
                                       AND (Board.DateEnd + INTERVAL '30 second') > Movement.OperDate
                                       AND Board.PayrollGroupID = zc_Enum_PayrollGroup_Check()
               WHERE Movement.UnitId <> 394426 OR COALESCE(Movement.UserID, 0) <> 8720522),
-           tmpCheckCount AS (
-               SELECT  Movement.ID                                        AS ID
-                    , COUNT(*)                                            AS  CountUser
+           tmpCheckCountPrew AS (
+               SELECT Movement.ID                                         AS ID
+                    , Movement.UnitID                                     AS UnitId
+                    , COUNT(*)                                            AS CountUser
+                    , string_agg(Movement.UserID::TVarChar, ',')          AS UserList
                FROM tmpCheckUserAll AS Movement
-               GROUP BY Movement.ID),
+               GROUP BY Movement.ID
+                      , Movement.UnitID),
+           tmpCheckCount AS (
+               SELECT Movement.ID                                         AS ID
+                    , Movement.CountUser                                  AS CountUser
+                    , tmpPayrollRatio.ID                                  AS PayrollRatioID
+               FROM tmpCheckCountPrew AS Movement
+                    LEFT JOIN tmpPayrollRatio ON tmpPayrollRatio.UnitID = Movement.UnitID
+                                             AND position(','||tmpPayrollRatio.UserID::TVarChar||',' IN ','||Movement.UserList||',') > 0
+               ),
            tmpCheckUser AS (
               SELECT Movement.OperDate                                    AS OperDate
                    , Movement.UnitID                                      AS UnitId
@@ -147,27 +162,40 @@ BEGIN
                    , SUM(Movement.TotalSumm)                              AS TotalSumm
                    , COUNT(*)                                             AS CountCheck
                    , CheckCount.CountUser                                 AS CountUser
+                   , CheckCount.PayrollRatioID                            AS PayrollRatioID
               FROM tmpCheckUserAll AS Movement
 
                    INNER JOIN tmpCheckCount AS CheckCount
                                             ON CheckCount.ID = Movement.ID
 
-              GROUP BY Movement.OperDate, Movement.UnitID, Movement.UserID, CheckCount.CountUser)
+              GROUP BY Movement.OperDate, Movement.UnitID, Movement.UserID, CheckCount.CountUser, CheckCount.PayrollRatioID)
 
        SELECT Movement.OperDate::TDateTime                                      AS OperDate
             , Movement.UnitID                                                   AS UnitId
             , Movement.UserID                                                   AS UserID
-            , SUM(Round(Movement.TotalSumm / Movement.CountUser, 2))::TFloat    AS SummaBase
+            , SUM(Round(
+              CASE WHEN COALESCE (tmpPayrollRatio.ID, 0) > 0 AND Movement.CountUser > 2 AND vbStartDate >= '01.03.2020'::TDateTime
+              THEN CASE WHEN tmpPayrollRatio.UserID = Movement.UserID
+                        THEN Movement.TotalSumm / 2
+                        ELSE Movement.TotalSumm / 2 / (Movement.CountUser - 1) END
+              ELSE Movement.TotalSumm / Movement.CountUser END, 2))::TFloat     AS SummaBase
             , SUM(Movement.CountCheck)::Integer                                 AS CountCheck
             , string_agg(
               '('||
               TRIM(to_char(Movement.TotalSumm, 'G999G999G999G999D99'))||' / '||
-              Movement.CountUser::TVarChar||' = '||
-              TRIM(to_char(Round(Movement.TotalSumm / Movement.CountUser, 2), 'G999G999G999G999D99'))||
+              CASE WHEN COALESCE (tmpPayrollRatio.ID, 0) > 0 AND Movement.CountUser > 2 AND vbStartDate >= '01.03.2020'::TDateTime
+              THEN CASE WHEN tmpPayrollRatio.UserID = Movement.UserID THEN '2'
+                        ELSE '2 / '||(Movement.CountUser - 1)::TVarChar END
+              ELSE Movement.CountUser::TVarChar END||' = '||
+              TRIM(to_char(Round(CASE WHEN COALESCE (tmpPayrollRatio.ID, 0) > 0 AND Movement.CountUser > 2 AND vbStartDate >= '01.03.2020'::TDateTime
+                                      THEN CASE WHEN tmpPayrollRatio.UserID = Movement.UserID
+                                                THEN Movement.TotalSumm / 2
+                                                ELSE Movement.TotalSumm / 2 / (Movement.CountUser - 1) END
+                                      ELSE Movement.TotalSumm / Movement.CountUser END, 2), 'G999G999G999G999D99'))||
               ')', ' + ')::TVarChar                                              AS Detals
        FROM tmpCheckUser AS Movement
+            LEFT JOIN tmpPayrollRatio ON tmpPayrollRatio.ID = Movement.PayrollRatioID
        GROUP BY Movement.OperDate, Movement.UnitID, Movement.UserID;
-
 
    -- реализаци€ про приходам за мес€ц
    CREATE TEMP TABLE tmpIncome ON COMMIT DROP AS
@@ -320,7 +348,7 @@ BEGIN
         , Calculation.Summa                               AS SummaCalc
         , Calculation.Formula                             AS FormulaCalc
    FROM tmpBoard
-   
+
         INNER JOIN Object AS Object_Unit ON Object_Unit.Id = tmpBoard.UnitId
 
         INNER JOIN Object AS Object_PayrollType ON Object_PayrollType.Id = tmpBoard.PayrollTypeID
@@ -341,7 +369,7 @@ BEGIN
         LEFT OUTER JOIN tmpIncome AS Income
                                   ON Income.OperDate  = tmpBoard.OperDate
                                  AND Income.UnitId    = tmpBoard.UnitId
-   
+
         LEFT OUTER JOIN gpSelect_Calculation_PayrollGroup(inPayrollTypeID    := tmpBoard.PayrollTypeID,
                                                           inPercent          := ObjectFloat_Percent.ValueData,
                                                           inMinAccrualAmount := ObjectFloat_MinAccrualAmount.ValueData,
@@ -350,7 +378,7 @@ BEGIN
                                                           inCountUser        := Income.CountUser,
                                                           inDetals           := '') AS Calculation
                                                                                     ON 1 = 1
-                              
+
    WHERE tmpBoard.PayrollGroupID = zc_Enum_PayrollGroup_IncomeCheck()
      AND (tmpBoard.UserId = inUserID OR inUserID = 0)
    UNION ALL
@@ -400,4 +428,5 @@ LANGUAGE plpgsql VOLATILE;
 */
 
 -- тест
--- SELECT * FROM gpSelect_Calculation_Wages (('01.10.2019')::TDateTime, 0, '3')
+--
+SELECT * FROM gpSelect_Calculation_Wages (('01.07.2020')::TDateTime, 0/*3997718*/, '3') order by OperDate

@@ -20,6 +20,7 @@ RETURNS TABLE (GoodsId Integer, GoodsCode Integer, GoodsName TVarChar
              , StockRatio TFloat
 
              , MCS_From TFloat
+             , Price_From TFloat
              , AmountRemains_From TFloat
              , AmountSalesDey_From TFloat
              , AmountSalesMonth_From TFloat
@@ -28,6 +29,7 @@ RETURNS TABLE (GoodsId Integer, GoodsCode Integer, GoodsName TVarChar
              , Delt_From TFloat
 
              , MCS_To TFloat
+             , Price_To TFloat
              , AmountRemains_To TFloat
              , AmountSalesDey_To TFloat
              , AmountSalesMonth_To TFloat
@@ -189,7 +191,7 @@ BEGIN
                             INNER JOIN _tmpGoods_SUN_Supplement ON _tmpGoods_SUN_Supplement.GoodsId = OL_Price_Goods.ChildObjectId
                             INNER JOIN Object AS Object_Goods
                                               ON Object_Goods.Id       = OL_Price_Goods.ChildObjectId
-                                             AND Object_Goods.isErased = FALSE
+                                            -- AND Object_Goods.isErased = FALSE
                             LEFT JOIN ObjectBoolean AS MCS_isClose
                                                     ON MCS_isClose.ObjectId  = OL_Price_Unit.ObjectId
                                                    AND MCS_isClose.DescId    = zc_ObjectBoolean_Price_MCSIsClose()
@@ -280,6 +282,7 @@ BEGIN
              LEFT JOIN tmpSalesMonth AS tmpSalesMonth
                                      ON tmpSalesMonth.UnitId  = tmpObject_Price.UnitId
                                     AND tmpSalesMonth.GoodsId = tmpObject_Price.GoodsId
+                                    
        ;
 
      -- 2. все остатки, НТЗ, и коэф. товарного запаса
@@ -437,6 +440,7 @@ BEGIN
             , _tmpStockRatio_all_Supplement.StockRatio
 
             , tmpRemains_all_From.MCS                    AS MCS_From
+            , tmpRemains_all_From.Price                  AS Price_From
             , tmpRemains_all_From.AmountRemains          AS AmountRemains_From
             , tmpRemains_all_From.AmountSalesDay         AS AmountSalesDay_From
             , tmpRemains_all_From.AmountSalesMonth       AS AmountSalesMonth_From
@@ -449,6 +453,7 @@ BEGIN
               END::TFloat                                       AS Delta_From
 
             , tmpRemains_all_To.MCS                      AS MCS_To
+            , tmpRemains_all_To.Price                    AS Price_To
             , tmpRemains_all_To.AmountRemains            AS AmountRemains_To
             , tmpRemains_all_To.AmountSalesDay           AS AmountSalesDay_To
             , tmpRemains_all_To.AmountSalesMonth         AS AmountSalesMonth_To
@@ -481,56 +486,6 @@ BEGIN
               , Object_Unit_To.ValueData
        ;
 
-
-/*     RETURN QUERY
-       SELECT Object_Goods.Id                            AS GoodsId
-            , Object_Goods.ObjectCode                    AS GoodsCode
-            , Object_Goods.ValueData                     AS GoodsName
-
-            , Object_Unit.Id                        AS UnitId_From
-            , Object_Unit.ValueData                 AS UnitName_From
-
-            , _tmpStockRatio_all_Supplement.MCS
-            , _tmpStockRatio_all_Supplement.AmountRemains
-            , _tmpStockRatio_all_Supplement.AmountSalesDay
-            , _tmpStockRatio_all_Supplement.AverageSales
-            , _tmpStockRatio_all_Supplement.StockRatio
-
-            , _tmpRemains_all_Supplement.MCS                    AS MCS
-            , _tmpRemains_all_Supplement.AmountRemains          AS AmountRemains
-            , _tmpRemains_all_Supplement.AmountSalesDay         AS AmountSalesDay
-            , _tmpRemains_all_Supplement.AmountSalesMonth       AS AmountSalesMonth
-
-            , _tmpRemains_all_Supplement.AverageSalesMonth      AS AverageSalesMonth
-            , _tmpRemains_all_Supplement.Need                   AS Need
-            , CASE WHEN _tmpRemains_all_Supplement.AmountSalesMonth = 0
-                   THEN - _tmpRemains_all_Supplement.AmountRemains
-                   ELSE (_tmpRemains_all_Supplement.Need -_tmpRemains_all_Supplement.AmountRemains)::Integer
-              END::TFloat                                       AS Delta
-
-       FROM _tmpRemains_all_Supplement
-
-            LEFT JOIN _tmpStockRatio_all_Supplement ON _tmpStockRatio_all_Supplement.GoodsId = _tmpRemains_all_Supplement.GoodsId
-
-            LEFT JOIN Object AS Object_Unit  ON Object_Unit.Id  = _tmpRemains_all_Supplement.UnitId
-
-            LEFT JOIN Object AS Object_Goods ON Object_Goods.Id = _tmpRemains_all_Supplement.GoodsId
-       ORDER BY Object_Goods.Id
-              , Object_Unit.ValueData
-              , Object_Unit.ValueData
-       ;
-*/
-/* if  inUserId = 3 then
-    RAISE EXCEPTION '<ok>  % % % % %'
-      , (SELECT Count(*)   FROM _tmpGoods_SUN_Supplement)
-      , (SELECT Count(*)   FROM _tmpUnit_SUN_Supplement)
-      , (SELECT Count(*)   FROM _tmpRemains_all_Supplement)
-      , (SELECT Count(*)   FROM _tmpStockRatio_all_Supplement)
-      , (SELECT Count(*)   FROM _tmpResult_Supplement)
-   ;
- end if;*/
-
-
 END;
 $BODY$
   LANGUAGE PLPGSQL VOLATILE;
@@ -541,9 +496,5 @@ $BODY$
  10.06.20                                                     *
 */
 
---
-SELECT * FROM lpInsert_Movement_Send_RemainsSun_Supplement (inOperDate:= CURRENT_DATE + INTERVAL '0 DAY', inDriverId:= 0, inUserId:= 3); -- WHERE Amount_calc < AmountResult_summ -- WHERE AmountSun_summ_save <> AmountSun_summ
-
-
-
+-- SELECT * FROM lpInsert_Movement_Send_RemainsSun_Supplement (inOperDate:= CURRENT_DATE + INTERVAL '0 DAY', inDriverId:= 0, inUserId:= 3); -- WHERE Amount_calc < AmountResult_summ -- WHERE AmountSun_summ_save <> AmountSun_summ
 

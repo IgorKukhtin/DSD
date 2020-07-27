@@ -77,6 +77,8 @@ type
     AverageSalesMonth_To: TcxGridDBBandedColumn;
     Need_To: TcxGridDBBandedColumn;
     Delta_To: TcxGridDBBandedColumn;
+    Summa_From: TcxGridDBBandedColumn;
+    Summa_To: TcxGridDBBandedColumn;
   private
     { Private declarations }
   public

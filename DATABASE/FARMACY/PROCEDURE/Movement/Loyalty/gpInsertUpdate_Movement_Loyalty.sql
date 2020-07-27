@@ -20,6 +20,7 @@ CREATE OR REPLACE FUNCTION gpInsertUpdate_Movement_Loyalty(
     IN inChangePercent         TFloat     , -- Процент от реализации для выдачи скидки
     IN inisBeginning           Boolean    , -- Генерация скидак с начало акции
     IN inisElectron            Boolean    , -- для Сайта
+    IN inSummRepay             Tfloat     , -- Погашать от суммы чека
     IN inSession               TVarChar     -- сессия пользователя
 )
 RETURNS Integer AS
@@ -46,6 +47,7 @@ BEGIN
                                            , inChangePercent := inChangePercent
                                            , inisBeginning   := inisBeginning
                                            , inisElectron    := inisElectron
+                                           , inSummRepay     := inSummRepay
                                            , inUserId        := vbUserId
                                            );
 

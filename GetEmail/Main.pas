@@ -513,7 +513,7 @@ begin
                       on E: Exception do begin
                          PanelError.Caption:= ' ERROR - IdIMAP4.Connect(TRUE) for ' + UserName + '  : ' + E.Message;
                          PanelError.Repaint;
-                       exit;
+                         Continue;
                       end;
                  end;
 

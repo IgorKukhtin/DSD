@@ -43,15 +43,15 @@ type
     Mail: TcxGridDBColumn;
     DateRun: TcxGridDBColumn;
     cxGridLevel: TcxGridLevel;
-    btnAllMaker: TButton;
+    btnAllLine: TButton;
     SchedulerCDS: TClientDataSet;
+    btnSaveSchedulerCDS: TButton;
     SchedulerCDSID: TAutoIncField;
     SchedulerCDSName: TStringField;
     SchedulerCDSDateRun: TDateTimeField;
     SchedulerCDSInterval: TIntegerField;
     SchedulerCDSProceure: TStringField;
     SchedulerCDSMail: TStringField;
-    btnSaveSchedulerCDS: TButton;
     procedure FormCreate(Sender: TObject);
     procedure Timer1Timer(Sender: TObject);
     procedure btnExecuteClick(Sender: TObject);
@@ -59,13 +59,11 @@ type
     procedure btnSendMailClick(Sender: TObject);
     procedure btnAllClick(Sender: TObject);
     procedure FormClose(Sender: TObject; var Action: TCloseAction);
-    procedure btnAllMakerClick(Sender: TObject);
+    procedure btnAllLineClick(Sender: TObject);
     procedure btnSaveSchedulerCDSClick(Sender: TObject);
   private
     { Private declarations }
     RepType : integer;
-    DateStart : TDateTime;
-    DateEnd : TDateTime;
 
     FileName: String;
     SavePath: String;
@@ -82,10 +80,9 @@ type
     { Public declarations }
     procedure Add_Log(AMessage:String);
     procedure OpenAndFormatSQL;
-    procedure SetDateParams;
 
-    procedure AllMaker;
-    procedure ReportFormation(ADateStart, ADateEnd : TDateTime);
+    procedure AllLine;
+    procedure ReportFormation;
   end;
 
 var
@@ -122,21 +119,19 @@ begin
   end;
 end;
 
-procedure TMainForm.AllMaker;
+procedure TMainForm.AllLine;
 begin
   try
-    SetDateParams;
-
     FProcError := False;
 
     Add_Log('');
     Add_Log('-------------------');
-    Add_Log('Поставщик: ' + SchedulerCDS.FieldByName('Name').AsString);
+    Add_Log('Задание: ' + SchedulerCDS.FieldByName('Name').AsString);
 
-      RepType := 0;
-      ReportFormation(DateStart, DateEnd);
-      btnExportClick(Nil);
-      btnSendMailClick(Nil);
+    RepType := 0;
+    ReportFormation;
+    btnExportClick(Nil);
+    btnSendMailClick(Nil);
 
   except
     on E: Exception do
@@ -152,8 +147,18 @@ begin
     while not SchedulerCDS.Eof do
     begin
 
-      AllMaker;
+    if SchedulerCDS.FieldByName('DateRun').AsDateTime <= Now then
+    begin
 
+      AllLine;
+
+      SchedulerCDS.Edit;
+      if SchedulerCDS.FieldByName('Interval').AsInteger < 30 then
+        SchedulerCDS.FieldByName('DateRun').AsDateTime := IncDay(SchedulerCDS.FieldByName('DateRun').AsDateTime, SchedulerCDS.FieldByName('Interval').AsInteger)
+      else SchedulerCDS.FieldByName('DateRun').AsDateTime := IncMonth(SchedulerCDS.FieldByName('DateRun').AsDateTime);
+      SchedulerCDS.Post;
+      SchedulerCDS.SaveToFile(ExtractFilePath(Application.ExeName) + 'ExportReportsToEmployees.xml', dfXML);
+    end;
       SchedulerCDS.Next;
       Application.ProcessMessages;
     end;
@@ -164,9 +169,9 @@ begin
 
 end;
 
-procedure TMainForm.btnAllMakerClick(Sender: TObject);
+procedure TMainForm.btnAllLineClick(Sender: TObject);
 begin
-  AllMaker;
+  AllLine;
 end;
 
 procedure TMainForm.OpenAndFormatSQL;
@@ -209,21 +214,14 @@ begin
         Width := 6 * Min(W, 70) + 2;
       end;
 
-      if (DataBinding.FieldName = 'Цена СИП') or (DataBinding.FieldName = 'Сумма СИП') then
-      begin
-        Visible := False;
-        qryReport_Upload.First;
-        while not qryReport_Upload.Eof do
+      if (Pos('количество', AnsiLowerCase(qryReport_Upload.Fields.Fields[I].FieldName)) > 0) OR
+         (Pos('сумма', AnsiLowerCase(qryReport_Upload.Fields.Fields[I].FieldName)) > 0) then
+        with TcxGridDBTableSummaryItem(grtvReport.DataController.Summary.FooterSummaryItems.Add) do
         begin
-          if not qryReport_Upload.Fields.Fields[I].IsNull then
-          begin
-            Visible := True;
-            Break;
-          end;
-          qryReport_Upload.Next;
+          Column := grtvReport.Columns[I];
+//          Format := '0.###';
+          Kind := skSum;
         end;
-        qryReport_Upload.First;
-      end;
 
     end;
   finally
@@ -231,142 +229,50 @@ begin
   end;
 end;
 
-procedure TMainForm.ReportFormation(ADateStart, ADateEnd : TDateTime);
+procedure TMainForm.ReportFormation;
+  var DateStart : TDateTime;
+      DateEnd : TDateTime;
 begin
-  Add_Log('Начало Формирования отчета по приходам за период с ' +
-                                          FormatDateTime('dd.mm.yyyy', ADateStart) + ' по ' +
-                                          FormatDateTime('dd.mm.yyyy', ADateEnd));
-  FileName := 'Отчет по приходам';
-  Subject := FileName + ' за период с ' + FormatDateTime('dd.mm.yyyy', ADateStart) + ' по ' +
-                                          FormatDateTime('dd.mm.yyyy', ADateEnd);
+
+  DateEnd := IncDay(StartOfTheDay(SchedulerCDS.FieldByName('DateRun').AsDateTime), -1);
+  if SchedulerCDS.FieldByName('Interval').AsInteger < 30 then
+    DateStart := IncDay(DateEnd, 1 - SchedulerCDS.FieldByName('Interval').AsInteger)
+  else DateStart := IncMonth(DateEnd, -1);
+
+  Add_Log('Начало Формирования' +
+                                          FormatDateTime('dd.mm.yyyy', DateStart) + ' по ' +
+                                          FormatDateTime('dd.mm.yyyy', DateEnd));
+  FileName := SchedulerCDS.FieldByName('Name').AsString;
+  Subject := FileName + ' за период с ' + FormatDateTime('dd.mm.yyyy', DateStart) + ' по ' +
+                                          FormatDateTime('dd.mm.yyyy', DateEnd);
 
   if qryReport_Upload.Active then qryReport_Upload.Close;
   if grtvReport.ColumnCount > 0 then grtvReport.ClearItems;
   if grtvReport.DataController.Summary.FooterSummaryItems.Count > 0 then
     grtvReport.DataController.Summary.FooterSummaryItems.Clear;
-  qryReport_Upload.SQL.Text :=
-    'select '#13#10 +
-    '  Code AS "Код", '#13#10 +
-    '  Name AS "Название", '#13#10 +
-    '  MorionCode AS "Код мориона", '#13#10 +
-    '  NDS AS "НДС", '#13#10 +
-    '  PriceWithVAT AS "Цена прихода с НДС", '#13#10 +
-    '  Price AS "Цена прихода (без НДС)", '#13#10 +
-    '  PriceSIP AS "Цена СИП", '#13#10 +
-    '  Amount AS "Итого кол-во", '#13#10 +
-    '  SummSIP AS "Сумма СИП", '#13#10 +
-    '  StatusName AS "Статус", '#13#10 +
-    '  ItemName AS "Тип документа", '#13#10 +
-    '  UnitName AS "Подразделение", '#13#10 +
-    '  OperDate AS "Дата", '#13#10 +
-    '  InvNumber AS "№ документа", '#13#10 +
-    '  JuridicalName AS "Поставщик", '#13#10 +
-    '  RetailName AS "Торговая сеть", '#13#10 +
-    '  MainJuridicalName AS "Наше юр. лицо" '#13#10 +
-    'from gpReport_MovementIncome_Promo(:inMaker, :inStartDate, :inEndDate, ''3'') '#13#10 +
-    'where isSendMaker = True and MainJuridicalId not in (2141104, 3031071, 5603546, 377601, 5778621, 5062813)' +
-    '  AND UnitID not in (SELECT Object_Unit_View.Id FROM Object_Unit_View WHERE COALESCE (Object_Unit_View.ParentId, 0) = 0)';
 
-  qryReport_Upload.Params.ParamByName('inMaker').Value := SchedulerCDS.FieldByName('Id').AsInteger;
-  qryReport_Upload.Params.ParamByName('inStartDate').Value := ADateStart;
-  qryReport_Upload.Params.ParamByName('inEndDate').Value := ADateEnd;
+  qryReport_Upload.SQL.Text := SchedulerCDS.FieldByName('Proceure').AsString;
+
+  qryReport_Upload.Params.ParamByName('inStartDate').Value := DateStart;
+  qryReport_Upload.Params.ParamByName('inEndDate').Value := DateEnd;
 
   OpenAndFormatSQL;
 
   if grtvReport.ColumnCount = 0 then Exit;
 
-  with TcxGridDBTableSummaryItem(grtvReport.DataController.Summary.FooterSummaryItems.Add) do
-  begin
-    Column := grtvReport.Columns[7];
-    Format := '0.###';
-    Kind := skSum;
-  end;
-  with TcxGridDBTableSummaryItem(grtvReport.DataController.Summary.FooterSummaryItems.Add) do
-  begin
-    Column := grtvReport.Columns[8];
-    Format := '0.###';
-    Kind := skSum;
-  end;
-end;
-
-procedure TMainForm.SetDateParams;
-begin
-  if qryReport_Upload.Active then qryReport_Upload.Close;
-  if grtvReport.ColumnCount > 0 then grtvReport.ClearItems;
-  if grtvReport.DataController.Summary.FooterSummaryItems.Count > 0 then
-    grtvReport.DataController.Summary.FooterSummaryItems.Clear;
-
-//  FormAddFile := False; FormQuarterFile := False; Form4MonthFile := False;
-//  if qryMaker.FieldByName('AmountDay').AsInteger <> 0 then
-//  begin
-//     if qryMaker.FieldByName('AmountDay').AsInteger = 14 then
-//     begin
-//       if DayOf(qryMaker.FieldByName('SendPlan').AsDateTime) < 15 then
-//       begin
-//         DateEnd := IncDay(StartOfTheMonth(qryMaker.FieldByName('SendPlan').AsDateTime), -1);
-//         DateStart := IncDay(StartOfTheMonth(DateEnd), 14);
-//
-//         FormAddFile := True;
-//         DateEndAdd := DateEnd;
-//         DateStartAdd := StartOfTheMonth(DateEndAdd);
-//       end else
-//       begin
-//         DateStart := StartOfTheMonth(qryMaker.FieldByName('SendPlan').AsDateTime);
-//         DateEnd := IncDay(DateStart, 13);
-//       end;
-//     end else if qryMaker.FieldByName('AmountDay').AsInteger = 15 then
-//     begin
-//       if DayOf(qryMaker.FieldByName('SendPlan').AsDateTime) < 16 then
-//       begin
-//         DateEnd := IncDay(StartOfTheMonth(qryMaker.FieldByName('SendPlan').AsDateTime), -1);
-//         DateStart := IncDay(StartOfTheMonth(DateEnd), 15);
-//
-//         FormAddFile := True;
-//         DateEndAdd := DateEnd;
-//         DateStartAdd := StartOfTheMonth(DateEndAdd);
-//       end else
-//       begin
-//         DateStart := StartOfTheMonth(qryMaker.FieldByName('SendPlan').AsDateTime);
-//         DateEnd := IncDay(DateStart, 14);
-//       end;
-//     end else
-//     begin
-//       DateEnd := IncDay(StartOfTheDay(qryMaker.FieldByName('SendPlan').AsDateTime), -1);
-//       DateStart := IncDay(DateEnd, 1 - qryMaker.FieldByName('AmountDay').AsInteger);
-//     end;
-//  end else
-//  begin
-//    DateEnd := IncDay(StartOfTheMonth(qryMaker.FieldByName('SendPlan').AsDateTime), -1);
-//    DateStart := StartOfTheMonth(DateEnd);
-//    if qryMaker.FieldByName('AmountMonth').AsInteger > 1 then
-//      DateStart := IncMonth(DateStart, 1 - qryMaker.FieldByName('AmountMonth').AsInteger);
-//  end;
-//
-//  if qryMaker.FieldByName('isQuarter').AsBoolean and (MonthOf(Date) in [1, 4, 7, 10]) and
-//    (DateStart <= IncDay(StartOfTheMonth(Date), -1)) and (DateEnd >= IncDay(StartOfTheMonth(Date), -1))  then
-//  begin
-//    FormQuarterFile := True;
-//    DateEndQuarter := IncDay(StartOfTheMonth(Date), -1);
-//    DateStartQuarter := IncMonth(StartOfTheMonth(DateEndQuarter), - 2);
-//  end;
-//
-//  if qryMaker.FieldByName('is4Month').AsBoolean and (MonthOf(Date) in [1, 5, 9]) and
-//    (DateStart <= IncDay(StartOfTheMonth(Date), -1)) and (DateEnd >= IncDay(StartOfTheMonth(Date), -1))  then
-//  begin
-//    Form4MonthFile := True;
-//    DateEnd4Month := IncDay(StartOfTheMonth(Date), -1);
-//    DateStart4Month := IncMonth(StartOfTheMonth(DateEnd4Month), - 3);
-//  end;
+  RepType := SchedulerCDS.FieldByName('ID').AsInteger;
 end;
 
 procedure TMainForm.btnExecuteClick(Sender: TObject);
 begin
   inherited;
-
   if qryReport_Upload.Active then qryReport_Upload.Close;
   if grtvReport.ColumnCount > 0 then grtvReport.ClearItems;
   if grtvReport.DataController.Summary.FooterSummaryItems.Count > 0 then
     grtvReport.DataController.Summary.FooterSummaryItems.Clear;
+
+  RepType := 0;
+  ReportFormation;
 end;
 
 procedure TMainForm.btnExportClick(Sender: TObject);
@@ -405,31 +311,11 @@ begin
 end;
 
 procedure TMainForm.btnSendMailClick(Sender: TObject);
-  var vExt : string;
-
-  function GetFileSizeByName(AFileName: string): DWord;
-  var
-    Handle: THandle;
-  begin
-    if not FileExists(AFilename) then exit;
-    Handle := FileOpen(AFilename, fmOpenRead or fmShareDenyNone);
-    Result := GetFileSize(Handle, nil);
-    CloseHandle(Handle);
-  end;
-
 begin
 
   if not FileExists(SavePath + FileName + '.xls') then Exit;
 
   Add_Log('Начало отправки отчета: ' + SavePath + FileName + '.xls');
-  vExt := '.xls';
-
-  if GetFileSizeByName(SavePath + FileName + '.xls') > 10000000 then
-  begin
-    vExt := '.zip';
-    Add_Log('Архивирование отчета: ' + SavePath + FileName + vExt);
-    GZCompressFile(SavePath + FileName + '.xls', SavePath + FileName + vExt);
-  end;
 
   if SendMail(qryMailParam.FieldByName('Mail_Host').AsString,
        qryMailParam.FieldByName('Mail_Port').AsInteger,
@@ -439,11 +325,10 @@ begin
        qryMailParam.FieldByName('Mail_From').AsString,
        Subject,
        '',
-       [SavePath + FileName + vExt]) then
+       [SavePath + FileName + '.xls']) then
   begin
     try
       DeleteFile(SavePath + FileName + '.xls');
-      if FileExists(SavePath + FileName + vExt) then DeleteFile(SavePath + FileName + vExt);
     except
       on E: Exception do
       begin
@@ -530,7 +415,7 @@ begin
       (Pos('Farmacy.exe', Application.ExeName) <> 0)) then
     begin
       btnAll.Enabled := false;
-      btnAllMaker.Enabled := false;
+      btnAllLine.Enabled := false;
       btnExecute.Enabled := false;
       btnExport.Enabled := false;
       btnSendMail.Enabled := false;

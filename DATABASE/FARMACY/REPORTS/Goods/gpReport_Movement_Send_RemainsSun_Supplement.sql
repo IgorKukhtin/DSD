@@ -11,6 +11,8 @@ RETURNS TABLE (GoodsId Integer, GoodsCode Integer, GoodsName TVarChar
 
              , UnitId_To Integer, UnitName_To TVarChar
              , Amount TFloat
+             , Summa_From TFloat
+             , Summa_To TFloat
 
              , MCS TFloat
              , AmountRemains TFloat
@@ -53,6 +55,9 @@ BEGIN
          , Result.UnitId_To 
          , Result.UnitName_To 
          , Result.Amount 
+         , Round(Result.Amount * Result.Price_From, 2)::TFloat 
+         , Round(Result.Amount * Result.Price_To, 2)::TFloat 
+
 
          , Result.MCS 
          , Result.AmountRemains 
@@ -89,4 +94,6 @@ $BODY$
 */
 
 -- SELECT * FROM gpReport_Movement_Send_RemainsSun_Supplement (inOperDate:= CURRENT_DATE + INTERVAL '0 DAY', inSession:= '3');
+
+SELECT * FROM gpReport_Movement_Send_RemainsSun_Supplement (inOperDate:= CURRENT_DATE + INTERVAL '0 DAY', inSession:= '3');
 
