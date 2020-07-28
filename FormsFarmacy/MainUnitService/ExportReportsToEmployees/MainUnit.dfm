@@ -86,14 +86,14 @@ object MainForm: TMainForm
       TabOrder = 4
       OnClick = btnAllClick
     end
-    object btnAllMaker: TButton
+    object btnAllLine: TButton
       Left = 480
       Top = 0
       Width = 129
       Height = 25
       Caption = #1042#1089#1105' '#1087#1086' '#1089#1090#1088#1086#1082#1077
       TabOrder = 0
-      OnClick = btnAllMakerClick
+      OnClick = btnAllLineClick
     end
     object btnSaveSchedulerCDS: TButton
       Left = 176
@@ -165,7 +165,7 @@ object MainForm: TMainForm
         GroupSummaryAlignment = taCenter
         HeaderAlignmentHorz = taCenter
         HeaderGlyphAlignmentHorz = taCenter
-        Width = 114
+        Width = 122
       end
       object Interval: TcxGridDBColumn
         Caption = #1055#1077#1088#1080#1086#1076'.  '#1076#1085#1077#1081
@@ -240,7 +240,7 @@ object MainForm: TMainForm
       0001000200010007535542545950450200490008004175746F696E6300044E61
       6D650100490000000100055749445448020002003C00074461746552756E0800
       08000000000008496E74657276616C04000100000000000850726F6365757265
-      0100490000000100055749445448020002001400044D61696C01004900000001
+      020049000000010005574944544802000200F401044D61696C01004900000001
       0005574944544802000200FA0001000C4155544F494E4356414C554504000100
       01000000}
     Active = True
@@ -267,20 +267,28 @@ object MainForm: TMainForm
       item
         Name = 'Proceure'
         DataType = ftString
-        Size = 20
+        Size = 500
       end
       item
         Name = 'Mail'
         DataType = ftString
         Size = 250
       end>
-    IndexDefs = <>
+    IndexDefs = <
+      item
+        Name = 'DEFAULT_ORDER'
+      end
+      item
+        Name = 'CHANGEINDEX'
+      end>
+    IndexFieldNames = 'Id'
     Params = <>
     StoreDefs = True
     Left = 144
     Top = 384
     object SchedulerCDSID: TAutoIncField
       FieldName = 'ID'
+      ReadOnly = True
     end
     object SchedulerCDSName: TStringField
       FieldName = 'Name'
@@ -294,6 +302,7 @@ object MainForm: TMainForm
     end
     object SchedulerCDSProceure: TStringField
       FieldName = 'Proceure'
+      Size = 500
     end
     object SchedulerCDSMail: TStringField
       FieldName = 'Mail'

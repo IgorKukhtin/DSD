@@ -3,6 +3,7 @@ inherited Report_Movement_Send_RemainsSun_SupplementForm: TReport_Movement_Send_
   ClientHeight = 673
   ClientWidth = 960
   AddOnFormData.ExecuteDialogAction = ExecuteDialog
+  ExplicitTop = -137
   ExplicitWidth = 976
   ExplicitHeight = 712
   PixelsPerInch = 96
@@ -55,9 +56,42 @@ inherited Report_Movement_Send_RemainsSun_SupplementForm: TReport_Movement_Send_
           Navigator.Buttons.GotoBookmark.Visible = True
           Navigator.Buttons.Filter.Visible = True
           DataController.DataSource = MasterDS
-          DataController.Summary.DefaultGroupSummaryItems = <>
-          DataController.Summary.FooterSummaryItems = <>
+          DataController.Summary.DefaultGroupSummaryItems = <
+            item
+              Format = ',0.00;-,0.00; ;'
+              Kind = skSum
+              Column = Summa_From
+            end
+            item
+              Format = ',0.00;-,0.00; ;'
+              Kind = skSum
+              Column = Summa_To
+            end
+            item
+              Format = ',0.00;-,0.00; ;'
+              Kind = skSum
+              Position = spFooter
+              Column = Summa_From
+            end
+            item
+              Format = ',0.00;-,0.00; ;'
+              Kind = skSum
+              Position = spFooter
+              Column = Summa_To
+            end>
+          DataController.Summary.FooterSummaryItems = <
+            item
+              Format = ',0.00;-,0.00; ;'
+              Kind = skSum
+              Column = Summa_From
+            end
+            item
+              Format = ',0.00;-,0.00; ;'
+              Kind = skSum
+              Column = Summa_To
+            end>
           DataController.Summary.SummaryGroups = <>
+          OptionsView.Footer = True
           OptionsView.HeaderHeight = 50
           Bands = <
             item
@@ -127,6 +161,34 @@ inherited Report_Movement_Send_RemainsSun_SupplementForm: TReport_Movement_Send_
             Options.Editing = False
             Position.BandIndex = 0
             Position.ColIndex = 4
+            Position.RowIndex = 0
+          end
+          object Summa_From: TcxGridDBBandedColumn
+            Caption = #1057#1091#1084#1084#1072' '#1074' '#1094#1077#1085#1072#1093' '#1086#1090#1087#1088#1072#1074#1080#1077#1083#1103
+            DataBinding.FieldName = 'Summa_From'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DisplayFormat = ',0.00;-,0.00; ;'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            HeaderHint = #1057#1091#1084#1084#1072' '#1074' '#1094#1077#1085#1072#1093' '#1086#1090#1087#1088#1072#1074#1080#1077#1083#1103
+            Options.Editing = False
+            Width = 82
+            Position.BandIndex = 0
+            Position.ColIndex = 5
+            Position.RowIndex = 0
+          end
+          object Summa_To: TcxGridDBBandedColumn
+            Caption = #1057#1091#1084#1084#1072' '#1074' '#1094#1077#1085#1072#1093' '#1087#1086#1083#1091#1095#1072#1090#1077#1083#1103
+            DataBinding.FieldName = 'Summa_To'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DisplayFormat = ',0.00;-,0.00; ;'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            HeaderHint = #1057#1091#1084#1084#1072' '#1074' '#1094#1077#1085#1072#1093' '#1087#1086#1083#1091#1095#1072#1090#1077#1083#1103
+            Options.Editing = False
+            Width = 79
+            Position.BandIndex = 0
+            Position.ColIndex = 6
             Position.RowIndex = 0
           end
           object MCS: TcxGridDBBandedColumn

@@ -23,7 +23,7 @@ RETURNS TABLE (OperDate_Movement TDateTime, InvNumber_Movement TVarChar, DescNam
              , BranchId Integer, BranchName TVarChar
              , RetailName TVarChar
              , PersonalCode Integer, PersonalName TVarChar
-             , PartnerName TVarChar
+             , PartnerId Integer, PartnerName TVarChar
              , Value TFloat
              , PercentRetBonus TFloat
              , PercentRetBonus_fact TFloat
@@ -410,9 +410,9 @@ BEGIN
                             LEFT JOIN ContainerLinkObject AS ContainerLO_Branch
                                                           ON ContainerLO_Branch.ContainerId = tmpContainerAll.Id
                                                          AND ContainerLO_Branch.DescId = zc_ContainerLinkObject_Branch()
-                        WHERE COALESCE (ContainerLO_Branch.ObjectId,0) = inBranchId OR inBranchId = 0 
+                       -- WHERE COALESCE (ContainerLO_Branch.ObjectId,0) = inBranchId OR inBranchId = 0 
                        )
- 
+
      , tmpCLO_Partner AS (SELECT ContainerLinkObject.*
                           FROM ContainerLinkObject
                           WHERE ContainerLinkObject.ContainerId IN (SELECT DISTINCT tmpContainer1.ContainerId
@@ -441,7 +441,7 @@ BEGIN
            , tmpContainer.ContractId_child
            , tmpContainer.InfoMoneyId_child
            , tmpContainer.PaidKindId_byBase
-           , tmpContainer.BranchId
+           , COALESCE (tmpContainer.BranchId, ObjectLink_Cash_Branch.ChildObjectId, MILinkObject_Branch.ObjectId, ObjectLink_Unit_Branch.ChildObjectId,0) AS BranchId
            , tmpContainer.PartnerId
            , SUM (CASE WHEN MIContainer.MovementDescId = zc_Movement_Income() THEN MIContainer.Amount ELSE 0 END) AS Sum_Income -- “олько приходы
            , SUM (CASE WHEN MIContainer.MovementDescId IN (zc_Movement_Income(), zc_Movement_ReturnOut()) THEN MIContainer.Amount ELSE 0 END) AS Sum_IncomeReturnOut -- приход - возвраты
@@ -449,26 +449,54 @@ BEGIN
                             THEN -1 * MIContainer.Amount
                        ELSE 0
                   END) AS Sum_Account -- оплаты
-           
+
            , SUM (CASE WHEN MIContainer.MovementDescId = zc_Movement_ReturnOut() THEN MIContainer.Amount ELSE 0 END) AS Sum_Return  -- возврат
            , MIContainer.MovementDescId   AS MovementDescId
            , MIContainer.MovementId       AS MovementId
 
       FROM MovementItemContainer AS MIContainer
            JOIN tmpContainer ON tmpContainer.ContainerId = MIContainer.ContainerId
+
+           LEFT JOIN MovementLinkObject AS MLO_Unit
+                                        ON MLO_Unit.MovementId = MIContainer.MovementId
+                                       AND MLO_Unit.DescId = CASE WHEN MIContainer.MovementDescId = zc_Movement_ReturnOut() THEN zc_MovementLinkObject_From()
+                                                                  WHEN MIContainer.MovementDescId = zc_Movement_Income() THEN zc_MovementLinkObject_To()
+                                                             END
+           LEFT JOIN MovementItem ON MovementItem.Id = MIContainer.MovementItemId 
+                                 AND MovementItem.DescId = zc_MI_Master()
+                                 AND MIContainer.MovementDescId = zc_Movement_Cash()
+
+           LEFT JOIN MovementItemLinkObject AS MILinkObject_Unit
+                                            ON MILinkObject_Unit.MovementItemId = MIContainer.MovementItemId   --BankAccount
+                                           AND MILinkObject_Unit.DescId = zc_MILinkObject_Unit()
+                                           AND MIContainer.MovementDescId = zc_Movement_BankAccount()
+           LEFT JOIN ObjectLink AS ObjectLink_Unit_Branch
+                                ON ObjectLink_Unit_Branch.ObjectId = COALESCE (MLO_Unit.ObjectId, MILinkObject_Unit.ObjectId)
+                               AND ObjectLink_Unit_Branch.DescId = zc_ObjectLink_Unit_Branch()
+
+           LEFT JOIN MovementItemLinkObject AS MILinkObject_Branch
+                                            ON MILinkObject_Branch.MovementItemId = MIContainer.MovementItemId   -- SendDebt
+                                           AND MILinkObject_Branch.DescId = zc_MILinkObject_Branch()
+                                           AND MovementItem.DescId = zc_MI_Master()
+                                           AND MIContainer.MovementDescId = zc_Movement_SendDebt()
+
+           LEFT JOIN ObjectLink AS ObjectLink_Cash_Branch
+                                ON ObjectLink_Cash_Branch.ObjectId = MovementItem.ObjectId
+                               AND ObjectLink_Cash_Branch.DescId = zc_ObjectLink_Cash_Branch()
+                               AND MIContainer.MovementDescId = zc_Movement_Cash()
       WHERE MIContainer.DescId = zc_MIContainer_Summ()
         AND MIContainer.OperDate BETWEEN inStartDate AND inEndDate
         AND MIContainer.MovementDescId IN (zc_Movement_Income(), zc_Movement_ReturnOut(), zc_Movement_BankAccount(),zc_Movement_Cash(), zc_Movement_SendDebt())
+        AND (COALESCE (tmpContainer.BranchId, ObjectLink_Cash_Branch.ChildObjectId, MILinkObject_Branch.ObjectId, ObjectLink_Unit_Branch.ChildObjectId,0) = inBranchId OR inBranchId = 0)
       GROUP BY tmpContainer.JuridicalId
              , tmpContainer.ContractId_child
              , tmpContainer.InfoMoneyId_child
              , tmpContainer.PaidKindId_byBase
              , MIContainer.MovementDescId
              , MIContainer.MovementId
-             , tmpContainer.BranchId
+             , COALESCE (tmpContainer.BranchId, ObjectLink_Cash_Branch.ChildObjectId, MILinkObject_Branch.ObjectId, ObjectLink_Unit_Branch.ChildObjectId,0)
              , tmpContainer.PartnerId
       );
-
 
     RETURN QUERY
       WITH 
@@ -778,6 +806,7 @@ BEGIN
             , Object_Retail.ValueData                       AS RetailName
             , Object_Personal_View.PersonalCode             AS PersonalCode
             , Object_Personal_View.PersonalName             AS PersonalName
+            , Object_Partner.Id                             AS PartnerId
             , Object_Partner.ValueData  ::TVarChar          AS PartnerName
 
             , CAST (tmpData.Value AS TFloat)                AS Value

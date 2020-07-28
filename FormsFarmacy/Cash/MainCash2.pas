@@ -492,6 +492,8 @@ type
     actReport_HouseholdInventoryRemainsCash: TdsdOpenForm;
     N46: TMenuItem;
     N47: TMenuItem;
+    MemDataUKTZED: TStringField;
+    MainUKTZED: TcxGridDBColumn;
     procedure WM_KEYDOWN(var Msg: TWMKEYDOWN);
     procedure FormCreate(Sender: TObject);
     procedure actChoiceGoodsInRemainsGridExecute(Sender: TObject);
@@ -1115,6 +1117,11 @@ begin
           FLocalDataBaseDiff.FieldByName('GOODSDINAM').AsVariant
       else MemData.FieldByName('GOODSDINAME').AsString :=
           Trim(FLocalDataBaseDiff.FieldByName('GOODSDINAM').AsString);
+      if FLocalDataBaseDiff.FieldByName('UKTZED').IsNull then
+        MemData.FieldByName('UKTZED').AsVariant :=
+          FLocalDataBaseDiff.FieldByName('UKTZED').AsVariant
+      else MemData.FieldByName('UKTZED').AsString :=
+          Trim(FLocalDataBaseDiff.FieldByName('UKTZED').AsString);
       FLocalDataBaseDiff.Edit;
       FLocalDataBaseDiff.DeleteRecord;
       FLocalDataBaseDiff.Post;
@@ -3163,6 +3170,8 @@ begin
         else
           CheckCDS.FieldByName('PriceDiscount').AsVariant :=
             vipList.FieldByName('Price').AsFloat;
+        CheckCDS.FieldByName('UKTZED').AsVariant :=
+          vipList.FieldByName('UKTZED').AsVariant;
         // ***21.10.18
         GoodsId := RemainsCDS.FieldByName('Id').AsInteger;
         PartionDateKindId := RemainsCDS.FieldByName('PartionDateKindId').AsVariant;
@@ -4202,6 +4211,8 @@ begin
           MemData.FieldByName('GOODSDIID').AsVariant;
         RemainsCDS.FieldByName('GoodsDiscountName').AsVariant :=
           MemData.FieldByName('GOODSDINAME').AsVariant;
+        RemainsCDS.FieldByName('UKTZED').AsVariant :=
+          MemData.FieldByName('UKTZED').AsVariant;
         RemainsCDS.Post;
       End
       else
@@ -4255,6 +4266,8 @@ begin
             MemData.FieldByName('GOODSDIID').AsVariant;
           RemainsCDS.FieldByName('GoodsDiscountName').AsVariant :=
             MemData.FieldByName('GOODSDINAME').AsVariant;
+          RemainsCDS.FieldByName('UKTZED').AsVariant :=
+            MemData.FieldByName('UKTZED').AsVariant;
           RemainsCDS.Post;
         End;
       End;
@@ -6609,6 +6622,8 @@ begin
           SourceClientDataSet.FindField('DiscountExternalName').AsVariant;
         CheckCDS.FieldByName('PriceDiscount').AsVariant := lPrice;
         CheckCDS.FieldByName('TypeDiscount').AsVariant := lTypeDiscount;
+        CheckCDS.FieldByName('UKTZED').AsVariant :=
+          SourceClientDataSet.FindField('UKTZED').AsVariant;
 
         if RemainsCDS <> SourceClientDataSet then
         begin
@@ -6719,6 +6734,8 @@ begin
           SourceClientDataSet.FieldByName('AmountMonth').AsVariant;
         CheckCDS.FieldByName('PriceDiscount').AsVariant := lPrice;
         CheckCDS.FieldByName('TypeDiscount').AsVariant := lTypeDiscount;
+        CheckCDS.FieldByName('UKTZED').AsVariant :=
+          SourceClientDataSet.FieldByName('UKTZED').AsVariant;
 
         if RemainsCDS <> SourceClientDataSet then
         begin
@@ -7529,7 +7546,7 @@ var
   { ------------------------------------------------------------------------------ }
   function PutOneRecordToCash: Boolean; // œÓ‰‡Ê‡ Ó‰ÌÓ„Ó Ì‡ËÏÂÌÓ‚‡ÌËˇ
   var
-    ÒAccommodationName: string;
+    ÒAccommodationName, cUKTZED: string;
     nDisc: Currency;
   begin
     // ÔÓÒ˚Î‡ÂÏ ÒÚÓÍÛ ‚ Í‡ÒÒÛ Ë ÂÒÎË ‚ÒÂ OK, ÚÓ ÒÚ‡‚ËÏ ÏÂÚÍÛ Ó ÔÓ‰‡ÊÂ
@@ -7542,6 +7559,8 @@ var
           ÒAccommodationName := ''
         else
           ÒAccommodationName := ' ' + FieldByName('AccommodationName').Text;
+        cUKTZED := FieldByName('UKTZED').AsString;
+        if cUKTZED <> '' then cUKTZED := cUKTZED + ' ';
         if ((FormParams.ParamByName('LoyaltyChangeSumma').Value +
           FormParams.ParamByName('LoyaltySMSumma').Value) > 0) or
           (Self.FormParams.ParamByName('InvNumberSP').Value = '') and
@@ -7553,7 +7572,7 @@ var
           if CheckCDS.FieldByName('PricePartionDate').asCurrency > 0 then
           begin
             Result := Cash.SoldFromPC(FieldByName('GoodsCode').AsInteger,
-              AnsiUpperCase(FieldByName('GoodsName').Text + ÒAccommodationName),
+              cUKTZED + AnsiUpperCase(FieldByName('GoodsName').Text + ÒAccommodationName),
               FieldByName('Amount').asCurrency, FieldByName('PricePartionDate')
               .asCurrency, FieldByName('NDS').asCurrency);
             nDisc := FieldByName('Summ').asCurrency -
@@ -7564,7 +7583,7 @@ var
           begin
 
             Result := Cash.SoldFromPC(FieldByName('GoodsCode').AsInteger,
-              AnsiUpperCase(FieldByName('GoodsName').Text + ÒAccommodationName),
+              cUKTZED + AnsiUpperCase(FieldByName('GoodsName').Text + ÒAccommodationName),
               FieldByName('Amount').asCurrency, FieldByName('PriceSale')
               .asCurrency, FieldByName('NDS').asCurrency);
             nDisc := FieldByName('Summ').asCurrency -
@@ -7576,7 +7595,7 @@ var
         end
         else
           Result := Cash.SoldFromPC(FieldByName('GoodsCode').AsInteger,
-            AnsiUpperCase(FieldByName('GoodsName').Text + ÒAccommodationName),
+            cUKTZED + AnsiUpperCase(FieldByName('GoodsName').Text + ÒAccommodationName),
             FieldByName('Amount').asCurrency, FieldByName('Price').asCurrency,
             FieldByName('NDS').asCurrency);
       end
@@ -8801,6 +8820,8 @@ begin
           ADS.FieldByName('DiscountExternalID').AsVariant;
         myVIPListCDS.FieldByName('DiscountExternalName').Value :=
           ADS.FieldByName('DiscountExternalName').AsVariant;
+        myVIPListCDS.FieldByName('UKTZED').Value :=
+          ADS.FieldByName('UKTZED').AsVariant;
 
         myVIPListCDS.Post;
         ADS.Next;

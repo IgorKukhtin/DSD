@@ -7,7 +7,9 @@ uses
   ULog in 'ULog.pas',
   USettings in 'USettings.pas',
   UConstants in 'UConstants.pas',
-  UDefinitions in 'UDefinitions.pas';
+  UDefinitions in 'UDefinitions.pas',
+  UCommandData in 'UCommandData.pas',
+  UCommon in 'UCommon.pas';
 
 {$R *.res}
 

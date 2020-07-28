@@ -20,6 +20,7 @@ CREATE OR REPLACE FUNCTION lpInsertUpdate_Movement_Loyalty(
     IN inChangePercent         TFloat     , -- Процент от реализации для выдачи скидки
     IN inisBeginning           Boolean    , -- Генерация скидак с начало акции
     IN inisElectron            Boolean    , -- для Сайта
+    IN inSummRepay             Tfloat     , -- Погашать от суммы чека
     IN inUserId                Integer      -- сессия пользователя
 )
 RETURNS Integer AS
@@ -57,6 +58,8 @@ BEGIN
     PERFORM lpInsertUpdate_MovementFloat (zc_MovementFloat_Limit(), ioId, inSummLimit);
     -- сохранили <>
     PERFORM lpInsertUpdate_MovementFloat (zc_MovementFloat_ChangePercent(), ioId, inChangePercent);
+    -- сохранили <>
+    PERFORM lpInsertUpdate_MovementFloat (zc_MovementFloat_SummRepay(), ioId, inSummRepay);
 
     -- сохранили <Примечание>
     PERFORM lpInsertUpdate_MovementString (zc_MovementString_Comment(), ioId, inComment);

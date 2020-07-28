@@ -547,10 +547,15 @@ CREATE OR REPLACE FUNCTION zc_MovementFloat_TotalAmount() RETURNS Integer AS $BO
 INSERT INTO MovementFloatDesc(Code, ItemName)
   SELECT 'zc_MovementFloat_TotalAmount', 'Итого количество' WHERE NOT EXISTS (SELECT * FROM MovementFloatDesc WHERE Code = 'zc_MovementFloat_TotalAmount');
   
+CREATE OR REPLACE FUNCTION zc_MovementFloat_SummRepay() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM MovementFloatDesc WHERE Code = 'zc_MovementFloat_SummRepay'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
+INSERT INTO MovementFloatDesc(Code, ItemName)
+  SELECT 'zc_MovementFloat_SummRepay', 'Погашать от суммы' WHERE NOT EXISTS (SELECT * FROM MovementFloatDesc WHERE Code = 'zc_MovementFloat_SummRepay');
+  
 
 /*-------------------------------------------------------------------------------
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.   Воробкало А.А.   Шаблий.О.В.
+ 27.07.20                                                                                     * zc_MovementFloat_SummRepay
  16.07.20                                                                                     * zc_MovementFloat_TotalAmount
  08.07.20                                                                                     * zc_MovementFloat_InvNumber
  06.07.20                                                                                     * zc_MovementFloat_ChangePercentLess

@@ -1,6 +1,6 @@
 -- Function: gpSelect_PromoCodeLoyalty_ForSite()
 
-DROP FUNCTION IF EXISTS gpSelect_PromoCodeLoyalty_ForSite (TVarChar, TVarChar);
+DROP FUNCTION IF EXISTS gpSelect_PromoCodeLoyalty_ForSite (TVarChar, Integer,TVarChar);
 
 CREATE OR REPLACE FUNCTION gpSelect_PromoCodeLoyalty_ForSite(
     IN inGUID          TVarChar,   -- Промо код
@@ -11,6 +11,7 @@ RETURNS TABLE (
                DiscountAmount  TFloat
              , PromoCodeId     Integer
              , DateValid       TDateTime
+             , SummRepay       TFloat
              , Error           TVarChar
               )
 AS
@@ -31,6 +32,7 @@ $BODY$
    DECLARE vbMovementChackId Integer;
    DECLARE vbMonthCount Integer;
    DECLARE vbisElectron Boolean;
+   DECLARE vbSummRepay TFloat;
 BEGIN
 
       -- проверка прав пользователя на вызов процедуры
@@ -59,21 +61,21 @@ BEGIN
     IF COALESCE(vbMovementChackId, 0) <> 0
     THEN
       RETURN QUERY
-      SELECT 0::TFloat, 0::Integer, Null::TDateTime, ('Продажа по промокоду '||COALESCE(inGUID, '')||' уже произведена.')::TVarChar;
+      SELECT 0::TFloat, 0::Integer, Null::TDateTime,  0::TFloat, ('Продажа по промокоду '||COALESCE(inGUID, '')||' уже произведена.')::TVarChar;
       RETURN;
     END IF;
 
     IF COALESCE(vbMovementItemId, 0) = 0
     THEN
       RETURN QUERY
-      SELECT 0::TFloat, 0::Integer, Null::TDateTime, ('Промокод '||COALESCE(inGUID, '')||' не найден.')::TVarChar;
+      SELECT 0::TFloat, 0::Integer, Null::TDateTime,  0::TFloat, ('Промокод '||COALESCE(inGUID, '')||' не найден.')::TVarChar;
       RETURN;
     END IF;
 
     IF vbisErased = TRUE
     THEN
       RETURN QUERY
-      SELECT 0::TFloat, 0::Integer, Null::TDateTime, ('Промокод '||COALESCE(inGUID, '')||' удален.')::TVarChar;
+      SELECT 0::TFloat, 0::Integer, Null::TDateTime,  0::TFloat, ('Промокод '||COALESCE(inGUID, '')||' удален.')::TVarChar;
       RETURN;
     END IF;
 
@@ -82,8 +84,9 @@ BEGIN
            MovementDate_StartSale.ValueData, 
            MovementDate_EndSale.ValueData, 
            MovementFloat_MonthCount.ValueData::Integer,
-           COALESCE(MovementBoolean_Electron.ValueData, FALSE) ::Boolean
-    INTO vbInvNumber, vbStatusId, vbStartSale, vbEndSale, vbMonthCount, vbisElectron
+           COALESCE(MovementBoolean_Electron.ValueData, FALSE) ::Boolean,
+           COALESCE(MovementFloat_SummRepay.ValueData, 0)::TFloat
+    INTO vbInvNumber, vbStatusId, vbStartSale, vbEndSale, vbMonthCount, vbisElectron, vbSummRepay
     FROM Movement
          LEFT JOIN MovementDate AS MovementDate_StartSale
                                 ON MovementDate_StartSale.MovementId = Movement.Id
@@ -97,12 +100,15 @@ BEGIN
          LEFT JOIN MovementBoolean AS MovementBoolean_Electron
                                    ON MovementBoolean_Electron.MovementId =  Movement.Id
                                   AND MovementBoolean_Electron.DescId = zc_MovementBoolean_Electron()
+         LEFT JOIN MovementFloat AS MovementFloat_SummRepay
+                                 ON MovementFloat_SummRepay.MovementId =  Movement.Id
+                                AND MovementFloat_SummRepay.DescId = zc_MovementFloat_SummRepay()
     WHERE Movement.ID = vbMovementId;
 
     IF COALESCE(vbParentId, 0) = 0 AND vbisElectron = FALSE
     THEN
       RETURN QUERY
-      SELECT 0::TFloat, 0::Integer, Null::TDateTime, ('По промокоду '||COALESCE(inGUID, '')||' нет подтверждения продажи.')::TVarChar;
+      SELECT 0::TFloat, 0::Integer, Null::TDateTime,  0::TFloat, ('По промокоду '||COALESCE(inGUID, '')||' нет подтверждения продажи.')::TVarChar;
       RETURN;
     END IF;
 
@@ -110,7 +116,7 @@ BEGIN
     IF COALESCE(vbStatusId, 0) <> zc_Enum_Status_Complete()
     THEN
       RETURN QUERY
-      SELECT 0::TFloat, 0::Integer, Null::TDateTime, ('Документ "Программы лояльности" по промокоду '||COALESCE(inGUID, '')||' не найден.')::TVarChar;
+      SELECT 0::TFloat, 0::Integer, Null::TDateTime,  0::TFloat, ('Документ "Программы лояльности" по промокоду '||COALESCE(inGUID, '')||' не найден.')::TVarChar;
       RETURN;
     END IF;
 
@@ -118,7 +124,7 @@ BEGIN
     IF vbStartSale > CURRENT_DATE OR vbEndSale < CURRENT_DATE
     THEN
       RETURN QUERY
-      SELECT 0::TFloat, 0::Integer, Null::TDateTime, ('Срок действия "Программы лояльности" по промокоду '||COALESCE(inGUID, '')||' закончен.')::TVarChar;
+      SELECT 0::TFloat, 0::Integer, Null::TDateTime,  0::TFloat, ('Срок действия "Программы лояльности" по промокоду '||COALESCE(inGUID, '')||' закончен.')::TVarChar;
       RETURN;
     END IF;
 
@@ -131,7 +137,7 @@ BEGIN
                     AND MI_Loyalty.ObjectId = inUnitID)
     THEN
       RETURN QUERY
-      SELECT 0::TFloat, 0::Integer, Null::TDateTime, ('"Программы лояльности" по промокоду '||COALESCE(inGUID, '')||' на аптеку не распространяеться.')::TVarChar;
+      SELECT 0::TFloat, 0::Integer, Null::TDateTime,  0::TFloat, ('"Программы лояльности" по промокоду '||COALESCE(inGUID, '')||' на аптеку не распространяеться.')::TVarChar;
       RETURN;
     END IF;
 
@@ -139,12 +145,12 @@ BEGIN
     IF (vbOperDate + (vbMonthCount||' MONTH')::INTERVAL) < CURRENT_DATE
     THEN
       RETURN QUERY
-      SELECT 0::TFloat, 0::Integer, Null::TDateTime, ('Срок действия промокода '||COALESCE(inGUID, '')||' закончен.')::TVarChar;
+      SELECT 0::TFloat, 0::Integer, Null::TDateTime,  0::TFloat, ('Срок действия промокода '||COALESCE(inGUID, '')||' закончен.')::TVarChar;
       RETURN;
     END IF;
 
     RETURN QUERY
-    SELECT vbDiscountAmount, vbMovementItemId, (vbOperDate + (vbMonthCount||' MONTH' )::INTERVAL)::TDateTime, ''::TVarChar;
+    SELECT vbDiscountAmount, vbMovementItemId, (vbOperDate + (vbMonthCount||' MONTH' )::INTERVAL)::TDateTime, vbSummRepay, ''::TVarChar;
 
 END;
 $BODY$
@@ -158,6 +164,5 @@ $BODY$
 
 -- zfCalc_FromHex
 
--- SELECT * FROM gpSelect_PromoCodeLoyalty_ForSite ('1119-A887-001F-A46F', 0, '3');
--- 
-SELECT DiscountAmount, PromoCodeId, DateValid, Error FROM gpSelect_PromoCodeLoyalty_ForSite (inGUID := '0720-4215-7340-3485', inUnitID := '0', inSession := zfCalc_UserSite());
+-- SELECT * FROM gpSelect_PromoCodeLoyalty_ForSite ('0720-4215-7340-3485', 0, '3');
+-- SELECT DiscountAmount, PromoCodeId, DateValid, Error FROM gpSelect_PromoCodeLoyalty_ForSite (inGUID := '0720-4215-7340-3485', inUnitID := '0', inSession := zfCalc_UserSite());

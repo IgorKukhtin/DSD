@@ -33,8 +33,13 @@ BEGIN
                                                 ON ObjectBoolean_isLeaf.ObjectId = Object_Unit.Id
                                                AND ObjectBoolean_isLeaf.DescId = zc_ObjectBoolean_isLeaf() 
                                                AND ObjectBoolean_isLeaf.ValueData = TRUE
+                             JOIN ObjectString AS ObjectString_Unit_Address
+                                               ON ObjectString_Unit_Address.ObjectId = Object_Unit.Id
+                                              AND ObjectString_Unit_Address.DescId = zc_ObjectString_Unit_Address()
                         WHERE Object_Unit.DescId = zc_Object_Unit()
                           AND (COALESCE (inUnitId, 0) = 0 OR Object_Unit.Id = inUnitId)  
+                          AND Object_Unit.IsErased = False
+                          AND COALESCE(ObjectString_Unit_Address.ValueData, '') <> ''
                        )
           , tmpUnitPrice AS (SELECT tmpUnit.UnitId
                                   , ObjectLink_Price_Goods.ChildObjectId AS GoodsId
@@ -234,3 +239,4 @@ END; $BODY$
 -- тест
 -- SELECT * FROM gpSelect_GoodsOnUnit_ForSite_NeBoley (inUnitId:= 0, inSession:= zfCalc_UserSite());
 -- SELECT * FROM gpSelect_GoodsOnUnit_ForSite_NeBoley (inUnitId:= 183292, inSession:= zfCalc_UserSite());
+-- SELECT DISTINCT * FROM gpSelect_GoodsOnUnit_ForSite_NeBoley (0, zfCalc_UserSite())

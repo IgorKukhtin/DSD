@@ -43,8 +43,10 @@ type
     class procedure SetSlaveUser(const AValue: string); static;
     class function GetSlavePassword: string; static;
     class procedure SetSlavePassword(const AValue: string); static;
-    class function GetReplicaRange: Integer; static;
-    class procedure SetReplicaRange(const AValue: Integer); static;
+    class function GetReplicaSelectRange: Integer; static;
+    class procedure SetReplicaSelectRange(const AValue: Integer); static;
+    class function GetReplicaPacketRange: Integer; static;
+    class procedure SetReplicaPacketRange(const AValue: Integer); static;
     class function GetReplicaStart: Integer; static;
     class procedure SetReplicaStart(const AValue: Integer); static;
     class function GetLibLocation: string; static;
@@ -66,7 +68,8 @@ type
     class property SlavePort: Integer read GetSlavePort write SetSlavePort;
     class property SlaveUser: string read GetSlaveUser write SetSlaveUser;
     class property SlavePassword: string read GetSlavePassword write SetSlavePassword;
-    class property ReplicaRange: Integer read GetReplicaRange write SetReplicaRange;
+    class property ReplicaSelectRange: Integer read GetReplicaSelectRange write SetReplicaSelectRange;
+    class property ReplicaPacketRange: Integer read GetReplicaPacketRange write SetReplicaPacketRange;
     class property ReplicaStart: Integer read GetReplicaStart write SetReplicaStart;
     class property LibLocation: string read GetLibLocation write SetLibLocation;
   end;
@@ -90,8 +93,10 @@ var
 const
   // Replica
   cReplicaSection    = 'Replica';
-  cReplicaRangeParam = 'Range';
   cReplicaStartParam = 'StartID';
+  cReplicaSelectRangeParam = 'SelectRange';
+  cReplicaPacketRangeParam = 'PacketRange';
+
 
   // Settings
   cSettingsSection  = 'Settings';
@@ -118,7 +123,8 @@ const
   // Default values
   cDefPort = 5432;
   cDefUser = 'admin';
-  cDefReplicaRange = 5000;
+  cDefReplicaSelectRange = 10000;
+  cDefReplicaPacketRange = 1000;
   cDefReplicaStart = 1;
 
 function IsService: Boolean;
@@ -294,9 +300,14 @@ begin
   Result := GetStrValue(cMasterSection, cMasterUserParam, cDefUser);
 end;
 
-class function TSettings.GetReplicaRange: Integer;
+class function TSettings.GetReplicaPacketRange: Integer;
 begin
-  Result := GetIntValue(cReplicaSection, cReplicaRangeParam, cDefReplicaRange);
+  Result := GetIntValue(cReplicaSection, cReplicaPacketRangeParam, cDefReplicaPacketRange);
+end;
+
+class function TSettings.GetReplicaSelectRange: Integer;
+begin
+  Result := GetIntValue(cReplicaSection, cReplicaSelectRangeParam, cDefReplicaSelectRange);
 end;
 
 class function TSettings.GetReplicaStart: Integer;
@@ -423,9 +434,14 @@ begin
   SetStrValue(cMasterSection, cMasterUserParam, AValue);
 end;
 
-class procedure TSettings.SetReplicaRange(const AValue: Integer);
+class procedure TSettings.SetReplicaPacketRange(const AValue: Integer);
 begin
-  SetIntValue(cReplicaSection, cReplicaRangeParam, AValue);
+  SetIntValue(cReplicaSection, cReplicaPacketRangeParam, AValue);
+end;
+
+class procedure TSettings.SetReplicaSelectRange(const AValue: Integer);
+begin
+  SetIntValue(cReplicaSection, cReplicaSelectRangeParam, AValue);
 end;
 
 class procedure TSettings.SetReplicaStart(const AValue: Integer);

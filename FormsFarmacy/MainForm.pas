@@ -715,6 +715,8 @@ type
     N247: TMenuItem;
     actInventoryHouseholdInventory: TdsdOpenForm;
     N248: TMenuItem;
+    actReport_Check_Count: TdsdOpenForm;
+    miReport_Check_Count: TMenuItem;
     procedure actSaveDataExecute(Sender: TObject);
 
     procedure miRepriceClick(Sender: TObject);

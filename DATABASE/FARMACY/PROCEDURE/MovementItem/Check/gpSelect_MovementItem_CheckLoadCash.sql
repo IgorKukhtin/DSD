@@ -39,6 +39,7 @@ RETURNS TABLE (Id Integer
              , NDSKindId Integer
              , DiscountExternalID Integer
              , DiscountExternalName TVarChar
+             , UKTZED TVarChar
               )
 AS
 $BODY$
@@ -138,7 +139,14 @@ BEGIN
      tmpMI AS (SELECT MovementItem.*
                FROM MovementItem_Check_View AS MovementItem
                WHERE MovementItem.MovementId = inMovementId
-               )
+               ),
+     tmpGoodsUKTZED AS (SELECT Object_Goods_Juridical.GoodsMainId
+                             , Object_Goods_Juridical.UKTZED
+                             , ROW_NUMBER() OVER (PARTITION BY Object_Goods_Juridical.GoodsMainId ORDER BY Object_Goods_Juridical.DateUpdate DESC) AS Ord
+                        FROM Object_Goods_Juridical
+                        WHERE COALESCE (Object_Goods_Juridical.UKTZED, '') <> ''
+                          AND Object_Goods_Juridical.GoodsMainId <> 0
+                        )
 
        SELECT
              MovementItem.Id
@@ -179,6 +187,7 @@ BEGIN
            , MovementItem.NDSKindId                                              AS NDSKindId
            , Object_DiscountExternal.ID                                          AS DiscountCardId
            , Object_DiscountExternal.ValueData                                   AS DiscountCardName
+           , tmpGoodsUKTZED.UKTZED                                               AS UKTZED
        FROM tmpMI AS MovementItem
 
             LEFT JOIN MovementItemFloat AS MIFloat_MovementItem
@@ -212,6 +221,10 @@ BEGIN
                                              ON MILinkObject_DiscountExternal.MovementItemId = MovementItem.Id
                                             AND MILinkObject_DiscountExternal.DescId         = zc_MILinkObject_DiscountExternal()
             LEFT JOIN Object AS Object_DiscountExternal ON Object_DiscountExternal.Id = MILinkObject_DiscountExternal.ObjectId
+
+            -- Коды UKTZED
+            LEFT JOIN tmpGoodsUKTZED ON tmpGoodsUKTZED.GoodsMainId = ObjectLink_Main.ChildObjectId
+                                    AND tmpGoodsUKTZED.Ord = 1
        ;
 END;
 $BODY$
@@ -226,5 +239,6 @@ ALTER FUNCTION gpSelect_MovementItem_CheckLoadCash (Integer, TVarChar) OWNER TO 
 
 -- тест
 -- select * from gpSelect_MovementItem_CheckLoadCash(inMovementId := 18769698 ,  inSession := '3');
--- select * from gpSelect_MovementItem_CheckLoadCash(inMovementId := 18805062    ,  inSession := '3');
+-- 
+select * from gpSelect_MovementItem_CheckLoadCash(inMovementId := 18805062    ,  inSession := '3');
 

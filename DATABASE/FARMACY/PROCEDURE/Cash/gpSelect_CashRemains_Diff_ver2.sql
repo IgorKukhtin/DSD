@@ -27,7 +27,8 @@ RETURNS TABLE (
     NDS TFloat,
     NDSKindId Integer,
     DiscountExternalID  Integer, DiscountExternalName  TVarChar,
-    GoodsDiscountID  Integer, GoodsDiscountName  TVarChar
+    GoodsDiscountID  Integer, GoodsDiscountName  TVarChar,
+    UKTZED TVarChar
 )
 AS
 $BODY$
@@ -449,6 +450,14 @@ WITH tmp as (SELECT tmp.*, ROW_NUMBER() OVER (PARTITION BY TextValue_calc ORDER 
 
                                           WHERE Object_BarCode.DescId = zc_Object_BarCode()
                                             AND Object_BarCode.isErased = False)
+                 , tmpGoodsUKTZED AS (SELECT Object_Goods_Juridical.GoodsMainId
+                                           , Object_Goods_Juridical.UKTZED
+                                           , ROW_NUMBER() OVER (PARTITION BY Object_Goods_Juridical.GoodsMainId ORDER BY Object_Goods_Juridical.DateUpdate DESC) AS Ord
+                                      FROM Object_Goods_Juridical
+                                      WHERE COALESCE (Object_Goods_Juridical.UKTZED, '') <> ''
+                                        AND Object_Goods_Juridical.GoodsMainId <> 0
+                                      )
+
 
         SELECT
             _DIFF.ObjectId,
@@ -484,7 +493,8 @@ WITH tmp as (SELECT tmp.*, ROW_NUMBER() OVER (PARTITION BY TextValue_calc ORDER 
             NULLIF (_DIFF.DiscountExternalID, 0)                              AS DiscountExternalId,
             Object_DiscountExternal.ValueData                                 AS DiscountExternalName,
             tmpGoodsDiscount.GoodsDiscountId                                  AS GoodsDiscountID,
-            tmpGoodsDiscount.GoodsDiscountName                                AS GoodsDiscountName
+            tmpGoodsDiscount.GoodsDiscountName                                AS GoodsDiscountName,
+            tmpGoodsUKTZED.UKTZED                                             AS UKTZED
         FROM _DIFF
 
             -- Тип срок/не срок
@@ -506,7 +516,11 @@ WITH tmp as (SELECT tmp.*, ROW_NUMBER() OVER (PARTITION BY TextValue_calc ORDER 
                                        ON ObjectLink_Goods_NDSKind.ObjectId = _DIFF.ObjectId
                                       AND ObjectLink_Goods_NDSKind.DescId = zc_ObjectLink_Goods_NDSKind()
             LEFT OUTER JOIN tmpNDSKind AS ObjectFloat_NDSKind_NDS
-                                       ON ObjectFloat_NDSKind_NDS.ObjectId = COALESCE(_DIFF.NDSKindId, ObjectLink_Goods_NDSKind.ChildObjectId);
+                                       ON ObjectFloat_NDSKind_NDS.ObjectId = COALESCE(_DIFF.NDSKindId, ObjectLink_Goods_NDSKind.ChildObjectId)
+            -- Коды UKTZED
+            LEFT JOIN tmpGoodsUKTZED ON tmpGoodsUKTZED.GoodsMainId = Object_Goods_Retail.GoodsMainId
+                                    AND tmpGoodsUKTZED.Ord = 1
+            ;
 
     -- !!!Протокол - отладка Скорости!!!
     PERFORM lpInsert_ResourseProtocol (inOperDate     := vbOperDate_StartBegin

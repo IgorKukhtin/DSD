@@ -208,7 +208,7 @@ BEGIN
           , gpGet_Mail.Value      AS Mail
           , gpGet_User.Value      AS UserName
           , gpGet_Password.Value  AS PasswordValue
-          , gpGet_Directory.Value AS DirectoryMail*/
+          , gpGet_Directory.Value AS DirectoryMail
 /*
           , 'imap.ukr.net'    :: TVarChar AS Host
           , '993'             :: TVarChar AS Port

@@ -27,7 +27,7 @@ object dmData: TdmData
     User = ''
     Password = ''
     Protocol = 'postgresql-9'
-    Left = 168
+    Left = 504
     Top = 40
   end
   object qrySelectReplicaSQL: TZReadOnlyQuery

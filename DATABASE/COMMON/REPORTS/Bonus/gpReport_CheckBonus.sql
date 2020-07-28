@@ -25,7 +25,8 @@ RETURNS TABLE (OperDate_Movement TDateTime, InvNumber_Movement TVarChar, DescNam
              , ConditionKindId Integer, ConditionKindName TVarChar
              , BonusKindId Integer, BonusKindName TVarChar
              , BranchId Integer, BranchName TVarChar
-             , RetailName TVarChar, PersonalName TVarChar, PartnerName TVarChar
+             , RetailName TVarChar, PersonalName TVarChar
+             , PartnerId Integer, PartnerName TVarChar
              , Value TFloat
              , Sum_CheckBonus TFloat
              , Sum_CheckBonusFact TFloat 
@@ -61,6 +62,7 @@ BEGIN
            , tmp.BranchId, tmp.BranchName
            , tmp.RetailName
            , tmp.PersonalName
+           , tmp.PartnerId
            , tmp.PartnerName
            , tmp.Value
            , tmp.Sum_CheckBonus

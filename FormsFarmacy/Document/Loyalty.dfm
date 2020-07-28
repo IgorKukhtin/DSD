@@ -22,7 +22,6 @@ inherited LoyaltyForm: TLoyaltyForm
       inherited cxGrid: TcxGrid
         Width = 1125
         Height = 263
-        ExplicitTop = 2
         ExplicitWidth = 1125
         ExplicitHeight = 263
         inherited cxGridDBTableView: TcxGridDBTableView
@@ -562,7 +561,7 @@ inherited LoyaltyForm: TLoyaltyForm
       Top = 62
       Properties.ReadOnly = False
       TabOrder = 7
-      Width = 397
+      Width = 301
     end
     object cxLabel10: TcxLabel
       Left = 862
@@ -795,6 +794,25 @@ inherited LoyaltyForm: TLoyaltyForm
       Caption = #1076#1083#1103' '#1057#1072#1081#1090#1072
       TabOrder = 39
       Width = 78
+    end
+    object edSummRepay: TcxCurrencyEdit
+      Left = 535
+      Top = 62
+      Hint = #1055#1086#1075#1072#1096#1072#1090#1100' '#1086#1090' '#1089#1091#1084#1084#1099' '#1095#1077#1082#1072
+      ParentShowHint = False
+      Properties.DisplayFormat = ',0.00'
+      Properties.ReadOnly = False
+      ShowHint = True
+      TabOrder = 40
+      Width = 87
+    end
+    object cxLabel20: TcxLabel
+      Left = 532
+      Top = 44
+      Hint = #1055#1086#1075#1072#1096#1072#1090#1100' '#1086#1090' '#1089#1091#1084#1084#1099' '#1095#1077#1082#1072
+      Caption = #1055#1086#1075#1072#1096#1072#1090#1100' '#1086#1090' '#1089#1091#1084'.'
+      ParentShowHint = False
+      ShowHint = True
     end
   end
   inherited ActionList: TActionList
@@ -2332,6 +2350,13 @@ inherited LoyaltyForm: TLoyaltyForm
         Component = cbisElectron
         DataType = ftBoolean
         MultiSelectSeparator = ','
+      end
+      item
+        Name = 'SummRepay'
+        Value = Null
+        Component = edSummRepay
+        DataType = ftFloat
+        MultiSelectSeparator = ','
       end>
     Left = 72
     Top = 224
@@ -2462,6 +2487,14 @@ inherited LoyaltyForm: TLoyaltyForm
         Value = Null
         Component = cbisElectron
         DataType = ftBoolean
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inSummRepay'
+        Value = Null
+        Component = edSummRepay
+        DataType = ftFloat
         ParamType = ptInput
         MultiSelectSeparator = ','
       end>

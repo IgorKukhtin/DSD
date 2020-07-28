@@ -28,8 +28,8 @@ BEGIN
     RETURN QUERY
         SELECT SRU.Value 
         FROM   _replica.gpSelect_Replica_union(inId_start := inId_start,
-                                      inId_end   := vbId_End
-                                     )
+                                               inId_end   := vbId_End
+                                               )
         AS SRU;
 END;
 $BODY$

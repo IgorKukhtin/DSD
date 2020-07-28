@@ -183,6 +183,8 @@ type
     actExecuteDialogPromoCodeScales: TExecuteDialog;
     spInsertPromoCodeScales: TdsdStoredProc;
     dxBarButton7: TdxBarButton;
+    edSummRepay: TcxCurrencyEdit;
+    cxLabel20: TcxLabel;
   private
     { Private declarations }
   public

@@ -4039,6 +4039,22 @@
 				<Form>Report_CheckBonus_IncomeForm</Form>
 				<DesignClass>TParentForm</DesignClass>
 			</DCCReference>
+			<DCCReference Include="..\..\Forms\Document\ProfitIncomeService.pas">
+				<Form>ProfitIncomeServiceForm</Form>
+				<DesignClass>TParentForm</DesignClass>
+			</DCCReference>
+			<DCCReference Include="..\..\Forms\Document\ProfitIncomeServiceJournal.pas">
+				<Form>ProfitIncomeServiceJournalForm</Form>
+				<DesignClass>TParentForm</DesignClass>
+			</DCCReference>
+			<DCCReference Include="..\..\Forms\Report\Report_MotionGoodsAssetNoBalance.pas">
+				<Form>Report_MotionGoodsAssetNoBalanceForm</Form>
+				<DesignClass>TParentForm</DesignClass>
+			</DCCReference>
+			<DCCReference Include="..\..\Forms\Report\Report_JuridicalSold_AssetNoBalance.pas">
+				<Form>Report_JuridicalSold_AssetNoBalanceForm</Form>
+				<DesignClass>TParentForm</DesignClass>
+			</DCCReference>
 			<BuildConfiguration Include="Release">
 				<Key>Cfg_2</Key>
 				<CfgParent>Base</CfgParent>
