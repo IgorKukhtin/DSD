@@ -1369,6 +1369,8 @@ BEGIN
 
                --*** штрихкод
     || ';' || COALESCE (tmpObject_GoodsPropertyValue.BarCode, tmpObject_GoodsPropertyValueGroup.BarCode, tmpObject_GoodsPropertyValue_basis.BarCode, '')
+               --*** МРЦ
+    || ';' 
                -- Термін придатності
     || ';' || CASE WHEN COALESCE (tmpStickerProperty.Value5,0) <> 0 THEN tmpStickerProperty.Value5 :: TVarChar ELSE '' END :: TVarChar
                -- Дата виробництва
