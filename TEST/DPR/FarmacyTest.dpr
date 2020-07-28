@@ -916,7 +916,9 @@ uses
   ComputerAccessoriesRegisterJournal in '..\..\FormsFarmacy\Document\ComputerAccessoriesRegisterJournal.pas' {ComputerAccessoriesRegisterJournalForm: TParentForm},
   InventoryHouseholdInventory in '..\..\FormsFarmacy\Document\InventoryHouseholdInventory.pas' {InventoryHouseholdInventoryForm: TParentForm},
   InventoryHouseholdInventoryJournal in '..\..\FormsFarmacy\Document\InventoryHouseholdInventoryJournal.pas' {InventoryHouseholdInventoryJournalForm: TParentForm},
-  LoyaltyInsertPromoCodeDialog in '..\..\FormsFarmacy\Document\LoyaltyInsertPromoCodeDialog.pas' {LoyaltyInsertPromoCodeDialogForm: TParentForm};
+  LoyaltyInsertPromoCodeDialog in '..\..\FormsFarmacy\Document\LoyaltyInsertPromoCodeDialog.pas' {LoyaltyInsertPromoCodeDialogForm: TParentForm},
+  Report_Check_Count in '..\..\FormsFarmacy\Report\Report_Check_Count.pas' {Report_Check_CountForm: TParentForm},
+  Report_Check_CountDialog in '..\..\FormsFarmacy\Report\Report_Check_CountDialog.pas' {Report_Check_CountDialogForm: TParentForm};
 
 {$R *.res}
 {$R DevExpressRus.res}
