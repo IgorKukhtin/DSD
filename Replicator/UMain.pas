@@ -30,8 +30,6 @@ type
     pnlLogLeft: TPanel;
     pnlLog: TPanel;
     mmoLog: TMemo;
-    lbRange: TLabel;
-    seRange: TSpinEdit;
     grpMaster: TGroupBox;
     grpSlave: TGroupBox;
     lbMasterServer: TLabel;
@@ -42,7 +40,6 @@ type
     edtSlaveServer: TEdit;
     lbSlaveDatabase: TLabel;
     edtSlaveDatabase: TEdit;
-    chkShowLog: TCheckBox;
     btnSendSinglePacket: TButton;
     pgcLog: TPageControl;
     tsMemo: TTabSheet;
@@ -67,14 +64,39 @@ type
     btnTestMaster: TButton;
     btnTestSlave: TButton;
     btnReplicaCommandsSQL: TButton;
-    lbStartReplica: TLabel;
-    edtStartReplica: TEdit;
     btnMinId: TButton;
     btnMaxId: TButton;
     btnUseMinId: TButton;
-    lbLastId: TLabel;
-    btnSendPackets: TButton;
+    btnStartReplication: TButton;
     chkWriteLog: TCheckBox;
+    grpAllData: TGroupBox;
+    lbAllMinId: TLabel;
+    edtAllMinId: TEdit;
+    lbAllMaxId: TLabel;
+    edtAllMaxId: TEdit;
+    lbAllStart: TLabel;
+    edtAllRecCount: TEdit;
+    lbAllRecCount: TLabel;
+    lbAllElapsed: TLabel;
+    pbAll: TProgressBar;
+    grpSession: TGroupBox;
+    lbSsnMinId: TLabel;
+    edtSsnMinId: TEdit;
+    lbSsnMaxId: TLabel;
+    edtSsnMaxId: TEdit;
+    lbSsnRecCount: TLabel;
+    edtSsnRecCount: TEdit;
+    lbSsnStart: TLabel;
+    lbSsnElapsed: TLabel;
+    sePacketRange: TSpinEdit;
+    lbPacketRange: TLabel;
+    seSelectRange: TSpinEdit;
+    lbSelectRange: TLabel;
+    pbSession: TProgressBar;
+    chkShowLog: TCheckBox;
+    btnStop: TButton;
+    lbSsnNumber: TLabel;
+    tmrElapsed: TTimer;
     {$WARNINGS ON}
     procedure chkShowLogClick(Sender: TObject);
     procedure btnLibLocationClick(Sender: TObject);
@@ -84,24 +106,32 @@ type
     procedure btnTestSlaveClick(Sender: TObject);
     procedure btnSendSinglePacketClick(Sender: TObject);
     procedure btnReplicaCommandsSQLClick(Sender: TObject);
-    procedure seRangeChange(Sender: TObject);
+    procedure seSelectRangeChange(Sender: TObject);
     procedure edtStartReplicaExit(Sender: TObject);
     procedure mmoLogChange(Sender: TObject);
     procedure btnMinIdClick(Sender: TObject);
     procedure btnMaxIdClick(Sender: TObject);
     procedure btnUseMinIdClick(Sender: TObject);
-    procedure btnSendPacketsClick(Sender: TObject);
+    procedure btnStartReplicationClick(Sender: TObject);
     procedure chkWriteLogClick(Sender: TObject);
+    procedure sePacketRangeChange(Sender: TObject);
+    procedure btnStopClick(Sender: TObject);
+    procedure tmrElapsedTimer(Sender: TObject);
   private
     FLog: TLog;
     FData: TdmData;
+    FReplicaThrd: TReplicaThread;
+    FStartTimeReplica: TDateTime;
+    FStartTimeSession: TDateTime;
   private
     procedure ReadSettings;
     procedure WriteSettings;
     procedure AssignOnExitSettings;
     procedure SwitchShowLog;
-    procedure LogMessage(const AMsg: string);
+    procedure LogMessage(const AMsg: string; const AFileName: string = ''; ALine: TMessageLine = mlNew);
     procedure OnChangeStartId(const ANewStartId: Integer);
+    procedure OnNewSession(const AStart: TDateTime; const AMinId, AMaxId, ARecCount, ASessionNumber: Integer);
+    procedure OnEndSession(Sender: TObject);
     procedure OnTerminateSinglePacket(Sender: TObject);
     procedure OnTerminateReplica(Sender: TObject);
   private
@@ -117,10 +147,17 @@ implementation
 
 uses
   UConstants,
-  USettings;
+  USettings,
+  UCommon;
 
 const
-  cLastId = 'ѕоследний обработанный Id = %d';
+  cStartPointReplica = 'начало репликации %s';
+  cElapsedReplica = 'прошло %s';
+  cStartPointSession = 'начало сессии %s';
+  cElapsedSession = 'прошло %s';
+  cSessionNumber = 'сесси€ є %d';
+
+
 
 function BelongsTo(AControl, ASerachParent: TWinControl): Boolean;
 var
@@ -149,16 +186,24 @@ begin
   edtSlavePort.Text     := IntToStr(TSettings.SlavePort);
 
   edtLibLocation.Text  := TSettings.LibLocation;
-  edtStartReplica.Text := IntToStr(TSettings.ReplicaStart);
-  seRange.Value        := TSettings.ReplicaRange;
-  chkWriteLog.Checked  := TSettings.UseLog;
-  chkShowLog.Checked   := TSettings.UseLogGUI;
+  edtSsnMinId.Text := IntToStr(TSettings.ReplicaStart);
+
+  seSelectRange.Value       := TSettings.ReplicaSelectRange;
+  sePacketRange.Value := TSettings.ReplicaPacketRange;
+
+  chkWriteLog.Checked := TSettings.UseLog;
+  chkShowLog.Checked  := TSettings.UseLogGUI;
   SwitchShowLog;
 end;
 
-procedure TfrmMain.seRangeChange(Sender: TObject);
+procedure TfrmMain.sePacketRangeChange(Sender: TObject);
 begin
-  TSettings.ReplicaRange := seRange.Value;
+  TSettings.ReplicaPacketRange := sePacketRange.Value;
+end;
+
+procedure TfrmMain.seSelectRangeChange(Sender: TObject);
+begin
+  TSettings.ReplicaSelectRange := seSelectRange.Value;
 end;
 
 procedure TfrmMain.SwitchShowLog;
@@ -167,6 +212,14 @@ begin
     pgcLog.ActivePage := tsMemo
   else
     pgcLog.ActivePage := tsChk;
+end;
+
+procedure TfrmMain.tmrElapsedTimer(Sender: TObject);
+begin
+  lbAllElapsed.Caption := Format(cElapsedReplica, [Elapsed(FStartTimeReplica)]);
+
+  if FStartTimeSession > 0 then
+    lbSsnElapsed.Caption := Format(cElapsedSession, [Elapsed(FStartTimeSession)]);
 end;
 
 procedure TfrmMain.WriteSettings;
@@ -184,8 +237,10 @@ begin
   TSettings.SlavePort     := StrToIntDef(edtSlavePort.Text, TSettings.DefaultPort);
 
   TSettings.LibLocation  := edtLibLocation.Text;
-  TSettings.ReplicaRange := seRange.Value;
   TSettings.UseLogGUI    := chkShowLog.Checked;
+
+  TSettings.ReplicaSelectRange := seSelectRange.Value;
+  TSettings.ReplicaPacketRange := sePacketRange.Value;
 end;
 
 procedure TfrmMain.AssignOnExitSettings;
@@ -231,19 +286,19 @@ end;
 
 procedure TfrmMain.btnReplicaCommandsSQLClick(Sender: TObject);
 const
-  cStartPerlica = '—тарт репликации: %d, диапазон: %d, SQL:' + #13#10 + '%s';
+  cStartPerlica = '—тарт репликации: %d, диапазон select: %d, команд в пакете: %d, SQL:' + #13#10 + '%s';
   cCmdCountMsg = '¬ пакете всего команд: %d';
 var
-  iStart, iRange: Integer;
+  iStart, iSelectRange: Integer;
 begin
-  iStart := StrToIntDef(edtStartReplica.Text, 0);
-  iRange := seRange.Value;
+  iStart := StrToIntDef(edtSsnMinId.Text, 0);
+  iSelectRange := seSelectRange.Value;
 
   // формирование SelectSQL дл€ ZQuery, который вернет набор команд репликации
-  FData.BuildReplicaCommandsSQL(iStart, iRange);
+  FData.BuildReplicaCommandsSQL(iStart, iSelectRange);
   LogMessage(
     Format(
-      cStartPerlica, [iStart, iRange, FData.qrySelectReplicaCmd.SQL.Text]
+      cStartPerlica, [iStart, iSelectRange, sePacketRange.Value, FData.qrySelectReplicaCmd.SQL.Text]
     )
   );
 
@@ -251,23 +306,40 @@ begin
   LogMessage(Format(cCmdCountMsg, [FData.GetReplicaCmdCount]));
 end;
 
-procedure TfrmMain.btnSendPacketsClick(Sender: TObject);
+procedure TfrmMain.btnStartReplicationClick(Sender: TObject);
 const
-  cStartPerlica = '—тарт репликации: %d, диапазон: %d';
+  cStartPerlica = '—тарт репликации: %d, диапазон select: %d, команд в пакете: %d';
 var
-  iStart, iRange: Integer;
-  tmpReplica: TReplicaThread;
+  iStart, iSelectRange, iPacketRange: Integer;
+  tmpMinMax: TMinMaxId;
 begin
-  iStart := StrToIntDef(edtStartReplica.Text, 0);
-  iRange := seRange.Value;
+  FStartTimeReplica := Now;
+  lbAllStart.Caption := Format(cStartPointReplica, [FormatDateTime(cTimeStrShort, Now)]);
 
-  LogMessage(Format(cStartPerlica, [iStart, iRange]));
+  iStart       := TSettings.ReplicaStart;
+  iSelectRange := seSelectRange.Value;
+  iPacketRange := sePacketRange.Value;
 
-  tmpReplica := TReplicaThread.Create(cCreateSuspended, iStart, iRange, LogMessage);
-  tmpReplica.OnTerminate := OnTerminateReplica;
-  tmpReplica.OnChangeStartId := OnChangeStartId;
-  tmpReplica.Start;
-  btnSendPackets.Enabled := False;
+  tmpMinMax := FData.GetMinMaxId;
+
+  pbAll.Visible  := True;
+  pbAll.Step     := 1;
+  pbAll.Min      := 1;
+  pbAll.Max      := tmpMinMax.MaxId - tmpMinMax.MinId;
+  pbAll.Position := iStart - tmpMinMax.MinId;
+
+  LogMessage(Format(cStartPerlica, [iStart, iSelectRange, iPacketRange]));
+
+  FReplicaThrd := TReplicaThread.Create(cCreateSuspended, iStart, iSelectRange, iPacketRange, LogMessage);
+  FReplicaThrd.OnChangeStartId := OnChangeStartId;
+  FReplicaThrd.OnNewSession := OnNewSession;
+  FReplicaThrd.OnEndSession := OnEndSession;
+  FReplicaThrd.OnTerminate  := OnTerminateReplica;
+  FReplicaThrd.Start;
+
+  btnStartReplication.Enabled := False;
+  btnStop.Enabled := True;
+  tmrElapsed.Enabled := True;
 end;
 
 procedure TfrmMain.btnSendSinglePacketClick(Sender: TObject);
@@ -277,14 +349,24 @@ begin
   LogMessage('—тарт выгрузки одного пакета ');
   tmpWorker := TSinglePacket.Create(
     cCreateSuspended,
-    StrToIntDef(edtStartReplica.Text, 0),
-    seRange.Value,
+    StrToIntDef(edtSsnMinId.Text, 0),
+    seSelectRange.Value,
+    sePacketRange.Value,
     LogMessage
   );
   tmpWorker.OnTerminate := OnTerminateSinglePacket;
   tmpWorker.OnChangeStartId := OnChangeStartId;
   tmpWorker.Start;
   btnSendSinglePacket.Enabled := False;
+end;
+
+procedure TfrmMain.btnStopClick(Sender: TObject);
+begin
+  if FReplicaThrd <> nil then
+    FReplicaThrd.Stop;
+
+  FReplicaThrd := nil;
+  btnStop.Enabled := False;
 end;
 
 procedure TfrmMain.btnTestMasterClick(Sender: TObject);
@@ -305,8 +387,8 @@ end;
 
 procedure TfrmMain.btnUseMinIdClick(Sender: TObject);
 begin
-  edtStartReplica.Text   := IntToStr(FData.MinId);
-  TSettings.ReplicaStart := StrToIntDef(edtStartReplica.Text, 0);
+  edtSsnMinId.Text   := IntToStr(FData.MinId);
+  TSettings.ReplicaStart := StrToIntDef(edtSsnMinId.Text, 0);
 end;
 
 procedure TfrmMain.chkShowLogClick(Sender: TObject);
@@ -322,7 +404,7 @@ end;
 
 procedure TfrmMain.edtStartReplicaExit(Sender: TObject);
 begin
-  TSettings.ReplicaStart := StrToIntDef(edtStartReplica.Text, 1);
+  TSettings.ReplicaStart := StrToIntDef(edtSsnMinId.Text, 1);
 end;
 
 procedure TfrmMain.FormClose(Sender: TObject; var Action: TCloseAction);
@@ -333,6 +415,8 @@ begin
 end;
 
 procedure TfrmMain.FormCreate(Sender: TObject);
+var
+  tmpMinMax: TMinMaxId;
 begin
   FLog := TLog.Create;
   pgcMain.ActivePage := tsLog;
@@ -341,26 +425,49 @@ begin
 
   FData := TdmData.Create(
     nil,
-    StrToIntDef(edtStartReplica.Text, 0),
-    seRange.Value,
+    StrToIntDef(edtSsnMinId.Text, 0),
+    seSelectRange.Value,
+    sePacketRange.Value,
     LogMessage
   );
   FData.OnChangeStartId := OnChangeStartId;
+
+  if FData.IsMasterConnected then
+  begin
+    tmpMinMax := FData.GetMinMaxId;
+
+    edtAllMinId.Text    := IntToStr(tmpMinMax.MinId);
+    edtAllMaxId.Text    := IntToStr(tmpMinMax.MaxId);
+    edtAllRecCount.Text := IntToStr(tmpMinMax.RecCount);
+  end;
 end;
 
-procedure TfrmMain.LogMessage(const AMsg: string);
-const
-  cMsg = '%s %s';
+procedure TfrmMain.LogMessage(const AMsg, AFileName: string; ALine: TMessageLine);
+var
+  prevLine: TMessageLine;
 begin
-  if TSettings.UseLog then
-    FLog.Write('application.log', AMsg);
+  if TSettings.UseLog then // выбрана настройка "записывать лог в файл"
+    if Length(Trim(AFileName)) = 0 then
+    begin
+      // не записываем в файл сообщение, переданное дл€ той же самой строки
+      // за исключением случа€, когда это последнее сообщение дл€ той же самой строки
+      if (ALine = mlNew) and (prevLine = mlSame) and (mmoLog.Lines.Count > 0) then
+        FLog.Write('application.log', mmoLog.Lines[Pred(mmoLog.Lines.Count)]);
 
-  mmoLog.Lines.Add(
-    Format(cMsg, [
-      FormatDateTime(cTimeStr, Now),
-      AMsg
-    ])
-  );
+      // не записываем в файл сообщение, переданное дл€ той же самой строки
+      if (ALine = mlNew) then
+        FLog.Write('application.log', AMsg);
+    end
+    else
+      FLog.Write(AFileName, AMsg);
+
+  if Length(Trim(AFileName)) = 0  then // не выводим в лог сообщение, которое предназначено дл€ сохранени€ в отдельный файл
+  case ALine of
+    mlNew:  mmoLog.Lines.Add(AMsg);
+    mlSame: mmoLog.Lines[Pred(mmoLog.Lines.Count)] := AMsg; // запись в последнюю строку
+  end;
+
+  prevLine := ALine;
 end;
 
 procedure TfrmMain.mmoLogChange(Sender: TObject);
@@ -370,7 +477,19 @@ end;
 
 procedure TfrmMain.OnChangeStartId(const ANewStartId: Integer);
 begin
-  lbLastId.Caption := Format(cLastId, [ANewStartId]);
+  edtSsnMinId.Text := IntToStr(ANewStartId);
+  pbSession.StepIt;
+  pbAll.StepIt;
+
+  lbAllElapsed.Caption := Format(cElapsedReplica, [Elapsed(FStartTimeReplica)]);
+  if FStartTimeSession > 0 then
+    lbSsnElapsed.Caption := Format(cElapsedSession, [Elapsed(FStartTimeSession)]);
+end;
+
+procedure TfrmMain.OnEndSession(Sender: TObject);
+begin
+  lbSsnElapsed.Caption := Format(cElapsedSession, [Elapsed(FStartTimeSession)]);
+  FStartTimeSession := 0;
 end;
 
 procedure TfrmMain.OnExitSettings(Sender: TObject);
@@ -378,12 +497,34 @@ begin
   WriteSettings;
 end;
 
+procedure TfrmMain.OnNewSession(const AStart: TDateTime; const AMinId, AMaxId, ARecCount, ASessionNumber: Integer);
+begin
+  edtSsnMinId.Text    := IntToStr(AMinId);
+  edtSsnMaxId.Text    := IntToStr(AMaxId);
+  edtSsnRecCount.Text := IntToStr(ARecCount);
+
+  FStartTimeSession := AStart;
+
+  lbSsnNumber.Caption := Format(cSessionNumber, [ASessionNumber]);
+  lbSsnStart.Caption  := Format(cStartPointSession, [FormatDateTime(cTimeStrShort, Now)]);
+
+  pbSession.Visible  := True;
+  pbSession.Position := 1;
+  pbSession.Step     := 1;
+  pbSession.Max      := ARecCount;
+end;
+
 procedure TfrmMain.OnTerminateReplica(Sender: TObject);
 const
   cEnd = '–епликаци€ завершена';
 begin
+  tmrElapsed.Enabled := False;
+
   LogMessage(cEnd);
-  btnSendPackets.Enabled := True;
+  btnStartReplication.Enabled := True;
+  btnStop.Enabled := False;
+
+  lbAllElapsed.Caption := Format(cElapsedReplica, [Elapsed(FStartTimeReplica)]);
 end;
 
 procedure TfrmMain.OnTerminateSinglePacket(Sender: TObject);

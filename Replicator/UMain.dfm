@@ -2,8 +2,8 @@ object frmMain: TfrmMain
   Left = 0
   Top = 0
   Caption = 'Replicator'
-  ClientHeight = 592
-  ClientWidth = 1074
+  ClientHeight = 768
+  ClientWidth = 1184
   Color = clBtnFace
   Font.Charset = DEFAULT_CHARSET
   Font.Color = clWindowText
@@ -19,80 +19,254 @@ object frmMain: TfrmMain
   object pgcMain: TPageControl
     Left = 0
     Top = 0
-    Width = 1074
-    Height = 592
+    Width = 1184
+    Height = 768
     ActivePage = tsLog
     Align = alClient
     TabOrder = 0
+    ExplicitWidth = 1074
+    ExplicitHeight = 592
     object tsLog: TTabSheet
       Caption = #1051#1086#1075
+      ExplicitWidth = 1066
+      ExplicitHeight = 564
       object pnlLogTop: TPanel
         Left = 0
         Top = 0
-        Width = 1066
-        Height = 41
+        Width = 1176
+        Height = 220
         Align = alTop
-        BevelOuter = bvNone
         TabOrder = 0
-        object lbRange: TLabel
-          Left = 540
-          Top = 13
-          Width = 92
-          Height = 13
-          Caption = #1056#1072#1079#1084#1077#1088' '#1076#1080#1072#1087#1072#1079#1086#1085#1072
-        end
-        object lbStartReplica: TLabel
-          Left = 268
-          Top = 13
-          Width = 94
-          Height = 13
-          Caption = #1057#1090#1072#1088#1090' '#1088#1077#1087#1083#1080#1082#1072#1094#1080#1080
-        end
-        object lbLastId: TLabel
-          Left = 785
-          Top = 14
-          Width = 235
-          Height = 13
-          Caption = #1055#1086#1089#1083#1077#1076#1085#1080#1081' '#1086#1073#1088#1072#1073#1086#1090#1072#1085#1085#1099#1081' Id = <'#1085#1077#1090' '#1076#1072#1085#1085#1099#1093'>'
-        end
-        object seRange: TSpinEdit
-          Left = 636
-          Top = 10
-          Width = 100
-          Height = 22
-          Increment = 1000
-          MaxValue = 100000
-          MinValue = 1
+        ExplicitWidth = 1066
+        DesignSize = (
+          1176
+          220)
+        object grpAllData: TGroupBox
+          Left = 21
+          Top = 6
+          Width = 1132
+          Height = 76
+          Anchors = [akLeft, akTop, akRight]
+          Caption = '  '#1042#1089#1077' '#1076#1072#1085#1085#1099#1077'  '
+          Color = clCream
+          ParentBackground = False
+          ParentColor = False
           TabOrder = 0
-          Value = 1000
-          OnChange = seRangeChange
+          ExplicitWidth = 1022
+          DesignSize = (
+            1132
+            76)
+          object lbAllMinId: TLabel
+            Left = 18
+            Top = 24
+            Width = 29
+            Height = 13
+            Caption = 'min Id'
+          end
+          object lbAllMaxId: TLabel
+            Left = 184
+            Top = 24
+            Width = 33
+            Height = 13
+            Caption = 'max Id'
+          end
+          object lbAllStart: TLabel
+            Left = 572
+            Top = 24
+            Width = 99
+            Height = 13
+            Caption = #1085#1072#1095#1072#1083#1086' '#1088#1077#1087#1083#1080#1082#1072#1094#1080#1080
+          end
+          object lbAllRecCount: TLabel
+            Left = 357
+            Top = 24
+            Width = 71
+            Height = 13
+            Caption = #1074#1089#1077#1075#1086' '#1079#1072#1087#1080#1089#1077#1081
+          end
+          object lbAllElapsed: TLabel
+            Left = 801
+            Top = 24
+            Width = 38
+            Height = 13
+            Caption = #1087#1088#1086#1096#1083#1086
+          end
+          object edtAllMinId: TEdit
+            Left = 51
+            Top = 21
+            Width = 100
+            Height = 21
+            ReadOnly = True
+            TabOrder = 0
+          end
+          object edtAllMaxId: TEdit
+            Left = 221
+            Top = 21
+            Width = 100
+            Height = 21
+            ReadOnly = True
+            TabOrder = 1
+          end
+          object edtAllRecCount: TEdit
+            Left = 432
+            Top = 21
+            Width = 100
+            Height = 21
+            ReadOnly = True
+            TabOrder = 2
+          end
+          object pbAll: TProgressBar
+            Left = 18
+            Top = 56
+            Width = 1093
+            Height = 8
+            Anchors = [akLeft, akTop, akRight]
+            TabOrder = 3
+            Visible = False
+            ExplicitWidth = 1000
+          end
         end
-        object chkShowLog: TCheckBox
-          Left = 125
-          Top = 12
-          Width = 97
-          Height = 17
-          Caption = #1087#1086#1082#1072#1079#1099#1074#1072#1090#1100' '#1083#1086#1075
+        object grpSession: TGroupBox
+          Left = 21
+          Top = 95
+          Width = 1132
+          Height = 113
+          Anchors = [akLeft, akTop, akRight]
+          Caption = '  '#1057#1077#1089#1089#1080#1103'  '
+          Color = clCream
+          ParentBackground = False
+          ParentColor = False
           TabOrder = 1
-          OnClick = chkShowLogClick
-        end
-        object edtStartReplica: TEdit
-          Left = 366
-          Top = 11
-          Width = 121
-          Height = 21
-          TabOrder = 2
-          OnExit = edtStartReplicaExit
+          ExplicitWidth = 1021
+          DesignSize = (
+            1132
+            113)
+          object lbSsnMinId: TLabel
+            Left = 18
+            Top = 62
+            Width = 29
+            Height = 13
+            Caption = 'min Id'
+          end
+          object lbSsnMaxId: TLabel
+            Left = 184
+            Top = 62
+            Width = 33
+            Height = 13
+            Caption = 'max Id'
+          end
+          object lbSsnRecCount: TLabel
+            Left = 357
+            Top = 62
+            Width = 71
+            Height = 13
+            Caption = #1074#1089#1077#1075#1086' '#1079#1072#1087#1080#1089#1077#1081
+          end
+          object lbSsnStart: TLabel
+            Left = 572
+            Top = 62
+            Width = 72
+            Height = 13
+            Caption = #1085#1072#1095#1072#1083#1086' '#1089#1077#1089#1089#1080#1080
+          end
+          object lbSsnElapsed: TLabel
+            Left = 801
+            Top = 62
+            Width = 38
+            Height = 13
+            Caption = #1087#1088#1086#1096#1083#1086
+          end
+          object lbPacketRange: TLabel
+            Left = 221
+            Top = 22
+            Width = 85
+            Height = 13
+            Caption = #1082#1086#1084#1072#1085#1076' '#1074' '#1087#1072#1082#1077#1090#1077
+          end
+          object lbSelectRange: TLabel
+            Left = 18
+            Top = 22
+            Width = 80
+            Height = 13
+            Caption = #1079#1072#1087#1080#1089#1077#1081' '#1074' select'
+          end
+          object lbSsnNumber: TLabel
+            Left = 572
+            Top = 22
+            Width = 52
+            Height = 13
+            Caption = #1089#1077#1089#1089#1080#1103' '#8470' '
+          end
+          object edtSsnMinId: TEdit
+            Left = 51
+            Top = 59
+            Width = 100
+            Height = 21
+            ReadOnly = True
+            TabOrder = 0
+          end
+          object edtSsnMaxId: TEdit
+            Left = 221
+            Top = 59
+            Width = 100
+            Height = 21
+            ReadOnly = True
+            TabOrder = 1
+          end
+          object edtSsnRecCount: TEdit
+            Left = 432
+            Top = 59
+            Width = 100
+            Height = 21
+            ReadOnly = True
+            TabOrder = 2
+          end
+          object sePacketRange: TSpinEdit
+            Left = 311
+            Top = 19
+            Width = 85
+            Height = 22
+            Increment = 1000
+            MaxValue = 100000
+            MinValue = 1
+            TabOrder = 3
+            Value = 1000
+            OnChange = sePacketRangeChange
+          end
+          object seSelectRange: TSpinEdit
+            Left = 104
+            Top = 19
+            Width = 85
+            Height = 22
+            Increment = 1000
+            MaxValue = 100000
+            MinValue = 1
+            TabOrder = 4
+            Value = 1000
+            OnChange = seSelectRangeChange
+          end
+          object pbSession: TProgressBar
+            Left = 18
+            Top = 91
+            Width = 1093
+            Height = 8
+            Anchors = [akLeft, akTop, akRight]
+            TabOrder = 5
+            Visible = False
+            ExplicitWidth = 983
+          end
         end
       end
       object pnlLogLeft: TPanel
         Left = 0
-        Top = 41
+        Top = 220
         Width = 233
-        Height = 523
+        Height = 520
         Align = alLeft
         BevelOuter = bvNone
         TabOrder = 1
+        ExplicitTop = 48
+        ExplicitHeight = 516
         object btnSendSinglePacket: TButton
           Left = 4
           Top = 137
@@ -157,39 +331,56 @@ object frmMain: TfrmMain
           TabOrder = 6
           OnClick = btnUseMinIdClick
         end
-        object btnSendPackets: TButton
+        object btnStartReplication: TButton
           Left = 4
           Top = 172
           Width = 223
           Height = 25
           Caption = #1057#1090#1072#1088#1090' '#1088#1077#1087#1083#1080#1082#1072#1094#1080#1080
           TabOrder = 7
-          OnClick = btnSendPacketsClick
+          OnClick = btnStartReplicationClick
+        end
+        object btnStop: TButton
+          Left = 4
+          Top = 205
+          Width = 223
+          Height = 25
+          Caption = #1057#1090#1086#1087
+          Enabled = False
+          TabOrder = 8
+          OnClick = btnStopClick
         end
       end
       object pnlLog: TPanel
         Left = 233
-        Top = 41
-        Width = 833
-        Height = 523
+        Top = 220
+        Width = 943
+        Height = 520
         Align = alClient
         TabOrder = 2
+        ExplicitTop = 48
+        ExplicitWidth = 833
+        ExplicitHeight = 516
         object pgcLog: TPageControl
           Left = 1
           Top = 1
-          Width = 831
-          Height = 521
+          Width = 941
+          Height = 518
           ActivePage = tsMemo
           Align = alClient
           TabOrder = 0
+          ExplicitWidth = 831
+          ExplicitHeight = 514
           object tsMemo: TTabSheet
             Caption = 'tsMemo'
             TabVisible = False
+            ExplicitWidth = 823
+            ExplicitHeight = 504
             object mmoLog: TMemo
               Left = 0
               Top = 0
-              Width = 823
-              Height = 511
+              Width = 933
+              Height = 508
               Align = alClient
               Color = clWindowText
               Font.Charset = DEFAULT_CHARSET
@@ -201,16 +392,16 @@ object frmMain: TfrmMain
               ScrollBars = ssVertical
               TabOrder = 0
               OnChange = mmoLogChange
+              ExplicitWidth = 823
+              ExplicitHeight = 504
             end
           end
           object tsChk: TTabSheet
             Caption = 'tsChk'
             ImageIndex = 1
             TabVisible = False
-            ExplicitLeft = 0
-            ExplicitTop = 0
-            ExplicitWidth = 646
-            ExplicitHeight = 448
+            ExplicitWidth = 823
+            ExplicitHeight = 504
           end
         end
       end
@@ -218,9 +409,11 @@ object frmMain: TfrmMain
     object tsSettings: TTabSheet
       Caption = #1053#1072#1089#1090#1088#1086#1081#1082#1080
       ImageIndex = 1
+      ExplicitWidth = 1066
+      ExplicitHeight = 564
       DesignSize = (
-        1066
-        564)
+        1176
+        740)
       object lbLibLocation: TLabel
         Left = 60
         Top = 493
@@ -231,12 +424,12 @@ object frmMain: TfrmMain
       object grpMaster: TGroupBox
         Left = 24
         Top = 23
-        Width = 1019
+        Width = 1129
         Height = 185
         Anchors = [akLeft, akTop, akRight]
         Caption = '  Master  '
         TabOrder = 0
-        ExplicitWidth = 842
+        ExplicitWidth = 1019
         object lbMasterServer: TLabel
           Left = 45
           Top = 27
@@ -323,12 +516,12 @@ object frmMain: TfrmMain
       object grpSlave: TGroupBox
         Left = 24
         Top = 233
-        Width = 1019
+        Width = 1129
         Height = 185
         Anchors = [akLeft, akTop, akRight]
         Caption = '  Slave  '
         TabOrder = 1
-        ExplicitWidth = 842
+        ExplicitWidth = 1019
         object lbSlaveServer: TLabel
           Left = 45
           Top = 26
@@ -438,6 +631,15 @@ object frmMain: TfrmMain
         TabOrder = 4
         OnClick = chkWriteLogClick
       end
+      object chkShowLog: TCheckBox
+        Left = 328
+        Top = 446
+        Width = 97
+        Height = 17
+        Caption = #1087#1086#1082#1072#1079#1099#1074#1072#1090#1100' '#1083#1086#1075
+        TabOrder = 5
+        OnClick = chkShowLogClick
+      end
     end
   end
   object opndlgMain: TFileOpenDialog
@@ -446,5 +648,11 @@ object frmMain: TfrmMain
     Options = []
     Left = 716
     Top = 471
+  end
+  object tmrElapsed: TTimer
+    Enabled = False
+    OnTimer = tmrElapsedTimer
+    Left = 953
+    Top = 151
   end
 end

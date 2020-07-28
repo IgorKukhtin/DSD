@@ -111,10 +111,15 @@ end;
 
 function TLog.GetLogItem(const AFileName: string): TLogItem;
 begin
-  if not FLogs.TryGetValue(AFileName, Result) then
-  begin
-    FLogs.Add(AFileName, TLogItem.Create(AFileName));
-    Result := FLogs.Items[AFileName];
+  TMonitor.Enter(FLogs);
+  try
+    if not FLogs.TryGetValue(AFileName, Result) then
+    begin
+      FLogs.Add(AFileName, TLogItem.Create(AFileName));
+      Result := FLogs.Items[AFileName];
+    end;
+  finally
+    TMonitor.Exit(FLogs);
   end;
 end;
 
