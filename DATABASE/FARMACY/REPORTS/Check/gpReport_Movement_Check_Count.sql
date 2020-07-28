@@ -52,9 +52,25 @@ BEGIN
                           , tmpUnit.JuridicalId                AS JuridicalId
                           , tmpUnit.RetailId                   AS RetailId
                           , MIContainer.MovementId             AS MovementId
-                          , SUM (COALESCE (-1 * MIContainer.Amount, 0) * COALESCE (MIContainer.Price,0)) AS SummaSale
+                          --, SUM (COALESCE (-1 * MIContainer.Amount, 0) * COALESCE (MIContainer.Price,0)) AS SummaSale
+                          , SUM (CASE WHEN COALESCE (MB_RoundingDown.ValueData, False) = True
+                                           THEN TRUNC(COALESCE (MovementItem.Amount, 0) * COALESCE (MIContainer.Price,0), 1)::TFloat
+                                           ELSE CASE WHEN COALESCE (MB_RoundingTo10.ValueData, False) = True
+                                           THEN (((COALESCE (MovementItem.Amount, 0)) * COALESCE (MIContainer.Price,0))::NUMERIC (16, 1))::TFloat
+                                           ELSE (((COALESCE (MovementItem.Amount, 0)) * COALESCE (MIContainer.Price,0))::NUMERIC (16, 2))::TFloat END END *
+                                           COALESCE (-1 * MIContainer.Amount, 0) / COALESCE (MovementItem.Amount, 0)) AS SummaSale
                      FROM MovementItemContainer AS MIContainer
                           INNER JOIN tmpUnit ON tmpUnit.UnitId = MIContainer.WhereObjectId_analyzer
+
+                          LEFT JOIN MovementItem ON MovementItem.ID =  MIContainer.MovementItemId
+
+                               LEFT JOIN MovementBoolean AS MB_RoundingTo10
+                                                         ON MB_RoundingTo10.MovementId = MIContainer.MovementId
+                                                        AND MB_RoundingTo10.DescId = zc_MovementBoolean_RoundingTo10()
+                               LEFT JOIN MovementBoolean AS MB_RoundingDown
+                                                         ON MB_RoundingDown.MovementId = MIContainer.MovementID
+                                                        AND MB_RoundingDown.DescId = zc_MovementBoolean_RoundingDown()  
+
                      WHERE MIContainer.DescId = zc_MIContainer_Count()
                        AND MIContainer.MovementDescId = zc_Movement_Check()
                        AND MIContainer.OperDate >= inStartDate AND MIContainer.OperDate < inEndDate + INTERVAL '1 DAY'
@@ -73,8 +89,8 @@ BEGIN
                      , COUNT (DISTINCT tmpContainer.MovementId) AS Count
                      , SUM (tmpContainer.SummaSale)             AS SummaSale
                 FROM tmpContainer
-                WHERE tmpContainer.OperTime >= inStartTime ::Time
-                  AND tmpContainer.OperTime <= inEndTime ::Time
+                WHERE (tmpContainer.OperTime >= inStartTime ::Time OR inStartTime ::Time  = '00:00:00')
+                  AND (tmpContainer.OperTime <= inEndTime ::Time OR inEndTime ::Time  = '00:00:00')
                 GROUP BY tmpContainer.UnitId
                        , tmpContainer.JuridicalId
                        , tmpContainer.RetailId
