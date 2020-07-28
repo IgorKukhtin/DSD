@@ -2394,6 +2394,13 @@ end;
 
 procedure TLoadFormTest.LoadReportAssetFormTest;
 begin
+
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_JuridicalSold_AssetNoBalanceForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TReport_JuridicalSold_AssetNoBalanceForm');
+
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_MotionGoodsAssetNoBalanceForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TReport_MotionGoodsAssetNoBalanceForm');
+  exit;
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_MotionGoodsAssetForm'));
   TdsdFormStorageFactory.GetStorage.Load('TReport_MotionGoodsAssetForm');
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_MotionGoodsAssetDialogForm'));

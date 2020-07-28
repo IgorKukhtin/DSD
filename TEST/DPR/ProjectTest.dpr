@@ -1182,7 +1182,9 @@ uses
   Report_CheckBonus_SaleReturn in '..\..\Forms\Report\Report_CheckBonus_SaleReturn.pas' {Report_CheckBonus_SaleReturnForm: TParentForm},
   Report_CheckBonus_Income in '..\..\Forms\Report\Report_CheckBonus_Income.pas' {Report_CheckBonus_IncomeForm: TParentForm},
   ProfitIncomeService in '..\..\Forms\Document\ProfitIncomeService.pas' {ProfitIncomeServiceForm: TParentForm},
-  ProfitIncomeServiceJournal in '..\..\Forms\Document\ProfitIncomeServiceJournal.pas' {ProfitIncomeServiceJournalForm: TParentForm};
+  ProfitIncomeServiceJournal in '..\..\Forms\Document\ProfitIncomeServiceJournal.pas' {ProfitIncomeServiceJournalForm: TParentForm},
+  Report_MotionGoodsAssetNoBalance in '..\..\Forms\Report\Report_MotionGoodsAssetNoBalance.pas' {Report_MotionGoodsAssetNoBalanceForm: TParentForm},
+  Report_JuridicalSold_AssetNoBalance in '..\..\Forms\Report\Report_JuridicalSold_AssetNoBalance.pas' {Report_JuridicalSold_AssetNoBalanceForm: TParentForm};
 
 {$R *.RES}
 {$R DevExpressRus.res}

@@ -1161,6 +1161,10 @@ type
     miReport_CheckBonus_Income: TMenuItem;
     actProfitIncomeService: TdsdOpenForm;
     miProfitIncomeService: TMenuItem;
+    actReport_MotionGoods_AssetNoBalance: TdsdOpenForm;
+    miReport_MotionGoods_AssetNoBalance: TMenuItem;
+    actReport_JuridicalSold_AssetNoBalance: TdsdOpenForm;
+    miReport_JuridicalSold_AssetNoBalance: TMenuItem;
     procedure actReport_OLAPSoldExecute(Sender: TObject);
     procedure FormShow(Sender: TObject);
     procedure FormClose(Sender: TObject; var Action: TCloseAction);
