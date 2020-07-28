@@ -33,7 +33,8 @@ RETURNS TABLE (Id Integer, GoodsId_main Integer, GoodsGroupName TVarChar, GoodsN
                NotSold boolean, NotSold60 boolean,
                DeferredSend TFloat,
                RemainsSUN TFloat,
-               GoodsDiscountID  Integer, GoodsDiscountName  TVarChar
+               GoodsDiscountID  Integer, GoodsDiscountName  TVarChar,
+               UKTZED TVarChar
 
              , PartionDateKindId_check   Integer
              , Price_check               TFloat
@@ -536,6 +537,13 @@ BEGIN
 
                                           WHERE Object_BarCode.DescId = zc_Object_BarCode()
                                             AND Object_BarCode.isErased = False)
+                 , tmpGoodsUKTZED AS (SELECT Object_Goods_Juridical.GoodsMainId
+                                           , Object_Goods_Juridical.UKTZED
+                                           , ROW_NUMBER() OVER (PARTITION BY Object_Goods_Juridical.GoodsMainId ORDER BY Object_Goods_Juridical.DateUpdate DESC) AS Ord
+                                      FROM Object_Goods_Juridical
+                                      WHERE COALESCE (Object_Goods_Juridical.UKTZED, '') <> ''
+                                        AND Object_Goods_Juridical.GoodsMainId <> 0
+                                      )
 
         -- Результат
         SELECT
@@ -785,6 +793,7 @@ BEGIN
           , tmpRenainsSUN.Amount::TFloat                           AS RemainsSUN
           , tmpGoodsDiscount.GoodsDiscountId                       AS GoodsDiscountID
           , tmpGoodsDiscount.GoodsDiscountName                     AS GoodsDiscountName
+          , tmpGoodsUKTZED.UKTZED                                  AS UKTZED
 
 
           , CashSessionSnapShot.PartionDateKindId   AS PartionDateKindId_check
@@ -876,7 +885,10 @@ BEGIN
            LEFT JOIN ObjectBoolean AS ObjectBoolean_Goods_NotTransferTime
                                    ON ObjectBoolean_Goods_NotTransferTime.ObjectId = CashSessionSnapShot.ObjectId
                                   AND ObjectBoolean_Goods_NotTransferTime.DescId = zc_ObjectBoolean_Goods_NotTransferTime()
-
+                                  
+           -- Коды UKTZED
+           LEFT JOIN tmpGoodsUKTZED ON tmpGoodsUKTZED.GoodsMainId = Object_Goods_Retail.GoodsMainId
+                                   AND tmpGoodsUKTZED.Ord = 1
 
         WHERE
             CashSessionSnapShot.CashSessionId = inCashSessionId

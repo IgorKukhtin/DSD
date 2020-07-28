@@ -1000,6 +1000,12 @@ inherited MainCashForm2: TMainCashForm2
           Options.Editing = False
           Width = 99
         end
+        object MainUKTZED: TcxGridDBColumn
+          Caption = #1050#1086#1076'  '#1059#1050#1058#1047#1045#1044
+          DataBinding.FieldName = 'UKTZED'
+          Options.Editing = False
+          Width = 80
+        end
       end
       object MainGridLevel: TcxGridLevel
         GridView = MainGridDBTableView
@@ -4802,6 +4808,11 @@ inherited MainCashForm2: TMainCashForm2
         Name = 'DiscountExternalName'
         DataType = ftString
         Size = 20
+      end
+      item
+        Name = 'UKTZED'
+        DataType = ftString
+        Size = 20
       end>
     IndexDefs = <>
     Params = <>
@@ -5394,6 +5405,9 @@ inherited MainCashForm2: TMainCashForm2
     object MemDataGOODSDINAME: TStringField
       FieldName = 'GOODSDINAME'
       Size = 100
+    end
+    object MemDataUKTZED: TStringField
+      FieldName = 'UKTZED'
     end
   end
   object mdCheck: TdxMemData
