@@ -22,6 +22,14 @@ CREATE OR REPLACE FUNCTION zc_Container_SummIncomeMovementPayment() RETURNS inte
 INSERT INTO ContainerDesc(Code, ItemName)
   SELECT 'zc_Container_SummIncomeMovementPayment', 'суммовая - остаток по оплате приходной накладной' WHERE NOT EXISTS (SELECT * FROM ContainerDesc WHERE Code = 'zc_Container_SummIncomeMovementPayment');
 
+CREATE OR REPLACE FUNCTION zc_Container_CountAsset() RETURNS integer AS $BODY$BEGIN RETURN (SELECT Id FROM ContainerDesc WHERE Code = 'zc_Container_CountAsset'); END; $BODY$ LANGUAGE plpgsql IMMUTABLE;
+INSERT INTO ContainerDesc(Code, ItemName)
+  SELECT 'zc_Container_CountAsset', 'Остатки ОС количественного учета' WHERE NOT EXISTS (SELECT * FROM ContainerDesc WHERE Code = 'zc_Container_CountAsset');
+
+CREATE OR REPLACE FUNCTION zc_Container_SummAsset() RETURNS integer AS $BODY$BEGIN RETURN (SELECT Id FROM ContainerDesc WHERE Code = 'zc_Container_SummAsset'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
+INSERT INTO ContainerDesc(Code, ItemName)
+  SELECT 'zc_Container_SummAsset', 'Остатки ОС суммового учета' WHERE NOT EXISTS (SELECT * FROM ContainerDesc WHERE Code = 'zc_Container_SummAsset');
+
 -- !!!Farmacy!!!
 CREATE OR REPLACE FUNCTION zc_Container_CountPartionDate() RETURNS integer AS $BODY$BEGIN RETURN (SELECT Id FROM ContainerDesc WHERE Code = 'zc_Container_CountPartionDate'); END; $BODY$ LANGUAGE plpgsql IMMUTABLE;
 INSERT INTO ContainerDesc(Code, ItemName)

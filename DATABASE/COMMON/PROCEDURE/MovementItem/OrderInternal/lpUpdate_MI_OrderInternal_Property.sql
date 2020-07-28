@@ -939,7 +939,9 @@ end if;
 
      -- сохранили протокол
      -- !!!что б росла база!!! 
-     PERFORM lpInsert_MovementItemProtocol (ioId, inUserId, vbIsInsert);
+     IF ioId > 0 THEN
+       PERFORM lpInsert_MovementItemProtocol (ioId, inUserId, vbIsInsert);
+     END IF;
 
 END;
 $BODY$
