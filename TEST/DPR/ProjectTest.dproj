@@ -4039,6 +4039,14 @@
 				<Form>Report_CheckBonus_IncomeForm</Form>
 				<DesignClass>TParentForm</DesignClass>
 			</DCCReference>
+			<DCCReference Include="..\..\Forms\Document\ProfitIncomeService.pas">
+				<Form>ProfitIncomeServiceForm</Form>
+				<DesignClass>TParentForm</DesignClass>
+			</DCCReference>
+			<DCCReference Include="..\..\Forms\Document\ProfitIncomeServiceJournal.pas">
+				<Form>ProfitIncomeServiceJournalForm</Form>
+				<DesignClass>TParentForm</DesignClass>
+			</DCCReference>
 			<BuildConfiguration Include="Release">
 				<Key>Cfg_2</Key>
 				<CfgParent>Base</CfgParent>

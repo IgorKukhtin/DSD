@@ -119,6 +119,11 @@ CREATE OR REPLACE FUNCTION zc_Movement_ProfitLossService() RETURNS Integer AS $B
 INSERT INTO MovementDesc (Code, ItemName)
   SELECT 'zc_Movement_ProfitLossService', 'Начисления по Юридическому лицу (расходы будущих периодов)' WHERE NOT EXISTS (SELECT * FROM MovementDesc WHERE Code = 'zc_Movement_ProfitLossService');
 
+CREATE OR REPLACE FUNCTION zc_Movement_ProfitIncomeService() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM MovementDesc WHERE Code = 'zc_Movement_ProfitIncomeService'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
+INSERT INTO MovementDesc (Code, ItemName)
+  SELECT 'zc_Movement_ProfitIncomeService', 'Начисления по бонусам (прибыль будущих периодов)' WHERE NOT EXISTS (SELECT * FROM MovementDesc WHERE Code = 'zc_Movement_ProfitIncomeService');
+
+
 CREATE OR REPLACE FUNCTION zc_Movement_WeighingPartner() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM MovementDesc WHERE Code = 'zc_Movement_WeighingPartner'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
 INSERT INTO MovementDesc (Code, ItemName)
   SELECT 'zc_Movement_WeighingPartner', 'Взвешивание (контрагент)' WHERE NOT EXISTS (SELECT * FROM MovementDesc WHERE Code = 'zc_Movement_WeighingPartner');
@@ -412,6 +417,7 @@ INSERT INTO MovementDesc (Code, ItemName)
 /*-------------------------------------------------------------------------------
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.   Воробкало А.А.  Шаблий О.В.
+ 28.07.20         * zc_Movement_ProfitIncomeService
  17.07.20                                                                                     * zc_Movement_InventoryHouseholdInventory
  14.07.20                                                                                     * zc_Movement_ComputerAccessoriesRegister
  10.07.20                                                                                     * zc_Movement_WriteOffHouseholdInventory

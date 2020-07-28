@@ -1180,7 +1180,9 @@ uses
   PromoJournal in '..\..\Forms\Document\PromoJournal.pas' {PromoJournalForm: TParentForm},
   Report_CheckBonus in '..\..\Forms\Report\Report_CheckBonus.pas' {Report_CheckBonusForm: TParentForm},
   Report_CheckBonus_SaleReturn in '..\..\Forms\Report\Report_CheckBonus_SaleReturn.pas' {Report_CheckBonus_SaleReturnForm: TParentForm},
-  Report_CheckBonus_Income in '..\..\Forms\Report\Report_CheckBonus_Income.pas' {Report_CheckBonus_IncomeForm: TParentForm};
+  Report_CheckBonus_Income in '..\..\Forms\Report\Report_CheckBonus_Income.pas' {Report_CheckBonus_IncomeForm: TParentForm},
+  ProfitIncomeService in '..\..\Forms\Document\ProfitIncomeService.pas' {ProfitIncomeServiceForm: TParentForm},
+  ProfitIncomeServiceJournal in '..\..\Forms\Document\ProfitIncomeServiceJournal.pas' {ProfitIncomeServiceJournalForm: TParentForm};
 
 {$R *.RES}
 {$R DevExpressRus.res}
