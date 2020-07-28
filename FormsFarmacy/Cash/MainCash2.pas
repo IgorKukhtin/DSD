@@ -7559,7 +7559,7 @@ var
           ÒAccommodationName := ''
         else
           ÒAccommodationName := ' ' + FieldByName('AccommodationName').Text;
-        cUKTZED := FieldByName('AccommodationName').AsString;
+        cUKTZED := FieldByName('UKTZED').AsString;
         if cUKTZED <> '' then cUKTZED := cUKTZED + ' ';
         if ((FormParams.ParamByName('LoyaltyChangeSumma').Value +
           FormParams.ParamByName('LoyaltySMSumma').Value) > 0) or
