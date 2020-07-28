@@ -58,7 +58,6 @@ BEGIN
                                                          )
      FROM gpReport_CheckBonus (inStartDate:= inStartDate, inEndDate:= inEndDate, inPaidKindID:= inPaidKindID, inJuridicalId:= inJuridicalId, inBranchId:= inBranchId, inSession:= inSession) AS tmp
      WHERE tmp.Sum_Bonus <> 0
-     limit 1
     ;
 
 END;
