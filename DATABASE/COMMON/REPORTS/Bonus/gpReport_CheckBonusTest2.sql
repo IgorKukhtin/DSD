@@ -24,7 +24,7 @@ RETURNS TABLE (OperDate_Movement TDateTime, InvNumber_Movement TVarChar, DescNam
              , BranchId Integer, BranchName TVarChar
              , RetailName TVarChar
              , PersonalCode Integer, PersonalName TVarChar
-             , PartnerName TVarChar
+             , PartnerId Integer, PartnerName TVarChar
              , Value TFloat
              , PercentRetBonus TFloat
              , PercentRetBonus_fact TFloat
@@ -752,6 +752,7 @@ BEGIN
             , Object_Retail.ValueData                       AS RetailName
             , Object_Personal_View.PersonalCode             AS PersonalCode
             , Object_Personal_View.PersonalName             AS PersonalName
+            , Object_Partner.Id                             AS PartnerId
             , Object_Partner.ValueData  ::TVarChar          AS PartnerName
 
             , CAST (tmpData.Value AS TFloat)                AS Value
