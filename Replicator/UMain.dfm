@@ -28,8 +28,6 @@ object frmMain: TfrmMain
     ExplicitHeight = 592
     object tsLog: TTabSheet
       Caption = #1051#1086#1075
-      ExplicitWidth = 1066
-      ExplicitHeight = 564
       object pnlLogTop: TPanel
         Left = 0
         Top = 0
@@ -358,9 +356,6 @@ object frmMain: TfrmMain
         Height = 520
         Align = alClient
         TabOrder = 2
-        ExplicitTop = 48
-        ExplicitWidth = 833
-        ExplicitHeight = 516
         object pgcLog: TPageControl
           Left = 1
           Top = 1
@@ -369,11 +364,11 @@ object frmMain: TfrmMain
           ActivePage = tsMemo
           Align = alClient
           TabOrder = 0
-          ExplicitWidth = 831
-          ExplicitHeight = 514
           object tsMemo: TTabSheet
             Caption = 'tsMemo'
             TabVisible = False
+            ExplicitLeft = 0
+            ExplicitTop = 0
             ExplicitWidth = 823
             ExplicitHeight = 504
             object mmoLog: TMemo
@@ -400,6 +395,8 @@ object frmMain: TfrmMain
             Caption = 'tsChk'
             ImageIndex = 1
             TabVisible = False
+            ExplicitLeft = 0
+            ExplicitTop = 0
             ExplicitWidth = 823
             ExplicitHeight = 504
           end
@@ -409,6 +406,8 @@ object frmMain: TfrmMain
     object tsSettings: TTabSheet
       Caption = #1053#1072#1089#1090#1088#1086#1081#1082#1080
       ImageIndex = 1
+      ExplicitLeft = 0
+      ExplicitTop = 0
       ExplicitWidth = 1066
       ExplicitHeight = 564
       DesignSize = (

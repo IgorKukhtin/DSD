@@ -18,15 +18,18 @@ type
     function GetCount: Integer;
     function GetEOF: Boolean;
   public
-    procedure Clear;
     procedure Add(const AId, ATransId: Integer; const ASQL: string);
     procedure BuildData(ADataSet: TDataSet);
-    function NearestId(const AId: Integer): Integer;
-    function Data: TDataRec;
-    procedure MoveToId(const AId: Integer);
+    procedure Clear;
     procedure First;
     procedure Last;
     procedure Next;
+
+    function Data: TDataRec;
+    function NearestId(const AId: Integer): Integer;
+    function MoveToId(const AId: Integer): Integer;// вернет позицию записи с AId в массиве FRecArray
+    function RecordCount(const AStartId, AEndId: Integer): Integer;
+
     property EOF: Boolean read GetEOF;
     property Count: Integer read GetCount;
   end;
@@ -151,19 +154,21 @@ begin
   FPos := High(FRecArray);
 end;
 
-procedure TCommandData.MoveToId(const AId: Integer);
+function TCommandData.MoveToId(const AId: Integer): Integer; // вернет позицию записи с AId в массиве FRecArray
 var
   I: Integer;
   bFound: Boolean;
 const
   cErrMsg = 'Id = %d не найден в массиве данных TCommandData';
 begin
+  Result := -1;
   bFound := False;
 
   for I := Low(FRecArray) to High(FRecArray) do
     if FRecArray[I].Id = AId then
     begin
       FPos := I;
+      Result := FPos;
       Exit;
     end;
 
@@ -189,6 +194,26 @@ end;
 procedure TCommandData.Next;
 begin
   Inc(FPos);
+end;
+
+function TCommandData.RecordCount(const AStartId, AEndId: Integer): Integer;
+var
+  prevPos, iStartPos, iEndPos: Integer;
+begin
+  prevPos := FPos;
+
+  try
+    try
+      iStartPos := MoveToId(AStartId);
+      iEndPos   := MoveToId(AEndId);
+
+      Result := iEndPos - iStartPos + 1;// например, две записи рядом 100 и 101. 101 - 100 = 1
+    except
+      Result := 0;
+    end;
+  finally
+    FPos := prevPos;
+  end;
 end;
 
 end.

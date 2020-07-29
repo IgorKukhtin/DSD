@@ -123,6 +123,7 @@ type
     FReplicaThrd: TReplicaThread;
     FStartTimeReplica: TDateTime;
     FStartTimeSession: TDateTime;
+    FPrevLine: TMessageLine;
   private
     procedure ReadSettings;
     procedure WriteSettings;
@@ -443,15 +444,13 @@ begin
 end;
 
 procedure TfrmMain.LogMessage(const AMsg, AFileName: string; ALine: TMessageLine);
-var
-  prevLine: TMessageLine;
 begin
   if TSettings.UseLog then // выбрана настройка "записывать лог в файл"
     if Length(Trim(AFileName)) = 0 then
     begin
       // не записываем в файл сообщение, переданное для той же самой строки
       // за исключением случая, когда это последнее сообщение для той же самой строки
-      if (ALine = mlNew) and (prevLine = mlSame) and (mmoLog.Lines.Count > 0) then
+      if (ALine = mlNew) and (FPrevLine = mlSame) and (mmoLog.Lines.Count > 0) then
         FLog.Write('application.log', mmoLog.Lines[Pred(mmoLog.Lines.Count)]);
 
       // не записываем в файл сообщение, переданное для той же самой строки
@@ -467,7 +466,7 @@ begin
     mlSame: mmoLog.Lines[Pred(mmoLog.Lines.Count)] := AMsg; // запись в последнюю строку
   end;
 
-  prevLine := ALine;
+  FPrevLine := ALine;
 end;
 
 procedure TfrmMain.mmoLogChange(Sender: TObject);

@@ -227,14 +227,6 @@ begin
     qrySelectReplicaCmd.FetchAll;
     LogMsg(Format(cElapsedFetch, [Elapsed(crdStartFetch), qrySelectReplicaCmd.RecordCount]));
 
-//    qrySelectReplicaCmd.First;
-//    while not qrySelectReplicaCmd.EOF do
-//    begin
-//      LogMsg('Id= ' + qrySelectReplicaCmd.FieldByName('Id').AsString);
-//      qrySelectReplicaCmd.Next;
-//    end;
-
-
     // строим свой массив данных, который позволит выбирать записи пакетами с учетом границ transaction_id
     crdStartBuild := GetTickCount;
     FCommandData.BuildData(qrySelectReplicaCmd);
@@ -347,7 +339,7 @@ begin
     iStartId   := FStartId;
     iSuccCount := 0;
     iFailCount := 0;
-    iTotCount  := iMaxId - FStartId;
+    iTotCount  := FCommandData.RecordCount(FStartId, iMaxId);
 
     // строка "попытка №2 всего: 2036 старт 12:03:54 успешно:0  неуспешно:0  прошло "
     LogMsg(Format(cAttempt2, [iStartId, iMaxId, iTotCount, FormatDateTime(cTimeStrShort, dtmStart), iSuccCount, iFailCount, EmptyStr]));
@@ -394,10 +386,8 @@ procedure TdmData.ExecuteErrCommands;
 var
   iSuccCount, iFailCount, iTotCount: Integer;
   dtmStart: TDateTime;
-  bRemained: Boolean;
   sFileName: string;
 const
-  cRemainedFailedCmds = 'Есть команды, которые так и не были выполнены. Они записаны в файлы';
   cFileName  = '\Err_commands\%s';
   cFileErr   = '%s__ERR_id-%d.txt';
 begin
@@ -407,7 +397,6 @@ begin
   
   dtmStart := Now;
 
-  bRemained := False;
   FFailCmds.First;
 
   iTotCount  := FFailCmds.Count;
@@ -436,7 +425,6 @@ begin
     except
       on E: Exception do
       begin
-        bRemained := True;
         conSlave.DbcConnection.Rollback;
         // команды, которые так и не были выполнены, пишем в лог
         sFileName := Format(cFileName, [
@@ -456,14 +444,10 @@ begin
   end;
 
   FFailCmds.Clear;
-
-//  if bRemained then
-//    LogMsg(cRemainedFailedCmds);
 end;
 
 function TdmData.ExecutePreparedPacket: Integer;
 var
-  crdStart: Cardinal;
   dtmStart: TDateTime;
   iMaxId, iStartId: Integer;
   sFileName: string;
@@ -484,7 +468,6 @@ begin
   if FStopped then Exit;
 
   iStartId := FStartId;
-  crdStart := GetTickCount;
   dtmStart := Now;
 
   iMaxId := FStartId + FPacketRange;
