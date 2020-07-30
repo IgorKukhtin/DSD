@@ -69,30 +69,32 @@ BEGIN
 
    CREATE TEMP TABLE tmpContractPartner ON COMMIT DROP AS (
            WITH
-           -- сохраненные ContractPartner
-           tmp1 AS (SELECT ObjectLink_ContractPartner_Contract.ChildObjectId AS ContractId
-                         , ObjectLink_ContractPartner_Partner.ChildObjectId  AS PartnerId
-                    FROM ObjectLink AS ObjectLink_ContractPartner_Contract
-                         INNER JOIN tmpContract_full ON tmpContract_full.ContractId = ObjectLink_ContractPartner_Contract.ChildObjectId
-                                                    AND tmpContract_full.PaidKindId <> zc_Enum_PaidKind_FirstForm()
+            -- сохраненные ContractPartner
+            tmp1 AS (SELECT ObjectLink_ContractPartner_Contract.ChildObjectId AS ContractId
+                          , ObjectLink_ContractPartner_Partner.ChildObjectId  AS PartnerId
+                          , tmpContract_full.JuridicalId
+                     FROM ObjectLink AS ObjectLink_ContractPartner_Contract
+                          INNER JOIN tmpContract_full ON tmpContract_full.ContractId = ObjectLink_ContractPartner_Contract.ChildObjectId
+                                                     AND tmpContract_full.PaidKindId <> zc_Enum_PaidKind_FirstForm()
 
-                         LEFT JOIN ObjectLink AS ObjectLink_ContractPartner_Partner
-                                              ON ObjectLink_ContractPartner_Partner.ObjectId = ObjectLink_ContractPartner_Contract.ObjectId
-                                             AND ObjectLink_ContractPartner_Partner.DescId = zc_ObjectLink_ContractPartner_Partner()
-                    WHERE ObjectLink_ContractPartner_Contract.DescId = zc_ObjectLink_ContractPartner_Contract()
-                    )
-           --  Partner для договоров, для которых нет ContractPartner
-         , tmp2 AS (SELECT ObjectLink_Contract_Juridical.ObjectId AS ContractId
-                         , ObjectLink_Partner_Juridical.ObjectId  AS PartnerId
-                    FROM tmpContract_full
-                         LEFT JOIN ObjectLink AS ObjectLink_Contract_Juridical
-                                              ON ObjectLink_Contract_Juridical.ObjectId = tmpContract_full.ContractId --ObjectLink_Contract_Juridical.ChildObjectId = ObjectLink_Partner_Juridical.ChildObjectId      --  AS JuridicalId-- ObjectLink_Contract_Juridical.ObjectId = Object_Contract_InvNumber_View.ContractId 
-                                             AND ObjectLink_Contract_Juridical.DescId = zc_ObjectLink_Contract_Juridical()
-                         LEFT JOIN ObjectLink AS ObjectLink_Partner_Juridical
-                                              ON ObjectLink_Partner_Juridical.ChildObjectId = ObjectLink_Contract_Juridical.ChildObjectId
-                                             AND ObjectLink_Partner_Juridical.DescId = zc_ObjectLink_Partner_Juridical()
-                         LEFT JOIN (SELECT DISTINCT tmp1.ContractId FROM tmp1) AS tmpContract ON tmpContract.ContractId = tmpContract_full.ContractId --ObjectLink_Contract_Juridical.ObjectId -- ContractId
-                     WHERE tmpContract.ContractId IS NULL
+                          LEFT JOIN ObjectLink AS ObjectLink_ContractPartner_Partner
+                                               ON ObjectLink_ContractPartner_Partner.ObjectId = ObjectLink_ContractPartner_Contract.ObjectId
+                                              AND ObjectLink_ContractPartner_Partner.DescId = zc_ObjectLink_ContractPartner_Partner()
+                     WHERE ObjectLink_ContractPartner_Contract.DescId = zc_ObjectLink_ContractPartner_Contract()
+                     )
+            --  Partner для договоров, для которых нет ContractPartner
+          , tmp2 AS (SELECT ObjectLink_Contract_Juridical.ObjectId AS ContractId
+                          , ObjectLink_Partner_Juridical.ObjectId  AS PartnerId
+                     FROM tmpContract_full
+                          LEFT JOIN ObjectLink AS ObjectLink_Contract_Juridical
+                                               ON ObjectLink_Contract_Juridical.ObjectId = tmpContract_full.ContractId --ObjectLink_Contract_Juridical.ChildObjectId = ObjectLink_Partner_Juridical.ChildObjectId      --  AS JuridicalId-- ObjectLink_Contract_Juridical.ObjectId = Object_Contract_InvNumber_View.ContractId 
+                                              AND ObjectLink_Contract_Juridical.DescId = zc_ObjectLink_Contract_Juridical()
+                          LEFT JOIN ObjectLink AS ObjectLink_Partner_Juridical
+                                               ON ObjectLink_Partner_Juridical.ChildObjectId = ObjectLink_Contract_Juridical.ChildObjectId
+                                              AND ObjectLink_Partner_Juridical.DescId = zc_ObjectLink_Partner_Juridical()
+                          LEFT JOIN (SELECT DISTINCT tmp1.JuridicalId FROM tmp1) AS tmpContract ON tmpContract.JuridicalId = tmpContract_full.JuridicalId
+                          --LEFT JOIN (SELECT DISTINCT tmp1.ContractId FROM tmp1) AS tmpContract ON tmpContract.ContractId = tmpContract_full.ContractId --ObjectLink_Contract_Juridical.ObjectId -- ContractId
+                      WHERE tmpContract.JuridicalId IS NULL
                      )
 
            SELECT tmp1.ContractId
