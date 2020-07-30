@@ -71,6 +71,7 @@ type
     spInsert_MI_All: TdsdStoredProc;
     actInsert_MI_All: TdsdExecStoredProc;
     dxBarButton2: TdxBarButton;
+    Summa: TcxGridDBColumn;
   private
     { Private declarations }
   public

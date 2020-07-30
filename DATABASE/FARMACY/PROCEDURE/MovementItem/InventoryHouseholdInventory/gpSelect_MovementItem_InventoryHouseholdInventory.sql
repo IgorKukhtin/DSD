@@ -10,7 +10,7 @@ CREATE OR REPLACE FUNCTION gpSelect_MovementItem_InventoryHouseholdInventory(
 )
 RETURNS TABLE (Id Integer, PartionHouseholdInventoryId Integer
              , HouseholdInventoryId Integer, HouseholdInventoryCode Integer, HouseholdInventoryName TVarChar
-             , InvNumber Integer, Remains TFloat, Amount TFloat, CountForPrice TFloat
+             , InvNumber Integer, Remains TFloat, Amount TFloat, CountForPrice TFloat, Summa TFloat
              , Comment TVarChar
              , isErased Boolean)
  AS
@@ -75,39 +75,36 @@ BEGIN
                                  WHERE MovementItem.MovementId = inMovementId
                                    AND MovementItem.DescId = zc_MI_Master()
                                  ),
-                   tmpRemains AS (SELECT Object_PHI.Id                          AS Id
+                   tmpRemains AS (SELECT Container.ID
+                                       , Container.ObjectId                     AS HouseholdInventoryId
+                                       , Container.Amount                       AS Amount
+                                       , Container.WhereobjectId                AS UnitID
+
                                        , Object_PHI.ObjectCode                  AS InvNumber
-
                                        , PHI_MovementItemId.ValueData::Integer  AS MovementItemId
-                                       , ObjectLink_PHI_Unit.ChildObjectId      AS UnitID
-
-                                       , MovementItem.ObjectId                  AS HouseholdInventoryId
-                                       , MovementItem.Amount                    AS Amount
                                        , MovementItem.MovementID                AS MovementID
+
                                        , MIFloat_CountForPrice.ValueData        AS CountForPrice
+                                FROM Container
+                                
+                                     LEFT JOIN ContainerLinkObject ON ContainerLinkObject.ContainerId = Container.Id
+                                                                  AND ContainerLinkObject.DescId = zc_ContainerLinkObject_PartionHouseholdInventory()
+                                                                  
+                                     LEFT JOIN Object AS Object_PHI ON Object_PHI.ID = ContainerLinkObject.ObjectId
 
-                                       , Object_PHI.isErased                    AS isErased
+                                     LEFT JOIN ObjectFloat AS PHI_MovementItemId
+                                                           ON PHI_MovementItemId.ObjectId = Object_PHI.Id
+                                                          AND PHI_MovementItemId.DescId = zc_ObjectFloat_PartionHouseholdInventory_MovementItemId()
 
-                                  FROM Object AS Object_PHI
+                                     LEFT JOIN MovementItem ON MovementItem.Id = PHI_MovementItemId.ValueData::Integer
 
-                                       LEFT JOIN ObjectFloat AS PHI_MovementItemId
-                                                             ON PHI_MovementItemId.ObjectId = Object_PHI.Id
-                                                            AND PHI_MovementItemId.DescId = zc_ObjectFloat_PartionHouseholdInventory_MovementItemId()
+                                     LEFT JOIN MovementItemFloat AS MIFloat_CountForPrice
+                                                                 ON MIFloat_CountForPrice.MovementItemId = MovementItem.Id
+                                                                AND MIFloat_CountForPrice.DescId = zc_MIFloat_CountForPrice()
 
-                                       LEFT JOIN ObjectLink AS ObjectLink_PHI_Unit
-                                                            ON ObjectLink_PHI_Unit.ObjectId = Object_PHI.Id
-                                                           AND ObjectLink_PHI_Unit.DescId = zc_ObjectLink_PartionHouseholdInventory_Unit()
-
-                                       LEFT JOIN MovementItem ON MovementItem.Id = PHI_MovementItemId.ValueData::Integer
-
-                                       LEFT JOIN MovementItemFloat AS MIFloat_CountForPrice
-                                                                   ON MIFloat_CountForPrice.MovementItemId = MovementItem.Id
-                                                                  AND MIFloat_CountForPrice.DescId = zc_MIFloat_CountForPrice()
-
-                                  WHERE Object_PHI.DescId = zc_Object_PartionHouseholdInventory()
-                                    AND COALESCE (PHI_MovementItemId.ValueData, 0) <> 0
-                                    AND ObjectLink_PHI_Unit.ChildObjectId = vbUnitId
-                                    AND MovementItem.Amount > 0)
+                                WHERE Container.DescId = zc_Container_CountHouseholdInventory()
+                                  AND Container.WhereobjectId = vbUnitId
+                                  AND Container.Amount > 0)
 
 
                SELECT MI_Master.Id                                                                AS Id
@@ -119,6 +116,7 @@ BEGIN
                     , tmpRemains.Amount                                                           AS Remains
                     , MI_Master.Amount                                                            AS Amount
                     , COALESCE(tmpRemains.CountForPrice, MI_Master.CountForPrice)                 AS CountForPrice
+                    , Round(MI_Master.Amount * MI_Master.CountForPrice, 2)::TFloat                AS Summa 
                     , MI_Master.Comment                                                           AS Comment
                     , COALESCE(MI_Master.IsErased, False)                                         AS isErased
                FROM tmpRemains
@@ -165,39 +163,36 @@ BEGIN
                                    AND MovementItem.DescId = zc_MI_Master()
                                    AND (MovementItem.isErased = False OR inIsErased = True)
                                  ),
-                   tmpRemains AS (SELECT Object_PHI.Id                          AS Id
+                   tmpRemains AS (SELECT Container.ID
+                                       , Container.ObjectId                     AS HouseholdInventoryId
+                                       , Container.Amount                       AS Amount
+                                       , Container.WhereobjectId                AS UnitID
+
                                        , Object_PHI.ObjectCode                  AS InvNumber
-
                                        , PHI_MovementItemId.ValueData::Integer  AS MovementItemId
-                                       , ObjectLink_PHI_Unit.ChildObjectId      AS UnitID
-
-                                       , MovementItem.ObjectId                  AS HouseholdInventoryId
-                                       , MovementItem.Amount                    AS Amount
                                        , MovementItem.MovementID                AS MovementID
+
                                        , MIFloat_CountForPrice.ValueData        AS CountForPrice
+                                FROM Container
+                                
+                                     LEFT JOIN ContainerLinkObject ON ContainerLinkObject.ContainerId = Container.Id
+                                                                  AND ContainerLinkObject.DescId = zc_ContainerLinkObject_PartionHouseholdInventory()
+                                                                  
+                                     LEFT JOIN Object AS Object_PHI ON Object_PHI.ID = ContainerLinkObject.ObjectId
 
-                                       , Object_PHI.isErased                    AS isErased
+                                     LEFT JOIN ObjectFloat AS PHI_MovementItemId
+                                                           ON PHI_MovementItemId.ObjectId = Object_PHI.Id
+                                                          AND PHI_MovementItemId.DescId = zc_ObjectFloat_PartionHouseholdInventory_MovementItemId()
 
-                                  FROM Object AS Object_PHI
+                                     LEFT JOIN MovementItem ON MovementItem.Id = PHI_MovementItemId.ValueData::Integer
 
-                                       LEFT JOIN ObjectFloat AS PHI_MovementItemId
-                                                             ON PHI_MovementItemId.ObjectId = Object_PHI.Id
-                                                            AND PHI_MovementItemId.DescId = zc_ObjectFloat_PartionHouseholdInventory_MovementItemId()
+                                     LEFT JOIN MovementItemFloat AS MIFloat_CountForPrice
+                                                                 ON MIFloat_CountForPrice.MovementItemId = MovementItem.Id
+                                                                AND MIFloat_CountForPrice.DescId = zc_MIFloat_CountForPrice()
 
-                                       LEFT JOIN ObjectLink AS ObjectLink_PHI_Unit
-                                                            ON ObjectLink_PHI_Unit.ObjectId = Object_PHI.Id
-                                                           AND ObjectLink_PHI_Unit.DescId = zc_ObjectLink_PartionHouseholdInventory_Unit()
-
-                                       LEFT JOIN MovementItem ON MovementItem.Id = PHI_MovementItemId.ValueData::Integer
-
-                                       LEFT JOIN MovementItemFloat AS MIFloat_CountForPrice
-                                                                   ON MIFloat_CountForPrice.MovementItemId = MovementItem.Id
-                                                                  AND MIFloat_CountForPrice.DescId = zc_MIFloat_CountForPrice()
-
-                                  WHERE Object_PHI.DescId = zc_Object_PartionHouseholdInventory()
-                                    AND COALESCE (PHI_MovementItemId.ValueData, 0) <> 0
-                                    AND ObjectLink_PHI_Unit.ChildObjectId = vbUnitId
-                                    AND MovementItem.Amount > 0)
+                                WHERE Container.DescId = zc_Container_CountHouseholdInventory()
+                                  AND Container.WhereobjectId = vbUnitId
+                                  AND Container.Amount > 0)
 
                SELECT MI_Master.Id                                      AS Id
                     , MI_Master.PartionHouseholdInventoryId             AS PartionHouseholdInventoryId
@@ -208,6 +203,7 @@ BEGIN
                     , tmpRemains.Amount                                 AS Remains
                     , MI_Master.Amount                                  AS Amount
                     , MI_Master.CountForPrice                           AS CountForPrice
+                    , Round(MI_Master.Amount * MI_Master.CountForPrice, 2)::TFloat                AS Summa 
                     , MI_Master.Comment                                 AS Comment
                     , MI_Master.IsErased                                AS isErased
                FROM MI_Master

@@ -29,16 +29,6 @@ inherited InventoryHouseholdInventoryForm: TInventoryHouseholdInventoryForm
             item
               Format = ',0.####'
               Kind = skSum
-              Column = Amount
-            end
-            item
-              Format = ',0.00;-,0.00; ;'
-              Kind = skSum
-              Column = CountForPrice
-            end
-            item
-              Format = ',0.####'
-              Kind = skSum
             end
             item
               Format = ',0.####'
@@ -72,6 +62,11 @@ inherited InventoryHouseholdInventoryForm: TInventoryHouseholdInventoryForm
               Format = ',0;-,0; ;'
               Kind = skSum
               Column = Remains
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = CountForPrice
             end>
           DataController.Summary.FooterSummaryItems = <
             item
@@ -79,19 +74,9 @@ inherited InventoryHouseholdInventoryForm: TInventoryHouseholdInventoryForm
               Kind = skSum
             end
             item
-              Format = ',0.####'
-              Kind = skSum
-              Column = Amount
-            end
-            item
               Format = #1057#1090#1088#1086#1082': ,0'
               Kind = skCount
               Column = HouseholdInventoryName
-            end
-            item
-              Format = ',0.00;-,0.00; ;'
-              Kind = skSum
-              Column = CountForPrice
             end
             item
               Format = ',0.####'
@@ -129,6 +114,16 @@ inherited InventoryHouseholdInventoryForm: TInventoryHouseholdInventoryForm
               Format = ',0;-,0; ;'
               Kind = skSum
               Column = Remains
+            end
+            item
+              Format = ',0.00;-,0.00; ;'
+              Kind = skSum
+              Column = Summa
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = CountForPrice
             end>
           OptionsBehavior.IncSearch = True
           OptionsData.CancelOnExit = True
@@ -203,6 +198,16 @@ inherited InventoryHouseholdInventoryForm: TInventoryHouseholdInventoryForm
             Styles.Content = dmMain.cxHeaderL1Style
             Styles.Header = dmMain.cxHeaderL1Style
             Width = 80
+          end
+          object Summa: TcxGridDBColumn
+            Caption = #1057#1091#1084#1084#1072
+            DataBinding.FieldName = 'Summa'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DisplayFormat = ',0.00;-,0.00; ;'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 88
           end
           object Comment: TcxGridDBColumn
             Caption = #1050#1086#1084#1084#1077#1085#1090#1072#1088#1080#1081

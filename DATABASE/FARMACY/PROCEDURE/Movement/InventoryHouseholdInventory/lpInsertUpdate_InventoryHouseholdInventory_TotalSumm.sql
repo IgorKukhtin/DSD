@@ -11,7 +11,7 @@ $BODY$
   DECLARE vbTotalSum TFloat;
 BEGIN
 
-      SELECT SUM(MovementItem.Amount) AS TotalCount, SUM(MIFloat_CountForPrice.ValueData) AS TotalSum
+      SELECT SUM(MovementItem.Amount) AS TotalCount, SUM(Round(MovementItem.Amount * MIFloat_CountForPrice.ValueData, 2)) AS TotalSum
       INTO vbTotalCount, vbTotalSum
       FROM MovementItem
 
@@ -40,6 +40,7 @@ ALTER FUNCTION lpInsertUpdate_InventoryHouseholdInventory_TotalSumm (Integer) OW
 -------------------------------------------------------------------------------
 /*
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.   Шаблий О.В.
+ 30.07.20                                                                      * 
  17.07.20                                                                      * 
 */
 

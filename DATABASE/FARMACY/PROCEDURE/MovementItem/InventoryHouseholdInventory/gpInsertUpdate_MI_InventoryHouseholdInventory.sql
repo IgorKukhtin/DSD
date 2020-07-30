@@ -19,9 +19,9 @@ BEGIN
     -- проверка прав пользователя на вызов процедуры
     vbUserId:= lpCheckRight (inSession, zc_Enum_Process_InsertUpdate_MI_InventoryHouseholdInventory());
     
-    IF COALESCE (inAmount, 0) <> 1 AND COALESCE (inAmount, 0) <> 0
+    IF COALESCE (inAmount, 0) < 0
     THEN
-        RAISE EXCEPTION 'Ошибка.Количество должно быть 1 или 0.';    
+        RAISE EXCEPTION 'Ошибка.Количество должно быть больше или равно 0.';    
     END IF;
 
     --определяем данные документа

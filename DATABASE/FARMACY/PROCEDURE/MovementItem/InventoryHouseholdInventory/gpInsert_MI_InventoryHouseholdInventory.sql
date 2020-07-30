@@ -72,28 +72,26 @@ BEGIN
                                WHERE MovementItem.MovementId = inMovementId
                                  AND MovementItem.DescId = zc_MI_Master()
                                ),
-                 tmpRemains AS (SELECT Object_PHI.Id                          AS Id
-                                     , Object_PHI.ObjectCode                  AS InvNumber
-                                     
-                                     , PHI_MovementItemId.ValueData::Integer  AS MovementItemId
-                                     , ObjectLink_PHI_Unit.ChildObjectId      AS UnitID
+                 tmpRemains AS (SELECT Container.ID
+                                       , Container.ObjectId                     AS HouseholdInventoryId
+                                       , Container.Amount                       AS Amount
+                                       , Container.WhereobjectId                AS UnitID
 
-                                     , MovementItem.ObjectId                  AS HouseholdInventoryId
-                                     , MovementItem.Amount                    AS Amount
-                                     , MovementItem.MovementID                AS MovementID
-                                     , MIFloat_CountForPrice.ValueData        AS CountForPrice
+                                       , Object_PHI.ObjectCode                  AS InvNumber
+                                       , PHI_MovementItemId.ValueData::Integer  AS MovementItemId
+                                       , MovementItem.MovementID                AS MovementID
 
-                                     , Object_PHI.isErased                    AS isErased
-
-                                FROM Object AS Object_PHI
+                                       , MIFloat_CountForPrice.ValueData        AS CountForPrice
+                                FROM Container
+                                
+                                     LEFT JOIN ContainerLinkObject ON ContainerLinkObject.ContainerId = Container.Id
+                                                                  AND ContainerLinkObject.DescId = zc_ContainerLinkObject_PartionHouseholdInventory()
+                                                                  
+                                     LEFT JOIN Object AS Object_PHI ON Object_PHI.ID = ContainerLinkObject.ObjectId
 
                                      LEFT JOIN ObjectFloat AS PHI_MovementItemId
                                                            ON PHI_MovementItemId.ObjectId = Object_PHI.Id
                                                           AND PHI_MovementItemId.DescId = zc_ObjectFloat_PartionHouseholdInventory_MovementItemId()
-
-                                     LEFT JOIN ObjectLink AS ObjectLink_PHI_Unit
-                                                          ON ObjectLink_PHI_Unit.ObjectId = Object_PHI.Id
-                                                         AND ObjectLink_PHI_Unit.DescId = zc_ObjectLink_PartionHouseholdInventory_Unit()
 
                                      LEFT JOIN MovementItem ON MovementItem.Id = PHI_MovementItemId.ValueData::Integer
 
@@ -101,10 +99,9 @@ BEGIN
                                                                  ON MIFloat_CountForPrice.MovementItemId = MovementItem.Id
                                                                 AND MIFloat_CountForPrice.DescId = zc_MIFloat_CountForPrice()
 
-                                WHERE Object_PHI.DescId = zc_Object_PartionHouseholdInventory()
-                                  AND COALESCE (PHI_MovementItemId.ValueData, 0) <> 0
-                                  AND ObjectLink_PHI_Unit.ChildObjectId = vbUnitId
-                                  AND MovementItem.Amount > 0)
+                                WHERE Container.DescId = zc_Container_CountHouseholdInventory()
+                                  AND Container.WhereobjectId = vbUnitId
+                                  AND Container.Amount > 0)
 
              SELECT tmpRemains.Id AS PartionHouseholdInventoryId
              FROM tmpRemains

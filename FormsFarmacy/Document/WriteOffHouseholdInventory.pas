@@ -68,6 +68,7 @@ type
     Comment: TcxGridDBColumn;
     InvNumber: TcxGridDBColumn;
     Remains: TcxGridDBColumn;
+    Summa: TcxGridDBColumn;
   private
     { Private declarations }
   public
