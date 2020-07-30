@@ -29,9 +29,9 @@ BEGIN
                                       AND MovementLinkObject_Unit.DescId = zc_MovementLinkObject_Unit()
     WHERE Movement.Id = inMovementId;
 
-    IF COALESCE (inAmount, 0) <> 1
+    IF COALESCE (inAmount, 0) < 0
     THEN
-        RAISE EXCEPTION 'Ошибка.Количество должно быть 1.';    
+        RAISE EXCEPTION 'Ошибка.Количество должно быть больше или равно 0.';    
     END IF;
 
      -- сохранили
@@ -51,6 +51,7 @@ $BODY$
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.   Шаблий О.В.
+ 30.07.20                                                                      *
  09.07.20                                                                      *
 */
 

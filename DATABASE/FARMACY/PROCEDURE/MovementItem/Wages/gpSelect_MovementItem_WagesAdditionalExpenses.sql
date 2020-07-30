@@ -140,6 +140,7 @@ BEGIN
                  , NULL::TFloat                       AS SummaFullChargeFact
                  , NULL::TFloat                       AS SummaMoneyBoxUsed
                  , NULL::TFloat                       AS SummaTotal
+                 , NULL::TFloat                       AS SummaMoneyBoxResidual
 
                  , False                              AS isIssuedBy
                  , NULL::TDateTime                    AS DateIssuedBy
@@ -256,7 +257,7 @@ BEGIN
             WHERE MovementItem.MovementId = inMovementId
               AND MovementItem.DescId = zc_MI_Sign()
               AND (MovementItem.isErased = FALSE OR inIsErased = TRUE)
-            ORDER BY Object_Unit.ValueData;
+            ORDER BY 4;
     ELSE
         -- Результат другой
         RETURN QUERY
@@ -431,3 +432,5 @@ $BODY$
 */
 -- select * from gpSelect_MovementItem_WagesAdditionalExpenses(inMovementId := 17449644  , inShowAll := 'False' , inIsErased := 'False' ,  inSession := '3');
 
+
+select * from gpSelect_MovementItem_WagesAdditionalExpenses(inMovementId := 18700432 , inShowAll := 'False' , inIsErased := 'False' ,  inSession := '3');

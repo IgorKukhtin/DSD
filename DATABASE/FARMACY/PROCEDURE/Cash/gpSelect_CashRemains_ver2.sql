@@ -538,12 +538,15 @@ BEGIN
                                           WHERE Object_BarCode.DescId = zc_Object_BarCode()
                                             AND Object_BarCode.isErased = False)
                  , tmpGoodsUKTZED AS (SELECT Object_Goods_Juridical.GoodsMainId
-                                           , Object_Goods_Juridical.UKTZED
-                                           , ROW_NUMBER() OVER (PARTITION BY Object_Goods_Juridical.GoodsMainId ORDER BY Object_Goods_Juridical.DateUpdate DESC) AS Ord
+                                           , REPLACE(REPLACE(REPLACE(Object_Goods_Juridical.UKTZED, ' ', ''), '.', ''), Chr(160), '')::TVarChar AS UKTZED
+                                           , ROW_NUMBER() OVER (PARTITION BY Object_Goods_Juridical.GoodsMainId 
+                                                          ORDER BY COALESCE(Object_Goods_Juridical.AreaId, 0), Object_Goods_Juridical.JuridicalId) AS Ord
                                       FROM Object_Goods_Juridical
                                       WHERE COALESCE (Object_Goods_Juridical.UKTZED, '') <> ''
+                                        AND length(REPLACE(REPLACE(REPLACE(Object_Goods_Juridical.UKTZED, ' ', ''), '.', ''), Chr(160), '')) <= 10
                                         AND Object_Goods_Juridical.GoodsMainId <> 0
                                       )
+
 
         -- Результат
         SELECT

@@ -10,8 +10,12 @@ CREATE OR REPLACE FUNCTION gpReport_PromoCode_Comeback(
 )
 RETURNS TABLE ("Код" Integer
              , "Подразделение" TVarChar
-             , "Количество чеков" Integer
-             , "Сумма скидки" TFloat
+             , "Кол-во чеков Ирина Дирочьян" Integer
+             , "Средний чек Ирина Дирочьян" TFloat
+             , "Сумма скидки Ирина Дирочьян" TFloat
+             , "Кол-во чеков Доктор диагностик" Integer
+             , "Средний чек Доктор диагностик" TFloat
+             , "Сумма скидки Доктор диагностик" TFloat
               )
 AS
 $BODY$
@@ -28,8 +32,10 @@ BEGIN
     RETURN QUERY
         WITH
         tmpMovement_Check AS (SELECT Movement.Id
+                                   , Movement_PromoCode.InvNumber                        AS InvNumber
                                    , MovementLinkObject_Unit.ObjectId                    AS UnitId
                                    , ObjectLink_Juridical_Retail.ChildObjectId           AS RetailID
+                                   , MovementFloat_TotalSumm.ValueData                   AS TotalSumm
                                    , MovementFloat_TotalSummChangePercent.ValueData      AS PromoCodeChangeSumma
                               FROM Movement
 
@@ -55,24 +61,50 @@ BEGIN
                                    LEFT JOIN MovementFloat AS MovementFloat_TotalSummChangePercent
                                                            ON MovementFloat_TotalSummChangePercent.MovementId =  Movement.Id
                                                           AND MovementFloat_TotalSummChangePercent.DescId = zc_MovementFloat_TotalSummChangePercent()
+
+                                   LEFT JOIN MovementFloat AS MovementFloat_TotalSumm
+                                                           ON MovementFloat_TotalSumm.MovementId =  Movement.Id
+                                                          AND MovementFloat_TotalSumm.DescId = zc_MovementFloat_TotalSumm()
+
                               WHERE Movement.OperDate >= DATE_TRUNC ('DAY', inStartDate)
                                 AND Movement.OperDate < DATE_TRUNC ('DAY', inEndDate) + INTERVAL '1 DAY'
                                 AND Movement.DescId = zc_Movement_Check()
                                 AND Movement.StatusId = zc_Enum_Status_Complete()
                                 AND Movement_PromoCode.DescId = zc_Movement_PromoCode()
-                           )
+                                AND Movement_PromoCode.InvNumber in ('34', '35')
+                           ),
+        tmpMovement_CheckGroup AS (SELECT Movement_Check.UnitId                                       AS UnitId
+                                        , Movement_Check.InvNumber                                    AS InvNumber
+                                        , count(*)::INTEGER                                           AS CountCheck
+                                        , Round(SUM(Movement_Check.TotalSumm) / count(*), 2)::TFloat  AS AverageCheck
+                                        , SUM(Movement_Check.PromoCodeChangeSumma)::TFloat            AS PromoCodeChangeSumma
+                                   FROM tmpMovement_Check AS Movement_Check
+
+                                   WHERE Movement_Check.RetailId = vbObjectId
+                                   GROUP BY Movement_Check.UnitId
+                                          , Movement_Check.InvNumber
+                                   )
+
 
        SELECT Object_Unit.ObjectCode                          AS UnitCode
             , Object_Unit.ValueData                           AS UnitName
-            , count(*)::INTEGER                               AS CountCheck
-            , SUM(Movement_Check.PromoCodeChangeSumma)::TFloat  AS PromoCodeChangeSumma
-       FROM tmpMovement_Check AS Movement_Check
+            , Movement_Check34.CountCheck                     AS CountCheck
+            , Movement_Check34.AverageCheck                   AS AverageCheck
+            , Movement_Check34.PromoCodeChangeSumma           AS PromoCodeChangeSumma
+            , Movement_Check35.CountCheck                     AS CountCheck
+            , Movement_Check35.AverageCheck                   AS AverageCheck
+            , Movement_Check35.PromoCodeChangeSumma           AS PromoCodeChangeSumma
+       FROM (SELECT DISTINCT tmpMovement_CheckGroup.UnitId FROM tmpMovement_CheckGroup) AS Movement_Check
 
             LEFT JOIN Object AS Object_Unit ON Object_Unit.Id = Movement_Check.UnitId
 
-       WHERE Movement_Check.RetailId = vbObjectId
-       GROUP BY Object_Unit.ObjectCode
-              , Object_Unit.ValueData
+            LEFT JOIN tmpMovement_CheckGroup AS Movement_Check34
+                                             ON Movement_Check34.UnitId = Movement_Check.UnitId
+                                            AND Movement_Check34.InvNumber = '34'
+
+            LEFT JOIN tmpMovement_CheckGroup AS Movement_Check35
+                                             ON Movement_Check35.UnitId = Movement_Check.UnitId
+                                            AND Movement_Check35.InvNumber = '35'
        ;
 
 END;

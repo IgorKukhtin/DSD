@@ -26,59 +26,13 @@ BEGIN
     THEN
         RAISE EXCEPTION 'Error. Нет данных для проведения.';
     END IF;
-
-    -- Проверяем первые переводы
-    IF EXISTS (SELECT 1
-               FROM MovementItem AS MI_Master
-               WHERE MI_Master.MovementId = inMovementId
-                 AND MI_Master.DescId     = zc_MI_Master()
-                 AND MI_Master.Amount     <> 1
-                 AND MI_Master.IsErased   = FALSE
-              )
-    THEN
-       SELECT Object_HouseholdInventory.ValueData, MIFloat_InvNumber.ValueData::Integer
-       INTO vbGoodsName, vbInvNumber
-       FROM MovementItem AS MI_Master
-
-            LEFT JOIN MovementItemFloat AS MIFloat_InvNumber
-                                        ON MIFloat_InvNumber.MovementItemId = MI_Master.Id
-                                       AND MIFloat_InvNumber.DescId = zc_MIFloat_InvNumber()
-                                       
-            LEFT JOIN Object AS Object_HouseholdInventory
-                             ON Object_HouseholdInventory.ID = MI_Master.ObjectId
-
-       WHERE MI_Master.MovementId = inMovementId
-         AND MI_Master.DescId     = zc_MI_Master()
-         AND MI_Master.Amount     <> 1
-         AND MI_Master.IsErased   = FALSE;
-
-       RAISE EXCEPTION 'Ошибка.Как минимум по одному хоз. инвентарю <%> <%> не заполнено количество.', vbInvNumber, vbGoodsName;
-    END IF;
     
-    -- Создание партий
-    PERFORM lpInsertUpdate_Object_PartionHouseholdInventory(ioId               := 0,                                     -- ключ объекта <>
-                                                            inInvNumber        := MIFloat_InvNumber.ValueData::Integer,  -- Инвентарный номер
-                                                            inUnitId           := MovementLinkObject_Unit.ObjectId,      -- Подразделение
-                                                            inMovementItemId   := MI_Master.ID,                          -- Ключ элемента прихода хозяйственного инвентаря
-                                                            inUserId           := vbUserId)
-    FROM MovementItem AS MI_Master
+    -- собственно проводки
+    PERFORM lpComplete_Movement_IncomeHouseholdInventory(inMovementId, -- ключ Документа
+                                                         vbUserId);    -- Пользователь
 
-         LEFT JOIN MovementItemFloat AS MIFloat_InvNumber
-                                     ON MIFloat_InvNumber.MovementItemId = MI_Master.Id
-                                    AND MIFloat_InvNumber.DescId = zc_MIFloat_InvNumber()
-                                       
-         LEFT JOIN MovementLinkObject AS MovementLinkObject_Unit
-                                       ON MovementLinkObject_Unit.MovementId = MI_Master.MovementId
-                                    AND MovementLinkObject_Unit.DescId = zc_MovementLinkObject_Unit()    WHERE MI_Master.MovementId = inMovementId
-      AND MI_Master.DescId     = zc_MI_Master()
-      AND MI_Master.Amount     > 0
-      AND MI_Master.IsErased   = FALSE;    
-         
-    -- Провели документ
-    PERFORM lpComplete_Movement (inMovementId := inMovementId
-                               , inDescId     := zc_Movement_IncomeHouseholdInventory()
-                               , inUserId     := vbUserId
-                                );
+
+    UPDATE Movement SET StatusId = zc_Enum_Status_Complete() WHERE Id = inMovementId AND StatusId IN (zc_Enum_Status_UnComplete(), zc_Enum_Status_Erased());
 
 END;
 $BODY$
@@ -87,6 +41,7 @@ $BODY$
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Шаблий О.В.
+ 30.07.20                                                       *
  09.07.20                                                       *
  */
 

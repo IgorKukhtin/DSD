@@ -11,7 +11,7 @@ $BODY$
   DECLARE vbTotalSum TFloat;
 BEGIN
 
-      SELECT SUM(MovementItem.Amount) AS TotalCount, SUM(MIFloat_CountForPrice.ValueData) AS TotalSum
+      SELECT SUM(MovementItem.Amount) AS TotalCount, SUM(ROUND(MIFloat_CountForPrice.ValueData * MovementItem.Amount, 2)) AS TotalSum
       INTO vbTotalCount, vbTotalSum
       FROM MovementItem
 

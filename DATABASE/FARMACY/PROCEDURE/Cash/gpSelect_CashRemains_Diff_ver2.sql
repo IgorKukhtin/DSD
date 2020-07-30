@@ -451,13 +451,14 @@ WITH tmp as (SELECT tmp.*, ROW_NUMBER() OVER (PARTITION BY TextValue_calc ORDER 
                                           WHERE Object_BarCode.DescId = zc_Object_BarCode()
                                             AND Object_BarCode.isErased = False)
                  , tmpGoodsUKTZED AS (SELECT Object_Goods_Juridical.GoodsMainId
-                                           , Object_Goods_Juridical.UKTZED
-                                           , ROW_NUMBER() OVER (PARTITION BY Object_Goods_Juridical.GoodsMainId ORDER BY Object_Goods_Juridical.DateUpdate DESC) AS Ord
+                                           , REPLACE(REPLACE(REPLACE(Object_Goods_Juridical.UKTZED, ' ', ''), '.', ''), Chr(160), '')::TVarChar AS UKTZED
+                                           , ROW_NUMBER() OVER (PARTITION BY Object_Goods_Juridical.GoodsMainId 
+                                                          ORDER BY COALESCE(Object_Goods_Juridical.AreaId, 0), Object_Goods_Juridical.JuridicalId) AS Ord
                                       FROM Object_Goods_Juridical
                                       WHERE COALESCE (Object_Goods_Juridical.UKTZED, '') <> ''
+                                        AND length(REPLACE(REPLACE(REPLACE(Object_Goods_Juridical.UKTZED, ' ', ''), '.', ''), Chr(160), '')) <= 10
                                         AND Object_Goods_Juridical.GoodsMainId <> 0
                                       )
-
 
         SELECT
             _DIFF.ObjectId,
@@ -552,5 +553,4 @@ ALTER FUNCTION gpSelect_CashRemains_Diff_ver2 (TVarChar, TVarChar) OWNER TO post
 -- SELECT * FROM gpSelect_CashRemains_Diff_ver2 ('{0B05C610-B172-4F81-99B8-25BF5385ADD6}' , '3')
 -- SELECT * FROM gpSelect_CashRemains_Diff_ver2 ('{85E257DE-0563-4B9E-BE1C-4D5C123FB33A}-', '10411288')
 -- SELECT * FROM gpSelect_CashRemains_Diff_ver2 ('{85E257DE-0563-4B9E-BE1C-4D5C123FB33A}-', '3998773') WHERE GoodsCode = 1240
---
-SELECT * FROM gpSelect_CashRemains_Diff_ver2 ('{0B05C610-B172-4F81-99B8-25BF5385ADD6}', '3')
+-- SELECT * FROM gpSelect_CashRemains_Diff_ver2 ('{0B05C610-B172-4F81-99B8-25BF5385ADD6}', '3')

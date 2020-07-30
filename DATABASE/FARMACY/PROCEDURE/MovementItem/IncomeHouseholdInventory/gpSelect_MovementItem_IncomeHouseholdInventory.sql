@@ -9,7 +9,7 @@ CREATE OR REPLACE FUNCTION gpSelect_MovementItem_IncomeHouseholdInventory(
     IN inSession     TVarChar       -- сессия пользователя
 )
 RETURNS TABLE (Id Integer, HouseholdInventoryId Integer, HouseholdInventoryCode Integer, HouseholdInventoryName TVarChar
-             , InvNumber Integer, Amount TFloat, CountForPrice TFloat
+             , InvNumber Integer, Amount TFloat, CountForPrice TFloat, Summa TFloat
              , Comment TVarChar
              , isErased Boolean)
  AS
@@ -96,6 +96,7 @@ BEGIN
                     , MI_Master.InvNumber                               AS InvNumber
                     , MI_Master.Amount                                  AS Amount
                     , MI_Master.CountForPrice                           AS CountForPrice
+                    , Round(MI_Master.Amount * MI_Master.CountForPrice, 2)::TFloat  AS Summa 
                     , MI_Master.Comment                                 AS Comment
                     , COALESCE(MI_Master.IsErased, False)               AS isErased
                FROM tmpData AS MI_Master
@@ -143,6 +144,7 @@ BEGIN
                     , MI_Master.InvNumber                               AS InvNumber
                     , MI_Master.Amount                                  AS Amount
                     , MI_Master.CountForPrice                           AS CountForPrice
+                    , Round(MI_Master.Amount * MI_Master.CountForPrice, 2)::TFloat  AS Summa 
                     , MI_Master.Comment                                 AS Comment
                     , MI_Master.IsErased                                AS isErased
                FROM MI_Master
@@ -160,6 +162,7 @@ $BODY$
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.  Шаблий О.В.
+ 30.07.20                                                                      *
  09.07.20                                                      *
 */
 --

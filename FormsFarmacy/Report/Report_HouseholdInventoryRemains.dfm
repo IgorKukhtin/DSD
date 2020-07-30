@@ -43,11 +43,6 @@ inherited Report_HouseholdInventoryRemainsForm: TReport_HouseholdInventoryRemain
             item
               Format = ',0.00'
               Kind = skSum
-              Column = CountForPrice
-            end
-            item
-              Format = ',0.00'
-              Kind = skSum
             end
             item
               Format = ',0.####;-,0.####'
@@ -61,6 +56,17 @@ inherited Report_HouseholdInventoryRemainsForm: TReport_HouseholdInventoryRemain
             item
               Format = ',0.00'
               Kind = skSum
+            end
+            item
+              Format = ',0.00;-,0.00; ;'
+              Kind = skSum
+              Position = spFooter
+              Column = Summa
+            end
+            item
+              Format = ',0.00;-,0.00; ;'
+              Kind = skSum
+              Column = Summa
             end>
           DataController.Summary.FooterSummaryItems = <
             item
@@ -86,11 +92,6 @@ inherited Report_HouseholdInventoryRemainsForm: TReport_HouseholdInventoryRemain
             item
               Format = ',0.00'
               Kind = skSum
-              Column = CountForPrice
-            end
-            item
-              Format = ',0.00'
-              Kind = skSum
             end
             item
               Format = ',0.####;-,0.####'
@@ -109,6 +110,11 @@ inherited Report_HouseholdInventoryRemainsForm: TReport_HouseholdInventoryRemain
               Format = #1042#1089#1077#1075#1086' '#1089#1090#1088#1086#1082': ,0'
               Kind = skCount
               Column = HouseholdInventoryName
+            end
+            item
+              Format = ',0.00;-,0.00; ;'
+              Kind = skSum
+              Column = Summa
             end>
           OptionsData.CancelOnExit = True
           OptionsData.Deleting = False
@@ -175,6 +181,16 @@ inherited Report_HouseholdInventoryRemainsForm: TReport_HouseholdInventoryRemain
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
             Width = 102
+          end
+          object Summa: TcxGridDBColumn
+            Caption = #1057#1091#1084#1084#1072
+            DataBinding.FieldName = 'Summa'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DisplayFormat = ',0.00;-,0.00; ;'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 80
           end
           object Comment: TcxGridDBColumn
             Caption = ' '#1050#1086#1084#1084#1077#1085#1090#1072#1088#1080#1081' '

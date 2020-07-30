@@ -911,15 +911,6 @@ begin
 {  TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_PercentageOccupancySUNForm'));
   TdsdFormStorageFactory.GetStorage.Load('TReport_PercentageOccupancySUNForm');
 
-  TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_HouseholdInventoryRemainsDialogForm'));
-  TdsdFormStorageFactory.GetStorage.Load('TReport_HouseholdInventoryRemainsDialogForm');
-
-  TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_HouseholdInventoryRemainsForm'));
-  TdsdFormStorageFactory.GetStorage.Load('TReport_HouseholdInventoryRemainsForm');
-
-  TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_HouseholdInventoryRemainsCashForm'));
-  TdsdFormStorageFactory.GetStorage.Load('TReport_HouseholdInventoryRemainsCashForm');
-
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_Check_NumberChecksDialogForm'));
   TdsdFormStorageFactory.GetStorage.Load('TReport_Check_NumberChecksDialogForm');
 
@@ -2180,6 +2171,15 @@ begin
 
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TIncomeHouseholdInventoryCashForm'));
   TdsdFormStorageFactory.GetStorage.Load('TIncomeHouseholdInventoryCashForm');
+
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_HouseholdInventoryRemainsDialogForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TReport_HouseholdInventoryRemainsDialogForm');
+
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_HouseholdInventoryRemainsForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TReport_HouseholdInventoryRemainsForm');
+
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_HouseholdInventoryRemainsCashForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TReport_HouseholdInventoryRemainsCashForm');
 end;
 
 procedure TLoadFormTest.LoadAdditionalGoodsFormTest;

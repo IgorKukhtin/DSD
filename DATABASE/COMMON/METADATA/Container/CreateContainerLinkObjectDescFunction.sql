@@ -126,10 +126,16 @@ CREATE OR REPLACE FUNCTION zc_ContainerLinkObject_Currency() RETURNS Integer AS 
 INSERT INTO ContainerLinkObjectDesc (Code, ItemName, ObjectDescId)
   SELECT 'zc_ContainerLinkObject_Currency', 'Валюта', zc_Object_Currency() WHERE NOT EXISTS (SELECT * FROM ContainerLinkObjectDesc WHERE Code = 'zc_ContainerLinkObject_Currency');
 
+CREATE OR REPLACE FUNCTION zc_ContainerLinkObject_PartionHouseholdInventory() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id AS Id FROM ContainerLinkObjectDesc WHERE Code = 'zc_ContainerLinkObject_PartionHouseholdInventory'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
+INSERT INTO ContainerLinkObjectDesc (Code, ItemName, ObjectDescId)
+  SELECT 'zc_ContainerLinkObject_PartionHouseholdInventory', 'Партии хозяйственного инвентаря', zc_Object_PartionHouseholdInventory() WHERE NOT EXISTS (SELECT * FROM ContainerLinkObjectDesc WHERE Code = 'zc_ContainerLinkObject_PartionHouseholdInventory');
+  
+
 /*-------------------------------------------------------------------------------*/
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
-               Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.
+               Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.  Шаблий О.В.
+ 30.07.20                                                                    * add zc_ContainerLinkObject_PartionHouseholdInventory
  20.12.14                                        * !!!restore!!! zc_ContainerLinkObject_Account
  12.11.14                                        * add zc_ContainerLinkObject_Currency
  04.09.14                                                        * + zc_ContainerLinkObject_ServiceDate

@@ -32,11 +32,6 @@ inherited IncomeHouseholdInventoryForm: TIncomeHouseholdInventoryForm
               Column = Amount
             end
             item
-              Format = ',0.00;-,0.00; ;'
-              Kind = skSum
-              Column = CountForPrice
-            end
-            item
               Format = ',0.####'
               Kind = skSum
             end
@@ -84,41 +79,41 @@ inherited IncomeHouseholdInventoryForm: TIncomeHouseholdInventoryForm
               Column = HouseholdInventoryName
             end
             item
+              Format = ',0.####'
+              Kind = skSum
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+            end
+            item
               Format = ',0.00;-,0.00; ;'
               Kind = skSum
-              Column = CountForPrice
-            end
-            item
-              Format = ',0.####'
-              Kind = skSum
-            end
-            item
-              Format = ',0.####'
-              Kind = skSum
-            end
-            item
-              Format = ',0.####'
-              Kind = skSum
-            end
-            item
-              Format = ',0.####'
-              Kind = skSum
-            end
-            item
-              Format = ',0.####'
-              Kind = skSum
-            end
-            item
-              Format = ',0.####'
-              Kind = skSum
-            end
-            item
-              Format = ',0.####'
-              Kind = skSum
-            end
-            item
-              Format = ',0.####'
-              Kind = skSum
+              Column = Summa
             end>
           OptionsBehavior.IncSearch = True
           OptionsData.CancelOnExit = True
@@ -161,14 +156,14 @@ inherited IncomeHouseholdInventoryForm: TIncomeHouseholdInventoryForm
             DataBinding.FieldName = 'InvNumber'
             PropertiesClassName = 'TcxCurrencyEditProperties'
             Properties.DecimalPlaces = 0
-            Properties.DisplayFormat = '0000'
+            Properties.DisplayFormat = '0000; ;'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
             Width = 101
           end
           object Amount: TcxGridDBColumn
-            Caption = #1054#1089#1090#1072#1090#1086#1082
+            Caption = #1050#1086#1083#1080#1095#1077#1089#1090#1074#1086
             DataBinding.FieldName = 'Amount'
             PropertiesClassName = 'TcxCurrencyEditProperties'
             Properties.DecimalPlaces = 0
@@ -191,13 +186,23 @@ inherited IncomeHouseholdInventoryForm: TIncomeHouseholdInventoryForm
             Styles.Header = dmMain.cxHeaderL1Style
             Width = 108
           end
+          object Summa: TcxGridDBColumn
+            Caption = #1057#1091#1084#1084#1072
+            DataBinding.FieldName = 'Summa'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DisplayFormat = ',0.00;-,0.00; ;'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 97
+          end
           object Comment: TcxGridDBColumn
             Caption = #1050#1086#1084#1084#1077#1085#1090#1072#1088#1080#1081
             DataBinding.FieldName = 'Comment'
             HeaderAlignmentVert = vaCenter
             Styles.Content = dmMain.cxHeaderL1Style
             Styles.Header = dmMain.cxHeaderL1Style
-            Width = 397
+            Width = 338
           end
         end
       end

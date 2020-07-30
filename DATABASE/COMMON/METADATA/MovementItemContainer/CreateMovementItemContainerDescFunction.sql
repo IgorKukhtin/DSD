@@ -27,10 +27,14 @@ CREATE OR REPLACE FUNCTION zc_MIContainer_CountPartionDate() RETURNS integer AS 
 INSERT INTO MovementItemContainerDesc (Code, ItemName)
   SELECT 'zc_MIContainer_CountPartionDate', 'Количественный учет (по дате партии)' WHERE NOT EXISTS (SELECT * FROM MovementItemContainerDesc WHERE Code = 'zc_MIContainer_CountPartionDate');
 
+CREATE OR REPLACE FUNCTION zc_MIContainer_CountHouseholdInventory() RETURNS integer AS $BODY$BEGIN RETURN (SELECT Id FROM MovementItemContainerDesc WHERE Code = 'zc_MIContainer_CountHouseholdInventory'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
+INSERT INTO MovementItemContainerDesc (Code, ItemName)
+  SELECT 'zc_MIContainer_CountHouseholdInventory', 'Количественный учет хозяйственного инвентаря' WHERE NOT EXISTS (SELECT * FROM MovementItemContainerDesc WHERE Code = 'zc_MIContainer_CountHouseholdInventory');
 
 /*-------------------------------------------------------------------------------
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
-               Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
+               Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.  Шаблий О.В.
+ 30.07.20                                                      * add zc_MIContainer_CountHouseholdInventory
  19.04.19                                        * add zc_MIContainer_CountPartionDate
  11.02.15                         * 
  12.11.14                                        * add zc_MIContainer_SummCurrency

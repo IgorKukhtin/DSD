@@ -211,11 +211,13 @@ begin
           qryReport_Upload.Next;
         end;
         qryReport_Upload.First;
-        Width := 6 * Min(W, 70) + 2;
-      end;
+        Width := 9 * Min(W, 90) + 2;
+      end else if qryReport_Upload.Fields.Fields[I].DataType in [ftCurrency, ftFloat] then Width := Round(Width * 1.5);
 
       if (Pos('количество', AnsiLowerCase(qryReport_Upload.Fields.Fields[I].FieldName)) > 0) OR
-         (Pos('сумма', AnsiLowerCase(qryReport_Upload.Fields.Fields[I].FieldName)) > 0) then
+         (Pos('кол-во', AnsiLowerCase(qryReport_Upload.Fields.Fields[I].FieldName)) > 0) OR
+         (Pos('сумма', AnsiLowerCase(qryReport_Upload.Fields.Fields[I].FieldName)) > 0) OR
+         (Pos('выдано', AnsiLowerCase(qryReport_Upload.Fields.Fields[I].FieldName)) > 0) then
         with TcxGridDBTableSummaryItem(grtvReport.DataController.Summary.FooterSummaryItems.Add) do
         begin
           Column := grtvReport.Columns[I];

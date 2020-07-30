@@ -72,6 +72,7 @@ type
     spUpdateCountForPrice: TdsdStoredProc;
     dxBarButton2: TdxBarButton;
     actHouseholdInventoryChoice: TOpenChoiceForm;
+    Summa: TcxGridDBColumn;
   private
     { Private declarations }
   public

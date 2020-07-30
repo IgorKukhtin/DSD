@@ -1,4 +1,4 @@
- -- Function: gpReport_HouseholdInventoryRemainsCash()
+-- Function: gpReport_HouseholdInventoryRemainsCash()
 
 DROP FUNCTION IF EXISTS gpReport_HouseholdInventoryRemainsCash (Boolean, TVarChar);
 
@@ -7,7 +7,7 @@ CREATE OR REPLACE FUNCTION gpReport_HouseholdInventoryRemainsCash(
     IN inSession          TVarChar    -- сессия пользователя
 )
 RETURNS TABLE (InvNumber Integer, HouseholdInventoryId Integer, HouseholdInventoryCode Integer, HouseholdInventoryName TVarChar
-             , Amount TFloat, CountForPrice TFloat, Comment TVarChar
+             , Amount TFloat, CountForPrice TFloat, Summa TFloat, Comment TVarChar
              , IncomeId Integer, IncomeInvNumber TVarChar, IncomeOperDate TDateTime
              , UnitId Integer, UnitName TVarChar
              )
@@ -29,44 +29,41 @@ BEGIN
     END IF;
     vbUnitId := vbUnitKey::Integer;
     
-    -- Результат
     RETURN QUERY
         WITH
-           tmpPartion AS (SELECT Object_PHI.Id                          AS Id
-                               , Object_PHI.ObjectCode                  AS InvNumber
+           tmpContainer AS (SELECT Container.ID
 
-                               , PHI_MovementItemId.ValueData::Integer  AS MovementItemId
-                               , ObjectLink_PHI_Unit.ChildObjectId      AS UnitID
+                                 , Container.ObjectId                     AS HouseholdInventoryId
+                                 , Container.Amount                       AS Amount
+                                 , Container.WhereobjectId                AS UnitID
 
-                               , MovementItem.ObjectId                  AS HouseholdInventoryId
-                               , MovementItem.Amount                    AS Amount
-                               , MovementItem.MovementID                AS MovementID
-
-                               , Object_PHI.isErased                    AS isErased
-
-                          FROM Object AS Object_PHI
+                                 , Object_PHI.ObjectCode                  AS InvNumber
+                                 , PHI_MovementItemId.ValueData::Integer  AS MovementItemId
+                                 , MovementItem.MovementID                AS MovementID
+                          FROM Container
+                          
+                               LEFT JOIN ContainerLinkObject ON ContainerLinkObject.ContainerId = Container.Id
+                                                            AND ContainerLinkObject.DescId = zc_ContainerLinkObject_PartionHouseholdInventory()
+                                                            
+                               LEFT JOIN Object AS Object_PHI ON Object_PHI.ID = ContainerLinkObject.ObjectId
 
                                LEFT JOIN ObjectFloat AS PHI_MovementItemId
                                                      ON PHI_MovementItemId.ObjectId = Object_PHI.Id
                                                     AND PHI_MovementItemId.DescId = zc_ObjectFloat_PartionHouseholdInventory_MovementItemId()
 
-                               LEFT JOIN ObjectLink AS ObjectLink_PHI_Unit
-                                                    ON ObjectLink_PHI_Unit.ObjectId = Object_PHI.Id
-                                                   AND ObjectLink_PHI_Unit.DescId = zc_ObjectLink_PartionHouseholdInventory_Unit()
-
                                LEFT JOIN MovementItem ON MovementItem.Id = PHI_MovementItemId.ValueData::Integer
 
-                          WHERE Object_PHI.DescId = zc_Object_PartionHouseholdInventory()
-                            AND COALESCE (PHI_MovementItemId.ValueData, 0) <> 0
-                            AND ObjectLink_PHI_Unit.ChildObjectId = vbUnitId
-                            AND (MovementItem.Amount > 0 OR inShowAll = TRUE)
+                          WHERE Container.DescId = zc_Container_CountHouseholdInventory()
+                            AND Container.WhereobjectId = vbUnitId
+                            AND (Container.Amount <> 0 OR inShowAll = TRUE)
                          ),
+                         
            tmpMIF AS (SELECT *
                      FROM MovementItemFloat
-                     WHERE MovementItemFloat.MovementItemId IN (SELECT tmpPartion.MovementItemId FROM tmpPartion)),
+                     WHERE MovementItemFloat.MovementItemId IN (SELECT tmpContainer.MovementItemId FROM tmpContainer)),
            tmpMIS AS (SELECT *
                      FROM MovementItemString
-                     WHERE MovementItemString.MovementItemId IN (SELECT tmpPartion.MovementItemId FROM tmpPartion)),
+                     WHERE MovementItemString.MovementItemId IN (SELECT tmpContainer.MovementItemId FROM tmpContainer)),
            tmpHouseholdInventory AS (SELECT *
                                      FROM Object
                                      WHERE Object.DescId = zc_Object_HouseholdInventory()),
@@ -75,38 +72,39 @@ BEGIN
                        WHERE Object.DescId = zc_Object_Unit())
 
         -- Результат
-        SELECT tmpPartion.InvNumber                               AS InvNumber
-             , tmpPartion.HouseholdInventoryId                    AS HouseholdInventoryId
+        SELECT tmpContainer.InvNumber                             AS InvNumber
+             , tmpContainer.HouseholdInventoryId                  AS HouseholdInventoryId
              , Object_HouseholdInventory.ObjectCode               AS HouseholdInventoryCode
              , Object_HouseholdInventory.ValueData                AS HouseholdInventoryName
-             , tmpPartion.Amount                                  AS Amount
+             , tmpContainer.Amount                                AS Amount
              , MIFloat_CountForPrice.ValueData                    AS CountForPrice
+             , Round(tmpContainer.Amount * MIFloat_CountForPrice.ValueData  , 2)::TFloat  AS Summa 
              , MIString_Comment.ValueData                         AS Comment
 
              , Movement_Income.Id                                 AS IncomeId
              , Movement_Income.InvNumber                          AS IncomeInvNumber
              , Movement_Income.OperDate                           AS IncomeOperDate
-             , tmpPartion.UnitId                                  AS UnitId
+             , tmpContainer.UnitId                                AS UnitId
              , Object_Unit.ValueData                              AS UnitName
-        FROM tmpPartion
+        FROM tmpContainer
 
-             LEFT JOIN Movement AS Movement_Income ON Movement_Income.ID = tmpPartion.MovementId
+             LEFT JOIN Movement AS Movement_Income ON Movement_Income.ID = tmpContainer.MovementId
 
              LEFT JOIN tmpMIF AS MIFloat_InvNumber
-                                         ON MIFloat_InvNumber.MovementItemId = tmpPartion.MovementItemId
+                                         ON MIFloat_InvNumber.MovementItemId = tmpContainer.MovementItemId
                                         AND MIFloat_InvNumber.DescId = zc_MIFloat_InvNumber()
 
              LEFT JOIN tmpMIF AS MIFloat_CountForPrice
-                                         ON MIFloat_CountForPrice.MovementItemId = tmpPartion.MovementItemId
+                                         ON MIFloat_CountForPrice.MovementItemId = tmpContainer.MovementItemId
                                         AND MIFloat_CountForPrice.DescId = zc_MIFloat_CountForPrice()
 
              LEFT JOIN tmpMIS AS MIString_Comment
-                                          ON MIString_Comment.MovementItemId = tmpPartion.MovementItemId
+                                          ON MIString_Comment.MovementItemId = tmpContainer.MovementItemId
                                          AND MIString_Comment.DescId = zc_MIString_Comment()
 
-             LEFT JOIN tmpHouseholdInventory AS Object_HouseholdInventory ON Object_HouseholdInventory.Id = tmpPartion.HouseholdInventoryId
+             LEFT JOIN tmpHouseholdInventory AS Object_HouseholdInventory ON Object_HouseholdInventory.Id = tmpContainer.HouseholdInventoryId
 
-             LEFT JOIN tmpUnit AS Object_Unit ON Object_Unit.Id = tmpPartion.UnitId
+             LEFT JOIN tmpUnit AS Object_Unit ON Object_Unit.Id = tmpContainer.UnitId
          ;
 
 END;
@@ -117,9 +115,11 @@ $BODY$
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.   Шаблий О.В.
+ 30.07.20                                                                     *
  09.07.20                                                                     *
 */
 
 -- тест
 --
 -- select * from gpReport_HouseholdInventoryRemainsCash(inShowAll := False , inSession := '3');
+ 

@@ -34,6 +34,7 @@ type
     bbExecuteDialog: TdxBarButton;
     actShowAll: TBooleanStoredProcAction;
     dxBarButton1: TdxBarButton;
+    Summa: TcxGridDBColumn;
   private
     { Private declarations }
   public
