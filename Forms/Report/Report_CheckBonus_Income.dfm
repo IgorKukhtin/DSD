@@ -69,6 +69,16 @@ inherited Report_CheckBonus_IncomeForm: TReport_CheckBonus_IncomeForm
             item
               Format = ',0.00##'
               Kind = skSum
+            end
+            item
+              Format = ',0.00##'
+              Kind = skSum
+              Column = Amount_in
+            end
+            item
+              Format = ',0.00##'
+              Kind = skSum
+              Column = Amount_out
             end>
           DataController.Summary.FooterSummaryItems = <
             item
@@ -118,6 +128,16 @@ inherited Report_CheckBonus_IncomeForm: TReport_CheckBonus_IncomeForm
               Format = #1057#1090#1088#1086#1082': ,0'
               Kind = skCount
               Column = JuridicalName
+            end
+            item
+              Format = ',0.00##'
+              Kind = skSum
+              Column = Amount_in
+            end
+            item
+              Format = ',0.00##'
+              Kind = skSum
+              Column = Amount_out
             end>
           OptionsData.Editing = False
           OptionsView.GroupByBox = True
@@ -379,6 +399,30 @@ inherited Report_CheckBonus_IncomeForm: TReport_CheckBonus_IncomeForm
             PropertiesClassName = 'TcxCurrencyEditProperties'
             Properties.DecimalPlaces = 4
             Properties.DisplayFormat = ',0.####;-,0.####; ;'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 80
+          end
+          object Amount_in: TcxGridDBColumn
+            Caption = #1055#1088#1080#1093#1086#1076', '#1082#1075
+            DataBinding.FieldName = 'Amount_in'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 4
+            Properties.DisplayFormat = ',0.####;-,0.####; ;'
+            Properties.ReadOnly = True
+            Visible = False
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 80
+          end
+          object Amount_out: TcxGridDBColumn
+            Caption = #1042#1086#1079#1074#1088#1072#1090', '#1082#1075
+            DataBinding.FieldName = 'Amount_out'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 4
+            Properties.DisplayFormat = ',0.####;-,0.####; ;'
+            Properties.ReadOnly = True
+            Visible = False
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Width = 80
@@ -762,8 +806,8 @@ inherited Report_CheckBonus_IncomeForm: TReport_CheckBonus_IncomeForm
           DataType = ftString
           MultiSelectSeparator = ','
         end>
-      ReportName = #1055#1088#1086#1074#1077#1088#1082#1072' '#1085#1072#1095#1080#1089#1083#1077#1085#1080#1081' '#1087#1086' '#1073#1086#1085#1091#1089#1072#1084
-      ReportNameParam.Value = #1055#1088#1086#1074#1077#1088#1082#1072' '#1085#1072#1095#1080#1089#1083#1077#1085#1080#1081' '#1087#1086' '#1073#1086#1085#1091#1089#1072#1084
+      ReportName = #1055#1088#1086#1074#1077#1088#1082#1072' '#1085#1072#1095#1080#1089#1083#1077#1085#1080#1081' '#1087#1086' '#1073#1086#1085#1091#1089#1072#1084' '#1087#1086#1089#1090#1072#1074#1097#1080#1082#1086#1074
+      ReportNameParam.Value = #1055#1088#1086#1074#1077#1088#1082#1072' '#1085#1072#1095#1080#1089#1083#1077#1085#1080#1081' '#1087#1086' '#1073#1086#1085#1091#1089#1072#1084' '#1087#1086#1089#1090#1072#1074#1097#1080#1082#1086#1074
       ReportNameParam.DataType = ftString
       ReportNameParam.ParamType = ptInput
       ReportNameParam.MultiSelectSeparator = ','

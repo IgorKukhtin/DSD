@@ -33,7 +33,9 @@ RETURNS TABLE (OperDate_Movement TDateTime, InvNumber_Movement TVarChar, DescNam
              , Sum_BonusFact TFloat
              , Sum_IncomeFact TFloat
              , Sum_Account TFloat
-             , Sum_IncomeReturnIn TFloat
+             , Sum_IncomeReturnOut TFloat
+             , Amount_in TFloat
+             , Amount_out TFloat
              , Comment TVarChar
               )  
 AS
@@ -405,8 +407,20 @@ BEGIN
                   END) AS Sum_Account -- оплаты
 
            , SUM (CASE WHEN MIContainer.MovementDescId = zc_Movement_ReturnOut() THEN MIContainer.Amount ELSE 0 END) AS Sum_Return  -- возврат
+           
+           , SUM (CASE WHEN MIContainer.MovementDescId = zc_Movement_Income() THEN COALESCE (MovementItem.Amount, 0)
+                       ELSE 0
+                  END
+                  * CASE WHEN ObjectLink_Goods_Measure.ChildObjectId = zc_Measure_Sh() THEN ObjectFloat_Weight.ValueData ELSE 1 END ) AS Amount_in
+
+           , SUM (CASE WHEN MIContainer.MovementDescId = zc_Movement_ReturnOut() THEN COALESCE (MovementItem.Amount, 0)
+                       ELSE 0
+                  END
+                  * CASE WHEN ObjectLink_Goods_Measure.ChildObjectId = zc_Measure_Sh() THEN ObjectFloat_Weight.ValueData ELSE 1 END ) AS Amount_out
+
            , MIContainer.MovementDescId   AS MovementDescId
            , MIContainer.MovementId       AS MovementId
+
 
       FROM MovementItemContainer AS MIContainer
            JOIN tmpContainer ON tmpContainer.ContainerId = MIContainer.ContainerId
@@ -418,7 +432,6 @@ BEGIN
                                                              END
            LEFT JOIN MovementItem ON MovementItem.Id = MIContainer.MovementItemId 
                                  AND MovementItem.DescId = zc_MI_Master()
-                                 AND MIContainer.MovementDescId = zc_Movement_Cash()
 
            LEFT JOIN MovementItemLinkObject AS MILinkObject_Unit
                                             ON MILinkObject_Unit.MovementItemId = MIContainer.MovementItemId   --BankAccount
@@ -438,6 +451,17 @@ BEGIN
                                 ON ObjectLink_Cash_Branch.ObjectId = MovementItem.ObjectId
                                AND ObjectLink_Cash_Branch.DescId = zc_ObjectLink_Cash_Branch()
                                AND MIContainer.MovementDescId = zc_Movement_Cash()
+
+           LEFT JOIN ObjectLink AS ObjectLink_Goods_Measure
+                                ON ObjectLink_Goods_Measure.ObjectId = MovementItem.ObjectId 
+                               AND ObjectLink_Goods_Measure.DescId = zc_ObjectLink_Goods_Measure()
+                               AND MIContainer.MovementDescId IN (zc_Movement_Income(), zc_Movement_ReturnOut())
+
+           LEFT JOIN ObjectFloat AS ObjectFloat_Weight
+                                 ON ObjectFloat_Weight.ObjectId = MovementItem.ObjectId
+                                AND ObjectFloat_Weight.DescId = zc_ObjectFloat_Goods_Weight()
+                                AND MIContainer.MovementDescId IN (zc_Movement_Income(), zc_Movement_ReturnOut())
+
       WHERE MIContainer.DescId = zc_MIContainer_Summ()
         AND MIContainer.OperDate BETWEEN inStartDate AND inEndDate
         AND MIContainer.MovementDescId IN (zc_Movement_Income(), zc_Movement_ReturnOut(), zc_Movement_BankAccount(),zc_Movement_Cash(), zc_Movement_SendDebt())
@@ -465,6 +489,8 @@ BEGIN
                              , tmpGroup.Sum_Income
                              , tmpGroup.Sum_IncomeReturnOut
                              , tmpGroup.Sum_Account
+                             , tmpGroup.Amount_in
+                             , tmpGroup.Amount_out
                              --расчитывем % возврата факт = факт возврата / факт отгрузки * 100
                              , CASE WHEN COALESCE (tmpGroup.Sum_Income,0) <> 0 THEN tmpGroup.Sum_Return / tmpGroup.Sum_Income * 100 ELSE 0 END AS PercentRetBonus_fact
                         FROM 
@@ -476,10 +502,12 @@ BEGIN
                                   , tmpGroup.BranchId
                                   , CASE WHEN inisMovement = TRUE THEN tmpGroup.MovementId ELSE 0 END     AS MovementId
                                   , CASE WHEN inisMovement = TRUE THEN tmpGroup.MovementDescId ELSE 0 END AS MovementDescId
-                                  , SUM (tmpGroup.Sum_Income)    AS Sum_Income
+                                  , SUM (tmpGroup.Sum_Income)          AS Sum_Income
                                   , SUM (tmpGroup.Sum_IncomeReturnOut) AS Sum_IncomeReturnOut
-                                  , SUM (tmpGroup.Sum_Account) AS Sum_Account
-                                  , SUM (tmpGroup.Sum_Return)  AS Sum_Return
+                                  , SUM (tmpGroup.Sum_Account)         AS Sum_Account
+                                  , SUM (tmpGroup.Sum_Return)          AS Sum_Return
+                                  , SUM (tmpGroup.Amount_in)           AS Amount_in
+                                  , SUM (tmpGroup.Amount_out)          AS Amount_out
                              FROM tmpBase AS tmpGroup
                              GROUP BY tmpGroup.JuridicalId
                                     , tmpGroup.PartnerId
@@ -539,8 +567,8 @@ BEGIN
                        --когда % возврата факт превышает % возврата план, бонус не начисляется 
                        , CAST (CASE WHEN (COALESCE (tmpContract.PercentRetBonus,0) <> 0 AND tmpMovement.PercentRetBonus_fact > tmpContract.PercentRetBonus) THEN 0 
                                     ELSE 
-                                       CASE WHEN tmpContract.ContractConditionKindID = zc_Enum_ContractConditionKind_BonusPercentIncome() THEN (tmpMovement.Sum_Income/100 * tmpContract.Value)
-                                            WHEN tmpContract.ContractConditionKindID = zc_Enum_ContractConditionKind_BonusPercentIncomeReturn() THEN (tmpMovement.Sum_IncomeReturnOut/100 * tmpContract.Value) 
+                                       CASE WHEN tmpContract.ContractConditionKindID = zc_Enum_ContractConditionKind_BonusPercentIncome() THEN COALESCE (tmpMovement.Amount_in,0) * tmpContract.Value                                                ----(tmpMovement.Sum_Income/100 * tmpContract.Value)
+                                            WHEN tmpContract.ContractConditionKindID = zc_Enum_ContractConditionKind_BonusPercentIncomeReturn() THEN  (COALESCE (tmpMovement.Amount_in,0) - COALESCE (tmpMovement.Amount_out,0)) * tmpContract.Value ----(tmpMovement.Sum_IncomeReturnOut/100 * tmpContract.Value) 
                                             WHEN tmpContract.ContractConditionKindID = zc_Enum_ContractConditionKind_BonusPercentAccount() THEN (tmpMovement.Sum_Account/100 * tmpContract.Value)
                                        ELSE 0 END
                                END  AS NUMERIC (16, 2)) AS Sum_Bonus
@@ -550,6 +578,9 @@ BEGIN
                        , 0 :: TFloat                  AS Sum_IncomeFact
                        , COALESCE (tmpMovement.Sum_Account) AS Sum_Account
                        , COALESCE (tmpMovement.Sum_IncomeReturnOut) AS Sum_IncomeReturnOut
+
+                       , tmpMovement.Amount_in
+                       , tmpMovement.Amount_out
 
                        , COALESCE (tmpContract.Comment, '')  AS Comment
              
@@ -596,6 +627,8 @@ BEGIN
                        , MIFloat_AmountPartner.ValueData                AS Sum_IncomeFact
                        , 0 :: TFloat                                    AS Sum_Account
                        , 0 :: TFloat                                    AS Sum_IncomeReturnOut
+                       , 0 :: TFloat                                    AS Amount_in
+                       , 0 :: TFloat                                    AS Amount_out
 
                        , COALESCE (MIString_Comment.ValueData,'')       AS Comment
 
@@ -681,15 +714,17 @@ BEGIN
                          , tmpAll.BranchId
                          , tmpAll.Value
 
-                         , MAX (tmpAll.PercentRetBonus)    AS PercentRetBonus
+                         , MAX (tmpAll.PercentRetBonus)     AS PercentRetBonus
                          , MAX (tmpAll.PercentRetBonus_fact) AS PercentRetBonus_fact  --*(-1)
-                         , SUM (tmpAll.Sum_CheckBonus)     AS Sum_CheckBonus
-                         , SUM (tmpAll.Sum_CheckBonusFact) AS Sum_CheckBonusFact
-                         , SUM (tmpAll.Sum_Bonus)          AS Sum_Bonus
-                         , SUM (tmpAll.Sum_BonusFact)      AS Sum_BonusFact    --*(-1) 
-                         , SUM (tmpAll.Sum_IncomeFact)     AS Sum_IncomeFact
-                         , SUM (tmpAll.Sum_Account)        AS Sum_Account
-                         , SUM (tmpAll.Sum_IncomeReturnOut)   AS Sum_IncomeReturnOut
+                         , SUM (tmpAll.Sum_CheckBonus)      AS Sum_CheckBonus
+                         , SUM (tmpAll.Sum_CheckBonusFact)  AS Sum_CheckBonusFact
+                         , SUM (tmpAll.Sum_Bonus)           AS Sum_Bonus
+                         , SUM (tmpAll.Sum_BonusFact)       AS Sum_BonusFact    --*(-1) 
+                         , SUM (tmpAll.Sum_IncomeFact)      AS Sum_IncomeFact
+                         , SUM (tmpAll.Sum_Account)         AS Sum_Account
+                         , SUM (tmpAll.Sum_IncomeReturnOut) AS Sum_IncomeReturnOut
+                         , SUM (tmpAll.Amount_in)           AS Amount_in
+                         , SUM (tmpAll.Amount_out)          AS Amount_out
                          , MAX (tmpAll.Comment) :: TVarChar AS Comment
                     FROM tmpAll
                     WHERE (tmpAll.Sum_CheckBonus > 0
@@ -774,6 +809,9 @@ BEGIN
             , CAST (tmpData.Sum_IncomeFact   AS TFloat)     AS Sum_IncomeFact
             , CAST (tmpData.Sum_Account    AS TFloat)       AS Sum_Account
             , CAST (tmpData.Sum_IncomeReturnOut AS TFloat)  AS Sum_IncomeReturnOut
+
+            , CAST (tmpData.Amount_in AS TFloat)            AS Amount_in
+            , CAST (tmpData.Amount_out AS TFloat)           AS Amount_out
             , tmpData.Comment :: TVarChar                   AS Comment
       FROM tmpData
             LEFT JOIN Object AS Object_Juridical ON Object_Juridical.Id = tmpData.JuridicalId
