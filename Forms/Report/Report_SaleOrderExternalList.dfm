@@ -339,6 +339,11 @@ object Report_SaleOrderExternalListForm: TReport_SaleOrderExternalListForm
           Format = ',0.####'
           Kind = skSum
           Column = Sale_TotalSummPVAT
+        end
+        item
+          Format = #1057#1090#1088#1086#1082': ,0'
+          Kind = skCount
+          Column = FromName
         end>
       DataController.Summary.SummaryGroups = <>
       Images = dmMain.SortImageList
@@ -1043,6 +1048,7 @@ object Report_SaleOrderExternalListForm: TReport_SaleOrderExternalListForm
     ColumnAddOnList = <>
     ColumnEnterList = <>
     SummaryItemList = <>
+    PropertiesCellList = <>
     Left = 304
     Top = 296
   end
@@ -1159,7 +1165,7 @@ object Report_SaleOrderExternalListForm: TReport_SaleOrderExternalListForm
       end
       item
         Name = 'inIsDiffTax'
-        Value = 'False'
+        Value = False
         DataType = ftBoolean
         ParamType = ptInput
         MultiSelectSeparator = ','

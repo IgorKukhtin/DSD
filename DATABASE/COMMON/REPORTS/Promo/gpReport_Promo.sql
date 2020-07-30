@@ -38,7 +38,7 @@ RETURNS TABLE(
     ,StatusCode Integer, StatusName TVarChar
     ,UnitName             TVarChar  --Склад
     ,PersonalTradeName    TVarChar  --Ответственный представитель коммерческого отдела
-   ,PersonalName         TVarChar  --Ответственный представитель маркетингового отдела
+    ,PersonalName         TVarChar  --Ответственный представитель маркетингового отдела
     ,DateStartSale        TDateTime --Дата отгрузки по акционным ценам
     ,DeteFinalSale        TDateTime --Дата отгрузки по акционным ценам
     ,DateStartPromo       TDateTime --Дата проведения акции
@@ -123,20 +123,26 @@ BEGIN
                                , MovementDate_EndSale.ValueData              AS EndSale            --Дата окончания отгрузки по акционной цене
                                , MovementLinkObject_Unit.ObjectId            AS UnitId
                                , COALESCE (MovementBoolean_Promo.ValueData, FALSE)   :: Boolean AS isPromo  -- акция (да/нет)
+                               , COALESCE(MovementLinkObject_PriceList.ObjectId, zc_PriceList_Basis()) AS PriceListId
                           FROM Movement AS Movement_Promo
                              LEFT JOIN MovementLinkObject AS MovementLinkObject_Unit
                                                           ON MovementLinkObject_Unit.MovementId = Movement_Promo.Id
                                                          AND MovementLinkObject_Unit.DescId = zc_MovementLinkObject_Unit()
 
                              LEFT JOIN MovementDate AS MovementDate_StartSale
-                                                     ON MovementDate_StartSale.MovementId = Movement_Promo.Id
-                                                    AND MovementDate_StartSale.DescId = zc_MovementDate_StartSale()
+                                                    ON MovementDate_StartSale.MovementId = Movement_Promo.Id
+                                                   AND MovementDate_StartSale.DescId = zc_MovementDate_StartSale()
                              LEFT JOIN MovementDate AS MovementDate_EndSale
-                                                     ON MovementDate_EndSale.MovementId = Movement_Promo.Id
-                                                    AND MovementDate_EndSale.DescId = zc_MovementDate_EndSale()
+                                                    ON MovementDate_EndSale.MovementId = Movement_Promo.Id
+                                                   AND MovementDate_EndSale.DescId = zc_MovementDate_EndSale()
                              LEFT JOIN MovementBoolean AS MovementBoolean_Promo
                                                        ON MovementBoolean_Promo.MovementId = Movement_Promo.Id
                                                       AND MovementBoolean_Promo.DescId = zc_MovementBoolean_Promo()
+
+                             -- нужно определить прайслист , а по нему значение НДС , для расчете цены с НДС
+                             LEFT JOIN MovementLinkObject AS MovementLinkObject_PriceList
+                                                          ON MovementLinkObject_PriceList.MovementId = Movement_Promo.Id
+                                                         AND MovementLinkObject_PriceList.DescId = zc_MovementLinkObject_PriceList()
 
                           WHERE Movement_Promo.DescId = zc_Movement_Promo()
                          AND (MovementDate_StartSale.ValueData BETWEEN inStartDate AND inEndDate
@@ -151,6 +157,12 @@ BEGIN
                              OR (inIsPromo = FALSE AND inIsTender = FALSE)
                              )
                           )
+          -- Для Прайсластов определяем НДС
+        , tmpVAT AS (SELECT tmp.PriceListId
+                          , (SELECT tt.VATPercent FROM gpGet_Object_PriceList(tmp.PriceListId, inSession) AS tt) AS VATPercent
+                     FROM (SELECT DISTINCT tmpMovement.PriceListId FROM tmpMovement) AS tmp
+                     )
+
         , tmpMovement_Promo AS (SELECT
                                 Movement_Promo.Id                                                 --Идентификатор
                               , Movement_Promo.InvNumber :: Integer         AS InvNumber          --Номер документа
@@ -165,8 +177,8 @@ BEGIN
                               , Object_Personal.ValueData                   AS PersonalName       --Ответственный представитель маркетингового отдела
                               , MovementDate_StartPromo.ValueData           AS StartPromo         --Дата начала акции
                               , MovementDate_EndPromo.ValueData             AS EndPromo           --Дата окончания акции
-                              , Movement_Promo.StartSale            AS StartSale          --Дата начала отгрузки по акционной цене
-                              , Movement_Promo.EndSale              AS EndSale            --Дата окончания отгрузки по акционной цене
+                              , Movement_Promo.StartSale                    AS StartSale          --Дата начала отгрузки по акционной цене
+                              , Movement_Promo.EndSale                      AS EndSale            --Дата окончания отгрузки по акционной цене
                               , MovementDate_EndReturn.ValueData            AS EndReturn          --Дата окончания возвратов по акционной цене
                               , MovementDate_Month.ValueData                AS MonthPromo         -- месяц акции
                               , MovementDate_CheckDate.ValueData            AS CheckDate          --Дата согласования
@@ -195,6 +207,8 @@ BEGIN
                                      -- нет цвета
                                      ELSE zc_Color_White()
                                 END AS Color_PromoStateKind
+                                
+                              , tmpVAT.VATPercent   --НДС из прайслиста
                          FROM tmpMovement AS Movement_Promo
                              LEFT JOIN Object AS Object_Status ON Object_Status.Id = Movement_Promo.StatusId
                              LEFT JOIN MovementDate AS MovementDate_StartPromo
@@ -250,6 +264,8 @@ BEGIN
                                                           ON MovementLinkObject_PromoStateKind.MovementId = Movement_Promo.Id
                                                          AND MovementLinkObject_PromoStateKind.DescId = zc_MovementLinkObject_PromoStateKind()
                              LEFT JOIN Object AS Object_PromoStateKind ON Object_PromoStateKind.Id = MovementLinkObject_PromoStateKind.ObjectId
+                             
+                             LEFT JOIN tmpVAT ON tmpVAT.PriceListId = Movement_Promo.PriceListId
                         )
 
         , tmpMI AS (SELECT *
@@ -326,35 +342,35 @@ BEGIN
 
                                FROM tmpMI AS MovementItem
                                       LEFT JOIN tmpMovementItemFloat AS MIFloat_Price
-                                                                  ON MIFloat_Price.MovementItemId = MovementItem.Id
-                                                                 AND MIFloat_Price.DescId = zc_MIFloat_Price()
+                                                                     ON MIFloat_Price.MovementItemId = MovementItem.Id
+                                                                    AND MIFloat_Price.DescId = zc_MIFloat_Price()
                                       LEFT JOIN tmpMovementItemFloat AS MIFloat_PriceWithOutVAT
-                                                                  ON MIFloat_PriceWithOutVAT.MovementItemId = MovementItem.Id
-                                                                 AND MIFloat_PriceWithOutVAT.DescId = zc_MIFloat_PriceWithOutVAT()
+                                                                     ON MIFloat_PriceWithOutVAT.MovementItemId = MovementItem.Id
+                                                                    AND MIFloat_PriceWithOutVAT.DescId = zc_MIFloat_PriceWithOutVAT()
                                       LEFT JOIN tmpMovementItemFloat AS MIFloat_PriceWithVAT
-                                                                  ON MIFloat_PriceWithVAT.MovementItemId = MovementItem.Id
-                                                                 AND MIFloat_PriceWithVAT.DescId = zc_MIFloat_PriceWithVAT()
+                                                                     ON MIFloat_PriceWithVAT.MovementItemId = MovementItem.Id
+                                                                    AND MIFloat_PriceWithVAT.DescId = zc_MIFloat_PriceWithVAT()
                                       LEFT JOIN tmpMovementItemFloat AS MIFloat_PriceSale
-                                                                  ON MIFloat_PriceSale.MovementItemId = MovementItem.Id
-                                                                 AND MIFloat_PriceSale.DescId = zc_MIFloat_PriceSale()
+                                                                     ON MIFloat_PriceSale.MovementItemId = MovementItem.Id
+                                                                    AND MIFloat_PriceSale.DescId = zc_MIFloat_PriceSale()
                                       LEFT JOIN tmpMovementItemFloat AS MIFloat_AmountOrder
-                                                                  ON MIFloat_AmountOrder.MovementItemId = MovementItem.Id
-                                                                 AND MIFloat_AmountOrder.DescId = zc_MIFloat_AmountOrder()
+                                                                     ON MIFloat_AmountOrder.MovementItemId = MovementItem.Id
+                                                                    AND MIFloat_AmountOrder.DescId = zc_MIFloat_AmountOrder()
                                       LEFT JOIN tmpMovementItemFloat AS MIFloat_AmountOut
-                                                                  ON MIFloat_AmountOut.MovementItemId = MovementItem.Id
-                                                                 AND MIFloat_AmountOut.DescId = zc_MIFloat_AmountOut()
+                                                                     ON MIFloat_AmountOut.MovementItemId = MovementItem.Id
+                                                                    AND MIFloat_AmountOut.DescId = zc_MIFloat_AmountOut()
                                       LEFT JOIN tmpMovementItemFloat AS MIFloat_AmountIn
-                                                                  ON MIFloat_AmountIn.MovementItemId = MovementItem.Id
-                                                                 AND MIFloat_AmountIn.DescId = zc_MIFloat_AmountIn()
+                                                                     ON MIFloat_AmountIn.MovementItemId = MovementItem.Id
+                                                                    AND MIFloat_AmountIn.DescId = zc_MIFloat_AmountIn()
                                       LEFT JOIN tmpMovementItemFloat AS MIFloat_AmountReal
-                                                                  ON MIFloat_AmountReal.MovementItemId = MovementItem.Id
-                                                                 AND MIFloat_AmountReal.DescId = zc_MIFloat_AmountReal()
+                                                                     ON MIFloat_AmountReal.MovementItemId = MovementItem.Id
+                                                                    AND MIFloat_AmountReal.DescId = zc_MIFloat_AmountReal()
                                       LEFT JOIN tmpMovementItemFloat AS MIFloat_AmountPlanMin
-                                                                  ON MIFloat_AmountPlanMin.MovementItemId = MovementItem.Id
-                                                                 AND MIFloat_AmountPlanMin.DescId = zc_MIFloat_AmountPlanMin()
+                                                                     ON MIFloat_AmountPlanMin.MovementItemId = MovementItem.Id
+                                                                    AND MIFloat_AmountPlanMin.DescId = zc_MIFloat_AmountPlanMin()
                                       LEFT JOIN tmpMovementItemFloat AS MIFloat_AmountPlanMax
-                                                                  ON MIFloat_AmountPlanMax.MovementItemId = MovementItem.Id
-                                                                 AND MIFloat_AmountPlanMax.DescId = zc_MIFloat_AmountPlanMax()
+                                                                     ON MIFloat_AmountPlanMax.MovementItemId = MovementItem.Id
+                                                                    AND MIFloat_AmountPlanMax.DescId = zc_MIFloat_AmountPlanMax()
 
                                       LEFT JOIN Object AS Object_Goods ON Object_Goods.Id = MovementItem.ObjectId
 
@@ -560,7 +576,7 @@ BEGIN
 
           , MI_PromoGoods.PriceWithOutVAT                                         AS PriceWithOutVAT
           , MI_PromoGoods.PriceWithVAT                                            AS PriceWithVAT
-          , CASE WHEN vbShowAll THEN MI_PromoGoods.Price END         :: TFloat    AS Price
+          , CASE WHEN vbShowAll THEN ROUND (MI_PromoGoods.Price * ((100 + Movement_Promo.VATPercent)/100), 2) END :: TFloat    AS Price       ---MI_PromoGoods.Price
           , CASE WHEN vbShowAll THEN Movement_Promo.CostPromo END    :: TFloat    AS CostPromo
 
           , CASE WHEN vbShowAll THEN
