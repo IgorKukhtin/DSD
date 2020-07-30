@@ -116,7 +116,12 @@ BEGIN
          -- DELETE
          UNION
           SELECT 11 AS Part
-               , case when a.operation ILIKE 'delete'
+               , case when a.operation ILIKE 'delete' AND a.table_name ILIKE 'MovementItemContainer'
+                      then ' when ' || _replica.zfStr_CHR_39  (a.Operation || '-' || a.table_name || '-' || COALESCE (a.upd_cols,a.pk_keys) || '-' || a.pk_keys) || ' THEN '
+                       || _replica.zfStr_CHR_39 ('DELETE FROM  '|| a.table_name || ' where MovementId = ') || '|| CAST (table_update_data.MovementId'
+                       ||' AS Text)'
+
+                      when a.operation ILIKE 'delete'
                       then ' when ' || _replica.zfStr_CHR_39  (a.Operation || '-' || a.table_name || '-' || COALESCE (a.upd_cols,a.pk_keys) || '-' || a.pk_keys) || ' THEN '
                        || _replica.zfStr_CHR_39 ('DELETE FROM  '|| a.table_name || ' where ' || _replica.zfCalc_WordText_Split_replica (a.pk_keys, 1) || ' = ') || '|| CAST (_replica.zfCalc_WordText_Split_replica (table_update_data.pk_values, 1)'
                        ||' AS Text)'
