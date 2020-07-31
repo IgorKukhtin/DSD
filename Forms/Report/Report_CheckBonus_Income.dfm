@@ -337,7 +337,7 @@ inherited Report_CheckBonus_IncomeForm: TReport_CheckBonus_IncomeForm
             Width = 90
           end
           object Sum_IncomeReturnOut: TcxGridDBColumn
-            Caption = #1055#1088#1080#1093#1086#1076' '#8212' '#1074#1086#1079#1074#1088#1072#1090
+            Caption = #1055#1088#1080#1093#1086#1076' '#8212' '#1074#1086#1079#1074#1088#1072#1090' ('#1075#1088#1085')'
             DataBinding.FieldName = 'Sum_IncomeReturnOut'
             PropertiesClassName = 'TcxCurrencyEditProperties'
             Properties.DecimalPlaces = 4
