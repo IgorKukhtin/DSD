@@ -51,6 +51,10 @@ type
     class procedure SetReplicaStart(const AValue: Integer); static;
     class function GetLibLocation: string; static;
     class procedure SetLibLocation(const AValue: string); static;
+    class function GetMasterDriverID: string; static;
+    class procedure SetMasterDriverID(const AValue: string); static;
+    class function GetSlaveDriverID: string; static;
+    class procedure SetSlaveDriverID(const AValue: string); static;
   public
     class constructor Create;
     class destructor Destroy;
@@ -72,6 +76,8 @@ type
     class property ReplicaPacketRange: Integer read GetReplicaPacketRange write SetReplicaPacketRange;
     class property ReplicaStart: Integer read GetReplicaStart write SetReplicaStart;
     class property LibLocation: string read GetLibLocation write SetLibLocation;
+    class property MasterDriverID: string read GetMasterDriverID write SetMasterDriverID;
+    class property SlaveDriverID: string read GetSlaveDriverID write SetSlaveDriverID;
   end;
 
 function IsService: Boolean;
@@ -91,6 +97,9 @@ var
   mCS: TCriticalSection;
 
 const
+  // INI-file name
+  cININame = 'ConnDef.ini';
+
   // Replica
   cReplicaSection    = 'Replica';
   cReplicaStartParam = 'StartID';
@@ -105,24 +114,27 @@ const
   cLibLocationParam = 'PostgresLibLocation';
 
   // Master
-  cMasterSection       = 'Master';
+  cMasterSection       = 'postgress_master';
   cMasterServerParam   = 'Server';
   cMasterDatabaseParam = 'Database';
   cMasterPortParam     = 'Port';
-  cMasterUserParam     = 'User';
+  cMasterUserParam     = 'User_name';
   cMasterPasswParam    = 'Password';
+  cMasterDriverID      = 'DriverID';
 
   // Slave
-  cSlaveSection       = 'Slave';
+  cSlaveSection       = 'postgress_slave';
   cSlaveServerParam   = 'Server';
   cSlaveDatabaseParam = 'Database';
   cSlavePortParam     = 'Port';
-  cSlaveUserParam     = 'User';
+  cSlaveUserParam     = 'User_name';
   cSlavePasswParam    = 'Password';
+  cSlaveDriverID      = 'DriverID';
 
   // Default values
   cDefPort = 5432;
   cDefUser = 'admin';
+  cDefDriverID = 'PG';
   cDefReplicaSelectRange = 10000;
   cDefReplicaPacketRange = 1000;
   cDefReplicaStart = 1;
@@ -177,7 +189,7 @@ end;
 
 class constructor TSettings.Create;
 var
-  sIniFile: string;
+  sIniFile, sMstDriverID, sSlvDriverID: string;
   tmpFS: TFileStream;
 begin
   FIniFolder := GetINIFolder;
@@ -186,7 +198,10 @@ begin
     TDirectory.CreateDirectory(FIniFolder);
 
   FIniFolder := IncludeTrailingPathDelimiter(FIniFolder);
-  sIniFile := FIniFolder + ChangeFileExt(ExtractFileName(ParamStr(0)), '.ini');
+  // для совместимости с другой программой используется специальное имя для INI-файла
+  sIniFile := FIniFolder + cININame;
+//  sIniFile := FIniFolder + ChangeFileExt(ExtractFileName(ParamStr(0)), '.ini');
+
   if not TFile.Exists(sIniFile) then
   begin
     tmpFS := TFile.Create(sIniFile);
@@ -199,6 +214,11 @@ begin
   except
     FIni := nil;
   end;
+
+  // параметры [postgress_master].DriverID и [postgress_slave].DriverID не используются в этой программе
+  // и добавлены в этот INI-файл для совместимости с другой программой
+  sMstDriverID := GetMasterDriverID;
+  sSlvDriverID := GetSlaveDriverID;
 end;
 
 class function TSettings.DefaultPort: Integer;
@@ -236,7 +256,6 @@ begin
   end;
 end;
 
-
 class function TSettings.GetIntValue(const ASection, AParam: string; const ADefVal: Integer): Integer;
 var
   ValueExist: Boolean;
@@ -273,6 +292,11 @@ begin
   finally
     mCS.Leave;
   end;
+end;
+
+class function TSettings.GetMasterDriverID: string;
+begin
+  Result := GetStrValue(cMasterSection, cMasterDriverID, cDefDriverID);
 end;
 
 class function TSettings.GetMasterDatabase: string;
@@ -318,6 +342,11 @@ end;
 class function TSettings.GetSlaveDatabase: string;
 begin
   Result := GetStrValue(cSlaveSection, cSlaveDatabaseParam, EmptyStr);
+end;
+
+class function TSettings.GetSlaveDriverID: string;
+begin
+  Result := GetStrValue(cSlaveSection, cSlaveDriverID, cDefDriverID);
 end;
 
 class function TSettings.GetSlavePassword: string;
@@ -409,6 +438,11 @@ begin
   SetStrValue(cSettingsSection, cLibLocationParam, AValue);
 end;
 
+class procedure TSettings.SetMasterDriverID(const AValue: string);
+begin
+  SetStrValue(cMasterSection, cMasterDriverID, AValue);
+end;
+
 class procedure TSettings.SetMasterDatabase(const AValue: string);
 begin
   SetStrValue(cMasterSection, cMasterDatabaseParam, AValue);
@@ -452,6 +486,11 @@ end;
 class procedure TSettings.SetSlaveDatabase(const AValue: string);
 begin
   SetStrValue(cSlaveSection, cSlaveDatabaseParam, AValue);
+end;
+
+class procedure TSettings.SetSlaveDriverID(const AValue: string);
+begin
+  SetStrValue(cSlaveSection, cSlaveDriverID, AValue);
 end;
 
 class procedure TSettings.SetSlavePassword(const AValue: string);

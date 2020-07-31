@@ -16,12 +16,6 @@ uses
   UCommandData;
 
 type
-  TMinMaxId = record
-    MinId: Integer;
-    MaxId: Integer;
-    RecCount: Integer;
-  end;
-
   TdmData = class(TDataModule)
     conMaster: TZConnection;
     conSlave: TZConnection;
@@ -48,7 +42,7 @@ type
     procedure ExecuteErrCommands;
     procedure LogMsg(const AMsg, AFileName: string); overload;
     procedure LogMsg(const AMsg: string); overload;
-    procedure LogSameMsg(const AMsg: string);
+    procedure LogMsg(const AMsg: string; const aUID: Cardinal); overload;
   strict private
     procedure SetStartId(const AValue: Integer);
   strict private
@@ -94,7 +88,7 @@ type
   strict private
     function GetReturnValue: Integer;
   protected
-    procedure InnerMsgProc(const AMsg, AFileName: string; ALine: TMessageLine);
+    procedure InnerMsgProc(const AMsg, AFileName: string; const aUID: Cardinal);
     procedure MySleep(const AInterval: Cardinal);
     property Data: TdmData read FData;
   public
@@ -109,6 +103,11 @@ type
   end;
 
   TSinglePacket = class(TWorkerThread)
+  protected
+    procedure Execute; override;
+  end;
+
+  TMinMaxIdThread = class(TWorkerThread)
   protected
     procedure Execute; override;
   end;
@@ -133,9 +132,9 @@ uses
   UCommon;
 
 const
-  cAttempt1 = 'попытка №1 %d-%d  старт %s  прошло %s  %s';
-  cAttempt2 = 'попытка №2 %d-%d  всего %d  старт %s успешно: %d  неуспешно: %d  прошло %s';
-  cAttempt3 = 'попытка №3 всего %d  старт %s успешно: %d  неуспешно: %d  прошло %s';
+  cAttempt1 = '№1 <%d-%d>  tranId=<%d-%d>  %d записей   за %s  %s';
+  cAttempt2 = '№2 <%d-%d>  ok = %d   error = %d   за %s';
+  cAttempt3 = '№3 <%d-%d>  ok = %d   за %s';
 
 
 { TdmData }
@@ -182,28 +181,28 @@ end;
 
 procedure TdmData.BuildReplicaCommandsSQL(const AStartId, ARange: Integer);
 const
-  cLastId       = 'Правая граница диапазона: %d';
-  cCreateCmdSQL = 'Создание списка команд сессии';
-  cElapsedTime  = 'Список команд сессии создан за %s' + #13#10;
-  cElapsedFetch = 'Получение данных запроса: %s  Всего получено записей: %d';
-  cElapsedBuild = 'Формирование данных TCommandData: %s';
+  cGetSQL       = 'формирование SQL ...';
+  cFetch        = 'получение записей ...';
+  cElapsedFetch = '%s записей получено за %s';
+  cBuild        = 'запись данных в локальное хранилище ...';
+  cElapsedBuild = '%s записей в локальное хранилище за %s';
 var
-  crdStart, crdStartFetch, crdStartBuild: Cardinal;
+  crdStartFetch, crdStartBuild{, crdLastId}: Cardinal;
   dtmStart: TDateTime;
 begin
   if FStopped then Exit;
 
   Inc(FSessionNumber);
   FLastId := -1;
-  crdStart := GetTickCount;
   dtmStart := Now;
-  LogMsg(cCreateCmdSQL);
+  crdStartFetch := GetTickCount;
 
   qrySelectReplicaCmd.Close;
   qrySelectReplicaCmd.SQL.Clear;
 
   if IsMasterConnected then
   try
+    LogMsg(cGetSQL, crdStartFetch);
     with qrySelectReplicaSQL do // результат запроса содержит SQL-текст, записанный в виде набора строк
     begin
       Close;
@@ -222,16 +221,19 @@ begin
 
     // qrySelectReplicaCmd вернет набор команд репликации (INSERT, UPDATE, DELETE) в поле Result,
     // которые могут быть выполнены пакетами с помощью conSlave
-    crdStartFetch := GetTickCount;
+    LogMsg(cFetch, crdStartFetch);
     qrySelectReplicaCmd.Open;
     qrySelectReplicaCmd.FetchAll;
-    LogMsg(Format(cElapsedFetch, [Elapsed(crdStartFetch), qrySelectReplicaCmd.RecordCount]));
+    qrySelectReplicaCmd.First;
+    StartId := qrySelectReplicaCmd.FieldByName('Id').AsInteger; // откорректируем значение StartId в соответствии с реальными данными
+    LogMsg(Format(cElapsedFetch, [IntToStr(qrySelectReplicaCmd.RecordCount), Elapsed(crdStartFetch)]), crdStartFetch);
 
     // строим свой массив данных, который позволит выбирать записи пакетами с учетом границ transaction_id
     crdStartBuild := GetTickCount;
+    LogMsg(cBuild, crdStartBuild);
     FCommandData.BuildData(qrySelectReplicaCmd);
     qrySelectReplicaCmd.Close;
-    LogMsg(Format(cElapsedBuild, [Elapsed(crdStartBuild)]));
+    LogMsg(Format(cElapsedBuild, [IntToStr(FCommandData.Count), Elapsed(crdStartBuild)]), crdStartBuild);
 
     FCommandData.Last; //чтобы прочитать MaxId
 
@@ -242,22 +244,20 @@ begin
     // сохраним правую границу диапазона для последующего использования
     with qryLastId do
     begin
+//      crdLastId := GetTickCount;
       Close;
       ParamByName('id_start').AsInteger  := AStartId;
       ParamByName('rec_count').AsInteger := ARange;
       Open;
       if not Fields[0].IsNull then
-      begin 
         FLastId := Fields[0].AsInteger;
-//        LogMsg(Format(cLastId, [FLastId]));
-      end;
+
+//      LogMsg('Получение LastId за ' + Elapsed(crdLastId));
     end;
   except
     on E: Exception do
       LogMsg(Format(cExceptionMsg, [E.ClassName, E.Message]));
   end;
-
-  LogMsg(Format(cElapsedTime, [Elapsed(crdStart)]));
 end;
 
 constructor TdmData.Create(AOwner: TComponent; const AStartId, ASelectRange, APacketRange: Integer; AMsgProc: TNotifyMessage);
@@ -276,6 +276,9 @@ end;
 
 destructor TdmData.Destroy;
 begin
+  conMaster.Disconnect;
+  conSlave.Disconnect;
+
   FreeAndNil(FCommandData);
   FreeAndNil(FFailCmds);
   inherited;
@@ -323,13 +326,13 @@ end;
 
 procedure TdmData.ExecuteCommandsOneByOne; // предполагается использовать внутри ExecuteAllPackets после неудачи ExecutePreparedPacket
 var
-  iStartId, iMaxId, iSuccCount, iFailCount, iTotCount: Integer;
-  dtmStart: TDateTime;
+  iStartId, iMaxId, iSuccCount, iFailCount: Integer;
+  crdStart: Cardinal;
 begin
   // будем выполнять команды по одной
   if FStopped then Exit;
 
-  dtmStart := Now;
+  crdStart := GetTickCount;
 
   try
     iMaxId := FStartId + FPacketRange;
@@ -339,10 +342,9 @@ begin
     iStartId   := FStartId;
     iSuccCount := 0;
     iFailCount := 0;
-    iTotCount  := FCommandData.RecordCount(FStartId, iMaxId);
 
-    // строка "попытка №2 всего: 2036 старт 12:03:54 успешно:0  неуспешно:0  прошло "
-    LogMsg(Format(cAttempt2, [iStartId, iMaxId, iTotCount, FormatDateTime(cTimeStrShort, dtmStart), iSuccCount, iFailCount, EmptyStr]));
+    // строка "№2 <56477135-56513779> ок = 0 записей error = 0 записей за  "
+    LogMsg(Format(cAttempt2, [iStartId, iMaxId, iSuccCount, iFailCount, EmptyStr]), crdStart);
 
     while not FCommandData.EOF and (FCommandData.Data.Id <= iMaxId) and not FStopped do
     begin
@@ -357,10 +359,8 @@ begin
             // если 'ExecutePrepared' выполнен успешно, тогда можем обновить StartId
             StartId := FCommandData.Data.Id + 1; // используем св-во StartId, а не FStartId, чтобы значение сразу сохранилось в TSettings.ReplicaStart
             Inc(iSuccCount);
-            // строка "попытка №2 всего: 2036 старт 12:03:54 успешно: 1235 неуспешно: 235 прошло 00:05:03_759"
-            // LogSameMsg пишет в последнюю строку Memo, поэтому важно, чтобы между первым вызовом "LogMsg(Format(cAttempt2,..." и
-            // LogSameMsg не было вызовов LogMsg(Msg) кроме тех, которые пишут в отдельный файл LogMsg(Msg, 'Some-file')
-            LogSameMsg(Format(cAttempt2, [iStartId, iMaxId, iTotCount, FormatDateTime(cTimeStrShort, dtmStart), iSuccCount, iFailCount, Elapsed(dtmStart)]));
+            // строка "№2 <56477135-56513779> ок = 3500 записей error = 25 записей за 00:00:20_2"
+            LogMsg(Format(cAttempt2, [iStartId, iMaxId, iSuccCount, iFailCount, Elapsed(crdStart)]), crdStart);
           end;
       except
         on E: Exception do
@@ -369,8 +369,8 @@ begin
           // Id и SQL невыполненных  команд сохраняем в FFailCmds
           FFailCmds.Add(FCommandData.Data.Id, FCommandData.Data.TransId, FCommandData.Data.SQL);
           Inc(iFailCount);
-          // строка "попытка №2 всего: 2036 старт 12:03:54 успешно: 1235 неуспешно: 236 прошло 00:05:03_759"
-          LogSameMsg(Format(cAttempt2, [iStartId, iMaxId, iTotCount, FormatDateTime(cTimeStrShort, dtmStart), iSuccCount, iFailCount, Elapsed(dtmStart)]));
+          // строка "№2 <56477135-56513779> ок = 3500 записей error = 25 записей за 00:00:20_2"
+          LogMsg(Format(cAttempt2, [iStartId, iMaxId, iSuccCount, iFailCount, Elapsed(crdStart)]), crdStart);
         end;
       end;
 
@@ -384,8 +384,8 @@ end;
 
 procedure TdmData.ExecuteErrCommands;
 var
-  iSuccCount, iFailCount, iTotCount: Integer;
-  dtmStart: TDateTime;
+  iStartId, iEndId, iSuccCount{, iFailCount}: Integer;
+  crdStart: Cardinal;
   sFileName: string;
 const
   cFileName  = '\Err_commands\%s';
@@ -395,17 +395,20 @@ begin
 
   if FStopped then Exit;
   
-  dtmStart := Now;
+  crdStart := GetTickCount;
+
+  FFailCmds.Last;
+  iEndId := FFailCmds.Data.Id;
 
   FFailCmds.First;
+  iStartId := FFailCmds.Data.Id;
 
-  iTotCount  := FFailCmds.Count;
   iSuccCount := 0;
-  iFailCount := 0;
+//  iFailCount := 0;
 
-  // строка "попытка №3 всего: 2036 старт 12:03:54 успешно:0  неуспешно:0  прошло "
+  // строка "№3 <56477135-56513779> ок = 25 записей за  "
   if FFailCmds.Count > 0 then
-    LogMsg(Format(cAttempt3, [iTotCount, FormatDateTime(cTimeStrShort, dtmStart), iSuccCount, iFailCount, EmptyStr]));
+    LogMsg(Format(cAttempt3, [iStartId, iEndId, iSuccCount, EmptyStr]), crdStart);
 
 
   while not FFailCmds.EOF and not FStopped do
@@ -418,9 +421,8 @@ begin
           PrepareStatement(FFailCmds.Data.SQL).ExecutePrepared;
           Commit;
           Inc(iSuccCount);
-          // LogSameMsg пишет в последнюю строку Memo, поэтому важно, чтобы между первым вызовом "LogMsg(Format(cAttempt3,..." и
-          // LogSameMsg не было вызовов LogMsg(Msg) кроме тех, которые пишут в отдельный файл LogMsg(Msg, 'Some-file')
-          LogSameMsg(Format(cAttempt3, [iTotCount, FormatDateTime(cTimeStrShort, dtmStart), iSuccCount, iFailCount, Elapsed(dtmStart)]));
+          // строка "№3 <56477135-56513779> ок = 25 записей за 00:00:2_2"
+          LogMsg(Format(cAttempt3, [iStartId, iEndId, iSuccCount, Elapsed(crdStart)]), crdStart);
         end;
     except
       on E: Exception do
@@ -435,8 +437,9 @@ begin
         ]);
         LogMsg(FFailCmds.Data.SQL, sFileName);
 
-        Inc(iFailCount);
-        LogSameMsg(Format(cAttempt3, [iTotCount, FormatDateTime(cTimeStrShort, dtmStart), iSuccCount, iFailCount, Elapsed(dtmStart)]));
+//        Inc(iFailCount);
+        // строка "№3 <56477135-56513779> ок = 25 записей за 00:00:2_2"
+        LogMsg(Format(cAttempt3, [iStartId, iEndId, iSuccCount, Elapsed(crdStart)]), crdStart);
       end;
     end;
 
@@ -448,32 +451,38 @@ end;
 
 function TdmData.ExecutePreparedPacket: Integer;
 var
-  dtmStart: TDateTime;
-  iMaxId, iStartId: Integer;
+  crdStart: Cardinal;
+  iMaxId, iStartId, iRecCount: Integer;
+  iStartTrans, iEndTrans: Integer;
   sFileName: string;
   tmpSL: TStringList;
   tmpStmt: IZPreparedStatement;
 const
-  cCmdListComplete = 'Создан список из %d команд';
-  cStartBatchLoad  = 'Старт пакетной передачи';
-  cEndBatchLoad    = 'Окончание пакетной передачи. Время передачи %s';
-  cFailBatchLoad   = '>> Пакетная передача завершилась неудачей: %s';
-  cNewStartId      = 'StartId = %d';
-  cFileName        = '\Packets\%s';
-  cFileOK          = '%s__id-%d-%d.txt';
-  cFileErr         = '%s__ERR_id-%d-%d.txt';
+  cFileName = '\Packets\%s';
+  cFileOK   = '%s__id-%d-%d.txt';
+  cFileErr  = '%s__ERR_id-%d-%d.txt';
 begin
   Result := 0;
 
   if FStopped then Exit;
 
   iStartId := FStartId;
-  dtmStart := Now;
+  crdStart := GetTickCount;
 
   iMaxId := FStartId + FPacketRange;
   iMaxId := FCommandData.NearestId(iMaxId);
-  // строка  "попытка №1 523601-529001 старт 12:01:22 прошло"
-  LogMsg(Format(cAttempt1, [iStartId, iMaxId, FormatDateTime(cTimeStrShort, dtmStart), EmptyStr, EmptyStr]));
+
+  FCommandData.MoveToId(iMaxId);
+  iEndTrans := FCommandData.Data.TransId;
+
+  FCommandData.MoveToId(FStartId);
+  iStartTrans := FCommandData.Data.TransId;
+
+  iRecCount := FCommandData.RecordCount(FStartId, iMaxId);
+//  LogMsg('Подготовка ExecutePreparedPacket за ' + Elapsed(crdStart));
+
+  // строка  "№1 Id=<56477135-56513779> tranId=<677135-63779> 3500 записей за  "
+  LogMsg(Format(cAttempt1, [iStartId, iMaxId, iStartTrans, iEndTrans, iRecCount, '', '']), crdStart);
 
   tmpSL := TStringList.Create;
   try
@@ -497,7 +506,7 @@ begin
         conSlave.DbcConnection.Commit;
 
         // пакет успешно выполнен и можем передвинуть StartId на новую позицию
-        StartId := FLastId + 1;
+        StartId := iMaxId + 1;
 
         // запись пакета в файл
         sFileName := Format(cFileName, [
@@ -509,10 +518,8 @@ begin
         ]);
         LogMsg(tmpSL.Text, sFileName);
 
-        // строка  "попытка №1 523601-529001 старт 12:01:22 прошло 00:01:23_259 "
-        // LogSameMsg пишет в последнюю строку Memo, поэтому важно, чтобы между первым вызовом "LogMsg(Format(cAttempt1,..." и
-        // LogSameMsg не было вызовов LogMsg(Msg) кроме тех, которые пишут в отдельный файл LogMsg(Msg, 'Some-file')
-        LogSameMsg(Format(cAttempt1, [iStartId, iMaxId, FormatDateTime(cTimeStrShort, dtmStart), Elapsed(dtmStart), EmptyStr]));
+        // строка  "№1 Id=<56477135-56513779> tranId=<677135-63779> 3500 записей за 00:00:00_212"
+        LogMsg(Format(cAttempt1, [iStartId, iMaxId, iStartTrans, iEndTrans, iRecCount, Elapsed(crdStart), '']), crdStart);
       end;
     except
       on E: Exception do
@@ -526,8 +533,8 @@ begin
           ])
         ]);
         LogMsg(tmpSL.Text, sFileName);
-        // строка  "попытка №1 523601-529001 старт 12:01:22 прошло 00:01:23_259 error"
-        LogSameMsg(Format(cAttempt1, [iStartId, iMaxId, FormatDateTime(cTimeStrShort, dtmStart), Elapsed(dtmStart), 'error']));
+        // строка  "№1 Id=<56477135-56513779> tranId=<677135-63779> 3500 записей за 00:00:00_212 error"
+        LogMsg(Format(cAttempt1, [iStartId, iMaxId, iStartTrans, iEndTrans, iRecCount, Elapsed(crdStart), 'error']), crdStart);;
       end;
     end;
   finally
@@ -592,14 +599,14 @@ begin
   Result := IsConnected(conSlave, srSlave);
 end;
 
+procedure TdmData.LogMsg(const AMsg: string; const aUID: Cardinal);
+begin
+  if Assigned(FMsgProc) then FMsgProc(AMsg, EmptyStr, aUID);
+end;
+
 procedure TdmData.LogMsg(const AMsg: string);
 begin
   if Assigned(FMsgProc) then FMsgProc(AMsg);
-end;
-
-procedure TdmData.LogSameMsg(const AMsg: string);
-begin
-  if Assigned(FMsgProc) then FMsgProc(AMsg, EmptyStr, mlSame);
 end;
 
 procedure TdmData.LogMsg(const AMsg, AFileName: string);
@@ -642,13 +649,53 @@ begin
 end;
 
 function TdmData.MaxID: Integer;
+const
+  cSelect = 'select * from _replica.gpSelect_MaxId()';
 begin
-  Result := GetMinMaxId.MaxId;
+  Result := -1;
+  try
+    if IsMasterConnected then
+      with qryMasterHelper do
+      begin
+        Close;
+        SQL.Clear;
+        SQL.Add(cSelect);
+        Open;
+
+        if not Fields[0].IsNull then
+          Result := Fields[0].AsInteger;
+
+        Close;
+      end;
+  except
+    on E: Exception do
+      LogMsg(Format(cExceptionMsg, [E.ClassName, E.Message]));
+  end;
 end;
 
 function TdmData.MinID: Integer;
+const
+  cSelect = 'select * from _replica.gpSelect_MinId()';
 begin
-  Result := GetMinMaxId.MinId;
+  Result := -1;
+  try
+    if IsMasterConnected then
+      with qryMasterHelper do
+      begin
+        Close;
+        SQL.Clear;
+        SQL.Add(cSelect);
+        Open;
+
+        if not Fields[0].IsNull then
+          Result := Fields[0].AsInteger;
+
+        Close;
+      end;
+  except
+    on E: Exception do
+      LogMsg(Format(cExceptionMsg, [E.ClassName, E.Message]));
+  end;
 end;
 
 procedure TdmData.SetStartId(const AValue: Integer);
@@ -656,7 +703,7 @@ begin
   if FStartId <> AValue then
   begin
     FStartId := AValue;
-    TSettings.ReplicaStart := FStartId;
+    TSettings.ReplicaStart := FStartId;  {TODO: изменить реализацию. Нужно избежать записи в INI-файл при каждом изменении FStartId. Это замедляет процесс}
     if Assigned(FOnChangeStartId) then
       FOnChangeStartId(FStartId);
   end;
@@ -715,11 +762,11 @@ begin
                      end);
 end;
 
-procedure TWorkerThread.InnerMsgProc(const AMsg, AFileName: string; ALine: TMessageLine);
+procedure TWorkerThread.InnerMsgProc(const AMsg, AFileName: string; const aUID: Cardinal);
 begin
   TThread.Queue(nil, procedure
                      begin
-                       if Assigned(FMsgProc) then FMsgProc(AMsg, AFileName, ALine);
+                       if Assigned(FMsgProc) then FMsgProc(AMsg, AFileName, aUID);
                      end);
 end;
 
@@ -761,6 +808,26 @@ procedure TReplicaThread.Execute;
 begin
   inherited;
   Data.ExecuteAllPackets;
+  Terminate;
 end;
+
+{ TMinMaxIdThread }
+
+procedure TMinMaxIdThread.Execute;
+var
+  P: PMinMaxId;
+  tmpMinMax: TMinMaxId;
+begin
+  inherited;
+  tmpMinMax := Data.GetMinMaxId;
+
+  New(P);
+  P^.MinId := tmpMinMax.MinId;
+  P^.MaxId := tmpMinMax.MaxId;
+  P^.RecCount := tmpMinMax.RecCount;
+  ReturnValue := LongWord(P);
+  Terminate;
+end;
+
 
 end.

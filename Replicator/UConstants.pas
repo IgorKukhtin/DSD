@@ -28,11 +28,7 @@ const
   cTimeStrShort        = 'hh:nn:ss';
 
   // имена файлов
-
-
-  // параметры коннекта
-
-
+  cDefLogFileName = 'application.log';
 
   // Zero DateTime
   cZeroDateTime: TDateTime = 0;

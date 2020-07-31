@@ -79,12 +79,9 @@ begin
   for I := Low(FMaxIdArr) to High(FMaxIdArr) do
     if FMaxIdArr[I].TransId = ATransId then
     begin
-      bTransIdExists := True;
-      if FMaxIdArr[I].MaxId < AId then
-      begin
-        FMaxIdArr[I].MaxId := AId;
-        Exit;
-      end;
+      if FMaxIdArr[I].MaxId < AId then FMaxIdArr[I].MaxId := AId;
+
+      Exit;
     end;
 
   if not bTransIdExists then
@@ -96,23 +93,30 @@ begin
 end;
 
 procedure TCommandData.BuildData(ADataSet: TDataSet);
+var
+  I: Integer;
 begin
   Assert(ADataSet <> nil, 'ќжидаетс€ ADataSet <> nil');
   Assert(ADataSet.Active, 'ќжидаетс€, что ADataSet уже открыт');
 
   Clear;
+  I := 0;
+
+  // ожидаетс€, что выполнен ADataSet.Last и в датасет загружены все записи
+  SetLength(FRecArray, ADataSet.RecordCount);
 
   with ADataSet do
   begin
     First;
     while not Eof do
     begin
-      SetLength(FRecArray, Length(FRecArray) + 1);
-      FRecArray[High(FRecArray)].Id      := FieldByName('Id').AsInteger;
-      FRecArray[High(FRecArray)].TransId := FieldByName('Transaction_Id').AsInteger;
-      FRecArray[High(FRecArray)].SQL     := ProvideSemicolon(FieldByName('Result').AsString);
+      FRecArray[I].Id      := FieldByName('Id').AsInteger;
+      FRecArray[I].TransId := FieldByName('Transaction_Id').AsInteger;
+      FRecArray[I].SQL     := FieldByName('Result').AsString + ';';
+//      FRecArray[I].SQL     := ProvideSemicolon(FieldByName('Result').AsString);
 
       AddToTMaxIdArr(FieldByName('Id').AsInteger, FieldByName('Transaction_Id').AsInteger);
+      Inc(I);
       Next;
     end;
   end;

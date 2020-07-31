@@ -12,8 +12,6 @@ object frmMain: TfrmMain
   Font.Style = []
   OldCreateOrder = False
   Position = poScreenCenter
-  OnClose = FormClose
-  OnCreate = FormCreate
   PixelsPerInch = 96
   TextHeight = 13
   object pgcMain: TPageControl
@@ -24,8 +22,6 @@ object frmMain: TfrmMain
     ActivePage = tsLog
     Align = alClient
     TabOrder = 0
-    ExplicitWidth = 1074
-    ExplicitHeight = 592
     object tsLog: TTabSheet
       Caption = #1051#1086#1075
       object pnlLogTop: TPanel
@@ -35,7 +31,6 @@ object frmMain: TfrmMain
         Height = 220
         Align = alTop
         TabOrder = 0
-        ExplicitWidth = 1066
         DesignSize = (
           1176
           220)
@@ -50,7 +45,6 @@ object frmMain: TfrmMain
           ParentBackground = False
           ParentColor = False
           TabOrder = 0
-          ExplicitWidth = 1022
           DesignSize = (
             1132
             76)
@@ -120,8 +114,6 @@ object frmMain: TfrmMain
             Height = 8
             Anchors = [akLeft, akTop, akRight]
             TabOrder = 3
-            Visible = False
-            ExplicitWidth = 1000
           end
         end
         object grpSession: TGroupBox
@@ -135,7 +127,6 @@ object frmMain: TfrmMain
           ParentBackground = False
           ParentColor = False
           TabOrder = 1
-          ExplicitWidth = 1021
           DesignSize = (
             1132
             113)
@@ -251,7 +242,6 @@ object frmMain: TfrmMain
             Anchors = [akLeft, akTop, akRight]
             TabOrder = 5
             Visible = False
-            ExplicitWidth = 983
           end
         end
       end
@@ -263,8 +253,6 @@ object frmMain: TfrmMain
         Align = alLeft
         BevelOuter = bvNone
         TabOrder = 1
-        ExplicitTop = 48
-        ExplicitHeight = 516
         object btnSendSinglePacket: TButton
           Left = 4
           Top = 137
@@ -367,38 +355,33 @@ object frmMain: TfrmMain
           object tsMemo: TTabSheet
             Caption = 'tsMemo'
             TabVisible = False
-            ExplicitLeft = 0
-            ExplicitTop = 0
-            ExplicitWidth = 823
-            ExplicitHeight = 504
-            object mmoLog: TMemo
+            object lstLog: TListBox
               Left = 0
               Top = 0
               Width = 933
               Height = 508
               Align = alClient
               Color = clWindowText
+              DoubleBuffered = True
               Font.Charset = DEFAULT_CHARSET
               Font.Color = clWhite
               Font.Height = -12
               Font.Name = 'Tahoma'
               Font.Style = []
+              ItemHeight = 14
+              ParentDoubleBuffered = False
               ParentFont = False
-              ScrollBars = ssVertical
               TabOrder = 0
-              OnChange = mmoLogChange
-              ExplicitWidth = 823
-              ExplicitHeight = 504
+              ExplicitLeft = 512
+              ExplicitTop = 56
+              ExplicitWidth = 185
+              ExplicitHeight = 209
             end
           end
           object tsChk: TTabSheet
             Caption = 'tsChk'
             ImageIndex = 1
             TabVisible = False
-            ExplicitLeft = 0
-            ExplicitTop = 0
-            ExplicitWidth = 823
-            ExplicitHeight = 504
           end
         end
       end
@@ -406,10 +389,6 @@ object frmMain: TfrmMain
     object tsSettings: TTabSheet
       Caption = #1053#1072#1089#1090#1088#1086#1081#1082#1080
       ImageIndex = 1
-      ExplicitLeft = 0
-      ExplicitTop = 0
-      ExplicitWidth = 1066
-      ExplicitHeight = 564
       DesignSize = (
         1176
         740)
@@ -428,7 +407,6 @@ object frmMain: TfrmMain
         Anchors = [akLeft, akTop, akRight]
         Caption = '  Master  '
         TabOrder = 0
-        ExplicitWidth = 1019
         object lbMasterServer: TLabel
           Left = 45
           Top = 27
@@ -520,7 +498,6 @@ object frmMain: TfrmMain
         Anchors = [akLeft, akTop, akRight]
         Caption = '  Slave  '
         TabOrder = 1
-        ExplicitWidth = 1019
         object lbSlaveServer: TLabel
           Left = 45
           Top = 26
