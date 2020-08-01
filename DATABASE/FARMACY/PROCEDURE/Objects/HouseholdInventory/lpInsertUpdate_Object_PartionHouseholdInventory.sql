@@ -4,7 +4,7 @@ DROP FUNCTION IF EXISTS lpInsertUpdate_Object_PartionHouseholdInventory (Integer
 
 CREATE OR REPLACE FUNCTION lpInsertUpdate_Object_PartionHouseholdInventory(
  INOUT ioId                     Integer   ,     -- ключ объекта <>
-    IN inInvNumber              Integer   ,     -- Инвентарный номер
+    IN inOrderID                Integer   ,     -- Порядковый номер
     IN inUnitId                 Integer   ,     -- Подразделение
     IN inMovementItemId         Integer   ,     -- Ключ элемента прихода хозяйственного инвентаря
     IN inUserId                 Integer     -- пользователь
@@ -12,37 +12,39 @@ CREATE OR REPLACE FUNCTION lpInsertUpdate_Object_PartionHouseholdInventory(
   RETURNS integer AS
 $BODY$
    DECLARE vbUserId Integer;
-   DECLARE vbCode_calc Integer;
+   DECLARE vbInvNumber Integer;
 BEGIN
 
    -- проверка прав пользователя на вызов процедуры
 --   vbUserId := lpCheckRight(inSession, zc_Enum_Process_Update_Object_HouseholdInventory());
 
-   IF COALESCE (inInvNumber, 0) = 0
+   IF COALESCE (inOrderID, 0) = 0 OR COALESCE (inMovementItemId, 0) = 0 OR COALESCE (inUnitId, 0) = 0
    THEN
-      RAISE EXCEPTION 'Ошибка. Не заполнено <Инвентарный номер>...';
+      RAISE EXCEPTION 'Ошибка. Не заполнено <Порядковый номер>...';
    END IF;
 
    -- пытаемся найти ID
-   IF EXISTS(SELECT Object.ID FROM Object 
-             WHERE Object.DescId = zc_Object_PartionHouseholdInventory()
-               AND Object.ObjectCode = inInvNumber) 
+   IF EXISTS(SELECT Object.ID 
+             FROM ObjectFloat 
+                  INNER JOIN Object ON Object.ID = ObjectFloat.ObjectID
+                                   AND Object.ValueData = inOrderID::TVarChar
+             WHERE ObjectFloat.DescId = zc_ObjectFloat_PartionHouseholdInventory_MovementItemId()
+               AND ObjectFloat.ValueData = inMovementItemId) 
    THEN 
-     SELECT Object.ID FROM Object 
-     INTO ioId
-     WHERE Object.DescId = zc_Object_PartionHouseholdInventory()
-       AND Object.ObjectCode = inInvNumber;
+     SELECT Object.ID, Object.ObjectCode 
+     INTO ioId, vbInvNumber
+     FROM ObjectFloat 
+          INNER JOIN Object ON Object.ID = ObjectFloat.ObjectID
+                           AND Object.ValueData = inOrderID::TVarChar
+     WHERE ObjectFloat.DescId = zc_ObjectFloat_PartionHouseholdInventory_MovementItemId()
+       AND ObjectFloat.ValueData = inMovementItemId;
    ELSE
      ioId := 0;
+     vbInvNumber := lfGet_ObjectCode(0, zc_Object_PartionHouseholdInventory()) ;
    END IF;
    
-   IF COALESCE (ioId, 0) = 0 AND COALESCE (inMovementItemId, 0) = 0
-   THEN 
-      RETURN;
-   END IF;
-
    -- сохранили <Объект>
-   ioId := lpInsertUpdate_Object (ioId, zc_Object_PartionHouseholdInventory(), inInvNumber, inInvNumber::TVarChar);
+   ioId := lpInsertUpdate_Object (ioId, c(), vbInvNumber, inOrderID::TVarChar);
    
    -- сохранили 
    PERFORM lpInsertUpdate_ObjectFloat (zc_ObjectFloat_PartionHouseholdInventory_MovementItemId(), ioId, inMovementItemId);

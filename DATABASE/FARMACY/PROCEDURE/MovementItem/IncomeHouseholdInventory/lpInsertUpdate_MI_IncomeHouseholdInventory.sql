@@ -22,15 +22,8 @@ BEGIN
 
           
      -- сохранили <Элемент документа>
-     ioId := lpInsertUpdate_MovementItem (ioId, zc_MI_Master(), inHouseholdInventoryId, inMovementId, CASE WHEN vbIsInsert = TRUE THEN 1 ELSE inAmount END, NULL);
-     
-     IF vbIsInsert = TRUE 
-     THEN
-       -- Сохранили <Инвентарный номер>
-       PERFORM lpInsertUpdate_MovementItemFloat (zc_MIFloat_InvNumber(), ioId, NEXTVAL ('MI_IncomeHouseholdInventory_InvNumber_seq'));     
-     END IF;
-
- 
+     ioId := lpInsertUpdate_MovementItem (ioId, zc_MI_Master(), inHouseholdInventoryId, inMovementId, inAmount, NULL);
+      
      -- Сохранили <Себестоимость>
      PERFORM lpInsertUpdate_MovementItemFloat (zc_MIFloat_CountForPrice(), ioId, inCountForPrice);
 

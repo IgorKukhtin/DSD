@@ -62,7 +62,8 @@ BEGIN
 
                WHERE MI_Master.MovementId = inMovementId
                  AND MI_Master.DescId     = zc_MI_Master()
-                 AND MI_Master.Amount     < COALESCE (tmpContainer.Amount, 0)
+                 AND MI_Master.Amount     > 0 
+                 AND COALESCE (tmpContainer.Amount, 0) <> 1
                  AND MI_Master.IsErased   = FALSE)
     THEN
        WITH
@@ -104,7 +105,8 @@ BEGIN
 
        WHERE MI_Master.MovementId = inMovementId
          AND MI_Master.DescId     = zc_MI_Master()
-         AND MI_Master.Amount     < COALESCE (tmpContainer.Amount, 0)
+         AND MI_Master.Amount     > 0 
+         AND COALESCE (tmpContainer.Amount, 0) <> 1
          AND MI_Master.IsErased   = FALSE;
 
        RAISE EXCEPTION 'Ошибка.Как минимум один хоз. инвентарь <%> <%> списан.', vbInvNumber, vbGoodsName;

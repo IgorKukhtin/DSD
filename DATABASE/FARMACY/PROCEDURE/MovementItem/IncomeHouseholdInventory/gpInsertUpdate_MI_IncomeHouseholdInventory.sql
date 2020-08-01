@@ -29,9 +29,9 @@ BEGIN
                                       AND MovementLinkObject_Unit.DescId = zc_MovementLinkObject_Unit()
     WHERE Movement.Id = inMovementId;
 
-    IF COALESCE (inAmount, 0) < 0
+    IF COALESCE (inAmount, 0) < 0 OR ceil(inAmount) <> inAmount
     THEN
-        RAISE EXCEPTION 'Ошибка.Количество должно быть больше или равно 0.';    
+        RAISE EXCEPTION 'Ошибка.Количество должно быть целым и больше или равно 0.';    
     END IF;
 
      -- сохранили
