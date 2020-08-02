@@ -27,6 +27,21 @@ $BODY$
    DECLARE vbContainerId Integer;
 BEGIN
 
+IF inGoodsId = 640655 AND inAccountId = 9091 -- "20202 Прочее сырье"
+THEN inAccountId:= 9095; -- 20206 Прочие материалы
+     inInfoMoneyDestinationId := zc_Enum_InfoMoneyDestination_20600();
+     inInfoMoneyId            := 8926; -- 20601;"Прочие материалы"
+
+END IF;
+IF inGoodsId = 640655 AND inAccountId = 9099 -- 20402;"Прочее сырье"
+THEN inAccountId:= 9100; -- 20403;"Прочие материалы"
+     inInfoMoneyDestinationId := zc_Enum_InfoMoneyDestination_20600();
+     inInfoMoneyId            := 8926; -- 20601;"Прочие материалы"
+
+END IF;
+
+
+
      -- 70000 Инвестиции: Капитальные инвестиции + Капитальный ремонт + Долгосрочные инвестиции + Капитальное строительство
      IF inInfoMoneyDestinationId IN (zc_Enum_InfoMoneyDestination_70100(), zc_Enum_InfoMoneyDestination_70200(), zc_Enum_InfoMoneyDestination_70300(), zc_Enum_InfoMoneyDestination_70400()
                                     )

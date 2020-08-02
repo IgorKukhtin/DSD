@@ -2467,7 +2467,6 @@ object MainForm: TMainForm
     DesignConnection = True
     HostName = '192.168.0.194'
     Port = 0
-    Database = 'project_master'
     Password = 'vas6ok'
     Protocol = 'postgresql-9'
     Left = 40
@@ -2547,7 +2546,6 @@ object MainForm: TMainForm
     DesignConnection = True
     HostName = '192.168.0.194'
     Port = 0
-    Database = 'project_master'
     User = 'admin'
     Password = 'vas6ok'
     Protocol = 'postgresql-9'
@@ -2558,9 +2556,7 @@ object MainForm: TMainForm
     ControlsCodePage = cCP_UTF16
     UTF8StringsAsWideField = True
     Catalog = 'public'
-    Connected = True
     DesignConnection = True
-    HostName = 'project-vds.vds.colocall.com'
     Port = 0
     Database = 'pod_test'
     User = 'admin'

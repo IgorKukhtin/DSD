@@ -1,4 +1,3 @@
-
 -- Function:  gpReport_Goods_RemainsCurrent()
 
 DROP FUNCTION IF EXISTS gpReport_Goods_RemainsCurrent (Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Boolean, Boolean, Boolean, Boolean, Boolean, TVarChar);
@@ -852,5 +851,4 @@ CREATE UNIQUE INDEX idx_objecthistory_objectid_enddate_descid
 
 -- тест
 -- SELECT * FROM gpReport_Goods_RemainsCurrent (inUnitId:= 1531, inBrandId:= 0, inPartnerId:= 0, inPeriodId:= 0, inStartYear:= 0, inEndYear:= 0, inUserId:= 0, inGoodsPrintId:= 0, inisPartion:= FALSE, inisPartner:= FALSE, inisSize:= TRUE, inIsYear:= FALSE, inIsRemains:= FALSE, inSession:= zfCalc_UserAdmin())
-
 -- select * from gpReport_Goods_RemainsCurrent(inUnitId := 0 , inBrandId := 0 , inPartnerId := 0 , inPeriodId := 0 , inStartYear := 0 , inEndYear := 0 , inUserId := 2 , inGoodsPrintId := 0 , inIsPartion := 'True' , inIsPartner := 'False' , inIsSize := 'False' , inIsYear := 'False' , inIsRemains := 'False' ,  inSession := '2');
