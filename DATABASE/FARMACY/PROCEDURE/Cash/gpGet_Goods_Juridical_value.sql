@@ -43,7 +43,7 @@ BEGIN
                                    , Container.Amount
                                  FROM Container
                                  WHERE Container.DescId = zc_Container_Count()
-                                   AND Container.Amount >= inAmount
+                                   AND Container.Amount >= 0 -- inAmount
                                    AND Container.WhereObjectId = vbUnitId
                                    AND Container.ObjectId = inGoodsId
                                 )
@@ -78,7 +78,7 @@ BEGIN
                                                        AND ObjectFloat_CodeMedicard.DescId = zc_ObjectFloat_Juridical_CodeMedicard()
                                                        AND (ObjectFloat_CodeMedicard.ValueData = 1 OR tmpDiscountExternal.ObjectCode <> 6)
 
-                            WHERE COALESCE(ObjectFloat_CodeMedicard.ValueData, 0) > 0
+                          --  WHERE COALESCE(ObjectFloat_CodeMedicard.ValueData, 0) > 0
                             ORDER BY Movement.OperDate, Container.Id
                                    )
 
@@ -157,4 +157,5 @@ ALTER FUNCTION gpGet_Goods_Juridical_value (Integer, Integer, TFloat, TVarChar) 
 */
 
 -- тест
--- SELECT * from gpGet_Goods_Juridical_value (inDiscountExternal := 13216391, inGoodsId := 5371 , inAmount := 1 ,  inSession := zfCalc_UserAdmin());
+--
+ SELECT * from gpGet_Goods_Juridical_value (inDiscountExternal := 14629849 , inGoodsId := 2637049 , inAmount := 1 ,  inSession := zfCalc_UserAdmin());

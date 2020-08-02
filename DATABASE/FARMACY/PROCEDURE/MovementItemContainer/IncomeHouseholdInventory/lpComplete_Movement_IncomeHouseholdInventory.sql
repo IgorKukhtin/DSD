@@ -49,12 +49,10 @@ BEGIN
            tmpMI AS (SELECT MovementItem.Id                           AS MovementItemId
                           , MovementItem.ObjectId                     AS HouseholdInventoryId
                           , MovementItem.Amount
-                          , MIFloat_InvNumber.ValueData::Integer      AS InvNumber
                           , MIFloat_CountForPrice.ValueData           AS CountForPrice
+                          , SUM (MovementItem.Amount) OVER (ORDER BY MovementItem.Id) - MovementItem.Amount AS SUMMin
+                          , SUM (MovementItem.Amount) OVER (ORDER BY MovementItem.Id) AS SUMMax
                      FROM MovementItem
-                          LEFT JOIN MovementItemFloat AS MIFloat_InvNumber
-                                                      ON MIFloat_InvNumber.MovementItemId = MovementItem.Id
-                                                     AND MIFloat_InvNumber.DescId = zc_MIFloat_InvNumber()
 
                           LEFT JOIN MovementItemFloat AS MIFloat_CountForPrice
                                                       ON MIFloat_CountForPrice.MovementItemId = MovementItem.Id
@@ -64,20 +62,24 @@ BEGIN
                        AND MovementItem.DescId     = zc_MI_Master()
                        AND MovementItem.Amount     > 0
                        AND MovementItem.IsErased   = FALSE
-                    )
+                     ORDER BY MovementItem.Id
+                    ),
+           tmpOrder AS (SELECT GENERATE_SERIES (1, (SELECT SUM(tmpMI.Amount)::Integer FROM tmpMI), 1) AS Id)
+
 
       -- результат
       SELECT zc_Movement_IncomeHouseholdInventory()
            , tmpMI.MovementItemId
            , tmpMI.HouseholdInventoryId AS ObjectId
-           , tmpMI.Amount
+           , 1                          AS Amount
            , Null
            , Null
            , vbOperDate
            , vbUnitId AS UnitId
            , tmpMI.CountForPrice
-           , tmpMI.InvNumber     AS AnalyzerId
-       FROM tmpMI
+           , ROW_NUMBER() OVER (PARTITION BY tmpMI.MovementItemId ORDER BY tmpOrder.ID) AS AnalyzerId
+       FROM tmpOrder
+            INNER JOIN tmpMI ON tmpMI.SUMMin < tmpOrder.ID AND tmpMI.SUMMax >= tmpOrder.ID
       ;
 
     -- Результат - проводки по кол-во "Остатки"
@@ -100,7 +102,7 @@ BEGIN
                           inObjectId_1        := _tmpItem.UnitId,
                           inDescId_2          := zc_ContainerLinkObject_PartionHouseholdInventory(), -- DescId для 2-ой Аналитики
                           inObjectId_2        := lpInsertUpdate_Object_PartionHouseholdInventory(ioId               := 0,                    -- ключ объекта <>
-                                                                                                 inInvNumber        := _tmpItem.AnalyzerId,  -- Инвентарный номер
+                                                                                                 inOrderID          := _tmpItem.AnalyzerId,  -- Порядковый номер
                                                                                                  inUnitId           := _tmpItem.UnitId,      -- Подразделение
                                                                                                  inMovementItemId   := _tmpItem.MovementItemId,                          -- Ключ элемента прихода хозяйственного инвентаря
                                                                                                  inUserId           := inUserId)

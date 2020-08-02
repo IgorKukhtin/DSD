@@ -156,7 +156,7 @@ inherited IncomeHouseholdInventoryForm: TIncomeHouseholdInventoryForm
             DataBinding.FieldName = 'InvNumber'
             PropertiesClassName = 'TcxCurrencyEditProperties'
             Properties.DecimalPlaces = 0
-            Properties.DisplayFormat = '0000; ;'
+            Properties.DisplayFormat = '0000; -0000; ;'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Options.Editing = False

@@ -86,14 +86,27 @@ BEGIN
                                     , Object_HouseholdInventory.isErased           AS isErased
                                FROM Object AS Object_HouseholdInventory
                                WHERE Object_HouseholdInventory.DescId = zc_Object_HouseholdInventory()
-                                 AND Object_HouseholdInventory.isErased = False)
+                                 AND Object_HouseholdInventory.isErased = False),
+                   tmpObjectFloat AS (SELECT ObjectFloat.ObjectID
+                                           , ObjectFloat.ValueData::Integer AS MovementItemId
+                                      FROM ObjectFloat 
+                                      WHERE ObjectFloat.DescId = zc_ObjectFloat_PartionHouseholdInventory_MovementItemId()
+                                     ), 
+                   tmpInvNumber AS (SELECT tmpObjectFloat.MovementItemId
+                                         , Object.ObjectCode                    AS InvNumber 
+                                    FROM MI_Master
+                                         INNER JOIN tmpObjectFloat ON tmpObjectFloat.MovementItemId = MI_Master.ID
+                                         INNER JOIN Object ON Object.ID = tmpObjectFloat.ObjectID      
+                                                          AND Object.ValueData = '1'
+                                   )
+
 
 
                SELECT MI_Master.Id                                      AS Id
                     , MI_Master.HouseholdInventoryId                    AS HouseholdInventoryId
                     , Object_HouseholdInventory.ObjectCode              AS HouseholdInventoryCode
                     , Object_HouseholdInventory.ValueData               AS HouseholdInventoryName
-                    , MI_Master.InvNumber                               AS InvNumber
+                    , tmpInvNumber.InvNumber                            AS InvNumber
                     , MI_Master.Amount                                  AS Amount
                     , MI_Master.CountForPrice                           AS CountForPrice
                     , Round(MI_Master.Amount * MI_Master.CountForPrice, 2)::TFloat  AS Summa 
@@ -102,6 +115,8 @@ BEGIN
                FROM tmpData AS MI_Master
 
                    LEFT JOIN Object AS Object_HouseholdInventory ON Object_HouseholdInventory.Id = MI_Master.HouseholdInventoryId
+                   
+                   LEFT JOIN tmpInvNumber ON tmpInvNumber.MovementItemId = MI_Master.Id                    
 
                ORDER BY MI_Master.HouseholdInventoryId, MI_Master.InvNumber
                ;
@@ -134,14 +149,26 @@ BEGIN
                                  WHERE MovementItem.MovementId = inMovementId
                                    AND MovementItem.DescId = zc_MI_Master()
                                    AND (MovementItem.isErased = False OR inIsErased = True)
-                                 )
+                                 ),
+                   tmpObjectFloat AS (SELECT ObjectFloat.ObjectID
+                                           , ObjectFloat.ValueData::Integer AS MovementItemId
+                                      FROM ObjectFloat 
+                                      WHERE ObjectFloat.DescId = zc_ObjectFloat_PartionHouseholdInventory_MovementItemId()
+                                   ), 
+                   tmpInvNumber AS (SELECT tmpObjectFloat.MovementItemId
+                                         , Object.ObjectCode                    AS InvNumber 
+                                    FROM MI_Master
+                                         INNER JOIN tmpObjectFloat ON tmpObjectFloat.MovementItemId = MI_Master.ID
+                                         INNER JOIN Object ON Object.ID = tmpObjectFloat.ObjectID      
+                                                          AND Object.ValueData = '1'
+                                   )
 
 
                SELECT MI_Master.Id                                      AS Id
                     , MI_Master.HouseholdInventoryId                    AS HouseholdInventoryId
                     , Object_HouseholdInventory.ObjectCode              AS HouseholdInventoryCode
                     , Object_HouseholdInventory.ValueData               AS HouseholdInventoryName
-                    , MI_Master.InvNumber                               AS InvNumber
+                    , tmpInvNumber.InvNumber                            AS InvNumber
                     , MI_Master.Amount                                  AS Amount
                     , MI_Master.CountForPrice                           AS CountForPrice
                     , Round(MI_Master.Amount * MI_Master.CountForPrice, 2)::TFloat  AS Summa 
@@ -150,6 +177,8 @@ BEGIN
                FROM MI_Master
 
                    LEFT JOIN Object AS Object_HouseholdInventory ON Object_HouseholdInventory.Id = MI_Master.HouseholdInventoryId
+                   
+                   LEFT JOIN tmpInvNumber ON tmpInvNumber.MovementItemId = MI_Master.Id 
 
                ORDER BY MI_Master.HouseholdInventoryId, MI_Master.InvNumber
 

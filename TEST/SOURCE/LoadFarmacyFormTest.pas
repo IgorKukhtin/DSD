@@ -62,7 +62,7 @@ type
     procedure LoadGoodsRepriceFormTest;
     procedure LoadHardwareFormTest;
     procedure LoadHouseholdInventoryFormTest;
-    procedure LoadInventoryHouseholdInventoryJournalFormTest;
+    procedure LoadInventoryHouseholdInventoryFormTest;
     procedure LoadImportSettingsFormTest;
     procedure LoadImportTypeFormTest;
     procedure LoadIncomeFormTest;
@@ -1662,7 +1662,7 @@ begin
   TdsdFormStorageFactory.GetStorage.Load('THouseholdInventoryEditForm');
 end;
 
-procedure TLoadFormTest.LoadInventoryHouseholdInventoryJournalFormTest;
+procedure TLoadFormTest.LoadInventoryHouseholdInventoryFormTest;
 begin
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TInventoryHouseholdInventoryForm'));
   TdsdFormStorageFactory.GetStorage.Load('TInventoryHouseholdInventoryForm');
