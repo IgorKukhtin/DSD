@@ -24,7 +24,8 @@ uses
   dxSkinOffice2010Blue, dxSkinOffice2010Silver, dxSkinPumpkin, dxSkinSeven,
   dxSkinSevenClassic, dxSkinSharp, dxSkinSharpPlus, dxSkinSilver,
   dxSkinSpringTime, dxSkinStardust, dxSkinSummer2008, dxSkinTheAsphaltWorld,
-  dxSkinValentine, dxSkinVS2010, dxSkinWhiteprint, dxSkinXmas2008Blue, cxDBLabel;
+  dxSkinValentine, dxSkinVS2010, dxSkinWhiteprint, dxSkinXmas2008Blue, cxDBLabel,
+  dsdInternetAction;
 
 type
   TReport_Goods_RemainsCurrentForm = class(TAncestorReportForm)
@@ -133,6 +134,19 @@ type
     OperPrice_grn: TcxGridDBColumn;
     OperPriceList_curr: TcxGridDBColumn;
     TotalSummPriceList_curr: TcxGridDBColumn;
+    ExportCDS: TClientDataSet;
+    ExportDS: TDataSource;
+    ExportXmlGrid: TcxGrid;
+    ExportXmlGridDBTableView: TcxGridDBTableView;
+    RowData: TcxGridDBColumn;
+    ExportXmlGridLevel: TcxGridLevel;
+    spGet_Export_FileName: TdsdStoredProc;
+    spSelect_Export: TdsdStoredProc;
+    actGet_Export_FileName: TdsdExecStoredProc;
+    actSelect_Export: TdsdExecStoredProc;
+    actExport_Grid: TExportGrid;
+    actSMTPFile: TdsdSMTPFileAction;
+    actExport: TMultiAction;
   private
     { Private declarations }
   public
