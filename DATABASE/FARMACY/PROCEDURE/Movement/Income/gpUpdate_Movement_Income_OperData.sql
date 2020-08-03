@@ -24,6 +24,14 @@ BEGIN
         RAISE EXCEPTION 'Ошибка. Документ не сохранен!';
     END IF;
 
+    IF EXISTS(SELECT 1 FROM Movement WHERE Movement.Id = inMovementId AND Movement.OperDate <> inOperDate)
+    THEN
+        UPDATE MovementItemContainer SET 
+            OperDate = inOperDate
+        where MovementItemContainer.MovementId = inMovementId
+          AND COALESCE(MovementItemContainer.MovementItemId, 0) = 0;
+    END IF;
+    
     IF EXISTS(SELECT 1 FROM Movement WHERE Movement.Id = inMovementId AND (Movement.InvNumber <> inInvNumber OR Movement.OperDate <> inOperDate))
     THEN
         UPDATE Movement SET
@@ -31,7 +39,7 @@ BEGIN
         WHERE
             Id = inMovementId;
     END IF;
-    
+
     outInvNumber := inInvNumber;
     outOperDate := inOperDate;
     

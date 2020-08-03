@@ -23,6 +23,7 @@ $BODY$
    DECLARE vbNDSKindId Integer;
    DECLARE vbAmount TFloat;
    DECLARE vbAmount_remains TFloat;
+   DECLARE vbDiscountExternalCode Integer;
 
    DECLARE curRemains refcursor;
    DECLARE curSale refcursor;
@@ -113,7 +114,24 @@ BEGIN
 
 
     -- Определить
-    vbOperDate:= (SELECT OperDate FROM Movement WHERE Id = inMovementId);
+    SELECT OperDate, MovementLinkObject_Unit.ObjectId, COALESCE(Object_DiscountExternal.ObjectCode, 0)
+    INTO vbOperDate, vbUnitId, vbDiscountExternalCode
+    FROM Movement 
+    
+         LEFT JOIN MovementLinkObject AS MovementLinkObject_Unit
+                                      ON MovementLinkObject_Unit.MovementId = Movement.Id
+                                     AND MovementLinkObject_Unit.DescId = zc_MovementLinkObject_Unit()    
+
+         LEFT JOIN MovementLinkObject AS MovementLinkObject_DiscountCard
+                                      ON MovementLinkObject_DiscountCard.MovementId = Movement.Id
+                                     AND MovementLinkObject_DiscountCard.DescId = zc_MovementLinkObject_DiscountCard()
+
+         LEFT JOIN ObjectLink AS ObjectLink_DiscountExternal
+                              ON ObjectLink_DiscountExternal.ObjectId = MovementLinkObject_DiscountCard.ObjectId
+                             AND ObjectLink_DiscountExternal.DescId = zc_ObjectLink_DiscountCard_Object()
+         LEFT JOIN Object AS Object_DiscountExternal ON Object_DiscountExternal.Id = ObjectLink_DiscountExternal.ChildObjectId
+
+    WHERE Movement.Id = inMovementId;
 
     -- Определить
     vbAccountId:= lpInsertFind_Object_Account (inAccountGroupId         := zc_Enum_AccountGroup_20000()         -- Запасы
@@ -121,12 +139,6 @@ BEGIN
                                              , inInfoMoneyDestinationId := zc_Enum_InfoMoneyDestination_10200() -- Медикаменты
                                              , inInfoMoneyId            := NULL
                                              , inUserId                 := inUserId);
-    -- Определить
-    vbUnitId:= (SELECT MovementLinkObject.ObjectId
-                FROM MovementLinkObject
-                WHERE MovementLinkObject.MovementId = inMovementId
-                  AND MovementLinkObject.DescId = zc_MovementLinkObject_Unit());
-
 
     -- данные почти все
     IF EXISTS (SELECT * FROM INFORMATION_SCHEMA.tables WHERE TABLE_NAME = LOWER ('_tmpItem_remains'))
@@ -212,7 +224,15 @@ BEGIN
             LEFT JOIN MovementLinkObject AS MovementLinkObject_NDSKind
                                          ON MovementLinkObject_NDSKind.MovementId = COALESCE (MI_Income_find.MovementId,MovementItem.MovementId)
                                         AND MovementLinkObject_NDSKind.DescId = zc_MovementLinkObject_NDSKind()
-       WHERE COALESCE (PDContainer.id, 0) = 0
+
+            LEFT JOIN MovementLinkObject AS MovementLinkObject_From
+                                         ON MovementLinkObject_From.MovementId = COALESCE (MI_Income_find.MovementId,MovementItem.MovementId)
+                                        AND MovementLinkObject_From.DescId = zc_MovementLinkObject_From()
+            LEFT JOIN ObjectFloat AS ObjectFloat_CodeMedicard
+                                  ON ObjectFloat_CodeMedicard.ObjectId = MovementLinkObject_From.ObjectId
+                                 AND ObjectFloat_CodeMedicard.DescId = zc_ObjectFloat_Juridical_CodeMedicard()
+
+       WHERE COALESCE (PDContainer.id, 0) = 0 AND (vbDiscountExternalCode <> 6 OR COALESCE(ObjectFloat_CodeMedicard.ValueData, 0) = 1)
        ;
 
     -- Проверим что б БЫЛ остаток в целом
@@ -397,7 +417,7 @@ BEGIN
                 , zc_Movement_Check()
                 , inMovementId
                 , MI.ParentId
-                , Container.ParentId
+                , COALESCE(Container.ParentId, Container.Id)
                 , vbAccountId
                 , -1 * MI.Amount
                 , vbOperDate
@@ -422,7 +442,7 @@ BEGIN
 
                 -- партия
                 INNER JOIN ContainerLinkObject AS CLI_MI
-                                               ON CLI_MI.ContainerId = Container.ParentId
+                                               ON CLI_MI.ContainerId = COALESCE(Container.ParentId, Container.Id)
                                               AND CLI_MI.descid = zc_ContainerLinkObject_PartionMovementItem()
                 INNER JOIN Object AS Object_PartionMovementItem ON Object_PartionMovementItem.Id = CLI_MI.ObjectId
                 -- элемент прихода

@@ -109,7 +109,7 @@
                           WHERE Container.DescId = zc_Container_CountPartionDate()
                             AND Container.WhereObjectId = inUnitID
                             AND Container.Amount > 0
-                            AND ObjectDate_ExpirationDate.ValueData < date_trunc('month', CURRENT_DATE) - INTERVAL '3 MONTH'
+                            AND ObjectDate_ExpirationDate.ValueData < date_trunc('month', CURRENT_DATE - INTERVAL '85 DAY')
                             AND COALESCE (ObjectBoolean_PartionGoods_Cat_5.ValueData, FALSE) = FALSE)
          -- Содержимое документа
 
