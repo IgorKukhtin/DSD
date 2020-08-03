@@ -470,6 +470,8 @@ inherited CashJournalBonusForm: TCashJournalBonusForm
           end
           object SummPay: TcxGridDBColumn
             Caption = #1042#1099#1087#1083#1072#1095#1077#1085#1086
+            DataBinding.FieldName = 'SummPay'
+            HeaderAlignmentVert = vaCenter
             Options.Editing = False
             Width = 70
           end
@@ -519,13 +521,14 @@ inherited CashJournalBonusForm: TCashJournalBonusForm
     object ceCash: TcxButtonEdit
       Left = 249
       Top = 5
-      Enabled = False
       Properties.Buttons = <
         item
           Default = True
           Kind = bkEllipsis
         end>
       Properties.ReadOnly = True
+      Properties.UseLeftAlignmentOnEditing = False
+      Properties.UseNullString = True
       TabOrder = 4
       Width = 115
     end
@@ -1120,6 +1123,32 @@ inherited CashJournalBonusForm: TCashJournalBonusForm
       PrinterNameParam.DataType = ftString
       PrinterNameParam.MultiSelectSeparator = ','
     end
+    object macInsert_Bonus: TMultiAction
+      Category = 'DSDLib'
+      MoveParams = <>
+      ActionList = <
+        item
+          Action = actInsert_Bonus
+        end>
+      View = cxGridDBTableView
+      QuestionBeforeExecute = #1057#1086#1079#1076#1072#1090#1100' '#1076#1086#1082#1091#1084#1077#1085#1090#1099' '#1085#1072' '#1089#1091#1084#1084#1091' <'#1054#1089#1090#1072#1090#1086#1082' '#1082' '#1074#1099#1087#1083#1072#1090#1077'>?'
+      Caption = #1057#1086#1079#1076#1072#1090#1100' '#1076#1086#1082#1091#1084#1077#1085#1090#1099' '#1085#1072' '#1089#1091#1084#1084#1091' <'#1054#1089#1090#1072#1090#1086#1082' '#1082' '#1074#1099#1087#1083#1072#1090#1077'>'
+      Hint = #1057#1086#1079#1076#1072#1090#1100' '#1076#1086#1082#1091#1084#1077#1085#1090#1099' '#1085#1072' '#1089#1091#1084#1084#1091' <'#1054#1089#1090#1072#1090#1086#1082' '#1082' '#1074#1099#1087#1083#1072#1090#1077'>'
+      ImageIndex = 50
+    end
+    object actInsert_Bonus: TdsdExecStoredProc
+      Category = 'DSDLib'
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      StoredProc = spInsert_Bonus
+      StoredProcList = <
+        item
+          StoredProc = spInsert_Bonus
+        end>
+      Caption = #1057#1086#1079#1076#1072#1090#1100' '#1076#1086#1082#1091#1084#1077#1085#1090#1099' '#1085#1072' '#1089#1091#1084#1084#1091' <'#1054#1089#1090#1072#1090#1086#1082' '#1082' '#1074#1099#1087#1083#1072#1090#1077'>'
+      Hint = #1057#1086#1079#1076#1072#1090#1100' '#1076#1086#1082#1091#1084#1077#1085#1090#1099' '#1085#1072' '#1089#1091#1084#1084#1091' <'#1054#1089#1090#1072#1090#1086#1082' '#1082' '#1074#1099#1087#1083#1072#1090#1077'>'
+      ImageIndex = 50
+    end
   end
   inherited MasterDS: TDataSource
     Left = 56
@@ -1216,8 +1245,8 @@ inherited CashJournalBonusForm: TCashJournalBonusForm
     Top = 216
   end
   inherited BarManager: TdxBarManager
-    Left = 160
-    Top = 128
+    Left = 312
+    Top = 296
     DockControlHeights = (
       0
       0
@@ -1232,6 +1261,14 @@ inherited CashJournalBonusForm: TCashJournalBonusForm
         item
           Visible = True
           ItemName = 'bbEdit'
+        end
+        item
+          Visible = True
+          ItemName = 'dxBarStatic'
+        end
+        item
+          Visible = True
+          ItemName = 'bbInsert_Bonus'
         end
         item
           BeginGroup = True
@@ -1262,6 +1299,10 @@ inherited CashJournalBonusForm: TCashJournalBonusForm
         item
           Visible = True
           ItemName = 'bbShowErased'
+        end
+        item
+          Visible = True
+          ItemName = 'dxBarStatic'
         end
         item
           Visible = True
@@ -1358,6 +1399,10 @@ inherited CashJournalBonusForm: TCashJournalBonusForm
     end
     object bbPrint_byService: TdxBarButton
       Action = actPrint_byService
+      Category = 0
+    end
+    object bbInsert_Bonus: TdxBarButton
+      Action = macInsert_Bonus
       Category = 0
     end
   end
@@ -1757,5 +1802,63 @@ inherited CashJournalBonusForm: TCashJournalBonusForm
       end>
     Left = 729
     Top = 9
+  end
+  object spInsert_Bonus: TdsdStoredProc
+    StoredProcName = 'gpInsert_Movement_Cash_Bonus'
+    DataSets = <>
+    OutputType = otResult
+    Params = <
+      item
+        Name = 'inCashId'
+        Value = Null
+        Component = GuidesCash
+        ComponentItem = 'Key'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inCurrencyId'
+        Value = Null
+        Component = GuidesCurrency
+        ComponentItem = 'Key'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inInfoMoneyId'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'InfoMoneyId'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inMoneyPlaceId'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'MoneyPlaceId'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inContractId'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'ContractId'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inRemainsToPay'
+        Value = False
+        Component = MasterCDS
+        ComponentItem = 'RemainsToPay'
+        DataType = ftFloat
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end>
+    PackSize = 1
+    Left = 232
+    Top = 371
   end
 end

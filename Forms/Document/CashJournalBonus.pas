@@ -79,6 +79,10 @@ type
     SummPay: TcxGridDBColumn;
     RemainsToPay: TcxGridDBColumn;
     GuidesRetail: TdsdGuides;
+    spInsert_Bonus: TdsdStoredProc;
+    actInsert_Bonus: TdsdExecStoredProc;
+    macInsert_Bonus: TMultiAction;
+    bbInsert_Bonus: TdxBarButton;
   private
     { Private declarations }
   public

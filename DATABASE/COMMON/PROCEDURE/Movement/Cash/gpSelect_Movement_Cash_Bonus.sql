@@ -29,9 +29,10 @@ RETURNS TABLE (Id Integer, InvNumber TVarChar, OperDate TDateTime
              , OKPO TVarChar, ItemName TVarChar
              , InfoMoneyGroupName TVarChar
              , InfoMoneyDestinationName TVarChar
-             , InfoMoneyCode Integer, InfoMoneyName TVarChar, InfoMoneyName_all TVarChar
+             , InfoMoneyId Integer, InfoMoneyCode Integer, InfoMoneyName TVarChar, InfoMoneyName_all TVarChar
              , MemberName TVarChar, PositionName TVarChar, PersonalServiceListId Integer, PersonalServiceListCode Integer, PersonalServiceListName TVarChar
-             , ContractCode Integer, ContractInvNumber TVarChar, ContractTagName TVarChar
+             , ContractId Integer, ContractCode Integer, ContractInvNumber TVarChar, ContractTagName TVarChar
+             , BranchId Integer, BranchName TVarChar
              , UnitCode Integer, UnitName TVarChar
              , CarId Integer, CarName TVarChar
              , CarModelId Integer, CarModelName TVarChar
@@ -54,6 +55,8 @@ RETURNS TABLE (Id Integer, InvNumber TVarChar, OperDate TDateTime
              , CurrencyValue_calc    TFloat
              , CurrencyValue_mi_calc TFloat
              , SummToPay TFloat
+             , SummPay   TFloat
+             , RemainsToPay TFloat
               )
 AS
 $BODY$
@@ -275,7 +278,7 @@ BEGIN
 
          , tmpContract_View AS (SELECT Object_Contract_InvNumber_View.*
                                 FROM Object_Contract_InvNumber_View
-                                WHERE Object_Contract_InvNumber_View.ContractId IN (SELECT DISTINCT MILinkObject_Contract.ObjectId FROM tmpMILO AS MILinkObject_Contract WHERE MILinkObject_Contract.DescId = zc_MILinkObject_Contract())
+                                --WHERE Object_Contract_InvNumber_View.ContractId IN (SELECT DISTINCT MILinkObject_Contract.ObjectId FROM tmpMILO AS MILinkObject_Contract WHERE MILinkObject_Contract.DescId = zc_MILinkObject_Contract())
                                )
          , tmpInfoMoney_View AS (SELECT * FROM Object_InfoMoney_View)
          , tmpJuridicalDetails_View AS (SELECT *
@@ -293,6 +296,7 @@ BEGIN
          , tmpContainerBonus AS (SELECT CLO_Juridical.ObjectId AS JuridicalId
                                       , CLO_Partner.ObjectId   AS PartnerId
                                       , CLO_InfoMoney.ObjectId AS InfoMoneyId
+                                      , CLO_Contract.ObjectId  AS ContractId
                                       , CLO_Branch.ObjectId    AS BranchId
                                       , SUM (COALESCE (Container.Amount,0)) * (-1) AS Amount
                                  FROM ContainerLinkObject AS CLO_Juridical
@@ -311,18 +315,23 @@ BEGIN
                                                                     ON CLO_PaidKind.ContainerId = Container.Id
                                                                    AND CLO_PaidKind.DescId = zc_ContainerLinkObject_PaidKind()
       
+                                      LEFT JOIN ContainerLinkObject AS CLO_Contract
+                                                                    ON CLO_Contract.ContainerId = Container.Id
+                                                                   AND CLO_Contract.DescId = zc_ContainerLinkObject_Contract()
+
                                  WHERE CLO_Juridical.DescId = zc_ContainerLinkObject_Juridical()
                                    AND (CLO_PaidKind.ObjectId = zc_Enum_PaidKind_SecondForm())
                                    AND (CLO_Branch.ObjectId = inBranchId OR COALESCE (inBranchId, 0) = 0)
                                    AND (CLO_Juridical.ObjectId = inJuridicalId OR COALESCE (inJuridicalId, 0) = 0)
                                    --AND CLO_Juridical.ObjectId = 3834632  --мидас
-                                   AND (CLO_InfoMoney.ObjectId = inInfoMoneyId OR (COALESCE (inInfoMoneyId, 0) = 0 AND CLO_InfoMoney.ObjectId IN (8950, 8951)) )
+                                   AND (CLO_InfoMoney.ObjectId = inInfoMoneyId OR (COALESCE (inInfoMoneyId, 0) = 0 AND CLO_InfoMoney.ObjectId IN (zc_Enum_InfoMoney_21501(), zc_Enum_InfoMoney_21502())) )
                                                                                                               --  AND CLO_InfoMoney.ObjectId IN (8950, 8951)   --Бонусы за продукцию, Бонусы за мясное сырье
                                    AND COALESCE (Container.Amount,0) <> 0
                                  GROUP BY CLO_Juridical.ObjectId
                                         , CLO_InfoMoney.ObjectId
                                         , CLO_Branch.ObjectId
                                         , CLO_Partner.ObjectId
+                                        , CLO_Contract.ObjectId
                                  )
 
        -- Результат
@@ -370,6 +379,7 @@ BEGIN
                         , ObjectDesc.ItemName
                         , View_InfoMoney.InfoMoneyGroupName
                         , View_InfoMoney.InfoMoneyDestinationName
+                        , View_InfoMoney.InfoMoneyId
                         , View_InfoMoney.InfoMoneyCode
                         , View_InfoMoney.InfoMoneyName
                         , View_InfoMoney.InfoMoneyName_all
@@ -378,12 +388,17 @@ BEGIN
                         , Object_PersonalServiceList.Id         AS PersonalServiceListId
                         , Object_PersonalServiceList.ObjectCode AS PersonalServiceListCode
                         , Object_PersonalServiceList.ValueData  AS PersonalServiceListName
+                        , View_Contract_InvNumber.ContractId
                         , View_Contract_InvNumber.ContractCode
                         , View_Contract_InvNumber.InvNumber  AS ContractInvNumber
                         , View_Contract_InvNumber.ContractTagName
+
+                        , Object_Branch.Id                   AS BranchId
+                        , Object_Branch.ValueData            AS BranchName
+
                         , Object_Unit.ObjectCode             AS UnitCode
                         , Object_Unit.ValueData              AS UnitName
-             
+                        
                         , Object_Car.Id                      AS CarId
                         , Object_Car.ValueData               AS CarName
                         , Object_CarModel.Id                 AS CarModelId
@@ -530,7 +545,6 @@ BEGIN
                          LEFT JOIN tmpMILO AS MILinkObject_Contract
                                            ON MILinkObject_Contract.MovementItemId = MovementItem.Id
                                           AND MILinkObject_Contract.DescId = zc_MILinkObject_Contract()
-                         LEFT JOIN tmpContract_View AS View_Contract_InvNumber ON View_Contract_InvNumber.ContractId = MILinkObject_Contract.ObjectId
              
                          LEFT JOIN tmpMILO AS MILinkObject_Unit
                                            ON MILinkObject_Unit.MovementItemId = MovementItem.Id
@@ -609,16 +623,20 @@ BEGIN
                          LEFT JOIN ObjectDesc ON ObjectDesc.Id = Object_MoneyPlace.DescId
                          LEFT JOIN tmpInfoMoney_View AS View_InfoMoney ON View_InfoMoney.InfoMoneyId = COALESCE (MILinkObject_InfoMoney.ObjectId, tmpContainerBonus.InfoMoneyId)
                          LEFT JOIN Object AS Object_Juridical ON Object_Juridical.Id = COALESCE (ObjectHistory_JuridicalDetails_View.JuridicalId, tmpContainerBonus.JuridicalId)
+                         LEFT JOIN tmpContract_View AS View_Contract_InvNumber ON View_Contract_InvNumber.ContractId = COALESCE (MILinkObject_Contract.ObjectId, tmpContainerBonus.ContractId)
+                         LEFT JOIN Object AS Object_Branch ON Object_Branch.Id = tmpContainerBonus.BranchId
 
                          LEFT JOIN ObjectLink AS OL_Juridical_Retail
                                               ON OL_Juridical_Retail.ObjectId = Object_Juridical.Id
                                              AND OL_Juridical_Retail.DescId = zc_ObjectLink_Juridical_Retail()
                          LEFT JOIN Object AS Object_Retail ON Object_Retail.Id = OL_Juridical_Retail.ChildObjectId
-                    WHERE (View_InfoMoney.InfoMoneyId = inInfoMoneyId OR (inInfoMoneyId = 0 AND View_InfoMoney.InfoMoneyId IN (8950, 8951) ))
+                    WHERE (View_InfoMoney.InfoMoneyId = inInfoMoneyId OR (inInfoMoneyId = 0 AND View_InfoMoney.InfoMoneyId IN (zc_Enum_InfoMoney_21501(), zc_Enum_InfoMoney_21502()) ))
                        AND (OL_Juridical_Retail.ChildObjectId = inRetailId OR inRetailId = 0)
                    )
 
        SELECT *
+         , COALESCE (tmpRes.AmountOut,0) ::TFloat AS SummPay
+         , (COALESCE(tmpRes.SummToPay,0) - COALESCE (tmpRes.AmountOut,0)) ::TFloat AS RemainsToPay
        FROM tmpRes
        ;
 
