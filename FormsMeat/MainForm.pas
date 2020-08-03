@@ -1165,6 +1165,8 @@ type
     miReport_MotionGoods_AssetNoBalance: TMenuItem;
     actReport_JuridicalSold_AssetNoBalance: TdsdOpenForm;
     miReport_JuridicalSold_AssetNoBalance: TMenuItem;
+    actCashOperationBonus: TdsdOpenForm;
+    miCashOperationBonus: TMenuItem;
     procedure actReport_OLAPSoldExecute(Sender: TObject);
     procedure FormShow(Sender: TObject);
     procedure FormClose(Sender: TObject; var Action: TCloseAction);
