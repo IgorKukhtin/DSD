@@ -243,6 +243,15 @@ object frmMain: TfrmMain
             TabOrder = 5
             Visible = False
           end
+          object chkStopIfErr: TCheckBox
+            Left = 801
+            Top = 24
+            Width = 240
+            Height = 17
+            Caption = ' '#1086#1089#1090#1072#1085#1086#1074#1080#1090#1100', '#1077#1089#1083#1080' '#1086#1096#1080#1073#1082#1072' '#1085#1072' '#1096#1072#1075#1077' '#8470'1'
+            TabOrder = 6
+            OnClick = chkStopIfErrClick
+          end
         end
       end
       object pnlLogLeft: TPanel
@@ -255,11 +264,12 @@ object frmMain: TfrmMain
         TabOrder = 1
         object btnSendSinglePacket: TButton
           Left = 4
-          Top = 137
+          Top = 481
           Width = 223
           Height = 25
           Caption = #1058#1077#1089#1090' '#1087#1077#1088#1077#1076#1072#1095#1080' '#1086#1076#1085#1086#1075#1086' '#1087#1072#1082#1077#1090#1072
           TabOrder = 0
+          Visible = False
           OnClick = btnSendSinglePacketClick
         end
         object btnTestMaster: TButton
@@ -282,11 +292,12 @@ object frmMain: TfrmMain
         end
         object btnReplicaCommandsSQL: TButton
           Left = 4
-          Top = 101
+          Top = 445
           Width = 223
           Height = 25
           Caption = 'SQL  '#1076#1083#1103' '#1089#1086#1079#1076#1072#1085#1080#1103' '#1082#1086#1084#1072#1085#1076' '#1086#1076#1085#1086#1075#1086' '#1087#1072#1082#1077#1090#1072
           TabOrder = 3
+          Visible = False
           OnClick = btnReplicaCommandsSQLClick
         end
         object btnMinId: TButton
@@ -319,7 +330,7 @@ object frmMain: TfrmMain
         end
         object btnStartReplication: TButton
           Left = 4
-          Top = 172
+          Top = 98
           Width = 223
           Height = 25
           Caption = #1057#1090#1072#1088#1090' '#1088#1077#1087#1083#1080#1082#1072#1094#1080#1080
@@ -328,7 +339,7 @@ object frmMain: TfrmMain
         end
         object btnStop: TButton
           Left = 4
-          Top = 205
+          Top = 131
           Width = 223
           Height = 25
           Caption = #1057#1090#1086#1087
@@ -372,10 +383,6 @@ object frmMain: TfrmMain
               ParentDoubleBuffered = False
               ParentFont = False
               TabOrder = 0
-              ExplicitLeft = 512
-              ExplicitTop = 56
-              ExplicitWidth = 185
-              ExplicitHeight = 209
             end
           end
           object tsChk: TTabSheet
@@ -587,6 +594,7 @@ object frmMain: TfrmMain
         Width = 500
         Height = 21
         TabOrder = 2
+        OnChange = edtLibLocationChange
       end
       object btnLibLocation: TButton
         Left = 640
@@ -599,22 +607,31 @@ object frmMain: TfrmMain
         OnClick = btnLibLocationClick
       end
       object chkWriteLog: TCheckBox
-        Left = 139
+        Left = 334
         Top = 446
         Width = 169
         Height = 17
-        Caption = #1079#1072#1087#1080#1089#1099#1074#1072#1090#1100' '#1083#1086#1075' '#1074' '#1092#1072#1081#1083
+        Caption = ' '#1079#1072#1087#1080#1089#1099#1074#1072#1090#1100' '#1083#1086#1075' '#1074' '#1092#1072#1081#1083
         TabOrder = 4
         OnClick = chkWriteLogClick
       end
       object chkShowLog: TCheckBox
-        Left = 328
+        Left = 139
         Top = 446
-        Width = 97
+        Width = 153
         Height = 17
-        Caption = #1087#1086#1082#1072#1079#1099#1074#1072#1090#1100' '#1083#1086#1075
+        Caption = ' '#1087#1086#1082#1072#1079#1099#1074#1072#1090#1100' '#1083#1086#1075' '#1085#1072' '#1101#1082#1088#1072#1085#1077
         TabOrder = 5
         OnClick = chkShowLogClick
+      end
+      object chkWriteCommands: TCheckBox
+        Left = 510
+        Top = 446
+        Width = 177
+        Height = 17
+        Caption = ' '#1079#1072#1087#1080#1089#1099#1074#1072#1090#1100' '#1082#1086#1084#1072#1085#1076#1099' '#1074' '#1092#1072#1081#1083
+        TabOrder = 6
+        OnClick = chkWriteCommandsClick
       end
     end
   end
@@ -622,13 +639,13 @@ object frmMain: TfrmMain
     FavoriteLinks = <>
     FileTypes = <>
     Options = []
-    Left = 716
-    Top = 471
+    Left = 564
+    Top = 551
   end
   object tmrElapsed: TTimer
     Enabled = False
     OnTimer = tmrElapsedTimer
-    Left = 953
-    Top = 151
+    Left = 1049
+    Top = 39
   end
 end
