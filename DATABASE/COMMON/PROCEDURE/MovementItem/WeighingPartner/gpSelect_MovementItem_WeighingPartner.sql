@@ -46,6 +46,12 @@ BEGIN
      -- проверка прав пользователя на вызов процедуры
      -- vbUserId := PERFORM lpCheckRight (inSession, zc_Enum_Process_Select_MI_WeighingPartner());
 
+/*if inSession <> '5' AND inShowAll = TRUE
+then
+    RAISE EXCEPTION 'Ошибка.Повторите действие через 3 мин.';
+end if;*/
+
+
      -- inShowAll:= TRUE;
      RETURN QUERY 
 
@@ -66,159 +72,34 @@ BEGIN
                                    , MovementItem.Id                               AS MovementItemId
                                    , MovementItem.ObjectId                         AS GoodsId
                                    , MovementItem.Amount                           AS TaxPromo
-                                   , COALESCE (MILinkObject_GoodsKind.ObjectId, 0) AS GoodsKindId
                               FROM (SELECT DISTINCT tmpMIList.MovementId_Promo :: Integer AS MovementId_Promo FROM tmpMIList WHERE tmpMIList.MovementId_Promo <> 0) AS tmp
                                    INNER JOIN MovementItem ON MovementItem.MovementId = tmp.MovementId_Promo
                                                           AND MovementItem.DescId = zc_MI_Master()
                                                           AND MovementItem.isErased = FALSE
-                                   LEFT JOIN MovementItemLinkObject AS MILinkObject_GoodsKind
-                                                                    ON MILinkObject_GoodsKind.MovementItemId = MovementItem.Id
-                                                                   AND MILinkObject_GoodsKind.DescId = zc_MILinkObject_GoodsKind()
                              )
+      , tmpMILinkObjectPromo AS (SELECT MILinkObject_GoodsKind.*
+                                 FROM MovementItemLinkObject AS MILinkObject_GoodsKind
+                                 WHERE MILinkObject_GoodsKind.MovementItemId IN (SELECT DISTINCT tmpMIPromo_all.MovementItemId FROM tmpMIPromo_all)
+                                   AND MILinkObject_GoodsKind.DescId         = zc_MILinkObject_GoodsKind()
+                                )
+           , tmpMIFloatPromo AS (SELECT MIFloat_PriceWithOutVAT.*
+                                 FROM MovementItemFloat AS MIFloat_PriceWithOutVAT
+                                 WHERE MIFloat_PriceWithOutVAT.MovementItemId IN (SELECT DISTINCT tmpMIPromo_all.MovementItemId FROM tmpMIPromo_all)
+                                   AND MIFloat_PriceWithOutVAT.DescId         = zc_MIFloat_PriceWithOutVAT()
+                                )
              , tmpMIPromo AS (SELECT DISTINCT 
                                      tmpMIPromo_all.MovementId_Promo
                                    , tmpMIPromo_all.GoodsId
-                                   , tmpMIPromo_all.GoodsKindId
+                                 --, tmpMIPromo_all.GoodsKindId
+                                   , COALESCE (MILinkObject_GoodsKind.ObjectId, 0) AS GoodsKindId
                                    , CASE WHEN tmpMIPromo_all.TaxPromo <> 0 THEN MIFloat_PriceWithOutVAT.ValueData ELSE 0 END AS PricePromo
                               FROM tmpMIPromo_all
-                                   LEFT JOIN MovementItemFloat AS MIFloat_PriceWithOutVAT
-                                                               ON MIFloat_PriceWithOutVAT.MovementItemId = tmpMIPromo_all.MovementItemId
-                                                              AND MIFloat_PriceWithOutVAT.DescId = zc_MIFloat_PriceWithOutVAT()
+                                   LEFT JOIN tmpMIFloatPromo AS MIFloat_PriceWithOutVAT
+                                                             ON MIFloat_PriceWithOutVAT.MovementItemId = tmpMIPromo_all.MovementItemId
+                                   LEFT JOIN tmpMILinkObjectPromo AS MILinkObject_GoodsKind
+                                                                  ON MILinkObject_GoodsKind.MovementItemId = tmpMIPromo_all.MovementItemId
                              )
-       -- Результат     
-       SELECT
-             tmpMI.MovementItemId :: Integer  AS Id
-           , Object_Goods.ObjectCode          AS GoodsCode
-           , Object_Goods.ValueData           AS GoodsName
-           , ObjectString_Goods_GoodsGroupFull.ValueData AS GoodsGroupNameFull
-
-           , tmpMI.Amount :: TFloat           AS Amount
-           , tmpMI.Amount_mi :: TFloat        AS Amount_mi
-
-           , CASE WHEN tmpMI.AmountPartner = 0 THEN NULL ELSE tmpMI.AmountPartner END :: TFloat       AS AmountPartner
-           , CASE WHEN tmpMI.AmountPartner_mi = 0 THEN NULL ELSE tmpMI.AmountPartner_mi END :: TFloat AS AmountPartner_mi
-
-           , tmpMI.RealWeight  :: TFloat      AS RealWeight
-           , tmpMI.CountTare   :: TFloat      AS CountTare
-           , CASE WHEN inShowAll = TRUE THEN tmpMI.WeightTare WHEN tmpMI.CountTare <> 0 THEN (tmpMI.RealWeight - tmpMI.Amount) / tmpMI.CountTare ELSE 0 END :: TFloat AS WeightTare
-
-           , tmpMI.CountTare1   :: TFloat   AS CountTare1
-           , tmpMI.CountTare2   :: TFloat   AS CountTare2
-           , tmpMI.CountTare3   :: TFloat   AS CountTare3
-           , tmpMI.CountTare4   :: TFloat   AS CountTare4
-           , tmpMI.CountTare5   :: TFloat   AS CountTare5
-           , tmpMI.CountTare6   :: TFloat   AS CountTare6
-           
-           , tmpMI.WeightTare1  :: TFloat   AS WeightTare1
-           , tmpMI.WeightTare2  :: TFloat   AS WeightTare2
-           , tmpMI.WeightTare3  :: TFloat   AS WeightTare3
-           , tmpMI.WeightTare4  :: TFloat   AS WeightTare4
-           , tmpMI.WeightTare5  :: TFloat   AS WeightTare5
-           , tmpMI.WeightTare6  :: TFloat   AS WeightTare6
-
-           , CASE WHEN tmpMI.CountPack = 0    THEN NULL ELSE tmpMI.CountPack    END :: TFloat AS Count
-           , CASE WHEN tmpMI.CountPack_mi = 0 THEN NULL ELSE tmpMI.CountPack_mi END :: TFloat AS Count_mi
-           , CASE WHEN tmpMI.HeadCount = 0    THEN NULL ELSE tmpMI.HeadCount    END :: TFloat AS HeadCount
-           , CASE WHEN tmpMI.HeadCount_mi = 0 THEN NULL ELSE tmpMI.HeadCount_mi END :: TFloat AS HeadCount_mi
-           , CASE WHEN tmpMI.BoxCount = 0     THEN NULL ELSE tmpMI.BoxCount     END :: TFloat AS BoxCount
-           , CASE WHEN tmpMI.BoxCount_mi = 0  THEN NULL ELSE tmpMI.BoxCount_mi  END :: TFloat AS BoxCount_mi
-
-           , CASE WHEN tmpMI.BoxNumber = 0 THEN NULL ELSE tmpMI.BoxNumber END :: TFloat     AS BoxNumber
-           , CASE WHEN tmpMI.LevelNumber = 0 THEN NULL ELSE tmpMI.LevelNumber END :: TFloat AS LevelNumber
-
-           , CASE WHEN tmpMI.ChangePercentAmount = 0 THEN NULL ELSE tmpMI.ChangePercentAmount END :: TFloat AS ChangePercentAmount
-           , CASE WHEN tmpMI.AmountChangePercent = 0 THEN NULL ELSE tmpMI.AmountChangePercent END :: TFloat AS AmountChangePercent
-
-           , tmpMI.ChangePercent :: TFloat AS ChangePercent
-           , CASE WHEN tmpMI.Price = 0 THEN NULL ELSE tmpMI.Price END :: TFloat                 AS Price
-           , CASE WHEN tmpMI.CountForPrice = 0 THEN NULL ELSE tmpMI.CountForPrice END :: TFloat AS CountForPrice
-           
-           , CASE WHEN tmpMI.PartionGoodsDate = zc_DateStart() THEN NULL ELSE tmpMI.PartionGoodsDate END :: TDateTime AS PartionGoodsDate
-
-           , Object_GoodsKind.ValueData      AS GoodsKindName
-           , Object_Measure.ValueData        AS MeasureName
-           , Object_Box.ValueData            AS BoxName
-           , Object_PriceList.ValueData      AS PriceListName
-           
-           , CASE WHEN tmpMI.InsertDate = zc_DateStart() THEN NULL ELSE tmpMI.InsertDate END :: TDateTime AS InsertDate
-           , CASE WHEN tmpMI.UpdateDate = zc_DateStart() THEN NULL ELSE tmpMI.UpdateDate END :: TDateTime AS UpdateDate
-
-           , tmpMI.StartBegin :: TDateTime
-           , tmpMI.EndBegin   :: TDateTime
-           , (COALESCE (tmpMI.diffBegin_sec,0)) ::TFloat AS diffBegin_sec
-
-           , zfCalc_PromoMovementName (NULL, Movement_Promo_View.InvNumber :: TVarChar, Movement_Promo_View.OperDate, Movement_Promo_View.StartSale, CASE WHEN MovementFloat_MovementDesc.ValueData = zc_Movement_ReturnIn() THEN Movement_Promo_View.EndReturn ELSE Movement_Promo_View.EndSale END) AS MovementPromo
-           , tmpMIPromo.PricePromo :: TFloat AS PricePromo
-
-           , tmpMI.isBarCode
-
-           , Object_InfoMoney_View.InfoMoneyCode
-           , Object_InfoMoney_View.InfoMoneyGroupName
-           , Object_InfoMoney_View.InfoMoneyDestinationName
-           , Object_InfoMoney_View.InfoMoneyName
-           , Object_InfoMoney_View.InfoMoneyName_all
-
-           , tmpMI.isErased
-
-       FROM (SELECT tmpMI.MovementItemId
-                  , tmpMI.GoodsId
-                  , SUM (tmpMI.Amount)           AS Amount
-                  , SUM (tmpMI.Amount_mi)        AS Amount_mi
-                  , SUM (tmpMI.AmountPartner)    AS AmountPartner
-                  , SUM (tmpMI.AmountPartner_mi) AS AmountPartner_mi
-
-                  , SUM (tmpMI.RealWeight)     AS RealWeight
-                  , SUM (tmpMI.CountTare)      AS CountTare
-                  , tmpMI.WeightTare           AS WeightTare
-
-                  , SUM (tmpMI.CountTare1)      AS CountTare1
-                  , SUM (tmpMI.CountTare2)      AS CountTare2
-                  , SUM (tmpMI.CountTare3)      AS CountTare3
-                  , SUM (tmpMI.CountTare4)      AS CountTare4
-                  , SUM (tmpMI.CountTare5)      AS CountTare5
-                  , SUM (tmpMI.CountTare6)      AS CountTare6
-                  
-                  , tmpMI.WeightTare1           AS WeightTare1
-                  , tmpMI.WeightTare2           AS WeightTare2
-                  , tmpMI.WeightTare3           AS WeightTare3
-                  , tmpMI.WeightTare4           AS WeightTare4
-                  , tmpMI.WeightTare5           AS WeightTare5
-                  , tmpMI.WeightTare6           AS WeightTare6
-
-                  , SUM (tmpMI.CountPack)      AS CountPack
-                  , SUM (tmpMI.CountPack_mi)   AS CountPack_mi
-                  , SUM (tmpMI.HeadCount)      AS HeadCount
-                  , SUM (tmpMI.HeadCount_mi)   AS HeadCount_mi
-                  , SUM (tmpMI.BoxCount)       AS BoxCount
-                  , SUM (tmpMI.BoxCount_mi)    AS BoxCount_mi
-
-                  , tmpMI.BoxNumber            AS BoxNumber
-                  , MAX (tmpMI.LevelNumber)    AS LevelNumber -- MAX
-
-                  , tmpMI.ChangePercentAmount
-                  , SUM (tmpMI.AmountChangePercent) AS AmountChangePercent
-                  , tmpMI.ChangePercent
-                  , tmpMI.Price
-                  , tmpMI.CountForPrice
-    
-                  , tmpMI.PartionGoodsDate
-                  , tmpMI.GoodsKindId
-                  , tmpMI.BoxId
-                  , tmpMI.PriceListId
-
-                  , tmpMI.InsertDate
-                  , tmpMI.UpdateDate
-
-                  , MAX (tmpMI.StartBegin) AS StartBegin
-                  , MAX (tmpMI.EndBegin)   AS EndBegin
-                  , SUM (COALESCE (tmpMI.diffBegin_sec,0)) ::TFloat AS diffBegin_sec
-
-                  , tmpMI.MovementPromoId
-                  
-                  , tmpMI.isBarCode
-                  , tmpMI.isErased
-             FROM
-            (SELECT CASE WHEN inShowAll = TRUE THEN MovementItem.Id ELSE 0 END :: Integer AS MovementItemId
+, tmpMI_1 AS (SELECT CASE WHEN inShowAll = TRUE THEN MovementItem.Id ELSE 0 END :: Integer AS MovementItemId
                   , MovementItem.ObjectId AS GoodsId
                   , MovementItem.Amount
                   , 0 AS Amount_mi
@@ -528,7 +409,141 @@ BEGIN
                                              AND MIFloat_PromoMovement.DescId = zc_MIFloat_PromoMovementId()
                   
 
-            ) AS tmpMI
+            ) 
+
+       -- Результат     
+       SELECT
+             tmpMI.MovementItemId :: Integer  AS Id
+           , Object_Goods.ObjectCode          AS GoodsCode
+           , Object_Goods.ValueData           AS GoodsName
+           , ObjectString_Goods_GoodsGroupFull.ValueData AS GoodsGroupNameFull
+
+           , tmpMI.Amount :: TFloat           AS Amount
+           , tmpMI.Amount_mi :: TFloat        AS Amount_mi
+
+           , CASE WHEN tmpMI.AmountPartner = 0 THEN NULL ELSE tmpMI.AmountPartner END :: TFloat       AS AmountPartner
+           , CASE WHEN tmpMI.AmountPartner_mi = 0 THEN NULL ELSE tmpMI.AmountPartner_mi END :: TFloat AS AmountPartner_mi
+
+           , tmpMI.RealWeight  :: TFloat      AS RealWeight
+           , tmpMI.CountTare   :: TFloat      AS CountTare
+           , CASE WHEN inShowAll = TRUE THEN tmpMI.WeightTare WHEN tmpMI.CountTare <> 0 THEN (tmpMI.RealWeight - tmpMI.Amount) / tmpMI.CountTare ELSE 0 END :: TFloat AS WeightTare
+
+           , tmpMI.CountTare1   :: TFloat   AS CountTare1
+           , tmpMI.CountTare2   :: TFloat   AS CountTare2
+           , tmpMI.CountTare3   :: TFloat   AS CountTare3
+           , tmpMI.CountTare4   :: TFloat   AS CountTare4
+           , tmpMI.CountTare5   :: TFloat   AS CountTare5
+           , tmpMI.CountTare6   :: TFloat   AS CountTare6
+           
+           , tmpMI.WeightTare1  :: TFloat   AS WeightTare1
+           , tmpMI.WeightTare2  :: TFloat   AS WeightTare2
+           , tmpMI.WeightTare3  :: TFloat   AS WeightTare3
+           , tmpMI.WeightTare4  :: TFloat   AS WeightTare4
+           , tmpMI.WeightTare5  :: TFloat   AS WeightTare5
+           , tmpMI.WeightTare6  :: TFloat   AS WeightTare6
+
+           , CASE WHEN tmpMI.CountPack = 0    THEN NULL ELSE tmpMI.CountPack    END :: TFloat AS Count
+           , CASE WHEN tmpMI.CountPack_mi = 0 THEN NULL ELSE tmpMI.CountPack_mi END :: TFloat AS Count_mi
+           , CASE WHEN tmpMI.HeadCount = 0    THEN NULL ELSE tmpMI.HeadCount    END :: TFloat AS HeadCount
+           , CASE WHEN tmpMI.HeadCount_mi = 0 THEN NULL ELSE tmpMI.HeadCount_mi END :: TFloat AS HeadCount_mi
+           , CASE WHEN tmpMI.BoxCount = 0     THEN NULL ELSE tmpMI.BoxCount     END :: TFloat AS BoxCount
+           , CASE WHEN tmpMI.BoxCount_mi = 0  THEN NULL ELSE tmpMI.BoxCount_mi  END :: TFloat AS BoxCount_mi
+
+           , CASE WHEN tmpMI.BoxNumber = 0 THEN NULL ELSE tmpMI.BoxNumber END :: TFloat     AS BoxNumber
+           , CASE WHEN tmpMI.LevelNumber = 0 THEN NULL ELSE tmpMI.LevelNumber END :: TFloat AS LevelNumber
+
+           , CASE WHEN tmpMI.ChangePercentAmount = 0 THEN NULL ELSE tmpMI.ChangePercentAmount END :: TFloat AS ChangePercentAmount
+           , CASE WHEN tmpMI.AmountChangePercent = 0 THEN NULL ELSE tmpMI.AmountChangePercent END :: TFloat AS AmountChangePercent
+
+           , tmpMI.ChangePercent :: TFloat AS ChangePercent
+           , CASE WHEN tmpMI.Price = 0 THEN NULL ELSE tmpMI.Price END :: TFloat                 AS Price
+           , CASE WHEN tmpMI.CountForPrice = 0 THEN NULL ELSE tmpMI.CountForPrice END :: TFloat AS CountForPrice
+           
+           , CASE WHEN tmpMI.PartionGoodsDate = zc_DateStart() THEN NULL ELSE tmpMI.PartionGoodsDate END :: TDateTime AS PartionGoodsDate
+
+           , Object_GoodsKind.ValueData      AS GoodsKindName
+           , Object_Measure.ValueData        AS MeasureName
+           , Object_Box.ValueData            AS BoxName
+           , Object_PriceList.ValueData      AS PriceListName
+           
+           , CASE WHEN tmpMI.InsertDate = zc_DateStart() THEN NULL ELSE tmpMI.InsertDate END :: TDateTime AS InsertDate
+           , CASE WHEN tmpMI.UpdateDate = zc_DateStart() THEN NULL ELSE tmpMI.UpdateDate END :: TDateTime AS UpdateDate
+
+           , tmpMI.StartBegin :: TDateTime
+           , tmpMI.EndBegin   :: TDateTime
+           , (COALESCE (tmpMI.diffBegin_sec,0)) ::TFloat AS diffBegin_sec
+
+           , zfCalc_PromoMovementName (NULL, Movement_Promo_View.InvNumber :: TVarChar, Movement_Promo_View.OperDate, Movement_Promo_View.StartSale, CASE WHEN MovementFloat_MovementDesc.ValueData = zc_Movement_ReturnIn() THEN Movement_Promo_View.EndReturn ELSE Movement_Promo_View.EndSale END) AS MovementPromo
+           , tmpMIPromo.PricePromo :: TFloat AS PricePromo
+
+           , tmpMI.isBarCode
+
+           , Object_InfoMoney_View.InfoMoneyCode
+           , Object_InfoMoney_View.InfoMoneyGroupName
+           , Object_InfoMoney_View.InfoMoneyDestinationName
+           , Object_InfoMoney_View.InfoMoneyName
+           , Object_InfoMoney_View.InfoMoneyName_all
+
+           , tmpMI.isErased
+
+       FROM (SELECT tmpMI.MovementItemId
+                  , tmpMI.GoodsId
+                  , SUM (tmpMI.Amount)           AS Amount
+                  , SUM (tmpMI.Amount_mi)        AS Amount_mi
+                  , SUM (tmpMI.AmountPartner)    AS AmountPartner
+                  , SUM (tmpMI.AmountPartner_mi) AS AmountPartner_mi
+
+                  , SUM (tmpMI.RealWeight)     AS RealWeight
+                  , SUM (tmpMI.CountTare)      AS CountTare
+                  , tmpMI.WeightTare           AS WeightTare
+
+                  , SUM (tmpMI.CountTare1)      AS CountTare1
+                  , SUM (tmpMI.CountTare2)      AS CountTare2
+                  , SUM (tmpMI.CountTare3)      AS CountTare3
+                  , SUM (tmpMI.CountTare4)      AS CountTare4
+                  , SUM (tmpMI.CountTare5)      AS CountTare5
+                  , SUM (tmpMI.CountTare6)      AS CountTare6
+                  
+                  , tmpMI.WeightTare1           AS WeightTare1
+                  , tmpMI.WeightTare2           AS WeightTare2
+                  , tmpMI.WeightTare3           AS WeightTare3
+                  , tmpMI.WeightTare4           AS WeightTare4
+                  , tmpMI.WeightTare5           AS WeightTare5
+                  , tmpMI.WeightTare6           AS WeightTare6
+
+                  , SUM (tmpMI.CountPack)      AS CountPack
+                  , SUM (tmpMI.CountPack_mi)   AS CountPack_mi
+                  , SUM (tmpMI.HeadCount)      AS HeadCount
+                  , SUM (tmpMI.HeadCount_mi)   AS HeadCount_mi
+                  , SUM (tmpMI.BoxCount)       AS BoxCount
+                  , SUM (tmpMI.BoxCount_mi)    AS BoxCount_mi
+
+                  , tmpMI.BoxNumber            AS BoxNumber
+                  , MAX (tmpMI.LevelNumber)    AS LevelNumber -- MAX
+
+                  , tmpMI.ChangePercentAmount
+                  , SUM (tmpMI.AmountChangePercent) AS AmountChangePercent
+                  , tmpMI.ChangePercent
+                  , tmpMI.Price
+                  , tmpMI.CountForPrice
+    
+                  , tmpMI.PartionGoodsDate
+                  , tmpMI.GoodsKindId
+                  , tmpMI.BoxId
+                  , tmpMI.PriceListId
+
+                  , tmpMI.InsertDate
+                  , tmpMI.UpdateDate
+
+                  , MAX (tmpMI.StartBegin) AS StartBegin
+                  , MAX (tmpMI.EndBegin)   AS EndBegin
+                  , SUM (COALESCE (tmpMI.diffBegin_sec,0)) ::TFloat AS diffBegin_sec
+
+                  , tmpMI.MovementPromoId
+                  
+                  , tmpMI.isBarCode
+                  , tmpMI.isErased
+             FROM tmpMI_1 AS tmpMI
             GROUP BY tmpMI.MovementItemId
                    , tmpMI.GoodsId
                    , tmpMI.WeightTare

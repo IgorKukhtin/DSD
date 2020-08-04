@@ -8,4 +8,8 @@ DO $$
             ALTER TABLE _replica.table_update_data ADD COLUMN MovementId BigInt;
         END IF;
     END;
+
+
+    -- CREATE INDEX idx_table_update_data_transaction_id ON _replica.table_update_data (transaction_id); 
+
 $$;

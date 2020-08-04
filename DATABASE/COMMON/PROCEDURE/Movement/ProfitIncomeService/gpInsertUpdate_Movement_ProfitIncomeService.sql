@@ -46,7 +46,7 @@ BEGIN
                                                       , inContractMasterId  := inContractMasterId
                                                       , inContractChildId   := inContractChildId
                                                       , inInfoMoneyId       := inInfoMoneyId
-                                                      , inJuridicalId       := COALESCE (inPartnerId, inJuridicalId)  -- если выбран контрагент - записываем его а по нему уже понятно кто юр.лицо
+                                                      , inJuridicalId       := CASE WHEN inPartnerId > 0 THEN inPartnerId ELSE inJuridicalId END  -- если выбран контрагент - записываем его а по нему уже понятно кто юр.лицо
                                                       , inPaidKindId        := inPaidKindId
                                                       , inContractConditionKindId := inContractConditionKindId
                                                       , inBonusKindId       := inBonusKindId

@@ -11,6 +11,7 @@ AS
 $BODY$
   DECLARE vbMovementDescId Integer;
   DECLARE vbIsAccount_50401 Boolean;
+  DECLARE vbIsAccount_60301 Boolean;
 BEGIN
      -- !!!обязательно!!! очистили таблицу проводок
      DELETE FROM _tmpMIContainer_insert;
@@ -25,7 +26,13 @@ BEGIN
                  THEN TRUE
                  ELSE FALSE
             END
-            INTO vbMovementDescId, vbIsAccount_50401 -- Расходы будущих периодов + Услуги по маркетингу
+          , CASE WHEN Object_InfoMoney_View.InfoMoneyId IN (zc_Enum_InfoMoney_30503()) -- Бонусы от поставщиков
+                 THEN TRUE
+                 ELSE FALSE
+            END
+            INTO vbMovementDescId
+               , vbIsAccount_50401 -- Расходы будущих периодов + Услуги по маркетингу
+               , vbIsAccount_60301 -- Прибыль будущих периодов + Услуги по маркетингу
      FROM Movement
           JOIN MovementItem ON MovementItem.MovementId = Movement.Id AND MovementItem.DescId = zc_MI_Master()
           LEFT JOIN MovementItemLinkObject AS MILinkObject_InfoMoney
@@ -53,7 +60,7 @@ BEGIN
              , Movement.OperDate
              , COALESCE (MovementItem.ObjectId, 0) AS ObjectId
              , COALESCE (Object.DescId, 0) AS ObjectDescId
-             , MovementItem.Amount AS OperSumm
+             , CASE WHEN vbMovementDescId = zc_Movement_ProfitIncomeService() THEN 1 ELSE 1 END * MovementItem.Amount AS OperSumm
              , COALESCE (MovementFloat_AmountCurrency.ValueData, 0) AS OperSumm_Currency
              , MovementItem.Id AS MovementItemId
 
@@ -61,6 +68,9 @@ BEGIN
              , 0 AS AccountGroupId, 0 AS AccountDirectionId                         -- сформируем позже, или ...
              , CASE WHEN vbMovementDescId = zc_Movement_ProfitLossService() AND vbIsAccount_50401 = TRUE
                          THEN zc_Enum_Account_50401() -- Расходы будущих периодов + Маркетинг
+                    WHEN vbMovementDescId = zc_Movement_ProfitIncomeService() AND vbIsAccount_60301 = TRUE
+                         THEN zc_Enum_Account_60301() -- Прибыль будущих периодов + Бонусы от поставщиков
+                         
                     ELSE 0
                END AS AccountId 
 
@@ -89,10 +99,10 @@ BEGIN
                          THEN -- Финансовая помощь
                               0
                     ELSE -- всегда по подразделению или "Главный филиал" (нужен для НАЛ долгов)
-                         COALESCE (ObjectLink_Unit_Branch.ChildObjectId, zc_Branch_Basis())
+                         COALESCE (MILinkObject_Branch.ObjectId, ObjectLink_Unit_Branch.ChildObjectId, zc_Branch_Basis())
                END AS BranchId_Balance
                -- Филиал ОПиУ: всегда по подразделению или "Главный филиал" (здесь не используется, нужен для следующей проводки)
-             , COALESCE (ObjectLink_Unit_Branch.ChildObjectId, 0 /*zc_Branch_Basis()*/) AS BranchId_ProfitLoss
+             , COALESCE (MILinkObject_Branch.ObjectId, ObjectLink_Unit_Branch.ChildObjectId, 0 /*zc_Branch_Basis()*/) AS BranchId_ProfitLoss
 
                -- Месяц начислений: не используется
              , 0 AS ServiceDateId
@@ -130,6 +140,11 @@ BEGIN
              LEFT JOIN ObjectLink AS ObjectLink_Unit_Branch ON ObjectLink_Unit_Branch.ObjectId = MILinkObject_Unit.ObjectId
                                                            AND ObjectLink_Unit_Branch.DescId   = zc_ObjectLink_Unit_Branch()
 
+             LEFT JOIN MovementItemLinkObject AS MILinkObject_Branch
+                                              ON MILinkObject_Branch.MovementItemId = MovementItem.Id
+                                             AND MILinkObject_Branch.DescId = zc_MILinkObject_Branch()
+                                             AND Movement.DescId IN (zc_Movement_ProfitLossService(), zc_Movement_ProfitIncomeService())
+
              LEFT JOIN MovementItemLinkObject AS MILinkObject_InfoMoney
                                               ON MILinkObject_InfoMoney.MovementItemId = MovementItem.Id
                                              AND MILinkObject_InfoMoney.DescId = zc_MILinkObject_InfoMoney()
@@ -145,7 +160,7 @@ BEGIN
                                                                        AND ObjectLink_Contract_JuridicalBasis.DescId = zc_ObjectLink_Contract_JuridicalBasis()
              LEFT JOIN Object_InfoMoney_View AS View_InfoMoney ON View_InfoMoney.InfoMoneyId = MILinkObject_InfoMoney.ObjectId
         WHERE Movement.Id = inMovementId
-          AND Movement.DescId IN (zc_Movement_Service(), zc_Movement_ProfitLossService())
+          AND Movement.DescId IN (zc_Movement_Service(), zc_Movement_ProfitLossService(), zc_Movement_ProfitIncomeService())
           AND Movement.StatusId IN (zc_Enum_Status_UnComplete(), zc_Enum_Status_Erased())
        ;
 
@@ -195,12 +210,17 @@ BEGIN
 
              , CASE WHEN vbMovementDescId = zc_Movement_Service() AND vbIsAccount_50401 = TRUE -- Расходы будущих периодов + Услуги по маркетингу
                          THEN _tmpItem.ObjectId -- из предыдущей проводки
+                    WHEN vbMovementDescId = zc_Movement_Service() AND vbIsAccount_60301 = TRUE -- Прибыль будущих периодов + Бонусы от поставщиков
+                         THEN _tmpItem.ObjectId -- из предыдущей проводки
+                         
                     WHEN MILinkObject_Asset.ObjectId > 0
                          THEN _tmpItem.ObjectId -- дублируем УП, попадет в ОС
                     ELSE 0 -- значит попадет в ОПиУ или в ОС
                END AS ObjectId
 
              , CASE WHEN vbMovementDescId = zc_Movement_Service() AND vbIsAccount_50401 = TRUE -- Расходы будущих периодов + Услуги по маркетингу
+                         THEN _tmpItem.ObjectDescId -- из предыдущей проводки
+                    WHEN vbMovementDescId = zc_Movement_Service() AND vbIsAccount_60301 = TRUE -- Прибыль будущих периодов + Бонусы от поставщиков
                          THEN _tmpItem.ObjectDescId -- из предыдущей проводки
                     WHEN MILinkObject_Asset.ObjectId > 0
                          THEN zc_Object_InfoMoney() -- дублируем УП, попадет в ОС
@@ -219,6 +239,8 @@ BEGIN
                END AS AccountDirectionId
              , CASE WHEN vbMovementDescId = zc_Movement_Service() AND vbIsAccount_50401 = TRUE
                          THEN zc_Enum_Account_50401() -- Расходы будущих периодов - Маркетинг
+                    WHEN vbMovementDescId = zc_Movement_Service() AND vbIsAccount_60301 = TRUE
+                         THEN zc_Enum_Account_60301() -- Прибыль будущих периодов + Бонусы от поставщиков
                     ELSE 0
                END AS AccountId 
 

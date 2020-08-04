@@ -271,6 +271,10 @@ BEGIN
                                                        AND (_tmpItem.UnitId = 0 OR _tmpItem.MovementDescId = zc_Movement_ProfitLossService())
                                                            THEN zc_Enum_ProfitLossDirection_11100() -- Результат основной деятельности + Маркетинг
 
+                                                      WHEN _tmpItem.InfoMoneyId = zc_Enum_InfoMoney_30503() -- Бонусы от поставщиков
+                                                       AND (_tmpItem.UnitId = 0 OR _tmpItem.MovementDescId = zc_Movement_ProfitIncomeService())
+                                                           THEN zc_Enum_ProfitLossDirection_70200() -- Результат основной деятельности + Маркетинг
+
                                                       WHEN _tmpItem.InfoMoneyDestinationId = zc_Enum_InfoMoneyDestination_30400() -- Доходы + услуги предоставленные
                                                         OR _tmpItem.InfoMoneyDestinationId = zc_Enum_InfoMoneyDestination_30500() -- Доходы + Прочие доходы
                                                         OR _tmpItem.InfoMoneyDestinationId = zc_Enum_InfoMoneyDestination_40600() -- Финансовая деятельность + Депозиты
@@ -314,6 +318,10 @@ BEGIN
                                          WHEN _tmpItem.InfoMoneyDestinationId = zc_Enum_InfoMoneyDestination_21500() -- Маркетинг
                                           AND (_tmpItem.UnitId = 0 OR _tmpItem.MovementDescId = zc_Movement_ProfitLossService())
                                               THEN zc_Enum_ProfitLoss_11101() -- Результат основной деятельности + Маркетинг + Продукция
+
+                                         WHEN _tmpItem.InfoMoneyId = zc_Enum_InfoMoney_30503() -- Бонусы от поставщиков
+                                          AND (_tmpItem.UnitId = 0 OR _tmpItem.MovementDescId = zc_Movement_ProfitIncomeService())
+                                              THEN zc_Enum_ProfitLoss_70215() -- Дополнительная прибыль + Прочее + Бонусы от поставщиков
 
                                          WHEN _tmpItem.InfoMoneyId = zc_Enum_InfoMoney_50201() -- Налог на прибыль
                                               THEN zc_Enum_ProfitLoss_50101() -- Налоги + Налог на прибыль + Налог на прибыль

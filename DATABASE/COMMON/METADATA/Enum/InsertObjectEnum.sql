@@ -535,6 +535,7 @@ BEGIN
      PERFORM lpUpdate_Object_Enum_byCode (inCode:= 40801, inDescId:= zc_Object_Account(), inEnumName:= 'zc_Enum_Account_40801');
 
      PERFORM lpUpdate_Object_Enum_byCode (inCode:= 50401, inDescId:= zc_Object_Account(), inEnumName:= 'zc_Enum_Account_50401');
+     PERFORM lpUpdate_Object_Enum_byCode (inCode:= 60301, inDescId:= zc_Object_Account(), inEnumName:= 'zc_Enum_Account_60301');
 
      PERFORM lpUpdate_Object_Enum_byCode (inCode:= 100301, inDescId:= zc_Object_Account(), inEnumName:= 'zc_Enum_Account_100301');
 
@@ -670,7 +671,9 @@ BEGIN
      PERFORM lpUpdate_Object_Enum_byCode (inCode:= 30103, inDescId:= zc_Object_InfoMoney(), inEnumName:= 'zc_Enum_InfoMoney_30103');
      PERFORM lpUpdate_Object_Enum_byCode (inCode:= 30201, inDescId:= zc_Object_InfoMoney(), inEnumName:= 'zc_Enum_InfoMoney_30201');
      PERFORM lpUpdate_Object_Enum_byCode (inCode:= 30301, inDescId:= zc_Object_InfoMoney(), inEnumName:= 'zc_Enum_InfoMoney_30301');
+
      PERFORM lpUpdate_Object_Enum_byCode (inCode:= 30501, inDescId:= zc_Object_InfoMoney(), inEnumName:= 'zc_Enum_InfoMoney_30501');
+     PERFORM lpUpdate_Object_Enum_byCode (inCode:= 30503, inDescId:= zc_Object_InfoMoney(), inEnumName:= 'zc_Enum_InfoMoney_30503');
 
      PERFORM lpUpdate_Object_Enum_byCode (inCode:= 40801, inDescId:= zc_Object_InfoMoney(), inEnumName:= 'zc_Enum_InfoMoney_40801');
 
@@ -808,6 +811,7 @@ BEGIN
      PERFORM lpUpdate_Object_Enum_byCode (inCode:= 70201, inDescId:= zc_Object_ProfitLoss(), inEnumName:= 'zc_Enum_ProfitLoss_70201');
      PERFORM lpUpdate_Object_Enum_byCode (inCode:= 70202, inDescId:= zc_Object_ProfitLoss(), inEnumName:= 'zc_Enum_ProfitLoss_70202');
      PERFORM lpUpdate_Object_Enum_byCode (inCode:= 70203, inDescId:= zc_Object_ProfitLoss(), inEnumName:= 'zc_Enum_ProfitLoss_70203');
+     PERFORM lpUpdate_Object_Enum_byCode (inCode:= 70215, inDescId:= zc_Object_ProfitLoss(), inEnumName:= 'zc_Enum_ProfitLoss_70215');
 
      PERFORM lpUpdate_Object_Enum_byCode (inCode:= 70501, inDescId:= zc_Object_ProfitLoss(), inEnumName:= 'zc_Enum_ProfitLoss_70501');
 

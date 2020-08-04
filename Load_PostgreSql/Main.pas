@@ -1214,14 +1214,17 @@ begin
      if (Hour_calc = 0) and (beginVACUUM > 0) then beginVACUUM:= 0;
      if (Hour_calc = 6) and (beginVACUUM > 0) then beginVACUUM:= 0;
      //
-     if (Hour_calc = 4) and (Minute_calc > 25) and (Minute_calc < 45)
-        and (ParamStr(2)<>'autoALL')
-        and (BranchEdit.Text <> 'BranchId : 0')
+     if (ParamStr(2)='autoALL') and (BranchEdit.Text <> 'BranchId : 0')
      then begin
-               myLogMemo_add('start stop');
-               MyDelay(15*60*1000);
-               myLogMemo_add('end stop');
-     end;
+           if (Hour_calc = 4) and (Minute_calc > 25) and (Minute_calc < 45)
+           then begin
+                     myLogMemo_add('start stop');
+                     MyDelay(15*60*1000);
+                     myLogMemo_add('end stop');
+           end;
+           //
+           exit;
+      end;
      //
      if ((Hour_calc = 7) or ((Hour_calc = 21) and (Minute_calc > 20)) or (Hour_calc = 23)
       or ((Hour_calc = 4) and (Minute_calc > 25) {and (Minute_calc < 55)} and ((ParamStr(6)='VAC_5')or(ParamStr(7)='VAC_5')or(ParamStr(8)='VAC_5')))
@@ -1424,7 +1427,7 @@ begin
      end;
      //
      //
-     if (saveMonth <> Month2) and ((ParamStr(6)<>'next-')) then begin
+     if (saveMonth <> Month2) {and ((ParamStr(6)<>'next-'))} then begin
        pInsertHistoryCost_Period(calcEndDate+1,saveEndDate,TRUE);
        //
        tmpDate3:=NOw;
@@ -1765,21 +1768,27 @@ begin
      StartDateCompleteEdit.Text:=DateToStr(StartDate);
      EndDateCompleteEdit.Text:=DateToStr(EndDate);
 
+     try
+
      cbLastCost_save:=cbLastCost.Checked;
      if isPeriodTwo = TRUE then cbLastCost.Checked:=false;
      cbOnlySale_save:=cbOnlySale.Checked;
      if isPeriodTwo = TRUE then cbOnlySale.Checked:=false;
      //
      //
-     if (not fStop) and (isPeriodTwo = FALSE) then pCompleteDocument_Defroster;
-     if (not fStop) and (isPeriodTwo = FALSE) then pCompleteDocument_Pack;
-     if (not fStop) and (isPeriodTwo = FALSE) then pCompleteDocument_Partion;
-     if (not fStop) and (isPeriodTwo = FALSE) then pCompleteDocument_Kopchenie;
+     if (ParamStr(6)<>'next-') or (isPeriodTwo = FALSE) then
+     begin
+       if (not fStop) and (isPeriodTwo = FALSE) then pCompleteDocument_Defroster;
+       if (not fStop) and (isPeriodTwo = FALSE) then pCompleteDocument_Pack;
+       if (not fStop) and (isPeriodTwo = FALSE) then pCompleteDocument_Partion;
+       if (not fStop) and (isPeriodTwo = FALSE) then pCompleteDocument_Kopchenie;
+     end;
      //
      //
      if {(cbOnlySale.Checked = FALSE)and***}(cbInsertHistoryCost.Checked)and(cbInsertHistoryCost.Enabled)
          // и - если необходимо 2 раза
          and (cbOnlyTwo.Checked = FALSE)
+         and ((ParamStr(6)<>'next-') or (isPeriodTwo = FALSE))
      then begin
            // сам расчет с/с - 1-ый - ТОЛЬКО производство
            if (not fStop)and(GroupId_branch <= 0) then pInsertHistoryCost(TRUE);
@@ -1789,7 +1798,8 @@ begin
      end;
      //
      // сам расчет с/с - 2-ой - производство + ФИЛИАЛЫ
-     if (not fStop)and(GroupId_branch <= 0) then pInsertHistoryCost(FALSE);
+     if (not fStop)and(GroupId_branch <= 0) and ((ParamStr(6)<>'next-') or (isPeriodTwo = FALSE))
+     then pInsertHistoryCost(FALSE);
      //
      // ВСЕГДА - Расчет акций
      if (not fStop)and(GroupId_branch <= 0) then pCompleteDocument_Promo;
@@ -1800,6 +1810,8 @@ begin
      // ВСЕГДА - Привязка Возвраты
      if (not fStop)and(GroupId_branch <= 0) {and ((ParamStr(4) <> '-') or (isPeriodTwo = true))} then pCompleteDocument_ReturnIn_Auto;
      //
+     if (ParamStr(6)='next-') and (isPeriodTwo = true)
+     then exit;
      //
      // перепроведение
      if not fStop then pCompleteDocument_List(FALSE, FALSE, FALSE);
@@ -1807,8 +1819,10 @@ begin
      if (not fStop) and (isPeriodTwo = FALSE) then pCompleteDocument_Diff;
      //
      //
-     if isPeriodTwo = TRUE then cbLastCost.Checked:=cbLastCost_save;
-     if isPeriodTwo = TRUE then cbOnlySale.Checked:=cbOnlySale_save;
+     finally
+       if isPeriodTwo = TRUE then cbLastCost.Checked:=cbLastCost_save;
+       if isPeriodTwo = TRUE then cbOnlySale.Checked:=cbOnlySale_save;
+     end;
 
 end;
 //----------------------------------------------------------------------------------------------------------------------------------------------------

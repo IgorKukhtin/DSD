@@ -1227,7 +1227,7 @@ BEGIN
                               WHEN tmpData_all.DocumentTaxKind IN (zc_Enum_DocumentTaxKind_CorrectivePrice()
                                                                  , zc_Enum_DocumentTaxKind_CorrectivePriceSummaryJuridical())
                                AND tmpData_all.AmountTax_calc = tmpData_all.Amount
-                                   THEN tmpData_all.KindCode
+                                   THEN (tmpData_all.KindCode :: Integer + case when inSession = '5' then 10 else 0 end) :: TVarChar
 
                               WHEN tmpData_all.DocumentTaxKind IN (zc_Enum_DocumentTaxKind_CorrectivePrice()
                                                                  , zc_Enum_DocumentTaxKind_CorrectivePriceSummaryJuridical())
@@ -1689,7 +1689,7 @@ BEGIN
                    FROM tmpData_all
                    WHERE vbIsNPP_calc = TRUE
                          -- !!!важно - если НЕ все кол-во!!!
-                     AND tmpData_all.AmountTax_calc <> tmpData_all.Amount
+                     AND tmpData_all.AmountTax_calc <> COALESCE (tmpData_all.Amount, 0)
                          -- !!!важно - показали ТОЛЬКО если есть еще что возвращать!!!
                      AND (tmpData_all.AmountTax_calc <> tmpData_all.Amount
                           -- или !!!Корр. цены!!!

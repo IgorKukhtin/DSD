@@ -1057,14 +1057,14 @@ object MainForm: TMainForm
     end
     object OKPOEdit: TEdit
       Left = 6
-      Top = 641
+      Top = 625
       Width = 104
       Height = 21
       TabOrder = 21
     end
     object cbOKPO: TCheckBox
       Left = 3
-      Top = 621
+      Top = 647
       Width = 104
       Height = 17
       Caption = #1058#1086#1083#1100#1082#1086' '#1054#1050#1055#1054
@@ -1225,7 +1225,7 @@ object MainForm: TMainForm
     end
     object cbBill_List: TCheckBox
       Left = 3
-      Top = 606
+      Top = 607
       Width = 235
       Height = 17
       Caption = #1054#1075#1088#1072#1085#1080#1095#1077#1085#1080#1077' '#1087#1086' '#1089#1087#1080#1089#1082#1091' '#1085#1072#1082#1083#1072#1076#1085#1099#1093
@@ -1397,7 +1397,7 @@ object MainForm: TMainForm
     end
     object cbBranchSendOnPrice: TCheckBox
       Left = 137
-      Top = 621
+      Top = 647
       Width = 110
       Height = 17
       Caption = #1050#1086#1076' '#1087'. '#1076#1083#1103' 2.2.'
@@ -1412,7 +1412,7 @@ object MainForm: TMainForm
     end
     object UnitCodeSendOnPriceEdit: TEdit
       Left = 129
-      Top = 640
+      Top = 625
       Width = 104
       Height = 21
       TabOrder = 44
