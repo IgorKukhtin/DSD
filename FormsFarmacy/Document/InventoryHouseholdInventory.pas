@@ -72,6 +72,12 @@ type
     actInsert_MI_All: TdsdExecStoredProc;
     dxBarButton2: TdxBarButton;
     Summa: TcxGridDBColumn;
+    Deficit: TcxGridDBColumn;
+    DeficitSumm: TcxGridDBColumn;
+    Proficit: TcxGridDBColumn;
+    ProficitSumm: TcxGridDBColumn;
+    Diff: TcxGridDBColumn;
+    DiffSumm: TcxGridDBColumn;
   private
     { Private declarations }
   public

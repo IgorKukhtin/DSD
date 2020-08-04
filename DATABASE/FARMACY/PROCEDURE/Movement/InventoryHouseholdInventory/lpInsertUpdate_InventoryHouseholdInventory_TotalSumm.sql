@@ -7,30 +7,18 @@ CREATE OR REPLACE FUNCTION lpInsertUpdate_InventoryHouseholdInventory_TotalSumm(
 )
   RETURNS VOID AS
 $BODY$
-  DECLARE vbTotalCount TFloat;
-  DECLARE vbTotalSum TFloat;
+  DECLARE vbTotalDiff TFloat;
+  DECLARE vbTotalDiffSum TFloat;
 BEGIN
 
-      SELECT SUM(MovementItem.Amount) AS TotalCount, SUM(Round(MovementItem.Amount * MIFloat_CountForPrice.ValueData, 2)) AS TotalSum
-      INTO vbTotalCount, vbTotalSum
-      FROM MovementItem
-
-           LEFT JOIN ObjectFloat AS PHI_MovementItemId
-                                 ON PHI_MovementItemId.ObjectId = MovementItem.ObjectId
-                                AND PHI_MovementItemId.DescId = zc_ObjectFloat_PartionHouseholdInventory_MovementItemId()
-                                
-           LEFT JOIN MovementItemFloat AS MIFloat_CountForPrice
-                                       ON MIFloat_CountForPrice.MovementItemId = PHI_MovementItemId.ValueData::Integer
-                                      AND MIFloat_CountForPrice.DescId = zc_MIFloat_CountForPrice()
-
-      WHERE MovementItem.MovementId = inMovementId
-        AND MovementItem.isErased = FALSE
-        AND MovementItem.DescId = zc_MI_Master();
+      SELECT SUM(MovementItem.Diff) AS TotalDiff, SUM(MovementItem.DiffSumm) AS TotalDiffSum
+      INTO vbTotalDiff, vbTotalDiffSum
+      FROM gpSelect_MovementItem_InventoryHouseholdInventory(inMovementId := inMovementId, inShowAll := 'False', inIsErased := 'False', inSession := zfCalc_UserAdmin()) AS MovementItem;
         
       -- Сохранили свойство <Итого количество>
-      PERFORM lpInsertUpdate_MovementFloat (zc_MovementFloat_TotalCount(), inMovementId, COALESCE(vbTotalCount, 0));
+      PERFORM lpInsertUpdate_MovementFloat (zc_MovementFloat_TotalDiff(), inMovementId, COALESCE(vbTotalDiff, 0));
       -- Сохранили свойство <Итого сумма>
-      PERFORM lpInsertUpdate_MovementFloat (zc_MovementFloat_TotalSumm(), inMovementId, COALESCE(vbTotalSum, 0));
+      PERFORM lpInsertUpdate_MovementFloat (zc_MovementFloat_TotalDiffSumm(), inMovementId, COALESCE(vbTotalDiffSum, 0));
 
 END;
 $BODY$

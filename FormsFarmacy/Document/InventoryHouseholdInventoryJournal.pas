@@ -30,7 +30,7 @@ uses
 type
   TInventoryHouseholdInventoryJournalForm = class(TAncestorJournalForm)
     UnitName: TcxGridDBColumn;
-    TotalCount: TcxGridDBColumn;
+    Diff: TcxGridDBColumn;
     PrintHeaderCDS: TClientDataSet;
     PrintItemsCDS: TClientDataSet;
     spSelectPrint: TdsdStoredProc;
@@ -48,7 +48,7 @@ type
     bbDeferredYes: TdxBarButton;
     bbDeferredNo: TdxBarButton;
     dxBarButton1: TdxBarButton;
-    TotalSumm: TcxGridDBColumn;
+    DiffSumm: TcxGridDBColumn;
   private
     { Private declarations }
   public

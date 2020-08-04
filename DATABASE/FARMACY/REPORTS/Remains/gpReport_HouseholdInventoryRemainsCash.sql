@@ -53,9 +53,12 @@ BEGIN
 
                                LEFT JOIN MovementItem ON MovementItem.Id = PHI_MovementItemId.ValueData::Integer
 
+                               LEFT JOIN Movement ON Movement.Id = MovementItem.MovementId
+
                           WHERE Container.DescId = zc_Container_CountHouseholdInventory()
                             AND Container.WhereobjectId = vbUnitId
                             AND (Container.Amount <> 0 OR inShowAll = TRUE)
+                            AND COALESCE (Movement.StatusId, 0) = zc_Enum_Status_Complete()
                          ),
                          
            tmpMIF AS (SELECT *

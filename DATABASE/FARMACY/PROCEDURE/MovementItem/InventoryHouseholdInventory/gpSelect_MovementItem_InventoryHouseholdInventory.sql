@@ -11,25 +11,27 @@ CREATE OR REPLACE FUNCTION gpSelect_MovementItem_InventoryHouseholdInventory(
 RETURNS TABLE (Id Integer, PartionHouseholdInventoryId Integer
              , HouseholdInventoryId Integer, HouseholdInventoryCode Integer, HouseholdInventoryName TVarChar
              , InvNumber Integer, Remains TFloat, Amount TFloat, CountForPrice TFloat, Summa TFloat
+             , Deficit TFloat, DeficitSumm TFloat
+             , Proficit TFloat, ProficitSumm TFloat, Diff TFloat, DiffSumm TFloat
              , Comment TVarChar
              , isErased Boolean)
  AS
 $BODY$
     DECLARE vbUserId   Integer;
     DECLARE vbUnitId   Integer;
+    DECLARE vbOperDate TDateTime;
     DECLARE vbRetailId Integer;
-
 BEGIN
     -- проверка прав пользователя на вызов процедуры
     -- vbUserId := PERFORM lpCheckRight (inSession, zc_Enum_Process_Select_MovementItem_InventoryHouseholdInventory());
     vbUserId:= lpGetUserBySession (inSession);
 
-    vbUnitId := (SELECT MovementLinkObject_Unit.ObjectId
-                 FROM MovementLinkObject AS MovementLinkObject_Unit
-                 WHERE MovementLinkObject_Unit.MovementId = inMovementId
-                   AND MovementLinkObject_Unit.DescId = zc_MovementLinkObject_Unit()
-                );
-
+    SELECT MovementLinkObject.ObjectId, Movement.OperDate
+    INTO vbUnitId, vbOperDate
+    FROM MovementLinkObject
+        JOIN Movement ON Movement.Id = MovementLinkObject.MovementId
+    WHERE MovementLinkObject.MovementId = inMovementId
+      AND MovementLinkObject.DescId = zc_MovementLinkObject_Unit();
 
     vbRetailId := (SELECT ObjectLink_Juridical_Retail.ChildObjectId AS RetailId
                    FROM ObjectLink AS ObjectLink_Unit_Juridical
@@ -60,7 +62,7 @@ BEGIN
 
                                       LEFT JOIN ContainerLinkObject ON ContainerLinkObject.ObjectId = MovementItem.ObjectId
                                                                    AND ContainerLinkObject.DescId = zc_ContainerLinkObject_PartionHouseholdInventory()
-                                                                   
+
                                       LEFT JOIN Container ON ContainerLinkObject.ContainerId = Container.Id
 
                                  WHERE MovementItem.MovementId = inMovementId
@@ -68,16 +70,19 @@ BEGIN
                                  ),
                    tmpRemains AS (SELECT Container.ID
                                        , Container.ObjectId                     AS HouseholdInventoryId
-                                       , Container.Amount                       AS Amount
+                                       , Container.Amount - COALESCE (SUM (MovementItemContainer.Amount), 0.0) AS Amount
                                        , ContainerLinkObject.ObjectId           AS PartionHouseholdInventoryId
 
                                        , Object_PHI.ObjectCode                  AS InvNumber
                                        , MIFloat_CountForPrice.ValueData        AS CountForPrice
                                   FROM Container
-                                
+
+                                       LEFT OUTER JOIN MovementItemContainer ON MovementItemContainer.ContainerId = Container.Id
+                                                                            AND MovementItemContainer.Operdate >= vbOperDate
+
                                        LEFT JOIN ContainerLinkObject ON ContainerLinkObject.ContainerId = Container.Id
                                                                     AND ContainerLinkObject.DescId = zc_ContainerLinkObject_PartionHouseholdInventory()
-                                                                    
+
                                        LEFT JOIN Object AS Object_PHI ON Object_PHI.ID = ContainerLinkObject.ObjectId
 
                                        LEFT JOIN ObjectFloat AS PHI_MovementItemId
@@ -95,19 +100,48 @@ BEGIN
                                   WHERE Container.DescId = zc_Container_CountHouseholdInventory()
                                     AND Container.WhereobjectId = vbUnitId
                                     AND COALESCE (Movement.StatusId, 0) = zc_Enum_Status_Complete()
+                                  GROUP BY Container.ID
+                                         , Container.ObjectId
+                                         , Container.Amount
+                                         , ContainerLinkObject.ObjectId
+                                         , Object_PHI.ObjectCode
+                                         , MIFloat_CountForPrice.ValueData
                                   )
 
                SELECT MI_Master.Id                                                                AS Id
-                    , COALESCE(tmpRemains.PartionHouseholdInventoryId, 
+                    , COALESCE(tmpRemains.PartionHouseholdInventoryId,
                                MI_Master.PartionHouseholdInventoryId)                             AS PartionHouseholdInventoryId
                     , COALESCE(tmpRemains.HouseholdInventoryId, MI_Master.HouseholdInventoryId)   AS HouseholdInventoryId
                     , Object_HouseholdInventory.ObjectCode                                        AS HouseholdInventoryCode
                     , Object_HouseholdInventory.ValueData                                         AS HouseholdInventoryName
                     , tmpRemains.InvNumber                                                        AS InvNumber
-                    , tmpRemains.Amount                                                           AS Remains
+                    , tmpRemains.Amount::TFloat                                                   AS Remains
                     , MI_Master.Amount                                                            AS Amount
                     , tmpRemains.CountForPrice                                                    AS CountForPrice
-                    , Round(MI_Master.Amount * tmpRemains.CountForPrice, 2)::TFloat               AS Summa 
+                    , Round(MI_Master.Amount * tmpRemains.CountForPrice, 2)::TFloat               AS Summa
+
+                    , CASE WHEN COALESCE (tmpRemains.Amount, 0) > COALESCE (MI_Master.Amount, 0)
+                           THEN COALESCE (tmpRemains.Amount, 0) - COALESCE (MI_Master.Amount, 0)
+                      END :: TFloat                                                       AS Deficit
+                    , (CASE WHEN COALESCE (tmpRemains.Amount, 0) > COALESCE (MI_Master.Amount, 0)
+                            THEN COALESCE (tmpRemains.Amount, 0) - COALESCE (MI_Master.Amount, 0)
+                       END * COALESCE (tmpRemains.CountForPrice, 0)
+                      ) :: TFloat                                                         AS DeficitSumm
+
+                    , CASE WHEN COALESCE (MI_Master.Amount, 0) > COALESCE (tmpRemains.Amount, 0)
+                           THEN COALESCE (MI_Master.Amount, 0) - COALESCE (tmpRemains.Amount, 0)
+                      END :: TFloat                                                       AS Proficit
+                    , (CASE WHEN COALESCE (MI_Master.Amount, 0) > COALESCE (tmpRemains.Amount, 0)
+                            THEN COALESCE (MI_Master.Amount, 0) - COALESCE (tmpRemains.Amount, 0)
+                       END * COALESCE (tmpRemains.CountForPrice, 0)
+                      ) :: TFloat                                                         AS ProficitSumm
+
+                    , (COALESCE (MI_Master.Amount, 0) - COALESCE (tmpRemains.Amount, 0)) :: TFloat AS Diff
+
+                    , ((COALESCE (MI_Master.Amount, 0) - COALESCE (tmpRemains.Amount, 0))
+                       * COALESCE (tmpRemains.CountForPrice, 0)
+                      ) :: TFloat                                                         AS DiffSumm
+
                     , MI_Master.Comment                                                           AS Comment
                     , COALESCE(MI_Master.IsErased, False)                                         AS isErased
                FROM tmpRemains
@@ -138,7 +172,7 @@ BEGIN
 
                                       LEFT JOIN ContainerLinkObject ON ContainerLinkObject.ObjectId = MovementItem.ObjectId
                                                                    AND ContainerLinkObject.DescId = zc_ContainerLinkObject_PartionHouseholdInventory()
-                                                                   
+
                                       LEFT JOIN Container ON ContainerLinkObject.ContainerId = Container.Id
 
                                  WHERE MovementItem.MovementId = inMovementId
@@ -146,16 +180,19 @@ BEGIN
                                  ),
                    tmpRemains AS (SELECT Container.ID
                                        , Container.ObjectId                     AS HouseholdInventoryId
-                                       , Container.Amount                       AS Amount
+                                       , Container.Amount - COALESCE (SUM (MovementItemContainer.Amount), 0.0) AS Amount
                                        , ContainerLinkObject.ObjectId           AS PartionHouseholdInventoryId
 
                                        , Object_PHI.ObjectCode                  AS InvNumber
                                        , MIFloat_CountForPrice.ValueData        AS CountForPrice
                                   FROM Container
-                                
+
+                                       LEFT OUTER JOIN MovementItemContainer ON MovementItemContainer.ContainerId = Container.Id
+                                                                            AND MovementItemContainer.Operdate >= vbOperDate
+
                                        LEFT JOIN ContainerLinkObject ON ContainerLinkObject.ContainerId = Container.Id
                                                                     AND ContainerLinkObject.DescId = zc_ContainerLinkObject_PartionHouseholdInventory()
-                                                                    
+
                                        LEFT JOIN Object AS Object_PHI ON Object_PHI.ID = ContainerLinkObject.ObjectId
 
                                        LEFT JOIN ObjectFloat AS PHI_MovementItemId
@@ -173,6 +210,12 @@ BEGIN
                                   WHERE Container.DescId = zc_Container_CountHouseholdInventory()
                                     AND Container.WhereobjectId = vbUnitId
                                     AND COALESCE (Movement.StatusId, 0) = zc_Enum_Status_Complete()
+                                  GROUP BY Container.ID
+                                         , Container.ObjectId
+                                         , Container.Amount
+                                         , ContainerLinkObject.ObjectId
+                                         , Object_PHI.ObjectCode
+                                         , MIFloat_CountForPrice.ValueData
                                   )
 
                SELECT MI_Master.Id                                      AS Id
@@ -181,10 +224,33 @@ BEGIN
                     , Object_HouseholdInventory.ObjectCode              AS HouseholdInventoryCode
                     , Object_HouseholdInventory.ValueData               AS HouseholdInventoryName
                     , tmpRemains.InvNumber                              AS InvNumber
-                    , tmpRemains.Amount                                 AS Remains
+                    , tmpRemains.Amount::TFloat                         AS Remains
                     , MI_Master.Amount                                  AS Amount
                     , tmpRemains.CountForPrice                          AS CountForPrice
-                    , Round(MI_Master.Amount * tmpRemains.CountForPrice, 2)::TFloat                AS Summa 
+                    , Round(MI_Master.Amount * tmpRemains.CountForPrice, 2)::TFloat                AS Summa
+
+                    , CASE WHEN COALESCE (tmpRemains.Amount, 0) > COALESCE (MI_Master.Amount, 0)
+                           THEN COALESCE (tmpRemains.Amount, 0) - COALESCE (MI_Master.Amount, 0)
+                      END :: TFloat                                                       AS Deficit
+                    , (CASE WHEN COALESCE (tmpRemains.Amount, 0) > COALESCE (MI_Master.Amount, 0)
+                            THEN COALESCE (tmpRemains.Amount, 0) - COALESCE (MI_Master.Amount, 0)
+                       END * COALESCE (tmpRemains.CountForPrice, 0)
+                      ) :: TFloat                                                         AS DeficitSumm
+
+                    , CASE WHEN COALESCE (MI_Master.Amount, 0) > COALESCE (tmpRemains.Amount, 0)
+                           THEN COALESCE (MI_Master.Amount, 0) - COALESCE (tmpRemains.Amount, 0)
+                      END :: TFloat                                                       AS Proficit
+                    , (CASE WHEN COALESCE (MI_Master.Amount, 0) > COALESCE (tmpRemains.Amount, 0)
+                            THEN COALESCE (MI_Master.Amount, 0) - COALESCE (tmpRemains.Amount, 0)
+                       END * COALESCE (tmpRemains.CountForPrice, 0)
+                      ) :: TFloat                                                         AS ProficitSumm
+
+                    , (COALESCE (MI_Master.Amount, 0) - COALESCE (tmpRemains.Amount, 0)) :: TFloat AS Diff
+
+                    , ((COALESCE (MI_Master.Amount, 0) - COALESCE (tmpRemains.Amount, 0))
+                       * COALESCE (tmpRemains.CountForPrice, 0)
+                      ) :: TFloat                                                         AS DiffSumm
+
                     , MI_Master.Comment                                 AS Comment
                     , MI_Master.IsErased                                AS isErased
                FROM MI_Master
@@ -206,5 +272,5 @@ $BODY$
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.  Шаблий О.В.
  17.07.20                                                      *
 */
--- 
-select * from gpSelect_MovementItem_InventoryHouseholdInventory(inMovementId := 19565179 , inShowAll := 'True' , inIsErased := 'False' ,  inSession := '3');
+--
+select * from gpSelect_MovementItem_InventoryHouseholdInventory(inMovementId := 19565179 , inShowAll := 'False' , inIsErased := 'False' ,  inSession := '3');

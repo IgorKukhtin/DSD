@@ -48,14 +48,10 @@ BEGIN
                    MI_Master AS (SELECT MovementItem.Id                           AS Id
                                       , MovementItem.ObjectId                     AS HouseholdInventoryId
                                       , MovementItem.Amount                       AS Amount
-                                      , MIFloat_InvNumber.ValueData::Integer      AS InvNumber
                                       , MIFloat_CountForPrice.ValueData           AS CountForPrice
                                       , MIString_Comment.ValueData                AS Comment
                                       , MovementItem.isErased                     AS isErased
                                  FROM MovementItem
-                                     LEFT JOIN MovementItemFloat AS MIFloat_InvNumber
-                                                                 ON MIFloat_InvNumber.MovementItemId = MovementItem.Id
-                                                                AND MIFloat_InvNumber.DescId = zc_MIFloat_InvNumber()
 
                                      LEFT JOIN MovementItemFloat AS MIFloat_CountForPrice
                                                                  ON MIFloat_CountForPrice.MovementItemId = MovementItem.Id
@@ -68,25 +64,21 @@ BEGIN
                                  WHERE MovementItem.MovementId = inMovementId
                                    AND MovementItem.DescId = zc_MI_Master()
                                  ),
-                   tmpData AS (SELECT MI_Master.Id                                      AS Id
-                                    , MI_Master.HouseholdInventoryId                    AS HouseholdInventoryId
-                                    , MI_Master.InvNumber                               AS InvNumber
-                                    , MI_Master.Amount                                  AS Amount
-                                    , MI_Master.CountForPrice                           AS CountForPrice
-                                    , MI_Master.Comment                                 AS Comment
-                                    , MI_Master.IsErased                                AS isErased
+                                 
+                   tmpHouseholdInventory AS (SELECT Object_HouseholdInventory.Id                 AS HouseholdInventoryId
+                                                  , Object_HouseholdInventory.isErased           AS isErased
+                                             FROM Object AS Object_HouseholdInventory
+                                             WHERE Object_HouseholdInventory.DescId = zc_Object_HouseholdInventory()
+                                               AND Object_HouseholdInventory.isErased = False),
+                   tmpData AS (SELECT MI_Master.Id                                         AS Id
+                                    , COALESCE(MI_Master.HouseholdInventoryId, 
+                                               tmpHouseholdInventory.HouseholdInventoryId) AS HouseholdInventoryId
+                                    , MI_Master.Amount                                     AS Amount
+                                    , MI_Master.CountForPrice                              AS CountForPrice
+                                    , MI_Master.Comment                                    AS Comment
+                                    , MI_Master.IsErased                                   AS isErased
                                FROM MI_Master
-                               UNION ALL
-                               SELECT NULL
-                                    , Object_HouseholdInventory.Id                 AS HouseholdInventoryId
-                                    , NULL                                         AS InvNumber
-                                    , NULL::TFloat                                 AS Amount
-                                    , NULL::TFloat                                 AS CountForPrice
-                                    , NULL::TVarChar                               AS Comment
-                                    , Object_HouseholdInventory.isErased           AS isErased
-                               FROM Object AS Object_HouseholdInventory
-                               WHERE Object_HouseholdInventory.DescId = zc_Object_HouseholdInventory()
-                                 AND Object_HouseholdInventory.isErased = False),
+                                    FULL JOIN tmpHouseholdInventory ON tmpHouseholdInventory.HouseholdInventoryId = MI_Master.HouseholdInventoryId ),
                    tmpObjectFloat AS (SELECT ObjectFloat.ObjectID
                                            , ObjectFloat.ValueData::Integer AS MovementItemId
                                       FROM ObjectFloat 
@@ -118,7 +110,7 @@ BEGIN
                    
                    LEFT JOIN tmpInvNumber ON tmpInvNumber.MovementItemId = MI_Master.Id                    
 
-               ORDER BY MI_Master.HouseholdInventoryId, MI_Master.InvNumber
+               ORDER BY MI_Master.HouseholdInventoryId, tmpInvNumber.InvNumber
                ;
 
     ELSE
@@ -129,14 +121,10 @@ BEGIN
                    MI_Master AS (SELECT MovementItem.Id                           AS Id
                                       , MovementItem.ObjectId                     AS HouseholdInventoryId
                                       , MovementItem.Amount                       AS Amount
-                                      , MIFloat_InvNumber.ValueData::Integer      AS InvNumber
                                       , MIFloat_CountForPrice.ValueData           AS CountForPrice
                                       , MIString_Comment.ValueData                AS Comment
                                       , MovementItem.isErased                     AS isErased
                                  FROM MovementItem
-                                     LEFT JOIN MovementItemFloat AS MIFloat_InvNumber
-                                                                 ON MIFloat_InvNumber.MovementItemId = MovementItem.Id
-                                                                AND MIFloat_InvNumber.DescId = zc_MIFloat_InvNumber()
 
                                      LEFT JOIN MovementItemFloat AS MIFloat_CountForPrice
                                                                  ON MIFloat_CountForPrice.MovementItemId = MovementItem.Id
@@ -180,7 +168,7 @@ BEGIN
                    
                    LEFT JOIN tmpInvNumber ON tmpInvNumber.MovementItemId = MI_Master.Id 
 
-               ORDER BY MI_Master.HouseholdInventoryId, MI_Master.InvNumber
+               ORDER BY MI_Master.HouseholdInventoryId, tmpInvNumber.InvNumber
 
                    ;
     END IF;
@@ -195,3 +183,4 @@ $BODY$
  09.07.20                                                      *
 */
 --
+select * from gpSelect_MovementItem_IncomeHouseholdInventory(inMovementId := 19469516 , inShowAll := 'True' , inIsErased := 'False' ,  inSession := '3');

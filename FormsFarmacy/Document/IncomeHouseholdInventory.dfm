@@ -664,6 +664,126 @@ inherited IncomeHouseholdInventoryForm: TIncomeHouseholdInventoryForm
         end>
       isShowModal = False
     end
+    object actPrintSticker: TdsdExportToXLS
+      Category = 'DSDLibExport'
+      MoveParams = <>
+      BeforeAction = ExecSPPrintSticker
+      ItemsDataSet = PrintItemsCDS
+      FileName = 'PrintSticker'
+      FileNameParam.Value = 'PrintSticker'
+      FileNameParam.DataType = ftString
+      FileNameParam.MultiSelectSeparator = ','
+      TitleHeight = 1.000000000000000000
+      TitleFont.Charset = DEFAULT_CHARSET
+      TitleFont.Color = clWindowText
+      TitleFont.Height = -11
+      TitleFont.Name = 'Tahoma'
+      TitleFont.Style = []
+      HeaderFont.Charset = DEFAULT_CHARSET
+      HeaderFont.Color = clWindowText
+      HeaderFont.Height = -11
+      HeaderFont.Name = 'Tahoma'
+      HeaderFont.Style = []
+      Footer = False
+      ColumnParams = <
+        item
+          FieldName = 'Column1'
+          DecimalPlace = 0
+          Font.Charset = DEFAULT_CHARSET
+          Font.Color = clWindowText
+          Font.Height = -11
+          Font.Name = 'Tahoma'
+          Font.Style = []
+          Width = 20
+          WrapText = True
+          CalcColumnLists = <>
+          DetailedTexts = <
+            item
+              FieldName = 'InvNumber1'
+              Font.Charset = DEFAULT_CHARSET
+              Font.Color = clWindowText
+              Font.Height = -13
+              Font.Name = 'Tahoma'
+              Font.Style = [fsBold]
+            end>
+        end
+        item
+          FieldName = 'Column2'
+          DecimalPlace = 0
+          Font.Charset = DEFAULT_CHARSET
+          Font.Color = clWindowText
+          Font.Height = -11
+          Font.Name = 'Tahoma'
+          Font.Style = []
+          Width = 20
+          WrapText = True
+          CalcColumnLists = <>
+          DetailedTexts = <
+            item
+              FieldName = 'InvNumber2'
+              Font.Charset = DEFAULT_CHARSET
+              Font.Color = clWindowText
+              Font.Height = -13
+              Font.Name = 'Tahoma'
+              Font.Style = [fsBold]
+            end>
+        end
+        item
+          FieldName = 'Column3'
+          DecimalPlace = 0
+          Font.Charset = DEFAULT_CHARSET
+          Font.Color = clWindowText
+          Font.Height = -11
+          Font.Name = 'Tahoma'
+          Font.Style = []
+          Width = 20
+          WrapText = True
+          CalcColumnLists = <>
+          DetailedTexts = <
+            item
+              FieldName = 'InvNumber3'
+              Font.Charset = DEFAULT_CHARSET
+              Font.Color = clWindowText
+              Font.Height = -13
+              Font.Name = 'Tahoma'
+              Font.Style = [fsBold]
+            end>
+        end
+        item
+          FieldName = 'Column4'
+          DecimalPlace = 0
+          Font.Charset = DEFAULT_CHARSET
+          Font.Color = clWindowText
+          Font.Height = -11
+          Font.Name = 'Tahoma'
+          Font.Style = []
+          Width = 20
+          CalcColumnLists = <>
+          DetailedTexts = <
+            item
+              FieldName = 'InvNumber4'
+              Font.Charset = DEFAULT_CHARSET
+              Font.Color = clWindowText
+              Font.Height = -13
+              Font.Name = 'Tahoma'
+              Font.Style = [fsBold]
+            end>
+        end>
+      Caption = #1055#1077#1095#1072#1090#1100' '#1089#1090#1080#1082#1077#1088#1086#1074' '#1076#1083#1103' '#1085#1072#1082#1083#1077#1081#1082#1080
+      Hint = #1055#1077#1095#1072#1090#1100' '#1089#1090#1080#1082#1077#1088#1086#1074' '#1076#1083#1103' '#1085#1072#1082#1083#1077#1081#1082#1080
+      ImageIndex = 29
+    end
+    object ExecSPPrintSticker: TdsdExecStoredProc
+      Category = 'DSDLib'
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      StoredProc = spSelectPrintSticker
+      StoredProcList = <
+        item
+          StoredProc = spSelectPrintSticker
+        end>
+      Caption = 'ExecSPPrintSticker'
+    end
   end
   inherited MasterDS: TDataSource
     Top = 224
@@ -762,10 +882,6 @@ inherited IncomeHouseholdInventoryForm: TIncomeHouseholdInventoryForm
         end
         item
           Visible = True
-          ItemName = 'dxBarStatic'
-        end
-        item
-          Visible = True
           ItemName = 'bbMovementItemContainer'
         end
         item
@@ -775,6 +891,14 @@ inherited IncomeHouseholdInventoryForm: TIncomeHouseholdInventoryForm
         item
           Visible = True
           ItemName = 'bbMovementItemProtocol'
+        end
+        item
+          Visible = True
+          ItemName = 'dxBarStatic'
+        end
+        item
+          Visible = True
+          ItemName = 'dxBarButton3'
         end
         item
           Visible = True
@@ -817,6 +941,10 @@ inherited IncomeHouseholdInventoryForm: TIncomeHouseholdInventoryForm
     end
     object dxBarButton2: TdxBarButton
       Action = actSetCountForPrice
+      Category = 0
+    end
+    object dxBarButton3: TdxBarButton
+      Action = actPrintSticker
       Category = 0
     end
   end
@@ -1418,5 +1546,25 @@ inherited IncomeHouseholdInventoryForm: TIncomeHouseholdInventoryForm
     ParamKeyField = 'inMovementId'
     Left = 448
     Top = 384
+  end
+  object spSelectPrintSticker: TdsdStoredProc
+    StoredProcName = 'gpSelect_MovementItem_InventoryHouseholdInventorySticker'
+    DataSet = PrintItemsCDS
+    DataSets = <
+      item
+        DataSet = PrintItemsCDS
+      end>
+    Params = <
+      item
+        Name = 'inMovementId'
+        Value = Null
+        Component = FormParams
+        ComponentItem = 'Id'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end>
+    PackSize = 1
+    Left = 311
+    Top = 336
   end
 end
