@@ -254,12 +254,10 @@
       GuiParams = <
         item
           Name = 'CashId_top'
-          Value = '14686'
           MultiSelectSeparator = ','
         end
         item
           Name = 'CashName_top'
-          Value = #1050#1072#1089#1089#1072' '#1050#1080#1077#1074
           DataType = ftString
           MultiSelectSeparator = ','
         end
@@ -271,6 +269,17 @@
         item
           Name = 'CurrencyName'
           Value = #1075#1088#1085
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'InfoMoneyId_top'
+          Value = '8950'
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'InfoMoneyName_top'
+          Value = #1041#1086#1085#1091#1089#1099' '#1079#1072' '#1087#1088#1086#1076#1091#1082#1094#1080#1102
+          DataType = ftString
           MultiSelectSeparator = ','
         end>
       isShowModal = False

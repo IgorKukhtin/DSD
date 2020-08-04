@@ -14,18 +14,19 @@ inherited CashJournalBonusForm: TCashJournalBonusForm
     Width = 963
     Height = 466
     TabOrder = 3
-    ExplicitWidth = 982
-    ExplicitHeight = 508
+    ExplicitTop = 99
+    ExplicitWidth = 963
+    ExplicitHeight = 466
     ClientRectBottom = 466
     ClientRectRight = 963
     inherited tsMain: TcxTabSheet
-      ExplicitWidth = 982
-      ExplicitHeight = 508
+      ExplicitWidth = 963
+      ExplicitHeight = 466
       inherited cxGrid: TcxGrid
         Width = 963
         Height = 466
-        ExplicitWidth = 982
-        ExplicitHeight = 508
+        ExplicitWidth = 963
+        ExplicitHeight = 466
         inherited cxGridDBTableView: TcxGridDBTableView
           DataController.Summary.DefaultGroupSummaryItems = <
             item
@@ -78,6 +79,11 @@ inherited CashJournalBonusForm: TCashJournalBonusForm
               Format = ',0.00'
               Kind = skSum
               Column = RemainsToPay
+            end
+            item
+              Format = #1042#1089#1077#1075#1086' '#1089#1090#1088#1086#1082': ,0'
+              Kind = skCount
+              Column = MoneyPlaceName
             end>
           OptionsData.CancelOnExit = True
           OptionsData.Deleting = False
@@ -129,6 +135,13 @@ inherited CashJournalBonusForm: TCashJournalBonusForm
             HeaderAlignmentVert = vaCenter
             Width = 70
           end
+          object RetailName: TcxGridDBColumn
+            Caption = #1058#1086#1088#1075'. '#1089#1077#1090#1100
+            DataBinding.FieldName = 'RetailName'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 100
+          end
           object MoneyPlaceCode: TcxGridDBColumn
             Caption = #1050#1086#1076
             DataBinding.FieldName = 'MoneyPlaceCode'
@@ -157,6 +170,7 @@ inherited CashJournalBonusForm: TCashJournalBonusForm
           object MemberName: TcxGridDBColumn
             Caption = #1060#1048#1054' ('#1095#1077#1088#1077#1079' '#1082#1086#1075#1086')'
             DataBinding.FieldName = 'MemberName'
+            Visible = False
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Width = 100
@@ -164,6 +178,7 @@ inherited CashJournalBonusForm: TCashJournalBonusForm
           object PartionMovementName: TcxGridDBColumn
             Caption = #1054#1089#1085#1086#1074#1072#1085#1080#1077
             DataBinding.FieldName = 'PartionMovementName'
+            Visible = False
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
@@ -196,18 +211,12 @@ inherited CashJournalBonusForm: TCashJournalBonusForm
             DataBinding.FieldName = 'ServiceDate'
             PropertiesClassName = 'TcxDateEditProperties'
             Properties.DisplayFormat = 'mmmm yyyy'
+            Visible = False
             FooterAlignmentHorz = taCenter
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
             Width = 89
-          end
-          object PositionName: TcxGridDBColumn
-            Caption = #1044#1086#1083#1078#1085#1086#1089#1090#1100' ('#1089#1086#1090#1088#1091#1076#1085#1080#1082' '#1079'/'#1087')'
-            DataBinding.FieldName = 'PositionName'
-            HeaderAlignmentHorz = taCenter
-            HeaderAlignmentVert = vaCenter
-            Width = 111
           end
           object InfoMoneyCode: TcxGridDBColumn
             Caption = #1050#1086#1076' '#1059#1055
@@ -216,21 +225,6 @@ inherited CashJournalBonusForm: TCashJournalBonusForm
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Width = 45
-          end
-          object PersonalServiceListCode: TcxGridDBColumn
-            Caption = #1050#1086#1076' '#1074#1077#1076#1084'.'
-            DataBinding.FieldName = 'PersonalServiceListCode'
-            Visible = False
-            HeaderAlignmentHorz = taCenter
-            HeaderAlignmentVert = vaCenter
-            Width = 45
-          end
-          object PersonalServiceListName: TcxGridDBColumn
-            Caption = #1042#1077#1076#1086#1084#1086#1089#1090#1100
-            DataBinding.FieldName = 'PersonalServiceListName'
-            HeaderAlignmentHorz = taCenter
-            HeaderAlignmentVert = vaCenter
-            Width = 80
           end
           object InfoMoneyGroupName: TcxGridDBColumn
             Caption = #1059#1055' '#1075#1088#1091#1087#1087#1072' '#1085#1072#1079#1085#1072#1095#1077#1085#1080#1103
@@ -298,33 +292,6 @@ inherited CashJournalBonusForm: TCashJournalBonusForm
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
             Width = 80
-          end
-          object CarName: TcxGridDBColumn
-            Caption = #1040#1074#1090#1086#1084#1086#1073#1080#1083#1100
-            DataBinding.FieldName = 'CarName'
-            HeaderAlignmentHorz = taCenter
-            HeaderAlignmentVert = vaCenter
-            HeaderHint = #1040#1074#1090#1086#1084#1086#1073#1080#1083#1100' '#1043#1086#1089'.'#1085#1086#1084#1077#1088
-            Options.Editing = False
-            Width = 88
-          end
-          object CarModelName: TcxGridDBColumn
-            Caption = #1052#1072#1088#1082#1072' '#1072#1074#1090#1086'.'
-            DataBinding.FieldName = 'CarModelName'
-            HeaderAlignmentHorz = taCenter
-            HeaderAlignmentVert = vaCenter
-            HeaderHint = #1052#1072#1088#1082#1072' '#1072#1074#1090#1086#1084#1086#1073#1080#1083#1103
-            Options.Editing = False
-            Width = 100
-          end
-          object UnitName_Car: TcxGridDBColumn
-            Caption = #1055#1086#1076#1088#1072#1079#1076#1077#1083#1077#1085#1080#1077' '#1072#1074#1090#1086'.'
-            DataBinding.FieldName = 'UnitName_Car'
-            HeaderAlignmentHorz = taCenter
-            HeaderAlignmentVert = vaCenter
-            HeaderHint = #1055#1086#1076#1088#1072#1079#1076#1077#1083#1077#1085#1080#1077' '#1072#1074#1090#1086#1084#1086#1073#1080#1083#1103
-            Options.Editing = False
-            Width = 100
           end
           object Comment: TcxGridDBColumn
             Caption = #1055#1088#1080#1084#1077#1095#1072#1085#1080#1077
@@ -447,6 +414,7 @@ inherited CashJournalBonusForm: TCashJournalBonusForm
           object PositionName_Mobile: TcxGridDBColumn
             Caption = #1044#1086#1083#1078#1085#1086#1089#1090#1100' ('#1084#1086#1073'. '#1072#1075#1077#1085#1090')'
             DataBinding.FieldName = 'PositionName_Mobile'
+            Visible = False
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
@@ -463,6 +431,9 @@ inherited CashJournalBonusForm: TCashJournalBonusForm
           object SummToPay: TcxGridDBColumn
             Caption = #1050' '#1074#1099#1087#1083#1072#1090#1077
             DataBinding.FieldName = 'SummToPay'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 4
+            Properties.DisplayFormat = ',0.00##;-,0.00##; ;'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
@@ -471,13 +442,20 @@ inherited CashJournalBonusForm: TCashJournalBonusForm
           object SummPay: TcxGridDBColumn
             Caption = #1042#1099#1087#1083#1072#1095#1077#1085#1086
             DataBinding.FieldName = 'SummPay'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 4
+            Properties.DisplayFormat = ',0.00##;-,0.00##; ;'
+            HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
-            Width = 70
+            Width = 80
           end
           object RemainsToPay: TcxGridDBColumn
             Caption = #1054#1089#1090#1072#1090#1086#1082' '#1082' '#1074#1099#1087#1083#1072#1090#1077
             DataBinding.FieldName = 'RemainsToPay'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 4
+            Properties.DisplayFormat = ',0.00##;-,0.00##; ;'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
@@ -490,7 +468,7 @@ inherited CashJournalBonusForm: TCashJournalBonusForm
   inherited Panel: TPanel
     Width = 963
     Height = 73
-    ExplicitWidth = 982
+    ExplicitWidth = 963
     ExplicitHeight = 73
     inherited deStart: TcxDateEdit
       Left = 122
@@ -1123,7 +1101,7 @@ inherited CashJournalBonusForm: TCashJournalBonusForm
       PrinterNameParam.DataType = ftString
       PrinterNameParam.MultiSelectSeparator = ','
     end
-    object macInsert_Bonus: TMultiAction
+    object macInsert_Bonus_list: TMultiAction
       Category = 'DSDLib'
       MoveParams = <>
       ActionList = <
@@ -1131,7 +1109,6 @@ inherited CashJournalBonusForm: TCashJournalBonusForm
           Action = actInsert_Bonus
         end>
       View = cxGridDBTableView
-      QuestionBeforeExecute = #1057#1086#1079#1076#1072#1090#1100' '#1076#1086#1082#1091#1084#1077#1085#1090#1099' '#1085#1072' '#1089#1091#1084#1084#1091' <'#1054#1089#1090#1072#1090#1086#1082' '#1082' '#1074#1099#1087#1083#1072#1090#1077'>?'
       Caption = #1057#1086#1079#1076#1072#1090#1100' '#1076#1086#1082#1091#1084#1077#1085#1090#1099' '#1085#1072' '#1089#1091#1084#1084#1091' <'#1054#1089#1090#1072#1090#1086#1082' '#1082' '#1074#1099#1087#1083#1072#1090#1077'>'
       Hint = #1057#1086#1079#1076#1072#1090#1100' '#1076#1086#1082#1091#1084#1077#1085#1090#1099' '#1085#1072' '#1089#1091#1084#1084#1091' <'#1054#1089#1090#1072#1090#1086#1082' '#1082' '#1074#1099#1087#1083#1072#1090#1077'>'
       ImageIndex = 50
@@ -1145,6 +1122,22 @@ inherited CashJournalBonusForm: TCashJournalBonusForm
         item
           StoredProc = spInsert_Bonus
         end>
+      Caption = #1057#1086#1079#1076#1072#1090#1100' '#1076#1086#1082#1091#1084#1077#1085#1090#1099' '#1085#1072' '#1089#1091#1084#1084#1091' <'#1054#1089#1090#1072#1090#1086#1082' '#1082' '#1074#1099#1087#1083#1072#1090#1077'>'
+      Hint = #1057#1086#1079#1076#1072#1090#1100' '#1076#1086#1082#1091#1084#1077#1085#1090#1099' '#1085#1072' '#1089#1091#1084#1084#1091' <'#1054#1089#1090#1072#1090#1086#1082' '#1082' '#1074#1099#1087#1083#1072#1090#1077'>'
+      ImageIndex = 50
+    end
+    object macInsert_Bonus: TMultiAction
+      Category = 'DSDLib'
+      MoveParams = <>
+      ActionList = <
+        item
+          Action = macInsert_Bonus_list
+        end
+        item
+          Action = actRefresh
+        end>
+      QuestionBeforeExecute = #1057#1086#1079#1076#1072#1090#1100' '#1076#1086#1082#1091#1084#1077#1085#1090#1099' '#1085#1072' '#1089#1091#1084#1084#1091' <'#1054#1089#1090#1072#1090#1086#1082' '#1082' '#1074#1099#1087#1083#1072#1090#1077'>?'
+      InfoAfterExecute = #1044#1086#1082#1091#1084#1077#1085#1090#1099' '#1089#1086#1079#1076#1072#1085#1099
       Caption = #1057#1086#1079#1076#1072#1090#1100' '#1076#1086#1082#1091#1084#1077#1085#1090#1099' '#1085#1072' '#1089#1091#1084#1084#1091' <'#1054#1089#1090#1072#1090#1086#1082' '#1082' '#1074#1099#1087#1083#1072#1090#1077'>'
       Hint = #1057#1086#1079#1076#1072#1090#1100' '#1076#1086#1082#1091#1084#1077#1085#1090#1099' '#1085#1072' '#1089#1091#1084#1084#1091' <'#1054#1089#1090#1072#1090#1086#1082' '#1082' '#1074#1099#1087#1083#1072#1090#1077'>'
       ImageIndex = 50
@@ -1427,6 +1420,18 @@ inherited CashJournalBonusForm: TCashJournalBonusForm
       end
       item
         Component = GuidesJuridicalBasis
+      end
+      item
+        Component = GuidesBranch
+      end
+      item
+        Component = GuidesRetail
+      end
+      item
+        Component = GuidesInfoMoney
+      end
+      item
+        Component = GuidesJuridical
       end>
   end
   inherited spMovementComplete: TdsdStoredProc
