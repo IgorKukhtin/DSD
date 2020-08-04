@@ -25,6 +25,7 @@ RETURNS TABLE (Id Integer, InvNumber TVarChar, OperDate TDateTime
              , PaidKindId Integer, PaidKindName TVarChar
              , ContractConditionKindId Integer, ContractConditionKindName TVarChar
              , BonusKindId Integer, BonusKindName TVarChar
+             , BranchId Integer, BranchName TVarChar
              , isLoad Boolean)
 AS
 $BODY$
@@ -68,6 +69,8 @@ BEGIN
            , CAST ('' as TVarChar)            AS ContractConditionKindName
            , 0                                AS BonusKindId
            , CAST ('' as TVarChar)            AS BonusKindName
+           , 0                                AS BranchIdId
+           , CAST ('' as TVarChar)            AS BranchName
            , CAST (FALSE AS Boolean)          AS isLoad 
 
        FROM lfGet_Object_Status (zc_Enum_Status_UnComplete()) AS lfObject_Status;
@@ -126,6 +129,9 @@ BEGIN
            , Object_BonusKind.Id                    AS BonusKindId
            , Object_BonusKind.ValueData             AS BonusKindName
  
+           , Object_Branch.Id                       AS BranchId
+           , Object_Branch.ValueData                AS BranchName
+
            , COALESCE (MovementBoolean_isLoad.ValueData, FALSE) AS isLoad
 
        FROM Movement
@@ -195,6 +201,11 @@ BEGIN
                                              ON MILinkObject_BonusKind.MovementItemId = MovementItem.Id
                                             AND MILinkObject_BonusKind.DescId = zc_MILinkObject_BonusKind()
             LEFT JOIN Object AS Object_BonusKind ON Object_BonusKind.Id = MILinkObject_BonusKind.ObjectId
+
+            LEFT JOIN MovementItemLinkObject AS MILinkObject_Branch
+                                             ON MILinkObject_Branch.MovementItemId = MovementItem.Id
+                                            AND MILinkObject_Branch.DescId = zc_MILinkObject_Branch()
+            LEFT JOIN Object AS Object_Branch ON Object_Branch.Id = MILinkObject_Branch.ObjectId
 
             LEFT JOIN MovementBoolean AS MovementBoolean_isLoad
                                       ON MovementBoolean_isLoad.MovementId =  Movement.Id

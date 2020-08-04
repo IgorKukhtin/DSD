@@ -335,6 +335,9 @@ end;
 
 procedure TLoadFormTest.LoadCashFormTest;
 begin
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TCashJournalBonusForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TCashJournalBonusForm');
+  exit;
 {
  // TdsdFormStorageFactory.GetStorage.Save(GetForm('TCashForm'));
  // TdsdFormStorageFactory.GetStorage.Load('TCashForm');

@@ -1184,7 +1184,8 @@ uses
   ProfitIncomeService in '..\..\Forms\Document\ProfitIncomeService.pas' {ProfitIncomeServiceForm: TParentForm},
   ProfitIncomeServiceJournal in '..\..\Forms\Document\ProfitIncomeServiceJournal.pas' {ProfitIncomeServiceJournalForm: TParentForm},
   Report_MotionGoodsAssetNoBalance in '..\..\Forms\Report\Report_MotionGoodsAssetNoBalance.pas' {Report_MotionGoodsAssetNoBalanceForm: TParentForm},
-  Report_JuridicalSold_AssetNoBalance in '..\..\Forms\Report\Report_JuridicalSold_AssetNoBalance.pas' {Report_JuridicalSold_AssetNoBalanceForm: TParentForm};
+  Report_JuridicalSold_AssetNoBalance in '..\..\Forms\Report\Report_JuridicalSold_AssetNoBalance.pas' {Report_JuridicalSold_AssetNoBalanceForm: TParentForm},
+  CashJournalBonus in '..\..\Forms\Document\CashJournalBonus.pas' {CashJournalBonusForm: TParentForm};
 
 {$R *.RES}
 {$R DevExpressRus.res}

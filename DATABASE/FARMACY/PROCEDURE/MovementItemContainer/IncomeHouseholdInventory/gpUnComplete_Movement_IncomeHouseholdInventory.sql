@@ -22,94 +22,76 @@ BEGIN
                 FROM MovementLinkObject
                 WHERE MovementLinkObject.MovementId = inMovementId
                   AND MovementLinkObject.DescId = zc_MovementLinkObject_Unit());
+
     -- Проверяем первые переводы
-    IF (SELECT StatusId FROM Movement WHERE Id = inMovementId) = zc_Enum_Status_Complete() AND
-       EXISTS (WITH
-                   tmpContainer AS (SELECT Container.ID
+    IF EXISTS (WITH
+                     tmpMIC AS (SELECT MIC.ContainerId
+                               FROM MovementItemContainer AS MIC
+                               WHERE MIC.MovementId = inMovementId
+                                 AND MIC.DescId     = zc_MIContainer_CountHouseholdInventory()),
+                     tmpContainer AS (SELECT Container.ID
+                                           , Container.ObjectId                     AS HouseholdInventoryId
+                                           , Container.Amount                       AS Amount
+                                           , Container.WhereobjectId                AS UnitID
 
-                                         , Container.ObjectId                     AS HouseholdInventoryId
-                                         , Container.Amount                       AS Amount
-                                         , Container.WhereobjectId                AS UnitID
+                                           , ContainerLinkObject.ObjectId           AS PartionHouseholdInventoryID
+                                    FROM tmpMIC 
+                                                
+                                         INNER JOIN Container ON Container.Id = tmpMIC.ContainerId
+                                                             AND Container.DescId = zc_Container_CountHouseholdInventory()
+                                                             AND Container.WhereobjectId = vbUnitId
+                                                             AND Container.Amount < 1
+                                                             
+                                         INNER JOIN ContainerLinkObject ON ContainerLinkObject.ContainerId = Container.Id
+                                                                       AND ContainerLinkObject.DescId = zc_ContainerLinkObject_PartionHouseholdInventory()
 
-                                         , PHI_MovementItemId.ValueData::Integer  AS MovementItemId
-                                  FROM Container
-                                  
-                                       LEFT JOIN ContainerLinkObject ON ContainerLinkObject.ContainerId = Container.Id
-                                                                    AND ContainerLinkObject.DescId = zc_ContainerLinkObject_PartionHouseholdInventory()
-                                                                    
-                                       LEFT JOIN Object AS Object_PHI ON Object_PHI.ID = ContainerLinkObject.ObjectId
-
-                                       LEFT JOIN ObjectFloat AS PHI_MovementItemId
-                                                             ON PHI_MovementItemId.ObjectId = Object_PHI.Id
-                                                            AND PHI_MovementItemId.DescId = zc_ObjectFloat_PartionHouseholdInventory_MovementItemId()
-
-                                  WHERE Container.DescId = zc_Container_CountHouseholdInventory()
-                                    AND Container.WhereobjectId = vbUnitId
-                                    AND Container.Amount > 0
-                                 )
+                                   )
                                  
-               SELECT Object_HouseholdInventory.ValueData, MIFloat_InvNumber.ValueData::Integer
-               FROM MovementItem AS MI_Master
-               
-                    LEFT JOIN tmpContainer ON tmpContainer.MovementItemId = MI_Master.Id
+               SELECT 1 
+               FROM tmpContainer
 
-                    LEFT JOIN MovementItemFloat AS MIFloat_InvNumber
-                                                ON MIFloat_InvNumber.MovementItemId = MI_Master.Id
-                                               AND MIFloat_InvNumber.DescId = zc_MIFloat_InvNumber()
-                                               
+                    LEFT JOIN Object AS Object_PartionHouseholdInventory 
+                                     ON Object_PartionHouseholdInventory.Id = tmpContainer.PartionHouseholdInventoryID
+
                     LEFT JOIN Object AS Object_HouseholdInventory
-                                     ON Object_HouseholdInventory.ID = MI_Master.ObjectId
-
-               WHERE MI_Master.MovementId = inMovementId
-                 AND MI_Master.DescId     = zc_MI_Master()
-                 AND MI_Master.Amount     > 0 
-                 AND COALESCE (tmpContainer.Amount, 0) <> 1
-                 AND MI_Master.IsErased   = FALSE)
+                                     ON Object_HouseholdInventory.ID = tmpContainer.HouseholdInventoryID
+              )
     THEN
-       WITH
+      WITH
+           tmpMIC AS (SELECT MIC.ContainerId
+                     FROM MovementItemContainer AS MIC
+                     WHERE MIC.MovementId = inMovementId
+                       AND MIC.DescId     = zc_MIContainer_CountHouseholdInventory()),
            tmpContainer AS (SELECT Container.ID
-
                                  , Container.ObjectId                     AS HouseholdInventoryId
                                  , Container.Amount                       AS Amount
                                  , Container.WhereobjectId                AS UnitID
 
-                                 , PHI_MovementItemId.ValueData::Integer  AS MovementItemId
-                          FROM Container
-                          
-                               LEFT JOIN ContainerLinkObject ON ContainerLinkObject.ContainerId = Container.Id
-                                                            AND ContainerLinkObject.DescId = zc_ContainerLinkObject_PartionHouseholdInventory()
-                                                            
-                               LEFT JOIN Object AS Object_PHI ON Object_PHI.ID = ContainerLinkObject.ObjectId
+                                 , ContainerLinkObject.ObjectId           AS PartionHouseholdInventoryID
+                          FROM tmpMIC 
+                                      
+                               INNER JOIN Container ON Container.Id = tmpMIC.ContainerId
+                                                   AND Container.DescId = zc_Container_CountHouseholdInventory()
+                                                   AND Container.WhereobjectId = vbUnitId
+                                                   AND Container.Amount < 1
+                                                   
+                               INNER JOIN ContainerLinkObject ON ContainerLinkObject.ContainerId = Container.Id
+                                                             AND ContainerLinkObject.DescId = zc_ContainerLinkObject_PartionHouseholdInventory()
 
-                               LEFT JOIN ObjectFloat AS PHI_MovementItemId
-                                                     ON PHI_MovementItemId.ObjectId = Object_PHI.Id
-                                                    AND PHI_MovementItemId.DescId = zc_ObjectFloat_PartionHouseholdInventory_MovementItemId()
-
-                          WHERE Container.DescId = zc_Container_CountHouseholdInventory()
-                            AND Container.WhereobjectId = vbUnitId
-                            AND Container.Amount > 0
                          )
-                         
-       SELECT Object_HouseholdInventory.ValueData, MIFloat_InvNumber.ValueData::Integer
+                                 
+       SELECT Object_HouseholdInventory.ValueData, Object_PartionHouseholdInventory.ObjectCode 
        INTO vbGoodsName, vbInvNumber
-       FROM MovementItem AS MI_Master
-       
-            LEFT JOIN tmpContainer ON tmpContainer.MovementItemId = MI_Master.Id
+       FROM tmpContainer
 
-            LEFT JOIN MovementItemFloat AS MIFloat_InvNumber
-                                        ON MIFloat_InvNumber.MovementItemId = MI_Master.Id
-                                       AND MIFloat_InvNumber.DescId = zc_MIFloat_InvNumber()
-                                       
+            LEFT JOIN Object AS Object_PartionHouseholdInventory 
+                             ON Object_PartionHouseholdInventory.Id = tmpContainer.PartionHouseholdInventoryID
+
             LEFT JOIN Object AS Object_HouseholdInventory
-                             ON Object_HouseholdInventory.ID = MI_Master.ObjectId
+                             ON Object_HouseholdInventory.ID = tmpContainer.HouseholdInventoryID
+       ;
 
-       WHERE MI_Master.MovementId = inMovementId
-         AND MI_Master.DescId     = zc_MI_Master()
-         AND MI_Master.Amount     > 0 
-         AND COALESCE (tmpContainer.Amount, 0) <> 1
-         AND MI_Master.IsErased   = FALSE;
-
-       RAISE EXCEPTION 'Ошибка.Как минимум один хоз. инвентарь <%> <%> списан.', vbInvNumber, vbGoodsName;
+      RAISE EXCEPTION 'Ошибка.Как минимум по одному хоз. инвентарю <%> <%> списание уже произведено.', vbInvNumber, vbGoodsName;
     END IF;
 
     -- Распроводим Документ
@@ -132,4 +114,4 @@ $BODY$
 */
 
 -- тест
--- SELECT * FROM gpUnComplete_Movement_IncomeHouseholdInventory (inMovementId:= 149639, inSession:= zfCalc_UserAdmin())
+-- select * from gpUpdate_Status_IncomeHouseholdInventory(inMovementId := 19469516 , inStatusCode := 1 ,  inSession := '3');

@@ -148,9 +148,12 @@ BEGIN
       , COALESCE (ObjectFloat_T2_SUN_v2.ValueData,0) ::TFloat AS T2_SUN_v2
       , COALESCE (ObjectFloat_T1_SUN_v4.ValueData,0) ::TFloat AS T1_SUN_v4
       
-      , CASE WHEN COALESCE (ObjectFloat_SunIncome.ValueData,0) > 0 THEN ObjectFloat_SunIncome.ValueData ELSE 30 END        ::TFloat AS SunIncome
-      , CASE WHEN COALESCE (ObjectFloat_Sun_v2Income.ValueData,0) > 0 THEN ObjectFloat_Sun_v2Income.ValueData ELSE 30 END  ::TFloat AS Sun_v2Income
-      , CASE WHEN COALESCE (ObjectFloat_Sun_v4Income.ValueData,0) > 0 THEN ObjectFloat_Sun_v4Income.ValueData ELSE 30 END  ::TFloat AS Sun_v4Income
+      , CASE WHEN COALESCE (ObjectFloat_SunIncome.ValueData,0) > 0 THEN ObjectFloat_SunIncome.ValueData 
+             ELSE CASE WHEN COALESCE (ObjectBoolean_SUN.ValueData, FALSE) = TRUE THEN 30 END END        ::TFloat AS SunIncome
+      , CASE WHEN COALESCE (ObjectFloat_Sun_v2Income.ValueData,0) > 0 THEN ObjectFloat_Sun_v2Income.ValueData 
+             ELSE CASE WHEN COALESCE (ObjectBoolean_SUN_v2.ValueData, FALSE) = TRUE THEN 30 END END  ::TFloat AS Sun_v2Income
+      , CASE WHEN COALESCE (ObjectFloat_Sun_v4Income.ValueData,0) > 0 THEN ObjectFloat_Sun_v4Income.ValueData 
+             ELSE CASE WHEN COALESCE (ObjectBoolean_SUN_v4.ValueData, FALSE) = TRUE THEN 30 END END  ::TFloat AS Sun_v4Income
 
       , COALESCE (ObjectFloat_HT_SUN_v1.ValueData,0) ::TFloat AS HT_SUN_v1
       , COALESCE (ObjectFloat_HT_SUN_v2.ValueData,0) ::TFloat AS HT_SUN_v2
