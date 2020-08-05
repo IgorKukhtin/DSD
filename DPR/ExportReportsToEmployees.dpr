@@ -1,6 +1,7 @@
 program ExportReportsToEmployees;
 
 uses
+  MidasLib,
   Vcl.Forms,
   MainUnit in '..\FormsFarmacy\MainUnitService\ExportReportsToEmployees\MainUnit.pas' {MainForm};
 

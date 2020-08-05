@@ -35,6 +35,8 @@ type
 
   TMaxIdTransIdArray = array of TMaxIdTransId;
 
+  TReplicaFinished = (rfUnknown, rfComplete, rfStopped, rfErrStopped);
+
 implementation
 
 end.

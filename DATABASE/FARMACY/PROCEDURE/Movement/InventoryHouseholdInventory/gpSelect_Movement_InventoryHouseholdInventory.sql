@@ -10,7 +10,7 @@ CREATE OR REPLACE FUNCTION gpSelect_Movement_InventoryHouseholdInventory(
 )
 RETURNS TABLE (Id Integer, InvNumber TVarChar, OperDate TDateTime
              , StatusCode Integer, StatusName TVarChar
-             , TotalCount TFloat, TotalSumm TFloat
+             , Diff TFloat, DiffSumm TFloat
              , UnitId Integer, UnitName TVarChar
              , Comment TVarChar
              , InsertName TVarChar, InsertDate TDateTime
@@ -60,23 +60,23 @@ BEGIN
                         )
 
        SELECT
-             Movement.Id                          AS Id
-           , Movement.InvNumber                   AS InvNumber
-           , Movement.OperDate                    AS OperDate
-           , Object_Status.ObjectCode             AS StatusCode
-           , Object_Status.ValueData              AS StatusName
-           , MovementFloat_TotalCount.ValueData   AS TotalCount
-           , MovementFloat_TotalSumm.ValueData    AS TotalSumm
+             Movement.Id                           AS Id
+           , Movement.InvNumber                    AS InvNumber
+           , Movement.OperDate                     AS OperDate
+           , Object_Status.ObjectCode              AS StatusCode
+           , Object_Status.ValueData               AS StatusName
+           , MovementFloat_TotalDiff.ValueData     AS Diff
+           , MovementFloat_TotalDiffSumm.ValueData AS DiffSumm
 
-           , Object_Unit.Id                       AS UnitId
-           , Object_Unit.ValueData                AS UnitName
+           , Object_Unit.Id                        AS UnitId
+           , Object_Unit.ValueData                 AS UnitName
 
            , COALESCE (MovementString_Comment.ValueData,'')     :: TVarChar AS Comment
 
-           , Object_Insert.ValueData              AS InsertName
-           , MovementDate_Insert.ValueData        AS InsertDate
-           , Object_Update.ValueData              AS UpdateName
-           , MovementDate_Update.ValueData        AS UpdateDate
+           , Object_Insert.ValueData               AS InsertName
+           , MovementDate_Insert.ValueData         AS InsertDate
+           , Object_Update.ValueData               AS UpdateName
+           , MovementDate_Update.ValueData         AS UpdateDate
 
        FROM (SELECT Movement.id
              FROM tmpStatus
@@ -87,13 +87,13 @@ BEGIN
 
             LEFT JOIN Object AS Object_Status ON Object_Status.Id = Movement.StatusId
 
-            LEFT JOIN MovementFloat AS MovementFloat_TotalCount
-                                    ON MovementFloat_TotalCount.MovementId =  Movement.Id
-                                   AND MovementFloat_TotalCount.DescId = zc_MovementFloat_TotalCount()
+            LEFT JOIN MovementFloat AS MovementFloat_TotalDiff
+                                    ON MovementFloat_TotalDiff.MovementId =  Movement.Id
+                                   AND MovementFloat_TotalDiff.DescId = zc_MovementFloat_TotalDiff()
  
-            LEFT JOIN MovementFloat AS MovementFloat_TotalSumm
-                                    ON MovementFloat_TotalSumm.MovementId =  Movement.Id
-                                   AND MovementFloat_TotalSumm.DescId = zc_MovementFloat_TotalSumm()
+            LEFT JOIN MovementFloat AS MovementFloat_TotalDiffSumm
+                                    ON MovementFloat_TotalDiffSumm.MovementId =  Movement.Id
+                                   AND MovementFloat_TotalDiffSumm.DescId = zc_MovementFloat_TotalDiffSumm()
 
             LEFT JOIN MovementLinkObject AS MovementLinkObject_Unit
                                          ON MovementLinkObject_Unit.MovementId = Movement.Id

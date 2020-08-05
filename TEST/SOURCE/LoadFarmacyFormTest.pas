@@ -899,16 +899,19 @@ end;
 
 procedure TLoadFormTest.LoadReportFormTest;
 begin
-    TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_Check_CountForm'));
-    TdsdFormStorageFactory.GetStorage.Load('TReport_Check_CountForm');
-    TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_Check_CountDialogForm'));
-    TdsdFormStorageFactory.GetStorage.Load('TReport_Check_CountDialogForm');
-    exit;
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_LeftSendForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TReport_LeftSendForm');
+
+  {
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_Check_CountForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TReport_Check_CountForm');
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_Check_CountDialogForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TReport_Check_CountDialogForm');
 
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_OrderInternalPromo_DistributionCalculationForm'));
   TdsdFormStorageFactory.GetStorage.Load('TReport_OrderInternalPromo_DistributionCalculationForm');
 
-{  TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_PercentageOccupancySUNForm'));
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_PercentageOccupancySUNForm'));
   TdsdFormStorageFactory.GetStorage.Load('TReport_PercentageOccupancySUNForm');
 
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_Check_NumberChecksDialogForm'));

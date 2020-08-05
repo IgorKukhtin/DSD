@@ -98,6 +98,8 @@ type
     lbSsnNumber: TLabel;
     tmrElapsed: TTimer;
     lstLog: TListBox;
+    chkWriteCommands: TCheckBox;
+    chkStopIfErr: TCheckBox;
     {$WARNINGS ON}
     procedure chkShowLogClick(Sender: TObject);
     procedure btnLibLocationClick(Sender: TObject);
@@ -116,6 +118,9 @@ type
     procedure sePacketRangeChange(Sender: TObject);
     procedure btnStopClick(Sender: TObject);
     procedure tmrElapsedTimer(Sender: TObject);
+    procedure chkWriteCommandsClick(Sender: TObject);
+    procedure edtLibLocationChange(Sender: TObject);
+    procedure chkStopIfErrClick(Sender: TObject);
   private
     FLog: TLog;
     FData: TdmData;
@@ -201,8 +206,11 @@ begin
   seSelectRange.Value := TSettings.ReplicaSelectRange;
   sePacketRange.Value := TSettings.ReplicaPacketRange;
 
-  chkWriteLog.Checked := TSettings.UseLog;
-  chkShowLog.Checked  := TSettings.UseLogGUI;
+  chkWriteLog.Checked      := TSettings.UseLog;
+  chkShowLog.Checked       := TSettings.UseLogGUI;
+  chkWriteCommands.Checked := TSettings.WriteCommandsToFile;
+  chkStopIfErr.Checked       := TSettings.StopIfError;
+
   SwitchShowLog;
 end;
 
@@ -350,6 +358,7 @@ begin
   iPacketRange := sePacketRange.Value;
 
   LogMessage(Format(cStartPerlica, [iStart]));
+  LogMessage('');
 
   StopReplicaThread;
   FReplicaThrd := TReplicaThread.Create(cCreateSuspended, iStart, iSelectRange, iPacketRange, LogMessage, tknDriven);
@@ -433,6 +442,16 @@ begin
   TSettings.UseLogGUI := chkShowLog.Checked;
 end;
 
+procedure TfrmMain.chkStopIfErrClick(Sender: TObject);
+begin
+  TSettings.StopIfError := chkStopIfErr.Checked;
+end;
+
+procedure TfrmMain.chkWriteCommandsClick(Sender: TObject);
+begin
+  TSettings.WriteCommandsToFile := chkWriteCommands.Checked;
+end;
+
 procedure TfrmMain.chkWriteLogClick(Sender: TObject);
 begin
   TSettings.UseLog := chkWriteLog.Checked;
@@ -470,6 +489,11 @@ begin
   inherited;
 end;
 
+procedure TfrmMain.edtLibLocationChange(Sender: TObject);
+begin
+  TSettings.LibLocation  := edtLibLocation.Text;
+end;
+
 procedure TfrmMain.edtStartReplicaExit(Sender: TObject);
 begin
   TSettings.ReplicaStart := StrToIntDef(edtSsnMinId.Text, 1);
@@ -482,6 +506,7 @@ var
   iObjIndex, iPos: Integer;
   sMsg, sLine: string;
 begin
+
   if TSettings.UseLog then // выбрана настройка "записывать лог в файл"
     if Length(Trim(AFileName)) = 0 then // пишем в файл по умолчанию
     begin
@@ -523,9 +548,8 @@ begin
     else
       lstLog.Items.AddObject(sMsg, TObject(aUID));
 
-//      lstLog.TopIndex := lstLog.Items.Count - 1;
-      lstLog.Perform(WM_VSCROLL, SB_BOTTOM, 0);
-      lstLog.Perform(WM_VSCROLL, SB_ENDSCROLL, 0);
+    lstLog.Perform(WM_VSCROLL, SB_BOTTOM, 0);
+    lstLog.Perform(WM_VSCROLL, SB_ENDSCROLL, 0);
   end;
 
   FPrevUID := aUID;
@@ -560,6 +584,7 @@ begin
   lbSsnElapsed.Caption := Format(cElapsedSession, [Elapsed(FStartTimeSession)]);
   lbSsnNumber.Caption  := lbSsnNumber.Caption + ' окончена';
   FStartTimeSession := 0;
+  LogMessage('');
 end;
 
 procedure TfrmMain.OnExitSettings(Sender: TObject);
@@ -626,12 +651,25 @@ begin
 end;
 
 procedure TfrmMain.OnTerminateReplica(Sender: TObject);
-const
-  cEnd = 'Репликация завершена';
+var
+  sMsg: string;
+  replicaFinish: TReplicaFinished;
+  thrdWorker: TWorkerThread;
 begin
   tmrElapsed.Enabled := False;
 
-  LogMessage(cEnd);
+  thrdWorker := (Sender as TWorkerThread);
+  replicaFinish := TReplicaFinished(thrdWorker.MyReturnValue);
+
+  case replicaFinish of
+    rfUnknown:    sMsg := 'Репликация остановилась по неизвестной причине';
+    rfComplete:   sMsg := 'Репликация завершена';
+    rfStopped:    sMsg := 'Репликация остановлена вручную';
+    rfErrStopped: sMsg := 'Репликация остановилась из-за ошибки';
+  end;
+
+  LogMessage(sMsg);
+  LogMessage('');
   btnStartReplication.Enabled := True;
   btnStop.Enabled := False;
 

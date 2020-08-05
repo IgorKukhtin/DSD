@@ -24,7 +24,7 @@ uses
   dxSkinSevenClassic, dxSkinSharp, dxSkinSharpPlus, dxSkinSilver,
   dxSkinSpringTime, dxSkinStardust, dxSkinSummer2008, dxSkinTheAsphaltWorld,
   dxSkinValentine, dxSkinVS2010, dxSkinWhiteprint, dxSkinXmas2008Blue,
-  cxCheckBox, DataModul;
+  cxCheckBox, DataModul, dsdExportToXLSAction;
 
 type
   TIncomeHouseholdInventoryForm = class(TAncestorDocumentForm)
@@ -73,6 +73,10 @@ type
     dxBarButton2: TdxBarButton;
     actHouseholdInventoryChoice: TOpenChoiceForm;
     Summa: TcxGridDBColumn;
+    actPrintSticker: TdsdExportToXLS;
+    ExecSPPrintSticker: TdsdExecStoredProc;
+    spSelectPrintSticker: TdsdStoredProc;
+    dxBarButton3: TdxBarButton;
   private
     { Private declarations }
   public

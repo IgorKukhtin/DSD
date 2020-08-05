@@ -462,7 +462,18 @@ BEGIN
                         -- факт. курс на дату - для курс разн.
                       , CASE WHEN MovementFloat_AmountCurrency.ValueData <> 0 THEN (ABS (MovementItem.Amount) + tmpMIС.Amount) / ABS (MovementFloat_AmountCurrency.ValueData) ELSE 0 END :: TFloat AS CurrencyValue_mi_calc
              
-                      , tmpContainerBonus.Amount ::TFloat AS SummToPay
+                      , tmpContainerBonus.Amount ::TFloat AS AmountBonus
+                      
+                      , SUM (CASE WHEN MILinkObject_Currency.ObjectId <> inCurrencyId AND inCurrencyId = zc_Enum_Currency_Basis()
+                                   AND MovementItem.Amount > 0
+                                       THEN MovementFloat_AmountSumm.ValueData
+                                  WHEN MILinkObject_Currency.ObjectId <> inCurrencyId AND inCurrencyId = zc_Enum_Currency_Basis()
+                                       THEN 0
+                                  WHEN MovementItem.Amount < 0
+                                       THEN -1 * MovementItem.Amount
+                                  ELSE 0
+                             END) OVER (PARTITION BY Object_Juridical.Id, View_InfoMoney.InfoMoneyId, View_Contract_InvNumber.ContractId, Object_MoneyPlace.Id)    ::TFloat  AS TotalAmountOut
+                      , ROW_NUMBER() OVER (PARTITION BY Object_Juridical.Id, View_InfoMoney.InfoMoneyId, View_Contract_InvNumber.ContractId, Object_MoneyPlace.Id) ::Integer AS Ord
                     FROM tmpMovement
              
                          LEFT JOIN tmpMIС ON tmpMIС.MovementId = tmpMovement.Id
@@ -615,16 +626,21 @@ BEGIN
                          FULL JOIN tmpContainerBonus ON tmpContainerBonus.JuridicalId = ObjectLink_Partner_Juridical.ChildObjectId
                                                     AND tmpContainerBonus.PartnerId   = MILinkObject_MoneyPlace.ObjectId
                                                     AND tmpContainerBonus.InfoMoneyId = MILinkObject_InfoMoney.ObjectId
-                                                    --AND COALESCE (tmpContainerBonus.BranchId,0) = COALESCE (Object_MoneyPlace.Id,0)
+                                                    AND COALESCE (tmpContainerBonus.ContractId,0) = COALESCE (MILinkObject_Contract.ObjectId,0)
 
-                         LEFT JOIN tmpJuridicalDetails_View AS ObjectHistory_JuridicalDetails_View ON ObjectHistory_JuridicalDetails_View.JuridicalId = COALESCE (tmpContainerBonus.JuridicalId, ObjectLink_Partner_Juridical.ChildObjectId )
+                         LEFT JOIN tmpJuridicalDetails_View AS ObjectHistory_JuridicalDetails_View ON ObjectHistory_JuridicalDetails_View.JuridicalId = COALESCE (ObjectLink_Partner_Juridical.ChildObjectId, tmpContainerBonus.JuridicalId)
 
                          LEFT JOIN Object AS Object_MoneyPlace ON Object_MoneyPlace.Id = COALESCE (MILinkObject_MoneyPlace.ObjectId, tmpContainerBonus.PartnerId)
                          LEFT JOIN ObjectDesc ON ObjectDesc.Id = Object_MoneyPlace.DescId
                          LEFT JOIN tmpInfoMoney_View AS View_InfoMoney ON View_InfoMoney.InfoMoneyId = COALESCE (MILinkObject_InfoMoney.ObjectId, tmpContainerBonus.InfoMoneyId)
                          LEFT JOIN Object AS Object_Juridical ON Object_Juridical.Id = COALESCE (ObjectHistory_JuridicalDetails_View.JuridicalId, tmpContainerBonus.JuridicalId)
                          LEFT JOIN tmpContract_View AS View_Contract_InvNumber ON View_Contract_InvNumber.ContractId = COALESCE (MILinkObject_Contract.ObjectId, tmpContainerBonus.ContractId)
-                         LEFT JOIN Object AS Object_Branch ON Object_Branch.Id = tmpContainerBonus.BranchId
+                         
+                         LEFT JOIN ObjectLink AS OL_Cash_Branch
+                                              ON OL_Cash_Branch.ObjectId = Object_Cash.Id
+                                             AND OL_Cash_Branch.DescId = zc_ObjectLink_Cash_Branch()
+
+                         LEFT JOIN Object AS Object_Branch ON Object_Branch.Id = COALESCE (tmpContainerBonus.BranchId, OL_Cash_Branch.ObjectId)
 
                          LEFT JOIN ObjectLink AS OL_Juridical_Retail
                                               ON OL_Juridical_Retail.ObjectId = Object_Juridical.Id
@@ -634,9 +650,78 @@ BEGIN
                        AND (OL_Juridical_Retail.ChildObjectId = inRetailId OR inRetailId = 0)
                    )
 
-       SELECT *
-         , COALESCE (tmpRes.AmountOut,0) ::TFloat AS SummPay
-         , (COALESCE(tmpRes.SummToPay,0) - COALESCE (tmpRes.AmountOut,0)) ::TFloat AS RemainsToPay
+       SELECT tmpRes.Id
+            , tmpRes.InvNumber
+            , tmpRes.OperDate
+            , tmpRes.StatusCode
+            , tmpRes.StatusName
+            , tmpRes.AmountIn
+            , tmpRes.AmountOut
+            , tmpRes.AmountCurrency
+            , tmpRes.AmountSumm
+            , tmpRes.ServiceDate
+            , tmpRes.Comment
+            , tmpRes.CashName
+            , tmpRes.MoneyPlaceId
+            , tmpRes.MoneyPlaceCode
+            , tmpRes.MoneyPlaceName
+            , tmpRes.JuridicalId
+            , tmpRes.JuridicalCode
+            , tmpRes.JuridicalName
+            , tmpRes.RetailName
+            , tmpRes.OKPO
+            , tmpRes.ItemName
+            , tmpRes.InfoMoneyGroupName
+            , tmpRes.InfoMoneyDestinationName
+            , tmpRes.InfoMoneyId
+            , tmpRes.InfoMoneyCode
+            , tmpRes.InfoMoneyName
+            , tmpRes.InfoMoneyName_all
+            , tmpRes.MemberName
+            , tmpRes.PositionName
+            , tmpRes.PersonalServiceListId
+            , tmpRes.PersonalServiceListCode
+            , tmpRes.PersonalServiceListName
+            , tmpRes.ContractId
+            , tmpRes.ContractCode
+            , tmpRes.ContractInvNumber
+            , tmpRes.ContractTagName
+            , tmpRes.BranchId
+            , tmpRes.BranchName
+            , tmpRes.UnitCode
+            , tmpRes.UnitName
+            , tmpRes.CarId
+            , tmpRes.CarName
+            , tmpRes.CarModelId
+            , tmpRes.CarModelName
+            , tmpRes.UnitId_Car
+            , tmpRes.UnitName_Car
+            , tmpRes.CurrencyName
+            , tmpRes.CurrencyPartnerName
+            , tmpRes.CurrencyValue
+            , tmpRes.ParValue
+            , tmpRes.CurrencyPartnerValue
+            , tmpRes.ParPartnerValue
+            , tmpRes.isLoad
+            , tmpRes.PartionMovementName
+            , tmpRes.MovementId_Invoice
+            , tmpRes.InvNumber_Invoice
+            , tmpRes.Comment_Invoice
+            , tmpRes.InsertDate
+            , tmpRes.InsertMobileDate
+            , tmpRes.InsertName
+            , tmpRes.UnitName_Mobile
+            , tmpRes.PositionName_Mobile
+            , tmpRes.GUID
+            , tmpRes.CurrencyId_x
+            , tmpRes.MovementId_x
+            , tmpRes.AmountSumm_x
+            , tmpRes.CurrencyValue_calc
+            , tmpRes.CurrencyValue_mi_calc
+                     
+         , CASE WHEN tmpRes.Ord = 1 THEN COALESCE (tmpRes.AmountBonus,0) ELSE 0 END ::TFloat AS SummToPay
+         , CASE WHEN tmpRes.Ord = 1 THEN COALESCE (tmpRes.TotalAmountOut,0)   ELSE 0 END ::TFloat AS SummPay
+         , CASE WHEN tmpRes.Ord = 1 THEN (COALESCE(tmpRes.AmountBonus,0) - COALESCE (tmpRes.TotalAmountOut,0)) ELSE 0 END ::TFloat AS RemainsToPay
        FROM tmpRes
        ;
 

@@ -22,7 +22,7 @@ BEGIN
      vbUserId:= lpCheckRight (inSession, zc_Enum_Process_InsertUpdate_Movement_Cash());
 
      -- 
-     IF COALESCE (inRemainsToPay, 0) = 0 
+     IF COALESCE (inRemainsToPay, 0) <= 0 
      THEN
         RETURN;
      END IF;
@@ -75,7 +75,7 @@ BEGIN
 
 
 
-     PERFORM lpSetErased_Movement (vbId, vbUserId);
+     --PERFORM lpSetErased_Movement (vbId, vbUserId);
 
      -- 5.3. проводим Документ
      IF vbUserId = lpCheckRight (inSession, zc_Enum_Process_Complete_Cash())

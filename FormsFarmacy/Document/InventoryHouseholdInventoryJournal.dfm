@@ -32,7 +32,7 @@ inherited InventoryHouseholdInventoryJournalForm: TInventoryHouseholdInventoryJo
             item
               Format = ',0.####'
               Kind = skSum
-              Column = TotalCount
+              Column = Diff
             end
             item
               Format = ',0.####'
@@ -89,13 +89,13 @@ inherited InventoryHouseholdInventoryJournalForm: TInventoryHouseholdInventoryJo
             item
               Format = ',0.00;-,0.00; ;'
               Kind = skSum
-              Column = TotalSumm
+              Column = DiffSumm
             end>
           DataController.Summary.FooterSummaryItems = <
             item
               Format = ',0.####'
               Kind = skSum
-              Column = TotalCount
+              Column = Diff
             end
             item
               Format = ',0.####'
@@ -152,7 +152,7 @@ inherited InventoryHouseholdInventoryJournalForm: TInventoryHouseholdInventoryJo
             item
               Format = ',0.00;-,0.00; ;'
               Kind = skSum
-              Column = TotalSumm
+              Column = DiffSumm
             end>
           OptionsBehavior.GoToNextCellOnEnter = False
           OptionsBehavior.FocusCellOnCycle = False
@@ -187,9 +187,9 @@ inherited InventoryHouseholdInventoryJournalForm: TInventoryHouseholdInventoryJo
             HeaderAlignmentVert = vaCenter
             Width = 200
           end
-          object TotalCount: TcxGridDBColumn
-            Caption = #1050#1086#1083'-'#1074#1086
-            DataBinding.FieldName = 'TotalCount'
+          object Diff: TcxGridDBColumn
+            Caption = #1056#1072#1079#1085#1080#1094#1072' '#1074' '#1082#1086#1083'-'#1074#1077
+            DataBinding.FieldName = 'Diff'
             PropertiesClassName = 'TcxCurrencyEditProperties'
             Properties.DecimalPlaces = 4
             Properties.DisplayFormat = ',0.####;-,0.####; ;'
@@ -197,9 +197,9 @@ inherited InventoryHouseholdInventoryJournalForm: TInventoryHouseholdInventoryJo
             HeaderAlignmentVert = vaCenter
             Width = 70
           end
-          object TotalSumm: TcxGridDBColumn
-            Caption = #1057#1091#1084#1084#1072
-            DataBinding.FieldName = 'TotalSumm'
+          object DiffSumm: TcxGridDBColumn
+            Caption = #1056#1072#1079#1085#1080#1094#1072' '#1074' '#1089#1091#1084#1084#1077
+            DataBinding.FieldName = 'DiffSumm'
             PropertiesClassName = 'TcxCurrencyEditProperties'
             Properties.DisplayFormat = ',0.00;-,0.00; ;'
             HeaderAlignmentHorz = taCenter

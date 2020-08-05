@@ -717,6 +717,8 @@ type
     N248: TMenuItem;
     actReport_Check_Count: TdsdOpenForm;
     miReport_Check_Count: TMenuItem;
+    actReport_LeftSend: TdsdOpenForm;
+    N249: TMenuItem;
     procedure actSaveDataExecute(Sender: TObject);
 
     procedure miRepriceClick(Sender: TObject);

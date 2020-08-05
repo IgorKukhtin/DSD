@@ -145,6 +145,7 @@ BEGIN
 
              LEFT JOIN MovementItem_Check_View AS MovementItem
                                                ON MovementItem.MovementId = Movement_Check.Id
+                                              AND MovementItem.Amount > 0 
                                                
              LEFT JOIN MovementItemContainer ON MovementItemContainer.MovementItemId = MovementItem.ID
 

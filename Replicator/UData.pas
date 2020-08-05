@@ -31,8 +31,10 @@ type
     FSessionNumber: Integer;
     FMsgProc: TNotifyMessage;
     FStopped: Boolean;
+    FWriteCommands: Boolean;
     FCommandData: TCommandData;
     FFailCmds: TCommandData;
+    FReplicaFinished: TReplicaFinished;
     FOnChangeStartId: TOnChangeStartId;
     FOnNewSession: TOnNewSession;
     FOnEndSession: TNotifyEvent;
@@ -56,6 +58,7 @@ type
     property OnEndSession: TNotifyEvent read FOnEndSession write FOnEndSession;
     property StartId: Integer read FStartId write SetStartId;
     property SelectRange: Integer read FSelectRange write FSelectRange;
+    property ReplicaFinished: TReplicaFinished read FReplicaFinished;
 
     function ExecutePreparedPacket: Integer;
     function IsMasterConnected: Boolean;
@@ -134,7 +137,9 @@ uses
 const
   cAttempt1 = '№1 <%d-%d>  tranId=<%d-%d>  %d записей   за %s  %s';
   cAttempt2 = '№2 <%d-%d>  ok = %d   error = %d   за %s';
-  cAttempt3 = '№3 <%d-%d>  ok = %d   за %s';
+  cAttempt3 = '№3 <%d-%d>  ok = %d   error = %d   за %s';
+  cWrongRange = 'Ожидается, что MaxId > StartId, а имеем MaxId = %d, StartId = %d';
+  cWaitNextMsg = 500;
 
 
 { TdmData }
@@ -225,7 +230,8 @@ begin
     qrySelectReplicaCmd.Open;
     qrySelectReplicaCmd.FetchAll;
     qrySelectReplicaCmd.First;
-    StartId := qrySelectReplicaCmd.FieldByName('Id').AsInteger; // откорректируем значение StartId в соответствии с реальными данными
+    FStartId := qrySelectReplicaCmd.FieldByName('Id').AsInteger; // откорректируем значение StartId в соответствии с реальными данными
+    TSettings.ReplicaStart := StartId;
     LogMsg(Format(cElapsedFetch, [IntToStr(qrySelectReplicaCmd.RecordCount), Elapsed(crdStartFetch)]), crdStartFetch);
 
     // строим свой массив данных, который позволит выбирать записи пакетами с учетом границ transaction_id
@@ -239,7 +245,7 @@ begin
 
     // показать инфу о новой сессии в GUI
     if Assigned(FOnNewSession) then
-      FOnNewSession(dtmStart, AStartId, FCommandData.Data.Id, FCommandData.Count, FSessionNumber);
+      FOnNewSession(dtmStart, FStartId, FCommandData.Data.Id, FCommandData.Count, FSessionNumber);
 
     // сохраним правую границу диапазона для последующего использования
     with qryLastId do
@@ -272,6 +278,8 @@ begin
 
   FCommandData := TCommandData.Create;
   FFailCmds    := TCommandData.Create;
+
+  FReplicaFinished := rfComplete;
 end;
 
 destructor TdmData.Destroy;
@@ -291,43 +299,56 @@ begin
   iPrevStartId := -1;
   FStopped := False;
 
-  // MaxID - это ф-ия, которая возвращает 'select Max(Id) from _replica.table_update_data'
-  while (FStartId > iPrevStartId) and (FStartId <= MaxID) and not FStopped do
-  begin
-    // Успешное выполнение методов репликации должно увеличивать FStartId и в конце итерации это значение обычно должно быть больше предыдущего.
-    // Возможен сценарий, когда в пакете нет ни одной команды. В этом случае FStartId останется неизменным.
-    // Сохраним предыдущеее значение FStartId, чтобы потом сравнить его с текущим значением FStartId
-    // и избежать бесконечного цикла для случая, когда в пакете нет ни одной команды.
-    iPrevStartId := FStartId;
-
-    // Формируем набор команд в дипазоне StartId..(StartId + SelectRange)
-    // FStartId увеличивается в процессе выполнения команд
-    // Реальная правая граница может быть > (FStartId + FSelectRange), потому что BuildReplicaCommandsSQL учитывает номера транзакций
-    // и обеспечивает условие, чтобы записи с одинаковыми номерами транзакций были в одном наборе
-    BuildReplicaCommandsSQL(FStartId, FSelectRange);
-
-    // Передаем команды из дипазона StartId..(StartId + SelectRange) порциями
-    while (FStartId < FLastId) and not FStopped do
+  try
+  
+    // MaxID - это ф-ия, которая возвращает 'select Max(Id) from _replica.table_update_data'
+    while (FStartId > iPrevStartId) and (FStartId <= MaxID) and not FStopped do
     begin
-      // Сначала попробуем передать данные целым пакетом. Id записей пакета в диапазоне FStartId..(FStartId + FPacketRange)
-      if ExecutePreparedPacket = 0 then // если передача пакета завершилась неудачей
-        ExecuteCommandsOneByOne; // выполняем команды по одной. Id и SQL невыполненных команд сохраняем в FFailCmds
+      // Успешное выполнение методов репликации должно увеличивать FStartId и в конце итерации это значение обычно должно быть больше предыдущего.
+      // Возможен сценарий, когда в пакете нет ни одной команды. В этом случае FStartId останется неизменным.
+      // Сохраним предыдущеее значение FStartId, чтобы потом сравнить его с текущим значением FStartId
+      // и избежать бесконечного цикла для случая, когда в пакете нет ни одной команды.
+      iPrevStartId := FStartId;
 
-      // Выполняем команды, которые не удалось выполнить на этапе "по одной команде"
-      if FFailCmds.Count > 0 then
-        ExecuteErrCommands;
+      // Формируем набор команд в дипазоне StartId..(StartId + SelectRange) - это сессия
+      // FStartId увеличивается в процессе выполнения команд
+      // Реальная правая граница может быть > (FStartId + FSelectRange), потому что BuildReplicaCommandsSQL учитывает номера транзакций
+      // и обеспечивает условие, чтобы записи с одинаковыми номерами транзакций были в одном наборе
+      BuildReplicaCommandsSQL(FStartId, FSelectRange);
+
+      // Передаем команды из дипазона StartId..(StartId + SelectRange) порциями
+      while (FStartId < FLastId) and not FStopped do
+      begin
+        // проверяем, нужно ли записывать текст команд в файл
+        FWriteCommands := TSettings.WriteCommandsToFile;
+
+        // Сначала попробуем передать данные целым пакетом. Id записей пакета в диапазоне FStartId..(FStartId + FPacketRange)
+        if ExecutePreparedPacket = 0 then // если передача пакета завершилась неудачей
+          ExecuteCommandsOneByOne; // выполняем команды по одной. Id и SQL невыполненных команд сохраняем в FFailCmds
+
+        // Выполняем команды, которые не удалось выполнить на этапе "по одной команде"
+        if FFailCmds.Count > 0 then
+          ExecuteErrCommands;
+      end;
+
+      // сессия закончена, передаем инфу в GUI
+      if Assigned(FOnEndSession) then
+        FOnEndSession(nil);
     end;
 
-    // сессия закончена, передаем инфу в GUI
-    if Assigned(FOnEndSession) then
-      FOnEndSession(nil);
+  except
+    on E: Exception do
+    begin
+      FReplicaFinished := rfErrStopped;
+      LogMsg(Format(cExceptionMsg, [E.ClassName, E.Message]));
+    end;
   end;
 end;
 
 procedure TdmData.ExecuteCommandsOneByOne; // предполагается использовать внутри ExecuteAllPackets после неудачи ExecutePreparedPacket
 var
   iStartId, iMaxId, iSuccCount, iFailCount: Integer;
-  crdStart: Cardinal;
+  crdStart, crdLogMsg: Cardinal;
 begin
   // будем выполнять команды по одной
   if FStopped then Exit;
@@ -338,6 +359,14 @@ begin
     iMaxId := FStartId + FPacketRange;
     iMaxId := FCommandData.NearestId(iMaxId);
 
+    if FStartId >= iMaxId then
+    begin 
+      LogMsg(Format(cWrongRange, [iMaxId, FStartId]));
+      FStopped := True;
+      FReplicaFinished := rfErrStopped;
+      Exit;
+    end;      
+
     FCommandData.MoveToId(FStartId);
     iStartId   := FStartId;
     iSuccCount := 0;
@@ -345,47 +374,59 @@ begin
 
     // строка "№2 <56477135-56513779> ок = 0 записей error = 0 записей за  "
     LogMsg(Format(cAttempt2, [iStartId, iMaxId, iSuccCount, iFailCount, EmptyStr]), crdStart);
-
-    while not FCommandData.EOF and (FCommandData.Data.Id <= iMaxId) and not FStopped do
-    begin
-      try
-        if IsSlaveConnected then
-          with conSlave.DbcConnection do
+    crdLogMsg := GetTickCount;
+    
+    try
+      
+      while not FCommandData.EOF and (FCommandData.Data.Id <= iMaxId) and not FStopped do
+      begin
+        try
+          if IsSlaveConnected then
+            with conSlave.DbcConnection do
+            begin
+              SetAutoCommit(False);
+              PrepareStatement(FCommandData.Data.SQL).ExecutePrepared;
+              Commit;
+              Inc(iSuccCount);
+            end;
+        except
+          on E: Exception do
           begin
-            SetAutoCommit(False);
-            PrepareStatement(FCommandData.Data.SQL).ExecutePrepared;
-            Commit;
-            // FCommandData.Data.Id содержит table_update_data.Id
-            // если 'ExecutePrepared' выполнен успешно, тогда можем обновить StartId
-            StartId := FCommandData.Data.Id + 1; // используем св-во StartId, а не FStartId, чтобы значение сразу сохранилось в TSettings.ReplicaStart
-            Inc(iSuccCount);
-            // строка "№2 <56477135-56513779> ок = 3500 записей error = 25 записей за 00:00:20_2"
-            LogMsg(Format(cAttempt2, [iStartId, iMaxId, iSuccCount, iFailCount, Elapsed(crdStart)]), crdStart);
+            conSlave.DbcConnection.Rollback;
+            // Id и SQL невыполненных  команд сохраняем в FFailCmds
+            FFailCmds.Add(FCommandData.Data.Id, FCommandData.Data.TransId, FCommandData.Data.SQL);
+            Inc(iFailCount);
           end;
-      except
-        on E: Exception do
-        begin
-          conSlave.DbcConnection.Rollback;
-          // Id и SQL невыполненных  команд сохраняем в FFailCmds
-          FFailCmds.Add(FCommandData.Data.Id, FCommandData.Data.TransId, FCommandData.Data.SQL);
-          Inc(iFailCount);
-          // строка "№2 <56477135-56513779> ок = 3500 записей error = 25 записей за 00:00:20_2"
-          LogMsg(Format(cAttempt2, [iStartId, iMaxId, iSuccCount, iFailCount, Elapsed(crdStart)]), crdStart);
         end;
-      end;
 
-      FCommandData.Next;
-    end;
-  except
-    on E: Exception do
-      LogMsg(Format(cExceptionMsg, [E.ClassName, E.Message]));
+        // Команды выполняются быстро и в большом количестве, но текст сообщений при этом отличается несущественно.
+        // Кроме того, в файл будет сохранено только последнее сообщение. Этот спам может подвесить программу.
+        // Для того, чтобы уменьшить поток сообщений, будем передавать только некоторые  из них с интервалом cWaitNextMsg.
+        if (GetTickCount - crdLogMsg) > cWaitNextMsg then
+        begin 
+          LogMsg(Format(cAttempt2, [iStartId, iMaxId, iSuccCount, iFailCount, Elapsed(crdStart)]), crdStart);
+          crdLogMsg := GetTickCount; 
+        end;       
+
+        FCommandData.Next;
+        // FCommandData.Data.Id содержит table_update_data.Id
+        StartId := FCommandData.Data.Id; // используем св-во StartId, а не FStartId, чтобы возбудить событие OnChangeStartId
+      end;
+        
+    finally
+      // обязательно записываем в лог последнее сообщение 
+      LogMsg(Format(cAttempt2, [iStartId, iMaxId, iSuccCount, iFailCount, Elapsed(crdStart)]), crdStart);
+    end;      
+    
+  finally
+    TSettings.ReplicaStart := StartId; // сохранить в настройках актуальное значение StartId
   end;
 end;
 
 procedure TdmData.ExecuteErrCommands;
 var
-  iStartId, iEndId, iSuccCount{, iFailCount}: Integer;
-  crdStart: Cardinal;
+  iStartId, iEndId, iSuccCount, iFailCount: Integer;
+  crdStart, crdLogMsg: Cardinal;
   sFileName: string;
 const
   cFileName  = '\Err_commands\%s';
@@ -394,7 +435,7 @@ begin
   // FFailCmds содержит команды, которые не удалось выполнить в пакетной выгрузке и в выгрузке "по одной команде"
 
   if FStopped then Exit;
-  
+
   crdStart := GetTickCount;
 
   FFailCmds.Last;
@@ -404,53 +445,77 @@ begin
   iStartId := FFailCmds.Data.Id;
 
   iSuccCount := 0;
-//  iFailCount := 0;
+  iFailCount := 0;
 
-  // строка "№3 <56477135-56513779> ок = 25 записей за  "
   if FFailCmds.Count > 0 then
-    LogMsg(Format(cAttempt3, [iStartId, iEndId, iSuccCount, EmptyStr]), crdStart);
-
-
-  while not FFailCmds.EOF and not FStopped do
-  begin
+  begin 
+    // строка "№3 <56477135-56513779> ок = 25 записей за  "
+    LogMsg(Format(cAttempt3, [iStartId, iEndId, iSuccCount, iFailCount, EmptyStr]), crdStart);
+    crdLogMsg := GetTickCount;
+    
     try
-      if IsSlaveConnected then
-        with conSlave.DbcConnection do
-        begin
-          SetAutoCommit(False);
-          PrepareStatement(FFailCmds.Data.SQL).ExecutePrepared;
-          Commit;
-          Inc(iSuccCount);
-          // строка "№3 <56477135-56513779> ок = 25 записей за 00:00:2_2"
-          LogMsg(Format(cAttempt3, [iStartId, iEndId, iSuccCount, Elapsed(crdStart)]), crdStart);
-        end;
-    except
-      on E: Exception do
+
+      while not FFailCmds.EOF and not FStopped do
       begin
-        conSlave.DbcConnection.Rollback;
-        // команды, которые так и не были выполнены, пишем в лог
-        sFileName := Format(cFileName, [
-          Format(cFileErr, [
-            FormatDateTime(cDateTimeFileNameStr, Now),
-            FFailCmds.Data.Id
-          ])
-        ]);
-        LogMsg(FFailCmds.Data.SQL, sFileName);
+        try
+          if IsSlaveConnected then
+            with conSlave.DbcConnection do
+            begin
+              SetAutoCommit(False);
+              PrepareStatement(FFailCmds.Data.SQL).ExecutePrepared;
+              Commit;
+              Inc(iSuccCount);
+            end;
+        except
+          on E: Exception do
+          begin
+            conSlave.DbcConnection.Rollback;
 
-//        Inc(iFailCount);
-        // строка "№3 <56477135-56513779> ок = 25 записей за 00:00:2_2"
-        LogMsg(Format(cAttempt3, [iStartId, iEndId, iSuccCount, Elapsed(crdStart)]), crdStart);
+            // команды, которые так и не были выполнены, пишем в лог
+            if FWriteCommands then
+            begin
+              sFileName := Format(cFileName, [
+                Format(cFileErr, [
+                  FormatDateTime(cDateTimeFileNameStr, Now),
+                  FFailCmds.Data.Id
+                ])
+              ]);
+              LogMsg(FFailCmds.Data.SQL, sFileName);
+            end;
+
+            Inc(iFailCount);
+          end;
+        end;
+
+        if (GetTickCount - crdLogMsg) > cWaitNextMsg then
+        begin 
+          // строка "№3 <56477135-56513779> ок = 25 записей за 00:00:2_225"
+          LogMsg(Format(cAttempt3, [iStartId, iEndId, iSuccCount, iFailCount, Elapsed(crdStart)]), crdStart);
+          crdLogMsg := GetTickCount; 
+        end;         
+
+        FFailCmds.Next;
       end;
-    end;
+      
+    finally
+      // обязательно записываем в лог последнее сообщение 
+      LogMsg(Format(cAttempt3, [iStartId, iEndId, iSuccCount, iFailCount, Elapsed(crdStart)]), crdStart);
+    end;       
+  end;
 
-    FFailCmds.Next;
+  if iFailCount > 0 then // всегда останавливаем реплику, если остались невыполненные команды
+  begin
+    FStopped := True;
+    FReplicaFinished := rfErrStopped;
   end;
 
   FFailCmds.Clear;
+  Sleep(25);
 end;
 
 function TdmData.ExecutePreparedPacket: Integer;
 var
+  bStopIfError: Boolean;
   crdStart: Cardinal;
   iMaxId, iStartId, iRecCount: Integer;
   iStartTrans, iEndTrans: Integer;
@@ -466,12 +531,22 @@ begin
 
   if FStopped then Exit;
 
+  bStopIfError := TSettings.StopIfError;
+
   iStartId := FStartId;
   crdStart := GetTickCount;
 
   iMaxId := FStartId + FPacketRange;
   iMaxId := FCommandData.NearestId(iMaxId);
 
+  if iStartId >= iMaxId then
+  begin 
+    LogMsg(Format(cWrongRange, [iMaxId, iStartId]));
+    FStopped := True;
+    FReplicaFinished := rfErrStopped;
+    Exit;
+  end;
+    
   FCommandData.MoveToId(iMaxId);
   iEndTrans := FCommandData.Data.TransId;
 
@@ -506,17 +581,31 @@ begin
         conSlave.DbcConnection.Commit;
 
         // пакет успешно выполнен и можем передвинуть StartId на новую позицию
-        StartId := iMaxId + 1;
+        // - сначала перемещаемся на правую границу диапазона
+        // - последовательность Id может иметь разрывы, например 48256, 48257, 48351, 48352
+        //   поэтому вместо iMaxId + 1 используем Next
+        FCommandData.MoveToId(iMaxId);
+        FCommandData.Next;
 
-        // запись пакета в файл
-        sFileName := Format(cFileName, [
-          Format(cFileOK, [
-            FormatDateTime(cDateTimeFileNameStr, Now),
-            iStartId,
-            iMaxId
-          ])
-        ]);
-        LogMsg(tmpSL.Text, sFileName);
+        if FCommandData.EOF then // если достигли правой границы диапазона,
+          StartId := iMaxId + 1  // тогда используем  iMaxId + 1, чтобы не выполнить последнюю команду пакета еще раз в новом пакете
+        else
+          StartId := FCommandData.Data.Id;
+
+        TSettings.ReplicaStart := StartId;
+
+        // запись успешного пакета в файл
+        if FWriteCommands then
+        begin
+          sFileName := Format(cFileName, [
+            Format(cFileOK, [
+              FormatDateTime(cDateTimeFileNameStr, Now),
+              iStartId,
+              iMaxId
+            ])
+          ]);
+          LogMsg(tmpSL.Text, sFileName);
+        end;
 
         // строка  "№1 Id=<56477135-56513779> tranId=<677135-63779> 3500 записей за 00:00:00_212"
         LogMsg(Format(cAttempt1, [iStartId, iMaxId, iStartTrans, iEndTrans, iRecCount, Elapsed(crdStart), '']), crdStart);
@@ -525,16 +614,28 @@ begin
       on E: Exception do
       begin
         conSlave.DbcConnection.Rollback;
-        sFileName := Format(cFileName, [
-          Format(cFileErr, [
-            FormatDateTime(cDateTimeFileNameStr, Now),
-            iStartId,
-            iMaxId
-          ])
-        ]);
-        LogMsg(tmpSL.Text, sFileName);
+
+        // запись сбойного пакета в файл
+        if FWriteCommands then
+        begin
+          sFileName := Format(cFileName, [
+            Format(cFileErr, [
+              FormatDateTime(cDateTimeFileNameStr, Now),
+              iStartId,
+              iMaxId
+            ])
+          ]);
+          LogMsg(tmpSL.Text, sFileName);
+        end;
+
+        if bStopIfError then
+        begin
+          FStopped := True;
+          FReplicaFinished := rfErrStopped;
+        end;
+
         // строка  "№1 Id=<56477135-56513779> tranId=<677135-63779> 3500 записей за 00:00:00_212 error"
-        LogMsg(Format(cAttempt1, [iStartId, iMaxId, iStartTrans, iEndTrans, iRecCount, Elapsed(crdStart), 'error']), crdStart);;
+        LogMsg(Format(cAttempt1, [iStartId, iMaxId, iStartTrans, iEndTrans, iRecCount, Elapsed(crdStart), 'error']), crdStart);
       end;
     end;
   finally
@@ -703,7 +804,6 @@ begin
   if FStartId <> AValue then
   begin
     FStartId := AValue;
-    TSettings.ReplicaStart := FStartId;  {TODO: изменить реализацию. Нужно избежать записи в INI-файл при каждом изменении FStartId. Это замедляет процесс}
     if Assigned(FOnChangeStartId) then
       FOnChangeStartId(FStartId);
   end;
@@ -712,6 +812,7 @@ end;
 procedure TdmData.StopReplica;
 begin
   FStopped := True;
+  FReplicaFinished := rfStopped;
 end;
 
 { TWorkerThread }
@@ -808,6 +909,7 @@ procedure TReplicaThread.Execute;
 begin
   inherited;
   Data.ExecuteAllPackets;
+  ReturnValue := Ord(Data.ReplicaFinished);
   Terminate;
 end;
 

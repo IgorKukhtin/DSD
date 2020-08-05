@@ -23,6 +23,8 @@ type
     class procedure SetUseLog(const AValue: Boolean); static;
     class function GetUseLogGUI: Boolean; static;
     class procedure SetUseLogGUI(const AValue: Boolean); static;
+    class function GetWriteCommandsToFile: Boolean; static;
+    class procedure SetWriteCommandsToFile(const AValue: Boolean); static;
     class function GetMasterServer: string; static;
     class procedure SetMasterServer(const AValue: string); static;
     class function GetMasterDatabase: string; static;
@@ -55,6 +57,8 @@ type
     class procedure SetMasterDriverID(const AValue: string); static;
     class function GetSlaveDriverID: string; static;
     class procedure SetSlaveDriverID(const AValue: string); static;
+    class function GetStopIfError: Boolean; static;
+    class procedure SetStopIfError(const AValue: Boolean); static;
   public
     class constructor Create;
     class destructor Destroy;
@@ -62,6 +66,7 @@ type
     class function DefaultPort: Integer;
     class property UseLog: Boolean read GetUseLog write SetUseLog;
     class property UseLogGUI: Boolean read GetUseLogGUI write SetUseLogGUI;
+    class property WriteCommandsToFile: Boolean read GetWriteCommandsToFile write SetWriteCommandsToFile;
     class property MasterServer: string read GetMasterServer write SetMasterServer;
     class property MasterDatabase: string read GetMasterDatabase write SetMasterDatabase;
     class property MasterPort: Integer read GetMasterPort write SetMasterPort;
@@ -78,6 +83,7 @@ type
     class property LibLocation: string read GetLibLocation write SetLibLocation;
     class property MasterDriverID: string read GetMasterDriverID write SetMasterDriverID;
     class property SlaveDriverID: string read GetSlaveDriverID write SetSlaveDriverID;
+    class property StopIfError: Boolean read GetStopIfError write SetStopIfError;
   end;
 
 function IsService: Boolean;
@@ -108,10 +114,12 @@ const
 
 
   // Settings
-  cSettingsSection  = 'Settings';
-  cUseLogParam      = 'UseLog';
-  cUseLogGUIParam   = 'UseLogGUI';
-  cLibLocationParam = 'PostgresLibLocation';
+  cSettingsSection    = 'Settings';
+  cUseLogParam        = 'UseLog';
+  cUseLogGUIParam     = 'UseLogGUI';
+  cWriteCommandsParam = 'WriteCommandsToFile';
+  cLibLocationParam   = 'PostgresLibLocation';
+  cStopIfErrorParam   = 'StopIfError';
 
   // Master
   cMasterSection       = 'postgress_master';
@@ -173,11 +181,12 @@ begin
   if IsService then
     Result := IncludeTrailingPathDelimiter(GetPublicDocuments) + GetAppName
   else
-    {$IFDEF DEBUG}
     Result := ExtractFilePath(ParamStr(0));
-    {$ELSE}
-    Result := IncludeTrailingPathDelimiter(TPath.GetDocumentsPath) + GetAppName;
-    {$ENDIF}
+//    {$IFDEF DEBUG}
+//    Result := ExtractFilePath(ParamStr(0));
+//    {$ELSE}
+//    Result := IncludeTrailingPathDelimiter(TPath.GetDocumentsPath) + GetAppName;
+//    {$ENDIF}
 end;
 
 function GetINIFolder: string;
@@ -369,6 +378,11 @@ begin
   Result := GetStrValue(cSlaveSection, cSlaveUserParam, cDefUser);
 end;
 
+class function TSettings.GetStopIfError: Boolean;
+begin
+  Result := GetBoolValue(cSettingsSection, cStopIfErrorParam, False);
+end;
+
 class function TSettings.GetStrValue(const ASection, AParam, ADefVal: string): string;
 var
   ValueExist: Boolean;
@@ -405,6 +419,11 @@ end;
 class function TSettings.GetUseLogGUI: Boolean;
 begin
   Result := GetBoolValue(cSettingsSection, cUseLogGUIParam, True);
+end;
+
+class function TSettings.GetWriteCommandsToFile: Boolean;
+begin
+  Result := GetBoolValue(cSettingsSection, cWriteCommandsParam, True);
 end;
 
 class procedure TSettings.SetBoolValue(const ASection, AParam: string; const AVal: Boolean);
@@ -513,6 +532,11 @@ begin
   SetStrValue(cSlaveSection, cSlaveUserParam, AValue);
 end;
 
+class procedure TSettings.SetStopIfError(const AValue: Boolean);
+begin
+  SetBoolValue(cSettingsSection, cStopIfErrorParam, AValue);
+end;
+
 class procedure TSettings.SetStrValue(const ASection, AParam, AVal: string);
 begin
   if Assigned(FIni) then
@@ -540,6 +564,11 @@ end;
 class procedure TSettings.SetUseLogGUI(const AValue: Boolean);
 begin
   SetBoolValue(cSettingsSection, cUseLogGUIParam, AValue);
+end;
+
+class procedure TSettings.SetWriteCommandsToFile(const AValue: Boolean);
+begin
+  SetBoolValue(cSettingsSection, cWriteCommandsParam, AValue);
 end;
 
 initialization

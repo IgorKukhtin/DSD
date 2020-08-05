@@ -187,7 +187,7 @@ begin
   Result := 0;
 
   for I := Low(FMaxIdArr) to High(FMaxIdArr) do
-    if AId < FMaxIdArr[I].MaxId then
+    if AId <= FMaxIdArr[I].MaxId then
       Exit(FMaxIdArr[I].MaxId);
 
   // если данное значение AId превышает имеющиеся в массиве значения MaxId

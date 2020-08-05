@@ -30,7 +30,6 @@ type
     GuidesCash: TdsdGuides;
     InfoMoneyName_all: TcxGridDBColumn;
     MemberName: TcxGridDBColumn;
-    PositionName: TcxGridDBColumn;
     ItemName: TcxGridDBColumn;
     actReport_CashUser: TdsdOpenForm;
     bbReport_CashUser: TdxBarButton;
@@ -38,8 +37,6 @@ type
     isLoad: TcxGridDBColumn;
     PartionMovementName: TcxGridDBColumn;
     ExecuteDialog: TExecuteDialog;
-    PersonalServiceListCode: TcxGridDBColumn;
-    PersonalServiceListName: TcxGridDBColumn;
     cxLabel15: TcxLabel;
     ceCurrency: TcxButtonEdit;
     GuidesCurrency: TdsdGuides;
@@ -81,8 +78,9 @@ type
     GuidesRetail: TdsdGuides;
     spInsert_Bonus: TdsdStoredProc;
     actInsert_Bonus: TdsdExecStoredProc;
-    macInsert_Bonus: TMultiAction;
+    macInsert_Bonus_list: TMultiAction;
     bbInsert_Bonus: TdxBarButton;
+    macInsert_Bonus: TMultiAction;
   private
     { Private declarations }
   public

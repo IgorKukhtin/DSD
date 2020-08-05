@@ -67,6 +67,83 @@ inherited InventoryHouseholdInventoryForm: TInventoryHouseholdInventoryForm
               Format = ',0.####'
               Kind = skSum
               Column = CountForPrice
+            end
+            item
+              Format = ',0;-,0; ;'
+              Kind = skSum
+              Position = spFooter
+              Column = Deficit
+            end
+            item
+              Format = ',0.00;-,0.00; ;'
+              Kind = skSum
+              Position = spFooter
+              Column = DeficitSumm
+            end
+            item
+              Format = ',0;-,0; ;'
+              Kind = skSum
+              Position = spFooter
+              Column = Proficit
+            end
+            item
+              Format = ',0.00;-,0.00; ;'
+              Kind = skSum
+              Position = spFooter
+              Column = ProficitSumm
+            end
+            item
+              Format = ',0;-,0; ;'
+              Kind = skSum
+              Position = spFooter
+              Column = Diff
+            end
+            item
+              Format = ',0.00;-,0.00; ;'
+              Kind = skSum
+              Position = spFooter
+              Column = DiffSumm
+            end
+            item
+              Format = ',0.00;-,0.00; ;'
+              Kind = skSum
+              Column = Deficit
+            end
+            item
+              Format = ',0.00;-,0.00; ;'
+              Kind = skSum
+              Column = DeficitSumm
+            end
+            item
+              Format = ',0.00;-,0.00; ;'
+              Kind = skSum
+              Column = Proficit
+            end
+            item
+              Format = ',0.00;-,0.00; ;'
+              Kind = skSum
+              Column = ProficitSumm
+            end
+            item
+              Format = ',0.00;-,0.00; ;'
+              Kind = skSum
+              Column = Diff
+            end
+            item
+              Format = ',0.00;-,0.00; ;'
+              Kind = skSum
+              Column = DiffSumm
+            end
+            item
+              Format = ',0;-,0; ;'
+              Kind = skSum
+              Position = spFooter
+              Column = Amount
+            end
+            item
+              Format = ',0;-,0; ;'
+              Kind = skSum
+              Column = Amount
             end>
           DataController.Summary.FooterSummaryItems = <
             item
@@ -124,6 +201,41 @@ inherited InventoryHouseholdInventoryForm: TInventoryHouseholdInventoryForm
               Format = ',0.####'
               Kind = skSum
               Column = CountForPrice
+            end
+            item
+              Format = ',0;-,0; ;'
+              Kind = skSum
+              Column = Deficit
+            end
+            item
+              Format = ',0.00;-,0.00; ;'
+              Kind = skSum
+              Column = DeficitSumm
+            end
+            item
+              Format = ',0;-,0; ;'
+              Kind = skSum
+              Column = Proficit
+            end
+            item
+              Format = ',0.00;-,0.00; ;'
+              Kind = skSum
+              Column = ProficitSumm
+            end
+            item
+              Format = ',0;-,0; ;'
+              Kind = skSum
+              Column = Diff
+            end
+            item
+              Format = ',0.00;-,0.00; ;'
+              Kind = skSum
+              Column = DiffSumm
+            end
+            item
+              Format = ',0;-,0; ;'
+              Kind = skSum
+              Column = Amount
             end>
           OptionsBehavior.IncSearch = True
           OptionsData.CancelOnExit = True
@@ -208,6 +320,69 @@ inherited InventoryHouseholdInventoryForm: TInventoryHouseholdInventoryForm
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
             Width = 88
+          end
+          object Deficit: TcxGridDBColumn
+            Caption = #1053#1077#1076#1086#1089#1090#1072#1095#1072
+            DataBinding.FieldName = 'Deficit'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 0
+            Properties.DisplayFormat = ',0;-,0; ;'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 70
+          end
+          object DeficitSumm: TcxGridDBColumn
+            Caption = #1057#1091#1084#1084#1072' '#1085#1077#1076#1086#1089#1090#1072#1095#1080
+            DataBinding.FieldName = 'DeficitSumm'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DisplayFormat = ',0.00;-,0.00; ;'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 70
+          end
+          object Proficit: TcxGridDBColumn
+            Caption = #1048#1079#1083#1080#1096#1077#1082
+            DataBinding.FieldName = 'Proficit'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 0
+            Properties.DisplayFormat = ',0;-,0; ;'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 70
+          end
+          object ProficitSumm: TcxGridDBColumn
+            Caption = #1057#1091#1084#1084#1072' '#1080#1079#1083#1080#1096#1082#1072
+            DataBinding.FieldName = 'ProficitSumm'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DisplayFormat = ',0.00;-,0.00; ;'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 70
+          end
+          object Diff: TcxGridDBColumn
+            Caption = #1056#1072#1079#1085#1080#1094#1072
+            DataBinding.FieldName = 'Diff'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 0
+            Properties.DisplayFormat = ',0;-,0; ;'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 70
+          end
+          object DiffSumm: TcxGridDBColumn
+            Caption = #1057#1091#1084#1084#1072' '#1088#1072#1079#1085#1080#1094#1099
+            DataBinding.FieldName = 'DiffSumm'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DisplayFormat = ',0.00;-,0.00; ;'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 70
           end
           object Comment: TcxGridDBColumn
             Caption = #1050#1086#1084#1084#1077#1085#1090#1072#1088#1080#1081

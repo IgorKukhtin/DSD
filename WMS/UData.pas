@@ -52,7 +52,7 @@ type
     qryFromHostDetail: TFDQuery;
     qryInsert_wms_Message: TFDQuery;
   private
-    procedure Insert_wms_from_host_error(const AHeaderId: Integer; const ASite: TSite;
+    procedure Insert_wms_from_host_error(const AHeaderId, AWmsMsgId: Integer; const ASite: TSite;
       const APacketName, AErrDescription: string; AMsgProc: TNotifyMsgProc);
   private
     function InjectAttributeToXml(const AOrigXml, AAttributeName, AAttributeValue: string): string;
@@ -272,7 +272,7 @@ function TdmData.fInsert_Movement_to_wms(const pgProcName, GUID, aPacketName: st
   const ACheckRecCount, ADebug: Boolean; const AThresholdRecCount: Integer;
   AMyLogSql, AMyShowSql: TNotifyProc; AMsgProc: TNotifyMsgProc): Integer;
 var
-  ii: Integer;
+  ii, iWmsMsgId: Integer;
 begin
   Result := 0;
      //
@@ -284,6 +284,11 @@ begin
     Sql.Add(' SELECT * FROM wms_Message' + ' WHERE GUID     = ' + chr(39) + GUID + chr(39)//            +'   and ProcName = ' + chr(39) + pgProcName + chr(39)
       + ' ORDER BY GroupId, RowNum');
     Open;
+
+    iWmsMsgId := 0;
+
+    if not FieldByName('Id').IsNull then
+      iWmsMsgId := FieldByName('Id').AsInteger;
        //
     if not (Active) then
       if Assigned(AMsgProc) then AMsgProc('Err = Open = Postgresql = wms_Message = ' + pgProcName);
@@ -336,7 +341,7 @@ begin
           except
             on E: Exception do
             begin
-              Insert_wms_from_host_error(-1, stAlan, aPacketName, E.Message, AMsgProc);
+              Insert_wms_from_host_error(-1, to_wms_Message_query.FieldByName('Id').AsInteger, stAlan, aPacketName, E.Message, AMsgProc);
               if Assigned(AMsgProc) then AMsgProc(Format(cExceptionMsg, [E.ClassName, E.Message]));
               if Assigned(AMyLogSql) then AMyLogSql;
               if Assigned(AMyShowSql) then AMyShowSql;
@@ -369,7 +374,7 @@ begin
                                 chr(39) + InjectAttributeToXml(
                                             FieldByName('RowData').AsString,
                                             cWms_message_Id_Attr,
-                                            to_wms_Message_query.FieldByName('Id').AsString) + chr(39) + '         )' +
+                                            IntToStr(iWmsMsgId)) + chr(39) + '         )' +
           '       returning id into vb_id;');
                   //
         to_wms_Packets_query.SQL.Add('commit;');
@@ -411,7 +416,7 @@ begin
     except
       on E: Exception do
       begin
-        Insert_wms_from_host_error(-1, stAlan, aPacketName, E.Message, AMsgProc);
+        Insert_wms_from_host_error(-1, iWmsMsgId, stAlan, aPacketName, E.Message, AMsgProc);
         if Assigned(AMsgProc) then AMsgProc(Format(cExceptionMsg, [E.ClassName, E.Message]));
         if Assigned(AMyLogSql) then AMyLogSql;
         if Assigned(AMyShowSql) then AMyShowSql;
@@ -861,7 +866,7 @@ end;
 function TdmData.fInsert_wms_Message_to_wms(pgProcName, GUID, aPacketName: string; const ACheckRecCount, ADebug: Boolean;
   const AThresholdRecCount: Integer; AMyLogSql, AMyShowSql: TNotifyProc; AMsgProc: TNotifyMsgProc): Integer;
 var
-  ii, ii_num: Integer;
+  ii, ii_num, iWmsMsgId: Integer;
 begin
   Result := 0;
      //
@@ -873,6 +878,11 @@ begin
     Sql.Add(' SELECT * FROM wms_Message' + ' WHERE GUID     = ' + chr(39) + GUID + chr(39)//            +'   and ProcName = ' + chr(39) + pgProcName + chr(39)
       + ' ORDER BY GroupId, RowNum');
     Open;
+
+    iWmsMsgId := 0;
+
+    if not FieldByName('Id').IsNull then
+      iWmsMsgId := FieldByName('Id').AsInteger;
        //
     if not (Active) then
       if Assigned(AMsgProc) then AMsgProc('Err = Open = Postgresql = wms_Message = ' + pgProcName + ' GUID = ' + GUID);
@@ -914,7 +924,7 @@ begin
         except
           on E: Exception do
           begin
-            Insert_wms_from_host_error(-1, stAlan, aPacketName, E.Message, AMsgProc);
+            Insert_wms_from_host_error(-1, iWmsMsgId, stAlan, aPacketName, E.Message, AMsgProc);
             if Assigned(AMsgProc) then AMsgProc(Format(cExceptionMsg, [E.ClassName, E.Message]));
             if Assigned(AMyLogSql) then AMyLogSql;
             if Assigned(AMyShowSql) then AMyShowSql;
@@ -945,7 +955,7 @@ begin
                               chr(39) + InjectAttributeToXml(
                                 FieldByName('RowData').AsString,
                                 cWms_message_Id_Attr,
-                                to_wms_Message_query.FieldByName('Id').AsString) + chr(39) +
+                                IntToStr(iWmsMsgId)) + chr(39) +
         '         );');
             //
       if ACheckRecCount and (AThresholdRecCount = ii) then
@@ -972,7 +982,7 @@ begin
   except
     on E: Exception do
     begin
-      Insert_wms_from_host_error(-1, stAlan, aPacketName, E.Message, AMsgProc);
+      Insert_wms_from_host_error(-1, iWmsMsgId, stAlan, aPacketName, E.Message, AMsgProc);
       if Assigned(AMsgProc) then AMsgProc(Format(cExceptionMsg, [E.ClassName, E.Message]));
       if Assigned(AMyLogSql) then AMyLogSql;
       if Assigned(AMyShowSql) then AMyShowSql;
@@ -1087,7 +1097,7 @@ end;
 
 function TdmData.InjectAttributeToXml(const AOrigXml, AAttributeName, AAttributeValue: string): string;
 const
-  cEnd = '></';
+  cEnd = '>';
   cNewAttribute = ' %s="%s"';
 var
   iPos, iLenOrig: Integer;
@@ -1104,10 +1114,10 @@ begin
   end;
 end;
 
-procedure TdmData.Insert_wms_from_host_error(const AHeaderId: Integer; const ASite: TSite; const APacketName,
+procedure TdmData.Insert_wms_from_host_error(const AHeaderId, AWmsMsgId: Integer; const ASite: TSite; const APacketName,
   AErrDescription: string; AMsgProc: TNotifyMsgProc);
 const
-  cInsert = 'SELECT gpInsert_wms_from_host_error(%d, %s, %s, %s)';
+  cInsert = 'SELECT gpInsert_wms_from_host_error(%d, %d, %s, %s, %s)';
 var
   sInsert, sSite: string;
   thrErr: TQryThread;
@@ -1118,7 +1128,7 @@ begin
   end;
 
   // записываем данные в таб. wms_from_host_error
-  sInsert := Format(cInsert, [AHeaderId, QuotedStr(sSite), QuotedStr(APacketName), QuotedStr(AErrDescription)]);
+  sInsert := Format(cInsert, [AHeaderId, AWmsMsgId, QuotedStr(sSite), QuotedStr(APacketName), QuotedStr(AErrDescription)]);
   with alan_exec_qry do
   begin
     Close;
