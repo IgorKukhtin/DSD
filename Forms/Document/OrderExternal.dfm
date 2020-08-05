@@ -11,19 +11,17 @@ inherited OrderExternalForm: TOrderExternalForm
     Width = 1364
     Height = 245
     ExplicitTop = 166
-    ExplicitWidth = 1362
+    ExplicitWidth = 1364
     ExplicitHeight = 245
     ClientRectBottom = 245
     ClientRectRight = 1364
     inherited tsMain: TcxTabSheet
-      ExplicitWidth = 1362
+      ExplicitWidth = 1364
       ExplicitHeight = 221
       inherited cxGrid: TcxGrid
         Width = 1364
         Height = 221
-        ExplicitLeft = -616
-        ExplicitTop = 3
-        ExplicitWidth = 1362
+        ExplicitWidth = 1364
         ExplicitHeight = 221
         inherited cxGridDBTableView: TcxGridDBTableView
           DataController.Summary.DefaultGroupSummaryItems = <
@@ -373,7 +371,7 @@ inherited OrderExternalForm: TOrderExternalForm
     Width = 1364
     Height = 140
     TabOrder = 3
-    ExplicitWidth = 1362
+    ExplicitWidth = 1364
     ExplicitHeight = 140
     inherited edInvNumber: TcxTextEdit
       Left = 8
@@ -686,6 +684,33 @@ inherited OrderExternalForm: TOrderExternalForm
       TabOrder = 40
       Width = 128
     end
+    object cxLabel20: TcxLabel
+      Left = 661
+      Top = 85
+      Caption = #1057#1090#1072#1090#1091#1089' '#1042#1052#1057
+    end
+    object ceStatus_wms: TcxButtonEdit
+      Left = 661
+      Top = 103
+      Properties.Buttons = <
+        item
+          Action = ChangeGuidesStatus1
+          Kind = bkGlyph
+        end
+        item
+          Action = ChangeGuidesStatus2
+          Kind = bkGlyph
+        end
+        item
+          Action = ChangeGuidesStatus3
+          Default = True
+          Kind = bkGlyph
+        end>
+      Properties.Images = dmMain.ImageList
+      Properties.ReadOnly = True
+      TabOrder = 42
+      Width = 168
+    end
   end
   object cxLabel21: TcxLabel [2]
     Left = 1223
@@ -773,7 +798,7 @@ inherited OrderExternalForm: TOrderExternalForm
         end
         item
           Name = 'inIsJuridical'
-          Value = 'TRUE'
+          Value = True
           DataType = ftBoolean
           MultiSelectSeparator = ','
         end>
@@ -817,7 +842,7 @@ inherited OrderExternalForm: TOrderExternalForm
         end
         item
           Name = 'inIsJuridical'
-          Value = 'FALSE'
+          Value = False
           DataType = ftBoolean
           MultiSelectSeparator = ','
         end>
@@ -856,7 +881,7 @@ inherited OrderExternalForm: TOrderExternalForm
         end
         item
           Name = 'inIsJuridical'
-          Value = 'FALSE'
+          Value = False
           DataType = ftBoolean
           MultiSelectSeparator = ','
         end>
@@ -1004,6 +1029,49 @@ inherited OrderExternalForm: TOrderExternalForm
         end>
       isShowModal = False
     end
+    object ChangeGuidesStatus1: TChangeGuidesStatus
+      Category = 'DSDLib'
+      MoveParams = <>
+      StoredProc = spUpdate_Status_wms
+      StoredProcList = <
+        item
+          StoredProc = spUpdate_Status_wms
+        end
+        item
+        end>
+      Caption = 'CompleteMovement'
+      ImageIndex = 12
+      Status = mtComplete
+      Guides = GuidesStatus_wms
+    end
+    object ChangeGuidesStatus2: TChangeGuidesStatus
+      Category = 'DSDLib'
+      MoveParams = <>
+      StoredProc = spUpdate_Status_wms
+      StoredProcList = <
+        item
+          StoredProc = spUpdate_Status_wms
+        end
+        item
+        end>
+      Caption = 'UnCompleteMovement'
+      ImageIndex = 11
+      Status = mtUncomplete
+      Guides = GuidesStatus_wms
+    end
+    object ChangeGuidesStatus3: TChangeGuidesStatus
+      Category = 'DSDLib'
+      MoveParams = <>
+      StoredProc = spUpdate_Status_wms
+      StoredProcList = <
+        item
+          StoredProc = spUpdate_Status_wms
+        end>
+      Caption = 'DeleteMovement'
+      ImageIndex = 13
+      Status = mtDelete
+      Guides = GuidesStatus_wms
+    end
     object actUpdateOperDatePartner: TdsdDataSetRefresh
       Category = 'OperDatePartner'
       MoveParams = <>
@@ -1047,7 +1115,7 @@ inherited OrderExternalForm: TOrderExternalForm
         end
         item
           Name = 'inIsAuto'
-          Value = 'False'
+          Value = False
           DataType = ftBoolean
           ParamType = ptInput
           MultiSelectSeparator = ','
@@ -1401,8 +1469,8 @@ inherited OrderExternalForm: TOrderExternalForm
         DataType = ftString
         MultiSelectSeparator = ','
       end>
-    Left = 112
-    Top = 24
+    Left = 144
+    Top = 48
   end
   inherited spGet: TdsdStoredProc
     StoredProcName = 'gpGet_Movement_OrderExternal'
@@ -1611,7 +1679,7 @@ inherited OrderExternalForm: TOrderExternalForm
       end
       item
         Name = 'PriceWithVAT'
-        Value = 'False'
+        Value = False
         Component = edPriceWithVAT
         DataType = ftBoolean
         MultiSelectSeparator = ','
@@ -1671,6 +1739,21 @@ inherited OrderExternalForm: TOrderExternalForm
         Value = Null
         Component = cbAuto
         DataType = ftBoolean
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'StatusCode_wms'
+        Value = Null
+        Component = GuidesStatus_wms
+        ComponentItem = 'Key'
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'StatusName_wms'
+        Value = Null
+        Component = GuidesStatus_wms
+        ComponentItem = 'TextValue'
+        DataType = ftString
         MultiSelectSeparator = ','
       end>
     Left = 216
@@ -1735,7 +1818,7 @@ inherited OrderExternalForm: TOrderExternalForm
       end
       item
         Name = 'outPriceWithVAT'
-        Value = 'False'
+        Value = False
         Component = edPriceWithVAT
         DataType = ftBoolean
         MultiSelectSeparator = ','
@@ -1852,7 +1935,7 @@ inherited OrderExternalForm: TOrderExternalForm
         MultiSelectSeparator = ','
       end
       item
-        Value = 'True'
+        Value = True
         Component = cbAuto
         DataType = ftBoolean
         ParamType = ptUnknown
@@ -1943,11 +2026,43 @@ inherited OrderExternalForm: TOrderExternalForm
   end
   inherited spErasedMIMaster: TdsdStoredProc
     StoredProcName = 'gpMovementItem_OrderExternal_SetErased'
+    Params = <
+      item
+        Name = 'inMovementItemId'
+        Component = MasterCDS
+        ComponentItem = 'Id'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'outIsErased'
+        Value = False
+        Component = MasterCDS
+        ComponentItem = 'isErased'
+        DataType = ftBoolean
+        MultiSelectSeparator = ','
+      end>
     Left = 518
     Top = 320
   end
   inherited spUnErasedMIMaster: TdsdStoredProc
     StoredProcName = 'gpMovementItem_OrderExternal_SetUnErased'
+    Params = <
+      item
+        Name = 'inMovementItemId'
+        Component = MasterCDS
+        ComponentItem = 'Id'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'outIsErased'
+        Value = False
+        Component = MasterCDS
+        ComponentItem = 'isErased'
+        DataType = ftBoolean
+        MultiSelectSeparator = ','
+      end>
     Left = 582
     Top = 304
   end
@@ -2177,7 +2292,7 @@ inherited OrderExternalForm: TOrderExternalForm
       end
       item
         Name = 'inIsJuridical'
-        Value = 'FALSE'
+        Value = False
         DataType = ftBoolean
         ParamType = ptInput
         MultiSelectSeparator = ','
@@ -2213,8 +2328,8 @@ inherited OrderExternalForm: TOrderExternalForm
         ParamType = ptInput
         MultiSelectSeparator = ','
       end>
-    Left = 680
-    Top = 88
+    Left = 528
+    Top = 56
   end
   object ContractGuides: TdsdGuides
     KeyField = 'Id'
@@ -2686,7 +2801,7 @@ inherited OrderExternalForm: TOrderExternalForm
       end
       item
         Name = 'inIsJuridical'
-        Value = 'TRUE'
+        Value = True
         DataType = ftBoolean
         ParamType = ptInput
         MultiSelectSeparator = ','
@@ -2734,7 +2849,7 @@ inherited OrderExternalForm: TOrderExternalForm
       end
       item
         Name = 'inIsAuto'
-        Value = 'edInvNumber'
+        Value = False
         Component = cbAuto
         DataType = ftBoolean
         ParamType = ptInput
@@ -2743,5 +2858,41 @@ inherited OrderExternalForm: TOrderExternalForm
     PackSize = 1
     Left = 826
     Top = 264
+  end
+  object GuidesStatus_wms: TdsdGuides
+    KeyField = 'Id'
+    LookupControl = ceStatus_wms
+    FormNameParam.Value = ''
+    FormNameParam.DataType = ftString
+    FormNameParam.MultiSelectSeparator = ','
+    PositionDataSet = 'ClientDataSet'
+    Params = <>
+    Left = 712
+    Top = 96
+  end
+  object spUpdate_Status_wms: TdsdStoredProc
+    StoredProcName = 'gpUpdate_OrderExternal_Status_wms'
+    DataSets = <>
+    OutputType = otResult
+    Params = <
+      item
+        Name = 'inMovementId'
+        Value = Null
+        Component = FormParams
+        ComponentItem = 'Id'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inStatusCode_wms'
+        Value = ''
+        Component = GuidesStatus_wms
+        ComponentItem = 'Key'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end>
+    PackSize = 1
+    Left = 856
+    Top = 96
   end
 end

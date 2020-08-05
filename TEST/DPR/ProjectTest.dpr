@@ -899,7 +899,6 @@ uses
   Member_ObjectTo in '..\..\Forms\Guides\Member_ObjectTo.pas' {Member_ObjectToForm: TParentForm},
   Member_ObjectToEdit in '..\..\Forms\Guides\Member_ObjectToEdit.pas' {Member_ObjectToEditForm: TParentForm},
   Report_MovementCheck_Cross in '..\..\FormsFarmacy\Report\Report_MovementCheck_Cross.pas' {Report_MovementCheck_CrossForm: TParentForm},
-  OrderExternalJournal in '..\..\Forms\Document\OrderExternalJournal.pas' {OrderExternalJournalForm: TParentForm},
   MemberEdit in '..\..\Forms\Guides\MemberEdit.pas' {MemberEditForm: TParentForm},
   MobilePartner_Object in '..\..\Forms\Guides\MobilePartner_Object.pas' {MobilePartner_ObjectForm: TParentForm},
   MobileGoodsByGoodsKind_Object in '..\..\Forms\Guides\MobileGoodsByGoodsKind_Object.pas' {MobileGoodsByGoodsKind_ObjectForm: TParentForm},
@@ -1185,7 +1184,8 @@ uses
   ProfitIncomeServiceJournal in '..\..\Forms\Document\ProfitIncomeServiceJournal.pas' {ProfitIncomeServiceJournalForm: TParentForm},
   Report_MotionGoodsAssetNoBalance in '..\..\Forms\Report\Report_MotionGoodsAssetNoBalance.pas' {Report_MotionGoodsAssetNoBalanceForm: TParentForm},
   Report_JuridicalSold_AssetNoBalance in '..\..\Forms\Report\Report_JuridicalSold_AssetNoBalance.pas' {Report_JuridicalSold_AssetNoBalanceForm: TParentForm},
-  CashJournalBonus in '..\..\Forms\Document\CashJournalBonus.pas' {CashJournalBonusForm: TParentForm};
+  CashJournalBonus in '..\..\Forms\Document\CashJournalBonus.pas' {CashJournalBonusForm: TParentForm},
+  OrderExternalJournal in '..\..\Forms\Document\OrderExternalJournal.pas' {OrderExternalJournalForm: TParentForm};
 
 {$R *.RES}
 {$R DevExpressRus.res}

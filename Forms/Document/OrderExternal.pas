@@ -115,6 +115,13 @@ type
     actPrint_2: TdsdPrintAction;
     bbPrintOrder: TdxBarButton;
     mactPrint_Order2: TMultiAction;
+    cxLabel20: TcxLabel;
+    ceStatus_wms: TcxButtonEdit;
+    GuidesStatus_wms: TdsdGuides;
+    spUpdate_Status_wms: TdsdStoredProc;
+    ChangeGuidesStatus1: TChangeGuidesStatus;
+    ChangeGuidesStatus2: TChangeGuidesStatus;
+    ChangeGuidesStatus3: TChangeGuidesStatus;
   private
     { Private declarations }
   public
