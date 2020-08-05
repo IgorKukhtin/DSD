@@ -24,12 +24,12 @@ uses
   cxContainer, Vcl.ComCtrls, dxCore, cxDateUtils, cxTextEdit, cxMaskEdit,
   cxDropDownEdit, cxCalendar, Vcl.ExtCtrls, cxCurrencyEdit, cxCustomPivotGrid,
   cxDBPivotGrid, cxLabel, ChoicePeriod, dxBarExtItems, cxCheckBox, dsdPivotGrid,
-  cxSplitter;
+  cxSplitter, cxGridBandedTableView, cxGridDBBandedTableView;
 
 type
   TReport_LeftSendForm = class(TParentForm)
-    DataSource: TDataSource;
-    ClientDataSet: TClientDataSet;
+    InventDS: TDataSource;
+    InventCDS: TClientDataSet;
     cxPropertiesStore: TcxPropertiesStore;
     dxBarManager: TdxBarManager;
     dxBarManagerBar1: TdxBar;
@@ -61,6 +61,38 @@ type
     Panel3: TPanel;
     cxSplitter1: TcxSplitter;
     cxSplitter2: TcxSplitter;
+    GridIncome: TcxGrid;
+    GridIncomeDBBandedTableView: TcxGridDBBandedTableView;
+    GridIncomeLevel: TcxGridLevel;
+    GridGoods: TcxGrid;
+    GridGoodsDBBandedTableView: TcxGridDBBandedTableView;
+    GridGoodsLevel: TcxGridLevel;
+    GridIncome_InvNumber: TcxGridDBBandedColumn;
+    GridIncome_OperDate: TcxGridDBBandedColumn;
+    GridIncome_UnitName: TcxGridDBBandedColumn;
+    GoodsDS: TDataSource;
+    GoodsCDS: TClientDataSet;
+    GridGoods_GoodsCode: TcxGridDBBandedColumn;
+    GridGoods_GoodsName: TcxGridDBBandedColumn;
+    GridGoods_AmountReturn: TcxGridDBBandedColumn;
+    GridWasGot: TcxGrid;
+    GridWasGotDBBandedTableView: TcxGridDBBandedTableView;
+    GridWasGot_InvNumber: TcxGridDBBandedColumn;
+    GridWasGot_GoodsName: TcxGridDBBandedColumn;
+    GridWasGotLevel: TcxGridLevel;
+    cxSplitter3: TcxSplitter;
+    GridWasSent: TcxGrid;
+    GridWasSentDBBandedTableView: TcxGridDBBandedTableView;
+    GridWasSent_InvNumber: TcxGridDBBandedColumn;
+    GridWasSent_OperDate: TcxGridDBBandedColumn;
+    GridWasSent_UnitName: TcxGridDBBandedColumn;
+    GridWasSentLevel: TcxGridLevel;
+    GridWasGot_UnitName: TcxGridDBBandedColumn;
+    WasSentDS: TDataSource;
+    WasSentCDS: TClientDataSet;
+    WasGotDS: TDataSource;
+    WasGotCDS: TClientDataSet;
+    GridWasGot_ReturnRate: TcxGridDBBandedColumn;
   private
   public
   end;

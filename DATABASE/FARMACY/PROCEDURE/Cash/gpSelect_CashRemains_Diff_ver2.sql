@@ -28,7 +28,8 @@ RETURNS TABLE (
     NDSKindId Integer,
     DiscountExternalID  Integer, DiscountExternalName  TVarChar,
     GoodsDiscountID  Integer, GoodsDiscountName  TVarChar,
-    UKTZED TVarChar
+    UKTZED TVarChar,
+    GoodsPairSunId Integer
 )
 AS
 $BODY$
@@ -459,6 +460,11 @@ WITH tmp as (SELECT tmp.*, ROW_NUMBER() OVER (PARTITION BY TextValue_calc ORDER 
                                         AND length(REPLACE(REPLACE(REPLACE(Object_Goods_Juridical.UKTZED, ' ', ''), '.', ''), Chr(160), '')) <= 10
                                         AND Object_Goods_Juridical.GoodsMainId <> 0
                                       )
+                 , tmpGoodsPairSun AS (SELECT Object_Goods_Retail.Id
+                                            , Object_Goods_Retail.GoodsPairSunId
+                                       FROM Object_Goods_Retail 
+                                       WHERE COALESCE (Object_Goods_Retail.GoodsPairSunId, 0) <> 0
+                                         AND Object_Goods_Retail.RetailId = 4)
 
         SELECT
             _DIFF.ObjectId,
@@ -495,7 +501,8 @@ WITH tmp as (SELECT tmp.*, ROW_NUMBER() OVER (PARTITION BY TextValue_calc ORDER 
             Object_DiscountExternal.ValueData                                 AS DiscountExternalName,
             tmpGoodsDiscount.GoodsDiscountId                                  AS GoodsDiscountID,
             tmpGoodsDiscount.GoodsDiscountName                                AS GoodsDiscountName,
-            tmpGoodsUKTZED.UKTZED                                             AS UKTZED
+            tmpGoodsUKTZED.UKTZED                                             AS UKTZED,
+            Object_Goods_PairSun.ID                                           AS GoodsPairSunId         
         FROM _DIFF
 
             -- Тип срок/не срок
@@ -507,6 +514,8 @@ WITH tmp as (SELECT tmp.*, ROW_NUMBER() OVER (PARTITION BY TextValue_calc ORDER 
             -- получается GoodsMainId
             LEFT JOIN Object_Goods_Retail AS Object_Goods_Retail ON Object_Goods_Retail.Id = _DIFF.ObjectId
             LEFT JOIN Object_Goods_Main AS Object_Goods_Main ON Object_Goods_Main.Id = Object_Goods_Retail.GoodsMainId
+            LEFT JOIN tmpGoodsPairSun AS Object_Goods_PairSun 
+                                      ON Object_Goods_PairSun.GoodsPairSunId = Object_Goods_Retail.Id 
             LEFT JOIN tmpGoodsDiscount ON tmpGoodsDiscount.GoodsMainId = Object_Goods_Main.Id
 
             LEFT JOIN Object AS Object_Accommodation  ON Object_Accommodation.ID = _DIFF.AccommodationId
@@ -553,4 +562,5 @@ ALTER FUNCTION gpSelect_CashRemains_Diff_ver2 (TVarChar, TVarChar) OWNER TO post
 -- SELECT * FROM gpSelect_CashRemains_Diff_ver2 ('{0B05C610-B172-4F81-99B8-25BF5385ADD6}' , '3')
 -- SELECT * FROM gpSelect_CashRemains_Diff_ver2 ('{85E257DE-0563-4B9E-BE1C-4D5C123FB33A}-', '10411288')
 -- SELECT * FROM gpSelect_CashRemains_Diff_ver2 ('{85E257DE-0563-4B9E-BE1C-4D5C123FB33A}-', '3998773') WHERE GoodsCode = 1240
--- SELECT * FROM gpSelect_CashRemains_Diff_ver2 ('{0B05C610-B172-4F81-99B8-25BF5385ADD6}', '3')
+-- 
+SELECT * FROM gpSelect_CashRemains_Diff_ver2 ('{0B05C610-B172-4F81-99B8-25BF5385ADD6}', '3')

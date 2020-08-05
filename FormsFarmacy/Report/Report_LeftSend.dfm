@@ -68,15 +68,174 @@ object Report_LeftSendForm: TReport_LeftSendForm
     ExplicitWidth = 185
     ExplicitHeight = 41
     object cxSplitter2: TcxSplitter
-      Left = 891
+      Left = 464
       Top = 1
       Width = 8
       Height = 197
       HotZoneClassName = 'TcxMediaPlayer8Style'
       AlignSplitter = salRight
-      ExplicitLeft = 1
-      ExplicitTop = 190
-      ExplicitHeight = 8
+      Control = GridGoods
+      ExplicitLeft = 899
+    end
+    object GridIncome: TcxGrid
+      Left = 1
+      Top = 1
+      Width = 463
+      Height = 197
+      Align = alClient
+      TabOrder = 1
+      ExplicitWidth = 394
+      object GridIncomeDBBandedTableView: TcxGridDBBandedTableView
+        Navigator.Buttons.CustomButtons = <>
+        Navigator.Buttons.First.Visible = True
+        Navigator.Buttons.PriorPage.Visible = True
+        Navigator.Buttons.Prior.Visible = True
+        Navigator.Buttons.Next.Visible = True
+        Navigator.Buttons.NextPage.Visible = True
+        Navigator.Buttons.Last.Visible = True
+        Navigator.Buttons.Insert.Visible = True
+        Navigator.Buttons.Append.Visible = False
+        Navigator.Buttons.Delete.Visible = True
+        Navigator.Buttons.Edit.Visible = True
+        Navigator.Buttons.Post.Visible = True
+        Navigator.Buttons.Cancel.Visible = True
+        Navigator.Buttons.Refresh.Visible = True
+        Navigator.Buttons.SaveBookmark.Visible = True
+        Navigator.Buttons.GotoBookmark.Visible = True
+        Navigator.Buttons.Filter.Visible = True
+        DataController.DataSource = InventDS
+        DataController.Summary.DefaultGroupSummaryItems = <>
+        DataController.Summary.FooterSummaryItems = <>
+        DataController.Summary.SummaryGroups = <>
+        OptionsData.CancelOnExit = False
+        OptionsData.Deleting = False
+        OptionsData.DeletingConfirmation = False
+        OptionsData.Editing = False
+        OptionsData.Inserting = False
+        OptionsView.GroupByBox = False
+        Bands = <
+          item
+            Caption = #1048#1085#1074#1077#1085#1090#1072#1088#1080#1079#1072#1094#1080#1080
+            Width = 443
+          end>
+        object GridIncome_InvNumber: TcxGridDBBandedColumn
+          Caption = #1053#1086#1084#1077#1088
+          DataBinding.FieldName = 'InvNumber'
+          HeaderAlignmentHorz = taCenter
+          HeaderAlignmentVert = vaCenter
+          Width = 71
+          Position.BandIndex = 0
+          Position.ColIndex = 0
+          Position.RowIndex = 0
+        end
+        object GridIncome_OperDate: TcxGridDBBandedColumn
+          Caption = #1044#1072#1090#1072
+          DataBinding.FieldName = 'OperDate'
+          HeaderAlignmentHorz = taCenter
+          HeaderAlignmentVert = vaCenter
+          Width = 84
+          Position.BandIndex = 0
+          Position.ColIndex = 1
+          Position.RowIndex = 0
+        end
+        object GridIncome_UnitName: TcxGridDBBandedColumn
+          Caption = #1055#1086#1076#1088#1072#1079#1076#1077#1083#1077#1085#1080#1077
+          DataBinding.FieldName = 'UnitName'
+          HeaderAlignmentHorz = taCenter
+          HeaderAlignmentVert = vaCenter
+          Width = 288
+          Position.BandIndex = 0
+          Position.ColIndex = 2
+          Position.RowIndex = 0
+        end
+      end
+      object GridIncomeLevel: TcxGridLevel
+        GridView = GridIncomeDBBandedTableView
+      end
+    end
+    object GridGoods: TcxGrid
+      Left = 472
+      Top = 1
+      Width = 427
+      Height = 197
+      Align = alRight
+      TabOrder = 2
+      object GridGoodsDBBandedTableView: TcxGridDBBandedTableView
+        Navigator.Buttons.CustomButtons = <>
+        Navigator.Buttons.First.Visible = True
+        Navigator.Buttons.PriorPage.Visible = True
+        Navigator.Buttons.Prior.Visible = True
+        Navigator.Buttons.Next.Visible = True
+        Navigator.Buttons.NextPage.Visible = True
+        Navigator.Buttons.Last.Visible = True
+        Navigator.Buttons.Insert.Visible = True
+        Navigator.Buttons.Append.Visible = False
+        Navigator.Buttons.Delete.Visible = True
+        Navigator.Buttons.Edit.Visible = True
+        Navigator.Buttons.Post.Visible = True
+        Navigator.Buttons.Cancel.Visible = True
+        Navigator.Buttons.Refresh.Visible = True
+        Navigator.Buttons.SaveBookmark.Visible = True
+        Navigator.Buttons.GotoBookmark.Visible = True
+        Navigator.Buttons.Filter.Visible = True
+        DataController.DataSource = GoodsDS
+        DataController.Summary.DefaultGroupSummaryItems = <>
+        DataController.Summary.FooterSummaryItems = <
+          item
+            Format = ',0.####;-,0.####; ;'
+            Kind = skSum
+            Column = GridGoods_AmountReturn
+          end>
+        DataController.Summary.SummaryGroups = <>
+        OptionsData.CancelOnExit = False
+        OptionsData.Deleting = False
+        OptionsData.DeletingConfirmation = False
+        OptionsData.Editing = False
+        OptionsData.Inserting = False
+        OptionsView.Footer = True
+        OptionsView.GroupByBox = False
+        Bands = <
+          item
+            Caption = #1058#1086#1074#1072#1088#1099' '#1082#1086#1090#1086#1088#1099#1077' '#1074#1077#1088#1085#1091#1083#1080#1089#1100
+            Width = 330
+          end>
+        object GridGoods_GoodsCode: TcxGridDBBandedColumn
+          Caption = #1050#1086#1076
+          DataBinding.FieldName = 'GoodsCode'
+          HeaderAlignmentHorz = taCenter
+          HeaderAlignmentVert = vaCenter
+          Width = 42
+          Position.BandIndex = 0
+          Position.ColIndex = 0
+          Position.RowIndex = 0
+        end
+        object GridGoods_GoodsName: TcxGridDBBandedColumn
+          Caption = #1053#1072#1079#1074#1072#1085#1080#1077
+          DataBinding.FieldName = 'GoodsName'
+          HeaderAlignmentHorz = taCenter
+          HeaderAlignmentVert = vaCenter
+          Width = 224
+          Position.BandIndex = 0
+          Position.ColIndex = 1
+          Position.RowIndex = 0
+        end
+        object GridGoods_AmountReturn: TcxGridDBBandedColumn
+          Caption = #1050#1086#1083'-'#1074#1086
+          DataBinding.FieldName = 'AmountReturn'
+          PropertiesClassName = 'TcxCurrencyEditProperties'
+          Properties.DecimalPlaces = 4
+          Properties.DisplayFormat = ',0.####;-,0.####; ;'
+          HeaderAlignmentHorz = taCenter
+          HeaderAlignmentVert = vaCenter
+          Width = 64
+          Position.BandIndex = 0
+          Position.ColIndex = 2
+          Position.RowIndex = 0
+        end
+      end
+      object GridGoodsLevel: TcxGridLevel
+        GridView = GridGoodsDBBandedTableView
+      end
     end
   end
   object Panel3: TPanel
@@ -88,8 +247,186 @@ object Report_LeftSendForm: TReport_LeftSendForm
     Caption = 'Panel3'
     ShowCaption = False
     TabOrder = 6
-    ExplicitTop = 216
-    ExplicitWidth = 869
+    ExplicitLeft = -1
+    ExplicitTop = 270
+    object GridWasGot: TcxGrid
+      Left = 440
+      Top = 1
+      Width = 459
+      Height = 222
+      Align = alRight
+      TabOrder = 0
+      object GridWasGotDBBandedTableView: TcxGridDBBandedTableView
+        Navigator.Buttons.CustomButtons = <>
+        Navigator.Buttons.First.Visible = True
+        Navigator.Buttons.PriorPage.Visible = True
+        Navigator.Buttons.Prior.Visible = True
+        Navigator.Buttons.Next.Visible = True
+        Navigator.Buttons.NextPage.Visible = True
+        Navigator.Buttons.Last.Visible = True
+        Navigator.Buttons.Insert.Visible = True
+        Navigator.Buttons.Append.Visible = False
+        Navigator.Buttons.Delete.Visible = True
+        Navigator.Buttons.Edit.Visible = True
+        Navigator.Buttons.Post.Visible = True
+        Navigator.Buttons.Cancel.Visible = True
+        Navigator.Buttons.Refresh.Visible = True
+        Navigator.Buttons.SaveBookmark.Visible = True
+        Navigator.Buttons.GotoBookmark.Visible = True
+        Navigator.Buttons.Filter.Visible = True
+        DataController.DataSource = WasGotDS
+        DataController.Summary.DefaultGroupSummaryItems = <>
+        DataController.Summary.FooterSummaryItems = <
+          item
+            Format = ',0.####;-,0.####; ;'
+            Kind = skSum
+          end>
+        DataController.Summary.SummaryGroups = <>
+        OptionsData.CancelOnExit = False
+        OptionsData.Deleting = False
+        OptionsData.DeletingConfirmation = False
+        OptionsData.Editing = False
+        OptionsData.Inserting = False
+        OptionsView.GroupByBox = False
+        Bands = <
+          item
+            Caption = #1055#1077#1088#1077#1084#1077#1097#1077#1085#1080#1103' '#1074#1086#1079#1074#1088#1072#1090' '#1085#1072' '#1072#1087#1090#1077#1082#1091
+            Width = 457
+          end>
+        object GridWasGot_InvNumber: TcxGridDBBandedColumn
+          Caption = #1050#1086#1076
+          DataBinding.FieldName = 'InvNumber'
+          HeaderAlignmentHorz = taCenter
+          HeaderAlignmentVert = vaCenter
+          Width = 72
+          Position.BandIndex = 0
+          Position.ColIndex = 0
+          Position.RowIndex = 0
+        end
+        object GridWasGot_GoodsName: TcxGridDBBandedColumn
+          Caption = #1044#1072#1090#1072
+          DataBinding.FieldName = 'OperDate'
+          HeaderAlignmentHorz = taCenter
+          HeaderAlignmentVert = vaCenter
+          Width = 70
+          Position.BandIndex = 0
+          Position.ColIndex = 1
+          Position.RowIndex = 0
+        end
+        object GridWasGot_UnitName: TcxGridDBBandedColumn
+          Caption = #1055#1086#1076#1088#1072#1079#1076#1077#1083#1077#1085#1080#1077' '#1086#1090#1082#1091#1076#1072' '#1074#1077#1088#1085#1091#1083#1080
+          DataBinding.FieldName = 'UnitName'
+          HeaderAlignmentHorz = taCenter
+          HeaderAlignmentVert = vaCenter
+          Width = 239
+          Position.BandIndex = 0
+          Position.ColIndex = 2
+          Position.RowIndex = 0
+        end
+        object GridWasGot_ReturnRate: TcxGridDBBandedColumn
+          Caption = '% '#1074#1086#1079#1074#1088#1072#1090#1072
+          DataBinding.FieldName = 'ReturnRate'
+          PropertiesClassName = 'TcxCurrencyEditProperties'
+          Properties.DisplayFormat = ',0.00;-,0.00; ;'
+          HeaderAlignmentHorz = taCenter
+          HeaderAlignmentVert = vaCenter
+          Width = 76
+          Position.BandIndex = 0
+          Position.ColIndex = 3
+          Position.RowIndex = 0
+        end
+      end
+      object GridWasGotLevel: TcxGridLevel
+        GridView = GridWasGotDBBandedTableView
+      end
+    end
+    object cxSplitter3: TcxSplitter
+      Left = 432
+      Top = 1
+      Width = 8
+      Height = 222
+      HotZoneClassName = 'TcxMediaPlayer8Style'
+      AlignSplitter = salRight
+      Control = GridWasGot
+      ExplicitLeft = 899
+    end
+    object GridWasSent: TcxGrid
+      Left = 1
+      Top = 1
+      Width = 431
+      Height = 222
+      Align = alClient
+      TabOrder = 2
+      ExplicitWidth = 394
+      ExplicitHeight = 197
+      object GridWasSentDBBandedTableView: TcxGridDBBandedTableView
+        Navigator.Buttons.CustomButtons = <>
+        Navigator.Buttons.First.Visible = True
+        Navigator.Buttons.PriorPage.Visible = True
+        Navigator.Buttons.Prior.Visible = True
+        Navigator.Buttons.Next.Visible = True
+        Navigator.Buttons.NextPage.Visible = True
+        Navigator.Buttons.Last.Visible = True
+        Navigator.Buttons.Insert.Visible = True
+        Navigator.Buttons.Append.Visible = False
+        Navigator.Buttons.Delete.Visible = True
+        Navigator.Buttons.Edit.Visible = True
+        Navigator.Buttons.Post.Visible = True
+        Navigator.Buttons.Cancel.Visible = True
+        Navigator.Buttons.Refresh.Visible = True
+        Navigator.Buttons.SaveBookmark.Visible = True
+        Navigator.Buttons.GotoBookmark.Visible = True
+        Navigator.Buttons.Filter.Visible = True
+        DataController.DataSource = WasSentDS
+        DataController.Summary.DefaultGroupSummaryItems = <>
+        DataController.Summary.FooterSummaryItems = <>
+        DataController.Summary.SummaryGroups = <>
+        OptionsData.CancelOnExit = False
+        OptionsData.Deleting = False
+        OptionsData.DeletingConfirmation = False
+        OptionsData.Editing = False
+        OptionsData.Inserting = False
+        OptionsView.GroupByBox = False
+        Bands = <
+          item
+            Caption = #1055#1077#1088#1077#1084#1077#1097#1077#1085#1080#1103' '#1089' '#1072#1087#1090#1077#1082#1080
+            Width = 443
+          end>
+        object GridWasSent_InvNumber: TcxGridDBBandedColumn
+          Caption = #1053#1086#1084#1077#1088
+          DataBinding.FieldName = 'InvNumber'
+          HeaderAlignmentHorz = taCenter
+          HeaderAlignmentVert = vaCenter
+          Width = 92
+          Position.BandIndex = 0
+          Position.ColIndex = 0
+          Position.RowIndex = 0
+        end
+        object GridWasSent_OperDate: TcxGridDBBandedColumn
+          Caption = #1044#1072#1090#1072
+          DataBinding.FieldName = 'OperDate'
+          HeaderAlignmentHorz = taCenter
+          HeaderAlignmentVert = vaCenter
+          Width = 87
+          Position.BandIndex = 0
+          Position.ColIndex = 1
+          Position.RowIndex = 0
+        end
+        object GridWasSent_UnitName: TcxGridDBBandedColumn
+          Caption = #1055#1086#1076#1088#1072#1079#1076#1077#1083#1077#1085#1080#1077' '#1082#1091#1076#1072' '#1087#1077#1088#1077#1084#1077#1089#1090#1080#1083#1080
+          DataBinding.FieldName = 'UnitName'
+          HeaderAlignmentHorz = taCenter
+          HeaderAlignmentVert = vaCenter
+          Width = 264
+          Position.BandIndex = 0
+          Position.ColIndex = 2
+          Position.RowIndex = 0
+        end
+      end
+      object GridWasSentLevel: TcxGridLevel
+        GridView = GridWasSentDBBandedTableView
+      end
+    end
   end
   object cxSplitter1: TcxSplitter
     Left = 0
@@ -102,12 +439,12 @@ object Report_LeftSendForm: TReport_LeftSendForm
     ExplicitTop = 200
     ExplicitWidth = 869
   end
-  object DataSource: TDataSource
-    DataSet = ClientDataSet
-    Left = 152
-    Top = 208
+  object InventDS: TDataSource
+    DataSet = InventCDS
+    Left = 240
+    Top = 280
   end
-  object ClientDataSet: TClientDataSet
+  object InventCDS: TClientDataSet
     Aggregates = <>
     Params = <>
     Left = 160
@@ -359,11 +696,21 @@ object Report_LeftSendForm: TReport_LeftSendForm
   end
   object dsdStoredProc: TdsdStoredProc
     StoredProcName = 'gpReport_LeftSend'
-    DataSet = ClientDataSet
+    DataSet = InventCDS
     DataSets = <
       item
-        DataSet = ClientDataSet
+        DataSet = InventCDS
+      end
+      item
+        DataSet = GoodsCDS
+      end
+      item
+        DataSet = WasSentCDS
+      end
+      item
+        DataSet = WasGotCDS
       end>
+    OutputType = otMultiDataSet
     Params = <
       item
         Name = 'inDateStart'
@@ -383,7 +730,7 @@ object Report_LeftSendForm: TReport_LeftSendForm
       end>
     PackSize = 1
     Left = 48
-    Top = 272
+    Top = 280
   end
   object UserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn
     Left = 800
@@ -405,5 +752,50 @@ object Report_LeftSendForm: TReport_LeftSendForm
       end>
     Left = 488
     Top = 48
+  end
+  object GoodsDS: TDataSource
+    DataSet = GoodsCDS
+    Left = 240
+    Top = 336
+  end
+  object GoodsCDS: TClientDataSet
+    Aggregates = <>
+    IndexFieldNames = 'InventId'
+    MasterFields = 'Id'
+    MasterSource = InventDS
+    PacketRecords = 0
+    Params = <>
+    Left = 160
+    Top = 336
+  end
+  object WasSentDS: TDataSource
+    DataSet = WasSentCDS
+    Left = 408
+    Top = 280
+  end
+  object WasSentCDS: TClientDataSet
+    Aggregates = <>
+    IndexFieldNames = 'InventId'
+    MasterFields = 'Id'
+    MasterSource = InventDS
+    PacketRecords = 0
+    Params = <>
+    Left = 328
+    Top = 280
+  end
+  object WasGotDS: TDataSource
+    DataSet = WasGotCDS
+    Left = 408
+    Top = 336
+  end
+  object WasGotCDS: TClientDataSet
+    Aggregates = <>
+    IndexFieldNames = 'InventId'
+    MasterFields = 'Id'
+    MasterSource = InventDS
+    PacketRecords = 0
+    Params = <>
+    Left = 328
+    Top = 336
   end
 end

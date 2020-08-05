@@ -34,7 +34,8 @@ RETURNS TABLE (Id Integer, GoodsId_main Integer, GoodsGroupName TVarChar, GoodsN
                DeferredSend TFloat,
                RemainsSUN TFloat,
                GoodsDiscountID  Integer, GoodsDiscountName  TVarChar,
-               UKTZED TVarChar
+               UKTZED TVarChar,
+               GoodsPairSunId Integer
 
              , PartionDateKindId_check   Integer
              , Price_check               TFloat
@@ -546,6 +547,12 @@ BEGIN
                                         AND length(REPLACE(REPLACE(REPLACE(Object_Goods_Juridical.UKTZED, ' ', ''), '.', ''), Chr(160), '')) <= 10
                                         AND Object_Goods_Juridical.GoodsMainId <> 0
                                       )
+                 , tmpGoodsPairSun AS (SELECT Object_Goods_Retail.Id
+                                            , Object_Goods_Retail.GoodsPairSunId
+                                       FROM Object_Goods_Retail 
+                                       WHERE COALESCE (Object_Goods_Retail.GoodsPairSunId, 0) <> 0
+                                         AND Object_Goods_Retail.RetailId = 4)
+                                            
 
 
         -- Результат
@@ -797,6 +804,7 @@ BEGIN
           , tmpGoodsDiscount.GoodsDiscountId                       AS GoodsDiscountID
           , tmpGoodsDiscount.GoodsDiscountName                     AS GoodsDiscountName
           , tmpGoodsUKTZED.UKTZED                                  AS UKTZED
+          , Object_Goods_PairSun.ID                                AS GoodsPairSunId         
 
 
           , CashSessionSnapShot.PartionDateKindId   AS PartionDateKindId_check
@@ -814,6 +822,9 @@ BEGIN
             -- получается GoodsMainId
             LEFT JOIN Object_Goods_Retail AS Object_Goods_Retail ON Object_Goods_Retail.Id = Goods.Id
             LEFT JOIN Object_Goods_Main AS Object_Goods_Main ON Object_Goods_Main.Id = Object_Goods_Retail.GoodsMainId
+            LEFT JOIN tmpGoodsPairSun AS Object_Goods_PairSun 
+                                      ON Object_Goods_PairSun.GoodsPairSunId = Object_Goods_Retail.Id 
+                                            
 
 
             LEFT JOIN tmpMCSAuto ON tmpMCSAuto.ObjectId = CashSessionSnapShot.ObjectId
@@ -952,5 +963,4 @@ ALTER FUNCTION gpSelect_CashRemains_ver2 (TVarChar, TVarChar) OWNER TO postgres;
 -- тест
 -- SELECT * FROM gpSelect_CashRemains_ver2 ('{85E257DE-0563-4B9E-BE1C-4D5C123FB33A}-', '10411288')
 -- SELECT * FROM gpSelect_CashRemains_ver2 ('{85E257DE-0563-4B9E-BE1C-4D5C123FB33A}-', '3998773') WHERE GoodsCode = 1240
---
-SELECT * FROM gpSelect_CashRemains_ver2 ('{0B05C610-B172-4F81-99B8-25BF5385ADD6}', '3')
+-- SELECT * FROM gpSelect_CashRemains_ver2 ('{0B05C610-B172-4F81-99B8-25BF5385ADD6}', '3')
