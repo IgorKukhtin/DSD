@@ -8,6 +8,7 @@ uses
   System.SysUtils,
   System.Variants,
   System.Classes,
+  Data.DB,
   Vcl.Graphics,
   Vcl.Controls,
   Vcl.Forms,
@@ -16,6 +17,8 @@ uses
   Vcl.ExtCtrls,
   Vcl.ComCtrls,
   Vcl.Samples.Spin,
+  Vcl.Grids,
+  Vcl.DBGrids,
   UConstants,
   UDefinitions,
   ULog,
@@ -100,6 +103,14 @@ type
     lstLog: TListBox;
     chkWriteCommands: TCheckBox;
     chkStopIfErr: TCheckBox;
+    tsCompare: TTabSheet;
+    pnlCompareTop: TPanel;
+    pnlCompareGrid: TPanel;
+    grdCompare: TDBGrid;
+    btnUpdateCompare: TButton;
+    chkDeviationOnly: TCheckBox;
+    dsCompare: TDataSource;
+    lbCompareExecuting: TLabel;
     {$WARNINGS ON}
     procedure chkShowLogClick(Sender: TObject);
     procedure btnLibLocationClick(Sender: TObject);
@@ -121,11 +132,15 @@ type
     procedure chkWriteCommandsClick(Sender: TObject);
     procedure edtLibLocationChange(Sender: TObject);
     procedure chkStopIfErrClick(Sender: TObject);
+    procedure btnUpdateCompareClick(Sender: TObject);
+    procedure grdCompareDrawColumnCell(Sender: TObject; const Rect: TRect; DataCol: Integer; Column: TColumn;
+      State: TGridDrawState);
   private
     FLog: TLog;
     FData: TdmData;
     FReplicaThrd: TReplicaThread;
     FMinMaxThrd: TMinMaxIdThread;
+    FCompareMSThrd: TCompareMasterSlaveThread;
     FSsnMinId: Integer;
     FSsnMaxId: Integer;
     FSsnStep: Double;
@@ -137,9 +152,11 @@ type
     procedure WriteSettings;
     procedure AssignOnExitSettings;
     procedure SwitchShowLog;
+    procedure CompareMasterSlave;
     procedure CheckReplicaMaxMin;
     procedure StopReplicaThread;
     procedure StopMinMaxThread;
+    procedure StopCompareMSThread;
     procedure LogMessage(const AMsg: string; const AFileName: string = ''; const aUID: Cardinal = 0);
     procedure OnChangeStartId(const ANewStartId: Integer);
     procedure OnNewSession(const AStart: TDateTime; const AMinId, AMaxId, ARecCount, ASessionNumber: Integer);
@@ -147,6 +164,7 @@ type
     procedure OnTerminateSinglePacket(Sender: TObject);
     procedure OnTerminateReplica(Sender: TObject);
     procedure OnTerminateMinMaxId(Sender: TObject);
+    procedure OnTerminateCompareMS(Sender: TObject);
   private
     procedure OnExitSettings(Sender: TObject);
   public
@@ -209,7 +227,8 @@ begin
   chkWriteLog.Checked      := TSettings.UseLog;
   chkShowLog.Checked       := TSettings.UseLogGUI;
   chkWriteCommands.Checked := TSettings.WriteCommandsToFile;
-  chkStopIfErr.Checked       := TSettings.StopIfError;
+  chkStopIfErr.Checked     := TSettings.StopIfError;
+  chkDeviationOnly.Checked := TSettings.CompareDeviationOnly;
 
   SwitchShowLog;
 end;
@@ -222,6 +241,16 @@ end;
 procedure TfrmMain.seSelectRangeChange(Sender: TObject);
 begin
   TSettings.ReplicaSelectRange := seSelectRange.Value;
+end;
+
+procedure TfrmMain.StopCompareMSThread;
+begin
+  if FCompareMSThrd <> nil then
+  begin
+    FCompareMSThrd.Stop;
+    FCompareMSThrd.WaitFor;
+    FreeAndNil(FCompareMSThrd);
+  end;
 end;
 
 procedure TfrmMain.StopMinMaxThread;
@@ -415,6 +444,11 @@ begin
     LogMessage('Slave подключен');
 end;
 
+procedure TfrmMain.btnUpdateCompareClick(Sender: TObject);
+begin
+  CompareMasterSlave;
+end;
+
 procedure TfrmMain.btnUseMinIdClick(Sender: TObject);
 begin
   edtSsnMinId.Text   := IntToStr(FData.MinId);
@@ -457,6 +491,18 @@ begin
   TSettings.UseLog := chkWriteLog.Checked;
 end;
 
+procedure TfrmMain.CompareMasterSlave;
+const
+  cCompareQueryExecuting = 'выполняется запрос ...';
+begin
+  StopCompareMSThread;
+  FCompareMSThrd := TCompareMasterSlaveThread.Create(cCreateSuspended, chkDeviationOnly.Checked, LogMessage, tknDriven);
+  FCompareMSThrd.OnTerminate := OnTerminateCompareMS;
+  FCompareMSThrd.Start;
+  lbCompareExecuting.Caption := cCompareQueryExecuting;
+  lbCompareExecuting.Visible := True;
+end;
+
 constructor TfrmMain.Create(AOwner: TComponent);
 begin
   inherited;
@@ -482,6 +528,7 @@ destructor TfrmMain.Destroy;
 begin
   StopReplicaThread;
   StopMinMaxThread;
+  StopCompareMSThread;
   WriteSettings;
   FreeAndNil(FData);
   FreeAndNil(FLog);
@@ -497,6 +544,32 @@ end;
 procedure TfrmMain.edtStartReplicaExit(Sender: TObject);
 begin
   TSettings.ReplicaStart := StrToIntDef(edtSsnMinId.Text, 1);
+end;
+
+procedure TfrmMain.grdCompareDrawColumnCell(Sender: TObject; const Rect: TRect; DataCol: Integer; Column: TColumn;
+  State: TGridDrawState);
+var
+  Grid: TStringGrid;
+  Texto: String;
+  R: TRect;
+begin
+  R := Rect;
+  R.Top  := R.Top + 2;
+  R.Left := R.Left + 2;
+
+  Grid := TStringGrid(Sender);
+  if Column.Field.IsBlob then
+  begin
+    Grid.Canvas.FillRect(Rect);
+    Texto := Column.Field.AsString;
+    DrawText(Grid.Canvas.Handle,
+             PChar(Texto),
+             StrLen(PChar(Texto)),
+             R,
+             DT_WORDBREAK);
+  end
+  else
+    (Sender as TDBGrid).DefaultDrawColumnCell(Rect, DataCol, Column, State);
 end;
 
 procedure TfrmMain.LogMessage(const AMsg, AFileName: string; const aUID: Cardinal);
@@ -612,6 +685,47 @@ begin
   FSsnMinId := AMinId;
   FSsnMaxId := AMaxId;
   FSsnStep  := (FSsnMaxId - FSsnMinId) / ARecCount;
+end;
+
+procedure TfrmMain.OnTerminateCompareMS(Sender: TObject);
+var
+  P: PCompareMasterSlave;
+  lwResult: LongWord;
+  sSQL: string;
+  tmpThread: TWorkerThread;
+begin
+  tmpThread := Sender as TWorkerThread;
+  lwResult := tmpThread.MyReturnValue;
+
+  dsCompare.DataSet := nil;
+
+  if lwResult > 0 then
+  begin
+    P := PCompareMasterSlave(lwResult);
+    try
+      sSQL := P^.ResultSQL;
+    finally
+      Dispose(P);
+    end;
+
+    if FData.IsSlaveConnected then
+      try
+        with FData.qryCompareMasterSlave do
+        begin
+          Close;
+          SQL.Clear;
+          SQL.Add(sSQL);
+          Open;
+        end;
+      except
+        on E: Exception do
+          LogMessage(Format(cExceptionMsg, [E.ClassName, E.Message]));
+      end;
+
+    dsCompare.DataSet := FData.qryCompareMasterSlave;
+  end;
+
+  lbCompareExecuting.Caption := '';
 end;
 
 procedure TfrmMain.OnTerminateMinMaxId(Sender: TObject);

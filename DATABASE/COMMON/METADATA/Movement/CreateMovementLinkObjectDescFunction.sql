@@ -452,12 +452,17 @@ CREATE OR REPLACE FUNCTION zc_MovementLinkObject_CheckSourceKind() RETURNS Integ
 INSERT INTO MovementLinkObjectDesc (Code, ItemName)
   SELECT 'zc_MovementLinkObject_CheckSourceKind', 'Источник чека' WHERE NOT EXISTS (SELECT * FROM MovementLinkObjectDesc WHERE Code = 'zc_MovementLinkObject_CheckSourceKind');
 
+CREATE OR REPLACE FUNCTION zc_MovementLinkObject_Status_wms() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM MovementLinkObjectDesc WHERE Code = 'zc_MovementLinkObject_Status_wms'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
+INSERT INTO MovementLinkObjectDesc (Code, ItemName)
+  SELECT 'zc_MovementLinkObject_Status_wms', 'Виды статусов' WHERE NOT EXISTS (SELECT * FROM MovementLinkObjectDesc WHERE Code = 'zc_MovementLinkObject_Status_wms');
+
 /*-------------------------------------------------------------------------------
 
                   РАСПОЛАГАЙТЕ ДЕСКИ ПО АЛФАВИТУ  !!!!!!!!!!!!!!!!!!!
 
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.  Воробкало А.А.   Шаблий О.В.
+ 05.08.20         * zc_MovementLinkObject_Status_wms
  16.06.20                                                                                      * zc_MovementLinkObject_CheckSourceKind
  01.04.20         * zc_MovementLinkObject_PromoStateKind
  05.03.19                                                                                      * zc_MovementLinkObject_DriverSun

@@ -42,6 +42,7 @@ RETURNS TABLE (Id Integer, InvNumber TVarChar, OperDate TDateTime, StatusCode In
              , StartBegin      TDateTime
              , EndBegin        TDateTime
              , diffBegin_sec   TFloat
+             , StatusId_wms Integer, StatusCode_wms Integer, StatusName_wms TVarChar
               )
 AS
 $BODY$
@@ -165,6 +166,10 @@ BEGIN
            , MovementDate_StartBegin.ValueData  AS StartBegin
            , MovementDate_EndBegin.ValueData    AS EndBegin
            , EXTRACT (EPOCH FROM (COALESCE (MovementDate_EndBegin.ValueData, zc_DateStart()) - COALESCE (MovementDate_StartBegin.ValueData, zc_DateStart())) :: INTERVAL) :: TFloat AS diffBegin_sec
+
+           , Object_Status_wms.Id                       AS StatusId_wms
+           , Object_Status_wms.ObjectCode               AS StatusCode_wms
+           , Object_Status_wms.ValueData                AS StatusName_wms
 
        FROM (SELECT Movement.id
              FROM tmpStatus
@@ -313,6 +318,11 @@ BEGIN
                                          ON MovementLinkObject_Insert.MovementId = Movement.Id
                                         AND MovementLinkObject_Insert.DescId = zc_MovementLinkObject_Insert()
             LEFT JOIN Object AS Object_User ON Object_User.Id = MovementLinkObject_Insert.ObjectId
+
+            LEFT JOIN MovementLinkObject AS MovementLinkObject_Status_wms
+                                         ON MovementLinkObject_Status_wms.MovementId = Movement.Id
+                                        AND MovementLinkObject_Status_wms.DescId = zc_MovementLinkObject_Status_wms()
+            LEFT JOIN Object AS Object_Status_wms ON Object_Status_wms.Id = MovementLinkObject_Status_wms.ObjectId
 
             LEFT JOIN MovementString AS MovementString_GUID
                                      ON MovementString_GUID.MovementId = Movement.Id

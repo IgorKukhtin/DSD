@@ -59,6 +59,8 @@ type
     class procedure SetSlaveDriverID(const AValue: string); static;
     class function GetStopIfError: Boolean; static;
     class procedure SetStopIfError(const AValue: Boolean); static;
+    class function GetCompareDeviationOnly: Boolean; static;
+    class procedure SetCompareDeviationOnly(const AValue: Boolean); static;
   public
     class constructor Create;
     class destructor Destroy;
@@ -84,6 +86,7 @@ type
     class property MasterDriverID: string read GetMasterDriverID write SetMasterDriverID;
     class property SlaveDriverID: string read GetSlaveDriverID write SetSlaveDriverID;
     class property StopIfError: Boolean read GetStopIfError write SetStopIfError;
+    class property CompareDeviationOnly: Boolean read GetCompareDeviationOnly write SetCompareDeviationOnly;
   end;
 
 function IsService: Boolean;
@@ -114,12 +117,13 @@ const
 
 
   // Settings
-  cSettingsSection    = 'Settings';
-  cUseLogParam        = 'UseLog';
-  cUseLogGUIParam     = 'UseLogGUI';
-  cWriteCommandsParam = 'WriteCommandsToFile';
-  cLibLocationParam   = 'PostgresLibLocation';
-  cStopIfErrorParam   = 'StopIfError';
+  cSettingsSection       = 'Settings';
+  cUseLogParam           = 'UseLog';
+  cUseLogGUIParam        = 'UseLogGUI';
+  cWriteCommandsParam    = 'WriteCommandsToFile';
+  cLibLocationParam      = 'PostgresLibLocation';
+  cStopIfErrorParam      = 'StopIfError';
+  cCompareDeviationParam = 'CompareDeviationOnly';
 
   // Master
   cMasterSection       = 'postgress_master';
@@ -263,6 +267,11 @@ begin
       System.TMonitor.Exit(FIni);
     end;
   end;
+end;
+
+class function TSettings.GetCompareDeviationOnly: Boolean;
+begin
+  Result := GetBoolValue(cSettingsSection, cCompareDeviationParam, False);
 end;
 
 class function TSettings.GetIntValue(const ASection, AParam: string; const ADefVal: Integer): Integer;
@@ -437,6 +446,11 @@ begin
       System.TMonitor.Exit(FIni);
     end;
   end;
+end;
+
+class procedure TSettings.SetCompareDeviationOnly(const AValue: Boolean);
+begin
+  SetBoolValue(cSettingsSection, cCompareDeviationParam, AValue);
 end;
 
 class procedure TSettings.SetIntValue(const ASection, AParam: string; const AVal: Integer);

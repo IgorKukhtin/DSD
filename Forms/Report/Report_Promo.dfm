@@ -1,29 +1,29 @@
 inherited Report_PromoForm: TReport_PromoForm
   Caption = #1054#1090#1095#1077#1090' '#1087#1086' '#1072#1082#1094#1080#1103#1084
   ClientHeight = 434
-  ClientWidth = 833
+  ClientWidth = 1098
   AddOnFormData.ExecuteDialogAction = actReport_PromoDialog
-  ExplicitWidth = 849
+  ExplicitWidth = 1114
   ExplicitHeight = 472
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
     Top = 83
-    Width = 833
+    Width = 1098
     Height = 351
     TabOrder = 3
     ExplicitTop = 83
-    ExplicitWidth = 833
+    ExplicitWidth = 1098
     ExplicitHeight = 351
     ClientRectBottom = 351
-    ClientRectRight = 833
+    ClientRectRight = 1098
     inherited tsMain: TcxTabSheet
-      ExplicitWidth = 833
+      ExplicitWidth = 1098
       ExplicitHeight = 351
       inherited cxGrid: TcxGrid
-        Width = 833
+        Width = 1098
         Height = 351
-        ExplicitWidth = 833
+        ExplicitWidth = 1098
         ExplicitHeight = 351
         inherited cxGridDBTableView: TcxGridDBTableView
           DataController.Summary.DefaultGroupSummaryItems = <
@@ -212,6 +212,13 @@ inherited Report_PromoForm: TReport_PromoForm
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Width = 89
+          end
+          object JuridicalName_str: TcxGridDBColumn
+            Caption = #1070#1088'.'#1083#1080#1094#1086
+            DataBinding.FieldName = 'JuridicalName_str'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 154
           end
           object strSign: TcxGridDBColumn
             Caption = #1060#1048#1054' '#1087#1086#1083#1100#1079'. - '#1077#1089#1090#1100' '#1101#1083'. '#1087#1086#1076#1087#1080#1089#1100
@@ -553,9 +560,9 @@ inherited Report_PromoForm: TReport_PromoForm
     end
   end
   inherited Panel: TPanel
-    Width = 833
+    Width = 1098
     Height = 57
-    ExplicitWidth = 833
+    ExplicitWidth = 1098
     ExplicitHeight = 57
     inherited deStart: TcxDateEdit
       Left = 114
@@ -617,6 +624,23 @@ inherited Report_PromoForm: TReport_PromoForm
       Caption = #1075#1088#1091#1087#1087#1080#1088#1086#1074#1072#1090#1100' '#1087#1086' '#1074#1080#1076#1072#1084
       TabOrder = 8
       Width = 145
+    end
+    object cxLabel6: TcxLabel
+      Left = 608
+      Top = 6
+      Caption = #1070#1088'. '#1083#1080#1094#1086
+    end
+    object ceJuridical: TcxButtonEdit
+      Left = 665
+      Top = 5
+      Properties.Buttons = <
+        item
+          Default = True
+          Kind = bkEllipsis
+        end>
+      Properties.ReadOnly = True
+      TabOrder = 10
+      Width = 252
     end
   end
   inherited ActionList: TActionList
@@ -793,6 +817,23 @@ inherited Report_PromoForm: TReport_PromoForm
           DataType = ftBoolean
           ParamType = ptInput
           MultiSelectSeparator = ','
+        end
+        item
+          Name = 'JuridicalId'
+          Value = Null
+          Component = GuidesJuridical
+          ComponentItem = 'Key'
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'JuridicalName'
+          Value = Null
+          Component = GuidesJuridical
+          ComponentItem = 'TextValue'
+          DataType = ftString
+          ParamType = ptInput
+          MultiSelectSeparator = ','
         end>
       isShowModal = True
       RefreshDispatcher = RefreshDispatcher
@@ -935,6 +976,14 @@ inherited Report_PromoForm: TReport_PromoForm
         Name = 'inUnitId'
         Value = Null
         Component = UnitGuides
+        ComponentItem = 'Key'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inJuridicalId'
+        Value = Null
+        Component = GuidesJuridical
         ComponentItem = 'Key'
         ParamType = ptInput
         MultiSelectSeparator = ','
@@ -1103,7 +1152,7 @@ inherited Report_PromoForm: TReport_PromoForm
         ParamType = ptInput
         MultiSelectSeparator = ','
       end>
-    Left = 740
+    Left = 420
     Top = 8
   end
   object PrintHead: TClientDataSet
@@ -1132,5 +1181,32 @@ inherited Report_PromoForm: TReport_PromoForm
     PackSize = 1
     Left = 744
     Top = 240
+  end
+  object GuidesJuridical: TdsdGuides
+    KeyField = 'Id'
+    LookupControl = ceJuridical
+    FormNameParam.Value = 'TJuridical_ObjectForm'
+    FormNameParam.DataType = ftString
+    FormNameParam.MultiSelectSeparator = ','
+    FormName = 'TJuridical_ObjectForm'
+    PositionDataSet = 'MasterCDS'
+    Params = <
+      item
+        Name = 'Key'
+        Value = ''
+        Component = GuidesJuridical
+        ComponentItem = 'Key'
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'TextValue'
+        Value = ''
+        Component = GuidesJuridical
+        ComponentItem = 'TextValue'
+        DataType = ftString
+        MultiSelectSeparator = ','
+      end>
+    Left = 793
+    Top = 9
   end
 end

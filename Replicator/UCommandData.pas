@@ -94,28 +94,52 @@ end;
 
 procedure TCommandData.BuildData(ADataSet: TDataSet);
 var
-  I: Integer;
+  I, iId, iTran, iResult: Integer;
+  sSQL, sPrevSQL: string;
 begin
   Assert(ADataSet <> nil, 'Ожидается ADataSet <> nil');
   Assert(ADataSet.Active, 'Ожидается, что ADataSet уже открыт');
 
   Clear;
-  I := 0;
 
   // ожидается, что выполнен ADataSet.Last и в датасет загружены все записи
   SetLength(FRecArray, ADataSet.RecordCount);
+
+  // Обращение к FieldByName в цикле замедляет выполнение программы. Лучше использовать Fields[Index]
+  // Определим индексы полей 'Id', 'Transaction_Id', 'Result'
+  iId := -1;
+  iTran := -1;
+  iResult := -1;
+
+  for I := 0 to Pred(ADataSet.FieldCount) do
+    if      LowerCase(ADataSet.Fields[I].FieldName) = 'id'             then iId := I
+    else if LowerCase(ADataSet.Fields[I].FieldName) = 'transaction_id' then iTran := I
+    else if LowerCase(ADataSet.Fields[I].FieldName) = 'result'         then iResult := I;
+
+
+  I := 0;
+  sPrevSQL := '';
 
   with ADataSet do
   begin
     First;
     while not Eof do
     begin
-      FRecArray[I].Id      := FieldByName('Id').AsInteger;
-      FRecArray[I].TransId := FieldByName('Transaction_Id').AsInteger;
-      FRecArray[I].SQL     := FieldByName('Result').AsString + ';';
-//      FRecArray[I].SQL     := ProvideSemicolon(FieldByName('Result').AsString);
+      // Пакет может содержать одинаковые комманды. Если команда такая же как и предыдущая,
+      // тогда добавлять ее не надо.
+      sSQL := Fields[iResult].AsString;
 
-      AddToTMaxIdArr(FieldByName('Id').AsInteger, FieldByName('Transaction_Id').AsInteger);
+      if sSQL <> sPrevSQL then
+      begin
+        FRecArray[I].Id      := Fields[iId].AsInteger;
+        FRecArray[I].TransId := Fields[iTran].AsInteger;
+        FRecArray[I].SQL     := sSQL + ';';
+//        FRecArray[I].SQL     := ProvideSemicolon(sSQL);
+
+        AddToTMaxIdArr(Fields[iId].AsInteger, Fields[iTran].AsInteger);
+      end;
+
+      sPrevSQL := sSQL;
       Inc(I);
       Next;
     end;

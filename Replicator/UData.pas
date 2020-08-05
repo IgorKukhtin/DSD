@@ -23,6 +23,8 @@ type
     qrySelectReplicaCmd: TZReadOnlyQuery;
     qryMasterHelper: TZReadOnlyQuery;
     qryLastId: TZReadOnlyQuery;
+    qryCompareMasterSlave: TZReadOnlyQuery;
+    qrySlaveHelper: TZReadOnlyQuery;
   strict private
     FStartId: Integer;
     FLastId: Integer;
@@ -61,6 +63,7 @@ type
     property ReplicaFinished: TReplicaFinished read FReplicaFinished;
 
     function ExecutePreparedPacket: Integer;
+    function GetCompareMasterSlaveSQL(const ADeviationsOnly: Boolean): string;
     function IsMasterConnected: Boolean;
     function IsSlaveConnected: Boolean;
     function IsBothConnected: Boolean;
@@ -118,6 +121,15 @@ type
   TReplicaThread = class(TWorkerThread)
   protected
     procedure Execute; override;
+  end;
+
+  TCompareMasterSlaveThread = class(TWorkerThread)
+  strict private
+    FDeviationsOnly: Boolean;
+  protected
+    procedure Execute; override;
+  public
+    constructor Create(CreateSuspended, ADeviationsOnly: Boolean; AMsgProc: TNotifyMessage; AKind: TThreadKind = tknNondriven); reintroduce;
   end;
 
 implementation
@@ -715,9 +727,120 @@ begin
   if Assigned(FMsgProc) then FMsgProc(AMsg, AFileName);
 end;
 
+function TdmData.GetCompareMasterSlaveSQL(const ADeviationsOnly: Boolean): string;
+type
+  TTableData = record
+    Name: string;
+    MasterCount: Integer;
+    SlaveCount: Integer;
+    CountSQL: string;
+  end;
+const
+  cSelect        = 'SELECT * FROM _replica.gpSelect_Replica_tables()';
+  cSelectUnion   = 'SELECT ''%s'' as TableName, %d AS CountMaster, %d AS CountSlave';
+  cSelectCount   = 'SELECT COUNT(*) AS RecCount FROM %s';
+  cSelectCountId = 'SELECT COUNT(Id) AS RecCount FROM %s';
+  cUnion         = ' UNION ALL ';
+var
+  I: Integer;
+  arrTables: array of TTableData;
+  sTableName, sSQL: string;
+begin
+  Result := Format(cSelectUnion, ['<нет данных>', 0, 0]) + ';';
+
+  try
+    // строим массив имен таблиц
+    if IsSlaveConnected then
+      with qrySlaveHelper do
+      begin
+        Close;
+        SQL.Clear;
+        SQL.Add(cSelect);
+        Open;
+        FetchAll;
+        if IsEmpty then Exit;
+
+        First;
+        while not EOF do
+        begin
+          if not FieldByName('Master_table').IsNull then
+          begin
+            sTableName := FieldByName('Master_table').AsString;
+            if Length(Trim(sTableName)) > 0 then
+            begin
+              SetLength(arrTables, Length(arrTables) + 1);
+              arrTables[High(arrTables)].Name := sTableName;
+            end;
+          end;
+
+          Next;
+        end;
+      end;
+
+    // Вычисляем Count(*) для таблиц из массива arrTables.
+    // Для 'MovementItemContainer' отдельный случай: select Count(Id).
+
+    // сначала формируем текст запроса
+    for I := Low(arrTables) to High(arrTables) do
+      if arrTables[I].Name = 'MovementItemContainer'  then
+        arrTables[I].CountSQL := Format(cSelectCountId, [arrTables[I].Name])
+      else
+        arrTables[I].CountSQL := Format(cSelectCount, [arrTables[I].Name]);
+
+    // теперь выполняем запрос для каждой таблицы
+    for I := Low(arrTables) to High(arrTables) do
+    begin
+      // для таблиц сервера Master
+      if IsMasterConnected then
+        with qryMasterHelper do
+        begin
+          Close;
+          SQL.Clear;
+          SQL.Add(arrTables[I].CountSQL);
+          Open;
+          if not Fields[0].IsNull then
+            arrTables[I].MasterCount := Fields[0].AsInteger;
+          Close;
+        end;
+
+      // для таблиц сервера Slave
+      if IsSlaveConnected then
+        with qrySlaveHelper do
+        begin
+          Close;
+          SQL.Clear;
+          SQL.Add(arrTables[I].CountSQL);
+          Open;
+          if not Fields[0].IsNull then
+            arrTables[I].MasterCount := Fields[0].AsInteger;
+          Close;
+        end;
+    end;
+
+    // формируем текст запроса SELECT UNION, используя данные массива arrTables
+    sSQL := '';
+    for I := Low(arrTables) to High(arrTables) do
+    begin
+      if ADeviationsOnly then
+        if arrTables[I].MasterCount = arrTables[I].SlaveCount then Continue;
+
+      if Length(sSQL) = 0 then
+        sSQL := Format(cSelectUnion, [arrTables[I].Name, arrTables[I].MasterCount, arrTables[I].SlaveCount])
+      else
+        sSQL := sSQL + cUnion + Format(cSelectUnion, [arrTables[I].Name, arrTables[I].MasterCount, arrTables[I].SlaveCount]);
+    end;
+
+    if Length(sSQL) > 0 then
+      Result := sSQL + ';';
+  except
+    on E: Exception do
+      LogMsg(Format(cExceptionMsg, [E.ClassName, E.Message]));
+  end;
+end;
+
 function TdmData.GetMinMaxId: TMinMaxId;
 const
-  cSelect = 'select * from _replica.gpSelect_MinMaxId()';
+  cSelect = 'SELECT * FROM _replica.gpSelect_MinMaxId()';
 begin
   Result.MinId := -1;
   Result.MaxId := -1;
@@ -931,5 +1054,28 @@ begin
   Terminate;
 end;
 
+
+{ TCompareMasterSlaveThread }
+
+constructor TCompareMasterSlaveThread.Create(CreateSuspended, ADeviationsOnly: Boolean; AMsgProc: TNotifyMessage;
+  AKind: TThreadKind);
+begin
+  FDeviationsOnly := ADeviationsOnly;
+  inherited Create(CreateSuspended, 0, 0, 0, AMsgProc, AKind);
+end;
+
+procedure TCompareMasterSlaveThread.Execute;
+var
+  P: PCompareMasterSlave;
+  sSQL: string;
+begin
+  inherited;
+  sSQL := Data.GetCompareMasterSlaveSQL(FDeviationsOnly);
+
+  New(P);
+  P^.ResultSQL := sSQL;
+  ReturnValue := LongWord(P);
+  Terminate;
+end;
 
 end.

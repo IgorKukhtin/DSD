@@ -187,6 +187,32 @@ inherited OrderExternalJournalForm: TOrderExternalJournalForm
             HeaderAlignmentVert = vaCenter
             Width = 75
           end
+          object StatusCode_wms: TcxGridDBColumn
+            Caption = #1057#1090#1072#1090#1091#1089' ('#1086#1073#1084#1077#1085' '#1089' '#1042#1052#1057')'
+            DataBinding.FieldName = 'StatusCode_wms'
+            PropertiesClassName = 'TcxImageComboBoxProperties'
+            Properties.Images = dmMain.ImageList
+            Properties.Items = <
+              item
+                Description = #1053#1077' '#1087#1088#1086#1074#1077#1076#1077#1085
+                ImageIndex = 11
+                Value = 1
+              end
+              item
+                Description = #1055#1088#1086#1074#1077#1076#1077#1085
+                ImageIndex = 12
+                Value = 2
+              end
+              item
+                Description = #1059#1076#1072#1083#1077#1085
+                ImageIndex = 13
+                Value = 3
+              end>
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 70
+          end
           object RouteGroupName: TcxGridDBColumn
             Caption = #1043#1088#1091#1087#1087#1072' '#1084'. / '#1052#1072#1088#1096#1088#1091#1090
             DataBinding.FieldName = 'RouteGroupName'
@@ -635,7 +661,7 @@ inherited OrderExternalJournalForm: TOrderExternalJournalForm
         end
         item
           Name = 'inIsJuridical'
-          Value = 'False'
+          Value = False
           DataType = ftBoolean
           MultiSelectSeparator = ','
         end>
@@ -715,7 +741,7 @@ inherited OrderExternalJournalForm: TOrderExternalJournalForm
         end
         item
           Name = 'inIsJuridical'
-          Value = 'TRUE'
+          Value = True
           DataType = ftBoolean
           MultiSelectSeparator = ','
         end>
@@ -823,7 +849,7 @@ inherited OrderExternalJournalForm: TOrderExternalJournalForm
         end
         item
           Name = 'inIsJuridical'
-          Value = 'FALSE'
+          Value = False
           DataType = ftBoolean
           MultiSelectSeparator = ','
         end>
@@ -916,7 +942,7 @@ inherited OrderExternalJournalForm: TOrderExternalJournalForm
         end
         item
           Name = 'inIsJuridical'
-          Value = 'FALSE'
+          Value = False
           DataType = ftBoolean
           MultiSelectSeparator = ','
         end>
@@ -1400,7 +1426,7 @@ inherited OrderExternalJournalForm: TOrderExternalJournalForm
       end
       item
         Name = 'inIsJuridical'
-        Value = 'FALSE'
+        Value = False
         DataType = ftBoolean
         ParamType = ptInput
         MultiSelectSeparator = ','
@@ -1433,7 +1459,7 @@ inherited OrderExternalJournalForm: TOrderExternalJournalForm
       end
       item
         Name = 'outPrinted'
-        Value = 'er'
+        Value = False
         Component = MasterCDS
         ComponentItem = 'isPrinted'
         DataType = ftBoolean
@@ -1518,7 +1544,7 @@ inherited OrderExternalJournalForm: TOrderExternalJournalForm
       end
       item
         Name = 'inIsJuridical'
-        Value = 'TRUE'
+        Value = True
         DataType = ftBoolean
         ParamType = ptInput
         MultiSelectSeparator = ','

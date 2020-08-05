@@ -30,7 +30,6 @@ RETURNS TABLE (Id Integer, InvNumber TVarChar, OperDate TDateTime
              , InfoMoneyGroupName TVarChar
              , InfoMoneyDestinationName TVarChar
              , InfoMoneyId Integer, InfoMoneyCode Integer, InfoMoneyName TVarChar, InfoMoneyName_all TVarChar
-             , MemberName TVarChar, PositionName TVarChar, PersonalServiceListId Integer, PersonalServiceListCode Integer, PersonalServiceListName TVarChar
              , ContractId Integer, ContractCode Integer, ContractInvNumber TVarChar, ContractTagName TVarChar
              , BranchId Integer, BranchName TVarChar
              , UnitCode Integer, UnitName TVarChar
@@ -283,14 +282,14 @@ BEGIN
          , tmpInfoMoney_View AS (SELECT * FROM Object_InfoMoney_View)
          , tmpJuridicalDetails_View AS (SELECT *
                                         FROM ObjectHistory_JuridicalDetails_View
-                                        WHERE ObjectHistory_JuridicalDetails_View.JuridicalId
+                                       /* WHERE ObjectHistory_JuridicalDetails_View.JuridicalId
                                               IN (SELECT DISTINCT ObjectLink_Partner_Juridical.ChildObjectId
                                                   FROM tmpMILO AS MILinkObject_MoneyPlace
                                                        INNER JOIN ObjectLink AS ObjectLink_Partner_Juridical
                                                                           ON ObjectLink_Partner_Juridical.ObjectId = MILinkObject_MoneyPlace.ObjectId
                                                                          AND ObjectLink_Partner_Juridical.DescId = zc_ObjectLink_Partner_Juridical()
                                                   WHERE MILinkObject_MoneyPlace.DescId = zc_MILinkObject_MoneyPlace()
-                                                 )
+                                                 )*/
                                        )
  
          , tmpContainerBonus AS (SELECT CLO_Juridical.ObjectId AS JuridicalId
@@ -383,11 +382,7 @@ BEGIN
                         , View_InfoMoney.InfoMoneyCode
                         , View_InfoMoney.InfoMoneyName
                         , View_InfoMoney.InfoMoneyName_all
-                        , Object_Member.ValueData               AS MemberName
-                        , Object_Position.ValueData             AS PositionName
-                        , Object_PersonalServiceList.Id         AS PersonalServiceListId
-                        , Object_PersonalServiceList.ObjectCode AS PersonalServiceListCode
-                        , Object_PersonalServiceList.ValueData  AS PersonalServiceListName
+
                         , View_Contract_InvNumber.ContractId
                         , View_Contract_InvNumber.ContractCode
                         , View_Contract_InvNumber.InvNumber  AS ContractInvNumber
@@ -501,8 +496,8 @@ BEGIN
                                                           ON MovementString_GUID.MovementId = tmpMovement.Id
              
                          LEFT JOIN tmpMLM_Invoice AS MLM_Invoice
-                                                        ON MLM_Invoice.MovementId = tmpMovement.Id
-                                                       AND MLM_Invoice.DescId = zc_MovementLinkMovement_Invoice()
+                                                  ON MLM_Invoice.MovementId = tmpMovement.Id
+                                                 AND MLM_Invoice.DescId = zc_MovementLinkMovement_Invoice()
                          LEFT JOIN Movement AS Movement_Invoice ON Movement_Invoice.Id = MLM_Invoice.MovementChildId
                          LEFT JOIN MovementDesc AS MovementDesc_Invoice ON MovementDesc_Invoice.Id = Movement_Invoice.DescId
                          LEFT JOIN tmpMovementString_Invoice AS MovementString_InvNumberPartner
@@ -529,11 +524,6 @@ BEGIN
                                                          ON MovementDate_OperDatePartner_PartionMovement.MovementId = Movement_PartionMovement.Id
                                                         AND MovementDate_OperDatePartner_PartionMovement.DescId = zc_MovementDate_OperDatePartner()
              
-                         LEFT JOIN MovementLinkObject AS MLO_PersonalServiceList
-                                                      ON MLO_PersonalServiceList.MovementId = tmpMovement.Id
-                                                     AND MLO_PersonalServiceList.DescId = zc_MovementLinkObject_PersonalServiceList()
-                         LEFT JOIN Object AS Object_PersonalServiceList ON Object_PersonalServiceList.Id = MLO_PersonalServiceList.ObjectId
-             
                          LEFT JOIN tmpMILO AS MILinkObject_MoneyPlace
                                            ON MILinkObject_MoneyPlace.MovementItemId = MovementItem.Id
                                           AND MILinkObject_MoneyPlace.DescId = zc_MILinkObject_MoneyPlace()
@@ -542,17 +532,7 @@ BEGIN
                          LEFT JOIN tmpMILO AS MILinkObject_InfoMoney
                                            ON MILinkObject_InfoMoney.MovementItemId = MovementItem.Id
                                           AND MILinkObject_InfoMoney.DescId = zc_MILinkObject_InfoMoney()
-             
-                         LEFT JOIN tmpMILO AS MILinkObject_Member
-                                           ON MILinkObject_Member.MovementItemId = MovementItem.Id
-                                          AND MILinkObject_Member.DescId = zc_MILinkObject_Member()
-                         LEFT JOIN Object AS Object_Member ON Object_Member.Id = MILinkObject_Member.ObjectId
-             
-                         LEFT JOIN tmpMILO AS MILinkObject_Position
-                                           ON MILinkObject_Position.MovementItemId = MovementItem.Id
-                                          AND MILinkObject_Position.DescId = zc_MILinkObject_Position()
-                         LEFT JOIN Object AS Object_Position ON Object_Position.Id = MILinkObject_Position.ObjectId
-             
+
                          LEFT JOIN tmpMILO AS MILinkObject_Contract
                                            ON MILinkObject_Contract.MovementItemId = MovementItem.Id
                                           AND MILinkObject_Contract.DescId = zc_MILinkObject_Contract()
@@ -623,17 +603,19 @@ BEGIN
                                               ON ObjectLink_Partner_Juridical.ObjectId = MILinkObject_MoneyPlace.ObjectId
                                              AND ObjectLink_Partner_Juridical.DescId = zc_ObjectLink_Partner_Juridical()
                                              
-                         FULL JOIN tmpContainerBonus ON tmpContainerBonus.JuridicalId = ObjectLink_Partner_Juridical.ChildObjectId
+                         FULL JOIN tmpContainerBonus ON tmpContainerBonus.JuridicalId = COALESCE (ObjectLink_Partner_Juridical.ChildObjectId, MILinkObject_MoneyPlace.ObjectId)
                                                     AND tmpContainerBonus.PartnerId   = MILinkObject_MoneyPlace.ObjectId
                                                     AND tmpContainerBonus.InfoMoneyId = MILinkObject_InfoMoney.ObjectId
                                                     AND COALESCE (tmpContainerBonus.ContractId,0) = COALESCE (MILinkObject_Contract.ObjectId,0)
 
-                         LEFT JOIN tmpJuridicalDetails_View AS ObjectHistory_JuridicalDetails_View ON ObjectHistory_JuridicalDetails_View.JuridicalId = COALESCE (ObjectLink_Partner_Juridical.ChildObjectId, tmpContainerBonus.JuridicalId)
+                         LEFT JOIN Object AS Object_Juridical ON Object_Juridical.Id = COALESCE (tmpContainerBonus.JuridicalId, ObjectLink_Partner_Juridical.ChildObjectId, MILinkObject_MoneyPlace.ObjectId)
+                                                             AND Object_Juridical.DescId = zc_Object_Juridical()
+                         LEFT JOIN tmpJuridicalDetails_View AS ObjectHistory_JuridicalDetails_View ON ObjectHistory_JuridicalDetails_View.JuridicalId = Object_Juridical.Id
 
                          LEFT JOIN Object AS Object_MoneyPlace ON Object_MoneyPlace.Id = COALESCE (MILinkObject_MoneyPlace.ObjectId, tmpContainerBonus.PartnerId)
                          LEFT JOIN ObjectDesc ON ObjectDesc.Id = Object_MoneyPlace.DescId
                          LEFT JOIN tmpInfoMoney_View AS View_InfoMoney ON View_InfoMoney.InfoMoneyId = COALESCE (MILinkObject_InfoMoney.ObjectId, tmpContainerBonus.InfoMoneyId)
-                         LEFT JOIN Object AS Object_Juridical ON Object_Juridical.Id = COALESCE (ObjectHistory_JuridicalDetails_View.JuridicalId, tmpContainerBonus.JuridicalId)
+                         
                          LEFT JOIN tmpContract_View AS View_Contract_InvNumber ON View_Contract_InvNumber.ContractId = COALESCE (MILinkObject_Contract.ObjectId, tmpContainerBonus.ContractId)
                          
                          LEFT JOIN ObjectLink AS OL_Cash_Branch
@@ -677,11 +659,6 @@ BEGIN
             , tmpRes.InfoMoneyCode
             , tmpRes.InfoMoneyName
             , tmpRes.InfoMoneyName_all
-            , tmpRes.MemberName
-            , tmpRes.PositionName
-            , tmpRes.PersonalServiceListId
-            , tmpRes.PersonalServiceListCode
-            , tmpRes.PersonalServiceListName
             , tmpRes.ContractId
             , tmpRes.ContractCode
             , tmpRes.ContractInvNumber

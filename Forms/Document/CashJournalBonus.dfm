@@ -159,6 +159,15 @@ inherited CashJournalBonusForm: TCashJournalBonusForm
             Options.Editing = False
             Width = 150
           end
+          object JuridicalName: TcxGridDBColumn
+            Caption = #1070#1088'.'#1083#1080#1094#1086
+            DataBinding.FieldName = 'JuridicalName'
+            FooterAlignmentHorz = taCenter
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 150
+          end
           object OKPO: TcxGridDBColumn
             Caption = #1054#1050#1055#1054
             DataBinding.FieldName = 'OKPO'
@@ -1813,6 +1822,14 @@ inherited CashJournalBonusForm: TCashJournalBonusForm
     DataSets = <>
     OutputType = otResult
     Params = <
+      item
+        Name = 'inOperDate'
+        Value = 'NULL'
+        Component = deEnd
+        DataType = ftDateTime
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
       item
         Name = 'inCashId'
         Value = Null

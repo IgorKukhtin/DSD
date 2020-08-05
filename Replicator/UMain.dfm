@@ -19,7 +19,7 @@ object frmMain: TfrmMain
     Top = 0
     Width = 1184
     Height = 768
-    ActivePage = tsLog
+    ActivePage = tsCompare
     Align = alClient
     TabOrder = 0
     object tsLog: TTabSheet
@@ -393,6 +393,95 @@ object frmMain: TfrmMain
         end
       end
     end
+    object tsCompare: TTabSheet
+      Caption = #1057#1088#1072#1074#1085#1077#1085#1080#1077' '#1076#1072#1085#1085#1099#1093' Master '#1080' Slave'
+      ImageIndex = 2
+      object pnlCompareTop: TPanel
+        Left = 0
+        Top = 0
+        Width = 1176
+        Height = 41
+        Align = alTop
+        TabOrder = 0
+        object lbCompareExecuting: TLabel
+          Left = 131
+          Top = 13
+          Width = 119
+          Height = 13
+          Caption = #1074#1099#1087#1086#1083#1085#1103#1077#1090#1089#1103' '#1079#1072#1087#1088#1086#1089' ...'
+          Visible = False
+        end
+        object btnUpdateCompare: TButton
+          Left = 22
+          Top = 8
+          Width = 75
+          Height = 25
+          Caption = #1054#1073#1085#1086#1074#1080#1090#1100
+          TabOrder = 0
+          OnClick = btnUpdateCompareClick
+        end
+        object chkDeviationOnly: TCheckBox
+          Left = 297
+          Top = 12
+          Width = 153
+          Height = 17
+          Caption = #1090#1086#1083#1100#1082#1086' '#1086#1090#1082#1083#1086#1085#1077#1085#1080#1103
+          TabOrder = 1
+        end
+      end
+      object pnlCompareGrid: TPanel
+        Left = 0
+        Top = 41
+        Width = 1176
+        Height = 699
+        Align = alClient
+        BevelOuter = bvNone
+        TabOrder = 1
+        object grdCompare: TDBGrid
+          AlignWithMargins = True
+          Left = 3
+          Top = 3
+          Width = 1170
+          Height = 693
+          Align = alClient
+          DataSource = dsCompare
+          DefaultDrawing = False
+          ReadOnly = True
+          TabOrder = 0
+          TitleFont.Charset = DEFAULT_CHARSET
+          TitleFont.Color = clWindowText
+          TitleFont.Height = -11
+          TitleFont.Name = 'Tahoma'
+          TitleFont.Style = []
+          OnDrawColumnCell = grdCompareDrawColumnCell
+          Columns = <
+            item
+              Expanded = False
+              FieldName = 'TableName'
+              Title.Alignment = taCenter
+              Title.Caption = #1048#1084#1103' '#1090#1072#1073#1083#1080#1094#1099
+              Width = 300
+              Visible = True
+            end
+            item
+              Expanded = False
+              FieldName = 'CountMaster'
+              Title.Alignment = taCenter
+              Title.Caption = #1082#1086#1083'-'#1074#1086' '#1079#1072#1087#1080#1089#1077#1081' Master'
+              Width = 125
+              Visible = True
+            end
+            item
+              Expanded = False
+              FieldName = 'CountSlave'
+              Title.Alignment = taCenter
+              Title.Caption = #1082#1086#1083'-'#1074#1086' '#1079#1072#1087#1080#1089#1077#1081' Slave'
+              Width = 125
+              Visible = True
+            end>
+        end
+      end
+    end
     object tsSettings: TTabSheet
       Caption = #1053#1072#1089#1090#1088#1086#1081#1082#1080
       ImageIndex = 1
@@ -647,5 +736,9 @@ object frmMain: TfrmMain
     OnTimer = tmrElapsedTimer
     Left = 1049
     Top = 39
+  end
+  object dsCompare: TDataSource
+    Left = 1004
+    Top = 249
   end
 end

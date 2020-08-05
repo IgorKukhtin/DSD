@@ -24,6 +24,7 @@ RETURNS TABLE (Id Integer, InvNumber TVarChar, OperDate TDateTime, StatusCode In
              , PriceListId Integer, PriceListName TVarChar
              , RetailId Integer, RetailName TVarChar
              , PartnerId Integer, PartnerName TVarChar
+             , StatusId_wms Integer, StatusCode_wms Integer, StatusName_wms TVarChar
              , PriceWithVAT Boolean, VATPercent TFloat, ChangePercent TFloat
              , DayCount TFloat
              , isPrinted Boolean
@@ -93,6 +94,9 @@ BEGIN
              , CAST ('' AS TVarChar)                            AS RetailName
              , CAST (0  AS Integer)                             AS PartnerId
              , CAST ('' AS TVarChar)                            AS PartnerName
+             , CAST (0  AS Integer)                             AS StatusId_wms
+             , CAST (0  AS Integer)                             AS StatusCode_wms
+             , CAST ('' AS TVarChar)                            AS StatusName_wms
 
              , CAST (FALSE AS Boolean)                          AS PriceWithVAT
              , CAST (20 AS TFloat)                              AS VATPercent
@@ -176,10 +180,15 @@ BEGIN
            , Object_PriceList.id                        AS PriceListId
            , Object_PriceList.ValueData                 AS PriceListName
 
-           , Object_Retail.id                               AS RetailId
-           , Object_Retail.ValueData                        AS RetailName
-           , Object_Partner.id                              AS PartnerId
-           , Object_Partner.ValueData                       AS PartnerName
+           , Object_Retail.Id                           AS RetailId
+           , Object_Retail.ValueData                    AS RetailName
+           , Object_Partner.Id                          AS PartnerId
+           , Object_Partner.ValueData                   AS PartnerName
+           
+           , Object_Status_wms.Id                       AS StatusId_wms
+           --, COALESCE (Object_Status_wms.ObjectCode, zc_Enum_StatusCode_Erased()) AS StatusCode_wms
+           , Object_Status_wms.ObjectCode AS StatusCode_wms
+           , Object_Status_wms.ValueData                AS StatusName_wms
 
            , COALESCE (MovementBoolean_PriceWithVAT.ValueData, FALSE)  AS PriceWithVAT
            , MovementFloat_VATPercent.ValueData         AS VATPercent
@@ -290,17 +299,22 @@ BEGIN
             LEFT JOIN MovementLinkObject AS MovementLinkObject_PriceList
                                          ON MovementLinkObject_PriceList.MovementId = Movement.Id
                                         AND MovementLinkObject_PriceList.DescId = zc_MovementLinkObject_PriceList()
-           LEFT JOIN Object AS Object_PriceList ON Object_PriceList.Id = MovementLinkObject_PriceList.ObjectId
+            LEFT JOIN Object AS Object_PriceList ON Object_PriceList.Id = MovementLinkObject_PriceList.ObjectId
 
-           LEFT JOIN MovementLinkObject AS MovementLinkObject_Retail
-                                        ON MovementLinkObject_Retail.MovementId = Movement.Id
-                                       AND MovementLinkObject_Retail.DescId = zc_MovementLinkObject_Retail()
-           LEFT JOIN Object AS Object_Retail ON Object_Retail.Id = MovementLinkObject_Retail.ObjectId
+            LEFT JOIN MovementLinkObject AS MovementLinkObject_Retail
+                                         ON MovementLinkObject_Retail.MovementId = Movement.Id
+                                        AND MovementLinkObject_Retail.DescId = zc_MovementLinkObject_Retail()
+            LEFT JOIN Object AS Object_Retail ON Object_Retail.Id = MovementLinkObject_Retail.ObjectId
 
-           LEFT JOIN MovementLinkObject AS MovementLinkObject_Partner
-                                        ON MovementLinkObject_Partner.MovementId = Movement.Id
-                                       AND MovementLinkObject_Partner.DescId = zc_MovementLinkObject_Partner()
-           LEFT JOIN Object AS Object_Partner ON Object_Partner.Id = MovementLinkObject_Partner.ObjectId
+            LEFT JOIN MovementLinkObject AS MovementLinkObject_Partner
+                                         ON MovementLinkObject_Partner.MovementId = Movement.Id
+                                        AND MovementLinkObject_Partner.DescId = zc_MovementLinkObject_Partner()
+            LEFT JOIN Object AS Object_Partner ON Object_Partner.Id = MovementLinkObject_Partner.ObjectId
+
+            LEFT JOIN MovementLinkObject AS MovementLinkObject_Status_wms
+                                         ON MovementLinkObject_Status_wms.MovementId = Movement.Id
+                                        AND MovementLinkObject_Status_wms.DescId = zc_MovementLinkObject_Status_wms()
+            LEFT JOIN Object AS Object_Status_wms ON Object_Status_wms.Id = MovementLinkObject_Status_wms.ObjectId
 
        WHERE Movement.Id =  inMovementId
          AND Movement.DescId = zc_Movement_OrderExternal();
@@ -316,6 +330,7 @@ ALTER FUNCTION gpGet_Movement_OrderExternal (Integer, TDateTime, TVarChar) OWNER
 /*
  »—“Œ–»ﬂ –¿«–¿¡Œ“ »: ƒ¿“¿, ¿¬“Œ–
                ‘ÂÎÓÌ˛Í ».¬.    ÛıÚËÌ ».¬.    ÎËÏÂÌÚ¸Â‚  .».   Ã‡Ì¸ÍÓ ƒ.¿.
+ 05.08.20         *
  20.06.18         * add isAuto
  25.11.15         * add Promo
  21.05.15         * add Retail, Partner

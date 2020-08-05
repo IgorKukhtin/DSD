@@ -2942,10 +2942,6 @@
 				<Form>Report_MovementCheck_CrossForm</Form>
 				<DesignClass>TParentForm</DesignClass>
 			</DCCReference>
-			<DCCReference Include="..\..\Forms\Document\OrderExternalJournal.pas">
-				<Form>OrderExternalJournalForm</Form>
-				<DesignClass>TParentForm</DesignClass>
-			</DCCReference>
 			<DCCReference Include="..\..\Forms\Guides\MemberEdit.pas">
 				<Form>MemberEditForm</Form>
 				<DesignClass>TParentForm</DesignClass>
@@ -4057,6 +4053,10 @@
 			</DCCReference>
 			<DCCReference Include="..\..\Forms\Document\CashJournalBonus.pas">
 				<Form>CashJournalBonusForm</Form>
+				<DesignClass>TParentForm</DesignClass>
+			</DCCReference>
+			<DCCReference Include="..\..\Forms\Document\OrderExternalJournal.pas">
+				<Form>OrderExternalJournalForm</Form>
 				<DesignClass>TParentForm</DesignClass>
 			</DCCReference>
 			<BuildConfiguration Include="Release">
