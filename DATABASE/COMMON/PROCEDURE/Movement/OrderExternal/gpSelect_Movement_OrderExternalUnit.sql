@@ -34,6 +34,7 @@ RETURNS TABLE (Id Integer, InvNumber TVarChar, OperDate TDateTime, StatusCode In
              , StartBegin      TDateTime
              , EndBegin        TDateTime
              , diffBegin_sec   TFloat
+             , StatusId_wms Integer, StatusCode_wms Integer, StatusName_wms TVarChar
               )
 AS
 $BODY$
@@ -130,6 +131,10 @@ BEGIN
            , MovementDate_StartBegin.ValueData  AS StartBegin
            , MovementDate_EndBegin.ValueData    AS EndBegin
            , EXTRACT (EPOCH FROM (COALESCE (MovementDate_EndBegin.ValueData, zc_DateStart()) - COALESCE (MovementDate_StartBegin.ValueData, zc_DateStart())) :: INTERVAL) :: TFloat AS diffBegin_sec
+
+           , Object_Status_wms.Id                       AS StatusId_wms
+           , Object_Status_wms.ObjectCode               AS StatusCode_wms
+           , Object_Status_wms.ValueData                AS StatusName_wms
 
        FROM (SELECT Movement.Id
              FROM tmpStatus
@@ -267,6 +272,11 @@ BEGIN
                                         AND MovementLinkObject_Partner.DescId = zc_MovementLinkObject_Partner()
             LEFT JOIN Object AS Object_Partner ON Object_Partner.Id = MovementLinkObject_Partner.ObjectId
 
+            LEFT JOIN MovementLinkObject AS MovementLinkObject_Status_wms
+                                         ON MovementLinkObject_Status_wms.MovementId = Movement.Id
+                                        AND MovementLinkObject_Status_wms.DescId = zc_MovementLinkObject_Status_wms()
+            LEFT JOIN Object AS Object_Status_wms ON Object_Status_wms.Id = MovementLinkObject_Status_wms.ObjectId
+
        WHERE tmpRoleAccessKey.AccessKeyId > 0 OR tmpUnit_from.UnitId > 0 OR tmpUnit_to.UnitId > 0
       ;
 
@@ -277,6 +287,7 @@ $BODY$
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.
+ 05.08.20         *
  02.05.19         *
  05.10.16         * add inJurIdicalBasisId
  21.05.15         * add Retail, Partner

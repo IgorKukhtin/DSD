@@ -38,6 +38,9 @@ type
     cbPromo: TcxCheckBox;
     cbTender: TcxCheckBox;
     cbGoodsKind: TcxCheckBox;
+    cxLabel6: TcxLabel;
+    ceJuridical: TcxButtonEdit;
+    GuidesJuridical: TdsdGuides;
   private
     { Private declarations }
   public

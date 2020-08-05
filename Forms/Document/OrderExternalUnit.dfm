@@ -1,25 +1,25 @@
 inherited OrderExternalUnitForm: TOrderExternalUnitForm
   Caption = #1044#1086#1082#1091#1084#1077#1085#1090' <'#1047#1072#1103#1074#1082#1072' '#1089#1090#1086#1088#1086#1085#1085#1103#1103' ('#1085#1072' '#1075#1083'.'#1089#1082#1083#1072#1076')>'
   ClientHeight = 399
-  ClientWidth = 1031
-  ExplicitWidth = 1047
+  ClientWidth = 1024
+  ExplicitWidth = 1040
   ExplicitHeight = 437
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
     Top = 166
-    Width = 1031
+    Width = 1024
     Height = 233
     ExplicitTop = 166
     ExplicitWidth = 1031
     ExplicitHeight = 233
     ClientRectBottom = 233
-    ClientRectRight = 1031
+    ClientRectRight = 1024
     inherited tsMain: TcxTabSheet
       ExplicitWidth = 1031
       ExplicitHeight = 209
       inherited cxGrid: TcxGrid
-        Width = 1031
+        Width = 1024
         Height = 209
         ExplicitWidth = 1031
         ExplicitHeight = 209
@@ -398,7 +398,7 @@ inherited OrderExternalUnitForm: TOrderExternalUnitForm
     end
   end
   inherited DataPanel: TPanel
-    Width = 1031
+    Width = 1024
     Height = 140
     TabOrder = 3
     ExplicitWidth = 1031
@@ -755,7 +755,7 @@ inherited OrderExternalUnitForm: TOrderExternalUnitForm
       Left = 8
       Top = 103
       TabOrder = 45
-      Width = 375
+      Width = 208
     end
     object cxLabel21: TcxLabel
       Left = 833
@@ -767,6 +767,36 @@ inherited OrderExternalUnitForm: TOrderExternalUnitForm
       Top = 85
       Caption = #1058#1086#1088#1075#1086#1074#1072#1103' '#1089#1077#1090#1100
     end
+    object cxLabel24: TcxLabel
+      Left = 222
+      Top = 85
+      Caption = #1057#1090#1072#1090#1091#1089' ('#1086#1073#1084#1077#1085' '#1089' '#1042#1052#1057')'
+    end
+    object ceStatus_wms: TcxButtonEdit
+      Left = 222
+      Top = 103
+      Hint = #1057#1090#1072#1090#1091#1089' ('#1086#1073#1084#1077#1085' '#1089' '#1042#1052#1057')promo'
+      ParentShowHint = False
+      Properties.Buttons = <
+        item
+          Action = ChangeGuidesStatuswms1
+          Kind = bkGlyph
+        end
+        item
+          Action = ChangeGuidesStatuswms2
+          Kind = bkGlyph
+        end
+        item
+          Action = ChangeGuidesStatuswms3
+          Default = True
+          Kind = bkGlyph
+        end>
+      Properties.Images = dmMain.ImageList
+      Properties.ReadOnly = True
+      ShowHint = True
+      TabOrder = 49
+      Width = 161
+    end
   end
   inherited UserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn
     Left = 267
@@ -777,7 +807,7 @@ inherited OrderExternalUnitForm: TOrderExternalUnitForm
     Top = 176
   end
   inherited ActionList: TActionList
-    Left = 23
+    Left = 31
     Top = 270
     inherited actRefresh: TdsdDataSetRefresh
       RefreshOnTabSetChanges = True
@@ -808,7 +838,7 @@ inherited OrderExternalUnitForm: TOrderExternalUnitForm
         end
         item
           Name = 'inIsJuridical'
-          Value = 'FALSE'
+          Value = False
           DataType = ftBoolean
           MultiSelectSeparator = ','
         end>
@@ -1053,6 +1083,49 @@ inherited OrderExternalUnitForm: TOrderExternalUnitForm
     object actShowMessage: TShowMessageAction
       Category = 'DSDLib'
       MoveParams = <>
+    end
+    object ChangeGuidesStatuswms1: TChangeGuidesStatus
+      Category = 'DSDLib'
+      MoveParams = <>
+      StoredProc = spUpdate_Status_wms
+      StoredProcList = <
+        item
+          StoredProc = spUpdate_Status_wms
+        end
+        item
+        end>
+      Caption = 'CompleteMovement'
+      ImageIndex = 12
+      Status = mtComplete
+      Guides = GuidesStatus_wms
+    end
+    object ChangeGuidesStatuswms2: TChangeGuidesStatus
+      Category = 'DSDLib'
+      MoveParams = <>
+      StoredProc = spUpdate_Status_wms
+      StoredProcList = <
+        item
+          StoredProc = spUpdate_Status_wms
+        end
+        item
+        end>
+      Caption = 'UnCompleteMovement'
+      ImageIndex = 11
+      Status = mtUncomplete
+      Guides = GuidesStatus_wms
+    end
+    object ChangeGuidesStatuswms3: TChangeGuidesStatus
+      Category = 'DSDLib'
+      MoveParams = <>
+      StoredProc = spUpdate_Status_wms
+      StoredProcList = <
+        item
+          StoredProc = spUpdate_Status_wms
+        end>
+      Caption = 'DeleteMovement'
+      ImageIndex = 13
+      Status = mtDelete
+      Guides = GuidesStatus_wms
     end
   end
   inherited MasterDS: TDataSource
@@ -1588,7 +1661,7 @@ inherited OrderExternalUnitForm: TOrderExternalUnitForm
       end
       item
         Name = 'PriceWithVAT'
-        Value = 'False'
+        Value = False
         Component = edPriceWithVAT
         DataType = ftBoolean
         MultiSelectSeparator = ','
@@ -1671,6 +1744,21 @@ inherited OrderExternalUnitForm: TOrderExternalUnitForm
         Component = ceComment
         DataType = ftString
         MultiSelectSeparator = ','
+      end
+      item
+        Name = 'StatusCode_wms'
+        Value = Null
+        Component = GuidesStatus_wms
+        ComponentItem = 'Key'
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'StatusName_wms'
+        Value = Null
+        Component = GuidesStatus_wms
+        ComponentItem = 'TextValue'
+        DataType = ftString
+        MultiSelectSeparator = ','
       end>
     Left = 216
     Top = 248
@@ -1744,7 +1832,7 @@ inherited OrderExternalUnitForm: TOrderExternalUnitForm
       end
       item
         Name = 'outPriceWithVAT'
-        Value = 'False'
+        Value = False
         Component = edPriceWithVAT
         DataType = ftBoolean
         MultiSelectSeparator = ','
@@ -1962,11 +2050,43 @@ inherited OrderExternalUnitForm: TOrderExternalUnitForm
   end
   inherited spErasedMIMaster: TdsdStoredProc
     StoredProcName = 'gpMovementItem_OrderExternal_SetErased'
+    Params = <
+      item
+        Name = 'inMovementItemId'
+        Component = MasterCDS
+        ComponentItem = 'Id'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'outIsErased'
+        Value = False
+        Component = MasterCDS
+        ComponentItem = 'isErased'
+        DataType = ftBoolean
+        MultiSelectSeparator = ','
+      end>
     Left = 654
     Top = 304
   end
   inherited spUnErasedMIMaster: TdsdStoredProc
     StoredProcName = 'gpMovementItem_OrderExternal_SetUnErased'
+    Params = <
+      item
+        Name = 'inMovementItemId'
+        Component = MasterCDS
+        ComponentItem = 'Id'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'outIsErased'
+        Value = False
+        Component = MasterCDS
+        ComponentItem = 'isErased'
+        DataType = ftBoolean
+        MultiSelectSeparator = ','
+      end>
     Left = 590
     Top = 344
   end
@@ -2181,7 +2301,7 @@ inherited OrderExternalUnitForm: TOrderExternalUnitForm
       end
       item
         Name = 'inIsJuridical'
-        Value = 'FALSE'
+        Value = False
         DataType = ftBoolean
         ParamType = ptInput
         MultiSelectSeparator = ','
@@ -2760,5 +2880,41 @@ inherited OrderExternalUnitForm: TOrderExternalUnitForm
     PackSize = 1
     Left = 434
     Top = 304
+  end
+  object spUpdate_Status_wms: TdsdStoredProc
+    StoredProcName = 'gpUpdate_OrderExternal_Status_wms'
+    DataSets = <>
+    OutputType = otResult
+    Params = <
+      item
+        Name = 'inMovementId'
+        Value = Null
+        Component = FormParams
+        ComponentItem = 'Id'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inStatusCode_wms'
+        Value = ''
+        Component = GuidesStatus_wms
+        ComponentItem = 'Key'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end>
+    PackSize = 1
+    Left = 240
+    Top = 96
+  end
+  object GuidesStatus_wms: TdsdGuides
+    KeyField = 'Id'
+    LookupControl = ceStatus_wms
+    FormNameParam.Value = ''
+    FormNameParam.DataType = ftString
+    FormNameParam.MultiSelectSeparator = ','
+    PositionDataSet = 'ClientDataSet'
+    Params = <>
+    Left = 320
+    Top = 88
   end
 end

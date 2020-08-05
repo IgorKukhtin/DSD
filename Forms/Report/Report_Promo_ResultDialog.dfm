@@ -1,22 +1,22 @@
 inherited Report_Promo_ResultDialogForm: TReport_Promo_ResultDialogForm
   Caption = #1055#1072#1088#1072#1084#1077#1090#1088#1099' '#1086#1090#1095#1077#1090#1072
-  ClientHeight = 239
+  ClientHeight = 280
   ClientWidth = 432
   ExplicitWidth = 438
-  ExplicitHeight = 267
+  ExplicitHeight = 308
   PixelsPerInch = 96
   TextHeight = 13
   inherited bbOk: TcxButton
     Left = 114
-    Top = 188
+    Top = 236
     ExplicitLeft = 114
-    ExplicitTop = 188
+    ExplicitTop = 236
   end
   inherited bbCancel: TcxButton
     Left = 258
-    Top = 188
+    Top = 236
     ExplicitLeft = 258
-    ExplicitTop = 188
+    ExplicitTop = 236
   end
   object cxLabel1: TcxLabel [2]
     Left = 26
@@ -99,17 +99,34 @@ inherited Report_Promo_ResultDialogForm: TReport_Promo_ResultDialogForm
     TabOrder = 12
     Width = 179
   end
+  object cxLabel6: TcxLabel [13]
+    Left = 26
+    Top = 197
+    Caption = #1070#1088'. '#1083#1080#1094#1086':'
+  end
+  object ceJuridical: TcxButtonEdit [14]
+    Left = 111
+    Top = 193
+    Properties.Buttons = <
+      item
+        Default = True
+        Kind = bkEllipsis
+      end>
+    Properties.ReadOnly = True
+    TabOrder = 14
+    Width = 290
+  end
   inherited UserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn
     Left = 128
-    Top = 192
+    Top = 240
   end
   inherited cxPropertiesStore: TcxPropertiesStore
     Left = 101
-    Top = 192
+    Top = 240
   end
   inherited ActionList: TActionList
     Left = 156
-    Top = 191
+    Top = 239
   end
   inherited FormParams: TdsdFormParams
     Params = <
@@ -186,9 +203,25 @@ inherited Report_Promo_ResultDialogForm: TReport_Promo_ResultDialogForm
         DataType = ftBoolean
         ParamType = ptInput
         MultiSelectSeparator = ','
+      end
+      item
+        Name = 'JuridicalId'
+        Value = Null
+        Component = GuidesJuridical
+        ComponentItem = 'Key'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'JuridicalName'
+        Value = Null
+        Component = GuidesJuridical
+        ComponentItem = 'TextValue'
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
       end>
     Left = 37
-    Top = 184
   end
   object UnitGuides: TdsdGuides
     KeyField = 'Id'
@@ -255,5 +288,32 @@ inherited Report_Promo_ResultDialogForm: TReport_Promo_ResultDialogForm
       end>
     Left = 196
     Top = 136
+  end
+  object GuidesJuridical: TdsdGuides
+    KeyField = 'Id'
+    LookupControl = ceJuridical
+    FormNameParam.Value = 'TJuridical_ObjectForm'
+    FormNameParam.DataType = ftString
+    FormNameParam.MultiSelectSeparator = ','
+    FormName = 'TJuridical_ObjectForm'
+    PositionDataSet = 'MasterCDS'
+    Params = <
+      item
+        Name = 'Key'
+        Value = ''
+        Component = GuidesJuridical
+        ComponentItem = 'Key'
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'TextValue'
+        Value = ''
+        Component = GuidesJuridical
+        ComponentItem = 'TextValue'
+        DataType = ftString
+        MultiSelectSeparator = ','
+      end>
+    Left = 257
+    Top = 185
   end
 end

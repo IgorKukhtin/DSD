@@ -119,9 +119,9 @@ type
     ceStatus_wms: TcxButtonEdit;
     GuidesStatus_wms: TdsdGuides;
     spUpdate_Status_wms: TdsdStoredProc;
-    ChangeGuidesStatus1: TChangeGuidesStatus;
-    ChangeGuidesStatus2: TChangeGuidesStatus;
-    ChangeGuidesStatus3: TChangeGuidesStatus;
+    ChangeGuidesStatuswms1: TChangeGuidesStatus;
+    ChangeGuidesStatuswms2: TChangeGuidesStatus;
+    ChangeGuidesStatuswms3: TChangeGuidesStatus;
   private
     { Private declarations }
   public

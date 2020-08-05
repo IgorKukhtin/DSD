@@ -995,10 +995,10 @@ begin
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TOrderExternalItemJournalForm'));
   TdsdFormStorageFactory.GetStorage.Load('TOrderExternalItemJournalForm');
   // заявки на главный склад
-  {
+
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TOrderExternalUnitForm'));
   TdsdFormStorageFactory.GetStorage.Load('TOrderExternalUnitForm');
-  }
+
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TOrderExternalUnitJournalForm'));
   TdsdFormStorageFactory.GetStorage.Load('TOrderExternalUnitJournalForm');
   //
@@ -2609,17 +2609,17 @@ begin
 
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_Promo_TradeForm'));
   TdsdFormStorageFactory.GetStorage.Load('TReport_Promo_TradeForm');
-
+   }
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_Promo_ResultForm'));
   TdsdFormStorageFactory.GetStorage.Load('TReport_Promo_ResultForm');
-
+  {
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_Promo_Result_TradeForm'));
   TdsdFormStorageFactory.GetStorage.Load('TReport_Promo_Result_TradeForm');
-
+  }
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_Promo_ResultDialogForm'));
   TdsdFormStorageFactory.GetStorage.Load('TReport_Promo_ResultDialogForm');
   //
-
+  {
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_PromoPlanForm'));
   TdsdFormStorageFactory.GetStorage.Load('TReport_PromoPlanForm');
   //
