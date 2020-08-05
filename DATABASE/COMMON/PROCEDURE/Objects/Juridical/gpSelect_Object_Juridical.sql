@@ -104,7 +104,9 @@ BEGIN
                        )
 
  , tmpObjectBoolean AS (SELECT ObjectBoolean.*
-                       FROM ObjectBoolean
+                       FROM tmpJuridical
+                            JOIN ObjectBoolean ON ObjectBoolean.ObjectId = tmpJuridical.Id
+                       /*FROM ObjectBoolean
                        WHERE ObjectBoolean.ObjectId IN (SELECT DISTINCT tmpJuridical.Id FROM tmpJuridical)
                          AND ObjectBoolean.DescId IN (zc_ObjectBoolean_Juridical_isCorporate()
                                                     , zc_ObjectBoolean_Juridical_isTaxSummary()
@@ -114,7 +116,7 @@ BEGIN
                                                     , zc_ObjectBoolean_Juridical_isOrderMin()
                                                     , zc_ObjectBoolean_Juridical_isBranchAll()
                                                     , zc_ObjectBoolean_Juridical_isVatPrice()
-                                                    )
+                                                    )*/
                        )
 
  , tmpObjectFloat AS (SELECT ObjectFloat.*
