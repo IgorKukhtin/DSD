@@ -687,11 +687,13 @@ inherited OrderExternalForm: TOrderExternalForm
     object cxLabel20: TcxLabel
       Left = 661
       Top = 85
-      Caption = #1057#1090#1072#1090#1091#1089' '#1042#1052#1057
+      Caption = #1057#1090#1072#1090#1091#1089' ('#1086#1073#1084#1077#1085' '#1089' '#1042#1052#1057')'
     end
     object ceStatus_wms: TcxButtonEdit
       Left = 661
       Top = 103
+      Hint = #1057#1090#1072#1090#1091#1089' ('#1086#1073#1084#1077#1085' '#1089' '#1042#1052#1057')'
+      ParentShowHint = False
       Properties.Buttons = <
         item
           Action = ChangeGuidesStatus1
@@ -708,6 +710,7 @@ inherited OrderExternalForm: TOrderExternalForm
         end>
       Properties.Images = dmMain.ImageList
       Properties.ReadOnly = True
+      ShowHint = True
       TabOrder = 42
       Width = 168
     end

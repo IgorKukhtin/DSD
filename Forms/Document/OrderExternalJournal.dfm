@@ -188,7 +188,7 @@ inherited OrderExternalJournalForm: TOrderExternalJournalForm
             Width = 75
           end
           object StatusCode_wms: TcxGridDBColumn
-            Caption = #1057#1090#1072#1090#1091#1089' '#1042#1052#1057
+            Caption = #1057#1090#1072#1090#1091#1089' ('#1086#1073#1084#1077#1085' '#1089' '#1042#1052#1057')'
             DataBinding.FieldName = 'StatusCode_wms'
             PropertiesClassName = 'TcxImageComboBoxProperties'
             Properties.Images = dmMain.ImageList
