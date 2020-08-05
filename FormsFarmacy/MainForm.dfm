@@ -4,7 +4,7 @@ inherited MainForm: TMainForm
   ClientWidth = 730
   KeyPreview = True
   ExplicitWidth = 746
-  ExplicitHeight = 203
+  ExplicitHeight = 204
   PixelsPerInch = 96
   TextHeight = 13
   object cxGrid: TcxGrid [0]
@@ -3812,6 +3812,18 @@ inherited MainForm: TMainForm
       GuiParams = <>
       isShowModal = False
     end
+    object actReport_LeftSend: TdsdOpenForm
+      Category = #1057#1083#1091#1078#1077#1073#1085#1099#1077
+      MoveParams = <>
+      Caption = #1050#1072#1084#1073#1101#1082#1080' '#1087#1086' '#1087#1077#1088#1077#1084#1077#1097#1077#1085#1080#1103#1084' '#1087#1077#1088#1077#1076' '#1080#1085#1074#1077#1085#1090#1072#1088#1080#1079#1072#1094#1080#1077#1081
+      Hint = #1050#1072#1084#1073#1101#1082#1080' '#1087#1086' '#1087#1077#1088#1077#1084#1077#1097#1077#1085#1080#1103#1084' '#1087#1077#1088#1077#1076' '#1080#1085#1074#1077#1085#1090#1072#1088#1080#1079#1072#1094#1080#1077#1081
+      FormName = 'TReport_LeftSendForm'
+      FormNameParam.Value = 'TReport_LeftSendForm'
+      FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
+      GuiParams = <>
+      isShowModal = False
+    end
   end
   inherited UserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn
     Left = 496
@@ -4891,6 +4903,9 @@ inherited MainForm: TMainForm
         end
         object N239: TMenuItem
           Action = actTReport_Check_NumberChecks
+        end
+        object N249: TMenuItem
+          Action = actReport_LeftSend
         end
       end
       object miTaxUnit: TMenuItem [3]

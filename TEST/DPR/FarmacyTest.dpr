@@ -918,7 +918,8 @@ uses
   InventoryHouseholdInventoryJournal in '..\..\FormsFarmacy\Document\InventoryHouseholdInventoryJournal.pas' {InventoryHouseholdInventoryJournalForm: TParentForm},
   LoyaltyInsertPromoCodeDialog in '..\..\FormsFarmacy\Document\LoyaltyInsertPromoCodeDialog.pas' {LoyaltyInsertPromoCodeDialogForm: TParentForm},
   Report_Check_Count in '..\..\FormsFarmacy\Report\Report_Check_Count.pas' {Report_Check_CountForm: TParentForm},
-  Report_Check_CountDialog in '..\..\FormsFarmacy\Report\Report_Check_CountDialog.pas' {Report_Check_CountDialogForm: TParentForm};
+  Report_Check_CountDialog in '..\..\FormsFarmacy\Report\Report_Check_CountDialog.pas' {Report_Check_CountDialogForm: TParentForm},
+  Report_LeftSend in '..\..\FormsFarmacy\Report\Report_LeftSend.pas' {Report_LeftSendForm: TParentForm};
 
 {$R *.res}
 {$R DevExpressRus.res}

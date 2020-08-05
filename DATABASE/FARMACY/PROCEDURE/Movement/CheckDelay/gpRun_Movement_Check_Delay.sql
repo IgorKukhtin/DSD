@@ -46,11 +46,11 @@ BEGIN
                                   AND MovementItem.isErased   = FALSE
                       GROUP BY tmpMov.Id, tmpMov.UnitId, MovementItem.ObjectId
                      )
-          , tmpMI AS (SELECT tmpMI_all.UnitId, tmpMI_all.GoodsId, SUM (tmpMI_all.Amount) AS Amount
+       , tmpMI AS (SELECT tmpMI_all.UnitId, tmpMI_all.GoodsId, SUM (tmpMI_all.Amount) AS Amount
                       FROM tmpMI_all
                       GROUP BY tmpMI_all.UnitId, tmpMI_all.GoodsId
                      )
-          , tmpRemains AS (SELECT tmpMI.GoodsId
+       , tmpRemains AS (SELECT tmpMI.GoodsId
                                 , tmpMI.UnitId
                                 , tmpMI.Amount           AS Amount_mi
                                 , COALESCE (SUM (Container.Amount), 0) AS Amount_remains
@@ -64,11 +64,11 @@ BEGIN
                                   , tmpMI.Amount
                            HAVING COALESCE (SUM (Container.Amount), 0) < tmpMI.Amount
                           )
-          , tmpErr AS (SELECT DISTINCT tmpMov.Id AS MovementId
-                       FROM tmpMov
-                            INNER JOIN tmpMI_all ON tmpMI_all.MovementId = tmpMov.Id
-                            INNER JOIN tmpRemains ON tmpRemains.GoodsId = tmpMI_all.GoodsId
-                                                 AND tmpRemains.UnitId  = tmpMI_all.UnitId
+       , tmpErr AS (SELECT DISTINCT tmpMov.Id AS MovementId
+                    FROM tmpMov
+                         INNER JOIN tmpMI_all ON tmpMI_all.MovementId = tmpMov.Id
+                         INNER JOIN tmpRemains ON tmpRemains.GoodsId = tmpMI_all.GoodsId
+                                              AND tmpRemains.UnitId  = tmpMI_all.UnitId
                       )
     SELECT Movement.Id
     FROM tmpMov
@@ -93,9 +93,18 @@ BEGIN
          LEFT JOIN MovementDate AS MovementDate_UserConfirmedKind
                                 ON MovementDate_UserConfirmedKind.MovementId = Movement.Id
                                AND MovementDate_UserConfirmedKind.DescId = zc_MovementDate_UserConfirmedKind()
-    WHERE CASE WHEN MovementString_InvNumberOrder.ValueData <> '' AND COALESCE (Object_CashMember.ValueData, '') = ''
-               THEN DATE_TRUNC ('DAY', MovementDate_UserConfirmedKind.ValueData) + INTERVAL '3 DAY'
-               ELSE DATE_TRUNC ('DAY', Movement.OperDate) + INTERVAL '3 DAY' END <= CURRENT_DATE) AS Movement;
+
+         LEFT JOIN MovementDate AS MovementDate_Delay
+                                ON MovementDate_Delay.MovementId = Movement.Id
+                               AND MovementDate_Delay.DescId = zc_MovementDate_Delay()
+
+    WHERE CASE WHEN MovementDate_Delay.ValueData is not Null 
+          THEN MovementDate_Delay.ValueData
+          ELSE CASE WHEN MovementString_InvNumberOrder.ValueData <> '' AND COALESCE (Object_CashMember.ValueData, '') = ''
+               THEN MovementDate_UserConfirmedKind.ValueData
+               ELSE Movement.OperDate END END <= DATE_TRUNC ('DAY', CURRENT_DATE) - INTERVAL '4 DAY' 
+       OR MovementDate_Delay.ValueData is Null AND MovementString_InvNumberOrder.ValueData <> '' AND COALESCE (Object_CashMember.ValueData, '') = ''
+      AND Movement.OperDate <= DATE_TRUNC ('DAY', CURRENT_DATE) - INTERVAL '10 DAY') AS Movement;
 END;
 $BODY$
   LANGUAGE PLPGSQL VOLATILE;
@@ -103,6 +112,8 @@ $BODY$
 /*
  ÈÑÒÎÐÈß ÐÀÇÐÀÁÎÒÊÈ: ÄÀÒÀ, ÀÂÒÎÐ
                Ôåëîíþê È.Â.   Êóõòèí È.Â.   Êëèìåíòüåâ Ê.È.   Ìàíüêî Ä.À.  Øàáëèé Î.Â.
+ 04.07.19                                                                    *
+ 18.04.19                                                                    *
  04.04.19                                                                    *
 */
 -- òåñò

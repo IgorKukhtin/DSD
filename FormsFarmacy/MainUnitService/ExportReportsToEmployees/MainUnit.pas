@@ -245,8 +245,10 @@ begin
                                           FormatDateTime('dd.mm.yyyy', DateStart) + ' по ' +
                                           FormatDateTime('dd.mm.yyyy', DateEnd));
   FileName := SchedulerCDS.FieldByName('Name').AsString;
-  Subject := FileName + ' за период с ' + FormatDateTime('dd.mm.yyyy', DateStart) + ' по ' +
-                                          FormatDateTime('dd.mm.yyyy', DateEnd);
+  if SchedulerCDS.FieldByName('Interval').AsInteger = 1 then
+    Subject := FileName + ' за ' + FormatDateTime('dd.mm.yyyy', DateEnd)
+  else Subject := FileName + ' за период с ' + FormatDateTime('dd.mm.yyyy', DateStart) + ' по ' +
+                                               FormatDateTime('dd.mm.yyyy', DateEnd);
 
   if qryReport_Upload.Active then qryReport_Upload.Close;
   if grtvReport.ColumnCount > 0 then grtvReport.ClearItems;
@@ -255,8 +257,10 @@ begin
 
   qryReport_Upload.SQL.Text := SchedulerCDS.FieldByName('Proceure').AsString;
 
-  qryReport_Upload.Params.ParamByName('inStartDate').Value := DateStart;
-  qryReport_Upload.Params.ParamByName('inEndDate').Value := DateEnd;
+  if Assigned(qryReport_Upload.Params.FindParam('inStartDate')) then
+    qryReport_Upload.Params.ParamByName('inStartDate').Value := DateStart;
+  if Assigned(qryReport_Upload.Params.FindParam('inEndDate')) then
+    qryReport_Upload.Params.ParamByName('inEndDate').Value := DateEnd;
 
   OpenAndFormatSQL;
 
