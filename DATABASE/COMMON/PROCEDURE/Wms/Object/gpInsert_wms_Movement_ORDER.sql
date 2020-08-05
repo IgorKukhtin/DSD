@@ -161,7 +161,7 @@ BEGIN
                                AND Movement.DescId   = zc_Movement_OrderExternal()
                              --AND Movement.StatusId = zc_Enum_Status_Complete()
                                AND MovementLinkObject_To.ObjectId = 8459 -- Склад Реализации
-                               AND Movement.InvNumber IN ('1050268', '1050273', '1050278') -- 952893
+                               AND Movement.InvNumber IN ('1066897') -- 952893
                                AND MovementItem.Amount + COALESCE (MIF_AmountSecond.ValueData, 0) > 0
                             )
           -- результат - Документы
