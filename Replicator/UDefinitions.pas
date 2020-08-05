@@ -16,6 +16,11 @@ type
     RecCount: Integer;
   end;
 
+  PCompareMasterSlave = ^TCompareMasterSlave;
+  TCompareMasterSlave = record
+    ResultSQL: string;
+  end;
+
   TServerRank = (srMaster, srSlave);
 
   TThreadKind = (tknDriven, tknNondriven);
