@@ -1,22 +1,22 @@
 inherited Report_PromoDialogForm: TReport_PromoDialogForm
   Caption = #1054#1090#1095#1077#1090' '#1087#1086' '#1087#1086#1076#1088#1072#1079#1076#1077#1083#1077#1085#1080#1102
-  ClientHeight = 151
-  ClientWidth = 458
-  ExplicitWidth = 464
-  ExplicitHeight = 179
+  ClientHeight = 196
+  ClientWidth = 468
+  ExplicitWidth = 474
+  ExplicitHeight = 224
   PixelsPerInch = 96
   TextHeight = 13
   inherited bbOk: TcxButton
     Left = 114
-    Top = 115
+    Top = 155
     ExplicitLeft = 114
-    ExplicitTop = 115
+    ExplicitTop = 155
   end
   inherited bbCancel: TcxButton
     Left = 258
-    Top = 115
+    Top = 155
     ExplicitLeft = 258
-    ExplicitTop = 115
+    ExplicitTop = 155
   end
   object cxLabel1: TcxLabel [2]
     Left = 26
@@ -82,17 +82,34 @@ inherited Report_PromoDialogForm: TReport_PromoDialogForm
     TabOrder = 10
     Width = 145
   end
+  object cxLabel6: TcxLabel [11]
+    Left = 56
+    Top = 115
+    Caption = #1070#1088'. '#1083#1080#1094#1086
+  end
+  object ceJuridical: TcxButtonEdit [12]
+    Left = 139
+    Top = 114
+    Properties.Buttons = <
+      item
+        Default = True
+        Kind = bkEllipsis
+      end>
+    Properties.ReadOnly = True
+    TabOrder = 12
+    Width = 301
+  end
   inherited UserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn
     Left = 128
-    Top = 107
+    Top = 147
   end
   inherited cxPropertiesStore: TcxPropertiesStore
-    Left = 101
-    Top = 107
+    Left = 29
+    Top = 147
   end
   inherited ActionList: TActionList
     Left = 156
-    Top = 106
+    Top = 146
   end
   inherited FormParams: TdsdFormParams
     Params = <
@@ -115,7 +132,7 @@ inherited Report_PromoDialogForm: TReport_PromoDialogForm
       item
         Name = 'UnitId'
         Value = Null
-        Component = UnitGuides
+        Component = GuidesUnit
         ComponentItem = 'Key'
         ParamType = ptInput
         MultiSelectSeparator = ','
@@ -123,7 +140,7 @@ inherited Report_PromoDialogForm: TReport_PromoDialogForm
       item
         Name = 'UnitName'
         Value = Null
-        Component = UnitGuides
+        Component = GuidesUnit
         ComponentItem = 'TextValue'
         DataType = ftString
         ParamType = ptInput
@@ -152,11 +169,28 @@ inherited Report_PromoDialogForm: TReport_PromoDialogForm
         DataType = ftBoolean
         ParamType = ptInput
         MultiSelectSeparator = ','
+      end
+      item
+        Name = 'JuridicalId'
+        Value = Null
+        Component = GuidesJuridical
+        ComponentItem = 'Key'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'JuridicalName'
+        Value = Null
+        Component = GuidesJuridical
+        ComponentItem = 'TextValue'
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
       end>
-    Left = 101
-    Top = 75
+    Left = 197
+    Top = 147
   end
-  object UnitGuides: TdsdGuides
+  object GuidesUnit: TdsdGuides
     KeyField = 'Id'
     LookupControl = edUnit
     FormNameParam.Value = 'TUnit_ObjectForm'
@@ -168,7 +202,7 @@ inherited Report_PromoDialogForm: TReport_PromoDialogForm
       item
         Name = 'Key'
         Value = ''
-        Component = UnitGuides
+        Component = GuidesUnit
         ComponentItem = 'Key'
         DataType = ftString
         ParamType = ptInput
@@ -177,7 +211,7 @@ inherited Report_PromoDialogForm: TReport_PromoDialogForm
       item
         Name = 'TextValue'
         Value = ''
-        Component = UnitGuides
+        Component = GuidesUnit
         ComponentItem = 'TextValue'
         DataType = ftString
         ParamType = ptInput
@@ -191,5 +225,32 @@ inherited Report_PromoDialogForm: TReport_PromoDialogForm
     DateEnd = deEnd
     Left = 232
     Top = 67
+  end
+  object GuidesJuridical: TdsdGuides
+    KeyField = 'Id'
+    LookupControl = ceJuridical
+    FormNameParam.Value = 'TJuridical_ObjectForm'
+    FormNameParam.DataType = ftString
+    FormNameParam.MultiSelectSeparator = ','
+    FormName = 'TJuridical_ObjectForm'
+    PositionDataSet = 'MasterCDS'
+    Params = <
+      item
+        Name = 'Key'
+        Value = ''
+        Component = GuidesJuridical
+        ComponentItem = 'Key'
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'TextValue'
+        Value = ''
+        Component = GuidesJuridical
+        ComponentItem = 'TextValue'
+        DataType = ftString
+        MultiSelectSeparator = ','
+      end>
+    Left = 265
+    Top = 105
   end
 end

@@ -87,6 +87,9 @@ type
     spSelect_Movement_Promo_Print: TdsdStoredProc;
     actPrint_Mov: TdsdPrintAction;
     bbPrint_Mov: TdxBarButton;
+    cxLabel6: TcxLabel;
+    ceJuridical: TcxButtonEdit;
+    GuidesJuridical: TdsdGuides;
   private
     { Private declarations }
   public

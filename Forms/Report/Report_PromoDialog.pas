@@ -30,11 +30,14 @@ type
     deEnd: TcxDateEdit;
     cxLabel17: TcxLabel;
     edUnit: TcxButtonEdit;
-    UnitGuides: TdsdGuides;
+    GuidesUnit: TdsdGuides;
     PeriodChoice: TPeriodChoice;
     cbPromo: TcxCheckBox;
     cbTender: TcxCheckBox;
     cbGoodsKind: TcxCheckBox;
+    cxLabel6: TcxLabel;
+    ceJuridical: TcxButtonEdit;
+    GuidesJuridical: TdsdGuides;
   private
     { Private declarations }
   public
