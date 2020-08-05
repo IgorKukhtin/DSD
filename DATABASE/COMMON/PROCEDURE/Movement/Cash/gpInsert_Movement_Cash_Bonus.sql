@@ -2,8 +2,10 @@
 
 DROP FUNCTION IF EXISTS gpInsert_Movement_Cash_Bonus (Integer, Integer, Integer, Integer, TFloat, TVarChar);
 DROP FUNCTION IF EXISTS gpInsert_Movement_Cash_Bonus (Integer, Integer, Integer, Integer, Integer, TFloat, TVarChar);
+DROP FUNCTION IF EXISTS gpInsert_Movement_Cash_Bonus (TDateTime, Integer, Integer, Integer, Integer, Integer, TFloat, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpInsert_Movement_Cash_Bonus(
+    IN inOperDate             TDateTime , --
     IN inCashId               Integer   , -- касса
     IN inCurrencyId           Integer   , -- ¬алюта
     IN inInfoMoneyId          Integer   , -- ”правленческие статьи
@@ -43,7 +45,7 @@ BEGIN
      vbId := lpInsertUpdate_Movement_Cash (ioId          := 0
                                          , inParentId    := NULL
                                          , inInvNumber   := CAST (NEXTVAL ('Movement_Cash_seq') AS TVarChar)
-                                         , inOperDate    := CAST (CURRENT_DATE AS TDateTime)
+                                         , inOperDate    := inOperDate --CAST (CURRENT_DATE AS TDateTime)
                                          , inServiceDate := NULL           :: TDateTime
                                          , inAmountIn    := 0              :: TFloat
                                          , inAmountOut   := inRemainsToPay :: TFloat
@@ -96,3 +98,25 @@ $BODY$
 
 -- тест
 -- SELECT * FROM gpInsertUpdate_Movement_Cash (ioId:= 0, inInvNumber:= '-1', inOperDate:= '01.01.2013', inOperDatePartner:= '01.01.2013', inInvNumberPartner:= 'xxx', inPriceWithVAT:= true, inVATPercent:= 20, inChangePercent:= 0, inFromId:= 1, inToId:= 2, inPaidKindId:= 1, inContractId:= 0, inCarId:= 0, inPersonalDriverId:= 0, inPersonalPackerId:= 0, inSession:= '2')
+
+/*
+WITH tmpMovement AS (select * from Movement
+
+where Movement.OperDate >= '03.08.2020'
+and Movement.DescId = zc_Movement_Cash()
+and Movement.StatusId <>8
+)
+
+, tmpMI AS (
+SELECT MovementItem.*
+ from tmpMovement AS Movement
+Inner join MovementItem ON MovementItem.MovementId = Movement.Id
+   AND MovementItem.DescId = zc_MI_Master()
+)
+WHERE MovementItem.Amount < -0
+--where Movement.StatusId <>8
+--and MovementItem.Amount = -5014.12
+
+--SELECT zc_Enum_Status_Erased()  9
+--SELECT zc_Enum_Status_UnComplete()  7
+*/
