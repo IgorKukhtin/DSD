@@ -33,9 +33,6 @@ RETURNS TABLE (Id Integer, InvNumber TVarChar, OperDate TDateTime
              , ContractId Integer, ContractCode Integer, ContractInvNumber TVarChar, ContractTagName TVarChar
              , BranchId Integer, BranchName TVarChar
              , UnitCode Integer, UnitName TVarChar
-             , CarId Integer, CarName TVarChar
-             , CarModelId Integer, CarModelName TVarChar
-             , UnitId_Car Integer, UnitName_Car TVarChar
              , CurrencyName TVarChar, CurrencyPartnerName TVarChar
              , CurrencyValue TFloat, ParValue TFloat
              , CurrencyPartnerValue TFloat, ParPartnerValue TFloat
@@ -265,13 +262,11 @@ BEGIN
                        WHERE MovementItemLinkObject.MovementItemId IN (SELECT DISTINCT tmpMI.Id FROM tmpMI)
                          AND MovementItemLinkObject.DescId IN (zc_MILinkObject_MoneyPlace()
                                                              , zc_MILinkObject_InfoMoney()
-                                                             , zc_MILinkObject_Member()
-                                                             , zc_MILinkObject_Position()
+                                                             , zc_MILinkObject_Branch()
                                                              , zc_MILinkObject_Contract()
                                                              , zc_MILinkObject_Unit()
                                                              , zc_MILinkObject_Currency()
                                                              , zc_MILinkObject_CurrencyPartner()
-                                                             , zc_MILinkObject_Car()
                                                              )
                       )
 
@@ -394,13 +389,6 @@ BEGIN
                         , Object_Unit.ObjectCode             AS UnitCode
                         , Object_Unit.ValueData              AS UnitName
                         
-                        , Object_Car.Id                      AS CarId
-                        , Object_Car.ValueData               AS CarName
-                        , Object_CarModel.Id                 AS CarModelId
-                        , Object_CarModel.ValueData          AS CarModelName
-                        , Object_Unit_Car.Id                 AS UnitId_Car
-                        , Object_Unit_Car.ValueData          AS UnitName_Car
-             
                         , Object_Currency.ValueData                     AS CurrencyName
                         , Object_CurrencyPartner.ValueData              AS CurrencyPartnerName
                         , MovementFloat_CurrencyValue.ValueData         AS CurrencyValue
@@ -457,7 +445,7 @@ BEGIN
                         -- факт. курс на дату - для курс разн.
                       , CASE WHEN MovementFloat_AmountCurrency.ValueData <> 0 THEN (ABS (MovementItem.Amount) + tmpMIС.Amount) / ABS (MovementFloat_AmountCurrency.ValueData) ELSE 0 END :: TFloat AS CurrencyValue_mi_calc
              
-                      , tmpContainerBonus.Amount ::TFloat AS AmountBonus
+                      , COALESCE (tmpContainerBonus.Amount,0) ::TFloat AS AmountBonus
                       
                       , SUM (CASE WHEN MILinkObject_Currency.ObjectId <> inCurrencyId AND inCurrencyId = zc_Enum_Currency_Basis()
                                    AND MovementItem.Amount > 0
@@ -465,10 +453,11 @@ BEGIN
                                   WHEN MILinkObject_Currency.ObjectId <> inCurrencyId AND inCurrencyId = zc_Enum_Currency_Basis()
                                        THEN 0
                                   WHEN MovementItem.Amount < 0
-                                       THEN -1 * MovementItem.Amount
+                                       THEN -1 * COALESCE (MovementItem.Amount,0)
                                   ELSE 0
-                             END) OVER (PARTITION BY Object_Juridical.Id, View_InfoMoney.InfoMoneyId, View_Contract_InvNumber.ContractId, Object_MoneyPlace.Id)    ::TFloat  AS TotalAmountOut
-                      , ROW_NUMBER() OVER (PARTITION BY Object_Juridical.Id, View_InfoMoney.InfoMoneyId, View_Contract_InvNumber.ContractId, Object_MoneyPlace.Id) ::Integer AS Ord
+                             END
+                             ) OVER (PARTITION BY Object_Branch.Id, Object_Juridical.Id, View_InfoMoney.InfoMoneyId, View_Contract_InvNumber.ContractId, Object_MoneyPlace.Id)       ::TFloat  AS TotalAmountOut
+                      , ROW_NUMBER() OVER (PARTITION BY Object_Branch.Id, Object_Juridical.Id, View_InfoMoney.InfoMoneyId, View_Contract_InvNumber.ContractId, Object_MoneyPlace.Id) ::Integer AS Ord
                     FROM tmpMovement
              
                          LEFT JOIN tmpMIС ON tmpMIС.MovementId = tmpMovement.Id
@@ -541,7 +530,11 @@ BEGIN
                                            ON MILinkObject_Unit.MovementItemId = MovementItem.Id
                                           AND MILinkObject_Unit.DescId = zc_MILinkObject_Unit()
                          LEFT JOIN Object AS Object_Unit ON Object_Unit.Id = MILinkObject_Unit.ObjectId
-             
+
+                         LEFT JOIN tmpMILO AS MILinkObject_Branch
+                                           ON MILinkObject_Branch.MovementItemId = MovementItem.Id
+                                          AND MILinkObject_Branch.DescId = zc_MILinkObject_Branch()
+
                          LEFT JOIN tmpMIDate_ServiceDate AS MIDate_ServiceDate
                                                          ON MIDate_ServiceDate.MovementItemId = MovementItem.Id
                                                         AND MIDate_ServiceDate.DescId = zc_MIDate_ServiceDate()
@@ -562,12 +555,7 @@ BEGIN
                                            ON MILinkObject_CurrencyPartner.MovementItemId = MovementItem.Id
                                           AND MILinkObject_CurrencyPartner.DescId = zc_MILinkObject_CurrencyPartner()
                          LEFT JOIN Object AS Object_CurrencyPartner ON Object_CurrencyPartner.Id = MILinkObject_CurrencyPartner.ObjectId
-             
-                         LEFT JOIN tmpMILO AS MILinkObject_Car
-                                           ON MILinkObject_Car.MovementItemId = MovementItem.Id
-                                          AND MILinkObject_Car.DescId = zc_MILinkObject_Car()
-                         LEFT JOIN Object AS Object_Car ON Object_Car.Id = MILinkObject_Car.ObjectId
-             
+
                          LEFT JOIN tmpMovementFloat AS MovementFloat_AmountCurrency
                                                     ON MovementFloat_AmountCurrency.MovementId = tmpMovement.Id
                                                    AND MovementFloat_AmountCurrency.DescId = zc_MovementFloat_AmountCurrency()
@@ -587,18 +575,7 @@ BEGIN
                          LEFT JOIN tmpMovementFloat AS MovementFloat_ParPartnerValue
                                                     ON MovementFloat_ParPartnerValue.MovementId = tmpMovement.Id
                                                    AND MovementFloat_ParPartnerValue.DescId = zc_MovementFloat_ParPartnerValue()
-             
-                         --свойства авто
-                         LEFT JOIN ObjectLink AS Car_CarModel
-                                              ON Car_CarModel.ObjectId = MILinkObject_Car.ObjectId
-                                             AND Car_CarModel.DescId = zc_ObjectLink_Car_CarModel()
-                         LEFT JOIN Object AS Object_CarModel ON Object_CarModel.Id = Car_CarModel.ChildObjectId
-             
-                         LEFT JOIN ObjectLink AS ObjectLink_Car_Unit
-                                              ON ObjectLink_Car_Unit.ObjectId = MILinkObject_Car.ObjectId
-                                             AND ObjectLink_Car_Unit.DescId = zc_ObjectLink_Car_Unit()
-                         LEFT JOIN Object AS Object_Unit_Car ON Object_Unit_Car.Id = ObjectLink_Car_Unit.ChildObjectId
-                         
+
                          LEFT JOIN ObjectLink AS ObjectLink_Partner_Juridical
                                               ON ObjectLink_Partner_Juridical.ObjectId = MILinkObject_MoneyPlace.ObjectId
                                              AND ObjectLink_Partner_Juridical.DescId = zc_ObjectLink_Partner_Juridical()
@@ -606,6 +583,7 @@ BEGIN
                          FULL JOIN tmpContainerBonus ON tmpContainerBonus.JuridicalId = COALESCE (ObjectLink_Partner_Juridical.ChildObjectId, MILinkObject_MoneyPlace.ObjectId)
                                                     AND tmpContainerBonus.PartnerId   = MILinkObject_MoneyPlace.ObjectId
                                                     AND tmpContainerBonus.InfoMoneyId = MILinkObject_InfoMoney.ObjectId
+                                                    AND COALESCE (tmpContainerBonus.BranchId,0)   = COALESCE (MILinkObject_Branch.ObjectId,0)
                                                     AND COALESCE (tmpContainerBonus.ContractId,0) = COALESCE (MILinkObject_Contract.ObjectId,0)
 
                          LEFT JOIN Object AS Object_Juridical ON Object_Juridical.Id = COALESCE (tmpContainerBonus.JuridicalId, ObjectLink_Partner_Juridical.ChildObjectId, MILinkObject_MoneyPlace.ObjectId)
@@ -622,7 +600,7 @@ BEGIN
                                               ON OL_Cash_Branch.ObjectId = Object_Cash.Id
                                              AND OL_Cash_Branch.DescId = zc_ObjectLink_Cash_Branch()
 
-                         LEFT JOIN Object AS Object_Branch ON Object_Branch.Id = COALESCE (tmpContainerBonus.BranchId, OL_Cash_Branch.ObjectId)
+                         LEFT JOIN Object AS Object_Branch ON Object_Branch.Id = COALESCE (tmpContainerBonus.BranchId, MILinkObject_Branch.ObjectId, OL_Cash_Branch.ObjectId)
 
                          LEFT JOIN ObjectLink AS OL_Juridical_Retail
                                               ON OL_Juridical_Retail.ObjectId = Object_Juridical.Id
@@ -667,12 +645,6 @@ BEGIN
             , tmpRes.BranchName
             , tmpRes.UnitCode
             , tmpRes.UnitName
-            , tmpRes.CarId
-            , tmpRes.CarName
-            , tmpRes.CarModelId
-            , tmpRes.CarModelName
-            , tmpRes.UnitId_Car
-            , tmpRes.UnitName_Car
             , tmpRes.CurrencyName
             , tmpRes.CurrencyPartnerName
             , tmpRes.CurrencyValue
