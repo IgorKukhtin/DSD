@@ -51,6 +51,8 @@ type
     ExpirationDate: TcxGridDBColumn;
     cbAdjustment: TcxCheckBox;
     Comment: TcxGridDBColumn;
+    actPUSH: TdsdShowPUSHMessage;
+    spPUSH: TdsdStoredProc;
   private
     { Private declarations }
   public
