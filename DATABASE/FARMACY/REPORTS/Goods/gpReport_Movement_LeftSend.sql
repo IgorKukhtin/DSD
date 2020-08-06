@@ -35,6 +35,13 @@ BEGIN
      -- 2. Инвентаризации
      CREATE TEMP TABLE _tmpInvent  (Id Integer) ON COMMIT DROP;
 
+     -- 3. Все что получили
+     CREATE TEMP TABLE _tmpWasGot (Id Integer, InventID Integer, GoodsId Integer, Amount TFloat, AmountReturn  TFloat) ON COMMIT DROP;
+
+     --  4.Перемещения отправителя
+     CREATE TEMP TABLE _tmpWasSentMovement (Id Integer, InventID Integer) ON COMMIT DROP;
+
+
      PERFORM gpReport_Movement_LeftSendUnit(inInventID   := Movement.Id
                                           , inOperDate   := Movement.OperDate
                                           , inUnitID     := MovementLinkObject_Unit.ObjectId

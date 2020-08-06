@@ -64,7 +64,7 @@ BEGIN
      -- 3. Все что получили
      IF EXISTS (SELECT * FROM INFORMATION_SCHEMA.tables WHERE TABLE_NAME = LOWER ('_tmpwasgot'))
      THEN
-       DELETE FROM _tmpWasGot;
+       DELETE FROM _tmpWasGot WHERE _tmpWasGot.InventID = inInventID;
      ELSE
        CREATE TEMP TABLE _tmpWasGot (Id Integer, InventID Integer, GoodsId Integer, Amount TFloat, AmountReturn  TFloat) ON COMMIT DROP;
      END IF;
@@ -102,7 +102,7 @@ BEGIN
 
      UPDATE _tmpWasGot SET AmountReturn = CASE WHEN _tmpWasGot.Amount > _tmpWasGot.Amount THEN _tmpWasGot.Amount ELSE _tmpWasGot.Amount END
      FROM _tmpWasSent
-     WHERE _tmpWasGot.GoodsId = _tmpWasSent.GoodsId;
+     WHERE _tmpWasGot.InventID = inInventID AND _tmpWasGot.GoodsId = _tmpWasSent.GoodsId;
 
 /*raise notice 'Value 05: % % %', (SELECT COUNT(*) FROM _tmpWasSent)
                               , (SELECT COUNT(*) FROM _tmpWasGot)
@@ -114,6 +114,7 @@ BEGIN
                                        , SUM(_tmpWasGot.Amount)         AS Amount
                                        , SUM(_tmpWasGot.AmountReturn)   AS AmountReturn
                                   FROM _tmpWasGot
+                                  WHERE _tmpWasGot.InventID = inInventID
                                   GROUP BY _tmpWasGot.ID
                                   HAVING SUM(_tmpWasGot.AmountReturn) > 0 AND SUM(_tmpWasGot.Amount) > 0)
 
@@ -127,6 +128,7 @@ BEGIN
                                , SUM(_tmpWasGot.Amount)         AS Amount
                                , SUM(_tmpWasGot.AmountReturn)   AS AmountReturn
                           FROM _tmpWasGot
+                          WHERE _tmpWasGot.InventID = inInventID
                           GROUP BY _tmpWasGot.ID
                           HAVING SUM(_tmpWasGot.AmountReturn) > 0 AND SUM(_tmpWasGot.Amount) > 0)
 
@@ -140,7 +142,7 @@ BEGIN
          -- Перемещения отправителя
          IF EXISTS (SELECT * FROM INFORMATION_SCHEMA.tables WHERE TABLE_NAME = LOWER ('_tmpwassentmovement'))
          THEN
-           DELETE FROM _tmpWasSentMovement;
+           DELETE FROM _tmpWasSentMovement WHERE _tmpWasSentMovement.InventID = inInventID;
          ELSE
            CREATE TEMP TABLE _tmpWasSentMovement (Id Integer, InventID Integer) ON COMMIT DROP;
          END IF;
@@ -169,6 +171,7 @@ BEGIN
 
               INNER JOIN _tmpWasGot ON _tmpWasGot.GoodsId = MovementItem.ObjectId
                                    AND _tmpWasGot.AmountReturn > 0
+                                   AND _tmpWasGot.InventID = inInventID
 
          WHERE Movement.OperDate BETWEEN inOperDate - INTERVAL '7 DAY' AND inOperDate
            AND Movement.DescId = zc_Movement_Send()
@@ -184,6 +187,7 @@ BEGIN
                                , SUM(_tmpWasGot.Amount)         AS Amount
                                , SUM(_tmpWasGot.AmountReturn)   AS AmountReturn
                           FROM _tmpWasGot
+                          WHERE _tmpWasGot.InventID = inInventID
                           GROUP BY _tmpWasGot.ID
                           HAVING SUM(_tmpWasGot.AmountReturn) > 0 AND SUM(_tmpWasGot.Amount) > 0)
 

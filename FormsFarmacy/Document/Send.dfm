@@ -3325,6 +3325,7 @@ inherited SendForm: TSendForm
     ColorRuleList = <
       item
         ValueColumn = chColor_calc
+        ColorInValueColumn = False
         ColorValueList = <>
       end>
     ColumnAddOnList = <>
@@ -3336,6 +3337,7 @@ inherited SendForm: TSendForm
         DataSummaryItemIndex = 0
       end>
     SearchAsFilter = False
+    KeepSelectColor = True
     PropertiesCellList = <>
     Left = 318
     Top = 529

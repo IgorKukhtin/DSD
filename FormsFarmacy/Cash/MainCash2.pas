@@ -2747,9 +2747,9 @@ begin
             RecNo := nRecNo;
           end;
 
-          if nAmountPS <> FieldByName('Amount').AsCurrency then
+          if nAmountPS < FieldByName('Amount').AsCurrency then
           begin
-            ShowMessage('Количество товара <' + FieldByName('GoodsName').AsString + '> по соц.проекту не равно количеству парного товара...');
+            ShowMessage('Количество товара <' + FieldByName('GoodsName').AsString + '> по соц.проекту больше количества парного товара...');
             exit;
           end;
         end;
@@ -6229,30 +6229,52 @@ begin
         CheckCDS.Next;
       end;
 
-      if nAmountPS = 0 then
-      begin
-        nRecNo := SourceClientDataSet.RecNo;
-        SourceClientDataSet.DisableControls;
-        try
-          if SourceClientDataSet.Locate('Id', SourceClientDataSet.FieldByName('GoodsPairSunId').AsInteger, []) then
+      nRecNo := SourceClientDataSet.RecNo;
+      SourceClientDataSet.DisableControls;
+      try
+        if SourceClientDataSet.Locate('Id', SourceClientDataSet.FieldByName('GoodsPairSunId').AsInteger, []) then
+        begin
+          if SourceClientDataSet.FieldByName('Remains').AsCurrency >= nAmount then
           begin
-            if SourceClientDataSet.FieldByName('Remains').AsCurrency >= nAmount then
-            begin
-              InsertUpdateBillCheckItems;
-            end else
+            InsertUpdateBillCheckItems;
+          end else
+          begin
+            if nAmountPS < nAmount then
             begin
               ShowMessage('Не хватает количества парного товар к товару по соц.проекту...');
               exit;
             end;
-          end else
+          end;
+        end else
+        begin
+          if nAmountPS < nAmount then
           begin
             ShowMessage('Парный товар к товару по соц.проекту не найден...');
             exit;
           end;
-        finally
-          SourceClientDataSet.EnableControls;
-          SourceClientDataSet.RecNo := nRecNo;
         end;
+      finally
+        SourceClientDataSet.EnableControls;
+        SourceClientDataSet.RecNo := nRecNo;
+      end;
+
+    end else if nAmount < 0 then
+    begin
+      nRecNo := checkCDS.FieldByName('GoodsId').AsInteger;
+      SourceClientDataSet.DisableControls;
+      CheckCDS.DisableControls;
+      try
+        if CheckCDS.Locate('GoodsId', SourceClientDataSet.FieldByName('GoodsPairSunId').AsInteger, []) then
+        begin
+          if (nAmount + checkCDS.FieldByName('Amount').AsCurrency) < 0 then
+            edAmount.Text := CurrToStr(- checkCDS.FieldByName('Amount').AsCurrency);
+
+          InsertUpdateBillCheckItems;
+        end;
+      finally
+        SourceClientDataSet.EnableControls;
+        CheckCDS.EnableControls;
+        CheckCDS.Locate('GoodsId', nRecNo, []);
       end;
     end;
   end;
