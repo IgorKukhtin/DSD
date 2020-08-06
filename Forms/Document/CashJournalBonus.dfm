@@ -1973,6 +1973,14 @@ inherited CashJournalBonusForm: TCashJournalBonusForm
         MultiSelectSeparator = ','
       end
       item
+        Name = 'inBranchId'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'BranchId'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
         Name = 'inRemainsToPay'
         Value = False
         Component = MasterCDS
