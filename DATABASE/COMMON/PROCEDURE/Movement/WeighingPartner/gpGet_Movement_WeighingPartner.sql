@@ -42,6 +42,8 @@ RETURNS TABLE (Id Integer, InvNumber TVarChar, OperDate TDateTime, StatusCode In
              , PositionId5 Integer, PositionName5 TVarChar
              , PersonalId1_Stick Integer, PersonalName1_Stick TVarChar
              , PositionId1_Stick Integer, PositionName1_Stick TVarChar
+
+             , PersonalGroupId Integer, PersonalGroupName TVarChar
               )
 AS
 $BODY$
@@ -145,6 +147,8 @@ BEGIN
              , Object_Personal1_Stick.Id AS PersonalId1_Stick, Object_Personal1_Stick.ValueData AS PersonalName1_Stick
              , Object_Position1_Stick.Id AS PositionId1_Stick, Object_Position1_Stick.ValueData AS PositionName1_Stick
 
+             , Object_PersonalGroup.Id                              AS PersonalGroupId
+             , Object_PersonalGroup.ValueData                       AS PersonalGroupName
        FROM Movement
             LEFT JOIN Object AS Object_Status ON Object_Status.Id = Movement.StatusId
 
@@ -297,6 +301,11 @@ BEGIN
                                          ON MovementLinkObject_Position5.MovementId = Movement.Id
                                         AND MovementLinkObject_Position5.DescId = zc_MovementLinkObject_PositionComplete5()
             LEFT JOIN Object AS Object_Position5 ON Object_Position5.Id = MovementLinkObject_Position5.ObjectId
+
+            LEFT JOIN MovementLinkObject AS MovementLinkObject_PersonalGroup
+                                         ON MovementLinkObject_PersonalGroup.MovementId = Movement.Id
+                                        AND MovementLinkObject_PersonalGroup.DescId = zc_MovementLinkObject_PersonalGroup()
+            LEFT JOIN Object AS Object_PersonalGroup ON Object_PersonalGroup.Id = MovementLinkObject_PersonalGroup.ObjectId
        WHERE Movement.Id =  inMovementId
          AND Movement.DescId = zc_Movement_WeighingPartner();
      END IF;

@@ -64,8 +64,6 @@ object WeighingProductionJournalForm: TWeighingProductionJournalForm
     Align = alClient
     TabOrder = 0
     LookAndFeel.NativeStyle = False
-    ExplicitLeft = 168
-    ExplicitTop = 169
     object cxGridDBTableView: TcxGridDBTableView
       Navigator.Buttons.CustomButtons = <>
       DataController.DataSource = DataSource
@@ -284,6 +282,14 @@ object WeighingProductionJournalForm: TWeighingProductionJournalForm
         HeaderAlignmentVert = vaCenter
         Options.Editing = False
         Width = 77
+      end
+      object PersonalGroupName: TcxGridDBColumn
+        Caption = #8470' '#1073#1088#1080#1075#1072#1076#1099
+        DataBinding.FieldName = 'PersonalGroupName'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Options.Editing = False
+        Width = 70
       end
       object TotalCountKg: TcxGridDBColumn
         Caption = #1050#1086#1083'-'#1074#1086' '#1042#1077#1089

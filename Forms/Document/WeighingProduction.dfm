@@ -3,7 +3,7 @@ object WeighingProductionForm: TWeighingProductionForm
   Top = 0
   Caption = #1044#1086#1082#1091#1084#1077#1085#1090' <'#1042#1079#1074#1077#1096#1080#1074#1072#1085#1080#1077' ('#1087#1088#1086#1080#1079#1074#1086#1076#1089#1090#1074#1086')>'
   ClientHeight = 462
-  ClientWidth = 1309
+  ClientWidth = 1289
   Color = clBtnFace
   Font.Charset = DEFAULT_CHARSET
   Font.Color = clWindowText
@@ -21,11 +21,14 @@ object WeighingProductionForm: TWeighingProductionForm
   object DataPanel: TPanel
     Left = 0
     Top = 0
-    Width = 1309
+    Width = 1289
     Height = 100
     Align = alTop
     BevelOuter = bvNone
     TabOrder = 0
+    ExplicitLeft = -40
+    ExplicitTop = 4
+    ExplicitWidth = 1309
     object edInvNumber: TcxTextEdit
       Left = 113
       Top = 23
@@ -222,20 +225,23 @@ object WeighingProductionForm: TWeighingProductionForm
       Width = 80
     end
     object edisIncome: TcxCheckBox
-      Left = 953
-      Top = 48
+      Left = 881
+      Top = 44
       Caption = #1055#1088#1080#1093#1086#1076'/'#1088#1072#1089#1093#1086#1076
       Properties.ReadOnly = True
       TabOrder = 24
-      Width = 157
+      Width = 104
     end
     object edIsAuto: TcxCheckBox
-      Left = 953
-      Top = 68
-      Caption = #1057#1086#1079#1076#1072#1085' '#1072#1074#1090#1086#1084#1072#1090#1080#1095#1077#1089#1082#1080
+      Left = 881
+      Top = 65
+      Hint = #1057#1086#1079#1076#1072#1085' '#1072#1074#1090#1086#1084#1072#1090#1080#1095#1077#1089#1082#1080
+      Caption = #1057#1086#1079#1076#1072#1085' '#1072#1074#1090#1086#1084#1072#1090'.'
+      ParentShowHint = False
       Properties.ReadOnly = True
+      ShowHint = True
       TabOrder = 25
-      Width = 157
+      Width = 113
     end
     object cxLabel17: TcxLabel
       Left = 9
@@ -256,29 +262,51 @@ object WeighingProductionForm: TWeighingProductionForm
       TabOrder = 27
       Width = 99
     end
+    object cxLabel22: TcxLabel
+      Left = 1008
+      Top = 45
+      Caption = #8470' '#1073#1088#1080#1075#1072#1076#1099
+    end
+    object edPersonalGroup: TcxButtonEdit
+      Left = 1008
+      Top = 61
+      Enabled = False
+      Properties.Buttons = <
+        item
+          Default = True
+          Enabled = False
+          Kind = bkEllipsis
+        end>
+      Properties.ReadOnly = True
+      TabOrder = 29
+      Width = 108
+    end
   end
   object cxPageControl: TcxPageControl
     Left = 0
     Top = 126
-    Width = 1309
+    Width = 1289
     Height = 336
     Align = alClient
     TabOrder = 1
     Properties.ActivePage = cxTabSheetMain
     Properties.CustomButtons.Buttons = <>
+    ExplicitWidth = 1309
     ClientRectBottom = 336
-    ClientRectRight = 1309
+    ClientRectRight = 1289
     ClientRectTop = 24
     object cxTabSheetMain: TcxTabSheet
       Caption = #1057#1090#1088#1086#1095#1085#1072#1103' '#1095#1072#1089#1090#1100
       ImageIndex = 0
+      ExplicitWidth = 1309
       object cxGrid: TcxGrid
         Left = 0
         Top = 0
-        Width = 1309
+        Width = 1289
         Height = 312
         Align = alClient
         TabOrder = 0
+        ExplicitWidth = 1309
         object cxGridDBTableView: TcxGridDBTableView
           Navigator.Buttons.CustomButtons = <>
           DataController.DataSource = MasterDS
@@ -607,7 +635,7 @@ object WeighingProductionForm: TWeighingProductionForm
     Enabled = False
     Properties.ReadOnly = True
     TabOrder = 5
-    Width = 146
+    Width = 80
   end
   object cxLabel13: TcxLabel
     Left = 946
@@ -665,7 +693,7 @@ object WeighingProductionForm: TWeighingProductionForm
   end
   object edBarCodeBox: TcxButtonEdit
     Left = 1122
-    Top = 62
+    Top = 61
     Enabled = False
     Properties.Buttons = <
       item
@@ -1359,7 +1387,7 @@ object WeighingProductionForm: TWeighingProductionForm
       Params = <
         item
           Name = 'isPrintTermo'
-          Value = 'True'
+          Value = True
           DataType = ftBoolean
           MultiSelectSeparator = ','
         end>
@@ -1691,7 +1719,7 @@ object WeighingProductionForm: TWeighingProductionForm
       end
       item
         Name = 'isProductionIn'
-        Value = 'False'
+        Value = False
         Component = edisIncome
         DataType = ftBoolean
         MultiSelectSeparator = ','
@@ -1791,6 +1819,21 @@ object WeighingProductionForm: TWeighingProductionForm
         Value = Null
         Component = FormParams
         ComponentItem = 'MovementId_Parent'
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'PersonalGroupId'
+        Value = Null
+        Component = GuidesPersonalGroup
+        ComponentItem = 'Key'
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'PersonalGroupName'
+        Value = Null
+        Component = GuidesPersonalGroup
+        ComponentItem = 'TextValue'
+        DataType = ftString
         MultiSelectSeparator = ','
       end>
     PackSize = 1
@@ -1948,7 +1991,7 @@ object WeighingProductionForm: TWeighingProductionForm
         ParamType = ptInput
         MultiSelectSeparator = ','
       end>
-    Left = 839
+    Left = 743
     Top = 16
   end
   object GuidesDocumentKind: TdsdGuides
@@ -1977,8 +2020,8 @@ object WeighingProductionForm: TWeighingProductionForm
         ParamType = ptInput
         MultiSelectSeparator = ','
       end>
-    Left = 1032
-    Top = 8
+    Left = 1072
+    Top = 65528
   end
   object spSelectPrintCeh: TdsdStoredProc
     StoredProcName = 'gpSelect_Movement_ProductionUnion_Ceh_Print'
@@ -2084,8 +2127,7 @@ object WeighingProductionForm: TWeighingProductionForm
         ParamType = ptInput
         MultiSelectSeparator = ','
       end>
-    Left = 1160
-    Top = 8
+    Left = 1248
   end
   object GuidesBarCodeBox: TdsdGuides
     KeyField = 'Id'
@@ -2113,7 +2155,7 @@ object WeighingProductionForm: TWeighingProductionForm
         ParamType = ptInput
         MultiSelectSeparator = ','
       end>
-    Left = 1168
+    Left = 1208
     Top = 56
   end
   object spUpdate_Param: TdsdStoredProc
@@ -2286,5 +2328,34 @@ object WeighingProductionForm: TWeighingProductionForm
     PackSize = 1
     Left = 624
     Top = 360
+  end
+  object GuidesPersonalGroup: TdsdGuides
+    KeyField = 'Id'
+    LookupControl = edPersonalGroup
+    FormNameParam.Value = 'TPersonalGroupForm'
+    FormNameParam.DataType = ftString
+    FormNameParam.MultiSelectSeparator = ','
+    FormName = 'TPersonalGroupForm'
+    PositionDataSet = 'ClientDataSet'
+    Params = <
+      item
+        Name = 'Key'
+        Value = ''
+        Component = GuidesPersonalGroup
+        ComponentItem = 'Key'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'TextValue'
+        Value = ''
+        Component = GuidesPersonalGroup
+        ComponentItem = 'TextValue'
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end>
+    Left = 976
+    Top = 96
   end
 end

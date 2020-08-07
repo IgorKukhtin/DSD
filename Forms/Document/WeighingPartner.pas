@@ -170,6 +170,9 @@ type
     actUpdatePersonalComlete: TdsdDataSetRefresh;
     macUpdatePersonalComlete: TMultiAction;
     bbUpdatePersonalComlete: TdxBarButton;
+    cxLabel22: TcxLabel;
+    edPersonalGroup: TcxButtonEdit;
+    GuidesPersonalGroup: TdsdGuides;
   private
   public
   end;

@@ -18,6 +18,7 @@ RETURNS TABLE (Id Integer, InvNumber Integer, OperDate TDateTime, StatusCode Int
              , StartWeighing TDateTime, EndWeighing TDateTime
              , MovementDescNumber Integer, MovementDescName TVarChar
              , SubjectDocId Integer, SubjectDocName TVarChar
+             , PersonalGroupId Integer, PersonalGroupName TVarChar
              , WeighingNumber TFloat
              , InvNumberOrder TVarChar
              , MovementId_Transport Integer, InvNumber_Transport TVarChar, OperDate_Transport TDateTime
@@ -173,6 +174,9 @@ BEGIN
 
              , Object_SubjectDoc.Id                       AS SubjectDocId
              , Object_SubjectDoc.ValueData                AS SubjectDocName
+
+             , Object_PersonalGroup.Id                    AS PersonalGroupId
+             , Object_PersonalGroup.ValueData             AS PersonalGroupName
 
              , MovementFloat_WeighingNumber.ValueData     AS WeighingNumber
 
@@ -496,6 +500,11 @@ BEGIN
             LEFT JOIN MovementDate AS MovementDate_EndBegin
                                    ON MovementDate_EndBegin.MovementId = Movement.Id
                                   AND MovementDate_EndBegin.DescId = zc_MovementDate_EndBegin()
+
+            LEFT JOIN MovementLinkObject AS MovementLinkObject_PersonalGroup
+                                         ON MovementLinkObject_PersonalGroup.MovementId = Movement.Id
+                                        AND MovementLinkObject_PersonalGroup.DescId = zc_MovementLinkObject_PersonalGroup()
+            LEFT JOIN Object AS Object_PersonalGroup ON Object_PersonalGroup.Id = MovementLinkObject_PersonalGroup.ObjectId
 
             --- строки
             INNER JOIN MovementItem ON MovementItem.MovementId = Movement.Id

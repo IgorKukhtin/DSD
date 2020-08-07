@@ -168,6 +168,9 @@ type
     actOpenForm: TdsdOpenForm;
     macOpenDocument: TMultiAction;
     bbOpenDocumentMain: TdxBarButton;
+    cxLabel22: TcxLabel;
+    edPersonalGroup: TcxButtonEdit;
+    GuidesPersonalGroup: TdsdGuides;
   private
   public
   end;

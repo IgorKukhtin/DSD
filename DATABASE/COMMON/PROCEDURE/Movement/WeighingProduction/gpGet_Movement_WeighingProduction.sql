@@ -21,6 +21,7 @@ RETURNS TABLE (Id Integer, InvNumber TVarChar, OperDate TDateTime, StatusCode In
              , GoodsTypeKindId Integer, GoodsTypeKindName TVarChar
              , BarCodeBoxId Integer, BarCodeBoxName TVarChar
              , SubjectDocId Integer, SubjectDocCode Integer, SubjectDocName TVarChar
+             , PersonalGroupId Integer, PersonalGroupName TVarChar
               )
 AS
 $BODY$
@@ -78,7 +79,9 @@ BEGIN
              , 0                     AS SubjectDocId
              , 0                     AS SubjectDocCode
              , CAST ('' AS TVarChar) AS SubjectDocName
-             
+
+             , 0                     AS PersonalGroupId
+             , CAST ('' AS TVarChar) AS PersonalGroupName
           FROM lfGet_Object_Status(zc_Enum_Status_UnComplete()) AS Object_Status;
      ELSE
        RETURN QUERY 
@@ -128,6 +131,8 @@ BEGIN
              , Object_SubjectDoc.ObjectCode    AS SubjectDocCode
              , Object_SubjectDoc.ValueData     AS SubjectDocName
 
+             , Object_PersonalGroup.Id         AS PersonalGroupId
+             , Object_PersonalGroup.ValueData  AS PersonalGroupName
        FROM Movement
             LEFT JOIN Object AS Object_Status ON Object_Status.Id = Movement.StatusId
             LEFT JOIN Movement AS Movement_Parent ON Movement_Parent.Id = Movement.ParentId
@@ -207,6 +212,10 @@ BEGIN
                                           AND MovementLinkMovement_Order.DescId = zc_MovementLinkMovement_Order()
             LEFT JOIN Movement AS Movement_Order ON Movement_Order.Id = MovementLinkMovement_Order.MovementChildId
 
+            LEFT JOIN MovementLinkObject AS MovementLinkObject_PersonalGroup
+                                         ON MovementLinkObject_PersonalGroup.MovementId = Movement.Id
+                                        AND MovementLinkObject_PersonalGroup.DescId = zc_MovementLinkObject_PersonalGroup()
+            LEFT JOIN Object AS Object_PersonalGroup ON Object_PersonalGroup.Id = MovementLinkObject_PersonalGroup.ObjectId
        WHERE Movement.Id =  inMovementId
          AND Movement.DescId = zc_Movement_WeighingProduction();
      END IF;

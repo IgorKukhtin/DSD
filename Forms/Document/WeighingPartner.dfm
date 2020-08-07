@@ -280,8 +280,8 @@ object WeighingPartnerForm: TWeighingPartnerForm
       Width = 97
     end
     object edPriceWithVAT: TcxCheckBox
-      Left = 1160
-      Top = 22
+      Left = 1161
+      Top = 5
       Caption = #1062#1077#1085#1072' '#1089' '#1053#1044#1057
       Properties.ReadOnly = True
       TabOrder = 31
@@ -309,6 +309,24 @@ object WeighingPartnerForm: TWeighingPartnerForm
       Properties.ReadOnly = True
       TabOrder = 34
       Width = 40
+    end
+    object cxLabel22: TcxLabel
+      Left = 1161
+      Top = 45
+      Caption = #8470' '#1073#1088#1080#1075#1072#1076#1099
+    end
+    object edPersonalGroup: TcxButtonEdit
+      Left = 1161
+      Top = 63
+      Properties.Buttons = <
+        item
+          Default = True
+          Enabled = False
+          Kind = bkEllipsis
+        end>
+      Properties.ReadOnly = True
+      TabOrder = 36
+      Width = 94
     end
   end
   object cxPageControl: TcxPageControl
@@ -1059,8 +1077,8 @@ object WeighingPartnerForm: TWeighingPartnerForm
     Caption = '(-)% '#1057#1082#1080#1076#1082#1080' (+)% '#1053#1072#1094#1077#1085#1082#1080
   end
   object cbPromo: TcxCheckBox
-    Left = 1160
-    Top = 63
+    Left = 1161
+    Top = 24
     Caption = #1040#1082#1094#1080#1103' ('#1076#1072'/'#1085#1077#1090')'
     Properties.ReadOnly = True
     TabOrder = 3
@@ -1999,6 +2017,7 @@ object WeighingPartnerForm: TWeighingPartnerForm
     ColumnAddOnList = <>
     ColumnEnterList = <>
     SummaryItemList = <>
+    PropertiesCellList = <>
     Left = 347
     Top = 337
   end
@@ -2456,6 +2475,21 @@ object WeighingPartnerForm: TWeighingPartnerForm
         Value = Null
         Component = FormParams
         ComponentItem = 'PositionName1_Stick'
+        DataType = ftString
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'PersonalGroupId'
+        Value = Null
+        Component = GuidesPersonalGroup
+        ComponentItem = 'Key'
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'PersonalGroupName'
+        Value = Null
+        Component = GuidesPersonalGroup
+        ComponentItem = 'TextValue'
         DataType = ftString
         MultiSelectSeparator = ','
       end>
@@ -3027,5 +3061,34 @@ object WeighingPartnerForm: TWeighingPartnerForm
     PackSize = 1
     Left = 1018
     Top = 240
+  end
+  object GuidesPersonalGroup: TdsdGuides
+    KeyField = 'Id'
+    LookupControl = edPersonalGroup
+    FormNameParam.Value = 'TPersonalGroupForm'
+    FormNameParam.DataType = ftString
+    FormNameParam.MultiSelectSeparator = ','
+    FormName = 'TPersonalGroupForm'
+    PositionDataSet = 'ClientDataSet'
+    Params = <
+      item
+        Name = 'Key'
+        Value = ''
+        Component = GuidesPersonalGroup
+        ComponentItem = 'Key'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'TextValue'
+        Value = ''
+        Component = GuidesPersonalGroup
+        ComponentItem = 'TextValue'
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end>
+    Left = 1176
+    Top = 64
   end
 end

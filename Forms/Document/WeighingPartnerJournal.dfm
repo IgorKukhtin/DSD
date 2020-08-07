@@ -416,6 +416,14 @@ object WeighingPartnerJournalForm: TWeighingPartnerJournalForm
         Options.Editing = False
         Width = 80
       end
+      object PersonalGroupName: TcxGridDBColumn
+        Caption = #8470' '#1073#1088#1080#1075#1072#1076#1099
+        DataBinding.FieldName = 'PersonalGroupName'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Options.Editing = False
+        Width = 70
+      end
       object PaidKindName: TcxGridDBColumn
         Caption = #1060#1086#1088#1084#1072' '#1086#1087#1083#1072#1090#1099
         DataBinding.FieldName = 'PaidKindName'
@@ -1573,6 +1581,7 @@ object WeighingPartnerJournalForm: TWeighingPartnerJournalForm
     ColumnAddOnList = <>
     ColumnEnterList = <>
     SummaryItemList = <>
+    PropertiesCellList = <>
     Left = 248
     Top = 216
   end
