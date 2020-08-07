@@ -6,10 +6,8 @@ inherited Report_Goods_RemainsCurrentForm: TReport_Goods_RemainsCurrentForm
   AddOnFormData.isSingle = False
   AddOnFormData.ExecuteDialogAction = ExecuteDialog
   AddOnFormData.Params = FormParams
-  ExplicitLeft = -307
-  ExplicitTop = -141
   ExplicitWidth = 1147
-  ExplicitHeight = 598
+  ExplicitHeight = 601
   PixelsPerInch = 96
   TextHeight = 13
   inherited Panel: TPanel [0]
@@ -2202,8 +2200,6 @@ inherited Report_Goods_RemainsCurrentForm: TReport_Goods_RemainsCurrentForm
         end
         item
           Action = actExport_Grid
-        end
-        item
         end>
       QuestionBeforeExecute = #1044#1077#1081#1089#1090#1074#1080#1090#1077#1083#1100#1085#1086' '#1074#1099#1075#1088#1091#1079#1080#1090#1100' '#1086#1089#1090#1072#1090#1082#1080' '#1074'  '#1101#1083#1077#1082#1090#1088#1086#1085#1085#1099#1081' '#1076#1086#1082#1091#1084#1077#1085#1090'?'
       InfoAfterExecute = #1069#1083#1077#1082#1090#1088#1086#1085#1085#1099#1081' '#1076#1086#1082#1091#1084#1077#1085#1090' '#1091#1089#1087#1077#1096#1085#1086' '#1089#1092#1086#1088#1084#1080#1088#1086#1074#1072#1085
@@ -2426,6 +2422,14 @@ inherited Report_Goods_RemainsCurrentForm: TReport_Goods_RemainsCurrentForm
         end
         item
           Visible = True
+          ItemName = 'bbExport'
+        end
+        item
+          Visible = True
+          ItemName = 'dxBarStatic'
+        end
+        item
+          Visible = True
           ItemName = 'bbPrintSticker'
         end
         item
@@ -2526,6 +2530,10 @@ inherited Report_Goods_RemainsCurrentForm: TReport_Goods_RemainsCurrentForm
     end
     object bbDelete_PartionGoods_ReportOLAP: TdxBarButton
       Action = actDelete_PartionGoods_ReportOLAP
+      Category = 0
+    end
+    object bbExport: TdxBarButton
+      Action = actExport
       Category = 0
     end
   end
@@ -3257,16 +3265,9 @@ inherited Report_Goods_RemainsCurrentForm: TReport_Goods_RemainsCurrentForm
     OutputType = otResult
     Params = <
       item
-        Name = 'inMovementId'
-        Value = Null
-        Component = FormParams
-        ComponentItem = 'Id'
-        ParamType = ptInput
-        MultiSelectSeparator = ','
-      end
-      item
         Name = 'outFileName'
         Value = Null
+        Component = actExport_Grid
         ComponentItem = 'DefaultFileName'
         DataType = ftString
         MultiSelectSeparator = ','
@@ -3274,6 +3275,7 @@ inherited Report_Goods_RemainsCurrentForm: TReport_Goods_RemainsCurrentForm
       item
         Name = 'outDefaultFileExt'
         Value = Null
+        Component = actExport_Grid
         ComponentItem = 'DefaultFileExt'
         DataType = ftString
         MultiSelectSeparator = ','
@@ -3281,6 +3283,7 @@ inherited Report_Goods_RemainsCurrentForm: TReport_Goods_RemainsCurrentForm
       item
         Name = 'outEncodingANSI'
         Value = Null
+        Component = actExport_Grid
         ComponentItem = 'EncodingANSI'
         DataType = ftBoolean
         MultiSelectSeparator = ','
@@ -3288,6 +3291,7 @@ inherited Report_Goods_RemainsCurrentForm: TReport_Goods_RemainsCurrentForm
       item
         Name = 'outFileName'
         Value = Null
+        Component = actSMTPFile
         ComponentItem = 'FileName'
         DataType = ftString
         MultiSelectSeparator = ','
@@ -3305,10 +3309,10 @@ inherited Report_Goods_RemainsCurrentForm: TReport_Goods_RemainsCurrentForm
       end>
     Params = <
       item
-        Name = 'inMovementId'
+        Name = 'inUnitId'
         Value = Null
-        Component = FormParams
-        ComponentItem = 'Id'
+        Component = GuidesUnit
+        ComponentItem = 'Key'
         ParamType = ptInput
         MultiSelectSeparator = ','
       end>

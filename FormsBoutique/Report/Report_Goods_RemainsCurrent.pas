@@ -149,6 +149,7 @@ type
     actExport: TMultiAction;
     OperPriceList_orig: TcxGridDBColumn;
     CurrencyName_pl: TcxGridDBColumn;
+    bbExport: TdxBarButton;
   private
     { Private declarations }
   public
