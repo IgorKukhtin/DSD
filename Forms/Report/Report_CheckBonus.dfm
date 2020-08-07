@@ -527,6 +527,9 @@ inherited Report_CheckBonusForm: TReport_CheckBonusForm
         Properties.Strings = (
           'Key'
           'TextValue')
+      end
+      item
+        Component = GuidesBranch
       end>
   end
   inherited ActionList: TActionList
