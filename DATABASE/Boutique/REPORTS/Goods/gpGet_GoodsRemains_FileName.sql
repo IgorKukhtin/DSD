@@ -1,6 +1,6 @@
 -- Function: gpGet_GoodsRemains_FileName(Integer, TVarChar)
 
-DROP FUNCTION IF EXISTS gpGet_GoodsRemains_FileName (Integer, TVarChar);
+DROP FUNCTION IF EXISTS gpGet_GoodsRemains_FileName (TVarChar);
 
 CREATE OR REPLACE FUNCTION gpGet_GoodsRemains_FileName(
    OUT outFileName            TVarChar  ,
@@ -17,9 +17,9 @@ BEGIN
      vbUserId:= lpGetUserBySession (inSession);
 
      -- Результат
-     SELECT ('GoodsRemains_' || CURRENT_DATE|| '.') AS outFileName
-          , 'xml'                                    AS outDefaultFileExt
-          , TRUE                                     AS outEncodingANSI
+     SELECT ('GoodsRemains_' || CURRENT_DATE) AS outFileName
+          , 'xml'                             AS outDefaultFileExt
+          , TRUE                              AS outEncodingANSI
    INTO outFileName, outDefaultFileExt, outEncodingANSI
      ;
 
