@@ -55,6 +55,7 @@ type
     actPrintSaleOrderTax: TdsdPrintAction;
     bbPrintSaleOrder: TdxBarButton;
     bbPrintSaleOrderTax: TdxBarButton;
+    PersonalGroupName: TcxGridDBColumn;
   private
     { Private declarations }
   public

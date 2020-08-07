@@ -22,6 +22,7 @@ RETURNS TABLE (Id Integer, InvNumber TVarChar, OperDate TDateTime
              , MovementId_Send Integer, InvNumber_SendFull TVarChar
              , MovementId_Order Integer, InvNumberOrder TVarChar
              , SubjectDocId Integer, SubjectDocName TVarChar
+             , PersonalGroupId Integer, PersonalGroupName TVarChar
               )
 AS
 $BODY$
@@ -61,8 +62,10 @@ BEGIN
              , 0                                                AS MovementId_Order
              , CAST ('' AS TVarChar)                            AS InvNumberOrder
              
-             , 0                                                  AS SubjectDocId
-             , CAST ('' AS TVarChar)                              AS SubjectDocName
+             , 0                                                AS SubjectDocId
+             , CAST ('' AS TVarChar)                            AS SubjectDocName
+             , 0                                                AS PersonalGroupId
+             , CAST ('' AS TVarChar)                            AS PersonalGroupName
           FROM lfGet_Object_Status(zc_Enum_Status_UnComplete()) AS Object_Status
               LEFT JOIN Object AS Object_Insert ON Object_Insert.Id = vbUserId
           ;
@@ -115,6 +118,9 @@ BEGIN
 
            , Object_SubjectDoc.Id                                 AS SubjectDocId
            , COALESCE (Object_SubjectDoc.ValueData,'') ::TVarChar AS SubjectDocName
+           
+           , Object_PersonalGroup.Id                              AS PersonalGroupId
+           , Object_PersonalGroup.ValueData                       AS PersonalGroupName
        FROM Movement
             LEFT JOIN Object AS Object_Status ON Object_Status.Id = Movement.StatusId
 
@@ -173,6 +179,10 @@ BEGIN
                                         AND MovementLinkObject_SubjectDoc.DescId = zc_MovementLinkObject_SubjectDoc()
             LEFT JOIN Object AS Object_SubjectDoc ON Object_SubjectDoc.Id = MovementLinkObject_SubjectDoc.ObjectId
 
+            LEFT JOIN MovementLinkObject AS MovementLinkObject_PersonalGroup
+                                         ON MovementLinkObject_PersonalGroup.MovementId = Movement.Id
+                                        AND MovementLinkObject_PersonalGroup.DescId = zc_MovementLinkObject_PersonalGroup()
+            LEFT JOIN Object AS Object_PersonalGroup ON Object_PersonalGroup.Id = MovementLinkObject_PersonalGroup.ObjectId
        WHERE Movement.Id = inMovementId
          AND Movement.DescId = zc_Movement_Send();
 
@@ -187,7 +197,8 @@ ALTER FUNCTION gpGet_Movement_Send (Integer, TDateTime, TVarChar) OWNER TO postg
 /*
  »—“Œ–»ﬂ –¿«–¿¡Œ“ »: ƒ¿“¿, ¿¬“Œ–
                ‘ÂÎÓÌ˛Í ».¬.    ÛıÚËÌ ».¬.    ÎËÏÂÌÚ¸Â‚  .».   Ã‡Ì¸ÍÓ ƒ.¿.
- 27.02.19         * 
+ 07.08.20         *
+ 27.02.19         *
  03.10.17         * add Comment
  14.07.16         *
  17.06.16         *

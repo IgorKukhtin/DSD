@@ -21,6 +21,7 @@ inherited SendForm: TSendForm
       inherited cxGrid: TcxGrid
         Width = 1172
         Height = 452
+        ExplicitTop = 344
         ExplicitWidth = 1172
         ExplicitHeight = 452
         inherited cxGridDBTableView: TcxGridDBTableView
@@ -146,7 +147,7 @@ inherited SendForm: TSendForm
             Properties.ReadOnly = True
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
-            Width = 150
+            Width = 182
           end
           object GoodsKindName: TcxGridDBColumn [3]
             Caption = #1042#1080#1076' '#1090#1086#1074#1072#1088#1072
@@ -427,15 +428,15 @@ inherited SendForm: TSendForm
       Caption = #1050#1086#1084#1091
     end
     object cxLabel22: TcxLabel
-      Left = 905
+      Left = 1023
       Top = 45
       Caption = #1055#1088#1080#1084#1077#1095#1072#1085#1080#1077
     end
     object ceComment: TcxTextEdit
-      Left = 905
+      Left = 1023
       Top = 63
       TabOrder = 11
-      Width = 264
+      Width = 146
     end
     object cxLabel8: TcxLabel
       Left = 905
@@ -506,7 +507,7 @@ inherited SendForm: TSendForm
         end>
       Properties.ReadOnly = True
       TabOrder = 19
-      Width = 203
+      Width = 210
     end
   end
   object cxLabel6: TcxLabel [2]
@@ -550,6 +551,24 @@ inherited SendForm: TSendForm
     Properties.ReadOnly = True
     TabOrder = 10
     Width = 81
+  end
+  object cxLabel10: TcxLabel [7]
+    Left = 905
+    Top = 45
+    Caption = #8470' '#1073#1088#1080#1075#1072#1076#1099
+  end
+  object edPersonalGroup: TcxButtonEdit [8]
+    Left = 905
+    Top = 63
+    Properties.Buttons = <
+      item
+        Default = True
+        Enabled = False
+        Kind = bkEllipsis
+      end>
+    Properties.ReadOnly = True
+    TabOrder = 12
+    Width = 112
   end
   inherited UserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn
     Left = 171
@@ -692,6 +711,41 @@ inherited SendForm: TSendForm
       Hint = #1054#1073#1085#1086#1074#1080#1090#1100' '#1076#1072#1085#1085#1099#1077
       ShortCut = 116
       RefreshOnTabSetChanges = False
+    end
+    object actPersonalGroupChoiceForm: TOpenChoiceForm
+      Category = 'DSDLib'
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      Caption = 'StorageForm'
+      ImageIndex = 76
+      FormName = 'TPersonalGroupForm'
+      FormNameParam.Value = 'TPersonalGroupForm'
+      FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
+      GuiParams = <
+        item
+          Name = 'Key'
+          Value = Null
+          Component = GuidesPersonalGroup
+          ComponentItem = 'Key'
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'TextValue'
+          Value = Null
+          Component = GuidesPersonalGroup
+          ComponentItem = 'TextValue'
+          DataType = ftString
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'TextValue'
+          Value = Null
+          Component = edPersonalGroup
+          DataType = ftString
+          MultiSelectSeparator = ','
+        end>
+      isShowModal = True
     end
     object actStorageChoiceForm: TOpenChoiceForm
       Category = 'DSDLib'
@@ -970,6 +1024,31 @@ inherited SendForm: TSendForm
       PrinterNameParam.DataType = ftString
       PrinterNameParam.MultiSelectSeparator = ','
     end
+    object actUpdatePersonalGroup: TdsdExecStoredProc
+      Category = 'DSDLib'
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      StoredProc = spUpdatePersonalGroup
+      StoredProcList = <
+        item
+          StoredProc = spUpdatePersonalGroup
+        end>
+      Caption = 'actUpdatePersonalGroup'
+    end
+    object macUpdatePersonalGroup: TMultiAction
+      Category = 'DSDLib'
+      MoveParams = <>
+      ActionList = <
+        item
+          Action = actPersonalGroupChoiceForm
+        end
+        item
+          Action = actUpdatePersonalGroup
+        end>
+      Caption = #1048#1079#1084#1077#1085#1080#1090#1100' '#8470' '#1073#1088#1080#1075#1072#1076#1099
+      Hint = #1048#1079#1084#1077#1085#1080#1090#1100' '#8470' '#1073#1088#1080#1075#1072#1076#1099
+      ImageIndex = 76
+    end
   end
   inherited MasterDS: TDataSource
     Left = 32
@@ -1070,6 +1149,18 @@ inherited SendForm: TSendForm
         end
         item
           Visible = True
+          ItemName = 'bbPersonalGroupChoiceForm'
+        end
+        item
+          Visible = True
+          ItemName = 'bbStatic'
+        end
+        item
+          Visible = True
+          ItemName = 'dxBarStatic'
+        end
+        item
+          Visible = True
           ItemName = 'bbRefresh'
         end
         item
@@ -1139,6 +1230,10 @@ inherited SendForm: TSendForm
     end
     object bbPrintSaleOrderTax: TdxBarButton
       Action = actPrintSaleOrderTax
+      Category = 0
+    end
+    object bbPersonalGroupChoiceForm: TdxBarButton
+      Action = macUpdatePersonalGroup
       Category = 0
     end
   end
@@ -1317,7 +1412,7 @@ inherited SendForm: TSendForm
       end
       item
         Name = 'isAuto'
-        Value = 0.000000000000000000
+        Value = False
         Component = edIsAuto
         DataType = ftBoolean
         MultiSelectSeparator = ','
@@ -1383,6 +1478,21 @@ inherited SendForm: TSendForm
         Name = 'SubjectDocName'
         Value = Null
         Component = GuidesSubjectDoc
+        ComponentItem = 'TextValue'
+        DataType = ftString
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'PersonalGroupId'
+        Value = Null
+        Component = GuidesPersonalGroup
+        ComponentItem = 'Key'
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'PersonalGroupName'
+        Value = Null
+        Component = GuidesPersonalGroup
         ComponentItem = 'TextValue'
         DataType = ftString
         MultiSelectSeparator = ','
@@ -1522,11 +1632,43 @@ inherited SendForm: TSendForm
   end
   inherited spErasedMIMaster: TdsdStoredProc
     StoredProcName = 'gpMovementItem_Send_SetErased'
+    Params = <
+      item
+        Name = 'inMovementItemId'
+        Component = MasterCDS
+        ComponentItem = 'Id'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'outIsErased'
+        Value = False
+        Component = MasterCDS
+        ComponentItem = 'isErased'
+        DataType = ftBoolean
+        MultiSelectSeparator = ','
+      end>
     Left = 718
     Top = 512
   end
   inherited spUnErasedMIMaster: TdsdStoredProc
     StoredProcName = 'gpMovementItem_Send_SetUnErased'
+    Params = <
+      item
+        Name = 'inMovementItemId'
+        Component = MasterCDS
+        ComponentItem = 'Id'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'outIsErased'
+        Value = False
+        Component = MasterCDS
+        ComponentItem = 'isErased'
+        DataType = ftBoolean
+        MultiSelectSeparator = ','
+      end>
     Left = 718
     Top = 464
   end
@@ -1812,7 +1954,7 @@ inherited SendForm: TSendForm
       end
       item
         Name = 'inisItem'
-        Value = 'false'
+        Value = False
         DataType = ftBoolean
         ParamType = ptInput
         MultiSelectSeparator = ','
@@ -1936,7 +2078,7 @@ inherited SendForm: TSendForm
       end
       item
         Name = 'inisItem'
-        Value = 'true'
+        Value = True
         DataType = ftBoolean
         ParamType = ptInput
         MultiSelectSeparator = ','
@@ -2033,7 +2175,7 @@ inherited SendForm: TSendForm
       end
       item
         Name = 'isRemains'
-        Value = 'FALSE'
+        Value = False
         DataType = ftBoolean
         ParamType = ptInput
         MultiSelectSeparator = ','
@@ -2121,7 +2263,7 @@ inherited SendForm: TSendForm
       end
       item
         Name = 'inIsDiffTax'
-        Value = 'FALSE'
+        Value = False
         DataType = ftBoolean
         ParamType = ptInput
         MultiSelectSeparator = ','
@@ -2165,7 +2307,7 @@ inherited SendForm: TSendForm
       end
       item
         Name = 'inIsDiffTax'
-        Value = 'TRUE'
+        Value = True
         DataType = ftBoolean
         ParamType = ptInput
         MultiSelectSeparator = ','
@@ -2212,5 +2354,59 @@ inherited SendForm: TSendForm
     GetStoredProc = spGet
     Left = 336
     Top = 225
+  end
+  object GuidesPersonalGroup: TdsdGuides
+    KeyField = 'Id'
+    LookupControl = edPersonalGroup
+    FormNameParam.Value = 'TPersonalGroupForm'
+    FormNameParam.DataType = ftString
+    FormNameParam.MultiSelectSeparator = ','
+    FormName = 'TPersonalGroupForm'
+    PositionDataSet = 'ClientDataSet'
+    Params = <
+      item
+        Name = 'Key'
+        Value = ''
+        Component = GuidesPersonalGroup
+        ComponentItem = 'Key'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'TextValue'
+        Value = ''
+        Component = GuidesPersonalGroup
+        ComponentItem = 'TextValue'
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end>
+    Left = 944
+    Top = 64
+  end
+  object spUpdatePersonalGroup: TdsdStoredProc
+    StoredProcName = 'gpUpdate_Movement_Send_PersonalGroup'
+    DataSets = <>
+    OutputType = otResult
+    Params = <
+      item
+        Name = 'inId'
+        Value = Null
+        Component = FormParams
+        ComponentItem = 'Id'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inPersonalGroupId'
+        Value = ''
+        Component = GuidesPersonalGroup
+        ComponentItem = 'Key'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end>
+    PackSize = 1
+    Left = 954
+    Top = 384
   end
 end

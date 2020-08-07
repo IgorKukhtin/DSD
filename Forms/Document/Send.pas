@@ -91,6 +91,14 @@ type
     bbPrintSaleOrderTax: TdxBarButton;
     spInsertUpdateMovement_order: TdsdStoredProc;
     HeaderSaver1: THeaderSaver;
+    cxLabel10: TcxLabel;
+    edPersonalGroup: TcxButtonEdit;
+    GuidesPersonalGroup: TdsdGuides;
+    actPersonalGroupChoiceForm: TOpenChoiceForm;
+    spUpdatePersonalGroup: TdsdStoredProc;
+    bbPersonalGroupChoiceForm: TdxBarButton;
+    actUpdatePersonalGroup: TdsdExecStoredProc;
+    macUpdatePersonalGroup: TMultiAction;
   private
     { Private declarations }
   public

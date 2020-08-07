@@ -23,6 +23,7 @@ RETURNS TABLE (Id Integer, InvNumber TVarChar, OperDate TDateTime
              , MovementId_Order Integer, OperDate_Order TDateTime, InvNumberOrder TVarChar
              , PartnerName_Order TVarChar
              , SubjectDocId Integer, SubjectDocName TVarChar
+             , PersonalGroupId Integer, PersonalGroupName TVarChar
               )
 AS
 $BODY$
@@ -112,6 +113,9 @@ BEGIN
            
            , Object_SubjectDoc.Id                               AS SubjectDocId
            , Object_SubjectDoc.ValueData                        AS SubjectDocName
+
+           , Object_PersonalGroup.Id                            AS PersonalGroupId
+           , Object_PersonalGroup.ValueData                     AS PersonalGroupName
        FROM tmpMovement
 
             LEFT JOIN Movement ON Movement.id = tmpMovement.id
@@ -193,6 +197,11 @@ BEGIN
                                          ON MovementLinkObject_From_order.MovementId = MovementLinkMovement_Order.MovementChildId
                                         AND MovementLinkObject_From_order.DescId     = zc_MovementLinkObject_From()
             LEFT JOIN Object AS Object_From_order ON Object_From_order.Id = MovementLinkObject_From_order.ObjectId
+
+            LEFT JOIN MovementLinkObject AS MovementLinkObject_PersonalGroup
+                                         ON MovementLinkObject_PersonalGroup.MovementId = Movement.Id
+                                        AND MovementLinkObject_PersonalGroup.DescId = zc_MovementLinkObject_PersonalGroup()
+            LEFT JOIN Object AS Object_PersonalGroup ON Object_PersonalGroup.Id = MovementLinkObject_PersonalGroup.ObjectId
 
        WHERE (vbIsDocumentUser = FALSE OR MLO_Insert.ObjectId = vbUserId)
       ;

@@ -326,6 +326,13 @@ inherited SendJournalForm: TSendJournalForm
             HeaderAlignmentVert = vaCenter
             Width = 132
           end
+          object PersonalGroupName: TcxGridDBColumn
+            Caption = #8470' '#1073#1088#1080#1075#1072#1076#1099
+            DataBinding.FieldName = 'PersonalGroupName'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 70
+          end
         end
       end
     end
@@ -965,7 +972,7 @@ inherited SendJournalForm: TSendJournalForm
       end
       item
         Name = 'inisItem'
-        Value = 'false'
+        Value = False
         DataType = ftBoolean
         ParamType = ptInput
         MultiSelectSeparator = ','
@@ -1062,7 +1069,7 @@ inherited SendJournalForm: TSendJournalForm
       end
       item
         Name = 'inisItem'
-        Value = 'true'
+        Value = True
         DataType = ftBoolean
         ParamType = ptInput
         MultiSelectSeparator = ','
@@ -1106,7 +1113,7 @@ inherited SendJournalForm: TSendJournalForm
       end
       item
         Name = 'inIsDiffTax'
-        Value = 'FALSE'
+        Value = False
         DataType = ftBoolean
         ParamType = ptInput
         MultiSelectSeparator = ','
@@ -1150,7 +1157,7 @@ inherited SendJournalForm: TSendJournalForm
       end
       item
         Name = 'inIsDiffTax'
-        Value = 'TRUE'
+        Value = True
         DataType = ftBoolean
         ParamType = ptInput
         MultiSelectSeparator = ','
