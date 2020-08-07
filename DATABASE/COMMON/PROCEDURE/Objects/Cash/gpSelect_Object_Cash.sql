@@ -7,7 +7,7 @@ CREATE OR REPLACE FUNCTION gpSelect_Object_Cash(
 )
 RETURNS TABLE (Id Integer, Code Integer, Name TVarChar, isErased boolean, 
                CurrencyId Integer, CurrencyName TVarChar, 
-               BranchName TVarChar,
+               BranchId Integer, BranchName TVarChar,
                JuridicalName TVarChar, 
                BusinessName TVarChar, 
                PaidKindName TVarChar)
@@ -30,6 +30,7 @@ BEGIN
    , Object.isErased    AS isErased
    , Currency.Id        AS CurrencyId
    , Currency.ValueData AS CurrencyName
+   , Branch.Id          AS BranchId
    , Branch.ValueData   AS BranchName
    , JuridicalBasis.ValueData  AS JuridicalName
    , Business.ValueData AS BusinessName

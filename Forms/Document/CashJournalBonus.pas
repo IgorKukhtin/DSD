@@ -81,6 +81,7 @@ type
     macInsert_Bonus_list: TMultiAction;
     bbInsert_Bonus: TdxBarButton;
     macInsert_Bonus: TMultiAction;
+    spGet_UserParams: TdsdStoredProc;
   private
     { Private declarations }
   public

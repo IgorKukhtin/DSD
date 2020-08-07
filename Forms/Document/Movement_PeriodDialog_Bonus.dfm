@@ -3,8 +3,8 @@ object Movement_PeriodDialog_BonusForm: TMovement_PeriodDialog_BonusForm
   Top = 0
   BorderStyle = bsDialog
   Caption = #1042#1099#1073#1086#1088' '#1087#1077#1088#1080#1086#1076#1072' '#1078#1091#1088#1085#1072#1083#1072' '#1076#1086#1082#1091#1084#1077#1085#1090#1086#1074
-  ClientHeight = 213
-  ClientWidth = 614
+  ClientHeight = 216
+  ClientWidth = 609
   Color = clBtnFace
   Font.Charset = DEFAULT_CHARSET
   Font.Color = clWindowText
@@ -13,6 +13,7 @@ object Movement_PeriodDialog_BonusForm: TMovement_PeriodDialog_BonusForm
   Font.Style = []
   KeyPreview = True
   OldCreateOrder = False
+  AddOnFormData.RefreshAction = actRefreshStart
   AddOnFormData.isSingle = False
   AddOnFormData.Params = FormParams
   PixelsPerInch = 96
@@ -175,8 +176,8 @@ object Movement_PeriodDialog_BonusForm: TMovement_PeriodDialog_BonusForm
     Top = 152
   end
   object dsdUserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn
-    Left = 519
-    Top = 166
+    Left = 511
+    Top = 86
   end
   object cxPropertiesStore: TcxPropertiesStore
     Components = <
@@ -337,6 +338,21 @@ object Movement_PeriodDialog_BonusForm: TMovement_PeriodDialog_BonusForm
         ComponentItem = 'TextValue'
         DataType = ftString
         MultiSelectSeparator = ','
+      end
+      item
+        Name = 'BranchId'
+        Value = Null
+        Component = GuidesBranch
+        ComponentItem = 'Key'
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'BranchName'
+        Value = Null
+        Component = GuidesBranch
+        ComponentItem = 'TextValue'
+        DataType = ftString
+        MultiSelectSeparator = ','
       end>
     Left = 304
     Top = 65533
@@ -491,5 +507,84 @@ object Movement_PeriodDialog_BonusForm: TMovement_PeriodDialog_BonusForm
       end>
     Left = 369
     Top = 113
+  end
+  object ActionList: TActionList
+    Left = 27
+    Top = 47
+    object actRefresh: TdsdDataSetRefresh
+      Category = 'DSDLib'
+      MoveParams = <>
+      StoredProcList = <>
+      Caption = #1055#1077#1088#1077#1095#1080#1090#1072#1090#1100
+      Hint = #1054#1073#1085#1086#1074#1080#1090#1100' '#1076#1072#1085#1085#1099#1077
+      ImageIndex = 4
+      ShortCut = 116
+      RefreshOnTabSetChanges = False
+    end
+    object actGet_UserUnit: TdsdExecStoredProc
+      Category = 'DSDLib'
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      StoredProc = spGet_UserParams
+      StoredProcList = <
+        item
+          StoredProc = spGet_UserParams
+        end>
+      Caption = 'actGet_UserUnit'
+    end
+    object actRefreshStart: TdsdDataSetRefresh
+      Category = 'DSDLib'
+      MoveParams = <>
+      StoredProc = spGet_UserParams
+      StoredProcList = <
+        item
+          StoredProc = spGet_UserParams
+        end
+        item
+        end>
+      Caption = #1055#1077#1088#1077#1095#1080#1090#1072#1090#1100
+      Hint = #1054#1073#1085#1086#1074#1080#1090#1100' '#1076#1072#1085#1085#1099#1077
+      ShortCut = 116
+      RefreshOnTabSetChanges = False
+    end
+  end
+  object spGet_UserParams: TdsdStoredProc
+    StoredProcName = 'gpGet_UserParams_bonus'
+    DataSets = <>
+    OutputType = otResult
+    Params = <
+      item
+        Name = 'CashId'
+        Value = ''
+        Component = GuidesCash
+        ComponentItem = 'Key'
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'CashName'
+        Value = ''
+        Component = GuidesCash
+        ComponentItem = 'TextValue'
+        DataType = ftString
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'BranchId'
+        Value = ''
+        Component = GuidesBranch
+        ComponentItem = 'Key'
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'BranchName'
+        Value = ''
+        Component = GuidesBranch
+        ComponentItem = 'TextValue'
+        DataType = ftString
+        MultiSelectSeparator = ','
+      end>
+    PackSize = 1
+    Left = 88
+    Top = 168
   end
 end

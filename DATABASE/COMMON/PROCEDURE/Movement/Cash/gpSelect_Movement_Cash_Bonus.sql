@@ -600,7 +600,7 @@ BEGIN
                                               ON OL_Cash_Branch.ObjectId = Object_Cash.Id
                                              AND OL_Cash_Branch.DescId = zc_ObjectLink_Cash_Branch()
 
-                         LEFT JOIN Object AS Object_Branch ON Object_Branch.Id = COALESCE (tmpContainerBonus.BranchId, MILinkObject_Branch.ObjectId, OL_Cash_Branch.ObjectId)
+                         LEFT JOIN Object AS Object_Branch ON Object_Branch.Id = COALESCE (tmpContainerBonus.BranchId, MILinkObject_Branch.ObjectId, OL_Cash_Branch.ChildObjectId)
 
                          LEFT JOIN ObjectLink AS OL_Juridical_Retail
                                               ON OL_Juridical_Retail.ObjectId = Object_Juridical.Id

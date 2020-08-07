@@ -5,7 +5,7 @@ inherited CheckJournalForm: TCheckJournalForm
   AddOnFormData.RefreshAction = actRefreshStart
   AddOnFormData.ExecuteDialogAction = ExecuteDialog
   ExplicitWidth = 927
-  ExplicitHeight = 593
+  ExplicitHeight = 592
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
@@ -24,6 +24,8 @@ inherited CheckJournalForm: TCheckJournalForm
       inherited cxGrid: TcxGrid
         Width = 911
         Height = 477
+        ExplicitLeft = 40
+        ExplicitTop = 80
         ExplicitWidth = 911
         ExplicitHeight = 477
         inherited cxGridDBTableView: TcxGridDBTableView

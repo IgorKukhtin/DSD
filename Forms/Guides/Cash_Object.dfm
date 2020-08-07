@@ -4,7 +4,7 @@ inherited Cash_ObjectForm: TCash_ObjectForm
   ClientWidth = 773
   AddOnFormData.ChoiceAction = dsdChoiceGuides
   ExplicitWidth = 789
-  ExplicitHeight = 413
+  ExplicitHeight = 412
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
@@ -129,6 +129,21 @@ inherited Cash_ObjectForm: TCash_ObjectForm
           Value = Null
           Component = MasterCDS
           ComponentItem = 'CurrencyName'
+          DataType = ftString
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'Branchid'
+          Value = Null
+          Component = MasterCDS
+          ComponentItem = 'Branchid'
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'BranchName'
+          Value = Null
+          Component = MasterCDS
+          ComponentItem = 'BranchName'
           DataType = ftString
           MultiSelectSeparator = ','
         end>

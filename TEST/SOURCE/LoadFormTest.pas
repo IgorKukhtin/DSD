@@ -339,13 +339,14 @@ begin
   TdsdFormStorageFactory.GetStorage.Load('TCashJournalBonusForm');
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TMovement_PeriodDialog_BonusForm'));
   TdsdFormStorageFactory.GetStorage.Load('TMovement_PeriodDialog_BonusForm');
-  exit;
+  //exit;
 {
  // TdsdFormStorageFactory.GetStorage.Save(GetForm('TCashForm'));
  // TdsdFormStorageFactory.GetStorage.Load('TCashForm');
- // TdsdFormStorageFactory.GetStorage.Save(GetForm('TCash_ObjectForm'));
- // TdsdFormStorageFactory.GetStorage.Load('TCash_ObjectForm');
- // TdsdFormStorageFactory.GetStorage.Save(GetForm('TCashEditForm'));
+ }
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TCash_ObjectForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TCash_ObjectForm');
+ {// TdsdFormStorageFactory.GetStorage.Save(GetForm('TCashEditForm'));
  // TdsdFormStorageFactory.GetStorage.Load('TCashEditForm');
   }
 

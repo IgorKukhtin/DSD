@@ -1515,8 +1515,8 @@ inherited CashJournalBonusForm: TCashJournalBonusForm
     Top = 248
   end
   inherited PeriodChoice: TPeriodChoice
-    Left = 216
-    Top = 184
+    Left = 256
+    Top = 200
   end
   inherited RefreshDispatcher: TRefreshDispatcher
     ComponentList = <
@@ -1553,8 +1553,8 @@ inherited CashJournalBonusForm: TCashJournalBonusForm
   end
   inherited spMovementSetErased: TdsdStoredProc
     StoredProcName = 'gpSetErased_Movement_Cash'
-    Left = 152
-    Top = 184
+    Left = 176
+    Top = 200
   end
   inherited FormParams: TdsdFormParams
     Params = <
@@ -1615,8 +1615,8 @@ inherited CashJournalBonusForm: TCashJournalBonusForm
   end
   inherited spMovementReComplete: TdsdStoredProc
     StoredProcName = 'gpReComplete_Movement_Cash'
-    Left = 384
-    Top = 120
+    Left = 656
+    Top = 208
   end
   object GuidesCash: TdsdGuides
     KeyField = 'Id'
@@ -1992,5 +1992,44 @@ inherited CashJournalBonusForm: TCashJournalBonusForm
     PackSize = 1
     Left = 232
     Top = 371
+  end
+  object spGet_UserParams: TdsdStoredProc
+    StoredProcName = 'gpGet_UserParams_bonus'
+    DataSets = <>
+    OutputType = otResult
+    Params = <
+      item
+        Name = 'CashId'
+        Value = ''
+        Component = GuidesCash
+        ComponentItem = 'Key'
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'CashName'
+        Value = ''
+        Component = GuidesCash
+        ComponentItem = 'TextValue'
+        DataType = ftString
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'BranchId'
+        Value = Null
+        Component = GuidesBranch
+        ComponentItem = 'Key'
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'BranchName'
+        Value = Null
+        Component = GuidesBranch
+        ComponentItem = 'TextValue'
+        DataType = ftString
+        MultiSelectSeparator = ','
+      end>
+    PackSize = 1
+    Left = 448
+    Top = 408
   end
 end
