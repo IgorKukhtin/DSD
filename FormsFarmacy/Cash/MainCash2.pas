@@ -494,6 +494,7 @@ type
     N47: TMenuItem;
     MemDataUKTZED: TStringField;
     MainUKTZED: TcxGridDBColumn;
+    MemDataGOODSPSID: TIntegerField;
     procedure WM_KEYDOWN(var Msg: TWMKEYDOWN);
     procedure FormCreate(Sender: TObject);
     procedure actChoiceGoodsInRemainsGridExecute(Sender: TObject);
@@ -1122,6 +1123,8 @@ begin
           FLocalDataBaseDiff.FieldByName('UKTZED').AsVariant
       else MemData.FieldByName('UKTZED').AsString :=
           Trim(FLocalDataBaseDiff.FieldByName('UKTZED').AsString);
+      MemData.FieldByName('GOODSPSID').AsVariant :=
+        FLocalDataBaseDiff.FieldByName('GOODSPSID').AsVariant;
       FLocalDataBaseDiff.Edit;
       FLocalDataBaseDiff.DeleteRecord;
       FLocalDataBaseDiff.Post;
@@ -2565,6 +2568,9 @@ var
   nOldColor: Integer;
   nSumAll: Currency;
   GoodsId: Integer;
+  nRecNo: Integer;
+  GoodsIdPS: Integer;
+  nAmountPS: Currency;
   PartionDateKindId, NDSKindId, DiscountExternalID: Variant;
 begin
   if CheckCDS.RecordCount = 0 then
@@ -2716,6 +2722,38 @@ begin
           exit;
         end;
 
+        if FieldByName('GoodsPairSunId').AsInteger <> 0 then
+        begin
+          // Только целое количество
+          if (Round(FieldByName('Amount').AsCurrency) <> FieldByName('Amount').AsCurrency) then
+          begin
+            ShowMessage('Товар по соц.проекту должен продаваться целыми упаковками...');
+            exit;
+          end;
+
+          // Проверим наличие парного
+          nRecNo := RecNo;
+          nAmountPS := 0;
+          try
+            GoodsIdPS := FieldByName('GoodsPairSunId').AsInteger;
+            First;
+            while not Eof do
+            begin
+              if FieldByName('GoodsId').AsInteger = GoodsIdPS then
+                nAmountPS := nAmountPS + FieldByName('Amount').AsCurrency;
+              Next;
+            end;
+          finally
+            RecNo := nRecNo;
+          end;
+
+          if nAmountPS < FieldByName('Amount').AsCurrency then
+          begin
+            ShowMessage('Количество товара <' + FieldByName('GoodsName').AsString + '> по соц.проекту больше количества парного товара...');
+            exit;
+          end;
+        end;
+
         Next;
       end;
     end;
@@ -2760,6 +2798,8 @@ begin
       exit;
     end;
   end;
+
+
 
   // проверили что есть остаток
   if not gc_User.Local then
@@ -3170,8 +3210,8 @@ begin
         else
           CheckCDS.FieldByName('PriceDiscount').AsVariant :=
             vipList.FieldByName('Price').AsFloat;
-        CheckCDS.FieldByName('UKTZED').AsVariant :=
-          vipList.FieldByName('UKTZED').AsVariant;
+        CheckCDS.FieldByName('GoodsPairSunId').AsVariant :=
+          vipList.FieldByName('GoodsPairSunId').AsVariant;
         // ***21.10.18
         GoodsId := RemainsCDS.FieldByName('Id').AsInteger;
         PartionDateKindId := RemainsCDS.FieldByName('PartionDateKindId').AsVariant;
@@ -4213,6 +4253,8 @@ begin
           MemData.FieldByName('GOODSDINAME').AsVariant;
         RemainsCDS.FieldByName('UKTZED').AsVariant :=
           MemData.FieldByName('UKTZED').AsVariant;
+        RemainsCDS.FieldByName('GoodsPairSunId').AsVariant :=
+          MemData.FieldByName('GOODSPSID').AsVariant;
         RemainsCDS.Post;
       End
       else
@@ -4268,6 +4310,8 @@ begin
             MemData.FieldByName('GOODSDINAME').AsVariant;
           RemainsCDS.FieldByName('UKTZED').AsVariant :=
             MemData.FieldByName('UKTZED').AsVariant;
+          RemainsCDS.FieldByName('GoodsPairSunId').AsVariant :=
+            MemData.FieldByName('GOODSPSID').AsVariant;
           RemainsCDS.Post;
         End;
       End;
@@ -6122,7 +6166,7 @@ end;
 procedure TMainCashForm2.InsertUpdateBillCheckItems;
 var
   lQuantity, lPrice, lPriceSale, lChangePercent, lSummChangePercent,
-    nAmount: Currency;
+    nAmount, nAmountPS: Currency;
   lMsg: String;
   lGoodsId_bySoldRegim, lTypeDiscount, nRecNo: Integer;
   nMultiplicity: Currency;
@@ -6162,6 +6206,77 @@ begin
   begin
     ShowMessage('Деление медикамента заблокировано!');
     exit;
+  end;
+
+  if (SourceClientDataSet.FieldByName('GoodsPairSunId').AsInteger <> 0) then
+  begin
+    // Только целое количество
+    if (Round(nAmount) <> nAmount) then
+    begin
+      ShowMessage('Товар по соц.проекту должен продаваться целыми упаковками...');
+      exit;
+    end;
+
+    // Проверим наличие парного
+    if nAmount > 0 then
+    begin
+      nAmountPS := 0;
+      CheckCDS.First;
+      while not CheckCDS.Eof do
+      begin
+        if checkCDS.FieldByName('GoodsId').AsInteger = SourceClientDataSet.FieldByName('GoodsPairSunId').AsInteger then
+          nAmountPS := nAmountPS + checkCDS.FieldByName('Amount').AsCurrency;
+        CheckCDS.Next;
+      end;
+
+      nRecNo := SourceClientDataSet.RecNo;
+      SourceClientDataSet.DisableControls;
+      try
+        if SourceClientDataSet.Locate('Id', SourceClientDataSet.FieldByName('GoodsPairSunId').AsInteger, []) then
+        begin
+          if SourceClientDataSet.FieldByName('Remains').AsCurrency >= nAmount then
+          begin
+            InsertUpdateBillCheckItems;
+          end else
+          begin
+            if nAmountPS < nAmount then
+            begin
+              ShowMessage('Не хватает количества парного товар к товару по соц.проекту...');
+              exit;
+            end;
+          end;
+        end else
+        begin
+          if nAmountPS < nAmount then
+          begin
+            ShowMessage('Парный товар к товару по соц.проекту не найден...');
+            exit;
+          end;
+        end;
+      finally
+        SourceClientDataSet.EnableControls;
+        SourceClientDataSet.RecNo := nRecNo;
+      end;
+
+    end else if nAmount < 0 then
+    begin
+      nRecNo := checkCDS.FieldByName('GoodsId').AsInteger;
+      SourceClientDataSet.DisableControls;
+      CheckCDS.DisableControls;
+      try
+        if CheckCDS.Locate('GoodsId', SourceClientDataSet.FieldByName('GoodsPairSunId').AsInteger, []) then
+        begin
+          if (nAmount + checkCDS.FieldByName('Amount').AsCurrency) < 0 then
+            edAmount.Text := CurrToStr(- checkCDS.FieldByName('Amount').AsCurrency);
+
+          InsertUpdateBillCheckItems;
+        end;
+      finally
+        SourceClientDataSet.EnableControls;
+        CheckCDS.EnableControls;
+        CheckCDS.Locate('GoodsId', nRecNo, []);
+      end;
+    end;
   end;
 
   if not CheckShareFromPrice(nAmount, SourceClientDataSet.FieldByName('Price')
@@ -6624,6 +6739,8 @@ begin
         CheckCDS.FieldByName('TypeDiscount').AsVariant := lTypeDiscount;
         CheckCDS.FieldByName('UKTZED').AsVariant :=
           SourceClientDataSet.FindField('UKTZED').AsVariant;
+        CheckCDS.FieldByName('GoodsPairSunId').AsVariant :=
+          SourceClientDataSet.FindField('GoodsPairSunId').AsVariant;
 
         if RemainsCDS <> SourceClientDataSet then
         begin
@@ -6736,6 +6853,8 @@ begin
         CheckCDS.FieldByName('TypeDiscount').AsVariant := lTypeDiscount;
         CheckCDS.FieldByName('UKTZED').AsVariant :=
           SourceClientDataSet.FieldByName('UKTZED').AsVariant;
+        CheckCDS.FieldByName('GoodsPairSunId').AsVariant :=
+          SourceClientDataSet.FieldByName('GoodsPairSunId').AsVariant;
 
         if RemainsCDS <> SourceClientDataSet then
         begin
@@ -8822,6 +8941,8 @@ begin
           ADS.FieldByName('DiscountExternalName').AsVariant;
         myVIPListCDS.FieldByName('UKTZED').Value :=
           ADS.FieldByName('UKTZED').AsVariant;
+        myVIPListCDS.FieldByName('GoodsPairSunId').Value :=
+          ADS.FieldByName('GoodsPairSunId').AsVariant;
 
         myVIPListCDS.Post;
         ADS.Next;

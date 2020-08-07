@@ -2425,10 +2425,12 @@ begin
 
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TSendJournalForm'));
   TdsdFormStorageFactory.GetStorage.Load('TSendJournalForm');
-
+   }
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TSendForm'));
   TdsdFormStorageFactory.GetStorage.Load('TSendForm');
-  exit;
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TSendMenegerForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TSendMenegerForm');
+  {
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TSendCashJournalForm'));
   TdsdFormStorageFactory.GetStorage.Load('TSendCashJournalForm');
 
@@ -2439,8 +2441,6 @@ begin
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TSendCashJournalVIPForm'));
   TdsdFormStorageFactory.GetStorage.Load('TSendCashJournalVIPForm');
 
-  TdsdFormStorageFactory.GetStorage.Save(GetForm('TSendMenegerForm'));
-  TdsdFormStorageFactory.GetStorage.Load('TSendMenegerForm');
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TSendMenegerJournalForm'));
   TdsdFormStorageFactory.GetStorage.Load('TSendMenegerJournalForm');
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TSendMenegerVIPJournalForm'));
@@ -2448,7 +2448,7 @@ begin
 
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TConfirmedDialogForm'));
   TdsdFormStorageFactory.GetStorage.Load('TConfirmedDialogForm');
-  }
+
 
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TSendVIP_ToGenerateCheckForm'));
   TdsdFormStorageFactory.GetStorage.Load('TSendVIP_ToGenerateCheckForm');
@@ -2458,7 +2458,7 @@ begin
   TdsdFormStorageFactory.GetStorage.Load('TSendVIP_VIPDialogForm');
 
     // диалог изменения цены получателя
- { TdsdFormStorageFactory.GetStorage.Save(GetForm('TPriceBySendDialogForm'));
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TPriceBySendDialogForm'));
   TdsdFormStorageFactory.GetStorage.Load('TPriceBySendDialogForm');
   }
 end;

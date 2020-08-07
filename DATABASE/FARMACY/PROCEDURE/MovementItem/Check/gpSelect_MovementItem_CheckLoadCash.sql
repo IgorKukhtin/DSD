@@ -40,6 +40,7 @@ RETURNS TABLE (Id Integer
              , DiscountExternalID Integer
              , DiscountExternalName TVarChar
              , UKTZED TVarChar
+             , GoodsPairSunId Integer
               )
 AS
 $BODY$
@@ -148,7 +149,12 @@ BEGIN
                         WHERE COALESCE (Object_Goods_Juridical.UKTZED, '') <> ''
                           AND length(REPLACE(REPLACE(REPLACE(Object_Goods_Juridical.UKTZED, ' ', ''), '.', ''), Chr(160), '')) <= 10
                           AND Object_Goods_Juridical.GoodsMainId <> 0
-                        )
+                        ), 
+     tmpGoodsPairSun AS (SELECT Object_Goods_Retail.Id
+                              , Object_Goods_Retail.GoodsPairSunId
+                         FROM Object_Goods_Retail 
+                         WHERE COALESCE (Object_Goods_Retail.GoodsPairSunId, 0) <> 0
+                           AND Object_Goods_Retail.RetailId = 4)
 
        SELECT
              MovementItem.Id
@@ -190,21 +196,16 @@ BEGIN
            , Object_DiscountExternal.ID                                          AS DiscountCardId
            , Object_DiscountExternal.ValueData                                   AS DiscountCardName
            , tmpGoodsUKTZED.UKTZED                                               AS UKTZED
+           , Object_Goods_PairSun.ID                                             AS GoodsPairSunId         
        FROM tmpMI AS MovementItem
 
             LEFT JOIN MovementItemFloat AS MIFloat_MovementItem
                                         ON MIFloat_MovementItem.MovementItemId = MovementItem.Id
                                        AND MIFloat_MovementItem.DescId = zc_MIFloat_PricePartionDate()
             -- получаем GoodsMainId
-            LEFT JOIN  ObjectLink AS ObjectLink_Child
-                                  ON ObjectLink_Child.ChildObjectId = MovementItem.GoodsId
-                                 AND ObjectLink_Child.DescId = zc_ObjectLink_LinkGoods_Goods()
-            LEFT JOIN  ObjectLink AS ObjectLink_Main
-                                  ON ObjectLink_Main.ObjectId = ObjectLink_Child.ObjectId
-                                 AND ObjectLink_Main.DescId = zc_ObjectLink_LinkGoods_GoodsMain()
-            LEFT JOIN ObjectLink AS ObjectLink_Goods_IntenalSP
-                                 ON ObjectLink_Goods_IntenalSP.ObjectId = ObjectLink_Main.ChildObjectId
-                                AND ObjectLink_Goods_IntenalSP.DescId = zc_ObjectLink_Goods_IntenalSP()
+            LEFT JOIN Object_Goods_Retail AS Object_Goods_Retail ON Object_Goods_Retail.Id = MovementItem.GoodsId
+            LEFT JOIN tmpGoodsPairSun AS Object_Goods_PairSun 
+                                      ON Object_Goods_PairSun.GoodsPairSunId = MovementItem.GoodsId
 
             -- Не делить медикамент на кассах
             LEFT JOIN ObjectBoolean AS ObjectBoolean_DoesNotShare
@@ -225,7 +226,7 @@ BEGIN
             LEFT JOIN Object AS Object_DiscountExternal ON Object_DiscountExternal.Id = MILinkObject_DiscountExternal.ObjectId
 
             -- Коды UKTZED
-            LEFT JOIN tmpGoodsUKTZED ON tmpGoodsUKTZED.GoodsMainId = ObjectLink_Main.ChildObjectId
+            LEFT JOIN tmpGoodsUKTZED ON tmpGoodsUKTZED.GoodsMainId = Object_Goods_Retail.GoodsMainId
                                     AND tmpGoodsUKTZED.Ord = 1
        ;
 END;

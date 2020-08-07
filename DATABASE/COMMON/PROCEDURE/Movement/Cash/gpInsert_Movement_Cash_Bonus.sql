@@ -3,6 +3,7 @@
 DROP FUNCTION IF EXISTS gpInsert_Movement_Cash_Bonus (Integer, Integer, Integer, Integer, TFloat, TVarChar);
 DROP FUNCTION IF EXISTS gpInsert_Movement_Cash_Bonus (Integer, Integer, Integer, Integer, Integer, TFloat, TVarChar);
 DROP FUNCTION IF EXISTS gpInsert_Movement_Cash_Bonus (TDateTime, Integer, Integer, Integer, Integer, Integer, TFloat, TVarChar);
+DROP FUNCTION IF EXISTS gpInsert_Movement_Cash_Bonus (TDateTime, Integer, Integer, Integer, Integer, Integer, Integer, TFloat, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpInsert_Movement_Cash_Bonus(
     IN inOperDate             TDateTime , --
@@ -11,6 +12,7 @@ CREATE OR REPLACE FUNCTION gpInsert_Movement_Cash_Bonus(
     IN inInfoMoneyId          Integer   , -- Управленческие статьи
     IN inMoneyPlaceId         Integer   , -- Объекты работы с деньгами
     IN inContractId           Integer   , -- Контракт
+    IN inBranchId             Integer   , -- филиал
     IN inRemainsToPay         TFloat    , -- Сумма расхода
     IN inSession              TVarChar    -- сессия пользователя
 )
@@ -19,6 +21,7 @@ AS
 $BODY$
    DECLARE vbUserId Integer;
    DECLARE vbId     Integer;
+   DECLARE vbMovementItemId Integer;
 BEGIN
      -- проверка прав пользователя на вызов процедуры
      vbUserId:= lpCheckRight (inSession, zc_Enum_Process_InsertUpdate_Movement_Cash());
@@ -42,24 +45,24 @@ BEGIN
      END IF;
 
      -- сохранили
-     vbId := lpInsertUpdate_Movement_Cash (ioId          := 0
-                                         , inParentId    := NULL
-                                         , inInvNumber   := CAST (NEXTVAL ('Movement_Cash_seq') AS TVarChar)
-                                         , inOperDate    := inOperDate --CAST (CURRENT_DATE AS TDateTime)
-                                         , inServiceDate := NULL           :: TDateTime
-                                         , inAmountIn    := 0              :: TFloat
-                                         , inAmountOut   := inRemainsToPay :: TFloat
-                                         , inAmountSumm  := 0              :: TFloat
-                                         , inAmountCurrency := 0           :: TFloat
-                                         , inComment     := 'Бонусы'
-                                         , inCarId       := 0
-                                         , inCashId      := inCashId
-                                         , inMoneyPlaceId:= inMoneyPlaceId
-                                         , inPositionId  := 0
-                                         , inContractId  := inContractId
-                                         , inInfoMoneyId := inInfoMoneyId
-                                         , inMemberId    := 0
-                                         , inUnitId      := 0
+     vbId := lpInsertUpdate_Movement_Cash (ioId                   := 0
+                                         , inParentId             := NULL
+                                         , inInvNumber            := CAST (NEXTVAL ('Movement_Cash_seq') AS TVarChar)
+                                         , inOperDate             := inOperDate --CAST (CURRENT_DATE AS TDateTime)
+                                         , inServiceDate          := NULL           :: TDateTime
+                                         , inAmountIn             := 0              :: TFloat
+                                         , inAmountOut            := inRemainsToPay :: TFloat
+                                         , inAmountSumm           := 0              :: TFloat
+                                         , inAmountCurrency       := 0           :: TFloat
+                                         , inComment              := 'Бонусы'
+                                         , inCarId                := 0
+                                         , inCashId               := inCashId
+                                         , inMoneyPlaceId         := inMoneyPlaceId
+                                         , inPositionId           := 0
+                                         , inContractId           := inContractId
+                                         , inInfoMoneyId          := inInfoMoneyId
+                                         , inMemberId             := 0
+                                         , inUnitId               := 0
                                          , inCurrencyId           := COALESCE (inCurrencyId, zc_Enum_Currency_Basis())
                                          , inCurrencyValue        := 0
                                          , inParValue             := 0
@@ -67,9 +70,20 @@ BEGIN
                                          , inCurrencyPartnerValue := 0
                                          , inParPartnerValue      := 0
                                          , inMovementId_Partion   := 0
-                                         , inUserId      := vbUserId
+                                         , inUserId               := vbUserId
                                           );
 
+     -- для бонусов сохраняем Филиал
+     -- поиск <Элемент документа>
+     SELECT MovementItem.Id INTO vbMovementItemId FROM MovementItem WHERE MovementItem.MovementId = vbId AND MovementItem.DescId = zc_MI_Master();
+
+     -- сохранили связь с <Объект>
+     PERFORM lpInsertUpdate_MovementItemLinkObject (zc_MILinkObject_Branch (), vbMovementItemId, inBranchId);
+
+     -- сохранили протокол
+     PERFORM lpInsert_MovementItemProtocol (vbMovementItemId, vbUserId, False);
+    
+    
     -- PERFORM lpSetErased_Movement (vbId, vbUserId);
 
    /*  -- создаются временные таблицы - для формирование данных для проводок

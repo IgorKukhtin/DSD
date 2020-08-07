@@ -3,6 +3,7 @@ DROP FUNCTION IF EXISTS gpSelect_Report_Promo_Result (Integer, TVarChar);
 DROP FUNCTION IF EXISTS gpSelect_Report_Promo_Result (TDateTime, TDateTime, Integer, Integer, Integer, TVarChar);
 --DROP FUNCTION IF EXISTS gpSelect_Report_Promo_Result (TDateTime, TDateTime, Boolean, Boolean, Integer, Integer, Integer, TVarChar);
 DROP FUNCTION IF EXISTS gpSelect_Report_Promo_Result (TDateTime, TDateTime, Boolean, Boolean, Boolean, Integer, Integer, Integer, TVarChar);
+DROP FUNCTION IF EXISTS gpSelect_Report_Promo_Result (TDateTime, TDateTime, Boolean, Boolean, Boolean, Integer, Integer, Integer, Integer, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpSelect_Report_Promo_Result (
     IN inStartDate      TDateTime, --дата начала периода
@@ -13,6 +14,7 @@ CREATE OR REPLACE FUNCTION gpSelect_Report_Promo_Result (
     IN inUnitId         Integer,   --подразделение 
     IN inRetailId       Integer,   --подразделение 
     IN inMovementId     Integer,   --документ акции
+    IN inJuridicalId    Integer,   --юр лицо
     IN inSession        TVarChar   --сессия пользователя
 )
 RETURNS TABLE(
@@ -30,6 +32,7 @@ RETURNS TABLE(
     ,CheckDate            TDateTime --дата согласования
     ,RetailName           TBlob     --Сеть, в которой проходит акция
     ,AreaName             TBlob     --Регион
+    ,JuridicalName_str    TBlob     --юр.лица
     ,GoodsName            TVarChar  --Позиция
     ,GoodsCode            Integer   --Код позиции
     ,GoodsId              Integer
@@ -245,7 +248,28 @@ BEGIN
                AND Movement_PromoPartner.DescId   = zc_Movement_PromoPartner()
                AND Movement_PromoPartner.StatusId <> zc_Enum_Status_Erased()
             )                                                                    :: TBlob AS AreaName      -- * регион
-            
+
+          , (SELECT STRING_AGG ( tmp.JuridicalName,'; ')
+             FROM (SELECT DISTINCT Object_Juridical.ValueData AS JuridicalName
+                        , CASE WHEN Object_Juridical.Id = inJuridicalId THEN 1 else 99 END AS ord
+                   FROM
+                      Movement AS Movement_PromoPartner
+
+                      INNER JOIN MovementItem AS MI_PromoPartner
+                                              ON MI_PromoPartner.MovementId = Movement_PromoPartner.ID
+                                             AND MI_PromoPartner.DescId     = zc_MI_Master()
+                                             AND MI_PromoPartner.IsErased   = FALSE
+                      LEFT JOIN ObjectLink AS ObjectLink_Partner_Juridical
+                                           ON ObjectLink_Partner_Juridical.ObjectId = MI_PromoPartner.ObjectId
+                                          AND ObjectLink_Partner_Juridical.DescId   = zc_ObjectLink_Partner_Juridical()
+                      LEFT JOIN Object AS Object_Juridical ON Object_Juridical.Id = COALESCE (ObjectLink_Partner_Juridical.ChildObjectId, MI_PromoPartner.ObjectId)
+                   WHERE Movement_PromoPartner.ParentId = Movement_Promo.Id
+                     AND Movement_PromoPartner.DescId   = zc_Movement_PromoPartner()
+                     AND Movement_PromoPartner.StatusId <> zc_Enum_Status_Erased()
+                   ORDER BY CASE WHEN Object_Juridical.Id = inJuridicalId THEN 1 else 99 END 
+                   ) AS tmp
+            ) ::TBlob AS JuridicalName_str
+
           , MI_PromoGoods.GoodsName
           , MI_PromoGoods.GoodsCode
           , MI_PromoGoods.GoodsId

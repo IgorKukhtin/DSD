@@ -692,19 +692,19 @@ inherited OrderExternalForm: TOrderExternalForm
     object ceStatus_wms: TcxButtonEdit
       Left = 661
       Top = 103
-      Hint = #1057#1090#1072#1090#1091#1089' ('#1086#1073#1084#1077#1085' '#1089' '#1042#1052#1057')'
+      Hint = #1057#1090#1072#1090#1091#1089' ('#1086#1073#1084#1077#1085' '#1089' '#1042#1052#1057')promo'
       ParentShowHint = False
       Properties.Buttons = <
         item
-          Action = ChangeGuidesStatus1
+          Action = ChangeGuidesStatuswms1
           Kind = bkGlyph
         end
         item
-          Action = ChangeGuidesStatus2
+          Action = ChangeGuidesStatuswms2
           Kind = bkGlyph
         end
         item
-          Action = ChangeGuidesStatus3
+          Action = ChangeGuidesStatuswms3
           Default = True
           Kind = bkGlyph
         end>
@@ -1032,7 +1032,7 @@ inherited OrderExternalForm: TOrderExternalForm
         end>
       isShowModal = False
     end
-    object ChangeGuidesStatus1: TChangeGuidesStatus
+    object ChangeGuidesStatuswms1: TChangeGuidesStatus
       Category = 'DSDLib'
       MoveParams = <>
       StoredProc = spUpdate_Status_wms
@@ -1047,7 +1047,7 @@ inherited OrderExternalForm: TOrderExternalForm
       Status = mtComplete
       Guides = GuidesStatus_wms
     end
-    object ChangeGuidesStatus2: TChangeGuidesStatus
+    object ChangeGuidesStatuswms2: TChangeGuidesStatus
       Category = 'DSDLib'
       MoveParams = <>
       StoredProc = spUpdate_Status_wms
@@ -1062,7 +1062,7 @@ inherited OrderExternalForm: TOrderExternalForm
       Status = mtUncomplete
       Guides = GuidesStatus_wms
     end
-    object ChangeGuidesStatus3: TChangeGuidesStatus
+    object ChangeGuidesStatuswms3: TChangeGuidesStatus
       Category = 'DSDLib'
       MoveParams = <>
       StoredProc = spUpdate_Status_wms

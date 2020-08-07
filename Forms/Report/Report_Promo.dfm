@@ -628,7 +628,7 @@ inherited Report_PromoForm: TReport_PromoForm
     object cxLabel6: TcxLabel
       Left = 608
       Top = 6
-      Caption = #1070#1088'. '#1083#1080#1094#1086
+      Caption = #1070#1088'. '#1083#1080#1094#1086':'
     end
     object ceJuridical: TcxButtonEdit
       Left = 665
@@ -1122,8 +1122,12 @@ inherited Report_PromoForm: TReport_PromoForm
       end
       item
         Component = UnitGuides
+      end
+      item
+        Component = GuidesJuridical
       end>
-    Top = 184
+    Left = 288
+    Top = 208
   end
   object UnitGuides: TdsdGuides
     KeyField = 'Id'

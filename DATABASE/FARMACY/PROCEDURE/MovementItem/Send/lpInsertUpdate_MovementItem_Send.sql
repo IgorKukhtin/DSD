@@ -103,6 +103,17 @@ BEGIN
      THEN
           RAISE EXCEPTION 'Ошибка.Документ отложен, корректировка запрещена!';
      END IF;
+     
+     IF vbIsSUN = TRUE AND vbIsInsert = FALSE AND COALESCE (inAmount, 0) = 0 AND COALESCE (vbAmount, 0) > 0
+     THEN
+     
+       -- Сохранили <кол-во>
+       IF EXISTS(SELECT 1 FROM gpSelect_MovementItem_Send_Child(inMovementId := inMovementId,  inSession := inUserId::TVarChar) AS T1 
+                 WHERE T1.Color_calc = zc_Color_Red() AND T1.ParentId = ioId)
+       THEN       
+         PERFORM lpInsertUpdate_MovementItemFloat (zc_MIFloat_ZeroingUKTZED(), ioId, vbAmount);
+       END IF;
+     END IF;
           
      -- сохранили <Элемент документа>
      ioId := lpInsertUpdate_MovementItem (ioId, zc_MI_Master(), inGoodsId, inMovementId, inAmount, NULL);

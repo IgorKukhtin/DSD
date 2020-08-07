@@ -30,10 +30,20 @@ BEGIN
      vbObjectId:= lpGet_DefaultValue ('zc_Object_Retail', vbUserId);
 
      -- 1. Результат работы
-     CREATE TEMP TABLE _tmpResult  (Id Integer, ReturnRate TFloat ) ON COMMIT DROP;
+     CREATE TEMP TABLE _tmpResult  (Id Integer, InventID Integer, ReturnRate TFloat ) ON COMMIT DROP;
+
+     -- 2. Инвентаризации
+     CREATE TEMP TABLE _tmpInvent  (Id Integer) ON COMMIT DROP;
+
+     -- 3. Все что получили
+     CREATE TEMP TABLE _tmpWasGot (Id Integer, InventID Integer, GoodsId Integer, Amount TFloat, AmountReturn  TFloat) ON COMMIT DROP;
+
+     --  4.Перемещения отправителя
+     CREATE TEMP TABLE _tmpWasSentMovement (Id Integer, InventID Integer) ON COMMIT DROP;
 
 
-     PERFORM gpReport_Movement_LeftSendUnit(inOperDate   := Movement.OperDate
+     PERFORM gpReport_Movement_LeftSendUnit(inInventID   := Movement.Id
+                                          , inOperDate   := Movement.OperDate
                                           , inUnitID     := MovementLinkObject_Unit.ObjectId
                                           , inSession    := inSession)
      FROM Movement
@@ -54,7 +64,7 @@ BEGIN
                                AND ObjectLink_Juridical_Retail.DescId = zc_ObjectLink_Juridical_Retail()
                                AND ObjectLink_Juridical_Retail.ChildObjectId = vbObjectId
 
-     WHERE Movement.OperDate BETWEEN inStartDate AND inEndDate 
+     WHERE Movement.OperDate BETWEEN inStartDate AND inEndDate
        AND Movement.DescId = zc_Movement_Inventory()
        AND Movement.StatusId = zc_Enum_Status_Complete();
 

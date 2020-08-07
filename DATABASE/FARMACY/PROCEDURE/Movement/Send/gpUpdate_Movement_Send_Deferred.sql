@@ -158,6 +158,26 @@ BEGIN
    -- свойство не меняем у проведенных документов
    IF COALESCE (vbStatusId, 0) = zc_Enum_Status_UnComplete()
    THEN
+
+       IF inisDeferred = TRUE
+       THEN
+       
+           IF vbisSUN = TRUE AND vbInsertDate >= '10.08.2020'
+           THEN
+             IF EXISTS(SELECT 1 FROM gpSelect_MovementItem_Send_Child(inMovementId := inMovementId,  inSession := inSession) AS T1 WHERE T1.Color_calc = zc_Color_Red())
+             THEN
+               SELECT Object_Goods.ValueData 
+               INTO vbGoodsName
+               FROM gpSelect_MovementItem_Send_Child(inMovementId := inMovementId,  inSession := inSession) AS T1
+                    LEFT JOIN  Object AS Object_Goods ON Object_Goods.Id = T1.GoodsId
+               WHERE Color_calc = zc_Color_Red()
+               LIMIT 1;
+               
+               RAISE EXCEPTION 'Ошибка. Данная позиция <%> запрещена к перемещению, по причине УКТВЭД! Обнулите код!', vbGoodsName;
+             END IF; 
+           END IF; 
+       END IF; 
+
        -- определили признак
        outisDeferred:=  inisDeferred;
        -- сохранили признак
@@ -181,7 +201,7 @@ BEGIN
            THEN
              PERFORM gpUpdate_Movement_Confirmed(inMovementId, TRUE, inSession);
            END IF;
-           
+                      
            IF (vbOccupancySUN > 0) AND vbisSUN = TRUE AND vbisReceived = FALSE
              AND NOT EXISTS (SELECT 1 FROM ObjectLink_UserRole_View  WHERE UserId = vbUserId AND RoleId = zc_Enum_Role_Admin())
            THEN
@@ -273,8 +293,7 @@ BEGIN
            THEN
                RAISE EXCEPTION 'Ошибка. По одному <%> или более товарам Кол-во получателя <%> отличается от Факт кол-ва точки-отправителя <%>.', vbGoodsName, vbAmount, vbAmountStorage;
            END IF;
-
-
+           
            -- собст	венно проводки
            PERFORM lpComplete_Movement_Send(inMovementId  -- ключ Документа
                                           , vbUserId);    -- Пользователь  
@@ -310,3 +329,4 @@ LANGUAGE plpgsql VOLATILE;
  06.02.20                                                                      *
  08.11.17         *
 */
+

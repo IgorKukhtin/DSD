@@ -363,6 +363,7 @@ begin
       AddIntField(LocalDataBaseDiff,   'GOODSDIID'); //Дисконтная программы товара
       AddStrField(LocalDataBaseDiff,   'GOODSDINAM',100); //наименование дисконтной программы товара
       AddStrField(LocalDataBaseDiff,   'UKTZED',20); //Код UKTZED
+      AddIntField(LocalDataBaseDiff,   'GOODSPSID'); //Парный тоапр СП
 
       LocalDataBaseDiff.CreateTable;
     end;
@@ -394,7 +395,8 @@ begin
         (FindField('DISCEXTNAM') = nil) or
         (FindField('GOODSDIID') = nil) or
         (FindField('GOODSDINAM') = nil) or
-        (FindField('UKTZED') = nil));
+        (FindField('UKTZED') = nil) or
+        (FindField('GOODSPSID') = nil));
 
       Close;
 

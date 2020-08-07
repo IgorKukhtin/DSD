@@ -429,6 +429,7 @@ inherited TechnicalRediscountCashierForm: TTechnicalRediscountCashierForm
         end>
     end
     inherited actUpdateMainDS: TdsdUpdateDataSet
+      BeforeAction = actPUSH
       StoredProcList = <
         item
           StoredProc = spInsertUpdateMIMaster
@@ -455,7 +456,6 @@ inherited TechnicalRediscountCashierForm: TTechnicalRediscountCashierForm
       ReportNameParam.Value = #1055#1088#1086#1076#1072#1078#1072
     end
     inherited actAddMask: TdsdExecStoredProc
-      AfterAction = actChoiceGoods
       BeforeAction = actChoiceGoods
       Caption = #1044#1086#1073#1072#1074#1080#1090#1100' '#1090#1086#1074#1072#1088' '#1080#1079' '#1087#1086#1083#1085#1086#1075#1086' '#1087#1077#1088#1077#1095#1085#1103' '#1087#1086' '#1089#1077#1090#1080
       Hint = #1044#1086#1073#1072#1074#1080#1090#1100' '#1090#1086#1074#1072#1088' '#1080#1079' '#1087#1086#1083#1085#1086#1075#1086' '#1087#1077#1088#1077#1095#1085#1103' '#1087#1086' '#1089#1077#1090#1080
@@ -505,6 +505,16 @@ inherited TechnicalRediscountCashierForm: TTechnicalRediscountCashierForm
           MultiSelectSeparator = ','
         end>
       isShowModal = True
+    end
+    object actPUSH: TdsdShowPUSHMessage
+      Category = 'DSDLib'
+      MoveParams = <>
+      StoredProc = spPUSH
+      StoredProcList = <
+        item
+          StoredProc = spPUSH
+        end>
+      Caption = 'actPUSH'
     end
   end
   inherited spSelect: TdsdStoredProc
@@ -851,11 +861,43 @@ inherited TechnicalRediscountCashierForm: TTechnicalRediscountCashierForm
   end
   inherited spErasedMIMaster: TdsdStoredProc
     StoredProcName = 'gpSetErased_MovementItem_TechnicalRediscount'
+    Params = <
+      item
+        Name = 'inMovementItemId'
+        Component = MasterCDS
+        ComponentItem = 'Id'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'outIsErased'
+        Value = False
+        Component = MasterCDS
+        ComponentItem = 'isErased'
+        DataType = ftBoolean
+        MultiSelectSeparator = ','
+      end>
     Left = 550
     Top = 224
   end
   inherited spUnErasedMIMaster: TdsdStoredProc
     StoredProcName = 'gpSetUnErased_MovementItem_TechnicalRediscount'
+    Params = <
+      item
+        Name = 'inMovementItemId'
+        Component = MasterCDS
+        ComponentItem = 'Id'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'outIsErased'
+        Value = False
+        Component = MasterCDS
+        ComponentItem = 'isErased'
+        DataType = ftBoolean
+        MultiSelectSeparator = ','
+      end>
     Left = 654
     Top = 248
   end
@@ -1172,5 +1214,39 @@ inherited TechnicalRediscountCashierForm: TTechnicalRediscountCashierForm
       end>
     Left = 352
     Top = 16
+  end
+  object spPUSH: TdsdStoredProc
+    StoredProcName = 'gpSelect_ShowPUSH_TechnicalRediscount'
+    DataSets = <>
+    OutputType = otResult
+    Params = <
+      item
+        Name = 'inMovementID'
+        Value = ''
+        Component = FormParams
+        ComponentItem = 'Id'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'outShowMessage'
+        Value = Null
+        DataType = ftBoolean
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'outPUSHType'
+        Value = Null
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'outText'
+        Value = Null
+        DataType = ftWideString
+        MultiSelectSeparator = ','
+      end>
+    PackSize = 1
+    Left = 322
+    Top = 344
   end
 end

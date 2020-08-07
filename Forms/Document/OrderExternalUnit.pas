@@ -124,6 +124,13 @@ type
     actInsertFromOrder: TdsdExecStoredProc;
     spInsertFromOrder: TdsdStoredProc;
     actShowMessage: TShowMessageAction;
+    spUpdate_Status_wms: TdsdStoredProc;
+    cxLabel24: TcxLabel;
+    ceStatus_wms: TcxButtonEdit;
+    ChangeGuidesStatuswms1: TChangeGuidesStatus;
+    ChangeGuidesStatuswms2: TChangeGuidesStatus;
+    ChangeGuidesStatuswms3: TChangeGuidesStatus;
+    GuidesStatus_wms: TdsdGuides;
   private
     { Private declarations }
   public

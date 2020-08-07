@@ -91,6 +91,9 @@ type
     CommentMain: TcxGridDBColumn;
     spUpdate_MainDiscount: TdsdStoredProc;
     actUpdateDataSet: TdsdUpdateDataSet;
+    cxLabel6: TcxLabel;
+    ceJuridical: TcxButtonEdit;
+    GuidesJuridical: TdsdGuides;
   private
     { Private declarations }
   public
