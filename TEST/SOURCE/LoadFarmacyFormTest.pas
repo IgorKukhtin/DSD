@@ -413,6 +413,7 @@ begin
 }
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TCheckForm'));
   TdsdFormStorageFactory.GetStorage.Load('TCheckForm');
+
  {
 
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TPartionGoodsListForm'));
@@ -2408,6 +2409,9 @@ begin
   //
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TCheckItemJournalForm'));
   TdsdFormStorageFactory.GetStorage.Load('TCheckItemJournalForm');
+
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TCheckToReturnForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TCheckToReturnForm');
 end;
 
 procedure TLoadFormTest.LoadSeasonalityCoefficientFormTest;
