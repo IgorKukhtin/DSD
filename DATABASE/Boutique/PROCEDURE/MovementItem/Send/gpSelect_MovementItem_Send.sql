@@ -29,6 +29,12 @@ RETURNS TABLE (NPP Integer
              , OperPrice TFloat, CountForPrice TFloat
              , OperPriceList TFloat, OperPriceListTo TFloat, OperPriceListTo_start TFloat
              , OperPriceListBalance TFloat -- , OperPriceListToBalance TFloat, OperPriceListToBalance_start TFloat
+
+             , OperPriceList_disc TFloat
+             , OperPriceListTo_disc TFloat
+             , OperPriceListBalance_disc TFloat
+             , OperPriceListToBalance_disc TFloat
+
              , TotalSumm TFloat , TotalSummBalance TFloat
 
              , TotalSummPriceListBalance TFloat, TotalSummPriceListToBalance TFloat, TotalSummPriceListToBalance_start TFloat
@@ -360,6 +366,21 @@ BEGIN
                                                                ELSE tmpMI.CurrencyValue / CASE WHEN tmpMI.ParValue <> 0 THEN tmpMI.ParValue ELSE 1 END
                                                           END AS NUMERIC (16, 2))
                  )                          :: TFloat AS OperPriceListBalance
+
+               -- цены с учетом сезонной скидки
+               , CAST (tmpPriceList_from.OperPriceList * (1 - COALESCE (tmpDiscount_From.DiscountTax, 0) / 100) AS NUMERIC (16, 0)) :: TFloat AS OperPriceList_disc
+               , CAST (tmpPriceList_to.OperPriceList * (1 - COALESCE (tmpDiscount_To.DiscountTax, 0) / 100) AS NUMERIC (16, 0))     :: TFloat AS OperPriceListTo_disc
+               , CAST ((tmpPriceList_from.OperPriceList * CASE WHEN tmpPriceList_from.CurrencyId = zc_Currency_Basis()
+                                                               THEN 1
+                                                               ELSE tmpMI.CurrencyValue / CASE WHEN tmpMI.ParValue <> 0 THEN tmpMI.ParValue ELSE 1 END
+                                                          END) 
+                        * (1 - COALESCE (tmpDiscount_From.DiscountTax, 0) / 100)  AS NUMERIC (16, 0))                               :: TFloat AS OperPriceListBalance_disc
+               , CAST ((tmpPriceList_to.OperPriceList * CASE WHEN tmpPriceList_to.CurrencyId = zc_Currency_Basis()
+                                                               THEN 1
+                                                               ELSE tmpMI.CurrencyValue / CASE WHEN tmpMI.ParValue <> 0 THEN tmpMI.ParValue ELSE 1 END
+                                                          END) 
+                        * (1 - COALESCE (tmpDiscount_To.DiscountTax, 0) / 100)  AS NUMERIC (16, 0))                                 :: TFloat AS OperPriceListToBalance_disc
+
                , 0                          :: TFloat AS TotalSumm
                , 0                          :: TFloat AS TotalSummBalance
                , 0                          :: TFloat AS TotalSummPriceListBalance
@@ -379,7 +400,7 @@ BEGIN
                  -- сезонная скидка от кого
                , tmpDiscount_From.DiscountTax ::TFloat AS DiscountTax_From
                  -- сезонная скидка кому
-               , tmpDiscount_From.DiscountTax ::TFloat AS DiscountTax_To
+               , tmpDiscount_To.DiscountTax   ::TFloat AS DiscountTax_To
 
                , FALSE                                 AS isProtocol
                , CASE WHEN tmpReportOLAP.PartionId > 0 THEN TRUE ELSE FALSE END AS isOlap
@@ -468,6 +489,20 @@ BEGIN
                                                           END AS NUMERIC (16, 2))
                  ) :: TFloat AS OperPriceListBalance
 
+               -- цены с учетом сезонной скидки
+               , CAST (tmpMI.OperPriceList * (1 - COALESCE (tmpDiscount_From.DiscountTax, 0) / 100) AS NUMERIC (16, 0))     :: TFloat AS OperPriceList_disc
+               , CAST (tmpMI.OperPriceListTo * (1 - COALESCE (tmpDiscount_To.DiscountTax, 0) / 100) AS NUMERIC (16, 0))     :: TFloat AS OperPriceListTo_disc
+               , CAST ((tmpMI.OperPriceList * CASE WHEN tmpPriceList_from.CurrencyId = zc_Currency_Basis()
+                                                   THEN 1
+                                                   ELSE tmpMI.CurrencyValue / CASE WHEN tmpMI.ParValue <> 0 THEN tmpMI.ParValue ELSE 1 END
+                                              END) 
+                        * (1 - COALESCE (tmpDiscount_From.DiscountTax, 0) / 100)  AS NUMERIC (16, 0))                               :: TFloat AS OperPriceListBalance_disc
+               , CAST ((tmpMI.OperPriceListTo * CASE WHEN tmpPriceList_to.CurrencyId = zc_Currency_Basis()
+                                                          THEN 1
+                                                          ELSE tmpMI.CurrencyValue / CASE WHEN tmpMI.ParValue <> 0 THEN tmpMI.ParValue ELSE 1 END
+                                                     END) 
+                        * (1 - COALESCE (tmpDiscount_To.DiscountTax, 0) / 100)  AS NUMERIC (16, 0))                                 :: TFloat AS OperPriceListToBalance_disc
+
                  -- Сумма вх.
                , tmpMI.TotalSumm  :: TFloat AS TotalSumm
                  -- Сумма вх. - ГРН
@@ -512,7 +547,7 @@ BEGIN
                -- сезонная скидка от кого
                , tmpDiscount_From.DiscountTax ::TFloat AS DiscountTax_From
                -- сезонная скидка кому
-               , tmpDiscount_From.DiscountTax ::TFloat AS DiscountTax_To
+               , tmpDiscount_To.DiscountTax   ::TFloat AS DiscountTax_To
 
                , CASE WHEN tmpProtocol.MovementItemId > 0 THEN TRUE ELSE FALSE END AS isProtocol
                , CASE WHEN tmpReportOLAP.PartionId > 0 THEN TRUE ELSE FALSE END    AS isOlap
@@ -795,6 +830,20 @@ BEGIN
                                                           END AS NUMERIC (16, 2))
                  ) :: TFloat AS OperPriceListBalance
 
+               -- цены с учетом сезонной скидки
+               , CAST (tmpMI.OperPriceList * (1 - COALESCE (tmpDiscount_From.DiscountTax, 0) / 100) AS NUMERIC (16, 0))     :: TFloat AS OperPriceList_disc
+               , CAST (tmpMI.OperPriceListTo * (1 - COALESCE (tmpDiscount_To.DiscountTax, 0) / 100) AS NUMERIC (16, 0))     :: TFloat AS OperPriceListTo_disc
+               , CAST ((tmpMI.OperPriceList * CASE WHEN tmpPriceList_from.CurrencyId = zc_Currency_Basis()
+                                                   THEN 1
+                                                   ELSE tmpMI.CurrencyValue / CASE WHEN tmpMI.ParValue <> 0 THEN tmpMI.ParValue ELSE 1 END
+                                              END) 
+                        * (1 - COALESCE (tmpDiscount_From.DiscountTax, 0) / 100)  AS NUMERIC (16, 0))                               :: TFloat AS OperPriceListBalance_disc
+               , CAST ((tmpMI.OperPriceListTo * CASE WHEN tmpPriceList_to.CurrencyId = zc_Currency_Basis()
+                                                          THEN 1
+                                                          ELSE tmpMI.CurrencyValue / CASE WHEN tmpMI.ParValue <> 0 THEN tmpMI.ParValue ELSE 1 END
+                                                     END) 
+                        * (1 - COALESCE (tmpDiscount_To.DiscountTax, 0) / 100)  AS NUMERIC (16, 0))                                 :: TFloat AS OperPriceListToBalance_disc
+
                  -- Сумма вх.
                , tmpMI.TotalSumm           ::TFloat
                  -- Сумма вх. - ГРН
@@ -898,6 +947,7 @@ $BODY$
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.
+ 07.08.20         *
  28.01.20         * add OperPriceListTo
  15.05.18         * add isOlap
  03.04.18         *

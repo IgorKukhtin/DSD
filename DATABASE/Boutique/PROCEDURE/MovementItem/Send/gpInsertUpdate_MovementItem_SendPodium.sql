@@ -365,4 +365,4 @@ $BODY$
 */
 
 -- тест
---
+--select * from gpInsertUpdate_MovementItem_SendPodium(ioId := 0 , inMovementId := 6540 , inGoodsName := '13801'::TVarChar , inGoodsSizeName := ''::TVarChar , ioAmount := 1::TFloat , ioOperPriceList := 250::TFloat , ioOperPriceListTo_start := 7525::TFloat , ioOperPriceListTo := 7525 ::TFloat,  inSession := '2'::TVarChar);

@@ -504,6 +504,30 @@ object SendPodiumForm: TSendPodiumForm
             Options.Editing = False
             Width = 80
           end
+          object OperPriceList_disc: TcxGridDBColumn
+            Caption = #1062#1077#1085#1072' '#1089' '#1091#1095'. '#1089#1082'. ('#1054#1090' '#1082#1086#1075#1086', '#1087#1088#1072#1081#1089') '
+            DataBinding.FieldName = 'OperPriceList_disc'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 4
+            Properties.DisplayFormat = ',0.####;-,0.####; ;'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            HeaderHint = #1062#1077#1085#1072' '#1087#1086' '#1087#1088#1072#1081#1089#1091' '#1076#1083#1103' '#1084#1072#1075#1072#1079#1080#1085#1072' '#1054#1090' '#1082#1086#1075#1086' '#1089' '#1091#1095#1077#1090#1086#1084' '#1089#1077#1079#1086#1085#1085#1086#1081' '#1089#1082#1080#1076#1082#1080
+            Options.Editing = False
+            Width = 70
+          end
+          object OperPriceListBalance_disc: TcxGridDBColumn
+            Caption = #1062#1077#1085#1072' '#1043#1056#1053' '#1089' '#1091#1095'. '#1089#1082'. ('#1054#1090' '#1082#1086#1075#1086', '#1087#1088#1072#1081#1089')'
+            DataBinding.FieldName = 'OperPriceListBalance_disc'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 4
+            Properties.DisplayFormat = ',0.####;-,0.####; ;'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            HeaderHint = #1062#1077#1085#1072' '#1087#1086' '#1087#1088#1072#1081#1089#1091' '#1076#1083#1103' '#1084#1072#1075#1072#1079#1080#1085#1072' '#1054#1090' '#1082#1086#1075#1086' '#1089' '#1091#1095#1077#1090#1086#1084' '#1089#1077#1079#1086#1085#1085#1086#1081' '#1089#1082#1080#1076#1082#1080
+            Options.Editing = False
+            Width = 80
+          end
           object TotalSummPriceList: TcxGridDBColumn
             Caption = #1057#1091#1084#1084#1072' ('#1054#1090' '#1082#1086#1075#1086', '#1087#1088#1072#1081#1089')'
             DataBinding.FieldName = 'TotalSummPriceList'
@@ -599,6 +623,29 @@ object SendPodiumForm: TSendPodiumForm
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             HeaderHint = #1062#1077#1085#1072' '#1087#1086' '#1087#1088#1072#1081#1089#1091' '#1076#1083#1103' '#1084#1072#1075#1072#1079#1080#1085#1072' '#1050#1086#1084#1091
+            Width = 80
+          end
+          object OperPriceListTo_disc: TcxGridDBColumn
+            Caption = #1062#1077#1085#1072' '#1089' '#1091#1095'. '#1089#1082'. ('#1050#1086#1084#1091', '#1087#1088#1072#1081#1089')'
+            DataBinding.FieldName = 'OperPriceListTo_disc'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 4
+            Properties.DisplayFormat = ',0.####;-,0.####; ;'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            HeaderHint = #1062#1077#1085#1072' '#1087#1086' '#1087#1088#1072#1081#1089#1091' '#1076#1083#1103' '#1084#1072#1075#1072#1079#1080#1085#1072' '#1050#1086#1084#1091' '#1089' '#1091#1095#1077#1090#1086#1084' '#1089#1077#1079#1086#1085#1085#1086#1081' '#1089#1082#1080#1076#1082#1080
+            Width = 80
+          end
+          object OperPriceListToBalance_disc: TcxGridDBColumn
+            Caption = #1062#1077#1085#1072' '#1043#1056#1053' '#1089' '#1091#1095'. '#1089#1082'. ('#1050#1086#1084#1091', '#1087#1088#1072#1081#1089')'
+            DataBinding.FieldName = 'OperPriceListToBalance_disc'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 4
+            Properties.DisplayFormat = ',0.####;-,0.####; ;'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            HeaderHint = #1062#1077#1085#1072' '#1087#1086' '#1087#1088#1072#1081#1089#1091' '#1076#1083#1103' '#1084#1072#1075#1072#1079#1080#1085#1072' '#1050#1086#1084#1091' '#1089' '#1091#1095#1077#1090#1086#1084' '#1089#1077#1079#1086#1085#1085#1086#1081' '#1089#1082#1080#1076#1082#1080
+            Options.Editing = False
             Width = 80
           end
           object TotalSummPriceListTo: TcxGridDBColumn
@@ -1419,7 +1466,7 @@ object SendPodiumForm: TSendPodiumForm
         end
         item
           Name = 'isOperPrice'
-          Value = 'True'
+          Value = True
           DataType = ftBoolean
           ParamType = ptInput
           MultiSelectSeparator = ','
@@ -1480,14 +1527,14 @@ object SendPodiumForm: TSendPodiumForm
         end
         item
           Name = 'isOperPrice'
-          Value = 'False'
+          Value = False
           DataType = ftBoolean
           ParamType = ptInput
           MultiSelectSeparator = ','
         end
         item
           Name = 'isPriceAll'
-          Value = 'true'
+          Value = True
           DataType = ftBoolean
           ParamType = ptInput
           MultiSelectSeparator = ','
@@ -1548,14 +1595,14 @@ object SendPodiumForm: TSendPodiumForm
         end
         item
           Name = 'isOperPrice'
-          Value = 'False'
+          Value = False
           DataType = ftBoolean
           ParamType = ptInput
           MultiSelectSeparator = ','
         end
         item
           Name = 'isPriceAll'
-          Value = 'false'
+          Value = False
           DataType = ftBoolean
           ParamType = ptInput
           MultiSelectSeparator = ','
@@ -1823,14 +1870,14 @@ object SendPodiumForm: TSendPodiumForm
         end
         item
           Name = 'isPeriod'
-          Value = 'TRUE'
+          Value = True
           DataType = ftBoolean
           ParamType = ptInput
           MultiSelectSeparator = ','
         end
         item
           Name = 'isPartion'
-          Value = 'False'
+          Value = False
           DataType = ftBoolean
           ParamType = ptInput
           MultiSelectSeparator = ','
@@ -1922,14 +1969,14 @@ object SendPodiumForm: TSendPodiumForm
         end
         item
           Name = 'isPeriod'
-          Value = 'TRUE'
+          Value = True
           DataType = ftBoolean
           ParamType = ptInput
           MultiSelectSeparator = ','
         end
         item
           Name = 'isPartion'
-          Value = 'False'
+          Value = False
           DataType = ftBoolean
           ParamType = ptInput
           MultiSelectSeparator = ','
@@ -1984,6 +2031,7 @@ object SendPodiumForm: TSendPodiumForm
       PostDataSetBeforeExecute = False
       PostDataSetAfterExecute = True
       View = cxGridDBTableView
+      Action = actPartionGoodsChoice
       Params = <>
       Caption = #1044#1086#1073#1072#1074#1080#1090#1100' <'#1058#1086#1074#1072#1088'>'
       Hint = #1044#1086#1073#1072#1074#1080#1090#1100' <'#1058#1086#1074#1072#1088'>'
@@ -3400,7 +3448,7 @@ object SendPodiumForm: TSendPodiumForm
       end
       item
         Name = 'inIsGoodsPrint'
-        Value = 'TRUE'
+        Value = True
         DataType = ftBoolean
         ParamType = ptInput
         MultiSelectSeparator = ','
@@ -3658,7 +3706,7 @@ object SendPodiumForm: TSendPodiumForm
       end
       item
         Name = 'inIsReportOLAP'
-        Value = 'TRUE'
+        Value = True
         DataType = ftBoolean
         ParamType = ptInput
         MultiSelectSeparator = ','
@@ -3688,7 +3736,7 @@ object SendPodiumForm: TSendPodiumForm
       end
       item
         Name = 'inIsReportOLAP'
-        Value = 'FALSE'
+        Value = False
         DataType = ftBoolean
         ParamType = ptInput
         MultiSelectSeparator = ','
@@ -3737,7 +3785,7 @@ object SendPodiumForm: TSendPodiumForm
       end
       item
         Name = 'inIsGoodsPrint'
-        Value = 'FALSE'
+        Value = False
         DataType = ftBoolean
         ParamType = ptInput
         MultiSelectSeparator = ','
