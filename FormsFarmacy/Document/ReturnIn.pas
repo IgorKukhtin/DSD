@@ -59,12 +59,25 @@ type
     SPKindGuides: TdsdGuides;
     bbGet_SP_Prior: TdxBarButton;
     cxLabel8: TcxLabel;
-    edFiscalCheckNumber: TcxTextEdit;
     NDS: TcxGridDBColumn;
-    InvNumber_Check_Full: TcxGridDBColumn;
     actInsertRecord: TInsertRecord;
     bb: TdxBarButton;
     actOpenChoiceForm: TOpenChoiceForm;
+    edInvNumberCheck: TcxButtonEdit;
+    GuidesInvNumberCheck: TdsdGuides;
+    cxLabel9: TcxLabel;
+    edPaidTypeCheck: TcxTextEdit;
+    ceTotalSummCheck: TcxCurrencyEdit;
+    cxLabel10: TcxLabel;
+    edOperDateCheck: TcxDateEdit;
+    cxLabel11: TcxLabel;
+    ContainerId: TcxGridDBColumn;
+    AmountCheck: TcxGridDBColumn;
+    OperDateIncome: TcxGridDBColumn;
+    InvnumberIncome: TcxGridDBColumn;
+    FromNameIncome: TcxGridDBColumn;
+    ExpirationDate: TcxGridDBColumn;
+    PartionDateKindName: TcxGridDBColumn;
   private
     { Private declarations }
   public

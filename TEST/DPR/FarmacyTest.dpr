@@ -920,7 +920,8 @@ uses
   Report_Check_Count in '..\..\FormsFarmacy\Report\Report_Check_Count.pas' {Report_Check_CountForm: TParentForm},
   Report_Check_CountDialog in '..\..\FormsFarmacy\Report\Report_Check_CountDialog.pas' {Report_Check_CountDialogForm: TParentForm},
   Report_LeftSend in '..\..\FormsFarmacy\Report\Report_LeftSend.pas' {Report_LeftSendForm: TParentForm},
-  CheckToReturn in '..\..\FormsFarmacy\Document\CheckToReturn.pas' {CheckToReturnForm: TParentForm};
+  CheckToReturn in '..\..\FormsFarmacy\Document\CheckToReturn.pas' {CheckToReturnForm: TParentForm},
+  CheckToReturnDialog in '..\..\FormsFarmacy\Document\CheckToReturnDialog.pas' {CheckToReturnDialogForm: TParentForm};
 
 {$R *.res}
 {$R DevExpressRus.res}

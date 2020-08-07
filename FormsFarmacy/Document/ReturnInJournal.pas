@@ -36,6 +36,8 @@ type
     GuidesUnit: TdsdGuides;
     spGet_UserUnit: TdsdStoredProc;
     actRefreshStart: TdsdDataSetRefresh;
+    InvNumberCheck: TcxGridDBColumn;
+    OperDateCheck: TcxGridDBColumn;
   private
     { Private declarations }
   public

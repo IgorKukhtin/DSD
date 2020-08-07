@@ -1,9 +1,10 @@
 -- Function: gpInsertUpdate_Movement_RetutnIn()
 
-DROP FUNCTION IF EXISTS gpInsertUpdate_Movement_RetutnIn (Integer, TVarChar, TDateTime, Integer, Integer, TVarChar, TVarChar);
+DROP FUNCTION IF EXISTS gpInsertUpdate_Movement_RetutnIn (Integer, Integer, TVarChar, TDateTime, Integer, Integer, TVarChar, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpInsertUpdate_Movement_RetutnIn(
- INOUT ioId                    Integer    , -- Ключ объекта <Документ продажи>
+ INOUT ioId                    Integer    , -- Ключ объекта <Документ>
+    IN inParentId              Integer    , -- Ключ объекта <Документ продажи>
     IN inInvNumber             TVarChar   , -- Номер документа
     IN inOperDate              TDateTime  , -- Дата документа
     IN inUnitId                Integer    , -- От кого (подразделение)
@@ -21,6 +22,7 @@ BEGIN
 
     -- сохранили <Документ>
     ioId := lpInsertUpdate_Movement_RetutnIn (ioId                 := ioId
+                                            , inParentId           := inParentId
                                             , inInvNumber          := inInvNumber
                                             , inOperDate           := inOperDate
                                             , inUnitId             := inUnitId

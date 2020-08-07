@@ -1,28 +1,32 @@
 inherited CheckToReturnForm: TCheckToReturnForm
-  Caption = 'VIP '#1095#1077#1082#1080
+  Caption = #1042#1099#1073#1086#1088' '#1095#1077#1082#1072' '#1076#1083#1103' '#1074#1086#1079#1074#1088#1072#1090#1072
   ClientHeight = 382
-  ClientWidth = 668
+  ClientWidth = 703
   AddOnFormData.ChoiceAction = dsdChoiceGuides
-  ExplicitWidth = 684
+  AddOnFormData.ExecuteDialogAction = ExecuteDialog
+  AddOnFormData.Params = FormParams
+  ExplicitWidth = 719
   ExplicitHeight = 421
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
-    Width = 668
-    Height = 356
-    ExplicitWidth = 668
-    ExplicitHeight = 356
-    ClientRectBottom = 356
-    ClientRectRight = 668
+    Top = 59
+    Width = 703
+    Height = 323
+    ExplicitTop = 59
+    ExplicitWidth = 703
+    ExplicitHeight = 323
+    ClientRectBottom = 323
+    ClientRectRight = 703
     inherited tsMain: TcxTabSheet
-      ExplicitWidth = 668
-      ExplicitHeight = 356
+      ExplicitWidth = 703
+      ExplicitHeight = 323
       inherited cxGrid: TcxGrid
-        Width = 273
-        Height = 356
+        Width = 329
+        Height = 323
         Align = alLeft
-        ExplicitWidth = 273
-        ExplicitHeight = 356
+        ExplicitWidth = 329
+        ExplicitHeight = 323
         inherited cxGridDBTableView: TcxGridDBTableView
           OptionsData.Deleting = False
           OptionsData.DeletingConfirmation = False
@@ -57,22 +61,6 @@ inherited CheckToReturnForm: TCheckToReturnForm
             HeaderHint = #1059#1076#1072#1083#1077#1085
             Width = 20
           end
-          object ConfirmedKindName: TcxGridDBColumn
-            Caption = #1057#1090#1072#1090'. '#1079'.'
-            DataBinding.FieldName = 'ConfirmedKindName'
-            HeaderHint = #1057#1090#1072#1090#1091#1089' '#1079#1072#1082#1072#1079#1072' ('#1089#1072#1081#1090')'
-            Width = 55
-          end
-          object CashMember: TcxGridDBColumn
-            Caption = #1052#1077#1085#1077#1076#1078#1077#1088
-            DataBinding.FieldName = 'CashMember'
-            Width = 83
-          end
-          object Bayer: TcxGridDBColumn
-            Caption = #1055#1086#1082#1091#1087#1072#1090#1077#1083#1100
-            DataBinding.FieldName = 'Bayer'
-            Width = 77
-          end
           object OperDate: TcxGridDBColumn
             Caption = #1044#1072#1090#1072
             DataBinding.FieldName = 'OperDate'
@@ -82,17 +70,6 @@ inherited CheckToReturnForm: TCheckToReturnForm
             Caption = #1057#1091#1084#1084#1072
             DataBinding.FieldName = 'TotalSumm'
             Width = 50
-          end
-          object SummCard: TcxGridDBColumn
-            Caption = #1055#1088#1077#1076#1086#1087#1083#1072#1090#1072' ('#1092#1072#1082#1090#1080#1095#1077#1089#1082#1072#1103')'
-            DataBinding.FieldName = 'SummCard'
-            PropertiesClassName = 'TcxCurrencyEditProperties'
-            Properties.DisplayFormat = ',0.00;-,0.00; ;'
-            HeaderAlignmentHorz = taCenter
-            HeaderAlignmentVert = vaCenter
-            Options.Editing = False
-            Styles.Content = dmMain.cxHeaderL3Style
-            Width = 99
           end
           object CashRegisterName: TcxGridDBColumn
             Caption = #1050#1072#1089#1089#1072
@@ -106,70 +83,10 @@ inherited CheckToReturnForm: TCheckToReturnForm
             HeaderHint = #8470' '#1076#1086#1082#1091#1084#1077#1085#1090#1072
             Width = 50
           end
-          object NumberOrder: TcxGridDBColumn
-            Caption = #8470' '#1079'.'
-            DataBinding.FieldName = 'InvNumberOrder'
-            HeaderHint = #8470' '#1079#1072#1082#1072#1079#1072' ('#1089#1072#1081#1090')'
-            Width = 45
-          end
           object UnitName: TcxGridDBColumn
             Caption = #1040#1087#1090#1077#1082#1072
             DataBinding.FieldName = 'UnitName'
             Width = 55
-          end
-          object BayerPhone: TcxGridDBColumn
-            Caption = #1058#1077#1083'. '#1087#1086#1082'.'
-            DataBinding.FieldName = 'BayerPhone'
-            Width = 65
-          end
-          object ConfirmedKindClientName: TcxGridDBColumn
-            Caption = #1057#1084#1089
-            DataBinding.FieldName = 'ConfirmedKindClientName'
-            HeaderHint = #1057#1090#1072#1090#1091#1089' '#1079#1072#1082#1072#1079#1072' ('#1054#1090#1087#1088#1072#1074#1083#1077#1085' '#1082#1083#1080#1077#1085#1090#1091')'
-            Options.Editing = False
-            Width = 50
-          end
-          object DiscountCardNumber: TcxGridDBColumn
-            Caption = #8470' '#1082#1072#1088#1090#1099
-            DataBinding.FieldName = 'DiscountCardNumber'
-            Width = 70
-          end
-          object DiscountExternalName: TcxGridDBColumn
-            Caption = #1055#1088#1086#1077#1082#1090
-            DataBinding.FieldName = 'DiscountExternalName'
-            Width = 70
-          end
-          object InvNumberSP: TcxGridDBColumn
-            Caption = #8470' '#1088#1077#1094#1077#1087#1090#1072
-            DataBinding.FieldName = 'InvNumberSP'
-            HeaderAlignmentHorz = taCenter
-            HeaderAlignmentVert = vaCenter
-            Options.Editing = False
-            Width = 70
-          end
-          object MedicSP: TcxGridDBColumn
-            Caption = #1060#1048#1054' '#1074#1088#1072#1095#1072
-            DataBinding.FieldName = 'MedicSP'
-            HeaderAlignmentHorz = taCenter
-            HeaderAlignmentVert = vaCenter
-            Options.Editing = False
-            Width = 80
-          end
-          object SPKindName: TcxGridDBColumn
-            Caption = #1042#1080#1076' '#1057#1055
-            DataBinding.FieldName = 'SPKindName'
-            HeaderAlignmentHorz = taCenter
-            HeaderAlignmentVert = vaCenter
-            Options.Editing = False
-            Width = 70
-          end
-          object SPTax: TcxGridDBColumn
-            Caption = '% '#1089#1082#1080#1076#1082#1080' '#1076#1083#1103' '#1057#1055
-            DataBinding.FieldName = 'SPTax'
-            HeaderAlignmentHorz = taCenter
-            HeaderAlignmentVert = vaCenter
-            Options.Editing = False
-            Width = 70
           end
           object PartionDateKindName: TcxGridDBColumn
             Caption = #1058#1080#1087#1099' '#1089#1088#1086#1082'/'#1085#1077' '#1089#1088#1086#1082
@@ -178,14 +95,6 @@ inherited CheckToReturnForm: TCheckToReturnForm
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
             Width = 62
-          end
-          object DateDelay: TcxGridDBColumn
-            Caption = #1044#1072#1090#1072' '#1080#1079#1084#1077#1085#1077#1085#1080#1103' '#1087#1088#1086#1089#1088#1086#1095#1082#1080
-            DataBinding.FieldName = 'DateDelay'
-            HeaderAlignmentHorz = taCenter
-            HeaderAlignmentVert = vaCenter
-            Options.Editing = False
-            Width = 60
           end
           object Color_CalcDoc: TcxGridDBColumn
             DataBinding.FieldName = 'Color_CalcDoc'
@@ -197,10 +106,10 @@ inherited CheckToReturnForm: TCheckToReturnForm
         end
       end
       object cxGrid1: TcxGrid
-        Left = 281
+        Left = 337
         Top = 0
-        Width = 387
-        Height = 356
+        Width = 366
+        Height = 323
         Align = alClient
         PopupMenu = PopupMenu
         TabOrder = 1
@@ -333,14 +242,62 @@ inherited CheckToReturnForm: TCheckToReturnForm
         end
       end
       object cxSplitter1: TcxSplitter
-        Left = 273
+        Left = 329
         Top = 0
         Width = 8
-        Height = 356
+        Height = 323
         HotZoneClassName = 'TcxMediaPlayer8Style'
         Control = cxGrid
       end
     end
+  end
+  object Panel1: TPanel [1]
+    Left = 0
+    Top = 0
+    Width = 703
+    Height = 33
+    Align = alTop
+    ShowCaption = False
+    TabOrder = 5
+    object deOperDate: TcxDateEdit
+      Left = 88
+      Top = 5
+      EditValue = 42370d
+      Properties.SaveTime = False
+      Properties.ShowTime = False
+      TabOrder = 0
+      Width = 104
+    end
+    object cxLabel1: TcxLabel
+      Left = 10
+      Top = 6
+      Caption = #1044#1072#1090#1072' '#1095#1077#1082#1072':'
+    end
+    object cxLabel2: TcxLabel
+      Left = 218
+      Top = 6
+      Caption = #1057#1091#1084#1084#1072' '#1095#1077#1082#1072':'
+    end
+    object ceTotalSumm: TcxCurrencyEdit
+      Left = 297
+      Top = 5
+      Properties.DisplayFormat = ',0.00;-,0.00'
+      TabOrder = 3
+      Width = 121
+    end
+  end
+  inherited cxPropertiesStore: TcxPropertiesStore
+    Components = <
+      item
+        Component = deOperDate
+        Properties.Strings = (
+          'Date')
+      end
+      item
+        Component = ceTotalSumm
+        Properties.Strings = (
+          'Value')
+      end>
   end
   inherited ActionList: TActionList
     inherited actRefresh: TdsdDataSetRefresh
@@ -349,7 +306,6 @@ inherited CheckToReturnForm: TCheckToReturnForm
           StoredProc = spSelect
         end
         item
-          StoredProc = dsdStoredProc1
         end>
     end
     object actShowErased: TBooleanStoredProcAction
@@ -386,300 +342,52 @@ inherited CheckToReturnForm: TCheckToReturnForm
           Name = 'TextValue'
           Value = Null
           Component = MasterCDS
-          ComponentItem = 'Bayer'
-          MultiSelectSeparator = ','
-        end
-        item
-          Name = 'CashMemberId'
-          Value = Null
-          Component = MasterCDS
-          ComponentItem = 'CashMemberId'
-          MultiSelectSeparator = ','
-        end
-        item
-          Name = 'CashMember'
-          Value = Null
-          Component = MasterCDS
-          ComponentItem = 'CashMember'
+          ComponentItem = 'InvNumber'
           DataType = ftString
           MultiSelectSeparator = ','
         end
         item
-          Name = 'DiscountExternalId'
+          Name = 'PaidTypeId'
           Value = Null
           Component = MasterCDS
-          ComponentItem = 'DiscountExternalId'
+          ComponentItem = 'PaidTypeId'
           MultiSelectSeparator = ','
         end
         item
-          Name = 'DiscountExternalName'
+          Name = 'PaidTypeName'
           Value = Null
           Component = MasterCDS
-          ComponentItem = 'DiscountExternalName'
+          ComponentItem = 'PaidTypeName'
           DataType = ftString
           MultiSelectSeparator = ','
         end
         item
-          Name = 'DiscountCardNumber'
-          Value = Null
-          Component = MasterCDS
-          ComponentItem = 'DiscountCardNumber'
-          DataType = ftString
-          MultiSelectSeparator = ','
-        end
-        item
-          Name = 'ConfirmedKindName'
-          Value = Null
-          Component = MasterCDS
-          ComponentItem = 'ConfirmedKindName'
-          DataType = ftString
-          MultiSelectSeparator = ','
-        end
-        item
-          Name = 'BayerPhone'
-          Value = Null
-          Component = MasterCDS
-          ComponentItem = 'BayerPhone'
-          DataType = ftString
-          MultiSelectSeparator = ','
-        end
-        item
-          Name = 'InvNumberOrder'
-          Value = Null
-          Component = MasterCDS
-          ComponentItem = 'InvNumberOrder'
-          DataType = ftString
-          MultiSelectSeparator = ','
-        end
-        item
-          Name = 'ConfirmedKindClientName'
-          Value = Null
-          Component = MasterCDS
-          ComponentItem = 'ConfirmedKindClientName'
-          DataType = ftString
-          MultiSelectSeparator = ','
-        end
-        item
-          Name = 'PartnerMedicalId'
-          Value = Null
-          Component = MasterCDS
-          ComponentItem = 'PartnerMedicalId'
-          MultiSelectSeparator = ','
-        end
-        item
-          Name = 'PartnerMedicalName'
-          Value = Null
-          Component = MasterCDS
-          ComponentItem = 'PartnerMedicalName'
-          DataType = ftString
-          MultiSelectSeparator = ','
-        end
-        item
-          Name = 'Ambulance'
-          Value = Null
-          Component = MasterCDS
-          ComponentItem = 'Ambulance'
-          DataType = ftString
-          MultiSelectSeparator = ','
-        end
-        item
-          Name = 'MedicSP'
-          Value = Null
-          Component = MasterCDS
-          ComponentItem = 'MedicSP'
-          DataType = ftString
-          MultiSelectSeparator = ','
-        end
-        item
-          Name = 'InvNumberSP'
-          Value = Null
-          Component = MasterCDS
-          ComponentItem = 'InvNumberSP'
-          DataType = ftString
-          MultiSelectSeparator = ','
-        end
-        item
-          Name = 'OperDateSP'
+          Name = 'OperDate'
           Value = 'NULL'
           Component = MasterCDS
-          ComponentItem = 'OperDateSP'
+          ComponentItem = 'OperDate'
           DataType = ftDateTime
           MultiSelectSeparator = ','
         end
         item
-          Name = 'SPKindId'
+          Name = 'TotalSumm'
           Value = Null
           Component = MasterCDS
-          ComponentItem = 'SPKindId'
-          MultiSelectSeparator = ','
-        end
-        item
-          Name = 'SPKindName'
-          Value = Null
-          Component = MasterCDS
-          ComponentItem = 'SPKindName'
-          DataType = ftString
-          MultiSelectSeparator = ','
-        end
-        item
-          Name = 'SPTax'
-          Value = Null
-          Component = MasterCDS
-          ComponentItem = 'SPTax'
+          ComponentItem = 'TotalSumm'
           DataType = ftFloat
           MultiSelectSeparator = ','
         end
         item
-          Name = 'ManualDiscount'
+          Name = 'UnitId'
           Value = Null
-          Component = MasterCDS
-          ComponentItem = 'ManualDiscount'
-          MultiSelectSeparator = ','
-        end
-        item
-          Name = 'PromoCodeID'
-          Value = Null
-          Component = MasterCDS
-          ComponentItem = 'PromoCodeID'
-          MultiSelectSeparator = ','
-        end
-        item
-          Name = 'PromoName'
-          Value = Null
-          Component = MasterCDS
-          ComponentItem = 'PromoName'
-          DataType = ftString
-          MultiSelectSeparator = ','
-        end
-        item
-          Name = 'PromoCodeGUID'
-          Value = Null
-          Component = MasterCDS
-          ComponentItem = 'PromoCodeGUID'
-          DataType = ftString
-          MultiSelectSeparator = ','
-        end
-        item
-          Name = 'PromoCodeChangePercent'
-          Value = Null
-          Component = MasterCDS
-          ComponentItem = 'PromoCodeChangePercent'
-          DataType = ftFloat
-          MultiSelectSeparator = ','
-        end
-        item
-          Name = 'MemberSPId'
-          Value = Null
-          Component = MasterCDS
-          ComponentItem = 'MemberSPId'
-          MultiSelectSeparator = ','
-        end
-        item
-          Name = 'SiteDiscount'
-          Value = Null
-          Component = MasterCDS
-          ComponentItem = 'SiteDiscount'
-          DataType = ftFloat
-          MultiSelectSeparator = ','
-        end
-        item
-          Name = 'PartionDateKindId'
-          Value = Null
-          Component = MasterCDS
-          ComponentItem = 'PartionDateKindId'
-          MultiSelectSeparator = ','
-        end
-        item
-          Name = 'PartionDateKindName'
-          Value = Null
-          Component = MasterCDS
-          ComponentItem = 'PartionDateKindName'
-          DataType = ftString
-          MultiSelectSeparator = ','
-        end
-        item
-          Name = 'AmountMonth'
-          Value = Null
-          Component = MasterCDS
-          ComponentItem = 'AmountMonth'
-          DataType = ftFloat
-          MultiSelectSeparator = ','
-        end
-        item
-          Name = 'LoyaltyChangeSumma'
-          Value = Null
-          Component = MasterCDS
-          ComponentItem = 'LoyaltyChangeSumma'
-          DataType = ftFloat
-          MultiSelectSeparator = ','
-        end
-        item
-          Name = 'SummCard'
-          Value = Null
-          Component = MasterCDS
-          ComponentItem = 'SummCard'
-          DataType = ftFloat
+          Component = FormParams
+          ComponentItem = 'UnitId'
           MultiSelectSeparator = ','
         end>
       Caption = #1047#1072#1075#1088#1091#1079#1080#1090#1100' '#1074' '#1088#1072#1073#1086#1090#1091
-      Hint = #1047#1072#1075#1088#1091#1079#1080#1090#1100' '#1074' '#1088#1072#1073#1086#1090#1091
+      Hint = #1042#1099#1073#1086#1088' '#1095#1077#1082#1072' '#1076#1083#1103' '#1074#1086#1079#1074#1088#1072#1090#1072
       ImageIndex = 7
       DataSource = MasterDS
-    end
-    object actDeleteCheck: TdsdChangeMovementStatus
-      Category = 'DSDLib'
-      MoveParams = <>
-      StoredProc = spMovementSetErased
-      StoredProcList = <
-        item
-          StoredProc = spMovementSetErased
-        end>
-      Caption = #1059#1076#1072#1083#1080#1090#1100' '#1095#1077#1082
-      Hint = #1059#1076#1072#1083#1080#1090#1100' '#1095#1077#1082' '#1080' '#1074#1077#1088#1085#1091#1090#1100' '#1090#1086#1074#1072#1088' '#1074' '#1082#1072#1089#1089#1091
-      ImageIndex = 13
-      Status = mtDelete
-      DataSource = MasterDS
-      QuestionBeforeExecute = #1059#1076#1072#1083#1080#1090#1100' '#1095#1077#1082' '#1080' '#1074#1077#1088#1085#1091#1090#1100' '#1090#1086#1074#1072#1088' '#1074' '#1082#1072#1089#1089#1091'?'
-    end
-    object actSetConfirmedKind_Complete: TdsdExecStoredProc
-      Category = 'DSDLib'
-      MoveParams = <>
-      PostDataSetBeforeExecute = False
-      StoredProc = spConfirmedKind_Complete
-      StoredProcList = <
-        item
-          StoredProc = spConfirmedKind_Complete
-        end>
-      Caption = #1059#1089#1090#1072#1085#1086#1074#1080#1090#1100' '#1076#1083#1103' '#1079#1072#1082#1072#1079#1072' - <'#1055#1086#1076#1090#1074#1077#1088#1078#1076#1077#1085'>'
-      Hint = #1059#1089#1090#1072#1085#1086#1074#1080#1090#1100' '#1076#1083#1103' '#1079#1072#1082#1072#1079#1072' - <'#1055#1086#1076#1090#1074#1077#1088#1078#1076#1077#1085'>'
-    end
-    object actSetConfirmedKind_UnComplete: TdsdExecStoredProc
-      Category = 'DSDLib'
-      MoveParams = <>
-      PostDataSetBeforeExecute = False
-      StoredProc = spConfirmedKind_UnComplete
-      StoredProcList = <
-        item
-          StoredProc = spConfirmedKind_UnComplete
-        end>
-      Caption = #1059#1089#1090#1072#1085#1086#1074#1080#1090#1100' '#1076#1083#1103' '#1079#1072#1082#1072#1079#1072' - <'#1053#1077' '#1087#1086#1076#1090#1074#1077#1088#1078#1076#1077#1085'>'
-      Hint = #1059#1089#1090#1072#1085#1086#1074#1080#1090#1100' '#1076#1083#1103' '#1079#1072#1082#1072#1079#1072' - <'#1053#1077' '#1087#1086#1076#1090#1074#1077#1088#1078#1076#1077#1085'>'
-    end
-    object actShowMessage: TShowMessageAction
-      Category = 'DSDLib'
-      MoveParams = <>
-    end
-    object actUpdateMovementItemAmount: TdsdUpdateDataSet
-      Category = 'DSDLib'
-      MoveParams = <>
-      PostDataSetBeforeExecute = False
-      StoredProc = spUpdateMovementItemAmount
-      StoredProcList = <
-        item
-          StoredProc = spUpdateMovementItemAmount
-        end>
-      Caption = 'actUpdateMovementItemAmount'
-      DataSource = DataSource1
     end
     object actCheckCash: TdsdOpenForm
       Category = 'DSDLib'
@@ -723,37 +431,35 @@ inherited CheckToReturnForm: TCheckToReturnForm
         end>
       isShowModal = False
     end
-    object actSmashCheck: TdsdExecStoredProc
+    object ExecuteDialog: TExecuteDialog
       Category = 'DSDLib'
       MoveParams = <>
-      AfterAction = actRefresh
-      PostDataSetBeforeExecute = False
-      StoredProc = spSmashCheck
-      StoredProcList = <
-        item
-          StoredProc = spSmashCheck
-        end>
-      Caption = #1056#1072#1079#1073#1080#1077#1085#1080#1077' '#1095#1077#1082#1072' '#1087#1086' '#1085#1072#1083#1080#1095#1080#1102
-      Hint = #1056#1072#1079#1073#1080#1077#1085#1080#1077' '#1095#1077#1082#1072' '#1087#1086' '#1085#1072#1083#1080#1095#1080#1102
-      ImageIndex = 27
-      QuestionBeforeExecute = #1056#1072#1079#1073#1080#1090#1100' '#1095#1077#1082' '#1087#1086' '#1085#1072#1083#1080#1095#1080#1102'?'
-      InfoAfterExecute = #1042#1099#1087#1086#1083#1085#1077#1085#1086
-    end
-    object actUpdateOperDate: TdsdExecStoredProc
-      Category = 'DSDLib'
-      MoveParams = <>
-      AfterAction = actRefresh
-      PostDataSetBeforeExecute = False
-      StoredProc = spUpdateOperDate
-      StoredProcList = <
-        item
-          StoredProc = spUpdateOperDate
-        end>
-      Caption = #1059#1089#1090#1072#1085#1086#1074#1080#1090#1100' '#1085#1072' '#1095#1077#1082' '#1090#1077#1082#1091#1097#1091#1102' '#1076#1072#1090#1091
-      Hint = #1059#1089#1090#1072#1085#1086#1074#1080#1090#1100' '#1085#1072' '#1095#1077#1082' '#1090#1077#1082#1091#1097#1091#1102' '#1076#1072#1090#1091
+      Caption = #1048#1079#1084#1077#1085#1080#1090#1100' '#1087#1072#1088#1072#1084#1077#1090#1088#1099' '#1086#1090#1095#1077#1090#1072
+      Hint = #1048#1079#1084#1077#1085#1080#1090#1100' '#1087#1072#1088#1072#1084#1077#1090#1088#1099' '#1086#1090#1095#1077#1090#1072
       ImageIndex = 35
-      QuestionBeforeExecute = #1059#1089#1090#1072#1085#1086#1074#1080#1090#1100' '#1085#1072' '#1095#1077#1082' '#1090#1077#1082#1091#1097#1091#1102' '#1076#1072#1090#1091'?'
-      InfoAfterExecute = #1042#1099#1087#1086#1083#1085#1077#1085#1086'.'
+      FormName = 'TCheckToReturnDialogForm'
+      FormNameParam.Value = 'TCheckToReturnDialogForm'
+      FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
+      GuiParams = <
+        item
+          Name = 'OperDate'
+          Value = 42370d
+          Component = deOperDate
+          DataType = ftDateTime
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'Summa'
+          Value = 42370d
+          Component = ceTotalSumm
+          DataType = ftFloat
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end>
+      isShowModal = True
+      OpenBeforeShow = True
     end
   end
   inherited MasterDS: TDataSource
@@ -766,12 +472,36 @@ inherited CheckToReturnForm: TCheckToReturnForm
   end
   inherited spSelect: TdsdStoredProc
     StoredProcName = 'gpSelect_Movement_CheckToReturn'
+    DataSets = <
+      item
+        DataSet = MasterCDS
+      end
+      item
+        DataSet = ClientDataSet1
+      end>
+    OutputType = otMultiDataSet
     Params = <
       item
-        Name = 'inIsErased'
+        Name = 'inUnitId'
         Value = Null
-        Component = actShowErased
-        DataType = ftBoolean
+        Component = FormParams
+        ComponentItem = 'UnitId'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inOperDate'
+        Value = 'NULL'
+        Component = deOperDate
+        DataType = ftDateTime
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inSumma'
+        Value = Null
+        Component = ceTotalSumm
+        DataType = ftFloat
         ParamType = ptInput
         MultiSelectSeparator = ','
       end>
@@ -802,49 +532,14 @@ inherited CheckToReturnForm: TCheckToReturnForm
         end
         item
           Visible = True
-          ItemName = 'dxBarButton3'
+          ItemName = 'dxBarStatic'
         end
         item
           Visible = True
           ItemName = 'dxBarStatic'
         end
         item
-          Visible = True
-          ItemName = 'bbConfirmedKind_Complete'
-        end
-        item
-          Visible = True
-          ItemName = 'dxBarStatic'
-        end
-        item
-          Visible = True
-          ItemName = 'bbConfirmedKind_UnComplete'
-        end
-        item
-          Visible = True
-          ItemName = 'dxBarStatic'
-        end
-        item
-          Visible = True
-          ItemName = 'bbUpdateOperDate'
-        end
-        item
-          Visible = True
-          ItemName = 'dxBarStatic'
-        end
-        item
-          Visible = True
-          ItemName = 'bbRefresh'
-        end
-        item
-          Visible = True
-          ItemName = 'dxBarStatic'
-        end
-        item
-          Visible = True
-          ItemName = 'dxBarButton1'
-        end
-        item
+          BeginGroup = True
           Visible = True
           ItemName = 'dxBarStatic'
         end
@@ -858,7 +553,23 @@ inherited CheckToReturnForm: TCheckToReturnForm
         end
         item
           Visible = True
-          ItemName = 'dxBarButton5'
+          ItemName = 'dxBarStatic'
+        end
+        item
+          Visible = True
+          ItemName = 'dxBarButton6'
+        end
+        item
+          Visible = True
+          ItemName = 'dxBarStatic'
+        end
+        item
+          Visible = True
+          ItemName = 'bbRefresh'
+        end
+        item
+          Visible = True
+          ItemName = 'dxBarStatic'
         end
         item
           Visible = True
@@ -881,19 +592,24 @@ inherited CheckToReturnForm: TCheckToReturnForm
       Category = 0
     end
     object dxBarButton3: TdxBarButton
-      Action = actDeleteCheck
+      Caption = #1059#1076#1072#1083#1080#1090#1100' '#1095#1077#1082
       Category = 0
+      Hint = #1059#1076#1072#1083#1080#1090#1100' '#1095#1077#1082' '#1080' '#1074#1077#1088#1085#1091#1090#1100' '#1090#1086#1074#1072#1088' '#1074' '#1082#1072#1089#1089#1091
+      Visible = ivAlways
+      ImageIndex = 13
     end
     object bbConfirmedKind_Complete: TdxBarButton
-      Action = actSetConfirmedKind_Complete
       Caption = 'VIP '#1095#1077#1082'  - <'#1055#1086#1076#1090#1074#1077#1088#1078#1076#1077#1085'>'
       Category = 0
+      Hint = #1059#1089#1090#1072#1085#1086#1074#1080#1090#1100' '#1076#1083#1103' '#1079#1072#1082#1072#1079#1072' - <'#1055#1086#1076#1090#1074#1077#1088#1078#1076#1077#1085'>'
+      Visible = ivAlways
       ImageIndex = 77
     end
     object bbConfirmedKind_UnComplete: TdxBarButton
-      Action = actSetConfirmedKind_UnComplete
       Caption = 'VIP '#1095#1077#1082'  - <'#1053#1077' '#1087#1086#1076#1090#1074#1077#1088#1078#1076#1077#1085'>'
       Category = 0
+      Hint = #1059#1089#1090#1072#1085#1086#1074#1080#1090#1100' '#1076#1083#1103' '#1079#1072#1082#1072#1079#1072' - <'#1053#1077' '#1087#1086#1076#1090#1074#1077#1088#1078#1076#1077#1085'>'
+      Visible = ivAlways
       ImageIndex = 58
     end
     object dxBarButton4: TdxBarButton
@@ -902,11 +618,21 @@ inherited CheckToReturnForm: TCheckToReturnForm
       ImageIndex = 1
     end
     object dxBarButton5: TdxBarButton
-      Action = actSmashCheck
+      Caption = #1056#1072#1079#1073#1080#1077#1085#1080#1077' '#1095#1077#1082#1072' '#1087#1086' '#1085#1072#1083#1080#1095#1080#1102
       Category = 0
+      Hint = #1056#1072#1079#1073#1080#1077#1085#1080#1077' '#1095#1077#1082#1072' '#1087#1086' '#1085#1072#1083#1080#1095#1080#1102
+      Visible = ivAlways
+      ImageIndex = 27
     end
     object bbUpdateOperDate: TdxBarButton
-      Action = actUpdateOperDate
+      Caption = #1059#1089#1090#1072#1085#1086#1074#1080#1090#1100' '#1085#1072' '#1095#1077#1082' '#1090#1077#1082#1091#1097#1091#1102' '#1076#1072#1090#1091
+      Category = 0
+      Hint = #1059#1089#1090#1072#1085#1086#1074#1080#1090#1100' '#1085#1072' '#1095#1077#1082' '#1090#1077#1082#1091#1097#1091#1102' '#1076#1072#1090#1091
+      Visible = ivAlways
+      ImageIndex = 35
+    end
+    object dxBarButton6: TdxBarButton
+      Action = ExecuteDialog
       Category = 0
     end
   end
@@ -920,8 +646,8 @@ inherited CheckToReturnForm: TCheckToReturnForm
         BackGroundValueColumn = Color_CalcDoc
         ColorValueList = <>
       end>
-    Left = 400
-    Top = 248
+    Left = 184
+    Top = 256
   end
   object ClientDataSet1: TClientDataSet
     Aggregates = <>
@@ -937,18 +663,6 @@ inherited CheckToReturnForm: TCheckToReturnForm
   object DataSource1: TDataSource
     DataSet = ClientDataSet1
     Left = 376
-    Top = 56
-  end
-  object dsdStoredProc1: TdsdStoredProc
-    StoredProcName = 'gpSelect_MovementItem_CheckDeferred'
-    DataSet = ClientDataSet1
-    DataSets = <
-      item
-        DataSet = ClientDataSet1
-      end>
-    Params = <>
-    PackSize = 1
-    Left = 440
     Top = 56
   end
   object dsdDBViewAddOn1: TdsdDBViewAddOn
@@ -968,193 +682,17 @@ inherited CheckToReturnForm: TCheckToReturnForm
     SummaryItemList = <>
     PropertiesCellList = <>
     Left = 544
-    Top = 256
-  end
-  object spMovementSetErased: TdsdStoredProc
-    StoredProcName = 'gpSetErased_Movement_Check'
-    DataSet = MasterCDS
-    DataSets = <
-      item
-        DataSet = MasterCDS
-      end>
-    OutputType = otResult
-    Params = <
-      item
-        Name = 'inmovementid'
-        Value = Null
-        Component = MasterCDS
-        ComponentItem = 'Id'
-        ParamType = ptInput
-        MultiSelectSeparator = ','
-      end>
-    PackSize = 1
-    Left = 208
-    Top = 128
-  end
-  object spConfirmedKind_Complete: TdsdStoredProc
-    StoredProcName = 'gpUpdate_Movement_Check_ConfirmedKind'
-    DataSets = <>
-    OutputType = otResult
-    Params = <
-      item
-        Name = 'inMovementId'
-        Value = Null
-        Component = MasterCDS
-        ComponentItem = 'Id'
-        ParamType = ptInput
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'inDescName'
-        Value = 'zc_Enum_ConfirmedKind_Complete'
-        DataType = ftString
-        ParamType = ptInput
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'ouConfirmedKindName'
-        Value = Null
-        Component = MasterCDS
-        ComponentItem = 'ConfirmedKindName'
-        DataType = ftString
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'outMessageText'
-        Value = Null
-        Component = actShowMessage
-        ComponentItem = 'MessageText'
-        DataType = ftString
-        MultiSelectSeparator = ','
-      end>
-    PackSize = 1
-    Left = 536
-    Top = 112
-  end
-  object spConfirmedKind_UnComplete: TdsdStoredProc
-    StoredProcName = 'gpUpdate_Movement_Check_ConfirmedKind'
-    DataSets = <>
-    OutputType = otResult
-    Params = <
-      item
-        Name = 'inMovementId'
-        Value = Null
-        Component = MasterCDS
-        ComponentItem = 'Id'
-        ParamType = ptInput
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'inDescName'
-        Value = 'zc_Enum_ConfirmedKind_UnComplete'
-        DataType = ftString
-        ParamType = ptInput
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'ouConfirmedKindName'
-        Value = Null
-        Component = MasterCDS
-        ComponentItem = 'ConfirmedKindName'
-        DataType = ftString
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'outMessageText'
-        Value = Null
-        Component = actShowMessage
-        ComponentItem = 'MessageText'
-        DataType = ftString
-        MultiSelectSeparator = ','
-      end>
-    PackSize = 1
-    Left = 528
-    Top = 168
-  end
-  object spUpdateMovementItemAmount: TdsdStoredProc
-    StoredProcName = 'gpUpdate_MovementItem_Check_Amount'
-    DataSets = <>
-    OutputType = otResult
-    Params = <
-      item
-        Name = 'inId'
-        Value = Null
-        Component = ClientDataSet1
-        ComponentItem = 'ID'
-        ParamType = ptInput
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'inMovementId'
-        Value = Null
-        Component = ClientDataSet1
-        ComponentItem = 'MovementId'
-        ParamType = ptInput
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'inGoodsId'
-        Value = Null
-        Component = ClientDataSet1
-        ComponentItem = 'GoodsId'
-        ParamType = ptInput
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'inAmount'
-        Value = Null
-        Component = ClientDataSet1
-        ComponentItem = 'Amount'
-        DataType = ftFloat
-        ParamType = ptInput
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'outTotalSumm'
-        Value = Null
-        Component = MasterCDS
-        ComponentItem = 'TotalSumm'
-        DataType = ftFloat
-        MultiSelectSeparator = ','
-      end>
-    PackSize = 1
-    NeedResetData = True
-    ParamKeyField = 'inId'
-    Left = 440
-    Top = 112
-  end
-  object spSmashCheck: TdsdStoredProc
-    StoredProcName = 'gpUpdate_Movement_SmashCheck'
-    DataSets = <>
-    OutputType = otResult
-    Params = <
-      item
-        Name = 'inMovementId'
-        Value = Null
-        Component = MasterCDS
-        ComponentItem = 'Id'
-        ParamType = ptInput
-        MultiSelectSeparator = ','
-      end>
-    PackSize = 1
-    Left = 312
-    Top = 176
-  end
-  object spUpdateOperDate: TdsdStoredProc
-    StoredProcName = 'gpUpdate_Movement_Check_CurrentOperDate'
-    DataSets = <>
-    OutputType = otResult
-    Params = <
-      item
-        Name = 'inMovementId'
-        Value = Null
-        Component = MasterCDS
-        ComponentItem = 'Id'
-        ParamType = ptInput
-        MultiSelectSeparator = ','
-      end>
-    PackSize = 1
-    Left = 520
     Top = 224
+  end
+  object FormParams: TdsdFormParams
+    Params = <
+      item
+        Name = 'UnitId'
+        Value = Null
+        ParamType = ptInputOutput
+        MultiSelectSeparator = ','
+      end>
+    Left = 32
+    Top = 160
   end
 end

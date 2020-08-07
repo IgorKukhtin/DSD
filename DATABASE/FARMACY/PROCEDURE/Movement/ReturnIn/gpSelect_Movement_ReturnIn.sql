@@ -1,4 +1,4 @@
--- Function: gpSelect_Movement_OrderInternal()
+-- Function: gpSelect_Movement_ReturnIn()
 
 DROP FUNCTION IF EXISTS gpSelect_Movement_ReturnIn (TDateTime, TDateTime, Boolean, Integer, TVarChar);
 DROP FUNCTION IF EXISTS gpSelect_Movement_ReturnIn (TDateTime, TDateTime, Integer, Boolean, TVarChar);
@@ -16,6 +16,8 @@ RETURNS TABLE (Id Integer, InvNumber TVarChar, OperDate TDateTime
              , UnitId Integer, UnitName TVarChar
              , CashRegisterId Integer, CashRegisterName TVarChar
              , FiscalCheckNumber TVarChar
+             , IdCheck Integer, InvNumberCheck TVarChar, OperDateCheck TDateTime
+             , PaidTypeCheckId Integer, PaidTypeCheckName TVarChar, TotalSummCheck TFloat
              , InsertName TVarChar, InsertDate TDateTime
               )
 AS
@@ -68,6 +70,13 @@ BEGIN
            , Object_CashRegister.ValueData                      AS CashRegisterName
            , MovementString_FiscalCheckNumber.ValueData         AS FiscalCheckNumber
 
+           , MovementCheck.Id                           AS IdCheck
+           , MovementCheck.InvNumber                    AS InvNumberCheck
+           , MovementCheck.OperDate                     AS OperDateCheck
+           , MovementLinkObject_PaidTypeCheck.ObjectId  AS PaidTypeCheckId
+           , Object_PaidTypeCheck.ValueData             AS PaidTypeCheckName
+           , MovementFloat_TotalSummCheck.ValueData     AS TotalSummCheck
+
            , Object_Insert.ValueData                            AS InsertName
            , MovementDate_Insert.ValueData                      AS InsertDate
 
@@ -98,6 +107,20 @@ BEGIN
                                      ON MovementString_FiscalCheckNumber.MovementId = Movement_ReturnIn.ID
                                     AND MovementString_FiscalCheckNumber.DescId = zc_MovementString_FiscalCheckNumber()
  
+            LEFT JOIN MovementFloat AS MovementFloat_MovementId
+                                    ON MovementFloat_MovementId.MovementId = Movement_ReturnIn.Id
+                                   AND MovementFloat_MovementId.DescId = zc_MovementFloat_MovementId()
+            LEFT JOIN Movement AS MovementCheck ON MovementCheck.ID = MovementFloat_MovementId.ValueData::Integer
+
+	        LEFT JOIN MovementLinkObject AS MovementLinkObject_PaidTypeCheck
+                                         ON MovementLinkObject_PaidTypeCheck.MovementId = MovementCheck.Id
+                                        AND MovementLinkObject_PaidTypeCheck.DescId = zc_MovementLinkObject_PaidType()
+            LEFT JOIN Object AS Object_PaidTypeCheck ON Object_PaidTypeCheck.Id = MovementLinkObject_PaidTypeCheck.ObjectId
+
+            LEFT JOIN MovementFloat AS MovementFloat_TotalSummCheck
+                                    ON MovementFloat_TotalSummCheck.MovementId =  MovementCheck.Id
+                                   AND MovementFloat_TotalSummCheck.DescId = zc_MovementFloat_TotalSumm()
+
             LEFT JOIN MovementDate AS MovementDate_Insert
                                    ON MovementDate_Insert.MovementId = Movement_ReturnIn.Id
                                   AND MovementDate_Insert.DescId = zc_MovementDate_Insert()

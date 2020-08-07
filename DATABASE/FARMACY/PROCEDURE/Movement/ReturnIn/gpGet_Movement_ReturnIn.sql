@@ -13,32 +13,83 @@ RETURNS TABLE (Id Integer, InvNumber TVarChar, OperDate TDateTime
              , UnitId Integer, UnitName TVarChar
              , CashRegisterId Integer, CashRegisterName TVarChar
              , FiscalCheckNumber TVarChar
-             
+             , IdCheck Integer, InvNumberCheck TVarChar, OperDateCheck TDateTime
+             , PaidTypeCheckId Integer, PaidTypeCheckName TVarChar, TotalSummCheck TFloat
+
 )
 AS
 $BODY$
   DECLARE vbUserId Integer;
+  DECLARE vbUnitId Integer;
 BEGIN
 
      -- проверка прав пользователя на вызов процедуры
      -- vbUserId := PERFORM lpReturnInRight (inSession, zc_Enum_Process_Get_Movement_ReturnIn());
-     vbUserId := inSession;
+    vbUserId := inSession;
+    -- определяем подразделение ()
+    IF EXISTS(SELECT * FROM gpSelect_Object_RoleUser (inSession) AS Object_RoleUser
+              WHERE Object_RoleUser.ID = vbUserId AND Object_RoleUser.RoleId = 308121) -- Для роли "Кассир аптеки"
+    THEN
+      vbUnitId := COALESCE ((SELECT tmp.UnitId FROM gpGet_UserUnit(inSession) AS tmp), 0);
+    ELSE
+      vbUnitId := 0;
+    END IF;
+
+    IF COALESCE (inMovementId, 0) = 0
+    THEN
+        RETURN QUERY
+        SELECT
+            0                                                AS Id
+--          , CAST (NEXTVAL ('movement_sale_seq') AS TVarChar) AS InvNumber
+          , CAST ('' AS TVarChar) AS InvNumber
+          , CURRENT_DATE::TDateTime                          AS OperDate
+          , Object_Status.Code               	             AS StatusCode
+          , Object_Status.Name              	             AS StatusName
+          , 0::TFloat                                        AS TotalCount
+          , 0::TFloat                                        AS TotalSumm
+          , Object_Unit.Id                                   AS UnitId
+          , Object_Unit.ValueData                            AS UnitName
+
+          , 0::Integer                                       AS CashRegisterId
+          , ''::TVarChar                                     AS CashRegisterName
+
+          , ''::TVarChar                                     AS FiscalCheckNumber
+
+          , 0::Integer                                       AS IdCheck
+          , ''::TVarChar                                     AS InvNumberCheck
+          , Null::TDateTime                                  AS OperDateCheck
+          , 0::Integer                                       AS PaidTypeCheckId
+          , ''::TVarChar                                     AS PaidTypeCheckName
+          , 0::TFloat                                        AS TotalSummCheck
+
+        FROM lfGet_Object_Status(zc_Enum_Status_UnComplete()) AS Object_Status
+
+            LEFT JOIN Object AS Object_Unit ON Object_Unit.Id = vbUnitId
+        ;              
+    ELSE
 
      RETURN QUERY
       SELECT Movement_ReturnIn.Id
            , Movement_ReturnIn.InvNumber
-           , COALESCE (Movement_ReturnIn.OperDate, CURRENT_DATE) :: TDateTime AS OperDate
+           , Movement_ReturnIn.OperDate                AS OperDate
            , Object_Status.ObjectCode                   AS StatusCode
            , Object_Status.ValueData                    AS StatusName
            , MovementFloat_TotalCount.ValueData         AS TotalCount
            , MovementFloat_TotalSumm.ValueData          AS TotalSumm
            , MovementLinkObject_Unit.ObjectId           AS UnitId
            , Object_Unit.ValueData                      AS UnitName
-           
+
            , MovementLinkObject_CashRegister.ObjectId   AS CashRegisterId
            , Object_CashRegister.ValueData              AS CashRegisterName
-           
+
            , MovementString_FiscalCheckNumber.ValueData AS FiscalCheckNumber
+
+           , MovementCheck.Id                           AS IdCheck
+           , MovementCheck.InvNumber                    AS InvNumberCheck
+           , MovementCheck.OperDate                     AS OperDateCheck
+           , MovementLinkObject_PaidTypeCheck.ObjectId  AS PaidTypeCheckId
+           , Object_PaidTypeCheck.ValueData             AS PaidTypeCheckName
+           , MovementFloat_TotalSummCheck.ValueData     AS TotalSummCheck
 
       FROM Movement AS Movement_ReturnIn
             LEFT JOIN Object AS Object_Status ON Object_Status.Id = Movement_ReturnIn.StatusId
@@ -61,12 +112,28 @@ BEGIN
                                         AND MovementLinkObject_CashRegister.DescId = zc_MovementLinkObject_CashRegister()
             LEFT JOIN Object AS Object_CashRegister ON Object_CashRegister.Id = MovementLinkObject_CashRegister.ObjectId
 
-            LEFT OUTER JOIN MovementString AS MovementString_FiscalCheckNumber
-                                           ON MovementString_FiscalCheckNumber.MovementId = Movement_ReturnIn.Id
-                                          AND MovementString_FiscalCheckNumber.DescId = zc_MovementString_FiscalCheckNumber()
+            LEFT JOIN MovementString AS MovementString_FiscalCheckNumber
+                                     ON MovementString_FiscalCheckNumber.MovementId = Movement_ReturnIn.Id
+                                    AND MovementString_FiscalCheckNumber.DescId = zc_MovementString_FiscalCheckNumber()
+
+            LEFT JOIN MovementFloat AS MovementFloat_MovementId
+                                    ON MovementFloat_MovementId.MovementId = Movement_ReturnIn.Id
+                                   AND MovementFloat_MovementId.DescId = zc_MovementFloat_MovementId()
+            LEFT JOIN Movement AS MovementCheck ON MovementCheck.ID = MovementFloat_MovementId.ValueData::Integer
+
+	        LEFT JOIN MovementLinkObject AS MovementLinkObject_PaidTypeCheck
+                                         ON MovementLinkObject_PaidTypeCheck.MovementId = MovementCheck.Id
+                                        AND MovementLinkObject_PaidTypeCheck.DescId = zc_MovementLinkObject_PaidType()
+            LEFT JOIN Object AS Object_PaidTypeCheck ON Object_PaidTypeCheck.Id = MovementLinkObject_PaidTypeCheck.ObjectId
+
+            LEFT JOIN MovementFloat AS MovementFloat_TotalSummCheck
+                                    ON MovementFloat_TotalSummCheck.MovementId =  MovementCheck.Id
+                                   AND MovementFloat_TotalSummCheck.DescId = zc_MovementFloat_TotalSumm()
+
        WHERE Movement_ReturnIn.Id = inMovementId
          AND Movement_ReturnIn.DescId = zc_Movement_ReturnIn()
       ;
+    END IF;
 
 END;
 $BODY$
@@ -75,8 +142,9 @@ $BODY$
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Шаблий О.В.
- 19.01.19         *                
+ 19.01.19         *
 */
 
 -- тест
--- SELECT * FROM gpGet_Movement_ReturnIn (inMovementId:= 1, inSession:= '9818')
+-- 
+SELECT * FROM gpGet_Movement_ReturnIn (inMovementId:= 0, inSession:= '3')

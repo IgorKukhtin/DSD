@@ -2412,6 +2412,8 @@ begin
 
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TCheckToReturnForm'));
   TdsdFormStorageFactory.GetStorage.Load('TCheckToReturnForm');
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TCheckToReturnDialogForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TCheckToReturnDialogForm');
 end;
 
 procedure TLoadFormTest.LoadSeasonalityCoefficientFormTest;

@@ -1,9 +1,10 @@
 -- Function: lpInsertUpdate_Movement_RetutnIn()
 
-DROP FUNCTION IF EXISTS lpInsertUpdate_Movement_RetutnIn (Integer, TVarChar, TDateTime, Integer, Integer, TVarChar, Integer);
+DROP FUNCTION IF EXISTS lpInsertUpdate_Movement_RetutnIn (Integer, Integer, TVarChar, TDateTime, Integer, Integer, TVarChar, Integer);
 
 CREATE OR REPLACE FUNCTION lpInsertUpdate_Movement_RetutnIn(
- INOUT ioId                    Integer    , -- Ключ объекта <Документ продажи>
+ INOUT ioId                    Integer    , -- Ключ объекта <Документ>
+    IN inParentId              Integer    , -- Ключ объекта <Документ продажи>
     IN inInvNumber             TVarChar   , -- Номер документа
     IN inOperDate              TDateTime  , -- Дата документа
     IN inUnitId                Integer    , -- От кого (подразделение)
@@ -27,8 +28,11 @@ BEGIN
     vbIsInsert:= COALESCE (ioId, 0) = 0;
     
     -- сохранили <Документ>
-    ioId := lpInsertUpdate_Movement (ioId, zc_Movement_ReturnIn(), inInvNumber, inOperDate, NULL, 0);
+    ioId := lpInsertUpdate_Movement (ioId, zc_Movement_ReturnIn(), inInvNumber, inOperDate, Null, 0);
     
+    -- сохранили <>
+    PERFORM lpInsertUpdate_MovementFloat (zc_MovementFloat_MovementId(), ioId, COALESCE(inParentId, 0));
+
     -- сохранили связь с <От кого (подразделение)>
     PERFORM lpInsertUpdate_MovementLinkObject (zc_MovementLinkObject_Unit(), ioId, inUnitId);
     

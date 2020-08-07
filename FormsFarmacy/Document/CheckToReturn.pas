@@ -12,7 +12,9 @@ uses
   cxGridCustomView, cxGridCustomTableView, cxGridTableView, cxGridDBTableView,
   cxGrid, cxPC, cxPCdxBarPopupMenu, cxImageComboBox, dxSkinsCore,
   dxSkinsDefaultPainters, dxSkinscxPCPainter, dxSkinsdxBarPainter,
-  cxCurrencyEdit, cxButtonEdit, cxSplitter;
+  cxCurrencyEdit, cxButtonEdit, cxSplitter, Vcl.ExtCtrls, cxContainer,
+  Vcl.ComCtrls, dxCore, cxDateUtils, cxLabel, cxTextEdit, cxMaskEdit,
+  cxDropDownEdit, cxCalendar;
 
 type
   TCheckToReturnForm = class(TAncestorDBGridForm)
@@ -21,7 +23,6 @@ type
     cxGridLevel1: TcxGridLevel;
     ClientDataSet1: TClientDataSet;
     DataSource1: TDataSource;
-    dsdStoredProc1: TdsdStoredProc;
     dsdDBViewAddOn1: TdsdDBViewAddOn;
     actShowErased: TBooleanStoredProcAction;
     dxBarButton1: TdxBarButton;
@@ -30,56 +31,37 @@ type
     UnitName: TcxGridDBColumn;
     CashRegisterName: TcxGridDBColumn;
     TotalSumm: TcxGridDBColumn;
-    CashMember: TcxGridDBColumn;
-    Bayer: TcxGridDBColumn;
     dxBarButton2: TdxBarButton;
     dsdChoiceGuides: TdsdChoiceGuides;
     GoodsName: TcxGridDBColumn;
     Amount: TcxGridDBColumn;
     Price: TcxGridDBColumn;
     dxBarButton3: TdxBarButton;
-    actDeleteCheck: TdsdChangeMovementStatus;
-    spMovementSetErased: TdsdStoredProc;
     StatusCode: TcxGridDBColumn;
-    DiscountCardNumber: TcxGridDBColumn;
-    DiscountExternalName: TcxGridDBColumn;
     PriceSale: TcxGridDBColumn;
     ChangePercent: TcxGridDBColumn;
     SummChangePercent: TcxGridDBColumn;
-    BayerPhone: TcxGridDBColumn;
-    NumberOrder: TcxGridDBColumn;
-    ConfirmedKindName: TcxGridDBColumn;
     AmountOrder: TcxGridDBColumn;
     GoodsCode: TcxGridDBColumn;
-    ConfirmedKindClientName: TcxGridDBColumn;
-    spConfirmedKind_Complete: TdsdStoredProc;
-    actSetConfirmedKind_Complete: TdsdExecStoredProc;
-    actSetConfirmedKind_UnComplete: TdsdExecStoredProc;
     bbConfirmedKind_Complete: TdxBarButton;
-    spConfirmedKind_UnComplete: TdsdStoredProc;
     bbConfirmedKind_UnComplete: TdxBarButton;
     Color_Calc: TcxGridDBColumn;
     Color_CalcDoc: TcxGridDBColumn;
-    actShowMessage: TShowMessageAction;
-    InvNumberSP: TcxGridDBColumn;
-    MedicSP: TcxGridDBColumn;
-    SPKindName: TcxGridDBColumn;
-    SPTax: TcxGridDBColumn;
-    spUpdateMovementItemAmount: TdsdStoredProc;
-    actUpdateMovementItemAmount: TdsdUpdateDataSet;
     cxSplitter1: TcxSplitter;
     actCheckCash: TdsdOpenForm;
     dxBarButton4: TdxBarButton;
     PartionDateKindName: TcxGridDBColumn;
-    DateDelay: TcxGridDBColumn;
     ListPartionDateKindName: TcxGridDBColumn;
-    actSmashCheck: TdsdExecStoredProc;
-    spSmashCheck: TdsdStoredProc;
     dxBarButton5: TdxBarButton;
-    actUpdateOperDate: TdsdExecStoredProc;
     bbUpdateOperDate: TdxBarButton;
-    spUpdateOperDate: TdsdStoredProc;
-    SummCard: TcxGridDBColumn;
+    Panel1: TPanel;
+    deOperDate: TcxDateEdit;
+    cxLabel1: TcxLabel;
+    cxLabel2: TcxLabel;
+    ceTotalSumm: TcxCurrencyEdit;
+    FormParams: TdsdFormParams;
+    ExecuteDialog: TExecuteDialog;
+    dxBarButton6: TdxBarButton;
   private
     { Private declarations }
   public
