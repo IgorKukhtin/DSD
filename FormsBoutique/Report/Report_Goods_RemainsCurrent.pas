@@ -147,6 +147,8 @@ type
     actExport_Grid: TExportGrid;
     actSMTPFile: TdsdSMTPFileAction;
     actExport: TMultiAction;
+    OperPriceList_orig: TcxGridDBColumn;
+    CurrencyName_pl: TcxGridDBColumn;
   private
     { Private declarations }
   public

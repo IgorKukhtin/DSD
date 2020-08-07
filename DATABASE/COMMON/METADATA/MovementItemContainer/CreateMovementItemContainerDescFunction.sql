@@ -22,6 +22,14 @@ CREATE OR REPLACE FUNCTION zc_MIContainer_SummIncomeMovementPayment() RETURNS in
 INSERT INTO MovementItemContainerDesc(Code, ItemName)
   SELECT 'zc_MIContainer_SummIncomeMovementPayment', 'суммовая - остаток по оплате приходной накладной' WHERE NOT EXISTS (SELECT * FROM MovementItemContainerDesc WHERE Code = 'zc_MIContainer_SummIncomeMovementPayment');
 
+CREATE OR REPLACE FUNCTION zc_MIContainer_CountAsset() RETURNS integer AS $BODY$BEGIN RETURN (SELECT Id FROM MovementItemContainerDesc WHERE Code = 'zc_MIContainer_CountAsset'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
+INSERT INTO MovementItemContainerDesc(Code, ItemName)
+  SELECT 'zc_MIContainer_CountAsset', 'Количественный учет ОС' WHERE NOT EXISTS (SELECT * FROM MovementItemContainerDesc WHERE Code = 'zc_MIContainer_CountAsset');
+
+CREATE OR REPLACE FUNCTION zc_MIContainer_SummAsset() RETURNS integer AS $BODY$BEGIN RETURN (SELECT Id FROM MovementItemContainerDesc WHERE Code = 'zc_MIContainer_SummAsset'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
+INSERT INTO MovementItemContainerDesc(Code, ItemName)
+  SELECT 'zc_MIContainer_SummAsset', 'Суммовой учет ОС' WHERE NOT EXISTS (SELECT * FROM MovementItemContainerDesc WHERE Code = 'zc_MIContainer_SummAsset');
+
 -- !!!Farmacy!!!
 CREATE OR REPLACE FUNCTION zc_MIContainer_CountPartionDate() RETURNS integer AS $BODY$BEGIN RETURN (SELECT Id FROM MovementItemContainerDesc WHERE Code = 'zc_MIContainer_CountPartionDate'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
 INSERT INTO MovementItemContainerDesc (Code, ItemName)

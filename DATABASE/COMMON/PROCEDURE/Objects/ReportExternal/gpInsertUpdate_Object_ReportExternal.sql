@@ -56,7 +56,7 @@ $BODY$
 */
 
 -- тест
--- SELECT * FROM Object WHERE DescId = zc_Object_ReportExternal() AND ValueData = 'gpReport_GoodsMI_SaleReturnIn' ORDER BY Id DESC;
+-- SELECT * FROM Object WHERE DescId = zc_Object_ReportExternal() AND ValueData ilike 'gpReport_CheckAmount_ReturnInToSale' ORDER BY Id DESC;
 -- SELECT *, gpInsertUpdate_Object_ReportExternal (ioId:= Id, inName:= '', inSession:= zfCalc_UserAdmin()) FROM Object WHERE DescId = zc_Object_ReportExternal() AND Id = 0 ORDER BY Id;
 --
 -- SELECT * FROM gpInsertUpdate_Object_ReportExternal (ioId:= 0, inName:= 'gpReport_Account',                      inSession:= zfCalc_UserAdmin()); -- +
@@ -129,7 +129,7 @@ $BODY$
 
 -- SELECT * FROM gpInsertUpdate_Object_ReportExternal (ioId:= 0, inName:= 'gpReport_Personal',inSession:= zfCalc_UserAdmin()); -- +
 
--- SELECT * FROM gpInsertUpdate_Object_ReportExternal (ioId:= 0, inName:= 'gpReport_CheckAmount_ReturnInToSale',inSession:= zfCalc_UserAdmin()); -- +
+-- -- SELECT * FROM gpInsertUpdate_Object_ReportExternal (ioId:= 0, inName:= 'gpReport_CheckAmount_ReturnInToSale',inSession:= zfCalc_UserAdmin()); -- -
 
 -- SELECT * FROM gpInsertUpdate_Object_ReportExternal (ioId:= 0, inName:= 'gpReport_GoodsMI_byMovementDiff',inSession:= zfCalc_UserAdmin()); -- +
 -- SELECT * FROM gpInsertUpdate_Object_ReportExternal (ioId:= 0, inName:= 'gpReport_BankAccount',inSession:= zfCalc_UserAdmin()); -- +

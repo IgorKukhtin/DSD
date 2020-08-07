@@ -15,22 +15,14 @@ BEGIN
     -- Нужно передать в gpSelect_Replica_union значения Id из _replica.table_update_data в диапазоне "inId_start..(inId_start + inRec_count)"
     -- и при этом соблюсти условие - "все соответствующие transaction_id находятся в передаваемом диапазоне".
     -- Для этого нужно определить правую границу, которая будет удовлетворять такому условию.
-    vbId_End := (SELECT Max(Id) 
-                 FROM   _replica.table_update_data 
-                 WHERE  transaction_id IN (SELECT DISTINCT transaction_id 
-                                           FROM _replica.table_update_data 
-                                           WHERE Id 
-                                                BETWEEN inId_start 
-                                                    AND inId_start + inRec_count
-                                          )
-                );
+    vbId_End := _replica.gpSelect_Replica_LastId (inId_start, inRec_count);
 
     RETURN QUERY
-        SELECT SRU.Value 
+        SELECT gpSelect.Value 
         FROM   _replica.gpSelect_Replica_union(inId_start := inId_start,
                                                inId_end   := vbId_End
                                                )
-        AS SRU;
+        AS gpSelect;
 END;
 $BODY$
  LANGUAGE PLPGSQL VOLATILE;     

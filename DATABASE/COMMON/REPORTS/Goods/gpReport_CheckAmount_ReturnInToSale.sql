@@ -1,4 +1,4 @@
--- Function: gpReport_CheckAmount_ReturnInToSale ()
+-- Function: gpReport_CheckAmount_ReturnInToSale()
 
 DROP FUNCTION IF EXISTS gpReport_CheckAmount_ReturnInToSale (TDateTime,TDateTime,Boolean, Integer, Integer, Integer, TVarChar);
 
@@ -12,21 +12,21 @@ CREATE OR REPLACE FUNCTION gpReport_CheckAmount_ReturnInToSale (
     IN inSession           TVarChar    -- ñåññèÿ ïîëüçîâàòåëÿ
 )
 RETURNS TABLE (Id Integer, MovementDescName TVarChar, StatusCode Integer
-             , OperDate TDateTime, InvNumber TVarChar, OperDatePartner TDateTime, InvNumberPartner TVarChar 
+             , OperDate TDateTime, InvNumber TVarChar, OperDatePartner TDateTime, InvNumberPartner TVarChar
              , InvNumber_Master TVarChar, InvNumberPartner_Master TVarChar, OperDate_Master TDateTime, DocumentTaxKindName TVarChar
-             
+
              , ContractId Integer, ContractName TVarChar
              , PaidKindId Integer, PaidKindName TVarChar
              , PartnerId Integer, PartnerCode Integer, PartnerName TVarChar
              , JuridicalId Integer, JuridicalCode Integer, JuridicalName TVarChar
              , GoodsGroupNameFull TVarChar, GoodsId Integer, GoodsCode Integer, GoodsName TVarChar, GoodsKindId Integer, GoodsKindName TVarChar
-             , Price TFloat 
+             , Price TFloat
 
-             , AmountDiff TFloat 
-             , AmountSale TFloat, AmountInReturn TFloat, AmountReturn TFloat 
-             , AmountBeforeReturn TFloat, AmountAfterReturn TFloat 
+             , AmountDiff TFloat
+             , AmountSale TFloat, AmountInReturn TFloat, AmountReturn TFloat
+             , AmountBeforeReturn TFloat, AmountAfterReturn TFloat
              , isError Boolean
-             ) 
+             )
 
 AS
 $BODY$
@@ -45,7 +45,7 @@ BEGIN
 
     -- Ðåçóëüòàò
     RETURN QUERY
-       WITH 
+       WITH
       tmpMovReturn  AS (SELECT tmp.Id
                              , tmp.PartnerId
                              , tmp.OperDatePartner
@@ -160,13 +160,23 @@ BEGIN
                                                        AND MI_Child.isErased   = FALSE
                                 INNER JOIN MovementItemFloat AS MIFloat_MovementId
                                                              ON MIFloat_MovementId.MovementItemId = MI_Child.Id
-                                                            AND MIFloat_MovementId.DescId = zc_MIFloat_MovementId()                         
+                                                            AND MIFloat_MovementId.DescId = zc_MIFloat_MovementId()
                                                             AND MIFloat_MovementId.ValueData > 0
                                 INNER JOIN MovementItemFloat AS MIFloat_MovementItemId
                                                              ON MIFloat_MovementItemId.MovementItemId = MI_Child.Id
-                                                            AND MIFloat_MovementItemId.DescId = zc_MIFloat_MovementItemId() 
+                                                            AND MIFloat_MovementItemId.DescId = zc_MIFloat_MovementItemId()
                      )
 
+        , tmpMIFloat AS (SELECT MIFloat_MovementItemId.*
+                         FROM MovementItemFloat AS MIFloat_MovementItemId
+                         WHERE MIFloat_MovementItemId.ValueData IN (SELECT DISTINCT tmpMIChildReturn.MovementItemId_sale FROM tmpMIChildReturn)
+                           AND MIFloat_MovementItemId.DescId = zc_MIFloat_MovementItemId()
+                        )
+   , tmpMIFloat_Sale AS (SELECT MIFloat_AmountPartner_Sale.*
+                         FROM MovementItemFloat AS MIFloat_AmountPartner_Sale
+                         WHERE MIFloat_AmountPartner_Sale.MovementItemId IN (SELECT DISTINCT tmpMIChildReturn.MovementItemId_sale FROM tmpMIChildReturn)
+                           AND MIFloat_AmountPartner_Sale.DescId = zc_MIFloat_AmountPartner()
+                        )
         , tmpData AS (SELECT tmpMIChildReturn.MovementId_sale
                            , tmpMIChildReturn.MovementItemId_sale
                            , MI_Sale.ObjectId                      AS GoodsId
@@ -175,26 +185,26 @@ BEGIN
 
                            , Sum(CASE WHEN inMovementId = 0 THEN
                                            CASE WHEN COALESCE (MD_OperDatePartner.ValueData, Movement_Return.OperDate) BETWEEN inStartDate AND inEndDate THEN MI_Return.Amount ELSE 0 END
-                                           ELSE 
+                                           ELSE
                                            CASE WHEN (Movement_Return.Id = inMovementId) THEN MI_Return.Amount ELSE 0 END
-                                 END ) AS AmountIn  
+                                 END ) AS AmountIn
                            , Sum(CASE WHEN inMovementId = 0 THEN
                                            CASE WHEN COALESCE (MD_OperDatePartner.ValueData, Movement_Return.OperDate) < inStartDate THEN MI_Return.Amount ELSE 0 END
-                                           ELSE 
+                                           ELSE
                                            CASE WHEN COALESCE (MD_OperDatePartner.ValueData, Movement_Return.OperDate) < tmpMIChildReturn.OperDatePartner THEN MI_Return.Amount ELSE 0 END
-                                 END ) AS AmountOutBefore  
+                                 END ) AS AmountOutBefore
                            , Sum(CASE WHEN inMovementId = 0 THEN
                                            CASE WHEN COALESCE (MD_OperDatePartner.ValueData, Movement_Return.OperDate) > inEndDate THEN MI_Return.Amount ELSE 0 END
-                                           ELSE 
+                                           ELSE
                                            CASE WHEN (COALESCE (MD_OperDatePartner.ValueData, Movement_Return.OperDate) >= tmpMIChildReturn.OperDatePartner AND Movement_Return.Id <> inMovementId) THEN MI_Return.Amount ELSE 0 END
-                                 END ) AS AmountOutAfter                             
+                                 END ) AS AmountOutAfter
 
                       FROM tmpMIChildReturn
-                           INNER JOIN MovementItemFloat AS MIFloat_MovementItemId
-                                                        ON MIFloat_MovementItemId.ValueData = tmpMIChildReturn.MovementItemId_sale
-                                                       AND MIFloat_MovementItemId.DescId = zc_MIFloat_MovementItemId() 
+                           INNER JOIN tmpMIFloat AS MIFloat_MovementItemId
+                                                 ON MIFloat_MovementItemId.ValueData = tmpMIChildReturn.MovementItemId_sale
+                                                AND MIFloat_MovementItemId.DescId = zc_MIFloat_MovementItemId()
                            INNER JOIN MovementItem AS MI_Sale ON MI_Sale.Id = tmpMIChildReturn.MovementItemId_sale
-                         
+
                            INNER JOIN MovementItem AS MI_Return ON MI_Return.Id       = MIFloat_MovementItemId.MovementItemId
                                                                AND MI_Return.isErased = FALSE
                            INNER JOIN MovementItem AS MI_Master
@@ -208,9 +218,9 @@ BEGIN
                                                  AND MD_OperDatePartner.DescId = zc_MovementDate_OperDatePartner()
                                                  AND Movement_Return.DescId   = zc_Movement_ReturnIn()
 
-                           LEFT JOIN MovementItemFloat AS MIFloat_AmountPartner_Sale
-                                                       ON MIFloat_AmountPartner_Sale.MovementItemId = MI_Sale.Id
-                                                      AND MIFloat_AmountPartner_Sale.DescId = zc_MIFloat_AmountPartner()
+                           LEFT JOIN tmpMIFloat_Sale AS MIFloat_AmountPartner_Sale
+                                                     ON MIFloat_AmountPartner_Sale.MovementItemId = MI_Sale.Id
+                                                    AND MIFloat_AmountPartner_Sale.DescId = zc_MIFloat_AmountPartner()
 
                          GROUP BY tmpMIChildReturn.MovementId_sale
                                 , tmpMIChildReturn.MovementItemId_sale
@@ -218,7 +228,7 @@ BEGIN
                                 , CASE WHEN Movement_Return.DescId = zc_Movement_ReturnIn() THEN MIFloat_AmountPartner_Sale.ValueData ELSE MI_Sale.Amount END
                          HAVING CASE WHEN Movement_Return.DescId = zc_Movement_ReturnIn() THEN MIFloat_AmountPartner_Sale.ValueData ELSE MI_Sale.Amount END < SUM (MI_Return.Amount)
                              OR inOnlyError = FALSE
-                      )   
+                      )
 
              SELECT Movement_Sale.Id                AS Id
                   , MovementDesc.ItemName AS MovementDescName
@@ -232,7 +242,7 @@ BEGIN
                   , MS_InvNumberPartner_Master.ValueData     AS InvNumberPartner_Master
                   , Movement_DocumentMaster.OperDate         AS OperDate_Master
                   , Object_TaxKind_Master.ValueData          AS DocumentTaxKindName
-                           
+
                   , View_Contract_InvNumber.ContractId
                   , View_Contract_InvNumber.InvNumber AS ContractName
                   , Object_PaidKind.Id                AS PaidKindId
@@ -245,7 +255,7 @@ BEGIN
                   , Object_Juridical.Id         AS JuridicalId
                   , Object_Juridical.ObjectCode AS JuridicalCode
                   , Object_Juridical.ValueData  AS JuridicalName
-                  
+
                   , ObjectString_Goods_GoodsGroupFull.ValueData AS GoodsGroupNameFull
                   , Object_Goods.Id                 AS GoodsId
                   , Object_Goods.ObjectCode         AS GoodsCode
@@ -262,7 +272,7 @@ BEGIN
                   , tmpData.Amount       :: TFloat AS AmountReturn
                   , tmpData.AmountOutBefore      :: TFloat AS AmountBeforeReturn
                   , tmpData.AmountOutAfter       :: TFloat AS AmountAfterReturn
-                  
+
                   , CASE WHEN tmpData.AmountSale < tmpData.Amount THEN TRUE ELSE FALSE END AS isError
 
              FROM tmpData
@@ -271,12 +281,12 @@ BEGIN
                 LEFT JOIN Object AS Object_Status ON Object_Status.Id = Movement_Sale.StatusId
 
                 LEFT JOIN MovementString AS MovementString_InvNumberPartner
-                                         ON MovementString_InvNumberPartner.MovementId = Movement_Sale.Id 
+                                         ON MovementString_InvNumberPartner.MovementId = Movement_Sale.Id
                                         AND MovementString_InvNumberPartner.DescId = zc_MovementString_InvNumberPartner()
                 LEFT JOIN MovementDate AS MD_OperDatePartner
-                                       ON MD_OperDatePartner.MovementId = Movement_Sale.Id 
+                                       ON MD_OperDatePartner.MovementId = Movement_Sale.Id
                                       AND MD_OperDatePartner.DescId = zc_MovementDate_OperDatePartner()
-                                                  
+
                 LEFT JOIN Object AS Object_Goods ON Object_Goods.Id = tmpData.GoodsId
                 LEFT JOIN ObjectString AS ObjectString_Goods_GoodsGroupFull
                                    ON ObjectString_Goods_GoodsGroupFull.ObjectId = Object_Goods.Id
@@ -284,13 +294,13 @@ BEGIN
 
                 LEFT JOIN MovementItemFloat AS MIFloat_Price
                                             ON MIFloat_Price.MovementItemId = tmpData.MovementItemId_sale
-                                           AND MIFloat_Price.DescId = zc_MIFloat_Price()  
+                                           AND MIFloat_Price.DescId = zc_MIFloat_Price()
 
                 LEFT JOIN MovementItemLinkObject AS MILinkObject_GoodsKind
                                                  ON MILinkObject_GoodsKind.MovementItemId = tmpData.MovementItemId_sale
                                                 AND MILinkObject_GoodsKind.DescId = zc_MILinkObject_GoodsKind()
                 LEFT JOIN Object AS Object_GoodsKind ON Object_GoodsKind.Id = MILinkObject_GoodsKind.ObjectId
-                                           
+
                 LEFT JOIN MovementLinkObject AS MovementLinkObject_To
                                              ON MovementLinkObject_To.MovementId = Movement_Sale.Id
                                             AND MovementLinkObject_To.DescId = CASE WHEN Movement_Sale.DescId = zc_Movement_Sale() THEN zc_MovementLinkObject_To() ELSE zc_MovementLinkObject_Partner() END
@@ -300,7 +310,7 @@ BEGIN
                                      ON ObjectLink_Partner_Juridical.ObjectId = Object_Partner.Id
                                     AND ObjectLink_Partner_Juridical.DescId = zc_ObjectLink_Partner_Juridical()
                 LEFT JOIN Object AS Object_Juridical ON Object_Juridical.Id = ObjectLink_Partner_Juridical.ChildObjectId
-                                                   
+
                 LEFT JOIN MovementLinkMovement AS MovementLinkMovement_Master
                                                ON MovementLinkMovement_Master.MovementId = Movement_Sale.Id
                                               AND MovementLinkMovement_Master.DescId = zc_MovementLinkMovement_Master()
@@ -310,9 +320,9 @@ BEGIN
                                         AND MS_InvNumberPartner_Master.DescId = zc_MovementString_InvNumberPartner()
 
                 LEFT JOIN MovementLinkObject AS MovementLinkObject_DocumentTaxKind_Master
-                                             ON MovementLinkObject_DocumentTaxKind_Master.MovementId = Movement_DocumentMaster.Id 
+                                             ON MovementLinkObject_DocumentTaxKind_Master.MovementId = Movement_DocumentMaster.Id
                                             AND MovementLinkObject_DocumentTaxKind_Master.DescId = zc_MovementLinkObject_DocumentTaxKind()
-                LEFT JOIN Object AS Object_TaxKind_Master 
+                LEFT JOIN Object AS Object_TaxKind_Master
                                  ON Object_TaxKind_Master.Id = MovementLinkObject_DocumentTaxKind_Master.ObjectId
                                 AND Movement_DocumentMaster.StatusId = zc_Enum_Status_Complete()
 
@@ -328,7 +338,7 @@ BEGIN
 
              WHERE (tmpData.AmountSale < tmpData.Amount) OR inOnlyError = FALSE
        ;
-         
+
 END;
 $BODY$
   LANGUAGE plpgsql VOLATILE;
@@ -336,9 +346,9 @@ $BODY$
 /*-------------------------------------------------------------------------------
  ÈÑÒÎÐÈß ÐÀÇÐÀÁÎÒÊÈ: ÄÀÒÀ, ÀÂÒÎÐ
                Ôåëîíþê È.Â.   Êóõòèí È.Â.   Êëèìåíòüåâ Ê.È.
- 30.05.15         * 
+ 30.05.15         *
 */
 
 -- òåñò
--- SELECT * FROM gpReport_CheckAmount_ReturnInToSale (inStartDate:= '2016-05-20' ::TDateTime , inEndDate:= '2016-05-20' ::TDateTime, inOnlyError:= false, inMovementId:= 0, inJuridicalId:= 0, inPartnerId:=97790, inSession:= zfCalc_UserAdmin()) 
--- SELECT * FROM gpReport_CheckAmount_ReturnInToSale (inStartDate:= '2016-05-20' ::TDateTime , inEndDate:= '2016-05-20' ::TDateTime, inOnlyError:= false, inMovementId:= 3650319  , inJuridicalId:= 0, inPartnerId:=97790, inSession:= zfCalc_UserAdmin()) 
+-- SELECT * FROM gpReport_CheckAmount_ReturnInToSale (inStartDate:= '2016-05-20' ::TDateTime , inEndDate:= '2016-05-20' ::TDateTime, inOnlyError:= false, inMovementId:= 0, inJuridicalId:= 0, inPartnerId:=97790, inSession:= zfCalc_UserAdmin())
+-- SELECT * FROM gpReport_CheckAmount_ReturnInToSale (inStartDate:= '2016-05-20' ::TDateTime , inEndDate:= '2016-05-20' ::TDateTime, inOnlyError:= false, inMovementId:= 3650319  , inJuridicalId:= 0, inPartnerId:=97790, inSession:= zfCalc_UserAdmin())

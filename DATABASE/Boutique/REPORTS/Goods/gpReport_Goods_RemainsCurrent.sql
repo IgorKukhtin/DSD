@@ -57,6 +57,8 @@ RETURNS TABLE (PartionId            Integer
              , CountForPrice           TFloat -- Кол. в цене вх. в валюте
              , OperPrice_grn           TFloat -- *Цена вх. в ГРН по курсу на тек дату
              , OperPrice_grn_doc       TFloat -- *Цена вх. в ГРН по курсу документа
+
+             , OperPriceList_orig      TFloat -- Цена по прайсу
              , OperPriceList           TFloat -- Цена по прайсу в ГРН по курсу на тек дату
              , OperPriceList_doc       TFloat -- Цена по прайсу в ГРН по курсу документа  
              , OperPriceList_curr      TFloat -- *Цена по прайсу в валюте по курсу на тек дату
@@ -92,6 +94,8 @@ RETURNS TABLE (PartionId            Integer
              , isOlap Boolean
              , Comment_in           TVarChar
              , ChangePercent_in     TFloat
+
+             , CurrencyName_pl TVarChar
               )
 AS
 $BODY$
@@ -445,13 +449,16 @@ BEGIN
                           , tmpData_All.LabelId
                           , tmpData_All.JuridicalId
                           , tmpData_All.CurrencyId
+                          , tmpData_All.CurrencyId_pl
                           
-                            -- Цена прайс - переводим в ГРН, по курск "сегодня"
+                            -- Цена прайс
+                          , tmpData_All.OperPriceList AS OperPriceList_orig
+                            -- Цена прайс - переводим в ГРН, по курсу "сегодня"
                           , tmpData_All.OperPriceList * (CASE WHEN tmpData_All.CurrencyId_pl = zc_Currency_Basis() THEN 1 WHEN tmpCurrency.Amount   <> 0 THEN tmpCurrency.Amount   ELSE 1 END
                                                        / CASE WHEN tmpData_All.CurrencyId_pl = zc_Currency_Basis() THEN 1 WHEN tmpCurrency.ParValue <> 0 THEN tmpCurrency.ParValue ELSE 1 END
                                                         ) AS OperPriceList
 
-                            -- Цена прайс - переводим в ГРН, по курск док. Приход
+                            -- Цена прайс - переводим в ГРН, по курсу док. Приход
                           , tmpData_All.OperPriceList * (CASE WHEN tmpData_All.CurrencyId_pl = zc_Currency_Basis() THEN 1 WHEN tmpData_All.CurrencyValue <> 0 THEN tmpData_All.CurrencyValue ELSE 1 END
                                                        / CASE WHEN tmpData_All.CurrencyId_pl = zc_Currency_Basis() THEN 1 WHEN tmpData_All.ParValue <> 0 THEN tmpData_All.ParValue ELSE 1 END
                                                         ) AS OperPriceList_doc
@@ -677,19 +684,21 @@ BEGIN
                   ELSE 0
              END :: TFloat AS OperPrice_grn_doc
 
+             -- Цена по прайсу
+           , tmpData.OperPriceList_orig :: TFloat
              -- Цена по прайсу в ГРН  тек.курс
-           , tmpData.OperPriceList :: TFloat
+           , CAST (tmpData.OperPriceList AS NUMERIC (16, 0)) :: TFloat
              -- Цена по прайсу в ГРН курс.документа
-           , tmpData.OperPriceList_doc :: TFloat
+           , CAST (tmpData.OperPriceList_doc AS NUMERIC (16, 0)) :: TFloat
            
              -- *Цена по прайсу в валюте по курсу на тек.дату
            , CAST (tmpData.OperPriceList / CASE WHEN tmpData.CurrencyId = zc_Currency_Basis() THEN 1 WHEN tmpData.CurrencyValue <> 0 THEN tmpData.CurrencyValue ELSE 1 END
                                          * CASE WHEN tmpData.CurrencyId = zc_Currency_Basis() THEN 1 WHEN tmpData.ParValue <> 0      THEN tmpData.ParValue      ELSE 1 END
-                   AS NUMERIC (16, 2)) :: TFloat AS OperPriceList_curr
+                   AS NUMERIC (16, 0)) :: TFloat AS OperPriceList_curr
              -- *Цена по прайсу в валюте по курсу документа
            , CAST (tmpData.OperPriceList_doc / CASE WHEN tmpData.CurrencyId = zc_Currency_Basis() THEN 1 WHEN tmpData.CurrencyValue_doc <> 0 THEN tmpData.CurrencyValue_doc ELSE 1 END
                                          * CASE WHEN tmpData.CurrencyId = zc_Currency_Basis() THEN 1 WHEN tmpData.ParValue_doc <> 0      THEN tmpData.ParValue_doc      ELSE 1 END
-                   AS NUMERIC (16, 2)) :: TFloat AS OperPriceList_curr_doc
+                   AS NUMERIC (16, 0)) :: TFloat AS OperPriceList_curr_doc
 
              -- Цена вх. без ск. в валюте (информативно)
            , CASE WHEN tmpData.Amount_in  <> 0 THEN tmpData.TotalSummPriceJur / tmpData.Amount_in
@@ -698,20 +707,20 @@ BEGIN
 
              --c учетом сезонной скидки
              -- Цена по прайсу в ГРН  тек.курс
-           , CAST (tmpData.OperPriceList * (1 - COALESCE (tmpDiscount.DiscountTax,0) /100) AS NUMERIC (16, 2))     :: TFloat AS OperPriceList_disc
+           , CAST (tmpData.OperPriceList * (1 - COALESCE (tmpDiscount.DiscountTax,0) /100) AS NUMERIC (16, 0))     :: TFloat AS OperPriceList_disc
              -- Цена по прайсу в ГРН курс.документа
-           , CAST (tmpData.OperPriceList_doc * (1 - COALESCE (tmpDiscount.DiscountTax,0) /100) AS NUMERIC (16, 2)) :: TFloat AS OperPriceList_doc_disc
+           , CAST (tmpData.OperPriceList_doc * (1 - COALESCE (tmpDiscount.DiscountTax,0) /100) AS NUMERIC (16, 0)) :: TFloat AS OperPriceList_doc_disc
            
              -- *Цена по прайсу в валюте по курсу на тек.дату
            , CAST (tmpData.OperPriceList / CASE WHEN tmpData.CurrencyId = zc_Currency_Basis() THEN 1 WHEN tmpData.CurrencyValue <> 0 THEN tmpData.CurrencyValue ELSE 1 END
                                          * CASE WHEN tmpData.CurrencyId = zc_Currency_Basis() THEN 1 WHEN tmpData.ParValue <> 0      THEN tmpData.ParValue      ELSE 1 END
                           * (1 - COALESCE (tmpDiscount.DiscountTax,0) /100)    
-                   AS NUMERIC (16, 2)) :: TFloat AS OperPriceList_curr_disc
+                   AS NUMERIC (16, 0)) :: TFloat AS OperPriceList_curr_disc
              -- *Цена по прайсу в валюте по курсу документа
            , CAST (tmpData.OperPriceList_doc / CASE WHEN tmpData.CurrencyId = zc_Currency_Basis() THEN 1 WHEN tmpData.CurrencyValue_doc <> 0 THEN tmpData.CurrencyValue_doc ELSE 1 END
                                              * CASE WHEN tmpData.CurrencyId = zc_Currency_Basis() THEN 1 WHEN tmpData.ParValue_doc <> 0      THEN tmpData.ParValue_doc      ELSE 1 END
                           * (1 - COALESCE (tmpDiscount.DiscountTax,0) /100)
-                   AS NUMERIC (16, 2)) :: TFloat AS OperPriceList_curr_doc_disc
+                   AS NUMERIC (16, 0)) :: TFloat AS OperPriceList_curr_doc_disc
            /***********************/
 
              -- Кол-во - остаток в магазине
@@ -782,11 +791,14 @@ BEGIN
            , tmpData.Comment_in       :: TVarChar
            , tmpData.ChangePercent_in :: TFloat
 
+           , Object_Currency_pl.ValueData AS CurrencyName_pl
+
         FROM tmpData
             LEFT JOIN Object AS Object_Unit    ON Object_Unit.Id    = tmpData.UnitId
             LEFT JOIN Object AS Object_Unit_in ON Object_Unit_in.Id = tmpData.UnitId_in
             LEFT JOIN Object AS Object_Partner ON Object_Partner.Id = tmpData.PartnerId
             LEFT JOIN Object AS Object_Goods   ON Object_Goods.Id   = tmpData.GoodsId
+            LEFT JOIN Object AS Object_Currency_pl ON Object_Currency_pl.Id = tmpData.CurrencyId_pl
 
             LEFT JOIN Object AS Object_GoodsGroup       ON Object_GoodsGroup.Id       = tmpData.GoodsGroupId
             LEFT JOIN Object AS Object_Measure          ON Object_Measure.Id          = tmpData.MeasureId

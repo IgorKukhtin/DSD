@@ -21,7 +21,7 @@ $BODY$BEGIN
            , CAST ('' as TVarChar)  AS Name
            , CAST (NULL AS Boolean) AS isErased
        FROM Object AS Object_ProfitLossGroup
-       WHERE Object.DescId = zc_Object_ProfitLossGroup();
+       WHERE Object_ProfitLossGroup.DescId = zc_Object_ProfitLossGroup();
    ELSE
        RETURN QUERY 
        SELECT
