@@ -3667,17 +3667,17 @@ begin
     Exit;
   end;
 
-  if not Assigned(FDataSet) then
-  begin
-    ShowMessage('Не определен источник данных.');
-    Exit;
-  end;
+//  if not Assigned(FDataSet) then
+//  begin
+//    ShowMessage('Не определен источник данных.');
+//    Exit;
+//  end;
 
-  if not FDataSet.Active then
-  begin
-    ShowMessage('Источник данных не открыт.');
-    Exit;
-  end;
+//  if not FDataSet.Active then
+//  begin
+//    ShowMessage('Источник данных не открыт.');
+//    Exit;
+//  end;
 
   Stream := TStringStream.Create;
 
@@ -3735,18 +3735,20 @@ begin
                       ConvertToURL(ExtractFilePath(ParamStr(0)) + FFileName), '_blank', 0,
                       VariantArr);
 
-        if not (VarIsEmpty(Doc) or VarIsNull(Doc)) then
+        if Assigned(FDataSet) then if FDataSet.Active then
         begin
-
-          FDataSet.First;
-          while not FDataSet.Eof do
+          if not (VarIsEmpty(Doc) or VarIsNull(Doc)) then
           begin
-            if Trim(FDataSet.Fields.Fields[0].AsString) <> '' then
+
+            FDataSet.First;
+            while not FDataSet.Eof do
             begin
-              ReplaceDescriptor:=Doc.createReplaceDescriptor;
-              ReplaceDescriptor.setSearchString('%' + FDataSet.Fields.Fields[0].AsString + '%');
-              ReplaceDescriptor.setReplaceString(FDataSet.Fields.Fields[1].AsString);
-              Doc.replaceAll(ReplaceDescriptor);            end;            FDataSet.Next;          end;
+              if Trim(FDataSet.Fields.Fields[0].AsString) <> '' then
+              begin
+                ReplaceDescriptor:=Doc.createReplaceDescriptor;
+                ReplaceDescriptor.setSearchString('%' + FDataSet.Fields.Fields[0].AsString + '%');
+                ReplaceDescriptor.setReplaceString(FDataSet.Fields.Fields[1].AsString);
+                Doc.replaceAll(ReplaceDescriptor);              end;              FDataSet.Next;            end;          end;
           SaveParams := VarArrayCreate([0, -1], varVariant);
           Doc.StoreAsUrl(ConvertToURL(ExtractFilePath(ParamStr(0)) + FFileName),SaveParams);
         end;
@@ -3759,18 +3761,21 @@ begin
 
       Doc := woApp.Documents.Open(ExtractFilePath(ParamStr(0)) + FFileName);
 
-      woApp.Selection.HomeKey($00000006);
-
-      FDataSet.First;
-      while not FDataSet.Eof do
+      if Assigned(FDataSet) then if FDataSet.Active then
       begin
-        if Trim(FDataSet.Fields.Fields[0].AsString) <> '' then
+        woApp.Selection.HomeKey($00000006);
+
+        FDataSet.First;
+        while not FDataSet.Eof do
         begin
-          woApp.Selection.HomeKey($00000006);
-          while woApp.Selection.Find.Execute('%' + FDataSet.Fields.Fields[0].AsString + '%')
-            do woApp.Selection.TypeText(FDataSet.Fields.Fields[1].AsString);
+          if Trim(FDataSet.Fields.Fields[0].AsString) <> '' then
+          begin
+            woApp.Selection.HomeKey($00000006);
+            while woApp.Selection.Find.Execute('%' + FDataSet.Fields.Fields[0].AsString + '%')
+              do woApp.Selection.TypeText(FDataSet.Fields.Fields[1].AsString);
+          end;
+          FDataSet.Next;
         end;
-        FDataSet.Next;
       end;
 
       Doc.Save;

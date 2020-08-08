@@ -495,6 +495,8 @@ type
     MemDataUKTZED: TStringField;
     MainUKTZED: TcxGridDBColumn;
     MemDataGOODSPSID: TIntegerField;
+    actReturnInJournal: TdsdOpenForm;
+    N44: TMenuItem;
     procedure WM_KEYDOWN(var Msg: TWMKEYDOWN);
     procedure FormCreate(Sender: TObject);
     procedure actChoiceGoodsInRemainsGridExecute(Sender: TObject);

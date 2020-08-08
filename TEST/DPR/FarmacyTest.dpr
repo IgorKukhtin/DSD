@@ -921,7 +921,9 @@ uses
   Report_Check_CountDialog in '..\..\FormsFarmacy\Report\Report_Check_CountDialog.pas' {Report_Check_CountDialogForm: TParentForm},
   Report_LeftSend in '..\..\FormsFarmacy\Report\Report_LeftSend.pas' {Report_LeftSendForm: TParentForm},
   CheckToReturn in '..\..\FormsFarmacy\Document\CheckToReturn.pas' {CheckToReturnForm: TParentForm},
-  CheckToReturnDialog in '..\..\FormsFarmacy\Document\CheckToReturnDialog.pas' {CheckToReturnDialogForm: TParentForm};
+  CheckToReturnDialog in '..\..\FormsFarmacy\Document\CheckToReturnDialog.pas' {CheckToReturnDialogForm: TParentForm},
+  ReturnInCash in '..\..\FormsFarmacy\Document\ReturnInCash.pas' {ReturnInCashForm: TParentForm},
+  ReturnInJournalCash in '..\..\FormsFarmacy\Document\ReturnInJournalCash.pas' {ReturnInJournalCashForm: TParentForm};
 
 {$R *.res}
 {$R DevExpressRus.res}

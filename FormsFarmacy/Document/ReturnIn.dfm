@@ -12,17 +12,17 @@ inherited ReturnInForm: TReturnInForm
     Width = 647
     Height = 319
     ExplicitTop = 163
-    ExplicitWidth = 665
+    ExplicitWidth = 647
     ExplicitHeight = 319
     ClientRectBottom = 319
     ClientRectRight = 647
     inherited tsMain: TcxTabSheet
-      ExplicitWidth = 665
+      ExplicitWidth = 647
       ExplicitHeight = 295
       inherited cxGrid: TcxGrid
         Width = 647
         Height = 295
-        ExplicitWidth = 665
+        ExplicitWidth = 647
         ExplicitHeight = 295
         inherited cxGridDBTableView: TcxGridDBTableView
           DataController.Summary.FooterSummaryItems = <
@@ -172,7 +172,7 @@ inherited ReturnInForm: TReturnInForm
     Width = 647
     Height = 137
     TabOrder = 3
-    ExplicitWidth = 1247
+    ExplicitWidth = 647
     ExplicitHeight = 137
     inherited edInvNumber: TcxTextEdit
       Top = 22
@@ -581,6 +581,15 @@ inherited ReturnInForm: TReturnInForm
         end>
       isShowModal = False
     end
+    object actApplicationTemplate: TdsdDOCReportFormAction
+      Category = 'DSDLib'
+      MoveParams = <>
+      Caption = #1064#1072#1073#1083#1086#1085' '#1079#1072#1103#1074#1083#1077#1085#1080#1103' '#1085#1072' '#1074#1086#1079#1074#1088#1072#1090' '#1090#1086#1074#1072#1088#1072
+      Hint = #1064#1072#1073#1083#1086#1085' '#1079#1072#1103#1074#1083#1077#1085#1080#1103' '#1085#1072' '#1074#1086#1079#1074#1088#1072#1090' '#1090#1086#1074#1072#1088#1072
+      ImageIndex = 29
+      BlankName = #1064#1072#1073#1083#1086#1085' '#1079#1072#1103#1074#1083#1077#1085#1080#1103' '#1085#1072' '#1074#1086#1079#1074#1088#1072#1090' '#1090#1086#1074#1072#1088#1072'.doc'
+      FileName = #1064#1072#1073#1083#1086#1085' '#1079#1072#1103#1074#1083#1077#1085#1080#1103' '#1085#1072' '#1074#1086#1079#1074#1088#1072#1090' '#1090#1086#1074#1072#1088#1072'.doc'
+    end
   end
   inherited MasterDS: TDataSource
     Top = 224
@@ -688,6 +697,10 @@ inherited ReturnInForm: TReturnInForm
         item
           Visible = True
           ItemName = 'dxBarStatic'
+        end
+        item
+          Visible = True
+          ItemName = 'bbApplicationTemplate'
         end>
     end
     object bbPrintCheck: TdxBarButton
@@ -704,6 +717,10 @@ inherited ReturnInForm: TReturnInForm
     object bb: TdxBarButton
       Action = actInsertRecord
       Caption = #1044#1086#1073#1072#1074#1080#1090#1100' '#1089#1090#1088#1086#1082#1091
+      Category = 0
+    end
+    object bbApplicationTemplate: TdxBarButton
+      Action = actApplicationTemplate
       Category = 0
     end
   end
@@ -1210,6 +1227,7 @@ inherited ReturnInForm: TReturnInForm
   object GuidesCashRegister: TdsdGuides
     KeyField = 'Id'
     LookupControl = edCashRegister
+    DisableGuidesOpen = True
     FormNameParam.Value = 'TCheck_CashRegisterForm'
     FormNameParam.DataType = ftString
     FormNameParam.MultiSelectSeparator = ','
@@ -1233,8 +1251,8 @@ inherited ReturnInForm: TReturnInForm
         ParamType = ptInput
         MultiSelectSeparator = ','
       end>
-    Left = 448
-    Top = 8
+    Left = 552
+    Top = 16
   end
   object GuidesPaidKind: TdsdGuides
     KeyField = 'Id'

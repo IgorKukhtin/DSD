@@ -3253,6 +3253,16 @@
 				<Form>CheckToReturnDialogForm</Form>
 				<DesignClass>TParentForm</DesignClass>
 			</DCCReference>
+			<DCCReference Include="..\..\FormsFarmacy\Document\ReturnInCash.pas">
+				<Form>ReturnInCashForm</Form>
+				<FormType>dfm</FormType>
+				<DesignClass>TParentForm</DesignClass>
+			</DCCReference>
+			<DCCReference Include="..\..\FormsFarmacy\Document\ReturnInJournalCash.pas">
+				<Form>ReturnInJournalCashForm</Form>
+				<FormType>dfm</FormType>
+				<DesignClass>TParentForm</DesignClass>
+			</DCCReference>
 			<BuildConfiguration Include="Release">
 				<Key>Cfg_2</Key>
 				<CfgParent>Base</CfgParent>

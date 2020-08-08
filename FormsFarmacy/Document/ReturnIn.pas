@@ -78,6 +78,8 @@ type
     FromNameIncome: TcxGridDBColumn;
     ExpirationDate: TcxGridDBColumn;
     PartionDateKindName: TcxGridDBColumn;
+    actApplicationTemplate: TdsdDOCReportFormAction;
+    bbApplicationTemplate: TdxBarButton;
   private
     { Private declarations }
   public

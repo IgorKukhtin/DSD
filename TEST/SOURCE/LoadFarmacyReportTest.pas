@@ -144,7 +144,7 @@ end;
 procedure TLoadReportTest.LoadAllBlankFormTest;
 begin
   LoadFileFromFile('ИНВЕНТ_ОПИСЬ_на_каждый_месяц.doc', FarmacyBlankPath + '\ИНВЕНТ ОПИСЬ на каждый месяц.doc');
-
+  LoadFileFromFile('Шаблон заявления на возврат товара.doc', FarmacyBlankPath + '\Шаблон заявления на возврат товара.doc');
 end;
 
 procedure TLoadReportTest.SetUp;

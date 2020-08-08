@@ -2406,6 +2406,12 @@ begin
   TdsdFormStorageFactory.GetStorage.Load('TReturnInJournalForm');
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TReturnInForm'));
   TdsdFormStorageFactory.GetStorage.Load('TReturnInForm');
+
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TReturnInCashForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TReturnInCashForm');
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TReturnInJournalCashForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TReturnInJournalCashForm');
+
   //
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TCheckItemJournalForm'));
   TdsdFormStorageFactory.GetStorage.Load('TCheckItemJournalForm');

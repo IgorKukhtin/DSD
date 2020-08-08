@@ -3967,6 +3967,40 @@ inherited MainCashForm2: TMainCashForm2
         end>
       isShowModal = False
     end
+    object actReturnInJournal: TdsdOpenForm
+      Category = #1044#1086#1082#1091#1084#1077#1085#1090#1099
+      MoveParams = <>
+      Caption = #1042#1086#1079#1074#1088#1072#1090' '#1086#1090' '#1087#1086#1082#1091#1087#1072#1090#1077#1083#1103
+      ShortCut = 16470
+      FormName = 'TReturnInJournalCashForm'
+      FormNameParam.Value = 'TReturnInJournalCashForm'
+      FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
+      GuiParams = <
+        item
+          Name = 'GoodsId'
+          Value = Null
+          Component = RemainsCDS
+          ComponentItem = 'Id'
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'GoodsCode'
+          Value = Null
+          Component = RemainsCDS
+          ComponentItem = 'GoodsCode'
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'GoodsName'
+          Value = Null
+          Component = RemainsCDS
+          ComponentItem = 'GoodsName'
+          DataType = ftString
+          MultiSelectSeparator = ','
+        end>
+      isShowModal = False
+    end
   end
   object dsdDBViewAddOnMain: TdsdDBViewAddOn
     ErasedFieldName = 'isErased'
@@ -5886,6 +5920,9 @@ inherited MainCashForm2: TMainCashForm2
     end
     object N42: TMenuItem
       Action = actSendPartionDateChangeCashJournal
+    end
+    object N44: TMenuItem
+      Action = actReturnInJournal
     end
   end
   object TimerDroppedDown: TTimer
