@@ -1186,7 +1186,8 @@ uses
   Report_JuridicalSold_AssetNoBalance in '..\..\Forms\Report\Report_JuridicalSold_AssetNoBalance.pas' {Report_JuridicalSold_AssetNoBalanceForm: TParentForm},
   CashJournalBonus in '..\..\Forms\Document\CashJournalBonus.pas' {CashJournalBonusForm: TParentForm},
   OrderExternalJournal in '..\..\Forms\Document\OrderExternalJournal.pas' {OrderExternalJournalForm: TParentForm},
-  Movement_PeriodDialog_Bonus in '..\..\Forms\Document\Movement_PeriodDialog_Bonus.pas' {Movement_PeriodDialog_BonusForm: TParentForm};
+  Movement_PeriodDialog_Bonus in '..\..\Forms\Document\Movement_PeriodDialog_Bonus.pas' {Movement_PeriodDialog_BonusForm: TParentForm},
+  CashOperationBonus in '..\..\Forms\Document\CashOperationBonus.pas' {CashOperationBonusForm: TParentForm};
 
 {$R *.RES}
 {$R DevExpressRus.res}

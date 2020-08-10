@@ -668,6 +668,152 @@ inherited CashJournalBonusForm: TCashJournalBonusForm
           MultiSelectSeparator = ','
         end>
     end
+    object actUpdate_New: TdsdInsertUpdateAction [4]
+      Category = 'DSDLib'
+      MoveParams = <>
+      Caption = #1048#1079#1084#1077#1085#1080#1090#1100
+      Hint = #1048#1079#1084#1077#1085#1080#1090#1100' '#1079#1072#1087#1080#1089#1100
+      ShortCut = 115
+      ImageIndex = 1
+      FormName = 'TCashOperationBonusForm'
+      FormNameParam.Value = 'TCashOperationBonusForm'
+      FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
+      GuiParams = <
+        item
+          Name = 'Id'
+          Value = Null
+          Component = MasterCDS
+          ComponentItem = 'Id'
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'ShowAll'
+          Value = False
+          DataType = ftBoolean
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'inOperDate'
+          Value = 42736d
+          Component = deEnd
+          DataType = ftDateTime
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'inCashId_top'
+          Value = ''
+          Component = GuidesCash
+          ComponentItem = 'Key'
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'inCurrencyId_top'
+          Value = '0'
+          Component = GuidesCurrency
+          ComponentItem = 'Key'
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'CurrencyId'
+          Value = '0'
+          Component = GuidesCurrency
+          ComponentItem = 'Key'
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'CurrencyName'
+          Value = ''
+          Component = GuidesCurrency
+          ComponentItem = 'TextValue'
+          DataType = ftString
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'CashId'
+          Value = ''
+          Component = GuidesCash
+          ComponentItem = 'Key'
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'CashName'
+          Value = ''
+          Component = GuidesCash
+          ComponentItem = 'TextValue'
+          DataType = ftString
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'ContractId'
+          Value = Null
+          Component = MasterCDS
+          ComponentItem = 'ContractId'
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'ContractName'
+          Value = Null
+          Component = MasterCDS
+          ComponentItem = 'ContractInvNumber'
+          DataType = ftString
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'InfoMoneyId'
+          Value = Null
+          Component = MasterCDS
+          ComponentItem = 'InfoMoneyId'
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'InfoMoneyName'
+          Value = Null
+          Component = MasterCDS
+          ComponentItem = 'InfoMoneyName'
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'MoneyPlaceId'
+          Value = Null
+          Component = MasterCDS
+          ComponentItem = 'MoneyPlaceId'
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'MoneyPlaceName'
+          Value = Null
+          Component = MasterCDS
+          ComponentItem = 'MoneyPlaceName'
+          DataType = ftString
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'RemainsToPay'
+          Value = Null
+          Component = MasterCDS
+          ComponentItem = 'RemainsToPay'
+          DataType = ftFloat
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end>
+      isShowModal = False
+      ActionType = acUpdate
+      DataSource = MasterDS
+      DataSetRefresh = actRefresh
+      IdFieldName = 'Id'
+    end
     inherited actUpdate: TdsdInsertUpdateAction
       FormName = 'TCashOperationForm'
       GuiParams = <
@@ -704,6 +850,99 @@ inherited CashJournalBonusForm: TCashJournalBonusForm
           Value = Null
           Component = GuidesCurrency
           ComponentItem = 'Key'
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'CurrencyId'
+          Value = Null
+          Component = GuidesCurrency
+          ComponentItem = 'Key'
+          ParamType = ptUnknown
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'CurrencyName'
+          Value = Null
+          Component = GuidesCurrency
+          ComponentItem = 'TextValue'
+          DataType = ftString
+          ParamType = ptUnknown
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'CashId'
+          Value = Null
+          Component = GuidesCash
+          ComponentItem = 'Key'
+          ParamType = ptUnknown
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'CashName'
+          Value = Null
+          Component = GuidesCash
+          ComponentItem = 'TextValue'
+          DataType = ftString
+          ParamType = ptUnknown
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'ContractId'
+          Value = Null
+          Component = MasterCDS
+          ComponentItem = 'ContractId'
+          ParamType = ptUnknown
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'ContractName'
+          Value = Null
+          Component = MasterCDS
+          ComponentItem = 'ContractInvNumber'
+          DataType = ftString
+          ParamType = ptUnknown
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'InfoMoneyId'
+          Value = Null
+          Component = MasterCDS
+          ComponentItem = 'InfoMoneyId'
+          ParamType = ptUnknown
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'InfoMoneyName'
+          Value = Null
+          Component = MasterCDS
+          ComponentItem = 'InfoMoneyName'
+          ParamType = ptUnknown
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'MoneyPlaceId'
+          Value = Null
+          Component = MasterCDS
+          ComponentItem = 'MoneyPlaceId'
+          ParamType = ptUnknown
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'MoneyPlaceName'
+          Value = Null
+          Component = MasterCDS
+          ComponentItem = 'MoneyPlaceName'
+          DataType = ftString
+          ParamType = ptUnknown
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'RemainsToPay'
+          Value = Null
+          Component = MasterCDS
+          ComponentItem = 'RemainsToPay'
+          DataType = ftFloat
+          ParamType = ptUnknown
           MultiSelectSeparator = ','
         end>
     end
@@ -1364,7 +1603,7 @@ inherited CashJournalBonusForm: TCashJournalBonusForm
         end
         item
           Visible = True
-          ItemName = 'bbEdit'
+          ItemName = 'bbUpdate_New'
         end
         item
           Visible = True
@@ -1507,6 +1746,10 @@ inherited CashJournalBonusForm: TCashJournalBonusForm
     end
     object bbInsert_Bonus: TdxBarButton
       Action = macInsert_Bonus
+      Category = 0
+    end
+    object bbUpdate_New: TdxBarButton
+      Action = actUpdate_New
       Category = 0
     end
   end
