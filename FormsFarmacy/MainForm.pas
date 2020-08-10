@@ -719,6 +719,8 @@ type
     miReport_Check_Count: TMenuItem;
     actReport_LeftSend: TdsdOpenForm;
     N249: TMenuItem;
+    actPositionsUKTVEDonSUN: TdsdOpenForm;
+    N250: TMenuItem;
     procedure actSaveDataExecute(Sender: TObject);
 
     procedure miRepriceClick(Sender: TObject);

@@ -900,10 +900,13 @@ end;
 
 procedure TLoadFormTest.LoadReportFormTest;
 begin
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_PositionsUKTVEDonSUNForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TReport_PositionsUKTVEDonSUNForm');
+
+  {
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_LeftSendForm'));
   TdsdFormStorageFactory.GetStorage.Load('TReport_LeftSendForm');
 
-  {
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_Check_CountForm'));
   TdsdFormStorageFactory.GetStorage.Load('TReport_Check_CountForm');
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_Check_CountDialogForm'));

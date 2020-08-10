@@ -17,6 +17,8 @@ uses
 
 type
   TReturnInCashForm = class(TReturnInForm)
+    actCashCloseReturnDialog: TdsdOpenStaticForm;
+    bbCashCloseReturnDialog: TdxBarButton;
   private
     { Private declarations }
   public

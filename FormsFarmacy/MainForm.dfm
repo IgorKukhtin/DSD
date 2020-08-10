@@ -3824,6 +3824,17 @@ inherited MainForm: TMainForm
       GuiParams = <>
       isShowModal = False
     end
+    object actPositionsUKTVEDonSUN: TdsdOpenForm
+      Category = #1054#1090#1095#1077#1090#1099' ('#1057#1059#1053')'
+      MoveParams = <>
+      Caption = #1055#1086#1079#1080#1094#1080#1080' '#1059#1050#1058#1042#1069#1044' '#1087#1086' '#1057#1059#1053#1072#1084
+      FormName = 'TReport_PositionsUKTVEDonSUNForm'
+      FormNameParam.Value = 'TReport_PositionsUKTVEDonSUNForm'
+      FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
+      GuiParams = <>
+      isShowModal = False
+    end
   end
   inherited UserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn
     Left = 496
@@ -4585,6 +4596,9 @@ inherited MainForm: TMainForm
       end
       object actReportPercentageOccupancySUN1: TMenuItem
         Action = actReport_PercentageOccupancySUN
+      end
+      object N250: TMenuItem
+        Action = actPositionsUKTVEDonSUN
       end
     end
     object N40: TMenuItem [7]

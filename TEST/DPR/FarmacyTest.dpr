@@ -923,7 +923,8 @@ uses
   CheckToReturn in '..\..\FormsFarmacy\Document\CheckToReturn.pas' {CheckToReturnForm: TParentForm},
   CheckToReturnDialog in '..\..\FormsFarmacy\Document\CheckToReturnDialog.pas' {CheckToReturnDialogForm: TParentForm},
   ReturnInCash in '..\..\FormsFarmacy\Document\ReturnInCash.pas' {ReturnInCashForm: TParentForm},
-  ReturnInJournalCash in '..\..\FormsFarmacy\Document\ReturnInJournalCash.pas' {ReturnInJournalCashForm: TParentForm};
+  ReturnInJournalCash in '..\..\FormsFarmacy\Document\ReturnInJournalCash.pas' {ReturnInJournalCashForm: TParentForm},
+  Report_PositionsUKTVEDonSUN in '..\..\FormsFarmacy\Report\Report_PositionsUKTVEDonSUN.pas' {Report_PositionsUKTVEDonSUNForm: TParentForm};
 
 {$R *.res}
 {$R DevExpressRus.res}
