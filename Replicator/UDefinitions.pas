@@ -16,6 +16,11 @@ type
     RecCount: Integer;
   end;
 
+  TMinMaxTransId = record
+    Min: Integer;
+    Max: Integer;
+  end;
+
   PCompareMasterSlave = ^TCompareMasterSlave;
   TCompareMasterSlave = record
     ResultSQL: string;
@@ -40,7 +45,7 @@ type
 
   TMaxIdTransIdArray = array of TMaxIdTransId;
 
-  TReplicaFinished = (rfUnknown, rfComplete, rfStopped, rfErrStopped);
+  TReplicaFinished = (rfUnknown, rfComplete, rfStopped, rfErrStopped, rfNoConnect, rfLostConnect);
 
 implementation
 

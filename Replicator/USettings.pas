@@ -61,6 +61,8 @@ type
     class procedure SetStopIfError(const AValue: Boolean); static;
     class function GetCompareDeviationOnly: Boolean; static;
     class procedure SetCompareDeviationOnly(const AValue: Boolean); static;
+    class function GetReconnectTimeoutMinute: Integer; static;
+    class procedure SetReconnectTimeoutMinute(const AValue: Integer); static;
   public
     class constructor Create;
     class destructor Destroy;
@@ -87,6 +89,7 @@ type
     class property SlaveDriverID: string read GetSlaveDriverID write SetSlaveDriverID;
     class property StopIfError: Boolean read GetStopIfError write SetStopIfError;
     class property CompareDeviationOnly: Boolean read GetCompareDeviationOnly write SetCompareDeviationOnly;
+    class property ReconnectTimeoutMinute: Integer read GetReconnectTimeoutMinute write SetReconnectTimeoutMinute;
   end;
 
 function IsService: Boolean;
@@ -124,6 +127,7 @@ const
   cLibLocationParam      = 'PostgresLibLocation';
   cStopIfErrorParam      = 'StopIfError';
   cCompareDeviationParam = 'CompareDeviationOnly';
+  cReconnectTimeoutParam = 'ReconnectTimeoutMinute';
 
   // Master
   cMasterSection       = 'postgress_master';
@@ -150,6 +154,7 @@ const
   cDefReplicaSelectRange = 10000;
   cDefReplicaPacketRange = 1000;
   cDefReplicaStart = 1;
+  cDefReconnectTimeoutMinute = 15;
 
 function IsService: Boolean;
 var
@@ -342,6 +347,11 @@ begin
   Result := GetStrValue(cMasterSection, cMasterUserParam, cDefUser);
 end;
 
+class function TSettings.GetReconnectTimeoutMinute: Integer;
+begin
+  Result := GetIntValue(cSettingsSection, cReconnectTimeoutParam, cDefReconnectTimeoutMinute);
+end;
+
 class function TSettings.GetReplicaPacketRange: Integer;
 begin
   Result := GetIntValue(cReplicaSection, cReplicaPacketRangeParam, cDefReplicaPacketRange);
@@ -499,6 +509,11 @@ end;
 class procedure TSettings.SetMasterUser(const AValue: string);
 begin
   SetStrValue(cMasterSection, cMasterUserParam, AValue);
+end;
+
+class procedure TSettings.SetReconnectTimeoutMinute(const AValue: Integer);
+begin
+  SetIntValue(cSettingsSection, cReconnectTimeoutParam, AValue);
 end;
 
 class procedure TSettings.SetReplicaPacketRange(const AValue: Integer);

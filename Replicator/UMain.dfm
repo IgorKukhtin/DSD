@@ -19,7 +19,7 @@ object frmMain: TfrmMain
     Top = 0
     Width = 1184
     Height = 768
-    ActivePage = tsCompare
+    ActivePage = tsLog
     Align = alClient
     TabOrder = 0
     object tsLog: TTabSheet
@@ -366,6 +366,10 @@ object frmMain: TfrmMain
           object tsMemo: TTabSheet
             Caption = 'tsMemo'
             TabVisible = False
+            ExplicitLeft = 0
+            ExplicitTop = 0
+            ExplicitWidth = 0
+            ExplicitHeight = 0
             object lstLog: TListBox
               Left = 0
               Top = 0
@@ -389,6 +393,10 @@ object frmMain: TfrmMain
             Caption = 'tsChk'
             ImageIndex = 1
             TabVisible = False
+            ExplicitLeft = 0
+            ExplicitTop = 0
+            ExplicitWidth = 0
+            ExplicitHeight = 0
           end
         end
       end
@@ -396,6 +404,10 @@ object frmMain: TfrmMain
     object tsCompare: TTabSheet
       Caption = #1057#1088#1072#1074#1085#1077#1085#1080#1077' '#1076#1072#1085#1085#1099#1093' Master '#1080' Slave'
       ImageIndex = 2
+      ExplicitLeft = 0
+      ExplicitTop = 0
+      ExplicitWidth = 0
+      ExplicitHeight = 0
       object pnlCompareTop: TPanel
         Left = 0
         Top = 0
@@ -404,7 +416,7 @@ object frmMain: TfrmMain
         Align = alTop
         TabOrder = 0
         object lbCompareExecuting: TLabel
-          Left = 131
+          Left = 205
           Top = 13
           Width = 119
           Height = 13
@@ -421,12 +433,22 @@ object frmMain: TfrmMain
           OnClick = btnUpdateCompareClick
         end
         object chkDeviationOnly: TCheckBox
-          Left = 297
+          Left = 340
           Top = 12
           Width = 153
           Height = 17
           Caption = #1090#1086#1083#1100#1082#1086' '#1086#1090#1082#1083#1086#1085#1077#1085#1080#1103
           TabOrder = 1
+        end
+        object btnCancelCompare: TButton
+          Left = 110
+          Top = 8
+          Width = 75
+          Height = 25
+          Caption = #1054#1090#1084#1077#1085#1072
+          Enabled = False
+          TabOrder = 2
+          OnClick = btnCancelCompareClick
         end
       end
       object pnlCompareGrid: TPanel
@@ -485,6 +507,10 @@ object frmMain: TfrmMain
     object tsSettings: TTabSheet
       Caption = #1053#1072#1089#1090#1088#1086#1081#1082#1080
       ImageIndex = 1
+      ExplicitLeft = 0
+      ExplicitTop = 0
+      ExplicitWidth = 0
+      ExplicitHeight = 0
       DesignSize = (
         1176
         740)
@@ -494,6 +520,20 @@ object frmMain: TfrmMain
         Width = 73
         Height = 13
         Caption = 'Library location'
+      end
+      object lbReconnectTimeout: TLabel
+        Left = 60
+        Top = 543
+        Width = 305
+        Height = 13
+        Caption = #1087#1088#1080' '#1087#1086#1090#1077#1088#1077' '#1089#1074#1103#1079#1080' '#1072#1074#1090#1086#1084#1072#1090#1080#1095#1077#1089#1082#1080' '#1087#1077#1088#1077#1087#1086#1076#1082#1083#1102#1095#1072#1090#1100#1089#1103' '#1095#1077#1088#1077#1079' '
+      end
+      object lbReconnectMinute: TLabel
+        Left = 453
+        Top = 543
+        Width = 312
+        Height = 13
+        Caption = #1084#1080#1085#1091#1090'           ( 0  '#1086#1079#1085#1072#1095#1072#1077#1090' "'#1085#1077' '#1074#1099#1087#1086#1083#1085#1103#1090#1100' '#1087#1077#1088#1077#1087#1086#1076#1082#1083#1102#1095#1077#1085#1080#1077'")'
       end
       object grpMaster: TGroupBox
         Left = 24
@@ -722,14 +762,25 @@ object frmMain: TfrmMain
         TabOrder = 6
         OnClick = chkWriteCommandsClick
       end
+      object seReconnectTimeout: TSpinEdit
+        Left = 369
+        Top = 540
+        Width = 80
+        Height = 22
+        MaxValue = 0
+        MinValue = 0
+        TabOrder = 7
+        Value = 0
+        OnChange = seReconnectTimeoutChange
+      end
     end
   end
   object opndlgMain: TFileOpenDialog
     FavoriteLinks = <>
     FileTypes = <>
     Options = []
-    Left = 564
-    Top = 551
+    Left = 700
+    Top = 495
   end
   object tmrElapsed: TTimer
     Enabled = False
@@ -740,5 +791,11 @@ object frmMain: TfrmMain
   object dsCompare: TDataSource
     Left = 1004
     Top = 249
+  end
+  object tmrRestartReplica: TTimer
+    Enabled = False
+    Interval = 0
+    Left = 1060
+    Top = 135
   end
 end

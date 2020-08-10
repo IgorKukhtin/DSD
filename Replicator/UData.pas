@@ -34,23 +34,33 @@ type
     FMsgProc: TNotifyMessage;
     FStopped: Boolean;
     FWriteCommands: Boolean;
+    FStartReplicaAttempt: Integer; // номер попытки начать репликацию
     FCommandData: TCommandData;
     FFailCmds: TCommandData;
     FReplicaFinished: TReplicaFinished;
     FOnChangeStartId: TOnChangeStartId;
     FOnNewSession: TOnNewSession;
     FOnEndSession: TNotifyEvent;
+    FOnNeedRestart: TNotifyEvent;
   strict private
     procedure ApplyConnectionConfig(AConnection: TZConnection; ARank: TServerRank);
+    procedure BuildReplicaCommandsSQL(const AStartId, ARange: Integer);
     procedure ExecuteCommandsOneByOne;
     procedure ExecuteErrCommands;
     procedure LogMsg(const AMsg, AFileName: string); overload;
     procedure LogMsg(const AMsg: string); overload;
     procedure LogMsg(const AMsg: string; const aUID: Cardinal); overload;
+
   strict private
     procedure SetStartId(const AValue: Integer);
+
   strict private
+    function ExecutePreparedPacket: Integer;
+    function ExecuteReplica: TReplicaFinished;
     function IsConnected(AConnection: TZConnection; ARank: TServerRank): Boolean;
+    function IsConnectionAlive(AConnection: TZConnection): Boolean;
+    function IsBothConnectionsAlive: Boolean;
+
   public
     constructor Create(AOwner: TComponent; const AStartId, ASelectRange, APacketRange: Integer; AMsgProc: TNotifyMessage); reintroduce;
     destructor Destroy; override;
@@ -58,11 +68,11 @@ type
     property OnChangeStartId: TOnChangeStartId read FOnChangeStartId write FOnChangeStartId;
     property OnNewSession: TOnNewSession read FOnNewSession write FOnNewSession;
     property OnEndSession: TNotifyEvent read FOnEndSession write FOnEndSession;
+    property OnNeedRestart: TNotifyEvent read FOnNeedRestart write FOnNeedRestart;
     property StartId: Integer read FStartId write SetStartId;
     property SelectRange: Integer read FSelectRange write FSelectRange;
     property ReplicaFinished: TReplicaFinished read FReplicaFinished;
 
-    function ExecutePreparedPacket: Integer;
     function GetCompareMasterSlaveSQL(const ADeviationsOnly: Boolean): string;
     function IsMasterConnected: Boolean;
     function IsSlaveConnected: Boolean;
@@ -72,11 +82,12 @@ type
     function MinID: Integer;
     function MaxID: Integer;
 
+    procedure StartReplica;
     procedure StopReplica;
-    procedure ExecuteAllPackets;
-    procedure BuildReplicaCommandsSQL(const AStartId, ARange: Integer);
   end;
 
+  {TODO: перенести события и большинство методов в TReplicaThread, оставить только создание FData.
+         Причина: другие наследники не используют специфичные параметры конструктора и события }
   TWorkerThread = class(TThread)
   strict private
     FStartId: Integer;
@@ -87,10 +98,12 @@ type
     FOnChangeStartId: TOnChangeStartId;
     FOnNewSession: TOnNewSession;
     FOnEndSession: TNotifyEvent;
+    FOnNeedRestart: TNotifyEvent;
   strict private
     procedure InnerChangeStartId(const ANewStartId: Integer);
     procedure InnerNewSession(const AStart: TDateTime; const AMinId, AMaxId, ARecCount, ASessionNumber: Integer);
     procedure InnerEndSession(Sender: TObject);
+    procedure InnerNeedRestart(Sender: TObject);
   strict private
     function GetReturnValue: Integer;
   protected
@@ -105,6 +118,7 @@ type
     property OnChangeStartId: TOnChangeStartId read FOnChangeStartId write FOnChangeStartId;
     property OnNewSession: TOnNewSession read FOnNewSession write FOnNewSession;
     property OnEndSession: TNotifyEvent read FOnEndSession write FOnEndSession;
+    property OnNeedRestart: TNotifyEvent read FOnNeedRestart write FOnNeedRestart;
     property MyReturnValue: Integer read GetReturnValue;
   end;
 
@@ -142,6 +156,7 @@ uses
   Winapi.Windows,
   System.Math,
   ZDbcIntfs,
+  ZClasses,
   UConstants,
   USettings,
   UCommon;
@@ -193,6 +208,11 @@ begin
 
     LibraryLocation := TSettings.LibLocation;
 //    Properties.Add('timeout=1');// таймаут сервера - 1 секунда
+
+    { После потери коннекта и попытке переподключиться в методе BuildReplicaCommandsSQL
+      возникает исключение "[EZSQLException] SQL Error: ОШИБКА:  подготовленный оператор "156270147041" не существует".
+      Параметр 'EMULATE_PREPARES' применен по рекомендации на форуме ZeosLib https://zeoslib.sourceforge.io/viewtopic.php?t=10695  }
+    Properties.Values['EMULATE_PREPARES'] := 'True';
   end;
 end;
 
@@ -202,7 +222,7 @@ const
   cFetch        = 'получение записей ...';
   cElapsedFetch = '%s записей получено за %s';
   cBuild        = 'запись данных в локальное хранилище ...';
-  cElapsedBuild = '%s записей в локальное хранилище за %s';
+  cElapsedBuild = '%s уникальных записей в локальное хранилище за %s';
 var
   crdStartFetch, crdStartBuild{, crdLastId}: Cardinal;
   dtmStart: TDateTime;
@@ -236,8 +256,10 @@ begin
       Close;
     end;
 
-    // qrySelectReplicaCmd вернет набор команд репликации (INSERT, UPDATE, DELETE) в поле Result,
-    // которые могут быть выполнены пакетами с помощью conSlave
+//    LogMsg(qrySelectReplicaCmd.SQL.Text, 'Replica_SQL.txt');
+
+    { qrySelectReplicaCmd вернет набор команд репликации (INSERT, UPDATE, DELETE) в поле Result,
+      которые могут быть выполнены пакетами с помощью conSlave }
     LogMsg(cFetch, crdStartFetch);
     qrySelectReplicaCmd.Open;
     qrySelectReplicaCmd.FetchAll;
@@ -255,26 +277,19 @@ begin
 
     FCommandData.Last; //чтобы прочитать MaxId
 
+    // сохраним правую границу сессии для последующего использования
+    FLastId := FCommandData.Data.Id;
+
     // показать инфу о новой сессии в GUI
     if Assigned(FOnNewSession) then
-      FOnNewSession(dtmStart, FStartId, FCommandData.Data.Id, FCommandData.Count, FSessionNumber);
-
-    // сохраним правую границу диапазона для последующего использования
-    with qryLastId do
-    begin
-//      crdLastId := GetTickCount;
-      Close;
-      ParamByName('id_start').AsInteger  := AStartId;
-      ParamByName('rec_count').AsInteger := ARange;
-      Open;
-      if not Fields[0].IsNull then
-        FLastId := Fields[0].AsInteger;
-
-//      LogMsg('Получение LastId за ' + Elapsed(crdLastId));
-    end;
+      FOnNewSession(dtmStart, FStartId, FLastId, FCommandData.Count, FSessionNumber);
   except
     on E: Exception do
+    begin
+      FStopped := True;
+      FReplicaFinished := rfErrStopped;
       LogMsg(Format(cExceptionMsg, [E.ClassName, E.Message]));
+    end;
   end;
 end;
 
@@ -304,50 +319,38 @@ begin
   inherited;
 end;
 
-procedure TdmData.ExecuteAllPackets;
+procedure TdmData.StartReplica;
 var
-  iPrevStartId: Integer;
+  bConnected: Boolean;
+const
+  cStartReplicaAttemptCount = 3;// столько раз попытаемся начать репликацию, прежде чем прекратим выполнение
 begin
-  iPrevStartId := -1;
-  FStopped := False;
+  { Каждая репликация создается в отдельном потоке, на старте создается экземпляр TdmData,
+    поэтому в самом начале всегда FStopped = False. Если возникла потеря связи, программа рекурсивно вызывает
+    StartReplica, чтобы восстановить соединение }
+  if FStopped then Exit;// если пользователь решил прекратить рекурсивные попытки реконнекта
 
-  try
-  
-    // MaxID - это ф-ия, которая возвращает 'select Max(Id) from _replica.table_update_data'
-    while (FStartId > iPrevStartId) and (FStartId <= MaxID) and not FStopped do
+  bConnected := IsBothConnected; // каждый вызов IsConnected делает 3 попытки установить соединение
+
+  // не удалось установить коннект перед началом репликации
+  if not bConnected then
+  begin
+    if FStartReplicaAttempt = 0 then
     begin
-      // Успешное выполнение методов репликации должно увеличивать FStartId и в конце итерации это значение обычно должно быть больше предыдущего.
-      // Возможен сценарий, когда в пакете нет ни одной команды. В этом случае FStartId останется неизменным.
-      // Сохраним предыдущеее значение FStartId, чтобы потом сравнить его с текущим значением FStartId
-      // и избежать бесконечного цикла для случая, когда в пакете нет ни одной команды.
-      iPrevStartId := FStartId;
+      FReplicaFinished := rfNoConnect;
+      if not FStopped and Assigned(FOnNeedRestart) then  // если коннекта нет с самого начала, тогда просим запустить реконнект
+        FOnNeedRestart(nil);                             // из главного потока через [TSettings.ReconnectTimeoutMinute] минут
+    end
+    else
+      FReplicaFinished := rfErrStopped; // если это рекурсивный вызов StartReplica из блока 'if FReplicaFinished = rfErrStopped then'
+  end;
 
-      // Формируем набор команд в дипазоне StartId..(StartId + SelectRange) - это сессия
-      // FStartId увеличивается в процессе выполнения команд
-      // Реальная правая граница может быть > (FStartId + FSelectRange), потому что BuildReplicaCommandsSQL учитывает номера транзакций
-      // и обеспечивает условие, чтобы записи с одинаковыми номерами транзакций были в одном наборе
-      BuildReplicaCommandsSQL(FStartId, FSelectRange);
-
-      // Передаем команды из дипазона StartId..(StartId + SelectRange) порциями
-      while (FStartId < FLastId) and not FStopped do
-      begin
-        // проверяем, нужно ли записывать текст команд в файл
-        FWriteCommands := TSettings.WriteCommandsToFile;
-
-        // Сначала попробуем передать данные целым пакетом. Id записей пакета в диапазоне FStartId..(FStartId + FPacketRange)
-        if ExecutePreparedPacket = 0 then // если передача пакета завершилась неудачей
-          ExecuteCommandsOneByOne; // выполняем команды по одной. Id и SQL невыполненных команд сохраняем в FFailCmds
-
-        // Выполняем команды, которые не удалось выполнить на этапе "по одной команде"
-        if FFailCmds.Count > 0 then
-          ExecuteErrCommands;
-      end;
-
-      // сессия закончена, передаем инфу в GUI
-      if Assigned(FOnEndSession) then
-        FOnEndSession(nil);
-    end;
-
+  // если связь установлена, тогда начинаем репликацию
+  if bConnected then
+  try
+    FStopped := False;
+    FStartReplicaAttempt := 0;
+    FReplicaFinished := ExecuteReplica;
   except
     on E: Exception do
     begin
@@ -355,9 +358,28 @@ begin
       LogMsg(Format(cExceptionMsg, [E.ClassName, E.Message]));
     end;
   end;
+
+  // Если реплика была прекращена из-за ошибки, тогда нужно проверить не была ли ошибка вызвана потерей связи
+  if FReplicaFinished = rfErrStopped then
+  begin
+    // если связи нет, тогда причиной ошибки считаем потерю связи
+    if not IsBothConnectionsAlive then
+    begin
+      FReplicaFinished := rfLostConnect;
+      Inc(FStartReplicaAttempt);
+
+      if FStartReplicaAttempt > cStartReplicaAttemptCount then
+      begin
+        if not FStopped and Assigned(FOnNeedRestart) then
+          FOnNeedRestart(nil);
+        Exit;
+      end
+      else StartReplica;
+    end;
+  end;
 end;
 
-procedure TdmData.ExecuteCommandsOneByOne; // предполагается использовать внутри ExecuteAllPackets после неудачи ExecutePreparedPacket
+procedure TdmData.ExecuteCommandsOneByOne; // предполагается использовать внутри StartReplica после неудачи ExecutePreparedPacket
 var
   iStartId, iMaxId, iSuccCount, iFailCount: Integer;
   crdStart, crdLogMsg: Cardinal;
@@ -368,11 +390,10 @@ begin
   crdStart := GetTickCount;
 
   try
-    iMaxId := FStartId + FPacketRange;
-    iMaxId := FCommandData.NearestId(iMaxId);
+    iMaxId := FCommandData.NearestId(FStartId, FPacketRange);
 
     if FStartId >= iMaxId then
-    begin 
+    begin
       LogMsg(Format(cWrongRange, [iMaxId, FStartId]));
       FStopped := True;
       FReplicaFinished := rfErrStopped;
@@ -529,8 +550,9 @@ function TdmData.ExecutePreparedPacket: Integer;
 var
   bStopIfError: Boolean;
   crdStart: Cardinal;
-  iMaxId, iStartId, iRecCount: Integer;
+  I, iMaxId, iStartId, iRecCount: Integer;
   iStartTrans, iEndTrans: Integer;
+  rangeTransId: TMinMaxTransId;
   sFileName: string;
   tmpSL: TStringList;
   tmpStmt: IZPreparedStatement;
@@ -538,6 +560,7 @@ const
   cFileName = '\Packets\%s';
   cFileOK   = '%s__id-%d-%d.txt';
   cFileErr  = '%s__ERR_id-%d-%d.txt';
+  cTransId  = '-- tranId = %d' + #13#10;
 begin
   Result := 0;
 
@@ -548,8 +571,8 @@ begin
   iStartId := FStartId;
   crdStart := GetTickCount;
 
-  iMaxId := FStartId + FPacketRange;
-  iMaxId := FCommandData.NearestId(iMaxId);
+  iMaxId := FCommandData.NearestId(FStartId, FPacketRange);
+//  LogMsg('IStartId= ' + IntToStr(iStartId) + ' iMaxId= ' + IntToStr(iMaxId));
 
   if iStartId >= iMaxId then
   begin 
@@ -558,12 +581,10 @@ begin
     FReplicaFinished := rfErrStopped;
     Exit;
   end;
-    
-  FCommandData.MoveToId(iMaxId);
-  iEndTrans := FCommandData.Data.TransId;
 
-  FCommandData.MoveToId(FStartId);
-  iStartTrans := FCommandData.Data.TransId;
+  rangeTransId := FCommandData.MinMaxTransId(iStartId, iMaxId);
+  iStartTrans := rangeTransId.Min;
+  iEndTrans   := rangeTransId.Max;
 
   iRecCount := FCommandData.RecordCount(FStartId, iMaxId);
 //  LogMsg('Подготовка ExecutePreparedPacket за ' + Elapsed(crdStart));
@@ -578,7 +599,7 @@ begin
       MoveToId(FStartId);
       while not EOF and (Data.Id <= iMaxId) and not FStopped do
       begin
-        tmpSL.Add(Data.SQL);
+        tmpSL.AddObject(Data.SQL, TObject(Data.TransId));
         Next;
       end;
     end;
@@ -589,7 +610,7 @@ begin
       begin
         conSlave.DbcConnection.SetAutoCommit(False);
         tmpStmt := conSlave.DbcConnection.PrepareStatement(tmpSL.Text);
-        Result := tmpStmt.ExecuteUpdatePrepared;
+        Result  := tmpStmt.ExecuteUpdatePrepared;
         conSlave.DbcConnection.Commit;
 
         // пакет успешно выполнен и можем передвинуть StartId на новую позицию
@@ -599,7 +620,7 @@ begin
         FCommandData.MoveToId(iMaxId);
         FCommandData.Next;
 
-        if FCommandData.EOF then // если достигли правой границы диапазона,
+        if FCommandData.EOF then // если достигли правой границы сессии,
           StartId := iMaxId + 1  // тогда используем  iMaxId + 1, чтобы не выполнить последнюю команду пакета еще раз в новом пакете
         else
           StartId := FCommandData.Data.Id;
@@ -616,6 +637,10 @@ begin
               iMaxId
             ])
           ]);
+
+          for I := 0 to Pred(tmpSL.Count) do
+            tmpSL[I] := Format(cTransId, [Integer(tmpSL.Objects[I])]) + tmpSL[I];
+
           LogMsg(tmpSL.Text, sFileName);
         end;
 
@@ -637,6 +662,10 @@ begin
               iMaxId
             ])
           ]);
+
+          for I := 0 to Pred(tmpSL.Count) do
+            tmpSL[I] := Format(cTransId, [Integer(tmpSL.Objects[I])]) + tmpSL[I];
+
           LogMsg(tmpSL.Text, sFileName);
         end;
 
@@ -653,6 +682,51 @@ begin
   finally
     FreeAndNil(tmpSL);
   end;
+end;
+
+function TdmData.ExecuteReplica: TReplicaFinished;
+var
+  iPrevStartId: Integer;
+begin
+  iPrevStartId := -1;
+
+  // MaxID - это ф-ия, которая возвращает 'select Max(Id) from _replica.table_update_data'
+  while (FStartId > iPrevStartId) and (FStartId <= MaxID) and not FStopped do
+  begin
+    // Успешное выполнение методов репликации должно увеличивать FStartId и в конце итерации это значение обычно должно быть больше предыдущего.
+    // Возможен сценарий, когда в пакете нет ни одной команды. В этом случае FStartId останется неизменным.
+    // Сохраним предыдущеее значение FStartId, чтобы потом сравнить его с текущим значением FStartId
+    // и избежать бесконечного цикла для случая, когда в пакете нет ни одной команды.
+    iPrevStartId := FStartId;
+
+    // Формируем набор команд в дипазоне StartId..(StartId + SelectRange) - это сессия
+    // Реальная правая граница может быть > (StartId + SelectRange), потому что BuildReplicaCommandsSQL учитывает номера транзакций
+    // и обеспечивает условие, чтобы записи с одинаковыми номерами транзакций были в одном наборе
+    BuildReplicaCommandsSQL(FStartId, FSelectRange);
+
+    // FStartId увеличивается в процессе выполнения команд
+
+    // Передаем команды из дипазона StartId..(StartId + SelectRange) порциями
+    while (FStartId < FLastId) and not FStopped do
+    begin
+      // проверяем, нужно ли записывать текст команд в файл
+      FWriteCommands := TSettings.WriteCommandsToFile;
+
+      // Сначала попробуем передать данные целым пакетом. Id записей пакета в диапазоне FStartId..(FStartId + FPacketRange)
+      if ExecutePreparedPacket = 0 then // если передача пакета завершилась неудачей
+        ExecuteCommandsOneByOne; // выполняем команды по одной. Id и SQL невыполненных команд сохраняем в FFailCmds
+
+      // Выполняем команды, которые не удалось выполнить на этапе "по одной команде"
+      if FFailCmds.Count > 0 then
+        ExecuteErrCommands;
+    end;
+
+    // сессия закончена, передаем инфу в GUI
+    if Assigned(FOnEndSession) then
+      FOnEndSession(nil);
+  end;
+
+  Result := FReplicaFinished;
 end;
 
 function TdmData.GetReplicaCmdCount: Integer;
@@ -684,22 +758,55 @@ begin
   Result := IsMasterConnected and IsSlaveConnected;
 end;
 
+function TdmData.IsBothConnectionsAlive: Boolean;
+var
+  bMasterAlive, bSlaveAlive: Boolean;
+begin
+  bMasterAlive := IsConnectionAlive(conMaster);
+  bSlaveAlive  := IsConnectionAlive(conSlave);
+  Result := bMasterAlive and bSlaveAlive;
+  // Нужно именно так проверять, по очереди, а не в одну строку 'Result := IsConnectionAlive(conMaster) and IsConnectionAlive(conSlave)'
+  // Если выражение в одну строку, тогда если IsConnectionAlive(conMaster) = False компилятор не станет вызывать IsConnectionAlive(conSlave),
+  // и не будет вызван conSlave.Disconnect (см. код IsConnectionAlive)
+end;
+
 function TdmData.IsConnected(AConnection: TZConnection; ARank: TServerRank): Boolean;
+var
+  iAttempt: Integer;
+const
+  cWaitReconnect = c1Sec;
+  cAttemptCount  = 3;
 begin
   Result := AConnection.Connected;
   if Result then Exit;
 
-  try
-    ApplyConnectionConfig(AConnection, ARank);
-    AConnection.Connect;
-    Result := AConnection.Connected;
-  except
-    on E: Exception do
-    begin
-      Result := False;
-      LogMsg(Format(cExceptionMsg, [E.ClassName, E.Message]));
+  iAttempt := 0;
+
+  repeat
+    try
+      Inc(iAttempt);
+      ApplyConnectionConfig(AConnection, ARank);
+      AConnection.Connect;
+      Result := AConnection.Connected;
+    except
+      on E: Exception do
+      begin
+        Result := False;
+
+        if iAttempt >= cAttemptCount then
+          LogMsg(Format(cExceptionMsg, [E.ClassName, E.Message]))
+        else
+          Sleep(cWaitReconnect);
+      end;
     end;
-  end;
+  until Result or (iAttempt >= cAttemptCount);
+end;
+
+function TdmData.IsConnectionAlive(AConnection: TZConnection): Boolean;
+begin
+  Result := AConnection.Ping;
+  if not Result and AConnection.Connected then
+    AConnection.Disconnect;
 end;
 
 function TdmData.IsMasterConnected: Boolean;
@@ -761,7 +868,7 @@ begin
         if IsEmpty then Exit;
 
         First;
-        while not EOF do
+        while not EOF and not FStopped do
         begin
           if not FieldByName('Master_table').IsNull then
           begin
@@ -779,6 +886,8 @@ begin
 
     // Вычисляем Count(*) для таблиц из массива arrTables.
     // Для 'MovementItemContainer' отдельный случай: select Count(Id).
+    if FStopped then Exit;
+
 
     // сначала формируем текст запроса
     for I := Low(arrTables) to High(arrTables) do
@@ -790,6 +899,8 @@ begin
     // теперь выполняем запрос для каждой таблицы
     for I := Low(arrTables) to High(arrTables) do
     begin
+      if FStopped then Exit;
+
       // для таблиц сервера Master
       if IsMasterConnected then
         with qryMasterHelper do
@@ -803,6 +914,7 @@ begin
           Close;
         end;
 
+      if FStopped then Exit;
       // для таблиц сервера Slave
       if IsSlaveConnected then
         with qrySlaveHelper do
@@ -821,6 +933,8 @@ begin
     sSQL := '';
     for I := Low(arrTables) to High(arrTables) do
     begin
+      if FStopped then Exit;
+
       if ADeviationsOnly then
         if arrTables[I].MasterCount = arrTables[I].SlaveCount then Continue;
 
@@ -953,6 +1067,7 @@ begin
   FData.OnChangeStartId := InnerChangeStartId;
   FData.OnNewSession    := InnerNewSession;
   FData.OnEndSession    := InnerEndSession;
+  FData.OnNeedRestart   := InnerNeedRestart;
 
   FreeOnTerminate := (AKind = tknNondriven);
 
@@ -994,6 +1109,14 @@ begin
                      end);
 end;
 
+procedure TWorkerThread.InnerNeedRestart(Sender: TObject);
+begin
+  TThread.Queue(nil, procedure
+                     begin
+                       if Assigned(FOnNeedRestart) then FOnNeedRestart(nil);
+                     end);
+end;
+
 procedure TWorkerThread.InnerNewSession(const AStart: TDateTime; const AMinId, AMaxId, ARecCount, ASessionNumber: Integer);
 begin
   TThread.Queue(nil, procedure
@@ -1022,8 +1145,8 @@ end;
 procedure TSinglePacket.Execute;
 begin
   inherited;
-  Data.BuildReplicaCommandsSQL(Data.StartId, Data.SelectRange);
-  ReturnValue := Data.ExecutePreparedPacket;
+//  Data.BuildReplicaCommandsSQL(Data.StartId, Data.SelectRange);
+//  ReturnValue := Data.ExecutePreparedPacket;
 end;
 
 { TReplicaThread }
@@ -1031,7 +1154,7 @@ end;
 procedure TReplicaThread.Execute;
 begin
   inherited;
-  Data.ExecuteAllPackets;
+  Data.StartReplica;
   ReturnValue := Ord(Data.ReplicaFinished);
   Terminate;
 end;

@@ -5,6 +5,7 @@ interface
 uses
   System.SysUtils,
   Data.DB,
+  {$IFDEF DEV_LOG}ULog,{$ENDIF}
   UDefinitions;
 
 type
@@ -13,6 +14,7 @@ type
     FPos: Integer;
     FRecArray: TDataRecArray;
     FMaxIdArr: TMaxIdTransIdArray;
+    FMaxId: Integer;
   strict private
     procedure AddToTMaxIdArr(const AId, ATransId: Integer);
     function GetCount: Integer;
@@ -26,7 +28,8 @@ type
     procedure Next;
 
     function Data: TDataRec;
-    function NearestId(const AId: Integer): Integer;
+    function NearestId(const AId, ARange: Integer): Integer;
+    function MinMaxTransId(const AMinId, AMaxId: Integer): TMinMaxTransId;
     function MoveToId(const AId: Integer): Integer;// вернет позицию записи с AId в массиве FRecArray
     function RecordCount(const AStartId, AEndId: Integer): Integer;
 
@@ -39,6 +42,14 @@ type
 
 
 implementation
+
+uses
+  System.Math;
+
+{$IFDEF DEV_LOG}
+var
+  mLog: TLog;
+{$ENDIF}
 
 function ProvideSemicolon(const AStr: string): string;
 var
@@ -75,11 +86,13 @@ var
   bTransIdExists: Boolean;
 begin
   bTransIdExists := False;
+  FMaxId := Max(FMaxId, AId); // максимальное значение Id в массиве FMaxIdArr
 
   for I := Low(FMaxIdArr) to High(FMaxIdArr) do
     if FMaxIdArr[I].TransId = ATransId then
     begin
-      if FMaxIdArr[I].MaxId < AId then FMaxIdArr[I].MaxId := AId;
+      if FMaxIdArr[I].MaxId < AId then
+        FMaxIdArr[I].MaxId := AId;
 
       Exit;
     end;
@@ -102,9 +115,6 @@ begin
 
   Clear;
 
-  // ожидается, что выполнен ADataSet.Last и в датасет загружены все записи
-  SetLength(FRecArray, ADataSet.RecordCount);
-
   // Обращение к FieldByName в цикле замедляет выполнение программы. Лучше использовать Fields[Index]
   // Определим индексы полей 'Id', 'Transaction_Id', 'Result'
   iId := -1;
@@ -117,8 +127,8 @@ begin
     else if LowerCase(ADataSet.Fields[I].FieldName) = 'result'         then iResult := I;
 
 
-  I := 0;
   sPrevSQL := '';
+  SetLength(FRecArray, 0);
 
   with ADataSet do
   begin
@@ -131,6 +141,8 @@ begin
 
       if sSQL <> sPrevSQL then
       begin
+        SetLength(FRecArray, Length(FRecArray) + 1);
+        I := High(FRecArray);
         FRecArray[I].Id      := Fields[iId].AsInteger;
         FRecArray[I].TransId := Fields[iTran].AsInteger;
         FRecArray[I].SQL     := sSQL + ';';
@@ -140,12 +152,19 @@ begin
       end;
 
       sPrevSQL := sSQL;
-      Inc(I);
       Next;
     end;
   end;
 
   FPos := 0;
+
+  {$IFDEF DEV_LOG}
+  for I := Low(FRecArray) to High(FRecArray) do
+     mLog.Write('CommandData.txt', 'Id= ' + IntToStr(FRecArray[I].Id) + ' TransId= ' + IntToStr(FRecArray[I].TransId));
+
+  for I := Low(FMaxIdArr) to High(FMaxIdArr) do
+     mLog.Write('MaxIdArray.txt', 'Id= ' + IntToStr(FMaxIdArr[I].MaxId) + ' TransId= ' + IntToStr(FMaxIdArr[I].TransId));
+  {$ENDIF}
 end;
 
 procedure TCommandData.Clear;
@@ -153,6 +172,7 @@ begin
   SetLength(FRecArray, 0);
   SetLength(FMaxIdArr, 0);
   FPos := -1;
+  FMaxId := -1;
 end;
 
 function TCommandData.Data: TDataRec;
@@ -182,6 +202,21 @@ begin
   FPos := High(FRecArray);
 end;
 
+function TCommandData.MinMaxTransId(const AMinId, AMaxId: Integer): TMinMaxTransId;
+var
+  I: Integer;
+begin
+  Result.Min := High(Integer);
+  Result.Max := -1;
+
+  for I := Low(FRecArray) to High(FRecArray) do
+    if (FRecArray[I].Id >= AMinId) and (FRecArray[I].Id <= AMaxId) then
+    begin
+      Result.Min := Min(Result.Min, FRecArray[I].TransId);
+      Result.Max := Max(Result.Max, FRecArray[I].TransId);
+    end;
+end;
+
 function TCommandData.MoveToId(const AId: Integer): Integer; // вернет позицию записи с AId в массиве FRecArray
 var
   I: Integer;
@@ -204,19 +239,56 @@ begin
     raise EIdNotFound.CreateFmt(cErrMsg, [AId]);
 end;
 
-function TCommandData.NearestId(const AId: Integer): Integer;
+function TCommandData.NearestId(const AId, ARange: Integer): Integer;
 var
-  I: Integer;
+  I, J, iDelta, iMaxId, iPrevMaxId: Integer;
+  arrTransId: array of Integer;
+const
+  cStartDelta = High(Integer);
 begin
   Result := 0;
+  iDelta := cStartDelta;
+  iMaxId := AId + ARange;
 
+  // В массиве FMaxIdArr элементы не обязательно упорядочены по Id
+  // Ищем элемент, который > AId и наиболее близок ему по значению.
   for I := Low(FMaxIdArr) to High(FMaxIdArr) do
-    if AId <= FMaxIdArr[I].MaxId then
-      Exit(FMaxIdArr[I].MaxId);
+    if iMaxId < FMaxIdArr[I].MaxId then
+      iDelta := Min(iDelta, FMaxIdArr[I].MaxId - iMaxId);
+
+  if iDelta < cStartDelta then
+  begin
+    iMaxId := iMaxId + iDelta;// новая правая граница
+
+    repeat
+      iPrevMaxId := iMaxId;
+
+      // собираем все номера транзакций нового диапазона
+      SetLength(arrTransId, 0);
+
+      for I := Low(FRecArray) to High(FRecArray) do
+        if (FRecArray[I].Id >= AId) and (FRecArray[I].Id <= iMaxId) then
+        begin
+          SetLength(arrTransId, Length(arrTransId) + 1);
+          arrTransId[High(arrTransId)] := FRecArray[I].TransId;
+        end;
+
+      // найдем максимальное значение Id, которое может иметь транзакция из массива arrTransId
+      for I := Low(arrTransId) to High(arrTransId) do
+        for J := Low(FMaxIdArr) to High(FMaxIdArr) do
+          if arrTransId[I] = FMaxIdArr[J].TransId  then
+            iMaxId := Max(iMaxId, FMaxIdArr[J].MaxId);
+
+      Result := iMaxId;
+
+      // Снова проверяем правую границу для нового iMaxId.
+      // Если iMaxId остался неизменным - выход.
+    until iPrevMaxId = iMaxId;
+  end;
 
   // если данное значение AId превышает имеющиеся в массиве значения MaxId
   if (Result = 0) and (Length(FMaxIdArr) > 0) then
-    Result := FMaxIdArr[High(FMaxIdArr)].MaxId;
+    Result := FMaxId;
 end;
 
 procedure TCommandData.Next;
@@ -243,5 +315,14 @@ begin
     FPos := prevPos;
   end;
 end;
+
+{$IFDEF DEV_LOG}
+initialization
+  mLog := TLog.Create;
+
+finalization
+  FreeAndNil(mLog);
+{$ENDIF}
+
 
 end.

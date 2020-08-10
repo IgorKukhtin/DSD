@@ -111,6 +111,11 @@ type
     chkDeviationOnly: TCheckBox;
     dsCompare: TDataSource;
     lbCompareExecuting: TLabel;
+    btnCancelCompare: TButton;
+    lbReconnectTimeout: TLabel;
+    seReconnectTimeout: TSpinEdit;
+    lbReconnectMinute: TLabel;
+    tmrRestartReplica: TTimer;
     {$WARNINGS ON}
     procedure chkShowLogClick(Sender: TObject);
     procedure btnLibLocationClick(Sender: TObject);
@@ -135,6 +140,8 @@ type
     procedure btnUpdateCompareClick(Sender: TObject);
     procedure grdCompareDrawColumnCell(Sender: TObject; const Rect: TRect; DataCol: Integer; Column: TColumn;
       State: TGridDrawState);
+    procedure btnCancelCompareClick(Sender: TObject);
+    procedure seReconnectTimeoutChange(Sender: TObject);
   private
     FLog: TLog;
     FData: TdmData;
@@ -154,6 +161,7 @@ type
     procedure SwitchShowLog;
     procedure CompareMasterSlave;
     procedure CheckReplicaMaxMin;
+    procedure StartReplica;
     procedure StopReplicaThread;
     procedure StopMinMaxThread;
     procedure StopCompareMSThread;
@@ -161,6 +169,8 @@ type
     procedure OnChangeStartId(const ANewStartId: Integer);
     procedure OnNewSession(const AStart: TDateTime; const AMinId, AMaxId, ARecCount, ASessionNumber: Integer);
     procedure OnEndSession(Sender: TObject);
+    procedure OnNeedReplicaRestart(Sender: TObject);
+    procedure OnTimerRestartReplica(Sender: TObject);
     procedure OnTerminateSinglePacket(Sender: TObject);
     procedure OnTerminateReplica(Sender: TObject);
     procedure OnTerminateMinMaxId(Sender: TObject);
@@ -180,6 +190,7 @@ implementation
 {$R *.dfm}
 
 uses
+  System.Math,
   USettings,
   UCommon;
 
@@ -221,8 +232,9 @@ begin
   edtLibLocation.Text := TSettings.LibLocation;
   edtSsnMinId.Text    := IntToStr(TSettings.ReplicaStart);
 
-  seSelectRange.Value := TSettings.ReplicaSelectRange;
-  sePacketRange.Value := TSettings.ReplicaPacketRange;
+  seSelectRange.Value      := TSettings.ReplicaSelectRange;
+  sePacketRange.Value      := TSettings.ReplicaPacketRange;
+  seReconnectTimeout.Value := TSettings.ReconnectTimeoutMinute;
 
   chkWriteLog.Checked      := TSettings.UseLog;
   chkShowLog.Checked       := TSettings.UseLogGUI;
@@ -238,9 +250,47 @@ begin
   TSettings.ReplicaPacketRange := sePacketRange.Value;
 end;
 
+procedure TfrmMain.seReconnectTimeoutChange(Sender: TObject);
+begin
+  seReconnectTimeout.Value := Max(0, seReconnectTimeout.Value);
+  TSettings.ReconnectTimeoutMinute := seReconnectTimeout.Value;
+end;
+
 procedure TfrmMain.seSelectRangeChange(Sender: TObject);
 begin
   TSettings.ReplicaSelectRange := seSelectRange.Value;
+end;
+
+procedure TfrmMain.StartReplica;
+const
+  cStartPerlica = 'Старт репликации: StartId = %d';
+var
+  iStart, iSelectRange, iPacketRange: Integer;
+begin
+  FStartTimeReplica := Now;
+  lbAllStart.Caption := Format(cStartPointReplica, [FormatDateTime(cTimeStrShort, Now)]);
+
+  iStart       := TSettings.ReplicaStart;
+  iSelectRange := seSelectRange.Value;
+  iPacketRange := sePacketRange.Value;
+
+  LogMessage(Format(cStartPerlica, [iStart]));
+  LogMessage('');
+
+  StopReplicaThread;
+  FReplicaThrd := TReplicaThread.Create(cCreateSuspended, iStart, iSelectRange, iPacketRange, LogMessage, tknDriven);
+
+  FReplicaThrd.OnNewSession    := OnNewSession;
+  FReplicaThrd.OnEndSession    := OnEndSession;
+  FReplicaThrd.OnTerminate     := OnTerminateReplica;
+  FReplicaThrd.OnNeedRestart   := OnNeedReplicaRestart;
+  FReplicaThrd.OnChangeStartId := OnChangeStartId;
+
+  FReplicaThrd.Start;
+
+  btnStartReplication.Enabled := False;
+  btnStop.Enabled := True;
+  tmrElapsed.Enabled := True;
 end;
 
 procedure TfrmMain.StopCompareMSThread;
@@ -265,6 +315,8 @@ end;
 
 procedure TfrmMain.StopReplicaThread;
 begin
+  tmrRestartReplica.Enabled := False;// остановить таймер реконнекта
+
   if FReplicaThrd <> nil then
   begin
     FReplicaThrd.Stop;
@@ -323,6 +375,12 @@ begin
       end;
 end;
 
+procedure TfrmMain.btnCancelCompareClick(Sender: TObject);
+begin
+  btnCancelCompare.Enabled := False;
+  StopCompareMSThread;
+end;
+
 procedure TfrmMain.btnLibLocationClick(Sender: TObject);
 begin
   {$WARNINGS OFF}
@@ -355,53 +413,27 @@ procedure TfrmMain.btnReplicaCommandsSQLClick(Sender: TObject);
 const
   cStartPerlica = 'Старт репликации: %d, диапазон select: %d, команд в пакете: %d, SQL:' + #13#10 + '%s';
   cCmdCountMsg = 'В пакете всего команд: %d';
-var
-  iStart, iSelectRange: Integer;
+//var
+//  iStart, iSelectRange: Integer;
 begin
-  iStart := StrToIntDef(edtSsnMinId.Text, 0);
-  iSelectRange := seSelectRange.Value;
+//  iStart := StrToIntDef(edtSsnMinId.Text, 0);
+//  iSelectRange := seSelectRange.Value;
 
   // формирование SelectSQL для ZQuery, который вернет набор команд репликации
-  FData.BuildReplicaCommandsSQL(iStart, iSelectRange);
-  LogMessage(
-    Format(
-      cStartPerlica, [iStart, iSelectRange, sePacketRange.Value, FData.qrySelectReplicaCmd.SQL.Text]
-    )
-  );
+//  FData.BuildReplicaCommandsSQL(iStart, iSelectRange);
+//  LogMessage(
+//    Format(
+//      cStartPerlica, [iStart, iSelectRange, sePacketRange.Value, FData.qrySelectReplicaCmd.SQL.Text]
+//    )
+//  );
 
   // количество команд репликации
   LogMessage(Format(cCmdCountMsg, [FData.GetReplicaCmdCount]));
 end;
 
 procedure TfrmMain.btnStartReplicationClick(Sender: TObject);
-const
-  cStartPerlica = 'Старт репликации: StartId = %d';
-var
-  iStart, iSelectRange, iPacketRange: Integer;
 begin
-  FStartTimeReplica := Now;
-  lbAllStart.Caption := Format(cStartPointReplica, [FormatDateTime(cTimeStrShort, Now)]);
-
-  iStart       := TSettings.ReplicaStart;
-  iSelectRange := seSelectRange.Value;
-  iPacketRange := sePacketRange.Value;
-
-  LogMessage(Format(cStartPerlica, [iStart]));
-  LogMessage('');
-
-  StopReplicaThread;
-  FReplicaThrd := TReplicaThread.Create(cCreateSuspended, iStart, iSelectRange, iPacketRange, LogMessage, tknDriven);
-
-  FReplicaThrd.OnNewSession := OnNewSession;
-  FReplicaThrd.OnEndSession := OnEndSession;
-  FReplicaThrd.OnTerminate  := OnTerminateReplica;
-  FReplicaThrd.OnChangeStartId := OnChangeStartId;
-
-  FReplicaThrd.Start;
-
-  btnStartReplication.Enabled := False;
-  btnStop.Enabled := True;
-  tmrElapsed.Enabled := True;
+  StartReplica;
 end;
 
 procedure TfrmMain.btnSendSinglePacketClick(Sender: TObject);
@@ -501,6 +533,9 @@ begin
   FCompareMSThrd.Start;
   lbCompareExecuting.Caption := cCompareQueryExecuting;
   lbCompareExecuting.Visible := True;
+  btnUpdateCompare.Enabled := False;
+  btnCancelCompare.Enabled := True;
+  chkDeviationOnly.Enabled := False;
 end;
 
 constructor TfrmMain.Create(AOwner: TComponent);
@@ -665,6 +700,17 @@ begin
   WriteSettings;
 end;
 
+procedure TfrmMain.OnNeedReplicaRestart(Sender: TObject);
+begin
+  with tmrRestartReplica do
+  begin
+    Enabled  := False;
+    OnTimer  := OnTimerRestartReplica;
+    Interval := TSettings.ReconnectTimeoutMinute * c1Minute;
+    Enabled  := Interval > 0;
+  end;
+end;
+
 procedure TfrmMain.OnNewSession(const AStart: TDateTime; const AMinId, AMaxId, ARecCount, ASessionNumber: Integer);
 begin
   edtSsnMinId.Text    := IntToStr(AMinId);
@@ -726,6 +772,9 @@ begin
   end;
 
   lbCompareExecuting.Caption := '';
+  btnUpdateCompare.Enabled := True;
+  btnCancelCompare.Enabled := False;
+  chkDeviationOnly.Enabled := True;
 end;
 
 procedure TfrmMain.OnTerminateMinMaxId(Sender: TObject);
@@ -776,10 +825,12 @@ begin
   replicaFinish := TReplicaFinished(thrdWorker.MyReturnValue);
 
   case replicaFinish of
-    rfUnknown:    sMsg := 'Репликация остановилась по неизвестной причине';
-    rfComplete:   sMsg := 'Репликация завершена';
-    rfStopped:    sMsg := 'Репликация остановлена вручную';
-    rfErrStopped: sMsg := 'Репликация остановилась из-за ошибки';
+    rfUnknown:     sMsg := 'Репликация остановилась по неизвестной причине';
+    rfComplete:    sMsg := 'Репликация завершена';
+    rfStopped:     sMsg := 'Репликация остановлена вручную';
+    rfErrStopped:  sMsg := 'Репликация остановилась из-за ошибки';
+    rfNoConnect:   sMsg := 'Не удалось начать репликацию - нет связи';
+    rfLostConnect: sMsg := 'Репликация остановилась из-за потери связи';
   end;
 
   LogMessage(sMsg);
@@ -803,6 +854,12 @@ begin
   LogMessage(Format(cEnd, [iCount]));
 
   btnSendSinglePacket.Enabled := True;
+end;
+
+procedure TfrmMain.OnTimerRestartReplica(Sender: TObject);
+begin
+  tmrRestartReplica.Enabled := False;
+  StartReplica;
 end;
 
 end.
