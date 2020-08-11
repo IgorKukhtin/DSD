@@ -17,7 +17,7 @@ type
     function SoldCode(const GoodsCode: integer; const Amount: double; const Price: double = 0.00): boolean;
     function SoldFromPC(const GoodsCode: integer; const GoodsName: string; const Amount, Price, NDS: double): boolean; //Продажа с компьютера
     function ChangePrice(const GoodsCode: integer; const Price: double): boolean;
-    function OpenReceipt(const isFiscal: boolean = true; const isPrintSumma: boolean = false): boolean;
+    function OpenReceipt(const isFiscal: boolean = true; const isPrintSumma: boolean = false; const isReturn: boolean = False): boolean;
     function CloseReceipt: boolean;
     function CloseReceiptEx(out CheckId: String): boolean;
     function CashInputOutput(const Summa: double): boolean;
@@ -161,13 +161,17 @@ begin
   result:= FAlwaysSold;
 end;
 
-function TCashFP3530T_NEW.OpenReceipt(const isFiscal: boolean = true; const isPrintSumma: boolean = false): boolean;
+function TCashFP3530T_NEW.OpenReceipt(const isFiscal: boolean = true; const isPrintSumma: boolean = false; const isReturn: boolean = False): boolean;
 begin
   FisFiscal := isFiscal;
   FPrintSumma := isPrintSumma;
   FSumma := 0;
   if FisFiscal then
-     FPrinter.OPENFISKCHECK[1, 1, 0, Password]
+  begin
+     if isReturn then
+       FPrinter.OPENFISKCHECK[1, 1, 1, Password]
+     else FPrinter.OPENFISKCHECK[1, 1, 0, Password];
+  end
   else
      FPrinter.OPENCHECK[Password];
   result := СообщениеКА(FPrinter.GETERROR)

@@ -790,6 +790,7 @@ type
     procedure PromoCodeLoyaltyCalc;
     procedure SetLoyaltySaveMoney;
     function SetLoyaltySaveMoneyDiscount: Boolean;
+    function GetCash: ICash;
   end;
 
 var
@@ -3525,6 +3526,12 @@ begin
     edLoyaltySMSummaExit(Nil);
   end;
 end;
+
+function TMainCashForm2.GetCash: ICash;
+begin
+  Result := Cash;
+end;
+
 
 procedure TMainCashForm2.actSetLoyaltySaveMoneyExecute(Sender: TObject);
 begin

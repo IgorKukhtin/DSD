@@ -123,7 +123,8 @@ uses
   EnterLoyaltySMDiscount in '..\FormsFarmacy\Cash\EnterLoyaltySMDiscount.pas' {EnterLoyaltySMDiscountForm},
   GetSystemInfo in '..\SOURCE\GetSystemInfo.pas',
   ListSelection in '..\FormsFarmacy\Cash\ListSelection.pas' {ListSelectionForm},
-  CashCloseReturnDialog in '..\FormsFarmacy\Cash\CashCloseReturnDialog.pas' {CashCloseReturnDialogForm: TParentForm};
+  CashCloseReturnDialog in '..\FormsFarmacy\Cash\CashCloseReturnDialog.pas' {CashCloseReturnDialogForm: TParentForm},
+  Cash_Emulation in '..\FormsFarmacy\Cash\Cash_Emulation.pas';
 
 {$R *.res}
 

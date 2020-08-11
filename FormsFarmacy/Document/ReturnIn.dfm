@@ -725,6 +725,15 @@ inherited ReturnInForm: TReturnInForm
     end
   end
   inherited DBViewAddOn: TdsdDBViewAddOn
+    SummaryItemList = <
+      item
+        Param.Value = Null
+        Param.Component = FormParams
+        Param.ComponentItem = 'TotalSumm'
+        Param.DataType = ftString
+        Param.MultiSelectSeparator = ','
+        DataSummaryItemIndex = 10
+      end>
     SearchAsFilter = False
     Top = 241
   end

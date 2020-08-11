@@ -69,6 +69,12 @@ type
     cxGridLevel: TcxGridLevel;
     DBViewAddOn: TdsdDBViewAddOn;
     GoodsCode: TcxGridDBColumn;
+    PriceFrom: TcxGridDBColumn;
+    SummaFrom: TcxGridDBColumn;
+    PriceTo: TcxGridDBColumn;
+    SummaTo: TcxGridDBColumn;
+    actUpdate: TdsdInsertUpdateAction;
+    bbUpdate: TdxBarButton;
   private
   public
   end;

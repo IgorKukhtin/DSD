@@ -48,7 +48,18 @@ inherited ReturnInCashForm: TReturnInCashForm
       ShortCut = 107
       ImageIndex = 3
       FormName = 'TCashCloseReturnDialogForm'
-      isShowModal = False
+      FormNameParam.Value = 'TCashCloseReturnDialogForm'
+      FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
+      GuiParams = <
+        item
+          Name = 'Id'
+          Value = Null
+          Component = FormParams
+          ComponentItem = 'Id'
+          MultiSelectSeparator = ','
+        end>
+      isShowModal = True
     end
   end
   inherited BarManager: TdxBarManager

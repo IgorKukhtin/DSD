@@ -19,7 +19,7 @@ type
     function SoldCode(const GoodsCode: integer; const Amount: double; const Price: double = 0.00): boolean;
     function SoldFromPC(const GoodsCode: integer; const GoodsName: string; const Amount, Price, NDS: double): boolean; //Продажа с компьютера
     function ChangePrice(const GoodsCode: integer; const Price: double): boolean;
-    function OpenReceipt(const isFiscal: boolean = true; const isPrintSumma: boolean = false): boolean;
+    function OpenReceipt(const isFiscal: boolean = true; const isPrintSumma: boolean = false; const isReturn: boolean = False): boolean;
     function CloseReceipt: boolean;
     function CloseReceiptEx(out CheckId: String): boolean;
     function CashInputOutput(const Summa: double): boolean;
@@ -196,14 +196,15 @@ begin
   End;
 end;
 
-function TCashFP320.OpenReceipt(const isFiscal: boolean = true; const isPrintSumma: boolean = false): boolean;
+function TCashFP320.OpenReceipt(const isFiscal: boolean = true; const isPrintSumma: boolean = false; const isReturn: boolean = False): boolean;
 begin
   Result := False;
   FTotalSummaCheck := 0;
   if not Connected then exit;
 
 	FPrinter.ResetPrinter;
-  FPrinter.FiscalReceiptType := 4;
+  if isReturn then FPrinter.FiscalReceiptType := 7
+  else FPrinter.FiscalReceiptType := 4;
   if isFiscal then
     FPrinter.BeginFiscalReceipt(True)
   else
