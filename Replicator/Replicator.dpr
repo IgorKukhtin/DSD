@@ -9,7 +9,8 @@ uses
   UConstants in 'UConstants.pas',
   UDefinitions in 'UDefinitions.pas',
   UCommandData in 'UCommandData.pas',
-  UCommon in 'UCommon.pas';
+  UCommon in 'UCommon.pas',
+  UScriptFiles in 'UScriptFiles.pas';
 
 {$R *.res}
 

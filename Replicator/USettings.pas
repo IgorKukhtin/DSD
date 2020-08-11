@@ -63,6 +63,10 @@ type
     class procedure SetCompareDeviationOnly(const AValue: Boolean); static;
     class function GetReconnectTimeoutMinute: Integer; static;
     class procedure SetReconnectTimeoutMinute(const AValue: Integer); static;
+    class function GetScriptPath: string; static;
+    class procedure SetScriptPath(const AValue: string); static;
+    class function GetScriptFilesUsed: string; static;
+    class procedure SetScriptFilesUsed(const AValue: string); static;
   public
     class constructor Create;
     class destructor Destroy;
@@ -90,6 +94,8 @@ type
     class property StopIfError: Boolean read GetStopIfError write SetStopIfError;
     class property CompareDeviationOnly: Boolean read GetCompareDeviationOnly write SetCompareDeviationOnly;
     class property ReconnectTimeoutMinute: Integer read GetReconnectTimeoutMinute write SetReconnectTimeoutMinute;
+    class property ScriptPath: string read GetScriptPath write SetScriptPath;
+    class property ScriptFilesUsed: string read GetScriptFilesUsed write SetScriptFilesUsed;
   end;
 
 function IsService: Boolean;
@@ -128,6 +134,8 @@ const
   cStopIfErrorParam      = 'StopIfError';
   cCompareDeviationParam = 'CompareDeviationOnly';
   cReconnectTimeoutParam = 'ReconnectTimeoutMinute';
+  cScriptFilesPathParam  = 'ScriptFilesPath';
+  cScriptFilesUsedParam  = 'ScriptFilesUsed';
 
   // Master
   cMasterSection       = 'postgress_master';
@@ -155,6 +163,7 @@ const
   cDefReplicaPacketRange = 1000;
   cDefReplicaStart = 1;
   cDefReconnectTimeoutMinute = 15;
+  cDefScriptFilesPath = '..\scripts';
 
 function IsService: Boolean;
 var
@@ -367,6 +376,16 @@ begin
   Result := GetIntValue(cReplicaSection, cReplicaStartParam, cDefReplicaStart);
 end;
 
+class function TSettings.GetScriptFilesUsed: string;
+begin
+  Result := GetStrValue(cSettingsSection, cScriptFilesUsedParam, '');
+end;
+
+class function TSettings.GetScriptPath: string;
+begin
+  Result := GetStrValue(cSettingsSection, cScriptFilesPathParam, cDefScriptFilesPath);
+end;
+
 class function TSettings.GetSlaveDatabase: string;
 begin
   Result := GetStrValue(cSlaveSection, cSlaveDatabaseParam, EmptyStr);
@@ -529,6 +548,16 @@ end;
 class procedure TSettings.SetReplicaStart(const AValue: Integer);
 begin
   SetIntValue(cReplicaSection, cReplicaStartParam, AValue);
+end;
+
+class procedure TSettings.SetScriptFilesUsed(const AValue: string);
+begin
+  SetStrValue(cSettingsSection, cScriptFilesUsedParam, AValue);
+end;
+
+class procedure TSettings.SetScriptPath(const AValue: string);
+begin
+  SetStrValue(cSettingsSection, cScriptFilesPathParam, AValue);
 end;
 
 class procedure TSettings.SetSlaveDatabase(const AValue: string);

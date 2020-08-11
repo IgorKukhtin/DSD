@@ -55,6 +55,7 @@ type
     procedure SetStartId(const AValue: Integer);
 
   strict private
+    function ApplyScriptsFor(AScripts: TStrings; AServer: TServerRank): TApplyScriptResult;
     function ExecutePreparedPacket: Integer;
     function ExecuteReplica: TReplicaFinished;
     function IsConnected(AConnection: TZConnection; ARank: TServerRank): Boolean;
@@ -73,6 +74,7 @@ type
     property SelectRange: Integer read FSelectRange write FSelectRange;
     property ReplicaFinished: TReplicaFinished read FReplicaFinished;
 
+    function ApplyScripts(AScripts: TStrings): TApplyScriptResult;
     function GetCompareMasterSlaveSQL(const ADeviationsOnly: Boolean): string;
     function IsMasterConnected: Boolean;
     function IsSlaveConnected: Boolean;
@@ -86,8 +88,6 @@ type
     procedure StopReplica;
   end;
 
-  {TODO: перенести события и большинство методов в TReplicaThread, оставить только создание FData.
-         Причина: другие наследники не используют специфичные параметры конструктора и события }
   TWorkerThread = class(TThread)
   strict private
     FStartId: Integer;
@@ -112,7 +112,8 @@ type
     property Data: TdmData read FData;
   public
     constructor Create(CreateSuspended: Boolean; const AStartId, ASelectRange, APacketRange: Integer;
-      AMsgProc: TNotifyMessage; AKind: TThreadKind = tknNondriven); reintroduce;
+      AMsgProc: TNotifyMessage; AKind: TThreadKind = tknNondriven); reintroduce; overload;
+    constructor Create(CreateSuspended: Boolean; AMsgProc: TNotifyMessage; AKind: TThreadKind = tknNondriven); reintroduce; overload;
     destructor Destroy; override;
     procedure Stop;
     property OnChangeStartId: TOnChangeStartId read FOnChangeStartId write FOnChangeStartId;
@@ -144,6 +145,16 @@ type
     procedure Execute; override;
   public
     constructor Create(CreateSuspended, ADeviationsOnly: Boolean; AMsgProc: TNotifyMessage; AKind: TThreadKind = tknNondriven); reintroduce;
+  end;
+
+  TApplyScriptThread = class(TWorkerThread)
+  strict private
+    FScriptList: TStringList;
+  protected
+    procedure Execute; override;
+  public
+    constructor Create(CreateSuspended: Boolean; AScripts: TStrings; AMsgProc: TNotifyMessage; AKind: TThreadKind = tknNondriven); reintroduce;
+    destructor Destroy; override;
   end;
 
 implementation
@@ -213,6 +224,72 @@ begin
       возникает исключение "[EZSQLException] SQL Error: ОШИБКА:  подготовленный оператор "156270147041" не существует".
       Параметр 'EMULATE_PREPARES' применен по рекомендации на форуме ZeosLib https://zeoslib.sourceforge.io/viewtopic.php?t=10695  }
     Properties.Values['EMULATE_PREPARES'] := 'True';
+  end;
+end;
+
+function TdmData.ApplyScripts(AScripts: TStrings): TApplyScriptResult;
+var
+  masterResult, slaveResult: TApplyScriptResult;
+begin
+  Result := asNoAction;
+
+  if (AScripts = nil) or (AScripts.Count = 0) then Exit;
+
+  masterResult := ApplyScriptsFor(AScripts, srMaster);
+  if masterResult = asError then
+    LogMsg('Не удалось выполнить скрипты для Master');
+
+  slaveResult := ApplyScriptsFor(AScripts, srSlave);
+  if slaveResult = asError then
+    LogMsg('Не удалось выполнить скрипты для Slave');
+
+  if (masterResult = asSuccess) and (slaveResult = asSuccess) then
+    Result := asSuccess
+  else
+    Result := asError;
+end;
+
+function TdmData.ApplyScriptsFor(AScripts: TStrings; AServer: TServerRank): TApplyScriptResult;
+var
+  bConnected: Boolean;
+  tmpStmt: IZPreparedStatement;
+  tmpConn: TZConnection;
+begin
+  Result     := asError;
+  tmpConn    := nil;
+  bConnected := False;
+
+  if (AScripts = nil) or (AScripts.Count = 0) then Exit;
+
+  case AServer of
+    srMaster:
+      begin
+        bConnected := IsMasterConnected;
+        tmpConn    := conMaster;
+      end;
+    srSlave:
+      begin
+        bConnected := IsSlaveConnected;
+        tmpConn    := conSlave;
+      end;
+  end;
+
+  try
+    if (tmpConn <> nil) and (AScripts.Count > 0) and bConnected and not FStopped then
+    begin
+      tmpConn.DbcConnection.SetAutoCommit(False);
+      tmpStmt := tmpConn.DbcConnection.PrepareStatement(AScripts.Text);
+      tmpStmt.ExecuteUpdatePrepared;
+      tmpConn.DbcConnection.Commit;
+      Result := asSuccess;
+    end;
+  except
+    on E: Exception do
+    begin
+      tmpConn.DbcConnection.Rollback;
+      LogMsg(Format(cExceptionMsg, [E.ClassName, E.Message]));
+      Result := asError;
+    end;
   end;
 end;
 
@@ -1074,6 +1151,11 @@ begin
   inherited Create(CreateSuspended);
 end;
 
+constructor TWorkerThread.Create(CreateSuspended: Boolean; AMsgProc: TNotifyMessage; AKind: TThreadKind);
+begin
+  Create(CreateSuspended, 0, 0, 0, AMsgProc, AKind);
+end;
+
 destructor TWorkerThread.Destroy;
 begin
   FreeAndNil(FData);
@@ -1198,6 +1280,28 @@ begin
   New(P);
   P^.ResultSQL := sSQL;
   ReturnValue := LongWord(P);
+  Terminate;
+end;
+
+{ TApplyScriptThread }
+
+constructor TApplyScriptThread.Create(CreateSuspended: Boolean; AScripts: TStrings; AMsgProc: TNotifyMessage; AKind: TThreadKind);
+begin
+  FScriptList := TStringList.Create;
+  FScriptList.Assign(AScripts);
+  inherited Create(CreateSuspended, AMsgProc, AKind);
+end;
+
+destructor TApplyScriptThread.Destroy;
+begin
+  FreeAndNil(FScriptList);
+  inherited;
+end;
+
+procedure TApplyScriptThread.Execute;
+begin
+  inherited;
+  ReturnValue := Ord(Data.ApplyScripts(FScriptList));
   Terminate;
 end;
 

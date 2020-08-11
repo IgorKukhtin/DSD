@@ -22,6 +22,7 @@ uses
   UConstants,
   UDefinitions,
   ULog,
+  UScriptFiles,
   UData;
 
 
@@ -115,7 +116,23 @@ type
     lbReconnectTimeout: TLabel;
     seReconnectTimeout: TSpinEdit;
     lbReconnectMinute: TLabel;
+    grpScripts: TGroupBox;
+    pnlScriptBottom: TPanel;
+    pnlScriptTop: TPanel;
+    btnApplyScript: TButton;
+    pnlScriptList: TPanel;
+    mmoScriptErr: TMemo;
+    mmoScriptList: TMemo;
+    splScript: TSplitter;
     tmrRestartReplica: TTimer;
+    btnCancelScript: TButton;
+    pnlScriptMsg: TPanel;
+    lbScriptMsg: TLabel;
+    tmrScriptMsg: TTimer;
+    btnLoadScripts: TButton;
+    edtScriptPath: TEdit;
+    lbScriptPath: TLabel;
+    btnScriptPath: TButton;
     {$WARNINGS ON}
     procedure chkShowLogClick(Sender: TObject);
     procedure btnLibLocationClick(Sender: TObject);
@@ -142,12 +159,20 @@ type
       State: TGridDrawState);
     procedure btnCancelCompareClick(Sender: TObject);
     procedure seReconnectTimeoutChange(Sender: TObject);
+    procedure btnApplyScriptClick(Sender: TObject);
+    procedure btnCancelScriptClick(Sender: TObject);
+    procedure tmrScriptMsgTimer(Sender: TObject);
+    procedure btnLoadScriptsClick(Sender: TObject);
+    procedure mmoScriptListChange(Sender: TObject);
+    procedure btnScriptPathClick(Sender: TObject);
   private
     FLog: TLog;
     FData: TdmData;
+    FScriptFiles: TScriptFiles;
     FReplicaThrd: TReplicaThread;
     FMinMaxThrd: TMinMaxIdThread;
     FCompareMSThrd: TCompareMasterSlaveThread;
+    FApplyScriptThrd: TApplyScriptThread;
     FSsnMinId: Integer;
     FSsnMaxId: Integer;
     FSsnStep: Double;
@@ -158,6 +183,7 @@ type
     procedure ReadSettings;
     procedure WriteSettings;
     procedure AssignOnExitSettings;
+    procedure ApplyScript;
     procedure SwitchShowLog;
     procedure CompareMasterSlave;
     procedure CheckReplicaMaxMin;
@@ -165,7 +191,10 @@ type
     procedure StopReplicaThread;
     procedure StopMinMaxThread;
     procedure StopCompareMSThread;
+    procedure StopApplyScriptThread;
+    procedure ShowScriptResultMsg(const AMsg: string; AResult: TApplyScriptResult);
     procedure LogMessage(const AMsg: string; const AFileName: string = ''; const aUID: Cardinal = 0);
+    procedure LogApplyScript(const AMsg: string; const AFileName: string = ''; const aUID: Cardinal = 0);
     procedure OnChangeStartId(const ANewStartId: Integer);
     procedure OnNewSession(const AStart: TDateTime; const AMinId, AMaxId, ARecCount, ASessionNumber: Integer);
     procedure OnEndSession(Sender: TObject);
@@ -175,6 +204,7 @@ type
     procedure OnTerminateReplica(Sender: TObject);
     procedure OnTerminateMinMaxId(Sender: TObject);
     procedure OnTerminateCompareMS(Sender: TObject);
+    procedure OnTerminateApplyScript(Sender: TObject);
   private
     procedure OnExitSettings(Sender: TObject);
   public
@@ -200,6 +230,7 @@ const
   cStartPointSession = 'начало сессии %s';
   cElapsedSession = 'прошло %s';
   cSessionNumber = 'сессия № %d';
+  cLogMsg = '%s  %s';
 
 
 
@@ -261,6 +292,19 @@ begin
   TSettings.ReplicaSelectRange := seSelectRange.Value;
 end;
 
+procedure TfrmMain.ShowScriptResultMsg(const AMsg: string; AResult: TApplyScriptResult);
+begin
+  case AResult of
+    asNoAction: lbScriptMsg.Font.Color := clWindowText;
+    asSuccess:  lbScriptMsg.Font.Color := clWindowText;
+    asError:    lbScriptMsg.Font.Color := clRed;
+  end;
+
+  lbScriptMsg.Caption := AMsg;
+  pnlScriptMsg.Visible := True;
+  tmrScriptMsg.Enabled := True;
+end;
+
 procedure TfrmMain.StartReplica;
 const
   cStartPerlica = 'Старт репликации: StartId = %d';
@@ -291,6 +335,16 @@ begin
   btnStartReplication.Enabled := False;
   btnStop.Enabled := True;
   tmrElapsed.Enabled := True;
+end;
+
+procedure TfrmMain.StopApplyScriptThread;
+begin
+  if FApplyScriptThrd <> nil then
+  begin
+    FApplyScriptThrd.Stop;
+    FApplyScriptThrd.WaitFor;
+    FreeAndNil(FApplyScriptThrd);
+  end;
 end;
 
 procedure TfrmMain.StopCompareMSThread;
@@ -341,6 +395,12 @@ begin
     lbSsnElapsed.Caption := Format(cElapsedSession, [Elapsed(FStartTimeSession)]);
 end;
 
+procedure TfrmMain.tmrScriptMsgTimer(Sender: TObject);
+begin
+  (Sender as TTimer).Enabled := False;
+  pnlScriptMsg.Visible := False;
+end;
+
 procedure TfrmMain.WriteSettings;
 begin
   TSettings.MasterServer   := edtMasterServer.Text;
@@ -362,6 +422,19 @@ begin
   TSettings.ReplicaPacketRange := sePacketRange.Value;
 end;
 
+procedure TfrmMain.ApplyScript;
+begin
+  btnApplyScript.Enabled  := False;
+  btnCancelScript.Enabled := True;
+  btnLoadScripts.Enabled  := False;
+
+  StopApplyScriptThread;
+
+  FApplyScriptThrd := TApplyScriptThread.Create(cCreateSuspended, FScriptFiles.ScriptContent, LogApplyScript, tknDriven);
+  FApplyScriptThrd.OnTerminate := OnTerminateApplyScript;
+  FApplyScriptThrd.Start;
+end;
+
 procedure TfrmMain.AssignOnExitSettings;
 var
   I: Integer;
@@ -381,6 +454,12 @@ begin
   StopCompareMSThread;
 end;
 
+procedure TfrmMain.btnCancelScriptClick(Sender: TObject);
+begin
+  StopApplyScriptThread;
+  btnCancelScript.Enabled := False;
+end;
+
 procedure TfrmMain.btnLibLocationClick(Sender: TObject);
 begin
   {$WARNINGS OFF}
@@ -393,6 +472,19 @@ begin
   if opndlgMain.Execute then
     edtLibLocation.Text := opndlgMain.FileName;
   {$WARNINGS ON}
+end;
+
+procedure TfrmMain.btnLoadScriptsClick(Sender: TObject);
+begin
+  mmoScriptList.Clear;
+
+  if Length(TSettings.ScriptPath) > 0 then
+  begin
+    FreeAndNil(FScriptFiles);
+    TSettings.ScriptFilesUsed := '';
+    FScriptFiles := TScriptFiles.Create(TSettings.ScriptPath, TSettings.ScriptFilesUsed, LogApplyScript);
+    mmoScriptList.Lines.Assign(FScriptFiles.ShortNames);
+  end;
 end;
 
 procedure TfrmMain.btnMaxIdClick(Sender: TObject);
@@ -434,6 +526,42 @@ end;
 procedure TfrmMain.btnStartReplicationClick(Sender: TObject);
 begin
   StartReplica;
+end;
+
+procedure TfrmMain.btnApplyScriptClick(Sender: TObject);
+begin
+  ApplyScript;
+end;
+
+procedure TfrmMain.btnScriptPathClick(Sender: TObject);
+var
+  sScriptFolder: string;
+begin
+  mmoScriptList.Clear;
+
+  {$WARNINGS OFF}
+  with opndlgMain do
+  begin
+    Title := 'Выберите папку со скриптами';
+    Options := [fdoPickFolders, fdoPathMustExist, fdoForceFileSystem];
+    OkButtonLabel := 'Выбрать';
+    DefaultFolder := ExtractFilePath(ParamStr(0));
+    if Execute then
+    begin
+      sScriptFolder        := FileName;
+      edtScriptPath.Text   := sScriptFolder;
+      TSettings.ScriptPath := sScriptFolder;
+    end;
+  end;
+  {$WARNINGS ON}
+
+  if Length(sScriptFolder) > 0 then
+  begin
+    FreeAndNil(FScriptFiles);
+//    TSettings.ScriptFilesUsed := '';
+    FScriptFiles := TScriptFiles.Create(sScriptFolder, TSettings.ScriptFilesUsed, LogApplyScript);
+    mmoScriptList.Lines.Assign(FScriptFiles.ShortNames);
+  end;
 end;
 
 procedure TfrmMain.btnSendSinglePacketClick(Sender: TObject);
@@ -493,8 +621,7 @@ begin
   if FData.IsMasterConnected then
   begin
     StopMinMaxThread;
-    FMinMaxThrd := TMinMaxIdThread.Create(
-      cCreateSuspended, TSettings.ReplicaStart, TSettings.ReplicaSelectRange, TSettings.ReplicaPacketRange, LogMessage, tknDriven);
+    FMinMaxThrd := TMinMaxIdThread.Create(cCreateSuspended,  LogMessage, tknDriven);
     FMinMaxThrd.OnTerminate := OnTerminateMinMaxId;
     FMinMaxThrd.Start;
   end
@@ -556,6 +683,10 @@ begin
   );
   FData.OnChangeStartId := OnChangeStartId;
 
+  edtScriptPath.Text := TSettings.ScriptPath;
+  FScriptFiles := TScriptFiles.Create(TSettings.ScriptPath, TSettings.ScriptFilesUsed, LogApplyScript);
+  mmoScriptList.Lines.Assign(FScriptFiles.ShortNames);
+
   CheckReplicaMaxMin;
 end;
 
@@ -564,9 +695,12 @@ begin
   StopReplicaThread;
   StopMinMaxThread;
   StopCompareMSThread;
+  StopApplyScriptThread;
+
   WriteSettings;
   FreeAndNil(FData);
   FreeAndNil(FLog);
+  FreeAndNil(FScriptFiles);
 
   inherited;
 end;
@@ -607,9 +741,27 @@ begin
     (Sender as TDBGrid).DefaultDrawColumnCell(Rect, DataCol, Column, State);
 end;
 
+procedure TfrmMain.LogApplyScript(const AMsg, AFileName: string; const aUID: Cardinal);
+var
+  sFileName: string;
+begin
+  if TSettings.UseLog then // выбрана настройка "записывать лог в файл"
+  begin
+    if Length(Trim(AFileName)) = 0 then
+      sFileName := cDefLogFileName
+    else
+      sFileName := AFileName; // пишем в специальный файл
+
+    FLog.Write(sFileName, AMsg);
+  end;
+
+  if not mmoScriptErr.Visible then
+    mmoScriptErr.Visible := True;
+
+  mmoScriptErr.Lines.Add(Format(cLogMsg, [FormatDateTime(cTimeStrShort, Now), AMsg]));
+end;
+
 procedure TfrmMain.LogMessage(const AMsg, AFileName: string; const aUID: Cardinal);
-const
-  cMsg = '%s  %s';
 var
   iObjIndex, iPos: Integer;
   sMsg, sLine: string;
@@ -642,7 +794,7 @@ begin
 
   if Length(Trim(AFileName)) = 0  then // не выводим в lstLog сообщение, которое предназначено для сохранения в отдельный файл
   begin
-    sMsg := Format(cMsg, [FormatDateTime(cTimeStrShort, Now), AMsg]);
+    sMsg := Format(cLogMsg, [FormatDateTime(cTimeStrShort, Now), AMsg]);
 
     if aUID <> 0 then // строка c таким aUID могла быть добавлена в lstLog ранее
     begin
@@ -666,6 +818,13 @@ end;
 procedure TfrmMain.mmoLogChange(Sender: TObject);
 begin
   SendMessage((Sender as TMemo).Handle, EM_LINESCROLL, 0, (Sender as TMemo).Lines.Count);
+end;
+
+procedure TfrmMain.mmoScriptListChange(Sender: TObject);
+begin
+  Assert(FScriptFiles <> nil, 'Ожидается FScriptFiles <> nil');
+  FScriptFiles.FilesUsed    := mmoScriptList.Lines.CommaText;
+  TSettings.ScriptFilesUsed := FScriptFiles.FilesUsed;
 end;
 
 procedure TfrmMain.OnChangeStartId(const ANewStartId: Integer);
@@ -731,6 +890,29 @@ begin
   FSsnMinId := AMinId;
   FSsnMaxId := AMaxId;
   FSsnStep  := (FSsnMaxId - FSsnMinId) / ARecCount;
+end;
+
+procedure TfrmMain.OnTerminateApplyScript(Sender: TObject);
+var
+  tmpResult: TApplyScriptResult;
+  thrdWorker: TWorkerThread;
+  sMsg: string;
+begin
+  thrdWorker := Sender as TWorkerThread;
+  tmpResult  := TApplyScriptResult(thrdWorker.MyReturnValue);
+
+  case tmpResult of
+    asNoAction: sMsg := '';
+    asSuccess:  sMsg := 'Скрипты успешно выполнены';
+    asError:    sMsg := 'Не удалось выполнить скрипты';
+  end;
+
+  if Length(sMsg) > 0 then
+    ShowScriptResultMsg(sMsg, tmpResult);
+
+  btnApplyScript.Enabled  := True;
+  btnCancelScript.Enabled := False;
+  btnLoadScripts.Enabled  := True;
 end;
 
 procedure TfrmMain.OnTerminateCompareMS(Sender: TObject);

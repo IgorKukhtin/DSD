@@ -19,7 +19,7 @@ object frmMain: TfrmMain
     Top = 0
     Width = 1184
     Height = 768
-    ActivePage = tsLog
+    ActivePage = tsSettings
     Align = alClient
     TabOrder = 0
     object tsLog: TTabSheet
@@ -216,8 +216,8 @@ object frmMain: TfrmMain
             Width = 85
             Height = 22
             Increment = 1000
-            MaxValue = 100000
-            MinValue = 1
+            MaxValue = 1000000
+            MinValue = 0
             TabOrder = 3
             Value = 1000
             OnChange = sePacketRangeChange
@@ -228,10 +228,10 @@ object frmMain: TfrmMain
             Width = 85
             Height = 22
             Increment = 1000
-            MaxValue = 100000
-            MinValue = 1
+            MaxValue = 999000000
+            MinValue = 0
             TabOrder = 4
-            Value = 1000
+            Value = 10000
             OnChange = seSelectRangeChange
           end
           object pbSession: TProgressBar
@@ -366,10 +366,6 @@ object frmMain: TfrmMain
           object tsMemo: TTabSheet
             Caption = 'tsMemo'
             TabVisible = False
-            ExplicitLeft = 0
-            ExplicitTop = 0
-            ExplicitWidth = 0
-            ExplicitHeight = 0
             object lstLog: TListBox
               Left = 0
               Top = 0
@@ -393,10 +389,6 @@ object frmMain: TfrmMain
             Caption = 'tsChk'
             ImageIndex = 1
             TabVisible = False
-            ExplicitLeft = 0
-            ExplicitTop = 0
-            ExplicitWidth = 0
-            ExplicitHeight = 0
           end
         end
       end
@@ -404,10 +396,6 @@ object frmMain: TfrmMain
     object tsCompare: TTabSheet
       Caption = #1057#1088#1072#1074#1085#1077#1085#1080#1077' '#1076#1072#1085#1085#1099#1093' Master '#1080' Slave'
       ImageIndex = 2
-      ExplicitLeft = 0
-      ExplicitTop = 0
-      ExplicitWidth = 0
-      ExplicitHeight = 0
       object pnlCompareTop: TPanel
         Left = 0
         Top = 0
@@ -507,19 +495,16 @@ object frmMain: TfrmMain
     object tsSettings: TTabSheet
       Caption = #1053#1072#1089#1090#1088#1086#1081#1082#1080
       ImageIndex = 1
-      ExplicitLeft = 0
-      ExplicitTop = 0
-      ExplicitWidth = 0
-      ExplicitHeight = 0
       DesignSize = (
         1176
         740)
       object lbLibLocation: TLabel
-        Left = 60
+        Left = 56
         Top = 493
-        Width = 73
+        Width = 77
         Height = 13
-        Caption = 'Library location'
+        Alignment = taRightJustify
+        Caption = #1055#1091#1090#1100' '#1082' libpq.dll'
       end
       object lbReconnectTimeout: TLabel
         Left = 60
@@ -531,16 +516,15 @@ object frmMain: TfrmMain
       object lbReconnectMinute: TLabel
         Left = 453
         Top = 543
-        Width = 312
+        Width = 288
         Height = 13
-        Caption = #1084#1080#1085#1091#1090'           ( 0  '#1086#1079#1085#1072#1095#1072#1077#1090' "'#1085#1077' '#1074#1099#1087#1086#1083#1085#1103#1090#1100' '#1087#1077#1088#1077#1087#1086#1076#1082#1083#1102#1095#1077#1085#1080#1077'")'
+        Caption = #1084#1080#1085#1091#1090'   ( 0  '#1086#1079#1085#1072#1095#1072#1077#1090' "'#1085#1077' '#1074#1099#1087#1086#1083#1085#1103#1090#1100' '#1087#1077#1088#1077#1087#1086#1076#1082#1083#1102#1095#1077#1085#1080#1077'")'
       end
       object grpMaster: TGroupBox
         Left = 24
         Top = 23
-        Width = 1129
+        Width = 650
         Height = 185
-        Anchors = [akLeft, akTop, akRight]
         Caption = '  Master  '
         TabOrder = 0
         object lbMasterServer: TLabel
@@ -591,14 +575,14 @@ object frmMain: TfrmMain
         object edtMasterServer: TEdit
           Left = 115
           Top = 24
-          Width = 400
+          Width = 500
           Height = 21
           TabOrder = 0
         end
         object edtMasterDatabase: TEdit
           Left = 115
           Top = 54
-          Width = 400
+          Width = 500
           Height = 21
           TabOrder = 1
         end
@@ -629,9 +613,8 @@ object frmMain: TfrmMain
       object grpSlave: TGroupBox
         Left = 24
         Top = 233
-        Width = 1129
+        Width = 650
         Height = 185
-        Anchors = [akLeft, akTop, akRight]
         Caption = '  Slave  '
         TabOrder = 1
         object lbSlaveServer: TLabel
@@ -722,7 +705,7 @@ object frmMain: TfrmMain
         Top = 490
         Width = 500
         Height = 21
-        TabOrder = 2
+        TabOrder = 5
         OnChange = edtLibLocationChange
       end
       object btnLibLocation: TButton
@@ -732,7 +715,7 @@ object frmMain: TfrmMain
         Height = 25
         Hint = #1055#1091#1090#1100' '#1082' '#1082#1083#1080#1077#1085#1090#1089#1082#1086#1081' '#1073#1080#1073#1083#1080#1086#1090#1077#1082#1077' PostgreSQL'
         Caption = '...'
-        TabOrder = 3
+        TabOrder = 6
         OnClick = btnLibLocationClick
       end
       object chkWriteLog: TCheckBox
@@ -741,7 +724,7 @@ object frmMain: TfrmMain
         Width = 169
         Height = 17
         Caption = ' '#1079#1072#1087#1080#1089#1099#1074#1072#1090#1100' '#1083#1086#1075' '#1074' '#1092#1072#1081#1083
-        TabOrder = 4
+        TabOrder = 3
         OnClick = chkWriteLogClick
       end
       object chkShowLog: TCheckBox
@@ -750,7 +733,7 @@ object frmMain: TfrmMain
         Width = 153
         Height = 17
         Caption = ' '#1087#1086#1082#1072#1079#1099#1074#1072#1090#1100' '#1083#1086#1075' '#1085#1072' '#1101#1082#1088#1072#1085#1077
-        TabOrder = 5
+        TabOrder = 2
         OnClick = chkShowLogClick
       end
       object chkWriteCommands: TCheckBox
@@ -759,7 +742,7 @@ object frmMain: TfrmMain
         Width = 177
         Height = 17
         Caption = ' '#1079#1072#1087#1080#1089#1099#1074#1072#1090#1100' '#1082#1086#1084#1072#1085#1076#1099' '#1074' '#1092#1072#1081#1083
-        TabOrder = 6
+        TabOrder = 4
         OnClick = chkWriteCommandsClick
       end
       object seReconnectTimeout: TSpinEdit
@@ -773,6 +756,149 @@ object frmMain: TfrmMain
         Value = 0
         OnChange = seReconnectTimeoutChange
       end
+      object grpScripts: TGroupBox
+        Left = 699
+        Top = 23
+        Width = 456
+        Height = 395
+        Anchors = [akLeft, akTop, akRight]
+        Caption = '  '#1057#1082#1088#1080#1087#1090#1099'  '
+        TabOrder = 8
+        object pnlScriptBottom: TPanel
+          Left = 2
+          Top = 353
+          Width = 452
+          Height = 40
+          Align = alBottom
+          BevelOuter = bvNone
+          TabOrder = 0
+          object btnApplyScript: TButton
+            Left = 21
+            Top = 7
+            Width = 134
+            Height = 25
+            Caption = #1042#1099#1087#1086#1083#1085#1080#1090#1100' '#1089#1082#1088#1080#1087#1090#1099
+            TabOrder = 0
+            OnClick = btnApplyScriptClick
+          end
+          object btnCancelScript: TButton
+            Left = 162
+            Top = 7
+            Width = 134
+            Height = 25
+            Caption = #1054#1090#1084#1077#1085#1080#1090#1100' '#1074#1099#1087#1086#1083#1085#1077#1085#1080#1077
+            Enabled = False
+            TabOrder = 1
+            OnClick = btnCancelScriptClick
+          end
+          object btnLoadScripts: TButton
+            Left = 338
+            Top = 7
+            Width = 93
+            Height = 25
+            Caption = #1047#1072#1075#1088#1091#1079#1080#1090#1100' '#1074#1089#1077
+            TabOrder = 2
+            OnClick = btnLoadScriptsClick
+          end
+        end
+        object pnlScriptTop: TPanel
+          Left = 2
+          Top = 15
+          Width = 452
+          Height = 338
+          Align = alClient
+          BevelOuter = bvNone
+          TabOrder = 1
+          object lbScriptPath: TLabel
+            Left = 15
+            Top = 12
+            Width = 25
+            Height = 13
+            Caption = #1055#1091#1090#1100
+          end
+          object pnlScriptList: TPanel
+            Left = 14
+            Top = 37
+            Width = 426
+            Height = 299
+            TabOrder = 0
+            object splScript: TSplitter
+              Left = 1
+              Top = 195
+              Width = 424
+              Height = 5
+              Cursor = crVSplit
+              Align = alBottom
+              Visible = False
+              ExplicitTop = 123
+            end
+            object mmoScriptErr: TMemo
+              Left = 1
+              Top = 200
+              Width = 424
+              Height = 98
+              Align = alBottom
+              ScrollBars = ssVertical
+              TabOrder = 0
+              Visible = False
+              ExplicitTop = 228
+            end
+            object mmoScriptList: TMemo
+              Left = 1
+              Top = 1
+              Width = 424
+              Height = 194
+              Align = alClient
+              ScrollBars = ssVertical
+              TabOrder = 1
+              OnChange = mmoScriptListChange
+              ExplicitHeight = 222
+            end
+          end
+          object edtScriptPath: TEdit
+            Left = 44
+            Top = 9
+            Width = 370
+            Height = 21
+            TabOrder = 1
+          end
+          object btnScriptPath: TButton
+            Left = 416
+            Top = 7
+            Width = 25
+            Height = 25
+            Caption = '...'
+            TabOrder = 2
+            OnClick = btnScriptPathClick
+          end
+        end
+      end
+      object pnlScriptMsg: TPanel
+        Left = 701
+        Top = 427
+        Width = 453
+        Height = 33
+        BorderStyle = bsSingle
+        Color = clInfoBk
+        ParentBackground = False
+        TabOrder = 9
+        Visible = False
+        object lbScriptMsg: TLabel
+          Left = 14
+          Top = 8
+          Width = 426
+          Height = 14
+          Alignment = taCenter
+          AutoSize = False
+          Caption = 'lbScriptMsg'
+          Font.Charset = DEFAULT_CHARSET
+          Font.Color = clWindowText
+          Font.Height = -12
+          Font.Name = 'Tahoma'
+          Font.Style = []
+          ParentFont = False
+        end
+      end
     end
   end
   object opndlgMain: TFileOpenDialog
@@ -780,22 +906,28 @@ object frmMain: TfrmMain
     FileTypes = <>
     Options = []
     Left = 700
-    Top = 495
+    Top = 678
   end
   object tmrElapsed: TTimer
     Enabled = False
     OnTimer = tmrElapsedTimer
-    Left = 1049
-    Top = 39
+    Left = 849
+    Top = 677
   end
   object dsCompare: TDataSource
-    Left = 1004
-    Top = 249
+    Left = 780
+    Top = 678
   end
   object tmrRestartReplica: TTimer
     Enabled = False
-    Interval = 0
-    Left = 1060
-    Top = 135
+    Left = 932
+    Top = 677
+  end
+  object tmrScriptMsg: TTimer
+    Enabled = False
+    Interval = 3000
+    OnTimer = tmrScriptMsgTimer
+    Left = 1021
+    Top = 676
   end
 end

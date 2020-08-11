@@ -28,6 +28,8 @@ type
 
   TServerRank = (srMaster, srSlave);
 
+  TApplyScriptResult = (asNoAction, asSuccess, asError);
+
   TThreadKind = (tknDriven, tknNondriven);
 
   TDataRec = record
