@@ -67,6 +67,8 @@ type
     class procedure SetScriptPath(const AValue: string); static;
     class function GetScriptFilesUsed: string; static;
     class procedure SetScriptFilesUsed(const AValue: string); static;
+    class function GetDDLStartId: Integer; static;
+    class procedure SetDDLStartId(const AValue: Integer); static;
   public
     class constructor Create;
     class destructor Destroy;
@@ -96,6 +98,7 @@ type
     class property ReconnectTimeoutMinute: Integer read GetReconnectTimeoutMinute write SetReconnectTimeoutMinute;
     class property ScriptPath: string read GetScriptPath write SetScriptPath;
     class property ScriptFilesUsed: string read GetScriptFilesUsed write SetScriptFilesUsed;
+    class property DDLStartId: Integer read GetDDLStartId write SetDDLStartId;
   end;
 
 function IsService: Boolean;
@@ -136,6 +139,7 @@ const
   cReconnectTimeoutParam = 'ReconnectTimeoutMinute';
   cScriptFilesPathParam  = 'ScriptFilesPath';
   cScriptFilesUsedParam  = 'ScriptFilesUsed';
+  cDDLStartIdParam       = 'DDLStartId';
 
   // Master
   cMasterSection       = 'postgress_master';
@@ -164,6 +168,7 @@ const
   cDefReplicaStart = 1;
   cDefReconnectTimeoutMinute = 15;
   cDefScriptFilesPath = '..\scripts';
+  cDefDDLStartId = 0;
 
 function IsService: Boolean;
 var
@@ -286,6 +291,11 @@ end;
 class function TSettings.GetCompareDeviationOnly: Boolean;
 begin
   Result := GetBoolValue(cSettingsSection, cCompareDeviationParam, False);
+end;
+
+class function TSettings.GetDDLStartId: Integer;
+begin
+  Result := GetIntValue(cSettingsSection, cDDLStartIdParam, cDefDDLStartId);
 end;
 
 class function TSettings.GetIntValue(const ASection, AParam: string; const ADefVal: Integer): Integer;
@@ -480,6 +490,11 @@ end;
 class procedure TSettings.SetCompareDeviationOnly(const AValue: Boolean);
 begin
   SetBoolValue(cSettingsSection, cCompareDeviationParam, AValue);
+end;
+
+class procedure TSettings.SetDDLStartId(const AValue: Integer);
+begin
+  SetIntValue(cSettingsSection, cDDLStartIdParam, AValue);
 end;
 
 class procedure TSettings.SetIntValue(const ASection, AParam: string; const AVal: Integer);

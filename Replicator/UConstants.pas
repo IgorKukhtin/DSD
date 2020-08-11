@@ -18,6 +18,8 @@ const
   cCreateRunning   = False;
 
   // шаблоны сообщений
+  cCrLf                = #13#10;
+  c2CrLf               = cCrLf + cCrLf;
   cExceptionMsg        = '[%s] %s';
   cThreadExceptionMsg  = '[%s] in thread %s - %s';
   cDateTimeShortStr    = 'yyyy-mm-dd hh:nn:ss';

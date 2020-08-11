@@ -133,6 +133,8 @@ type
     edtScriptPath: TEdit;
     lbScriptPath: TLabel;
     btnScriptPath: TButton;
+    btnMoveProcsToSlave: TButton;
+    btnStopMoveProcsToSlave: TButton;
     {$WARNINGS ON}
     procedure chkShowLogClick(Sender: TObject);
     procedure btnLibLocationClick(Sender: TObject);
@@ -165,6 +167,8 @@ type
     procedure btnLoadScriptsClick(Sender: TObject);
     procedure mmoScriptListChange(Sender: TObject);
     procedure btnScriptPathClick(Sender: TObject);
+    procedure btnMoveProcsToSlaveClick(Sender: TObject);
+    procedure btnStopMoveProcsToSlaveClick(Sender: TObject);
   private
     FLog: TLog;
     FData: TdmData;
@@ -173,6 +177,7 @@ type
     FMinMaxThrd: TMinMaxIdThread;
     FCompareMSThrd: TCompareMasterSlaveThread;
     FApplyScriptThrd: TApplyScriptThread;
+    FMoveProcToSlaveThrd: TMoveProcToSlaveThread;
     FSsnMinId: Integer;
     FSsnMaxId: Integer;
     FSsnStep: Double;
@@ -192,6 +197,7 @@ type
     procedure StopMinMaxThread;
     procedure StopCompareMSThread;
     procedure StopApplyScriptThread;
+    procedure StopMoveProcToSlaveThread;
     procedure ShowScriptResultMsg(const AMsg: string; AResult: TApplyScriptResult);
     procedure LogMessage(const AMsg: string; const AFileName: string = ''; const aUID: Cardinal = 0);
     procedure LogApplyScript(const AMsg: string; const AFileName: string = ''; const aUID: Cardinal = 0);
@@ -205,6 +211,7 @@ type
     procedure OnTerminateMinMaxId(Sender: TObject);
     procedure OnTerminateCompareMS(Sender: TObject);
     procedure OnTerminateApplyScript(Sender: TObject);
+    procedure OnTerminateMoveSavedProcToSlave(Sender: TObject);
   private
     procedure OnExitSettings(Sender: TObject);
   public
@@ -367,6 +374,16 @@ begin
   end;
 end;
 
+procedure TfrmMain.StopMoveProcToSlaveThread;
+begin
+  if FMoveProcToSlaveThrd <> nil then
+  begin
+    FMoveProcToSlaveThrd.Stop;
+    FMoveProcToSlaveThrd.WaitFor;
+    FreeAndNil(FMoveProcToSlaveThrd);
+  end;
+end;
+
 procedure TfrmMain.StopReplicaThread;
 begin
   tmrRestartReplica.Enabled := False;// остановить таймер реконнекта
@@ -501,6 +518,18 @@ begin
   LogMessage(Format(cMsg, [FData.MinId]));
 end;
 
+procedure TfrmMain.btnMoveProcsToSlaveClick(Sender: TObject);
+begin
+  btnMoveProcsToSlave.Enabled     := False;
+  btnStopMoveProcsToSlave.Enabled := True;
+
+  StopMoveProcToSlaveThread;
+
+  FMoveProcToSlaveThrd := TMoveProcToSlaveThread.Create(cCreateSuspended, LogMessage, tknDriven);
+  FMoveProcToSlaveThrd.OnTerminate := OnTerminateMoveSavedProcToSlave;
+  FMoveProcToSlaveThrd.Start;
+end;
+
 procedure TfrmMain.btnReplicaCommandsSQLClick(Sender: TObject);
 const
   cStartPerlica = '—тарт репликации: %d, диапазон select: %d, команд в пакете: %d, SQL:' + #13#10 + '%s';
@@ -586,6 +615,12 @@ procedure TfrmMain.btnStopClick(Sender: TObject);
 begin
   StopReplicaThread;
   btnStop.Enabled := False;
+end;
+
+procedure TfrmMain.btnStopMoveProcsToSlaveClick(Sender: TObject);
+begin
+  StopMoveProcToSlaveThread;
+  btnStopMoveProcsToSlave.Enabled := False;
 end;
 
 procedure TfrmMain.btnTestMasterClick(Sender: TObject);
@@ -696,6 +731,7 @@ begin
   StopMinMaxThread;
   StopCompareMSThread;
   StopApplyScriptThread;
+  StopMoveProcToSlaveThread;
 
   WriteSettings;
   FreeAndNil(FData);
@@ -993,6 +1029,12 @@ begin
       Dispose(P);
     end;
   end;
+end;
+
+procedure TfrmMain.OnTerminateMoveSavedProcToSlave(Sender: TObject);
+begin
+  btnMoveProcsToSlave.Enabled     := True;
+  btnStopMoveProcsToSlave.Enabled := False;
 end;
 
 procedure TfrmMain.OnTerminateReplica(Sender: TObject);

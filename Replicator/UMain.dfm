@@ -19,7 +19,7 @@ object frmMain: TfrmMain
     Top = 0
     Width = 1184
     Height = 768
-    ActivePage = tsSettings
+    ActivePage = tsLog
     Align = alClient
     TabOrder = 0
     object tsLog: TTabSheet
@@ -330,7 +330,7 @@ object frmMain: TfrmMain
         end
         object btnStartReplication: TButton
           Left = 4
-          Top = 98
+          Top = 104
           Width = 223
           Height = 25
           Caption = #1057#1090#1072#1088#1090' '#1088#1077#1087#1083#1080#1082#1072#1094#1080#1080
@@ -339,13 +339,32 @@ object frmMain: TfrmMain
         end
         object btnStop: TButton
           Left = 4
-          Top = 131
+          Top = 133
           Width = 223
           Height = 25
           Caption = #1057#1090#1086#1087
           Enabled = False
           TabOrder = 8
           OnClick = btnStopClick
+        end
+        object btnMoveProcsToSlave: TButton
+          Left = 4
+          Top = 177
+          Width = 223
+          Height = 25
+          Caption = #1055#1077#1088#1077#1085#1077#1089#1090#1080' '#1093#1088'.'#1087#1088#1086#1094#1077#1076#1091#1088#1099'  '#1085#1072' Slave'
+          TabOrder = 9
+          OnClick = btnMoveProcsToSlaveClick
+        end
+        object btnStopMoveProcsToSlave: TButton
+          Left = 4
+          Top = 206
+          Width = 223
+          Height = 25
+          Caption = #1054#1089#1090#1072#1085#1086#1074#1080#1090#1100' '#1087#1077#1088#1077#1085#1086#1089
+          Enabled = False
+          TabOrder = 10
+          OnClick = btnStopMoveProcsToSlaveClick
         end
       end
       object pnlLog: TPanel
@@ -499,9 +518,9 @@ object frmMain: TfrmMain
         1176
         740)
       object lbLibLocation: TLabel
-        Left = 56
+        Left = 60
         Top = 493
-        Width = 77
+        Width = 73
         Height = 13
         Alignment = taRightJustify
         Caption = #1055#1091#1090#1100' '#1082' libpq.dll'
@@ -841,7 +860,6 @@ object frmMain: TfrmMain
               ScrollBars = ssVertical
               TabOrder = 0
               Visible = False
-              ExplicitTop = 228
             end
             object mmoScriptList: TMemo
               Left = 1
@@ -852,7 +870,6 @@ object frmMain: TfrmMain
               ScrollBars = ssVertical
               TabOrder = 1
               OnChange = mmoScriptListChange
-              ExplicitHeight = 222
             end
           end
           object edtScriptPath: TEdit

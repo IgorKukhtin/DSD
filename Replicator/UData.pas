@@ -84,6 +84,7 @@ type
     function MinID: Integer;
     function MaxID: Integer;
 
+    procedure MoveSavedProcToSlave;
     procedure StartReplica;
     procedure StopReplica;
   end;
@@ -155,6 +156,11 @@ type
   public
     constructor Create(CreateSuspended: Boolean; AScripts: TStrings; AMsgProc: TNotifyMessage; AKind: TThreadKind = tknNondriven); reintroduce;
     destructor Destroy; override;
+  end;
+
+  TMoveProcToSlaveThread = class(TWorkerThread)
+  protected
+    procedure Execute; override;
   end;
 
 implementation
@@ -540,7 +546,7 @@ var
   sFileName: string;
 const
   cFileName  = '\Err_commands\%s';
-  cFileErr   = '%s__ERR_id-%d.txt';
+  cFileErr   = '%s__id-%d_ERR.txt';
 begin
   // FFailCmds содержит команды, которые не удалось выполнить в пакетной выгрузке и в выгрузке "по одной команде"
 
@@ -636,7 +642,7 @@ var
 const
   cFileName = '\Packets\%s';
   cFileOK   = '%s__id-%d-%d.txt';
-  cFileErr  = '%s__ERR_id-%d-%d.txt';
+  cFileErr  = '%s__id-%d-%d_ERR.txt';
   cTransId  = '-- tranId = %d' + #13#10;
 begin
   Result := 0;
@@ -1113,6 +1119,91 @@ begin
   end;
 end;
 
+procedure TdmData.MoveSavedProcToSlave;
+const
+  cSelect = 'select * from _replica.gpSelect_Table_ddl(:Id)';
+  cSession = '\DDL_Commands\%s\';            // \DDL_Commands\2020-08-11_14-49-00
+  cFileName = cSession + 'Id_%d.txt';        // \DDL_Commands\2020-08-11_14-49-00\Id_2095014.txt
+  cFileNameErr = cSession + 'Id_%d_ERR.txt'; // \DDL_Commands\2020-08-11_14-49-00\id_2095014_Error.txt
+  cFileContent = c2CrLf + 'Last_modified: %s' + c2CrLf + '%s';
+var
+  I, idxId, idxQry, idxLM, iStartId: Integer;
+  iId: Integer;
+  sQry, sSessionStart, sFileName, sFileContent: string;
+  dtmLM: TDateTime;
+  tmpStmt: IZPreparedStatement;
+begin
+  idxId  := -1;
+  idxQry := -1;
+  idxLM  := -1;
+  iStartId := TSettings.DDLStartId; // Id, на котором в прошлый раз завершилось выполнение
+  sSessionStart := FormatDateTime(cDateTimeFileNameStr, Now);
+
+  try
+    try
+      if IsMasterConnected then
+        with qryMasterHelper do
+        begin
+          Close;
+          SQL.Clear;
+          SQL.Add(Format(cSelect, [iStartId]));
+          ParamByName('Id').AsInteger  := iStartId;
+          Open;
+          First;
+
+          // определим индексы полей в датасете, чтобы использовать в цикле 'while not EOF do'
+          for I := 0 to Pred(Fields.Count) do
+            if      LowerCase(Fields[I].FieldName) = 'id'            then idxId  := I
+            else if LowerCase(Fields[I].FieldName) = 'query'         then idxQry := I
+            else if LowerCase(Fields[I].FieldName) = 'last_modified' then idxLM  := I;
+
+          if Locate('Id', iStartId, []) then // Найдем позицию, на которой закончили в прошлый раз
+            Next;                            // и передвинем на следующую для нового выполнения
+
+          while not EOF do
+          begin
+            iId   := Fields[idxId].AsInteger;
+            sQry  := Fields[idxQry].AsString;
+            dtmLM := Fields[idxLM].AsDateTime;
+
+            sFileContent := Format(cFileContent, [FormatDateTime(cDateTimeStrShort, dtmLM), sQry]);
+
+            try
+              if IsSlaveConnected and not FStopped then
+              begin
+                conSlave.DbcConnection.SetAutoCommit(False);
+                tmpStmt := conSlave.DbcConnection.PrepareStatement(sQry);
+                tmpStmt.ExecuteUpdatePrepared;
+                conSlave.DbcConnection.Commit;
+                iStartId := iId;
+                sFileName := Format(cFileName, [sSessionStart, iId]);
+                LogMsg(sFileContent, sFileName);
+              end;
+            except
+              on E: Exception do
+              begin
+                conSlave.DbcConnection.Rollback;
+                sFileName := Format(cFileNameErr, [sSessionStart, iId]);
+                LogMsg(sFileContent, sFileName);
+                LogMsg(Format(cExceptionMsg, [E.ClassName, E.Message]));
+                // Прекращаем выполнение из-за ошибки
+                Break;
+              end;
+            end;
+
+            Next;
+          end;
+          Close;
+        end;
+    except
+      on E: Exception do
+        LogMsg(Format(cExceptionMsg, [E.ClassName, E.Message]));
+    end;
+  finally
+    TSettings.DDLStartId := iStartId;
+  end;
+end;
+
 procedure TdmData.SetStartId(const AValue: Integer);
 begin
   if FStartId <> AValue then
@@ -1302,6 +1393,15 @@ procedure TApplyScriptThread.Execute;
 begin
   inherited;
   ReturnValue := Ord(Data.ApplyScripts(FScriptList));
+  Terminate;
+end;
+
+{ TMoveProcToSlaveThread }
+
+procedure TMoveProcToSlaveThread.Execute;
+begin
+  inherited;
+  Data.MoveSavedProcToSlave;
   Terminate;
 end;
 
