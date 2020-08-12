@@ -33,15 +33,6 @@ type
     edCashRegister: TcxButtonEdit;
     GuidesUnit: TdsdGuides;
     GuidesCashRegister: TdsdGuides;
-    cxLabel3: TcxLabel;
-    edPaidKind: TcxButtonEdit;
-    GuidesPaidKind: TdsdGuides;
-    cxLabel4: TcxLabel;
-    edTotalSumm: TcxCurrencyEdit;
-    cxLabel5: TcxLabel;
-    edTotalCount: TcxCurrencyEdit;
-    cxLabel6: TcxLabel;
-    edTotalSummPrimeCost: TcxCurrencyEdit;
     GoodsCode: TcxGridDBColumn;
     GoodsName: TcxGridDBColumn;
     Amount: TcxGridDBColumn;
@@ -80,6 +71,14 @@ type
     PartionDateKindName: TcxGridDBColumn;
     actApplicationTemplate: TdsdDOCReportFormAction;
     bbApplicationTemplate: TdxBarButton;
+    edPaidType: TcxTextEdit;
+    cxLabel12: TcxLabel;
+    ceTotalSumm: TcxCurrencyEdit;
+    cxLabel13: TcxLabel;
+    edTotalSummPayAdd: TcxCurrencyEdit;
+    cxLabel14: TcxLabel;
+    edTotalSummPayAddCheck: TcxCurrencyEdit;
+    cxLabel16: TcxLabel;
   private
     { Private declarations }
   public

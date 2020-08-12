@@ -72,7 +72,8 @@ uses Forms, SysUtils, Dialogs, Math, Variants, StrUtils, IniUtils, RegularExpres
 { TPrinterEmulation }
 procedure TPrinterEmulation.Sale(AGoodsCode : Integer; AAmount, APrice : Currency);
 begin
-  FSummaCheck := FSummaCheck + RoundTo(AAmount * APrice, - 2);
+  if FReturn then FSummaCheck := FSummaCheck - RoundTo(AAmount * APrice, - 2)
+  else FSummaCheck := FSummaCheck + RoundTo(AAmount * APrice, - 2);
 end;
 
 procedure TPrinterEmulation.OpenFiscCheck(AReturn : Boolean);
@@ -91,7 +92,8 @@ end;
 
 procedure TPrinterEmulation.Discount(ASum : Currency);
 begin
-  if FReturn then FSummaCheck := FSummaCheck + ASum;
+  if FReturn then FSummaCheck := FSummaCheck - ASum
+  else FSummaCheck := FSummaCheck + ASum;
 end;
 
 { TCashEmulation }
@@ -384,6 +386,7 @@ begin
 //      FPrinter.DISCOUNTTOTAL[ReplaceStr(FormatFloat('0.00', Disc), FormatSettings.DecimalSeparator, '.'), Password];
     end;
   end else result := True;
+  result := True;
 end;
 
 

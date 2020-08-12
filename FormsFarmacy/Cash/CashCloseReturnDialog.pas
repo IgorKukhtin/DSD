@@ -119,15 +119,19 @@ begin
     TPaidType(rgPaidType.ItemIndex), cFiscalNumber, cCheckNumber) then Exit;
 
   // Проведение чека
-  spComplete_Movement.ParamByName('inMovementId').Value := FormParams.ParamByName('Id').Value;
-  spComplete_Movement.ParamByName('inPaidType').Value := rgPaidType.ItemIndex + 1;
-  if Assigned(FCash) then
-    spComplete_Movement.ParamByName('inCashRegister').Value := FCash.FiscalNumber
-  else spComplete_Movement.ParamByName('inCashRegister').Value := '';
-  if rgPaidType.ItemIndex = 2 then
-    spComplete_Movement.ParamByName('inTotalSummPayAdd').Value := edSalerCashAdd.Value
-  else spComplete_Movement.ParamByName('inTotalSummPayAdd').Value := 0;
-  spComplete_Movement.Execute;
+  try
+    spComplete_Movement.ParamByName('inMovementId').Value := FormParams.ParamByName('Id').Value;
+    spComplete_Movement.ParamByName('inPaidType').Value := rgPaidType.ItemIndex;
+    if Assigned(FCash) then
+      spComplete_Movement.ParamByName('inCashRegister').Value := FCash.FiscalNumber
+    else spComplete_Movement.ParamByName('inCashRegister').Value := '';
+    if rgPaidType.ItemIndex = 2 then
+      spComplete_Movement.ParamByName('inTotalSummPayAdd').Value := edSalerCashAdd.Value
+    else spComplete_Movement.ParamByName('inTotalSummPayAdd').Value := 0;
+    spComplete_Movement.Execute;
+  Except ON E: Exception DO
+    MessageDlg(E.Message,mtError,[mbOk],0);
+  end;
 
   ModalResult := mrOk;
 end;
@@ -398,7 +402,7 @@ begin
           if (Disc <> 0) and (PosDisc = 0) then
             Result := Cash.DiscountGoods(Disc);
           if not isFiscal or
-            (Round(FSummaTotal * 100) = Round(Cash.SummaReceipt * 100)) then
+            ((Round(FSummaTotal * 100) + Round(Cash.SummaReceipt * 100)) = 0) then
           begin
             if Result then
               Result := Cash.SubTotal(True, True, 0, 0);

@@ -22,7 +22,7 @@ BEGIN
                                   , inUserId     := vbUserId);
 
     --пересчитываем сумму документа по приходным ценам
-    --PERFORM lpInsertUpdate_MovementFloat_TotalSumm (inMovementId);    
+    --PERFORM lpInsertUpdate_MovementFloat_TotalSummReturnIn (inMovementId);    
     
 
 END;

@@ -9,12 +9,13 @@ CREATE OR REPLACE FUNCTION gpGet_Movement_ReturnIn(
 )
 RETURNS TABLE (Id Integer, InvNumber TVarChar, OperDate TDateTime
              , StatusCode Integer, StatusName TVarChar
-             , TotalCount TFloat, TotalSumm TFloat
+             , PaidTypeId Integer, PaidTypeName TVarChar
+             , TotalCount TFloat, TotalSumm TFloat, TotalSummPayAdd TFloat
              , UnitId Integer, UnitName TVarChar
              , CashRegisterId Integer, CashRegisterName TVarChar
              , FiscalCheckNumber TVarChar
              , IdCheck Integer, InvNumberCheck TVarChar, OperDateCheck TDateTime
-             , PaidTypeCheckId Integer, PaidTypeCheckName TVarChar, TotalSummCheck TFloat
+             , PaidTypeCheckId Integer, PaidTypeCheckName TVarChar, TotalSummCheck TFloat, TotalSummPayAddCheck TFloat
 
 )
 AS
@@ -45,8 +46,11 @@ BEGIN
           , CURRENT_DATE::TDateTime                          AS OperDate
           , Object_Status.Code               	             AS StatusCode
           , Object_Status.Name              	             AS StatusName
+          , 0::Integer                                       AS PaidTypeId
+          , ''::TVarChar                                     AS PaidTypeName
           , 0::TFloat                                        AS TotalCount
           , 0::TFloat                                        AS TotalSumm
+          , 0::TFloat                                        AS TotalSummPayAdd
           , Object_Unit.Id                                   AS UnitId
           , Object_Unit.ValueData                            AS UnitName
 
@@ -61,6 +65,7 @@ BEGIN
           , 0::Integer                                       AS PaidTypeCheckId
           , ''::TVarChar                                     AS PaidTypeCheckName
           , 0::TFloat                                        AS TotalSummCheck
+          , 0::TFloat                                        AS TotalSummPayAddCheck
 
         FROM lfGet_Object_Status(zc_Enum_Status_UnComplete()) AS Object_Status
 
@@ -71,11 +76,14 @@ BEGIN
      RETURN QUERY
       SELECT Movement_ReturnIn.Id
            , Movement_ReturnIn.InvNumber
-           , Movement_ReturnIn.OperDate                AS OperDate
+           , Movement_ReturnIn.OperDate                 AS OperDate
            , Object_Status.ObjectCode                   AS StatusCode
            , Object_Status.ValueData                    AS StatusName
+           , MovementLinkObject_PaidType.ObjectId       AS PaidTypeId
+           , Object_PaidType.ValueData                  AS PaidTypeName
            , MovementFloat_TotalCount.ValueData         AS TotalCount
            , MovementFloat_TotalSumm.ValueData          AS TotalSumm
+           , MovementFloat_TotalSummPayAdd.ValueData    AS TotalSummPayAdd 
            , MovementLinkObject_Unit.ObjectId           AS UnitId
            , Object_Unit.ValueData                      AS UnitName
 
@@ -90,6 +98,7 @@ BEGIN
            , MovementLinkObject_PaidTypeCheck.ObjectId  AS PaidTypeCheckId
            , Object_PaidTypeCheck.ValueData             AS PaidTypeCheckName
            , MovementFloat_TotalSummCheck.ValueData     AS TotalSummCheck
+           , MovementFloat_TotalSummPayAddCheck.ValueData AS TotalSummPayAddCheck 
 
       FROM Movement AS Movement_ReturnIn
             LEFT JOIN Object AS Object_Status ON Object_Status.Id = Movement_ReturnIn.StatusId
@@ -101,6 +110,14 @@ BEGIN
             LEFT JOIN MovementFloat AS MovementFloat_TotalSumm
                                     ON MovementFloat_TotalSumm.MovementId = Movement_ReturnIn.Id
                                    AND MovementFloat_TotalSumm.DescId = zc_MovementFloat_TotalSumm()
+            LEFT JOIN MovementFloat AS MovementFloat_TotalSummPayAdd
+                                    ON MovementFloat_TotalSummPayAdd.MovementId =  Movement_ReturnIn.Id
+                                   AND MovementFloat_TotalSummPayAdd.DescId = zc_MovementFloat_TotalSummPayAdd()
+
+	        LEFT JOIN MovementLinkObject AS MovementLinkObject_PaidType
+                                         ON MovementLinkObject_PaidType.MovementId = Movement_ReturnIn.Id
+                                        AND MovementLinkObject_PaidType.DescId = zc_MovementLinkObject_PaidType()
+            LEFT JOIN Object AS Object_PaidType ON Object_PaidType.Id = MovementLinkObject_PaidType.ObjectId
 
             LEFT JOIN MovementLinkObject AS MovementLinkObject_Unit
                                          ON MovementLinkObject_Unit.MovementId = Movement_ReturnIn.Id
@@ -129,6 +146,9 @@ BEGIN
             LEFT JOIN MovementFloat AS MovementFloat_TotalSummCheck
                                     ON MovementFloat_TotalSummCheck.MovementId =  MovementCheck.Id
                                    AND MovementFloat_TotalSummCheck.DescId = zc_MovementFloat_TotalSumm()
+            LEFT JOIN MovementFloat AS MovementFloat_TotalSummPayAddCheck
+                                    ON MovementFloat_TotalSummPayAddCheck.MovementId =  MovementCheck.Id
+                                   AND MovementFloat_TotalSummPayAddCheck.DescId = zc_MovementFloat_TotalSummPayAdd()
 
        WHERE Movement_ReturnIn.Id = inMovementId
          AND Movement_ReturnIn.DescId = zc_Movement_ReturnIn()
@@ -147,4 +167,4 @@ $BODY$
 
 -- тест
 -- 
-SELECT * FROM gpGet_Movement_ReturnIn (inMovementId:= 0, inSession:= '3')
+SELECT * FROM gpGet_Movement_ReturnIn (inMovementId:= 19806544, inSession:= '3')
