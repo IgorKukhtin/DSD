@@ -1,54 +1,60 @@
 ﻿[Closed Files]
-File_0=TSourceModule,'c:\program files\embarcadero\studio\18.0\source\rtl\common\System.TypInfo.pas',0,1,1572,3,1591,0,0,,
-File_1=TSourceModule,'C:\Users\sergey\Documents\Works\Kukui\service\src\Loger.pas',0,1,61,86,26,0,0,,
-File_2=TSourceModule,'C:\Users\sergey\Documents\Works\Kukui\service\src\Settings.pas',0,1,10,1,1,0,0,,
-File_3=TSourceModule,'C:\Users\sergey\Documents\Works\Kukui\service\src\Main.pas',0,1,201,49,220,0,0,,
-File_4=TSourceModule,'c:\program files\embarcadero\studio\18.0\source\data\Data.DB.pas',0,1,13515,3,13531,0,0,,
-File_5=TSourceModule,'c:\program files\embarcadero\studio\18.0\SOURCE\RTL\SYS\System.SysUtils.pas',0,1,677,1,701,0,0,,
-File_6=TSourceModule,'c:\program files\embarcadero\studio\18.0\source\data\vclctrls\Vcl.DBGrids.pas',0,1,2640,43,2649,0,0,,
-File_7=TSourceModule,'c:\program files\embarcadero\studio\18.0\source\rtl\common\System.Classes.pas',0,1,1642,16,1740,0,0,,
-File_8=TSourceModule,'c:\program files\embarcadero\studio\18.0\SOURCE\VCL\Vcl.Grids.pas',0,1,220,78,333,0,0,,
-File_9=TSourceModule,'C:\Users\sergey\Documents\Works\ASM-3\src\_utils.pas',0,1,238,1,244,0,0,,
-File_10=TSourceModule,'c:\program files\embarcadero\studio\18.0\source\rtl\win\Winapi.ActiveX.pas',0,1,6922,1,6941,0,0,,
-File_11=TSourceModule,'c:\program files\embarcadero\studio\18.0\SOURCE\RTL\SYS\System.pas',0,1,789,11,808,0,0,,
-File_12=TSourceModule,'c:\program files\embarcadero\studio\18.0\source\data\firedac\FireDAC.Stan.Param.pas',0,1,1126,1,1128,0,0,,
-File_13=TSourceModule,'c:\program files\embarcadero\studio\18.0\source\rtl\common\System.Win.ComObj.pas',0,1,1,1,14,0,0,,
-File_14=TSourceModule,'C:\Users\sergey\Documents\Works\WMS\src\UImportErrorProcessor.pas',0,1,1,1,13,0,0,,
+File_0=TSourceModule,'C:\Users\sergey\Documents\Works\Kukui\service\src\Loger.pas',0,1,61,86,26,0,0,,
+File_1=TSourceModule,'C:\Users\sergey\Documents\Works\Kukui\service\src\Settings.pas',0,1,10,1,1,0,0,,
+File_2=TSourceModule,'C:\Users\sergey\Documents\Works\Kukui\service\src\Main.pas',0,1,201,49,220,0,0,,
+File_3=TSourceModule,'c:\program files\embarcadero\studio\18.0\source\data\Data.DB.pas',0,1,13515,3,13531,0,0,,
+File_4=TSourceModule,'c:\program files\embarcadero\studio\18.0\SOURCE\RTL\SYS\System.SysUtils.pas',0,1,677,1,701,0,0,,
+File_5=TSourceModule,'c:\program files\embarcadero\studio\18.0\source\data\vclctrls\Vcl.DBGrids.pas',0,1,2640,43,2649,0,0,,
+File_6=TSourceModule,'c:\program files\embarcadero\studio\18.0\source\rtl\common\System.Classes.pas',0,1,1642,16,1740,0,0,,
+File_7=TSourceModule,'c:\program files\embarcadero\studio\18.0\SOURCE\VCL\Vcl.Grids.pas',0,1,220,78,333,0,0,,
+File_8=TSourceModule,'C:\Users\sergey\Documents\Works\ASM-3\src\_utils.pas',0,1,238,1,244,0,0,,
+File_9=TSourceModule,'c:\program files\embarcadero\studio\18.0\source\rtl\win\Winapi.ActiveX.pas',0,1,6922,1,6941,0,0,,
+File_10=TSourceModule,'c:\program files\embarcadero\studio\18.0\SOURCE\RTL\SYS\System.pas',0,1,789,11,808,0,0,,
+File_11=TSourceModule,'c:\program files\embarcadero\studio\18.0\source\data\firedac\FireDAC.Stan.Param.pas',0,1,1126,1,1128,0,0,,
+File_12=TSourceModule,'c:\program files\embarcadero\studio\18.0\source\rtl\common\System.Win.ComObj.pas',0,1,1,1,14,0,0,,
+File_13=TSourceModule,'C:\Users\sergey\Documents\Works\WMS\src\UImportErrorProcessor.pas',0,1,1,1,13,0,0,,
 
 [Modules]
-Module0=C:\Users\sergey\Documents\Works\WMS\src\UImportWMS.pas
+Module0=C:\Users\sergey\Documents\Works\WMS\src\Main.pas
 Module1=C:\Users\sergey\Documents\Works\WMS\src\UData.pas
-Module2=C:\Users\sergey\Documents\Works\WMS\src\Main.pas
-Module3=C:\Users\sergey\Documents\Works\WMS\src\UQryThread.pas
-Module4=C:\Users\sergey\Documents\Works\WMS\src\UGateway.pas
-Module5=C:\Users\sergey\Documents\Works\WMS\src\UDefinitions.pas
-Module6=C:\Users\sergey\Documents\Works\WMS\src\UConstants.pas
-Module7=C:\Users\sergey\Documents\Works\WMS\src\UGatewaySvc.pas
-Module8=C:\Users\sergey\Documents\Works\WMS\src\ULog.pas
-Module9=C:\Users\sergey\Documents\Works\WMS\src\USettings.pas
-Module10=C:\Users\sergey\Documents\Works\WMS\src\UCommon.pas
-Count=11
+Module2=C:\Users\sergey\Documents\Works\WMS\src\UCommon.pas
+Module3=C:\Users\sergey\Documents\Works\WMS\src\UConstants.pas
+Module4=C:\Users\sergey\Documents\Works\WMS\src\UDefinitions.pas
+Module5=c:\program files\embarcadero\studio\18.0\source\rtl\common\System.TypInfo.pas
+Module6=C:\Users\sergey\Documents\Works\WMS\src\UImportWMS.pas
+Module7=C:\Users\sergey\Documents\Works\WMS\src\UQryThread.pas
+Module8=C:\Users\sergey\Documents\Works\WMS\src\UGateway.pas
+Module9=C:\Users\sergey\Documents\Works\WMS\src\UGatewaySvc.pas
+Module10=C:\Users\sergey\Documents\Works\WMS\src\ULog.pas
+Module11=C:\Users\sergey\Documents\Works\WMS\src\USettings.pas
+Count=12
 EditWindowCount=1
 
-[C:\Users\sergey\Documents\Works\WMS\src\UImportWMS.pas]
+[C:\Users\sergey\Documents\Works\WMS\src\Main.pas]
 ModuleType=TSourceModule
 
 [C:\Users\sergey\Documents\Works\WMS\src\UData.pas]
 ModuleType=TSourceModule
 
-[C:\Users\sergey\Documents\Works\WMS\src\Main.pas]
+[C:\Users\sergey\Documents\Works\WMS\src\UCommon.pas]
+ModuleType=TSourceModule
+
+[C:\Users\sergey\Documents\Works\WMS\src\UConstants.pas]
+ModuleType=TSourceModule
+
+[C:\Users\sergey\Documents\Works\WMS\src\UDefinitions.pas]
+ModuleType=TSourceModule
+
+[c:\program files\embarcadero\studio\18.0\source\rtl\common\System.TypInfo.pas]
+ModuleType=TSourceModule
+
+[C:\Users\sergey\Documents\Works\WMS\src\UImportWMS.pas]
 ModuleType=TSourceModule
 
 [C:\Users\sergey\Documents\Works\WMS\src\UQryThread.pas]
 ModuleType=TSourceModule
 
 [C:\Users\sergey\Documents\Works\WMS\src\UGateway.pas]
-ModuleType=TSourceModule
-
-[C:\Users\sergey\Documents\Works\WMS\src\UDefinitions.pas]
-ModuleType=TSourceModule
-
-[C:\Users\sergey\Documents\Works\WMS\src\UConstants.pas]
 ModuleType=TSourceModule
 
 [C:\Users\sergey\Documents\Works\WMS\src\UGatewaySvc.pas]
@@ -60,12 +66,9 @@ ModuleType=TSourceModule
 [C:\Users\sergey\Documents\Works\WMS\src\USettings.pas]
 ModuleType=TSourceModule
 
-[C:\Users\sergey\Documents\Works\WMS\src\UCommon.pas]
-ModuleType=TSourceModule
-
 [EditWindow0]
-ViewCount=11
-CurrentEditView=C:\Users\sergey\Documents\Works\WMS\src\UImportWMS.pas
+ViewCount=12
+CurrentEditView=C:\Users\sergey\Documents\Works\WMS\src\Main.pas
 View0=0
 View1=1
 View2=2
@@ -77,6 +80,7 @@ View7=7
 View8=8
 View9=9
 View10=10
+View11=11
 PercentageSizes=1
 Create=1
 Visible=1
@@ -95,13 +99,13 @@ BorlandEditorCodeExplorer=BorlandEditorCodeExplorer@EditWindow0
 TopPanelSize=0
 LeftPanelSize=1964
 LeftPanelClients=DockSite3,PropertyInspector
-LeftPanelData=000008000101000000006A1200000000000001AC070000000000000100000000FC0C000009000000446F636B53697465330100000000BC2000001100000050726F7065727479496E73706563746F72FFFFFFFF
+LeftPanelData=00000800010100000000B60E00000000000001AC070000000000000100000000FC0C000009000000446F636B53697465330100000000261A00001100000050726F7065727479496E73706563746F72FFFFFFFF
 RightPanelSize=1568
 RightPanelClients=DockSite2,DockSite4
-RightPanelData=0000080001010100000009000000446F636B53697465346A120000000000000120060000000000000100000000BC20000009000000446F636B5369746532FFFFFFFF
-BottomPanelSize=0
+RightPanelData=0000080001010100000009000000446F636B5369746534B60E0000000000000120060000000000000100000000261A000009000000446F636B5369746532FFFFFFFF
+BottomPanelSize=1630
 BottomPanelClients=DockSite1,MessageView
-BottomPanelData=0000080001020200000009000000446F636B53697465310F0000004D65737361676556696577466F726D7245000000000000025E060000000000000100000000724500000F0000004D65737361676556696577466F726DFFFFFFFF
+BottomPanelData=0000080001020100000009000000446F636B53697465317245000000000000025E060000000000000100000000724500000F0000004D65737361676556696577466F726DFFFFFFFF
 BottomMiddlePanelSize=0
 BottomMiddlePanelClients=DockSite0,GraphDrawingModel
 BottomMiddelPanelData=0000080001020200000009000000446F636B536974653010000000477261706844726177696E67566965779F1D00000000000002F206000000000000FFFFFFFF
@@ -110,11 +114,11 @@ BottomMiddelPanelData=0000080001020200000009000000446F636B5369746530100000004772
 CustomEditViewType=TEditView
 Module=C:\Users\sergey\Documents\Works\WMS\src\Main.pas
 CursorX=1
-CursorY=485
-TopLine=469
+CursorY=338
+TopLine=338
 LeftCol=1
 Elisions=
-Bookmarks={0,475,70}{1,1058,38}{2,1140,1}{3,592,94}{9,422,1}
+Bookmarks=
 EditViewName=C:\Users\sergey\Documents\Works\WMS\src\Main.pas
 
 [View1]
@@ -142,9 +146,9 @@ EditViewName=C:\Users\sergey\Documents\Works\WMS\src\UGateway.pas
 [View3]
 CustomEditViewType=TEditView
 Module=C:\Users\sergey\Documents\Works\WMS\src\UData.pas
-CursorX=16
-CursorY=1106
-TopLine=1098
+CursorX=52
+CursorY=1468
+TopLine=1390
 LeftCol=1
 Elisions=
 Bookmarks={1,1106,1}{2,374,1}{3,1047,1}{4,1361,18}{5,1390,1}
@@ -152,16 +156,27 @@ EditViewName=C:\Users\sergey\Documents\Works\WMS\src\UData.pas
 
 [View4]
 CustomEditViewType=TEditView
+Module=c:\program files\embarcadero\studio\18.0\source\rtl\common\System.TypInfo.pas
+CursorX=6
+CursorY=10
+TopLine=1
+LeftCol=1
+Elisions=
+Bookmarks=
+EditViewName=c:\program files\embarcadero\studio\18.0\source\rtl\common\System.TypInfo.pas
+
+[View5]
+CustomEditViewType=TEditView
 Module=C:\Users\sergey\Documents\Works\WMS\src\UImportWMS.pas
-CursorX=30
-CursorY=33
+CursorX=35
+CursorY=16
 TopLine=11
 LeftCol=1
 Elisions=
 Bookmarks={1,831,24}{2,722,11}{3,720,48}
 EditViewName=C:\Users\sergey\Documents\Works\WMS\src\UImportWMS.pas
 
-[View5]
+[View6]
 CustomEditViewType=TEditView
 Module=C:\Users\sergey\Documents\Works\WMS\src\UQryThread.pas
 CursorX=85
@@ -172,40 +187,40 @@ Elisions=
 Bookmarks=
 EditViewName=C:\Users\sergey\Documents\Works\WMS\src\UQryThread.pas
 
-[View6]
+[View7]
 CustomEditViewType=TEditView
 Module=C:\Users\sergey\Documents\Works\WMS\src\UCommon.pas
-CursorX=33
-CursorY=121
-TopLine=97
+CursorX=1
+CursorY=84
+TopLine=63
 LeftCol=1
 Elisions=
 Bookmarks=
 EditViewName=C:\Users\sergey\Documents\Works\WMS\src\UCommon.pas
 
-[View7]
+[View8]
 CustomEditViewType=TEditView
 Module=C:\Users\sergey\Documents\Works\WMS\src\UDefinitions.pas
-CursorX=3
-CursorY=18
+CursorX=61
+CursorY=20
 TopLine=1
 LeftCol=1
 Elisions=
 Bookmarks=
 EditViewName=C:\Users\sergey\Documents\Works\WMS\src\UDefinitions.pas
 
-[View8]
+[View9]
 CustomEditViewType=TEditView
 Module=C:\Users\sergey\Documents\Works\WMS\src\UConstants.pas
-CursorX=3
-CursorY=50
-TopLine=31
+CursorX=11
+CursorY=25
+TopLine=7
 LeftCol=1
 Elisions=
 Bookmarks=
 EditViewName=C:\Users\sergey\Documents\Works\WMS\src\UConstants.pas
 
-[View9]
+[View10]
 CustomEditViewType=TEditView
 Module=C:\Users\sergey\Documents\Works\WMS\src\ULog.pas
 CursorX=55
@@ -216,7 +231,7 @@ Elisions=
 Bookmarks={1,82,1}
 EditViewName=C:\Users\sergey\Documents\Works\WMS\src\ULog.pas
 
-[View10]
+[View11]
 CustomEditViewType=TEditView
 Module=C:\Users\sergey\Documents\Works\WMS\src\USettings.pas
 CursorX=77
@@ -293,11 +308,11 @@ State=0
 Left=0
 Top=0
 Width=1568
-Height=8288
+Height=6538
 MaxLeft=-1
 MaxTop=-1
 ClientWidth=1568
-ClientHeight=8288
+ClientHeight=6538
 TBDockHeight=5904
 LRDockWidth=2349
 Dockable=1
@@ -306,7 +321,7 @@ StayOnTop=0
 [MessageView]
 PercentageSizes=1
 Create=1
-Visible=0
+Visible=1
 Docked=1
 State=0
 Left=0
@@ -410,21 +425,16 @@ State=0
 Left=0
 Top=377
 Width=1964
-Height=5077
+Height=3327
 MaxLeft=-1
 MaxTop=-1
 ClientWidth=1964
-ClientHeight=5077
-TBDockHeight=8529
+ClientHeight=3327
+TBDockHeight=7404
 LRDockWidth=1964
 Dockable=1
 StayOnTop=0
 SplitPos=126
-
-[PropInspDesignerSelection]
-ArrangeBy=Name
-SelectedItem=Caption,Action
-ExpandedItems=Anchors=0,Constraints=0,Font=0,LiveBindings=0,"LiveBindings Designer=0",Margins=0,BevelEdges=0,StyleElements=0,Touch=0,Font.Style=0,HotTrackStyles=0,IconOptions=0,Options=0,BorderIcons=0
 
 [DebugLogView]
 PercentageSizes=1
@@ -467,6 +477,7 @@ Column0Width=145
 Column1Width=100
 Column2Width=115
 Column3Width=250
+Column4Width=250
 
 [LocalVarsWindow]
 PercentageSizes=1
@@ -854,7 +865,7 @@ LRDockWidth=3823
 Dockable=1
 StayOnTop=0
 TabPosition=1
-ActiveTabID=DebugLogView
+ActiveTabID=BreakpointWindow
 TabDockClients=DebugLogView,BreakpointWindow,ThreadStatusWindow,CallStackWindow,WatchWindow,LocalVarsWindow
 
 [DockSite2]
@@ -868,11 +879,11 @@ State=0
 Left=0
 Top=18
 Width=1568
-Height=8529
+Height=6779
 MaxLeft=-1
 MaxTop=-1
 ClientWidth=1568
-ClientHeight=8529
+ClientHeight=6779
 TBDockHeight=9010
 LRDockWidth=1568
 Dockable=1
@@ -897,7 +908,7 @@ MaxLeft=-1
 MaxTop=-1
 ClientWidth=1964
 ClientHeight=3240
-TBDockHeight=8529
+TBDockHeight=7404
 LRDockWidth=1964
 Dockable=1
 StayOnTop=0

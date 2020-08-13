@@ -37,6 +37,14 @@ type
     procedure Finish;
   end;
 
+  TPacketThreadInfo = record
+    PacketKind: TPacketKind;
+    OnTerminate: TNotifyEvent;
+    Stopped: Boolean;
+  end;
+
+  TTimerPool = array of TPacketThreadInfo;
+
   TMainForm = class(TForm)
     pgcMain: TPageControl;
     tsLog: TTabSheet;
@@ -250,15 +258,18 @@ type
     procedure chkWriteLogClick(Sender: TObject);
     procedure btnStartGatewayClick(Sender: TObject);
     procedure btnStopGatewayClick(Sender: TObject);
+
   private
     FLog: TLog;
-    FStopTimer: Boolean;
+    FTimerStopped: Boolean;
     FExpThread: TExporterThread;
     FImpThread: TImporterThread;
     FStartOrderStatusChanged: TDateTime;
     FStartReceivingResult: TDateTime;
+    FTimerPool: TTimerPool;
     FObjectSKU_TM, FObjectSKUCode_TM, FObjectSKUGroup_TM, FObjectClient_TM, FObjectPack_TM, FObjectUser_TM,
     FMovementInc_TM, FMovementASNLoad_TM, FMovementOrder_TM, FProcessExpErr_TM: TTimeMeter;
+
   private
     procedure AddToLog_Timer(LogType, S: string);
     procedure myShowSql;
@@ -279,6 +290,9 @@ type
     procedure UpdateWmsMessageGrid(const ANeedRebuildColumns: Boolean = False);
     procedure WMNeedUpdateGrids(var AMessage: TMessage); message WM_NEED_UPDATE_GRIDS;
     procedure ExportPacket(APacketKind: TPacketKind; AOnTerminate: TNotifyEvent);
+    procedure RunTimerPool(const APackets: array of TPacketKind);
+    procedure NotifyPacketTerminated(APacketKind: TPacketKind);
+    procedure StartTimeMeter(APacketKind: TPacketKind);
     procedure OnTerminateOrderStatusChanged(Sender: TObject);
     procedure OnTerminateReceivingResult(Sender: TObject);
     procedure OnTerminateWmsMovementASNLoad(Sender: TObject);
@@ -291,6 +305,9 @@ type
     procedure OnTerminateWmsMovementOrder(Sender: TObject);
     procedure OnTerminateWmsMovementIncoming(Sender: TObject);
     procedure OnTerminateProcessExportDataErr(Sender: TObject);
+
+    function GetOnTerminate(APacketKInd: TPacketKind): TNotifyEvent;
+
   public
     constructor Create(AOwner: TComponent); override;
     destructor Destroy; override;
@@ -304,6 +321,7 @@ implementation
 {$R *.dfm}
 
 uses
+  System.TypInfo,
   UData,
   UCommon,
   USettings,
@@ -380,6 +398,18 @@ begin
   end;
 end;
 
+procedure TMainForm.NotifyPacketTerminated(APacketKind: TPacketKind);
+var
+  I: Integer;
+begin
+  for I := Low(FTimerPool) to High(FTimerPool) do
+    if FTimerPool[I].PacketKind = APacketKind then
+    begin
+      FTimerPool[I].Stopped := True;
+      Break;
+    end;
+end;
+
 procedure TMainForm.OnTerminateOrderStatusChanged(Sender: TObject);
 begin
   chkOrderStatusChanged.Checked := False;
@@ -391,6 +421,8 @@ begin
   lbEnd_OrderStatusChanged.Repaint;
 
   PostMessage(Handle, WM_NEED_UPDATE_GRIDS, 0, 0);
+
+  NotifyPacketTerminated(pknOrderStatusChanged);
 end;
 
 procedure TMainForm.OnTerminateProcessExportDataErr(Sender: TObject);
@@ -410,6 +442,8 @@ begin
   lbEnd_ReceivingResult.Repaint;
 
   PostMessage(Handle, WM_NEED_UPDATE_GRIDS, 0, 0);
+
+  NotifyPacketTerminated(pknReceivingResult);
 end;
 
 procedure TMainForm.OnTerminateWmsMovementASNLoad(Sender: TObject);
@@ -437,11 +471,7 @@ begin
   else
     myShowMsg('ERROR - pack_id = ' + IntToStr(lpack_id) + ' spName = pInsert_to_wms_ASN_LOAD');
 
-  if not FStopTimer then // На старте приложения FStopTimer = True. В момент нажатия кнпоки "Start timer" это значение устанавливается в False
-  begin                  //                                         В момент нажатия кнпоки "Stop timer"  это значение устанавливается в True
-    WaitFor(1000);
-    Timer.Enabled := True;
-  end;
+  NotifyPacketTerminated(pknWmsMovementIncoming);
 end;
 
 procedure TMainForm.OnTerminateWmsMovementIncoming(Sender: TObject);
@@ -450,6 +480,7 @@ var
   P: PExportData;
   lpack_id: Integer;
   tmpThread: TWorkerThread;
+
 begin
   tmpThread := Sender as TWorkerThread;
   lwResult := tmpThread.MyReturnValue;
@@ -471,8 +502,18 @@ begin
 
   WaitFor(2000);
 
+  if FTimerStopped then
+  begin
+    NotifyPacketTerminated(pknWmsMovementIncoming);
+    Exit;
+  end;
+
+  // пакет ASNLoad должен быть запущен только по окончании пакета Incoming
   FMovementASNLoad_TM.Start;
   ExportPacket(pknWmsMovementASNLoad, OnTerminateWmsMovementASNLoad);
+
+  // В этом пакете не вызыываем NotifyPacketTerminated. Это будет сделано в OnTerminateWmsMovementASNLoad.
+  // Кроме случая, когда таймер был остановлен и пакет pknWmsMovementASNLoad еще не был запущен.
 end;
 
 procedure TMainForm.OnTerminateWmsMovementOrder(Sender: TObject);
@@ -499,6 +540,8 @@ begin
     myShowMsg('ok - pack_id = ' + IntToStr(lpack_id) + ' spName = fInsert_to_wms_ORDER')
   else
     myShowMsg('ERROR - pack_id = ' + IntToStr(lpack_id) + ' spName = fInsert_to_wms_ORDER');
+
+  NotifyPacketTerminated(pknWmsMovementOrder);
 end;
 
 procedure TMainForm.OnTerminateWmsObjectClient(Sender: TObject);
@@ -514,6 +557,8 @@ begin
     myShowMsg('ok - pack_id = ' + IntToStr(vb_pack_id) + ' spName = fInsert_to_wms_CLIENT')
   else
     myShowMsg('ERROR - pack_id = ' + IntToStr(vb_pack_id) + ' spName = fInsert_to_wms_CLIENT');
+
+  NotifyPacketTerminated(pknWmsObjectClient);
 end;
 
 procedure TMainForm.OnTerminateWmsObjectPack(Sender: TObject);
@@ -529,6 +574,8 @@ begin
     myShowMsg('ok - pack_id = ' + IntToStr(vb_pack_id) + ' spName = fInsert_to_wms_PACK')
   else
     myShowMsg('ERROR - pack_id = ' + IntToStr(vb_pack_id) + ' spName = fInsert_to_wms_PACK');
+
+  NotifyPacketTerminated(pknWmsObjectPack);
 end;
 
 procedure TMainForm.OnTerminateWmsObjectSKU(Sender: TObject);
@@ -545,6 +592,8 @@ begin
     myShowMsg('ok - pack_id = ' + IntToStr(vb_pack_id) + ' spName = fInsert_to_wms_SKU')
   else
     myShowMsg('ERROR - pack_id = ' + IntToStr(vb_pack_id) + ' spName = fInsert_to_wms_SKU');
+
+  NotifyPacketTerminated(pknWmsObjectSKU);
 end;
 
 procedure TMainForm.OnTerminateWmsObjectSKUCode(Sender: TObject);
@@ -560,6 +609,8 @@ begin
     myShowMsg('ok - pack_id = ' + IntToStr(vb_pack_id) + ' spName = fInsert_to_wms_SKU_CODE')
   else
     myShowMsg('ERROR - pack_id = ' + IntToStr(vb_pack_id) + ' spName = fInsert_to_wms_SKU_CODE');
+
+  NotifyPacketTerminated(pknWmsObjectSKUCode);
 end;
 
 procedure TMainForm.OnTerminateWmsObjectSKUGroup(Sender: TObject);
@@ -575,6 +626,8 @@ begin
     myShowMsg('ok - pack_id = ' + IntToStr(vb_pack_id) + ' spName = fInsert_to_wms_SKU_GROUP + SKU_DEPENDS')
   else
     myShowMsg('ERROR - pack_id = ' + IntToStr(vb_pack_id) + ' spName = fInsert_to_wms_SKU_GROUP + SKU_DEPENDS');
+
+  NotifyPacketTerminated(pknWmsObjectSKUGroup);
 end;
 
 procedure TMainForm.OnTerminateWmsObjectUser(Sender: TObject);
@@ -590,6 +643,8 @@ begin
     myShowMsg('ok - pack_id = ' + IntToStr(vb_pack_id) + ' spName = fInsert_to_wms_USER')
   else
     myShowMsg('ERROR - pack_id = ' + IntToStr(vb_pack_id) + ' spName = fInsert_to_wms_USER');
+
+  NotifyPacketTerminated(pknWmsObjectUser);
 end;
 
 procedure TMainForm.AdjustColumnWidth(AGrid: TDBGrid);
@@ -658,6 +713,21 @@ begin
   end;
 end;
 
+procedure TMainForm.RunTimerPool(const APackets: array of TPacketKind);
+var
+  I: Integer;
+begin
+  SetLength(FTimerPool, Length(APackets));
+
+  for I := Low(FTimerPool) to High(FTimerPool) do
+  begin
+    FTimerPool[I].PacketKind  := APackets[I];
+    FTimerPool[I].OnTerminate := GetOnTerminate(APackets[I]);
+    StartTimeMeter(FTimerPool[I].PacketKind);
+    ExportPacket(FTimerPool[I].PacketKind, FTimerPool[I].OnTerminate);
+  end;
+end;
+
 procedure TMainForm.seFontSizeChange(Sender: TObject);
 begin
   LogMemo.Font.Size := seFontSize.Value;
@@ -668,6 +738,21 @@ procedure TMainForm.seTimerIntervalChange(Sender: TObject);
 begin
   TSettings.TimerInterval := seTimerInterval.Value * c1Sec;
   Timer.Interval := seTimerInterval.Value * c1Sec;
+end;
+
+procedure TMainForm.StartTimeMeter(APacketKind: TPacketKind);
+begin
+  case APacketKInd of
+    pknWmsMovementASNLoad:  FMovementASNLoad_TM.Start;
+    pknWmsObjectClient:     FObjectClient_TM.Start;
+    pknWmsObjectPack:       FObjectPack_TM.Start;
+    pknWmsObjectSKU:        FObjectSKU_TM.Start;
+    pknWmsObjectSKUCode:    FObjectSKUCode_TM.Start;
+    pknWmsObjectSKUGroup:   FObjectSKUGroup_TM.Start;
+    pknWmsObjectUser:       FObjectUser_TM.Start;
+    pknWmsMovementIncoming: FMovementInc_TM.Start;
+    pknWmsMovementOrder:    FMovementOrder_TM.Start;
+  end;
 end;
 
 procedure TMainForm.myShowMsg(const AMsg: string);
@@ -865,12 +950,13 @@ var
   I: Integer;
 begin
   inherited;
+  SetLength(FTimerPool, 0);
   FLog := TLog.Create;
   chkWriteLog.Checked := TSettings.UseLog;
 
   Timer.Interval := TSettings.TimerInterval;
   seTimerInterval.Value := TSettings.TimerInterval div c1Sec;
-  FStopTimer := True;
+  FTimerStopped := True;
 
   edtWMSDatabase.Text := TSettings.WMSDatabase;
   edtAlanServer.Text := TSettings.AlanServer;
@@ -919,7 +1005,22 @@ begin
 end;
 
 destructor TMainForm.Destroy;
+var
+  I: Integer;
+  bAllStopped: Boolean;
 begin
+  FTimerStopped := True;
+  Timer.Enabled := False;
+
+  repeat
+    bAllStopped := True;
+
+    for I := Low(FTimerPool) to High(FTimerPool) do
+      bAllStopped := bAllStopped and FTimerPool[I].Stopped;
+
+    WaitFor(2000, not bAllStopped);
+  until bAllStopped;
+
   FreeAndNil(FObjectSKU_TM);
   FreeAndNil(FObjectSKUCode_TM);
   FreeAndNil(FObjectSKUGroup_TM);
@@ -1073,32 +1174,40 @@ end;
 
 procedure TMainForm.btnStartTimerClick(Sender: TObject);
 begin
-  FStopTimer := False;
-  btnStartTimer.Enabled := false;
-  btnEndTimer.Enabled := true;
-  myShowMsg('Start timer');
+  FTimerStopped := False;
 
-  // Не используем Timer.Enabled := true. При большом интервале придется долго ждать первого запуска.
-  // Сразу запускаем процесс Movement_Incoming.
-  // OnTerminateWmsMovementIncoming запустит Movement_ASNLoad, а уже тот в OnTerminateWmsMovementASNLoad запустит таймер
-  FMovementInc_TM.Start;
-  ExportPacket(pknWmsMovementIncoming, OnTerminateWmsMovementIncoming);
+  btnStartTimer.Enabled := false;
+  btnEndTimer.Enabled   := true;
+
+  // добавь в массив любые пакеты, которые хочешь запускать по таймеру (кроме pknWmsMovementASNLoad)
+  RunTimerPool([pknWmsMovementOrder, pknWmsMovementIncoming]);
+
+  Timer.Enabled := True;
+  myShowMsg('Таймер запущен');
 end;
 
 procedure TMainForm.btnEndTimerClick(Sender: TObject);
 begin
-  FStopTimer := True;
+  FTimerStopped := True;
+  Timer.Enabled := False;
+
   btnStartTimer.Enabled := true;
-  btnEndTimer.Enabled := false;
-  myShowMsg('Stop timer');
+  btnEndTimer.Enabled   := false;
+  myShowMsg('Таймер остановлен');
 end;
 
 procedure TMainForm.TimerTimer(Sender: TObject);
+var
+  I: Integer;
 begin
-  Timer.Enabled := False;
-
-  FMovementInc_TM.Start;
-  ExportPacket(pknWmsMovementIncoming, OnTerminateWmsMovementIncoming);
+  // запускаем те пакеты, которые уже завершились
+  for I := Low(FTimerPool) to High(FTimerPool) do
+    if FTimerPool[I].Stopped and not FTimerStopped then
+    begin
+      FTimerPool[I].Stopped := False;
+      StartTimeMeter(FTimerPool[I].PacketKind);
+      ExportPacket(FTimerPool[I].PacketKind, FTimerPool[I].OnTerminate);
+    end;
 end;
 
 procedure TMainForm.UpdateAlanGrid(const ANeedRebuildColumns: Boolean = False);
@@ -1284,6 +1393,23 @@ begin
   pnlFromHostHeaderMessage.Height := (tsOraExport.Height - splFromHostHeader.Height) div 2;
 end;
 
+function TMainForm.GetOnTerminate(APacketKInd: TPacketKind): TNotifyEvent;
+begin
+  case APacketKInd of
+    pknOrderStatusChanged:  Result := OnTerminateOrderStatusChanged;
+    pknReceivingResult:     Result := OnTerminateReceivingResult;
+    pknWmsMovementASNLoad:  Result := OnTerminateWmsMovementASNLoad;
+    pknWmsObjectClient:     Result := OnTerminateWmsObjectClient;
+    pknWmsObjectPack:       Result := OnTerminateWmsObjectPack;
+    pknWmsObjectSKU:        Result := OnTerminateWmsObjectSKU;
+    pknWmsObjectSKUCode:    Result := OnTerminateWmsObjectSKUCode;
+    pknWmsObjectSKUGroup:   Result := OnTerminateWmsObjectSKUGroup;
+    pknWmsObjectUser:       Result := OnTerminateWmsObjectUser;
+    pknWmsMovementIncoming: Result := OnTerminateWmsMovementIncoming;
+    pknWmsMovementOrder:    Result := OnTerminateWmsMovementOrder;
+  end;
+end;
+
 procedure TMainForm.grdWmsMessageDrawColumnCell(Sender: TObject; const Rect: TRect; DataCol: Integer; Column: TColumn;
   State: TGridDrawState);
 var
@@ -1327,7 +1453,7 @@ procedure TTimeMeter.Finish;
 begin
   FChkbox.Checked := False;
 
-  FEnd.Caption     := Format(cEndPacket, [FormatDateTime(cDateTimeStr, Now)]);
+  FEnd.Caption     := Format(cEndPacket, [FormatDateTime(cTimeStr, Now)]);
   FElapsed.Caption := Format(cElapsedPacket, [FormatDateTime(cTimeStr, Now - FStartTime)]);
 
   FElapsed.Repaint;
@@ -1339,9 +1465,12 @@ begin
   FStartTime := Now;
   FChkbox.Checked := True;
 
-  FStart.Caption   := Format(cStartPacket, [FormatDateTime(cDateTimeStr, Now)]);
+  FStart.Caption   := Format(cStartPacket, [FormatDateTime(cTimeStr, Now)]);
   FEnd.Caption     := Format(cEndPacket, ['']);
   FElapsed.Caption := Format(cElapsedPacket, ['']);
+
+  FElapsed.Repaint;
+  FEnd.Repaint;
 end;
 
 end.

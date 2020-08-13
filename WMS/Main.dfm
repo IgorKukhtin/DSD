@@ -677,6 +677,10 @@ object MainForm: TMainForm
     object tsErrors: TTabSheet
       Caption = #1054#1096#1080#1073#1082#1080
       ImageIndex = 2
+      ExplicitLeft = 0
+      ExplicitTop = 0
+      ExplicitWidth = 0
+      ExplicitHeight = 0
       object splHorz: TSplitter
         Left = 0
         Top = 262
@@ -1323,25 +1327,25 @@ object MainForm: TMainForm
         1376
         614)
       object lbWMSDatabase: TLabel
-        Left = 10
+        Left = 37
         Top = 43
-        Width = 100
+        Width = 73
         Height = 13
         Alignment = taRightJustify
         Caption = 'WMS Database'
       end
       object lbAlanServer: TLabel
-        Left = 10
+        Left = 54
         Top = 87
-        Width = 100
+        Width = 56
         Height = 13
         Alignment = taRightJustify
         Caption = 'Alan Server'
       end
       object lbTimerInterval: TLabel
-        Left = 10
+        Left = 45
         Top = 126
-        Width = 100
+        Width = 65
         Height = 13
         Alignment = taRightJustify
         Caption = 'Timer interval'
