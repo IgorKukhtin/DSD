@@ -131,10 +131,16 @@ INSERT INTO ContainerLinkObjectDesc (Code, ItemName, ObjectDescId)
   SELECT 'zc_ContainerLinkObject_PartionHouseholdInventory', 'Партии хозяйственного инвентаря', zc_Object_PartionHouseholdInventory() WHERE NOT EXISTS (SELECT * FROM ContainerLinkObjectDesc WHERE Code = 'zc_ContainerLinkObject_PartionHouseholdInventory');
   
 
+CREATE OR REPLACE FUNCTION zc_ContainerLinkObject_DivisionParties() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id AS Id FROM ContainerLinkObjectDesc WHERE Code = 'zc_ContainerLinkObject_DivisionParties'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
+INSERT INTO ContainerLinkObjectDesc (Code, ItemName, ObjectDescId)
+  SELECT 'zc_ContainerLinkObject_DivisionParties', 'Разделение партий в кассе для продажи', zc_Object_DivisionParties() WHERE NOT EXISTS (SELECT * FROM ContainerLinkObjectDesc WHERE Code = 'zc_ContainerLinkObject_DivisionParties');
+  
+
 /*-------------------------------------------------------------------------------*/
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.  Шаблий О.В.
+ 13.08.20                                                                    * add zc_ContainerLinkObject_DivisionParties
  30.07.20                                                                    * add zc_ContainerLinkObject_PartionHouseholdInventory
  20.12.14                                        * !!!restore!!! zc_ContainerLinkObject_Account
  12.11.14                                        * add zc_ContainerLinkObject_Currency

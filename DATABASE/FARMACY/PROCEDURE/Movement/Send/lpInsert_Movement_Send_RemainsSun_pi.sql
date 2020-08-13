@@ -1555,7 +1555,7 @@ BEGIN
                     -- инче берем ост "основного"
                     ELSE _tmpRemains_Partion.Amount
                END > 0
-        ORDER BY tmpSumm_limit.Summ DESC, _tmpRemains_Partion.UnitId, _tmpRemains_Partion.GoodsId
+        ORDER BY 3 /*tmpSumm_limit.Summ*/ DESC, _tmpRemains_Partion.UnitId, _tmpRemains_Partion.GoodsId
        ;
      -- начало цикла по курсору1
      LOOP
