@@ -46,6 +46,7 @@ type
     procedure LoadDefaultFormTest;
     procedure LoadDiscountFormTest;
     procedure LoadDiffKindFormTest;
+    procedure LoadDivisionPartiesFormTest;
     procedure LoadDriverTest;
     procedure LoadDriverSunTest;
     procedure LoadEnumFormTest;
@@ -271,6 +272,12 @@ begin
   TdsdFormStorageFactory.GetStorage.Load('TDiffKindForm');
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TDiffKindEditForm'));
   TdsdFormStorageFactory.GetStorage.Load('TDiffKindEditForm');
+end;
+
+procedure TLoadFormTest.LoadDivisionPartiesFormTest;
+begin
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TDivisionPartiesForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TDivisionPartiesForm');
 end;
 
 procedure TLoadFormTest.LoadDriverTest;

@@ -495,11 +495,17 @@ CREATE OR REPLACE FUNCTION zc_Enum_PartionDateKind_Cat_5() RETURNS integer AS $B
 
 CREATE OR REPLACE FUNCTION zc_Enum_CheckSourceKind_Liki24() RETURNS integer AS $BODY$BEGIN RETURN (SELECT ObjectId AS Id FROM ObjectString WHERE ValueData = 'zc_Enum_CheckSourceKind_Liki24' AND DescId = zc_ObjectString_Enum()); END;  $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
 
+-- !!!
+-- !!! Разделение партий в кассе для продажи
+-- !!!
+
+CREATE OR REPLACE FUNCTION zc_Enum_DivisionParties_UKTVED() RETURNS integer AS $BODY$BEGIN RETURN (SELECT ObjectId AS Id FROM ObjectString WHERE ValueData = 'zc_Enum_DivisionParties_UKTVED' AND DescId = zc_ObjectString_Enum()); END;  $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
 
 /*-------------------------------------------------------------------------------*/
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.    Воробкало А.А.  Ярошенко Р.Ф.  Шаблий О.В.
+ 13.08.20                                                                                                   * zc_Enum_DivisionParties_UKTVED
  15.06.20                                                                                                   * zc_Enum_CheckSourceKind_Liki24
  24.04.19                                                                                                   * Проверка и погашение рецептов по доступным лекарствам
  19.04.19         * zc_Enum_PartionDateKind...

@@ -3674,6 +3674,10 @@ inherited MainForm: TMainForm
       Caption = #1055#1086#1080#1089#1082' '#1084#1077#1076#1080#1082#1072#1084#1077#1085#1090#1086#1074' VIP'
       ShortCut = 117
       FormName = 'TSearchRemainsVIPForm'
+      FormNameParam.Value = ''
+      FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
+      GuiParams = <>
       isShowModal = False
     end
     object actSendMenegerVIPJournal: TdsdOpenForm
@@ -3830,6 +3834,17 @@ inherited MainForm: TMainForm
       Caption = #1055#1086#1079#1080#1094#1080#1080' '#1059#1050#1058#1042#1069#1044' '#1087#1086' '#1057#1059#1053#1072#1084
       FormName = 'TReport_PositionsUKTVEDonSUNForm'
       FormNameParam.Value = 'TReport_PositionsUKTVEDonSUNForm'
+      FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
+      GuiParams = <>
+      isShowModal = False
+    end
+    object actDivisionParties: TdsdOpenForm
+      Category = #1057#1083#1091#1078#1077#1073#1085#1099#1077
+      MoveParams = <>
+      Caption = #1056#1072#1079#1076#1077#1083#1077#1085#1080#1077' '#1087#1072#1088#1090#1080#1081' '#1074' '#1082#1072#1089#1089#1077' '#1076#1083#1103' '#1087#1088#1086#1076#1072#1078
+      FormName = 'TDivisionPartiesForm'
+      FormNameParam.Value = 'TDivisionPartiesForm'
       FormNameParam.DataType = ftString
       FormNameParam.MultiSelectSeparator = ','
       GuiParams = <>
@@ -4874,6 +4889,10 @@ inherited MainForm: TMainForm
         end
         object N227: TMenuItem
           Action = actSeasonalityCoefficient
+        end
+        object N251: TMenuItem
+          Action = actDivisionParties
+          Caption = #1058#1080#1087#1099' '#1088#1072#1079#1076#1077#1083#1077#1085#1080#1081' '#1087#1072#1088#1090#1080#1081' '#1074' '#1082#1072#1089#1089#1077' '#1076#1083#1103' '#1087#1088#1086#1076#1072#1078
         end
       end
       object N44: TMenuItem [1]
