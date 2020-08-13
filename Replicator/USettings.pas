@@ -49,8 +49,8 @@ type
     class procedure SetReplicaSelectRange(const AValue: Integer); static;
     class function GetReplicaPacketRange: Integer; static;
     class procedure SetReplicaPacketRange(const AValue: Integer); static;
-    class function GetReplicaStart: Integer; static;
-    class procedure SetReplicaStart(const AValue: Integer); static;
+    class function GetReplicaLastId: Integer; static;
+    class procedure SetReplicaLastId(const AValue: Integer); static;
     class function GetLibLocation: string; static;
     class procedure SetLibLocation(const AValue: string); static;
     class function GetMasterDriverID: string; static;
@@ -67,8 +67,8 @@ type
     class procedure SetScriptPath(const AValue: string); static;
     class function GetScriptFilesUsed: string; static;
     class procedure SetScriptFilesUsed(const AValue: string); static;
-    class function GetDDLStartId: Integer; static;
-    class procedure SetDDLStartId(const AValue: Integer); static;
+    class function GetDDLLastId: Integer; static;
+    class procedure SetDDLLastId(const AValue: Integer); static;
   public
     class constructor Create;
     class destructor Destroy;
@@ -89,7 +89,7 @@ type
     class property SlavePassword: string read GetSlavePassword write SetSlavePassword;
     class property ReplicaSelectRange: Integer read GetReplicaSelectRange write SetReplicaSelectRange;
     class property ReplicaPacketRange: Integer read GetReplicaPacketRange write SetReplicaPacketRange;
-    class property ReplicaStart: Integer read GetReplicaStart write SetReplicaStart;
+    class property ReplicaLastId: Integer read GetReplicaLastId write SetReplicaLastId;
     class property LibLocation: string read GetLibLocation write SetLibLocation;
     class property MasterDriverID: string read GetMasterDriverID write SetMasterDriverID;
     class property SlaveDriverID: string read GetSlaveDriverID write SetSlaveDriverID;
@@ -98,7 +98,7 @@ type
     class property ReconnectTimeoutMinute: Integer read GetReconnectTimeoutMinute write SetReconnectTimeoutMinute;
     class property ScriptPath: string read GetScriptPath write SetScriptPath;
     class property ScriptFilesUsed: string read GetScriptFilesUsed write SetScriptFilesUsed;
-    class property DDLStartId: Integer read GetDDLStartId write SetDDLStartId;
+    class property DDLLastId: Integer read GetDDLLastId write SetDDLLastId;
   end;
 
 function IsService: Boolean;
@@ -122,11 +122,11 @@ const
   cININame = 'ConnDef.ini';
 
   // Replica
-  cReplicaSection    = 'Replica';
-  cReplicaStartParam = 'StartID';
+  cReplicaSection          = 'Replica';
+  cReplicaLastIdParam      = 'LastId';
   cReplicaSelectRangeParam = 'SelectRange';
   cReplicaPacketRangeParam = 'PacketRange';
-
+  cReplicaDDLLastIdParam   = 'DDLLastId';
 
   // Settings
   cSettingsSection       = 'Settings';
@@ -139,7 +139,6 @@ const
   cReconnectTimeoutParam = 'ReconnectTimeoutMinute';
   cScriptFilesPathParam  = 'ScriptFilesPath';
   cScriptFilesUsedParam  = 'ScriptFilesUsed';
-  cDDLStartIdParam       = 'DDLStartId';
 
   // Master
   cMasterSection       = 'postgress_master';
@@ -165,10 +164,10 @@ const
   cDefDriverID = 'PG';
   cDefReplicaSelectRange = 10000;
   cDefReplicaPacketRange = 1000;
-  cDefReplicaStart = 1;
+  cDefReplicaLastId = 0;
   cDefReconnectTimeoutMinute = 15;
   cDefScriptFilesPath = '..\scripts';
-  cDefDDLStartId = 0;
+  cDefDDLLastId = 0;
 
 function IsService: Boolean;
 var
@@ -293,9 +292,9 @@ begin
   Result := GetBoolValue(cSettingsSection, cCompareDeviationParam, False);
 end;
 
-class function TSettings.GetDDLStartId: Integer;
+class function TSettings.GetDDLLastId: Integer;
 begin
-  Result := GetIntValue(cSettingsSection, cDDLStartIdParam, cDefDDLStartId);
+  Result := GetIntValue(cReplicaSection, cReplicaDDLLastIdParam, cDefDDLLastId);
 end;
 
 class function TSettings.GetIntValue(const ASection, AParam: string; const ADefVal: Integer): Integer;
@@ -381,9 +380,9 @@ begin
   Result := GetIntValue(cReplicaSection, cReplicaSelectRangeParam, cDefReplicaSelectRange);
 end;
 
-class function TSettings.GetReplicaStart: Integer;
+class function TSettings.GetReplicaLastId: Integer;
 begin
-  Result := GetIntValue(cReplicaSection, cReplicaStartParam, cDefReplicaStart);
+  Result := GetIntValue(cReplicaSection, cReplicaLastIdParam, cDefReplicaLastId);
 end;
 
 class function TSettings.GetScriptFilesUsed: string;
@@ -492,9 +491,9 @@ begin
   SetBoolValue(cSettingsSection, cCompareDeviationParam, AValue);
 end;
 
-class procedure TSettings.SetDDLStartId(const AValue: Integer);
+class procedure TSettings.SetDDLLastId(const AValue: Integer);
 begin
-  SetIntValue(cSettingsSection, cDDLStartIdParam, AValue);
+  SetIntValue(cReplicaSection, cReplicaDDLLastIdParam, AValue);
 end;
 
 class procedure TSettings.SetIntValue(const ASection, AParam: string; const AVal: Integer);
@@ -560,9 +559,9 @@ begin
   SetIntValue(cReplicaSection, cReplicaSelectRangeParam, AValue);
 end;
 
-class procedure TSettings.SetReplicaStart(const AValue: Integer);
+class procedure TSettings.SetReplicaLastId(const AValue: Integer);
 begin
-  SetIntValue(cReplicaSection, cReplicaStartParam, AValue);
+  SetIntValue(cReplicaSection, cReplicaLastIdParam, AValue);
 end;
 
 class procedure TSettings.SetScriptFilesUsed(const AValue: string);

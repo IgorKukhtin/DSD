@@ -21,6 +21,17 @@ type
     Max: Integer;
   end;
 
+  TSlaveValues = record
+    LastId: Integer;
+    LastId_DDL: Integer;
+    ClientId: Int64;
+  end;
+
+  TMasterValues = record
+    LastId: Integer;
+    LastId_DDL: Integer;
+  end;
+
   PCompareMasterSlave = ^TCompareMasterSlave;
   TCompareMasterSlave = record
     ResultSQL: string;
