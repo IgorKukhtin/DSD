@@ -408,6 +408,10 @@ object frmMain: TfrmMain
             Caption = 'tsChk'
             ImageIndex = 1
             TabVisible = False
+            ExplicitLeft = 0
+            ExplicitTop = 0
+            ExplicitWidth = 0
+            ExplicitHeight = 0
           end
         end
       end
@@ -415,6 +419,10 @@ object frmMain: TfrmMain
     object tsCompare: TTabSheet
       Caption = #1057#1088#1072#1074#1085#1077#1085#1080#1077' '#1076#1072#1085#1085#1099#1093' Master '#1080' Slave'
       ImageIndex = 2
+      ExplicitLeft = 0
+      ExplicitTop = 0
+      ExplicitWidth = 0
+      ExplicitHeight = 0
       object pnlCompareTop: TPanel
         Left = 0
         Top = 0

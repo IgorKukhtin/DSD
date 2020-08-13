@@ -254,7 +254,11 @@ begin
 end;
 
 procedure TfrmMain.ReadSettings;
+var
+  iLastId: Integer;
 begin
+  iLastId := FData.LastId;
+
   edtMasterServer.Text   := TSettings.MasterServer;
   edtMasterDatabase.Text := TSettings.MasterDatabase;
   edtMasterUser.Text     := TSettings.MasterUser;
@@ -268,7 +272,7 @@ begin
   edtSlavePort.Text     := IntToStr(TSettings.SlavePort);
 
   edtLibLocation.Text := TSettings.LibLocation;
-  edtSsnMinId.Text    := IntToStr(TSettings.ReplicaStart);
+  edtSsnMinId.Text    := IntToStr(iLastId + 1); // стартовый Id реплики
 
   seSelectRange.Value      := TSettings.ReplicaSelectRange;
   sePacketRange.Value      := TSettings.ReplicaPacketRange;
@@ -316,20 +320,20 @@ procedure TfrmMain.StartReplica;
 const
   cStartPerlica = 'Старт репликации: StartId = %d';
 var
-  iStart, iSelectRange, iPacketRange: Integer;
+  iStartId, iSelectRange, iPacketRange: Integer;
 begin
   FStartTimeReplica := Now;
   lbAllStart.Caption := Format(cStartPointReplica, [FormatDateTime(cTimeStrShort, Now)]);
 
-  iStart       := TSettings.ReplicaStart;
+  iStartId     := StrToIntDef(edtSsnMinId.Text, 0);
   iSelectRange := seSelectRange.Value;
   iPacketRange := sePacketRange.Value;
 
-  LogMessage(Format(cStartPerlica, [iStart]));
+  LogMessage(Format(cStartPerlica, [iStartId]));
   LogMessage('');
 
   StopReplicaThread;
-  FReplicaThrd := TReplicaThread.Create(cCreateSuspended, iStart, iSelectRange, iPacketRange, LogMessage, tknDriven);
+  FReplicaThrd := TReplicaThread.Create(cCreateSuspended, iStartId, iSelectRange, iPacketRange, LogMessage, tknDriven);
 
   FReplicaThrd.OnNewSession    := OnNewSession;
   FReplicaThrd.OnEndSession    := OnEndSession;
@@ -340,7 +344,8 @@ begin
   FReplicaThrd.Start;
 
   btnStartReplication.Enabled := False;
-  btnStop.Enabled := True;
+  btnStop.Enabled             := True;
+
   tmrElapsed.Enabled := True;
 end;
 
@@ -647,7 +652,7 @@ end;
 procedure TfrmMain.btnUseMinIdClick(Sender: TObject);
 begin
   edtSsnMinId.Text   := IntToStr(FData.MinId);
-  TSettings.ReplicaStart := StrToIntDef(edtSsnMinId.Text, 0);
+  TSettings.ReplicaLastId := 0;
 end;
 
 procedure TfrmMain.CheckReplicaMaxMin;
@@ -706,17 +711,10 @@ begin
   FLog := TLog.Create;
   pgcMain.ActivePage := tsLog;
 
+  FData := TdmData.Create(nil, LogMessage);
+
   ReadSettings;
   AssignOnExitSettings;
-
-  FData := TdmData.Create(
-    nil,
-    StrToIntDef(edtSsnMinId.Text, 0),
-    seSelectRange.Value,
-    sePacketRange.Value,
-    LogMessage
-  );
-  FData.OnChangeStartId := OnChangeStartId;
 
   edtScriptPath.Text := TSettings.ScriptPath;
   FScriptFiles := TScriptFiles.Create(TSettings.ScriptPath, TSettings.ScriptFilesUsed, LogApplyScript);
@@ -748,7 +746,7 @@ end;
 
 procedure TfrmMain.edtStartReplicaExit(Sender: TObject);
 begin
-  TSettings.ReplicaStart := StrToIntDef(edtSsnMinId.Text, 1);
+  TSettings.ReplicaLastId := StrToIntDef(edtSsnMinId.Text, 1) - 1;
 end;
 
 procedure TfrmMain.grdCompareDrawColumnCell(Sender: TObject; const Rect: TRect; DataCol: Integer; Column: TColumn;
@@ -1013,7 +1011,7 @@ begin
       edtAllMaxId.Text    := IntToStr(P^.MaxId);
       edtAllRecCount.Text := IntToStr(P^.RecCount);
 
-      iStart:= TSettings.ReplicaStart;
+      iStart:= TSettings.ReplicaLastId;
 
       if (P^.MaxId > P^.MinId) then
       begin
@@ -1059,10 +1057,14 @@ begin
 
   LogMessage(sMsg);
   LogMessage('');
+
   btnStartReplication.Enabled := True;
-  btnStop.Enabled := False;
+  btnStop.Enabled             := False;
 
   lbAllElapsed.Caption := Format(cElapsedReplica, [Elapsed(FStartTimeReplica)]);
+
+  // нужно сохранить в БД значение LastId
+  FData.LastId := TSettings.ReplicaLastId;
 end;
 
 procedure TfrmMain.OnTerminateSinglePacket(Sender: TObject);

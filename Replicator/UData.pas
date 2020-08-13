@@ -42,6 +42,7 @@ type
     FOnNewSession: TOnNewSession;
     FOnEndSession: TNotifyEvent;
     FOnNeedRestart: TNotifyEvent;
+
   strict private
     procedure ApplyConnectionConfig(AConnection: TZConnection; ARank: TServerRank);
     procedure BuildReplicaCommandsSQL(const AStartId, ARange: Integer);
@@ -50,9 +51,14 @@ type
     procedure LogMsg(const AMsg, AFileName: string); overload;
     procedure LogMsg(const AMsg: string); overload;
     procedure LogMsg(const AMsg: string; const aUID: Cardinal); overload;
+    procedure SaveValueInDB(const AValue: Integer; const AFieldName: string; const ASaveInMaster: Boolean = True);
 
   strict private
     procedure SetStartId(const AValue: Integer);
+    function GetLastId: Integer;
+    procedure SetLastId(const AValue: Integer);
+    function GetLastId_DDL: Integer;
+    procedure SetLastId_DDL(const AValue: Integer);
 
   strict private
     function ApplyScriptsFor(AScripts: TStrings; AServer: TServerRank): TApplyScriptResult;
@@ -61,17 +67,25 @@ type
     function IsConnected(AConnection: TZConnection; ARank: TServerRank): Boolean;
     function IsConnectionAlive(AConnection: TZConnection): Boolean;
     function IsBothConnectionsAlive: Boolean;
+    function GetSlaveValues: TSlaveValues;
+    function GetMasterValues(const AClientId: Int64): TMasterValues;
+
+  protected
+    property StartId: Integer read FStartId write SetStartId;
+    property LastId_DDL: Integer read GetLastId_DDL write SetLastId_DDL;
 
   public
-    constructor Create(AOwner: TComponent; const AStartId, ASelectRange, APacketRange: Integer; AMsgProc: TNotifyMessage); reintroduce;
+    constructor Create(AOwner: TComponent; AMsgProc: TNotifyMessage); reintroduce; overload;
+    constructor Create(AOwner: TComponent; const AStartId, ASelectRange, APacketRange: Integer; AMsgProc: TNotifyMessage); reintroduce; overload;
     destructor Destroy; override;
 
     property OnChangeStartId: TOnChangeStartId read FOnChangeStartId write FOnChangeStartId;
     property OnNewSession: TOnNewSession read FOnNewSession write FOnNewSession;
     property OnEndSession: TNotifyEvent read FOnEndSession write FOnEndSession;
     property OnNeedRestart: TNotifyEvent read FOnNeedRestart write FOnNeedRestart;
-    property StartId: Integer read FStartId write SetStartId;
+//    property StartId: Integer read FStartId write SetStartId;
     property SelectRange: Integer read FSelectRange write FSelectRange;
+    property LastId: Integer read GetLastId write SetLastId;
     property ReplicaFinished: TReplicaFinished read FReplicaFinished;
 
     function ApplyScripts(AScripts: TStrings): TApplyScriptResult;
@@ -184,6 +198,7 @@ const
   cAttempt3 = '№3 <%d-%d>  ok = %d   error = %d   за %s';
   cWrongRange = 'Ожидается, что MaxId > StartId, а имеем MaxId = %d, StartId = %d';
   cWaitNextMsg = 500;
+  cSaveInMasterAfterNSessions = 100;
 
 
 { TdmData }
@@ -348,7 +363,7 @@ begin
     qrySelectReplicaCmd.FetchAll;
     qrySelectReplicaCmd.First;
     FStartId := qrySelectReplicaCmd.FieldByName('Id').AsInteger; // откорректируем значение StartId в соответствии с реальными данными
-    TSettings.ReplicaStart := StartId;
+//    TSettings.ReplicaStart := StartId;
     LogMsg(Format(cElapsedFetch, [IntToStr(qrySelectReplicaCmd.RecordCount), Elapsed(crdStartFetch)]), crdStartFetch);
 
     // строим свой массив данных, который позволит выбирать записи пакетами с учетом границ transaction_id
@@ -374,6 +389,12 @@ begin
       LogMsg(Format(cExceptionMsg, [E.ClassName, E.Message]));
     end;
   end;
+end;
+
+constructor TdmData.Create(AOwner: TComponent; AMsgProc: TNotifyMessage);
+begin
+  inherited Create(AOwner);
+  FMsgProc := AMsgProc;
 end;
 
 constructor TdmData.Create(AOwner: TComponent; const AStartId, ASelectRange, APacketRange: Integer; AMsgProc: TNotifyMessage);
@@ -464,13 +485,14 @@ end;
 
 procedure TdmData.ExecuteCommandsOneByOne; // предполагается использовать внутри StartReplica после неудачи ExecutePreparedPacket
 var
-  iStartId, iMaxId, iSuccCount, iFailCount: Integer;
+  iStartId, iLastId, iMaxId, iSuccCount, iFailCount: Integer;
   crdStart, crdLogMsg: Cardinal;
 begin
   // будем выполнять команды по одной
   if FStopped then Exit;
 
   crdStart := GetTickCount;
+  iLastId  := FStartId;
 
   try
     iMaxId := FCommandData.NearestId(FStartId, FPacketRange);
@@ -503,6 +525,7 @@ begin
               SetAutoCommit(False);
               PrepareStatement(FCommandData.Data.SQL).ExecutePrepared;
               Commit;
+
               Inc(iSuccCount);
             end;
         except
@@ -524,10 +547,13 @@ begin
           crdLogMsg := GetTickCount; 
         end;       
 
+        iLastId := FCommandData.Data.Id; // FCommandData.Data.Id содержит table_update_data.Id
         FCommandData.Next;
-        // FCommandData.Data.Id содержит table_update_data.Id
         StartId := FCommandData.Data.Id; // используем св-во StartId, а не FStartId, чтобы возбудить событие OnChangeStartId
       end;
+
+      if FCommandData.EOF then // если достигли правой границы сессии, тогда используем  iMaxId + 1
+        StartId := iMaxId + 1;
         
     finally
       // обязательно записываем в лог последнее сообщение 
@@ -535,7 +561,11 @@ begin
     end;      
     
   finally
-    TSettings.ReplicaStart := StartId; // сохранить в настройках актуальное значение StartId
+    TSettings.ReplicaLastId := iLastId;// сохраняем в INI-файл значение Id последней успешной команды
+    // В конце сессии нужно сохранить значение LastId на Master и Slave.
+    // На Master сохраняем реже, после cSaveInMasterAfterNSessions сессий
+    if FCommandData.EOF then
+      SaveValueInDB(iLastId, 'Last_Id', FSessionNumber > cSaveInMasterAfterNSessions);
   end;
 end;
 
@@ -633,7 +663,7 @@ function TdmData.ExecutePreparedPacket: Integer;
 var
   bStopIfError: Boolean;
   crdStart: Cardinal;
-  I, iMaxId, iStartId, iRecCount: Integer;
+  I, iMaxId, iStartId, iLastId, iRecCount: Integer;
   iStartTrans, iEndTrans: Integer;
   rangeTransId: TMinMaxTransId;
   sFileName: string;
@@ -697,18 +727,25 @@ begin
         conSlave.DbcConnection.Commit;
 
         // пакет успешно выполнен и можем передвинуть StartId на новую позицию
-        // - сначала перемещаемся на правую границу диапазона
-        // - последовательность Id может иметь разрывы, например 48256, 48257, 48351, 48352
-        //   поэтому вместо iMaxId + 1 используем Next
+
+        // сначала перемещаемся на правую границу диапазона
         FCommandData.MoveToId(iMaxId);
+        iLastId := FCommandData.Data.Id;
+        TSettings.ReplicaLastId := iLastId;// сохраняем в INI-файл значение Id последней успешной команды
+
+        // последовательность Id может иметь разрывы, например 48256, 48257, 48351, 48352
+        // поэтому вместо iMaxId + 1 используем Next
         FCommandData.Next;
 
-        if FCommandData.EOF then // если достигли правой границы сессии,
-          StartId := iMaxId + 1  // тогда используем  iMaxId + 1, чтобы не выполнить последнюю команду пакета еще раз в новом пакете
+        if FCommandData.EOF then // если достигли правой границы сессии, тогда используем  iMaxId + 1
+        begin
+          StartId := iMaxId + 1;
+          // В конце сессии нужно сохранить значение LastId на Master и Slave.
+          // На Master сохраняем реже, после cSaveInMasterAfterNSessions сессий
+          SaveValueInDB(iLastId, 'Last_Id', FSessionNumber > cSaveInMasterAfterNSessions);
+        end
         else
           StartId := FCommandData.Data.Id;
-
-        TSettings.ReplicaStart := StartId;
 
         // запись успешного пакета в файл
         if FWriteCommands then
@@ -834,6 +871,63 @@ begin
     on E: Exception do
       LogMsg(Format(cExceptionMsg, [E.ClassName, E.Message]));
   end;
+end;
+
+function TdmData.GetSlaveValues: TSlaveValues;
+const
+  cSelectSettings = 'select * from _replica.gpSelect_Settings()';
+begin
+  try
+    if IsSlaveConnected then
+      with qrySlaveHelper do
+      begin
+        Close;
+        SQL.Clear;
+        SQL.Add(cSelectSettings);
+        Open;
+
+        if Locate('Name', 'Last_Id', [loCaseInsensitive]) then
+          if not FieldByName('Value').IsNull then
+            Result.LastId := StrToIntDef(FieldByName('Value').AsString, 0);
+
+        if Locate('Name', 'Last_Id_DDL', [loCaseInsensitive]) then
+          if not FieldByName('Value').IsNull then
+            Result.LastId_DDL := StrToIntDef(FieldByName('Value').AsString, 0);
+
+        if Locate('Name', 'Client_Id', [loCaseInsensitive]) then
+          if not FieldByName('Value').IsNull then
+            Result.ClientId := StrToInt64Def(FieldByName('Value').AsString, 0);
+      end;
+  except
+    on E: Exception do
+      LogMsg(Format(cExceptionMsg, [E.ClassName, E.Message]));
+  end;
+end;
+
+function TdmData.GetLastId: Integer;
+var
+  slvValues: TSlaveValues;
+  iMasterId, iSlaveId: Integer;
+begin
+  slvValues := GetSlaveValues;
+
+  iSlaveId  := slvValues.LastId;
+  iMasterId := GetMasterValues(slvValues.ClientId).LastId;
+
+  Result := Max(iSlaveId, iMasterId);
+end;
+
+function TdmData.GetLastId_DDL: Integer;
+var
+  slvValues: TSlaveValues;
+  iMasterId, iSlaveId: Integer;
+begin
+  slvValues := GetSlaveValues;
+
+  iSlaveId  := slvValues.LastId_DDL;
+  iMasterId := GetMasterValues(slvValues.ClientId).LastId_DDL;
+
+  Result := Max(iSlaveId, iMasterId);
 end;
 
 function TdmData.IsBothConnected: Boolean;
@@ -1035,6 +1129,36 @@ begin
   end;
 end;
 
+function TdmData.GetMasterValues(const AClientId: Int64): TMasterValues;
+const
+  cSelectClients = 'select * from _replica.gpSelect_Clients(%d)';
+begin
+  try
+    if IsMasterConnected then
+      with qryMasterHelper do
+      begin
+        Close;
+        SQL.Clear;
+        SQL.Add(Format(cSelectClients, [AClientId]));
+        Open;
+
+        if not IsEmpty then
+        begin
+          if not FieldByName('last_id').IsNull then
+            Result.LastId := StrToIntDef(FieldByName('last_id').AsString, 0);
+
+          if not FieldByName('last_id_ddl').IsNull then
+            Result.LastId_DDL := StrToIntDef(FieldByName('last_id_ddl').AsString, 0);
+        end;
+
+        Close;
+      end;
+  except
+    on E: Exception do
+      LogMsg(Format(cExceptionMsg, [E.ClassName, E.Message]));
+  end;
+end;
+
 function TdmData.GetMinMaxId: TMinMaxId;
 const
   cSelect = 'SELECT * FROM _replica.gpSelect_MinMaxId()';
@@ -1127,7 +1251,7 @@ const
   cFileNameErr = cSession + 'Id_%d_ERR.txt'; // \DDL_Commands\2020-08-11_14-49-00\id_2095014_Error.txt
   cFileContent = c2CrLf + 'Last_modified: %s' + c2CrLf + '%s';
 var
-  I, idxId, idxQry, idxLM, iStartId: Integer;
+  I, idxId, idxQry, idxLM, iLastId: Integer;
   iId: Integer;
   sQry, sSessionStart, sFileName, sFileContent: string;
   dtmLM: TDateTime;
@@ -1136,7 +1260,7 @@ begin
   idxId  := -1;
   idxQry := -1;
   idxLM  := -1;
-  iStartId := TSettings.DDLStartId; // Id, на котором в прошлый раз завершилось выполнение
+  iLastId := LastId_DDL; // Id, на котором в прошлый раз завершилось выполнение
   sSessionStart := FormatDateTime(cDateTimeFileNameStr, Now);
 
   try
@@ -1146,8 +1270,8 @@ begin
         begin
           Close;
           SQL.Clear;
-          SQL.Add(Format(cSelect, [iStartId]));
-          ParamByName('Id').AsInteger  := iStartId;
+          SQL.Add(Format(cSelect, [iLastId]));
+          ParamByName('Id').AsInteger  := iLastId;
           Open;
           First;
 
@@ -1157,7 +1281,7 @@ begin
             else if LowerCase(Fields[I].FieldName) = 'query'         then idxQry := I
             else if LowerCase(Fields[I].FieldName) = 'last_modified' then idxLM  := I;
 
-          if Locate('Id', iStartId, []) then // Найдем позицию, на которой закончили в прошлый раз
+          if Locate('Id', iLastId, []) then // Найдем позицию, на которой закончили в прошлый раз
             Next;                            // и передвинем на следующую для нового выполнения
 
           while not EOF do
@@ -1175,7 +1299,7 @@ begin
                 tmpStmt := conSlave.DbcConnection.PrepareStatement(sQry);
                 tmpStmt.ExecuteUpdatePrepared;
                 conSlave.DbcConnection.Commit;
-                iStartId := iId;
+                iLastId := iId;
                 sFileName := Format(cFileName, [sSessionStart, iId]);
                 LogMsg(sFileContent, sFileName);
               end;
@@ -1200,7 +1324,108 @@ begin
         LogMsg(Format(cExceptionMsg, [E.ClassName, E.Message]));
     end;
   finally
-    TSettings.DDLStartId := iStartId;
+    TSettings.DDLLastId := iLastId;
+    LastId_DDL := iLastId;
+  end;
+end;
+
+procedure TdmData.SetLastId_DDL(const AValue: Integer);
+begin
+  SaveValueInDB(AValue, 'Last_Id_DDL');
+end;
+
+procedure TdmData.SetLastId(const AValue: Integer);
+begin
+  SaveValueInDB(AValue, 'Last_Id');
+end;
+
+procedure TdmData.SaveValueInDB(const AValue: Integer; const AFieldName: string; const ASaveInMaster: Boolean);
+const
+  cSelectSettings    = 'select * from _replica.gpSelect_Settings()';
+  cUpdateMaster      = 'select * from _replica.gpUpdate_Clients_LastId(%d, %d)';
+  cUpdateMasterDDL   = 'select * from _replica.gpUpdate_Clients_LastId_Ddl(%d, %d)';
+  cInsUpdateSettings = 'select * from _replica.gpInsertUpdate_Settings(0, %s, %s)';
+  cFailSave          = 'Не удалось сохранить значение %s на %s';
+var
+  iClientId: Int64;
+  tmpStmt: IZPreparedStatement;
+  sServerRank, sFieldName, sUpdate, sInsUpdate: string;
+begin
+  iClientId := 0;
+
+
+  sFieldName := LowerCase(AFieldName);
+  Assert((sFieldName = 'last_id') or (sFieldName = 'last_id_ddl'), 'Ф-ия SaveValueInDB предназначена для полей Last_Id и Last_Id_DDL');
+
+  if sFieldName = 'last_id'  then
+    sUpdate := cUpdateMaster;
+
+  if sFieldName = 'last_id_ddl'  then
+    sUpdate := cUpdateMasterDDL;
+
+
+  try
+    if IsSlaveConnected then
+    begin  // Блок ниже с qrySlaveHelper работает в ExecutePreparedPacket,
+           // но не работает в ExecuteCommandsOneByOne - ошибок нет, iClientId возвращает, но значение не сохраняется в таб. Settings
+           // Причина не установлена. Пришлось использовать отдельно GetSlaveValues.ClientId;
+
+//      with qrySlaveHelper do
+//      begin
+//        sServerRank := 'Slave';
+//        Close;
+//        SQL.Clear;
+//        SQL.Add(Format(cInsUpdateSettings, [QuotedStr(sFieldName), QuotedStr(IntToStr(AValue))]));
+//        Open;
+//        iClientId := Fields[0].AsLargeInt;
+//        Close;
+//      end;
+
+
+      try
+        sServerRank := 'Slave';
+        conSlave.DbcConnection.SetAutoCommit(False);
+        sInsUpdate := Format(cInsUpdateSettings, [QuotedStr(sFieldName), QuotedStr(IntToStr(AValue))]);
+        tmpStmt := conSlave.DbcConnection.PrepareStatement(sInsUpdate);
+        tmpStmt.ExecuteUpdatePrepared;
+        conSlave.DbcConnection.Commit;
+        iClientId := GetSlaveValues.ClientId;
+      except
+        on E: Exception do
+        begin
+          conSlave.DbcConnection.Rollback;
+          LogMsg(Format(cExceptionMsg, [E.ClassName, E.Message]));
+          LogMsg(Format(cFailSave, [sFieldName, sServerRank]));
+        end;
+      end;
+    end;
+
+    // Сохранение в Master требуется реже, чем в Slave, поэтому сохранением в Master управляет параметр ASaveInMaster
+
+    // Сохраняем значение AValue в Master._replica.Clients
+    if ASaveInMaster and (iClientId > 0) and IsMasterConnected then
+    begin
+      try
+        sServerRank := 'Master';
+        conMaster.DbcConnection.SetAutoCommit(False);
+        tmpStmt := conMaster.DbcConnection.PrepareStatement(Format(sUpdate, [iClientId, AValue]));
+        tmpStmt.ExecuteUpdatePrepared;
+        conMaster.DbcConnection.Commit;
+      except
+        on E: Exception do
+        begin
+          conMaster.DbcConnection.Rollback;
+          LogMsg(Format(cExceptionMsg, [E.ClassName, E.Message]));
+          LogMsg(Format(cFailSave, [sFieldName, sServerRank]));
+        end;
+      end;
+    end;
+  except
+    on E: Exception do
+    begin
+      LogMsg(Format(cExceptionMsg, [E.ClassName, E.Message]));
+      LogMsg(Format(cFailSave, [sFieldName, sServerRank]));
+    end;
   end;
 end;
 
