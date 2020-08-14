@@ -121,15 +121,10 @@ type
     pnlScriptTop: TPanel;
     btnApplyScript: TButton;
     pnlScriptList: TPanel;
-    mmoScriptErr: TMemo;
-    mmoScriptList: TMemo;
-    splScript: TSplitter;
+    mmoScriptLog: TMemo;
     tmrRestartReplica: TTimer;
     btnCancelScript: TButton;
-    pnlScriptMsg: TPanel;
-    lbScriptMsg: TLabel;
-    tmrScriptMsg: TTimer;
-    btnLoadScripts: TButton;
+    btnUpdateScriptIni: TButton;
     edtScriptPath: TEdit;
     lbScriptPath: TLabel;
     btnScriptPath: TButton;
@@ -163,12 +158,11 @@ type
     procedure seReconnectTimeoutChange(Sender: TObject);
     procedure btnApplyScriptClick(Sender: TObject);
     procedure btnCancelScriptClick(Sender: TObject);
-    procedure tmrScriptMsgTimer(Sender: TObject);
-    procedure btnLoadScriptsClick(Sender: TObject);
-    procedure mmoScriptListChange(Sender: TObject);
+    procedure mmoScriptLogChange(Sender: TObject);
     procedure btnScriptPathClick(Sender: TObject);
     procedure btnMoveProcsToSlaveClick(Sender: TObject);
     procedure btnStopMoveProcsToSlaveClick(Sender: TObject);
+    procedure btnUpdateScriptIniClick(Sender: TObject);
   private
     FLog: TLog;
     FData: TdmData;
@@ -198,7 +192,6 @@ type
     procedure StopCompareMSThread;
     procedure StopApplyScriptThread;
     procedure StopMoveProcToSlaveThread;
-    procedure ShowScriptResultMsg(const AMsg: string; AResult: TApplyScriptResult);
     procedure LogMessage(const AMsg: string; const AFileName: string = ''; const aUID: Cardinal = 0);
     procedure LogApplyScript(const AMsg: string; const AFileName: string = ''; const aUID: Cardinal = 0);
     procedure OnChangeStartId(const ANewStartId: Integer);
@@ -228,6 +221,7 @@ implementation
 
 uses
   System.Math,
+  System.IOUtils,
   USettings,
   UCommon;
 
@@ -301,19 +295,6 @@ end;
 procedure TfrmMain.seSelectRangeChange(Sender: TObject);
 begin
   TSettings.ReplicaSelectRange := seSelectRange.Value;
-end;
-
-procedure TfrmMain.ShowScriptResultMsg(const AMsg: string; AResult: TApplyScriptResult);
-begin
-  case AResult of
-    asNoAction: lbScriptMsg.Font.Color := clWindowText;
-    asSuccess:  lbScriptMsg.Font.Color := clWindowText;
-    asError:    lbScriptMsg.Font.Color := clRed;
-  end;
-
-  lbScriptMsg.Caption := AMsg;
-  pnlScriptMsg.Visible := True;
-  tmrScriptMsg.Enabled := True;
 end;
 
 procedure TfrmMain.StartReplica;
@@ -417,12 +398,6 @@ begin
     lbSsnElapsed.Caption := Format(cElapsedSession, [Elapsed(FStartTimeSession)]);
 end;
 
-procedure TfrmMain.tmrScriptMsgTimer(Sender: TObject);
-begin
-  (Sender as TTimer).Enabled := False;
-  pnlScriptMsg.Visible := False;
-end;
-
 procedure TfrmMain.WriteSettings;
 begin
   TSettings.MasterServer   := edtMasterServer.Text;
@@ -445,16 +420,30 @@ begin
 end;
 
 procedure TfrmMain.ApplyScript;
+var
+  tmpFiles: TStringList;
 begin
-  btnApplyScript.Enabled  := False;
-  btnCancelScript.Enabled := True;
-  btnLoadScripts.Enabled  := False;
+  btnApplyScript.Enabled     := False;
+  btnCancelScript.Enabled    := True;
+  btnUpdateScriptIni.Enabled := False;
 
   StopApplyScriptThread;
 
-  FApplyScriptThrd := TApplyScriptThread.Create(cCreateSuspended, FScriptFiles.ScriptContent, LogApplyScript, tknDriven);
-  FApplyScriptThrd.OnTerminate := OnTerminateApplyScript;
-  FApplyScriptThrd.Start;
+  tmpFiles := TStringList.Create;
+  try
+    TSettings.ReadScriptFiles(tmpFiles); // читаем список скриптов из INI-файла
+    FApplyScriptThrd := TApplyScriptThread.Create(
+      cCreateSuspended,
+      FScriptFiles.GetScriptContent(tmpFiles), // возвращает список SQL для указанных файлов
+      FScriptFiles.ShortNames, // Возвращает список коротких имен файлов. Будет использоваться в сообщении об ошибке
+      LogApplyScript,
+      tknDriven
+    );
+    FApplyScriptThrd.OnTerminate := OnTerminateApplyScript;
+    FApplyScriptThrd.Start;
+  finally
+    FreeAndNil(tmpFiles);
+  end;
 end;
 
 procedure TfrmMain.AssignOnExitSettings;
@@ -496,16 +485,14 @@ begin
   {$WARNINGS ON}
 end;
 
-procedure TfrmMain.btnLoadScriptsClick(Sender: TObject);
+procedure TfrmMain.btnUpdateScriptIniClick(Sender: TObject);
 begin
-  mmoScriptList.Clear;
-
-  if Length(TSettings.ScriptPath) > 0 then
-  begin
-    FreeAndNil(FScriptFiles);
-    TSettings.ScriptFilesUsed := '';
-    FScriptFiles := TScriptFiles.Create(TSettings.ScriptPath, TSettings.ScriptFilesUsed, LogApplyScript);
-    mmoScriptList.Lines.Assign(FScriptFiles.ShortNames);
+  try
+    TSettings.WriteScriptFiles(FScriptFiles.ShortNames);
+    LogApplyScript('Список скриптов обновлен в INI-файле');
+  except
+    on E: Exception do
+      LogApplyScript(Format(cExceptionMsg, [E.ClassName, E.Message]));
   end;
 end;
 
@@ -569,9 +556,11 @@ end;
 
 procedure TfrmMain.btnScriptPathClick(Sender: TObject);
 var
-  sScriptFolder: string;
+  sScriptFolder, sInitPath: string;
 begin
-  mmoScriptList.Clear;
+  sInitPath := TSettings.ScriptPath;
+  if not TDirectory.Exists(sInitPath) then
+    sInitPath := ExtractFilePath(ParamStr(0));
 
   {$WARNINGS OFF}
   with opndlgMain do
@@ -579,7 +568,7 @@ begin
     Title := 'Выберите папку со скриптами';
     Options := [fdoPickFolders, fdoPathMustExist, fdoForceFileSystem];
     OkButtonLabel := 'Выбрать';
-    DefaultFolder := ExtractFilePath(ParamStr(0));
+    DefaultFolder := sInitPath;
     if Execute then
     begin
       sScriptFolder        := FileName;
@@ -592,9 +581,7 @@ begin
   if Length(sScriptFolder) > 0 then
   begin
     FreeAndNil(FScriptFiles);
-//    TSettings.ScriptFilesUsed := '';
-    FScriptFiles := TScriptFiles.Create(sScriptFolder, TSettings.ScriptFilesUsed, LogApplyScript);
-    mmoScriptList.Lines.Assign(FScriptFiles.ShortNames);
+    FScriptFiles := TScriptFiles.Create(sScriptFolder, LogApplyScript);
   end;
 end;
 
@@ -717,8 +704,7 @@ begin
   AssignOnExitSettings;
 
   edtScriptPath.Text := TSettings.ScriptPath;
-  FScriptFiles := TScriptFiles.Create(TSettings.ScriptPath, TSettings.ScriptFilesUsed, LogApplyScript);
-  mmoScriptList.Lines.Assign(FScriptFiles.ShortNames);
+  FScriptFiles := TScriptFiles.Create(TSettings.ScriptPath, LogApplyScript);
 
   CheckReplicaMaxMin;
 end;
@@ -789,10 +775,11 @@ begin
     FLog.Write(sFileName, AMsg);
   end;
 
-  if not mmoScriptErr.Visible then
-    mmoScriptErr.Visible := True;
-
-  mmoScriptErr.Lines.Add(Format(cLogMsg, [FormatDateTime(cTimeStrShort, Now), AMsg]));
+//  if not mmoScriptErr.Visible then
+//    mmoScriptErr.Visible := True;
+//
+//  mmoScriptErr.Lines.Add(Format(cLogMsg, [FormatDateTime(cTimeStrShort, Now), AMsg]));
+  mmoScriptLog.Lines.Add(Format(cLogMsg, [FormatDateTime(cTimeStrShort, Now), AMsg]));
 end;
 
 procedure TfrmMain.LogMessage(const AMsg, AFileName: string; const aUID: Cardinal);
@@ -854,11 +841,11 @@ begin
   SendMessage((Sender as TMemo).Handle, EM_LINESCROLL, 0, (Sender as TMemo).Lines.Count);
 end;
 
-procedure TfrmMain.mmoScriptListChange(Sender: TObject);
+procedure TfrmMain.mmoScriptLogChange(Sender: TObject);
 begin
-  Assert(FScriptFiles <> nil, 'Ожидается FScriptFiles <> nil');
-  FScriptFiles.FilesUsed    := mmoScriptList.Lines.CommaText;
-  TSettings.ScriptFilesUsed := FScriptFiles.FilesUsed;
+//  Assert(FScriptFiles <> nil, 'Ожидается FScriptFiles <> nil');
+//  FScriptFiles.FilesUsed    := mmoScriptList.Lines.CommaText;
+//  TSettings.ScriptFilesUsed := FScriptFiles.FilesUsed;
 end;
 
 procedure TfrmMain.OnChangeStartId(const ANewStartId: Integer);
@@ -938,15 +925,15 @@ begin
   case tmpResult of
     asNoAction: sMsg := '';
     asSuccess:  sMsg := 'Скрипты успешно выполнены';
-    asError:    sMsg := 'Не удалось выполнить скрипты';
+    asError:    sMsg := '';//'Не удалось выполнить скрипты';
   end;
 
   if Length(sMsg) > 0 then
-    ShowScriptResultMsg(sMsg, tmpResult);
+    LogApplyScript(sMsg);
 
-  btnApplyScript.Enabled  := True;
-  btnCancelScript.Enabled := False;
-  btnLoadScripts.Enabled  := True;
+  btnApplyScript.Enabled     := True;
+  btnCancelScript.Enabled    := False;
+  btnUpdateScriptIni.Enabled := True;
 end;
 
 procedure TfrmMain.OnTerminateCompareMS(Sender: TObject);
