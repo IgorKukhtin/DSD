@@ -11,7 +11,7 @@ uses
   cxDBLookupComboBox, cxPropertiesStore, dsdAddOn, dsdDB, dsdAction,
   Vcl.ActnList, cxCurrencyEdit, Vcl.StdCtrls, cxButtons, cxLabel, cxTextEdit,
   cxButtonEdit, Vcl.ComCtrls, dxCore, cxDateUtils, cxCalendar,
-  dxSkinsDefaultPainters;
+  dxSkinsDefaultPainters, cxCheckBox;
 
 type
   TDiscountExternalEditForm = class(TParentForm)
@@ -36,6 +36,7 @@ type
     ceURL: TcxTextEdit;
     cxLabel4: TcxLabel;
     cePort: TcxTextEdit;
+    cbGoodsForProject: TcxCheckBox;
   private
     { Private declarations }
   public

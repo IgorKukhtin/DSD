@@ -40,6 +40,7 @@ CREATE TABLE CashSessionSnapShot
   NDSKindId           Integer     NOT NULL, -- Типы НДС
   DiscountExternalID  Integer     NOT NULL, -- Товар для проекта (дисконтные карты)
   PartionDateKindId   Integer     NOT NULL, -- Типы срок/не срок
+  DivisionPartiesID   Integer     NOT NULL, -- Разделение партий в кассе для продажи
   Price               TFloat      NOT NULL, -- цена
   Remains             TFloat      NOT NULL, -- Остаток
   MCSValue            TFloat      NULL,     -- неснижаемый товарный остаток
@@ -65,7 +66,7 @@ CREATE INDEX idx_CashSessionSnapShot_ObjectId ON CashSessionSnapShot(ObjectId);
 
 -- CREATE INDEX idx_CashSessionSnapShot_ObjectId_CashSessionId ON CashSessionSnapShot(ObjectId, CashSessionId);
 -- CREATE INDEX idx_CashSessionSnapShot_CashSessionId_ObjectId ON CashSessionSnapShot(CashSessionId, ObjectId);
--- ALTER TABLE CashSessionSnapShot ADD DiscountExternalID  Integer
+-- ALTER TABLE CashSessionSnapShot ADD DivisionPartiesID   Integer
 
 /*-------------------------------------------------------------------------------*/
 
@@ -77,6 +78,7 @@ CREATE INDEX idx_CashSessionSnapShot_ObjectId ON CashSessionSnapShot(ObjectId);
  ДАТА         АВТОР
  ----------------
                  Климентьев К.И.   Кухтин И.В.   Воробкало А.А.   Фелонюк И.В.   Шаблий О.В.
+14.08.2020                                                                         * DivisionPartiesID
 19.06.2020                                                                         * DiscountExternalID
 13.05.2019                                                                         * PartionDateKindId
 22.08.2018                                                                         *

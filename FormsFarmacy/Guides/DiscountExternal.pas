@@ -59,6 +59,7 @@ type
     Id: TcxGridDBColumn;
     ProtocolOpenForm: TdsdOpenForm;
     bbProtocolOpenForm: TdxBarButton;
+    isGoodsForProject: TcxGridDBColumn;
   private
     { Private declarations }
   public

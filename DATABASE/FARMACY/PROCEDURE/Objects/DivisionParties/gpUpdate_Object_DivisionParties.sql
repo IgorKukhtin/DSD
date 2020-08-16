@@ -18,13 +18,13 @@ $BODY$
 BEGIN
    
    -- проверка прав пользователя на вызов процедуры
-   vbUserId:= lpCheckRight (inSession, zc_Enum_Process_Update_Object_DivisionParties());
+   vbUserId:= lpCheckRight (inSession, zc_Enum_Process_Update_Object_PartionDateKind());
 
    -- сохранили <Объект>
    PERFORM lpInsertUpdate_Object (inId, zc_Object_DivisionParties(), inCode, inName);
 
    -- сохранили св-во <>
-   PERFORM lpInsertUpdate_ObjectBoolean (zc_ObjectBoolean_DivisionParties_BanFiscalSale(), inId, inBanFiscalSale);
+   PERFORM lpInsertUpdate_ObjectBoolean (zc_ObjectBoolean_DivisionParties_BanFiscalSale(), inId, inisBanFiscalSale);
 
    -- сохранили протокол
    PERFORM lpInsert_ObjectProtocol (inId, vbUserId);

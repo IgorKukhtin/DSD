@@ -23,6 +23,8 @@ $BODY$
    DECLARE vbAmount          TFloat;
    DECLARE vbSaldo           TFloat;
    DECLARE vbSUN             Boolean;
+   DECLARE vbAddress         TVarChar;
+   DECLARE vbDivisionParties Boolean;
 
    DECLARE vbDate_6 TDateTime;
    DECLARE vbDate_3 TDateTime;
@@ -74,6 +76,7 @@ end if;*/
          , ObjectLink_Juridical_Retail_To.ChildObjectId
          , COALESCE (MovementLinkObject_PartionDateKind.ObjectId, 0)
          , COALESCE (MovementBoolean_SUN.ValueData, FALSE)
+         , ObjectString_Unit_Address.ValueData   
            INTO
                 vbUnitFromId
               , vbJuridicalFromId
@@ -84,6 +87,7 @@ end if;*/
               , vbRetailId_to
               , vbPartionDateId
               , vbSUN
+              , vbAddress
     FROM
         Movement
         INNER JOIN MovementLinkObject AS MovementLinkObject_From
@@ -105,6 +109,10 @@ end if;*/
         LEFT OUTER JOIN ObjectLink AS ObjectLink_Juridical_Retail_To
                                    ON ObjectLink_Juridical_Retail_To.ObjectId = ObjectLink_Unit_Juridical_To.ChildObjectId
                                   AND ObjectLink_Juridical_Retail_To.DescId = zc_ObjectLink_Juridical_Retail()
+        LEFT JOIN ObjectString AS ObjectString_Unit_Address
+                               ON ObjectString_Unit_Address.ObjectId = MovementLinkObject_To.ObjectId
+                              AND ObjectString_Unit_Address.DescId = zc_ObjectString_Unit_Address()
+        
 
         LEFT JOIN MovementLinkObject AS MovementLinkObject_PartionDateKind
                                      ON MovementLinkObject_PartionDateKind.MovementId = Movement.Id
@@ -114,6 +122,8 @@ end if;*/
                                   ON MovementBoolean_SUN.MovementId = Movement.Id
                                  AND MovementBoolean_SUN.DescId = zc_MovementBoolean_SUN()
     WHERE Movement.Id = inMovementId;
+    
+    vbDivisionParties := (vbRetailId_to = 4) AND (vbJuridicalFromId <> vbJuridicalToId) AND COALESCE(vbAddress, '') <> '';
 
     -- если это перемещение просрочки
     IF vbPartionDateId = zc_Enum_PartionDateKind_0()
@@ -309,24 +319,52 @@ end if;*/
           , tmpItem AS (
                         -- для сроковых перемещений - сразу ContainerId
                         SELECT
-                            DDChild.ContainerId                AS ContainerId_count
-                          , DDChild.ContainerPartionId         AS ContainerPartionId_count
-                          , NULL                    :: Integer AS ContainerId_summ
-                          , PartionMovementItem.Id             AS PartionMovementItemId
-                          , DDChild.MovementItemID             AS MovementItemId
+                            DDChild.ContainerId                       AS ContainerId_count
+                          , DDChild.ContainerPartionId                AS ContainerPartionId_count
+                          , NULL                    :: Integer        AS ContainerId_summ
+                          , COALESCE (MI_Income_find.Id,MI_Income.Id) AS PartionMovementItemId
+                          , DDChild.MovementItemID                    AS MovementItemId
                           , DDChild.ObjectId
                           , CASE WHEN vbRetailId_from <> vbRetailId_to THEN GoodsRetial_to.ObjectId_to ELSE DDChild.ObjectId END AS ObjectId_to
-                          , DDChild.Amount                     AS Amount
+                          , DDChild.Amount                            AS Amount
                           , 0 AS Summ
+                          , COALESCE (MI_Income_find.MovementId,MI_Income.MovementId) AS MovementId_Income
                         FROM DDChild
                              LEFT JOIN GoodsRetial_to ON GoodsRetial_to.ObjectId = DDChild.ObjectId
-                             LEFT JOIN containerlinkObject AS CLI_MI
-                                                           ON CLI_MI.ContainerId = DDChild.ContainerId
-                                                          AND CLI_MI.DescId = zc_ContainerLinkObject_PartionMovementItem()
-                             LEFT JOIN Object AS Object_PartionMovementItem ON Object_PartionMovementItem.Id = CLI_MI.ObjectId
-                             LEFT JOIN MovementItem AS PartionMovementItem ON PartionMovementItem.Id = Object_PartionMovementItem.ObjectCode
-                             LEFT JOIN Movement AS PartionMovement ON PartionMovement.Id = PartionMovementItem.MovementId
+
+                             LEFT JOIN ContainerlinkObject AS CLO_MovementItem
+                                                           ON CLO_MovementItem.Containerid = DDChild.ContainerId
+                                                          AND CLO_MovementItem.DescId = zc_ContainerLinkObject_PartionMovementItem()
+                             LEFT OUTER JOIN Object AS Object_PartionMovementItem ON Object_PartionMovementItem.Id = CLO_MovementItem.ObjectId
+                             -- элемент прихода
+                             LEFT JOIN MovementItem AS MI_Income ON MI_Income.Id = Object_PartionMovementItem.ObjectCode
+                             -- если это партия, которая была создана инвентаризацией - в этом свойстве будет "найденный" ближайший приход от поставщика
+                             LEFT JOIN MovementItemFloat AS MIFloat_MovementItem
+                                                         ON MIFloat_MovementItem.MovementItemId = MI_Income.Id
+                                                        AND MIFloat_MovementItem.DescId = zc_MIFloat_MovementItemId()
+                             -- элемента прихода от поставщика (если это партия, которая была создана инвентаризацией)
+                             LEFT JOIN MovementItem AS MI_Income_find ON MI_Income_find.Id = (MIFloat_MovementItem.ValueData :: Integer)
                        )
+          , tmpContainerTo AS (SELECT Container.ObjectId                                          AS ObjectId
+                                    , MovementLinkObject_From.ObjectId                            AS FromId
+                               FROM (SELECT DISTINCT tmpItem.ObjectId_to FROM tmpItem) AS tmpMI
+                                    INNER JOIN Container ON Container.DescId = zc_Container_Count()
+                                                        AND Container.WhereObjectId in (SELECT OL_Unit_Juridical.ObjectId FROM ObjectLink AS OL_Unit_Juridical
+                                                                                        WHERE OL_Unit_Juridical.ChildObjectId = vbJuridicalToId
+                                                                                          AND OL_Unit_Juridical.DescId   = zc_ObjectLink_Unit_Juridical())
+                                                        AND Container.ObjectId = tmpMI.ObjectId_to
+
+                                    LEFT JOIN MovementItemContainer AS MIC
+                                                                    ON MIC.Containerid = Container.Id
+                                                                   AND MIC.MovementDescId = zc_Movement_Income()
+                                                                   AND MIC.OperDate >= CURRENT_DATE - INTERVAL '30 MONTH'
+
+                                    LEFT JOIN MovementLinkObject AS MovementLinkObject_From
+                                                                 ON MovementLinkObject_From.MovementId = MIC.MovementId
+                                                                AND MovementLinkObject_From.DescId = zc_MovementLinkObject_From()
+                                GROUP BY Container.ObjectId
+                                       , MovementLinkObject_From.ObjectId
+                                )
             -- проводки кол-во
           , tmpAll AS  (-- расход с подразделения "From"
                         SELECT
@@ -353,6 +391,8 @@ end if;*/
                                                   , inObjectId_1        := vbUnitToId
                                                   , inDescId_2          := zc_ContainerLinkObject_PartionMovementItem() -- DescId для 2-ой Аналитики
                                                   , inObjectId_2        := lpInsertFind_Object_PartionMovementItem (tmpItem.PartionMovementItemId)
+                                                  , inDescId_3          := CASE WHEN vbDivisionParties = TRUE AND COALESCE (tmpContainerTo.FromId, 0) = 0 THEN zc_ContainerLinkObject_DivisionParties() ELSE NULL END -- DescId для 3-ой Аналитики
+                                                  , inObjectId_3        := CASE WHEN vbDivisionParties = TRUE AND COALESCE (tmpContainerTo.FromId, 0) = 0 THEN zc_Enum_DivisionParties_UKTVED() ELSE NULL END
                                                    ) AS ContainerId_count
                            , Null
                            , tmpItem.MovementItemId  AS MovementItemId
@@ -361,6 +401,14 @@ end if;*/
                            , 1 * tmpItem.Amount      AS Amount
                            , TRUE                    AS IsActive
                         FROM tmpItem
+
+                             LEFT JOIN MovementLinkObject AS MovementLinkObject_From
+                                                          ON MovementLinkObject_From.MovementId = tmpItem.MovementId_Income
+                                                         AND MovementLinkObject_From.DescId = zc_MovementLinkObject_From()
+
+                             LEFT JOIN tmpContainerTo ON tmpContainerTo.ObjectId = tmpItem.ObjectId_to
+                                                     AND tmpContainerTo.FromId = MovementLinkObject_From.ObjectId
+
                         WHERE vbIsDeferred = FALSE -- !!! если НЕ Отложен, тогда приходуем!!!
                        )
             -- проводки суммы
@@ -511,21 +559,31 @@ end if;*/
                    , Container.Amount + COALESCE (ContainerUsed.Amount, 0) AS AmountRemains
                    , Container.ObjectId
                    , Movement.OperDate   -- дата прихода от пост.
-                   , MovementItem.Id AS PartionMovementItemId
+                   , COALESCE (MI_Income_find.Id,MI_Income.Id) AS PartionMovementItemId
                    , Container.Id    AS ContainerId
+                   , COALESCE (MI_Income_find.MovementId,MI_Income.MovementId) AS MovementId_Income
                      -- итого "накопительный" остаток
                    , SUM (Container.Amount + COALESCE (ContainerUsed.Amount, 0)) OVER (PARTITION BY Container.ObjectId ORDER BY Movement.OperDate, Container.Id, tmpMI_Send.MovementItemId) AS AmountRemains_sum
                      -- для последнего элемента - не смотрим на остаток
                    , ROW_NUMBER() OVER (PARTITION BY tmpMI_Send.MovementItemId ORDER BY Movement.OperDate DESC, Container.Id DESC, tmpMI_Send.MovementItemId DESC) AS DOrd
                  FROM Container
                       JOIN tmpMI_Send ON tmpMI_Send.ObjectId = Container.ObjectId
-                      JOIN containerlinkObject AS CLI_MI
-                                               ON CLI_MI.ContainerId = Container.Id
-                                              AND CLI_MI.DescId      = zc_ContainerLinkObject_PartionMovementItem()
-                      JOIN Object AS Object_PartionMovementItem ON Object_PartionMovementItem.Id = CLI_MI.ObjectId
-                      JOIN MovementItem ON MovementItem.Id = Object_PartionMovementItem.ObjectCode
-                      JOIN Movement ON Movement.Id = MovementItem.MovementId
                       LEFT JOIN ContainerUsed ON ContainerUsed.ContainerId = Container.Id
+
+                      LEFT JOIN ContainerlinkObject AS CLO_MovementItem
+                                                    ON CLO_MovementItem.Containerid = Container.Id
+                                                   AND CLO_MovementItem.DescId = zc_ContainerLinkObject_PartionMovementItem()
+                      LEFT OUTER JOIN Object AS Object_PartionMovementItem ON Object_PartionMovementItem.Id = CLO_MovementItem.ObjectId
+                      -- элемент прихода
+                      LEFT JOIN MovementItem AS MI_Income ON MI_Income.Id = Object_PartionMovementItem.ObjectCode
+                      -- если это партия, которая была создана инвентаризацией - в этом свойстве будет "найденный" ближайший приход от поставщика
+                      LEFT JOIN MovementItemFloat AS MIFloat_MovementItem
+                                                  ON MIFloat_MovementItem.MovementItemId = MI_Income.Id
+                                                 AND MIFloat_MovementItem.DescId = zc_MIFloat_MovementItemId()
+                      -- элемента прихода от поставщика (если это партия, которая была создана инвентаризацией)
+                      LEFT JOIN MovementItem AS MI_Income_find ON MI_Income_find.Id = (MIFloat_MovementItem.ValueData :: Integer)
+                      -- Приход
+                      LEFT JOIN Movement ON Movement.ID = COALESCE (MI_Income_find.MovementId,MI_Income.MovementId)
                  WHERE Container.WhereObjectId = vbUnitFromId
                    AND Container.DescId        = zc_Container_Count()
                    AND Container.Amount + COALESCE (ContainerUsed.Amount, 0) > 0
@@ -537,6 +595,7 @@ end if;*/
                           DD.ContainerId            AS ContainerId_count
                         , NULL           :: Integer AS ContainerId_summ
                         , DD.PartionMovementItemId  AS PartionMovementItemId
+                        , DD.MovementId_Income      AS MovementId_Income
                         , DD.MovementItemId         AS MovementItemId
                         , DD.ObjectId               AS ObjectId
                         , CASE WHEN vbRetailId_from <> vbRetailId_to THEN GoodsRetial_to.ObjectId_to ELSE DD.ObjectId END AS ObjectId_to
@@ -555,6 +614,26 @@ end if;*/
                                               */
                       WHERE  (DD.Amount - (DD.AmountRemains_sum - DD.AmountRemains) > 0)
                      )
+          , tmpContainerTo AS (SELECT Container.ObjectId                                          AS ObjectId
+                                    , MovementLinkObject_From.ObjectId                            AS FromId
+                               FROM (SELECT DISTINCT tmpItem.ObjectId_to FROM tmpItem) AS tmpMI
+                                    INNER JOIN Container ON Container.DescId = zc_Container_Count()
+                                                        AND Container.WhereObjectId in (SELECT OL_Unit_Juridical.ObjectId FROM ObjectLink AS OL_Unit_Juridical
+                                                                                        WHERE OL_Unit_Juridical.ChildObjectId = vbJuridicalToId
+                                                                                          AND OL_Unit_Juridical.DescId   = zc_ObjectLink_Unit_Juridical())
+                                                        AND Container.ObjectId = tmpMI.ObjectId_to
+
+                                    LEFT JOIN MovementItemContainer AS MIC
+                                                                    ON MIC.Containerid = Container.Id
+                                                                   AND MIC.MovementDescId = zc_Movement_Income()
+                                                                   AND MIC.OperDate >= CURRENT_DATE - INTERVAL '30 MONTH'
+
+                                    LEFT JOIN MovementLinkObject AS MovementLinkObject_From
+                                                                 ON MovementLinkObject_From.MovementId = MIC.MovementId
+                                                                AND MovementLinkObject_From.DescId = zc_MovementLinkObject_From()
+                                GROUP BY Container.ObjectId
+                                       , MovementLinkObject_From.ObjectId
+                                )
           -- проводки кол-во
         , tmpAll AS  (-- расход с подразделения "From"
                       SELECT
@@ -581,6 +660,8 @@ end if;*/
                                                 , inObjectId_1        := vbUnitToId
                                                 , inDescId_2          := zc_ContainerLinkObject_PartionMovementItem() -- DescId для 2-ой Аналитики
                                                 , inObjectId_2        := lpInsertFind_Object_PartionMovementItem (tmpItem.PartionMovementItemId)
+                                                , inDescId_3          := CASE WHEN vbDivisionParties = TRUE AND COALESCE (tmpContainerTo.FromId, 0) = 0 THEN zc_ContainerLinkObject_DivisionParties() ELSE NULL END -- DescId для 3-ой Аналитики
+                                                , inObjectId_3        := CASE WHEN vbDivisionParties = TRUE AND COALESCE (tmpContainerTo.FromId, 0) = 0 THEN zc_Enum_DivisionParties_UKTVED() ELSE NULL END
                                                  ) AS ContainerId_count
                          , tmpItem.MovementItemId  AS MovementItemId
                          , tmpItem.ObjectId_to     AS ObjectId
@@ -588,6 +669,13 @@ end if;*/
                          , 1 * tmpItem.Amount      AS Amount
                          , TRUE                    AS IsActive
                       FROM tmpItem
+                           LEFT JOIN MovementLinkObject AS MovementLinkObject_From
+                                                        ON MovementLinkObject_From.MovementId = tmpItem.MovementId_Income
+                                                       AND MovementLinkObject_From.DescId = zc_MovementLinkObject_From()
+
+                           LEFT JOIN tmpContainerTo ON tmpContainerTo.ObjectId = tmpItem.ObjectId_to
+                                                   AND tmpContainerTo.FromId = MovementLinkObject_From.ObjectId
+
                       WHERE vbIsDeferred = FALSE -- !!! если НЕ Отложен, тогда приходуем!!!
                      )
           -- проводки суммы
@@ -671,7 +759,7 @@ end if;*/
       SELECT Date_6, Date_3, Date_1, Date_0
       INTO vbDate_6, vbDate_3, vbDate_1, vbDate_0
       FROM lpSelect_PartionDateKind_SetDate ();
-      
+
       -- А сюда товары для перемещений СУН
       WITH
           -- строки документа перемещения
@@ -718,10 +806,26 @@ end if;*/
         , ContainerAll AS (SELECT
                                Container.ID
                              , Container.ObjectId
-                             , Container.Amount + COALESCE (ContainerUsed.Amount, 0) AS Amount
+                             , Container.Amount + COALESCE (ContainerUsed.Amount, 0)     AS Amount
+                             , COALESCE (MI_Income_find.Id,MI_Income.Id)                 AS PartionMovementItemId
+                             , COALESCE (MI_Income_find.MovementId,MI_Income.MovementId) AS MovementId_Income
                            FROM Container
                                 JOIN tmpMI_Send ON tmpMI_Send.ObjectId = Container.ObjectId
                                 LEFT JOIN ContainerUsed ON ContainerUsed.ContainerId = Container.Id
+
+                                LEFT JOIN ContainerlinkObject AS CLO_MovementItem
+                                                              ON CLO_MovementItem.Containerid = Container.Id
+                                                             AND CLO_MovementItem.DescId = zc_ContainerLinkObject_PartionMovementItem()
+                                LEFT OUTER JOIN Object AS Object_PartionMovementItem ON Object_PartionMovementItem.Id = CLO_MovementItem.ObjectId
+                                -- элемент прихода
+                                LEFT JOIN MovementItem AS MI_Income ON MI_Income.Id = Object_PartionMovementItem.ObjectCode
+                                -- если это партия, которая была создана инвентаризацией - в этом свойстве будет "найденный" ближайший приход от поставщика
+                                LEFT JOIN MovementItemFloat AS MIFloat_MovementItem
+                                                            ON MIFloat_MovementItem.MovementItemId = MI_Income.Id
+                                                           AND MIFloat_MovementItem.DescId = zc_MIFloat_MovementItemId()
+                                -- элемента прихода от поставщика (если это партия, которая была создана инвентаризацией)
+                                LEFT JOIN MovementItem AS MI_Income_find ON MI_Income_find.Id = (MIFloat_MovementItem.ValueData :: Integer)
+
                            WHERE Container.WhereObjectId = vbUnitFromId
                              AND Container.DescId        = zc_Container_Count()
                              AND Container.Amount + COALESCE (ContainerUsed.Amount, 0) > 0
@@ -752,8 +856,15 @@ end if;*/
                              , Container.ObjectId
                              , Container.Amount
                              , COALESCE (ContainerPD.PDOrd, 4) AS PDOrd
+                             , Container.PartionMovementItemId
+                             , Container.MovementId_Income
+                             , MovementLinkObject_From.ObjectId AS JuridicalID
                            FROM ContainerAll AS Container
                                 LEFT JOIN ContainerPD ON ContainerPD.Id = Container.Id
+
+                                LEFT JOIN MovementLinkObject AS MovementLinkObject_From
+                                                             ON MovementLinkObject_From.MovementId = Container.MovementId_Income
+                                                            AND MovementLinkObject_From.DescId = zc_MovementLinkObject_From()
                            )
 
           -- строки документа перемещения размазанные по текущему остатку(Контейнерам) на подразделении "From"
@@ -765,20 +876,16 @@ end if;*/
                    , Container.Amount AS AmountRemains
                    , Container.ObjectId
                    , Movement.OperDate   -- дата прихода от пост.
-                   , MovementItem.Id AS PartionMovementItemId
+                   , Container.PartionMovementItemId
                    , Container.Id    AS ContainerId
+                   , Container.JuridicalID   AS JuridicalID
                      -- итого "накопительный" остаток
                    , SUM (Container.Amount) OVER (PARTITION BY Container.ObjectId ORDER BY Container.PDOrd, Movement.OperDate, Container.Id, tmpMI_Send.MovementItemId) AS AmountRemains_sum
                      -- для последнего элемента - не смотрим на остаток
                    , ROW_NUMBER() OVER (PARTITION BY tmpMI_Send.MovementItemId ORDER BY Container.PDOrd DESC, Movement.OperDate DESC, Container.Id DESC, tmpMI_Send.MovementItemId DESC) AS DOrd
                  FROM tmpContainer AS Container
                       JOIN tmpMI_Send ON tmpMI_Send.ObjectId = Container.ObjectId
-                      JOIN containerlinkObject AS CLI_MI
-                                               ON CLI_MI.ContainerId = Container.Id
-                                              AND CLI_MI.DescId      = zc_ContainerLinkObject_PartionMovementItem()
-                      JOIN Object AS Object_PartionMovementItem ON Object_PartionMovementItem.Id = CLI_MI.ObjectId
-                      JOIN MovementItem ON MovementItem.Id = Object_PartionMovementItem.ObjectCode
-                      JOIN Movement ON Movement.Id = MovementItem.MovementId
+                      JOIN Movement ON Movement.Id = Container.MovementId_Income
                 )
           -- контейнеры и zc_Container_Count, которые будут списаны (с подразделения "From")
         , tmpItem AS (
@@ -789,6 +896,7 @@ end if;*/
                         , DD.PartionMovementItemId  AS PartionMovementItemId
                         , DD.MovementItemId         AS MovementItemId
                         , DD.ObjectId               AS ObjectId
+                        , DD.JuridicalID            AS JuridicalID
                         , CASE WHEN vbRetailId_from <> vbRetailId_to THEN GoodsRetial_to.ObjectId_to ELSE DD.ObjectId END AS ObjectId_to
                         , CASE WHEN DD.Amount - DD.AmountRemains_sum > 0.0 AND DD.DOrd <> 1
                                     THEN DD.AmountRemains
@@ -805,6 +913,27 @@ end if;*/
                                               */
                       WHERE  (DD.Amount - (DD.AmountRemains_sum - DD.AmountRemains) > 0)
                      )
+        , tmpContainerTo AS (SELECT Container.ObjectId                                          AS ObjectId
+                                  , MovementLinkObject_From.ObjectId                            AS FromId
+                             FROM (SELECT DISTINCT tmpItem.ObjectId_to FROM tmpItem) AS tmpMI
+                                  INNER JOIN Container ON Container.DescId = zc_Container_Count()
+                                                      AND Container.WhereObjectId in (SELECT OL_Unit_Juridical.ObjectId FROM ObjectLink AS OL_Unit_Juridical
+                                                                                      WHERE OL_Unit_Juridical.ChildObjectId = vbJuridicalToId
+                                                                                        AND OL_Unit_Juridical.DescId   = zc_ObjectLink_Unit_Juridical())
+                                                      AND Container.ObjectId = tmpMI.ObjectId_to
+
+                                  LEFT JOIN MovementItemContainer AS MIC
+                                                                  ON MIC.Containerid = Container.Id
+                                                                 AND MIC.MovementDescId = zc_Movement_Income()
+                                                                 AND MIC.OperDate >= CURRENT_DATE - INTERVAL '30 MONTH'
+
+                                  LEFT JOIN MovementLinkObject AS MovementLinkObject_From
+                                                               ON MovementLinkObject_From.MovementId = MIC.MovementId
+                                                              AND MovementLinkObject_From.DescId = zc_MovementLinkObject_From()
+                              GROUP BY Container.ObjectId
+                                     , MovementLinkObject_From.ObjectId
+                              )
+
           -- проводки кол-во
         , tmpAll AS  (-- расход с подразделения "From"
                       SELECT
@@ -831,6 +960,8 @@ end if;*/
                                                 , inObjectId_1        := vbUnitToId
                                                 , inDescId_2          := zc_ContainerLinkObject_PartionMovementItem() -- DescId для 2-ой Аналитики
                                                 , inObjectId_2        := lpInsertFind_Object_PartionMovementItem (tmpItem.PartionMovementItemId)
+                                                , inDescId_3          := CASE WHEN vbDivisionParties = TRUE AND COALESCE (tmpContainerTo.FromId, 0) = 0 THEN zc_ContainerLinkObject_DivisionParties() ELSE NULL END -- DescId для 3-ой Аналитики
+                                                , inObjectId_3        := CASE WHEN vbDivisionParties = TRUE AND COALESCE (tmpContainerTo.FromId, 0) = 0 THEN zc_Enum_DivisionParties_UKTVED() ELSE NULL END
                                                  ) AS ContainerId_count
                          , tmpItem.MovementItemId  AS MovementItemId
                          , tmpItem.ObjectId_to     AS ObjectId
@@ -838,6 +969,8 @@ end if;*/
                          , 1 * tmpItem.Amount      AS Amount
                          , TRUE                    AS IsActive
                       FROM tmpItem
+                           LEFT JOIN tmpContainerTo ON tmpContainerTo.ObjectId = tmpItem.ObjectId_to
+                                                   AND tmpContainerTo.FromId = tmpItem.JuridicalID
                       WHERE vbIsDeferred = FALSE -- !!! если НЕ Отложен, тогда приходуем!!!
                      )
           -- проводки суммы
@@ -1087,3 +1220,4 @@ $BODY$
 */
 
 -- select * from gpUpdate_Movement_Send_Deferred(inMovementId := 15529825 , inisDeferred := 'True' ,  inSession := '3');-- SELECT * FROM lpComplete_Movement_Send (inMovementId:= 14931454, inUserId:= 3)
+-- select * from gpUpdate_Status_Send(inMovementId := 19877942  , inStatusCode := 2 ,  inSession := '3');

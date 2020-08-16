@@ -257,6 +257,8 @@ begin
       AddIntField(LocalDataBaseBody,   'NDSKINDID'); //Ставка НДС
       //***19.06.20
       AddIntField(LocalDataBaseBody,   'DISCEXTID'); //Дисконтная программы
+      //***19.06.20
+      AddIntField(LocalDataBaseBody,   'DIVPARTID'); //Разделение партий в кассе для продажи
 
       LocalDataBaseBody.CreateTable;
     end
@@ -282,6 +284,8 @@ begin
         if FindField('NDSKINDID') = nil then AddIntField(LFieldDefs, 'NDSKINDID');
         //***19.06.20
         if FindField('DISCEXTID') = nil then AddIntField(LFieldDefs, 'DISCEXTID');
+        //***16.08.20
+        if FindField('DIVPARTID') = nil then AddIntField(LFieldDefs, 'DIVPARTID');
 
         if LFieldDefs.Count <> 0 then
           AddFields(LFieldDefs, 1000);
@@ -314,7 +318,9 @@ begin
         //***15.04.20
         (FindField('NDSKINDID') = nil) or
         //***19.06.20
-        (FindField('DISCEXTID') = nil));
+        (FindField('DISCEXTID') = nil) or
+        //***16.08.20
+        (FindField('DIVPARTID') = nil));
 
       Close;
 
@@ -364,6 +370,8 @@ begin
       AddStrField(LocalDataBaseDiff,   'GOODSDINAM',100); //наименование дисконтной программы товара
       AddStrField(LocalDataBaseDiff,   'UKTZED',20); //Код UKTZED
       AddIntField(LocalDataBaseDiff,   'GOODSPSID'); //Парный тоапр СП
+      AddIntField(LocalDataBaseDiff,   'DIVPARTID'); //Тип срок/не срок
+      AddStrField(LocalDataBaseDiff,   'DIVPARTNAM',100); //наименование типа срок/не срок
 
       LocalDataBaseDiff.CreateTable;
     end;
@@ -396,7 +404,8 @@ begin
         (FindField('GOODSDIID') = nil) or
         (FindField('GOODSDINAM') = nil) or
         (FindField('UKTZED') = nil) or
-        (FindField('GOODSPSID') = nil));
+        (FindField('GOODSPSID') = nil) or
+        (FindField('DIVPARTNAM') = nil));
 
       Close;
 

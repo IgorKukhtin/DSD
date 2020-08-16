@@ -319,10 +319,16 @@ CREATE OR REPLACE FUNCTION zc_MILinkObject_DiscountExternal() RETURNS Integer AS
 INSERT INTO MovementItemLinkObjectDesc (Code, ItemName)
   SELECT 'zc_MILinkObject_DiscountExternal', 'Дисконтная программы' WHERE NOT EXISTS (SELECT * FROM MovementItemLinkObjectDesc WHERE Code = 'zc_MILinkObject_DiscountExternal');
 
+CREATE OR REPLACE FUNCTION zc_MILinkObject_DivisionParties() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM MovementItemLinkObjectDesc WHERE Code = 'zc_MILinkObject_DivisionParties'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
+INSERT INTO MovementItemLinkObjectDesc (Code, ItemName)
+  SELECT 'zc_MILinkObject_DivisionParties', 'Разделение партий в кассе для продажи' WHERE NOT EXISTS (SELECT * FROM MovementItemLinkObjectDesc WHERE Code = 'zc_MILinkObject_DivisionParties');
+
+
 
 /*-------------------------------------------------------------------------------
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.  Шаблий О.В.
+ 14.08.20                                                                    * zc_MILinkObject_DivisionParties
  21.06.20                                                                    * zc_MILinkObject_DiscountExternal
  14.04.20                                                                    * zc_MILinkObject_NDSKind
  27.02.20                                                                    * zc_MILinkObject_CommentTR

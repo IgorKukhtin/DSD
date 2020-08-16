@@ -186,19 +186,19 @@ end;
 
 procedure TLoadFormTest.LoadDiscountFormTest;
 begin
-{  TdsdFormStorageFactory.GetStorage.Save(GetForm('TDiscountExternalForm'));
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TDiscountExternalForm'));
   TdsdFormStorageFactory.GetStorage.Load('TDiscountExternalForm');
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TDiscountExternalEditForm'));
   TdsdFormStorageFactory.GetStorage.Load('TDiscountExternalEditForm');
-  TdsdFormStorageFactory.GetStorage.Save
-    (GetForm('TDiscountExternal_ObjectForm'));
-  TdsdFormStorageFactory.GetStorage.Load('TDiscountExternal_ObjectForm');}
+  Exit;
+
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TDiscountExternal_ObjectForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TDiscountExternal_ObjectForm');
 
 
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TDiscountExternalToolsForm'));
   TdsdFormStorageFactory.GetStorage.Load('TDiscountExternalToolsForm');
-  TdsdFormStorageFactory.GetStorage.Save
-    (GetForm('TDiscountExternalToolsEditForm'));
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TDiscountExternalToolsEditForm'));
   TdsdFormStorageFactory.GetStorage.Load('TDiscountExternalToolsEditForm');
   Exit;
 

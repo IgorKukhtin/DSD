@@ -62,7 +62,7 @@ BEGIN
                                      AND MovementLinkObject_From.DescId = zc_MovementLinkObject_From()
          LEFT JOIN MovementLinkObject AS MovementLinkObject_To
                                       ON MovementLinkObject_To.MovementId = Movement.Id
-                                     AND MovementLinkObject_To.DescId = zc_MovementLinkObject_From()
+                                     AND MovementLinkObject_To.DescId = zc_MovementLinkObject_To()
          LEFT JOIN ObjectLink AS OL_Unit_Juridical
                               ON OL_Unit_Juridical.ObjectId = MovementLinkObject_To.ObjectId
                              AND OL_Unit_Juridical.DescId   = zc_ObjectLink_Unit_Juridical()
@@ -174,10 +174,11 @@ BEGIN
                            )
           --
          , tmpPartion AS (SELECT Movement.Id
-                               , MovementDate_Branch.ValueData AS BranchDate
-                               , Movement.Invnumber            AS Invnumber
-                               , Object_From.ValueData         AS FromName
-                               , Object_Contract.ValueData     AS ContractName
+                               , MovementDate_Branch.ValueData    AS BranchDate
+                               , Movement.Invnumber               AS Invnumber
+                               , MovementLinkObject_From.ObjectId AS FromId
+                               , Object_From.ValueData            AS FromName
+                               , Object_Contract.ValueData        AS ContractName
                           FROM Movement
                                LEFT JOIN MovementDate AS MovementDate_Branch
                                                       ON MovementDate_Branch.MovementId = Movement.Id
@@ -195,6 +196,32 @@ BEGIN
                           WHERE Movement.Id IN (SELECT DISTINCT tmpContainer.MovementId_Income FROM tmpContainer)
                           )
 
+         , tmpContainerTo AS (SELECT Container.ObjectId                                          AS ObjectId
+                                   , MovementLinkObject_From.ObjectId                            AS FromId
+                              FROM (SELECT DISTINCT MovementItem.ObjectId
+                                    FROM MovementItem
+                                    WHERE MovementItem.MovementId = inMovementId
+                                       AND MovementItem.DescId = zc_MI_Master()
+                                       AND MovementItem.Amount > 0
+                                       AND MovementItem.isErased = FALSE) AS tmpMI
+                                   INNER JOIN Container ON Container.DescId = zc_Container_Count()
+                                                       AND Container.WhereObjectId in (SELECT OL_Unit_Juridical.ObjectId FROM ObjectLink AS OL_Unit_Juridical
+                                                                                       WHERE OL_Unit_Juridical.ChildObjectId = vbJuridicalId
+                                                                                         AND OL_Unit_Juridical.DescId   = zc_ObjectLink_Unit_Juridical())
+                                                       AND Container.ObjectId = tmpMI.ObjectId
+
+                                   LEFT JOIN MovementItemContainer AS MIC
+                                                                   ON MIC.Containerid = Container.Id
+                                                                  AND MIC.MovementDescId = zc_Movement_Income()
+                                                                  AND MIC.OperDate >= vbOperDate - INTERVAL '30 MONTH'
+                                                                  AND MIC.OperDate < vbOperDate
+
+                                   LEFT JOIN MovementLinkObject AS MovementLinkObject_From
+                                                                ON MovementLinkObject_From.MovementId = MIC.MovementId
+                                                               AND MovementLinkObject_From.DescId = zc_MovementLinkObject_From()
+                               GROUP BY Container.ObjectId
+                                      , MovementLinkObject_From.ObjectId
+                               )
          SELECT
                COALESCE(tmpMI_Child_ContainerId.MovementItemId, 0)            AS ID
              , COALESCE(MovementItem.ParentId, MovementItem.Id)               AS ParentId
@@ -214,7 +241,7 @@ BEGIN
              , DATE_TRUNC ('DAY', MIDate_Insert.ValueData)       :: TDateTime AS DateInsert
              , CASE WHEN COALESCE(tmpMI_Child_ContainerId.MovementItemId, 0) = 0 THEN FALSE ELSE TRUE END AS PartyRelated
 
-             , zc_Color_Black()                                               AS Color_calc
+             , CASE WHEN COALESCE(tmpContainerTo.ObjectId, 0) <> 0 THEN zc_Color_Black() ELSE zc_Color_Red() END  AS Color_calc
          FROM tmpMIContainerAll AS Container
 
               LEFT JOIN MovementItem ON MovementItem.ID = Container.MovementItemId
@@ -230,6 +257,8 @@ BEGIN
               LEFT OUTER JOIN MovementItemDate  AS MIDate_Insert
                                                 ON MIDate_Insert.MovementItemId = MovementItem.Id
                                                AND MIDate_Insert.DescId = zc_MIDate_Insert()
+              LEFT OUTER JOIN tmpContainerTo ON tmpContainerTo.ObjectId = MovementItem.ObjectId
+                                            AND tmpContainerTo.FromId = tmpPartion.FromId
          ;
 
      ELSEIF vbisSUN = TRUE
@@ -408,7 +437,12 @@ BEGIN
                           )
          , tmpContainerTo AS (SELECT Container.ObjectId                                          AS ObjectId
                                    , MovementLinkObject_From.ObjectId                            AS FromId
-                              FROM (SELECT DISTINCT tmpMI_Master.ObjectId FROM tmpMI_Master) AS tmpMI
+                              FROM (SELECT DISTINCT MovementItem.ObjectId
+                                    FROM MovementItem
+                                    WHERE MovementItem.MovementId = inMovementId
+                                       AND MovementItem.DescId = zc_MI_Master()
+                                    --   AND MovementItem.Amount > 0
+                                       AND MovementItem.isErased = FALSE) AS tmpMI
                                    INNER JOIN Container ON Container.DescId = zc_Container_Count()
                                                        AND Container.WhereObjectId in (SELECT OL_Unit_Juridical.ObjectId FROM ObjectLink AS OL_Unit_Juridical
                                                                                        WHERE OL_Unit_Juridical.ChildObjectId = vbJuridicalId
@@ -611,10 +645,11 @@ BEGIN
                            )
           --
          , tmpPartion AS (SELECT Movement.Id
-                               , MovementDate_Branch.ValueData AS BranchDate
-                               , Movement.Invnumber            AS Invnumber
-                               , Object_From.ValueData         AS FromName
-                               , Object_Contract.ValueData     AS ContractName
+                               , MovementDate_Branch.ValueData    AS BranchDate
+                               , Movement.Invnumber               AS Invnumber
+                               , MovementLinkObject_From.ObjectId AS FromId
+                               , Object_From.ValueData            AS FromName
+                               , Object_Contract.ValueData       AS ContractName
                           FROM Movement
                                LEFT JOIN MovementDate AS MovementDate_Branch
                                                       ON MovementDate_Branch.MovementId = Movement.Id
@@ -631,6 +666,32 @@ BEGIN
                                LEFT JOIN Object AS Object_Contract ON Object_Contract.Id = MovementLinkObject_Contract.ObjectId
                           WHERE Movement.Id IN (SELECT DISTINCT tmpContainer.MovementId_Income FROM tmpContainer)
                           )
+         , tmpContainerTo AS (SELECT Container.ObjectId                                          AS ObjectId
+                                   , MovementLinkObject_From.ObjectId                            AS FromId
+                              FROM (SELECT DISTINCT MovementItem.ObjectId
+                                    FROM MovementItem
+                                    WHERE MovementItem.MovementId = inMovementId
+                                       AND MovementItem.DescId = zc_MI_Master()
+                                    --   AND MovementItem.Amount > 0
+                                       AND MovementItem.isErased = FALSE) AS tmpMI
+                                   INNER JOIN Container ON Container.DescId = zc_Container_Count()
+                                                       AND Container.WhereObjectId in (SELECT OL_Unit_Juridical.ObjectId FROM ObjectLink AS OL_Unit_Juridical
+                                                                                       WHERE OL_Unit_Juridical.ChildObjectId = vbJuridicalId
+                                                                                         AND OL_Unit_Juridical.DescId   = zc_ObjectLink_Unit_Juridical())
+                                                       AND Container.ObjectId = tmpMI.ObjectId
+
+                                   LEFT JOIN MovementItemContainer AS MIC
+                                                                   ON MIC.Containerid = Container.Id
+                                                                  AND MIC.MovementDescId = zc_Movement_Income()
+                                                                  AND MIC.OperDate >= vbOperDate - INTERVAL '30 MONTH'
+                                                                  AND MIC.OperDate < vbOperDate
+
+                                   LEFT JOIN MovementLinkObject AS MovementLinkObject_From
+                                                                ON MovementLinkObject_From.MovementId = MIC.MovementId
+                                                               AND MovementLinkObject_From.DescId = zc_MovementLinkObject_From()
+                               GROUP BY Container.ObjectId
+                                      , MovementLinkObject_From.ObjectId
+                               )
 
          SELECT
                Container.ID::Integer      AS ID
@@ -651,7 +712,7 @@ BEGIN
              , DATE_TRUNC ('DAY', MIDate_Insert.ValueData)       :: TDateTime   AS DateInsert
              , CASE WHEN COALESCE(Container.ID, 0) = 0 THEN FALSE ELSE TRUE END AS PartyRelated
 
-             , zc_Color_Black()                                                 AS Color_calc
+             , CASE WHEN COALESCE(tmpContainerTo.ObjectId, 0) <> 0 THEN zc_Color_Black() ELSE zc_Color_Red() END  AS Color_calc
          FROM tmpMIContainerAll AS Container
 
               LEFT JOIN MovementItem ON MovementItem.ID = Container.MovementItemId
@@ -665,6 +726,8 @@ BEGIN
               LEFT OUTER JOIN MovementItemDate  AS MIDate_Insert
                                                 ON MIDate_Insert.MovementItemId = MovementItem.Id
                                                AND MIDate_Insert.DescId = zc_MIDate_Insert()
+              LEFT OUTER JOIN tmpContainerTo ON tmpContainerTo.ObjectId = MovementItem.ObjectId
+                                            AND tmpContainerTo.FromId = tmpPartion.FromId
          ;
 
      END IF;
@@ -684,6 +747,4 @@ $BODY$
 -- select * from gpSelect_MovementItem_Send_Child(inMovementId := 16804677 ,  inSession := '3');
 
 -- select * from gpSelect_MovementItem_Send_Child (inMovementId := 19361981       ,  inSession := '3');
-
-
-select * from gpSelect_MovementItem_Send_Child(inMovementId := 19747964        ,  inSession := '3') left join Object ON Object.Id = GoodsId;
+-- select * from gpSelect_MovementItem_Send_Child(inMovementId := 19872428  ,  inSession := '3') left join Object ON Object.Id = GoodsId;

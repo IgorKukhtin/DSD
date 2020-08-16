@@ -4646,6 +4646,17 @@ inherited MainCashForm2: TMainCashForm2
         Value = '0'
         DataType = ftFloat
         MultiSelectSeparator = ','
+      end
+      item
+        Name = 'DivisionPartiesID'
+        Value = Null
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'DivisionPartiesName'
+        Value = Null
+        DataType = ftString
+        MultiSelectSeparator = ','
       end>
     Left = 32
     Top = 32
@@ -4831,6 +4842,15 @@ inherited MainCashForm2: TMainCashForm2
       item
         Name = 'GoodsPairSunId'
         DataType = ftInteger
+      end
+      item
+        Name = 'DivisionPartiesID'
+        DataType = ftInteger
+      end
+      item
+        Name = 'DivisionPartiesName'
+        DataType = ftString
+        Size = 100
       end>
     IndexDefs = <>
     Params = <>
@@ -5430,6 +5450,13 @@ inherited MainCashForm2: TMainCashForm2
     object MemDataGOODSPSID: TIntegerField
       FieldName = 'GOODSPSID'
     end
+    object MemDataDIVPARTID: TIntegerField
+      FieldName = 'DIVPARTID'
+    end
+    object MemDataDIVPARTNAME: TStringField
+      FieldName = 'DIVPARTNAME'
+      Size = 100
+    end
   end
   object mdCheck: TdxMemData
     Indexes = <>
@@ -5447,6 +5474,9 @@ inherited MainCashForm2: TMainCashForm2
     end
     object mdCheckDISCEXTID: TIntegerField
       FieldName = 'DISCEXTID'
+    end
+    object mdCheckDIVPARTID: TIntegerField
+      FieldName = 'DIVPARTID'
     end
     object mdCheckAMOUNT: TCurrencyField
       FieldName = 'AMOUNT'
