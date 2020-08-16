@@ -16,23 +16,17 @@ type
     FShortNames: TStringList;
     FFileNames: TStringList;
     FScriptContent: TStringList;
-    FFilesUsed: string; // список тех скриптов, которые будем применять
-    FFilesUsedArr: TStringDynArray;
   strict private
     procedure EnumFiles(const AScriptPath: string);
     procedure LogMsg(const AMsg: string);
-    procedure SetFilesUsed(const AValue: string);
   strict private
     function GetShortNames: TStrings;
-    function GetScriptContent: TStrings;
     function GetFileContent(const AFileName: string): string;
-    function MakeFilesUsedArray(const AFileList: string): TStringDynArray;
   public
-    constructor Create(const AScriptPath, AFilesUsed: string; AMsgProc: TNotifyMessage);
+    constructor Create(const AScriptPath: string; AMsgProc: TNotifyMessage);
     destructor Destroy; override;
-    property ScriptContent: TStrings read GetScriptContent;
     property ShortNames: TStrings read GetShortNames;
-    property FilesUsed: string read FFilesUsed write SetFilesUsed;
+    function GetScriptContent(AFiles: TStrings): TStrings;
   end;
 
 implementation
@@ -42,18 +36,17 @@ uses
 
 { TScriptFiles }
 
-constructor TScriptFiles.Create(const AScriptPath, AFilesUsed: string; AMsgProc: TNotifyMessage);
+constructor TScriptFiles.Create(const AScriptPath: string; AMsgProc: TNotifyMessage);
 begin
   inherited Create;
 
   FMsgProc := AMsgProc;
-  FFilesUsed  := AFilesUsed; // из всех имеющихся в каталоге скриптов будем применять только эти
 
   FShortNames    := TStringList.Create;
   FFileNames     := TStringList.Create;
   FScriptContent := TStringList.Create;
 
-  EnumFiles(AScriptPath);
+  EnumFiles(IncludeTrailingPathDelimiter(AScriptPath));
 end;
 
 destructor TScriptFiles.Destroy;
@@ -66,60 +59,58 @@ end;
 
 procedure TScriptFiles.EnumFiles(const AScriptPath: string);
 var
-  I, J: Integer;
+  I, iRootLen: Integer;
   arrFiles: TStringDynArray;
   searchOpt: TSearchOption;
   fileMask, sShortName: string;
 begin
   try
-    FFilesUsedArr := MakeFilesUsedArray(FFilesUsed); // массив коротких имен файлов, которые определены пользователем для выполнения
-
     searchOpt := TSearchOption.soAllDirectories;
     fileMask  := '*.sql';
     arrFiles  := TDirectory.GetFiles(AScriptPath, fileMask, searchOpt); // массив всех файлов, которые есть в директории AScriptPath
 
-    // если в Настройках пользователь сохранил имена скриптов, которые нужно выполнить
-    if Length(FFilesUsedArr) > 0 then
-      for I := Low(arrFiles) to High(arrFiles) do
-        for J := Low(FFilesUsedArr) to High(FFilesUsedArr) do
-        begin
-          sShortName := ExtractFileName(arrFiles[I]);
-          if sShortName = FFilesUsedArr[J] then
-          begin
-            FFileNames.Add(arrFiles[I]);
-            FShortNames.Add(sShortName);
-          end;
-        end;
-
-    // если в Настройках нет сохраненных имен скриптов, тогда берем все файлы из директории AScriptPath
-    if Length(FFilesUsedArr) = 0 then
-      for I := Low(arrFiles) to High(arrFiles) do
-      begin
-        FFileNames.Add(arrFiles[I]);
-        FShortNames.Add(ExtractFileName(arrFiles[I]));
-      end;
+    for I := Low(arrFiles) to High(arrFiles) do
+    begin
+      FFileNames.Add(arrFiles[I]);
+      // В качестве короткого имени файла берем имя файла до последней папки, указанной в AScriptPath
+      // Например, AScriptPath = C:\Test\Scripts, тогда полный путь C:\Test\Scripts\app_procedures\sample.sql
+      // В качестве короткого имени берем 'app_procedures\sample.sql'
+      iRootLen := Length(AScriptPath);
+      sShortName := Copy(arrFiles[I], iRootLen + 1, Length(arrFiles[I]) - iRootLen);
+      FShortNames.Add(sShortName);
+    end;
   except
     on E: Exception do
       LogMsg(Format(cExceptionMsg, [E.ClassName, E.Message]));
   end;
 end;
 
-function TScriptFiles.GetScriptContent: TStrings;
+function TScriptFiles.GetScriptContent(AFiles: TStrings): TStrings;
 var
-  I: Integer;
-  sScriptSQL: string;
+  I, J: Integer;
+  sScriptSQL, sFileName: string;
 begin
   Result := FScriptContent;
   Assert(FScriptContent <> nil, 'Ожидается FScriptContent <> nil');
 
+  // AFiles содержит пары вида '1=app_procedures\file.sql'
+
   try
     Result.Clear;
 
-    for I := 0 to Pred(FFileNames.Count) do
+    for I := 0 to Pred(AFiles.Count) do
     begin
-      sScriptSQL := GetFileContent(FFileNames[I]);
-       if Length(Trim(sScriptSQL)) > 0 then
-         Result.Add(sScriptSQL);
+      // получим имя файла из пары '1=app_procedures\file.sql'
+      sFileName := AFiles.Values[AFiles.Names[I]];
+      // найдем такое же имя в FShortNames
+      for J := 0 to Pred(FShortNames.Count) do
+        if LowerCase(sFileName) = LowerCase(FShortNames[J]) then
+        begin
+          sScriptSQL := GetFileContent(FFileNames[J]);
+          if Length(Trim(sScriptSQL)) > 0 then
+            Result.Add(sScriptSQL);
+          Break;
+        end;
     end;
   except
     on E: Exception do
@@ -171,29 +162,5 @@ begin
   if Assigned(FMsgProc) then FMsgProc(AMsg);
 end;
 
-function TScriptFiles.MakeFilesUsedArray(const AFileList: string): TStringDynArray;
-var
-  I: Integer;
-  tmpSL: TStringList;
-begin
-  SetLength(Result, 0);
-
-  tmpSL := TStringList.Create;
-  try
-    tmpSL.CommaText := AFileList;
-    SetLength(Result, tmpSL.Count);
-
-    for I := Low(Result) to High(Result) do
-      Result[I] := Trim(tmpSL[I]);
-  finally
-    FreeAndNil(tmpSL);
-  end;
-end;
-
-procedure TScriptFiles.SetFilesUsed(const AValue: string);
-begin
-  FFilesUsed := StringReplace(AValue, ' ', '', [rfIgnoreCase, rfReplaceAll]);
-  FFilesUsed := StringReplace(FFilesUsed, #13#10, '', [rfIgnoreCase, rfReplaceAll]);
-end;
 
 end.

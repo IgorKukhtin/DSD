@@ -3,7 +3,8 @@ unit USettings;
 interface
 
 uses
-  System.IniFiles;
+  System.Classes
+  , System.IniFiles;
 
 type
   TSettings = class
@@ -65,8 +66,6 @@ type
     class procedure SetReconnectTimeoutMinute(const AValue: Integer); static;
     class function GetScriptPath: string; static;
     class procedure SetScriptPath(const AValue: string); static;
-    class function GetScriptFilesUsed: string; static;
-    class procedure SetScriptFilesUsed(const AValue: string); static;
     class function GetDDLLastId: Integer; static;
     class procedure SetDDLLastId(const AValue: Integer); static;
   public
@@ -97,8 +96,9 @@ type
     class property CompareDeviationOnly: Boolean read GetCompareDeviationOnly write SetCompareDeviationOnly;
     class property ReconnectTimeoutMinute: Integer read GetReconnectTimeoutMinute write SetReconnectTimeoutMinute;
     class property ScriptPath: string read GetScriptPath write SetScriptPath;
-    class property ScriptFilesUsed: string read GetScriptFilesUsed write SetScriptFilesUsed;
     class property DDLLastId: Integer read GetDDLLastId write SetDDLLastId;
+    class procedure WriteScriptFiles(AList: TStrings);
+    class procedure ReadScriptFiles(AList: TStrings);
   end;
 
 function IsService: Boolean;
@@ -107,7 +107,6 @@ implementation
 
 uses
   System.IOUtils
-  , System.Classes
   , System.SysUtils
   , System.SyncObjs
   , Winapi.SHFolder
@@ -157,6 +156,9 @@ const
   cSlaveUserParam     = 'User_name';
   cSlavePasswParam    = 'Password';
   cSlaveDriverID      = 'DriverID';
+
+  // Scripts
+  cScriptSection = 'scripts';
 
   // Default values
   cDefPort = 5432;
@@ -385,11 +387,6 @@ begin
   Result := GetIntValue(cReplicaSection, cReplicaLastIdParam, cDefReplicaLastId);
 end;
 
-class function TSettings.GetScriptFilesUsed: string;
-begin
-  Result := GetStrValue(cSettingsSection, cScriptFilesUsedParam, '');
-end;
-
 class function TSettings.GetScriptPath: string;
 begin
   Result := GetStrValue(cSettingsSection, cScriptFilesPathParam, cDefScriptFilesPath);
@@ -471,6 +468,11 @@ end;
 class function TSettings.GetWriteCommandsToFile: Boolean;
 begin
   Result := GetBoolValue(cSettingsSection, cWriteCommandsParam, True);
+end;
+
+class procedure TSettings.ReadScriptFiles(AList: TStrings);
+begin
+  FIni.ReadSectionValues(cScriptSection, AList);
 end;
 
 class procedure TSettings.SetBoolValue(const ASection, AParam: string; const AVal: Boolean);
@@ -564,11 +566,6 @@ begin
   SetIntValue(cReplicaSection, cReplicaLastIdParam, AValue);
 end;
 
-class procedure TSettings.SetScriptFilesUsed(const AValue: string);
-begin
-  SetStrValue(cSettingsSection, cScriptFilesUsedParam, AValue);
-end;
-
 class procedure TSettings.SetScriptPath(const AValue: string);
 begin
   SetStrValue(cSettingsSection, cScriptFilesPathParam, AValue);
@@ -641,6 +638,17 @@ end;
 class procedure TSettings.SetWriteCommandsToFile(const AValue: Boolean);
 begin
   SetBoolValue(cSettingsSection, cWriteCommandsParam, AValue);
+end;
+
+class procedure TSettings.WriteScriptFiles(AList: TStrings);
+var
+  I: Integer;
+begin
+  Assert(AList <> nil, 'Ожидается AList <> nil');
+  FIni.EraseSection(cScriptSection);
+
+  for I := 0 to Pred(AList.Count) do
+    SetStrValue(cScriptSection, IntToStr(I + 1), AList[I]);
 end;
 
 initialization
