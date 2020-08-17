@@ -24,7 +24,7 @@ RETURNS TABLE (Id Integer, InvNumber Integer, OperDate TDateTime, StatusCode Int
              , GoodsTypeKindId Integer, GoodsTypeKindName TVarChar
              , BarCodeBoxId Integer, BarCodeBoxName TVarChar
              , SubjectDocId Integer, SubjectDocName TVarChar
-             , PersonalGroupId Integer, PersonalGroupName TVarChar
+             , PersonalGroupId Integer, PersonalGroupName TVarChar, UnitName_PersonalGroup TVarChar
               )
 AS
 $BODY$
@@ -100,6 +100,7 @@ BEGIN
 
              , Object_PersonalGroup.Id         AS PersonalGroupId
              , Object_PersonalGroup.ValueData  AS PersonalGroupName
+             , Object_Unit_PersonalGroup.ValueData AS UnitName_PersonalGroup
        FROM tmpStatus
             JOIN Movement ON Movement.DescId = zc_Movement_WeighingProduction()
                          AND Movement.OperDate BETWEEN inStartDate AND inEndDate
@@ -189,6 +190,12 @@ BEGIN
                                          ON MovementLinkObject_PersonalGroup.MovementId = Movement.Id
                                         AND MovementLinkObject_PersonalGroup.DescId = zc_MovementLinkObject_PersonalGroup()
             LEFT JOIN Object AS Object_PersonalGroup ON Object_PersonalGroup.Id = MovementLinkObject_PersonalGroup.ObjectId
+
+            LEFT JOIN ObjectLink AS ObjectLink_PersonalGroup_Unit
+                                 ON ObjectLink_PersonalGroup_Unit.ObjectId = Object_PersonalGroup.Id
+                                AND ObjectLink_PersonalGroup_Unit.DescId = zc_ObjectLink_PersonalGroup_Unit()
+            LEFT JOIN Object AS Object_Unit_PersonalGroup ON Object_Unit_PersonalGroup.Id = ObjectLink_PersonalGroup_Unit.ChildObjectId
+
        WHERE Movement.DescId = zc_Movement_WeighingProduction()
          AND Movement.OperDate BETWEEN inStartDate AND inEndDate;
   
@@ -200,6 +207,7 @@ $BODY$
 /*
  »—“Œ–»ﬂ –¿«–¿¡Œ“ »: ƒ¿“¿, ¿¬“Œ–
                ‘ÂÎÓÌ˛Í ».¬.    ÛıÚËÌ ».¬.    ÎËÏÂÌÚ¸Â‚  .».   Ã‡Ì¸ÍÓ ƒ.
+ 17.08.20         *
  03.03.20         * Add Order
  05.10.16         * add inJuridicalBasisId
  14.06.16         * DocumentKind

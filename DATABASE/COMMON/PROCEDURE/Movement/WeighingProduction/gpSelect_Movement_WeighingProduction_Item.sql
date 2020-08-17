@@ -19,7 +19,7 @@ RETURNS TABLE (Id Integer, InvNumber Integer, OperDate TDateTime, StatusCode Int
              , MovementId_Order Integer, InvNumberOrder TVarChar 
              , MovementDescNumber Integer, MovementDescName TVarChar
              , SubjectDocId Integer, SubjectDocName TVarChar
-             , PersonalGroupId Integer, PersonalGroupName TVarChar
+             , PersonalGroupId Integer, PersonalGroupName TVarChar, UnitName_PersonalGroup TVarChar
              , WeighingNumber TFloat
              , PartionGoods TVarChar
              , isProductionIn Boolean, isAuto Boolean
@@ -113,6 +113,7 @@ BEGIN
 
              , Object_PersonalGroup.Id                    AS PersonalGroupId
              , Object_PersonalGroup.ValueData             AS PersonalGroupName
+             , Object_Unit_PersonalGroup.ValueData        AS UnitName_PersonalGroup
              
              , MovementFloat_WeighingNumber.ValueData     AS WeighingNumber
 
@@ -276,6 +277,11 @@ BEGIN
                                         AND MovementLinkObject_PersonalGroup.DescId = zc_MovementLinkObject_PersonalGroup()
             LEFT JOIN Object AS Object_PersonalGroup ON Object_PersonalGroup.Id = MovementLinkObject_PersonalGroup.ObjectId
 
+            LEFT JOIN ObjectLink AS ObjectLink_PersonalGroup_Unit
+                                 ON ObjectLink_PersonalGroup_Unit.ObjectId = Object_PersonalGroup.Id
+                                AND ObjectLink_PersonalGroup_Unit.DescId = zc_ObjectLink_PersonalGroup_Unit()
+            LEFT JOIN Object AS Object_Unit_PersonalGroup ON Object_Unit_PersonalGroup.Id = ObjectLink_PersonalGroup_Unit.ChildObjectId
+
             --- строки
             INNER JOIN MovementItem ON MovementItem.MovementId = Movement.Id
                                    AND MovementItem.DescId     = zc_MI_Master()
@@ -397,6 +403,7 @@ $BODY$
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.
+ 17.08.20         *
  05.10.16         * add inJuridicalBasisId
  29.08.15         * add inGoodsGroupId, inGoodsId
  12.06.15                                        * all

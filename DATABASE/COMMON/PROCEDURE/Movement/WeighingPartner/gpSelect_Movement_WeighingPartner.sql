@@ -46,7 +46,7 @@ RETURNS TABLE (Id Integer, InvNumber Integer, OperDate TDateTime, StatusCode Int
              , MovementPromo TVarChar
              , BranchCode    Integer
              , SubjectDocId Integer, SubjectDocName TVarChar
-             , PersonalGroupId Integer, PersonalGroupName TVarChar
+             , PersonalGroupId Integer, PersonalGroupName TVarChar, UnitName_PersonalGroup TVarChar
               )
 AS
 $BODY$
@@ -187,8 +187,9 @@ BEGIN
              , Object_SubjectDoc.Id                          AS SubjectDocId
              , Object_SubjectDoc.ValueData                   AS SubjectDocName
 
-             , Object_PersonalGroup.Id                              AS PersonalGroupId
-             , Object_PersonalGroup.ValueData                       AS PersonalGroupName
+             , Object_PersonalGroup.Id                       AS PersonalGroupId
+             , Object_PersonalGroup.ValueData                AS PersonalGroupName
+             , Object_Unit_PersonalGroup.ValueData           AS UnitName_PersonalGroup
        FROM tmpStatus
             INNER JOIN Movement ON Movement.DescId = zc_Movement_WeighingPartner()
                                AND Movement.OperDate BETWEEN inStartDate AND inEndDate
@@ -414,6 +415,11 @@ BEGIN
                                          ON MovementLinkObject_PersonalGroup.MovementId = Movement.Id
                                         AND MovementLinkObject_PersonalGroup.DescId = zc_MovementLinkObject_PersonalGroup()
             LEFT JOIN Object AS Object_PersonalGroup ON Object_PersonalGroup.Id = MovementLinkObject_PersonalGroup.ObjectId
+
+            LEFT JOIN ObjectLink AS ObjectLink_PersonalGroup_Unit
+                                 ON ObjectLink_PersonalGroup_Unit.ObjectId = Object_PersonalGroup.Id
+                                AND ObjectLink_PersonalGroup_Unit.DescId = zc_ObjectLink_PersonalGroup_Unit()
+            LEFT JOIN Object AS Object_Unit_PersonalGroup ON Object_Unit_PersonalGroup.Id = ObjectLink_PersonalGroup_Unit.ChildObjectId
            ;
 
 END;
@@ -424,6 +430,7 @@ $BODY$
 /*
  »—“Œ–»ﬂ –¿«–¿¡Œ“ »: ƒ¿“¿, ¿¬“Œ–
                ‘ÂÎÓÌ˛Í ».¬.    ÛıÚËÌ ».¬.    ÎËÏÂÌÚ¸Â‚  .».   Ã‡Ì¸ÍÓ ƒ.
+ 17.08.20         *
  17.12.18         *
  05.10.16         * add inJuridicalBasisId
  04.10.16         * add AccessKey

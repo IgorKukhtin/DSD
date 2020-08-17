@@ -131,7 +131,6 @@ BEGIN
                                          ON MovementLinkObject_PersonalGroup.MovementId = Movement.Id
                                         AND MovementLinkObject_PersonalGroup.DescId = zc_MovementLinkObject_PersonalGroup()
             LEFT JOIN Object AS Object_PersonalGroup ON Object_PersonalGroup.Id = MovementLinkObject_PersonalGroup.ObjectId
-
      
             LEFT JOIN ObjectLink AS ObjectLink_PersonalGroup_Unit
                                  ON ObjectLink_PersonalGroup_Unit.ObjectId = Object_PersonalGroup.Id
