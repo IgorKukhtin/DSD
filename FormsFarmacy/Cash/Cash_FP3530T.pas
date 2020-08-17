@@ -15,7 +15,7 @@ type
     function SoldCode(const GoodsCode: integer; const Amount: double; const Price: double = 0.00): boolean;
     function SoldFromPC(const GoodsCode: integer; const GoodsName: string; const Amount, Price, NDS: double): boolean; //Продажа с компьютера
     function ChangePrice(const GoodsCode: integer; const Price: double): boolean;
-    function OpenReceipt(const isFiscal: boolean = true; const isPrintSumma: boolean = false): boolean;
+    function OpenReceipt(const isFiscal: boolean = true; const isPrintSumma: boolean = false; const isReturn: boolean = False): boolean;
     function CloseReceipt: boolean;
     function CloseReceiptEx(out CheckId: String): boolean;
     function CashInputOutput(const Summa: double): boolean;
@@ -74,6 +74,7 @@ type
 
 function    GetStatus(hWin:HWND; fun:TMathFunc; par:LPARAM; int1: BOOL):integer; stdcall	;external 'fpl.dll' name 'GetStatus';
 function    OpenFiscalReceipt(hWin:HWND; fun:TMathFunc; par:LPARAM;i1: DWORD;i2: LPSTR;i3: DWORD;i4: BOOL):integer;stdcall;external 'fpl.dll' name 'OpenFiscalReceipt';
+function    OpenRepaymentReceipt(hWin:HWND; fun:TMathFunc; par:LPARAM;i1: DWORD;i2: LPSTR;i3: DWORD;i4: BOOL):integer;stdcall;external 'fpl.dll' name 'OpenRepaymentReceipt';
 function    RegisterItem(hWin:HWND; fun:TMathFunc; par:LPARAM; n:LPSTR; n1: AnsiChar; n2:double; n3:double):integer;stdcall;external 'fpl.dll' name 'RegisterItem';
 function    InitFPport(int1,int2:integer):integer;stdcall	; external 'fpl.dll' name 'InitFPport';
 function    CloseFPport():integer;stdcall	; external 'fpl.dll' name 'CloseFPport';
@@ -251,15 +252,19 @@ begin
   result:= FAlwaysSold;
 end;
 
-function TCashFP3530T.OpenReceipt(const isFiscal: boolean = true; const isPrintSumma: boolean = false): boolean;
+function TCashFP3530T.OpenReceipt(const isFiscal: boolean = true; const isPrintSumma: boolean = false; const isReturn: boolean = False): boolean;
 begin
   result := true;
   try
     status:= 0;
     if FAlwaysSold then exit;
     s:=0;
-    if FisFiscal then OpenFiscalReceipt(0, PrinterResults, 0, 1,'0000',0, true)
-    else OpenNonfiscalReceipt(0, PrinterResults, 0);
+    if FisFiscal then
+    begin
+      if isReturn then
+        OpenRepaymentReceipt(0, PrinterResults, 0, 1,'0000',0, true)
+      else OpenFiscalReceipt(0, PrinterResults, 0, 1,'0000',0, true)
+    end else OpenNonfiscalReceipt(0, PrinterResults, 0);
     while s=0 do Application.ProcessMessages;
 
     s:=0;

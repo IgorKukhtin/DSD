@@ -733,10 +733,20 @@ CREATE OR REPLACE FUNCTION zc_ObjectBoolean_Goods_SupplementSUN1() RETURNS Integ
 INSERT INTO ObjectBooleanDesc (DescId, Code, ItemName)
   SELECT zc_Object_Goods(), 'zc_ObjectBoolean_Goods_SupplementSUN1', 'Дополнение СУН1' WHERE NOT EXISTS (SELECT * FROM ObjectBooleanDesc WHERE Code = 'zc_ObjectBoolean_Goods_SupplementSUN1');
 
+CREATE OR REPLACE FUNCTION zc_ObjectBoolean_DivisionParties_BanFiscalSale() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM ObjectBooleanDesc WHERE Code = 'zc_ObjectBoolean_DivisionParties_BanFiscalSale'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
+INSERT INTO ObjectBooleanDesc (DescId, Code, ItemName)
+  SELECT zc_Object_DivisionParties(), 'zc_ObjectBoolean_DivisionParties_BanFiscalSale', 'Запрет фискальной продажи' WHERE NOT EXISTS (SELECT * FROM ObjectBooleanDesc WHERE Code = 'zc_ObjectBoolean_DivisionParties_BanFiscalSale');
+
+CREATE OR REPLACE FUNCTION zc_ObjectBoolean_DiscountExternal_GoodsForProject() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM ObjectBooleanDesc WHERE Code = 'zc_ObjectBoolean_DiscountExternal_GoodsForProject'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
+INSERT INTO ObjectBooleanDesc (DescId, Code, ItemName)
+  SELECT zc_Object_DiscountExternal(), 'zc_ObjectBoolean_DiscountExternal_GoodsForProject', 'Товар только для проекта (дисконтные карты)' WHERE NOT EXISTS (SELECT * FROM ObjectBooleanDesc WHERE Code = 'zc_ObjectBoolean_DiscountExternal_GoodsForProject');
+
 
 /*-------------------------------------------------------------------------------
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.  Воробкало А.А.  Ярошенко Р.Ф.   Подмогильный В.В.   Шаблий О.В.
+ 16.08.20                                                                                                          * zc_ObjectBoolean_DiscountExternal_GoodsForProject 
+ 13.08.20                                                                                                          * zc_ObjectBoolean_DivisionParties_BanFiscalSale 
  09.06.20                                                                                                          * zc_ObjectBoolean_Goods_SupplementSUN1 
  05.06.20                                                                                                          * zc_ObjectBoolean_CashSettings_BlockVIP, zc_ObjectBoolean_DiscountExternalTools_NotUseAPI
  25.05.20         * zc_Object_PersonalServiceList

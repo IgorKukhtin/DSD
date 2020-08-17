@@ -16,6 +16,7 @@ RETURNS TABLE (Id Integer, GoodsId_main Integer, GoodsGroupName TVarChar, GoodsN
                MinExpirationDate TDateTime,
                DiscountExternalID  Integer, DiscountExternalName  TVarChar,
                PartionDateKindId  Integer, PartionDateKindName  TVarChar,
+               DivisionPartiesId  Integer, DivisionPartiesName  TVarChar,
                Color_ExpirationDate Integer,
                ConditionsKeepName TVarChar,
                AmountIncome TFloat, PriceSaleIncome TFloat,
@@ -135,13 +136,14 @@ BEGIN
 
     -- Данные
     --залили снапшот
-    INSERT INTO CashSessionSnapShot(CashSessionId,ObjectId,NDSKindId,DiscountExternalID,PartionDateKindId,Price,Remains,MCSValue,Reserved,DeferredSend,MinExpirationDate,AccommodationId,PartionDateDiscount,PriceWithVAT
+    INSERT INTO CashSessionSnapShot(CashSessionId,ObjectId,NDSKindId,DiscountExternalID,PartionDateKindId,DivisionPartiesID,Price,Remains,MCSValue,Reserved,DeferredSend,MinExpirationDate,AccommodationId,PartionDateDiscount,PriceWithVAT
     )
     SELECT inCashSessionId                                                  AS CashSession
           , CashRemains.GoodsId
           , CashRemains.NDSKindId
           , CashRemains.DiscountExternalID
           , CashRemains.PartionDateKindId
+          , CashRemains.DivisionPartiesID
           , CashRemains.Price
           , CashRemains.Remains
           , CashRemains.MCSValue
@@ -540,7 +542,7 @@ BEGIN
                                             AND Object_BarCode.isErased = False)
                  , tmpGoodsUKTZED AS (SELECT Object_Goods_Juridical.GoodsMainId
                                            , REPLACE(REPLACE(REPLACE(Object_Goods_Juridical.UKTZED, ' ', ''), '.', ''), Chr(160), '')::TVarChar AS UKTZED
-                                           , ROW_NUMBER() OVER (PARTITION BY Object_Goods_Juridical.GoodsMainId 
+                                           , ROW_NUMBER() OVER (PARTITION BY Object_Goods_Juridical.GoodsMainId
                                                           ORDER BY COALESCE(Object_Goods_Juridical.AreaId, 0), Object_Goods_Juridical.JuridicalId) AS Ord
                                       FROM Object_Goods_Juridical
                                       WHERE COALESCE (Object_Goods_Juridical.UKTZED, '') <> ''
@@ -549,10 +551,10 @@ BEGIN
                                       )
                  , tmpGoodsPairSun AS (SELECT Object_Goods_Retail.Id
                                             , Object_Goods_Retail.GoodsPairSunId
-                                       FROM Object_Goods_Retail 
+                                       FROM Object_Goods_Retail
                                        WHERE COALESCE (Object_Goods_Retail.GoodsPairSunId, 0) <> 0
                                          AND Object_Goods_Retail.RetailId = 4)
-                                            
+
 
 
         -- Результат
@@ -745,6 +747,8 @@ BEGIN
             Object_DiscountExternal.ValueData                  AS DiscountExternalName,
             NULLIF (CashSessionSnapShot.PartionDateKindId, 0)  AS PartionDateKindId,
             Object_PartionDateKind.Name                        AS PartionDateKindName,
+            NULLIF (CashSessionSnapShot.DivisionPartiesId, 0)  AS DivisionPartiesId,
+            Object_DivisionParties.ValueData                   AS DivisionPartiesName,
             CASE WHEN vbDividePartionDate = False
               THEN
                 CASE WHEN CashSessionSnapShot.MinExpirationDate < CURRENT_DATE + zc_Interval_ExpirationDate() THEN zc_Color_Red() ELSE zc_Color_Black() END
@@ -804,7 +808,7 @@ BEGIN
           , tmpGoodsDiscount.GoodsDiscountId                       AS GoodsDiscountID
           , tmpGoodsDiscount.GoodsDiscountName                     AS GoodsDiscountName
           , tmpGoodsUKTZED.UKTZED                                  AS UKTZED
-          , Object_Goods_PairSun.ID                                AS GoodsPairSunId         
+          , Object_Goods_PairSun.ID                                AS GoodsPairSunId
 
 
           , CashSessionSnapShot.PartionDateKindId   AS PartionDateKindId_check
@@ -822,9 +826,9 @@ BEGIN
             -- получается GoodsMainId
             LEFT JOIN Object_Goods_Retail AS Object_Goods_Retail ON Object_Goods_Retail.Id = Goods.Id
             LEFT JOIN Object_Goods_Main AS Object_Goods_Main ON Object_Goods_Main.Id = Object_Goods_Retail.GoodsMainId
-            LEFT JOIN tmpGoodsPairSun AS Object_Goods_PairSun 
-                                      ON Object_Goods_PairSun.GoodsPairSunId = Object_Goods_Retail.Id 
-                                            
+            LEFT JOIN tmpGoodsPairSun AS Object_Goods_PairSun
+                                      ON Object_Goods_PairSun.GoodsPairSunId = Object_Goods_Retail.Id
+
 
 
             LEFT JOIN tmpMCSAuto ON tmpMCSAuto.ObjectId = CashSessionSnapShot.ObjectId
@@ -885,6 +889,9 @@ BEGIN
            -- Товар для проекта (дисконтные карты)
            LEFT JOIN Object AS Object_DiscountExternal ON Object_DiscountExternal.Id = NULLIF (CashSessionSnapShot.DiscountExternalId, 0)
 
+           -- Разделение партий в кассе для продажи
+           LEFT JOIN Object AS Object_DivisionParties ON Object_DivisionParties.Id = NULLIF (CashSessionSnapShot.DivisionPartiesId, 0)
+
            -- Без Продажи за последнии 100 дней
            LEFT JOIN tmpNotSold ON tmpNotSold.GoodsID = Goods.Id
 
@@ -899,7 +906,7 @@ BEGIN
            LEFT JOIN ObjectBoolean AS ObjectBoolean_Goods_NotTransferTime
                                    ON ObjectBoolean_Goods_NotTransferTime.ObjectId = CashSessionSnapShot.ObjectId
                                   AND ObjectBoolean_Goods_NotTransferTime.DescId = zc_ObjectBoolean_Goods_NotTransferTime()
-                                  
+
            -- Коды UKTZED
            LEFT JOIN tmpGoodsUKTZED ON tmpGoodsUKTZED.GoodsMainId = Object_Goods_Retail.GoodsMainId
                                    AND tmpGoodsUKTZED.Ord = 1
@@ -931,6 +938,7 @@ ALTER FUNCTION gpSelect_CashRemains_ver2 (TVarChar, TVarChar) OWNER TO postgres;
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.   Воробкало А.А.  Ярошенко Р.Ф.  Шаблий О.В.
+ 14.08.20                                                                                                    * DivisionPartiesID
  19.06.20                                                                                                    * DiscountExternalID
  19.02.20                                                                                                    *
  04.12.19                                                                                                    * FixDiscount
@@ -963,4 +971,5 @@ ALTER FUNCTION gpSelect_CashRemains_ver2 (TVarChar, TVarChar) OWNER TO postgres;
 -- тест
 -- SELECT * FROM gpSelect_CashRemains_ver2 ('{85E257DE-0563-4B9E-BE1C-4D5C123FB33A}-', '10411288')
 -- SELECT * FROM gpSelect_CashRemains_ver2 ('{85E257DE-0563-4B9E-BE1C-4D5C123FB33A}-', '3998773') WHERE GoodsCode = 1240
--- SELECT * FROM gpSelect_CashRemains_ver2 ('{0B05C610-B172-4F81-99B8-25BF5385ADD6}', '3')
+--
+SELECT * FROM gpSelect_CashRemains_ver2 ('{0B05C610-B172-4F81-99B8-25BF5385ADD6}', '3')

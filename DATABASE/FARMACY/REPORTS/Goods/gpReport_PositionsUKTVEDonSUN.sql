@@ -11,7 +11,7 @@ RETURNS TABLE (Id Integer, InvNumbr TVarChar, OperDate TDateTime
              , UnitCode Integer, UnitName TVarChar
              , UnitCodeTo Integer, UnitNameTo TVarChar
              , GoodsId Integer, GoodsCode Integer, GoodsName TVarChar
-             , Amount TFloat
+             , Amount TFloat, PriceFrom TFloat, SummaFrom TFloat, PriceTo TFloat, SummaTo TFloat
               )
 
 AS
@@ -58,6 +58,46 @@ BEGIN
 
   -- Результат
   RETURN QUERY
+    WITH
+           tmpResult AS ( SELECT Movement.Id
+                               , Movement.InvNumber
+                               , Movement.OperDate
+                               , MovementLinkObject_From.ObjectId                                               AS UnitId
+                               , MovementLinkObject_To.ObjectId                                                 AS UnitIdTo
+                               , tmpResult.GoodsId                                                              AS GoodsId
+                               , tmpResult.Amount                                                               AS Amount
+
+                          FROM _tmpResult AS tmpResult
+
+                               LEFT JOIN Movement ON Movement.ID = tmpResult.Id
+
+                               LEFT JOIN MovementLinkObject AS MovementLinkObject_From
+                                                            ON MovementLinkObject_From.MovementId = tmpResult.Id
+                                                           AND MovementLinkObject_From.DescId = zc_MovementLinkObject_From()
+
+                               LEFT JOIN MovementLinkObject AS MovementLinkObject_To
+                                                            ON MovementLinkObject_To.MovementId = tmpResult.Id
+                                                           AND MovementLinkObject_To.DescId = zc_MovementLinkObject_To()
+                        )
+         , tmpPrice AS (SELECT OL_Price_Goods.ChildObjectId      AS GoodsId
+                             , OL_Price_Unit.ChildObjectId       AS UnitID
+                             , ROUND (Price_Value.ValueData, 2)  AS Price
+                        FROM ObjectLink AS OL_Price_Unit
+                             -- !!!только для таких Аптек!!!
+                             LEFT JOIN ObjectLink AS OL_Price_Goods
+                                                  ON OL_Price_Goods.ObjectId = OL_Price_Unit.ObjectId
+                                                 AND OL_Price_Goods.DescId   = zc_ObjectLink_Price_Goods()
+                             INNER JOIN (SELECT DISTINCT tmpResult.GoodsId FROM tmpResult) AS Goods
+                                                                                           ON Goods.GoodsId       = OL_Price_Goods.ChildObjectId
+                             LEFT JOIN ObjecTFloat AS Price_Value
+                                                   ON Price_Value.ObjectId = OL_Price_Unit.ObjectId
+                                                  AND Price_Value.DescId = zc_ObjecTFloat_Price_Value()
+                        WHERE OL_Price_Unit.DescId = zc_ObjectLink_Price_Unit()
+                          AND OL_Price_Unit.ChildObjectId in (SELECT DISTINCT UnitId FROM tmpResult
+                                                              UNION ALL
+                                                              SELECT DISTINCT UnitIdTo FROM tmpResult)
+                       )
+
   SELECT Movement.Id
        , Movement.InvNumber
        , Movement.OperDate
@@ -65,26 +105,31 @@ BEGIN
        , Object_From.ValueData                                                          AS UnitName
        , Object_To.ObjectCode                                                           AS UnitCodeTo
        , Object_To.ValueData                                                            AS UnitNameTo
-       , tmpResult.GoodsId                                                              AS GoodsId
+       , Movement.GoodsId                                                               AS GoodsId
        , Object_Goods.ObjectCode                                                        AS GoodsCode
        , Object_Goods.ValueData                                                         AS GoodsName
-       , tmpResult.Amount                                                               AS Amount
+       , Movement.Amount                                                                AS Amount
+       , PriceFrom.Price::TFloat                                                        AS PriceFrom
+       , Round(PriceFrom.Price * Movement.Amount  , 2)::TFloat                          AS SummaFrom
+       , PriceTo.Price::TFloat                                                          AS PriceTo
+       , Round(PriceTo.Price * Movement.Amount  , 2)::TFloat                            AS SummaTo
 
-  FROM _tmpResult AS tmpResult
+  FROM tmpResult AS Movement
 
-       LEFT JOIN Movement ON Movement.ID = tmpResult.Id
 
-       LEFT JOIN MovementLinkObject AS MovementLinkObject_From
-                                    ON MovementLinkObject_From.MovementId = tmpResult.Id
-                                   AND MovementLinkObject_From.DescId = zc_MovementLinkObject_From()
-       LEFT JOIN Object AS Object_From ON Object_From.Id = MovementLinkObject_From.ObjectId
+       LEFT JOIN Object AS Object_From ON Object_From.Id = Movement.UnitId
 
-       LEFT JOIN MovementLinkObject AS MovementLinkObject_To
-                                    ON MovementLinkObject_To.MovementId = tmpResult.Id
-                                   AND MovementLinkObject_To.DescId = zc_MovementLinkObject_To()
-       LEFT JOIN Object AS Object_To ON Object_To.Id = MovementLinkObject_To.ObjectId
+       LEFT JOIN Object AS Object_To ON Object_To.Id = Movement.UnitIdTo
 
-       LEFT JOIN Object AS Object_Goods ON Object_Goods.Id = tmpResult.GoodsId
+       LEFT JOIN Object AS Object_Goods ON Object_Goods.Id = Movement.GoodsId
+
+       LEFT JOIN tmpPrice AS PriceFrom
+                          ON PriceFrom.UnitId = Movement.UnitId
+                         AND PriceFrom.GoodsId = Movement.GoodsId
+
+       LEFT JOIN tmpPrice AS PriceTo
+                          ON PriceTo.UnitId = Movement.UnitIdTo
+                         AND PriceTo.GoodsId = Movement.GoodsId
 
   ;
 
@@ -101,5 +146,4 @@ ALTER FUNCTION gpReport_PercentageOverdueSUN (TDateTime, TDateTime, TVarChar) OW
 */
 
 -- тест
---
-SELECT * FROM gpReport_PositionsUKTVEDonSUN (inStartDate:= '01.07.2020', inEndDate:= '30.07.2020', inSession:= '3')
+-- SELECT * FROM gpReport_PositionsUKTVEDonSUN (inStartDate:= '01.07.2020', inEndDate:= '30.07.2020', inSession:= '3')

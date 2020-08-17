@@ -18,7 +18,7 @@ RETURNS TABLE (Id Integer, InvNumber Integer, OperDate TDateTime, StatusCode Int
              , StartWeighing TDateTime, EndWeighing TDateTime
              , MovementDescNumber Integer, MovementDescName TVarChar
              , SubjectDocId Integer, SubjectDocName TVarChar
-             , PersonalGroupId Integer, PersonalGroupName TVarChar
+             , PersonalGroupId Integer, PersonalGroupName TVarChar, UnitName_PersonalGroup TVarChar
              , WeighingNumber TFloat
              , InvNumberOrder TVarChar
              , MovementId_Transport Integer, InvNumber_Transport TVarChar, OperDate_Transport TDateTime
@@ -177,6 +177,7 @@ BEGIN
 
              , Object_PersonalGroup.Id                    AS PersonalGroupId
              , Object_PersonalGroup.ValueData             AS PersonalGroupName
+             , Object_Unit_PersonalGroup.ValueData        AS UnitName_PersonalGroup
 
              , MovementFloat_WeighingNumber.ValueData     AS WeighingNumber
 
@@ -506,6 +507,11 @@ BEGIN
                                         AND MovementLinkObject_PersonalGroup.DescId = zc_MovementLinkObject_PersonalGroup()
             LEFT JOIN Object AS Object_PersonalGroup ON Object_PersonalGroup.Id = MovementLinkObject_PersonalGroup.ObjectId
 
+            LEFT JOIN ObjectLink AS ObjectLink_PersonalGroup_Unit
+                                 ON ObjectLink_PersonalGroup_Unit.ObjectId = Object_PersonalGroup.Id
+                                AND ObjectLink_PersonalGroup_Unit.DescId = zc_ObjectLink_PersonalGroup_Unit()
+            LEFT JOIN Object AS Object_Unit_PersonalGroup ON Object_Unit_PersonalGroup.Id = ObjectLink_PersonalGroup_Unit.ChildObjectId
+
             --- строки
             INNER JOIN MovementItem ON MovementItem.MovementId = Movement.Id
                                    AND MovementItem.DescId     = zc_MI_Master()
@@ -657,6 +663,7 @@ $BODY$
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.
+ 17.08.20         *
  04.11.19         *
  17.12.18         *
  15.03.17         * add zc_MovementLinkObject_Member

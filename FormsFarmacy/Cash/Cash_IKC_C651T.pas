@@ -12,13 +12,14 @@ type
 //    FModem: IICS_Modem;
     FisFiscal: boolean;
     FLengNoFiscalText : integer;
+    FReturn: boolean;
     procedure SetAlwaysSold(Value: boolean);
     function GetAlwaysSold: boolean;
   protected
     function SoldCode(const GoodsCode: integer; const Amount: double; const Price: double = 0.00): boolean;
     function SoldFromPC(const GoodsCode: integer; const GoodsName: string; const Amount, Price, NDS: double): boolean; //Продажа с компьютера
     function ChangePrice(const GoodsCode: integer; const Price: double): boolean;
-    function OpenReceipt(const isFiscal: boolean = true; const isPrintSumma: boolean = false): boolean;
+    function OpenReceipt(const isFiscal: boolean = true; const isPrintSumma: boolean = false; const isReturn: boolean = False): boolean;
     function CloseReceipt: boolean;
     function CloseReceiptEx(out CheckId: String): boolean;
     function CashInputOutput(const Summa: double): boolean;
@@ -69,6 +70,7 @@ begin
   inherited Create;
   FAlwaysSold:=false;
   FPrintSumma:=False;
+  FReturn:=False;
   FLengNoFiscalText := 37;
   FPrinter := CoFiscPrn.Create_MZ_11;
   if FPrinter.FPInitialize = 0 then
@@ -116,10 +118,11 @@ begin
   result:= FAlwaysSold;
 end;
 
-function TCashIKC_C651T.OpenReceipt(const isFiscal: boolean = true; const isPrintSumma: boolean = false): boolean;
+function TCashIKC_C651T.OpenReceipt(const isFiscal: boolean = true; const isPrintSumma: boolean = false; const isReturn: boolean = False): boolean;
 begin
   FisFiscal := isFiscal;
   FPrintSumma := isPrintSumma;
+  FReturn := isReturn;
   FSumma := 0;
   result := True;
 end;
@@ -201,9 +204,17 @@ begin
 
   Logger.AddToLog(' SALE (GoodsCode := ' + IntToStr(GoodsCode) + ', Amount := ' + ReplaceStr(FormatFloat('0.000', Amount), FormatSettings.DecimalSeparator, '.') +
       ', Price := ' + ReplaceStr(FormatFloat('0.00', Price), FormatSettings.DecimalSeparator, '.') + ')');
-  if Amount = 1 then
-    result := FPrinter.FPSaleItem(Round(Amount * 1000), 3, False, True, False, Round(Price * 100), nNDS, Copy(GoodsName, 1, 75), GoodsCode)
-  else result := FPrinter.FPSaleItem(Round(Amount * 1000), 3, False, False, False, Round(Price * 100), nNDS, Copy(GoodsName, 1, 75), GoodsCode);
+  if FReturn then
+  begin
+    if Amount = 1 then
+      result := FPrinter.FPSaleItem(Round(Amount * 1000), 3, False, True, False, Round(Price * 100), nNDS, Copy(GoodsName, 1, 75), GoodsCode)
+    else result := FPrinter.FPSaleItem(Round(Amount * 1000), 3, False, False, False, Round(Price * 100), nNDS, Copy(GoodsName, 1, 75), GoodsCode);
+  end else
+  begin
+    if Amount = 1 then
+      result := FPrinter.FPRefundItem(Round(Amount * 1000), 3, False, True, False, Round(Price * 100), nNDS, Copy(GoodsName, 1, 75), GoodsCode)
+    else result := FPrinter.FPRefundItem(Round(Amount * 1000), 3, False, False, False, Round(Price * 100), nNDS, Copy(GoodsName, 1, 75), GoodsCode);
+  end;
 
   if not result then ShowError;
 end;

@@ -1272,6 +1272,10 @@ CREATE OR REPLACE FUNCTION zc_Object_ComputerAccessories() RETURNS Integer AS $B
 INSERT INTO ObjectDesc (Code, ItemName)
   SELECT 'zc_Object_ComputerAccessories', 'Компьютерные аксессуары' WHERE NOT EXISTS (SELECT * FROM ObjectDesc WHERE Code = 'zc_Object_ComputerAccessories');
 
+CREATE OR REPLACE FUNCTION zc_Object_DivisionParties() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM ObjectDesc WHERE Code = 'zc_Object_DivisionParties'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
+INSERT INTO ObjectDesc (Code, ItemName)
+  SELECT 'zc_Object_DivisionParties', 'Разделение партий в кассе для продажи' WHERE NOT EXISTS (SELECT * FROM ObjectDesc WHERE Code = 'zc_Object_DivisionParties');
+
 
 --------------------------- !!!!!!!!!!!!!!!!!!!!!!!!!
 --------------------------- !!! ВРЕМЕННЫЕ ОБЪЕКТЫ !!!
@@ -1289,6 +1293,7 @@ INSERT INTO ObjectDesc (Code, ItemName)
 /*-------------------------------------------------------------------------------
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.   Воробкало А. А.   Шаблий О.В.
+ 13.08.20                                                                                        * zc_Object_DivisionParties
  14.07.20                                                                                        * zc_Object_ComputerAccessories
  09.07.20                                                                                        * zc_Object_PartionHouseholdInventory
  08.07.20                                                                                        * zc_Object_HouseholdInventory

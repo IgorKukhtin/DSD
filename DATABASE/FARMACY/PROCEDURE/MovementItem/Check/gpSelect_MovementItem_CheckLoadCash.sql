@@ -41,6 +41,8 @@ RETURNS TABLE (Id Integer
              , DiscountExternalName TVarChar
              , UKTZED TVarChar
              , GoodsPairSunId Integer
+             , DivisionPartiesId Integer
+             , DivisionPartiesName TVarChar
               )
 AS
 $BODY$
@@ -197,7 +199,9 @@ BEGIN
            , Object_DiscountExternal.ValueData                                   AS DiscountCardName
            , tmpGoodsUKTZED.UKTZED                                               AS UKTZED
            , Object_Goods_PairSun.ID                                             AS GoodsPairSunId         
-       FROM tmpMI AS MovementItem
+           , Object_DivisionParties.Id                                           AS DivisionPartiesId 
+           , Object_DivisionParties.ValueData                                    AS DivisionPartiesName 
+           FROM tmpMI AS MovementItem
 
             LEFT JOIN MovementItemFloat AS MIFloat_MovementItem
                                         ON MIFloat_MovementItem.MovementItemId = MovementItem.Id
@@ -228,6 +232,11 @@ BEGIN
             -- Коды UKTZED
             LEFT JOIN tmpGoodsUKTZED ON tmpGoodsUKTZED.GoodsMainId = Object_Goods_Retail.GoodsMainId
                                     AND tmpGoodsUKTZED.Ord = 1
+
+            LEFT JOIN MovementItemLinkObject AS MILinkObject_DivisionParties
+                                             ON MILinkObject_DivisionParties.MovementItemId = MovementItem.Id
+                                            AND MILinkObject_DivisionParties.DescId         = zc_MILinkObject_DivisionParties()
+            LEFT JOIN Object AS Object_DivisionParties ON Object_DivisionParties.Id = MILinkObject_DivisionParties.ObjectId
        ;
 END;
 $BODY$

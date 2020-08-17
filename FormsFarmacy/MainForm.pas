@@ -721,6 +721,8 @@ type
     N249: TMenuItem;
     actPositionsUKTVEDonSUN: TdsdOpenForm;
     N250: TMenuItem;
+    actDivisionParties: TdsdOpenForm;
+    N251: TMenuItem;
     procedure actSaveDataExecute(Sender: TObject);
 
     procedure miRepriceClick(Sender: TObject);

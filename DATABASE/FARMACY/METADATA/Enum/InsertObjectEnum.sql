@@ -4271,11 +4271,17 @@ BEGIN
      
 END $$;
 
-
+DO $$
+BEGIN
+     --- !!! Разделение партий в кассе для продажи
+     PERFORM lpInsertUpdate_Object_Enum (inId:= zc_Enum_DivisionParties_UKTVED(), inDescId:= zc_Object_DivisionParties(), inCode:= 1, inName:= 'Запрещенный к фискальной продаже по УКТВЭД',             inEnumName:= 'zc_Enum_DivisionParties_UKTVED');
+     
+END $$;
 /*-------------------------------------------------------------------------------*/
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.    Воробкало А.А.  Ярошенко Р.Ф.  Шаблий О.В.
+ 13.08.20                                                                                                   * zc_Enum_DivisionParties_UKTVED
  15.06.20                                                                                                   * zc_Enum_CheckSourceKind_Liki24
  24.04.19                                                                                                   * Проверка и погашение рецептов по доступным лекарствам
  02.04.19         * Загрузка Цен в справочник товаров сети

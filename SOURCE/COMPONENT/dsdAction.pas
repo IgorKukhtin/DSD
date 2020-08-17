@@ -875,18 +875,26 @@ type
 
   TdsdOpenStaticForm = class(TdsdCustomAction)
   private
-    FFormName : String;
-    FisShowModal : Boolean;
+    FParams: TdsdParams;
+    FFormName: string;
+    FisShowModal: Boolean;
+    FFormNameParam: TdsdParam;
+    procedure SetFormName(const Value: string);
+    function GetFormName: string;
   protected
     function LocalExecute: Boolean; override;
   public
+    constructor Create(AOwner: TComponent); override;
+    destructor Destroy; override;
   published
     property Caption;
     property Hint;
     property ShortCut;
     property ImageIndex;
     property SecondaryShortCuts;
-    property FormName: string read FFormName write FFormName;
+    property FormName: string read GetFormName write SetFormName;
+    property FormNameParam: TdsdParam read FFormNameParam write FFormNameParam;
+    property GuiParams: TdsdParams read FParams write FParams;
     property isShowModal: Boolean read FisShowModal write FisShowModal;
   end;
 
@@ -3795,8 +3803,40 @@ end;
 
 { TdsdOpenStaticForm }
 
+constructor TdsdOpenStaticForm.Create(AOwner: TComponent);
+begin
+  inherited;
+  FParams := TdsdParams.Create(Self, TdsdParam);
+  FFormNameParam := TdsdParam.Create(nil);
+  FFormNameParam.DataType := ftString;
+  FFormNameParam.Value := '';
+end;
+
+destructor TdsdOpenStaticForm.Destroy;
+begin
+  FParams.Free;
+  FParams := nil;
+  FFormNameParam.Free;
+  inherited;
+end;
+
+procedure TdsdOpenStaticForm.SetFormName(const Value: string);
+begin
+  if (csDesigning in ComponentState) and not(csLoading in ComponentState) then
+    ShowMessage('Используйте FormNameParam')
+  else
+    FFormName := Value;
+end;
+
+function TdsdOpenStaticForm.GetFormName: string;
+begin
+  result := FFormNameParam.AsString;
+  if result = '' then
+    result := FFormName
+end;
+
 function TdsdOpenStaticForm.LocalExecute: Boolean;
-var FormClass: TFormClass;
+var FormClass: TFormClass; Form: TForm;
 begin
   Result := False;
 
@@ -3812,17 +3852,25 @@ begin
     raise Exception.Create('Класс ' + FFormName + ' не найден.')
   end;
 
-  with FormClass.Create(Application) do
+  Form := FormClass.Create(Application);
+
+  if Form is TParentForm then
+    if not TParentForm(Form).Execute(Self, FParams) then
+  begin
+    Form.Free;
+    Exit;
+  end;
+
   begin
     if isShowModal then
     begin
       try
-        ShowModal;
+        Form.ShowModal;
       finally
-        Free;
+        Form.Free;
       end;
     end
-    else Show;
+    else Form.Show;
   end;
 
   Result := True;

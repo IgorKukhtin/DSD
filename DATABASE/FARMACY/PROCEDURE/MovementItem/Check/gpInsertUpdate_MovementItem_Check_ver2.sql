@@ -6,7 +6,8 @@
 -- DROP FUNCTION IF EXISTS gpInsertUpdate_MovementItem_Check_ver2 (Integer, Integer, Integer, TFloat, TFloat, TFloat, TFloat, TFloat, Integer, TVarChar, TVarChar, TVarChar);
 -- DROP FUNCTION IF EXISTS gpInsertUpdate_MovementItem_Check_ver2 (Integer, Integer, Integer, TFloat, TFloat, TFloat, TFloat, TFloat, Integer, TFloat, TVarChar, TVarChar, TVarChar);
 --DROP FUNCTION IF EXISTS gpInsertUpdate_MovementItem_Check_ver2 (Integer, Integer, Integer, TFloat, TFloat, TFloat, TFloat, TFloat, Integer, TFloat, Integer, TVarChar, TVarChar, TVarChar);
-DROP FUNCTION IF EXISTS gpInsertUpdate_MovementItem_Check_ver2 (Integer, Integer, Integer, TFloat, TFloat, TFloat, TFloat, TFloat, Integer, TFloat, Integer, Integer, TVarChar, TVarChar, TVarChar);
+--DROP FUNCTION IF EXISTS gpInsertUpdate_MovementItem_Check_ver2 (Integer, Integer, Integer, TFloat, TFloat, TFloat, TFloat, TFloat, Integer, TFloat, Integer, Integer, TVarChar, TVarChar, TVarChar);
+DROP FUNCTION IF EXISTS gpInsertUpdate_MovementItem_Check_ver2 (Integer, Integer, Integer, TFloat, TFloat, TFloat, TFloat, TFloat, Integer, TFloat, Integer, Integer, Integer, TVarChar, TVarChar, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpInsertUpdate_MovementItem_Check_ver2(
  INOUT ioId                  Integer   , -- Ключ объекта <строка документа>
@@ -21,6 +22,7 @@ CREATE OR REPLACE FUNCTION gpInsertUpdate_MovementItem_Check_ver2(
     IN inPricePartionDate    TFloat    , -- Цена отпускная согласно срока
     IN inNDSKindId           Integer   , -- Ставка НДС
     IN inDiscountExternalId  Integer   , -- Проект дисконтных карт
+    IN inDivisionPartiesID   Integer   , -- Разделение партий в кассе для продажи
     IN inList_UID            TVarChar  , -- UID строки
     -- IN inDiscountCardNumber  TVarChar DEFAULT '', -- № Дисконтной карты
     in inUserSession	     TVarChar  , -- сессия пользователя (подменяем реальную)
@@ -179,6 +181,9 @@ BEGIN
 
     -- сохранили связь с <Дисконтная карта>
     PERFORM lpInsertUpdate_MovementItemLinkObject (zc_MILinkObject_DiscountExternal(), ioId, COALESCE (inDiscountExternalId, 0));
+
+    -- сохранили связь с <Разделение партий в кассе для продажи>
+    PERFORM lpInsertUpdate_MovementItemLinkObject (zc_MILinkObject_DivisionParties(), ioId, COALESCE (inDivisionPartiesID, 0));
 
     -- пересчитали Итоговые суммы
     PERFORM lpInsertUpdate_MovementFloat_TotalSummCheck (inMovementId);

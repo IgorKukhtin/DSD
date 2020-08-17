@@ -1,26 +1,26 @@
 inherited ReturnInForm: TReturnInForm
   Caption = #1042#1086#1079#1074#1088#1072#1090' '#1086#1090' '#1087#1086#1082#1091#1087#1072#1090#1077#1083#1103
   ClientHeight = 482
-  ClientWidth = 647
+  ClientWidth = 644
   AddOnFormData.AddOnFormRefresh.ParentList = 'Sale'
-  ExplicitWidth = 663
+  ExplicitWidth = 660
   ExplicitHeight = 521
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
     Top = 163
-    Width = 647
+    Width = 644
     Height = 319
     ExplicitTop = 163
     ExplicitWidth = 647
     ExplicitHeight = 319
     ClientRectBottom = 319
-    ClientRectRight = 647
+    ClientRectRight = 644
     inherited tsMain: TcxTabSheet
       ExplicitWidth = 647
       ExplicitHeight = 295
       inherited cxGrid: TcxGrid
-        Width = 647
+        Width = 644
         Height = 295
         ExplicitWidth = 647
         ExplicitHeight = 295
@@ -169,7 +169,7 @@ inherited ReturnInForm: TReturnInForm
     end
   end
   inherited DataPanel: TPanel
-    Width = 647
+    Width = 644
     Height = 137
     TabOrder = 3
     ExplicitWidth = 647
@@ -183,12 +183,18 @@ inherited ReturnInForm: TReturnInForm
       ExplicitTop = 4
     end
     inherited edOperDate: TcxDateEdit
+      Left = 266
       Top = 22
       EditValue = 43466d
+      ExplicitLeft = 266
       ExplicitTop = 22
+      ExplicitWidth = 104
+      Width = 104
     end
     inherited cxLabel2: TcxLabel
+      Left = 266
       Top = 4
+      ExplicitLeft = 266
       ExplicitTop = 4
     end
     inherited cxLabel15: TcxLabel
@@ -232,69 +238,6 @@ inherited ReturnInForm: TReturnInForm
       TabOrder = 9
       Width = 252
     end
-    object cxLabel3: TcxLabel
-      Left = 851
-      Top = 101
-      Caption = #1058#1080#1087' '#1086#1087#1083#1072#1090#1099
-      Visible = False
-    end
-    object edPaidKind: TcxButtonEdit
-      Left = 851
-      Top = 116
-      Properties.Buttons = <
-        item
-          Default = True
-          Kind = bkEllipsis
-        end>
-      TabOrder = 11
-      Visible = False
-      Width = 100
-    end
-    object cxLabel4: TcxLabel
-      Left = 683
-      Top = 33
-      Caption = #1048#1090#1086#1075#1086' '#1089#1091#1084#1084#1072
-      Visible = False
-    end
-    object edTotalSumm: TcxCurrencyEdit
-      Left = 684
-      Top = 49
-      Properties.DisplayFormat = ',0.00'
-      Properties.ReadOnly = True
-      TabOrder = 13
-      Visible = False
-      Width = 76
-    end
-    object cxLabel5: TcxLabel
-      Left = 684
-      Top = 6
-      Caption = #1048#1090#1086#1075#1086' '#1082#1086#1083'-'#1074#1086
-      Visible = False
-    end
-    object edTotalCount: TcxCurrencyEdit
-      Left = 684
-      Top = 22
-      Properties.DisplayFormat = ',0.00'
-      Properties.ReadOnly = True
-      TabOrder = 15
-      Visible = False
-      Width = 81
-    end
-    object cxLabel6: TcxLabel
-      Left = 683
-      Top = 60
-      Caption = #1048#1090#1086#1075#1086' '#1089#1091#1084#1084#1072' ('#1079#1072#1082'.)'
-      Visible = False
-    end
-    object edTotalSummPrimeCost: TcxCurrencyEdit
-      Left = 683
-      Top = 76
-      Properties.DisplayFormat = ',0.00'
-      Properties.ReadOnly = True
-      TabOrder = 17
-      Visible = False
-      Width = 98
-    end
     object cxLabel7: TcxLabel
       Left = 576
       Top = 98
@@ -305,7 +248,7 @@ inherited ReturnInForm: TReturnInForm
       Left = 576
       Top = 116
       Properties.ReadOnly = False
-      TabOrder = 19
+      TabOrder = 11
       Visible = False
       Width = 252
     end
@@ -317,30 +260,30 @@ inherited ReturnInForm: TReturnInForm
           Default = True
           Kind = bkEllipsis
         end>
-      TabOrder = 20
+      TabOrder = 12
       Width = 100
     end
     object cxLabel9: TcxLabel
-      Left = 260
+      Left = 266
       Top = 87
-      Caption = #1058#1080#1087' '#1086#1087#1083#1072#1090#1099' '
+      Caption = #1058#1080#1087' '#1086#1087#1083#1072#1090#1099' '#1095#1077#1082#1072
     end
     object edPaidTypeCheck: TcxTextEdit
-      Left = 260
+      Left = 266
       Top = 105
       Properties.ReadOnly = True
-      TabOrder = 22
-      Width = 90
+      TabOrder = 14
+      Width = 104
     end
     object ceTotalSummCheck: TcxCurrencyEdit
-      Left = 356
+      Left = 379
       Top = 105
       Properties.DisplayFormat = ',0.00;-,0.00'
-      TabOrder = 23
+      TabOrder = 15
       Width = 121
     end
     object cxLabel10: TcxLabel
-      Left = 356
+      Left = 381
       Top = 87
       Caption = #1057#1091#1084#1084#1072' '#1095#1077#1082#1072':'
     end
@@ -353,13 +296,61 @@ inherited ReturnInForm: TReturnInForm
       Left = 114
       Top = 105
       EditValue = 43466d
-      TabOrder = 26
+      TabOrder = 18
       Width = 140
     end
     object cxLabel11: TcxLabel
       Left = 114
       Top = 87
       Caption = #1044#1072#1090#1072' '#1095#1077#1082#1072
+    end
+    object edPaidType: TcxTextEdit
+      Left = 266
+      Top = 64
+      Properties.ReadOnly = True
+      TabOrder = 20
+      Width = 104
+    end
+    object cxLabel12: TcxLabel
+      Left = 266
+      Top = 46
+      Caption = #1058#1080#1087' '#1086#1087#1083#1072#1090#1099' '#1074#1086#1079#1074#1088#1072#1090#1072
+    end
+    object ceTotalSumm: TcxCurrencyEdit
+      Left = 379
+      Top = 64
+      Properties.DisplayFormat = ',0.00;-,0.00'
+      TabOrder = 22
+      Width = 121
+    end
+    object cxLabel13: TcxLabel
+      Left = 381
+      Top = 46
+      Caption = #1057#1091#1084#1084#1072' '#1074#1086#1079#1074#1088#1072#1090#1072':'
+    end
+    object edTotalSummPayAdd: TcxCurrencyEdit
+      Left = 508
+      Top = 64
+      Properties.DisplayFormat = ',0.00;-,0.00'
+      TabOrder = 24
+      Width = 121
+    end
+    object cxLabel14: TcxLabel
+      Left = 508
+      Top = 46
+      Caption = #1057#1091#1084#1084#1072' '#1076#1086#1087#1083#1072#1090#1099':'
+    end
+    object edTotalSummPayAddCheck: TcxCurrencyEdit
+      Left = 508
+      Top = 105
+      Properties.DisplayFormat = ',0.00;-,0.00'
+      TabOrder = 26
+      Width = 121
+    end
+    object cxLabel16: TcxLabel
+      Left = 508
+      Top = 87
+      Caption = #1057#1091#1084#1084#1072' '#1076#1086#1087#1083#1072#1090#1099' '#1074' '#1095#1077#1082#1077':'
     end
   end
   inherited ActionList: TActionList
@@ -725,6 +716,15 @@ inherited ReturnInForm: TReturnInForm
     end
   end
   inherited DBViewAddOn: TdsdDBViewAddOn
+    SummaryItemList = <
+      item
+        Param.Value = Null
+        Param.Component = FormParams
+        Param.ComponentItem = 'TotalSumm'
+        Param.DataType = ftString
+        Param.MultiSelectSeparator = ','
+        DataSummaryItemIndex = 10
+      end>
     SearchAsFilter = False
     Top = 241
   end
@@ -754,21 +754,18 @@ inherited ReturnInForm: TReturnInForm
       item
         Name = 'TotalCount'
         Value = Null
-        Component = edTotalCount
         DataType = ftFloat
         MultiSelectSeparator = ','
       end
       item
         Name = 'TotalSumm'
         Value = Null
-        Component = edTotalSumm
         DataType = ftFloat
         MultiSelectSeparator = ','
       end
       item
         Name = 'TotalSummPrimeCost'
         Value = Null
-        Component = edTotalSummPrimeCost
         DataType = ftFloat
         MultiSelectSeparator = ','
       end>
@@ -823,16 +820,16 @@ inherited ReturnInForm: TReturnInForm
         MultiSelectSeparator = ','
       end
       item
-        Name = 'TotalCount'
+        Name = 'TotalSumm'
         Value = Null
-        Component = edTotalCount
-        DataType = ftString
+        Component = ceTotalSumm
+        DataType = ftFloat
         MultiSelectSeparator = ','
       end
       item
-        Name = 'TotalSumm'
+        Name = 'TotalSummPayAdd'
         Value = Null
-        Component = edTotalSumm
+        Component = edTotalSummPayAdd
         DataType = ftString
         MultiSelectSeparator = ','
       end
@@ -873,20 +870,17 @@ inherited ReturnInForm: TReturnInForm
         MultiSelectSeparator = ','
       end
       item
-        Name = 'PaidKindId'
+        Name = 'PaidTypeName'
         Value = Null
-        Component = GuidesPaidKind
-        ComponentItem = 'Key'
-        ParamType = ptUnknown
+        Component = edPaidType
+        DataType = ftString
         MultiSelectSeparator = ','
       end
       item
-        Name = 'PaidKindName'
+        Name = 'TotalSumm'
         Value = Null
-        Component = GuidesPaidKind
-        ComponentItem = 'TextValue'
-        DataType = ftString
-        ParamType = ptUnknown
+        Component = ceTotalSumm
+        DataType = ftFloat
         MultiSelectSeparator = ','
       end
       item
@@ -922,6 +916,13 @@ inherited ReturnInForm: TReturnInForm
         Name = 'TotalSummCheck'
         Value = Null
         Component = ceTotalSummCheck
+        DataType = ftFloat
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'TotalSummPayAddCheck'
+        Value = Null
+        Component = edTotalSummPayAddCheck
         DataType = ftFloat
         MultiSelectSeparator = ','
       end>
@@ -1021,7 +1022,6 @@ inherited ReturnInForm: TReturnInForm
         Control = edCashRegister
       end
       item
-        Control = edPaidKind
       end
       item
         Control = edComment
@@ -1253,35 +1253,6 @@ inherited ReturnInForm: TReturnInForm
       end>
     Left = 552
     Top = 16
-  end
-  object GuidesPaidKind: TdsdGuides
-    KeyField = 'Id'
-    LookupControl = edPaidKind
-    FormNameParam.Value = 'TPaidKindForm'
-    FormNameParam.DataType = ftString
-    FormNameParam.MultiSelectSeparator = ','
-    FormName = 'TPaidKindForm'
-    PositionDataSet = 'MasterCDS'
-    Params = <
-      item
-        Name = 'Key'
-        Value = ''
-        Component = GuidesPaidKind
-        ComponentItem = 'Key'
-        ParamType = ptInput
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'TextValue'
-        Value = ''
-        Component = GuidesPaidKind
-        ComponentItem = 'TextValue'
-        DataType = ftString
-        ParamType = ptInput
-        MultiSelectSeparator = ','
-      end>
-    Left = 576
-    Top = 64
   end
   object PrintItemsCDS: TClientDataSet
     Aggregates = <>

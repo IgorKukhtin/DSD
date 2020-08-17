@@ -126,6 +126,7 @@ type
     macUpdatePersonalComlete: TMultiAction;
     spUpdate_PersonalComlete: TdsdStoredProc;
     bbUpdatePersonalComlete: TdxBarButton;
+    UnitName_PersonalGroup: TcxGridDBColumn;
   private
   public
   end;

@@ -24,7 +24,6 @@ AS
 $BODY$
    DECLARE vbUserId Integer;
    DECLARE vbObjectId Integer;
-   DECLARE vbRetailId Integer;   
 BEGIN
      -- проверка прав пользователя на вызов процедуры
      -- PERFORM lpReturnInRight (inSession, zc_Enum_Process_Select_Movement_OrderInternal());
@@ -32,21 +31,6 @@ BEGIN
 
      -- определяется <Торговая сеть>
      vbObjectId:= lpGet_DefaultValue ('zc_Object_Retail', vbUserId);
-
-     -- определяем Торговую сеть входящего подразделения
-     vbRetailId:= CASE WHEN vbUserId IN (3, 183242, 375661) -- Админ + Люба + Юра
-                          OR vbUserId IN (SELECT UserId FROM ObjectLink_UserRole_View WHERE RoleId IN (393039)) -- Старший менеджер
-                       THEN vbObjectId
-                  ELSE
-                  (SELECT ObjectLink_Juridical_Retail.ChildObjectId
-                   FROM ObjectLink AS ObjectLink_Unit_Juridical
-                      INNER JOIN ObjectLink AS ObjectLink_Juridical_Retail
-                                            ON ObjectLink_Juridical_Retail.ObjectId = ObjectLink_Unit_Juridical.ChildObjectId
-                                           AND ObjectLink_Juridical_Retail.DescId = zc_ObjectLink_Juridical_Retail()
-                   WHERE ObjectLink_Unit_Juridical.ObjectId = inUnitId
-                     AND ObjectLink_Unit_Juridical.DescId = zc_ObjectLink_Unit_Juridical()
-                   )
-                   END;
 
      -- Результат
      RETURN QUERY
@@ -98,6 +82,13 @@ BEGIN
                                         AND MovementLinkObject_Unit.DescId = zc_MovementLinkObject_Unit()
             LEFT JOIN Object AS Object_Unit ON Object_Unit.Id = MovementLinkObject_Unit.ObjectId
 
+            LEFT JOIN ObjectLink AS ObjectLink_Unit_Juridical
+                                 ON ObjectLink_Unit_Juridical.ObjectId = Object_Unit.Id
+                                AND ObjectLink_Unit_Juridical.DescId = zc_ObjectLink_Unit_Juridical()
+            LEFT JOIN ObjectLink AS ObjectLink_Juridical_Retail
+                                 ON ObjectLink_Juridical_Retail.ObjectId = ObjectLink_Unit_Juridical.ChildObjectId
+                               AND ObjectLink_Juridical_Retail.DescId = zc_ObjectLink_Juridical_Retail()
+
             LEFT JOIN MovementLinkObject AS MovementLinkObject_CashRegister
                                          ON MovementLinkObject_CashRegister.MovementId = Movement_ReturnIn.Id
                                         AND MovementLinkObject_CashRegister.DescId = zc_MovementLinkObject_CashRegister()
@@ -134,7 +125,7 @@ BEGIN
           AND Movement_ReturnIn.OperDate < DATE_TRUNC ('DAY', inEndDate) + INTERVAL '1 DAY'
           AND Movement_ReturnIn.DescId = zc_Movement_ReturnIn()
           AND (MovementLinkObject_Unit.ObjectId = inUnitId OR inUnitId = 0)
-          AND vbRetailId = vbObjectId
+          AND ObjectLink_Juridical_Retail.ChildObjectId = vbObjectId
 
       ;
 

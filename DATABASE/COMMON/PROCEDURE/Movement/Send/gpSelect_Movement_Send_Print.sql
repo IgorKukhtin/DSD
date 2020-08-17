@@ -97,6 +97,9 @@ BEGIN
              END :: TVarChar AS StoreKeeperName_to -- кладовщик
 
            , Object_SubjectDoc.ValueData                        AS SubjectDocName
+           
+           , Object_PersonalGroup.ValueData                     AS PersonalGroupName
+           , Object_Unit.ValueData                              AS UnitName_PersonalGroup
 
        FROM Movement
             LEFT JOIN MovementFloat AS MFloat_WeighingNumber
@@ -123,6 +126,17 @@ BEGIN
                                          ON MovementLinkObject_SubjectDoc.MovementId = Movement.Id
                                         AND MovementLinkObject_SubjectDoc.DescId = zc_MovementLinkObject_SubjectDoc()
             LEFT JOIN Object AS Object_SubjectDoc ON Object_SubjectDoc.Id = MovementLinkObject_SubjectDoc.ObjectId
+
+            LEFT JOIN MovementLinkObject AS MovementLinkObject_PersonalGroup
+                                         ON MovementLinkObject_PersonalGroup.MovementId = Movement.Id
+                                        AND MovementLinkObject_PersonalGroup.DescId = zc_MovementLinkObject_PersonalGroup()
+            LEFT JOIN Object AS Object_PersonalGroup ON Object_PersonalGroup.Id = MovementLinkObject_PersonalGroup.ObjectId
+     
+            LEFT JOIN ObjectLink AS ObjectLink_PersonalGroup_Unit
+                                 ON ObjectLink_PersonalGroup_Unit.ObjectId = Object_PersonalGroup.Id
+                                AND ObjectLink_PersonalGroup_Unit.DescId = zc_ObjectLink_PersonalGroup_Unit()
+            LEFT JOIN Object AS Object_Unit ON Object_Unit.Id = ObjectLink_PersonalGroup_Unit.ChildObjectId
+
 
        WHERE Movement.Id =  inMovementId
          AND Movement.DescId IN (zc_Movement_Send(), zc_Movement_ProductionUnion(), zc_Movement_Inventory())

@@ -25,7 +25,6 @@ object Report_PositionsUKTVEDonSUNForm: TReport_PositionsUKTVEDonSUNForm
     Height = 31
     Align = alTop
     TabOrder = 0
-    ExplicitWidth = 869
     object deStart: TcxDateEdit
       Left = 101
       Top = 5
@@ -62,10 +61,6 @@ object Report_PositionsUKTVEDonSUNForm: TReport_PositionsUKTVEDonSUNForm
     Height = 383
     Align = alClient
     TabOrder = 5
-    ExplicitLeft = 12
-    ExplicitTop = 208
-    ExplicitWidth = 919
-    ExplicitHeight = 302
     object cxGridDBTableView: TcxGridDBTableView
       Navigator.Buttons.CustomButtons = <>
       DataController.DataSource = DataSource
@@ -119,6 +114,28 @@ object Report_PositionsUKTVEDonSUNForm: TReport_PositionsUKTVEDonSUNForm
         item
           Format = ',0.00'
           Kind = skSum
+        end
+        item
+          Format = ',0.00;-,0.00; ;'
+          Kind = skSum
+          Position = spFooter
+          Column = SummaFrom
+        end
+        item
+          Format = ',0.00;-,0.00; ;'
+          Kind = skSum
+          Column = SummaFrom
+        end
+        item
+          Format = ',0.00;-,0.00; ;'
+          Kind = skSum
+          Position = spFooter
+          Column = SummaTo
+        end
+        item
+          Format = ',0.00;-,0.00; ;'
+          Kind = skSum
+          Column = SummaTo
         end>
       DataController.Summary.FooterSummaryItems = <
         item
@@ -178,6 +195,16 @@ object Report_PositionsUKTVEDonSUNForm: TReport_PositionsUKTVEDonSUNForm
           Format = #1042#1089#1077#1075#1086' '#1089#1090#1088#1086#1082': ,0'
           Kind = skCount
           Column = UnitName
+        end
+        item
+          Format = ',0.00;-,0.00; ;'
+          Kind = skSum
+          Column = SummaFrom
+        end
+        item
+          Format = ',0.00;-,0.00; ;'
+          Kind = skSum
+          Column = SummaTo
         end>
       DataController.Summary.SummaryGroups = <>
       Images = dmMain.SortImageList
@@ -249,7 +276,47 @@ object Report_PositionsUKTVEDonSUNForm: TReport_PositionsUKTVEDonSUNForm
         Properties.DisplayFormat = ',0.####;-,0.####; ;'
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
-        Width = 77
+        Width = 70
+      end
+      object PriceFrom: TcxGridDBColumn
+        Caption = #1062#1077#1085#1072' '#1086#1090#1087#1088'.'
+        DataBinding.FieldName = 'PriceFrom'
+        PropertiesClassName = 'TcxCurrencyEditProperties'
+        Properties.DisplayFormat = ',0.00;-,0.00; ;'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Options.Editing = False
+        Width = 70
+      end
+      object SummaFrom: TcxGridDBColumn
+        Caption = #1057#1091#1084#1084#1072' '#1086#1090#1087#1088'.'
+        DataBinding.FieldName = 'SummaFrom'
+        PropertiesClassName = 'TcxCurrencyEditProperties'
+        Properties.DisplayFormat = ',0.00;-,0.00; ;'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Options.Editing = False
+        Width = 70
+      end
+      object PriceTo: TcxGridDBColumn
+        Caption = #1062#1077#1085#1072' '#1087#1086#1083#1091#1095'.'
+        DataBinding.FieldName = 'PriceTo'
+        PropertiesClassName = 'TcxCurrencyEditProperties'
+        Properties.DisplayFormat = ',0.00;-,0.00; ;'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Options.Editing = False
+        Width = 70
+      end
+      object SummaTo: TcxGridDBColumn
+        Caption = #1057#1091#1084#1084#1072' '#1087#1086#1083#1091#1095'.'
+        DataBinding.FieldName = 'SummaTo'
+        PropertiesClassName = 'TcxCurrencyEditProperties'
+        Properties.DisplayFormat = ',0.00;-,0.00; ;'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Options.Editing = False
+        Width = 70
       end
     end
     object cxGridLevel: TcxGridLevel
@@ -348,6 +415,10 @@ object Report_PositionsUKTVEDonSUNForm: TReport_PositionsUKTVEDonSUNForm
           BeginGroup = True
           Visible = True
           ItemName = 'bbStaticText'
+        end
+        item
+          Visible = True
+          ItemName = 'bbUpdate'
         end
         item
           Visible = True
@@ -452,6 +523,10 @@ object Report_PositionsUKTVEDonSUNForm: TReport_PositionsUKTVEDonSUNForm
       Hint = 'bbGroup'
       Visible = ivAlways
     end
+    object bbUpdate: TdxBarButton
+      Action = actUpdate
+      Category = 0
+    end
   end
   object ActionList: TActionList
     Images = dmMain.ImageList
@@ -474,6 +549,7 @@ object Report_PositionsUKTVEDonSUNForm: TReport_PositionsUKTVEDonSUNForm
     object actExportToExcel: TdsdGridToExcel
       Category = 'DSDLib'
       MoveParams = <>
+      Grid = cxGrid
       Caption = #1042#1099#1075#1088#1091#1079#1082#1072' '#1074' Excel'
       Hint = #1042#1099#1075#1088#1091#1079#1082#1072' '#1074' Excel'
       ImageIndex = 6
@@ -509,6 +585,45 @@ object Report_PositionsUKTVEDonSUNForm: TReport_PositionsUKTVEDonSUNForm
       isShowModal = True
       RefreshDispatcher = RefreshDispatcher
       OpenBeforeShow = True
+    end
+    object actUpdate: TdsdInsertUpdateAction
+      Category = 'DSDLib'
+      MoveParams = <>
+      Caption = #1054#1090#1082#1088#1099#1090#1100' '#1087#1077#1088#1077#1084#1077#1097#1077#1085#1080#1077
+      Hint = #1054#1090#1082#1088#1099#1090#1100' '#1087#1077#1088#1077#1084#1077#1097#1077#1085#1080#1077
+      ShortCut = 115
+      ImageIndex = 1
+      FormName = 'TSendForm'
+      FormNameParam.Value = ''
+      FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
+      GuiParams = <
+        item
+          Name = 'Id'
+          Value = Null
+          Component = ClientDataSet
+          ComponentItem = 'Id'
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'ShowAll'
+          Value = False
+          DataType = ftBoolean
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'inOperDate'
+          Value = 43466d
+          Component = deEnd
+          DataType = ftDateTime
+          MultiSelectSeparator = ','
+        end>
+      isShowModal = False
+      ActionType = acUpdate
+      DataSource = DataSource
+      DataSetRefresh = actRefresh
+      IdFieldName = 'Id'
     end
   end
   object dsdStoredProc: TdsdStoredProc
@@ -742,7 +857,10 @@ object Report_PositionsUKTVEDonSUNForm: TReport_PositionsUKTVEDonSUNForm
   object DBViewAddOn: TdsdDBViewAddOn
     ErasedFieldName = 'isErased'
     View = cxGridDBTableView
-    OnDblClickActionList = <>
+    OnDblClickActionList = <
+      item
+        Action = actUpdate
+      end>
     ActionItemList = <>
     SortImages = dmMain.SortImageList
     OnlyEditingCellOnEnter = False

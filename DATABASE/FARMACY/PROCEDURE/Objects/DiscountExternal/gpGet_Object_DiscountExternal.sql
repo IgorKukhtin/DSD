@@ -10,6 +10,7 @@ RETURNS TABLE (Id Integer, Code Integer, Name TVarChar
              , URL     TVarChar
              , Service TVarChar
              , Port    TVarChar
+             , isGoodsForProject Boolean
               )
 AS
 $BODY$
@@ -28,6 +29,7 @@ BEGIN
            , CAST ('' AS TVarChar)  AS URL
            , CAST ('' AS TVarChar)  AS Service
            , CAST ('' AS TVarChar)  AS Port
+           , False                  AS isGoodsForProject  
          ;
    ELSE
        RETURN QUERY
@@ -39,6 +41,7 @@ BEGIN
            , ObjectString_URL.ValueData       AS URL
            , ObjectString_Service.ValueData   AS Service
            , ObjectString_Port.ValueData      AS Port
+           , COALESCE(ObjectBoolean_GoodsForProject.ValueData, False)  AS isGoodsForProject
 
        FROM Object AS Object_DiscountExternal
             LEFT JOIN ObjectString AS ObjectString_URL
@@ -50,6 +53,9 @@ BEGIN
             LEFT JOIN ObjectString AS ObjectString_Port
                                    ON ObjectString_Port.ObjectId = Object_DiscountExternal.Id 
                                   AND ObjectString_Port.DescId = zc_ObjectString_DiscountExternal_Port()
+            LEFT JOIN ObjectBoolean AS ObjectBoolean_GoodsForProject
+                                    ON ObjectBoolean_GoodsForProject.ObjectId = Object_DiscountExternal.Id 
+                                   AND ObjectBoolean_GoodsForProject.DescId = zc_ObjectBoolean_DiscountExternal_GoodsForProject()
        WHERE Object_DiscountExternal.Id = inId;
    END IF;
 

@@ -69,7 +69,15 @@ BEGIN
          RETURN;
      END IF;
 
-
+     --проверка нельзя выбрать чужую кассу, филиал можно, для пользователей с ролью админ не проверяем
+     IF NOT EXISTS (SELECT 1 AS Id FROM ObjectLink_UserRole_View WHERE RoleId = zc_Enum_Role_Admin() AND UserId = vbUserId)
+     THEN
+         IF inCashId <> (SELECT tmp.CashId FROM gpGet_UserParams_bonus (inSession:= inSession) AS tmp)
+         THEN
+              RAISE EXCEPTION 'Ошибка.У пользователя не достаточно прав доступа для просмотра данных по <%>.', lfGet_Object_ValueData (inCashId);
+         END IF;
+     END IF;
+     
      -- Результат
      RETURN QUERY
        WITH tmpStatus AS (SELECT zc_Enum_Status_Complete() AS StatusId, inStartDate AS StartDate, inEndDate AS EndDate
@@ -687,3 +695,4 @@ $BODY$
 -- тест
 --select * from  Object where ValueData like '%Розница Одесса%'
 -- select * from gpSelect_Movement_Cash_Bonus(inStartDate := ('01.08.2020')::TDateTime , inEndDate := ('05.08.2020')::TDateTime , inCashId := 0 , inCurrencyId := 0, inJuridicalBasisId := 9399 , inInfoMoneyId:= 0, inBranchId:=0, inRetailId:=524072, inJuridicalId := 0, inIsErased := 'False' ,  inSession := '5');
+--select * from gpSelect_Movement_Cash_Bonus(inStartDate := ('01.08.2020')::TDateTime , inEndDate := ('05.08.2020')::TDateTime , inCashId := 14462 , inCurrencyId := 0, inJuridicalBasisId := 0 , inInfoMoneyId:= 0, inBranchId:=0, inRetailId:=0, inJuridicalId := 0, inIsErased := 'False' ,  inSession := '5567897');
