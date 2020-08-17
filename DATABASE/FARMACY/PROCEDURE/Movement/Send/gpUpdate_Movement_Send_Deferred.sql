@@ -159,7 +159,7 @@ BEGIN
    IF COALESCE (vbStatusId, 0) = zc_Enum_Status_UnComplete()
    THEN
 
-       IF inisDeferred = TRUE
+/*       IF inisDeferred = TRUE
        THEN
        
            IF vbisSUN = TRUE AND vbInsertDate >= '10.08.2020'
@@ -177,7 +177,7 @@ BEGIN
              END IF; 
            END IF; 
        END IF; 
-
+*/
        -- определили признак
        outisDeferred:=  inisDeferred;
        -- сохранили признак

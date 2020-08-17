@@ -243,13 +243,22 @@ inherited CheckForm: TCheckForm
             Options.Editing = False
             Width = 61
           end
-          object DiscountExternalName: TcxGridDBColumn
+          object colDiscountExternalName: TcxGridDBColumn
             Caption = #1044#1080#1089#1082#1086#1085#1090#1085#1072#1103' '#1087#1088#1086#1075#1088#1072#1084#1084#1099
             DataBinding.FieldName = 'DiscountExternalName'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
             Width = 94
+          end
+          object colDivisionPartiesName: TcxGridDBColumn
+            Caption = #1056#1072#1079#1076#1077#1083#1077#1085#1080#1077' '#1087#1072#1088#1090#1080#1081
+            DataBinding.FieldName = 'DivisionPartiesName'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            HeaderHint = #1056#1072#1079#1076#1077#1083#1077#1085#1080#1077' '#1087#1072#1088#1090#1080#1081' '#1076#1083#1103' '#1087#1088#1086#1076#1072#1078#1080
+            Options.Editing = False
+            Width = 146
           end
         end
       end

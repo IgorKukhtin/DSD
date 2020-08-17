@@ -70,6 +70,9 @@ BEGIN
                          LEFT JOIN MovementItemLinkObject AS MILinkObject_PartionDateKind
                                                           ON MILinkObject_PartionDateKind.MovementItemId = MovementItem.Id
                                                          AND MILinkObject_PartionDateKind.DescId         = zc_MILinkObject_PartionDateKind()
+                         LEFT JOIN MovementItemLinkObject AS MILinkObject_DivisionParties
+                                                          ON MILinkObject_DivisionParties.MovementItemId = MovementItem.Id
+                                                         AND MILinkObject_DivisionParties.DescId = zc_MILinkObject_DivisionParties()
                          LEFT JOIN Object_Goods_Retail AS Object_Goods_Retail ON Object_Goods_Retail.Id = MovementItem.ObjectId
                          LEFT JOIN Object_Goods_Main AS Object_Goods ON Object_Goods.Id = Object_Goods_Retail.GoodsMainId
                          LEFT JOIN MovementItemLinkObject AS MILinkObject_NDSKind
@@ -81,6 +84,7 @@ BEGIN
                       AND MovementItem.isErased   = FALSE
                       AND COALESCE (MILinkObject_PartionDateKind.ObjectId, 0) = COALESCE (inPartionDateKindID, 0)
                       AND COALESCE (MILinkObject_NDSKind.ObjectId, Object_Goods.NDSKindId) = COALESCE (inNDSKindId, 0)
+                      AND COALESCE (MILinkObject_DivisionParties.ObjectId, 0) = COALESCE (inDivisionPartiesID, 0)
                       AND COALESCE (MIFloat_Price.ValueData, 0) = inPrice
                    );
         ELSE
@@ -93,6 +97,10 @@ BEGIN
                          LEFT JOIN MovementItemLinkObject AS MILinkObject_PartionDateKind
                                                           ON MILinkObject_PartionDateKind.MovementItemId = MovementItem.Id
                                                          AND MILinkObject_PartionDateKind.DescId         = zc_MILinkObject_PartionDateKind()
+                         LEFT JOIN MovementItemLinkObject AS MILinkObject_DivisionParties
+                                                          ON MILinkObject_DivisionParties.MovementItemId = MovementItem.Id
+                                                         AND MILinkObject_DivisionParties.DescId = zc_MILinkObject_DivisionParties()
+
                          LEFT JOIN Object_Goods_Retail AS Object_Goods_Retail ON Object_Goods_Retail.Id = MovementItem.ObjectId
                          LEFT JOIN Object_Goods_Main AS Object_Goods ON Object_Goods.Id = Object_Goods_Retail.GoodsMainId
                          LEFT JOIN MovementItemLinkObject AS MILinkObject_NDSKind
@@ -103,6 +111,7 @@ BEGIN
                       AND MovementItem.DescId     = zc_MI_Master()
                       AND COALESCE (MILinkObject_PartionDateKind.ObjectId, 0) = COALESCE (inPartionDateKindID, 0)
                       AND COALESCE (MILinkObject_NDSKind.ObjectId, Object_Goods.NDSKindId) = COALESCE (inNDSKindId, 0)
+                      AND COALESCE (MILinkObject_DivisionParties.ObjectId, 0) = COALESCE (inDivisionPartiesID, 0)
                       AND MovementItem.isErased   = FALSE
                    );
         END IF;
@@ -119,6 +128,9 @@ BEGIN
                          LEFT JOIN MovementItemLinkObject AS MILinkObject_PartionDateKind
                                                           ON MILinkObject_PartionDateKind.MovementItemId = MovementItem.Id
                                                          AND MILinkObject_PartionDateKind.DescId         = zc_MILinkObject_PartionDateKind()
+                         LEFT JOIN MovementItemLinkObject AS MILinkObject_DivisionParties
+                                                          ON MILinkObject_DivisionParties.MovementItemId = MovementItem.Id
+                                                         AND MILinkObject_DivisionParties.DescId = zc_MILinkObject_DivisionParties()
                          LEFT JOIN Object_Goods_Retail AS Object_Goods_Retail ON Object_Goods_Retail.Id = MovementItem.ObjectId
                          LEFT JOIN Object_Goods_Main AS Object_Goods ON Object_Goods.Id = Object_Goods_Retail.GoodsMainId
                          LEFT JOIN MovementItemLinkObject AS MILinkObject_NDSKind
@@ -129,6 +141,7 @@ BEGIN
                       AND MovementItem.DescId     = zc_MI_Master()
                       AND COALESCE (MILinkObject_PartionDateKind.ObjectId, 0) = COALESCE (inPartionDateKindID, 0)
                       AND COALESCE (MILinkObject_NDSKind.ObjectId, Object_Goods.NDSKindId) = COALESCE (inNDSKindId, 0)
+                      AND COALESCE (MILinkObject_DivisionParties.ObjectId, 0) = COALESCE (inDivisionPartiesID, 0)
                       AND MovementItem.isErased   = FALSE
                     LIMIT 1
                    );

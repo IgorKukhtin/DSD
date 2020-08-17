@@ -35,6 +35,7 @@ RETURNS TABLE (Id Integer, ParentId integer
              , PaymentSP TFloat
              , PartionDateKindId Integer, PartionDateKindName TVarChar
              , NDSKindId Integer
+             , DivisionPartiesId Integer, DivisionPartiesName TVarChar
               )
 AS
 $BODY$
@@ -175,6 +176,9 @@ BEGIN
 
            , MovementItem.NDSKindId                       AS NDSKindId
 
+           , Object_DivisionParties.Id                                           AS DivisionPartiesId 
+           , Object_DivisionParties.ValueData                                    AS DivisionPartiesName 
+
            /*, MIFloat_ContainerId.ContainerId  ::TFloat                         AS ContainerId
            , COALESCE (tmpContainer.ExpirationDate, NULL)      :: TDateTime      AS ExpirationDate
            , COALESCE (tmpPartion.BranchDate, NULL)            :: TDateTime      AS OperDate_Income
@@ -217,6 +221,10 @@ BEGIN
                                     ON ObjectBoolean_DoesNotShare.ObjectId = MovementItem.GoodsId
                                    AND ObjectBoolean_DoesNotShare.DescId = zc_ObjectBoolean_Goods_DoesNotShare()
 
+            LEFT JOIN MovementItemLinkObject AS MILinkObject_DivisionParties
+                                             ON MILinkObject_DivisionParties.MovementItemId = MovementItem.Id
+                                            AND MILinkObject_DivisionParties.DescId         = zc_MILinkObject_DivisionParties()
+            LEFT JOIN Object AS Object_DivisionParties ON Object_DivisionParties.Id = MILinkObject_DivisionParties.ObjectId
       ;
 END;
 $BODY$

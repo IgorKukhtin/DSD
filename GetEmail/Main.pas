@@ -246,6 +246,7 @@ end;
 {------------------------------------------------------------------------}
 //отправка сообщения если возникла ошибка
 function TMainForm.fError_SendEmail (inImportSettingsId, inContactPersonId:Integer; inByDate :TDateTime; inByMail, inByFileName : String) : Boolean;
+  var nRecNo : Integer;
 begin
      if (inByFileName = '0') or (inByFileName = '4')
      then if IdMessage.MessageParts.Count > 0
@@ -263,20 +264,25 @@ begin
        ParamByName('inByFileName').Value:=inByFileName;
        //получили кому надо отправить Email об ошибке
        Execute;
-       DataSet.First;
-       while not DataSet.EOF do begin
-          {FormParams.ParamByName('Host').Value       :=DataSet.FieldByName('Host').AsString;
-          FormParams.ParamByName('Port').Value       :=DataSet.FieldByName('Port').AsInteger;
-          FormParams.ParamByName('UserName').Value   :=DataSet.FieldByName('UserName').AsString;
-          FormParams.ParamByName('Password').Value   :=DataSet.FieldByName('PasswordValue').AsString;
-          FormParams.ParamByName('AddressFrom').Value:=DataSet.FieldByName('MailFrom').AsString;
-          FormParams.ParamByName('AddressTo').Value  :=DataSet.FieldByName('MailTo').AsString;
-          FormParams.ParamByName('Subject').Value    :=DataSet.FieldByName('Subject').AsString;
-          FormParams.ParamByName('Body').Value       :=DataSet.FieldByName('Body').AsString;}
-          //
-          actSendEmail.Execute;
-          //перешли к следующему
-          DataSet.Next;
+       nRecNo := DataSet.RecNo;
+       try
+         DataSet.First;
+         while not DataSet.EOF do begin
+            {FormParams.ParamByName('Host').Value       :=DataSet.FieldByName('Host').AsString;
+            FormParams.ParamByName('Port').Value       :=DataSet.FieldByName('Port').AsInteger;
+            FormParams.ParamByName('UserName').Value   :=DataSet.FieldByName('UserName').AsString;
+            FormParams.ParamByName('Password').Value   :=DataSet.FieldByName('PasswordValue').AsString;
+            FormParams.ParamByName('AddressFrom').Value:=DataSet.FieldByName('MailFrom').AsString;
+            FormParams.ParamByName('AddressTo').Value  :=DataSet.FieldByName('MailTo').AsString;
+            FormParams.ParamByName('Subject').Value    :=DataSet.FieldByName('Subject').AsString;
+            FormParams.ParamByName('Body').Value       :=DataSet.FieldByName('Body').AsString;}
+            //
+            actSendEmail.Execute;
+            //перешли к следующему
+            DataSet.Next;
+         end;
+       finally
+         DataSet.RecNo := nRecNo;
        end;
      end;
 end;

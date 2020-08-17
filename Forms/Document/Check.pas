@@ -177,7 +177,8 @@ type
     spUpdateNDSKindId: TdsdStoredProc;
     actExecspUpdateNDSKindId: TdsdExecStoredProc;
     dxBarButton13: TdxBarButton;
-    DiscountExternalName: TcxGridDBColumn;
+    colDiscountExternalName: TcxGridDBColumn;
+    colDivisionPartiesName: TcxGridDBColumn;
   private
     { Private declarations }
   public
