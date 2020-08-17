@@ -120,6 +120,26 @@ BEGIN
                                                                 END
                                                               , MovementItem.isErased, tmpGoods.InfoMoneyDestinationId
                                                       )
+                            -- Ёлементы
+                          , tmpContainer_list AS
+                               (SELECT DISTINCT Container.Id AS ContainerId
+                                FROM tmpGoods
+                                     INNER JOIN Container ON Container.ObjectId = tmpGoods.GoodsId
+                                                         AND Container.DescId = zc_Container_Count()
+                                                         AND Container.Amount = 0
+                                     INNER JOIN ContainerLinkObject AS CLO_Unit
+                                                                    ON CLO_Unit.ContainerId = Container.Id
+                                                                   AND CLO_Unit.DescId = zc_ContainerLinkObject_Unit()
+                                     INNER JOIN tmpUnit ON tmpUnit.UnitId = CLO_Unit.ObjectId
+
+                                     LEFT JOIN ContainerLinkObject AS CLO_Account
+                                                                   ON CLO_Account.ContainerId = Container.Id
+                                                                  AND CLO_Account.DescId = zc_ContainerLinkObject_Account()
+                                     LEFT JOIN MovementItemContainer AS MIContainer ON MIContainer.ContainerId = Container.Id
+                                                                                   AND MIContainer.OperDate >= inOperDate
+                                WHERE CLO_Account.ContainerId IS NULL -- !!!т.е. без счета “ранзит!!!
+                                  AND MIContainer.ContainerId > 0
+                               )
                             -- Ёлементы »нвентаризации - Ќ≈ все - по которым надо считать ост вперед ... "по видам"
                           , tmpMI_Inventory AS (SELECT tmp.GoodsId, tmp.GoodsKindId, SUM (tmp.Amount) AS Amount
                                                 FROM 
@@ -154,12 +174,14 @@ BEGIN
                                      INNER JOIN Container ON Container.ObjectId = tmpGoods.GoodsId
                                                          AND Container.DescId = zc_Container_Count()
                                                          AND Container.ObjectId NOT IN (SELECT tmpMI_Inventory.GoodsId FROM tmpMI_Inventory)
-                                                         AND Container.Amount <> 0
+                                                       --AND Container.Amount <> 0
                                      INNER JOIN ContainerLinkObject AS CLO_Unit
                                                                     ON CLO_Unit.ContainerId = Container.Id
                                                                    AND CLO_Unit.DescId = zc_ContainerLinkObject_Unit()
                                      INNER JOIN tmpUnit ON tmpUnit.UnitId = CLO_Unit.ObjectId
 
+                                     LEFT JOIN tmpContainer_list ON tmpContainer_list.ContainerId = Container.Id
+                                     
                                      LEFT JOIN ContainerLinkObject AS CLO_Account
                                                                    ON CLO_Account.ContainerId = Container.Id
                                                                   AND CLO_Account.DescId = zc_ContainerLinkObject_Account()
@@ -167,6 +189,7 @@ BEGIN
                                                                    ON CLO_GoodsKind.ContainerId = Container.Id
                                                                   AND CLO_GoodsKind.DescId = zc_ContainerLinkObject_GoodsKind()
                                 WHERE CLO_Account.ContainerId IS NULL -- !!!т.е. без счета “ранзит!!!
+                                  AND (Container.Amount <> 0 OR tmpContainer_list.ContainerId > 0)
                                UNION ALL
                                 -- !!!только дл€ производства!!!
                                 SELECT   zc_MI_Master() AS MIDescId
@@ -489,6 +512,16 @@ end if;*/
        WHERE tmpAll.MIDescId = zc_MI_Child()
          AND vbIsBasis = FALSE -- !!!дл€ сырь€ не надо!!!
       ;
+
+
+if inSession = '5'
+then
+    RAISE EXCEPTION 'ќшибка. end <%>  %   %', (select sum (tmpAll.Amount_start) from tmpAll where tmpAll.GoodsId = 5215077  and tmpAll.GoodsKindId = 8335)
+    , (select max (tmpAll.Amount_start) from tmpAll where tmpAll.GoodsId = 5215077  and tmpAll.GoodsKindId = 8335)
+    , (select max (tmpAll.ContainerId) from tmpAll where tmpAll.GoodsId = 5215077  and tmpAll.GoodsKindId = 8335)
+    ;
+end if;
+
 
 
 END;

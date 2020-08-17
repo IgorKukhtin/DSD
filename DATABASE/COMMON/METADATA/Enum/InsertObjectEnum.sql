@@ -712,9 +712,10 @@ BEGIN
      PERFORM lpUpdate_Object_Enum_byCode (inCode:= 40000, inDescId:= zc_Object_ProfitLossGroup(), inEnumName:= 'zc_Enum_ProfitLossGroup_40000');
      PERFORM lpUpdate_Object_Enum_byCode (inCode:= 50000, inDescId:= zc_Object_ProfitLossGroup(), inEnumName:= 'zc_Enum_ProfitLossGroup_50000');
      PERFORM lpUpdate_Object_Enum_byCode (inCode:= 60000, inDescId:= zc_Object_ProfitLossGroup(), inEnumName:= 'zc_Enum_ProfitLossGroup_60000');
+     PERFORM lpUpdate_Object_Enum_byCode (inCode:= 65000, inDescId:= zc_Object_ProfitLossGroup(), inEnumName:= 'zc_Enum_ProfitLossGroup_65000');
      PERFORM lpUpdate_Object_Enum_byCode (inCode:= 70000, inDescId:= zc_Object_ProfitLossGroup(), inEnumName:= 'zc_Enum_ProfitLossGroup_70000');
      PERFORM lpUpdate_Object_Enum_byCode (inCode:= 80000, inDescId:= zc_Object_ProfitLossGroup(), inEnumName:= 'zc_Enum_ProfitLossGroup_80000');
-
+     
      -- !!!
      -- !!! ќѕи”: 2-уровень (јналитика ќѕи” - направление)
      -- !!!
@@ -754,7 +755,11 @@ BEGIN
 
      PERFORM lpUpdate_Object_Enum_byCode (inCode:= 60100, inDescId:= zc_Object_ProfitLossDirection(), inEnumName:= 'zc_Enum_ProfitLossDirection_60100');
      PERFORM lpUpdate_Object_Enum_byCode (inCode:= 60200, inDescId:= zc_Object_ProfitLossDirection(), inEnumName:= 'zc_Enum_ProfitLossDirection_60200');
-     PERFORM lpUpdate_Object_Enum_byCode (inCode:= 60300, inDescId:= zc_Object_ProfitLossDirection(), inEnumName:= 'zc_Enum_ProfitLossDirection_60300');
+   --PERFORM lpUpdate_Object_Enum_byCode (inCode:= 60300, inDescId:= zc_Object_ProfitLossDirection(), inEnumName:= 'zc_Enum_ProfitLossDirection_60300');
+
+     PERFORM lpUpdate_Object_Enum_byCode (inCode:= 65100, inDescId:= zc_Object_ProfitLossDirection(), inEnumName:= 'zc_Enum_ProfitLossDirection_65100');
+     PERFORM lpUpdate_Object_Enum_byCode (inCode:= 65200, inDescId:= zc_Object_ProfitLossDirection(), inEnumName:= 'zc_Enum_ProfitLossDirection_65200');
+     PERFORM lpUpdate_Object_Enum_byCode (inCode:= 65300, inDescId:= zc_Object_ProfitLossDirection(), inEnumName:= 'zc_Enum_ProfitLossDirection_65300');
 
      PERFORM lpUpdate_Object_Enum_byCode (inCode:= 70100, inDescId:= zc_Object_ProfitLossDirection(), inEnumName:= 'zc_Enum_ProfitLossDirection_70100');
      PERFORM lpUpdate_Object_Enum_byCode (inCode:= 70110, inDescId:= zc_Object_ProfitLossDirection(), inEnumName:= 'zc_Enum_ProfitLossDirection_70110');
@@ -800,6 +805,13 @@ BEGIN
 
      PERFORM lpUpdate_Object_Enum_byCode (inCode:= 60101, inDescId:= zc_Object_ProfitLoss(), inEnumName:= 'zc_Enum_ProfitLoss_60101');
      PERFORM lpUpdate_Object_Enum_byCode (inCode:= 60201, inDescId:= zc_Object_ProfitLoss(), inEnumName:= 'zc_Enum_ProfitLoss_60201');
+
+     PERFORM lpUpdate_Object_Enum_byCode (inCode:= 65101, inDescId:= zc_Object_ProfitLoss(), inEnumName:= 'zc_Enum_ProfitLoss_65101');
+     PERFORM lpUpdate_Object_Enum_byCode (inCode:= 65102, inDescId:= zc_Object_ProfitLoss(), inEnumName:= 'zc_Enum_ProfitLoss_65102');
+     PERFORM lpUpdate_Object_Enum_byCode (inCode:= 65103, inDescId:= zc_Object_ProfitLoss(), inEnumName:= 'zc_Enum_ProfitLoss_65103');
+     PERFORM lpUpdate_Object_Enum_byCode (inCode:= 65201, inDescId:= zc_Object_ProfitLoss(), inEnumName:= 'zc_Enum_ProfitLoss_65201');
+     PERFORM lpUpdate_Object_Enum_byCode (inCode:= 65202, inDescId:= zc_Object_ProfitLoss(), inEnumName:= 'zc_Enum_ProfitLoss_65202');
+     PERFORM lpUpdate_Object_Enum_byCode (inCode:= 65203, inDescId:= zc_Object_ProfitLoss(), inEnumName:= 'zc_Enum_ProfitLoss_65203');
 
      PERFORM lpUpdate_Object_Enum_byCode (inCode:= 70101, inDescId:= zc_Object_ProfitLoss(), inEnumName:= 'zc_Enum_ProfitLoss_70101');
      PERFORM lpUpdate_Object_Enum_byCode (inCode:= 70102, inDescId:= zc_Object_ProfitLoss(), inEnumName:= 'zc_Enum_ProfitLoss_70102');

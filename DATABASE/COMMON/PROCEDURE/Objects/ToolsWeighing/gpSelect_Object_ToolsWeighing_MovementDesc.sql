@@ -28,6 +28,7 @@ RETURNS TABLE (Number              Integer
              , isArticleLoss       Boolean -- ScaleCeh - проверка на установку <Статья списания>
              , isTransport_link    Boolean -- Scale - проверка <Штрих код Путевой лист>
              , isSubjectDoc        Boolean -- Scale + ScaleCeh - будет проверка на ввод <Основание Возврат>
+             , isPersonalGroup     Boolean -- ScaleCeh - будет проверка на ввод <№ бригады>
              , isOrderInternal     Boolean -- ScaleCeh - проверка для операции - разрешается только через заявку
              , isSticker_Ceh       Boolean -- ScaleCeh - при взвешивании в данной операции - сразу печатается Стикер на термопринтере
              , isLockStartWeighing Boolean -- 
@@ -79,13 +80,14 @@ BEGIN
                                        , isArticleLoss            Boolean
                                        , isTransport_link         Boolean
                                        , isSubjectDoc             Boolean
+                                       , isPersonalGroup          Boolean
                                        , isOrderInternal          Boolean
                                        , isSticker_Ceh            Boolean
                                        , isLockStartWeighing      Boolean
                                        , ItemName                 TVarChar
                                         ) ON COMMIT DROP;
     -- формирование
-    INSERT INTO _tmpToolsWeighing (Number, MovementDescId, FromId, ToId, PaidKindId, InfoMoneyId, GoodsId_ReWork, DocumentKindId, GoodsKindWeighingGroupId, ColorGridValue, OrderById, isSendOnPriceIn, isPartionGoodsDate, isStorageLine, isArticleLoss, isTransport_link, isSubjectDoc, isOrderInternal, isSticker_Ceh, isLockStartWeighing, ItemName)
+    INSERT INTO _tmpToolsWeighing (Number, MovementDescId, FromId, ToId, PaidKindId, InfoMoneyId, GoodsId_ReWork, DocumentKindId, GoodsKindWeighingGroupId, ColorGridValue, OrderById, isSendOnPriceIn, isPartionGoodsDate, isStorageLine, isArticleLoss, isTransport_link, isSubjectDoc, isPersonalGroup, isOrderInternal, isSticker_Ceh, isLockStartWeighing, ItemName)
        SELECT tmp.Number
             , CASE WHEN TRIM (tmp.MovementDescId)           <> '' THEN TRIM (tmp.MovementDescId)           ELSE '0' END :: Integer AS MovementDescId
             , CASE WHEN TRIM (tmp.FromId)                   <> '' THEN TRIM (tmp.FromId)                   ELSE '0' END :: Integer AS FromId
@@ -132,14 +134,15 @@ BEGIN
                    ELSE FALSE -- для филиала - расход с него
               END AS isSendOnPriceIn
 
-            , CASE WHEN tmp.isPartionGoodsDate  = 'TRUE' THEN TRUE ELSE FALSE END AS isPartionGoodsDate
-            , CASE WHEN tmp.isStorageLine       = 'TRUE' THEN TRUE ELSE FALSE END AS isStorageLine
-            , CASE WHEN tmp.isArticleLoss       = 'TRUE' THEN TRUE ELSE FALSE END AS isArticleLoss
-            , CASE WHEN tmp.isTransport_link    = 'TRUE' THEN TRUE ELSE FALSE END AS isTransport_link
-            , CASE WHEN tmp.isSubjectDoc        = 'TRUE' THEN TRUE ELSE FALSE END AS isSubjectDoc
-            , CASE WHEN tmp.isOrderInternal     = 'TRUE' THEN TRUE ELSE FALSE END AS isOrderInternal
-            , CASE WHEN tmp.isSticker_Ceh       = 'TRUE' THEN TRUE ELSE FALSE END AS isSticker_Ceh
-            , CASE WHEN tmp.isLockStartWeighing = 'TRUE' THEN TRUE ELSE FALSE END AS isLockStartWeighing
+            , CASE WHEN tmp.isPartionGoodsDate  ILIKE 'TRUE' THEN TRUE ELSE FALSE END AS isPartionGoodsDate
+            , CASE WHEN tmp.isStorageLine       ILIKE 'TRUE' THEN TRUE ELSE FALSE END AS isStorageLine
+            , CASE WHEN tmp.isArticleLoss       ILIKE 'TRUE' THEN TRUE ELSE FALSE END AS isArticleLoss
+            , CASE WHEN tmp.isTransport_link    ILIKE 'TRUE' THEN TRUE ELSE FALSE END AS isTransport_link
+            , CASE WHEN tmp.isSubjectDoc        ILIKE 'TRUE' THEN TRUE ELSE FALSE END AS isSubjectDoc
+            , CASE WHEN tmp.isPersonalGroup     ILIKE 'TRUE' THEN TRUE ELSE FALSE END AS isPersonalGroup
+            , CASE WHEN tmp.isOrderInternal     ILIKE 'TRUE' THEN TRUE ELSE FALSE END AS isOrderInternal
+            , CASE WHEN tmp.isSticker_Ceh       ILIKE 'TRUE' THEN TRUE ELSE FALSE END AS isSticker_Ceh
+            , CASE WHEN tmp.isLockStartWeighing ILIKE 'TRUE' THEN TRUE ELSE FALSE END AS isLockStartWeighing
             
 
             , CASE WHEN tmp.MovementDescId IN (zc_Movement_ProductionUnion() :: TVarChar) AND inBranchCode BETWEEN 201 AND 210 -- если Обвалка
@@ -169,6 +172,7 @@ BEGIN
                         , CASE WHEN inIsCeh = TRUE AND vbIsSticker = FALSE THEN gpGet_ToolsWeighing_Value (vbLevelMain, 'Movement', 'MovementDesc_' || CASE WHEN tmp.Number < 10 THEN '0' ELSE '' END              || tmp.Number, 'isStorageLine',      'FALSE',                                                     inSession) ELSE ''  END AS isStorageLine
                         , CASE WHEN inIsCeh = TRUE  OR vbIsSticker = TRUE  THEN 'FALSE' ELSE gpGet_ToolsWeighing_Value (vbLevelMain, 'Movement', 'MovementDesc_' || CASE WHEN tmp.Number < 10 THEN '0' ELSE '' END || tmp.Number, 'isTransport_link',   'FALSE',                                                     inSession)          END AS isTransport_link
                         , CASE WHEN                    vbIsSticker = TRUE  THEN 'FALSE' ELSE gpGet_ToolsWeighing_Value (vbLevelMain, 'Movement', 'MovementDesc_' || CASE WHEN tmp.Number < 10 THEN '0' ELSE '' END || tmp.Number, 'isSubjectDoc',       'FALSE',                                                     inSession)          END AS isSubjectDoc
+                        , CASE WHEN inIsCeh = FALSE OR vbIsSticker = TRUE  THEN 'FALSE' ELSE gpGet_ToolsWeighing_Value (vbLevelMain, 'Movement', 'MovementDesc_' || CASE WHEN tmp.Number < 10 THEN '0' ELSE '' END || tmp.Number, 'isPersonalGroup',    'FALSE',                                                     inSession)          END AS isPersonalGroup
                         , CASE WHEN inIsCeh = FALSE OR vbIsSticker = TRUE  THEN 'FALSE' ELSE gpGet_ToolsWeighing_Value (vbLevelMain, 'Movement', 'MovementDesc_' || CASE WHEN tmp.Number < 10 THEN '0' ELSE '' END || tmp.Number, 'isOrderInternal',    'FALSE',                                                     inSession)          END AS isOrderInternal
                         , CASE WHEN inIsCeh = FALSE OR vbIsSticker = TRUE  THEN 'FALSE' ELSE gpGet_ToolsWeighing_Value (vbLevelMain, 'Movement', 'MovementDesc_' || CASE WHEN tmp.Number < 10 THEN '0' ELSE '' END || tmp.Number, 'isSticker_Ceh',      'FALSE',                                                     inSession)          END AS isSticker_Ceh
                         
@@ -359,6 +363,7 @@ BEGIN
            , _tmpToolsWeighing.isArticleLoss
            , _tmpToolsWeighing.isTransport_link
            , _tmpToolsWeighing.isSubjectDoc
+           , _tmpToolsWeighing.isPersonalGroup
            , _tmpToolsWeighing.isOrderInternal
            , _tmpToolsWeighing.isSticker_Ceh
            , _tmpToolsWeighing.isLockStartWeighing
@@ -433,6 +438,7 @@ BEGIN
             , FALSE AS isArticleLoss
             , FALSE AS isTransport_link
             , FALSE AS isSubjectDoc
+            , FALSE AS isPersonalGroup
             , FALSE AS isOrderInternal
             , FALSE AS isSticker_Ceh
             , FALSE AS isLockStartWeighing

@@ -28,6 +28,10 @@ RETURNS TABLE (MovementId       Integer
              , SubjectDocCode Integer
              , SubjectDocName TVarChar
 
+             , PersonalGroupId   Integer
+             , PersonalGroupCode Integer
+             , PersonalGroupName TVarChar
+
              , MovementId_Order Integer
              , MovementDescId_Order Integer
              , InvNumber_Order  TVarChar
@@ -86,6 +90,7 @@ BEGIN
                                       , MovementLinkObject_From.ObjectId            AS FromId
                                       , MovementLinkObject_To.ObjectId              AS ToId
                                       , MovementLinkObject_SubjectDoc.ObjectId      AS SubjectDocId
+                                      , MovementLinkObject_PersonalGroup.ObjectId   AS PersonalGroupId
                                       , MovementLinkMovement_Order.MovementChildId  AS MovementId_Order
                                  FROM tmpMovement_find
                                       LEFT JOIN Movement ON Movement.Id = tmpMovement_find.Id
@@ -98,6 +103,9 @@ BEGIN
                                       LEFT JOIN MovementLinkObject AS MovementLinkObject_SubjectDoc
                                                                    ON MovementLinkObject_SubjectDoc.MovementId = Movement.Id
                                                                   AND MovementLinkObject_SubjectDoc.DescId     = zc_MovementLinkObject_SubjectDoc()
+                                      LEFT JOIN MovementLinkObject AS MovementLinkObject_PersonalGroup
+                                                                   ON MovementLinkObject_PersonalGroup.MovementId = Movement.Id
+                                                                  AND MovementLinkObject_PersonalGroup.DescId     = zc_MovementLinkObject_PersonalGroup()
 
                                       LEFT JOIN MovementLinkMovement AS MovementLinkMovement_Order
                                                                      ON MovementLinkMovement_Order.MovementId = Movement.Id
@@ -140,6 +148,10 @@ BEGIN
             , Object_SubjectDoc.ObjectCode                   AS SubjectDocCode
             , Object_SubjectDoc.ValueData                    AS SubjectDocName
 
+            , Object_PersonalGroup.Id                        AS PersonalGroupId
+            , Object_PersonalGroup.ObjectCode                AS PersonalGroupCode
+            , Object_PersonalGroup.ValueData                 AS PersonalGroupName
+
             , tmpMovement.MovementId_Order AS MovementId_Order
             , Movement_Order.DescId        AS MovementDescId_Order
             , Movement_Order.InvNumber     AS InvNumber_Order
@@ -149,6 +161,7 @@ BEGIN
             LEFT JOIN Object AS Object_From ON Object_From.Id = tmpMovement.FromId
             LEFT JOIN Object AS Object_To ON Object_To.Id = tmpMovement.ToId
             LEFT JOIN Object AS Object_SubjectDoc ON Object_SubjectDoc.Id = tmpMovement.SubjectDocId
+            LEFT JOIN Object AS Object_PersonalGroup ON Object_PersonalGroup.Id = tmpMovement.PersonalGroupId
 
             LEFT JOIN Movement AS Movement_Order ON Movement_Order.Id = tmpMovement.MovementId_Order
 

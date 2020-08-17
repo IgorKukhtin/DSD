@@ -192,7 +192,9 @@ BEGIN
             (SELECT STRING_AGG( DISTINCT REPLACE(TO_CHAR(ROUND(MI_PromoGoods.Price*((100+vbVAT)/100),2),'FM9999990D09')||' ','.0 ','')||'   '||CASE WHEN vbCountGoods > 1 THEN MI_PromoGoods.GoodsName ELSE '' END, chr(13))
              FROM MovementItem_PromoGoods_View AS MI_PromoGoods
              WHERE MI_PromoGoods.MovementId = inMovementId
-               AND MI_PromoGoods.IsErased = FALSE)::TEXT AS LineValue
+               AND MI_PromoGoods.IsErased = FALSE
+               AND MI_PromoGoods.Price <> 0
+               )::TEXT AS LineValue
         UNION ALL
         SELECT
             '' :: TVarChar AS LineNo,

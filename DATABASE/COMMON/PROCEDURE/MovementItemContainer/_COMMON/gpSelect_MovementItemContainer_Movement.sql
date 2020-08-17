@@ -15,8 +15,8 @@ CREATE OR REPLACE FUNCTION gpSelect_MovementItemContainer_Movement(
 )
 RETURNS TABLE (InvNumber Integer, OperDate TDateTime
              , AccountCode Integer
-             , DebetAmount TFloat, DebetAccountGroupName TVarChar, DebetAccountDirectionName TVarChar, DebetAccountName TVarChar
-             , KreditAmount TFloat, KreditAccountGroupName TVarChar, KreditAccountDirectionName TVarChar, KreditAccountName  TVarChar
+             , DebetAmount TFloat, DebetAmount_Asset TFloat, DebetAccountGroupName TVarChar, DebetAccountDirectionName TVarChar, DebetAccountName TVarChar
+             , KreditAmount TFloat, KreditAmount_Asset TFloat, KreditAccountGroupName TVarChar, KreditAccountDirectionName TVarChar, KreditAccountName  TVarChar
              , Amount_Currency TFloat
              , Price TFloat
              , AccountOnComplete Boolean
@@ -31,6 +31,7 @@ RETURNS TABLE (InvNumber Integer, OperDate TDateTime
              , ObjectCostId Integer, ContainerId_Currency Integer, MIId_Parent Integer, GoodsCode_Parent Integer, GoodsName_Parent TVarChar, GoodsKindName_Parent TVarChar
              , InfoMoneyCode Integer, InfoMoneyName TVarChar, InfoMoneyCode_Detail Integer, InfoMoneyName_Detail TVarChar
              , CurrencyName TVarChar
+             , ContainerId_Asset Integer
               )
 AS
 $BODY$
@@ -59,7 +60,7 @@ BEGIN
                            )
                     -- все проводки: количественные + суммовые
                   , tmpMIContainer_all AS (SELECT MIContainer.DescId AS MIContainerDescId
-                                                , CASE WHEN MIContainer.DescId = zc_MIContainer_Count() THEN 0 ELSE MIContainer.Id END AS Id
+                                                , CASE WHEN MIContainer.DescId IN (zc_MIContainer_Count(), zc_MIContainer_CountAsset()) THEN 0 ELSE MIContainer.Id END AS Id
                                                 , COALESCE (MIContainer.MovementItemId, 0) AS MovementItemId -- !!!может быть NULL!!!
                                                 , CASE WHEN MIContainer.AccountId = zc_Enum_Account_110101() THEN MIContainer.AccountId ELSE 0 END AS AccountId_110101
                                                 , MIContainer.ParentId
@@ -68,7 +69,7 @@ BEGIN
                                                 -- , MIContainer.ObjectId_Analyzer
                                                 , MIContainer.OperDate
                                                 , MIContainer.isActive
-                                                , SUM (CASE WHEN MIContainer.isActive = TRUE OR MIContainer.DescId = zc_MIContainer_Summ() OR MIContainer.DescId = zc_MIContainer_SummCurrency() THEN 1 ELSE -1 END * MIContainer.Amount) AS Amount
+                                                , SUM (CASE WHEN MIContainer.isActive = TRUE OR MIContainer.DescId IN (zc_MIContainer_Summ(), zc_MIContainer_SummCurrency(), zc_MIContainer_SummAsset()) THEN 1 ELSE -1 END * MIContainer.Amount) AS Amount
                                                 , tmpMovement.MovementId
                                                 , tmpMovement.MovementDescId
                                                 , tmpMovement.InvNumber
@@ -78,7 +79,7 @@ BEGIN
                                            FROM tmpMovement
                                                 LEFT JOIN MovementItemContainer AS MIContainer ON MIContainer.MovementId = tmpMovement.MovementId
                                            GROUP BY MIContainer.DescId
-                                                , CASE WHEN MIContainer.DescId = zc_MIContainer_Count() THEN 0 ELSE MIContainer.Id END
+                                                , CASE WHEN MIContainer.DescId IN (zc_MIContainer_Count(), zc_MIContainer_CountAsset()) THEN 0 ELSE MIContainer.Id END
                                                 , COALESCE (MIContainer.MovementItemId, 0)
                                                 , CASE WHEN MIContainer.AccountId = zc_Enum_Account_110101() THEN MIContainer.AccountId ELSE 0 END
                                                 , MIContainer.ParentId
@@ -98,6 +99,7 @@ BEGIN
                                                 , Container.ObjectId AS AccountId
                                                 -- , COALESCE (Container_Parent.Id, 0) AS ContainerId_Currency, 0 AS Amount_Currency
                                                 , 0 AS ContainerId_Currency, 0 AS Amount_Currency
+                                                , 0 AS ContainerId_Asset, 0 AS Amount_Asset
                                            FROM tmpMIContainer_all
                                                 LEFT JOIN Container ON Container.Id = tmpMIContainer_all.ContainerId
                                                 -- LEFT JOIN Container AS Container_Parent ON Container_Parent.ParentId = Container.Id
@@ -122,17 +124,41 @@ BEGIN
                                                 , tmpMIContainer_all.isInfoMoneyDetail
                                                 , Container.ObjectId AS AccountId
                                                 , COALESCE (tmpMIContainer_all.ContainerId, 0) AS ContainerId_Currency, COALESCE (tmpMIContainer_all.Amount, 0) AS Amount_Currency
+                                                , 0 AS ContainerId_Asset, 0 AS Amount_Asset
                                            FROM tmpMIContainer_all
                                                 LEFT JOIN Container ON Container.Id = tmpMIContainer_all.ContainerId
                                                 LEFT JOIN Container AS Container_Parent ON Container_Parent.Id = Container.ParentId
                                            WHERE tmpMIContainer_all.MIContainerDescId = zc_MIContainer_SummCurrency()
+                                          UNION ALL
+                                           SELECT tmpMIContainer_all.MIContainerDescId
+                                                , tmpMIContainer_all.Id
+                                                , tmpMIContainer_all.MovementItemId -- !!!может быть NULL!!!
+                                                , tmpMIContainer_all.AccountId_110101
+                                                , tmpMIContainer_all.ParentId
+                                                , tmpMIContainer_all.ContainerId AS ContainerId
+                                                , tmpMIContainer_all.ObjectId_Analyzer
+                                                , tmpMIContainer_all.OperDate
+                                                , tmpMIContainer_all.isActive
+                                                , 0 AS Amount
+                                                , tmpMIContainer_all.MovementId
+                                                , tmpMIContainer_all.MovementDescId
+                                                , tmpMIContainer_all.InvNumber
+                                                , tmpMIContainer_all.isDestination
+                                                , tmpMIContainer_all.isParentDetail
+                                                , tmpMIContainer_all.isInfoMoneyDetail
+                                                , Container.ObjectId AS AccountId
+                                                , 0 AS ContainerId_Currency, 0 AS Amount_Currency
+                                                , COALESCE (tmpMIContainer_all.ContainerId, 0) AS ContainerId_Asset, COALESCE (tmpMIContainer_all.Amount, 0) AS Amount_Asset
+                                           FROM tmpMIContainer_all
+                                                LEFT JOIN Container ON Container.Id = tmpMIContainer_all.ContainerId
+                                           WHERE tmpMIContainer_all.MIContainerDescId = zc_MIContainer_SummAsset()
                                           )
                -- проводки: только количественные + определяется GoodsId + (нужны для расчета цены)
             , tmpMIContainer_Count_all AS (SELECT tmpMIContainer_all.*
                                                 , COALESCE (Container.ObjectId, 0) AS GoodsId
                                            FROM tmpMIContainer_all
                                                 LEFT JOIN Container ON Container.Id = tmpMIContainer_all.ContainerId
-                                           WHERE tmpMIContainer_all.MIContainerDescId = zc_MIContainer_Count()
+                                           WHERE tmpMIContainer_all.MIContainerDescId IN (zc_MIContainer_Count(), zc_MIContainer_CountAsset())
                                              AND tmpMIContainer_all.isDestination     = TRUE
                                           )
                 -- проводки: количественные + определяется GoodsKindId
@@ -271,6 +297,9 @@ BEGIN
                                     , tmpMIContainer_Summ_all.ContainerId_Currency
                                     , tmpMIContainer_Summ_all.Amount_Currency
 
+                                    , tmpMIContainer_Summ_all.ContainerId_Asset
+                                    , tmpMIContainer_Summ_all.Amount_Asset
+
                                     , tmpMIContainer_Count.isDestination
                                     , tmpMIContainer_Count.isParentDetail
                                     , tmpMIContainer_Count.isInfoMoneyDetail
@@ -306,6 +335,9 @@ BEGIN
 
                                     , tmpMIContainer.ContainerId_Currency
                                     , tmpMIContainer.Amount_Currency
+
+                                    , tmpMIContainer.ContainerId_Asset
+                                    , tmpMIContainer.Amount_Asset
 
                                     , tmpMIContainer.isDestination
                                     , tmpMIContainer.isParentDetail
@@ -384,22 +416,24 @@ BEGIN
            , CAST (Object_Account_View.AccountCode AS Integer) AS AccountCode
 
            -- , CAST (CASE WHEN tmpMovementItemContainer.isActive = TRUE THEN tmpMovementItemContainer.Amount ELSE 0 END AS TFloat) AS DebetAmount
-           , CAST (CASE WHEN tmpMovementItemContainer.Amount >= 0 THEN tmpMovementItemContainer.Amount ELSE 0 END AS TFloat) AS DebetAmount
+           , CAST (CASE WHEN tmpMovementItemContainer.Amount       >= 0 THEN tmpMovementItemContainer.Amount       ELSE 0 END AS TFloat) AS DebetAmount
+           , CAST (CASE WHEN tmpMovementItemContainer.Amount_Asset >= 0 THEN tmpMovementItemContainer.Amount_Asset ELSE 0 END AS TFloat) AS DebetAmount_Asset
            -- , CAST (CASE WHEN tmpMovementItemContainer.isActive = TRUE /*COALESCE (ObjectLink_AccountKind.ChildObjectId, 0) = zc_Enum_AccountKind_Active()*/ THEN Object_Account_View.AccountGroupName ELSE NULL END  AS TVarChar) AS DebetAccountGroupName
            -- , CAST (CASE WHEN tmpMovementItemContainer.isActive = TRUE /*COALESCE (ObjectLink_AccountKind.ChildObjectId, 0) = zc_Enum_AccountKind_Active()*/ THEN Object_Account_View.AccountDirectionName ELSE NULL END  AS TVarChar) AS DebetAccountDirectionName
            -- , CAST (CASE WHEN tmpMovementItemContainer.isActive = TRUE /*COALESCE (ObjectLink_AccountKind.ChildObjectId, 0) = zc_Enum_AccountKind_Active()*/ THEN Object_Account_View.AccountName_all ELSE NULL END  AS TVarChar) AS DebetAccountName
-           , CAST (CASE WHEN tmpMovementItemContainer.Amount >= 0 AND tmpMovementItemContainer.Amount_Currency >= 0 /*COALESCE (ObjectLink_AccountKind.ChildObjectId, 0) = zc_Enum_AccountKind_Active()*/ THEN CASE WHEN tmpMovementItemContainer.ContainerId_Currency > 0 THEN '*з* ' ELSE '' END || Object_Account_View.AccountGroupName ELSE NULL END  AS TVarChar) AS DebetAccountGroupName
-           , CAST (CASE WHEN tmpMovementItemContainer.Amount >= 0 AND tmpMovementItemContainer.Amount_Currency >= 0 /*COALESCE (ObjectLink_AccountKind.ChildObjectId, 0) = zc_Enum_AccountKind_Active()*/ THEN CASE WHEN tmpMovementItemContainer.ContainerId_Currency > 0 THEN '*з* ' ELSE '' END || Object_Account_View.AccountDirectionName ELSE NULL END  AS TVarChar) AS DebetAccountDirectionName
-           , CAST (CASE WHEN tmpMovementItemContainer.Amount >= 0 AND tmpMovementItemContainer.Amount_Currency >= 0 /*COALESCE (ObjectLink_AccountKind.ChildObjectId, 0) = zc_Enum_AccountKind_Active()*/ THEN CASE WHEN tmpMovementItemContainer.ContainerId_Currency > 0 THEN '*з* ' ELSE '' END || Object_Account_View.AccountName_all ELSE NULL END  AS TVarChar) AS DebetAccountName
+           , CAST (CASE WHEN tmpMovementItemContainer.Amount >= 0 AND tmpMovementItemContainer.Amount_Currency >= 0 AND tmpMovementItemContainer.Amount_Asset >= 0 /*COALESCE (ObjectLink_AccountKind.ChildObjectId, 0) = zc_Enum_AccountKind_Active()*/ THEN CASE WHEN tmpMovementItemContainer.ContainerId_Currency > 0 OR tmpMovementItemContainer.ContainerId_asset > 0 THEN '*з* ' ELSE '' END || Object_Account_View.AccountGroupName ELSE NULL END  AS TVarChar) AS DebetAccountGroupName
+           , CAST (CASE WHEN tmpMovementItemContainer.Amount >= 0 AND tmpMovementItemContainer.Amount_Currency >= 0 AND tmpMovementItemContainer.Amount_Asset >= 0 /*COALESCE (ObjectLink_AccountKind.ChildObjectId, 0) = zc_Enum_AccountKind_Active()*/ THEN CASE WHEN tmpMovementItemContainer.ContainerId_Currency > 0 OR tmpMovementItemContainer.ContainerId_asset > 0 THEN '*з* ' ELSE '' END || Object_Account_View.AccountDirectionName ELSE NULL END  AS TVarChar) AS DebetAccountDirectionName
+           , CAST (CASE WHEN tmpMovementItemContainer.Amount >= 0 AND tmpMovementItemContainer.Amount_Currency >= 0 AND tmpMovementItemContainer.Amount_Asset >= 0 /*COALESCE (ObjectLink_AccountKind.ChildObjectId, 0) = zc_Enum_AccountKind_Active()*/ THEN CASE WHEN tmpMovementItemContainer.ContainerId_Currency > 0 OR tmpMovementItemContainer.ContainerId_asset > 0 THEN '*з* ' ELSE '' END || Object_Account_View.AccountName_all ELSE NULL END  AS TVarChar) AS DebetAccountName
 
            -- , CAST (CASE WHEN tmpMovementItemContainer.isActive = FALSE THEN -1 * tmpMovementItemContainer.Amount ELSE 0 END AS TFloat) AS KreditAmount
-           , CAST (CASE WHEN tmpMovementItemContainer.Amount < 0 THEN -1 * tmpMovementItemContainer.Amount ELSE 0 END AS TFloat) AS KreditAmount
+           , CAST (CASE WHEN tmpMovementItemContainer.Amount       < 0 THEN -1 * tmpMovementItemContainer.Amount       ELSE 0 END AS TFloat) AS KreditAmount
+           , CAST (CASE WHEN tmpMovementItemContainer.Amount_Asset < 0 THEN -1 * tmpMovementItemContainer.Amount_Asset ELSE 0 END AS TFloat) AS KreditAmount_Asset
            -- , CAST (CASE WHEN tmpMovementItemContainer.isActive = FALSE /*COALESCE (ObjectLink_AccountKind.ChildObjectId, 0) <> zc_Enum_AccountKind_Active()*/ THEN Object_Account_View.AccountGroupName ELSE NULL END  AS TVarChar) AS KreditAccountGroupName
            -- , CAST (CASE WHEN tmpMovementItemContainer.isActive = FALSE /*COALESCE (ObjectLink_AccountKind.ChildObjectId, 0) <> zc_Enum_AccountKind_Active()*/ THEN Object_Account_View.AccountDirectionName ELSE NULL END  AS TVarChar) AS KreditAccountDirectionName
            -- , CAST (CASE WHEN tmpMovementItemContainer.isActive = FALSE /*COALESCE (ObjectLink_AccountKind.ChildObjectId, 0) <> zc_Enum_AccountKind_Active()*/ THEN Object_Account_View.AccountName_all ELSE NULL END  AS TVarChar) AS KreditAccountName
-           , CAST (CASE WHEN tmpMovementItemContainer.Amount < 0 OR tmpMovementItemContainer.Amount_Currency < 0 /*COALESCE (ObjectLink_AccountKind.ChildObjectId, 0) <> zc_Enum_AccountKind_Active()*/ THEN CASE WHEN tmpMovementItemContainer.ContainerId_Currency > 0 THEN '*з* ' ELSE '' END || Object_Account_View.AccountGroupName ELSE NULL END  AS TVarChar) AS KreditAccountGroupName
-           , CAST (CASE WHEN tmpMovementItemContainer.Amount < 0 OR tmpMovementItemContainer.Amount_Currency < 0 /*COALESCE (ObjectLink_AccountKind.ChildObjectId, 0) <> zc_Enum_AccountKind_Active()*/ THEN CASE WHEN tmpMovementItemContainer.ContainerId_Currency > 0 THEN '*з* ' ELSE '' END || Object_Account_View.AccountDirectionName ELSE NULL END  AS TVarChar) AS KreditAccountDirectionName
-           , CAST (CASE WHEN tmpMovementItemContainer.Amount < 0 OR tmpMovementItemContainer.Amount_Currency < 0 /*COALESCE (ObjectLink_AccountKind.ChildObjectId, 0) <> zc_Enum_AccountKind_Active()*/ THEN CASE WHEN tmpMovementItemContainer.ContainerId_Currency > 0 THEN '*з* ' ELSE '' END || Object_Account_View.AccountName_all ELSE NULL END  AS TVarChar) AS KreditAccountName
+           , CAST (CASE WHEN tmpMovementItemContainer.Amount < 0 OR tmpMovementItemContainer.Amount_Currency < 0 OR tmpMovementItemContainer.Amount_Asset < 0 /*COALESCE (ObjectLink_AccountKind.ChildObjectId, 0) <> zc_Enum_AccountKind_Active()*/ THEN CASE WHEN tmpMovementItemContainer.ContainerId_Currency > 0 OR tmpMovementItemContainer.ContainerId_asset > 0 THEN '*з* ' ELSE '' END || Object_Account_View.AccountGroupName ELSE NULL END  AS TVarChar) AS KreditAccountGroupName
+           , CAST (CASE WHEN tmpMovementItemContainer.Amount < 0 OR tmpMovementItemContainer.Amount_Currency < 0 OR tmpMovementItemContainer.Amount_Asset < 0 /*COALESCE (ObjectLink_AccountKind.ChildObjectId, 0) <> zc_Enum_AccountKind_Active()*/ THEN CASE WHEN tmpMovementItemContainer.ContainerId_Currency > 0 OR tmpMovementItemContainer.ContainerId_asset > 0 THEN '*з* ' ELSE '' END || Object_Account_View.AccountDirectionName ELSE NULL END  AS TVarChar) AS KreditAccountDirectionName
+           , CAST (CASE WHEN tmpMovementItemContainer.Amount < 0 OR tmpMovementItemContainer.Amount_Currency < 0 OR tmpMovementItemContainer.Amount_Asset < 0 /*COALESCE (ObjectLink_AccountKind.ChildObjectId, 0) <> zc_Enum_AccountKind_Active()*/ THEN CASE WHEN tmpMovementItemContainer.ContainerId_Currency > 0 OR tmpMovementItemContainer.ContainerId_asset > 0 THEN '*з* ' ELSE '' END || Object_Account_View.AccountName_all ELSE NULL END  AS TVarChar) AS KreditAccountName
 
            , CAST (tmpMovementItemContainer.Amount_Currency AS TFloat) AS Amount_Currency
 
@@ -439,6 +473,7 @@ BEGIN
            , tmpMovementItemContainer.InfoMoneyCode_Detail
            , tmpMovementItemContainer.InfoMoneyName_Detail
            , Object_Currency.ValueData AS CurrencyName
+           , tmpMovementItemContainer.ContainerId_asset
        FROM
            (SELECT
                   tmpMIContainer_Summ.InvNumber
@@ -447,12 +482,15 @@ BEGIN
                 , tmpMIContainer_Summ.AccountId
                 , SUM (tmpMIContainer_Summ.Amount)  AS Amount
                 , SUM (tmpMIContainer_Summ.Amount_Currency) AS Amount_Currency
+                , SUM (tmpMIContainer_Summ.Amount_Asset) AS Amount_Asset
                 , tmpMIContainer_Summ.isActive
 
                 , tmpMIContainer_Summ.Id
                 , tmpMIContainer_Summ.ContainerId          AS ObjectCostId
                 , tmpMIContainer_Summ.ContainerId_Currency AS ContainerId_Currency
                 , SUM (tmpMIContainer_Summ.Amount_Count)   AS Amount_Count
+
+                , tmpMIContainer_Summ.ContainerId_Asset AS ContainerId_Asset
 
                 , Object_JuridicalBasis.ObjectCode AS JuridicalBasisCode
                 , Object_JuridicalBasis.ValueData  AS JuridicalBasisName
@@ -525,12 +563,14 @@ BEGIN
                 , tmpMIContainer_Summ.AccountId
                 , tmpMIContainer_Summ.Amount
                 , tmpMIContainer_Summ.Amount_Currency
+                , tmpMIContainer_Summ.Amount_Asset
 
                 , tmpMIContainer_Summ.isActive
 
                 , CASE WHEN tmpMIContainer_Summ.isInfoMoneyDetail = TRUE THEN tmpMIContainer_Summ.Id                   ELSE 0 END AS Id
                 , CASE WHEN tmpMIContainer_Summ.isInfoMoneyDetail = TRUE THEN tmpMIContainer_Summ.ContainerId          ELSE 0 END AS ContainerId
                 , CASE WHEN tmpMIContainer_Summ.isInfoMoneyDetail = TRUE THEN tmpMIContainer_Summ.ContainerId_Currency ELSE 0 END AS ContainerId_Currency
+                , CASE WHEN tmpMIContainer_Summ.isInfoMoneyDetail = TRUE THEN tmpMIContainer_Summ.ContainerId_Asset    ELSE 0 END AS ContainerId_Asset
                 
                 , CASE WHEN tmpMIContainer_Summ.isInfoMoneyDetail = TRUE THEN tmpMIContainer_Summ.MovementItemId       ELSE 0 END AS MovementItemId
                 , CASE WHEN tmpMIContainer_Summ.isInfoMoneyDetail = TRUE THEN tmpMIContainer_Summ.Amount_Count         ELSE 0 END AS Amount_Count
@@ -685,6 +725,7 @@ BEGIN
                    , tmpMIContainer_Summ.AccountId
                    , tmpMIContainer_Summ.ContainerId
                    , tmpMIContainer_Summ.ContainerId_Currency
+                   , tmpMIContainer_Summ.ContainerId_Asset
                    , tmpMIContainer_Summ.MovementItemId_Parent
                    , tmpMIContainer_Summ.Id
                    , tmpMIContainer_Summ.MovementDescId
@@ -800,4 +841,4 @@ DestinationObjectCode
 DestinationObjectName
 */
 -- тест
--- SELECT * FROM gpSelect_MovementItemContainer_Movement (inMovementId:= 386405, inIsDestination:= FALSE, inIsParentDetail:= FALSE, inIsInfoMoneyDetail:= FALSE, inSession:= zfCalc_UserAdmin())
+-- SELECT * FROM gpSelect_MovementItemContainer_Movement (inMovementId:= 17390159, inIsDestination:= FALSE, inIsParentDetail:= FALSE, inIsInfoMoneyDetail:= FALSE, inSession:= zfCalc_UserAdmin())

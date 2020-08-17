@@ -3,7 +3,8 @@
 -- DROP FUNCTION IF EXISTS gpInsertUpdate_ScaleCeh_Movement (Integer, TDateTime, Integer, Integer, Integer, Integer, Boolean, TVarChar);
 -- DROP FUNCTION IF EXISTS gpInsertUpdate_ScaleCeh_Movement (Integer, TDateTime, Integer, Integer, Integer, Integer, Boolean, Integer, TVarChar);
 -- DROP FUNCTION IF EXISTS gpInsertUpdate_ScaleCeh_Movement (Integer, TDateTime, Integer, Integer, Integer, Integer, Integer, Boolean, Integer, TVarChar);
-DROP FUNCTION IF EXISTS gpInsertUpdate_ScaleCeh_Movement (Integer, TDateTime, Integer, Integer, Integer, Integer, Integer, Integer, Boolean, Integer, TVarChar);
+-- DROP FUNCTION IF EXISTS gpInsertUpdate_ScaleCeh_Movement (Integer, TDateTime, Integer, Integer, Integer, Integer, Integer, Integer, Boolean, Integer, TVarChar);
+DROP FUNCTION IF EXISTS gpInsertUpdate_ScaleCeh_Movement (Integer, TDateTime, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Boolean, Integer, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpInsertUpdate_ScaleCeh_Movement(
     IN inId                  Integer   , -- Ключ объекта <Документ>
@@ -13,6 +14,7 @@ CREATE OR REPLACE FUNCTION gpInsertUpdate_ScaleCeh_Movement(
     IN inFromId              Integer   , -- От кого (в документе)
     IN inToId                Integer   , -- Кому (в документе)
     IN inSubjectDocId        Integer   , -- 
+    IN inPersonalGroupId     Integer   , -- 
     IN inMovementId_Order    Integer   , -- ключ Документа заявка
     IN inIsProductionIn      Boolean   , -- 
     IN inBranchCode          Integer   , -- 
@@ -82,6 +84,7 @@ BEGIN
                                                       , inToId                := inToId
                                                       , inDocumentKindId      := CASE WHEN vbDocumentKindId = 0 THEN NULL ELSE vbDocumentKindId END
                                                       , inSubjectDocId        := inSubjectDocId
+                                                      , inPersonalGroupId     := inPersonalGroupId
                                                       , inMovementId_Order    := inMovementId_Order
                                                       , inPartionGoods        := (SELECT MovementString.ValueData FROM MovementString WHERE MovementString.MovementId = inId AND MovementString.DescId = zc_MovementString_PartionGoods())
                                                       , inIsProductionIn      := inIsProductionIn

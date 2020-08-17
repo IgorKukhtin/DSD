@@ -422,7 +422,8 @@ BEGIN
           -- список Перемещение
         , tmpSend AS (SELECT tmpPartionGoods.MovementItemId     AS PartionId
                            , MIConatiner.WhereObjectId_Analyzer AS UnitId
-                           , SUM (MIConatiner.Amount)           AS Amount
+                           , SUM (CASE WHEN MIConatiner.Amount > 0 THEN  1 * MIConatiner.Amount ELSE 0 END) AS SendIn_Amount
+                           , SUM (CASE WHEN MIConatiner.Amount < 0 THEN -1 * MIConatiner.Amount ELSE 0 END) AS SendOut_Amount
                       FROM tmpPartionGoods
                            INNER JOIN MovementItemContainer AS MIConatiner
                                                             ON MIConatiner.PartionId      = tmpPartionGoods.MovementItemId
@@ -1230,10 +1231,10 @@ BEGIN
                                , tmp.Remains_Amount_real   Remains_Amount_real
 
                                  -- Перемещение
-                               , CASE WHEN tmp.Send_Amount > 0 THEN  1 * tmp.Send_Amount ELSE 0 END AS SendIn_Amount
-                               , CASE WHEN tmp.Send_Amount < 0 THEN -1 * tmp.Send_Amount ELSE 0 END AS SendOut_Amount
-                               , CASE WHEN tmp.Send_Amount > 0 THEN  1 * tmp.Send_Amount * Object_PartionGoods.OperPrice / CASE WHEN Object_PartionGoods.CountForPrice > 0 THEN Object_PartionGoods.CountForPrice ELSE 1 END ELSE 0 END AS SendIn_Summ
-                               , CASE WHEN tmp.Send_Amount < 0 THEN -1 * tmp.Send_Amount * Object_PartionGoods.OperPrice / CASE WHEN Object_PartionGoods.CountForPrice > 0 THEN Object_PartionGoods.CountForPrice ELSE 1 END ELSE 0 END AS SendOut_Summ
+                               , tmp.SendIn_Amount
+                               , tmp.SendOut_Amount
+                               , tmp.SendIn_Amount  * Object_PartionGoods.OperPrice / CASE WHEN Object_PartionGoods.CountForPrice > 0 THEN Object_PartionGoods.CountForPrice ELSE 1 END AS SendIn_Summ
+                               , tmp.SendOut_Amount * Object_PartionGoods.OperPrice / CASE WHEN Object_PartionGoods.CountForPrice > 0 THEN Object_PartionGoods.CountForPrice ELSE 1 END AS SendOut_Summ
 
                                  -- Списание + Возврат поставщ.
                                , 0 AS Loss_Amount
@@ -1351,7 +1352,8 @@ BEGIN
                                                 , COALESCE (tmpRemains.UnitId,      tmpSend.UnitId)    AS UnitId
                                                 , COALESCE (tmpRemains.Amount,      0)                 AS Remains_Amount
                                                 , COALESCE (tmpRemains.Amount_real, 0)                 AS Remains_Amount_real
-                                                , COALESCE (tmpSend.Amount,         0)                 AS Send_Amount
+                                                , COALESCE (tmpSend.SendIn_Amount,  0)                 AS SendIn_Amount
+                                                , COALESCE (tmpSend.SendOut_Amount, 0)                 AS SendOut_Amount
                                            FROM tmpRemains
                                                 FULL JOIN tmpSend ON tmpSend.PartionId = tmpRemains.PartionId
                                                                  AND tmpSend.UnitId    = tmpRemains.UnitId
@@ -1920,3 +1922,5 @@ $BODY$
 -- тест
 -- SELECT LabelName, GroupsName4, GroupsName3, GroupsName2, GroupsName1 FROM gpReport_SaleOLAP (inStartDate:= '01.01.2017', inEndDate:= '31.12.2017', inUnitId:= 0, inPartnerId:= 2628, inBrandId:= 0, inPeriodId:= 0, inStartYear:= 2017, inEndYear:= 2017, inIsYear:= FALSE, inIsPeriodAll:= TRUE, inIsGoods:= FALSE, inIsSize:= FALSE, inIsClient_doc:= FALSE, inIsOperDate_doc:= FALSE, inIsDay_doc:= FALSE, inIsOperPrice:= FALSE, inIsDiscount:= FALSE, inSession:= zfCalc_UserAdmin());
 -- SELECT * FROM gpReport_SaleOLAP (inStartDate:= '01.01.2017', inEndDate:= '31.12.2017', inUnitId:= 0, inPartnerId:= 2628, inBrandId:= 0, inPeriodId:= 0, inStartYear:= 2017, inEndYear:= 2017, inIsYear:= TRUE, inIsPeriodAll:= TRUE, inIsGoods:= FALSE, inIsSize:= FALSE, inIsClient_doc:= FALSE, inIsOperDate_doc:= FALSE, inIsDay_doc:= FALSE, inIsOperPrice:= FALSE, inIsDiscount:= FALSE, inIsMark:= FALSE, inSession:= zfCalc_UserAdmin());
+select * from gpReport_SaleOLAP(inStartDate := ('01.09.2019')::TDateTime , inEndDate := ('30.09.2019')::TDateTime , inUnitId := 1550 , inPartnerId := 0 , inBrandId := 0 , inPeriodId := 1554 , inStartYear := 2018 , inEndYear := 2018 , inIsYear := 'False' , inIsPeriodAll := 'True' , inisGoods := 'True' , inisSize := 'False' , inIsClient_doc := 'False' , inIsOperDate_doc := 'False' , inIsDay_doc := 'False' , inIsOperPrice := 'False' , inIsDiscount := 'False' , inIsMark := 'False' ,  inSession := '8')
+where GoodsCode = 74577
