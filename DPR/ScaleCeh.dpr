@@ -83,7 +83,7 @@ uses
   IFIN_J1201209 in '..\SOURCE\MeDOC\IFIN_J1201209.pas',
   LookAndFillSettings in '..\SOURCE\LookAndFillSettings.pas' {LookAndFillSettingsForm},
   DialogNumberValue in '..\Scale\DialogNumberValue.pas' {DialogNumberValueForm},
-  GuideArticleLoss in '..\ScaleCeh\GuideArticleLoss.pas' {GuideArticleLossForm},
+  GuidePersonalGroup in '..\ScaleCeh\GuidePersonalGroup.pas' {GuidePersonalGroupForm},
   dsdPivotGrid in '..\SOURCE\COMPONENT\dsdPivotGrid.pas',
   GuideGoodsLine in '..\ScaleCeh\GuideGoodsLine.pas' {GuideGoodsLineForm},
   dsdExportToXLSAction in '..\SOURCE\COMPONENT\dsdExportToXLSAction.pas',
@@ -100,7 +100,8 @@ uses
   IftminFozzXML in '..\SOURCE\EDI\IftminFozzXML.pas',
   OrderSpFozzXML in '..\SOURCE\EDI\OrderSpFozzXML.pas',
   GuideSubjectDoc in '..\Scale\GuideSubjectDoc.pas' {GuideSubjectDocForm},
-  GuideUnit in '..\Scale\GuideUnit.pas' {GuideUnitForm};
+  GuideUnit in '..\Scale\GuideUnit.pas' {GuideUnitForm},
+  GuideArticleLoss in '..\ScaleCeh\GuideArticleLoss.pas' {GuideArticleLossForm};
 
 {$R *.res}
 
@@ -123,8 +124,6 @@ begin
          //
          Application.CreateForm(TdmMain, dmMain);
   Application.CreateForm(TDMMainScaleCehForm, DMMainScaleCehForm);
-  Application.CreateForm(TGuideSubjectDocForm, GuideSubjectDocForm);
-  Application.CreateForm(TGuideUnitForm, GuideUnitForm);
   // !!!важно первым!!!
   Application.CreateForm(TMainCehForm, MainCehForm);
          Application.CreateForm(TDialogMovementDescForm, DialogMovementDescForm);
@@ -144,6 +143,8 @@ begin
          Application.CreateForm(TDialogGoodsSeparateForm, DialogGoodsSeparateForm);
          Application.CreateForm(TGuideSubjectDocForm, GuideSubjectDocForm);
          Application.CreateForm(TGuideUnitForm, GuideUnitForm);
+         Application.CreateForm(TGuidePersonalGroupForm, GuidePersonalGroupForm);
+
   end
   else
 
@@ -179,6 +180,7 @@ begin
          Application.CreateForm(TDialogGoodsSeparateForm, DialogGoodsSeparateForm);
          Application.CreateForm(TGuideSubjectDocForm, GuideSubjectDocForm);
          Application.CreateForm(TGuideUnitForm, GuideUnitForm);
+         Application.CreateForm(TGuidePersonalGroupForm, GuidePersonalGroupForm);
 
   end;
   //

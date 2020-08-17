@@ -60,12 +60,12 @@ BEGIN
                               FROM Object
                               WHERE Object.DescId = zc_Object_PartnerTag()
                                 AND Object.Id IN (310821 -- 1;"експорт"
-                                              , 310822 -- 2;"роздрібна мережа";f
+                                              --, 310822 -- 2;"роздрібна мережа";f
                                                 , 310823 -- 3;"HoReCa";f
                                                 , 310824 -- 4;"супермаркет";f
                                                 , 310825 -- 5;"тендери";f
-                                             , 310826 -- 6;"роздрібна торгівля";f
-                                              , 310827 -- 7;"дистриб`ютор";f
+                                              --, 310826 -- 6;"роздрібна торгівля";f
+                                              --, 310827 -- 7;"дистриб`ютор";f
                                                  )
                              )
             -- 
@@ -118,6 +118,10 @@ BEGIN
                                    , tmpPartnerTag.PartnerTagId AS PartnerTagId_find
                                 -- , COALESCE (OL_Partner_Juridical.ChildObjectId, 0)  AS JuridicalId
                              FROM Movement
+                                  INNER JOIN MovementLinkObject AS MovementLinkObject_Status_wms
+                                                                ON MovementLinkObject_Status_wms.MovementId = Movement.Id
+                                                               AND MovementLinkObject_Status_wms.DescId     = zc_MovementLinkObject_Status_wms()
+                                                               AND MovementLinkObject_Status_wms.ObjectId   = zc_Enum_Status_UnComplete()
                                   LEFT JOIN MovementDate AS MovementDate_OperDatePartner
                                                          ON MovementDate_OperDatePartner.MovementId =  Movement.Id
                                                         AND MovementDate_OperDatePartner.DescId     = zc_MovementDate_OperDatePartner()
@@ -161,7 +165,7 @@ BEGIN
                                AND Movement.DescId   = zc_Movement_OrderExternal()
                              --AND Movement.StatusId = zc_Enum_Status_Complete()
                                AND MovementLinkObject_To.ObjectId = 8459 -- Склад Реализации
-                               AND Movement.InvNumber IN ('1066897') -- 952893
+                             --AND Movement.InvNumber IN ('1068087') -- 952893
                                AND MovementItem.Amount + COALESCE (MIF_AmountSecond.ValueData, 0) > 0
                             )
           -- результат - Документы
@@ -354,6 +358,17 @@ BEGIN
      -- LIMIT 1
        ;
 
+     IF inGUID <> '1'
+     THEN
+         -- отметили что данные отправлены
+         PERFORM lpInsertUpdate_MovementLinkObject (zc_MovementLinkObject_Status_wms(), wms_Message.ObjectId, zc_Enum_Status_Complete())
+         FROM wms_Message
+         WHERE wms_Message.GUID    = inGUID
+           AND wms_Message.TagName = vbTagName
+           -- только те которые еще не передавали
+        -- AND ...
+         ;
+     END IF;
 
      -- Результат
      outRecCount:= (SELECT COUNT(*) FROM wms_Message WHERE wms_Message.GUID = inGUID);

@@ -40,6 +40,9 @@ type
     Amount_Currency: TcxGridDBColumn;
     CurrencyName: TcxGridDBColumn;
     PaidKindName: TcxGridDBColumn;
+    DebetAmount_Asset: TcxGridDBColumn;
+    KreditAmount_Asset: TcxGridDBColumn;
+    ContainerId_Asset: TcxGridDBColumn;
   private
     { Private declarations }
   public

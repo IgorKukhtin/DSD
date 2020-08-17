@@ -120,6 +120,7 @@ type
   procedure Create_ParamsPersonal(var Params:TParams; idx:String);
   procedure Create_ParamsPersonal_Stick(var Params:TParams; idx:String);
   procedure Create_ParamsPersonalComplete(var Params:TParams);
+  procedure Create_ParamsPersonalGroup(var Params:TParams);
   procedure Create_ParamsWorkProgress(var Params:TParams);
   procedure Create_ParamsArticleLoss(var Params:TParams);
   procedure Create_ParamsGoodsLine(var Params:TParams);
@@ -260,6 +261,11 @@ begin
      ParamAdd(Params,'SubjectDocId',ftInteger);
      ParamAdd(Params,'SubjectDocCode',ftInteger);
      ParamAdd(Params,'SubjectDocName',ftString);
+
+     ParamAdd(Params,'isPersonalGroup',ftBoolean);
+     ParamAdd(Params,'PersonalGroupId',ftInteger);
+     ParamAdd(Params,'PersonalGroupCode',ftInteger);
+     ParamAdd(Params,'PersonalGroupName',ftString);
 
      ParamAdd(Params,'isEdiOrdspr',ftBoolean); //Подтверждение
      ParamAdd(Params,'isEdiInvoice',ftBoolean);//Счет
@@ -617,6 +623,15 @@ begin
      ParamAdd(Params,'SubjectDocId', ftInteger);   //
      ParamAdd(Params,'SubjectDocCode', ftInteger); //
      ParamAdd(Params,'SubjectDocName', ftString);  //
+end;
+{------------------------------------------------------------------------}
+procedure Create_ParamsPersonalGroup(var Params:TParams);
+begin
+     Params:=nil;
+     ParamAdd(Params,'UnitId', ftInteger);   //
+     ParamAdd(Params,'PersonalGroupId', ftInteger);   //
+     ParamAdd(Params,'PersonalGroupCode', ftInteger); //
+     ParamAdd(Params,'PersonalGroupName', ftString);  //
 end;
 {------------------------------------------------------------------------}
 procedure Create_ParamsUnit_OrderInternal(var Params:TParams);

@@ -274,6 +274,9 @@ type
     bbSale_Order_diffTax: TSpeedButton;
     bbPrint: TSpeedButton;
     bbScaleLight_Goods_auto: TSpeedButton;
+    PersonalGroupPanel: TPanel;
+    LabelPersonalGroup: TLabel;
+    EditPersonalGroup: TcxButtonEdit;
     procedure FormKeyDown(Sender: TObject; var Key: Word; Shift: TShiftState);
     procedure FormCreate(Sender: TObject);
     procedure PanelWeight_ScaleDblClick(Sender: TObject);
@@ -358,6 +361,8 @@ type
     procedure bbSale_Order_diffTaxClick(Sender: TObject);
     procedure bbPrintClick(Sender: TObject);
     procedure bbScaleLight_Goods_autoClick(Sender: TObject);
+    procedure EditPersonalGroupPropertiesButtonClick(Sender: TObject;
+      AButtonIndex: Integer);
   private
     oldGoodsId, oldGoodsCode : Integer;
     lTimerWeight_1, lTimerWeight_2, lTimerWeight_3 : Double;
@@ -398,6 +403,7 @@ type
     function GetOldRealWeight:Double;
 
     procedure pSetSubjectDoc;
+    procedure pSetPersonalGroup;
 
   public
     procedure InitializeGoodsKind(GoodsKindWeighingGroupId:Integer);
@@ -417,7 +423,7 @@ implementation
 {$R *.dfm}
 uses UnilWin,DMMainScaleCeh, DMMainScale, UtilConst, DialogMovementDesc, UtilPrint
     ,GuideMovementCeh, DialogNumberValue,DialogStringValue, DialogDateValue, DialogPrint, DialogMessage
-    ,GuideWorkProgress, GuideArticleLoss, GuideGoodsLine, DialogDateReport, GuideSubjectDoc
+    ,GuideWorkProgress, GuideArticleLoss, GuideGoodsLine, DialogDateReport, GuideSubjectDoc, GuidePersonalGroup
     ,IdIPWatch, LookAndFillSettings
     ,DialogBoxLight, DialogGoodsSeparate
     ,CommonData;
@@ -661,6 +667,9 @@ end;
 function TMainCehForm.Save_Movement_all:Boolean;
 var execParams:TParams;
     MessageErr :String;
+    oldPersonalGroupId: Integer;
+    oldPersonalGroupCode: Integer;
+    oldPersonalGroupName : String;
 begin
      Result:=false;
      //
@@ -689,6 +698,16 @@ begin
            if MessageDlg('Ошибка.'+#10+#13+'Не установлено значение <Основание Возврат>.'+#10+#13+'Хотите исправить?',mtConfirmation,mbYesNoCancel,0) = 6
            then begin pSetSubjectDoc; exit; end;
        end;
+       //Проверка
+       if {(ParamsMovement.ParamByName('MovementDescId').AsInteger = zc_Movement_Send)
+           and}(ParamsMovement.ParamByName('PersonalGroupId').AsInteger = 0)
+           and(ParamsMovement.ParamByName('isPersonalGroup').AsBoolean = TRUE)
+       then begin
+           ShowMessage('Ошибка.Не установлено значение <№ Бригады>.');
+           pSetPersonalGroup;
+           exit;
+       end;
+
        //Проверка
        if  (ParamsMovement.ParamByName('ToId').asInteger = 0)
         and(ParamsMovement.ParamByName('isArticleLoss').AsBoolean = FALSE)
@@ -757,7 +776,16 @@ begin
             //ParamsMovement.ParamByName('MovementId').AsInteger:=0;//!!!нельзя обнулять, т.к. это будет значить isLast=TRUE!!!
             //DMMainScaleCehForm.gpGet_Scale_Movement(ParamsMovement,FALSE,FALSE);//isLast=FALSE,isNext=FALSE
             //
+            oldPersonalGroupId:= ParamsMovement.ParamByName('PersonalGroupId').AsInteger;
+            oldPersonalGroupCode:= ParamsMovement.ParamByName('PersonalGroupCode').AsInteger;
+            oldPersonalGroupName:= ParamsMovement.ParamByName('PersonalGroupName').asString;
+            //
             EmptyValuesParams(ParamsMovement);//!!!кроме даты!!!
+            //
+            ParamsMovement.ParamByName('PersonalGroupId').AsInteger:= oldPersonalGroupId;
+            ParamsMovement.ParamByName('PersonalGroupCode').AsInteger:= oldPersonalGroupCode;
+            ParamsMovement.ParamByName('PersonalGroupName').asString:= oldPersonalGroupName;
+            //
             if SettingMain.isModeSorting = TRUE then EmptyValuesParams(ParamsLight);
 
             gpInitialize_MovementDesc;
@@ -2170,6 +2198,45 @@ begin
      if Key = 13 then ActiveControl:=EditCount;
 end;
 //---------------------------------------------------------------------------------------------
+procedure TMainCehForm.pSetPersonalGroup;
+var lParams:TParams;
+begin
+     if ParamsMovement.ParamByName('isPersonalGroup').AsBoolean = FALSE then exit;
+     //
+     Create_ParamsPersonalGroup(lParams);
+     //
+     with lParams do
+     begin
+          ParamByName('UnitId').asInteger:=ParamsMovement.ParamByName('FromId').asInteger;
+          ParamByName('PersonalGroupId').AsInteger:=ParamsMovement.ParamByName('PersonalGroupId').AsInteger;
+          ParamByName('PersonalGroupCode').AsInteger:=ParamsMovement.ParamByName('PersonalGroupCode').AsInteger;
+          ParamByName('PersonalGroupName').asString:=ParamsMovement.ParamByName('PersonalGroupName').asString;
+     end;
+     if GuidePersonalGroupForm.Execute(lParams)
+     then begin
+               ParamsMovement.ParamByName('PersonalGroupId').AsInteger:=lParams.ParamByName('PersonalGroupId').AsInteger;
+               ParamsMovement.ParamByName('PersonalGroupCode').AsInteger:=lParams.ParamByName('PersonalGroupCode').AsInteger;
+               ParamsMovement.ParamByName('PersonalGroupName').AsString:=lParams.ParamByName('PersonalGroupName').AsString;
+               //
+               EditPersonalGroup.Text:=lParams.ParamByName('PersonalGroupName').AsString;
+               //
+               DMMainScaleCehForm.gpInsertUpdate_ScaleCeh_Movement(ParamsMovement);
+     end;
+     //
+     lParams.Free;
+end;
+//---------------------------------------------------------------------------------------------
+procedure TMainCehForm.EditPersonalGroupPropertiesButtonClick(Sender: TObject;AButtonIndex: Integer);
+begin
+     if ParamsMovement.ParamByName('isPersonalGroup').AsBoolean = FALSE
+     then begin
+               ShowMessage ('Ошибка.Для данного документ нет выбора <№ Бригады>.');
+               exit;
+     end;
+     //
+     pSetPersonalGroup;
+end;
+//---------------------------------------------------------------------------------------------
 procedure TMainCehForm.EditCountKeyDown(Sender: TObject; var Key: Word;Shift: TShiftState);
 begin
      if Key = 13 then
@@ -2533,6 +2600,7 @@ begin
     bbChangeStorageLine.Visible:= false;
 
     SubjectDocPanel.Visible:= false;
+    PersonalGroupPanel.Visible:= false;
     //
     testButton1.Visible:= gc_User.Session = '5';
     testButton2.Visible:= gc_User.Session = '5';
@@ -2649,11 +2717,15 @@ begin
   PanelPartionDate.Visible:=ParamsMovement.ParamByName('isPartionGoodsDate').asBoolean=true;
   PanelStorageLine.Visible:=ParamsMovement.ParamByName('isStorageLine').asBoolean=true;
   PanelArticleLoss.Visible:=ParamsMovement.ParamByName('isArticleLoss').asBoolean=true;
+  PersonalGroupPanel.Visible:=ParamsMovement.ParamByName('isPersonalGroup').asBoolean=true;
   PanelMovementInfo.Visible:=(ParamsMovement.ParamByName('DocumentKindId').asInteger = zc_Enum_DocumentKind_CuterWeight)
                           or (ParamsMovement.ParamByName('DocumentKindId').asInteger = zc_Enum_DocumentKind_RealWeight);
   //
   if PanelArticleLoss.Visible = true
   then EditArticleLoss.Text:=ParamsMovement.ParamByName('ToName').asString;
+  //
+  if PersonalGroupPanel.Visible = true
+  then EditPersonalGroup.Text:=ParamsMovement.ParamByName('PersonalGroupName').asString;
   //
   PanelMovementDesc.Font.Color:=clBlue;
 
@@ -3322,6 +3394,13 @@ end;
 {------------------------------------------------------------------------}
 procedure TMainCehForm.bbPrintClick(Sender: TObject);
 begin
+     if (SettingMain.isModeSorting = TRUE)
+     then
+        Print_Sticker_Wms(ParamsMovement.ParamByName('MovementDescId').AsInteger
+                        , ParamsMovement.ParamByName('MovementId').AsInteger
+                        , CDS.FieldByName('MovementItemId').AsInteger
+                        , TRUE)
+     else
      if ParamsMovement.ParamByName('isSticker_Ceh').asBoolean = FALSE
      then ShowMessage ('Для данной операции не предусмотрена печать Стикера')
      else

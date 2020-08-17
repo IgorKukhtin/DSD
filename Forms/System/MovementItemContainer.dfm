@@ -43,6 +43,16 @@ inherited MovementItemContainerForm: TMovementItemContainerForm
               Format = ',0.####'
               Kind = skSum
               Column = colKreditAmount
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = DebetAmount_Asset
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = KreditAmount_Asset
             end>
           DataController.Summary.FooterSummaryItems = <
             item
@@ -64,6 +74,16 @@ inherited MovementItemContainerForm: TMovementItemContainerForm
               Format = ',0.####'
               Kind = skSum
               Column = Amount_Currency
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = DebetAmount_Asset
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = KreditAmount_Asset
             end>
           OptionsData.CancelOnExit = True
           OptionsData.Deleting = False
@@ -279,6 +299,28 @@ inherited MovementItemContainerForm: TMovementItemContainerForm
             Options.Editing = False
             Width = 80
           end
+          object DebetAmount_Asset: TcxGridDBColumn
+            Caption = #1057#1091#1084#1084#1072' '#1076#1077#1073#1077#1090' '#1054#1057
+            DataBinding.FieldName = 'DebetAmount_Asset'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 4
+            Properties.DisplayFormat = ',0.00##;-,0.00##; ;'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 80
+          end
+          object KreditAmount_Asset: TcxGridDBColumn
+            Caption = #1057#1091#1084#1084#1072' '#1082#1088#1077#1076#1080#1090' '#1054#1057
+            DataBinding.FieldName = 'KreditAmount_Asset'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 4
+            Properties.DisplayFormat = ',0.00##;-,0.00##; ;'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 80
+          end
           object Amount_Currency: TcxGridDBColumn
             Caption = #1057#1091#1084#1084#1072' '#1074' '#1074#1072#1083#1102#1090#1077
             DataBinding.FieldName = 'Amount_Currency'
@@ -352,6 +394,24 @@ inherited MovementItemContainerForm: TMovementItemContainerForm
             Options.Editing = False
             Width = 32
           end
+          object colInfoMoneyName: TcxGridDBColumn
+            Caption = #1057#1090#1072#1090#1100#1103' '#1085#1072#1079#1085#1072#1095#1077#1085#1080#1103
+            DataBinding.FieldName = 'InfoMoneyName'
+            Visible = False
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 93
+          end
+          object colInfoMoneyName_Detail: TcxGridDBColumn
+            Caption = #1057#1090#1072#1090#1100#1103' '#1076#1077#1090#1072#1083#1100#1085#1086
+            DataBinding.FieldName = 'InfoMoneyName_Detail'
+            Visible = False
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 70
+          end
           object ObjectCostId: TcxGridDBColumn
             DataBinding.FieldName = 'ObjectCostId'
             PropertiesClassName = 'TcxButtonEditProperties'
@@ -380,23 +440,17 @@ inherited MovementItemContainerForm: TMovementItemContainerForm
             HeaderAlignmentVert = vaCenter
             Width = 55
           end
-          object colInfoMoneyName: TcxGridDBColumn
-            Caption = #1057#1090#1072#1090#1100#1103' '#1085#1072#1079#1085#1072#1095#1077#1085#1080#1103
-            DataBinding.FieldName = 'InfoMoneyName'
+          object ContainerId_Asset: TcxGridDBColumn
+            DataBinding.FieldName = 'ContainerId_Asset'
+            PropertiesClassName = 'TcxButtonEditProperties'
+            Properties.Buttons = <
+              item
+                Default = True
+                Kind = bkEllipsis
+              end>
+            Properties.ReadOnly = True
             Visible = False
-            HeaderAlignmentHorz = taCenter
-            HeaderAlignmentVert = vaCenter
-            Options.Editing = False
-            Width = 93
-          end
-          object colInfoMoneyName_Detail: TcxGridDBColumn
-            Caption = #1057#1090#1072#1090#1100#1103' '#1076#1077#1090#1072#1083#1100#1085#1086
-            DataBinding.FieldName = 'InfoMoneyName_Detail'
-            Visible = False
-            HeaderAlignmentHorz = taCenter
-            HeaderAlignmentVert = vaCenter
-            Options.Editing = False
-            Width = 70
+            Width = 55
           end
         end
       end
@@ -453,6 +507,7 @@ inherited MovementItemContainerForm: TMovementItemContainerForm
         Component = FormParams
         ComponentItem = 'Id'
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inIsDestination'
@@ -460,6 +515,7 @@ inherited MovementItemContainerForm: TMovementItemContainerForm
         Component = cbDestination
         DataType = ftBoolean
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inIsParentDetail'
@@ -467,6 +523,7 @@ inherited MovementItemContainerForm: TMovementItemContainerForm
         Component = cbParentDetail
         DataType = ftBoolean
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inIsInfoMoneyDetail'
@@ -474,6 +531,7 @@ inherited MovementItemContainerForm: TMovementItemContainerForm
         Component = cbInfoMoneyDetail
         DataType = ftBoolean
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end>
   end
   inherited BarManager: TdxBarManager
@@ -550,12 +608,14 @@ inherited MovementItemContainerForm: TMovementItemContainerForm
       item
         Name = 'Id'
         Value = Null
+        MultiSelectSeparator = ','
       end>
     Left = 152
     Top = 264
   end
   object RefreshDispatcher: TRefreshDispatcher
     IdParam.Value = Null
+    IdParam.MultiSelectSeparator = ','
     RefreshAction = actRefresh
     ComponentList = <
       item

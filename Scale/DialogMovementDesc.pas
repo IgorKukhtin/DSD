@@ -107,6 +107,7 @@ begin
            ParamsMovement.ParamByName('isArticleLoss').asBoolean           := CDS.FieldByName('isArticleLoss').asBoolean;
            ParamsMovement.ParamByName('isTransport_link').asBoolean        := CDS.FieldByName('isTransport_link').asBoolean;
            ParamsMovement.ParamByName('isSubjectDoc').asBoolean            := CDS.FieldByName('isSubjectDoc').asBoolean;
+           ParamsMovement.ParamByName('isPersonalGroup').asBoolean         := CDS.FieldByName('isPersonalGroup').asBoolean;
            ParamsMovement.ParamByName('isSticker_Ceh').asBoolean           := CDS.FieldByName('isSticker_Ceh').asBoolean;
            ParamsMovement.ParamByName('isLockStartWeighing').asBoolean     := CDS.FieldByName('isLockStartWeighing').asBoolean;
 
@@ -369,6 +370,7 @@ begin
           ParamByName('isArticleLoss').asBoolean           := CDS.FieldByName('isArticleLoss').asBoolean;
           ParamByName('isTransport_link').asBoolean        := CDS.FieldByName('isTransport_link').asBoolean;
           ParamByName('isSubjectDoc').asBoolean            := CDS.FieldByName('isSubjectDoc').asBoolean;
+          ParamByName('isPersonalGroup').asBoolean         := CDS.FieldByName('isPersonalGroup').asBoolean;
           ParamByName('isSticker_Ceh').asBoolean           := CDS.FieldByName('isSticker_Ceh').asBoolean;
           ParamByName('isLockStartWeighing').asBoolean     := CDS.FieldByName('isLockStartWeighing').asBoolean;
 

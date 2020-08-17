@@ -1379,12 +1379,13 @@ object MainCehForm: TMainCehForm
     end
     object infoPanelTotalSorting: TPanel
       Left = 0
-      Top = 160
+      Top = 200
       Width = 130
       Height = 94
       Align = alTop
       BevelOuter = bvNone
       TabOrder = 7
+      ExplicitTop = 160
       object infoWeightOnBoxTotal_2Panel: TPanel
         Left = 0
         Top = 192
@@ -1721,6 +1722,53 @@ object MainCehForm: TMainCehForm
         Align = alTop
         BevelOuter = bvNone
         TabOrder = 6
+      end
+    end
+    object PersonalGroupPanel: TPanel
+      Left = 0
+      Top = 160
+      Width = 130
+      Height = 40
+      Align = alTop
+      BevelInner = bvRaised
+      BevelOuter = bvNone
+      TabOrder = 8
+      ExplicitTop = 161
+      object LabelPersonalGroup: TLabel
+        Left = 1
+        Top = 1
+        Width = 128
+        Height = 14
+        Align = alTop
+        Caption = '   '#8470' '#1041#1088#1080#1075#1072#1076#1099
+        Font.Charset = RUSSIAN_CHARSET
+        Font.Color = clRed
+        Font.Height = -11
+        Font.Name = 'Arial'
+        Font.Style = [fsBold]
+        ParentFont = False
+        ExplicitWidth = 74
+      end
+      object EditPersonalGroup: TcxButtonEdit
+        Left = 4
+        Top = 15
+        ParentFont = False
+        Properties.Buttons = <
+          item
+            Default = True
+            Kind = bkEllipsis
+          end>
+        Properties.ReadOnly = True
+        Properties.OnButtonClick = EditPersonalGroupPropertiesButtonClick
+        Style.Font.Charset = RUSSIAN_CHARSET
+        Style.Font.Color = clBlack
+        Style.Font.Height = -11
+        Style.Font.Name = 'Arial'
+        Style.Font.Style = [fsBold]
+        Style.IsFontAssigned = True
+        TabOrder = 0
+        Text = 'EditPersonalGroup'
+        Width = 120
       end
     end
   end
@@ -2905,7 +2953,8 @@ object MainCehForm: TMainCehForm
         Font.Name = 'Arial'
         Font.Style = []
         ParentFont = False
-        ExplicitWidth = 103
+        ExplicitLeft = -6
+        ExplicitTop = -2
       end
       object EditSubjectDoc: TcxButtonEdit
         Left = 4

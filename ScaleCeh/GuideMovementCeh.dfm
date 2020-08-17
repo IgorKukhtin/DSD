@@ -486,6 +486,7 @@ object GuideMovementCehForm: TGuideMovementCehForm
     ColumnAddOnList = <>
     ColumnEnterList = <>
     SummaryItemList = <>
+    PropertiesCellList = <>
     Left = 408
     Top = 392
   end

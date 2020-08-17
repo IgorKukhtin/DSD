@@ -286,6 +286,10 @@ begin
            ParamByName('SubjectDocCode').AsInteger := DataSet.FieldByName('SubjectDocCode').asInteger;
            ParamByName('SubjectDocName').asString  := DataSet.FieldByName('SubjectDocName').asString;
 
+           ParamByName('PersonalGroupId').AsInteger   := DataSet.FieldByName('PersonalGroupId').asInteger;
+           ParamByName('PersonalGroupCode').AsInteger := DataSet.FieldByName('PersonalGroupCode').asInteger;
+           ParamByName('PersonalGroupName').asString  := DataSet.FieldByName('PersonalGroupName').asString;
+
            ParamByName('OrderExternalId').AsInteger        := DataSet.FieldByName('MovementId_Order').asInteger;
            ParamByName('OrderExternal_DescId').AsInteger   := DataSet.FieldByName('MovementDescId_Order').asInteger;
            ParamByName('OrderExternal_InvNumber').asString := DataSet.FieldByName('InvNumber_Order').asString;
@@ -655,6 +659,9 @@ begin
          Params.AddParam('inFromId', ftInteger, ptInput, execParamsMovement.ParamByName('FromId').AsInteger);
          Params.AddParam('inToId', ftInteger, ptInput, execParamsMovement.ParamByName('ToId').AsInteger);
          Params.AddParam('inSubjectDocId', ftInteger, ptInput, execParamsMovement.ParamByName('SubjectDocId').AsInteger);
+         if execParamsMovement.ParamByName('isPersonalGroup').AsBoolean = true
+         then Params.AddParam('inPersonalGroupId', ftInteger, ptInput, execParamsMovement.ParamByName('PersonalGroupId').AsInteger)
+         else Params.AddParam('inPersonalGroupId', ftInteger, ptInput, 0);
          Params.AddParam('inMovementId_Order', ftInteger, ptInput, execParamsMovement.ParamByName('OrderExternalId').AsInteger);
          Params.AddParam('inIsProductionIn', ftBoolean, ptInput, execParamsMovement.ParamByName('isSendOnPriceIn').AsBoolean);
          Params.AddParam('inBranchCode', ftInteger, ptInput, SettingMain.BranchCode);
