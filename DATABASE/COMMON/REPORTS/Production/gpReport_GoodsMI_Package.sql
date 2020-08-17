@@ -1,14 +1,16 @@
 -- Function: gpReport_GoodsMI_Package ()
 
 DROP FUNCTION IF EXISTS gpReport_GoodsMI_Package (TDateTime, TDateTime, Integer, TVarChar);
-DROP FUNCTION IF EXISTS gpReport_GoodsMI_Package (TDateTime, TDateTime, Integer, Boolean, TVarChar);
+--DROP FUNCTION IF EXISTS gpReport_GoodsMI_Package (TDateTime, TDateTime, Integer, Boolean, TVarChar);
+DROP FUNCTION IF EXISTS gpReport_GoodsMI_Package (TDateTime, TDateTime, Integer, Boolean, Boolean, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpReport_GoodsMI_Package(
-    IN inStartDate    TDateTime ,
-    IN inEndDate      TDateTime ,
-    IN inUnitId       Integer   ,
-    IN inIsDate       Boolean   , -- по датам
-    IN inSession      TVarChar    -- сессия пользователя
+    IN inStartDate          TDateTime ,
+    IN inEndDate            TDateTime ,
+    IN inUnitId             Integer   ,
+    IN inIsDate             Boolean   , -- по датам
+    IN inIsPersonalGroup    Boolean   , -- по № бригады
+    IN inSession            TVarChar    -- сессия пользователя
 )
 RETURNS TABLE (OperDate TDateTime
              , GoodsGroupNameFull TVarChar, GoodsGroupId Integer, GoodsGroupName TVarChar
@@ -27,6 +29,8 @@ RETURNS TABLE (OperDate TDateTime
 
              , Weight_diff TFloat
              , WeightTotal TFloat -- Вес в упаковке - GoodsByGoodsKind
+             
+             , PersonalGroupName      TVarChar
               )
 AS
 $BODY$
@@ -53,6 +57,9 @@ BEGIN
                            , tmpMI.Amount_Send_out
                            , tmpMI.Amount_Production
                            , tmpMI.CountPack
+                           
+                           , tmpMI.PersonalGroupName
+                          -- , tmpMI.UnitName_PersonalGroup
 
                       FROM (SELECT MIContainer.ObjectId_Analyzer           AS GoodsId
                                  , COALESCE (MIContainer.ObjectIntId_Analyzer, 0) AS GoodsKindId
@@ -79,6 +86,9 @@ BEGIN
                                              ELSE 0
                                         END) AS Amount_Production
                                  , SUM (COALESCE (MIFloat_CountPack.ValueData ,0)) AS CountPack
+
+                                 , CASE WHEN inIsPersonalGroup = FALSE THEN '' ELSE CASE WHEN COALESCE (Object_PersonalGroup.ValueData,'') <> '' THEN (COALESCE (Object_PersonalGroup.ValueData,'') ||' ('||COALESCE (Object_Unit_PersonalGroup.ValueData,'') ||')') ELSE '' END END AS PersonalGroupName
+                                 --, STRING_AGG (DISTINCT CASE WHEN COALESCE (Object_PersonalGroup.ValueData,'') <> '' THEN (COALESCE (Object_PersonalGroup.ValueData,'') ||' ('||COALESCE (Object_Unit_PersonalGroup.ValueData,'') ||')') ELSE '' END, '; ')      AS PersonalGroupName
                             FROM MovementItemContainer AS MIContainer
                                  LEFT JOIN MovementLinkObject AS MLO_DocumentKind
                                                               ON MLO_DocumentKind.MovementId = MIContainer.MovementId
@@ -88,6 +98,16 @@ BEGIN
                                                             AND MIFloat_CountPack.DescId = zc_MIFloat_CountPack()
                                                             AND MIContainer.MovementDescId = zc_Movement_Send()
                                                             AND MIContainer.IsActive = FALSE
+
+                                LEFT JOIN MovementLinkObject AS MovementLinkObject_PersonalGroup
+                                                             ON MovementLinkObject_PersonalGroup.MovementId = MIContainer.MovementId
+                                                            AND MovementLinkObject_PersonalGroup.DescId = zc_MovementLinkObject_PersonalGroup()
+                                LEFT JOIN Object AS Object_PersonalGroup ON Object_PersonalGroup.Id = MovementLinkObject_PersonalGroup.ObjectId
+
+                                LEFT JOIN ObjectLink AS ObjectLink_PersonalGroup_Unit
+                                                     ON ObjectLink_PersonalGroup_Unit.ObjectId = Object_PersonalGroup.Id
+                                                    AND ObjectLink_PersonalGroup_Unit.DescId = zc_ObjectLink_PersonalGroup_Unit()
+                                LEFT JOIN Object AS Object_Unit_PersonalGroup ON Object_Unit_PersonalGroup.Id = ObjectLink_PersonalGroup_Unit.ChildObjectId
                             WHERE MIContainer.OperDate BETWEEN inStartDate AND inEndDate
                               AND MIContainer.DescId = zc_MIContainer_Count()
                               AND MIContainer.WhereObjectId_Analyzer = inUnitId
@@ -96,6 +116,7 @@ BEGIN
                             GROUP BY MIContainer.ObjectId_Analyzer
                                    , MIContainer.ObjectIntId_Analyzer
                                    , CASE WHEN inIsDate = TRUE THEN MIContainer.OperDate ELSE NULL END
+                                   , CASE WHEN inIsPersonalGroup = FALSE THEN '' ELSE CASE WHEN COALESCE (Object_PersonalGroup.ValueData,'') <> '' THEN (COALESCE (Object_PersonalGroup.ValueData,'') ||' ('||COALESCE (Object_Unit_PersonalGroup.ValueData,'') ||')') ELSE '' END END
                            ) AS tmpMI
                            INNER JOIN tmpGoods ON tmpGoods.GoodsId = tmpMI.GoodsId
                      )
@@ -206,6 +227,8 @@ BEGIN
 
            -- Вес в упаковке - GoodsByGoodsKind
          , ObjectFloat_WeightTotal.ValueData AS WeightTotal
+         
+         , tmpMI_Union.PersonalGroupName      ::TVarChar
 
      FROM tmpMI_Union
           LEFT JOIN tmpReceipt ON tmpReceipt.GoodsId     = tmpMI_Union.GoodsId
@@ -263,6 +286,7 @@ $BODY$
 /*-------------------------------------------------------------------------------
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
+ 17.08.20         * inIsPersonalGroup
  29.04.20         * zc_Movement_SendAsset()
  07.06.18         * add inIsDate
  28.06.15                                        * ALL
@@ -270,4 +294,14 @@ $BODY$
 */
 
 -- тест
--- SELECT * FROM gpReport_GoodsMI_Package(inStartDate:= '01.07.2017', inEndDate:= '01.07.2017', inUnitId:= 8451, inIsDate:= False, inSession:= zfCalc_UserAdmin()) ORDER BY 2;
+-- SELECT * FROM gpReport_GoodsMI_Package(inStartDate:= '01.08.2020', inEndDate:= '01.09.2020', inUnitId:= 8451, inIsDate:= False, inSession:= zfCalc_UserAdmin()) ORDER BY 7;
+/*
+ SELECT * FROM gpReport_GoodsMI_Package(inStartDate:= '01.08.2020', inEndDate:= '01.09.2020', inUnitId:= 8451, inIsDate:= False, inIsPersonalGroup:= true, inSession:= zfCalc_UserAdmin()) 
+where goodsId = 2062
+ORDER BY 7;
+
+
+SELECT * FROM gpReport_GoodsMI_Package(inStartDate:= '01.08.2020', inEndDate:= '01.09.2020', inUnitId:= 8451, inIsDate:= False, inIsPersonalGroup:= False, inSession:= zfCalc_UserAdmin()) 
+where goodsId = 2062
+ORDER BY 7;
+*/

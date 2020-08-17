@@ -27,6 +27,7 @@ type
     cxLabel7: TcxLabel;
     UnitGuides: TdsdGuides;
     cbisDate: TcxCheckBox;
+    cbisPersonalGroup: TcxCheckBox;
   private
     { Private declarations }
   public

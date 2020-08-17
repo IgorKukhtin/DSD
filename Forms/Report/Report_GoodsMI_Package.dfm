@@ -162,6 +162,16 @@ inherited Report_GoodsMI_PackageForm: TReport_GoodsMI_PackageForm
             HeaderAlignmentVert = vaCenter
             Width = 48
           end
+          object PersonalGroupName: TcxGridDBColumn
+            Caption = #8470' '#1041#1088#1080#1075#1072#1076#1099
+            DataBinding.FieldName = 'PersonalGroupName'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            HeaderGlyphAlignmentHorz = taCenter
+            HeaderHint = #8470' '#1041#1088#1080#1075#1072#1076#1099
+            Options.Editing = False
+            Width = 102
+          end
           object GoodsGroupNameFull: TcxGridDBColumn
             Caption = #1043#1088#1091#1087#1087#1072' '#1090#1086#1074#1072#1088#1072' ('#1074#1089#1077')'
             DataBinding.FieldName = 'GoodsGroupNameFull'
@@ -432,6 +442,14 @@ inherited Report_GoodsMI_PackageForm: TReport_GoodsMI_PackageForm
       TabOrder = 6
       Width = 76
     end
+    object cbisPersonalGroup: TcxCheckBox
+      Left = 306
+      Top = 30
+      Action = actRefreshDataPersonalGroup
+      Properties.ReadOnly = False
+      TabOrder = 7
+      Width = 143
+    end
   end
   inherited cxPropertiesStore: TcxPropertiesStore
     Components = <
@@ -453,7 +471,20 @@ inherited Report_GoodsMI_PackageForm: TReport_GoodsMI_PackageForm
       end>
   end
   inherited ActionList: TActionList
-    object actRefreshData: TdsdDataSetRefresh [0]
+    object actRefreshDataPersonalGroup: TdsdDataSetRefresh [0]
+      Category = 'DSDLib'
+      MoveParams = <>
+      StoredProc = spSelect
+      StoredProcList = <
+        item
+          StoredProc = spSelect
+        end>
+      Caption = #1087#1086#1082#1072#1079#1072#1090#1100' '#8470' '#1073#1088#1080#1075#1072#1076#1099
+      Hint = #1087#1086#1082#1072#1079#1072#1090#1100' '#8470' '#1073#1088#1080#1075#1072#1076#1099
+      ImageIndex = 4
+      RefreshOnTabSetChanges = False
+    end
+    object actRefreshData: TdsdDataSetRefresh [1]
       Category = 'DSDLib'
       MoveParams = <>
       StoredProc = spSelect
@@ -695,6 +726,14 @@ inherited Report_GoodsMI_PackageForm: TReport_GoodsMI_PackageForm
           DataType = ftBoolean
           ParamType = ptInput
           MultiSelectSeparator = ','
+        end
+        item
+          Name = 'isPersonalGroup'
+          Value = Null
+          Component = cbisPersonalGroup
+          DataType = ftBoolean
+          ParamType = ptInput
+          MultiSelectSeparator = ','
         end>
       isShowModal = True
       RefreshDispatcher = RefreshDispatcher
@@ -793,7 +832,7 @@ inherited Report_GoodsMI_PackageForm: TReport_GoodsMI_PackageForm
         end
         item
           Name = 'IsPartner'
-          Value = 'TRUE'
+          Value = True
           DataType = ftBoolean
           ParamType = ptInput
           MultiSelectSeparator = ','
@@ -838,8 +877,16 @@ inherited Report_GoodsMI_PackageForm: TReport_GoodsMI_PackageForm
       end
       item
         Name = 'inisDate'
-        Value = ''
+        Value = False
         Component = cbisDate
+        DataType = ftBoolean
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inisPersonalGroup'
+        Value = Null
+        Component = cbisPersonalGroup
         DataType = ftBoolean
         ParamType = ptInput
         MultiSelectSeparator = ','
@@ -991,6 +1038,6 @@ inherited Report_GoodsMI_PackageForm: TReport_GoodsMI_PackageForm
         ParamType = ptInput
         MultiSelectSeparator = ','
       end>
-    Left = 360
+    Left = 544
   end
 end

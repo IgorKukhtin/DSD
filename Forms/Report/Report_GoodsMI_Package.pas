@@ -54,6 +54,9 @@ type
     actRefreshData: TdsdDataSetRefresh;
     actReport_Goods: TdsdOpenForm;
     bbReport_Goods: TdxBarButton;
+    cbisPersonalGroup: TcxCheckBox;
+    actRefreshDataPersonalGroup: TdsdDataSetRefresh;
+    PersonalGroupName: TcxGridDBColumn;
   private
     { Private declarations }
   public

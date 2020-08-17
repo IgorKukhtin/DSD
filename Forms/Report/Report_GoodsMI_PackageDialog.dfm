@@ -3,7 +3,7 @@ object Report_GoodsMI_PackageDialogForm: TReport_GoodsMI_PackageDialogForm
   Top = 0
   BorderStyle = bsDialog
   Caption = #1055#1072#1088#1072#1084#1077#1090#1088#1099' '#1086#1090#1095#1077#1090#1072' <'#1055#1086' '#1091#1087#1072#1082#1086#1074#1082#1077'>'
-  ClientHeight = 175
+  ClientHeight = 217
   ClientWidth = 338
   Color = clBtnFace
   Font.Charset = DEFAULT_CHARSET
@@ -19,7 +19,7 @@ object Report_GoodsMI_PackageDialogForm: TReport_GoodsMI_PackageDialogForm
   TextHeight = 13
   object cxButton1: TcxButton
     Left = 50
-    Top = 135
+    Top = 166
     Width = 75
     Height = 25
     Caption = 'Ok'
@@ -29,7 +29,7 @@ object Report_GoodsMI_PackageDialogForm: TReport_GoodsMI_PackageDialogForm
   end
   object cxButton2: TcxButton
     Left = 224
-    Top = 135
+    Top = 166
     Width = 75
     Height = 25
     Caption = #1054#1090#1084#1077#1085#1072
@@ -54,7 +54,7 @@ object Report_GoodsMI_PackageDialogForm: TReport_GoodsMI_PackageDialogForm
   end
   object edUnit: TcxButtonEdit
     Left = 8
-    Top = 87
+    Top = 118
     Properties.Buttons = <
       item
         Default = True
@@ -66,7 +66,7 @@ object Report_GoodsMI_PackageDialogForm: TReport_GoodsMI_PackageDialogForm
   end
   object cxLabel3: TcxLabel
     Left = 8
-    Top = 67
+    Top = 98
     Caption = #1055#1086#1076#1088#1072#1079#1076#1077#1083#1077#1085#1080#1077':'
   end
   object cxLabel6: TcxLabel
@@ -80,22 +80,30 @@ object Report_GoodsMI_PackageDialogForm: TReport_GoodsMI_PackageDialogForm
     Caption = #1044#1072#1090#1072' '#1087#1086' :'
   end
   object cbisDate: TcxCheckBox
-    Left = 237
-    Top = 27
+    Left = 20
+    Top = 63
     Caption = #1087#1086' '#1076#1072#1090#1072#1084
     Properties.ReadOnly = False
     TabOrder = 8
     Width = 76
   end
+  object cbisPersonalGroup: TcxCheckBox
+    Left = 121
+    Top = 63
+    Caption = #1087#1086#1082#1072#1079#1072#1090#1100' '#8470' '#1073#1088#1080#1075#1072#1076#1099
+    Properties.ReadOnly = False
+    TabOrder = 9
+    Width = 143
+  end
   object PeriodChoice: TPeriodChoice
     DateStart = deStart
     DateEnd = deEnd
     Left = 176
-    Top = 120
+    Top = 151
   end
   object dsdUserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn
     Left = 216
-    Top = 56
+    Top = 87
   end
   object cxPropertiesStore: TcxPropertiesStore
     Components = <
@@ -152,9 +160,17 @@ object Report_GoodsMI_PackageDialogForm: TReport_GoodsMI_PackageDialogForm
         DataType = ftBoolean
         ParamType = ptInput
         MultiSelectSeparator = ','
+      end
+      item
+        Name = 'isPersonalGroup'
+        Value = Null
+        Component = cbisPersonalGroup
+        DataType = ftBoolean
+        ParamType = ptInput
+        MultiSelectSeparator = ','
       end>
     Left = 24
-    Top = 112
+    Top = 143
   end
   object UnitGuides: TdsdGuides
     KeyField = 'Id'
@@ -184,6 +200,6 @@ object Report_GoodsMI_PackageDialogForm: TReport_GoodsMI_PackageDialogForm
         MultiSelectSeparator = ','
       end>
     Left = 88
-    Top = 80
+    Top = 111
   end
 end
