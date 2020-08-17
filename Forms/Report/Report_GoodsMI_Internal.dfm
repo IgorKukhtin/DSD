@@ -1188,21 +1188,21 @@ inherited Report_GoodsMI_InternalForm: TReport_GoodsMI_InternalForm
         end
         item
           Name = 'isLocation'
-          Value = 'False'
+          Value = False
           Component = cbLocation
           DataType = ftBoolean
           MultiSelectSeparator = ','
         end
         item
           Name = 'isGoodsKind'
-          Value = 'False'
+          Value = False
           Component = cbGoodsKind
           DataType = ftBoolean
           MultiSelectSeparator = ','
         end
         item
           Name = 'isPartionGoods'
-          Value = 'False'
+          Value = False
           Component = cbPartionGoods
           DataType = ftBoolean
           MultiSelectSeparator = ','
@@ -1217,6 +1217,136 @@ inherited Report_GoodsMI_InternalForm: TReport_GoodsMI_InternalForm
         end>
       ReportName = #1054#1090#1095#1077#1090' '#1087#1086' '#1090#1086#1074#1072#1088#1091' ('#1089#1087#1080#1089#1072#1085#1080#1077' '#1075#1088#1091#1087#1087#1072' '#1090#1086#1074#1072#1088#1072')'
       ReportNameParam.Value = #1054#1090#1095#1077#1090' '#1087#1086' '#1090#1086#1074#1072#1088#1091' ('#1089#1087#1080#1089#1072#1085#1080#1077' '#1075#1088#1091#1087#1087#1072' '#1090#1086#1074#1072#1088#1072')'
+      ReportNameParam.DataType = ftString
+      ReportNameParam.ParamType = ptInput
+      ReportNameParam.MultiSelectSeparator = ','
+      PrinterNameParam.Value = ''
+      PrinterNameParam.DataType = ftString
+      PrinterNameParam.MultiSelectSeparator = ','
+    end
+    object actPrintArticleLossPrice: TdsdPrintAction
+      Category = 'DSDLib'
+      MoveParams = <
+        item
+          FromParam.Name = 'id'
+          FromParam.Value = Null
+          FromParam.ComponentItem = 'id'
+          FromParam.MultiSelectSeparator = ','
+          ToParam.Value = '0'
+          ToParam.Component = FormParams
+          ToParam.ComponentItem = 'Id'
+          ToParam.ParamType = ptInputOutput
+          ToParam.MultiSelectSeparator = ','
+        end
+        item
+          FromParam.Value = 42370d
+          FromParam.Component = deStart
+          FromParam.DataType = ftDateTime
+          FromParam.MultiSelectSeparator = ','
+          ToParam.Name = 'StartDate'
+          ToParam.Value = 'NULL'
+          ToParam.DataType = ftDateTime
+          ToParam.ParamType = ptInputOutput
+          ToParam.MultiSelectSeparator = ','
+        end
+        item
+          FromParam.Value = 42370d
+          FromParam.Component = deEnd
+          FromParam.DataType = ftDateTime
+          FromParam.MultiSelectSeparator = ','
+          ToParam.Name = 'EndDate'
+          ToParam.Value = 'NULL'
+          ToParam.DataType = ftDateTime
+          ToParam.ParamType = ptInputOutput
+          ToParam.MultiSelectSeparator = ','
+        end>
+      StoredProcList = <>
+      Caption = #1054#1090#1095#1077#1090' '#1087#1086' '#1090#1086#1074#1072#1088#1091' ('#1089#1090#1072#1090#1100#1080' '#1089#1087#1080#1089#1072#1085#1080#1103') ('#1089#1091#1084#1084#1072' '#1087#1088#1072#1081#1089#1072' '#1089' '#1053#1044#1057')'
+      Hint = #1054#1090#1095#1077#1090' '#1087#1086' '#1090#1086#1074#1072#1088#1091' ('#1089#1090#1072#1090#1100#1080' '#1089#1087#1080#1089#1072#1085#1080#1103')'
+      ImageIndex = 20
+      DataSets = <
+        item
+          UserName = 'frxDBDItems'
+          IndexFieldNames = 
+            'ArticleLossName;LocationName;GoodsName;GoodsKindName;PartionGood' +
+            's'
+          GridView = cxGridDBTableView
+        end>
+      Params = <
+        item
+          Name = 'StartDate'
+          Value = 42370d
+          Component = deStart
+          DataType = ftDateTime
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'EndDate'
+          Value = 42370d
+          Component = deEnd
+          DataType = ftDateTime
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'GoodsGroupName'
+          Value = ''
+          Component = GoodsGroupGuides
+          ComponentItem = 'TextValue'
+          DataType = ftString
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'FromName'
+          Value = ''
+          Component = FromGuides
+          ComponentItem = 'TextValue'
+          DataType = ftString
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'ToName'
+          Value = ''
+          Component = ToGuides
+          ComponentItem = 'TextValue'
+          DataType = ftString
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'isLocation'
+          Value = False
+          Component = cbLocation
+          DataType = ftBoolean
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'isGoodsKind'
+          Value = False
+          Component = cbGoodsKind
+          DataType = ftBoolean
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'isPartionGoods'
+          Value = False
+          Component = cbPartionGoods
+          DataType = ftBoolean
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'DescName'
+          Value = ''
+          Component = FormParams
+          ComponentItem = 'InDescName'
+          DataType = ftString
+          MultiSelectSeparator = ','
+        end>
+      ReportName = #1054#1090#1095#1077#1090' '#1087#1086' '#1090#1086#1074#1072#1088#1091' ('#1089#1090#1072#1090#1100#1080' '#1089#1087#1080#1089#1072#1085#1080#1103')_'#1055#1088#1072#1081#1089
+      ReportNameParam.Value = #1054#1090#1095#1077#1090' '#1087#1086' '#1090#1086#1074#1072#1088#1091' ('#1089#1090#1072#1090#1100#1080' '#1089#1087#1080#1089#1072#1085#1080#1103')_'#1055#1088#1072#1081#1089
       ReportNameParam.DataType = ftString
       ReportNameParam.ParamType = ptInput
       ReportNameParam.MultiSelectSeparator = ','
@@ -1318,21 +1448,21 @@ inherited Report_GoodsMI_InternalForm: TReport_GoodsMI_InternalForm
         end
         item
           Name = 'isLocation'
-          Value = 'False'
+          Value = False
           Component = cbLocation
           DataType = ftBoolean
           MultiSelectSeparator = ','
         end
         item
           Name = 'isGoodsKind'
-          Value = 'False'
+          Value = False
           Component = cbGoodsKind
           DataType = ftBoolean
           MultiSelectSeparator = ','
         end
         item
           Name = 'isPartionGoods'
-          Value = 'False'
+          Value = False
           Component = cbPartionGoods
           DataType = ftBoolean
           MultiSelectSeparator = ','
@@ -1574,21 +1704,21 @@ inherited Report_GoodsMI_InternalForm: TReport_GoodsMI_InternalForm
         end
         item
           Name = 'isLocation'
-          Value = 'False'
+          Value = False
           Component = cbLocation
           DataType = ftBoolean
           MultiSelectSeparator = ','
         end
         item
           Name = 'isGoodsKind'
-          Value = 'False'
+          Value = False
           Component = cbGoodsKind
           DataType = ftBoolean
           MultiSelectSeparator = ','
         end
         item
           Name = 'isPartionGoods'
-          Value = 'False'
+          Value = False
           Component = cbPartionGoods
           DataType = ftBoolean
           MultiSelectSeparator = ','
@@ -1707,7 +1837,7 @@ inherited Report_GoodsMI_InternalForm: TReport_GoodsMI_InternalForm
         end
         item
           Name = 'IsPartner'
-          Value = 'TRUE'
+          Value = True
           DataType = ftBoolean
           ParamType = ptInput
           MultiSelectSeparator = ','
@@ -1877,6 +2007,10 @@ inherited Report_GoodsMI_InternalForm: TReport_GoodsMI_InternalForm
         end
         item
           Visible = True
+          ItemName = 'bbPrintArticleLossPrice'
+        end
+        item
+          Visible = True
           ItemName = 'dxBarStatic'
         end
         item
@@ -1947,6 +2081,10 @@ inherited Report_GoodsMI_InternalForm: TReport_GoodsMI_InternalForm
     end
     object bbReport_Goods: TdxBarButton
       Action = actReport_Goods
+      Category = 0
+    end
+    object bbPrintArticleLossPrice: TdxBarButton
+      Action = actPrintArticleLossPrice
       Category = 0
     end
   end

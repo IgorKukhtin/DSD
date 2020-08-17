@@ -111,6 +111,8 @@ type
     cbSubjectDoc: TcxCheckBox;
     actReport_Goods: TdsdOpenForm;
     bbReport_Goods: TdxBarButton;
+    actPrintArticleLossPrice: TdsdPrintAction;
+    bbPrintArticleLossPrice: TdxBarButton;
   private
     { Private declarations }
   public
