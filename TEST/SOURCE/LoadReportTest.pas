@@ -136,11 +136,12 @@ procedure TLoadReportTest.LoadAllReportFormTest;
 var
  i : integer;
 begin
+{
   LoadReportFromFile('Проверка начислений по бонусам поставщиков', ReportPath + '\Отчеты (финансы)\Проверка начислений по бонусам поставщиков.fr3');
   exit;
   LoadReportFromFile('Проверка начислений по бонусам', ReportPath + '\Отчеты (финансы)\Проверка начислений по бонусам.fr3');
   exit;
-    {
+
   LoadReportFromFile('Обороты по кассе и счету (Прямой метод)', ReportPath + '\Отчеты (финансы)\Обороты по кассе и счету (Прямой метод).fr3');
   exit;
 
@@ -399,7 +400,7 @@ begin
   LoadReportFromFile('Отчет - заявки (по Маршрутам-итого)', ReportPath + '\Отчеты (товарные)\Отчет - заявки (по Маршрутам-итого).fr3');
   LoadReportFromFile('Отчет - заявки (кросс)', ReportPath + '\Отчеты (товарные)\Отчет - заявки (кросс).fr3');
   exit;
-  }
+
   // Печатные формы накладных
    LoadReportFromFile('PrintMovement_ReestrReturn', ReportPath + '\Товарный Учет\PrintMovement_ReestrReturn.fr3');
    LoadReportFromFile('PrintMovement_ReestrReturnPeriod', ReportPath + '\Товарный Учет\PrintMovement_ReestrReturnPeriod.fr3');
@@ -415,7 +416,7 @@ begin
    LoadReportFromFile('PrintMovement_ReestrPeriod', ReportPath + '\Товарный Учет\PrintMovement_ReestrPeriod.fr3');
    LoadReportFromFile('PrintMovement_ReestrStartPeriod', ReportPath + '\Товарный Учет\PrintMovement_ReestrStartPeriod.fr3');
    exit;
-   {
+
   LoadReportFromFile('PrintMovement_TransferDebtOut', ReportPath + '\Товарный Учет\PrintMovement_TransferDebtOut.fr3');
   LoadReportFromFile('PrintMovement_Sale1', ReportPath + '\Товарный Учет\PrintMovement_Sale1.fr3');
   LoadReportFromFile('PrintMovement_Sale2', ReportPath + '\Товарный Учет\PrintMovement_Sale2.fr3');
@@ -507,15 +508,15 @@ begin
   LoadReportFromFile('PrintMovement_IncomeFuel', ReportPath + '\Товарный Учет\PrintMovement_IncomeFuel.fr3');
 
   LoadReportFromFile('PrintMovement_ReturnOut', ReportPath + '\Товарный Учет\PrintMovement_ReturnOut.fr3');
-
+  }
   LoadReportFromFile('PrintMovement_Send', ReportPath + '\Товарный Учет\PrintMovement_Send.fr3');
   exit;
-
+  {
   LoadReportFromFile('PrintMovement_Inventory', ReportPath + '\Товарный Учет\PrintMovement_Inventory.fr3');
-  }
+
   LoadReportFromFile('PrintMovement_Sale_Order', ReportPath + '\Товарный Учет\PrintMovement_Sale_Order.fr3');
   exit;
-  {
+
   LoadReportFromFile('PrintMovement_ProductionUnion', ReportPath + '\Товарный Учет\PrintMovement_ProductionUnion.fr3');
   exit;
 
