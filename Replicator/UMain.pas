@@ -223,7 +223,8 @@ uses
   System.Math,
   System.IOUtils,
   USettings,
-  UCommon;
+  UCommon,
+  UFileVersion;
 
 const
   cStartPointReplica = 'начало репликации %s';
@@ -707,6 +708,7 @@ begin
   FScriptFiles := TScriptFiles.Create(TSettings.ScriptPath, LogApplyScript);
 
   CheckReplicaMaxMin;
+  Caption := 'Replicator - ' + GetFileVersion;
 end;
 
 destructor TfrmMain.Destroy;

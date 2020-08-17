@@ -10,7 +10,8 @@ uses
   UDefinitions in 'UDefinitions.pas',
   UCommandData in 'UCommandData.pas',
   UCommon in 'UCommon.pas',
-  UScriptFiles in 'UScriptFiles.pas';
+  UScriptFiles in 'UScriptFiles.pas',
+  UFileVersion in 'UFileVersion.pas';
 
 {$R *.res}
 

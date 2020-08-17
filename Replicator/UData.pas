@@ -1114,7 +1114,7 @@ begin
           SQL.Add(arrTables[I].CountSQL);
           Open;
           if not Fields[0].IsNull then
-            arrTables[I].MasterCount := Fields[0].AsInteger;
+            arrTables[I].SlaveCount := Fields[0].AsInteger;
           Close;
         end;
     end;

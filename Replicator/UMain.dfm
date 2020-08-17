@@ -26,8 +26,6 @@ object frmMain: TfrmMain
     ExplicitHeight = 768
     object tsLog: TTabSheet
       Caption = #1051#1086#1075
-      ExplicitWidth = 1176
-      ExplicitHeight = 740
       object pnlLogTop: TPanel
         Left = 0
         Top = 0
@@ -384,9 +382,6 @@ object frmMain: TfrmMain
         Height = 414
         Align = alClient
         TabOrder = 2
-        ExplicitLeft = 233
-        ExplicitWidth = 943
-        ExplicitHeight = 520
         object pgcLog: TPageControl
           Left = 1
           Top = 1
@@ -395,11 +390,11 @@ object frmMain: TfrmMain
           ActivePage = tsMemo
           Align = alClient
           TabOrder = 0
-          ExplicitWidth = 941
-          ExplicitHeight = 518
           object tsMemo: TTabSheet
             Caption = 'tsMemo'
             TabVisible = False
+            ExplicitLeft = 0
+            ExplicitTop = 0
             ExplicitWidth = 933
             ExplicitHeight = 508
             object lstLog: TListBox
@@ -419,15 +414,16 @@ object frmMain: TfrmMain
               ParentDoubleBuffered = False
               ParentFont = False
               TabOrder = 0
-              ExplicitWidth = 933
-              ExplicitHeight = 508
             end
           end
           object tsChk: TTabSheet
             Caption = 'tsChk'
             ImageIndex = 1
             TabVisible = False
+            ExplicitLeft = 0
+            ExplicitTop = 0
             ExplicitWidth = 733
+            ExplicitHeight = 0
           end
         end
       end
@@ -435,6 +431,10 @@ object frmMain: TfrmMain
     object tsCompare: TTabSheet
       Caption = #1057#1088#1072#1074#1085#1077#1085#1080#1077' '#1076#1072#1085#1085#1099#1093' Master '#1080' Slave'
       ImageIndex = 2
+      ExplicitLeft = 0
+      ExplicitTop = 0
+      ExplicitWidth = 0
+      ExplicitHeight = 0
       object pnlCompareTop: TPanel
         Left = 0
         Top = 0
@@ -534,6 +534,10 @@ object frmMain: TfrmMain
     object tsSettings: TTabSheet
       Caption = #1053#1072#1089#1090#1088#1086#1081#1082#1080
       ImageIndex = 1
+      ExplicitLeft = 0
+      ExplicitTop = 0
+      ExplicitWidth = 0
+      ExplicitHeight = 0
       DesignSize = (
         976
         634)
@@ -886,8 +890,6 @@ object frmMain: TfrmMain
               ScrollBars = ssVertical
               TabOrder = 0
               OnChange = mmoScriptLogChange
-              ExplicitTop = -1
-              ExplicitWidth = 424
             end
           end
           object edtScriptPath: TEdit
