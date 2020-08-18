@@ -19,11 +19,9 @@ object frmMain: TfrmMain
     Top = 0
     Width = 984
     Height = 662
-    ActivePage = tsLog
+    ActivePage = tsSettings
     Align = alClient
     TabOrder = 0
-    ExplicitWidth = 1184
-    ExplicitHeight = 768
     object tsLog: TTabSheet
       Caption = #1051#1086#1075
       object pnlLogTop: TPanel
@@ -33,7 +31,6 @@ object frmMain: TfrmMain
         Height = 220
         Align = alTop
         TabOrder = 0
-        ExplicitWidth = 1176
         DesignSize = (
           976
           220)
@@ -48,7 +45,6 @@ object frmMain: TfrmMain
           ParentBackground = False
           ParentColor = False
           TabOrder = 0
-          ExplicitWidth = 1132
           DesignSize = (
             932
             76)
@@ -118,7 +114,6 @@ object frmMain: TfrmMain
             Height = 8
             Anchors = [akLeft, akTop, akRight]
             TabOrder = 3
-            ExplicitWidth = 1093
           end
         end
         object grpSession: TGroupBox
@@ -132,7 +127,6 @@ object frmMain: TfrmMain
           ParentBackground = False
           ParentColor = False
           TabOrder = 1
-          ExplicitWidth = 1132
           DesignSize = (
             932
             113)
@@ -248,7 +242,6 @@ object frmMain: TfrmMain
             Anchors = [akLeft, akTop, akRight]
             TabOrder = 5
             Visible = False
-            ExplicitWidth = 1093
           end
           object chkStopIfErr: TCheckBox
             Left = 689
@@ -393,10 +386,6 @@ object frmMain: TfrmMain
           object tsMemo: TTabSheet
             Caption = 'tsMemo'
             TabVisible = False
-            ExplicitLeft = 0
-            ExplicitTop = 0
-            ExplicitWidth = 933
-            ExplicitHeight = 508
             object lstLog: TListBox
               Left = 0
               Top = 0
@@ -420,10 +409,6 @@ object frmMain: TfrmMain
             Caption = 'tsChk'
             ImageIndex = 1
             TabVisible = False
-            ExplicitLeft = 0
-            ExplicitTop = 0
-            ExplicitWidth = 733
-            ExplicitHeight = 0
           end
         end
       end
@@ -431,10 +416,6 @@ object frmMain: TfrmMain
     object tsCompare: TTabSheet
       Caption = #1057#1088#1072#1074#1085#1077#1085#1080#1077' '#1076#1072#1085#1085#1099#1093' Master '#1080' Slave'
       ImageIndex = 2
-      ExplicitLeft = 0
-      ExplicitTop = 0
-      ExplicitWidth = 0
-      ExplicitHeight = 0
       object pnlCompareTop: TPanel
         Left = 0
         Top = 0
@@ -535,15 +516,13 @@ object frmMain: TfrmMain
       Caption = #1053#1072#1089#1090#1088#1086#1081#1082#1080
       ImageIndex = 1
       ExplicitLeft = 0
-      ExplicitTop = 0
-      ExplicitWidth = 0
-      ExplicitHeight = 0
+      ExplicitTop = 28
       DesignSize = (
         976
         634)
       object lbLibLocation: TLabel
         Left = 24
-        Top = 493
+        Top = 536
         Width = 73
         Height = 13
         Alignment = taRightJustify
@@ -551,14 +530,14 @@ object frmMain: TfrmMain
       end
       object lbReconnectTimeout: TLabel
         Left = 24
-        Top = 543
+        Top = 586
         Width = 305
         Height = 13
         Caption = #1087#1088#1080' '#1087#1086#1090#1077#1088#1077' '#1089#1074#1103#1079#1080' '#1072#1074#1090#1086#1084#1072#1090#1080#1095#1077#1089#1082#1080' '#1087#1077#1088#1077#1087#1086#1076#1082#1083#1102#1095#1072#1090#1100#1089#1103' '#1095#1077#1088#1077#1079' '
       end
       object lbReconnectMinute: TLabel
         Left = 417
-        Top = 543
+        Top = 586
         Width = 288
         Height = 13
         Caption = #1084#1080#1085#1091#1090'   ( 0  '#1086#1079#1085#1072#1095#1072#1077#1090' "'#1085#1077' '#1074#1099#1087#1086#1083#1085#1103#1090#1100' '#1087#1077#1088#1077#1087#1086#1076#1082#1083#1102#1095#1077#1085#1080#1077'")'
@@ -745,7 +724,7 @@ object frmMain: TfrmMain
       end
       object edtLibLocation: TEdit
         Left = 103
-        Top = 490
+        Top = 533
         Width = 500
         Height = 21
         TabOrder = 5
@@ -753,7 +732,7 @@ object frmMain: TfrmMain
       end
       object btnLibLocation: TButton
         Left = 604
-        Top = 488
+        Top = 531
         Width = 25
         Height = 25
         Hint = #1055#1091#1090#1100' '#1082' '#1082#1083#1080#1077#1085#1090#1089#1082#1086#1081' '#1073#1080#1073#1083#1080#1086#1090#1077#1082#1077' PostgreSQL'
@@ -790,7 +769,7 @@ object frmMain: TfrmMain
       end
       object seReconnectTimeout: TSpinEdit
         Left = 333
-        Top = 540
+        Top = 583
         Width = 80
         Height = 22
         MaxValue = 0
@@ -815,7 +794,6 @@ object frmMain: TfrmMain
           Align = alBottom
           BevelOuter = bvNone
           TabOrder = 0
-          ExplicitWidth = 252
           object btnApplyScript: TButton
             Left = 21
             Top = 7
@@ -853,7 +831,6 @@ object frmMain: TfrmMain
           Align = alClient
           BevelOuter = bvNone
           TabOrder = 1
-          ExplicitWidth = 252
           DesignSize = (
             547
             338)
@@ -909,6 +886,24 @@ object frmMain: TfrmMain
             OnClick = btnScriptPathClick
           end
         end
+      end
+      object chkSaveErr1: TCheckBox
+        Left = 24
+        Top = 485
+        Width = 193
+        Height = 17
+        Caption = #1089#1086#1093#1088#1072#1085#1103#1090#1100' '#1086#1096#1080#1073#1082#1080' '#1096#1072#1075#1072' '#8470'1 '#1074' '#1041#1044
+        TabOrder = 9
+        OnClick = chkSaveErr1Click
+      end
+      object chkSaveErr2: TCheckBox
+        Left = 261
+        Top = 485
+        Width = 190
+        Height = 17
+        Caption = #1089#1086#1093#1088#1072#1085#1103#1090#1100' '#1086#1096#1080#1073#1082#1080' '#1096#1072#1075#1072' '#8470'2 '#1074' '#1041#1044
+        TabOrder = 10
+        OnClick = chkSaveErr2Click
       end
     end
   end

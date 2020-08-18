@@ -12,6 +12,7 @@ type
     class var
       FIni: TIniFile;
       FIniFolder: string;
+
   strict private
     class function GetBoolValue(const ASection, AParam: string; const ADefVal: Boolean): Boolean;
     class function GetIntValue(const ASection, AParam: string; const ADefVal: Integer): Integer;
@@ -19,6 +20,7 @@ type
     class procedure SetBoolValue(const ASection, AParam: string; const AVal: Boolean);
     class procedure SetIntValue(const ASection, AParam: string; const AVal: Integer);
     class procedure SetStrValue(const ASection, AParam, AVal: string);
+
   strict private
     class function GetUseLog: Boolean; static;
     class procedure SetUseLog(const AValue: Boolean); static;
@@ -68,6 +70,11 @@ type
     class procedure SetScriptPath(const AValue: string); static;
     class function GetDDLLastId: Integer; static;
     class procedure SetDDLLastId(const AValue: Integer); static;
+    class function GetSaveErrStep1InDB: Boolean; static;
+    class procedure SetSaveErrStep1InDB(const AValue: Boolean); static;
+    class function GetSaveErrStep2InDB: Boolean; static;
+    class procedure SetSaveErrStep2InDB(const AValue: Boolean); static;
+
   public
     class constructor Create;
     class destructor Destroy;
@@ -97,6 +104,9 @@ type
     class property ReconnectTimeoutMinute: Integer read GetReconnectTimeoutMinute write SetReconnectTimeoutMinute;
     class property ScriptPath: string read GetScriptPath write SetScriptPath;
     class property DDLLastId: Integer read GetDDLLastId write SetDDLLastId;
+    class property SaveErrStep1InDB: Boolean read GetSaveErrStep1InDB write SetSaveErrStep1InDB;
+    class property SaveErrStep2InDB: Boolean read GetSaveErrStep2InDB write SetSaveErrStep2InDB;
+
     class procedure WriteScriptFiles(AList: TStrings);
     class procedure ReadScriptFiles(AList: TStrings);
   end;
@@ -137,7 +147,8 @@ const
   cCompareDeviationParam = 'CompareDeviationOnly';
   cReconnectTimeoutParam = 'ReconnectTimeoutMinute';
   cScriptFilesPathParam  = 'ScriptFilesPath';
-  cScriptFilesUsedParam  = 'ScriptFilesUsed';
+  cSaveErr1InDBParam     = 'SaveErrorStep1InDB';
+  cSaveErr2InDBParam     = 'SaveErrorStep2InDB';
 
   // Master
   cMasterSection       = 'postgress_master';
@@ -387,6 +398,16 @@ begin
   Result := GetIntValue(cReplicaSection, cReplicaLastIdParam, cDefReplicaLastId);
 end;
 
+class function TSettings.GetSaveErrStep1InDB: Boolean;
+begin
+  Result := GetBoolValue(cSettingsSection, cSaveErr1InDBParam, False);
+end;
+
+class function TSettings.GetSaveErrStep2InDB: Boolean;
+begin
+  Result := GetBoolValue(cSettingsSection, cSaveErr2InDBParam, False);
+end;
+
 class function TSettings.GetScriptPath: string;
 begin
   Result := GetStrValue(cSettingsSection, cScriptFilesPathParam, cDefScriptFilesPath);
@@ -564,6 +585,16 @@ end;
 class procedure TSettings.SetReplicaLastId(const AValue: Integer);
 begin
   SetIntValue(cReplicaSection, cReplicaLastIdParam, AValue);
+end;
+
+class procedure TSettings.SetSaveErrStep1InDB(const AValue: Boolean);
+begin
+  SetBoolValue(cSettingsSection, cSaveErr1InDBParam, AValue);
+end;
+
+class procedure TSettings.SetSaveErrStep2InDB(const AValue: Boolean);
+begin
+  SetBoolValue(cSettingsSection, cSaveErr2InDBParam, AValue);
 end;
 
 class procedure TSettings.SetScriptPath(const AValue: string);
