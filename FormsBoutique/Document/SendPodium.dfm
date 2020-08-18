@@ -2028,10 +2028,7 @@ object SendPodiumForm: TSendPodiumForm
       Category = 'DSDLib'
       TabSheet = cxTabSheetMain
       MoveParams = <>
-      PostDataSetBeforeExecute = False
-      PostDataSetAfterExecute = True
       View = cxGridDBTableView
-      Action = actPartionGoodsChoice
       Params = <>
       Caption = #1044#1086#1073#1072#1074#1080#1090#1100' <'#1058#1086#1074#1072#1088'>'
       Hint = #1044#1086#1073#1072#1074#1080#1090#1100' <'#1058#1086#1074#1072#1088'>'
