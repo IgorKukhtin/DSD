@@ -1,8 +1,8 @@
 -- Function: lpInsertUpdate_MovementItem_Send()
 
 DROP FUNCTION IF EXISTS lpInsertUpdate_MovementItem_Send (Integer, Integer, Integer, TFloat, Integer);
---DROP FUNCTION IF EXISTS lpInsertUpdate_MovementItem_Send (Integer, Integer, Integer, TFloat, TFloat, Integer, Integer);
 DROP FUNCTION IF EXISTS lpInsertUpdate_MovementItem_Send (Integer, Integer, Integer, TFloat, TFloat, Integer, Integer);
+DROP FUNCTION IF EXISTS lpInsertUpdate_MovementItem_Send (Integer, Integer, Integer, TFloat, TFloat, Integer, Integer, Integer);
 
 
 CREATE OR REPLACE FUNCTION lpInsertUpdate_MovementItem_Send(
@@ -13,6 +13,7 @@ CREATE OR REPLACE FUNCTION lpInsertUpdate_MovementItem_Send(
     IN inAmountManual        TFloat    , -- Кол-во ручное
     IN inAmountStorage       TFloat    , --
     IN inReasonDifferencesId Integer   , -- Причина разногласия
+    IN inCommentTRID         Integer   , -- Комментарий
     IN inUserId              Integer     -- пользователь
 )
 RETURNS Integer
@@ -104,7 +105,7 @@ BEGIN
           RAISE EXCEPTION 'Ошибка.Документ отложен, корректировка запрещена!';
      END IF;
      
-     IF vbIsSUN = TRUE AND vbIsInsert = FALSE AND COALESCE (inAmount, 0) = 0 AND COALESCE (vbAmount, 0) > 0
+/*     IF vbIsSUN = TRUE AND vbIsInsert = FALSE AND COALESCE (inAmount, 0) = 0 AND COALESCE (vbAmount, 0) > 0
      THEN
      
        -- Сохранили <кол-во>
@@ -114,7 +115,7 @@ BEGIN
          PERFORM lpInsertUpdate_MovementItemFloat (zc_MIFloat_ZeroingUKTZED(), ioId, vbAmount);
        END IF;
      END IF;
-          
+*/          
      -- сохранили <Элемент документа>
      ioId := lpInsertUpdate_MovementItem (ioId, zc_MI_Master(), inGoodsId, inMovementId, inAmount, NULL);
 
@@ -125,6 +126,9 @@ BEGIN
  
      -- Сохранили <причину разногласия>
      PERFORM lpInsertUpdate_MovementItemLinkObject (zc_MILinkObject_ReasonDifferences(), ioId, inReasonDifferencesId);
+     
+     -- Сохранили <Комментарий>
+     PERFORM lpInsertUpdate_MovementItemLinkObject (zc_MILinkObject_CommentTR(), ioId, inCommentTRID);
      
      -- Только для IsSUN
      IF vbIsSUN = TRUE

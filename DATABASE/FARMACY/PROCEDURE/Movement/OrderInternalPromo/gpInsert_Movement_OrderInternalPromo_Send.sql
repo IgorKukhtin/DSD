@@ -84,6 +84,7 @@
                                               inAmountManual         := 0,
                                               inAmountStorage        := 0,
                                               inReasonDifferencesId  := 0,
+                                              inCommentTRID          := 0,  
                                               inUserId               := vbUserId)
     FROM tmpMovementItem
          INNER JOIN tmpUnit ON tmpUnit.UnitID = tmpMovementItem.UnitID;

@@ -2751,7 +2751,7 @@ begin
 
         if DiscountServiceForm.gCode <> 0 then
         begin
-          if RemainsCDS.FieldByName('GoodsDiscountId').AsInteger <> DiscountServiceForm.gCode then
+          if RemainsCDS.FieldByName('GoodsDiscountId').AsInteger <> DiscountServiceForm.gDiscountExternalId then
           begin
             ShowMessage('Ошибка.Товар <' + FieldByName('GoodsName').AsString + '> не участвует в дисконтной программе ' + FormParams.ParamByName('DiscountExternalName').Value + '!');
             exit;
@@ -6493,7 +6493,7 @@ begin
 
       if DiscountServiceForm.gCode <> 0 then
       begin
-        if RemainsCDS.FieldByName('GoodsDiscountId').AsInteger <> DiscountServiceForm.gCode then
+        if RemainsCDS.FieldByName('GoodsDiscountId').AsInteger <> DiscountServiceForm.gDiscountExternalId then
         begin
           ShowMessage('Ошибка.Товар <' + SourceClientDataSet.FieldByName('GoodsName').AsString + '> не участвует в дисконтной программе ' + FormParams.ParamByName('DiscountExternalName').Value + '!');
           exit;

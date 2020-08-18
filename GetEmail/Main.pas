@@ -279,7 +279,7 @@ begin
             //перешли к следующему
             DataSet.Next;
          end;
-       except
+       except on E: Exception do AddToLog(E.Message);
        end;
      end;
 end;

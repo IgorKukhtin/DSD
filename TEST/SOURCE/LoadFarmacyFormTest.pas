@@ -2452,6 +2452,9 @@ begin
   TdsdFormStorageFactory.GetStorage.Load('TSendForm');
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TSendMenegerForm'));
   TdsdFormStorageFactory.GetStorage.Load('TSendMenegerForm');
+
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TCommentTRSendForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TCommentTRSendForm');
   {
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TSendCashJournalForm'));
   TdsdFormStorageFactory.GetStorage.Load('TSendCashJournalForm');
