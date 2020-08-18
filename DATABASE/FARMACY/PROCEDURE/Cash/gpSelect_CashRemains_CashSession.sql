@@ -101,7 +101,7 @@ BEGIN
       vbDiscountExternal := False;
     END IF;
 
-    vbDivisionParties := inSession = '3';
+    vbDivisionParties := vbRetailId = 4;
 
     RETURN QUERY
     WITH

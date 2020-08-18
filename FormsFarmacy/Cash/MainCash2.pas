@@ -504,6 +504,7 @@ type
     MemDataGOODSPROJ: TBooleanField;
     MemDataBANFISCAL: TBooleanField;
     MainisBanFiscalSale: TcxGridDBColumn;
+    CheckDivisionPartiesName: TcxGridDBColumn;
     procedure WM_KEYDOWN(var Msg: TWMKEYDOWN);
     procedure FormCreate(Sender: TObject);
     procedure actChoiceGoodsInRemainsGridExecute(Sender: TObject);
@@ -2750,9 +2751,9 @@ begin
 
         if DiscountServiceForm.gCode <> 0 then
         begin
-          if RemainsCDS.FieldByName('GoodsDiscountId').AsInteger <> UnitConfigCDS.FindField('GoodsDiscountId').AsInteger then
+          if RemainsCDS.FieldByName('GoodsDiscountId').AsInteger <> DiscountServiceForm.gCode then
           begin
-            ShowMessage('Ошибка.Товар <' + FieldByName('GoodsName').AsString + '> не участвует в дисконтной программе ' + RemainsCDS.FindField('GoodsDiscountName').AsString + '!');
+            ShowMessage('Ошибка.Товар <' + FieldByName('GoodsName').AsString + '> не участвует в дисконтной программе ' + FormParams.ParamByName('DiscountExternalName').Value + '!');
             exit;
           end;
         end else if RemainsCDS.FieldByName('isGoodsForProject').AsBoolean and (RemainsCDS.FieldByName('GoodsDiscountId').AsInteger <> 0) then
@@ -2793,9 +2794,9 @@ begin
           end;
         end;
 
-        if RemainsCDS.FieldByName('isBanFiscalSale').AsBoolean and not(actSpecCorr.Checked or actSpec.Checked) then
+        if RemainsCDS.FieldByName('isBanFiscalSale').AsBoolean and not actSpec.Checked then
         begin
-          ShowMessage('Товар <' + FieldByName('GoodsName').AsString + '> по выбранной партии разрешено пробивать только по служебному чеку...');
+          ShowMessage('Товар <' + FieldByName('GoodsName').AsString + '> по выбранной партии разрешено пробивать только по служебному чеку (зеленая галочка)...');
           exit;
         end;
 
@@ -6476,18 +6477,33 @@ begin
 //      end;
 //    end;
 
-    if DiscountServiceForm.gCode = 3 then
-    begin
-      if SourceClientDataSet.FieldByName('GoodsDiscountId').AsInteger <> UnitConfigCDS.FindField('GoodsDiscountId').AsInteger then
+//    if DiscountServiceForm.gCode = 3 then
+//    begin
+//      if SourceClientDataSet.FieldByName('GoodsDiscountId').AsInteger <> UnitConfigCDS.FindField('GoodsDiscountId').AsInteger then
+//      begin
+//        ShowMessage('Ошибка.Выбранный код товара не участвует в дисконтной программе ' + UnitConfigCDS.FindField('GoodsDiscountName').AsString + '!');
+//        exit;
+//      end;
+//    end else if SourceClientDataSet.FieldByName('GoodsDiscountId').AsInteger = UnitConfigCDS.FindField('GoodsDiscountId').AsInteger then
+//    begin
+//      ShowMessage('Ошибка.Выбранный код товара предназначен для дисконтной программе ' + UnitConfigCDS.FindField('GoodsDiscountName').AsString + '!');
+//      exit;
+//    end;
+
+
+      if DiscountServiceForm.gCode <> 0 then
       begin
-        ShowMessage('Ошибка.Выбранный код товара не участвует в дисконтной программе ' + UnitConfigCDS.FindField('GoodsDiscountName').AsString + '!');
+        if RemainsCDS.FieldByName('GoodsDiscountId').AsInteger <> DiscountServiceForm.gCode then
+        begin
+          ShowMessage('Ошибка.Товар <' + SourceClientDataSet.FieldByName('GoodsName').AsString + '> не участвует в дисконтной программе ' + FormParams.ParamByName('DiscountExternalName').Value + '!');
+          exit;
+        end;
+      end else if SourceClientDataSet.FieldByName('isGoodsForProject').AsBoolean and (SourceClientDataSet.FieldByName('GoodsDiscountId').AsInteger <> 0) then
+      begin
+        ShowMessage('Ошибка.Товар <' + SourceClientDataSet.FieldByName('GoodsName').AsString + '> предназначен для дисконтной программе ' + SourceClientDataSet.FindField('GoodsDiscountName').AsString + '!');
         exit;
       end;
-    end else if SourceClientDataSet.FieldByName('GoodsDiscountId').AsInteger = UnitConfigCDS.FindField('GoodsDiscountId').AsInteger then
-    begin
-      ShowMessage('Ошибка.Выбранный код товара предназначен для дисконтной программе ' + UnitConfigCDS.FindField('GoodsDiscountName').AsString + '!');
-      exit;
-    end;
+
 
   end;
 
