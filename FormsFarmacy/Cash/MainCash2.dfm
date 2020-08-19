@@ -34,7 +34,7 @@ inherited MainCashForm2: TMainCashForm2
         Navigator.Buttons.CustomButtons = <>
         OnFocusedRecordChanged = CheckGridDBTableViewFocusedRecordChanged
         DataController.DataSource = CheckDS
-        DataController.KeyFieldNames = 'GoodsId;PartionDateKindId;NDSKindId'
+        DataController.KeyFieldNames = 'GoodsId;PartionDateKindId;NDSKindId;DivisionPartiesID'
         DataController.Summary.DefaultGroupSummaryItems = <>
         DataController.Summary.FooterSummaryItems = <>
         DataController.Summary.SummaryGroups = <>
@@ -140,6 +140,12 @@ inherited MainCashForm2: TMainCashForm2
           DataBinding.FieldName = 'NDS'
           HeaderAlignmentHorz = taCenter
           Width = 46
+        end
+        object CheckDivisionPartiesName: TcxGridDBColumn
+          Caption = #1056#1072#1079#1076#1077#1083#1077#1085#1080#1077' '#1087#1072#1088#1090#1080#1081
+          DataBinding.FieldName = 'DivisionPartiesName'
+          HeaderAlignmentHorz = taCenter
+          Options.Editing = False
         end
       end
       object CheckGridLevel: TcxGridLevel
@@ -309,7 +315,7 @@ inherited MainCashForm2: TMainCashForm2
         OnSelectionChanged = MainGridDBTableViewSelectionChanged
         DataController.DataSource = RemainsDS
         DataController.Filter.Options = [fcoCaseInsensitive]
-        DataController.KeyFieldNames = 'Id;PartionDateKindId;NDSKindId'
+        DataController.KeyFieldNames = 'Id;PartionDateKindId;NDSKindId;DivisionPartiesID'
         DataController.Summary.DefaultGroupSummaryItems = <>
         DataController.Summary.FooterSummaryItems = <>
         DataController.Summary.SummaryGroups = <>
@@ -335,6 +341,7 @@ inherited MainCashForm2: TMainCashForm2
         object MainColName: TcxGridDBColumn
           Caption = #1053#1072#1079#1074#1072#1085#1080#1077
           DataBinding.FieldName = 'GoodsName'
+          OnCustomDrawCell = MainColNameCustomDrawCell
           HeaderAlignmentHorz = taCenter
           Options.Editing = False
           Width = 200
@@ -1005,6 +1012,20 @@ inherited MainCashForm2: TMainCashForm2
           DataBinding.FieldName = 'UKTZED'
           Options.Editing = False
           Width = 80
+        end
+        object MainDivisionPartiesName: TcxGridDBColumn
+          Caption = #1056#1072#1079#1076#1077#1083#1077#1085#1080#1077' '#1087#1072#1088#1090#1080#1081
+          DataBinding.FieldName = 'DivisionPartiesName'
+          HeaderAlignmentHorz = taCenter
+          Options.Editing = False
+          Width = 92
+        end
+        object MainisBanFiscalSale: TcxGridDBColumn
+          Caption = #1047#1072#1087#1088#1077#1090' '#1092#1080#1089#1082#1072#1083#1100#1085#1086#1081' '#1087#1088#1086#1076#1072#1078#1080
+          DataBinding.FieldName = 'isBanFiscalSale'
+          HeaderAlignmentHorz = taCenter
+          Options.Editing = False
+          Width = 81
         end
       end
       object MainGridLevel: TcxGridLevel
@@ -4659,7 +4680,7 @@ inherited MainCashForm2: TMainCashForm2
         MultiSelectSeparator = ','
       end>
     Left = 32
-    Top = 32
+    Top = 24
   end
   object spSelectCheck: TdsdStoredProc
     StoredProcName = 'gpSelect_MovementItem_CheckLoadCash'
@@ -5258,6 +5279,13 @@ inherited MainCashForm2: TMainCashForm2
         MultiSelectSeparator = ','
       end
       item
+        Name = 'inDivisionPartiesId_list'
+        Value = Null
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
         Name = 'outMessageText'
         Value = Null
         DataType = ftString
@@ -5456,6 +5484,12 @@ inherited MainCashForm2: TMainCashForm2
     object MemDataDIVPARTNAME: TStringField
       FieldName = 'DIVPARTNAME'
       Size = 100
+    end
+    object MemDataBANFISCAL: TBooleanField
+      FieldName = 'BANFISCAL'
+    end
+    object MemDataGOODSPROJ: TBooleanField
+      FieldName = 'GOODSPROJ'
     end
   end
   object mdCheck: TdxMemData

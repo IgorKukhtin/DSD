@@ -130,6 +130,8 @@ type
     btnScriptPath: TButton;
     btnMoveProcsToSlave: TButton;
     btnStopMoveProcsToSlave: TButton;
+    chkSaveErr1: TCheckBox;
+    chkSaveErr2: TCheckBox;
     {$WARNINGS ON}
     procedure chkShowLogClick(Sender: TObject);
     procedure btnLibLocationClick(Sender: TObject);
@@ -163,6 +165,8 @@ type
     procedure btnMoveProcsToSlaveClick(Sender: TObject);
     procedure btnStopMoveProcsToSlaveClick(Sender: TObject);
     procedure btnUpdateScriptIniClick(Sender: TObject);
+    procedure chkSaveErr1Click(Sender: TObject);
+    procedure chkSaveErr2Click(Sender: TObject);
   private
     FLog: TLog;
     FData: TdmData;
@@ -278,6 +282,8 @@ begin
   chkWriteCommands.Checked := TSettings.WriteCommandsToFile;
   chkStopIfErr.Checked     := TSettings.StopIfError;
   chkDeviationOnly.Checked := TSettings.CompareDeviationOnly;
+  chkSaveErr1.Checked      := TSettings.SaveErrStep1InDB;
+  chkSaveErr2.Checked      := TSettings.SaveErrStep2InDB;
 
   SwitchShowLog;
 end;
@@ -655,6 +661,16 @@ begin
   end
   else
     LogMessage('Проверьте настройки подключения к базе данных');
+end;
+
+procedure TfrmMain.chkSaveErr1Click(Sender: TObject);
+begin
+  TSettings.SaveErrStep1InDB := chkSaveErr1.Checked;
+end;
+
+procedure TfrmMain.chkSaveErr2Click(Sender: TObject);
+begin
+  TSettings.SaveErrStep2InDB := chkSaveErr2.Checked;
 end;
 
 procedure TfrmMain.chkShowLogClick(Sender: TObject);

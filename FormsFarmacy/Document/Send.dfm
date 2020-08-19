@@ -518,6 +518,21 @@ inherited SendForm: TSendForm
             Options.Editing = False
             Width = 68
           end
+          object ButtonEdit: TcxGridDBColumn
+            Caption = #1055#1088#1080#1095#1080#1085#1072' '#1091#1084#1077#1085#1100#1096#1077#1085#1080#1102' '#1082#1086#1083#1080#1095#1077#1089#1090#1074#1072
+            DataBinding.FieldName = 'CommentTRName'
+            PropertiesClassName = 'TcxButtonEditProperties'
+            Properties.Buttons = <
+              item
+                Action = actChoiceCommentTR
+                Default = True
+                Kind = bkEllipsis
+              end>
+            Properties.ReadOnly = True
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 125
+          end
         end
       end
       object cxSplitter1: TcxSplitter
@@ -1648,6 +1663,33 @@ inherited SendForm: TSendForm
         end>
       isShowModal = True
     end
+    object actChoiceCommentTR: TOpenChoiceForm
+      Category = 'DSDLib'
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      Caption = 'ChoiceCommentTR'
+      FormName = 'TCommentTRSendForm'
+      FormNameParam.Value = 'TCommentTRSendForm'
+      FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
+      GuiParams = <
+        item
+          Name = 'Key'
+          Value = Null
+          Component = MasterCDS
+          ComponentItem = 'CommentTRId'
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'TextValue'
+          Value = Null
+          Component = MasterCDS
+          ComponentItem = 'CommentTRName'
+          DataType = ftString
+          MultiSelectSeparator = ','
+        end>
+      isShowModal = True
+    end
   end
   inherited MasterDS: TDataSource
     Top = 424
@@ -2569,6 +2611,14 @@ inherited SendForm: TSendForm
         Value = Null
         Component = MasterCDS
         ComponentItem = 'ReasonDifferencesId'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inCommentTRId'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'CommentTRId'
         ParamType = ptInput
         MultiSelectSeparator = ','
       end>

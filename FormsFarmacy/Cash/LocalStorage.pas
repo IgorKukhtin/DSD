@@ -372,6 +372,8 @@ begin
       AddIntField(LocalDataBaseDiff,   'GOODSPSID'); //Парный тоапр СП
       AddIntField(LocalDataBaseDiff,   'DIVPARTID'); //Тип срок/не срок
       AddStrField(LocalDataBaseDiff,   'DIVPARTNAM',100); //наименование типа срок/не срок
+      AddBoolField(LocalDataBaseDiff,  'BANFISCAL'); // Запрет фискальной продажи
+      AddBoolField(LocalDataBaseDiff,  'GOODSPROJ'); // Товар только для проекта (дисконтные карты)
 
       LocalDataBaseDiff.CreateTable;
     end;
@@ -405,7 +407,9 @@ begin
         (FindField('GOODSDINAM') = nil) or
         (FindField('UKTZED') = nil) or
         (FindField('GOODSPSID') = nil) or
-        (FindField('DIVPARTNAM') = nil));
+        (FindField('DIVPARTNAM') = nil) or
+        (FindField('BANFISCAL') = nil) or
+        (FindField('GOODSPROJ') = nil));
 
       Close;
 

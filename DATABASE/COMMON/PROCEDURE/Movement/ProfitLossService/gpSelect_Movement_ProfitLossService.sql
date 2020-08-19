@@ -109,7 +109,6 @@ BEGIN
            , Object_BonusKind.Id                            AS BonusKindId
            , Object_BonusKind.ValueData                     AS BonusKindName
            
-           
            , Object_Branch.Id                               AS BranchId
            , Object_Branch.ValueData                        AS BranchName
 

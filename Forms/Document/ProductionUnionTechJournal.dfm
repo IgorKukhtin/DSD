@@ -900,8 +900,8 @@ inherited ProductionUnionTechJournalForm: TProductionUnionTechJournalForm
           DataSet = PrintMasterCDS
           UserName = 'frxDBDMaster'
           IndexFieldNames = 
-            'OperDate;GoodsName;GoodsKind_group;GoodsName_child;GoodsKindName' +
-            '_Complete'
+            'OperDate;Goodsgroupname;GoodsName;GoodsKind_group;GoodsName_chil' +
+            'd;GoodsKindName_Complete'
         end>
       Params = <
         item
@@ -962,7 +962,7 @@ inherited ProductionUnionTechJournalForm: TProductionUnionTechJournalForm
         end
         item
           Name = 'isCalc'
-          Value = 'true'
+          Value = True
           DataType = ftBoolean
           MultiSelectSeparator = ','
         end>
@@ -1064,7 +1064,7 @@ inherited ProductionUnionTechJournalForm: TProductionUnionTechJournalForm
         end
         item
           Name = 'isCalc'
-          Value = 'false'
+          Value = False
           DataType = ftBoolean
           MultiSelectSeparator = ','
         end>
@@ -1174,7 +1174,7 @@ inherited ProductionUnionTechJournalForm: TProductionUnionTechJournalForm
         end
         item
           Name = 'isCalc'
-          Value = 'false'
+          Value = False
           DataType = ftBoolean
           MultiSelectSeparator = ','
         end>
@@ -1276,7 +1276,7 @@ inherited ProductionUnionTechJournalForm: TProductionUnionTechJournalForm
         end
         item
           Name = 'isCalc'
-          Value = 'false'
+          Value = False
           DataType = ftBoolean
           MultiSelectSeparator = ','
         end>
@@ -1392,7 +1392,7 @@ inherited ProductionUnionTechJournalForm: TProductionUnionTechJournalForm
         end
         item
           Name = 'isCalc'
-          Value = 'false'
+          Value = False
           DataType = ftBoolean
           MultiSelectSeparator = ','
         end>
@@ -2394,8 +2394,8 @@ inherited ProductionUnionTechJournalForm: TProductionUnionTechJournalForm
           DataSet = PrintMasterCDS
           UserName = 'frxDBDMaster'
           IndexFieldNames = 
-            'OperDate;GoodsName;GoodsKind_group;GoodsName_child;GoodsKindName' +
-            '_Complete'
+            'OperDate;goodsgroupname;GoodsName;GoodsKind_group;GoodsName_chil' +
+            'd;GoodsKindName_Complete'
         end>
       Params = <
         item
@@ -2456,7 +2456,7 @@ inherited ProductionUnionTechJournalForm: TProductionUnionTechJournalForm
         end
         item
           Name = 'isCalc'
-          Value = 'TRUE'
+          Value = True
           DataType = ftBoolean
           MultiSelectSeparator = ','
         end>
@@ -2940,11 +2940,43 @@ inherited ProductionUnionTechJournalForm: TProductionUnionTechJournalForm
   end
   inherited spErasedMIMaster: TdsdStoredProc
     StoredProcName = ''
+    Params = <
+      item
+        Name = 'inMovementItemId'
+        Component = MasterCDS
+        ComponentItem = 'Id'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'outIsErased'
+        Value = False
+        Component = MasterCDS
+        ComponentItem = 'isErased'
+        DataType = ftBoolean
+        MultiSelectSeparator = ','
+      end>
     Left = 694
     Top = 512
   end
   inherited spUnErasedMIMaster: TdsdStoredProc
     StoredProcName = ''
+    Params = <
+      item
+        Name = 'inMovementItemId'
+        Component = MasterCDS
+        ComponentItem = 'Id'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'outIsErased'
+        Value = False
+        Component = MasterCDS
+        ComponentItem = 'isErased'
+        DataType = ftBoolean
+        MultiSelectSeparator = ','
+      end>
     Left = 646
     Top = 528
   end
@@ -3712,7 +3744,7 @@ inherited ProductionUnionTechJournalForm: TProductionUnionTechJournalForm
       end
       item
         Name = 'inisCuterCount'
-        Value = 'false'
+        Value = False
         DataType = ftBoolean
         ParamType = ptInput
         MultiSelectSeparator = ','
@@ -3770,7 +3802,7 @@ inherited ProductionUnionTechJournalForm: TProductionUnionTechJournalForm
       end
       item
         Name = 'inisCuterCount'
-        Value = 'false'
+        Value = False
         DataType = ftBoolean
         ParamType = ptInput
         MultiSelectSeparator = ','
@@ -3828,7 +3860,7 @@ inherited ProductionUnionTechJournalForm: TProductionUnionTechJournalForm
       end
       item
         Name = 'inisCuterCount'
-        Value = 'false'
+        Value = False
         DataType = ftBoolean
         ParamType = ptInput
         MultiSelectSeparator = ','
@@ -3886,7 +3918,7 @@ inherited ProductionUnionTechJournalForm: TProductionUnionTechJournalForm
       end
       item
         Name = 'inisCuterCount'
-        Value = 'false'
+        Value = False
         DataType = ftBoolean
         ParamType = ptInput
         MultiSelectSeparator = ','
@@ -3944,7 +3976,7 @@ inherited ProductionUnionTechJournalForm: TProductionUnionTechJournalForm
       end
       item
         Name = 'inisCuterCount'
-        Value = 'true'
+        Value = True
         DataType = ftBoolean
         ParamType = ptInput
         MultiSelectSeparator = ','

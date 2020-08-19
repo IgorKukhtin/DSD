@@ -16,7 +16,7 @@ RETURNS TABLE (Id Integer, GoodsId_main Integer, GoodsGroupName TVarChar, GoodsN
                MinExpirationDate TDateTime,
                DiscountExternalID  Integer, DiscountExternalName  TVarChar,
                PartionDateKindId  Integer, PartionDateKindName  TVarChar,
-               DivisionPartiesId  Integer, DivisionPartiesName  TVarChar,
+               DivisionPartiesId  Integer, DivisionPartiesName  TVarChar, isBanFiscalSale Boolean,
                Color_ExpirationDate Integer,
                ConditionsKeepName TVarChar,
                AmountIncome TFloat, PriceSaleIncome TFloat,
@@ -34,7 +34,7 @@ RETURNS TABLE (Id Integer, GoodsId_main Integer, GoodsGroupName TVarChar, GoodsN
                NotSold boolean, NotSold60 boolean,
                DeferredSend TFloat,
                RemainsSUN TFloat,
-               GoodsDiscountID  Integer, GoodsDiscountName  TVarChar,
+               GoodsDiscountID  Integer, GoodsDiscountName  TVarChar, isGoodsForProject boolean,
                UKTZED TVarChar,
                GoodsPairSunId Integer
 
@@ -524,9 +524,10 @@ BEGIN
                                  FROM ObjectFloat AS ObjectFloat_NDSKind_NDS
                                  WHERE ObjectFloat_NDSKind_NDS.DescId = zc_ObjectFloat_NDSKind_NDS()
                                 )
-                 , tmpGoodsDiscount AS (SELECT Object_Goods_Retail.GoodsMainId              AS GoodsMainId
-                                             , Object_Object.Id                             AS GoodsDiscountId
-                                             , Object_Object.ValueData                      AS GoodsDiscountName
+                 , tmpGoodsDiscount AS (SELECT Object_Goods_Retail.GoodsMainId                           AS GoodsMainId
+                                             , Object_Object.Id                                          AS GoodsDiscountId
+                                             , Object_Object.ValueData                                   AS GoodsDiscountName
+                                             , COALESCE(ObjectBoolean_GoodsForProject.ValueData, False)  AS isGoodsForProject
                                           FROM Object AS Object_BarCode
                                               INNER JOIN ObjectLink AS ObjectLink_BarCode_Goods
                                                                     ON ObjectLink_BarCode_Goods.ObjectId = Object_BarCode.Id
@@ -538,6 +539,9 @@ BEGIN
                                                                   AND ObjectLink_BarCode_Object.DescId = zc_ObjectLink_BarCode_Object()
                                               LEFT JOIN Object AS Object_Object ON Object_Object.Id = ObjectLink_BarCode_Object.ChildObjectId
 
+                                              LEFT JOIN ObjectBoolean AS ObjectBoolean_GoodsForProject
+                                                                      ON ObjectBoolean_GoodsForProject.ObjectId = Object_Object.Id 
+                                                                     AND ObjectBoolean_GoodsForProject.DescId = zc_ObjectBoolean_DiscountExternal_GoodsForProject()
                                           WHERE Object_BarCode.DescId = zc_Object_BarCode()
                                             AND Object_BarCode.isErased = False)
                  , tmpGoodsUKTZED AS (SELECT Object_Goods_Juridical.GoodsMainId
@@ -749,6 +753,7 @@ BEGIN
             Object_PartionDateKind.Name                        AS PartionDateKindName,
             NULLIF (CashSessionSnapShot.DivisionPartiesId, 0)  AS DivisionPartiesId,
             Object_DivisionParties.ValueData                   AS DivisionPartiesName,
+            COALESCE (ObjectBoolean_BanFiscalSale.ValueData, False) AS isBanFiscalSale,
             CASE WHEN vbDividePartionDate = False
               THEN
                 CASE WHEN CashSessionSnapShot.MinExpirationDate < CURRENT_DATE + zc_Interval_ExpirationDate() THEN zc_Color_Red() ELSE zc_Color_Black() END
@@ -807,6 +812,7 @@ BEGIN
           , tmpRenainsSUN.Amount::TFloat                           AS RemainsSUN
           , tmpGoodsDiscount.GoodsDiscountId                       AS GoodsDiscountID
           , tmpGoodsDiscount.GoodsDiscountName                     AS GoodsDiscountName
+          , COALESCE(tmpGoodsDiscount.isGoodsForProject, FALSE)    AS isGoodsForProject
           , tmpGoodsUKTZED.UKTZED                                  AS UKTZED
           , Object_Goods_PairSun.ID                                AS GoodsPairSunId
 
@@ -891,6 +897,9 @@ BEGIN
 
            -- Разделение партий в кассе для продажи
            LEFT JOIN Object AS Object_DivisionParties ON Object_DivisionParties.Id = NULLIF (CashSessionSnapShot.DivisionPartiesId, 0)
+           LEFT JOIN ObjectBoolean AS ObjectBoolean_BanFiscalSale
+                                   ON ObjectBoolean_BanFiscalSale.ObjectId = Object_DivisionParties.Id
+                                  AND ObjectBoolean_BanFiscalSale.DescId = zc_ObjectBoolean_DivisionParties_BanFiscalSale()
 
            -- Без Продажи за последнии 100 дней
            LEFT JOIN tmpNotSold ON tmpNotSold.GoodsID = Goods.Id

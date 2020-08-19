@@ -137,6 +137,7 @@ BEGIN
             , Object_GoodsKind.ObjectCode           AS GoodsKindCode
             , Object_GoodsKind.ValueData            AS GoodsKindName
             , Object_Measure.ValueData              AS MeasureName
+            , Object_GoodsGroup.ValueData           AS GoodsGroupName
 
             , Object_GoodsKindComplete.Id           AS GoodsKindId_Complete
             , Object_GoodsKindComplete.ObjectCode   AS GoodsKindCode_Complete
@@ -154,6 +155,11 @@ BEGIN
              LEFT JOIN ObjectFloat AS ObjectFloat_CountReceipt
                                    ON ObjectFloat_CountReceipt.ObjectId = _tmpListMaster.GoodsId
                                   AND ObjectFloat_CountReceipt.DescId   = zc_ObjectFloat_Goods_CountReceipt()
+
+             LEFT JOIN ObjectLink AS ObjectLink_Goods_GoodsGroup
+                                  ON ObjectLink_Goods_GoodsGroup.ObjectId = _tmpListMaster.GoodsId
+                                 AND ObjectLink_Goods_GoodsGroup.DescId = zc_ObjectLink_Goods_GoodsGroup()
+             LEFT JOIN Object AS Object_GoodsGroup ON Object_GoodsGroup.Id = ObjectLink_Goods_GoodsGroup.ChildObjectId
 
              LEFT JOIN Object AS Object_Goods             ON Object_Goods.Id             = _tmpListMaster.GoodsId
              LEFT JOIN Object AS Object_GoodsKind         ON Object_GoodsKind.Id         = _tmpListMaster.GoodsKindId
@@ -291,6 +297,7 @@ BEGIN
             , SUM (_tmpRes_cur1.CuterCount * tmpData.AmountReceipt) AS AmountReceipt_sum
               -- Кол-во партий рецептуры для замеса
             , _tmpRes_cur1.CountReceipt_goods
+            , _tmpRes_cur1.GoodsGroupName
        FROM tmpData
             INNER JOIN _tmpRes_cur1  ON _tmpRes_cur1.MovementItemId = tmpData.ParentId
             INNER JOIN tmpGroupPrint ON tmpGroupPrint.GroupNum      = tmpData.GroupNumber
@@ -303,6 +310,7 @@ BEGIN
               , _tmpRes_cur1.GoodsId
               , _tmpRes_cur1.OperDate
               , _tmpRes_cur1.CountReceipt_goods
+              , _tmpRes_cur1.GoodsGroupName
       ;
 
     -- Результат - 1
@@ -313,6 +321,7 @@ BEGIN
          , tmp_Res.GoodsId
          , tmp_Res.GoodsCode
          , tmp_Res.GoodsName
+         , tmp_Res.GoodsGroupName
          , '' :: TVarChar AS GoodsKindName_Complete
          , '' :: TVarChar AS GoodsKind_group
 
@@ -348,6 +357,7 @@ BEGIN
                , tmpRes_cur1.GoodsId
                , tmpRes_cur1.GoodsCode
                , tmpRes_cur1.GoodsName
+               , tmpRes_cur1.GoodsGroupName
                , tmpRes_cur2.GoodsId        AS GoodsId_child
                , tmpRes_cur2.GoodsCode      AS GoodsCode_child
                , tmpRes_cur2.GoodsName      AS GoodsName_child
@@ -375,6 +385,7 @@ BEGIN
                      , _tmpRes_cur1.GoodsCode
                      , _tmpRes_cur1.GoodsName
                      , _tmpRes_cur1.CountReceipt_goods
+                     , _tmpRes_cur1.GoodsGroupName
                      , SUM (_tmpRes_cur1.Amount)     AS Amount
                      , SUM (_tmpRes_cur1.CuterCount) AS CuterCount
                 FROM _tmpRes_cur1
@@ -383,6 +394,7 @@ BEGIN
                        , _tmpRes_cur1.GoodsCode
                        , _tmpRes_cur1.GoodsName
                        , _tmpRes_cur1.CountReceipt_goods
+                       , _tmpRes_cur1.GoodsGroupName
                 HAVING SUM (_tmpRes_cur1.CuterCount) > 0
                ) AS tmpRes_cur1
                -- пр-во расход - строчная часть - уже собрана

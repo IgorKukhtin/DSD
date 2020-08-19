@@ -3,8 +3,9 @@
 DROP FUNCTION IF EXISTS gpInsertUpdate_MovementItem_Send (Integer, Integer, Integer, TFloat, TVarChar);
 DROP FUNCTION IF EXISTS gpInsertUpdate_MovementItem_Send (Integer, Integer, Integer, TFloat, TFloat, TVarChar);
 DROP FUNCTION IF EXISTS gpInsertUpdate_MovementItem_Send (Integer, Integer, Integer, TFloat, TFloat, TFloat, Integer, TVarChar);
---DROP FUNCTION IF EXISTS gpInsertUpdate_MovementItem_Send (Integer, Integer, Integer, TFloat, TFloat, TFloat, TFloat, TFloat, Integer, TVarChar);
+DROP FUNCTION IF EXISTS gpInsertUpdate_MovementItem_Send (Integer, Integer, Integer, TFloat, TFloat, TFloat, TFloat, TFloat, Integer, TVarChar);
 DROP FUNCTION IF EXISTS gpInsertUpdate_MovementItem_Send (Integer, Integer, Integer, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, Integer, TVarChar);
+DROP FUNCTION IF EXISTS gpInsertUpdate_MovementItem_Send (Integer, Integer, Integer, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, Integer, Integer, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpInsertUpdate_MovementItem_Send(
  INOUT ioId                  Integer   , -- Ключ объекта <Элемент документа>
@@ -21,6 +22,7 @@ CREATE OR REPLACE FUNCTION gpInsertUpdate_MovementItem_Send(
    OUT outAmountDiff         TFloat    , -- Загружаемое кол-во  минус  Факт кол-во точки-получателя
    OUT outAmountStorageDiff  TFloat    , -- Загружаемое кол-во  минус  Факт кол-во точки-отправителя
     IN inReasonDifferencesId Integer   , -- Причина разногласия
+    IN inCommentTRID         Integer   , -- Комментарий
     IN inSession             TVarChar    -- сессия пользователя
 )
 AS
@@ -238,6 +240,7 @@ BEGIN
                                             , inAmountManual       := inAmountManual
                                             , inAmountStorage      := inAmountStorage
                                             , inReasonDifferencesId:= inReasonDifferencesId
+                                            , inCommentTRID        := inCommentTRID
                                             , inUserId             := vbUserId
                                              );
 

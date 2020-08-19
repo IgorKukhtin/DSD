@@ -266,24 +266,56 @@ BEGIN
      ANALYSE _GoodsPriceAll;
 
      RETURN QUERY
-     WITH GoodsPriceAll AS (
-         SELECT
-              ROW_NUMBER() OVER (PARTITION BY _GoodsPriceAll.GoodsId ORDER BY _GoodsPriceAll.Price, _GoodsPriceAll.ContractId)::Integer AS Ord,
-              _GoodsPriceAll.GoodsId           AS GoodsId,
-              _GoodsPriceAll.JuridicalId       AS JuridicalId,
-              _GoodsPriceAll.ContractId        AS ContractId,
-              _GoodsPriceAll.AreaId            AS AreaId,
-              _GoodsPriceAll.NDS               AS NDS,
-              _GoodsPriceAll.JuridicalPrice    AS JuridicalPrice,
-              _GoodsPriceAll.MarginPercent     AS MarginPercent,
-              _GoodsPriceAll.ExpirationDate    AS ExpirationDate,
-              _GoodsPriceAll.MCSValue          AS MCSValue,
-              _GoodsPriceAll.Price             AS Price,
-              _GoodsPriceAll.isClose           AS isClose,
-              _GoodsPriceAll.isFirst           AS isFirst,
-              _GoodsPriceAll.isSecond          AS isSecond,
-              _GoodsPriceAll.isResolution_224  AS isResolution_224
-         FROM _GoodsPriceAll)
+     WITH GoodsPriceAll AS (SELECT
+                                  ROW_NUMBER() OVER (PARTITION BY _GoodsPriceAll.GoodsId ORDER BY _GoodsPriceAll.Price, _GoodsPriceAll.ContractId)::Integer AS Ord,
+                                  _GoodsPriceAll.GoodsId           AS GoodsId,
+                                  _GoodsPriceAll.JuridicalId       AS JuridicalId,
+                                  _GoodsPriceAll.ContractId        AS ContractId,
+                                  _GoodsPriceAll.AreaId            AS AreaId,
+                                  _GoodsPriceAll.NDS               AS NDS,
+                                  _GoodsPriceAll.JuridicalPrice    AS JuridicalPrice,
+                                  _GoodsPriceAll.MarginPercent     AS MarginPercent,
+                                  _GoodsPriceAll.ExpirationDate    AS ExpirationDate,
+                                  _GoodsPriceAll.MCSValue          AS MCSValue,
+                                  _GoodsPriceAll.Price             AS Price,
+                                  _GoodsPriceAll.isClose           AS isClose,
+                                  _GoodsPriceAll.isFirst           AS isFirst,
+                                  _GoodsPriceAll.isSecond          AS isSecond,
+                                  _GoodsPriceAll.isResolution_224  AS isResolution_224
+                            FROM _GoodsPriceAll)
+       , tmpGoodsDiscountTools AS (SELECT ObjectLink_DiscountExternal.ChildObjectId  AS DiscountExternalID
+                                   FROM Object AS Object_DiscountExternalTools
+                                         LEFT JOIN ObjectLink AS ObjectLink_DiscountExternal
+                                                              ON ObjectLink_DiscountExternal.ObjectId = Object_DiscountExternalTools.Id
+                                                             AND ObjectLink_DiscountExternal.DescId = zc_ObjectLink_DiscountExternalTools_DiscountExternal()
+                                         LEFT JOIN ObjectLink AS ObjectLink_Unit
+                                                              ON ObjectLink_Unit.ObjectId = Object_DiscountExternalTools.Id
+                                                             AND ObjectLink_Unit.DescId = zc_ObjectLink_DiscountExternalTools_Unit()
+                                    WHERE Object_DiscountExternalTools.DescId = zc_Object_DiscountExternalTools()
+                                      AND Object_DiscountExternalTools.isErased = FALSE
+                                      AND ObjectLink_Unit.ChildObjectId = vbUnitId)                            
+       , tmpGoodsDiscount AS (SELECT Object_Goods_Retail.Id              AS Id
+                                   , COALESCE(ObjectBoolean_GoodsForProject.ValueData, False)  AS isGoodsForProject
+                                FROM Object AS Object_BarCode
+                                    INNER JOIN ObjectLink AS ObjectLink_BarCode_Goods
+                                                          ON ObjectLink_BarCode_Goods.ObjectId = Object_BarCode.Id
+                                                         AND ObjectLink_BarCode_Goods.DescId = zc_ObjectLink_BarCode_Goods()
+                                    INNER JOIN Object_Goods_Retail AS Object_Goods_4 ON Object_Goods_4.Id = ObjectLink_BarCode_Goods.ChildObjectId
+                                    INNER JOIN Object_Goods_Retail AS Object_Goods_Retail ON Object_Goods_Retail.GoodsMainId = Object_Goods_4.GoodsMainId
+                                                                                         AND Object_Goods_Retail.RetailId = vbRetailId
+
+                                    LEFT JOIN ObjectLink AS ObjectLink_BarCode_Object
+                                                         ON ObjectLink_BarCode_Object.ObjectId = Object_BarCode.Id
+                                                        AND ObjectLink_BarCode_Object.DescId = zc_ObjectLink_BarCode_Object()
+
+                                    LEFT JOIN ObjectBoolean AS ObjectBoolean_GoodsForProject
+                                                            ON ObjectBoolean_GoodsForProject.ObjectId = ObjectLink_BarCode_Object.ChildObjectId 
+                                                           AND ObjectBoolean_GoodsForProject.DescId = zc_ObjectBoolean_DiscountExternal_GoodsForProject()
+                                    LEFT JOIN tmpGoodsDiscountTools ON tmpGoodsDiscountTools.DiscountExternalID = ObjectLink_BarCode_Object.ChildObjectId
+                                WHERE Object_BarCode.DescId = zc_Object_BarCode()
+                                  AND Object_BarCode.isErased = False
+                                  AND COALESCE(ObjectBoolean_GoodsForProject.ValueData, False) = TRUE
+                                  AND COALESCE(tmpGoodsDiscountTools.DiscountExternalID, 0) = 0)
 
      SELECT
               GoodsPriceAll.GoodsId             AS Id,
@@ -310,8 +342,10 @@ BEGIN
           LEFT JOIN Object AS Object_Juridical ON Object_Juridical.Id = GoodsPriceAll.JuridicalId
           LEFT JOIN Object AS Object_Contract ON Object_Contract.Id = GoodsPriceAll.ContractId
           LEFT JOIN Object AS Object_Area ON Object_Area.Id = GoodsPriceAll.AreaId
+          LEFT JOIN tmpGoodsDiscount ON tmpGoodsDiscount.ID =  GoodsPriceAll.GoodsId
 
-     WHERE Ord = 1;
+     WHERE Ord = 1
+       AND COALESCE(tmpGoodsDiscount.ID, 0) = 0;
 
 END;
 $BODY$
@@ -329,4 +363,5 @@ $BODY$
  11.09.18        *
 */
 
--- тест SELECT * FROM gpSelect_CashGoods('3');
+-- тест 
+SELECT * FROM gpSelect_CashGoods('3');

@@ -35,6 +35,7 @@ type
     FStopped: Boolean;
     FWriteCommands: Boolean;
     FStartReplicaAttempt: Integer; // номер попытки начать репликацию
+    FClient_Id: Int64;// идентфикатор базы данных slave
     FCommandData: TCommandData;
     FFailCmds: TCommandData;
     FReplicaFinished: TReplicaFinished;
@@ -52,6 +53,7 @@ type
     procedure LogMsg(const AMsg: string); overload;
     procedure LogMsg(const AMsg: string; const aUID: Cardinal); overload;
     procedure SaveValueInDB(const AValue: Integer; const AFieldName: string; const ASaveInMaster: Boolean = True);
+    procedure SaveErrorInMaster(const AStartId, ALastId: Integer; const AClientId: Int64; const AErrDescription: string);
 
   strict private
     procedure SetStartId(const AValue: Integer);
@@ -83,7 +85,6 @@ type
     property OnNewSession: TOnNewSession read FOnNewSession write FOnNewSession;
     property OnEndSession: TNotifyEvent read FOnEndSession write FOnEndSession;
     property OnNeedRestart: TNotifyEvent read FOnNeedRestart write FOnNeedRestart;
-//    property StartId: Integer read FStartId write SetStartId;
     property SelectRange: Integer read FSelectRange write FSelectRange;
     property LastId: Integer read GetLastId write SetLastId;
     property ReplicaFinished: TReplicaFinished read FReplicaFinished;
@@ -254,6 +255,9 @@ var
   masterResult, slaveResult: TApplyScriptResult;
 begin
   Result := asNoAction;
+  masterResult := asError;
+  slaveResult  := asError;
+
 
   if (AScriptsContent = nil) or (AScriptNames = nil) or (AScriptsContent.Count = 0) or (AScriptNames.Count = 0) then Exit;
 
@@ -376,7 +380,6 @@ begin
     qrySelectReplicaCmd.FetchAll;
     qrySelectReplicaCmd.First;
     FStartId := qrySelectReplicaCmd.FieldByName('Id').AsInteger; // откорректируем значение StartId в соответствии с реальными данными
-//    TSettings.ReplicaStart := StartId;
     LogMsg(Format(cElapsedFetch, [IntToStr(qrySelectReplicaCmd.RecordCount), Elapsed(crdStartFetch)]), crdStartFetch);
 
     // строим свой массив данных, который позволит выбирать записи пакетами с учетом границ transaction_id
@@ -548,6 +551,10 @@ begin
             // Id и SQL невыполненных  команд сохраняем в FFailCmds
             FFailCmds.Add(FCommandData.Data.Id, FCommandData.Data.TransId, FCommandData.Data.SQL);
             Inc(iFailCount);
+
+            // если нужно сохранять ошибки шага №2 в БД
+            if TSettings.SaveErrStep2InDB then
+              SaveErrorInMaster(FCommandData.Data.Id, 0, FClient_Id, E.Message);
           end;
         end;
 
@@ -629,6 +636,9 @@ begin
           on E: Exception do
           begin
             conSlave.DbcConnection.Rollback;
+
+            // ошибки шага №3 нужно сохранять в БД
+            SaveErrorInMaster(FFailCmds.Data.Id, 0, FClient_Id, E.Message);
 
             // команды, которые так и не были выполнены, пишем в лог
             if FWriteCommands then
@@ -785,6 +795,10 @@ begin
       begin
         conSlave.DbcConnection.Rollback;
 
+        // если нужно сохранять ошибки шага №1 в БД
+        if TSettings.SaveErrStep1InDB then
+          SaveErrorInMaster(iStartId, iMaxId, FClient_Id, E.Message);
+
         // запись сбойного пакета в файл
         if FWriteCommands then
         begin
@@ -822,6 +836,11 @@ var
   iPrevStartId: Integer;
 begin
   iPrevStartId := -1;
+
+  // Идентификатор базы данных Slave. Это значение хранится в единственном числе
+  // в slave._replica.Settings в полях name, value как пара 'client_id = 1234565855222447722'.
+  // В Master содержится инфа о всех slave-ах в master._replica.Clients.client_id
+  FClient_Id := GetSlaveValues.ClientId;
 
   // MaxID - это ф-ия, которая возвращает 'select Max(Id) from _replica.table_update_data'
   while (FStartId > iPrevStartId) and (FStartId <= MaxID) and not FStopped do
@@ -910,6 +929,7 @@ begin
         if Locate('Name', 'Client_Id', [loCaseInsensitive]) then
           if not FieldByName('Value').IsNull then
             Result.ClientId := StrToInt64Def(FieldByName('Value').AsString, 0);
+        Close;
       end;
   except
     on E: Exception do
@@ -1350,6 +1370,33 @@ end;
 procedure TdmData.SetLastId(const AValue: Integer);
 begin
   SaveValueInDB(AValue, 'Last_Id');
+end;
+
+procedure TdmData.SaveErrorInMaster(const AStartId, ALastId: Integer; const AClientId: Int64; const AErrDescription: string);
+const
+  cInsert    = 'SELECT _replica.gpInsert_Errors (%d, %d, %d, %s)';
+  cExceptMsg = 'Ошибка сохранения в БД информации об ошибке выполнения команды с StartId = %d, Client_Id = %d ' + cCrLf + cExceptionMsg;
+var
+  sInsert: string;
+  tmpStmt: IZPreparedStatement;
+begin
+  if IsMasterConnected then
+  try
+    with conMaster.DbcConnection do
+    begin
+      SetAutoCommit(False);
+      sInsert := Format(cInsert, [AStartId, ALastId, AClientId, QuotedStr(AErrDescription)]);
+      tmpStmt := PrepareStatement(sInsert);
+      tmpStmt.ExecuteUpdatePrepared;
+      Commit;
+    end;
+  except
+    on E: Exception do
+    begin
+      conMaster.DbcConnection.Rollback;
+      LogMsg(Format(cExceptMsg, [AStartId, AClientId, E.ClassName, E.Message]));
+    end;
+  end;
 end;
 
 procedure TdmData.SaveValueInDB(const AValue: Integer; const AFieldName: string; const ASaveInMaster: Boolean);

@@ -12,19 +12,19 @@ inherited Report_Movement_ProfitLossServiceForm: TReport_Movement_ProfitLossServ
     Width = 1180
     Height = 255
     TabOrder = 3
-    ExplicitTop = 83
+    ExplicitTop = 86
     ExplicitWidth = 1180
-    ExplicitHeight = 258
+    ExplicitHeight = 255
     ClientRectBottom = 255
     ClientRectRight = 1180
     inherited tsMain: TcxTabSheet
       ExplicitWidth = 1180
-      ExplicitHeight = 258
+      ExplicitHeight = 255
       inherited cxGrid: TcxGrid
         Width = 1180
         Height = 255
         ExplicitWidth = 1180
-        ExplicitHeight = 258
+        ExplicitHeight = 255
         inherited cxGridDBTableView: TcxGridDBTableView
           DataController.Summary.DefaultGroupSummaryItems = <
             item
@@ -857,6 +857,14 @@ inherited Report_Movement_ProfitLossServiceForm: TReport_Movement_ProfitLossServ
         Name = 'inJuridicalId'
         Value = Null
         Component = JuridicalGuides
+        ComponentItem = 'Key'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inBranchId'
+        Value = Null
+        Component = GuidesBranch
         ComponentItem = 'Key'
         ParamType = ptInput
         MultiSelectSeparator = ','

@@ -1557,6 +1557,8 @@ begin
                   dsdSave.Params.AddParam('inNDSKindId', ftInteger, ptInput, Null);
                   // ***20.06.20
                   dsdSave.Params.AddParam('inDiscountExternalID', ftInteger, ptInput, Null);
+                  // ***16.08.20
+                  dsdSave.Params.AddParam('inDivisionPartiesID', ftInteger, ptInput, Null);
                   // ***10.08.16
                   dsdSave.Params.AddParam('inList_UID', ftString, ptInput, Null);
                   //

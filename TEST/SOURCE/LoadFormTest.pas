@@ -1947,19 +1947,22 @@ end;
 
 procedure TLoadFormTest.LoadReportFormTest;
 begin
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_BalanceNoForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TReport_BalanceNoForm');
+  exit;
   {
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_OrderInternalBasis_OlapForm'));
   TdsdFormStorageFactory.GetStorage.Load('TReport_OrderInternalBasis_OlapForm');
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_OrderInternalBasis_OlapDialogForm'));
   TdsdFormStorageFactory.GetStorage.Load('TReport_OrderInternalBasis_OlapDialogForm');
   exit;
-
+   }
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_Movement_ProfitLossServiceForm'));
   TdsdFormStorageFactory.GetStorage.Load('TReport_Movement_ProfitLossServiceForm');
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_Movement_ProfitLossServiceDialogForm'));
   TdsdFormStorageFactory.GetStorage.Load('TReport_Movement_ProfitLossServiceDialogForm');
   exit;
-
+  {
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_ReceiptAnalyzeForm'));
   TdsdFormStorageFactory.GetStorage.Load('TReport_ReceiptAnalyzeForm');
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_ReceiptAnalyzeDialogForm'));
@@ -2376,12 +2379,12 @@ begin
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_DefrosterDialogForm'));
   TdsdFormStorageFactory.GetStorage.Load('TReport_DefrosterDialogForm');
   exit;
-
+   }
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_GoodsMI_PackageForm'));
   TdsdFormStorageFactory.GetStorage.Load('TReport_GoodsMI_PackageForm');
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_GoodsMI_PackageDialogForm'));
   TdsdFormStorageFactory.GetStorage.Load('TReport_GoodsMI_PackageDialogForm');
-
+  {
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_PersonalCompleteDialogForm'));
   TdsdFormStorageFactory.GetStorage.Load('TReport_PersonalCompleteDialogForm');
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_PersonalCompleteForm'));

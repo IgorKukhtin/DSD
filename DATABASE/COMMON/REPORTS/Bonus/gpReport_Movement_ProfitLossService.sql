@@ -27,7 +27,8 @@ RETURNS TABLE (OperDate_Movement TDateTime, InvNumber_Movement TVarChar, DescNam
              , JuridicalId Integer, JuridicalName TVarChar
              , PaidKindId Integer, PaidKindName TVarChar
              , ConditionKindId Integer, ConditionKindName TVarChar
-             , BranchIdId Integer, BranchIdName TVarChar
+             , BonusKindId Integer, BonusKindName TVarChar
+             , BranchId Integer, BranchName TVarChar
              , Value TFloat
              , Sum_CheckBonus TFloat
              , Sum_CheckBonusFact TFloat
@@ -36,13 +37,13 @@ RETURNS TABLE (OperDate_Movement TDateTime, InvNumber_Movement TVarChar, DescNam
              , Sum_SaleFact TFloat
 
              , Comment   TVarChar
-            , PartnerId Integer
-            , PartnerName TVarChar
+             , PartnerId Integer
+             , PartnerName TVarChar
             
-            , GoodsId Integer
-            , GoodsName TVarChar
-            , GoodsKindId Integer
-            , GoodsKindName TVarChar
+             , GoodsId Integer
+             , GoodsName TVarChar
+             , GoodsKindId Integer
+             , GoodsKindName TVarChar
            
             )  
 AS
@@ -484,6 +485,7 @@ BEGIN
                                       , MILinkObject_PaidKind.ObjectId                 AS PaidKindId
                                       , MILinkObject_ContractConditionKind.ObjectId    AS ContractConditionKindId
                                       , MILinkObject_BonusKind.ObjectId                AS BonusKindId
+                                      , MILinkObject_Branch.ObjectId                   AS BranchId
                                       , MIFloat_BonusValue.ValueData                   AS Value
           
                                       , 0 :: TFloat                                    AS Sum_CheckBonus
@@ -538,6 +540,10 @@ BEGIN
                                                                        ON MILinkObject_BonusKind.MovementItemId = MovementItem.Id
                                                                       AND MILinkObject_BonusKind.DescId = zc_MILinkObject_BonusKind()
           
+                                      LEFT JOIN MovementItemLinkObject AS MILinkObject_Branch
+                                                                       ON MILinkObject_Branch.MovementItemId = MovementItem.Id
+                                                                      AND MILinkObject_Branch.DescId = zc_MILinkObject_Branch()
+
                                       LEFT JOIN tmpContract_all AS View_Contract_InvNumber_find ON View_Contract_InvNumber_find.ContractId = MILinkObject_Contract.ObjectId
                                       LEFT JOIN tmpContract_all AS View_Contract_InvNumber_master ON View_Contract_InvNumber_master.ContractId = MILinkObject_ContractMaster.ObjectId
                                       LEFT JOIN tmpContract_all AS View_Contract_InvNumber_child ON View_Contract_InvNumber_child.ContractId = MILinkObject_ContractChild.ObjectId
@@ -581,6 +587,7 @@ BEGIN
                             , tmpMovement.PaidKindId  AS PaidKindId
                             , tmpContract.ContractConditionKindId
                             , tmpContract.BonusKindId
+                            , tmpProfitLossService.BranchId
                             , tmpContract.Value
 
                             , CAST (CASE WHEN tmpContract.ContractConditionKindID = zc_Enum_ContractConditionKind_BonusPercentSale() THEN tmpMovement.Sum_Sale 
@@ -654,6 +661,9 @@ BEGIN
             , Object_BonusKind.Id                           AS BonusKindId
             , Object_BonusKind.ValueData                    AS BonusKindName
 
+            , Object_Branch.Id                              AS BranchId
+            , Object_Branch.ValueData                       AS BranchName
+
             , CAST (tmpAll.Value AS TFloat)                 AS Value
 
             , CAST (SUM (tmpAll.Sum_CheckBonus) AS TFloat)     AS Sum_CheckBonus
@@ -676,6 +686,7 @@ BEGIN
             LEFT JOIN Object AS Object_PaidKind ON Object_PaidKind.Id = tmpAll.PaidKindId
             LEFT JOIN Object AS Object_BonusKind ON Object_BonusKind.Id = tmpAll.BonusKindId
             LEFT JOIN Object AS Object_ContractConditionKind ON Object_ContractConditionKind.Id = tmpAll.ContractConditionKindId
+            LEFT JOIN Object AS Object_BranchId ON Object_BranchId.Id = tmpAll.BranchId
             
             LEFT JOIN Object AS Object_Partner ON Object_Partner.Id = tmpAll.PartnerId 
             LEFT JOIN Object AS Object_Goods ON Object_Goods.Id = tmpAll.GoodsId 

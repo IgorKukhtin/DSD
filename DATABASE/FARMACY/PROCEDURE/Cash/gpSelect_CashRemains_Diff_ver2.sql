@@ -30,7 +30,8 @@ RETURNS TABLE (
     GoodsDiscountID  Integer, GoodsDiscountName  TVarChar,
     UKTZED TVarChar,
     GoodsPairSunId Integer,
-    DivisionPartiesId  Integer,  DivisionPartiesName  TVarChar
+    DivisionPartiesId  Integer,  DivisionPartiesName  TVarChar, isBanFiscalSale Boolean,
+    isGoodsForProject boolean
 )
 AS
 $BODY$
@@ -451,6 +452,7 @@ WITH tmp as (SELECT tmp.*, ROW_NUMBER() OVER (PARTITION BY TextValue_calc ORDER 
                  , tmpGoodsDiscount AS (SELECT Object_Goods_Retail.GoodsMainId              AS GoodsMainId
                                              , Object_Object.Id                             AS GoodsDiscountId
                                              , Object_Object.ValueData                      AS GoodsDiscountName
+                                             , COALESCE(ObjectBoolean_GoodsForProject.ValueData, False)  AS isGoodsForProject
                                           FROM Object AS Object_BarCode
                                               INNER JOIN ObjectLink AS ObjectLink_BarCode_Goods
                                                                     ON ObjectLink_BarCode_Goods.ObjectId = Object_BarCode.Id
@@ -462,6 +464,9 @@ WITH tmp as (SELECT tmp.*, ROW_NUMBER() OVER (PARTITION BY TextValue_calc ORDER 
                                                                   AND ObjectLink_BarCode_Object.DescId = zc_ObjectLink_BarCode_Object()
                                               LEFT JOIN Object AS Object_Object ON Object_Object.Id = ObjectLink_BarCode_Object.ChildObjectId
 
+                                              LEFT JOIN ObjectBoolean AS ObjectBoolean_GoodsForProject
+                                                                      ON ObjectBoolean_GoodsForProject.ObjectId = Object_Object.Id 
+                                                                     AND ObjectBoolean_GoodsForProject.DescId = zc_ObjectBoolean_DiscountExternal_GoodsForProject()
                                           WHERE Object_BarCode.DescId = zc_Object_BarCode()
                                             AND Object_BarCode.isErased = False)
                  , tmpGoodsUKTZED AS (SELECT Object_Goods_Juridical.GoodsMainId
@@ -517,7 +522,9 @@ WITH tmp as (SELECT tmp.*, ROW_NUMBER() OVER (PARTITION BY TextValue_calc ORDER 
             tmpGoodsUKTZED.UKTZED                                             AS UKTZED,
             Object_Goods_PairSun.ID                                           AS GoodsPairSunId,
             NULLIF (_DIFF.DivisionPartiesId, 0),
-            Object_DivisionParties.ValueData                                  AS DivisionPartiesName
+            Object_DivisionParties.ValueData                                  AS DivisionPartiesName,
+            COALESCE (ObjectBoolean_BanFiscalSale.ValueData, False)           AS isBanFiscalSale,
+            COALESCE(tmpGoodsDiscount.isGoodsForProject, FALSE)               AS isGoodsForProject
         FROM _DIFF
 
             -- Тип срок/не срок
@@ -528,7 +535,10 @@ WITH tmp as (SELECT tmp.*, ROW_NUMBER() OVER (PARTITION BY TextValue_calc ORDER 
 
             -- Разделение партий в кассе для продажи
             LEFT JOIN Object AS Object_DivisionParties ON Object_DivisionParties.Id = NULLIF (_DIFF.DivisionPartiesId, 0)
-
+            LEFT JOIN ObjectBoolean AS ObjectBoolean_BanFiscalSale
+                                    ON ObjectBoolean_BanFiscalSale.ObjectId = Object_DivisionParties.Id
+                                    AND ObjectBoolean_BanFiscalSale.DescId = zc_ObjectBoolean_DivisionParties_BanFiscalSale()
+ 
             -- получается GoodsMainId
             LEFT JOIN Object_Goods_Retail AS Object_Goods_Retail ON Object_Goods_Retail.Id = _DIFF.ObjectId
             LEFT JOIN Object_Goods_Main AS Object_Goods_Main ON Object_Goods_Main.Id = Object_Goods_Retail.GoodsMainId

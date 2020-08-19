@@ -256,27 +256,30 @@ begin
      //
      with spExportSettings_Email do
      begin
-       ParamByName('inObjectId').Value         :=inImportSettingsId;
-       ParamByName('inContactPersonId').Value  :=inContactPersonId;
-       ParamByName('inByDate').Value    :=inByDate;
-       ParamByName('inByMail').Value    :=inByMail;
-       ParamByName('inByFileName').Value:=inByFileName;
-       //получили кому надо отправить Email об ошибке
-       Execute;
-       DataSet.First;
-       while not DataSet.EOF do begin
-          {FormParams.ParamByName('Host').Value       :=DataSet.FieldByName('Host').AsString;
-          FormParams.ParamByName('Port').Value       :=DataSet.FieldByName('Port').AsInteger;
-          FormParams.ParamByName('UserName').Value   :=DataSet.FieldByName('UserName').AsString;
-          FormParams.ParamByName('Password').Value   :=DataSet.FieldByName('PasswordValue').AsString;
-          FormParams.ParamByName('AddressFrom').Value:=DataSet.FieldByName('MailFrom').AsString;
-          FormParams.ParamByName('AddressTo').Value  :=DataSet.FieldByName('MailTo').AsString;
-          FormParams.ParamByName('Subject').Value    :=DataSet.FieldByName('Subject').AsString;
-          FormParams.ParamByName('Body').Value       :=DataSet.FieldByName('Body').AsString;}
-          //
-          actSendEmail.Execute;
-          //перешли к следующему
-          DataSet.Next;
+       try
+         ParamByName('inObjectId').Value         :=inImportSettingsId;
+         ParamByName('inContactPersonId').Value  :=inContactPersonId;
+         ParamByName('inByDate').Value    :=inByDate;
+         ParamByName('inByMail').Value    :=inByMail;
+         ParamByName('inByFileName').Value:=inByFileName;
+         //получили кому надо отправить Email об ошибке
+         Execute;
+         DataSet.First;
+         while not DataSet.EOF do begin
+            {FormParams.ParamByName('Host').Value       :=DataSet.FieldByName('Host').AsString;
+            FormParams.ParamByName('Port').Value       :=DataSet.FieldByName('Port').AsInteger;
+            FormParams.ParamByName('UserName').Value   :=DataSet.FieldByName('UserName').AsString;
+            FormParams.ParamByName('Password').Value   :=DataSet.FieldByName('PasswordValue').AsString;
+            FormParams.ParamByName('AddressFrom').Value:=DataSet.FieldByName('MailFrom').AsString;
+            FormParams.ParamByName('AddressTo').Value  :=DataSet.FieldByName('MailTo').AsString;
+            FormParams.ParamByName('Subject').Value    :=DataSet.FieldByName('Subject').AsString;
+            FormParams.ParamByName('Body').Value       :=DataSet.FieldByName('Body').AsString;}
+            //
+            actSendEmail.Execute;
+            //перешли к следующему
+            DataSet.Next;
+         end;
+       except on E: Exception do AddToLog(E.Message);
        end;
      end;
 end;
@@ -1208,11 +1211,15 @@ begin
            try
               if DataSet.FieldByName('isMoved').AsBoolean = FALSE
               then actMovePriceList.Execute;
-           except fError_SendEmail(0 //Dataset.FieldByName('Id').AsInteger
-                                 , 0 // Dataset.FieldByName('ContactPersonId').AsInteger
-                                 , NOW
-                                 , Dataset.FieldByName('JuridicalName').AsString
-                                 , '-1');
+           except on E: Exception do
+             begin
+               AddToLog(E.Message);
+               fError_SendEmail(0 //Dataset.FieldByName('Id').AsInteger
+                              , 0 // Dataset.FieldByName('ContactPersonId').AsInteger
+                              , NOW
+                              , Dataset.FieldByName('JuridicalName').AsString
+                              , '-1');
+             end;
            end;
            //
            DataSet.Next;

@@ -237,6 +237,7 @@ BEGIN
                                                   , inAmountManual         := 0
                                                   , inAmountStorage        := 0
                                                   , inReasonDifferencesId  := 0
+                                                  , inCommentTRID          := 0
                                                   , inUserId               := vbUserId
                                                    ) AS MovementItemId
            FROM _tmpResult_Partion_a AS _tmpResult_Partion
@@ -257,6 +258,7 @@ BEGIN
                                                   , inAmountManual         := 0
                                                   , inAmountStorage        := 0
                                                   , inReasonDifferencesId  := 0
+                                                  , inCommentTRID          := 0
                                                   , inUserId               := vbUserId
                                                    ) AS MovementItemId
            FROM _tmpResult_Partion_a AS _tmpResult_Partion
