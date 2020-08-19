@@ -228,7 +228,8 @@ BEGIN
              END IF;
            END IF;
            
-           IF vbisSUN = TRUE --AND vbInsertDate >= '10.08.2020'
+           IF vbisSUN = TRUE AND vbInsertDate >= '25.08.2020' AND 
+              NOT EXISTS (SELECT 1 FROM ObjectLink_UserRole_View  WHERE UserId = vbUserId AND RoleId = zc_Enum_Role_Admin())
            THEN
              IF EXISTS(WITH tmpProtocolAll AS (SELECT  MovementItem.Id
                                                      , SUBSTRING(MovementItemProtocol.ProtocolData, POSITION('Значение' IN MovementItemProtocol.ProtocolData) + 24, 50) AS ProtocolData

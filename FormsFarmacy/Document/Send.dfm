@@ -518,13 +518,13 @@ inherited SendForm: TSendForm
             Options.Editing = False
             Width = 68
           end
-          object ButtonEdit: TcxGridDBColumn
+          object CommentSendName: TcxGridDBColumn
             Caption = #1055#1088#1080#1095#1080#1085#1072' '#1091#1084#1077#1085#1100#1096#1077#1085#1080#1102' '#1082#1086#1083#1080#1095#1077#1089#1090#1074#1072
-            DataBinding.FieldName = 'CommentTRName'
+            DataBinding.FieldName = 'CommentSendName'
             PropertiesClassName = 'TcxButtonEditProperties'
             Properties.Buttons = <
               item
-                Action = actChoiceCommentTR
+                Action = actChoiceCommentSend
                 Default = True
                 Kind = bkEllipsis
               end>
@@ -1663,13 +1663,13 @@ inherited SendForm: TSendForm
         end>
       isShowModal = True
     end
-    object actChoiceCommentTR: TOpenChoiceForm
+    object actChoiceCommentSend: TOpenChoiceForm
       Category = 'DSDLib'
       MoveParams = <>
       PostDataSetBeforeExecute = False
-      Caption = 'ChoiceCommentTR'
-      FormName = 'TCommentTRSendForm'
-      FormNameParam.Value = 'TCommentTRSendForm'
+      Caption = 'ChoiceCommentSend'
+      FormName = 'TCommentSendForm'
+      FormNameParam.Value = 'TCommentSendForm'
       FormNameParam.DataType = ftString
       FormNameParam.MultiSelectSeparator = ','
       GuiParams = <
@@ -1677,14 +1677,14 @@ inherited SendForm: TSendForm
           Name = 'Key'
           Value = Null
           Component = MasterCDS
-          ComponentItem = 'CommentTRId'
+          ComponentItem = 'CommentSendId'
           MultiSelectSeparator = ','
         end
         item
           Name = 'TextValue'
           Value = Null
           Component = MasterCDS
-          ComponentItem = 'CommentTRName'
+          ComponentItem = 'CommentSendName'
           DataType = ftString
           MultiSelectSeparator = ','
         end>
