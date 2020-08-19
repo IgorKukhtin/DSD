@@ -1,8 +1,8 @@
--- Function: lpComplete_Movement_BankAccount (Integer, Boolean)
+-- Function: lpComplete_Movement_BankAccount22 (Integer, Boolean)
 
-DROP FUNCTION IF EXISTS lpComplete_Movement_BankAccount (Integer, Integer);
+DROP FUNCTION IF EXISTS lpComplete_Movement_BankAccount22 (Integer, Integer);
 
-CREATE OR REPLACE FUNCTION lpComplete_Movement_BankAccount(
+CREATE OR REPLACE FUNCTION lpComplete_Movement_BankAccount22(
     IN inMovementId        Integer  , -- ключ Документа
     IN inUserId            Integer    -- Пользователь
 )
@@ -18,7 +18,7 @@ BEGIN
                                                AND Object.DescId = zc_Object_PersonalServiceList())
      THEN
          -- формирование данных <Расчетный счет, выплата по ведомости>
-         PERFORM lpComplete_Movement_BankAccount_Recalc (inMovementId := inMovementId
+         PERFORM lpComplete_Movement_BankAccount22_Recalc (inMovementId := inMovementId
                                                        , inUserId     := inUserId);
      END IF;
 
@@ -178,7 +178,7 @@ BEGIN
                                                      WHERE _tmpItem.InfoMoneyGroupId = zc_Enum_InfoMoneyGroup_60000()) -- Заработная плата
                                                   , inUserId :: TVarChar) AS tmp
                          )
-     INSERT INTO _tmpItem (MovementDescId, OperDate, ObjectId, ObjectDescId, OperSumm, OperSumm_Currency, OperSumm_Diff
+     INSERT INTO _tmpItem (MovementDescId, OperDate, ObjectId, ObjectDescId, OperSumm, OperSumm_Currency, OperSumm_Diff, OperSumm_Asset, OperSumm_Diff_Asset
                          , MovementItemId, ContainerId, ContainerId_Currency, ContainerId_Diff, ProfitLossId_Diff
                          , AccountGroupId, AccountDirectionId, AccountId
                          , ProfitLossGroupId, ProfitLossDirectionId
@@ -188,6 +188,7 @@ BEGIN
                          , CurrencyId
                          , IsActive, IsMaster
                           )
+        -- 1. в балансе
         SELECT _tmpItem.MovementDescId
              , _tmpItem.OperDate
              , CASE -- сразу в ОПиУ
@@ -195,11 +196,19 @@ BEGIN
                      AND _tmpItem.InfoMoneyDestinationId = zc_Enum_InfoMoneyDestination_30500() -- Прочие доходы
                          THEN 0
 
+                    -- сразу в ОПиУ - Инвестиции
+                    WHEN _tmpItem.OperDate >= zc_DateStart_Asset() AND _tmpItem.InfoMoneyGroupId = zc_Enum_InfoMoneyGroup_70000()
+                         THEN 0
+
                     ELSE COALESCE (MI_Child.ObjectId, COALESCE (tmpPersonal.PersonalId, COALESCE (ObjectLink_Founder_InfoMoney.ObjectId, COALESCE (MILinkObject_MoneyPlace.ObjectId, 0))))
                END AS ObjectId
              , CASE -- сразу в ОПиУ
                     WHEN _tmpItem.CurrencyId             <> zc_Enum_Currency_Basis()
                      AND _tmpItem.InfoMoneyDestinationId = zc_Enum_InfoMoneyDestination_30500() -- Прочие доходы
+                         THEN 0
+
+                    -- сразу в ОПиУ - Инвестиции
+                    WHEN _tmpItem.OperDate >= zc_DateStart_Asset() AND _tmpItem.InfoMoneyGroupId = zc_Enum_InfoMoneyGroup_70000()
                          THEN 0
 
                     ELSE COALESCE (Object.DescId, 0)
@@ -235,6 +244,10 @@ BEGIN
                      AND _tmpItem.InfoMoneyDestinationId = zc_Enum_InfoMoneyDestination_30500() -- Прочие доходы
                          THEN 0
 
+                    -- Инвестиции - забаланс
+                    WHEN _tmpItem.OperDate >= zc_DateStart_Asset() AND _tmpItem.InfoMoneyGroupId = zc_Enum_InfoMoneyGroup_70000()
+                         THEN 0
+
                     WHEN --_tmpItem.CurrencyId = zc_Enum_Currency_Basis()
                          _tmpItem.isActive = TRUE
                      AND _tmpItem.InfoMoneyDestinationId = zc_Enum_InfoMoneyDestination_41000() -- Покупка/продажа валюты
@@ -252,7 +265,13 @@ BEGIN
                     ELSE -1 * _tmpItem.OperSumm + 1 * /*CASE WHEN _tmpItem.IsActive = TRUE THEN -1 ELSE 1 END*/ CAST (CASE WHEN MovementFloat_ParPartnerValue.ValueData <> 0 THEN _tmpItem.OperSumm_Currency * MovementFloat_CurrencyPartnerValue.ValueData / MovementFloat_ParPartnerValue.ValueData ELSE 0 END AS NUMERIC (16, 2))
                END AS OperSumm_Diff
 
+
              , COALESCE (MI_Child.Id, _tmpItem.MovementItemId) AS MovementItemId
+
+               -- Asset
+             , 0 AS OperSumm_Asset
+               -- Diff_Asset
+             , 0 AS OperSumm_Diff_Asset
 
              , 0 AS ContainerId                                               -- сформируем позже
              , 0 AS ContainerId_Currency                                      -- сформируем позже
@@ -395,8 +414,223 @@ BEGIN
              LEFT JOIN ObjectLink AS ObjectLink_Unit_Branch ON ObjectLink_Unit_Branch.ObjectId = COALESCE (MILinkObject_Unit.ObjectId, tmpPersonal.UnitId)
                                                            AND ObjectLink_Unit_Branch.DescId = zc_ObjectLink_Unit_Branch()
              LEFT JOIN lfSelect_Object_Unit_byProfitLossDirection() AS lfObject_Unit_byProfitLossDirection ON lfObject_Unit_byProfitLossDirection.UnitId = COALESCE (MILinkObject_Unit.ObjectId, tmpPersonal.UnitId)
-                                                                                                          AND Object.Id IS NULL -- !!!нужен только для затрат!!!
+                                                                                                          AND (Object.Id IS NULL -- !!!нужен только для затрат!!!
+                                                                                                            OR (_tmpItem.OperDate >= zc_DateStart_Asset() AND _tmpItem.InfoMoneyGroupId = zc_Enum_InfoMoneyGroup_70000())
+                                                                                                              )
+       UNION ALL 
+
+        -- 2. забаланс
+        SELECT _tmpItem.MovementDescId
+             , _tmpItem.OperDate
+             , CASE -- сразу в ОПиУ
+                    WHEN _tmpItem.CurrencyId             <> zc_Enum_Currency_Basis()
+                     AND _tmpItem.InfoMoneyDestinationId = zc_Enum_InfoMoneyDestination_30500() -- Прочие доходы
+                         THEN 0
+
+                    ELSE COALESCE (MI_Child.ObjectId, COALESCE (tmpPersonal.PersonalId, COALESCE (ObjectLink_Founder_InfoMoney.ObjectId, COALESCE (MILinkObject_MoneyPlace.ObjectId, 0))))
+               END AS ObjectId
+             , CASE -- сразу в ОПиУ
+                    WHEN _tmpItem.CurrencyId             <> zc_Enum_Currency_Basis()
+                     AND _tmpItem.InfoMoneyDestinationId = zc_Enum_InfoMoneyDestination_30500() -- Прочие доходы
+                         THEN 0
+
+                    ELSE COALESCE (Object.DescId, 0)
+               END AS ObjectDescId
+
+             , 0 AS OperSumm
+             , 0 AS OperSumm_Currency
+             , 0 AS OperSumm_Diff
+
+             , COALESCE (MI_Child.Id, _tmpItem.MovementItemId) AS MovementItemId
+
+               -- Asset
+             , CASE WHEN -- _tmpItem.CurrencyId = zc_Enum_Currency_Basis()
+                         _tmpItem.isActive = TRUE
+                     AND _tmpItem.InfoMoneyDestinationId = zc_Enum_InfoMoneyDestination_41000() -- Покупка/продажа валюты
+                         THEN -1 * COALESCE (MovementFloat_Amount.ValueData, 0)
+
+                    /*08.10.2019
+                    WHEN _tmpItem.CurrencyId <> zc_Enum_Currency_Basis()
+                     AND _tmpItem.isActive = TRUE
+                     AND _tmpItem.InfoMoneyId = zc_Enum_InfoMoney_40801() -- Внутренний оборот
+                          THEN -1 * COALESCE (MovementFloat_Amount.ValueData, 0)*/
+
+                    WHEN _tmpItem.CurrencyId             = zc_Enum_Currency_Basis()
+                      OR _tmpItem.InfoMoneyDestinationId = zc_Enum_InfoMoneyDestination_30500() -- Прочие доходы, т.е. сумма грн сразу в ОПиУ
+                         THEN COALESCE (MI_Child.Amount, -1 * _tmpItem.OperSumm)
+
+                    ELSE -1 * /*CASE WHEN _tmpItem.IsActive = TRUE THEN -1 ELSE 1 END*/ CAST (CASE WHEN MovementFloat_ParPartnerValue.ValueData <> 0 THEN _tmpItem.OperSumm_Currency * MovementFloat_CurrencyPartnerValue.ValueData / MovementFloat_ParPartnerValue.ValueData ELSE 0 END AS NUMERIC (16, 2))
+               END AS OperSumm_Asset
+               -- Diff_Asset
+             , CASE -- сразу в ОПиУ - и это НЕ курсовая разница
+                    WHEN _tmpItem.CurrencyId             <> zc_Enum_Currency_Basis()
+                     AND _tmpItem.InfoMoneyDestinationId = zc_Enum_InfoMoneyDestination_30500() -- Прочие доходы
+                         THEN 0
+
+                    WHEN --_tmpItem.CurrencyId = zc_Enum_Currency_Basis()
+                         _tmpItem.isActive = TRUE
+                     AND _tmpItem.InfoMoneyDestinationId = zc_Enum_InfoMoneyDestination_41000() -- Покупка/продажа валюты
+                         THEN COALESCE (MovementFloat_Amount.ValueData, 0) - _tmpItem.OperSumm
+
+                    WHEN _tmpItem.CurrencyId = zc_Enum_Currency_Basis()
+                         THEN 0
+                    ELSE -1 * _tmpItem.OperSumm + 1 * /*CASE WHEN _tmpItem.IsActive = TRUE THEN -1 ELSE 1 END*/ CAST (CASE WHEN MovementFloat_ParPartnerValue.ValueData <> 0 THEN _tmpItem.OperSumm_Currency * MovementFloat_CurrencyPartnerValue.ValueData / MovementFloat_ParPartnerValue.ValueData ELSE 0 END AS NUMERIC (16, 2))
+               END AS OperSumm_Diff_Asset
+
+             , 0 AS ContainerId                                               -- сформируем позже
+             , 0 AS ContainerId_Currency                                      -- сформируем позже
+             , 0 AS ContainerId_Diff                                          -- сформируем позже
+
+             , CASE WHEN 1=1
+                         THEN 0 -- !!!забаланс
+
+                    WHEN Object.DescId IN (zc_Object_BankAccount(), zc_Object_Cash())
+                      OR _tmpItem.InfoMoneyDestinationId = zc_Enum_InfoMoneyDestination_41000() -- Покупка/продажа валюты
+                         THEN zc_Enum_ProfitLoss_80105() -- Разница при покупке/продаже валюты
+                    ELSE zc_Enum_ProfitLoss_80103() -- Курсовая разница
+               END AS ProfitLossId_Diff
+
+             , 0 AS AccountGroupId, 0 AS AccountDirectionId                   -- сформируем позже
+
+             , CASE WHEN 1=1
+                         THEN 0 -- !!!забаланс
+
+                    WHEN Object.DescId IN (zc_Object_BankAccount(), zc_Object_Cash())
+                         THEN CASE WHEN _tmpItem.CurrencyId = zc_Enum_Currency_Basis()
+                                        THEN zc_Enum_Account_110301() -- Транзит + расчетный счет + расчетный счет
+                                   WHEN Object.DescId = zc_Object_Cash()
+                                        -- THEN zc_Enum_Account_40102() -- касса + касса в валюте
+                                        THEN zc_Enum_Account_110301() -- Транзит + расчетный счет + расчетный счет
+                                    ELSE zc_Enum_Account_110302() -- Транзит + расчетный счет + валютный
+                              END
+                    ELSE 0
+               END AS AccountId -- ... или сформируем позже
+
+               -- Группы ОПиУ
+             , 0 AS ProfitLossGroupId
+               -- Аналитики ОПиУ - направления
+             , 0 AS ProfitLossDirectionId
+
+               -- Управленческие группы назначения
+             , _tmpItem.InfoMoneyGroupId
+               -- Управленческие назначения
+             , _tmpItem.InfoMoneyDestinationId
+               -- Управленческие статьи назначения
+             , _tmpItem.InfoMoneyId
+
+               -- Бизнес Баланс: всегда из р/сч. (а значение кстати=0)
+             , _tmpItem.BusinessId_Balance
+               -- Бизнес ОПиУ: ObjectLink_Unit_Business
+             , COALESCE (ObjectLink_Unit_Business.ChildObjectId, 0) AS BusinessId_ProfitLoss
+
+               -- Главное Юр.лицо всегда из р/сч.
+             , _tmpItem.JuridicalId_Basis
+
+             , COALESCE (MILinkObject_Unit.ObjectId, COALESCE (tmpPersonal.UnitId, 0))         AS UnitId
+             , COALESCE (MILinkObject_Position.ObjectId, COALESCE (tmpPersonal.PositionId, 0)) AS PositionId -- используется
+             /*, CASE WHEN MI_Child.Id > 0
+                         THEN COALESCE (MILinkObject_MoneyPlace.ObjectId, 0)
+                    ELSE COALESCE (MLO_PersonalServiceList.ObjectId, 0)
+               END AS PersonalServiceListId*/
+             , COALESCE (MILinkObject_PersonalServiceList.ObjectId, COALESCE (tmpPersonal.PersonalServiceListId, 0)) AS PersonalServiceListId
+
+               -- Филиал Баланс: всегда из р/сч. (а значение кстати=0) !!!но для ЗП - как в начислениях!!!
+             , CASE WHEN MI_Child.Id > 0 OR tmpPersonal.MemberId > 0
+                         THEN COALESCE (ObjectLink_Unit_Branch.ChildObjectId, zc_Branch_Basis())
+                    ELSE _tmpItem.BranchId_Balance
+               END AS BranchId_Balance
+               -- Филиал ОПиУ: всегда по подразделению !!!но для ЗП - не используется!!!
+             , CASE WHEN MI_Child.Id > 0
+                         THEN 0
+                    ELSE COALESCE (ObjectLink_Unit_Branch.ChildObjectId, 0)
+               END AS BranchId_ProfitLoss
+
+               -- Месяц начислений: есть
+             , CASE WHEN _tmpItem.InfoMoneyId = zc_Enum_InfoMoney_60101() -- Заработная плата
+                         THEN lpInsertFind_Object_ServiceDate (inOperDate:= MIDate_ServiceDate.ValueData)
+                    WHEN _tmpItem.InfoMoneyGroupId = zc_Enum_InfoMoneyGroup_60000() -- Заработная плата
+                         -- tmpPersonal.MemberId > 0
+                         THEN lpInsertFind_Object_ServiceDate (inOperDate:= _tmpItem.OperDate - INTERVAL '1 MONTH') -- !!!т.е. по дате документа!!!
+                    ELSE 0
+               END AS ServiceDateId
+
+             , COALESCE (MILinkObject_Contract.ObjectId, 0) AS ContractId
+             , zc_Enum_PaidKind_FirstForm() AS PaidKindId -- Всегда БН
+
+             , CASE -- сразу в ОПиУ
+                    WHEN _tmpItem.CurrencyId             <> zc_Enum_Currency_Basis()
+                     AND _tmpItem.InfoMoneyDestinationId = zc_Enum_InfoMoneyDestination_30500() -- Прочие доходы
+                         THEN zc_Enum_Currency_Basis() -- !!!меняется валюта!!!
+
+                    WHEN Object.DescId IN (zc_Object_Juridical(), zc_Object_Partner())
+                     AND _tmpItem.CurrencyId <> zc_Enum_Currency_Basis()
+                     /*AND _tmpItem.isActive = FALSE*/
+                     AND _tmpItem.InfoMoneyDestinationId = zc_Enum_InfoMoneyDestination_41000() -- Покупка/продажа валюты
+                         THEN zc_Enum_Currency_Basis() -- !!!меняется валюта!!!
+
+                    WHEN Object.DescId IN (zc_Object_Juridical(), zc_Object_Partner())
+                         THEN _tmpItem.CurrencyId
+
+                    WHEN Object.DescId IN (zc_Object_BankAccount(), zc_Object_Cash())
+                         THEN _tmpItem.CurrencyId
+
+                    ELSE 0
+               END AS CurrencyId
+
+             , NOT _tmpItem.IsActive
+             , NOT _tmpItem.IsMaster
+        FROM _tmpItem
+             LEFT JOIN MovementItem AS MI_Child ON MI_Child.MovementId = inMovementId
+                                               AND MI_Child.DescId = zc_MI_Child()
+                                               AND MI_Child.isErased = FALSE
+             LEFT JOIN MovementItemDate AS MIDate_ServiceDate
+                                        ON MIDate_ServiceDate.MovementItemId = MI_Child.Id
+                                       AND MIDate_ServiceDate.DescId = zc_MIDate_ServiceDate()
+             LEFT JOIN MovementItemLinkObject AS MILinkObject_PersonalServiceList
+                                              ON MILinkObject_PersonalServiceList.MovementItemId = MI_Child.Id
+                                             AND MILinkObject_PersonalServiceList.DescId = zc_MILinkObject_PersonalServiceList()
+
+             LEFT JOIN MovementFloat AS MovementFloat_Amount
+                                     ON MovementFloat_Amount.MovementId = inMovementId
+                                    AND MovementFloat_Amount.DescId = zc_MovementFloat_Amount()
+             LEFT JOIN MovementFloat AS MovementFloat_CurrencyPartnerValue
+                                     ON MovementFloat_CurrencyPartnerValue.MovementId = inMovementId
+                                    AND MovementFloat_CurrencyPartnerValue.DescId = zc_MovementFloat_CurrencyPartnerValue()
+             LEFT JOIN MovementFloat AS MovementFloat_ParPartnerValue
+                                     ON MovementFloat_ParPartnerValue.MovementId = inMovementId
+                                    AND MovementFloat_ParPartnerValue.DescId = zc_MovementFloat_ParPartnerValue()
+             LEFT JOIN MovementItemLinkObject AS MILinkObject_MoneyPlace
+                                              ON MILinkObject_MoneyPlace.MovementItemId = _tmpItem.MovementItemId
+                                             AND MILinkObject_MoneyPlace.DescId = zc_MILinkObject_MoneyPlace()
+             LEFT JOIN tmpPersonal ON tmpPersonal.MemberId = MILinkObject_MoneyPlace.ObjectId
+
+             LEFT JOIN MovementItemLinkObject AS MILinkObject_Unit
+                                              ON MILinkObject_Unit.MovementItemId = COALESCE (MI_Child.Id, _tmpItem.MovementItemId)
+                                             AND MILinkObject_Unit.DescId = zc_MILinkObject_Unit()
+             LEFT JOIN MovementItemLinkObject AS MILinkObject_Position
+                                              ON MILinkObject_Position.MovementItemId = COALESCE (MI_Child.Id, _tmpItem.MovementItemId)
+                                             AND MILinkObject_Position.DescId = zc_MILinkObject_Position()
+             LEFT JOIN MovementItemLinkObject AS MILinkObject_Contract
+                                              ON MILinkObject_Contract.MovementItemId =  _tmpItem.MovementItemId
+                                             AND MILinkObject_Contract.DescId = zc_MILinkObject_Contract()
+
+             LEFT JOIN ObjectLink AS ObjectLink_Founder_InfoMoney
+                                  ON ObjectLink_Founder_InfoMoney.ChildObjectId = _tmpItem.InfoMoneyId
+                                 AND ObjectLink_Founder_InfoMoney.DescId = zc_ObjectLink_Founder_InfoMoney()
+
+             LEFT JOIN Object ON Object.Id = COALESCE (MI_Child.ObjectId, COALESCE (tmpPersonal.PersonalId, COALESCE (ObjectLink_Founder_InfoMoney.ObjectId, MILinkObject_MoneyPlace.ObjectId)))
+             LEFT JOIN ObjectLink AS ObjectLink_Unit_Business ON ObjectLink_Unit_Business.ObjectId = COALESCE (MILinkObject_Unit.ObjectId, tmpPersonal.UnitId)
+                                                             AND ObjectLink_Unit_Business.DescId = zc_ObjectLink_Unit_Business()
+             LEFT JOIN ObjectLink AS ObjectLink_Unit_Branch ON ObjectLink_Unit_Branch.ObjectId = COALESCE (MILinkObject_Unit.ObjectId, tmpPersonal.UnitId)
+                                                           AND ObjectLink_Unit_Branch.DescId = zc_ObjectLink_Unit_Branch()
+             LEFT JOIN lfSelect_Object_Unit_byProfitLossDirection() AS lfObject_Unit_byProfitLossDirection ON lfObject_Unit_byProfitLossDirection.UnitId = COALESCE (MILinkObject_Unit.ObjectId, tmpPersonal.UnitId)
+                                                                                                          AND (Object.Id IS NULL -- !!!нужен только для затрат!!!
+                                                                                                            OR (_tmpItem.OperDate >= zc_DateStart_Asset() AND _tmpItem.InfoMoneyGroupId = zc_Enum_InfoMoneyGroup_70000())
+                                                                                                              )
+        WHERE _tmpItem.OperDate >= zc_DateStart_Asset() AND _tmpItem.InfoMoneyGroupId = zc_Enum_InfoMoneyGroup_70000()
+          AND COALESCE (MI_Child.ObjectId, COALESCE (tmpPersonal.PersonalId, COALESCE (ObjectLink_Founder_InfoMoney.ObjectId, COALESCE (MILinkObject_MoneyPlace.ObjectId, 0)))) > 0
        ;
+
 
      -- проверка
      IF EXISTS (SELECT 1 FROM _tmpItem WHERE _tmpItem.ObjectId = 0) AND NOT EXISTS (SELECT 1 FROM ObjectLink_UserRole_View WHERE RoleId = zc_Enum_Role_Admin() AND UserId = inUserId)
@@ -407,10 +641,15 @@ BEGIN
          RAISE EXCEPTION 'Ошибка.В документе не заполнено значение <От Кого, Кому>.Проведение невозможно.';
      END IF;
 
-
+if inUserId = 5 then
+     -- 5.1. ФИНИШ - формируем/сохраняем Проводки
+     PERFORM lpComplete_Movement_Finance22 (inMovementId := inMovementId
+                                        , inUserId     := inUserId);
+else
      -- 5.1. ФИНИШ - формируем/сохраняем Проводки
      PERFORM lpComplete_Movement_Finance (inMovementId := inMovementId
                                         , inUserId     := inUserId);
+end if;
 
      -- 5.2. ФИНИШ - Обязательно меняем статус документа + сохранили протокол
      PERFORM lpComplete_Movement (inMovementId := inMovementId

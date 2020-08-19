@@ -167,25 +167,25 @@ BEGIN
                                      , MovementFloat_CurrencyValue.ValueData        AS CurrencyValue
                                      , MovementFloat_ParValue.ValueData             AS ParValue
                                        -- оплата б/н
-                                     , CASE WHEN MovementLinkObject_CurrencyDocument.ObjectId = zc_Enum_Currency_Basis() 
-                                            THEN CASE WHEN MovementLinkObject_PaidKind.ObjectId = zc_Enum_PaidKind_FirstForm() 
-                                                      THEN MovementFloat_TotalSumm.ValueData - COALESCE (MovementFloat_TotalSummPayOth.ValueData,0) 
-                                                      ELSE COALESCE (MovementFloat_TotalSummPayOth.ValueData,0) 
-                                                 END 
-                                            ELSE CASE WHEN MovementLinkObject_PaidKind.ObjectId = zc_Enum_PaidKind_FirstForm() 
-                                                      THEN MovementFloat_TotalSummCurrency.ValueData - COALESCE (MovementFloat_TotalSummPayOth.ValueData,0) 
-                                                      ELSE COALESCE (MovementFloat_TotalSummPayOth.ValueData,0) 
-                                                 END 
+                                     , CASE WHEN MovementLinkObject_CurrencyDocument.ObjectId = zc_Enum_Currency_Basis()
+                                            THEN CASE WHEN MovementLinkObject_PaidKind.ObjectId = zc_Enum_PaidKind_FirstForm()
+                                                      THEN MovementFloat_TotalSumm.ValueData - COALESCE (MovementFloat_TotalSummPayOth.ValueData,0)
+                                                      ELSE COALESCE (MovementFloat_TotalSummPayOth.ValueData,0)
+                                                 END
+                                            ELSE CASE WHEN MovementLinkObject_PaidKind.ObjectId = zc_Enum_PaidKind_FirstForm()
+                                                      THEN MovementFloat_TotalSummCurrency.ValueData - COALESCE (MovementFloat_TotalSummPayOth.ValueData,0)
+                                                      ELSE COALESCE (MovementFloat_TotalSummPayOth.ValueData,0)
+                                                 END
                                        END AS TotalSumm_f1
                                        -- оплата нал
-                                     , CASE WHEN MovementLinkObject_CurrencyDocument.ObjectId = zc_Enum_Currency_Basis() 
-                                            THEN CASE WHEN MovementLinkObject_PaidKind.ObjectId = zc_Enum_PaidKind_FirstForm() 
-                                                      THEN COALESCE (MovementFloat_TotalSummPayOth.ValueData,0) 
-                                                      ELSE MovementFloat_TotalSumm.ValueData - COALESCE (MovementFloat_TotalSummPayOth.ValueData,0) 
+                                     , CASE WHEN MovementLinkObject_CurrencyDocument.ObjectId = zc_Enum_Currency_Basis()
+                                            THEN CASE WHEN MovementLinkObject_PaidKind.ObjectId = zc_Enum_PaidKind_FirstForm()
+                                                      THEN COALESCE (MovementFloat_TotalSummPayOth.ValueData,0)
+                                                      ELSE MovementFloat_TotalSumm.ValueData - COALESCE (MovementFloat_TotalSummPayOth.ValueData,0)
                                                  END
-                                            ELSE CASE WHEN MovementLinkObject_PaidKind.ObjectId = zc_Enum_PaidKind_FirstForm() 
-                                                      THEN COALESCE (MovementFloat_TotalSummPayOth.ValueData,0) 
-                                                      ELSE MovementFloat_TotalSummCurrency.ValueData - COALESCE (MovementFloat_TotalSummPayOth.ValueData,0) 
+                                            ELSE CASE WHEN MovementLinkObject_PaidKind.ObjectId = zc_Enum_PaidKind_FirstForm()
+                                                      THEN COALESCE (MovementFloat_TotalSummPayOth.ValueData,0)
+                                                      ELSE MovementFloat_TotalSummCurrency.ValueData - COALESCE (MovementFloat_TotalSummPayOth.ValueData,0)
                                                  END
                                        END AS TotalSumm_f2
                                 FROM tmpMI_Invoice
@@ -343,7 +343,7 @@ BEGIN
                                      ELSE tmpMovement_Invoice.TotalSumm_f1
                                 END
                  END AS InvoiceSumm_Currency
-                 
+
                , tmpMovement_Invoice.MovementId AS MovementId_Invoice
 
            FROM Movement
@@ -1691,7 +1691,9 @@ END IF;
                                                                                                       , inObjectId_4        := 0 -- для Физ.лица (подотчетные лица) !!!именно здесь последняя аналитика всегда значение = 0!!!
                                                                                                        )
                                                                                 -- 0.1.)Счет 0.2.)Главное Юр лицо 0.3.)Бизнес 1)Юридические лица 2)Виды форм оплаты 3)Договора 4)Статьи назначения 5)Партии накладной
-                                                                           ELSE lpInsertFind_Container (inContainerDescId   := zc_Container_Summ()
+                                                                           ELSE CASE WHEN vbOperDate >= zc_DateStart_Asset() AND vbMovementDescId = zc_Movement_IncomeAsset()
+                                                                                THEN
+                                                                                lpInsertFind_Container (inContainerDescId   := zc_Container_SummAsset()
                                                                                                       , inParentId          := NULL
                                                                                                       , inObjectId          := tmp.AccountId
                                                                                                       , inJuridicalId_basis := vbJuridicalId_Basis_To
@@ -1715,10 +1717,38 @@ END IF;
                                                                                                       , inDescId_8          := CASE WHEN vbCurrencyPartnerId = zc_Enum_Currency_Basis() THEN NULL ELSE zc_ContainerLinkObject_Currency() END
                                                                                                       , inObjectId_8        := CASE WHEN vbCurrencyPartnerId = zc_Enum_Currency_Basis() THEN NULL ELSE vbCurrencyPartnerId END
                                                                                                        )
+                                                                                ELSE
+                                                                                lpInsertFind_Container (inContainerDescId   := zc_Container_Summ()
+                                                                                                      , inParentId          := NULL
+                                                                                                      , inObjectId          := tmp.AccountId
+                                                                                                      , inJuridicalId_basis := vbJuridicalId_Basis_To
+                                                                                                      , inBusinessId        := tmp.BusinessId
+                                                                                                      , inObjectCostDescId  := NULL
+                                                                                                      , inObjectCostId      := NULL
+                                                                                                      , inDescId_1          := zc_ContainerLinkObject_Juridical()
+                                                                                                      , inObjectId_1        := vbJuridicalId_From
+                                                                                                      , inDescId_2          := zc_ContainerLinkObject_Contract()
+                                                                                                      , inObjectId_2        := vbContractId
+                                                                                                      , inDescId_3          := zc_ContainerLinkObject_InfoMoney()
+                                                                                                      , inObjectId_3        := tmp.InfoMoneyId
+                                                                                                      , inDescId_4          := zc_ContainerLinkObject_PaidKind()
+                                                                                                      , inObjectId_4        := vbPaidKindId
+                                                                                                      , inDescId_5          := zc_ContainerLinkObject_PartionMovement()
+                                                                                                      , inObjectId_5        := 0 -- !!!по этой аналитике учет пока не ведем!!!
+                                                                                                      , inDescId_6          := CASE WHEN vbPaidKindId = zc_Enum_PaidKind_SecondForm() AND vbIsCorporate_From = FALSE THEN zc_ContainerLinkObject_Partner() ELSE NULL END
+                                                                                                      , inObjectId_6        := CASE WHEN vbInfoMoneyDestinationId_From = zc_Enum_InfoMoneyDestination_20400() /*ГСМ*/ THEN 0 ELSE CASE WHEN vbPaidKindId = zc_Enum_PaidKind_SecondForm() AND vbIsCorporate_From = FALSE THEN vbPartnerId_From ELSE NULL END END
+                                                                                                      , inDescId_7          := CASE WHEN vbPaidKindId = zc_Enum_PaidKind_SecondForm() AND vbIsCorporate_From = FALSE THEN zc_ContainerLinkObject_Branch() ELSE NULL END
+                                                                                                      , inObjectId_7        := CASE WHEN vbPaidKindId = zc_Enum_PaidKind_SecondForm() AND vbIsCorporate_From = FALSE THEN zc_Branch_Basis() ELSE NULL END -- долг Поставщика всегда на Главном филиале
+                                                                                                      , inDescId_8          := CASE WHEN vbCurrencyPartnerId = zc_Enum_Currency_Basis() THEN NULL ELSE zc_ContainerLinkObject_Currency() END
+                                                                                                      , inObjectId_8        := CASE WHEN vbCurrencyPartnerId = zc_Enum_Currency_Basis() THEN NULL ELSE vbCurrencyPartnerId END
+                                                                                                       )
+                                                                                END
                                                                  END AS ContainerId
                                                                , CASE WHEN vbMemberId_From = 0 AND (vbInvoiceSumm <> 0 OR vbInvoiceSumm_Currency <> 0)
                                                                                 -- 0.1.)Счет 0.2.)Главное Юр лицо 0.3.)Бизнес 1)Юридические лица 2)Виды форм оплаты 3)Договора 4)Статьи назначения 5)Партии накладной
-                                                                           THEN lpInsertFind_Container (inContainerDescId   := zc_Container_Summ()
+                                                                           THEN CASE WHEN vbOperDate >= zc_DateStart_Asset() AND vbMovementDescId = zc_Movement_IncomeAsset()
+                                                                                THEN
+                                                                                lpInsertFind_Container (inContainerDescId   := zc_Container_SummAsset()
                                                                                                       , inParentId          := NULL
                                                                                                       , inObjectId          := tmp.AccountId
                                                                                                       , inJuridicalId_basis := vbJuridicalId_Basis_To
@@ -1747,12 +1777,45 @@ END IF;
                                                                                                       , inDescId_8          := CASE WHEN vbCurrencyPartnerId = zc_Enum_Currency_Basis() THEN NULL ELSE zc_ContainerLinkObject_Currency() END
                                                                                                       , inObjectId_8        := CASE WHEN vbCurrencyPartnerId = zc_Enum_Currency_Basis() THEN NULL ELSE vbCurrencyPartnerId END
                                                                                                        )
+                                                                                ELSE
+                                                                                lpInsertFind_Container (inContainerDescId   := zc_Container_Summ()
+                                                                                                      , inParentId          := NULL
+                                                                                                      , inObjectId          := tmp.AccountId
+                                                                                                      , inJuridicalId_basis := vbJuridicalId_Basis_To
+                                                                                                      , inBusinessId        := tmp.BusinessId
+                                                                                                      , inObjectCostDescId  := NULL
+                                                                                                      , inObjectCostId      := NULL
+                                                                                                      , inDescId_1          := zc_ContainerLinkObject_Juridical()
+                                                                                                      , inObjectId_1        := vbJuridicalId_From
+                                                                                                      , inDescId_2          := zc_ContainerLinkObject_Contract()
+                                                                                                      , inObjectId_2        := vbContractId
+                                                                                                      , inDescId_3          := zc_ContainerLinkObject_InfoMoney()
+                                                                                                      , inObjectId_3        := tmp.InfoMoneyId
+                                                                                                      , inDescId_4          := zc_ContainerLinkObject_PaidKind()
+                                                                                                      , inObjectId_4        := -- !!!замена!!!
+                                                                                                                               CASE WHEN vbPaidKindId = zc_Enum_PaidKind_FirstForm() THEN zc_Enum_PaidKind_SecondForm() ELSE zc_Enum_PaidKind_FirstForm() END
+                                                                                                      , inDescId_5          := zc_ContainerLinkObject_PartionMovement()
+                                                                                                      , inObjectId_5        := 0 -- !!!по этой аналитике учет пока не ведем!!!
+                                                                                                      , inDescId_6          := -- !!!замена!!!
+                                                                                                                               CASE WHEN vbPaidKindId = zc_Enum_PaidKind_FirstForm() AND vbIsCorporate_From = FALSE THEN zc_ContainerLinkObject_Partner() ELSE NULL END
+                                                                                                      , inObjectId_6        := -- !!!замена!!!
+                                                                                                                               CASE WHEN vbInfoMoneyDestinationId_From = zc_Enum_InfoMoneyDestination_20400() /*ГСМ*/ THEN 0 ELSE CASE WHEN vbPaidKindId = zc_Enum_PaidKind_FirstForm() AND vbIsCorporate_From = FALSE THEN vbPartnerId_From ELSE NULL END END
+                                                                                                      , inDescId_7          := -- !!!замена!!!
+                                                                                                                               CASE WHEN vbPaidKindId = zc_Enum_PaidKind_FirstForm() AND vbIsCorporate_From = FALSE THEN zc_ContainerLinkObject_Branch() ELSE NULL END
+                                                                                                      , inObjectId_7        := -- !!!замена!!!
+                                                                                                                               CASE WHEN vbPaidKindId = zc_Enum_PaidKind_FirstForm() AND vbIsCorporate_From = FALSE THEN zc_Branch_Basis() ELSE NULL END -- долг Поставщика всегда на Главном филиале
+                                                                                                      , inDescId_8          := CASE WHEN vbCurrencyPartnerId = zc_Enum_Currency_Basis() THEN NULL ELSE zc_ContainerLinkObject_Currency() END
+                                                                                                      , inObjectId_8        := CASE WHEN vbCurrencyPartnerId = zc_Enum_Currency_Basis() THEN NULL ELSE vbCurrencyPartnerId END
+                                                                                                       )
+                                                                                END
                                                                            ELSE 0
                                                                  END AS ContainerId_re
                                                                , CASE WHEN tmp.AccountId_Transit = 0 OR vbMemberId_From <> 0
                                                                            THEN 0
                                                                                 -- 0.1.)Счет 0.2.)Главное Юр лицо 0.3.)Бизнес 1)Юридические лица 2)Виды форм оплаты 3)Договора 4)Статьи назначения 5)Партии накладной
-                                                                           ELSE lpInsertFind_Container (inContainerDescId   := zc_Container_Summ()
+                                                                           ELSE CASE WHEN vbOperDate >= zc_DateStart_Asset() AND vbMovementDescId = zc_Movement_IncomeAsset()
+                                                                                THEN
+                                                                                lpInsertFind_Container (inContainerDescId   := zc_Container_SummAsset()
                                                                                                       , inParentId          := NULL
                                                                                                       , inObjectId          := tmp.AccountId_Transit
                                                                                                       , inJuridicalId_basis := vbJuridicalId_Basis_To
@@ -1776,6 +1839,32 @@ END IF;
                                                                                                       , inDescId_8          := NULL -- ...zc_ContainerLinkObject_Currency()
                                                                                                       , inObjectId_8        := NULL -- ...vbCurrencyPartnerId
                                                                                                        )
+                                                                                ELSE
+                                                                                lpInsertFind_Container (inContainerDescId   := zc_Container_Summ()
+                                                                                                      , inParentId          := NULL
+                                                                                                      , inObjectId          := tmp.AccountId_Transit
+                                                                                                      , inJuridicalId_basis := vbJuridicalId_Basis_To
+                                                                                                      , inBusinessId        := tmp.BusinessId
+                                                                                                      , inObjectCostDescId  := NULL
+                                                                                                      , inObjectCostId      := NULL
+                                                                                                      , inDescId_1          := zc_ContainerLinkObject_Juridical()
+                                                                                                      , inObjectId_1        := vbJuridicalId_From
+                                                                                                      , inDescId_2          := zc_ContainerLinkObject_Contract()
+                                                                                                      , inObjectId_2        := vbContractId
+                                                                                                      , inDescId_3          := zc_ContainerLinkObject_InfoMoney()
+                                                                                                      , inObjectId_3        := tmp.InfoMoneyId
+                                                                                                      , inDescId_4          := zc_ContainerLinkObject_PaidKind()
+                                                                                                      , inObjectId_4        := vbPaidKindId
+                                                                                                      , inDescId_5          := zc_ContainerLinkObject_PartionMovement()
+                                                                                                      , inObjectId_5        := 0 -- !!!по этой аналитике учет пока не ведем!!!
+                                                                                                      , inDescId_6          := CASE WHEN vbPaidKindId = zc_Enum_PaidKind_SecondForm() AND vbIsCorporate_From = FALSE THEN zc_ContainerLinkObject_Partner() ELSE NULL END
+                                                                                                      , inObjectId_6        := CASE WHEN vbInfoMoneyDestinationId_From = zc_Enum_InfoMoneyDestination_20400() /*ГСМ*/ THEN 0 ELSE CASE WHEN vbPaidKindId = zc_Enum_PaidKind_SecondForm() AND vbIsCorporate_From = FALSE THEN vbPartnerId_From ELSE NULL END END
+                                                                                                      , inDescId_7          := CASE WHEN vbPaidKindId = zc_Enum_PaidKind_SecondForm() AND vbIsCorporate_From = FALSE THEN zc_ContainerLinkObject_Branch() ELSE NULL END
+                                                                                                      , inObjectId_7        := CASE WHEN vbPaidKindId = zc_Enum_PaidKind_SecondForm() AND vbIsCorporate_From = FALSE THEN zc_Branch_Basis() ELSE NULL END -- долг Поставщика всегда на Главном филиале
+                                                                                                      , inDescId_8          := NULL -- ...zc_ContainerLinkObject_Currency()
+                                                                                                      , inObjectId_8        := NULL -- ...vbCurrencyPartnerId
+                                                                                                       )
+                                                                                END
                                                                  END AS ContainerId_Transit
            FROM (SELECT _tmpItem_SummPartner.AccountId, _tmpItem_SummPartner.AccountId_Transit, _tmpItem_SummPartner.BusinessId, _tmpItem_SummPartner.InfoMoneyId
                  FROM _tmpItem_SummPartner
@@ -1792,19 +1881,35 @@ END IF;
      -- 2.0.2.1. определяется ContainerId_Goods для "виртуальных" проводок количественного учета по ПОКУПАТЕЛЮ
      UPDATE _tmpItem_SummPartner_To SET ContainerId_Goods = tmp.ContainerId
      FROM                            (SELECT _tmpItem.GoodsId
-                                           , lpInsertUpdate_ContainerCount_Goods (inOperDate               := vbOperDate -- по "Дате склад"
-                                                                                , inUnitId                 := vbPartnerId_To
-                                                                                , inCarId                  := NULL
-                                                                                , inMemberId               := NULL
-                                                                                , inInfoMoneyDestinationId := _tmpItem.InfoMoneyDestinationId
-                                                                                , inGoodsId                := _tmpItem.GoodsId
-                                                                                , inGoodsKindId            := NULL
-                                                                                , inIsPartionCount         := FALSE
-                                                                                , inPartionGoodsId         := NULL
-                                                                                , inAssetId                := NULL
-                                                                                , inBranchId               := NULL                     -- эта аналитика нужна для филиала
-                                                                                , inAccountId              := zc_Enum_Account_110401() -- эта аналитика нужна для "товар в пути / виртуальный склад"
-                                                                                 ) AS ContainerId
+                                           , CASE WHEN vbOperDate >= zc_DateStart_Asset() AND vbMovementDescId = zc_Movement_IncomeAsset()
+                                             THEN
+                                                  lpInsertUpdate_ContainerCount_Asset (inOperDate               := vbOperDate -- по "Дате склад"
+                                                                                     , inUnitId                 := vbPartnerId_To
+                                                                                     , inCarId                  := NULL
+                                                                                     , inMemberId               := NULL
+                                                                                     , inInfoMoneyDestinationId := _tmpItem.InfoMoneyDestinationId
+                                                                                     , inGoodsId                := _tmpItem.GoodsId
+                                                                                     , inGoodsKindId            := NULL
+                                                                                     , inIsPartionCount         := FALSE
+                                                                                     , inPartionGoodsId         := NULL
+                                                                                     , inAssetId                := NULL
+                                                                                     , inBranchId               := NULL                     -- эта аналитика нужна для филиала
+                                                                                     , inAccountId              := zc_Enum_Account_110401() -- эта аналитика нужна для "товар в пути / виртуальный склад"
+                                                                                      )
+                                             ELSE lpInsertUpdate_ContainerCount_Goods (inOperDate               := vbOperDate -- по "Дате склад"
+                                                                                     , inUnitId                 := vbPartnerId_To
+                                                                                     , inCarId                  := NULL
+                                                                                     , inMemberId               := NULL
+                                                                                     , inInfoMoneyDestinationId := _tmpItem.InfoMoneyDestinationId
+                                                                                     , inGoodsId                := _tmpItem.GoodsId
+                                                                                     , inGoodsKindId            := NULL
+                                                                                     , inIsPartionCount         := FALSE
+                                                                                     , inPartionGoodsId         := NULL
+                                                                                     , inAssetId                := NULL
+                                                                                     , inBranchId               := NULL                     -- эта аналитика нужна для филиала
+                                                                                     , inAccountId              := zc_Enum_Account_110401() -- эта аналитика нужна для "товар в пути / виртуальный склад"
+                                                                                      )
+                                             END AS ContainerId
            FROM (SELECT _tmpItem_SummPartner.GoodsId, _tmpItem_SummPartner.InfoMoneyDestinationId
                  FROM _tmpItem_SummPartner_To AS _tmpItem_SummPartner
                  GROUP BY _tmpItem_SummPartner.GoodsId, _tmpItem_SummPartner.InfoMoneyDestinationId
@@ -1848,30 +1953,56 @@ END IF;
      -- 2.0.2.3. определяется ContainerId для проводок по долг ПОКУПАТЕЛЮ
      UPDATE _tmpItem_SummPartner_To SET ContainerId = tmp.ContainerId
      FROM              (SELECT tmp.AccountId, tmp.BusinessId, tmp.InfoMoneyId
-                                                                             , lpInsertFind_Container (inContainerDescId   := zc_Container_Summ()
-                                                                                                      , inParentId          := NULL
-                                                                                                      , inObjectId          := tmp.AccountId
-                                                                                                      , inJuridicalId_basis := vbJuridicalId_Basis_To
-                                                                                                      , inBusinessId        := tmp.BusinessId
-                                                                                                      , inObjectCostDescId  := NULL
-                                                                                                      , inObjectCostId      := NULL
-                                                                                                      , inDescId_1          := zc_ContainerLinkObject_Juridical()
-                                                                                                      , inObjectId_1        := vbJuridicalId_To
-                                                                                                      , inDescId_2          := zc_ContainerLinkObject_Contract()
-                                                                                                      , inObjectId_2        := vbContractId_To
-                                                                                                      , inDescId_3          := zc_ContainerLinkObject_InfoMoney()
-                                                                                                      , inObjectId_3        := tmp.InfoMoneyId
-                                                                                                      , inDescId_4          := zc_ContainerLinkObject_PaidKind()
-                                                                                                      , inObjectId_4        := vbPaidKindId_To
-                                                                                                      , inDescId_5          := zc_ContainerLinkObject_PartionMovement()
-                                                                                                      , inObjectId_5        := 0 -- !!!по этой аналитике учет пока не ведем!!!
-                                                                                                      , inDescId_6          := CASE WHEN vbPaidKindId_To = zc_Enum_PaidKind_SecondForm() AND vbIsCorporate_To = FALSE THEN zc_ContainerLinkObject_Partner() ELSE NULL END
-                                                                                                      , inObjectId_6        := CASE WHEN vbPaidKindId_To = zc_Enum_PaidKind_SecondForm() AND vbIsCorporate_To = FALSE THEN vbPartnerId_To ELSE NULL END
-                                                                                                      , inDescId_7          := CASE WHEN vbPaidKindId_To = zc_Enum_PaidKind_SecondForm() AND vbIsCorporate_To = FALSE THEN zc_ContainerLinkObject_Branch() ELSE NULL END
-                                                                                                      , inObjectId_7        := CASE WHEN vbPaidKindId_To = zc_Enum_PaidKind_SecondForm() AND vbIsCorporate_To = FALSE THEN zc_Branch_Basis() ELSE NULL END -- долг Поставщика всегда на Главном филиале
-                                                                                                      , inDescId_8          := NULL -- ...zc_ContainerLinkObject_Currency()
-                                                                                                      , inObjectId_8        := NULL -- ...vbCurrencyPartnerId
-                                                                                                       ) AS ContainerId
+                             , CASE WHEN vbOperDate >= zc_DateStart_Asset() AND vbMovementDescId = zc_Movement_IncomeAsset()
+                                         THEN lpInsertFind_Container (inContainerDescId   := zc_Container_SummAsset()
+                                                                    , inParentId          := NULL
+                                                                    , inObjectId          := tmp.AccountId
+                                                                    , inJuridicalId_basis := vbJuridicalId_Basis_To
+                                                                    , inBusinessId        := tmp.BusinessId
+                                                                    , inObjectCostDescId  := NULL
+                                                                    , inObjectCostId      := NULL
+                                                                    , inDescId_1          := zc_ContainerLinkObject_Juridical()
+                                                                    , inObjectId_1        := vbJuridicalId_To
+                                                                    , inDescId_2          := zc_ContainerLinkObject_Contract()
+                                                                    , inObjectId_2        := vbContractId_To
+                                                                    , inDescId_3          := zc_ContainerLinkObject_InfoMoney()
+                                                                    , inObjectId_3        := tmp.InfoMoneyId
+                                                                    , inDescId_4          := zc_ContainerLinkObject_PaidKind()
+                                                                    , inObjectId_4        := vbPaidKindId_To
+                                                                    , inDescId_5          := zc_ContainerLinkObject_PartionMovement()
+                                                                    , inObjectId_5        := 0 -- !!!по этой аналитике учет пока не ведем!!!
+                                                                    , inDescId_6          := CASE WHEN vbPaidKindId_To = zc_Enum_PaidKind_SecondForm() AND vbIsCorporate_To = FALSE THEN zc_ContainerLinkObject_Partner() ELSE NULL END
+                                                                    , inObjectId_6        := CASE WHEN vbPaidKindId_To = zc_Enum_PaidKind_SecondForm() AND vbIsCorporate_To = FALSE THEN vbPartnerId_To ELSE NULL END
+                                                                    , inDescId_7          := CASE WHEN vbPaidKindId_To = zc_Enum_PaidKind_SecondForm() AND vbIsCorporate_To = FALSE THEN zc_ContainerLinkObject_Branch() ELSE NULL END
+                                                                    , inObjectId_7        := CASE WHEN vbPaidKindId_To = zc_Enum_PaidKind_SecondForm() AND vbIsCorporate_To = FALSE THEN zc_Branch_Basis() ELSE NULL END -- долг Поставщика всегда на Главном филиале
+                                                                    , inDescId_8          := NULL -- ...zc_ContainerLinkObject_Currency()
+                                                                    , inObjectId_8        := NULL -- ...vbCurrencyPartnerId
+                                                                     )
+                                         ELSE lpInsertFind_Container (inContainerDescId   := zc_Container_Summ()
+                                                                    , inParentId          := NULL
+                                                                    , inObjectId          := tmp.AccountId
+                                                                    , inJuridicalId_basis := vbJuridicalId_Basis_To
+                                                                    , inBusinessId        := tmp.BusinessId
+                                                                    , inObjectCostDescId  := NULL
+                                                                    , inObjectCostId      := NULL
+                                                                    , inDescId_1          := zc_ContainerLinkObject_Juridical()
+                                                                    , inObjectId_1        := vbJuridicalId_To
+                                                                    , inDescId_2          := zc_ContainerLinkObject_Contract()
+                                                                    , inObjectId_2        := vbContractId_To
+                                                                    , inDescId_3          := zc_ContainerLinkObject_InfoMoney()
+                                                                    , inObjectId_3        := tmp.InfoMoneyId
+                                                                    , inDescId_4          := zc_ContainerLinkObject_PaidKind()
+                                                                    , inObjectId_4        := vbPaidKindId_To
+                                                                    , inDescId_5          := zc_ContainerLinkObject_PartionMovement()
+                                                                    , inObjectId_5        := 0 -- !!!по этой аналитике учет пока не ведем!!!
+                                                                    , inDescId_6          := CASE WHEN vbPaidKindId_To = zc_Enum_PaidKind_SecondForm() AND vbIsCorporate_To = FALSE THEN zc_ContainerLinkObject_Partner() ELSE NULL END
+                                                                    , inObjectId_6        := CASE WHEN vbPaidKindId_To = zc_Enum_PaidKind_SecondForm() AND vbIsCorporate_To = FALSE THEN vbPartnerId_To ELSE NULL END
+                                                                    , inDescId_7          := CASE WHEN vbPaidKindId_To = zc_Enum_PaidKind_SecondForm() AND vbIsCorporate_To = FALSE THEN zc_ContainerLinkObject_Branch() ELSE NULL END
+                                                                    , inObjectId_7        := CASE WHEN vbPaidKindId_To = zc_Enum_PaidKind_SecondForm() AND vbIsCorporate_To = FALSE THEN zc_Branch_Basis() ELSE NULL END -- долг Поставщика всегда на Главном филиале
+                                                                    , inDescId_8          := NULL -- ...zc_ContainerLinkObject_Currency()
+                                                                    , inObjectId_8        := NULL -- ...vbCurrencyPartnerId
+                                                                     )
+                               END AS ContainerId
 
            FROM (SELECT _tmpItem_SummPartner.AccountId, _tmpItem_SummPartner.BusinessId, _tmpItem_SummPartner.InfoMoneyId
                  FROM _tmpItem_SummPartner_To AS _tmpItem_SummPartner
@@ -1927,19 +2058,36 @@ END IF;
      -- 2.0.3.1. определяется ContainerId_Goods для "виртуальных" проводок количественного учета по Сотруднику (ЗП) или "Учредитель"
      UPDATE _tmpItem_SummPersonal SET ContainerId_Goods = tmp.ContainerId
      FROM                            (SELECT _tmpItem.GoodsId
-                                           , lpInsertUpdate_ContainerCount_Goods (inOperDate               := vbOperDate -- по "Дате склад"
-                                                                                , inUnitId                 := _tmpItem.byObjectId
-                                                                                , inCarId                  := NULL
-                                                                                , inMemberId               := NULL
-                                                                                , inInfoMoneyDestinationId := zc_Enum_InfoMoneyDestination_20400() -- ГСМ
-                                                                                , inGoodsId                := _tmpItem.GoodsId
-                                                                                , inGoodsKindId            := NULL
-                                                                                , inIsPartionCount         := FALSE
-                                                                                , inPartionGoodsId         := NULL
-                                                                                , inAssetId                := NULL
-                                                                                , inBranchId               := NULL                     -- эта аналитика нужна для филиала
-                                                                                , inAccountId              := zc_Enum_Account_110401() -- эта аналитика нужна для "товар в пути / виртуальный склад"
-                                                                                 ) AS ContainerId
+                                           , CASE WHEN vbOperDate >= zc_DateStart_Asset() AND vbMovementDescId = zc_Movement_IncomeAsset()
+                                             THEN
+                                                  lpInsertUpdate_ContainerCount_Asset (inOperDate               := vbOperDate -- по "Дате склад"
+                                                                                     , inUnitId                 := _tmpItem.byObjectId
+                                                                                     , inCarId                  := NULL
+                                                                                     , inMemberId               := NULL
+                                                                                     , inInfoMoneyDestinationId := zc_Enum_InfoMoneyDestination_20400() -- ГСМ
+                                                                                     , inGoodsId                := _tmpItem.GoodsId
+                                                                                     , inGoodsKindId            := NULL
+                                                                                     , inIsPartionCount         := FALSE
+                                                                                     , inPartionGoodsId         := NULL
+                                                                                     , inAssetId                := NULL
+                                                                                     , inBranchId               := NULL                     -- эта аналитика нужна для филиала
+                                                                                     , inAccountId              := zc_Enum_Account_110401() -- эта аналитика нужна для "товар в пути / виртуальный склад"
+                                                                                      )
+                                             ELSE
+                                                  lpInsertUpdate_ContainerCount_Goods (inOperDate               := vbOperDate -- по "Дате склад"
+                                                                                     , inUnitId                 := _tmpItem.byObjectId
+                                                                                     , inCarId                  := NULL
+                                                                                     , inMemberId               := NULL
+                                                                                     , inInfoMoneyDestinationId := zc_Enum_InfoMoneyDestination_20400() -- ГСМ
+                                                                                     , inGoodsId                := _tmpItem.GoodsId
+                                                                                     , inGoodsKindId            := NULL
+                                                                                     , inIsPartionCount         := FALSE
+                                                                                     , inPartionGoodsId         := NULL
+                                                                                     , inAssetId                := NULL
+                                                                                     , inBranchId               := NULL                     -- эта аналитика нужна для филиала
+                                                                                     , inAccountId              := zc_Enum_Account_110401() -- эта аналитика нужна для "товар в пути / виртуальный склад"
+                                                                                      )
+                                             END AS ContainerId
            FROM (SELECT DISTINCT _tmpItem_SummPersonal.GoodsId, CASE WHEN _tmpItem_SummPersonal.FounderId <> 0 THEN _tmpItem_SummPersonal.FounderId ELSE _tmpItem_SummPersonal.PersonalId END AS byObjectId
                  FROM _tmpItem_SummPersonal
                 ) AS _tmpItem
@@ -2237,7 +2385,9 @@ END IF;
 
 
      -- 1.2.1. определяется ContainerId_Goods для проводок по количественному учету
-     UPDATE _tmpItem SET ContainerId_Goods = lpInsertUpdate_ContainerCount_Goods (inOperDate               := vbOperDate
+     UPDATE _tmpItem SET ContainerId_Goods = CASE WHEN vbOperDate >= zc_DateStart_Asset() AND vbMovementDescId = zc_Movement_IncomeAsset()
+                                             THEN
+                                             lpInsertUpdate_ContainerCount_Asset (inOperDate               := vbOperDate
                                                                                 , inUnitId                 := vbUnitId
                                                                                 , inCarId                  := vbCarId
                                                                                 , inMemberId               := vbMemberId_To
@@ -2250,13 +2400,33 @@ END IF;
                                                                                 , inBranchId               := NULL -- эта аналитика нужна для филиала
                                                                                 , inAccountId              := NULL -- эта аналитика нужна для "товар в пути"
                                                                                  )
+                                             ELSE
+                                             lpInsertUpdate_ContainerCount_Goods (inOperDate               := vbOperDate
+                                                                                , inUnitId                 := vbUnitId
+                                                                                , inCarId                  := vbCarId
+                                                                                , inMemberId               := vbMemberId_To
+                                                                                , inInfoMoneyDestinationId := _tmpItem.InfoMoneyDestinationId
+                                                                                , inGoodsId                := _tmpItem.GoodsId
+                                                                                , inGoodsKindId            := _tmpItem.GoodsKindId
+                                                                                , inIsPartionCount         := _tmpItem.isPartionCount
+                                                                                , inPartionGoodsId         := _tmpItem.PartionGoodsId
+                                                                                , inAssetId                := _tmpItem.AssetId
+                                                                                , inBranchId               := NULL -- эта аналитика нужна для филиала
+                                                                                , inAccountId              := NULL -- эта аналитика нужна для "товар в пути"
+                                                                                 )
+                                             END
      WHERE vbPartnerId_To = 0;
 
      -- 1.2.2. формируются Проводки для количественного учета
      INSERT INTO _tmpMIContainer_insert (Id, DescId, MovementDescId, MovementId, MovementItemId, ContainerId
                                        , AccountId, AnalyzerId, ObjectId_Analyzer, WhereObjectId_Analyzer, ContainerId_Analyzer, ObjectIntId_Analyzer, ObjectExtId_Analyzer, ContainerIntId_Analyzer
                                        , ParentId, Amount, OperDate, isActive)
-       SELECT 0, zc_MIContainer_Count() AS DescId, vbMovementDescId, inMovementId, MovementItemId
+       SELECT 0
+            , CASE WHEN vbOperDate >= zc_DateStart_Asset() AND vbMovementDescId = zc_Movement_IncomeAsset()
+                        THEN zc_MIContainer_CountAsset()
+                        ELSE zc_MIContainer_Count()
+              END AS DescId
+            , vbMovementDescId, inMovementId, MovementItemId
             , ContainerId_Goods
             , 0                                       AS AccountId              -- нет счета
             , CASE WHEN _tmpItem.isTareReturning = TRUE THEN zc_Enum_AnalyzerId_TareReturning() ELSE 0 END AS AnalyzerId             -- нет аналитики, т.е. деление Поставщик, Заготовитель, Покупатель, Талоны пока не надо
@@ -2273,7 +2443,12 @@ END IF;
        FROM _tmpItem
        -- WHERE OperCount <> 0
       UNION ALL
-       SELECT 0, zc_MIContainer_Count() AS DescId, vbMovementDescId, inMovementId, MovementItemId
+       SELECT 0
+            , CASE WHEN vbOperDate >= zc_DateStart_Asset() AND vbMovementDescId = zc_Movement_IncomeAsset()
+                        THEN zc_MIContainer_CountAsset()
+                        ELSE zc_MIContainer_Count()
+              END AS DescId
+            , vbMovementDescId, inMovementId, MovementItemId
             , ContainerId_Goods
             , 0                                       AS AccountId                -- нет счета
             , zc_Enum_AnalyzerId_Count_40200()        AS AnalyzerId               -- есть аналитика, Разница в весе, хотя реально эта разница не попадает в статью затрат 40200...
@@ -2290,7 +2465,12 @@ END IF;
        FROM _tmpItem
        WHERE OperCount <> OperCount_Partner
       UNION ALL
-       SELECT 0, zc_MIContainer_Count() AS DescId, vbMovementDescId, inMovementId, MovementItemId
+       SELECT 0
+            , CASE WHEN vbOperDate >= zc_DateStart_Asset() AND vbMovementDescId = zc_Movement_IncomeAsset()
+                        THEN zc_MIContainer_CountAsset()
+                        ELSE zc_MIContainer_Count()
+              END AS DescId
+            , vbMovementDescId, inMovementId, MovementItemId
             , ContainerId_Goods
             , 0                                       AS AccountId                -- нет счета
             , zc_Enum_AnalyzerId_Income_Packer()      AS AnalyzerId               -- есть аналитика, по заготовителю
@@ -2400,24 +2580,46 @@ END IF;
     ;
 
      -- 1.3.2. определяется ContainerId_Summ для проводок по суммовому учету + формируется Аналитика <элемент с/с>
-     UPDATE _tmpItem SET ContainerId_Summ = lpInsertUpdate_ContainerSumm_Goods (inOperDate               := vbOperDate
-                                                                              , inUnitId                 := vbUnitId
-                                                                              , inCarId                  := vbCarId
-                                                                              , inMemberId               := vbMemberId_To
-                                                                              , inBranchId               := NULL -- эта аналитика нужна для филиала
-                                                                              , inJuridicalId_basis      := vbJuridicalId_Basis_To
-                                                                              , inBusinessId             := _tmpItem.BusinessId
-                                                                              , inAccountId              := _tmpItem.AccountId
-                                                                              , inInfoMoneyDestinationId := _tmpItem.InfoMoneyDestinationId
-                                                                              , inInfoMoneyId            := _tmpItem.InfoMoneyId
-                                                                              , inInfoMoneyId_Detail     := _tmpItem.InfoMoneyId_Detail
-                                                                              , inContainerId_Goods      := _tmpItem.ContainerId_Goods
-                                                                              , inGoodsId                := _tmpItem.GoodsId
-                                                                              , inGoodsKindId            := _tmpItem.GoodsKindId
-                                                                              , inIsPartionSumm          := _tmpItem.isPartionSumm
-                                                                              , inPartionGoodsId         := _tmpItem.PartionGoodsId
-                                                                              , inAssetId                := _tmpItem.AssetId
-                                                                               )
+     UPDATE _tmpItem SET ContainerId_Summ =  CASE WHEN vbOperDate >= zc_DateStart_Asset() AND vbMovementDescId = zc_Movement_IncomeAsset()
+                                             THEN
+                                                  lpInsertUpdate_ContainerSumm_Asset (inOperDate               := vbOperDate
+                                                                                    , inUnitId                 := vbUnitId
+                                                                                    , inCarId                  := vbCarId
+                                                                                    , inMemberId               := vbMemberId_To
+                                                                                    , inBranchId               := NULL -- эта аналитика нужна для филиала
+                                                                                    , inJuridicalId_basis      := vbJuridicalId_Basis_To
+                                                                                    , inBusinessId             := _tmpItem.BusinessId
+                                                                                    , inAccountId              := _tmpItem.AccountId
+                                                                                    , inInfoMoneyDestinationId := _tmpItem.InfoMoneyDestinationId
+                                                                                    , inInfoMoneyId            := _tmpItem.InfoMoneyId
+                                                                                    , inInfoMoneyId_Detail     := _tmpItem.InfoMoneyId_Detail
+                                                                                    , inContainerId_Goods      := _tmpItem.ContainerId_Goods
+                                                                                    , inGoodsId                := _tmpItem.GoodsId
+                                                                                    , inGoodsKindId            := _tmpItem.GoodsKindId
+                                                                                    , inIsPartionSumm          := _tmpItem.isPartionSumm
+                                                                                    , inPartionGoodsId         := _tmpItem.PartionGoodsId
+                                                                                    , inAssetId                := _tmpItem.AssetId
+                                                                                     )
+                                             ELSE
+                                                  lpInsertUpdate_ContainerSumm_Goods (inOperDate               := vbOperDate
+                                                                                    , inUnitId                 := vbUnitId
+                                                                                    , inCarId                  := vbCarId
+                                                                                    , inMemberId               := vbMemberId_To
+                                                                                    , inBranchId               := NULL -- эта аналитика нужна для филиала
+                                                                                    , inJuridicalId_basis      := vbJuridicalId_Basis_To
+                                                                                    , inBusinessId             := _tmpItem.BusinessId
+                                                                                    , inAccountId              := _tmpItem.AccountId
+                                                                                    , inInfoMoneyDestinationId := _tmpItem.InfoMoneyDestinationId
+                                                                                    , inInfoMoneyId            := _tmpItem.InfoMoneyId
+                                                                                    , inInfoMoneyId_Detail     := _tmpItem.InfoMoneyId_Detail
+                                                                                    , inContainerId_Goods      := _tmpItem.ContainerId_Goods
+                                                                                    , inGoodsId                := _tmpItem.GoodsId
+                                                                                    , inGoodsKindId            := _tmpItem.GoodsKindId
+                                                                                    , inIsPartionSumm          := _tmpItem.isPartionSumm
+                                                                                    , inPartionGoodsId         := _tmpItem.PartionGoodsId
+                                                                                    , inAssetId                := _tmpItem.AssetId
+                                                                                     )
+                                             END
      WHERE _tmpItem.ContainerId_ProfitLoss = 0 -- !!!если НЕ ОПиУ!!!
     ;
 
@@ -2425,7 +2627,12 @@ END IF;
      INSERT INTO _tmpMIContainer_insert (Id, DescId, MovementDescId, MovementId, MovementItemId, ContainerId
                                        , AccountId, AnalyzerId, ObjectId_Analyzer, WhereObjectId_Analyzer, ContainerId_Analyzer, ObjectIntId_Analyzer, ObjectExtId_Analyzer, ContainerIntId_Analyzer
                                        , ParentId, Amount, OperDate, isActive)
-       SELECT 0, zc_MIContainer_Summ() AS DescId, vbMovementDescId, inMovementId, MovementItemId
+       SELECT 0
+            , CASE WHEN vbOperDate >= zc_DateStart_Asset() AND vbMovementDescId = zc_Movement_IncomeAsset()
+                        THEN zc_MIContainer_SummAsset()
+                        ELSE zc_MIContainer_Summ()
+              END AS DescId
+            , vbMovementDescId, inMovementId, MovementItemId
             , ContainerId_Summ
             , _tmpItem.AccountId                      AS AccountId                -- счет есть всегда
             , 0                                       AS AnalyzerId               -- нет аналитики, т.е. деление Поставщик, Заготовитель, Покупатель, Талоны пока не надо
@@ -2443,7 +2650,12 @@ END IF;
        WHERE _tmpItem.ContainerId_ProfitLoss = 0 -- !!!если НЕ ОПиУ!!!
          AND _tmpItem.OperSumm_Partner <> 0
       UNION ALL
-       SELECT 0, zc_MIContainer_Summ() AS DescId, vbMovementDescId, inMovementId, MovementItemId
+       SELECT 0
+            , CASE WHEN vbOperDate >= zc_DateStart_Asset() AND vbMovementDescId = zc_Movement_IncomeAsset()
+                        THEN zc_MIContainer_SummAsset()
+                        ELSE zc_MIContainer_Summ()
+              END AS DescId
+            , vbMovementDescId, inMovementId, MovementItemId
             , ContainerId_Summ
             , _tmpItem.AccountId                      AS AccountId                -- счет есть всегда
             , zc_Enum_AnalyzerId_Count_40200()        AS AnalyzerId               -- есть аналитика, Разница в весе, хотя реально эта разница не попадает в статью затрат 40200...
@@ -2462,7 +2674,12 @@ END IF;
          AND _tmpItem.OperSumm_Partner <> 0
          AND _tmpItem.OperCount <> OperCount_Partner
       UNION ALL
-       SELECT 0, zc_MIContainer_Summ() AS DescId, vbMovementDescId, inMovementId, MovementItemId
+       SELECT 0
+            , CASE WHEN vbOperDate >= zc_DateStart_Asset() AND vbMovementDescId = zc_Movement_IncomeAsset()
+                        THEN zc_MIContainer_SummAsset()
+                        ELSE zc_MIContainer_Summ()
+              END AS DescId
+            , vbMovementDescId, inMovementId, MovementItemId
             , ContainerId_Summ
             , _tmpItem.AccountId                      AS AccountId                -- счет есть всегда
             , zc_Enum_AnalyzerId_Income_Packer()      AS AnalyzerId               -- есть аналитика, по заготовителю
@@ -2485,7 +2702,12 @@ END IF;
      INSERT INTO _tmpMIContainer_insert (Id, DescId, MovementDescId, MovementId, MovementItemId, ContainerId
                                        , AccountId, AnalyzerId, ObjectId_Analyzer, WhereObjectId_Analyzer, ContainerId_Analyzer, ObjectIntId_Analyzer, ObjectExtId_Analyzer, ContainerIntId_Analyzer
                                        , ParentId, Amount, OperDate, isActive)
-       SELECT 0, zc_MIContainer_Summ() AS DescId, vbMovementDescId, inMovementId, _tmpItem.MovementItemId
+       SELECT 0
+            , CASE WHEN vbOperDate >= zc_DateStart_Asset() AND vbMovementDescId = zc_Movement_IncomeAsset()
+                        THEN zc_MIContainer_SummAsset()
+                        ELSE zc_MIContainer_Summ()
+              END AS DescId
+            , vbMovementDescId, inMovementId, _tmpItem.MovementItemId
             , _tmpItem.ContainerId_ProfitLoss
             , zc_Enum_Account_100301()                   AS AccountId                -- прибыль текущего периода
             , 0                                          AS AnalyzerId               -- в ОПиУ как правило не нужена аналитика, т.к. ...
@@ -2503,7 +2725,7 @@ END IF;
        WHERE _tmpItem.ContainerId_ProfitLoss <> 0 -- !!!если ОПиУ!!!
       ;
 /*
-RAISE EXCEPTION '<%>   %' 
+RAISE EXCEPTION '<%>   %'
 ,(SELECT DISTINCT _tmpItem_SummPartner.ContainerId_Currency
              FROM _tmpItem_SummPartner
              WHERE vbInvoiceSumm_Currency <> 0
@@ -2518,7 +2740,12 @@ RAISE EXCEPTION '<%>   %'
                                        , AccountId, AnalyzerId, ObjectId_Analyzer, WhereObjectId_Analyzer, ContainerId_Analyzer, ObjectIntId_Analyzer, ObjectExtId_Analyzer, ContainerIntId_Analyzer
                                        , ParentId, Amount, OperDate, IsActive)
        -- это обычная проводка
-       SELECT 0, zc_MIContainer_Summ() AS DescId, vbMovementDescId, inMovementId, _tmpItem_SummPartner.MovementItemId
+       SELECT 0
+            , CASE WHEN vbOperDate >= zc_DateStart_Asset() AND vbMovementDescId = zc_Movement_IncomeAsset()
+                        THEN zc_MIContainer_SummAsset()
+                        ELSE zc_MIContainer_Summ()
+              END AS DescId
+            , vbMovementDescId, inMovementId, _tmpItem_SummPartner.MovementItemId
             , _tmpItem_SummPartner.ContainerId
             , _tmpItem_SummPartner.AccountId          AS AccountId                -- счет есть всегда
             , 0                                       AS AnalyzerId               -- нет аналитики, т.е. деление Поставщик, Заготовитель, Покупатель, Талоны пока не надо
@@ -2539,7 +2766,12 @@ RAISE EXCEPTION '<%>   %'
 
      UNION ALL
        -- это взаимозачет - 1.1.
-       SELECT 0, zc_MIContainer_Summ() AS DescId, vbMovementDescId, inMovementId, 0 AS MovementItemId
+       SELECT 0
+            , CASE WHEN vbOperDate >= zc_DateStart_Asset() AND vbMovementDescId = zc_Movement_IncomeAsset()
+                        THEN zc_MIContainer_SummAsset()
+                        ELSE zc_MIContainer_Summ()
+              END AS DescId
+            , vbMovementDescId, inMovementId, 0 AS MovementItemId
             , _tmpItem_SummPartner.ContainerId
             , _tmpItem_SummPartner.AccountId          AS AccountId                -- счет есть всегда
             , 0                                       AS AnalyzerId               -- нет аналитики, т.е. деление Поставщик, Заготовитель, Покупатель, Талоны пока не надо
@@ -2559,7 +2791,12 @@ RAISE EXCEPTION '<%>   %'
             ) AS _tmpItem_SummPartner
      UNION ALL
        -- это взаимозачет - 1.2.
-       SELECT 0, zc_MIContainer_Summ() AS DescId, vbMovementDescId, inMovementId, 0 AS MovementItemId
+       SELECT 0
+            , CASE WHEN vbOperDate >= zc_DateStart_Asset() AND vbMovementDescId = zc_Movement_IncomeAsset()
+                        THEN zc_MIContainer_SummAsset()
+                        ELSE zc_MIContainer_Summ()
+              END AS DescId
+            , vbMovementDescId, inMovementId, 0 AS MovementItemId
             , _tmpItem_SummPartner.ContainerId_re
             , _tmpItem_SummPartner.AccountId          AS AccountId                -- счет есть всегда
             , 0                                       AS AnalyzerId               -- нет аналитики, т.е. деление Поставщик, Заготовитель, Покупатель, Талоны пока не надо
@@ -2638,7 +2875,12 @@ RAISE EXCEPTION '<%>   %'
 
      UNION ALL
        -- это две проводки для счета Транзит
-       SELECT 0, zc_MIContainer_Summ() AS DescId, vbMovementDescId, inMovementId, _tmpItem_SummPartner.MovementItemId
+       SELECT 0
+            , CASE WHEN vbOperDate >= zc_DateStart_Asset() AND vbMovementDescId = zc_Movement_IncomeAsset()
+                        THEN zc_MIContainer_SummAsset()
+                        ELSE zc_MIContainer_Summ()
+              END AS DescId
+            , vbMovementDescId, inMovementId, _tmpItem_SummPartner.MovementItemId
             , _tmpItem_SummPartner.ContainerId_Transit
             , _tmpItem_SummPartner.AccountId_Transit  AS AccountId                -- есть счет (т.е. в отчетах определяется "транзит")
             , 0                                       AS AnalyzerId               -- нет аналитики, т.е. деление Поставщик, Заготовитель, Покупатель, Талоны пока не надо
@@ -2745,7 +2987,12 @@ RAISE EXCEPTION '<%>   %'
      INSERT INTO _tmpMIContainer_insert (Id, DescId, MovementDescId, MovementId, MovementItemId, ContainerId
                                        , AccountId, AnalyzerId, ObjectId_Analyzer, WhereObjectId_Analyzer, ContainerId_Analyzer, ObjectIntId_Analyzer, ObjectExtId_Analyzer, ContainerIntId_Analyzer
                                        , ParentId, Amount, OperDate, isActive)
-       SELECT 0, zc_MIContainer_Summ() AS DescId, vbMovementDescId, inMovementId, 0 AS MovementItemId
+       SELECT 0
+            , CASE WHEN vbOperDate >= zc_DateStart_Asset() AND vbMovementDescId = zc_Movement_IncomeAsset()
+                        THEN zc_MIContainer_SummAsset()
+                        ELSE zc_MIContainer_Summ()
+              END AS DescId
+            , vbMovementDescId, inMovementId, 0 AS MovementItemId
             , _tmpItem_group.ContainerId_ProfitLoss
             , zc_Enum_Account_100301()                AS AccountId               -- прибыль текущего периода
             , _tmpItem_group.AnalyzerId               AS AnalyzerId               -- аналитика, но значение = 0

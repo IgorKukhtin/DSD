@@ -23,10 +23,12 @@ BEGIN
      -- нужен тип документа, т.к. проведение для двух разных видов документов
      SELECT Movement.DescId
           , CASE WHEN Object_InfoMoney_View.InfoMoneyDestinationId IN (zc_Enum_InfoMoneyDestination_21500()) -- Маркетинг
+                  AND MILinkObject_PaidKind.ObjectId = zc_Enum_PaidKind_FirstForm()
                  THEN TRUE
                  ELSE FALSE
             END
           , CASE WHEN Object_InfoMoney_View.InfoMoneyId IN (zc_Enum_InfoMoney_30503()) -- Бонусы от поставщиков
+                  AND (Movement.DescId = zc_Movement_ProfitIncomeService() OR Movement.OperDate >= '01.09.2020')
                  THEN TRUE
                  ELSE FALSE
             END
@@ -35,6 +37,9 @@ BEGIN
                , vbIsAccount_60301 -- Прибыль будущих периодов + Услуги по маркетингу
      FROM Movement
           JOIN MovementItem ON MovementItem.MovementId = Movement.Id AND MovementItem.DescId = zc_MI_Master()
+          LEFT JOIN MovementItemLinkObject AS MILinkObject_PaidKind
+                                           ON MILinkObject_PaidKind.MovementItemId = MovementItem.Id
+                                          AND MILinkObject_PaidKind.DescId = zc_MILinkObject_PaidKind()
           LEFT JOIN MovementItemLinkObject AS MILinkObject_InfoMoney
                                            ON MILinkObject_InfoMoney.MovementItemId = MovementItem.Id
                                           AND MILinkObject_InfoMoney.DescId = zc_MILinkObject_InfoMoney()

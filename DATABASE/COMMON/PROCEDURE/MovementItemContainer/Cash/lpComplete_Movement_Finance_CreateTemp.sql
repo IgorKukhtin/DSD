@@ -15,7 +15,7 @@ BEGIN
          DELETE FROM _tmpItem;
      ELSE
      -- таблица - элементы документа, со всеми свойствами для формирования Аналитик в проводках
-     CREATE TEMP TABLE _tmpItem (MovementDescId Integer, OperDate TDateTime, ObjectId Integer, ObjectDescId Integer, OperSumm TFloat, OperSumm_Currency TFloat, OperSumm_Diff TFloat, Price TFloat
+     CREATE TEMP TABLE _tmpItem (MovementDescId Integer, OperDate TDateTime, ObjectId Integer, ObjectDescId Integer, OperSumm TFloat, OperSumm_Currency TFloat, OperSumm_Diff TFloat, OperSumm_Asset TFloat, OperSumm_Diff_Asset TFloat, Price TFloat
                                , MovementItemId Integer, ContainerId Integer, ContainerId_Currency Integer, ContainerId_Diff Integer, ProfitLossId_Diff Integer
                                , AccountGroupId Integer, AccountDirectionId Integer, AccountId Integer
                                , ProfitLossGroupId Integer, ProfitLossDirectionId Integer

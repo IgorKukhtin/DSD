@@ -1,8 +1,8 @@
--- Function: lpComplete_Movement_Finance (Integer, Boolean)
+-- Function: lpComplete_Movement_Finance22 (Integer, Boolean)
 
-DROP FUNCTION IF EXISTS lpComplete_Movement_Finance (Integer, Integer);
+DROP FUNCTION IF EXISTS lpComplete_Movement_Finance22 (Integer, Integer);
 
-CREATE OR REPLACE FUNCTION lpComplete_Movement_Finance(
+CREATE OR REPLACE FUNCTION lpComplete_Movement_Finance22(
     IN inMovementId        Integer  , -- ключ Документа
     IN inUserId            Integer    -- Пользователь
 )
@@ -12,7 +12,7 @@ $BODY$
   DECLARE vbTmp Integer;
 BEGIN
      -- Проверка
-     IF EXISTS (SELECT SUM (OperSumm + CASE WHEN _tmpItem.MovementDescId = zc_Movement_Cash() THEN 0 ELSE COALESCE (OperSumm_Diff, 0) END) FROM _tmpItem /*WHERE MovementDescId = zc_Movement_ProfitLossService()*/ HAVING SUM (OperSumm + CASE WHEN _tmpItem.MovementDescId = zc_Movement_Cash() THEN 0 ELSE COALESCE (OperSumm_Diff, 0) END) <> 0)
+     IF EXISTS (SELECT SUM (OperSumm + CASE WHEN _tmpItem.MovementDescId = zc_Movement_Cash() THEN 0 ELSE COALESCE (OperSumm_Diff, 0) + COALESCE (OperSumm_Diff_Asset, 0) END) FROM _tmpItem /*WHERE MovementDescId = zc_Movement_ProfitLossService()*/ HAVING SUM (OperSumm + CASE WHEN _tmpItem.MovementDescId = zc_Movement_Cash() THEN 0 ELSE COALESCE (OperSumm_Diff, 0) + COALESCE (OperSumm_Diff_Asset, 0) END) <> 0)
      THEN
          RAISE EXCEPTION 'Ошибка.В проводке отличаются сумма <Дебет> и сумма <Кредит> : (%) (%) = (%)', (SELECT SUM (OperSumm) FROM _tmpItem WHERE IsMaster = TRUE), (SELECT SUM (OperSumm) FROM _tmpItem WHERE IsMaster = FALSE), (SELECT SUM (OperSumm) FROM _tmpItem);
      END IF;
@@ -281,6 +281,10 @@ BEGIN
                                                            THEN zc_Enum_ProfitLossDirection_70200() -- Дополнительная прибыль + Прочее
 
                                                       WHEN _tmpItem.MovementDescId = zc_Movement_BankAccount()
+                                                       AND (_tmpItem.InfoMoneyGroupId <> zc_Enum_InfoMoneyGroup_70000() -- Инвестиции
+                                                         OR _tmpItem.InfoMoneyDestinationId = zc_Enum_InfoMoneyDestination_70500() -- НМА
+                                                         OR _tmpItem.OperDate < zc_DateStart_Asset()
+                                                           )
                                                            THEN zc_Enum_ProfitLossDirection_80100() -- Расходы с прибыли + Финансовая деятельность
 
                                                       WHEN _tmpItem.InfoMoneyDestinationId = zc_Enum_InfoMoneyDestination_40400() -- Финансовая деятельность + проценты по кредитам
@@ -350,7 +354,7 @@ BEGIN
 
      -- 1.2.3. определяется ObjectId для проводок суммового учета по счету Прибыль
      UPDATE _tmpItem SET ObjectId = CASE WHEN _tmpItem.MovementDescId = zc_Movement_Currency()
-                                           OR (_tmpItem.OperSumm_Diff  <> 0
+                                           OR ((_tmpItem.OperSumm_Diff  <> 0 OR _tmpItem.OperSumm_Diff_Asset  <> 0)
                                            AND _tmpItem.MovementDescId = zc_Movement_Cash()
                                               )
                                               THEN zc_Enum_ProfitLoss_80103() -- Курсовая разница
@@ -358,35 +362,108 @@ BEGIN
                                          WHEN _tmpItem.MovementDescId = zc_Movement_LossPersonal()
                                               THEN zc_Enum_ProfitLoss_70501() -- Списание задолженности по ЗП
 
+                                         -- Капитальные Затраты - по оплате
+                                         WHEN _tmpItem.InfoMoneyDestinationId = zc_Enum_InfoMoneyDestination_70100() -- Инвестиции + Капитальные инвестиции
+                                          AND _tmpItem.ProfitLossGroupId IN (zc_Enum_ProfitLossGroup_20000(), zc_Enum_ProfitLossGroup_30000()) -- Общепроизводственные расходы
+                                          AND _tmpItem.OperDate >= zc_DateStart_Asset() AND _tmpItem.MovementDescId IN (zc_Movement_BankAccount(), zc_Movement_Cash())
+
+                                              THEN CASE WHEN _tmpItem.ProfitLossGroupId = zc_Enum_ProfitLossGroup_20000() -- Общепроизводственные расходы
+                                                             THEN zc_Enum_ProfitLoss_65201() -- Производственные ОС + Основные средства
+
+                                                        WHEN _tmpItem.ProfitLossGroupId = zc_Enum_ProfitLossGroup_30000() -- Административные расходы
+                                                             THEN zc_Enum_ProfitLoss_65101() -- Административные ОС + Основные средства
+
+                                                        ELSE NULL -- !!!Ошибка!!!
+                                                   END
+
+                                         -- Расходы строительные
                                          WHEN _tmpItem.InfoMoneyDestinationId = zc_Enum_InfoMoneyDestination_70100() -- Инвестиции + Капитальные инвестиции
                                           AND _tmpItem.ProfitLossGroupId IN (zc_Enum_ProfitLossGroup_20000(), zc_Enum_ProfitLossGroup_30000()) -- Общепроизводственные расходы
 
                                               THEN CASE WHEN _tmpItem.ProfitLossGroupId = zc_Enum_ProfitLossGroup_20000() -- Общепроизводственные расходы
-                                                             THEN zc_Enum_ProfitLoss_60201() -- Амортизация + Производственные ОС + Основные средства
+                                                             THEN zc_Enum_ProfitLoss_60201() -- Производственные ОС + Основные средства
 
                                                         WHEN _tmpItem.ProfitLossGroupId = zc_Enum_ProfitLossGroup_30000() -- Административные расходы
-                                                             THEN zc_Enum_ProfitLoss_60101() -- Амортизация + Административные ОС + Основные средства
+                                                             THEN zc_Enum_ProfitLoss_60101() -- Административные ОС + Основные средства
 
                                                         ELSE NULL -- !!!Ошибка!!!
                                                    END
+
+                                         -- Капитальные Затраты - по оплате
+                                         WHEN _tmpItem.InfoMoneyGroupId = zc_Enum_InfoMoneyGroup_70000() -- Инвестиции
+                                          AND _tmpItem.OperDate >= zc_DateStart_Asset() AND _tmpItem.MovementDescId IN (zc_Movement_BankAccount(), zc_Movement_Cash())
+                                          AND _tmpItem.InfoMoneyDestinationId <> zc_Enum_InfoMoneyDestination_70500() -- НМА
+                                          AND _tmpItem.ProfitLossDirectionId > 0
+
+                                              THEN CASE -- Общепроизводственные расходы -> Капитальные Затраты + Производственные ОС
+                                                        WHEN _tmpItem.ProfitLossGroupId = zc_Enum_ProfitLossGroup_20000()
+                                                         AND _tmpItem.InfoMoneyDestinationId = zc_Enum_InfoMoneyDestination_70200() -- Капитальный ремонт
+                                                             THEN zc_Enum_ProfitLoss_65202() -- Капитальный ремонт
+                                                        -- Общепроизводственные расходы -> Капитальные Затраты + Производственные ОС
+                                                        WHEN _tmpItem.ProfitLossGroupId = zc_Enum_ProfitLossGroup_20000()
+                                                         AND _tmpItem.InfoMoneyDestinationId = zc_Enum_InfoMoneyDestination_70400() -- Капитальное строительство
+                                                             THEN zc_Enum_ProfitLoss_65203() -- Капитальное строительство
+                                                        -- Общепроизводственные расходы -> Капитальные Затраты + Производственные ОС
+                                                        WHEN _tmpItem.ProfitLossGroupId = zc_Enum_ProfitLossGroup_20000()
+                                                             THEN zc_Enum_ProfitLoss_65201() -- Основные средства*****
+
+                                                        -- Административные расходы + Расходы на сбыт -> Капитальные Затраты + Административные ОС
+                                                        WHEN (_tmpItem.ProfitLossGroupId = zc_Enum_ProfitLossGroup_30000()
+                                                           OR _tmpItem.ProfitLossGroupId = zc_Enum_ProfitLossGroup_40000())
+                                                         AND _tmpItem.InfoMoneyDestinationId = zc_Enum_InfoMoneyDestination_70200() -- Капитальный ремонт
+                                                             THEN zc_Enum_ProfitLoss_65102() -- Капитальный ремонт
+                                                        -- Административные расходы + Расходы на сбыт -> Капитальные Затраты + Административные ОС
+                                                        WHEN (_tmpItem.ProfitLossGroupId = zc_Enum_ProfitLossGroup_30000()  -- Административные расходы
+                                                           OR _tmpItem.ProfitLossGroupId = zc_Enum_ProfitLossGroup_40000()) -- Расходы на сбыт
+                                                         AND _tmpItem.InfoMoneyDestinationId = zc_Enum_InfoMoneyDestination_70400() -- Капитальное строительство
+                                                             THEN zc_Enum_ProfitLoss_65103() -- Капитальное строительство
+                                                        -- Административные расходы + Расходы на сбыт -> Капитальные Затраты + Административные ОС
+                                                        WHEN (_tmpItem.ProfitLossGroupId = zc_Enum_ProfitLossGroup_30000()  -- Административные расходы
+                                                           OR _tmpItem.ProfitLossGroupId = zc_Enum_ProfitLossGroup_40000()) -- Расходы на сбыт
+                                                             THEN zc_Enum_ProfitLoss_65101() -- Основные средства*****
+
+                                                        ELSE -1
+                                                   END
+
                                          ELSE
                                     lpInsertFind_Object_ProfitLoss (inProfitLossGroupId      := CASE WHEN _tmpItem.InfoMoneyGroupId = zc_Enum_InfoMoneyGroup_70000() -- Инвестиции
-                                                                                                          THEN zc_Enum_ProfitLossGroup_60000() -- Амортизация
+                                                                                                      AND _tmpItem.OperDate >= zc_DateStart_Asset() AND _tmpItem.MovementDescId IN (zc_Movement_BankAccount(), zc_Movement_Cash())
+                                                                                                          THEN zc_Enum_ProfitLossGroup_70000() -- Капитальные Затраты
+
+                                                                                                     WHEN _tmpItem.InfoMoneyGroupId = zc_Enum_InfoMoneyGroup_70000() -- Инвестиции
+                                                                                                          THEN zc_Enum_ProfitLossGroup_60000() -- Расходы строительные
+
                                                                                                      ELSE _tmpItem.ProfitLossGroupId
                                                                                                 END
                                                                   , inProfitLossDirectionId  := CASE WHEN _tmpItem.InfoMoneyGroupId = zc_Enum_InfoMoneyGroup_70000() -- Инвестиции
+                                                                                                      AND _tmpItem.OperDate >= zc_DateStart_Asset() AND _tmpItem.MovementDescId IN (zc_Movement_BankAccount(), zc_Movement_Cash())
 
                                                                                                           THEN CASE WHEN _tmpItem.ProfitLossGroupId = zc_Enum_ProfitLossGroup_20000() -- Общепроизводственные расходы
-                                                                                                                         THEN zc_Enum_ProfitLossDirection_60200() -- Амортизация + Производственные ОС
+                                                                                                                         THEN zc_Enum_ProfitLossDirection_65200() -- Капитальные Затраты + Производственные ОС
 
                                                                                                                     WHEN _tmpItem.ProfitLossGroupId = zc_Enum_ProfitLossGroup_30000() -- Административные расходы
-                                                                                                                         THEN zc_Enum_ProfitLossDirection_60100() -- Амортизация + Административные ОС
+                                                                                                                         THEN zc_Enum_ProfitLossDirection_65100() -- Капитальные Затраты + Административные ОС
 
                                                                                                                     WHEN _tmpItem.ProfitLossGroupId = zc_Enum_ProfitLossGroup_40000() -- Расходы на сбыт
-                                                                                                                         THEN zc_Enum_ProfitLossDirection_60100() -- Амортизация + Административные ОС
+                                                                                                                         THEN zc_Enum_ProfitLossDirection_65100() -- Капитальные Затраты + Административные ОС
 
                                                                                                                     ELSE _tmpItem.ProfitLossDirectionId
-                                                                                                              END
+                                                                                                               END
+
+                                                                                                     WHEN _tmpItem.InfoMoneyGroupId = zc_Enum_InfoMoneyGroup_70000() -- Инвестиции
+
+                                                                                                          THEN CASE WHEN _tmpItem.ProfitLossGroupId = zc_Enum_ProfitLossGroup_20000() -- Общепроизводственные расходы
+                                                                                                                         THEN zc_Enum_ProfitLossDirection_60200() -- Расходы строительные + Производственные ОС
+
+                                                                                                                    WHEN _tmpItem.ProfitLossGroupId = zc_Enum_ProfitLossGroup_30000() -- Административные расходы
+                                                                                                                         THEN zc_Enum_ProfitLossDirection_60100() -- Расходы строительные + Административные ОС
+
+                                                                                                                    WHEN _tmpItem.ProfitLossGroupId = zc_Enum_ProfitLossGroup_40000() -- Расходы на сбыт
+                                                                                                                         THEN zc_Enum_ProfitLossDirection_60100() -- Расходы строительные + Административные ОС
+
+                                                                                                                    ELSE _tmpItem.ProfitLossDirectionId
+                                                                                                               END
+
                                                                                                      WHEN _tmpItem.InfoMoneyDestinationId = zc_Enum_InfoMoneyDestination_21600() -- Общефирменные + Коммунальные услуги
                                                                                                           THEN CASE WHEN _tmpItem.ProfitLossGroupId = zc_Enum_ProfitLossGroup_20000() -- Общепроизводственные расходы
                                                                                                                          THEN zc_Enum_ProfitLossDirection_20700() -- Общепроизводственные расходы + Коммунальные услуги
@@ -622,7 +699,7 @@ BEGIN
 
                                             WHEN _tmpItem.ObjectDescId IN (zc_Object_Juridical(), zc_Object_Partner())
                                                       -- 0.1.)Счет 0.2.)Главное Юр лицо 0.3.)Бизнес 1)Юридические лица 2)Виды форм оплаты 3)Договора 4)Статьи назначения 5)Партии накладной
-                                                 THEN lpInsertFind_Container (inContainerDescId   := zc_Container_Summ()
+                                                 THEN lpInsertFind_Container (inContainerDescId   := CASE WHEN _tmpItem.OperSumm_Asset <> 0 OR _tmpItem.OperSumm_Diff_Asset <> 0 THEN zc_Container_SummAsset() ELSE zc_Container_Summ() END
                                                                             , inParentId          := NULL
                                                                             , inObjectId          := _tmpItem.AccountId
                                                                             , inJuridicalId_basis := _tmpItem.JuridicalId_Basis
@@ -774,7 +851,9 @@ BEGIN
                                        , AccountId, AnalyzerId, ObjectId_Analyzer, WhereObjectId_Analyzer, ContainerId_Analyzer, AccountId_Analyzer, ObjectIntId_Analyzer, ObjectExtId_Analyzer
                                        , ParentId, Amount, OperDate, IsActive)
        -- это "обычные" проводки
-       SELECT 0, zc_MIContainer_Summ() AS DescId, _tmpItem.MovementDescId, inMovementId, _tmpItem.MovementItemId
+       SELECT 0
+            , CASE WHEN _tmpItem.OperSumm_Asset <> 0 OR _tmpItem.OperSumm_Diff_Asset <> 0 THEN zc_MIContainer_SummAsset() ELSE zc_MIContainer_Summ() END AS DescId
+            , _tmpItem.MovementDescId, inMovementId, _tmpItem.MovementItemId
             , _tmpItem.ContainerId
             , _tmpItem.AccountId                  AS AccountId
             , _tmpItem.AnalyzerId                 AS AnalyzerId
@@ -821,7 +900,9 @@ BEGIN
                                                AND _tmpItem.ContainerId_Diff = 0
       UNION ALL
        -- это !!!одна!!! проводка для "курсовой разницы" - "zc_Object_BankAccount"
-       SELECT 0, zc_MIContainer_Summ() AS DescId, _tmpItem.MovementDescId, inMovementId, _tmpItem.MovementItemId
+       SELECT 0
+            , CASE WHEN _tmpItem.OperSumm_Asset <> 0 OR _tmpItem.OperSumm_Diff_Asset <> 0 THEN zc_MIContainer_SummAsset() ELSE zc_MIContainer_Summ() END AS DescId
+            , _tmpItem.MovementDescId, inMovementId, _tmpItem.MovementItemId
             , _tmpItem.ContainerId
             , _tmpItem.AccountId                  AS AccountId
             , zc_Enum_AnalyzerId_ProfitLoss()     AS AnalyzerId -- то что относится к ОПиУ, кроме проводок с товарами
@@ -861,7 +942,9 @@ BEGIN
 
       UNION ALL
        -- это !!!одна!!! проводка для "курсовой разницы" - "Прибыль"
-       SELECT 0, zc_MIContainer_Summ() AS DescId, _tmpItem.MovementDescId, inMovementId, _tmpItem.MovementItemId
+       SELECT 0
+            , CASE WHEN _tmpItem.OperSumm_Asset <> 0 OR _tmpItem.OperSumm_Diff_Asset <> 0 THEN zc_MIContainer_SummAsset() ELSE zc_MIContainer_Summ() END AS DescId
+            , _tmpItem.MovementDescId, inMovementId, _tmpItem.MovementItemId
             , _tmpItem.ContainerId_Diff
             , zc_Enum_Account_100301()            AS AccountId -- прибыль текущего периода
             , 0                                   AS AnalyzerId
