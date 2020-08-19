@@ -42,21 +42,21 @@ BEGIN
      PERFORM lpInsertUpdate_Movement_ProfitLossService (ioId                := 0
                                                       , inInvNumber         := CAST (NEXTVAL ('movement_profitlossservice_seq') AS TVarChar) 
                                                       , inOperDate          := inEndDate
-                                                      , inAmountIn          := 0  :: tfloat
-                                                      , inAmountOut         := Sum_Bonus
-                                                      , inBonusValue        := CAST (Value AS NUMERIC (16, 2))
-                                                      , inComment           := Comment
+                                                      , inAmountIn          := 0                               :: TFloat
+                                                      , inAmountOut         := Sum_Bonus                       :: TFloat
+                                                      , inBonusValue        := CAST (Value AS NUMERIC (16, 2)) :: TFloat
+                                                      , inComment           := Comment                         :: TVarChar
                                                       , inContractId        := ContractId_find
                                                       , inContractMasterId  := ContractId_master
                                                       , inContractChildId   := ContractId_Child
                                                       , inInfoMoneyId       := InfoMoneyId_find
                                                       , inJuridicalId       := CASE WHEN PartnerId > 0 THEN PartnerId ELSE JuridicalId END  -- если выбран контрагент - записываем его а по нему уже понятно кто юр.лицо JuridicalId
                                                       , inPaidKindId        := PaidKindId
-                                                      , inUnitId            := 0 :: Integer
+                                                      , inUnitId            := 0                               :: Integer
                                                       , inContractConditionKindId   := ConditionKindId
                                                       , inBonusKindId       := BonusKindId
                                                       , inBranchId          := BranchId
-                                                      , inIsLoad            := TRUE
+                                                      , inIsLoad            := TRUE                            :: Boolean
                                                       , inUserId            := vbUserId
                                                        )
      FROM gpReport_CheckBonus (inStartDate:= inStartDate, inEndDate:= inEndDate, inPaidKindID:= inPaidKindID, inJuridicalId:= inJuridicalId, inBranchId:= inBranchId, inSession:= inSession) AS tmp
