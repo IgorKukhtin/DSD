@@ -35,7 +35,7 @@ RETURNS TABLE (Id Integer, GoodsId Integer, GoodsCode Integer, GoodsName TVarCha
              , AccommodationId Integer, AccommodationName TVarChar
              , DateInsertChild TDateTime , DateInsert TDateTime
              , isPromo Boolean
-             , CommentTRId Integer, CommentTRCode Integer, CommentTRName TVarChar
+             , CommentSendId Integer, CommentSendCode Integer, CommentSendName TVarChar
               )
 AS
 $BODY$
@@ -457,9 +457,9 @@ BEGIN
    
               , COALESCE(tmpPromo.GoodsId, 0) <> 0                               AS isPromo
 
-              , Object_CommentTR.Id                                                 AS CommentTRId
-              , Object_CommentTR.ObjectCode                                         AS CommentTRCode
-              , Object_CommentTR.ValueData                                          AS CommentTRName
+              , Object_CommentSend.Id                                                 AS CommentTRId
+              , Object_CommentSend.ObjectCode                                         AS CommentTRCode
+              , Object_CommentSend.ValueData                                          AS CommentTRName
 
             FROM tmpRemains
                 FULL OUTER JOIN MovementItem_Send ON tmpRemains.GoodsId = MovementItem_Send.ObjectId
@@ -494,11 +494,11 @@ BEGIN
                 LEFT OUTER JOIN Object_Goods_Retail AS Object_Goods_Retail ON Object_Goods_Retail.Id = Object_Goods.Id
                 LEFT JOIN tmpPromo ON tmpPromo.GoodsId = Object_Goods_Retail.GoodsMainId
                 
-                LEFT JOIN MovementItemLinkObject AS MILinkObject_CommentTR
-                                                 ON MILinkObject_CommentTR.MovementItemId = MovementItem_Send.Id
-                                                AND MILinkObject_CommentTR.DescId = zc_MILinkObject_CommentTR()
-                LEFT JOIN Object AS Object_CommentTR
-                                 ON Object_CommentTR.ID = MILinkObject_CommentTR.ObjectId
+                LEFT JOIN MovementItemLinkObject AS MILinkObject_CommentSend
+                                                 ON MILinkObject_CommentSend.MovementItemId = MovementItem_Send.Id
+                                                AND MILinkObject_CommentSend.DescId = zc_MILinkObject_CommentSend()
+                LEFT JOIN Object AS Object_CommentSend
+                                 ON Object_CommentSend.ID = MILinkObject_CommentSend.ObjectId
 
             WHERE Object_Goods.isErased = FALSE 
                or MovementItem_Send.id is not null;
@@ -877,9 +877,9 @@ BEGIN
            
            , COALESCE(tmpPromo.GoodsId, 0) <> 0                                AS isPromo
 
-           , Object_CommentTR.Id                                               AS CommentTRId
-           , Object_CommentTR.ObjectCode                                       AS CommentTRCode
-           , Object_CommentTR.ValueData                                        AS CommentTRName
+           , Object_CommentSend.Id                                               AS CommentTRId
+           , Object_CommentSend.ObjectCode                                       AS CommentTRCode
+           , Object_CommentSend.ValueData                                        AS CommentTRName
        FROM MovementItem_Send
             LEFT OUTER JOIN tmpRemains ON tmpRemains.GoodsId = MovementItem_Send.ObjectId
             LEFT JOIN Object AS Object_Goods ON Object_Goods.Id = MovementItem_Send.ObjectId
@@ -918,11 +918,11 @@ BEGIN
             LEFT OUTER JOIN Object_Goods_Retail AS Object_Goods_Retail ON Object_Goods_Retail.Id = MovementItem_Send.ObjectId
             LEFT JOIN tmpPromo ON tmpPromo.GoodsId = Object_Goods_Retail.GoodsMainId
 
-            LEFT JOIN MovementItemLinkObject AS MILinkObject_CommentTR
-                                             ON MILinkObject_CommentTR.MovementItemId = MovementItem_Send.Id
-                                            AND MILinkObject_CommentTR.DescId = zc_MILinkObject_CommentTR()
-            LEFT JOIN Object AS Object_CommentTR
-                             ON Object_CommentTR.ID = MILinkObject_CommentTR.ObjectId;
+            LEFT JOIN MovementItemLinkObject AS MILinkObject_CommentSend
+                                             ON MILinkObject_CommentSend.MovementItemId = MovementItem_Send.Id
+                                            AND MILinkObject_CommentSend.DescId = zc_MILinkObject_CommentSend()
+            LEFT JOIN Object AS Object_CommentSend
+                             ON Object_CommentSend.ID = MILinkObject_CommentSend.ObjectId;
      END IF;
 
 END;

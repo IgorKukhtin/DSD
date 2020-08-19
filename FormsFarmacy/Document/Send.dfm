@@ -2618,7 +2618,7 @@ inherited SendForm: TSendForm
         Name = 'inCommentTRId'
         Value = Null
         Component = MasterCDS
-        ComponentItem = 'CommentTRId'
+        ComponentItem = 'CommentSendId'
         ParamType = ptInput
         MultiSelectSeparator = ','
       end>

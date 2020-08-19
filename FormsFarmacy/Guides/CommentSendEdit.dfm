@@ -139,30 +139,10 @@
         MultiSelectSeparator = ','
       end
       item
-        Name = 'isExplanation'
+        Name = 'inCommentTRId'
         Value = Null
-        DataType = ftBoolean
-        ParamType = ptInput
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'inisResort'
-        Value = Null
-        DataType = ftBoolean
-        ParamType = ptInput
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'inisDifferenceSum'
-        Value = Null
-        DataType = ftBoolean
-        ParamType = ptInput
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'inDifferenceSum'
-        Value = Null
-        DataType = ftFloat
+        Component = CommentTRGuides
+        ComponentItem = 'Key'
         ParamType = ptInput
         MultiSelectSeparator = ','
       end>
@@ -208,27 +188,18 @@
         MultiSelectSeparator = ','
       end
       item
-        Name = 'isExplanation'
+        Name = 'CommentTRId'
         Value = Null
-        DataType = ftBoolean
+        Component = CommentTRGuides
+        ComponentItem = 'Key'
         MultiSelectSeparator = ','
       end
       item
-        Name = 'isResort'
+        Name = 'CommentTRName'
         Value = Null
-        DataType = ftBoolean
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'isDifferenceSum'
-        Value = Null
-        DataType = ftBoolean
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'DifferenceSum'
-        Value = Null
-        DataType = ftFloat
+        Component = CommentTRGuides
+        ComponentItem = 'TextValue'
+        DataType = ftString
         MultiSelectSeparator = ','
       end>
     PackSize = 1
@@ -261,7 +232,7 @@
     FormNameParam.DataType = ftString
     FormNameParam.MultiSelectSeparator = ','
     FormName = 'TCommentTRForm'
-    PositionDataSet = 'MasterCDS'
+    PositionDataSet = 'ClientDataSet'
     Params = <
       item
         Name = 'Key'
