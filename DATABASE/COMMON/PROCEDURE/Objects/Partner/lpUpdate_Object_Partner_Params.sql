@@ -57,7 +57,7 @@ BEGIN
                              ELSE ''
                         END
                      || CASE WHEN COALESCE (inCaseNumber, '') <> ''
-                                  THEN ' ' || COALESCE (inCaseNumber, '')
+                                  THEN ' корп.' || COALESCE (inCaseNumber, '')
                              ELSE ''
                         END
                        );
