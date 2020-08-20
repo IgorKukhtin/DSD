@@ -647,6 +647,7 @@ type
     isScaner: Boolean;
     FSoldRegim: Boolean;
     fShift: Boolean;
+    fPrint: Boolean;
     FTotalSumm: Currency;
     Cash: ICash;
     SoldParallel: Boolean;
@@ -1349,6 +1350,7 @@ begin
   ClearFilterAll;
 
   FiscalNumber := '';
+  fPrint := False;
   pnlVIP.Visible := false;
   edPrice.Value := 0.0;
   edPrice.Visible := false;
@@ -2794,9 +2796,9 @@ begin
           end;
         end;
 
-        if RemainsCDS.FieldByName('isBanFiscalSale').AsBoolean and not actSpec.Checked then
+        if RemainsCDS.FieldByName('isBanFiscalSale').AsBoolean and not actSpec.Checked and (FieldByName('Amount').AsCurrency > 0) then
         begin
-          ShowMessage('Товар <' + FieldByName('GoodsName').AsString + '> по выбранной партии разрешено пробивать только по служебному чеку (зеленая галочка)...');
+          ShowMessage('Товар <' + FieldByName('GoodsName').AsString + '> из выбранной партии по техническим причинам пробивается по служебному чеку (зеленая галка)...');
           exit;
         end;
 
@@ -6078,6 +6080,7 @@ begin
   difUpdate := True;
   FPUSHStart := True;
   FUpdatePUSH := 0;
+  fPrint := False;
   //
   edDays.Value := 7;
   PanelMCSAuto.Visible := false;
@@ -7323,6 +7326,11 @@ procedure TMainCashForm2.MainColCodeCustomDrawCell
 var
   AText: string;
 begin
+  if AViewInfo.Focused then
+  begin
+     ACanvas.Brush.Color := clHighlight;
+     ACanvas.Font.Color := clHighlightText;
+  end;
   ACanvas.FillRect(AViewInfo.Bounds);
   if not VarIsNull(AViewInfo.GridRecord.Values[MainNotSold60.Index]) and
     AViewInfo.GridRecord.Values[MainNotSold60.Index] then
@@ -7351,6 +7359,11 @@ procedure TMainCashForm2.MainColNameCustomDrawCell(
 var
   AText: string;
 begin
+  if AViewInfo.Focused then
+  begin
+     ACanvas.Brush.Color := clHighlight;
+     ACanvas.Font.Color := clHighlightText;
+  end;
   ACanvas.FillRect(AViewInfo.Bounds);
   if not VarIsNull(AViewInfo.GridRecord.Values[MainisBanFiscalSale.Index]) and
     AViewInfo.GridRecord.Values[MainisBanFiscalSale.Index] then
@@ -7715,18 +7728,24 @@ end;
 procedure TMainCashForm2.ParentFormKeyDown(Sender: TObject; var Key: Word;
   Shift: TShiftState);
 begin
-  if (Key = VK_Tab) and (CheckGrid.IsFocused) then
-    if isScaner = True then
-      ActiveControl := ceScaner
-    else
-      ActiveControl := lcName;
+  if fPrint then Exit;
+  fPrint := True;
+  try
+    if (Key = VK_Tab) and (CheckGrid.IsFocused) then
+      if isScaner = True then
+        ActiveControl := ceScaner
+      else
+        ActiveControl := lcName;
 
-  if (Key = VK_ADD) or ((Key = VK_RETURN) AND (ssShift in Shift)) then
-  Begin
-    Key := 0;
-    fShift := ssShift in Shift;
-    actPutCheckToCashExecute(nil);
-  End;
+    if (Key = VK_ADD) AND (Shift = []) {or ((Key = VK_RETURN) AND (ssShift in Shift))} then
+    Begin
+      Key := 0;
+      fShift := ssShift in Shift;
+      actPutCheckToCashExecute(nil);
+    End;
+  finally
+    fPrint := False;
+  end;
 end;
 
 procedure TMainCashForm2.ParentFormShow(Sender: TObject);

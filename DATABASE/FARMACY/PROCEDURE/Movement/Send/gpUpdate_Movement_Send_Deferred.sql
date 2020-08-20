@@ -296,7 +296,7 @@ BEGIN
                WHERE tmpProtocol.AmountAuto > tmpProtocol.Amount             
                LIMIT 1;
              
-               RAISE EXCEPTION 'Ошибка. Данная позиция <%> количество меньше сформировано укажите причину уменьшению количества!', vbGoodsName;
+               RAISE EXCEPTION 'Ошибка. Данная позиция <%> количество меньше сформировано укажите причину уменьшения количества!', vbGoodsName;
              END IF; 
            END IF; 
            

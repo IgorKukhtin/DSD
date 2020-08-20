@@ -229,7 +229,7 @@ BEGIN
                  
            IF COALESCE(vbAmountAuto, 0) > COALESCE(inAmount, 0)
            THEN
-              RAISE EXCEPTION 'Ошибка. Количество % меньше сформировано % укажите причину уменьшению количества!', inAmount, vbAmountAuto;               
+              RAISE EXCEPTION 'Ошибка. Количество % меньше сформировано % укажите причину уменьшения количества!', inAmount, vbAmountAuto;               
            END IF;
         END IF;
       END IF;

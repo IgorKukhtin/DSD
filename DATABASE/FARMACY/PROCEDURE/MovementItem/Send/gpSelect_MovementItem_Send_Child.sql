@@ -304,9 +304,9 @@ BEGIN
                                     , Min(ObjectDate_Value.ValueData)                             AS ExpirationDate
                                     , CASE WHEN Min(ObjectDate_Value.ValueData) <= vbDate_0  THEN 6      -- просрочено
                                            WHEN Min(ObjectDate_Value.ValueData) <= vbDate_1  THEN 5      -- Меньше 1 месяца
-                                           WHEN Min(ObjectDate_Value.ValueData) <= vbDate_3  THEN 2      -- Меньше 3 месяца
+                                           WHEN Min(ObjectDate_Value.ValueData) <= vbDate_3  THEN 4      -- Меньше 3 месяца
                                            WHEN Min(ObjectDate_Value.ValueData) <= vbDate_6  THEN 1      -- Меньше 6 месяца
-                                           ELSE  3 END  AS PDOrd                                                  -- Востановлен с просрочки
+                                           ELSE  2 END  AS PDOrd                                                  -- Востановлен с просрочки
                                FROM (SELECT DISTINCT tmpMI_Master.ObjectId FROM tmpMI_Master) AS tmpMI
                                     INNER JOIN Container ON Container.DescId = zc_Container_CountPartionDate()
                                                         AND Container.WhereObjectId = vbUnitId
@@ -324,7 +324,7 @@ BEGIN
                        SELECT Container.Id
                             , Container.ObjectId --Товар
                             , Container.Amount - COALESCE(tmpMI_Child_ContainerId.Amount, 0) AS Amount  --Тек. остаток
-                            , COALESCE (tmpContainerPD.PDOrd, 4) AS PDOrd
+                            , COALESCE (tmpContainerPD.PDOrd, 3) AS PDOrd
                        FROM Container
                             INNER JOIN tmpMI_Master ON tmpMI_Master.ObjectId = Container.ObjectId
                             LEFT JOIN tmpMI_Child_ContainerId ON tmpMI_Child_ContainerId.ContainerId = Container.Id

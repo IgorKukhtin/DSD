@@ -318,6 +318,21 @@ inherited SendForm: TSendForm
             Options.Editing = False
             Width = 74
           end
+          object CommentSendName: TcxGridDBColumn
+            Caption = #1055#1088#1080#1095#1080#1085#1072' '#1091#1084#1077#1085#1100#1096#1077#1085#1080#1102' '#1082#1086#1083#1080#1095#1077#1089#1090#1074#1072
+            DataBinding.FieldName = 'CommentSendName'
+            PropertiesClassName = 'TcxButtonEditProperties'
+            Properties.Buttons = <
+              item
+                Action = actChoiceCommentSend
+                Default = True
+                Kind = bkEllipsis
+              end>
+            Properties.ReadOnly = True
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 125
+          end
           object PriceIn: TcxGridDBColumn
             Caption = #1059#1089#1088#1077#1076'. '#1079#1072#1082#1091#1087'. '#1094#1077#1085#1072' ('#1073#1077#1079' '#1053#1044#1057')'
             DataBinding.FieldName = 'PriceIn'
@@ -517,21 +532,6 @@ inherited SendForm: TSendForm
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
             Width = 68
-          end
-          object CommentSendName: TcxGridDBColumn
-            Caption = #1055#1088#1080#1095#1080#1085#1072' '#1091#1084#1077#1085#1100#1096#1077#1085#1080#1102' '#1082#1086#1083#1080#1095#1077#1089#1090#1074#1072
-            DataBinding.FieldName = 'CommentSendName'
-            PropertiesClassName = 'TcxButtonEditProperties'
-            Properties.Buttons = <
-              item
-                Action = actChoiceCommentSend
-                Default = True
-                Kind = bkEllipsis
-              end>
-            Properties.ReadOnly = True
-            HeaderAlignmentHorz = taCenter
-            HeaderAlignmentVert = vaCenter
-            Width = 125
           end
         end
       end
