@@ -233,7 +233,6 @@ object SendPodiumForm: TSendPodiumForm
           OptionsData.CancelOnExit = False
           OptionsData.Deleting = False
           OptionsData.DeletingConfirmation = False
-          OptionsData.Inserting = False
           OptionsView.Footer = True
           OptionsView.GroupByBox = False
           OptionsView.HeaderAutoHeight = True
@@ -1338,12 +1337,6 @@ object SendPodiumForm: TSendPodiumForm
       StoredProcList = <
         item
           StoredProc = spInsertUpdateMIMaster
-        end
-        item
-          StoredProc = spSelectMI
-        end
-        item
-          StoredProc = spGetTotalSumm
         end>
       Caption = 'actUpdateMasterDS'
       DataSource = MasterDS
