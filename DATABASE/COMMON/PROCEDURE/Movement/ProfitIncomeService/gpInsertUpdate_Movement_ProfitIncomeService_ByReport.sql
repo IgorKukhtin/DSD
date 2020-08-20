@@ -40,10 +40,10 @@ BEGIN
      PERFORM lpInsertUpdate_Movement_ProfitIncomeService (ioId                := 0
                                                         , inInvNumber         := CAST (NEXTVAL ('movement_ProfitIncomeService_seq') AS TVarChar) 
                                                         , inOperDate          := inEndDate
-                                                        , inAmountIn          := 0  :: tfloat
-                                                        , inAmountOut         := Sum_Bonus
+                                                        , inAmountIn          := 0            :: tfloat
+                                                        , inAmountOut         := Sum_Bonus    :: tfloat
                                                         , inBonusValue        := CAST (Value AS NUMERIC (16, 2))
-                                                        , inComment           := Comment
+                                                        , inComment           := COALESCE (Comment, '') :: TVarChar
                                                         , inContractId        := ContractId_find
                                                         , inContractMasterId  := ContractId_master
                                                         , inContractChildId   := ContractId_Child
@@ -51,13 +51,13 @@ BEGIN
                                                         , inJuridicalId       := CASE WHEN PartnerId > 0 THEN PartnerId ELSE JuridicalId END  -- если выбран контрагент - записываем его а по нему уже понятно кто юр.лицо JuridicalId
                                                         , inPaidKindId        := PaidKindId
                                                         , inContractConditionKindId := ConditionKindId
-                                                        , inBonusKindId       := BonusKindId
-                                                        , inBranchId          := BranchId
+                                                        , inBonusKindId       := COALESCE (BonusKindId,0) :: Integer
+                                                        , inBranchId          := COALESCE (BranchId,0) :: Integer
                                                         , inIsLoad            := TRUE
                                                         , inUserId            := vbUserId
                                                          )
-     FROM gpReport_CheckBonus (inStartDate:= inStartDate, inEndDate:= inEndDate, inPaidKindID:= inPaidKindID, inJuridicalId:= inJuridicalId, inBranchId:= inBranchId, inSession:= inSession) AS tmp
-     WHERE tmp.Sum_Bonus <> 0
+     FROM gpReport_CheckBonus_Income (inStartDate:= inStartDate, inEndDate:= inEndDate, inPaidKindID:= inPaidKindID, inJuridicalId:= inJuridicalId, inBranchId:= inBranchId, inSession:= inSession) AS tmp
+     WHERE COALESCE (tmp.Sum_Bonus,0) <> 0
     ;
 
 END;
