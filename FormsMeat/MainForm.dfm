@@ -5,7 +5,7 @@
   Position = poDesigned
   OnClose = FormClose
   ExplicitWidth = 1376
-  ExplicitHeight = 255
+  ExplicitHeight = 252
   PixelsPerInch = 96
   TextHeight = 13
   object cxGrid: TcxGrid [0]
@@ -213,7 +213,7 @@
     object actReport_CheckBonus_Income: TdsdOpenForm [5]
       Category = #1054#1090#1095#1077#1090#1099' ('#1092#1080#1085'.)'
       MoveParams = <>
-      Caption = #1055#1088#1086#1074#1077#1088#1082#1072' '#1085#1072#1095#1080#1089#1083#1077#1085#1080#1081' '#1087#1086' '#1073#1086#1085#1091#1089#1072#1084' '#1087#1086#1089#1090#1072#1074#1097#1080#1082#1086#1074
+      Caption = #1055#1088#1086#1074#1077#1088#1082#1072' '#1085#1072#1095#1080#1089#1083#1077#1085#1080#1081' '#1087#1086' '#1073#1086#1085#1091#1089#1072#1084' ('#1087#1086#1089#1090#1072#1074#1097#1080#1082#1080')'
       FormName = 'TReport_CheckBonus_IncomeForm'
       FormNameParam.Value = 'TReport_CheckBonus_IncomeForm'
       FormNameParam.DataType = ftString
@@ -525,7 +525,7 @@
     object actReport_CheckBonus_SaleReturn: TdsdOpenForm [26]
       Category = #1054#1090#1095#1077#1090#1099' ('#1092#1080#1085'.)'
       MoveParams = <>
-      Caption = #1055#1088#1086#1074#1077#1088#1082#1072' '#1085#1072#1095#1080#1089#1083#1077#1085#1080#1081' '#1087#1086' '#1073#1086#1085#1091#1089#1072#1084' ('#1087#1088#1086#1076#1072#1078#1072'/'#1074#1086#1079#1074#1088#1072#1090')'
+      Caption = #1055#1088#1086#1074#1077#1088#1082#1072' '#1085#1072#1095#1080#1089#1083#1077#1085#1080#1081' '#1087#1086' '#1073#1086#1085#1091#1089#1072#1084' ('#1087#1086#1082#1091#1087'. '#1087#1088#1086#1076#1072#1078#1072'/'#1074#1086#1079#1074#1088#1072#1090')'
       FormName = 'TReport_CheckBonus_SaleReturnForm'
       FormNameParam.Value = 'TReport_CheckBonus_SaleReturnForm'
       FormNameParam.DataType = ftString
@@ -536,7 +536,7 @@
     object actProfitIncomeService: TdsdOpenForm [27]
       Category = #1060#1080#1085#1072#1085#1089#1086#1074#1099#1081' '#1091#1095#1077#1090
       MoveParams = <>
-      Caption = #1053#1072#1095#1080#1089#1083#1077#1085#1080#1103' '#1087#1086' '#1073#1086#1085#1091#1089#1072#1084' ('#1087#1088#1080#1073#1099#1083#1100' '#1073#1091#1076#1091#1097#1080#1093' '#1087#1077#1088#1080#1086#1076#1086#1074')'
+      Caption = #1053#1072#1095#1080#1089#1083#1077#1085#1080#1103' '#1087#1086' '#1073#1086#1085#1091#1089#1072#1084' ('#1087#1086#1089#1090#1072#1074#1097#1080#1082#1080')'
       FormName = 'TProfitIncomeServiceJournalForm'
       FormNameParam.Name = 'TProfitIncomeServiceJournalForm'
       FormNameParam.Value = 'TProfitIncomeServiceJournalForm'
@@ -604,7 +604,7 @@
     object actReport_CheckBonusTest: TdsdOpenForm [31]
       Category = #1054#1090#1095#1077#1090#1099' ('#1092#1080#1085'.)'
       MoveParams = <>
-      Caption = #1055#1088#1086#1074#1077#1088#1082#1072' '#1085#1072#1095#1080#1089#1083#1077#1085#1080#1081' '#1087#1086' '#1073#1086#1085#1091#1089#1072#1084' (Test)'
+      Caption = #1055#1088#1086#1074#1077#1088#1082#1072' '#1085#1072#1095#1080#1089#1083#1077#1085#1080#1081' '#1087#1086' '#1073#1086#1085#1091#1089#1072#1084' ('#1087#1086#1082#1091#1087'. Test)'
       FormName = 'TReport_CheckBonusTestForm'
       FormNameParam.Value = 'TReport_CheckBonusTestForm'
       FormNameParam.DataType = ftString
@@ -773,7 +773,7 @@
     object actProfitLossServiceCash: TdsdOpenForm [42]
       Category = #1060#1080#1085#1072#1085#1089#1086#1074#1099#1081' '#1091#1095#1077#1090
       MoveParams = <>
-      Caption = #1053#1072#1095#1080#1089#1083#1077#1085#1080#1103' '#1087#1086' '#1073#1086#1085#1091#1089#1072#1084' ('#1088#1072#1089#1093#1086#1076#1099' '#1073#1091#1076#1091#1097#1080#1093' '#1087#1077#1088#1080#1086#1076#1086#1074') '#1041#1053
+      Caption = #1053#1072#1095#1080#1089#1083#1077#1085#1080#1103' '#1087#1086' '#1073#1086#1085#1091#1089#1072#1084' ('#1087#1086#1082#1091#1087#1072#1090#1077#1083#1080') '#1053#1040#1051
       FormName = 'TProfitLossServiceJournalForm'
       FormNameParam.Name = 'TProfitLossServiceJournalForm'
       FormNameParam.Value = 'TProfitLossServiceJournalForm'
@@ -843,7 +843,7 @@
     object actReport_Movement_ProfitLossService: TdsdOpenForm [47]
       Category = #1054#1090#1095#1077#1090#1099' ('#1092#1080#1085'.)'
       MoveParams = <>
-      Caption = #1053#1072#1095#1080#1089#1083#1077#1085#1080#1103' '#1087#1086' '#1073#1086#1085#1091#1089#1072#1084' ('#1076#1077#1090#1072#1083#1100#1085#1086')'
+      Caption = #1053#1072#1095#1080#1089#1083#1077#1085#1080#1103' '#1087#1086' '#1073#1086#1085#1091#1089#1072#1084' ('#1087#1086#1082#1091#1087'. '#1076#1077#1090#1072#1083#1100#1085#1086')'
       FormName = 'TReport_Movement_ProfitLossServiceForm'
       FormNameParam.Value = 'TReport_Movement_ProfitLossServiceForm'
       FormNameParam.DataType = ftString
@@ -6112,7 +6112,7 @@
     object actProfitLossService: TdsdOpenForm
       Category = #1060#1080#1085#1072#1085#1089#1086#1074#1099#1081' '#1091#1095#1077#1090
       MoveParams = <>
-      Caption = 'actProfitLossService'
+      Caption = #1053#1072#1095#1080#1089#1083#1077#1085#1080#1103' '#1087#1086' '#1073#1086#1085#1091#1089#1072#1084' ('#1087#1086#1082#1091#1087#1072#1090#1077#1083#1080') '#1041#1053
       FormName = 'TProfitLossServiceJournalForm'
       FormNameParam.Name = 'TProfitLossServiceJournalForm'
       FormNameParam.Value = 'TProfitLossServiceJournalForm'
@@ -6225,7 +6225,7 @@
     object actReport_CheckBonus: TdsdOpenForm
       Category = #1054#1090#1095#1077#1090#1099' ('#1092#1080#1085'.)'
       MoveParams = <>
-      Caption = #1055#1088#1086#1074#1077#1088#1082#1072' '#1085#1072#1095#1080#1089#1083#1077#1085#1080#1081' '#1087#1086' '#1073#1086#1085#1091#1089#1072#1084
+      Caption = #1055#1088#1086#1074#1077#1088#1082#1072' '#1085#1072#1095#1080#1089#1083#1077#1085#1080#1081' '#1087#1086' '#1073#1086#1085#1091#1089#1072#1084' ('#1087#1086#1082#1091#1087#1072#1090#1077#1083#1080')'
       FormName = 'TReport_CheckBonusForm'
       FormNameParam.Value = 'TReport_CheckBonusForm'
       FormNameParam.DataType = ftString
@@ -7991,11 +7991,9 @@
       end
       object miProfitLossService: TMenuItem
         Action = actProfitLossService
-        Caption = #1053#1072#1095#1080#1089#1083#1077#1085#1080#1103' '#1087#1086' '#1073#1086#1085#1091#1089#1072#1084' ('#1088#1072#1089#1093#1086#1076#1099' '#1073#1091#1076#1091#1097#1080#1093' '#1087#1077#1088#1080#1086#1076#1086#1074') '#1041#1053
       end
       object actProfitLossService1: TMenuItem
         Action = actProfitLossServiceCash
-        Caption = #1053#1072#1095#1080#1089#1083#1077#1085#1080#1103' '#1087#1086' '#1073#1086#1085#1091#1089#1072#1084' ('#1088#1072#1089#1093#1086#1076#1099' '#1073#1091#1076#1091#1097#1080#1093' '#1087#1077#1088#1080#1086#1076#1086#1074') '#1053#1040#1051
       end
       object miServiceMarket: TMenuItem
         Action = actServiceMarket
@@ -8804,11 +8802,11 @@
       object miReport_CheckBonus: TMenuItem
         Action = actReport_CheckBonus
       end
-      object miReport_CheckBonus_SaleReturn: TMenuItem
-        Action = actReport_CheckBonus_SaleReturn
-      end
       object miReport_Movement_ProfitLossService: TMenuItem
         Action = actReport_Movement_ProfitLossService
+      end
+      object miReport_CheckBonus_SaleReturn: TMenuItem
+        Action = actReport_CheckBonus_SaleReturn
       end
       object miReport_CheckBonus_Income: TMenuItem
         Action = actReport_CheckBonus_Income
