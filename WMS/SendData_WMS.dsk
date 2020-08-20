@@ -16,21 +16,25 @@ File_13=TSourceModule,'C:\Users\sergey\Documents\Works\WMS\src\UImportErrorProce
 
 [Modules]
 Module0=C:\Users\sergey\Documents\Works\WMS\src\Main.pas
-Module1=C:\Users\sergey\Documents\Works\WMS\src\UData.pas
-Module2=C:\Users\sergey\Documents\Works\WMS\src\UCommon.pas
-Module3=C:\Users\sergey\Documents\Works\WMS\src\UConstants.pas
-Module4=C:\Users\sergey\Documents\Works\WMS\src\UDefinitions.pas
-Module5=c:\program files\embarcadero\studio\18.0\source\rtl\common\System.TypInfo.pas
-Module6=C:\Users\sergey\Documents\Works\WMS\src\UImportWMS.pas
-Module7=C:\Users\sergey\Documents\Works\WMS\src\UQryThread.pas
-Module8=C:\Users\sergey\Documents\Works\WMS\src\UGateway.pas
-Module9=C:\Users\sergey\Documents\Works\WMS\src\UGatewaySvc.pas
-Module10=C:\Users\sergey\Documents\Works\WMS\src\ULog.pas
-Module11=C:\Users\sergey\Documents\Works\WMS\src\USettings.pas
-Count=12
+Module1=C:\Users\sergey\Documents\Works\WMS\src\UFileVersion.pas
+Module2=C:\Users\sergey\Documents\Works\WMS\src\UData.pas
+Module3=C:\Users\sergey\Documents\Works\WMS\src\UCommon.pas
+Module4=C:\Users\sergey\Documents\Works\WMS\src\UConstants.pas
+Module5=C:\Users\sergey\Documents\Works\WMS\src\UDefinitions.pas
+Module6=c:\program files\embarcadero\studio\18.0\source\rtl\common\System.TypInfo.pas
+Module7=C:\Users\sergey\Documents\Works\WMS\src\UImportWMS.pas
+Module8=C:\Users\sergey\Documents\Works\WMS\src\UQryThread.pas
+Module9=C:\Users\sergey\Documents\Works\WMS\src\UGateway.pas
+Module10=C:\Users\sergey\Documents\Works\WMS\src\UGatewaySvc.pas
+Module11=C:\Users\sergey\Documents\Works\WMS\src\ULog.pas
+Module12=C:\Users\sergey\Documents\Works\WMS\src\USettings.pas
+Count=13
 EditWindowCount=1
 
 [C:\Users\sergey\Documents\Works\WMS\src\Main.pas]
+ModuleType=TSourceModule
+
+[C:\Users\sergey\Documents\Works\WMS\src\UFileVersion.pas]
 ModuleType=TSourceModule
 
 [C:\Users\sergey\Documents\Works\WMS\src\UData.pas]
@@ -67,7 +71,7 @@ ModuleType=TSourceModule
 ModuleType=TSourceModule
 
 [EditWindow0]
-ViewCount=12
+ViewCount=13
 CurrentEditView=C:\Users\sergey\Documents\Works\WMS\src\Main.pas
 View0=0
 View1=1
@@ -81,6 +85,7 @@ View8=8
 View9=9
 View10=10
 View11=11
+View12=12
 PercentageSizes=1
 Create=1
 Visible=1
@@ -89,23 +94,23 @@ State=0
 Left=0
 Top=0
 Width=10000
-Height=8702
+Height=9212
 MaxLeft=-1
 MaxTop=-1
 ClientWidth=10000
-ClientHeight=8702
+ClientHeight=9212
 DockedToMainForm=1
 BorlandEditorCodeExplorer=BorlandEditorCodeExplorer@EditWindow0
 TopPanelSize=0
 LeftPanelSize=1964
 LeftPanelClients=DockSite3,PropertyInspector
-LeftPanelData=00000800010100000000B60E00000000000001AC070000000000000100000000FC0C000009000000446F636B53697465330100000000261A00001100000050726F7065727479496E73706563746F72FFFFFFFF
+LeftPanelData=00000800010100000000BF0F00000000000001AC070000000000000100000000FC0C000009000000446F636B53697465330100000000FF1B00001100000050726F7065727479496E73706563746F72FFFFFFFF
 RightPanelSize=1568
 RightPanelClients=DockSite2,DockSite4
-RightPanelData=0000080001010100000009000000446F636B5369746534B60E0000000000000120060000000000000100000000261A000009000000446F636B5369746532FFFFFFFF
-BottomPanelSize=1630
+RightPanelData=0000080001010100000009000000446F636B5369746534BF0F0000000000000120060000000000000100000000FF1B000009000000446F636B5369746532FFFFFFFF
+BottomPanelSize=1648
 BottomPanelClients=DockSite1,MessageView
-BottomPanelData=0000080001020100000009000000446F636B53697465317245000000000000025E060000000000000100000000724500000F0000004D65737361676556696577466F726DFFFFFFFF
+BottomPanelData=0000080001020100000009000000446F636B536974653172450000000000000270060000000000000100000000724500000F0000004D65737361676556696577466F726DFFFFFFFF
 BottomMiddlePanelSize=0
 BottomMiddlePanelClients=DockSite0,GraphDrawingModel
 BottomMiddelPanelData=0000080001020200000009000000446F636B536974653010000000477261706844726177696E67566965779F1D00000000000002F206000000000000FFFFFFFF
@@ -113,15 +118,26 @@ BottomMiddelPanelData=0000080001020200000009000000446F636B5369746530100000004772
 [View0]
 CustomEditViewType=TEditView
 Module=C:\Users\sergey\Documents\Works\WMS\src\Main.pas
-CursorX=1
-CursorY=338
-TopLine=338
+CursorX=102
+CursorY=959
+TopLine=936
 LeftCol=1
 Elisions=
-Bookmarks=
+Bookmarks={1,1227,89}{2,1263,3}{3,887,1}{4,701,1}{5,1326,3}
 EditViewName=C:\Users\sergey\Documents\Works\WMS\src\Main.pas
 
 [View1]
+CustomEditViewType=TEditView
+Module=C:\Users\sergey\Documents\Works\WMS\src\UFileVersion.pas
+CursorX=24
+CursorY=5
+TopLine=1
+LeftCol=1
+Elisions=
+Bookmarks=
+EditViewName=C:\Users\sergey\Documents\Works\WMS\src\UFileVersion.pas
+
+[View2]
 CustomEditViewType=TEditView
 Module=C:\Users\sergey\Documents\Works\WMS\src\UGatewaySvc.pas
 CursorX=21
@@ -132,7 +148,7 @@ Elisions=
 Bookmarks=
 EditViewName=C:\Users\sergey\Documents\Works\WMS\src\UGatewaySvc.pas
 
-[View2]
+[View3]
 CustomEditViewType=TEditView
 Module=C:\Users\sergey\Documents\Works\WMS\src\UGateway.pas
 CursorX=23
@@ -143,18 +159,18 @@ Elisions={{262,4},{264,15},{'Старт нового цикла импорта �
 Bookmarks=
 EditViewName=C:\Users\sergey\Documents\Works\WMS\src\UGateway.pas
 
-[View3]
+[View4]
 CustomEditViewType=TEditView
 Module=C:\Users\sergey\Documents\Works\WMS\src\UData.pas
-CursorX=52
-CursorY=1468
-TopLine=1390
+CursorX=5
+CursorY=52
+TopLine=28
 LeftCol=1
 Elisions=
 Bookmarks={1,1106,1}{2,374,1}{3,1047,1}{4,1361,18}{5,1390,1}
-EditViewName=C:\Users\sergey\Documents\Works\WMS\src\UData.pas
+EditViewName=Borland.FormDesignerView
 
-[View4]
+[View5]
 CustomEditViewType=TEditView
 Module=c:\program files\embarcadero\studio\18.0\source\rtl\common\System.TypInfo.pas
 CursorX=6
@@ -165,7 +181,7 @@ Elisions=
 Bookmarks=
 EditViewName=c:\program files\embarcadero\studio\18.0\source\rtl\common\System.TypInfo.pas
 
-[View5]
+[View6]
 CustomEditViewType=TEditView
 Module=C:\Users\sergey\Documents\Works\WMS\src\UImportWMS.pas
 CursorX=35
@@ -176,7 +192,7 @@ Elisions=
 Bookmarks={1,831,24}{2,722,11}{3,720,48}
 EditViewName=C:\Users\sergey\Documents\Works\WMS\src\UImportWMS.pas
 
-[View6]
+[View7]
 CustomEditViewType=TEditView
 Module=C:\Users\sergey\Documents\Works\WMS\src\UQryThread.pas
 CursorX=85
@@ -187,7 +203,7 @@ Elisions=
 Bookmarks=
 EditViewName=C:\Users\sergey\Documents\Works\WMS\src\UQryThread.pas
 
-[View7]
+[View8]
 CustomEditViewType=TEditView
 Module=C:\Users\sergey\Documents\Works\WMS\src\UCommon.pas
 CursorX=1
@@ -198,7 +214,7 @@ Elisions=
 Bookmarks=
 EditViewName=C:\Users\sergey\Documents\Works\WMS\src\UCommon.pas
 
-[View8]
+[View9]
 CustomEditViewType=TEditView
 Module=C:\Users\sergey\Documents\Works\WMS\src\UDefinitions.pas
 CursorX=61
@@ -209,7 +225,7 @@ Elisions=
 Bookmarks=
 EditViewName=C:\Users\sergey\Documents\Works\WMS\src\UDefinitions.pas
 
-[View9]
+[View10]
 CustomEditViewType=TEditView
 Module=C:\Users\sergey\Documents\Works\WMS\src\UConstants.pas
 CursorX=11
@@ -220,7 +236,7 @@ Elisions=
 Bookmarks=
 EditViewName=C:\Users\sergey\Documents\Works\WMS\src\UConstants.pas
 
-[View10]
+[View11]
 CustomEditViewType=TEditView
 Module=C:\Users\sergey\Documents\Works\WMS\src\ULog.pas
 CursorX=55
@@ -231,7 +247,7 @@ Elisions=
 Bookmarks={1,82,1}
 EditViewName=C:\Users\sergey\Documents\Works\WMS\src\ULog.pas
 
-[View11]
+[View12]
 CustomEditViewType=TEditView
 Module=C:\Users\sergey\Documents\Works\WMS\src\USettings.pas
 CursorX=77
@@ -263,11 +279,11 @@ State=0
 Left=0
 Top=0
 Width=3823
-Height=1279
+Height=1298
 MaxLeft=-1
 MaxTop=-1
 ClientWidth=3823
-ClientHeight=1279
+ClientHeight=1298
 TBDockHeight=212
 LRDockWidth=13604
 Dockable=1
@@ -295,7 +311,7 @@ MaxWidth=6667
 MaxHeight=8519
 ClientWidth=10000
 ClientHeight=9788
-BottomPanelSize=8380
+BottomPanelSize=8870
 BottomPanelClients=EditWindow0
 BottomPanelData=0000080000000000000000000000000000000000000000000000000100000000000000000C0000004564697457696E646F775F30FFFFFFFF
 
@@ -308,11 +324,11 @@ State=0
 Left=0
 Top=0
 Width=1568
-Height=6538
+Height=7029
 MaxLeft=-1
 MaxTop=-1
 ClientWidth=1568
-ClientHeight=6538
+ClientHeight=7029
 TBDockHeight=5904
 LRDockWidth=2349
 Dockable=1
@@ -327,12 +343,12 @@ State=0
 Left=0
 Top=18
 Width=10000
-Height=1519
+Height=1538
 MaxLeft=-1
 MaxTop=-1
 ClientWidth=10000
-ClientHeight=1519
-TBDockHeight=1519
+ClientHeight=1538
+TBDockHeight=1538
 LRDockWidth=2771
 Dockable=1
 StayOnTop=0
@@ -401,7 +417,7 @@ Visible=0
 Docked=1
 State=0
 Left=-1627
-Top=226
+Top=279
 Width=276
 Height=365
 MaxLeft=-1
@@ -425,11 +441,11 @@ State=0
 Left=0
 Top=377
 Width=1964
-Height=3327
+Height=3817
 MaxLeft=-1
 MaxTop=-1
 ClientWidth=1964
-ClientHeight=3327
+ClientHeight=3817
 TBDockHeight=7404
 LRDockWidth=1964
 Dockable=1
@@ -445,11 +461,11 @@ State=0
 Left=0
 Top=0
 Width=3823
-Height=1279
+Height=1298
 MaxLeft=-1
 MaxTop=-1
 ClientWidth=3823
-ClientHeight=1279
+ClientHeight=1298
 TBDockHeight=413
 LRDockWidth=4953
 Dockable=1
@@ -464,11 +480,11 @@ State=0
 Left=0
 Top=0
 Width=3823
-Height=1279
+Height=1298
 MaxLeft=-1
 MaxTop=-1
 ClientWidth=3823
-ClientHeight=1279
+ClientHeight=1298
 TBDockHeight=212
 LRDockWidth=7406
 Dockable=1
@@ -477,7 +493,6 @@ Column0Width=145
 Column1Width=100
 Column2Width=115
 Column3Width=250
-Column4Width=250
 
 [LocalVarsWindow]
 PercentageSizes=1
@@ -488,11 +503,11 @@ State=0
 Left=0
 Top=0
 Width=3823
-Height=1279
+Height=1298
 MaxLeft=-1
 MaxTop=-1
 ClientWidth=3823
-ClientHeight=1279
+ClientHeight=1298
 TBDockHeight=1538
 LRDockWidth=3484
 Dockable=1
@@ -507,11 +522,11 @@ State=0
 Left=0
 Top=0
 Width=3823
-Height=1279
+Height=1298
 MaxLeft=-1
 MaxTop=-1
 ClientWidth=3823
-ClientHeight=1279
+ClientHeight=1298
 TBDockHeight=2067
 LRDockWidth=3484
 Dockable=1
@@ -526,11 +541,11 @@ State=0
 Left=0
 Top=0
 Width=1568
-Height=6240
+Height=6750
 MaxLeft=-1
 MaxTop=-1
 ClientWidth=1568
-ClientHeight=6240
+ClientHeight=6750
 TBDockHeight=4885
 LRDockWidth=7151
 Dockable=1
@@ -543,7 +558,7 @@ Visible=0
 Docked=1
 State=0
 Left=-1502
-Top=-66
+Top=-13
 Width=2844
 Height=6202
 MaxLeft=-1
@@ -564,11 +579,11 @@ State=0
 Left=0
 Top=0
 Width=1568
-Height=6240
+Height=6750
 MaxLeft=-1
 MaxTop=-1
 ClientWidth=1568
-ClientHeight=6240
+ClientHeight=6750
 TBDockHeight=5962
 LRDockWidth=2510
 Dockable=1
@@ -638,7 +653,7 @@ Visible=0
 Docked=1
 State=0
 Left=0
-Top=-153
+Top=-100
 Width=1849
 Height=3144
 MaxLeft=-1
@@ -743,11 +758,11 @@ State=0
 Left=0
 Top=0
 Width=3823
-Height=1279
+Height=1298
 MaxLeft=-1
 MaxTop=-1
 ClientWidth=3823
-ClientHeight=1279
+ClientHeight=1298
 TBDockHeight=1548
 LRDockWidth=8740
 Dockable=1
@@ -788,11 +803,11 @@ State=0
 Left=0
 Top=0
 Width=1568
-Height=6240
+Height=6750
 MaxLeft=-1
 MaxTop=-1
 ClientWidth=1568
-ClientHeight=6240
+ClientHeight=6750
 TBDockHeight=4885
 LRDockWidth=5307
 Dockable=1
@@ -852,20 +867,20 @@ Create=1
 Visible=0
 Docked=1
 State=0
-Left=960
+Left=0
 Top=18
 Width=3823
-Height=1519
+Height=1538
 MaxLeft=-1
 MaxTop=-1
 ClientWidth=3823
-ClientHeight=1519
-TBDockHeight=1519
+ClientHeight=1538
+TBDockHeight=1538
 LRDockWidth=3823
 Dockable=1
 StayOnTop=0
 TabPosition=1
-ActiveTabID=BreakpointWindow
+ActiveTabID=DebugLogView
 TabDockClients=DebugLogView,BreakpointWindow,ThreadStatusWindow,CallStackWindow,WatchWindow,LocalVarsWindow
 
 [DockSite2]
@@ -879,11 +894,11 @@ State=0
 Left=0
 Top=18
 Width=1568
-Height=6779
+Height=7269
 MaxLeft=-1
 MaxTop=-1
 ClientWidth=1568
-ClientHeight=6779
+ClientHeight=7269
 TBDockHeight=9010
 LRDockWidth=1568
 Dockable=1

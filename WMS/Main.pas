@@ -325,7 +325,8 @@ uses
   UData,
   UCommon,
   USettings,
-  UQryThread;
+  UQryThread,
+  UFileVersion;
 
 type
   THackedGrid = class(TCustomGrid);
@@ -683,10 +684,7 @@ begin
   if pgcMain.ActivePage = tsOraImport then
   begin
     if not dmData.qryWMSGridErr.Active and not dmData.qryWMSGridAll.Active then
-      UpdateWMSGrid(True);
-
-    if not dmData.qryWMSDetail.Active then
-      UpdateWMSGridDetail(True);
+      UpdateWMSGrid(True); // UpdateWMSGridDetail(True) будет вызван внутри UpdateWMSGrid
 
     with dmData.qryWMSDetail do
     begin
@@ -699,10 +697,7 @@ begin
   if pgcMain.ActivePage = tsOraExport then
   begin
     if not dmData.qryFromHostMessageAll.Active and not dmData.qryFRomHostMessageErr.Active then
-      UpdateFromHostHeaderGrid(True);
-
-    if not dmData.qryFromHostDetail.Active then
-      UpdateFromHostDetailGrid(True);
+      UpdateFromHostHeaderGrid(True); // UpdateFromHostDetailGrid(True) будет вызван внутри UpdateFromHostHeaderGrid
 
     with dmData.qryFromHostDetail do
     begin
@@ -948,8 +943,13 @@ end;
 constructor TMainForm.Create(AOwner: TComponent);
 var
   I: Integer;
+const
+  cAppCaption = 'SendData WMS - %s';
 begin
   inherited;
+
+  Caption := Format(cAppCaption, [GetFileVersion]);
+
   SetLength(FTimerPool, 0);
   FLog := TLog.Create;
   chkWriteLog.Checked := TSettings.UseLog;
@@ -1246,6 +1246,9 @@ begin
     dtpEndFromHostHeaderMessage,
     ANeedRebuildColumns
   );
+
+  // обновляем источник данных detail-грида
+  UpdateFromHostDetailGrid(ANeedRebuildColumns);
 end;
 
 procedure TMainForm.UpdateGrid(AQry: TFDQuery; ADataSrc: TDataSource; AGrid: TDBGrid;
@@ -1318,6 +1321,9 @@ begin
     dtpEndDateWMS,
     ANeedRebuildColumns
   );
+
+  // обновляем источник данных detail-грида
+  UpdateWMSGridDetail(ANeedRebuildColumns);
 end;
 
 procedure TMainForm.UpdateWMSGridDetail(const ANeedRebuildColumns: Boolean);
