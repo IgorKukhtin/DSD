@@ -36,29 +36,49 @@ BEGIN
      -- создаются временные таблицы - для формирование данных для проводок
      PERFORM lpComplete_Movement_Finance_CreateTemp();
 
-     -- 
-     PERFORM lpInsertUpdate_Movement_ProfitIncomeService (ioId                := 0
-                                                        , inInvNumber         := CAST (NEXTVAL ('movement_ProfitIncomeService_seq') AS TVarChar) 
-                                                        , inOperDate          := inEndDate
-                                                        , inAmountIn          := 0            :: tfloat
-                                                        , inAmountOut         := Sum_Bonus    :: tfloat
-                                                        , inBonusValue        := CAST (Value AS NUMERIC (16, 2))
-                                                        , inComment           := COALESCE (Comment, '') :: TVarChar
-                                                        , inContractId        := ContractId_find
-                                                        , inContractMasterId  := ContractId_master
-                                                        , inContractChildId   := ContractId_Child
-                                                        , inInfoMoneyId       := InfoMoneyId_find
-                                                        , inJuridicalId       := CASE WHEN PartnerId > 0 THEN PartnerId ELSE JuridicalId END  -- если выбран контрагент - записываем его а по нему уже понятно кто юр.лицо JuridicalId
-                                                        , inPaidKindId        := PaidKindId
-                                                        , inContractConditionKindId := ConditionKindId
-                                                        , inBonusKindId       := COALESCE (BonusKindId,0) :: Integer
-                                                        , inBranchId          := COALESCE (BranchId,0) :: Integer
-                                                        , inIsLoad            := TRUE
-                                                        , inUserId            := vbUserId
-                                                         )
+     CREATE TEMP TABLE _tmpReport ON COMMIT DROP AS
+     SELECT tmp.Sum_Bonus                        :: TFloat
+          , CAST (tmp.Value AS NUMERIC (16, 2))  :: TFloat Value
+          , COALESCE (tmp.Comment, '') :: TVarChar AS Comment
+          , tmp.ContractId_find
+          , tmp.ContractId_master
+          , tmp.ContractId_Child
+          , tmp.InfoMoneyId_find
+          , CASE WHEN PartnerId > 0 THEN PartnerId ELSE JuridicalId END  AS JuridicalId -- если выбран контрагент - записываем его а по нему уже понятно кто юр.лицо JuridicalId
+          , tmp.PaidKindId
+          , tmp.ConditionKindId
+          , COALESCE (tmp.BonusKindId,0) :: Integer AS BonusKindId
+          , COALESCE (tmp.BranchId,0) :: Integer    AS BranchId
      FROM gpReport_CheckBonus_Income (inStartDate:= inStartDate, inEndDate:= inEndDate, inPaidKindID:= inPaidKindID, inJuridicalId:= inJuridicalId, inBranchId:= inBranchId, inSession:= inSession) AS tmp
      WHERE COALESCE (tmp.Sum_Bonus,0) <> 0
-    ;
+     ;     
+     
+     IF EXISTS (SELECT 1 FROM _tmpReport)
+     THEN
+          -- 
+          PERFORM lpInsertUpdate_Movement_ProfitIncomeService (ioId                := 0
+                                                             , inInvNumber         := CAST (NEXTVAL ('movement_ProfitIncomeService_seq') AS TVarChar) 
+                                                             , inOperDate          := inEndDate
+                                                             , inAmountIn          := 0                :: tfloat
+                                                             , inAmountOut         := tmp.Sum_Bonus    :: tfloat
+                                                             , inBonusValue        := tmp.Value        :: TFloat
+                                                             , inComment           := tmp.Comment      :: TVarChar
+                                                             , inContractId        := tmp.ContractId_find
+                                                             , inContractMasterId  := tmp.ContractId_master
+                                                             , inContractChildId   := tmp.ContractId_Child
+                                                             , inInfoMoneyId       := tmp.InfoMoneyId_find
+                                                             , inJuridicalId       := tmp.JuridicalId
+                                                             , inPaidKindId        := tmp.PaidKindId
+                                                             , inContractConditionKindId := tmp.ConditionKindId
+                                                             , inBonusKindId       := tmp.BonusKindId
+                                                             , inBranchId          := tmp.BranchId
+                                                             , inIsLoad            := TRUE             :: Boolean
+                                                             , inUserId            := vbUserId
+                                                              )
+          FROM _tmpReport AS tmp;
+     ELSE
+         RAISE EXCEPTION 'Ошибка.Данных для формирования документов нет.';
+     END IF;
 
 END;
 $BODY$
