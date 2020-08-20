@@ -38,7 +38,7 @@ BEGIN
 
      CREATE TEMP TABLE _tmpReport ON COMMIT DROP AS
      SELECT tmp.Sum_Bonus                        :: TFloat
-          , CAST (tmp.Value AS NUMERIC (16, 2))  :: TFloat Value
+          , CAST (tmp.Value AS NUMERIC (16, 2))  :: TFloat AS Value
           , COALESCE (tmp.Comment, '') :: TVarChar AS Comment
           , tmp.ContractId_find
           , tmp.ContractId_master
