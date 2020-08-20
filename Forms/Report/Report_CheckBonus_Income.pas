@@ -69,6 +69,7 @@ type
     PartnerName: TcxGridDBColumn;
     actPrint: TdsdPrintAction;
     bbPrint: TdxBarButton;
+    macDocBonus: TMultiAction;
   private
     { Private declarations }
   public
