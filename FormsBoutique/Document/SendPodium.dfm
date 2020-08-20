@@ -233,6 +233,7 @@ object SendPodiumForm: TSendPodiumForm
           OptionsData.CancelOnExit = False
           OptionsData.Deleting = False
           OptionsData.DeletingConfirmation = False
+          OptionsData.Inserting = False
           OptionsView.Footer = True
           OptionsView.GroupByBox = False
           OptionsView.HeaderAutoHeight = True
@@ -2776,19 +2777,7 @@ object SendPodiumForm: TSendPodiumForm
     SortImages = dmMain.SortImageList
     OnlyEditingCellOnEnter = True
     ColorRuleList = <>
-    ColumnAddOnList = <
-      item
-        Column = GoodsName
-        FindByFullValue = True
-        onExitColumn.Active = False
-        onExitColumn.AfterEmptyValue = False
-      end
-      item
-        Column = GoodsSizeName
-        FindByFullValue = True
-        onExitColumn.Active = False
-        onExitColumn.AfterEmptyValue = False
-      end>
+    ColumnAddOnList = <>
     ColumnEnterList = <
       item
         Column = GoodsName
