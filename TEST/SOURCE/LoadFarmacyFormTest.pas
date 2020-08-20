@@ -1712,7 +1712,7 @@ end;
 
 procedure TLoadFormTest.LoadUnitFormTest;
 begin
-  TdsdFormStorageFactory.GetStorage.Save(GetForm('TUnit_SUN_LockDialogForm'));
+{  TdsdFormStorageFactory.GetStorage.Save(GetForm('TUnit_SUN_LockDialogForm'));
   TdsdFormStorageFactory.GetStorage.Load('TUnit_SUN_LockDialogForm');
 
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TUnit_LimitSUN_EditForm'));
@@ -1730,7 +1730,7 @@ begin
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TUnit_T_SUN_EditForm'));
   TdsdFormStorageFactory.GetStorage.Load('TUnit_T_SUN_EditForm');
 
- { TdsdFormStorageFactory.GetStorage.Save(GetForm('TUnit_KoeffSUN_EditForm'));
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TUnit_KoeffSUN_EditForm'));
   TdsdFormStorageFactory.GetStorage.Load('TUnit_KoeffSUN_EditForm');
 
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TUnit_MCSForm'));
@@ -1742,12 +1742,12 @@ begin
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TUnitEditForm'));
   TdsdFormStorageFactory.GetStorage.Load('TUnitEditForm');
 
-  TdsdFormStorageFactory.GetStorage.Save(GetForm('TUnit_ObjectForm'));
+{  TdsdFormStorageFactory.GetStorage.Save(GetForm('TUnit_ObjectForm'));
   TdsdFormStorageFactory.GetStorage.Load('TUnit_ObjectForm');
 
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TListDaySUNDialogForm'));
   TdsdFormStorageFactory.GetStorage.Load('TListDaySUNDialogForm');
-    {
+
     //
     TdsdFormStorageFactory.GetStorage.Save(GetForm('TUnit_JuridicalAreaForm'));
     TdsdFormStorageFactory.GetStorage.Load('TUnit_JuridicalAreaForm');

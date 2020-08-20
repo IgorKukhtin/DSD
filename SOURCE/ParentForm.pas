@@ -661,6 +661,7 @@ initialization
   RegisterClass (TdsdDOCReportFormAction);
   RegisterClass (TdsdOpenStaticForm);
   RegisterClass (TdsdProperties—hange);
+  RegisterClass (TdsdSetDefaultParams);
 
   RegisterClass (TExecuteDialog);
   RegisterClass (TFileDialogAction);
