@@ -145,6 +145,7 @@ type
     chkDeviationOnlySeq: TCheckBox;
     btnCancelCompareSeq: TButton;
     dsCompareSeq: TDataSource;
+    tmrUpdateAllData: TTimer;
     {$WARNINGS ON}
     procedure chkShowLogClick(Sender: TObject);
     procedure btnLibLocationClick(Sender: TObject);
@@ -184,6 +185,7 @@ type
     procedure btnUpdateCompareSeqClick(Sender: TObject);
     procedure btnCancelCompareSeqClick(Sender: TObject);
     procedure btnStopAlterSlaveSequencesClick(Sender: TObject);
+    procedure tmrUpdateAllDataTimer(Sender: TObject);
   private
     FLog: TLog;
     FData: TdmData;
@@ -262,6 +264,10 @@ uses
   UFileVersion;
 
 const
+  // Период обновления "Все данные"
+  cUpdateAllDataInterval = c1Minute * 5;
+
+  // Сообщения
   cLogMsg = '%s  %s';
 
   cStartPointReplica     = 'начало репликации %s';
@@ -463,6 +469,12 @@ begin
 
   if FStartTimeSession > 0 then
     lbSsnElapsed.Caption := Format(cElapsedSession, [Elapsed(FStartTimeSession)]);
+end;
+
+procedure TfrmMain.tmrUpdateAllDataTimer(Sender: TObject);
+begin
+  (Sender as TTimer).Enabled := False;
+  CheckReplicaMaxMin;
 end;
 
 procedure TfrmMain.WriteSettings;
@@ -1202,7 +1214,7 @@ begin
       edtAllMaxId.Text    := IntToStr(P^.MaxId);
       edtAllRecCount.Text := IntToStr(P^.RecCount);
 
-      iStart:= TSettings.ReplicaLastId;
+      iStart := StrToIntDef(edtSsnMinId.Text, 0);
 
       if (P^.MaxId > P^.MinId) then
       begin
@@ -1218,6 +1230,10 @@ begin
       Dispose(P);
     end;
   end;
+
+  // запускаем таймер обновления "Все данные"
+  tmrUpdateAllData.Interval := cUpdateAllDataInterval;
+  tmrUpdateAllData.Enabled  := True;
 end;
 
 procedure TfrmMain.OnTerminateMoveSavedProcToSlave(Sender: TObject);

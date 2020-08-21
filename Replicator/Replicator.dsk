@@ -1,50 +1,58 @@
 ﻿[Closed Files]
-File_0=TSourceModule,'c:\program files\embarcadero\studio\18.0\SOURCE\RTL\SYS\System.pas',0,1,16513,1,16531,0,0,,
-File_1=TSourceModule,'C:\Users\sergey\Documents\zeosdbo-7.2.6.1-stable\src\dbc\ZDbcStatement.pas',0,1,517,1,535,0,0,,
-File_2=TSourceModule,'c:\program files\embarcadero\studio\18.0\source\rtl\win\Winapi.Windows.pas',0,1,35851,1,35869,0,0,,
-File_3=TSourceModule,'c:\program files\embarcadero\studio\18.0\source\rtl\common\System.Classes.pas',0,1,14708,1,14726,0,0,,
-File_4=TSourceModule,'C:\Users\sergey\Documents\Works\SEP\Main.pas',0,1,6003,1,6019,0,0,,
-File_5=TSourceModule,'c:\program files\embarcadero\studio\18.0\source\rtl\common\System.IOUtils.pas',0,1,1134,55,1154,0,0,,
-File_6=TSourceModule,'c:\program files\embarcadero\studio\18.0\SOURCE\RTL\SYS\System.SysUtils.pas',0,1,1277,23,1299,0,0,,
-File_7=TSourceModule,'c:\program files\embarcadero\studio\18.0\SOURCE\VCL\Vcl.Forms.pas',0,1,10645,1,10661,0,0,{{1740,4}
-File_8=TSourceModule,'c:\program files\embarcadero\studio\18.0\SOURCE\RTL\SYS\System.Types.pas',0,1,36,1,53,0,0,,
-File_9=TSourceModule,'C:\Users\sergey\Documents\Works\WMS\src\Main.pas',0,1,1287,1,1289,0,0,,{0
-File_10=TSourceModule,'c:\program files\embarcadero\studio\18.0\SOURCE\VCL\Vcl.Controls.pas',0,1,12004,1,12012,0,0,,
-File_11=TSourceModule,'c:\program files\embarcadero\studio\18.0\SOURCE\VCL\Vcl.StdCtrls.pas',0,1,7691,3,7708,0,0,{{1655,4}
-File_12=TSourceModule,'c:\program files\embarcadero\studio\18.0\SOURCE\VCL\Vcl.ComCtrls.pas',0,1,1913,1,1936,0,0,{{17148,0}
-File_13=TSourceModule,'C:\Users\sergey\Documents\zeosdbo-7.2.6.1-stable\src\dbc\ZDbcConnection.pas',0,1,1275,1,1291,0,0,,
-File_14=TSourceModule,'C:\Users\sergey\Documents\zeosdbo-7.2.6.1-stable\src\dbc\ZDbcPostgreSql.pas',0,1,612,1,628,0,0,,
+File_0=TSourceModule,'C:\Users\sergey\Documents\Works\SEP\Definitions.pas',0,1,70,20,4,0,0,,{2,43,1}
+File_1=TSourceModule,'c:\program files\embarcadero\studio\18.0\source\rtl\common\System.Classes.pas',0,1,1641,1,1665,0,0,,
+File_2=TSourceModule,'c:\program files\embarcadero\studio\18.0\SOURCE\RTL\SYS\System.pas',0,1,16513,1,16531,0,0,,
+File_3=TSourceModule,'C:\Users\sergey\Documents\zeosdbo-7.2.6.1-stable\src\dbc\ZDbcStatement.pas',0,1,517,1,535,0,0,,
+File_4=TSourceModule,'c:\program files\embarcadero\studio\18.0\source\rtl\win\Winapi.Windows.pas',0,1,35851,1,35869,0,0,,
+File_5=TSourceModule,'C:\Users\sergey\Documents\Works\SEP\Main.pas',0,1,6003,1,6019,0,0,,
+File_6=TSourceModule,'c:\program files\embarcadero\studio\18.0\source\rtl\common\System.IOUtils.pas',0,1,1134,55,1154,0,0,,
+File_7=TSourceModule,'c:\program files\embarcadero\studio\18.0\SOURCE\RTL\SYS\System.SysUtils.pas',0,1,1277,23,1299,0,0,,
+File_8=TSourceModule,'c:\program files\embarcadero\studio\18.0\SOURCE\VCL\Vcl.Forms.pas',0,1,10645,1,10661,0,0,{{1740,4}
+File_9=TSourceModule,'c:\program files\embarcadero\studio\18.0\SOURCE\RTL\SYS\System.Types.pas',0,1,36,1,53,0,0,,
+File_10=TSourceModule,'C:\Users\sergey\Documents\Works\WMS\src\Main.pas',0,1,1287,1,1289,0,0,,{0
+File_11=TSourceModule,'c:\program files\embarcadero\studio\18.0\SOURCE\VCL\Vcl.Controls.pas',0,1,12004,1,12012,0,0,,
+File_12=TSourceModule,'c:\program files\embarcadero\studio\18.0\SOURCE\VCL\Vcl.StdCtrls.pas',0,1,7691,3,7708,0,0,{{1655,4}
+File_13=TSourceModule,'c:\program files\embarcadero\studio\18.0\SOURCE\VCL\Vcl.ComCtrls.pas',0,1,1913,1,1936,0,0,{{17148,0}
+File_14=TSourceModule,'C:\Users\sergey\Documents\zeosdbo-7.2.6.1-stable\src\dbc\ZDbcConnection.pas',0,1,1275,1,1291,0,0,,
 
 [Modules]
 Module0=C:\Users\sergey\Documents\Works\Replicator\src\UData.pas
-Module1=C:\Users\sergey\Documents\Works\Replicator\src\UCommandData.pas
-Module2=C:\Users\sergey\Documents\Works\Replicator\src\UMain.pas
-Module3=C:\Users\sergey\Documents\zeosdbo-7.2.6.1-stable\src\dbc\ZDbcPostgreSqlStatement.pas
-Module4=C:\Users\sergey\Documents\zeosdbo-7.2.6.1-stable\src\dbc\ZDbcIntfs.pas
-Module5=C:\Users\sergey\Documents\zeosdbo-7.2.6.1-stable\src\component\ZAbstractConnection.pas
-Module6=C:\Users\sergey\Documents\Works\SEP\Definitions.pas
-Module7=C:\Users\sergey\Documents\Works\Replicator\src\UFileVersion.pas
-Module8=C:\Users\sergey\Documents\Works\Replicator\src\USettings.pas
-Module9=C:\Users\sergey\Documents\Works\Replicator\src\UConstants.pas
+Module1=C:\Users\sergey\Documents\Works\Replicator\src\UMain.pas
+Module2=C:\Users\sergey\Documents\Works\Replicator\src\UDefinitions.pas
+Module3=C:\Users\sergey\Documents\Works\Replicator\src\UConstants.pas
+Module4=C:\Users\sergey\Documents\Works\Replicator\src\USettings.pas
+Module5=C:\Users\sergey\Documents\Works\Replicator\src\UCommandData.pas
+Module6=C:\Users\sergey\Documents\zeosdbo-7.2.6.1-stable\src\dbc\ZDbcPostgreSqlStatement.pas
+Module7=C:\Users\sergey\Documents\zeosdbo-7.2.6.1-stable\src\dbc\ZDbcIntfs.pas
+Module8=C:\Users\sergey\Documents\zeosdbo-7.2.6.1-stable\src\component\ZAbstractConnection.pas
+Module9=C:\Users\sergey\Documents\Works\Replicator\src\UFileVersion.pas
 Module10=C:\Users\sergey\Documents\Works\Replicator\src\UScriptFiles.pas
-Module11=C:\Users\sergey\Documents\Works\Replicator\src\UDefinitions.pas
-Module12=C:\Users\sergey\Documents\zeosdbo-7.2.6.1-stable\src\component\ZAbstractRODataset.pas
-Module13=c:\program files\embarcadero\studio\18.0\source\data\Data.DB.pas
-Module14=C:\Users\sergey\Documents\zeosdbo-7.2.6.1-stable\src\plain\ZPlainPostgreSqlDriver.pas
-Module15=C:\Users\sergey\Documents\zeosdbo-7.2.6.1-stable\src\component\ZConnection.pas
-Module16=C:\Users\sergey\Documents\zeosdbo-7.2.6.1-stable\src\core\ZClasses.pas
-Module17=C:\Users\sergey\Documents\Works\Replicator\src\UCommon.pas
-Module18=C:\Users\sergey\Documents\Works\Replicator\src\ULog.pas
-Count=19
+Module11=C:\Users\sergey\Documents\zeosdbo-7.2.6.1-stable\src\component\ZAbstractRODataset.pas
+Module12=c:\program files\embarcadero\studio\18.0\source\data\Data.DB.pas
+Module13=C:\Users\sergey\Documents\zeosdbo-7.2.6.1-stable\src\plain\ZPlainPostgreSqlDriver.pas
+Module14=C:\Users\sergey\Documents\zeosdbo-7.2.6.1-stable\src\component\ZConnection.pas
+Module15=C:\Users\sergey\Documents\zeosdbo-7.2.6.1-stable\src\core\ZClasses.pas
+Module16=C:\Users\sergey\Documents\Works\Replicator\src\UCommon.pas
+Module17=C:\Users\sergey\Documents\Works\Replicator\src\ULog.pas
+Count=18
 EditWindowCount=1
 
 [C:\Users\sergey\Documents\Works\Replicator\src\UData.pas]
 ModuleType=TSourceModule
 
-[C:\Users\sergey\Documents\Works\Replicator\src\UCommandData.pas]
+[C:\Users\sergey\Documents\Works\Replicator\src\UMain.pas]
 ModuleType=TSourceModule
 
-[C:\Users\sergey\Documents\Works\Replicator\src\UMain.pas]
+[C:\Users\sergey\Documents\Works\Replicator\src\UDefinitions.pas]
+ModuleType=TSourceModule
+
+[C:\Users\sergey\Documents\Works\Replicator\src\UConstants.pas]
+ModuleType=TSourceModule
+
+[C:\Users\sergey\Documents\Works\Replicator\src\USettings.pas]
+ModuleType=TSourceModule
+
+[C:\Users\sergey\Documents\Works\Replicator\src\UCommandData.pas]
 ModuleType=TSourceModule
 
 [C:\Users\sergey\Documents\zeosdbo-7.2.6.1-stable\src\dbc\ZDbcPostgreSqlStatement.pas]
@@ -56,22 +64,10 @@ ModuleType=TSourceModule
 [C:\Users\sergey\Documents\zeosdbo-7.2.6.1-stable\src\component\ZAbstractConnection.pas]
 ModuleType=TSourceModule
 
-[C:\Users\sergey\Documents\Works\SEP\Definitions.pas]
-ModuleType=TSourceModule
-
 [C:\Users\sergey\Documents\Works\Replicator\src\UFileVersion.pas]
 ModuleType=TSourceModule
 
-[C:\Users\sergey\Documents\Works\Replicator\src\USettings.pas]
-ModuleType=TSourceModule
-
-[C:\Users\sergey\Documents\Works\Replicator\src\UConstants.pas]
-ModuleType=TSourceModule
-
 [C:\Users\sergey\Documents\Works\Replicator\src\UScriptFiles.pas]
-ModuleType=TSourceModule
-
-[C:\Users\sergey\Documents\Works\Replicator\src\UDefinitions.pas]
 ModuleType=TSourceModule
 
 [C:\Users\sergey\Documents\zeosdbo-7.2.6.1-stable\src\component\ZAbstractRODataset.pas]
@@ -96,7 +92,7 @@ ModuleType=TSourceModule
 ModuleType=TSourceModule
 
 [EditWindow0]
-ViewCount=19
+ViewCount=18
 CurrentEditView=C:\Users\sergey\Documents\Works\Replicator\src\UData.pas
 View0=0
 View1=1
@@ -116,7 +112,6 @@ View14=14
 View15=15
 View16=16
 View17=17
-View18=18
 PercentageSizes=1
 Create=1
 Visible=1
@@ -125,23 +120,23 @@ State=0
 Left=0
 Top=0
 Width=10000
-Height=9212
+Height=8702
 MaxLeft=-1
 MaxTop=-1
 ClientWidth=10000
-ClientHeight=9212
+ClientHeight=8702
 DockedToMainForm=1
 BorlandEditorCodeExplorer=BorlandEditorCodeExplorer@EditWindow0
 TopPanelSize=0
 LeftPanelSize=1964
 LeftPanelClients=DockSite3,PropertyInspector
-LeftPanelData=000008000101000000007E1300000000000001AC070000000000000100000000FC0C000009000000446F636B53697465330100000000A62200001100000050726F7065727479496E73706563746F72FFFFFFFF
-RightPanelSize=0
+LeftPanelData=000008000101000000006A1200000000000001AC070000000000000100000000FC0C000009000000446F636B53697465330100000000BC2000001100000050726F7065727479496E73706563746F72FFFFFFFF
+RightPanelSize=1568
 RightPanelClients=DockSite2,DockSite4
-RightPanelData=0000080001010200000009000000446F636B536974653209000000446F636B5369746534B50F000000000000012006000000000000FFFFFFFF
+RightPanelData=0000080001010100000009000000446F636B53697465346A120000000000000120060000000000000100000000BC20000009000000446F636B5369746532FFFFFFFF
 BottomPanelSize=0
 BottomPanelClients=DockSite1,MessageView
-BottomPanelData=0000080001020200000009000000446F636B53697465310F0000004D65737361676556696577466F726D7245000000000000028306000000000000FFFFFFFF
+BottomPanelData=0000080001020200000009000000446F636B53697465310F0000004D65737361676556696577466F726D7245000000000000022606000000000000FFFFFFFF
 BottomMiddlePanelSize=0
 BottomMiddlePanelClients=DockSite0,GraphDrawingModel
 BottomMiddelPanelData=0000080001020200000009000000446F636B536974653010000000477261706844726177696E67566965779F1D00000000000002F206000000000000FFFFFFFF
@@ -149,9 +144,9 @@ BottomMiddelPanelData=0000080001020200000009000000446F636B5369746530100000004772
 [View0]
 CustomEditViewType=TEditView
 Module=C:\Users\sergey\Documents\Works\Replicator\src\UMain.pas
-CursorX=48
-CursorY=392
-TopLine=363
+CursorX=90
+CursorY=271
+TopLine=254
 LeftCol=1
 Elisions=
 Bookmarks=
@@ -160,26 +155,15 @@ EditViewName=C:\Users\sergey\Documents\Works\Replicator\src\UMain.pas
 [View1]
 CustomEditViewType=TEditView
 Module=C:\Users\sergey\Documents\Works\Replicator\src\UData.pas
-CursorX=70
-CursorY=405
-TopLine=371
+CursorX=64
+CursorY=1474
+TopLine=1454
 LeftCol=1
 Elisions=
 Bookmarks=
 EditViewName=C:\Users\sergey\Documents\Works\Replicator\src\UData.pas
 
 [View2]
-CustomEditViewType=TEditView
-Module=C:\Users\sergey\Documents\Works\SEP\Definitions.pas
-CursorX=7
-CursorY=38
-TopLine=21
-LeftCol=1
-Elisions=
-Bookmarks={2,43,1}
-EditViewName=C:\Users\sergey\Documents\Works\SEP\Definitions.pas
-
-[View3]
 CustomEditViewType=TEditView
 Module=C:\Users\sergey\Documents\Works\Replicator\src\UScriptFiles.pas
 CursorX=52
@@ -190,12 +174,23 @@ Elisions=
 Bookmarks=
 EditViewName=C:\Users\sergey\Documents\Works\Replicator\src\UScriptFiles.pas
 
+[View3]
+CustomEditViewType=TEditView
+Module=C:\Users\sergey\Documents\Works\Replicator\src\UDefinitions.pas
+CursorX=26
+CursorY=47
+TopLine=25
+LeftCol=1
+Elisions=
+Bookmarks=
+EditViewName=C:\Users\sergey\Documents\Works\Replicator\src\UDefinitions.pas
+
 [View4]
 CustomEditViewType=TEditView
 Module=C:\Users\sergey\Documents\Works\Replicator\src\USettings.pas
-CursorX=1
-CursorY=399
-TopLine=381
+CursorX=48
+CursorY=106
+TopLine=94
 LeftCol=1
 Elisions=
 Bookmarks=
@@ -236,17 +231,6 @@ EditViewName=C:\Users\sergey\Documents\Works\Replicator\src\UCommandData.pas
 
 [View8]
 CustomEditViewType=TEditView
-Module=C:\Users\sergey\Documents\Works\Replicator\src\UDefinitions.pas
-CursorX=1
-CursorY=33
-TopLine=7
-LeftCol=1
-Elisions=
-Bookmarks=
-EditViewName=C:\Users\sergey\Documents\Works\Replicator\src\UDefinitions.pas
-
-[View9]
-CustomEditViewType=TEditView
 Module=C:\Users\sergey\Documents\Works\Replicator\src\UCommon.pas
 CursorX=53
 CursorY=18
@@ -256,18 +240,18 @@ Elisions=
 Bookmarks=
 EditViewName=C:\Users\sergey\Documents\Works\Replicator\src\UCommon.pas
 
-[View10]
+[View9]
 CustomEditViewType=TEditView
 Module=C:\Users\sergey\Documents\Works\Replicator\src\UConstants.pas
-CursorX=8
-CursorY=21
+CursorX=3
+CursorY=23
 TopLine=5
 LeftCol=1
 Elisions=
 Bookmarks=
 EditViewName=C:\Users\sergey\Documents\Works\Replicator\src\UConstants.pas
 
-[View11]
+[View10]
 CustomEditViewType=TEditView
 Module=C:\Users\sergey\Documents\zeosdbo-7.2.6.1-stable\src\dbc\ZDbcPostgreSqlStatement.pas
 CursorX=1
@@ -278,7 +262,7 @@ Elisions=
 Bookmarks=
 EditViewName=C:\Users\sergey\Documents\zeosdbo-7.2.6.1-stable\src\dbc\ZDbcPostgreSqlStatement.pas
 
-[View12]
+[View11]
 CustomEditViewType=TEditView
 Module=C:\Users\sergey\Documents\zeosdbo-7.2.6.1-stable\src\component\ZConnection.pas
 CursorX=1
@@ -289,7 +273,7 @@ Elisions=
 Bookmarks=
 EditViewName=C:\Users\sergey\Documents\zeosdbo-7.2.6.1-stable\src\component\ZConnection.pas
 
-[View13]
+[View12]
 CustomEditViewType=TEditView
 Module=C:\Users\sergey\Documents\zeosdbo-7.2.6.1-stable\src\core\ZClasses.pas
 CursorX=22
@@ -300,7 +284,7 @@ Elisions=
 Bookmarks=
 EditViewName=C:\Users\sergey\Documents\zeosdbo-7.2.6.1-stable\src\core\ZClasses.pas
 
-[View14]
+[View13]
 CustomEditViewType=TEditView
 Module=C:\Users\sergey\Documents\zeosdbo-7.2.6.1-stable\src\component\ZAbstractConnection.pas
 CursorX=1
@@ -311,7 +295,7 @@ Elisions=
 Bookmarks=
 EditViewName=C:\Users\sergey\Documents\zeosdbo-7.2.6.1-stable\src\component\ZAbstractConnection.pas
 
-[View15]
+[View14]
 CustomEditViewType=TEditView
 Module=C:\Users\sergey\Documents\zeosdbo-7.2.6.1-stable\src\component\ZAbstractRODataset.pas
 CursorX=69
@@ -322,7 +306,7 @@ Elisions=
 Bookmarks=
 EditViewName=C:\Users\sergey\Documents\zeosdbo-7.2.6.1-stable\src\component\ZAbstractRODataset.pas
 
-[View16]
+[View15]
 CustomEditViewType=TEditView
 Module=C:\Users\sergey\Documents\zeosdbo-7.2.6.1-stable\src\dbc\ZDbcIntfs.pas
 CursorX=35
@@ -333,7 +317,7 @@ Elisions=
 Bookmarks=
 EditViewName=C:\Users\sergey\Documents\zeosdbo-7.2.6.1-stable\src\dbc\ZDbcIntfs.pas
 
-[View17]
+[View16]
 CustomEditViewType=TEditView
 Module=c:\program files\embarcadero\studio\18.0\source\data\Data.DB.pas
 CursorX=1
@@ -344,7 +328,7 @@ Elisions=
 Bookmarks=
 EditViewName=c:\program files\embarcadero\studio\18.0\source\data\Data.DB.pas
 
-[View18]
+[View17]
 CustomEditViewType=TEditView
 Module=C:\Users\sergey\Documents\Works\Replicator\src\ULog.pas
 CursorX=30
@@ -379,11 +363,11 @@ State=0
 Left=0
 Top=0
 Width=3823
-Height=1317
+Height=1221
 MaxLeft=-1
 MaxTop=-1
 ClientWidth=3823
-ClientHeight=1317
+ClientHeight=1221
 TBDockHeight=212
 LRDockWidth=13604
 Dockable=1
@@ -411,7 +395,7 @@ MaxWidth=6667
 MaxHeight=8519
 ClientWidth=10000
 ClientHeight=9788
-BottomPanelSize=8870
+BottomPanelSize=8380
 BottomPanelClients=EditWindow0
 BottomPanelData=0000080000000000000000000000000000000000000000000000000100000000000000000C0000004564697457696E646F775F30FFFFFFFF
 
@@ -424,11 +408,11 @@ State=0
 Left=0
 Top=0
 Width=1568
-Height=8769
+Height=8288
 MaxLeft=-1
 MaxTop=-1
 ClientWidth=1568
-ClientHeight=8769
+ClientHeight=8288
 TBDockHeight=5904
 LRDockWidth=2349
 Dockable=1
@@ -441,14 +425,14 @@ Visible=0
 Docked=1
 State=0
 Left=0
-Top=0
+Top=18
 Width=2771
-Height=1558
+Height=1462
 MaxLeft=-1
 MaxTop=-1
 ClientWidth=2771
-ClientHeight=1558
-TBDockHeight=1558
+ClientHeight=1462
+TBDockHeight=1462
 LRDockWidth=2771
 Dockable=1
 StayOnTop=0
@@ -516,8 +500,8 @@ Create=1
 Visible=0
 Docked=1
 State=0
-Left=-1280
-Top=-128
+Left=-1627
+Top=226
 Width=276
 Height=365
 MaxLeft=-1
@@ -541,11 +525,11 @@ State=0
 Left=0
 Top=377
 Width=1964
-Height=5587
+Height=5077
 MaxLeft=-1
 MaxTop=-1
 ClientWidth=1964
-ClientHeight=5587
+ClientHeight=5077
 TBDockHeight=7404
 LRDockWidth=1964
 Dockable=1
@@ -561,11 +545,11 @@ State=0
 Left=0
 Top=0
 Width=3823
-Height=1317
+Height=1221
 MaxLeft=-1
 MaxTop=-1
 ClientWidth=3823
-ClientHeight=1317
+ClientHeight=1221
 TBDockHeight=413
 LRDockWidth=4953
 Dockable=1
@@ -580,11 +564,11 @@ State=0
 Left=0
 Top=0
 Width=3823
-Height=1317
+Height=1221
 MaxLeft=-1
 MaxTop=-1
 ClientWidth=3823
-ClientHeight=1317
+ClientHeight=1221
 TBDockHeight=212
 LRDockWidth=7406
 Dockable=1
@@ -603,11 +587,11 @@ State=0
 Left=0
 Top=0
 Width=3823
-Height=1317
+Height=1221
 MaxLeft=-1
 MaxTop=-1
 ClientWidth=3823
-ClientHeight=1317
+ClientHeight=1221
 TBDockHeight=1538
 LRDockWidth=3484
 Dockable=1
@@ -622,11 +606,11 @@ State=0
 Left=0
 Top=0
 Width=3823
-Height=1317
+Height=1221
 MaxLeft=-1
 MaxTop=-1
 ClientWidth=3823
-ClientHeight=1317
+ClientHeight=1221
 TBDockHeight=2067
 LRDockWidth=3484
 Dockable=1
@@ -641,11 +625,11 @@ State=0
 Left=0
 Top=0
 Width=1568
-Height=8769
+Height=6240
 MaxLeft=-1
 MaxTop=-1
 ClientWidth=1568
-ClientHeight=8769
+ClientHeight=6240
 TBDockHeight=4885
 LRDockWidth=7151
 Dockable=1
@@ -657,8 +641,8 @@ Create=1
 Visible=0
 Docked=1
 State=0
-Left=-1280
-Top=-128
+Left=-1502
+Top=-66
 Width=2844
 Height=6202
 MaxLeft=-1
@@ -679,11 +663,11 @@ State=0
 Left=0
 Top=0
 Width=1568
-Height=8769
+Height=6240
 MaxLeft=-1
 MaxTop=-1
 ClientWidth=1568
-ClientHeight=8769
+ClientHeight=6240
 TBDockHeight=5962
 LRDockWidth=2510
 Dockable=1
@@ -717,11 +701,11 @@ State=0
 Left=0
 Top=0
 Width=2339
-Height=1240
+Height=1000
 MaxLeft=-1
 MaxTop=-1
 ClientWidth=2339
-ClientHeight=1240
+ClientHeight=1000
 TBDockHeight=2317
 LRDockWidth=2823
 Dockable=1
@@ -752,8 +736,8 @@ Create=1
 Visible=0
 Docked=1
 State=0
-Left=-8
-Top=-138
+Left=0
+Top=-153
 Width=1849
 Height=3144
 MaxLeft=-1
@@ -836,8 +820,8 @@ Create=1
 Visible=0
 Docked=1
 State=0
-Left=0
-Top=0
+Left=370
+Top=827
 Width=2854
 Height=3212
 MaxLeft=-1
@@ -858,11 +842,11 @@ State=0
 Left=0
 Top=0
 Width=3823
-Height=1317
+Height=1221
 MaxLeft=-1
 MaxTop=-1
 ClientWidth=3823
-ClientHeight=1317
+ClientHeight=1221
 TBDockHeight=1548
 LRDockWidth=8740
 Dockable=1
@@ -903,11 +887,11 @@ State=0
 Left=0
 Top=0
 Width=1568
-Height=8769
+Height=6240
 MaxLeft=-1
 MaxTop=-1
 ClientWidth=1568
-ClientHeight=8769
+ClientHeight=6240
 TBDockHeight=4885
 LRDockWidth=5307
 Dockable=1
@@ -967,20 +951,20 @@ Create=1
 Visible=0
 Docked=1
 State=0
-Left=8
-Top=8
+Left=0
+Top=18
 Width=3823
-Height=1558
+Height=1462
 MaxLeft=-1
 MaxTop=-1
 ClientWidth=3823
-ClientHeight=1558
-TBDockHeight=1558
+ClientHeight=1462
+TBDockHeight=1462
 LRDockWidth=3823
 Dockable=1
 StayOnTop=0
 TabPosition=1
-ActiveTabID=DebugLogView
+ActiveTabID=BreakpointWindow
 TabDockClients=DebugLogView,BreakpointWindow,ThreadStatusWindow,CallStackWindow,WatchWindow,LocalVarsWindow
 
 [DockSite2]
@@ -988,17 +972,17 @@ HostDockSite=DockRightPanel
 DockSiteType=1
 PercentageSizes=1
 Create=1
-Visible=0
+Visible=1
 Docked=1
 State=0
-Left=8
-Top=8
+Left=0
+Top=18
 Width=1568
-Height=9010
+Height=8529
 MaxLeft=-1
 MaxTop=-1
 ClientWidth=1568
-ClientHeight=9010
+ClientHeight=8529
 TBDockHeight=9010
 LRDockWidth=1568
 Dockable=1

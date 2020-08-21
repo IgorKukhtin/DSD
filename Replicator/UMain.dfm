@@ -1050,26 +1050,32 @@ object frmMain: TfrmMain
     FavoriteLinks = <>
     FileTypes = <>
     Options = []
-    Left = 508
+    Left = 381
     Top = 601
   end
   object tmrElapsed: TTimer
     Enabled = False
     OnTimer = tmrElapsedTimer
-    Left = 809
+    Left = 682
     Top = 600
   end
   object dsCompareRecCount: TDataSource
-    Left = 722
+    Left = 595
     Top = 601
   end
   object tmrRestartReplica: TTimer
     Enabled = False
-    Left = 892
+    Left = 765
     Top = 600
   end
   object dsCompareSeq: TDataSource
-    Left = 609
+    Left = 482
     Top = 601
+  end
+  object tmrUpdateAllData: TTimer
+    Enabled = False
+    OnTimer = tmrUpdateAllDataTimer
+    Left = 873
+    Top = 599
   end
 end
