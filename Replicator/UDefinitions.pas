@@ -32,6 +32,13 @@ type
     LastId_DDL: Integer;
   end;
 
+  TSequenceData = record
+    Name: string;
+    LastValue: Int64;
+  end;
+
+  TSequenceDataArray = array of TSequenceData;
+
   PCompareMasterSlave = ^TCompareMasterSlave;
   TCompareMasterSlave = record
     ResultSQL: string;

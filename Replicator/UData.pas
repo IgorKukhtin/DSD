@@ -23,8 +23,9 @@ type
     qrySelectReplicaCmd: TZReadOnlyQuery;
     qryMasterHelper: TZReadOnlyQuery;
     qryLastId: TZReadOnlyQuery;
-    qryCompareMasterSlave: TZReadOnlyQuery;
+    qryCompareRecCountMS: TZReadOnlyQuery;
     qrySlaveHelper: TZReadOnlyQuery;
+    qryCompareSeqMS: TZReadOnlyQuery;
   strict private
     FStartId: Integer;
     FLastId: Integer;
@@ -52,6 +53,7 @@ type
     procedure LogMsg(const AMsg, AFileName: string); overload;
     procedure LogMsg(const AMsg: string); overload;
     procedure LogMsg(const AMsg: string; const aUID: Cardinal); overload;
+    procedure FetchSequences(AServer: TServerRank; out ASeqDataArr: TSequenceDataArray);
     procedure SaveValueInDB(const AValue: Integer; const AFieldName: string; const ASaveInMaster: Boolean = True);
     procedure SaveErrorInMaster(const AStartId, ALastId: Integer; const AClientId: Int64; const AErrDescription: string);
 
@@ -90,7 +92,8 @@ type
     property ReplicaFinished: TReplicaFinished read FReplicaFinished;
 
     function ApplyScripts(AScriptsContent, AScriptNames: TStrings): TApplyScriptResult;
-    function GetCompareMasterSlaveSQL(const ADeviationsOnly: Boolean): string;
+    function GetCompareRecCountMS_SQL(const ADeviationsOnly: Boolean): string;
+    function GetCompareSeqMS_SQL(const ADeviationsOnly: Boolean): string;
     function IsMasterConnected: Boolean;
     function IsSlaveConnected: Boolean;
     function IsBothConnected: Boolean;
@@ -99,6 +102,7 @@ type
     function MinID: Integer;
     function MaxID: Integer;
 
+    procedure AlterSlaveSequences;
     procedure MoveSavedProcToSlave;
     procedure StartReplica;
     procedure StopReplica;
@@ -149,12 +153,26 @@ type
     procedure Execute; override;
   end;
 
+  TLastIdThread = class(TWorkerThread)
+  protected
+    procedure Execute; override;
+  end;
+
   TReplicaThread = class(TWorkerThread)
   protected
     procedure Execute; override;
   end;
 
-  TCompareMasterSlaveThread = class(TWorkerThread)
+  TCompareRecCountMSThread = class(TWorkerThread)
+  strict private
+    FDeviationsOnly: Boolean;
+  protected
+    procedure Execute; override;
+  public
+    constructor Create(CreateSuspended, ADeviationsOnly: Boolean; AMsgProc: TNotifyMessage; AKind: TThreadKind = tknNondriven); reintroduce;
+  end;
+
+  TCompareSeqMSThread = class(TWorkerThread)
   strict private
     FDeviationsOnly: Boolean;
   protected
@@ -175,6 +193,11 @@ type
   end;
 
   TMoveProcToSlaveThread = class(TWorkerThread)
+  protected
+    procedure Execute; override;
+  end;
+
+  TAlterSlaveSequencesThread = class(TWorkerThread)
   protected
     procedure Execute; override;
   end;
@@ -204,6 +227,57 @@ const
 
 
 { TdmData }
+
+procedure TdmData.AlterSlaveSequences;
+const
+  cAlterSequence = 'alter sequence if exists public.%s restart with %d';
+  cSuccess       = 'ѕоследние значени€ последовательностей перенесены в Slave';
+var
+  I: Integer;
+  arrSeq: TSequenceDataArray;
+  sAlterSequence: string;
+begin
+  try
+    // —начала получим все последовательности Master и их последние значени€
+    FetchSequences(srMaster, arrSeq);
+
+    if FStopped then Exit;
+
+    // “еперь готов записать последние значени€ последовательностей в Slave
+    if IsSlaveConnected and (Length(arrSeq) > 0) then
+    begin
+      for I := Low(arrSeq) to High(arrSeq) do
+      begin
+        if FStopped then Exit;
+
+        sAlterSequence := Format(cAlterSequence, [arrSeq[I].Name, arrSeq[I].LastValue]);
+        try
+          with conSlave.DbcConnection do
+          begin
+            SetAutoCommit(False);
+            PrepareStatement(sAlterSequence).ExecutePrepared;
+            Commit;
+          end;
+        except
+          on E: Exception do
+          begin
+            conSlave.DbcConnection.Rollback;
+            LogMsg(Format(cExceptionMsg, [E.ClassName, E.Message]));
+            Break;
+          end;
+        end;
+      end;
+
+      if FStopped then Exit;
+
+      LogMsg(cSuccess);
+    end;
+
+  except
+    on E: Exception do
+      LogMsg(Format(cExceptionMsg, [E.ClassName, E.Message]));
+  end;
+end;
 
 procedure TdmData.ApplyConnectionConfig(AConnection: TZConnection; ARank: TServerRank);
 var
@@ -371,6 +445,8 @@ begin
       Close;
     end;
 
+    if FStopped then Exit;
+
 //    LogMsg(qrySelectReplicaCmd.SQL.Text, 'Replica_SQL.txt');
 
     { qrySelectReplicaCmd вернет набор команд репликации (INSERT, UPDATE, DELETE) в поле Result,
@@ -382,12 +458,16 @@ begin
     FStartId := qrySelectReplicaCmd.FieldByName('Id').AsInteger; // откорректируем значение StartId в соответствии с реальными данными
     LogMsg(Format(cElapsedFetch, [IntToStr(qrySelectReplicaCmd.RecordCount), Elapsed(crdStartFetch)]), crdStartFetch);
 
+    if FStopped then Exit;
+
     // строим свой массив данных, который позволит выбирать записи пакетами с учетом границ transaction_id
     crdStartBuild := GetTickCount;
     LogMsg(cBuild, crdStartBuild);
     FCommandData.BuildData(qrySelectReplicaCmd);
     qrySelectReplicaCmd.Close;
     LogMsg(Format(cElapsedBuild, [IntToStr(FCommandData.Count), Elapsed(crdStartBuild)]), crdStartBuild);
+
+    if FStopped then Exit;
 
     FCommandData.Last; //чтобы прочитать MaxId
 
@@ -881,6 +961,88 @@ begin
   Result := FReplicaFinished;
 end;
 
+procedure TdmData.FetchSequences(AServer: TServerRank; out ASeqDataArr: TSequenceDataArray);
+const
+  cSelectSequences = 'select * from gpSelect_SequenceNames()';
+  cSelectLastValue = 'select last_value from %s';
+var
+  I: Integer;
+  bConnected: Boolean;
+  qryHelper: TZReadOnlyQuery;
+  sSelectLastValue: string;
+begin
+  try
+
+    SetLength(ASeqDataArr, 0);
+    qryHelper  := nil;
+    bConnected := False;
+
+    case AServer of
+      srMaster:
+        begin
+          bConnected := IsMasterConnected;
+          qryHelper  := qryMasterHelper;
+        end;
+
+      srSlave:
+        begin
+          bConnected := IsSlaveConnected;
+          qryHelper  := qrySlaveHelper;
+        end;
+    end;
+
+    if bConnected and Assigned(qryHelper) then
+    begin
+      // получим все последовательности
+      with qryHelper do
+      begin
+        Close;
+        SQL.Clear;
+        SQL.Add(cSelectSequences);
+        Open;
+        FetchAll;
+        First;
+        SetLength(ASeqDataArr, RecordCount);
+
+        if not IsEmpty then
+        begin
+          Assert(Lowercase(Fields[0].FieldName) = 'sequencename',
+            'ќжидаетс€, что gpSelect_SequenceNames() вернет датасет, в котором первое поле "SequenceName"');
+
+          I := 0;
+          while not EOF and not FStopped do
+          begin
+            ASeqDataArr[I].Name := Fields[0].AsString;
+            Inc(I);
+            Next;
+          end;
+        end;
+      end;
+
+      // получим последние значени€ каждой последовательности
+      for I := Low(ASeqDataArr) to High(ASeqDataArr) do
+      begin
+        if FStopped then Exit;
+
+        sSelectLastValue := Format(cSelectLastValue, [ASeqDataArr[I].Name]);
+        with qryHelper do
+        begin
+          Close;
+          SQL.Clear;
+          SQL.Add(sSelectLastValue);
+          Open;
+          if not IsEmpty and not Fields[0].IsNull then
+            ASeqDataArr[I].LastValue := Fields[0].AsLargeInt;
+        end;
+      end;
+    end;
+
+  except
+    on E: Exception do
+      LogMsg(Format(cExceptionMsg, [E.ClassName, E.Message]));
+  end;
+end;
+
 function TdmData.GetReplicaCmdCount: Integer;
 const
   cSQL = 'select Count(*) from (%s) as Commands';
@@ -1044,7 +1206,7 @@ begin
   if Assigned(FMsgProc) then FMsgProc(AMsg, AFileName);
 end;
 
-function TdmData.GetCompareMasterSlaveSQL(const ADeviationsOnly: Boolean): string;
+function TdmData.GetCompareRecCountMS_SQL(const ADeviationsOnly: Boolean): string;
 type
   TTableData = record
     Name: string;
@@ -1156,6 +1318,81 @@ begin
 
     if Length(sSQL) > 0 then
       Result := sSQL + ';';
+  except
+    on E: Exception do
+      LogMsg(Format(cExceptionMsg, [E.ClassName, E.Message]));
+  end;
+end;
+
+function TdmData.GetCompareSeqMS_SQL(const ADeviationsOnly: Boolean): string;
+type
+  TUnionData = record
+    Name: string;
+    MasterValue: Int64;
+    SlaveValue: Int64;
+  end;
+const
+  cSelectUnion = 'select ''%s'' as SequenceName, %d as MasterValue, %d as SlaveValue';
+var
+  I, J: Integer;
+  arrMasterSeq, arrSlaveSeq: TSequenceDataArray;
+  arrUnion: array of TUnionData;
+  sSelect: string;
+begin
+  Result := Format(cSelectUnion, ['<нет данных>', 0, 0]) + ';';
+
+  try
+
+    // ѕолучим список последовательностей Master
+    FetchSequences(srMaster, arrMasterSeq);
+    if Length(arrMasterSeq) = 0 then Exit;
+
+    if FStopped then Exit;
+
+    // ѕолучим список последовательностей Slave
+    FetchSequences(srMaster, arrSlaveSeq);
+
+    if FStopped then Exit;
+
+    SetLength(arrUnion, Length(arrMasterSeq));
+
+    for I := Low(arrUnion) to High(arrUnion) do
+    begin
+      if FStopped then Exit;
+      arrUnion[I].Name := arrMasterSeq[I].Name;
+      arrUnion[I].MasterValue := arrMasterSeq[I].LastValue;
+    end;
+
+    // –епликаци€ может быть еще не закончена и в Slave меньше последовательностей, чем в Master
+    for I := Low(arrUnion) to High(arrUnion) do
+    begin
+      if FStopped then Exit;
+
+      for J := Low(arrSlaveSeq) to High(arrSlaveSeq) do
+        if arrSlaveSeq[J].Name = arrUnion[I].Name then
+        begin
+          if FStopped then Exit;
+          arrUnion[I].SlaveValue := arrSlaveSeq[J].LastValue;
+          Break;
+        end;
+    end;
+
+    // “еперь готов сформировать UNION
+    for I := Low(arrUnion) to High(arrUnion) do
+    begin
+      if FStopped then Exit;
+
+      // если нужно показать только отличи€, тогда пропускаем равные значени€
+      if ADeviationsOnly then
+        if arrUnion[I].MasterValue = arrUnion[I].SlaveValue then Continue;
+
+      sSelect := Format(cSelectUnion, [arrUnion[I].Name, arrUnion[I].MasterValue, arrUnion[I].SlaveValue]);
+      if I = 0 then
+        Result := sSelect
+      else
+        Result := Result + ' union ' + sSelect;
+    end;
+
   except
     on E: Exception do
       LogMsg(Format(cExceptionMsg, [E.ClassName, E.Message]));
@@ -1375,7 +1612,7 @@ end;
 procedure TdmData.SaveErrorInMaster(const AStartId, ALastId: Integer; const AClientId: Int64; const AErrDescription: string);
 const
   cInsert    = 'SELECT _replica.gpInsert_Errors (%d, %d, %d, %s)';
-  cExceptMsg = 'ќшибка сохранени€ в Ѕƒ информации об ошибке выполнени€ команды с StartId = %d, Client_Id = %d ' + cCrLf + cExceptionMsg;
+  cExceptMsg = 'Ќе удалось сохранить в Master информацию об ошибке команды с StartId = %d, Client_Id = %d';
 var
   sInsert: string;
   tmpStmt: IZPreparedStatement;
@@ -1394,7 +1631,8 @@ begin
     on E: Exception do
     begin
       conMaster.DbcConnection.Rollback;
-      LogMsg(Format(cExceptMsg, [AStartId, AClientId, E.ClassName, E.Message]));
+      LogMsg(Format(cExceptMsg, [AStartId, AClientId]));
+      LogMsg(Format(cExceptionMsg, [E.ClassName, E.Message]));
     end;
   end;
 end;
@@ -1636,22 +1874,45 @@ begin
 end;
 
 
-{ TCompareMasterSlaveThread }
+{ TCompareRecCountMSThread }
 
-constructor TCompareMasterSlaveThread.Create(CreateSuspended, ADeviationsOnly: Boolean; AMsgProc: TNotifyMessage;
+constructor TCompareRecCountMSThread.Create(CreateSuspended, ADeviationsOnly: Boolean; AMsgProc: TNotifyMessage;
   AKind: TThreadKind);
 begin
   FDeviationsOnly := ADeviationsOnly;
-  inherited Create(CreateSuspended, 0, 0, 0, AMsgProc, AKind);
+  inherited Create(CreateSuspended, AMsgProc, AKind);
 end;
 
-procedure TCompareMasterSlaveThread.Execute;
+procedure TCompareRecCountMSThread.Execute;
 var
   P: PCompareMasterSlave;
   sSQL: string;
 begin
   inherited;
-  sSQL := Data.GetCompareMasterSlaveSQL(FDeviationsOnly);
+  sSQL := Data.GetCompareRecCountMS_SQL(FDeviationsOnly);
+
+  New(P);
+  P^.ResultSQL := sSQL;
+  ReturnValue := LongWord(P);
+  Terminate;
+end;
+
+{ TCompareSeqMSThread }
+
+constructor TCompareSeqMSThread.Create(CreateSuspended, ADeviationsOnly: Boolean; AMsgProc: TNotifyMessage;
+  AKind: TThreadKind);
+begin
+  FDeviationsOnly := ADeviationsOnly;
+  inherited Create(CreateSuspended, AMsgProc, AKind);
+end;
+
+procedure TCompareSeqMSThread.Execute;
+var
+  P: PCompareMasterSlave;
+  sSQL: string;
+begin
+  inherited;
+  sSQL := Data.GetCompareSeqMS_SQL(FDeviationsOnly);
 
   New(P);
   P^.ResultSQL := sSQL;
@@ -1695,5 +1956,25 @@ begin
   Data.MoveSavedProcToSlave;
   Terminate;
 end;
+
+{ TLastIdThread }
+
+procedure TLastIdThread.Execute;
+begin
+  inherited;
+  ReturnValue := Data.LastId;
+  Terminate;
+end;
+
+{ TAlterSlaveSequencesThread }
+
+procedure TAlterSlaveSequencesThread.Execute;
+begin
+  inherited;
+  Data.AlterSlaveSequences;
+  Terminate;
+end;
+
+
 
 end.

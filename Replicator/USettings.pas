@@ -62,8 +62,10 @@ type
     class procedure SetSlaveDriverID(const AValue: string); static;
     class function GetStopIfError: Boolean; static;
     class procedure SetStopIfError(const AValue: Boolean); static;
-    class function GetCompareDeviationOnly: Boolean; static;
-    class procedure SetCompareDeviationOnly(const AValue: Boolean); static;
+    class function GetCompareDeviationRecCountOnly: Boolean; static;
+    class procedure SetCompareDeviationRecCountOnly(const AValue: Boolean); static;
+    class function GetCompareDeviationSeqOnly: Boolean; static;
+    class procedure SetCompareDeviationSeqOnly(const AValue: Boolean); static;
     class function GetReconnectTimeoutMinute: Integer; static;
     class procedure SetReconnectTimeoutMinute(const AValue: Integer); static;
     class function GetScriptPath: string; static;
@@ -100,7 +102,8 @@ type
     class property MasterDriverID: string read GetMasterDriverID write SetMasterDriverID;
     class property SlaveDriverID: string read GetSlaveDriverID write SetSlaveDriverID;
     class property StopIfError: Boolean read GetStopIfError write SetStopIfError;
-    class property CompareDeviationOnly: Boolean read GetCompareDeviationOnly write SetCompareDeviationOnly;
+    class property CompareDeviationRecCountOnly: Boolean read GetCompareDeviationRecCountOnly write SetCompareDeviationRecCountOnly;
+    class property CompareDeviationSequenceOnly: Boolean read GetCompareDeviationSeqOnly write SetCompareDeviationSeqOnly;
     class property ReconnectTimeoutMinute: Integer read GetReconnectTimeoutMinute write SetReconnectTimeoutMinute;
     class property ScriptPath: string read GetScriptPath write SetScriptPath;
     class property DDLLastId: Integer read GetDDLLastId write SetDDLLastId;
@@ -144,11 +147,13 @@ const
   cWriteCommandsParam    = 'WriteCommandsToFile';
   cLibLocationParam      = 'PostgresLibLocation';
   cStopIfErrorParam      = 'StopIfError';
-  cCompareDeviationParam = 'CompareDeviationOnly';
   cReconnectTimeoutParam = 'ReconnectTimeoutMinute';
   cScriptFilesPathParam  = 'ScriptFilesPath';
   cSaveErr1InDBParam     = 'SaveErrorStep1InDB';
   cSaveErr2InDBParam     = 'SaveErrorStep2InDB';
+
+  cCompareDeviationRecCountParam = 'CompareDeviationRecCountOnly';
+  cCompareDeviationSeqParam      = 'CompareDeviationSequenceOnly';
 
   // Master
   cMasterSection       = 'postgress_master';
@@ -300,9 +305,14 @@ begin
   end;
 end;
 
-class function TSettings.GetCompareDeviationOnly: Boolean;
+class function TSettings.GetCompareDeviationRecCountOnly: Boolean;
 begin
-  Result := GetBoolValue(cSettingsSection, cCompareDeviationParam, False);
+  Result := GetBoolValue(cSettingsSection, cCompareDeviationRecCountParam, False);
+end;
+
+class function TSettings.GetCompareDeviationSeqOnly: Boolean;
+begin
+  Result := GetBoolValue(cSettingsSection, cCompareDeviationSeqParam, False);
 end;
 
 class function TSettings.GetDDLLastId: Integer;
@@ -509,9 +519,14 @@ begin
   end;
 end;
 
-class procedure TSettings.SetCompareDeviationOnly(const AValue: Boolean);
+class procedure TSettings.SetCompareDeviationRecCountOnly(const AValue: Boolean);
 begin
-  SetBoolValue(cSettingsSection, cCompareDeviationParam, AValue);
+  SetBoolValue(cSettingsSection, cCompareDeviationRecCountParam, AValue);
+end;
+
+class procedure TSettings.SetCompareDeviationSeqOnly(const AValue: Boolean);
+begin
+  SetBoolValue(cSettingsSection, cCompareDeviationSeqParam, AValue);
 end;
 
 class procedure TSettings.SetDDLLastId(const AValue: Integer);
