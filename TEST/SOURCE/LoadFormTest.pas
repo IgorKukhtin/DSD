@@ -284,13 +284,18 @@ end;
 
 procedure TLoadFormTest.LoadBarCodeBoxFormTest;
 begin
-  TdsdFormStorageFactory.GetStorage.Save(GetForm('TBarCodeBoxDialogForm'));
-  TdsdFormStorageFactory.GetStorage.Load('TBarCodeBoxDialogForm');
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TBarCodeBoxPrintDialogForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TBarCodeBoxPrintDialogForm');
 
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TBarCodeBoxForm'));
   TdsdFormStorageFactory.GetStorage.Load('TBarCodeBoxForm');
+ {
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TBarCodeBoxDialogForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TBarCodeBoxDialogForm');
+
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TBarCodeBoxEditForm'));
   TdsdFormStorageFactory.GetStorage.Load('TBarCodeBoxEditForm');
+  }
 end;
 
 procedure TLoadFormTest.LoadBonusKindFormTest;
