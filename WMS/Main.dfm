@@ -23,7 +23,7 @@ object MainForm: TMainForm
     Top = 0
     Width = 1384
     Height = 642
-    ActivePage = tsLog
+    ActivePage = tsOraExport
     Align = alClient
     TabOrder = 0
     OnChange = pgcMainChange
@@ -677,10 +677,6 @@ object MainForm: TMainForm
     object tsErrors: TTabSheet
       Caption = #1054#1096#1080#1073#1082#1080
       ImageIndex = 2
-      ExplicitLeft = 0
-      ExplicitTop = 0
-      ExplicitWidth = 0
-      ExplicitHeight = 0
       object splHorz: TSplitter
         Left = 0
         Top = 262

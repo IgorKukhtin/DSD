@@ -15,7 +15,8 @@ uses
   UQryThread in 'UQryThread.pas',
   UCommon in 'UCommon.pas',
   UGatewaySvc in 'UGatewaySvc.pas' {WMSGatewaySvc: TService},
-  UGateway in 'UGateway.pas';
+  UGateway in 'UGateway.pas',
+  UFileVersion in 'UFileVersion.pas';
 
 {$R *.res}
 

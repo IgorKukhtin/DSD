@@ -137,7 +137,7 @@ BEGIN
             , Object_GoodsKind.ObjectCode           AS GoodsKindCode
             , Object_GoodsKind.ValueData            AS GoodsKindName
             , Object_Measure.ValueData              AS MeasureName
-            , Object_GoodsGroup.ValueData           AS GoodsGroupName
+            , Object_GoodsGroupAnalyst.ValueData    AS GoodsGroupName
 
             , Object_GoodsKindComplete.Id           AS GoodsKindId_Complete
             , Object_GoodsKindComplete.ObjectCode   AS GoodsKindCode_Complete
@@ -156,10 +156,10 @@ BEGIN
                                    ON ObjectFloat_CountReceipt.ObjectId = _tmpListMaster.GoodsId
                                   AND ObjectFloat_CountReceipt.DescId   = zc_ObjectFloat_Goods_CountReceipt()
 
-             LEFT JOIN ObjectLink AS ObjectLink_Goods_GoodsGroup
-                                  ON ObjectLink_Goods_GoodsGroup.ObjectId = _tmpListMaster.GoodsId
-                                 AND ObjectLink_Goods_GoodsGroup.DescId = zc_ObjectLink_Goods_GoodsGroup()
-             LEFT JOIN Object AS Object_GoodsGroup ON Object_GoodsGroup.Id = ObjectLink_Goods_GoodsGroup.ChildObjectId
+             LEFT JOIN ObjectLink AS ObjectLink_Goods_GoodsGroupAnalyst
+                                  ON ObjectLink_Goods_GoodsGroupAnalyst.ObjectId = _tmpListMaster.GoodsId
+                                 AND ObjectLink_Goods_GoodsGroupAnalyst.DescId = zc_ObjectLink_Goods_GoodsGroupAnalyst()
+             LEFT JOIN Object AS Object_GoodsGroupAnalyst ON Object_GoodsGroupAnalyst.Id = ObjectLink_Goods_GoodsGroupAnalyst.ChildObjectId
 
              LEFT JOIN Object AS Object_Goods             ON Object_Goods.Id             = _tmpListMaster.GoodsId
              LEFT JOIN Object AS Object_GoodsKind         ON Object_GoodsKind.Id         = _tmpListMaster.GoodsKindId

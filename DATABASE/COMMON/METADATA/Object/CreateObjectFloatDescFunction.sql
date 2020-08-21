@@ -1814,9 +1814,14 @@ CREATE OR REPLACE FUNCTION zc_ObjectFloat_HouseholdInventory_CountForPrice() RET
 INSERT INTO ObjectFloatDesc (DescId, Code, ItemName)
   SELECT zc_Object_HouseholdInventory(), 'zc_ObjectFloat_HouseholdInventory_CountForPrice', 'Себестоимость' WHERE NOT EXISTS (SELECT * FROM ObjectFloatDesc WHERE Code = 'zc_ObjectFloat_HouseholdInventory_CountForPrice');
 
+CREATE OR REPLACE FUNCTION zc_ObjectFloat_Unit_SerialNumberTabletki() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM ObjectFloatDesc WHERE Code = 'zc_ObjectFloat_Unit_SerialNumberTabletki'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
+INSERT INTO ObjectFloatDesc (DescId, Code, ItemName)
+  SELECT zc_Object_Unit(), 'zc_ObjectFloat_Unit_SerialNumberTabletki', 'Серийный номер на сайте таблеток' WHERE NOT EXISTS (SELECT * FROM ObjectFloatDesc WHERE Code = 'zc_ObjectFloat_Unit_SerialNumberTabletki');
+
 /*-------------------------------------------------------------------------------
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.   Воробкало А.А.   Шаблий О.В.
+ 21.07.20                                                                                      * zc_ObjectFloat_Unit_SerialNumberTabletki
  14.07.20                                                                                      * zc_ObjectFloat_HouseholdInventory_CountForPrice
  09.07.20                                                                                      * zc_ObjectFloat_PartionHouseholdInventory_MovementItemId
  06.07.20                                                                                      * zc_ObjectFloat_PartionGoods_ValueLess

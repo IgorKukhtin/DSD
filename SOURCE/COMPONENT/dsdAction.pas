@@ -898,6 +898,50 @@ type
     property isShowModal: Boolean read FisShowModal write FisShowModal;
   end;
 
+
+  TdsdDefaultParamsItem = class(TCollectionItem)
+  private
+    FParam: TdsdParam;
+    FValue: Variant;
+  protected
+    function GetDisplayName: string; override;
+  public
+    constructor Create(Collection: TCollection); overload; override;
+    destructor Destroy; override;
+    procedure Assign(Source: TPersistent); override;
+  published
+    // При установке данного свойства процедура будет вызвана только если TabSheet активен
+    property Param: TdsdParam read FParam write FParam;
+    property Value: Variant read FValue write FValue;
+  end;
+
+  TdsdDefaultParamsList = class(TOwnedCollection)
+  private
+    function GetItem(Index: Integer): TdsdDefaultParamsItem;
+    procedure SetItem(Index: Integer; const Value: TdsdDefaultParamsItem);
+  public
+    function Add: TdsdDefaultParamsItem;
+    property Items[Index: Integer]: TdsdDefaultParamsItem read GetItem
+      write SetItem; default;
+  end;
+
+  TdsdSetDefaultParams = class(TdsdCustomAction)
+  private
+    FDefaultParams: TdsdDefaultParamsList;
+  protected
+    function LocalExecute: Boolean; override;
+  public
+    constructor Create(AOwner: TComponent); override;
+    destructor Destroy; override;
+  published
+    property Caption;
+    property Hint;
+    property ShortCut;
+    property ImageIndex;
+    property SecondaryShortCuts;
+    property DefaultParams: TdsdDefaultParamsList read FDefaultParams write FDefaultParams;
+  end;
+
 procedure Register;
 
 implementation
@@ -950,6 +994,7 @@ begin
   RegisterActions('DSDLib', [TdsdDuplicateSearchAction], TdsdDuplicateSearchAction);
   RegisterActions('DSDLib', [TdsdDOCReportFormAction], TdsdDOCReportFormAction);
   RegisterActions('DSDLib', [TdsdOpenStaticForm], TdsdOpenStaticForm);
+  RegisterActions('DSDLib', [TdsdSetDefaultParams], TdsdSetDefaultParams);
   RegisterActions('DSDLibExport', [TdsdGridToExcel], TdsdGridToExcel);
   RegisterActions('DSDLibExport', [TdsdExportToXLS], TdsdExportToXLS);
   RegisterActions('DSDLibExport', [TdsdExportToXML], TdsdExportToXML);
@@ -3872,6 +3917,86 @@ begin
     end
     else Form.Show;
   end;
+
+  Result := True;
+end;
+
+{ TdsdDefaultParamsItem }
+
+constructor TdsdDefaultParamsItem.Create(Collection: TCollection);
+begin
+  inherited;
+  FValue := Null;
+  FParam := TdsdParam.Create(Nil);
+end;
+
+destructor TdsdDefaultParamsItem.Destroy;
+begin
+  FParam.Free;
+  inherited Destroy;
+end;
+
+function TdsdDefaultParamsItem.GetDisplayName: string;
+begin
+  result := inherited;
+  if FParam.Name <> '' then result := FParam.Name
+  else if Assigned(FParam.Component) then
+    result := FParam.Component.Name + ' ' + FParam.ComponentItem
+  else Result := inherited;;
+end;
+
+procedure TdsdDefaultParamsItem.Assign(Source: TPersistent);
+var Owner: TComponent;
+begin
+  if Source is TdsdDefaultParamsItem then
+  begin
+     FParam.Assign(TdsdDefaultParamsItem(Source).Param);
+     FValue := TdsdDefaultParamsItem(Source).Value;
+  end
+  else
+    inherited Assign(Source);
+end;
+
+
+{ TdsdDefaultParamsList }
+
+function TdsdDefaultParamsList.Add: TdsdDefaultParamsItem;
+begin
+  result := TdsdDefaultParamsItem(inherited Add)
+end;
+
+function TdsdDefaultParamsList.GetItem(Index: Integer): TdsdDefaultParamsItem;
+begin
+  result := TdsdDefaultParamsItem(inherited GetItem(Index))
+end;
+
+procedure TdsdDefaultParamsList.SetItem(Index: Integer;
+  const Value: TdsdDefaultParamsItem);
+begin
+  inherited SetItem(Index, Value);
+end;
+
+
+{ TdsdSetDefaultParams }
+
+constructor TdsdSetDefaultParams.Create(AOwner: TComponent);
+begin
+  inherited;
+  FDefaultParams := TdsdDefaultParamsList.Create(Self, TdsdDefaultParamsItem);
+end;
+
+destructor TdsdSetDefaultParams.Destroy;
+begin
+  FDefaultParams.Free;
+  FDefaultParams := nil;
+  inherited;
+end;
+
+function TdsdSetDefaultParams.LocalExecute: Boolean;
+ var I: Integer;
+begin
+  for I := 0 to FDefaultParams.Count - 1 do
+    FDefaultParams.Items[I].Param.Value := FDefaultParams.Items[I].Value;
 
   Result := True;
 end;

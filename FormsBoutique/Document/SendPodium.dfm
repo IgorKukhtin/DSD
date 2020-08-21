@@ -1337,12 +1337,6 @@ object SendPodiumForm: TSendPodiumForm
       StoredProcList = <
         item
           StoredProc = spInsertUpdateMIMaster
-        end
-        item
-          StoredProc = spSelectMI
-        end
-        item
-          StoredProc = spGetTotalSumm
         end>
       Caption = 'actUpdateMasterDS'
       DataSource = MasterDS
@@ -2028,6 +2022,7 @@ object SendPodiumForm: TSendPodiumForm
       Category = 'DSDLib'
       TabSheet = cxTabSheetMain
       MoveParams = <>
+      PostDataSetBeforeExecute = False
       View = cxGridDBTableView
       Params = <>
       Caption = #1044#1086#1073#1072#1074#1080#1090#1100' <'#1058#1086#1074#1072#1088'>'
@@ -2775,16 +2770,13 @@ object SendPodiumForm: TSendPodiumForm
     SortImages = dmMain.SortImageList
     OnlyEditingCellOnEnter = True
     ColorRuleList = <>
-    ColumnAddOnList = <
-      item
-        Column = GoodsName
-        FindByFullValue = True
-        onExitColumn.Active = False
-        onExitColumn.AfterEmptyValue = False
-      end>
+    ColumnAddOnList = <>
     ColumnEnterList = <
       item
         Column = GoodsName
+      end
+      item
+        Column = GoodsSizeName
       end
       item
         Column = Amount

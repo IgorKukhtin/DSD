@@ -1,4 +1,4 @@
-unit CommentTRSend;
+unit CommentSend;
 
 interface
 
@@ -25,7 +25,7 @@ uses
   Vcl.Menus;
 
 type
-  TCommentTRSendForm = class(TParentForm)
+  TCommentSendForm = class(TParentForm)
     cxGridLevel: TcxGridLevel;
     cxGrid: TcxGrid;
     DataSource: TDataSource;
@@ -38,6 +38,7 @@ type
     actRefresh: TdsdDataSetRefresh;
     bbInsert: TdxBarButton;
     spSelect: TdsdStoredProc;
+    actUpdate: TdsdInsertUpdateAction;
     bbEdit: TdxBarButton;
     bbSetErased: TdxBarButton;
     bbSetUnErased: TdxBarButton;
@@ -53,14 +54,18 @@ type
     dsdUserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn;
     dsdChoiceGuides: TdsdChoiceGuides;
     dsdDBViewAddOn: TdsdDBViewAddOn;
+    actInsert: TdsdInsertUpdateAction;
     pmGrid: TPopupMenu;
     pmAdd: TMenuItem;
     N1: TMenuItem;
     N2: TMenuItem;
+    dsdSetUnErased: TdsdUpdateErased;
+    dsdSetErased: TdsdUpdateErased;
     N3: TMenuItem;
     N4: TMenuItem;
     ProtocolOpenForm: TdsdOpenForm;
     bbProtocolOpenForm: TdxBarButton;
+    CommentTRName: TcxGridDBColumn;
   private
     { Private declarations }
   public
@@ -72,6 +77,6 @@ implementation
 {$R *.dfm}
 
 initialization
-  RegisterClass(TCommentTRSendForm);
+  RegisterClass(TCommentSendForm);
 
 end.

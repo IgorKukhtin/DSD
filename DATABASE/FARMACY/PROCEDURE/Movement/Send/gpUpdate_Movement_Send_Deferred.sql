@@ -228,7 +228,8 @@ BEGIN
              END IF;
            END IF;
            
-           IF vbisSUN = TRUE --AND vbInsertDate >= '10.08.2020'
+           IF vbisSUN = TRUE AND vbInsertDate >= '25.08.2020' AND 
+              NOT EXISTS (SELECT 1 FROM ObjectLink_UserRole_View  WHERE UserId = vbUserId AND RoleId = zc_Enum_Role_Admin())
            THEN
              IF EXISTS(WITH tmpProtocolAll AS (SELECT  MovementItem.Id
                                                      , SUBSTRING(MovementItemProtocol.ProtocolData, POSITION('Значение' IN MovementItemProtocol.ProtocolData) + 24, 50) AS ProtocolData
@@ -251,11 +252,11 @@ BEGIN
                                                   , SUBSTRING(tmpProtocolAll.ProtocolData, 1, POSITION('"' IN tmpProtocolAll.ProtocolData) - 1)::TFloat AS AmountAuto
                                                   , tmpProtocolAll.Amount
                                              FROM tmpProtocolAll
-                                                  LEFT JOIN MovementItemLinkObject AS MILinkObject_CommentTR
-                                                                                   ON MILinkObject_CommentTR.MovementItemId = tmpProtocolAll.Id
-                                                                                  AND MILinkObject_CommentTR.DescId = zc_MILinkObject_CommentTR()
+                                                  LEFT JOIN MovementItemLinkObject AS MILinkObject_CommentSend
+                                                                                   ON MILinkObject_CommentSend.MovementItemId = tmpProtocolAll.Id
+                                                                                  AND MILinkObject_CommentSend.DescId = zc_MILinkObject_CommentSend()
                                              WHERE tmpProtocolAll.Ord = 1
-                                               AND COALESCE (MILinkObject_CommentTR.ObjectId, 0) = 0)
+                                               AND COALESCE (MILinkObject_CommentSend.ObjectId, 0) = 0)
                        SELECT 1
                        FROM tmpProtocol
                        WHERE tmpProtocol.AmountAuto > tmpProtocol.Amount)
@@ -295,7 +296,7 @@ BEGIN
                WHERE tmpProtocol.AmountAuto > tmpProtocol.Amount             
                LIMIT 1;
              
-               RAISE EXCEPTION 'Ошибка. Данная позиция <%> количество меньше сформировано укажите причину уменьшению количества!', vbGoodsName;
+               RAISE EXCEPTION 'Ошибка. Данная позиция <%> количество меньше сформировано укажите причину уменьшения количества!', vbGoodsName;
              END IF; 
            END IF; 
            

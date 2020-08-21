@@ -1209,11 +1209,14 @@ begin
            Sleep(100);
            //
            try
-              if DataSet.FieldByName('isMoved').AsBoolean = FALSE
-              then actMovePriceList.Execute;
+              if DataSet.FieldByName('isMoved').AsBoolean = FALSE then
+              begin
+                actMovePriceList.Execute;
+                AddToLog('Move ' + Dataset.FieldByName('JuridicalName').AsString);
+              end;
            except on E: Exception do
              begin
-               AddToLog(E.Message);
+               AddToLog('Error ' + Dataset.FieldByName('JuridicalName').AsString);
                fError_SendEmail(0 //Dataset.FieldByName('Id').AsInteger
                               , 0 // Dataset.FieldByName('ContactPersonId').AsInteger
                               , NOW

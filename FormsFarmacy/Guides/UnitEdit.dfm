@@ -161,7 +161,7 @@
     Width = 489
     Height = 385
     TabOrder = 18
-    Properties.ActivePage = cxTabSheet3
+    Properties.ActivePage = cxTabSheet1
     Properties.CustomButtons.Buttons = <>
     ClientRectBottom = 385
     ClientRectRight = 489
@@ -905,6 +905,19 @@
         Top = 179
         Caption = #1050#1083#1102#1095' '#1061#1054' '#1076#1083#1103' '#1086#1090#1087#1088#1072#1074#1082#1080' '#1076#1072#1085#1085#1099#1093' '#1070#1088#1080#1103'-'#1060#1072#1088#1084
       end
+      object ceSerialNumberTabletki: TcxCurrencyEdit
+        Left = 15
+        Top = 255
+        Properties.DecimalPlaces = 4
+        Properties.DisplayFormat = ',0.####'
+        TabOrder = 18
+        Width = 168
+      end
+      object cxLabel46: TcxLabel
+        Left = 15
+        Top = 236
+        Caption = #1057#1077#1088#1080#1081#1085#1099#1081' '#1085#1086#1084#1077#1088' '#1085#1072' '#1089#1072#1081#1090#1077' '#1090#1072#1073#1083#1077#1090#1086#1082
+      end
     end
   end
   object ActionList: TActionList
@@ -1415,6 +1428,13 @@
         Value = Null
         Component = cbAlertRecounting
         DataType = ftBoolean
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inSerialNumberTabletki'
+        Value = Null
+        Component = ceSerialNumberTabletki
         ParamType = ptInput
         MultiSelectSeparator = ','
       end>
@@ -1957,6 +1977,12 @@
         Value = Null
         Component = cbAlertRecounting
         DataType = ftBoolean
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'SerialNumberTabletki'
+        Value = Null
+        Component = ceSerialNumberTabletki
         MultiSelectSeparator = ','
       end>
     PackSize = 1

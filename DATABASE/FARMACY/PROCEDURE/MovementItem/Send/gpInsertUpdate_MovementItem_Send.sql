@@ -37,11 +37,12 @@ $BODY$
    DECLARE vbAmount        TFloat;
    DECLARE vbAmountManual  TFloat;
    DECLARE vbAmountStorage TFloat;
+   DECLARE vbAmountAuto    TFloat;
    DECLARE vbIsSUN         Boolean;
    DECLARE vbIsSUN_v2      Boolean;
    DECLARE vbIsSUN_v3      Boolean;
    DECLARE vbIsDefSUN      Boolean;
-   DECLARE vbInsertDate TDateTime;
+   DECLARE vbInsertDate    TDateTime;
 BEGIN
     -- проверка прав пользователя на вызов процедуры
     --vbUserId := lpCheckRight (inSession, zc_Enum_Process_InsertUpdate_MI_Send());
@@ -190,6 +191,47 @@ BEGIN
           END IF;
         END IF;
 */
+
+        IF vbIsSUN = TRUE AND vbInsertDate >= '25.08.2020'
+        THEN
+           WITH tmpProtocolAll AS (SELECT  MovementItem.Id
+                                         , SUBSTRING(MovementItemProtocol.ProtocolData, POSITION('Значение' IN MovementItemProtocol.ProtocolData) + 24, 50) AS ProtocolData
+                                         , MovementItem.Amount
+                                         , MovementItem.ObjectId
+                                         , Object_Goods_Main.Name
+                                         , ROW_NUMBER() OVER (PARTITION BY MovementItemProtocol.MovementItemId ORDER BY MovementItemProtocol.Id) AS Ord
+                                    FROM MovementItem 
+
+                                         INNER JOIN Object_Goods_Retail ON Object_Goods_Retail.ID = MovementItem.objectid
+                                         INNER JOIN Object_Goods_Main ON Object_Goods_Main.ID = Object_Goods_Retail.GoodsMainId
+                                                                     AND Object_Goods_Main.isInvisibleSUN = False
+
+                                         INNER JOIN MovementItemProtocol ON MovementItemProtocol.MovementItemId = MovementItem.Id
+                                                                        AND MovementItemProtocol.ProtocolData ILIKE '%Значение%'
+                                                                        AND MovementItemProtocol.UserId = zfCalc_UserAdmin()::Integer
+                                    WHERE  MovementItem.Id = ioId
+                                    )
+               , tmpProtocol AS (SELECT tmpProtocolAll.Id
+                                      , tmpProtocolAll.ObjectId
+                                      , SUBSTRING(tmpProtocolAll.ProtocolData, 1, POSITION('"' IN tmpProtocolAll.ProtocolData) - 1)::TFloat AS AmountAuto
+                                      , tmpProtocolAll.Name
+                                      , tmpProtocolAll.Amount
+                                 FROM tmpProtocolAll
+                                      LEFT JOIN MovementItemLinkObject AS MILinkObject_CommentSend
+                                                                       ON MILinkObject_CommentSend.MovementItemId = tmpProtocolAll.Id
+                                                                      AND MILinkObject_CommentSend.DescId = zc_MILinkObject_CommentSend()
+                                 WHERE tmpProtocolAll.Ord = 1
+                                   AND COALESCE (MILinkObject_CommentSend.ObjectId, 0) = 0)
+                                       
+           SELECT tmpProtocol.AmountAuto
+           INTO vbAmountAuto
+           FROM tmpProtocol;
+                 
+           IF COALESCE(vbAmountAuto, 0) > COALESCE(inAmount, 0)
+           THEN
+              RAISE EXCEPTION 'Ошибка. Количество % меньше сформировано % укажите причину уменьшения количества!', inAmount, vbAmountAuto;               
+           END IF;
+        END IF;
       END IF;
 
       -- Для менеджеров
@@ -204,6 +246,7 @@ BEGIN
           RAISE EXCEPTION 'Ошибка. Изменять <Факт кол-во точки-получателя> и <Факт кол-во точки-отправителя> вам запрещено.';
         END IF;
       END IF;
+      
     END IF;
 
     --если цена получателя = 0 заменяем ее на цену отвравителя и записываем в прайс

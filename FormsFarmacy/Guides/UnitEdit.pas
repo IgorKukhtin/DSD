@@ -154,6 +154,8 @@ type
     edSun_v4Income: TcxCurrencyEdit;
     edSun_v2Income: TcxCurrencyEdit;
     cxLabel45: TcxLabel;
+    ceSerialNumberTabletki: TcxCurrencyEdit;
+    cxLabel46: TcxLabel;
   private
     { Private declarations }
   public

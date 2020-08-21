@@ -2341,9 +2341,14 @@ CREATE OR REPLACE FUNCTION zc_ObjectLink_PartionHouseholdInventory_Unit() RETURN
 INSERT INTO ObjectLinkDesc(Code, ItemName, DescId, ChildObjectDescId)
 SELECT 'zc_ObjectLink_PartionHouseholdInventory_Unit', 'Связь с Подразделением', zc_Object_PartionHouseholdInventory(), zc_Object_Unit() WHERE NOT EXISTS (SELECT * FROM ObjectLinkDesc WHERE Code = 'zc_ObjectLink_PartionHouseholdInventory_Unit');
 
+CREATE OR REPLACE FUNCTION zc_ObjectLink_CommentSend_CommentTR() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM ObjectLinkDesc WHERE Code = 'zc_ObjectLink_CommentSend_CommentTR'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
+INSERT INTO ObjectLinkDesc(Code, ItemName, DescId, ChildObjectDescId)
+SELECT 'zc_ObjectLink_CommentSend_CommentTR', 'Связь с Комментарием строк технического переучета', zc_Object_CommentSend(), zc_Object_CommentTR() WHERE NOT EXISTS (SELECT * FROM ObjectLinkDesc WHERE Code = 'zc_ObjectLink_CommentSend_CommentTR');
+
 /*-------------------------------------------------------------------------------
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.   Воробкало А.А.   Шаблий О.В.
+ 19.07.20                                                                                      * zc_ObjectLink_CommentSend_CommentTR
  09.07.20                                                                                      * zc_ObjectLink_PartionHouseholdInventory_Unit
  22.06.20         * zc_ObjectLink_InfoMoney_CashFlow_in
                     zc_ObjectLink_InfoMoney_CashFlow_out

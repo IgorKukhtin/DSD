@@ -173,8 +173,8 @@ type
     dxBarButton6: TdxBarButton;
     edConfirmed: TcxTextEdit;
     actOpenConfirmedDialog: TOpenChoiceForm;
-    ButtonEdit: TcxGridDBColumn;
-    actChoiceCommentTR: TOpenChoiceForm;
+    CommentSendName: TcxGridDBColumn;
+    actChoiceCommentSend: TOpenChoiceForm;
   private
     { Private declarations }
   public

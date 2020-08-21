@@ -926,7 +926,8 @@ uses
   ReturnInJournalCash in '..\..\FormsFarmacy\Document\ReturnInJournalCash.pas' {ReturnInJournalCashForm: TParentForm},
   Report_PositionsUKTVEDonSUN in '..\..\FormsFarmacy\Report\Report_PositionsUKTVEDonSUN.pas' {Report_PositionsUKTVEDonSUNForm: TParentForm},
   DivisionParties in '..\..\FormsFarmacy\Kind\DivisionParties.pas' {DivisionPartiesForm: TParentForm},
-  CommentTRSend in '..\..\FormsFarmacy\Guides\CommentTRSend.pas' {CommentTRSendForm: TParentForm};
+  CommentSend in '..\..\FormsFarmacy\Guides\CommentSend.pas' {CommentSendForm: TParentForm},
+  CommentSendEdit in '..\..\FormsFarmacy\Guides\CommentSendEdit.pas' {CommentSendEditForm: TParentForm};
 
 {$R *.res}
 {$R DevExpressRus.res}

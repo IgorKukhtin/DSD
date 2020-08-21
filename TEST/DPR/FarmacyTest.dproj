@@ -3271,8 +3271,12 @@
 				<Form>DivisionPartiesForm</Form>
 				<DesignClass>TParentForm</DesignClass>
 			</DCCReference>
-			<DCCReference Include="..\..\FormsFarmacy\Guides\CommentTRSend.pas">
-				<Form>CommentTRSendForm</Form>
+			<DCCReference Include="..\..\FormsFarmacy\Guides\CommentSend.pas">
+				<Form>CommentSendForm</Form>
+				<DesignClass>TParentForm</DesignClass>
+			</DCCReference>
+			<DCCReference Include="..\..\FormsFarmacy\Guides\CommentSendEdit.pas">
+				<Form>CommentSendEditForm</Form>
 				<DesignClass>TParentForm</DesignClass>
 			</DCCReference>
 			<BuildConfiguration Include="Release">

@@ -834,9 +834,9 @@ end if;*/
                                , Min(ObjectDate_ExpirationDate.ValueData)               AS ExpirationDate
                                , CASE WHEN Min(ObjectDate_ExpirationDate.ValueData) <= vbDate_0  THEN 6      -- просрочено
                                       WHEN Min(ObjectDate_ExpirationDate.ValueData) <= vbDate_1  THEN 5      -- ћеньше 1 мес€ца
-                                      WHEN Min(ObjectDate_ExpirationDate.ValueData) <= vbDate_3  THEN 2      -- ћеньше 3 мес€ца
+                                      WHEN Min(ObjectDate_ExpirationDate.ValueData) <= vbDate_3  THEN 4      -- ћеньше 3 мес€ца
                                       WHEN Min(ObjectDate_ExpirationDate.ValueData) <= vbDate_6  THEN 1      -- ћеньше 6 мес€ца
-                                      ELSE  3 END  AS PDOrd                                                  -- ¬остановлен с просрочки
+                                      ELSE  2 END  AS PDOrd                                                  -- ¬остановлен с просрочки
                           FROM ContainerAll
 
                                INNER JOIN Container ON Container.ParentId = ContainerAll.Id
@@ -855,7 +855,7 @@ end if;*/
                                Container.ID
                              , Container.ObjectId
                              , Container.Amount
-                             , COALESCE (ContainerPD.PDOrd, 4) AS PDOrd
+                             , COALESCE (ContainerPD.PDOrd, 3) AS PDOrd
                              , Container.PartionMovementItemId
                              , Container.MovementId_Income
                              , MovementLinkObject_From.ObjectId AS JuridicalID
