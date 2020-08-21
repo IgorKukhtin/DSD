@@ -227,16 +227,30 @@ BEGIN
                                    AND ObjectBoolean_isCorporate.DescId    = zc_ObjectBoolean_Juridical_isCorporate()
        WHERE Object_BankAccount_View.Name = inBankAccount AND TRIM (inBankAccount) <> ''
          AND (ObjectBoolean_isCorporate.ValueData = TRUE /*OR Object_BankAccount_View.JuridicalId = 15505*/) -- ƒ” Œ “Œ¬ 
+         AND Object_BankAccount_View.JuridicalId IN
+                           -- ¬Õ”“–≈ÕÕ»≈ ‘»–Ã€
+                          (SELECT ObjectBoolean_isCorporate.ObjectId
+                           FROM ObjectBoolean AS ObjectBoolean_isCorporate
+                                JOIN ObjectHistory ON ObjectHistory.ObjectId = ObjectBoolean_isCorporate.ObjectId
+                                                  AND inOperDate BETWEEN ObjectHistory.StartDate AND ObjectHistory.EndDate
+                                JOIN ObjectHistoryString AS ObjectHistoryString_JuridicalDetails_OKPO
+                                                         ON ObjectHistoryString_JuridicalDetails_OKPO.ObjectHistoryId = ObjectHistory.Id
+                                                        AND ObjectHistoryString_JuridicalDetails_OKPO.ValueData = inOKPO
+                                                        AND ObjectHistoryString_JuridicalDetails_OKPO.DescId = zc_ObjectHistoryString_JuridicalDetails_OKPO()
+                           WHERE ObjectBoolean_isCorporate.DescId    = zc_ObjectBoolean_Juridical_isCorporate()
+                             AND ObjectBoolean_isCorporate.ValueData = TRUE
+                          )
        ;
 
        IF COALESCE(vbJuridicalId, 0) = 0 THEN
          -- œ˚Ú‡ÂÏÒˇ Ì‡ÈÚË ˛. ÎËˆÓ ÔÓ OKPO
          SELECT ObjectHistory.ObjectId INTO vbJuridicalId
          FROM ObjectHistoryString AS ObjectHistoryString_JuridicalDetails_OKPO
-              JOIN ObjectHistory ON ObjectHistoryString_JuridicalDetails_OKPO.ObjectHistoryId = ObjectHistory.Id
-         WHERE ObjectHistoryString_JuridicalDetails_OKPO.DescId = zc_ObjectHistoryString_JuridicalDetails_OKPO()
-           AND ObjectHistoryString_JuridicalDetails_OKPO.ValueData = inOKPO
-           AND inOperDate BETWEEN ObjectHistory.StartDate AND ObjectHistory.EndDate;
+              JOIN ObjectHistory ON ObjectHistory.Id = ObjectHistoryString_JuridicalDetails_OKPO.ObjectHistoryId
+                                AND inOperDate BETWEEN ObjectHistory.StartDate AND ObjectHistory.EndDate
+         WHERE ObjectHistoryString_JuridicalDetails_OKPO.ValueData = inOKPO
+           AND ObjectHistoryString_JuridicalDetails_OKPO.DescId = zc_ObjectHistoryString_JuridicalDetails_OKPO()
+           ;
        END IF;
 
        IF COALESCE(vbJuridicalId, 0) <> 0 THEN
@@ -438,10 +452,10 @@ BEGIN
     PERFORM lpInsert_MovementProtocol (vbMovementItemId, vbUserId, TRUE);
 
 
-/* if inSession = '5' 
+ if inSession = '5' 
  then
     RAISE EXCEPTION 'ok1 %   %    %    %',  lfGet_Object_ValueData (vbJuridicalId), vbContractId, lfGet_Object_ValueData (vbContractId), lfGet_Object_ValueData (vbInfoMoneyId);
- end if;*/
+ end if;
 
 
    RETURN 0;

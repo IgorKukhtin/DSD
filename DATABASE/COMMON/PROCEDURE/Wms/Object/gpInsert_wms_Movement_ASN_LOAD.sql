@@ -97,6 +97,8 @@ BEGIN
                        WHERE Movement.OperDate BETWEEN CURRENT_DATE - INTERVAL '1 DAY' AND CURRENT_DATE + INTERVAL '1 DAY'
                              -- не удален
                          AND Movement.StatusId NOT IN (zc_Enum_Status_Erased()) -- zc_Enum_Status_UnComplete(), zc_Enum_Status_Complete()
+                         --
+                         AND Movement.Id = 391
                        GROUP BY -- ШК груза (EAN-128)
                                 Object_BarCodeBox.ValueData
                               --COALESCE (Object_BarCodeBox.ValueData, '') || '-' || MI.ParentId :: TVarChar

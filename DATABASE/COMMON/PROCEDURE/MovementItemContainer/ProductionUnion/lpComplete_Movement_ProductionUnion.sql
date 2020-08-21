@@ -356,6 +356,8 @@ BEGIN
        AND (vbUnitId_To = 8458 -- Склад База ГП
             OR (vbUnitId_From =  981821  -- ЦЕХ шприц. мясо
             AND vbUnitId_To   =  951601) -- ЦЕХ упаковки мясо
+            OR (vbUnitId_From =  8447    -- ЦЕХ колбасный
+            AND vbUnitId_To   =  8445)   -- Склад МИНУСОВКА
            )
      THEN -- Расход партий П/Ф (ГП) по Рецептуре
           PERFORM lpComplete_Movement_ProductionUnion_Partion (inMovementId:= inMovementId

@@ -80,7 +80,7 @@ BEGIN
                                    , COALESCE (MovementString_Comment.ValueData, '')   AS Comment
                                    , MovementItem.Id                                   AS MovementItemId
                                    , MovementItem.ObjectId                             AS GoodsId
-                                   , MILO_GoodsKind.ObjectId                           AS GoodsKindId
+                                   , COALESCE (MILO_GoodsKind.ObjectId, zc_GoodsKind_Basis()) AS GoodsKindId
                                    , OL_Goods_Measure.ChildObjectId                    AS MeasureId
                                      -- !!!test
                                    , CASE /*when MILO_GoodsKind.ObjectId = 8352
