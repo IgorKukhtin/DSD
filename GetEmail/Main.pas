@@ -166,6 +166,7 @@ begin
   then WriteLn(F, '');
   CloseFile(F);
 end;
+
 //----------------------------------------------------------------------------------------------------------------------------------------------------
 procedure TMainForm.FormCreate(Sender: TObject);
 begin
@@ -469,6 +470,7 @@ begin
      Application.ProcessMessages;
      //цикл по почтовым ящикам
      for ii := 0 to Length(vbArrayMail)-1 do
+     begin
        // если после предыдущей обработки прошло > onTime МИНУТ
        if (NOW - vbArrayMail[ii].BeginTime) * 24 * 60 > vbArrayMail[ii].onTime
        then try
@@ -780,10 +782,11 @@ begin
            Application.ProcessMessages;
            Sleep(1000);
        end;//финиш - цикл по почтовым ящикам
-    finally
-     // завершена обработка
-     vbIsBegin:= false;
     end;
+  finally
+   // завершена обработка
+   vbIsBegin:= false;
+  end;
 end;
 //----------------------------------------------------------------------------------------------------------------------------------------------------
 // обработка всех XLS
@@ -1209,14 +1212,9 @@ begin
            Sleep(100);
            //
            try
-              if DataSet.FieldByName('isMoved').AsBoolean = FALSE then
-              begin
-                actMovePriceList.Execute;
-                AddToLog('Move ' + Dataset.FieldByName('JuridicalName').AsString);
-              end;
+              if DataSet.FieldByName('isMoved').AsBoolean = FALSE then actMovePriceList.Execute;
            except on E: Exception do
              begin
-               AddToLog('Error ' + Dataset.FieldByName('JuridicalName').AsString);
                fError_SendEmail(0 //Dataset.FieldByName('Id').AsInteger
                               , 0 // Dataset.FieldByName('ContactPersonId').AsInteger
                               , NOW

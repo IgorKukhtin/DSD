@@ -21,6 +21,8 @@ inherited SendForm: TSendForm
       inherited cxGrid: TcxGrid
         Width = 1001
         Height = 318
+        ExplicitLeft = 56
+        ExplicitTop = 3
         ExplicitWidth = 1001
         ExplicitHeight = 318
         inherited cxGridDBTableView: TcxGridDBTableView
@@ -327,6 +329,10 @@ inherited SendForm: TSendForm
                 Action = actChoiceCommentSend
                 Default = True
                 Kind = bkEllipsis
+              end
+              item
+                Action = actClearCommentSend
+                Kind = bkGlyph
               end>
             Properties.Images = dmMain.ImageList
             Properties.ReadOnly = True
@@ -1690,6 +1696,35 @@ inherited SendForm: TSendForm
           MultiSelectSeparator = ','
         end>
       isShowModal = True
+    end
+    object actClearCommentSend: TdsdSetDefaultParams
+      Category = 'DSDLib'
+      MoveParams = <>
+      Caption = #1059#1073#1088#1072#1090#1100' '#1087#1088#1080#1095#1080#1085#1072' '#1091#1084#1077#1085#1100#1096#1077#1085#1080#1103' '#1082#1086#1083#1080#1095#1077#1089#1090#1074#1072
+      ImageIndex = 52
+      DefaultParams = <
+        item
+          Param.Value = Null
+          Param.Component = MasterCDS
+          Param.ComponentItem = 'CommentSendId'
+          Param.MultiSelectSeparator = ','
+          Value = Null
+        end
+        item
+          Param.Value = Null
+          Param.Component = MasterCDS
+          Param.ComponentItem = 'CommentSendCode'
+          Param.MultiSelectSeparator = ','
+          Value = Null
+        end
+        item
+          Param.Value = Null
+          Param.Component = MasterCDS
+          Param.ComponentItem = 'CommentSendName'
+          Param.DataType = ftString
+          Param.MultiSelectSeparator = ','
+          Value = Null
+        end>
     end
   end
   inherited MasterDS: TDataSource
