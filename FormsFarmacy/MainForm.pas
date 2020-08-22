@@ -723,6 +723,8 @@ type
     N250: TMenuItem;
     actDivisionParties: TdsdOpenForm;
     N251: TMenuItem;
+    actJuridicalPriorities: TdsdOpenForm;
+    N252: TMenuItem;
     procedure actSaveDataExecute(Sender: TObject);
 
     procedure miRepriceClick(Sender: TObject);

@@ -52,6 +52,8 @@ type
     MinExpirationDate: TcxGridDBColumn;
     cbAdjustment: TcxCheckBox;
     Comment: TcxGridDBColumn;
+    InvNumberSend: TcxGridDBColumn;
+    OperDateSend: TcxGridDBColumn;
   private
     { Private declarations }
   public

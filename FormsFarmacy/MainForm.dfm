@@ -3850,6 +3850,17 @@ inherited MainForm: TMainForm
       GuiParams = <>
       isShowModal = False
     end
+    object actJuridicalPriorities: TdsdOpenForm
+      Category = #1057#1083#1091#1078#1077#1073#1085#1099#1077
+      MoveParams = <>
+      Caption = #1055#1088#1080#1086#1088#1080#1090#1077#1090#1099' '#1087#1088#1080' '#1074#1099#1073#1086#1088#1077' '#1087#1086#1089#1090#1072#1074#1097#1080#1082#1072
+      FormName = 'TJuridicalPrioritiesForm'
+      FormNameParam.Value = 'TJuridicalPrioritiesForm'
+      FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
+      GuiParams = <>
+      isShowModal = False
+    end
   end
   inherited UserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn
     Left = 496
@@ -4912,6 +4923,9 @@ inherited MainForm: TMainForm
         end
         object miMarginCategory_All: TMenuItem
           Action = actMarginCategory_All
+        end
+        object N252: TMenuItem
+          Action = actJuridicalPriorities
         end
       end
       object mmServiceFunctions: TMenuItem [2]

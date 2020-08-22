@@ -1375,9 +1375,15 @@ CREATE OR REPLACE FUNCTION zc_MIFloat_ZeroingUKTZED() RETURNS Integer AS $BODY$B
 INSERT INTO MovementItemFloatDesc (Code, ItemName)
   SELECT 'zc_MIFloat_ZeroingUKTZED', 'Обнуление по УКТЗЕД' WHERE NOT EXISTS (SELECT * FROM MovementItemFloatDesc WHERE Code = 'zc_MIFloat_ZeroingUKTZED');
 
+CREATE OR REPLACE FUNCTION zc_MIFloat_MITechnicalRediscountId() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM MovementItemFloatDesc WHERE Code = 'zc_MIFloat_MITechnicalRediscountId'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
+INSERT INTO MovementItemFloatDesc(Code, ItemName)
+  SELECT 'zc_MIFloat_MITechnicalRediscountId', 'Строка в техническом переучете' WHERE NOT EXISTS (SELECT * FROM MovementItemFloatDesc WHERE Code = 'zc_MIFloat_MITechnicalRediscountId');
+
+
 /*-------------------------------------------------------------------------------
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.   Воробкало А.А.  Ярошенко Р.Ф.   Шаблий О.В.
+ 21.08.20                                                                                                     * zc_MIFloat_MITechnicalRediscountId
  06.08.20                                                                                                     * zc_MIFloat_ZeroingUKTZED
  21.07.20                                                                                                     * zc_MIFloat_ChangeAmount
  09.07.20                                                                                                     * zc_MIFloat_InvNumber
