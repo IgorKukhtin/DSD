@@ -12,7 +12,17 @@ uses
   Vcl.ActnList, DataModul, ParentForm, dsdDB, dsdAction, dsdAddOn, dxBarExtItems,
   cxGridBandedTableView, cxGridDBBandedTableView, cxCheckBox, dxSkinsCore,
   dxSkinsDefaultPainters, dxSkinscxPCPainter, dxSkinsdxBarPainter,
-  cxCurrencyEdit;
+  cxCurrencyEdit, dxSkinBlack, dxSkinBlue, dxSkinBlueprint, dxSkinCaramel,
+  dxSkinCoffee, dxSkinDarkRoom, dxSkinDarkSide, dxSkinDevExpressDarkStyle,
+  dxSkinDevExpressStyle, dxSkinFoggy, dxSkinGlassOceans, dxSkinHighContrast,
+  dxSkiniMaginary, dxSkinLilian, dxSkinLiquidSky, dxSkinLondonLiquidSky,
+  dxSkinMcSkin, dxSkinMoneyTwins, dxSkinOffice2007Black, dxSkinOffice2007Blue,
+  dxSkinOffice2007Green, dxSkinOffice2007Pink, dxSkinOffice2007Silver,
+  dxSkinOffice2010Black, dxSkinOffice2010Blue, dxSkinOffice2010Silver,
+  dxSkinPumpkin, dxSkinSeven, dxSkinSevenClassic, dxSkinSharp, dxSkinSharpPlus,
+  dxSkinSilver, dxSkinSpringTime, dxSkinStardust, dxSkinSummer2008,
+  dxSkinTheAsphaltWorld, dxSkinValentine, dxSkinVS2010, dxSkinWhiteprint,
+  dxSkinXmas2008Blue;
 
 type
   TBarCodeBoxForm = class(TParentForm)
@@ -74,6 +84,12 @@ type
     macInsert_Object_Print_list: TMultiAction;
     macInsert_Object_PrintGrid: TMultiAction;
     bbInsert_Object_PrintGrid: TdxBarButton;
+    spBarCodeBox_onlyPrint: TdsdStoredProc;
+    ExecuteBarCodePrintDialog: TExecuteDialog;
+    actBarCodeBox_onlyPrint: TdsdExecStoredProc;
+    macBarCodeBox_onlyPrint: TMultiAction;
+    actOnlyPrint: TdsdPrintAction;
+    bbBarCodeBox_onlyPrint: TdxBarButton;
   private
     { Private declarations }
   public

@@ -104,7 +104,7 @@ object dmData: TdmData
         ParamType = ptInput
       end>
   end
-  object qryCompareMasterSlave: TZReadOnlyQuery
+  object qryCompareRecCountMS: TZReadOnlyQuery
     Connection = conSlave
     Params = <>
     Left = 504
@@ -113,7 +113,13 @@ object dmData: TdmData
   object qrySlaveHelper: TZReadOnlyQuery
     Connection = conSlave
     Params = <>
-    Left = 504
-    Top = 200
+    Left = 501
+    Top = 248
+  end
+  object qryCompareSeqMS: TZReadOnlyQuery
+    Connection = conSlave
+    Params = <>
+    Left = 502
+    Top = 192
   end
 end

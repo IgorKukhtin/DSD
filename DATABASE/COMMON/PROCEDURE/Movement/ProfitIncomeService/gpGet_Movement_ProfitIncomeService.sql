@@ -70,8 +70,8 @@ BEGIN
      ELSE
 
      RETURN QUERY
-     WITH
-     tmpContract_View AS (SELECT * FROM Object_Contract_InvNumber_View)
+     --WITH
+     --tmpContract_View AS (SELECT * FROM Object_Contract_InvNumber_View)
      
        SELECT
              CASE WHEN inMovementId = -1 
@@ -107,12 +107,12 @@ BEGIN
            , Object_Partner.ValueData               AS PartnerName
            , View_InfoMoney.InfoMoneyId             AS InfoMoneyId
            , View_InfoMoney.InfoMoneyName_all       AS InfoMoneyName
-           , View_Contract_InvNumber.ContractId     AS ContractId
-           , View_Contract_InvNumber.InvNumber      AS ContractInvNumber
-           , View_ContractMaster_InvNumber.ContractId     AS ContractMasterId
-           , View_ContractMaster_InvNumber.InvNumber      AS ContractMasterInvNumber
-           , View_ContractChild_InvNumber.ContractId      AS ContractChildId
-           , View_ContractChild_InvNumber.InvNumber       AS ContractChildInvNumber                      
+           , Object_Contract_InvNumber.Id           AS ContractId
+           , Object_Contract_InvNumber.ValueData        AS ContractInvNumber
+           , Object_ContractMaster_InvNumber.Id         AS ContractMasterId
+           , Object_ContractMaster_InvNumber.ValueData  AS ContractMasterInvNumber
+           , Object_ContractChild_InvNumber.Id          AS ContractChildId
+           , Object_ContractChild_InvNumber.ValueData   AS ContractChildInvNumber                      
            , Object_PaidKind.Id                     AS PaidKindId
            , Object_PaidKind.ValueData              AS PaidKindName
 
@@ -155,20 +155,20 @@ BEGIN
             LEFT JOIN MovementItemLinkObject AS MILinkObject_Contract
                                              ON MILinkObject_Contract.MovementItemId = MovementItem.Id
                                             AND MILinkObject_Contract.DescId = zc_MILinkObject_Contract()
-            LEFT JOIN tmpContract_View AS View_Contract_InvNumber 
-                                       ON View_Contract_InvNumber.ContractId = MILinkObject_Contract.ObjectId
+            --LEFT JOIN tmpContract_View AS View_Contract_InvNumber ON View_Contract_InvNumber.ContractId = MILinkObject_Contract.ObjectId
+            LEFT JOIN Object AS Object_Contract_InvNumber ON Object_Contract_InvNumber.Id = MILinkObject_Contract.ObjectId
 
             LEFT JOIN MovementItemLinkObject AS MILinkObject_ContractMaster
                                              ON MILinkObject_ContractMaster.MovementItemId = MovementItem.Id
                                             AND MILinkObject_ContractMaster.DescId = zc_MILinkObject_ContractMaster()
-            LEFT JOIN tmpContract_View AS View_ContractMaster_InvNumber 
-                                       ON View_ContractMaster_InvNumber.ContractId = MILinkObject_ContractMaster.ObjectId
+            --LEFT JOIN tmpContract_View AS View_ContractMaster_InvNumber ON View_ContractMaster_InvNumber.ContractId = MILinkObject_ContractMaster.ObjectId
+            LEFT JOIN Object AS Object_ContractMaster_InvNumber ON Object_ContractMaster_InvNumber.Id = MILinkObject_ContractMaster.ObjectId
 
             LEFT JOIN MovementItemLinkObject AS MILinkObject_ContractChild
                                              ON MILinkObject_ContractChild.MovementItemId = MovementItem.Id
                                             AND MILinkObject_ContractChild.DescId = zc_MILinkObject_ContractChild()
-            LEFT JOIN tmpContract_View AS View_ContractChild_InvNumber 
-                                       ON View_ContractChild_InvNumber.ContractId = MILinkObject_ContractChild.ObjectId
+            --LEFT JOIN tmpContract_View AS View_ContractChild_InvNumber ON View_ContractChild_InvNumber.ContractId = MILinkObject_ContractChild.ObjectId
+            LEFT JOIN Object AS Object_ContractChild_InvNumber ON Object_ContractChild_InvNumber.Id = MILinkObject_ContractChild.ObjectId
 
             LEFT JOIN MovementItemLinkObject AS MILinkObject_PaidKind
                                              ON MILinkObject_PaidKind.MovementItemId = MovementItem.Id

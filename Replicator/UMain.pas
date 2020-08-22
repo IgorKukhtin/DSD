@@ -107,12 +107,12 @@ type
     tsCompare: TTabSheet;
     pnlCompareTop: TPanel;
     pnlCompareGrid: TPanel;
-    grdCompare: TDBGrid;
-    btnUpdateCompare: TButton;
-    chkDeviationOnly: TCheckBox;
-    dsCompare: TDataSource;
-    lbCompareExecuting: TLabel;
-    btnCancelCompare: TButton;
+    grdCompareRecCount: TDBGrid;
+    btnUpdateCompareRecCount: TButton;
+    chkDeviationOnlyRecCount: TCheckBox;
+    dsCompareRecCount: TDataSource;
+    lbCompareExecutingRecCount: TLabel;
+    btnCancelCompareRecCount: TButton;
     lbReconnectTimeout: TLabel;
     seReconnectTimeout: TSpinEdit;
     lbReconnectMinute: TLabel;
@@ -132,6 +132,20 @@ type
     btnStopMoveProcsToSlave: TButton;
     chkSaveErr1: TCheckBox;
     chkSaveErr2: TCheckBox;
+    btnStartAlterSlaveSequences: TButton;
+    btnStopAlterSlaveSequences: TButton;
+    pgcCompare: TPageControl;
+    tsCompareRecCount: TTabSheet;
+    tsCompareSequences: TTabSheet;
+    pnl1: TPanel;
+    grdCompareSeq: TDBGrid;
+    pnl2: TPanel;
+    lbCompareExecutingSeq: TLabel;
+    btnUpdateCompareSeq: TButton;
+    chkDeviationOnlySeq: TCheckBox;
+    btnCancelCompareSeq: TButton;
+    dsCompareSeq: TDataSource;
+    tmrUpdateAllData: TTimer;
     {$WARNINGS ON}
     procedure chkShowLogClick(Sender: TObject);
     procedure btnLibLocationClick(Sender: TObject);
@@ -153,10 +167,8 @@ type
     procedure chkWriteCommandsClick(Sender: TObject);
     procedure edtLibLocationChange(Sender: TObject);
     procedure chkStopIfErrClick(Sender: TObject);
-    procedure btnUpdateCompareClick(Sender: TObject);
-    procedure grdCompareDrawColumnCell(Sender: TObject; const Rect: TRect; DataCol: Integer; Column: TColumn;
-      State: TGridDrawState);
-    procedure btnCancelCompareClick(Sender: TObject);
+    procedure btnUpdateCompareRecCountClick(Sender: TObject);
+    procedure btnCancelCompareRecCountClick(Sender: TObject);
     procedure seReconnectTimeoutChange(Sender: TObject);
     procedure btnApplyScriptClick(Sender: TObject);
     procedure btnCancelScriptClick(Sender: TObject);
@@ -167,15 +179,25 @@ type
     procedure btnUpdateScriptIniClick(Sender: TObject);
     procedure chkSaveErr1Click(Sender: TObject);
     procedure chkSaveErr2Click(Sender: TObject);
+    procedure btnStartAlterSlaveSequencesClick(Sender: TObject);
+    procedure chkDeviationOnlyRecCountClick(Sender: TObject);
+    procedure chkDeviationOnlySeqClick(Sender: TObject);
+    procedure btnUpdateCompareSeqClick(Sender: TObject);
+    procedure btnCancelCompareSeqClick(Sender: TObject);
+    procedure btnStopAlterSlaveSequencesClick(Sender: TObject);
+    procedure tmrUpdateAllDataTimer(Sender: TObject);
   private
     FLog: TLog;
     FData: TdmData;
     FScriptFiles: TScriptFiles;
     FReplicaThrd: TReplicaThread;
     FMinMaxThrd: TMinMaxIdThread;
-    FCompareMSThrd: TCompareMasterSlaveThread;
+    FLastIdThrd: TLastIdThread;
+    FCompareRecCountMSThrd: TCompareRecCountMSThread;
+    FCompareSeqMSThrd: TCompareSeqMSThread;
     FApplyScriptThrd: TApplyScriptThread;
     FMoveProcToSlaveThrd: TMoveProcToSlaveThread;
+    FAlterSlaveSequencesThrd: TAlterSlaveSequencesThread;
     FSsnMinId: Integer;
     FSsnMaxId: Integer;
     FSsnStep: Double;
@@ -188,12 +210,17 @@ type
     procedure AssignOnExitSettings;
     procedure ApplyScript;
     procedure SwitchShowLog;
-    procedure CompareMasterSlave;
+    procedure CompareMasterSlaveRecCount;
+    procedure CompareMasterSlaveSeq;
     procedure CheckReplicaMaxMin;
+    procedure FetchLastId;
     procedure StartReplica;
     procedure StopReplicaThread;
     procedure StopMinMaxThread;
-    procedure StopCompareMSThread;
+    procedure StopLastIdThread;
+    procedure StopCompareRecCountMSThread;
+    procedure StopCompareSeqMSThread;
+    procedure StopAlterSlaveSequences;
     procedure StopApplyScriptThread;
     procedure StopMoveProcToSlaveThread;
     procedure LogMessage(const AMsg: string; const AFileName: string = ''; const aUID: Cardinal = 0);
@@ -202,13 +229,19 @@ type
     procedure OnNewSession(const AStart: TDateTime; const AMinId, AMaxId, ARecCount, ASessionNumber: Integer);
     procedure OnEndSession(Sender: TObject);
     procedure OnNeedReplicaRestart(Sender: TObject);
+    procedure OnTerminateAlterSlaveSequences(Sender: TObject);
     procedure OnTimerRestartReplica(Sender: TObject);
     procedure OnTerminateSinglePacket(Sender: TObject);
     procedure OnTerminateReplica(Sender: TObject);
     procedure OnTerminateMinMaxId(Sender: TObject);
-    procedure OnTerminateCompareMS(Sender: TObject);
+    procedure OnTerminateLastId(Sender: TObject);
+    procedure OnTerminateCompareRecCountMS(Sender: TObject);
+    procedure OnTerminateCompareSeqMS(Sender: TObject);
     procedure OnTerminateApplyScript(Sender: TObject);
     procedure OnTerminateMoveSavedProcToSlave(Sender: TObject);
+    procedure grdDrawColumnCell(Sender: TObject; const Rect: TRect; DataCol: Integer; Column: TColumn;
+      State: TGridDrawState);
+
   private
     procedure OnExitSettings(Sender: TObject);
   public
@@ -231,12 +264,18 @@ uses
   UFileVersion;
 
 const
-  cStartPointReplica = 'начало репликации %s';
-  cElapsedReplica = 'прошло %s';
-  cStartPointSession = 'начало сессии %s';
-  cElapsedSession = 'прошло %s';
-  cSessionNumber = 'сессия № %d';
+  // Период обновления "Все данные"
+  cUpdateAllDataInterval = c1Minute * 5;
+
+  // Сообщения
   cLogMsg = '%s  %s';
+
+  cStartPointReplica     = 'начало репликации %s';
+  cElapsedReplica        = 'прошло %s';
+  cStartPointSession     = 'начало сессии %s';
+  cElapsedSession        = 'прошло %s';
+  cSessionNumber         = 'сессия № %d';
+  cCompareQueryExecuting = 'выполняется запрос ...';
 
 
 
@@ -253,11 +292,7 @@ begin
 end;
 
 procedure TfrmMain.ReadSettings;
-var
-  iLastId: Integer;
 begin
-  iLastId := FData.LastId;
-
   edtMasterServer.Text   := TSettings.MasterServer;
   edtMasterDatabase.Text := TSettings.MasterDatabase;
   edtMasterUser.Text     := TSettings.MasterUser;
@@ -271,7 +306,6 @@ begin
   edtSlavePort.Text     := IntToStr(TSettings.SlavePort);
 
   edtLibLocation.Text := TSettings.LibLocation;
-  edtSsnMinId.Text    := IntToStr(iLastId + 1); // стартовый Id реплики
 
   seSelectRange.Value      := TSettings.ReplicaSelectRange;
   sePacketRange.Value      := TSettings.ReplicaPacketRange;
@@ -281,9 +315,11 @@ begin
   chkShowLog.Checked       := TSettings.UseLogGUI;
   chkWriteCommands.Checked := TSettings.WriteCommandsToFile;
   chkStopIfErr.Checked     := TSettings.StopIfError;
-  chkDeviationOnly.Checked := TSettings.CompareDeviationOnly;
   chkSaveErr1.Checked      := TSettings.SaveErrStep1InDB;
   chkSaveErr2.Checked      := TSettings.SaveErrStep2InDB;
+
+  chkDeviationOnlyRecCount.Checked := TSettings.CompareDeviationRecCountOnly;
+  chkDeviationOnlySeq.Checked      := TSettings.CompareDeviationSequenceOnly;
 
   SwitchShowLog;
 end;
@@ -337,6 +373,16 @@ begin
   tmrElapsed.Enabled := True;
 end;
 
+procedure TfrmMain.StopAlterSlaveSequences;
+begin
+  if FAlterSlaveSequencesThrd <> nil then
+  begin
+    FAlterSlaveSequencesThrd.Stop;
+    FAlterSlaveSequencesThrd.WaitFor;
+    FreeAndNil(FAlterSlaveSequencesThrd);
+  end;
+end;
+
 procedure TfrmMain.StopApplyScriptThread;
 begin
   if FApplyScriptThrd <> nil then
@@ -347,13 +393,33 @@ begin
   end;
 end;
 
-procedure TfrmMain.StopCompareMSThread;
+procedure TfrmMain.StopCompareRecCountMSThread;
 begin
-  if FCompareMSThrd <> nil then
+  if FCompareRecCountMSThrd <> nil then
   begin
-    FCompareMSThrd.Stop;
-    FCompareMSThrd.WaitFor;
-    FreeAndNil(FCompareMSThrd);
+    FCompareRecCountMSThrd.Stop;
+    FCompareRecCountMSThrd.WaitFor;
+    FreeAndNil(FCompareRecCountMSThrd);
+  end;
+end;
+
+procedure TfrmMain.StopCompareSeqMSThread;
+begin
+  if FCompareSeqMSThrd <> nil then
+  begin
+    FCompareSeqMSThrd.Stop;
+    FCompareSeqMSThrd.WaitFor;
+    FreeAndNil(FCompareSeqMSThrd);
+  end;
+end;
+
+procedure TfrmMain.StopLastIdThread;
+begin
+  if FLastIdThrd <> nil then
+  begin
+    FLastIdThrd.Stop;
+    FLastIdThrd.WaitFor;
+    FreeAndNil(FLastIdThrd);
   end;
 end;
 
@@ -403,6 +469,12 @@ begin
 
   if FStartTimeSession > 0 then
     lbSsnElapsed.Caption := Format(cElapsedSession, [Elapsed(FStartTimeSession)]);
+end;
+
+procedure TfrmMain.tmrUpdateAllDataTimer(Sender: TObject);
+begin
+  (Sender as TTimer).Enabled := False;
+  CheckReplicaMaxMin;
 end;
 
 procedure TfrmMain.WriteSettings;
@@ -466,16 +538,22 @@ begin
       end;
 end;
 
-procedure TfrmMain.btnCancelCompareClick(Sender: TObject);
+procedure TfrmMain.btnCancelCompareRecCountClick(Sender: TObject);
 begin
-  btnCancelCompare.Enabled := False;
-  StopCompareMSThread;
+  btnCancelCompareRecCount.Enabled := False;
+  StopCompareRecCountMSThread;
+end;
+
+procedure TfrmMain.btnCancelCompareSeqClick(Sender: TObject);
+begin
+  btnCancelCompareSeq.Enabled := False;
+  StopCompareSeqMSThread;
 end;
 
 procedure TfrmMain.btnCancelScriptClick(Sender: TObject);
 begin
-  StopApplyScriptThread;
   btnCancelScript.Enabled := False;
+  StopApplyScriptThread;
 end;
 
 procedure TfrmMain.btnLibLocationClick(Sender: TObject);
@@ -551,6 +629,17 @@ begin
   LogMessage(Format(cCmdCountMsg, [FData.GetReplicaCmdCount]));
 end;
 
+procedure TfrmMain.btnStartAlterSlaveSequencesClick(Sender: TObject);
+begin
+  StopAlterSlaveSequences;
+  FAlterSlaveSequencesThrd := TAlterSlaveSequencesThread.Create(cCreateSuspended, LogMessage, tknDriven);
+  FAlterSlaveSequencesThrd.OnTerminate := OnTerminateAlterSlaveSequences;
+  FAlterSlaveSequencesThrd.Start;
+
+  btnStartAlterSlaveSequences.Enabled := False;
+  btnStopAlterSlaveSequences.Enabled  := True;
+end;
+
 procedure TfrmMain.btnStartReplicationClick(Sender: TObject);
 begin
   StartReplica;
@@ -610,6 +699,12 @@ begin
   btnSendSinglePacket.Enabled := False;
 end;
 
+procedure TfrmMain.btnStopAlterSlaveSequencesClick(Sender: TObject);
+begin
+  StopAlterSlaveSequences;
+  btnStopAlterSlaveSequences.Enabled := False;
+end;
+
 procedure TfrmMain.btnStopClick(Sender: TObject);
 begin
   StopReplicaThread;
@@ -638,9 +733,14 @@ begin
     LogMessage('Slave подключен');
 end;
 
-procedure TfrmMain.btnUpdateCompareClick(Sender: TObject);
+procedure TfrmMain.btnUpdateCompareRecCountClick(Sender: TObject);
 begin
-  CompareMasterSlave;
+  CompareMasterSlaveRecCount;
+end;
+
+procedure TfrmMain.btnUpdateCompareSeqClick(Sender: TObject);
+begin
+  CompareMasterSlaveSeq;
 end;
 
 procedure TfrmMain.btnUseMinIdClick(Sender: TObject);
@@ -650,17 +750,29 @@ begin
 end;
 
 procedure TfrmMain.CheckReplicaMaxMin;
-
 begin
-  if FData.IsMasterConnected then
-  begin
-    StopMinMaxThread;
-    FMinMaxThrd := TMinMaxIdThread.Create(cCreateSuspended,  LogMessage, tknDriven);
-    FMinMaxThrd.OnTerminate := OnTerminateMinMaxId;
-    FMinMaxThrd.Start;
-  end
-  else
-    LogMessage('Проверьте настройки подключения к базе данных');
+  StopMinMaxThread;
+  FMinMaxThrd := TMinMaxIdThread.Create(cCreateSuspended,  LogMessage, tknDriven);
+  FMinMaxThrd.OnTerminate := OnTerminateMinMaxId;
+  FMinMaxThrd.Start;
+end;
+
+procedure TfrmMain.FetchLastId;
+begin
+  StopLastIdThread;
+  FLastIdThrd := TLastIdThread.Create(cCreateSuspended, LogMessage, tknDriven);
+  FLastIdThrd.OnTerminate := OnTerminateLastId;
+  FLastIdThrd.Start;
+end;
+
+procedure TfrmMain.chkDeviationOnlyRecCountClick(Sender: TObject);
+begin
+  TSettings.CompareDeviationRecCountOnly := chkDeviationOnlyRecCount.Checked;
+end;
+
+procedure TfrmMain.chkDeviationOnlySeqClick(Sender: TObject);
+begin
+  TSettings.CompareDeviationSequenceOnly := chkDeviationOnlySeq.Checked;
 end;
 
 procedure TfrmMain.chkSaveErr1Click(Sender: TObject);
@@ -694,26 +806,44 @@ begin
   TSettings.UseLog := chkWriteLog.Checked;
 end;
 
-procedure TfrmMain.CompareMasterSlave;
-const
-  cCompareQueryExecuting = 'выполняется запрос ...';
+procedure TfrmMain.CompareMasterSlaveRecCount;
 begin
-  StopCompareMSThread;
-  FCompareMSThrd := TCompareMasterSlaveThread.Create(cCreateSuspended, chkDeviationOnly.Checked, LogMessage, tknDriven);
-  FCompareMSThrd.OnTerminate := OnTerminateCompareMS;
-  FCompareMSThrd.Start;
-  lbCompareExecuting.Caption := cCompareQueryExecuting;
-  lbCompareExecuting.Visible := True;
-  btnUpdateCompare.Enabled := False;
-  btnCancelCompare.Enabled := True;
-  chkDeviationOnly.Enabled := False;
+  StopCompareRecCountMSThread;
+  FCompareRecCountMSThrd := TCompareRecCountMSThread.Create(cCreateSuspended, chkDeviationOnlyRecCount.Checked, LogMessage, tknDriven);
+  FCompareRecCountMSThrd.OnTerminate := OnTerminateCompareRecCountMS;
+  FCompareRecCountMSThrd.Start;
+
+  lbCompareExecutingRecCount.Caption := cCompareQueryExecuting;
+  lbCompareExecutingRecCount.Visible := True;
+  btnUpdateCompareRecCount.Enabled := False;
+  btnCancelCompareRecCount.Enabled := True;
+  chkDeviationOnlyRecCount.Enabled := False;
+end;
+
+procedure TfrmMain.CompareMasterSlaveSeq;
+begin
+  StopCompareSeqMSThread;
+  FCompareSeqMSThrd := TCompareSeqMSThread.Create(cCreateSuspended, chkDeviationOnlySeq.Checked, LogMessage, tknDriven);
+  FCompareSeqMSThrd.OnTerminate := OnTerminateCompareSeqMS;
+  FCompareSeqMSThrd.Start;
+
+  lbCompareExecutingSeq.Caption := cCompareQueryExecuting;
+  lbCompareExecutingSeq.Visible := True;
+  btnUpdateCompareSeq.Enabled := False;
+  btnCancelCompareSeq.Enabled := True;
+  chkDeviationOnlySeq.Enabled := False;
 end;
 
 constructor TfrmMain.Create(AOwner: TComponent);
 begin
   inherited;
+  Caption := 'Replicator - ' + GetFileVersion;
+
   FLog := TLog.Create;
   pgcMain.ActivePage := tsLog;
+
+  FetchLastId;
+  CheckReplicaMaxMin;
 
   FData := TdmData.Create(nil, LogMessage);
 
@@ -723,15 +853,18 @@ begin
   edtScriptPath.Text := TSettings.ScriptPath;
   FScriptFiles := TScriptFiles.Create(TSettings.ScriptPath, LogApplyScript);
 
-  CheckReplicaMaxMin;
-  Caption := 'Replicator - ' + GetFileVersion;
+  grdCompareRecCount.OnDrawColumnCell := grdDrawColumnCell;
+  grdCompareSeq.OnDrawColumnCell      := grdDrawColumnCell;
 end;
 
 destructor TfrmMain.Destroy;
 begin
   StopReplicaThread;
   StopMinMaxThread;
-  StopCompareMSThread;
+  StopLastIdThread;
+  StopCompareRecCountMSThread;
+  StopCompareSeqMSThread;
+  StopAlterSlaveSequences;
   StopApplyScriptThread;
   StopMoveProcToSlaveThread;
 
@@ -753,11 +886,11 @@ begin
   TSettings.ReplicaLastId := StrToIntDef(edtSsnMinId.Text, 1) - 1;
 end;
 
-procedure TfrmMain.grdCompareDrawColumnCell(Sender: TObject; const Rect: TRect; DataCol: Integer; Column: TColumn;
+procedure TfrmMain.grdDrawColumnCell(Sender: TObject; const Rect: TRect; DataCol: Integer; Column: TColumn;
   State: TGridDrawState);
 var
   Grid: TStringGrid;
-  Texto: String;
+  Texto: string;
   R: TRect;
 begin
   R := Rect;
@@ -931,6 +1064,12 @@ begin
   FSsnStep  := (FSsnMaxId - FSsnMinId) / ARecCount;
 end;
 
+procedure TfrmMain.OnTerminateAlterSlaveSequences(Sender: TObject);
+begin
+  btnStopAlterSlaveSequences.Enabled  := False;
+  btnStartAlterSlaveSequences.Enabled := True;
+end;
+
 procedure TfrmMain.OnTerminateApplyScript(Sender: TObject);
 var
   tmpResult: TApplyScriptResult;
@@ -954,7 +1093,7 @@ begin
   btnUpdateScriptIni.Enabled := True;
 end;
 
-procedure TfrmMain.OnTerminateCompareMS(Sender: TObject);
+procedure TfrmMain.OnTerminateCompareRecCountMS(Sender: TObject);
 var
   P: PCompareMasterSlave;
   lwResult: LongWord;
@@ -964,7 +1103,7 @@ begin
   tmpThread := Sender as TWorkerThread;
   lwResult := tmpThread.MyReturnValue;
 
-  dsCompare.DataSet := nil;
+  dsCompareRecCount.DataSet := nil;
 
   if lwResult > 0 then
   begin
@@ -975,9 +1114,9 @@ begin
       Dispose(P);
     end;
 
-    if FData.IsSlaveConnected then
+    if FData.IsSlaveConnected and (Length(sSQL) > 0) then
       try
-        with FData.qryCompareMasterSlave do
+        with FData.qryCompareRecCountMS do
         begin
           Close;
           SQL.Clear;
@@ -989,13 +1128,72 @@ begin
           LogMessage(Format(cExceptionMsg, [E.ClassName, E.Message]));
       end;
 
-    dsCompare.DataSet := FData.qryCompareMasterSlave;
+    dsCompareRecCount.DataSet := FData.qryCompareRecCountMS;
   end;
 
-  lbCompareExecuting.Caption := '';
-  btnUpdateCompare.Enabled := True;
-  btnCancelCompare.Enabled := False;
-  chkDeviationOnly.Enabled := True;
+  lbCompareExecutingRecCount.Caption := '';
+  btnUpdateCompareRecCount.Enabled := True;
+  btnCancelCompareRecCount.Enabled := False;
+  chkDeviationOnlyRecCount.Enabled := True;
+end;
+
+procedure TfrmMain.OnTerminateCompareSeqMS(Sender: TObject);
+var
+  P: PCompareMasterSlave;
+  lwResult: LongWord;
+  sSQL: string;
+  tmpThread: TWorkerThread;
+begin
+  tmpThread := Sender as TWorkerThread;
+  lwResult := tmpThread.MyReturnValue;
+
+  dsCompareSeq.DataSet := nil;
+
+  if lwResult > 0 then
+  begin
+    P := PCompareMasterSlave(lwResult);
+    try
+      sSQL := P^.ResultSQL;
+    finally
+      Dispose(P);
+    end;
+
+    if FData.IsSlaveConnected and (Length(sSQL) > 0) then
+      try
+        with FData.qryCompareSeqMS do
+        begin
+          Close;
+          SQL.Clear;
+          SQL.Add(sSQL);
+          Open;
+        end;
+      except
+        on E: Exception do
+          LogMessage(Format(cExceptionMsg, [E.ClassName, E.Message]));
+      end;
+
+    dsCompareSeq.DataSet := FData.qryCompareSeqMS;
+  end;
+
+  lbCompareExecutingSeq.Caption := '';
+  btnUpdateCompareSeq.Enabled := True;
+  btnCancelCompareSeq.Enabled := False;
+  chkDeviationOnlySeq.Enabled := True;
+end;
+
+procedure TfrmMain.OnTerminateLastId(Sender: TObject);
+var
+  lwResult: LongWord;
+  tmpThread: TWorkerThread;
+begin
+  tmpThread := Sender as TWorkerThread;
+  lwResult := tmpThread.MyReturnValue;
+
+  edtSsnMinId.Text := IntToStr(lwResult + 1); // стартовый Id реплики
+
+  btnStartReplication.Enabled         := True;
+  btnMoveProcsToSlave.Enabled         := True;
+  btnStartAlterSlaveSequences.Enabled := True;
 end;
 
 procedure TfrmMain.OnTerminateMinMaxId(Sender: TObject);
@@ -1016,7 +1214,7 @@ begin
       edtAllMaxId.Text    := IntToStr(P^.MaxId);
       edtAllRecCount.Text := IntToStr(P^.RecCount);
 
-      iStart:= TSettings.ReplicaLastId;
+      iStart := StrToIntDef(edtSsnMinId.Text, 0);
 
       if (P^.MaxId > P^.MinId) then
       begin
@@ -1032,6 +1230,10 @@ begin
       Dispose(P);
     end;
   end;
+
+  // запускаем таймер обновления "Все данные"
+  tmrUpdateAllData.Interval := cUpdateAllDataInterval;
+  tmrUpdateAllData.Enabled  := True;
 end;
 
 procedure TfrmMain.OnTerminateMoveSavedProcToSlave(Sender: TObject);

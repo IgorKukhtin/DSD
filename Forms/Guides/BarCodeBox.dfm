@@ -266,6 +266,14 @@ object BarCodeBoxForm: TBarCodeBoxForm
         end
         item
           Visible = True
+          ItemName = 'bbBarCodeBox_onlyPrint'
+        end
+        item
+          Visible = True
+          ItemName = 'dxBarStatic'
+        end
+        item
+          Visible = True
           ItemName = 'bbToExcel'
         end
         item
@@ -341,6 +349,11 @@ object BarCodeBoxForm: TBarCodeBoxForm
       Action = macInsert_Object_PrintGrid
       Category = 0
     end
+    object bbBarCodeBox_onlyPrint: TdxBarButton
+      Action = macBarCodeBox_onlyPrint
+      Caption = #1055#1077#1095#1072#1090#1100' '#1085#1086#1074#1099#1093' '#1096'/'#1082
+      Category = 0
+    end
   end
   object ActionList: TActionList
     Images = dmMain.ImageList
@@ -407,6 +420,45 @@ object BarCodeBoxForm: TBarCodeBoxForm
       DataSource = DataSource
       DataSetRefresh = actRefresh
       IdFieldName = 'Id'
+    end
+    object ExecuteBarCodePrintDialog: TExecuteDialog
+      Category = 'OnlyPrint'
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      PostDataSetAfterExecute = True
+      Caption = #1053#1072#1087#1077#1095#1072#1090#1072#1090#1100' '#1085#1086#1074#1099#1077' '#1096'/'#1082
+      Hint = #1053#1072#1087#1077#1095#1072#1090#1072#1090#1100' '#1085#1086#1074#1099#1077' '#1096'/'#1082
+      ImageIndex = 23
+      FormName = 'TBarCodeBoxPrintDialogForm'
+      FormNameParam.Value = 'TBarCodeBoxPrintDialogForm'
+      FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
+      GuiParams = <
+        item
+          Name = 'inBarCode1'
+          Value = '0'
+          Component = FormParams
+          ComponentItem = 'inBarCode1'
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'inBarCode2'
+          Value = '0'
+          Component = FormParams
+          ComponentItem = 'inBarCode2'
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'inId'
+          Value = Null
+          Component = ClientDataSet
+          ComponentItem = 'Id'
+          MultiSelectSeparator = ','
+        end>
+      isShowModal = True
+      OpenBeforeShow = True
     end
     object dsdSetErased: TdsdUpdateErased
       Category = 'DSDLib'
@@ -537,6 +589,19 @@ object BarCodeBoxForm: TBarCodeBoxForm
       Hint = #1044#1086#1073#1072#1074#1080#1090#1100' '#1096'/'#1082' '#1074#1086' '#1074#1088#1077#1084' '#1090#1072#1073#1083#1080#1094#1091
       ImageIndex = 23
     end
+    object actBarCodeBox_onlyPrint: TdsdExecStoredProc
+      Category = 'OnlyPrint'
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      StoredProc = spBarCodeBox_onlyPrint
+      StoredProcList = <
+        item
+          StoredProc = spBarCodeBox_onlyPrint
+        end>
+      Caption = #1053#1072#1087#1077#1095#1072#1090#1072#1090#1100' '#1085#1086#1074#1099#1077' '#1096'/'#1082
+      Hint = #1053#1072#1087#1077#1095#1072#1090#1072#1090#1100' '#1085#1086#1074#1099#1077' '#1096'/'#1082
+      ImageIndex = 23
+    end
     object actInsert_BarCodeBox: TdsdExecStoredProc
       Category = 'DSDLib'
       MoveParams = <>
@@ -549,6 +614,23 @@ object BarCodeBoxForm: TBarCodeBoxForm
       Caption = 'C'#1092#1086#1088#1084#1080#1088#1086#1074#1072#1090#1100' '#1085#1086#1074#1099#1077' '#1096'/'#1082
       Hint = 'C'#1092#1086#1088#1084#1080#1088#1086#1074#1072#1090#1100' '#1085#1086#1074#1099#1077' '#1096'/'#1082
       ImageIndex = 50
+    end
+    object macBarCodeBox_onlyPrint: TMultiAction
+      Category = 'OnlyPrint'
+      MoveParams = <>
+      ActionList = <
+        item
+          Action = ExecuteBarCodePrintDialog
+        end
+        item
+          Action = actOnlyPrint
+        end
+        item
+          Action = actRefresh
+        end>
+      Caption = #1053#1072#1087#1077#1095#1072#1090#1072#1090#1100' '#1085#1086#1074#1099#1077' '#1096'/'#1082
+      Hint = #1053#1072#1087#1077#1095#1072#1090#1072#1090#1100' '#1085#1086#1074#1099#1077' '#1096'/'#1082
+      ImageIndex = 23
     end
     object ExecuteBarCodeBoxDialog: TExecuteDialog
       Category = 'DSDLib'
@@ -882,6 +964,62 @@ object BarCodeBoxForm: TBarCodeBoxForm
       PrinterNameParam.DataType = ftString
       PrinterNameParam.MultiSelectSeparator = ','
     end
+    object actOnlyPrint: TdsdPrintAction
+      Category = 'DSDLib'
+      MoveParams = <
+        item
+          FromParam.Name = 'id'
+          FromParam.Value = Null
+          FromParam.ComponentItem = 'id'
+          FromParam.MultiSelectSeparator = ','
+          ToParam.Value = '0'
+          ToParam.ComponentItem = 'Id'
+          ToParam.ParamType = ptInputOutput
+          ToParam.MultiSelectSeparator = ','
+        end
+        item
+          FromParam.Value = 42186d
+          FromParam.DataType = ftDateTime
+          FromParam.MultiSelectSeparator = ','
+          ToParam.Name = 'StartDate'
+          ToParam.Value = 'NULL'
+          ToParam.DataType = ftDateTime
+          ToParam.ParamType = ptInputOutput
+          ToParam.MultiSelectSeparator = ','
+        end
+        item
+          FromParam.Value = 42186d
+          FromParam.DataType = ftDateTime
+          FromParam.MultiSelectSeparator = ','
+          ToParam.Name = 'EndDate'
+          ToParam.Value = 'NULL'
+          ToParam.DataType = ftDateTime
+          ToParam.ParamType = ptInputOutput
+          ToParam.MultiSelectSeparator = ','
+        end>
+      StoredProc = spBarCodeBox_onlyPrint
+      StoredProcList = <
+        item
+          StoredProc = spBarCodeBox_onlyPrint
+        end>
+      Caption = #1053#1072#1087#1077#1095#1072#1090#1072#1090#1100' '#1085#1086#1074#1099#1077' '#1096'/'#1082
+      Hint = #1053#1072#1087#1077#1095#1072#1090#1072#1090#1100' '#1085#1086#1074#1099#1077' '#1096'/'#1082
+      ImageIndex = 23
+      DataSets = <
+        item
+          DataSet = PrintHeaderCDS
+          UserName = 'frxDBDMaster'
+        end>
+      Params = <>
+      ReportName = 'Print_Object_BarCodeBox'
+      ReportNameParam.Value = 'Print_Object_BarCodeBox'
+      ReportNameParam.DataType = ftString
+      ReportNameParam.ParamType = ptInput
+      ReportNameParam.MultiSelectSeparator = ','
+      PrinterNameParam.Value = ''
+      PrinterNameParam.DataType = ftString
+      PrinterNameParam.MultiSelectSeparator = ','
+    end
     object macInsert_Object_Print_list: TMultiAction
       Category = 'DSDLib'
       MoveParams = <>
@@ -1122,5 +1260,41 @@ object BarCodeBoxForm: TBarCodeBoxForm
     PackSize = 1
     Left = 639
     Top = 160
+  end
+  object spBarCodeBox_onlyPrint: TdsdStoredProc
+    StoredProcName = 'gpSelect_BarCodeBox_onlyPrint'
+    DataSet = PrintHeaderCDS
+    DataSets = <
+      item
+        DataSet = PrintHeaderCDS
+      end>
+    Params = <
+      item
+        Name = 'inId'
+        Value = Null
+        Component = ClientDataSet
+        ComponentItem = 'Id'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inBarCode1'
+        Value = '0'
+        Component = FormParams
+        ComponentItem = 'inBarCode1'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inBarCode2'
+        Value = '0'
+        Component = FormParams
+        ComponentItem = 'inBarCode2'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end>
+    PackSize = 1
+    Left = 304
+    Top = 267
   end
 end

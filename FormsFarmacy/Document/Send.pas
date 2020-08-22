@@ -175,6 +175,7 @@ type
     actOpenConfirmedDialog: TOpenChoiceForm;
     CommentSendName: TcxGridDBColumn;
     actChoiceCommentSend: TOpenChoiceForm;
+    actClearCommentSend: TdsdSetDefaultParams;
   private
     { Private declarations }
   public

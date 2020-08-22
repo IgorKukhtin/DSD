@@ -19,7 +19,7 @@ object frmMain: TfrmMain
     Top = 0
     Width = 984
     Height = 662
-    ActivePage = tsSettings
+    ActivePage = tsLog
     Align = alClient
     TabOrder = 0
     object tsLog: TTabSheet
@@ -334,6 +334,7 @@ object frmMain: TfrmMain
           Width = 122
           Height = 25
           Caption = #1057#1090#1072#1088#1090' '#1088#1077#1087#1083#1080#1082#1072#1094#1080#1080
+          Enabled = False
           TabOrder = 7
           OnClick = btnStartReplicationClick
         end
@@ -353,6 +354,7 @@ object frmMain: TfrmMain
           Width = 122
           Height = 39
           Caption = #1057#1090#1072#1088#1090' '#1088#1077#1087#1083#1080#1082#1072#1094#1080#1080' table_ddl '#1085#1072' Slave'
+          Enabled = False
           TabOrder = 9
           WordWrap = True
           OnClick = btnMoveProcsToSlaveClick
@@ -366,6 +368,27 @@ object frmMain: TfrmMain
           Enabled = False
           TabOrder = 10
           OnClick = btnStopMoveProcsToSlaveClick
+        end
+        object btnStartAlterSlaveSequences: TButton
+          Left = 4
+          Top = 307
+          Width = 122
+          Height = 65
+          Caption = #1055#1077#1088#1077#1085#1077#1089#1090#1080' '#1087#1086#1089#1083#1077#1076#1085#1080#1077' '#1079#1085#1072#1095#1077#1085#1080#1103' '#1087#1086#1089#1083#1077#1076#1086#1074#1072#1090#1077#1083#1100#1085#1086#1089#1090#1077#1081' '#1085#1072' Slave'
+          Enabled = False
+          TabOrder = 11
+          WordWrap = True
+          OnClick = btnStartAlterSlaveSequencesClick
+        end
+        object btnStopAlterSlaveSequences: TButton
+          Left = 4
+          Top = 376
+          Width = 122
+          Height = 25
+          Caption = #1057#1090#1086#1087
+          Enabled = False
+          TabOrder = 12
+          OnClick = btnStopAlterSlaveSequencesClick
         end
       end
       object pnlLog: TPanel
@@ -416,107 +439,223 @@ object frmMain: TfrmMain
     object tsCompare: TTabSheet
       Caption = #1057#1088#1072#1074#1085#1077#1085#1080#1077' '#1076#1072#1085#1085#1099#1093' Master '#1080' Slave'
       ImageIndex = 2
-      object pnlCompareTop: TPanel
+      object pgcCompare: TPageControl
         Left = 0
         Top = 0
         Width = 976
-        Height = 41
-        Align = alTop
-        TabOrder = 0
-        object lbCompareExecuting: TLabel
-          Left = 205
-          Top = 13
-          Width = 119
-          Height = 13
-          Caption = #1074#1099#1087#1086#1083#1085#1103#1077#1090#1089#1103' '#1079#1072#1087#1088#1086#1089' ...'
-          Visible = False
-        end
-        object btnUpdateCompare: TButton
-          Left = 22
-          Top = 8
-          Width = 75
-          Height = 25
-          Caption = #1054#1073#1085#1086#1074#1080#1090#1100
-          TabOrder = 0
-          OnClick = btnUpdateCompareClick
-        end
-        object chkDeviationOnly: TCheckBox
-          Left = 340
-          Top = 12
-          Width = 153
-          Height = 17
-          Caption = #1090#1086#1083#1100#1082#1086' '#1086#1090#1082#1083#1086#1085#1077#1085#1080#1103
-          TabOrder = 1
-        end
-        object btnCancelCompare: TButton
-          Left = 110
-          Top = 8
-          Width = 75
-          Height = 25
-          Caption = #1054#1090#1084#1077#1085#1072
-          Enabled = False
-          TabOrder = 2
-          OnClick = btnCancelCompareClick
-        end
-      end
-      object pnlCompareGrid: TPanel
-        Left = 0
-        Top = 41
-        Width = 976
-        Height = 593
+        Height = 634
+        ActivePage = tsCompareSequences
         Align = alClient
-        BevelOuter = bvNone
-        TabOrder = 1
-        object grdCompare: TDBGrid
-          AlignWithMargins = True
-          Left = 3
-          Top = 3
-          Width = 970
-          Height = 587
-          Align = alClient
-          DataSource = dsCompare
-          DefaultDrawing = False
-          ReadOnly = True
-          TabOrder = 0
-          TitleFont.Charset = DEFAULT_CHARSET
-          TitleFont.Color = clWindowText
-          TitleFont.Height = -11
-          TitleFont.Name = 'Tahoma'
-          TitleFont.Style = []
-          OnDrawColumnCell = grdCompareDrawColumnCell
-          Columns = <
-            item
-              Expanded = False
-              FieldName = 'TableName'
-              Title.Alignment = taCenter
-              Title.Caption = #1048#1084#1103' '#1090#1072#1073#1083#1080#1094#1099
-              Width = 300
-              Visible = True
+        TabOrder = 0
+        object tsCompareRecCount: TTabSheet
+          Caption = #1050#1086#1083#1080#1095#1077#1089#1090#1074#1086' '#1079#1072#1087#1080#1089#1077#1081
+          ExplicitHeight = 565
+          object pnlCompareGrid: TPanel
+            Left = 0
+            Top = 41
+            Width = 968
+            Height = 565
+            Align = alClient
+            BevelOuter = bvNone
+            TabOrder = 0
+            ExplicitWidth = 976
+            ExplicitHeight = 593
+            object grdCompareRecCount: TDBGrid
+              AlignWithMargins = True
+              Left = 3
+              Top = 3
+              Width = 962
+              Height = 559
+              Align = alClient
+              DataSource = dsCompareRecCount
+              DefaultDrawing = False
+              ReadOnly = True
+              TabOrder = 0
+              TitleFont.Charset = DEFAULT_CHARSET
+              TitleFont.Color = clWindowText
+              TitleFont.Height = -11
+              TitleFont.Name = 'Tahoma'
+              TitleFont.Style = []
+              Columns = <
+                item
+                  Expanded = False
+                  FieldName = 'TableName'
+                  Title.Alignment = taCenter
+                  Title.Caption = #1080#1084#1103' '#1090#1072#1073#1083#1080#1094#1099
+                  Width = 300
+                  Visible = True
+                end
+                item
+                  Expanded = False
+                  FieldName = 'CountMaster'
+                  Title.Alignment = taCenter
+                  Title.Caption = #1082#1086#1083'-'#1074#1086' '#1079#1072#1087#1080#1089#1077#1081' Master'
+                  Width = 125
+                  Visible = True
+                end
+                item
+                  Expanded = False
+                  FieldName = 'CountSlave'
+                  Title.Alignment = taCenter
+                  Title.Caption = #1082#1086#1083'-'#1074#1086' '#1079#1072#1087#1080#1089#1077#1081' Slave'
+                  Width = 125
+                  Visible = True
+                end>
             end
-            item
-              Expanded = False
-              FieldName = 'CountMaster'
-              Title.Alignment = taCenter
-              Title.Caption = #1082#1086#1083'-'#1074#1086' '#1079#1072#1087#1080#1089#1077#1081' Master'
-              Width = 125
-              Visible = True
+          end
+          object pnlCompareTop: TPanel
+            Left = 0
+            Top = 0
+            Width = 968
+            Height = 41
+            Align = alTop
+            TabOrder = 1
+            ExplicitWidth = 976
+            object lbCompareExecutingRecCount: TLabel
+              Left = 205
+              Top = 13
+              Width = 119
+              Height = 13
+              Caption = #1074#1099#1087#1086#1083#1085#1103#1077#1090#1089#1103' '#1079#1072#1087#1088#1086#1089' ...'
+              Visible = False
             end
-            item
-              Expanded = False
-              FieldName = 'CountSlave'
-              Title.Alignment = taCenter
-              Title.Caption = #1082#1086#1083'-'#1074#1086' '#1079#1072#1087#1080#1089#1077#1081' Slave'
-              Width = 125
-              Visible = True
-            end>
+            object btnUpdateCompareRecCount: TButton
+              Left = 22
+              Top = 8
+              Width = 75
+              Height = 25
+              Caption = #1054#1073#1085#1086#1074#1080#1090#1100
+              TabOrder = 0
+              OnClick = btnUpdateCompareRecCountClick
+            end
+            object chkDeviationOnlyRecCount: TCheckBox
+              Left = 340
+              Top = 12
+              Width = 153
+              Height = 17
+              Caption = #1090#1086#1083#1100#1082#1086' '#1086#1090#1082#1083#1086#1085#1077#1085#1080#1103
+              TabOrder = 1
+              OnClick = chkDeviationOnlyRecCountClick
+            end
+            object btnCancelCompareRecCount: TButton
+              Left = 110
+              Top = 8
+              Width = 75
+              Height = 25
+              Caption = #1054#1090#1084#1077#1085#1072
+              Enabled = False
+              TabOrder = 2
+              OnClick = btnCancelCompareRecCountClick
+            end
+          end
+        end
+        object tsCompareSequences: TTabSheet
+          Caption = #1055#1086#1089#1083#1077#1076#1086#1074#1072#1090#1077#1083#1100#1085#1086#1089#1090#1080
+          ImageIndex = 1
+          object pnl1: TPanel
+            Left = 0
+            Top = 41
+            Width = 968
+            Height = 565
+            Align = alClient
+            BevelOuter = bvNone
+            TabOrder = 0
+            ExplicitWidth = 976
+            ExplicitHeight = 593
+            object grdCompareSeq: TDBGrid
+              AlignWithMargins = True
+              Left = 3
+              Top = 3
+              Width = 962
+              Height = 559
+              Align = alClient
+              DataSource = dsCompareSeq
+              DefaultDrawing = False
+              ReadOnly = True
+              TabOrder = 0
+              TitleFont.Charset = DEFAULT_CHARSET
+              TitleFont.Color = clWindowText
+              TitleFont.Height = -11
+              TitleFont.Name = 'Tahoma'
+              TitleFont.Style = []
+              Columns = <
+                item
+                  Expanded = False
+                  FieldName = 'SequenceName'
+                  Title.Alignment = taCenter
+                  Title.Caption = #1080#1084#1103' '#1087#1086#1089#1083#1077#1076#1086#1074#1072#1090#1077#1083#1100#1085#1086#1089#1090#1080
+                  Width = 300
+                  Visible = True
+                end
+                item
+                  Expanded = False
+                  FieldName = 'MasterValue'
+                  Title.Alignment = taCenter
+                  Title.Caption = #1087#1086#1089#1083#1077#1076#1085#1077#1077' '#1079#1085#1072#1095#1077#1085#1080#1077' '#1074' Master'
+                  Width = 180
+                  Visible = True
+                end
+                item
+                  Expanded = False
+                  FieldName = 'SlaveValue'
+                  Title.Alignment = taCenter
+                  Title.Caption = #1087#1086#1083#1089#1083#1077#1076#1085#1077#1077' '#1079#1085#1072#1095#1077#1085#1080#1077' '#1074' Slave'
+                  Width = 180
+                  Visible = True
+                end>
+            end
+          end
+          object pnl2: TPanel
+            Left = 0
+            Top = 0
+            Width = 968
+            Height = 41
+            Align = alTop
+            TabOrder = 1
+            ExplicitTop = 8
+            object lbCompareExecutingSeq: TLabel
+              Left = 205
+              Top = 13
+              Width = 119
+              Height = 13
+              Caption = #1074#1099#1087#1086#1083#1085#1103#1077#1090#1089#1103' '#1079#1072#1087#1088#1086#1089' ...'
+              Visible = False
+            end
+            object btnUpdateCompareSeq: TButton
+              Left = 22
+              Top = 8
+              Width = 75
+              Height = 25
+              Caption = #1054#1073#1085#1086#1074#1080#1090#1100
+              TabOrder = 0
+              OnClick = btnUpdateCompareSeqClick
+            end
+            object chkDeviationOnlySeq: TCheckBox
+              Left = 340
+              Top = 12
+              Width = 153
+              Height = 17
+              Caption = #1090#1086#1083#1100#1082#1086' '#1086#1090#1082#1083#1086#1085#1077#1085#1080#1103
+              TabOrder = 1
+              OnClick = chkDeviationOnlySeqClick
+            end
+            object btnCancelCompareSeq: TButton
+              Left = 110
+              Top = 8
+              Width = 75
+              Height = 25
+              Caption = #1054#1090#1084#1077#1085#1072
+              Enabled = False
+              TabOrder = 2
+              OnClick = btnCancelCompareSeqClick
+            end
+          end
         end
       end
     end
     object tsSettings: TTabSheet
       Caption = #1053#1072#1089#1090#1088#1086#1081#1082#1080
       ImageIndex = 1
-      ExplicitLeft = 0
-      ExplicitTop = 28
       DesignSize = (
         976
         634)
@@ -911,22 +1050,32 @@ object frmMain: TfrmMain
     FavoriteLinks = <>
     FileTypes = <>
     Options = []
-    Left = 660
+    Left = 381
     Top = 601
   end
   object tmrElapsed: TTimer
     Enabled = False
     OnTimer = tmrElapsedTimer
-    Left = 809
+    Left = 682
     Top = 600
   end
-  object dsCompare: TDataSource
-    Left = 740
+  object dsCompareRecCount: TDataSource
+    Left = 595
     Top = 601
   end
   object tmrRestartReplica: TTimer
     Enabled = False
-    Left = 892
+    Left = 765
     Top = 600
+  end
+  object dsCompareSeq: TDataSource
+    Left = 482
+    Top = 601
+  end
+  object tmrUpdateAllData: TTimer
+    Enabled = False
+    OnTimer = tmrUpdateAllDataTimer
+    Left = 873
+    Top = 599
   end
 end
