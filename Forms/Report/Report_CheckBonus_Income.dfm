@@ -4,7 +4,7 @@ inherited Report_CheckBonus_IncomeForm: TReport_CheckBonus_IncomeForm
   ClientWidth = 1180
   AddOnFormData.ExecuteDialogAction = ExecuteDialog
   ExplicitWidth = 1196
-  ExplicitHeight = 379
+  ExplicitHeight = 376
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
@@ -1026,11 +1026,8 @@ inherited Report_CheckBonus_IncomeForm: TReport_CheckBonus_IncomeForm
   end
   object spInsertUpdate: TdsdStoredProc
     StoredProcName = 'gpInsertUpdate_Movement_ProfitIncomeService_ByReport'
-    DataSet = MasterCDS
-    DataSets = <
-      item
-        DataSet = MasterCDS
-      end>
+    DataSets = <>
+    OutputType = otResult
     Params = <
       item
         Name = 'inStartDate'
@@ -1067,8 +1064,8 @@ inherited Report_CheckBonus_IncomeForm: TReport_CheckBonus_IncomeForm
       item
         Name = 'inBranchId'
         Value = Null
-        Component = MasterCDS
-        ComponentItem = 'BranchId'
+        Component = GuidesBranch
+        ComponentItem = 'Key'
         ParamType = ptInput
         MultiSelectSeparator = ','
       end>

@@ -4,7 +4,7 @@ inherited Report_CheckBonusTestForm: TReport_CheckBonusTestForm
   ClientWidth = 1180
   AddOnFormData.ExecuteDialogAction = ExecuteDialog
   ExplicitWidth = 1196
-  ExplicitHeight = 379
+  ExplicitHeight = 376
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
@@ -949,11 +949,8 @@ inherited Report_CheckBonusTestForm: TReport_CheckBonusTestForm
   end
   object spInsertUpdate: TdsdStoredProc
     StoredProcName = 'gpInsertUpdate_Movement_ProfitLossService_ByReport'
-    DataSet = MasterCDS
-    DataSets = <
-      item
-        DataSet = MasterCDS
-      end>
+    DataSets = <>
+    OutputType = otResult
     Params = <
       item
         Name = 'inStartDate'
