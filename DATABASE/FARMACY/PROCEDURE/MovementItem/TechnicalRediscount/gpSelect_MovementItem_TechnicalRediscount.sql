@@ -21,6 +21,7 @@ RETURNS TABLE (Id Integer, GoodsId Integer, GoodsCode Integer, GoodsName TVarCha
              , Proficit TFloat, ProficitSumm TFloat
              , ExpirationDate TDateTime, Comment TVarChar
              , IDSend Integer, InvNumberSend TVarChar, OperDateSend TDateTime
+             , Color_calc Integer
              )
 AS
 $BODY$
@@ -187,6 +188,8 @@ BEGIN
               , MovementSend.ID
               , MovementSend.InvNumber
               , MovementSend.OperDate
+              , CASE WHEN COALESCE (MIFloat_MISendId.ValueData, 0) = 0 THEN zc_Color_White() ELSE zc_Color_Yelow() END AS Color_calc
+
 
            FROM tmpMovementItemAll AS MovementItem
 
@@ -369,6 +372,8 @@ BEGIN
               , MovementSend.ID
               , MovementSend.InvNumber
               , MovementSend.OperDate
+
+              , CASE WHEN COALESCE (MIFloat_MISendId.ValueData, 0) = 0 THEN zc_Color_White() ELSE zc_Color_Yelow() END AS Color_calc
 
            FROM GoodsAll
                  
@@ -560,6 +565,8 @@ BEGIN
               , MovementSend.ID
               , MovementSend.InvNumber
               , MovementSend.OperDate
+
+              , CASE WHEN COALESCE (MIFloat_MISendId.ValueData, 0) = 0 THEN zc_Color_White() ELSE zc_Color_Yelow() END AS Color_calc
 
            FROM tmpMovementItemAll AS MovementItem
 

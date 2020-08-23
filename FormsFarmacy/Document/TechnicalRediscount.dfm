@@ -292,6 +292,11 @@ inherited TechnicalRediscountForm: TTechnicalRediscountForm
             Options.Editing = False
             Width = 91
           end
+          object Color_calc: TcxGridDBColumn
+            DataBinding.FieldName = 'Color_calc'
+            Visible = False
+            VisibleForCustomization = False
+          end
         end
       end
       object cxSplitter1: TcxSplitter
@@ -605,6 +610,11 @@ inherited TechnicalRediscountForm: TTechnicalRediscountForm
     end
   end
   inherited DBViewAddOn: TdsdDBViewAddOn
+    ColorRuleList = <
+      item
+        BackGroundValueColumn = Color_calc
+        ColorValueList = <>
+      end>
     SummaryItemList = <
       item
         Param.Value = Null

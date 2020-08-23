@@ -54,6 +54,7 @@ type
     Comment: TcxGridDBColumn;
     InvNumberSend: TcxGridDBColumn;
     OperDateSend: TcxGridDBColumn;
+    Color_calc: TcxGridDBColumn;
   private
     { Private declarations }
   public

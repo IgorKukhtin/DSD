@@ -92,7 +92,7 @@ BEGIN
        LEFT JOIN Object AS Object_Juridical ON Object_Juridical.Id = ObjectLink_Unit_Juridical.ChildObjectId
 
        LEFT JOIN MovementItemLinkObject AS MILinkObject_CommentSend
-                                        ON MILinkObject_CommentSend.MovementItemId = Object_From.Id
+                                        ON MILinkObject_CommentSend.MovementItemId = tmpProtocol.MovementItemId
                                        AND MILinkObject_CommentSend.DescId = zc_MILinkObject_CommentSend()
        LEFT JOIN Object AS Object_CommentSend
                         ON Object_CommentSend.ID = MILinkObject_CommentSend.ObjectId
