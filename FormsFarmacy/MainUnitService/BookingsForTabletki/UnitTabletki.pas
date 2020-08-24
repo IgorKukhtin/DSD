@@ -158,7 +158,7 @@ begin
     FBookingsHeadCDS.FieldDefs.Clear;
     FBookingsHeadCDS.FieldDefs.Add('bookingId', TFieldType.ftString, 100);
     FBookingsHeadCDS.FieldDefs.Add('code', TFieldType.ftInteger);
-    FBookingsHeadCDS.FieldDefs.Add('statusID', TFieldType.ftCurrency);
+    FBookingsHeadCDS.FieldDefs.Add('statusID', TFieldType.ftString, 10);
     FBookingsHeadCDS.FieldDefs.Add('dateTimeCreated', TFieldType.ftDateTime);
     FBookingsHeadCDS.FieldDefs.Add('customer', TFieldType.ftString, 100);
     FBookingsHeadCDS.FieldDefs.Add('customerPhone', TFieldType.ftString, 100);
@@ -236,13 +236,13 @@ begin
         begin
           jValue := JSONA.Items[I];
 
-          bookingId := jValue.GetValue<TJSONString>('id').ToString;
+          bookingId := DelDoubleQuote(jValue.FindValue('id'));
 
           FBookingsHeadCDS.Last;
           FBookingsHeadCDS.Append;
           FBookingsHeadCDS.FieldByName('bookingId').AsString := bookingId;
           FBookingsHeadCDS.FieldByName('code').AsInteger := jValue.GetValue<TJSONNumber>('code').AsInt;
-          FBookingsHeadCDS.FieldByName('statusID').AsCurrency := jValue.GetValue<TJSONNumber>('statusID').AsDouble;
+          FBookingsHeadCDS.FieldByName('statusID').AsString := DelDoubleQuote(jValue.FindValue('statusID'));
           FBookingsHeadCDS.FieldByName('dateTimeCreated').AsDateTime := JSONStrToDate(jValue.FindValue('dateTimeCreated'));
           FBookingsHeadCDS.FieldByName('customer').AsString := DelDoubleQuote(jValue.FindValue('customer'));
           FBookingsHeadCDS.FieldByName('customerPhone').AsString := DelDoubleQuote(jValue.FindValue('customerPhone'));

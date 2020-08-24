@@ -108,21 +108,27 @@ BEGIN
       RAISE EXCEPTION 'Ошибка. Удаление VIP перемещений вам запрещено.';         
     END IF;
 
-     -- проверка
-     IF EXISTS (SELECT MIC.Id FROM MovementItemContainer AS MIC WHERE MIC.Movementid = inMovementId)
-     THEN
-          RAISE EXCEPTION 'Ошибка.Документ отложен, удаление запрещено!';
-     END IF;
+    -- проверка
+    IF EXISTS (SELECT MIC.Id FROM MovementItemContainer AS MIC WHERE MIC.Movementid = inMovementId)
+    THEN
+         RAISE EXCEPTION 'Ошибка.Документ отложен, удаление запрещено!';
+    END IF;
      
-     -- проверка - если <Master> Проведен, то <Ошибка>
-     PERFORM lfCheck_Movement_ParentStatus (inMovementId:= inMovementId, inNewStatusId:= zc_Enum_Status_Erased(), inComment:= 'удалить');
+    -- проверка - если <Master> Проведен, то <Ошибка>
+    PERFORM lfCheck_Movement_ParentStatus (inMovementId:= inMovementId, inNewStatusId:= zc_Enum_Status_Erased(), inComment:= 'удалить');
 
-     -- проверка - если есть <Child> Проведен, то <Ошибка>
-     PERFORM lfCheck_Movement_ChildStatus (inMovementId:= inMovementId, inNewStatusId:= zc_Enum_Status_Erased(), inComment:= 'удалить');
+    -- проверка - если есть <Child> Проведен, то <Ошибка>
+    PERFORM lfCheck_Movement_ChildStatus (inMovementId:= inMovementId, inNewStatusId:= zc_Enum_Status_Erased(), inComment:= 'удалить');
 
-     -- Удаляем Документ
-     PERFORM lpSetErased_Movement (inMovementId := inMovementId
-                                 , inUserId     := vbUserId);
+    -- Удаляем Документ
+    PERFORM lpSetErased_Movement (inMovementId := inMovementId
+                                , inUserId     := vbUserId);
+
+    -- Добавили в ТП
+    IF vbisSUN = TRUE 
+    THEN
+       PERFORM  gpSelect_MovementSUN_TechnicalRediscount(inMovementId, inSession);
+    END IF;
 
 END;
 $BODY$

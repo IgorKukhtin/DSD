@@ -178,8 +178,14 @@ BEGIN
           AND MITechnicalRediscount.MovementId <> vbMovementTRId;
       END IF;
 
+      IF EXISTS (SELECT * FROM INFORMATION_SCHEMA.tables WHERE TABLE_NAME = LOWER ('_tmpoccupancysun'))
+      THEN 
+        DROP TABLE _tmpOccupancySUN;
+      END IF;
+
       CREATE TEMP TABLE _tmpOccupancySUN ON COMMIT DROP AS
       SELECT * FROM gpSelect_MovementOccupancySUN (inMovementID:= inMovementID, inSession:= inSession);
+        
 
       -- Добавили в технический переучет
       PERFORM lpInsertUpdate_MovementItemFloat (zc_MIFloat_MITechnicalRediscountId(), tmpMovementItem.MovementItemId, tmpMovementItem.MITechnicalRediscountId::TFloat)

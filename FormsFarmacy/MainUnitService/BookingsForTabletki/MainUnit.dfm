@@ -46,11 +46,11 @@ object MainForm: TMainForm
           item
             Format = #1042#1089#1077#1075#1086' '#1089#1090#1088#1086#1082': ,0'
             Kind = skCount
-            Column = itemId
+            Column = goodsName
           end>
         DataController.Summary.SummaryGroups = <>
         OptionsBehavior.IncSearch = True
-        OptionsBehavior.IncSearchItem = quantity
+        OptionsBehavior.IncSearchItem = qty
         OptionsCustomize.ColumnHiding = True
         OptionsCustomize.ColumnsQuickCustomization = True
         OptionsData.Deleting = False
@@ -61,22 +61,22 @@ object MainForm: TMainForm
         OptionsView.GroupByBox = False
         OptionsView.HeaderHeight = 20
         OptionsView.Indicator = True
-        object itemId: TcxGridDBColumn
-          Caption = 'GUID'
-          DataBinding.FieldName = 'itemId'
-          HeaderAlignmentHorz = taCenter
-          Width = 277
-        end
-        object productId: TcxGridDBColumn
+        object goodsCode: TcxGridDBColumn
           Caption = #1050#1086#1076' '#1090#1086#1074#1072#1088#1072
-          DataBinding.FieldName = 'productId'
+          DataBinding.FieldName = 'goodsCode'
           HeaderAlignmentHorz = taCenter
           Options.Editing = False
           Width = 77
         end
-        object quantity: TcxGridDBColumn
+        object goodsName: TcxGridDBColumn
+          Caption = #1053#1072#1079#1074#1072#1085#1080#1077' '#1090#1086#1074#1072#1088#1072
+          DataBinding.FieldName = 'goodsName'
+          HeaderAlignmentHorz = taCenter
+          Width = 277
+        end
+        object qty: TcxGridDBColumn
           Caption = #1050#1086#1083'-'#1074#1086
-          DataBinding.FieldName = 'quantity'
+          DataBinding.FieldName = 'qty'
           PropertiesClassName = 'TcxCurrencyEditProperties'
           Properties.DecimalPlaces = 4
           Properties.DisplayFormat = ',0.####;-,0.####'
@@ -126,7 +126,7 @@ object MainForm: TMainForm
           end>
         DataController.Summary.SummaryGroups = <>
         OptionsBehavior.IncSearch = True
-        OptionsBehavior.IncSearchItem = status
+        OptionsBehavior.IncSearchItem = statusID
         OptionsCustomize.ColumnHiding = True
         OptionsCustomize.ColumnsQuickCustomization = True
         OptionsData.Deleting = False
@@ -142,24 +142,29 @@ object MainForm: TMainForm
           DataBinding.FieldName = 'bookingId'
           HeaderAlignmentHorz = taCenter
           Options.Editing = False
-          Width = 262
+          Width = 242
         end
-        object status: TcxGridDBColumn
+        object code: TcxGridDBColumn
+          Caption = #1050#1086#1076
+          DataBinding.FieldName = 'code'
+          Options.Editing = False
+        end
+        object statusID: TcxGridDBColumn
           Caption = #1057#1090#1072#1090#1091#1089
-          DataBinding.FieldName = 'status'
+          DataBinding.FieldName = 'statusID'
           HeaderAlignmentHorz = taCenter
           HeaderGlyphAlignmentHorz = taCenter
           Options.Editing = False
-          Width = 117
+          Width = 50
         end
-        object pharmacyId: TcxGridDBColumn
-          Caption = #1055#1086#1076#1088#1072#1079#1076#1077#1083#1077#1085#1080#1077
-          DataBinding.FieldName = 'pharmacyId'
+        object customer: TcxGridDBColumn
+          Caption = #1055#1086#1082#1091#1087#1072#1090#1077#1083#1100
+          DataBinding.FieldName = 'customer'
           GroupSummaryAlignment = taCenter
           HeaderAlignmentHorz = taCenter
           HeaderGlyphAlignmentHorz = taCenter
           Options.Editing = False
-          Width = 90
+          Width = 177
         end
       end
       object cxGridLevel2: TcxGridLevel
@@ -820,7 +825,17 @@ object MainForm: TMainForm
       end
       item
         DataType = ftString
-        Name = 'inOrderId'
+        Name = 'inBayer'
+        ParamType = ptInput
+      end
+      item
+        DataType = ftString
+        Name = 'inBayerPhone'
+        ParamType = ptInput
+      end
+      item
+        DataType = ftInteger
+        Name = 'inCode'
         ParamType = ptInput
       end
       item
@@ -859,7 +874,17 @@ object MainForm: TMainForm
       end
       item
         DataType = ftString
-        Name = 'inOrderId'
+        Name = 'inBayer'
+        ParamType = ptInput
+      end
+      item
+        DataType = ftString
+        Name = 'inBayerPhone'
+        ParamType = ptInput
+      end
+      item
+        DataType = ftInteger
+        Name = 'inCode'
         ParamType = ptInput
       end
       item
@@ -887,13 +912,8 @@ object MainForm: TMainForm
         ParamType = ptInput
       end
       item
-        DataType = ftString
-        Name = 'inItemId'
-        ParamType = ptInput
-      end
-      item
         DataType = ftInteger
-        Name = 'inGoodsId'
+        Name = 'inGoodsCode'
         ParamType = ptInput
       end
       item
@@ -926,13 +946,8 @@ object MainForm: TMainForm
         ParamType = ptInput
       end
       item
-        DataType = ftString
-        Name = 'inItemId'
-        ParamType = ptInput
-      end
-      item
         DataType = ftInteger
-        Name = 'inGoodsId'
+        Name = 'inGoodsCode'
         ParamType = ptInput
       end
       item
