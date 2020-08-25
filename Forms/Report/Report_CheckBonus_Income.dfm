@@ -65,14 +65,6 @@ inherited Report_CheckBonus_IncomeForm: TReport_CheckBonus_IncomeForm
             item
               Format = ',0.00##'
               Kind = skSum
-            end
-            item
-              Format = ',0.00##'
-              Kind = skSum
-            end
-            item
-              Format = ',0.00##'
-              Kind = skSum
               Column = Amount_in
             end
             item
@@ -115,14 +107,6 @@ inherited Report_CheckBonus_IncomeForm: TReport_CheckBonus_IncomeForm
               Format = ',0.00##'
               Kind = skSum
               Column = Sum_Account
-            end
-            item
-              Format = ',0.00##'
-              Kind = skSum
-            end
-            item
-              Format = ',0.00##'
-              Kind = skSum
             end
             item
               Format = #1057#1090#1088#1086#1082': ,0'
@@ -879,14 +863,6 @@ inherited Report_CheckBonus_IncomeForm: TReport_CheckBonus_IncomeForm
         Component = GuidesBranch
         ComponentItem = 'Key'
         ParamType = ptInput
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'inisMovement'
-        Value = Null
-        Component = cbMovement
-        DataType = ftBoolean
-        ParamType = ptUnknown
         MultiSelectSeparator = ','
       end>
     Left = 112

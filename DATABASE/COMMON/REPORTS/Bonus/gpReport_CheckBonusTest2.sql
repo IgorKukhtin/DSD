@@ -379,7 +379,6 @@ BEGIN
                                                     AND CLO_Partner.ObjectId IN (SELECT DISTINCT tmpContractPartner.PartnerId FROM tmpContractPartner)
                            /*INNER JOIN tmpContractPartner ON tmpContractPartner.ContractId = tmpContainer.ContractId_child
                                                         AND tmpContractPartner.PartnerId = CLO_Partner.ObjectId*/
-
                        WHERE tmpContainer.PaidKindId_byBase <> zc_Enum_PaidKind_FirstForm()
                        )
 
