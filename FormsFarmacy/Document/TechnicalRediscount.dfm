@@ -282,7 +282,7 @@ inherited TechnicalRediscountForm: TTechnicalRediscountForm
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
-            Width = 91
+            Width = 94
           end
           object OperDateSend: TcxGridDBColumn
             Caption = #1044#1072#1090#1072' '#1087#1077#1088#1077#1084#1077#1097#1077#1085#1080#1103' '#1057#1059#1053
@@ -290,7 +290,7 @@ inherited TechnicalRediscountForm: TTechnicalRediscountForm
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
-            Width = 91
+            Width = 104
           end
           object Color_calc: TcxGridDBColumn
             DataBinding.FieldName = 'Color_calc'

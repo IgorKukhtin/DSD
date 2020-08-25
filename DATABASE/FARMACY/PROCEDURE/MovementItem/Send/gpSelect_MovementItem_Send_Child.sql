@@ -101,9 +101,10 @@ BEGIN
                                       WHERE MovementItemFloat.MovementItemId IN (SELECT tmpMI_Child.Id FROM tmpMI_Child WHERE tmpMI_Child.IsErased = FALSE)
                                         AND MovementItemFloat.DescId = zc_MIFloat_ContainerId()
                                       )
-         , tmpMI_Child_ContainerId AS (SELECT Container.ParentId                  AS ContainerId
-                                            , MovementItem.Id                     AS MovementItemId
-                                            , MovementItem.ParentID               AS ParentID
+         , tmpMI_Child_ContainerId AS (SELECT Container.ParentId                      AS ContainerId
+                                            , max(tmpMIFloat_ContainerId.ContainerId) AS ContainerPDId
+                                            , MovementItem.Id                         AS MovementItemId
+                                            , MovementItem.ParentID                   AS ParentID
                                        FROM tmpMI_Child AS MovementItem
                                             INNER JOIN tmpMIFloat_ContainerId ON tmpMIFloat_ContainerId.MovementItemId = MovementItem.ID
                                             INNER JOIN Container ON Container.Id = tmpMIFloat_ContainerId.ContainerId
@@ -246,7 +247,7 @@ BEGIN
 
               LEFT JOIN MovementItem ON MovementItem.ID = Container.MovementItemId
 
-              LEFT JOIN tmpMI_Child_ContainerId ON tmpMI_Child_ContainerId.ContainerId = Container.ContainerId
+              LEFT JOIN tmpMI_Child_ContainerId ON tmpMI_Child_ContainerId.ContainerPDId = Container.ContainerId
                                                AND tmpMI_Child_ContainerId.MovementItemId = MovementItem.Id
 
 --              LEFT JOIN Object AS Object_Goods ON Object_Goods.Id = MovementItem.ObjectId
@@ -370,6 +371,17 @@ BEGIN
                                         , tmpMI_Child_ContainerId.Amount
                                    FROM tmpMI_Child_ContainerId
                                         )
+          , tmpContainerPDDate AS (SELECT ContainerAll.ContainerPDId                                        AS ContainerPDId
+                                        , ObjectDate_Value.ValueData                                        AS ExpirationDate
+                                   FROM (SELECT DISTINCT tmpMI_Child_ContainerId.ContainerPDId FROM tmpMI_Child_ContainerId) AS ContainerAll
+                                        LEFT JOIN ContainerLinkObject AS CLO_PartionGoods
+                                                                      ON CLO_PartionGoods.ContainerId = ContainerAll.ContainerPDId
+                                                                     AND CLO_PartionGoods.DescId      = zc_ContainerLinkObject_PartionGoods()
+                                        LEFT OUTER JOIN ObjectDate AS ObjectDate_Value
+                                                                   ON ObjectDate_Value.ObjectId = CLO_PartionGoods.ObjectId
+                                                                  AND ObjectDate_Value.DescId   =  zc_ObjectDate_PartionGoods_Value()
+                                   )
+
          , tmpContainer AS (SELECT tmp.ContainerId
                                  , COALESCE (MI_Income_find.MovementId,MI_Income.MovementId) AS MovementId_Income
                                  , COALESCE (ObjectDate_Value.ValueData, MIDate_ExpirationDate.ValueData, zc_DateEnd())  AS ExpirationDate
@@ -472,7 +484,7 @@ BEGIN
              , Container.Amount::TFloat   AS Amount
 
              , COALESCE (Container.ContainerPDId, Container.ContainerId)  :: TFloat      AS ContainerId
-             , COALESCE (tmpContainerPD.ExpirationDate, tmpContainer.ExpirationDate, NULL)  :: TDateTime   AS ExpirationDate
+             , COALESCE (tmpContainerPDDate.ExpirationDate, tmpContainer.ExpirationDate, NULL)  :: TDateTime   AS ExpirationDate
              , COALESCE (tmpPartion.BranchDate, NULL)            :: TDateTime   AS OperDate_Income
              , COALESCE (tmpPartion.Invnumber, NULL)             :: TVarChar    AS Invnumber_Income
              , COALESCE (tmpPartion.FromName, NULL)              :: TVarChar    AS FromName_Income
@@ -489,7 +501,7 @@ BEGIN
 --              LEFT JOIN Object AS Object_Goods ON Object_Goods.Id = MovementItem.ObjectId
 
               LEFT JOIN tmpContainer ON tmpContainer.ContainerId = Container.ContainerId
-              LEFT JOIN tmpContainerPD ON tmpContainerPD.ContainerPDId = Container.ContainerPDId
+              LEFT JOIN tmpContainerPDDate ON tmpContainerPDDate.ContainerPDId = Container.ContainerPDId
               LEFT JOIN tmpPartion ON tmpPartion.Id= tmpContainer.MovementId_Income
               LEFT JOIN Object AS Object_PartionDateKind ON Object_PartionDateKind.Id = tmpContainer.PartionDateKindId
               LEFT OUTER JOIN MovementItemDate  AS MIDate_Insert
@@ -746,5 +758,6 @@ $BODY$
 -- select * from gpSelect_MovementItem_Send_Child(inMovementId := 15390729 ,  inSession := '3');
 -- select * from gpSelect_MovementItem_Send_Child(inMovementId := 16804677 ,  inSession := '3');
 
--- select * from gpSelect_MovementItem_Send_Child (inMovementId := 19361981       ,  inSession := '3');
+-- 
+select * from gpSelect_MovementItem_Send_Child (inMovementId := 20000655       ,  inSession := '3');
 -- select * from gpSelect_MovementItem_Send_Child(inMovementId := 19872428  ,  inSession := '3') left join Object ON Object.Id = GoodsId;

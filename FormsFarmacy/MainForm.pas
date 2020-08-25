@@ -725,6 +725,8 @@ type
     N251: TMenuItem;
     actJuridicalPriorities: TdsdOpenForm;
     N252: TMenuItem;
+    actReport_CommentSendSUN: TdsdOpenForm;
+    N253: TMenuItem;
     procedure actSaveDataExecute(Sender: TObject);
 
     procedure miRepriceClick(Sender: TObject);

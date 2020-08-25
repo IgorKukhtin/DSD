@@ -928,7 +928,8 @@ uses
   DivisionParties in '..\..\FormsFarmacy\Kind\DivisionParties.pas' {DivisionPartiesForm: TParentForm},
   CommentSend in '..\..\FormsFarmacy\Guides\CommentSend.pas' {CommentSendForm: TParentForm},
   CommentSendEdit in '..\..\FormsFarmacy\Guides\CommentSendEdit.pas' {CommentSendEditForm: TParentForm},
-  JuridicalPriorities in '..\..\FormsFarmacy\Guides\JuridicalPriorities.pas' {JuridicalPrioritiesForm: TParentForm};
+  JuridicalPriorities in '..\..\FormsFarmacy\Guides\JuridicalPriorities.pas' {JuridicalPrioritiesForm: TParentForm},
+  Report_CommentSendSUN in '..\..\FormsFarmacy\Report\Report_CommentSendSUN.pas' {Report_CommentSendSUNForm: TParentForm};
 
 {$R *.res}
 {$R DevExpressRus.res}

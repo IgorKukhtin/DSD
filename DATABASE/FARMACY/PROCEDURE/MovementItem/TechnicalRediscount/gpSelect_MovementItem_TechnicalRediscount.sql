@@ -444,7 +444,7 @@ BEGIN
                                            , Container.ObjectId                                                    AS GoodsId
                                            , Container.Amount                                                      AS Amount
                                            , COALESCE (MI_Income_find.Id,MI_Income.Id)                             AS MI_IncomeId  
-                                        FROM tmpMovementItem
+                                        FROM (SELECT DISTINCT tmpMovementItem.GoodsId FROM tmpMovementItem) AS  tmpMovementItem
                                             LEFT OUTER JOIN Container ON Container.ObjectId = tmpMovementItem.GoodsId
                                                                      AND Container.DescID = zc_Container_Count()
                                                                      AND Container.WhereObjectId = vbUnitId 

@@ -988,7 +988,7 @@ inherited SendJournalForm: TSendJournalForm
       end
       item
         Name = 'inisVip'
-        Value = 'False'
+        Value = False
         Component = FormParams
         ComponentItem = 'inisVip'
         DataType = ftBoolean
@@ -1318,7 +1318,7 @@ inherited SendJournalForm: TSendJournalForm
       end
       item
         Name = 'inisVip'
-        Value = 'False'
+        Value = False
         DataType = ftBoolean
         MultiSelectSeparator = ','
       end>
@@ -1357,7 +1357,7 @@ inherited SendJournalForm: TSendJournalForm
       item
         Name = 'inMovementId'
         Value = Null
-        Component = FormParams
+        Component = MasterCDS
         ComponentItem = 'Id'
         ParamType = ptInput
         MultiSelectSeparator = ','
@@ -1412,14 +1412,14 @@ inherited SendJournalForm: TSendJournalForm
       end
       item
         Name = 'inisDeferred'
-        Value = 'FALSE'
+        Value = False
         DataType = ftBoolean
         ParamType = ptInput
         MultiSelectSeparator = ','
       end
       item
         Name = 'outisDeferred'
-        Value = 'False'
+        Value = False
         Component = MasterCDS
         ComponentItem = 'isDeferred'
         DataType = ftBoolean
@@ -1444,14 +1444,14 @@ inherited SendJournalForm: TSendJournalForm
       end
       item
         Name = 'inisDeferred'
-        Value = 'True'
+        Value = True
         DataType = ftBoolean
         ParamType = ptInput
         MultiSelectSeparator = ','
       end
       item
         Name = 'outisDeferred'
-        Value = 'False'
+        Value = False
         Component = MasterCDS
         ComponentItem = 'isDeferred'
         DataType = ftBoolean
@@ -1528,7 +1528,7 @@ inherited SendJournalForm: TSendJournalForm
       end
       item
         Name = 'inisDefSUN'
-        Value = 'FALSE'
+        Value = False
         Component = MasterCDS
         ComponentItem = 'isDefSUN'
         DataType = ftBoolean
@@ -1562,7 +1562,7 @@ inherited SendJournalForm: TSendJournalForm
       end
       item
         Name = 'inisSUN'
-        Value = 'True'
+        Value = True
         Component = MasterCDS
         ComponentItem = 'isSUN'
         DataType = ftBoolean

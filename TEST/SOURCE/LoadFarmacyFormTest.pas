@@ -907,10 +907,13 @@ end;
 
 procedure TLoadFormTest.LoadReportFormTest;
 begin
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_CommentSendSUNForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TReport_CommentSendSUNForm');
+
+  {
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_PositionsUKTVEDonSUNForm'));
   TdsdFormStorageFactory.GetStorage.Load('TReport_PositionsUKTVEDonSUNForm');
 
-  {
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_LeftSendForm'));
   TdsdFormStorageFactory.GetStorage.Load('TReport_LeftSendForm');
 
@@ -2447,17 +2450,17 @@ begin
 
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TSendJournalForm'));
   TdsdFormStorageFactory.GetStorage.Load('TSendJournalForm');
-   }
+}
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TSendForm'));
   TdsdFormStorageFactory.GetStorage.Load('TSendForm');
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TSendMenegerForm'));
   TdsdFormStorageFactory.GetStorage.Load('TSendMenegerForm');
 
-  TdsdFormStorageFactory.GetStorage.Save(GetForm('TCommentSendEditForm'));
+{  TdsdFormStorageFactory.GetStorage.Save(GetForm('TCommentSendEditForm'));
   TdsdFormStorageFactory.GetStorage.Load('TCommentSendEditForm');
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TCommentSendForm'));
   TdsdFormStorageFactory.GetStorage.Load('TCommentSendForm');
-  {
+
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TSendCashJournalForm'));
   TdsdFormStorageFactory.GetStorage.Load('TSendCashJournalForm');
 
