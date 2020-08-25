@@ -61,6 +61,8 @@ type
     actShowAll: TBooleanStoredProcAction;
     bbShowAll: TdxBarButton;
     spUnErased: TdsdStoredProc;
+    spUpdate_NameUKR: TdsdStoredProc;
+    actUpdate_NameUKR: TdsdUpdateDataSet;
   private
     { Private declarations }
   public

@@ -39,7 +39,6 @@ object CompositionForm: TCompositionForm
       OptionsCustomize.ColumnsQuickCustomization = True
       OptionsData.Deleting = False
       OptionsData.DeletingConfirmation = False
-      OptionsData.Editing = False
       OptionsData.Inserting = False
       OptionsView.ColumnAutoWidth = True
       OptionsView.GroupByBox = False
@@ -51,6 +50,7 @@ object CompositionForm: TCompositionForm
         DataBinding.FieldName = 'Code'
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
+        Options.Editing = False
         Width = 90
       end
       object Name: TcxGridDBColumn
@@ -59,7 +59,16 @@ object CompositionForm: TCompositionForm
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         HeaderGlyphAlignmentHorz = taCenter
+        Options.Editing = False
         Width = 339
+      end
+      object Name_UKR: TcxGridDBColumn
+        Caption = #1053#1072#1079#1074#1072#1085#1080#1077' ('#1091#1082#1088'.)'
+        DataBinding.FieldName = 'Name_UKR'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        HeaderGlyphAlignmentHorz = taCenter
+        Width = 243
       end
       object CompositionGroup: TcxGridDBColumn
         Caption = #1043#1088#1091#1087#1087#1072' '#1076#1083#1103' '#1089#1086#1089#1090#1072#1074#1072' '#1090#1086#1074#1072#1088#1072
@@ -67,6 +76,7 @@ object CompositionForm: TCompositionForm
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         HeaderGlyphAlignmentHorz = taCenter
+        Options.Editing = False
         Width = 165
       end
       object Erased: TcxGridDBColumn
@@ -76,6 +86,7 @@ object CompositionForm: TCompositionForm
         Visible = False
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
+        Options.Editing = False
         Width = 78
       end
     end
@@ -447,6 +458,18 @@ object CompositionForm: TCompositionForm
       ImageIndexTrue = 62
       ImageIndexFalse = 63
     end
+    object actUpdate_NameUKR: TdsdUpdateDataSet
+      Category = 'DSDLib'
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      StoredProc = spUpdate_NameUKR
+      StoredProcList = <
+        item
+          StoredProc = spUpdate_NameUKR
+        end>
+      Caption = 'actUpdate_NameUKR'
+      DataSource = DataSource
+    end
   end
   object spSelect: TdsdStoredProc
     StoredProcName = 'gpSelect_Object_Composition'
@@ -522,6 +545,7 @@ object CompositionForm: TCompositionForm
     ColumnEnterList = <>
     SummaryItemList = <>
     SearchAsFilter = False
+    PropertiesCellList = <>
     Left = 104
     Top = 248
   end
@@ -548,5 +572,31 @@ object CompositionForm: TCompositionForm
     PackSize = 1
     Left = 464
     Top = 144
+  end
+  object spUpdate_NameUKR: TdsdStoredProc
+    StoredProcName = 'gpUpdate_Object_Composition_NameUKR'
+    DataSets = <>
+    OutputType = otResult
+    Params = <
+      item
+        Name = 'inId'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'Id'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inName_UKR'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'Name_UKR'
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end>
+    PackSize = 1
+    Left = 528
+    Top = 203
   end
 end

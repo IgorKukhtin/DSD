@@ -62,6 +62,8 @@ type
     bbShowAll: TdxBarButton;
     CompositionGroup: TcxGridDBColumn;
     spUnErased: TdsdStoredProc;
+    spUpdate_NameUKR: TdsdStoredProc;
+    actUpdate_NameUKR: TdsdUpdateDataSet;
   private
     { Private declarations }
   public
