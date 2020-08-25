@@ -6,13 +6,14 @@ DROP FUNCTION IF EXISTS gpSelect_BarCodeBox_onlyPrint (Integer,Integer, Integer,
 CREATE OR REPLACE FUNCTION gpSelect_BarCodeBox_onlyPrint(
     IN inId             Integer  , -- ссылка на ящик
     IN inBarCode1       Integer  , -- 
-    IN inBarCode2       Integer  , -- 
+    IN inAmount         Integer  , --  кол-во штрихкодов дл€ печати
     IN inSession        TVarChar       -- сесси€ пользовател€
 )
 RETURNS TABLE (BarCode TVarChar--, AmountPrint TFloat
               ) AS
 $BODY$
   DECLARE vbUserId      Integer;
+  DECLARE vbBarCode2    Integer;
 BEGIN
    -- проверка прав пользовател€ на вызов процедуры
    -- PERFORM lpCheckRight (inSession, zc_Enum_Process_Select_Object_BarCodeBox());
@@ -20,12 +21,14 @@ BEGIN
    -- проверка прав пользовател€ на вызов процедуры
    vbUserId:= inSession;
    
+   vbBarCode2 := (inBarCode1 + inAmount - 1) :: Integer;
+   
    RETURN QUERY
   SELECT (REPEAT ('0', 5 - LENGTH (tmp.Num :: TVarChar) ) || tmp.Num) :: TVarChar AS BarCode
-  FROM (SELECT GENERATE_SERIES (inBarCode1, inBarCode2) as Num) as tmp;
+  FROM (SELECT GENERATE_SERIES (inBarCode1, vbBarCode2) as Num) as tmp;
   
   -- сохранили <ќбъект>
-  PERFORM lpInsertUpdate_Object (inId, zc_Object_BarCodeBox(), Object.ObjectCode, inBarCode2 :: TVarChar)
+  PERFORM lpInsertUpdate_Object (inId, zc_Object_BarCodeBox(), Object.ObjectCode, vbBarCode2 :: TVarChar)
   FROM Object 
   WHERE Object.Id = inId;
 

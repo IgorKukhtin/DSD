@@ -443,10 +443,10 @@ object BarCodeBoxForm: TBarCodeBoxForm
           MultiSelectSeparator = ','
         end
         item
-          Name = 'inBarCode2'
+          Name = 'inAmount'
           Value = '0'
           Component = FormParams
-          ComponentItem = 'inBarCode2'
+          ComponentItem = 'inAmount'
           ParamType = ptInput
           MultiSelectSeparator = ','
         end
@@ -934,7 +934,7 @@ object BarCodeBoxForm: TBarCodeBoxForm
         end
         item
           Name = 'isPartionGoods'
-          Value = 'False'
+          Value = False
           DataType = ftBoolean
           ParamType = ptInput
           MultiSelectSeparator = ','
@@ -1286,10 +1286,10 @@ object BarCodeBoxForm: TBarCodeBoxForm
         MultiSelectSeparator = ','
       end
       item
-        Name = 'inBarCode2'
+        Name = 'inAmount'
         Value = '0'
         Component = FormParams
-        ComponentItem = 'inBarCode2'
+        ComponentItem = 'inAmount'
         ParamType = ptInput
         MultiSelectSeparator = ','
       end>

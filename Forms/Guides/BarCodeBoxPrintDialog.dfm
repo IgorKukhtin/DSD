@@ -45,7 +45,7 @@ object BarCodeBoxPrintDialogForm: TBarCodeBoxPrintDialogForm
   object cxLabel3: TcxLabel
     Left = 136
     Top = 18
-    Caption = #1050#1086#1085#1077#1095#1085'. '#1079#1085#1072#1095#1077#1085#1080#1077
+    Caption = #1050#1086#1083#1080#1095#1077#1089#1090#1074#1086
   end
   object edBarCode1: TcxCurrencyEdit
     Left = 25
@@ -56,8 +56,8 @@ object BarCodeBoxPrintDialogForm: TBarCodeBoxPrintDialogForm
     TabOrder = 4
     Width = 100
   end
-  object edBarCode2: TcxCurrencyEdit
-    Left = 136
+  object edAmount: TcxCurrencyEdit
+    Left = 131
     Top = 41
     EditValue = '0'
     Properties.DecimalPlaces = 4
@@ -92,9 +92,9 @@ object BarCodeBoxPrintDialogForm: TBarCodeBoxPrintDialogForm
         MultiSelectSeparator = ','
       end
       item
-        Name = 'inBarCode2'
+        Name = 'inAmount'
         Value = Null
-        Component = edBarCode2
+        Component = edAmount
         ParamType = ptInput
         MultiSelectSeparator = ','
       end
