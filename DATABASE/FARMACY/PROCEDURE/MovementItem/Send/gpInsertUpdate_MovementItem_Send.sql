@@ -1,10 +1,5 @@
 -- Function: gpInsertUpdate_MovementItem_Send()
 
-DROP FUNCTION IF EXISTS gpInsertUpdate_MovementItem_Send (Integer, Integer, Integer, TFloat, TVarChar);
-DROP FUNCTION IF EXISTS gpInsertUpdate_MovementItem_Send (Integer, Integer, Integer, TFloat, TFloat, TVarChar);
-DROP FUNCTION IF EXISTS gpInsertUpdate_MovementItem_Send (Integer, Integer, Integer, TFloat, TFloat, TFloat, Integer, TVarChar);
-DROP FUNCTION IF EXISTS gpInsertUpdate_MovementItem_Send (Integer, Integer, Integer, TFloat, TFloat, TFloat, TFloat, TFloat, Integer, TVarChar);
-DROP FUNCTION IF EXISTS gpInsertUpdate_MovementItem_Send (Integer, Integer, Integer, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, Integer, TVarChar);
 DROP FUNCTION IF EXISTS gpInsertUpdate_MovementItem_Send (Integer, Integer, Integer, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, Integer, Integer, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpInsertUpdate_MovementItem_Send(
@@ -43,6 +38,8 @@ $BODY$
    DECLARE vbIsSUN_v3      Boolean;
    DECLARE vbIsDefSUN      Boolean;
    DECLARE vbInsertDate    TDateTime;
+   DECLARE vbTotalCount    TFloat;
+   DECLARE vbTotalCountOld TFloat;
 BEGIN
     -- проверка прав пользователя на вызов процедуры
     --vbUserId := lpCheckRight (inSession, zc_Enum_Process_InsertUpdate_MI_Send());
@@ -55,7 +52,8 @@ BEGIN
          , COALESCE (MovementBoolean_SUN_v3.ValueData, FALSE)::Boolean  AS isSUN_v3
          , COALESCE (MovementBoolean_DefSUN.ValueData, FALSE)::Boolean  AS isDefSUN
          , DATE_TRUNC ('DAY', MovementDate_Insert.ValueData)
-    INTO vbUnitId, vbIsSUN, vbIsSUN_v2, vbIsSUN_v3, vbIsDefSUN, vbInsertDate
+         , COALESCE (MovementFloat_TotalCount.ValueData, 0)
+    INTO vbUnitId, vbIsSUN, vbIsSUN_v2, vbIsSUN_v3, vbIsDefSUN, vbInsertDate, vbTotalCountOld
     FROM Movement 
           LEFT JOIN MovementLinkObject AS MovementLinkObject_To
                                        ON MovementLinkObject_To.MovementId = Movement.Id
@@ -78,6 +76,10 @@ BEGIN
           LEFT JOIN MovementDate AS MovementDate_Insert
                                  ON MovementDate_Insert.MovementId = Movement.Id
                                 AND MovementDate_Insert.DescId = zc_MovementDate_Insert()
+          LEFT JOIN MovementFloat AS MovementFloat_TotalCount
+                                  ON MovementFloat_TotalCount.MovementId = Movement.Id
+                                 AND MovementFloat_TotalCount.DescId = zc_MovementFloat_TotalCount()
+
     WHERE Movement.Id = inMovementId;
     
     IF COALESCE (ioId, 0) = 0 AND (vbIsSUN = TRUE OR vbIsSUN_v2 = TRUE OR vbIsSUN_v3 = TRUE) AND
@@ -287,6 +289,26 @@ BEGIN
                                             , inUserId             := vbUserId
                                              );
 
+    -- Добавили в ТП
+    IF vbIsSUN = TRUE 
+    THEN
+
+      --определяем 
+      SELECT COALESCE (MovementFloat_TotalCount.ValueData, 0)
+      INTO vbTotalCount
+      FROM Movement 
+            LEFT JOIN MovementFloat AS MovementFloat_TotalCount
+                                    ON MovementFloat_TotalCount.MovementId = Movement.Id
+                                   AND MovementFloat_TotalCount.DescId = zc_MovementFloat_TotalCount()
+
+      WHERE Movement.Id = inMovementId;
+
+      IF COALESCE (vbTotalCount, 0) = 0 OR COALESCE (vbTotalCountOld, 0) = 0
+      THEN
+        PERFORM  gpSelect_MovementSUN_TechnicalRediscount(inMovementId, inSession);
+      END IF;
+    END IF;
+
 END;
 $BODY$
   LANGUAGE plpgsql VOLATILE;
@@ -294,6 +316,7 @@ $BODY$
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.   Шаблий О.В.
+ 23.08.20                                                                      * СУН в ТП
  21.12.19                                                                      * звпрет добавления в перемещения по СУН
  01.04.19                                                                      *
  05.02.19         * add inAmountStorage
@@ -305,3 +328,4 @@ $BODY$
 
 -- тест
 -- SELECT * FROM gpInsertUpdate_MovementItem_Send (ioId:= 0, inMovementId:= 10, inGoodsId:= 1, inAmount:= 0, inHeadCount:= 0, inPartionGoods:= '', inGoodsKindId:= 0, inSession:= '2')
+

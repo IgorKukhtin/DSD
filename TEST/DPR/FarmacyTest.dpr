@@ -927,7 +927,8 @@ uses
   Report_PositionsUKTVEDonSUN in '..\..\FormsFarmacy\Report\Report_PositionsUKTVEDonSUN.pas' {Report_PositionsUKTVEDonSUNForm: TParentForm},
   DivisionParties in '..\..\FormsFarmacy\Kind\DivisionParties.pas' {DivisionPartiesForm: TParentForm},
   CommentSend in '..\..\FormsFarmacy\Guides\CommentSend.pas' {CommentSendForm: TParentForm},
-  CommentSendEdit in '..\..\FormsFarmacy\Guides\CommentSendEdit.pas' {CommentSendEditForm: TParentForm};
+  CommentSendEdit in '..\..\FormsFarmacy\Guides\CommentSendEdit.pas' {CommentSendEditForm: TParentForm},
+  JuridicalPriorities in '..\..\FormsFarmacy\Guides\JuridicalPriorities.pas' {JuridicalPrioritiesForm: TParentForm};
 
 {$R *.res}
 {$R DevExpressRus.res}

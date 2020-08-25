@@ -38,6 +38,13 @@ BEGIN
        RAISE EXCEPTION 'Ошибка.Фактическое количество не может быть ментше 0.';
      END IF;
 
+     IF EXISTS(SELECT 1 FROM MovementItemFloat 
+               WHERE MovementItemFloat.MovementItemId = ioId
+                 AND MovementItemFloat.DescId = zc_MIFloat_MovementItemId())
+     THEN
+       RAISE EXCEPTION 'Ошибка.Изменятьпозиции сформированные из перемещений по СУН запрещено.';
+     END IF;
+
 /*     SELECT Movement.OperDate
      INTO vbOperDate
      FROM Movement
@@ -103,3 +110,4 @@ LANGUAGE PLPGSQL VOLATILE;
 
 -- тест
 -- SELECT * FROM gpInsertUpdate_MovementItem_TechnicalRediscount (ioId:= 0, inMovementId:= 10, inGoodsId:= 1, inAmount:= 0, inHeadCount:= 0, inPartionGoods:= '', inGoodsKindId:= 0, inSession:= '2')
+

@@ -2345,9 +2345,18 @@ CREATE OR REPLACE FUNCTION zc_ObjectLink_CommentSend_CommentTR() RETURNS Integer
 INSERT INTO ObjectLinkDesc(Code, ItemName, DescId, ChildObjectDescId)
 SELECT 'zc_ObjectLink_CommentSend_CommentTR', 'Связь с Комментарием строк технического переучета', zc_Object_CommentSend(), zc_Object_CommentTR() WHERE NOT EXISTS (SELECT * FROM ObjectLinkDesc WHERE Code = 'zc_ObjectLink_CommentSend_CommentTR');
 
+CREATE OR REPLACE FUNCTION zc_ObjectLink_JuridicalPriorities_Juridical() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM ObjectLinkDesc WHERE Code = 'zc_ObjectLink_JuridicalPriorities_Juridical'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
+INSERT INTO ObjectLinkDesc(Code, ItemName, DescId, ChildObjectDescId)
+SELECT 'zc_ObjectLink_JuridicalPriorities_Juridical', 'Связь с поставщиком', zc_Object_JuridicalPriorities(), zc_Object_Juridical() WHERE NOT EXISTS (SELECT * FROM ObjectLinkDesc WHERE Code = 'zc_ObjectLink_JuridicalPriorities_Juridical');
+
+CREATE OR REPLACE FUNCTION zc_ObjectLink_JuridicalPriorities_Goods() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM ObjectLinkDesc WHERE Code = 'zc_ObjectLink_JuridicalPriorities_Goods'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
+INSERT INTO ObjectLinkDesc(Code, ItemName, DescId, ChildObjectDescId)
+SELECT 'zc_ObjectLink_JuridicalPriorities_Goods', 'Связь с главным товаром', zc_Object_JuridicalPriorities(), zc_Object_Goods() WHERE NOT EXISTS (SELECT * FROM ObjectLinkDesc WHERE Code = 'zc_ObjectLink_JuridicalPriorities_Goods');
+
 /*-------------------------------------------------------------------------------
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.   Воробкало А.А.   Шаблий О.В.
+ 22.08.20                                                                                      * zc_Object_JuridicalPriorities
  19.07.20                                                                                      * zc_ObjectLink_CommentSend_CommentTR
  09.07.20                                                                                      * zc_ObjectLink_PartionHouseholdInventory_Unit
  22.06.20         * zc_ObjectLink_InfoMoney_CashFlow_in

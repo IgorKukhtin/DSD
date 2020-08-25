@@ -26,6 +26,8 @@ BEGIN
     -- PERFORM lpCheckRight (inSession, zc_Enum_Process_Select_Movement_Send());
     vbUserId:= lpGetUserBySession (inSession);
 
+    raise notice 'Value 00: gpSelect_MovementSUN_TechnicalRediscount';
+
     --определяем
     SELECT Movement.StatusId
          , MovementLinkObject_From.ObjectId                               AS UnitId
@@ -248,7 +250,7 @@ BEGIN
 
     END IF;
 
---    raise notice 'Value 05: % %', vbisAddTR, (SELECT Movement.invnumber FROM Movement WHERE Movement.ID = vbMovementTRId);
+    raise notice 'Value 05: % %', vbisAddTR, (SELECT Movement.invnumber FROM Movement WHERE Movement.ID = vbMovementTRId);
 
 --    RAISE EXCEPTION 'Прошло.';
 

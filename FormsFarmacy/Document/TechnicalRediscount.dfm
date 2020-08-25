@@ -276,6 +276,27 @@ inherited TechnicalRediscountForm: TTechnicalRediscountForm
             Options.Editing = False
             Width = 86
           end
+          object InvNumberSend: TcxGridDBColumn
+            Caption = #1053#1086#1084#1077#1088' '#1087#1077#1088#1077#1084#1077#1097#1077#1085#1080#1103' '#1057#1059#1053
+            DataBinding.FieldName = 'InvNumberSend'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 91
+          end
+          object OperDateSend: TcxGridDBColumn
+            Caption = #1044#1072#1090#1072' '#1087#1077#1088#1077#1084#1077#1097#1077#1085#1080#1103' '#1057#1059#1053
+            DataBinding.FieldName = 'OperDateSend'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 91
+          end
+          object Color_calc: TcxGridDBColumn
+            DataBinding.FieldName = 'Color_calc'
+            Visible = False
+            VisibleForCustomization = False
+          end
         end
       end
       object cxSplitter1: TcxSplitter
@@ -589,6 +610,11 @@ inherited TechnicalRediscountForm: TTechnicalRediscountForm
     end
   end
   inherited DBViewAddOn: TdsdDBViewAddOn
+    ColorRuleList = <
+      item
+        BackGroundValueColumn = Color_calc
+        ColorValueList = <>
+      end>
     SummaryItemList = <
       item
         Param.Value = Null
@@ -837,11 +863,43 @@ inherited TechnicalRediscountForm: TTechnicalRediscountForm
   end
   inherited spErasedMIMaster: TdsdStoredProc
     StoredProcName = 'gpSetErased_MovementItem_TechnicalRediscount'
+    Params = <
+      item
+        Name = 'inMovementItemId'
+        Component = MasterCDS
+        ComponentItem = 'Id'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'outIsErased'
+        Value = False
+        Component = MasterCDS
+        ComponentItem = 'isErased'
+        DataType = ftBoolean
+        MultiSelectSeparator = ','
+      end>
     Left = 550
     Top = 224
   end
   inherited spUnErasedMIMaster: TdsdStoredProc
     StoredProcName = 'gpSetUnErased_MovementItem_TechnicalRediscount'
+    Params = <
+      item
+        Name = 'inMovementItemId'
+        Component = MasterCDS
+        ComponentItem = 'Id'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'outIsErased'
+        Value = False
+        Component = MasterCDS
+        ComponentItem = 'isErased'
+        DataType = ftBoolean
+        MultiSelectSeparator = ','
+      end>
     Left = 654
     Top = 248
   end

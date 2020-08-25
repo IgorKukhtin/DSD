@@ -1280,6 +1280,10 @@ CREATE OR REPLACE FUNCTION zc_Object_CommentSend() RETURNS Integer AS $BODY$BEGI
 INSERT INTO ObjectDesc (Code, ItemName)
   SELECT 'zc_Object_CommentSend', 'Комментарий строк перемещений по СУН' WHERE NOT EXISTS (SELECT * FROM ObjectDesc WHERE Code = 'zc_Object_CommentSend');
 
+CREATE OR REPLACE FUNCTION zc_Object_JuridicalPriorities() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM ObjectDesc WHERE Code = 'zc_Object_JuridicalPriorities'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
+INSERT INTO ObjectDesc (Code, ItemName)
+  SELECT 'zc_Object_JuridicalPriorities', 'Приоритеты при выборе поставщика' WHERE NOT EXISTS (SELECT * FROM ObjectDesc WHERE Code = 'zc_Object_JuridicalPriorities');
+
 
 --------------------------- !!!!!!!!!!!!!!!!!!!!!!!!!
 --------------------------- !!! ВРЕМЕННЫЕ ОБЪЕКТЫ !!!
@@ -1297,6 +1301,7 @@ INSERT INTO ObjectDesc (Code, ItemName)
 /*-------------------------------------------------------------------------------
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.   Воробкало А. А.   Шаблий О.В.
+ 22.08.20                                                                                        * zc_Object_JuridicalPriorities
  19.08.20                                                                                        * zc_Object_CommentSend
  13.08.20                                                                                        * zc_Object_DivisionParties
  14.07.20                                                                                        * zc_Object_ComputerAccessories

@@ -4268,6 +4268,7 @@ DO $$
 BEGIN
      --- !!! Источник чека
      PERFORM lpInsertUpdate_Object_Enum (inId:= zc_Enum_CheckSourceKind_Liki24(), inDescId:= zc_Object_CheckSourceKind(), inCode:= 1, inName:= 'Загружено с сайта Ликы24',             inEnumName:= 'zc_Enum_CheckSourceKind_Liki24');
+     PERFORM lpInsertUpdate_Object_Enum (inId:= zc_Enum_CheckSourceKind_Tabletki(), inDescId:= zc_Object_CheckSourceKind(), inCode:= 2, inName:= 'Загружено с сайта Tabletki',             inEnumName:= 'zc_Enum_CheckSourceKind_Tabletki');
      
 END $$;
 

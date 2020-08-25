@@ -494,6 +494,7 @@ CREATE OR REPLACE FUNCTION zc_Enum_PartionDateKind_Cat_5() RETURNS integer AS $B
 -- !!!
 
 CREATE OR REPLACE FUNCTION zc_Enum_CheckSourceKind_Liki24() RETURNS integer AS $BODY$BEGIN RETURN (SELECT ObjectId AS Id FROM ObjectString WHERE ValueData = 'zc_Enum_CheckSourceKind_Liki24' AND DescId = zc_ObjectString_Enum()); END;  $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
+CREATE OR REPLACE FUNCTION zc_Enum_CheckSourceKind_Tabletki() RETURNS integer AS $BODY$BEGIN RETURN (SELECT ObjectId AS Id FROM ObjectString WHERE ValueData = 'zc_Enum_CheckSourceKind_Tabletki' AND DescId = zc_ObjectString_Enum()); END;  $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
 
 -- !!!
 -- !!! Разделение партий в кассе для продажи

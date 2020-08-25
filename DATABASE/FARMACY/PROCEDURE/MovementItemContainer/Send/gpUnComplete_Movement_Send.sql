@@ -182,6 +182,13 @@ BEGIN
     -- Распроводим Документ
     PERFORM lpUnComplete_Movement (inMovementId := inMovementId
                                   , inUserId     := vbUserId);
+
+    -- Добавили в ТП
+    IF vbisSUN = TRUE 
+    THEN
+       PERFORM  gpSelect_MovementSUN_TechnicalRediscount(inMovementId, inSession);
+    END IF;
+
 END;
 $BODY$
   LANGUAGE plpgsql VOLATILE;

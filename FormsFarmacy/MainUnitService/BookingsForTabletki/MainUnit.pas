@@ -33,10 +33,10 @@ type
     dsCheckHead: TDataSource;
     grBookingsBody: TcxGrid;
     grBookingsBodyDBTableView: TcxGridDBTableView;
-    productId: TcxGridDBColumn;
-    quantity: TcxGridDBColumn;
+    goodsCode: TcxGridDBColumn;
+    qty: TcxGridDBColumn;
     price: TcxGridDBColumn;
-    itemId: TcxGridDBColumn;
+    goodsName: TcxGridDBColumn;
     grBookingsBodyLevel: TcxGridLevel;
     btnLoadBookings: TButton;
     grCheckBody: TcxGrid;
@@ -49,8 +49,8 @@ type
     grBookingsHead: TcxGrid;
     cxGridDBTableView2: TcxGridDBTableView;
     bookingId: TcxGridDBColumn;
-    status: TcxGridDBColumn;
-    pharmacyId: TcxGridDBColumn;
+    statusID: TcxGridDBColumn;
+    customer: TcxGridDBColumn;
     cxGridLevel2: TcxGridLevel;
     BookingsHeadDS: TDataSource;
     btnAddTest: TButton;
@@ -79,6 +79,7 @@ type
     cxGridLevel4: TcxGridLevel;
     dsUnit: TDataSource;
     qryUnit: TZQuery;
+    code: TcxGridDBColumn;
     procedure FormCreate(Sender: TObject);
     procedure Timer1Timer(Sender: TObject);
     procedure btnSaveBookingsClick(Sender: TObject);
@@ -235,7 +236,11 @@ end;
 
 procedure TMainForm.btnLoadBookingsClick(Sender: TObject);
 begin
-  if not TabletkiAPI.LoadBookings(0) then
+  if not qryUnit.Active then Exit;
+  if qryUnit.IsEmpty then Exit;
+  Add_Log('Аптека: ' + qryUnit.FieldByName('Name').AsString);
+
+  if not TabletkiAPI.LoadBookings(qryUnit.FieldByName('SerialNumber').AsInteger) then
   begin
      if TabletkiAPI.ErrorsText = '' then Add_Log('Нет новых заказов.')
      else Add_Log(TabletkiAPI.ErrorsText);
@@ -268,11 +273,13 @@ begin
     while not TabletkiAPI.BookingsHeadCDS.Eof  do
     begin
       spInsertMovement.Params.ParamByName('ioId').AsInteger := 0;
-      spInsertMovement.Params.ParamByName('inUnitId').AsInteger := TabletkiAPI.BookingsHeadCDS.FieldByName('pharmacyId').AsInteger;
-      spInsertMovement.Params.ParamByName('inDate').Value := Null;
+      spInsertMovement.Params.ParamByName('inUnitId').AsInteger := qryUnit.FieldByName('Id').AsInteger;
+      spInsertMovement.Params.ParamByName('inDate').AsDateTime := TabletkiAPI.BookingsHeadCDS.FieldByName('dateTimeCreated').AsDateTime;
       spInsertMovement.Params.ParamByName('inBookingId').AsString := TabletkiAPI.BookingsHeadCDS.FieldByName('bookingId').AsString;
-      spInsertMovement.Params.ParamByName('inOrderId').AsString := TabletkiAPI.BookingsHeadCDS.FieldByName('orderId').AsString;
-      spInsertMovement.Params.ParamByName('inBookingStatus').AsString := TabletkiAPI.BookingsHeadCDS.FieldByName('status').AsString;
+      spInsertMovement.Params.ParamByName('inBayer').AsString := TabletkiAPI.BookingsHeadCDS.FieldByName('customer').AsString;
+      spInsertMovement.Params.ParamByName('inBayerPhone').AsString := TabletkiAPI.BookingsHeadCDS.FieldByName('customerPhone').AsString;
+      spInsertMovement.Params.ParamByName('inCode').AsInteger := TabletkiAPI.BookingsHeadCDS.FieldByName('code').AsInteger;
+      spInsertMovement.Params.ParamByName('inBookingStatus').AsString := TabletkiAPI.BookingsHeadCDS.FieldByName('statusID').AsString;
       spInsertMovement.Params.ParamByName('inSession').AsString := '3';
       spInsertMovement.ExecProc;
 
@@ -282,9 +289,8 @@ begin
 
         spInsertMovementItem.Params.ParamByName('ioId').AsInteger := 0;
         spInsertMovementItem.Params.ParamByName('inMovementId').AsInteger := spInsertMovement.Params.ParamByName('ioId').AsInteger;
-        spInsertMovementItem.Params.ParamByName('inItemId').AsString := TabletkiAPI.BookingsBodyCDS.FieldByName('itemId').AsString;
-        spInsertMovementItem.Params.ParamByName('inGoodsId').AsInteger := TabletkiAPI.BookingsBodyCDS.FieldByName('productId').AsInteger;
-        spInsertMovementItem.Params.ParamByName('inAmount').AsCurrency := TabletkiAPI.BookingsBodyCDS.FieldByName('quantity').AsCurrency;
+        spInsertMovementItem.Params.ParamByName('inGoodsCode').AsInteger := TabletkiAPI.BookingsBodyCDS.FieldByName('goodsCode').AsInteger;
+        spInsertMovementItem.Params.ParamByName('inAmount').AsCurrency := TabletkiAPI.BookingsBodyCDS.FieldByName('qty').AsCurrency;
         spInsertMovementItem.Params.ParamByName('inPrice').AsCurrency := TabletkiAPI.BookingsBodyCDS.FieldByName('price').AsCurrency;
         spInsertMovementItem.Params.ParamByName('inSession').AsString := '3';
         spInsertMovementItem.ExecProc;
@@ -425,7 +431,7 @@ begin
     end;
   end;
 
-  TabletkiAPI := TTabletkiAPI.Create(APIUser, APIPassword);
+  TabletkiAPI := TTabletkiAPI.Create(APIUser, APIPassword, True);
 
   BookingsHeadDS.DataSet := TabletkiAPI.BookingsHeadCDS;
   BookingsBodyDS.DataSet := TabletkiAPI.BookingsBodyCDS;

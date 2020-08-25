@@ -2685,11 +2685,13 @@ end;
 
 procedure TLoadFormTest.LoadServiceFormTest;
 begin
+    TdsdFormStorageFactory.GetStorage.Save(GetForm('TJuridicalPrioritiesForm'));
+    TdsdFormStorageFactory.GetStorage.Load('TJuridicalPrioritiesForm');
+  Exit;
+       {
+
     TdsdFormStorageFactory.GetStorage.Save(GetForm('TCashSettingsEditForm'));
     TdsdFormStorageFactory.GetStorage.Load('TCashSettingsEditForm');
-  Exit;
-
-       {
 
     TdsdFormStorageFactory.GetStorage.Save(GetForm('THelsiUserForm'));
     TdsdFormStorageFactory.GetStorage.Load('THelsiUserForm');

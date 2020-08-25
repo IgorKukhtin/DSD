@@ -20,6 +20,8 @@ RETURNS TABLE (Id Integer, GoodsId Integer, GoodsCode Integer, GoodsName TVarCha
              , Deficit TFloat, DeficitSumm TFloat
              , Proficit TFloat, ProficitSumm TFloat
              , ExpirationDate TDateTime, Comment TVarChar
+             , IDSend Integer, InvNumberSend TVarChar, OperDateSend TDateTime
+             , Color_calc Integer
              )
 AS
 $BODY$
@@ -61,6 +63,7 @@ BEGIN
 
     IF vbStatusId = zc_Enum_Status_Complete()
     THEN
+        -- raise notice 'Value 01:';
         -- –≈«”À‹“¿“
         RETURN QUERY
             WITH tmpMovementItem AS (SELECT MovementItem.Id                                                     AS Id
@@ -133,6 +136,8 @@ BEGIN
                                                                           ON MIString_Comment.MovementItemId = MovementItem.Id
                                                                          AND MIString_Comment.DescId = zc_MIString_Comment()
                                         )                            
+               , tmpMIFloat AS (SELECT * FROM MovementItemFloat 
+                                WHERE MovementItemId IN (SELECT tmpMovementItem.Id FROM tmpMovementItem))                            
 
             -- –ÂÁÛÎ¸Ú‡Ú
             SELECT
@@ -180,17 +185,23 @@ BEGIN
               , MovementItem.minExpirationDate :: TDateTime
               , MovementItem.Comment                                               AS Comment
 
+              , MovementSend.ID
+              , MovementSend.InvNumber
+              , MovementSend.OperDate
+              , CASE WHEN COALESCE (MIFloat_MISendId.ValueData, 0) = 0 THEN zc_Color_White() ELSE zc_Color_Yelow() END AS Color_calc
+
+
            FROM tmpMovementItemAll AS MovementItem
 
                 LEFT JOIN Object_Goods_Retail ON Object_Goods_Retail.ID = MovementItem.GoodsId
                 LEFT JOIN Object_Goods_Main ON Object_Goods_Main.ID = Object_Goods_Retail.GoodsMainId
 
-                LEFT JOIN MovementItemFloat AS MIFloat_Price
-                                            ON MIFloat_Price.MovementItemId = MovementItem.Id
-                                           AND MIFloat_Price.DescId = zc_MIFloat_Price()
-                LEFT JOIN MovementItemFloat AS MIFloat_Remains
-                                            ON MIFloat_Remains.MovementItemId = MovementItem.Id
-                                           AND MIFloat_Remains.DescId = zc_MIFloat_Remains()
+                LEFT JOIN tmpMIFloat AS MIFloat_Price
+                                     ON MIFloat_Price.MovementItemId = MovementItem.Id
+                                    AND MIFloat_Price.DescId = zc_MIFloat_Price()
+                LEFT JOIN tmpMIFloat AS MIFloat_Remains
+                                     ON MIFloat_Remains.MovementItemId = MovementItem.Id
+                                    AND MIFloat_Remains.DescId = zc_MIFloat_Remains()
 
                 LEFT JOIN MovementItemLinkObject AS MILinkObject_CommentTR
                                                  ON MILinkObject_CommentTR.MovementItemId = MovementItem.Id
@@ -202,9 +213,17 @@ BEGIN
                                              ON MIString_Explanation.MovementItemId = MovementItem.Id
                                             AND MIString_Explanation.DescId = zc_MIString_Explanation()
 
+                LEFT JOIN tmpMIFloat AS MIFloat_MISendId
+                                     ON MIFloat_MISendId.MovementItemId = MovementItem.Id
+                                    AND MIFloat_MISendId.DescId = zc_MIFloat_MovementItemId()
+                                           
+                LEFT JOIN MovementItem AS MISend ON MISend.ID = MIFloat_MISendId.ValueData::Integer
+
+                LEFT JOIN Movement AS MovementSend ON MovementSend.ID = MISend.MovementId
             ;
     ELSEIF inShowAll = TRUE
     THEN
+        -- raise notice 'Value 02:';
         -- –≈«”À‹“¿“
         RETURN QUERY
             WITH tmpMovementItem AS (SELECT MovementItem.Id                                                     AS Id
@@ -300,6 +319,8 @@ BEGIN
                                                                                                   AND MovementItem.DescId     = zc_MI_Master())
                               UNION ALL 
                               SELECT tmpMovementItem.GoodsId FROM tmpMovementItem)
+               , tmpMIFloat AS (SELECT * FROM MovementItemFloat 
+                                WHERE MovementItemId IN (SELECT tmpMovementItem.Id FROM tmpMovementItem))                            
 
             -- –ÂÁÛÎ¸Ú‡Ú
             SELECT
@@ -348,6 +369,12 @@ BEGIN
               , REMAINS.minExpirationDate :: TDateTime
               , MovementItem.Comment                                                AS Comment
 
+              , MovementSend.ID
+              , MovementSend.InvNumber
+              , MovementSend.OperDate
+
+              , CASE WHEN COALESCE (MIFloat_MISendId.ValueData, 0) = 0 THEN zc_Color_White() ELSE zc_Color_Yelow() END AS Color_calc
+
            FROM GoodsAll
                  
                 LEFT JOIN REMAINS  ON REMAINS.GoodsId = GoodsAll.GoodsId
@@ -359,14 +386,14 @@ BEGIN
                                              ON MovementItem.GoodsId = GoodsAll.GoodsId
                 LEFT JOIN tmpPrice ON tmpPrice.GoodsId = GoodsAll.GoodsId
 
-                LEFT JOIN MovementItemFloat AS MIFloat_Price
-                                            ON MIFloat_Price.MovementItemId = MovementItem.Id
-                                           AND MIFloat_Price.DescId = zc_MIFloat_Price()
-                                           AND vbStatusId = zc_Enum_Status_Complete()
-                LEFT JOIN MovementItemFloat AS MIFloat_Remains
-                                            ON MIFloat_Remains.MovementItemId = MovementItem.Id
-                                           AND MIFloat_Remains.DescId = zc_MIFloat_Remains()
-                                           AND vbStatusId = zc_Enum_Status_Complete()
+                LEFT JOIN tmpMIFloat AS MIFloat_Price
+                                     ON MIFloat_Price.MovementItemId = MovementItem.Id
+                                    AND MIFloat_Price.DescId = zc_MIFloat_Price()
+                                    AND vbStatusId = zc_Enum_Status_Complete()
+                LEFT JOIN tmpMIFloat AS MIFloat_Remains
+                                     ON MIFloat_Remains.MovementItemId = MovementItem.Id
+                                    AND MIFloat_Remains.DescId = zc_MIFloat_Remains()
+                                    AND vbStatusId = zc_Enum_Status_Complete()
 
                 LEFT JOIN MovementItemLinkObject AS MILinkObject_CommentTR
                                                  ON MILinkObject_CommentTR.MovementItemId = MovementItem.Id
@@ -377,9 +404,18 @@ BEGIN
                 LEFT JOIN MovementItemString AS MIString_Explanation
                                              ON MIString_Explanation.MovementItemId = MovementItem.Id
                                             AND MIString_Explanation.DescId = zc_MIString_Explanation()
+
+                LEFT JOIN tmpMIFloat AS MIFloat_MISendId
+                                     ON MIFloat_MISendId.MovementItemId = MovementItem.Id
+                                    AND MIFloat_MISendId.DescId = zc_MIFloat_MovementItemId()
+                                           
+                LEFT JOIN MovementItem AS MISend ON MISend.ID = MIFloat_MISendId.ValueData::Integer
+
+                LEFT JOIN Movement AS MovementSend ON MovementSend.ID = MISend.MovementId
             ;
 
     ELSE
+        -- raise notice 'Value 03:';
         -- –≈«”À‹“¿“
         RETURN QUERY
             WITH tmpMovementItem AS (SELECT MovementItem.Id                                                     AS Id
@@ -474,6 +510,9 @@ BEGIN
                                                                           ON MIString_Comment.MovementItemId = MovementItem.Id
                                                                          AND MIString_Comment.DescId = zc_MIString_Comment()
                                         )                            
+               , tmpMIFloat AS (SELECT * FROM MovementItemFloat 
+                                WHERE MovementItemId IN (SELECT tmpMovementItem.Id FROM tmpMovementItem))                            
+
             -- –ÂÁÛÎ¸Ú‡Ú
             SELECT
                 MovementItem.Id                                                     AS Id
@@ -522,6 +561,12 @@ BEGIN
 
               , MovementItem.minExpirationDate :: TDateTime
               , MovementItem.Comment                                               AS Comment
+              
+              , MovementSend.ID
+              , MovementSend.InvNumber
+              , MovementSend.OperDate
+
+              , CASE WHEN COALESCE (MIFloat_MISendId.ValueData, 0) = 0 THEN zc_Color_White() ELSE zc_Color_Yelow() END AS Color_calc
 
            FROM tmpMovementItemAll AS MovementItem
 
@@ -540,6 +585,15 @@ BEGIN
                 LEFT JOIN MovementItemString AS MIString_Explanation
                                              ON MIString_Explanation.MovementItemId = MovementItem.Id
                                             AND MIString_Explanation.DescId = zc_MIString_Explanation()
+
+                LEFT JOIN tmpMIFloat AS MIFloat_MISendId
+                                     ON MIFloat_MISendId.MovementItemId = MovementItem.Id
+                                    AND MIFloat_MISendId.DescId = zc_MIFloat_MovementItemId()
+                                           
+                LEFT JOIN MovementItem AS MISend ON MISend.ID = MIFloat_MISendId.ValueData::Integer
+
+                LEFT JOIN Movement AS MovementSend ON MovementSend.ID = MISend.MovementId
+ 
             ;
 
     END IF;
@@ -556,4 +610,5 @@ ALTER FUNCTION gpSelect_MovementItem_TechnicalRediscount (Integer, Boolean, Bool
 */
 
 -- ÚÂÒÚ
--- select * from gpSelect_MovementItem_TechnicalRediscount(inMovementId := 17974020     , inShowAll := 'True' , inIsErased := 'False' ,  inSession := '3');
+--
+ select * from gpSelect_MovementItem_TechnicalRediscount(inMovementId := 17974020     , inShowAll := 'False' , inIsErased := 'False' ,  inSession := '3');
