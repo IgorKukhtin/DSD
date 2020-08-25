@@ -1,11 +1,13 @@
 -- Function: gpInsertUpdate_Object_Composition (Integer,Integer,TVarChar,Integer,TVarChar)
 
-DROP FUNCTION IF EXISTS gpInsertUpdate_Object_Composition (Integer,Integer,TVarChar,Integer,TVarChar);
+--DROP FUNCTION IF EXISTS gpInsertUpdate_Object_Composition (Integer, Integer, TVarChar, Integer, TVarChar);
+DROP FUNCTION IF EXISTS gpInsertUpdate_Object_Composition (Integer, Integer, TVarChar, TVarChar, Integer,TVarChar);
 
 CREATE OR REPLACE FUNCTION gpInsertUpdate_Object_Composition(
  INOUT ioId                       Integer   ,    -- Ключ объекта <Состав товара> 
  INOUT ioCode                     Integer   ,    -- Код объекта <Состав товара>
     IN inName                     TVarChar  ,    -- Название объекта <Состав товара>
+    IN inName_UKR                 TVarChar,      -- Название объекта <Название > укр
     IN inCompositionGroupId       Integer   ,    -- ключ объекта <Группа для состава товара> 
     IN inSession                  TVarChar       -- сессия пользователя
 )
@@ -68,6 +70,9 @@ BEGIN
    -- сохранили связь с <Группа для состава товара>
    PERFORM lpInsertUpdate_ObjectLink (zc_ObjectLink_Composition_CompositionGroup(), ioId, inCompositionGroupId);
 
+   -- сохранили свойство
+   PERFORM lpInsertUpdate_ObjectString (zc_ObjectString_Composition_UKR(), ioId, inName_UKR);
+
    -- сохранили протокол
    PERFORM lpInsert_ObjectProtocol (ioId, vbUserId);
    
@@ -79,6 +84,7 @@ $BODY$
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.    Полятикин А.А.
+25.08.20          * inName_UKR
 13.05.17                                                           *
 06.03.17                                                           *
 20.02.17                                                           *
