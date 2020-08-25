@@ -342,7 +342,7 @@ end;
 
 procedure TfrmMain.StartReplica;
 const
-  cStartPerlica = 'Старт репликации: StartId = %d';
+  cStartPerlica = 'Старт репликации: StartId = %d    select %d    в пакете %d    версия %s';
 var
   iStartId, iSelectRange, iPacketRange: Integer;
 begin
@@ -353,7 +353,7 @@ begin
   iSelectRange := seSelectRange.Value;
   iPacketRange := sePacketRange.Value;
 
-  LogMessage(Format(cStartPerlica, [iStartId]));
+  LogMessage(Format(cStartPerlica, [iStartId, seSelectRange.Value, sePacketRange.Value, GetFileVersion]));
   LogMessage('');
 
   StopReplicaThread;
@@ -707,8 +707,8 @@ end;
 
 procedure TfrmMain.btnStopClick(Sender: TObject);
 begin
-  StopReplicaThread;
   btnStop.Enabled := False;
+  StopReplicaThread;
 end;
 
 procedure TfrmMain.btnStopMoveProcsToSlaveClick(Sender: TObject);

@@ -218,10 +218,16 @@ uses
   UCommon;
 
 const
+  // Сообщения Шаг №1 - Шаг №3
   cAttempt1 = '№1 <%d-%d>  tranId=<%d-%d>  %d записей   за %s  %s';
   cAttempt2 = '№2 <%d-%d>  ok = %d   error = %d   за %s';
   cAttempt3 = '№3 <%d-%d>  ok = %d   error = %d   за %s';
+
+  // Сообщения об ошибке
   cWrongRange = 'Ожидается, что MaxId > StartId, а имеем MaxId = %d, StartId = %d';
+  cTransWrongRange = 'Команды с транзакциями из диапазона <%d-%d> уже выполнялись в другом пакете';
+
+  // Пороговые значения
   cWaitNextMsg = 500;
   cSaveInMasterAfterNSessions = 100;
 
@@ -587,11 +593,15 @@ begin
   // будем выполнять команды по одной
   if FStopped then Exit;
 
+  {$IFDEF NO_EXECUTE} // для проверки границ пакета, без выполнения запросов
+    Exit;
+  {$ENDIF}
+
   crdStart := GetTickCount;
   iLastId  := FStartId;
 
   try
-    iMaxId := FCommandData.NearestId(FStartId, FPacketRange);
+    iMaxId := FCommandData.GetMaxId(FStartId, FPacketRange);
 
     if FStartId >= iMaxId then
     begin
@@ -771,7 +781,9 @@ var
   rangeTransId: TMinMaxTransId;
   sFileName: string;
   tmpSL: TStringList;
+  {$IFNDEF NO_EXECUTE}
   tmpStmt: IZPreparedStatement;
+  {$ENDIF}
 const
   cFileName = '\Packets\%s';
   cFileOK   = '%s__id-%d-%d.txt';
@@ -787,11 +799,11 @@ begin
   iStartId := FStartId;
   crdStart := GetTickCount;
 
-  iMaxId := FCommandData.NearestId(FStartId, FPacketRange);
-//  LogMsg('IStartId= ' + IntToStr(iStartId) + ' iMaxId= ' + IntToStr(iMaxId));
+  iMaxId := FCommandData.GetMaxId(FStartId, FPacketRange);
 
+  // проверим диапазон Id нового пакета
   if iStartId >= iMaxId then
-  begin 
+  begin
     LogMsg(Format(cWrongRange, [iMaxId, iStartId]));
     FStopped := True;
     FReplicaFinished := rfErrStopped;
@@ -803,7 +815,6 @@ begin
   iEndTrans   := rangeTransId.Max;
 
   iRecCount := FCommandData.RecordCount(FStartId, iMaxId);
-//  LogMsg('Подготовка ExecutePreparedPacket за ' + Elapsed(crdStart));
 
   // строка  "№1 Id=<56477135-56513779> tranId=<677135-63779> 3500 записей за  "
   LogMsg(Format(cAttempt1, [iStartId, iMaxId, iStartTrans, iEndTrans, iRecCount, '', '']), crdStart);
@@ -824,10 +835,16 @@ begin
       // пакетная выгрузка (сделано по образцу кода из Release Notes "2.1.3 Batch Loading")
       if (tmpSL.Count > 0) and IsSlaveConnected and not FStopped then
       begin
+        {$IFDEF NO_EXECUTE} // для проверки границ пакета, без выполнения запросов
+        Result := 1;
+        Sleep(1000);
+
+        {$ELSE}
         conSlave.DbcConnection.SetAutoCommit(False);
         tmpStmt := conSlave.DbcConnection.PrepareStatement(tmpSL.Text);
         Result  := tmpStmt.ExecuteUpdatePrepared;
         conSlave.DbcConnection.Commit;
+        {$ENDIF}
 
         // пакет успешно выполнен и можем передвинуть StartId на новую позицию
 
@@ -1649,6 +1666,10 @@ var
   tmpStmt: IZPreparedStatement;
   sServerRank, sFieldName, sUpdate, sInsUpdate: string;
 begin
+  {$IFDEF NO_EXECUTE} // для проверки границ пакета, без выполнения запросов
+    Exit;
+  {$ENDIF}
+
   iClientId := 0;
 
 
