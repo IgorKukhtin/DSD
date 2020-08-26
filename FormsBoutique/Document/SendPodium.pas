@@ -187,6 +187,10 @@ type
     OperPriceListTo_start: TcxGridDBColumn;
     NPP: TcxGridDBColumn;
     actGoodsSizeChoice: TOpenChoiceForm;
+    actUpdate: TdsdExecStoredProc;
+    macInsert: TMultiAction;
+    actUpdate_Down: TdsdExecStoredProc;
+    actUpdate_UP: TdsdExecStoredProc;
   private
   public
   end;

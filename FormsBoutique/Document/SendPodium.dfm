@@ -1332,6 +1332,7 @@ object SendPodiumForm: TSendPodiumForm
     object actUpdateMasterDS: TdsdUpdateDataSet
       Category = 'DSDLib'
       MoveParams = <>
+      Enabled = False
       PostDataSetBeforeExecute = False
       StoredProc = spInsertUpdateMIMaster
       StoredProcList = <
@@ -1339,7 +1340,6 @@ object SendPodiumForm: TSendPodiumForm
           StoredProc = spInsertUpdateMIMaster
         end>
       Caption = 'actUpdateMasterDS'
-      DataSource = MasterDS
     end
     object actRefreshMI: TdsdDataSetRefresh
       Category = 'DSDLib'
@@ -2027,7 +2027,6 @@ object SendPodiumForm: TSendPodiumForm
       Params = <>
       Caption = #1044#1086#1073#1072#1074#1080#1090#1100' <'#1058#1086#1074#1072#1088'>'
       Hint = #1044#1086#1073#1072#1074#1080#1090#1100' <'#1058#1086#1074#1072#1088'>'
-      ShortCut = 45
       ImageIndex = 0
     end
     object actPartionGoodsChoice: TOpenChoiceForm
@@ -2255,23 +2254,6 @@ object SendPodiumForm: TSendPodiumForm
       Hint = #1059#1089#1090#1072#1085#1086#1074#1080#1090#1100' '#1089#1082#1080#1076#1082#1091
       ImageIndex = 74
     end
-    object macUpdateAll: TMultiAction
-      Category = 'DSDLib'
-      MoveParams = <>
-      ActionList = <
-        item
-          Action = ExecuteDialogDiscount
-        end
-        item
-          Action = macUpdatePersent
-        end
-        item
-          Action = actRefresh
-        end>
-      Caption = #1059#1089#1090#1072#1085#1086#1074#1080#1090#1100' '#1042#1057#1045#1052' % '#1089#1077#1079#1086#1085#1085#1086#1081' '#1089#1082#1080#1076#1082#1080
-      Hint = #1059#1089#1090#1072#1085#1086#1074#1080#1090#1100' '#1042#1057#1045#1052' % '#1089#1077#1079#1086#1085#1085#1086#1081' '#1089#1082#1080#1076#1082#1080
-      ImageIndex = 74
-    end
     object ExecuteDialogDiscount: TExecuteDialog
       Category = 'DSDLib'
       MoveParams = <>
@@ -2327,6 +2309,49 @@ object SendPodiumForm: TSendPodiumForm
         end>
       isShowModal = True
       OpenBeforeShow = True
+    end
+    object macUpdateAll: TMultiAction
+      Category = 'DSDLib'
+      MoveParams = <>
+      ActionList = <
+        item
+          Action = ExecuteDialogDiscount
+        end
+        item
+          Action = macUpdatePersent
+        end
+        item
+          Action = actRefresh
+        end>
+      Caption = #1059#1089#1090#1072#1085#1086#1074#1080#1090#1100' '#1042#1057#1045#1052' % '#1089#1077#1079#1086#1085#1085#1086#1081' '#1089#1082#1080#1076#1082#1080
+      Hint = #1059#1089#1090#1072#1085#1086#1074#1080#1090#1100' '#1042#1057#1045#1052' % '#1089#1077#1079#1086#1085#1085#1086#1081' '#1089#1082#1080#1076#1082#1080
+      ImageIndex = 74
+    end
+    object actUpdate_UP: TdsdExecStoredProc
+      Category = 'DSDLib'
+      MoveParams = <>
+      AfterAction = actRefreshMI
+      PostDataSetBeforeExecute = False
+      StoredProc = spInsertUpdateMIMaster
+      StoredProcList = <
+        item
+          StoredProc = spInsertUpdateMIMaster
+        end>
+      Caption = 'actUpdate'
+      ShortCut = 38
+    end
+    object actUpdate_Down: TdsdExecStoredProc
+      Category = 'DSDLib'
+      MoveParams = <>
+      AfterAction = actRefreshMI
+      PostDataSetBeforeExecute = False
+      StoredProc = spInsertUpdateMIMaster
+      StoredProcList = <
+        item
+          StoredProc = spInsertUpdateMIMaster
+        end>
+      Caption = 'actUpdate'
+      ShortCut = 40
     end
     object actGet_GoodsPrint_Null: TdsdExecStoredProc
       Category = 'PrintSticker'
@@ -2553,6 +2578,31 @@ object SendPodiumForm: TSendPodiumForm
       PrinterNameParam.DataType = ftString
       PrinterNameParam.MultiSelectSeparator = ','
     end
+    object actUpdate: TdsdExecStoredProc
+      Category = 'DSDLib'
+      MoveParams = <>
+      AfterAction = macInsert
+      PostDataSetBeforeExecute = False
+      StoredProc = spInsertUpdateMIMaster
+      StoredProcList = <
+        item
+          StoredProc = spInsertUpdateMIMaster
+        end>
+      Caption = 'actUpdate'
+      ShortCut = 45
+    end
+    object macInsert: TMultiAction
+      Category = 'DSDLib'
+      MoveParams = <>
+      ActionList = <
+        item
+          Action = actRefreshMI
+        end
+        item
+          Action = actInsertRecord
+        end>
+      Caption = 'macInsert'
+    end
   end
   object MasterDS: TDataSource
     DataSet = MasterCDS
@@ -2561,6 +2611,7 @@ object SendPodiumForm: TSendPodiumForm
   end
   object MasterCDS: TClientDataSet
     Aggregates = <>
+    AutoCalcFields = False
     Params = <>
     Left = 16
     Top = 303

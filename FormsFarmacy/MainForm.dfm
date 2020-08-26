@@ -4,7 +4,7 @@ inherited MainForm: TMainForm
   ClientWidth = 730
   KeyPreview = True
   ExplicitWidth = 746
-  ExplicitHeight = 204
+  ExplicitHeight = 203
   PixelsPerInch = 96
   TextHeight = 13
   object cxGrid: TcxGrid [0]
@@ -4618,6 +4618,7 @@ inherited MainForm: TMainForm
       end
       object miReport_RemainsOverGoods_test: TMenuItem
         Action = actReport_RemainsOverGoods_test
+        Caption = #1056#1072#1089#1087#1088#1077#1076#1077#1083#1077#1085#1080#1077' '#1080#1079#1083#1080#1096#1082#1086#1074' '#1087#1086' '#1072#1087#1090#1077#1082#1072#1084'  ('#1087#1077#1088#1077#1084#1077#1097#1072#1090#1100' '#1074#1089#1077')'
       end
       object N130: TMenuItem
         Action = actReport_RemainsOverGoods_To
