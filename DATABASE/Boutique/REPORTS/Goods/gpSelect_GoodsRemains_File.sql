@@ -31,7 +31,7 @@ BEGIN
                LEFT JOIN ObjectLink AS ObjectLink_PriceList_Currency
                                     ON ObjectLink_PriceList_Currency.ObjectId = ObjectLink_Unit_PriceList.ChildObjectId
                                    AND ObjectLink_PriceList_Currency.DescId   = zc_ObjectLink_PriceList_Currency()
-               LEFT JOIN Object AS Object_Currency ON Object_Currency.Id = ObjectLink_PriceList_Currency.ObjectId
+               LEFT JOIN Object AS Object_Currency ON Object_Currency.Id = ObjectLink_PriceList_Currency.ChildObjectId
 
                LEFT JOIN ObjectString AS OS_Unit_Phone
                                       ON OS_Unit_Phone.ObjectId = Object_Unit.Id
@@ -104,6 +104,7 @@ BEGIN
                       WHERE Container.DescId = zc_Container_Count()
                         AND Container.WhereObjectId = inUnitId
                         AND (Container.Amount <> 0)
+                      LIMIT 1
                       /*  AND (ObjectLink_Partner_Period.ChildObjectId = inPeriodId   OR inPeriodId  = 0)
                         AND (Object_PartionGoods.BrandId             = inBrandId    OR inBrandId   = 0)
                         AND (Object_PartionGoods.PartnerId           = inPartnerId  OR inPartnerId = 0)
@@ -138,8 +139,8 @@ BEGIN
           LEFT JOIN Object AS Object_Currency   ON Object_Currency.Id   = tmpContainer.CurrencyId_pl
 
           LEFT JOIN ObjectLink AS ObjectLink_Unit_Parent
-                               ON ObjectLink_Unit_Parent.ObjectId = tmpContainer.UnitId
-                              AND ObjectLink_Unit_Parent.DescId = zc_ObjectLink_Unit_Parent()
+                               ON ObjectLink_Unit_Parent.ObjectId = tmpContainer.GoodsGroupId
+                              AND ObjectLink_Unit_Parent.DescId = zc_ObjectLink_GoodsGroup_Parent()
           LEFT JOIN Object AS Object_Parent ON Object_Parent.Id = ObjectLink_Unit_Parent.ChildObjectId
      ;
 
@@ -159,7 +160,7 @@ BEGIN
          ||CASE WHEN COALESCE (_tmpUnit.Phone,'') <>'' THEN '<phone>' ||_tmpUnit.Phone||'</phone>' ELSE '' END
          ||'<currencies>' 
            ||'<currency rate="1" id="'||_tmpUnit.CurrencyName_pl||'"/>'
-         ||'</currencies>'
+         ||'</currencies>' 
      FROM _tmpUnit;
 
      -- данные Категорий - Группы товаров
@@ -168,11 +169,11 @@ BEGIN
      SELECT '<category id="' ||tmp.GoodsGroupCode
          || CASE WHEN COALESCE (tmp.ParentCode,'') <> '' THEN '" parentId="'||tmp.ParentCode ELSE '' END
          || '">'||tmp.GoodsGroupName||'</category>'
-         ||'</categories>'
+         --||'</categories>'
      FROM (SELECT DISTINCT 
                   _tmpData.GoodsGroupCode
                 , _tmpData.GoodsGroupName
-                , _tmpData.ParentCode
+                , _tmpData.ParentCode::TVarChar
            FROM _tmpData
            ) AS tmp ;
      INSERT INTO _Result(RowData) VALUES ('</categories>');
@@ -182,7 +183,8 @@ BEGIN
      INSERT INTO _Result(RowData)
      SELECT '<offer id="' ||tmp.GoodsName
          || CASE WHEN COALESCE (tmp.Amount,0) <> 0 THEN '" available="true">' ELSE '" available="false">' END
-         || '<url>'||tmp.PartnerName||'</url>' 
+         --|| '<url>'||tmp.PartnerName||'</url>' 
+         || '<url>http://podium-shop.com/product/premiata_1o/</url>'
          || '<price>'||tmp.OperPriceList||'</price>'
          || '<amount>'||tmp.Amount||'</amount>'
          || '<currencyId>'||tmp.CurrencyName||'</currencyId>'
@@ -192,6 +194,7 @@ BEGIN
          || '<description>'
          || '<![CDATA['||tmp.LabelName||']]>'
          || '</description>'
+         || '</offer>'
      FROM _tmpData AS tmp ;
  
      --последнии строчки XML

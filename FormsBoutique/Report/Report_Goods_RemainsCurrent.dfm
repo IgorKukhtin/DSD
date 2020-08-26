@@ -2145,7 +2145,7 @@ inherited Report_Goods_RemainsCurrentForm: TReport_Goods_RemainsCurrentForm
     object actExport_Grid: TExportGrid
       Category = 'Export_file'
       MoveParams = <>
-      ExportType = cxegExportToText
+      ExportType = cxegExportToTextUTF8
       Grid = ExportXmlGrid
       Caption = 'actExport_Grid'
       OpenAfterCreate = False
