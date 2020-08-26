@@ -33,6 +33,7 @@ type
     FSupplier : Integer;
     FSIdAlter : String;
     FInvoiceNumber : String;
+    FInvoiceDate : TDateTime;
 
     function myFloatToStr(aValue: Double) : String;
     function myStrToFloat(aValue: String) : Double;
@@ -99,6 +100,17 @@ begin
   if AValues <> 0 then
      Result := StringReplace(CurrToStr(AValues), FormatSettings.DecimalSeparator, '.', [rfReplaceAll])
   else Result := '0';
+end;
+
+function TXSStrToDate(Value : String) : TDateTime;
+begin
+  with TXSDateTime.Create do
+  try
+    XSToNative(Value);
+    result := AsDateTime;
+  finally
+    Free;
+  end;
 end;
 
 //
@@ -454,6 +466,19 @@ begin
           //если Штрих-код нашелся
           if BarCode_find <> '' then
           begin
+              //получение номера и даты прихода
+              with spGet_Goods_CodeRazom do begin
+                 ParamByName('inDiscountExternal').Value  := lDiscountExternalId;
+                 ParamByName('inGoodsId').Value  := CheckCDS.FieldByName('GoodsId').AsInteger;
+                 ParamByName('inAmount').Value  := CheckCDS.FieldByName('Amount').AsCurrency;
+                 Execute;
+                 //Номер прихода
+                 aSaleRequest.OrderCode := ParamByName('outInvoiceNumber').Value;
+                 //Дата прихода
+                 aSaleRequest.OrderDate:= TXSDateTime.Create;
+                 aSaleRequest.OrderDate.AsDateTime:= TXSStrToDate(ParamByName('outInvoiceDate').Value);
+              end;
+
               try
                 Item         := CardSaleRequestItem.Create;
                 //ИД строки в учетной системе
@@ -469,8 +494,8 @@ begin
                 Item.PrimaryPrice := TXSDecimal.Create;
                 Item.PrimaryPrice.XSToNative (myFloatToStr (CheckCDS.FieldByName('PriceSale').AsFloat));
                 //Сумма без учета скидки
-                Item.PrimaryAmount := TXSDecimal.Create;
-                Item.PrimaryAmount.XSToNative (myFloatToStr( GetSumm (CheckCDS.FieldByName('Amount').AsFloat, CheckCDS.FieldByName('PriceSale').AsFloat, False)));
+//                Item.PrimaryAmount := TXSDecimal.Create;
+//                Item.PrimaryAmount.XSToNative (myFloatToStr( GetSumm (CheckCDS.FieldByName('Amount').AsFloat, CheckCDS.FieldByName('PriceSale').AsFloat, False)));
 
                 //Цена товара (с учетом скидки)
                 Item.RequestedPrice := TXSDecimal.Create;
@@ -479,8 +504,8 @@ begin
                 Item.RequestedQuantity := TXSDecimal.Create;
                 Item.RequestedQuantity.XSToNative (myFloatToStr (CheckCDS.FieldByName('Amount').AsFloat));
                 //Сумма за кол-во товара (с учетом скидки)
-                Item.RequestedAmount := TXSDecimal.Create;
-                Item.RequestedAmount.XSToNative(myFloatToStr( GetSumm (CheckCDS.FieldByName('Amount').AsFloat, CheckCDS.FieldByName('Price').AsFloat, False)));
+//                Item.RequestedAmount := TXSDecimal.Create;
+//                Item.RequestedAmount.XSToNative(myFloatToStr( GetSumm (CheckCDS.FieldByName('Amount').AsFloat, CheckCDS.FieldByName('Price').AsFloat, False)));
 
                 // Подготовили список для отправки
                 SetLength(SendList, i);
@@ -1178,7 +1203,7 @@ begin
 
           //обработали результат
           lMsg:= Res.ResultDescription;
-          Result:= LowerCase(lMsg) = LowerCase('OK');
+          Result:= (LowerCase(lMsg) = LowerCase('OK')) or (Pos('уже зарегистрирован', LowerCase(lMsg)) > 0);
           //
           if Result then
             //запишем в Документе - Загружена приходная накладная от дистрибьютора в медреестр Pfizer МДМ
@@ -1276,6 +1301,17 @@ begin
       //если Штрих-код нашелся и программа ЗАРАДИ ЖИТТЯ
       if (BarCode_find <> '') and (gCode = 1) then
       begin
+
+          //получение номера и даты прихода
+          with spGet_Goods_CodeRazom do begin
+             ParamByName('inDiscountExternal').Value  := lDiscountExternalId;
+             ParamByName('inGoodsId').Value  := CheckCDS.FieldByName('GoodsId').AsInteger;
+             ParamByName('inAmount').Value  := CheckCDS.FieldByName('Amount').AsCurrency;
+             Execute;
+             FInvoiceNumber := ParamByName('outInvoiceNumber').Value;
+             FInvoiceDate := TXSStrToDate(ParamByName('outInvoiceDate').Value);
+          end;
+
           try
             Item := CardCheckItem.Create;
             //Код карточки
@@ -1294,6 +1330,10 @@ begin
             //Предполагаемая сумма за кол-во товара
             Item.RequestedAmount := TXSDecimal.Create;
             Item.RequestedAmount.XSToNative(myFloatToStr( GetSumm(CheckCDS.FieldByName('Amount').AsFloat, lPriceSale, False)));
+            //Приход от поставщика
+            Item.OrderCode := FInvoiceNumber;
+            Item.OrderDate := TXSDateTime.Create;
+            Item.OrderDate.AsDateTime := FInvoiceDate;
 
 
             // Подготовили список для отправки
@@ -1379,9 +1419,9 @@ begin
                 if Result then
                 begin
                      //Рекомендованная скидка в виде % от цены
-                     lChangePercent     := ResItem.ResultDiscountPercent;
+                     lChangePercent     := gfStrToFloat (ResItem.ResultDiscountPercent.DecimalString);
                      //Рекомендованная скидка в виде фиксированной суммы от общей цены за все кол-во товара (общая сумма скидки за все кол-во товара)
-                     lSummChangePercent := ResItem.ResultDiscountAmount;
+                     lSummChangePercent := gfStrToFloat (ResItem.ResultDiscountAmount.DecimalString);
 
                      //!!! расчет Цена - уже со скидкой !!!
                      if lSummChangePercent > 0

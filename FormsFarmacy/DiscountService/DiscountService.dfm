@@ -225,6 +225,12 @@ object DiscountServiceForm: TDiscountServiceForm
         Value = Null
         DataType = ftString
         MultiSelectSeparator = ','
+      end
+      item
+        Name = 'outInvoiceDate'
+        Value = 'NULL'
+        DataType = ftDateTime
+        MultiSelectSeparator = ','
       end>
     PackSize = 1
     Left = 208

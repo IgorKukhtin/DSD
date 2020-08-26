@@ -10,9 +10,11 @@ CREATE OR REPLACE FUNCTION gpSetErased_MovementItem_TechnicalRediscount(
   RETURNS Boolean
 AS
 $BODY$
-   DECLARE vbUserId Integer;
+   DECLARE vbUserId      Integer;
    DECLARE vbMovementId  Integer;
-   DECLARE vbOperDate TDateTime;
+   DECLARE vbOperDate    TDateTime;
+   DECLARE vbMISendId    Integer;
+   DECLARE vbAmount      TFloat;
 BEGIN
   -- проверка прав пользовател€ на вызов процедуры
   vbUserId := lpCheckRight (inSession, zc_Enum_Process_SetErased_MI_TechnicalRediscount());
@@ -22,11 +24,20 @@ BEGIN
       RAISE EXCEPTION 'ќшибка.Ёлемент документа не сохранен.';
   END IF;
   
-  SELECT MovementItem.MovementId, Movement.OperDate
-  INTO vbMovementId, vbOperDate
+  SELECT MovementItem.MovementId, Movement.OperDate, COALESCE (MIFloat_MISendId.ValueData, 0)::Integer, MovementItem.Amount
+  INTO vbMovementId, vbOperDate, vbMISendId, vbAmount
   FROM MovementItem 
        INNER JOIN Movement ON Movement.ID = MovementItem.MovementId
+       LEFT JOIN MovementItemFloat AS MIFloat_MISendId
+                                   ON MIFloat_MISendId.MovementItemId = MovementItem.Id
+                                  AND MIFloat_MISendId.DescId = zc_MIFloat_MovementItemId()
   WHERE MovementItem.ID = inMovementItemId;
+
+  IF COALESCE (vbMISendId, 0) <> 0 AND COALESCE (vbAmount, 0) <> 0
+  THEN
+      RAISE EXCEPTION 'ќшибка.Ёлемент документа создан из перемещени€ —”Ќ удаление запрещено.';
+  END IF;
+
 
 /*  IF date_part('DAY',  vbOperDate)::Integer <= 15
   THEN
