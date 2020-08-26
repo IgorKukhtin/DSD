@@ -38,8 +38,24 @@ BEGIN
      END IF;
 
 
-     -- !!!Залили ВСЕ данные - в Object_GoodsByGoodsKind - линейная табл.!!!
-     PERFORM gpInsertUpdate_wms_Object_GoodsByGoodsKind (inSession);
+     -- временно
+     IF EXISTS (SELECT 1
+                FROM wms_Movement_WeighingProduction AS Movement
+                     INNER JOIN wms_MI_WeighingProduction AS MI ON MI.MovementId = Movement.Id
+                                                               AND MI.isErased   = FALSE
+                                                               -- !!!сразу как закрыли ящик!!!
+                                                               AND MI.ParentId   > 0 
+                                                               -- только те которые еще не передавали
+                                                               AND MI.StatusId_wms IS NULL
+          
+                WHERE Movement.OperDate BETWEEN CURRENT_DATE - INTERVAL '1 DAY' AND CURRENT_DATE + INTERVAL '1 DAY'
+                      -- не удален
+                  AND Movement.StatusId NOT IN (zc_Enum_Status_Erased()) -- zc_Enum_Status_UnComplete(), zc_Enum_Status_Complete()
+               )
+     THEN
+         -- !!!Залили ВСЕ данные - в Object_GoodsByGoodsKind - линейная табл.!!!
+         PERFORM gpInsertUpdate_wms_Object_GoodsByGoodsKind (inSession);
+     END IF;
 
 
      -- Результат
@@ -98,7 +114,7 @@ BEGIN
                              -- не удален
                          AND Movement.StatusId NOT IN (zc_Enum_Status_Erased()) -- zc_Enum_Status_UnComplete(), zc_Enum_Status_Complete()
                          --
-                         AND Movement.Id = 391
+                         -- AND Movement.Id = 391
                        GROUP BY -- ШК груза (EAN-128)
                                 Object_BarCodeBox.ValueData
                               --COALESCE (Object_BarCodeBox.ValueData, '') || '-' || MI.ParentId :: TVarChar

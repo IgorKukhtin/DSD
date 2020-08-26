@@ -30,7 +30,22 @@ BEGIN
      --
      vbActionName:= 'set';
      --
-     vbOperDate:= CURRENT_DATE - INTERVAL '0 DAY';
+     -- vbOperDate:= CURRENT_DATE - INTERVAL '0 DAY';
+     vbOperDate:= COALESCE ((SELECT MIN (Movement.OperDate)
+                             FROM wms_Movement_WeighingProduction AS Movement
+                                  INNER JOIN wms_MI_WeighingProduction AS MI ON MI.MovementId = Movement.Id
+                                                                            AND MI.isErased   = FALSE
+                                                                            -- !!!сразу как закрыли ящик!!!
+                                                                            AND MI.ParentId   > 0 
+                                                                            -- только те которые еще не передавали
+                                                                            AND MI.StatusId_wms IS NULL
+          
+                             WHERE Movement.OperDate BETWEEN CURRENT_DATE - INTERVAL '1 DAY' AND CURRENT_DATE + INTERVAL '1 DAY'
+                                   -- не удален
+                               AND Movement.StatusId NOT IN (zc_Enum_Status_Erased()) -- zc_Enum_Status_UnComplete(), zc_Enum_Status_Complete()
+                            )
+                          , CURRENT_DATE);
+
 
      -- Проверка
      IF TRIM (COALESCE (inGUID, '')) = ''
