@@ -929,7 +929,11 @@ uses
   CommentSend in '..\..\FormsFarmacy\Guides\CommentSend.pas' {CommentSendForm: TParentForm},
   CommentSendEdit in '..\..\FormsFarmacy\Guides\CommentSendEdit.pas' {CommentSendEditForm: TParentForm},
   JuridicalPriorities in '..\..\FormsFarmacy\Guides\JuridicalPriorities.pas' {JuridicalPrioritiesForm: TParentForm},
-  Report_CommentSendSUN in '..\..\FormsFarmacy\Report\Report_CommentSendSUN.pas' {Report_CommentSendSUNForm: TParentForm};
+  Report_CommentSendSUN in '..\..\FormsFarmacy\Report\Report_CommentSendSUN.pas' {Report_CommentSendSUNForm: TParentForm},
+  LayoutEdit in '..\..\FormsFarmacy\Guides\LayoutEdit.pas' {LayoutEditForm: TParentForm},
+  Layout in '..\..\FormsFarmacy\Guides\Layout.pas' {LayoutForm: TParentForm},
+  LayoutJournal in '..\..\FormsFarmacy\Document\LayoutJournal.pas' {LayoutJournalForm: TParentForm},
+  Layout_Movement in '..\..\FormsFarmacy\Document\Layout_Movement.pas' {Layout_MovementForm: TParentForm};
 
 {$R *.res}
 {$R DevExpressRus.res}

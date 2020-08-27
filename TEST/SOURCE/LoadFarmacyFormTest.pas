@@ -76,6 +76,7 @@ type
     procedure LoadIlliquidUnitFormTest;
     procedure LoadJuridicalFormTest;
     procedure LoadJuridicalAreaFormTest;
+    procedure LoadLayoutFormTest;
     procedure LoadLoadFormTest;
     procedure LoadLoyaltyFormTest;
     procedure LoadLoyaltySaveMoneyFormTest;
@@ -1587,6 +1588,19 @@ begin
   TdsdFormStorageFactory.GetStorage.Load('TIlliquidUnitForm');
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TIlliquidUnitJournalForm'));
   TdsdFormStorageFactory.GetStorage.Load('TIlliquidUnitJournalForm');
+end;
+
+procedure TLoadFormTest.LoadLayoutFormTest;
+begin
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TLayoutForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TLayoutForm');
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TLayoutEditForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TLayoutEditForm');
+
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TLayout_MovementForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TLayout_MovementForm');
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TLayoutJournalForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TLayoutJournalForm');
 end;
 
 procedure TLoadFormTest.LoadJuridicalFormTest;
