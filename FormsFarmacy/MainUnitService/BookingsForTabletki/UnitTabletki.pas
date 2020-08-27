@@ -34,7 +34,10 @@ type
 
     function LoadBookings(ASerialNumber : Integer) : boolean;
 
-    function SendRemnants(ADrugs, Distributor, AAmount : Integer) : boolean;
+    function UpdateStaus(ASerialNumber : Integer;
+                         ABookingId, AId, AStatusNew, ACode, ACustomer, ACustomerPhone : String;
+                         ADate : TDateTime;
+                         AJSONAItems: TJSONArray) : boolean;
 
     property BookingsHeadCDS: TClientDataSet read FBookingsHeadCDS;
     property BookingsBodyCDS: TClientDataSet read FBookingsBodyCDS;
@@ -57,7 +60,7 @@ begin
   with TXSDateTime.Create do
   try
     XSToNative(DelDoubleQuote(Value));
-    result := AsDateTime;
+    result := AsUTCDateTime;
   finally
     Free;
   end;
@@ -231,7 +234,6 @@ begin
 
       if InitCDS then
       begin
-        JSONA := jValue.GetValue<TJSONArray>;
         for I := 0 to JSONA.Count - 1 do
         begin
           jValue := JSONA.Items[I];
@@ -294,32 +296,52 @@ begin
 
 end;
 
-function TTabletkiAPI.SendRemnants(ADrugs, Distributor, AAmount : Integer) : boolean;
+function TTabletkiAPI.UpdateStaus(ASerialNumber : Integer;
+                                  ABookingId, AId, AStatusNew, ACode, ACustomer, ACustomerPhone : String;
+                                  ADate : TDateTime;
+                                  AJSONAItems: TJSONArray) : boolean;
   var jValue : TJSONValue;
-      jsonBody: TJSONObject;
+      jsonBody: TJSONArray;
+      jsonItem: TJSONObject;
+      JSONA: TJSONArray;
+      S : string;
 begin
 
   Result := False;
+  S := FUserName + ':' + FPassword;
 
-  jsonBody := TJSONObject.Create;
+  jsonBody := TJSONArray.Create;
   try
-    jsonBody.AddPair('drugs', TJSONNumber.Create(ADrugs));
-    jsonBody.AddPair('date', TJSONString.Create(FormatDateTime('dd.mm.yyyy', Date)));
-    jsonBody.AddPair('amount', TJSONNumber.Create(AAmount));
-    jsonBody.AddPair('distributor', TJSONNumber.Create(Distributor));
+    jsonItem := TJSONObject.Create;
+    jsonItem.AddPair('id', TJSONString.Create(AbookingId)).
+             AddPair('code', TJSONNumber.Create(ACode)).
+             AddPair('statusID', TJSONNumber.Create(AStatusNew)).
+             AddPair('dateTimeCreated', TJSONString.Create(FormatDateTime('yyyy''-''mm''-''dd''T''hh'':''nn'':''ss', ADate))).
+             AddPair('customer', TJSONString.Create(ACustomer)).
+             AddPair('customerPhone', TJSONString.Create(ACustomerPhone)).
+             AddPair('customerEmail', TJSONString.Create('')).
+             AddPair('branchID', TJSONString.Create(IntToStr(ASerialNumber))).
+             AddPair('externalNmb', TJSONString.Create(AId)).
+             AddPair('docAdditionalInfo', TJSONString.Create('')).
+             AddPair('customerAdditionalInfo', TJSONString.Create('')).
+             AddPair('reserveSource', TJSONString.Create('FSource')).
+             AddPair('cancelReason', TJSONString.Create('')).
+             AddPair('rows', AJSONAItems);
+    jsonBody.AddElement(jsonItem);
 
     FRESTClient.BaseURL := FBaseURL;
     FRESTClient.ContentType := 'application/json';
 
     FRESTRequest.ClearBody;
     FRESTRequest.Method := TRESTRequestMethod.rmPOST;
-    FRESTRequest.Resource := 'remnants/create';
+    FRESTRequest.Resource := '';
     // required parameters
     FRESTRequest.Params.Clear;
     FRESTRequest.AddParameter('Accept', 'application/json', TRESTRequestParameterKind.pkHTTPHEADER,
                                                                             [TRESTRequestParameterOption.poDoNotEncode]);
-//    FRESTRequest.AddParameter('Authorization', 'Bearer ' + FToken, TRESTRequestParameterKind.pkHTTPHEADER,
-//                                                                            [TRESTRequestParameterOption.poDoNotEncode]);
+    FRESTRequest.AddParameter('Authorization', 'Basic ' + EncodeBase64(BytesOf(S)), TRESTRequestParameterKind.pkHTTPHEADER,
+                                                                            [TRESTRequestParameterOption.poDoNotEncode]);
+
     FRESTRequest.Body.Add(jsonBody.ToString, TRESTContentType.ctAPPLICATION_JSON);
 
     try
@@ -334,26 +356,25 @@ begin
   begin
     jValue := FRESTResponse.JSONValue;
 
-    if jValue.FindValue('errors') <> Nil then
+    if (jValue.FindValue('processedDocs') <> Nil) and (not jValue.FindValue('processedDocs').Null) then
     begin
-      FErrorsText := DelDoubleQuote(jValue.FindValue('errors'));
-    end else if jValue.FindValue('status') <> Nil then
-    begin
-      case StrToInt(jValue.FindValue('status').ToString) of
-         0 : FErrorsText := 'Дані не вдалося додати';
-         1 : Result := True;
-        -1 : FErrorsText := 'Невірний ключ авторизації "Authorization: Bearer {token}"';
-        -2 : FErrorsText := 'Доступи аптеки відсутні або деактивовані';
-        -3 : FErrorsText := 'Аптека деактивована';
-        -4 : FErrorsText := 'Невірний ID дистриб’ютора';
-        -5 : FErrorsText := 'Невірний ID препарату';
+      JSONA := jValue.GetValue<TJSONArray>('processedDocs');
+      if JSONA.Count > 0 then
+      begin
+        jValue := JSONA.Items[0];
+        Result := ABookingId = DelDoubleQuote(jValue.FindValue('id'));
       end;
+    end else if (jValue.FindValue('error') <> Nil) and (not jValue.FindValue('error').Null) then
+    begin
+      jValue := jValue.FindValue('error');
+      FErrorsText := DelDoubleQuote(jValue.FindValue('message')) + #13#10 +
+                     DelDoubleQuote(jValue.FindValue('details'));
     end else
     begin
-      FErrorsText := 'Ошибка сохранения остатка.'#13#10 + jValue.ToString;
+      FErrorsText := 'Ошибка изменения статуса.'#13#10 + jValue.ToString;
     end;
-  end;
+  end else if FRESTResponse.StatusCode = 200 then Result := True
+  else FErrorsText := 'Ошибка изменения статуса.'#13#10 +  FRESTResponse.StatusText;
 end;
-
 
 end.

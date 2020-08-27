@@ -53,7 +53,6 @@ type
     customer: TcxGridDBColumn;
     cxGridLevel2: TcxGridLevel;
     BookingsHeadDS: TDataSource;
-    btnAddTest: TButton;
     spInsertMovement: TZStoredProc;
     spInsertMovementItem: TZStoredProc;
     Panel3: TPanel;
@@ -67,7 +66,7 @@ type
     chBookingStatusNew: TcxGridDBColumn;
     chOperDate: TcxGridDBColumn;
     cbPrice: TcxGridDBColumn;
-    cbItemId: TcxGridDBColumn;
+    cbAmountOrder: TcxGridDBColumn;
     dsCheckBody: TDataSource;
     qryCheckBody: TZQuery;
     spUpdateMovementStatus: TZStoredProc;
@@ -80,6 +79,7 @@ type
     dsUnit: TDataSource;
     qryUnit: TZQuery;
     code: TcxGridDBColumn;
+    cbGoodsCode: TcxGridDBColumn;
     procedure FormCreate(Sender: TObject);
     procedure Timer1Timer(Sender: TObject);
     procedure btnSaveBookingsClick(Sender: TObject);
@@ -88,7 +88,6 @@ type
     procedure FormClose(Sender: TObject; var Action: TCloseAction);
     procedure btnLoadBookingsClick(Sender: TObject);
     procedure FormDestroy(Sender: TObject);
-    procedure btnAddTestClick(Sender: TObject);
     procedure btnOpenBookingClick(Sender: TObject);
   private
     { Private declarations }
@@ -149,84 +148,35 @@ begin
 end;
 
 
-procedure TMainForm.btnAddTestClick(Sender: TObject);
-  var GUID, GUIDI: TGUID;
-begin
-
-  if not TabletkiAPI.BookingsHeadCDS.Active then Exit;
-
-  TabletkiAPI.BookingsHeadCDS.Last;
-  TabletkiAPI.BookingsHeadCDS.Append;
-  TabletkiAPI.BookingsHeadCDS.FieldByName('bookingId').AsString := 'ea611433-bfc6-435b-80cf-16b457607dc3';
-  TabletkiAPI.BookingsHeadCDS.FieldByName('status').AsString := 'Processing';
-  TabletkiAPI.BookingsHeadCDS.FieldByName('type').AsString := 'SelfService';
-  TabletkiAPI.BookingsHeadCDS.FieldByName('pharmacyId').AsInteger := 6128298;
-  TabletkiAPI.BookingsHeadCDS.FieldByName('orderId').AsString := 'bfb4b3dd-affe-11ea-a9f3-00163e3c1eb4';
-  TabletkiAPI.BookingsHeadCDS.FieldByName('orderNumber').AsInteger := 328202;
-  TabletkiAPI.BookingsHeadCDS.Post;
-
-  TabletkiAPI.BookingsBodyCDS.Last;
-  TabletkiAPI.BookingsBodyCDS.Append;
-  TabletkiAPI.BookingsBodyCDS.FieldByName('bookingId').AsString := 'ea611433-bfc6-435b-80cf-16b457607dc3';
-  TabletkiAPI.BookingsBodyCDS.FieldByName('itemId').AsString := '69c6e5e1-0981-4945-48d0-08d811ef7799';
-  TabletkiAPI.BookingsBodyCDS.FieldByName('productId').AsInteger := 36085;
-  TabletkiAPI.BookingsBodyCDS.FieldByName('quantity').AsCurrency := 1;
-  TabletkiAPI.BookingsBodyCDS.FieldByName('price').AsCurrency := 36.30;
-  TabletkiAPI.BookingsBodyCDS.Post;
-
-//  CreateGUID(GUID);
-//  TabletkiAPI.BookingsHeadCDS.Last;
-//  TabletkiAPI.BookingsHeadCDS.Append;
-//  TabletkiAPI.BookingsHeadCDS.FieldByName('bookingId').AsString := GUID.ToString;
-//  TabletkiAPI.BookingsHeadCDS.FieldByName('status').AsString := 'Processing';
-//  TabletkiAPI.BookingsHeadCDS.FieldByName('type').AsString := 'SelfService';
-//  TabletkiAPI.BookingsHeadCDS.FieldByName('pharmacyId').AsInteger := 6128298;
-//  TabletkiAPI.BookingsHeadCDS.FieldByName('orderId').AsString := 'bfb4b3dd-affe-11ea-a9f3-00163e3c1eb4';
-//  TabletkiAPI.BookingsHeadCDS.FieldByName('orderNumber').AsInteger := 328202;
-//  TabletkiAPI.BookingsHeadCDS.Post;
-//
-//  CreateGUID(GUIDI);
-//  TabletkiAPI.BookingsBodyCDS.Last;
-//  TabletkiAPI.BookingsBodyCDS.Append;
-//  TabletkiAPI.BookingsBodyCDS.FieldByName('bookingId').AsString := GUID.ToString;
-//  TabletkiAPI.BookingsBodyCDS.FieldByName('itemId').AsString := GUIDI.ToString;
-//  TabletkiAPI.BookingsBodyCDS.FieldByName('productId').AsInteger := 27292;
-//  TabletkiAPI.BookingsBodyCDS.FieldByName('quantity').AsCurrency := 1;
-//  TabletkiAPI.BookingsBodyCDS.FieldByName('price').AsCurrency := 13.4;
-//  TabletkiAPI.BookingsBodyCDS.Post;
-//
-//  CreateGUID(GUIDI);
-//  TabletkiAPI.BookingsBodyCDS.Last;
-//  TabletkiAPI.BookingsBodyCDS.Append;
-//  TabletkiAPI.BookingsBodyCDS.FieldByName('bookingId').AsString := GUID.ToString;
-//  TabletkiAPI.BookingsBodyCDS.FieldByName('itemId').AsString := GUIDI.ToString;
-//  TabletkiAPI.BookingsBodyCDS.FieldByName('productId').AsInteger := 6317159;
-//  TabletkiAPI.BookingsBodyCDS.FieldByName('quantity').AsCurrency := 2;
-//  TabletkiAPI.BookingsBodyCDS.FieldByName('price').AsCurrency := 1.6;
-//  TabletkiAPI.BookingsBodyCDS.Post;
-
-end;
-
 procedure TMainForm.btnAllClick(Sender: TObject);
 var
   Ini: TIniFile;
 begin
   try
-    // Получаем и сохранякм новые заказы
-    btnLoadBookingsClick(Nil);
-    Application.ProcessMessages;
-    btnSaveBookingsClick(Nil);
-    Application.ProcessMessages;
+    if not qryUnit.Active then Exit;
+    if qryUnit.IsEmpty then Exit;
 
-    // Получаем заказы для изменения статуса
-    btnOpenBookingClick(Nil);
-    Application.ProcessMessages;
-    if not qryCheckHead.Active then Exit;
-    if qryCheckHead.IsEmpty then Exit;
+    qryUnit.First;
 
-    // Изменяем статусы
-    btnUpdateStausClick(Nil);
-    Application.ProcessMessages;
+    while not qryUnit.Eof do
+    begin
+
+      // Получаем и сохранякм новые заказы
+      btnLoadBookingsClick(Nil);
+      Application.ProcessMessages;
+      btnSaveBookingsClick(Nil);
+      Application.ProcessMessages;
+
+      // Получаем заказы для изменения статуса
+      btnOpenBookingClick(Nil);
+      Application.ProcessMessages;
+
+      // Изменяем статусы
+      btnUpdateStausClick(Nil);
+      Application.ProcessMessages;
+
+      qryUnit.Next;
+    end;
 
   except
     on E: Exception do
@@ -251,9 +201,11 @@ procedure TMainForm.btnOpenBookingClick(Sender: TObject);
 begin
   try
     qryCheckHead.Close;
+    qryCheckHead.ParamByName('UnitID').Value := qryUnit.FieldByName('Id').AsInteger;
     qryCheckHead.Open;
 
     qryCheckBody.Close;
+    qryCheckBody.ParamByName('UnitID').Value := qryUnit.FieldByName('Id').AsInteger;
     qryCheckBody.Open;
 
   except
@@ -316,13 +268,21 @@ var
     var  jsonItem: TJSONObject;
   begin
     Result := TJSONArray.Create;
+    if (qryCheckHead.FieldByName('BookingStatusNew').AsString <> '4.0') and
+       (qryCheckHead.FieldByName('BookingStatusNew').AsString <> '6.0') then Exit;
+
     qryCheckBody.First;
     while not qryCheckBody.Eof do
     begin
       jsonItem := TJSONObject.Create;
-      jsonItem.AddPair('productId', TJSONString.Create(qryCheckBody.FieldByName('GoodsId').AsString));
-      jsonItem.AddPair('quantity', TJSONNumber.Create(qryCheckBody.FieldByName('Amount').AsCurrency));
+      jsonItem.AddPair('goodsCode', TJSONString.Create(qryCheckBody.FieldByName('GoodsCode').AsString));
+      jsonItem.AddPair('goodsName', TJSONString.Create(qryCheckBody.FieldByName('GoodsName').AsString));
+      jsonItem.AddPair('goodsProducer', TJSONString.Create(qryCheckBody.FieldByName('MakerName').AsString));
+      jsonItem.AddPair('qty', TJSONNumber.Create(qryCheckBody.FieldByName('AmountOrder').AsCurrency));
       jsonItem.AddPair('price', TJSONNumber.Create(qryCheckBody.FieldByName('Price').AsCurrency));
+      jsonItem.AddPair('qtyShip', TJSONNumber.Create(qryCheckBody.FieldByName('Amount').AsCurrency));
+      jsonItem.AddPair('priceShip', TJSONNumber.Create(qryCheckBody.FieldByName('Price').AsCurrency));
+      jsonItem.AddPair('needOrder', TJSONNumber.Create(0));
       Result.AddElement(jsonItem);
       qryCheckBody.Next;
     end;
@@ -339,37 +299,36 @@ begin
     while not qryCheckHead.Eof do
     begin
 
-//      if TabletkiAPI.GetStaus(qryCheckHead.FieldByName('BookingId').AsString, Status) then
-//      begin
-//        if Status = 'Cancelled' then
-//        begin
-//          spUpdateMovementStatus.Params.ParamByName('inMovementId').AsInteger := qryCheckHead.FieldByName('Id').AsInteger;
-//          spUpdateMovementStatus.Params.ParamByName('inBookingStatus').AsString := Status;
-//          spUpdateMovementStatus.Params.ParamByName('inSession').AsString := '3';
-//          spUpdateMovementStatus.ExecProc;
-//        end else if Status <> qryCheckHead.FieldByName('BookingStatusNew').AsString then
-//        begin
-//          if TabletkiAPI.UpdateStaus(qryCheckHead.FieldByName('BookingId').AsString,
-//                                   qryCheckHead.FieldByName('Id').AsString,
-//                                   qryCheckHead.FieldByName('BookingStatusNew').AsString,
-//                                   qryCheckHead.FieldByName('InvNumber').AsString, GetJSONAItems) then
-//          begin
-//            spUpdateMovementStatus.Params.ParamByName('inMovementId').AsInteger := qryCheckHead.FieldByName('Id').AsInteger;
-//            spUpdateMovementStatus.Params.ParamByName('inBookingStatus').AsString := qryCheckHead.FieldByName('BookingStatusNew').AsString;
-//            spUpdateMovementStatus.Params.ParamByName('inSession').AsString := '3';
-//            spUpdateMovementStatus.ExecProc;
-//          end;
-//        end else if qryCheckHead.FieldByName('BookingStatus').AsString <> qryCheckHead.FieldByName('BookingStatusNew').AsString then
-//        begin
-//          spUpdateMovementStatus.Params.ParamByName('inMovementId').AsInteger := qryCheckHead.FieldByName('Id').AsInteger;
-//          spUpdateMovementStatus.Params.ParamByName('inBookingStatus').AsString := qryCheckHead.FieldByName('BookingStatusNew').AsString;
-//          spUpdateMovementStatus.Params.ParamByName('inSession').AsString := '3';
-//          spUpdateMovementStatus.ExecProc;
-//        end;
-//      end else
-//      begin
-//        Add_Log('Ошибка получения статуса: ' + TabletkiAPI.ErrorsText);
-//      end;
+      if Status = '7.0' then
+      begin
+        spUpdateMovementStatus.Params.ParamByName('inMovementId').AsInteger := qryCheckHead.FieldByName('Id').AsInteger;
+        spUpdateMovementStatus.Params.ParamByName('inBookingStatus').AsString := Status;
+        spUpdateMovementStatus.Params.ParamByName('inSession').AsString := '3';
+        spUpdateMovementStatus.ExecProc;
+      end else if Status <> qryCheckHead.FieldByName('BookingStatusNew').AsString then
+      begin
+        if TabletkiAPI.UpdateStaus(qryUnit.FieldByName('SerialNumber').AsInteger,
+                                   qryCheckHead.FieldByName('BookingId').AsString,
+                                   qryCheckHead.FieldByName('Id').AsString,
+                                   qryCheckHead.FieldByName('BookingStatusNew').AsString,
+                                   qryCheckHead.FieldByName('OrderId').AsString,
+                                   qryCheckHead.FieldByName('Bayer').AsString,
+                                   qryCheckHead.FieldByName('BayerPhone').AsString,
+                                   qryCheckHead.FieldByName('OperDate').AsDateTime,
+                                   GetJSONAItems) then
+        begin
+          spUpdateMovementStatus.Params.ParamByName('inMovementId').AsInteger := qryCheckHead.FieldByName('Id').AsInteger;
+          spUpdateMovementStatus.Params.ParamByName('inBookingStatus').AsString := qryCheckHead.FieldByName('BookingStatusNew').AsString;
+          spUpdateMovementStatus.Params.ParamByName('inSession').AsString := '3';
+          spUpdateMovementStatus.ExecProc;
+        end;
+      end else if qryCheckHead.FieldByName('BookingStatus').AsString <> qryCheckHead.FieldByName('BookingStatusNew').AsString then
+      begin
+        spUpdateMovementStatus.Params.ParamByName('inMovementId').AsInteger := qryCheckHead.FieldByName('Id').AsInteger;
+        spUpdateMovementStatus.Params.ParamByName('inBookingStatus').AsString := qryCheckHead.FieldByName('BookingStatusNew').AsString;
+        spUpdateMovementStatus.Params.ParamByName('inSession').AsString := '3';
+        spUpdateMovementStatus.ExecProc;
+      end;
 
       qryCheckHead.Next;
     end;

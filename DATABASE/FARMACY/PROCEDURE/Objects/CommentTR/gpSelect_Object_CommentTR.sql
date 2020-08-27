@@ -43,7 +43,8 @@ $BODY$BEGIN
                               ON ObjectFloat_DifferenceSum.ObjectId = Object_CommentTR.Id 
                              AND ObjectFloat_DifferenceSum.DescId = zc_ObjectFloat_CommentTR_DifferenceSum()
 
-   WHERE Object_CommentTR.DescId = zc_Object_CommentTR();
+   WHERE Object_CommentTR.DescId = zc_Object_CommentTR()
+     AND Object_CommentTR.ObjectCode <> 8;
   
 END;$BODY$
 
