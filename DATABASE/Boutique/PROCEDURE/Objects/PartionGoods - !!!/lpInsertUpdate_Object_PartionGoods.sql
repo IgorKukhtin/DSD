@@ -333,7 +333,13 @@ BEGIN
               --, Amount               = inAmount
               , OperPrice            = inOperPrice
               , CountForPrice        = inCountForPrice
-              , OperPriceList        = CASE WHEN vbPriceList_change = TRUE THEN inOperPriceList ELSE Object_PartionGoods.OperPriceList END
+              , OperPriceList        = CASE WHEN vbRePrice_exists = TRUE
+                                                 THEN (SELECT tmp.ValuePrice FROM lpGet_ObjectHistory_PriceListItem (zc_DateEnd() - INTERVAL '1 DAY', zc_PriceList_Basis(), inGoodsId) AS tmp)
+                                            WHEN vbPriceList_change = TRUE
+                                                 THEN inOperPriceList
+                                            ELSE 
+                                                 Object_PartionGoods.OperPriceList
+                                       END
               , BrandId              = inBrandId
               , PeriodId             = inPeriodId
               , PeriodYear           = inPeriodYear
@@ -363,7 +369,10 @@ BEGIN
                                  VALUES (inMovementItemId, inMovementId, inPartnerId, inUnitId, inOperDate, inGoodsId, inGoodsItemId
                                        , inCurrencyId, 0 /*inAmount*/, inOperPrice, inCountForPrice
                                          -- "сложно" получили цену
-                                       , inOperPriceList
+                                       , CASE WHEN vbRePrice_exists = TRUE
+                                                 THEN (SELECT tmp.ValuePrice FROM lpGet_ObjectHistory_PriceListItem (zc_DateEnd() - INTERVAL '1 DAY', zc_PriceList_Basis(), inGoodsId) AS tmp)
+                                              ELSE inOperPriceList
+                                         END
                                        , inBrandId, inPeriodId, inPeriodYear
                                        , zfConvert_IntToNull (inFabrikaId), inGoodsGroupId, inMeasureId
                                        , zfConvert_IntToNull (inCompositionId), zfConvert_IntToNull (inGoodsInfoId), zfConvert_IntToNull (inLineFabricaId)

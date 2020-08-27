@@ -138,7 +138,7 @@ BEGIN
                                 -- !!!***Вес нетто в ящ (E2/E3) - по всем категориям
                             --, CASE WHEN tmp.BoxId IN (zc_Box_E2(), zc_Box_E3()) THEN tmp.WeightOnBox ELSE NULL END :: TFloat  AS WeightOnBox
                                 -- Кол-во ед. в ящ. (E2/E3) - !!!самый приоритетный!!!
-                              , CASE WHEN tmp.BoxId IN (zc_Box_E2(), zc_Box_E3()) THEN tmp.CountOnBox  ELSE tmp.CountOnBox_2 END :: TFloat  AS CountOnBox
+                              , CASE WHEN tmp.BoxId IN (zc_Box_E2(), zc_Box_E3()) AND tmp.CountOnBox > 0 THEN tmp.CountOnBox  ELSE tmp.CountOnBox_2 END :: TFloat  AS CountOnBox
          
                                 -- № Ячейки на складе ВМС
                               , tmp.WmsCellNum

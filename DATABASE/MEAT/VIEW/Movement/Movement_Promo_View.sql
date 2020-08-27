@@ -32,7 +32,7 @@ CREATE OR REPLACE VIEW Movement_Promo_View AS
       , Object_Personal.ValueData                   AS PersonalName       --Ответственный представитель маркетингового отдела	
       , COALESCE (MovementBoolean_Promo.ValueData, FALSE)   :: Boolean AS isPromo  -- акция (да/нет)
       , COALESCE (MovementBoolean_Checked.ValueData, FALSE) :: Boolean AS Checked  -- согласовано (да/нет)
-      , MovementDate_Month.ValueData                AS MonthPromo         -- месяц акции
+      , DATE_TRUNC ('MONTH', MovementDate_Month.ValueData) :: TDateTime AS MonthPromo         -- месяц акции
       , MovementDate_CheckDate.ValueData            AS CheckDate          --Дата согласования
 
       , Object_PromoStateKind.Id                    AS PromoStateKindId        --Состояние акции

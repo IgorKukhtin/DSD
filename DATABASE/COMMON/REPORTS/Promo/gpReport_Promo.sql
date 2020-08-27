@@ -192,7 +192,7 @@ BEGIN
                               , Movement_Promo.StartSale                    AS StartSale          --Дата начала отгрузки по акционной цене
                               , Movement_Promo.EndSale                      AS EndSale            --Дата окончания отгрузки по акционной цене
                               , MovementDate_EndReturn.ValueData            AS EndReturn          --Дата окончания возвратов по акционной цене
-                              , MovementDate_Month.ValueData                AS MonthPromo         -- месяц акции
+                              , DATE_TRUNC ('MONTH', MovementDate_Month.ValueData) :: TDateTime AS MonthPromo         -- месяц акции
                               , MovementDate_CheckDate.ValueData            AS CheckDate          --Дата согласования
                               , MovementFloat_CostPromo.ValueData           AS CostPromo          --Стоимость участия в акции
                               , MovementString_Comment.ValueData            AS Comment            --Примечание

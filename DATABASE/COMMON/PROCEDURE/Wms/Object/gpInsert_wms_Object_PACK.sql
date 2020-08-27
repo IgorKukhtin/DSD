@@ -77,7 +77,8 @@ BEGIN
                                , COALESCE (tmp.WeightMaxGross, 0) AS WeightMaxGross           -- Вес брутто полного ящика "по МАКСИМАЛЬНОМУ весу" (E2/E3)
                                , COALESCE (tmp.WeightMaxNet, 0)   AS WeightMaxNet             -- Вес нетто полного ящика "по МАКСИМАЛЬНОМУ весу" (E2/E3)
                           FROM lpSelect_wms_Object_SKU() AS tmp
-                        --WHERE sku_id in ('34570391', '37500131', '34570381', '34570361', '38391842')
+                        --WHERE sku_id in ('34570361', '34570391')
+                        --WHERE tmp.BoxId NOT IN (zc_Box_E2(), zc_Box_E3())
 
                          )
               --
@@ -136,7 +137,9 @@ BEGIN
                                -- Количество элементов упаковки, т.е. количество вложенных элементов
                                , CASE WHEN tmpGoods.GoodsTypeKindId = zc_Enum_GoodsTypeKind_Ves()
                                            THEN tmpGoods.WeightMaxNet * 1000
-                                      ELSE CEIL (CASE WHEN tmpGoods.WeightAvg > 0 THEN tmpGoods.WeightAvgNet / tmpGoods.WeightAvg ELSE 1 END)
+                                      WHEN tmpGoods.WeightAvgNet > 0
+                                           THEN CEIL (CASE WHEN tmpGoods.WeightAvg > 0 THEN tmpGoods.WeightAvgNet / tmpGoods.WeightAvg ELSE 1 END)
+                                      ELSE tmpGoods.CountOnBox
                                  END :: Integer AS units
                                -- Количество единичных упаковок в данной
                                , CASE WHEN tmpGoods.GoodsTypeKindId = zc_Enum_GoodsTypeKind_Ves()
