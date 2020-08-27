@@ -1211,6 +1211,7 @@ object SendPodiumForm: TSendPodiumForm
     object bbInsertRecord: TdxBarButton
       Action = actInsertRecord
       Category = 0
+      ShortCut = 45
     end
     object bbOpenReportForm: TdxBarButton
       Action = actReport_Goods
@@ -1340,6 +1341,7 @@ object SendPodiumForm: TSendPodiumForm
           StoredProc = spInsertUpdateMIMaster
         end>
       Caption = 'actUpdateMasterDS'
+      DataSource = MasterDS
     end
     object actRefreshMI: TdsdDataSetRefresh
       Category = 'DSDLib'
@@ -2338,7 +2340,6 @@ object SendPodiumForm: TSendPodiumForm
           StoredProc = spInsertUpdateMIMaster
         end>
       Caption = 'actUpdate'
-      ShortCut = 38
     end
     object actUpdate_Down: TdsdExecStoredProc
       Category = 'DSDLib'
@@ -2351,7 +2352,6 @@ object SendPodiumForm: TSendPodiumForm
           StoredProc = spInsertUpdateMIMaster
         end>
       Caption = 'actUpdate'
-      ShortCut = 40
     end
     object actGet_GoodsPrint_Null: TdsdExecStoredProc
       Category = 'PrintSticker'
@@ -2589,7 +2589,6 @@ object SendPodiumForm: TSendPodiumForm
           StoredProc = spInsertUpdateMIMaster
         end>
       Caption = 'actUpdate'
-      ShortCut = 45
     end
     object macInsert: TMultiAction
       Category = 'DSDLib'
@@ -2807,6 +2806,14 @@ object SendPodiumForm: TSendPodiumForm
         Component = MasterCDS
         ComponentItem = 'ParValue'
         DataType = ftFloat
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'outGoodsSizeName'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'GoodsSizeName'
+        DataType = ftString
         MultiSelectSeparator = ','
       end>
     PackSize = 1

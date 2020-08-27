@@ -1482,7 +1482,7 @@ inherited Report_Promo_ResultForm: TReport_Promo_ResultForm
         DataType = ftString
         MultiSelectSeparator = ','
       end>
-    Left = 793
-    Top = 9
+    Left = 729
+    Top = 17
   end
 end

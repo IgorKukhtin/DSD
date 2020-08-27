@@ -22,6 +22,7 @@ CREATE OR REPLACE FUNCTION gpInsertUpdate_MovementItem_SendPodium(
    OUT outTotalSummPriceListToBalance  TFloat    , -- Сумма ГРН (Кому, прайс)
    OUT outCurrencyValue                TFloat    , --
    OUT outParValue                     TFloat    , --
+   OUT outGoodsSizeName                TVarChar  , --
     IN inSession                       TVarChar    -- сессия пользователя
 )
 RETURNS RECORD
@@ -35,6 +36,7 @@ $BODY$
    DECLARE vbOperDate TDateTime;
    DECLARE vbCurrencyId Integer;
    DECLARE vbCurrencyId_pl_to Integer;
+   DECLARE vbFromId Integer;
    DECLARE vbToId Integer;
    DECLARE vbPriceListId_to Integer;
    DECLARE vbCurrencyValue_to TFloat;
@@ -90,14 +92,17 @@ BEGIN
          RAISE EXCEPTION 'Ошибка.Не установлено значение <Товар>.';
      END IF;
        
-
      -- Дата документа, подразделение Кому, прайс для подразд. кому
      SELECT Movement.OperDate
-          , MovementLinkObject_To.ObjectId AS ToId
+          , MovementLinkObject_From.ObjectId AS FromId
+          , MovementLinkObject_To.ObjectId   AS ToId
           , ObjectLink_Unit_PriceList_to.ChildObjectId AS PriceListId_to
           , COALESCE (ObjectLink_PriceList_Currency_to.ChildObjectId, zc_Currency_Basis()) AS CurrencyId_pl_to
-            INTO vbOperDate, vbToId, vbPriceListId_to, vbCurrencyId_pl_to
+            INTO vbOperDate, vbFromId, vbToId, vbPriceListId_to, vbCurrencyId_pl_to
      FROM Movement
+         LEFT JOIN MovementLinkObject AS MovementLinkObject_From
+                                      ON MovementLinkObject_From.MovementId = Movement.Id
+                                     AND MovementLinkObject_From.DescId = zc_MovementLinkObject_From()
          LEFT JOIN MovementLinkObject AS MovementLinkObject_To
                                       ON MovementLinkObject_To.MovementId = Movement.Id
                                      AND MovementLinkObject_To.DescId = zc_MovementLinkObject_To()
@@ -128,6 +133,8 @@ BEGIN
         RAISE EXCEPTION 'Ошибка.Не установлено значение <Цена (прайс)>.';
      END IF;
 
+     outGoodsSizeName :=inGoodsSizeName;
+     
      -- Поиск Размера - ВСЕГДА
      vbGoodsSizeId:= (SELECT Object.Id FROM Object WHERE Object.DescId = zc_Object_GoodsSize() AND LOWER (Object.ValueData) = LOWER (inGoodsSizeName));
      --
@@ -146,12 +153,45 @@ BEGIN
           , COALESCE (Object_PartionGoods.OperPrice, 0)                    AS OperPrice
           , COALESCE (Object_PartionGoods.CurrencyId, zc_Currency_Basis()) AS CurrencyId
           , COALESCE (Object_PartionGoods.MovementItemId,0)                AS PartionId
-            INTO outCountForPrice, outOperPrice, vbCurrencyId, vbPartionId
+    INTO outCountForPrice, outOperPrice, vbCurrencyId, vbPartionId
      FROM Object_PartionGoods
      WHERE Object_PartionGoods.GoodsId = vbGoodsId
        AND Object_PartionGoods.GoodsSizeId = vbGoodsSizeId; --Object_PartionGoods.MovementItemId = inPartionId;
+     
+     -- Если размер пусто и партия не найдена, тогда находим первый размер, что есть на остатке и подставляем его
+     -- берем партию которая есть на остатке
+     IF COALESCE (vbPartionId,0) = 0
+     THEN
+         SELECT COALESCE (Object_PartionGoods.CountForPrice, 1)                AS CountForPrice
+              , COALESCE (Object_PartionGoods.OperPrice, 0)                    AS OperPrice
+              , COALESCE (Object_PartionGoods.CurrencyId, zc_Currency_Basis()) AS CurrencyId
+              , COALESCE (Object_PartionGoods.MovementItemId,0)                AS PartionId 
+              , COALESCE (Object_GoodsSize.ValueData, '') ::TVarChar           AS GoodsSizeName
+       INTO outCountForPrice, outOperPrice, vbCurrencyId, vbPartionId, outGoodsSizeName
+         FROM (SELECT MIN ( Container.PartionId) AS PartionId
+               FROM Container
+                    LEFT JOIN ContainerLinkObject AS CLO_Client
+                                                  ON CLO_Client.ContainerId = Container.Id
+                                                 AND CLO_Client.DescId      = zc_ContainerLinkObject_Client()
+               WHERE Container.WhereObjectId = vbFromId
+                 AND Container.DescId = zc_Container_count()
+                 AND COALESCE(Container.Amount, 0) <> 0
+                 AND Container.ObjectId = vbGoodsId
+                 AND COALESCE (Container.Amount,0) <> 0
+                 AND CLO_Client.ContainerId IS NULL -- !!!отбросили Долги Покупателей!!!
+               ) AS tmp
+               LEFT JOIN Object_PartionGoods ON Object_PartionGoods.MovementItemId = tmp.PartionId
+               LEFT JOIN Object AS Object_GoodsSize ON Object_GoodsSize.Id = Object_PartionGoods.GoodsSizeId
+         ;
+     END IF; 
 
-
+     -- если и после этого не найдена партия, то ошибка
+     IF COALESCE (vbPartionId,0) = 0
+     THEN
+         RAISE EXCEPTION 'Ошибка.Не найдена партия товара.';
+     END IF;
+     
+     
      -- Если НЕ Базовая Валюта
      IF vbCurrencyId <> zc_Currency_Basis()
      THEN
