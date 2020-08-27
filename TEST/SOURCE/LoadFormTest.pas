@@ -2621,16 +2621,16 @@ begin
   {
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_SaleReturn_byPromoForm'));
   TdsdFormStorageFactory.GetStorage.Load('TReport_SaleReturn_byPromoForm');
-
+   }
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_Promo_TradeForm'));
   TdsdFormStorageFactory.GetStorage.Load('TReport_Promo_TradeForm');
-   }
+
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_Promo_ResultForm'));
   TdsdFormStorageFactory.GetStorage.Load('TReport_Promo_ResultForm');
-  {
+
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_Promo_Result_TradeForm'));
   TdsdFormStorageFactory.GetStorage.Load('TReport_Promo_Result_TradeForm');
-  }
+
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_Promo_ResultDialogForm'));
   TdsdFormStorageFactory.GetStorage.Load('TReport_Promo_ResultDialogForm');
   //
@@ -2638,13 +2638,13 @@ begin
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_PromoPlanForm'));
   TdsdFormStorageFactory.GetStorage.Load('TReport_PromoPlanForm');
   //
-  }
+
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_PromoForm'));
   TdsdFormStorageFactory.GetStorage.Load('TReport_PromoForm');
 
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_PromoDialogForm'));
   TdsdFormStorageFactory.GetStorage.Load('TReport_PromoDialogForm');
-
+  }
 end;
 
 procedure TLoadFormTest.LoadVisitFormTest;

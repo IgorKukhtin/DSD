@@ -194,7 +194,7 @@ BEGIN
         END IF;
 */
 
-        IF vbIsSUN = TRUE AND vbInsertDate >= '25.08.2020'
+        IF vbIsSUN = TRUE AND vbInsertDate >= '25.08.2020' AND COALESCE (inCommentTRID, 0) = 0
         THEN
            WITH tmpProtocolAll AS (SELECT  MovementItem.Id
                                          , SUBSTRING(MovementItemProtocol.ProtocolData, POSITION('Значение' IN MovementItemProtocol.ProtocolData) + 24, 50) AS ProtocolData

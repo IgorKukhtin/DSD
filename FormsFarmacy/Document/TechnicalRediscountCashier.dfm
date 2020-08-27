@@ -276,6 +276,28 @@ inherited TechnicalRediscountCashierForm: TTechnicalRediscountCashierForm
             Options.Editing = False
             Width = 85
           end
+          object InvNumberSend: TcxGridDBColumn
+            Caption = #1053#1086#1084#1077#1088' '#1087#1077#1088#1077#1084#1077#1097#1077#1085#1080#1103' '#1057#1059#1053
+            DataBinding.FieldName = 'InvNumberSend'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 86
+          end
+          object OperDateSend: TcxGridDBColumn
+            Caption = #1044#1072#1090#1072' '#1087#1077#1088#1077#1084#1077#1097#1077#1085#1080#1103' '#1057#1059#1053
+            DataBinding.FieldName = 'OperDateSend'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 85
+          end
+          object Color_calc: TcxGridDBColumn
+            DataBinding.FieldName = 'Color_calc'
+            Visible = False
+            Options.Editing = False
+            VisibleForCustomization = False
+          end
         end
       end
       object cxSplitter1: TcxSplitter
@@ -613,6 +635,11 @@ inherited TechnicalRediscountCashierForm: TTechnicalRediscountCashierForm
     end
   end
   inherited DBViewAddOn: TdsdDBViewAddOn
+    ColorRuleList = <
+      item
+        BackGroundValueColumn = Color_calc
+        ColorValueList = <>
+      end>
     SummaryItemList = <
       item
         Param.Value = Null

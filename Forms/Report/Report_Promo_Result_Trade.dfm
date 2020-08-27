@@ -613,6 +613,23 @@ inherited Report_Promo_Result_TradeForm: TReport_Promo_Result_TradeForm
       TabOrder = 8
       Width = 161
     end
+    object cxLabel6: TcxLabel
+      Left = 778
+      Top = 33
+      Caption = #1070#1088'. '#1083#1080#1094#1086':'
+    end
+    object ceJuridical: TcxButtonEdit
+      Left = 834
+      Top = 32
+      Properties.Buttons = <
+        item
+          Default = True
+          Kind = bkEllipsis
+        end>
+      Properties.ReadOnly = True
+      TabOrder = 10
+      Width = 241
+    end
   end
   object cxLabel3: TcxLabel [2]
     Left = 544
@@ -785,6 +802,23 @@ inherited Report_Promo_Result_TradeForm: TReport_Promo_Result_TradeForm
           Value = Null
           Component = cbGoodsKind
           DataType = ftBoolean
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'JuridicalId'
+          Value = Null
+          Component = GuidesJuridical
+          ComponentItem = 'Key'
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'JuridicalName'
+          Value = Null
+          Component = GuidesJuridical
+          ComponentItem = 'TextValue'
+          DataType = ftString
           ParamType = ptInput
           MultiSelectSeparator = ','
         end>
@@ -994,6 +1028,14 @@ inherited Report_Promo_Result_TradeForm: TReport_Promo_Result_TradeForm
         Value = Null
         Component = FormParams
         ComponentItem = 'inMovementId'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inJuridicalId'
+        Value = Null
+        Component = GuidesJuridical
+        ComponentItem = 'Key'
         ParamType = ptInput
         MultiSelectSeparator = ','
       end>
@@ -1332,5 +1374,32 @@ inherited Report_Promo_Result_TradeForm: TReport_Promo_Result_TradeForm
     PackSize = 1
     Left = 648
     Top = 320
+  end
+  object GuidesJuridical: TdsdGuides
+    KeyField = 'Id'
+    LookupControl = ceJuridical
+    FormNameParam.Value = 'TJuridical_ObjectForm'
+    FormNameParam.DataType = ftString
+    FormNameParam.MultiSelectSeparator = ','
+    FormName = 'TJuridical_ObjectForm'
+    PositionDataSet = 'MasterCDS'
+    Params = <
+      item
+        Name = 'Key'
+        Value = ''
+        Component = GuidesJuridical
+        ComponentItem = 'Key'
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'TextValue'
+        Value = ''
+        Component = GuidesJuridical
+        ComponentItem = 'TextValue'
+        DataType = ftString
+        MultiSelectSeparator = ','
+      end>
+    Left = 857
+    Top = 25
   end
 end

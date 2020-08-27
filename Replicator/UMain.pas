@@ -146,6 +146,8 @@ type
     btnCancelCompareSeq: TButton;
     dsCompareSeq: TDataSource;
     tmrUpdateAllData: TTimer;
+    splHrz: TSplitter;
+    mmoError: TMemo;
     {$WARNINGS ON}
     procedure chkShowLogClick(Sender: TObject);
     procedure btnLibLocationClick(Sender: TObject);
@@ -172,7 +174,6 @@ type
     procedure seReconnectTimeoutChange(Sender: TObject);
     procedure btnApplyScriptClick(Sender: TObject);
     procedure btnCancelScriptClick(Sender: TObject);
-    procedure mmoScriptLogChange(Sender: TObject);
     procedure btnScriptPathClick(Sender: TObject);
     procedure btnMoveProcsToSlaveClick(Sender: TObject);
     procedure btnStopMoveProcsToSlaveClick(Sender: TObject);
@@ -223,8 +224,12 @@ type
     procedure StopAlterSlaveSequences;
     procedure StopApplyScriptThread;
     procedure StopMoveProcToSlaveThread;
-    procedure LogMessage(const AMsg: string; const AFileName: string = ''; const aUID: Cardinal = 0);
-    procedure LogApplyScript(const AMsg: string; const AFileName: string = ''; const aUID: Cardinal = 0);
+    procedure UpdateProgBarPosition(AProgBar: TProgressBar; const AMax, ACurrValue, ARecCount: Integer);
+    procedure LogMessage(const AMsg: string; const AFileName: string = ''; const aUID: Cardinal = 0;
+      AMsgType: TLogMessageType = lmtPlain);
+    procedure LogApplyScript(const AMsg: string; const AFileName: string = ''; const aUID: Cardinal = 0;
+      AMsgType: TLogMessageType = lmtPlain);
+
     procedure OnChangeStartId(const ANewStartId: Integer);
     procedure OnNewSession(const AStart: TDateTime; const AMinId, AMaxId, ARecCount, ASessionNumber: Integer);
     procedure OnEndSession(Sender: TObject);
@@ -342,7 +347,7 @@ end;
 
 procedure TfrmMain.StartReplica;
 const
-  cStartPerlica = '—тарт репликации: StartId = %d';
+  cStartPerlica = '—тарт репликации: StartId = %d    select %d    в пакете %d    верси€ %s';
 var
   iStartId, iSelectRange, iPacketRange: Integer;
 begin
@@ -353,7 +358,7 @@ begin
   iSelectRange := seSelectRange.Value;
   iPacketRange := sePacketRange.Value;
 
-  LogMessage(Format(cStartPerlica, [iStartId]));
+  LogMessage(Format(cStartPerlica, [iStartId, seSelectRange.Value, sePacketRange.Value, GetFileVersion]));
   LogMessage('');
 
   StopReplicaThread;
@@ -533,7 +538,7 @@ begin
     if Components[I] is TEdit then
       if BelongsTo(TEdit(Components[I]), tsSettings) then
       begin
-        OutputDebugString(PWideChar('Edit.name = ' + Components[I].Name));
+//        OutputDebugString(PWideChar('Edit.name = ' + Components[I].Name));
         TEdit(Components[I]).OnExit := OnExitSettings;
       end;
 end;
@@ -707,8 +712,8 @@ end;
 
 procedure TfrmMain.btnStopClick(Sender: TObject);
 begin
-  StopReplicaThread;
   btnStop.Enabled := False;
+  StopReplicaThread;
 end;
 
 procedure TfrmMain.btnStopMoveProcsToSlaveClick(Sender: TObject);
@@ -763,6 +768,24 @@ begin
   FLastIdThrd := TLastIdThread.Create(cCreateSuspended, LogMessage, tknDriven);
   FLastIdThrd.OnTerminate := OnTerminateLastId;
   FLastIdThrd.Start;
+end;
+
+procedure TfrmMain.UpdateProgBarPosition(AProgBar: TProgressBar; const AMax, ACurrValue, ARecCount: Integer);
+var
+  extPart: Extended;
+begin
+  AProgBar.Min  := 1;
+  AProgBar.Max  := ARecCount;
+  AProgBar.Step := 1;
+
+  if AMax <= 0 then
+  begin
+    AProgBar.Position := 0;
+    Exit;
+  end;
+
+  extPart := ACurrValue / AMax;
+  AProgBar.Position := Round(ARecCount * extPart);
 end;
 
 procedure TfrmMain.chkDeviationOnlyRecCountClick(Sender: TObject);
@@ -912,7 +935,7 @@ begin
     (Sender as TDBGrid).DefaultDrawColumnCell(Rect, DataCol, Column, State);
 end;
 
-procedure TfrmMain.LogApplyScript(const AMsg, AFileName: string; const aUID: Cardinal);
+procedure TfrmMain.LogApplyScript(const AMsg, AFileName: string; const aUID: Cardinal; AMsgType: TLogMessageType);
 var
   sFileName: string;
 begin
@@ -926,14 +949,10 @@ begin
     FLog.Write(sFileName, AMsg);
   end;
 
-//  if not mmoScriptErr.Visible then
-//    mmoScriptErr.Visible := True;
-//
-//  mmoScriptErr.Lines.Add(Format(cLogMsg, [FormatDateTime(cTimeStrShort, Now), AMsg]));
   mmoScriptLog.Lines.Add(Format(cLogMsg, [FormatDateTime(cTimeStrShort, Now), AMsg]));
 end;
 
-procedure TfrmMain.LogMessage(const AMsg, AFileName: string; const aUID: Cardinal);
+procedure TfrmMain.LogMessage(const AMsg, AFileName: string; const aUID: Cardinal; AMsgType: TLogMessageType);
 var
   iObjIndex, iPos: Integer;
   sMsg, sLine: string;
@@ -962,26 +981,40 @@ begin
         FLog.Write(cDefLogFileName, AMsg);
     end
     else
-      FLog.Write(AFileName, AMsg); // пишем в специальный файл
+      FLog.Write(AFileName, AMsg, False); // пишем в специальный файл, False означает "не записывать отметку времени в текст файла"
 
   if Length(Trim(AFileName)) = 0  then // не выводим в lstLog сообщение, которое предназначено дл€ сохранени€ в отдельный файл
   begin
     sMsg := Format(cLogMsg, [FormatDateTime(cTimeStrShort, Now), AMsg]);
 
-    if aUID <> 0 then // строка c таким aUID могла быть добавлена в lstLog ранее
-    begin
-      iObjIndex := lstLog.Items.IndexOfObject(TObject(aUID));
+    case AMsgType of
+      lmtPlain: // обычное сообщение
+        begin
+          if aUID <> 0 then // строка c таким aUID могла быть добавлена в lstLog ранее
+          begin
+            iObjIndex := lstLog.Items.IndexOfObject(TObject(aUID));
 
-      if iObjIndex = -1 then // это нова€ запись
-        lstLog.Items.AddObject(sMsg, TObject(aUID))
-      else
-        lstLog.Items[iObjIndex] := sMsg;
-    end
-    else
-      lstLog.Items.AddObject(sMsg, TObject(aUID));
+            if iObjIndex = -1 then // это нова€ запись
+              lstLog.Items.AddObject(sMsg, TObject(aUID))
+            else
+              lstLog.Items[iObjIndex] := sMsg;
+          end
+          else
+            lstLog.Items.AddObject(sMsg, TObject(aUID));
 
-    lstLog.Perform(WM_VSCROLL, SB_BOTTOM, 0);
-    lstLog.Perform(WM_VSCROLL, SB_ENDSCROLL, 0);
+          lstLog.Perform(WM_VSCROLL, SB_BOTTOM, 0);
+          lstLog.Perform(WM_VSCROLL, SB_ENDSCROLL, 0);
+        end;
+
+      lmtError: // сообщение об ошибке
+        begin
+          splHrz.Visible := True;
+          mmoError.Visible := True;
+          mmoError.Lines.Add(sMsg);
+          mmoError.Perform(WM_VSCROLL, SB_BOTTOM, 0);
+          mmoError.Perform(WM_VSCROLL, SB_ENDSCROLL, 0);
+        end;
+    end;
   end;
 
   FPrevUID := aUID;
@@ -992,24 +1025,18 @@ begin
   SendMessage((Sender as TMemo).Handle, EM_LINESCROLL, 0, (Sender as TMemo).Lines.Count);
 end;
 
-procedure TfrmMain.mmoScriptLogChange(Sender: TObject);
-begin
-//  Assert(FScriptFiles <> nil, 'ќжидаетс€ FScriptFiles <> nil');
-//  FScriptFiles.FilesUsed    := mmoScriptList.Lines.CommaText;
-//  TSettings.ScriptFilesUsed := FScriptFiles.FilesUsed;
-end;
-
 procedure TfrmMain.OnChangeStartId(const ANewStartId: Integer);
 var
-  iReplicaMin: Integer;
+  iReplicaMax, iRecCount: Integer;
 begin
   edtSsnMinId.Text := IntToStr(ANewStartId);
 
   if FSsnStep > 0 then
     pbSession.Position := Trunc((ANewStartId - FSsnMinId) / FSsnStep);
 
-  iReplicaMin := StrToIntDef(edtAllMinId.Text, 0);
-  pbAll.Position := ANewStartId - iReplicaMin;
+  iReplicaMax := StrToIntDef(edtAllMaxId.Text, 0);
+  iRecCount   := StrToIntDef(edtAllRecCount.Text, 0);
+  UpdateProgBarPosition(pbAll, iReplicaMax, ANewStartId, iRecCount);
 
   if (ANewStartId mod 2) = 0 then Exit;
 
@@ -1215,17 +1242,8 @@ begin
       edtAllRecCount.Text := IntToStr(P^.RecCount);
 
       iStart := StrToIntDef(edtSsnMinId.Text, 0);
+      UpdateProgBarPosition(pbAll, P^.MaxId, iStart, P^.RecCount);
 
-      if (P^.MaxId > P^.MinId) then
-      begin
-        pbAll.Step := 1;
-        pbAll.Min  := 1;
-        pbAll.Max  := P^.RecCount;
-        if (P^.MaxId > iStart) and (iStart > P^.MinId) then
-          pbAll.Position := iStart - P^.MinId
-        else
-          pbAll.Position := pbAll.Min;
-      end;
     finally
       Dispose(P);
     end;

@@ -137,9 +137,19 @@ CREATE OR REPLACE FUNCTION zc_ObjectString_Label_UKR() RETURNS Integer AS $BODY$
 INSERT INTO ObjectStringDesc (Code, DescId, ItemName)
   SELECT 'zc_ObjectString_Label_UKR', zc_Object_Label(), 'Название(укр.)' WHERE NOT EXISTS (SELECT * FROM ObjectStringDesc WHERE Code = 'zc_ObjectString_Label_UKR');
 
+CREATE OR REPLACE FUNCTION zc_ObjectString_Composition_UKR() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM ObjectStringDesc WHERE Code = 'zc_ObjectString_Composition_UKR'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
+INSERT INTO ObjectStringDesc (Code, DescId, ItemName)
+  SELECT 'zc_ObjectString_Composition_UKR', zc_Object_Composition(), 'Название(укр.)' WHERE NOT EXISTS (SELECT * FROM ObjectStringDesc WHERE Code = 'zc_ObjectString_Composition_UKR');
+
+CREATE OR REPLACE FUNCTION zc_ObjectString_CountryBrand_UKR() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM ObjectStringDesc WHERE Code = 'zc_ObjectString_CountryBrand_UKR'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
+INSERT INTO ObjectStringDesc (Code, DescId, ItemName)
+  SELECT 'zc_ObjectString_CountryBrand_UKR', zc_Object_CountryBrand(), 'Название(укр.)' WHERE NOT EXISTS (SELECT * FROM ObjectStringDesc WHERE Code = 'zc_ObjectString_CountryBrand_UKR');
+
 /*-------------------------------------------------------------------------------
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Полятыкин А.А.
+25.08.20          * zc_ObjectString_Composition_UKR
+                    zc_ObjectString_CountryBrand_UKR
 09.06.20          * zc_ObjectString_Label_RUS
 29.03.19          * zc_ObjectString_ImportType_ProcedureName
                     zc_ObjectString_ImportType_JSONParamName

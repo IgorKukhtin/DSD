@@ -76,6 +76,7 @@ type
     procedure LoadIlliquidUnitFormTest;
     procedure LoadJuridicalFormTest;
     procedure LoadJuridicalAreaFormTest;
+    procedure LoadLayoutFormTest;
     procedure LoadLoadFormTest;
     procedure LoadLoyaltyFormTest;
     procedure LoadLoyaltySaveMoneyFormTest;
@@ -907,10 +908,13 @@ end;
 
 procedure TLoadFormTest.LoadReportFormTest;
 begin
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_CommentSendSUNForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TReport_CommentSendSUNForm');
+
+  {
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_PositionsUKTVEDonSUNForm'));
   TdsdFormStorageFactory.GetStorage.Load('TReport_PositionsUKTVEDonSUNForm');
 
-  {
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_LeftSendForm'));
   TdsdFormStorageFactory.GetStorage.Load('TReport_LeftSendForm');
 
@@ -1586,6 +1590,19 @@ begin
   TdsdFormStorageFactory.GetStorage.Load('TIlliquidUnitJournalForm');
 end;
 
+procedure TLoadFormTest.LoadLayoutFormTest;
+begin
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TLayoutForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TLayoutForm');
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TLayoutEditForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TLayoutEditForm');
+
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TLayout_MovementForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TLayout_MovementForm');
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TLayoutJournalForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TLayoutJournalForm');
+end;
+
 procedure TLoadFormTest.LoadJuridicalFormTest;
 begin
    TdsdFormStorageFactory.GetStorage.Save(GetForm('TJuridicalForm'));
@@ -1742,9 +1759,9 @@ begin
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TUnitEditForm'));
   TdsdFormStorageFactory.GetStorage.Load('TUnitEditForm');
 
-{  TdsdFormStorageFactory.GetStorage.Save(GetForm('TUnit_ObjectForm'));
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TUnit_ObjectForm'));
   TdsdFormStorageFactory.GetStorage.Load('TUnit_ObjectForm');
-
+{
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TListDaySUNDialogForm'));
   TdsdFormStorageFactory.GetStorage.Load('TListDaySUNDialogForm');
 
@@ -2447,17 +2464,17 @@ begin
 
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TSendJournalForm'));
   TdsdFormStorageFactory.GetStorage.Load('TSendJournalForm');
-   }
+}
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TSendForm'));
   TdsdFormStorageFactory.GetStorage.Load('TSendForm');
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TSendMenegerForm'));
   TdsdFormStorageFactory.GetStorage.Load('TSendMenegerForm');
 
-  TdsdFormStorageFactory.GetStorage.Save(GetForm('TCommentSendEditForm'));
+{  TdsdFormStorageFactory.GetStorage.Save(GetForm('TCommentSendEditForm'));
   TdsdFormStorageFactory.GetStorage.Load('TCommentSendEditForm');
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TCommentSendForm'));
   TdsdFormStorageFactory.GetStorage.Load('TCommentSendForm');
-  {
+
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TSendCashJournalForm'));
   TdsdFormStorageFactory.GetStorage.Load('TSendCashJournalForm');
 

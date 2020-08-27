@@ -83,11 +83,6 @@ BEGIN
         RAISE EXCEPTION 'Ошибка. Вам разрешено работать только с подразделением <%>.', (SELECT ValueData FROM Object WHERE ID = vbUserUnitId);     
       END IF;     
 
-      IF vbStatusID = zc_Enum_Status_Erased() AND vbisNotDisplaySUN = TRUE
-      THEN 
-        RAISE EXCEPTION 'Ошибка. Изменить статус на Не проведен в перемещениях СУН с признаком Не отображать для сбора запрещено.';     
-      END IF;     
-
       IF vbIsSUN = TRUE AND EXISTS(SELECT 1
                                    FROM Object AS Object_CashSettings
                                         LEFT JOIN ObjectDate AS ObjectDate_CashSettings_DateBanSUN
@@ -98,8 +93,14 @@ BEGIN
       THEN
         RAISE EXCEPTION 'Ошибка. Работа СУН пока невозможна, ожидайте сообщение IT.';
       END IF;                                
-
-      RAISE EXCEPTION 'Ошибка. Удаление перемещений вам запрещено.';     
+      
+      IF COALESCE((SELECT MovementFloat_TotalCount.ValueData
+                   FROM MovementFloat AS MovementFloat_TotalCount
+                   WHERE MovementFloat_TotalCount.MovementId = inMovementId
+                     AND MovementFloat_TotalCount.DescId = zc_MovementFloat_TotalCount()), 0) <> 0
+      THEN
+        RAISE EXCEPTION 'Ошибка. Удаление перемещений вам запрещено.';     
+      END IF;                                
     END IF;     
     
     IF vbIsVIP = TRUE AND NOT EXISTS (SELECT 1 FROM ObjectLink_UserRole_View  WHERE UserId = vbUserId AND RoleId in (zc_Enum_Role_Admin()))

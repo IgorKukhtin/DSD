@@ -68,6 +68,8 @@ type
     actDoLoad: TExecuteImportSettingsAction;
     macStartLoad: TMultiAction;
     bb: TdxBarButton;
+    spUpdate_NameUKR: TdsdStoredProc;
+    actUpdate_NameUKR: TdsdUpdateDataSet;
   private
     { Private declarations }
   public

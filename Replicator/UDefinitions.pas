@@ -3,11 +3,16 @@ unit UDefinitions;
 interface
 
 type
-//  TMessageLine = (mlNew, mlSame);
-  TNotifyMessage = procedure(const AMsg: string; const AFileName: string = ''; const aUID: Cardinal = 0) of object;
+  TLogMessageType = (lmtPlain, lmtError);
+  TNotifyMessage = procedure(const AMsg: string; const AFileName: string = ''; const aUID: Cardinal = 0; AMsgType: TLogMessageType = lmtPlain) of object;
   TOnChangeStartId = procedure (const ANewStartId: Integer) of object;
   TOnNewSession = procedure(const AStart: TDateTime; const AMinId, AMaxId, ARecCount, ASessionNumber: Integer) of object;
   TConditionFunc = reference to function(): Boolean;
+
+  TCmdData = class
+    Id: Integer;
+    TranId: Integer;
+  end;
 
   PMinMaxId = ^TMinMaxId;
   TMinMaxId = record
@@ -35,6 +40,7 @@ type
   TSequenceData = record
     Name: string;
     LastValue: Int64;
+    Increment: Integer;
   end;
 
   TSequenceDataArray = array of TSequenceData;

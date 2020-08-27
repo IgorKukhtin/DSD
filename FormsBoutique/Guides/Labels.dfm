@@ -3,7 +3,7 @@ object LabelForm: TLabelForm
   Top = 0
   Caption = #1057#1087#1088#1072#1074#1086#1095#1085#1080#1082' <'#1053#1072#1079#1074#1072#1085#1080#1077' '#1076#1083#1103' '#1094#1077#1085#1085#1080#1082#1072'>'
   ClientHeight = 376
-  ClientWidth = 588
+  ClientWidth = 621
   Color = clBtnFace
   Font.Charset = DEFAULT_CHARSET
   Font.Color = clWindowText
@@ -20,12 +20,13 @@ object LabelForm: TLabelForm
   object cxGrid: TcxGrid
     Left = 0
     Top = 26
-    Width = 588
+    Width = 621
     Height = 350
     Align = alClient
     TabOrder = 0
     LookAndFeel.NativeStyle = True
     LookAndFeel.SkinName = 'UserSkin'
+    ExplicitWidth = 588
     object cxGridDBTableView: TcxGridDBTableView
       Navigator.Buttons.CustomButtons = <>
       DataController.DataSource = DataSource
@@ -38,7 +39,6 @@ object LabelForm: TLabelForm
       OptionsCustomize.ColumnsQuickCustomization = True
       OptionsData.Deleting = False
       OptionsData.DeletingConfirmation = False
-      OptionsData.Editing = False
       OptionsData.Inserting = False
       OptionsView.ColumnAutoWidth = True
       OptionsView.GroupByBox = False
@@ -50,6 +50,7 @@ object LabelForm: TLabelForm
         DataBinding.FieldName = 'Code'
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
+        Options.Editing = False
         Width = 55
       end
       object Name: TcxGridDBColumn
@@ -58,6 +59,7 @@ object LabelForm: TLabelForm
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         HeaderGlyphAlignmentHorz = taCenter
+        Options.Editing = False
         Width = 243
       end
       object Name_UKR: TcxGridDBColumn
@@ -66,7 +68,6 @@ object LabelForm: TLabelForm
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         HeaderGlyphAlignmentHorz = taCenter
-        Options.Editing = False
         Width = 243
       end
       object Erased: TcxGridDBColumn
@@ -76,6 +77,7 @@ object LabelForm: TLabelForm
         Visible = False
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
+        Options.Editing = False
         Width = 78
       end
     end
@@ -492,6 +494,18 @@ object LabelForm: TLabelForm
       ImageIndex = 41
       WithoutNext = True
     end
+    object actUpdate_NameUKR: TdsdUpdateDataSet
+      Category = 'DSDLib'
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      StoredProc = spUpdate_NameUKR
+      StoredProcList = <
+        item
+          StoredProc = spUpdate_NameUKR
+        end>
+      Caption = 'actUpdate_NameUKR'
+      DataSource = DataSource
+    end
   end
   object spSelect: TdsdStoredProc
     StoredProcName = 'gpSelect_Object_Label'
@@ -635,5 +649,31 @@ object LabelForm: TLabelForm
     PackSize = 1
     Left = 464
     Top = 224
+  end
+  object spUpdate_NameUKR: TdsdStoredProc
+    StoredProcName = 'gpUpdate_Object_Label_NameUKR'
+    DataSets = <>
+    OutputType = otResult
+    Params = <
+      item
+        Name = 'inId'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'Id'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inName_UKR'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'Name_UKR'
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end>
+    PackSize = 1
+    Left = 544
+    Top = 91
   end
 end

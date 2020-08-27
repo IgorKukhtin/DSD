@@ -53,6 +53,9 @@ type
     Comment: TcxGridDBColumn;
     actPUSH: TdsdShowPUSHMessage;
     spPUSH: TdsdStoredProc;
+    OperDateSend: TcxGridDBColumn;
+    InvNumberSend: TcxGridDBColumn;
+    Color_calc: TcxGridDBColumn;
   private
     { Private declarations }
   public

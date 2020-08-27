@@ -167,8 +167,8 @@ BEGIN
 
       -- Контроль остатка
     SELECT Object_Goods.ValueData                                                 AS CommentTR
-         , COALESCE (MovementItem.Amount, 0)                                      AS Amount
-         , COALESCE (MIFloat_Remains.ValueData, 0)                                AS DifferenceSum
+         , COALESCE (Sum(MovementItem.Amount), 0)                                 AS Amount
+         , COALESCE (Max(MIFloat_Remains.ValueData), 0)                           AS DifferenceSum
     INTO vbCommentTR, vbAmountIn, vbAmountOut
     FROM MovementItem
 
@@ -182,7 +182,8 @@ BEGIN
     WHERE MovementItem.MovementId = inMovementId
       AND MovementItem.DescId     = zc_MI_Master()
       AND MovementItem.isErased   = FALSE
-      AND (COALESCE (MovementItem.Amount, 0) + COALESCE (MIFloat_Remains.ValueData, 0)) < 0;
+    GROUP BY Object_Goods.ValueData 
+    HAVING (COALESCE (Sum(MovementItem.Amount), 0) + COALESCE (Max(MIFloat_Remains.ValueData), 0)) < 0;
 
     IF (COALESCE(vbCommentTR,'') <> '')
     THEN
@@ -292,9 +293,9 @@ BEGIN
     PERFORM lpInsertUpdate_MovementItem_Inventory(ioId := COALESCE(MIInventory.ID, 0)
                                                 , inMovementId := vbInventoryID
                                                 , inGoodsId := MovementItem.ObjectId
-                                                , inAmount := COALESCE(MIFloat_Remains.ValueData, 0) + MovementItem.Amount
-                                                , inPrice := COALESCE (MIFloat_Price.ValueData, 0)
-                                                , inSumm := ROUND((COALESCE(MIFloat_Remains.ValueData, 0) + MovementItem.Amount) * COALESCE (MIFloat_Price.ValueData, 0), 2)
+                                                , inAmount := COALESCE(Max(MIFloat_Remains.ValueData), 0) + Sum(MovementItem.Amount)
+                                                , inPrice := COALESCE (Max(MIFloat_Price.ValueData), 0)
+                                                , inSumm := ROUND((COALESCE(Max(MIFloat_Remains.ValueData), 0) + Sum(MovementItem.Amount)) * COALESCE (Max(MIFloat_Price.ValueData), 0), 2)
                                                 , inComment := ''
                                                 , inUserId := inUserId)
     FROM MovementItem
@@ -308,8 +309,10 @@ BEGIN
                                               AND MIInventory.ObjectId = MovementItem.ObjectId
     WHERE MovementItem.MovementId = inMovementId
       AND MovementItem.DescId     = zc_MI_Master()
-      AND (COALESCE(MIInventory.Amount, 0) <> (COALESCE(MIFloat_Remains.ValueData, 0) + MovementItem.Amount) OR MIInventory.Amount IS NULL)
-      AND MovementItem.isErased   = FALSE;
+      AND MovementItem.isErased   = FALSE
+    GROUP BY MovementItem.ObjectId, MIInventory.ID
+    HAVING COALESCE(Max(MIInventory.Amount), 0) <> (COALESCE(Max(MIFloat_Remains.ValueData), 0) + Sum(MovementItem.Amount)) 
+        OR Max(MIInventory.Amount) IS NULL;
 
      -- Удалили все лишнее в инвентаризации
     PERFORM gpMovementItem_Inventory_SetErased(MovementItem.ID, inUserId::TVarChar)
@@ -317,6 +320,8 @@ BEGIN
     WHERE MovementItem.MovementId = vbInventoryID
       AND MovementItem.ObjectId NOT IN (SELECT MovementItem.ObjectId FROM MovementItem
                                         WHERE MovementItem.MovementId = inMovementId AND MovementItem.isErased = FALSE);
+
+--    RAISE EXCEPTION 'Прошло.';
 
     -- Провели
     PERFORM gpComplete_Movement_Inventory (vbInventoryID, inUserId::TVarChar);
@@ -338,3 +343,5 @@ $BODY$
 */
 
 --select * from gpUpdate_Status_TechnicalRediscount(inMovementId := 17785885 , inStatusCode := 2 ,  inSession := '3');
+
+select * from gpUpdate_Status_TechnicalRediscount(inMovementId := 19801455 , inStatusCode := 2 ,  inSession := '3');

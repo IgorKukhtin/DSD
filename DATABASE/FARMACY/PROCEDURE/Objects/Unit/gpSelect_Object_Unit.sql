@@ -59,6 +59,7 @@ RETURNS TABLE (Id Integer, Code Integer, Name TVarChar
              , isNotCashMCS     Boolean, isNotCashListDiff     Boolean
              , isTechnicalRediscount Boolean, isAlertRecounting Boolean
              , TimeWork TVarChar
+             , DateCheck TDateTime
 
 ) AS
 $BODY$
@@ -73,7 +74,12 @@ BEGIN
                        , ROW_NUMBER() OVER (ORDER BY ObjectBoolean_UploadBadm.ObjectId )  ::integer  AS Num_byReportBadm
                   FROM ObjectBoolean AS ObjectBoolean_UploadBadm
                   WHERE ObjectBoolean_UploadBadm.DescId = zc_ObjectBoolean_Unit_UploadBadm()
-                    AND ObjectBoolean_UploadBadm.ValueData = TRUE)
+                    AND ObjectBoolean_UploadBadm.ValueData = TRUE),
+    tmpCheck AS (SELECT AnalysisContainerItem.UnitId                   AS UnitId
+                      , MIN(AnalysisContainerItem.OperDate)::TDateTime AS OperDate
+                 FROM AnalysisContainerItem
+                 WHERE AnalysisContainerItem.AmountCheck > 0
+                 GROUP BY AnalysisContainerItem.UnitId)
 
     SELECT 
         Object_Unit.Id                                       AS Id
@@ -220,6 +226,7 @@ BEGIN
              THEN 'Вс '||LEFT ((ObjectDate_SundayStart.ValueData::Time)::TVarChar,5)||'-'||LEFT ((ObjectDate_SundayEnd.ValueData::Time)::TVarChar,5)
              ELSE ''
         END) :: TVarChar AS TimeWork
+      , tmpCheck.OperDate                                                     AS  DateCheck
 
     FROM Object AS Object_Unit
         LEFT JOIN ObjectLink AS ObjectLink_Unit_Parent
@@ -559,6 +566,8 @@ BEGIN
         LEFT JOIN ObjectDate AS ObjectDate_SundayEnd 
                              ON ObjectDate_SundayEnd.ObjectId = Object_Unit.Id
                             AND ObjectDate_SundayEnd.DescId = zc_ObjectDate_Unit_SundayEnd()
+                            
+        LEFT JOIN tmpCheck ON tmpCheck.UnitId =  Object_Unit.Id
 
     WHERE Object_Unit.DescId = zc_Object_Unit()
       AND (inisShowAll = True OR Object_Unit.isErased = False);
@@ -611,4 +620,5 @@ LANGUAGE plpgsql VOLATILE;
 */
 
 -- тест
--- SELECT * FROM gpSelect_Object_Unit (False, '2')
+-- 
+SELECT * FROM gpSelect_Object_Unit (False, '2')

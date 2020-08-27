@@ -41,8 +41,9 @@ BEGIN
      IF EXISTS(SELECT 1 FROM MovementItemFloat 
                WHERE MovementItemFloat.MovementItemId = ioId
                  AND MovementItemFloat.DescId = zc_MIFloat_MovementItemId())
+        AND COALESCE(inAmount, 0) <> COALESCE((SELECT MovementItem.Amount FROM MovementItem WHERE MovementItem.ID = ioId), 0) 
      THEN
-       RAISE EXCEPTION 'Ошибка.Изменятьпозиции сформированные из перемещений по СУН запрещено.';
+       RAISE EXCEPTION 'Ошибка.Изменятьпозиции количество по строкам сформированным из перемещений по СУН запрещено.';
      END IF;
 
 /*     SELECT Movement.OperDate

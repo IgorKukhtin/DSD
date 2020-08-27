@@ -549,80 +549,83 @@ BEGIN
                              ) AS tmpGroup
                        )
 
-      , tmpAll as(SELECT tmpContract.InvNumber_master
-                       , tmpContract.InvNumber_child
-                       , CASE WHEN tmpContract.InfoMoneyId_Condition <> 0
-                                   THEN tmpContractBonus.InvNumber_find
-                              ELSE tmpContract.InvNumber_master
-                         END AS InvNumber_find
-
-                       , tmpContract.ContractTagName_child
-                       , tmpContract.ContractStateKindCode_child
-
-                       , tmpContract.ContractId_master
-                       , tmpContract.ContractId_child
-                       , CASE WHEN tmpContract.InfoMoneyId_Condition <> 0
-                                   THEN tmpContractBonus.ContractId_find
-                              ELSE tmpContract.ContractId_master
-                         END AS ContractId_find
-
-                       , tmpContract.InfoMoneyId_master
-                       , tmpContract.InfoMoneyId_child
-                       , CASE WHEN tmpContract.InfoMoneyId_Condition <> 0
-                                   THEN tmpContractBonus.InfoMoneyId_find
-                              WHEN tmpContract.InfoMoneyId_master = zc_Enum_InfoMoney_30101() -- Готовая продукция
-                                   THEN zc_Enum_InfoMoney_21501() -- Маркетинг + Бонусы за продукцию
-                              WHEN tmpContract.InfoMoneyId_master = zc_Enum_InfoMoney_30201() -- Мясное сырье
-                                   THEN zc_Enum_InfoMoney_21502() -- Маркетинг + Бонусы за мясное сырье
-                              ELSE tmpContract.InfoMoneyId_master
-                         END AS InfoMoneyId_find
-
-                       , tmpContract.JuridicalId AS JuridicalId
-                       , tmpMovement.PartnerId
-                       -- подменяем обратно ФО bз усл.договора на ФО из договора
-                       , tmpContract.PaidKindId                                 --tmpMovement.PaidKindId AS PaidKindId
-                       , tmpContract.PaidKindId_byBase  AS PaidKindId_child     -- ФО договора базы
-                       , tmpContract.ContractConditionKindId
-                       , tmpContract.BonusKindId
-                       , COALESCE (tmpContract.Value,0) AS Value
-                       , COALESCE (tmpContract.PercentRetBonus,0)     ::TFloat AS PercentRetBonus
-                       , COALESCE (tmpMovement.PercentRetBonus_fact,0)::TFloat AS PercentRetBonus_fact
-
-                       , CAST (CASE WHEN tmpContract.ContractConditionKindID = zc_Enum_ContractConditionKind_BonusPercentIncome() THEN COALESCE (tmpMovement.Amount_in,0)                     --  база приход кг -tmpMovement.Sum_Income
-                                    WHEN tmpContract.ContractConditionKindID = zc_Enum_ContractConditionKind_BonusPercentIncomeReturn() THEN  (COALESCE (tmpMovement.Amount_in,0) - COALESCE (tmpMovement.Amount_out,0)) --база приход-возврат кг  --  tmpMovement.Sum_IncomeReturnOut
-                                    WHEN tmpContract.ContractConditionKindID = zc_Enum_ContractConditionKind_BonusPercentAccount() THEN tmpMovement.Sum_Account
-                               ELSE 0 END  AS TFloat) AS Sum_CheckBonus
-
-                       --когда % возврата факт превышает % возврата план, бонус не начисляется
-                       , CAST (CASE WHEN (COALESCE (tmpContract.PercentRetBonus,0) <> 0 AND tmpMovement.PercentRetBonus_fact > tmpContract.PercentRetBonus) THEN 0
-                                    ELSE
-                                       CASE WHEN tmpContract.ContractConditionKindID = zc_Enum_ContractConditionKind_BonusPercentIncome() THEN COALESCE (tmpMovement.Amount_in,0) * tmpContract.Value                                                ----(tmpMovement.Sum_Income/100 * tmpContract.Value)
-                                            WHEN tmpContract.ContractConditionKindID = zc_Enum_ContractConditionKind_BonusPercentIncomeReturn() THEN  (COALESCE (tmpMovement.Amount_in,0) - COALESCE (tmpMovement.Amount_out,0)) * tmpContract.Value ----(tmpMovement.Sum_IncomeReturnOut/100 * tmpContract.Value)
-                                            WHEN tmpContract.ContractConditionKindID = zc_Enum_ContractConditionKind_BonusPercentAccount() THEN (tmpMovement.Sum_Account/100 * tmpContract.Value)
-                                       ELSE 0 END
-                               END  AS NUMERIC (16, 2)) AS Sum_Bonus
-
-                       , 0 :: TFloat                  AS Sum_BonusFact
-                       , 0 :: TFloat                  AS Sum_CheckBonusFact
-                       , 0 :: TFloat                  AS Sum_IncomeFact
-                       , COALESCE (tmpMovement.Sum_Account) AS Sum_Account
-                       , COALESCE (tmpMovement.Sum_IncomeReturnOut) AS Sum_IncomeReturnOut
-
-                       , tmpMovement.Amount_in
-                       , tmpMovement.Amount_out
-
-                       , COALESCE (tmpContract.Comment, '')  AS Comment
-
-                       , COALESCE (tmpMovement.MovementId,0) AS MovementId
-                       , tmpMovement.MovementDescId
-                       , COALESCE (tmpMovement.BranchId,0)   AS BranchId
-                  FROM tmpContract
-                       INNER JOIN tmpMovement ON tmpMovement.JuridicalId       = tmpContract.JuridicalId
-                                             AND tmpMovement.ContractId_child  = tmpContract.ContractId_child
-                                             AND tmpMovement.InfoMoneyId_child = tmpContract.InfoMoneyId_child
-                                             AND tmpMovement.PaidKindId_byBase = tmpContract.PaidKindId_byBase
-                       LEFT JOIN tmpContractBonus ON tmpContractBonus.ContractId_master = tmpContract.ContractId_master
-
+      , tmpAll AS(SELECT tmp.*
+                  FROM (SELECT tmpContract.InvNumber_master
+                             , tmpContract.InvNumber_child
+                             , CASE WHEN tmpContract.InfoMoneyId_Condition <> 0
+                                         THEN tmpContractBonus.InvNumber_find
+                                    ELSE tmpContract.InvNumber_master
+                               END AS InvNumber_find
+      
+                             , tmpContract.ContractTagName_child
+                             , tmpContract.ContractStateKindCode_child
+      
+                             , tmpContract.ContractId_master
+                             , tmpContract.ContractId_child
+                             , CASE WHEN tmpContract.InfoMoneyId_Condition <> 0
+                                         THEN tmpContractBonus.ContractId_find
+                                    ELSE tmpContract.ContractId_master
+                               END AS ContractId_find
+      
+                             , tmpContract.InfoMoneyId_master
+                             , tmpContract.InfoMoneyId_child
+                             , CASE WHEN tmpContract.InfoMoneyId_Condition <> 0
+                                         THEN tmpContractBonus.InfoMoneyId_find
+                                    WHEN tmpContract.InfoMoneyId_master = zc_Enum_InfoMoney_30101() -- Готовая продукция
+                                         THEN zc_Enum_InfoMoney_21501() -- Маркетинг + Бонусы за продукцию
+                                    WHEN tmpContract.InfoMoneyId_master = zc_Enum_InfoMoney_30201() -- Мясное сырье
+                                         THEN zc_Enum_InfoMoney_21502() -- Маркетинг + Бонусы за мясное сырье
+                                    ELSE tmpContract.InfoMoneyId_master
+                               END AS InfoMoneyId_find
+      
+                             , tmpContract.JuridicalId AS JuridicalId
+                             , tmpMovement.PartnerId
+                             -- подменяем обратно ФО bз усл.договора на ФО из договора
+                             , tmpContract.PaidKindId                                 --tmpMovement.PaidKindId AS PaidKindId
+                             , tmpContract.PaidKindId_byBase  AS PaidKindId_child     -- ФО договора базы
+                             , tmpContract.ContractConditionKindId
+                             , tmpContract.BonusKindId
+                             , COALESCE (tmpContract.Value,0) AS Value
+                             , COALESCE (tmpContract.PercentRetBonus,0)     ::TFloat AS PercentRetBonus
+                             , COALESCE (tmpMovement.PercentRetBonus_fact,0)::TFloat AS PercentRetBonus_fact
+      
+                             , CAST (CASE WHEN tmpContract.ContractConditionKindID = zc_Enum_ContractConditionKind_BonusPercentIncome() THEN COALESCE (tmpMovement.Amount_in,0)                     --  база приход кг -tmpMovement.Sum_Income
+                                          WHEN tmpContract.ContractConditionKindID = zc_Enum_ContractConditionKind_BonusPercentIncomeReturn() THEN  (COALESCE (tmpMovement.Amount_in,0) - COALESCE (tmpMovement.Amount_out,0)) --база приход-возврат кг  --  tmpMovement.Sum_IncomeReturnOut
+                                          WHEN tmpContract.ContractConditionKindID = zc_Enum_ContractConditionKind_BonusPercentAccount() THEN tmpMovement.Sum_Account
+                                     ELSE 0 END  AS TFloat) AS Sum_CheckBonus
+      
+                             --когда % возврата факт превышает % возврата план, бонус не начисляется
+                             , CAST (CASE WHEN (COALESCE (tmpContract.PercentRetBonus,0) <> 0 AND tmpMovement.PercentRetBonus_fact > tmpContract.PercentRetBonus) THEN 0
+                                          ELSE
+                                             CASE WHEN tmpContract.ContractConditionKindID = zc_Enum_ContractConditionKind_BonusPercentIncome() THEN COALESCE (tmpMovement.Amount_in,0) * tmpContract.Value                                                ----(tmpMovement.Sum_Income/100 * tmpContract.Value)
+                                                  WHEN tmpContract.ContractConditionKindID = zc_Enum_ContractConditionKind_BonusPercentIncomeReturn() THEN  (COALESCE (tmpMovement.Amount_in,0) - COALESCE (tmpMovement.Amount_out,0)) * tmpContract.Value ----(tmpMovement.Sum_IncomeReturnOut/100 * tmpContract.Value)
+                                                  WHEN tmpContract.ContractConditionKindID = zc_Enum_ContractConditionKind_BonusPercentAccount() THEN (tmpMovement.Sum_Account/100 * tmpContract.Value)
+                                             ELSE 0 END
+                                     END  AS NUMERIC (16, 2)) AS Sum_Bonus
+      
+                             , 0 :: TFloat                  AS Sum_BonusFact
+                             , 0 :: TFloat                  AS Sum_CheckBonusFact
+                             , 0 :: TFloat                  AS Sum_IncomeFact
+                             , COALESCE (tmpMovement.Sum_Account) AS Sum_Account
+                             , COALESCE (tmpMovement.Sum_IncomeReturnOut) AS Sum_IncomeReturnOut
+      
+                             , tmpMovement.Amount_in
+                             , tmpMovement.Amount_out
+      
+                             , COALESCE (tmpContract.Comment, '')  AS Comment
+      
+                             , COALESCE (tmpMovement.MovementId,0) AS MovementId
+                             , tmpMovement.MovementDescId
+                             , COALESCE (tmpMovement.BranchId,0)   AS BranchId
+                        FROM tmpContract
+                             INNER JOIN tmpMovement ON tmpMovement.JuridicalId       = tmpContract.JuridicalId
+                                                   AND tmpMovement.ContractId_child  = tmpContract.ContractId_child
+                                                   AND tmpMovement.InfoMoneyId_child = tmpContract.InfoMoneyId_child
+                                                   AND tmpMovement.PaidKindId_byBase = tmpContract.PaidKindId_byBase
+                             LEFT JOIN tmpContractBonus ON tmpContractBonus.ContractId_master = tmpContract.ContractId_master
+                        ) AS tmp
+                        LEFT JOIN tmpContractPartner ON (tmpContractPartner.ContractId = tmp.ContractId_master AND tmpContractPartner.PartnerId = tmp.PartnerId)
+                  WHERE tmpContractPartner.ContractId IS NOT NULL OR COALESCE (tmp.PaidKindId_child, 0) = zc_Enum_PaidKind_FirstForm()
                 UNION ALL
                   SELECT View_Contract_InvNumber_master.InvNumber AS InvNumber_master
                        , View_Contract_InvNumber_child.InvNumber AS InvNumber_child

@@ -41,6 +41,8 @@ type
     cxLabel3: TcxLabel;
     ceCompositionGroup: TcxButtonEdit;
     CompositionGroupGuides: TdsdGuides;
+    cxLabel4: TcxLabel;
+    edName_UKR: TcxTextEdit;
   private
     { Private declarations }
   public

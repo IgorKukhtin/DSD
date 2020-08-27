@@ -2145,7 +2145,7 @@ inherited Report_Goods_RemainsCurrentForm: TReport_Goods_RemainsCurrentForm
     object actExport_Grid: TExportGrid
       Category = 'Export_file'
       MoveParams = <>
-      ExportType = cxegExportToText
+      ExportType = cxegExportToTextUTF8
       Grid = ExportXmlGrid
       Caption = 'actExport_Grid'
       OpenAfterCreate = False
@@ -2655,8 +2655,8 @@ inherited Report_Goods_RemainsCurrentForm: TReport_Goods_RemainsCurrentForm
         ParamType = ptInput
         MultiSelectSeparator = ','
       end>
-    Left = 510
-    Top = 74
+    Left = 470
+    Top = 122
   end
   object GuidesPartner: TdsdGuides
     KeyField = 'Id'

@@ -19,7 +19,7 @@ object frmMain: TfrmMain
     Top = 0
     Width = 984
     Height = 662
-    ActivePage = tsLog
+    ActivePage = tsCompare
     Align = alClient
     TabOrder = 0
     object tsLog: TTabSheet
@@ -409,11 +409,20 @@ object frmMain: TfrmMain
           object tsMemo: TTabSheet
             Caption = 'tsMemo'
             TabVisible = False
+            object splHrz: TSplitter
+              Left = 0
+              Top = 285
+              Width = 834
+              Height = 3
+              Cursor = crVSplit
+              Align = alBottom
+              ExplicitTop = 283
+            end
             object lstLog: TListBox
               Left = 0
               Top = 0
               Width = 834
-              Height = 402
+              Height = 285
               Align = alClient
               Color = clWindowText
               DoubleBuffered = True
@@ -426,6 +435,24 @@ object frmMain: TfrmMain
               ParentDoubleBuffered = False
               ParentFont = False
               TabOrder = 0
+            end
+            object mmoError: TMemo
+              Left = 0
+              Top = 288
+              Width = 834
+              Height = 114
+              Align = alBottom
+              Color = clWindowText
+              Font.Charset = DEFAULT_CHARSET
+              Font.Color = clWhite
+              Font.Height = -11
+              Font.Name = 'Tahoma'
+              Font.Style = []
+              ParentFont = False
+              ReadOnly = True
+              ScrollBars = ssVertical
+              TabOrder = 1
+              Visible = False
             end
           end
           object tsChk: TTabSheet
@@ -449,7 +476,6 @@ object frmMain: TfrmMain
         TabOrder = 0
         object tsCompareRecCount: TTabSheet
           Caption = #1050#1086#1083#1080#1095#1077#1089#1090#1074#1086' '#1079#1072#1087#1080#1089#1077#1081
-          ExplicitHeight = 565
           object pnlCompareGrid: TPanel
             Left = 0
             Top = 41
@@ -458,8 +484,6 @@ object frmMain: TfrmMain
             Align = alClient
             BevelOuter = bvNone
             TabOrder = 0
-            ExplicitWidth = 976
-            ExplicitHeight = 593
             object grdCompareRecCount: TDBGrid
               AlignWithMargins = True
               Left = 3
@@ -510,7 +534,6 @@ object frmMain: TfrmMain
             Height = 41
             Align = alTop
             TabOrder = 1
-            ExplicitWidth = 976
             object lbCompareExecutingRecCount: TLabel
               Left = 205
               Top = 13
@@ -560,8 +583,6 @@ object frmMain: TfrmMain
             Align = alClient
             BevelOuter = bvNone
             TabOrder = 0
-            ExplicitWidth = 976
-            ExplicitHeight = 593
             object grdCompareSeq: TDBGrid
               AlignWithMargins = True
               Left = 3
@@ -592,15 +613,31 @@ object frmMain: TfrmMain
                   FieldName = 'MasterValue'
                   Title.Alignment = taCenter
                   Title.Caption = #1087#1086#1089#1083#1077#1076#1085#1077#1077' '#1079#1085#1072#1095#1077#1085#1080#1077' '#1074' Master'
-                  Width = 180
+                  Width = 160
                   Visible = True
                 end
                 item
                   Expanded = False
                   FieldName = 'SlaveValue'
                   Title.Alignment = taCenter
-                  Title.Caption = #1087#1086#1083#1089#1083#1077#1076#1085#1077#1077' '#1079#1085#1072#1095#1077#1085#1080#1077' '#1074' Slave'
-                  Width = 180
+                  Title.Caption = #1087#1086#1089#1083#1077#1076#1085#1077#1077' '#1079#1085#1072#1095#1077#1085#1080#1077' '#1074' Slave'
+                  Width = 160
+                  Visible = True
+                end
+                item
+                  Expanded = False
+                  FieldName = 'MasterIncrement'
+                  Title.Alignment = taCenter
+                  Title.Caption = #1080#1085#1082#1088#1077#1084#1077#1085#1090' Master'
+                  Width = 100
+                  Visible = True
+                end
+                item
+                  Expanded = False
+                  FieldName = 'SlaveIncrement'
+                  Title.Alignment = taCenter
+                  Title.Caption = #1080#1085#1082#1088#1077#1084#1077#1085#1090' Slave'
+                  Width = 100
                   Visible = True
                 end>
             end
@@ -612,7 +649,6 @@ object frmMain: TfrmMain
             Height = 41
             Align = alTop
             TabOrder = 1
-            ExplicitTop = 8
             object lbCompareExecutingSeq: TLabel
               Left = 205
               Top = 13
@@ -1005,7 +1041,6 @@ object frmMain: TfrmMain
               ParentFont = False
               ScrollBars = ssVertical
               TabOrder = 0
-              OnChange = mmoScriptLogChange
             end
           end
           object edtScriptPath: TEdit

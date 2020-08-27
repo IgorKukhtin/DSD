@@ -109,7 +109,7 @@ BEGIN
            , Object_DiscountExternal.ValueData                  AS DiscountExternalName
            , MovementString_BayerPhone.ValueData                AS BayerPhone
            , COALESCE(MovementString_InvNumberOrder.ValueData,
-             MovementString_BookingId.ValueData)                AS InvNumberOrder
+             CASE WHEN COALESCE (MovementString_BookingId.ValueData, '') <> '' THEN Movement_Check.Id::TVarChar END)::TVarChar  AS InvNumberOrder
            , Object_ConfirmedKind.ValueData                     AS ConfirmedKindName
            , Object_ConfirmedKindClient.ValueData               AS ConfirmedKindClientName
 
@@ -389,5 +389,5 @@ $BODY$
 */
 
 -- тест
--- SELECT * FROM gpSelect_Movement_Check (inStartDate:= '01.08.2017', inEndDate:= '01.08.2017', inIsErased := FALSE, inIsSP := FALSE, inIsVip := FALSE, inUnitId:= 1, inSession:= '2')
+-- SELECT * FROM gpSelect_Movement_Check (inStartDate:= '01.08.2020', inEndDate:= '01.08.2020', inIsErased := FALSE, inIsSP := FALSE, inIsVip := FALSE, inUnitId:= 0, inSession:= '2')
 

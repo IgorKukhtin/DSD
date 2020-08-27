@@ -4,7 +4,7 @@ object BarCodeBoxPrintDialogForm: TBarCodeBoxPrintDialogForm
   BorderStyle = bsDialog
   Caption = #1053#1072#1087#1077#1095#1072#1090#1072#1090#1100' '#1085#1086#1074#1099#1077' '#1096'/'#1082
   ClientHeight = 150
-  ClientWidth = 310
+  ClientWidth = 268
   Color = clBtnFace
   Font.Charset = DEFAULT_CHARSET
   Font.Color = clWindowText
@@ -29,7 +29,7 @@ object BarCodeBoxPrintDialogForm: TBarCodeBoxPrintDialogForm
     TabOrder = 0
   end
   object cxButton2: TcxButton
-    Left = 192
+    Left = 161
     Top = 105
     Width = 75
     Height = 25
@@ -43,9 +43,9 @@ object BarCodeBoxPrintDialogForm: TBarCodeBoxPrintDialogForm
     Caption = #1053#1072#1095'. '#1079#1085#1072#1095#1077#1085#1080#1077
   end
   object cxLabel3: TcxLabel
-    Left = 136
+    Left = 149
     Top = 18
-    Caption = #1050#1086#1085#1077#1095#1085'. '#1079#1085#1072#1095#1077#1085#1080#1077
+    Caption = #1050#1086#1083#1080#1095#1077#1089#1090#1074#1086
   end
   object edBarCode1: TcxCurrencyEdit
     Left = 25
@@ -56,8 +56,8 @@ object BarCodeBoxPrintDialogForm: TBarCodeBoxPrintDialogForm
     TabOrder = 4
     Width = 100
   end
-  object edBarCode2: TcxCurrencyEdit
-    Left = 136
+  object edAmount: TcxCurrencyEdit
+    Left = 149
     Top = 41
     EditValue = '0'
     Properties.DecimalPlaces = 4
@@ -92,9 +92,9 @@ object BarCodeBoxPrintDialogForm: TBarCodeBoxPrintDialogForm
         MultiSelectSeparator = ','
       end
       item
-        Name = 'inBarCode2'
+        Name = 'inAmount'
         Value = Null
-        Component = edBarCode2
+        Component = edAmount
         ParamType = ptInput
         MultiSelectSeparator = ','
       end
@@ -104,8 +104,8 @@ object BarCodeBoxPrintDialogForm: TBarCodeBoxPrintDialogForm
         ParamType = ptInput
         MultiSelectSeparator = ','
       end>
-    Left = 231
-    Top = 31
+    Left = 71
+    Top = 39
   end
   object spGet: TdsdStoredProc
     StoredProcName = 'gpGet_Onject_BarCodeBox_ValueData'

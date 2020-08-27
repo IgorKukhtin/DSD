@@ -3,7 +3,7 @@ object CountryBrandForm: TCountryBrandForm
   Top = 0
   Caption = #1057#1087#1088#1072#1074#1086#1095#1085#1080#1082' <'#1057#1090#1088#1072#1085#1072' '#1087#1088#1086#1080#1079#1074#1086#1076#1080#1090#1077#1083#1100'>'
   ClientHeight = 376
-  ClientWidth = 403
+  ClientWidth = 517
   Color = clBtnFace
   Font.Charset = DEFAULT_CHARSET
   Font.Color = clWindowText
@@ -20,12 +20,13 @@ object CountryBrandForm: TCountryBrandForm
   object cxGrid: TcxGrid
     Left = 0
     Top = 26
-    Width = 403
+    Width = 517
     Height = 350
     Align = alClient
     TabOrder = 0
     LookAndFeel.NativeStyle = True
     LookAndFeel.SkinName = 'UserSkin'
+    ExplicitWidth = 403
     object cxGridDBTableView: TcxGridDBTableView
       Navigator.Buttons.CustomButtons = <>
       DataController.DataSource = DataSource
@@ -38,7 +39,6 @@ object CountryBrandForm: TCountryBrandForm
       OptionsCustomize.ColumnsQuickCustomization = True
       OptionsData.Deleting = False
       OptionsData.DeletingConfirmation = False
-      OptionsData.Editing = False
       OptionsData.Inserting = False
       OptionsView.ColumnAutoWidth = True
       OptionsView.GroupByBox = False
@@ -50,11 +50,21 @@ object CountryBrandForm: TCountryBrandForm
         DataBinding.FieldName = 'Code'
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
+        Options.Editing = False
         Width = 55
       end
       object Name: TcxGridDBColumn
         Caption = #1053#1072#1079#1074#1072#1085#1080#1077
         DataBinding.FieldName = 'Name'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        HeaderGlyphAlignmentHorz = taCenter
+        Options.Editing = False
+        Width = 243
+      end
+      object Name_UKR: TcxGridDBColumn
+        Caption = #1053#1072#1079#1074#1072#1085#1080#1077' ('#1091#1082#1088'.)'
+        DataBinding.FieldName = 'Name_UKR'
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         HeaderGlyphAlignmentHorz = taCenter
@@ -67,6 +77,7 @@ object CountryBrandForm: TCountryBrandForm
         Visible = False
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
+        Options.Editing = False
         Width = 78
       end
     end
@@ -424,6 +435,18 @@ object CountryBrandForm: TCountryBrandForm
       ImageIndexTrue = 62
       ImageIndexFalse = 63
     end
+    object actUpdate_NameUKR: TdsdUpdateDataSet
+      Category = 'DSDLib'
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      StoredProc = spUpdate_NameUKR
+      StoredProcList = <
+        item
+          StoredProc = spUpdate_NameUKR
+        end>
+      Caption = 'actUpdate_NameUKR'
+      DataSource = DataSource
+    end
   end
   object spSelect: TdsdStoredProc
     StoredProcName = 'gpSelect_Object_CountryBrand'
@@ -498,6 +521,7 @@ object CountryBrandForm: TCountryBrandForm
     ColumnAddOnList = <>
     ColumnEnterList = <>
     SummaryItemList = <>
+    PropertiesCellList = <>
     Left = 216
     Top = 160
   end
@@ -524,5 +548,31 @@ object CountryBrandForm: TCountryBrandForm
     PackSize = 1
     Left = 296
     Top = 144
+  end
+  object spUpdate_NameUKR: TdsdStoredProc
+    StoredProcName = 'gpUpdate_Object_CountryBrand_NameUKR'
+    DataSets = <>
+    OutputType = otResult
+    Params = <
+      item
+        Name = 'inId'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'Id'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inName_UKR'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'Name_UKR'
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end>
+    PackSize = 1
+    Left = 392
+    Top = 115
   end
 end

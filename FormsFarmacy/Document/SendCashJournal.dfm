@@ -25,13 +25,6 @@ inherited SendCashJournalForm: TSendCashJournalForm
           ToParam.Value = Null
           ToParam.MultiSelectSeparator = ','
         end>
-      DataSets = <
-        item
-          DataSet = PrintHeaderCDS
-        end
-        item
-          DataSet = PrintItemsCDS
-        end>
     end
   end
   inherited spSelect: TdsdStoredProc
@@ -81,7 +74,7 @@ inherited SendCashJournalForm: TSendCashJournalForm
       end
       item
         Name = 'inisVIP'
-        Value = 'False'
+        Value = False
         Component = FormParams
         ComponentItem = 'isVIP'
         DataType = ftBoolean
@@ -97,14 +90,180 @@ inherited SendCashJournalForm: TSendCashJournalForm
         MultiSelectSeparator = ','
       end>
   end
-  inherited BarManager: TdxBarManager
-    DockControlHeights = (
-      0
-      0
-      26
-      0)
+  inherited spSelectPrint: TdsdStoredProc [8]
   end
-  inherited FormParams: TdsdFormParams
+  inherited PrintItemsSverkaCDS: TClientDataSet [9]
+  end
+  inherited spUpdate_Movement_OperDate: TdsdStoredProc [10]
+  end
+  inherited spUpdate_isDeferred_No: TdsdStoredProc [11]
+    Params = <
+      item
+        Name = 'inId'
+        Component = MasterCDS
+        ComponentItem = 'Id'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inisDeferred'
+        Value = False
+        DataType = ftBoolean
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'outisDeferred'
+        Value = False
+        Component = MasterCDS
+        ComponentItem = 'isDeferred'
+        DataType = ftBoolean
+        MultiSelectSeparator = ','
+      end>
+  end
+  inherited spUpdate_isDeferred_Yes: TdsdStoredProc [12]
+    Params = <
+      item
+        Name = 'inId'
+        Component = MasterCDS
+        ComponentItem = 'Id'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inisDeferred'
+        Value = True
+        DataType = ftBoolean
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'outisDeferred'
+        Value = False
+        Component = MasterCDS
+        ComponentItem = 'isDeferred'
+        DataType = ftBoolean
+        MultiSelectSeparator = ','
+      end>
+  end
+  inherited spUpdate_Movement_Received: TdsdStoredProc [13]
+    Params = <
+      item
+        Name = 'inMovementId'
+        Component = MasterCDS
+        ComponentItem = 'Id'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inisReceived'
+        Value = False
+        Component = MasterCDS
+        ComponentItem = 'isReceived'
+        DataType = ftBoolean
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end>
+  end
+  inherited spUpdate_Movement_Sent: TdsdStoredProc [14]
+    Params = <
+      item
+        Name = 'inMovementId'
+        Component = MasterCDS
+        ComponentItem = 'Id'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inisSent'
+        Value = False
+        Component = MasterCDS
+        ComponentItem = 'isSent'
+        DataType = ftBoolean
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end>
+  end
+  inherited spUpdate_isDefSun: TdsdStoredProc [15]
+    Params = <
+      item
+        Name = 'inId'
+        Component = MasterCDS
+        ComponentItem = 'Id'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inisDefSUN'
+        Value = False
+        Component = MasterCDS
+        ComponentItem = 'isDefSUN'
+        DataType = ftBoolean
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'outisDefSUN'
+        Value = False
+        Component = MasterCDS
+        ComponentItem = 'isDefSUN'
+        DataType = ftBoolean
+        MultiSelectSeparator = ','
+      end>
+  end
+  inherited spUpdate_isSun: TdsdStoredProc [16]
+    Params = <
+      item
+        Name = 'inId'
+        Component = MasterCDS
+        ComponentItem = 'Id'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inisSUN'
+        Value = False
+        Component = MasterCDS
+        ComponentItem = 'isSUN'
+        DataType = ftBoolean
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'outisSUN'
+        Value = False
+        Component = MasterCDS
+        ComponentItem = 'isSUN'
+        DataType = ftBoolean
+        MultiSelectSeparator = ','
+      end>
+  end
+  inherited spUnCompleteView: TdsdStoredProc [17]
+  end
+  inherited spUpdate_NotDisplaySUN_Yes: TdsdStoredProc [18]
+    Params = <
+      item
+        Name = 'inMovementId'
+        Component = MasterCDS
+        ComponentItem = 'Id'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inisNotDisplaySUN'
+        Value = False
+        Component = MasterCDS
+        ComponentItem = 'isNotDisplaySUN'
+        DataType = ftBoolean
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end>
+  end
+  inherited spComplete_Filter: TdsdStoredProc [19]
+  end
+  inherited spSetErased_Filter: TdsdStoredProc [20]
+  end
+  inherited FormParams: TdsdFormParams [21]
     Params = <
       item
         Name = 'Id'
@@ -148,13 +307,13 @@ inherited SendCashJournalForm: TSendCashJournalForm
       end
       item
         Name = 'isSUNAll'
-        Value = 'False'
+        Value = False
         DataType = ftBoolean
         MultiSelectSeparator = ','
       end
       item
         Name = 'isVIP'
-        Value = 'False'
+        Value = False
         DataType = ftBoolean
         ParamType = ptInput
         MultiSelectSeparator = ','
@@ -165,5 +324,32 @@ inherited SendCashJournalForm: TSendCashJournalForm
         ParamType = ptInput
         MultiSelectSeparator = ','
       end>
+  end
+  inherited spMovementReComplete: TdsdStoredProc [22]
+  end
+  inherited PrintHeaderCDS: TClientDataSet [23]
+  end
+  inherited PrintItemsCDS: TClientDataSet [24]
+  end
+  inherited RefreshDispatcher: TRefreshDispatcher [25]
+  end
+  inherited spMovementComplete: TdsdStoredProc [26]
+  end
+  inherited spMovementUnComplete: TdsdStoredProc [27]
+  end
+  inherited spMovementSetErased: TdsdStoredProc [28]
+  end
+  inherited BarManager: TdxBarManager [29]
+    DockControlHeights = (
+      0
+      0
+      26
+      0)
+  end
+  inherited DBViewAddOn: TdsdDBViewAddOn [30]
+  end
+  inherited PopupMenu: TPopupMenu [31]
+  end
+  inherited PeriodChoice: TPeriodChoice [32]
   end
 end

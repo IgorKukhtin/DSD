@@ -32,7 +32,7 @@ type
     cxLabel2: TcxLabel;
     cxLabel3: TcxLabel;
     edBarCode1: TcxCurrencyEdit;
-    edBarCode2: TcxCurrencyEdit;
+    edAmount: TcxCurrencyEdit;
     spGet: TdsdStoredProc;
     ActionList: TActionList;
     actRefresh: TdsdDataSetRefresh;

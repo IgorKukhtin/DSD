@@ -14,8 +14,14 @@ BEGIN
    -- проверка прав пользователя на вызов процедуры
    vbUserId:= inSession;
    
+   --проверка. если выбрали штрихкод с префиксом
+   IF (SELECT POSITION ('-' IN Object.ValueData) FROM Object WHERE Object.Id = inId) > 0
+   THEN
+        RAISE EXCEPTION 'Ошибка.Выбранный штрихкод содержит префикс.';
+   END IF;
+   
    RETURN QUERY
-  SELECT CAST(Object.ValueData AS TFloat)   AS BarCode
+  SELECT (zfConvert_StringToFloat(Object.ValueData) + 1) ::TFloat AS BarCode
   FROM Object
   WHERE Object.Id = inId;
 

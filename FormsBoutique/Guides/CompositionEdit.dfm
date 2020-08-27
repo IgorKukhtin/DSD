@@ -2,7 +2,7 @@ object CompositionEditForm: TCompositionEditForm
   Left = 0
   Top = 0
   Caption = #1044#1086#1073#1072#1074#1080#1090#1100'/'#1048#1079#1084#1077#1085#1080#1090#1100' <'#1057#1086#1089#1090#1072#1074' '#1090#1086#1074#1072#1088#1072'>'
-  ClientHeight = 217
+  ClientHeight = 246
   ClientWidth = 302
   Color = clBtnFace
   Font.Charset = DEFAULT_CHARSET
@@ -28,8 +28,8 @@ object CompositionEditForm: TCompositionEditForm
     Caption = #1053#1072#1079#1074#1072#1085#1080#1077
   end
   object cxButton1: TcxButton
-    Left = 41
-    Top = 168
+    Left = 45
+    Top = 206
     Width = 75
     Height = 25
     Action = actInsertUpdateGuides
@@ -37,8 +37,8 @@ object CompositionEditForm: TCompositionEditForm
     TabOrder = 2
   end
   object cxButton2: TcxButton
-    Left = 185
-    Top = 168
+    Left = 189
+    Top = 206
     Width = 75
     Height = 25
     Action = actFormClose
@@ -63,12 +63,12 @@ object CompositionEditForm: TCompositionEditForm
   end
   object cxLabel3: TcxLabel
     Left = 10
-    Top = 104
+    Top = 147
     Caption = #1043#1088#1091#1087#1087#1072' '#1076#1083#1103' '#1089#1086#1089#1090#1072#1074#1072' '#1090#1086#1074#1072#1088#1072
   end
   object ceCompositionGroup: TcxButtonEdit
-    Left = 8
-    Top = 120
+    Left = 10
+    Top = 163
     Properties.Buttons = <
       item
         Default = True
@@ -76,6 +76,17 @@ object CompositionEditForm: TCompositionEditForm
       end>
     Properties.ReadOnly = True
     TabOrder = 1
+    Width = 273
+  end
+  object cxLabel4: TcxLabel
+    Left = 10
+    Top = 99
+    Caption = #1053#1072#1079#1074#1072#1085#1080#1077' ('#1091#1082#1088'.)'
+  end
+  object edName_UKR: TcxTextEdit
+    Left = 10
+    Top = 117
+    TabOrder = 9
     Width = 273
   end
   object ActionList: TActionList
@@ -134,6 +145,14 @@ object CompositionEditForm: TCompositionEditForm
         Name = 'inName'
         Value = ''
         Component = edName
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inName_UKR'
+        Value = Null
+        Component = edName_UKR
         DataType = ftString
         ParamType = ptInput
         MultiSelectSeparator = ','
@@ -203,6 +222,13 @@ object CompositionEditForm: TCompositionEditForm
         ComponentItem = 'TextValue'
         DataType = ftString
         MultiSelectSeparator = ','
+      end
+      item
+        Name = 'Name_UKR'
+        Value = Null
+        Component = edName_UKR
+        DataType = ftString
+        MultiSelectSeparator = ','
       end>
     PackSize = 1
     Left = 240
@@ -224,8 +250,8 @@ object CompositionEditForm: TCompositionEditForm
     Top = 56
   end
   object dsdUserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn
-    Left = 104
-    Top = 104
+    Left = 108
+    Top = 160
   end
   object CompositionGroupGuides: TdsdGuides
     KeyField = 'Id'
@@ -253,7 +279,7 @@ object CompositionEditForm: TCompositionEditForm
         ParamType = ptInput
         MultiSelectSeparator = ','
       end>
-    Left = 200
-    Top = 101
+    Left = 204
+    Top = 157
   end
 end
