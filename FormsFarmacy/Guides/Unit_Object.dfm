@@ -816,6 +816,14 @@ inherited Unit_ObjectForm: TUnit_ObjectForm
             Options.Editing = False
             Width = 91
           end
+          object DateCheck: TcxGridDBColumn
+            Caption = #1055#1077#1088#1074#1099#1081' '#1095#1077#1082
+            DataBinding.FieldName = 'DateCheck'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 84
+          end
         end
       end
     end

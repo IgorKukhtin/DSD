@@ -307,6 +307,7 @@ type
     dxBarButton7: TdxBarButton;
     dxBarStatic1: TdxBarStatic;
     HT_SUN_All: TcxGridDBColumn;
+    DateCheck: TcxGridDBColumn;
   private
     { Private declarations }
   public
