@@ -16,6 +16,9 @@ uses
   UCommandData;
 
 type
+  TWorkerThread = class;
+  TMoveErrorsThread = class;
+
   TdmData = class(TDataModule)
     conMaster: TZConnection;
     conSlave: TZConnection;
@@ -31,6 +34,7 @@ type
     FLastId: Integer;
     FSelectRange: Integer;
     FPacketRange: Integer;
+    FPacketNumber: Integer; // порядковый номер пакета в сессии
     FSessionNumber: Integer;
     FMsgProc: TNotifyMessage;
     FStopped: Boolean;
@@ -40,6 +44,8 @@ type
     FCommandData: TCommandData;
     FFailCmds: TCommandData;
     FReplicaFinished: TReplicaFinished;
+    FMoveErrorsThrd: TMoveErrorsThread;
+    FMoveErrorsThrdFinished: Boolean;
     FOnChangeStartId: TOnChangeStartId;
     FOnNewSession: TOnNewSession;
     FOnEndSession: TNotifyEvent;
@@ -50,12 +56,14 @@ type
     procedure BuildReplicaCommandsSQL(const AStartId, ARange: Integer);
     procedure ExecuteCommandsOneByOne;
     procedure ExecuteErrCommands;
-    procedure LogMsg(const AMsg, AFileName: string); overload;
     procedure LogMsg(const AMsg: string); overload;
     procedure LogMsg(const AMsg: string; const aUID: Cardinal); overload;
+    procedure LogErrMsg(const AMsg: string);
+    procedure LogMsgFile(const AMsg, AFileName: string);
+    procedure OnTerminateMoveErrors(Sender: TObject);
     procedure FetchSequences(AServer: TServerRank; out ASeqDataArr: TSequenceDataArray);
     procedure SaveValueInDB(const AValue: Integer; const AFieldName: string; const ASaveInMaster: Boolean = True);
-    procedure SaveErrorInMaster(const AStartId, ALastId: Integer; const AClientId: Int64; const AErrDescription: string);
+    procedure SaveErrorInMaster(const AStep, AStartId, ALastId: Integer; const AClientId: Int64; const AErrDescription: string);
 
   strict private
     procedure SetStartId(const AValue: Integer);
@@ -73,6 +81,8 @@ type
     function IsBothConnectionsAlive: Boolean;
     function GetSlaveValues: TSlaveValues;
     function GetMasterValues(const AClientId: Int64): TMasterValues;
+    function SaveErrorInDB(AServerRank: TServerRank; const AStep, AStartId, ALastId: Integer;
+      const AClientId: Int64; const AErrDescription: string): Boolean;
 
   protected
     property StartId: Integer read FStartId write SetStartId;
@@ -104,6 +114,7 @@ type
 
     procedure AlterSlaveSequences;
     procedure MoveSavedProcToSlave;
+    procedure MoveErrorsFromSlaveToMaster;
     procedure StartReplica;
     procedure StopReplica;
   end;
@@ -127,7 +138,7 @@ type
   strict private
     function GetReturnValue: Integer;
   protected
-    procedure InnerMsgProc(const AMsg, AFileName: string; const aUID: Cardinal);
+    procedure InnerMsgProc(const AMsg, AFileName: string; const aUID: Cardinal; AMsgType: TLogMessageType);
     procedure MySleep(const AInterval: Cardinal);
     property Data: TdmData read FData;
   public
@@ -202,6 +213,11 @@ type
     procedure Execute; override;
   end;
 
+  TMoveErrorsThread = class(TWorkerThread)
+  protected
+    procedure Execute; override;
+  end;
+
 implementation
 
 {%CLASSGROUP 'Vcl.Controls.TControl'}
@@ -223,6 +239,11 @@ const
   cAttempt2 = '№2 <%d-%d>  ok = %d   error = %d   за %s';
   cAttempt3 = '№3 <%d-%d>  ok = %d   error = %d   за %s';
 
+  // номера шагов
+  cStep1 = 1;
+  cStep2 = 2;
+  cStep3 = 3;
+
   // Сообщения об ошибке
   cWrongRange = 'Ожидается, что MaxId > StartId, а имеем MaxId = %d, StartId = %d';
   cTransWrongRange = 'Команды с транзакциями из диапазона <%d-%d> уже выполнялись в другом пакете';
@@ -236,7 +257,7 @@ const
 
 procedure TdmData.AlterSlaveSequences;
 const
-  cAlterSequence = 'alter sequence if exists public.%s restart with %d';
+  cAlterSequence = 'alter sequence if exists public.%s increment %d restart with %d';
   cSuccess       = 'Последние значения последовательностей перенесены в Slave';
 var
   I: Integer;
@@ -256,7 +277,7 @@ begin
       begin
         if FStopped then Exit;
 
-        sAlterSequence := Format(cAlterSequence, [arrSeq[I].Name, arrSeq[I].LastValue]);
+        sAlterSequence := Format(cAlterSequence, [arrSeq[I].Name, arrSeq[I].Increment, arrSeq[I].LastValue]);
         try
           with conSlave.DbcConnection do
           begin
@@ -268,7 +289,7 @@ begin
           on E: Exception do
           begin
             conSlave.DbcConnection.Rollback;
-            LogMsg(Format(cExceptionMsg, [E.ClassName, E.Message]));
+            LogErrMsg(Format(cExceptionMsg, [E.ClassName, E.Message]));
             Break;
           end;
         end;
@@ -281,7 +302,7 @@ begin
 
   except
     on E: Exception do
-      LogMsg(Format(cExceptionMsg, [E.ClassName, E.Message]));
+      LogErrMsg(Format(cExceptionMsg, [E.ClassName, E.Message]));
   end;
 end;
 
@@ -345,13 +366,13 @@ begin
     masterResult := ApplyScriptsFor(AScriptsContent, AScriptNames, srMaster);
     if masterResult = asError then
     begin
-      LogMsg('Не удалось выполнить скрипты для Master');
+      LogErrMsg('Не удалось выполнить скрипты для Master');
       Exit;
     end;
 
     slaveResult := ApplyScriptsFor(AScriptsContent, AScriptNames, srSlave);
     if slaveResult = asError then
-      LogMsg('Не удалось выполнить скрипты для Slave');
+      LogErrMsg('Не удалось выполнить скрипты для Slave');
 
   finally
     if (masterResult = asSuccess) and (slaveResult = asSuccess) then
@@ -404,7 +425,7 @@ begin
         on E: Exception do
         begin
           tmpConn.DbcConnection.Rollback;
-          LogMsg(Format(cExceptMsg, [AScriptNames[I], E.ClassName, E.Message]));
+          LogErrMsg(Format(cExceptMsg, [AScriptNames[I], E.ClassName, E.Message]));
           Result := asError;
           Break;
         end;
@@ -488,7 +509,7 @@ begin
     begin
       FStopped := True;
       FReplicaFinished := rfErrStopped;
-      LogMsg(Format(cExceptionMsg, [E.ClassName, E.Message]));
+      LogErrMsg(Format(cExceptionMsg, [E.ClassName, E.Message]));
     end;
   end;
 end;
@@ -513,6 +534,7 @@ begin
   FFailCmds    := TCommandData.Create;
 
   FReplicaFinished := rfComplete;
+  FMoveErrorsThrdFinished := True;
 end;
 
 destructor TdmData.Destroy;
@@ -561,7 +583,7 @@ begin
     on E: Exception do
     begin
       FReplicaFinished := rfErrStopped;
-      LogMsg(Format(cExceptionMsg, [E.ClassName, E.Message]));
+      LogErrMsg(Format(cExceptionMsg, [E.ClassName, E.Message]));
     end;
   end;
 
@@ -605,7 +627,7 @@ begin
 
     if FStartId >= iMaxId then
     begin
-      LogMsg(Format(cWrongRange, [iMaxId, FStartId]));
+      LogErrMsg(Format(cWrongRange, [iMaxId, FStartId]));
       FStopped := True;
       FReplicaFinished := rfErrStopped;
       Exit;
@@ -642,9 +664,11 @@ begin
             FFailCmds.Add(FCommandData.Data.Id, FCommandData.Data.TransId, FCommandData.Data.SQL);
             Inc(iFailCount);
 
+            LogErrMsg(Format(cExceptionMsg, [E.ClassName, E.Message]));
+
             // если нужно сохранять ошибки шага №2 в БД
             if TSettings.SaveErrStep2InDB then
-              SaveErrorInMaster(FCommandData.Data.Id, 0, FClient_Id, E.Message);
+              SaveErrorInMaster(cStep2, FCommandData.Data.Id, 0, FClient_Id, E.Message);
           end;
         end;
 
@@ -686,7 +710,7 @@ var
   sFileName: string;
 const
   cFileName  = '\Err_commands\%s';
-  cFileErr   = '%s__id-%d_ERR.txt';
+  cFileErr   = '%s  Id %d  ERR.txt';
 begin
   // FFailCmds содержит команды, которые не удалось выполнить в пакетной выгрузке и в выгрузке "по одной команде"
 
@@ -727,8 +751,10 @@ begin
           begin
             conSlave.DbcConnection.Rollback;
 
+            LogErrMsg(Format(cExceptionMsg, [E.ClassName, E.Message]));
+
             // ошибки шага №3 нужно сохранять в БД
-            SaveErrorInMaster(FFailCmds.Data.Id, 0, FClient_Id, E.Message);
+            SaveErrorInMaster(cStep3, FFailCmds.Data.Id, 0, FClient_Id, E.Message);
 
             // команды, которые так и не были выполнены, пишем в лог
             if FWriteCommands then
@@ -739,7 +765,7 @@ begin
                   FFailCmds.Data.Id
                 ])
               ]);
-              LogMsg(FFailCmds.Data.SQL, sFileName);
+              LogMsgFile(FFailCmds.Data.SQL, sFileName);
             end;
 
             Inc(iFailCount);
@@ -780,15 +806,16 @@ var
   iStartTrans, iEndTrans: Integer;
   rangeTransId: TMinMaxTransId;
   sFileName: string;
+  tmpData: TCmdData;
   tmpSL: TStringList;
   {$IFNDEF NO_EXECUTE}
   tmpStmt: IZPreparedStatement;
   {$ENDIF}
 const
   cFileName = '\Packets\%s';
-  cFileOK   = '%s__id-%d-%d.txt';
-  cFileErr  = '%s__id-%d-%d_ERR.txt';
-  cTransId  = '-- tranId = %d' + #13#10;
+  cFileOK   = '%s  Id %d-%d  %d.txt';
+  cFileErr  = '%s  Id %d-%d  %d ERR.txt';
+  cTransId  = '-- Id= %d    tranId= %d' + #13#10;
 begin
   Result := 0;
 
@@ -804,7 +831,7 @@ begin
   // проверим диапазон Id нового пакета
   if iStartId >= iMaxId then
   begin
-    LogMsg(Format(cWrongRange, [iMaxId, iStartId]));
+    LogErrMsg(Format(cWrongRange, [iMaxId, iStartId]));
     FStopped := True;
     FReplicaFinished := rfErrStopped;
     Exit;
@@ -819,19 +846,23 @@ begin
   // строка  "№1 Id=<56477135-56513779> tranId=<677135-63779> 3500 записей за  "
   LogMsg(Format(cAttempt1, [iStartId, iMaxId, iStartTrans, iEndTrans, iRecCount, '', '']), crdStart);
 
-  tmpSL := TStringList.Create;
+  tmpSL := TStringList.Create(True);// True означает, что tmpSL владеет объектами tmpData и освободит их в своем деструкторе
   try
     with FCommandData do
     begin
       MoveToId(FStartId);
       while not EOF and (Data.Id <= iMaxId) and not FStopped do
       begin
-        tmpSL.AddObject(Data.SQL, TObject(Data.TransId));
+        tmpData := TCmdData.Create;
+        tmpData.Id := Data.Id;
+        tmpData.TranId := Data.TransId;
+        tmpSL.AddObject(Data.SQL, tmpData);
         Next;
       end;
     end;
 
     try
+      Inc(FPacketNumber);
       // пакетная выгрузка (сделано по образцу кода из Release Notes "2.1.3 Batch Loading")
       if (tmpSL.Count > 0) and IsSlaveConnected and not FStopped then
       begin
@@ -874,14 +905,17 @@ begin
             Format(cFileOK, [
               FormatDateTime(cDateTimeFileNameStr, Now),
               iStartId,
-              iMaxId
+              iMaxId,
+              FPacketNumber
             ])
           ]);
 
           for I := 0 to Pred(tmpSL.Count) do
-            tmpSL[I] := Format(cTransId, [Integer(tmpSL.Objects[I])]) + tmpSL[I];
+            tmpSL[I] := Format(cTransId,
+                               [TCmdData(tmpSL.Objects[I]).Id, TCmdData(tmpSL.Objects[I]).TranId]
+                               ) + tmpSL[I];
 
-          LogMsg(tmpSL.Text, sFileName);
+          LogMsgFile(tmpSL.Text, sFileName);
         end;
 
         // строка  "№1 Id=<56477135-56513779> tranId=<677135-63779> 3500 записей за 00:00:00_212"
@@ -892,9 +926,11 @@ begin
       begin
         conSlave.DbcConnection.Rollback;
 
+        LogErrMsg(Format(cExceptionMsg, [E.ClassName, E.Message]));
+
         // если нужно сохранять ошибки шага №1 в БД
         if TSettings.SaveErrStep1InDB then
-          SaveErrorInMaster(iStartId, iMaxId, FClient_Id, E.Message);
+          SaveErrorInMaster(cStep1, iStartId, iMaxId, FClient_Id, E.Message);
 
         // запись сбойного пакета в файл
         if FWriteCommands then
@@ -903,14 +939,17 @@ begin
             Format(cFileErr, [
               FormatDateTime(cDateTimeFileNameStr, Now),
               iStartId,
-              iMaxId
+              iMaxId,
+              FPacketNumber
             ])
           ]);
 
           for I := 0 to Pred(tmpSL.Count) do
-            tmpSL[I] := Format(cTransId, [Integer(tmpSL.Objects[I])]) + tmpSL[I];
+            tmpSL[I] := Format(cTransId,
+                               [TCmdData(tmpSL.Objects[I]).Id, TCmdData(tmpSL.Objects[I]).TranId]
+                              ) + tmpSL[I];
 
-          LogMsg(tmpSL.Text, sFileName);
+          LogMsgFile(tmpSL.Text, sFileName);
         end;
 
         if bStopIfError then
@@ -948,12 +987,23 @@ begin
     // и избежать бесконечного цикла для случая, когда в пакете нет ни одной команды.
     iPrevStartId := FStartId;
 
+    // В процессе работы программы ошибки обычно сохраняются в Master._replica.Errors. Если в какой то момент связь с Master
+    // была утрачена, тогда ошибки сохраняются Slave._replica.Errors. Нужно проверить их наличие в Slave и перенести в Master
+    if FMoveErrorsThrdFinished then
+    begin
+      FMoveErrorsThrd := TMoveErrorsThread.Create(cCreateSuspended, FMsgProc, tknNondriven);
+      FMoveErrorsThrd.OnTerminate := OnTerminateMoveErrors;
+      FMoveErrorsThrd.Start;
+    end;
+
     // Формируем набор команд в дипазоне StartId..(StartId + SelectRange) - это сессия
     // Реальная правая граница может быть > (StartId + SelectRange), потому что BuildReplicaCommandsSQL учитывает номера транзакций
     // и обеспечивает условие, чтобы записи с одинаковыми номерами транзакций были в одном наборе
     BuildReplicaCommandsSQL(FStartId, FSelectRange);
 
     // FStartId увеличивается в процессе выполнения команд
+
+    FPacketNumber := 0; // сбрасываем нумерацию пакетов перед началом сессии
 
     // Передаем команды из дипазона StartId..(StartId + SelectRange) порциями
     while (FStartId < FLastId) and not FStopped do
@@ -980,7 +1030,7 @@ end;
 
 procedure TdmData.FetchSequences(AServer: TServerRank; out ASeqDataArr: TSequenceDataArray);
 const
-  cSelectSequences = 'select * from gpSelect_SequenceNames()';
+  cSelectSequences = 'select * from gpSelect_Sequences()';
   cSelectLastValue = 'select last_value from %s';
 var
   I: Integer;
@@ -1024,12 +1074,15 @@ begin
         if not IsEmpty then
         begin
           Assert(Lowercase(Fields[0].FieldName) = 'sequencename',
-            'Ожидается, что gpSelect_SequenceNames() вернет датасет, в котором первое поле "SequenceName"');
+            'Ожидается, что gpSelect_Sequences() вернет датасет, в котором первое поле "SequenceName"');
+          Assert(Lowercase(Fields[1].FieldName) = 'increment',
+            'Ожидается, что gpSelect_Sequences() вернет датасет, в котором второе поле "Increment"');
 
           I := 0;
           while not EOF and not FStopped do
           begin
             ASeqDataArr[I].Name := Fields[0].AsString;
+            ASeqDataArr[I].Increment := Fields[1].AsInteger;
             Inc(I);
             Next;
           end;
@@ -1056,7 +1109,7 @@ begin
 
   except
     on E: Exception do
-      LogMsg(Format(cExceptionMsg, [E.ClassName, E.Message]));
+      LogErrMsg(Format(cExceptionMsg, [E.ClassName, E.Message]));
   end;
 end;
 
@@ -1080,7 +1133,7 @@ begin
       end;
   except
     on E: Exception do
-      LogMsg(Format(cExceptionMsg, [E.ClassName, E.Message]));
+      LogErrMsg(Format(cExceptionMsg, [E.ClassName, E.Message]));
   end;
 end;
 
@@ -1112,7 +1165,7 @@ begin
       end;
   except
     on E: Exception do
-      LogMsg(Format(cExceptionMsg, [E.ClassName, E.Message]));
+      LogErrMsg(Format(cExceptionMsg, [E.ClassName, E.Message]));
   end;
 end;
 
@@ -1183,7 +1236,7 @@ begin
         Result := False;
 
         if iAttempt >= cAttemptCount then
-          LogMsg(Format(cExceptionMsg, [E.ClassName, E.Message]))
+          LogErrMsg(Format(cExceptionMsg, [E.ClassName, E.Message]))
         else
           Sleep(cWaitReconnect);
       end;
@@ -1208,6 +1261,11 @@ begin
   Result := IsConnected(conSlave, srSlave);
 end;
 
+procedure TdmData.LogErrMsg(const AMsg: string);
+begin
+  if Assigned(FMsgProc) then FMsgProc(AMsg, EmptyStr, 0, lmtError);
+end;
+
 procedure TdmData.LogMsg(const AMsg: string; const aUID: Cardinal);
 begin
   if Assigned(FMsgProc) then FMsgProc(AMsg, EmptyStr, aUID);
@@ -1218,7 +1276,7 @@ begin
   if Assigned(FMsgProc) then FMsgProc(AMsg);
 end;
 
-procedure TdmData.LogMsg(const AMsg, AFileName: string);
+procedure TdmData.LogMsgFile(const AMsg, AFileName: string);
 begin
   if Assigned(FMsgProc) then FMsgProc(AMsg, AFileName);
 end;
@@ -1337,7 +1395,7 @@ begin
       Result := sSQL + ';';
   except
     on E: Exception do
-      LogMsg(Format(cExceptionMsg, [E.ClassName, E.Message]));
+      LogErrMsg(Format(cExceptionMsg, [E.ClassName, E.Message]));
   end;
 end;
 
@@ -1347,16 +1405,18 @@ type
     Name: string;
     MasterValue: Int64;
     SlaveValue: Int64;
+    MasterIncrement: Integer;
+    SlaveIncrement: Integer;
   end;
 const
-  cSelectUnion = 'select ''%s'' as SequenceName, %d as MasterValue, %d as SlaveValue';
+  cSelectUnion = 'select ''%s'' as SequenceName, %d as MasterValue, %d as SlaveValue, %d as MasterIncrement, %d as SlaveIncrement';
 var
   I, J: Integer;
   arrMasterSeq, arrSlaveSeq: TSequenceDataArray;
   arrUnion: array of TUnionData;
   sSelect: string;
 begin
-  Result := Format(cSelectUnion, ['<нет данных>', 0, 0]) + ';';
+  Result := Format(cSelectUnion, ['<нет данных>', 0, 0, 0, 0]) + ';';
 
   try
 
@@ -1376,8 +1436,9 @@ begin
     for I := Low(arrUnion) to High(arrUnion) do
     begin
       if FStopped then Exit;
-      arrUnion[I].Name := arrMasterSeq[I].Name;
-      arrUnion[I].MasterValue := arrMasterSeq[I].LastValue;
+      arrUnion[I].Name            := arrMasterSeq[I].Name;
+      arrUnion[I].MasterValue     := arrMasterSeq[I].LastValue;
+      arrUnion[I].MasterIncrement := arrMasterSeq[I].Increment;
     end;
 
     // Репликация может быть еще не закончена и в Slave меньше последовательностей, чем в Master
@@ -1389,7 +1450,8 @@ begin
         if arrSlaveSeq[J].Name = arrUnion[I].Name then
         begin
           if FStopped then Exit;
-          arrUnion[I].SlaveValue := arrSlaveSeq[J].LastValue;
+          arrUnion[I].SlaveValue     := arrSlaveSeq[J].LastValue;
+          arrUnion[I].SlaveIncrement := arrSlaveSeq[J].Increment;
           Break;
         end;
     end;
@@ -1401,9 +1463,13 @@ begin
 
       // если нужно показать только отличия, тогда пропускаем равные значения
       if ADeviationsOnly then
-        if arrUnion[I].MasterValue = arrUnion[I].SlaveValue then Continue;
+        if (arrUnion[I].MasterValue = arrUnion[I].SlaveValue) and
+           (arrUnion[I].MasterIncrement = arrUnion[I].SlaveIncrement)
+        then Continue;
 
-      sSelect := Format(cSelectUnion, [arrUnion[I].Name, arrUnion[I].MasterValue, arrUnion[I].SlaveValue]);
+      sSelect := Format(cSelectUnion, [
+        arrUnion[I].Name, arrUnion[I].MasterValue, arrUnion[I].SlaveValue, arrUnion[I].MasterIncrement, arrUnion[I].SlaveIncrement
+      ]);
       if I = 0 then
         Result := sSelect
       else
@@ -1412,7 +1478,7 @@ begin
 
   except
     on E: Exception do
-      LogMsg(Format(cExceptionMsg, [E.ClassName, E.Message]));
+      LogErrMsg(Format(cExceptionMsg, [E.ClassName, E.Message]));
   end;
 end;
 
@@ -1442,7 +1508,7 @@ begin
       end;
   except
     on E: Exception do
-      LogMsg(Format(cExceptionMsg, [E.ClassName, E.Message]));
+      LogErrMsg(Format(cExceptionMsg, [E.ClassName, E.Message]));
   end;
 end;
 
@@ -1476,7 +1542,7 @@ begin
       end;
   except
     on E: Exception do
-      LogMsg(Format(cExceptionMsg, [E.ClassName, E.Message]));
+      LogErrMsg(Format(cExceptionMsg, [E.ClassName, E.Message]));
   end;
 end;
 
@@ -1501,7 +1567,7 @@ begin
       end;
   except
     on E: Exception do
-      LogMsg(Format(cExceptionMsg, [E.ClassName, E.Message]));
+      LogErrMsg(Format(cExceptionMsg, [E.ClassName, E.Message]));
   end;
 end;
 
@@ -1526,7 +1592,95 @@ begin
       end;
   except
     on E: Exception do
-      LogMsg(Format(cExceptionMsg, [E.ClassName, E.Message]));
+      LogErrMsg(Format(cExceptionMsg, [E.ClassName, E.Message]));
+  end;
+end;
+
+procedure TdmData.MoveErrorsFromSlaveToMaster;
+const
+  cSelectSlave = 'select * from _replica.gpSelect_Errors()';
+  cDeleteSlave = 'select _replica.gpDelete_Errors()';
+  cInsertMaster = 'select _replica.gpInsert_Errors (%d, %d, %d, %d, %s);';
+  cFailMoveErrors = 'Не удалось перенести ошибки из Slave в Master';
+  cFailDeleteErrors = 'Ошибки перенесены в Master, но не удалось удалить их в Slave';
+var
+  bMoveSuccess: Boolean;
+  slCmds: TStringList;
+  tmpStmt: IZPreparedStatement;
+begin
+  bMoveSuccess := False;
+  // Обычно ошибки сохраняются сразу в Master.Errors. Если во время выполнения программы связь с Master была утрачена,
+  // тогда ошибки сохраняются в Slave.Errors. Нужно перенести эти ошибки в Master и потом удалить их в Slave
+  try
+
+    slCmds := TStringList.Create;
+    try
+
+      if IsSlaveConnected then
+        with qrySlaveHelper do
+        begin
+          Close;
+          SQL.Clear;
+          SQL.Add(cSelectSlave);
+          Open;
+          if not IsEmpty then // если в Slave есть сохраненные ошибки, тогда сформируем список команд
+          begin
+            First;
+            while not Eof do
+            begin
+              slCmds.Add(Format(cInsertMaster, [
+                FieldByName('Step').AsInteger,
+                FieldByName('Start_Id').AsInteger,
+                FieldByName('Last_Id').AsInteger,
+                FieldByName('Client_Id').AsLargeInt,
+                QuotedStr(FieldByName('Description').AsString)
+              ]));
+              Next;
+            end;
+          end;
+        end;
+
+      // теперь можем перенести ошибки в Master
+      if (slCmds.Count > 0) and IsMasterConnected then
+      begin
+        try
+          conMaster.DbcConnection.SetAutoCommit(False);
+          tmpStmt := conMaster.DbcConnection.PrepareStatement(slCmds.Text);
+          tmpStmt.ExecuteUpdatePrepared;
+          conMaster.DbcConnection.Commit;
+          bMoveSuccess := True;
+        except
+          on E: Exception do
+          begin
+            LogErrMsg(cFailMoveErrors);
+            LogErrMsg(Format(cExceptionMsg, [E.ClassName, E.Message]));
+            conMaster.DbcConnection.Rollback;
+          end;
+        end;
+      end;
+
+      // если ошибки успешно перенесены, тогда можем удалить их в Slave
+      if bMoveSuccess and IsSlaveConnected then
+        try
+          conSlave.DbcConnection.SetAutoCommit(False);
+          tmpStmt := conSlave.DbcConnection.PrepareStatement(cDeleteSlave);
+          tmpStmt.ExecuteUpdatePrepared;
+          conSlave.DbcConnection.Commit;
+        except
+          on E: Exception do
+          begin
+            LogErrMsg(cFailDeleteErrors);
+            LogErrMsg(Format(cExceptionMsg, [E.ClassName, E.Message]));
+            conSlave.DbcConnection.Rollback;
+          end;
+        end;
+    finally
+      FreeAndNil(slCmds);
+    end;
+
+  except
+    on E: Exception do
+      LogErrMsg(Format(cExceptionMsg, [E.ClassName, E.Message]));
   end;
 end;
 
@@ -1588,15 +1742,15 @@ begin
                 conSlave.DbcConnection.Commit;
                 iLastId := iId;
                 sFileName := Format(cFileName, [sSessionStart, iId]);
-                LogMsg(sFileContent, sFileName);
+                LogMsgFile(sFileContent, sFileName);
               end;
             except
               on E: Exception do
               begin
                 conSlave.DbcConnection.Rollback;
                 sFileName := Format(cFileNameErr, [sSessionStart, iId]);
-                LogMsg(sFileContent, sFileName);
-                LogMsg(Format(cExceptionMsg, [E.ClassName, E.Message]));
+                LogMsgFile(sFileContent, sFileName);
+                LogErrMsg(Format(cExceptionMsg, [E.ClassName, E.Message]));
                 // Прекращаем выполнение из-за ошибки
                 Break;
               end;
@@ -1608,12 +1762,17 @@ begin
         end;
     except
       on E: Exception do
-        LogMsg(Format(cExceptionMsg, [E.ClassName, E.Message]));
+        LogErrMsg(Format(cExceptionMsg, [E.ClassName, E.Message]));
     end;
   finally
     TSettings.DDLLastId := iLastId;
     LastId_DDL := iLastId;
   end;
+end;
+
+procedure TdmData.OnTerminateMoveErrors(Sender: TObject);
+begin
+  FMoveErrorsThrdFinished := True;
 end;
 
 procedure TdmData.SetLastId_DDL(const AValue: Integer);
@@ -1626,32 +1785,71 @@ begin
   SaveValueInDB(AValue, 'Last_Id');
 end;
 
-procedure TdmData.SaveErrorInMaster(const AStartId, ALastId: Integer; const AClientId: Int64; const AErrDescription: string);
+function TdmData.SaveErrorInDB(AServerRank: TServerRank; const AStep, AStartId, ALastId: Integer;
+  const AClientId: Int64; const AErrDescription: string): Boolean;
 const
-  cInsert    = 'SELECT _replica.gpInsert_Errors (%d, %d, %d, %s)';
-  cExceptMsg = 'Не удалось сохранить в Master информацию об ошибке команды с StartId = %d, Client_Id = %d';
+  cInsert    = 'SELECT _replica.gpInsert_Errors (%d, %d, %d, %d, %s)';
+  cExceptMsg = 'Не удалось сохранить в %s информацию об ошибке команды с StartId = %d, Client_Id = %d';
 var
-  sInsert: string;
+  bConnected: Boolean;
+  sInsert, sSrvrLable: string;
+  tmpConn: TZConnection;
   tmpStmt: IZPreparedStatement;
 begin
-  if IsMasterConnected then
+  Result := False;
+
+  bConnected := False;
+  tmpConn    := nil;
+
+  case AServerRank of
+    srMaster:
+      begin
+        bConnected := IsMasterConnected;
+        sSrvrLable := 'Master';
+        tmpConn    := conMaster;
+      end;
+    srSlave:
+      begin
+        bConnected := IsSlaveConnected;
+        sSrvrLable := 'Slave';
+        tmpConn    := conSlave;
+      end;
+  end;
+
+  if bConnected and (tmpConn <> nil) then
   try
-    with conMaster.DbcConnection do
+    with tmpConn.DbcConnection do
     begin
       SetAutoCommit(False);
-      sInsert := Format(cInsert, [AStartId, ALastId, AClientId, QuotedStr(AErrDescription)]);
+      sInsert := Format(cInsert, [AStep, AStartId, ALastId, AClientId, QuotedStr(AErrDescription)]);
       tmpStmt := PrepareStatement(sInsert);
       tmpStmt.ExecuteUpdatePrepared;
       Commit;
+      Result := True;
     end;
   except
     on E: Exception do
     begin
-      conMaster.DbcConnection.Rollback;
-      LogMsg(Format(cExceptMsg, [AStartId, AClientId]));
-      LogMsg(Format(cExceptionMsg, [E.ClassName, E.Message]));
+      LogErrMsg(Format(cExceptMsg, [sSrvrLable, AStartId, AClientId]));
+      LogErrMsg(Format(cExceptionMsg, [E.ClassName, E.Message]));
+      try
+        tmpConn.DbcConnection.Rollback; // если утрачена связь, тогда этот метод выбросит исключение
+      except
+        on EE: Exception do
+        begin
+          LogErrMsg(Format(cExceptionMsg, [EE.ClassName, EE.Message]));
+          tmpConn.Disconnect;
+        end;
+      end;
     end;
   end;
+end;
+
+procedure TdmData.SaveErrorInMaster(const AStep, AStartId, ALastId: Integer; const AClientId: Int64; const AErrDescription: string);
+begin
+  // сначала попытаемся сохранить ошибку в Master, а в случае неудачи - в Slave
+  if not SaveErrorInDB(srMaster, AStep, AStartId, ALastId, AClientId, AErrDescription) then
+    SaveErrorInDB(srSlave, AStep, AStartId, ALastId, AClientId, AErrDescription);
 end;
 
 procedure TdmData.SaveValueInDB(const AValue: Integer; const AFieldName: string; const ASaveInMaster: Boolean);
@@ -1713,8 +1911,8 @@ begin
         on E: Exception do
         begin
           conSlave.DbcConnection.Rollback;
-          LogMsg(Format(cExceptionMsg, [E.ClassName, E.Message]));
-          LogMsg(Format(cFailSave, [sFieldName, sServerRank]));
+          LogErrMsg(Format(cExceptionMsg, [E.ClassName, E.Message]));
+          LogErrMsg(Format(cFailSave, [sFieldName, sServerRank]));
         end;
       end;
     end;
@@ -1734,16 +1932,16 @@ begin
         on E: Exception do
         begin
           conMaster.DbcConnection.Rollback;
-          LogMsg(Format(cExceptionMsg, [E.ClassName, E.Message]));
-          LogMsg(Format(cFailSave, [sFieldName, sServerRank]));
+          LogErrMsg(Format(cExceptionMsg, [E.ClassName, E.Message]));
+          LogErrMsg(Format(cFailSave, [sFieldName, sServerRank]));
         end;
       end;
     end;
   except
     on E: Exception do
     begin
-      LogMsg(Format(cExceptionMsg, [E.ClassName, E.Message]));
-      LogMsg(Format(cFailSave, [sFieldName, sServerRank]));
+      LogErrMsg(Format(cExceptionMsg, [E.ClassName, E.Message]));
+      LogErrMsg(Format(cFailSave, [sFieldName, sServerRank]));
     end;
   end;
 end;
@@ -1818,11 +2016,11 @@ begin
                      end);
 end;
 
-procedure TWorkerThread.InnerMsgProc(const AMsg, AFileName: string; const aUID: Cardinal);
+procedure TWorkerThread.InnerMsgProc(const AMsg, AFileName: string; const aUID: Cardinal; AMsgType: TLogMessageType);
 begin
   TThread.Queue(nil, procedure
                      begin
-                       if Assigned(FMsgProc) then FMsgProc(AMsg, AFileName, aUID);
+                       if Assigned(FMsgProc) then FMsgProc(AMsg, AFileName, aUID, AMsgType);
                      end);
 end;
 
@@ -1996,6 +2194,12 @@ begin
   Terminate;
 end;
 
+{ TMoveErrorsThread }
 
+procedure TMoveErrorsThread.Execute;
+begin
+  inherited;
+  Data.MoveErrorsFromSlaveToMaster;
+end;
 
 end.

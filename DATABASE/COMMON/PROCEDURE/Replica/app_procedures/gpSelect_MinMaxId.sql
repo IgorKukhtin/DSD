@@ -4,8 +4,8 @@ DROP FUNCTION IF EXISTS _replica.gpSelect_MinMaxId ();
 
 CREATE OR REPLACE FUNCTION _replica.gpSelect_MinMaxId (
 )
-RETURNS TABLE (MinId Integer,
-               MaxId Integer,
+RETURNS TABLE (MinId    Integer,
+               MaxId    Integer,
                RecCount Bigint
 )    
 AS

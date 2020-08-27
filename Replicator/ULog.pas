@@ -16,7 +16,7 @@ type
   public
     constructor Create(const AFileName: string);
     destructor Destroy; override;
-    procedure Write(const AMsg: string);
+    procedure Write(const AMsg: string; const AWriteTimeStamp: Boolean = True);
   end;
 
   TLog = class
@@ -27,7 +27,7 @@ type
   public
     constructor Create;
     destructor Destroy; override;
-    procedure Write(AFileName, AMsg: string);
+    procedure Write(AFileName, AMsg: string; const AWriteTimeStamp: Boolean = True);
   end;
 
 implementation
@@ -38,6 +38,7 @@ uses
 
 const
   cLogMsg = '%s  %s' + #13#10;
+  cLogMsgNoTimeStamp = '%s' + #13#10;
 
 { TLogItem }
 
@@ -74,7 +75,7 @@ begin
   inherited;
 end;
 
-procedure TLogItem.Write(const AMsg: string);
+procedure TLogItem.Write(const AMsg: string; const AWriteTimeStamp: Boolean);
 var
   sMsg: string;
 begin
@@ -82,7 +83,11 @@ begin
 
   FCS.Enter;
   try
-    sMsg := Format(cLogMsg, [FormatDateTime(cDateTimeStr, Now), AMsg]);
+    if AWriteTimeStamp then
+      sMsg := Format(cLogMsg, [FormatDateTime(cDateTimeStr, Now), AMsg])
+    else
+      sMsg := Format(cLogMsgNoTimeStamp, [AMsg]);
+
     FFileStream.WriteBuffer(sMsg[1], Length(sMsg) * SizeOf(Char));
   finally
     FCS.Leave;
@@ -123,9 +128,9 @@ begin
   end;
 end;
 
-procedure TLog.Write(AFileName, AMsg: string);
+procedure TLog.Write(AFileName, AMsg: string; const AWriteTimeStamp: Boolean);
 begin
-  GetLogItem(AFileName).Write(AMsg);
+  GetLogItem(AFileName).Write(AMsg, AWriteTimeStamp);
 end;
 
 end.
