@@ -1601,6 +1601,9 @@ begin
   TdsdFormStorageFactory.GetStorage.Load('TLayout_MovementForm');
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TLayoutJournalForm'));
   TdsdFormStorageFactory.GetStorage.Load('TLayoutJournalForm');
+
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TLayoutJournalChoiceForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TLayoutJournalChoiceForm');
 end;
 
 procedure TLoadFormTest.LoadJuridicalFormTest;

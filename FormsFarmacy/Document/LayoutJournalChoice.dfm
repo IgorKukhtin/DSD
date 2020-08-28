@@ -1,9 +1,9 @@
-inherited LayoutJournalForm: TLayoutJournalForm
+inherited LayoutJournalChoiceForm: TLayoutJournalChoiceForm
   Caption = #1046#1091#1088#1085#1072#1083' '#1076#1086#1082#1091#1084#1077#1085#1090#1086#1074' <'#1042#1099#1082#1083#1072#1076#1082#1072'>'
   ClientHeight = 535
   ClientWidth = 817
   AddOnFormData.ChoiceAction = actChoiceGuides
-  AddOnFormData.Params = FormParams
+  AddOnFormData.AddOnFormRefresh.SelfList = 'Loss'
   AddOnFormData.AddOnFormRefresh.DataSet = MasterCDS
   AddOnFormData.AddOnFormRefresh.KeyField = 'Id'
   AddOnFormData.AddOnFormRefresh.KeyParam = 'inMovementId'
@@ -248,7 +248,7 @@ inherited LayoutJournalForm: TLayoutJournalForm
       FormNameParam.DataType = ftString
       FormNameParam.MultiSelectSeparator = ','
       GuiParams = <>
-      isShowModal = True
+      isShowModal = False
     end
     object actChoiceGuides: TdsdChoiceGuides
       Category = 'DSDLib'
@@ -330,31 +330,13 @@ inherited LayoutJournalForm: TLayoutJournalForm
       ItemLinks = <
         item
           Visible = True
-          ItemName = 'bbInsert'
-        end
-        item
-          Visible = True
-          ItemName = 'bbEdit'
-        end
-        item
-          BeginGroup = True
-          Visible = True
           ItemName = 'dxBarStatic'
         end
         item
           Visible = True
-          ItemName = 'bbComplete'
+          ItemName = 'bbChoiceGuides'
         end
         item
-          Visible = True
-          ItemName = 'bbUnComplete'
-        end
-        item
-          Visible = True
-          ItemName = 'bbDelete'
-        end
-        item
-          BeginGroup = True
           Visible = True
           ItemName = 'dxBarStatic'
         end
@@ -365,14 +347,6 @@ inherited LayoutJournalForm: TLayoutJournalForm
         item
           Visible = True
           ItemName = 'bbRefresh'
-        end
-        item
-          Visible = True
-          ItemName = 'dxBarStatic'
-        end
-        item
-          Visible = True
-          ItemName = 'bbChoiceGuides'
         end
         item
           Visible = True
@@ -433,6 +407,10 @@ inherited LayoutJournalForm: TLayoutJournalForm
     end
   end
   inherited DBViewAddOn: TdsdDBViewAddOn
+    OnDblClickActionList = <
+      item
+        Action = actChoiceGuides
+      end>
     Left = 320
     Top = 224
   end

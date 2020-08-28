@@ -1,4 +1,4 @@
-unit LayoutJournal;
+unit LayoutJournalChoice;
 
 interface
 
@@ -28,7 +28,7 @@ uses
   dxSkinValentine, dxSkinVS2010, dxSkinWhiteprint, dxSkinXmas2008Blue;
 
 type
-  TLayoutJournalForm = class(TAncestorJournalForm)
+  TLayoutJournalChoiceForm = class(TAncestorJournalForm)
     TotalCount: TcxGridDBColumn;
     PrintHeaderCDS: TClientDataSet;
     PrintItemsCDS: TClientDataSet;
@@ -53,5 +53,5 @@ implementation
 
 {$R *.dfm}
 initialization
-  RegisterClass(TLayoutJournalForm);
+  RegisterClass(TLayoutJournalChoiceForm);
 end.
