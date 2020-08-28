@@ -2856,6 +2856,12 @@ object Report_MotionGoodsAssetNoBalanceForm: TReport_MotionGoodsAssetNoBalanceFo
           Component = cbInfoMoney
           DataType = ftBoolean
           MultiSelectSeparator = ','
+        end
+        item
+          Name = 'isNoBalance'
+          Value = True
+          DataType = ftBoolean
+          MultiSelectSeparator = ','
         end>
       ReportName = #1054#1090#1095#1077#1090' '#1076#1074#1080#1078#1077#1085#1080#1077' '#1087#1086' '#1054#1057
       ReportNameParam.Value = #1054#1090#1095#1077#1090' '#1076#1074#1080#1078#1077#1085#1080#1077' '#1087#1086' '#1054#1057
