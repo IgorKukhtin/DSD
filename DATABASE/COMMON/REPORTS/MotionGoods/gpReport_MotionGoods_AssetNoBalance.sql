@@ -283,8 +283,8 @@ BEGIN
                             , COALESCE (tmpReport_count.CountReturnInReal,       tmpReport_summ.CountReturnInReal)       AS CountReturnInReal      
                             , COALESCE (tmpReport_count.CountReturnInReal_40208, tmpReport_summ.CountReturnInReal_40208) AS CountReturnInReal_40208
 
-                            , COALESCE (tmpReport_count.CountLoss,      tmpReport_summ.CountLoss)      AS CountLoss     
-                            , COALESCE (tmpReport_count.CountInventory, tmpReport_summ.CountInventory) AS CountInventory
+                            , COALESCE (tmpReport_count.CountLoss,      tmpReport_summ.CountLoss) * (-1)       AS CountLoss     
+                            , COALESCE (tmpReport_count.CountInventory, tmpReport_summ.CountInventory)         AS CountInventory
 
                             , COALESCE (tmpReport_count.CountProductionIn,  tmpReport_summ.CountProductionIn)  AS CountProductionIn 
                             , COALESCE (tmpReport_count.CountProductionOut, tmpReport_summ.CountProductionOut) AS CountProductionOut
@@ -317,7 +317,7 @@ BEGIN
                             , COALESCE (tmpReport_summ.SummReturnInReal, 0)       AS SummReturnInReal      
                             , COALESCE (tmpReport_summ.SummReturnInReal_40208, 0) AS SummReturnInReal_40208
 
-                            , COALESCE (tmpReport_summ.SummLoss, 0)              AS SummLoss             
+                            , COALESCE (tmpReport_summ.SummLoss, 0) * (-1)       AS SummLoss             
                             , COALESCE (tmpReport_summ.SummInventory, 0)         AS SummInventory        
                             , COALESCE (tmpReport_summ.SummInventory_RePrice, 0) AS SummInventory_RePrice
 
@@ -657,14 +657,15 @@ BEGIN
                    + tmpMIContainer_all.CountSendOnPriceIn
                    + tmpMIContainer_all.CountReturnIn
                    + tmpMIContainer_all.CountReturnIn_40208
-                   + tmpMIContainer_all.CountProductionIn)   AS CountTotalIn
+                   + tmpMIContainer_all.CountProductionIn
+                   + tmpMIContainer_all.CountLoss)           AS CountTotalIn
               , SUM (tmpMIContainer_all.CountReturnOut
                    + tmpMIContainer_all.CountSendOut
                    + tmpMIContainer_all.CountSendOnPriceOut
                    + tmpMIContainer_all.CountSale
                    + tmpMIContainer_all.CountSale_10500
                    - tmpMIContainer_all.CountSale_40208
-                   + tmpMIContainer_all.CountLoss
+                   --+ tmpMIContainer_all.CountLoss
                    + tmpMIContainer_all.CountProductionOut)  AS CountTotalOut
 
               , SUM (tmpMIContainer_all.SummStart)           AS SummStart
@@ -696,14 +697,15 @@ BEGIN
                    + tmpMIContainer_all.SummSendOnPriceIn
                    + tmpMIContainer_all.SummReturnIn
                    + tmpMIContainer_all.SummReturnIn_40208
-                   + tmpMIContainer_all.SummProductionIn)    AS SummTotalIn
+                   + tmpMIContainer_all.SummProductionIn
+                   + tmpMIContainer_all.SummLoss)            AS SummTotalIn
               , SUM (tmpMIContainer_all.SummReturnOut
                    + tmpMIContainer_all.SummSendOut
                    + tmpMIContainer_all.SummSendOnPriceOut
                    + tmpMIContainer_all.SummSale
                    + tmpMIContainer_all.SummSale_10500
                    - tmpMIContainer_all.SummSale_40208
-                   + tmpMIContainer_all.SummLoss
+                  -- + tmpMIContainer_all.SummLoss
                    + tmpMIContainer_all.SummProductionOut)   AS SummTotalOut
 
          FROM tmpReport AS tmpMIContainer_all
@@ -746,51 +748,50 @@ BEGIN
         LEFT JOIN ObjectString AS ObjectString_Asset_InvNumber ON ObjectString_Asset_InvNumber.ObjectId = Object_Goods.Id
                                                               AND ObjectString_Asset_InvNumber.DescId = zc_ObjectString_Asset_InvNumber()
 
-
         LEFT JOIN ObjectString AS ObjectString_Goods_GroupNameFull
                                ON ObjectString_Goods_GroupNameFull.ObjectId = Object_Goods.Id
                               AND ObjectString_Goods_GroupNameFull.DescId = zc_ObjectString_Goods_GroupNameFull()
         LEFT JOIN ObjectFloat AS ObjectFloat_Weight ON ObjectFloat_Weight.ObjectId = Object_Goods.Id
                              AND ObjectFloat_Weight.DescId = zc_ObjectFloat_Goods_Weight()
 
-       LEFT JOIN Object AS Object_PartionGoods ON Object_PartionGoods.Id = tmpMIContainer_group.PartionGoodsId
-       LEFT JOIN Object AS Object_AssetTo ON Object_AssetTo.Id = tmpMIContainer_group.AssetToId
+        LEFT JOIN Object AS Object_PartionGoods ON Object_PartionGoods.Id = tmpMIContainer_group.PartionGoodsId
+        LEFT JOIN Object AS Object_AssetTo ON Object_AssetTo.Id = tmpMIContainer_group.AssetToId
 
-       LEFT JOIN ObjectLink AS ObjectLink_AssetTo_GoodsGroup
-                            ON ObjectLink_AssetTo_GoodsGroup.ObjectId = Object_AssetTo.Id
-                           AND ObjectLink_AssetTo_GoodsGroup.DescId = zc_ObjectLink_Asset_AssetGroup()
-       LEFT JOIN Object AS Object_AssetToGroup ON Object_AssetToGroup.Id = ObjectLink_AssetTo_GoodsGroup.ChildObjectId
+        LEFT JOIN ObjectLink AS ObjectLink_AssetTo_GoodsGroup
+                             ON ObjectLink_AssetTo_GoodsGroup.ObjectId = Object_AssetTo.Id
+                            AND ObjectLink_AssetTo_GoodsGroup.DescId = zc_ObjectLink_Asset_AssetGroup()
+        LEFT JOIN Object AS Object_AssetToGroup ON Object_AssetToGroup.Id = ObjectLink_AssetTo_GoodsGroup.ChildObjectId
 
-         LEFT JOIN ObjectLink AS ObjectLink_Goods
-                              ON ObjectLink_Goods.ObjectId = tmpMIContainer_group.PartionGoodsId
-                             AND ObjectLink_Goods.DescId = zc_ObjectLink_PartionGoods_Goods()
-         LEFT JOIN ObjectLink AS ObjectLink_Unit
-                              ON ObjectLink_Unit.ObjectId = tmpMIContainer_group.PartionGoodsId
-                             AND ObjectLink_Unit.DescId = zc_ObjectLink_PartionGoods_Unit()
-         LEFT JOIN Object AS Object_Unit ON Object_Unit.Id = ObjectLink_Unit.ChildObjectId
-         LEFT JOIN ObjectLink AS ObjectLink_Storage
-                              ON ObjectLink_Storage.ObjectId = tmpMIContainer_group.PartionGoodsId
-                             AND ObjectLink_Storage.DescId = zc_ObjectLink_PartionGoods_Storage()
-         LEFT JOIN Object AS Object_Storage ON Object_Storage.Id = ObjectLink_Storage.ChildObjectId
+        LEFT JOIN ObjectLink AS ObjectLink_Goods
+                             ON ObjectLink_Goods.ObjectId = tmpMIContainer_group.PartionGoodsId
+                            AND ObjectLink_Goods.DescId = zc_ObjectLink_PartionGoods_Goods()
+        LEFT JOIN ObjectLink AS ObjectLink_Unit
+                             ON ObjectLink_Unit.ObjectId = tmpMIContainer_group.PartionGoodsId
+                            AND ObjectLink_Unit.DescId = zc_ObjectLink_PartionGoods_Unit()
+        LEFT JOIN Object AS Object_Unit ON Object_Unit.Id = ObjectLink_Unit.ChildObjectId
+        LEFT JOIN ObjectLink AS ObjectLink_Storage
+                             ON ObjectLink_Storage.ObjectId = tmpMIContainer_group.PartionGoodsId
+                            AND ObjectLink_Storage.DescId = zc_ObjectLink_PartionGoods_Storage()
+        LEFT JOIN Object AS Object_Storage ON Object_Storage.Id = ObjectLink_Storage.ChildObjectId
 
-         LEFT JOIN ObjectDate AS ObjectDate_PartionGoods_Value
-                              ON ObjectDate_PartionGoods_Value.ObjectId = tmpMIContainer_group.PartionGoodsId
-                             AND ObjectDate_PartionGoods_Value.DescId = zc_ObjectDate_PartionGoods_Value()
+        LEFT JOIN ObjectDate AS ObjectDate_PartionGoods_Value
+                             ON ObjectDate_PartionGoods_Value.ObjectId = tmpMIContainer_group.PartionGoodsId
+                            AND ObjectDate_PartionGoods_Value.DescId = zc_ObjectDate_PartionGoods_Value()
 
-         LEFT JOIN Movement AS Movement_PartionGoods ON Movement_PartionGoods.Id = Object_PartionGoods.ObjectCode
-         LEFT JOIN MovementDesc AS MovementDesc_PartionGoods ON MovementDesc_PartionGoods.Id = Movement_PartionGoods.DescId
+        LEFT JOIN Movement AS Movement_PartionGoods ON Movement_PartionGoods.Id = Object_PartionGoods.ObjectCode
+        LEFT JOIN MovementDesc AS MovementDesc_PartionGoods ON MovementDesc_PartionGoods.Id = Movement_PartionGoods.DescId
 
-         LEFT JOIN MovementLinkObject AS MLO_From ON MLO_From.MovementId = Movement_PartionGoods.Id
-                                                 AND MLO_From.DescId = zc_MovementLinkObject_From()
-         LEFT JOIN MovementItem AS MI_From ON MI_From.MovementId = Movement_PartionGoods.Id
-                                          AND MI_From.DescId = zc_MI_Master()
-                                          AND Movement_PartionGoods.DescId = zc_Movement_Service()
-        LEFT JOIN Object AS Object_Partner ON Object_Partner.Id = COALESCE (MI_From.ObjectId, MLO_From.ObjectId)
+        LEFT JOIN MovementLinkObject AS MLO_From ON MLO_From.MovementId = Movement_PartionGoods.Id
+                                                AND MLO_From.DescId = zc_MovementLinkObject_From()
+        LEFT JOIN MovementItem AS MI_From ON MI_From.MovementId = Movement_PartionGoods.Id
+                                         AND MI_From.DescId = zc_MI_Master()
+                                         AND Movement_PartionGoods.DescId = zc_Movement_Service()
+       LEFT JOIN Object AS Object_Partner ON Object_Partner.Id = COALESCE (MI_From.ObjectId, MLO_From.ObjectId)
 
-        LEFT JOIN Object_Account_View AS View_Account ON View_Account.AccountId = tmpMIContainer_group.AccountId
+       LEFT JOIN Object_Account_View AS View_Account ON View_Account.AccountId = tmpMIContainer_group.AccountId
 
-        LEFT JOIN tmpPriceStart ON tmpPriceStart.GoodsId = tmpMIContainer_group.GoodsId
-        LEFT JOIN tmpPriceEnd ON tmpPriceEnd.GoodsId = tmpMIContainer_group.GoodsId
+       LEFT JOIN tmpPriceStart ON tmpPriceStart.GoodsId = tmpMIContainer_group.GoodsId
+       LEFT JOIN tmpPriceEnd ON tmpPriceEnd.GoodsId = tmpMIContainer_group.GoodsId
       ;
 
 
