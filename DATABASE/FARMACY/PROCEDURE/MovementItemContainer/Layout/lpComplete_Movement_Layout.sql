@@ -9,8 +9,26 @@ CREATE OR REPLACE FUNCTION lpComplete_Movement_Layout(
 RETURNS VOID
 AS
 $BODY$
+   DECLARE vbLayoutId Integer;
 BEGIN
 
+     -- проверка если, например, док. был удален , то старый запретить распроводить если есть новый с такой выкладкой
+     vbLayoutId := (SELECT MLO.ObjectId FROM MovementLinkObject AS MLO WHERE MLO.DescId = zc_MovementLinkObject_Layout() AND MLO.MovementId = inMovementId);
+
+     IF EXISTS (SELECT 1
+                FROM Movement
+                     INNER JOIN MovementLinkObject AS MovementLinkObject_Layout
+                                                   ON MovementLinkObject_Layout.MovementId = Movement.Id
+                                                  AND MovementLinkObject_Layout.DescId = zc_MovementLinkObject_Layout()
+                                                  AND MovementLinkObject_Layout.ObjectId = vbLayoutId
+                WHERE Movement.DescId = zc_Movement_Layout()
+                  AND Movement.StatusId <> zc_Enum_Status_Erased()
+                  AND Movement.Id <> inMovementId)
+     THEN
+          RAISE EXCEPTION 'Ошибка.Документ для выкладки <%> уже существует.', lfGet_Object_ValueData (vbLayoutId);
+     END IF;
+
+     
      -- создаются временные таблицы - для формирование данных для проводок
      PERFORM lpComplete_Movement_Finance_CreateTemp();
 

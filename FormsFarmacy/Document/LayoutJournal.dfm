@@ -419,20 +419,13 @@ inherited LayoutJournalForm: TLayoutJournalForm
     Top = 344
   end
   inherited spMovementComplete: TdsdStoredProc
-    StoredProcName = 'gpComplete_Movement_Loss'
+    StoredProcName = 'gpComplete_Movement_Layout'
     Params = <
       item
         Name = 'inmovementid'
         Value = Null
         Component = MasterCDS
         ComponentItem = 'Id'
-        ParamType = ptInput
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'inIsCurrentData'
-        Value = True
-        DataType = ftBoolean
         ParamType = ptInput
         MultiSelectSeparator = ','
       end
@@ -448,7 +441,7 @@ inherited LayoutJournalForm: TLayoutJournalForm
     Top = 320
   end
   inherited spMovementUnComplete: TdsdStoredProc
-    StoredProcName = 'gpUnComplete_Movement_Loss'
+    StoredProcName = 'gpUnComplete_Movement_Layout'
     Params = <
       item
         Name = 'inmovementid'
@@ -462,7 +455,7 @@ inherited LayoutJournalForm: TLayoutJournalForm
     Top = 384
   end
   inherited spMovementSetErased: TdsdStoredProc
-    StoredProcName = 'gpSetErased_Movement_Loss'
+    StoredProcName = 'gpSetErased_Movement_Layout'
     Params = <
       item
         Name = 'inmovementid'
@@ -515,7 +508,7 @@ inherited LayoutJournalForm: TLayoutJournalForm
     Top = 200
   end
   inherited spMovementReComplete: TdsdStoredProc
-    StoredProcName = 'gpReComplete_Movement_Loss'
+    StoredProcName = 'gpReComplete_Movement_Layout'
     Left = 488
     Top = 152
   end
@@ -532,7 +525,7 @@ inherited LayoutJournalForm: TLayoutJournalForm
     Top = 270
   end
   object spSelectPrint_Loss: TdsdStoredProc
-    StoredProcName = 'gpSelect_Movement_Loss_Print'
+    StoredProcName = 'gpSelect_Movement_Layout_Print'
     DataSet = PrintHeaderCDS
     DataSets = <
       item
