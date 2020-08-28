@@ -49,6 +49,12 @@ DROP FUNCTION IF EXISTS gpInsertUpdate_Object_Unit(Integer, Integer, TVarChar, T
                                                    TVarChar, TVarChar, TVarChar, TVarChar, TDateTime, TDateTime, TDateTime, TDateTime, TDateTime, TDateTime, Boolean, Boolean, Integer, 
                                                    Integer, TVarChar, Boolean, Boolean, Integer, TVarChar);
 
+DROP FUNCTION IF EXISTS gpInsertUpdate_Object_Unit(Integer, Integer, TVarChar, TVarChar, TVarChar, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat,
+                                                   TDateTime, TDateTime, TDateTime, TDateTime, TDateTime,TDateTime, TDateTime, TDateTime, TDateTime,
+                                                   Boolean, Boolean, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer,
+                                                   Boolean, Boolean, Boolean, Boolean, Integer, Boolean, Boolean, 
+                                                   TVarChar, TVarChar, TVarChar, TVarChar, TDateTime, TDateTime, TDateTime, TDateTime, TDateTime, TDateTime, Boolean, Boolean, Integer, 
+                                                   Integer, TVarChar, Boolean, Boolean, Integer, TVarChar);
 CREATE OR REPLACE FUNCTION gpInsertUpdate_Object_Unit(
  INOUT ioId                      Integer   ,   	-- ключ объекта <Подразделение>
     IN inCode                    Integer   ,    -- Код объекта <Подразделение>
@@ -86,6 +92,7 @@ CREATE OR REPLACE FUNCTION gpInsertUpdate_Object_Unit(
     IN inUnitRePriceId           Integer   ,    -- ссылка на подразделение 
     IN inNormOfManDays           Integer   ,    -- Норма человекодней в месяце
     IN inPartnerMedicalId        Integer   ,    -- Мед.учреждение для пкму 1303
+    IN inLayoutId                Integer   ,    -- Название выкладки
     IN inPharmacyItem            Boolean   ,    -- Аптечный пункт
     IN inisGoodsCategory         Boolean   ,    -- Для Ассортиментной матрица
     IN inDividePartionDate       Boolean   ,    -- Разбивать товар по партиям на кассах
@@ -427,6 +434,9 @@ BEGIN
    -- Кол-во дней приход от пост. (Серийный номер на сайте таблеток)
    PERFORM lpInsertUpdate_ObjectFloat(zc_ObjectFloat_Unit_SerialNumberTabletki(), ioId, inSerialNumberTabletki);
 
+   -- сохранили связь с <Выкладка>
+   PERFORM lpInsertUpdate_ObjectLink(zc_ObjectLink_Unit_Layout(), ioId, inLayoutId);
+
    -- сохранили протокол
    PERFORM lpInsert_ObjectProtocol (ioId, vbUserId);
 
@@ -440,6 +450,7 @@ LANGUAGE plpgsql VOLATILE;
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Шаблий О.В.
+ 28.08.20         * add Layout
  21.08.20                                                       * add SerialNumberTabletki
  21.04.20         * add inListDaySUN_pi
  14.02.20                                                       * add isTechnicalRediscount

@@ -156,6 +156,9 @@ type
     cxLabel45: TcxLabel;
     ceSerialNumberTabletki: TcxCurrencyEdit;
     cxLabel46: TcxLabel;
+    cxLabel47: TcxLabel;
+    edLayout: TcxButtonEdit;
+    GuidesLayout: TdsdGuides;
   private
     { Private declarations }
   public
