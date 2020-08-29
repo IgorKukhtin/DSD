@@ -390,7 +390,7 @@ begin
     end;
   end;
 
-  TabletkiAPI := TTabletkiAPI.Create(APIUser, APIPassword, True);
+  TabletkiAPI := TTabletkiAPI.Create(APIUser, APIPassword);
 
   BookingsHeadDS.DataSet := TabletkiAPI.BookingsHeadCDS;
   BookingsBodyDS.DataSet := TabletkiAPI.BookingsBodyCDS;

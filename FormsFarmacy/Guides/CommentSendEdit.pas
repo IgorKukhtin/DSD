@@ -42,6 +42,8 @@ type
     ceCommentTR: TcxButtonEdit;
     cxLabel5: TcxLabel;
     CommentTRGuides: TdsdGuides;
+    cbisPromo: TcxCheckBox;
+    cbisSendPartionDate: TcxCheckBox;
   private
     { Private declarations }
   public

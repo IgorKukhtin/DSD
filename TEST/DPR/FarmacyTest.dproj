@@ -3307,6 +3307,10 @@
 				<Form>LayoutJournalChoiceForm</Form>
 				<DesignClass>TParentForm</DesignClass>
 			</DCCReference>
+			<DCCReference Include="..\..\FormsFarmacy\Cash\OverdueChangeCashPUSHSend.pas">
+				<Form>OverdueChangeCashPUSHSendForm</Form>
+				<DesignClass>TParentForm</DesignClass>
+			</DCCReference>
 			<BuildConfiguration Include="Release">
 				<Key>Cfg_2</Key>
 				<CfgParent>Base</CfgParent>

@@ -8,6 +8,7 @@ CREATE OR REPLACE FUNCTION gpGet_Object_CommentSend(
 )
 RETURNS TABLE (Id Integer, Code Integer, Name TVarChar
              , CommentTRId Integer, CommentTRCode Integer, CommentTRName TVarChar
+             , isPromo boolean, isSendPartionDate boolean
              , isErased boolean) AS
 $BODY$
 BEGIN
@@ -25,6 +26,8 @@ BEGIN
            , CAST (0 AS Integer)                          AS CommentTRId
            , CAST (0 AS Integer)                          AS CommentTRCode
            , CAST ('' AS TVarChar)                        AS CommentTRName
+           , CAST (FALSE AS Boolean)                      AS isPromo
+           , CAST (FALSE AS Boolean)                      AS isSendPartionDate 
            , CAST (FALSE AS Boolean)                      AS isErased;
    ELSE
        RETURN QUERY 
@@ -34,6 +37,8 @@ BEGIN
         , Object_CommentTR.Id                               AS CommentTRId 
         , Object_CommentTR.ObjectCode                       AS CommentTRCode
         , Object_CommentTR.ValueData                        AS CommentTRName
+        , COALESCE(ObjectBoolean_CommentSun_Promo.ValueData, FALSE)             AS isPromo
+        , COALESCE(ObjectBoolean_CommentSun_SendPartionDate.ValueData, FALSE)   AS isSendPartionDate
         , Object_CommentSend.isErased                       AS isErased
    FROM Object AS Object_CommentSend
 
@@ -41,6 +46,14 @@ BEGIN
                              ON ObjectLink_CommentSend_CommentTR.ObjectId = Object_CommentSend.Id
                             AND ObjectLink_CommentSend_CommentTR.DescId = zc_ObjectLink_CommentSend_CommentTR()
         LEFT JOIN Object AS Object_CommentTR ON Object_CommentTR.Id = ObjectLink_CommentSend_CommentTR.ChildObjectId
+
+        LEFT JOIN ObjectBoolean AS ObjectBoolean_CommentSun_Promo
+                                ON ObjectBoolean_CommentSun_Promo.ObjectId = Object_CommentSend.Id 
+                               AND ObjectBoolean_CommentSun_Promo.DescId = zc_ObjectBoolean_CommentSun_Promo()
+
+        LEFT JOIN ObjectBoolean AS ObjectBoolean_CommentSun_SendPartionDate
+                                ON ObjectBoolean_CommentSun_SendPartionDate.ObjectId = Object_CommentSend.Id 
+                               AND ObjectBoolean_CommentSun_SendPartionDate.DescId = zc_ObjectBoolean_CommentSun_SendPartionDate()
 
        WHERE Object_CommentSend.Id = inId;
    END IF; 

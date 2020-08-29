@@ -360,6 +360,10 @@ end;
 procedure TLoadFormTest.LoadCashRegisterFormTest;
 begin
 
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TOverdueChangeCashPUSHSendForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TOverdueChangeCashPUSHSendForm');
+
+
 {  TdsdFormStorageFactory.GetStorage.Save(GetForm('TOverdueChangeCashJournalForm'));
   TdsdFormStorageFactory.GetStorage.Load('TOverdueChangeCashJournalForm');
 

@@ -42,6 +42,7 @@ BEGIN
                WHERE MovementItemFloat.MovementItemId = ioId
                  AND MovementItemFloat.DescId = zc_MIFloat_MovementItemId())
         AND COALESCE(inAmount, 0) <> COALESCE((SELECT MovementItem.Amount FROM MovementItem WHERE MovementItem.ID = ioId), 0) 
+        AND NOT EXISTS (SELECT 1 FROM ObjectLink_UserRole_View  WHERE UserId = vbUserId AND RoleId = zc_Enum_Role_Admin())
      THEN
        RAISE EXCEPTION 'Ошибка.Изменятьпозиции количество по строкам сформированным из перемещений по СУН запрещено.';
      END IF;
