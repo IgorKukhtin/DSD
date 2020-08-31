@@ -2605,6 +2605,9 @@ begin
 
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TEmployeeScheduleFillingForm'));
   TdsdFormStorageFactory.GetStorage.Load('TEmployeeScheduleFillingForm');
+
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TEmployeeScheduleAddUserDialogForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TEmployeeScheduleAddUserDialogForm');
 end;
 
 procedure TLoadFormTest.LoadSPKindFormTest;

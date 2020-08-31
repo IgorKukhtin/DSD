@@ -1,0 +1,505 @@
+unit Cash_MINI_FP54;
+
+interface
+uses Windows, CashInterface, ecrmini_TLB;
+type
+  TCashMINI_FP54 = class(TInterfacedObject, ICash)
+  private
+    FAlwaysSold: boolean;
+    FPrintSumma: boolean;
+    FSumma : Currency;
+    FPrinter: variant;
+//    FModem: IICS_Modem;
+    FisFiscal: boolean;
+    FLengNoFiscalText : integer;
+    FReturn: boolean;
+    procedure SetAlwaysSold(Value: boolean);
+    function GetAlwaysSold: boolean;
+  protected
+    function SoldCode(const GoodsCode: integer; const Amount: double; const Price: double = 0.00): boolean;
+    function SoldFromPC(const GoodsCode: integer; const GoodsName: string; const Amount, Price, NDS: double): boolean; //Продажа с компьютера
+    function ChangePrice(const GoodsCode: integer; const Price: double): boolean;
+    function OpenReceipt(const isFiscal: boolean = true; const isPrintSumma: boolean = false; const isReturn: boolean = False): boolean;
+    function CloseReceipt: boolean;
+    function CloseReceiptEx(out CheckId: String): boolean;
+    function CashInputOutput(const Summa: double): boolean;
+    function ProgrammingGoods(const GoodsCode: integer; const GoodsName: string; const Price, NDS: double): boolean;
+    function ClosureFiscal: boolean;
+    function TotalSumm(Summ, SummAdd: double; PaidType: TPaidType): boolean;
+    function DiscountGoods(Summ: double): boolean;
+    function DeleteArticules(const GoodsCode: integer): boolean;
+    function XReport: boolean;
+    function GetLastErrorCode: integer;
+    function GetArticulInfo(const GoodsCode: integer; var ArticulInfo: WideString): boolean;
+    function PrintNotFiscalText(const PrintText: WideString): boolean;
+    function PrintFiscalText(const PrintText: WideString): boolean;
+    function SubTotal(isPrint, isDisplay: WordBool; Percent, Disc: Double): boolean;
+    function PrintFiscalMemoryByNum(inStart, inEnd: Integer): boolean;
+    function PrintFiscalMemoryByDate(inStart, inEnd: TDateTime): boolean;
+    function PrintZeroReceipt: boolean;
+    function PrintReportByDate(inStart, inEnd: TDateTime): boolean;
+    function PrintReportByNum(inStart, inEnd: Integer): boolean;
+    function FiscalNumber:String;
+    function SerialNumber:String;
+    procedure ClearArticulAttachment;
+    procedure SetTime;
+    procedure Anulirovt;
+    function InfoZReport : string;
+    function JuridicalName : string;
+    function ZReport : Integer;
+    function SummaReceipt : Currency;
+    function GetTaxRate : string;
+  public
+    constructor Create;
+    function ShowError: boolean;
+  end;
+
+
+
+implementation
+uses Forms, SysUtils, Dialogs, Math, Variants, StrUtils, IniUtils, RegularExpressions, Log, ComObj;
+
+
+
+const
+
+  Password = 000000;
+
+{ TCashMINI_FP54 }
+constructor TCashMINI_FP54.Create;
+begin
+  inherited Create;
+  FAlwaysSold:=false;
+  FPrintSumma:=False;
+  FReturn:=False;
+  FLengNoFiscalText := 37;
+  FPrinter := CreateOleObject('ecrmini.t400');
+  if FPrinter.FPInitialize = 0 then
+  begin
+    if not FPrinter.FPOpen(StrToInt(iniPortNumber), StrToInt(iniPortSpeed), 3, 3) then
+    begin
+      ShowError;
+      Raise Exception.Create('');
+    end;
+  end else
+  begin
+    ShowMessage(SysErrorMessage(GetLastError));
+    Raise Exception.Create('');
+  end;
+
+//  FModem := CoFiscPrn.CreateModem;
+//  if FModem.ModemInitialize('COM' + iniPortNumber) <> 0 then
+//  begin
+//    ShowMessage(SysErrorMessage(GetLastError));
+//    Raise Exception.Create('');
+//  end;
+end;
+
+
+function TCashMINI_FP54.ShowError: boolean;
+  var S : string;
+begin
+  Result := False;
+  S := FPrinter.prGetErrorText;
+  ShowMessage(S);
+end;
+
+function TCashMINI_FP54.CloseReceipt: boolean;
+begin
+  result := True;
+end;
+
+function TCashMINI_FP54.CloseReceiptEx(out CheckId: String): boolean;
+begin
+  result := True;
+end;
+
+function TCashMINI_FP54.GetAlwaysSold: boolean;
+begin
+  result:= FAlwaysSold;
+end;
+
+function TCashMINI_FP54.OpenReceipt(const isFiscal: boolean = true; const isPrintSumma: boolean = false; const isReturn: boolean = False): boolean;
+begin
+  FisFiscal := isFiscal;
+  FPrintSumma := isPrintSumma;
+  FReturn := isReturn;
+  FSumma := 0;
+  result := True;
+end;
+
+procedure TCashMINI_FP54.SetAlwaysSold(Value: boolean);
+begin
+  FAlwaysSold:= Value
+end;
+
+procedure TCashMINI_FP54.SetTime;
+begin
+  FPrinter.FPSetCurrentDate(Date);
+  if not FPrinter.FPSetCurrentTime(Now) then ShowError;
+end;
+
+function TCashMINI_FP54.SoldCode(const GoodsCode: integer;
+  const Amount: double; const Price: double = 0.00): boolean;
+begin
+  result := False;
+  ShowMessage('Ошибка. Комманда SoldCode не разрешена.');
+end;
+
+function TCashMINI_FP54.SoldFromPC(const GoodsCode: integer; const GoodsName: string; const Amount, Price, NDS: double): boolean;
+var NDSType: char;
+    CashCode, nNDS: integer;
+    I : Integer;
+    L : string;
+    Res: TArray<string>;
+begin
+  result := true;
+
+    // печать нефискального чека
+  if not FisFiscal then
+  begin
+
+    L := '';
+    Res := TRegEx.Split(GoodsName, ' ');
+    for I := 0 to High(Res) do
+    begin
+      if L <> '' then L := L + ' ';
+      L := L + Res[i];
+      if (I < High(Res)) and (Length(L + Res[i]) > FLengNoFiscalText) then
+      begin
+        if not PrintNotFiscalText(L) then Exit;
+        L := '';
+      end;
+
+      if I = High(Res) then
+      begin
+        if FPrintSumma then
+        begin
+          if L <> '' then if not PrintNotFiscalText(L) then Exit;
+          L := FormatCurr('0.000', Amount) + ' x ' + FormatCurr('0.00', Price);
+          L := L + StringOfChar(' ' , FLengNoFiscalText - Length(L + FormatCurr('0.00', RoundTo(Amount * Price, -1))) - 1) + FormatCurr('0.00', RoundTo(Amount * Price, -1));
+          if not PrintNotFiscalText(L) then Exit;
+          FSumma := FSumma + RoundTo(Amount * Price, -1);
+        end else
+        begin
+          if (Length(L + FormatCurr('0.000', Amount)) + 3) >= FLengNoFiscalText then
+          begin
+            if not PrintNotFiscalText(L) then Exit;
+            L := StringOfChar(' ' , FLengNoFiscalText - Length(FormatCurr('0.000', Amount)) - 1) + FormatCurr('0.000', Amount);
+            if not PrintNotFiscalText(L) then Exit;
+          end else
+          begin
+            L := L + StringOfChar(' ' , FLengNoFiscalText - Length(L + FormatCurr('0.000', Amount)) - 1) + FormatCurr('0.000', Amount);
+            if not PrintNotFiscalText(L) then Exit;
+          end;
+        end;
+      end;
+    end;
+
+    Exit;
+  end;
+
+  if FAlwaysSold then exit;
+
+  if NDS = 20 then nNDS := 1 else nNDS := 2;
+
+  Logger.AddToLog(' SALE (GoodsCode := ' + IntToStr(GoodsCode) + ', Amount := ' + ReplaceStr(FormatFloat('0.000', Amount), FormatSettings.DecimalSeparator, '.') +
+      ', Price := ' + ReplaceStr(FormatFloat('0.00', Price), FormatSettings.DecimalSeparator, '.') + ')');
+  if FReturn then
+  begin
+    if Amount = 1 then
+      result := FPrinter.FPSaleItem(Round(Amount * 1000), 3, False, True, False, Round(Price * 100), nNDS, Copy(GoodsName, 1, 75), GoodsCode)
+    else result := FPrinter.FPSaleItem(Round(Amount * 1000), 3, False, False, False, Round(Price * 100), nNDS, Copy(GoodsName, 1, 75), GoodsCode);
+  end else
+  begin
+    if Amount = 1 then
+      result := FPrinter.FPRefundItem(Round(Amount * 1000), 3, False, True, False, Round(Price * 100), nNDS, Copy(GoodsName, 1, 75), GoodsCode)
+    else result := FPrinter.FPRefundItem(Round(Amount * 1000), 3, False, False, False, Round(Price * 100), nNDS, Copy(GoodsName, 1, 75), GoodsCode);
+  end;
+
+  if not result then ShowError;
+end;
+
+function TCashMINI_FP54.ProgrammingGoods(const GoodsCode: integer;
+  const GoodsName: string; const Price, NDS: double): boolean;
+begin
+  result := False;
+  ShowMessage('Ошибка. Комманда SoldCode не разрешена.');
+end;
+
+procedure TCashMINI_FP54.Anulirovt;
+begin
+  if not FPrinter.FPAnnulReceipt then ShowError;
+end;
+
+function TCashMINI_FP54.CashInputOutput(const Summa: double): boolean;
+begin
+  if Summa > 0 then
+    result := FPrinter.FPCashIn(Round(Summa * 100))
+  else result := FPrinter.FPCashOut(Round(Abs(Summa) * 100));
+  if not result then ShowError;
+end;
+
+function TCashMINI_FP54.TotalSumm(Summ, SummAdd: double; PaidType: TPaidType): boolean;
+  var L : string;
+begin
+  result := True;
+
+  if FisFiscal then
+  begin
+
+    if (PaidType=ptCardAdd) and (SummAdd <> 0) then
+    begin
+      result := FPrinter.FPPayment(4, Round(SummAdd * 100), False, True, '');
+    end;
+
+    if result then
+    begin
+      if PaidType=ptMoney then
+      begin
+        result := FPrinter.FPPayment(4, Round(Summ * 100), True, True, '');
+      end else result := FPrinter.FPPayment(1, Round(Summ * 100), True, True, '');
+    end;
+
+   if not result then ShowError;
+   if not result then FPrinter.FPAnnulReceipt;
+
+  end else
+  begin
+    if FPrintSumma then
+    begin
+      if not PrintNotFiscalText(StringOfChar('-' , FLengNoFiscalText)) then Exit;
+      L := 'СУМА';
+      L := L + StringOfChar(' ' , FLengNoFiscalText - Length(L + FormatCurr('0.00', FSumma)) - 1) + FormatCurr('0.00', FSumma);
+      if not PrintNotFiscalText(L) then Exit;
+    end;
+
+    FPrinter.FPCloseServiceReport;
+  end;
+
+end;
+
+function TCashMINI_FP54.DiscountGoods(Summ: double): boolean;
+begin
+  if FisFiscal then
+  begin
+    if Summ > 0 then
+      result := FPrinter.FPMakeMarkup(False, True, Round(Summ * 100), '')
+    else result := FPrinter.FPMakeDiscount(False, True, Round(Abs(Summ) * 100), '');
+    if not result then ShowError;
+  end else result := True;
+end;
+
+function TCashMINI_FP54.ClosureFiscal: boolean;
+begin
+  result := FPrinter.FPMakeZReport(Password);
+  if not result then ShowError;
+end;
+
+function TCashMINI_FP54.DeleteArticules(const GoodsCode: integer): boolean;
+begin
+end;
+
+function TCashMINI_FP54.FiscalNumber: String;
+begin
+  if FPrinter.FPGetCurrentStatus then
+    Result := FPrinter.prFiscalNumber
+  else ShowError;
+end;
+
+function TCashMINI_FP54.SerialNumber:String;
+begin
+  if FPrinter.FPGetCurrentStatus then
+    Result := FPrinter.prSerialNumber
+  else ShowError;
+end;
+
+function TCashMINI_FP54.XReport: boolean;
+begin
+  result := FPrinter.FPMakeXReport(Password);
+  if not result then ShowError;
+end;
+
+function TCashMINI_FP54.ChangePrice(const GoodsCode: integer;
+  const Price: double): boolean;
+begin
+end;
+
+function TCashMINI_FP54.GetLastErrorCode: integer;
+begin
+  //result:= status
+end;
+
+function TCashMINI_FP54.GetArticulInfo(const GoodsCode: integer;
+  var ArticulInfo: WideString): boolean;
+var i: integer;
+begin
+end;
+
+function TCashMINI_FP54.PrintNotFiscalText(
+  const PrintText: WideString): boolean;
+begin
+  result := FPrinter.FPPrintServiceReportByLine(PrintText);
+  if not result then ShowError
+end;
+
+function TCashMINI_FP54.PrintFiscalText(
+  const PrintText: WideString): boolean;
+var APrintText: String;
+begin
+
+end;
+
+function TCashMINI_FP54.SubTotal(isPrint, isDisplay: WordBool; Percent,
+  Disc: Double): boolean;
+begin
+  result := True;
+end;
+
+
+function TCashMINI_FP54.PrintFiscalMemoryByDate(inStart,
+  inEnd: TDateTime): boolean;
+var StartStr, EndStr: string;
+begin
+
+end;
+
+function TCashMINI_FP54.PrintFiscalMemoryByNum(inStart,
+  inEnd: Integer): boolean;
+begin
+
+end;
+
+function TCashMINI_FP54.PrintReportByDate(inStart,
+  inEnd: TDateTime): boolean;
+begin
+
+end;
+
+function TCashMINI_FP54.PrintReportByNum(inStart, inEnd: Integer): boolean;
+begin
+
+end;
+
+function TCashMINI_FP54.PrintZeroReceipt: boolean;
+begin
+  result := FPrinter.FPPrintZeroReceipt;
+  if not result then ShowError
+end;
+
+
+procedure TCashMINI_FP54.ClearArticulAttachment;
+begin
+end;
+
+function TCashMINI_FP54.InfoZReport : string;
+  var I : integer; S : String;
+
+  function Centr(AStr : string) : String;
+  begin
+    if Length(AStr) > 40 then
+      Result := Copy(AStr, 1, 40) + #13#10 + Centr(Copy(AStr, 41, Length(AStr)))
+    else if Length(AStr) = 40 then Result := AStr
+    else Result := StringOfChar(' ', (40 - Length(AStr)) div 2) + AStr;
+  end;
+
+  function Str(ACur : Currency; AL : integer) : String;
+  begin
+    Result := FormatCurr('0.00', ACur);
+    if AL > Length(Result) then Result := StringOfChar(' ', AL - Length(Result)) + Result;
+    Result := StringReplace(Result, FormatSettings.DecimalSeparator, '.', [rfReplaceAll])
+  end;
+
+begin
+  Result := '';
+
+//  FModem.prKsefSavePath := 'd:\DSD\BIN\ZRepot';
+//  FModem.ModemReadKsefByZReport(9);
+//  if FModem.ModemFindPacket(15, 0, 0) then FModem.ModemReadKsefPacket(FModem.prFoundPacket);
+
+
+  FPrinter.FPGetCurrentStatus;
+
+  if FPrinter.prHeadLine1 <> '' then  Result := Result + Centr(FPrinter.prHeadLine1) + #13#10;
+  if FPrinter.prHeadLine2 <> '' then  Result := Result + Centr(FPrinter.prHeadLine2) + #13#10;
+  if FPrinter.prHeadLine3 <> '' then  Result := Result + Centr(FPrinter.prHeadLine3) + #13#10;
+
+  S := 'ЗН ' + FPrinter.prSerialNumber;
+  S := S + '  ФН ' + FPrinter.prFiscalNumber + #13#10;
+  Result := Result + Centr(S) + #13#10;
+
+
+  FPrinter.FPGetDayReportProperties;
+
+  S := '           Z-звіт N ' + IntToStr(FPrinter.prCurrentZReport);
+  Result := Result + S + #13#10;
+
+  Result := Result + '              ЗАГАЛОМ' + #13#10;
+  Result := Result + '  ------      Повернення    Продаж' + #13#10;
+
+  FPrinter.FPGetDayReportData;
+  FPrinter.FPGetDaySumOfAddTaxes;
+  FPrinter.FPGetCashDrawerSum;
+
+  Result := Result + '  Готівка  ' + Str(FPrinter.prDayRefundSumOnPayForm4 / 100, 13) + Str(FPrinter.prDaySaleSumOnPayForm4 / 100, 13) + #13#10;
+  Result := Result + '  Картка   ' + Str(FPrinter.prDayRefundSumOnPayForm1 / 100, 13) + Str(FPrinter.prDaySaleSumOnPayForm1 / 100, 13) + #13#10;
+  Result := Result + '  ВСЬОГО   ' + Str(FPrinter.prDayRefundSumOnPayForm10 / 100, 13) + Str(FPrinter.prDaySaleSumOnPayForm10 / 100, 13) + #13#10;
+
+
+  Result := Result + '  ------         Видача     Внесок'#13#10;
+  Result := Result + '  Готівка  ' + Str(FPrinter.prDayCashOutSum / 100, 13) + Str(FPrinter.prDayCashInSum / 100, 13) + #13#10;
+  Result := Result + '  Готівка в касі        ' + Str(FPrinter.prCashDrawerSum / 100, 13) + #13#10;
+
+  Result := Result + '  ------        Податок       Обіг' + #13#10;
+  Result := Result + '  ДОД. А   ' + Str(FPrinter.prDaySumAddTaxOfSale1 / 100, 13) + Str(FPrinter.prDaySaleSumOnTax1 / 100, 13) + #13#10;
+  Result := Result + '  ДОД. Б   ' + Str(FPrinter.prDaySumAddTaxOfSale2 / 100, 13) + Str(FPrinter.prDaySaleSumOnTax2 / 100, 13) + #13#10;
+  Result := Result + '  Чеків продажу ' + IntToStr(FPrinter.prDaySaleReceiptsCount) + #13#10;
+
+  Result := Result + '  ВІД. A   ' + Str(FPrinter.prDaySumAddTaxOfRefund1 / 100, 13) + Str(FPrinter.prDayRefundSumOnTax1 / 100, 13) + #13#10;
+  Result := Result + '  ВІД. Б   ' + Str(FPrinter.prDaySumAddTaxOfRefund2 / 100, 13) + Str(FPrinter.prDayRefundSumOnTax2 / 100, 13) + #13#10;
+  Result := Result + '  Чеків повернення ' + IntToStr(FPrinter.prDayRefundReceiptsCount) + #13#10;
+
+  FPrinter.FPGetTaxRates;
+  Result := Result + '  Податок     від        ' + FormatDateTime('dd.mm.yyyy', FPrinter.prTaxRatesDate) + #13#10;
+  Result := Result + '            ПДВ_A (Вкл) A =    ' + Str(FPrinter.prTaxRate1 / 100, 6) + '%' + #13#10;
+  Result := Result + '            ПДВ_Б (Вкл) Б =    ' + Str(FPrinter.prTaxRate2 / 100, 6) + '%' + #13#10;
+
+  FPrinter.FPGetCurrentDate;
+  FPrinter.FPGetCurrentTime;
+
+  S := FormatDateTime('dd.mm.yyyy', FPrinter.prCurrentDate) + '  ' + FormatDateTime('hh:nn', FPrinter.prCurrentTime);
+
+  Result := Result + '                    ' + S  + #13#10;
+  Result := Result + '         ФІСКАЛЬНИЙ ЧЕК' + #13#10;
+  Result := Result + '  --------------------------------------' + #13#10;
+  Result := Result + '  --------------------------------------' + #13#10;
+
+end;
+
+function TCashMINI_FP54.JuridicalName : string;
+begin
+  if FPrinter.FPGetCurrentStatus then
+    Result := FPrinter.prHeadLine1
+  else ShowError;
+end;
+
+function TCashMINI_FP54.ZReport : Integer;
+begin
+  Result := 0;
+  if FPrinter.FPGetDayReportProperties then Result := FPrinter.prCurrentZReport
+  else ShowError;
+end;
+
+function TCashMINI_FP54.SummaReceipt : Currency;
+begin
+  Result := FPrinter.prSumTotal / 100;
+end;
+
+function TCashMINI_FP54.GetTaxRate : string;
+begin
+  Result := '';
+end;
+
+end.
+
+// FPGetCurrentReceiptData

@@ -36,8 +36,8 @@ type
     actDataDialog: TExecuteDialog;
     actUserNickDialig: TOpenChoiceForm;
     actAddUser: TMultiAction;
-    actspInsertUser: TdsdExecStoredProc;
-    spInsertUser: TdsdStoredProc;
+    actAddPayrollType: TdsdExecStoredProc;
+    spAddPayrollType: TdsdStoredProc;
     actExecPreviousMonth: TdsdExecStoredProc;
     actPreviousMonth: TMultiAction;
     dxBarButton4: TdxBarButton;
@@ -73,6 +73,8 @@ type
     spExecPayrollType: TdsdStoredProc;
     dxBarButton8: TdxBarButton;
     edUserCode: TcxTextEdit;
+    actAddUserDialog: TExecuteDialog;
+    dxBarButton9: TdxBarButton;
   private
     { Private declarations }
   public

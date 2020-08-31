@@ -739,6 +739,13 @@ inherited EmployeeScheduleNewForm: TEmployeeScheduleNewForm
           Value = False
           DataType = ftBoolean
           MultiSelectSeparator = ','
+        end
+        item
+          Name = 'UserId'
+          Value = Null
+          Component = MasterCDS
+          ComponentItem = 'UserId'
+          MultiSelectSeparator = ','
         end>
       isShowModal = False
       ActionType = acUpdate
@@ -1312,9 +1319,41 @@ inherited EmployeeScheduleNewForm: TEmployeeScheduleNewForm
     Top = 312
   end
   inherited spErasedMIMaster: TdsdStoredProc
+    Params = <
+      item
+        Name = 'inMovementItemId'
+        Component = MasterCDS
+        ComponentItem = 'Id'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'outIsErased'
+        Value = False
+        Component = MasterCDS
+        ComponentItem = 'isErased'
+        DataType = ftBoolean
+        MultiSelectSeparator = ','
+      end>
     Left = 534
   end
   inherited spUnErasedMIMaster: TdsdStoredProc
+    Params = <
+      item
+        Name = 'inMovementItemId'
+        Component = MasterCDS
+        ComponentItem = 'Id'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'outIsErased'
+        Value = False
+        Component = MasterCDS
+        ComponentItem = 'isErased'
+        DataType = ftBoolean
+        MultiSelectSeparator = ','
+      end>
     Left = 526
     Top = 280
   end
@@ -1405,6 +1444,7 @@ inherited EmployeeScheduleNewForm: TEmployeeScheduleNewForm
     ColumnAddOnList = <>
     ColumnEnterList = <>
     SummaryItemList = <>
+    PropertiesCellList = <>
     HeaderDataSet = HeaderPrevCDS
     HeaderColumnName = 'ValueField'
     TemplateColumn = ValuePrev
@@ -1429,6 +1469,7 @@ inherited EmployeeScheduleNewForm: TEmployeeScheduleNewForm
     ColumnAddOnList = <>
     ColumnEnterList = <>
     SummaryItemList = <>
+    PropertiesCellList = <>
     HeaderDataSet = HeaderCDS
     HeaderColumnName = 'ValueField'
     TemplateColumn = Value
@@ -1451,6 +1492,7 @@ inherited EmployeeScheduleNewForm: TEmployeeScheduleNewForm
     ColumnAddOnList = <>
     ColumnEnterList = <>
     SummaryItemList = <>
+    PropertiesCellList = <>
     HeaderDataSet = HeaderCDS
     HeaderColumnName = 'ValueFieldUser'
     TemplateColumn = ValueStart
@@ -1587,6 +1629,7 @@ inherited EmployeeScheduleNewForm: TEmployeeScheduleNewForm
     ColumnAddOnList = <>
     ColumnEnterList = <>
     SummaryItemList = <>
+    PropertiesCellList = <>
     HeaderDataSet = HeaderCDS
     HeaderColumnName = 'ValueFieldUser'
     TemplateColumn = ValueEnd

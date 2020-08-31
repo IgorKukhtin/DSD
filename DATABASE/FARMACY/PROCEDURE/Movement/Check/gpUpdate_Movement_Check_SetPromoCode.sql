@@ -17,7 +17,7 @@ BEGIN
     -- проверка прав пользователя на вызов процедуры
    vbUserId := inSession;
 
-   IF NOT EXISTS (SELECT 1 FROM ObjectLink_UserRole_View  WHERE UserId = vbUserId AND RoleId = zc_Enum_Role_Admin())
+   IF NOT EXISTS (SELECT 1 FROM ObjectLink_UserRole_View  WHERE UserId = vbUserId AND RoleId IN (zc_Enum_Role_Admin(), zc_Enum_Role_CashierPharmacy()))
    THEN
      RAISE EXCEPTION 'Разрешено только системному администратору';
    END IF;
@@ -81,3 +81,4 @@ $BODY$
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Шаблий О.В.
  20.02.20                                                       *
 */
+

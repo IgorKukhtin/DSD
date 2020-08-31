@@ -337,7 +337,7 @@ BEGIN
           SELECT 6, 'Коллеги, сегодня было сформировано перемещение от вас по СУН, ознакомьтесь с деталями в "Перемещениях"!'||
                     CASE WHEN date_part('DOW',     CURRENT_DATE)::Integer <= 5
                           AND date_part('HOUR',    CURRENT_TIME)::Integer < 12
-                         THEN Chr(13)||Chr(13)||'Просьба собрать товар сегодня до 12:00!' ELSE '' END,
+                         THEN Chr(13)||Chr(13)||'Просьба собрать товар сегодня до 21:00!' ELSE '' END,
                     'TSendForm', 'Перемещение СУН', 'Id,inOperDate', 'ftInteger,ftDateTime',
                     Movement.ID::TVarChar||','||CURRENT_DATE::TVarChar
           FROM  Movement
@@ -373,7 +373,7 @@ BEGIN
         VALUES (6, 'Коллеги, сегодня было сформировано перемещение от вас по СУН, ознакомьтесь с деталями в "Перемещениях"!'||
                     CASE WHEN date_part('DOW',     CURRENT_DATE)::Integer <= 5
                           AND date_part('HOUR',    CURRENT_TIME)::Integer < 12
-                         THEN Chr(13)||Chr(13)||'Просьба собрать товар сегодня до 12:00!' ELSE '' END,
+                         THEN Chr(13)||Chr(13)||'Просьба собрать товар сегодня до 21:00!' ELSE '' END,
                    'TSendCashJournalSunForm', 'Реестр перемещений СУН', 'isSUNAll', 'ftBoolean', 'False');
       END IF;
    END IF;
