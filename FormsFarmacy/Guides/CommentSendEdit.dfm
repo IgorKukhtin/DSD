@@ -2,7 +2,7 @@
   Left = 0
   Top = 0
   Caption = #1044#1086#1073#1072#1074#1080#1090#1100'/'#1080#1079#1084#1077#1085#1080#1090#1100' <'#1050#1086#1084#1084#1077#1085#1090#1072#1088#1080#1081' '#1089#1090#1088#1086#1082' '#1087#1077#1088#1077#1084#1077#1097#1077#1085#1080#1081' '#1087#1086' '#1057#1059#1053'>'
-  ClientHeight = 201
+  ClientHeight = 246
   ClientWidth = 439
   Color = clBtnFace
   Font.Charset = DEFAULT_CHARSET
@@ -29,7 +29,7 @@
   end
   object cxButton1: TcxButton
     Left = 91
-    Top = 162
+    Top = 214
     Width = 75
     Height = 25
     Action = dsdInsertUpdateGuides
@@ -39,7 +39,7 @@
   end
   object cxButton2: TcxButton
     Left = 241
-    Top = 162
+    Top = 214
     Width = 75
     Height = 25
     Action = dsdFormClose
@@ -76,6 +76,20 @@
     Left = 20
     Top = 104
     Caption = #1050#1086#1084#1084#1077#1085#1090#1072#1088#1080#1081' '#1089#1090#1088#1086#1082' '#1090#1077#1093#1085#1080#1095#1077#1089#1082#1086#1075#1086' '#1087#1077#1088#1077#1091#1095#1077#1090#1072
+  end
+  object cbisPromo: TcxCheckBox
+    Left = 20
+    Top = 163
+    Caption = #1050#1086#1085#1090#1088#1086#1083#1100' '#1082#1086#1083#1080#1095#1077#1089#1090#1074#1072' '#1087#1086' '#1087#1083#1072#1085#1091
+    TabOrder = 8
+    Width = 245
+  end
+  object cbisSendPartionDate: TcxCheckBox
+    Left = 20
+    Top = 187
+    Caption = #1060#1086#1088#1084#1080#1088#1086#1074#1072#1090#1100' '#1079#1072#1103#1074#1082#1091' '#1085#1072' '#1080#1079#1084#1077#1085#1077#1085#1080#1103' '#1089#1088#1086#1082#1072
+    TabOrder = 9
+    Width = 245
   end
   object ActionList: TActionList
     Left = 252
@@ -145,6 +159,22 @@
         ComponentItem = 'Key'
         ParamType = ptInput
         MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inisPromo'
+        Value = Null
+        Component = cbisPromo
+        DataType = ftBoolean
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inisSendPartionDate'
+        Value = Null
+        Component = cbisSendPartionDate
+        DataType = ftBoolean
+        ParamType = ptInput
+        MultiSelectSeparator = ','
       end>
     PackSize = 1
     Left = 188
@@ -200,6 +230,20 @@
         Component = CommentTRGuides
         ComponentItem = 'TextValue'
         DataType = ftString
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'isPromo'
+        Value = Null
+        Component = cbisPromo
+        DataType = ftBoolean
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'isSendPartionDate'
+        Value = Null
+        Component = cbisSendPartionDate
+        DataType = ftBoolean
         MultiSelectSeparator = ','
       end>
     PackSize = 1

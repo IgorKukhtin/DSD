@@ -33,8 +33,8 @@ BEGIN
 
         , tmpMovement AS (SELECT Movement.*
                           FROM tmpStatus
-                               JOIN Movement ON Movement.OperDate BETWEEN inStartDate AND inEndDate
-                                            AND Movement.DescId = zc_Movement_Layout()
+                               JOIN Movement ON /*Movement.OperDate BETWEEN inStartDate AND inEndDate   -- выбираем все документы
+                                            AND */Movement.DescId = zc_Movement_Layout()
                                             AND Movement.StatusId = tmpStatus.StatusId
                          )
 

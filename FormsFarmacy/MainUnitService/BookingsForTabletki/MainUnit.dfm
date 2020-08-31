@@ -215,22 +215,13 @@ object MainForm: TMainForm
       TabOrder = 0
       OnClick = btnLoadBookingsClick
     end
-    object btnAddTest: TButton
-      Left = 984
-      Top = 2
-      Width = 25
-      Height = 25
-      Caption = 'T'
-      TabOrder = 4
-      OnClick = btnAddTestClick
-    end
     object btnOpenBooking: TButton
       Left = 641
       Top = 2
       Width = 192
       Height = 25
       Caption = #1047#1072#1082#1072#1079#1099' '#1076#1083#1103' '#1080#1079#1084#1077#1085#1077#1085#1080#1103' '#1089#1090#1072#1090#1091#1089#1072
-      TabOrder = 5
+      TabOrder = 4
       OnClick = btnOpenBookingClick
     end
   end
@@ -387,7 +378,13 @@ object MainForm: TMainForm
           Caption = 'ID'
           DataBinding.FieldName = 'GoodsId'
           HeaderAlignmentHorz = taCenter
-          Width = 68
+          Width = 61
+        end
+        object cbGoodsCode: TcxGridDBColumn
+          Caption = #1050#1086#1076
+          DataBinding.FieldName = 'GoodsCode'
+          HeaderAlignmentHorz = taCenter
+          Width = 53
         end
         object cbGoodsName: TcxGridDBColumn
           Caption = #1058#1086#1074#1072#1088
@@ -395,24 +392,24 @@ object MainForm: TMainForm
           HeaderAlignmentHorz = taCenter
           Width = 176
         end
+        object cbAmountOrder: TcxGridDBColumn
+          Caption = #1047#1072#1082#1072#1079#1072#1085#1086
+          DataBinding.FieldName = 'AmountOrder'
+          HeaderAlignmentHorz = taCenter
+          Options.Editing = False
+          Width = 62
+        end
         object cbAmount: TcxGridDBColumn
           Caption = #1050#1086#1083'-'#1074#1086
           DataBinding.FieldName = 'Amount'
           HeaderAlignmentHorz = taCenter
-          Width = 68
+          Width = 57
         end
         object cbPrice: TcxGridDBColumn
           Caption = #1062#1077#1085#1072
           DataBinding.FieldName = 'Price'
           HeaderAlignmentHorz = taCenter
           Options.Editing = False
-        end
-        object cbItemId: TcxGridDBColumn
-          Caption = 'Id '#1089#1090#1088#1086#1082#1080' '#1090#1086#1074#1072#1088#1072
-          DataBinding.FieldName = 'ItemId'
-          HeaderAlignmentHorz = taCenter
-          Options.Editing = False
-          Width = 116
         end
       end
       object cxGridLevel1: TcxGridLevel
@@ -575,7 +572,7 @@ object MainForm: TMainForm
           Caption = #1057#1090#1072#1090#1091#1089
           DataBinding.FieldName = 'BookingStatus'
           HeaderAlignmentHorz = taCenter
-          Width = 134
+          Width = 73
         end
         object chBookingStatusNew: TcxGridDBColumn
           Caption = #1053#1086#1074#1099#1081' '#1089#1090#1072#1090#1091#1089
@@ -783,12 +780,25 @@ object MainForm: TMainForm
   object qryCheckHead: TZQuery
     Connection = ZConnection1
     SQL.Strings = (
-      'SELECT * FROM gpSelect_Movement_Check_Booking_Tabletki ('#39'3'#39');')
-    Params = <>
+      
+        'SELECT * FROM gpSelect_Movement_Check_Booking_Tabletki (:UnitId ' +
+        ', '#39'3'#39');')
+    Params = <
+      item
+        DataType = ftUnknown
+        Name = 'UnitId'
+        ParamType = ptUnknown
+      end>
     Properties.Strings = (
       '')
     Left = 52
     Top = 248
+    ParamData = <
+      item
+        DataType = ftUnknown
+        Name = 'UnitId'
+        ParamType = ptUnknown
+      end>
   end
   object dsCheckHead: TDataSource
     DataSet = qryCheckHead
@@ -969,22 +979,33 @@ object MainForm: TMainForm
   object dsCheckBody: TDataSource
     DataSet = qryCheckBody
     Left = 176
-    Top = 480
+    Top = 520
   end
   object qryCheckBody: TZQuery
     Connection = ZConnection1
     SQL.Strings = (
       
-        'SELECT * FROM gpSelect_MovementItem_Check_Booking_Tabletki ('#39'3'#39')' +
-        ';')
-    Params = <>
+        'SELECT * FROM gpSelect_MovementItem_Check_Booking_Tabletki (:Uni' +
+        'tId , '#39'3'#39');')
+    Params = <
+      item
+        DataType = ftUnknown
+        Name = 'UnitId'
+        ParamType = ptUnknown
+      end>
     Properties.Strings = (
       '')
     MasterFields = 'Id'
     MasterSource = dsCheckHead
     LinkedFields = 'MovementId'
     Left = 36
-    Top = 480
+    Top = 520
+    ParamData = <
+      item
+        DataType = ftUnknown
+        Name = 'UnitId'
+        ParamType = ptUnknown
+      end>
   end
   object spUpdateMovementStatus: TZStoredProc
     Connection = ZConnection1

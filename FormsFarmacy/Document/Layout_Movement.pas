@@ -57,6 +57,11 @@ type
     actInsertMaskMIMaster: TdsdExecStoredProc;
     dxBarButton3: TdxBarButton;
     bbUpdateSummaFund: TdxBarButton;
+    macInsertByLayout: TMultiAction;
+    actLayoutJournalChoiceForm: TOpenChoiceForm;
+    actInsertMaster: TdsdExecStoredProc;
+    spInsertByLayout: TdsdStoredProc;
+    bbInsertByLayout: TdxBarButton;
   private
     { Private declarations }
   public

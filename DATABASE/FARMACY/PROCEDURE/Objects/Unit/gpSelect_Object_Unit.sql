@@ -60,6 +60,7 @@ RETURNS TABLE (Id Integer, Code Integer, Name TVarChar
              , isTechnicalRediscount Boolean, isAlertRecounting Boolean
              , TimeWork TVarChar
              , DateCheck TDateTime
+             , LayoutId  Integer, LayoutName TVarChar
 
 ) AS
 $BODY$
@@ -228,6 +229,9 @@ BEGIN
         END) :: TVarChar AS TimeWork
       , tmpCheck.OperDate                                                     AS  DateCheck
 
+      , COALESCE (Object_Layout.Id,0)          ::Integer   AS LayoutId
+      , COALESCE (Object_Layout.ValueData, '') ::TVarChar  AS LayoutName
+
     FROM Object AS Object_Unit
         LEFT JOIN ObjectLink AS ObjectLink_Unit_Parent
                              ON ObjectLink_Unit_Parent.ObjectId = Object_Unit.Id
@@ -337,6 +341,11 @@ BEGIN
                              ON ObjectLink_Unit_PartnerMedical.ObjectId = Object_Unit.Id 
                             AND ObjectLink_Unit_PartnerMedical.DescId = zc_ObjectLink_Unit_PartnerMedical()
         LEFT JOIN Object AS Object_PartnerMedical ON Object_PartnerMedical.Id = ObjectLink_Unit_PartnerMedical.ChildObjectId
+
+        LEFT JOIN ObjectLink AS ObjectLink_Unit_Layout
+                             ON ObjectLink_Unit_Layout.ObjectId = Object_Unit.Id 
+                            AND ObjectLink_Unit_Layout.DescId = zc_ObjectLink_Unit_Layout()
+        LEFT JOIN Object AS Object_Layout ON Object_Layout.Id = ObjectLink_Unit_Layout.ChildObjectId
 
         LEFT JOIN ObjectBoolean AS ObjectBoolean_isLeaf 
                                 ON ObjectBoolean_isLeaf.ObjectId = Object_Unit.Id
@@ -620,5 +629,4 @@ LANGUAGE plpgsql VOLATILE;
 */
 
 -- тест
--- 
-SELECT * FROM gpSelect_Object_Unit (False, '2')
+-- SELECT * FROM gpSelect_Object_Unit (False, '2')

@@ -3,12 +3,13 @@
 DROP FUNCTION IF EXISTS gpInsert_MovementTransfer_SendPartionDateChange (Integer, TDateTime, TFloat, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpInsert_MovementTransfer_SendPartionDateChange(
-    IN inContainerID    Integer   , -- ID контейнера для изменения срока
-    IN inExpirationDate TDateTime , -- Новый срок
-    IN inAmount         TFloat    , -- Количество
-    IN inSession        TVarChar    -- сессия пользователя
+    IN inContainerID     Integer   , -- ID контейнера для изменения срока
+    IN inExpirationDate  TDateTime , -- Новый срок
+    IN inAmount          TFloat    , -- Количество
+   OUT outMovementItemId Integer   , -- Созданная строка в перемещении
+    IN inSession         TVarChar    -- сессия пользователя
 )
-RETURNS VOID AS
+RETURNS Integer AS
 $BODY$
    DECLARE vbUserId Integer;
    DECLARE vbMovementId Integer;
@@ -100,14 +101,14 @@ BEGIN
                                                                    );
   END IF;
  
-  PERFORM gpInsertUpdate_MI_SendPartionDateChange(ioId                 := 0,                 -- Ключ объекта <Элемент документа>
-                                                  inMovementId         := vbMovementId,      -- Ключ объекта <Документ>
-                                                  inGoodsId            := vbGoodsId,         -- Товары
-                                                  inAmount             := inAmount,          -- Количество
-                                                  inNewExpirationDate  := inExpirationDate,  -- Новый срок
-                                                  inContainerId        := inContainerID,     -- Контейнер
-                                                  inSession            := inSession          -- сессия пользователя
-                                                  );
+  outMovementItemId := gpInsertUpdate_MI_SendPartionDateChange(ioId                 := 0,                 -- Ключ объекта <Элемент документа>
+                                                               inMovementId         := vbMovementId,      -- Ключ объекта <Документ>
+                                                               inGoodsId            := vbGoodsId,         -- Товары
+                                                               inAmount             := inAmount,          -- Количество
+                                                               inNewExpirationDate  := inExpirationDate,  -- Новый срок
+                                                               inContainerId        := inContainerID,     -- Контейнер
+                                                               inSession            := inSession          -- сессия пользователя
+                                                               );
 
 END;
 $BODY$

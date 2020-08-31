@@ -360,6 +360,10 @@ end;
 procedure TLoadFormTest.LoadCashRegisterFormTest;
 begin
 
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TOverdueChangeCashPUSHSendForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TOverdueChangeCashPUSHSendForm');
+
+
 {  TdsdFormStorageFactory.GetStorage.Save(GetForm('TOverdueChangeCashJournalForm'));
   TdsdFormStorageFactory.GetStorage.Load('TOverdueChangeCashJournalForm');
 
@@ -1601,6 +1605,9 @@ begin
   TdsdFormStorageFactory.GetStorage.Load('TLayout_MovementForm');
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TLayoutJournalForm'));
   TdsdFormStorageFactory.GetStorage.Load('TLayoutJournalForm');
+
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TLayoutJournalChoiceForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TLayoutJournalChoiceForm');
 end;
 
 procedure TLoadFormTest.LoadJuridicalFormTest;
@@ -1752,10 +1759,10 @@ begin
 
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TUnit_MCSForm'));
   TdsdFormStorageFactory.GetStorage.Load('TUnit_MCSForm');
-
+  }
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TUnitTreeForm'));
   TdsdFormStorageFactory.GetStorage.Load('TUnitTreeForm');
-  }
+
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TUnitEditForm'));
   TdsdFormStorageFactory.GetStorage.Load('TUnitEditForm');
 

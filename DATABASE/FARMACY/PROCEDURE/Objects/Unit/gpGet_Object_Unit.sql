@@ -49,7 +49,8 @@ RETURNS TABLE (Id Integer, Code Integer, Name TVarChar,
                UnitOldId  Integer, UnitOldName TVarChar,
                MorionCode Integer, AccessKeyYF TVarChar,
                isTechnicalRediscount Boolean, isAlertRecounting Boolean,
-               SerialNumberTabletki Integer 
+               SerialNumberTabletki Integer,
+               LayoutId  Integer, LayoutName TVarChar
                ) AS
 $BODY$
 BEGIN
@@ -160,6 +161,8 @@ BEGIN
            , FALSE                 AS isTechnicalRediscount     
            , FALSE                 AS isAlertRecounting      
            , CAST (0 as Integer)   AS SerialNumberTabletki
+           , CAST (0 as Integer)   AS LayoutId
+           , CAST ('' as TVarChar) AS LayoutName
 ;
    ELSE
        RETURN QUERY 
@@ -266,9 +269,11 @@ BEGIN
       , ObjectFloat_MorionCode.ValueData::Integer          AS MorionCode
       , ObjectString_AccessKeyYF.ValueData                 AS AccessKeyYF
       , COALESCE (ObjectBoolean_TechnicalRediscount.ValueData, FALSE):: Boolean   AS isTechnicalRediscount      
-      , COALESCE (ObjectBoolean_AlertRecounting.ValueData, FALSE):: Boolean   AS isAlertRecounting   
+      , COALESCE (ObjectBoolean_AlertRecounting.ValueData, FALSE)    :: Boolean   AS isAlertRecounting   
       , ObjectFloat_SerialNumberTabletki.ValueData::Integer                       AS  SerialNumberTabletki
 
+      , COALESCE (Object_Layout.Id,0)          ::Integer   AS LayoutId
+      , COALESCE (Object_Layout.ValueData, '') ::TVarChar  AS LayoutName
     FROM Object AS Object_Unit
         LEFT JOIN ObjectLink AS ObjectLink_Unit_Parent
                              ON ObjectLink_Unit_Parent.ObjectId = Object_Unit.Id
@@ -524,6 +529,11 @@ BEGIN
                             AND ObjectLink_Unit_UnitOld.DescId = zc_ObjectLink_Unit_UnitOld()
         LEFT JOIN Object AS Object_UnitOld ON Object_UnitOld.Id = ObjectLink_Unit_UnitOld.ChildObjectId
 
+        LEFT JOIN ObjectLink AS ObjectLink_Unit_Layout
+                             ON ObjectLink_Unit_Layout.ObjectId = Object_Unit.Id 
+                            AND ObjectLink_Unit_Layout.DescId = zc_ObjectLink_Unit_Layout()
+        LEFT JOIN Object AS Object_Layout ON Object_Layout.Id = ObjectLink_Unit_Layout.ChildObjectId
+
         LEFT JOIN ObjectBoolean AS ObjectBoolean_TechnicalRediscount
                                 ON ObjectBoolean_TechnicalRediscount.ObjectId = Object_Unit.Id
                                AND ObjectBoolean_TechnicalRediscount.DescId = zc_ObjectBoolean_Unit_TechnicalRediscount()
@@ -551,6 +561,7 @@ ALTER FUNCTION gpGet_Object_Unit (integer, TVarChar) OWNER TO postgres;
 /*
  »—“Œ–»ﬂ –¿«–¿¡Œ“ »: ƒ¿“¿, ¿¬“Œ–
                ‘ÂÎÓÌ˛Í ».¬.    ÛıÚËÌ ».¬.    ÎËÏÂÌÚ¸Â‚  .».   ÿ‡·ÎËÈ Œ.¬.
+ 28.08.20         * add LayoutId
  21.04.20         * add ListDaySUN_pi
  14.02.20                                                       * add isTechnicalRediscount
  17.12.19         * add SunIncome

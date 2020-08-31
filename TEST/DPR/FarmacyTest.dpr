@@ -933,7 +933,9 @@ uses
   LayoutEdit in '..\..\FormsFarmacy\Guides\LayoutEdit.pas' {LayoutEditForm: TParentForm},
   Layout in '..\..\FormsFarmacy\Guides\Layout.pas' {LayoutForm: TParentForm},
   LayoutJournal in '..\..\FormsFarmacy\Document\LayoutJournal.pas' {LayoutJournalForm: TParentForm},
-  Layout_Movement in '..\..\FormsFarmacy\Document\Layout_Movement.pas' {Layout_MovementForm: TParentForm};
+  Layout_Movement in '..\..\FormsFarmacy\Document\Layout_Movement.pas' {Layout_MovementForm: TParentForm},
+  LayoutJournalChoice in '..\..\FormsFarmacy\Document\LayoutJournalChoice.pas' {LayoutJournalChoiceForm: TParentForm},
+  OverdueChangeCashPUSHSend in '..\..\FormsFarmacy\Cash\OverdueChangeCashPUSHSend.pas' {OverdueChangeCashPUSHSendForm: TParentForm};
 
 {$R *.res}
 {$R DevExpressRus.res}

@@ -1,31 +1,28 @@
 inherited Layout_MovementForm: TLayout_MovementForm
   Caption = #1044#1086#1082#1091#1084#1077#1085#1090' <'#1042#1099#1082#1083#1072#1076#1082#1072'>'
   ClientHeight = 516
-  ClientWidth = 685
-  AddOnFormData.AddOnFormRefresh.ParentList = 'Loss'
-  ExplicitWidth = 701
+  ClientWidth = 708
+  ExplicitWidth = 724
   ExplicitHeight = 554
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
     Top = 119
-    Width = 685
+    Width = 708
     Height = 397
     ExplicitTop = 119
-    ExplicitWidth = 783
-    ExplicitHeight = 549
+    ExplicitWidth = 685
+    ExplicitHeight = 397
     ClientRectBottom = 397
-    ClientRectRight = 685
+    ClientRectRight = 708
     inherited tsMain: TcxTabSheet
-      ExplicitWidth = 783
-      ExplicitHeight = 525
+      ExplicitWidth = 685
+      ExplicitHeight = 373
       inherited cxGrid: TcxGrid
-        Width = 685
+        Width = 708
         Height = 373
-        ExplicitLeft = 40
-        ExplicitTop = -56
-        ExplicitWidth = 783
-        ExplicitHeight = 525
+        ExplicitWidth = 685
+        ExplicitHeight = 373
         inherited cxGridDBTableView: TcxGridDBTableView
           DataController.Summary.DefaultGroupSummaryItems = <
             item
@@ -113,10 +110,10 @@ inherited Layout_MovementForm: TLayout_MovementForm
     end
   end
   inherited DataPanel: TPanel
-    Width = 685
+    Width = 708
     Height = 93
     TabOrder = 3
-    ExplicitWidth = 783
+    ExplicitWidth = 685
     ExplicitHeight = 93
     inherited edInvNumber: TcxTextEdit
       Left = 182
@@ -404,6 +401,66 @@ inherited Layout_MovementForm: TLayout_MovementForm
       ImageIndex = 30
       QuestionBeforeExecute = #1057#1087#1080#1089#1072#1090#1100' '#1074#1077#1089#1100' '#1086#1089#1090#1072#1090#1086#1082' '#1089' '#1090#1086#1095#1082#1080'?'
     end
+    object macInsertByLayout: TMultiAction
+      Category = 'DSDLib'
+      MoveParams = <>
+      ActionList = <
+        item
+          Action = actLayoutJournalChoiceForm
+        end
+        item
+          Action = actInsertMaster
+        end>
+      QuestionBeforeExecute = #1047#1072#1087#1086#1083#1085#1080#1090#1100' '#1090#1086#1074#1072#1088#1072#1084#1080' '#1080#1079' '#1076#1088#1091#1075#1086#1075#1086' '#1076#1086#1082#1091#1084#1077#1085#1090#1072' '#1042#1099#1082#1083#1072#1076#1082#1080'?'
+      InfoAfterExecute = #1058#1086#1074#1072#1088#1099' '#1079#1072#1087#1086#1083#1085#1077#1085#1099
+      Caption = #1047#1072#1087#1086#1083#1085#1080#1090#1100' '#1090#1086#1074#1072#1088#1072#1084#1080' '#1080#1079' '#1076#1088#1091#1075#1086#1075#1086' '#1076#1086#1082#1091#1084#1077#1085#1090#1072' '#1042#1099#1082#1083#1072#1076#1082#1080
+      Hint = #1047#1072#1087#1086#1083#1085#1080#1090#1100' '#1090#1086#1074#1072#1088#1072#1084#1080' '#1080#1079' '#1076#1088#1091#1075#1086#1075#1086' '#1076#1086#1082#1091#1084#1077#1085#1090#1072' '#1042#1099#1082#1083#1072#1076#1082#1080
+      ImageIndex = 27
+    end
+    object actInsertMaster: TdsdExecStoredProc
+      Category = 'DSDLib'
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      StoredProc = spInsertByLayout
+      StoredProcList = <
+        item
+          StoredProc = spInsertByLayout
+        end
+        item
+          StoredProc = spSelect
+        end>
+      Caption = #1047#1072#1087#1086#1083#1085#1080#1090#1100' '#1090#1086#1074#1072#1088#1072#1084#1080' '#1080#1079' '#1076#1088#1091#1075#1086#1075#1086' '#1076#1086#1082#1091#1084#1077#1085#1090#1072' '#1042#1099#1082#1083#1072#1076#1082#1080
+      Hint = #1047#1072#1087#1086#1083#1085#1080#1090#1100' '#1090#1086#1074#1072#1088#1072#1084#1080' '#1080#1079' '#1076#1088#1091#1075#1086#1075#1086' '#1076#1086#1082#1091#1084#1077#1085#1090#1072' '#1042#1099#1082#1083#1072#1076#1082#1080
+      ImageIndex = 27
+    end
+    object actLayoutJournalChoiceForm: TOpenChoiceForm
+      Category = 'DSDLib'
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      Caption = 'LayoutJournalForm'
+      ImageIndex = 27
+      FormName = 'TLayoutJournalChoiceForm'
+      FormNameParam.Value = 'TLayoutJournalChoiceForm'
+      FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
+      GuiParams = <
+        item
+          Name = 'key'
+          Value = '0'
+          Component = FormParams
+          ComponentItem = 'MovementId_mask'
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'TextValue'
+          Value = Null
+          Component = FormParams
+          ComponentItem = 'InvNumber_mask'
+          DataType = ftString
+          MultiSelectSeparator = ','
+        end>
+      isShowModal = True
+    end
   end
   inherited MasterDS: TDataSource
     Left = 32
@@ -479,6 +536,14 @@ inherited Layout_MovementForm: TLayout_MovementForm
         end
         item
           BeginGroup = True
+          Visible = True
+          ItemName = 'dxBarStatic'
+        end
+        item
+          Visible = True
+          ItemName = 'bbInsertByLayout'
+        end
+        item
           Visible = True
           ItemName = 'dxBarStatic'
         end
@@ -561,6 +626,10 @@ inherited Layout_MovementForm: TLayout_MovementForm
       Hint = #1048#1079#1084#1077#1085#1080#1090#1100' '#1089#1091#1084#1084#1091' '#1080#1079' '#1092#1086#1085#1076#1072
       Visible = ivAlways
       ImageIndex = 75
+    end
+    object bbInsertByLayout: TdxBarButton
+      Action = macInsertByLayout
+      Category = 0
     end
   end
   inherited DBViewAddOn: TdsdDBViewAddOn
@@ -1039,5 +1108,32 @@ inherited Layout_MovementForm: TLayout_MovementForm
     PackSize = 1
     Left = 72
     Top = 376
+  end
+  object spInsertByLayout: TdsdStoredProc
+    StoredProcName = 'gpInsert_MI_Layout_byLayout'
+    DataSets = <>
+    OutputType = otResult
+    Params = <
+      item
+        Name = 'inMovementId'
+        Value = Null
+        Component = FormParams
+        ComponentItem = 'Id'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inMovementId_mask'
+        Value = '0'
+        Component = FormParams
+        ComponentItem = 'MovementId_mask'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end>
+    PackSize = 1
+    NeedResetData = True
+    ParamKeyField = 'inMovementId'
+    Left = 160
+    Top = 448
   end
 end

@@ -304,6 +304,14 @@ object UnitTreeForm: TUnitTreeForm
         Options.Editing = False
         Width = 85
       end
+      object LayoutName: TcxGridDBColumn
+        Caption = #1053#1072#1079#1074#1072#1085#1080#1077' '#1074#1099#1082#1083#1072#1076#1082#1080
+        DataBinding.FieldName = 'LayoutName'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Options.Editing = False
+        Width = 99
+      end
     end
     object cxGridLevel: TcxGridLevel
       GridView = cxGridDBTableView
@@ -724,7 +732,7 @@ object UnitTreeForm: TUnitTreeForm
     Params = <
       item
         Name = 'inisShowAll'
-        Value = 'False'
+        Value = False
         Component = actShowAll
         DataType = ftBoolean
         ParamType = ptInput
@@ -773,6 +781,7 @@ object UnitTreeForm: TUnitTreeForm
     ColumnEnterList = <>
     SummaryItemList = <>
     SearchAsFilter = False
+    PropertiesCellList = <>
     Left = 432
     Top = 240
   end

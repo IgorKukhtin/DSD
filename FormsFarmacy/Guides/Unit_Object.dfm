@@ -3,9 +3,8 @@ inherited Unit_ObjectForm: TUnit_ObjectForm
   ClientHeight = 477
   ClientWidth = 1434
   PopupMenu = PopupMenu
-  ExplicitLeft = -98
   ExplicitWidth = 1450
-  ExplicitHeight = 516
+  ExplicitHeight = 515
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
@@ -823,6 +822,14 @@ inherited Unit_ObjectForm: TUnit_ObjectForm
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
             Width = 84
+          end
+          object LayoutName: TcxGridDBColumn
+            Caption = #1053#1072#1079#1074#1072#1085#1080#1077' '#1074#1099#1082#1083#1072#1076#1082#1080
+            DataBinding.FieldName = 'LayoutName'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 103
           end
         end
       end
@@ -4404,8 +4411,8 @@ inherited Unit_ObjectForm: TUnit_ObjectForm
         MultiSelectSeparator = ','
       end>
     PackSize = 1
-    Left = 312
-    Top = 419
+    Left = 304
+    Top = 387
   end
   object spUpdate_Unit_isSUN_v3_out_yes: TdsdStoredProc
     StoredProcName = 'gpUpdate_Unit_isSUN_v2'

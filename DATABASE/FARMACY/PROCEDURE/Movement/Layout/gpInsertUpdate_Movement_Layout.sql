@@ -18,7 +18,22 @@ BEGIN
      -- проверка прав пользовател€ на вызов процедуры
      --vbUserId:= lpCheckRight (inSession, zc_Enum_Process_InsertUpdate_Movement_Layout());
      vbUserId:= lpGetUserBySession (inSession);
-	 
+
+
+     -- проверка по одному документу дл€ каждого наименовани€ выкладки и если удалили то можно новый создать но при этом старый запретить распроводить если есть новый
+     IF EXISTS (SELECT 1
+                FROM Movement
+                     INNER JOIN MovementLinkObject AS MovementLinkObject_Layout
+                                                   ON MovementLinkObject_Layout.MovementId = Movement.Id
+                                                  AND MovementLinkObject_Layout.DescId = zc_MovementLinkObject_Layout()
+                                                  AND MovementLinkObject_Layout.ObjectId = inLayoutId
+                WHERE Movement.DescId = zc_Movement_Layout()
+                  AND Movement.StatusId <> zc_Enum_Status_Erased()
+                  AND Movement.Id <> ioId)
+     THEN
+          RAISE EXCEPTION 'ќшибка.ƒокумент дл€ выкладки <%> уже существует.', lfGet_Object_ValueData (inLayoutId);
+     END IF;
+     
      -- сохранили <ƒокумент>
      ioId := lpInsertUpdate_Movement_Layout (ioId           := ioId
                                            , inInvNumber    := inInvNumber

@@ -40,20 +40,23 @@ $BODY$
    DECLARE vbInsertDate    TDateTime;
    DECLARE vbTotalCount    TFloat;
    DECLARE vbTotalCountOld TFloat;
+   DECLARE vbCommentSendId  Integer;
+   DECLARE vbStatusId  Integer;
 BEGIN
     -- проверка прав пользователя на вызов процедуры
     --vbUserId := lpCheckRight (inSession, zc_Enum_Process_InsertUpdate_MI_Send());
     vbUserId := inSession;
 
     --определяем подразделение получателя
-    SELECT MovementLinkObject_To.ObjectId                               AS UnitId
+    SELECT Movement.StatusId
+         , MovementLinkObject_To.ObjectId                               AS UnitId
          , COALESCE (MovementBoolean_SUN.ValueData, FALSE)::Boolean     AS isSUN
          , COALESCE (MovementBoolean_SUN_v2.ValueData, FALSE)::Boolean  AS isSUN_v2
          , COALESCE (MovementBoolean_SUN_v3.ValueData, FALSE)::Boolean  AS isSUN_v3
          , COALESCE (MovementBoolean_DefSUN.ValueData, FALSE)::Boolean  AS isDefSUN
          , DATE_TRUNC ('DAY', MovementDate_Insert.ValueData)
          , COALESCE (MovementFloat_TotalCount.ValueData, 0)
-    INTO vbUnitId, vbIsSUN, vbIsSUN_v2, vbIsSUN_v3, vbIsDefSUN, vbInsertDate, vbTotalCountOld
+    INTO vbStatusId, vbUnitId, vbIsSUN, vbIsSUN_v2, vbIsSUN_v3, vbIsDefSUN, vbInsertDate, vbTotalCountOld
     FROM Movement 
           LEFT JOIN MovementLinkObject AS MovementLinkObject_To
                                        ON MovementLinkObject_To.MovementId = Movement.Id
@@ -79,7 +82,6 @@ BEGIN
           LEFT JOIN MovementFloat AS MovementFloat_TotalCount
                                   ON MovementFloat_TotalCount.MovementId = Movement.Id
                                  AND MovementFloat_TotalCount.DescId = zc_MovementFloat_TotalCount()
-
     WHERE Movement.Id = inMovementId;
     
     IF COALESCE (ioId, 0) = 0 AND (vbIsSUN = TRUE OR vbIsSUN_v2 = TRUE OR vbIsSUN_v3 = TRUE) AND
@@ -90,10 +92,11 @@ BEGIN
 
     -- Получаем предыдущее значение количеств
     SELECT
-           SUM (MovementItem.Amount)                         AS Amount
-         , SUM (COALESCE(MIFloat_AmountManual.ValueData,0))  AS AmountManual
-         , SUM (COALESCE(MIFloat_AmountStorage.ValueData,0)) AS AmountStorage
-    INTO vbAmount, vbAmountManual, vbAmountStorage
+           MovementItem.Amount                         AS Amount
+         , COALESCE(MIFloat_AmountManual.ValueData,0)  AS AmountManual
+         , COALESCE(MIFloat_AmountStorage.ValueData,0) AS AmountStorage
+         , COALESCE (MILinkObject_CommentSend.ObjectId, 0)
+    INTO vbAmount, vbAmountManual, vbAmountStorage, vbCommentSendId
     FROM MovementItem
                LEFT JOIN MovementItemFloat AS MIFloat_AmountManual
                                            ON MIFloat_AmountManual.MovementItemId = MovementItem.Id
@@ -101,9 +104,37 @@ BEGIN
                LEFT JOIN MovementItemFloat AS MIFloat_AmountStorage
                                            ON MIFloat_AmountStorage.MovementItemId = MovementItem.Id
                                           AND MIFloat_AmountStorage.DescId = zc_MIFloat_AmountStorage()
+               LEFT JOIN MovementItemLinkObject AS MILinkObject_CommentSend
+                                                ON MILinkObject_CommentSend.MovementItemId = MovementItem.Id
+                                               AND MILinkObject_CommentSend.DescId = zc_MILinkObject_CommentSend()
     WHERE MovementItem.Id = ioId;
 
-
+    IF vbisSUN = TRUE AND COALESCE (ioId, 0) <> 0
+       AND COALESCE (vbCommentSendId, 0) <> COALESCE (inCommentTRID, 0)
+       AND COALESCE (vbStatusId, 0) = zc_Enum_Status_Complete()
+       AND COALESCE (vbAmount, 0) = COALESCE (inAmount, 0)
+       AND COALESCE (vbAmountManual, 0) = COALESCE (vbAmountManual, 0)
+       AND COALESCE (vbAmountStorage, 0) = COALESCE (inAmountStorage, 0)
+       AND EXISTS (SELECT 1 FROM ObjectLink_UserRole_View  WHERE UserId = vbUserId AND RoleId = zc_Enum_Role_Admin())
+    THEN
+      -- Сохранили <Комментарий>
+      PERFORM lpInsertUpdate_MovementItemLinkObject (zc_MILinkObject_CommentSend(), ioId, inCommentTRID);
+      
+      IF COALESCE ((SELECT ChildObjectId FROM ObjectLink  
+                    WHERE ObjectId = vbCommentSendId
+                      AND DescId = zc_ObjectLink_CommentSend_CommentTR()), 0) <>
+         COALESCE ((SELECT ChildObjectId FROM ObjectLink  
+                    WHERE ObjectId = inCommentTRID
+                      AND DescId = zc_ObjectLink_CommentSend_CommentTR()), 0)                     
+      THEN
+        PERFORM  gpSelect_MovementSUN_TechnicalRediscount(inMovementId, inSession);
+      END IF;
+      raise notice 'Value 04';
+      RETURN;
+    END IF;
+    
+    raise notice 'Value 05:  % %  %', COALESCE (vbCommentSendId, 0), COALESCE (inCommentTRID, 0), (SELECT 1 FROM ObjectLink_UserRole_View  WHERE UserId = vbUserId AND RoleId = zc_Enum_Role_Admin());
+    
     -- Для роли "Безнал" отключаем проверки
     IF NOT EXISTS(SELECT * FROM gpSelect_Object_RoleUser (inSession) AS Object_RoleUser
               WHERE Object_RoleUser.ID = vbUserId AND Object_RoleUser.RoleId = zc_Enum_Role_Cashless())
