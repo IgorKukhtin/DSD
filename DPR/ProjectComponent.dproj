@@ -158,7 +158,6 @@
 			<DCCReference Include="..\SOURCE\UtilConst.pas"/>
 			<DCCReference Include="..\SOURCE\CommonData.pas"/>
 			<DCCReference Include="..\SOURCE\Authentication.pas"/>
-			<DCCReference Include="..\SOURCE\COMPONENT\dsdAction.pas"/>
 			<DCCReference Include="..\SOURCE\COMPONENT\dsdExportToXLSAction.pas"/>
 			<DCCReference Include="..\SOURCE\UtilConvert.pas"/>
 			<DCCReference Include="..\SOURCE\ParentForm.pas">
@@ -231,6 +230,7 @@
 			<DCCReference Include="..\SOURCE\EDI\DesadvFozzXML.pas"/>
 			<DCCReference Include="..\SOURCE\EDI\IftminFozzXML.pas"/>
 			<DCCReference Include="..\SOURCE\EDI\OrderSpFozzXML.pas"/>
+			<DCCReference Include="..\SOURCE\COMPONENT\dsdAction.pas"/>
 			<BuildConfiguration Include="Release">
 				<Key>Cfg_2</Key>
 				<CfgParent>Base</CfgParent>

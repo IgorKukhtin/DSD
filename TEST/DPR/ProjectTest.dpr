@@ -1189,7 +1189,8 @@ uses
   Movement_PeriodDialog_Bonus in '..\..\Forms\Document\Movement_PeriodDialog_Bonus.pas' {Movement_PeriodDialog_BonusForm: TParentForm},
   CashOperationBonus in '..\..\Forms\Document\CashOperationBonus.pas' {CashOperationBonusForm: TParentForm},
   Report_BalanceNo in '..\..\Forms\Report\Report_BalanceNo.pas' {Report_BalanceNoForm: TParentForm},
-  BarCodeBoxPrintDialog in '..\..\Forms\Guides\BarCodeBoxPrintDialog.pas' {BarCodeBoxPrintDialogForm: TParentForm};
+  BarCodeBoxPrintDialog in '..\..\Forms\Guides\BarCodeBoxPrintDialog.pas' {BarCodeBoxPrintDialogForm: TParentForm},
+  ProfitLossService_51201Journal in '..\..\Forms\Document\ProfitLossService_51201Journal.pas' {ProfitLossService_51201JournalForm: TParentForm};
 
 {$R *.RES}
 {$R DevExpressRus.res}

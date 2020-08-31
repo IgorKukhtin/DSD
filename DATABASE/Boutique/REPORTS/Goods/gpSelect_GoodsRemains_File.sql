@@ -104,7 +104,7 @@ BEGIN
                       WHERE Container.DescId = zc_Container_Count()
                         AND Container.WhereObjectId = inUnitId
                         AND (Container.Amount <> 0)
-                      LIMIT 1
+                     -- LIMIT 1
                       /*  AND (ObjectLink_Partner_Period.ChildObjectId = inPeriodId   OR inPeriodId  = 0)
                         AND (Object_PartionGoods.BrandId             = inBrandId    OR inBrandId   = 0)
                         AND (Object_PartionGoods.PartnerId           = inPartnerId  OR inPartnerId = 0)
