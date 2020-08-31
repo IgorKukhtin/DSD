@@ -429,6 +429,7 @@ BEGIN
      PERFORM lpUpdate_Object_Enum_byCode (inCode:= 30000,  inDescId:= zc_Object_AccountGroup(), inEnumName:= 'zc_Enum_AccountGroup_30000');
      PERFORM lpUpdate_Object_Enum_byCode (inCode:= 40000,  inDescId:= zc_Object_AccountGroup(), inEnumName:= 'zc_Enum_AccountGroup_40000');
      PERFORM lpUpdate_Object_Enum_byCode (inCode:= 50000,  inDescId:= zc_Object_AccountGroup(), inEnumName:= 'zc_Enum_AccountGroup_50000');
+     PERFORM lpUpdate_Object_Enum_byCode (inCode:= 51000,  inDescId:= zc_Object_AccountGroup(), inEnumName:= 'zc_Enum_AccountGroup_51000');
      PERFORM lpUpdate_Object_Enum_byCode (inCode:= 60000,  inDescId:= zc_Object_AccountGroup(), inEnumName:= 'zc_Enum_AccountGroup_60000');
      PERFORM lpUpdate_Object_Enum_byCode (inCode:= 70000,  inDescId:= zc_Object_AccountGroup(), inEnumName:= 'zc_Enum_AccountGroup_70000');
      PERFORM lpUpdate_Object_Enum_byCode (inCode:= 80000,  inDescId:= zc_Object_AccountGroup(), inEnumName:= 'zc_Enum_AccountGroup_80000');
@@ -535,6 +536,8 @@ BEGIN
      PERFORM lpUpdate_Object_Enum_byCode (inCode:= 40801, inDescId:= zc_Object_Account(), inEnumName:= 'zc_Enum_Account_40801');
 
      PERFORM lpUpdate_Object_Enum_byCode (inCode:= 50401, inDescId:= zc_Object_Account(), inEnumName:= 'zc_Enum_Account_50401');
+     PERFORM lpUpdate_Object_Enum_byCode (inCode:= 51101, inDescId:= zc_Object_Account(), inEnumName:= 'zc_Enum_Account_51101');
+     PERFORM lpUpdate_Object_Enum_byCode (inCode:= 51201, inDescId:= zc_Object_Account(), inEnumName:= 'zc_Enum_Account_51201');
      PERFORM lpUpdate_Object_Enum_byCode (inCode:= 60301, inDescId:= zc_Object_Account(), inEnumName:= 'zc_Enum_Account_60301');
 
      PERFORM lpUpdate_Object_Enum_byCode (inCode:= 100301, inDescId:= zc_Object_Account(), inEnumName:= 'zc_Enum_Account_100301');

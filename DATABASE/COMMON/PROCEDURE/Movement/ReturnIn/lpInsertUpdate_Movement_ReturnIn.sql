@@ -33,7 +33,11 @@ $BODY$
    DECLARE vbAccessKeyId Integer;
    DECLARE vbIsInsert Boolean;
    DECLARE vbMovementId_TaxCorrective Integer;
+   DECLARE vbBranchId Integer;
 BEGIN
+     -- нашли Филиал
+     vbBranchId:= (SELECT DISTINCT Object_RoleAccessKeyGuide_View.BranchId FROM Object_RoleAccessKeyGuide_View WHERE Object_RoleAccessKeyGuide_View.UserId = inUserId AND Object_RoleAccessKeyGuide_View.BranchId <> 0);
+
      -- проверка
      IF inOperDate <> DATE_TRUNC ('DAY', inOperDate) OR inOperDatePartner <> DATE_TRUNC ('DAY', inOperDatePartner) 
      THEN
@@ -43,6 +47,16 @@ BEGIN
      IF COALESCE (inContractId, 0) = 0 AND NOT EXISTS (SELECT UserId FROM ObjectLink_UserRole_View WHERE UserId = inUserId AND RoleId = zc_Enum_Role_Admin())
      THEN
          RAISE EXCEPTION 'Ошибка.Не установлено значение <Договор>.';
+     END IF;
+
+     -- проверка
+     IF vbBranchId > 0 AND inToId > 0 AND NOT EXISTS (SELECT 1 FROM ObjectLink AS OL WHERE OL.ObjectId = inToId AND OL.DescId = zc_ObjectLink_Unit_Branch() AND OL.ChildObjectId = vbBranchId)
+     THEN
+         RAISE EXCEPTION 'Ошибка.Нет прав выбрать подразделение <%>.%Можно выбрать %>'
+                 , lfGet_Object_ValueData_sh (inToId)
+                 , CHR (13)
+                 , (SELECT STRING_AGG (tmp.Value, ' или ') FROM (SELECT '<' || lfGet_Object_ValueData_sh (OL.ObjectId) || '>' AS Value FROM ObjectLink AS OL WHERE OL.ChildObjectId = vbBranchId AND OL.DescId = zc_ObjectLink_Unit_Branch() ORDER BY OL.ObjectId) AS tmp)
+                 ;
      END IF;
 
 

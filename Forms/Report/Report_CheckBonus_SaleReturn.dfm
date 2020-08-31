@@ -450,12 +450,14 @@ inherited Report_CheckBonus_SaleReturnForm: TReport_CheckBonus_SaleReturnForm
     ExplicitHeight = 57
     inherited deStart: TcxDateEdit
       Left = 123
+      EditValue = 43831d
       Properties.SaveTime = False
       ExplicitLeft = 123
     end
     inherited deEnd: TcxDateEdit
       Left = 123
       Top = 31
+      EditValue = 43831d
       Properties.SaveTime = False
       ExplicitLeft = 123
       ExplicitTop = 31
@@ -994,7 +996,7 @@ inherited Report_CheckBonus_SaleReturnForm: TReport_CheckBonus_SaleReturnForm
     Left = 1064
   end
   object spInsertUpdate: TdsdStoredProc
-    StoredProcName = 'gpInsertUpdate_Movement_ProfitLossService_ByReport'
+    StoredProcName = 'gpInsertUpdate_Movement_ProfitLossService_ByReport_new'
     DataSets = <>
     OutputType = otResult
     Params = <

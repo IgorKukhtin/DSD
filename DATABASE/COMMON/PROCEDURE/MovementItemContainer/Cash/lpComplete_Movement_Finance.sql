@@ -1,8 +1,8 @@
--- Function: lpComplete_Movement_Finance22 (Integer, Boolean)
+-- Function: lpComplete_Movement_Finance (Integer, Boolean)
 
-DROP FUNCTION IF EXISTS lpComplete_Movement_Finance22 (Integer, Integer);
+DROP FUNCTION IF EXISTS lpComplete_Movement_Finance (Integer, Integer);
 
-CREATE OR REPLACE FUNCTION lpComplete_Movement_Finance22(
+CREATE OR REPLACE FUNCTION lpComplete_Movement_Finance(
     IN inMovementId        Integer  , -- ключ Документа
     IN inUserId            Integer    -- Пользователь
 )
@@ -10,11 +10,21 @@ RETURNS VOID
 AS
 $BODY$
   DECLARE vbTmp Integer;
+  DECLARE vbPartnerId_min Integer;
+  DECLARE vbPartnerId_max Integer;
 BEGIN
      -- Проверка
-     IF EXISTS (SELECT SUM (OperSumm + CASE WHEN _tmpItem.MovementDescId = zc_Movement_Cash() THEN 0 ELSE COALESCE (OperSumm_Diff, 0) + COALESCE (OperSumm_Diff_Asset, 0) END) FROM _tmpItem /*WHERE MovementDescId = zc_Movement_ProfitLossService()*/ HAVING SUM (OperSumm + CASE WHEN _tmpItem.MovementDescId = zc_Movement_Cash() THEN 0 ELSE COALESCE (OperSumm_Diff, 0) + COALESCE (OperSumm_Diff_Asset, 0) END) <> 0)
+     IF EXISTS (SELECT SUM (OperSumm + CASE WHEN _tmpItem.MovementDescId = zc_Movement_Cash() THEN 0 ELSE COALESCE (OperSumm_Diff, 0) END) FROM _tmpItem /*WHERE MovementDescId = zc_Movement_ProfitLossService()*/ HAVING SUM (OperSumm + CASE WHEN _tmpItem.MovementDescId = zc_Movement_Cash() THEN 0 ELSE COALESCE (OperSumm_Diff, 0) END) <> 0)
      THEN
-         RAISE EXCEPTION 'Ошибка.В проводке отличаются сумма <Дебет> и сумма <Кредит> : (%) (%) = (%)', (SELECT SUM (OperSumm) FROM _tmpItem WHERE IsMaster = TRUE), (SELECT SUM (OperSumm) FROM _tmpItem WHERE IsMaster = FALSE), (SELECT SUM (OperSumm) FROM _tmpItem);
+         RAISE EXCEPTION 'Ошибка.В проводке отличаются сумма <Дебет> и сумма <Кредит> : (%) (%) = (%)  os = (%) (%) (%) (%)'
+                       , (SELECT SUM (OperSumm + CASE WHEN _tmpItem.MovementDescId = zc_Movement_Cash() THEN 0 ELSE COALESCE (OperSumm_Diff, 0) END) FROM _tmpItem WHERE IsMaster = TRUE)
+                       , (SELECT SUM (OperSumm + CASE WHEN _tmpItem.MovementDescId = zc_Movement_Cash() THEN 0 ELSE COALESCE (OperSumm_Diff, 0) END) FROM _tmpItem WHERE IsMaster = FALSE)
+                       , (SELECT SUM (OperSumm + CASE WHEN _tmpItem.MovementDescId = zc_Movement_Cash() THEN 0 ELSE COALESCE (OperSumm_Diff, 0) END) FROM _tmpItem)
+                       , (SELECT SUM (coalesce (OperSumm_Asset, 0)) FROM _tmpItem where OperSumm_Asset > 0)
+                       , (SELECT SUM (coalesce (OperSumm_Asset, 0)) FROM _tmpItem where OperSumm_Asset < 0)
+                       , (SELECT SUM (coalesce (OperSumm_Diff_Asset, 0)) FROM _tmpItem where OperSumm_Diff_Asset > 0)
+                       , (SELECT SUM (coalesce (OperSumm_Diff_Asset, 0)) FROM _tmpItem where OperSumm_Diff_Asset < 0)
+                        ;
      END IF;
 
 
@@ -544,9 +554,47 @@ BEGIN
      END IF;
 
 
+     -- 2.0.1. найдем контрагента
+     SELECT MIN (ObjectLink.ObjectId), MAX (ObjectLink.ObjectId)
+            INTO vbPartnerId_min, vbPartnerId_max
+     FROM _tmpItem
+          JOIN ObjectLink ON ObjectLink.ChildObjectId = _tmpItem.ObjectId AND ObjectLink.DescId = zc_ObjectLink_Partner_Juridical()
+          JOIN Object ON Object.Id = ObjectLink.ObjectId AND Object.isErased = FALSE
+     WHERE _tmpItem.ObjectDescId = zc_Object_Juridical()
+       AND inMovementId <> 4955377 
+       AND (_tmpItem.BranchId_Balance <> 0 OR _tmpItem.ObjectId NOT IN (9400, 9401))
+       AND _tmpItem.InfoMoneyDestinationId <> zc_Enum_InfoMoneyDestination_20400()
+       AND _tmpItem.PaidKindId = zc_Enum_PaidKind_SecondForm() AND _tmpItem.AccountDirectionId NOT IN (zc_Enum_AccountDirection_30200())
+    ;
+       
+     
+     -- 2.0.2. проверка
+     IF vbPartnerId_min <> vbPartnerId_max
+     THEN
+         RAISE EXCEPTION 'Ошибка.Нельзя автоматически определить контрагента, т.к. их больше одного%<1. %>%<2. %>.'
+                       , CHR (13)
+                       , lfGet_Object_ValueData (vbPartnerId_min)
+                       , CHR (13)
+                       , lfGet_Object_ValueData (vbPartnerId_max)
+                       ;
+     END IF;
+
+
      -- 2.1. определяется ContainerId для проводок суммового учета - Суммовой учет
      UPDATE _tmpItem SET ContainerId = CASE WHEN _tmpItem.ContainerId <> 0
                                                  THEN _tmpItem.ContainerId
+
+                                            WHEN _tmpItem.AccountId IN (zc_Enum_Account_51201()) -- Распределение маркетинг + Маркетинг в накладных + Маркетинг
+                                                 THEN lpInsertFind_Container (inContainerDescId   := zc_Container_Summ()
+                                                                            , inParentId          := NULL
+                                                                            , inObjectId          := _tmpItem.AccountId
+                                                                            , inJuridicalId_basis := _tmpItem.JuridicalId_Basis
+                                                                            , inBusinessId        := _tmpItem.BusinessId_Balance
+                                                                            , inObjectCostDescId  := NULL
+                                                                            , inObjectCostId      := NULL
+                                                                            , inDescId_1          := zc_ContainerLinkObject_PartionMovement()
+                                                                            , inObjectId_1        := _tmpItem.PartionMovementId
+                                                                             )
 
                                             WHEN _tmpItem.AccountId IN (zc_Enum_Account_110201()  -- Транзит + деньги в пути
                                                                       , zc_Enum_Account_110301()) -- Транзит + расчетный счет + расчетный счет
@@ -815,9 +863,9 @@ BEGIN
                                                                              )
                                             ELSE 0
                                        END
-                  , ContainerId_Diff = CASE WHEN _tmpItem.OperSumm_Diff  <> 0
+                  , ContainerId_Diff = CASE WHEN (_tmpItem.OperSumm_Diff  <> 0 OR _tmpItem.OperSumm_Diff_Asset <> 0)
                                              AND _tmpItem.MovementDescId <> zc_Movement_Cash()
-                                                 THEN lpInsertFind_Container (inContainerDescId   := zc_Container_Summ()
+                                                 THEN lpInsertFind_Container (inContainerDescId   := CASE WHEN _tmpItem.OperSumm_Asset <> 0 OR _tmpItem.OperSumm_Diff_Asset <> 0 THEN zc_Container_SummAsset() ELSE zc_Container_Summ() END
                                                                             , inParentId          := NULL
                                                                             , inObjectId          := zc_Enum_Account_100301() -- прибыль текущего периода
                                                                             , inJuridicalId_basis := _tmpItem.JuridicalId_Basis
@@ -832,7 +880,7 @@ BEGIN
                                             ELSE 0
                                        END
      WHERE _tmpItem.CurrencyId      <> zc_Enum_Currency_Basis()
-        OR (_tmpItem.OperSumm_Diff  <> 0
+        OR ((_tmpItem.OperSumm_Diff  <> 0 OR _tmpItem.OperSumm_Diff_Asset <> 0)
         AND _tmpItem.MovementDescId = zc_Movement_Cash()
            )
     ;
@@ -841,7 +889,11 @@ BEGIN
      -- 3. формируются Проводки + !!!есть MovementItemId!!!
      IF EXISTS (SELECT 1 FROM _tmpItem WHERE COALESCE (_tmpItem.ContainerId, 0) = 0)
      THEN
-         RAISE EXCEPTION 'Ошибка.В проводках сформирован пустой счет баланса с суммой = <%>', (SELECT _tmpItem.OperSumm FROM _tmpItem WHERE COALESCE (_tmpItem.ContainerId, 0) = 0 LIMIT 1);
+         RAISE EXCEPTION 'Ошибка.В проводках сформирован пустой счет баланса с суммой = <%> + Счет = <%>  + ObjectDesc = <%>'
+             , (SELECT _tmpItem.OperSumm FROM _tmpItem WHERE COALESCE (_tmpItem.ContainerId, 0) = 0 LIMIT 1)
+             , (SELECT lfGet_Object_ValueData (_tmpItem.AccountId) FROM _tmpItem WHERE COALESCE (_tmpItem.ContainerId, 0) = 0 LIMIT 1)
+             , (SELECT ObjectDesc.Code FROM _tmpItem JOIN ObjectDesc ON ObjectDesc.Id = _tmpItem.ObjectDescId WHERE COALESCE (_tmpItem.ContainerId, 0) = 0 LIMIT 1)
+              ;
      END IF;
 
 
@@ -877,7 +929,10 @@ BEGIN
             , _tmpItem.ObjectExtId_Analyzer       AS ObjectExtId_Analyzer
 
             , 0                                   AS ParentId
-            , _tmpItem.OperSumm + CASE WHEN _tmpItem.MovementDescId = zc_Movement_Cash() THEN 0 ELSE COALESCE (_tmpItem_Diff.OperSumm_Diff, 0) END AS OperSumm
+            , CASE WHEN _tmpItem.OperSumm_Asset <> 0 OR _tmpItem.OperSumm_Diff_Asset <> 0
+                   THEN _tmpItem.OperSumm_Asset + CASE WHEN _tmpItem.MovementDescId = zc_Movement_Cash() THEN 0 ELSE COALESCE (_tmpItem_Diff.OperSumm_Diff_Asset, 0) END
+                   ELSE _tmpItem.OperSumm       + CASE WHEN _tmpItem.MovementDescId = zc_Movement_Cash() THEN 0 ELSE COALESCE (_tmpItem_Diff.OperSumm_Diff, 0)       END
+              END AS OperSumm
             , _tmpItem.OperDate
             , _tmpItem.IsActive
        FROM _tmpItem
@@ -924,7 +979,10 @@ BEGIN
             , _tmpItem.ObjectExtId_Analyzer       AS ObjectExtId_Analyzer
 
             , 0                                   AS ParentId
-            , -1 * CASE WHEN _tmpItem.MovementDescId = zc_Movement_Cash() THEN 0 ELSE COALESCE (_tmpItem_Diff.OperSumm_Diff, 0) END AS OperSumm
+            , CASE WHEN _tmpItem.OperSumm_Asset <> 0 OR _tmpItem.OperSumm_Diff_Asset <> 0
+                   THEN -1 * CASE WHEN _tmpItem.MovementDescId = zc_Movement_Cash() THEN 0 ELSE COALESCE (_tmpItem_Diff.OperSumm_Diff_Asset, 0) END
+                   ELSE -1 * CASE WHEN _tmpItem.MovementDescId = zc_Movement_Cash() THEN 0 ELSE COALESCE (_tmpItem_Diff.OperSumm_Diff, 0)       END
+              END AS OperSumm
             , _tmpItem.OperDate
             , _tmpItem.IsActive  -- !!!такая же!!!
        FROM _tmpItem
@@ -957,7 +1015,10 @@ BEGIN
             , _tmpItem.ObjectIntId_Analyzer       AS ObjectIntId_Analyzer
             , _tmpItem.ObjectExtId_Analyzer       AS ObjectExtId_Analyzer
             , 0                                   AS ParentId
-            , CASE WHEN _tmpItem.MovementDescId = zc_Movement_Cash() THEN 0 ELSE COALESCE (_tmpItem.OperSumm_Diff, 0) END AS OperSumm
+            , CASE WHEN _tmpItem.OperSumm_Asset <> 0 OR _tmpItem.OperSumm_Diff_Asset <> 0
+                   THEN CASE WHEN _tmpItem.MovementDescId = zc_Movement_Cash() THEN 0 ELSE COALESCE (_tmpItem.OperSumm_Diff_Asset, 0) END
+                   ELSE CASE WHEN _tmpItem.MovementDescId = zc_Movement_Cash() THEN 0 ELSE COALESCE (_tmpItem.OperSumm_Diff, 0)       END
+              END AS OperSumm
             , _tmpItem.OperDate
             , FALSE AS IsActive -- !!!всегда по Кредиту!!!
        FROM _tmpItem

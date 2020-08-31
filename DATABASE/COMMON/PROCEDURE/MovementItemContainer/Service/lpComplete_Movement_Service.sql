@@ -5,11 +5,12 @@ DROP FUNCTION IF EXISTS lpComplete_Movement_Service (Integer, Integer);
 CREATE OR REPLACE FUNCTION lpComplete_Movement_Service(
     IN inMovementId        Integer  , -- ключ Документа
     IN inUserId            Integer    -- Пользователь
-)                              
+)
 RETURNS void
 AS
 $BODY$
   DECLARE vbMovementDescId Integer;
+  DECLARE vbIsChild         Boolean;
   DECLARE vbIsAccount_50401 Boolean;
   DECLARE vbIsAccount_60301 Boolean;
 BEGIN
@@ -18,6 +19,15 @@ BEGIN
      DELETE FROM _tmpMIReport_insert;
      -- !!!обязательно!!! очистили таблицу - элементы документа, со всеми свойствами для формирования Аналитик в проводках
      DELETE FROM _tmpItem;
+
+     --
+     vbIsChild:= EXISTS (SELECT 1 FROM Movement
+                                      JOIN MovementItem AS MI_Child ON MI_Child.MovementId = Movement.Id
+                                                                   AND MI_Child.DescId     = zc_MI_Child()
+                                                                   AND MI_Child.isErased   = FALSE
+                         WHERE Movement.Id = inMovementId AND Movement.DescId = zc_Movement_ProfitLossService()
+                           AND inUserId = 5
+                        );
 
 
      -- нужен тип документа, т.к. проведение для двух разных видов документов
@@ -48,7 +58,7 @@ BEGIN
 
 
      -- заполняем таблицу - элементы документа, со всеми свойствами для формирования Аналитик в проводках
-     INSERT INTO _tmpItem (MovementDescId, OperDate, ObjectId, ObjectDescId, OperSumm, OperSumm_Currency
+     INSERT INTO _tmpItem (MovementDescId, OperDate, ObjectId, ObjectDescId, OperSumm, OperSumm_Currency, OperSumm_Asset
                          , MovementItemId, ContainerId
                          , AccountGroupId, AccountDirectionId, AccountId
                          , ProfitLossGroupId, ProfitLossDirectionId
@@ -65,8 +75,21 @@ BEGIN
              , Movement.OperDate
              , COALESCE (MovementItem.ObjectId, 0) AS ObjectId
              , COALESCE (Object.DescId, 0) AS ObjectDescId
-             , CASE WHEN vbMovementDescId = zc_Movement_ProfitIncomeService() THEN 1 ELSE 1 END * MovementItem.Amount AS OperSumm
-             , COALESCE (MovementFloat_AmountCurrency.ValueData, 0) AS OperSumm_Currency
+
+             , CASE WHEN Movement.OperDate >= zc_DateStart_Asset() AND View_InfoMoney.InfoMoneyGroupId = zc_Enum_InfoMoneyGroup_70000() AND vbMovementDescId = zc_Movement_Service()
+                         THEN 0
+                    WHEN vbMovementDescId = zc_Movement_ProfitIncomeService()
+                         THEN 1
+                    ELSE 1
+               END * MovementItem.Amount                                                                              AS OperSumm
+
+             , COALESCE (MovementFloat_AmountCurrency.ValueData, 0)                                                   AS OperSumm_Currency
+
+             , CASE WHEN Movement.OperDate >= zc_DateStart_Asset() AND View_InfoMoney.InfoMoneyGroupId = zc_Enum_InfoMoneyGroup_70000() AND vbMovementDescId = zc_Movement_Service()
+                         THEN 1
+                    ELSE 0
+               END * MovementItem.Amount                                                                              AS OperSumm_Asset
+
              , MovementItem.Id AS MovementItemId
 
              , 0 AS ContainerId                                                     -- сформируем позже
@@ -75,9 +98,9 @@ BEGIN
                          THEN zc_Enum_Account_50401() -- Расходы будущих периодов + Маркетинг
                     WHEN vbMovementDescId = zc_Movement_ProfitIncomeService() AND vbIsAccount_60301 = TRUE
                          THEN zc_Enum_Account_60301() -- Прибыль будущих периодов + Бонусы от поставщиков
-                         
+
                     ELSE 0
-               END AS AccountId 
+               END AS AccountId
 
              , 0 AS ProfitLossGroupId, 0 AS ProfitLossDirectionId                   -- не используется
 
@@ -99,7 +122,7 @@ BEGIN
              , COALESCE (MILinkObject_Unit.ObjectId, 0) AS UnitId -- здесь используется (нужен для следующей проводки)
              , 0 AS PositionId -- не используется
 
-               -- Филиал Баланс: 
+               -- Филиал Баланс:
              , CASE WHEN View_InfoMoney.InfoMoneyDestinationId = zc_Enum_InfoMoneyDestination_40900() AND Movement.OperDate = '31.12.2014'
                          THEN -- Финансовая помощь
                               0
@@ -169,6 +192,10 @@ BEGIN
           AND Movement.StatusId IN (zc_Enum_Status_UnComplete(), zc_Enum_Status_Erased())
        ;
 
+     IF vbIsChild = FALSE AND EXISTS (SELECT 1 FROM _tmpItem WHERE _tmpItem.OperSumm = 0 AND _tmpItem.OperSumm_Currency = 0 AND _tmpItem.MovementDescId = zc_Movement_ProfitLossService())
+     THEN
+         RAISE EXCEPTION 'Введите сумму.';
+     END IF;
 
      -- проверка
      IF EXISTS (SELECT _tmpItem.ObjectId FROM _tmpItem WHERE _tmpItem.ObjectId = 0 OR _tmpItem.ObjectDescId NOT IN (zc_Object_Juridical(), zc_Object_Partner()))
@@ -198,7 +225,7 @@ BEGIN
 
 
      -- заполняем таблицу - элементы документа, со всеми свойствами для формирования Аналитик в проводках
-     INSERT INTO _tmpItem (MovementDescId, OperDate, ObjectId, ObjectDescId, OperSumm
+     INSERT INTO _tmpItem (MovementDescId, OperDate, ObjectId, ObjectDescId, OperSumm, OperSumm_Asset
                          , MovementItemId, ContainerId
                          , AccountGroupId, AccountDirectionId, AccountId
                          , ProfitLossGroupId, ProfitLossDirectionId
@@ -206,10 +233,21 @@ BEGIN
                          , BusinessId_Balance, BusinessId_ProfitLoss, JuridicalId_Basis
                          , UnitId, PositionId, BranchId_Balance, BranchId_ProfitLoss, ServiceDateId, ContractId, PaidKindId
                          , PartionMovementId, PartionGoodsId, AssetId
-                         , AnalyzerId
+                         , AnalyzerId, ObjectIntId_Analyzer
                          , IsActive, IsMaster
                           )
-         -- 1.2.1. ОПиУ
+        -- 1.2.1. ОПиУ OR Новая Схема (еще переброска на счет для zc_Movement_ProfitLossService)
+        WITH tmpMI_Child AS (SELECT MI_Child.ParentId, MI_Child.Id AS MovementItemId, MIF_MovementId.ValueData :: Integer AS MovementId_begin, MI_Child.Amount
+                             FROM MovementItem AS MI_Child
+                                  INNER JOIN MovementItemFloat AS MIF_MovementId ON MIF_MovementId.MovementItemId = MI_Child.Id
+                                                                                AND MIF_MovementId.DescId         = zc_MIFloat_MovementId()
+                             WHERE MI_Child.MovementId = inMovementId
+                               AND MI_Child.DescId = zc_MI_Child()
+                               AND MI_Child.isErased = FALSE
+                             --AND inUserId = 5
+                               AND vbIsChild = TRUE
+                            )
+
         SELECT _tmpItem.MovementDescId
              , _tmpItem.OperDate
 
@@ -217,23 +255,43 @@ BEGIN
                          THEN _tmpItem.ObjectId -- из предыдущей проводки
                     WHEN vbMovementDescId = zc_Movement_Service() AND vbIsAccount_60301 = TRUE -- Прибыль будущих периодов + Бонусы от поставщиков
                          THEN _tmpItem.ObjectId -- из предыдущей проводки
-                         
+
                     WHEN MILinkObject_Asset.ObjectId > 0
                          THEN _tmpItem.ObjectId -- дублируем УП, попадет в ОС
+
+                    WHEN vbIsChild = TRUE
+                         THEN _tmpItem.ObjectId -- дублируем для zc_Movement_ProfitLossService
+
                     ELSE 0 -- значит попадет в ОПиУ или в ОС
+
                END AS ObjectId
 
              , CASE WHEN vbMovementDescId = zc_Movement_Service() AND vbIsAccount_50401 = TRUE -- Расходы будущих периодов + Услуги по маркетингу
                          THEN _tmpItem.ObjectDescId -- из предыдущей проводки
+
                     WHEN vbMovementDescId = zc_Movement_Service() AND vbIsAccount_60301 = TRUE -- Прибыль будущих периодов + Бонусы от поставщиков
                          THEN _tmpItem.ObjectDescId -- из предыдущей проводки
+
                     WHEN MILinkObject_Asset.ObjectId > 0
                          THEN zc_Object_InfoMoney() -- дублируем УП, попадет в ОС
+
+                    WHEN vbIsChild = TRUE
+                         THEN _tmpItem.ObjectDescId -- из предыдущей проводки - дублируем для zc_Movement_ProfitLossService
+
                     ELSE 0 -- значит попадет в ОПиУ
                END AS ObjectDescId
 
-             , COALESCE (MI_Child.Amount, -1 * _tmpItem.OperSumm)
-             , COALESCE (MI_Child.Id, _tmpItem.MovementItemId)
+             , CASE WHEN _tmpItem.OperDate >= zc_DateStart_Asset() AND _tmpItem.InfoMoneyGroupId = zc_Enum_InfoMoneyGroup_70000() AND vbMovementDescId = zc_Movement_Service()
+                         THEN 0
+                    ELSE -1 * _tmpItem.OperSumm + (-1) * COALESCE (MI_Child.Amount, 0)
+               END AS OperSumm
+
+             , CASE WHEN _tmpItem.OperDate >= zc_DateStart_Asset() AND _tmpItem.InfoMoneyGroupId = zc_Enum_InfoMoneyGroup_70000() AND vbMovementDescId = zc_Movement_Service()
+                         THEN -1 * _tmpItem.OperSumm_Asset
+                    ELSE 0
+               END AS OperSumm_Asset
+
+             , _tmpItem.MovementItemId
 
              , 0 AS ContainerId    -- сформируем позже
              , 0 AS AccountGroupId -- сформируем позже, или ...
@@ -242,12 +300,15 @@ BEGIN
                               COALESCE ((SELECT tmp.AccountDirectionId FROM lfGet_Object_Unit_byAccountDirection_Asset (_tmpItem.UnitId) AS tmp), 0)
                     ELSE 0 -- сформируем позже, или ...
                END AS AccountDirectionId
+
              , CASE WHEN vbMovementDescId = zc_Movement_Service() AND vbIsAccount_50401 = TRUE
                          THEN zc_Enum_Account_50401() -- Расходы будущих периодов - Маркетинг
                     WHEN vbMovementDescId = zc_Movement_Service() AND vbIsAccount_60301 = TRUE
                          THEN zc_Enum_Account_60301() -- Прибыль будущих периодов + Бонусы от поставщиков
+                    WHEN vbIsChild = TRUE
+                         THEN zc_Enum_Account_51101() -- Распределение маркетинг + Услуги по маркетингу + Маркетинг
                     ELSE 0
-               END AS AccountId 
+               END AS AccountId
 
                -- Группы ОПиУ (для затрат)
              , COALESCE (lfObject_Unit_byProfitLossDirection.ProfitLossGroupId, 0) AS ProfitLossGroupId
@@ -288,6 +349,7 @@ BEGIN
              , COALESCE (MILinkObject_Asset.ObjectId, 0) AS AssetId -- надо для Партии услуг (т.е. НЕ списываем в ОПиУ)
 
              , 0 AS AnalyzerId -- заполнено !!!только!!! для первой
+             , 0 AS ObjectIntId_Analyzer
 
              , NOT _tmpItem.IsActive
              , NOT _tmpItem.IsMaster
@@ -298,27 +360,28 @@ BEGIN
                                                              AND ObjectLink_Unit_Contract.DescId = zc_ObjectLink_Unit_Contract()
              LEFT JOIN lfSelect_Object_Unit_byProfitLossDirection() AS lfObject_Unit_byProfitLossDirection ON lfObject_Unit_byProfitLossDirection.UnitId = _tmpItem.UnitId
                                                                                                           AND NOT (vbMovementDescId = zc_Movement_Service() AND vbIsAccount_50401 = TRUE) -- !!!нужен только для затрат!!!
-             LEFT JOIN MovementItem AS MI_Child ON MI_Child.MovementId = inMovementId
-                                               AND MI_Child.DescId = zc_MI_Child()
-                                               AND MI_Child.ParentId = _tmpItem.MovementItemId
-                                               AND MI_Child.isErased = FALSE
-                                               AND _tmpItem.MovementDescId = zc_Movement_ProfitLossService()
+                                                                                                          AND vbIsChild = FALSE
+             LEFT JOIN (SELECT tmpMI_Child.ParentId, SUM (tmpMI_Child.Amount) AS Amount FROM tmpMI_Child GROUP BY tmpMI_Child.ParentId) AS MI_Child ON MI_Child.ParentId = _tmpItem.MovementItemId
              LEFT JOIN MovementItemLinkObject AS MILinkObject_Branch
-                                              ON MILinkObject_Branch.MovementItemId = MI_Child.Id
+                                              ON MILinkObject_Branch.MovementItemId = NULL -- MI_Child.MovementItemId
                                              AND MILinkObject_Branch.DescId = zc_MILinkObject_Branch()
 
              LEFT JOIN MovementItemLinkObject AS MILinkObject_Asset
                                               ON MILinkObject_Asset.MovementItemId = _tmpItem.MovementItemId
-                                             AND MILinkObject_Asset.DescId = zc_MILinkObject_Asset() 
-        WHERE ObjectLink_Unit_Contract.ChildObjectId IS NULL -- !!!если НЕ перевыставление!!!
+                                             AND MILinkObject_Asset.DescId = zc_MILinkObject_Asset()
+        WHERE (ObjectLink_Unit_Contract.ChildObjectId IS NULL -- !!!если НЕ перевыставление!!!
+           AND (_tmpItem.OperDate < zc_DateStart_Asset() OR _tmpItem.InfoMoneyGroupId <> zc_Enum_InfoMoneyGroup_70000() OR vbMovementDescId <> zc_Movement_Service())
+              )
            OR MILinkObject_Asset.ObjectId IS NOT NULL        -- !!!если ОС!!!
+
        UNION ALL
          -- 1.2.2. Перевыставление затрат на Юр Лицо
         SELECT _tmpItem.MovementDescId
              , _tmpItem.OperDate
              , COALESCE (ObjectLink_Contract_Juridical.ChildObjectId, 0) AS ObjectId
              , COALESCE (Object.DescId, 0) AS ObjectDescId
-             , -1 * _tmpItem.OperSumm
+             , -1 * _tmpItem.OperSumm AS OperSumm
+             , 0                      AS OperSumm_Asset
              , _tmpItem.MovementItemId
 
              , 0 AS ContainerId                                               -- сформируем позже
@@ -360,6 +423,7 @@ BEGIN
              , 0 AS AssetId           -- заполнено !!!только!!! для предыдущей
 
              , 0 AS AnalyzerId -- заполнено !!!только!!! для первой
+             , 0 AS ObjectIntId_Analyzer
 
              , NOT _tmpItem.IsActive
              , NOT _tmpItem.IsMaster
@@ -376,10 +440,92 @@ BEGIN
 
              LEFT JOIN MovementItemLinkObject AS MILinkObject_Asset
                                               ON MILinkObject_Asset.MovementItemId = _tmpItem.MovementItemId
-                                             AND MILinkObject_Asset.DescId = zc_MILinkObject_Asset() 
+                                             AND MILinkObject_Asset.DescId = zc_MILinkObject_Asset()
 
         WHERE ObjectLink_Unit_Contract.ChildObjectId > 0 -- !!!если перевыставление!!!
           AND MILinkObject_Asset.ObjectId IS NULL        -- !!!если НЕ ОС!!!
+          AND (_tmpItem.OperDate < zc_DateStart_Asset() OR _tmpItem.InfoMoneyGroupId <> zc_Enum_InfoMoneyGroup_70000() OR vbMovementDescId <> zc_Movement_Service())
+
+       UNION ALL
+        SELECT _tmpItem.MovementDescId
+             , _tmpItem.OperDate
+
+             , MI_Child.MovementId_begin AS ObjectId
+
+             , -1 * zc_Movement_Sale() AS ObjectDescId
+
+             , 1 * MI_Child.Amount  AS OperSumm
+
+             , 0                    AS OperSumm_Asset
+
+             , _tmpItem.MovementItemId
+
+             , 0 AS ContainerId    -- сформируем позже
+             , 0 AS AccountGroupId -- сформируем позже, или ...
+
+             , 0 AS AccountDirectionId -- сформируем позже, или ...
+
+             , zc_Enum_Account_51201()  AS AccountId -- Распределение маркетинг + Маркетинг в накладных + Маркетинг
+
+               -- Группы ОПиУ (для затрат)
+             , 0 AS ProfitLossGroupId
+               -- Аналитики ОПиУ - направления (для затрат)
+             , 0 AS ProfitLossDirectionId
+
+               -- Управленческие группы назначения
+             , _tmpItem.InfoMoneyGroupId
+               -- Управленческие назначения
+             , _tmpItem.InfoMoneyDestinationId
+               -- Управленческие статьи назначения
+             , _tmpItem.InfoMoneyId
+
+               -- Бизнес Баланс: всегда из предыдущей проводки (а значение кстати=0)
+             , _tmpItem.BusinessId_Balance
+               -- Бизнес ОПиУ: ObjectLink_Unit_Business
+             , 0 AS BusinessId_ProfitLoss
+
+               -- Главное Юр.лицо всегда из договора
+             , _tmpItem.JuridicalId_Basis
+
+             , 0 AS UnitId     -- не используется
+             , 0 AS PositionId -- не используется
+
+               -- Филиал Баланс: всегда из предыдущей проводки
+             , _tmpItem.BranchId_Balance
+               -- Филиал ОПиУ: всегда из предыдущей проводки
+             , _tmpItem.BranchId_ProfitLoss
+
+               -- Месяц начислений: не используется
+             , 0 AS ServiceDateId
+
+             , _tmpItem.ContractId -- из предыдущей проводки
+             , _tmpItem.PaidKindId -- из предыдущей проводки
+
+             , CASE WHEN ObjectFloat.ObjectId > 0 THEN ObjectFloat.ObjectId
+                    ELSE lpInsertFind_Object_PartionMovement (inMovementId := MI_Child.MovementId_begin
+                                                            , inPaymentDate:= _tmpItem.OperDate
+                                                             )
+               END AS PartionMovementId                             -- !!! используется !!!
+             , 0 AS PartionGoodsId                                  -- сформируем позже, надо для Партии услуг (т.е. НЕ списываем в ОПиУ)
+             , 0 AS AssetId                                         -- надо для Партии услуг (т.е. НЕ списываем в ОПиУ)
+
+             , 0 AS AnalyzerId -- заполнено !!!только!!! для первой
+             , MILinkObject_BonusKind.ObjectId AS ObjectIntId_Analyzer
+
+             , _tmpItem.IsActive
+             , NOT _tmpItem.IsMaster
+        FROM _tmpItem
+             LEFT JOIN ObjectLink AS ObjectLink_Unit_Business ON ObjectLink_Unit_Business.ObjectId = _tmpItem.UnitId
+                                                             AND ObjectLink_Unit_Business.DescId = zc_ObjectLink_Unit_Business()
+             LEFT JOIN ObjectLink AS ObjectLink_Unit_Contract ON ObjectLink_Unit_Contract.ObjectId = _tmpItem.UnitId
+                                                             AND ObjectLink_Unit_Contract.DescId = zc_ObjectLink_Unit_Contract()
+             INNER JOIN tmpMI_Child AS MI_Child ON MI_Child.ParentId = _tmpItem.MovementItemId
+             LEFT JOIN MovementItemLinkObject AS MILinkObject_BonusKind
+                                              ON MILinkObject_BonusKind.MovementItemId = _tmpItem.MovementItemId
+                                             AND MILinkObject_BonusKind.DescId         = zc_MILinkObject_BonusKind()
+
+             LEFT JOIN ObjectFloat ON ObjectFloat.ValueData = MI_Child.MovementId_begin AND ObjectFloat.DescId = zc_ObjectFloat_PartionMovement_MovementId()
+           --LEFT JOIN ObjectDate  ON ObjectDate.ObjectId = ObjectFloat.ObjectId AND ObjectDate.DescId = zc_ObjectDate_PartionMovement_Payment()
        ;
 
 

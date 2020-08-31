@@ -1,8 +1,8 @@
--- Function: lpComplete_Movement_BankAccount22 (Integer, Boolean)
+ -- Function: lpComplete_Movement_BankAccount (Integer, Boolean)
 
-DROP FUNCTION IF EXISTS lpComplete_Movement_BankAccount22 (Integer, Integer);
+DROP FUNCTION IF EXISTS lpComplete_Movement_BankAccount (Integer, Integer);
 
-CREATE OR REPLACE FUNCTION lpComplete_Movement_BankAccount22(
+CREATE OR REPLACE FUNCTION lpComplete_Movement_BankAccount(
     IN inMovementId        Integer  , -- ключ Документа
     IN inUserId            Integer    -- Пользователь
 )
@@ -18,7 +18,7 @@ BEGIN
                                                AND Object.DescId = zc_Object_PersonalServiceList())
      THEN
          -- формирование данных <Расчетный счет, выплата по ведомости>
-         PERFORM lpComplete_Movement_BankAccount22_Recalc (inMovementId := inMovementId
+         PERFORM lpComplete_Movement_BankAccount_Recalc (inMovementId := inMovementId
                                                        , inUserId     := inUserId);
      END IF;
 
@@ -265,13 +265,12 @@ BEGIN
                     ELSE -1 * _tmpItem.OperSumm + 1 * /*CASE WHEN _tmpItem.IsActive = TRUE THEN -1 ELSE 1 END*/ CAST (CASE WHEN MovementFloat_ParPartnerValue.ValueData <> 0 THEN _tmpItem.OperSumm_Currency * MovementFloat_CurrencyPartnerValue.ValueData / MovementFloat_ParPartnerValue.ValueData ELSE 0 END AS NUMERIC (16, 2))
                END AS OperSumm_Diff
 
-
-             , COALESCE (MI_Child.Id, _tmpItem.MovementItemId) AS MovementItemId
-
                -- Asset
              , 0 AS OperSumm_Asset
                -- Diff_Asset
              , 0 AS OperSumm_Diff_Asset
+
+             , COALESCE (MI_Child.Id, _tmpItem.MovementItemId) AS MovementItemId
 
              , 0 AS ContainerId                                               -- сформируем позже
              , 0 AS ContainerId_Currency                                      -- сформируем позже
@@ -417,7 +416,7 @@ BEGIN
                                                                                                           AND (Object.Id IS NULL -- !!!нужен только для затрат!!!
                                                                                                             OR (_tmpItem.OperDate >= zc_DateStart_Asset() AND _tmpItem.InfoMoneyGroupId = zc_Enum_InfoMoneyGroup_70000())
                                                                                                               )
-       UNION ALL 
+       UNION ALL
 
         -- 2. забаланс
         SELECT _tmpItem.MovementDescId
@@ -440,8 +439,6 @@ BEGIN
              , 0 AS OperSumm
              , 0 AS OperSumm_Currency
              , 0 AS OperSumm_Diff
-
-             , COALESCE (MI_Child.Id, _tmpItem.MovementItemId) AS MovementItemId
 
                -- Asset
              , CASE WHEN -- _tmpItem.CurrencyId = zc_Enum_Currency_Basis()
@@ -476,6 +473,8 @@ BEGIN
                          THEN 0
                     ELSE -1 * _tmpItem.OperSumm + 1 * /*CASE WHEN _tmpItem.IsActive = TRUE THEN -1 ELSE 1 END*/ CAST (CASE WHEN MovementFloat_ParPartnerValue.ValueData <> 0 THEN _tmpItem.OperSumm_Currency * MovementFloat_CurrencyPartnerValue.ValueData / MovementFloat_ParPartnerValue.ValueData ELSE 0 END AS NUMERIC (16, 2))
                END AS OperSumm_Diff_Asset
+
+             , COALESCE (MI_Child.Id, _tmpItem.MovementItemId) AS MovementItemId
 
              , 0 AS ContainerId                                               -- сформируем позже
              , 0 AS ContainerId_Currency                                      -- сформируем позже
@@ -641,15 +640,10 @@ BEGIN
          RAISE EXCEPTION 'Ошибка.В документе не заполнено значение <От Кого, Кому>.Проведение невозможно.';
      END IF;
 
-if inUserId = 5 then
-     -- 5.1. ФИНИШ - формируем/сохраняем Проводки
-     PERFORM lpComplete_Movement_Finance22 (inMovementId := inMovementId
-                                        , inUserId     := inUserId);
-else
+
      -- 5.1. ФИНИШ - формируем/сохраняем Проводки
      PERFORM lpComplete_Movement_Finance (inMovementId := inMovementId
                                         , inUserId     := inUserId);
-end if;
 
      -- 5.2. ФИНИШ - Обязательно меняем статус документа + сохранили протокол
      PERFORM lpComplete_Movement (inMovementId := inMovementId

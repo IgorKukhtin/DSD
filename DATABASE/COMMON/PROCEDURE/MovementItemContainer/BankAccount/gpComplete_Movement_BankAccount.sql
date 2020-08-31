@@ -5,7 +5,7 @@ DROP FUNCTION IF EXISTS gpComplete_Movement_BankAccount (Integer, TVarChar);
 CREATE OR REPLACE FUNCTION gpComplete_Movement_BankAccount(
     IN inMovementId        Integer              , -- ключ Документа
     IN inSession           TVarChar               -- сессия пользователя
-)                              
+)
   RETURNS void AS
 $BODY$
   DECLARE vbUserId Integer;
@@ -16,15 +16,10 @@ BEGIN
      -- создаются временные таблицы - для формирование данных для проводок
      PERFORM lpComplete_Movement_Finance_CreateTemp();
 
-if inUserId = 5 then
-     -- 5.1. ФИНИШ - формируем/сохраняем Проводки
-     PERFORM lpComplete_Movement_BankAccount22 (inMovementId := inMovementId
-                                              , inUserId     := inUserId);
-else
      -- проводим Документ
      PERFORM lpComplete_Movement_BankAccount (inMovementId := inMovementId
                                             , inUserId     := vbUserId);
-end if;
+
 
 END;$BODY$
   LANGUAGE plpgsql VOLATILE;
@@ -40,5 +35,5 @@ END;$BODY$
  22.01.14                                        * add IsMaster
  16.01.13                                        * add lpComplete_Movement_BankAccount
  24.11.13                                        * add View_InfoMoney
- 26.08.13                        *                
+ 26.08.13                        *
 */

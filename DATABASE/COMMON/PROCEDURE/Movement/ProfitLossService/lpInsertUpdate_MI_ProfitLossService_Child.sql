@@ -56,7 +56,7 @@ BEGIN
      PERFORM lpInsertUpdate_MovementItemLinkObject (zc_MILinkObject_Branch(), ioId, inBranchId);
 
       -- сохранили протокол
-      PERFORM lpInsert_MovementItemProtocol (ioId, inUserId, vbIsInsert);
+    --PERFORM lpInsert_MovementItemProtocol (ioId, inUserId, vbIsInsert);
 
 END;
 $BODY$

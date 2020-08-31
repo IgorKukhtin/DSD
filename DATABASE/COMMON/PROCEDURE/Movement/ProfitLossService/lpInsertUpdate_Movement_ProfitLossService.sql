@@ -38,9 +38,9 @@ BEGIN
      vbAccessKeyId:= lpGetAccessKey (inUserId, zc_Enum_Process_InsertUpdate_Movement_ProfitLossService());
 
      -- проверка
-     IF (COALESCE(inAmountIn, 0) = 0) AND (COALESCE(inAmountOut, 0) = 0) THEN
-        RAISE EXCEPTION 'Введите сумму.';
-     END IF;
+   --IF (COALESCE(inAmountIn, 0) = 0) AND (COALESCE(inAmountOut, 0) = 0) THEN
+   --   RAISE EXCEPTION 'Введите сумму.';
+   --END IF;
 
      -- проверка
      IF (COALESCE(inAmountIn, 0) <> 0) AND (COALESCE(inAmountOut, 0) <> 0) THEN
@@ -121,9 +121,12 @@ BEGIN
                                                                    );
      END IF;*/
 
+     IF inUserId <> 5
+     THEN
      -- 5.3. проводим Документ
      PERFORM lpComplete_Movement_Service (inMovementId := ioId
                                         , inUserId     := inUserId);
+     END IF;
 
 END;
 $BODY$

@@ -38,7 +38,11 @@ AS
 $BODY$
    DECLARE vbAccessKeyId Integer;
    DECLARE vbIsInsert Boolean;
+   DECLARE vbBranchId Integer;
 BEGIN
+     -- нашли Филиал
+     vbBranchId:= (SELECT DISTINCT Object_RoleAccessKeyGuide_View.BranchId FROM Object_RoleAccessKeyGuide_View WHERE Object_RoleAccessKeyGuide_View.UserId = inUserId AND Object_RoleAccessKeyGuide_View.BranchId <> 0);
+
      -- проверка
      IF inOperDate <> DATE_TRUNC ('DAY', inOperDate) OR inOperDatePartner <> DATE_TRUNC ('DAY', inOperDatePartner) 
      THEN
@@ -60,6 +64,17 @@ BEGIN
      THEN
          RAISE EXCEPTION 'Ошибка.Неверное значение <Валюта (цена)> или <Валюта (покупатель)>';
      END IF;
+
+     -- проверка
+     IF vbBranchId > 0 AND inFromId > 0 AND NOT EXISTS (SELECT 1 FROM ObjectLink AS OL WHERE OL.ObjectId = inFromId AND OL.DescId = zc_ObjectLink_Unit_Branch() AND OL.ChildObjectId = vbBranchId)
+     THEN
+         RAISE EXCEPTION 'Ошибка.Нет прав выбрать подразделение <%>.%Можно выбрать %>'
+                 , lfGet_Object_ValueData_sh (inFromId)
+                 , CHR (13)
+                 , (SELECT STRING_AGG (tmp.Value, ' или ') FROM (SELECT '<' || lfGet_Object_ValueData_sh (OL.ObjectId) || '>' AS Value FROM ObjectLink AS OL WHERE OL.ChildObjectId = vbBranchId AND OL.DescId = zc_ObjectLink_Unit_Branch() ORDER BY OL.ObjectId) AS tmp)
+                 ;
+     END IF;
+
 
      -- !!!Меняем параметры!!!
      IF COALESCE (inCurrencyDocumentId, 0) = 0 THEN inCurrencyDocumentId:= zc_Enum_Currency_Basis(); END IF;
