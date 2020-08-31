@@ -22,9 +22,9 @@ BEGIN
      -- проверка прав пользовател€ на вызов процедуры
 --     vbUserId:= lpCheckRight (inSession, zc_Enum_Process_Select_MI_SheetWorkTime());
       vbUserId:= lpGetUserBySession (inSession);
-     
+
      inDate := DATE_TRUNC ('MONTH', inDate);
-     
+
      IF EXISTS(SELECT 1 FROM Movement
                    WHERE Movement.OperDate = inDate - INTERVAL '1 MONTH'
                      AND Movement.OperDate >= '01.09.2019'
@@ -39,14 +39,14 @@ BEGIN
      ELSE
        vbMovementId := 0;
      END IF;
-     
+
 
      CREATE TEMP TABLE tmpUserData ON COMMIT DROP AS
      SELECT MIMaster.ID                                                                  AS ID
           , MIMaster.ObjectId                                                            AS UserID
           , (COALESCE(MILinkObject_Unit.ObjectId, ObjectLink_Member_Unit.ChildObjectId) =
             COALESCE(MIChild.ObjectId, ObjectLink_Member_Unit.ChildObjectId))::Boolean   AS MainUnit
-          , MIChild.ID                                                                   AS ChildID  
+          , MIChild.ID                                                                   AS ChildID
           , MIChild.ObjectId                                                             AS UnitID
           , MIChild.Amount                                                               AS Day
           , MILinkObject_PayrollType.ObjectId                                            AS PayrollTypeID
@@ -57,6 +57,10 @@ BEGIN
           , CASE WHEN COALESCE(MIBoolean_ServiceExit.ValueData, FALSE) = FALSE
             THEN TO_CHAR(MIDate_End.ValueData, 'HH24:mi')  ELSE '' END                   AS TimeEnd
           , COALESCE(MIBoolean_ServiceExit.ValueData, FALSE)                             AS ServiceExit
+          , ROW_NUMBER() OVER (PARTITION BY MIMaster.ID, MIChild.Amount
+                               ORDER BY (COALESCE(MILinkObject_Unit.ObjectId, ObjectLink_Member_Unit.ChildObjectId) =
+                                         COALESCE(MIChild.ObjectId, ObjectLink_Member_Unit.ChildObjectId)) DESC, MIChild.ID) AS Ord
+
      FROM Movement
 
           INNER JOIN MovementItem AS MIMaster
@@ -103,6 +107,8 @@ BEGIN
      WHERE Movement.ID = inMovementId;
      ANALYSE tmpUserData;
 
+     -- ѕридублировании в дне показываем только главные
+
      CREATE TEMP TABLE tmpUserDataPrev ON COMMIT DROP AS
      SELECT MIMaster.ID                                                                  AS ID
           , MIMaster.ObjectId                                                            AS UserID
@@ -118,6 +124,9 @@ BEGIN
           , CASE WHEN COALESCE(MIBoolean_ServiceExit.ValueData, FALSE) = FALSE
             THEN TO_CHAR(MIDate_End.ValueData, 'HH24:mi')  ELSE '' END                   AS TimeEnd
           , COALESCE(MIBoolean_ServiceExit.ValueData, FALSE)                             AS ServiceExit
+          , ROW_NUMBER() OVER (PARTITION BY MIMaster.ID, MIChild.Amount
+                               ORDER BY (COALESCE(MILinkObject_Unit.ObjectId, ObjectLink_Member_Unit.ChildObjectId) =
+                                         COALESCE(MIChild.ObjectId, ObjectLink_Member_Unit.ChildObjectId)) DESC, MIChild.ID) AS Ord
      FROM Movement
 
           INNER JOIN MovementItem AS MIMaster
@@ -521,128 +530,159 @@ BEGIN
             INNER JOIN Object AS Object_Unit ON Object_Unit.Id = ObjectLink_Member_Unit.ChildObjectId
 
             LEFT JOIN tmpUserDataPrev AS UserDataPrev_01
-                                  ON UserDataPrev_01.Day = 1
-                                  AND UserDataPrev_01.UserID = Object_User.Id
+                                      ON UserDataPrev_01.Day = 1
+                                     AND UserDataPrev_01.UserID = Object_User.Id
+                                     AND UserDataPrev_01.Ord = 1
 
             LEFT JOIN tmpUserDataPrev AS UserDataPrev_02
-                                   ON UserDataPrev_02.Day = 2
-                                  AND UserDataPrev_02.UserID = Object_User.Id
+                                      ON UserDataPrev_02.Day = 2
+                                     AND UserDataPrev_02.UserID = Object_User.Id
+                                     AND UserDataPrev_02.Ord = 1
 
             LEFT JOIN tmpUserDataPrev AS UserDataPrev_03
-                                   ON UserDataPrev_03.Day = 3
-                                  AND UserDataPrev_03.UserID = Object_User.Id
+                                      ON UserDataPrev_03.Day = 3
+                                     AND UserDataPrev_03.UserID = Object_User.Id
+                                     AND UserDataPrev_03.Ord = 1
 
             LEFT JOIN tmpUserDataPrev AS UserDataPrev_04
-                                   ON UserDataPrev_04.Day = 4
-                                  AND UserDataPrev_04.UserID = Object_User.Id
+                                      ON UserDataPrev_04.Day = 4
+                                     AND UserDataPrev_04.UserID = Object_User.Id
+                                     AND UserDataPrev_04.Ord = 1
 
             LEFT JOIN tmpUserDataPrev AS UserDataPrev_05
-                                   ON UserDataPrev_05.Day = 5
-                                  AND UserDataPrev_05.UserID = Object_User.Id
+                                      ON UserDataPrev_05.Day = 5
+                                     AND UserDataPrev_05.UserID = Object_User.Id
+                                     AND UserDataPrev_05.Ord = 1
 
             LEFT JOIN tmpUserDataPrev AS UserDataPrev_06
-                                   ON UserDataPrev_06.Day = 6
-                                  AND UserDataPrev_06.UserID = Object_User.Id
+                                      ON UserDataPrev_06.Day = 6
+                                     AND UserDataPrev_06.UserID = Object_User.Id
+                                     AND UserDataPrev_06.Ord = 1
 
             LEFT JOIN tmpUserDataPrev AS UserDataPrev_07
-                                   ON UserDataPrev_07.Day = 7
-                                  AND UserDataPrev_07.UserID = Object_User.Id
+                                      ON UserDataPrev_07.Day = 7
+                                     AND UserDataPrev_07.UserID = Object_User.Id
+                                     AND UserDataPrev_07.Ord = 1
 
             LEFT JOIN tmpUserDataPrev AS UserDataPrev_08
-                                   ON UserDataPrev_08.Day = 8
-                                  AND UserDataPrev_08.UserID = Object_User.Id
+                                      ON UserDataPrev_08.Day = 8
+                                     AND UserDataPrev_08.UserID = Object_User.Id
+                                     AND UserDataPrev_08.Ord = 1
 
             LEFT JOIN tmpUserDataPrev AS UserDataPrev_09
-                                   ON UserDataPrev_09.Day = 9
-                                  AND UserDataPrev_09.UserID = Object_User.Id
+                                      ON UserDataPrev_09.Day = 9
+                                     AND UserDataPrev_09.UserID = Object_User.Id
+                                     AND UserDataPrev_09.Ord = 1
 
             LEFT JOIN tmpUserDataPrev AS UserDataPrev_10
-                                   ON UserDataPrev_10.Day = 10
-                                  AND UserDataPrev_10.UserID = Object_User.Id
+                                      ON UserDataPrev_10.Day = 10
+                                     AND UserDataPrev_10.UserID = Object_User.Id
+                                     AND UserDataPrev_10.Ord = 1
 
             LEFT JOIN tmpUserDataPrev AS UserDataPrev_11
-                                   ON UserDataPrev_11.Day = 11
-                                  AND UserDataPrev_11.UserID = Object_User.Id
+                                      ON UserDataPrev_11.Day = 11
+                                     AND UserDataPrev_11.UserID = Object_User.Id
+                                     AND UserDataPrev_11.Ord = 1
 
             LEFT JOIN tmpUserDataPrev AS UserDataPrev_12
-                                   ON UserDataPrev_12.Day = 12
-                                  AND UserDataPrev_12.UserID = Object_User.Id
+                                      ON UserDataPrev_12.Day = 12
+                                     AND UserDataPrev_12.UserID = Object_User.Id
+                                     AND UserDataPrev_12.Ord = 1
 
             LEFT JOIN tmpUserDataPrev AS UserDataPrev_13
-                                   ON UserDataPrev_13.Day = 13
-                                  AND UserDataPrev_13.UserID = Object_User.Id
+                                      ON UserDataPrev_13.Day = 13
+                                     AND UserDataPrev_13.UserID = Object_User.Id
+                                     AND UserDataPrev_13.Ord = 1
 
             LEFT JOIN tmpUserDataPrev AS UserDataPrev_14
-                                   ON UserDataPrev_14.Day = 14
-                                  AND UserDataPrev_14.UserID = Object_User.Id
+                                      ON UserDataPrev_14.Day = 14
+                                     AND UserDataPrev_14.UserID = Object_User.Id
+                                     AND UserDataPrev_14.Ord = 1
 
             LEFT JOIN tmpUserDataPrev AS UserDataPrev_15
-                                   ON UserDataPrev_15.Day = 15
-                                  AND UserDataPrev_15.UserID = Object_User.Id
+                                      ON UserDataPrev_15.Day = 15
+                                     AND UserDataPrev_15.UserID = Object_User.Id
+                                     AND UserDataPrev_15.Ord = 1
 
             LEFT JOIN tmpUserDataPrev AS UserDataPrev_16
-                                   ON UserDataPrev_16.Day = 16
-                                  AND UserDataPrev_16.UserID = Object_User.Id
+                                      ON UserDataPrev_16.Day = 16
+                                     AND UserDataPrev_16.UserID = Object_User.Id
+                                     AND UserDataPrev_16.Ord = 1
 
             LEFT JOIN tmpUserDataPrev AS UserDataPrev_17
-                                   ON UserDataPrev_17.Day = 17
-                                  AND UserDataPrev_17.UserID = Object_User.Id
+                                      ON UserDataPrev_17.Day = 17
+                                     AND UserDataPrev_17.UserID = Object_User.Id
+                                     AND UserDataPrev_17.Ord = 1
 
             LEFT JOIN tmpUserDataPrev AS UserDataPrev_18
-                                   ON UserDataPrev_18.Day = 18
-                                  AND UserDataPrev_18.UserID = Object_User.Id
+                                      ON UserDataPrev_18.Day = 18
+                                     AND UserDataPrev_18.UserID = Object_User.Id
+                                     AND UserDataPrev_18.Ord = 1
 
             LEFT JOIN tmpUserDataPrev AS UserDataPrev_19
-                                   ON UserDataPrev_19.Day = 19
-                                  AND UserDataPrev_19.UserID = Object_User.Id
+                                      ON UserDataPrev_19.Day = 19
+                                     AND UserDataPrev_19.UserID = Object_User.Id
+                                     AND UserDataPrev_19.Ord = 1
 
             LEFT JOIN tmpUserDataPrev AS UserDataPrev_20
-                                   ON UserDataPrev_20.Day = 20
-                                  AND UserDataPrev_20.UserID = Object_User.Id
+                                      ON UserDataPrev_20.Day = 20
+                                     AND UserDataPrev_20.UserID = Object_User.Id
+                                     AND UserDataPrev_20.Ord = 1
 
             LEFT JOIN tmpUserDataPrev AS UserDataPrev_21
-                                   ON UserDataPrev_21.Day = 21
-                                  AND UserDataPrev_21.UserID = Object_User.Id
+                                      ON UserDataPrev_21.Day = 21
+                                     AND UserDataPrev_21.UserID = Object_User.Id
+                                     AND UserDataPrev_21.Ord = 1
 
             LEFT JOIN tmpUserDataPrev AS UserDataPrev_22
-                                   ON UserDataPrev_22.Day = 22
-                                  AND UserDataPrev_22.UserID = Object_User.Id
+                                      ON UserDataPrev_22.Day = 22
+                                     AND UserDataPrev_22.UserID = Object_User.Id
+                                     AND UserDataPrev_22.Ord = 1
 
             LEFT JOIN tmpUserDataPrev AS UserDataPrev_23
-                                   ON UserDataPrev_23.Day = 23
-                                  AND UserDataPrev_23.UserID = Object_User.Id
+                                      ON UserDataPrev_23.Day = 23
+                                     AND UserDataPrev_23.UserID = Object_User.Id
+                                     AND UserDataPrev_23.Ord = 1
 
             LEFT JOIN tmpUserDataPrev AS UserDataPrev_24
-                                   ON UserDataPrev_24.Day = 24
-                                  AND UserDataPrev_24.UserID = Object_User.Id
+                                      ON UserDataPrev_24.Day = 24
+                                     AND UserDataPrev_24.UserID = Object_User.Id
+                                     AND UserDataPrev_24.Ord = 1
 
             LEFT JOIN tmpUserDataPrev AS UserDataPrev_25
-                                   ON UserDataPrev_25.Day = 25
-                                  AND UserDataPrev_25.UserID = Object_User.Id
+                                      ON UserDataPrev_25.Day = 25
+                                     AND UserDataPrev_25.UserID = Object_User.Id
+                                     AND UserDataPrev_25.Ord = 1
 
             LEFT JOIN tmpUserDataPrev AS UserDataPrev_26
-                                   ON UserDataPrev_26.Day = 26
-                                  AND UserDataPrev_26.UserID = Object_User.Id
+                                      ON UserDataPrev_26.Day = 26
+                                     AND UserDataPrev_26.UserID = Object_User.Id
+                                     AND UserDataPrev_26.Ord = 1
 
             LEFT JOIN tmpUserDataPrev AS UserDataPrev_27
-                                   ON UserDataPrev_27.Day = 27
-                                  AND UserDataPrev_27.UserID = Object_User.Id
+                                      ON UserDataPrev_27.Day = 27
+                                     AND UserDataPrev_27.UserID = Object_User.Id
+                                     AND UserDataPrev_27.Ord = 1
 
             LEFT JOIN tmpUserDataPrev AS UserDataPrev_28
-                                   ON UserDataPrev_28.Day = 28
-                                  AND UserDataPrev_28.UserID = Object_User.Id
+                                      ON UserDataPrev_28.Day = 28
+                                     AND UserDataPrev_28.UserID = Object_User.Id
+                                     AND UserDataPrev_28.Ord = 1
 
             LEFT JOIN tmpUserDataPrev AS UserDataPrev_29
-                                   ON UserDataPrev_29.Day = 29
-                                  AND UserDataPrev_29.UserID = Object_User.Id
+                                      ON UserDataPrev_29.Day = 29
+                                     AND UserDataPrev_29.UserID = Object_User.Id
+                                     AND UserDataPrev_29.Ord = 1
 
             LEFT JOIN tmpUserDataPrev AS UserDataPrev_30
-                                   ON UserDataPrev_30.Day = 30
-                                  AND UserDataPrev_30.UserID = Object_User.Id
+                                      ON UserDataPrev_30.Day = 30
+                                     AND UserDataPrev_30.UserID = Object_User.Id
+                                     AND UserDataPrev_30.Ord = 1
 
             LEFT JOIN tmpUserDataPrev AS UserDataPrev_31
-                                   ON UserDataPrev_31.Day = 31
-                                  AND UserDataPrev_31.UserID = Object_User.Id
+                                      ON UserDataPrev_31.Day = 31
+                                     AND UserDataPrev_31.UserID = Object_User.Id
+                                     AND UserDataPrev_31.Ord = 1
 
        WHERE Object_User.ID NOT IN (SELECT MovementItem.ObjectId
                                     FROM MovementItem
@@ -1021,251 +1061,313 @@ BEGIN
 
             LEFT JOIN tmpUserData AS UserData_01
                                   ON UserData_01.Day = 1
-                                  AND UserData_01.ID = MovementItem.Id
+                                 AND UserData_01.ID = MovementItem.Id
+                                 AND UserData_01.Ord = 1
 
             LEFT JOIN tmpUserData AS UserData_02
-                                   ON UserData_02.Day = 2
-                                  AND UserData_02.ID = MovementItem.Id
+                                  ON UserData_02.Day = 2
+                                 AND UserData_02.ID = MovementItem.Id
+                                 AND UserData_02.Ord = 1
 
             LEFT JOIN tmpUserData AS UserData_03
-                                   ON UserData_03.Day = 3
-                                  AND UserData_03.ID = MovementItem.Id
+                                  ON UserData_03.Day = 3
+                                 AND UserData_03.ID = MovementItem.Id
+                                 AND UserData_03.Ord = 1
 
             LEFT JOIN tmpUserData AS UserData_04
-                                   ON UserData_04.Day = 4
-                                  AND UserData_04.ID = MovementItem.Id
+                                  ON UserData_04.Day = 4
+                                 AND UserData_04.ID = MovementItem.Id
+                                 AND UserData_04.Ord = 1
 
             LEFT JOIN tmpUserData AS UserData_05
-                                   ON UserData_05.Day = 5
-                                  AND UserData_05.ID = MovementItem.Id
+                                  ON UserData_05.Day = 5
+                                 AND UserData_05.ID = MovementItem.Id
+                                 AND UserData_05.Ord = 1
 
             LEFT JOIN tmpUserData AS UserData_06
-                                   ON UserData_06.Day = 6
-                                  AND UserData_06.ID = MovementItem.Id
+                                  ON UserData_06.Day = 6
+                                 AND UserData_06.ID = MovementItem.Id
+                                 AND UserData_06.Ord = 1
 
             LEFT JOIN tmpUserData AS UserData_07
-                                   ON UserData_07.Day = 7
-                                  AND UserData_07.ID = MovementItem.Id
+                                  ON UserData_07.Day = 7
+                                 AND UserData_07.ID = MovementItem.Id
+                                 AND UserData_07.Ord = 1
 
             LEFT JOIN tmpUserData AS UserData_08
-                                   ON UserData_08.Day = 8
-                                  AND UserData_08.ID = MovementItem.Id
+                                  ON UserData_08.Day = 8
+                                 AND UserData_08.ID = MovementItem.Id
+                                 AND UserData_08.Ord = 1
 
             LEFT JOIN tmpUserData AS UserData_09
-                                   ON UserData_09.Day = 9
-                                  AND UserData_09.ID = MovementItem.Id
+                                  ON UserData_09.Day = 9
+                                 AND UserData_09.ID = MovementItem.Id
+                                 AND UserData_09.Ord = 1
 
             LEFT JOIN tmpUserData AS UserData_10
-                                   ON UserData_10.Day = 10
-                                  AND UserData_10.ID = MovementItem.Id
+                                  ON UserData_10.Day = 10
+                                 AND UserData_10.ID = MovementItem.Id
+                                 AND UserData_10.Ord = 1
 
             LEFT JOIN tmpUserData AS UserData_11
-                                   ON UserData_11.Day = 11
-                                  AND UserData_11.ID = MovementItem.Id
+                                  ON UserData_11.Day = 11
+                                 AND UserData_11.ID = MovementItem.Id
+                                 AND UserData_11.Ord = 1
 
             LEFT JOIN tmpUserData AS UserData_12
-                                   ON UserData_12.Day = 12
-                                  AND UserData_12.ID = MovementItem.Id
+                                  ON UserData_12.Day = 12
+                                 AND UserData_12.ID = MovementItem.Id
+                                 AND UserData_12.Ord = 1
 
             LEFT JOIN tmpUserData AS UserData_13
-                                   ON UserData_13.Day = 13
-                                  AND UserData_13.ID = MovementItem.Id
+                                  ON UserData_13.Day = 13
+                                 AND UserData_13.ID = MovementItem.Id
+                                 AND UserData_13.Ord = 1
 
             LEFT JOIN tmpUserData AS UserData_14
-                                   ON UserData_14.Day = 14
-                                  AND UserData_14.ID = MovementItem.Id
+                                  ON UserData_14.Day = 14
+                                 AND UserData_14.ID = MovementItem.Id
+                                 AND UserData_14.Ord = 1
 
             LEFT JOIN tmpUserData AS UserData_15
-                                   ON UserData_15.Day = 15
-                                  AND UserData_15.ID = MovementItem.Id
+                                  ON UserData_15.Day = 15
+                                 AND UserData_15.ID = MovementItem.Id
+                                 AND UserData_15.Ord = 1
 
             LEFT JOIN tmpUserData AS UserData_16
-                                   ON UserData_16.Day = 16
-                                  AND UserData_16.ID = MovementItem.Id
+                                  ON UserData_16.Day = 16
+                                 AND UserData_16.ID = MovementItem.Id
+                                 AND UserData_16.Ord = 1
 
             LEFT JOIN tmpUserData AS UserData_17
-                                   ON UserData_17.Day = 17
-                                  AND UserData_17.ID = MovementItem.Id
+                                  ON UserData_17.Day = 17
+                                 AND UserData_17.ID = MovementItem.Id
+                                 AND UserData_17.Ord = 1
 
             LEFT JOIN tmpUserData AS UserData_18
-                                   ON UserData_18.Day = 18
-                                  AND UserData_18.ID = MovementItem.Id
+                                  ON UserData_18.Day = 18
+                                 AND UserData_18.ID = MovementItem.Id
+                                 AND UserData_18.Ord = 1
 
             LEFT JOIN tmpUserData AS UserData_19
-                                   ON UserData_19.Day = 19
-                                  AND UserData_19.ID = MovementItem.Id
+                                  ON UserData_19.Day = 19
+                                 AND UserData_19.ID = MovementItem.Id
+                                 AND UserData_19.Ord = 1
 
             LEFT JOIN tmpUserData AS UserData_20
-                                   ON UserData_20.Day = 20
-                                  AND UserData_20.ID = MovementItem.Id
+                                  ON UserData_20.Day = 20
+                                 AND UserData_20.ID = MovementItem.Id
+                                 AND UserData_20.Ord = 1
 
             LEFT JOIN tmpUserData AS UserData_21
-                                   ON UserData_21.Day = 21
-                                  AND UserData_21.ID = MovementItem.Id
+                                  ON UserData_21.Day = 21
+                                 AND UserData_21.ID = MovementItem.Id
+                                 AND UserData_21.Ord = 1
 
             LEFT JOIN tmpUserData AS UserData_22
-                                   ON UserData_22.Day = 22
-                                  AND UserData_22.ID = MovementItem.Id
+                                  ON UserData_22.Day = 22
+                                 AND UserData_22.ID = MovementItem.Id
+                                 AND UserData_22.Ord = 1
 
             LEFT JOIN tmpUserData AS UserData_23
-                                   ON UserData_23.Day = 23
-                                  AND UserData_23.ID = MovementItem.Id
+                                  ON UserData_23.Day = 23
+                                 AND UserData_23.ID = MovementItem.Id
+                                 AND UserData_23.Ord = 1
 
             LEFT JOIN tmpUserData AS UserData_24
-                                   ON UserData_24.Day = 24
-                                  AND UserData_24.ID = MovementItem.Id
+                                  ON UserData_24.Day = 24
+                                 AND UserData_24.ID = MovementItem.Id
+                                 AND UserData_24.Ord = 1
 
             LEFT JOIN tmpUserData AS UserData_25
-                                   ON UserData_25.Day = 25
-                                  AND UserData_25.ID = MovementItem.Id
+                                  ON UserData_25.Day = 25
+                                 AND UserData_25.ID = MovementItem.Id
+                                 AND UserData_25.Ord = 1
 
             LEFT JOIN tmpUserData AS UserData_26
-                                   ON UserData_26.Day = 26
-                                  AND UserData_26.ID = MovementItem.Id
+                                  ON UserData_26.Day = 26
+                                 AND UserData_26.ID = MovementItem.Id
+                                 AND UserData_26.Ord = 1
 
             LEFT JOIN tmpUserData AS UserData_27
-                                   ON UserData_27.Day = 27
-                                  AND UserData_27.ID = MovementItem.Id
+                                  ON UserData_27.Day = 27
+                                 AND UserData_27.ID = MovementItem.Id
+                                 AND UserData_27.Ord = 1
 
             LEFT JOIN tmpUserData AS UserData_28
-                                   ON UserData_28.Day = 28
-                                  AND UserData_28.ID = MovementItem.Id
+                                  ON UserData_28.Day = 28
+                                 AND UserData_28.ID = MovementItem.Id
+                                 AND UserData_28.Ord = 1
 
             LEFT JOIN tmpUserData AS UserData_29
-                                   ON UserData_29.Day = 29
-                                  AND UserData_29.ID = MovementItem.Id
+                                  ON UserData_29.Day = 29
+                                 AND UserData_29.ID = MovementItem.Id
+                                 AND UserData_29.Ord = 1
 
             LEFT JOIN tmpUserData AS UserData_30
-                                   ON UserData_30.Day = 30
-                                  AND UserData_30.ID = MovementItem.Id
+                                  ON UserData_30.Day = 30
+                                 AND UserData_30.ID = MovementItem.Id
+                                 AND UserData_30.Ord = 1
 
             LEFT JOIN tmpUserData AS UserData_31
-                                   ON UserData_31.Day = 31
-                                  AND UserData_31.ID = MovementItem.Id
+                                  ON UserData_31.Day = 31
+                                 AND UserData_31.ID = MovementItem.Id
+                                 AND UserData_31.Ord = 1
 
             LEFT JOIN tmpUserDataPrev AS UserDataPrev_01
-                                  ON UserDataPrev_01.Day = 1
-                                  AND UserDataPrev_01.UserID = MovementItem.ObjectId
+                                      ON UserDataPrev_01.Day = 1
+                                     AND UserDataPrev_01.UserID = MovementItem.ObjectId
+                                     AND UserDataPrev_01.Ord = 1
 
             LEFT JOIN tmpUserDataPrev AS UserDataPrev_02
-                                   ON UserDataPrev_02.Day = 2
-                                  AND UserDataPrev_02.UserID = MovementItem.ObjectId
+                                      ON UserDataPrev_02.Day = 2
+                                     AND UserDataPrev_02.UserID = MovementItem.ObjectId
+                                     AND UserDataPrev_02.Ord = 1
 
             LEFT JOIN tmpUserDataPrev AS UserDataPrev_03
-                                   ON UserDataPrev_03.Day = 3
-                                  AND UserDataPrev_03.UserID = MovementItem.ObjectId
+                                      ON UserDataPrev_03.Day = 3
+                                     AND UserDataPrev_03.UserID = MovementItem.ObjectId
+                                     AND UserDataPrev_03.Ord = 1
 
             LEFT JOIN tmpUserDataPrev AS UserDataPrev_04
-                                   ON UserDataPrev_04.Day = 4
-                                  AND UserDataPrev_04.UserID = MovementItem.ObjectId
+                                      ON UserDataPrev_04.Day = 4
+                                     AND UserDataPrev_04.UserID = MovementItem.ObjectId
+                                     AND UserDataPrev_04.Ord = 1
 
             LEFT JOIN tmpUserDataPrev AS UserDataPrev_05
-                                   ON UserDataPrev_05.Day = 5
-                                  AND UserDataPrev_05.UserID = MovementItem.ObjectId
+                                      ON UserDataPrev_05.Day = 5
+                                     AND UserDataPrev_05.UserID = MovementItem.ObjectId
+                                     AND UserDataPrev_05.Ord = 1
 
             LEFT JOIN tmpUserDataPrev AS UserDataPrev_06
-                                   ON UserDataPrev_06.Day = 6
-                                  AND UserDataPrev_06.UserID = MovementItem.ObjectId
+                                      ON UserDataPrev_06.Day = 6
+                                     AND UserDataPrev_06.UserID = MovementItem.ObjectId
+                                     AND UserDataPrev_06.Ord = 1
 
             LEFT JOIN tmpUserDataPrev AS UserDataPrev_07
-                                   ON UserDataPrev_07.Day = 7
-                                  AND UserDataPrev_07.UserID = MovementItem.ObjectId
+                                      ON UserDataPrev_07.Day = 7
+                                     AND UserDataPrev_07.UserID = MovementItem.ObjectId
+                                     AND UserDataPrev_07.Ord = 1
 
             LEFT JOIN tmpUserDataPrev AS UserDataPrev_08
-                                   ON UserDataPrev_08.Day = 8
-                                  AND UserDataPrev_08.UserID = MovementItem.ObjectId
+                                      ON UserDataPrev_08.Day = 8
+                                     AND UserDataPrev_08.UserID = MovementItem.ObjectId
+                                     AND UserDataPrev_08.Ord = 1
 
             LEFT JOIN tmpUserDataPrev AS UserDataPrev_09
-                                   ON UserDataPrev_09.Day = 9
-                                  AND UserDataPrev_09.UserID = MovementItem.ObjectId
+                                      ON UserDataPrev_09.Day = 9
+                                     AND UserDataPrev_09.UserID = MovementItem.ObjectId
+                                     AND UserDataPrev_09.Ord = 1
 
             LEFT JOIN tmpUserDataPrev AS UserDataPrev_10
-                                   ON UserDataPrev_10.Day = 10
-                                  AND UserDataPrev_10.UserID = MovementItem.ObjectId
+                                      ON UserDataPrev_10.Day = 10
+                                     AND UserDataPrev_10.UserID = MovementItem.ObjectId
+                                     AND UserDataPrev_10.Ord = 1
 
             LEFT JOIN tmpUserDataPrev AS UserDataPrev_11
-                                   ON UserDataPrev_11.Day = 11
-                                  AND UserDataPrev_11.UserID = MovementItem.ObjectId
+                                      ON UserDataPrev_11.Day = 11
+                                     AND UserDataPrev_11.UserID = MovementItem.ObjectId
+                                     AND UserDataPrev_11.Ord = 1
 
             LEFT JOIN tmpUserDataPrev AS UserDataPrev_12
-                                   ON UserDataPrev_12.Day = 12
-                                  AND UserDataPrev_12.UserID = MovementItem.ObjectId
+                                      ON UserDataPrev_12.Day = 12
+                                     AND UserDataPrev_12.UserID = MovementItem.ObjectId
+                                     AND UserDataPrev_12.Ord = 1
 
             LEFT JOIN tmpUserDataPrev AS UserDataPrev_13
-                                   ON UserDataPrev_13.Day = 13
-                                  AND UserDataPrev_13.UserID = MovementItem.ObjectId
+                                      ON UserDataPrev_13.Day = 13
+                                     AND UserDataPrev_13.UserID = MovementItem.ObjectId
+                                     AND UserDataPrev_13.Ord = 1
 
             LEFT JOIN tmpUserDataPrev AS UserDataPrev_14
-                                   ON UserDataPrev_14.Day = 14
-                                  AND UserDataPrev_14.UserID = MovementItem.ObjectId
+                                      ON UserDataPrev_14.Day = 14
+                                     AND UserDataPrev_14.UserID = MovementItem.ObjectId
+                                     AND UserDataPrev_14.Ord = 1
 
             LEFT JOIN tmpUserDataPrev AS UserDataPrev_15
-                                   ON UserDataPrev_15.Day = 15
-                                  AND UserDataPrev_15.UserID = MovementItem.ObjectId
+                                      ON UserDataPrev_15.Day = 15
+                                     AND UserDataPrev_15.UserID = MovementItem.ObjectId
+                                     AND UserDataPrev_15.Ord = 1
 
             LEFT JOIN tmpUserDataPrev AS UserDataPrev_16
-                                   ON UserDataPrev_16.Day = 16
-                                  AND UserDataPrev_16.UserID = MovementItem.ObjectId
+                                      ON UserDataPrev_16.Day = 16
+                                     AND UserDataPrev_16.UserID = MovementItem.ObjectId
+                                     AND UserDataPrev_16.Ord = 1
 
             LEFT JOIN tmpUserDataPrev AS UserDataPrev_17
-                                   ON UserDataPrev_17.Day = 17
-                                  AND UserDataPrev_17.UserID = MovementItem.ObjectId
+                                      ON UserDataPrev_17.Day = 17
+                                     AND UserDataPrev_17.UserID = MovementItem.ObjectId
+                                     AND UserDataPrev_17.Ord = 1
 
             LEFT JOIN tmpUserDataPrev AS UserDataPrev_18
-                                   ON UserDataPrev_18.Day = 18
-                                  AND UserDataPrev_18.UserID = MovementItem.ObjectId
+                                      ON UserDataPrev_18.Day = 18
+                                     AND UserDataPrev_18.UserID = MovementItem.ObjectId
+                                     AND UserDataPrev_18.Ord = 1
 
             LEFT JOIN tmpUserDataPrev AS UserDataPrev_19
-                                   ON UserDataPrev_19.Day = 19
-                                  AND UserDataPrev_19.UserID = MovementItem.ObjectId
+                                      ON UserDataPrev_19.Day = 19
+                                     AND UserDataPrev_19.UserID = Object_User.Id
+                                     AND UserDataPrev_19.Ord = 1
 
             LEFT JOIN tmpUserDataPrev AS UserDataPrev_20
-                                   ON UserDataPrev_20.Day = 20
-                                  AND UserDataPrev_20.UserID = MovementItem.ObjectId
+                                      ON UserDataPrev_20.Day = 20
+                                     AND UserDataPrev_20.UserID = MovementItem.ObjectId
+                                     AND UserDataPrev_20.Ord = 1
 
             LEFT JOIN tmpUserDataPrev AS UserDataPrev_21
-                                   ON UserDataPrev_21.Day = 21
-                                  AND UserDataPrev_21.UserID = MovementItem.ObjectId
+                                      ON UserDataPrev_21.Day = 21
+                                     AND UserDataPrev_21.UserID = MovementItem.ObjectId
+                                     AND UserDataPrev_21.Ord = 1
 
             LEFT JOIN tmpUserDataPrev AS UserDataPrev_22
-                                   ON UserDataPrev_22.Day = 22
-                                  AND UserDataPrev_22.UserID = MovementItem.ObjectId
+                                      ON UserDataPrev_22.Day = 22
+                                     AND UserDataPrev_22.UserID = MovementItem.ObjectId
+                                     AND UserDataPrev_22.Ord = 1
 
             LEFT JOIN tmpUserDataPrev AS UserDataPrev_23
-                                   ON UserDataPrev_23.Day = 23
-                                  AND UserDataPrev_23.UserID = MovementItem.ObjectId
+                                      ON UserDataPrev_23.Day = 23
+                                     AND UserDataPrev_23.UserID = MovementItem.ObjectId
+                                     AND UserDataPrev_23.Ord = 1
 
             LEFT JOIN tmpUserDataPrev AS UserDataPrev_24
-                                   ON UserDataPrev_24.Day = 24
-                                  AND UserDataPrev_24.UserID = MovementItem.ObjectId
+                                      ON UserDataPrev_24.Day = 24
+                                     AND UserDataPrev_24.UserID = MovementItem.ObjectId
+                                     AND UserDataPrev_24.Ord = 1
 
             LEFT JOIN tmpUserDataPrev AS UserDataPrev_25
-                                   ON UserDataPrev_25.Day = 25
-                                  AND UserDataPrev_25.UserID = MovementItem.ObjectId
+                                      ON UserDataPrev_25.Day = 25
+                                     AND UserDataPrev_25.UserID = MovementItem.ObjectId
+                                     AND UserDataPrev_25.Ord = 1
 
             LEFT JOIN tmpUserDataPrev AS UserDataPrev_26
-                                   ON UserDataPrev_26.Day = 26
-                                  AND UserDataPrev_26.UserID = MovementItem.ObjectId
+                                      ON UserDataPrev_26.Day = 26
+                                     AND UserDataPrev_26.UserID = MovementItem.ObjectId
+                                     AND UserDataPrev_26.Ord = 1
 
             LEFT JOIN tmpUserDataPrev AS UserDataPrev_27
-                                   ON UserDataPrev_27.Day = 27
-                                  AND UserDataPrev_27.UserID = MovementItem.ObjectId
+                                      ON UserDataPrev_27.Day = 27
+                                     AND UserDataPrev_27.UserID = MovementItem.ObjectId
+                                     AND UserDataPrev_27.Ord = 1
 
             LEFT JOIN tmpUserDataPrev AS UserDataPrev_28
-                                   ON UserDataPrev_28.Day = 28
-                                  AND UserDataPrev_28.UserID = MovementItem.ObjectId
+                                      ON UserDataPrev_28.Day = 28
+                                     AND UserDataPrev_28.UserID = MovementItem.ObjectId
+                                     AND UserDataPrev_28.Ord = 1
 
             LEFT JOIN tmpUserDataPrev AS UserDataPrev_29
-                                   ON UserDataPrev_29.Day = 29
-                                  AND UserDataPrev_29.UserID = MovementItem.ObjectId
+                                      ON UserDataPrev_29.Day = 29
+                                     AND UserDataPrev_29.UserID = MovementItem.ObjectId
+                                     AND UserDataPrev_29.Ord = 1
 
             LEFT JOIN tmpUserDataPrev AS UserDataPrev_30
-                                   ON UserDataPrev_30.Day = 30
-                                  AND UserDataPrev_30.UserID = MovementItem.ObjectId
+                                      ON UserDataPrev_30.Day = 30
+                                     AND UserDataPrev_30.UserID = MovementItem.ObjectId
+                                     AND UserDataPrev_30.Ord = 1
 
             LEFT JOIN tmpUserDataPrev AS UserDataPrev_31
-                                   ON UserDataPrev_31.Day = 31
-                                  AND UserDataPrev_31.UserID = MovementItem.ObjectId
+                                      ON UserDataPrev_31.Day = 31
+                                     AND UserDataPrev_31.UserID = MovementItem.ObjectId
+                                     AND UserDataPrev_31.Ord = 1
 
        WHERE Movement.ID = inMovementId
          AND (MovementItem.IsErased = FALSE OR inIsErased = TRUE);
@@ -1639,252 +1741,314 @@ BEGIN
 
             LEFT JOIN tmpUserData AS UserData_01
                                   ON UserData_01.Day = 1
-                                  AND UserData_01.ID = MovementItem.Id
+                                 AND UserData_01.ID = MovementItem.Id
+                                 AND UserData_01.Ord = 1
 
             LEFT JOIN tmpUserData AS UserData_02
-                                   ON UserData_02.Day = 2
-                                  AND UserData_02.ID = MovementItem.Id
+                                  ON UserData_02.Day = 2
+                                 AND UserData_02.ID = MovementItem.Id
+                                 AND UserData_02.Ord = 1
 
             LEFT JOIN tmpUserData AS UserData_03
-                                   ON UserData_03.Day = 3
-                                  AND UserData_03.ID = MovementItem.Id
+                                  ON UserData_03.Day = 3
+                                 AND UserData_03.ID = MovementItem.Id
+                                 AND UserData_03.Ord = 1
 
             LEFT JOIN tmpUserData AS UserData_04
-                                   ON UserData_04.Day = 4
-                                  AND UserData_04.ID = MovementItem.Id
+                                  ON UserData_04.Day = 4
+                                 AND UserData_04.ID = MovementItem.Id
+                                 AND UserData_04.Ord = 1
 
             LEFT JOIN tmpUserData AS UserData_05
-                                   ON UserData_05.Day = 5
-                                  AND UserData_05.ID = MovementItem.Id
+                                  ON UserData_05.Day = 5
+                                 AND UserData_05.ID = MovementItem.Id
+                                 AND UserData_05.Ord = 1
 
             LEFT JOIN tmpUserData AS UserData_06
-                                   ON UserData_06.Day = 6
-                                  AND UserData_06.ID = MovementItem.Id
+                                  ON UserData_06.Day = 6
+                                 AND UserData_06.ID = MovementItem.Id
+                                 AND UserData_06.Ord = 1
 
             LEFT JOIN tmpUserData AS UserData_07
-                                   ON UserData_07.Day = 7
-                                  AND UserData_07.ID = MovementItem.Id
+                                  ON UserData_07.Day = 7
+                                 AND UserData_07.ID = MovementItem.Id
+                                 AND UserData_07.Ord = 1
 
             LEFT JOIN tmpUserData AS UserData_08
-                                   ON UserData_08.Day = 8
-                                  AND UserData_08.ID = MovementItem.Id
+                                  ON UserData_08.Day = 8
+                                 AND UserData_08.ID = MovementItem.Id
+                                 AND UserData_08.Ord = 1
 
             LEFT JOIN tmpUserData AS UserData_09
-                                   ON UserData_09.Day = 9
-                                  AND UserData_09.ID = MovementItem.Id
+                                  ON UserData_09.Day = 9
+                                 AND UserData_09.ID = MovementItem.Id
+                                 AND UserData_09.Ord = 1
 
             LEFT JOIN tmpUserData AS UserData_10
-                                   ON UserData_10.Day = 10
-                                  AND UserData_10.ID = MovementItem.Id
+                                  ON UserData_10.Day = 10
+                                 AND UserData_10.ID = MovementItem.Id
+                                 AND UserData_10.Ord = 1
 
             LEFT JOIN tmpUserData AS UserData_11
-                                   ON UserData_11.Day = 11
-                                  AND UserData_11.ID = MovementItem.Id
+                                  ON UserData_11.Day = 11
+                                 AND UserData_11.ID = MovementItem.Id
+                                 AND UserData_11.Ord = 1
 
             LEFT JOIN tmpUserData AS UserData_12
-                                   ON UserData_12.Day = 12
-                                  AND UserData_12.ID = MovementItem.Id
+                                  ON UserData_12.Day = 12
+                                 AND UserData_12.ID = MovementItem.Id
+                                 AND UserData_12.Ord = 1
 
             LEFT JOIN tmpUserData AS UserData_13
-                                   ON UserData_13.Day = 13
-                                  AND UserData_13.ID = MovementItem.Id
+                                  ON UserData_13.Day = 13
+                                 AND UserData_13.ID = MovementItem.Id
+                                 AND UserData_13.Ord = 1
 
             LEFT JOIN tmpUserData AS UserData_14
-                                   ON UserData_14.Day = 14
-                                  AND UserData_14.ID = MovementItem.Id
+                                  ON UserData_14.Day = 14
+                                 AND UserData_14.ID = MovementItem.Id
+                                 AND UserData_14.Ord = 1
 
             LEFT JOIN tmpUserData AS UserData_15
-                                   ON UserData_15.Day = 15
-                                  AND UserData_15.ID = MovementItem.Id
+                                  ON UserData_15.Day = 15
+                                 AND UserData_15.ID = MovementItem.Id
+                                 AND UserData_15.Ord = 1
 
             LEFT JOIN tmpUserData AS UserData_16
-                                   ON UserData_16.Day = 16
-                                  AND UserData_16.ID = MovementItem.Id
+                                  ON UserData_16.Day = 16
+                                 AND UserData_16.ID = MovementItem.Id
+                                 AND UserData_16.Ord = 1
 
             LEFT JOIN tmpUserData AS UserData_17
-                                   ON UserData_17.Day = 17
-                                  AND UserData_17.ID = MovementItem.Id
+                                  ON UserData_17.Day = 17
+                                 AND UserData_17.ID = MovementItem.Id
+                                 AND UserData_17.Ord = 1
 
             LEFT JOIN tmpUserData AS UserData_18
-                                   ON UserData_18.Day = 18
-                                  AND UserData_18.ID = MovementItem.Id
+                                  ON UserData_18.Day = 18
+                                 AND UserData_18.ID = MovementItem.Id
+                                 AND UserData_18.Ord = 1
 
             LEFT JOIN tmpUserData AS UserData_19
-                                   ON UserData_19.Day = 19
-                                  AND UserData_19.ID = MovementItem.Id
+                                  ON UserData_19.Day = 19
+                                 AND UserData_19.ID = MovementItem.Id
+                                 AND UserData_19.Ord = 1
 
             LEFT JOIN tmpUserData AS UserData_20
-                                   ON UserData_20.Day = 20
-                                  AND UserData_20.ID = MovementItem.Id
+                                  ON UserData_20.Day = 20
+                                 AND UserData_20.ID = MovementItem.Id
+                                 AND UserData_20.Ord = 1
 
             LEFT JOIN tmpUserData AS UserData_21
-                                   ON UserData_21.Day = 21
-                                  AND UserData_21.ID = MovementItem.Id
+                                  ON UserData_21.Day = 21
+                                 AND UserData_21.ID = MovementItem.Id
+                                 AND UserData_21.Ord = 1
 
             LEFT JOIN tmpUserData AS UserData_22
-                                   ON UserData_22.Day = 22
-                                  AND UserData_22.ID = MovementItem.Id
+                                  ON UserData_22.Day = 22
+                                 AND UserData_22.ID = MovementItem.Id
+                                 AND UserData_22.Ord = 1
 
             LEFT JOIN tmpUserData AS UserData_23
-                                   ON UserData_23.Day = 23
-                                  AND UserData_23.ID = MovementItem.Id
+                                  ON UserData_23.Day = 23
+                                 AND UserData_23.ID = MovementItem.Id
+                                 AND UserData_23.Ord = 1
 
             LEFT JOIN tmpUserData AS UserData_24
-                                   ON UserData_24.Day = 24
-                                  AND UserData_24.ID = MovementItem.Id
+                                  ON UserData_24.Day = 24
+                                 AND UserData_24.ID = MovementItem.Id
+                                 AND UserData_24.Ord = 1
 
             LEFT JOIN tmpUserData AS UserData_25
-                                   ON UserData_25.Day = 25
-                                  AND UserData_25.ID = MovementItem.Id
+                                  ON UserData_25.Day = 25
+                                 AND UserData_25.ID = MovementItem.Id
+                                 AND UserData_25.Ord = 1
 
             LEFT JOIN tmpUserData AS UserData_26
-                                   ON UserData_26.Day = 26
-                                  AND UserData_26.ID = MovementItem.Id
+                                  ON UserData_26.Day = 26
+                                 AND UserData_26.ID = MovementItem.Id
+                                 AND UserData_26.Ord = 1
 
             LEFT JOIN tmpUserData AS UserData_27
-                                   ON UserData_27.Day = 27
-                                  AND UserData_27.ID = MovementItem.Id
+                                  ON UserData_27.Day = 27
+                                 AND UserData_27.ID = MovementItem.Id
+                                 AND UserData_27.Ord = 1
 
             LEFT JOIN tmpUserData AS UserData_28
-                                   ON UserData_28.Day = 28
-                                  AND UserData_28.ID = MovementItem.Id
+                                  ON UserData_28.Day = 28
+                                 AND UserData_28.ID = MovementItem.Id
+                                 AND UserData_28.Ord = 1
 
             LEFT JOIN tmpUserData AS UserData_29
-                                   ON UserData_29.Day = 29
-                                  AND UserData_29.ID = MovementItem.Id
+                                  ON UserData_29.Day = 29
+                                 AND UserData_29.ID = MovementItem.Id
+                                 AND UserData_29.Ord = 1
 
             LEFT JOIN tmpUserData AS UserData_30
-                                   ON UserData_30.Day = 30
-                                  AND UserData_30.ID = MovementItem.Id
+                                  ON UserData_30.Day = 30
+                                 AND UserData_30.ID = MovementItem.Id
+                                 AND UserData_30.Ord = 1
 
             LEFT JOIN tmpUserData AS UserData_31
-                                   ON UserData_31.Day = 31
-                                  AND UserData_31.ID = MovementItem.Id
+                                  ON UserData_31.Day = 31
+                                 AND UserData_31.ID = MovementItem.Id
+                                 AND UserData_31.Ord = 1
 
             LEFT JOIN tmpUserDataPrev AS UserDataPrev_01
-                                  ON UserDataPrev_01.Day = 1
-                                  AND UserDataPrev_01.UserID = MovementItem.ObjectId
+                                      ON UserDataPrev_01.Day = 1
+                                     AND UserDataPrev_01.UserID = MovementItem.ObjectId
+                                     AND UserDataPrev_01.Ord = 1
 
             LEFT JOIN tmpUserDataPrev AS UserDataPrev_02
-                                   ON UserDataPrev_02.Day = 2
-                                  AND UserDataPrev_02.UserID = MovementItem.ObjectId
+                                      ON UserDataPrev_02.Day = 2
+                                     AND UserDataPrev_02.UserID = MovementItem.ObjectId
+                                     AND UserDataPrev_02.Ord = 1
 
             LEFT JOIN tmpUserDataPrev AS UserDataPrev_03
-                                   ON UserDataPrev_03.Day = 3
-                                  AND UserDataPrev_03.UserID = MovementItem.ObjectId
+                                      ON UserDataPrev_03.Day = 3
+                                     AND UserDataPrev_03.UserID = MovementItem.ObjectId
+                                     AND UserDataPrev_03.Ord = 1
 
             LEFT JOIN tmpUserDataPrev AS UserDataPrev_04
-                                   ON UserDataPrev_04.Day = 4
-                                  AND UserDataPrev_04.UserID = MovementItem.ObjectId
+                                      ON UserDataPrev_04.Day = 4
+                                     AND UserDataPrev_04.UserID = MovementItem.ObjectId
+                                     AND UserDataPrev_04.Ord = 1
 
             LEFT JOIN tmpUserDataPrev AS UserDataPrev_05
-                                   ON UserDataPrev_05.Day = 5
-                                  AND UserDataPrev_05.UserID = MovementItem.ObjectId
+                                      ON UserDataPrev_05.Day = 5
+                                     AND UserDataPrev_05.UserID = MovementItem.ObjectId
+                                     AND UserDataPrev_05.Ord = 1
 
             LEFT JOIN tmpUserDataPrev AS UserDataPrev_06
-                                   ON UserDataPrev_06.Day = 6
-                                  AND UserDataPrev_06.UserID = MovementItem.ObjectId
+                                      ON UserDataPrev_06.Day = 6
+                                     AND UserDataPrev_06.UserID = MovementItem.ObjectId
+                                     AND UserDataPrev_06.Ord = 1
 
             LEFT JOIN tmpUserDataPrev AS UserDataPrev_07
-                                   ON UserDataPrev_07.Day = 7
-                                  AND UserDataPrev_07.UserID = MovementItem.ObjectId
+                                      ON UserDataPrev_07.Day = 7
+                                     AND UserDataPrev_07.UserID = MovementItem.ObjectId
+                                     AND UserDataPrev_07.Ord = 1
 
             LEFT JOIN tmpUserDataPrev AS UserDataPrev_08
-                                   ON UserDataPrev_08.Day = 8
-                                  AND UserDataPrev_08.UserID = MovementItem.ObjectId
+                                      ON UserDataPrev_08.Day = 8
+                                     AND UserDataPrev_08.UserID = MovementItem.ObjectId
+                                     AND UserDataPrev_08.Ord = 1
 
             LEFT JOIN tmpUserDataPrev AS UserDataPrev_09
-                                   ON UserDataPrev_09.Day = 9
-                                  AND UserDataPrev_09.UserID = MovementItem.ObjectId
+                                      ON UserDataPrev_09.Day = 9
+                                     AND UserDataPrev_09.UserID = MovementItem.ObjectId
+                                     AND UserDataPrev_09.Ord = 1
 
             LEFT JOIN tmpUserDataPrev AS UserDataPrev_10
-                                   ON UserDataPrev_10.Day = 10
-                                  AND UserDataPrev_10.UserID = MovementItem.ObjectId
+                                      ON UserDataPrev_10.Day = 10
+                                     AND UserDataPrev_10.UserID = MovementItem.ObjectId
+                                     AND UserDataPrev_10.Ord = 1
 
             LEFT JOIN tmpUserDataPrev AS UserDataPrev_11
-                                   ON UserDataPrev_11.Day = 11
-                                  AND UserDataPrev_11.UserID = MovementItem.ObjectId
+                                      ON UserDataPrev_11.Day = 11
+                                     AND UserDataPrev_11.UserID = MovementItem.ObjectId
+                                     AND UserDataPrev_11.Ord = 1
 
             LEFT JOIN tmpUserDataPrev AS UserDataPrev_12
-                                   ON UserDataPrev_12.Day = 12
-                                  AND UserDataPrev_12.UserID = MovementItem.ObjectId
+                                      ON UserDataPrev_12.Day = 12
+                                     AND UserDataPrev_12.UserID = MovementItem.ObjectId
+                                     AND UserDataPrev_12.Ord = 1
 
             LEFT JOIN tmpUserDataPrev AS UserDataPrev_13
-                                   ON UserDataPrev_13.Day = 13
-                                  AND UserDataPrev_13.UserID = MovementItem.ObjectId
+                                      ON UserDataPrev_13.Day = 13
+                                     AND UserDataPrev_13.UserID = MovementItem.ObjectId
+                                     AND UserDataPrev_13.Ord = 1
 
             LEFT JOIN tmpUserDataPrev AS UserDataPrev_14
-                                   ON UserDataPrev_14.Day = 14
-                                  AND UserDataPrev_14.UserID = MovementItem.ObjectId
+                                      ON UserDataPrev_14.Day = 14
+                                     AND UserDataPrev_14.UserID = MovementItem.ObjectId
+                                     AND UserDataPrev_14.Ord = 1
 
             LEFT JOIN tmpUserDataPrev AS UserDataPrev_15
-                                   ON UserDataPrev_15.Day = 15
-                                  AND UserDataPrev_15.UserID = MovementItem.ObjectId
+                                      ON UserDataPrev_15.Day = 15
+                                     AND UserDataPrev_15.UserID = MovementItem.ObjectId
+                                     AND UserDataPrev_15.Ord = 1
 
             LEFT JOIN tmpUserDataPrev AS UserDataPrev_16
-                                   ON UserDataPrev_16.Day = 16
-                                  AND UserDataPrev_16.UserID = MovementItem.ObjectId
+                                      ON UserDataPrev_16.Day = 16
+                                     AND UserDataPrev_16.UserID = MovementItem.ObjectId
+                                     AND UserDataPrev_16.Ord = 1
 
             LEFT JOIN tmpUserDataPrev AS UserDataPrev_17
-                                   ON UserDataPrev_17.Day = 17
-                                  AND UserDataPrev_17.UserID = MovementItem.ObjectId
+                                      ON UserDataPrev_17.Day = 17
+                                     AND UserDataPrev_17.UserID = MovementItem.ObjectId
+                                     AND UserDataPrev_17.Ord = 1
 
             LEFT JOIN tmpUserDataPrev AS UserDataPrev_18
-                                   ON UserDataPrev_18.Day = 18
-                                  AND UserDataPrev_18.UserID = MovementItem.ObjectId
+                                      ON UserDataPrev_18.Day = 18
+                                     AND UserDataPrev_18.UserID = MovementItem.ObjectId
+                                     AND UserDataPrev_18.Ord = 1
 
             LEFT JOIN tmpUserDataPrev AS UserDataPrev_19
-                                   ON UserDataPrev_19.Day = 19
-                                  AND UserDataPrev_19.UserID = MovementItem.ObjectId
+                                      ON UserDataPrev_19.Day = 19
+                                     AND UserDataPrev_19.UserID = Object_User.Id
+                                     AND UserDataPrev_19.Ord = 1
 
             LEFT JOIN tmpUserDataPrev AS UserDataPrev_20
-                                   ON UserDataPrev_20.Day = 20
-                                  AND UserDataPrev_20.UserID = MovementItem.ObjectId
+                                      ON UserDataPrev_20.Day = 20
+                                     AND UserDataPrev_20.UserID = MovementItem.ObjectId
+                                     AND UserDataPrev_20.Ord = 1
 
             LEFT JOIN tmpUserDataPrev AS UserDataPrev_21
-                                   ON UserDataPrev_21.Day = 21
-                                  AND UserDataPrev_21.UserID = MovementItem.ObjectId
+                                      ON UserDataPrev_21.Day = 21
+                                     AND UserDataPrev_21.UserID = MovementItem.ObjectId
+                                     AND UserDataPrev_21.Ord = 1
 
             LEFT JOIN tmpUserDataPrev AS UserDataPrev_22
-                                   ON UserDataPrev_22.Day = 22
-                                  AND UserDataPrev_22.UserID = MovementItem.ObjectId
+                                      ON UserDataPrev_22.Day = 22
+                                     AND UserDataPrev_22.UserID = MovementItem.ObjectId
+                                     AND UserDataPrev_22.Ord = 1
 
             LEFT JOIN tmpUserDataPrev AS UserDataPrev_23
-                                   ON UserDataPrev_23.Day = 23
-                                  AND UserDataPrev_23.UserID = MovementItem.ObjectId
+                                      ON UserDataPrev_23.Day = 23
+                                     AND UserDataPrev_23.UserID = MovementItem.ObjectId
+                                     AND UserDataPrev_23.Ord = 1
 
             LEFT JOIN tmpUserDataPrev AS UserDataPrev_24
-                                   ON UserDataPrev_24.Day = 24
-                                  AND UserDataPrev_24.UserID = MovementItem.ObjectId
+                                      ON UserDataPrev_24.Day = 24
+                                     AND UserDataPrev_24.UserID = MovementItem.ObjectId
+                                     AND UserDataPrev_24.Ord = 1
 
             LEFT JOIN tmpUserDataPrev AS UserDataPrev_25
-                                   ON UserDataPrev_25.Day = 25
-                                  AND UserDataPrev_25.UserID = MovementItem.ObjectId
+                                      ON UserDataPrev_25.Day = 25
+                                     AND UserDataPrev_25.UserID = MovementItem.ObjectId
+                                     AND UserDataPrev_25.Ord = 1
 
             LEFT JOIN tmpUserDataPrev AS UserDataPrev_26
-                                   ON UserDataPrev_26.Day = 26
-                                  AND UserDataPrev_26.UserID = MovementItem.ObjectId
+                                      ON UserDataPrev_26.Day = 26
+                                     AND UserDataPrev_26.UserID = MovementItem.ObjectId
+                                     AND UserDataPrev_26.Ord = 1
 
             LEFT JOIN tmpUserDataPrev AS UserDataPrev_27
-                                   ON UserDataPrev_27.Day = 27
-                                  AND UserDataPrev_27.UserID = MovementItem.ObjectId
+                                      ON UserDataPrev_27.Day = 27
+                                     AND UserDataPrev_27.UserID = MovementItem.ObjectId
+                                     AND UserDataPrev_27.Ord = 1
 
             LEFT JOIN tmpUserDataPrev AS UserDataPrev_28
-                                   ON UserDataPrev_28.Day = 28
-                                  AND UserDataPrev_28.UserID = MovementItem.ObjectId
+                                      ON UserDataPrev_28.Day = 28
+                                     AND UserDataPrev_28.UserID = MovementItem.ObjectId
+                                     AND UserDataPrev_28.Ord = 1
 
             LEFT JOIN tmpUserDataPrev AS UserDataPrev_29
-                                   ON UserDataPrev_29.Day = 29
-                                  AND UserDataPrev_29.UserID = MovementItem.ObjectId
+                                      ON UserDataPrev_29.Day = 29
+                                     AND UserDataPrev_29.UserID = MovementItem.ObjectId
+                                     AND UserDataPrev_29.Ord = 1
 
             LEFT JOIN tmpUserDataPrev AS UserDataPrev_30
-                                   ON UserDataPrev_30.Day = 30
-                                  AND UserDataPrev_30.UserID = MovementItem.ObjectId
+                                      ON UserDataPrev_30.Day = 30
+                                     AND UserDataPrev_30.UserID = MovementItem.ObjectId
+                                     AND UserDataPrev_30.Ord = 1
 
             LEFT JOIN tmpUserDataPrev AS UserDataPrev_31
-                                   ON UserDataPrev_31.Day = 31
-                                  AND UserDataPrev_31.UserID = MovementItem.ObjectId
-                                  
+                                      ON UserDataPrev_31.Day = 31
+                                     AND UserDataPrev_31.UserID = MovementItem.ObjectId
+                                     AND UserDataPrev_31.Ord = 1
+
        WHERE Movement.ID = inMovementId
          AND (MovementItem.IsErased = FALSE OR inIsErased = TRUE);
      END IF;
@@ -1907,3 +2071,4 @@ ALTER FUNCTION gpSelect_MovementItem_EmployeeScheduleNew (Integer, TDateTime, Bo
 -- тест
 -- select * from gpSelect_MovementItem_EmployeeScheduleNew(inMovementId := 15869657 , inDate := ('01.10.2019')::TDateTime , inShowAll := 'True' , inIsErased := 'False' ,  inSession := '3');
 
+select * from gpSelect_MovementItem_EmployeeScheduleNew(inMovementId := 17692072 , inDate := ('01.08.2020')::TDateTime , inShowAll := 'False' , inIsErased := 'False' ,  inSession := '3');

@@ -57,7 +57,7 @@ BEGIN
     RETURN QUERY
         SELECT CASE WHEN vbSumma < inMinAccrualAmount THEN inMinAccrualAmount ELSE vbSumma END, vbSummaBase, vbFormula;
 
-  ELSEIF inPayrollTypeID = zc_Enum_PayrollType_WorkS()
+  ELSEIF inPayrollTypeID in (zc_Enum_PayrollType_WorkS(), zc_Enum_PayrollType_WorkIS())
   THEN
     IF COALESCE (inCountUser, 0) = 0
     THEN

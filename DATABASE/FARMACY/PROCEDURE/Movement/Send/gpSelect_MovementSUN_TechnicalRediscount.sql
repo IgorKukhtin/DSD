@@ -26,8 +26,6 @@ BEGIN
     -- PERFORM lpCheckRight (inSession, zc_Enum_Process_Select_Movement_Send());
     vbUserId:= lpGetUserBySession (inSession);
 
-    raise notice 'Value 00: gpSelect_MovementSUN_TechnicalRediscount';
-
     --определяем
     SELECT Movement.StatusId
          , MovementLinkObject_From.ObjectId                               AS UnitId
@@ -100,9 +98,13 @@ BEGIN
                      LEFT JOIN MovementLinkObject AS MovementLinkObject_Unit
                                                   ON MovementLinkObject_Unit.MovementId = Movement.Id
                                                  AND MovementLinkObject_Unit.DescId = zc_MovementLinkObject_Unit()
+                     LEFT JOIN MovementBoolean AS MovementBoolean_CorrectionSUN
+                                               ON MovementBoolean_CorrectionSUN.MovementId = Movement.Id
+                                              AND MovementBoolean_CorrectionSUN.DescId = zc_MovementBoolean_CorrectionSUN()
                 WHERE Movement.DescId = zc_Movement_TechnicalRediscount()
                   AND Movement.StatusId = zc_Enum_Status_UnComplete()
-                  AND MovementLinkObject_Unit.ObjectId = vbUnitId)
+                  AND MovementLinkObject_Unit.ObjectId = vbUnitId
+                  AND COALESCE (MovementBoolean_CorrectionSUN.ValueData, False) = TRUE)
       THEN
          SELECT Max(Movement.Id) AS Id
          INTO vbMovementTRId
@@ -110,6 +112,9 @@ BEGIN
               LEFT JOIN MovementLinkObject AS MovementLinkObject_Unit
                                            ON MovementLinkObject_Unit.MovementId = Movement.Id
                                           AND MovementLinkObject_Unit.DescId = zc_MovementLinkObject_Unit()
+             LEFT JOIN MovementBoolean AS MovementBoolean_CorrectionSUN
+                                       ON MovementBoolean_CorrectionSUN.MovementId = Movement.Id
+                                      AND MovementBoolean_CorrectionSUN.DescId = zc_MovementBoolean_CorrectionSUN()
          WHERE Movement.DescId = zc_Movement_TechnicalRediscount()
            AND Movement.StatusId = zc_Enum_Status_UnComplete()
            AND MovementLinkObject_Unit.ObjectId = vbUnitId;
@@ -123,6 +128,8 @@ BEGIN
                                                                      , inisAdjustment     := False
                                                                      , inUserId           := vbUserId
                                                                        );
+        -- сохранили <Корректировка основного переучета>
+        PERFORM lpInsertUpdate_MovementBoolean (zc_MovementBoolean_CorrectionSUN(), vbMovementTRId, TRUE);
       END IF;
 
       -- Обнуляем в техническом переучете что ненадо и что в других
@@ -250,7 +257,7 @@ BEGIN
 
     END IF;
 
-    raise notice 'Value 05: % %', vbisAddTR, (SELECT Movement.invnumber FROM Movement WHERE Movement.ID = vbMovementTRId);
+--    raise notice 'Value 05: % %', vbisAddTR, (SELECT Movement.invnumber FROM Movement WHERE Movement.ID = vbMovementTRId);
 
 --    RAISE EXCEPTION 'Прошло.';
 

@@ -1198,7 +1198,7 @@ inherited EmployeeScheduleEditUserForm: TEmployeeScheduleEditUserForm
         MultiSelectSeparator = ','
       end
       item
-        Name = 'inMovementItemId'
+        Name = 'inParentId'
         Value = Null
         Component = FormParams
         ComponentItem = 'Id'

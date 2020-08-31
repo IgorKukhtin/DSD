@@ -376,7 +376,7 @@ inherited TechnicalRediscountForm: TTechnicalRediscountForm
       Width = 426
     end
     object cbisRedCheck: TcxCheckBox
-      Left = 340
+      Left = 328
       Top = 1
       Caption = #1050#1088#1072#1089#1085#1099#1081' '#1095#1077#1082
       Properties.ReadOnly = True
@@ -389,6 +389,13 @@ inherited TechnicalRediscountForm: TTechnicalRediscountForm
       Caption = #1050#1086#1088#1088#1077#1082#1090#1080#1088#1086#1074#1082#1072' '#1086#1089#1085#1086#1074#1085#1086#1075#1086' '#1087#1077#1088#1077#1091#1095#1077#1090#1072
       TabOrder = 11
       Width = 216
+    end
+    object cbCorrectionSUN: TcxCheckBox
+      Left = 328
+      Top = 42
+      Caption = #1050#1086#1088#1088#1077#1082#1094#1080#1103' '#1057#1059#1053' '
+      TabOrder = 12
+      Width = 112
     end
   end
   inherited ActionList: TActionList
@@ -1232,7 +1239,7 @@ inherited TechnicalRediscountForm: TTechnicalRediscountForm
         ParamType = ptInput
         MultiSelectSeparator = ','
       end>
-    Left = 352
+    Left = 288
     Top = 16
   end
 end
