@@ -77,6 +77,11 @@ inherited WagesForm: TWagesForm
               Format = ',0.00;-,0.00; ;'
               Kind = skSum
               Column = IlliquidAssets
+            end
+            item
+              Format = ',0.00;-,0.00; ;'
+              Kind = skSum
+              Column = PenaltySUN
             end>
           DataController.Summary.SummaryGroups = <>
           OptionsBehavior.GoToNextCellOnEnter = True
@@ -198,7 +203,7 @@ inherited WagesForm: TWagesForm
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
-            Width = 62
+            Width = 56
             Position.BandIndex = 1
             Position.ColIndex = 0
             Position.RowIndex = 0
@@ -210,7 +215,7 @@ inherited WagesForm: TWagesForm
             Properties.DisplayFormat = ',0.00;-,0.00; ;'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
-            Width = 61
+            Width = 55
             Position.BandIndex = 1
             Position.ColIndex = 1
             Position.RowIndex = 0
@@ -222,7 +227,7 @@ inherited WagesForm: TWagesForm
             Properties.DisplayFormat = ',0.00;-,0.00; ;'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
-            Width = 63
+            Width = 57
             Position.BandIndex = 1
             Position.ColIndex = 2
             Position.RowIndex = 0
@@ -234,7 +239,7 @@ inherited WagesForm: TWagesForm
             Properties.DisplayFormat = ',0.00;-,0.00; ;'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
-            Width = 62
+            Width = 56
             Position.BandIndex = 1
             Position.ColIndex = 3
             Position.RowIndex = 0
@@ -246,9 +251,21 @@ inherited WagesForm: TWagesForm
             Properties.DisplayFormat = ',0.00;-,0.00; ;'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
-            Width = 60
+            Width = 54
             Position.BandIndex = 1
             Position.ColIndex = 4
+            Position.RowIndex = 0
+          end
+          object PenaltySUN: TcxGridDBBandedColumn
+            Caption = #1055#1077#1088#1089#1086#1085#1072#1083#1100#1085#1099#1081' '#1096#1090#1088#1072#1092' '#1087#1086' '#1057#1059#1053
+            DataBinding.FieldName = 'PenaltySUN'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DisplayFormat = ',0.00;-,0.00; ;'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 61
+            Position.BandIndex = 1
+            Position.ColIndex = 5
             Position.RowIndex = 0
           end
           object AmountCard: TcxGridDBBandedColumn
@@ -258,9 +275,9 @@ inherited WagesForm: TWagesForm
             Properties.DisplayFormat = ',0.00;-,0.00; ;'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
-            Width = 60
+            Width = 53
             Position.BandIndex = 1
-            Position.ColIndex = 5
+            Position.ColIndex = 6
             Position.RowIndex = 0
           end
           object AmountHand: TcxGridDBBandedColumn
@@ -271,9 +288,9 @@ inherited WagesForm: TWagesForm
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
-            Width = 62
+            Width = 55
             Position.BandIndex = 1
-            Position.ColIndex = 6
+            Position.ColIndex = 7
             Position.RowIndex = 0
           end
           object isIssuedBy: TcxGridDBBandedColumn
@@ -281,9 +298,9 @@ inherited WagesForm: TWagesForm
             DataBinding.FieldName = 'isIssuedBy'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
-            Width = 62
+            Width = 55
             Position.BandIndex = 1
-            Position.ColIndex = 7
+            Position.ColIndex = 8
             Position.RowIndex = 0
           end
           object DateIssuedBy: TcxGridDBBandedColumn
@@ -292,9 +309,9 @@ inherited WagesForm: TWagesForm
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
-            Width = 94
+            Width = 84
             Position.BandIndex = 1
-            Position.ColIndex = 8
+            Position.ColIndex = 9
             Position.RowIndex = 0
           end
           object Color_Calc: TcxGridDBBandedColumn
@@ -1719,6 +1736,15 @@ inherited WagesForm: TWagesForm
         Value = Null
         Component = MasterCDS
         ComponentItem = 'IlliquidAssets'
+        DataType = ftFloat
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inPenaltySUN'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'PenaltySUN'
         DataType = ftFloat
         ParamType = ptInput
         MultiSelectSeparator = ','
