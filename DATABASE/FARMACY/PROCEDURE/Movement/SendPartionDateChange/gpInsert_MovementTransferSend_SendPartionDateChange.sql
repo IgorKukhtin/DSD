@@ -31,7 +31,7 @@ BEGIN
       -- добавл€ем то что нашли
       vbMISendId := SPLIT_PART (inMISendId, ',', vbIndex) :: Integer;
       -- сохранили свойство < оличество мест>
-      PERFORM lpInsertUpdate_MovementFloat (zc_MIFloat_MISendPDChangeId(), vbMISendId, vbMovementItemId);
+      PERFORM lpInsertUpdate_MovementItemFloat (zc_MIFloat_MISendPDChangeId(), vbMISendId, vbMovementItemId);
       -- теперь следуюющий
       vbIndex := vbIndex + 1;
   END LOOP;

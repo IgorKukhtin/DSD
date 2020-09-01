@@ -47,6 +47,18 @@ BEGIN
        RAISE EXCEPTION 'Ошибка.Изменятьпозиции количество по строкам сформированным из перемещений по СУН запрещено.';
      END IF;
 
+     IF EXISTS(SELECT 1 FROM MovementBoolean
+               WHERE MovementBoolean.MovementId = inMovementId
+                 AND MovementBoolean.DescId = zc_MIFloat_MovementItemId()
+                 AND MovementBoolean.ValueData = TRUE)
+        AND NOT EXISTS(SELECT 1 FROM MovementItemFloat 
+                       WHERE MovementItemFloat.MovementItemId = ioId
+                         AND MovementItemFloat.DescId = zc_MIFloat_MovementItemId())
+        AND COALESCE(inCommentTRID, 0) <> 13619611 
+     THEN
+       RAISE EXCEPTION 'Ошибка.В техническом переучете "Коррекция СУН" можно добавлять только товар с примечанием "Пересорт".';
+     END IF;
+
 /*     SELECT Movement.OperDate
      INTO vbOperDate
      FROM Movement

@@ -394,7 +394,7 @@ inherited TechnicalRediscountCashierForm: TTechnicalRediscountCashierForm
       Width = 426
     end
     object cbisRedCheck: TcxCheckBox
-      Left = 338
+      Left = 328
       Top = 1
       Caption = #1050#1088#1072#1089#1085#1099#1081' '#1095#1077#1082
       Properties.ReadOnly = True
@@ -408,6 +408,14 @@ inherited TechnicalRediscountCashierForm: TTechnicalRediscountCashierForm
       Properties.ReadOnly = True
       TabOrder = 11
       Width = 216
+    end
+    object cbCorrectionSUN: TcxCheckBox
+      Left = 328
+      Top = 42
+      Caption = #1050#1086#1088#1088#1077#1082#1094#1080#1103' '#1057#1059#1053' '
+      Properties.ReadOnly = True
+      TabOrder = 12
+      Width = 112
     end
   end
   inherited ActionList: TActionList
@@ -775,6 +783,13 @@ inherited TechnicalRediscountCashierForm: TTechnicalRediscountCashierForm
         Name = 'isAdjustment'
         Value = Null
         Component = cbAdjustment
+        DataType = ftBoolean
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'isCorrectionSUN'
+        Value = Null
+        Component = cbCorrectionSUN
         DataType = ftBoolean
         MultiSelectSeparator = ','
       end>

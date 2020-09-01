@@ -119,17 +119,7 @@ BEGIN
            AND Movement.StatusId = zc_Enum_Status_UnComplete()
            AND MovementLinkObject_Unit.ObjectId = vbUnitId;
       ELSE
-        vbMovementTRId := lpInsertUpdate_Movement_TechnicalRediscount (ioId               := 0
-                                                                     , inInvNumber        := CAST (NEXTVAL ('Movement_TechnicalRediscount_seq') AS TVarChar)
-                                                                     , inOperDate         := CURRENT_DATE
-                                                                     , inUnitId           := vbUnitId
-                                                                     , inComment          := ''
-                                                                     , inisRedCheck       := False
-                                                                     , inisAdjustment     := False
-                                                                     , inUserId           := vbUserId
-                                                                       );
-        -- сохранили <Корректировка основного переучета>
-        PERFORM lpInsertUpdate_MovementBoolean (zc_MovementBoolean_CorrectionSUN(), vbMovementTRId, TRUE);
+        vbMovementTRId := 0;
       END IF;
 
       -- Обнуляем в техническом переучете что ненадо и что в других
@@ -193,20 +183,7 @@ BEGIN
       CREATE TEMP TABLE _tmpOccupancySUN ON COMMIT DROP AS
       SELECT * FROM gpSelect_MovementOccupancySUN (inMovementID:= inMovementID, inSession:= inSession);
         
-
-      -- Добавили в технический переучет
-      PERFORM lpInsertUpdate_MovementItemFloat (zc_MIFloat_MITechnicalRediscountId(), tmpMovementItem.MovementItemId, tmpMovementItem.MITechnicalRediscountId::TFloat)
-            , lpInsertUpdate_MovementItemFloat (zc_MIFloat_MovementItemId(), tmpMovementItem.MITechnicalRediscountId, tmpMovementItem.MovementItemId::TFloat)
-      FROM (SELECT MISend.MovementItemId
-                 , lpInsertUpdate_MovementItem_TechnicalRediscount (
-                           ioId           := COALESCE(MITechnicalRediscount.Id, 0)
-                         , inMovementId   := vbMovementTRId
-                         , inGoodsId      := MISend.GoodsId
-                         , inAmount       := CASE WHEN COALESCE (MISend.CommentTRId, 0) <> 0 AND COALESCE (MISend.AmountDelta, 0) > 0 THEN - MISend.AmountDelta ELSE 0 END
-                         , inCommentTRID  := COALESCE (MISend.CommentTRId, MILinkObject_CommentTR.ObjectId)
-                         , isExplanation  := ''
-                         , isComment      := 'Коррекция СУН'
-                         , inUserId       := vbUserId)                                  AS MITechnicalRediscountId
+      IF EXISTS(SELECT 1
             FROM _tmpOccupancySUN AS MISend
 
                  LEFT JOIN MovementItemFloat AS MIFloat_MITechnicalRediscountId
@@ -220,7 +197,51 @@ BEGIN
                                                   ON MILinkObject_CommentTR.MovementItemId = MITechnicalRediscount.Id
                                                  AND MILinkObject_CommentTR.DescId = zc_MILinkObject_CommentTR()
             WHERE CASE WHEN COALESCE (MISend.CommentTRId, 0) <> 0 AND COALESCE (MISend.AmountDelta, 0) > 0
-                       THEN MISend.AmountDelta ELSE 0 END > COALESCE (MITechnicalRediscount.Amount, 0)) AS tmpMovementItem;
+                       THEN MISend.AmountDelta ELSE 0 END > COALESCE (MITechnicalRediscount.Amount, 0))
+      THEN
+        IF COALESCE(vbMovementTRId, 0) = 0
+        THEN
+          vbMovementTRId := lpInsertUpdate_Movement_TechnicalRediscount (ioId               := 0
+                                                                       , inInvNumber        := CAST (NEXTVAL ('Movement_TechnicalRediscount_seq') AS TVarChar)
+                                                                       , inOperDate         := CURRENT_DATE
+                                                                       , inUnitId           := vbUnitId
+                                                                       , inComment          := ''
+                                                                       , inisRedCheck       := False
+                                                                       , inisAdjustment     := False
+                                                                       , inUserId           := vbUserId
+                                                                         );
+          -- сохранили <Корректировка основного переучета>
+          PERFORM lpInsertUpdate_MovementBoolean (zc_MovementBoolean_CorrectionSUN(), vbMovementTRId, TRUE);
+        END IF;
+
+        -- Добавили в технический переучет
+        PERFORM lpInsertUpdate_MovementItemFloat (zc_MIFloat_MITechnicalRediscountId(), tmpMovementItem.MovementItemId, tmpMovementItem.MITechnicalRediscountId::TFloat)
+              , lpInsertUpdate_MovementItemFloat (zc_MIFloat_MovementItemId(), tmpMovementItem.MITechnicalRediscountId, tmpMovementItem.MovementItemId::TFloat)
+        FROM (SELECT MISend.MovementItemId
+                   , lpInsertUpdate_MovementItem_TechnicalRediscount (
+                             ioId           := COALESCE(MITechnicalRediscount.Id, 0)
+                           , inMovementId   := vbMovementTRId
+                           , inGoodsId      := MISend.GoodsId
+                           , inAmount       := CASE WHEN COALESCE (MISend.CommentTRId, 0) <> 0 AND COALESCE (MISend.AmountDelta, 0) > 0 THEN - MISend.AmountDelta ELSE 0 END
+                           , inCommentTRID  := COALESCE (MISend.CommentTRId, MILinkObject_CommentTR.ObjectId)
+                           , isExplanation  := ''
+                           , isComment      := 'Коррекция СУН'
+                           , inUserId       := vbUserId)                                  AS MITechnicalRediscountId
+              FROM _tmpOccupancySUN AS MISend
+
+                   LEFT JOIN MovementItemFloat AS MIFloat_MITechnicalRediscountId
+                                               ON MIFloat_MITechnicalRediscountId.MovementItemId = MISend.MovementItemId
+                                              AND MIFloat_MITechnicalRediscountId.DescId = zc_MIFloat_MITechnicalRediscountId()
+
+                   LEFT JOIN MovementItem AS MITechnicalRediscount
+                                          ON MITechnicalRediscount.ID = MIFloat_MITechnicalRediscountId.ValueData::Integer
+
+                   LEFT JOIN MovementItemLinkObject AS MILinkObject_CommentTR
+                                                    ON MILinkObject_CommentTR.MovementItemId = MITechnicalRediscount.Id
+                                                   AND MILinkObject_CommentTR.DescId = zc_MILinkObject_CommentTR()
+              WHERE CASE WHEN COALESCE (MISend.CommentTRId, 0) <> 0 AND COALESCE (MISend.AmountDelta, 0) > 0
+                         THEN MISend.AmountDelta ELSE 0 END > COALESCE (MITechnicalRediscount.Amount, 0)) AS tmpMovementItem;
+      END IF;
 
     ELSE
       -- Обнуляем в техническом переучете
@@ -259,8 +280,11 @@ BEGIN
 
 --    raise notice 'Value 05: % %', vbisAddTR, (SELECT Movement.invnumber FROM Movement WHERE Movement.ID = vbMovementTRId);
 
---    RAISE EXCEPTION 'Прошло.';
-
+/*    IF inSession = '3'
+    THEN
+      RAISE EXCEPTION 'Прошло. %', vbMovementTRId;
+    END IF;
+*/
 END;
 $BODY$
   LANGUAGE PLPGSQL VOLATILE;
@@ -275,7 +299,8 @@ ALTER FUNCTION gpSelect_MovementOccupancySUN (Integer, TVarChar) OWNER TO postgr
 
 -- тест
 -- SELECT * FROM Movement where ID = 19363037
--- SELECT * FROM gpSelect_MovementSUN_TechnicalRediscount (inMovementID:= 19668294, inSession:= '3')
+-- 
+--SELECT * FROM gpSelect_MovementSUN_TechnicalRediscount (inMovementID:= 20074057 , inSession:= '3')
 -- select * from gpInsertUpdate_MovementItem_Send(ioId := 361887145 , inMovementId := 19668294 , inGoodsId := 38164 , inAmount := 0 , inPrice := 0 , inPriceUnitFrom := 97.5 , ioPriceUnitTo := 98.4 , inAmountManual := 0 , inAmountStorage := 0 , inReasonDifferencesId := 0 , inCommentTRId := 14883321 ,  inSession := '3');
 
 --select * from gpInsertUpdate_MovementItem_Send(ioId := 361887145 , inMovementId := 19668294 , inGoodsId := 38164 , inAmount := 1 , inPrice := 0 , inPriceUnitFrom := 97.5 , ioPriceUnitTo := 98.4 , inAmountManual := 0 , inAmountStorage := 0 , inReasonDifferencesId := 0 , inCommentTRId := 14883321 ,  inSession := '3');

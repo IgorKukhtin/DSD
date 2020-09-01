@@ -387,6 +387,7 @@ inherited TechnicalRediscountForm: TTechnicalRediscountForm
       Left = 433
       Top = 1
       Caption = #1050#1086#1088#1088#1077#1082#1090#1080#1088#1086#1074#1082#1072' '#1086#1089#1085#1086#1074#1085#1086#1075#1086' '#1087#1077#1088#1077#1091#1095#1077#1090#1072
+      Properties.ReadOnly = False
       TabOrder = 11
       Width = 216
     end
@@ -394,6 +395,7 @@ inherited TechnicalRediscountForm: TTechnicalRediscountForm
       Left = 328
       Top = 42
       Caption = #1050#1086#1088#1088#1077#1082#1094#1080#1103' '#1057#1059#1053' '
+      Properties.ReadOnly = True
       TabOrder = 12
       Width = 112
     end
@@ -757,6 +759,13 @@ inherited TechnicalRediscountForm: TTechnicalRediscountForm
         Name = 'isAdjustment'
         Value = Null
         Component = cbAdjustment
+        DataType = ftBoolean
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'isCorrectionSUN'
+        Value = Null
+        Component = cbCorrectionSUN
         DataType = ftBoolean
         MultiSelectSeparator = ','
       end>

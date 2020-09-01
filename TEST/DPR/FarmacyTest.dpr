@@ -936,7 +936,8 @@ uses
   Layout_Movement in '..\..\FormsFarmacy\Document\Layout_Movement.pas' {Layout_MovementForm: TParentForm},
   LayoutJournalChoice in '..\..\FormsFarmacy\Document\LayoutJournalChoice.pas' {LayoutJournalChoiceForm: TParentForm},
   OverdueChangeCashPUSHSend in '..\..\FormsFarmacy\Cash\OverdueChangeCashPUSHSend.pas' {OverdueChangeCashPUSHSendForm: TParentForm},
-  EmployeeScheduleAddUserDialog in '..\..\FormsFarmacy\Document\EmployeeScheduleAddUserDialog.pas' {EmployeeScheduleAddUserDialogForm: TParentForm};
+  EmployeeScheduleAddUserDialog in '..\..\FormsFarmacy\Document\EmployeeScheduleAddUserDialog.pas' {EmployeeScheduleAddUserDialogForm: TParentForm},
+  MovementItemContainerCount in '..\..\FormsFarmacy\Document\MovementItemContainerCount.pas' {MovementItemContainerCountForm: TParentForm};
 
 {$R *.res}
 {$R DevExpressRus.res}

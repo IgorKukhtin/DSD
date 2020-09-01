@@ -59,40 +59,40 @@ type
 implementation
 uses Forms, SysUtils, Dialogs, Math, Variants, StrUtils, IniUtils, RegularExpressions, Log, ComObj;
 
-
-
 const
 
-  Password = 000000;
+  Password = '12321';
 
 { TCashMINI_FP54 }
 constructor TCashMINI_FP54.Create;
+  var Error, Command : String;
 begin
   inherited Create;
   FAlwaysSold:=false;
   FPrintSumma:=False;
   FReturn:=False;
   FLengNoFiscalText := 37;
-  FPrinter := CreateOleObject('ecrmini.t400');
-  if FPrinter.FPInitialize = 0 then
+  Error := '';
+  try
+    FPrinter := CreateOleObject('ecrmini.t400');
+  except
+    on E: Exception do  Error := E.Message
+  end;
+
+  if Error <> '' then
   begin
-    if not FPrinter.FPOpen(StrToInt(iniPortNumber), StrToInt(iniPortSpeed), 3, 3) then
-    begin
-      ShowError;
-      Raise Exception.Create('');
-    end;
-  end else
-  begin
-    ShowMessage(SysErrorMessage(GetLastError));
+    ShowMessage('Ошибка. Возможно не установлен драйвер фискального принтера ecrT400.dll ' + Error);
     Raise Exception.Create('');
   end;
 
-//  FModem := CoFiscPrn.CreateModem;
-//  if FModem.ModemInitialize('COM' + iniPortNumber) <> 0 then
-//  begin
-//    ShowMessage(SysErrorMessage(GetLastError));
-//    Raise Exception.Create('');
-//  end;
+  Command := 'open_port;' + iniPortNumber + ';' + iniPortSpeed + ';';
+  if not FPrinter.T400me(Command) then
+  begin
+    ShowMessage(Command);
+    ShowError;
+    Raise Exception.Create('');
+  end;
+  FPrinter.T400me('close_port;')
 end;
 
 
@@ -100,7 +100,7 @@ function TCashMINI_FP54.ShowError: boolean;
   var S : string;
 begin
   Result := False;
-  S := FPrinter.prGetErrorText;
+  S := FPrinter.Get_last_error;
   ShowMessage(S);
 end;
 
