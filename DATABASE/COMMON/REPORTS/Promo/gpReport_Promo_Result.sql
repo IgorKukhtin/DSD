@@ -103,7 +103,7 @@ BEGIN
                                                 ON ObjectLink_Juridical_Retail.ObjectId = COALESCE (ObjectLink_Partner_Juridical.ChildObjectId, MI_PromoPartner.ObjectId)
                                                AND ObjectLink_Juridical_Retail.DescId   = zc_ObjectLink_Juridical_Retail()
                                               AND (ObjectLink_Juridical_Retail.ChildObjectId = inRetailId OR inRetailId = 0)
-                    
+
                     WHERE (Movement_Promo.Id = inMovementId OR inMovementId = 0)
                       AND (Movement_Promo.StartSale BETWEEN inStartDate AND inEndDate
                             OR inStartDate BETWEEN Movement_Promo.StartSale AND Movement_Promo.EndSale
@@ -116,6 +116,13 @@ BEGIN
                           OR (inIsPromo = FALSE AND inIsTender = FALSE)
                           )
                     )
+                    
+          -- Для Прайсластов определяем НДС
+        , tmpVAT AS (SELECT tmp.PriceListId
+                          , (SELECT tt.VATPercent FROM gpGet_Object_PriceList(tmp.PriceListId, inSession) AS tt) AS VATPercent
+                     FROM (SELECT DISTINCT tmpMovement.PriceListId FROM tmpMovement) AS tmp
+                     )
+
   , tmpMI AS (SELECT 
                      MI_PromoGoods.MovementId          --ИД документа <Акция>
                    , MI_PromoGoods.GoodsId             --Ид объекта  <товар>
@@ -156,6 +163,7 @@ BEGIN
                    , MIFloat_PriceIn1.ValueData                                                                 :: TFloat  AS PriceIn1               --себестоимость факт,  за кг
                    , ObjectString_Goods_GoodsGroupFull.ValueData                                                           AS GoodsGroupNameFull
               FROM tmpMovement AS Movement_Promo
+
                    LEFT JOIN MovementItem_PromoGoods_View AS MI_PromoGoods
                                                           ON MI_PromoGoods.MovementId = Movement_Promo.Id
                                                          AND MI_PromoGoods.IsErASed = FALSE
@@ -335,7 +343,7 @@ BEGIN
           , MI_PromoGoods.MainDiscount        :: TFloat AS MainDiscount
                  
           , MI_PromoGoods.PriceWithVAT        :: TFloat
-          , MI_PromoGoods.Price               :: TFloat
+          , ROUND (MI_PromoGoods.Price * ((100 + tmpVAT.VATPercent)/100), 2) :: TFloat    AS Price       --- , MI_PromoGoods.Price               :: TFloat
           , Movement_Promo.CostPromo          :: TFloat
           , MI_PromoGoods.PriceSale           :: TFloat
 
@@ -356,6 +364,7 @@ BEGIN
           , ''                                :: TVarChar  AS Comment                -- Примечание
           , ''                                :: TVarChar  AS CommentMain            -- Примечание
         FROM tmpMovement AS Movement_Promo
+             LEFT JOIN tmpVAT ON tmpVAT.PriceListId = Movement_Promo.PriceListId
              LEFT JOIN tmpMI AS MI_PromoGoods ON MI_PromoGoods.MovementId = Movement_Promo.Id
         ;
 END;
