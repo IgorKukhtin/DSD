@@ -29,6 +29,9 @@ BEGIN
                                                     , inSession             := inSession
                                                      );
 
+     --
+     -- RAISE EXCEPTION 'Ошибка.OK';
+
 END;
 $BODY$
   LANGUAGE PLPGSQL VOLATILE;

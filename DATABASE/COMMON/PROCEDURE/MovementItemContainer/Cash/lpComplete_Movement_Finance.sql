@@ -594,6 +594,8 @@ BEGIN
                                                                             , inObjectCostId      := NULL
                                                                             , inDescId_1          := zc_ContainerLinkObject_PartionMovement()
                                                                             , inObjectId_1        := _tmpItem.PartionMovementId
+                                                                            , inDescId_2          := zc_ContainerLinkObject_InfoMoney()
+                                                                            , inObjectId_2        := _tmpItem.InfoMoneyId
                                                                              )
 
                                             WHEN _tmpItem.AccountId IN (zc_Enum_Account_110201()  -- Транзит + деньги в пути
