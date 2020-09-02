@@ -9,7 +9,7 @@ type
 
 implementation
 
-uses Cash_FP3530T, Cash_FP3530T_NEW, Cash_FP320, Cash_IKC_E810T, Cash_IKC_C651T, Cash_Emulation, {CashApp,} SysUtils;
+uses Cash_FP3530T, Cash_FP3530T_NEW, Cash_FP320, Cash_IKC_E810T, Cash_IKC_C651T, Cash_MINI_FP54, Cash_Emulation, SysUtils;
 { TCashFactory }
 class function TCashFactory.GetCash(CashType: string): ICash;
 begin
@@ -23,6 +23,8 @@ begin
      result := TCashIKC_E810T.Create;
   if CashType = 'IKC-C651T' then
      result := TCashIKC_C651T.Create;
+  if CashType = 'MINI_FP54' then
+     result := TCashMINI_FP54.Create;
   if CashType = 'Emulation' then
      result := TCashEmulation.Create;
   if not Assigned(Result) then

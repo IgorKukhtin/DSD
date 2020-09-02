@@ -43,6 +43,7 @@ type
     colComment: TcxGridDBColumn;
     colisRedCheck: TcxGridDBColumn;
     colisAdjustment: TcxGridDBColumn;
+    isCorrectionSUN: TcxGridDBColumn;
   private
     { Private declarations }
   public

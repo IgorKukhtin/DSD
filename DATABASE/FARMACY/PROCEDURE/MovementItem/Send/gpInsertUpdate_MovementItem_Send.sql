@@ -40,8 +40,10 @@ $BODY$
    DECLARE vbInsertDate    TDateTime;
    DECLARE vbTotalCount    TFloat;
    DECLARE vbTotalCountOld TFloat;
-   DECLARE vbCommentSendId  Integer;
-   DECLARE vbStatusId  Integer;
+   DECLARE vbCommentSendId Integer;
+   DECLARE vbStatusId      Integer;
+   DECLARE vbAmountPromo   TFloat;
+   DECLARE vbRemains       TFloat;
 BEGIN
     -- проверка прав пользователя на вызов процедуры
     --vbUserId := lpCheckRight (inSession, zc_Enum_Process_InsertUpdate_MI_Send());
@@ -57,15 +59,15 @@ BEGIN
          , DATE_TRUNC ('DAY', MovementDate_Insert.ValueData)
          , COALESCE (MovementFloat_TotalCount.ValueData, 0)
     INTO vbStatusId, vbUnitId, vbIsSUN, vbIsSUN_v2, vbIsSUN_v3, vbIsDefSUN, vbInsertDate, vbTotalCountOld
-    FROM Movement 
+    FROM Movement
           LEFT JOIN MovementLinkObject AS MovementLinkObject_To
                                        ON MovementLinkObject_To.MovementId = Movement.Id
                                       AND MovementLinkObject_To.DescId = zc_MovementLinkObject_To()
-    
+
           LEFT JOIN MovementBoolean AS MovementBoolean_SUN
                                     ON MovementBoolean_SUN.MovementId = Movement.Id
                                    AND MovementBoolean_SUN.DescId = zc_MovementBoolean_SUN()
-                                   
+
           LEFT JOIN MovementBoolean AS MovementBoolean_SUN_v2
                                     ON MovementBoolean_SUN_v2.MovementId = Movement.Id
                                    AND MovementBoolean_SUN_v2.DescId = zc_MovementBoolean_SUN_v2()
@@ -83,11 +85,11 @@ BEGIN
                                   ON MovementFloat_TotalCount.MovementId = Movement.Id
                                  AND MovementFloat_TotalCount.DescId = zc_MovementFloat_TotalCount()
     WHERE Movement.Id = inMovementId;
-    
+
     IF COALESCE (ioId, 0) = 0 AND (vbIsSUN = TRUE OR vbIsSUN_v2 = TRUE OR vbIsSUN_v3 = TRUE) AND
       NOT EXISTS (SELECT 1 FROM ObjectLink_UserRole_View  WHERE UserId = vbUserId AND RoleId = zc_Enum_Role_Admin())
     THEN
-      RAISE EXCEPTION 'Ошибка. В перемещения по СУН добавление товара запрещено.';    
+      RAISE EXCEPTION 'Ошибка. В перемещения по СУН добавление товара запрещено.';
     END IF;
 
     -- Получаем предыдущее значение количеств
@@ -111,7 +113,7 @@ BEGIN
 
     IF vbisSUN = TRUE AND COALESCE (ioId, 0) <> 0
        AND COALESCE (vbCommentSendId, 0) <> COALESCE (inCommentTRID, 0)
-       AND COALESCE (vbStatusId, 0) = zc_Enum_Status_Complete()
+       AND COALESCE (vbStatusId, 0) <> zc_Enum_Status_UnComplete()
        AND COALESCE (vbAmount, 0) = COALESCE (inAmount, 0)
        AND COALESCE (vbAmountManual, 0) = COALESCE (vbAmountManual, 0)
        AND COALESCE (vbAmountStorage, 0) = COALESCE (inAmountStorage, 0)
@@ -119,22 +121,21 @@ BEGIN
     THEN
       -- Сохранили <Комментарий>
       PERFORM lpInsertUpdate_MovementItemLinkObject (zc_MILinkObject_CommentSend(), ioId, inCommentTRID);
-      
-      IF COALESCE ((SELECT ChildObjectId FROM ObjectLink  
+
+      IF COALESCE ((SELECT ChildObjectId FROM ObjectLink
                     WHERE ObjectId = vbCommentSendId
                       AND DescId = zc_ObjectLink_CommentSend_CommentTR()), 0) <>
-         COALESCE ((SELECT ChildObjectId FROM ObjectLink  
+         COALESCE ((SELECT ChildObjectId FROM ObjectLink
                     WHERE ObjectId = inCommentTRID
-                      AND DescId = zc_ObjectLink_CommentSend_CommentTR()), 0)                     
+                      AND DescId = zc_ObjectLink_CommentSend_CommentTR()), 0) AND
+         (COALESCE (vbStatusId, 0) = zc_Enum_Status_Complete() OR COALESCE (vbTotalCountOld, 0) = 0)
       THEN
         PERFORM  gpSelect_MovementSUN_TechnicalRediscount(inMovementId, inSession);
       END IF;
       raise notice 'Value 04';
       RETURN;
     END IF;
-    
-    raise notice 'Value 05:  % %  %', COALESCE (vbCommentSendId, 0), COALESCE (inCommentTRID, 0), (SELECT 1 FROM ObjectLink_UserRole_View  WHERE UserId = vbUserId AND RoleId = zc_Enum_Role_Admin());
-    
+
     -- Для роли "Безнал" отключаем проверки
     IF NOT EXISTS(SELECT * FROM gpSelect_Object_RoleUser (inSession) AS Object_RoleUser
               WHERE Object_RoleUser.ID = vbUserId AND Object_RoleUser.RoleId = zc_Enum_Role_Cashless())
@@ -153,22 +154,22 @@ BEGIN
         THEN
           RAISE EXCEPTION 'Ошибка. Не найдено подразделение сотрудника.';
         END IF;
-        
+
         IF vbisDefSUN = TRUE
         THEN
           RAISE EXCEPTION 'Ошибка. Коллеги, вы не можете редактировать данное перемещение! Проверьте фильтр на Перемещение по СУН.';
         END IF;
-        
+
         IF vbIsSUN = TRUE AND EXISTS(SELECT 1
                                      FROM Object AS Object_CashSettings
                                           LEFT JOIN ObjectDate AS ObjectDate_CashSettings_DateBanSUN
-                                                               ON ObjectDate_CashSettings_DateBanSUN.ObjectId = Object_CashSettings.Id 
+                                                               ON ObjectDate_CashSettings_DateBanSUN.ObjectId = Object_CashSettings.Id
                                                               AND ObjectDate_CashSettings_DateBanSUN.DescId = zc_ObjectDate_CashSettings_DateBanSUN()
                                      WHERE Object_CashSettings.DescId = zc_Object_CashSettings()
                                        AND ObjectDate_CashSettings_DateBanSUN.ValueData = vbInsertDate)
         THEN
           RAISE EXCEPTION 'Ошибка. Работа СУН пока невозможна, ожидайте сообщение IT.';
-        END IF;                                
+        END IF;
 
         --определяем подразделение отправителя
         SELECT MovementLinkObject_From.ObjectId AS vbFromId
@@ -181,7 +182,7 @@ BEGIN
         THEN
           RAISE EXCEPTION 'Ошибка. Вам разрешено работать только с подразделением <%>.', (SELECT ValueData FROM Object WHERE ID = vbUserUnitId);
         END IF;
-        
+
         IF vbUnitId <> 11299914 /*OR (DATE_TRUNC ('MONTH', CURRENT_DATE) + INTERVAL '1 MONTH' - ('' ||
             CASE WHEN date_part('isodow', DATE_TRUNC ('MONTH', CURRENT_DATE) + INTERVAL '1 MONTH') = 1
                  THEN 6 - date_part('isodow', DATE_TRUNC ('MONTH', CURRENT_DATE) + INTERVAL '1 MONTH')
@@ -209,7 +210,7 @@ BEGIN
             RAISE EXCEPTION 'Ошибка. Увеличивать количество в перемещениях по СУН вам запрещено.';
           END IF;
         END IF;
-        
+
 /*        IF EXISTS(SELECT 1 FROM MovementBoolean
                   WHERE MovementBoolean.MovementId = inMovementId
                     AND MovementBoolean.DescId = zc_MovementBoolean_isAuto()
@@ -233,7 +234,7 @@ BEGIN
                                          , MovementItem.ObjectId
                                          , Object_Goods_Main.Name
                                          , ROW_NUMBER() OVER (PARTITION BY MovementItemProtocol.MovementItemId ORDER BY MovementItemProtocol.Id) AS Ord
-                                    FROM MovementItem 
+                                    FROM MovementItem
 
                                          INNER JOIN Object_Goods_Retail ON Object_Goods_Retail.ID = MovementItem.objectid
                                          INNER JOIN Object_Goods_Main ON Object_Goods_Main.ID = Object_Goods_Retail.GoodsMainId
@@ -255,17 +256,91 @@ BEGIN
                                                                       AND MILinkObject_CommentSend.DescId = zc_MILinkObject_CommentSend()
                                  WHERE tmpProtocolAll.Ord = 1
                                    AND COALESCE (MILinkObject_CommentSend.ObjectId, 0) = 0)
-                                       
+
            SELECT tmpProtocol.AmountAuto
            INTO vbAmountAuto
            FROM tmpProtocol;
-                 
+
            IF COALESCE(vbAmountAuto, 0) > COALESCE(inAmount, 0)
            THEN
-              RAISE EXCEPTION 'Ошибка. Количество % меньше сформировано % укажите причину уменьшения количества!', inAmount, vbAmountAuto;               
+              RAISE EXCEPTION 'Ошибка. Количество % меньше сформировано % укажите причину уменьшения количества!', inAmount, vbAmountAuto;
            END IF;
         END IF;
       END IF;
+
+      IF COALESCE(inCommentTRID, 0) <> 0 AND COALESCE(inCommentTRID, 0) <> COALESCE(vbCommentSendId, 0)
+         AND EXISTS(SELECT 1 FROM ObjectBoolean
+                    WHERE ObjectBoolean.ObjectId = inCommentTRID
+                      AND ObjectBoolean.DescId = zc_ObjectBoolean_CommentSun_Promo()
+                      AND ObjectBoolean.ValueData = TRUE)
+      THEN
+          vbAmountPromo := (SELECT Sum(MI_Goods.Amount) AS Amount
+                            FROM Movement
+
+                                 INNER JOIN MovementLinkObject AS MovementLinkObject_UnitCategory
+                                                               ON MovementLinkObject_UnitCategory.MovementId = Movement.Id
+                                                              AND MovementLinkObject_UnitCategory.DescId = zc_MovementLinkObject_UnitCategory()
+                                 INNER JOIN ObjectLink AS OL_UnitCategory
+                                                       ON OL_UnitCategory.DescId = zc_ObjectLink_Unit_Category()
+                                                      AND OL_UnitCategory.Objectid = vbFromId
+                                                      AND OL_UnitCategory.ChildObjectId = MovementLinkObject_UnitCategory.ObjectId
+
+                                 INNER JOIN MovementItem AS MI_Goods ON MI_Goods.MovementId = Movement.Id
+                                                                    AND MI_Goods.DescId = zc_MI_Master()
+                                                                    AND MI_Goods.isErased = FALSE
+                                                                    AND MI_Goods.ObjectId = inGoodsId
+
+                            WHERE Movement.StatusId = zc_Enum_Status_Complete()
+                              AND Movement.DescId = zc_Movement_PromoUnit()
+                              AND Movement.OperDate = DATE_TRUNC ('MONTH', CURRENT_DATE));
+
+          vbRemains := (SELECT Sum(Container.Amount) AS Amount
+                            FROM Container
+                            WHERE Container.DescId = zc_Container_Count()
+                              AND Container.ObjectId = inGoodsId
+                              AND Container.WhereObjectId = vbFromId
+                              AND Container.Amount <> 0);
+
+           WITH tmpProtocolAll AS (SELECT  MovementItem.Id
+                                         , SUBSTRING(MovementItemProtocol.ProtocolData, POSITION('Значение' IN MovementItemProtocol.ProtocolData) + 24, 50) AS ProtocolData
+                                         , MovementItem.Amount
+                                         , MovementItem.ObjectId
+                                         , Object_Goods_Main.Name
+                                         , ROW_NUMBER() OVER (PARTITION BY MovementItemProtocol.MovementItemId ORDER BY MovementItemProtocol.Id) AS Ord
+                                    FROM MovementItem
+
+                                         INNER JOIN Object_Goods_Retail ON Object_Goods_Retail.ID = MovementItem.objectid
+                                         INNER JOIN Object_Goods_Main ON Object_Goods_Main.ID = Object_Goods_Retail.GoodsMainId
+                                                                     AND Object_Goods_Main.isInvisibleSUN = False
+
+                                         INNER JOIN MovementItemProtocol ON MovementItemProtocol.MovementItemId = MovementItem.Id
+                                                                        AND MovementItemProtocol.ProtocolData ILIKE '%Значение%'
+                                                                        AND MovementItemProtocol.UserId = zfCalc_UserAdmin()::Integer
+                                    WHERE  MovementItem.Id = ioId
+                                    )
+               , tmpProtocol AS (SELECT tmpProtocolAll.Id
+                                      , tmpProtocolAll.ObjectId
+                                      , SUBSTRING(tmpProtocolAll.ProtocolData, 1, POSITION('"' IN tmpProtocolAll.ProtocolData) - 1)::TFloat AS AmountAuto
+                                      , tmpProtocolAll.Name
+                                      , tmpProtocolAll.Amount
+                                 FROM tmpProtocolAll
+                                      LEFT JOIN MovementItemLinkObject AS MILinkObject_CommentSend
+                                                                       ON MILinkObject_CommentSend.MovementItemId = tmpProtocolAll.Id
+                                                                      AND MILinkObject_CommentSend.DescId = zc_MILinkObject_CommentSend()
+                                 WHERE tmpProtocolAll.Ord = 1
+                                   AND COALESCE (MILinkObject_CommentSend.ObjectId, 0) = 0)
+
+           SELECT tmpProtocol.AmountAuto
+           INTO vbAmountAuto
+           FROM tmpProtocol;
+
+        IF COALESCE (vbAmountPromo, 0) < (COALESCE (vbRemains, 0) - COALESCE (vbAmountAuto, 0))
+        THEN
+          RAISE EXCEPTION 'Ошибка. Остаток с учетом зануления <%> больше чем в плане по точке <%> использование коментария <%> запрещено.',
+                           COALESCE (vbRemains, 0) - COALESCE (vbAmountAuto, 0), COALESCE (vbAmountPromo, 0), (SELECT Object.ValueData FROM Object WHERE Object.ID = inCommentTRID);
+        END IF;
+      END IF;
+
 
       -- Для менеджеров
       IF EXISTS(SELECT * FROM gpSelect_Object_RoleUser (inSession) AS Object_RoleUser
@@ -279,7 +354,7 @@ BEGIN
           RAISE EXCEPTION 'Ошибка. Изменять <Факт кол-во точки-получателя> и <Факт кол-во точки-отправителя> вам запрещено.';
         END IF;
       END IF;
-      
+
     END IF;
 
     --если цена получателя = 0 заменяем ее на цену отвравителя и записываем в прайс
@@ -321,13 +396,13 @@ BEGIN
                                              );
 
     -- Добавили в ТП
-    IF vbIsSUN = TRUE 
+    IF vbIsSUN = TRUE
     THEN
 
-      --определяем 
+      --определяем
       SELECT COALESCE (MovementFloat_TotalCount.ValueData, 0)
       INTO vbTotalCount
-      FROM Movement 
+      FROM Movement
             LEFT JOIN MovementFloat AS MovementFloat_TotalCount
                                     ON MovementFloat_TotalCount.MovementId = Movement.Id
                                    AND MovementFloat_TotalCount.DescId = zc_MovementFloat_TotalCount()
@@ -359,4 +434,3 @@ $BODY$
 
 -- тест
 -- SELECT * FROM gpInsertUpdate_MovementItem_Send (ioId:= 0, inMovementId:= 10, inGoodsId:= 1, inAmount:= 0, inHeadCount:= 0, inPartionGoods:= '', inGoodsKindId:= 0, inSession:= '2')
-

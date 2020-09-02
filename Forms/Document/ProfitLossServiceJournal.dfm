@@ -50,6 +50,11 @@ inherited ProfitLossServiceJournalForm: TProfitLossServiceJournalForm
               Format = ',0.####'
               Kind = skSum
               Column = Summ
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = Summ_51201
             end>
           DataController.Summary.FooterSummaryItems = <
             item
@@ -71,6 +76,11 @@ inherited ProfitLossServiceJournalForm: TProfitLossServiceJournalForm
               Format = ',0.####'
               Kind = skSum
               Column = Summ
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = Summ_51201
             end>
           OptionsData.CancelOnExit = True
           OptionsData.Deleting = False
@@ -138,6 +148,17 @@ inherited ProfitLossServiceJournalForm: TProfitLossServiceJournalForm
             Properties.DisplayFormat = ',0.####;-,0.####; ;'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
+            Width = 70
+          end
+          object Summ_51201: TcxGridDBColumn
+            Caption = #1057#1091#1084#1084#1072' '#1088#1072#1089#1087#1088'. '#1074' '#1089'/'#1089
+            DataBinding.FieldName = 'Summ_51201'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 4
+            Properties.DisplayFormat = ',0.####;-,0.####; ;'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            HeaderHint = #1057#1091#1084#1084#1072' '#1076#1083#1103' '#1088#1072#1089#1087#1088#1077#1076#1077#1083#1077#1085#1080#1103' '#1074' '#1089'/'#1089
             Width = 70
           end
           object JuridicalCode: TcxGridDBColumn
@@ -619,6 +640,35 @@ inherited ProfitLossServiceJournalForm: TProfitLossServiceJournalForm
       ShortCut = 116
       RefreshOnTabSetChanges = False
     end
+    object actOpenForm_51201: TdsdOpenForm
+      Category = 'DSDLib'
+      MoveParams = <>
+      Caption = #1056#1072#1079#1074#1077#1088#1085#1091#1090#1100' '#1089#1091#1084#1084#1091' '#1088#1072#1089#1087#1088#1077#1076#1077#1083#1077#1085#1080#1103' '#1074' '#1089'/'#1089
+      ImageIndex = 26
+      FormName = 'TProfitLossService_51201JournalForm'
+      FormNameParam.Value = 'TProfitLossService_51201JournalForm'
+      FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
+      GuiParams = <
+        item
+          Name = 'Id'
+          Value = Null
+          Component = MasterCDS
+          ComponentItem = 'Id'
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'InvNumber_full'
+          Value = Null
+          Component = MasterCDS
+          ComponentItem = 'InvNumber_full'
+          DataType = ftString
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end>
+      isShowModal = False
+    end
   end
   inherited MasterDS: TDataSource
     Left = 56
@@ -744,6 +794,14 @@ inherited ProfitLossServiceJournalForm: TProfitLossServiceJournalForm
         end
         item
           Visible = True
+          ItemName = 'bbOpenForm_51201'
+        end
+        item
+          Visible = True
+          ItemName = 'dxBarStatic'
+        end
+        item
+          Visible = True
           ItemName = 'bbMovementItemContainer'
         end
         item
@@ -769,6 +827,10 @@ inherited ProfitLossServiceJournalForm: TProfitLossServiceJournalForm
     end
     object bbReCompleteAll: TdxBarButton
       Action = actReCompleteAll
+      Category = 0
+    end
+    object bbOpenForm_51201: TdxBarButton
+      Action = actOpenForm_51201
       Category = 0
     end
   end

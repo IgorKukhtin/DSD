@@ -326,16 +326,16 @@ inherited EmployeeScheduleEditUserForm: TEmployeeScheduleEditUserForm
       MoveParams = <>
       ActionList = <
         item
-          Action = actUserNickDialig
+          Action = actAddUserDialog
         end
         item
-          Action = actspInsertUser
+          Action = actAddPayrollType
         end
         item
           Action = actRefresh
         end>
-      Caption = #1044#1086#1073#1072#1074#1080#1090#1100' '#1089#1086#1090#1088#1091#1076#1085#1080#1082#1072
-      Hint = #1044#1086#1073#1072#1074#1080#1090#1100' '#1089#1086#1090#1088#1091#1076#1085#1080#1082#1072
+      Caption = #1044#1086#1073#1072#1074#1080#1090#1100' '#1090#1080#1087' '#1076#1085#1103' '#1089#1086#1090#1088#1091#1076#1085#1080#1082#1091
+      Hint = #1044#1086#1073#1072#1074#1080#1090#1100' '#1090#1080#1087' '#1076#1085#1103' '#1089#1086#1090#1088#1091#1076#1085#1080#1082#1091
       ImageIndex = 54
     end
     object actUserNickDialig: TOpenChoiceForm
@@ -362,16 +362,16 @@ inherited EmployeeScheduleEditUserForm: TEmployeeScheduleEditUserForm
         end>
       isShowModal = True
     end
-    object actspInsertUser: TdsdExecStoredProc
+    object actAddPayrollType: TdsdExecStoredProc
       Category = 'DSDLib'
       MoveParams = <>
       PostDataSetBeforeExecute = False
-      StoredProc = spInsertUser
+      StoredProc = spAddPayrollType
       StoredProcList = <
         item
-          StoredProc = spInsertUser
+          StoredProc = spAddPayrollType
         end>
-      Caption = 'actspInsertUser'
+      Caption = 'actAddPayrollType'
     end
     object actPreviousMonth: TMultiAction
       Category = 'DSDLib'
@@ -581,6 +581,55 @@ inherited EmployeeScheduleEditUserForm: TEmployeeScheduleEditUserForm
         end>
       Caption = 'actExecPayrollType'
     end
+    object actAddUserDialog: TExecuteDialog
+      Category = 'DSDLib'
+      MoveParams = <>
+      Caption = 'actAddUserDialog'
+      FormName = 'TEmployeeScheduleAddUserDialogForm'
+      FormNameParam.Value = 'TEmployeeScheduleAddUserDialogForm'
+      FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
+      GuiParams = <
+        item
+          Name = 'UserName'
+          Value = Null
+          Component = edUserName
+          DataType = ftString
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'UnitID'
+          Value = Null
+          Component = FormParams
+          ComponentItem = 'UnitID'
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'PayrollTypeId'
+          Value = Null
+          Component = FormParams
+          ComponentItem = 'PayrollTypeID'
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'DateStart'
+          Value = 'NULL'
+          Component = FormParams
+          ComponentItem = 'DateStart'
+          DataType = ftDateTime
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'DateEnd'
+          Value = 'NULL'
+          Component = FormParams
+          ComponentItem = 'DateEnd'
+          DataType = ftDateTime
+          MultiSelectSeparator = ','
+        end>
+      isShowModal = True
+      OpenBeforeShow = True
+    end
   end
   inherited MasterDS: TDataSource
     Top = 224
@@ -653,6 +702,10 @@ inherited EmployeeScheduleEditUserForm: TEmployeeScheduleEditUserForm
         item
           Visible = True
           ItemName = 'dxBarStatic'
+        end
+        item
+          Visible = True
+          ItemName = 'dxBarButton9'
         end
         item
           Visible = True
@@ -781,6 +834,10 @@ inherited EmployeeScheduleEditUserForm: TEmployeeScheduleEditUserForm
       Action = actSetPayrollType
       Category = 0
     end
+    object dxBarButton9: TdxBarButton
+      Action = actAddUser
+      Category = 0
+    end
   end
   inherited DBViewAddOn: TdsdDBViewAddOn
     ColorRuleList = <
@@ -841,6 +898,18 @@ inherited EmployeeScheduleEditUserForm: TEmployeeScheduleEditUserForm
       item
         Name = 'PayrollTypeID'
         Value = Null
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'DateStart'
+        Value = 'NULL'
+        DataType = ftDateTime
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'DateEnd'
+        Value = 'NULL'
+        DataType = ftDateTime
         MultiSelectSeparator = ','
       end>
     Left = 40
@@ -994,9 +1063,41 @@ inherited EmployeeScheduleEditUserForm: TEmployeeScheduleEditUserForm
     Top = 312
   end
   inherited spErasedMIMaster: TdsdStoredProc
+    Params = <
+      item
+        Name = 'inMovementItemId'
+        Component = MasterCDS
+        ComponentItem = 'Id'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'outIsErased'
+        Value = False
+        Component = MasterCDS
+        ComponentItem = 'isErased'
+        DataType = ftBoolean
+        MultiSelectSeparator = ','
+      end>
     Left = 534
   end
   inherited spUnErasedMIMaster: TdsdStoredProc
+    Params = <
+      item
+        Name = 'inMovementItemId'
+        Component = MasterCDS
+        ComponentItem = 'Id'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'outIsErased'
+        Value = False
+        Component = MasterCDS
+        ComponentItem = 'isErased'
+        DataType = ftBoolean
+        MultiSelectSeparator = ','
+      end>
     Left = 526
     Top = 280
   end
@@ -1083,13 +1184,21 @@ inherited EmployeeScheduleEditUserForm: TEmployeeScheduleEditUserForm
     Left = 668
     Top = 228
   end
-  object spInsertUser: TdsdStoredProc
-    StoredProcName = 'gpInsert_MovementItem_EmployeeScheduleEditUser_User'
+  object spAddPayrollType: TdsdStoredProc
+    StoredProcName = 'gpInsert_MovementItem_EmployeeScheduleAddUser_PayrollType'
     DataSets = <>
     OutputType = otResult
     Params = <
       item
         Name = 'inMovementId'
+        Value = Null
+        Component = FormParams
+        ComponentItem = 'MovementID'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inParentId'
         Value = Null
         Component = FormParams
         ComponentItem = 'Id'
@@ -1101,6 +1210,40 @@ inherited EmployeeScheduleEditUserForm: TEmployeeScheduleEditUserForm
         Value = Null
         Component = FormParams
         ComponentItem = 'UserID'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inUnitID'
+        Value = Null
+        Component = FormParams
+        ComponentItem = 'UnitID'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inPayrollTypeID'
+        Value = Null
+        Component = FormParams
+        ComponentItem = 'PayrollTypeID'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inDateStart'
+        Value = 'NULL'
+        Component = FormParams
+        ComponentItem = 'DateStart'
+        DataType = ftDateTime
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inDateEnd'
+        Value = 'NULL'
+        Component = FormParams
+        ComponentItem = 'DateEnd'
+        DataType = ftDateTime
         ParamType = ptInput
         MultiSelectSeparator = ','
       end>

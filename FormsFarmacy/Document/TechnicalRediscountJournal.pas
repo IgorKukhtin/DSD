@@ -55,6 +55,7 @@ type
     spInsertTechnicalRediscount: TdsdStoredProc;
     dxBarButton2: TdxBarButton;
     colisAdjustment: TcxGridDBColumn;
+    isCorrectionSUN: TcxGridDBColumn;
   private
     { Private declarations }
   public

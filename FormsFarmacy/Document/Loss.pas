@@ -69,6 +69,8 @@ type
     actInsertMaskMIMaster: TdsdExecStoredProc;
     dxBarButton3: TdxBarButton;
     bbUpdateSummaFund: TdxBarButton;
+    actMovementItemContainerCount: TdsdOpenForm;
+    dxBarButton4: TdxBarButton;
   private
     { Private declarations }
   public

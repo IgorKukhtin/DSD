@@ -124,7 +124,9 @@ uses
   GetSystemInfo in '..\SOURCE\GetSystemInfo.pas',
   ListSelection in '..\FormsFarmacy\Cash\ListSelection.pas' {ListSelectionForm},
   CashCloseReturnDialog in '..\FormsFarmacy\Cash\CashCloseReturnDialog.pas' {CashCloseReturnDialogForm: TParentForm},
-  Cash_Emulation in '..\FormsFarmacy\Cash\Cash_Emulation.pas';
+  Cash_Emulation in '..\FormsFarmacy\Cash\Cash_Emulation.pas',
+  Cash_MINI_FP54 in '..\FormsFarmacy\Cash\Cash_MINI_FP54.pas',
+  ecrmini_TLB in '..\FormsFarmacy\Cash\ecrmini_TLB.pas';
 
 {$R *.res}
 

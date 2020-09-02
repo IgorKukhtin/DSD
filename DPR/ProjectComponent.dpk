@@ -77,7 +77,6 @@ contains
   UtilConst in '..\SOURCE\UtilConst.pas',
   CommonData in '..\SOURCE\CommonData.pas',
   Authentication in '..\SOURCE\Authentication.pas',
-  dsdAction in '..\SOURCE\COMPONENT\dsdAction.pas',
   dsdExportToXLSAction in '..\SOURCE\COMPONENT\dsdExportToXLSAction.pas',
   UtilConvert in '..\SOURCE\UtilConvert.pas',
   ParentForm in '..\SOURCE\ParentForm.pas' {ParentForm},
@@ -139,6 +138,7 @@ contains
   PUSHMessage in '..\SOURCE\COMPONENT\PUSHMessage.pas' {PUSHMessageForm},
   DesadvFozzXML in '..\SOURCE\EDI\DesadvFozzXML.pas',
   IftminFozzXML in '..\SOURCE\EDI\IftminFozzXML.pas',
-  OrderSpFozzXML in '..\SOURCE\EDI\OrderSpFozzXML.pas';
+  OrderSpFozzXML in '..\SOURCE\EDI\OrderSpFozzXML.pas',
+  dsdAction in '..\SOURCE\COMPONENT\dsdAction.pas';
 
 end.

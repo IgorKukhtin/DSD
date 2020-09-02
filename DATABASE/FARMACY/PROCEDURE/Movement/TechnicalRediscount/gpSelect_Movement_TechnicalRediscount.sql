@@ -11,7 +11,7 @@ CREATE OR REPLACE FUNCTION gpSelect_Movement_TechnicalRediscount(
 RETURNS TABLE (Id Integer, InvNumber TVarChar, OperDate TDateTime, StatusCode Integer, StatusName TVarChar
              , UnitId Integer, UnitName TVarChar
              , TotalDiff TFloat, TotalDiffSumm TFloat
-             , Comment TVarChar, isRedCheck Boolean, isAdjustment Boolean
+             , Comment TVarChar, isRedCheck Boolean, isAdjustment Boolean, isCorrectionSUN Boolean
              )
 AS
 $BODY$
@@ -61,6 +61,7 @@ BEGIN
            , COALESCE (MovementString_Comment.ValueData,'')     :: TVarChar AS Comment
            , COALESCE (MovementBoolean_RedCheck.ValueData, False) AS isRedCheck
            , COALESCE (MovementBoolean_Adjustment.ValueData, False) AS isAdjustment
+           , COALESCE (MovementBoolean_CorrectionSUN.ValueData, False) AS isCorrectionSUN
 
        FROM (SELECT Movement.Id
                   , MovementLinkObject_Unit.ObjectId AS UnitId
@@ -95,6 +96,9 @@ BEGIN
             LEFT JOIN MovementBoolean AS MovementBoolean_Adjustment
                                       ON MovementBoolean_Adjustment.MovementId = Movement.Id
                                      AND MovementBoolean_Adjustment.DescId = zc_MovementBoolean_Adjustment()
+            LEFT JOIN MovementBoolean AS MovementBoolean_CorrectionSUN
+                                      ON MovementBoolean_CorrectionSUN.MovementId = Movement.Id
+                                     AND MovementBoolean_CorrectionSUN.DescId = zc_MovementBoolean_CorrectionSUN()
             ;
 
 END;

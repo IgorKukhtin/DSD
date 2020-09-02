@@ -13,10 +13,11 @@ CREATE OR REPLACE FUNCTION gpSelect_Movement_ProfitLossService(
     IN inIsErased           Boolean ,
     IN inSession            TVarChar    -- сессия пользователя
 )
-RETURNS TABLE (Id Integer, InvNumber TVarChar, OperDate TDateTime
+RETURNS TABLE (Id Integer, InvNumber TVarChar, InvNumber_full TVarChar, OperDate TDateTime
              , StatusCode Integer, StatusName TVarChar
              , AmountIn TFloat, AmountOut TFloat
              , BonusValue TFloat, AmountPartner TFloat, Summ TFloat
+             , Summ_51201 TFloat
              , Comment TVarChar
              , JuridicalCode Integer, JuridicalName TVarChar, ItemName TVarChar, OKPO TVarChar
              , JuridicalCode_Child Integer, JuridicalName_Child TVarChar, OKPO_Child TVarChar
@@ -56,9 +57,26 @@ BEGIN
                          UNION
                           SELECT zc_Enum_Status_Erased() AS StatusId WHERE inIsErased = TRUE
                          )
+
+          , tmpMovement AS (SELECT Movement.*
+                            FROM tmpStatus
+                                 JOIN Movement ON Movement.DescId = zc_Movement_ProfitLossService()
+                                              AND Movement.OperDate BETWEEN inStartDate AND inEndDate
+                                              AND Movement.StatusId = tmpStatus.StatusId
+                                 JOIN (SELECT AccessKeyId FROM Object_RoleAccessKey_View WHERE UserId = vbUserId GROUP BY AccessKeyId) AS tmpRoleAccessKey ON tmpRoleAccessKey.AccessKeyId = Movement.AccessKeyId
+                            )
+
+          , tmpMIContainer AS (SELECT MIContainer.MovementId
+                                    , SUM (MIContainer.Amount) AS Summ_51201
+                               FROM MovementItemContainer AS MIContainer
+                               WHERE MIContainer.MovementId IN (SELECT tmpMovement.Id FROM tmpMovement)
+                                 AND MIContainer.AccountId = zc_Enum_Account_51201()
+                               GROUP BY MIContainer.MovementId
+                               )
        SELECT
              Movement.Id                                    AS Id
            , Movement.InvNumber                             AS InvNumber
+           , zfCalc_PartionMovementName (Movement.DescId, MovementDesc.ItemName, Movement.InvNumber, Movement.OperDate) :: TVarChar AS InvNumber_full
            , Movement.OperDate                              AS OperDate
            , Object_Status.ObjectCode                       AS StatusCode
            , Object_Status.ValueData                        AS StatusName
@@ -74,6 +92,7 @@ BEGIN
            , MIFloat_BonusValue.ValueData                   AS BonusValue
            , MIFloat_AmountPartner.ValueData                AS AmountPartner
            , MIFloat_Summ.ValueData                         AS Summ
+           , COALESCE (tmpMIContainer.Summ_51201, 0) :: TFloat AS Summ_51201
 
            , MIString_Comment.ValueData                     AS Comment
            , Object_Juridical.ObjectCode                    AS JuridicalCode
@@ -114,13 +133,9 @@ BEGIN
 
            , COALESCE (MovementBoolean_isLoad.ValueData, FALSE) AS isLoad
 
-       FROM tmpStatus
-            JOIN Movement ON Movement.DescId = zc_Movement_ProfitLossService()
-                         AND Movement.OperDate BETWEEN inStartDate AND inEndDate
-                         AND Movement.StatusId = tmpStatus.StatusId
-            JOIN (SELECT AccessKeyId FROM Object_RoleAccessKey_View WHERE UserId = vbUserId GROUP BY AccessKeyId) AS tmpRoleAccessKey ON tmpRoleAccessKey.AccessKeyId = Movement.AccessKeyId
-
+       FROM tmpMovement AS Movement
             LEFT JOIN Object AS Object_Status ON Object_Status.Id = Movement.StatusId
+            LEFT JOIN  MovementDesc ON MovementDesc.Id = Movement.DescId
 
             LEFT JOIN MovementItem ON MovementItem.MovementId = Movement.Id AND MovementItem.DescId = zc_MI_Master()
 
@@ -206,6 +221,8 @@ BEGIN
             LEFT JOIN MovementBoolean AS MovementBoolean_isLoad
                                       ON MovementBoolean_isLoad.MovementId =  Movement.Id
                                      AND MovementBoolean_isLoad.DescId = zc_MovementBoolean_isLoad()
+
+            LEFT JOIN tmpMIContainer ON tmpMIContainer.MovementId = Movement.Id
        WHERE ( COALESCE (MILinkObject_PaidKind.ObjectId, 0) = inPaidKindId OR inPaidKindId = 0)
          AND ( COALESCE (MILinkObject_Branch.ObjectId, 0) = inBranchId OR inBranchId = 0)
       ;
@@ -218,6 +235,7 @@ $BODY$
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.
+ 31.08.20         *
  21.05.20         *
  06.10.16         * add inJuridicalBasisId
  18.02.15         * add ContractMaster, ContractChild

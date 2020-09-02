@@ -680,6 +680,7 @@ inherited WagesForm: TWagesForm
           Font.Name = 'Tahoma'
           Font.Style = []
           CalcColumnLists = <>
+          DetailedTexts = <>
         end
         item
           Caption = #1055#1086#1076#1088#1072#1079#1076#1077#1083#1077#1085#1080#1077
@@ -692,6 +693,7 @@ inherited WagesForm: TWagesForm
           Font.Style = []
           Width = 30
           CalcColumnLists = <>
+          DetailedTexts = <>
         end
         item
           Caption = #1050#1088#1072#1090'. '#1085#1072#1080#1084'.'
@@ -703,6 +705,7 @@ inherited WagesForm: TWagesForm
           Font.Name = 'Tahoma'
           Font.Style = []
           CalcColumnLists = <>
+          DetailedTexts = <>
         end
         item
           Caption = #1058#1080#1087' '#1088#1072#1089#1095#1077#1090#1072
@@ -715,6 +718,7 @@ inherited WagesForm: TWagesForm
           Font.Style = []
           Width = 20
           CalcColumnLists = <>
+          DetailedTexts = <>
         end
         item
           Caption = #1053#1072#1095#1080#1089#1083#1077#1085#1086
@@ -728,6 +732,7 @@ inherited WagesForm: TWagesForm
           Font.Style = []
           Width = 20
           CalcColumnLists = <>
+          DetailedTexts = <>
           Kind = skSumma
           KindText = #1048#1090#1086#1075#1086' '#1085#1072#1095#1080#1089#1083#1077#1085#1086':'
         end
@@ -743,6 +748,7 @@ inherited WagesForm: TWagesForm
           Width = 100
           WrapText = True
           CalcColumnLists = <>
+          DetailedTexts = <>
         end>
       Caption = 'actExportPrintCalculationUser'
     end
@@ -830,6 +836,7 @@ inherited WagesForm: TWagesForm
           Font.Style = []
           Width = 30
           CalcColumnLists = <>
+          DetailedTexts = <>
         end
         item
           Caption = #1044#1086#1083#1078#1085#1086#1089#1090#1100
@@ -841,6 +848,7 @@ inherited WagesForm: TWagesForm
           Font.Name = 'Tahoma'
           Font.Style = []
           CalcColumnLists = <>
+          DetailedTexts = <>
         end
         item
           Caption = #1051#1086#1075#1080#1085
@@ -852,6 +860,7 @@ inherited WagesForm: TWagesForm
           Font.Name = 'Tahoma'
           Font.Style = []
           CalcColumnLists = <>
+          DetailedTexts = <>
         end
         item
           Caption = #1055#1086#1076#1088#1072#1079#1076#1077#1083#1077#1085#1080#1077
@@ -864,6 +873,7 @@ inherited WagesForm: TWagesForm
           Font.Style = []
           Width = 30
           CalcColumnLists = <>
+          DetailedTexts = <>
         end
         item
           Caption = #1053#1072#1095#1080#1089#1083#1077#1085#1086
@@ -876,6 +886,7 @@ inherited WagesForm: TWagesForm
           Font.Name = 'Tahoma'
           Font.Style = []
           CalcColumnLists = <>
+          DetailedTexts = <>
           Kind = skSumma
           KindText = #1048#1090#1086#1075#1086' '#1085#1072#1095#1080#1089#1083#1077#1085#1086':'
         end>
@@ -1619,9 +1630,41 @@ inherited WagesForm: TWagesForm
     Top = 312
   end
   inherited spErasedMIMaster: TdsdStoredProc
+    Params = <
+      item
+        Name = 'inMovementItemId'
+        Component = MasterCDS
+        ComponentItem = 'Id'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'outIsErased'
+        Value = False
+        Component = MasterCDS
+        ComponentItem = 'isErased'
+        DataType = ftBoolean
+        MultiSelectSeparator = ','
+      end>
     Left = 534
   end
   inherited spUnErasedMIMaster: TdsdStoredProc
+    Params = <
+      item
+        Name = 'inMovementItemId'
+        Component = MasterCDS
+        ComponentItem = 'Id'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'outIsErased'
+        Value = False
+        Component = MasterCDS
+        ComponentItem = 'isErased'
+        DataType = ftBoolean
+        MultiSelectSeparator = ','
+      end>
     Left = 526
     Top = 280
   end
@@ -1676,6 +1719,7 @@ inherited WagesForm: TWagesForm
         Value = Null
         Component = MasterCDS
         ComponentItem = 'IlliquidAssets'
+        DataType = ftFloat
         ParamType = ptInput
         MultiSelectSeparator = ','
       end
@@ -1836,6 +1880,7 @@ inherited WagesForm: TWagesForm
         DataSummaryItemIndex = -1
       end>
     SearchAsFilter = False
+    PropertiesCellList = <>
     Left = 318
     Top = 529
   end

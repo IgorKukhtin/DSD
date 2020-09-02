@@ -37,7 +37,7 @@ BEGIN
                         INNER JOIN MovementItem ON MovementItem.ID = MILinkObject_CommentSend.MovementItemId
 
                         LEFT JOIN MovementItemFloat AS MIFloat_MISendPDChangeId
-                                                    ON MIFloat_MISendPDChangeId.MovementItemId = Object_CommentSun.Id
+                                                    ON MIFloat_MISendPDChangeId.MovementItemId = MovementItem.ID
                                                    AND MIFloat_MISendPDChangeId.DescId = zc_MIFloat_MISendPDChangeId()
 
                         LEFT JOIN MovementLinkObject AS MovementLinkObject_From
@@ -110,4 +110,4 @@ $BODY$
  28.08.20                                                       *
 */
 
--- SELECT * FROM gpSelect_SendToSendPDChange_PUSH_Cash(1, 5120968, '3');
+-- SELECT * FROM gpSelect_SendToSendPDChange_PUSH_Cash(1, 394426 , '3');

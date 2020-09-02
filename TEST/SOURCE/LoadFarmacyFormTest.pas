@@ -1824,8 +1824,8 @@ begin
 
 //  TdsdFormStorageFactory.GetStorage.Save(GetForm('TWagesJournalForm'));
 //  TdsdFormStorageFactory.GetStorage.Load('TWagesJournalForm');
-//  TdsdFormStorageFactory.GetStorage.Save(GetForm('TWagesForm'));
-//  TdsdFormStorageFactory.GetStorage.Load('TWagesForm');
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TWagesForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TWagesForm');
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TWagesAdditionalExpensesForm'));
   TdsdFormStorageFactory.GetStorage.Load('TWagesAdditionalExpensesForm');
 //
@@ -2605,6 +2605,9 @@ begin
 
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TEmployeeScheduleFillingForm'));
   TdsdFormStorageFactory.GetStorage.Load('TEmployeeScheduleFillingForm');
+
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TEmployeeScheduleAddUserDialogForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TEmployeeScheduleAddUserDialogForm');
 end;
 
 procedure TLoadFormTest.LoadSPKindFormTest;
@@ -2709,10 +2712,14 @@ end;
 
 procedure TLoadFormTest.LoadServiceFormTest;
 begin
-    TdsdFormStorageFactory.GetStorage.Save(GetForm('TJuridicalPrioritiesForm'));
-    TdsdFormStorageFactory.GetStorage.Load('TJuridicalPrioritiesForm');
+    TdsdFormStorageFactory.GetStorage.Save(GetForm('TMovementItemContainerCountForm'));
+    TdsdFormStorageFactory.GetStorage.Load('TMovementItemContainerCountForm');
+
   Exit;
        {
+
+    TdsdFormStorageFactory.GetStorage.Save(GetForm('TJuridicalPrioritiesForm'));
+    TdsdFormStorageFactory.GetStorage.Load('TJuridicalPrioritiesForm');
 
     TdsdFormStorageFactory.GetStorage.Save(GetForm('TCashSettingsEditForm'));
     TdsdFormStorageFactory.GetStorage.Load('TCashSettingsEditForm');

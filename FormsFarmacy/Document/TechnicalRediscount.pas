@@ -55,6 +55,7 @@ type
     InvNumberSend: TcxGridDBColumn;
     OperDateSend: TcxGridDBColumn;
     Color_calc: TcxGridDBColumn;
+    cbCorrectionSUN: TcxCheckBox;
   private
     { Private declarations }
   public

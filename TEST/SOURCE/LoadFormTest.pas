@@ -2863,6 +2863,9 @@ begin
   TdsdFormStorageFactory.GetStorage.Load('TProfitLossServiceForm');
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TProfitLossServiceJournalForm'));
   TdsdFormStorageFactory.GetStorage.Load('TProfitLossServiceJournalForm');
+
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TProfitLossService_51201JournalForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TProfitLossService_51201JournalForm')
 end;
 
 procedure TLoadFormTest.LoadProfitIncomeServiceFormTest;
