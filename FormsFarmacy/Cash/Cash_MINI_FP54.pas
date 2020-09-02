@@ -1,7 +1,7 @@
 unit Cash_MINI_FP54;
 
 interface
-uses Windows, CashInterface, ecrmini_TLB;
+uses Windows, CashInterface, ecrmini_TLB, System.Classes;
 type
   TCashMINI_FP54 = class(TInterfacedObject, ICash)
   private
@@ -11,8 +11,12 @@ type
     FPrinter: variant;
 //    FModem: IICS_Modem;
     FisFiscal: boolean;
+    FConnected: boolean;
     FLengNoFiscalText : integer;
     FReturn: boolean;
+    FResult: TArray<string>;
+    FResultCount: Integer;
+    FOpenCommand: String;
     procedure SetAlwaysSold(Value: boolean);
     function GetAlwaysSold: boolean;
   protected
@@ -51,6 +55,9 @@ type
     function GetTaxRate : string;
   public
     constructor Create;
+    function OpenPort : Boolean;
+    function ClosePort : Boolean;
+    function SendCommand(ACommand : String) : Boolean;
     function ShowError: boolean;
   end;
 
@@ -65,13 +72,16 @@ const
 
 { TCashMINI_FP54 }
 constructor TCashMINI_FP54.Create;
-  var Error, Command : String;
+  var Error : String;
 begin
   inherited Create;
   FAlwaysSold:=false;
   FPrintSumma:=False;
   FReturn:=False;
   FLengNoFiscalText := 37;
+  FConnected := False;
+  FResultCount := 0;
+  FOpenCommand := 'open_port;' + iniPortNumber + ';' + iniPortSpeed + ';';
   Error := '';
   try
     FPrinter := CreateOleObject('ecrmini.t400');
@@ -85,22 +95,141 @@ begin
     Raise Exception.Create('');
   end;
 
-  Command := 'open_port;' + iniPortNumber + ';' + iniPortSpeed + ';';
-  if not FPrinter.T400me(Command) then
+  if not SendCommand('') then
   begin
-    ShowMessage(Command);
-    ShowError;
     Raise Exception.Create('');
   end;
-  FPrinter.T400me('close_port;')
 end;
 
+function TCashMINI_FP54.OpenPort : Boolean;
+begin
+  Result := False;
+  try
+    if FConnected then Result := True
+    else Result := FPrinter.T400me(FOpenCommand);
+    if not Result then ShowError;
+  finally
+    FConnected := Result;
+  end;
+end;
+
+function TCashMINI_FP54.ClosePort : Boolean;
+begin
+  Result := FPrinter.T400me('close_port;');
+  if not Result then ShowError;
+end;
+
+function TCashMINI_FP54.SendCommand(ACommand : String) : Boolean;
+  var Command : String; Connected : Boolean;
+begin
+  Result := False;
+  Connected := FConnected;
+  try
+    Command := ACommand;
+    if not OpenPort then Exit;
+    if Result and (Command <> '') then Result := FPrinter.T400me(Command);
+    if not Result then ShowError;
+    FResult := TRegEx.Split(Command, ' ');
+    FResultCount := High(FResult);
+  finally
+    if not Connected then ClosePort;
+  end;
+end;
 
 function TCashMINI_FP54.ShowError: boolean;
   var S : string;
 begin
   Result := False;
-  S := FPrinter.Get_last_error;
+  case FPrinter.Get_last_error of
+    0 : S := 'нет ошибки';
+    1 : S := ' нет возможности запустить команду';
+    2 : S := 'невозможно обработать команду';
+    3 : S := 'код команды отсутствует';
+    4 : S := 'много данных в команде';
+    5 : S := 'недостаточно данных в команде';
+    6 : S := 'ошибка при приеме данных';
+    7 : S := 'недопустимый идентификатор команды';
+    8 : S := 'невозможно выполнить команду';
+    10 : S := 'Ошибка ввода';
+    11 : S := 'необходимо снять z1 отчет';
+    12 : S := 'скидки/наценки запрещены';
+    13 : S := 'переполнение по чеку';
+    14 : S := 'команда запрещена';
+    15 : S := 'кассир не зарегистрирован';
+    16 : S := 'отрицательная сумма';
+    17 : S := 'количество товара отрицательное';
+    18 : S := 'время смены исчерпано';
+    19 : S := 'неверный тип оплаты';
+    20 : S := 'неправильная или отсутствующая цена';
+    21 : S := 'неверный параметр на входе команды';
+    22 : S := 'товар находится в открытом чеке, нельзя редактировать';
+    23 : S := 'некорректно запрограммированный товар';
+    24 : S := 'неверный или отсутствующий штрих-код товара';
+    27 : S := 'неверный или отсутствующий код товара';
+    28 : S := 'товар не весовой(штучный)';
+    29 : S := 'ФП почти заполнена';
+    30 : S := 'ФП заполнена';
+    31 : S := 'память инициализаций заполнена';
+    32 : S := 'есть отложенная операция, оплата запрещена';
+    33 : S := 'карточка клиента не принята';
+    34 : S := 'не хватает денег на сдачу';
+    35 : S := 'запрещена комбинированная оплата';
+    36 : S := 'неправильный номер кассира';
+    37 : S := 'места недостаточно';
+    38 : S := 'нет места в Журнале';
+    39 : S := 'нет места в базе товаров';
+    40 : S := 'нет места в Архиве';
+    41 : S := 'запрещено, товар является комплексом';
+    42 : S := 'код не принадлежит комплексу';
+    43 : S := 'ЭККА занят и не может выполнить команду';
+    44 : S := 'необходимо снять 501 отчет';
+    45 : S := 'неправильный пароль кассира';
+    46 : S := 'комплекс невозможно продать';
+    47 : S := 'цена товара определена';
+    48 : S := 'отмена запрещена';
+    49 : S := 'продажа товара запрещена';
+    50 : S := 'ошибка чтения ФП';
+    51 : S := 'номер производителя неверен';
+    52 : S := 'ошибка записи во флеш';
+    54 : S := 'удаление товара запрещено';
+    55 : S := 'нет данных в фискальной памяти';
+    56 : S := 'неправильный пароль налогового инспектора';
+    57 : S := 'не готов выполнить команду';
+    58 : S := 'неправильный пароль администратора';
+    60 : S := 'РРО заблокирован (72 часа не было передачи данных)';
+    61 : S := 'РРО не персонализован';
+    70 : S := 'отсутсвует вал термоголовки';
+    79 : S := 'дата сервисного обслуживания превышена';
+    80 : S := 'ошибка записи в ФП';
+    81 : S := 'ошибка часов';
+    82 : S := 'ошибка данных в интерфейсе';
+    86 : S := 'отсутствует индикатор клиента';
+    97 : S := 'отсутствует бумага';
+    300 : S := 'неверная команда';
+    301 : S := 'ошибка порта';
+    302 : S := 'неверные параметры';
+    303 : S := 'неверное количество параметров';
+    304 : S := 'ошибка данных';
+    305 : S := 'порт закрыт';
+    306 : S := 'нет данных';
+    307 : S := 'не поддерживается';
+    308 : S := 'касса не доступна';
+    309 : S := 'неизвестный код ошибки';
+    310 : S := 'запись запрещена';
+    311 : S := 'ошибка чтения';
+    312 : S := 'ошибка записи';
+    313 : S := 'неправильная запись НДС';
+    314 : S := 'операция отменена';
+    315 : S := 'неправильная модель кассового аппарата';
+    316 : S := 'данные не существуют';
+    317 : S := 'кассовый аппарат отключен';
+    318 : S := 'файл не найден';
+    319 : S := 'присутствует ошибка';
+    320 : S := 'неверные данные';
+    321 : S := 'команда отключена';
+    322 : S := 'будет доступно в следующих версиях';
+    323 : S := 'принтер не готов';
+  end;
   ShowMessage(S);
 end;
 
@@ -302,22 +431,19 @@ end;
 
 function TCashMINI_FP54.FiscalNumber: String;
 begin
-  if FPrinter.FPGetCurrentStatus then
-    Result := FPrinter.prFiscalNumber
-  else ShowError;
+  result := '';
+  if SendCommand('get_fm_status;') and (FResultCount >= 2) then Result := FResult[2];
 end;
 
 function TCashMINI_FP54.SerialNumber:String;
 begin
-  if FPrinter.FPGetCurrentStatus then
-    Result := FPrinter.prSerialNumber
-  else ShowError;
+  result := '';
+  if SendCommand('get_serial_num;') and (FResultCount >= 2)  then Result := FResult[2];
 end;
 
 function TCashMINI_FP54.XReport: boolean;
 begin
-  result := FPrinter.FPMakeXReport(Password);
-  if not result then ShowError;
+  result := SendCommand('execute_X_report;' + Password + ';');
 end;
 
 function TCashMINI_FP54.ChangePrice(const GoodsCode: integer;
@@ -383,8 +509,7 @@ end;
 
 function TCashMINI_FP54.PrintZeroReceipt: boolean;
 begin
-  result := FPrinter.FPPrintZeroReceipt;
-  if not result then ShowError
+  result := SendCommand('print_empty_receipt;');
 end;
 
 
@@ -485,9 +610,7 @@ end;
 
 function TCashMINI_FP54.ZReport : Integer;
 begin
-  Result := 0;
-  if FPrinter.FPGetDayReportProperties then Result := FPrinter.prCurrentZReport
-  else ShowError;
+  if SendCommand('execute_Z_report;' + Password + ';') then result := 1;
 end;
 
 function TCashMINI_FP54.SummaReceipt : Currency;

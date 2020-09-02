@@ -89,7 +89,7 @@ BEGIN
            'Добавить товар в заявку'::TVarChar                                  AS Button,
            'GoodsId,GoodsCode,GoodsName,MISendId,Amount'::TVarChar              AS Params,
            'ftInteger,ftInteger,ftString,ftString,ftFloat'::TVarChar            AS TypeParams,
-           (Object_Goods.Id::TVarChar||','||Object_Goods.ObjectCode::TVarChar||','||Object_Goods.ValueData||','||MovementItem.ID::TVarChar||','||MovementItem.Amount::TVarChar)::TVarChar   AS ValueParams
+           (Object_Goods.Id::TVarChar||','||Object_Goods.ObjectCode::TVarChar||','||REPLACE(Object_Goods.ValueData, ',', '.')||','||MovementItem.ID::TVarChar||','||MovementItem.Amount::TVarChar)::TVarChar   AS ValueParams
 
     FROM tmpData AS MovementItem
 

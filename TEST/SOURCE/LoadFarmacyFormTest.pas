@@ -1838,8 +1838,8 @@ begin
 //  TdsdFormStorageFactory.GetStorage.Save(GetForm('TWagesMoneyBoxSunForm'));
 //  TdsdFormStorageFactory.GetStorage.Load('TWagesMoneyBoxSunForm');
 //
-//  TdsdFormStorageFactory.GetStorage.Save(GetForm('TWagesUserForm'));
-//  TdsdFormStorageFactory.GetStorage.Load('TWagesUserForm');
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TWagesUserForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TWagesUserForm');
 end;
 
 procedure TLoadFormTest.LoadWriteOffHouseholdInventoryFormTest;

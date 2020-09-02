@@ -274,6 +274,33 @@ inherited WagesUserForm: TWagesUserForm
           Style.Font.Style = []
           Style.IsFontAssigned = True
         end
+        object cePenaltySUN: TcxCurrencyEdit
+          Left = 478
+          Top = 33
+          ParentFont = False
+          Properties.DecimalPlaces = 2
+          Properties.DisplayFormat = ',0.00;-,0.00;;'
+          Style.Font.Charset = DEFAULT_CHARSET
+          Style.Font.Color = clWindowText
+          Style.Font.Height = -16
+          Style.Font.Name = 'Tahoma'
+          Style.Font.Style = []
+          Style.IsFontAssigned = True
+          TabOrder = 14
+          Width = 156
+        end
+        object cxLabel25: TcxLabel
+          Left = 329
+          Top = 33
+          Caption = #1064#1090#1088#1072#1092' '#1087#1086' '#1057#1059#1053':'
+          ParentFont = False
+          Style.Font.Charset = DEFAULT_CHARSET
+          Style.Font.Color = clWindowText
+          Style.Font.Height = -16
+          Style.Font.Name = 'Tahoma'
+          Style.Font.Style = []
+          Style.IsFontAssigned = True
+        end
       end
     end
   end
@@ -848,6 +875,13 @@ inherited WagesUserForm: TWagesUserForm
         Name = 'IlliquidAssets'
         Value = Null
         Component = ceIlliquidAssets
+        DataType = ftFloat
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'PenaltySUN'
+        Value = Null
+        Component = cePenaltySUN
         DataType = ftFloat
         MultiSelectSeparator = ','
       end>

@@ -27,7 +27,7 @@ BEGIN
                 WHERE Container.DescId    in (zc_Container_Count(), zc_Container_CountPartionDate())
                   AND Container.Id        = inContainerID)
   THEN
-    RAISE EXCEPTION 'Ошибка. Контейнкр не найден.';
+    RAISE EXCEPTION 'Ошибка. Контейнер не найден.';
   END IF;
 
   SELECT Container.WhereObjectId, Container.ObjectId, Container.Amount, ObjectDate_ExpirationDate.ValueData, ObjectLink_Juridical_Retail.ChildObjectId
