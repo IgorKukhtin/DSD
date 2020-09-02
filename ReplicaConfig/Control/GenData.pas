@@ -33,7 +33,8 @@ var
   procedure RefreshStruct(Force: Boolean);
   procedure RemapStruct(AutoAlter: Boolean = true; tableKinds: TMetaTableKinds = [tkTable]);
   procedure GenerateSQLs(map: TMapMeta);
-  function GetScriptStruct(Kind: TMapKind): string;
+  function GetScriptStruct(Kind: TMapKind; AOnlyTableSlave: boolean = false): string;
+  function GetTableSlaveScript: string;
 
   procedure InitData;
   procedure ReleaseData;
@@ -273,7 +274,7 @@ Delete(trigger, 1, 2);
     end;
 end;
 
-function GetScriptStruct(Kind: TMapKind): string;
+function GetScriptStruct(Kind: TMapKind; AOnlyTableSlave: boolean = false): string;
 var
   i: Integer;
   list, listSlave: TStringList;
@@ -288,6 +289,14 @@ var
       ss := ss + Schema.Name + '.' + Name;
     Result := NormalCRC64(Pointer(ss), Length(ss) * SizeOf(char));
   end;
+
+  function GetStartIdValue(AValue: int64): string;
+  begin
+    if AValue < 0 then
+      Result := 'NULL'
+    else
+      Result := IntToStr(AValue);
+  end;
 begin
   list := TStringList.Create;
   listSlave := TStringList.Create;
@@ -295,14 +304,46 @@ begin
     for I := 0 to Maps.Count-1 do
       if (mfApply in Maps[i].Flags) and Maps[i].Checked then
       begin
-        s := Maps[i].SQLAlter[Kind];
-        if s <> '' then
-          begin
-            list.Add(' -- table '+Maps[i].Tables[Kind].Name);
-            list.Add(s);
-            list.Add('');
-          end;
+        if not AOnlyTableSlave then
+        begin
+          s := Maps[i].SQLAlter[Kind];
+          if s <> '' then
+            begin
+              list.Add(' -- table '+Maps[i].Tables[Kind].Name);
+              list.Add(s);
+              list.Add('');
+            end;
+        end;
         if Kind = mkSlave then
+          begin
+            with Maps[i] do
+            listSlave.Add(
+              Format(
+                'INSERT INTO  _replica.table_slave (table_key, master_schema, slave_schema, '+
+                'master_table, slave_table, master_fields, slave_fields, '+
+                'sql_select, sql_update, sql_insert, downloaded, start_id) VALUES (%d, %s, %s, %s, '+
+                '%s, %s, %s, %s, %s, %s, FALSE, %s) ON CONFLICT (table_key) DO UPDATE SET'+sLineBreak+
+                'master_schema = %1:s, slave_schema = %s, '+
+                'master_table= %s, slave_table= %s, master_fields= %s, slave_fields= %s, '+
+                'sql_select= %s, sql_update= %s, sql_insert= %s, start_id= %s;',
+                [
+                  GetTableKey,
+                  QuotedStr(Tables[mkMaster].Schema.Name),
+                  QuotedStr(Tables[mkSlave].Schema.Name),
+                  QuotedStr(Tables[mkMaster].Name),
+                  QuotedStr(Tables[mkSlave].Name),
+                  QuotedStr(GetListField(mkMaster)),
+                  QuotedStr(GetListField(mkSlave)),
+                  QuotedStr(SQLSelect[mkSlave]),
+                  QuotedStr(SQLUpdate[mkSlave]),
+                  QuotedStr(SQLInsert[mkSlave]),
+                  GetStartIdValue(Tables[mkMaster].StartId)
+                ]
+              )
+            );
+
+          end
+        else if Kind = mkMaster then
           begin
             with Maps[i] do
             listSlave.Add(
@@ -340,6 +381,12 @@ begin
     listSlave.Free;
   end;
 
+end;
+
+function GetTableSlaveScript: string;
+begin
+  RefreshStruct(true);
+  Result := GetScriptStruct(mkSlave, true);
 end;
 
 procedure InitData;

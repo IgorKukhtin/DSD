@@ -1,13 +1,13 @@
--- Function: gpInsertUpdate_MovementItem_SendPodium()
+-- Function: gpInsertUpdate_MovementItem_Send()
 
-DROP FUNCTION IF EXISTS gpInsertUpdate_MovementItem_SendPodium (Integer, Integer, TVarChar, TFloat, TFloat, TFloat, TFloat, TVarChar);
-DROP FUNCTION IF EXISTS gpInsertUpdate_MovementItem_SendPodium (Integer, Integer, TVarChar, TVarChar, TFloat, TFloat, TFloat, TFloat, TVarChar);
+DROP FUNCTION IF EXISTS gpInsertUpdate_MovementItem_Send (Integer, Integer, TVarChar, TFloat, TFloat, TFloat, TFloat, TVarChar);
+DROP FUNCTION IF EXISTS gpInsertUpdate_MovementItem_Send (Integer, Integer, TVarChar, TVarChar, TFloat, TFloat, TFloat, TFloat, TVarChar);
 
-CREATE OR REPLACE FUNCTION gpInsertUpdate_MovementItem_SendPodium(
+CREATE OR REPLACE FUNCTION gpInsertUpdate_MovementItem_Send(
  INOUT ioId                            Integer   , -- Ключ объекта <Элемент документа>
     IN inMovementId                    Integer   , -- Ключ объекта <Документ>
-    IN inGoodsName                     TVarChar  , -- Товары
-    IN inGoodsSizeName                 TVarChar  , -- Размер
+    IN inGoodsId                       Integer   , -- 
+    IN inPartionId                     Integer   , -- 
  INOUT ioAmount                        TFloat    , -- Количество
    OUT outOperPrice                    TFloat    , -- Цена
    OUT outCountForPrice                TFloat    , -- Цена за количество
@@ -22,21 +22,17 @@ CREATE OR REPLACE FUNCTION gpInsertUpdate_MovementItem_SendPodium(
    OUT outTotalSummPriceListToBalance  TFloat    , -- Сумма ГРН (Кому, прайс)
    OUT outCurrencyValue                TFloat    , --
    OUT outParValue                     TFloat    , --
-   OUT outGoodsSizeName                TVarChar  , --
     IN inSession                       TVarChar    -- сессия пользователя
 )
 RETURNS RECORD
 AS
 $BODY$
    DECLARE vbUserId Integer;
-   DECLARE vbGoodsId Integer;
-   DECLARE vbGoodsSizeId Integer;
    DECLARE vbPartionId Integer;
    DECLARE vbIsInsert Boolean;
    DECLARE vbOperDate TDateTime;
    DECLARE vbCurrencyId Integer;
    DECLARE vbCurrencyId_pl_to Integer;
-   DECLARE vbFromId Integer;
    DECLARE vbToId Integer;
    DECLARE vbPriceListId_to Integer;
    DECLARE vbCurrencyValue_to TFloat;
@@ -48,24 +44,19 @@ BEGIN
      -- проверка прав пользователя на вызов процедуры
      vbUserId := lpCheckRight (inSession, zc_Enum_Process_InsertUpdate_MI_Send());
 
-     IF COALESCE (inGoodsName, '') = ''
-     THEN 
-         RETURN;
-     END IF;
-     
      -- проверка - документ должен быть сохранен
      IF COALESCE (inMovementId, 0) = 0 THEN
         RAISE EXCEPTION 'Ошибка.Документ не сохранен.';
      END IF;
      -- проверка - свойство должно быть установлено
-/*     IF COALESCE (inGoodsId, 0) = 0 THEN
+     IF COALESCE (inGoodsId, 0) = 0 THEN
         RAISE EXCEPTION 'Ошибка.Не установлено значение <Товар>.';
      END IF;
      -- проверка - свойство должно быть установлено
      IF COALESCE (inPartionId, 0) = 0 THEN
         RAISE EXCEPTION 'Ошибка.Не установлено значение <Партия>.';
      END IF;
-*/
+
      -- определяется признак Создание/Корректировка
      vbIsInsert:= COALESCE (ioId, 0) = 0;
 
@@ -80,29 +71,13 @@ BEGIN
          END IF;
      END IF;
 
-     -- определяем товар по inGoodsName
-     SELECT MAX (Object.Id)
-       INTO vbGoodsId
-     FROM Object
-     WHERE Object.DescId    = zc_Object_Goods()
-       AND Object.ValueData = inGoodsName;
-       
-     IF COALESCE (vbGoodsId,0) = 0 
-     THEN 
-         RAISE EXCEPTION 'Ошибка.Не установлено значение <Товар>.';
-     END IF;
-       
      -- Дата документа, подразделение Кому, прайс для подразд. кому
      SELECT Movement.OperDate
-          , MovementLinkObject_From.ObjectId AS FromId
-          , MovementLinkObject_To.ObjectId   AS ToId
+          , MovementLinkObject_To.ObjectId AS ToId
           , ObjectLink_Unit_PriceList_to.ChildObjectId AS PriceListId_to
           , COALESCE (ObjectLink_PriceList_Currency_to.ChildObjectId, zc_Currency_Basis()) AS CurrencyId_pl_to
-            INTO vbOperDate, vbFromId, vbToId, vbPriceListId_to, vbCurrencyId_pl_to
+            INTO vbOperDate, vbToId, vbPriceListId_to, vbCurrencyId_pl_to
      FROM Movement
-         LEFT JOIN MovementLinkObject AS MovementLinkObject_From
-                                      ON MovementLinkObject_From.MovementId = Movement.Id
-                                     AND MovementLinkObject_From.DescId = zc_MovementLinkObject_From()
          LEFT JOIN MovementLinkObject AS MovementLinkObject_To
                                       ON MovementLinkObject_To.MovementId = Movement.Id
                                      AND MovementLinkObject_To.DescId = zc_MovementLinkObject_To()
@@ -124,7 +99,7 @@ BEGIN
          -- из Истории
          ioOperPriceList := COALESCE ((SELECT tmp.ValuePrice FROM lpGet_ObjectHistory_PriceListItem (vbOperDate
                                                                                                    , zc_PriceList_Basis()
-                                                                                                   , vbGoodsId
+                                                                                                   , inGoodsId
                                                                                                     ) AS tmp), 0);
      END IF;
 
@@ -133,65 +108,15 @@ BEGIN
         RAISE EXCEPTION 'Ошибка.Не установлено значение <Цена (прайс)>.';
      END IF;
 
-     outGoodsSizeName :=inGoodsSizeName;
-     
-     -- Поиск Размера - ВСЕГДА
-     vbGoodsSizeId:= (SELECT Object.Id FROM Object WHERE Object.DescId = zc_Object_GoodsSize() AND LOWER (Object.ValueData) = LOWER (inGoodsSizeName));
-     --
-     IF COALESCE (vbGoodsSizeId, 0) = 0
-     THEN
-         -- Создание
-         vbGoodsSizeId := (SELECT tmp.ioId FROM gpInsertUpdate_Object_GoodsSize (ioId     := 0
-                                                                               , ioCode   := 0
-                                                                               , inName   := inGoodsSizeName
-                                                                               , inSession:= vbUserId :: TVarChar
-                                                                                 ) AS tmp);
-     END IF;
-
      -- данные из партии : OperPrice и CountForPrice и CurrencyId
      SELECT COALESCE (Object_PartionGoods.CountForPrice, 1)                AS CountForPrice
           , COALESCE (Object_PartionGoods.OperPrice, 0)                    AS OperPrice
           , COALESCE (Object_PartionGoods.CurrencyId, zc_Currency_Basis()) AS CurrencyId
-          , COALESCE (Object_PartionGoods.MovementItemId,0)                AS PartionId
-    INTO outCountForPrice, outOperPrice, vbCurrencyId, vbPartionId
+            INTO outCountForPrice, outOperPrice, vbCurrencyId
      FROM Object_PartionGoods
-     WHERE Object_PartionGoods.GoodsId = vbGoodsId
-       AND Object_PartionGoods.GoodsSizeId = vbGoodsSizeId; --Object_PartionGoods.MovementItemId = inPartionId;
-     
-     -- Если размер пусто и партия не найдена, тогда находим первый размер, что есть на остатке и подставляем его
-     -- берем партию которая есть на остатке
-     IF COALESCE (vbPartionId,0) = 0
-     THEN
-         SELECT COALESCE (Object_PartionGoods.CountForPrice, 1)                AS CountForPrice
-              , COALESCE (Object_PartionGoods.OperPrice, 0)                    AS OperPrice
-              , COALESCE (Object_PartionGoods.CurrencyId, zc_Currency_Basis()) AS CurrencyId
-              , COALESCE (Object_PartionGoods.MovementItemId,0)                AS PartionId 
-              , COALESCE (Object_GoodsSize.ValueData, '') ::TVarChar           AS GoodsSizeName
-       INTO outCountForPrice, outOperPrice, vbCurrencyId, vbPartionId, outGoodsSizeName
-         FROM (SELECT MIN ( Container.PartionId) AS PartionId
-               FROM Container
-                    LEFT JOIN ContainerLinkObject AS CLO_Client
-                                                  ON CLO_Client.ContainerId = Container.Id
-                                                 AND CLO_Client.DescId      = zc_ContainerLinkObject_Client()
-               WHERE Container.WhereObjectId = vbFromId
-                 AND Container.DescId = zc_Container_count()
-                 AND COALESCE(Container.Amount, 0) <> 0
-                 AND Container.ObjectId = vbGoodsId
-                 AND COALESCE (Container.Amount,0) <> 0
-                 AND CLO_Client.ContainerId IS NULL -- !!!отбросили Долги Покупателей!!!
-               ) AS tmp
-               LEFT JOIN Object_PartionGoods ON Object_PartionGoods.MovementItemId = tmp.PartionId
-               LEFT JOIN Object AS Object_GoodsSize ON Object_GoodsSize.Id = Object_PartionGoods.GoodsSizeId
-         ;
-     END IF; 
+     WHERE Object_PartionGoods.MovementItemId = inPartionId;
 
-     -- если и после этого не найдена партия, то ошибка
-     IF COALESCE (vbPartionId,0) = 0
-     THEN
-         RAISE EXCEPTION 'Ошибка.Не найдена партия товара.';
-     END IF;
-     
-     
+
      -- Если НЕ Базовая Валюта
      IF vbCurrencyId <> zc_Currency_Basis()
      THEN
@@ -223,20 +148,20 @@ BEGIN
 
 
      -- !!!замена!!!
-     IF EXISTS (SELECT 1 FROM MovementItem AS MI WHERE MI.MovementId = inMovementId AND MI.DescId = zc_MI_Master() AND MI.ObjectId = vbGoodsId AND MI.isErased = FALSE)
+     IF EXISTS (SELECT 1 FROM MovementItem AS MI WHERE MI.MovementId = inMovementId AND MI.DescId = zc_MI_Master() AND MI.ObjectId = inGoodsId AND MI.isErased = FALSE)
      AND 1=0
      THEN
          -- Цена печать ценников (прайс)(кому) --(для магазина получателя)
          ioOperPriceListTo_start:= (SELECT DISTINCT MIF.ValueData
                                     FROM MovementItem AS MI
                                          INNER JOIN MovementItemFloat AS MIF ON MIF.MovementItemId = MI.Id AND MIF.DescId = zc_MIFloat_OperPriceListTo_start()
-                                    WHERE MI.MovementId = inMovementId AND MI.DescId = zc_MI_Master() AND MI.ObjectId = vbGoodsId AND MI.isErased = FALSE
+                                    WHERE MI.MovementId = inMovementId AND MI.DescId = zc_MI_Master() AND MI.ObjectId = inGoodsId AND MI.isErased = FALSE
                                    );
          -- Цена (прайс)(кому) --(для магазина получателя)
          ioOperPriceListTo:= (SELECT DISTINCT MIF.ValueData
                               FROM MovementItem AS MI
                                    INNER JOIN MovementItemFloat AS MIF ON MIF.MovementItemId = MI.Id AND MIF.DescId = zc_MIFloat_OperPriceListTo()
-                              WHERE MI.MovementId = inMovementId AND MI.DescId = zc_MI_Master() AND MI.ObjectId = vbGoodsId AND MI.isErased = FALSE
+                              WHERE MI.MovementId = inMovementId AND MI.DescId = zc_MI_Master() AND MI.ObjectId = inGoodsId AND MI.isErased = FALSE
                              );
      END IF;
 
@@ -249,18 +174,19 @@ BEGIN
          SELECT COALESCE (lpGet.StartDate, zc_DateStart()) AS StartDate
               , COALESCE (lpGet.ValuePrice, 0 )            AS ValuePrice
                 INTO vbStartDate_plTo_find, vbOperPriceListTo_find
-         FROM (SELECT vbGoodsId AS GoodsId) AS tmp
+         FROM (SELECT inGoodsId AS GoodsId) AS tmp
               LEFT JOIN lpGet_ObjectHistory_PriceListItem (zc_DateStart()
                                                          , vbPriceListId_to
-                                                         , vbGoodsId
+                                                         , inGoodsId
                                                           ) AS lpGet ON 1=1;
          -- если нет цены или была такая же цена, т.е. её корректируют
          IF COALESCE (vbOperPriceListTo_find, 0) = 0
             OR vbOperPriceListTo_find = (SELECT MIF.ValueData FROM MovementItemFloat AS MIF WHERE MIF.MovementItemId = ioId AND MIF.DescId = zc_MIFloat_OperPriceListTo_start())
+            OR 1=1
          THEN
              PERFORM lpInsertUpdate_ObjectHistory_PriceListItem (ioId         := 0
                                                                , inPriceListId:= vbPriceListId_to
-                                                               , inGoodsId    := vbGoodsId
+                                                               , inGoodsId    := inGoodsId
                                                                , inOperDate   := vbStartDate_plTo_find
                                                                , inValue      := ioOperPriceListTo_start
                                                                , inUserId     := vbUserId
@@ -280,19 +206,20 @@ BEGIN
          SELECT COALESCE (lpGet.StartDate, vbOperDate)     AS StartDate
               , COALESCE (lpGet.ValuePrice, 0 )            AS ValuePrice
                 INTO vbStartDate_plTo_find, vbOperPriceListTo_find
-         FROM (SELECT vbGoodsId AS GoodsId) AS tmp
+         FROM (SELECT inGoodsId AS GoodsId) AS tmp
               LEFT JOIN lpGet_ObjectHistory_PriceListItem (vbOperDate
                                                          , vbPriceListId_to
-                                                         , vbGoodsId
+                                                         , inGoodsId
                                                           ) AS lpGet ON 1=1;
          -- если нет цены или была такая же цена, т.е. её корректируют
          IF  vbOperPriceListTo_find = 0
           OR vbStartDate_plTo_find  = zc_DateStart()
           OR vbOperPriceListTo_find = (SELECT MIF.ValueData FROM MovementItemFloat AS MIF WHERE MIF.MovementItemId = ioId AND MIF.DescId = zc_MIFloat_OperPriceListTo())
+          OR 1=1
          THEN
              PERFORM gpInsertUpdate_ObjectHistory_PriceListItemLast (ioId         := 0
                                                                    , inPriceListId:= vbPriceListId_to
-                                                                   , inGoodsId    := vbGoodsId
+                                                                   , inGoodsId    := inGoodsId
                                                                    , inOperDate   := CASE WHEN vbStartDate_plTo_find = zc_DateStart() THEN vbOperDate ELSE vbStartDate_plTo_find END
                                                                    , inValue      := ioOperPriceListTo
                                                                    , inIsLast     := TRUE
@@ -306,7 +233,7 @@ BEGIN
 
 
      -- сохранили <Элемент документа>
-     ioId := lpInsertUpdate_MovementItem (ioId, zc_MI_Master(), vbGoodsId, vbPartionId, inMovementId, ioAmount, NULL);
+     ioId := lpInsertUpdate_MovementItem (ioId, zc_MI_Master(), inGoodsId, inPartionId, inMovementId, ioAmount, NULL);
 
      -- сохранили свойство <>
      PERFORM lpInsertUpdate_MovementItemFloat (zc_MIFloat_OperPrice(), ioId, outOperPrice);
@@ -353,7 +280,7 @@ BEGIN
                                 LEFT JOIN ObjectHistoryFloat AS OHF_Value
                                                              ON OHF_Value.ObjectHistoryId = OH_PriceListItem.Id
                                                             AND OHF_Value.DescId          = zc_ObjectHistoryFloat_PriceListItem_Value()
-                           WHERE OL_PriceListItem_Goods.ChildObjectId = vbGoodsId
+                           WHERE OL_PriceListItem_Goods.ChildObjectId = inGoodsId
                              AND OL_PriceListItem_Goods.DescId        = zc_ObjectLink_PriceListItem_Goods()
                           );
 
@@ -406,4 +333,4 @@ $BODY$
 */
 
 -- тест
--- select * from gpInsertUpdate_MovementItem_SendPodium(ioId := 0 , inMovementId := 6540 , inGoodsName := '13801'::TVarChar , inGoodsSizeName := ''::TVarChar , ioAmount := 1::TFloat , ioOperPriceList := 250::TFloat , ioOperPriceListTo_start := 7525::TFloat , ioOperPriceListTo := 7525 ::TFloat,  inSession := '2'::TVarChar);
+-- select * from gpInsertUpdate_MovementItem_Send(ioId := 0 , inMovementId := 6540 , inGoodsName := '13801'::TVarChar , inGoodsSizeName := ''::TVarChar , ioAmount := 1::TFloat , ioOperPriceList := 250::TFloat , ioOperPriceListTo_start := 7525::TFloat , ioOperPriceListTo := 7525 ::TFloat,  inSession := '2'::TVarChar);

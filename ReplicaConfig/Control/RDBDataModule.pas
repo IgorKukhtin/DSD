@@ -31,7 +31,7 @@ uses
   FireDAC.Phys.PGDef, FireDAC.VCLUI.Wait, FireDAC.Comp.Client, Data.DB,
   FireDAC.Comp.DataSet, FireDAC.Moni.Base, FireDAC.Moni.RemoteClient, RDBClass,
   FireDAC.Comp.ScriptCommands, FireDAC.Stan.Util, FireDAC.Comp.Script,
-  FireDAC.VCLUI.Script, FireDAC.Comp.UI;
+  FireDAC.VCLUI.Script, FireDAC.Comp.UI, Variants, Winapi.Windows;
 
 type
   TRDB = class(TDataModule)
@@ -47,6 +47,7 @@ type
     FDScript: TFDScript;
     FDGUIxScriptDialog: TFDGUIxScriptDialog;
     FDQuery: TFDQuery;
+    sql_sequences: TFDQuery;
     procedure DataModuleCreate(Sender: TObject);
   private
     FReplicaSchemaUsed: array [TMapKind] of Boolean;
@@ -63,8 +64,17 @@ type
     procedure SwitchConnectionMaster(kind: TMapKind);
     procedure ExecuteScript(const script: string; Kind: TMapKind);
     procedure Reconnect(FileName, Master, Slave: string);
-    procedure GetConnectionInfo(var Srv, DB, User, Pwd: string; Kind: TMapKind);
+    procedure GetConnectionInfo(var Srv, DB, User, Pwd: string; var Prt: integer;
+      Kind: TMapKind);
     procedure CheckReplicaSchema;
+
+    function ClientId(kind: TMapKind): string;
+    function DigitForIncrement(kind: TMapKind): integer;
+    function InitMasterSequences: boolean;
+    function InitSlaveSequences: boolean;
+    function SaveClientIDs: boolean;
+    function SyncClients: boolean;
+
     property ReplicaSchemaUsed[kind: TMapKind]: Boolean read GetReplicaSchemaUsed;
   end;
 
@@ -72,10 +82,10 @@ type
     DefConnectionMaster = 'postgress_master';
     DefConnectionSlave  = 'postgress_slave';
     DefConnectionFile   = 'ConnDef.ini';
-    DefSettingsMaster  =
+    DefSettingsVersion  =
       'INSERT INTO _replica.settings (name, value) VALUES (''version'', ''1.0'') '+
       'ON CONFLICT (name) DO NOTHING;';
-    DefSettingsSlave  =
+    DefSettingsClientId  =
       'INSERT INTO _replica.settings (name, value) VALUES (''client_id'', ''%s'') '+
       'ON CONFLICT (name) DO UPDATE SET value = ''%0:s'';';
 
@@ -318,6 +328,15 @@ begin
   q.Close
 end;
 
+function TRDB.ClientId(kind: TMapKind): string;
+begin
+  Result := '';
+  if kind = mkMaster then
+    Result := VarToStr(master_conn.ExecSQLScalar('SELECT value FROM _replica.settings WHERE name=''client_id'';'))
+  else if kind = mkSlave then
+    Result := VarToStr(slave_conn.ExecSQLScalar('SELECT value FROM _replica.settings WHERE name=''client_id'';'));
+end;
+
 procedure TRDB.DataModuleCreate(Sender: TObject);
 var
   s: string;
@@ -352,7 +371,7 @@ begin
   end;
 end;
 
-procedure TRDB.GetConnectionInfo(var Srv, DB, User, Pwd: string;
+procedure TRDB.GetConnectionInfo(var Srv, DB, User, Pwd: string; var Prt: integer;
   Kind: TMapKind);
 var
   c: IFDStanConnectionDef;
@@ -362,6 +381,7 @@ begin
     mkSlave:  c := FDManager.ConnectionDefs.ConnectionDefByName(ConnectionSlave);
   end;
   Srv := TFDPhysPGConnectionDefParams(c.Params).Server;
+  Prt := TFDPhysPGConnectionDefParams(c.Params).Port;
   DB  := c.Params.Database;
   User:= c.Params.UserName;
   Pwd := c.Params.Password;
@@ -371,6 +391,68 @@ end;
 function TRDB.GetReplicaSchemaUsed(kind: TMapKind): Boolean;
 begin
   Result := FReplicaSchemaUsed[kind]
+end;
+
+function TRDB.InitMasterSequences: boolean;
+var t, proc, check: TFDQuery;
+    I: integer;
+begin
+  Result := false;
+  try
+    proc := TFDQuery.Create(nil);
+    check := TFDQuery.Create(nil);
+    try
+      proc.Connection := master_conn;
+      proc.SQL.Text := 'SELECT * FROM _replica.gpInit_SequencesMaster(:inSchema, :inTable, :inColumn, :inSequence)';
+      t := sql_sequences;
+      t.Close;
+      t.Connection := master_conn;
+      t.SQL.LoadFromFile('..\scripts\getSequences.sql');
+      t.Open;
+      check.Connection := master_conn;
+      check.SQL.Text := 'SELECT _replica.gpCheck_SequencesMaster(:inSchema, :inTable, :inColumn) AS Result';
+      while not t.Eof do
+      begin
+        I := 0;
+        while True do
+        begin
+          proc.Close;
+          proc.ParamByName('inSchema').Value := t.FieldByName('table_schema').Value;
+          proc.ParamByName('inTable').Value := t.FieldByName('table_name').Value;
+          proc.ParamByName('inColumn').Value := t.FieldByName('column_name').Value;
+          proc.ParamByName('inSequence').Value := t.FieldByName('sequence_name').Value;
+          proc.Open;
+          check.Close;
+          check.ParamByName('inSchema').Value := t.FieldByName('table_schema').Value;
+          check.ParamByName('inTable').Value := t.FieldByName('table_name').Value;
+          check.ParamByName('inColumn').Value := t.FieldByName('column_name').Value;
+          check.Open;
+          if check.FieldByName('Result').AsBoolean then
+            break;
+          inc(I);
+          if I > 100 then
+            raise Exception.Create('Cannot init sequence for '+ t.FieldByName('table_name').AsString);
+        end;
+        t.Next;
+      end;
+      Result := true;
+    finally
+      FreeAndNil(proc);
+    end;
+  except on E: Exception do
+    MessageBox(0, PWideChar(E.Message), '', MB_ICONWARNING or MB_OK);
+  end;
+end;
+
+function TRDB.InitSlaveSequences: boolean;
+begin
+  Result := false;
+  try
+    slave_conn.ExecSQLScalar('SELECT _replica.gpInit_SequencesSlave()');
+    Result := true;
+  except on E: Exception do
+    MessageBox(0, PWideChar(E.Message), '', MB_ICONWARNING or MB_OK);
+  end;
 end;
 
 function TRDB.LoadFields(tables: TMetaTableList): Integer;
@@ -533,37 +615,72 @@ var
   i: Integer;
   t: TFDQuery;
   table: TMetaTable;
+  isMaster: boolean;
+  startIDs: TFDQuery;
 begin
-  t := sql_tables;
-  if t.Tag <> NativeInt(TMetaTable) then
-    begin
-      t.SQL.LoadFromFile('..\scripts\getTables.sql');
-      t.Tag := NativeInt(TMetaTable);
-    end;
-  t.Close();
-  t.Params[0].AsString := schema.Name;
-  t.Open();
-  Result := t.RecordCount;
-  schema.Tables.BeginUpdate;
+  startIDs := TFDQuery.Create(nil);
   try
-  for I := 0 to Result - 1 do
+    t := sql_tables;
+    if t.Tag <> NativeInt(TMetaTable) then
+      begin
+        t.SQL.LoadFromFile('..\scripts\getTables.sql');
+        t.Tag := NativeInt(TMetaTable);
+      end;
+    t.Close();
+    t.Params[0].AsString := schema.Name;
+    t.Open();
+    Result := t.RecordCount;
+
+    isMaster := t.Connection = master_conn;
+    if isMaster then
     begin
-      table := schema.Tables.Add;
-      table.Schema := schema;
-      table.Name := t.FieldByName('TABLE_NAME').AsString;
-      table.Kind := TMetaTableKind(t.FieldByName('TABLE_TYPE').AsInteger);
-      table.User := t.FieldByName('USER').AsString;
-      if FullLoad then
-        begin
-          LoadFields(table);
-          LoadIndexes(table);
-        end;
-      t.Next
+      startIDs.Connection := master_conn;
+      startIDs.SQL.Text := 'SELECT * FROM _replica.table_slave';
+      startIDs.Open;
     end;
+
+    schema.Tables.BeginUpdate;
+    try
+    for I := 0 to Result - 1 do
+      begin
+        table := schema.Tables.Add;
+        table.Schema := schema;
+        table.Name := t.FieldByName('TABLE_NAME').AsString;
+        table.Kind := TMetaTableKind(t.FieldByName('TABLE_TYPE').AsInteger);
+        table.User := t.FieldByName('USER').AsString;
+
+        table.StartId := -1;
+        if isMaster and startIDs.Locate('master_table', t.FieldByName('TABLE_NAME').AsString, [loCaseInsensitive]) then
+          table.StartId := startIDs.FieldByName('start_id').AsLargeInt;
+
+        if FullLoad then
+          begin
+            LoadFields(table);
+            LoadIndexes(table);
+          end;
+        t.Next
+      end;
+    finally
+      schema.Tables.EndUpdate;
+    end;
+    t.Close;
   finally
-    schema.Tables.EndUpdate;
+    FreeAndNil(startIDs);
   end;
-  t.Close;
+end;
+
+function TRDB.DigitForIncrement(kind: TMapKind): integer;
+var FClientId: string;
+begin
+  Result := -1;
+  FClientId := ClientId(kind);
+  if not FClientId.IsEmpty then
+    Result := StrToIntDef(
+                VarToStr(
+                    master_conn.ExecSQLScalar(
+                        'SELECT digit_for_increment '+
+                        'FROM _replica.clients '+
+                        'WHERE client_id = '+ FClientId)), -1);
 end;
 
 procedure TRDB.Reconnect(FileName, Master, Slave: string);
@@ -587,6 +704,46 @@ begin
 //  BuildTree;
 end;
 
+function TRDB.SaveClientIDs: boolean;
+var FMasterClientId, FSlaveClientId: string;
+
+  procedure SaveClientId(AClientId: string);
+  var QClients: TFDQuery;
+  begin
+    QClients := TFDQuery.Create(nil);
+    try
+      QClients.Connection := master_conn;
+      QClients.SQL.Text :=
+        'SELECT * FROM _replica.clients WHERE client_id = '+ AClientId;
+      QClients.Open;
+      if QClients.RecordCount = 0 then
+        master_conn.ExecSQLScalar('select _replica.client_visit(:id, :name, :last_id);',
+                  [AClientID, 'Configurator', -1], [ftLargeint, ftString, ftInteger]);
+    finally
+      QClients.Free;
+    end;
+  end;
+
+begin
+  Result := false;
+  FMasterClientId := ClientId(mkMaster);
+  if FMasterClientId.IsEmpty then
+  begin
+    MessageBox(0, 'ClientId for master is not defined', '', MB_ICONWARNING or MB_OK);
+    Exit;
+  end;
+  FSlaveClientId := ClientId(mkSlave);
+  if FSlaveClientId.IsEmpty then
+  begin
+    MessageBox(0, 'ClientId for slave is not defined', '', MB_ICONWARNING or MB_OK);
+    Exit;
+  end;
+  SaveClientId(FMasterClientId);
+  SaveClientId(FSlaveClientId);
+  if not SyncClients then Exit;
+  Result := true;
+end;
+
 procedure TRDB.SwitchConnectionMaster(kind: TMapKind);
 begin
   if kind = mkMaster then
@@ -605,6 +762,48 @@ begin
       sql_idx_fields.Connection := slave_conn;
       sql_schema.Connection     := slave_conn;
     end;
+end;
+
+function TRDB.SyncClients: boolean;
+var QSource, QDest: TFDQuery;
+    I: integer;
+begin
+  Result := false;
+  try
+    QSource := TFDQuery.Create(nil);
+    QDest := TFDQuery.Create(nil);
+    try
+      QSource.Connection := master_conn;
+      QDest.Connection := slave_conn;
+      QSource.SQL.Text := 'SELECT * FROM _replica.clients';
+      QSource.Open;
+      QDest.SQL.Text := 'SELECT * FROM _replica.clients WHERE id = :id';
+      while not QSource.Eof do
+      begin
+        QDest.Close;
+        QDest.ParamByName('id').Value := QSource.FieldByName('id').Value;
+        QDest.Open;
+        if QDest.RecordCount = 0 then
+        begin
+          QDest.Append;
+          QDest.FieldByName('id').Value := QSource.FieldByName('id').Value;
+        end
+        else
+          QDest.Edit;
+        for I := 0 to QSource.FieldCount - 1 do
+          if not SameText(QSource.Fields.Fields[I].FieldName, 'id') then
+            QDest.FieldByName(QSource.Fields.Fields[I].FieldName).Value := QSource.Fields.Fields[I].Value;
+        QDest.Post;
+        QSource.Next;
+      end;
+      Result := true;
+    finally
+      FreeAndNil(QSource);
+      FreeAndNil(QDest);
+    end;
+  except on E: Exception do
+    MessageBox(0, 'ClientId for slave is not defined', '', MB_ICONERROR or MB_OK);
+  end;
 end;
 
 end.

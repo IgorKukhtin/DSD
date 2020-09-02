@@ -20,8 +20,11 @@ BEGIN
      -- vbUserId := PERFORM lpCheckRight (inSession, zc_Enum_Process_Select_MI_Promo());
      vbUserId := inSession;
 
-     vbIsUserSigning1:= vbUserId IN (280164, 5, 133035);  -- Старецкая М.В.
-     vbIsUserSigning2:= vbUserId IN (9463); -- Махота Д.П.
+     -- Signing
+     --vbIsUserSigning1:= vbUserId IN (280164, 5, 133035);  -- Старецкая М.В. + Фурсов А.А.
+     --vbIsUserSigning2:= vbUserId IN (9463); -- Махота Д.П.
+     vbIsUserSigning1:= vbUserId IN (133035, 5); -- Фурсов А.А.
+     vbIsUserSigning2:= vbUserId IN (280164);    -- Старецкая М.В.
 
      -- последний
      SELECT tmp.Id, tmp.ObjectId

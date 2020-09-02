@@ -105,6 +105,7 @@ type
     FFields: TMetaFieldList;
     FIndexes: TMetaIndexList;
     FUser: string;
+    FStartId: int64;
   public
     constructor Create; override;
     destructor Destroy; override;
@@ -116,6 +117,7 @@ type
     property Fields: TMetaFieldList read FFields write FFields;
     property Indexes: TMetaIndexList read FIndexes write FIndexes;
     property User: string read FUser write FUser;
+    property StartId: int64 read FStartId write FStartId;
   end;
 
   TMetaSchema = class (TMetaClass)
