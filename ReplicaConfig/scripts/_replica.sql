@@ -26,15 +26,16 @@ CREATE TABLE IF NOT EXISTS _replica.table_ddl(
 */
 --DROP TABLE IF EXISTS _replica.clients;
 CREATE TABLE IF NOT EXISTS _replica.clients (
-  ID                SERIAL PRIMARY KEY,
-  PID               INTEGER,
-  client_id         BIGINT UNIQUE,
-  client_name       TEXT,
-  application_name  TEXT,
-  first_visit       TIMESTAMP WITHOUT TIME ZONE,
-  last_visit        TIMESTAMP WITHOUT TIME ZONE,-- DEFAULT timezone('utc'::text, now())::timestamp
-  last_id           INTEGER
-  
+  ID                  SERIAL PRIMARY KEY,
+  PID                 INTEGER,
+  client_id           BIGINT UNIQUE,
+  client_name         TEXT,
+  application_name    TEXT,
+  first_visit         TIMESTAMP WITHOUT TIME ZONE,
+  last_visit          TIMESTAMP WITHOUT TIME ZONE,-- DEFAULT timezone('utc'::text, now())::timestamp
+  last_id             INTEGER,
+  last_id_ddl         INTEGER,
+  digit_for_increment INTEGER
 );
 
 
@@ -84,7 +85,8 @@ CREATE TABLE IF NOT EXISTS _replica.table_slave (
   sql_select        TEXT,
   sql_update        TEXT,
   sql_insert        TEXT,
-  last_modified     TIMESTAMP WITHOUT TIME ZONE
+  last_modified     TIMESTAMP WITHOUT TIME ZONE,
+  start_id          BIGINT
                             
 );
 
@@ -284,9 +286,9 @@ BEGIN
   SELECT pid, last_id INTO cli_pid, li FROM _replica.clients WHERE client_id = in_id;
   IF NOT FOUND THEN
     lm := timezone('utc'::text, now())::timestamp;
-  	INSERT INTO _replica.clients (client_id, client_name, application_name, pid, first_visit, last_visit, last_id) 
-    	VALUES (in_id, in_name, current_setting('application_name'), cur_pid, lm, lm, -1);
-  ELSIF (cli_pid <> cur_pid) AND EXISTS(SELECT FROM pg_stat_activity WHERE pid = cli_pid) THEN
+  	INSERT INTO _replica.clients (client_id, client_name, application_name, pid, first_visit, last_visit, last_id, digit_for_increment) 
+    	VALUES (in_id, in_name, current_setting('application_name'), cur_pid, lm, lm, -1, COALESCE((SELECT MAX(digit_for_increment) FROM _replica.clients), -1) + 1);
+  ELSIF (cli_pid <> cur_pid) AND EXISTS(SELECT * FROM pg_stat_activity WHERE pid = cli_pid) THEN
   	ret = FALSE;
   ELSE
     IF li < in_last_id THEN 
@@ -321,5 +323,4 @@ BEGIN
   -- VACUUM OR TRUNCATE 
 END;
 $$ LANGUAGE plpgsql;
-
 

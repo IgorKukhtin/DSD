@@ -53,6 +53,9 @@ type
     btnWizard: TButton;
     btnGenerate: TButton;
     chbCheckSchema: TCheckBox;
+    btnInitMasterSequences: TButton;
+    btnInitSlaveSequences: TButton;
+    btnSaveClientIDs: TButton;
     procedure actAlterPKExecute(Sender: TObject);
     procedure actAlterIndexExecute(Sender: TObject);
     procedure btnExecuteScriptsClick(Sender: TObject);
@@ -62,9 +65,12 @@ type
     procedure btnCreateReplicaStructClick(Sender: TObject);
     procedure btnWizardClick(Sender: TObject);
     procedure btnGenerateClick(Sender: TObject);
+    procedure btnInitMasterSequencesClick(Sender: TObject);
+    procedure btnSaveClientIDsClick(Sender: TObject);
+    procedure btnInitSlaveSequencesClick(Sender: TObject);
   private
     { Private declarations }
-    function CreateID: string;
+    function CreateID(Kind: TMapKind): string;
     function GetReplicaScript(): string;
   public
     { Public declarations }
@@ -93,16 +99,19 @@ end;
 procedure TMainForm.btnCreateReplicaStructClick(Sender: TObject);
 var
   srv, db, user, pwd: string;
+  prt: integer;
 begin
   with TDumpRestoreForm.Create(nil) do
     try
-      RDB.GetConnectionInfo(srv, db, user, pwd, mkMaster);
+      RDB.GetConnectionInfo(srv, db, user, pwd, prt, mkMaster);
       edHostDump.Text := srv;
+      edPortDump.Text := IntToStr(prt);
       edDBDump.Text   := db;
       edUserDump.Text := user;
       edPswDump.Text  := pwd;
-      RDB.GetConnectionInfo(srv, db, user, pwd, mkSlave);
+      RDB.GetConnectionInfo(srv, db, user, pwd, prt, mkSlave);
       edHostRestore.Text := srv;
+      edPortRestore.Text := IntToStr(prt);
       edDBRestore.Text   := db;
       edUserRestore.Text := user;
       edPswRestore.Text  := pwd;
@@ -140,7 +149,8 @@ begin
     end;
   list.Add(GetScriptStruct(mkMaster));
   list.Add('');
-  list.Add(DefSettingsMaster);
+  list.Add(DefSettingsVersion);
+  list.Add(Format(DefSettingsClientId, [CreateID(mkMaster)]));
   ScriptsForm.AddScript(list.Text, 'replica_master');
   list.Clear;
   if not chbCheckSchema.Checked or not RDB.ReplicaSchemaUsed[mkSlave] then
@@ -150,7 +160,8 @@ begin
     end;
   list.Add(GetScriptStruct(mkSlave));
   list.Add('');
-  list.Add(Format(DefSettingsSlave, [CreateID]));
+  list.Add(DefSettingsVersion);
+  list.Add(Format(DefSettingsClientId, [CreateID(mkSlave)]));
   ScriptsForm.AddScript(list.Text, 'replica_slave');
   ScriptsForm.ShowModal;
 end;
@@ -185,7 +196,8 @@ begin
     list.Clear;
     list.Add(GetScriptStruct(mkMaster));
     list.Add('');
-    list.Add(DefSettingsMaster);
+    list.Add(DefSettingsVersion);
+    list.Add(Format(DefSettingsClientId, [CreateID(mkMaster)]));
     s := list.Text;
     ScriptsForm.AddScript(s);
     RDB.ExecuteScript(s, mkMaster);
@@ -195,14 +207,36 @@ begin
       list.Add(GetReplicaScript());
     list.Add(GetScriptStruct(mkSlave));
     list.Add('');
-    list.Add(Format(DefSettingsSlave, [CreateID]));
+    list.Add(DefSettingsVersion);
+    list.Add(Format(DefSettingsClientId, [CreateID(mkSlave)]));
     s := list.Text;
     ScriptsForm.AddScript(s);
     RDB.ExecuteScript(s, mkSlave);
+    RDB.SaveClientIDs;
     MessageBox(Handle, 'OK', '', MB_ICONINFORMATION or MB_OK);
   finally
     list.Free;
   end;
+end;
+
+procedure TMainForm.btnInitMasterSequencesClick(Sender: TObject);
+begin
+  if RDB.InitMasterSequences then
+  begin
+    RDB.ExecuteScript(GetTableSlaveScript, mkSlave);
+    MessageBox(Handle, 'Master sequences are initialized successfully', '', MB_ICONINFORMATION or MB_OK);
+  end;
+end;
+
+procedure TMainForm.btnInitSlaveSequencesClick(Sender: TObject);
+begin
+  if RDB.InitSlaveSequences then
+    MessageBox(Handle, 'Slave sequences are initialized successfully', '', MB_ICONINFORMATION or MB_OK);
+end;
+
+procedure TMainForm.btnSaveClientIDsClick(Sender: TObject);
+begin
+  RDB.SaveClientIDs;
 end;
 
 procedure TMainForm.btnWizardClick(Sender: TObject);
@@ -222,16 +256,15 @@ begin
   MapResultForm.ShowModal;
 end;
 
-function TMainForm.CreateID: string;
+function TMainForm.CreateID(Kind: TMapKind): string;
 var
-  s1, s2, s3, s4, s5, s6, s7, s8: string;
+  s1, s2, s3, s4: string;
   s: string;
-  i: Integer;
+  i, prt: Integer;
   crc64: Int64;
 begin
-  RDB.GetConnectionInfo(s1, s2, s3, s4, mkMaster);
-  RDB.GetConnectionInfo(s5, s6, s7, s8, mkSlave);
-  s := s1 + s2 + s3 + s4 + s5 + s6 + s7 + s8;
+  RDB.GetConnectionInfo(s1, s2, s3, s4, prt, Kind);
+  s := s1 + s2 + s3 + s4;
   crc64:= NormalCRC64(Pointer(s), Length(s) * SizeOf(char));
   Result := crc64.ToString;
 end;

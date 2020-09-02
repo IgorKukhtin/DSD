@@ -2,7 +2,7 @@ object MainForm: TMainForm
   Left = 0
   Top = 0
   Caption = 'MainForm'
-  ClientHeight = 294
+  ClientHeight = 382
   ClientWidth = 531
   Color = clBtnFace
   Font.Charset = DEFAULT_CHARSET
@@ -19,11 +19,12 @@ object MainForm: TMainForm
     Left = 0
     Top = 0
     Width = 531
-    Height = 294
+    Height = 382
     Align = alClient
     Caption = 'pnlTop'
     ShowCaption = False
     TabOrder = 0
+    ExplicitHeight = 294
     object lblObject: TLabel
       Left = 196
       Top = 193
@@ -157,7 +158,7 @@ object MainForm: TMainForm
     end
     object btnWizard: TButton
       Left = 20
-      Top = 148
+      Top = 179
       Width = 153
       Height = 25
       Caption = 'Wizard'
@@ -182,6 +183,33 @@ object MainForm: TMainForm
       Checked = True
       State = cbChecked
       TabOrder = 13
+    end
+    object btnInitMasterSequences: TButton
+      Left = 20
+      Top = 284
+      Width = 153
+      Height = 25
+      Caption = 'Init Master Sequences'
+      TabOrder = 14
+      OnClick = btnInitMasterSequencesClick
+    end
+    object btnInitSlaveSequences: TButton
+      Left = 20
+      Top = 315
+      Width = 153
+      Height = 25
+      Caption = 'Init Slave Sequences'
+      TabOrder = 15
+      OnClick = btnInitSlaveSequencesClick
+    end
+    object btnSaveClientIDs: TButton
+      Left = 20
+      Top = 253
+      Width = 153
+      Height = 25
+      Caption = 'Save Client IDs'
+      TabOrder = 16
+      OnClick = btnSaveClientIDsClick
     end
   end
   object ActionList: TActionList

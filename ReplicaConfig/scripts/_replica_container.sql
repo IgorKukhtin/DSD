@@ -41,7 +41,7 @@ BEGIN
   
   -- При обновлении получим имена полей, данные которых имзенились.
   IF (TG_OP = 'UPDATE') THEN
-    IF ((NEW.id <> OLD.id)) OR (_replica.num_nulls(NEW.id::TEXT, OLD.id)::TEXT) = 1)  THEN
+    IF (NEW.id <> OLD.id) OR (_replica.num_nulls(NEW.id::TEXT, OLD.id::TEXT) = 1)  THEN
       _cols  := array_append(_cols, 'Id');	    
     END IF;
     IF (NEW.DescId <> OLD.DescId) OR (_replica.num_nulls(NEW.DescId::TEXT, OLD.DescId::TEXT) = 1) THEN

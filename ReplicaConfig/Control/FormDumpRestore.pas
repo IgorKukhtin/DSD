@@ -56,6 +56,9 @@ type
     lblPassword: TLabel;
     edPswDump: TEdit;
     edPswRestore: TEdit;
+    lblPort: TLabel;
+    edPortDump: TEdit;
+    edPortRestore: TEdit;
     procedure btnExecuteClick(Sender: TObject);
     procedure FormDestroy(Sender: TObject);
     procedure FormCreate(Sender: TObject);
@@ -128,13 +131,13 @@ begin
     begin
       pg_app    := 'pg_dump.exe';
       if chbDrop.Checked  then s := '-c ' else s := '';
-      pg_param  := Format('-U %s %s -s -v -N _replica -h %s -f %s %s', [edUserDump.Text, s, edHostDump.Text, edPath.Text, edDBDump.Text]);
+      pg_param  := Format('-U %s %s -s -v -N _replica -h %s -p %s -f %s %s', [edUserDump.Text, s, edHostDump.Text, edPortDump.Text, edPath.Text, edDBDump.Text]);
       a := edPswDump.Text+sLineBreak;
     end
   else
     begin
       pg_app := 'psql.exe';      //-e
-      pg_param  := Format('-U %s -h %s -d %s -f %s', [edUserRestore.Text, edHostRestore.Text, edDBRestore.Text,  edPath.Text]);
+      pg_param  := Format('-U %s -h %s -p %s -d %s -f %s', [edUserRestore.Text, edHostRestore.Text, edPortRestore.Text, edDBRestore.Text,  edPath.Text]);
       a := edPswRestore.Text+sLineBreak;
     end;
 
@@ -311,12 +314,14 @@ end;
 procedure TDumpRestoreForm.rbDumpClick(Sender: TObject);
 begin
   edHostDump.Enabled  := rbDump.Checked;
+  edPortDump.Enabled  := rbDump.Checked;
   edDBDump.Enabled    := rbDump.Checked;
   edUserDump.Enabled  := rbDump.Checked;
   edPswDump.Enabled   := rbDump.Checked;
 
 
   edHostRestore.Enabled := rbRestore.Checked;
+  edPortRestore.Enabled := rbRestore.Checked;
   edDBRestore.Enabled   := rbRestore.Checked;
   edUserRestore.Enabled := rbRestore.Checked;
   edPswRestore.Enabled  := rbRestore.Checked;

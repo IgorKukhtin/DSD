@@ -89,6 +89,13 @@ object DumpRestoreForm: TDumpRestoreForm
     Height = 16
     Caption = 'password'
   end
+  object lblPort: TLabel
+    Left = 304
+    Top = 81
+    Width = 23
+    Height = 16
+    Caption = 'port'
+  end
   object mmLog: TMemo
     Left = 8
     Top = 184
@@ -154,7 +161,7 @@ object DumpRestoreForm: TDumpRestoreForm
   object edHostDump: TEdit
     Left = 117
     Top = 99
-    Width = 216
+    Width = 172
     Height = 24
     TabOrder = 6
     Text = 'project-vds.vds.colocall.com'
@@ -164,7 +171,7 @@ object DumpRestoreForm: TDumpRestoreForm
     Top = 99
     Width = 200
     Height = 24
-    TabOrder = 7
+    TabOrder = 8
     Text = 'pod_test'
   end
   object edUserDump: TEdit
@@ -172,16 +179,16 @@ object DumpRestoreForm: TDumpRestoreForm
     Top = 99
     Width = 120
     Height = 24
-    TabOrder = 8
+    TabOrder = 9
     Text = 'postgres'
   end
   object edHostRestore: TEdit
     Left = 117
     Top = 129
-    Width = 216
+    Width = 172
     Height = 24
     Enabled = False
-    TabOrder = 9
+    TabOrder = 10
     Text = 'project-vds.vds.colocall.com'
   end
   object edDBRestore: TEdit
@@ -190,7 +197,7 @@ object DumpRestoreForm: TDumpRestoreForm
     Width = 200
     Height = 24
     Enabled = False
-    TabOrder = 10
+    TabOrder = 12
     Text = 'pod_test_slave'
   end
   object edUserRestore: TEdit
@@ -199,7 +206,7 @@ object DumpRestoreForm: TDumpRestoreForm
     Width = 120
     Height = 24
     Enabled = False
-    TabOrder = 11
+    TabOrder = 13
     Text = 'postgres'
   end
   object chbDrop: TCheckBox
@@ -210,14 +217,14 @@ object DumpRestoreForm: TDumpRestoreForm
     Caption = 'Generate drop objects'
     Checked = True
     State = cbChecked
-    TabOrder = 12
+    TabOrder = 14
   end
   object edPswDump: TEdit
     Left = 681
     Top = 99
     Width = 120
     Height = 24
-    TabOrder = 13
+    TabOrder = 15
     Text = 'vas6ok'
   end
   object edPswRestore: TEdit
@@ -226,7 +233,24 @@ object DumpRestoreForm: TDumpRestoreForm
     Width = 120
     Height = 24
     Enabled = False
-    TabOrder = 14
+    TabOrder = 16
     Text = 'vas6ok'
+  end
+  object edPortDump: TEdit
+    Left = 291
+    Top = 99
+    Width = 50
+    Height = 24
+    TabOrder = 7
+    Text = '5432'
+  end
+  object edPortRestore: TEdit
+    Left = 291
+    Top = 129
+    Width = 50
+    Height = 24
+    Enabled = False
+    TabOrder = 11
+    Text = '5432'
   end
 end

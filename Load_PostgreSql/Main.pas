@@ -1216,7 +1216,7 @@ begin
      //
      if (ParamStr(2)='autoALL') and (BranchEdit.Text <> 'BranchId : 0')
      then begin
-           if (Hour_calc = 4) and (Minute_calc > 25) and (Minute_calc < 45)
+           if (Hour_calc = 4) and (Minute_calc > 25) and (Minute_calc < 40)
            then begin
                      myLogMemo_add('start stop');
                      MyDelay(15*60*1000);

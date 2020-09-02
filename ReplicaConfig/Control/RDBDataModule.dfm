@@ -122,4 +122,15 @@ object RDB: TRDB
     Left = 308
     Top = 236
   end
+  object sql_sequences: TFDQuery
+    Connection = master_conn
+    FetchOptions.AssignedValues = [evMode, evRecordCountMode]
+    FetchOptions.Mode = fmAll
+    ResourceOptions.AssignedValues = [rvMacroCreate, rvMacroExpand, rvEscapeExpand]
+    ResourceOptions.MacroCreate = False
+    ResourceOptions.MacroExpand = False
+    ResourceOptions.EscapeExpand = False
+    Left = 440
+    Top = 188
+  end
 end
