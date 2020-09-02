@@ -34,8 +34,8 @@ BEGIN
      vbUserId:= lpGetUserBySession (inSession);
 
 
-     -- zc_Enum_Role_Admin + Отдел Маркетинг
-     vbIsMsg_PromoStateKind:= EXISTS (SELECT 1 FROM ObjectLink_UserRole_View AS UserRole_View WHERE UserRole_View.RoleId IN (zc_Enum_Role_Admin(), 876016) AND UserRole_View.UserId = vbUserId);
+     -- zc_Enum_Role_Admin + Отдел Маркетинг + Маркетинг - Руководитель
+     vbIsMsg_PromoStateKind:= EXISTS (SELECT 1 FROM ObjectLink_UserRole_View AS UserRole_View WHERE UserRole_View.RoleId IN (zc_Enum_Role_Admin(), 876016, 5473256) AND UserRole_View.UserId = vbUserId);
      -- Договора-ввод справочников
      vbIsMsg_Contract:= vbUserId = zfCalc_UserAdmin() :: Integer OR EXISTS (SELECT 1 FROM ObjectLink_UserRole_View AS UserRole_View WHERE UserRole_View.RoleId IN (78432) AND UserRole_View.UserId = vbUserId);
 
@@ -116,8 +116,10 @@ BEGIN
      END IF;
 
      -- Signing
-     vbIsUserSigning1:= vbUserId IN (280164, 5, 133035);  -- Старецкая М.В.
-     vbIsUserSigning2:= vbUserId IN (9463); -- Махота Д.П.
+     --vbIsUserSigning1:= vbUserId IN (280164, 5, 133035);  -- Старецкая М.В. + Фурсов А.А.
+     --vbIsUserSigning2:= vbUserId IN (9463); -- Махота Д.П.
+     vbIsUserSigning1:= vbUserId IN (133035, 5); -- Фурсов А.А.
+     vbIsUserSigning2:= vbUserId IN (280164); -- Старецкая М.В.
 
      -- Отдел Маркетинг
      vbIsMsgColor:= EXISTS (SELECT 1 FROM ObjectLink_UserRole_View AS UserRole_View WHERE UserRole_View.RoleId IN (876016) AND UserRole_View.UserId = vbUserId);
