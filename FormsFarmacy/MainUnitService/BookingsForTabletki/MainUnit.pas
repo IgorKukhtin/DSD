@@ -80,6 +80,7 @@ type
     qryUnit: TZQuery;
     code: TcxGridDBColumn;
     cbGoodsCode: TcxGridDBColumn;
+    chCancelReason: TcxGridDBColumn;
     procedure FormCreate(Sender: TObject);
     procedure Timer1Timer(Sender: TObject);
     procedure btnSaveBookingsClick(Sender: TObject);
@@ -314,6 +315,7 @@ begin
                                    qryCheckHead.FieldByName('OrderId').AsString,
                                    qryCheckHead.FieldByName('Bayer').AsString,
                                    qryCheckHead.FieldByName('BayerPhone').AsString,
+                                   qryCheckHead.FieldByName('CancelReason').AsString,
                                    qryCheckHead.FieldByName('OperDate').AsDateTime,
                                    GetJSONAItems) then
         begin
