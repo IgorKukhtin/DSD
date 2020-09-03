@@ -3,7 +3,7 @@ program GetEmail;
 uses
   Vcl.Forms,
   SysUtils,
-  Main in '..\GetEmail\Main.pas' {MainForm},
+  Main in '..\FormsFarmacy\MainUnitService\GetEmail\Main.pas' {MainForm},
   Authentication in '..\SOURCE\Authentication.pas',
   CommonData in '..\SOURCE\CommonData.pas',
   DataModul in '..\SOURCE\DataModul.pas' {dmMain: TDataModule},
@@ -53,7 +53,7 @@ uses
   MeDOC in '..\SOURCE\MeDOC\MeDOC.pas',
   MeDocXML in '..\SOURCE\MeDOC\MeDocXML.pas',
   dsdInternetAction in '..\SOURCE\COMPONENT\dsdInternetAction.pas',
-  sevenzip in '..\GetEmail\sevenzip.pas',
+  sevenzip in '..\FormsFarmacy\MainUnitService\GetEmail\sevenzip.pas',
   ExternalLoad in '..\SOURCE\COMPONENT\ExternalLoad.pas',
   IFIN_J1201009 in '..\SOURCE\MeDOC\IFIN_J1201009.pas',
   IFIN_J1201209 in '..\SOURCE\MeDOC\IFIN_J1201209.pas',

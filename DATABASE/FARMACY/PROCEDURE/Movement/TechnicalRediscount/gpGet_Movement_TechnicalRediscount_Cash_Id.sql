@@ -44,9 +44,21 @@ BEGIN
            LEFT JOIN MovementLinkObject AS MovementLinkObject_Unit
                                         ON MovementLinkObject_Unit.MovementId = Movement.Id
                                        AND MovementLinkObject_Unit.DescId = zc_MovementLinkObject_Unit()
+           LEFT JOIN MovementBoolean AS MovementBoolean_RedCheck
+                                     ON MovementBoolean_RedCheck.MovementId = Movement.Id
+                                    AND MovementBoolean_RedCheck.DescId = zc_MovementBoolean_RedCheck()
+           LEFT JOIN MovementBoolean AS MovementBoolean_Adjustment
+                                     ON MovementBoolean_Adjustment.MovementId = Movement.Id
+                                    AND MovementBoolean_Adjustment.DescId = zc_MovementBoolean_Adjustment()
+           LEFT JOIN MovementBoolean AS MovementBoolean_CorrectionSUN
+                                     ON MovementBoolean_CorrectionSUN.MovementId = Movement.Id
+                                    AND MovementBoolean_CorrectionSUN.DescId = zc_MovementBoolean_CorrectionSUN()
       WHERE Movement.DescId = zc_Movement_TechnicalRediscount()   
         AND Movement.StatusId = zc_Enum_Status_UnComplete()
-        AND MovementLinkObject_Unit.ObjectId = vbUnitId;  
+        AND MovementLinkObject_Unit.ObjectId = vbUnitId
+        AND COALESCE (MovementBoolean_RedCheck.ValueData, False) = FALSE
+        AND COALESCE (MovementBoolean_Adjustment.ValueData, False) = FALSE
+        AND COALESCE (MovementBoolean_CorrectionSUN.ValueData, False) = FALSE;  
    END IF;
 
 END;

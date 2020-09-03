@@ -96,9 +96,8 @@
 			<DelphiCompile Include="$(MainSource)">
 				<MainSource>MainSource</MainSource>
 			</DelphiCompile>
-			<DCCReference Include="..\GetEmail\Main.pas">
+			<DCCReference Include="..\FormsFarmacy\MainUnitService\GetEmail\Main.pas">
 				<Form>MainForm</Form>
-				<FormType>dfm</FormType>
 			</DCCReference>
 			<DCCReference Include="..\SOURCE\Authentication.pas"/>
 			<DCCReference Include="..\SOURCE\CommonData.pas"/>
@@ -160,7 +159,7 @@
 			<DCCReference Include="..\SOURCE\MeDOC\MeDOC.pas"/>
 			<DCCReference Include="..\SOURCE\MeDOC\MeDocXML.pas"/>
 			<DCCReference Include="..\SOURCE\COMPONENT\dsdInternetAction.pas"/>
-			<DCCReference Include="..\GetEmail\sevenzip.pas"/>
+			<DCCReference Include="..\FormsFarmacy\MainUnitService\GetEmail\sevenzip.pas"/>
 			<DCCReference Include="..\SOURCE\COMPONENT\ExternalLoad.pas"/>
 			<DCCReference Include="..\SOURCE\MeDOC\IFIN_J1201009.pas"/>
 			<DCCReference Include="..\SOURCE\MeDOC\IFIN_J1201209.pas"/>

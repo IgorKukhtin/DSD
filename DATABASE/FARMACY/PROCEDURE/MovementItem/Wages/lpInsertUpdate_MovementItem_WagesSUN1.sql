@@ -1,10 +1,11 @@
 -- Function: lpInsertUpdate_MovementItem_WagesSUN1 ()
 
-DROP FUNCTION IF EXISTS lpInsertUpdate_MovementItem_WagesSUN1 (TFloat, Integer, Integer);
+DROP FUNCTION IF EXISTS lpInsertUpdate_MovementItem_WagesSUN1 (TFloat, Integer, TVarChar, Integer);
 
 CREATE OR REPLACE FUNCTION lpInsertUpdate_MovementItem_WagesSUN1(
     IN inSummaSUN1           TFloat  ,   -- Сумма штрафа
     IN inUnitID              Integer ,   -- Дата расчета
+    IN inInvNumber           TVarChar,   -- Перечень документов
     IN inUserId              Integer     -- пользователь
  )
 RETURNS VOID AS
@@ -14,6 +15,7 @@ $BODY$
    DECLARE vbIsInsert   Boolean;
    DECLARE vbWeek       Integer;
    DECLARE vbSummaSUN1  TFloat;
+   DECLARE vbInvNumber  TVarChar;
 BEGIN
 
     IF COALESCE(inSummaSUN1, 0) = 0
@@ -68,31 +70,51 @@ BEGIN
       inSummaSUN1 := inSummaSUN1 + COALESCE((SELECT MovementItemFloat.ValueData FROM MovementItemFloat
                                              WHERE MovementItemFloat.MovementItemID = vbId
                                                AND MovementItemFloat.DescId = zc_MIFloat_SummaWeek1()), 0);
+      vbInvNumber := COALESCE(';'||(SELECT MovementItemString.ValueData FROM MovementItemString
+                                             WHERE MovementItemString.MovementItemID = vbId
+                                               AND MovementItemString.DescId = zc_MIString_InvNumberWeek1()), '')||COALESCE (inInvNumber, '');
       PERFORM lpInsertUpdate_MovementItemFloat (zc_MIFloat_SummaWeek1(), vbId, inSummaSUN1);
+      PERFORM lpInsertUpdate_MovementItemString (zc_MIString_InvNumberWeek1(), vbId, vbInvNumber);
     ELSEIF vbWeek = 2
     THEN
       inSummaSUN1 := inSummaSUN1 + COALESCE((SELECT MovementItemFloat.ValueData FROM MovementItemFloat
                                              WHERE MovementItemFloat.MovementItemID = vbId
                                                AND MovementItemFloat.DescId = zc_MIFloat_SummaWeek2()), 0);
+      vbInvNumber := COALESCE(';'||(SELECT MovementItemString.ValueData FROM MovementItemString
+                                             WHERE MovementItemString.MovementItemID = vbId
+                                               AND MovementItemString.DescId = zc_MIString_InvNumberWeek2()), '')||COALESCE (inInvNumber, '');
       PERFORM lpInsertUpdate_MovementItemFloat (zc_MIFloat_SummaWeek2(), vbId, inSummaSUN1);
+      PERFORM lpInsertUpdate_MovementItemString (zc_MIString_InvNumberWeek2(), vbId, vbInvNumber);
     ELSEIF vbWeek = 3
     THEN
       inSummaSUN1 := inSummaSUN1 + COALESCE((SELECT MovementItemFloat.ValueData FROM MovementItemFloat
                                              WHERE MovementItemFloat.MovementItemID = vbId
                                                AND MovementItemFloat.DescId = zc_MIFloat_SummaWeek3()), 0);
+      vbInvNumber := COALESCE(';'||(SELECT MovementItemString.ValueData FROM MovementItemString
+                                             WHERE MovementItemString.MovementItemID = vbId
+                                               AND MovementItemString.DescId = zc_MIString_InvNumberWeek3()), '')||COALESCE (inInvNumber, '');
       PERFORM lpInsertUpdate_MovementItemFloat (zc_MIFloat_SummaWeek3(), vbId, inSummaSUN1);
+      PERFORM lpInsertUpdate_MovementItemString (zc_MIString_InvNumberWeek3(), vbId, vbInvNumber);
     ELSEIF vbWeek = 4
     THEN
       inSummaSUN1 := inSummaSUN1 + COALESCE((SELECT MovementItemFloat.ValueData FROM MovementItemFloat
                                              WHERE MovementItemFloat.MovementItemID = vbId
                                                AND MovementItemFloat.DescId = zc_MIFloat_SummaWeek4()), 0);
+      vbInvNumber := COALESCE(';'||(SELECT MovementItemString.ValueData FROM MovementItemString
+                                             WHERE MovementItemString.MovementItemID = vbId
+                                               AND MovementItemString.DescId = zc_MIString_InvNumberWeek4()), '')||COALESCE (inInvNumber, '');
       PERFORM lpInsertUpdate_MovementItemFloat (zc_MIFloat_SummaWeek4(), vbId, inSummaSUN1);
+      PERFORM lpInsertUpdate_MovementItemString (zc_MIString_InvNumberWeek4(), vbId, vbInvNumber);
     ELSEIF vbWeek = 5
     THEN
       inSummaSUN1 := inSummaSUN1 + COALESCE((SELECT MovementItemFloat.ValueData FROM MovementItemFloat
                                              WHERE MovementItemFloat.MovementItemID = vbId
                                                AND MovementItemFloat.DescId = zc_MIFloat_SummaWeek5()), 0);
+      vbInvNumber := COALESCE(';'||(SELECT MovementItemString.ValueData FROM MovementItemString
+                                             WHERE MovementItemString.MovementItemID = vbId
+                                               AND MovementItemString.DescId = zc_MIString_InvNumberWeek5()), '')||COALESCE (inInvNumber, '');
       PERFORM lpInsertUpdate_MovementItemFloat (zc_MIFloat_SummaWeek5(), vbId, inSummaSUN1);
+      PERFORM lpInsertUpdate_MovementItemString (zc_MIString_InvNumberWeek5(), vbId, vbInvNumber);
     ELSE
       RAISE EXCEPTION 'Ошибка.Определения номера дня %', vbWeek;
     END IF;
@@ -118,7 +140,7 @@ BEGIN
 
     -- raise notice 'Прошло. % % %', inSummaSUN1, inUnitID, (SELECT Object.ValueData FROM Object WHERE object.Id = inUnitID);
 
-    -- RAISE EXCEPTION 'Прошло. % % % % % %', CURRENT_DATE, vbMovementId, vbId, inSummaSUN1, vbSummaSUN1, vbWeek;
+    -- RAISE EXCEPTION 'Прошло. % % % % % % %', CURRENT_DATE, vbMovementId, vbId, inSummaSUN1, vbSummaSUN1, vbWeek, vbInvNumber;
 
  END;
 $BODY$
@@ -132,4 +154,4 @@ LANGUAGE PLPGSQL VOLATILE;
 */
 
 -- тест
--- SELECT * FROM lpInsertUpdate_MovementItem_WagesSUN1 (inSummaSUN1 := 1, inUnitID := 183292 , inUserId := 3)
+-- SELECT * FROM lpInsertUpdate_MovementItem_WagesSUN1 (inSummaSUN1 := 1, inUnitID := 183292 , inInvNumber := '1111,2222', inUserId := 3)

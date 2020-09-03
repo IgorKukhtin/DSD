@@ -1,7 +1,7 @@
 unit Cash_MINI_FP54;
 
 interface
-uses Windows, CashInterface, ecrmini_TLB, System.Classes;
+uses Windows, CashInterface, ecrmini_TLB, System.Classes, System.DateUtils;
 type
   TCashMINI_FP54 = class(TInterfacedObject, ICash)
   private
@@ -69,6 +69,11 @@ uses Forms, SysUtils, Dialogs, Math, Variants, StrUtils, IniUtils, RegularExpres
 const
 
   Password = '12321';
+
+function CurrToStrPoint (ACurr : Currency) : String;
+begin
+  Result := StringReplace(FormatCurr('0.00', ACurr), FormatSettings.DecimalSeparator, '.', [rfReplaceAll, rfIgnoreCase])
+end;
 
 { TCashMINI_FP54 }
 constructor TCashMINI_FP54.Create;
@@ -254,7 +259,9 @@ begin
   FPrintSumma := isPrintSumma;
   FReturn := isReturn;
   FSumma := 0;
-  result := True;
+  if not OpenPort then Exit;
+  if isFiscal then result := SendCommand('open_receipt;' + IfThen(isReturn, '1', '0') + ';')
+  ;
 end;
 
 procedure TCashMINI_FP54.SetAlwaysSold(Value: boolean);
@@ -264,8 +271,8 @@ end;
 
 procedure TCashMINI_FP54.SetTime;
 begin
-  FPrinter.FPSetCurrentDate(Date);
-  if not FPrinter.FPSetCurrentTime(Now) then ShowError;
+  if SendCommand('set_date;' + IntToStr(DayOf(NOW)) + ';' + IntToStr(MonthOf(NOW)) + ';' + IntToStr(YearOf(NOW)) + ';') then
+    SendCommand('set_time;' + IntToStr(HourOf(NOW)) + ';' + IntToStr(MinuteOf(NOW)) + ';' + IntToStr(SecondOf(NOW)) + ';');
 end;
 
 function TCashMINI_FP54.SoldCode(const GoodsCode: integer;
@@ -358,15 +365,13 @@ end;
 
 procedure TCashMINI_FP54.Anulirovt;
 begin
-  if not FPrinter.FPAnnulReceipt then ShowError;
+  SendCommand('cancel_receipt;');
+  ClosePort;
 end;
 
 function TCashMINI_FP54.CashInputOutput(const Summa: double): boolean;
 begin
-  if Summa > 0 then
-    result := FPrinter.FPCashIn(Round(Summa * 100))
-  else result := FPrinter.FPCashOut(Round(Abs(Summa) * 100));
-  if not result then ShowError;
+  SendCommand('in_out;0;0;0;' + IfThen(Summa > 0, '0', '1') + ';' + CurrToStrPoint(Abs(Summa)) + ';;;');
 end;
 
 function TCashMINI_FP54.TotalSumm(Summ, SummAdd: double; PaidType: TPaidType): boolean;
@@ -379,19 +384,19 @@ begin
 
     if (PaidType=ptCardAdd) and (SummAdd <> 0) then
     begin
-      result := FPrinter.FPPayment(4, Round(SummAdd * 100), False, True, '');
+      result := SendCommand('pay;0;' + CurrToStrPoint(Abs(SummAdd)) + ';')
     end;
 
     if result then
     begin
       if PaidType=ptMoney then
       begin
-        result := FPrinter.FPPayment(4, Round(Summ * 100), True, True, '');
-      end else result := FPrinter.FPPayment(1, Round(Summ * 100), True, True, '');
+        result := SendCommand('pay;0;' + CurrToStrPoint(Abs(Summ)) + ';')
+      end else result := SendCommand('pay;2;' + CurrToStrPoint(Abs(Summ)) + ';')
     end;
 
    if not result then ShowError;
-   if not result then FPrinter.FPAnnulReceipt;
+   if not result then Anulirovt;
 
   end else
   begin
@@ -412,10 +417,7 @@ function TCashMINI_FP54.DiscountGoods(Summ: double): boolean;
 begin
   if FisFiscal then
   begin
-    if Summ > 0 then
-      result := FPrinter.FPMakeMarkup(False, True, Round(Summ * 100), '')
-    else result := FPrinter.FPMakeDiscount(False, True, Round(Abs(Summ) * 100), '');
-    if not result then ShowError;
+    result := SendCommand('discount_surcharge;0;0;' + IfThen(Summ > 0, '0', '1') + ';' + CurrToStrPoint(Abs(Summ)) + ';');
   end else result := True;
 end;
 
@@ -615,7 +617,7 @@ end;
 
 function TCashMINI_FP54.SummaReceipt : Currency;
 begin
-  Result := FPrinter.prSumTotal / 100;
+  // if SendCommand('execute_Z_report;' + Password + ';') then result :=
 end;
 
 function TCashMINI_FP54.GetTaxRate : string;

@@ -29,9 +29,10 @@ BEGIN
 
      -- Расчет необходимости штрафа
     BEGIN
-        PERFORM lpInsertUpdate_MovementItem_WagesSUN1 (inSummaSUN1 := SummaSUN1, inUnitID := T1.UnitID, inUserId := vbUserId)
+        PERFORM lpInsertUpdate_MovementItem_WagesSUN1 (inSummaSUN1 := SummaSUN1, inUnitID := T1.UnitID, inInvNumber = InvNumber, inUserId := vbUserId)
         FROM (WITH
                 tmpMovement AS (SELECT Movement.Id
+                                     , Movement.InvNumber
                                 FROM Movement
                                      INNER JOIN MovementBoolean AS MovementBoolean_SUN
                                                                 ON MovementBoolean_SUN.MovementId = Movement.Id
@@ -73,6 +74,7 @@ BEGIN
                    , CASE WHEN date_trunc('day', MovementDate_Insert.ValueData) = vbOparDate1 THEN - 200
                           WHEN date_trunc('day', MovementDate_Insert.ValueData) = vbOparDate2 THEN - 200
                           WHEN date_trunc('day', MovementDate_Insert.ValueData) = vbOparDate3 THEN - 350 END::TFloat AS SummaSUN1
+                   , string_agg(Movement.InvNumber, ',')::TVarChar                              AS InvNumber
               FROM tmpMovement AS Movement
                    LEFT JOIN MovementLinkObject AS MovementLinkObject_From
                                                 ON MovementLinkObject_From.MovementId = Movement.Id
