@@ -23,31 +23,47 @@ BEGIN
 
      -- Результат
      RETURN QUERY
-       WITH 
-       tmpMIContainer AS (SELECT ObjectFloat_Partion.ValueData  :: integer AS MovementId
-                               , MIContainer.ContainerId
-                               , SUM (COALESCE (MIContainer.Amount,0)) AS Summ_51201
-                          FROM MovementItemContainer AS MIContainer
-                               LEFT JOIN ContainerLinkObject AS CLO_PartionMovement
-                                                             ON CLO_PartionMovement.ContainerId = MIContainer.ContainerId
-                                                            AND CLO_PartionMovement.DescId = zc_ContainerLinkObject_PartionMovement()
-                               LEFT JOIN ObjectFloat AS ObjectFloat_Partion
-                                                     ON ObjectFloat_Partion.ObjectId = CLO_PartionMovement.ObjectId
-                                                    AND ObjectFloat_Partion.DescId = zc_ObjectFloat_PartionMovement_MovementId()
-                          WHERE MIContainer.MovementId = inMovementId
-                            AND MIContainer.AccountId = zc_Enum_Account_51201()
-                          GROUP BY ObjectFloat_Partion.ValueData
-                                 , MIContainer.ContainerId
-                          )
-     , tmpMovement AS (SELECT tmpMIContainer.MovementId
-                            , SUM (CASE WHEN MIContainer.MovementDescId = zc_Movement_ProfitLossService() THEN MIContainer.Amount ELSE 0 END)   AS Summ_51201
-                            , SUM (CASE WHEN MIContainer.MovementDescId <> zc_Movement_ProfitLossService() THEN MIContainer.Amount ELSE 0 END)  AS Summ
-                       FROM tmpMIContainer
-                            LEFT JOIN MovementItemContainer AS MIContainer
-                                                            ON MIContainer.ContainerId = tmpMIContainer.ContainerId
-                       GROUP BY tmpMIContainer.MovementId
-                       )
+      WITH
+       tmpMI_Child AS (SELECT MIFloat.ValueData ::integer AS MovementId_part
+                            , SUM (MovementItem.Amount) AS Amount
+                  FROM MovementItem
+                       LEFT JOIN MovementItemFloat AS MIFloat
+                                                   ON MIFloat.MovementItemId = MovementItem.Id
+                                                  AND MIFloat.DescId = zc_MIFloat_MovementId()
+                  WHERE MovementItem.MovementId = inMovementId
+                    AND MovementItem.DescId = zc_MI_Child()
+                  GROUP BY MIFloat.ValueData
+                  )
 
+     , tmpMIContainer AS (SELECT tmpMI_Child.MovementId_part AS MovementId
+                               , CLO_PartionMovement.ContainerId
+                          FROM tmpMI_Child
+                               LEFT JOIN ObjectFloat AS ObjectFloat_Partion
+                                                     ON ObjectFloat_Partion.ValueData  :: integer = tmpMI_Child.MovementId_part
+                                                    AND ObjectFloat_Partion.DescId = zc_ObjectFloat_PartionMovement_MovementId()
+                                                    
+                               LEFT JOIN ContainerLinkObject AS CLO_PartionMovement
+                                                             ON CLO_PartionMovement.ObjectId = ObjectFloat_Partion.ObjectId
+                                                            AND CLO_PartionMovement.DescId = zc_ContainerLinkObject_PartionMovement()
+                          )
+
+     , tmpContainer AS (SELECT MIContainer.ContainerId
+                             , SUM (CASE WHEN MIContainer.MovementDescId = zc_Movement_ProfitLossService() THEN MIContainer.Amount ELSE 0 END)   AS Summ_51201
+                             , SUM (CASE WHEN MIContainer.MovementDescId <> zc_Movement_ProfitLossService() THEN MIContainer.Amount ELSE 0 END)  AS Summ
+                        FROM MovementItemContainer AS MIContainer
+                        WHERE MIContainer.ContainerId IN (SELECT DISTINCT tmpMIContainer.ContainerId FROM tmpMIContainer)
+                        GROUP BY MIContainer.ContainerId
+                        )
+
+     , tmpMovement AS (SELECT tmpMIContainer.MovementId
+                            , SUM (COALESCE (tmpContainer.Summ, 0)) AS Summ
+                            , SUM (COALESCE (tmpContainer.Summ_51201, 0)) AS Summ_51201
+                       FROM tmpMIContainer
+                            LEFT JOIN tmpContainer on tmpContainer.ContainerId = tmpMIContainer.ContainerId
+                       GROUP BY tmpMIContainer.MovementId
+                      )
+
+       -- Результат
        SELECT
              Movement.Id                                  AS Id
            , Movement.InvNumber                           AS InvNumber
@@ -58,8 +74,8 @@ BEGIN
            , MovementDesc.ItemName                        AS DescName
 
            , MovementFloat_TotalSumm.ValueData   ::TFloat  AS TotalSumm
-           , COALESCE (tmpMovement.Summ_51201, 0) ::TFloat AS Summ_51201    -- сумма для распределения
-           , COALESCE (tmpMovement.Summ, 0)      ::TFloat  AS Summ          -- сумма распределено
+           , COALESCE (tmpMovement.Summ_51201, 0)   ::TFloat  AS Summ_51201    -- сумма для распределения
+           , COALESCE (tmpMovement.Summ, 0)         ::TFloat  AS Summ          -- сумма распределено
 
            , Object_From.Id                               AS FromId
            , Object_From.ValueData                        AS FromName
@@ -67,7 +83,7 @@ BEGIN
            , Object_To.ValueData                          AS ToName
            , Object_PaidKind.Id                           AS PaidKindId
            , Object_PaidKind.ValueData                    AS PaidKindName
-           
+
        FROM tmpMovement
             LEFT JOIN  Movement ON Movement.Id = tmpMovement.MovementId
             LEFT JOIN  MovementDesc ON MovementDesc.Id = Movement.DescId
@@ -96,7 +112,6 @@ BEGIN
             LEFT JOIN MovementFloat AS MovementFloat_TotalSumm
                                     ON MovementFloat_TotalSumm.MovementId = Movement.Id
                                    AND MovementFloat_TotalSumm.DescId = zc_MovementFloat_TotalSumm()
-
       ;
 
 END;

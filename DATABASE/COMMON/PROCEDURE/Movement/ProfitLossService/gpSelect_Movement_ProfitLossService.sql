@@ -66,13 +66,14 @@ BEGIN
                                  JOIN (SELECT AccessKeyId FROM Object_RoleAccessKey_View WHERE UserId = vbUserId GROUP BY AccessKeyId) AS tmpRoleAccessKey ON tmpRoleAccessKey.AccessKeyId = Movement.AccessKeyId
                             )
 
-          , tmpMIContainer AS (SELECT MIContainer.MovementId
-                                    , SUM (MIContainer.Amount) AS Summ_51201
-                               FROM MovementItemContainer AS MIContainer
-                               WHERE MIContainer.MovementId IN (SELECT tmpMovement.Id FROM tmpMovement)
-                                 AND MIContainer.AccountId = zc_Enum_Account_51201()
-                               GROUP BY MIContainer.MovementId
-                               )
+          , tmpMI_Child AS (SELECT tmpMovement.Id            AS MovementId
+                                 , SUM (MovementItem.Amount) AS Amount
+                            FROM tmpMovement
+                                 LEFT JOIN MovementItem ON MovementItem.MovementId = tmpMovement.Id
+                                                       AND MovementItem.DescId = zc_MI_Child()
+                            GROUP BY tmpMovement.Id
+                            )
+
        SELECT
              Movement.Id                                    AS Id
            , Movement.InvNumber                             AS InvNumber
@@ -92,7 +93,7 @@ BEGIN
            , MIFloat_BonusValue.ValueData                   AS BonusValue
            , MIFloat_AmountPartner.ValueData                AS AmountPartner
            , MIFloat_Summ.ValueData                         AS Summ
-           , COALESCE (tmpMIContainer.Summ_51201, 0) :: TFloat AS Summ_51201
+           , COALESCE (tmpMI_Child.Amount, 0)     :: TFloat AS Summ_51201
 
            , MIString_Comment.ValueData                     AS Comment
            , Object_Juridical.ObjectCode                    AS JuridicalCode
@@ -222,7 +223,7 @@ BEGIN
                                       ON MovementBoolean_isLoad.MovementId =  Movement.Id
                                      AND MovementBoolean_isLoad.DescId = zc_MovementBoolean_isLoad()
 
-            LEFT JOIN tmpMIContainer ON tmpMIContainer.MovementId = Movement.Id
+            LEFT JOIN tmpMI_Child ON tmpMI_Child.MovementId = Movement.Id
        WHERE ( COALESCE (MILinkObject_PaidKind.ObjectId, 0) = inPaidKindId OR inPaidKindId = 0)
          AND ( COALESCE (MILinkObject_Branch.ObjectId, 0) = inBranchId OR inBranchId = 0)
       ;
