@@ -21,6 +21,7 @@ $BODY$
   DECLARE vbisAddTR       Boolean;
 
   DECLARE vbMovementTRId        Integer;
+  DECLARE vbMovementTRSUNId     Integer;
 BEGIN
     -- проверка прав пользователя на вызов процедуры
     -- PERFORM lpCheckRight (inSession, zc_Enum_Process_Select_Movement_Send());
@@ -92,7 +93,54 @@ BEGIN
 
     IF vbisAddTR = TRUE
     THEN
-      -- Ищем текущий технический переучет
+      -- Ищем текущий технический переучет СУН
+      IF EXISTS(SELECT Movement.Id
+                FROM Movement
+                     LEFT JOIN MovementLinkObject AS MovementLinkObject_Unit
+                                                  ON MovementLinkObject_Unit.MovementId = Movement.Id
+                                                 AND MovementLinkObject_Unit.DescId = zc_MovementLinkObject_Unit()
+                     LEFT JOIN MovementBoolean AS MovementBoolean_RedCheck
+                                               ON MovementBoolean_RedCheck.MovementId = Movement.Id
+                                              AND MovementBoolean_RedCheck.DescId = zc_MovementBoolean_RedCheck()
+                     LEFT JOIN MovementBoolean AS MovementBoolean_Adjustment
+                                               ON MovementBoolean_Adjustment.MovementId = Movement.Id
+                                              AND MovementBoolean_Adjustment.DescId = zc_MovementBoolean_Adjustment()
+                     LEFT JOIN MovementBoolean AS MovementBoolean_CorrectionSUN
+                                               ON MovementBoolean_CorrectionSUN.MovementId = Movement.Id
+                                              AND MovementBoolean_CorrectionSUN.DescId = zc_MovementBoolean_CorrectionSUN()
+                WHERE Movement.DescId = zc_Movement_TechnicalRediscount()
+                  AND Movement.StatusId = zc_Enum_Status_UnComplete()
+                  AND MovementLinkObject_Unit.ObjectId = vbUnitId
+                  AND COALESCE (MovementBoolean_RedCheck.ValueData, False) = FALSE
+                  AND COALESCE (MovementBoolean_Adjustment.ValueData, False) = FALSE
+                  AND COALESCE (MovementBoolean_CorrectionSUN.ValueData, False) = FALSE)
+      THEN
+         SELECT Max(Movement.Id) AS Id
+         INTO vbMovementTRId
+         FROM Movement
+              LEFT JOIN MovementLinkObject AS MovementLinkObject_Unit
+                                           ON MovementLinkObject_Unit.MovementId = Movement.Id
+                                          AND MovementLinkObject_Unit.DescId = zc_MovementLinkObject_Unit()
+              LEFT JOIN MovementBoolean AS MovementBoolean_RedCheck
+                                        ON MovementBoolean_RedCheck.MovementId = Movement.Id
+                                       AND MovementBoolean_RedCheck.DescId = zc_MovementBoolean_RedCheck()
+              LEFT JOIN MovementBoolean AS MovementBoolean_Adjustment
+                                        ON MovementBoolean_Adjustment.MovementId = Movement.Id
+                                       AND MovementBoolean_Adjustment.DescId = zc_MovementBoolean_Adjustment()
+              LEFT JOIN MovementBoolean AS MovementBoolean_CorrectionSUN
+                                        ON MovementBoolean_CorrectionSUN.MovementId = Movement.Id
+                                       AND MovementBoolean_CorrectionSUN.DescId = zc_MovementBoolean_CorrectionSUN()
+         WHERE Movement.DescId = zc_Movement_TechnicalRediscount()
+           AND Movement.StatusId = zc_Enum_Status_UnComplete()
+           AND MovementLinkObject_Unit.ObjectId = vbUnitId
+           AND COALESCE (MovementBoolean_RedCheck.ValueData, False) = FALSE
+           AND COALESCE (MovementBoolean_Adjustment.ValueData, False) = FALSE
+           AND COALESCE (MovementBoolean_CorrectionSUN.ValueData, False) = FALSE;
+      ELSE
+        vbMovementTRId := 0;
+      END IF;
+
+      -- Ищем текущий технический переучет СУН
       IF EXISTS(SELECT Movement.Id
                 FROM Movement
                      LEFT JOIN MovementLinkObject AS MovementLinkObject_Unit
@@ -107,19 +155,20 @@ BEGIN
                   AND COALESCE (MovementBoolean_CorrectionSUN.ValueData, False) = TRUE)
       THEN
          SELECT Max(Movement.Id) AS Id
-         INTO vbMovementTRId
+         INTO vbMovementTRSUNId
          FROM Movement
               LEFT JOIN MovementLinkObject AS MovementLinkObject_Unit
                                            ON MovementLinkObject_Unit.MovementId = Movement.Id
                                           AND MovementLinkObject_Unit.DescId = zc_MovementLinkObject_Unit()
-             LEFT JOIN MovementBoolean AS MovementBoolean_CorrectionSUN
-                                       ON MovementBoolean_CorrectionSUN.MovementId = Movement.Id
-                                      AND MovementBoolean_CorrectionSUN.DescId = zc_MovementBoolean_CorrectionSUN()
+              LEFT JOIN MovementBoolean AS MovementBoolean_CorrectionSUN
+                                        ON MovementBoolean_CorrectionSUN.MovementId = Movement.Id
+                                       AND MovementBoolean_CorrectionSUN.DescId = zc_MovementBoolean_CorrectionSUN()
          WHERE Movement.DescId = zc_Movement_TechnicalRediscount()
            AND Movement.StatusId = zc_Enum_Status_UnComplete()
-           AND MovementLinkObject_Unit.ObjectId = vbUnitId;
+           AND MovementLinkObject_Unit.ObjectId = vbUnitId
+           AND COALESCE (MovementBoolean_CorrectionSUN.ValueData, False) = TRUE;
       ELSE
-        vbMovementTRId := 0;
+        vbMovementTRSUNId := 0;
       END IF;
 
       -- Обнуляем в техническом переучете что ненадо и что в других
@@ -133,11 +182,19 @@ BEGIN
                      INNER JOIN MovementItem AS MITechnicalRediscount
                                              ON MITechnicalRediscount.ID = MIFloat_MITechnicalRediscountId.ValueData::Integer
 
+                     LEFT JOIN MovementItemLinkObject AS MILinkObject_CommentTR
+                                                      ON MILinkObject_CommentTR.MovementItemId = MITechnicalRediscount.Id
+                                                     AND MILinkObject_CommentTR.DescId = zc_MILinkObject_CommentTR()
+
+                     LEFT JOIN ObjectBoolean AS ObjectBoolean_CommentTR_Resort
+                                             ON ObjectBoolean_CommentTR_Resort.ObjectId = MILinkObject_CommentTR.ObjectId
+                                            AND ObjectBoolean_CommentTR_Resort.DescId = zc_ObjectBoolean_CommentTR_Resort()
+
                 WHERE MISend.MovementId = inMovementId
                   AND MISend.DescId = zc_MI_Master()
                   AND (MISend.isErased = FALSE
                     OR MISend.Amount = 0
-                    OR MITechnicalRediscount.MovementId <> vbMovementTRId))
+                    OR MITechnicalRediscount.MovementId <> CASE WHEN COALESCE(ObjectBoolean_CommentTR_Resort.ValueData, False) = FALSE THEN vbMovementTRId ELSE vbMovementTRSUNId END))
       THEN
         -- Обнулили
         PERFORM lpInsertUpdate_MovementItem (MITechnicalRediscount.Id, zc_MI_Master(), MITechnicalRediscount.ObjectId, MITechnicalRediscount.MovementId, 0, Null)
@@ -150,16 +207,25 @@ BEGIN
              INNER JOIN MovementItem AS MITechnicalRediscount
                                      ON MITechnicalRediscount.ID = MIFloat_MITechnicalRediscountId.ValueData::Integer
 
+             LEFT JOIN MovementItemLinkObject AS MILinkObject_CommentTR
+                                              ON MILinkObject_CommentTR.MovementItemId = MITechnicalRediscount.Id
+                                             AND MILinkObject_CommentTR.DescId = zc_MILinkObject_CommentTR()
+
+             LEFT JOIN ObjectBoolean AS ObjectBoolean_CommentTR_Resort
+                                     ON ObjectBoolean_CommentTR_Resort.ObjectId = MILinkObject_CommentTR.ObjectId
+                                    AND ObjectBoolean_CommentTR_Resort.DescId = zc_ObjectBoolean_CommentTR_Resort()
+
         WHERE MISend.MovementId = inMovementId
           AND MISend.DescId = zc_MI_Master()
           AND MITechnicalRediscount.Amount <> 0
           AND (MISend.isErased = FALSE
             OR MISend.Amount = 0
-            OR MITechnicalRediscount.MovementId <> vbMovementTRId);
+            OR MITechnicalRediscount.MovementId <> CASE WHEN COALESCE(ObjectBoolean_CommentTR_Resort.ValueData, False) = FALSE THEN vbMovementTRId ELSE vbMovementTRSUNId END);
 
         -- Грохнули связи на то что в не текущем ТП
         PERFORM lpInsertUpdate_MovementItemFloat (zc_MIFloat_MITechnicalRediscountId(), MISend.ID, 0)
               , lpInsertUpdate_MovementItemFloat (zc_MIFloat_MovementItemId(), MITechnicalRediscount.ID, 0)
+              , gpSetErased_MovementItem (MITechnicalRediscount.ID, inSession)
         FROM MovementItem AS MISend
 
              INNER JOIN MovementItemFloat AS MIFloat_MITechnicalRediscountId
@@ -169,20 +235,27 @@ BEGIN
              INNER JOIN MovementItem AS MITechnicalRediscount
                                      ON MITechnicalRediscount.ID = MIFloat_MITechnicalRediscountId.ValueData::Integer
 
+             LEFT JOIN MovementItemLinkObject AS MILinkObject_CommentTR
+                                              ON MILinkObject_CommentTR.MovementItemId = MITechnicalRediscount.Id
+                                             AND MILinkObject_CommentTR.DescId = zc_MILinkObject_CommentTR()
+
+             LEFT JOIN ObjectBoolean AS ObjectBoolean_CommentTR_Resort
+                                     ON ObjectBoolean_CommentTR_Resort.ObjectId = MILinkObject_CommentTR.ObjectId
+                                    AND ObjectBoolean_CommentTR_Resort.DescId = zc_ObjectBoolean_CommentTR_Resort()
 
         WHERE MISend.MovementId = inMovementId
           AND MISend.DescId = zc_MI_Master()
-          AND MITechnicalRediscount.MovementId <> vbMovementTRId;
+          AND MITechnicalRediscount.MovementId <> CASE WHEN COALESCE(ObjectBoolean_CommentTR_Resort.ValueData, False) = FALSE THEN vbMovementTRId ELSE vbMovementTRSUNId END;
       END IF;
 
       IF EXISTS (SELECT * FROM INFORMATION_SCHEMA.tables WHERE TABLE_NAME = LOWER ('_tmpoccupancysun'))
-      THEN 
+      THEN
         DROP TABLE _tmpOccupancySUN;
       END IF;
 
       CREATE TEMP TABLE _tmpOccupancySUN ON COMMIT DROP AS
       SELECT * FROM gpSelect_MovementOccupancySUN (inMovementID:= inMovementID, inSession:= inSession);
-        
+
       IF EXISTS(SELECT 1
             FROM _tmpOccupancySUN AS MISend
 
@@ -200,6 +273,22 @@ BEGIN
                        THEN MISend.AmountDelta ELSE 0 END > COALESCE (MITechnicalRediscount.Amount, 0))
       THEN
         IF COALESCE(vbMovementTRId, 0) = 0
+           AND EXISTS(SELECT 1
+                      FROM _tmpOccupancySUN AS MISend
+
+                           LEFT JOIN MovementItemFloat AS MIFloat_MITechnicalRediscountId
+                                                       ON MIFloat_MITechnicalRediscountId.MovementItemId = MISend.MovementItemId
+                                                      AND MIFloat_MITechnicalRediscountId.DescId = zc_MIFloat_MITechnicalRediscountId()
+
+                           LEFT JOIN MovementItem AS MITechnicalRediscount
+                                                  ON MITechnicalRediscount.ID = MIFloat_MITechnicalRediscountId.ValueData::Integer
+
+                           LEFT JOIN MovementItemLinkObject AS MILinkObject_CommentTR
+                                                            ON MILinkObject_CommentTR.MovementItemId = MITechnicalRediscount.Id
+                                                           AND MILinkObject_CommentTR.DescId = zc_MILinkObject_CommentTR()
+                      WHERE CASE WHEN COALESCE (MISend.CommentTRId, 0) <> 0 AND COALESCE (MISend.AmountDelta, 0) > 0
+                                 THEN MISend.AmountDelta ELSE 0 END > COALESCE (MITechnicalRediscount.Amount, 0)
+                        AND MISend.isResort = FALSE)
         THEN
           vbMovementTRId := lpInsertUpdate_Movement_TechnicalRediscount (ioId               := 0
                                                                        , inInvNumber        := CAST (NEXTVAL ('Movement_TechnicalRediscount_seq') AS TVarChar)
@@ -210,8 +299,37 @@ BEGIN
                                                                        , inisAdjustment     := False
                                                                        , inUserId           := vbUserId
                                                                          );
+        END IF;
+
+        IF COALESCE(vbMovementTRSUNId, 0) = 0
+           AND EXISTS(SELECT 1
+                      FROM _tmpOccupancySUN AS MISend
+
+                           LEFT JOIN MovementItemFloat AS MIFloat_MITechnicalRediscountId
+                                                       ON MIFloat_MITechnicalRediscountId.MovementItemId = MISend.MovementItemId
+                                                      AND MIFloat_MITechnicalRediscountId.DescId = zc_MIFloat_MITechnicalRediscountId()
+
+                           LEFT JOIN MovementItem AS MITechnicalRediscount
+                                                  ON MITechnicalRediscount.ID = MIFloat_MITechnicalRediscountId.ValueData::Integer
+
+                           LEFT JOIN MovementItemLinkObject AS MILinkObject_CommentTR
+                                                            ON MILinkObject_CommentTR.MovementItemId = MITechnicalRediscount.Id
+                                                           AND MILinkObject_CommentTR.DescId = zc_MILinkObject_CommentTR()
+                      WHERE CASE WHEN COALESCE (MISend.CommentTRId, 0) <> 0 AND COALESCE (MISend.AmountDelta, 0) > 0
+                                 THEN MISend.AmountDelta ELSE 0 END > COALESCE (MITechnicalRediscount.Amount, 0)
+                        AND MISend.isResort = TRUE)
+        THEN
+          vbMovementTRSUNId := lpInsertUpdate_Movement_TechnicalRediscount (ioId               := 0
+                                                                          , inInvNumber        := CAST (NEXTVAL ('Movement_TechnicalRediscount_seq') AS TVarChar)
+                                                                          , inOperDate         := CURRENT_DATE
+                                                                          , inUnitId           := vbUnitId
+                                                                          , inComment          := ''
+                                                                          , inisRedCheck       := False
+                                                                          , inisAdjustment     := False
+                                                                          , inUserId           := vbUserId
+                                                                            );
           -- сохранили <Корректировка основного переучета>
-          PERFORM lpInsertUpdate_MovementBoolean (zc_MovementBoolean_CorrectionSUN(), vbMovementTRId, TRUE);
+          PERFORM lpInsertUpdate_MovementBoolean (zc_MovementBoolean_CorrectionSUN(), vbMovementTRSUNId, TRUE);
         END IF;
 
         -- Добавили в технический переучет
@@ -220,7 +338,7 @@ BEGIN
         FROM (SELECT MISend.MovementItemId
                    , lpInsertUpdate_MovementItem_TechnicalRediscount (
                              ioId           := COALESCE(MITechnicalRediscount.Id, 0)
-                           , inMovementId   := vbMovementTRId
+                           , inMovementId   := CASE WHEN MISend.isResort = FALSE THEN vbMovementTRId ELSE vbMovementTRSUNId END
                            , inGoodsId      := MISend.GoodsId
                            , inAmount       := CASE WHEN COALESCE (MISend.CommentTRId, 0) <> 0 AND COALESCE (MISend.AmountDelta, 0) > 0 THEN - MISend.AmountDelta ELSE 0 END
                            , inCommentTRID  := COALESCE (MISend.CommentTRId, MILinkObject_CommentTR.ObjectId)
@@ -278,13 +396,13 @@ BEGIN
 
     END IF;
 
---    raise notice 'Value 05: % %', vbisAddTR, (SELECT Movement.invnumber FROM Movement WHERE Movement.ID = vbMovementTRId);
+--    raise notice 'Value 05: % % %', vbisAddTR, (SELECT Movement.invnumber FROM Movement WHERE Movement.ID = vbMovementTRId), (SELECT Movement.invnumber FROM Movement WHERE Movement.ID = vbMovementTRSUNId);
 
 /*    IF inSession = '3'
     THEN
       RAISE EXCEPTION 'Прошло. %', vbMovementTRId;
-    END IF;
-*/
+    END IF;*/
+
 END;
 $BODY$
   LANGUAGE PLPGSQL VOLATILE;
@@ -299,8 +417,5 @@ ALTER FUNCTION gpSelect_MovementOccupancySUN (Integer, TVarChar) OWNER TO postgr
 
 -- тест
 -- SELECT * FROM Movement where ID = 19363037
--- 
---SELECT * FROM gpSelect_MovementSUN_TechnicalRediscount (inMovementID:= 20074057 , inSession:= '3')
--- select * from gpInsertUpdate_MovementItem_Send(ioId := 361887145 , inMovementId := 19668294 , inGoodsId := 38164 , inAmount := 0 , inPrice := 0 , inPriceUnitFrom := 97.5 , ioPriceUnitTo := 98.4 , inAmountManual := 0 , inAmountStorage := 0 , inReasonDifferencesId := 0 , inCommentTRId := 14883321 ,  inSession := '3');
-
---select * from gpInsertUpdate_MovementItem_Send(ioId := 361887145 , inMovementId := 19668294 , inGoodsId := 38164 , inAmount := 1 , inPrice := 0 , inPriceUnitFrom := 97.5 , ioPriceUnitTo := 98.4 , inAmountManual := 0 , inAmountStorage := 0 , inReasonDifferencesId := 0 , inCommentTRId := 14883321 ,  inSession := '3');
+--
+-- SELECT * FROM gpSelect_MovementSUN_TechnicalRediscount (inMovementID:= 20000468  , inSession:= '3')

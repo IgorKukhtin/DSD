@@ -80,6 +80,11 @@ type
     bbUpdateOperDate: TdxBarButton;
     spUpdateOperDate: TdsdStoredProc;
     SummCard: TcxGridDBColumn;
+    spMovementSetErasedSite: TdsdStoredProc;
+    FormParams: TdsdFormParams;
+    actDeleteCheckSite: TdsdChangeMovementStatus;
+    dxBarButton6: TdxBarButton;
+    actChoiceCancelReason: TOpenChoiceForm;
   private
     { Private declarations }
   public

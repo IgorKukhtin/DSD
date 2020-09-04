@@ -566,7 +566,7 @@ object MainForm: TMainForm
           Caption = #1053#1086#1084#1077#1088
           DataBinding.FieldName = 'InvNumber'
           HeaderAlignmentHorz = taCenter
-          Width = 85
+          Width = 52
         end
         object chBookingStatus: TcxGridDBColumn
           Caption = #1057#1090#1072#1090#1091#1089
@@ -585,6 +585,12 @@ object MainForm: TMainForm
           DataBinding.FieldName = 'OperDate'
           HeaderAlignmentHorz = taCenter
           Width = 96
+        end
+        object chCancelReason: TcxGridDBColumn
+          Caption = #1055#1088#1080#1095#1080#1085#1072' '#1086#1090#1082#1072#1079#1072
+          DataBinding.FieldName = 'CancelReason'
+          HeaderAlignmentHorz = taCenter
+          Width = 106
         end
       end
       object cxGridLevel3: TcxGridLevel

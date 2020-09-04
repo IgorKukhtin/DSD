@@ -1,6 +1,6 @@
 -- Function: gpInsertUpdate_MovementItem_Wages_Summa()
 
-DROP FUNCTION IF EXISTS gpInsertUpdate_MovementItem_Wages_Summa(INTEGER, INTEGER, TFloat, TFloat, TFloat, TFloat, TFloat, Boolean, TVarChar);
+DROP FUNCTION IF EXISTS gpInsertUpdate_MovementItem_Wages_Summa(INTEGER, INTEGER, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, Boolean, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpInsertUpdate_MovementItem_Wages_Summa(
     IN ioId                  Integer   , -- Ключ объекта <Элемент документа>
@@ -9,6 +9,7 @@ CREATE OR REPLACE FUNCTION gpInsertUpdate_MovementItem_Wages_Summa(
     IN inMarketing           TFloat    , -- Маркетинг
     IN inDirector            TFloat    , -- Директор. премии / штрафы
     IN inIlliquidAssets      TFloat    , -- Неликвиды
+    IN inPenaltySUN          TFloat    , -- Персональный штраф по СУН
     IN inAmountCard          TFloat    , -- На карту
     IN inisIssuedBy          Boolean   , -- Выдана
    OUT outAmountHand         TFloat    , -- На руки
@@ -49,6 +50,7 @@ BEGIN
          COALESCE(inMarketing, 0) <> 0 OR
          COALESCE(inDirector, 0) <> 0  OR
          COALESCE(inIlliquidAssets, 0) <> 0 OR
+         COALESCE(inPenaltySUN, 0) <> 0 OR
          COALESCE(inAmountCard, 0) <> 0
       THEN
         RAISE EXCEPTION 'Ошибка. Для дополнительных расходов можно изменять только признак "Выдано".';      
@@ -93,6 +95,10 @@ BEGIN
                                           ON MIFloat_IlliquidAssets.MovementItemId = MovementItem.Id
                                          AND MIFloat_IlliquidAssets.DescId = zc_MIFloat_SummaIlliquidAssets()
 
+              LEFT JOIN MovementItemFloat AS MIFloat_PenaltySUN
+                                          ON MIFloat_PenaltySUN.MovementItemId = MovementItem.Id
+                                         AND MIFloat_PenaltySUN.DescId = zc_MIFloat_PenaltySUN()
+
               LEFT JOIN MovementItemFloat AS MIF_AmountCard
                                           ON MIF_AmountCard.MovementItemId = MovementItem.Id
                                          AND MIF_AmountCard.DescId = zc_MIFloat_AmountCard()
@@ -107,6 +113,7 @@ BEGIN
             OR COALESCE (MIFloat_Marketing.ValueData, 0) <>  COALESCE (inMarketing, 0)
             OR COALESCE (MIFloat_Director.ValueData, 0) <>  COALESCE (inDirector, 0)
             OR COALESCE (MIFloat_IlliquidAssets.ValueData, 0) <>  COALESCE (inIlliquidAssets, 0)
+            OR COALESCE (MIFloat_PenaltySUN.ValueData, 0) <>  COALESCE (inPenaltySUN, 0)
             OR COALESCE (MIF_AmountCard.ValueData, 0) <>  COALESCE (inAmountCard, 0)))
       THEN
         RAISE EXCEPTION 'Ошибка. Зарплата выдана. Изменение сумм запрещено.';            
@@ -120,6 +127,8 @@ BEGIN
       PERFORM lpInsertUpdate_MovementItemFloat (zc_MIFloat_Director(), ioId, inDirector);
        -- сохранили свойство < Неликвиды >
       PERFORM lpInsertUpdate_MovementItemFloat (zc_MIFloat_SummaIlliquidAssets(), ioId, inIlliquidAssets);
+       -- сохранили свойство <Персональный штраф по СУН>
+      PERFORM lpInsertUpdate_MovementItemFloat (zc_MIFloat_PenaltySUN(), ioId, inPenaltySUN);
 
        -- сохранили свойство <На карту>
       PERFORM lpInsertUpdate_MovementItemFloat (zc_MIFloat_AmountCard(), ioId, inAmountCard);
@@ -178,7 +187,8 @@ BEGIN
               COALESCE (MIFloat_HolidaysHospital.ValueData, 0) + 
               COALESCE (MIFloat_Marketing.ValueData, 0) +
               COALESCE (MIFloat_Director.ValueData, 0) +
-              COALESCE (MIFloat_IlliquidAssets.ValueData, 0) - 
+              COALESCE (MIFloat_IlliquidAssets.ValueData, 0) +
+              COALESCE (MIFloat_PenaltySUN.ValueData, 0) - 
               COALESCE (MIF_AmountCard.ValueData, 0))::TFloat AS AmountHand
       INTO outAmountHand
       FROM  MovementItem
@@ -198,6 +208,10 @@ BEGIN
             LEFT JOIN MovementItemFloat AS MIFloat_IlliquidAssets
                                         ON MIFloat_IlliquidAssets.MovementItemId = MovementItem.Id
                                        AND MIFloat_IlliquidAssets.DescId = zc_MIFloat_SummaIlliquidAssets()
+
+            LEFT JOIN MovementItemFloat AS MIFloat_PenaltySUN
+                                        ON MIFloat_PenaltySUN.MovementItemId = MovementItem.Id
+                                       AND MIFloat_PenaltySUN.DescId = zc_MIFloat_PenaltySUN()
 
             LEFT JOIN MovementItemFloat AS MIF_AmountCard
                                         ON MIF_AmountCard.MovementItemId = MovementItem.Id

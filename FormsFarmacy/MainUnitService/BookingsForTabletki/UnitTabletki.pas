@@ -35,7 +35,7 @@ type
     function LoadBookings(ASerialNumber : Integer) : boolean;
 
     function UpdateStaus(ASerialNumber : Integer;
-                         ABookingId, AId, AStatusNew, ACode, ACustomer, ACustomerPhone : String;
+                         ABookingId, AId, AStatusNew, ACode, ACustomer, ACustomerPhone, ACancelReason : String;
                          ADate : TDateTime;
                          AJSONAItems: TJSONArray) : boolean;
 
@@ -297,7 +297,7 @@ begin
 end;
 
 function TTabletkiAPI.UpdateStaus(ASerialNumber : Integer;
-                                  ABookingId, AId, AStatusNew, ACode, ACustomer, ACustomerPhone : String;
+                                  ABookingId, AId, AStatusNew, ACode, ACustomer, ACustomerPhone, ACancelReason : String;
                                   ADate : TDateTime;
                                   AJSONAItems: TJSONArray) : boolean;
   var jValue : TJSONValue;
@@ -325,7 +325,7 @@ begin
              AddPair('docAdditionalInfo', TJSONString.Create('')).
              AddPair('customerAdditionalInfo', TJSONString.Create('')).
              AddPair('reserveSource', TJSONString.Create('FSource')).
-             AddPair('cancelReason', TJSONString.Create('')).
+             AddPair('cancelReason', TJSONString.Create(ACancelReason)).
              AddPair('rows', AJSONAItems);
     jsonBody.AddElement(jsonItem);
 

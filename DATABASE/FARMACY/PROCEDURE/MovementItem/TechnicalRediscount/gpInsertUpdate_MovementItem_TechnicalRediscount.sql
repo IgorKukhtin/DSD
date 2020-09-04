@@ -49,7 +49,7 @@ BEGIN
 
      IF EXISTS(SELECT 1 FROM MovementBoolean
                WHERE MovementBoolean.MovementId = inMovementId
-                 AND MovementBoolean.DescId = zc_MIFloat_MovementItemId()
+                 AND MovementBoolean.DescId = zc_MovementBoolean_CorrectionSUN()
                  AND MovementBoolean.ValueData = TRUE)
         AND NOT EXISTS(SELECT 1 FROM MovementItemFloat 
                        WHERE MovementItemFloat.MovementItemId = ioId

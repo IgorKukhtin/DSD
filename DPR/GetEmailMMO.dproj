@@ -5,7 +5,7 @@
 			<FrameworkType>VCL</FrameworkType>
 			<MainSource>GetEmailMMO.dpr</MainSource>
 			<Base>True</Base>
-			<Config Condition="'$(Config)'==''">Debug</Config>
+			<Config Condition="'$(Config)'==''">Release</Config>
 			<Platform Condition="'$(Platform)'==''">Win32</Platform>
 			<TargetedPlatforms>1</TargetedPlatforms>
 			<AppType>Application</AppType>
@@ -155,9 +155,9 @@
 			<DCCReference Include="..\SOURCE\MeDOC\MeDOC.pas"/>
 			<DCCReference Include="..\SOURCE\MeDOC\MeDocXML.pas"/>
 			<DCCReference Include="..\SOURCE\COMPONENT\dsdInternetAction.pas"/>
-			<DCCReference Include="..\GetEmail\sevenzip.pas"/>
+			<DCCReference Include="..\FormsFarmacy\MainUnitService\GetEmail\sevenzip.pas"/>
 			<DCCReference Include="..\SOURCE\COMPONENT\ExternalLoad.pas"/>
-			<DCCReference Include="..\GetEmail\Main.pas">
+			<DCCReference Include="..\FormsFarmacy\MainUnitService\GetEmail\Main.pas">
 				<Form>MainForm</Form>
 			</DCCReference>
 			<DCCReference Include="..\SOURCE\MeDOC\IFIN_J1201009.pas"/>

@@ -8,8 +8,8 @@ CREATE OR REPLACE FUNCTION gpSelect_Movement_Check_Booking_Tabletki(
 )
 RETURNS TABLE (Id Integer, InvNumber TVarChar, OperDate TDateTime, StatusCode Integer,
                BookingId TVarChar, BookingStatus TVarChar, BookingStatusNew TVarChar,
-               Bayer TVarChar, BayerPhone TVarChar, OrderId TVarChar
-
+               Bayer TVarChar, BayerPhone TVarChar, OrderId TVarChar,
+               CancelReason TVarChar
               )
 AS
 $BODY$
@@ -42,6 +42,8 @@ BEGIN
           , MovementString_Bayer.ValueData                     AS Bayer
           , MovementString_BayerPhone.ValueData                AS BayerPhone
           , MovementString_OrderId.ValueData                   AS OrderId
+          , CASE WHEN Movement.StatusId = zc_Enum_Status_Erased()
+                 THEN COALESCE(Object_CancelReason.ValueData, CancelReasonDefault.Name) END::TVarChar  AS CancelReason
 
      FROM MovementLinkObject
 
@@ -75,6 +77,14 @@ BEGIN
           INNER JOIN MovementString AS MovementString_OrderId
                                     ON MovementString_OrderId.MovementId = Movement.Id
                                    AND MovementString_OrderId.DescId = zc_MovementString_OrderId()
+                                   
+
+          LEFT JOIN MovementLinkObject AS MovementLinkObject_CancelReason
+                                       ON MovementLinkObject_CancelReason.MovementId = Movement.Id
+                                      AND MovementLinkObject_CancelReason.DescId = zc_MovementLinkObject_CancelReason()
+          LEFT JOIN Object AS Object_CancelReason ON Object_CancelReason.Id = MovementLinkObject_CancelReason.ObjectId
+                                   
+          LEFT JOIN (SELECT * FROM gpSelect_Object_CancelReason('3') AS CR ORDER BY CR.Code LIMIT 1) AS CancelReasonDefault ON 1 =1 
 
      WHERE MovementLinkObject.DescId = zc_MovementLinkObject_CheckSourceKind()
        AND MovementLinkObject.ObjectId = zc_Enum_CheckSourceKind_Tabletki()

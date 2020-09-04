@@ -686,6 +686,43 @@ inherited CheckVIP_SearchForm: TCheckVIP_SearchForm
       Category = 'DSDLib'
       MoveParams = <>
     end
+    object actDeleteCheckSite: TdsdChangeMovementStatus
+      Category = 'DSDLib'
+      MoveParams = <>
+      BeforeAction = actChoiceCancelReason
+      StoredProc = spMovementSetErasedSite
+      StoredProcList = <
+        item
+          StoredProc = spMovementSetErasedSite
+        end>
+      Caption = #1059#1076#1072#1083#1080#1090#1100' '#1095#1077#1082
+      Hint = #1059#1076#1072#1083#1080#1090#1100' '#1095#1077#1082' '#1089' '#1079#1074#1087#1086#1083#1085#1077#1085#1080#1077#1084' '#1087#1088#1080#1095#1080#1085#1099' '#1086#1090#1082#1072#1079#1072' '#1080' '#1074#1077#1088#1085#1091#1090#1100' '#1090#1086#1074#1072#1088' '#1074' '#1082#1072#1089#1089#1091
+      ImageIndex = 13
+      Status = mtDelete
+      DataSource = MasterDS
+      QuestionBeforeExecute = 
+        #1059#1076#1072#1083#1080#1090#1100' '#1095#1077#1082' '#1089' '#1079#1074#1087#1086#1083#1085#1077#1085#1080#1077#1084' '#1087#1088#1080#1095#1080#1085#1099' '#1086#1090#1082#1072#1079#1072' '#1080' '#1074#1077#1088#1085#1091#1090#1100' '#1090#1086#1074#1072#1088' '#1074' '#1082#1072#1089#1089#1091 +
+        '?'
+    end
+    object actChoiceCancelReason: TOpenChoiceForm
+      Category = 'DSDLib'
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      Caption = 'actChoiceCancelReason'
+      FormName = 'TCancelReasonForm'
+      FormNameParam.Value = 'TCancelReasonForm'
+      FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
+      GuiParams = <
+        item
+          Name = 'Key'
+          Value = Null
+          Component = FormParams
+          ComponentItem = 'CancelReasonId'
+          MultiSelectSeparator = ','
+        end>
+      isShowModal = True
+    end
   end
   inherited MasterDS: TDataSource
     Left = 40
@@ -738,6 +775,10 @@ inherited CheckVIP_SearchForm: TCheckVIP_SearchForm
         item
           Visible = True
           ItemName = 'dxBarButton3'
+        end
+        item
+          Visible = True
+          ItemName = 'dxBarButton4'
         end
         item
           Visible = True
@@ -811,6 +852,10 @@ inherited CheckVIP_SearchForm: TCheckVIP_SearchForm
       Category = 0
       ImageIndex = 58
     end
+    object dxBarButton4: TdxBarButton
+      Action = actDeleteCheckSite
+      Category = 0
+    end
   end
   inherited DBViewAddOn: TdsdDBViewAddOn
     OnDblClickActionList = <
@@ -871,7 +916,7 @@ inherited CheckVIP_SearchForm: TCheckVIP_SearchForm
     Top = 256
   end
   object spMovementSetErased: TdsdStoredProc
-    StoredProcName = 'gpSetErased_Movement_Check'
+    StoredProcName = 'gpSetErased_Movement_CheckVIP'
     DataSet = MasterCDS
     DataSets = <
       item
@@ -880,10 +925,16 @@ inherited CheckVIP_SearchForm: TCheckVIP_SearchForm
     OutputType = otResult
     Params = <
       item
-        Name = 'inmovementid'
+        Name = 'inMovementId'
         Value = Null
         Component = MasterCDS
         ComponentItem = 'Id'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inCancelReasonId'
+        Value = 0
         ParamType = ptInput
         MultiSelectSeparator = ','
       end>
@@ -970,5 +1021,44 @@ inherited CheckVIP_SearchForm: TCheckVIP_SearchForm
     PackSize = 1
     Left = 528
     Top = 168
+  end
+  object spMovementSetErasedSite: TdsdStoredProc
+    StoredProcName = 'gpSetErased_Movement_CheckVIP'
+    DataSet = MasterCDS
+    DataSets = <
+      item
+        DataSet = MasterCDS
+      end>
+    OutputType = otResult
+    Params = <
+      item
+        Name = 'inMovementId'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'Id'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inCancelReasonId'
+        Value = Null
+        Component = FormParams
+        ComponentItem = 'CancelReasonId'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end>
+    PackSize = 1
+    Left = 208
+    Top = 200
+  end
+  object FormParams: TdsdFormParams
+    Params = <
+      item
+        Name = 'CancelReasonId'
+        Value = Null
+        MultiSelectSeparator = ','
+      end>
+    Left = 40
+    Top = 144
   end
 end

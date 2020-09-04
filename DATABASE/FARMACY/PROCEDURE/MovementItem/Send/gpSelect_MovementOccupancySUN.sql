@@ -13,7 +13,7 @@ RETURNS TABLE (Id Integer, InvNumbr TVarChar, OperDate TDateTime
              , GoodsId Integer, GoodsCode Integer, GoodsName TVarChar
              , AmountFormed TFloat, AmountSend TFloat, AmountDelta TFloat
              , CommentSendId Integer, CommentSendCode Integer, CommentSendName TVarChar
-             , CommentTRId Integer, CommentTRCode Integer, CommentTRName TVarChar
+             , CommentTRId Integer, CommentTRCode Integer, CommentTRName TVarChar, isResort Boolean
               )
 
 AS
@@ -77,6 +77,7 @@ BEGIN
        , Object_CommentTR.Id                                                            AS CommentTRId
        , Object_CommentTR.ObjectCode                                                    AS CommentTRCode
        , Object_CommentTR.ValueData                                                     AS CommentTRName
+       , COALESCE(ObjectBoolean_CommentTR_Resort.ValueData, False)                      AS isResort
   FROM tmpProtocol
 
        LEFT JOIN MovementLinkObject AS MovementLinkObject_From
@@ -101,6 +102,10 @@ BEGIN
                             ON ObjectLink_CommentSend_CommentTR.ObjectId = Object_CommentSend.Id
                            AND ObjectLink_CommentSend_CommentTR.DescId = zc_ObjectLink_CommentSend_CommentTR()
        LEFT JOIN Object AS Object_CommentTR ON Object_CommentTR.Id = ObjectLink_CommentSend_CommentTR.ChildObjectId
+
+       LEFT JOIN ObjectBoolean AS ObjectBoolean_CommentTR_Resort
+                               ON ObjectBoolean_CommentTR_Resort.ObjectId = Object_CommentTR.Id 
+                              AND ObjectBoolean_CommentTR_Resort.DescId = zc_ObjectBoolean_CommentTR_Resort()
   ;
 
 END;

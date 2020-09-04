@@ -153,10 +153,30 @@ CREATE OR REPLACE FUNCTION zc_MIString_ItemId() RETURNS Integer AS $BODY$BEGIN R
 INSERT INTO MovementItemStringDesc (Code, ItemName)
   SELECT 'zc_MIString_ItemId', 'Id строки товара в заказе' WHERE NOT EXISTS (SELECT * FROM MovementItemStringDesc WHERE Code = 'zc_MIString_ItemId');
 
+CREATE OR REPLACE FUNCTION zc_MIString_InvNumberWeek1() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM MovementItemStringDesc WHERE Code = 'zc_MIString_InvNumberWeek1'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
+INSERT INTO MovementItemStringDesc (Code, ItemName)
+  SELECT 'zc_MIString_InvNumberWeek1', 'Документы за первую неделю' WHERE NOT EXISTS (SELECT * FROM MovementItemStringDesc WHERE Code = 'zc_MIString_InvNumberWeek1');
+
+CREATE OR REPLACE FUNCTION zc_MIString_InvNumberWeek2() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM MovementItemStringDesc WHERE Code = 'zc_MIString_InvNumberWeek2'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
+INSERT INTO MovementItemStringDesc (Code, ItemName)
+  SELECT 'zc_MIString_InvNumberWeek2', 'Документы за вторую неделю' WHERE NOT EXISTS (SELECT * FROM MovementItemStringDesc WHERE Code = 'zc_MIString_InvNumberWeek2');
+
+CREATE OR REPLACE FUNCTION zc_MIString_InvNumberWeek3() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM MovementItemStringDesc WHERE Code = 'zc_MIString_InvNumberWeek3'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
+INSERT INTO MovementItemStringDesc (Code, ItemName)
+  SELECT 'zc_MIString_InvNumberWeek3', 'Документы за третью неделю' WHERE NOT EXISTS (SELECT * FROM MovementItemStringDesc WHERE Code = 'zc_MIString_InvNumberWeek3');
+
+CREATE OR REPLACE FUNCTION zc_MIString_InvNumberWeek4() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM MovementItemStringDesc WHERE Code = 'zc_MIString_InvNumberWeek4'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
+INSERT INTO MovementItemStringDesc (Code, ItemName)
+  SELECT 'zc_MIString_InvNumberWeek4', 'Документы за четвертую неделю' WHERE NOT EXISTS (SELECT * FROM MovementItemStringDesc WHERE Code = 'zc_MIString_InvNumberWeek4');
+
+CREATE OR REPLACE FUNCTION zc_MIString_InvNumberWeek5() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM MovementItemStringDesc WHERE Code = 'zc_MIString_InvNumberWeek5'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
+INSERT INTO MovementItemStringDesc (Code, ItemName)
+  SELECT 'zc_MIString_InvNumberWeek5', 'Документы за пятую неделю' WHERE NOT EXISTS (SELECT * FROM MovementItemStringDesc WHERE Code = 'zc_MIString_InvNumberWeek5');
 
 /*-------------------------------------------------------------------------------
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.  Воробкало А.А.  Ярошенко Р.Ф.   Шаблий О.В.
+ 03.09.20                                                                                      * zc_MIString_InvNumberWeek...
  18.03.20                                                                                      * zc_MIString_ItemId
  05.03.20                                                                                      * zc_MIString_Result
  27.02.20                                                                                      * zc_MIString_Explanation

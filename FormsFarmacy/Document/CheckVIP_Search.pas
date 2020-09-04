@@ -70,6 +70,11 @@ type
     PartionDateKindName: TcxGridDBColumn;
     ListPartionDateKindName: TcxGridDBColumn;
     SummCard: TcxGridDBColumn;
+    spMovementSetErasedSite: TdsdStoredProc;
+    FormParams: TdsdFormParams;
+    actDeleteCheckSite: TdsdChangeMovementStatus;
+    actChoiceCancelReason: TOpenChoiceForm;
+    dxBarButton4: TdxBarButton;
   private
     { Private declarations }
   public

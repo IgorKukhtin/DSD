@@ -16,15 +16,8 @@ $BODY$
    DECLARE vbMISendId    Integer;
    DECLARE vbAmount      TFloat;
 BEGIN
-  -- проверка прав пользовател€ на вызов процедуры
-  vbUserId := lpCheckRight (inSession, zc_Enum_Process_SetErased_MI_TechnicalRediscount());
 
-  IF COALESCE (inMovementItemId, 0) = 0
-  THEN
-      RAISE EXCEPTION 'ќшибка.Ёлемент документа не сохранен.';
-  END IF;
-  
-  SELECT MovementItem.MovementId, Movement.OperDate, COALESCE (MIFloat_MISendId.ValueData, 0)::Integer, MovementItem.Amount
+  SELECT MovementItem.MovementId, Movement.OperDate, MIFloat_MISendId.ValueData, MovementItem.Amount
   INTO vbMovementId, vbOperDate, vbMISendId, vbAmount
   FROM MovementItem 
        INNER JOIN Movement ON Movement.ID = MovementItem.MovementId
@@ -32,6 +25,20 @@ BEGIN
                                    ON MIFloat_MISendId.MovementItemId = MovementItem.Id
                                   AND MIFloat_MISendId.DescId = zc_MIFloat_MovementItemId()
   WHERE MovementItem.ID = inMovementItemId;
+
+  -- проверка прав пользовател€ на вызов процедуры
+  IF vbAmount = 0 AND vbMISendId IS NOT NULL
+  THEN
+    vbUserId:= lpGetUserBySession (inSession);  
+  ELSE
+    vbUserId := lpCheckRight (inSession, zc_Enum_Process_SetErased_MI_TechnicalRediscount());
+  END IF;
+
+  IF COALESCE (inMovementItemId, 0) = 0
+  THEN
+      RAISE EXCEPTION 'ќшибка.Ёлемент документа не сохранен.';
+  END IF;
+  
 
   IF COALESCE (vbMISendId, 0) <> 0 AND COALESCE (vbAmount, 0) <> 0
   THEN

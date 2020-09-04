@@ -70,6 +70,9 @@ type
     Cat_5: TcxGridDBColumn;
     ceAmount: TcxCurrencyEdit;
     cxLabel4: TcxLabel;
+    spAttach_SendPartionDate: TdsdStoredProc;
+    actAttach_SendPartionDate: TdsdExecStoredProc;
+    bbAttach_SendPartionDate: TdxBarButton;
   private
     { Private declarations }
   public

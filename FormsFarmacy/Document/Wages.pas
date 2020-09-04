@@ -116,6 +116,7 @@ type
     IlliquidAssets: TcxGridDBBandedColumn;
     actWagesMoneyBoxSun: TdsdOpenForm;
     dxBarButton18: TdxBarButton;
+    PenaltySUN: TcxGridDBBandedColumn;
   private
     { Private declarations }
   public

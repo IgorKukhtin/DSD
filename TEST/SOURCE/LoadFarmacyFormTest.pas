@@ -29,6 +29,7 @@ type
     procedure LoadBankStatementFormTest;
     procedure LoadBuyerFormTest;
     procedure LoadCalendarFormTest;
+    procedure LoadCancelReasonFormTest;
     procedure LoadCashRegisterFormTest;
     procedure LoadChangeIncomePaymentKindFormTest;
     procedure LoadChangeIncomePaymentFormTest;
@@ -399,6 +400,14 @@ procedure TLoadFormTest.LoadCalendarFormTest;
 begin
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TCalendarForm'));
   TdsdFormStorageFactory.GetStorage.Load('TCalendarForm');
+end;
+
+procedure TLoadFormTest.LoadCancelReasonFormTest;
+begin
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TCancelReasonEditForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TCancelReasonEditForm');
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TCancelReasonForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TCancelReasonForm');
 end;
 
 procedure TLoadFormTest.LoadCheckFormTest;
@@ -1838,8 +1847,8 @@ begin
 //  TdsdFormStorageFactory.GetStorage.Save(GetForm('TWagesMoneyBoxSunForm'));
 //  TdsdFormStorageFactory.GetStorage.Load('TWagesMoneyBoxSunForm');
 //
-//  TdsdFormStorageFactory.GetStorage.Save(GetForm('TWagesUserForm'));
-//  TdsdFormStorageFactory.GetStorage.Load('TWagesUserForm');
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TWagesUserForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TWagesUserForm');
 end;
 
 procedure TLoadFormTest.LoadWriteOffHouseholdInventoryFormTest;

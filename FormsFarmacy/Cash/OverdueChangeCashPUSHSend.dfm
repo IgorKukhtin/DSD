@@ -26,7 +26,6 @@ object OverdueChangeCashPUSHSendForm: TOverdueChangeCashPUSHSendForm
     LookAndFeel.Kind = lfStandard
     LookAndFeel.NativeStyle = False
     LookAndFeel.SkinName = ''
-    ExplicitWidth = 707
     object cxGridDBTableView: TcxGridDBTableView
       Navigator.Buttons.CustomButtons = <>
       DataController.DataSource = DataSource
@@ -134,7 +133,6 @@ object OverdueChangeCashPUSHSendForm: TOverdueChangeCashPUSHSendForm
     Caption = 'Panel'
     ShowCaption = False
     TabOrder = 5
-    ExplicitWidth = 707
     object edGoodsCode: TcxTextEdit
       Left = 15
       Top = 16
@@ -255,6 +253,14 @@ object OverdueChangeCashPUSHSendForm: TOverdueChangeCashPUSHSendForm
         end
         item
           Visible = True
+          ItemName = 'bbAttach_SendPartionDate'
+        end
+        item
+          Visible = True
+          ItemName = 'dxBarStatic'
+        end
+        item
+          Visible = True
           ItemName = 'bbGridToExcel'
         end>
       OneOnRow = True
@@ -330,6 +336,10 @@ object OverdueChangeCashPUSHSendForm: TOverdueChangeCashPUSHSendForm
     end
     object dxBarButton2: TdxBarButton
       Action = actSendPartionDateChange
+      Category = 0
+    end
+    object bbAttach_SendPartionDate: TdxBarButton
+      Action = actAttach_SendPartionDate
       Category = 0
     end
   end
@@ -416,6 +426,23 @@ object OverdueChangeCashPUSHSendForm: TOverdueChangeCashPUSHSendForm
           StoredProc = spTransfer_SendPartionDate
         end>
       Caption = 'actTransfer_SendPartionDate'
+    end
+    object actAttach_SendPartionDate: TdsdExecStoredProc
+      Category = 'DSDLib'
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      StoredProc = spAttach_SendPartionDate
+      StoredProcList = <
+        item
+          StoredProc = spAttach_SendPartionDate
+        end>
+      Caption = #1055#1088#1080#1082#1088#1077#1087#1080#1090#1100' '#1087#1077#1088#1077#1084#1077#1097#1077#1085#1080#1077' '#1082' '#1091#1078#1077' '#1089#1086#1079#1076#1072#1085#1085#1086#1081' '#1079#1072#1103#1074#1082#1077' '#1085#1072' '#1080#1079#1084#1077#1085#1077#1085#1080#1077' '#1089#1088#1086#1082#1072
+      Hint = #1055#1088#1080#1082#1088#1077#1087#1080#1090#1100' '#1087#1077#1088#1077#1084#1077#1097#1077#1085#1080#1077' '#1082' '#1091#1078#1077' '#1089#1086#1079#1076#1072#1085#1085#1086#1081' '#1079#1072#1103#1074#1082#1077' '#1085#1072' '#1080#1079#1084#1077#1085#1077#1085#1080#1077' '#1089#1088#1086#1082#1072
+      ImageIndex = 79
+      QuestionBeforeExecute = 
+        #1055#1088#1080#1082#1088#1077#1087#1080#1090#1100' '#1087#1077#1088#1077#1084#1077#1097#1077#1085#1080#1077' '#1082' '#1091#1078#1077' '#1089#1086#1079#1076#1072#1085#1085#1086#1081' '#1079#1072#1103#1074#1082#1077' '#1085#1072' '#1080#1079#1084#1077#1085#1077#1085#1080#1077' '#1089#1088#1086#1082#1072 +
+        '?'
+      InfoAfterExecute = #1042#1099#1087#1086#1083#1085#1077#1085#1086
     end
   end
   object dsdStoredProc: TdsdStoredProc
@@ -552,6 +579,32 @@ object OverdueChangeCashPUSHSendForm: TOverdueChangeCashPUSHSendForm
         MultiSelectSeparator = ','
       end>
     Left = 48
+    Top = 296
+  end
+  object spAttach_SendPartionDate: TdsdStoredProc
+    StoredProcName = 'gpUpdate_MovementItem_Attach_SendPartionDateChange'
+    DataSets = <>
+    OutputType = otResult
+    Params = <
+      item
+        Name = 'inContainerID'
+        Value = Null
+        Component = ClientDataSet
+        ComponentItem = 'ContainerChangeID'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inMISendId'
+        Value = Null
+        Component = FormParams
+        ComponentItem = 'MISendId'
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end>
+    PackSize = 1
+    Left = 312
     Top = 296
   end
 end

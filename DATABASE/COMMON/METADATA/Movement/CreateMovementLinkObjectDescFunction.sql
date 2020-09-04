@@ -464,12 +464,18 @@ CREATE OR REPLACE FUNCTION zc_MovementLinkObject_Layout() RETURNS Integer AS $BO
 INSERT INTO MovementLinkObjectDesc (Code, ItemName)
   SELECT 'zc_MovementLinkObject_Layout', 'Название выкладки' WHERE NOT EXISTS (SELECT * FROM MovementLinkObjectDesc WHERE Code = 'zc_MovementLinkObject_Layout');
 
+CREATE OR REPLACE FUNCTION zc_MovementLinkObject_CancelReason() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM MovementLinkObjectDesc WHERE Code = 'zc_MovementLinkObject_CancelReason'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
+INSERT INTO MovementLinkObjectDesc (Code, ItemName)
+  SELECT 'zc_MovementLinkObject_CancelReason', 'Причина отказа для сайта' WHERE NOT EXISTS (SELECT * FROM MovementLinkObjectDesc WHERE Code = 'zc_MovementLinkObject_CancelReason');
+
+
 /*-------------------------------------------------------------------------------
 
                   РАСПОЛАГАЙТЕ ДЕСКИ ПО АЛФАВИТУ  !!!!!!!!!!!!!!!!!!!
 
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.  Воробкало А.А.   Шаблий О.В.
+ 03.09.20                                                                                      * zc_MovementLinkObject_CancelReason
  27.08.20         * zc_MovementLinkObject_Layout
  07.08.20         * zc_MovementLinkObject_PersonalGroup
  05.08.20         * zc_MovementLinkObject_Status_wms
