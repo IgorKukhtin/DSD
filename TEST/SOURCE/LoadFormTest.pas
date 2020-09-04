@@ -95,6 +95,7 @@ type
     procedure LoadLossPersonalFormTest;
     procedure LoadMeasureFormTest;
     procedure LoadMemberFormTest;
+     procedure LoadMemberMinusFormTest;
     procedure LoadMemberBankAccountFormTest;
     procedure LoadMemberExternalFormTest;
     procedure LoadMemberSheetWorkTimeFormTest;
@@ -3225,6 +3226,17 @@ begin
 
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TMember_ObjectToForm'));
   TdsdFormStorageFactory.GetStorage.Load('TMember_ObjectToForm');
+end;
+
+procedure TLoadFormTest.LoadMemberMinusFormTest;
+begin
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TMemberMinusForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TMemberMinusForm');
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TMemberMinusEditForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TMemberMinusEditForm');
+
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TMemberExternal_Juridical_ObjectForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TMemberExternal_Juridical_ObjectForm');
 end;
 
 procedure TLoadFormTest.LoadMemberBankAccountFormTest;
