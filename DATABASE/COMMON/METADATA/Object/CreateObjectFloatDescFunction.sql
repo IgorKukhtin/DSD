@@ -1073,6 +1073,14 @@ CREATE OR REPLACE FUNCTION zc_ObjectFloat_PersonalServiceList_Compensation() RET
 INSERT INTO ObjectFloatDesc (Code, DescId, ItemName)
   SELECT 'zc_ObjectFloat_PersonalServiceList_Compensation', zc_Object_Car(), 'В каком месяце начисляется компенсация' WHERE NOT EXISTS (SELECT * FROM ObjectFloatDesc WHERE Code = 'zc_ObjectFloat_PersonalServiceList_Compensation');
 
+CREATE OR REPLACE FUNCTION zc_ObjectFloat_MemberMinus_TotalSumm() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM ObjectFloatDesc WHERE Code = 'zc_ObjectFloat_MemberMinus_TotalSumm'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
+INSERT INTO ObjectFloatDesc (Code, DescId, ItemName)
+  SELECT 'zc_ObjectFloat_MemberMinus_TotalSumm', zc_Object_MemberMinus(), 'Сумма Итого' WHERE NOT EXISTS (SELECT * FROM ObjectFloatDesc WHERE Code = 'zc_ObjectFloat_MemberMinus_TotalSumm');
+
+CREATE OR REPLACE FUNCTION zc_ObjectFloat_MemberMinus_Summ() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM ObjectFloatDesc WHERE Code = 'zc_ObjectFloat_MemberMinus_Summ'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
+INSERT INTO ObjectFloatDesc (Code, DescId, ItemName)
+  SELECT 'zc_ObjectFloat_MemberMinus_Summ', zc_Object_MemberMinus(), 'Сумма к удержанию ежемесячно' WHERE NOT EXISTS (SELECT * FROM ObjectFloatDesc WHERE Code = 'zc_ObjectFloat_MemberMinus_Summ');
+
 
 --!!! АПТЕКА
 
@@ -1825,6 +1833,8 @@ INSERT INTO ObjectFloatDesc (DescId, Code, ItemName)
 /*-------------------------------------------------------------------------------
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.   Воробкало А.А.   Шаблий О.В.
+ 04.09.20         * zc_ObjectFloat_MemberMinus_TotalSumm
+                    zc_ObjectFloat_MemberMinus_Summ
  22.08.20                                                                                      * zc_ObjectFloat_JuridicalPriorities_Priorities
  21.07.20                                                                                      * zc_ObjectFloat_Unit_SerialNumberTabletki
  14.07.20                                                                                      * zc_ObjectFloat_HouseholdInventory_CountForPrice

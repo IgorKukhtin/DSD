@@ -1757,6 +1757,23 @@ INSERT INTO ObjectLinkDesc (Code, ItemName, DescId, ChildObjectDescId)
   SELECT 'zc_ObjectLink_MemberBankAccount_Member', 'Физ лицо', zc_Object_MemberBankAccount(), zc_Object_Member() WHERE NOT EXISTS (SELECT * FROM ObjectLinkDesc WHERE Code = 'zc_ObjectLink_MemberBankAccount_Member');
 
 
+CREATE OR REPLACE FUNCTION zc_ObjectLink_MemberMinus_From() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM ObjectLinkDesc WHERE Code = 'zc_ObjectLink_MemberMinus_From'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
+INSERT INTO ObjectLinkDesc (Code, ItemName, DescId, ChildObjectDescId)
+  SELECT 'zc_ObjectLink_MemberMinus_From', 'Физ лицо', zc_Object_MemberMinus(), zc_Object_Member() WHERE NOT EXISTS (SELECT * FROM ObjectLinkDesc WHERE Code = 'zc_ObjectLink_MemberMinus_From');
+
+CREATE OR REPLACE FUNCTION zc_ObjectLink_MemberMinus_To() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM ObjectLinkDesc WHERE Code = 'zc_ObjectLink_MemberMinus_To'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
+INSERT INTO ObjectLinkDesc (Code, ItemName, DescId, ChildObjectDescId)
+  SELECT 'zc_ObjectLink_MemberMinus_To', 'Физ лицо (сторонние) / юр. лица', zc_Object_MemberMinus(), zc_Object_MemberExternal() WHERE NOT EXISTS (SELECT * FROM ObjectLinkDesc WHERE Code = 'zc_ObjectLink_MemberMinus_To');
+
+CREATE OR REPLACE FUNCTION zc_ObjectLink_MemberMinus_BankAccountFrom() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM ObjectLinkDesc WHERE Code = 'zc_ObjectLink_MemberMinus_BankAccountFrom'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
+INSERT INTO ObjectLinkDesc (Code, ItemName, DescId, ChildObjectDescId)
+  SELECT 'zc_ObjectLink_MemberMinus_BankAccountFrom', 'IBAN плательщика платежа', zc_Object_MemberMinus(), zc_Object_BankAccount() WHERE NOT EXISTS (SELECT * FROM ObjectLinkDesc WHERE Code = 'zc_ObjectLink_MemberMinus_BankAccountFrom');
+
+CREATE OR REPLACE FUNCTION zc_ObjectLink_MemberMinus_BankAccountTo() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM ObjectLinkDesc WHERE Code = 'zc_ObjectLink_MemberMinus_BankAccountTo'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
+INSERT INTO ObjectLinkDesc (Code, ItemName, DescId, ChildObjectDescId)
+  SELECT 'zc_ObjectLink_MemberMinus_BankAccountTo', 'IBAN получателя платежа', zc_Object_MemberMinus(), zc_Object_BankAccount() WHERE NOT EXISTS (SELECT * FROM ObjectLinkDesc WHERE Code = 'zc_ObjectLink_MemberMinus_BankAccountTo');
+
+
 --!!! АПТЕКА
 
 CREATE OR REPLACE FUNCTION zc_ObjectLink_Goods_NDSKind() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM ObjectLinkDesc WHERE Code = 'zc_ObjectLink_Goods_NDSKind'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
@@ -2361,6 +2378,10 @@ SELECT 'zc_ObjectLink_JuridicalPriorities_Goods', 'Связь с главным товаром', zc_
 /*-------------------------------------------------------------------------------
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.   Воробкало А.А.   Шаблий О.В.
+ 04.09.20         * zc_ObjectLink_MemberMinus_From
+                    zc_ObjectLink_MemberMinus_To
+                    zc_ObjectLink_MemberMinus_BankAccountFrom
+                    zc_ObjectLink_MemberMinus_BankAccountTo
  27.08.20         * zc_ObjectLink_Unit_Layout
  22.08.20                                                                                      * zc_Object_JuridicalPriorities
  19.07.20                                                                                      * zc_ObjectLink_CommentSend_CommentTR
