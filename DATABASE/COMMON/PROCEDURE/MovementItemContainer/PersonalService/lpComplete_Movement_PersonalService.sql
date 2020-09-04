@@ -2,10 +2,12 @@
 
 DROP FUNCTION IF EXISTS lpComplete_Movement_PersonalService (Integer, Boolean, Integer);
 DROP FUNCTION IF EXISTS lpComplete_Movement_PersonalService (Integer, Integer);
+-- DROP FUNCTION IF EXISTS lpComplete_Movement_PersonalService (Integer, Boolean, Integer);
 
 CREATE OR REPLACE FUNCTION lpComplete_Movement_PersonalService(
-    IN inMovementId        Integer  , -- ключ Документа
-    IN inUserId            Integer    -- Пользователь
+    IN inMovementId          Integer               , -- ключ Документа
+--  IN inIsPersonalOut_check Boolean  DEFAULT TRUE , --
+    IN inUserId              Integer                 -- Пользователь
 )
 RETURNS VOID
 AS
@@ -181,6 +183,13 @@ BEGIN
         AND (NOT EXISTS (SELECT 1 FROM ObjectLink_UserRole_View WHERE ObjectLink_UserRole_View.RoleId = zc_Enum_Role_Admin() AND ObjectLink_UserRole_View.UserId = ABS (inUserId))
           OR ABS (inUserId) = zfCalc_UserAdmin() :: Integer
             )
+     AND inUserId > 0
+     AND NOT EXISTS (SELECT 1
+                     FROM ObjectBoolean AS ObjectBoolean_PersonalOut
+                     WHERE ObjectBoolean_PersonalOut.ObjectId  = vbPersonalServiceListId
+                       AND ObjectBoolean_PersonalOut.DescId    = zc_ObjectBoolean_PersonalServiceList_PersonalOut()
+                       AND ObjectBoolean_PersonalOut.ValueData = TRUE --
+                    )
      THEN
          -- для остальных - нельзя "следующий" месяц
          vbMovementItemId_err:= (SELECT MovementItem.Id
@@ -203,12 +212,13 @@ BEGIN
                                    AND COALESCE (ObjectDate_DateOut.ValueData + INTERVAL'1 MONTH', zc_DateEnd()) < DATE_TRUNC ('MONTH', vbServiceDate) + INTERVAL'1 MONTH'
                                  LIMIT 1
                                 );
-          IF vbMovementItemId_err > 0 -- AND 1=0
-         THEN RAISE EXCEPTION 'Ошибка.Сотрудник <%> <%> <%> уволен <%>. Необходимо его удалить в ведомости за <%> № <%> от <%>.' --  id=%
+         IF vbMovementItemId_err > 0 -- AND 1=0
+         THEN RAISE EXCEPTION 'Ошибка.Сотрудник <%> <%> <%> уволен <%>. Необходимо его удалить в ведомости <%> за <%> № <%> от <%>.' --  id=%
                        , lfGet_Object_ValueData_sh ((SELECT MI.ObjectId FROM MovementItem AS MI WHERE MI.Id = vbMovementItemId_err))
                        , lfGet_Object_ValueData_sh ((SELECT MILO.ObjectId FROM MovementItemLinkObject AS MILO WHERE MILO.MovementItemId = vbMovementItemId_err AND MILO.DescId = zc_MILinkObject_Position()))
                        , lfGet_Object_ValueData_sh ((SELECT MILO.ObjectId FROM MovementItemLinkObject AS MILO WHERE MILO.MovementItemId = vbMovementItemId_err AND MILO.DescId = zc_MILinkObject_Unit()))
                        , zfConvert_DateToString ((SELECT ObjectDate_DateOut.ValueData FROM MovementItem AS MI LEFT JOIN ObjectDate AS ObjectDate_DateOut ON ObjectDate_DateOut.ObjectId = MI.ObjectId AND ObjectDate_DateOut.DescId   = zc_ObjectDate_Personal_Out() WHERE MI.Id = vbMovementItemId_err))
+                       , lfGet_Object_ValueData_sh (vbPersonalServiceListId)
                        , zfCalc_MonthYearName (vbServiceDate)
                        , (SELECT Movement.InvNumber FROM MovementItem AS MI LEFT JOIN Movement ON Movement.Id = MI.MovementId WHERE MI.Id = vbMovementItemId_err)
                        , zfConvert_DateToString ((SELECT Movement.OperDate FROM MovementItem AS MI LEFT JOIN Movement ON Movement.Id = MI.MovementId WHERE MI.Id = vbMovementItemId_err))
@@ -342,7 +352,8 @@ BEGIN
     AND inUserId > 0
      THEN
           PERFORM lpComplete_Movement_PersonalService_Recalc (inMovementId := inMovementId
-                                                            , inUserId     := inUserId);
+                                                            , inUserId     := inUserId
+                                                             );
      END IF;
 
 
