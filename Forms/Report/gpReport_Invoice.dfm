@@ -1,4 +1,5 @@
 inherited Report_InvoiceForm: TReport_InvoiceForm
+  Caption = #1054#1090#1095#1077#1090' <'#1055#1086' '#1089#1095#1077#1090#1072#1084'>'
   ClientHeight = 404
   ClientWidth = 1073
   AddOnFormData.isSingle = False
