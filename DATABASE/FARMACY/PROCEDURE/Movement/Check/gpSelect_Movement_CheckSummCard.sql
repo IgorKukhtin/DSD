@@ -39,6 +39,7 @@ RETURNS TABLE (Id Integer, InvNumber TVarChar, OperDate TDateTime, StatusCode In
              , Delay Boolean, DateDelay TDateTime
              , CheckSourceKindName TVarChar
              , SummCard TFloat
+             , CancelReason TVarChar
               )
 AS
 $BODY$
@@ -112,6 +113,8 @@ BEGIN
            , MovementDate_Delay.ValueData                                 AS DateDelay
            , Object_CheckSourceKind.ValueData                             AS CheckSourceKindName
            , MovementFloat_TotalSummCard.ValueData                        AS SummCard
+           , CASE WHEN Movement_Check.StatusId = zc_Enum_Status_Erased()
+                  THEN COALESCE(Object_CancelReason.ValueData, CancelReasonDefault.Name) END::TVarChar  AS CancelReason
 
         FROM (SELECT Movement.*
                    , MovementLinkObject_Unit.ObjectId                    AS UnitId
@@ -201,7 +204,7 @@ BEGIN
                                          AND MovementLinkObject_CashRegister.DescId = zc_MovementLinkObject_CashRegister()
              LEFT JOIN Object AS Object_CashRegister ON Object_CashRegister.Id = MovementLinkObject_CashRegister.ObjectId
 
-   	     LEFT JOIN MovementLinkObject AS MovementLinkObject_PaidType
+   	         LEFT JOIN MovementLinkObject AS MovementLinkObject_PaidType
                                           ON MovementLinkObject_PaidType.MovementId = Movement_Check.Id
                                          AND MovementLinkObject_PaidType.DescId = zc_MovementLinkObject_PaidType()
              LEFT JOIN Object AS Object_PaidType ON Object_PaidType.Id = MovementLinkObject_PaidType.ObjectId
@@ -307,6 +310,13 @@ BEGIN
             LEFT JOIN MovementString AS MovementString_BookingId
                                      ON MovementString_BookingId.MovementId = Movement_Check.Id
                                     AND MovementString_BookingId.DescId = zc_MovementString_BookingId()
+
+            LEFT JOIN MovementLinkObject AS MovementLinkObject_CancelReason
+                                         ON MovementLinkObject_CancelReason.MovementId = Movement_Check.Id
+                                        AND MovementLinkObject_CancelReason.DescId = zc_MovementLinkObject_CancelReason()
+            LEFT JOIN Object AS Object_CancelReason ON Object_CancelReason.Id = MovementLinkObject_CancelReason.ObjectId
+                                     
+            LEFT JOIN (SELECT * FROM gpSelect_Object_CancelReason('3') AS CR ORDER BY CR.Code LIMIT 1) AS CancelReasonDefault ON 1 = 1 
       ;
 
 END;

@@ -75,6 +75,16 @@ begin
   Result := StringReplace(FormatCurr('0.00', ACurr), FormatSettings.DecimalSeparator, '.', [rfReplaceAll, rfIgnoreCase])
 end;
 
+function AmountToStrPoint (ACurr : Currency) : String;
+begin
+  Result := StringReplace(FormatCurr('0.000', ACurr), FormatSettings.DecimalSeparator, '.', [rfReplaceAll, rfIgnoreCase])
+end;
+
+function StrToCurrPoint(AStr : String) : Currency;
+begin
+  if not TryStrToCurr(StringReplace(AStr, '.', FormatSettings.DecimalSeparator, [rfReplaceAll, rfIgnoreCase]), Result) then Result := 0;
+end;
+
 { TCashMINI_FP54 }
 constructor TCashMINI_FP54.Create;
   var Error : String;
@@ -83,10 +93,11 @@ begin
   FAlwaysSold:=false;
   FPrintSumma:=False;
   FReturn:=False;
-  FLengNoFiscalText := 37;
+  FLengNoFiscalText := 22;
   FConnected := False;
   FResultCount := 0;
   FOpenCommand := 'open_port;' + iniPortNumber + ';' + iniPortSpeed + ';';
+  FSumma := 0;
   Error := '';
   try
     FPrinter := CreateOleObject('ecrmini.t400');
@@ -107,11 +118,13 @@ begin
 end;
 
 function TCashMINI_FP54.OpenPort : Boolean;
+  var Command : String;
 begin
   Result := False;
   try
+    Command := FOpenCommand;
     if FConnected then Result := True
-    else Result := FPrinter.T400me(FOpenCommand);
+    else Result := FPrinter.T400me(Command);
     if not Result then ShowError;
   finally
     FConnected := Result;
@@ -119,8 +132,11 @@ begin
 end;
 
 function TCashMINI_FP54.ClosePort : Boolean;
+  var Command : String;
 begin
-  Result := FPrinter.T400me('close_port;');
+  FConnected := False;
+  Command := 'close_port;';
+  Result := FPrinter.T400me(Command);
   if not Result then ShowError;
 end;
 
@@ -131,10 +147,11 @@ begin
   Connected := FConnected;
   try
     Command := ACommand;
-    if not OpenPort then Exit;
+    Result := OpenPort;
+    if not Result then Exit;
     if Result and (Command <> '') then Result := FPrinter.T400me(Command);
     if not Result then ShowError;
-    FResult := TRegEx.Split(Command, ' ');
+    FResult := TRegEx.Split(Command, ';');
     FResultCount := High(FResult);
   finally
     if not Connected then ClosePort;
@@ -245,6 +262,15 @@ end;
 
 function TCashMINI_FP54.CloseReceiptEx(out CheckId: String): boolean;
 begin
+  if FisFiscal then
+  begin
+    SendCommand('get_status;0;');
+    if FResultCount >= 15 then CheckId := FResult[15];
+  end else
+  begin
+    SendCommand('comment;0;1;0;0;1;1;;');
+    ClosePort;
+  end;
   result := True;
 end;
 
@@ -260,8 +286,8 @@ begin
   FReturn := isReturn;
   FSumma := 0;
   if not OpenPort then Exit;
-  if isFiscal then result := SendCommand('open_receipt;' + IfThen(isReturn, '1', '0') + ';')
-  ;
+  if FisFiscal then result := SendCommand('open_receipt;' + IfThen(isReturn, '1', '0') + ';')
+  else result := SendCommand('comment;0;0;0;1;1;1;;');
 end;
 
 procedure TCashMINI_FP54.SetAlwaysSold(Value: boolean);
@@ -337,30 +363,29 @@ begin
 
   if FAlwaysSold then exit;
 
-  if NDS = 20 then nNDS := 1 else nNDS := 2;
-
   Logger.AddToLog(' SALE (GoodsCode := ' + IntToStr(GoodsCode) + ', Amount := ' + ReplaceStr(FormatFloat('0.000', Amount), FormatSettings.DecimalSeparator, '.') +
       ', Price := ' + ReplaceStr(FormatFloat('0.00', Price), FormatSettings.DecimalSeparator, '.') + ')');
-  if FReturn then
-  begin
-    if Amount = 1 then
-      result := FPrinter.FPSaleItem(Round(Amount * 1000), 3, False, True, False, Round(Price * 100), nNDS, Copy(GoodsName, 1, 75), GoodsCode)
-    else result := FPrinter.FPSaleItem(Round(Amount * 1000), 3, False, False, False, Round(Price * 100), nNDS, Copy(GoodsName, 1, 75), GoodsCode);
-  end else
-  begin
-    if Amount = 1 then
-      result := FPrinter.FPRefundItem(Round(Amount * 1000), 3, False, True, False, Round(Price * 100), nNDS, Copy(GoodsName, 1, 75), GoodsCode)
-    else result := FPrinter.FPRefundItem(Round(Amount * 1000), 3, False, False, False, Round(Price * 100), nNDS, Copy(GoodsName, 1, 75), GoodsCode);
-  end;
 
-  if not result then ShowError;
+  // программируем товар
+  if NDS = 20 then nNDS := 1
+  else if NDS =  0 then nNDS := 3
+  else nNDS := 2;
+
+  result := SendCommand('add_plu;' + IntToStr(GoodsCode) + ';' + IntToStr(nNDS) + ';1;0;0;0;1;0.0;0;' +
+    Copy(StringReplace(GoodsName, ';', '\;', [rfReplaceAll, rfIgnoreCase]), 1, 48) + ';' + AmountToStrPoint(Ceil(Amount)) + ';');
+  if not result then Exit;
+
+  // Продажа
+  result := SendCommand('sale_plu;0;0;1;' + AmountToStrPoint(Amount) + ';' + IntToStr(GoodsCode) + ';' + CurrToStrPoint(Price) + ';');
+  if result and (FResultCount >= 2) then FSumma := FSumma + StrToCurrPoint(FResult[2]);
+
 end;
 
 function TCashMINI_FP54.ProgrammingGoods(const GoodsCode: integer;
   const GoodsName: string; const Price, NDS: double): boolean;
 begin
   result := False;
-  ShowMessage('Ошибка. Комманда SoldCode не разрешена.');
+  ShowMessage('Ошибка. Комманда GoodsCode не разрешена.');
 end;
 
 procedure TCashMINI_FP54.Anulirovt;
@@ -396,7 +421,7 @@ begin
     end;
 
    if not result then ShowError;
-   if not result then Anulirovt;
+   if result then ClosePort else Anulirovt;
 
   end else
   begin
@@ -407,10 +432,7 @@ begin
       L := L + StringOfChar(' ' , FLengNoFiscalText - Length(L + FormatCurr('0.00', FSumma)) - 1) + FormatCurr('0.00', FSumma);
       if not PrintNotFiscalText(L) then Exit;
     end;
-
-    FPrinter.FPCloseServiceReport;
   end;
-
 end;
 
 function TCashMINI_FP54.DiscountGoods(Summ: double): boolean;
@@ -419,12 +441,12 @@ begin
   begin
     result := SendCommand('discount_surcharge;0;0;' + IfThen(Summ > 0, '0', '1') + ';' + CurrToStrPoint(Abs(Summ)) + ';');
   end else result := True;
+  FSumma := FSumma + Summ;
 end;
 
 function TCashMINI_FP54.ClosureFiscal: boolean;
 begin
-  result := FPrinter.FPMakeZReport(Password);
-  if not result then ShowError;
+  result := SendCommand('execute_Z_report;' + Password + ';');
 end;
 
 function TCashMINI_FP54.DeleteArticules(const GoodsCode: integer): boolean;
@@ -434,13 +456,13 @@ end;
 function TCashMINI_FP54.FiscalNumber: String;
 begin
   result := '';
-  if SendCommand('get_fm_status;') and (FResultCount >= 2) then Result := FResult[2];
+  if SendCommand('get_fm_status;') and (FResultCount >= 3) then Result := FResult[3];
 end;
 
 function TCashMINI_FP54.SerialNumber:String;
 begin
   result := '';
-  if SendCommand('get_serial_num;') and (FResultCount >= 2)  then Result := FResult[2];
+  if SendCommand('get_serial_num;') and (FResultCount >= 3)  then Result := FResult[3];
 end;
 
 function TCashMINI_FP54.XReport: boolean;
@@ -467,15 +489,16 @@ end;
 function TCashMINI_FP54.PrintNotFiscalText(
   const PrintText: WideString): boolean;
 begin
-  result := FPrinter.FPPrintServiceReportByLine(PrintText);
-  if not result then ShowError
+  result := SendCommand('comment;0;0;0;0;1;1;' +
+    StringReplace(PrintText, ';', '\;', [rfReplaceAll, rfIgnoreCase]) + ';');
 end;
 
 function TCashMINI_FP54.PrintFiscalText(
   const PrintText: WideString): boolean;
-var APrintText: String;
 begin
-
+  result := SendCommand('comment;0;0;0;0;1;1;' +
+    StringReplace(PrintText, ';', '\;', [rfReplaceAll, rfIgnoreCase]) + ';');
+  if not FConnected and result then SendCommand('paper_feed;5;');
 end;
 
 function TCashMINI_FP54.SubTotal(isPrint, isDisplay: WordBool; Percent,
@@ -539,11 +562,6 @@ function TCashMINI_FP54.InfoZReport : string;
 
 begin
   Result := '';
-
-//  FModem.prKsefSavePath := 'd:\DSD\BIN\ZRepot';
-//  FModem.ModemReadKsefByZReport(9);
-//  if FModem.ModemFindPacket(15, 0, 0) then FModem.ModemReadKsefPacket(FModem.prFoundPacket);
-
 
   FPrinter.FPGetCurrentStatus;
 
@@ -617,12 +635,21 @@ end;
 
 function TCashMINI_FP54.SummaReceipt : Currency;
 begin
-  // if SendCommand('execute_Z_report;' + Password + ';') then result :=
+  result := FSumma;
 end;
 
 function TCashMINI_FP54.GetTaxRate : string;
+  var I : Integer; S : string; C : Currency;
+  const TaxName : String = 'АБВГ';
 begin
   Result := '';
+  if not SendCommand('get_taxes;') then Exit;
+  for I := 0 to 3 do
+  begin
+    if Result <> '' then Result := Result + '; ';
+    Result := Result + TaxName[I + 1] + ' ' + FormatCurr('0.00', StrToCurrPoint(FResult[6 + I * 3])) + '%';
+  end;
+
 end;
 
 end.

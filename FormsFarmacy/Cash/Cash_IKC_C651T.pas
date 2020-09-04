@@ -200,7 +200,9 @@ begin
 
   if FAlwaysSold then exit;
 
-  if NDS = 20 then nNDS := 1 else nNDS := 2;
+  if NDS = 20 then nNDS := 0
+  else if NDS =  0 then nNDS := 2
+  else nNDS := 1;
 
   Logger.AddToLog(' SALE (GoodsCode := ' + IntToStr(GoodsCode) + ', Amount := ' + ReplaceStr(FormatFloat('0.000', Amount), FormatSettings.DecimalSeparator, '.') +
       ', Price := ' + ReplaceStr(FormatFloat('0.00', Price), FormatSettings.DecimalSeparator, '.') + ')');
@@ -344,9 +346,36 @@ end;
 
 function TCashIKC_C651T.PrintFiscalText(
   const PrintText: WideString): boolean;
-var APrintText: String;
+var I : Integer;
+    L : string;
+    N : string;
+    Res: TArray<string>;
 begin
-
+  Result := True;
+  if POS(#13, PrintText) > 0 then
+  begin
+    Res := TRegEx.Split(StringReplace(PrintText, #10, '', [rfReplaceAll]), #13);
+    for I := 0 to High(Res) do
+    begin
+      PrintFiscalText(Res[i])
+    end;
+  end else
+  begin
+    L := '';
+    Res := TRegEx.Split(PrintText, ' ');
+    for I := 0 to High(Res) do
+    begin
+      if L <> '' then L := L + ' ';
+      L := L + Res[i];
+      if I < High(Res) then N := ' ' + Res[i + 1] else N := '';
+      if Length(L + N) > FLengNoFiscalText then
+      begin
+        if not FPrinter.FPCommentLine(L, True) then Exit;
+        L := '';
+      end;
+    end;
+    if L <> '' then FPrinter.FPCommentLine(L, True);
+  end;
 end;
 
 function TCashIKC_C651T.SubTotal(isPrint, isDisplay: WordBool; Percent,
@@ -497,6 +526,11 @@ end;
 function TCashIKC_C651T.GetTaxRate : string;
 begin
   Result := '';
+  if not FPrinter.FPGetTaxRates then Exit;
+  Result := Result + 'A =    ' + FormatCurr('0.00', FPrinter.prTaxRate1 / 100) + '%;';
+  Result := Result + 'Á =    ' + FormatCurr('0.00', FPrinter.prTaxRate2 / 100) + '%;';
+  Result := Result + 'Â =    ' + FormatCurr('0.00', FPrinter.prTaxRate3 / 100) + '%;';
+  Result := Result + 'Ã =    ' + FormatCurr('0.00', FPrinter.prTaxRate4 / 100) + '%;';
 end;
 
 end.
