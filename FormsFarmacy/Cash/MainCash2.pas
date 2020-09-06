@@ -505,6 +505,24 @@ type
     MemDataBANFISCAL: TBooleanField;
     MainisBanFiscalSale: TcxGridDBColumn;
     CheckDivisionPartiesName: TcxGridDBColumn;
+    actOpenCheckDeferred: TOpenChoiceForm;
+    N48: TMenuItem;
+    N49: TMenuItem;
+    N50: TMenuItem;
+    N51: TMenuItem;
+    N52: TMenuItem;
+    VIP6: TMenuItem;
+    VIP7: TMenuItem;
+    VIP8: TMenuItem;
+    actLoadDeferred: TMultiAction;
+    actOpenCheckDeferred_Search: TOpenChoiceForm;
+    actLoadDeferred_Search: TMultiAction;
+    actOpenDelayDeferred: TdsdOpenForm;
+    actOpenCheckSite: TOpenChoiceForm;
+    actLoadSite: TMultiAction;
+    actOpenCheckSite_Search: TOpenChoiceForm;
+    actLoadSite_Search: TMultiAction;
+    actOpenDelaySite: TdsdOpenForm;
     procedure WM_KEYDOWN(var Msg: TWMKEYDOWN);
     procedure FormCreate(Sender: TObject);
     procedure actChoiceGoodsInRemainsGridExecute(Sender: TObject);
@@ -1753,12 +1771,32 @@ procedure TMainCashForm2.pm_VIP1Click(Sender: TObject);
 begin
   inherited;
   case TMenuItem(Sender).Tag of
-    0:
+    1:
+      if actLoadDeferred.Execute and ((FormParams.ParamByName('CheckId').Value <> 0)
+        or (FormParams.ParamByName('ManagerName').AsString <> '')) then
+        LoadVIPCheck;
+    2:
+      if actLoadDeferred_Search.Execute and
+        ((FormParams.ParamByName('CheckId').Value <> 0) or
+        (FormParams.ParamByName('ManagerName').AsString <> '')) then
+        LoadVIPCheck;
+
+    11:
       if actLoadVIP.Execute and ((FormParams.ParamByName('CheckId').Value <> 0)
         or (FormParams.ParamByName('ManagerName').AsString <> '')) then
         LoadVIPCheck;
-    1:
+    12:
       if actLoadVIP_Search.Execute and
+        ((FormParams.ParamByName('CheckId').Value <> 0) or
+        (FormParams.ParamByName('ManagerName').AsString <> '')) then
+        LoadVIPCheck;
+
+    21:
+      if actLoadSite.Execute and ((FormParams.ParamByName('CheckId').Value <> 0)
+        or (FormParams.ParamByName('ManagerName').AsString <> '')) then
+        LoadVIPCheck;
+    22:
+      if actLoadSite_Search.Execute and
         ((FormParams.ParamByName('CheckId').Value <> 0) or
         (FormParams.ParamByName('ManagerName').AsString <> '')) then
         LoadVIPCheck;
@@ -2640,7 +2678,7 @@ begin
     exit;
   end;
 
-  if not DiscountServiceForm.isBeforeSale and (DiscountServiceForm.gCode in [3, 5, 6, 7, 8]) then
+  if not DiscountServiceForm.isBeforeSale and (DiscountServiceForm.gCode in [3, 5, 6, 7, 8, 9]) then
   begin
     ShowMessage('По дисконтрой программе не запрошена возможность продажи!');
     exit;
@@ -8979,6 +9017,10 @@ var
   str_log_xml: String;
   I: Integer;
 begin
+  // Для админа пропускаем
+  if gc_User.Session = '3' then Exit;
+
+
   // Если чек виповский и ещё не проведен - то сохраняем в таблицу випов
   if gc_User.Local And not ANeedComplete AND
     ((AManagerId <> 0) or (ABayerName <> '')) then

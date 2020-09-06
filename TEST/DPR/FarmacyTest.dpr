@@ -276,8 +276,6 @@ uses
   AlternativeGroupTest in '..\SOURCE\Objects\All\Farmacy\AlternativeGroupTest.pas',
   AlternativeGroup in '..\..\FormsFarmacy\Guides\AlternativeGroup.pas' {AlternativeGroupForm: TParentForm},
   RepriceChangeRetail in '..\..\FormsFarmacy\ConnectWithOld\RepriceChangeRetail.pas' {Reprice—hangeRetailForm},
-  CheckVIP in '..\..\FormsFarmacy\Document\CheckVIP.pas' {CheckVIPForm: TParentForm},
-  CheckDeferred in '..\..\FormsFarmacy\Document\CheckDeferred.pas' {CheckDeferredForm: TParentForm},
   PaidType in '..\..\Forms\Guides\PaidType.pas' {PaidTypeForm: TParentForm},
   PaidTypeTest in '..\SOURCE\Objects\All\Farmacy\PaidTypeTest.pas',
   CashRegisterTest in '..\SOURCE\Objects\All\Farmacy\CashRegisterTest.pas',
@@ -603,7 +601,7 @@ uses
   UnnamedEnterprisesJournal in '..\..\FormsFarmacy\Document\UnnamedEnterprisesJournal.pas' {UnnamedEnterprisesJournalForm: TParentForm},
   UnnamedEnterprises in '..\..\FormsFarmacy\Document\UnnamedEnterprises.pas' {UnnamedEnterprisesForm: TParentForm},
   Report_KPU in '..\..\FormsFarmacy\Report\Report_KPU.pas' {Report_KPUForm: TParentForm},
-  CheckVIP_Search in '..\..\FormsFarmacy\Document\CheckVIP_Search.pas' {CheckVIP_SearchForm: TParentForm},
+  CheckDeferred_Search in '..\..\FormsFarmacy\Document\CheckDeferred_Search.pas' {CheckDeferred_SearchForm: TParentForm},
   Report_IncomeSample in '..\..\FormsFarmacy\Report\Report_IncomeSample.pas' {Report_IncomeSampleForm: TParentForm},
   Report_IncomeSampleDialog in '..\..\FormsFarmacy\Report\Report_IncomeSampleDialog.pas' {Report_IncomeSampleDialogForm: TParentForm},
   Report_Check_GoodsPriceChange in '..\..\FormsFarmacy\Report\Report_Check_GoodsPriceChange.pas' {Report_Check_GoodsPriceChangeForm: TParentForm},
@@ -669,7 +667,7 @@ uses
   GoodsAnalogEdit in '..\..\FormsFarmacy\Guides\GoodsAnalogEdit.pas' {GoodsAnalogEditForm: TParentForm},
   SendPartionDateJournal in '..\..\FormsFarmacy\Document\SendPartionDateJournal.pas' {SendPartionDateJournalForm: TParentForm},
   SendPartionDate in '..\..\FormsFarmacy\Document\SendPartionDate.pas' {SendPartionDateForm: TParentForm},
-  CheckDelayVIP in '..\..\FormsFarmacy\Document\CheckDelayVIP.pas' {CheckDelayVIPForm: TParentForm},
+  CheckDelayDeferred in '..\..\FormsFarmacy\Document\CheckDelayDeferred.pas' {CheckDelayDeferredForm: TParentForm},
   Report_GoodsInventory in '..\..\FormsFarmacy\Report\Report_GoodsInventory.pas' {Report_GoodsInventoryForm: TParentForm},
   Report_GoodsInventoryDialog in '..\..\FormsFarmacy\Report\Report_GoodsInventoryDialog.pas' {Report_GoodsInventoryDialogForm: TParentForm},
   CreditLimitDistributor in '..\..\FormsFarmacy\Object\CreditLimitDistributor.pas' {CreditLimitDistributorForm: TParentForm},
@@ -939,7 +937,14 @@ uses
   EmployeeScheduleAddUserDialog in '..\..\FormsFarmacy\Document\EmployeeScheduleAddUserDialog.pas' {EmployeeScheduleAddUserDialogForm: TParentForm},
   MovementItemContainerCount in '..\..\FormsFarmacy\Document\MovementItemContainerCount.pas' {MovementItemContainerCountForm: TParentForm},
   CancelReason in '..\..\FormsFarmacy\Guides\CancelReason.pas' {CancelReasonForm: TParentForm},
-  CancelReasonEdit in '..\..\FormsFarmacy\Guides\CancelReasonEdit.pas' {CancelReasonEditForm: TParentForm};
+  CancelReasonEdit in '..\..\FormsFarmacy\Guides\CancelReasonEdit.pas' {CancelReasonEditForm: TParentForm},
+  CheckDeferred in '..\..\FormsFarmacy\Document\CheckDeferred.pas' {CheckDeferredForm: TParentForm},
+  CheckVIP in '..\..\FormsFarmacy\Document\CheckVIP.pas' {CheckVIPForm: TParentForm},
+  CheckVIP_Search in '..\..\FormsFarmacy\Document\CheckVIP_Search.pas' {CheckVIP_SearchForm: TParentForm},
+  CheckDelayVIP in '..\..\FormsFarmacy\Document\CheckDelayVIP.pas' {CheckDelayVIPForm: TParentForm},
+  CheckSite_Search in '..\..\FormsFarmacy\Document\CheckSite_Search.pas' {CheckSite_SearchForm: TParentForm},
+  CheckSite in '..\..\FormsFarmacy\Document\CheckSite.pas' {CheckSiteForm: TParentForm},
+  CheckDelaySite in '..\..\FormsFarmacy\Document\CheckDelaySite.pas' {CheckDelaySiteForm: TParentForm};
 
 {$R *.res}
 {$R DevExpressRus.res}

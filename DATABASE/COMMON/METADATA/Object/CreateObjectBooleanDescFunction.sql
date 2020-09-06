@@ -750,9 +750,14 @@ CREATE OR REPLACE FUNCTION zc_ObjectBoolean_CommentSun_SendPartionDate() RETURNS
 INSERT INTO ObjectBooleanDesc (DescId, Code, ItemName)
   SELECT zc_Object_CommentSend(), 'zc_ObjectBoolean_CommentSun_SendPartionDate', 'Формировать заявку на изменения срока' WHERE NOT EXISTS (SELECT * FROM ObjectBooleanDesc WHERE Code = 'zc_ObjectBoolean_CommentSun_SendPartionDate');
 
+CREATE OR REPLACE FUNCTION zc_ObjectBoolean_CheckSourceKind_Site() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM ObjectBooleanDesc WHERE Code = 'zc_ObjectBoolean_CheckSourceKind_Site'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
+INSERT INTO ObjectBooleanDesc (DescId, Code, ItemName)
+  SELECT zc_Object_CheckSourceKind(), 'zc_ObjectBoolean_CheckSourceKind_Site', 'Показвыать как чек с сайта' WHERE NOT EXISTS (SELECT * FROM ObjectBooleanDesc WHERE Code = 'zc_ObjectBoolean_CheckSourceKind_Site');
+
 /*-------------------------------------------------------------------------------
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.  Воробкало А.А.  Ярошенко Р.Ф.   Подмогильный В.В.   Шаблий О.В.
+ 05.09.20                                                                                                          * zc_ObjectBoolean_CheckSourceKind_Site 
  26.08.20                                                                                                          * zc_ObjectBoolean_CommentSun_Promo 
  16.08.20                                                                                                          * zc_ObjectBoolean_DiscountExternal_GoodsForProject 
  13.08.20                                                                                                          * zc_ObjectBoolean_DivisionParties_BanFiscalSale 

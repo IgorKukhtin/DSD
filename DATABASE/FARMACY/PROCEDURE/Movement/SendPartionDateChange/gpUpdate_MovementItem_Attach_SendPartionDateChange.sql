@@ -3,7 +3,7 @@
 DROP FUNCTION IF EXISTS gpUpdate_MovementItem_Attach_SendPartionDateChange (Integer, TVarChar, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpUpdate_MovementItem_Attach_SendPartionDateChange(
-    IN inContainerID    Integer   , -- ID контейнера для изменения срока
+    IN inGoodsId        Integer   , -- Товар
     IN inMISendId       TVarChar  , -- Перечень перемещений
     IN inSession        TVarChar    -- сессия пользователя
 )
@@ -14,25 +14,16 @@ $BODY$
    DECLARE vbMovementItemId Integer;
    DECLARE vbIndex Integer;
    DECLARE vbUnitId Integer;
-   DECLARE vbGoodsId Integer;
+   DECLARE vbUnitKey TVarChar;
 BEGIN
 
   vbUserId:= lpGetUserBySession (inSession);
 
-  IF NOT EXISTS(SELECT 1 FROM Container
-                WHERE Container.DescId    in (zc_Container_Count(), zc_Container_CountPartionDate())
-                  AND Container.Id        = inContainerID)
-  THEN
-    RAISE EXCEPTION 'Ошибка. Контейнер не найден.';
+  vbUnitKey := COALESCE(lpGet_DefaultValue('zc_Object_Unit', vbUserId), '');
+  IF vbUnitKey = '' THEN
+     vbUnitKey := '0';
   END IF;
-
-  SELECT Container.WhereObjectId, Container.ObjectId
-  INTO vbUnitId, vbGoodsId
-  FROM Container
-  WHERE Container.DescId    in (zc_Container_Count(), zc_Container_CountPartionDate())
-    AND Container.Id        = inContainerID;
-
-
+  vbUnitId := vbUnitKey::Integer;
 
   SELECT MAX(MovementItem.Id)
   INTO vbMovementItemId
@@ -45,7 +36,7 @@ BEGIN
 
        INNER JOIN MovementItem ON MovementItem.MovementId = Movement.Id
                               AND MovementItem.DescId = zc_MI_Master()
-                              AND MovementItem.ObjectId = vbGoodsId
+                              AND MovementItem.ObjectId = inGoodsId
                               AND MovementItem.Amount > 0
                               AND MovementItem.isErased = FALSE
 
@@ -55,7 +46,8 @@ BEGIN
 
   IF COALESCE (vbMovementItemId, 0) = 0
   THEN
-    RAISE EXCEPTION 'Ошибка. По контейнеру не найдена заявка на изменение срока.';
+    RAISE EXCEPTION 'Ошибка. По товару <%> не найдена заявка на изменение срока.', 
+          (SELECT Object.ValueData FROM Object WHERE Object.Id = inGoodsId);
   END IF;
 
 
@@ -70,7 +62,7 @@ BEGIN
       vbIndex := vbIndex + 1;
   END LOOP;
 
---  RAISE EXCEPTION 'Прошло. %', vbMovementItemId;
+  --RAISE EXCEPTION 'Прошло. %', vbMovementItemId;
 
 END;
 $BODY$
@@ -79,8 +71,9 @@ $BODY$
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Шаблий О.В.
+ 05.09.20                                                       *
  02.09.20                                                       *
 */
 
 -- тест
--- select * from gpUpdate_MovementItem_Attach_SendPartionDateChange(inContainerID := 21745442 , inMISendId := '371008924' ,  inSession := '3');
+-- select * from gpUpdate_MovementItem_Attach_SendPartionDateChange(inGoodsId := 13242 , inMISendId := '371008924' ,  inSession := '3');

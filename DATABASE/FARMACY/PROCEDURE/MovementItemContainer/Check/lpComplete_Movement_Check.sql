@@ -244,9 +244,10 @@ BEGIN
                                  AND ObjectFloat_CodeMedicard.DescId = zc_ObjectFloat_Juridical_CodeMedicard()
 
        WHERE COALESCE (PDContainer.id, 0) = 0
-         AND (vbDiscountExternalCode NOT IN (6, 7, 8)
+         AND (vbDiscountExternalCode NOT IN (6, 7, 8, 9)
            OR vbDiscountExternalCode = 6 AND COALESCE(ObjectFloat_CodeMedicard.ValueData, 0) = 1
-           OR vbDiscountExternalCode IN (7, 8)  AND COALESCE(ObjectFloat_CodeMedicard.ValueData, 0) IN (1, 3))
+           OR vbDiscountExternalCode IN (7, 8)  AND COALESCE(ObjectFloat_CodeMedicard.ValueData, 0) IN (1, 3)
+           OR vbDiscountExternalCode IN (7, 8, 9)  AND COALESCE(ObjectFloat_CodeMedicard.ValueData, 0) IN (1, 2, 3))
        ;
 
     -- Проверим что б БЫЛ остаток в целом
@@ -571,4 +572,4 @@ $BODY$
 -- SELECT * FROM lpComplete_Movement_Check (inMovementId:= 12671, inUserId:= zfCalc_UserAdmin()::Integer)
 -- SELECT * FROM gpSelect_MovementItemContainer_Movement (inMovementId:= 103, inSession:= zfCalc_UserAdmin())
 -- SELECT * FROM MovementItemContainer WHERE MovementId = 12671`
-select * from gpUpdate_Status_Check(inMovementId := 19907613 , ioStatusCode := 2 ,  inSession := '3');
+-- select * from gpUpdate_Status_Check(inMovementId := 19907613 , ioStatusCode := 2 ,  inSession := '3');

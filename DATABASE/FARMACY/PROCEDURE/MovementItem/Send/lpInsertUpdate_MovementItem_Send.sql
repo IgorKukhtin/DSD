@@ -177,11 +177,15 @@ BEGIN
                                      ON ObjectDate_PairSun.ObjectId = ObjectLink_GoodsPairSun.ObjectId
                                     AND ObjectDate_PairSun.DescId = zc_ObjectDate_Goods_PairSun()
                                     AND ObjectDate_PairSun.ValueData <= vbOperDate_pr
+               LEFT JOIN MovementItemFloat AS MIFloat_AmountStorage
+                                           ON MIFloat_AmountStorage.MovementItemId = MovementItem.Id
+                                          AND MIFloat_AmountStorage.DescId = zc_MIFloat_AmountStorage()
                                    
           WHERE MovementItem.MovementId = inMovementId
              AND MovementItem.DescId = zc_MI_Master()
              AND MovementItem.isErased = FALSE
-             AND MovementItem.Id <> ioId;
+             AND MovementItem.Id <> ioId
+             AND COALESCE (MIFloat_AmountStorage.ValueData, 0) < inAmountStorage;
           -- для ChildObjectId
           PERFORM lpInsertUpdate_MovementItemFloat (zc_MIFloat_AmountStorage(), MovementItem.Id, inAmountStorage)
           FROM MovementItem
@@ -189,16 +193,18 @@ BEGIN
                                      ON ObjectLink_GoodsPairSun.ChildObjectId = MovementItem.ObjectId
                                     AND ObjectLink_GoodsPairSun.DescId   = zc_ObjectLink_Goods_GoodsPairSun()
                                     AND ObjectLink_GoodsPairSun.ObjectId = inGoodsId
-
                INNER JOIN ObjectDate AS ObjectDate_PairSun
                                      ON ObjectDate_PairSun.ObjectId = ObjectLink_GoodsPairSun.ObjectId
                                     AND ObjectDate_PairSun.DescId = zc_ObjectDate_Goods_PairSun()
                                     AND ObjectDate_PairSun.ValueData <= vbOperDate_pr
-
+               LEFT JOIN MovementItemFloat AS MIFloat_AmountStorage
+                                           ON MIFloat_AmountStorage.MovementItemId = MovementItem.Id
+                                          AND MIFloat_AmountStorage.DescId = zc_MIFloat_AmountStorage()
           WHERE MovementItem.MovementId = inMovementId
              AND MovementItem.DescId = zc_MI_Master()
              AND MovementItem.isErased = FALSE
-             AND MovementItem.Id <> ioId;
+             AND MovementItem.Id <> ioId
+             AND COALESCE (MIFloat_AmountStorage.ValueData, 0) > inAmountStorage;
      END IF;
 
 
