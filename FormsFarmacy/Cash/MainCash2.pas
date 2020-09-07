@@ -523,6 +523,7 @@ type
     actOpenCheckSite_Search: TOpenChoiceForm;
     actLoadSite_Search: TMultiAction;
     actOpenDelaySite: TdsdOpenForm;
+    MemDataGOODSPMID: TIntegerField;
     procedure WM_KEYDOWN(var Msg: TWMKEYDOWN);
     procedure FormCreate(Sender: TObject);
     procedure actChoiceGoodsInRemainsGridExecute(Sender: TObject);
@@ -694,6 +695,8 @@ type
     FOldAnalogFilter: String;
 
     FAnalogFilter: Integer;
+
+    FIsVIP, FIsSite : Boolean;
 
     procedure SetBlinkVIP(isRefresh: Boolean);
     procedure SetBlinkCheck(isRefresh: Boolean);
@@ -1159,6 +1162,8 @@ begin
           Trim(FLocalDataBaseDiff.FieldByName('UKTZED').AsString);
       MemData.FieldByName('GOODSPSID').AsVariant :=
         FLocalDataBaseDiff.FieldByName('GOODSPSID').AsVariant;
+      MemData.FieldByName('GOODSPMID').AsVariant :=
+        FLocalDataBaseDiff.FieldByName('GOODSPMID').AsVariant;
       MemData.FieldByName('DIVPARTID').AsVariant :=
         FLocalDataBaseDiff.FieldByName('DIVPARTID').AsVariant;
       if FLocalDataBaseDiff.FieldByName('DIVPARTID').IsNull then
@@ -3305,6 +3310,8 @@ begin
             vipList.FieldByName('Price').AsFloat;
         CheckCDS.FieldByName('GoodsPairSunId').AsVariant :=
           vipList.FieldByName('GoodsPairSunId').AsVariant;
+        CheckCDS.FieldByName('GoodsPairSunMainId').AsVariant :=
+          vipList.FieldByName('GoodsPairSunMainId').AsVariant;
         // ***21.10.18
         GoodsId := RemainsCDS.FieldByName('Id').AsInteger;
         PartionDateKindId := RemainsCDS.FieldByName('PartionDateKindId').AsVariant;
@@ -4364,6 +4371,8 @@ begin
           MemData.FieldByName('UKTZED').AsVariant;
         RemainsCDS.FieldByName('GoodsPairSunId').AsVariant :=
           MemData.FieldByName('GOODSPSID').AsVariant;
+        RemainsCDS.FieldByName('GoodsPairSunMainId').AsVariant :=
+          MemData.FieldByName('GOODSPMID').AsVariant;
         RemainsCDS.FieldByName('isGoodsForProject').AsVariant :=
           MemData.FieldByName('GOODSPROJ').AsVariant;
         RemainsCDS.FieldByName('isBanFiscalSale').AsVariant :=
@@ -4430,6 +4439,8 @@ begin
             MemData.FieldByName('UKTZED').AsVariant;
           RemainsCDS.FieldByName('GoodsPairSunId').AsVariant :=
             MemData.FieldByName('GOODSPSID').AsVariant;
+          RemainsCDS.FieldByName('GoodsPairSunMainId').AsVariant :=
+            MemData.FieldByName('GOODSPMID').AsVariant;
           RemainsCDS.FieldByName('isBanFiscalSale').AsVariant :=
             MemData.FieldByName('BANFISCAL').AsVariant;
           RemainsCDS.FieldByName('isGoodsForProject').AsVariant :=
@@ -6899,6 +6910,8 @@ begin
           SourceClientDataSet.FindField('UKTZED').AsVariant;
         CheckCDS.FieldByName('GoodsPairSunId').AsVariant :=
           SourceClientDataSet.FindField('GoodsPairSunId').AsVariant;
+        CheckCDS.FieldByName('GoodsPairSunMainId').AsVariant :=
+          SourceClientDataSet.FindField('GoodsPairSunMainId').AsVariant;
 
         if RemainsCDS <> SourceClientDataSet then
         begin
@@ -7019,6 +7032,8 @@ begin
           SourceClientDataSet.FieldByName('UKTZED').AsVariant;
         CheckCDS.FieldByName('GoodsPairSunId').AsVariant :=
           SourceClientDataSet.FieldByName('GoodsPairSunId').AsVariant;
+        CheckCDS.FieldByName('GoodsPairSunMainId').AsVariant :=
+          SourceClientDataSet.FieldByName('GoodsPairSunMainId').AsVariant;
 
         if RemainsCDS <> SourceClientDataSet then
         begin
@@ -9018,8 +9033,7 @@ var
   I: Integer;
 begin
   // Для админа пропускаем
-  if gc_User.Session = '3' then Exit;
-
+//  if gc_User.Session = '3' then Exit;
 
   // Если чек виповский и ещё не проведен - то сохраняем в таблицу випов
   if gc_User.Local And not ANeedComplete AND
@@ -9169,6 +9183,8 @@ begin
           ADS.FieldByName('UKTZED').AsVariant;
         myVIPListCDS.FieldByName('GoodsPairSunId').Value :=
           ADS.FieldByName('GoodsPairSunId').AsVariant;
+        myVIPListCDS.FieldByName('GoodsPairSunMainId').Value :=
+          ADS.FieldByName('GoodsPairSunMainId').AsVariant;
 
         myVIPListCDS.Post;
         ADS.Next;
@@ -9674,6 +9690,7 @@ begin
     SetBanCash(false);
 
     if fBlinkVIP = True then
+    begin
       if btnVIP.Colors.NormalText <> clDefault then
       begin
         btnVIP.Colors.NormalText := clDefault;
@@ -9683,11 +9700,17 @@ begin
       begin { Beep; }
         btnVIP.Colors.NormalText := clYellow;
         btnVIP.Colors.Default := clRed;
-      end
-    else
+      end;
+
+      if not FIsSite then btnVIP.Caption := 'VIP'
+      else if not FIsVIP then btnVIP.Caption := 'Таблетки'
+      else btnVIP.Caption := 'Vip/Табл';
+
+    end else
     begin
       btnVIP.Colors.NormalText := clDefault;
       btnVIP.Colors.Default := clDefault;
+      btnVIP.Caption := 'Vip/Табл';
     end;
 
     if fBlinkCheck = True then
@@ -9733,8 +9756,9 @@ begin
 
       // Получили список ВСЕХ документов - с типом "Не подтвержден"
       spGet_BlinkVIP.Execute;
-      lMovementId_BlinkVIP := spGet_BlinkVIP.ParamByName
-        ('outMovementId_list').Value;
+      lMovementId_BlinkVIP := spGet_BlinkVIP.ParamByName('outMovementId_list').Value;
+      FIsVIP := spGet_BlinkVIP.ParamByName('outIsVIP').Value;
+      FIsSite := spGet_BlinkVIP.ParamByName('outIsSite').Value;
 
       // в этом случае кнопка будет мигать
       fBlinkVIP := lMovementId_BlinkVIP <> '';

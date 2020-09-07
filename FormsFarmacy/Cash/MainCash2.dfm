@@ -1040,7 +1040,7 @@ inherited MainCashForm2: TMainCashForm2
       Align = alBottom
       TabOrder = 1
       object ShapeState: TShape
-        Left = 797
+        Left = 786
         Top = 13
         Width = 10
         Height = 10
@@ -1103,7 +1103,7 @@ inherited MainCashForm2: TMainCashForm2
         TabOrder = 3
       end
       object btnCheck: TcxButton
-        Left = 510
+        Left = 504
         Top = 7
         Width = 35
         Height = 22
@@ -1152,12 +1152,12 @@ inherited MainCashForm2: TMainCashForm2
         Style.IsFontAssigned = True
       end
       object btnVIP: TcxButton
-        Left = 550
+        Left = 542
         Top = 7
-        Width = 34
+        Width = 63
         Height = 22
         Hint = #1055#1088#1086#1089#1084#1086#1090#1088' '#1086#1090#1083#1086#1078#1077#1085'. '#1095#1077#1082#1086#1074
-        Action = actExecuteLoadVIP
+        Caption = 'Vip/'#1058#1072#1073#1083
         LookAndFeel.Kind = lfStandard
         ParentShowHint = False
         ShowHint = True
@@ -1168,9 +1168,10 @@ inherited MainCashForm2: TMainCashForm2
         Font.Name = 'Tahoma'
         Font.Style = [fsBold]
         ParentFont = False
+        OnClick = actExecuteLoadVIPExecute
       end
       object lblMoneyInCash: TcxLabel
-        Left = 719
+        Left = 735
         Top = 7
         Caption = '0.00'
         ParentFont = False
@@ -1184,7 +1185,7 @@ inherited MainCashForm2: TMainCashForm2
         Style.IsFontAssigned = True
       end
       object btnOpenMCSForm: TcxButton
-        Left = 639
+        Left = 655
         Top = 7
         Width = 34
         Height = 22
@@ -1202,7 +1203,7 @@ inherited MainCashForm2: TMainCashForm2
         ParentFont = False
       end
       object chbNotMCS: TcxCheckBox
-        Left = 586
+        Left = 605
         Top = 7
         Hint = #1053#1077' '#1091#1095#1080#1090#1099#1074'. '#1095#1077#1082' '#1087#1088#1080' '#1087#1077#1088#1077#1089#1095#1077#1090#1077' '#1053#1058#1047
         Caption = #1053#1058#1047
@@ -1219,7 +1220,7 @@ inherited MainCashForm2: TMainCashForm2
         OnClick = actSpecExecute
       end
       object cxButton1: TcxButton
-        Left = 679
+        Left = 695
         Top = 7
         Width = 34
         Height = 22
@@ -1246,7 +1247,7 @@ inherited MainCashForm2: TMainCashForm2
         Width = 55
       end
       object cbSpecCorr: TcxCheckBox
-        Left = 459
+        Left = 455
         Top = 7
         Hint = #1050#1086#1088#1088#1077#1082#1090#1080#1088#1091#1102#1097#1072#1103' '#1075#1072#1083#1086#1095#1082#1072
         Action = actSpecCorr
@@ -3024,7 +3025,7 @@ inherited MainCashForm2: TMainCashForm2
     end
     object actExecuteLoadVIP: TAction
       Category = #1044#1086#1082#1091#1084#1077#1085#1090#1099
-      Caption = 'VIP'
+      Caption = 'Vip/'#1058#1072#1073#1083
       OnExecute = actExecuteLoadVIPExecute
     end
     object actSelectCheck: TdsdExecStoredProc
@@ -5999,6 +6000,10 @@ inherited MainCashForm2: TMainCashForm2
         DataType = ftInteger
       end
       item
+        Name = 'GoodsPairSunMainId'
+        DataType = ftInteger
+      end
+      item
         Name = 'DivisionPartiesID'
         DataType = ftInteger
       end
@@ -6162,7 +6167,7 @@ inherited MainCashForm2: TMainCashForm2
     SearchAsFilter = False
     PropertiesCellList = <>
     Left = 592
-    Top = 344
+    Top = 336
   end
   object spGetMoneyInCash: TdsdStoredProc
     StoredProcName = 'gpGet_Money_in_Cash'
@@ -6324,6 +6329,18 @@ inherited MainCashForm2: TMainCashForm2
         Name = 'outMovementId_list'
         Value = Null
         DataType = ftString
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'outIsVIP'
+        Value = Null
+        DataType = ftBoolean
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'outIsSite'
+        Value = Null
+        DataType = ftBoolean
         MultiSelectSeparator = ','
       end>
     PackSize = 1
@@ -6624,6 +6641,9 @@ inherited MainCashForm2: TMainCashForm2
     end
     object MemDataGOODSPROJ: TBooleanField
       FieldName = 'GOODSPROJ'
+    end
+    object MemDataGOODSPMID: TIntegerField
+      FieldName = 'GOODSPMID'
     end
   end
   object mdCheck: TdxMemData
@@ -6973,7 +6993,7 @@ inherited MainCashForm2: TMainCashForm2
       end>
     PackSize = 1
     Left = 592
-    Top = 392
+    Top = 408
   end
   object spInsert_MovementItem_PUSH: TdsdStoredProc
     StoredProcName = 'gpInsert_MovementItem_PUSH_Cash'
@@ -7031,13 +7051,13 @@ inherited MainCashForm2: TMainCashForm2
     IndexFieldNames = 'ID;ExpirationDate'
     Params = <>
     StoreDefs = True
-    Left = 688
-    Top = 344
+    Left = 656
+    Top = 328
   end
   object ExpirationDateDS: TDataSource
     DataSet = ExpirationDateCDS
     Left = 688
-    Top = 400
+    Top = 408
   end
   object dsdDBViewAddOnExpirationDate: TdsdDBViewAddOn
     ErasedFieldName = 'isErased'
@@ -7371,8 +7391,8 @@ inherited MainCashForm2: TMainCashForm2
         MultiSelectSeparator = ','
       end>
     PackSize = 1
-    Left = 785
-    Top = 349
+    Left = 769
+    Top = 341
   end
   object spLoyaltySaveMoneyChekInfo: TdsdStoredProc
     StoredProcName = 'gpSelect_LoyaltySaveMoney_ChekInfo'
