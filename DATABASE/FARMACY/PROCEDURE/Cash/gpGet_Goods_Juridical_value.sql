@@ -269,9 +269,8 @@ BEGIN
                                   LEFT JOIN ObjectFloat AS ObjectFloat_CodeMedicard
                                                         ON ObjectFloat_CodeMedicard.ObjectId = MovementLinkObject_From.ObjectId
                                                        AND ObjectFloat_CodeMedicard.DescId = zc_ObjectFloat_Juridical_CodeMedicard()
-                                                       AND ObjectFloat_CodeMedicard.ValueData = 1
 
-                          --  WHERE COALESCE(ObjectFloat_CodeMedicard.ValueData, 0) > 0
+                            WHERE COALESCE(ObjectFloat_CodeMedicard.ValueData, 0) > 0
                             ORDER BY Movement.OperDate, Container.Id
                                    )
 

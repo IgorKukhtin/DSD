@@ -697,6 +697,7 @@ type
     FAnalogFilter: Integer;
 
     FIsVIP, FIsSite : Boolean;
+    FStepSecond : Boolean;
 
     procedure SetBlinkVIP(isRefresh: Boolean);
     procedure SetBlinkCheck(isRefresh: Boolean);
@@ -6130,6 +6131,7 @@ begin
   FPUSHStart := True;
   FUpdatePUSH := 0;
   fPrint := False;
+  FStepSecond := False;
   //
   edDays.Value := 7;
   PanelMCSAuto.Visible := false;
@@ -6317,8 +6319,9 @@ var
   lQuantity, lPrice, lPriceSale, lChangePercent, lSummChangePercent,
     nAmount, nAmountPS: Currency;
   lMsg: String;
-  lGoodsId_bySoldRegim, lTypeDiscount, nRecNo: Integer;
+  lGoodsId_bySoldRegim, lTypeDiscount, nRecNo, nGoodsPairSun: Integer;
   nMultiplicity: Currency;
+  Bookmark : TBookmark;
 begin
 
   // Ночные скидки
@@ -6357,7 +6360,7 @@ begin
     exit;
   end;
 
-  if (SourceClientDataSet.FieldByName('GoodsPairSunId').AsInteger <> 0) then
+  if not FStepSecond and (SourceClientDataSet.FieldByName('GoodsPairSunId').AsInteger <> 0) then
   begin
     // Только целое количество
     if (Round(nAmount) <> nAmount) then
@@ -6365,6 +6368,8 @@ begin
       ShowMessage('Товар по соц.проекту должен продаваться целыми упаковками...');
       exit;
     end;
+    Bookmark := CheckCDS.GetBookmark;
+    nGoodsPairSun := SourceClientDataSet.FieldByName('GoodsPairSunId').AsInteger;
 
     // Проверим наличие парного
     if nAmount > 0 then
@@ -6373,19 +6378,25 @@ begin
       CheckCDS.First;
       while not CheckCDS.Eof do
       begin
-        if checkCDS.FieldByName('GoodsId').AsInteger = SourceClientDataSet.FieldByName('GoodsPairSunId').AsInteger then
+        if checkCDS.FieldByName('GoodsId').AsInteger = nGoodsPairSun then
           nAmountPS := nAmountPS + checkCDS.FieldByName('Amount').AsCurrency;
         CheckCDS.Next;
       end;
+      CheckCDS.GotoBookmark(Bookmark);
 
-      nRecNo := SourceClientDataSet.RecNo;
-      SourceClientDataSet.DisableControls;
+      RemainsCDS.DisableControls;
       try
-        if SourceClientDataSet.Locate('Id', SourceClientDataSet.FieldByName('GoodsPairSunId').AsInteger, []) then
+        if RemainsCDS.Locate('Id', nGoodsPairSun, []) then
         begin
-          if SourceClientDataSet.FieldByName('Remains').AsCurrency >= nAmount then
+          if RemainsCDS.FieldByName('Remains').AsCurrency >= nAmount then
           begin
-            InsertUpdateBillCheckItems;
+            try
+              FStepSecond := True;
+              if CheckCDS = SourceClientDataSet then CheckCDS.Locate('GoodsId', nGoodsPairSun, []);
+              InsertUpdateBillCheckItems;
+            finally
+              FStepSecond := False;
+            end;
           end else
           begin
             if nAmountPS < nAmount then
@@ -6403,27 +6414,115 @@ begin
           end;
         end;
       finally
-        SourceClientDataSet.EnableControls;
-        SourceClientDataSet.RecNo := nRecNo;
+        RemainsCDS.EnableControls;
+        CheckCDS.GotoBookmark(Bookmark);
       end;
 
     end else if nAmount < 0 then
     begin
-      nRecNo := checkCDS.FieldByName('GoodsId').AsInteger;
       SourceClientDataSet.DisableControls;
       CheckCDS.DisableControls;
       try
-        if CheckCDS.Locate('GoodsId', SourceClientDataSet.FieldByName('GoodsPairSunId').AsInteger, []) then
+        if CheckCDS.Locate('GoodsId', nGoodsPairSun, []) then
         begin
           if (nAmount + checkCDS.FieldByName('Amount').AsCurrency) < 0 then
             edAmount.Text := CurrToStr(- checkCDS.FieldByName('Amount').AsCurrency);
 
-          InsertUpdateBillCheckItems;
+          try
+            FStepSecond := True;
+            InsertUpdateBillCheckItems;
+          finally
+            FStepSecond := False;
+          end;
+        end;
+      finally
+        CheckCDS.EnableControls;
+        SourceClientDataSet.EnableControls;
+        CheckCDS.GotoBookmark(Bookmark);
+      end;
+    end;
+  end;
+
+  if not FStepSecond and not UnitConfigCDS.FindField('isPairedOnlyPromo').AsBoolean and
+     (SourceClientDataSet.FieldByName('GoodsPairSunMainId').AsInteger <> 0) then
+  begin
+    // Только целое количество
+    if (Round(nAmount) <> nAmount) then
+    begin
+      ShowMessage('Товар по соц.проекту должен продаваться целыми упаковками...');
+      exit;
+    end;
+    Bookmark := CheckCDS.GetBookmark;
+    nGoodsPairSun := SourceClientDataSet.FieldByName('GoodsPairSunMainId').AsInteger;
+
+    // Проверим наличие парного
+    if nAmount > 0 then
+    begin
+      nAmountPS := 0;
+      CheckCDS.First;
+      while not CheckCDS.Eof do
+      begin
+        if checkCDS.FieldByName('GoodsId').AsInteger = nGoodsPairSun then
+          nAmountPS := nAmountPS + checkCDS.FieldByName('Amount').AsCurrency;
+        CheckCDS.Next;
+      end;
+      CheckCDS.GotoBookmark(Bookmark);
+
+      RemainsCDS.DisableControls;
+      try
+        if RemainsCDS.Locate('Id', nGoodsPairSun, []) then
+        begin
+          if RemainsCDS.FieldByName('Remains').AsCurrency >= nAmount then
+          begin
+            try
+              FStepSecond := True;
+              if CheckCDS = SourceClientDataSet then CheckCDS.Locate('GoodsId', nGoodsPairSun, []);
+              InsertUpdateBillCheckItems;
+            finally
+              FStepSecond := False;
+            end;
+          end else
+          begin
+            if nAmountPS < nAmount then
+            begin
+              ShowMessage('Не хватает количества товар по соц.проекту к парному товару ...');
+              exit;
+            end;
+          end;
+        end else
+        begin
+          if nAmountPS < nAmount then
+          begin
+            ShowMessage('Товар по соц.проекту к парному товару не найден...');
+            exit;
+          end;
+        end;
+      finally
+        RemainsCDS.EnableControls;
+        CheckCDS.GotoBookmark(Bookmark);
+      end;
+
+    end else if nAmount < 0 then
+    begin
+      SourceClientDataSet.DisableControls;
+      CheckCDS.DisableControls;
+      try
+        if CheckCDS.Locate('GoodsId', nGoodsPairSun, []) then
+        begin
+          if (nAmount + checkCDS.FieldByName('Amount').AsCurrency) < 0 then
+            edAmount.Text := CurrToStr(- checkCDS.FieldByName('Amount').AsCurrency);
+
+          try
+            FStepSecond := True;
+            InsertUpdateBillCheckItems;
+          finally
+            FStepSecond := False;
+          end;
         end;
       finally
         SourceClientDataSet.EnableControls;
         CheckCDS.EnableControls;
-        CheckCDS.Locate('GoodsId', nRecNo, []);
+        CheckCDS.GotoBookmark(Bookmark);
       end;
     end;
   end;

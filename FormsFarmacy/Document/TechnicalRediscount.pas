@@ -56,6 +56,8 @@ type
     OperDateSend: TcxGridDBColumn;
     Color_calc: TcxGridDBColumn;
     cbCorrectionSUN: TcxCheckBox;
+    actOpenSend: TdsdInsertUpdateAction;
+    dxBarButton3: TdxBarButton;
   private
     { Private declarations }
   public
