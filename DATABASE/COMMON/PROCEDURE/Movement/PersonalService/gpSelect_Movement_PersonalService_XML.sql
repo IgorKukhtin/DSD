@@ -138,7 +138,9 @@ BEGIN
             , ''                                   ::TVarChar  AS ACCOUNTNO        --№ счета плательщика
             , tmpMemberMinus.BankAccountName_from  ::TVarChar  AS IBAN             --IBAN плательщика
             , Object_Bank_to.MFO                   ::TVarChar  AS CORRBANKID       --Код банка получателя платежа (МФО)
-            , ObjectString_INN.ValueData           ::TVarChar  AS CORRIDENTIFYCODE --Идентификационный код получателя платежа (ЕГРПОУ)
+            , CASE WHEN Object_To.DescId = zc_Object_Juridical() THEN COALESCE (ObjectHistory_JuridicalDetails_View.INN,'')
+                   ELSE COALESCE (ObjectString_INN.ValueData,'')
+              END                                  ::TVarChar  AS CORRIDENTIFYCODE --Идентификационный код получателя платежа (ЕГРПОУ)
             , 804                                  ::TVarChar  AS CORRCOUNTRYID    --Код страны корреспондента
             , tmpMI_All.Invnumber                  ::TVarChar  AS DOCUMENTNO       --№ документа
             , Null                                 ::TDateTime AS VALUEDATE        --Дата валютирования
@@ -160,9 +162,15 @@ BEGIN
                                 AND OL_Bank_from.DescId = zc_ObjectLink_BankAccount_Bank()
             LEFT JOIN Object_Bank_View AS Object_Bank_from ON Object_Bank_from.Id = OL_Bank_from.ChildObjectId
             
+            LEFT JOIN Object AS Object_To ON Object_To.Id = tmpMemberMinus.ToId
+
+            --если физ лицо или строннее
             LEFT JOIN ObjectString AS ObjectString_INN
                                    ON ObjectString_INN.ObjectId = tmpMemberMinus.ToId
-                                  AND ObjectString_INN.DescId = zc_ObjectString_Member_INN()
+                                  AND ObjectString_INN.DescId IN (zc_ObjectString_Member_INN(), zc_ObjectString_MemberExternal_INN())
+            -- если юр. лицо
+            LEFT JOIN ObjectHistory_JuridicalDetails_View ON ObjectHistory_JuridicalDetails_View.JuridicalId = tmpMemberMinus.ToId
+            
       ;
 
 
@@ -191,7 +199,7 @@ BEGIN
          || 'PRIORITY="'||tmp.PRIORITY||'" '
          || 'DOCUMENTDATE="'||tmp.DOCUMENTDATE||'" '
          || 'ADDENTRIES="'||COALESCE (tmp.ADDENTRIES,'')::TVarChar||'" '
-         || 'PURPOSEPAYMENTID="'||COALESCE (tmp.PURPOSEPAYMENTID,0)||'" '
+         || 'PURPOSEPAYMENTID="'||COALESCE (tmp.PURPOSEPAYMENTID,'')||'" '
          || 'BANKID="'||COALESCE (tmp.BANKID,'')::TVarChar||'" '
          || '/>'
      FROM tmpData AS tmp ;

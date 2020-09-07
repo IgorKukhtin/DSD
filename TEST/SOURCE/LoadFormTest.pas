@@ -95,7 +95,7 @@ type
     procedure LoadLossPersonalFormTest;
     procedure LoadMeasureFormTest;
     procedure LoadMemberFormTest;
-     procedure LoadMemberMinusFormTest;
+    procedure LoadMemberMinusFormTest;
     procedure LoadMemberBankAccountFormTest;
     procedure LoadMemberExternalFormTest;
     procedure LoadMemberSheetWorkTimeFormTest;

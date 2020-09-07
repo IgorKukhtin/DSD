@@ -3,7 +3,7 @@ object MemberExternalForm: TMemberExternalForm
   Top = 0
   Caption = #1057#1087#1088#1072#1074#1086#1095#1085#1080#1082' <'#1060#1080#1079#1080#1095#1077#1089#1082#1080#1077' '#1083#1080#1094#1072'('#1089#1090#1086#1088#1086#1085#1085#1080#1077')>'
   ClientHeight = 332
-  ClientWidth = 440
+  ClientWidth = 580
   Color = clBtnFace
   Font.Charset = DEFAULT_CHARSET
   Font.Color = clWindowText
@@ -20,13 +20,14 @@ object MemberExternalForm: TMemberExternalForm
   object cxGrid: TcxGrid
     Left = 0
     Top = 26
-    Width = 440
+    Width = 580
     Height = 306
     Align = alClient
     TabOrder = 0
     LookAndFeel.Kind = lfStandard
     LookAndFeel.NativeStyle = False
     LookAndFeel.SkinName = ''
+    ExplicitWidth = 440
     object cxGridDBTableView: TcxGridDBTableView
       Navigator.Buttons.CustomButtons = <>
       DataController.DataSource = MasterDS
@@ -53,13 +54,13 @@ object MemberExternalForm: TMemberExternalForm
         Caption = #1050#1086#1076
         DataBinding.FieldName = 'Code'
         HeaderAlignmentVert = vaCenter
-        Width = 83
+        Width = 89
       end
       object Name: TcxGridDBColumn
         Caption = #1060#1048#1054
         DataBinding.FieldName = 'Name'
         HeaderAlignmentVert = vaCenter
-        Width = 226
+        Width = 189
       end
       object isErased: TcxGridDBColumn
         Caption = #1059#1076#1072#1083#1077#1085
@@ -76,7 +77,15 @@ object MemberExternalForm: TMemberExternalForm
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         Options.Editing = False
-        Width = 115
+        Width = 147
+      end
+      object INN: TcxGridDBColumn
+        Caption = #1048#1053#1053
+        DataBinding.FieldName = 'INN'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Options.Editing = False
+        Width = 139
       end
     end
     object cxGridLevel: TcxGridLevel
@@ -506,6 +515,7 @@ object MemberExternalForm: TMemberExternalForm
     ColumnAddOnList = <>
     ColumnEnterList = <>
     SummaryItemList = <>
+    PropertiesCellList = <>
     Left = 368
     Top = 128
   end

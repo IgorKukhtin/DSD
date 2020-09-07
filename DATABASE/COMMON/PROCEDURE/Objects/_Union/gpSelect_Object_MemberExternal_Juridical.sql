@@ -28,7 +28,21 @@ BEGIN
      FROM Object AS Object_MemberExternal
           LEFT JOIN ObjectDesc ON ObjectDesc.Id = Object_MemberExternal.DescId
      WHERE Object_MemberExternal.DescId = zc_Object_MemberExternal()
-       AND (Object_MemberExternal.isErased = FALSE OR inIsShowAll = TRUE)                    
+       AND (Object_MemberExternal.isErased = FALSE OR inIsShowAll = TRUE)
+   UNION ALL
+     SELECT 
+           Object_Member.Id         AS Id
+         , Object_Member.ObjectCode AS Code
+         , Object_Member.ValueData  AS Name
+
+         , ObjectDesc.ItemName
+
+         , Object_Member.isErased   AS isErased
+
+     FROM Object AS Object_Member
+          LEFT JOIN ObjectDesc ON ObjectDesc.Id = Object_Member.DescId
+     WHERE Object_Member.DescId = zc_Object_Member()
+       AND (Object_Member.isErased = FALSE OR inIsShowAll = TRUE)                
    UNION ALL
      SELECT 
            Object_Juridical.Id         AS Id
