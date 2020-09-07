@@ -1,0 +1,217 @@
+-- Function:  gpSelect_Movement_PersonalService_XML()
+
+DROP FUNCTION IF EXISTS gpSelect_Movement_PersonalService_XML (Integer, TVarChar);
+
+CREATE OR REPLACE FUNCTION  gpSelect_Movement_PersonalService_XML(
+    IN inMovementId   Integer  ,  -- Подразделение
+    IN inSession                  TVarChar    -- сессия пользователя
+)
+RETURNS TABLE (RowData TBlob)
+AS
+$BODY$
+   DECLARE vbUserId Integer;
+   DECLARE vbMemberId Integer;
+BEGIN
+    -- проверка прав пользователя на вызов процедуры
+    -- PERFORM lpCheckRight (inSession, zc_Enum_Process_Select_Movement_Income());
+    vbUserId:= lpGetUserBySession (inSession);
+
+  CREATE TEMP TABLE tmpMI_All (OperDate TDateTime, Invnumber TVarChar, MemberId Integer, SummChild TFloat) ON COMMIT DROP;
+     INSERT INTO tmpMI_All (OperDate, Invnumber, MemberId, SummChild)
+      WITH
+          tmpMovement AS (SELECT Movement.Id
+                               , Movement.Invnumber
+                               , Movement.OperDate
+                               , MovementDate_ServiceDate.ValueData ServiceDate
+                          FROM Movement
+                               LEFT JOIN MovementDate AS MovementDate_ServiceDate
+                                                            ON MovementDate_ServiceDate.MovementId = Movement.Id
+                                                           AND MovementDate_ServiceDate.DescId     = zc_MovementDate_ServiceDate()
+                          WHERE Movement.Id = MovementDate_ServiceDate.MovementId
+                            AND Movement.DescId = zc_Movement_PersonalService()
+                            AND Movement.Id = inMovementId
+                         )
+
+        , tmpMI AS (SELECT Movement.Id                               AS MovementId
+                         , Movement.OperDate              
+                         , Movement.Invnumber
+                         , MovementItem.Id                           AS MovementItemId
+                         , MovementItem.Amount                       AS Amount
+                         --, MovementItem.ObjectId                     AS PersonalId
+                         --, MILinkObject_Member.ObjectId              AS MemberId
+                         , ObjectLink_Personal_Member.ChildObjectId  AS MemberId_Personal
+                    FROM tmpMovement AS Movement
+                         INNER JOIN MovementItem ON MovementItem.MovementId = Movement.Id
+                                                AND MovementItem.DescId = zc_MI_Master()
+                                                AND MovementItem.isErased = False
+
+                         LEFT JOIN MovementItemLinkObject AS MILinkObject_Member
+                                                          ON MILinkObject_Member.MovementItemId = MovementItem.Id
+                                                         AND MILinkObject_Member.DescId = zc_MILinkObject_Member()
+                         LEFT JOIN ObjectLink AS ObjectLink_Personal_Member
+                                              ON ObjectLink_Personal_Member.ObjectId = MovementItem.ObjectId
+                                             AND ObjectLink_Personal_Member.DescId = zc_ObjectLink_Personal_Member()
+                    )                         
+
+        , tmpMIFloat_SummChild AS (SELECT MovementItemFloat.*
+                                   FROM MovementItemFloat
+                                   WHERE MovementItemFloat.MovementItemId IN (SELECT DISTINCT tmpMI.MovementItemId FROM tmpMI)
+                                     AND MovementItemFloat.DescId = zc_MIFloat_SummChildRecalc()
+                                   )
+
+        SELECT tmpMI.OperDate
+             , tmpMI.Invnumber
+             , tmpMI.MemberId_Personal     AS MemberId
+             , MIFloat_SummChild.ValueData AS MIFloat_SummChild
+        FROM tmpMI
+             LEFT JOIN tmpMIFloat_SummChild AS MIFloat_SummChild
+                                            ON MIFloat_SummChild.MovementItemId = tmpMI.MovementItemId
+         WHERE COALESCE (MIFloat_SummChild.ValueData,0) <> 0
+        ;
+        
+  CREATE TEMP TABLE tmpMemberMinus (FromId Integer, ToId Integer, ToName TVarChar, Summ TFloat, Summ_all TFloat, BankAccountToId Integer, BankAccountName_to TVarChar, BankAccountFromId Integer, BankAccountName_from TVarChar, BankAccountTo TVarChar,  DetailPayment TVarChar) ON COMMIT DROP;
+     INSERT INTO tmpMemberMinus (FromId, ToId, ToName, Summ, Summ_all, BankAccountToId, BankAccountName_to, BankAccountFromId, BankAccountName_from, BankAccountTo, DetailPayment)
+        SELECT tmp.FromId
+             , tmp.ToId
+             , tmp.ToName
+             , tmp.Summ
+             , SUM (tmp.Summ) OVER (PARTITION BY tmp.FromId) AS Summ_all
+             , tmp.BankAccountToId
+             , Object_Account_to.ValueData   AS BankAccountName_to
+             , tmp.BankAccountFromId
+             , Object_Account_from.ValueData AS BankAccountName_from
+             , tmp.BankAccountTo -- № счета получателя
+             , tmp.DetailPayment
+             
+        FROM gpSelect_Object_MemberMinus (inSession) AS tmp
+        
+             LEFT JOIN ObjectLink AS OL_BankAccount_Account_to
+                                  ON OL_BankAccount_Account_to.ObjectId = tmp.BankAccountToId
+                                 AND OL_BankAccount_Account_to.DescId = zc_ObjectLink_BankAccount_Account()
+             LEFT JOIN Object AS Object_Account_to ON Object_Account_to.Id = OL_BankAccount_Account_to.ChildObjectId
+
+             LEFT JOIN ObjectLink AS OL_BankAccount_Account_from
+                                  ON OL_BankAccount_Account_from.ObjectId = tmp.BankAccountFromId
+                                 AND OL_BankAccount_Account_from.DescId = zc_ObjectLink_BankAccount_Account()
+             LEFT JOIN Object AS Object_Account_from ON Object_Account_from.Id = OL_BankAccount_Account_from.ChildObjectId
+
+        WHERE tmp.FromId IN (SELECT DISTINCT tmpMI_All.MemberId FROM tmpMI_All)
+          AND tmp.isErased = FALSE;
+
+   -- проверка сумма итого по документу должна соответствовать сумме по справочнику
+   vbMemberId := (SELECT tmpMI_All.MemberId
+                  FROM tmpMI_All
+                       INNER JOIN (SELECT DISTINCT tmpMemberMinus.FromId, tmpMemberMinus.Summ_all FROM tmpMemberMinus) AS tmpMinus ON tmpMinus.FromId = tmpMI_All.MemberId
+                  WHERE tmpMI_All.SummChild <> tmpMinus.Summ_all
+                  LIMIT 1);
+
+   IF COALESCE (vbMemberId,0) <> 0
+   THEN
+        RAISE EXCEPTION 'Ошибка.Для физ. лица <%> сумма удержания по документу не соответствует сумме удержания по стравочнику.', lfGet_Object_ValueData (vbMemberId);
+   END IF;
+
+  CREATE TEMP TABLE tmpData (AMOUNT           Integer  --Сумма платежа в копейках
+                           , CORRSNAME        TVarChar -- Сумма платежа в копейках
+                           , DETAILSOFPAYMENT TVarChar --Назначение платежа
+                           , CORRACCOUNTNO    TVarChar --№ счета получателя платежа
+                           , CORRIBAN         TVarChar --IBAN получателя платежа
+                           , ACCOUNTNO        TVarChar --№ счета плательщика
+                           , IBAN             TVarChar --IBAN плательщика
+                           , CORRBANKID       TVarChar --Код банка получателя платежа (МФО)
+                           , CORRIDENTIFYCODE TVarChar --Идентификационный код получателя платежа (ЕГРПОУ)
+                           , CORRCOUNTRYID    TVarChar --Код страны корреспондента
+                           , DOCUMENTNO       TVarChar --№ документа
+                           , VALUEDATE        TDateTime--Дата валютирования
+                           , PRIORITY         Integer  --Приоритет
+                           , DOCUMENTDATE     TVarChar --Дата документа
+                           , ADDENTRIES       TVarChar --Дополнительные реквизиты платежа
+                           , PURPOSEPAYMENTID TVarChar  --Код назначения платежа   --????????????????????????????????????????
+                           , BANKID           TVarChar --Код банка плательщика (МФО)
+                           ) ON COMMIT DROP;
+
+     INSERT INTO tmpData (AMOUNT, CORRSNAME, DETAILSOFPAYMENT, CORRACCOUNTNO, CORRIBAN, ACCOUNTNO, IBAN, CORRBANKID, CORRIDENTIFYCODE, CORRCOUNTRYID, DOCUMENTNO, VALUEDATE, PRIORITY, DOCUMENTDATE, ADDENTRIES, PURPOSEPAYMENTID, BANKID)
+       SELECT (tmpMemberMinus.Summ * 100)          ::Integer   AS AMOUNT           --Сумма платежа в копейках
+            , tmpMemberMinus.ToName                ::TVarChar  AS CORRSNAME        -- Сумма платежа в копейках
+            , tmpMemberMinus.DetailPayment         ::TVarChar  AS DETAILSOFPAYMENT --Назначение платежа
+            , tmpMemberMinus.BankAccountTo         ::TVarChar  AS CORRACCOUNTNO    --№ счета получателя платежа
+            , tmpMemberMinus.BankAccountName_to    ::TVarChar  AS CORRIBAN         --IBAN получателя платежа
+            , ''                                   ::TVarChar  AS ACCOUNTNO        --№ счета плательщика
+            , tmpMemberMinus.BankAccountName_from  ::TVarChar  AS IBAN             --IBAN плательщика
+            , Object_Bank_to.MFO                   ::TVarChar  AS CORRBANKID       --Код банка получателя платежа (МФО)
+            , ObjectString_INN.ValueData           ::TVarChar  AS CORRIDENTIFYCODE --Идентификационный код получателя платежа (ЕГРПОУ)
+            , 804                                  ::TVarChar  AS CORRCOUNTRYID    --Код страны корреспондента
+            , tmpMI_All.Invnumber                  ::TVarChar  AS DOCUMENTNO       --№ документа
+            , Null                                 ::TDateTime AS VALUEDATE        --Дата валютирования
+            , 50                                   ::Integer   AS PRIORITY         --Приоритет
+            , (lpad (EXTRACT (YEAR FROM tmpMI_All.OperDate)::tvarchar ,4, '0')||lpad (EXTRACT (MONTH FROM tmpMI_All.OperDate)::tvarchar ,2, '0') ||lpad (EXTRACT (DAY FROM tmpMI_All.OperDate)::tvarchar ,2, '0')) ::TVarchar AS DOCUMENTDATE     --Дата документа
+            , ''                                   ::TVarChar  AS ADDENTRIES       --Дополнительные реквизиты платежа
+            , '000'                                ::TVarChar  AS PURPOSEPAYMENTID --Код назначения платежа   --????????????????????????????????????????
+            , Object_Bank_from.MFO                 ::TVarChar  AS BANKID           --Код банка плательщика (МФО)
+       FROM tmpMI_All
+            INNER JOIN tmpMemberMinus ON tmpMemberMinus.FromId = tmpMI_All.MemberId
+
+            LEFT JOIN ObjectLink AS OL_Bank_to
+                                 ON OL_Bank_to.ObjectId = tmpMemberMinus.BankAccountToId
+                                AND OL_Bank_to.DescId = zc_ObjectLink_BankAccount_Bank()
+            LEFT JOIN Object_Bank_View AS Object_Bank_to ON Object_Bank_to.Id = OL_Bank_to.ChildObjectId
+
+            LEFT JOIN ObjectLink AS OL_Bank_from
+                                 ON OL_Bank_from.ObjectId = tmpMemberMinus.BankAccountFromId
+                                AND OL_Bank_from.DescId = zc_ObjectLink_BankAccount_Bank()
+            LEFT JOIN Object_Bank_View AS Object_Bank_from ON Object_Bank_from.Id = OL_Bank_from.ChildObjectId
+            
+            LEFT JOIN ObjectString AS ObjectString_INN
+                                   ON ObjectString_INN.ObjectId = tmpMemberMinus.ToId
+                                  AND ObjectString_INN.DescId = zc_ObjectString_Member_INN()
+      ;
+
+
+     -- Таблица для результата
+     CREATE TEMP TABLE _Result (RowData TBlob) ON COMMIT DROP;
+
+     -- первые строчки XML
+     INSERT INTO _Result(RowData) VALUES ('<?xml version= "1.0" encoding= "windows-1251"?>');
+   
+     -- данные
+     INSERT INTO _Result(RowData) VALUES ('<ROWDATA>');
+     INSERT INTO _Result(RowData)
+    SELECT '<ROW '
+         || 'AMOUNT ="'||tmp.AMOUNT||'" '
+         || 'CORRSNAME="'||COALESCE (tmp.CORRSNAME,'')::TVarChar||'" '
+         || 'DETAILSOFPAYMENT="'||COALESCE (tmp.DETAILSOFPAYMENT,'')::TVarChar||'" '
+         || 'CORRACCOUNTNO="'||COALESCE (tmp.CORRACCOUNTNO,'')::TVarChar||'" '
+         || 'CORRIBAN="'||COALESCE (tmp.CORRIBAN,'')::TVarChar||'" '
+         || 'ACCOUNTNO="'||COALESCE (tmp.ACCOUNTNO,'')::TVarChar||'" '
+         || 'IBAN="'||COALESCE (tmp.IBAN,'')::TVarChar||'" '
+         || 'CORRBANKID="'||COALESCE (tmp.CORRBANKID,'')::TVarChar||'" '
+         || 'CORRIDENTIFYCODE="'||COALESCE (tmp.CORRIDENTIFYCODE,'')::TVarChar||'" '
+         || 'CORRCOUNTRYID="'||COALESCE (tmp.CORRCOUNTRYID,'')::TVarChar||'" '
+         || 'DOCUMENTNO="'||COALESCE (tmp.DOCUMENTNO,'')::TVarChar||'" '
+         || 'VALUEDATE="'||COALESCE (tmp.VALUEDATE::TVarChar,'')::TVarChar||'" '
+         || 'PRIORITY="'||tmp.PRIORITY||'" '
+         || 'DOCUMENTDATE="'||tmp.DOCUMENTDATE||'" '
+         || 'ADDENTRIES="'||COALESCE (tmp.ADDENTRIES,'')::TVarChar||'" '
+         || 'PURPOSEPAYMENTID="'||COALESCE (tmp.PURPOSEPAYMENTID,0)||'" '
+         || 'BANKID="'||COALESCE (tmp.BANKID,'')::TVarChar||'" '
+         || '/>'
+     FROM tmpData AS tmp ;
+
+     --последнии строчки XML
+     INSERT INTO _Result(RowData) VALUES ('</ROWDATA>');
+
+     -- Результат
+     RETURN QUERY
+        SELECT _Result.RowData FROM _Result;
+
+END;
+$BODY$
+  LANGUAGE PLPGSQL VOLATILE;
+
+/*
+ ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
+               Фелонюк И.В.   Кухтин И.В.   Климентьев К.И. 
+ 06.09.20         *
+*/
+
+-- тест
+--  SELECT * FROM gpSelect_Movement_PersonalService_XML(inMovementId :=17388288 , inSession := '3');
