@@ -41,6 +41,7 @@ type
      function ZReport : Integer;
      function SummaReceipt : Currency;
      function GetTaxRate : string;
+     function SensZReportBefore : boolean;
 
      property AlwaysSold: boolean read GetAlwaysSold write SetAlwaysSold;
    end;

@@ -220,6 +220,7 @@ procedure TMainForm.btnSaveBookingsClick(Sender: TObject);
 begin
   if not TabletkiAPI.BookingsHeadCDS.Active then Exit;
   if TabletkiAPI.BookingsHeadCDS.IsEmpty then Exit;
+  Add_Log('Загружено заказов: ' + IntToStr(TabletkiAPI.BookingsHeadCDS.RecordCount));
 
   try
     TabletkiAPI.BookingsHeadCDS.First;
@@ -293,7 +294,7 @@ begin
   if not qryCheckHead.Active then Exit;
   if qryCheckHead.IsEmpty then Exit;
 
-  Add_Log('Начало изменения статусов');
+  Add_Log('Начало изменения статусов: ' + IntToStr(qryCheckHead.RecordCount));
 
   try
     qryCheckHead.First;

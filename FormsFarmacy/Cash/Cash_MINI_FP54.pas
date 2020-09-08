@@ -53,6 +53,7 @@ type
     function ZReport : Integer;
     function SummaReceipt : Currency;
     function GetTaxRate : string;
+    function SensZReportBefore : boolean;
   public
     constructor Create;
     function OpenPort : Boolean;
@@ -264,8 +265,8 @@ function TCashMINI_FP54.CloseReceiptEx(out CheckId: String): boolean;
 begin
   if FisFiscal then
   begin
-    SendCommand('get_status;0;');
-    if FResultCount >= 15 then CheckId := FResult[15];
+    SendCommand('get_last_receipt_number;');
+    if FResultCount >= 1 then CheckId := FResult[1];
   end else
   begin
     SendCommand('comment;0;1;0;0;1;1;;');
@@ -456,7 +457,7 @@ end;
 function TCashMINI_FP54.FiscalNumber: String;
 begin
   result := '';
-  if SendCommand('get_fm_status;') and (FResultCount >= 3) then Result := FResult[3];
+  if SendCommand('read_fm_table;1;1') and (FResultCount >= 5) then Result := FResult[5];
 end;
 
 function TCashMINI_FP54.SerialNumber:String;
@@ -543,7 +544,7 @@ begin
 end;
 
 function TCashMINI_FP54.InfoZReport : string;
-  var I : integer; S : String;
+  var I, ZReport : integer; S : String;
 
   function Centr(AStr : string) : String;
   begin
@@ -563,56 +564,64 @@ function TCashMINI_FP54.InfoZReport : string;
 begin
   Result := '';
 
-  FPrinter.FPGetCurrentStatus;
+//  SendCommand('get_dir;');
+//  ShowMessage(FResult[1]);
 
-  if FPrinter.prHeadLine1 <> '' then  Result := Result + Centr(FPrinter.prHeadLine1) + #13#10;
-  if FPrinter.prHeadLine2 <> '' then  Result := Result + Centr(FPrinter.prHeadLine2) + #13#10;
-  if FPrinter.prHeadLine3 <> '' then  Result := Result + Centr(FPrinter.prHeadLine3) + #13#10;
+  SendCommand('get_header;');
 
-  S := 'ЗН ' + FPrinter.prSerialNumber;
-  S := S + '  ФН ' + FPrinter.prFiscalNumber + #13#10;
+  for I := 0 to 12 do
+  begin
+    if FResult[1 + I * 3] = '' then Continue;
+    Result := Result + Centr(FResult[1 + I * 3]) + #13#10;
+  end;
+
+
+  S := 'ЗН ' + SerialNumber;
+  S := S + '  ФН ' + FiscalNumber + #13#10;
   Result := Result + Centr(S) + #13#10;
 
+  SendCommand('get_ksef_status;');
+  ZReport := StrToInt(FResult[18]);
 
-  FPrinter.FPGetDayReportProperties;
-
-  S := '           Z-звіт N ' + IntToStr(FPrinter.prCurrentZReport);
+  S := '           Z-звіт N ' + IntToStr(ZReport);
   Result := Result + S + #13#10;
 
   Result := Result + '              ЗАГАЛОМ' + #13#10;
-  Result := Result + '  ------      Повернення    Продаж' + #13#10;
+//  Result := Result + '  ------      Повернення    Продаж' + #13#10;
 
-  FPrinter.FPGetDayReportData;
-  FPrinter.FPGetDaySumOfAddTaxes;
-  FPrinter.FPGetCashDrawerSum;
+  SendCommand('read_fm_table;3;' + IntToStr(ZReport) + ';');
 
-  Result := Result + '  Готівка  ' + Str(FPrinter.prDayRefundSumOnPayForm4 / 100, 13) + Str(FPrinter.prDaySaleSumOnPayForm4 / 100, 13) + #13#10;
-  Result := Result + '  Картка   ' + Str(FPrinter.prDayRefundSumOnPayForm1 / 100, 13) + Str(FPrinter.prDaySaleSumOnPayForm1 / 100, 13) + #13#10;
-  Result := Result + '  ВСЬОГО   ' + Str(FPrinter.prDayRefundSumOnPayForm10 / 100, 13) + Str(FPrinter.prDaySaleSumOnPayForm10 / 100, 13) + #13#10;
-
-
-  Result := Result + '  ------         Видача     Внесок'#13#10;
-  Result := Result + '  Готівка  ' + Str(FPrinter.prDayCashOutSum / 100, 13) + Str(FPrinter.prDayCashInSum / 100, 13) + #13#10;
-  Result := Result + '  Готівка в касі        ' + Str(FPrinter.prCashDrawerSum / 100, 13) + #13#10;
+//  Result := Result + '  Готівка  ' + Str(FPrinter.prDayRefundSumOnPayForm4 / 100, 13) + Str(FPrinter.prDaySaleSumOnPayForm4 / 100, 13) + #13#10;
+//  Result := Result + '  Картка   ' + Str(FPrinter.prDayRefundSumOnPayForm1 / 100, 13) + Str(FPrinter.prDaySaleSumOnPayForm1 / 100, 13) + #13#10;
+//  Result := Result + '  ВСЬОГО   ' + Str(FPrinter.prDayRefundSumOnPayForm10 / 100, 13) + Str(FPrinter.prDaySaleSumOnPayForm10 / 100, 13) + #13#10;
+//
+//
+//  Result := Result + '  ------         Видача     Внесок'#13#10;
+//  Result := Result + '  Готівка  ' + Str(FPrinter.prDayCashOutSum / 100, 13) + Str(FPrinter.prDayCashInSum / 100, 13) + #13#10;
+//  Result := Result + '  Готівка в касі        ' + Str(FPrinter.prCashDrawerSum / 100, 13) + #13#10;
+//
 
   Result := Result + '  ------        Податок       Обіг' + #13#10;
-  Result := Result + '  ДОД. А   ' + Str(FPrinter.prDaySumAddTaxOfSale1 / 100, 13) + Str(FPrinter.prDaySaleSumOnTax1 / 100, 13) + #13#10;
-  Result := Result + '  ДОД. Б   ' + Str(FPrinter.prDaySumAddTaxOfSale2 / 100, 13) + Str(FPrinter.prDaySaleSumOnTax2 / 100, 13) + #13#10;
-  Result := Result + '  Чеків продажу ' + IntToStr(FPrinter.prDaySaleReceiptsCount) + #13#10;
+  Result := Result + '  ДОД. А   ' + Str(StrToCurrPoint(FResult[9]), 13) + Str(StrToCurrPoint(FResult[3]), 13) + #13#10;
+  Result := Result + '  ДОД. Б   ' + Str(StrToCurrPoint(FResult[10]), 13) + Str(StrToCurrPoint(FResult[4]), 14) + #13#10;
+  Result := Result + '  ДОД. В   ' + Str(StrToCurrPoint(FResult[11]), 13) + Str(StrToCurrPoint(FResult[5]), 15) + #13#10;
+  Result := Result + '  Чеків продажу ' + FResult[39] + #13#10;
 
-  Result := Result + '  ВІД. A   ' + Str(FPrinter.prDaySumAddTaxOfRefund1 / 100, 13) + Str(FPrinter.prDayRefundSumOnTax1 / 100, 13) + #13#10;
-  Result := Result + '  ВІД. Б   ' + Str(FPrinter.prDaySumAddTaxOfRefund2 / 100, 13) + Str(FPrinter.prDayRefundSumOnTax2 / 100, 13) + #13#10;
-  Result := Result + '  Чеків повернення ' + IntToStr(FPrinter.prDayRefundReceiptsCount) + #13#10;
+  Result := Result + '  ВІД. A   ' + Str(StrToCurrPoint(FResult[27]), 13) + Str(StrToCurrPoint(FResult[21]), 13) + #13#10;
+  Result := Result + '  ВІД. Б   ' + Str(StrToCurrPoint(FResult[28]), 13) + Str(StrToCurrPoint(FResult[22]), 13) + #13#10;
+  Result := Result + '  ВІД. В   ' + Str(StrToCurrPoint(FResult[29]), 13) + Str(StrToCurrPoint(FResult[23]), 13) + #13#10;
+  Result := Result + '  Чеків повернення ' + FResult[40] + #13#10;
 
-  FPrinter.FPGetTaxRates;
-  Result := Result + '  Податок     від        ' + FormatDateTime('dd.mm.yyyy', FPrinter.prTaxRatesDate) + #13#10;
-  Result := Result + '            ПДВ_A (Вкл) A =    ' + Str(FPrinter.prTaxRate1 / 100, 6) + '%' + #13#10;
-  Result := Result + '            ПДВ_Б (Вкл) Б =    ' + Str(FPrinter.prTaxRate2 / 100, 6) + '%' + #13#10;
+  SendCommand('read_fm_table;2;0;');
 
-  FPrinter.FPGetCurrentDate;
-  FPrinter.FPGetCurrentTime;
+  Result := Result + '  Податок     від        ' + FResult[2] + #13#10;
+  Result := Result + '            ПДВ_A (Вкл) A =    ' + Str(StrToCurrPoint(FResult[9]), 6) + '%' + #13#10;
+  Result := Result + '            ПДВ_Б (Вкл) Б =    ' + Str(StrToCurrPoint(FResult[13]), 6) + '%' + #13#10;
+  Result := Result + '            ПДВ_В (Вкл) В =    ' + Str(StrToCurrPoint(FResult[17]), 6) + '%' + #13#10;
 
-  S := FormatDateTime('dd.mm.yyyy', FPrinter.prCurrentDate) + '  ' + FormatDateTime('hh:nn', FPrinter.prCurrentTime);
+  SendCommand('read_fm_table;3;' + IntToStr(ZReport) + ';');
+
+  S := FResult[2] + '  ' + FResult[43];
 
   Result := Result + '                    ' + S  + #13#10;
   Result := Result + '         ФІСКАЛЬНИЙ ЧЕК' + #13#10;
@@ -623,9 +632,8 @@ end;
 
 function TCashMINI_FP54.JuridicalName : string;
 begin
-  if FPrinter.FPGetCurrentStatus then
-    Result := FPrinter.prHeadLine1
-  else ShowError;
+  SendCommand('get_header;');
+  Result :=  FResult[1];
 end;
 
 function TCashMINI_FP54.ZReport : Integer;
@@ -635,7 +643,9 @@ end;
 
 function TCashMINI_FP54.SummaReceipt : Currency;
 begin
-  result := FSumma;
+//  result := FSumma;
+  if SendCommand('show_subtotal;') then Result := StrToCurrPoint(FResult[1])
+  else Result := 0;
 end;
 
 function TCashMINI_FP54.GetTaxRate : string;
@@ -652,6 +662,10 @@ begin
 
 end;
 
+function TCashMINI_FP54.SensZReportBefore : boolean;
+begin
+  Result := False;
+end;
+
 end.
 
-// FPGetCurrentReceiptData

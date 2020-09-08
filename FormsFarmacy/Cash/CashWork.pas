@@ -80,10 +80,15 @@ procedure TCashWorkForm.Button2Click(Sender: TObject);
 begin
   if MessageDlg('Вы уверены в снятии Z-отчета?', mtInformation, mbOKCancel, 0) = mrOk then
   begin
-     SaveZReport(StringReplace(m_Cash.JuridicalName, '"', '', [rfReplaceAll]) + ' ' +
-                 m_ZReportName + FormatDateTime('DD.MM.YY', Date) + ' ФН' +
-                 m_Cash.FiscalNumber  + ' №' + IntToStr(m_Cash.ZReport), m_Cash.InfoZReport);
+     if m_Cash.SensZReportBefore then
+       SaveZReport(StringReplace(m_Cash.JuridicalName, '"', '', [rfReplaceAll]) + ' ' +
+                   m_ZReportName + FormatDateTime('DD.MM.YY', Date) + ' ФН' +
+                   m_Cash.FiscalNumber  + ' №' + IntToStr(m_Cash.ZReport), m_Cash.InfoZReport);
      m_Cash.ClosureFiscal;
+     if not m_Cash.SensZReportBefore then
+       SaveZReport(StringReplace(m_Cash.JuridicalName, '"', '', [rfReplaceAll]) + ' ' +
+                   m_ZReportName + FormatDateTime('DD.MM.YY', Date) + ' ФН' +
+                   m_Cash.FiscalNumber  + ' №' + IntToStr(m_Cash.ZReport), m_Cash.InfoZReport);
      EmployeeWorkLog_ZReport;
      if not gc_User.Local then
      try

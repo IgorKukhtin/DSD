@@ -47,6 +47,7 @@ type
     function ZReport : Integer;
     function SummaReceipt : Currency;
     function GetTaxRate : string;
+    function SensZReportBefore : boolean;
   public
     constructor Create;
   end;
@@ -685,6 +686,11 @@ begin
     end;
   end;
 
+end;
+
+function TCashFP3530T_NEW.SensZReportBefore : boolean;
+begin
+  Result := True;
 end;
 
 end.

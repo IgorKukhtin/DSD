@@ -53,9 +53,9 @@ BEGIN
 
  -- парсим перемещени€
   vbIndex := 1;
-  WHILE SPLIT_PART (inMISendId, ',', vbIndex) <> '' LOOP
+  WHILE SPLIT_PART (inMISendId, ';', vbIndex) <> '' LOOP
       -- добавл€ем то что нашли
-      vbMISendId := SPLIT_PART (inMISendId, ',', vbIndex) :: Integer;
+      vbMISendId := SPLIT_PART (inMISendId, ';', vbIndex) :: Integer;
       -- сохранили свойство < оличество мест>
       PERFORM lpInsertUpdate_MovementItemFloat (zc_MIFloat_MISendPDChangeId(), vbMISendId, vbMovementItemId);
       -- теперь следуюющий

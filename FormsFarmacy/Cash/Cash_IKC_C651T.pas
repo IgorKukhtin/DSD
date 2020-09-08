@@ -49,6 +49,7 @@ type
     function ZReport : Integer;
     function SummaReceipt : Currency;
     function GetTaxRate : string;
+    function SensZReportBefore : boolean;
   public
     constructor Create;
     function ShowError: boolean;
@@ -481,16 +482,19 @@ begin
   Result := Result + '  ------        Податок       Обіг' + #13#10;
   Result := Result + '  ДОД. А   ' + Str(FPrinter.prDaySumAddTaxOfSale1 / 100, 13) + Str(FPrinter.prDaySaleSumOnTax1 / 100, 13) + #13#10;
   Result := Result + '  ДОД. Б   ' + Str(FPrinter.prDaySumAddTaxOfSale2 / 100, 13) + Str(FPrinter.prDaySaleSumOnTax2 / 100, 13) + #13#10;
+  Result := Result + '  ДОД. В   ' + Str(FPrinter.prDaySumAddTaxOfSale3 / 100, 13) + Str(FPrinter.prDaySaleSumOnTax3 / 100, 13) + #13#10;
   Result := Result + '  Чеків продажу ' + IntToStr(FPrinter.prDaySaleReceiptsCount) + #13#10;
 
   Result := Result + '  ВІД. A   ' + Str(FPrinter.prDaySumAddTaxOfRefund1 / 100, 13) + Str(FPrinter.prDayRefundSumOnTax1 / 100, 13) + #13#10;
   Result := Result + '  ВІД. Б   ' + Str(FPrinter.prDaySumAddTaxOfRefund2 / 100, 13) + Str(FPrinter.prDayRefundSumOnTax2 / 100, 13) + #13#10;
+  Result := Result + '  ВІД. В   ' + Str(FPrinter.prDaySumAddTaxOfRefund4 / 100, 13) + Str(FPrinter.prDayRefundSumOnTax3 / 100, 13) + #13#10;
   Result := Result + '  Чеків повернення ' + IntToStr(FPrinter.prDayRefundReceiptsCount) + #13#10;
 
   FPrinter.FPGetTaxRates;
   Result := Result + '  Податок     від        ' + FormatDateTime('dd.mm.yyyy', FPrinter.prTaxRatesDate) + #13#10;
   Result := Result + '            ПДВ_A (Вкл) A =    ' + Str(FPrinter.prTaxRate1 / 100, 6) + '%' + #13#10;
   Result := Result + '            ПДВ_Б (Вкл) Б =    ' + Str(FPrinter.prTaxRate2 / 100, 6) + '%' + #13#10;
+  Result := Result + '            ПДВ_Б (Вкл) В =    ' + Str(FPrinter.prTaxRate3 / 100, 6) + '%' + #13#10;
 
   FPrinter.FPGetCurrentDate;
   FPrinter.FPGetCurrentTime;
@@ -532,6 +536,12 @@ begin
   Result := Result + 'В =    ' + FormatCurr('0.00', FPrinter.prTaxRate3 / 100) + '%;';
   Result := Result + 'Г =    ' + FormatCurr('0.00', FPrinter.prTaxRate4 / 100) + '%;';
 end;
+
+function TCashIKC_C651T.SensZReportBefore : boolean;
+begin
+  Result := True;
+end;
+
 
 end.
 

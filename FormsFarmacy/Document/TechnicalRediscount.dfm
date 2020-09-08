@@ -551,6 +551,7 @@ inherited TechnicalRediscountForm: TTechnicalRediscountForm
           MultiSelectSeparator = ','
         end>
       isShowModal = False
+      CheckIDRecords = True
       ActionType = acUpdate
       DataSource = MasterDS
       IdFieldName = 'IDSend'
