@@ -758,10 +758,17 @@ CREATE OR REPLACE FUNCTION zc_ObjectBoolean_CashSettings_PairedOnlyPromo() RETUR
 INSERT INTO ObjectBooleanDesc (DescId, Code, ItemName)
   SELECT zc_Object_CashSettings(), 'zc_ObjectBoolean_CashSettings_PairedOnlyPromo', 'При опускании парных контролировать только акционный' WHERE NOT EXISTS (SELECT * FROM ObjectBooleanDesc WHERE Code = 'zc_ObjectBoolean_CashSettings_PairedOnlyPromo');
 
+CREATE OR REPLACE FUNCTION zc_ObjectFloat_CommentTR_BlockFormSUN() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM ObjectBooleanDesc WHERE Code = 'zc_ObjectFloat_CommentTR_BlockFormSUN'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
+INSERT INTO ObjectBooleanDesc (DescId, Code, ItemName)
+  SELECT zc_Object_CommentTR(), 'zc_ObjectFloat_CommentTR_BlockFormSUN', 'Блокировать формирование СУН при не проведенных ТП' WHERE NOT EXISTS (SELECT * FROM ObjectBooleanDesc WHERE Code = 'zc_ObjectFloat_CommentTR_BlockFormSUN');
+
+
+
 
 /*-------------------------------------------------------------------------------
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.  Воробкало А.А.  Ярошенко Р.Ф.   Подмогильный В.В.   Шаблий О.В.
+ 09.09.20                                                                                                          * zc_ObjectFloat_CommentTR_BlockFormSUN 
  06.09.20                                                                                                          * zc_ObjectBoolean_CashSettings_PairedOnlyPromo 
  05.09.20                                                                                                          * zc_ObjectBoolean_CheckSourceKind_Site 
  26.08.20                                                                                                          * zc_ObjectBoolean_CommentSun_Promo 

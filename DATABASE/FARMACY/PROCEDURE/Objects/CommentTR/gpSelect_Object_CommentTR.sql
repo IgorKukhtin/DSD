@@ -10,6 +10,7 @@ RETURNS TABLE (Id Integer, Code Integer, Name TVarChar
              , isResort Boolean
              , isDifferenceSum Boolean
              , DifferenceSum TFloat
+             , isBlockFormSUN Boolean
              , isErased boolean) AS
 $BODY$BEGIN
    
@@ -24,6 +25,7 @@ $BODY$BEGIN
         , ObjectBoolean_CommentTR_Resort.ValueData        AS isResort
         , ObjectBoolean_CommentTR_DifferenceSum.ValueData AS isDifferenceSum
         , ObjectFloat_DifferenceSum.ValueData             AS DifferenceSum
+        , ObjectBoolean_CommentTR_BlockFormSUN.ValueData  AS isBlockFormSUN
         , Object_CommentTR.isErased                       AS isErased
    FROM Object AS Object_CommentTR
 
@@ -42,6 +44,10 @@ $BODY$BEGIN
         LEFT JOIN ObjectFloat AS ObjectFloat_DifferenceSum
                               ON ObjectFloat_DifferenceSum.ObjectId = Object_CommentTR.Id 
                              AND ObjectFloat_DifferenceSum.DescId = zc_ObjectFloat_CommentTR_DifferenceSum()
+
+        LEFT JOIN ObjectBoolean AS ObjectBoolean_CommentTR_BlockFormSUN
+                                ON ObjectBoolean_CommentTR_BlockFormSUN.ObjectId = Object_CommentTR.Id 
+                               AND ObjectBoolean_CommentTR_BlockFormSUN.DescId = zc_ObjectFloat_CommentTR_BlockFormSUN()
 
    WHERE Object_CommentTR.DescId = zc_Object_CommentTR()
      AND Object_CommentTR.ObjectCode <> 8;

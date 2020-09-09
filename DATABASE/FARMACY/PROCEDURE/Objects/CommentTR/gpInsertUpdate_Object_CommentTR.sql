@@ -1,6 +1,6 @@
 -- Function: gpInsertUpdate_Object_CommentTR()
 
-DROP FUNCTION IF EXISTS gpInsertUpdate_Object_CommentTR(Integer, Integer, TVarChar, Boolean, Boolean, Boolean, TFloat, TVarChar);
+DROP FUNCTION IF EXISTS gpInsertUpdate_Object_CommentTR(Integer, Integer, TVarChar, Boolean, Boolean, Boolean, TFloat, Boolean, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpInsertUpdate_Object_CommentTR(
  INOUT ioId              Integer   ,     -- ключ объекта <Покупатель> 
@@ -10,6 +10,7 @@ CREATE OR REPLACE FUNCTION gpInsertUpdate_Object_CommentTR(
     IN inisResort        Boolean   ,     -- Контроль пересорта
     IN inisDifferenceSum Boolean   ,     -- Контроль пересорта в сумме
     IN inDifferenceSum   TFloat    ,     -- Допустимая разница в сумме
+    IN inBlockFormSUN    Boolean   ,     -- Блокировать формирование СУН при не проведенных ТП
     IN inSession         TVarChar        -- сессия пользователя
 )
   RETURNS integer AS
@@ -51,6 +52,9 @@ BEGIN
    PERFORM lpInsertUpdate_ObjectBoolean (zc_ObjectBoolean_CommentTR_DifferenceSum(), ioId, inisDifferenceSum);
    -- сохранили Допустимая разница в сумме
    PERFORM lpInsertUpdate_ObjectFloat (zc_ObjectFloat_CommentTR_DifferenceSum(), ioId, inDifferenceSum);
+
+   -- Блокировать формирование СУН при не проведенных ТП
+   PERFORM lpInsertUpdate_ObjectBoolean (zc_ObjectFloat_CommentTR_BlockFormSUN(), ioId, inBlockFormSUN);
 
    -- сохранили протокол
    PERFORM lpInsert_ObjectProtocol (ioId, vbUserId);

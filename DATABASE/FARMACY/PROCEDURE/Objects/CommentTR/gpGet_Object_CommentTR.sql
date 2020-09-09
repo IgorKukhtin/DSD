@@ -10,6 +10,7 @@ RETURNS TABLE (Id Integer, Code Integer, Name TVarChar
              , isExplanation Boolean, isResort Boolean
              , isDifferenceSum Boolean
              , DifferenceSum TFloat
+             , isBlockFormSUN Boolean
              , isErased boolean) AS
 $BODY$
 BEGIN
@@ -28,6 +29,7 @@ BEGIN
            , CAST (FALSE AS Boolean) AS isResort
            , CAST (FALSE AS Boolean) AS isDifferenceSum
            , CAST (Null AS TFloat)   AS DifferenceSum
+           , CAST (Null AS TFloat)   AS isBlockFormSUN
            , CAST (FALSE AS Boolean) AS isErased;
    ELSE
        RETURN QUERY 
@@ -38,6 +40,7 @@ BEGIN
             , COALESCE(ObjectBoolean_CommentTR_Resort.ValueData, FALSE)        AS isResort
             , COALESCE(ObjectBoolean_CommentTR_DifferenceSum.ValueData, FALSE) AS isDifferenceSum
             , ObjectFloat_DifferenceSum.ValueData                              AS DifferenceSum
+            , COALESCE(ObjectBoolean_CommentTR_BlockFormSUN.ValueData, FALSE)  AS isBlockFormSUN
             , Object_CommentTR.isErased                                        AS isErased
        FROM Object AS Object_CommentTR
 
@@ -56,6 +59,10 @@ BEGIN
         LEFT JOIN ObjectFloat AS ObjectFloat_DifferenceSum
                               ON ObjectFloat_DifferenceSum.ObjectId = Object_CommentTR.Id 
                              AND ObjectFloat_DifferenceSum.DescId = zc_ObjectFloat_CommentTR_DifferenceSum()
+
+        LEFT JOIN ObjectBoolean AS ObjectBoolean_CommentTR_BlockFormSUN
+                                ON ObjectBoolean_CommentTR_BlockFormSUN.ObjectId = Object_CommentTR.Id 
+                               AND ObjectBoolean_CommentTR_BlockFormSUN.DescId = zc_ObjectFloat_CommentTR_BlockFormSUN()
 
        WHERE Object_CommentTR.Id = inId;
    END IF; 
