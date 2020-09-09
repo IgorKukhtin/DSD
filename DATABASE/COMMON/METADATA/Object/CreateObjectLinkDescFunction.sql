@@ -1744,6 +1744,11 @@ CREATE OR REPLACE FUNCTION zc_ObjectLink_JuridicalOrderFinance_BankAccount() RET
 INSERT INTO ObjectLinkDesc (Code, ItemName, DescId, ChildObjectDescId)
   SELECT 'zc_ObjectLink_JuridicalOrderFinance_BankAccount', 'Расчетный счет', zc_Object_JuridicalOrderFinance(), zc_Object_BankAccount() WHERE NOT EXISTS (SELECT * FROM ObjectLinkDesc WHERE Code = 'zc_ObjectLink_JuridicalOrderFinance_BankAccount');
 
+CREATE OR REPLACE FUNCTION zc_ObjectLink_JuridicalOrderFinance_BankAccountMain() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM ObjectLinkDesc WHERE Code = 'zc_ObjectLink_JuridicalOrderFinance_BankAccountMain'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
+INSERT INTO ObjectLinkDesc (Code, ItemName, DescId, ChildObjectDescId)
+  SELECT 'zc_ObjectLink_JuridicalOrderFinance_BankAccountMain', 'Расчетный счет (с которого оплата)', zc_Object_JuridicalOrderFinance(), zc_Object_BankAccount() WHERE NOT EXISTS (SELECT * FROM ObjectLinkDesc WHERE Code = 'zc_ObjectLink_JuridicalOrderFinance_BankAccountMain');
+
+
 CREATE OR REPLACE FUNCTION zc_ObjectLink_JuridicalOrderFinance_InfoMoney() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM ObjectLinkDesc WHERE Code = 'zc_ObjectLink_JuridicalOrderFinance_InfoMoney'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
 INSERT INTO ObjectLinkDesc (Code, ItemName, DescId, ChildObjectDescId)
   SELECT 'zc_ObjectLink_JuridicalOrderFinance_InfoMoney', 'УП статьи назначения', zc_Object_JuridicalOrderFinance(), zc_Object_InfoMoney() WHERE NOT EXISTS (SELECT * FROM ObjectLinkDesc WHERE Code = 'zc_ObjectLink_JuridicalOrderFinance_InfoMoney');
@@ -2378,6 +2383,7 @@ SELECT 'zc_ObjectLink_JuridicalPriorities_Goods', 'Связь с главным товаром', zc_
 /*-------------------------------------------------------------------------------
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.   Воробкало А.А.   Шаблий О.В.
+ 09.09.20         * zc_ObjectLink_JuridicalOrderFinance_BankAccountMain
  04.09.20         * zc_ObjectLink_MemberMinus_From
                     zc_ObjectLink_MemberMinus_To
                     zc_ObjectLink_MemberMinus_BankAccountFrom

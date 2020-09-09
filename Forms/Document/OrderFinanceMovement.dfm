@@ -585,6 +585,30 @@ object OrderFinanceMovementForm: TOrderFinanceMovementForm
             Options.Editing = False
             Width = 70
           end
+          object chBankName_main: TcxGridDBColumn
+            Caption = #1041#1072#1085#1082' ('#1086#1090#1082#1091#1076#1072')'
+            DataBinding.FieldName = 'BankName_main'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 87
+          end
+          object chBankAccountName_main: TcxGridDBColumn
+            Caption = #1056'/'#1057#1095#1077#1090' ('#1086#1090#1082#1091#1076#1072')'
+            DataBinding.FieldName = 'BankAccountName_main'
+            PropertiesClassName = 'TcxButtonEditProperties'
+            Properties.Buttons = <
+              item
+                Action = actBankAccountChoiceFormJurMain
+                Default = True
+                Kind = bkEllipsis
+              end>
+            Properties.ReadOnly = True
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            HeaderHint = #1088'/'#1089#1095#1077#1090', '#1089' '#1082#1086#1090#1086#1088#1086#1075#1086' '#1084#1099' '#1087#1083#1072#1090#1080#1084
+            Width = 156
+          end
           object chInvNumberBranch: TcxGridDBColumn
             Caption = #8470' '#1092#1080#1083#1080#1072#1083#1072
             DataBinding.FieldName = 'InvNumberBranch'
@@ -741,6 +765,7 @@ object OrderFinanceMovementForm: TOrderFinanceMovementForm
     Params = <
       item
         Name = 'Id'
+        Value = Null
         ParamType = ptInputOutput
         MultiSelectSeparator = ','
       end
@@ -1389,6 +1414,44 @@ object OrderFinanceMovementForm: TOrderFinanceMovementForm
         end>
       isShowModal = False
     end
+    object actBankAccountChoiceFormJurMain: TOpenChoiceForm
+      Category = 'DSDLib'
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      Caption = 'BankAccount_ObjectChoiceForm'
+      FormName = 'TBankAccount_ObjectForm'
+      FormNameParam.Value = 'TBankAccount_ObjectForm'
+      FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
+      GuiParams = <
+        item
+          Name = 'key'
+          Value = Null
+          Component = JuridicalCDS
+          ComponentItem = 'BankAccountId_main'
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'TextValue'
+          Value = Null
+          Component = JuridicalCDS
+          ComponentItem = 'BankAccountName_main'
+          DataType = ftString
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'BankName'
+          Value = Null
+          Component = JuridicalCDS
+          ComponentItem = 'BankName_main'
+          DataType = ftString
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end>
+      isShowModal = False
+    end
     object actBankAccountChoiceFormJur: TOpenChoiceForm
       Category = 'DSDLib'
       MoveParams = <>
@@ -1767,6 +1830,7 @@ object OrderFinanceMovementForm: TOrderFinanceMovementForm
         Param.MultiSelectSeparator = ','
         DataSummaryItemIndex = 6
       end>
+    PropertiesCellList = <>
     Left = 347
     Top = 337
   end
@@ -1850,6 +1914,7 @@ object OrderFinanceMovementForm: TOrderFinanceMovementForm
         Control = edOrderFinance
       end
       item
+        Control = edBankAccount
       end
       item
       end
@@ -2008,8 +2073,8 @@ object OrderFinanceMovementForm: TOrderFinanceMovementForm
         MultiSelectSeparator = ','
       end>
     PackSize = 1
-    Left = 534
-    Top = 248
+    Left = 558
+    Top = 240
   end
   object spUnErasedMIMaster: TdsdStoredProc
     StoredProcName = 'gpSetUnErased_MovementItem'
@@ -2130,8 +2195,8 @@ object OrderFinanceMovementForm: TOrderFinanceMovementForm
         MultiSelectSeparator = ','
       end>
     PackSize = 1
-    Left = 567
-    Top = 208
+    Left = 599
+    Top = 184
   end
   object spInsertMaskMIMaster: TdsdStoredProc
     DataSets = <>
@@ -2181,7 +2246,7 @@ object OrderFinanceMovementForm: TOrderFinanceMovementForm
       end
       item
         Name = 'inIsCalcAmountPartner'
-        Value = 'True'
+        Value = True
         DataType = ftBoolean
         ParamType = ptInput
         MultiSelectSeparator = ','
@@ -2336,17 +2401,34 @@ object OrderFinanceMovementForm: TOrderFinanceMovementForm
         Param.MultiSelectSeparator = ','
         DataSummaryItemIndex = 6
       end>
+    PropertiesCellList = <>
     Left = 819
     Top = 265
   end
   object spSelectJuridicalOrderFinance: TdsdStoredProc
-    StoredProcName = 'gpSelect_Object_JuridicalOrderFinance'
+    StoredProcName = 'gpSelect_Object_JuridicalOrderFinance_choice'
     DataSet = JuridicalCDS
     DataSets = <
       item
         DataSet = JuridicalCDS
       end>
     Params = <
+      item
+        Name = 'inBankAccountMainId'
+        Value = Null
+        Component = GuidesBankAccount
+        ComponentItem = 'Key'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inOrderFinanceId'
+        Value = Null
+        Component = GuidesOrderFinance
+        ComponentItem = 'Key'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
       item
         Name = 'inShowAll'
         Value = False
@@ -2364,8 +2446,8 @@ object OrderFinanceMovementForm: TOrderFinanceMovementForm
         MultiSelectSeparator = ','
       end>
     PackSize = 1
-    Left = 944
-    Top = 271
+    Left = 704
+    Top = 359
   end
   object spUpdate_Juridical_OrderFinance: TdsdStoredProc
     StoredProcName = 'gpInsertUpdate_Object_JuridicalOrderFinance'
@@ -2385,6 +2467,14 @@ object OrderFinanceMovementForm: TOrderFinanceMovementForm
         Value = Null
         Component = JuridicalCDS
         ComponentItem = 'JuridicalId'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inBankAccountMainId'
+        Value = Null
+        Component = JuridicalCDS
+        ComponentItem = 'BankAccountId_main'
         ParamType = ptInput
         MultiSelectSeparator = ','
       end
@@ -2462,7 +2552,7 @@ object OrderFinanceMovementForm: TOrderFinanceMovementForm
         MultiSelectSeparator = ','
       end>
     Left = 656
-    Top = 16
+    Top = 40
   end
   object spSelect_Export: TdsdStoredProc
     StoredProcName = 'gpSelect_Movement_OrderFinance_File'
@@ -2491,6 +2581,7 @@ object OrderFinanceMovementForm: TOrderFinanceMovementForm
     Params = <
       item
         Name = 'inMovementId'
+        Value = Null
         Component = FormParams
         ComponentItem = 'Id'
         ParamType = ptInput
@@ -2514,7 +2605,7 @@ object OrderFinanceMovementForm: TOrderFinanceMovementForm
       end
       item
         Name = 'outEncodingANSI'
-        Value = 'false'
+        Value = False
         Component = actExport_Grid
         ComponentItem = 'EncodingANSI'
         DataType = ftBoolean

@@ -41,22 +41,22 @@ BEGIN
      
      RETURN QUERY
      WITH
-     tmpOrderFinanceProperty AS (SELECT DISTINCT OrderFinanceProperty_Object.ChildObjectId AS Id
-                                 FROM ObjectLink AS OrderFinanceProperty_OrderFinance
-                                      INNER JOIN ObjectLink AS OrderFinanceProperty_Object
-                                                            ON OrderFinanceProperty_Object.ObjectId = OrderFinanceProperty_OrderFinance.ObjectId
-                                                           AND OrderFinanceProperty_Object.DescId = zc_ObjectLink_OrderFinanceProperty_Object()
-                                                           AND COALESCE (OrderFinanceProperty_Object.ChildObjectId,0) <> 0
-
-                                 WHERE OrderFinanceProperty_OrderFinance.ChildObjectId = vbOrderFinanceId
-                                   AND OrderFinanceProperty_OrderFinance.DescId = zc_ObjectLink_OrderFinanceProperty_OrderFinance()
-                                )
-   , tmpInfoMoney AS (SELECT DISTINCT Object_InfoMoney_View.InfoMoneyId
-                      FROM Object_InfoMoney_View
-                           INNER JOIN tmpOrderFinanceProperty ON (tmpOrderFinanceProperty.Id = Object_InfoMoney_View.InfoMoneyId
-                                                               OR tmpOrderFinanceProperty.Id = Object_InfoMoney_View.InfoMoneyDestinationId
-                                                               OR tmpOrderFinanceProperty.Id = Object_InfoMoney_View.InfoMoneyGroupId)
-                      )
+/*        tmpOrderFinanceProperty AS (SELECT DISTINCT OrderFinanceProperty_Object.ChildObjectId AS Id
+                                    FROM ObjectLink AS OrderFinanceProperty_OrderFinance
+                                         INNER JOIN ObjectLink AS OrderFinanceProperty_Object
+                                                               ON OrderFinanceProperty_Object.ObjectId = OrderFinanceProperty_OrderFinance.ObjectId
+                                                              AND OrderFinanceProperty_Object.DescId = zc_ObjectLink_OrderFinanceProperty_Object()
+                                                              AND COALESCE (OrderFinanceProperty_Object.ChildObjectId,0) <> 0
+   
+                                    WHERE OrderFinanceProperty_OrderFinance.ChildObjectId = vbOrderFinanceId
+                                      AND OrderFinanceProperty_OrderFinance.DescId = zc_ObjectLink_OrderFinanceProperty_OrderFinance()
+                                   )
+      , tmpInfoMoney AS (SELECT DISTINCT Object_InfoMoney_View.InfoMoneyId
+                         FROM Object_InfoMoney_View
+                              INNER JOIN tmpOrderFinanceProperty ON (tmpOrderFinanceProperty.Id = Object_InfoMoney_View.InfoMoneyId
+                                                                  OR tmpOrderFinanceProperty.Id = Object_InfoMoney_View.InfoMoneyDestinationId
+                                                                  OR tmpOrderFinanceProperty.Id = Object_InfoMoney_View.InfoMoneyGroupId)
+                         )
 
       , tmpJuridicalOrderFinance AS (SELECT OL_JuridicalOrderFinance_Juridical.ChildObjectId   AS JuridicalId
                                           , OL_JuridicalOrderFinance_BankAccount.ChildObjectId AS BankAccountId
@@ -77,6 +77,17 @@ BEGIN
                                      WHERE Object_JuridicalOrderFinance.DescId = zc_Object_JuridicalOrderFinance()
                                        AND Object_JuridicalOrderFinance.isErased = FALSE
                                      )
+                                     */
+     tmpJuridicalOrderFinance AS (SELECT DISCTINCT
+                                         tmp.BankAccountId
+                                       , tmp.JuridicalId
+                                       , tmp.InfoMoneyId
+                                  FROM gpSelect_Object_JuridicalOrderFinance_choice (inBankAccountMainId:= vbBankAccountMainId
+                                                                                   , inOrderFinanceId := vbOrderFinanceId
+                                                                                   , inisShowAll      := FALSE 
+                                                                                   , inisErased       := FALSE
+                                                                                   , inSession        := inSession) AS tmp
+                                  )
 
    , tmpData AS (SELECT DISTINCT 
                         ObjectLink_Contract_Juridical.ChildObjectId AS JuridicalId
@@ -84,13 +95,12 @@ BEGIN
                       , ObjectLink_Contract_InfoMoney.ChildObjectId AS InfoMoneyId
                       , tmpJuridicalOrderFinance.BankAccountId      AS BankAccountId
                  FROM ObjectLink AS ObjectLink_Contract_InfoMoney
-                      INNER JOIN tmpInfoMoney ON tmpInfoMoney.InfoMoneyId = ObjectLink_Contract_InfoMoney.ChildObjectId
-                        LEFT JOIN ObjectLink AS ObjectLink_Contract_Juridical
-                                             ON ObjectLink_Contract_Juridical.ObjectId = ObjectLink_Contract_InfoMoney.ObjectId
-                                            AND ObjectLink_Contract_Juridical.DescId = zc_ObjectLink_Contract_Juridical()
+                      LEFT JOIN ObjectLink AS ObjectLink_Contract_Juridical
+                                           ON ObjectLink_Contract_Juridical.ObjectId = ObjectLink_Contract_InfoMoney.ObjectId
+                                          AND ObjectLink_Contract_Juridical.DescId = zc_ObjectLink_Contract_Juridical()
 
-                      LEFT JOIN tmpJuridicalOrderFinance ON tmpJuridicalOrderFinance.JuridicalId = ObjectLink_Contract_Juridical.ChildObjectId
-                                                        AND tmpJuridicalOrderFinance.InfoMoneyId = ObjectLink_Contract_InfoMoney.ChildObjectId
+                      INNER JOIN tmpJuridicalOrderFinance ON tmpJuridicalOrderFinance.JuridicalId = ObjectLink_Contract_Juridical.ChildObjectId
+                                                         AND tmpJuridicalOrderFinance.InfoMoneyId = ObjectLink_Contract_InfoMoney.ChildObjectId
                  WHERE ObjectLink_Contract_InfoMoney.DescId = zc_ObjectLink_Contract_InfoMoney()
                 )
 

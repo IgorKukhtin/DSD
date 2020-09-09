@@ -1,11 +1,13 @@
--- Function: gpSelect_Object_JuridicalOrderFinance()
+-- Function: gpSelect_Object_JuridicalOrderFinance_choice()
 
-DROP FUNCTION IF EXISTS gpSelect_Object_JuridicalOrderFinance(Boolean, Boolean, TVarChar);
+DROP FUNCTION IF EXISTS gpSelect_Object_JuridicalOrderFinance_choice(Integer, Integer, Boolean, Boolean, TVarChar);
 
-CREATE OR REPLACE FUNCTION gpSelect_Object_JuridicalOrderFinance(
-    IN inisShowAll   Boolean,       -- True - показать все, False - показать только сохраненные
-    IN inisErased    Boolean,       -- True - показать так же удаленные, False - показать только рабочие
-    IN inSession     TVarChar       -- сессия пользователя
+CREATE OR REPLACE FUNCTION gpSelect_Object_JuridicalOrderFinance_choice(
+    IN inBankAccountMainId Integer,       -- с какого счета оплата
+    IN inOrderFinanceId    Integer,       -- вид планирования платежа
+    IN inisShowAll         Boolean,       -- True - показать все, False - показать только сохраненные
+    IN inisErased          Boolean,       -- True - показать так же удаленные, False - показать только рабочие
+    IN inSession           TVarChar       -- сессия пользователя
 )
 RETURNS TABLE (Id Integer
              , JuridicalId Integer, JuridicalCode Integer, JuridicalName TVarChar
@@ -38,6 +40,27 @@ BEGIN
                     WHERE Object_Contract_View.isErased = FALSE
                       AND Object_Contract_View.EndDate >= CURRENT_DATE
                    )
+
+       -- по inOrderFinanceId выбираем статьи, которые отображать в документе
+      , tmpOrderFinanceProperty AS (SELECT DISTINCT OrderFinanceProperty_Object.ChildObjectId AS Id
+                                    FROM ObjectLink AS OrderFinanceProperty_OrderFinance
+                                         INNER JOIN ObjectLink AS OrderFinanceProperty_Object
+                                                               ON OrderFinanceProperty_Object.ObjectId = OrderFinanceProperty_OrderFinance.ObjectId
+                                                              AND OrderFinanceProperty_Object.DescId = zc_ObjectLink_OrderFinanceProperty_Object()
+                                                              AND COALESCE (OrderFinanceProperty_Object.ChildObjectId,0) <> 0
+                                         INNER JOIN Object ON Object.Id = OrderFinanceProperty_Object.ObjectId
+                                                          AND Object.isErased = False
+                                    WHERE OrderFinanceProperty_OrderFinance.ChildObjectId = inOrderFinanceId
+                                      AND OrderFinanceProperty_OrderFinance.DescId = zc_ObjectLink_OrderFinanceProperty_OrderFinance()
+                                   )
+
+      , tmpInfoMoney AS (SELECT DISTINCT Object_InfoMoney_View.InfoMoneyId
+                         FROM Object_InfoMoney_View
+                              INNER JOIN tmpOrderFinanceProperty ON (tmpOrderFinanceProperty.Id = Object_InfoMoney_View.InfoMoneyId
+                                                                  OR tmpOrderFinanceProperty.Id = Object_InfoMoney_View.InfoMoneyDestinationId
+                                                                  OR tmpOrderFinanceProperty.Id = Object_InfoMoney_View.InfoMoneyGroupId)
+                         )
+
       , tmpJuridicalOrderFinance AS (SELECT Object_JuridicalOrderFinance.Id
                                           , OL_JuridicalOrderFinance_Juridical.ChildObjectId       AS JuridicalId
                                           , OL_JuridicalOrderFinance_BankAccountMain.ChildObjectId AS BankAccountId_main
@@ -45,31 +68,35 @@ BEGIN
                                           , OL_JuridicalOrderFinance_InfoMoney.ChildObjectId       AS InfoMoneyId
                                           , ObjectFloat_SummOrderFinance.ValueData :: TFloat       AS SummOrderFinance
                                           , Object_JuridicalOrderFinance.isErased                  AS isErased
-                              
+
                                      FROM Object AS Object_JuridicalOrderFinance
+                                         INNER JOIN ObjectLink AS OL_JuridicalOrderFinance_BankAccountMain
+                                                               ON OL_JuridicalOrderFinance_BankAccountMain.ObjectId = Object_JuridicalOrderFinance.Id
+                                                              AND OL_JuridicalOrderFinance_BankAccountMain.DescId = zc_ObjectLink_JuridicalOrderFinance_BankAccountMain()
+                                                              AND (OL_JuridicalOrderFinance_BankAccountMain.ChildObjectId = inBankAccountMainId OR inBankAccountMainId = 0)
+
+                                         LEFT JOIN ObjectLink AS OL_JuridicalOrderFinance_InfoMoney
+                                                              ON OL_JuridicalOrderFinance_InfoMoney.ObjectId = Object_JuridicalOrderFinance.Id
+                                                             AND OL_JuridicalOrderFinance_InfoMoney.DescId = zc_ObjectLink_JuridicalOrderFinance_InfoMoney()
+                                         LEFT JOIN tmpInfoMoney ON tmpInfoMoney.InfoMoneyId = OL_JuridicalOrderFinance_InfoMoney.ChildObjectId
+
                                          LEFT JOIN ObjectLink AS OL_JuridicalOrderFinance_Juridical
                                                               ON OL_JuridicalOrderFinance_Juridical.ObjectId = Object_JuridicalOrderFinance.Id
                                                              AND OL_JuridicalOrderFinance_Juridical.DescId = zc_ObjectLink_JuridicalOrderFinance_Juridical()
 
-                                         LEFT JOIN ObjectLink AS OL_JuridicalOrderFinance_BankAccountMain
-                                                              ON OL_JuridicalOrderFinance_BankAccountMain.ObjectId = Object_JuridicalOrderFinance.Id
-                                                             AND OL_JuridicalOrderFinance_BankAccountMain.DescId = zc_ObjectLink_JuridicalOrderFinance_BankAccountMain()
-
                                          LEFT JOIN ObjectLink AS OL_JuridicalOrderFinance_BankAccount
                                                               ON OL_JuridicalOrderFinance_BankAccount.ObjectId = Object_JuridicalOrderFinance.Id
                                                              AND OL_JuridicalOrderFinance_BankAccount.DescId = zc_ObjectLink_JuridicalOrderFinance_BankAccount()
-                                        
-                                         LEFT JOIN ObjectLink AS OL_JuridicalOrderFinance_InfoMoney
-                                                              ON OL_JuridicalOrderFinance_InfoMoney.ObjectId = Object_JuridicalOrderFinance.Id
-                                                             AND OL_JuridicalOrderFinance_InfoMoney.DescId = zc_ObjectLink_JuridicalOrderFinance_InfoMoney()
-                              
+
                                          LEFT JOIN ObjectFloat AS ObjectFloat_SummOrderFinance
                                                                ON ObjectFloat_SummOrderFinance.ObjectId = Object_JuridicalOrderFinance.Id
                                                               AND ObjectFloat_SummOrderFinance.DescId = zc_ObjectFloat_JuridicalOrderFinance_SummOrderFinance()
                               
                                      WHERE Object_JuridicalOrderFinance.DescId = zc_Object_JuridicalOrderFinance()
                                         AND (Object_JuridicalOrderFinance.isErased = inisErased OR inisErased = TRUE)
+                                        AND (tmpInfoMoney.InfoMoneyId IS NOT NULL OR inOrderFinanceId = 0)
                                      )
+
         --Результат
         SELECT COALESCE (tmpJuridicalOrderFinance.Id,0) AS Id
              , Object_Juridical.Id              AS JuridicalId
@@ -131,6 +158,26 @@ BEGIN
         ;
     ELSE
         RETURN QUERY 
+       WITH
+       -- по inOrderFinanceId выбираем статьи, которые отображать в документе
+       tmpOrderFinanceProperty AS (SELECT DISTINCT OrderFinanceProperty_Object.ChildObjectId AS Id
+                                   FROM ObjectLink AS OrderFinanceProperty_OrderFinance
+                                        INNER JOIN ObjectLink AS OrderFinanceProperty_Object
+                                                              ON OrderFinanceProperty_Object.ObjectId = OrderFinanceProperty_OrderFinance.ObjectId
+                                                             AND OrderFinanceProperty_Object.DescId = zc_ObjectLink_OrderFinanceProperty_Object()
+                                                             AND COALESCE (OrderFinanceProperty_Object.ChildObjectId,0) <> 0
+                                        INNER JOIN Object ON Object.Id = OrderFinanceProperty_Object.ObjectId
+                                                         AND Object.isErased = False
+                                   WHERE OrderFinanceProperty_OrderFinance.ChildObjectId = inOrderFinanceId
+                                     AND OrderFinanceProperty_OrderFinance.DescId = zc_ObjectLink_OrderFinanceProperty_OrderFinance()
+                                  )
+     , tmpInfoMoney AS (SELECT DISTINCT Object_InfoMoney_View.InfoMoneyId
+                        FROM Object_InfoMoney_View
+                             INNER JOIN tmpOrderFinanceProperty ON (tmpOrderFinanceProperty.Id = Object_InfoMoney_View.InfoMoneyId
+                                                                 OR tmpOrderFinanceProperty.Id = Object_InfoMoney_View.InfoMoneyDestinationId
+                                                                 OR tmpOrderFinanceProperty.Id = Object_InfoMoney_View.InfoMoneyGroupId)
+                        )
+
 
         SELECT Object_JuridicalOrderFinance.Id  AS Id
  
@@ -167,26 +214,28 @@ BEGIN
              , Object_JuridicalOrderFinance.isErased  AS isErased
  
         FROM Object AS Object_JuridicalOrderFinance
+             INNER JOIN ObjectLink AS OL_JuridicalOrderFinance_BankAccountMain
+                                   ON OL_JuridicalOrderFinance_BankAccountMain.ObjectId = Object_JuridicalOrderFinance.Id
+                                  AND OL_JuridicalOrderFinance_BankAccountMain.DescId = zc_ObjectLink_JuridicalOrderFinance_BankAccountMain()
+                                  AND (OL_JuridicalOrderFinance_BankAccountMain.ChildObjectId = inBankAccountMainId OR inBankAccountMainId = 0)
+             LEFT JOIN Object_BankAccount_View AS Main_BankAccount_View ON Main_BankAccount_View.Id = OL_JuridicalOrderFinance_BankAccountMain.ChildObjectId
+
+             LEFT JOIN ObjectLink AS OL_JuridicalOrderFinance_InfoMoney
+                                  ON OL_JuridicalOrderFinance_InfoMoney.ObjectId = Object_JuridicalOrderFinance.Id
+                                 AND OL_JuridicalOrderFinance_InfoMoney.DescId = zc_ObjectLink_JuridicalOrderFinance_InfoMoney()
+             LEFT JOIN tmpInfoMoney ON tmpInfoMoney.InfoMoneyId = OL_JuridicalOrderFinance_InfoMoney.ChildObjectId
+             LEFT JOIN Object_InfoMoney_View ON Object_InfoMoney_View.InfoMoneyId = OL_JuridicalOrderFinance_InfoMoney.ChildObjectId
+
              LEFT JOIN ObjectLink AS OL_JuridicalOrderFinance_Juridical
                                   ON OL_JuridicalOrderFinance_Juridical.ObjectId = Object_JuridicalOrderFinance.Id
                                  AND OL_JuridicalOrderFinance_Juridical.DescId = zc_ObjectLink_JuridicalOrderFinance_Juridical()
              LEFT JOIN Object AS Object_Juridical ON Object_Juridical.Id = OL_JuridicalOrderFinance_Juridical.ChildObjectId
-  
-             LEFT JOIN ObjectLink AS OL_JuridicalOrderFinance_BankAccountMain
-                                  ON OL_JuridicalOrderFinance_BankAccountMain.ObjectId = Object_JuridicalOrderFinance.Id
-                                 AND OL_JuridicalOrderFinance_BankAccountMain.DescId = zc_ObjectLink_JuridicalOrderFinance_BankAccountMain()
-             LEFT JOIN Object_BankAccount_View AS Main_BankAccount_View ON Main_BankAccount_View.Id = OL_JuridicalOrderFinance_BankAccountMain.ChildObjectId
 
              LEFT JOIN ObjectLink AS OL_JuridicalOrderFinance_BankAccount
                                   ON OL_JuridicalOrderFinance_BankAccount.ObjectId = Object_JuridicalOrderFinance.Id
                                  AND OL_JuridicalOrderFinance_BankAccount.DescId = zc_ObjectLink_JuridicalOrderFinance_BankAccount()
              LEFT JOIN Object_BankAccount_View AS Partner_BankAccount_View ON Partner_BankAccount_View.Id = OL_JuridicalOrderFinance_BankAccount.ChildObjectId
-            
-             LEFT JOIN ObjectLink AS OL_JuridicalOrderFinance_InfoMoney
-                                  ON OL_JuridicalOrderFinance_InfoMoney.ObjectId = Object_JuridicalOrderFinance.Id
-                                 AND OL_JuridicalOrderFinance_InfoMoney.DescId = zc_ObjectLink_JuridicalOrderFinance_InfoMoney()
-             LEFT JOIN Object_InfoMoney_View ON Object_InfoMoney_View.InfoMoneyId = OL_JuridicalOrderFinance_InfoMoney.ChildObjectId
-  
+
              LEFT JOIN ObjectFloat AS ObjectFloat_SummOrderFinance
                                    ON ObjectFloat_SummOrderFinance.ObjectId = Object_JuridicalOrderFinance.Id
                                   AND ObjectFloat_SummOrderFinance.DescId = zc_ObjectFloat_JuridicalOrderFinance_SummOrderFinance()
@@ -209,6 +258,7 @@ BEGIN
 
         WHERE Object_JuridicalOrderFinance.DescId = zc_Object_JuridicalOrderFinance()
          AND (Object_JuridicalOrderFinance.isErased = inisErased OR inisErased = TRUE)
+         AND (tmpInfoMoney.InfoMoneyId IS NOT NULL OR inOrderFinanceId = 0)
         ;
     END IF;
 END;
@@ -220,8 +270,8 @@ LANGUAGE plpgsql VOLATILE;
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
- 29.07.19         *
+ 09.09.20         *
 */
 
 -- тест
--- SELECT * FROM gpSelect_Object_JuridicalOrderFinance (FALSE , FALSE ,'2')
+-- SELECT * FROM gpSelect_Object_JuridicalOrderFinance_choice (4529011,3988054, FALSE , FALSE ,'5')

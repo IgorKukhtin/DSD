@@ -12,6 +12,7 @@ $BODY$
    DECLARE vbUserId Integer;
    DECLARE vbOrderFinanceId Integer;
    DECLARE vbPaidKindId Integer;
+   DECLARE vbBankAccountMainId Integer;
    DECLARE vbOperDate TDateTime;
 BEGIN
      -- проверка прав пользователя на вызов процедуры
@@ -25,15 +26,20 @@ BEGIN
      
      -- из шапки документа
      SELECT Movement.OperDate
-          , MovementLinkObject.ObjectId         AS OrderFinanceId
-          , OrderFinance_PaidKind.ChildObjectId AS PaidKindId
-     INTO vbOperDate, vbOrderFinanceId, vbPaidKindId
+          , MovementLinkObject.ObjectId             AS OrderFinanceId
+          , OrderFinance_PaidKind.ChildObjectId     AS PaidKindId
+          , MovementLinkObject_BankAccount.ObjectId AS BankAccountId
+     INTO vbOperDate, vbOrderFinanceId, vbPaidKindId, vbBankAccountMainId
      FROM Movement
           LEFT JOIN MovementLinkObject ON MovementLinkObject.MovementId = inMovementId
                                       AND MovementLinkObject.DescId = zc_MovementLinkObject_OrderFinance()
           LEFT JOIN ObjectLink AS OrderFinance_PaidKind
                                ON OrderFinance_PaidKind.ObjectId = MovementLinkObject.ObjectId
                               AND OrderFinance_PaidKind.DescId = zc_ObjectLink_OrderFinance_PaidKind()
+
+         LEFT JOIN MovementLinkObject AS MovementLinkObject_BankAccount
+                                      ON MovementLinkObject_BankAccount.MovementId = inMovementId
+                                     AND MovementLinkObject_BankAccount.DescId = zc_MovementLinkObject_BankAccount()
      WHERE Movement.Id = inMovementId;
        
 
@@ -61,10 +67,20 @@ BEGIN
                OR COALESCE (tmp.Remains, 0) <> 0;
 
     -- строки документа
-    CREATE TEMP TABLE _tmpData (Id Integer, JuridicalId Integer, ContractId Integer, PaidKindId Integer, InfoMoneyId Integer) ON COMMIT DROP;
-    INSERT INTO _tmpData (Id, JuridicalId, ContractId, PaidKindId, InfoMoneyId)
+    CREATE TEMP TABLE _tmpData (Id Integer, JuridicalId Integer, ContractId Integer, PaidKindId Integer, InfoMoneyId Integer, BankAccountId Integer) ON COMMIT DROP;
+    INSERT INTO _tmpData (Id, JuridicalId, ContractId, PaidKindId, InfoMoneyId, BankAccountId)
      WITH
-     tmpOrderFinanceProperty AS (SELECT DISTINCT OrderFinanceProperty_Object.ChildObjectId AS Id
+     tmpJuridicalOrderFinance AS (SELECT tmp.BankAccountId
+                                       , tmp.JuridicalId
+                                       , tmp.InfoMoneyId
+                                  FROM gpSelect_Object_JuridicalOrderFinance_choice (inBankAccountMainId := vbBankAccountMainId
+                                                                                   , inOrderFinanceId    := vbOrderFinanceId
+                                                                                   , inisShowAll         := FALSE
+                                                                                   , inisErased          := FALSE
+                                                                                   , inSession           := inSession) AS tmp
+                                  )
+
+/*     tmpOrderFinanceProperty AS (SELECT DISTINCT OrderFinanceProperty_Object.ChildObjectId AS Id
                                  FROM ObjectLink AS OrderFinanceProperty_OrderFinance
                                       INNER JOIN ObjectLink AS OrderFinanceProperty_Object
                                                             ON OrderFinanceProperty_Object.ObjectId = OrderFinanceProperty_OrderFinance.ObjectId
@@ -80,17 +96,22 @@ BEGIN
                                                                OR tmpOrderFinanceProperty.Id = Object_InfoMoney_View.InfoMoneyDestinationId
                                                                OR tmpOrderFinanceProperty.Id = Object_InfoMoney_View.InfoMoneyGroupId)
                       )
-
+*/
    , tmpData AS (SELECT DISTINCT 
                         ObjectLink_Contract_Juridical.ChildObjectId AS JuridicalId
                       , ObjectLink_Contract_InfoMoney.ObjectId      AS ContractId
                       , ObjectLink_Contract_InfoMoney.ChildObjectId AS InfoMoneyId
                       , OL_Contract_PaidKind.ChildObjectId          AS PaidKindId
+                      , tmpJuridicalOrderFinance.BankAccountId      AS BankAccountId
                  FROM ObjectLink AS ObjectLink_Contract_InfoMoney
-                      INNER JOIN tmpInfoMoney ON tmpInfoMoney.InfoMoneyId = ObjectLink_Contract_InfoMoney.ChildObjectId
-                      LEFT JOIN ObjectLink AS ObjectLink_Contract_Juridical
-                                           ON ObjectLink_Contract_Juridical.ObjectId = ObjectLink_Contract_InfoMoney.ObjectId
-                                          AND ObjectLink_Contract_Juridical.DescId = zc_ObjectLink_Contract_Juridical()
+                      
+                      INNER JOIN ObjectLink AS ObjectLink_Contract_Juridical
+                                            ON ObjectLink_Contract_Juridical.ObjectId = ObjectLink_Contract_InfoMoney.ObjectId
+                                           AND ObjectLink_Contract_Juridical.DescId = zc_ObjectLink_Contract_Juridical()
+
+                      INNER JOIN tmpJuridicalOrderFinance ON tmpJuridicalOrderFinance.JuridicalId = ObjectLink_Contract_Juridical.ChildObjectId
+                                                         AND tmpJuridicalOrderFinance.InfoMoneyId = ObjectLink_Contract_InfoMoney.ChildObjectId                                   
+
                       INNER JOIN ObjectLink AS OL_Contract_PaidKind
                                             ON OL_Contract_PaidKind.ObjectId = ObjectLink_Contract_InfoMoney.ObjectId
                                            AND OL_Contract_PaidKind.DescId = zc_ObjectLink_Contract_PaidKind()
@@ -103,10 +124,15 @@ BEGIN
                     , MILinkObject_Contract.ObjectId      AS ContractId
                     , OL_Contract_PaidKind.ChildObjectId  AS PaidKindId
                     , OL_Contract_InfoMoney.ChildObjectId AS InfoMoneyId
+                    , MILinkObject_BankAccount.ObjectId   AS BankAccountId
                FROM MovementItem
-                    LEFT JOIN MovementItemLinkObject AS MILinkObject_Contract
-                                                     ON MILinkObject_Contract.MovementItemId = MovementItem.Id
-                                                    AND MILinkObject_Contract.DescId = zc_MILinkObject_Contract()
+                   LEFT JOIN MovementItemLinkObject AS MILinkObject_Contract
+                                                    ON MILinkObject_Contract.MovementItemId = MovementItem.Id
+                                                   AND MILinkObject_Contract.DescId = zc_MILinkObject_Contract()
+                   LEFT JOIN MovementItemLinkObject AS MILinkObject_BankAccount
+                                                    ON MILinkObject_BankAccount.MovementItemId = MovementItem.Id
+                                                   AND MILinkObject_BankAccount.DescId = zc_MILinkObject_BankAccount()
+
                    INNER JOIN ObjectLink AS OL_Contract_PaidKind
                                          ON OL_Contract_PaidKind.ObjectId = MILinkObject_Contract.ObjectId
                                         AND OL_Contract_PaidKind.DescId = zc_ObjectLink_Contract_PaidKind()
@@ -126,18 +152,20 @@ BEGIN
            , COALESCE (tmpData.ContractId, tmpMI.ContractId)   AS ContractId
            , COALESCE (tmpData.PaidKindId, tmpMI.PaidKindId)   AS PaidKindId
            , COALESCE (tmpData.InfoMoneyId, tmpMI.InfoMoneyId) AS InfoMoneyId
-
+           , COALESCE (tmpData.BankAccountId, tmpMI.BankAccountId) AS BankAccountId
        FROM tmpData
-            FULL JOIN tmpMI ON tmpMI.JuridicalId = tmpData.JuridicalId
-                           AND tmpMI.ContractId  = tmpData.ContractId
-                           AND tmpMI.PaidKindId  = tmpData.PaidKindId
-                           AND tmpMI.InfoMoneyId = tmpData.InfoMoneyId;
+            FULL JOIN tmpMI ON tmpMI.JuridicalId   = tmpData.JuridicalId
+                           AND tmpMI.ContractId    = tmpData.ContractId
+                           AND tmpMI.PaidKindId    = tmpData.PaidKindId
+                           AND tmpMI.InfoMoneyId   = tmpData.InfoMoneyId
+                           AND tmpMI.BankAccountId = tmpData.BankAccountId;
             
     -- сохраняем данные
     PERFORM lpUpdate_MI_OrderFinance_ByReport (inId            := COALESCE (_tmpData.Id, 0)                       ::Integer
                                              , inMovementId    := inMovementId 
                                              , inJuridicalId   := _tmpData.JuridicalId
                                              , inContractId    := _tmpData.ContractId
+                                             , inBankAccountId := _tmpData.BankAccountId
                                              , inAmountRemains := COALESCE (_tmpReport.Remains,0)                 ::TFloat
                                              , inAmountPartner := COALESCE (_tmpReport.DefermentPaymentRemains,0) ::TFloat
                                              , inUserId        := vbUserId

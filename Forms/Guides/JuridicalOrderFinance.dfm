@@ -1,26 +1,26 @@
 inherited JuridicalOrderFinanceForm: TJuridicalOrderFinanceForm
   Caption = #1055#1072#1088#1072#1084#1077#1090#1088#1099' '#1070#1088'.'#1083#1080#1094#1072' '#1074' '#1087#1083#1072#1085#1080#1088#1086#1074#1072#1085#1080#1080' '#1087#1083#1072#1090#1077#1078#1077#1081
   ClientHeight = 423
-  ClientWidth = 715
+  ClientWidth = 920
   AddOnFormData.isAlwaysRefresh = True
   AddOnFormData.ChoiceAction = dsdChoiceGuides
   AddOnFormData.Params = FormParams
-  ExplicitWidth = 731
+  ExplicitWidth = 936
   ExplicitHeight = 461
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
-    Width = 715
+    Width = 920
     Height = 397
     ExplicitWidth = 715
     ExplicitHeight = 397
     ClientRectBottom = 397
-    ClientRectRight = 715
+    ClientRectRight = 920
     inherited tsMain: TcxTabSheet
       ExplicitWidth = 715
       ExplicitHeight = 397
       inherited cxGrid: TcxGrid
-        Width = 715
+        Width = 920
         Height = 397
         ExplicitWidth = 715
         ExplicitHeight = 397
@@ -64,6 +64,24 @@ inherited JuridicalOrderFinanceForm: TJuridicalOrderFinanceForm
             Options.Editing = False
             Width = 150
           end
+          object BankName_main: TcxGridDBColumn
+            Caption = #1041#1072#1085#1082' ('#1086#1090#1082#1091#1076#1072')'
+            DataBinding.FieldName = 'BankName_main'
+            Visible = False
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 87
+          end
+          object BankAccountName_main: TcxGridDBColumn
+            Caption = #1056'/'#1057#1095#1077#1090' ('#1086#1090#1082#1091#1076#1072')'
+            DataBinding.FieldName = 'BankAccountName_main'
+            Visible = False
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            HeaderHint = #1088'/'#1089#1095#1077#1090', '#1089' '#1082#1086#1090#1086#1088#1086#1075#1086' '#1084#1099' '#1087#1083#1072#1090#1080#1084
+            Width = 156
+          end
           object BankName: TcxGridDBColumn
             Caption = #1041#1072#1085#1082
             DataBinding.FieldName = 'BankName'
@@ -78,7 +96,7 @@ inherited JuridicalOrderFinanceForm: TJuridicalOrderFinanceForm
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             HeaderHint = #1088'/'#1089#1095#1077#1090', '#1085#1072' '#1082#1086#1090#1086#1088#1099#1081' '#1084#1099' '#1087#1083#1072#1090#1080#1084
-            Width = 89
+            Width = 171
           end
           object SummOrderFinance: TcxGridDBColumn
             Caption = #1051#1080#1084#1080#1090' '#1087#1086' '#1089#1091#1084#1084#1077' '#1086#1090#1089#1088#1086#1095#1082#1080
