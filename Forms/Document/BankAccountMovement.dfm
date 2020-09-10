@@ -379,7 +379,7 @@
       item
         Name = 'inBankAccountId'
         Value = ''
-        Component = BankAccountGuides
+        Component = GuidesBankAccount
         ComponentItem = 'Key'
         ParamType = ptInput
         MultiSelectSeparator = ','
@@ -395,7 +395,7 @@
       item
         Name = 'inMoneyPlaceId'
         Value = ''
-        Component = ObjectlGuides
+        Component = lGuidesObject
         ComponentItem = 'Key'
         ParamType = ptInput
         MultiSelectSeparator = ','
@@ -403,7 +403,7 @@
       item
         Name = 'incontactid'
         Value = ''
-        Component = ContractGuides
+        Component = GuidesContract
         ComponentItem = 'Key'
         ParamType = ptInput
         MultiSelectSeparator = ','
@@ -411,7 +411,7 @@
       item
         Name = 'ininfomoneyid'
         Value = ''
-        Component = InfoMoneyGuides
+        Component = GuidesInfoMoney
         ComponentItem = 'Key'
         ParamType = ptInput
         MultiSelectSeparator = ','
@@ -419,7 +419,7 @@
       item
         Name = 'inUnitId'
         Value = Null
-        Component = UnitGuides
+        Component = GuidesUnit
         ComponentItem = 'Key'
         ParamType = ptInput
         MultiSelectSeparator = ','
@@ -427,7 +427,7 @@
       item
         Name = 'inMovementId_Invoice'
         Value = 0
-        Component = InvoiceGuides
+        Component = GuidesInvoice
         ComponentItem = 'Key'
         ParamType = ptInput
         MultiSelectSeparator = ','
@@ -435,7 +435,7 @@
       item
         Name = 'inCurrencyId'
         Value = ''
-        Component = CurrencyGuides
+        Component = GuidesCurrency
         ComponentItem = 'Key'
         ParamType = ptInput
         MultiSelectSeparator = ','
@@ -532,14 +532,14 @@
       item
         Name = 'BankAccountId'
         Value = ''
-        Component = BankAccountGuides
+        Component = GuidesBankAccount
         ComponentItem = 'Key'
         MultiSelectSeparator = ','
       end
       item
         Name = 'BankAccountName'
         Value = ''
-        Component = BankAccountGuides
+        Component = GuidesBankAccount
         ComponentItem = 'TextValue'
         DataType = ftString
         MultiSelectSeparator = ','
@@ -547,14 +547,14 @@
       item
         Name = 'moneyplaceid'
         Value = ''
-        Component = ObjectlGuides
+        Component = lGuidesObject
         ComponentItem = 'Key'
         MultiSelectSeparator = ','
       end
       item
         Name = 'moneyplacename'
         Value = ''
-        Component = ObjectlGuides
+        Component = lGuidesObject
         ComponentItem = 'TextValue'
         DataType = ftString
         MultiSelectSeparator = ','
@@ -562,14 +562,14 @@
       item
         Name = 'infomoneyid'
         Value = ''
-        Component = InfoMoneyGuides
+        Component = GuidesInfoMoney
         ComponentItem = 'Key'
         MultiSelectSeparator = ','
       end
       item
         Name = 'infomoneyname'
         Value = ''
-        Component = InfoMoneyGuides
+        Component = GuidesInfoMoney
         ComponentItem = 'TextValue'
         DataType = ftString
         MultiSelectSeparator = ','
@@ -577,14 +577,14 @@
       item
         Name = 'contractid'
         Value = ''
-        Component = ContractGuides
+        Component = GuidesContract
         ComponentItem = 'Key'
         MultiSelectSeparator = ','
       end
       item
         Name = 'contractinvnumber'
         Value = ''
-        Component = ContractGuides
+        Component = GuidesContract
         ComponentItem = 'TextValue'
         DataType = ftString
         MultiSelectSeparator = ','
@@ -592,14 +592,14 @@
       item
         Name = 'CurrencyId'
         Value = ''
-        Component = CurrencyGuides
+        Component = GuidesCurrency
         ComponentItem = 'Key'
         MultiSelectSeparator = ','
       end
       item
         Name = 'CurrencyName'
         Value = ''
-        Component = CurrencyGuides
+        Component = GuidesCurrency
         ComponentItem = 'TextValue'
         DataType = ftString
         MultiSelectSeparator = ','
@@ -607,14 +607,14 @@
       item
         Name = 'BankId'
         Value = Null
-        Component = BankGuides
+        Component = GuidesBank
         ComponentItem = 'Key'
         MultiSelectSeparator = ','
       end
       item
         Name = 'BankName'
         Value = Null
-        Component = BankGuides
+        Component = GuidesBank
         ComponentItem = 'TextValue'
         MultiSelectSeparator = ','
       end
@@ -635,14 +635,14 @@
       item
         Name = 'UnitId'
         Value = Null
-        Component = UnitGuides
+        Component = GuidesUnit
         ComponentItem = 'Key'
         MultiSelectSeparator = ','
       end
       item
         Name = 'UnitName'
         Value = Null
-        Component = UnitGuides
+        Component = GuidesUnit
         ComponentItem = 'TextValue'
         DataType = ftString
         MultiSelectSeparator = ','
@@ -650,14 +650,14 @@
       item
         Name = 'MovementId_Invoice'
         Value = Null
-        Component = InvoiceGuides
+        Component = GuidesInvoice
         ComponentItem = 'Key'
         MultiSelectSeparator = ','
       end
       item
         Name = 'InvNumber_Invoice'
         Value = Null
-        Component = InvoiceGuides
+        Component = GuidesInvoice
         ComponentItem = 'TextValue'
         DataType = ftString
         MultiSelectSeparator = ','
@@ -676,10 +676,10 @@
         DataType = ftDateTime
         MultiSelectSeparator = ','
       end>
-    Left = 408
-    Top = 272
+    Left = 280
+    Top = 264
   end
-  object BankAccountGuides: TdsdGuides
+  object GuidesBankAccount: TdsdGuides
     KeyField = 'Id'
     LookupControl = ceBankAccount
     FormNameParam.Value = 'TBankAccount_ObjectForm'
@@ -691,7 +691,7 @@
       item
         Name = 'Key'
         Value = ''
-        Component = BankAccountGuides
+        Component = GuidesBankAccount
         ComponentItem = 'Key'
         ParamType = ptInput
         MultiSelectSeparator = ','
@@ -699,7 +699,7 @@
       item
         Name = 'TextValue'
         Value = ''
-        Component = BankAccountGuides
+        Component = GuidesBankAccount
         ComponentItem = 'TextValue'
         DataType = ftString
         ParamType = ptInput
@@ -708,7 +708,7 @@
       item
         Name = 'CurrencyId'
         Value = ''
-        Component = CurrencyGuides
+        Component = GuidesCurrency
         ComponentItem = 'Key'
         ParamType = ptInput
         MultiSelectSeparator = ','
@@ -716,7 +716,7 @@
       item
         Name = 'CurrencyName'
         Value = ''
-        Component = CurrencyGuides
+        Component = GuidesCurrency
         ComponentItem = 'TextValue'
         DataType = ftString
         ParamType = ptInput
@@ -725,7 +725,7 @@
       item
         Name = 'BankId'
         Value = Null
-        Component = BankGuides
+        Component = GuidesBank
         ComponentItem = 'Key'
         ParamType = ptInput
         MultiSelectSeparator = ','
@@ -733,7 +733,7 @@
       item
         Name = 'BankName'
         Value = Null
-        Component = BankGuides
+        Component = GuidesBank
         ComponentItem = 'TextValue'
         DataType = ftString
         ParamType = ptInput
@@ -765,7 +765,7 @@
     Left = 324
     Top = 21
   end
-  object ObjectlGuides: TdsdGuides
+  object lGuidesObject: TdsdGuides
     KeyField = 'Id'
     LookupControl = ceObject
     FormNameParam.Value = 'TMoneyPlace_ObjectForm'
@@ -777,14 +777,14 @@
       item
         Name = 'Key'
         Value = ''
-        Component = ObjectlGuides
+        Component = lGuidesObject
         ComponentItem = 'Key'
         MultiSelectSeparator = ','
       end
       item
         Name = 'TextValue'
         Value = ''
-        Component = ObjectlGuides
+        Component = lGuidesObject
         ComponentItem = 'TextValue'
         DataType = ftString
         MultiSelectSeparator = ','
@@ -792,14 +792,14 @@
       item
         Name = 'InfoMoneyId'
         Value = ''
-        Component = InfoMoneyGuides
+        Component = GuidesInfoMoney
         ComponentItem = 'Key'
         MultiSelectSeparator = ','
       end
       item
         Name = 'InfoMoneyName_all'
         Value = ''
-        Component = InfoMoneyGuides
+        Component = GuidesInfoMoney
         ComponentItem = 'TextValue'
         DataType = ftString
         MultiSelectSeparator = ','
@@ -807,14 +807,14 @@
       item
         Name = 'ContractId'
         Value = ''
-        Component = ContractGuides
+        Component = GuidesContract
         ComponentItem = 'Key'
         MultiSelectSeparator = ','
       end
       item
         Name = 'ContractName'
         Value = ''
-        Component = ContractGuides
+        Component = GuidesContract
         ComponentItem = 'TextValue'
         DataType = ftString
         MultiSelectSeparator = ','
@@ -822,7 +822,7 @@
     Left = 52
     Top = 125
   end
-  object InfoMoneyGuides: TdsdGuides
+  object GuidesInfoMoney: TdsdGuides
     KeyField = 'Id'
     LookupControl = ceInfoMoney
     FormNameParam.Value = 'TInfoMoney_ObjectForm'
@@ -834,14 +834,14 @@
       item
         Name = 'Key'
         Value = ''
-        Component = InfoMoneyGuides
+        Component = GuidesInfoMoney
         ComponentItem = 'Key'
         MultiSelectSeparator = ','
       end
       item
         Name = 'TextValue'
         Value = ''
-        Component = InfoMoneyGuides
+        Component = GuidesInfoMoney
         ComponentItem = 'TextValue'
         DataType = ftString
         MultiSelectSeparator = ','
@@ -849,7 +849,7 @@
     Left = 160
     Top = 114
   end
-  object ContractGuides: TdsdGuides
+  object GuidesContract: TdsdGuides
     KeyField = 'Id'
     LookupControl = ceContract
     FormNameParam.Value = 'TContractChoiceForm'
@@ -861,14 +861,14 @@
       item
         Name = 'Key'
         Value = ''
-        Component = ContractGuides
+        Component = GuidesContract
         ComponentItem = 'Key'
         MultiSelectSeparator = ','
       end
       item
         Name = 'TextValue'
         Value = ''
-        Component = ContractGuides
+        Component = GuidesContract
         ComponentItem = 'TextValue'
         DataType = ftString
         MultiSelectSeparator = ','
@@ -876,14 +876,14 @@
       item
         Name = 'JuridicalId'
         Value = ''
-        Component = ObjectlGuides
+        Component = lGuidesObject
         ComponentItem = 'Key'
         MultiSelectSeparator = ','
       end
       item
         Name = 'JuridicalName'
         Value = ''
-        Component = ObjectlGuides
+        Component = lGuidesObject
         ComponentItem = 'TextValue'
         DataType = ftString
         MultiSelectSeparator = ','
@@ -891,14 +891,14 @@
       item
         Name = 'InfoMoneyId'
         Value = ''
-        Component = InfoMoneyGuides
+        Component = GuidesInfoMoney
         ComponentItem = 'Key'
         MultiSelectSeparator = ','
       end
       item
         Name = 'InfoMoneyName_all'
         Value = ''
-        Component = InfoMoneyGuides
+        Component = GuidesInfoMoney
         ComponentItem = 'TextValue'
         DataType = ftString
         MultiSelectSeparator = ','
@@ -913,14 +913,14 @@
       item
         Name = 'MasterJuridicalId'
         Value = Null
-        Component = ObjectlGuides
+        Component = lGuidesObject
         ComponentItem = 'Key'
         MultiSelectSeparator = ','
       end
       item
         Name = 'MasterJuridicalName'
         Value = Null
-        Component = ObjectlGuides
+        Component = lGuidesObject
         ComponentItem = 'TextValue'
         DataType = ftString
         MultiSelectSeparator = ','
@@ -928,7 +928,7 @@
     Left = 324
     Top = 131
   end
-  object CurrencyGuides: TdsdGuides
+  object GuidesCurrency: TdsdGuides
     KeyField = 'Id'
     LookupControl = ceCurrency
     FormNameParam.Value = 'TCurrencyForm'
@@ -940,14 +940,14 @@
       item
         Name = 'Key'
         Value = ''
-        Component = CurrencyGuides
+        Component = GuidesCurrency
         ComponentItem = 'Key'
         MultiSelectSeparator = ','
       end
       item
         Name = 'TextValue'
         Value = ''
-        Component = CurrencyGuides
+        Component = GuidesCurrency
         ComponentItem = 'TextValue'
         DataType = ftString
         MultiSelectSeparator = ','
@@ -955,7 +955,7 @@
     Left = 432
     Top = 66
   end
-  object BankGuides: TdsdGuides
+  object GuidesBank: TdsdGuides
     KeyField = 'Id'
     LookupControl = ceBank
     FormNameParam.Value = 'TBankForm'
@@ -967,14 +967,14 @@
       item
         Name = 'Key'
         Value = ''
-        Component = BankGuides
+        Component = GuidesBank
         ComponentItem = 'Key'
         MultiSelectSeparator = ','
       end
       item
         Name = 'TextValue'
         Value = ''
-        Component = BankGuides
+        Component = GuidesBank
         ComponentItem = 'TextValue'
         DataType = ftString
         MultiSelectSeparator = ','
@@ -982,7 +982,7 @@
     Left = 448
     Top = 2
   end
-  object UnitGuides: TdsdGuides
+  object GuidesUnit: TdsdGuides
     KeyField = 'Id'
     LookupControl = ceUnit
     FormNameParam.Value = 'TUnit_ObjectForm'
@@ -994,14 +994,14 @@
       item
         Name = 'Key'
         Value = ''
-        Component = UnitGuides
+        Component = GuidesUnit
         ComponentItem = 'Key'
         MultiSelectSeparator = ','
       end
       item
         Name = 'TextValue'
         Value = ''
-        Component = UnitGuides
+        Component = GuidesUnit
         ComponentItem = 'TextValue'
         DataType = ftString
         MultiSelectSeparator = ','
@@ -1009,7 +1009,7 @@
     Left = 480
     Top = 117
   end
-  object InvoiceGuides: TdsdGuides
+  object GuidesInvoice: TdsdGuides
     KeyField = 'Id'
     LookupControl = ceInvoice
     Key = '0'
@@ -1022,7 +1022,7 @@
       item
         Name = 'Key'
         Value = '0'
-        Component = InvoiceGuides
+        Component = GuidesInvoice
         ComponentItem = 'Key'
         DataType = ftString
         ParamType = ptInput
@@ -1031,7 +1031,7 @@
       item
         Name = 'InvNumber_Full'
         Value = ''
-        Component = InvoiceGuides
+        Component = GuidesInvoice
         ComponentItem = 'TextValue'
         DataType = ftString
         ParamType = ptInput
@@ -1040,14 +1040,14 @@
       item
         Name = 'MasterJuridicalId'
         Value = ''
-        Component = ObjectlGuides
+        Component = lGuidesObject
         ComponentItem = 'Key'
         MultiSelectSeparator = ','
       end
       item
         Name = 'MasterJuridicalName'
         Value = ''
-        Component = ObjectlGuides
+        Component = lGuidesObject
         ComponentItem = 'TextValue'
         DataType = ftString
         MultiSelectSeparator = ','
@@ -1056,6 +1056,23 @@
         Name = 'Comment'
         Value = Null
         Component = ceComment_Invoice
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'UnitId'
+        Value = Null
+        Component = GuidesUnit
+        ComponentItem = 'Key'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'UnitName'
+        Value = Null
+        Component = GuidesUnit
+        ComponentItem = 'TextValue'
         DataType = ftString
         ParamType = ptInput
         MultiSelectSeparator = ','

@@ -229,7 +229,7 @@ procedure TLoadFormTest.LoadBankAccountDocumentFormTest;
 begin
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TBankAccountJournalForm'));
   TdsdFormStorageFactory.GetStorage.Load('TBankAccountJournalForm');
-  exit;
+  //exit;
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TBankAccountMovementForm'));
   TdsdFormStorageFactory.GetStorage.Load('TBankAccountMovementForm');
   exit;
