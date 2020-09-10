@@ -110,7 +110,7 @@ BEGIN
 
      -- первые строчки XML
      INSERT INTO _Result(RowData) VALUES ('<?xml version= "1.0" encoding= "windows-1251"?>');
-   
+     
      -- данные
      INSERT INTO _Result(RowData) VALUES ('<ROWDATA>');
      INSERT INTO _Result(RowData)

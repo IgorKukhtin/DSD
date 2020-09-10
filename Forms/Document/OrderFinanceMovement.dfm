@@ -1662,6 +1662,7 @@ object OrderFinanceMovementForm: TOrderFinanceMovementForm
       OpenAfterCreate = False
       DefaultFileName = 'Report_'
       DefaultFileExt = 'XML'
+      EncodingANSI = True
     end
     object actSMTPFile: TdsdSMTPFileAction
       Category = 'Export_file'
