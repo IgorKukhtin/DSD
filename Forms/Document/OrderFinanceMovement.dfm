@@ -2555,7 +2555,7 @@ object OrderFinanceMovementForm: TOrderFinanceMovementForm
     Top = 40
   end
   object spSelect_Export: TdsdStoredProc
-    StoredProcName = 'gpSelect_Movement_OrderFinance_File'
+    StoredProcName = 'gpSelect_Movement_OrderFinance_XML'
     DataSet = ExportCDS
     DataSets = <
       item

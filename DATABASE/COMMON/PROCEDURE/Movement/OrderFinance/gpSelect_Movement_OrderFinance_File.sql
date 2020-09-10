@@ -41,8 +41,8 @@ BEGIN
 
      -- первые строчки XML
      --INSERT INTO _Result(RowData) VALUES ('<?xml version= «1.0» encoding= «win-1251»?>');
-     -- INSERT INTO _Result(RowData) VALUES ('<?xml version="1.0" encoding="windows-1251"?>');
-     INSERT INTO _Result(RowData) VALUES ('<?xml version="1.0" encoding="UTF-16"?>');
+     INSERT INTO _Result(RowData) VALUES ('<?xml version="1.0" encoding="windows-1251"?>');
+     ---INSERT INTO _Result(RowData) VALUES ('<?xml version="1.0" encoding="UTF-16"?>');
      INSERT INTO _Result(RowData) VALUES ('<ROWDATA>');
 
      -- Строки
