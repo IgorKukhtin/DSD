@@ -126,10 +126,14 @@ CREATE OR REPLACE FUNCTION zc_MIDate_ReplacementDate() RETURNS Integer AS $BODY$
 INSERT INTO MovementItemDateDesc (Code, ItemName)
   SELECT 'zc_MIDate_ReplacementDate', 'Дата замены' WHERE NOT EXISTS (SELECT * FROM MovementItemDateDesc WHERE Code = 'zc_MIDate_ReplacementDate');
 
-  
+CREATE OR REPLACE FUNCTION zc_MIDate_ExpirationDateIncome() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM MovementItemDateDesc WHERE Code = 'zc_MIDate_ExpirationDateIncome'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
+INSERT INTO MovementItemDateDesc (Code, ItemName)
+  SELECT 'zc_MIDate_ExpirationDateIncome', 'Срок годности с прихода' WHERE NOT EXISTS (SELECT * FROM MovementItemDateDesc WHERE Code = 'zc_MIDate_ExpirationDateIncome');
+
 /*-------------------------------------------------------------------------------
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.    Воробкало А.А.  Шаблий О.В.
+ 10.09.20                                                                         * zc_MIDate_ExpirationDateIncome
  14.07.20                                                                         * zc_MIDate_ReplacementDate
  01.09.19                                                                         * zc_MIDate_IssuedBy
  23.08.19                                                                         * zc_MIDate_Start, zc_MIDate_End

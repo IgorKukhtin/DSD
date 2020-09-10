@@ -266,7 +266,8 @@ BEGIN
     SET GoodsID = tmpBarCode.GoodsID,
         isSpecCondition = tmpBarCode.isSpecCondition
     FROM tmpBarCode
-    WHERE inBarCode = tmpBarCode.BarCode;
+    WHERE inBarCode = tmpBarCode.BarCode
+      AND COALESCE (tblJSON.GoodsID, 0) = 0;
 
 
     -- ищем по коду и inJuridicalId
@@ -315,7 +316,8 @@ BEGIN
     SET GoodsID = tmpGoodsCode.GoodsID,
         isSpecCondition = tmpGoodsCode.isSpecCondition
     FROM tmpGoodsCode
-    WHERE inGoodsCode = tmpGoodsCode.GoodsCode AND tblJSON.inGoodsCode <> '0' and COALESCE(tblJSON.inGoodsCode, '') <> '' AND ORD = 1;
+    WHERE inGoodsCode = tmpGoodsCode.GoodsCode AND tblJSON.inGoodsCode <> '0' and COALESCE(tblJSON.inGoodsCode, '') <> '' AND ORD = 1
+      AND COALESCE (tblJSON.GoodsID, 0) = 0;
 
     -- !!!замена параметра!!!
     UPDATE tblJSON

@@ -45,9 +45,9 @@ BEGIN
      THEN
          DELETE FROM tmpRemains;
      ELSE
-         CREATE TEMP TABLE tmpRemains (ContainerId Integer, MovementId_Income Integer, GoodsId Integer, Amount TFloat, ExpirationDate TDateTime, PriceWithVAT TFloat) ON COMMIT DROP;
+         CREATE TEMP TABLE tmpRemains (ContainerId Integer, MovementId_Income Integer, GoodsId Integer, Amount TFloat, ExpirationDate TDateTime, PriceWithVAT TFloat, ExpirationDateIncome TDateTime) ON COMMIT DROP;
      END IF;    
-          INSERT INTO tmpRemains (ContainerId, MovementId_Income, GoodsId, Amount, ExpirationDate, PriceWithVAT)
+          INSERT INTO tmpRemains (ContainerId, MovementId_Income, GoodsId, Amount, ExpirationDate, PriceWithVAT, ExpirationDateIncome)
           WITH
           -- просрочка
           tmpContainer_PartionDate AS (SELECT DISTINCT Container.ParentId AS ContainerId
@@ -165,6 +165,7 @@ BEGIN
                                 , COALESCE(tmpContainer_term.ExpirationDateIn, tmpContainer_term.ExpirationDate)  AS ExpirationDate
                                 , ROUND(CASE WHEN MovementBoolean_PriceWithVAT.ValueData THEN MIFloat_Price.ValueData
                                        ELSE (MIFloat_Price.ValueData * (1 + ObjectFloat_NDSKind_NDS.ValueData / 100)) END, 2)::TFloat  AS PriceWithVAT
+                                , tmpContainer_term.ExpirationDate                                                                     AS ExpirationDateIncome
                            FROM (SELECT DISTINCT tmpContainer_term.GoodsId
                                  FROM tmpContainer_term
                                  -- !!!ограничили!!!
@@ -194,6 +195,7 @@ BEGIN
                , tmpContainer.Amount
                , tmpContainer.ExpirationDate
                , tmpContainer.PriceWithVAT
+               , tmpContainer.ExpirationDateIncome
           FROM tmpContainer
          ;
 
@@ -240,9 +242,9 @@ BEGIN
                         -- все остатки
                       , SUM (tmpRemains.Amount) AS AmountRemains
                         -- только просрочка
-                      , SUM (CASE WHEN tmpRemains.ExpirationDate <= vbDate180
-                                   AND tmpRemains.ExpirationDate > zc_DateStart()
-                                -- AND tmpRemains.ExpirationDate > CURRENT_DATE - INTERVAL '3 YEAR'
+                      , SUM (CASE WHEN tmpRemains.ExpirationDateIncome <= vbDate180
+                                   AND tmpRemains.ExpirationDateIncome > zc_DateStart()
+                                -- AND tmpRemains.ExpirationDateIncome > CURRENT_DATE - INTERVAL '3 YEAR'
                                        THEN tmpRemains.Amount
                                   ELSE 0
                              END) AS Amount
@@ -277,9 +279,9 @@ BEGIN
      THEN
          DELETE FROM tmpChild;
      ELSE
-         CREATE TEMP TABLE tmpChild (Id Integer, ParentId Integer, GoodsId Integer, Amount TFloat, ContainerId Integer, MovementId_Income Integer, ExpirationDate TDateTime, PriceWithVAT TFloat, isErased Boolean) ON COMMIT DROP;
+         CREATE TEMP TABLE tmpChild (Id Integer, ParentId Integer, GoodsId Integer, Amount TFloat, ContainerId Integer, MovementId_Income Integer, ExpirationDate TDateTime, PriceWithVAT TFloat, ExpirationDateIncome TDateTime, isErased Boolean) ON COMMIT DROP;
      END IF;    
-          INSERT INTO tmpChild (Id, ParentId, GoodsId, Amount, ContainerId, MovementId_Income, ExpirationDate, PriceWithVAT, isErased)
+          INSERT INTO tmpChild (Id, ParentId, GoodsId, Amount, ContainerId, MovementId_Income, ExpirationDate, PriceWithVAT, ExpirationDateIncome, isErased)
        WITH -- существующие - Master
             MI_Master AS (SELECT MovementItem.Id       AS Id
                                , MovementItem.ObjectId AS GoodsId
@@ -289,12 +291,13 @@ BEGIN
                             AND MovementItem.isErased   = FALSE
                          )
             -- существующие - Child
-          , MI_Child AS (SELECT MovementItem.Id                    AS Id
-                              , MovementItem.ObjectId              AS GoodsId
-                              , MIFloat_ContainerId.ValueData      AS ContainerId
-                              , MIDate_ExpirationDate.ValueData    AS ExpirationDate
-                              , MIFloat_PriceWithVAT.ValueData     AS PriceWithVAT
-                              , MovementItem.Amount                AS Amount
+          , MI_Child AS (SELECT MovementItem.Id                       AS Id
+                              , MovementItem.ObjectId                 AS GoodsId
+                              , MIFloat_ContainerId.ValueData         AS ContainerId
+                              , MIDate_ExpirationDate.ValueData       AS ExpirationDate
+                              , MIFloat_PriceWithVAT.ValueData        AS PriceWithVAT
+                              , MIDate_ExpirationDateIncome.ValueData AS ExpirationDateIncome
+                              , MovementItem.Amount                   AS Amount
                          FROM MovementItem
                               LEFT JOIN MovementItemFloat AS MIFloat_ContainerId
                                                           ON MIFloat_ContainerId.MovementItemId = MovementItem.Id
@@ -305,6 +308,9 @@ BEGIN
                               LEFT JOIN MovementItemFloat AS MIFloat_PriceWithVAT
                                                           ON MIFloat_PriceWithVAT.MovementItemId = MovementItem.Id
                                                          AND MIFloat_PriceWithVAT.DescId         = zc_MIFloat_PriceWithVAT()
+                              LEFT JOIN MovementItemDate AS MIDate_ExpirationDateIncome
+                                                         ON MIDate_ExpirationDateIncome.MovementItemId = MovementItem.Id
+                                                        AND MIDate_ExpirationDateIncome.DescId         = zc_MIDate_ExpirationDateIncome()
                          WHERE MovementItem.MovementId = inMovementId
                            AND MovementItem.DescId     = zc_MI_Child()
                            AND MovementItem.isErased   = FALSE
@@ -321,6 +327,7 @@ BEGIN
                   -- сохранили тот Срок годности, который корректировали
                 , COALESCE (MI_Child.ExpirationDate, tmpRemains.ExpirationDate) AS ExpirationDate
                 , tmpRemains.PriceWithVAT                         AS PriceWithVAT
+                , COALESCE (MI_Child.ExpirationDateIncome, tmpRemains.ExpirationDateIncome) AS ExpirationDateIncome
                   -- удалим если лишний
                 , CASE WHEN tmpRemains.GoodsId > 0 THEN FALSE ELSE TRUE END AS isErased
            FROM tmpRemains
@@ -331,16 +338,17 @@ BEGIN
 
 
     --- сохраняем MI_Child
-    PERFORM lpInsertUpdate_MI_SendPartionDate_Child(ioId                 := tmpChild.Id
-                                                  , inParentId           := tmpChild.ParentId
-                                                  , inMovementId         := inMovementId
-                                                  , inGoodsId            := tmpChild.GoodsId
-                                                  , inExpirationDate     := tmpChild.ExpirationDate
-                                                  , inPriceWithVAT       := COALESCE (tmpChild.PriceWithVAT, 0)
-                                                  , inAmount             := COALESCE (tmpChild.Amount,0)        :: TFloat
-                                                  , inContainerId        := COALESCE (tmpChild.ContainerId,0)   :: TFloat
-                                                  , inMovementId_Income  := COALESCE (tmpChild.MovementId_Income,0):: TFloat
-                                                  , inUserId             := vbUserId)
+    PERFORM lpInsertUpdate_MI_SendPartionDate_Child(ioId                    := tmpChild.Id
+                                                  , inParentId              := tmpChild.ParentId
+                                                  , inMovementId            := inMovementId
+                                                  , inGoodsId               := tmpChild.GoodsId
+                                                  , inExpirationDate        := tmpChild.ExpirationDate
+                                                  , inExpirationDateIncome  := tmpChild.ExpirationDateIncome
+                                                  , inPriceWithVAT          := COALESCE (tmpChild.PriceWithVAT, 0)
+                                                  , inAmount                := COALESCE (tmpChild.Amount,0)        :: TFloat
+                                                  , inContainerId           := COALESCE (tmpChild.ContainerId,0)   :: TFloat
+                                                  , inMovementId_Income     := COALESCE (tmpChild.MovementId_Income,0):: TFloat
+                                                  , inUserId                := vbUserId)
     FROM tmpChild
     WHERE tmpChild.isErased = FALSE;
 
@@ -397,6 +405,7 @@ $BODY$
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.  Шаблий О.В.
+ 10.09.20                                                      *
  06.07.20                                                      *
  18.09.19                                                      * 
  15.07.19                                                      * 
@@ -405,3 +414,5 @@ $BODY$
  27.05.19         *
  05.04.19         *
 */
+
+select * from gpInsert_MI_SendPartionDate(inMovementId := 20202202 , inUnitId := 3457773 , inOperDate := ('10.09.2020')::TDateTime ,  inSession := '3');

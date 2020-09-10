@@ -5,19 +5,21 @@ DROP FUNCTION IF EXISTS lpInsertUpdate_MI_SendPartionDate_Child (Integer, Intege
 DROP FUNCTION IF EXISTS lpInsertUpdate_MI_SendPartionDate_Child (Integer, Integer, Integer, Integer, Integer, TDateTime, TFloat, TFloat, TFloat, Integer);
 DROP FUNCTION IF EXISTS lpInsertUpdate_MI_SendPartionDate_Child (Integer, Integer, Integer, Integer, TDateTime, TFloat, TFloat, TFloat, Integer);
 DROP FUNCTION IF EXISTS lpInsertUpdate_MI_SendPartionDate_Child (Integer, Integer, Integer, Integer, TDateTime, TFloat, TFloat, TFloat, TFloat, Integer);
+DROP FUNCTION IF EXISTS lpInsertUpdate_MI_SendPartionDate_Child (Integer, Integer, Integer, Integer, TDateTime, TDateTime, TFloat, TFloat, TFloat, TFloat, Integer);
 
 CREATE OR REPLACE FUNCTION lpInsertUpdate_MI_SendPartionDate_Child(
- INOUT ioId                  Integer   , -- Ключ объекта <Элемент документа>
-    IN inParentId            Integer   , --
-    IN inMovementId          Integer   , -- Ключ объекта <Документ>
-    IN inGoodsId             Integer   , -- Товары
+ INOUT ioId                    Integer   , -- Ключ объекта <Элемент документа>
+    IN inParentId              Integer   , --
+    IN inMovementId            Integer   , -- Ключ объекта <Документ>
+    IN inGoodsId               Integer   , -- Товары
    -- IN inPartionDateKindId   Integer   , --
-    IN inExpirationDate      TDateTime ,
-    IN inPriceWithVAT        TFloat    , -- Цена закупки с НДС
-    IN inAmount              TFloat    , -- Количество
-    IN inContainerId         TFloat    , --
-    IN inMovementId_Income   TFloat    , --
-    IN inUserId              Integer    -- сессия пользователя
+    IN inExpirationDate        TDateTime ,
+    IN inExpirationDateIncome  TDateTime ,
+    IN inPriceWithVAT          TFloat    , -- Цена закупки с НДС
+    IN inAmount                TFloat    , -- Количество
+    IN inContainerId           TFloat    , --
+    IN inMovementId_Income     TFloat    , --
+    IN inUserId                Integer    -- сессия пользователя
 )
 RETURNS Integer
 AS
@@ -43,6 +45,8 @@ BEGIN
     PERFORM lpInsertUpdate_MovementItemDate (zc_MIDate_ExpirationDate(), ioId, inExpirationDate);
     -- сохранили <>
     PERFORM lpInsertUpdate_MovementItemFloat (zc_MIFloat_PriceWithVAT(), ioId, COALESCE(inPriceWithVAT, 0));
+    -- сохранили <>
+    PERFORM lpInsertUpdate_MovementItemDate (zc_MIDate_ExpirationDateIncome(), ioId, inExpirationDateIncome);
 
     -- пересчитали Итоговые суммы по накладной
     --PERFORM lpInsertUpdate_MovementFloat_TotalSumm (inMovementId);

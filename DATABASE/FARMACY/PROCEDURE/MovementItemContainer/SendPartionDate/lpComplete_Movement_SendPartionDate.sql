@@ -90,7 +90,7 @@ BEGIN
      THEN
        PERFORM lpInsertUpdate_MovementItem (tmp.MovementItemId, zc_MI_Master(), tmp.GoodsId, inMovementId, tmp.Amount, NULL)
        FROM (SELECT MI_Master.Id AS MovementItemId, MI_Master.ObjectId AS GoodsId
-                  , SUM (CASE WHEN MIDate_ExpirationDate.ValueData <= vbDate180 THEN COALESCE (MovementItem.Amount, 0) ELSE 0 END) AS Amount
+                  , SUM (CASE WHEN COALESCE(MIDate_ExpirationDateIncome.ValueData, MIDate_ExpirationDate.ValueData) <= vbDate180 THEN COALESCE (MovementItem.Amount, 0) ELSE 0 END) AS Amount
              FROM MovementItem AS MI_Master
                   LEFT JOIN MovementItem ON MI_Master.MovementId  = inMovementId
                                         AND MovementItem.ParentId = MI_Master.Id
@@ -99,6 +99,9 @@ BEGIN
                   LEFT JOIN MovementItemDate AS MIDate_ExpirationDate
                                              ON MIDate_ExpirationDate.MovementItemId = MovementItem.Id
                                             AND MIDate_ExpirationDate.DescId         = zc_MIDate_ExpirationDate()
+                  LEFT JOIN MovementItemDate AS MIDate_ExpirationDateIncome
+                                             ON MIDate_ExpirationDateIncome.MovementItemId = MovementItem.Id
+                                            AND MIDate_ExpirationDateIncome.DescId         = zc_MIDate_ExpirationDateIncome()
              WHERE MI_Master.MovementId = inMovementId
                AND MI_Master.DescId     = zc_MI_Master()
                AND MI_Master.isErased   = FALSE
@@ -110,7 +113,7 @@ BEGIN
                                          PartionGoodsId, ExpirationDate, PriceWithVAT, ChangePercentMin, ChangePercentLess, ChangePercent, ContainerId_Transfer)
           SELECT MovementItem.Id                    AS MovementItemId
                , MovementItem.ObjectId              AS GoodsId
-               , CASE WHEN MIDate_ExpirationDate.ValueData <= vbDate180 THEN MovementItem.Amount ELSE 0 END AS Amount
+               , CASE WHEN COALESCE(MIDate_ExpirationDateIncome.ValueData, MIDate_ExpirationDate.ValueData) <= vbDate180 THEN MovementItem.Amount ELSE 0 END AS Amount
                , MIFloat_ContainerId.ValueData      AS ContainerId_in
                , 0                                  AS ContainerId
                , MIFloat_MovementId.ValueData       AS MovementId_in
@@ -170,6 +173,9 @@ BEGIN
               LEFT JOIN MovementItemDate AS MIDate_ExpirationDate
                                          ON MIDate_ExpirationDate.MovementItemId = MovementItem.Id
                                         AND MIDate_ExpirationDate.DescId         = zc_MIDate_ExpirationDate()
+              LEFT JOIN MovementItemDate AS MIDate_ExpirationDateIncome
+                                         ON MIDate_ExpirationDateIncome.MovementItemId = MovementItem.Id
+                                        AND MIDate_ExpirationDateIncome.DescId         = zc_MIDate_ExpirationDateIncome()
               LEFT JOIN MovementItemFloat AS MIFloat_PriceWithVAT
                                           ON MIFloat_PriceWithVAT.MovementItemId = MovementItem.Id
                                          AND MIFloat_PriceWithVAT.DescId         = zc_MIFloat_PriceWithVAT()
@@ -180,7 +186,7 @@ BEGIN
           WHERE MovementItem.MovementId = inMovementId
             AND MovementItem.DescId     = zc_MI_Child()
             AND MovementItem.isErased   = FALSE
-            AND CASE WHEN MIDate_ExpirationDate.ValueData <= vbDate180 THEN MovementItem.Amount ELSE 0 END > 0
+            AND CASE WHEN COALESCE(MIDate_ExpirationDateIncome.ValueData, MIDate_ExpirationDate.ValueData) <= vbDate180 THEN MovementItem.Amount ELSE 0 END > 0
          ;
      ELSE
 
@@ -249,6 +255,9 @@ BEGIN
               LEFT JOIN MovementItemDate AS MIDate_ExpirationDate
                                          ON MIDate_ExpirationDate.MovementItemId = MovementItem.Id
                                         AND MIDate_ExpirationDate.DescId         = zc_MIDate_ExpirationDate()
+              LEFT JOIN MovementItemDate AS MIDate_ExpirationDateIncome
+                                         ON MIDate_ExpirationDateIncome.MovementItemId = MovementItem.Id
+                                        AND MIDate_ExpirationDateIncome.DescId         = zc_MIDate_ExpirationDateIncome()
               LEFT JOIN MovementItemFloat AS MIFloat_PriceWithVAT
                                           ON MIFloat_PriceWithVAT.MovementItemId = MovementItem.Id
                                          AND MIFloat_PriceWithVAT.DescId         = zc_MIFloat_PriceWithVAT()
