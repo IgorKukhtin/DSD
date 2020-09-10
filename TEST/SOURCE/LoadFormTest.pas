@@ -277,8 +277,10 @@ end;
 
 procedure TLoadFormTest.LoadBankStatementFormTest;
 begin
+  {
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TBankStatementJournalForm'));
   TdsdFormStorageFactory.GetStorage.Load('TBankStatementJournalForm');
+  }
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TBankStatementForm'));
   TdsdFormStorageFactory.GetStorage.Load('TBankStatementForm');
 end;

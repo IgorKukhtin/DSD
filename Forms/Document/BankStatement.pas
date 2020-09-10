@@ -85,6 +85,7 @@ type
     LinkINN: TcxGridDBColumn;
     MovementProtocolOpenForm: TdsdOpenForm;
     bbMovementProtocolOpenForm: TdxBarButton;
+    actClear_Invoice: TdsdSetDefaultParams;
   private
     { Private declarations }
   public
