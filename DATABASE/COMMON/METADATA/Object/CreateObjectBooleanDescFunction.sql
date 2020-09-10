@@ -197,6 +197,10 @@ CREATE OR REPLACE FUNCTION zc_ObjectBoolean_Receipt_ParentMulti() RETURNS Intege
 INSERT INTO ObjectBooleanDesc (DescId, Code, ItemName)
   SELECT zc_Object_Receipt(), 'zc_ObjectBoolean_Receipt_ParentMulti', 'в составляющих несколько ГП' WHERE NOT EXISTS (SELECT * FROM ObjectBooleanDesc WHERE Code = 'zc_ObjectBoolean_Receipt_ParentMulti');
 
+CREATE OR REPLACE FUNCTION zc_ObjectBoolean_Receipt_Disabled() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM ObjectBooleanDesc WHERE Code = 'zc_ObjectBoolean_Receipt_Disabled'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
+INSERT INTO ObjectBooleanDesc (DescId, Code, ItemName)
+  SELECT zc_Object_Receipt(), 'zc_ObjectBoolean_Receipt_Disabled', 'Признак отключить рецептуру' WHERE NOT EXISTS (SELECT * FROM ObjectBooleanDesc WHERE Code = 'zc_ObjectBoolean_Receipt_Disabled');
+
 
 CREATE OR REPLACE FUNCTION zc_ObjectBoolean_Unit_PartionDate() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM ObjectBooleanDesc WHERE Code = 'zc_ObjectBoolean_Unit_PartionDate'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
 INSERT INTO ObjectBooleanDesc (DescId, Code, ItemName)
@@ -768,6 +772,7 @@ INSERT INTO ObjectBooleanDesc (DescId, Code, ItemName)
 /*-------------------------------------------------------------------------------
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.  Воробкало А.А.  Ярошенко Р.Ф.   Подмогильный В.В.   Шаблий О.В.
+ 10.09.20         * zc_ObjectBoolean_Receipt_Disabled
  09.09.20                                                                                                          * zc_ObjectFloat_CommentTR_BlockFormSUN 
  06.09.20                                                                                                          * zc_ObjectBoolean_CashSettings_PairedOnlyPromo 
  05.09.20                                                                                                          * zc_ObjectBoolean_CheckSourceKind_Site 

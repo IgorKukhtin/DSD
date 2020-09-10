@@ -3659,15 +3659,17 @@ end;
 
 procedure TLoadFormTest.LoadReceiptFormTest;
 begin
+  {
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TReceiptMainGoods_ObjectForm'));
   TdsdFormStorageFactory.GetStorage.Load('TReceiptMainGoods_ObjectForm');
-{
+
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TReceiptDialogForm'));
   TdsdFormStorageFactory.GetStorage.Load('TReceiptDialogForm');
   // Рецептуры
+  }
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TReceiptForm'));
   TdsdFormStorageFactory.GetStorage.Load('TReceiptForm');
-
+  {
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TReceiptEditForm'));
   TdsdFormStorageFactory.GetStorage.Load('TReceiptEditForm');
   // Затраты в рецептурах
