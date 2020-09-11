@@ -315,6 +315,10 @@ BEGIN
                                                       WHEN _tmpItem.InfoMoneyDestinationId = zc_Enum_InfoMoneyDestination_80500() -- Собственный капиталл + Прочие
                                                            THEN zc_Enum_ProfitLossDirection_80400() -- Расходы с прибыли + Прочие
 
+                                                      WHEN _tmpItem.InfoMoneyId IN (zc_Enum_InfoMoney_70102() -- Капитальные инвестиции + Производственное оборудование
+                                                                                  , zc_Enum_InfoMoney_70202() -- Капитальный ремонт + Производственное оборудование
+                                                                                   )
+                                                           THEN zc_Enum_ProfitLossDirection_65200() -- Капитальные Затраты + Производственные ОС
 
                                                       ELSE _tmpItem.ProfitLossDirectionId
                                                  END

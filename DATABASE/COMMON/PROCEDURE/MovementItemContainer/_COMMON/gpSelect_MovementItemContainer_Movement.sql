@@ -569,8 +569,8 @@ BEGIN
 
                 , CASE WHEN tmpMIContainer_Summ.isInfoMoneyDetail = TRUE THEN tmpMIContainer_Summ.Id                   ELSE 0 END AS Id
                 , CASE WHEN tmpMIContainer_Summ.isInfoMoneyDetail = TRUE THEN tmpMIContainer_Summ.ContainerId          ELSE 0 END AS ContainerId
-                , CASE WHEN tmpMIContainer_Summ.isInfoMoneyDetail = TRUE THEN tmpMIContainer_Summ.ContainerId_Currency ELSE 0 END AS ContainerId_Currency
-                , CASE WHEN tmpMIContainer_Summ.isInfoMoneyDetail = TRUE THEN tmpMIContainer_Summ.ContainerId_Asset    ELSE 0 END AS ContainerId_Asset
+                , CASE WHEN 1=1/*tmpMIContainer_Summ.isInfoMoneyDetail = TRUE*/ THEN tmpMIContainer_Summ.ContainerId_Currency ELSE 0 END AS ContainerId_Currency
+                , CASE WHEN 1=1/*tmpMIContainer_Summ.isInfoMoneyDetail = TRUE*/ THEN tmpMIContainer_Summ.ContainerId_Asset    ELSE 0 END AS ContainerId_Asset
                 
                 , CASE WHEN tmpMIContainer_Summ.isInfoMoneyDetail = TRUE THEN tmpMIContainer_Summ.MovementItemId       ELSE 0 END AS MovementItemId
                 , CASE WHEN tmpMIContainer_Summ.isInfoMoneyDetail = TRUE THEN tmpMIContainer_Summ.Amount_Count         ELSE 0 END AS Amount_Count

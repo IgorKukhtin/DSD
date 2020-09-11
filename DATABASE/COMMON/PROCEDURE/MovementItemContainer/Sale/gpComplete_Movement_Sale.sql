@@ -18,10 +18,17 @@ BEGIN
 
      -- создаются временные таблицы - для формирование данных для проводок
      PERFORM lpComplete_Movement_Sale_CreateTemp();
+if vbUserId = 5 THEN
+     -- Проводим Документ
+     PERFORM lpComplete_Movement_Sale22 (inMovementId     := inMovementId
+                                     , inUserId         := vbUserId
+                                     , inIsLastComplete := inIsLastComplete);
+ELSE
      -- Проводим Документ
      PERFORM lpComplete_Movement_Sale (inMovementId     := inMovementId
                                      , inUserId         := vbUserId
                                      , inIsLastComplete := inIsLastComplete);
+END IF;
 
 END;
 $BODY$

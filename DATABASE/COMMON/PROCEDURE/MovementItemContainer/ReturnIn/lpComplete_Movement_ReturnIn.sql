@@ -79,10 +79,32 @@ $BODY$
 
   DECLARE vbIsPartionDoc_Branch Boolean;
 
+  DECLARE vbOperSumm_51201 TFloat;
+  DECLARE vbContainerId_51201 Integer;
+
 BEGIN
      -- !!!временно!!!
      PERFORM lpInsertUpdate_MovementFloat_TotalSumm (inMovementId:= inMovementId);
 
+
+     -- ContainerId для распределения
+     vbContainerId_51201:= (SELECT Container.Id -- CLO_InfoMoney.ObjectId
+                            FROM ObjectFloat
+                                 INNER JOIN ContainerLinkObject AS CLO_PartionMovement
+                                                                ON CLO_PartionMovement.ObjectId = ObjectFloat.ObjectId
+                                                               AND CLO_PartionMovement.DescId   = zc_ContainerLinkObject_PartionMovement()
+                               --INNER JOIN ContainerLinkObject AS CLO_InfoMoney
+                               --                               ON CLO_InfoMoney.ContainerId = CLO_PartionMovement.ContainerId
+                               --                              AND CLO_InfoMoney.DescId      = zc_ContainerLinkObject_InfoMoney()
+                                 INNER JOIN Container ON Container.Id       = CLO_PartionMovement.ContainerId
+                                                     AND Container.ObjectId = zc_Enum_Account_51201() -- Распределение маркетинг + Маркетинг в накладных + Маркетинг
+                                                     AND Container.DescId   = zc_Container_Summ()
+                            WHERE ObjectFloat.ValueData = inMovementId
+                              AND ObjectFloat.DescId    = zc_ObjectFloat_PartionMovement_MovementId()
+                              AND Container.Amount <> 0
+                           );
+     -- Сумма для распределения
+     vbOperSumm_51201:= (SELECT Container.Amount FROM Container WHERE Container.Id = vbContainerId_51201);
 
      -- !!!обязательно!!! очистили таблицу проводок
      DELETE FROM _tmpMIContainer_insert;
@@ -721,6 +743,7 @@ BEGIN
                                         AND tmpPL_Basis.GoodsKindId IS NULL
              ) AS _tmp;
 
+
      -- !!!надо определить - есть ли скидка в цене!!!
      vbIsChangePrice:= (SELECT _tmpItem.isChangePrice FROM _tmpItem LIMIT 1);
 
@@ -731,6 +754,7 @@ BEGIN
      THEN
          RAISE EXCEPTION 'Ошибка.В документе не установлено значение <Договор>.Проведение невозможно.';
      END IF;
+
      -- проверка для кривых пользователей
      IF inUserId <> zc_Enum_Process_Auto_PrimeCost() AND inUserId <> 5
         AND TRUE = (SELECT MovementBoolean.ValueData FROM MovementBoolean WHERE MovementBoolean.MovementId = inMovementId AND MovementBoolean.DescId = zc_MovementBoolean_List())
@@ -912,6 +936,23 @@ BEGIN
          UPDATE _tmpItem SET OperSumm_Partner_ChangePercent = _tmpItem.OperSumm_Partner_ChangePercent - (vbOperSumm_Partner_ChangePercent_byItem - vbOperSumm_Partner_ChangePercent)
          WHERE _tmpItem.MovementItemId IN (SELECT MAX (_tmpItem.MovementItemId) FROM _tmpItem WHERE _tmpItem.OperSumm_Partner_ChangePercent IN (SELECT MAX (_tmpItem.OperSumm_Partner_ChangePercent) FROM _tmpItem)
                                           );
+     END IF;
+
+
+     -- Распределение - Маркетинг в накладных + Маркетинг
+     IF vbOperSumm_51201 <> 0
+     THEN
+         -- распределили
+         UPDATE _tmpItem SET OperSumm_51201 = CAST (vbOperSumm_51201 * _tmpItem.OperSumm_Partner / vbOperSumm_Partner AS NUMERIC (16,2));
+
+         -- если не вышли на нужную сумму
+         IF vbOperSumm_51201 <> (SELECT SUM (COALESCE (_tmpItem.OperSumm_51201, 0)) FROM _tmpItem)
+         THEN
+             -- выровняли копейки
+             UPDATE _tmpItem SET OperSumm_51201 = _tmpItem.OperSumm_51201 - (SELECT SUM (_tmpItem.OperSumm_51201) FROM _tmpItem) + vbOperSumm_51201
+             WHERE _tmpItem.MovementItemId = (SELECT _tmpItem.MovementItemId FROM _tmpItem WHERE _tmpItem.OperSumm_51201 <> 0 ORDER BY _tmpItem.OperSumm_51201 DESC LIMIT 1);
+
+         END IF;
      END IF;
 
 
@@ -1557,7 +1598,26 @@ BEGIN
                , _tmpList_Alternative.ContainerId_Summ
                , Container_Summ_Alternative.ObjectId
                , lfContainerSumm_20901.ContainerId
-               , lfContainerSumm_20901.AccountId;
+               , lfContainerSumm_20901.AccountId
+       UNION ALL
+        SELECT
+              _tmpItem.MovementItemId
+            , 0 AS ContainerId_ProfitLoss_40208 -- Счет - прибыль (ОПиУ - разница в весе : с/с1 - с/с2)
+            , 0 AS ContainerId_ProfitLoss_10800 -- Счет - прибыль (ОПиУ - Себестоимость возвратов : с/с2)
+            , COALESCE (Container_Summ.Id, 0)       AS ContainerId
+            , COALESCE (Container_Summ.ObjectId, 0) AS AccountId
+
+            , 0 AS ContainerId_Transit -- Счет Транзит, определим позже
+
+              -- с/с1 - для количества: приход на остаток
+            , _tmpItem.OperSumm_51201 AS OperSumm
+              -- с/с2 - для количества: контрагента
+            , _tmpItem.OperSumm_51201 AS OperSumm_ChangePercent
+        FROM _tmpItem
+             -- так находим
+             LEFT JOIN Container AS Container_Summ ON Container_Summ.Id = vbContainerId_51201
+        WHERE _tmpItem.OperSumm_51201 <> 0
+       ;
 
      -- 1.3.1.2. определяется ContainerId - Транзит
      UPDATE _tmpItemSumm SET ContainerId_Transit = lpInsertUpdate_ContainerSumm_Goods (inOperDate               := vbOperDate

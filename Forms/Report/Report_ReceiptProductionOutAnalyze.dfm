@@ -3,8 +3,9 @@ inherited Report_ReceiptProductionOutAnalyzeForm: TReport_ReceiptProductionOutAn
   ClientHeight = 430
   ClientWidth = 1130
   AddOnFormData.ExecuteDialogAction = ExecuteDialog
+  ExplicitLeft = -340
   ExplicitWidth = 1146
-  ExplicitHeight = 468
+  ExplicitHeight = 465
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
@@ -609,7 +610,6 @@ inherited Report_ReceiptProductionOutAnalyzeForm: TReport_ReceiptProductionOutAn
             Visible = False
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
-            VisibleForCustomization = False
             Width = 55
           end
         end
@@ -1100,7 +1100,6 @@ inherited Report_ReceiptProductionOutAnalyzeForm: TReport_ReceiptProductionOutAn
           object MasterKey_ch: TcxGridDBColumn
             DataBinding.FieldName = 'MasterKey'
             Visible = False
-            VisibleForCustomization = False
             Width = 55
           end
         end
@@ -1405,7 +1404,7 @@ inherited Report_ReceiptProductionOutAnalyzeForm: TReport_ReceiptProductionOutAn
         end
         item
           Name = 'isPartionGoods'
-          Value = 'False'
+          Value = False
           Component = cbPartionGoods
           DataType = ftBoolean
           ParamType = ptInput
@@ -1512,7 +1511,7 @@ inherited Report_ReceiptProductionOutAnalyzeForm: TReport_ReceiptProductionOutAn
         end
         item
           Name = 'isPartionGoods'
-          Value = 'False'
+          Value = False
           Component = cbPartionGoods
           DataType = ftBoolean
           ParamType = ptInput
@@ -1618,7 +1617,7 @@ inherited Report_ReceiptProductionOutAnalyzeForm: TReport_ReceiptProductionOutAn
         end
         item
           Name = 'isPartionGoods'
-          Value = 'False'
+          Value = False
           Component = cbPartionGoods
           DataType = ftBoolean
           ParamType = ptInput
@@ -1724,7 +1723,7 @@ inherited Report_ReceiptProductionOutAnalyzeForm: TReport_ReceiptProductionOutAn
         end
         item
           Name = 'isPartionGoods'
-          Value = 'False'
+          Value = False
           Component = cbPartionGoods
           DataType = ftBoolean
           ParamType = ptInput
@@ -2241,7 +2240,7 @@ inherited Report_ReceiptProductionOutAnalyzeForm: TReport_ReceiptProductionOutAn
       end
       item
         Name = 'PriceWithVAT'
-        Value = 'False'
+        Value = False
         DataType = ftBoolean
         ParamType = ptInput
         MultiSelectSeparator = ','
@@ -2300,7 +2299,7 @@ inherited Report_ReceiptProductionOutAnalyzeForm: TReport_ReceiptProductionOutAn
       end
       item
         Name = 'PriceWithVAT'
-        Value = 'False'
+        Value = False
         DataType = ftBoolean
         ParamType = ptInput
         MultiSelectSeparator = ','
@@ -2359,7 +2358,7 @@ inherited Report_ReceiptProductionOutAnalyzeForm: TReport_ReceiptProductionOutAn
       end
       item
         Name = 'PriceWithVAT'
-        Value = 'False'
+        Value = False
         DataType = ftBoolean
         ParamType = ptInput
         MultiSelectSeparator = ','
@@ -2418,7 +2417,7 @@ inherited Report_ReceiptProductionOutAnalyzeForm: TReport_ReceiptProductionOutAn
       end
       item
         Name = 'PriceWithVAT'
-        Value = 'False'
+        Value = False
         DataType = ftBoolean
         ParamType = ptInput
         MultiSelectSeparator = ','
@@ -2472,6 +2471,7 @@ inherited Report_ReceiptProductionOutAnalyzeForm: TReport_ReceiptProductionOutAn
     ColumnAddOnList = <>
     ColumnEnterList = <>
     SummaryItemList = <>
+    PropertiesCellList = <>
     Left = 544
     Top = 320
   end

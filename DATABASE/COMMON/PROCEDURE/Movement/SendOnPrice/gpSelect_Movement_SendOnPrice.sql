@@ -364,6 +364,7 @@ BEGIN
        WHERE tmpBranch.UserId IS NULL
           OR ObjectLink_UnitFrom_Branch.ChildObjectId = tmpBranch.BranchId
           OR ObjectLink_UnitTo_Branch.ChildObjectId = tmpBranch.BranchId
+          OR tmpBranch.UserId = 280162 -- Панасенко А.Н.
       ;
                                                
 END;

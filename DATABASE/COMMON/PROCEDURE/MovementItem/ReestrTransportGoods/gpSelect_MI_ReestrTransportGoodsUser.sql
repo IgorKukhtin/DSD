@@ -74,7 +74,7 @@ BEGIN
           RAISE EXCEPTION 'Ошибка.У пользователя <%> не определно значение <Физ.лицо>.', lfGet_Object_ValueData (vbUserId);
      END IF;
 
-if vbUserId <> 3263818 -- or 1=1
+if vbUserId <> 3263818 OR 1=1
 then 
 
 

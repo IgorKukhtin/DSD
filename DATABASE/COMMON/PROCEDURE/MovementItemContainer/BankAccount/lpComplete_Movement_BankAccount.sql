@@ -632,7 +632,8 @@ BEGIN
 
 
      -- проверка
-     IF EXISTS (SELECT 1 FROM _tmpItem WHERE _tmpItem.ObjectId = 0) AND NOT EXISTS (SELECT 1 FROM ObjectLink_UserRole_View WHERE RoleId = zc_Enum_Role_Admin() AND UserId = inUserId)
+     IF EXISTS (SELECT 1 FROM _tmpItem WHERE _tmpItem.ObjectId = 0 AND NOT EXISTS (SELECT 1 FROM _tmpItem AS tmp_ch WHERE tmp_ch.OperSumm_Diff_Asset <> 0 OR tmp_ch.OperSumm_Asset <> 0))
+        AND NOT EXISTS (SELECT 1 FROM ObjectLink_UserRole_View WHERE RoleId = zc_Enum_Role_Admin() AND UserId = inUserId)
         AND NOT EXISTS (SELECT 1 FROM _tmpItem WHERE _tmpItem.CurrencyId             <> zc_Enum_Currency_Basis()
                                                  AND _tmpItem.InfoMoneyDestinationId = zc_Enum_InfoMoneyDestination_30500() -- Прочие доходы
                        )

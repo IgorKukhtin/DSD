@@ -116,10 +116,10 @@ BEGIN
      END IF;
 
      -- Signing
-     --vbIsUserSigning1:= vbUserId IN (280164, 5, 133035);  -- Старецкая М.В. + Фурсов А.А.
-     --vbIsUserSigning2:= vbUserId IN (9463); -- Махота Д.П.
-     vbIsUserSigning1:= vbUserId IN (133035, 5); -- Фурсов А.А.
-     vbIsUserSigning2:= vbUserId IN (280164); -- Старецкая М.В.
+     vbIsUserSigning1:= vbUserId IN (280164, 5, 133035);  -- Старецкая М.В. + Фурсов А.А.
+     vbIsUserSigning2:= vbUserId IN (9463); -- Махота Д.П.
+     -- vbIsUserSigning1:= vbUserId IN (133035, 5); -- Фурсов А.А.
+     -- vbIsUserSigning2:= vbUserId IN (280164); -- Старецкая М.В.
 
      -- Отдел Маркетинг
      vbIsMsgColor:= EXISTS (SELECT 1 FROM ObjectLink_UserRole_View AS UserRole_View WHERE UserRole_View.RoleId IN (876016) AND UserRole_View.UserId = vbUserId);

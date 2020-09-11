@@ -1,8 +1,8 @@
--- Function: lpComplete_Movement_Sale (Integer, Integer, Boolean)
+-- Function: lpComplete_Movement_Sale22 (Integer, Integer, Boolean)
 
-DROP FUNCTION IF EXISTS lpComplete_Movement_Sale (Integer, Integer, Boolean);
+DROP FUNCTION IF EXISTS lpComplete_Movement_Sale22 (Integer, Integer, Boolean);
 
-CREATE OR REPLACE FUNCTION lpComplete_Movement_Sale(
+CREATE OR REPLACE FUNCTION lpComplete_Movement_Sale22(
     IN inMovementId        Integer               , -- ключ Документа
     IN inUserId            Integer               , -- Пользователь
     IN inIsLastComplete    Boolean  DEFAULT False  -- это последнее проведение после расчета с/с (для прихода параметр !!!не обрабатывается!!!)
@@ -95,18 +95,41 @@ $BODY$
   DECLARE vbIsPartionDoc_Branch Boolean;
   DECLARE vbPartionMovementId Integer;
   DECLARE vbPaymentDate TDateTime;
+
+  DECLARE vbOperSumm_51201 TFloat;
+  DECLARE vbContainerId_51201 Integer;
+
 BEGIN
-
-
 /*IF inUserId in (zfCalc_UserAdmin() :: Integer) -- , zc_Enum_Process_Auto_PrimeCost(), 9459)
  OR ('01.10.2017' <= (SELECT Movement.OperDate FROM Movement WHERE Movement.Id = inMovementId)
      AND
      '01.10.2017' <= (SELECT MD.ValueData FROM MovementDate AS MD WHERE MD.MovementId = inMovementId AND MD.DescId = zc_MovementDate_OperDatePartner())
     )
 THEN
-    PERFORM lpComplete_Movement_Sale_NEW (inMovementId, inUserId, FALSE);
+    PERFORM lpComplete_Movement_Sale22_NEW (inMovementId, inUserId, FALSE);
     RETURN;
 END IF;*/
+
+     -- ContainerId для распределения
+     vbContainerId_51201:= (SELECT Container.Id -- CLO_InfoMoney.ObjectId
+                            FROM ObjectFloat
+                                 INNER JOIN ContainerLinkObject AS CLO_PartionMovement
+                                                                ON CLO_PartionMovement.ObjectId = ObjectFloat.ObjectId
+                                                               AND CLO_PartionMovement.DescId   = zc_ContainerLinkObject_PartionMovement()
+                               --INNER JOIN ContainerLinkObject AS CLO_InfoMoney
+                               --                               ON CLO_InfoMoney.ContainerId = CLO_PartionMovement.ContainerId
+                               --                              AND CLO_InfoMoney.DescId      = zc_ContainerLinkObject_InfoMoney()
+                                 INNER JOIN Container ON Container.Id       = CLO_PartionMovement.ContainerId
+                                                     AND Container.ObjectId = zc_Enum_Account_51201() -- Распределение маркетинг + Маркетинг в накладных + Маркетинг
+                                                     AND Container.DescId   = zc_Container_Summ()
+                            WHERE ObjectFloat.ValueData = inMovementId
+                              AND ObjectFloat.DescId    = zc_ObjectFloat_PartionMovement_MovementId()
+                              AND Container.Amount <> 0
+                           );
+     -- Сумма для распределения
+     vbOperSumm_51201:= (SELECT Container.Amount FROM Container WHERE Container.Id = vbContainerId_51201);
+
+
 
      -- !!!временно!!!
      PERFORM lpInsertUpdate_MovementFloat_TotalSumm (inMovementId:= inMovementId);
@@ -1108,7 +1131,7 @@ END IF;*/
      IF inUserId <> zfCalc_UserAdmin() :: Integer
      THEN
          -- !!!Синхронно - пересчитали/провели Пересортица!!! - на основании "Реализация" - !!!важно - здесь очищается _tmpMIContainer_insert, поэтому делаем ДО проводок!!!, но после заполнения _tmpItem
-         PERFORM lpComplete_Movement_Sale_Recalc (inMovementId := inMovementId
+         PERFORM lpComplete_Movement_Sale22_Recalc (inMovementId := inMovementId
                                                 , inUnitId     := vbUnitId_From
                                                 , inUserId     := inUserId
                                                  );
@@ -1356,6 +1379,24 @@ END IF;*/
                                                                   THEN _tmpItem.OperSumm_PriceList - _tmpItem.OperSumm_Partner
                                                              ELSE 0
                                                         END;
+
+     -- Распределение - Маркетинг в накладных + Маркетинг
+     IF vbOperSumm_51201 <> 0
+     THEN
+         -- распределили
+         UPDATE _tmpItem SET OperSumm_51201 = CAST (vbOperSumm_51201 * _tmpItem.OperSumm_Partner / vbOperSumm_Partner AS NUMERIC (16,2))
+         WHERE _tmpItem.isLossMaterials = FALSE;
+
+         -- если не вышли на нужную сумму
+         IF vbOperSumm_51201 <> (SELECT SUM (COALESCE (_tmpItem.OperSumm_51201, 0)) FROM _tmpItem)
+         THEN
+             -- выровняли копейки
+             UPDATE _tmpItem SET OperSumm_51201 = _tmpItem.OperSumm_51201 - (SELECT SUM (_tmpItem.OperSumm_51201) FROM _tmpItem) + vbOperSumm_51201
+             WHERE _tmpItem.MovementItemId = (SELECT _tmpItem.MovementItemId FROM _tmpItem WHERE _tmpItem.OperSumm_51201 <> 0 ORDER BY _tmpItem.OperSumm_51201 DESC LIMIT 1);
+
+         END IF;
+     END IF;
+
 
      -- формируются Партии товара, ЕСЛИ надо ...
      UPDATE _tmpItem SET PartionGoodsId = CASE WHEN vbMovementDescId = zc_Movement_SaleAsset()
@@ -2057,7 +2098,36 @@ END IF;*/
                , lfContainerSumm_20901.ContainerId
                , lfContainerSumm_20901.AccountId
                , _tmpItem.isLossMaterials
-                ;
+
+       UNION ALL
+        SELECT
+              _tmpItem.MovementItemId
+            , _tmpItem.ContainerId_Goods
+            , 0 AS ContainerId_ProfitLoss_40208 -- Счет - прибыль (ОПиУ - разница в весе : с/с2 - с/с3)
+            , 0 AS ContainerId_ProfitLoss_10500 -- Счет - прибыль (ОПиУ - скидки в весе : с/с1 - с/с2)
+            , 0 AS ContainerId_ProfitLoss_10400 -- Счет - прибыль (ОПиУ - себестоимости реализации : с/с3)
+            , 0 AS ContainerId_ProfitLoss_20200 -- Счет - прибыль (ОПиУ - Общепроизводственные расходы + Содержание складов)
+            , COALESCE (Container_Summ.Id, 0)       AS ContainerId
+            , COALESCE (Container_Summ.ObjectId, 0) AS AccountId
+
+            , 0 AS ContainerId_Transit_01 -- Счет Транзит, определим позже +++
+            , 0 AS ContainerId_Transit_02 -- Счет Транзит, определим позже +++
+            , 0 AS ContainerId_Transit_51 -- Счет Транзит, определим позже
+            , 0 AS ContainerId_Transit_52 -- Счет Транзит, определим позже
+            , 0 AS ContainerId_Transit_53 -- Счет Транзит, определим позже +++
+
+              -- с/с1 - для количества: расход с остатка
+            , _tmpItem.OperSumm_51201 AS OperSumm
+              -- с/с2 - для количества: с учетом % скидки
+            , _tmpItem.OperSumm_51201 AS OperSumm_ChangePercent
+              -- с/с3 - для количества: контрагента
+            , _tmpItem.OperSumm_51201 AS OperSumm_Partner
+            , _tmpItem.isLossMaterials
+        FROM _tmpItem
+             -- так находим
+             LEFT JOIN Container AS Container_Summ ON Container_Summ.Id = vbContainerId_51201
+        WHERE _tmpItem.OperSumm_51201 <> 0
+       ;
 
      END IF; -- if vbIsHistoryCost = TRUE AND zc_isHistoryCost() = TRUE
 
@@ -3401,5 +3471,5 @@ and coalesce (M1.ValueData, 0) <> coalesce (M2.ValueData, 0)
 */
 -- тест
 -- SELECT * FROM gpUnComplete_Movement (inMovementId:= 122175 , inSession:= '2')
--- SELECT * FROM lpComplete_Movement_Sale (inMovementId:= 122175, inIsLastComplete:= FALSE, inSession:= zfCalc_UserAdmin())
+-- SELECT * FROM lpComplete_Movement_Sale22 (inMovementId:= 122175, inIsLastComplete:= FALSE, inSession:= zfCalc_UserAdmin())
 -- SELECT * FROM gpSelect_MovementItemContainer_Movement (inMovementId:= 122175 , inSession:= '2')

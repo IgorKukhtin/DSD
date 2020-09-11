@@ -78,7 +78,7 @@ BEGIN
      END IF;
 
 
-if vbUserId <> 14599 -- or 1=1
+if vbUserId <> 14599 or 1=1
 then 
 
      -- Результат

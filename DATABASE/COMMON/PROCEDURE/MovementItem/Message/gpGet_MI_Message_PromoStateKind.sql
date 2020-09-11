@@ -21,10 +21,10 @@ BEGIN
      vbUserId := inSession;
 
      -- Signing
-     --vbIsUserSigning1:= vbUserId IN (280164, 5, 133035);  -- Старецкая М.В. + Фурсов А.А.
-     --vbIsUserSigning2:= vbUserId IN (9463); -- Махота Д.П.
-     vbIsUserSigning1:= vbUserId IN (133035, 5); -- Фурсов А.А.
-     vbIsUserSigning2:= vbUserId IN (280164);    -- Старецкая М.В.
+     vbIsUserSigning1:= vbUserId IN (280164, 5, 133035);  -- Старецкая М.В. + Фурсов А.А.
+     vbIsUserSigning2:= vbUserId IN (9463); -- Махота Д.П.
+     -- vbIsUserSigning1:= vbUserId IN (133035, 5); -- Фурсов А.А.
+     -- vbIsUserSigning2:= vbUserId IN (280164);    -- Старецкая М.В.
 
      -- последний
      SELECT tmp.Id, tmp.ObjectId
