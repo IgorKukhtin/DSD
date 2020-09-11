@@ -41,7 +41,7 @@ BEGIN
                               AND MovementItem.isErased = FALSE
 
 
-   WHERE Movement.OperDate >= CURRENT_DATE - INTERVAL '5 DAY'
+   WHERE Movement.OperDate >= CURRENT_DATE - INTERVAL '14 DAY'
      AND Movement.DescId = zc_Movement_SendPartionDateChange();
 
   IF COALESCE (vbMovementItemId, 0) = 0
