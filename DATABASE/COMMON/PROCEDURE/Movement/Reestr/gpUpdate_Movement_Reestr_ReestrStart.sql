@@ -38,6 +38,8 @@ BEGIN
                         outDriverId := lpInsertUpdate_Object_MemberExternal (ioId    := 0
                                                                            , inCode  := lfGet_ObjectCode(0, zc_Object_MemberExternal()) 
                                                                            , inName  := inDriver
+                                                                           , inDriverCertificate := '' ::TVarChar
+                                                                           , inINN   := '' ::TVarChar
                                                                            , inUserId:= vbUserId
                                                                              );
                         -- сохранили протокол
@@ -62,6 +64,8 @@ BEGIN
                         outMemberId := lpInsertUpdate_Object_MemberExternal (ioId    := 0
                                                                            , inCode  := lfGet_ObjectCode(0, zc_Object_MemberExternal()) 
                                                                            , inName  := inMember
+                                                                           , inDriverCertificate := '' ::TVarChar
+                                                                           , inINN   := '' ::TVarChar
                                                                            , inUserId:= vbUserId
                                                                              );
                         -- сохранили протокол
@@ -84,14 +88,14 @@ BEGIN
                     THEN 
                         -- не нашли Сохраняем в авто(сторонние)
                         outCarId := lpInsertUpdate_Object_CarExternal (ioId	    := 0
-                                            , inCode        := lfGet_ObjectCode(0, zc_Object_CarExternal())
-                                            , inName        := inCar
-                                            , inRegistrationCertificate := '' ::TVarChar
-                                            , inComment     := '' ::TVarChar
-                                            , inCarModelId  := 0
-                                            , inJuridicalId := 0
-                                            , inUserId      := vbUserId
-                                              );
+                                                                     , inCode        := lfGet_ObjectCode(0, zc_Object_CarExternal())
+                                                                     , inName        := inCar
+                                                                     , inRegistrationCertificate := '' ::TVarChar
+                                                                     , inComment     := '' ::TVarChar
+                                                                     , inCarModelId  := 0
+                                                                     , inJuridicalId := 0
+                                                                     , inUserId      := vbUserId
+                                                                       );
                         -- сохранили протокол
                         PERFORM lpInsert_ObjectProtocol (outCarId, vbUserId);
                  END IF;  

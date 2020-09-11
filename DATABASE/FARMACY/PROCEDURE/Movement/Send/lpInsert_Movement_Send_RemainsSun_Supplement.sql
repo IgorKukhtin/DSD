@@ -36,6 +36,8 @@ RETURNS TABLE (GoodsId Integer, GoodsCode Integer, GoodsName TVarChar
              , AverageSalesMonth_To TFloat
              , Need_To TFloat
              , Delta_To TFloat
+             
+             , AmountUse_To TFloat
               )
 AS
 $BODY$
@@ -401,7 +403,13 @@ BEGIN
              FETCH curResult_next INTO vbUnitId_to, vbNeed;
              -- если данные закончились, или все кол-во найдено тогда выход
              IF NOT FOUND OR vbSurplus = 0 THEN EXIT; END IF;
+             
+/*             IF vbUnitId_to = 377610 AND vbGoodsId = 12918138
+             THEN
+               raise notice 'Value 05: % % % % % %', vbUnitId_from, vbUnitId_to, vbGoodsId, vbNeed, vbSurplus, CASE WHEN vbSurplus > vbNeed THEN vbNeed ELSE vbSurplus END;
+             END IF;
 
+*/
              INSERT INTO _tmpResult_Supplement (UnitId_from, UnitId_to, GoodsId, Amount)
                VALUES (vbUnitId_from, vbUnitId_to, vbGoodsId, CASE WHEN vbSurplus > vbNeed THEN vbNeed ELSE vbSurplus END);
 
@@ -464,6 +472,7 @@ BEGIN
                    THEN - tmpRemains_all_To.AmountRemains
                    ELSE (tmpRemains_all_To.Need -tmpRemains_all_To.AmountRemains)::Integer
               END::TFloat                                       AS Delta_To
+            , tmpRemains_all_To.AmountUse                       AS AmountUse_To
 
        FROM _tmpResult_Supplement
 
@@ -498,3 +507,4 @@ $BODY$
 
 -- SELECT * FROM lpInsert_Movement_Send_RemainsSun_Supplement (inOperDate:= CURRENT_DATE + INTERVAL '0 DAY', inDriverId:= 0, inUserId:= 3); -- WHERE Amount_calc < AmountResult_summ -- WHERE AmountSun_summ_save <> AmountSun_summ
 
+select * from gpReport_Movement_Send_RemainsSun_Supplement(inOperDate := ('07.09.2020')::TDateTime ,  inSession := '3');

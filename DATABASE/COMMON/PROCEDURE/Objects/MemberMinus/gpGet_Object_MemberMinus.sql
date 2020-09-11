@@ -1,0 +1,123 @@
+-- Function: gpGet_Object_MemberMinus()
+
+DROP FUNCTION IF EXISTS gpGet_Object_MemberMinus(Integer, TVarChar);
+
+CREATE OR REPLACE FUNCTION gpGet_Object_MemberMinus(
+    IN inId          Integer,       -- Основные средства 
+    IN inSession     TVarChar       -- сессия пользователя
+)
+RETURNS TABLE (Id Integer, Name TVarChar
+             , FromId Integer, FromName TVarChar
+             , ToId Integer, ToName TVarChar
+             , BankAccountFromId Integer, BankAccountFromName TVarChar
+             , BankAccountToId Integer, BankAccountToName TVarChar
+             , DetailPayment TVarChar, BankAccountTo TVarChar
+             , TotalSumm TFloat, Summ TFloat
+             ) AS
+$BODY$BEGIN
+   
+   -- проверка прав пользователя на вызов процедуры
+   -- PERFORM lpCheckRight(inSession, zc_Enum_Process_Get_Object_MemberMinus());
+   
+   IF COALESCE (inId, 0) = 0
+   THEN
+       RETURN QUERY 
+       SELECT
+             CAST (0 as Integer)    AS Id
+           , CAST ('' as TVarChar)  AS Name
+           
+           , CAST (0 as Integer)    AS FromId
+           , CAST ('' as TVarChar)  AS FromName
+           
+           , CAST (0 as Integer)    AS ToId
+           , CAST ('' as TVarChar)  AS ToName
+           
+           , CAST (0 as Integer)    AS BankAccountFromId
+           , CAST ('' as TVarChar)  AS BankAccountFromName
+
+           , CAST (0 as Integer)    AS BankAccountToId
+           , CAST ('' as TVarChar)  AS BankAccountToName
+
+           , CAST ('' as TVarChar)  AS DetailPayment
+           , CAST ('' as TVarChar)  AS BankAccountTo
+           
+           , 0 :: TFloat            AS TotalSumm
+           , 0 :: TFloat            AS Summ
+          ;
+   ELSE
+     RETURN QUERY 
+     SELECT 
+           Object_MemberMinus.Id                AS Id 
+         , Object_MemberMinus.ValueData         AS Name
+         
+         , MemberMinus_From.Id                  AS FromId
+         , MemberMinus_From.ValueData           AS FromName
+
+         , Object_To.Id                         AS ToId
+         , Object_To.ValueData                  AS ToName
+
+         , Object_BankAccountFrom.Id            AS BankAccountFromId
+         , Object_BankAccountFrom.ValueData     AS BankAccountFromName
+
+         , Object_BankAccountTo.Id              AS BankAccountToId
+         , Object_BankAccountTo.ValueData       AS BankAccountToName
+
+         , ObjectString_DetailPayment.ValueData AS DetailPayment
+         , ObjectString_BankAccountTo.ValueData AS BankAccountTo
+
+         , COALESCE (ObjectFloat_TotalSumm.ValueData, 0) :: TFloat AS TotalSumm
+         , COALESCE (ObjectFloat_Summ.ValueData, 0)      :: TFloat AS Summ
+         
+     FROM OBJECT AS Object_MemberMinus
+          LEFT JOIN ObjectLink AS ObjectLink_MemberMinus_From
+                               ON ObjectLink_MemberMinus_From.ObjectId = Object_MemberMinus.Id
+                              AND ObjectLink_MemberMinus_From.DescId = zc_ObjectLink_MemberMinus_From()
+          LEFT JOIN Object AS MemberMinus_From ON MemberMinus_From.Id = ObjectLink_MemberMinus_From.ChildObjectId
+          
+          LEFT JOIN ObjectLink AS ObjectLink_MemberMinus_To
+                               ON ObjectLink_MemberMinus_To.ObjectId = Object_MemberMinus.Id
+                              AND ObjectLink_MemberMinus_To.DescId = zc_ObjectLink_MemberMinus_To()
+          LEFT JOIN Object AS Object_To ON Object_To.Id = ObjectLink_MemberMinus_To.ChildObjectId
+
+          LEFT JOIN ObjectLink AS ObjectLink_MemberMinus_BankAccountFrom
+                               ON ObjectLink_MemberMinus_BankAccountFrom.ObjectId = Object_MemberMinus.Id
+                              AND ObjectLink_MemberMinus_BankAccountFrom.DescId = zc_ObjectLink_MemberMinus_BankAccountFrom()
+          LEFT JOIN Object AS Object_BankAccountFrom ON Object_BankAccountFrom.Id = ObjectLink_MemberMinus_BankAccountFrom.ChildObjectId
+
+          LEFT JOIN ObjectLink AS ObjectLink_MemberMinus_BankAccountTo
+                               ON ObjectLink_MemberMinus_BankAccountTo.ObjectId = Object_MemberMinus.Id
+                              AND ObjectLink_MemberMinus_BankAccountTo.DescId = zc_ObjectLink_MemberMinus_BankAccountTo()
+          LEFT JOIN Object AS Object_BankAccountTo ON Object_BankAccountTo.Id = ObjectLink_MemberMinus_BankAccountTo.ChildObjectId
+   
+          LEFT JOIN ObjectString AS ObjectString_DetailPayment
+                                 ON ObjectString_DetailPayment.ObjectId = Object_MemberMinus.Id
+                                AND ObjectString_DetailPayment.DescId = zc_ObjectString_MemberMinus_DetailPayment()
+
+          LEFT JOIN ObjectString AS ObjectString_BankAccountTo
+                                 ON ObjectString_BankAccountTo.ObjectId = Object_MemberMinus.Id
+                                AND ObjectString_BankAccountTo.DescId = zc_ObjectString_MemberMinus_BankAccountTo()
+
+          LEFT JOIN ObjectFloat AS ObjectFloat_TotalSumm
+                                ON ObjectFloat_TotalSumm.ObjectId = Object_MemberMinus.Id
+                               AND ObjectFloat_TotalSumm.DescId = zc_ObjectFloat_MemberMinus_TotalSumm()
+
+          LEFT JOIN ObjectFloat AS ObjectFloat_Summ
+                                ON ObjectFloat_Summ.ObjectId = Object_MemberMinus.Id
+                               AND ObjectFloat_Summ.DescId = zc_ObjectFloat_MemberMinus_Summ()
+       WHERE Object_MemberMinus.Id = inId;
+   END IF;
+   
+END;
+$BODY$
+
+LANGUAGE plpgsql VOLATILE;
+
+
+/*-------------------------------------------------------------------------------
+ ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
+               Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
+ 04.09.20         *
+*/
+
+-- тест
+-- SELECT * FROM gpGet_Object_MemberMinus(0, '2')

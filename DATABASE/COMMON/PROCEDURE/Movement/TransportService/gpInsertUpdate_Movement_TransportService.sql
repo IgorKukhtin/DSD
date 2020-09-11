@@ -244,6 +244,7 @@ BEGIN
                                                                        , inCode  := lfGet_ObjectCode(0, zc_Object_MemberExternal())
                                                                        , inName  := inMemberExternalName  :: TVarChar
                                                                        , inDriverCertificate := COALESCE (inDriverCertificate,'') :: TVarChar
+                                                                       , inINN   := '' ::TVarChar
                                                                        , inUserId:= vbUserId
                                                                         );
          ELSE 

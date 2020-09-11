@@ -800,14 +800,6 @@
 			<DCCReference Include="..\..\FormsFarmacy\ConnectWithOld\RepriceChangeRetail.pas">
 				<Form>RepriceСhangeRetailForm</Form>
 			</DCCReference>
-			<DCCReference Include="..\..\FormsFarmacy\Document\CheckVIP.pas">
-				<Form>CheckVIPForm</Form>
-				<DesignClass>TParentForm</DesignClass>
-			</DCCReference>
-			<DCCReference Include="..\..\FormsFarmacy\Document\CheckDeferred.pas">
-				<Form>CheckDeferredForm</Form>
-				<DesignClass>TParentForm</DesignClass>
-			</DCCReference>
 			<DCCReference Include="..\..\Forms\Guides\PaidType.pas">
 				<Form>PaidTypeForm</Form>
 				<DesignClass>TParentForm</DesignClass>
@@ -2026,8 +2018,8 @@
 				<Form>Report_KPUForm</Form>
 				<DesignClass>TParentForm</DesignClass>
 			</DCCReference>
-			<DCCReference Include="..\..\FormsFarmacy\Document\CheckVIP_Search.pas">
-				<Form>CheckVIP_SearchForm</Form>
+			<DCCReference Include="..\..\FormsFarmacy\Document\CheckDeferred_Search.pas">
+				<Form>CheckDeferred_SearchForm</Form>
 				<DesignClass>TParentForm</DesignClass>
 			</DCCReference>
 			<DCCReference Include="..\..\FormsFarmacy\Report\Report_IncomeSample.pas">
@@ -2271,8 +2263,8 @@
 				<Form>SendPartionDateForm</Form>
 				<DesignClass>TParentForm</DesignClass>
 			</DCCReference>
-			<DCCReference Include="..\..\FormsFarmacy\Document\CheckDelayVIP.pas">
-				<Form>CheckDelayVIPForm</Form>
+			<DCCReference Include="..\..\FormsFarmacy\Document\CheckDelayDeferred.pas">
+				<Form>CheckDelayDeferredForm</Form>
 				<DesignClass>TParentForm</DesignClass>
 			</DCCReference>
 			<DCCReference Include="..\..\FormsFarmacy\Report\Report_GoodsInventory.pas">
@@ -3325,6 +3317,40 @@
 			</DCCReference>
 			<DCCReference Include="..\..\FormsFarmacy\Guides\CancelReasonEdit.pas">
 				<Form>CancelReasonEditForm</Form>
+				<DesignClass>TParentForm</DesignClass>
+			</DCCReference>
+			<DCCReference Include="..\..\FormsFarmacy\Document\CheckDeferred.pas">
+				<Form>CheckDeferredForm</Form>
+				<DesignClass>TParentForm</DesignClass>
+			</DCCReference>
+			<DCCReference Include="..\..\FormsFarmacy\Document\CheckVIP.pas">
+				<Form>CheckVIPForm</Form>
+				<FormType>dfm</FormType>
+				<DesignClass>TParentForm</DesignClass>
+			</DCCReference>
+			<DCCReference Include="..\..\FormsFarmacy\Document\CheckVIP_Search.pas">
+				<Form>CheckVIP_SearchForm</Form>
+				<FormType>dfm</FormType>
+				<DesignClass>TParentForm</DesignClass>
+			</DCCReference>
+			<DCCReference Include="..\..\FormsFarmacy\Document\CheckDelayVIP.pas">
+				<Form>CheckDelayVIPForm</Form>
+				<FormType>dfm</FormType>
+				<DesignClass>TParentForm</DesignClass>
+			</DCCReference>
+			<DCCReference Include="..\..\FormsFarmacy\Document\CheckSite_Search.pas">
+				<Form>CheckSite_SearchForm</Form>
+				<FormType>dfm</FormType>
+				<DesignClass>TParentForm</DesignClass>
+			</DCCReference>
+			<DCCReference Include="..\..\FormsFarmacy\Document\CheckSite.pas">
+				<Form>CheckSiteForm</Form>
+				<FormType>dfm</FormType>
+				<DesignClass>TParentForm</DesignClass>
+			</DCCReference>
+			<DCCReference Include="..\..\FormsFarmacy\Document\CheckDelaySite.pas">
+				<Form>CheckDelaySiteForm</Form>
+				<FormType>dfm</FormType>
 				<DesignClass>TParentForm</DesignClass>
 			</DCCReference>
 			<BuildConfiguration Include="Release">

@@ -11,6 +11,7 @@ RETURNS TABLE (Id Integer
              , JuridicalId Integer, JuridicalCode Integer, JuridicalName TVarChar
              , OKPO TVarChar, INN TVarChar, isCorporate Boolean
              , RetailId Integer, RetailName TVarChar
+             , BankName_main TVarChar, MFO_main TVarChar, BankAccountId_main Integer, BankAccountName_main TVarChar
              , BankName TVarChar, MFO TVarChar, BankAccountId Integer, BankAccountName TVarChar
              , InfoMoneyGroupName TVarChar
              , InfoMoneyDestinationName TVarChar
@@ -38,17 +39,22 @@ BEGIN
                       AND Object_Contract_View.EndDate >= CURRENT_DATE
                    )
       , tmpJuridicalOrderFinance AS (SELECT Object_JuridicalOrderFinance.Id
-                                          , OL_JuridicalOrderFinance_Juridical.ChildObjectId   AS JuridicalId
-                                          , OL_JuridicalOrderFinance_BankAccount.ChildObjectId AS BankAccountId
-                                          , OL_JuridicalOrderFinance_InfoMoney.ChildObjectId   AS InfoMoneyId
-                                          , ObjectFloat_SummOrderFinance.ValueData :: TFloat   AS SummOrderFinance
-                                          , Object_JuridicalOrderFinance.isErased              AS isErased
+                                          , OL_JuridicalOrderFinance_Juridical.ChildObjectId       AS JuridicalId
+                                          , OL_JuridicalOrderFinance_BankAccountMain.ChildObjectId AS BankAccountId_main
+                                          , OL_JuridicalOrderFinance_BankAccount.ChildObjectId     AS BankAccountId
+                                          , OL_JuridicalOrderFinance_InfoMoney.ChildObjectId       AS InfoMoneyId
+                                          , ObjectFloat_SummOrderFinance.ValueData :: TFloat       AS SummOrderFinance
+                                          , Object_JuridicalOrderFinance.isErased                  AS isErased
                               
                                      FROM Object AS Object_JuridicalOrderFinance
                                          LEFT JOIN ObjectLink AS OL_JuridicalOrderFinance_Juridical
                                                               ON OL_JuridicalOrderFinance_Juridical.ObjectId = Object_JuridicalOrderFinance.Id
                                                              AND OL_JuridicalOrderFinance_Juridical.DescId = zc_ObjectLink_JuridicalOrderFinance_Juridical()
-                              
+
+                                         LEFT JOIN ObjectLink AS OL_JuridicalOrderFinance_BankAccountMain
+                                                              ON OL_JuridicalOrderFinance_BankAccountMain.ObjectId = Object_JuridicalOrderFinance.Id
+                                                             AND OL_JuridicalOrderFinance_BankAccountMain.DescId = zc_ObjectLink_JuridicalOrderFinance_BankAccountMain()
+
                                          LEFT JOIN ObjectLink AS OL_JuridicalOrderFinance_BankAccount
                                                               ON OL_JuridicalOrderFinance_BankAccount.ObjectId = Object_JuridicalOrderFinance.Id
                                                              AND OL_JuridicalOrderFinance_BankAccount.DescId = zc_ObjectLink_JuridicalOrderFinance_BankAccount()
@@ -77,6 +83,11 @@ BEGIN
              , Object_Retail.Id                 AS RetailId
              , Object_Retail.ValueData          AS RetailName
 
+             , Main_BankAccount_View.BankName   AS BankAccountName_main
+             , Main_BankAccount_View.MFO        AS MFO_main
+             , Main_BankAccount_View.Id         AS BankAccountId_main
+             , Main_BankAccount_View.Name       AS BankAccountName_main
+
              , Partner_BankAccount_View.BankName
              , Partner_BankAccount_View.MFO
              , Partner_BankAccount_View.Id      AS BankAccountId
@@ -99,6 +110,8 @@ BEGIN
              LEFT JOIN Object AS Object_Juridical ON Object_Juridical.Id = COALESCE (tmpJuridicalOrderFinance.JuridicalId, tmpData.JuridicalId)
              LEFT JOIN Object_InfoMoney_View ON Object_InfoMoney_View.InfoMoneyId = COALESCE (tmpJuridicalOrderFinance.InfoMoneyId, tmpData.InfoMoneyId)
              LEFT JOIN Object_BankAccount_View AS Partner_BankAccount_View ON Partner_BankAccount_View.Id = tmpJuridicalOrderFinance.BankAccountId
+             
+             LEFT JOIN Object_BankAccount_View AS Main_BankAccount_View ON Main_BankAccount_View.Id = tmpJuridicalOrderFinance.BankAccountId_main
            
              LEFT JOIN ObjectHistory_JuridicalDetails_View ON ObjectHistory_JuridicalDetails_View.JuridicalId = Object_Juridical.Id
  
@@ -132,6 +145,11 @@ BEGIN
              , Object_Retail.Id                 AS RetailId
              , Object_Retail.ValueData          AS RetailName
 
+             , Main_BankAccount_View.BankName   AS BankAccountName_main
+             , Main_BankAccount_View.MFO        AS MFO_main
+             , Main_BankAccount_View.Id         AS BankAccountId_main
+             , Main_BankAccount_View.Name       AS BankAccountName_main
+
              , Partner_BankAccount_View.BankName
              , Partner_BankAccount_View.MFO
              , Partner_BankAccount_View.Id      AS BankAccountId
@@ -154,6 +172,11 @@ BEGIN
                                  AND OL_JuridicalOrderFinance_Juridical.DescId = zc_ObjectLink_JuridicalOrderFinance_Juridical()
              LEFT JOIN Object AS Object_Juridical ON Object_Juridical.Id = OL_JuridicalOrderFinance_Juridical.ChildObjectId
   
+             LEFT JOIN ObjectLink AS OL_JuridicalOrderFinance_BankAccountMain
+                                  ON OL_JuridicalOrderFinance_BankAccountMain.ObjectId = Object_JuridicalOrderFinance.Id
+                                 AND OL_JuridicalOrderFinance_BankAccountMain.DescId = zc_ObjectLink_JuridicalOrderFinance_BankAccountMain()
+             LEFT JOIN Object_BankAccount_View AS Main_BankAccount_View ON Main_BankAccount_View.Id = OL_JuridicalOrderFinance_BankAccountMain.ChildObjectId
+
              LEFT JOIN ObjectLink AS OL_JuridicalOrderFinance_BankAccount
                                   ON OL_JuridicalOrderFinance_BankAccount.ObjectId = Object_JuridicalOrderFinance.Id
                                  AND OL_JuridicalOrderFinance_BankAccount.DescId = zc_ObjectLink_JuridicalOrderFinance_BankAccount()

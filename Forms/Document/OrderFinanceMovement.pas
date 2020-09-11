@@ -159,6 +159,7 @@ type
     actSMTPFile: TdsdSMTPFileAction;
     actExport: TMultiAction;
     bbExport: TdxBarButton;
+    actBankAccountChoiceFormJurMain: TOpenChoiceForm;
   private
   public
   end;

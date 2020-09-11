@@ -266,18 +266,19 @@ BEGIN
                                  AND COALESCE (tmpChild.Id, 0) <> 0);
 
      -- сохраняем нужные строки
-     PERFORM lpInsertUpdate_MI_SendPartionDate_Child(ioId                := tmpChild.Id
-                                                   , inParentId          := ioId
-                                                   , inMovementId        := inMovementId
-                                                   , inGoodsId           := inGoodsId
-                                                   --, inPartionDateKindId := tmpChild.PartionDateKindId
-                                                   , inExpirationDate    := tmpChild.ExpirationDate
-                                                   , inPriceWithVAT      := tmpChild.PriceWithVAT
-                                                   , inAmount            := tmpChild.Amount        :: TFloat
-                                                   , inContainerId       := tmpChild.ContainerId   :: TFloat
-                                                   , inMovementId_Income := COALESCE (tmpChild.MovementId_Income,0) :: TFloat
-                                                   --, inExpired       := tmpChild.Expired       :: TFloat
-                                                   , inUserId            := vbUserId)
+     PERFORM lpInsertUpdate_MI_SendPartionDate_Child(ioId                    := tmpChild.Id
+                                                   , inParentId              := ioId
+                                                   , inMovementId            := inMovementId
+                                                   , inGoodsId               := inGoodsId
+                                                   --, inPartionDateKindId     := tmpChild.PartionDateKindId
+                                                   , inExpirationDate        := tmpChild.ExpirationDate
+                                                   , inExpirationDateIncome  := tmpChild.ExpirationDate
+                                                   , inPriceWithVAT          := tmpChild.PriceWithVAT
+                                                   , inAmount                := tmpChild.Amount        :: TFloat
+                                                   , inContainerId           := tmpChild.ContainerId   :: TFloat
+                                                   , inMovementId_Income     := COALESCE (tmpChild.MovementId_Income,0) :: TFloat
+                                                   --, inExpired              := tmpChild.Expired       :: TFloat
+                                                   , inUserId                := vbUserId)
      FROM tmpChild
      WHERE COALESCE (tmpChild.Amount, 0) <> 0;
 

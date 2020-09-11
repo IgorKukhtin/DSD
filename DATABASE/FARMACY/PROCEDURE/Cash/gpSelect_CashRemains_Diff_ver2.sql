@@ -31,7 +31,8 @@ RETURNS TABLE (
     UKTZED TVarChar,
     GoodsPairSunId Integer,
     DivisionPartiesId  Integer,  DivisionPartiesName  TVarChar, isBanFiscalSale Boolean,
-    isGoodsForProject boolean
+    isGoodsForProject boolean,
+    GoodsPairSunMainId Integer
 )
 AS
 $BODY$
@@ -524,7 +525,8 @@ WITH tmp as (SELECT tmp.*, ROW_NUMBER() OVER (PARTITION BY TextValue_calc ORDER 
             NULLIF (_DIFF.DivisionPartiesId, 0),
             Object_DivisionParties.ValueData                                  AS DivisionPartiesName,
             COALESCE (ObjectBoolean_BanFiscalSale.ValueData, False)           AS isBanFiscalSale,
-            COALESCE(tmpGoodsDiscount.isGoodsForProject, FALSE)               AS isGoodsForProject
+            COALESCE(tmpGoodsDiscount.isGoodsForProject, FALSE)               AS isGoodsForProject,
+            Object_Goods_PairSun_Main.GoodsPairSunId                          AS GoodsPairSunMainId
         FROM _DIFF
 
             -- Тип срок/не срок
@@ -544,6 +546,8 @@ WITH tmp as (SELECT tmp.*, ROW_NUMBER() OVER (PARTITION BY TextValue_calc ORDER 
             LEFT JOIN Object_Goods_Main AS Object_Goods_Main ON Object_Goods_Main.Id = Object_Goods_Retail.GoodsMainId
             LEFT JOIN tmpGoodsPairSun AS Object_Goods_PairSun
                                       ON Object_Goods_PairSun.GoodsPairSunId = Object_Goods_Retail.Id
+            LEFT JOIN tmpGoodsPairSun AS Object_Goods_PairSun_Main
+                                      ON Object_Goods_PairSun_Main.Id = Object_Goods_Retail.Id
             LEFT JOIN tmpGoodsDiscount ON tmpGoodsDiscount.GoodsMainId = Object_Goods_Main.Id
 
             LEFT JOIN Object AS Object_Accommodation  ON Object_Accommodation.ID = _DIFF.AccommodationId

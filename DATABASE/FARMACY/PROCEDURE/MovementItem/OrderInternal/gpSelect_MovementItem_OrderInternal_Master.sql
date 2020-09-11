@@ -1123,150 +1123,192 @@ BEGIN
       -- данные по % кредитных средств из справочника
       , tmpCostCredit AS (SELECT * FROM gpSelect_Object_RetailCostCredit(inRetailId := vbObjectId, inShowAll := FALSE, inisErased := FALSE, inSession := inSession) AS tmp)
 
-
+      -- спр. Приоритеты при выборе поставщика
+      , tmpJuridicalPriorities AS (SELECT tmp.JuridicalId 
+                                        , tmp.GoodsId AS GoodsMainId  --главный товар
+                                        , tmp.Priorities
+                                   FROM gpSelect_Object_JuridicalPriorities (inSession) AS tmp
+                                   WHERE tmp.isErased = FALSE
+                                     AND COALESCE (tmp.Priorities,0) <> 0
+                                   )
+                                   
        -- Результат
        SELECT row_number() OVER ()
-            , ddd.Id AS MovementItemId
-            , ddd.PriceListMovementItemId
-            , ddd.Price
-            , ddd.PartionGoodsDate
-            , ddd.GoodsId
-            , ddd.GoodsCode
-            , ddd.GoodsName
-            , ddd.MainGoodsName
-            , ddd.JuridicalId
-            , ddd.JuridicalName
-            , ddd.MakerName
-            , ddd.ContractId
-            , ddd.ContractName
-            , ddd.AreaId
-            , ddd.AreaName
-            , ddd.isDefault
-            , ddd.Deferment
-            , ddd.Bonus
-/* * /
-            , CASE WHEN ddd.Deferment = 0
-                        THEN 0
-                   WHEN ddd.isTOP = TRUE
-                        THEN COALESCE (PriceSettingsTOP.Percent, 0)
-                   ELSE PriceSettings.Percent
-              END :: TFloat AS Percent
-            , CASE WHEN ddd.Deferment = 0
-                        THEN FinalPrice
-                   WHEN ddd.Deferment = 0 OR ddd.isTOP = TRUE
-                        THEN FinalPrice * (100 - COALESCE (PriceSettingsTOP.Percent, 0)) / 100
-                   ELSE FinalPrice * (100 - PriceSettings.Percent) / 100
-              END :: TFloat AS SuperFinalPrice
-/ */
-            , CASE WHEN ddd.Deferment = 0 AND ddd.isTOP = TRUE
-                        THEN COALESCE (PriceSettingsTOP.Percent, 0)
-                   WHEN ddd.Deferment = 0 AND ddd.isTOP = FALSE
-                        THEN COALESCE (PriceSettings.Percent, 0)
-                   ELSE 0
-              END :: TFloat AS Percent
+            , DD.MovementItemId
+            , DD.PriceListMovementItemId
+            , DD.Price
+            , DD.PartionGoodsDate
+            , DD.GoodsId
+            , DD.GoodsCode
+            , DD.GoodsName
+            , DD.MainGoodsName
+            , DD.JuridicalId
+            , DD.JuridicalName
+            , DD.MakerName
+            , DD.ContractId
+            , DD.ContractName
+            , DD.AreaId
+            , DD.AreaName
+            , DD.isDefault
+            , DD.Deferment
+            , DD.Bonus
+            , DD.Percent         :: TFloat
+            , DD.SuperFinalPrice :: TFloat
 
-            , CASE WHEN ddd.Deferment = 0 AND ddd.isTOP = TRUE
-                        THEN FinalPrice * (100 + COALESCE (PriceSettingsTOP.Percent, 0)) / 100
-                   WHEN ddd.Deferment = 0 AND ddd.isTOP = FALSE
-                        THEN FinalPrice * (100 + COALESCE (PriceSettings.Percent, 0)) / 100
-                   ELSE FinalPrice
-              END :: TFloat AS SuperFinalPrice
-
-            , (ddd.FinalPrice - ddd.FinalPrice * ((ddd.Deferment) * COALESCE (tmpCostCredit.Percent, vbCostCredit) ) / 100) :: TFloat AS SuperFinalPrice_Deferment
-/**/
-       FROM
-             (SELECT DISTINCT MovementItemOrder.Id
-                  , MovementItemLastPriceList_View.Price AS Price
-                  , MovementItemLastPriceList_View.MovementItemId AS PriceListMovementItemId
-                  , MovementItemLastPriceList_View.PartionGoodsDate
-                  , MIN (MovementItemLastPriceList_View.Price) OVER (PARTITION BY MovementItemOrder.Id ORDER BY MovementItemLastPriceList_View.PartionGoodsDate DESC) AS MinPrice
-                  , CASE
-                      -- -- если Цена поставщика не попадает в ценовые промежутки (до какой цены учитывать бонус при расчете миним. цены)
-                      WHEN tmpJuridicalSettingsItem.JuridicalSettingsId IS NULL
-                           THEN MovementItemLastPriceList_View.Price
-                               -- И учитывается % бонуса из Маркетинговый контракт
-                             * (1 - COALESCE (GoodsPromo.ChangePercent, 0) / 100)
-
-                      ELSE -- иначе учитывается бонус - для ТОП-позиции или НЕ ТОП-позиции
-                           (MovementItemLastPriceList_View.Price * (100 - COALESCE(tmpJuridicalSettingsItem.Bonus, 0)) / 100) :: TFloat
-                            -- И учитывается % бонуса из Маркетинговый контракт
-                          * (1 - COALESCE (GoodsPromo.ChangePercent, 0) / 100)
-                    END AS FinalPrice
-                  , CASE WHEN tmpJuridicalSettingsItem.JuridicalSettingsId IS NULL
-                              THEN 0
-                         ELSE COALESCE(tmpJuridicalSettingsItem.Bonus, 0)
-                    END :: TFloat AS Bonus
-
-                  , MovementItemLastPriceList_View.GoodsId
-                  , MovementItemLastPriceList_View.GoodsCode
-                  , MovementItemLastPriceList_View.GoodsName
-                  , MovementItemLastPriceList_View.MakerName
-                  , MainGoods.valuedata                       AS MainGoodsName
-                  , Juridical.ID                              AS JuridicalId
-                  , Juridical.ValueData                       AS JuridicalName
-                  , Contract.Id                               AS ContractId
-                  , Contract.ValueData                        AS ContractName
-                  , COALESCE (ObjectFloat_Deferment.ValueData, 0)::Integer AS Deferment
-                  , COALESCE (GoodsPrice.isTOP, COALESCE (ObjectBoolean_Goods_TOP.ValueData, FALSE)) AS isTOP
-
-                  , tmpJuridicalArea.AreaId
-                  , tmpJuridicalArea.AreaName
-                  , COALESCE (tmpJuridicalArea.isDefault, FALSE)  :: Boolean AS isDefault
-
-               FROM MovementItemOrder
-                    LEFT OUTER JOIN MovementItemLastPriceList_View ON MovementItemLastPriceList_View.GoodsId = MovementItemOrder.GoodsId
-
-                    JOIN tmpJuridicalArea ON tmpJuridicalArea.JuridicalId = MovementItemLastPriceList_View.JuridicalId
-                                         AND tmpJuridicalArea.AreaId      = MovementItemLastPriceList_View.AreaId
-
-                    INNER JOIN tmpLoadPriceList ON tmpLoadPriceList.JuridicalId = MovementItemLastPriceList_View.JuridicalId
-                                               AND tmpLoadPriceList.ContractId  = MovementItemLastPriceList_View.ContractId
-                                               AND (tmpLoadPriceList.AreaId = MovementItemLastPriceList_View.AreaId OR COALESCE (tmpLoadPriceList.AreaId, 0) = 0)
-
-
-                    LEFT JOIN JuridicalSettings ON JuridicalSettings.JuridicalId = MovementItemLastPriceList_View.JuridicalId
-                                               AND JuridicalSettings.ContractId  = MovementItemLastPriceList_View.ContractId
-                    LEFT JOIN tmpJuridicalSettingsItem ON tmpJuridicalSettingsItem.JuridicalSettingsId = JuridicalSettings.JuridicalSettingsId
-                                                      AND MovementItemLastPriceList_View.Price >= tmpJuridicalSettingsItem.PriceLimit_min
-                                                      AND MovementItemLastPriceList_View.Price <= tmpJuridicalSettingsItem.PriceLimit
-
-                    -- товар "поставщика", если он есть в прайсах !!!а он есть!!!
-                             --LEFT JOIN Object AS Object_JuridicalGoods ON Object_JuridicalGoods.Id = MILinkObject_Goods.ObjectId
-                    --LEFT JOIN ObjectString AS ObjectString_GoodsCode ON ObjectString_GoodsCode.ObjectId = MILinkObject_Goods.ObjectId
-                    --                      AND ObjectString_GoodsCode.DescId = zc_ObjectString_Goods_Code()
-                    --LEFT JOIN ObjectString AS ObjectString_Goods_Maker
-                    --                           ON ObjectString_Goods_Maker.ObjectId = MILinkObject_Goods.ObjectId
-                    --                          AND ObjectString_Goods_Maker.DescId = zc_ObjectString_Goods_Maker()
-
-                    JOIN OBJECT AS Juridical ON Juridical.Id = MovementItemLastPriceList_View.JuridicalId
-
-                    LEFT JOIN OBJECT AS Contract ON Contract.Id = MovementItemLastPriceList_View.ContractId
-
-                    LEFT JOIN ObjectFloat AS ObjectFloat_Deferment
-                                          ON ObjectFloat_Deferment.ObjectId = Contract.Id
-                                         AND ObjectFloat_Deferment.DescId = zc_ObjectFloat_Contract_Deferment()
-
-                    LEFT JOIN OBJECT AS MainGoods ON MainGoods.Id = MovementItemOrder.GoodsMainId
-
-                    LEFT JOIN ObjectBoolean AS ObjectBoolean_Goods_TOP
-                                            ON ObjectBoolean_Goods_TOP.ObjectId = MovementItemOrder.ObjectId
-                                           AND ObjectBoolean_Goods_TOP.DescId = zc_ObjectBoolean_Goods_TOP()
-                    LEFT JOIN GoodsPrice ON GoodsPrice.GoodsId = MovementItemOrder.ObjectId
-
-                    --   LEFT JOIN Object_Goods_View AS Goods  -- Элемент документа заявка
-                    --     ON Goods.Id = MovementItemOrder.ObjectId
-
-                    -- % бонуса из Маркетинговый контракт
-                    LEFT JOIN GoodsPromo ON GoodsPromo.GoodsId     = MovementItemOrder.ObjectId
-                                        AND GoodsPromo.JuridicalId = MovementItemLastPriceList_View.JuridicalId
-
-
-               WHERE  COALESCE(JuridicalSettings.isPriceCloseOrder, FALSE) <> TRUE                                        --
-       ) AS ddd
-
-       LEFT JOIN PriceSettings    ON ddd.MinPrice BETWEEN PriceSettings.MinPrice    AND PriceSettings.MaxPrice
-       LEFT JOIN PriceSettingsTOP ON ddd.MinPrice BETWEEN PriceSettingsTOP.MinPrice AND PriceSettingsTOP.MaxPrice
-       LEFT JOIN tmpCostCredit    ON ddd.MinPrice BETWEEN tmpCostCredit.MinPrice  AND tmpCostCredit.PriceLimit
+            -- по этой цене выбирается более выгодный поставщик
+            -- с 09,09,2020 нужно еще учитывать JuridicalPriorities   -- % Приоритета "-" уменьшает приоритет "+" увеличивает, т.е если + нужно уменьшить цену
+            , (DD.SuperFinalPrice_Deferment * ( (-1) * COALESCE (tmpJuridicalPriorities.Priorities,0) / 100 + 1)) :: TFloat AS SuperFinalPrice_Deferment
+       FROM (
+            SELECT ddd.Id AS MovementItemId
+                 , ddd.PriceListMovementItemId
+                 , ddd.Price
+                 , ddd.PartionGoodsDate
+                 , ddd.GoodsId
+                 , ddd.GoodsCode
+                 , ddd.GoodsMainId
+                 , ddd.GoodsName
+                 , ddd.MainGoodsName
+                 , ddd.JuridicalId
+                 , ddd.JuridicalName
+                 , ddd.MakerName
+                 , ddd.ContractId
+                 , ddd.ContractName
+                 , ddd.AreaId
+                 , ddd.AreaName
+                 , ddd.isDefault
+                 , ddd.Deferment
+                 , ddd.Bonus
+     /* 
+                 , CASE WHEN ddd.Deferment = 0
+                             THEN 0
+                        WHEN ddd.isTOP = TRUE
+                             THEN COALESCE (PriceSettingsTOP.Percent, 0)
+                        ELSE PriceSettings.Percent
+                   END :: TFloat AS Percent
+                 , CASE WHEN ddd.Deferment = 0
+                             THEN FinalPrice
+                        WHEN ddd.Deferment = 0 OR ddd.isTOP = TRUE
+                             THEN FinalPrice * (100 - COALESCE (PriceSettingsTOP.Percent, 0)) / 100
+                        ELSE FinalPrice * (100 - PriceSettings.Percent) / 100
+                   END :: TFloat AS SuperFinalPrice
+      */
+                 , CASE WHEN ddd.Deferment = 0 AND ddd.isTOP = TRUE
+                             THEN COALESCE (PriceSettingsTOP.Percent, 0)
+                        WHEN ddd.Deferment = 0 AND ddd.isTOP = FALSE
+                             THEN COALESCE (PriceSettings.Percent, 0)
+                        ELSE 0
+                   END :: TFloat AS Percent
+     
+                 , CASE WHEN ddd.Deferment = 0 AND ddd.isTOP = TRUE
+                             THEN FinalPrice * (100 + COALESCE (PriceSettingsTOP.Percent, 0)) / 100
+                        WHEN ddd.Deferment = 0 AND ddd.isTOP = FALSE
+                             THEN FinalPrice * (100 + COALESCE (PriceSettings.Percent, 0)) / 100
+                        ELSE FinalPrice
+                   END :: TFloat AS SuperFinalPrice
+     
+                 -- по этой цене выбирается более выгодный поставщик
+                 -- с 09,09,2020 нужно еще учитывать JuridicalPriorities
+                 , (ddd.FinalPrice - ddd.FinalPrice * ((ddd.Deferment) * COALESCE (tmpCostCredit.Percent, vbCostCredit) ) / 100) :: TFloat AS SuperFinalPrice_Deferment
+     /**/
+            FROM
+                  (SELECT DISTINCT MovementItemOrder.Id
+                       , MovementItemLastPriceList_View.Price AS Price
+                       , MovementItemLastPriceList_View.MovementItemId AS PriceListMovementItemId
+                       , MovementItemLastPriceList_View.PartionGoodsDate
+                       , MIN (MovementItemLastPriceList_View.Price) OVER (PARTITION BY MovementItemOrder.Id ORDER BY MovementItemLastPriceList_View.PartionGoodsDate DESC) AS MinPrice
+                       , CASE
+                           -- -- если Цена поставщика не попадает в ценовые промежутки (до какой цены учитывать бонус при расчете миним. цены)
+                           WHEN tmpJuridicalSettingsItem.JuridicalSettingsId IS NULL
+                                THEN MovementItemLastPriceList_View.Price
+                                    -- И учитывается % бонуса из Маркетинговый контракт
+                                  * (1 - COALESCE (GoodsPromo.ChangePercent, 0) / 100)
+     
+                           ELSE -- иначе учитывается бонус - для ТОП-позиции или НЕ ТОП-позиции
+                                (MovementItemLastPriceList_View.Price * (100 - COALESCE(tmpJuridicalSettingsItem.Bonus, 0)) / 100) :: TFloat
+                                 -- И учитывается % бонуса из Маркетинговый контракт
+                               * (1 - COALESCE (GoodsPromo.ChangePercent, 0) / 100)
+                         END AS FinalPrice
+                       , CASE WHEN tmpJuridicalSettingsItem.JuridicalSettingsId IS NULL
+                                   THEN 0
+                              ELSE COALESCE(tmpJuridicalSettingsItem.Bonus, 0)
+                         END :: TFloat AS Bonus
+     
+                       , MovementItemLastPriceList_View.GoodsId
+                       , MovementItemLastPriceList_View.GoodsCode
+                       , MovementItemLastPriceList_View.GoodsName
+                       , MovementItemLastPriceList_View.MakerName
+                       , MovementItemOrder.GoodsMainId             AS GoodsMainId
+                       , MainGoods.valuedata                       AS MainGoodsName
+                       , Juridical.ID                              AS JuridicalId
+                       , Juridical.ValueData                       AS JuridicalName
+                       , Contract.Id                               AS ContractId
+                       , Contract.ValueData                        AS ContractName
+                       , COALESCE (ObjectFloat_Deferment.ValueData, 0)::Integer AS Deferment
+                       , COALESCE (GoodsPrice.isTOP, COALESCE (ObjectBoolean_Goods_TOP.ValueData, FALSE)) AS isTOP
+     
+                       , tmpJuridicalArea.AreaId
+                       , tmpJuridicalArea.AreaName
+                       , COALESCE (tmpJuridicalArea.isDefault, FALSE)  :: Boolean AS isDefault
+     
+                    FROM MovementItemOrder
+                         LEFT OUTER JOIN MovementItemLastPriceList_View ON MovementItemLastPriceList_View.GoodsId = MovementItemOrder.GoodsId
+     
+                         JOIN tmpJuridicalArea ON tmpJuridicalArea.JuridicalId = MovementItemLastPriceList_View.JuridicalId
+                                              AND tmpJuridicalArea.AreaId      = MovementItemLastPriceList_View.AreaId
+     
+                         INNER JOIN tmpLoadPriceList ON tmpLoadPriceList.JuridicalId = MovementItemLastPriceList_View.JuridicalId
+                                                    AND tmpLoadPriceList.ContractId  = MovementItemLastPriceList_View.ContractId
+                                                    AND (tmpLoadPriceList.AreaId = MovementItemLastPriceList_View.AreaId OR COALESCE (tmpLoadPriceList.AreaId, 0) = 0)
+     
+     
+                         LEFT JOIN JuridicalSettings ON JuridicalSettings.JuridicalId = MovementItemLastPriceList_View.JuridicalId
+                                                    AND JuridicalSettings.ContractId  = MovementItemLastPriceList_View.ContractId
+                         LEFT JOIN tmpJuridicalSettingsItem ON tmpJuridicalSettingsItem.JuridicalSettingsId = JuridicalSettings.JuridicalSettingsId
+                                                           AND MovementItemLastPriceList_View.Price >= tmpJuridicalSettingsItem.PriceLimit_min
+                                                           AND MovementItemLastPriceList_View.Price <= tmpJuridicalSettingsItem.PriceLimit
+     
+                         -- товар "поставщика", если он есть в прайсах !!!а он есть!!!
+                                  --LEFT JOIN Object AS Object_JuridicalGoods ON Object_JuridicalGoods.Id = MILinkObject_Goods.ObjectId
+                         --LEFT JOIN ObjectString AS ObjectString_GoodsCode ON ObjectString_GoodsCode.ObjectId = MILinkObject_Goods.ObjectId
+                         --                      AND ObjectString_GoodsCode.DescId = zc_ObjectString_Goods_Code()
+                         --LEFT JOIN ObjectString AS ObjectString_Goods_Maker
+                         --                           ON ObjectString_Goods_Maker.ObjectId = MILinkObject_Goods.ObjectId
+                         --                          AND ObjectString_Goods_Maker.DescId = zc_ObjectString_Goods_Maker()
+     
+                         JOIN OBJECT AS Juridical ON Juridical.Id = MovementItemLastPriceList_View.JuridicalId
+     
+                         LEFT JOIN OBJECT AS Contract ON Contract.Id = MovementItemLastPriceList_View.ContractId
+     
+                         LEFT JOIN ObjectFloat AS ObjectFloat_Deferment
+                                               ON ObjectFloat_Deferment.ObjectId = Contract.Id
+                                              AND ObjectFloat_Deferment.DescId = zc_ObjectFloat_Contract_Deferment()
+     
+                         LEFT JOIN OBJECT AS MainGoods ON MainGoods.Id = MovementItemOrder.GoodsMainId
+     
+                         LEFT JOIN ObjectBoolean AS ObjectBoolean_Goods_TOP
+                                                 ON ObjectBoolean_Goods_TOP.ObjectId = MovementItemOrder.ObjectId
+                                                AND ObjectBoolean_Goods_TOP.DescId = zc_ObjectBoolean_Goods_TOP()
+                         LEFT JOIN GoodsPrice ON GoodsPrice.GoodsId = MovementItemOrder.ObjectId
+     
+                         --   LEFT JOIN Object_Goods_View AS Goods  -- Элемент документа заявка
+                         --     ON Goods.Id = MovementItemOrder.ObjectId
+     
+                         -- % бонуса из Маркетинговый контракт
+                         LEFT JOIN GoodsPromo ON GoodsPromo.GoodsId     = MovementItemOrder.ObjectId
+                                             AND GoodsPromo.JuridicalId = MovementItemLastPriceList_View.JuridicalId
+     
+     
+                    WHERE  COALESCE(JuridicalSettings.isPriceCloseOrder, FALSE) <> TRUE                                        --
+            ) AS ddd
+     
+            LEFT JOIN PriceSettings    ON ddd.MinPrice BETWEEN PriceSettings.MinPrice    AND PriceSettings.MaxPrice
+            LEFT JOIN PriceSettingsTOP ON ddd.MinPrice BETWEEN PriceSettingsTOP.MinPrice AND PriceSettingsTOP.MaxPrice
+            LEFT JOIN tmpCostCredit    ON ddd.MinPrice BETWEEN tmpCostCredit.MinPrice  AND tmpCostCredit.PriceLimit
+            ) AS DD
+            
+            LEFT JOIN tmpJuridicalPriorities ON tmpJuridicalPriorities.GoodsMainId = DD.GoodsMainId
+                                            AND tmpJuridicalPriorities.JuridicalId = DD.JuridicalId
+       
   ;
 
 -- lpCreateTempTable_OrderInternal Конец процедуры
@@ -2637,150 +2679,190 @@ BEGIN
       -- данные по % кредитных средств из справочника
       , tmpCostCredit AS (SELECT * FROM gpSelect_Object_RetailCostCredit(inRetailId := vbObjectId, inShowAll := FALSE, inisErased := FALSE, inSession := inSession) AS tmp)
 
+      -- спр. Приоритеты при выборе поставщика
+      , tmpJuridicalPriorities AS (SELECT tmp.JuridicalId 
+                                        , tmp.GoodsId AS GoodsMainId  --главный товар
+                                        , tmp.Priorities
+                                   FROM gpSelect_Object_JuridicalPriorities (inSession) AS tmp
+                                   WHERE tmp.isErased = FALSE
+                                     AND COALESCE (tmp.Priorities,0) <> 0
+                                   )
 
        -- Результат
        SELECT row_number() OVER ()
-            , ddd.Id AS MovementItemId
-            , ddd.PriceListMovementItemId
-            , ddd.Price
-            , ddd.PartionGoodsDate
-            , ddd.GoodsId
-            , ddd.GoodsCode
-            , ddd.GoodsName
-            , ddd.MainGoodsName
-            , ddd.JuridicalId
-            , ddd.JuridicalName
-            , ddd.MakerName
-            , ddd.ContractId
-            , ddd.ContractName
-            , ddd.AreaId
-            , ddd.AreaName
-            , ddd.isDefault
-            , ddd.Deferment
-            , ddd.Bonus
-/* * /
-            , CASE WHEN ddd.Deferment = 0
-                        THEN 0
-                   WHEN ddd.isTOP = TRUE
-                        THEN COALESCE (PriceSettingsTOP.Percent, 0)
-                   ELSE PriceSettings.Percent
-              END :: TFloat AS Percent
-            , CASE WHEN ddd.Deferment = 0
-                        THEN FinalPrice
-                   WHEN ddd.Deferment = 0 OR ddd.isTOP = TRUE
-                        THEN FinalPrice * (100 - COALESCE (PriceSettingsTOP.Percent, 0)) / 100
-                   ELSE FinalPrice * (100 - PriceSettings.Percent) / 100
-              END :: TFloat AS SuperFinalPrice
-/ */
-            , CASE WHEN ddd.Deferment = 0 AND ddd.isTOP = TRUE
-                        THEN COALESCE (PriceSettingsTOP.Percent, 0)
-                   WHEN ddd.Deferment = 0 AND ddd.isTOP = FALSE
-                        THEN COALESCE (PriceSettings.Percent, 0)
-                   ELSE 0
-              END :: TFloat AS Percent
+            , DD.MovementItemId
+            , DD.PriceListMovementItemId
+            , DD.Price
+            , DD.PartionGoodsDate
+            , DD.GoodsId
+            , DD.GoodsCode
+            , DD.GoodsName
+            , DD.MainGoodsName
+            , DD.JuridicalId
+            , DD.JuridicalName
+            , DD.MakerName
+            , DD.ContractId
+            , DD.ContractName
+            , DD.AreaId
+            , DD.AreaName
+            , DD.isDefault
+            , DD.Deferment
+            , DD.Bonus
+            , DD.Percent         :: TFloat
+            , DD.SuperFinalPrice :: TFloat
 
-            , CASE WHEN ddd.Deferment = 0 AND ddd.isTOP = TRUE
-                        THEN FinalPrice * (100 + COALESCE (PriceSettingsTOP.Percent, 0)) / 100
-                   WHEN ddd.Deferment = 0 AND ddd.isTOP = FALSE
-                        THEN FinalPrice * (100 + COALESCE (PriceSettings.Percent, 0)) / 100
-                   ELSE FinalPrice
-              END :: TFloat AS SuperFinalPrice
+            -- по этой цене выбирается более выгодный поставщик
+            -- с 09,09,2020 нужно еще учитывать JuridicalPriorities   -- % Приоритета "-" уменьшает приоритет "+" увеличивает, т.е если + нужно уменьшить цену
+            , (DD.SuperFinalPrice_Deferment * ( (-1) * COALESCE (tmpJuridicalPriorities.Priorities,0) / 100 + 1)) :: TFloat AS SuperFinalPrice_Deferment
 
-            , (ddd.FinalPrice - ddd.FinalPrice * ((ddd.Deferment) * COALESCE (tmpCostCredit.Percent, vbCostCredit) ) / 100) :: TFloat AS SuperFinalPrice_Deferment
-/**/
-       FROM
-             (SELECT DISTINCT MovementItemOrder.Id
-                  , MovementItemLastPriceList_View.Price AS Price
-                  , MovementItemLastPriceList_View.MovementItemId AS PriceListMovementItemId
-                  , MovementItemLastPriceList_View.PartionGoodsDate
-                  , MIN (MovementItemLastPriceList_View.Price) OVER (PARTITION BY MovementItemOrder.Id ORDER BY MovementItemLastPriceList_View.PartionGoodsDate DESC) AS MinPrice
-                  , CASE
-                      -- -- если Цена поставщика не попадает в ценовые промежутки (до какой цены учитывать бонус при расчете миним. цены)
-                      WHEN tmpJuridicalSettingsItem.JuridicalSettingsId IS NULL
-                           THEN MovementItemLastPriceList_View.Price
-                               -- И учитывается % бонуса из Маркетинговый контракт
-                             * (1 - COALESCE (GoodsPromo.ChangePercent, 0) / 100)
-
-                      ELSE -- иначе учитывается бонус - для ТОП-позиции или НЕ ТОП-позиции
-                           (MovementItemLastPriceList_View.Price * (100 - COALESCE(tmpJuridicalSettingsItem.Bonus, 0)) / 100) :: TFloat
-                            -- И учитывается % бонуса из Маркетинговый контракт
-                          * (1 - COALESCE (GoodsPromo.ChangePercent, 0) / 100)
-                    END AS FinalPrice
-                  , CASE WHEN tmpJuridicalSettingsItem.JuridicalSettingsId IS NULL
+       FROM (
+             SELECT ddd.Id AS MovementItemId
+                  , ddd.PriceListMovementItemId
+                  , ddd.Price
+                  , ddd.PartionGoodsDate
+                  , ddd.GoodsId
+                  , ddd.GoodsCode
+                  , ddd.GoodsName
+                  , ddd.GoodsMainId
+                  , ddd.MainGoodsName
+                  , ddd.JuridicalId
+                  , ddd.JuridicalName
+                  , ddd.MakerName
+                  , ddd.ContractId
+                  , ddd.ContractName
+                  , ddd.AreaId
+                  , ddd.AreaName
+                  , ddd.isDefault
+                  , ddd.Deferment
+                  , ddd.Bonus
+      /* * /
+                  , CASE WHEN ddd.Deferment = 0
                               THEN 0
-                         ELSE COALESCE(tmpJuridicalSettingsItem.Bonus, 0)
-                    END :: TFloat AS Bonus
-
-                  , MovementItemLastPriceList_View.GoodsId
-                  , MovementItemLastPriceList_View.GoodsCode
-                  , MovementItemLastPriceList_View.GoodsName
-                  , MovementItemLastPriceList_View.MakerName
-                  , MainGoods.valuedata                       AS MainGoodsName
-                  , Juridical.ID                              AS JuridicalId
-                  , Juridical.ValueData                       AS JuridicalName
-                  , Contract.Id                               AS ContractId
-                  , Contract.ValueData                        AS ContractName
-                  , COALESCE (ObjectFloat_Deferment.ValueData, 0)::Integer AS Deferment
-                  , COALESCE (GoodsPrice.isTOP, COALESCE (ObjectBoolean_Goods_TOP.ValueData, FALSE)) AS isTOP
-
-                  , tmpJuridicalArea.AreaId
-                  , tmpJuridicalArea.AreaName
-                  , COALESCE (tmpJuridicalArea.isDefault, FALSE)  :: Boolean AS isDefault
-
-               FROM MovementItemOrder
-                    LEFT OUTER JOIN MovementItemLastPriceList_View ON MovementItemLastPriceList_View.GoodsId = MovementItemOrder.GoodsId
-
-                    JOIN tmpJuridicalArea ON tmpJuridicalArea.JuridicalId = MovementItemLastPriceList_View.JuridicalId
-                                         AND tmpJuridicalArea.AreaId      = MovementItemLastPriceList_View.AreaId
-
-                    INNER JOIN tmpLoadPriceList ON tmpLoadPriceList.JuridicalId = MovementItemLastPriceList_View.JuridicalId
-                                               AND tmpLoadPriceList.ContractId  = MovementItemLastPriceList_View.ContractId
-                                               AND (tmpLoadPriceList.AreaId = MovementItemLastPriceList_View.AreaId OR COALESCE (tmpLoadPriceList.AreaId, 0) = 0)
-
-
-                    LEFT JOIN JuridicalSettings ON JuridicalSettings.JuridicalId = MovementItemLastPriceList_View.JuridicalId
-                                               AND JuridicalSettings.ContractId  = MovementItemLastPriceList_View.ContractId
-                    LEFT JOIN tmpJuridicalSettingsItem ON tmpJuridicalSettingsItem.JuridicalSettingsId = JuridicalSettings.JuridicalSettingsId
-                                                      AND MovementItemLastPriceList_View.Price >= tmpJuridicalSettingsItem.PriceLimit_min
-                                                      AND MovementItemLastPriceList_View.Price <= tmpJuridicalSettingsItem.PriceLimit
-
-                    -- товар "поставщика", если он есть в прайсах !!!а он есть!!!
-                             --LEFT JOIN Object AS Object_JuridicalGoods ON Object_JuridicalGoods.Id = MILinkObject_Goods.ObjectId
-                    --LEFT JOIN ObjectString AS ObjectString_GoodsCode ON ObjectString_GoodsCode.ObjectId = MILinkObject_Goods.ObjectId
-                    --                      AND ObjectString_GoodsCode.DescId = zc_ObjectString_Goods_Code()
-                    --LEFT JOIN ObjectString AS ObjectString_Goods_Maker
-                    --                           ON ObjectString_Goods_Maker.ObjectId = MILinkObject_Goods.ObjectId
-                    --                          AND ObjectString_Goods_Maker.DescId = zc_ObjectString_Goods_Maker()
-
-                    JOIN OBJECT AS Juridical ON Juridical.Id = MovementItemLastPriceList_View.JuridicalId
-
-                    LEFT JOIN OBJECT AS Contract ON Contract.Id = MovementItemLastPriceList_View.ContractId
-
-                    LEFT JOIN ObjectFloat AS ObjectFloat_Deferment
-                                          ON ObjectFloat_Deferment.ObjectId = Contract.Id
-                                         AND ObjectFloat_Deferment.DescId = zc_ObjectFloat_Contract_Deferment()
-
-                    LEFT JOIN OBJECT AS MainGoods ON MainGoods.Id = MovementItemOrder.GoodsMainId
-
-                    LEFT JOIN ObjectBoolean AS ObjectBoolean_Goods_TOP
-                                            ON ObjectBoolean_Goods_TOP.ObjectId = MovementItemOrder.ObjectId
-                                           AND ObjectBoolean_Goods_TOP.DescId = zc_ObjectBoolean_Goods_TOP()
-                    LEFT JOIN GoodsPrice ON GoodsPrice.GoodsId = MovementItemOrder.ObjectId
-
-                    --   LEFT JOIN Object_Goods_View AS Goods  -- Элемент документа заявка
-                    --     ON Goods.Id = MovementItemOrder.ObjectId
-
-                    -- % бонуса из Маркетинговый контракт
-                    LEFT JOIN GoodsPromo ON GoodsPromo.GoodsId     = MovementItemOrder.ObjectId
-                                        AND GoodsPromo.JuridicalId = MovementItemLastPriceList_View.JuridicalId
-
-
-               WHERE  COALESCE(JuridicalSettings.isPriceCloseOrder, FALSE) <> TRUE                                        --
-       ) AS ddd
-
-       LEFT JOIN PriceSettings    ON ddd.MinPrice BETWEEN PriceSettings.MinPrice    AND PriceSettings.MaxPrice
-       LEFT JOIN PriceSettingsTOP ON ddd.MinPrice BETWEEN PriceSettingsTOP.MinPrice AND PriceSettingsTOP.MaxPrice
-       LEFT JOIN tmpCostCredit    ON ddd.MinPrice BETWEEN tmpCostCredit.MinPrice  AND tmpCostCredit.PriceLimit
+                         WHEN ddd.isTOP = TRUE
+                              THEN COALESCE (PriceSettingsTOP.Percent, 0)
+                         ELSE PriceSettings.Percent
+                    END :: TFloat AS Percent
+                  , CASE WHEN ddd.Deferment = 0
+                              THEN FinalPrice
+                         WHEN ddd.Deferment = 0 OR ddd.isTOP = TRUE
+                              THEN FinalPrice * (100 - COALESCE (PriceSettingsTOP.Percent, 0)) / 100
+                         ELSE FinalPrice * (100 - PriceSettings.Percent) / 100
+                    END :: TFloat AS SuperFinalPrice
+      / */
+                  , CASE WHEN ddd.Deferment = 0 AND ddd.isTOP = TRUE
+                              THEN COALESCE (PriceSettingsTOP.Percent, 0)
+                         WHEN ddd.Deferment = 0 AND ddd.isTOP = FALSE
+                              THEN COALESCE (PriceSettings.Percent, 0)
+                         ELSE 0
+                    END :: TFloat AS Percent
+      
+                  , CASE WHEN ddd.Deferment = 0 AND ddd.isTOP = TRUE
+                              THEN FinalPrice * (100 + COALESCE (PriceSettingsTOP.Percent, 0)) / 100
+                         WHEN ddd.Deferment = 0 AND ddd.isTOP = FALSE
+                              THEN FinalPrice * (100 + COALESCE (PriceSettings.Percent, 0)) / 100
+                         ELSE FinalPrice
+                    END :: TFloat AS SuperFinalPrice
+      
+                  , (ddd.FinalPrice - ddd.FinalPrice * ((ddd.Deferment) * COALESCE (tmpCostCredit.Percent, vbCostCredit) ) / 100) :: TFloat AS SuperFinalPrice_Deferment
+      /**/
+             FROM
+                   (SELECT DISTINCT MovementItemOrder.Id
+                        , MovementItemLastPriceList_View.Price AS Price
+                        , MovementItemLastPriceList_View.MovementItemId AS PriceListMovementItemId
+                        , MovementItemLastPriceList_View.PartionGoodsDate
+                        , MIN (MovementItemLastPriceList_View.Price) OVER (PARTITION BY MovementItemOrder.Id ORDER BY MovementItemLastPriceList_View.PartionGoodsDate DESC) AS MinPrice
+                        , CASE
+                            -- -- если Цена поставщика не попадает в ценовые промежутки (до какой цены учитывать бонус при расчете миним. цены)
+                            WHEN tmpJuridicalSettingsItem.JuridicalSettingsId IS NULL
+                                 THEN MovementItemLastPriceList_View.Price
+                                     -- И учитывается % бонуса из Маркетинговый контракт
+                                   * (1 - COALESCE (GoodsPromo.ChangePercent, 0) / 100)
+      
+                            ELSE -- иначе учитывается бонус - для ТОП-позиции или НЕ ТОП-позиции
+                                 (MovementItemLastPriceList_View.Price * (100 - COALESCE(tmpJuridicalSettingsItem.Bonus, 0)) / 100) :: TFloat
+                                  -- И учитывается % бонуса из Маркетинговый контракт
+                                * (1 - COALESCE (GoodsPromo.ChangePercent, 0) / 100)
+                          END AS FinalPrice
+                        , CASE WHEN tmpJuridicalSettingsItem.JuridicalSettingsId IS NULL
+                                    THEN 0
+                               ELSE COALESCE(tmpJuridicalSettingsItem.Bonus, 0)
+                          END :: TFloat AS Bonus
+      
+                        , MovementItemLastPriceList_View.GoodsId
+                        , MovementItemLastPriceList_View.GoodsCode
+                        , MovementItemLastPriceList_View.GoodsName
+                        , MovementItemLastPriceList_View.MakerName
+                        , MovementItemOrder.GoodsMainId             AS GoodsMainId
+                        , MainGoods.valuedata                       AS MainGoodsName
+                        , Juridical.ID                              AS JuridicalId
+                        , Juridical.ValueData                       AS JuridicalName
+                        , Contract.Id                               AS ContractId
+                        , Contract.ValueData                        AS ContractName
+                        , COALESCE (ObjectFloat_Deferment.ValueData, 0)::Integer AS Deferment
+                        , COALESCE (GoodsPrice.isTOP, COALESCE (ObjectBoolean_Goods_TOP.ValueData, FALSE)) AS isTOP
+      
+                        , tmpJuridicalArea.AreaId
+                        , tmpJuridicalArea.AreaName
+                        , COALESCE (tmpJuridicalArea.isDefault, FALSE)  :: Boolean AS isDefault
+      
+                     FROM MovementItemOrder
+                          LEFT OUTER JOIN MovementItemLastPriceList_View ON MovementItemLastPriceList_View.GoodsId = MovementItemOrder.GoodsId
+      
+                          JOIN tmpJuridicalArea ON tmpJuridicalArea.JuridicalId = MovementItemLastPriceList_View.JuridicalId
+                                               AND tmpJuridicalArea.AreaId      = MovementItemLastPriceList_View.AreaId
+      
+                          INNER JOIN tmpLoadPriceList ON tmpLoadPriceList.JuridicalId = MovementItemLastPriceList_View.JuridicalId
+                                                     AND tmpLoadPriceList.ContractId  = MovementItemLastPriceList_View.ContractId
+                                                     AND (tmpLoadPriceList.AreaId = MovementItemLastPriceList_View.AreaId OR COALESCE (tmpLoadPriceList.AreaId, 0) = 0)
+      
+      
+                          LEFT JOIN JuridicalSettings ON JuridicalSettings.JuridicalId = MovementItemLastPriceList_View.JuridicalId
+                                                     AND JuridicalSettings.ContractId  = MovementItemLastPriceList_View.ContractId
+                          LEFT JOIN tmpJuridicalSettingsItem ON tmpJuridicalSettingsItem.JuridicalSettingsId = JuridicalSettings.JuridicalSettingsId
+                                                            AND MovementItemLastPriceList_View.Price >= tmpJuridicalSettingsItem.PriceLimit_min
+                                                            AND MovementItemLastPriceList_View.Price <= tmpJuridicalSettingsItem.PriceLimit
+      
+                          -- товар "поставщика", если он есть в прайсах !!!а он есть!!!
+                                   --LEFT JOIN Object AS Object_JuridicalGoods ON Object_JuridicalGoods.Id = MILinkObject_Goods.ObjectId
+                          --LEFT JOIN ObjectString AS ObjectString_GoodsCode ON ObjectString_GoodsCode.ObjectId = MILinkObject_Goods.ObjectId
+                          --                      AND ObjectString_GoodsCode.DescId = zc_ObjectString_Goods_Code()
+                          --LEFT JOIN ObjectString AS ObjectString_Goods_Maker
+                          --                           ON ObjectString_Goods_Maker.ObjectId = MILinkObject_Goods.ObjectId
+                          --                          AND ObjectString_Goods_Maker.DescId = zc_ObjectString_Goods_Maker()
+      
+                          JOIN OBJECT AS Juridical ON Juridical.Id = MovementItemLastPriceList_View.JuridicalId
+      
+                          LEFT JOIN OBJECT AS Contract ON Contract.Id = MovementItemLastPriceList_View.ContractId
+      
+                          LEFT JOIN ObjectFloat AS ObjectFloat_Deferment
+                                                ON ObjectFloat_Deferment.ObjectId = Contract.Id
+                                               AND ObjectFloat_Deferment.DescId = zc_ObjectFloat_Contract_Deferment()
+      
+                          LEFT JOIN OBJECT AS MainGoods ON MainGoods.Id = MovementItemOrder.GoodsMainId
+      
+                          LEFT JOIN ObjectBoolean AS ObjectBoolean_Goods_TOP
+                                                  ON ObjectBoolean_Goods_TOP.ObjectId = MovementItemOrder.ObjectId
+                                                 AND ObjectBoolean_Goods_TOP.DescId = zc_ObjectBoolean_Goods_TOP()
+                          LEFT JOIN GoodsPrice ON GoodsPrice.GoodsId = MovementItemOrder.ObjectId
+      
+                          --   LEFT JOIN Object_Goods_View AS Goods  -- Элемент документа заявка
+                          --     ON Goods.Id = MovementItemOrder.ObjectId
+      
+                          -- % бонуса из Маркетинговый контракт
+                          LEFT JOIN GoodsPromo ON GoodsPromo.GoodsId     = MovementItemOrder.ObjectId
+                                              AND GoodsPromo.JuridicalId = MovementItemLastPriceList_View.JuridicalId
+      
+      
+                     WHERE  COALESCE(JuridicalSettings.isPriceCloseOrder, FALSE) <> TRUE                                        --
+             ) AS ddd
+      
+             LEFT JOIN PriceSettings    ON ddd.MinPrice BETWEEN PriceSettings.MinPrice    AND PriceSettings.MaxPrice
+             LEFT JOIN PriceSettingsTOP ON ddd.MinPrice BETWEEN PriceSettingsTOP.MinPrice AND PriceSettingsTOP.MaxPrice
+             LEFT JOIN tmpCostCredit    ON ddd.MinPrice BETWEEN tmpCostCredit.MinPrice  AND tmpCostCredit.PriceLimit
+            ) AS DD
+            
+            LEFT JOIN tmpJuridicalPriorities ON tmpJuridicalPriorities.GoodsMainId = DD.GoodsMainId
+                                            AND tmpJuridicalPriorities.JuridicalId = DD.JuridicalId
   ;
 
 -- lpCreateTempTable_OrderInternal Конец процедуры
@@ -3144,7 +3226,6 @@ BEGIN
                                     WHERE MIBoolean_Calculated.DescId = zc_MIBoolean_Calculated()
                                       AND MIBoolean_Calculated.MovementItemId IN (SELECT DISTINCT tmpMI_Master.Id FROM tmpMI_Master)
                                    )
-
 
       , tmpMinPrice AS (SELECT DISTINCT DDD.MovementItemId
                              , DDD.GoodsId

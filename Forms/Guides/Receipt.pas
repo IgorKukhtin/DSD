@@ -185,6 +185,12 @@ type
     GuidesGoods: TdsdGuides;
     GuidesGoodsKind: TdsdGuides;
     bbExecuteDialog: TdxBarButton;
+    spUpdateDisabled_yes: TdsdStoredProc;
+    spUpdateDisabled_no: TdsdStoredProc;
+    actUpdateDisabled_yes: TdsdExecStoredProc;
+    actUpdateDisabled_no: TdsdExecStoredProc;
+    bbUpdateDisabled_yes: TdxBarButton;
+    bbUpdateDisabled_no: TdxBarButton;
   private
     { Private declarations }
   public

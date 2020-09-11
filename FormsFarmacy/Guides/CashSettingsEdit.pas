@@ -38,6 +38,7 @@ type
     edSummaUrgentlySendVIP: TcxCurrencyEdit;
     cxLabel4: TcxLabel;
     cbBlockVIP: TcxCheckBox;
+    cbPairedOnlyPromo: TcxCheckBox;
   private
     { Private declarations }
   public

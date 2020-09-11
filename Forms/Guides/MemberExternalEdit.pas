@@ -41,6 +41,8 @@ type
     cxPropertiesStore: TcxPropertiesStore;
     edDriverCertificate: TcxTextEdit;
     cxLabel9: TcxLabel;
+    cxLabel2: TcxLabel;
+    edINN: TcxTextEdit;
   private
     { Private declarations }
   public

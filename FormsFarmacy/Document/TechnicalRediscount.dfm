@@ -326,7 +326,7 @@ inherited TechnicalRediscountForm: TTechnicalRediscountForm
     end
     inherited edOperDate: TcxDateEdit
       Left = 108
-      EditValue = nil
+      EditValue = 44081d
       Properties.AssignedValues.DisplayFormat = True
       ExplicitLeft = 108
     end
@@ -518,6 +518,44 @@ inherited TechnicalRediscountForm: TTechnicalRediscountForm
         end>
       isShowModal = True
     end
+    object actOpenSend: TdsdInsertUpdateAction
+      Category = 'DSDLib'
+      MoveParams = <>
+      Caption = #1054#1090#1082#1088#1099#1090#1100' '#1087#1077#1088#1077#1084#1077#1097#1077#1085#1080#1077
+      Hint = #1054#1090#1082#1088#1099#1090#1100' '#1087#1077#1088#1077#1084#1077#1097#1077#1085#1080#1077
+      ImageIndex = 1
+      FormName = 'TSendForm'
+      FormNameParam.Value = ''
+      FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
+      GuiParams = <
+        item
+          Name = 'Id'
+          Value = Null
+          Component = MasterCDS
+          ComponentItem = 'IDSend'
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'ShowAll'
+          Value = False
+          DataType = ftBoolean
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'inOperDate'
+          Value = 42005d
+          Component = edOperDate
+          DataType = ftDateTime
+          MultiSelectSeparator = ','
+        end>
+      isShowModal = False
+      CheckIDRecords = True
+      ActionType = acUpdate
+      DataSource = MasterDS
+      IdFieldName = 'IDSend'
+    end
   end
   inherited spSelect: TdsdStoredProc
     StoredProcName = 'gpSelect_MovementItem_TechnicalRediscount'
@@ -577,6 +615,10 @@ inherited TechnicalRediscountForm: TTechnicalRediscountForm
         end
         item
           Visible = True
+          ItemName = 'dxBarButton3'
+        end
+        item
+          Visible = True
           ItemName = 'dxBarStatic'
         end
         item
@@ -617,8 +659,16 @@ inherited TechnicalRediscountForm: TTechnicalRediscountForm
       Action = actAddMask
       Category = 0
     end
+    object dxBarButton3: TdxBarButton
+      Action = actOpenSend
+      Category = 0
+    end
   end
   inherited DBViewAddOn: TdsdDBViewAddOn
+    OnDblClickActionList = <
+      item
+        Action = actOpenSend
+      end>
     ColorRuleList = <
       item
         BackGroundValueColumn = Color_calc

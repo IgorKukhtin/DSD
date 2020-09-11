@@ -113,7 +113,10 @@ BEGIN
          Object_Goods.GoodsCode              AS Code,
          Object_Goods.GoodsName              AS Name,
          LoadPriceListItem.Price             AS Price,
-         (LoadPriceListItem.Price * (100 + Object_Goods.NDS)/100)::TFloat AS PriceWithNDS,
+         (LoadPriceListItem.Price * (100 + COALESCE(CASE WHEN LoadPriceListItem.GoodsNDS LIKE '%2%' THEN 20 
+                                                         WHEN LoadPriceListItem.GoodsNDS LIKE '%7%' THEN 7 
+                                                         WHEN LoadPriceListItem.GoodsNDS IN ('0', 'Áåç ÍÄÑ') THEN 0 END, 
+                                                         Object_Goods.NDS))/100)::TFloat AS PriceWithNDS,
          LoadPriceListItem.ProducerName,
          Object_Juridical.ValueData          AS JuridicalName,
          Object_Contract.ValueData           AS ContractName,
@@ -127,7 +130,10 @@ BEGIN
               ELSE COALESCE (MarginCondition.MarginPercent, 0) + COALESCE (ObjectFloat_Juridical_Percent.valuedata, 0)
          END                       :: TFloat AS MarginPercent
          --(MarginCondition.MarginPercent + COALESCE(ObjectFloat_Juridical_Percent.valuedata, 0))::TFloat,
-       , zfCalc_SalePrice((LoadPriceListItem.Price * (100 + Object_Goods.NDS)/100),                         -- Öåíà Ñ ÍÄÑ
+       , zfCalc_SalePrice((LoadPriceListItem.Price * (100 +  COALESCE(CASE WHEN LoadPriceListItem.GoodsNDS LIKE '%2%' THEN 20 
+                                                                           WHEN LoadPriceListItem.GoodsNDS LIKE '%7%' THEN 7 
+                                                                           WHEN LoadPriceListItem.GoodsNDS IN ('0', 'Áåç ÍÄÑ') THEN 0 END, 
+                                                                           Object_Goods.NDS))/100),                         -- Öåíà Ñ ÍÄÑ
                            CASE WHEN COALESCE (ObjectFloat_Contract_Percent.ValueData, 0) <> 0
                                     THEN MarginCondition.MarginPercent + COALESCE (ObjectFloat_Contract_Percent.valuedata, 0)
                                 ELSE MarginCondition.MarginPercent + COALESCE (ObjectFloat_Juridical_Percent.valuedata, 0)
@@ -161,7 +167,10 @@ BEGIN
 
             LEFT JOIN Object_Goods_Main_View AS Object_Goods ON Object_Goods.Id = LoadPriceListItem.GoodsId
             LEFT JOIN MarginCondition ON MarginCondition.MarginCategoryId = Object_MarginCategoryLink.MarginCategoryId
-                                     AND (LoadPriceListItem.Price * (100 + Object_Goods.NDS)/100)::TFloat
+                                     AND (LoadPriceListItem.Price * (100 +  COALESCE(CASE WHEN LoadPriceListItem.GoodsNDS LIKE '%2%' THEN 20 
+                                                                                          WHEN LoadPriceListItem.GoodsNDS LIKE '%7%' THEN 7 
+                                                                                          WHEN LoadPriceListItem.GoodsNDS IN ('0', 'Áåç ÍÄÑ') THEN 0 END, 
+                                                                                          Object_Goods.NDS))/100)::TFloat
                                      BETWEEN MarginCondition.MinPrice AND MarginCondition.MaxPrice
 
             LEFT JOIN Object AS Object_Juridical ON Object_Juridical.Id = LoadPriceList.JuridicalId
@@ -215,3 +224,5 @@ $BODY$
 
 -- òåñò
 -- select * from gpSelect_GoodsSearch(inAreaId := 5803492, inGoodsSearch := '111' , inProducerSearch := '' , inCodeSearch := '' ,  inSession := '3990942 ');
+
+select * from gpSelect_GoodsSearch(inAreaId := 0 , inGoodsSearch := '' , inProducerSearch := '' , inCodeSearch := '26815' ,  inSession := '3');

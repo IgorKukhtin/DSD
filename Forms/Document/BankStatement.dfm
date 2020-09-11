@@ -5,7 +5,7 @@ inherited BankStatementForm: TBankStatementForm
   AddOnFormData.isSingle = False
   AddOnFormData.Params = FormParams
   ExplicitWidth = 1100
-  ExplicitHeight = 451
+  ExplicitHeight = 454
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
@@ -291,8 +291,14 @@ inherited BankStatementForm: TBankStatementForm
               item
                 Action = actInvoiceJournalDetailChoiceForm
                 Default = True
+                Hint = #1042#1099#1073#1088#1072#1090#1100' '#8470' '#1076#1086#1082'. '#1057#1095#1077#1090
                 Kind = bkEllipsis
+              end
+              item
+                Action = actClear_Invoice
+                Kind = bkGlyph
               end>
+            Properties.Images = dmMain.ImageList
             Properties.ReadOnly = True
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
@@ -826,6 +832,37 @@ inherited BankStatementForm: TBankStatementForm
           MultiSelectSeparator = ','
         end>
       isShowModal = False
+    end
+    object actClear_Invoice: TdsdSetDefaultParams
+      Category = 'DSDLib'
+      MoveParams = <>
+      Caption = #1054#1095#1080#1089#1090#1080#1090#1100' '#8470' '#1076#1086#1082'.'#1057#1095#1077#1090
+      Hint = #1054#1095#1080#1089#1090#1080#1090#1100' '#8470' '#1076#1086#1082'. '#1057#1095#1077#1090
+      ImageIndex = 52
+      DefaultParams = <
+        item
+          Param.Value = Null
+          Param.Component = MasterCDS
+          Param.ComponentItem = 'MovementId_Invoice'
+          Param.MultiSelectSeparator = ','
+          Value = Null
+        end
+        item
+          Param.Value = Null
+          Param.Component = MasterCDS
+          Param.ComponentItem = 'InvNumber_Invoice'
+          Param.DataType = ftString
+          Param.MultiSelectSeparator = ','
+          Value = Null
+        end
+        item
+          Param.Value = Null
+          Param.Component = MasterCDS
+          Param.ComponentItem = 'Comment_Invoice'
+          Param.DataType = ftString
+          Param.MultiSelectSeparator = ','
+          Value = Null
+        end>
     end
   end
   inherited MasterDS: TDataSource

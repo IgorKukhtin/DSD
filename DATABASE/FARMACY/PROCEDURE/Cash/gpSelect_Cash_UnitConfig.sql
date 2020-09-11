@@ -23,7 +23,7 @@ RETURNS TABLE (id Integer, Code Integer, Name TVarChar,
                SPKindId Integer, SPKindName TVarChar, SPTax TFloat, 
                PartnerMedicalID Integer, PartnerMedicalName TVarChar,
                isPromoCodeDoctor boolean, isTechnicalRediscount Boolean, 
-               isGetHardwareData boolean,
+               isGetHardwareData boolean, isPairedOnlyPromo Boolean, 
                DiscountExternalId integer, DiscountExternalCode integer, DiscountExternalName TVarChar,
                GoodsDiscountId integer, GoodsDiscountCode integer, GoodsDiscountName TVarChar
 
@@ -174,6 +174,7 @@ BEGIN
                                   , ObjectString_CashSettings_ShareFromPriceName.ValueData  AS ShareFromPriceName
                                   , ObjectString_CashSettings_ShareFromPriceCode.ValueData  AS ShareFromPriceCode
                                   , COALESCE(ObjectBoolean_CashSettings_GetHardwareData.ValueData, FALSE)    AS isGetHardwareData
+                                  , COALESCE(ObjectBoolean_CashSettings_PairedOnlyPromo.ValueData, FALSE)    AS isPairedOnlyPromo
                              FROM Object AS Object_CashSettings
                                   LEFT JOIN ObjectString AS ObjectString_CashSettings_ShareFromPriceName
                                                          ON ObjectString_CashSettings_ShareFromPriceName.ObjectId = Object_CashSettings.Id
@@ -184,6 +185,9 @@ BEGIN
                                   LEFT JOIN ObjectBoolean AS ObjectBoolean_CashSettings_GetHardwareData
                                                           ON ObjectBoolean_CashSettings_GetHardwareData.ObjectId = Object_CashSettings.Id 
                                                          AND ObjectBoolean_CashSettings_GetHardwareData.DescId = zc_ObjectBoolean_CashSettings_GetHardwareData()
+                                  LEFT JOIN ObjectBoolean AS ObjectBoolean_CashSettings_PairedOnlyPromo
+                                                          ON ObjectBoolean_CashSettings_PairedOnlyPromo.ObjectId = Object_CashSettings.Id 
+                                                         AND ObjectBoolean_CashSettings_PairedOnlyPromo.DescId = zc_ObjectBoolean_CashSettings_PairedOnlyPromo()
                              WHERE Object_CashSettings.DescId = zc_Object_CashSettings()
                              LIMIT 1)
        , tmpPromoCodeDoctor AS (SELECT PromoUnit.ID
@@ -254,6 +258,7 @@ BEGIN
        , COALESCE (ObjectBoolean_TechnicalRediscount.ValueData, FALSE):: Boolean   AS isTechnicalRediscount
        , COALESCE(ObjectBoolean_GetHardwareData.ValueData, False) OR
          COALESCE(tmpCashSettings.isGetHardwareData, False)                        AS isGetHardwareData
+       , tmpCashSettings.isPairedOnlyPromo                                         AS isPairedOnlyPromo
        , Object_DiscountExternal.Id                                                AS DiscountExternalId
        , Object_DiscountExternal.ObjectCode                                        AS DiscountExternalCode
        , Object_DiscountExternal.ValueData                                         AS DiscountExternalName

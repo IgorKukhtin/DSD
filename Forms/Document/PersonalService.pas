@@ -24,7 +24,7 @@ uses
   dxSkinPumpkin, dxSkinSeven, dxSkinSevenClassic, dxSkinSharp, dxSkinSharpPlus,
   dxSkinSilver, dxSkinSpringTime, dxSkinStardust, dxSkinSummer2008,
   dxSkinTheAsphaltWorld, dxSkinValentine, dxSkinVS2010, dxSkinWhiteprint,
-  dxSkinXmas2008Blue;
+  dxSkinXmas2008Blue, dsdInternetAction;
 
 type
   TPersonalServiceForm = class(TAncestorDocumentForm)
@@ -185,6 +185,20 @@ type
     bbUpdate_Compensation: TdxBarButton;
     DayCompensation: TcxGridDBColumn;
     PriceCompensation: TcxGridDBColumn;
+    ExportXmlGrid: TcxGrid;
+    ExportXmlGridDBTableView: TcxGridDBTableView;
+    RowData: TcxGridDBColumn;
+    ExportXmlGridLevel: TcxGridLevel;
+    ExportDS: TDataSource;
+    ExportCDS: TClientDataSet;
+    spGet_Export_FileName: TdsdStoredProc;
+    spSelect_Export: TdsdStoredProc;
+    actSelect_Export: TdsdExecStoredProc;
+    actExport_Grid: TExportGrid;
+    actSMTPFile: TdsdSMTPFileAction;
+    actExport: TMultiAction;
+    actGet_Export_FileName: TdsdExecStoredProc;
+    bbExport: TdxBarButton;
   private
     { Private declarations }
   public

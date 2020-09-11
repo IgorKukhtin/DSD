@@ -883,6 +883,9 @@ CREATE OR REPLACE FUNCTION zc_Object_SubjectDoc() RETURNS integer AS $BODY$BEGIN
 INSERT INTO ObjectDesc(Code, ItemName)
 SELECT 'zc_Object_SubjectDoc', 'Основание для перемещения' WHERE NOT EXISTS (SELECT * FROM ObjectDesc WHERE Code = 'zc_Object_SubjectDoc');
 
+CREATE OR REPLACE FUNCTION zc_Object_MemberMinus() RETURNS integer AS $BODY$BEGIN RETURN (SELECT Id FROM ObjectDesc WHERE Code = 'zc_Object_MemberMinus'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
+INSERT INTO ObjectDesc(Code, ItemName)
+SELECT 'zc_Object_MemberMinus', 'Удержания по сотрудникам' WHERE NOT EXISTS (SELECT * FROM ObjectDesc WHERE Code = 'zc_Object_MemberMinus');
 
 
 --!!! Аптека
@@ -1310,6 +1313,7 @@ INSERT INTO ObjectDesc (Code, ItemName)
 /*-------------------------------------------------------------------------------
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.   Воробкало А. А.   Шаблий О.В.
+ 04.09.20         * zc_Object_MemberMinus
  03.09.20                                                                                        * zc_Object_CancelReason
  27.08.20         * zc_Object_Layout
  22.08.20                                                                                        * zc_Object_JuridicalPriorities

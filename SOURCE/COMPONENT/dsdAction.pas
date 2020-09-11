@@ -463,6 +463,7 @@ type
     FdsdDataSetRefresh: TdsdCustomAction;
     FActionType: TDataSetAcionType;
     FFieldName: string;
+    FCheckIDRecords : boolean;
     function GetDataSource: TDataSource;
     procedure SetDataSource(const Value: TDataSource);
     function GetFieldName: string;
@@ -477,6 +478,8 @@ type
     constructor Create(AOwner: TComponent); override;
     destructor Destroy; override;
   published
+    property CheckIDRecords : boolean  read FCheckIDRecords write FCheckIDRecords
+      default False;
     property ActionType: TDataSetAcionType read FActionType write FActionType
       default acInsert;
     property DataSource: TDataSource read GetDataSource write SetDataSource;
@@ -1346,8 +1349,11 @@ begin
   Enabled := false;
   if Assigned(DataSource) then
     if Assigned(DataSource.DataSet) then
-      Enabled := (ActionType = acInsert) or
-        (DataSource.DataSet.RecordCount <> 0)
+      if FCheckIDRecords and Assigned(DataSource.DataSet.FindField(FFieldName)) then
+        Enabled := (ActionType = acInsert) or
+                      (DataSource.DataSet.RecordCount <> 0) and (DataSource.DataSet.FieldByName(FFieldName).AsInteger <> 0)
+      else Enabled := (ActionType = acInsert) or
+                      (DataSource.DataSet.RecordCount <> 0)
 end;
 
 destructor TdsdInsertUpdateAction.Destroy;

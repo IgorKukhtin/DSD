@@ -49,6 +49,7 @@ type
     function ZReport : Integer;
     function SummaReceipt : Currency;
     function GetTaxRate : string;
+    function SensZReportBefore : boolean;
   public
     constructor Create;
     function ShowError: boolean;
@@ -200,7 +201,9 @@ begin
 
   if FAlwaysSold then exit;
 
-  if NDS = 20 then nNDS := 1 else nNDS := 2;
+  if NDS = 20 then nNDS := 0
+  else if NDS =  0 then nNDS := 2
+  else nNDS := 1;
 
   Logger.AddToLog(' SALE (GoodsCode := ' + IntToStr(GoodsCode) + ', Amount := ' + ReplaceStr(FormatFloat('0.000', Amount), FormatSettings.DecimalSeparator, '.') +
       ', Price := ' + ReplaceStr(FormatFloat('0.00', Price), FormatSettings.DecimalSeparator, '.') + ')');
@@ -336,9 +339,36 @@ end;
 
 function TCashIKC_E810T.PrintFiscalText(
   const PrintText: WideString): boolean;
-var APrintText: String;
+var I : Integer;
+    L : string;
+    N : string;
+    Res: TArray<string>;
 begin
-
+  Result := True;
+  if POS(#13, PrintText) > 0 then
+  begin
+    Res := TRegEx.Split(StringReplace(PrintText, #10, '', [rfReplaceAll]), #13);
+    for I := 0 to High(Res) do
+    begin
+      PrintFiscalText(Res[i])
+    end;
+  end else
+  begin
+    L := '';
+    Res := TRegEx.Split(PrintText, ' ');
+    for I := 0 to High(Res) do
+    begin
+      if L <> '' then L := L + ' ';
+      L := L + Res[i];
+      if I < High(Res) then N := ' ' + Res[i + 1] else N := '';
+      if Length(L + N) > FLengNoFiscalText then
+      begin
+        if not FPrinter.FPCommentLine(L, True) then Exit;
+        L := '';
+      end;
+    end;
+    if L <> '' then FPrinter.FPCommentLine(L, True);
+  end;
 end;
 
 function TCashIKC_E810T.SubTotal(isPrint, isDisplay: WordBool; Percent,
@@ -444,16 +474,19 @@ begin
   Result := Result + '  ------        Податок       Обіг' + #13#10;
   Result := Result + '  ДОД. А   ' + Str(FPrinter.prDaySumAddTaxOfSale1 / 100, 13) + Str(FPrinter.prDaySaleSumOnTax1 / 100, 13) + #13#10;
   Result := Result + '  ДОД. Б   ' + Str(FPrinter.prDaySumAddTaxOfSale2 / 100, 13) + Str(FPrinter.prDaySaleSumOnTax2 / 100, 13) + #13#10;
+  Result := Result + '  ДОД. В   ' + Str(FPrinter.prDaySumAddTaxOfSale3 / 100, 13) + Str(FPrinter.prDaySaleSumOnTax3 / 100, 13) + #13#10;
   Result := Result + '  Чеків продажу ' + IntToStr(FPrinter.prDaySaleReceiptsCount) + #13#10;
 
   Result := Result + '  ВІД. A   ' + Str(FPrinter.prDaySumAddTaxOfRefund1 / 100, 13) + Str(FPrinter.prDayRefundSumOnTax1 / 100, 13) + #13#10;
   Result := Result + '  ВІД. Б   ' + Str(FPrinter.prDaySumAddTaxOfRefund2 / 100, 13) + Str(FPrinter.prDayRefundSumOnTax2 / 100, 13) + #13#10;
+  Result := Result + '  ВІД. В   ' + Str(FPrinter.prDaySumAddTaxOfRefund4 / 100, 13) + Str(FPrinter.prDayRefundSumOnTax3 / 100, 13) + #13#10;
   Result := Result + '  Чеків повернення ' + IntToStr(FPrinter.prDayRefundReceiptsCount) + #13#10;
 
   FPrinter.FPGetTaxRates;
   Result := Result + '  Податок     від        ' + FormatDateTime('dd.mm.yyyy', FPrinter.prTaxRatesDate) + #13#10;
   Result := Result + '            ПДВ_A (Вкл) A =    ' + Str(FPrinter.prTaxRate1 / 100, 6) + '%' + #13#10;
   Result := Result + '            ПДВ_Б (Вкл) Б =    ' + Str(FPrinter.prTaxRate2 / 100, 6) + '%' + #13#10;
+  Result := Result + '            ПДВ_Б (Вкл) В =    ' + Str(FPrinter.prTaxRate3 / 100, 6) + '%' + #13#10;
 
   FPrinter.FPGetCurrentDate;
   FPrinter.FPGetCurrentTime;
@@ -489,6 +522,16 @@ end;
 function TCashIKC_E810T.GetTaxRate : string;
 begin
   Result := '';
+  if not FPrinter.FPGetTaxRates then Exit;
+  Result := Result + 'A =    ' + FormatCurr('0.00', FPrinter.prTaxRate1 / 100) + '%;';
+  Result := Result + 'Б =    ' + FormatCurr('0.00', FPrinter.prTaxRate2 / 100) + '%;';
+  Result := Result + 'В =    ' + FormatCurr('0.00', FPrinter.prTaxRate3 / 100) + '%;';
+  Result := Result + 'Г =    ' + FormatCurr('0.00', FPrinter.prTaxRate4 / 100) + '%;';
+end;
+
+function TCashIKC_E810T.SensZReportBefore : boolean;
+begin
+  Result := True;
 end;
 
 end.

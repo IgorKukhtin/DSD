@@ -587,10 +587,10 @@ object OverdueChangeCashPUSHSendForm: TOverdueChangeCashPUSHSendForm
     OutputType = otResult
     Params = <
       item
-        Name = 'inContainerID'
+        Name = 'inGoodsId'
         Value = Null
-        Component = ClientDataSet
-        ComponentItem = 'ContainerChangeID'
+        Component = FormParams
+        ComponentItem = 'GoodsId'
         ParamType = ptInput
         MultiSelectSeparator = ','
       end

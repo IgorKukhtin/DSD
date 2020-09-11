@@ -1499,7 +1499,8 @@ BEGIN
      OPEN curPartion FOR
         SELECT _tmpRemains_Partion.UnitId AS UnitId_from, _tmpRemains_Partion.GoodsId
                --
-             , CASE -- если у парного ост = 0, не отдаем
+               -- Отдаем весь товар невзирая на парный
+/*             , CASE -- если у парного ост = 0, не отдаем
                     WHEN _tmpGoods_SUN_PairSun_find.GoodsId_PairSun > 0 AND COALESCE (_tmpRemains_Partion_PairSun.Amount, 0) <=0
                          THEN 0
                     -- если у парного ост < чем у "основного", меняем на меньшее
@@ -1507,10 +1508,11 @@ BEGIN
                          THEN _tmpRemains_Partion_PairSun.Amount
                     -- инче берем ост "основного"
                     ELSE _tmpRemains_Partion.Amount
-               END AS Amount
+               END AS Amount */
+              , _tmpRemains_Partion.Amount AS Amount
 
                -- для получения дробной части, нужен весь ост.
-             , CASE -- если у парного ост = 0, не отдаем
+/*             , CASE -- если у парного ост = 0, не отдаем
                     WHEN _tmpGoods_SUN_PairSun_find.GoodsId_PairSun > 0 AND COALESCE (_tmpRemains_Partion_PairSun.Amount_save, 0) <=0
                          THEN 0
                     -- если у парного ост < чем у "основного", меняем на меньшее
@@ -1518,7 +1520,8 @@ BEGIN
                          THEN _tmpRemains_Partion_PairSun.Amount_save
                     -- инче берем ост "основного"
                     ELSE _tmpRemains_Partion.Amount_save
-               END AS Amount_save
+               END AS Amount_save*/
+             , _tmpRemains_Partion.Amount_save AS Amount_save
 
                --
              , COALESCE (_tmpGoods_SUN.KoeffSUN, 0)

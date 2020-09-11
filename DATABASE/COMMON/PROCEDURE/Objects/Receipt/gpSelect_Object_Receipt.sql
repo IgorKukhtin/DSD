@@ -30,6 +30,7 @@ RETURNS TABLE (Id Integer, Code Integer, Name TVarChar, ReceiptCode TVarChar, Co
              , isCheck_Parent Boolean
              , Check_Weight TFloat, Check_PartionValue TFloat, Check_TaxExit TFloat
              , isParentMulti Boolean
+             , isDisabled Boolean, Color_Disabled Integer
              , isErased Boolean
               )
 AS
@@ -142,6 +143,8 @@ BEGIN
 
 
          , COALESCE (ObjectBoolean_ParentMulti.ValueData, FALSE) :: Boolean AS isParentMulti
+         , COALESCE (ObjectBoolean_Disabled.ValueData, FALSE)    :: Boolean AS isDisabled
+         , CASE WHEN COALESCE (ObjectBoolean_Disabled.ValueData, FALSE) = TRUE THEN zc_Color_Red() ELSE 0 END :: Integer AS Color_Disabled
 
          , Object_Receipt.isErased AS isErased
 
@@ -183,7 +186,6 @@ BEGIN
           LEFT JOIN ObjectFloat AS ObjectFloat_TaxExit_Parent
                                 ON ObjectFloat_TaxExit_Parent.ObjectId = Object_Receipt_Parent.Id
                                AND ObjectFloat_TaxExit_Parent.DescId = zc_ObjectFloat_Receipt_TaxExit()
-
 
           LEFT JOIN ObjectLink AS ObjectLink_Receipt_Goods
                                ON ObjectLink_Receipt_Goods.ObjectId = Object_Receipt.Id
@@ -239,6 +241,9 @@ BEGIN
           LEFT JOIN ObjectBoolean AS ObjectBoolean_ParentMulti
                                   ON ObjectBoolean_ParentMulti.ObjectId = Object_Receipt.Id
                                  AND ObjectBoolean_ParentMulti.DescId = zc_ObjectBoolean_Receipt_ParentMulti()
+          LEFT JOIN ObjectBoolean AS ObjectBoolean_Disabled
+                                  ON ObjectBoolean_Disabled.ObjectId = Object_Receipt.Id
+                                 AND ObjectBoolean_Disabled.DescId = zc_ObjectBoolean_Receipt_Disabled()
 
           LEFT JOIN ObjectString AS ObjectString_Code
                                  ON ObjectString_Code.ObjectId = Object_Receipt.Id
@@ -333,6 +338,7 @@ ALTER FUNCTION gpSelect_Object_Receipt (Integer, Integer, Integer, Boolean, TVar
 /*-------------------------------------------------------------------------------
  »—“Œ–»ﬂ –¿«–¿¡Œ“ »: ƒ¿“¿, ¿¬“Œ–
               ‘ÂÎÓÌ˛Í ».¬.    ÛıÚËÌ ».¬.    ÎËÏÂÌÚ¸Â‚  .».   Ã‡Ì¸ÍÓ ƒ.
+ 10.09.20        * add isDisabled
  21.03.15                                       * add inReceiptId
  23.02.15        * add 
  14.02.15                                      *all

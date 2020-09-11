@@ -147,6 +147,8 @@ BEGIN
              inPersonalDriverId:= lpInsertUpdate_Object_MemberExternal (ioId    := inPersonalDriverId
                                                                       , inCode  := 0
                                                                       , inName  := inPersonalDriverName
+                                                                      , inDriverCertificate := '' ::TVarChar
+                                                                      , inINN   := '' ::TVarChar
                                                                       , inUserId:= vbUserId
                                                                        );
          END IF;
@@ -162,6 +164,8 @@ BEGIN
              inMemberId1:= lpInsertUpdate_Object_MemberExternal (ioId    := inMemberId1
                                                                , inCode  := 0
                                                                , inName  := inMemberName1
+                                                               , inDriverCertificate := '' ::TVarChar
+                                                               , inINN   := '' ::TVarChar
                                                                , inUserId:= vbUserId
                                                                 );
          END IF;
@@ -177,6 +181,8 @@ BEGIN
              inMemberId2:= lpInsertUpdate_Object_MemberExternal (ioId    := inMemberId2
                                                                , inCode  := 0
                                                                , inName  := inMemberName2
+                                                               , inDriverCertificate := '' ::TVarChar
+                                                               , inINN   := '' ::TVarChar
                                                                , inUserId:= vbUserId
                                                                 );
          END IF;
@@ -192,6 +198,8 @@ BEGIN
              inMemberId3:= lpInsertUpdate_Object_MemberExternal (ioId    := inMemberId3
                                                                , inCode  := 0
                                                                , inName  := inMemberName3
+                                                               , inDriverCertificate := '' ::TVarChar
+                                                               , inINN   := '' ::TVarChar
                                                                , inUserId:= vbUserId
                                                                 );
          END IF;
@@ -207,6 +215,8 @@ BEGIN
          inMemberId4:= lpInsertUpdate_Object_MemberExternal (ioId    := inMemberId4
                                                            , inCode  := 0
                                                            , inName  := inMemberName4
+                                                           , inDriverCertificate := '' ::TVarChar
+                                                           , inINN   := '' ::TVarChar
                                                            , inUserId:= vbUserId
                                                             );
      END IF;
@@ -222,6 +232,8 @@ BEGIN
              inMemberId5:= lpInsertUpdate_Object_MemberExternal (ioId    := inMemberId5
                                                                , inCode  := 0
                                                                , inName  := inMemberName5
+                                                               , inDriverCertificate := '' ::TVarChar
+                                                               , inINN   := '' ::TVarChar
                                                                , inUserId:= vbUserId
                                                                 );
          END IF;
@@ -250,6 +262,8 @@ BEGIN
          inMemberId7:= lpInsertUpdate_Object_MemberExternal (ioId    := inMemberId7
                                                            , inCode  := 0
                                                            , inName  := inMemberName7
+                                                           , inDriverCertificate := '' ::TVarChar
+                                                           , inINN   := '' ::TVarChar
                                                            , inUserId:= vbUserId
                                                             );
      END IF;

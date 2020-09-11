@@ -185,6 +185,14 @@ inherited CheckSummCardForm: TCheckSummCardForm
             Options.Editing = False
             Width = 96
           end
+          object CancelReason: TcxGridDBColumn
+            Caption = #1055#1088#1080#1095#1080#1085#1072' '#1086#1090#1082#1072#1079#1072
+            DataBinding.FieldName = 'CancelReason'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 114
+          end
         end
       end
     end

@@ -67,6 +67,7 @@ type
     bbProtocolOpenForm: TdxBarButton;
     isExplanation: TcxGridDBColumn;
     isResort: TcxGridDBColumn;
+    isBlockFormSUN: TcxGridDBColumn;
   private
     { Private declarations }
   public

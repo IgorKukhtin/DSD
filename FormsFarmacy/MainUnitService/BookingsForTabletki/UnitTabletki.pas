@@ -259,7 +259,7 @@ begin
           FBookingsHeadCDS.Post;
 
           JSONAI := jValue.GetValue<TJSONArray>('rows');
-          for J := 0 to JSONA.Count - 1 do
+          for J := 0 to JSONAI.Count - 1 do
           begin
             jValue := JSONAI.Items[J];
 

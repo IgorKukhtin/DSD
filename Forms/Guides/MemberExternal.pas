@@ -60,6 +60,7 @@ type
     actShowAll: TBooleanStoredProcAction;
     bbShowAll: TdxBarButton;
     DriverCertificate: TcxGridDBColumn;
+    INN: TcxGridDBColumn;
   private
     { Private declarations }
   public

@@ -1,12 +1,14 @@
 -- Function: lpUpdate_MI_OrderFinance_ByReport()
 
 DROP FUNCTION IF EXISTS lpUpdate_MI_OrderFinance_ByReport (Integer, Integer, Integer, Integer, TFloat, TFloat, Integer);
+DROP FUNCTION IF EXISTS lpUpdate_MI_OrderFinance_ByReport (Integer, Integer, Integer, Integer, Integer, TFloat, TFloat, Integer);
 
 CREATE OR REPLACE FUNCTION lpUpdate_MI_OrderFinance_ByReport(
     IN inId               Integer   , -- Ключ объекта <Элемент документа>
     IN inMovementId       Integer   ,
     IN inJuridicalId      Integer   ,
     IN inContractId       Integer   ,
+    IN inBankAccountId    Integer   , --
     IN inAmountRemains    TFloat    , -- 
     IN inAmountPartner    TFloat    , -- 
     IN inUserId           Integer     -- пользователь
@@ -26,6 +28,8 @@ BEGIN
          inId := lpInsertUpdate_MovementItem (inId, zc_MI_Master(), inJuridicalId, inMovementId, 0, NULL);
          -- сохранили связь с <>
          PERFORM lpInsertUpdate_MovementItemLinkObject (zc_MILinkObject_Contract(), inId, inContractId);
+         -- сохранили связь с <>
+         PERFORM lpInsertUpdate_MovementItemLinkObject (zc_MILinkObject_BankAccount(), inId, inBankAccountId);
      END IF;
 
      -- сохранили свойство <>
@@ -60,6 +64,7 @@ $BODY$
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
+ 09.09.20         *
  31.07.19         *
 */
 

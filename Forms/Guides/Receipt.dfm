@@ -2,7 +2,7 @@ object ReceiptForm: TReceiptForm
   Left = 0
   Top = 0
   Caption = #1057#1087#1088#1072#1074#1086#1095#1085#1080#1082' <'#1056#1077#1094#1077#1087#1090#1091#1088#1099'>'
-  ClientHeight = 594
+  ClientHeight = 587
   ClientWidth = 1152
   Color = clBtnFace
   Font.Charset = DEFAULT_CHARSET
@@ -22,7 +22,7 @@ object ReceiptForm: TReceiptForm
     Left = 0
     Top = 61
     Width = 1152
-    Height = 278
+    Height = 271
     Align = alClient
     TabOrder = 0
     LookAndFeel.NativeStyle = False
@@ -384,6 +384,15 @@ object ReceiptForm: TReceiptForm
         Options.Editing = False
         Width = 100
       end
+      object isDisabled: TcxGridDBColumn
+        Caption = #1054#1090#1082#1083#1102#1095#1080#1090#1100' '#1088#1077#1094#1077#1087#1090#1091#1088#1091' ('#1044#1072'/'#1053#1077#1090')'
+        DataBinding.FieldName = 'isDisabled'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        HeaderHint = #1054#1090#1082#1083#1102#1095#1080#1090#1100' '#1088#1077#1094#1077#1087#1090#1091#1088#1091' ('#1044#1072'/'#1053#1077#1090')'
+        Options.Editing = False
+        Width = 100
+      end
       object Code_Parent: TcxGridDBColumn
         Caption = #1050#1086#1076' '#1088#1077#1094#1077#1087#1090'. ('#1087#1086#1080#1089#1082', '#1087#1086#1083#1100#1079'.)'
         DataBinding.FieldName = 'Code_Parent'
@@ -511,6 +520,15 @@ object ReceiptForm: TReceiptForm
         Options.Editing = False
         Width = 70
       end
+      object Color_Disabled: TcxGridDBColumn
+        DataBinding.FieldName = 'Color_Disabled'
+        Visible = False
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Options.Editing = False
+        VisibleForCustomization = False
+        Width = 55
+      end
     end
     object cxGridLevel: TcxGridLevel
       GridView = cxGridDBTableView
@@ -518,7 +536,7 @@ object ReceiptForm: TReceiptForm
   end
   object cxGridReceiptChild: TcxGrid
     Left = 0
-    Top = 344
+    Top = 337
     Width = 1152
     Height = 250
     Align = alBottom
@@ -841,7 +859,7 @@ object ReceiptForm: TReceiptForm
   end
   object cxBottomSplitter: TcxSplitter
     Left = 0
-    Top = 339
+    Top = 332
     Width = 1152
     Height = 5
     AlignSplitter = salBottom
@@ -1027,6 +1045,18 @@ object ReceiptForm: TReceiptForm
         end
         item
           Visible = True
+          ItemName = 'bbUpdateDisabled_yes'
+        end
+        item
+          Visible = True
+          ItemName = 'bbUpdateDisabled_no'
+        end
+        item
+          Visible = True
+          ItemName = 'dxBarStatic1'
+        end
+        item
+          Visible = True
           ItemName = 'bbProtocolChild'
         end
         item
@@ -1189,6 +1219,14 @@ object ReceiptForm: TReceiptForm
     end
     object bbExecuteDialog: TdxBarButton
       Action = ExecuteDialog
+      Category = 0
+    end
+    object bbUpdateDisabled_yes: TdxBarButton
+      Action = actUpdateDisabled_yes
+      Category = 0
+    end
+    object bbUpdateDisabled_no: TdxBarButton
+      Action = actUpdateDisabled_no
       Category = 0
     end
   end
@@ -1555,6 +1593,38 @@ object ReceiptForm: TReceiptForm
       Hint = #1048#1079#1084#1077#1085#1080#1090#1100' "'#1042#1093#1086#1076#1080#1090' '#1074' '#1086#1089#1085'. '#1089#1099#1088#1100#1077' (100 '#1082#1075'.)  '#1044#1072'/'#1053#1077#1090'"'
       ImageIndex = 58
     end
+    object actUpdateDisabled_no: TdsdExecStoredProc
+      Category = 'DSDLib'
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      StoredProc = spUpdateDisabled_no
+      StoredProcList = <
+        item
+          StoredProc = spUpdateDisabled_no
+        end
+        item
+          StoredProc = spSelect
+        end>
+      Caption = #1042#1082#1083#1102#1095#1080#1090#1100' '#1088#1077#1094#1077#1087#1090#1091#1088#1091
+      Hint = #1042#1082#1083#1102#1095#1080#1090#1100' '#1088#1077#1094#1077#1087#1090#1091#1088#1091
+      ImageIndex = 76
+    end
+    object actUpdateDisabled_yes: TdsdExecStoredProc
+      Category = 'DSDLib'
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      StoredProc = spUpdateDisabled_yes
+      StoredProcList = <
+        item
+          StoredProc = spUpdateDisabled_yes
+        end
+        item
+          StoredProc = spSelect
+        end>
+      Caption = #1054#1090#1082#1083#1102#1095#1080#1090#1100' '#1088#1077#1094#1077#1087#1090#1091#1088#1091
+      Hint = #1054#1090#1082#1083#1102#1095#1080#1090#1100' '#1088#1077#1094#1077#1087#1090#1091#1088#1091
+      ImageIndex = 77
+    end
     object actPrint: TdsdPrintAction
       Category = 'Print'
       MoveParams = <>
@@ -1773,7 +1843,11 @@ object ReceiptForm: TReceiptForm
       end>
     SortImages = dmMain.SortImageList
     OnlyEditingCellOnEnter = False
-    ColorRuleList = <>
+    ColorRuleList = <
+      item
+        ValueColumn = Color_Disabled
+        ColorValueList = <>
+      end>
     ColumnAddOnList = <
       item
         onExitColumn.Active = False
@@ -1781,6 +1855,7 @@ object ReceiptForm: TReceiptForm
       end>
     ColumnEnterList = <>
     SummaryItemList = <>
+    PropertiesCellList = <>
     Left = 272
     Top = 184
   end
@@ -1945,7 +2020,6 @@ object ReceiptForm: TReceiptForm
     Top = 397
   end
   object spInsertUpdate: TdsdStoredProc
-    StoredProcName = 'gpUpdate_Object_Receipt'
     DataSets = <>
     OutputType = otResult
     Params = <
@@ -2076,6 +2150,7 @@ object ReceiptForm: TReceiptForm
     ColumnAddOnList = <>
     ColumnEnterList = <>
     SummaryItemList = <>
+    PropertiesCellList = <>
     Left = 448
     Top = 360
   end
@@ -2204,8 +2279,8 @@ object ReceiptForm: TReceiptForm
         MultiSelectSeparator = ','
       end>
     PackSize = 1
-    Left = 770
-    Top = 405
+    Left = 754
+    Top = 429
   end
   object spUpdateWeightMain: TdsdStoredProc
     StoredProcName = 'gpUpdateObject_isBoolean'
@@ -2335,5 +2410,75 @@ object ReceiptForm: TReceiptForm
       end>
     Left = 768
     Top = 3
+  end
+  object spUpdateDisabled_yes: TdsdStoredProc
+    StoredProcName = 'gpUpdateObject_isBoolean'
+    DataSet = ChildCDS
+    DataSets = <
+      item
+        DataSet = ChildCDS
+      end>
+    OutputType = otResult
+    Params = <
+      item
+        Name = 'inId'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'Id'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'ioParam'
+        Value = False
+        DataType = ftBoolean
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inDesc'
+        Value = 'zc_ObjectBoolean_Receipt_Disabled'
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end>
+    PackSize = 1
+    Left = 642
+    Top = 477
+  end
+  object spUpdateDisabled_no: TdsdStoredProc
+    StoredProcName = 'gpUpdateObject_isBoolean'
+    DataSet = ChildCDS
+    DataSets = <
+      item
+        DataSet = ChildCDS
+      end>
+    OutputType = otResult
+    Params = <
+      item
+        Name = 'inId'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'Id'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'ioParam'
+        Value = True
+        DataType = ftBoolean
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inDesc'
+        Value = 'zc_ObjectBoolean_Receipt_Disabled'
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end>
+    PackSize = 1
+    Left = 554
+    Top = 493
   end
 end

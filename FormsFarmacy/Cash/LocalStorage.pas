@@ -369,11 +369,12 @@ begin
       AddIntField(LocalDataBaseDiff,   'GOODSDIID'); //Дисконтная программы товара
       AddStrField(LocalDataBaseDiff,   'GOODSDINAM',100); //наименование дисконтной программы товара
       AddStrField(LocalDataBaseDiff,   'UKTZED',20); //Код UKTZED
-      AddIntField(LocalDataBaseDiff,   'GOODSPSID'); //Парный тоапр СП
+      AddIntField(LocalDataBaseDiff,   'GOODSPSID'); //Парный товар СП
       AddIntField(LocalDataBaseDiff,   'DIVPARTID'); //Тип срок/не срок
       AddStrField(LocalDataBaseDiff,   'DIVPARTNAM',100); //наименование типа срок/не срок
       AddBoolField(LocalDataBaseDiff,  'BANFISCAL'); // Запрет фискальной продажи
       AddBoolField(LocalDataBaseDiff,  'GOODSPROJ'); // Товар только для проекта (дисконтные карты)
+      AddIntField(LocalDataBaseDiff,   'GOODSPMID'); //Парный товпр СП главный
 
       LocalDataBaseDiff.CreateTable;
     end;
@@ -409,7 +410,8 @@ begin
         (FindField('GOODSPSID') = nil) or
         (FindField('DIVPARTNAM') = nil) or
         (FindField('BANFISCAL') = nil) or
-        (FindField('GOODSPROJ') = nil));
+        (FindField('GOODSPROJ') = nil) or
+        (FindField('GOODSPMID') = nil));
 
       Close;
 

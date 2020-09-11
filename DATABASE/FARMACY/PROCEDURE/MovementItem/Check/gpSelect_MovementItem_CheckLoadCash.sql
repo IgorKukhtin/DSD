@@ -41,6 +41,7 @@ RETURNS TABLE (Id Integer
              , DiscountExternalName TVarChar
              , UKTZED TVarChar
              , GoodsPairSunId Integer
+             , GoodsPairSunMainId Integer
              , DivisionPartiesId Integer
              , DivisionPartiesName TVarChar
               )
@@ -199,6 +200,7 @@ BEGIN
            , Object_DiscountExternal.ValueData                                   AS DiscountCardName
            , tmpGoodsUKTZED.UKTZED                                               AS UKTZED
            , Object_Goods_PairSun.ID                                             AS GoodsPairSunId         
+           , Object_Goods_PairSun_Main.GoodsPairSunId                            AS GoodsPairSunMainId
            , Object_DivisionParties.Id                                           AS DivisionPartiesId 
            , Object_DivisionParties.ValueData                                    AS DivisionPartiesName 
            FROM tmpMI AS MovementItem
@@ -210,6 +212,8 @@ BEGIN
             LEFT JOIN Object_Goods_Retail AS Object_Goods_Retail ON Object_Goods_Retail.Id = MovementItem.GoodsId
             LEFT JOIN tmpGoodsPairSun AS Object_Goods_PairSun 
                                       ON Object_Goods_PairSun.GoodsPairSunId = MovementItem.GoodsId
+            LEFT JOIN tmpGoodsPairSun AS Object_Goods_PairSun_Main
+                                      ON Object_Goods_PairSun_Main.Id = MovementItem.GoodsId
 
             -- Не делить медикамент на кассах
             LEFT JOIN ObjectBoolean AS ObjectBoolean_DoesNotShare

@@ -33,6 +33,8 @@ BEGIN
                         outDriverId := lpInsertUpdate_Object_MemberExternal (ioId    := 0
                                                                            , inCode  := lfGet_ObjectCode(0, zc_Object_MemberExternal()) 
                                                                            , inName  := inDriver
+                                                                           , inDriverCertificate := '' ::TVarChar
+                                                                           , inINN   := '' ::TVarChar
                                                                            , inUserId:= vbUserId
                                                                              );
                  END IF;  

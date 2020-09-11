@@ -12,7 +12,9 @@ RETURNS TABLE (Id Integer, Code Integer, Name TVarChar
              , DateBanSUN TDateTime
              , SummaFormSendVIP TFloat
              , SummaUrgentlySendVIP TFloat
-             , isBlockVIP Boolean) AS
+             , isBlockVIP Boolean
+             , isPairedOnlyPromov Boolean
+             ) AS
 $BODY$
 BEGIN
 
@@ -30,6 +32,7 @@ BEGIN
         , ObjectFloat_CashSettings_SummaFormSendVIP.ValueData                      AS SummaFormSendVIP
         , ObjectFloat_CashSettings_SummaUrgentlySendVIP.ValueData                  AS SummaUrgentlySendVIP
         , COALESCE(ObjectBoolean_CashSettings_BlockVIP.ValueData, FALSE)           AS isBlockVIP
+        , COALESCE(ObjectBoolean_CashSettings_PairedOnlyPromo.ValueData, FALSE)   AS isPairedOnlyPromov
    FROM Object AS Object_CashSettings
         LEFT JOIN ObjectString AS ObjectString_CashSettings_ShareFromPriceName
                                ON ObjectString_CashSettings_ShareFromPriceName.ObjectId = Object_CashSettings.Id 
@@ -52,6 +55,9 @@ BEGIN
         LEFT JOIN ObjectBoolean AS ObjectBoolean_CashSettings_BlockVIP
                                 ON ObjectBoolean_CashSettings_BlockVIP.ObjectId = Object_CashSettings.Id 
                                AND ObjectBoolean_CashSettings_BlockVIP.DescId = zc_ObjectBoolean_CashSettings_BlockVIP()
+        LEFT JOIN ObjectBoolean AS ObjectBoolean_CashSettings_PairedOnlyPromo
+                                ON ObjectBoolean_CashSettings_PairedOnlyPromo.ObjectId = Object_CashSettings.Id 
+                               AND ObjectBoolean_CashSettings_PairedOnlyPromo.DescId = zc_ObjectBoolean_CashSettings_PairedOnlyPromo()
    WHERE Object_CashSettings.DescId = zc_Object_CashSettings()
    LIMIT 1;
   

@@ -44,6 +44,7 @@ type
     cbisDifferenceSum: TcxCheckBox;
     cxLabel9: TcxLabel;
     edDifferenceSum: TcxCurrencyEdit;
+    cbisBlockFormSUN: TcxCheckBox;
   private
     { Private declarations }
   public

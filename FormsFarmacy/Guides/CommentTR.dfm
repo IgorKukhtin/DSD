@@ -51,21 +51,21 @@ object CommentTRForm: TCommentTRForm
         HeaderAlignmentHorz = taRightJustify
         HeaderAlignmentVert = vaCenter
         Options.Editing = False
-        Width = 49
+        Width = 43
       end
       object Name: TcxGridDBColumn
         Caption = #1053#1072#1079#1074#1072#1085#1080#1077
         DataBinding.FieldName = 'Name'
         HeaderAlignmentVert = vaCenter
         Options.Editing = False
-        Width = 309
+        Width = 269
       end
       object isExplanation: TcxGridDBColumn
-        Caption = #1054#1073#1103#1079#1072#1090#1077#1083#1100#1085#1086#1077' '#1079#1072#1087#1086#1083#1085#1077#1085#1080#1077' '#1087#1086#1103#1089#1085#1077#1085#1080#1103
+        Caption = #1054#1073#1103#1079#1072#1090'. '#1079#1072#1087#1086#1083#1085'. '#1087#1086#1103#1089#1085#1077#1085#1080#1103
         DataBinding.FieldName = 'isExplanation'
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
-        Width = 94
+        Width = 82
       end
       object isErased: TcxGridDBColumn
         Caption = #1059#1076#1072#1083#1077#1085
@@ -83,7 +83,16 @@ object CommentTRForm: TCommentTRForm
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         Options.Editing = False
-        Width = 78
+        Width = 74
+      end
+      object isBlockFormSUN: TcxGridDBColumn
+        Caption = #1041#1083#1086#1082'. '#1092#1086#1088#1084'. '#1057#1059#1053
+        DataBinding.FieldName = 'isBlockFormSUN'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        HeaderHint = #1041#1083#1086#1082#1080#1088#1086#1074#1072#1090#1100' '#1092#1086#1088#1084#1080#1088#1086#1074#1072#1085#1080#1077' '#1057#1059#1053' '#1087#1088#1080' '#1085#1077' '#1087#1088#1086#1074#1077#1076#1077#1085#1085#1099#1093' '#1058#1055
+        Options.Editing = False
+        Width = 62
       end
     end
     object cxGridLevel: TcxGridLevel
@@ -470,6 +479,7 @@ object CommentTRForm: TCommentTRForm
     ColumnAddOnList = <>
     ColumnEnterList = <>
     SummaryItemList = <>
+    PropertiesCellList = <>
     Left = 48
     Top = 216
   end

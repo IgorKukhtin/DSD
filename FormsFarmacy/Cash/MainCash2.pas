@@ -505,6 +505,25 @@ type
     MemDataBANFISCAL: TBooleanField;
     MainisBanFiscalSale: TcxGridDBColumn;
     CheckDivisionPartiesName: TcxGridDBColumn;
+    actOpenCheckDeferred: TOpenChoiceForm;
+    N48: TMenuItem;
+    N49: TMenuItem;
+    N50: TMenuItem;
+    N51: TMenuItem;
+    N52: TMenuItem;
+    VIP6: TMenuItem;
+    VIP7: TMenuItem;
+    VIP8: TMenuItem;
+    actLoadDeferred: TMultiAction;
+    actOpenCheckDeferred_Search: TOpenChoiceForm;
+    actLoadDeferred_Search: TMultiAction;
+    actOpenDelayDeferred: TdsdOpenForm;
+    actOpenCheckSite: TOpenChoiceForm;
+    actLoadSite: TMultiAction;
+    actOpenCheckSite_Search: TOpenChoiceForm;
+    actLoadSite_Search: TMultiAction;
+    actOpenDelaySite: TdsdOpenForm;
+    MemDataGOODSPMID: TIntegerField;
     procedure WM_KEYDOWN(var Msg: TWMKEYDOWN);
     procedure FormCreate(Sender: TObject);
     procedure actChoiceGoodsInRemainsGridExecute(Sender: TObject);
@@ -676,6 +695,9 @@ type
     FOldAnalogFilter: String;
 
     FAnalogFilter: Integer;
+
+    FIsVIP, FIsSite : Boolean;
+    FStepSecond : Boolean;
 
     procedure SetBlinkVIP(isRefresh: Boolean);
     procedure SetBlinkCheck(isRefresh: Boolean);
@@ -1141,6 +1163,8 @@ begin
           Trim(FLocalDataBaseDiff.FieldByName('UKTZED').AsString);
       MemData.FieldByName('GOODSPSID').AsVariant :=
         FLocalDataBaseDiff.FieldByName('GOODSPSID').AsVariant;
+      MemData.FieldByName('GOODSPMID').AsVariant :=
+        FLocalDataBaseDiff.FieldByName('GOODSPMID').AsVariant;
       MemData.FieldByName('DIVPARTID').AsVariant :=
         FLocalDataBaseDiff.FieldByName('DIVPARTID').AsVariant;
       if FLocalDataBaseDiff.FieldByName('DIVPARTID').IsNull then
@@ -1753,12 +1777,32 @@ procedure TMainCashForm2.pm_VIP1Click(Sender: TObject);
 begin
   inherited;
   case TMenuItem(Sender).Tag of
-    0:
+    1:
+      if actLoadDeferred.Execute and ((FormParams.ParamByName('CheckId').Value <> 0)
+        or (FormParams.ParamByName('ManagerName').AsString <> '')) then
+        LoadVIPCheck;
+    2:
+      if actLoadDeferred_Search.Execute and
+        ((FormParams.ParamByName('CheckId').Value <> 0) or
+        (FormParams.ParamByName('ManagerName').AsString <> '')) then
+        LoadVIPCheck;
+
+    11:
       if actLoadVIP.Execute and ((FormParams.ParamByName('CheckId').Value <> 0)
         or (FormParams.ParamByName('ManagerName').AsString <> '')) then
         LoadVIPCheck;
-    1:
+    12:
       if actLoadVIP_Search.Execute and
+        ((FormParams.ParamByName('CheckId').Value <> 0) or
+        (FormParams.ParamByName('ManagerName').AsString <> '')) then
+        LoadVIPCheck;
+
+    21:
+      if actLoadSite.Execute and ((FormParams.ParamByName('CheckId').Value <> 0)
+        or (FormParams.ParamByName('ManagerName').AsString <> '')) then
+        LoadVIPCheck;
+    22:
+      if actLoadSite_Search.Execute and
         ((FormParams.ParamByName('CheckId').Value <> 0) or
         (FormParams.ParamByName('ManagerName').AsString <> '')) then
         LoadVIPCheck;
@@ -2640,7 +2684,7 @@ begin
     exit;
   end;
 
-  if not DiscountServiceForm.isBeforeSale and (DiscountServiceForm.gCode in [3, 5, 6, 7, 8]) then
+  if not DiscountServiceForm.isBeforeSale and (DiscountServiceForm.gCode in [3, 5, 6, 7, 8, 9]) then
   begin
     ShowMessage('По дисконтрой программе не запрошена возможность продажи!');
     exit;
@@ -3267,6 +3311,8 @@ begin
             vipList.FieldByName('Price').AsFloat;
         CheckCDS.FieldByName('GoodsPairSunId').AsVariant :=
           vipList.FieldByName('GoodsPairSunId').AsVariant;
+        CheckCDS.FieldByName('GoodsPairSunMainId').AsVariant :=
+          vipList.FieldByName('GoodsPairSunMainId').AsVariant;
         // ***21.10.18
         GoodsId := RemainsCDS.FieldByName('Id').AsInteger;
         PartionDateKindId := RemainsCDS.FieldByName('PartionDateKindId').AsVariant;
@@ -4326,6 +4372,8 @@ begin
           MemData.FieldByName('UKTZED').AsVariant;
         RemainsCDS.FieldByName('GoodsPairSunId').AsVariant :=
           MemData.FieldByName('GOODSPSID').AsVariant;
+        RemainsCDS.FieldByName('GoodsPairSunMainId').AsVariant :=
+          MemData.FieldByName('GOODSPMID').AsVariant;
         RemainsCDS.FieldByName('isGoodsForProject').AsVariant :=
           MemData.FieldByName('GOODSPROJ').AsVariant;
         RemainsCDS.FieldByName('isBanFiscalSale').AsVariant :=
@@ -4392,6 +4440,8 @@ begin
             MemData.FieldByName('UKTZED').AsVariant;
           RemainsCDS.FieldByName('GoodsPairSunId').AsVariant :=
             MemData.FieldByName('GOODSPSID').AsVariant;
+          RemainsCDS.FieldByName('GoodsPairSunMainId').AsVariant :=
+            MemData.FieldByName('GOODSPMID').AsVariant;
           RemainsCDS.FieldByName('isBanFiscalSale').AsVariant :=
             MemData.FieldByName('BANFISCAL').AsVariant;
           RemainsCDS.FieldByName('isGoodsForProject').AsVariant :=
@@ -6081,6 +6131,7 @@ begin
   FPUSHStart := True;
   FUpdatePUSH := 0;
   fPrint := False;
+  FStepSecond := False;
   //
   edDays.Value := 7;
   PanelMCSAuto.Visible := false;
@@ -6268,8 +6319,9 @@ var
   lQuantity, lPrice, lPriceSale, lChangePercent, lSummChangePercent,
     nAmount, nAmountPS: Currency;
   lMsg: String;
-  lGoodsId_bySoldRegim, lTypeDiscount, nRecNo: Integer;
+  lGoodsId_bySoldRegim, lTypeDiscount, nRecNo, nGoodsPairSun: Integer;
   nMultiplicity: Currency;
+  Bookmark : TBookmark;
 begin
 
   // Ночные скидки
@@ -6308,7 +6360,7 @@ begin
     exit;
   end;
 
-  if (SourceClientDataSet.FieldByName('GoodsPairSunId').AsInteger <> 0) then
+  if not FStepSecond and (SourceClientDataSet.FieldByName('GoodsPairSunId').AsInteger <> 0) then
   begin
     // Только целое количество
     if (Round(nAmount) <> nAmount) then
@@ -6316,6 +6368,8 @@ begin
       ShowMessage('Товар по соц.проекту должен продаваться целыми упаковками...');
       exit;
     end;
+    Bookmark := CheckCDS.GetBookmark;
+    nGoodsPairSun := SourceClientDataSet.FieldByName('GoodsPairSunId').AsInteger;
 
     // Проверим наличие парного
     if nAmount > 0 then
@@ -6324,19 +6378,25 @@ begin
       CheckCDS.First;
       while not CheckCDS.Eof do
       begin
-        if checkCDS.FieldByName('GoodsId').AsInteger = SourceClientDataSet.FieldByName('GoodsPairSunId').AsInteger then
+        if checkCDS.FieldByName('GoodsId').AsInteger = nGoodsPairSun then
           nAmountPS := nAmountPS + checkCDS.FieldByName('Amount').AsCurrency;
         CheckCDS.Next;
       end;
+      CheckCDS.GotoBookmark(Bookmark);
 
-      nRecNo := SourceClientDataSet.RecNo;
-      SourceClientDataSet.DisableControls;
+      RemainsCDS.DisableControls;
       try
-        if SourceClientDataSet.Locate('Id', SourceClientDataSet.FieldByName('GoodsPairSunId').AsInteger, []) then
+        if RemainsCDS.Locate('Id', nGoodsPairSun, []) then
         begin
-          if SourceClientDataSet.FieldByName('Remains').AsCurrency >= nAmount then
+          if RemainsCDS.FieldByName('Remains').AsCurrency >= nAmount then
           begin
-            InsertUpdateBillCheckItems;
+            try
+              FStepSecond := True;
+              if CheckCDS = SourceClientDataSet then CheckCDS.Locate('GoodsId', nGoodsPairSun, []);
+              InsertUpdateBillCheckItems;
+            finally
+              FStepSecond := False;
+            end;
           end else
           begin
             if nAmountPS < nAmount then
@@ -6354,27 +6414,115 @@ begin
           end;
         end;
       finally
-        SourceClientDataSet.EnableControls;
-        SourceClientDataSet.RecNo := nRecNo;
+        RemainsCDS.EnableControls;
+        CheckCDS.GotoBookmark(Bookmark);
       end;
 
     end else if nAmount < 0 then
     begin
-      nRecNo := checkCDS.FieldByName('GoodsId').AsInteger;
       SourceClientDataSet.DisableControls;
       CheckCDS.DisableControls;
       try
-        if CheckCDS.Locate('GoodsId', SourceClientDataSet.FieldByName('GoodsPairSunId').AsInteger, []) then
+        if CheckCDS.Locate('GoodsId', nGoodsPairSun, []) then
         begin
           if (nAmount + checkCDS.FieldByName('Amount').AsCurrency) < 0 then
             edAmount.Text := CurrToStr(- checkCDS.FieldByName('Amount').AsCurrency);
 
-          InsertUpdateBillCheckItems;
+          try
+            FStepSecond := True;
+            InsertUpdateBillCheckItems;
+          finally
+            FStepSecond := False;
+          end;
+        end;
+      finally
+        CheckCDS.EnableControls;
+        SourceClientDataSet.EnableControls;
+        CheckCDS.GotoBookmark(Bookmark);
+      end;
+    end;
+  end;
+
+  if not FStepSecond and not UnitConfigCDS.FindField('isPairedOnlyPromo').AsBoolean and
+     (SourceClientDataSet.FieldByName('GoodsPairSunMainId').AsInteger <> 0) then
+  begin
+    // Только целое количество
+    if (Round(nAmount) <> nAmount) then
+    begin
+      ShowMessage('Товар по соц.проекту должен продаваться целыми упаковками...');
+      exit;
+    end;
+    Bookmark := CheckCDS.GetBookmark;
+    nGoodsPairSun := SourceClientDataSet.FieldByName('GoodsPairSunMainId').AsInteger;
+
+    // Проверим наличие парного
+    if nAmount > 0 then
+    begin
+      nAmountPS := 0;
+      CheckCDS.First;
+      while not CheckCDS.Eof do
+      begin
+        if checkCDS.FieldByName('GoodsId').AsInteger = nGoodsPairSun then
+          nAmountPS := nAmountPS + checkCDS.FieldByName('Amount').AsCurrency;
+        CheckCDS.Next;
+      end;
+      CheckCDS.GotoBookmark(Bookmark);
+
+      RemainsCDS.DisableControls;
+      try
+        if RemainsCDS.Locate('Id', nGoodsPairSun, []) then
+        begin
+          if RemainsCDS.FieldByName('Remains').AsCurrency >= nAmount then
+          begin
+            try
+              FStepSecond := True;
+              if CheckCDS = SourceClientDataSet then CheckCDS.Locate('GoodsId', nGoodsPairSun, []);
+              InsertUpdateBillCheckItems;
+            finally
+              FStepSecond := False;
+            end;
+          end else
+          begin
+            if nAmountPS < nAmount then
+            begin
+              ShowMessage('Не хватает количества товар по соц.проекту к парному товару ...');
+              exit;
+            end;
+          end;
+        end else
+        begin
+          if nAmountPS < nAmount then
+          begin
+            ShowMessage('Товар по соц.проекту к парному товару не найден...');
+            exit;
+          end;
+        end;
+      finally
+        RemainsCDS.EnableControls;
+        CheckCDS.GotoBookmark(Bookmark);
+      end;
+
+    end else if nAmount < 0 then
+    begin
+      SourceClientDataSet.DisableControls;
+      CheckCDS.DisableControls;
+      try
+        if CheckCDS.Locate('GoodsId', nGoodsPairSun, []) then
+        begin
+          if (nAmount + checkCDS.FieldByName('Amount').AsCurrency) < 0 then
+            edAmount.Text := CurrToStr(- checkCDS.FieldByName('Amount').AsCurrency);
+
+          try
+            FStepSecond := True;
+            InsertUpdateBillCheckItems;
+          finally
+            FStepSecond := False;
+          end;
         end;
       finally
         SourceClientDataSet.EnableControls;
         CheckCDS.EnableControls;
-        CheckCDS.Locate('GoodsId', nRecNo, []);
+        CheckCDS.GotoBookmark(Bookmark);
       end;
     end;
   end;
@@ -6861,6 +7009,8 @@ begin
           SourceClientDataSet.FindField('UKTZED').AsVariant;
         CheckCDS.FieldByName('GoodsPairSunId').AsVariant :=
           SourceClientDataSet.FindField('GoodsPairSunId').AsVariant;
+        CheckCDS.FieldByName('GoodsPairSunMainId').AsVariant :=
+          SourceClientDataSet.FindField('GoodsPairSunMainId').AsVariant;
 
         if RemainsCDS <> SourceClientDataSet then
         begin
@@ -6981,6 +7131,8 @@ begin
           SourceClientDataSet.FieldByName('UKTZED').AsVariant;
         CheckCDS.FieldByName('GoodsPairSunId').AsVariant :=
           SourceClientDataSet.FieldByName('GoodsPairSunId').AsVariant;
+        CheckCDS.FieldByName('GoodsPairSunMainId').AsVariant :=
+          SourceClientDataSet.FieldByName('GoodsPairSunMainId').AsVariant;
 
         if RemainsCDS <> SourceClientDataSet then
         begin
@@ -8979,6 +9131,9 @@ var
   str_log_xml: String;
   I: Integer;
 begin
+  // Для админа пропускаем
+//  if gc_User.Session = '3' then Exit;
+
   // Если чек виповский и ещё не проведен - то сохраняем в таблицу випов
   if gc_User.Local And not ANeedComplete AND
     ((AManagerId <> 0) or (ABayerName <> '')) then
@@ -9127,6 +9282,8 @@ begin
           ADS.FieldByName('UKTZED').AsVariant;
         myVIPListCDS.FieldByName('GoodsPairSunId').Value :=
           ADS.FieldByName('GoodsPairSunId').AsVariant;
+        myVIPListCDS.FieldByName('GoodsPairSunMainId').Value :=
+          ADS.FieldByName('GoodsPairSunMainId').AsVariant;
 
         myVIPListCDS.Post;
         ADS.Next;
@@ -9632,6 +9789,7 @@ begin
     SetBanCash(false);
 
     if fBlinkVIP = True then
+    begin
       if btnVIP.Colors.NormalText <> clDefault then
       begin
         btnVIP.Colors.NormalText := clDefault;
@@ -9641,11 +9799,17 @@ begin
       begin { Beep; }
         btnVIP.Colors.NormalText := clYellow;
         btnVIP.Colors.Default := clRed;
-      end
-    else
+      end;
+
+      if not FIsSite then btnVIP.Caption := 'VIP'
+      else if not FIsVIP then btnVIP.Caption := 'Таблетки'
+      else btnVIP.Caption := 'Vip/Табл';
+
+    end else
     begin
       btnVIP.Colors.NormalText := clDefault;
       btnVIP.Colors.Default := clDefault;
+      btnVIP.Caption := 'Vip/Табл';
     end;
 
     if fBlinkCheck = True then
@@ -9691,8 +9855,9 @@ begin
 
       // Получили список ВСЕХ документов - с типом "Не подтвержден"
       spGet_BlinkVIP.Execute;
-      lMovementId_BlinkVIP := spGet_BlinkVIP.ParamByName
-        ('outMovementId_list').Value;
+      lMovementId_BlinkVIP := spGet_BlinkVIP.ParamByName('outMovementId_list').Value;
+      FIsVIP := spGet_BlinkVIP.ParamByName('outIsVIP').Value;
+      FIsSite := spGet_BlinkVIP.ParamByName('outIsSite').Value;
 
       // в этом случае кнопка будет мигать
       fBlinkVIP := lMovementId_BlinkVIP <> '';

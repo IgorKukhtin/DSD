@@ -36,6 +36,7 @@ type
     procedure LoadCheckFormTest;
     procedure LoadCheckDeferredFormTest;
     procedure LoadCheckVIPFormTest;
+    procedure LoadCheckSiteFormTest;
     procedure LoadConditionsKeepFormTest;
     procedure LoadContactPersonFormTest;
     procedure LoadClientsByBankFormTest;
@@ -412,10 +413,10 @@ end;
 
 procedure TLoadFormTest.LoadCheckFormTest;
 begin
-  {
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TCheckSummCardForm'));
   TdsdFormStorageFactory.GetStorage.Load('TCheckSummCardForm');
 
+  {
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TCheckJournalDiscountExternalForm'));
   TdsdFormStorageFactory.GetStorage.Load('TCheckJournalDiscountExternalForm');
   Exit;
@@ -431,11 +432,11 @@ begin
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TChoiceDeferredCheckForm'));
   TdsdFormStorageFactory.GetStorage.Load('TChoiceDeferredCheckForm');
   exit;
-}
+
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TCheckForm'));
   TdsdFormStorageFactory.GetStorage.Load('TCheckForm');
 
- {
+
 
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TPartionGoodsListForm'));
   TdsdFormStorageFactory.GetStorage.Load('TPartionGoodsListForm');
@@ -2290,6 +2291,18 @@ begin
   TdsdFormStorageFactory.GetStorage.Load('TAlternativeGroupForm');
 end;
 
+procedure TLoadFormTest.LoadCheckDeferredFormTest;
+begin
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TCheckDeferredForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TCheckDeferredForm');
+
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TCheckDeferred_SearchForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TCheckDeferred_SearchForm');
+
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TCheckDelayDeferredForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TCheckDelayDeferredForm');
+end;
+
 procedure TLoadFormTest.LoadCheckVIPFormTest;
 begin
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_CashListDiffPeriodForm'));
@@ -2309,6 +2322,18 @@ begin
   //
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TCheckCashForm'));
   TdsdFormStorageFactory.GetStorage.Load('TCheckCashForm');
+end;
+
+procedure TLoadFormTest.LoadCheckSiteFormTest;
+begin
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TCheckSiteForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TCheckSiteForm');
+
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TCheckSite_SearchForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TCheckSite_SearchForm');
+
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TCheckDelaySiteForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TCheckDelaySiteForm');
 end;
 
 procedure TLoadFormTest.LoadOverFormTest;
@@ -2419,12 +2444,6 @@ begin
   TdsdFormStorageFactory.GetStorage.Save
     (GetForm('TChangeIncomePaymentKindForm'));
   TdsdFormStorageFactory.GetStorage.Load('TChangeIncomePaymentKindForm');
-end;
-
-procedure TLoadFormTest.LoadCheckDeferredFormTest;
-begin
-  TdsdFormStorageFactory.GetStorage.Save(GetForm('TCheckDeferredForm'));
-  TdsdFormStorageFactory.GetStorage.Load('TCheckDeferredForm');
 end;
 
 procedure TLoadFormTest.LoadPriceListFormTest;

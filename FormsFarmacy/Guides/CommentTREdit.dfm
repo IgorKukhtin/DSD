@@ -2,7 +2,7 @@
   Left = 0
   Top = 0
   Caption = #1044#1086#1073#1072#1074#1080#1090#1100'/'#1080#1079#1084#1077#1085#1080#1090#1100' <'#1050#1086#1084#1084#1077#1085#1090#1072#1088#1080#1081' '#1089#1090#1088#1086#1082' '#1090#1077#1093#1085#1080#1095#1077#1089#1082#1086#1075#1086' '#1087#1077#1088#1077#1091#1095#1077#1090#1072'>'
-  ClientHeight = 232
+  ClientHeight = 269
   ClientWidth = 439
   Color = clBtnFace
   Font.Charset = DEFAULT_CHARSET
@@ -29,7 +29,7 @@
   end
   object cxButton1: TcxButton
     Left = 91
-    Top = 194
+    Top = 218
     Width = 75
     Height = 25
     Action = dsdInsertUpdateGuides
@@ -39,7 +39,7 @@
   end
   object cxButton2: TcxButton
     Left = 241
-    Top = 194
+    Top = 218
     Width = 75
     Height = 25
     Action = dsdFormClose
@@ -95,6 +95,13 @@
     Properties.ReadOnly = False
     TabOrder = 10
     Width = 80
+  end
+  object cbisBlockFormSUN: TcxCheckBox
+    Left = 20
+    Top = 183
+    Caption = #1041#1083#1086#1082#1080#1088#1086#1074#1072#1090#1100' '#1092#1086#1088#1084#1080#1088#1086#1074#1072#1085#1080#1077' '#1057#1059#1053' '#1087#1088#1080' '#1085#1077' '#1087#1088#1086#1074#1077#1076#1077#1085#1085#1099#1093' '#1058#1055
+    TabOrder = 11
+    Width = 325
   end
   object ActionList: TActionList
     Left = 252
@@ -188,6 +195,14 @@
         DataType = ftFloat
         ParamType = ptInput
         MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inisBlockFormSUN'
+        Value = Null
+        Component = cbisBlockFormSUN
+        DataType = ftBoolean
+        ParamType = ptInput
+        MultiSelectSeparator = ','
       end>
     PackSize = 1
     Left = 188
@@ -256,6 +271,13 @@
         Value = Null
         Component = edDifferenceSum
         DataType = ftFloat
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'isBlockFormSUN'
+        Value = Null
+        Component = cbisBlockFormSUN
+        DataType = ftBoolean
         MultiSelectSeparator = ','
       end>
     PackSize = 1

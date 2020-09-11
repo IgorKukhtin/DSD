@@ -25,10 +25,12 @@ BEGIN
          , MLO_Unit.ObjectId                                      AS UnitId
          , COALESCE (MovementBoolean_RedCheck.ValueData, False)   AS isRedCheck
          , COALESCE (MovementBoolean_Adjustment.ValueData, False) AS isAdjustment
+         , Movement.StatusID
     INTO vbOperDate
        , vbUnitId
        , vbisRedCheck
        , vbisAdjustment
+       , vbStatusID
     FROM Movement
          INNER JOIN MovementLinkObject AS MLO_Unit
                                        ON MLO_Unit.MovementId = Movement.Id
@@ -46,7 +48,7 @@ BEGIN
                                  , inUserId    := vbUserId);
                                  
     -- Прописываем в зарплату
-    IF vbisRedCheck = FALSE AND vbisAdjustment = FALSE
+    IF vbisRedCheck = FALSE AND vbisAdjustment = FALSE AND vbStatusID = zc_Enum_Status_Complete()
     THEN
       PERFORM gpInsertUpdate_MovementItem_WagesTechnicalRediscount(vbUnitId, vbOperDate, zfCalc_UserAdmin());
     END IF;

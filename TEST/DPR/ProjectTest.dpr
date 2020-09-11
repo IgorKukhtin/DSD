@@ -1190,7 +1190,10 @@ uses
   CashOperationBonus in '..\..\Forms\Document\CashOperationBonus.pas' {CashOperationBonusForm: TParentForm},
   Report_BalanceNo in '..\..\Forms\Report\Report_BalanceNo.pas' {Report_BalanceNoForm: TParentForm},
   BarCodeBoxPrintDialog in '..\..\Forms\Guides\BarCodeBoxPrintDialog.pas' {BarCodeBoxPrintDialogForm: TParentForm},
-  ProfitLossService_51201Journal in '..\..\Forms\Document\ProfitLossService_51201Journal.pas' {ProfitLossService_51201JournalForm: TParentForm};
+  ProfitLossService_51201Journal in '..\..\Forms\Document\ProfitLossService_51201Journal.pas' {ProfitLossService_51201JournalForm: TParentForm},
+  MemberMinus in '..\..\Forms\Guides\MemberMinus.pas' {MemberMinusForm: TParentForm},
+  MemberMinusEdit in '..\..\Forms\Guides\MemberMinusEdit.pas' {MemberMinusEditForm: TParentForm},
+  MemberExternal_Juridical_Object in '..\..\Forms\Guides\MemberExternal_Juridical_Object.pas' {MemberExternal_Juridical_ObjectForm: TParentForm};
 
 {$R *.RES}
 {$R DevExpressRus.res}

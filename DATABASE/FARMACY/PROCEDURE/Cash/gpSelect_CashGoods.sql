@@ -157,7 +157,10 @@ BEGIN
            LoadPriceList.JuridicalId           AS JuridicalId,
            LoadPriceList.ContractId            AS ContractId,
            LoadPriceList.AreaId                AS AreaId,
-           COALESCE (ObjectFloat_NDSKind_NDS.ValueData, 0)::TFloat  AS NDS,
+           COALESCE(CASE WHEN LoadPriceListItem.GoodsNDS LIKE '%2%' THEN 20 
+                         WHEN LoadPriceListItem.GoodsNDS LIKE '%7%' THEN 7 
+                         WHEN LoadPriceListItem.GoodsNDS IN ('0', 'Áåç ÍÄÑ') THEN 0 END,
+                         ObjectFloat_NDSKind_NDS.ValueData, 0)::TFloat  AS NDS,
            LoadPriceListItem.Price             AS JuridicalPrice,
            CASE WHEN COALESCE (NULLIF (GoodsPrice.isTOP, FALSE), Object_Goods_Retail.isTop) = TRUE
                      THEN COALESCE (NULLIF (GoodsPrice.PercentMarkup, 0), COALESCE (ObjectFloat_Goods_PercentMarkup.ValueData, 0))
@@ -165,7 +168,10 @@ BEGIN
              END                       :: TFloat AS MarginPercent,
            LoadPriceListItem.ExpirationDate    AS ExpirationDate,
 
-           zfCalc_SalePrice((LoadPriceListItem.Price * (100 + COALESCE (ObjectFloat_NDSKind_NDS.ValueData, 0))/100),                         -- Öåíà Ñ ÍÄÑ
+           zfCalc_SalePrice((LoadPriceListItem.Price * (100 + COALESCE(CASE WHEN LoadPriceListItem.GoodsNDS LIKE '%2%' THEN 20 
+                                                                            WHEN LoadPriceListItem.GoodsNDS LIKE '%7%' THEN 7 
+                                                                            WHEN LoadPriceListItem.GoodsNDS IN ('0', 'Áåç ÍÄÑ') THEN 0 END,
+                                                                            ObjectFloat_NDSKind_NDS.ValueData, 0))/100),                         -- Öåíà Ñ ÍÄÑ
                              CASE WHEN COALESCE (ObjectFloat_Contract_Percent.ValueData, 0) <> 0
                                       THEN MarginCondition.MarginPercent + COALESCE (ObjectFloat_Contract_Percent.valuedata, 0)
                                   ELSE MarginCondition.MarginPercent + COALESCE (ObjectFloat_Juridical_Percent.valuedata, 0)
@@ -255,7 +261,10 @@ BEGIN
                                    AND ObjectFloat_Goods_Price.DescId   = zc_ObjectFloat_Goods_Price()
 
               LEFT JOIN MarginCondition ON MarginCondition.MarginCategoryId = COALESCE (Object_MarginCategoryLink.MarginCategoryId, Object_MarginCategoryLink_all.MarginCategoryId)
-                                      AND (LoadPriceListItem.Price * (100 + COALESCE (ObjectFloat_NDSKind_NDS.ValueData, 0))/100)::TFloat BETWEEN MarginCondition.MinPrice AND MarginCondition.MaxPrice
+                                      AND (LoadPriceListItem.Price * (100 + COALESCE(CASE WHEN LoadPriceListItem.GoodsNDS LIKE '%2%' THEN 20 
+                                                                                          WHEN LoadPriceListItem.GoodsNDS LIKE '%7%' THEN 7 
+                                                                                          WHEN LoadPriceListItem.GoodsNDS IN ('0', 'Áåç ÍÄÑ') THEN 0 END,
+                                                                                          ObjectFloat_NDSKind_NDS.ValueData, 0))/100)::TFloat BETWEEN MarginCondition.MinPrice AND MarginCondition.MaxPrice
 
            LEFT JOIN GoodsPrice ON GoodsPrice.GoodsId = Object_Goods_Retail.Id
 

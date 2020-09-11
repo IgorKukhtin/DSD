@@ -145,7 +145,7 @@ BEGIN
                  -- Текущий остаток
                , REMAINS AS (SELECT Container.ObjectId                                                    AS GoodsId
                                   , SUM (Container.Amount)                                                AS Amount
-                             FROM tmpMovementItem
+                             FROM (SELECT DISTINCT tmpMovementItem.GoodsId FROM tmpMovementItem) AS  tmpMovementItem
                                   LEFT OUTER JOIN Container ON Container.ObjectId = tmpMovementItem.GoodsId
                                                            AND Container.DescID = zc_Container_Count()
                                                            AND Container.WhereObjectId = vbUnitId
@@ -344,4 +344,4 @@ $BODY$
 
 --select * from gpUpdate_Status_TechnicalRediscount(inMovementId := 17785885 , inStatusCode := 2 ,  inSession := '3');
 
-select * from gpUpdate_Status_TechnicalRediscount(inMovementId := 19801455 , inStatusCode := 2 ,  inSession := '3');
+-- select * from gpUpdate_Status_TechnicalRediscount(inMovementId := 19801455 , inStatusCode := 2 ,  inSession := '3');

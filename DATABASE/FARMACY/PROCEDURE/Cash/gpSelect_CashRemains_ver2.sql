@@ -36,7 +36,7 @@ RETURNS TABLE (Id Integer, GoodsId_main Integer, GoodsGroupName TVarChar, GoodsN
                RemainsSUN TFloat,
                GoodsDiscountID  Integer, GoodsDiscountName  TVarChar, isGoodsForProject boolean,
                UKTZED TVarChar,
-               GoodsPairSunId Integer
+               GoodsPairSunId Integer, GoodsPairSunMainId Integer
 
              , PartionDateKindId_check   Integer
              , Price_check               TFloat
@@ -815,7 +815,7 @@ BEGIN
           , COALESCE(tmpGoodsDiscount.isGoodsForProject, FALSE)    AS isGoodsForProject
           , tmpGoodsUKTZED.UKTZED                                  AS UKTZED
           , Object_Goods_PairSun.ID                                AS GoodsPairSunId
-
+          , Object_Goods_PairSun_Main.GoodsPairSunId               AS GoodsPairSunMainId
 
           , CashSessionSnapShot.PartionDateKindId   AS PartionDateKindId_check
           , CashSessionSnapShot.Price               AS Price_check
@@ -834,8 +834,8 @@ BEGIN
             LEFT JOIN Object_Goods_Main AS Object_Goods_Main ON Object_Goods_Main.Id = Object_Goods_Retail.GoodsMainId
             LEFT JOIN tmpGoodsPairSun AS Object_Goods_PairSun
                                       ON Object_Goods_PairSun.GoodsPairSunId = Object_Goods_Retail.Id
-
-
+            LEFT JOIN tmpGoodsPairSun AS Object_Goods_PairSun_Main
+                                      ON Object_Goods_PairSun_Main.Id = Object_Goods_Retail.Id
 
             LEFT JOIN tmpMCSAuto ON tmpMCSAuto.ObjectId = CashSessionSnapShot.ObjectId
             LEFT OUTER JOIN ObjectLink AS Link_Goods_AlternativeGroup

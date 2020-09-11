@@ -27,12 +27,12 @@ BEGIN
   WHERE MovementItem.ID = inMovementItemId;
 
   -- проверка прав пользователя на вызов процедуры
-  IF vbAmount = 0 AND vbMISendId IS NOT NULL
+/*  IF vbAmount = 0 AND vbMISendId IS NOT NULL
   THEN
     vbUserId:= lpGetUserBySession (inSession);  
-  ELSE
+  ELSE*/
     vbUserId := lpCheckRight (inSession, zc_Enum_Process_SetErased_MI_TechnicalRediscount());
-  END IF;
+--  END IF;
 
   IF COALESCE (inMovementItemId, 0) = 0
   THEN

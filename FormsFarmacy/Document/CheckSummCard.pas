@@ -50,6 +50,7 @@ type
     colSummCard: TcxGridDBColumn;
     actUpdateDataSet: TdsdUpdateDataSet;
     spUpdateMovement: TdsdStoredProc;
+    CancelReason: TcxGridDBColumn;
   private
     { Private declarations }
   public

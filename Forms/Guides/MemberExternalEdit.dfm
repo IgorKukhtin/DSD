@@ -2,7 +2,7 @@
   Left = 0
   Top = 0
   Caption = #1044#1086#1073#1072#1074#1080#1090#1100'/'#1048#1079#1084#1077#1085#1080#1090#1100' <'#1060#1080#1079#1080#1095#1077#1089#1082#1080#1077' '#1083#1080#1094#1072'('#1089#1090#1086#1088#1086#1085#1085#1080#1077')>'
-  ClientHeight = 210
+  ClientHeight = 247
   ClientWidth = 412
   Color = clBtnFace
   Font.Charset = DEFAULT_CHARSET
@@ -29,7 +29,7 @@
   end
   object cxButton1: TcxButton
     Left = 90
-    Top = 171
+    Top = 211
     Width = 75
     Height = 25
     Action = dsdInsertUpdateGuides
@@ -39,7 +39,7 @@
   end
   object cxButton2: TcxButton
     Left = 224
-    Top = 171
+    Top = 211
     Width = 75
     Height = 25
     Action = dsdFormClose
@@ -71,6 +71,17 @@
     Left = 59
     Top = 101
     Caption = #1042#1086#1076#1080#1090#1077#1083#1100#1089#1082#1086#1077' '#1091#1076#1086#1089#1090#1086#1074#1077#1088#1077#1085#1080#1077
+  end
+  object cxLabel2: TcxLabel
+    Left = 59
+    Top = 152
+    Caption = #1048#1053#1053
+  end
+  object edINN: TcxTextEdit
+    Left = 59
+    Top = 173
+    TabOrder = 9
+    Width = 302
   end
   object ActionList: TActionList
     Left = 272
@@ -140,6 +151,14 @@
         DataType = ftString
         ParamType = ptInput
         MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inINN'
+        Value = Null
+        Component = edINN
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
       end>
     PackSize = 1
     Left = 344
@@ -186,6 +205,13 @@
         Name = 'DriverCertificate'
         Value = Null
         Component = edDriverCertificate
+        DataType = ftString
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'INN'
+        Value = Null
+        Component = edINN
         DataType = ftString
         MultiSelectSeparator = ','
       end>

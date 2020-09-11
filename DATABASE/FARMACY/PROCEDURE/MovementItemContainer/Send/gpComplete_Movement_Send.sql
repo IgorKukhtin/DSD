@@ -31,6 +31,9 @@ $BODY$
   DECLARE vbisReceived Boolean;
   DECLARE vbPartionDateKindId Integer;
   DECLARE vbInsertDate TDateTime;
+  DECLARE vbComment TVarChar;
+  DECLARE vbisAuto Boolean;
+  DECLARE vbisVIP Boolean;
 BEGIN
     vbUserId:= inSession;
 
@@ -52,7 +55,10 @@ BEGIN
         COALESCE (MovementBoolean_SUN.ValueData, FALSE),
         COALESCE (MovementBoolean_Received.ValueData, FALSE),
         COALESCE (MovementLinkObject_PartionDateKind.ObjectId, 0),
-        DATE_TRUNC ('DAY', MovementDate_Insert.ValueData)
+        DATE_TRUNC ('DAY', MovementDate_Insert.ValueData),
+        COALESCE (MovementBoolean_isAuto.ValueData, FALSE), 
+        COALESCE (MovementBoolean_VIP.ValueData, FALSE),
+        COALESCE (MovementString_Comment.ValueData, '')
         
     INTO
         outOperDate,
@@ -64,6 +70,9 @@ BEGIN
         vbisReceived,
         vbPartionDateKindId,
         vbInsertDate
+        vbisAuto,
+        vbisVIP,
+        vbComment
     FROM Movement
         INNER JOIN MovementLinkObject AS Movement_From
                                       ON Movement_From.MovementId = Movement.Id
@@ -86,6 +95,15 @@ BEGIN
         LEFT JOIN MovementDate AS MovementDate_Insert
                                ON MovementDate_Insert.MovementId = Movement.Id
                               AND MovementDate_Insert.DescId = zc_MovementDate_Insert()
+        LEFT JOIN MovementString AS MovementString_Comment
+                                 ON MovementString_Comment.MovementId = Movement.Id
+                                AND MovementString_Comment.DescId = zc_MovementString_Comment()
+        LEFT JOIN MovementBoolean AS MovementBoolean_VIP
+                                  ON MovementBoolean_VIP.MovementId = Movement.Id
+                                 AND MovementBoolean_VIP.DescId = zc_MovementBoolean_VIP()
+        LEFT JOIN MovementBoolean AS MovementBoolean_isAuto
+                                  ON MovementBoolean_isAuto.MovementId = Movement.Id
+                                 AND MovementBoolean_isAuto.DescId = zc_MovementBoolean_isAuto()
     WHERE Movement.Id = inMovementId;
 
     IF EXISTS(SELECT * FROM gpSelect_Object_RoleUser (inSession) AS Object_RoleUser
@@ -131,9 +149,14 @@ BEGIN
     
     IF COALESCE (vbisSUN, FALSE) = True AND COALESCE (vbisReceived, False) = False
     THEN
-      RAISE EXCEPTION 'Ошибка. Коллеги, переиещение по СУН можно проводить тллько с признаком "Получено-да".';
+      RAISE EXCEPTION 'Ошибка. Коллеги, перемещение по СУН можно проводить тллько с признаком "Получено-да".';
     END IF;
     
+    IF COALESCE(vbComment, '') = '' AND vbisAuto = FALSE AND vbisVIP = FALSE
+       AND COALESCE(vbPartionDateKindId, 0) <> zc_Enum_PartionDateKind_0()
+    THEN
+      RAISE EXCEPTION 'ВНЕСИТЕ В ЯЧЕЙКУ КОММЕНТАРИЙ - ПРИЧИНУ ПЕРЕДАЧИ!!!';
+    END IF;
 
     -- дата накладной перемещения должна совпадать с текущей датой.
     -- Если пытаются провести док-т числом позже - выдаем предупреждение
