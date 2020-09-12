@@ -99,6 +99,7 @@ BEGIN
                              , RemainsMCS_from TFloat, SummaRemainsMCS_from TFloat
                              , RemainsMCS_to TFloat, SummaRemainsMCS_to TFloat
                              , AmountSend TFloat, Amount_Reserve TFloat
+                             , isClose Boolean
                              , PRIMARY KEY (UnitId, GoodsId)
                               ) ON COMMIT DROP;
     -- Таблица - Результат
@@ -391,6 +392,7 @@ BEGIN
                             , RemainsMCS_from, SummaRemainsMCS_from
                             , RemainsMCS_to, SummaRemainsMCS_to
                             , AmountSend, Amount_Reserve
+                            , isClose
                              )
         WITH 
           tmpOverSettings AS (SELECT *
@@ -453,7 +455,7 @@ BEGIN
                , (Object_Remains.RemainsStart_save * COALESCE (ObjectHistoryFloat_Price.ValueData, 0)) AS SummaRemainsStart
                
                  -- Излишки
-               , CASE WHEN ObjectBoolean_Goods_Close.ValueData = TRUE
+               , CASE WHEN ObjectBoolean_Goods_Close.ValueData = TRUE and 1=0 -- 11.09.20 Люба попросила чтоб закрытые товары участвовали в расчете
                            THEN 0
                       ELSE CASE WHEN inIsReserve = FALSE
                                 THEN CASE WHEN Object_Remains.RemainsStart > tmpGoods_list.MCSValue AND tmpGoods_list.MCSValue >= 0
@@ -469,7 +471,7 @@ BEGIN
                            END     
                  END AS RemainsMCS_from
 
-               , CASE WHEN ObjectBoolean_Goods_Close.ValueData = TRUE
+               , CASE WHEN ObjectBoolean_Goods_Close.ValueData = TRUE and 1=0 -- 11.09.20 Люба попросила чтоб закрытые товары участвовали в расчете
                            THEN 0
                       ELSE CASE WHEN inIsReserve = FALSE
                                 THEN CASE WHEN Object_Remains.RemainsStart > tmpGoods_list.MCSValue AND tmpGoods_list.MCSValue >= 0
@@ -488,7 +490,7 @@ BEGIN
                  END AS SummaRemainsMCS_from
 
                  -- Не хватает
-               , CASE WHEN ObjectBoolean_Goods_Close.ValueData = TRUE
+               , CASE WHEN ObjectBoolean_Goods_Close.ValueData = TRUE and 1=0 -- 11.09.20 Люба попросила чтоб закрытые товары участвовали в расчете
                            THEN 0
                       ELSE CASE WHEN inIsReserve = FALSE
                                 THEN CASE WHEN COALESCE (Object_Remains.RemainsStart, 0) < tmpGoods_list.MCSValue AND tmpGoods_list.MCSValue > 0
@@ -503,7 +505,7 @@ BEGIN
                                      END
                            END                                
                  END AS RemainsMCS_to
-               , CASE WHEN ObjectBoolean_Goods_Close.ValueData = TRUE
+               , CASE WHEN ObjectBoolean_Goods_Close.ValueData = TRUE and 1=0 -- 11.09.20 Люба попросила чтоб закрытые товары участвовали в расчете
                            THEN 0
                       ELSE CASE WHEN inIsReserve = FALSE
                                 THEN CASE WHEN COALESCE (Object_Remains.RemainsStart, 0) < tmpGoods_list.MCSValue AND tmpGoods_list.MCSValue > 0
@@ -524,6 +526,7 @@ BEGIN
                , Object_Send.Amount               AS AmountSend
                , COALESCE (tmpReserve.Amount, 0)  AS Amount_Reserve
 --               , Object_Send.Amount_To     AS AmountSend_To
+               , COALESCE (ObjectBoolean_Goods_Close.ValueData, FALSE) :: Boolean AS isClose
 
             FROM tmpGoods_list
                 LEFT JOIN tmpRemains AS Object_Remains
@@ -632,7 +635,11 @@ BEGIN
                         FROM tmpDataTo
                         GROUP BY tmpDataTo.GoodsMainId
                        )
-          
+
+   -- Маркетинговый контракт
+   , GoodsPromo AS (SELECT DISTINCT tmp.GoodsId
+                    FROM lpSelect_MovementItem_Promo_onDate (inOperDate:= CURRENT_DATE) AS tmp   --CURRENT_DATE
+                    )
                       
      SELECT    tmpData.GoodsId
              , tmpData.GoodsMainId
@@ -666,6 +673,9 @@ BEGIN
              , tmpData.AmountSend              :: TFloat  AS AmountSend
              , tmpData.Amount_Reserve          :: TFloat  AS Amount_Reserve
 
+             , tmpData.isClose                 :: Boolean
+             , CASE WHEN COALESCE(GoodsPromo.GoodsMainId,0) <> 0 THEN TRUE ELSE FALSE END :: Boolean AS isPromo
+
              --  , CASE WHEN COALESCE (tmpMIChild.Amount, 0) > tmpData.RemainsStart THEN TRUE ELSE FALSE END ::Boolean AS isError
 
      FROM tmpData
@@ -688,7 +698,9 @@ BEGIN
           LEFT JOIN ObjectLink AS ObjectLink_Goods_Measure
                                ON ObjectLink_Goods_Measure.ObjectId = tmpData.GoodsId
                               AND ObjectLink_Goods_Measure.DescId = zc_ObjectLink_Goods_Measure()
-          LEFT JOIN Object AS Object_Measure ON Object_Measure.Id = ObjectLink_Goods_Measure.ChildObjectId 
+          LEFT JOIN Object AS Object_Measure ON Object_Measure.Id = ObjectLink_Goods_Measure.ChildObjectId
+
+          LEFT JOIN GoodsPromo ON GoodsPromo.GoodsId = tmpData.GoodsId
 
      WHERE tmpData.UnitId = inUnitId
  --      AND tmpDataTo.RemainsMCS_result > 0;
@@ -891,4 +903,4 @@ $BODY$
 
 -- тест
 --SELECT * FROM gpReport_RemainsOverGoods_To(inUnitId := 183288 , inStartDate := ('23.02.2017')::TDateTime , inPeriod := 30 , inDay := 30 , inAssortment := 1 , inisMCS := 'False' , inisInMCS := 'True' , inisRecal := 'False' , inisAssortment := 'False' , inIsReserve:='False' ,  inSession := '3')
-
+--FETCH ALL "<unnamed portal 1>";
