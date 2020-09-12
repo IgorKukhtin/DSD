@@ -405,7 +405,7 @@ inisMovement:= FALSE;
                                  , tmpContainer.BranchId
                                  , SUM (CASE WHEN MIContainer.MovementDescId = zc_Movement_Sale() THEN MIContainer.Amount ELSE 0 END) AS Sum_Sale -- “олько продажи
                                  , SUM (CASE WHEN MIContainer.MovementDescId IN (zc_Movement_Sale(), zc_Movement_ReturnIn()) THEN MIContainer.Amount ELSE 0 END) AS Sum_SaleReturnIn -- продажи - возвраты
-                                 , SUM (CASE WHEN MIContainer.MovementDescId IN (zc_Movement_BankAccount(), zc_Movement_Cash(), zc_Movement_SendDebt())
+                                 , SUM (CASE WHEN MIContainer.MovementDescId IN (zc_Movement_BankAccount(), zc_Movement_Cash()/*, zc_Movement_SendDebt()*/)
                                                   THEN -1 * MIContainer.Amount
                                              ELSE 0
                                         END) AS Sum_Account -- оплаты
@@ -418,7 +418,7 @@ inisMovement:= FALSE;
                                  JOIN tmpContainer ON tmpContainer.ContainerId = MIContainer.ContainerId
                             WHERE MIContainer.DescId = zc_MIContainer_Summ()
                               AND MIContainer.OperDate BETWEEN inStartDate AND inEndDate
-                              AND MIContainer.MovementDescId IN (zc_Movement_Sale(), zc_Movement_ReturnIn(), zc_Movement_BankAccount(),zc_Movement_Cash(), zc_Movement_SendDebt())
+                              AND MIContainer.MovementDescId IN (zc_Movement_Sale(), zc_Movement_ReturnIn(), zc_Movement_BankAccount(),zc_Movement_Cash()/*, zc_Movement_SendDebt()*/)
                             GROUP BY tmpContainer.JuridicalId
                                    , tmpContainer.ContractId_child
                                    , tmpContainer.InfoMoneyId_child

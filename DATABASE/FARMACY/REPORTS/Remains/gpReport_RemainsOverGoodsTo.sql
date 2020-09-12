@@ -674,7 +674,7 @@ BEGIN
              , tmpData.Amount_Reserve          :: TFloat  AS Amount_Reserve
 
              , tmpData.isClose                 :: Boolean
-             , CASE WHEN COALESCE(GoodsPromo.GoodsMainId,0) <> 0 THEN TRUE ELSE FALSE END :: Boolean AS isPromo
+             , CASE WHEN COALESCE(GoodsPromo.GoodsId,0) <> 0 THEN TRUE ELSE FALSE END :: Boolean AS isPromo
 
              --  , CASE WHEN COALESCE (tmpMIChild.Amount, 0) > tmpData.RemainsStart THEN TRUE ELSE FALSE END ::Boolean AS isError
 
