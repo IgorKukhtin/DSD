@@ -3683,11 +3683,11 @@ begin
 
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TReceipt_ObjectForm'));
   TdsdFormStorageFactory.GetStorage.Load('TReceipt_ObjectForm');
-  }
+
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TReceiptGoods_ObjectForm'));
   TdsdFormStorageFactory.GetStorage.Load('TReceiptGoods_ObjectForm');
   // составл€ющие рецептур
-  {TdsdFormStorageFactory.GetStorage.Save(GetForm('TReceiptComponentsForm'));
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TReceiptComponentsForm'));
   TdsdFormStorageFactory.GetStorage.Load('TReceiptComponentsForm');
   }
 end;
