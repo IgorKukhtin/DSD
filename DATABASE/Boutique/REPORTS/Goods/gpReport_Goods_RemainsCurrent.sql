@@ -64,6 +64,7 @@ RETURNS TABLE (PartionId            Integer
              , OperPriceList_curr      TFloat -- *Цена по прайсу в валюте по курсу на тек дату
              , OperPriceList_curr_doc  TFloat -- *Цена по прайсу в валюте по курсу документа  
              , PriceJur                TFloat -- Цена вх. без ск. в валюте (информативно)
+             , OperPriceList_first     TFloat -- первая цена по прайсу (информативно)
              
              , OperPriceList_disc           TFloat -- Цена по прайсу в ГРН по курсу на тек дату c учетом Сезонной скидки
              , OperPriceList_doc_disc       TFloat -- Цена по прайсу в ГРН по курсу документа c учетом Сезонной скидки
@@ -189,33 +190,48 @@ BEGIN
                          AND Object.ObjectCode IN (2, 3)
                          AND Object.isErased = FALSE
                        )
-     -- Последняя цена из Прайс-листа
-   , tmpPriceList AS (SELECT _tmpUnit.UnitId                                  AS UnitId
-                           , ObjectLink_PriceListItem_Goods.ChildObjectId     AS GoodsId
-                           , ObjectHistoryFloat_PriceListItem_Value.ValueData AS OperPriceList
-                           , COALESCE (ObjectHistoryLink_Currency.ObjectId, _tmpUnit.CurrencyId_pl) AS CurrencyId_pl
-                      FROM _tmpUnit
-                           INNER JOIN ObjectLink AS ObjectLink_PriceListItem_PriceList
-                                                 ON ObjectLink_PriceListItem_PriceList.ChildObjectId = _tmpUnit.PriceListId
-                                                AND ObjectLink_PriceListItem_PriceList.DescId        = zc_ObjectLink_PriceListItem_PriceList()
-                           INNER JOIN ObjectLink AS ObjectLink_PriceListItem_Goods
-                                                 ON ObjectLink_PriceListItem_Goods.ObjectId = ObjectLink_PriceListItem_PriceList.ObjectId
-                                                AND ObjectLink_PriceListItem_Goods.DescId   = zc_ObjectLink_PriceListItem_Goods()
-
-                           LEFT JOIN ObjectHistory AS ObjectHistory_PriceListItem
-                                                   ON ObjectHistory_PriceListItem.ObjectId = ObjectLink_PriceListItem_PriceList.ObjectId
-                                                  AND ObjectHistory_PriceListItem.DescId   = zc_ObjectHistory_PriceListItem()
-                                                  -- Последняя цена
-                                                  AND ObjectHistory_PriceListItem.EndDate  = zc_DateEnd()
-                           LEFT JOIN ObjectHistoryFloat AS ObjectHistoryFloat_PriceListItem_Value
-                                                        ON ObjectHistoryFloat_PriceListItem_Value.ObjectHistoryId = ObjectHistory_PriceListItem.Id
-                                                       AND ObjectHistoryFloat_PriceListItem_Value.DescId = zc_ObjectHistoryFloat_PriceListItem_Value()
-
-                           LEFT JOIN ObjectHistoryLink AS ObjectHistoryLink_Currency
-                                                       ON ObjectHistoryLink_Currency.ObjectHistoryId = ObjectHistory_PriceListItem.Id
-                                                      AND ObjectHistoryLink_Currency.DescId          = zc_ObjectHistoryLink_PriceListItem_Currency()
-                      WHERE zc_Enum_GlobalConst_isTerry() = FALSE
-                     )
+     -- выбираем из прайслистов первую и последнюю цены 
+   , tmpPriceList AS (SELECT tmp.UnitId
+                           , tmp.GoodsId
+                           , tmp.CurrencyId_pl
+                           , MAX (CASE WHEN tmp.EndDate = zc_DateEnd() THEN tmp.OperPriceList ELSE 0 END)    AS OperPriceList
+                           , MAX (CASE WHEN tmp.StartDate = tmp.FirstDate THEN tmp.OperPriceList ELSE 0 END) AS OperPriceList_first
+                      FROM (SELECT _tmpUnit.UnitId                                  AS UnitId
+                                 , ObjectLink_PriceListItem_Goods.ChildObjectId     AS GoodsId
+                                 , ObjectHistoryFloat_PriceListItem_Value.ValueData AS OperPriceList
+                                 , COALESCE (ObjectHistoryLink_Currency.ObjectId, _tmpUnit.CurrencyId_pl) AS CurrencyId_pl
+                                 , ObjectHistory_PriceListItem.StartDate
+                                 , ObjectHistory_PriceListItem.EndDate
+                                 , MIN (ObjectHistory_PriceListItem.StartDate) OVER (PARTITION BY _tmpUnit.UnitId, ObjectLink_PriceListItem_Goods.ChildObjectId) AS FirstDate
+                            FROM _tmpUnit
+                                 INNER JOIN ObjectLink AS ObjectLink_PriceListItem_PriceList
+                                                       ON ObjectLink_PriceListItem_PriceList.ChildObjectId = _tmpUnit.PriceListId
+                                                      AND ObjectLink_PriceListItem_PriceList.DescId        = zc_ObjectLink_PriceListItem_PriceList()
+                                 INNER JOIN ObjectLink AS ObjectLink_PriceListItem_Goods
+                                                       ON ObjectLink_PriceListItem_Goods.ObjectId = ObjectLink_PriceListItem_PriceList.ObjectId
+                                                      AND ObjectLink_PriceListItem_Goods.DescId   = zc_ObjectLink_PriceListItem_Goods()
+      
+                                 LEFT JOIN ObjectHistory AS ObjectHistory_PriceListItem
+                                                         ON ObjectHistory_PriceListItem.ObjectId = ObjectLink_PriceListItem_PriceList.ObjectId
+                                                        AND ObjectHistory_PriceListItem.DescId   = zc_ObjectHistory_PriceListItem()
+                                                        -- Последняя цена
+                                                        --AND ObjectHistory_PriceListItem.EndDate  = zc_DateEnd()
+                                 LEFT JOIN ObjectHistoryFloat AS ObjectHistoryFloat_PriceListItem_Value
+                                                              ON ObjectHistoryFloat_PriceListItem_Value.ObjectHistoryId = ObjectHistory_PriceListItem.Id
+                                                             AND ObjectHistoryFloat_PriceListItem_Value.DescId = zc_ObjectHistoryFloat_PriceListItem_Value()
+      
+                                 LEFT JOIN ObjectHistoryLink AS ObjectHistoryLink_Currency
+                                                             ON ObjectHistoryLink_Currency.ObjectHistoryId = ObjectHistory_PriceListItem.Id
+                                                            AND ObjectHistoryLink_Currency.DescId          = zc_ObjectHistoryLink_PriceListItem_Currency()
+                            WHERE zc_Enum_GlobalConst_isTerry() = FALSE
+                           ) AS tmp
+                      WHERE tmp.EndDate = zc_DateEnd()
+                         OR tmp.StartDate = tmp.FirstDate
+                      GROUP BY tmp.UnitId
+                           , tmp.GoodsId
+                           , tmp.CurrencyId_pl
+                      )
+                       
      -- Остатки + Партии
    , tmpContainer AS (SELECT Container.WhereObjectId                                   AS UnitId
                            , Container.PartionId                                       AS PartionId
@@ -248,6 +264,7 @@ BEGIN
                            , Object_PartionGoods.CountForPrice
 
                            , COALESCE (tmpPriceList.OperPriceList, Object_PartionGoods.OperPriceList) AS OperPriceList
+                           , tmpPriceList.OperPriceList_first                                         AS OperPriceList_first
                            , COALESCE (tmpPriceList.CurrencyId_pl, zc_Currency_Basis())               AS CurrencyId_pl
                            
                            -- , CASE WHEN Container.WhereObjectId = Object_PartionGoods.UnitId THEN Object_PartionGoods.Amount ELSE 0 END AS Amount_in
@@ -323,6 +340,7 @@ BEGIN
                               , tmpContainer.CurrencyId
                               , tmpContainer.CurrencyId_pl
                               , tmpContainer.OperPriceList
+                              , tmpContainer.OperPriceList_first
                               , tmpContainer.UnitId_in
 
                                 --  только для Ord = 1
@@ -407,6 +425,7 @@ BEGIN
                                 , tmpContainer.CurrencyId_pl
                                 , tmpContainer.PeriodYear
                                 , tmpContainer.OperPriceList
+                                , tmpContainer.OperPriceList_first
                                 , tmpContainer.UnitId_in
                                 , MS_Comment.ValueData
                                 , MF_ChangePercent.ValueData
@@ -452,7 +471,10 @@ BEGIN
                           , tmpData_All.CurrencyId_pl
                           
                             -- Цена прайс
-                          , tmpData_All.OperPriceList AS OperPriceList_orig
+                          , tmpData_All.OperPriceList       AS OperPriceList_orig
+                           -- первая цена товара (инф.) 
+                          , tmpData_All.OperPriceList_first AS OperPriceList_first
+                          
                             -- Цена прайс - переводим в ГРН, по курсу "сегодня"
                           , tmpData_All.OperPriceList * (CASE WHEN tmpData_All.CurrencyId_pl = zc_Currency_Basis() THEN 1 WHEN tmpCurrency.Amount   <> 0 THEN tmpCurrency.Amount   ELSE 1 END
                                                        / CASE WHEN tmpData_All.CurrencyId_pl = zc_Currency_Basis() THEN 1 WHEN tmpCurrency.ParValue <> 0 THEN tmpCurrency.ParValue ELSE 1 END
@@ -515,6 +537,7 @@ BEGIN
                             , tmpData_All.CurrencyId
                             , tmpData_All.CurrencyId_pl
                             , tmpData_All.OperPriceList
+                            , tmpData_All.OperPriceList_first
                             , tmpData_All.UnitId_in
                             , tmpData_All.Comment_in
                             , tmpData_All.ChangePercent_in
@@ -685,7 +708,8 @@ BEGIN
              END :: TFloat AS OperPrice_grn_doc
 
              -- Цена по прайсу
-           , tmpData.OperPriceList_orig :: TFloat
+           , tmpData.OperPriceList_orig  :: TFloat
+           
              -- Цена по прайсу в ГРН  тек.курс
            , CAST (tmpData.OperPriceList AS NUMERIC (16, 0)) :: TFloat
              -- Цена по прайсу в ГРН курс.документа
@@ -704,6 +728,9 @@ BEGIN
            , CASE WHEN tmpData.Amount_in  <> 0 THEN tmpData.TotalSummPriceJur / tmpData.Amount_in
                   ELSE 0
              END :: TFloat AS PriceJur
+
+             -- первая цена товара (инф.)
+           , tmpData.OperPriceList_first :: TFloat
 
              --c учетом сезонной скидки
              -- Цена по прайсу в ГРН  тек.курс
