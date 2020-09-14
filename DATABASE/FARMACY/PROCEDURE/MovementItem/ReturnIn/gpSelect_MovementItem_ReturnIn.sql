@@ -33,6 +33,8 @@ $BODY$
   DECLARE vbObjectId Integer;
   DECLARE vbParentId Integer;
   DECLARE vbUnitId Integer;
+  DECLARE vbRoundingTo10 Boolean;
+  DECLARE vbRoundingDown Boolean;
   DECLARE vbDate_6 TDateTime;
   DECLARE vbDate_3 TDateTime;
   DECLARE vbDate_1 TDateTime;
@@ -47,9 +49,13 @@ BEGIN
 
     --Определили подразделение для розничной цены и дату для остатка
     SELECT
-        MovementFloat_MovementId.ValueData::Integer, MovementLinkObject_Unit.ObjectId
+          MovementFloat_MovementId.ValueData::Integer
+        , MovementLinkObject_Unit.ObjectId
+        , COALESCE (MB_RoundingTo10.ValueData, FALSE)::boolean
+        , COALESCE (MB_RoundingDown.ValueData, FALSE)::boolean
     INTO
-        vbParentId, vbUnitId
+        vbParentId, vbUnitId, vbRoundingTo10, vbRoundingDown
+
     FROM Movement
         INNER JOIN MovementLinkObject AS MovementLinkObject_Unit
                                       ON MovementLinkObject_Unit.MovementId = Movement.Id
@@ -57,6 +63,12 @@ BEGIN
         LEFT JOIN MovementFloat AS MovementFloat_MovementId
                                 ON MovementFloat_MovementId.MovementId = Movement.Id
                                AND MovementFloat_MovementId.DescId = zc_MovementFloat_MovementId()
+        LEFT JOIN MovementBoolean AS MB_RoundingTo10
+                                  ON MB_RoundingTo10.MovementId = MovementFloat_MovementId.ValueData::Integer
+                                 AND MB_RoundingTo10.DescId = zc_MovementBoolean_RoundingTo10()
+        LEFT JOIN MovementBoolean AS MB_RoundingDown
+                                  ON MB_RoundingDown.MovementId = MovementFloat_MovementId.ValueData::Integer
+                                 AND MB_RoundingDown.DescId = zc_MovementBoolean_RoundingDown()
     WHERE Movement.Id = inMovementId;
 
     -- значения для разделения по срокам
@@ -169,8 +181,11 @@ BEGIN
                  , tmpContainer.Amount            AS AmountCheck
                  , MovementItem.Amount        AS Amount
                  , COALESCE (MIFloat_Price.ValueData, tmpContainer.Price)           AS Price
-
-                 , Round(COALESCE (MIFloat_Price.ValueData, tmpContainer.Price) * MovementItem.Amount, 1)::TFloat AS Summ
+                 , CASE WHEN vbRoundingDown = True
+                      THEN TRUNC(COALESCE (MovementItem.Amount, 0) * MIFloat_Price.ValueData, 1)::TFloat
+                      ELSE CASE WHEN vbRoundingTo10 = True
+                      THEN (((COALESCE (MovementItem.Amount, 0)) * MIFloat_Price.ValueData)::NUMERIC (16, 1))::TFloat
+                      ELSE (((COALESCE (MovementItem.Amount, 0)) * MIFloat_Price.ValueData)::NUMERIC (16, 2))::TFloat END END AS Summ
                  , ObjectFloat_NDSKind_NDS.ValueData  AS NDS
                  , MIString_UID.ValueData     AS List_UID
 
@@ -323,7 +338,11 @@ BEGIN
                  , MovementItem.Amount        AS Amount
                  , MIFloat_Price.ValueData    AS Price
 
-                 , Round(MIFloat_Price.ValueData * MovementItem.Amount, 1)::TFloat AS Summ
+                 , CASE WHEN vbRoundingDown = True
+                      THEN TRUNC(COALESCE (MovementItem.Amount, 0) * MIFloat_Price.ValueData, 1)::TFloat
+                      ELSE CASE WHEN vbRoundingTo10 = True
+                      THEN (((COALESCE (MovementItem.Amount, 0)) * MIFloat_Price.ValueData)::NUMERIC (16, 1))::TFloat
+                      ELSE (((COALESCE (MovementItem.Amount, 0)) * MIFloat_Price.ValueData)::NUMERIC (16, 2))::TFloat END END AS AmountSumm
                  , ObjectFloat_NDSKind_NDS.ValueData  AS NDS
                  , MIString_UID.ValueData     AS List_UID
 
@@ -381,5 +400,6 @@ $BODY$
 
 -- тест
 --  select * from lpDelete_MovementItem (365195207, '3');
-select * from gpSelect_MovementItem_ReturnIn(inMovementId := 19806214  ,  inShowAll := False, inIsErased := FALSE, inSession := '3');
+-- select * from gpSelect_MovementItem_ReturnIn(inMovementId := 19806214  ,  inShowAll := False, inIsErased := FALSE, inSession := '3');
 
+select * from gpSelect_MovementItem_ReturnIn(inMovementId := 20242591 , inShowAll := 'False' , inIsErased := 'False' ,  inSession := '3');

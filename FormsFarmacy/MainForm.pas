@@ -729,6 +729,8 @@ type
     N253: TMenuItem;
     actLayoutJournal: TdsdOpenForm;
     miLayoutJournal: TMenuItem;
+    actReport_ChangeCommentsSUN: TdsdOpenForm;
+    N254: TMenuItem;
     procedure actSaveDataExecute(Sender: TObject);
 
     procedure miRepriceClick(Sender: TObject);

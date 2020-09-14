@@ -597,7 +597,7 @@ begin
   if not СообщениеКА(FPrinter.GETERROR) then Exit;
   if not TryStrToCurr(Trim(StringReplace(S, '.', FormatSettings.DecimalSeparator, [rfReplaceAll])), nSum[1]) then nSum[1] := 0;
 
-  S := FPrinter.SUMDAY[0, 3 , 0, 2, Password];
+  S := FPrinter.SUMDAY[0, 2 , 0, 2, Password];
   if not СообщениеКА(FPrinter.GETERROR) then Exit;
   if not TryStrToCurr(Trim(StringReplace(S, '.', FormatSettings.DecimalSeparator, [rfReplaceAll])), nSum[2]) then nSum[2] := 0;
 
@@ -609,7 +609,7 @@ begin
   if not СообщениеКА(FPrinter.GETERROR) then Exit;
   if not TryStrToCurr(Trim(StringReplace(S, '.', FormatSettings.DecimalSeparator, [rfReplaceAll])), nSum[4]) then nSum[4] := 0;
 
-  S := FPrinter.SUMDAY[1, 3, 0, 2, Password];
+  S := FPrinter.SUMDAY[1, 2, 0, 2, Password];
   if not СообщениеКА(FPrinter.GETERROR) then Exit;
   if not TryStrToCurr(Trim(StringReplace(S, '.', FormatSettings.DecimalSeparator, [rfReplaceAll])), nSum[5]) then nSum[5] := 0;
 

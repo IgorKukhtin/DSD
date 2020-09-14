@@ -77,6 +77,9 @@ type
     ExecSPPrintSticker: TdsdExecStoredProc;
     spSelectPrintSticker: TdsdStoredProc;
     dxBarButton3: TdxBarButton;
+    actComplete: TdsdExecStoredProc;
+    dxBarButton4: TdxBarButton;
+    spMovementComplete: TdsdStoredProc;
   private
     { Private declarations }
   public

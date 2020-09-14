@@ -944,7 +944,8 @@ uses
   CheckDelayVIP in '..\..\FormsFarmacy\Document\CheckDelayVIP.pas' {CheckDelayVIPForm: TParentForm},
   CheckSite_Search in '..\..\FormsFarmacy\Document\CheckSite_Search.pas' {CheckSite_SearchForm: TParentForm},
   CheckSite in '..\..\FormsFarmacy\Document\CheckSite.pas' {CheckSiteForm: TParentForm},
-  CheckDelaySite in '..\..\FormsFarmacy\Document\CheckDelaySite.pas' {CheckDelaySiteForm: TParentForm};
+  CheckDelaySite in '..\..\FormsFarmacy\Document\CheckDelaySite.pas' {CheckDelaySiteForm: TParentForm},
+  Report_ChangeCommentsSUN in '..\..\FormsFarmacy\Report\Report_ChangeCommentsSUN.pas' {Report_ChangeCommentsSUNForm: TParentForm};
 
 {$R *.res}
 {$R DevExpressRus.res}

@@ -275,7 +275,7 @@ BEGIN
                                   LEFT JOIN MovementString AS MovementString_CommentError ON Movement.Id     = MovementString_CommentError.MovementId
                                                           AND MovementString_CommentError.DescId = zc_MovementString_CommentError()
                                                           AND MovementString_CommentError.ValueData <> ''                             )
-                       
+
           , tmpMovReserveAll AS (
                              SELECT Movement.Id
                              FROM tmpMovReserveId AS Movement
@@ -567,6 +567,8 @@ BEGIN
                                  THEN ObjectFloat_Goods_Price.ValueData
                             ELSE ObjectFloat_Price_Value.ValueData
                        END AS Price
+                     , COALESCE (NULLIF (ObjectBoolean_Goods_TOP.ValueData, FALSE), COALESCE (ObjectBoolean_Goods_TOP.ValueData, FALSE))         AS isTop
+                     , COALESCE (NULLIF (ObjectFloat_PercentMarkup.ValueData, 0), COALESCE (ObjectFloat_Goods_PercentMarkup.ValueData, 0)) AS PercentMarkup
                 -- FROM _tmpGoodsMinPrice_List
                 FROM _tmpList
                      INNER JOIN ObjectLink AS ObjectLink_Price_Goods
@@ -580,18 +582,29 @@ BEGIN
                      LEFT JOIN ObjectFloat AS ObjectFloat_Price_Value
                                            ON ObjectFloat_Price_Value.ObjectId = ObjectLink_Price_Goods.ObjectId
                                           AND ObjectFloat_Price_Value.DescId = zc_ObjectFloat_Price_Value()
+                     LEFT JOIN ObjectBoolean AS ObjectBoolean_Top
+                                             ON ObjectBoolean_Top.ObjectId = ObjectLink_Price_Goods.ObjectId
+                                            AND ObjectBoolean_Top.DescId = zc_ObjectBoolean_Price_Top()
+                     LEFT JOIN ObjectFloat AS ObjectFloat_PercentMarkup
+                                           ON ObjectFloat_PercentMarkup.ObjectId = ObjectLink_Price_Unit.ObjectId
+                                          AND ObjectFloat_PercentMarkup.DescId = zc_ObjectFloat_Price_PercentMarkup()
                      -- Фикс цена для всей Сети
                      LEFT JOIN ObjectFloat  AS ObjectFloat_Goods_Price
                                             ON ObjectFloat_Goods_Price.ObjectId = ObjectLink_Price_Goods.ChildObjectId
                                            AND ObjectFloat_Goods_Price.DescId   = zc_ObjectFloat_Goods_Price()
                      LEFT JOIN ObjectBoolean AS ObjectBoolean_Goods_TOP
-                                             ON ObjectBoolean_Goods_TOP.ObjectId = ObjectLink_Price_Goods.ChildObjectId
+                                             ON ObjectBoolean_Goods_TOP.ObjectId = _tmpList.GoodsId_retail
                                             AND ObjectBoolean_Goods_TOP.DescId   = zc_ObjectBoolean_Goods_TOP()
+                     LEFT JOIN ObjectFloat AS ObjectFloat_Goods_PercentMarkup
+                                           ON ObjectFloat_Goods_PercentMarkup.ObjectId = _tmpList.GoodsId_retail
+                                          AND ObjectFloat_Goods_PercentMarkup.DescId = zc_ObjectFloat_Goods_PercentMarkup()
                )
           , Price_Unit AS
                (SELECT Price_Unit_all.UnitId
                      , Price_Unit_all.GoodsId
                      , Price_Unit_all.Price
+                     , Price_Unit_all.isTop
+                     , Price_Unit_all.PercentMarkup
                 FROM Price_Unit_all
                )
           , MarginCategory_all AS
@@ -665,12 +678,14 @@ BEGIN
              , Price_Unit.Price    AS Price_unit
              , ROUND (CASE WHEN vbSiteDiscount = 0 THEN Price_Unit.Price
                         ELSE CEIL(Price_Unit.Price * (100.0 - vbSiteDiscount) / 10.0) / 10.0 END, 2) :: TFloat AS Price_unit_sale
-             , ROUND (MinPrice_List.Price * (1 + COALESCE (ObjectFloat_NDSKind_NDS.ValueData, 0) / 100) * (1 + COALESCE (MarginCategory.MarginPercent, 0)      / 100), 2) :: TFloat  AS Price_min
-             , ROUND (CASE WHEN vbSiteDiscount = 0 THEN ROUND (MinPrice_List.Price * (1 + COALESCE (ObjectFloat_NDSKind_NDS.ValueData, 0) / 100) * (1 + COALESCE (MarginCategory.MarginPercent, 0) / 100), 2)
-                        ELSE CEIL(ROUND (MinPrice_List.Price * (1 + COALESCE (ObjectFloat_NDSKind_NDS.ValueData, 0) / 100) * (1 + COALESCE (MarginCategory.MarginPercent, 0) / 100), 2) *
+             , ROUND (MinPrice_List.Price * (1 + COALESCE (ObjectFloat_NDSKind_NDS.ValueData, 0) / 100) *
+                     (1 + CASE WHEN Price_Unit.IsTop = TRUE AND COALESCE(Price_Unit.PercentMarkup, 0) > 0 THEN Price_Unit.PercentMarkup ELSE COALESCE (MarginCategory.MarginPercent, 0) END      / 100), 2) :: TFloat  AS Price_min
+             , ROUND (CASE WHEN vbSiteDiscount = 0 THEN ROUND (MinPrice_List.Price * (1 + COALESCE (ObjectFloat_NDSKind_NDS.ValueData, 0) / 100) *
+                        (1 + CASE WHEN Price_Unit.IsTop = TRUE AND COALESCE(Price_Unit.PercentMarkup, 0) > 0 THEN Price_Unit.PercentMarkup ELSE COALESCE (MarginCategory.MarginPercent, 0) END / 100), 2)
+                        ELSE CEIL(ROUND (MinPrice_List.Price * (1 + COALESCE (ObjectFloat_NDSKind_NDS.ValueData, 0) / 100) *
+                        (1 + CASE WHEN Price_Unit.IsTop = TRUE AND COALESCE(Price_Unit.PercentMarkup, 0) > 0 THEN Price_Unit.PercentMarkup ELSE COALESCE (MarginCategory.MarginPercent, 0) END / 100), 2) *
                         (100.0 - vbSiteDiscount) / 10.0) / 10.0 END, 2) :: TFloat AS Price_min_sale
              , ROUND (MinPrice_List_D.Price * (1 + COALESCE (ObjectFloat_NDSKind_NDS.ValueData, 0) / 100) * (1 + COALESCE (MarginCategory_site.MarginPercent, 0) / 100), 2) :: TFloat  AS Price_minD
-
              , MinPrice_List.JuridicalId
              , MinPrice_List.JuridicalName
              , MinPrice_List.ContractId
@@ -684,21 +699,21 @@ BEGIN
 
              , PDGoodsRemains6.Remains::TFloat AS Remains_6
              , CASE WHEN PDGoodsRemains6.Remains IS NULL THEN NULL
-                     ELSE CEIL(CASE WHEN Price_Unit.Price > CASE WHEN PDGoodsRemains6.PriceWithVAT > 14 OR COALESCE (MinPrice_List.Price, 0) = 0 THEN PDGoodsRemains6.PriceWithVAT ELSE 
+                     ELSE CEIL(CASE WHEN Price_Unit.Price > CASE WHEN PDGoodsRemains6.PriceWithVAT > 14 OR COALESCE (MinPrice_List.Price, 0) = 0 THEN PDGoodsRemains6.PriceWithVAT ELSE
                                     ROUND (MinPrice_List.Price * (1 + COALESCE (ObjectFloat_NDSKind_NDS.ValueData, 0) / 100), 2) END
-                               THEN ROUND(Price_Unit.Price - (Price_Unit.Price - CASE WHEN PDGoodsRemains6.PriceWithVAT > 14 OR COALESCE (MinPrice_List.Price, 0) = 0 THEN PDGoodsRemains6.PriceWithVAT ELSE 
+                               THEN ROUND(Price_Unit.Price - (Price_Unit.Price - CASE WHEN PDGoodsRemains6.PriceWithVAT > 14 OR COALESCE (MinPrice_List.Price, 0) = 0 THEN PDGoodsRemains6.PriceWithVAT ELSE
                                     ROUND (MinPrice_List.Price * (1 + COALESCE (ObjectFloat_NDSKind_NDS.ValueData, 0) / 100), 2) END) * PDGoodsRemains6.PartionDateDiscount / 100, 2)
                                ELSE Price_Unit.Price END * 10.0) / 10.0 END::TFloat                AS Price_unit_6
              , CASE WHEN PDGoodsRemains6.Remains IS NULL THEN NULL
                      ELSE ROUND (CASE WHEN vbSiteDiscount = 0 THEN
-                 CEIL(CASE WHEN Price_Unit.Price > CASE WHEN PDGoodsRemains6.PriceWithVAT > 14 OR COALESCE (MinPrice_List.Price, 0) = 0 THEN PDGoodsRemains6.PriceWithVAT ELSE 
+                 CEIL(CASE WHEN Price_Unit.Price > CASE WHEN PDGoodsRemains6.PriceWithVAT > 14 OR COALESCE (MinPrice_List.Price, 0) = 0 THEN PDGoodsRemains6.PriceWithVAT ELSE
                                     ROUND (MinPrice_List.Price * (1 + COALESCE (ObjectFloat_NDSKind_NDS.ValueData, 0) / 100), 2) END
-                     THEN ROUND(Price_Unit.Price - (Price_Unit.Price - CASE WHEN PDGoodsRemains6.PriceWithVAT > 14 OR COALESCE (MinPrice_List.Price, 0) = 0 THEN PDGoodsRemains6.PriceWithVAT ELSE 
+                     THEN ROUND(Price_Unit.Price - (Price_Unit.Price - CASE WHEN PDGoodsRemains6.PriceWithVAT > 14 OR COALESCE (MinPrice_List.Price, 0) = 0 THEN PDGoodsRemains6.PriceWithVAT ELSE
                                     ROUND (MinPrice_List.Price * (1 + COALESCE (ObjectFloat_NDSKind_NDS.ValueData, 0) / 100), 2) END) * PDGoodsRemains6.PartionDateDiscount / 100, 2)
                      ELSE Price_Unit.Price END * 10.0) / 10.0
-                  ELSE CEIL(CEIL(CASE WHEN Price_Unit.Price > CASE WHEN PDGoodsRemains6.PriceWithVAT > 14 OR COALESCE (MinPrice_List.Price, 0) = 0 THEN PDGoodsRemains6.PriceWithVAT ELSE 
+                  ELSE CEIL(CEIL(CASE WHEN Price_Unit.Price > CASE WHEN PDGoodsRemains6.PriceWithVAT > 14 OR COALESCE (MinPrice_List.Price, 0) = 0 THEN PDGoodsRemains6.PriceWithVAT ELSE
                                     ROUND (MinPrice_List.Price * (1 + COALESCE (ObjectFloat_NDSKind_NDS.ValueData, 0) / 100), 2) END
-                     THEN ROUND(Price_Unit.Price - CASE WHEN PDGoodsRemains6.PriceWithVAT > 14 OR COALESCE (MinPrice_List.Price, 0) = 0 THEN PDGoodsRemains6.PriceWithVAT ELSE 
+                     THEN ROUND(Price_Unit.Price - CASE WHEN PDGoodsRemains6.PriceWithVAT > 14 OR COALESCE (MinPrice_List.Price, 0) = 0 THEN PDGoodsRemains6.PriceWithVAT ELSE
                                     ROUND (MinPrice_List.Price * (1 + COALESCE (ObjectFloat_NDSKind_NDS.ValueData, 0) / 100), 2) END * PDGoodsRemains6.PartionDateDiscount / 100, 2)
                      ELSE Price_Unit.Price END * 10.0) / 10.0 * (100.0 - vbSiteDiscount) / 10.0) / 10.0 END, 2) END :: TFloat AS Price_unit_sale_6
 
@@ -714,10 +729,10 @@ BEGIN
                                           ON tmpList2.GoodsId = tmpList.GoodsId
                                          AND tmpList2.UnitId  = tmpList.UnitId
              LEFT JOIN _tmpMinPrice_List AS MinPrice_List  ON MinPrice_List.GoodsId  = tmpList.GoodsId
-                                                          AND MinPrice_List.AreaId   = 
+                                                          AND MinPrice_List.AreaId   =
                                                               CASE WHEN tmpList.AreaId <> 12487449  THEN tmpList.AreaId ELSE zc_Area_Basis() END
              LEFT JOIN _tmpMinPrice_List AS MinPrice_List_D  ON MinPrice_List_D.GoodsId  = tmpList.GoodsId
-                                                            AND MinPrice_List_D.AreaId   = 
+                                                            AND MinPrice_List_D.AreaId   =
                                                                 CASE WHEN tmpList.AreaId <> 12487449 THEN tmpList.AreaId ELSE zc_Area_Basis() END
 
              LEFT JOIN Object AS Object_Goods    ON Object_Goods.Id    = tmpList.GoodsId
@@ -796,5 +811,6 @@ $BODY$
 
 --SELECT p.* FROM gpselect_goodsonunit_forsite ('183292,11769526,4135547,377606,6128298,9951517,13338606,377595,12607257,377605,494882,10779386,394426,183289,8393158,6309262,13311246,377613,7117700,377610,377594,11300059,377574,12812109,183291,1781716,5120968,9771036,8698426,6608396,375626,375627,11152911,10128935,472116', '24970,31333,393553,15610,5878,31561,1849,976003,31285,1594,4534,27658,6430,31000,14941,19093,38173,18922,18916,29449,19696,5486995,28516,26422,21748,15172,3002798,54604,358750,2503', TRUE, zfCalc_UserSite()) AS p
 -- SELECT p.* FROM gpselect_goodsonunit_forsite ('375626,11769526,183292,4135547,377606,6128298,9951517,13338606,377595,12607257,377605,494882,10779386,394426,183289,8393158,6309262,13311246,377613,7117700,377610,377594,11300059,377574,12812109,183291,1781716,5120968,9771036,8698426,6608396,375627,11152911,10128935,472116', '22579,54100,6994,352890,54649,29983,48988,964555,54625,54613,28849,54640,30310,34831,982510,1106785,1243320,2366715,1243457,34867,50134,4509209,22573,50725,1106995,1960400,50152,51202,34846,28858', TRUE, zfCalc_UserSite()) AS p
--- SELECT OBJECT.valuedata, p.* FROM gpselect_goodsonunit_forsite ('375626, 3457773, 6741875', '8050', TRUE, zfCalc_UserSite()) AS p LEFT JOIN OBJECT ON OBJECT.ID = p.ID
+--
 
+SELECT OBJECT.valuedata, p.* FROM gpselect_goodsonunit_forsite ('375626,11769526,183292,4135547,377606,6128298,9951517,13338606,377595,12607257,377605,494882,10779386,394426,183289,8393158,6309262,13311246,377613,7117700,377610,377594,11300059,377574,12812109,183291,1781716,5120968,9771036,8698426,6608396,375627,11152911,10128935,472116', '494103', TRUE, zfCalc_UserSite()) AS p LEFT JOIN OBJECT ON OBJECT.ID = p.ID
