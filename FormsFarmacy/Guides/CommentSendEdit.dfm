@@ -2,7 +2,7 @@
   Left = 0
   Top = 0
   Caption = #1044#1086#1073#1072#1074#1080#1090#1100'/'#1080#1079#1084#1077#1085#1080#1090#1100' <'#1050#1086#1084#1084#1077#1085#1090#1072#1088#1080#1081' '#1089#1090#1088#1086#1082' '#1087#1077#1088#1077#1084#1077#1097#1077#1085#1080#1081' '#1087#1086' '#1057#1059#1053'>'
-  ClientHeight = 246
+  ClientHeight = 285
   ClientWidth = 439
   Color = clBtnFace
   Font.Charset = DEFAULT_CHARSET
@@ -29,7 +29,7 @@
   end
   object cxButton1: TcxButton
     Left = 91
-    Top = 214
+    Top = 246
     Width = 75
     Height = 25
     Action = dsdInsertUpdateGuides
@@ -39,7 +39,7 @@
   end
   object cxButton2: TcxButton
     Left = 241
-    Top = 214
+    Top = 246
     Width = 75
     Height = 25
     Action = dsdFormClose
@@ -89,6 +89,13 @@
     Top = 187
     Caption = #1060#1086#1088#1084#1080#1088#1086#1074#1072#1090#1100' '#1079#1072#1103#1074#1082#1091' '#1085#1072' '#1080#1079#1084#1077#1085#1077#1085#1080#1103' '#1089#1088#1086#1082#1072
     TabOrder = 9
+    Width = 245
+  end
+  object cbisLostPositions: TcxCheckBox
+    Left = 20
+    Top = 213
+    Caption = #1059#1090#1077#1088#1103#1085#1085#1099#1077' '#1087#1086#1079#1080#1094#1080#1080
+    TabOrder = 10
     Width = 245
   end
   object ActionList: TActionList
@@ -175,6 +182,14 @@
         DataType = ftBoolean
         ParamType = ptInput
         MultiSelectSeparator = ','
+      end
+      item
+        Name = 'isLostPositions'
+        Value = Null
+        Component = cbisLostPositions
+        DataType = ftBoolean
+        ParamType = ptInput
+        MultiSelectSeparator = ','
       end>
     PackSize = 1
     Left = 188
@@ -243,6 +258,13 @@
         Name = 'isSendPartionDate'
         Value = Null
         Component = cbisSendPartionDate
+        DataType = ftBoolean
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'isLostPositions'
+        Value = Null
+        Component = cbisLostPositions
         DataType = ftBoolean
         MultiSelectSeparator = ','
       end>

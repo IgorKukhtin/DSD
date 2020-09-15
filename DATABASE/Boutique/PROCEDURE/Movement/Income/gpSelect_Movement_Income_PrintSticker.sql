@@ -209,6 +209,46 @@ BEGIN
                                                                    ON ObjectHistoryFloat_PriceListItem_Value.ObjectHistoryId = ObjectHistory_PriceListItem.Id
                                                                   AND ObjectHistoryFloat_PriceListItem_Value.DescId = zc_ObjectHistoryFloat_PriceListItem_Value()
                                 )
+              -- первая цена из прайса
+              , tmpPriceList_fp AS (SELECT DISTINCT
+                                          tmp.UnitId
+                                        , tmp.PartionId
+                                        , tmp.Price
+                                        , tmp.CurrencyId
+                                    FROM (SELECT DISTINCT
+                                                 tmpGoodsPrint.UnitId
+                                               , tmpGoodsPrint.PartionId
+                                               , ObjectHistoryFloat_PriceListItem_Value.ValueData AS Price
+                                               , OL_currency.ChildObjectId                        AS CurrencyId
+                                               , ObjectHistory_PriceListItem.StartDate
+                                               , MIN (ObjectHistory_PriceListItem.StartDate) OVER (PARTITION BY tmpGoodsPrint.UnitId, tmpGoodsPrint.PartionId) AS FirstDate
+                                          FROM tmpGoodsPrint
+                                               LEFT JOIN ObjectLink AS ObjectLink_Unit_PriceList
+                                                                    ON ObjectLink_Unit_PriceList.ObjectId = tmpGoodsPrint.UnitId
+                                                                   AND ObjectLink_Unit_PriceList.DescId   = zc_ObjectLink_Unit_PriceList()
+                                               LEFT JOIN ObjectLink AS OL_currency ON OL_currency.ObjectId = ObjectLink_Unit_PriceList.ChildObjectId
+                                                                                  AND OL_currency.DescId   = zc_ObjectLink_PriceList_Currency()
+         
+                                               LEFT JOIN Object_PartionGoods ON Object_PartionGoods.MovementItemId = tmpGoodsPrint.PartionId
+         
+                                               INNER JOIN ObjectLink AS ObjectLink_PriceListItem_Goods
+                                                                     ON ObjectLink_PriceListItem_Goods.ChildObjectId = Object_PartionGoods.GoodsId
+                                                                    AND ObjectLink_PriceListItem_Goods.DescId        = zc_ObjectLink_PriceListItem_Goods()
+                                               INNER JOIN ObjectLink AS ObjectLink_PriceListItem_PriceList
+                                                                     ON ObjectLink_PriceListItem_PriceList.ObjectId      = ObjectLink_PriceListItem_Goods.ObjectId
+                                                                    AND ObjectLink_PriceListItem_PriceList.ChildObjectId = COALESCE (ObjectLink_Unit_PriceList.ChildObjectId, zc_PriceList_Basis())
+                                                                    AND ObjectLink_PriceListItem_PriceList.DescId        = zc_ObjectLink_PriceListItem_PriceList()
+         
+                                               LEFT JOIN ObjectHistory AS ObjectHistory_PriceListItem
+                                                                       ON ObjectHistory_PriceListItem.ObjectId = ObjectLink_PriceListItem_PriceList.ObjectId
+                                                                      AND ObjectHistory_PriceListItem.DescId   = zc_ObjectHistory_PriceListItem()
+                                               LEFT JOIN ObjectHistoryFloat AS ObjectHistoryFloat_PriceListItem_Value
+                                                                            ON ObjectHistoryFloat_PriceListItem_Value.ObjectHistoryId = ObjectHistory_PriceListItem.Id
+                                                                           AND ObjectHistoryFloat_PriceListItem_Value.DescId = zc_ObjectHistoryFloat_PriceListItem_Value()
+                                         ) AS tmp
+                                    WHERE tmp.StartDate = tmp.FirstDate
+                                   )
+
            -- Результат
            SELECT
                  tmpGoodsPrint.PartionId
@@ -225,7 +265,8 @@ BEGIN
                , Object_CountryBrand.ValueData  AS CountryBrandName
                , zfFormat_BarCode (zc_BarCodePref_Object(), tmpGoodsPrint.PartionId) AS IdBarCode
 
-               , COALESCE (tmpPriceList.Price, Object_PartionGoods.OperPriceList) :: TFloat AS OperPriceList
+               , COALESCE (tmpPriceList.Price, Object_PartionGoods.OperPriceList)    :: TFloat AS OperPriceList
+               , COALESCE (tmpPriceList_fp.Price, Object_PartionGoods.OperPriceList) :: TFloat AS OperPriceList_fp  -- первая цена из прайса
 
                , (SUBSTR ((Object_PartionGoods.PeriodYear :: Integer) :: TVarChar, 3, 1)
                || CASE WHEN Object_Period.ObjectCode = 1 THEN 'L' ELSE 'Z' END
@@ -241,6 +282,9 @@ BEGIN
                 LEFT JOIN tmpList ON tmpList.Amount = tmpGoodsPrint.Amount
                 LEFT JOIN tmpPriceList ON tmpPriceList.UnitId    = tmpGoodsPrint.UnitId
                                       AND tmpPriceList.PartionId = tmpGoodsPrint.PartionId
+
+                LEFT JOIN tmpPriceList_fp ON tmpPriceList_fp.UnitId    = tmpGoodsPrint.UnitId
+                                         AND tmpPriceList_fp.PartionId = tmpGoodsPrint.PartionId
 
                 LEFT JOIN Object_PartionGoods ON Object_PartionGoods.MovementItemId = tmpGoodsPrint.PartionId
 

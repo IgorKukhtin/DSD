@@ -922,10 +922,14 @@ end;
 
 procedure TLoadFormTest.LoadReportFormTest;
 begin
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_ChangeCommentsSUNForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TReport_ChangeCommentsSUNForm');
+
+  {
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_CommentSendSUNForm'));
   TdsdFormStorageFactory.GetStorage.Load('TReport_CommentSendSUNForm');
 
-  {
+
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_PositionsUKTVEDonSUNForm'));
   TdsdFormStorageFactory.GetStorage.Load('TReport_PositionsUKTVEDonSUNForm');
 
@@ -1341,18 +1345,18 @@ begin
 
     TdsdFormStorageFactory.GetStorage.Save(GetForm('TReportOrderGoodsForm'));
     TdsdFormStorageFactory.GetStorage.Load('TReportOrderGoodsForm');
-    }
+
     // отчет распределение остатков
     TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_RemainsOverGoodsForm'));
     TdsdFormStorageFactory.GetStorage.Load('TReport_RemainsOverGoodsForm');
     TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_RemainsOverGoodsDialogForm'));
     TdsdFormStorageFactory.GetStorage.Load('TReport_RemainsOverGoodsDialogForm');
     exit;
-    {
+    }
     TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_RemainsOverGoods_ToForm'));
     TdsdFormStorageFactory.GetStorage.Load('TReport_RemainsOverGoods_ToForm');
     exit;
-
+    {
     //Отчет Приход на точку
     TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_MovementIncomeForm'));
     TdsdFormStorageFactory.GetStorage.Load('TReport_MovementIncomeForm');
@@ -2740,18 +2744,16 @@ end;
 
 procedure TLoadFormTest.LoadServiceFormTest;
 begin
+       {
     TdsdFormStorageFactory.GetStorage.Save(GetForm('TMovementItemContainerCountForm'));
     TdsdFormStorageFactory.GetStorage.Load('TMovementItemContainerCountForm');
 
-  Exit;
-       {
-
     TdsdFormStorageFactory.GetStorage.Save(GetForm('TJuridicalPrioritiesForm'));
     TdsdFormStorageFactory.GetStorage.Load('TJuridicalPrioritiesForm');
-
+     }
     TdsdFormStorageFactory.GetStorage.Save(GetForm('TCashSettingsEditForm'));
     TdsdFormStorageFactory.GetStorage.Load('TCashSettingsEditForm');
-
+      {
     TdsdFormStorageFactory.GetStorage.Save(GetForm('THelsiUserForm'));
     TdsdFormStorageFactory.GetStorage.Load('THelsiUserForm');
 

@@ -8,7 +8,7 @@ CREATE OR REPLACE FUNCTION gpGet_Object_CommentSend(
 )
 RETURNS TABLE (Id Integer, Code Integer, Name TVarChar
              , CommentTRId Integer, CommentTRCode Integer, CommentTRName TVarChar
-             , isPromo boolean, isSendPartionDate boolean
+             , isPromo boolean, isSendPartionDate boolean, isLostPositions boolean
              , isErased boolean) AS
 $BODY$
 BEGIN
@@ -28,6 +28,7 @@ BEGIN
            , CAST ('' AS TVarChar)                        AS CommentTRName
            , CAST (FALSE AS Boolean)                      AS isPromo
            , CAST (FALSE AS Boolean)                      AS isSendPartionDate 
+           , CAST (FALSE AS Boolean)                      AS isLostPositions 
            , CAST (FALSE AS Boolean)                      AS isErased;
    ELSE
        RETURN QUERY 
@@ -39,6 +40,7 @@ BEGIN
         , Object_CommentTR.ValueData                        AS CommentTRName
         , COALESCE(ObjectBoolean_CommentSun_Promo.ValueData, FALSE)             AS isPromo
         , COALESCE(ObjectBoolean_CommentSun_SendPartionDate.ValueData, FALSE)   AS isSendPartionDate
+        , COALESCE(ObjectBoolean_CommentSun_LostPositions.ValueData, FALSE)     AS isLostPositions
         , Object_CommentSend.isErased                       AS isErased
    FROM Object AS Object_CommentSend
 
@@ -54,6 +56,10 @@ BEGIN
         LEFT JOIN ObjectBoolean AS ObjectBoolean_CommentSun_SendPartionDate
                                 ON ObjectBoolean_CommentSun_SendPartionDate.ObjectId = Object_CommentSend.Id 
                                AND ObjectBoolean_CommentSun_SendPartionDate.DescId = zc_ObjectBoolean_CommentSun_SendPartionDate()
+
+        LEFT JOIN ObjectBoolean AS ObjectBoolean_CommentSun_LostPositions
+                                ON ObjectBoolean_CommentSun_LostPositions.ObjectId = Object_CommentSend.Id 
+                               AND ObjectBoolean_CommentSun_LostPositions.DescId = zc_ObjectBoolean_CommentSun_LostPositions()
 
        WHERE Object_CommentSend.Id = inId;
    END IF; 

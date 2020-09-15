@@ -1,21 +1,43 @@
 -- Function: gpComplete_Movement_IncomeHouseholdInventory()
 
 DROP FUNCTION IF EXISTS gpComplete_Movement_IncomeHouseholdInventory  (Integer, TVarChar);
+DROP FUNCTION IF EXISTS gpComplete_Movement_IncomeHouseholdInventory  (Integer, Boolean, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpComplete_Movement_IncomeHouseholdInventory(
     IN inMovementId        Integer               , -- ключ Документа
+    IN inIsCurrentData     Boolean               , -- дата документа текущая Да /Нет
+   OUT outOperDate         TDateTime             , --
     IN inSession           TVarChar DEFAULT ''     -- сессия пользователя
 )                              
-RETURNS VOID
+RETURNS TDateTime
 AS
 $BODY$
   DECLARE vbUserId    Integer;
   DECLARE vbGoodsName TVarChar;
-  DECLARE vbInvNumber Integer;
+  DECLARE vbInvNumber TVarChar;
 BEGIN
     -- проверка прав пользователя на вызов процедуры
     vbUserId := lpCheckRight (inSession, zc_Enum_Process_Complete_IncomeHouseholdInventory());
            
+    -- параметры документа
+    SELECT
+        Movement.OperDate,
+        Movement.InvNumber
+    INTO
+        outOperDate,
+        vbInvNumber
+    FROM Movement
+    WHERE Movement.Id = inMovementId;
+
+    -- Меняем дату
+    IF (outOperDate <> CURRENT_DATE) AND (inIsCurrentData = TRUE)
+    THEN
+         --RAISE EXCEPTION 'Ошибка. ПОМЕНЯЙТЕ ДАТУ НАКЛАДНОЙ НА ТЕКУЩУЮ.';
+        outOperDate:= CURRENT_DATE;
+        -- сохранили <Документ> c новой датой 
+        PERFORM lpInsertUpdate_Movement (inMovementId, zc_Movement_IncomeHouseholdInventory(), vbInvNumber, outOperDate, NULL);
+    END IF;
+
     -- проверка - Остатки Мастер и Чайлд должны совпадать, если нет - то корректировали не правильно или задним числом съехал остаток
     IF NOT EXISTS (SELECT 1
                    FROM MovementItem

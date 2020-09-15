@@ -3883,6 +3883,17 @@ inherited MainForm: TMainForm
       GuiParams = <>
       isShowModal = False
     end
+    object actReport_ChangeCommentsSUN: TdsdOpenForm
+      Category = #1054#1090#1095#1077#1090#1099' ('#1057#1059#1053')'
+      MoveParams = <>
+      Caption = #1054#1090#1095#1105#1090' '#1080#1079#1084#1077#1085#1077#1085#1080#1077' '#1082#1086#1084#1084#1077#1085#1090#1072#1088#1080#1077#1074' '#1057#1059#1053
+      FormName = 'TReport_ChangeCommentsSUNForm'
+      FormNameParam.Value = 'TReport_ChangeCommentsSUNForm'
+      FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
+      GuiParams = <>
+      isShowModal = False
+    end
   end
   inherited UserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn
     Left = 496
@@ -4654,6 +4665,9 @@ inherited MainForm: TMainForm
       end
       object N253: TMenuItem
         Action = actReport_CommentSendSUN
+      end
+      object N254: TMenuItem
+        Action = actReport_ChangeCommentsSUN
       end
     end
     object N40: TMenuItem [7]

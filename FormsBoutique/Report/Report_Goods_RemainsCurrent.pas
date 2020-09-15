@@ -150,6 +150,9 @@ type
     OperPriceList_orig: TcxGridDBColumn;
     CurrencyName_pl: TcxGridDBColumn;
     bbExport: TdxBarButton;
+    actPrintSticker_fp: TdsdPrintAction;
+    macPrintSticker_fp: TMultiAction;
+    bbPrintSticker_fp: TdxBarButton;
   private
     { Private declarations }
   public

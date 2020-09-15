@@ -5,7 +5,7 @@ inherited Report_RemainsOverGoods_ToForm: TReport_RemainsOverGoods_ToForm
   AddOnFormData.ExecuteDialogAction = ExecuteDialog
   AddOnFormData.Params = FormParams
   ExplicitWidth = 1107
-  ExplicitHeight = 597
+  ExplicitHeight = 598
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
@@ -18,7 +18,7 @@ inherited Report_RemainsOverGoods_ToForm: TReport_RemainsOverGoods_ToForm
     Properties.ActivateFocusedTab = False
     Properties.Options = [pcoGradient, pcoGradientClientArea, pcoRedrawOnResize, pcoSort]
     ExplicitTop = 81
-    ExplicitWidth = 1066
+    ExplicitWidth = 1091
     ExplicitHeight = 478
     ClientRectBottom = 478
     ClientRectRight = 1091
@@ -27,12 +27,12 @@ inherited Report_RemainsOverGoods_ToForm: TReport_RemainsOverGoods_ToForm
       Caption = #1054#1089#1085#1086#1074#1085#1072#1103
       TabVisible = True
       ExplicitTop = 24
-      ExplicitWidth = 1066
+      ExplicitWidth = 1091
       ExplicitHeight = 454
       inherited cxGrid: TcxGrid
         Width = 1091
         Height = 217
-        ExplicitWidth = 1066
+        ExplicitWidth = 1091
         ExplicitHeight = 217
         inherited cxGridDBTableView: TcxGridDBTableView
           DataController.Summary.DefaultGroupSummaryItems = <
@@ -319,13 +319,21 @@ inherited Report_RemainsOverGoods_ToForm: TReport_RemainsOverGoods_ToForm
           object IsClose: TcxGridDBColumn
             Caption = #1047#1072#1082#1088#1099#1090' '#1082#1086#1076' '#1087#1086' '#1074#1089#1077#1081' '#1089#1077#1090#1080
             DataBinding.FieldName = 'IsClose'
-            Visible = False
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             HeaderGlyphAlignmentHorz = taCenter
             Options.Editing = False
-            VisibleForCustomization = False
             Width = 67
+          end
+          object isPromo: TcxGridDBColumn
+            Caption = #1052#1072#1088#1082#1077#1090'. '#1082#1086#1085#1090#1088'.'
+            DataBinding.FieldName = 'isPromo'
+            PropertiesClassName = 'TcxCheckBoxProperties'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            HeaderHint = #1052#1072#1088#1082#1077#1090#1080#1085#1075#1086#1074#1099#1081' '#1082#1086#1085#1090#1088#1072#1082#1090
+            Options.Editing = False
+            Width = 63
           end
           object IsTop: TcxGridDBColumn
             Caption = #1058#1054#1055
@@ -667,7 +675,6 @@ inherited Report_RemainsOverGoods_ToForm: TReport_RemainsOverGoods_ToForm
         Align = alBottom
         PopupMenu = PopupMenu
         TabOrder = 1
-        ExplicitWidth = 1066
         object cxGridDBTableView1: TcxGridDBTableView
           Navigator.Buttons.CustomButtons = <>
           DataController.DataSource = ChildDS
@@ -1073,13 +1080,11 @@ inherited Report_RemainsOverGoods_ToForm: TReport_RemainsOverGoods_ToForm
         Height = 5
         AlignSplitter = salBottom
         Control = cxGrid1
-        ExplicitWidth = 1066
       end
     end
     object cxTabSheetTotal: TcxTabSheet
       Caption = #1048#1090#1086#1075#1080
       ImageIndex = 2
-      ExplicitWidth = 1066
       object cxGridTotal: TcxGrid
         Left = 0
         Top = 0
@@ -1087,7 +1092,6 @@ inherited Report_RemainsOverGoods_ToForm: TReport_RemainsOverGoods_ToForm
         Height = 454
         Align = alClient
         TabOrder = 0
-        ExplicitWidth = 1066
         object cxGridTotalDBTableView: TcxGridDBTableView
           Navigator.Buttons.CustomButtons = <>
           DataController.DataSource = TotalDS
@@ -1486,7 +1490,7 @@ inherited Report_RemainsOverGoods_ToForm: TReport_RemainsOverGoods_ToForm
   inherited Panel: TPanel
     Width = 1091
     Height = 55
-    ExplicitWidth = 1066
+    ExplicitWidth = 1091
     ExplicitHeight = 55
     inherited deStart: TcxDateEdit
       Left = 99
@@ -2097,6 +2101,7 @@ inherited Report_RemainsOverGoods_ToForm: TReport_RemainsOverGoods_ToForm
         end>
       Caption = #1053#1077' '#1091#1095#1080#1090#1099#1074#1072#1090#1100' '#1086#1090#1083'. '#1090#1086#1074#1072#1088
       Hint = #1053#1077' '#1091#1095#1080#1090#1099#1074#1072#1090#1100' '#1086#1090#1083#1086#1078#1077#1085#1085#1099#1081' '#1090#1086#1074#1072#1088' ('#1044#1072'/'#1053#1077#1090')'
+      ShortCut = 116
       RefreshOnTabSetChanges = False
     end
   end
@@ -3185,6 +3190,7 @@ inherited Report_RemainsOverGoods_ToForm: TReport_RemainsOverGoods_ToForm
     ColumnAddOnList = <>
     ColumnEnterList = <>
     SummaryItemList = <>
+    PropertiesCellList = <>
     Left = 880
     Top = 312
   end
@@ -3192,7 +3198,7 @@ inherited Report_RemainsOverGoods_ToForm: TReport_RemainsOverGoods_ToForm
     Params = <
       item
         Name = 'inisTo'
-        Value = ''
+        Value = False
         DataType = ftBoolean
         ParamType = ptInput
         MultiSelectSeparator = ','

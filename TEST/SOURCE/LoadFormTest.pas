@@ -345,32 +345,31 @@ procedure TLoadFormTest.LoadCashFormTest;
 begin
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TCashOperationBonusForm'));
   TdsdFormStorageFactory.GetStorage.Load('TCashOperationBonusForm');
-
+  {
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TCashJournalBonusForm'));
   TdsdFormStorageFactory.GetStorage.Load('TCashJournalBonusForm');
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TMovement_PeriodDialog_BonusForm'));
   TdsdFormStorageFactory.GetStorage.Load('TMovement_PeriodDialog_BonusForm');
   //exit;
-{
+
  // TdsdFormStorageFactory.GetStorage.Save(GetForm('TCashForm'));
  // TdsdFormStorageFactory.GetStorage.Load('TCashForm');
- }
+
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TCash_ObjectForm'));
   TdsdFormStorageFactory.GetStorage.Load('TCash_ObjectForm');
  {// TdsdFormStorageFactory.GetStorage.Save(GetForm('TCashEditForm'));
  // TdsdFormStorageFactory.GetStorage.Load('TCashEditForm');
-  }
 
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TCashJournalForm'));
   TdsdFormStorageFactory.GetStorage.Load('TCashJournalForm');
 
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TCashJournalUserForm'));
   TdsdFormStorageFactory.GetStorage.Load('TCashJournalUserForm');
-  {
+  }
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TCashOperationForm'));
   TdsdFormStorageFactory.GetStorage.Load('TCashOperationForm');
   exit;
-
+  {
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TCash_PersonalForm'));
   TdsdFormStorageFactory.GetStorage.Load('TCash_PersonalForm');
 
@@ -3683,11 +3682,11 @@ begin
 
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TReceipt_ObjectForm'));
   TdsdFormStorageFactory.GetStorage.Load('TReceipt_ObjectForm');
-  }
+
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TReceiptGoods_ObjectForm'));
   TdsdFormStorageFactory.GetStorage.Load('TReceiptGoods_ObjectForm');
   // составл€ющие рецептур
-  {TdsdFormStorageFactory.GetStorage.Save(GetForm('TReceiptComponentsForm'));
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TReceiptComponentsForm'));
   TdsdFormStorageFactory.GetStorage.Load('TReceiptComponentsForm');
   }
 end;

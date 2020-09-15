@@ -259,7 +259,7 @@ BEGIN
                          WHERE Movement.DescId = zc_Movement_TechnicalRediscount()
                             AND Movement.StatusId = zc_Enum_Status_UnComplete())
       , tmpGoods AS (SELECT Movement.UnitId
-                          , MovementItem.ObjectId    AS GoodsId
+                          , MovementItem.ObjectId       AS GoodsId
                           , SUM(MovementItem.Amount)    AS Amount
                      FROM _tmpUnit_SUN
 

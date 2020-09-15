@@ -27,11 +27,17 @@ BEGIN
     outMovementId_list:= 
        (SELECT STRING_AGG (COALESCE (Movement.Id :: TVarChar, ''), ';') AS RetV
         FROM (SELECT 0 AS x) AS tmp
-             LEFT JOIN (SELECT Movement.Id
+             LEFT JOIN (WITH
+                              tmpMovementCheck AS (SELECT Movement.*
+                                                   FROM Movement
+                                                   WHERE Movement.DescId = zc_Movement_Check()
+                                                     AND Movement.StatusId = zc_Enum_Status_UnComplete()
+                                                     AND Movement.OperDate >= CURRENT_DATE - INTERVAL '1 MONTH')
+                        SELECT Movement.Id
                              , Movement.InvNumber
                              , Movement.OperDate
                              , Movement.StatusId
-                        FROM Movement
+                        FROM tmpMovementCheck AS Movement
                              INNER JOIN MovementLinkObject AS MovementLinkObject_Unit
                                                            ON MovementLinkObject_Unit.MovementId = Movement.Id
                                                           AND MovementLinkObject_Unit.DescId     = zc_MovementLinkObject_Unit()
@@ -40,9 +46,6 @@ BEGIN
                                       ON MovementString_CommentError.MovementId = Movement.Id
                                      AND MovementString_CommentError.DescId     = zc_MovementString_CommentError()
                                      AND MovementString_CommentError.ValueData  > ''
-                        WHERE Movement.DescId =  zc_Movement_Check()
-                          -- AND Movement.StatusId =  zc_Enum_Status_UnComplete()
-                          AND Movement.OperDate >= CURRENT_DATE - INTERVAL '1 MONTH'
                         ORDER BY Movement.Id DESC
                         -- LIMIT 1
                        ) AS Movement ON Movement.StatusId =  zc_Enum_Status_UnComplete()

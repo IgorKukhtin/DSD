@@ -176,6 +176,8 @@ type
     CommentSendName: TcxGridDBColumn;
     actChoiceCommentSend: TOpenChoiceForm;
     actClearCommentSend: TdsdSetDefaultParams;
+    TechnicalRediscountInvNumber: TcxGridDBColumn;
+    TechnicalRediscountOperDate: TcxGridDBColumn;
   private
     { Private declarations }
   public

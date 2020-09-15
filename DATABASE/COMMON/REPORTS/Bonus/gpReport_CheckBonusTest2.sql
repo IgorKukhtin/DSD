@@ -390,7 +390,7 @@ BEGIN
                                  , tmpContainer.PartnerId
                                  , SUM (CASE WHEN MIContainer.MovementDescId = zc_Movement_Sale() THEN COALESCE(MIContainer.Amount,0) ELSE 0 END) AS Sum_Sale -- Только продажи
                                  , SUM (CASE WHEN MIContainer.MovementDescId IN (zc_Movement_Sale(), zc_Movement_ReturnIn()) THEN COALESCE(MIContainer.Amount,0) ELSE 0 END) AS Sum_SaleReturnIn -- продажи - возвраты
-                                 , SUM (CASE WHEN MIContainer.MovementDescId IN (zc_Movement_BankAccount(), zc_Movement_Cash(), zc_Movement_SendDebt())
+                                 , SUM (CASE WHEN MIContainer.MovementDescId IN (zc_Movement_BankAccount(), zc_Movement_Cash()/*, zc_Movement_SendDebt()*/)
                                                   THEN -1 * COALESCE(MIContainer.Amount,0)
                                              ELSE 0
                                         END) AS Sum_Account -- оплаты
@@ -419,7 +419,7 @@ BEGIN
                                  LEFT JOIN ObjectLink AS ObjectLink_Contract_Personal
                                                       ON ObjectLink_Contract_Personal.ObjectId = tmpContainer.ContractId_child
                                                      AND ObjectLink_Contract_Personal.DescId = zc_ObjectLink_Contract_Personal()
-                                                     AND MIContainer.MovementDescId IN (zc_Movement_BankAccount(), zc_Movement_Cash(), zc_Movement_SendDebt())
+                                                     AND MIContainer.MovementDescId IN (zc_Movement_BankAccount(), zc_Movement_Cash()/*, zc_Movement_SendDebt()*/)
                                  LEFT JOIN ObjectLink AS ObjectLink_Personal_Unit
                                                       ON ObjectLink_Personal_Unit.ObjectId = ObjectLink_Contract_Personal.ChildObjectId
                                                      AND ObjectLink_Personal_Unit.DescId = zc_ObjectLink_Personal_Unit()
@@ -441,7 +441,7 @@ BEGIN
 
                             WHERE MIContainer.DescId = zc_MIContainer_Summ()
                               AND (MIContainer.OperDate >= inStartDate AND MIContainer.OperDate < vbEndDate)
-                              AND MIContainer.MovementDescId IN (zc_Movement_Sale(), zc_Movement_ReturnIn(), zc_Movement_BankAccount(),zc_Movement_Cash(), zc_Movement_SendDebt())
+                              AND MIContainer.MovementDescId IN (zc_Movement_Sale(), zc_Movement_ReturnIn(), zc_Movement_BankAccount(),zc_Movement_Cash()/*, zc_Movement_SendDebt()*/)  -- взаимозачет убираем, чтоб он не влиял на бонусы
                               AND (COALESCE (ObjectLink_Cash_Branch.ChildObjectId, MILinkObject_Branch.ObjectId, ObjectLink_Unit_Branch.ChildObjectId,tmpContainer.BranchId,0) = inBranchId OR inBranchId = 0)
                             GROUP BY tmpContainer.JuridicalId
                                    , tmpContainer.ContractId_child

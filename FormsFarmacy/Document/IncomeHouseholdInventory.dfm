@@ -784,6 +784,20 @@ inherited IncomeHouseholdInventoryForm: TIncomeHouseholdInventoryForm
         end>
       Caption = 'ExecSPPrintSticker'
     end
+    object actComplete: TdsdExecStoredProc
+      Category = 'DSDLib'
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      StoredProc = spMovementComplete
+      StoredProcList = <
+        item
+          StoredProc = spMovementComplete
+        end>
+      Caption = #1055#1088#1086#1074#1077#1089#1090#1080' '#1076#1086#1082#1091#1084#1077#1085#1090' '#1079#1072#1076#1085#1080#1084' '#1095#1080#1089#1083#1086#1084
+      Hint = #1055#1088#1086#1074#1077#1089#1090#1080' '#1076#1086#1082#1091#1084#1077#1085#1090' '#1079#1072#1076#1085#1080#1084' '#1095#1080#1089#1083#1086#1084
+      ImageIndex = 12
+      QuestionBeforeExecute = #1055#1088#1086#1074#1077#1089#1090#1080' '#1076#1086#1082#1091#1084#1077#1085#1090' '#1079#1072#1076#1085#1080#1084' '#1095#1080#1089#1083#1086#1084'?'
+    end
   end
   inherited MasterDS: TDataSource
     Top = 224
@@ -870,6 +884,10 @@ inherited IncomeHouseholdInventoryForm: TIncomeHouseholdInventoryForm
         end
         item
           Visible = True
+          ItemName = 'dxBarButton4'
+        end
+        item
+          Visible = True
           ItemName = 'dxBarStatic'
         end
         item
@@ -945,6 +963,10 @@ inherited IncomeHouseholdInventoryForm: TIncomeHouseholdInventoryForm
     end
     object dxBarButton3: TdxBarButton
       Action = actPrintSticker
+      Category = 0
+    end
+    object dxBarButton4: TdxBarButton
+      Action = actComplete
       Category = 0
     end
   end
@@ -1565,6 +1587,37 @@ inherited IncomeHouseholdInventoryForm: TIncomeHouseholdInventoryForm
       end>
     PackSize = 1
     Left = 311
+    Top = 336
+  end
+  object spMovementComplete: TdsdStoredProc
+    StoredProcName = 'gpComplete_Movement_IncomeHouseholdInventory'
+    DataSets = <>
+    OutputType = otResult
+    Params = <
+      item
+        Name = 'inmovementid'
+        Value = Null
+        Component = FormParams
+        ComponentItem = 'Id'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inIsCurrentData'
+        Value = False
+        DataType = ftBoolean
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'outOperDate'
+        Value = 42951d
+        Component = edOperDate
+        DataType = ftDateTime
+        MultiSelectSeparator = ','
+      end>
+    PackSize = 1
+    Left = 736
     Top = 336
   end
 end

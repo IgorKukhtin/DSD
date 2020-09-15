@@ -730,6 +730,18 @@ inherited Report_Goods_RemainsCurrentForm: TReport_Goods_RemainsCurrentForm
             Options.Editing = False
             Width = 55
           end
+          object OperPriceList_first: TcxGridDBColumn
+            Caption = #1055#1077#1088#1074#1072#1103' '#1062#1077#1085#1072' '#1087#1088#1072#1081#1089' ('#1080#1085#1092'.)'
+            DataBinding.FieldName = 'OperPriceList_first'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 4
+            Properties.DisplayFormat = ',0.####;-,0.####; ;'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            HeaderHint = #1055#1077#1088#1074#1072#1103' '#1094#1077#1085#1072' '#1074' '#1094#1077#1085#1072#1093' '#1087#1088#1072#1081#1089#1072
+            Options.Editing = False
+            Width = 55
+          end
           object CurrencyName_pl: TcxGridDBColumn
             Caption = #1042#1072#1083'. '#1087#1088#1072#1081#1089
             DataBinding.FieldName = 'CurrencyName_pl'
@@ -1238,7 +1250,50 @@ inherited Report_Goods_RemainsCurrentForm: TReport_Goods_RemainsCurrentForm
   end
   inherited ActionList: TActionList
     Top = 319
-    object macPrintSticker: TMultiAction [1]
+    object macPrintSticker_fp: TMultiAction [1]
+      Category = 'PrintSticker'
+      MoveParams = <>
+      ActionList = <
+        item
+          Action = actGet_PrinterByUser
+        end
+        item
+          Action = actPrintSticker_fp
+        end>
+      Caption = #1055#1077#1095#1072#1090#1100' '#1062#1077#1085#1085#1080#1082#1086#1074' ('#1087#1077#1088#1074#1072#1103' '#1094#1077#1085#1072')'
+      Hint = #1055#1077#1095#1072#1090#1100' '#1062#1077#1085#1085#1080#1082#1086#1074' ('#1087#1077#1088#1074#1072#1103' '#1094#1077#1085#1072')'
+      ImageIndex = 18
+    end
+    object actPrintSticker_fp: TdsdPrintAction [2]
+      Category = 'PrintSticker'
+      MoveParams = <>
+      StoredProc = spSelectPrintSticker
+      StoredProcList = <
+        item
+          StoredProc = spSelectPrintSticker
+        end>
+      Caption = #1055#1077#1095#1072#1090#1100' '#1062#1077#1085#1085#1080#1082#1086#1074
+      Hint = #1055#1077#1095#1072#1090#1100' '#1062#1077#1085#1085#1080#1082#1086#1074
+      ImageIndex = 18
+      DataSets = <
+        item
+          DataSet = PrintItemsCDS
+          UserName = 'frxDBDItems'
+        end>
+      Params = <>
+      ReportName = 'PrintMovement_IncomeStickerPODIUM_fp'
+      ReportNameParam.Name = #1055#1077#1095#1072#1090#1100' '#1089#1090#1080#1082#1077#1088#1072' '#1089#1072#1084#1086#1082#1083#1077#1081#1082#1080
+      ReportNameParam.Value = 'PrintMovement_IncomeStickerPODIUM_fp'
+      ReportNameParam.DataType = ftString
+      ReportNameParam.ParamType = ptInput
+      ReportNameParam.MultiSelectSeparator = ','
+      PrinterNameParam.Value = Null
+      PrinterNameParam.Component = FormParams
+      PrinterNameParam.ComponentItem = 'PrinterName'
+      PrinterNameParam.DataType = ftString
+      PrinterNameParam.MultiSelectSeparator = ','
+    end
+    object macPrintSticker: TMultiAction [3]
       Category = 'PrintSticker'
       MoveParams = <>
       ActionList = <
@@ -2327,8 +2382,8 @@ inherited Report_Goods_RemainsCurrentForm: TReport_Goods_RemainsCurrentForm
     Top = 224
   end
   inherited BarManager: TdxBarManager
-    Left = 120
-    Top = 160
+    Left = 112
+    Top = 200
     DockControlHeights = (
       0
       0
@@ -2434,6 +2489,10 @@ inherited Report_Goods_RemainsCurrentForm: TReport_Goods_RemainsCurrentForm
         end
         item
           Visible = True
+          ItemName = 'bbPrintSticker_fp'
+        end
+        item
+          Visible = True
           ItemName = 'dxBarStatic'
         end
         item
@@ -2510,6 +2569,7 @@ inherited Report_Goods_RemainsCurrentForm: TReport_Goods_RemainsCurrentForm
     end
     object bbPriceListGoods: TdxBarButton
       Action = actPriceListGoods
+      Caption = #1055#1088#1086#1089#1084#1086#1090#1088'/'#1048#1079#1084#1077#1085#1077#1085#1080#1077' '#1080#1089#1090#1086#1088#1080#1080' '#1094#1077#1085
       Category = 0
     end
     object bbGoods_isOlapNo_list: TdxBarButton
@@ -2535,6 +2595,11 @@ inherited Report_Goods_RemainsCurrentForm: TReport_Goods_RemainsCurrentForm
     object bbExport: TdxBarButton
       Action = actExport
       Category = 0
+    end
+    object bbPrintSticker_fp: TdxBarButton
+      Action = macPrintSticker_fp
+      Category = 0
+      ImageIndex = 19
     end
   end
   inherited DBViewAddOn: TdsdDBViewAddOn

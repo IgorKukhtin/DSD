@@ -1830,9 +1830,15 @@ CREATE OR REPLACE FUNCTION zc_ObjectFloat_JuridicalPriorities_Priorities() RETUR
 INSERT INTO ObjectFloatDesc (DescId, Code, ItemName)
   SELECT zc_Object_JuridicalPriorities(), 'zc_ObjectFloat_JuridicalPriorities_Priorities', '% Приоритета - уменьшает приоритет + увеличивает' WHERE NOT EXISTS (SELECT * FROM ObjectFloatDesc WHERE Code = 'zc_ObjectFloat_JuridicalPriorities_Priorities');
   
+CREATE OR REPLACE FUNCTION zc_ObjectFloat_CashSettings_DaySaleForSUN() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM ObjectFloatDesc WHERE Code = 'zc_ObjectFloat_CashSettings_DaySaleForSUN'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
+INSERT INTO ObjectFloatDesc (DescId, Code, ItemName)
+  SELECT zc_Object_CashSettings(), 'zc_ObjectFloat_CashSettings_DaySaleForSUN', 'Количество дней для контроля <Продано/Продажа до след СУН>' WHERE NOT EXISTS (SELECT * FROM ObjectFloatDesc WHERE Code = 'zc_ObjectFloat_CashSettings_DaySaleForSUN');
+
+
 /*-------------------------------------------------------------------------------
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.   Воробкало А.А.   Шаблий О.В.
+ 15.09.20                                                                                      * zc_ObjectFloat_CashSettings_DaySaleForSUN
  04.09.20         * zc_ObjectFloat_MemberMinus_TotalSumm
                     zc_ObjectFloat_MemberMinus_Summ
  22.08.20                                                                                      * zc_ObjectFloat_JuridicalPriorities_Priorities

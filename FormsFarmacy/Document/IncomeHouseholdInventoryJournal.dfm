@@ -552,6 +552,13 @@ inherited IncomeHouseholdInventoryJournalForm: TIncomeHouseholdInventoryJournalF
         ComponentItem = 'Id'
         ParamType = ptInput
         MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inIsCurrentData'
+        Value = False
+        DataType = ftBoolean
+        ParamType = ptInput
+        MultiSelectSeparator = ','
       end>
     Left = 80
     Top = 320

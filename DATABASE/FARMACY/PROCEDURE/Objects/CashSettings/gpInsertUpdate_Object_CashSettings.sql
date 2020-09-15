@@ -1,6 +1,6 @@
 -- Function: gpInsertUpdate_Object_CashSettings()
 
-DROP FUNCTION IF EXISTS gpInsertUpdate_Object_CashSettings(TVarChar, TVarChar, Boolean, TDateTime, TFloat, TFloat, Boolean, Boolean, TVarChar);
+DROP FUNCTION IF EXISTS gpInsertUpdate_Object_CashSettings(TVarChar, TVarChar, Boolean, TDateTime, TFloat, TFloat, Integer, Boolean, Boolean, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpInsertUpdate_Object_CashSettings(
     IN inShareFromPriceName      TVarChar  ,     -- Перечень фраз в названиях товаров которые можно делить с любой ценой
@@ -9,6 +9,7 @@ CREATE OR REPLACE FUNCTION gpInsertUpdate_Object_CashSettings(
     IN inDateBanSUN              TDateTime ,     -- Запрет работы по СУН
     IN inSummaFormSendVIP        TFloat    ,     -- Сумма от которой показан товар при формировании перемещений VIP
     IN inSummaUrgentlySendVIP    TFloat    ,     -- Сумма перемещения от которой разрешен признак срочно
+    IN inDaySaleForSUN           Integer   ,     -- Количество дней для контроля <Продано/Продажа до след СУН>
     IN inisBlockVIP              Boolean   ,     -- Блокировать формирование перемещений VIP
     IN inisPairedOnlyPromo       Boolean   ,     -- При опускании парных контролировать только акционный
     IN inSession                 TVarChar        -- сессия пользователя
@@ -48,6 +49,8 @@ BEGIN
    PERFORM lpInsertUpdate_ObjectFloat (zc_ObjectFloat_CashSettings_SummaFormSendVIP(), vbID, inSummaFormSendVIP);
       -- сохранили Сумма перемещения от которой разрешен признак срочно
    PERFORM lpInsertUpdate_ObjectFloat (zc_ObjectFloat_CashSettings_SummaUrgentlySendVIP(), vbID, inSummaUrgentlySendVIP);
+      -- сохранили Количество дней для контроля <Продано/Продажа до след СУН>
+   PERFORM lpInsertUpdate_ObjectFloat (zc_ObjectFloat_CashSettings_DaySaleForSUN(), vbID, inDaySaleForSUN);
 
    -- сохранили Блокировать формирование перемещений VIP
    PERFORM lpInsertUpdate_ObjectBoolean (zc_ObjectBoolean_CashSettings_BlockVIP(), vbID, inisBlockVIP);

@@ -36,6 +36,7 @@ RETURNS TABLE (Id Integer, GoodsId Integer, GoodsCode Integer, GoodsName TVarCha
              , DateInsertChild TDateTime , DateInsert TDateTime
              , isPromo Boolean
              , CommentSendId Integer, CommentSendCode Integer, CommentSendName TVarChar
+             , TechnicalRediscountID Integer, TechnicalRediscountInvNumber TVarChar, TechnicalRediscountOperDate TDateTime
               )
 AS
 $BODY$
@@ -238,6 +239,10 @@ BEGIN
                                       , COALESCE(MIFloat_AmountManual.ValueData,0)   ::TFloat  AS AmountManual
                                       , COALESCE(MIFloat_AmountStorage.ValueData,0)  ::TFloat  AS AmountStorage
                                       , MIDate_Insert.ValueData                                AS DateInsert
+
+                                      , MovementTR.ID                                          AS TechnicalRediscountID
+                                      , MovementTR.InvNumber                                   AS TechnicalRediscountInvNumber
+                                      , MovementTR.OperDate                                    AS TechnicalRediscountOperDate
                                       
                                    FROM MovementItem AS MovementItem_Send
                                        -- цена подразделений записанная при автоматическом распределении 
@@ -283,6 +288,14 @@ BEGIN
                                                                   ON MIDate_Insert.MovementItemId = MovementItem_Send.Id
                                                                  AND MIDate_Insert.DescId = zc_MIDate_Insert()
 
+                                       LEFT JOIN MovementItemFloat AS MIFloat_MITRId
+                                                                   ON MIFloat_MITRId.MovementItemId = MovementItem_Send.Id
+                                                                   AND MIFloat_MITRId.DescId = zc_MIFloat_MITechnicalRediscountId()
+                                                                                                                             
+                                       LEFT JOIN MovementItem AS MITR ON MITR.ID = MIFloat_MITRId.ValueData::Integer
+
+                                       LEFT JOIN Movement AS MovementTR ON MovementTR.ID = MITR.MovementId
+
                                    WHERE MovementItem_Send.MovementId = inMovementId
                                      AND MovementItem_Send.DescId = zc_MI_Master()
                                      AND (MovementItem_Send.isErased = FALSE or inIsErased = TRUE)    
@@ -297,6 +310,9 @@ BEGIN
                                           , COALESCE(MIFloat_AmountStorage.ValueData,0) 
                                           , MILinkObject_PartionDateKind.ObjectId
                                           ,  MIDate_Insert.ValueData  
+                                          , MovementTR.ID   
+                                          , MovementTR.InvNumber
+                                          , MovementTR.OperDate 
                                 )
 
           , tmpPrice AS (SELECT MovementItem_Send.ObjectId     AS GoodsId
@@ -461,6 +477,10 @@ BEGIN
               , Object_CommentSend.ObjectCode                                         AS CommentTRCode
               , Object_CommentSend.ValueData                                          AS CommentTRName
 
+              , MovementItem_Send.TechnicalRediscountID                             AS TechnicalRediscountID
+              , MovementItem_Send.TechnicalRediscountInvNumber                      AS TechnicalRediscountInvNumber
+              , MovementItem_Send.TechnicalRediscountOperDate                       AS TechnicalRediscountOperDate
+
             FROM tmpRemains
                 FULL OUTER JOIN MovementItem_Send ON tmpRemains.GoodsId = MovementItem_Send.ObjectId
                 LEFT JOIN Object AS Object_Goods ON Object_Goods.Id = COALESCE(MovementItem_Send.ObjectId,tmpRemains.GoodsId)
@@ -525,6 +545,9 @@ BEGIN
                                       , COALESCE(MIFloat_ValueFrom.ValueData,0)     AS ValueFrom
                                       , COALESCE(MIFloat_ValueTo.ValueData,0)       AS ValueTo
 
+                                      , MovementTR.ID                                          AS TechnicalRediscountID
+                                      , MovementTR.InvNumber                                   AS TechnicalRediscountInvNumber
+                                      , MovementTR.OperDate                                    AS TechnicalRediscountOperDate
                                  FROM MovementItem   
                                      -- цена подразделений записанная при автоматическом распределении 
                                      LEFT OUTER JOIN MovementItemFloat AS MIFloat_PriceFrom
@@ -562,6 +585,15 @@ BEGIN
                                      LEFT JOIN MovementItemDate AS MIDate_Insert
                                                                 ON MIDate_Insert.MovementItemId = MovementItem.Id
                                                                AND MIDate_Insert.DescId = zc_MIDate_Insert()
+
+                                     LEFT JOIN MovementItemFloat AS MIFloat_MITRId
+                                                                 ON MIFloat_MITRId.MovementItemId = MovementItem.Id
+                                                                AND MIFloat_MITRId.DescId = zc_MIFloat_MITechnicalRediscountId()
+                                                                                                   
+                                     LEFT JOIN MovementItem AS MITR ON MITR.ID = MIFloat_MITRId.ValueData::Integer
+
+                                     LEFT JOIN Movement AS MovementTR ON MovementTR.ID = MITR.MovementId
+                                     
                                  WHERE MovementItem.MovementId = inMovementId
                                    AND MovementItem.DescId = zc_MI_Master()
                                    AND (MovementItem.isErased = FALSE or inIsErased = TRUE)
@@ -880,6 +912,10 @@ BEGIN
            , Object_CommentSend.Id                                               AS CommentTRId
            , Object_CommentSend.ObjectCode                                       AS CommentTRCode
            , Object_CommentSend.ValueData                                        AS CommentTRName
+
+           , MovementItem_Send.TechnicalRediscountID                             AS TechnicalRediscountID
+           , MovementItem_Send.TechnicalRediscountInvNumber                      AS TechnicalRediscountInvNumber
+           , MovementItem_Send.TechnicalRediscountOperDate                       AS TechnicalRediscountOperDate
        FROM MovementItem_Send
             LEFT OUTER JOIN tmpRemains ON tmpRemains.GoodsId = MovementItem_Send.ObjectId
             LEFT JOIN Object AS Object_Goods ON Object_Goods.Id = MovementItem_Send.ObjectId
@@ -923,6 +959,7 @@ BEGIN
                                             AND MILinkObject_CommentSend.DescId = zc_MILinkObject_CommentSend()
             LEFT JOIN Object AS Object_CommentSend
                              ON Object_CommentSend.ID = MILinkObject_CommentSend.ObjectId;
+                             
      END IF;
 
 END;
@@ -963,4 +1000,5 @@ ALTER FUNCTION gpSelect_MovementItem_Send (Integer, Boolean, Boolean, TVarChar) 
 
 -- тест
 -- SELECT * FROM gpSelect_MovementItem_Send (inMovementId:= 25173, inShowAll:= TRUE, inIsErased:= FALSE, inSession:= '9818')
--- SELECT * FROM gpSelect_MovementItem_Send (inMovementId:= 25173, inShowAll:= FALSE, inIsErased:= FALSE, inSession:= '2')
+-- 
+SELECT * FROM gpSelect_MovementItem_Send (inMovementId:= 25173, inShowAll:= False, inIsErased:= FALSE, inSession:= '2')

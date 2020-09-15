@@ -117,7 +117,7 @@ BEGIN
        AND COALESCE (vbAmount, 0) = COALESCE (inAmount, 0)
        AND COALESCE (vbAmountManual, 0) = COALESCE (vbAmountManual, 0)
        AND COALESCE (vbAmountStorage, 0) = COALESCE (inAmountStorage, 0)
-       AND EXISTS (SELECT 1 FROM ObjectLink_UserRole_View  WHERE UserId = vbUserId AND RoleId = zc_Enum_Role_Admin())
+       AND EXISTS (SELECT 1 FROM ObjectLink_UserRole_View  WHERE UserId = vbUserId AND RoleId in (zc_Enum_Role_Admin(), zc_Enum_Role_TechnicalRediscount()))
     THEN
       -- Сохранили <Комментарий>
       PERFORM lpInsertUpdate_MovementItemLinkObject (zc_MILinkObject_CommentSend(), ioId, inCommentTRID);
@@ -132,7 +132,10 @@ BEGIN
       THEN
         PERFORM  gpSelect_MovementSUN_TechnicalRediscount(inMovementId, inSession);
       END IF;
-      raise notice 'Value 04';
+
+      -- сохранили протокол
+      PERFORM lpInsert_MovementItemProtocol (ioId, vbUserId, False);
+
       RETURN;
     END IF;
 
@@ -357,51 +360,38 @@ BEGIN
 
     END IF;
 
-    IF COALESCE(inCommentTRID, 0) = 14883331
+/*    IF COALESCE(inCommentTRID, 0) = 14883331
+       AND NOT EXISTS(SELECT 1 FROM Object_Goods_Retail WHERE Object_Goods_Retail.ID = inGoodsId AND COALESCE(Object_Goods_Retail.GoodsPairSunId, 0) <> 0)
     THEN
-      IF NOT EXISTS(SELECT 1 FROM Object_Goods_Retail WHERE Object_Goods_Retail.ID = inGoodsId AND COALESCE(Object_Goods_Retail.GoodsPairSunId, 0) <> 0)
-      THEN
-         RAISE EXCEPTION 'Ошибка. Использование коментария <%> с товаром <%> запрещено.',
-                             (SELECT Object.ValueData FROM Object WHERE Object.ID = 14883331), (SELECT Object.ValueData FROM Object WHERE Object.ID = inGoodsId);
-      END IF;
+       RAISE EXCEPTION 'Ошибка. Использование коментария <%> с товаром <%> запрещено.',
+                           (SELECT Object.ValueData FROM Object WHERE Object.ID = 14883331), (SELECT Object.ValueData FROM Object WHERE Object.ID = inGoodsId);
     END IF;
-
-    IF COALESCE(inCommentTRID, 0) = 14883308
+*/
+    IF COALESCE(inCommentTRID, 0) = 14911561
     THEN
-      IF NOT EXISTS(SELECT 1
-                    FROM Movement
-
-                         INNER JOIN MovementLinkObject AS MovementLinkObject_From
-                                                       ON MovementLinkObject_From.MovementId = Movement.Id
-                                                      AND MovementLinkObject_From.DescId = zc_MovementLinkObject_From()
-                                                      AND MovementLinkObject_From.ObjectId = vbFromId
-
-                         INNER JOIN MovementBoolean AS MovementBoolean_VIP
-                                                    ON MovementBoolean_VIP.MovementId = Movement.Id
-                                                   AND MovementBoolean_VIP.DescId = zc_MovementBoolean_VIP()
-                                                   AND MovementBoolean_VIP.ValueData = TRUE
-
-                         INNER JOIN MovementItem ON MovementItem.MovementId = Movement.Id
-                                                AND MovementItem.DescId = zc_MI_Master()
-                                                AND MovementItem.isErased = FALSE
-                                                AND MovementItem.ObjectId = inGoodsId
-
-                         LEFT JOIN MovementBoolean AS MovementBoolean_Deferred
-                                                   ON MovementBoolean_Deferred.MovementId = Movement.Id
-                                                  AND MovementBoolean_Deferred.DescId = zc_MovementBoolean_Deferred()
-
-                         LEFT JOIN MovementDate AS MovementDate_Deferred
-                                                ON MovementDate_Deferred.MovementId = Movement.Id
-                                               AND MovementDate_Deferred.DescId = zc_MovementDate_Deferred()
-
-                    WHERE Movement.StatusId = zc_Enum_Status_UnComplete()
-                      AND Movement.DescId = zc_Movement_Send()
-                      AND (COALESCE (MovementBoolean_Deferred.ValueData, FALSE) = FALSE
-                        OR MovementDate_Deferred.ValueData > vbInsertDate))
-      THEN
-         RAISE EXCEPTION 'Ошибка. По товару <%> не найдены отложенные или отложенные после формирования СУН VIP перемещения. Комментарий <%> запрещен.',
-                             (SELECT Object.ValueData FROM Object WHERE Object.ID = inGoodsId), (SELECT Object.ValueData FROM Object WHERE Object.ID = 14883308);
-      END IF;
+       IF NOT EXISTS(SELECT MovementItem.ObjectId         AS GoodsId
+                     FROM Movement
+                          INNER JOIN MovementDate AS MovementDate_OperDateStart
+                                                  ON MovementDate_OperDateStart.MovementId = Movement.Id
+                                                 AND MovementDate_OperDateStart.DescId     = zc_MovementDate_OperDateStart()
+                                                 AND MovementDate_OperDateStart.ValueData  <= CURRENT_DATE
+ 
+                          INNER JOIN MovementDate AS MovementDate_OperDateEnd
+                                                  ON MovementDate_OperDateEnd.MovementId = Movement.Id
+                                                 AND MovementDate_OperDateEnd.DescId     = zc_MovementDate_OperDateEnd()
+                                                 AND MovementDate_OperDateEnd.ValueData  >= CURRENT_DATE
+                          INNER JOIN MovementItem ON MovementItem.MovementId = Movement.Id
+                                                 AND MovementItem.DescId     = zc_MI_Master()
+                                                 AND MovementItem.isErased   = FALSE
+                                                 AND MovementItem.ObjectId   = 
+                                                     (SELECT Object_Goods_Retail.GoodsMainId FROM Object_Goods_Retail WHERE Object_Goods_Retail.ID = inGoodsId) 
+ 
+                     WHERE Movement.DescId = zc_Movement_GoodsSP()
+                       AND Movement.StatusId IN (zc_Enum_Status_Complete(), zc_Enum_Status_UnComplete())
+                     )
+       THEN 
+         RAISE EXCEPTION 'Ошибка. Данная позиция не участвует в СП, выберите другую причину.';
+       END IF;
     END IF;
 
     IF COALESCE(inCommentTRID, 0) = 14883299
@@ -441,7 +431,7 @@ BEGIN
                              (SELECT Object.ValueData FROM Object WHERE Object.ID = inGoodsId), (SELECT Object.ValueData FROM Object WHERE Object.ID = 14883299);
       END IF;
     END IF;
-
+    
     IF vbIsSUN = TRUE AND COALESCE (inReasonDifferencesId, 0) <> 0
     THEN
        RAISE EXCEPTION 'Ошибка. В перемещениях СУН причину разногласия использовать нельзя.';

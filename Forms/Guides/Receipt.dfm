@@ -1777,7 +1777,7 @@ object ReceiptForm: TReceiptForm
     end
   end
   object spSelect: TdsdStoredProc
-    StoredProcName = 'gpSelect_Object_Receipt'
+    StoredProcName = 'gpSelect_Object_Receipt_all'
     DataSet = MasterCDS
     DataSets = <
       item

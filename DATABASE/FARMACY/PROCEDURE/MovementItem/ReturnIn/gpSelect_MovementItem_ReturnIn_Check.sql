@@ -33,6 +33,8 @@ $BODY$
   DECLARE vbObjectId Integer;
   DECLARE vbParentId Integer;
   DECLARE vbUnitId Integer;
+  DECLARE vbRoundingTo10 Boolean;
+  DECLARE vbRoundingDown Boolean;
   DECLARE vbDate_6 TDateTime;
   DECLARE vbDate_3 TDateTime;
   DECLARE vbDate_1 TDateTime;
@@ -47,9 +49,13 @@ BEGIN
 
     --Определили подразделение для розничной цены и дату для остатка
     SELECT
-        MovementFloat_MovementId.ValueData::Integer, MovementLinkObject_Unit.ObjectId
+          MovementFloat_MovementId.ValueData::Integer
+        , MovementLinkObject_Unit.ObjectId
+        , COALESCE (MB_RoundingTo10.ValueData, FALSE)::boolean
+        , COALESCE (MB_RoundingDown.ValueData, FALSE)::boolean
     INTO
-        vbParentId, vbUnitId
+        vbParentId, vbUnitId, vbRoundingTo10, vbRoundingDown
+
     FROM Movement
         INNER JOIN MovementLinkObject AS MovementLinkObject_Unit
                                       ON MovementLinkObject_Unit.MovementId = Movement.Id
@@ -57,7 +63,14 @@ BEGIN
         LEFT JOIN MovementFloat AS MovementFloat_MovementId
                                 ON MovementFloat_MovementId.MovementId = Movement.Id
                                AND MovementFloat_MovementId.DescId = zc_MovementFloat_MovementId()
+        LEFT JOIN MovementBoolean AS MB_RoundingTo10
+                                  ON MB_RoundingTo10.MovementId = MovementFloat_MovementId.ValueData::Integer
+                                 AND MB_RoundingTo10.DescId = zc_MovementBoolean_RoundingTo10()
+        LEFT JOIN MovementBoolean AS MB_RoundingDown
+                                  ON MB_RoundingDown.MovementId = MovementFloat_MovementId.ValueData::Integer
+                                 AND MB_RoundingDown.DescId = zc_MovementBoolean_RoundingDown()
     WHERE Movement.Id = inMovementId;
+
 
     -- значения для разделения по срокам
     SELECT Date_6, Date_3, Date_1, Date_0
@@ -116,7 +129,7 @@ BEGIN
 
                             WHERE MovementItemContainer.DescId = zc_MIContainer_CountPartionDate()
                               AND MovementItemContainer.MovementId = vbParentId
-                            GROUP BY Container.ParentId 
+                            GROUP BY Container.ParentId
                            ),
         tmpMI AS (SELECT MovementItem.Id
                        , MIFloat_ContainerId.ValueData :: Integer            AS ContainerId
@@ -162,7 +175,7 @@ BEGIN
                                  ),
           tmpGoodsUKTZED AS (SELECT Object_Goods_Juridical.GoodsMainId
                                   , REPLACE(REPLACE(REPLACE(Object_Goods_Juridical.UKTZED, ' ', ''), '.', ''), Chr(160), '')::TVarChar AS UKTZED
-                                  , ROW_NUMBER() OVER (PARTITION BY Object_Goods_Juridical.GoodsMainId 
+                                  , ROW_NUMBER() OVER (PARTITION BY Object_Goods_Juridical.GoodsMainId
                                                  ORDER BY COALESCE(Object_Goods_Juridical.AreaId, 0), Object_Goods_Juridical.JuridicalId) AS Ord
                              FROM Object_Goods_Juridical
                              WHERE COALESCE (Object_Goods_Juridical.UKTZED, '') <> ''
@@ -180,7 +193,11 @@ BEGIN
                  , MovementItem.Amount        AS Amount
                  , MIFloat_Price.ValueData    AS Price
 
-                 , Round(MIFloat_Price.ValueData * MovementItem.Amount, 1)::TFloat AS Summ
+                 , CASE WHEN vbRoundingDown = True
+                      THEN TRUNC(COALESCE (MovementItem.Amount, 0) * MIFloat_Price.ValueData, 1)::TFloat
+                      ELSE CASE WHEN vbRoundingTo10 = True
+                      THEN (((COALESCE (MovementItem.Amount, 0)) * MIFloat_Price.ValueData)::NUMERIC (16, 1))::TFloat
+                      ELSE (((COALESCE (MovementItem.Amount, 0)) * MIFloat_Price.ValueData)::NUMERIC (16, 2))::TFloat END END AS Summ
                  , ObjectFloat_NDSKind_NDS.ValueData  AS NDS
                  , MIString_UID.ValueData     AS List_UID
 
@@ -228,7 +245,7 @@ BEGIN
 
                   LEFT JOIN tmpContainerPD ON tmpContainerPD.ContainerId = MovementItem.ContainerId
                   LEFT JOIN tmpPartionDateKind AS Object_PartionDateKind ON Object_PartionDateKind.Id = tmpContainerPD.PartionDateKindId
-                  
+
                    -- Размещение товара
                   LEFT OUTER JOIN AccommodationLincGoods AS Accommodation
                                                          ON Accommodation.UnitId = vbUnitId
@@ -253,5 +270,5 @@ $BODY$
 
 -- тест
 --  select * from lpDelete_MovementItem (365195207, '3');
-select * from gpSelect_MovementItem_ReturnIn_Check(inMovementId := 19806214, inSession := '3');
+select * from gpSelect_MovementItem_ReturnIn_Check(inMovementId := 20242591, inSession := '3');
 

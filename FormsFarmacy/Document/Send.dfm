@@ -1,25 +1,25 @@
 inherited SendForm: TSendForm
   Caption = #1044#1086#1082#1091#1084#1077#1085#1090' <'#1055#1077#1088#1077#1084#1077#1097#1077#1085#1080#1077'>'
   ClientHeight = 617
-  ClientWidth = 1001
-  ExplicitWidth = 1017
+  ClientWidth = 992
+  ExplicitWidth = 1008
   ExplicitHeight = 656
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
     Top = 155
-    Width = 1001
+    Width = 992
     Height = 462
     ExplicitTop = 155
     ExplicitWidth = 1001
     ExplicitHeight = 462
     ClientRectBottom = 462
-    ClientRectRight = 1001
+    ClientRectRight = 992
     inherited tsMain: TcxTabSheet
       ExplicitWidth = 1001
       ExplicitHeight = 438
       inherited cxGrid: TcxGrid
-        Width = 1001
+        Width = 992
         Height = 318
         ExplicitWidth = 1001
         ExplicitHeight = 318
@@ -539,25 +539,43 @@ inherited SendForm: TSendForm
             Options.Editing = False
             Width = 68
           end
+          object TechnicalRediscountInvNumber: TcxGridDBColumn
+            Caption = #1058#1077#1093'. '#1087#1077#1088#1077#1091#1095#1077#1090
+            DataBinding.FieldName = 'TechnicalRediscountInvNumber'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 67
+          end
+          object TechnicalRediscountOperDate: TcxGridDBColumn
+            Caption = #1044#1072#1090#1072' '#1090#1077#1093'. '#1087#1077#1088#1077#1091#1095#1077#1090#1072
+            DataBinding.FieldName = 'TechnicalRediscountOperDate'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 84
+          end
         end
       end
       object cxSplitter1: TcxSplitter
         Left = 0
         Top = 318
-        Width = 1001
+        Width = 992
         Height = 8
         HotZoneClassName = 'TcxMediaPlayer8Style'
         AlignSplitter = salBottom
         Control = cxGrid1
+        ExplicitWidth = 1001
       end
       object cxGrid1: TcxGrid
         Left = 0
         Top = 326
-        Width = 1001
+        Width = 992
         Height = 112
         Align = alBottom
         PopupMenu = PopupMenu
         TabOrder = 2
+        ExplicitWidth = 1001
         object cxGridDBTableView1: TcxGridDBTableView
           Navigator.Buttons.CustomButtons = <>
           DataController.DataSource = DetailDS
@@ -699,7 +717,7 @@ inherited SendForm: TSendForm
     end
   end
   inherited DataPanel: TPanel
-    Width = 1001
+    Width = 992
     Height = 129
     TabOrder = 3
     ExplicitWidth = 1001
@@ -2483,8 +2501,8 @@ inherited SendForm: TSendForm
   end
   inherited RefreshAddOn: TRefreshAddOn
     DataSet = ''
-    Left = 456
-    Top = 440
+    Left = 472
+    Top = 432
   end
   inherited spErasedMIMaster: TdsdStoredProc
     StoredProcName = 'gpMovementItem_Send_SetErased'

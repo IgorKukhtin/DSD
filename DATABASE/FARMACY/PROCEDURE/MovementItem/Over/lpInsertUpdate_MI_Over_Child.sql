@@ -33,6 +33,12 @@ BEGIN
        RAISE EXCEPTION 'Ошибка.Не определён главный элемент.';
    END IF;
 
+   -- проверка
+   IF COALESCE (inMovementId, 0) = 0
+   THEN
+       RAISE EXCEPTION 'Ошибка.Редактирование строк которые не попали в распределение запрещено.';
+   END IF;
+
    -- определяется признак Создание/Корректировка
    vbIsInsert:= COALESCE (ioId, 0) = 0;
  
