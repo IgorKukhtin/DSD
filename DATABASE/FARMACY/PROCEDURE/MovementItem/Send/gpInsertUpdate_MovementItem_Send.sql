@@ -133,6 +133,9 @@ BEGIN
         PERFORM  gpSelect_MovementSUN_TechnicalRediscount(inMovementId, inSession);
       END IF;
 
+      -- сохранили протокол
+      PERFORM lpInsert_MovementItemProtocol (ioId, vbUserId, False);
+
       RETURN;
     END IF;
 
@@ -391,6 +394,44 @@ BEGIN
        END IF;
     END IF;
 
+    IF COALESCE(inCommentTRID, 0) = 14883299
+    THEN
+      IF EXISTS(SELECT 1
+                FROM Movement
+
+                     INNER JOIN MovementLinkObject AS MovementLinkObject_From
+                                                   ON MovementLinkObject_From.MovementId = Movement.Id
+                                                  AND MovementLinkObject_From.DescId = zc_MovementLinkObject_From()
+                                                  AND MovementLinkObject_From.ObjectId = vbFromId
+
+                     INNER JOIN MovementBoolean AS MovementBoolean_SUN
+                                                ON MovementBoolean_SUN.MovementId = Movement.Id
+                                               AND MovementBoolean_SUN.DescId = zc_MovementBoolean_SUN()
+                                               AND MovementBoolean_SUN.ValueData = TRUE
+
+                     LEFT JOIN MovementDate AS MovementDate_Insert
+                                            ON MovementDate_Insert.MovementId = Movement.Id
+                                           AND MovementDate_Insert.DescId = zc_MovementDate_Insert()
+
+                     INNER JOIN MovementItem ON MovementItem.MovementId = Movement.Id
+                                            AND MovementItem.DescId = zc_MI_Master()
+                                            AND MovementItem.isErased = FALSE
+                                            AND MovementItem.ObjectId = inGoodsId
+
+                     INNER JOIN MovementItemLinkObject AS MILinkObject_CommentSend
+                                                       ON MILinkObject_CommentSend.MovementItemId = MovementItem.Id
+                                                      AND MILinkObject_CommentSend.DescId = zc_MILinkObject_CommentSend()
+                                                      AND MILinkObject_CommentSend.ObjectId = 14883299
+
+                WHERE Movement.StatusId IN (zc_Enum_Status_Complete(), zc_Enum_Status_Erased())
+                  AND Movement.DescId = zc_Movement_Send()
+                  AND MovementDate_Insert.ValueData BETWEEN vbInsertDate - INTERVAL '37 DAY' AND vbInsertDate - INTERVAL '29 DAY')
+      THEN
+         RAISE EXCEPTION 'Ошибка. По товару <%> был использован комментарий <%> 30 дней назад. Использовать сейчас запрещено',
+                             (SELECT Object.ValueData FROM Object WHERE Object.ID = inGoodsId), (SELECT Object.ValueData FROM Object WHERE Object.ID = 14883299);
+      END IF;
+    END IF;
+    
     IF vbIsSUN = TRUE AND COALESCE (inReasonDifferencesId, 0) <> 0
     THEN
        RAISE EXCEPTION 'Ошибка. В перемещениях СУН причину разногласия использовать нельзя.';

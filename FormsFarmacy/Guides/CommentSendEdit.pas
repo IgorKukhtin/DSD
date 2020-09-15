@@ -44,6 +44,7 @@ type
     CommentTRGuides: TdsdGuides;
     cbisPromo: TcxCheckBox;
     cbisSendPartionDate: TcxCheckBox;
+    cbisLostPositions: TcxCheckBox;
   private
     { Private declarations }
   public

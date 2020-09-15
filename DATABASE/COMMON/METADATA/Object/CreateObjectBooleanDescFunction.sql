@@ -766,12 +766,17 @@ CREATE OR REPLACE FUNCTION zc_ObjectFloat_CommentTR_BlockFormSUN() RETURNS Integ
 INSERT INTO ObjectBooleanDesc (DescId, Code, ItemName)
   SELECT zc_Object_CommentTR(), 'zc_ObjectFloat_CommentTR_BlockFormSUN', 'Блокировать формирование СУН при не проведенных ТП' WHERE NOT EXISTS (SELECT * FROM ObjectBooleanDesc WHERE Code = 'zc_ObjectFloat_CommentTR_BlockFormSUN');
 
+CREATE OR REPLACE FUNCTION zc_ObjectBoolean_CommentSun_LostPositions() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM ObjectBooleanDesc WHERE Code = 'zc_ObjectBoolean_CommentSun_LostPositions'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
+INSERT INTO ObjectBooleanDesc (DescId, Code, ItemName)
+  SELECT zc_Object_CommentSend(), 'zc_ObjectBoolean_CommentSun_LostPositions', 'Утерянные позиции' WHERE NOT EXISTS (SELECT * FROM ObjectBooleanDesc WHERE Code = 'zc_ObjectBoolean_CommentSun_LostPositions');
+
 
 
 
 /*-------------------------------------------------------------------------------
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.  Воробкало А.А.  Ярошенко Р.Ф.   Подмогильный В.В.   Шаблий О.В.
+ 15.09.20                                                                                                          * zc_ObjectBoolean_CommentSun_LostPositions 
  10.09.20         * zc_ObjectBoolean_Receipt_Disabled
  09.09.20                                                                                                          * zc_ObjectFloat_CommentTR_BlockFormSUN 
  06.09.20                                                                                                          * zc_ObjectBoolean_CashSettings_PairedOnlyPromo 

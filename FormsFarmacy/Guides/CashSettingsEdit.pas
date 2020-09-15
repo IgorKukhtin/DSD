@@ -39,6 +39,8 @@ type
     cxLabel4: TcxLabel;
     cbBlockVIP: TcxCheckBox;
     cbPairedOnlyPromo: TcxCheckBox;
+    edDaySaleForSUN: TcxCurrencyEdit;
+    cxLabel5: TcxLabel;
   private
     { Private declarations }
   public

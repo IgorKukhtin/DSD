@@ -1,6 +1,6 @@
 -- Function: gpInsertUpdate_Object_CommentSend()
 
-DROP FUNCTION IF EXISTS gpInsertUpdate_Object_CommentSend(Integer, Integer, TVarChar, Integer, Boolean, Boolean, TVarChar);
+DROP FUNCTION IF EXISTS gpInsertUpdate_Object_CommentSend(Integer, Integer, TVarChar, Integer, Boolean, Boolean, Boolean, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpInsertUpdate_Object_CommentSend(
  INOUT ioId                 Integer   ,     -- ключ объекта <Покупатель> 
@@ -9,6 +9,7 @@ CREATE OR REPLACE FUNCTION gpInsertUpdate_Object_CommentSend(
     IN inCommentTRId        Integer   ,     -- Комментарий строк технического переучета
     IN inisPromo            Boolean   ,     -- Контроль количества по плану
     IN inisSendPartionDate  Boolean   ,     -- Контроль пересорта
+    IN inisLostPositions    Boolean   ,     -- Утерянные позиции
     IN inSession            TVarChar        -- Формировать заявку на изменения срока
 )
   RETURNS integer AS
@@ -47,6 +48,8 @@ BEGIN
    PERFORM lpInsertUpdate_ObjectBoolean (zc_ObjectBoolean_CommentSun_Promo(), ioId, inisPromo);
    -- сохранили Формировать заявку на изменения срока
    PERFORM lpInsertUpdate_ObjectBoolean (zc_ObjectBoolean_CommentSun_SendPartionDate(), ioId, inisSendPartionDate);
+   -- сохранили Формировать заявку на изменения срока
+   PERFORM lpInsertUpdate_ObjectBoolean (zc_ObjectBoolean_CommentSun_LostPositions(), ioId, inisLostPositions);
 
    -- сохранили протокол
    PERFORM lpInsert_ObjectProtocol (ioId, vbUserId);
