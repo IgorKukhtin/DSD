@@ -128,6 +128,9 @@ type
     ContainerId: TcxGridDBColumn;
     ContainerChoiceForm: TOpenChoiceForm;
     CurrencyChoiceForm: TOpenChoiceForm;
+    spInsert_MI_LossDebt_70000: TdsdStoredProc;
+    actInsert_MI_LossDebt_70000: TdsdExecStoredProc;
+    bb: TdxBarButton;
   private
   public
   end;

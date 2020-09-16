@@ -131,8 +131,8 @@ BEGIN
                                                 , inPartnerId            := inPartnerId
                                                 , inBranchId             := inBranchId
                                                 , inContainerId          := inContainerId
-                                                , inAmount               := vbAmount
-                                                , inSumm                 := vbSumm
+                                                , inAmount               := 0
+                                                , inSumm                 := CASE WHEN 
                                                 , inCurrencyPartnerValue := inCurrencyPartnerValue
                                                 , inParPartnerValue      := inParPartnerValue
                                                 , inAmountCurrency       := CASE WHEN ioAmountCurrencyDebet  <> 0 THEN  1 * ioAmountCurrencyDebet
