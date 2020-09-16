@@ -10,12 +10,20 @@ CREATE OR REPLACE FUNCTION gpInsert_MI_LossDebt_70000(
 RETURNS VOID AS
 $BODY$
    DECLARE vbUserId Integer;
+   DECLARE vbPaidKindId Integer;
    DECLARE vbOperDate TDateTime;
 BEGIN
      -- проверка прав пользовател€ на вызов процедуры
      vbUserId:= lpCheckRight (inSession, zc_Enum_Process_Insert_MI_LossDebt_70000());
 
-     vbOperDate := (SELECT Movement.OperDate FROM Movement WHERE Movement.Id = inMovementId);
+     SELECT Movement.OperDate
+          , COALESCE (MovementLinkObject_PaidKind.ObjectId,0) AS PaidKindId
+  INTO vbOperDate, vbPaidKindId
+     FROM Movement
+          LEFT JOIN MovementLinkObject AS MovementLinkObject_PaidKind
+                                       ON MovementLinkObject_PaidKind.MovementId = Movement.Id
+                                      AND MovementLinkObject_PaidKind.DescId = zc_MovementLinkObject_PaidKind()
+     WHERE Movement.Id = inMovementId;
 
      -- сохранили <Ёлемент документа>
      PERFORM lpInsertUpdate_MovementItem_LossDebt (ioId                   := 0
@@ -87,6 +95,7 @@ BEGIN
                 LEFT JOIN ContainerLinkObject AS CLO_Branch
                                               ON CLO_Branch.ContainerId = tmp.ContainerId
                                              AND CLO_Branch.DescId = zc_ContainerLinkObject_Branch()
+           WHERE CLO_PaidKind.ObjectId = vbPaidKindId OR vbPaidKindId = 0
            GROUP BY tmp.ContainerId
                   , CLO_Juridical.ObjectId
                   , CLO_Partner.ObjectId
