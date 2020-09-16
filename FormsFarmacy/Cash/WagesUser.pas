@@ -81,6 +81,8 @@ type
     cxLabel24: TcxLabel;
     cePenaltySUN: TcxCurrencyEdit;
     cxLabel25: TcxLabel;
+    ceSummaFine: TcxCurrencyEdit;
+    cxLabel26: TcxLabel;
   private
     { Private declarations }
   public

@@ -66,7 +66,9 @@ BEGIN
            , Object_DiscountCard.ValueData                      AS DiscountCardName
            , Object_DiscountExternal.ValueData                  AS DiscountExternalName
            , MovementString_BayerPhone.ValueData                AS BayerPhone
-           , MovementString_InvNumberOrder.ValueData            AS InvNumberOrder
+           , COALESCE(MovementString_InvNumberOrder.ValueData,
+             CASE WHEN COALESCE (MovementLinkObject_CheckSourceKind.ObjectId, 0) = zc_Enum_CheckSourceKind_Tabletki() THEN MovementString_OrderId.ValueData
+                  WHEN COALESCE (MovementLinkObject_CheckSourceKind.ObjectId, 0) <> 0 THEN Movement_Check.Id::TVarChar END)::TVarChar   AS InvNumberOrder
            , Object_ConfirmedKind.ValueData                     AS ConfirmedKindName
            , Object_ConfirmedKindClient.ValueData               AS ConfirmedKindClientName
 
@@ -241,6 +243,15 @@ BEGIN
                                          ON MovementLinkObject_JackdawsChecks.MovementId =  Movement_Check.Id
                                         AND MovementLinkObject_JackdawsChecks.DescId = zc_MovementLinkObject_JackdawsChecks()
             LEFT JOIN Object AS Object_JackdawsChecks ON Object_JackdawsChecks.Id = MovementLinkObject_JackdawsChecks.ObjectId
+
+            LEFT JOIN MovementLinkObject AS MovementLinkObject_CheckSourceKind
+                                         ON MovementLinkObject_CheckSourceKind.MovementId =  Movement_Check.Id
+                                        AND MovementLinkObject_CheckSourceKind.DescId = zc_MovementLinkObject_CheckSourceKind()
+            LEFT JOIN Object AS Object_CheckSourceKind ON Object_CheckSourceKind.Id = MovementLinkObject_CheckSourceKind.ObjectId
+
+            LEFT JOIN MovementString AS MovementString_OrderId
+                                     ON MovementString_OrderId.MovementId = Movement_Check.Id
+                                    AND MovementString_OrderId.DescId = zc_MovementString_OrderId()
      ;
 
 END;

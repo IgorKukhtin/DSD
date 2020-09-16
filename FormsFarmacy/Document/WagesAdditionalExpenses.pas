@@ -69,6 +69,7 @@ type
     cxLabel3: TcxLabel;
     cxLabel4: TcxLabel;
     SummaMoneyBoxResidual: TcxGridDBBandedColumn;
+    SummaFine: TcxGridDBBandedColumn;
   private
     { Private declarations }
   public

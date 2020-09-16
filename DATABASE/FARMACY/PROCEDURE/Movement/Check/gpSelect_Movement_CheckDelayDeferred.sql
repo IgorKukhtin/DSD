@@ -124,7 +124,9 @@ BEGIN
 	        , MovementString_Bayer.ValueData             AS Bayer
 
             , MovementString_BayerPhone.ValueData        AS BayerPhone
-            , MovementString_InvNumberOrder.ValueData    AS InvNumberOrder
+            , COALESCE(MovementString_InvNumberOrder.ValueData,
+              CASE WHEN COALESCE (MovementLinkObject_CheckSourceKind.ObjectId, 0) = zc_Enum_CheckSourceKind_Tabletki() THEN MovementString_OrderId.ValueData
+                   WHEN COALESCE (MovementLinkObject_CheckSourceKind.ObjectId, 0) <> 0 THEN Movement.Id::TVarChar END)::TVarChar   AS InvNumberOrder
             , Object_ConfirmedKind.ValueData             AS ConfirmedKindName
             , Object_ConfirmedKindClient.ValueData       AS ConfirmedKindClientName
 
@@ -293,6 +295,15 @@ BEGIN
                                          ON MovementLinkObject_PartionDateKind.MovementId = Movement.Id
                                         AND MovementLinkObject_PartionDateKind.DescId = zc_MovementLinkObject_PartionDateKind()
             LEFT JOIN Object AS Object_PartionDateKind ON Object_PartionDateKind.Id = MovementLinkObject_PartionDateKind.ObjectId
+
+            LEFT JOIN MovementLinkObject AS MovementLinkObject_CheckSourceKind
+                                         ON MovementLinkObject_CheckSourceKind.MovementId =  Movement.Id
+                                        AND MovementLinkObject_CheckSourceKind.DescId = zc_MovementLinkObject_CheckSourceKind()
+            LEFT JOIN Object AS Object_CheckSourceKind ON Object_CheckSourceKind.Id = MovementLinkObject_CheckSourceKind.ObjectId
+
+            LEFT JOIN MovementString AS MovementString_OrderId
+                                     ON MovementString_OrderId.MovementId = Movement.Id
+                                    AND MovementString_OrderId.DescId = zc_MovementString_OrderId()
 
        WHERE inIsShowAll OR COALESCE(MovementDate_Delay.ValueData, Movement.OperDate) >= CURRENT_DATE - INTERVAL '10 DAY'
        );

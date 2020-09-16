@@ -82,7 +82,8 @@ BEGIN
            , Object_DiscountExternal.ValueData                  AS DiscountExternalName
            , MovementString_BayerPhone.ValueData                AS BayerPhone
            , COALESCE(MovementString_InvNumberOrder.ValueData,
-             CASE WHEN COALESCE (MovementLinkObject_CheckSourceKind.ObjectId, 0) <> 0 THEN Movement_Check.Id::TVarChar END)::TVarChar   AS InvNumberOrder
+             CASE WHEN COALESCE (MovementLinkObject_CheckSourceKind.ObjectId, 0) = zc_Enum_CheckSourceKind_Tabletki() THEN MovementString_OrderId.ValueData
+                  WHEN COALESCE (MovementLinkObject_CheckSourceKind.ObjectId, 0) <> 0 THEN Movement_Check.Id::TVarChar END)::TVarChar   AS InvNumberOrder
            , Object_ConfirmedKind.ValueData                     AS ConfirmedKindName
            , Object_ConfirmedKindClient.ValueData               AS ConfirmedKindClientName
 
@@ -134,7 +135,7 @@ BEGIN
                    LEFT JOIN MovementBoolean AS MovementBoolean_Deferred
                                              ON MovementBoolean_Deferred.MovementId = Movement.Id
                                             AND MovementBoolean_Deferred.DescId = zc_MovementBoolean_Deferred()
-
+                   
               WHERE Movement.OperDate >= DATE_TRUNC ('DAY', inStartDate)
                 AND Movement.OperDate < DATE_TRUNC ('DAY', inEndDate) + INTERVAL '1 DAY'
                 AND Movement.DescId = zc_Movement_Check()
@@ -189,6 +190,10 @@ BEGIN
              LEFT JOIN MovementString AS MovementString_Ambulance
                                       ON MovementString_Ambulance.MovementId = Movement_Check.Id
                                      AND MovementString_Ambulance.DescId = zc_MovementString_Ambulance()
+
+             LEFT JOIN MovementString AS MovementString_OrderId
+                                      ON MovementString_OrderId.MovementId = Movement_Check.Id
+                                     AND MovementString_OrderId.DescId = zc_MovementString_OrderId()
 
              LEFT JOIN MovementBoolean AS MovementBoolean_NotMCS
                                        ON MovementBoolean_NotMCS.MovementId = Movement_Check.Id
@@ -333,4 +338,3 @@ $BODY$
 -- тест
 -- SELECT * FROM gpSelect_Movement_CheckSummCard (inStartDate:= '30.06.2020', inEndDate:= '30.06.2020', inIsErased := FALSE, inSession:= '3')
 
-select * from gpSelect_Movement_CheckSummCard(inStartDate := ('16.07.2020')::TDateTime , inEndDate := ('16.07.2020')::TDateTime , inIsErased := 'False' ,  inSession := '3');

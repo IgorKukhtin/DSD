@@ -86,7 +86,9 @@ BEGIN
            , Object_DiscountCard.ValueData                      AS DiscountCardName
            , Object_DiscountExternal.ValueData                  AS DiscountExternalName
            , MovementString_BayerPhone.ValueData                AS BayerPhone
-           , MovementString_InvNumberOrder.ValueData            AS InvNumberOrder
+           , COALESCE(MovementString_InvNumberOrder.ValueData,
+             CASE WHEN COALESCE (MovementLinkObject_CheckSourceKind.ObjectId, 0) = zc_Enum_CheckSourceKind_Tabletki() THEN MovementString_OrderId.ValueData
+                  WHEN COALESCE (MovementLinkObject_CheckSourceKind.ObjectId, 0) <> 0 THEN Movement_Check.Id::TVarChar END)::TVarChar   AS InvNumberOrder
            , Object_ConfirmedKind.ValueData                     AS ConfirmedKindName
            , Object_ConfirmedKindClient.ValueData               AS ConfirmedKindClientName
 
@@ -203,6 +205,10 @@ BEGIN
                                       ON MovementString_Ambulance.MovementId = Movement_Check.Id
                                      AND MovementString_Ambulance.DescId = zc_MovementString_Ambulance()
 
+             LEFT JOIN MovementString AS MovementString_OrderId
+                                      ON MovementString_OrderId.MovementId = Movement_Check.Id
+                                     AND MovementString_OrderId.DescId = zc_MovementString_OrderId()
+
              LEFT JOIN MovementBoolean AS MovementBoolean_NotMCS
                                        ON MovementBoolean_NotMCS.MovementId = Movement_Check.Id
                                       AND MovementBoolean_NotMCS.DescId = zc_MovementBoolean_NotMCS()
@@ -276,6 +282,11 @@ BEGIN
                                          ON MovementLinkObject_MemberSP.MovementId = Movement_Check.Id
                                         AND MovementLinkObject_MemberSP.DescId = zc_MovementLinkObject_MemberSP()
             LEFT JOIN Object AS Object_MemberSP ON Object_MemberSP.Id = MovementLinkObject_MemberSP.ObjectId
+
+            LEFT JOIN MovementLinkObject AS MovementLinkObject_CheckSourceKind
+                                         ON MovementLinkObject_CheckSourceKind.MovementId =  Movement_Check.Id
+                                        AND MovementLinkObject_CheckSourceKind.DescId = zc_MovementLinkObject_CheckSourceKind()
+            LEFT JOIN Object AS Object_CheckSourceKind ON Object_CheckSourceKind.Id = MovementLinkObject_CheckSourceKind.ObjectId
 
             LEFT JOIN ObjectString AS ObjectString_Address
                                    ON ObjectString_Address.ObjectId = MovementLinkObject_MemberSP.ObjectId

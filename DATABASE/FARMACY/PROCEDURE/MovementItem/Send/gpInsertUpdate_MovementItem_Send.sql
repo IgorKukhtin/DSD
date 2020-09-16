@@ -44,6 +44,7 @@ $BODY$
    DECLARE vbStatusId      Integer;
    DECLARE vbAmountPromo   TFloat;
    DECLARE vbRemains       TFloat;
+   DECLARE vbDaySaleForSUN Integer;
 BEGIN
     -- проверка прав пользователя на вызов процедуры
     --vbUserId := lpCheckRight (inSession, zc_Enum_Process_InsertUpdate_MI_Send());
@@ -58,7 +59,8 @@ BEGIN
          , COALESCE (MovementBoolean_DefSUN.ValueData, FALSE)::Boolean  AS isDefSUN
          , DATE_TRUNC ('DAY', MovementDate_Insert.ValueData)
          , COALESCE (MovementFloat_TotalCount.ValueData, 0)
-    INTO vbStatusId, vbUnitId, vbIsSUN, vbIsSUN_v2, vbIsSUN_v3, vbIsDefSUN, vbInsertDate, vbTotalCountOld
+         , COALESCE (ObjectFloat_CashSettings_DaySaleForSUN.ValueData, 0)::Integer
+    INTO vbStatusId, vbUnitId, vbIsSUN, vbIsSUN_v2, vbIsSUN_v3, vbIsDefSUN, vbInsertDate, vbTotalCountOld, vbDaySaleForSUN
     FROM Movement
           LEFT JOIN MovementLinkObject AS MovementLinkObject_To
                                        ON MovementLinkObject_To.MovementId = Movement.Id
@@ -84,7 +86,53 @@ BEGIN
           LEFT JOIN MovementFloat AS MovementFloat_TotalCount
                                   ON MovementFloat_TotalCount.MovementId = Movement.Id
                                  AND MovementFloat_TotalCount.DescId = zc_MovementFloat_TotalCount()
+          LEFT JOIN ObjectFloat AS ObjectFloat_CashSettings_DaySaleForSUN
+                                ON ObjectFloat_CashSettings_DaySaleForSUN.ObjectId = (SELECT MIN(Object_CashSettings.Id)
+                                                                                      FROM Object AS Object_CashSettings
+                                                                                      WHERE Object_CashSettings.DescId = zc_Object_CashSettings())
+                               AND ObjectFloat_CashSettings_DaySaleForSUN.DescId = zc_ObjectFloat_CashSettings_DaySaleForSUN()
     WHERE Movement.Id = inMovementId;
+    
+    IF COALESCE (inCommentTRID, 0) <> 0
+    THEN
+       WITH tmpProtocolAll AS (SELECT  MovementItem.Id
+                                     , SUBSTRING(MovementItemProtocol.ProtocolData, POSITION('Значение' IN MovementItemProtocol.ProtocolData) + 24, 50) AS ProtocolData
+                                     , MovementItem.Amount
+                                     , MovementItem.ObjectId
+                                     , Object_Goods_Main.Name
+                                     , ROW_NUMBER() OVER (PARTITION BY MovementItemProtocol.MovementItemId ORDER BY MovementItemProtocol.Id) AS Ord
+                                FROM MovementItem
+
+                                     INNER JOIN Object_Goods_Retail ON Object_Goods_Retail.ID = MovementItem.objectid
+                                     INNER JOIN Object_Goods_Main ON Object_Goods_Main.ID = Object_Goods_Retail.GoodsMainId
+
+                                     INNER JOIN MovementItemProtocol ON MovementItemProtocol.MovementItemId = MovementItem.Id
+                                                                    AND MovementItemProtocol.ProtocolData ILIKE '%Значение%'
+                                                                    AND MovementItemProtocol.UserId = zfCalc_UserAdmin()::Integer
+                                WHERE  MovementItem.Id = ioId
+                                )
+           , tmpProtocol AS (SELECT tmpProtocolAll.Id
+                                  , tmpProtocolAll.ObjectId
+                                  , SUBSTRING(tmpProtocolAll.ProtocolData, 1, POSITION('"' IN tmpProtocolAll.ProtocolData) - 1)::TFloat AS AmountAuto
+                                  , tmpProtocolAll.Name
+                                  , tmpProtocolAll.Amount
+                             FROM tmpProtocolAll
+                                  LEFT JOIN MovementItemLinkObject AS MILinkObject_CommentSend
+                                                                   ON MILinkObject_CommentSend.MovementItemId = tmpProtocolAll.Id
+                                                                  AND MILinkObject_CommentSend.DescId = zc_MILinkObject_CommentSend()
+                             WHERE tmpProtocolAll.Ord = 1
+                               AND COALESCE (MILinkObject_CommentSend.ObjectId, 0) = 0)
+
+       SELECT tmpProtocol.AmountAuto
+       INTO vbAmountAuto
+       FROM tmpProtocol;
+
+       IF COALESCE(vbAmountAuto, 0) = COALESCE(inAmount, 0)
+       THEN
+          RAISE EXCEPTION 'Ошибка. Количество % равно сформировано % уберите причину уменьшения количества!', inAmount, vbAmountAuto;
+       END IF;
+    END IF;
+    
 
     IF COALESCE (ioId, 0) = 0 AND (vbIsSUN = TRUE OR vbIsSUN_v2 = TRUE OR vbIsSUN_v3 = TRUE) AND
       NOT EXISTS (SELECT 1 FROM ObjectLink_UserRole_View  WHERE UserId = vbUserId AND RoleId = zc_Enum_Role_Admin())
@@ -394,7 +442,7 @@ BEGIN
        END IF;
     END IF;
 
-    IF COALESCE(inCommentTRID, 0) = 14883299
+    IF COALESCE(inCommentTRID, 0) = 14883299 AND COALESCE (vbDaySaleForSUN, 0) > 0
     THEN
       IF EXISTS(SELECT 1
                 FROM Movement
@@ -425,10 +473,11 @@ BEGIN
 
                 WHERE Movement.StatusId IN (zc_Enum_Status_Complete(), zc_Enum_Status_Erased())
                   AND Movement.DescId = zc_Movement_Send()
-                  AND MovementDate_Insert.ValueData BETWEEN vbInsertDate - INTERVAL '37 DAY' AND vbInsertDate - INTERVAL '29 DAY')
+                  AND MovementDate_Insert.ValueData BETWEEN vbInsertDate - ((vbDaySaleForSUN + 7)::TVarChar||' DAY')::INTERVAL AND vbInsertDate - ((vbDaySaleForSUN - 1)::TVarChar||' DAY')::INTERVAL)
       THEN
-         RAISE EXCEPTION 'Ошибка. По товару <%> был использован комментарий <%> 30 дней назад. Использовать сейчас запрещено',
-                             (SELECT Object.ValueData FROM Object WHERE Object.ID = inGoodsId), (SELECT Object.ValueData FROM Object WHERE Object.ID = 14883299);
+         RAISE EXCEPTION 'Ошибка. По товару <%> был использован комментарий <%> % дней назад. Использовать сейчас запрещено',
+                             (SELECT Object.ValueData FROM Object WHERE Object.ID = inGoodsId), vbDaySaleForSUN, 
+                             (SELECT Object.ValueData FROM Object WHERE Object.ID = 14883299);
       END IF;
     END IF;
     

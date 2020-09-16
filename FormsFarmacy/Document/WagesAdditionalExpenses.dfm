@@ -146,6 +146,11 @@ inherited WagesAdditionalExpensesForm: TWagesAdditionalExpensesForm
               Format = ',0.00;-,0.00; ;'
               Kind = skSum
               Column = SummaMoneyBoxResidual
+            end
+            item
+              Format = ',0.00;-,0.00; ;'
+              Kind = skSum
+              Column = SummaFine
             end>
           DataController.Summary.SummaryGroups = <>
           OptionsView.Footer = True
@@ -232,6 +237,22 @@ inherited WagesAdditionalExpensesForm: TWagesAdditionalExpensesForm
             Width = 76
             Position.BandIndex = 1
             Position.ColIndex = 4
+            Position.RowIndex = 0
+          end
+          object SummaFine: TcxGridDBBandedColumn
+            Caption = #1047#1072#1085#1091#1083#1077#1085#1080#1077' '#1087#1086#1090#1077#1088#1103#1085#1085#1099#1093' '#1087#1086#1079#1080#1094#1080#1081' '#1074' '#1057#1059#1053'  ('#1086#1079#1085#1072#1082#1086#1084'.)'
+            DataBinding.FieldName = 'SummaFine'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DisplayFormat = ',0.00;-,0.00; ;'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            HeaderHint = 
+              #1064#1090#1088#1072#1092' '#1087#1086' '#1079#1072#1085#1091#1083#1077#1085#1080#1102' '#1087#1086#1090#1077#1088#1103#1085#1085#1086#1081' '#1087#1086#1079#1080#1094#1080#1080' '#1074' '#1057#1059#1053'  ('#1090#1086#1083#1100#1082#1086' '#1086#1079#1085#1072#1082#1086#1084#1083#1077#1085#1080 +
+              #1077')'
+            Options.Editing = False
+            Width = 76
+            Position.BandIndex = 1
+            Position.ColIndex = 5
             Position.RowIndex = 0
           end
           object SummaTechnicalRediscount: TcxGridDBBandedColumn
@@ -1001,10 +1022,42 @@ inherited WagesAdditionalExpensesForm: TWagesAdditionalExpensesForm
     Top = 312
   end
   inherited spErasedMIMaster: TdsdStoredProc
+    Params = <
+      item
+        Name = 'inMovementItemId'
+        Component = MasterCDS
+        ComponentItem = 'Id'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'outIsErased'
+        Value = False
+        Component = MasterCDS
+        ComponentItem = 'isErased'
+        DataType = ftBoolean
+        MultiSelectSeparator = ','
+      end>
     Left = 678
     Top = 248
   end
   inherited spUnErasedMIMaster: TdsdStoredProc
+    Params = <
+      item
+        Name = 'inMovementItemId'
+        Component = MasterCDS
+        ComponentItem = 'Id'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'outIsErased'
+        Value = False
+        Component = MasterCDS
+        ComponentItem = 'isErased'
+        DataType = ftBoolean
+        MultiSelectSeparator = ','
+      end>
     Left = 550
     Top = 256
   end
