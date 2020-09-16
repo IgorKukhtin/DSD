@@ -69,6 +69,7 @@ RETURNS TABLE (BrandName             VarChar (100)
              , Remains_Summ          TFloat
                -- Остаток - с учетом "долга"
              , Remains_Amount_real   TFloat
+             , Remains_Summ_real     TFloat
 
                -- Перемещение
              , SendIn_Amount         TFloat
@@ -490,6 +491,7 @@ BEGIN
                                , 0 AS Remains_Summ
                                  -- Остаток - с учетом "долга"
                                , 0 AS Remains_Amount_real
+                               , 0 AS Remains_Summ_real
 
                                  -- Перемещение
                                , 0 AS SendIn_Amount
@@ -897,6 +899,7 @@ BEGIN
                                , tmpSale_all.Remains_Summ
                                  -- Остаток - с учетом "долга"
                                , tmpSale_all.Remains_Amount_real
+                               , tmpSale_all.Remains_Summ_real
 
                                  -- Перемещение
                                , tmpSale_all.SendIn_Amount
@@ -1059,6 +1062,7 @@ BEGIN
                                , 0 AS Remains_Summ
                                  -- Остаток - с учетом "долга"
                                , 0 AS Remains_Amount_real
+                               , 0 AS Remains_Summ_real
 
                                  -- Перемещение
                                , 0 AS SendIn_Amount
@@ -1228,7 +1232,8 @@ BEGIN
                                , tmp.Remains_Amount        AS Remains_Amount
                                , tmp.Remains_Amount * Object_PartionGoods.OperPrice / CASE WHEN Object_PartionGoods.CountForPrice > 0 THEN Object_PartionGoods.CountForPrice ELSE 1 END AS Remains_Summ
                                  -- Остаток - с учетом "долга"
-                               , tmp.Remains_Amount_real   Remains_Amount_real
+                               , tmp.Remains_Amount_real   AS Remains_Amount_real
+                               , tmp.Remains_Amount_real  * Object_PartionGoods.OperPrice / CASE WHEN Object_PartionGoods.CountForPrice > 0 THEN Object_PartionGoods.CountForPrice ELSE 1 END AS Remains_Summ_real
 
                                  -- Перемещение
                                , tmp.SendIn_Amount
@@ -1398,6 +1403,7 @@ BEGIN
                             , SUM (tmpData_all.Remains_Amount)      AS Remains_Amount
                             , SUM (tmpData_all.Remains_Summ)        AS Remains_Summ
                             , SUM (tmpData_all.Remains_Amount_real) AS Remains_Amount_real
+                            , SUM (tmpData_all.Remains_Summ_real)   AS Remains_Summ_real
 
                             , SUM (tmpData_all.SendIn_Amount)       AS SendIn_Amount
                             , SUM (tmpData_all.SendOut_Amount)      AS SendOut_Amount
@@ -1640,6 +1646,7 @@ BEGIN
              , tmpData.Remains_Summ         :: TFloat AS Remains_Summ
                -- Остаток - с учетом "долга"
              , tmpData.Remains_Amount_real  :: TFloat AS Remains_Amount_real
+             , tmpData.Remains_Summ_real    :: TFloat AS Remains_Summ_real
 
                -- Перемещение
              , tmpData.SendIn_Amount        :: TFloat AS SendIn_Amount
@@ -1680,6 +1687,7 @@ BEGIN
                -- С\с продажа - без учета "долга"
              , tmpData.Sale_SummCost_calc   :: TFloat AS Sale_SummCost      -- calc из валюты в Грн
              , tmpData.Sale_SummCost_curr   :: TFloat AS Sale_SummCost_curr -- валюта
+             
 
                -- Курс. разн продажа
              , (tmpData.Sale_SummCost - tmpData.Sale_SummCost_calc) :: TFloat AS Sale_SummCost_diff
