@@ -11,7 +11,7 @@ CREATE OR REPLACE FUNCTION gpSelect_MovementItem_OrderExternal(
 RETURNS TABLE (Id Integer
              , CommonCode Integer
              , GoodsId Integer, GoodsCode Integer, GoodsName TVarChar
-             , PartnerGoodsId Integer, PartnerGoodsCode TVarChar
+             , PartnerGoodsId Integer, PartnerGoodsCode TVarChar, PartnerGoodsName TVarChar
              , RetailName TVarChar, AreaName TVarChar
              , NDS_PriceList TVarChar
              , Amount TFloat, Price TFloat, Summ TFloat
@@ -199,6 +199,7 @@ BEGIN
            , tmpMI.GoodsName
            , tmpMI.PartnerGoodsId
            , tmpMI.PartnerGoodsCode
+           , Object_PartnerGoods.ValueData AS PartnerGoodsName
            , Object_Retail.ValueData    AS RetailName
            , Object_Area.ValueData      AS AreaName
            , CASE WHEN COALESCE (tmpLoadPriceList.GoodsNDS,'0') <> '0' THEN COALESCE (tmpLoadPriceList.GoodsNDS,'') ELSE '' END  :: TVarChar  AS NDS_PriceList                                                               -- НДС из прайса поставщика
@@ -250,6 +251,7 @@ BEGIN
                                    AND GoodsParam_TOP.DescId = zc_ObjectBoolean_Goods_TOP()
            
             LEFT JOIN tmpLoadPriceList ON tmpLoadPriceList.PartnerGoodsId = tmpMI.PartnerGoodsId
+            LEFT JOIN Object AS Object_PartnerGoods ON Object_PartnerGoods.Id = tmpMI.PartnerGoodsId
        ;
 
 END;
