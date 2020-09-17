@@ -13,6 +13,7 @@ RETURNS TABLE (Id Integer, InvNumber TVarChar, OperDate TDateTime
              , ToId Integer, ToName TVarChar
              , ArticleLossId Integer, ArticleLossName TVarChar
              , Comment TVarChar
+             , isAuto Boolean 
               )
 AS
 $BODY$
@@ -39,6 +40,7 @@ BEGIN
              , 0                                                AS ArticleLossId
              , CAST ('' AS TVarChar)                            AS ArticleLossName
              , CAST ('' as TVarChar)                            AS Comment
+             , FALSE :: Boolean                                 AS isAuto
 
           FROM lfGet_Object_Status(zc_Enum_Status_UnComplete()) AS Object_Status
               LEFT JOIN Object AS Object_Insert ON Object_Insert.Id = vbUserId
@@ -61,6 +63,7 @@ BEGIN
            , Object_ArticleLoss.ValueData           AS ArticleLossName
 
            , MovementString_Comment.ValueData       AS Comment
+           , COALESCE (MovementBoolean_isAuto.ValueData, FALSE) :: Boolean AS isAuto
 
        FROM Movement
             LEFT JOIN Object AS Object_Status ON Object_Status.Id = Movement.StatusId
@@ -68,6 +71,10 @@ BEGIN
             LEFT JOIN MovementString AS MovementString_Comment 
                                      ON MovementString_Comment.MovementId = Movement.Id
                                     AND MovementString_Comment.DescId = zc_MovementString_Comment()
+
+            LEFT JOIN MovementBoolean AS MovementBoolean_isAuto
+                                      ON MovementBoolean_isAuto.MovementId = Movement.Id
+                                     AND MovementBoolean_isAuto.DescId = zc_MovementBoolean_isAuto()
 
             LEFT JOIN MovementLinkObject AS MovementLinkObject_From
                                          ON MovementLinkObject_From.MovementId = Movement.Id
@@ -96,6 +103,7 @@ $BODY$
 /*
  »—“Œ–»ﬂ –¿«–¿¡Œ“ »: ƒ¿“¿, ¿¬“Œ–
                ‘ÂÎÓÌ˛Í ».¬.    ÛıÚËÌ ».¬.    ÎËÏÂÌÚ¸Â‚  .».
+ 17.09.20         * add isAuto
  18.06.20         *
 */
 

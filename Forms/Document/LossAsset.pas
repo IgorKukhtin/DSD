@@ -53,6 +53,7 @@ type
     bbInsertRecordGoods: TdxBarButton;
     actAssetChoiceForm: TOpenChoiceForm;
     InsertRecordGoods: TInsertRecord;
+    cbisAuto: TcxCheckBox;
   private
     { Private declarations }
   public

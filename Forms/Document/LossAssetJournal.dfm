@@ -137,6 +137,15 @@ inherited LossAssetJournalForm: TLossAssetJournalForm
             Options.Editing = False
             Width = 120
           end
+          object isAuto: TcxGridDBColumn
+            Caption = #1040#1074#1090#1086#1084#1072#1090'.'
+            DataBinding.FieldName = 'isAuto'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            HeaderHint = #1057#1086#1079#1076#1072#1085' '#1072#1074#1090#1086#1084#1072#1090#1080#1095#1077#1089#1082#1080' ('#1076#1072'/'#1085#1077#1090')'
+            Options.Editing = False
+            Width = 60
+          end
         end
       end
     end
@@ -346,6 +355,19 @@ inherited LossAssetJournalForm: TLossAssetJournalForm
       ShortCut = 116
       RefreshOnTabSetChanges = False
     end
+    object actInsert_Movement_LossAsset_Auto: TdsdExecStoredProc
+      Category = 'DSDLib'
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      StoredProc = spInsert_Movement_LossAsset_Auto
+      StoredProcList = <
+        item
+          StoredProc = spInsert_Movement_LossAsset_Auto
+        end>
+      Caption = 'C'#1087#1080#1089#1072#1090#1100' '#1086#1089#1090#1072#1090#1082#1080' '#1054#1057
+      Hint = 'C'#1087#1080#1089#1072#1090#1100' '#1086#1089#1090#1072#1090#1082#1080' '#1054#1057
+      ImageIndex = 27
+    end
     object actChecked: TdsdExecStoredProc
       Category = 'DSDLib'
       MoveParams = <>
@@ -356,6 +378,22 @@ inherited LossAssetJournalForm: TLossAssetJournalForm
       Caption = #1048#1079#1084#1077#1085#1080#1090#1100' "'#1055#1088#1086#1074#1077#1088#1077#1085' '#1044#1072'/'#1053#1077#1090'"'
       Hint = #1048#1079#1084#1077#1085#1080#1090#1100' "'#1055#1088#1086#1074#1077#1088#1077#1085' '#1044#1072'/'#1053#1077#1090'"'
       ImageIndex = 58
+    end
+    object macInsert_Movement_LossAsset_Auto: TMultiAction
+      Category = 'DSDLib'
+      MoveParams = <>
+      ActionList = <
+        item
+          Action = actInsert_Movement_LossAsset_Auto
+        end
+        item
+          Action = actRefresh
+        end>
+      QuestionBeforeExecute = #1057#1086#1079#1076#1072#1090#1100' '#1076#1086#1082#1091#1084#1077#1085#1090#1099' '#1089#1087#1080#1089#1072#1085#1080#1103' '#1054#1057'?'
+      InfoAfterExecute = #1044#1086#1082#1091#1084#1077#1085#1090#1099' '#1089#1086#1079#1076#1072#1085#1099
+      Caption = 'C'#1087#1080#1089#1072#1090#1100' '#1086#1089#1090#1072#1090#1082#1080' '#1054#1057
+      Hint = 'C'#1087#1080#1089#1072#1090#1100' '#1086#1089#1090#1072#1090#1082#1080' '#1054#1057
+      ImageIndex = 27
     end
   end
   inherited MasterDS: TDataSource
@@ -461,6 +499,14 @@ inherited LossAssetJournalForm: TLossAssetJournalForm
         end
         item
           Visible = True
+          ItemName = 'bbInsert_Movement_LossAsset_Auto'
+        end
+        item
+          Visible = True
+          ItemName = 'dxBarStatic'
+        end
+        item
+          Visible = True
           ItemName = 'bbMovementItemContainer'
         end
         item
@@ -502,6 +548,10 @@ inherited LossAssetJournalForm: TLossAssetJournalForm
     end
     object bbChecked: TdxBarButton
       Action = actChecked
+      Category = 0
+    end
+    object bbInsert_Movement_LossAsset_Auto: TdxBarButton
+      Action = macInsert_Movement_LossAsset_Auto
       Category = 0
     end
   end
@@ -741,5 +791,25 @@ inherited LossAssetJournalForm: TLossAssetJournalForm
     Params = <>
     Left = 812
     Top = 214
+  end
+  object spInsert_Movement_LossAsset_Auto: TdsdStoredProc
+    StoredProcName = 'gpInsert_Movement_LossAsset_Auto'
+    DataSet = MasterCDS
+    DataSets = <
+      item
+        DataSet = MasterCDS
+      end>
+    Params = <
+      item
+        Name = 'instartdate'
+        Value = 42370d
+        Component = deStart
+        DataType = ftDateTime
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end>
+    PackSize = 1
+    Left = 512
+    Top = 323
   end
 end
