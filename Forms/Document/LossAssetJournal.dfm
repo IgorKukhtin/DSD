@@ -799,6 +799,7 @@ inherited LossAssetJournalForm: TLossAssetJournalForm
       item
         DataSet = MasterCDS
       end>
+    OutputType = otResult
     Params = <
       item
         Name = 'instartdate'
@@ -809,7 +810,7 @@ inherited LossAssetJournalForm: TLossAssetJournalForm
         MultiSelectSeparator = ','
       end>
     PackSize = 1
-    Left = 512
-    Top = 323
+    Left = 552
+    Top = 307
   end
 end

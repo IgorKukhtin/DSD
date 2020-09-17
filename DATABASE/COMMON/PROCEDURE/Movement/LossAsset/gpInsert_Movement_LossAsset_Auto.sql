@@ -21,7 +21,8 @@ BEGIN
             , tmp.GoodsId
             , tmp.CountStart
        FROM gpReport_Remains_Asset(inStartDate := inStartDate, inSession := inSession) as tmp
-       WHERE tmp.GoodsId = 3354331;
+       --WHERE tmp.GoodsId = 3354331
+       ;
 
      -- сохранили <Документ>
      PERFORM lpInsertUpdate_Movement_LossAsset_auto (ioId               := COALESCE (tmpMovement.MovementId,0) :: Integer
