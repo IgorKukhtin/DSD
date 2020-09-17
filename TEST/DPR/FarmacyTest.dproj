@@ -3357,6 +3357,10 @@
 				<Form>Report_ChangeCommentsSUNForm</Form>
 				<DesignClass>TParentForm</DesignClass>
 			</DCCReference>
+			<DCCReference Include="..\..\FormsFarmacy\Report\Report_FoundPositionsSUN.pas">
+				<Form>Report_FoundPositionsSUNForm</Form>
+				<DesignClass>TParentForm</DesignClass>
+			</DCCReference>
 			<BuildConfiguration Include="Release">
 				<Key>Cfg_2</Key>
 				<CfgParent>Base</CfgParent>

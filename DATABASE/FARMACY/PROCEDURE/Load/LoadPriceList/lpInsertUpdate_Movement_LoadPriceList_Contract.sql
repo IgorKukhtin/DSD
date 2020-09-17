@@ -152,7 +152,7 @@ BEGIN
     -- Поиск "элемента"
     SELECT Id INTO vbLoadPriceListItemsId FROM LoadPriceListItem WHERE LoadPriceListId = vbLoadPriceListId AND GoodsCode = inGoodsCode;
 
-
+/*
     -- Ищем по общему коду
     IF COALESCE (vbGoodsId, 0) = 0 AND inCommonCode > 0
     THEN
@@ -218,7 +218,7 @@ BEGIN
       WHERE Object_Goods.ValueData = inBarCode
         AND Object_Goods.DescId = zc_Object_Goods();
     END IF;
-
+*/
     -- Ищем по коду и inJuridicalId
     IF (COALESCE(vbGoodsId, 0) = 0) THEN
         SELECT ObjectLink_LinkGoods_GoodsMain.ChildObjectId AS GoodsId

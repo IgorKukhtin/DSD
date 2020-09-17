@@ -12,6 +12,7 @@ RETURNS TABLE (Id Integer
              , OperDate TDateTime
              , StatusCode Integer
              , StatusName TVarChar
+             , EndDate TDateTime
              )
 AS
 $BODY$
@@ -44,11 +45,12 @@ BEGIN
 
         RETURN QUERY
         SELECT
-            0                                                  AS Id
-          , CAST (NEXTVAL ('Movement_Wages_seq')  AS TVarChar) AS InvNumber
-          , vbOperDate::TDateTime                              AS OperDate
-          , Object_Status.Code               	               AS StatusCode
-          , Object_Status.Name              	               AS StatusName
+            0                                                                 AS Id
+          , CAST (NEXTVAL ('Movement_Wages_seq')  AS TVarChar)                AS InvNumber
+          , vbOperDate::TDateTime                                             AS OperDate
+          , Object_Status.Code               	                              AS StatusCode
+          , Object_Status.Name                             	                  AS StatusName
+          , (vbOperDate + INTERVAL '1 MONTH' - INTERVAL '1 DAY')::TDateTime   AS OperDate
 
         FROM lfGet_Object_Status(zc_Enum_Status_UnComplete()) AS Object_Status;
     ELSE
@@ -57,8 +59,9 @@ BEGIN
             Movement.Id
           , Movement.InvNumber
           , Movement.OperDate
-          , Object_Status.ObjectCode                 AS StatusCode
-          , Object_Status.ValueData                  AS StatusName
+          , Object_Status.ObjectCode                                                 AS StatusCode
+          , Object_Status.ValueData                                                  AS StatusName
+          , (Movement.OperDate + INTERVAL '1 MONTH' - INTERVAL '1 DAY')::TDateTime   AS OperDate
 
         FROM Movement
             LEFT JOIN Object AS Object_Status ON Object_Status.Id = Movement.StatusId

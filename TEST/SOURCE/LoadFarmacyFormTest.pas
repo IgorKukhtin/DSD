@@ -922,6 +922,9 @@ end;
 
 procedure TLoadFormTest.LoadReportFormTest;
 begin
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_FoundPositionsSUNForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TReport_FoundPositionsSUNForm');
+
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_ChangeCommentsSUNForm'));
   TdsdFormStorageFactory.GetStorage.Load('TReport_ChangeCommentsSUNForm');
 

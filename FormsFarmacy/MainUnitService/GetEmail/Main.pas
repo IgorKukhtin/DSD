@@ -1354,7 +1354,8 @@ begin
        try if (cbBeginMove.Checked = TRUE) and (vbEmailKindDesc= 'zc_Enum_EmailKind_InPrice') then fBeginMove; except vbIsBegin:= false; PanelHost.Caption:= '!!! ERROR - fBeginMove - exit !!!'; isErr_exit:= true; exit; end;
 
        // !!! VACUUM !!! - 1 раз после 2-х ночи - !!!Только если "Загрузка MMO"!!!
-       try if vbEmailKindDesc= 'zc_Enum_EmailKind_IncomeMMO' then fBeginVACUUM;  except vbIsBegin:= false; AddToLog('!!! ERROR - VACUUM !!!'); isErr_exit:= true; exit; end;
+       // перенес в отдельную программу
+       // try if vbEmailKindDesc= 'zc_Enum_EmailKind_IncomeMMO' then fBeginVACUUM;  except vbIsBegin:= false; AddToLog('!!! ERROR - VACUUM !!!'); isErr_exit:= true; exit; end;
 
      finally
        Timer.Enabled:= true;
