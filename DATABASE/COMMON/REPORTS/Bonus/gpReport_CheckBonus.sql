@@ -42,9 +42,21 @@ RETURNS TABLE (OperDate_Movement TDateTime, InvNumber_Movement TVarChar, DescNam
 AS
 $BODY$
 
-declare inisMovement          Boolean ; -- по документам
-
+    DECLARE inisMovement Boolean ; -- по документам
+    DECLARE vbBranchId   Integer;
+    DECLARE vbUserId Integer;
 BEGIN
+     vbUserId:= lpGetUserBySession (inSession);
+     --проверка нельзя выбрать чужую кассу, филиал можно, для пользователей с ролью админ не проверяем
+     vbBranchId := (SELECT tmp.BranchId FROM gpGet_UserParams_bonus (inSession:= inSession) AS tmp);
+
+     IF NOT EXISTS (SELECT 1 AS Id FROM ObjectLink_UserRole_View WHERE RoleId = zc_Enum_Role_Admin() AND UserId = vbUserId) OR (vbBranchId <> zc_Branch_Basis())
+     THEN
+         IF (inBranchId <> vbBranchId ) OR (inPaidKindId <> zc_Enum_PaidKind_SecondForm())
+         THEN
+              RAISE EXCEPTION 'Ошибка.У пользователя не достаточно прав доступа для просмотра данных по <%> (<%>).', lfGet_Object_ValueData (inBranchId), lfGet_Object_ValueData (inPaidKindId);
+         END IF;
+     END IF;
 
 
     RETURN QUERY
@@ -759,4 +771,4 @@ $BODY$
 */
 -- тест
 -- select * from gpReport_CheckBonus (inStartDate:= '15.03.2016', inEndDate:= '15.03.2016', inPaidKindID:= zc_Enum_PaidKind_FirstForm(), inJuridicalId:= 0, inBranchId:= 0, inSession:= zfCalc_UserAdmin());
--- select * from gpReport_CheckBonus(inStartDate := ('28.05.2020')::TDateTime , inEndDate := ('28.05.2020')::TDateTime , inPaidKindId := 4 , inJuridicalId := 344240 , inBranchId := 0 ,  inSession := '5');--
+-- select * from gpReport_CheckBonus(inStartDate := ('28.05.2020')::TDateTime , inEndDate := ('28.05.2020')::TDateTime , inPaidKindId := 3 , inJuridicalId := 344240 , inBranchId :=  8374 ,  inSession := '5');--
