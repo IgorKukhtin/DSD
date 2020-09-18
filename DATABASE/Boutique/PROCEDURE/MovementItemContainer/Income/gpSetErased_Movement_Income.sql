@@ -23,6 +23,11 @@ BEGIN
      WHERE Object_PartionGoods.MovementId = inMovementId
     ;
 
+    IF EXISTS (SELECT 1 FROM  Object_PartionGoods WHERE Object_PartionGoods.MovementId = inMovementId AND (Object_PartionGoods.isErased <> TRUE OR Object_PartionGoods.Amount <> 0 OR Object_PartionGoods.isArc <> TRUE))
+    THEN
+        RAISE EXCEPTION 'Ошибка.Не удалены <%> элеиентов.', (SELECT COUNT(*) FROM  Object_PartionGoods WHERE Object_PartionGoods.MovementId = inMovementId AND (Object_PartionGoods.isErased <> TRUE OR Object_PartionGoods.Amount <> 0 OR Object_PartionGoods.isArc <> TRUE));
+    END IF;
+
 END;
 $BODY$
   LANGUAGE plpgsql VOLATILE;

@@ -232,7 +232,10 @@ BEGIN
                     ELSE -1 * /*CASE WHEN _tmpItem.IsActive = TRUE THEN -1 ELSE 1 END*/ CAST (CASE WHEN MovementFloat_ParPartnerValue.ValueData <> 0 THEN _tmpItem.OperSumm_Currency * MovementFloat_CurrencyPartnerValue.ValueData / MovementFloat_ParPartnerValue.ValueData ELSE 0 END AS NUMERIC (16, 2))
                END AS OperSumm
 
-             , CASE WHEN Object.DescId IN (zc_Object_Juridical(), zc_Object_Partner())
+             , CASE -- когда в ОПиУ - Инвестиции, сумму в валюте попробуем провести в "другой" проводке
+                    WHEN _tmpItem.OperDate >= zc_DateStart_Asset() AND _tmpItem.InfoMoneyGroupId = zc_Enum_InfoMoneyGroup_70000()
+                         THEN 0
+                    WHEN Object.DescId IN (zc_Object_Juridical(), zc_Object_Partner())
                          THEN -1 * _tmpItem.OperSumm_Currency
                     WHEN Object.DescId IN (zc_Object_BankAccount(), zc_Object_Cash())
                          THEN -1 * _tmpItem.OperSumm_Currency
@@ -437,10 +440,17 @@ BEGIN
                END AS ObjectDescId
 
              , 0 AS OperSumm
-             , 0 AS OperSumm_Currency
+               -- когда в ОПиУ - Инвестиции, сумму в валюте попробуем провести в "этой" проводке
+             , CASE WHEN Object.DescId IN (zc_Object_Juridical(), zc_Object_Partner())
+                         THEN -1 * _tmpItem.OperSumm_Currency
+                    WHEN Object.DescId IN (zc_Object_BankAccount(), zc_Object_Cash())
+                         THEN -1 * _tmpItem.OperSumm_Currency
+                    ELSE 0
+               END AS OperSumm_Currency
+
              , 0 AS OperSumm_Diff
 
-               -- Asset
+               -- OperSumm_Asset
              , CASE WHEN -- _tmpItem.CurrencyId = zc_Enum_Currency_Basis()
                          _tmpItem.isActive = TRUE
                      AND _tmpItem.InfoMoneyDestinationId = zc_Enum_InfoMoneyDestination_41000() -- Покупка/продажа валюты

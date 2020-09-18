@@ -242,8 +242,8 @@ BEGIN
                                   ON ObjectBoolean_ParentMulti.ObjectId = Object_Receipt.Id
                                  AND ObjectBoolean_ParentMulti.DescId = zc_ObjectBoolean_Receipt_ParentMulti()
           LEFT JOIN ObjectBoolean AS ObjectBoolean_Disabled
-                                  ON ObjectBoolean_Disabled.ObjectId = Object_Receipt.Id
-                                 AND ObjectBoolean_Disabled.DescId = zc_ObjectBoolean_Receipt_Disabled()
+                                  ON ObjectBoolean_Disabled.ObjectId  = Object_Receipt.Id
+                                 AND ObjectBoolean_Disabled.DescId    = zc_ObjectBoolean_Receipt_Disabled()
                                  AND ObjectBoolean_Disabled.ValueData = TRUE
 
           LEFT JOIN ObjectString AS ObjectString_Code
@@ -330,7 +330,8 @@ BEGIN
        AND (Object_Receipt.Id = inReceiptId OR inReceiptId = 0)
        AND (ObjectLink_Receipt_Goods.ChildObjectId = inGoodsId OR inGoodsId = 0)
        AND (ObjectLink_Receipt_GoodsKind.ChildObjectId = inGoodsKindId OR inGoodsKindId = 0)
-       AND (ObjectBoolean_Disabled.ObjectId IS NULL OR inShowAll = TRUE)
+     --AND (ObjectBoolean_Disabled.ObjectId IS NULL OR inShowAll = TRUE)
+       AND ObjectBoolean_Disabled.ObjectId IS NULL
       ;
 
 END;

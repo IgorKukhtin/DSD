@@ -25,9 +25,17 @@ BEGIN
          PERFORM lfCheck_Movement_ChildStatus (inMovementId:= inMovementId, inNewStatusId:= zc_Enum_Status_Erased(), inComment:= 'удалить');
      END IF;
 */
-     -- Удаляем Документ
-     PERFORM lpSetErased_Movement (inMovementId := inMovementId
-                                 , inUserId     := vbUserId);
+     IF EXISTS (SELECT 1 FROM Movement WHERE Movement.Id = inMovementId AND Movement.DescId = zc_Movement_Income())
+     THEN
+         -- Удаляем Документ
+         PERFORM gpSetErased_Movement_Income (inMovementId := inMovementId
+                                            , inSession    := inSession);
+     ELSE
+         -- Удаляем Документ
+         PERFORM lpSetErased_Movement (inMovementId := inMovementId
+                                     , inUserId     := vbUserId);
+     END IF;
+
 /*
      -- Удаляем подчиненные Документы
      PERFORM lpSetErased_Movement (inMovementId := Movement.Id

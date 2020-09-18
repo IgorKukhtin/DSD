@@ -20,7 +20,9 @@ BEGIN
 
      -- проводим Документ
      PERFORM lpComplete_Movement_Cash (inMovementId := inMovementId
-                                     , inUserId     := vbUserId);
+                                     , inUserId     := vbUserId
+                                      );
+
 
 END;$BODY$
   LANGUAGE plpgsql VOLATILE;
