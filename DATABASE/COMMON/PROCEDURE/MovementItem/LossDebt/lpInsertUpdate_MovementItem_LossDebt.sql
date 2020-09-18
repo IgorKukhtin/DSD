@@ -67,11 +67,15 @@ BEGIN
                      LEFT JOIN MovementItemLinkObject AS MILinkObject_Branch
                                                       ON MILinkObject_Branch.MovementItemId = MovementItem.Id
                                                      AND MILinkObject_Branch.DescId = zc_MILinkObject_Branch()
+                     LEFT JOIN MovementItemFloat AS MIFloat_ContainerId 
+                                                 ON MIFloat_ContainerId.MovementItemId = MovementItem.Id
+                                                AND MIFloat_ContainerId.DescId = zc_MIFloat_ContainerId()
                 WHERE MovementItem.MovementId = inMovementId
                   AND MovementItem.ObjectId = inJuridicalId
                   AND MovementItem.DescId = zc_MI_Master()
                   AND (COALESCE (MILinkObject_Partner.ObjectId, 0) = COALESCE (inPartnerId, 0) OR inPaidKindId <> zc_Enum_PaidKind_SecondForm()) -- AND inPartnerId <> 0
                   AND (COALESCE (MILinkObject_Branch.ObjectId, 0) = COALESCE (inBranchId, 0) OR inPaidKindId <> zc_Enum_PaidKind_SecondForm()) -- AND inBranchId <> 0
+                  AND (COALESCE (MIFloat_ContainerId.ValueData,0) = COALESCE (inContainerId,0)
                   AND MovementItem.Id <> COALESCE (ioId, 0)
                   AND MovementItem.isErased = FALSE
                 )
