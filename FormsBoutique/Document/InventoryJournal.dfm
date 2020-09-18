@@ -1051,7 +1051,7 @@ object InventoryJournalForm: TInventoryJournalForm
     end
   end
   object spMovementUnComplete: TdsdStoredProc
-    StoredProcName = 'gpUnComplete_Movement'
+    StoredProcName = 'gpUnComplete_Movement_Inventory'
     DataSets = <>
     OutputType = otResult
     Params = <
@@ -1068,7 +1068,7 @@ object InventoryJournalForm: TInventoryJournalForm
     Top = 272
   end
   object spMovementSetErased: TdsdStoredProc
-    StoredProcName = 'gpSetErased_Movement'
+    StoredProcName = 'gpSetErased_Movement_Inventory'
     DataSet = ClientDataSet
     DataSets = <
       item
@@ -1110,6 +1110,7 @@ object InventoryJournalForm: TInventoryJournalForm
     ColumnAddOnList = <>
     ColumnEnterList = <>
     SummaryItemList = <>
+    PropertiesCellList = <>
     Left = 248
     Top = 216
   end

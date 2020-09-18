@@ -100,8 +100,6 @@ object IncomeJournalForm: TIncomeJournalForm
     PopupMenu = PopupMenu
     TabOrder = 0
     LookAndFeel.NativeStyle = False
-    ExplicitLeft = 101
-    ExplicitTop = 49
     object cxGridDBTableView: TcxGridDBTableView
       Navigator.Buttons.CustomButtons = <>
       DataController.DataSource = DataSource
@@ -702,7 +700,7 @@ object IncomeJournalForm: TIncomeJournalForm
         end
         item
           Name = 'isOperPrice'
-          Value = 'False'
+          Value = False
           DataType = ftBoolean
           ParamType = ptInput
           MultiSelectSeparator = ','
@@ -747,7 +745,7 @@ object IncomeJournalForm: TIncomeJournalForm
         end
         item
           Name = 'isSecond'
-          Value = 'TRUE'
+          Value = True
           DataType = ftBoolean
           ParamType = ptInput
           MultiSelectSeparator = ','
@@ -790,7 +788,7 @@ object IncomeJournalForm: TIncomeJournalForm
         end
         item
           Name = 'isOperPrice'
-          Value = 'True'
+          Value = True
           DataType = ftBoolean
           ParamType = ptInput
           MultiSelectSeparator = ','
@@ -829,7 +827,7 @@ object IncomeJournalForm: TIncomeJournalForm
         end
         item
           Name = 'isPrice'
-          Value = 'True'
+          Value = True
           DataType = ftBoolean
           MultiSelectSeparator = ','
         end>
@@ -1465,7 +1463,7 @@ object IncomeJournalForm: TIncomeJournalForm
     end
   end
   object spMovementUnComplete: TdsdStoredProc
-    StoredProcName = 'gpUnComplete_Movement'
+    StoredProcName = 'gpUnComplete_Movement_Income'
     DataSets = <>
     OutputType = otResult
     Params = <
@@ -1482,7 +1480,7 @@ object IncomeJournalForm: TIncomeJournalForm
     Top = 272
   end
   object spMovementSetErased: TdsdStoredProc
-    StoredProcName = 'gpSetErased_Movement'
+    StoredProcName = 'gpSetErased_Movement_Income'
     DataSet = ClientDataSet
     DataSets = <
       item
@@ -1524,6 +1522,7 @@ object IncomeJournalForm: TIncomeJournalForm
     ColumnAddOnList = <>
     ColumnEnterList = <>
     SummaryItemList = <>
+    PropertiesCellList = <>
     Left = 248
     Top = 216
   end
@@ -1663,7 +1662,7 @@ object IncomeJournalForm: TIncomeJournalForm
       end
       item
         Name = 'inIsGoodsPrint'
-        Value = 'FALSE'
+        Value = False
         DataType = ftBoolean
         ParamType = ptInput
         MultiSelectSeparator = ','

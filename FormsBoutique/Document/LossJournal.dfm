@@ -1096,7 +1096,7 @@ object LossJournalForm: TLossJournalForm
     end
   end
   object spMovementUnComplete: TdsdStoredProc
-    StoredProcName = 'gpUnComplete_Movement'
+    StoredProcName = 'gpUnComplete_Movement_Loss'
     DataSets = <>
     OutputType = otResult
     Params = <
@@ -1113,7 +1113,7 @@ object LossJournalForm: TLossJournalForm
     Top = 272
   end
   object spMovementSetErased: TdsdStoredProc
-    StoredProcName = 'gpSetErased_Movement'
+    StoredProcName = 'gpSetErased_Movement_Loss'
     DataSet = ClientDataSet
     DataSets = <
       item
@@ -1155,6 +1155,7 @@ object LossJournalForm: TLossJournalForm
     ColumnAddOnList = <>
     ColumnEnterList = <>
     SummaryItemList = <>
+    PropertiesCellList = <>
     Left = 248
     Top = 216
   end

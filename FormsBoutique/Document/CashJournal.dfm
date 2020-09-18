@@ -138,8 +138,6 @@ object CashJournalForm: TCashJournalForm
     PopupMenu = PopupMenu
     TabOrder = 0
     LookAndFeel.NativeStyle = False
-    ExplicitTop = 57
-    ExplicitHeight = 382
     object cxGridDBTableView: TcxGridDBTableView
       Navigator.Buttons.CustomButtons = <>
       DataController.DataSource = DataSource
@@ -647,7 +645,7 @@ object CashJournalForm: TCashJournalForm
         end
         item
           Name = 'isOperPrice'
-          Value = 'False'
+          Value = False
           DataType = ftBoolean
           ParamType = ptInput
           MultiSelectSeparator = ','
@@ -692,7 +690,7 @@ object CashJournalForm: TCashJournalForm
         end
         item
           Name = 'isSecond'
-          Value = 'TRUE'
+          Value = True
           DataType = ftBoolean
           ParamType = ptInput
           MultiSelectSeparator = ','
@@ -735,7 +733,7 @@ object CashJournalForm: TCashJournalForm
         end
         item
           Name = 'isOperPrice'
-          Value = 'True'
+          Value = True
           DataType = ftBoolean
           ParamType = ptInput
           MultiSelectSeparator = ','
@@ -772,7 +770,7 @@ object CashJournalForm: TCashJournalForm
         end
         item
           Name = 'isPrice'
-          Value = 'True'
+          Value = True
           DataType = ftBoolean
           MultiSelectSeparator = ','
         end>
@@ -1348,7 +1346,7 @@ object CashJournalForm: TCashJournalForm
     end
   end
   object spMovementUnComplete: TdsdStoredProc
-    StoredProcName = 'gpUnComplete_Movement'
+    StoredProcName = 'gpUnComplete_Movement_Cash'
     DataSets = <>
     OutputType = otResult
     Params = <
@@ -1365,7 +1363,7 @@ object CashJournalForm: TCashJournalForm
     Top = 272
   end
   object spMovementSetErased: TdsdStoredProc
-    StoredProcName = 'gpSetErased_Movement'
+    StoredProcName = 'gpSetErased_Movement_Cash'
     DataSet = ClientDataSet
     DataSets = <
       item
@@ -1407,6 +1405,7 @@ object CashJournalForm: TCashJournalForm
     ColumnAddOnList = <>
     ColumnEnterList = <>
     SummaryItemList = <>
+    PropertiesCellList = <>
     Left = 248
     Top = 216
   end
