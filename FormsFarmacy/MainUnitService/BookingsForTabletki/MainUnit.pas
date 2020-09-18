@@ -311,7 +311,7 @@ begin
       begin
         if TabletkiAPI.UpdateStaus(qryUnit.FieldByName('SerialNumber').AsInteger,
                                    qryCheckHead.FieldByName('BookingId').AsString,
-                                   qryCheckHead.FieldByName('Id').AsString,
+                                   qryCheckHead.FieldByName('OrderId').AsString,
                                    qryCheckHead.FieldByName('BookingStatusNew').AsString,
                                    qryCheckHead.FieldByName('OrderId').AsString,
                                    qryCheckHead.FieldByName('Bayer').AsString,

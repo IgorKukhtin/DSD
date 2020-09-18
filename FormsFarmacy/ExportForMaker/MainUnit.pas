@@ -1216,7 +1216,8 @@ begin
     on E:Exception do
     begin
       Add_Log(E.Message);
-      Close;
+      ZConnection1.Disconnect;
+      Timer1.Enabled := true;
       Exit;
     end;
   end;
@@ -1230,7 +1231,8 @@ begin
       on E: Exception do
       begin
         Add_Log(E.Message);
-        Close;
+        ZConnection1.Disconnect;
+        Timer1.Enabled := true;
         Exit;
       end;
     end;
@@ -1242,7 +1244,8 @@ begin
       on E: Exception do
       begin
         Add_Log(E.Message);
-        Close;
+        ZConnection1.Disconnect;
+        Timer1.Enabled := true;
         Exit;
       end;
     end;

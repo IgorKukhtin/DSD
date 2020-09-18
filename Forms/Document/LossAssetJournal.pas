@@ -51,6 +51,11 @@ type
     PrintItemsSverkaCDS: TClientDataSet;
     actChecked: TdsdExecStoredProc;
     bbChecked: TdxBarButton;
+    isAuto: TcxGridDBColumn;
+    spInsert_Movement_LossAsset_Auto: TdsdStoredProc;
+    actInsert_Movement_LossAsset_Auto: TdsdExecStoredProc;
+    macInsert_Movement_LossAsset_Auto: TMultiAction;
+    bbInsert_Movement_LossAsset_Auto: TdxBarButton;
   private
     { Private declarations }
   public

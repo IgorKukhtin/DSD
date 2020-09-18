@@ -1249,6 +1249,7 @@ inherited Report_Goods_RemainsCurrentForm: TReport_Goods_RemainsCurrentForm
       end>
   end
   inherited ActionList: TActionList
+    Left = 63
     Top = 319
     object macPrintSticker_fp: TMultiAction [1]
       Category = 'PrintSticker'
@@ -1306,6 +1307,26 @@ inherited Report_Goods_RemainsCurrentForm: TReport_Goods_RemainsCurrentForm
       Caption = #1055#1077#1095#1072#1090#1100' '#1062#1077#1085#1085#1080#1082#1086#1074
       Hint = #1055#1077#1095#1072#1090#1100' '#1062#1077#1085#1085#1080#1082#1086#1074
       ImageIndex = 18
+    end
+    object mactGoodsPrintList_Print_fp: TMultiAction [4]
+      Category = 'PrintSticker'
+      MoveParams = <>
+      ActionList = <
+        item
+          Action = actGet_GoodsPrint_Null
+        end
+        item
+          Action = macAddGoodsPrintList_Rem
+        end
+        item
+          Action = actGet_PrinterByUser
+        end
+        item
+          Action = actPrintSticker_fp
+        end>
+      Caption = #1044#1086#1073#1072#1074#1080#1090#1100' '#1074' '#1087#1077#1095#1072#1090#1100' '#1094#1077#1085#1085#1080#1082#1086#1074' '#1080' '#1085#1072#1087#1077#1095#1072#1090#1072#1090#1100' ('#1087#1077#1088#1074#1072#1103' '#1094#1077#1085#1072')'
+      Hint = #1044#1086#1073#1072#1074#1080#1090#1100' '#1074' '#1087#1077#1095#1072#1090#1100' '#1094#1077#1085#1085#1080#1082#1086#1074' '#1080' '#1085#1072#1087#1077#1095#1072#1090#1072#1090#1100' ('#1087#1077#1088#1074#1072#1103' '#1094#1077#1085#1072')'
+      ImageIndex = 17
     end
     object actDelete_PartionGoods_ReportOLAP: TdsdExecStoredProc
       Category = 'Olap'
@@ -2501,6 +2522,10 @@ inherited Report_Goods_RemainsCurrentForm: TReport_Goods_RemainsCurrentForm
         end
         item
           Visible = True
+          ItemName = 'bbGoodsPrintList_Print_fp'
+        end
+        item
+          Visible = True
           ItemName = 'dxBarStatic'
         end
         item
@@ -2600,6 +2625,10 @@ inherited Report_Goods_RemainsCurrentForm: TReport_Goods_RemainsCurrentForm
       Action = macPrintSticker_fp
       Category = 0
       ImageIndex = 19
+    end
+    object bbGoodsPrintList_Print_fp: TdxBarButton
+      Action = mactGoodsPrintList_Print_fp
+      Category = 0
     end
   end
   inherited DBViewAddOn: TdsdDBViewAddOn

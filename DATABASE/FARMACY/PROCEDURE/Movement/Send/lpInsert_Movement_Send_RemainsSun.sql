@@ -1318,6 +1318,11 @@ BEGIN
              LEFT JOIN tmpIncomeSUN ON tmpIncomeSUN.UnitId_to = tmpRes_SUN.UnitId
                                    AND tmpIncomeSUN.GoodsId   = tmpRes_SUN.GoodsId
 
+             -- Исключения по техническим переучетам
+             LEFT JOIN _tmpGoods_TP_exception AS tmpGoods_TP_exception
+                                              ON tmpGoods_TP_exception.UnitId  = tmpRes_SUN.UnitId
+                                             AND tmpGoods_TP_exception.GoodsId = tmpRes_SUN.GoodsId
+
              -- баланс по Аптекам отправителям - если не соответствует, соотв расход блокируется
              LEFT JOIN _tmpUnit_SUN_balance ON _tmpUnit_SUN_balance.UnitId = tmpRes_SUN.UnitId
              LEFT JOIN _tmpUnit_SUN         ON _tmpUnit_SUN.UnitId         = tmpRes_SUN.UnitId
@@ -1334,6 +1339,7 @@ BEGIN
               -- !!!
           AND (_tmpUnit_SUN.KoeffOutSUN = 0 OR _tmpUnit_SUN_balance.KoeffOutSUN < _tmpUnit_SUN.KoeffOutSUN)
           AND OB_Unit_SUN_in.ObjectId IS NULL
+          AND COALESCE (tmpGoods_TP_exception.GoodsId, 0) = 0
 
        UNION ALL
 
@@ -1355,6 +1361,12 @@ BEGIN
              -- !!!SUN всех - за 30 дней - если приходило, уходить уже не может!!!
              LEFT JOIN tmpSUN_SendAll ON tmpSUN_SendAll.UnitId_to = tmpNotSold.UnitId
                                      AND tmpSUN_SendAll.GoodsId   = tmpNotSold.GoodsId
+
+             -- Исключения по техническим переучетам
+             LEFT JOIN _tmpGoods_TP_exception AS tmpGoods_TP_exception
+                                              ON tmpGoods_TP_exception.UnitId  = tmpNotSold.UnitId
+                                             AND tmpGoods_TP_exception.GoodsId = tmpNotSold.GoodsId
+
              -- баланс по Аптекам отправителям - если не соответствует, соотв расход блокируется
              LEFT JOIN _tmpUnit_SUN_balance ON _tmpUnit_SUN_balance.UnitId = tmpNotSold.UnitId
              LEFT JOIN _tmpUnit_SUN         ON _tmpUnit_SUN.UnitId         = tmpNotSold.UnitId
@@ -1374,6 +1386,7 @@ BEGIN
          AND (_tmpUnit_SUN.KoeffOutSUN = 0 OR _tmpUnit_SUN_balance.KoeffOutSUN < _tmpUnit_SUN.KoeffOutSUN)
              -- !!!
          AND OB_Unit_SUN_in.ObjectId IS NULL
+         AND COALESCE (tmpGoods_TP_exception.GoodsId, 0) = 0
        -- AND tmpRes_SUN.GoodsId IS NULL
        ;
 

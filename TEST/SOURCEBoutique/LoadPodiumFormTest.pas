@@ -854,6 +854,7 @@ begin
   }
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_SaleOLAPForm'));
   TdsdFormStorageFactory.GetStorage.Load('TReport_SaleOLAPForm');
+  exit;
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_SaleOLAPDialogForm'));
   TdsdFormStorageFactory.GetStorage.Load('TReport_SaleOLAPDialogForm');
   //

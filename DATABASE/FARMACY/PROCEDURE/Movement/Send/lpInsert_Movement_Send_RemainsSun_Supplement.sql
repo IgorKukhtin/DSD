@@ -36,7 +36,7 @@ RETURNS TABLE (GoodsId Integer, GoodsCode Integer, GoodsName TVarChar
              , AverageSalesMonth_To TFloat
              , Need_To TFloat
              , Delta_To TFloat
-             
+
              , AmountUse_To TFloat
               )
 AS
@@ -73,6 +73,18 @@ BEGIN
        CREATE TEMP TABLE _tmpUnit_SUN_Supplement   (UnitId Integer, DeySupplSun1 Integer, MonthSupplSun1 Integer) ON COMMIT DROP;
      END IF;
 
+     -- Исключения по техническим переучетам по Аптекам - если есть в непроведенных ТП то исключаем из распределения
+     IF NOT EXISTS (SELECT * FROM INFORMATION_SCHEMA.tables WHERE TABLE_NAME = LOWER ('_tmpGoods_TP_exception'))
+     THEN
+       CREATE TEMP TABLE _tmpGoods_TP_exception   (UnitId Integer, GoodsId Integer) ON COMMIT DROP;
+     END IF;
+
+     -- Уже использовано в текущем СУН
+     IF NOT EXISTS (SELECT * FROM INFORMATION_SCHEMA.tables WHERE TABLE_NAME = LOWER ('_tmpGoods_Sun_exception'))
+     THEN
+       CREATE TEMP TABLE _tmpGoods_Sun_exception   (UnitId Integer, GoodsId Integer, Amount TFloat) ON COMMIT DROP;
+     END IF;
+
      -- 1. все остатки, НТЗ => получаем кол-ва автозаказа
      IF NOT EXISTS (SELECT * FROM INFORMATION_SCHEMA.tables WHERE TABLE_NAME = LOWER ('_tmpRemains_all_Supplement'))
      THEN
@@ -95,22 +107,16 @@ BEGIN
      DELETE FROM _tmpGoods_SUN_Supplement;
      -- все Подразделения для схемы SUN
      DELETE FROM _tmpUnit_SUN_Supplement;
+     -- Исключения по техническим переучетам по Аптекам - если есть в непроведенных ТП то исключаем из распределения
+     DELETE FROM _tmpGoods_TP_exception;
+     -- Уже использовано в текущем СУН
+     DELETE FROM _tmpGoods_Sun_exception;
      -- 1. все остатки, НТЗ => получаем кол-ва автозаказа
      DELETE FROM _tmpRemains_all_Supplement;
      -- 2. все остатки, НТЗ, и коэф. товарного запаса
      DELETE FROM _tmpStockRatio_all_Supplement;
      -- 3. распределяем-1 остатки - по всем аптекам
      DELETE FROM _tmpResult_Supplement;
-
-
-
-     -- все Товары для схемы SUN Supplement
-     INSERT INTO _tmpGoods_SUN_Supplement (GoodsId)
-        SELECT Object_Goods_Retail.ID
-        FROM Object_Goods_Retail
-             INNER JOIN Object_Goods_Main ON Object_Goods_Main.ID = Object_Goods_Retail.GoodsMainId
-                                         AND Object_Goods_Main.isSupplementSUN1 = TRUE
-        WHERE Object_Goods_Retail.RetailID = vbObjectId;
 
      -- все Подразделения для схемы SUN
      INSERT INTO _tmpUnit_SUN_Supplement (UnitId, DeySupplSun1, MonthSupplSun1)
@@ -134,7 +140,82 @@ BEGIN
        ;
 
 
-     -- 1. все остатки, НТЗ => получаем кол-ва автозаказа
+     -- Исключения по техническим переучетам по Аптекам - если есть в непроведенных ТП то исключаем из распределения
+     WITH
+         tmpMovement AS (SELECT Movement.Id
+                              , MovementLinkObject_Unit.ObjectId AS UnitId
+                         FROM Movement
+
+                              LEFT JOIN MovementLinkObject AS MovementLinkObject_Unit
+                                                           ON MovementLinkObject_Unit.MovementId = Movement.Id
+                                                          AND MovementLinkObject_Unit.DescId = zc_MovementLinkObject_Unit()
+
+                         WHERE Movement.DescId = zc_Movement_TechnicalRediscount()
+                            AND Movement.StatusId = zc_Enum_Status_UnComplete())
+      , tmpGoods AS (SELECT Movement.UnitId
+                          , MovementItem.ObjectId       AS GoodsId
+                          , SUM(MovementItem.Amount)    AS Amount
+                     FROM _tmpUnit_SUN_Supplement
+
+                          INNER JOIN tmpMovement AS Movement ON Movement.UnitId = _tmpUnit_SUN_Supplement.UnitId
+
+                          INNER JOIN MovementItem ON MovementItem.MovementId = Movement.Id
+                                         AND MovementItem.DescId     = zc_MI_Master()
+                                         AND MovementItem.isErased  = FALSE
+                                         AND MovementItem.Amount < 0
+                          INNER JOIN MovementItemLinkObject AS MILinkObject_CommentTR
+                                                            ON MILinkObject_CommentTR.MovementItemId = MovementItem.Id
+                                                           AND MILinkObject_CommentTR.DescId = zc_MILinkObject_CommentTR()
+                          INNER JOIN ObjectBoolean AS ObjectBoolean_CommentTR_BlockFormSUN
+                                                   ON ObjectBoolean_CommentTR_BlockFormSUN.ObjectId = MILinkObject_CommentTR.ObjectId
+                                                  AND ObjectBoolean_CommentTR_BlockFormSUN.DescId = zc_ObjectFloat_CommentTR_BlockFormSUN()
+                                                  AND ObjectBoolean_CommentTR_BlockFormSUN.ValueData = True
+                     GROUP BY Movement.UnitId
+                            , MovementItem.ObjectId
+                     )
+
+     INSERT INTO _tmpGoods_TP_exception   (UnitId, GoodsId)
+     SELECT tmpGoods.UnitId, tmpGoods.GoodsId
+     FROM tmpGoods;
+
+     -- Уже использовано в текущем СУН
+     WITH
+          tmpSUN AS (SELECT MovementLinkObject_From.ObjectId AS UnitId
+                          , MovementItem.ObjectId            AS GoodsId
+                          , SUM (MovementItem.Amount)        AS Amount
+                     FROM Movement
+                          INNER JOIN MovementLinkObject AS MovementLinkObject_From
+                                                        ON MovementLinkObject_From.MovementId = Movement.Id
+                                                       AND MovementLinkObject_From.DescId     = zc_MovementLinkObject_From()
+                          INNER JOIN MovementBoolean AS MovementBoolean_SUN
+                                                     ON MovementBoolean_SUN.MovementId = Movement.Id
+                                                    AND MovementBoolean_SUN.DescId     = zc_MovementBoolean_SUN()
+                                                    AND MovementBoolean_SUN.ValueData  = TRUE
+                          INNER JOIN MovementItem ON MovementItem.MovementId = Movement.Id
+                                                 AND MovementItem.DescId     = zc_MI_Master()
+                                                 AND MovementItem.isErased   = FALSE
+                                                 AND MovementItem.Amount     > 0
+                     WHERE Movement.OperDate = inOperDate
+                       AND Movement.DescId   = zc_Movement_Send()
+                       AND Movement.StatusId IN (zc_Enum_Status_UnComplete(), zc_Enum_Status_Erased())
+                     GROUP BY MovementLinkObject_From.ObjectId
+                            , MovementItem.ObjectId
+                    )
+     -- Результат-1
+     INSERT INTO _tmpGoods_Sun_exception (UnitId, GoodsId, Amount)
+        SELECT tmpSUN.UnitId, tmpSUN.GoodsId, tmpSUN.Amount
+        FROM tmpSUN
+     ;
+
+     -- все Товары для схемы SUN Supplement
+     INSERT INTO _tmpGoods_SUN_Supplement (GoodsId)
+        SELECT Object_Goods_Retail.ID
+        FROM Object_Goods_Retail
+             INNER JOIN Object_Goods_Main ON Object_Goods_Main.ID = Object_Goods_Retail.GoodsMainId
+                                         AND Object_Goods_Main.isSupplementSUN1 = TRUE
+        WHERE Object_Goods_Retail.RetailID = vbObjectId;
+
+     -- 1. все остатки
      --
      WITH tmpRemains AS (SELECT Container.WhereObjectId AS UnitId
                               , Container.ObjectId      AS GoodsId
@@ -143,8 +224,11 @@ BEGIN
                               -- !!!только для таких Аптек!!!
                               INNER JOIN _tmpGoods_SUN_Supplement ON _tmpGoods_SUN_Supplement.GoodsId = Container.ObjectId
                               INNER JOIN _tmpUnit_SUN_Supplement ON _tmpUnit_SUN_Supplement.UnitId = Container.WhereObjectId
+                              LEFT JOIN _tmpGoods_TP_exception ON _tmpGoods_TP_exception.GoodsId = Container.ObjectId
+                                                              AND _tmpGoods_TP_exception.UnitId = Container.WhereObjectId
                          WHERE Container.DescId = zc_Container_Count()
                            AND Container.Amount <> 0
+                           AND COALESCE (_tmpGoods_TP_exception.GoodsId, 0) = 0
                          GROUP BY Container.WhereObjectId
                                 , Container.ObjectId
                         )
@@ -266,7 +350,8 @@ BEGIN
              , tmpObject_Price.MCSValue
 
                -- остаток
-             , COALESCE (tmpRemains.Amount, 0)               AS AmountRemains
+             , CASE WHEN COALESCE (tmpRemains.Amount - COALESCE (_tmpGoods_Sun_exception.Amount, 0), 0) > 0
+                    THEN COALESCE (tmpRemains.Amount - COALESCE (_tmpGoods_Sun_exception.Amount, 0), 0) ELSE 0 END AS AmountRemains
                -- реализация
              , COALESCE (tmpSalesDay.AmountSalesDay, 0)      AS AmountSalesDay
              , COALESCE (tmpSalesMonth.AmountSalesMonth, 0)  AS AmountSalesMonth
@@ -284,7 +369,10 @@ BEGIN
              LEFT JOIN tmpSalesMonth AS tmpSalesMonth
                                      ON tmpSalesMonth.UnitId  = tmpObject_Price.UnitId
                                     AND tmpSalesMonth.GoodsId = tmpObject_Price.GoodsId
-                                    
+
+             LEFT JOIN _tmpGoods_Sun_exception ON _tmpGoods_Sun_exception.UnitId  = tmpObject_Price.UnitId
+                                              AND _tmpGoods_Sun_exception.GoodsId = tmpObject_Price.GoodsId
+
        ;
 
      -- 2. все остатки, НТЗ, и коэф. товарного запаса
@@ -403,7 +491,7 @@ BEGIN
              FETCH curResult_next INTO vbUnitId_to, vbNeed;
              -- если данные закончились, или все кол-во найдено тогда выход
              IF NOT FOUND OR vbSurplus = 0 THEN EXIT; END IF;
-             
+
 /*             IF vbUnitId_to = 377610 AND vbGoodsId = 12918138
              THEN
                raise notice 'Value 05: % % % % % %', vbUnitId_from, vbUnitId_to, vbGoodsId, vbNeed, vbSurplus, CASE WHEN vbSurplus > vbNeed THEN vbNeed ELSE vbSurplus END;
@@ -507,4 +595,4 @@ $BODY$
 
 -- SELECT * FROM lpInsert_Movement_Send_RemainsSun_Supplement (inOperDate:= CURRENT_DATE + INTERVAL '0 DAY', inDriverId:= 0, inUserId:= 3); -- WHERE Amount_calc < AmountResult_summ -- WHERE AmountSun_summ_save <> AmountSun_summ
 
-select * from gpReport_Movement_Send_RemainsSun_Supplement(inOperDate := ('07.09.2020')::TDateTime ,  inSession := '3');
+select * from gpReport_Movement_Send_RemainsSun_Supplement(inOperDate := ('21.09.2020')::TDateTime ,  inSession := '3');

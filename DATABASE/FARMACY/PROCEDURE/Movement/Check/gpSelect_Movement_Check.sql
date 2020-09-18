@@ -109,7 +109,8 @@ BEGIN
            , Object_DiscountExternal.ValueData                  AS DiscountExternalName
            , MovementString_BayerPhone.ValueData                AS BayerPhone
            , COALESCE(MovementString_InvNumberOrder.ValueData,
-             CASE WHEN COALESCE (MovementString_BookingId.ValueData, '') <> '' THEN Movement_Check.Id::TVarChar END)::TVarChar  AS InvNumberOrder
+             CASE WHEN COALESCE (MovementLinkObject_CheckSourceKind.ObjectId, 0) = zc_Enum_CheckSourceKind_Tabletki() THEN MovementString_OrderId.ValueData
+                  WHEN COALESCE (MovementLinkObject_CheckSourceKind.ObjectId, 0) <> 0 THEN Movement_Check.Id::TVarChar END)::TVarChar   AS InvNumberOrder
            , Object_ConfirmedKind.ValueData                     AS ConfirmedKindName
            , Object_ConfirmedKindClient.ValueData               AS ConfirmedKindClientName
 
@@ -219,7 +220,7 @@ BEGIN
              LEFT JOIN MovementString AS MovementString_InvNumberOrder
                                       ON MovementString_InvNumberOrder.MovementId = Movement_Check.Id
                                      AND MovementString_InvNumberOrder.DescId = zc_MovementString_InvNumberOrder()
-	     LEFT JOIN MovementString AS MovementString_Bayer
+	         LEFT JOIN MovementString AS MovementString_Bayer
                                       ON MovementString_Bayer.MovementId = Movement_Check.Id
                                      AND MovementString_Bayer.DescId = zc_MovementString_Bayer()
              LEFT JOIN MovementString AS MovementString_BayerPhone
@@ -235,6 +236,10 @@ BEGIN
              LEFT JOIN MovementString AS MovementString_Ambulance
                                       ON MovementString_Ambulance.MovementId = Movement_Check.Id
                                      AND MovementString_Ambulance.DescId = zc_MovementString_Ambulance()
+
+             LEFT JOIN MovementString AS MovementString_OrderId
+                                      ON MovementString_OrderId.MovementId = Movement_Check.Id
+                                     AND MovementString_OrderId.DescId = zc_MovementString_OrderId()
 
              LEFT JOIN MovementBoolean AS MovementBoolean_NotMCS
                                        ON MovementBoolean_NotMCS.MovementId = Movement_Check.Id
@@ -356,6 +361,10 @@ BEGIN
                                          ON MovementLinkObject_CheckSourceKind.MovementId =  Movement_Check.Id
                                         AND MovementLinkObject_CheckSourceKind.DescId = zc_MovementLinkObject_CheckSourceKind()
             LEFT JOIN Object AS Object_CheckSourceKind ON Object_CheckSourceKind.Id = MovementLinkObject_CheckSourceKind.ObjectId
+
+            LEFT JOIN MovementString AS MovementString_OrderId
+                                     ON MovementString_OrderId.MovementId = Movement_Check.Id
+                                    AND MovementString_OrderId.DescId = zc_MovementString_OrderId()
 
             LEFT JOIN MovementString AS MovementString_BookingId
                                      ON MovementString_BookingId.MovementId = Movement_Check.Id

@@ -69,6 +69,9 @@ type
     cxLabel3: TcxLabel;
     cxLabel4: TcxLabel;
     SummaMoneyBoxResidual: TcxGridDBBandedColumn;
+    SummaFine: TcxGridDBBandedColumn;
+    actReport_FoundPositionsSUN: TdsdOpenForm;
+    dxBarButton14: TdxBarButton;
   private
     { Private declarations }
   public

@@ -153,6 +153,8 @@ type
     actPrintSticker_fp: TdsdPrintAction;
     macPrintSticker_fp: TMultiAction;
     bbPrintSticker_fp: TdxBarButton;
+    mactGoodsPrintList_Print_fp: TMultiAction;
+    bbGoodsPrintList_Print_fp: TdxBarButton;
   private
     { Private declarations }
   public

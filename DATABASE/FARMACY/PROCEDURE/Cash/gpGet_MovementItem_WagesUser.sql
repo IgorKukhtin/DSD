@@ -13,7 +13,7 @@ RETURNS TABLE (Id Integer, UserID Integer, AmountAccrued TFloat
              , UnitID Integer, UnitCode Integer, UnitName TVarChar
              , OperDate TDateTime
              , Result TFloat, Attempts Integer, Status TVarChar, DateTimeTest TDateTime
-             , SummaCleaning TFloat, SummaSP TFloat, SummaOther TFloat, SummaValidationResults TFloat, SummaSUN1 TFloat 
+             , SummaCleaning TFloat, SummaSP TFloat, SummaOther TFloat, SummaValidationResults TFloat, SummaSUN1 TFloat, SummaFine TFloat 
              , SummaTechnicalRediscount TFloat, SummaMoneyBox TFloat, SummaFullCharge TFloat, SummaMoneyBoxUsed TFloat
              , SummaTotal TFloat
              , PasswordEHels TVarChar
@@ -219,6 +219,12 @@ BEGIN
                                            AND MovementItem.ObjectId = vbUnitId
                                            AND MovementItem.DescId = zc_MI_Sign()
                                            AND MovementItem.isErased = FALSE)
+              , tmpFoundPositionsSUN AS (SELECT T1.UnitId
+                                              , SUM(T1.SummaFine)::TFloat   AS SummaFine
+                                         FROM gpReport_FoundPositionsSUN (date_trunc('month', inOperDate), 
+                                                                          date_trunc('month', inOperDate) + INTERVAL '1 MONTH' - INTERVAL '1 DAY', 
+                                                                          inSession) AS T1
+                                         GROUP BY T1.UnitId)
 
             SELECT MovementItem.Id                    AS Id
                  , MovementItem.ObjectId              AS UserID
@@ -257,6 +263,7 @@ BEGIN
                  , tmpAdditionalExpenses.SummaSP                AS SummaSP
                  , tmpAdditionalExpenses.SummaOther             AS SummaOther
                  , tmpAdditionalExpenses.SummaValidationResults AS SummaValidationResults
+                 , FoundPositionsSUN.SummaFine                  AS SummaFine
                  , tmpAdditionalExpenses.SummaSUN1              AS SummaSUN1
                  , tmpAdditionalExpenses.SummaTechnicalRediscount AS SummaTechnicalRediscount
                  , tmpAdditionalExpenses.SummaMoneyBox          AS SummaMoneyBox
@@ -315,6 +322,9 @@ BEGIN
                   LEFT JOIN ObjectString AS ObjectString_PasswordEHels
                          ON ObjectString_PasswordEHels.DescId = zc_ObjectString_User_Helsi_PasswordEHels() 
                         AND ObjectString_PasswordEHels.ObjectId = vbUserId
+
+                  LEFT JOIN tmpFoundPositionsSUN AS FoundPositionsSUN
+                                                 ON FoundPositionsSUN.UnitID = vbUnitId
 
             WHERE MovementItem.MovementId = vbMovementId
               AND MovementItem.ObjectId = vbUserId

@@ -922,6 +922,9 @@ end;
 
 procedure TLoadFormTest.LoadReportFormTest;
 begin
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_FoundPositionsSUNForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TReport_FoundPositionsSUNForm');
+
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_ChangeCommentsSUNForm'));
   TdsdFormStorageFactory.GetStorage.Load('TReport_ChangeCommentsSUNForm');
 
@@ -2077,6 +2080,7 @@ begin
 
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TOrderExternalForm'));
   TdsdFormStorageFactory.GetStorage.Load('TOrderExternalForm');
+  exit;
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TOrderExternalJournalForm'));
   TdsdFormStorageFactory.GetStorage.Load('TOrderExternalJournalForm');
 

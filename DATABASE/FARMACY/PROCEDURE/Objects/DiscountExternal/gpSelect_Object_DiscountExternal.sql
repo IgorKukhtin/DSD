@@ -27,7 +27,8 @@ BEGIN
         vbUnitKey := '0';
      END IF;   
      vbUnitId := vbUnitKey :: Integer;
-     IF inSession = '3' 
+     IF NOT EXISTS(SELECT * FROM gpSelect_Object_RoleUser (inSession) AS Object_RoleUser
+                   WHERE Object_RoleUser.ID = vbUserId AND Object_RoleUser.RoleId = zc_Enum_Role_CashierPharmacy())
      THEN
        vbUnitId := 0;
      END IF;
@@ -68,7 +69,7 @@ BEGIN
                                                                    AND ObjectLink_DiscountExternal.DescId = zc_ObjectLink_DiscountExternalTools_DiscountExternal()
                                          WHERE ObjectLink_Unit.DescId        = zc_ObjectLink_DiscountExternalTools_Unit()
                                            AND ObjectLink_Unit.ChildObjectId = vbUnitId
-                                        )
+                                        ) AND Object_DiscountExternal.isErased = False
          );
   
 END;

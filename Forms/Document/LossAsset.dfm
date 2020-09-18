@@ -288,6 +288,13 @@ inherited LossAssetForm: TLossAssetForm
       TabOrder = 13
       Width = 455
     end
+    object cbisAuto: TcxCheckBox
+      Left = 188
+      Top = 61
+      Caption = #1089#1086#1079#1076#1072#1085' '#1072#1074#1090#1086#1084#1072#1090#1080#1095#1077#1089#1082#1080' ('#1076#1072'/'#1085#1077#1090')'
+      TabOrder = 14
+      Width = 197
+    end
   end
   inherited UserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn
     Left = 171
@@ -1047,7 +1054,7 @@ inherited LossAssetForm: TLossAssetForm
       end
       item
         Name = 'Checked'
-        Value = 0.000000000000000000
+        Value = False
         DataType = ftBoolean
         MultiSelectSeparator = ','
       end
@@ -1055,6 +1062,13 @@ inherited LossAssetForm: TLossAssetForm
         Name = 'InvNumber_IncomeFull'
         Value = Null
         DataType = ftString
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'isAuto'
+        Value = Null
+        Component = cbisAuto
+        DataType = ftBoolean
         MultiSelectSeparator = ','
       end>
     Left = 216
@@ -1166,11 +1180,43 @@ inherited LossAssetForm: TLossAssetForm
   end
   inherited spErasedMIMaster: TdsdStoredProc
     StoredProcName = 'gpMovementItem_LossAsset_SetErased'
+    Params = <
+      item
+        Name = 'inMovementItemId'
+        Component = MasterCDS
+        ComponentItem = 'Id'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'outIsErased'
+        Value = False
+        Component = MasterCDS
+        ComponentItem = 'isErased'
+        DataType = ftBoolean
+        MultiSelectSeparator = ','
+      end>
     Left = 718
     Top = 512
   end
   inherited spUnErasedMIMaster: TdsdStoredProc
     StoredProcName = 'gpMovementItem_LossAsset_SetUnErased'
+    Params = <
+      item
+        Name = 'inMovementItemId'
+        Component = MasterCDS
+        ComponentItem = 'Id'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'outIsErased'
+        Value = False
+        Component = MasterCDS
+        ComponentItem = 'isErased'
+        DataType = ftBoolean
+        MultiSelectSeparator = ','
+      end>
     Left = 718
     Top = 464
   end

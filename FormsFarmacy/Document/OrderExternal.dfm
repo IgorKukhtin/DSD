@@ -4,7 +4,7 @@ inherited OrderExternalForm: TOrderExternalForm
   ClientWidth = 821
   AddOnFormData.PUSHMessage = actPUSHInfo
   ExplicitWidth = 837
-  ExplicitHeight = 650
+  ExplicitHeight = 649
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
@@ -125,6 +125,14 @@ inherited OrderExternalForm: TOrderExternalForm
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
             Width = 76
+          end
+          object PartnerGoodsName: TcxGridDBColumn
+            Caption = #1053#1072#1079#1074#1072#1085#1080#1077' '#1091' '#1087#1088#1086#1076#1072#1074#1094#1072
+            DataBinding.FieldName = 'PartnerGoodsName'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 93
           end
           object GoodsCode: TcxGridDBColumn
             Caption = #1050#1086#1076
@@ -826,7 +834,7 @@ inherited OrderExternalForm: TOrderExternalForm
         MultiSelectSeparator = ','
       end>
     Left = 160
-    Top = 248
+    Top = 272
   end
   inherited BarManager: TdxBarManager
     Left = 88
@@ -1266,8 +1274,8 @@ inherited OrderExternalForm: TOrderExternalForm
         DataType = ftString
         MultiSelectSeparator = ','
       end>
-    Left = 216
-    Top = 248
+    Left = 208
+    Top = 296
   end
   inherited spInsertUpdateMovement: TdsdStoredProc
     StoredProcName = 'gpInsertUpdate_Movement_OrderExternal'
@@ -1371,8 +1379,8 @@ inherited OrderExternalForm: TOrderExternalForm
       item
         Guides = GuidesTo
       end>
-    Left = 160
-    Top = 192
+    Left = 128
+    Top = 280
   end
   inherited HeaderSaver: THeaderSaver
     ControlList = <
@@ -1397,8 +1405,7 @@ inherited OrderExternalForm: TOrderExternalForm
       item
         Control = edLetterSubject
       end>
-    Left = 232
-    Top = 193
+    Top = 305
   end
   inherited RefreshAddOn: TRefreshAddOn
     FormName = 'OrderExternalJournalForm'

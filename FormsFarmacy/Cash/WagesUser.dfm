@@ -1,30 +1,30 @@
 inherited WagesUserForm: TWagesUserForm
   Caption = #1047#1072#1088#1087#1083#1072#1090#1072
   ClientHeight = 449
-  ClientWidth = 655
+  ClientWidth = 654
   AddOnFormData.isSingle = False
   AddOnFormData.ExecuteDialogAction = actDataDialog
   AddOnFormData.Params = FormParams
-  ExplicitWidth = 671
+  ExplicitWidth = 670
   ExplicitHeight = 488
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
-    Top = 154
-    Width = 655
-    Height = 295
+    Top = 144
+    Width = 654
+    Height = 305
     TabOrder = 0
     ExplicitTop = 154
     ExplicitWidth = 655
     ExplicitHeight = 295
-    ClientRectBottom = 295
-    ClientRectRight = 655
+    ClientRectBottom = 305
+    ClientRectRight = 654
     inherited tsMain: TcxTabSheet
       ExplicitWidth = 655
       ExplicitHeight = 295
       inherited cxGrid: TcxGrid
-        Width = 655
-        Height = 169
+        Width = 654
+        Height = 179
         ExplicitWidth = 655
         ExplicitHeight = 169
         inherited cxGridDBTableView: TcxGridDBTableView
@@ -79,12 +79,14 @@ inherited WagesUserForm: TWagesUserForm
       end
       object PanelBottom: TPanel
         Left = 0
-        Top = 169
-        Width = 655
+        Top = 179
+        Width = 654
         Height = 126
         Align = alBottom
         ShowCaption = False
         TabOrder = 1
+        ExplicitTop = 169
+        ExplicitWidth = 655
         object ceTotal: TcxCurrencyEdit
           Left = 157
           Top = 6
@@ -307,11 +309,12 @@ inherited WagesUserForm: TWagesUserForm
   object Panel: TPanel [1]
     Left = 0
     Top = 0
-    Width = 655
-    Height = 128
+    Width = 654
+    Height = 118
     Align = alTop
     ShowCaption = False
     TabOrder = 1
+    ExplicitWidth = 655
     object edOperDate: TcxDateEdit
       Left = 99
       Top = 5
@@ -395,7 +398,7 @@ inherited WagesUserForm: TWagesUserForm
       Caption = #1044#1086#1087'. '#1088#1072#1089#1093#1086#1076#1099' ('#1085#1072' '#1072#1087#1090#1077#1082#1091'):'
     end
     object ceSummaSP: TcxCurrencyEdit
-      Left = 162
+      Left = 160
       Top = 48
       Properties.DecimalPlaces = 2
       Properties.DisplayFormat = ',0.00'
@@ -403,12 +406,12 @@ inherited WagesUserForm: TWagesUserForm
       Width = 65
     end
     object cxLabel12: TcxLabel
-      Left = 141
+      Left = 139
       Top = 49
       Caption = #1057#1055
     end
     object ceSummaOther: TcxCurrencyEdit
-      Left = 272
+      Left = 298
       Top = 48
       Properties.DecimalPlaces = 2
       Properties.DisplayFormat = ',0.00'
@@ -416,26 +419,26 @@ inherited WagesUserForm: TWagesUserForm
       Width = 65
     end
     object cxLabel13: TcxLabel
-      Left = 228
-      Top = 49
+      Left = 226
+      Top = 50
       Caption = #1055#1088#1086#1095#1077#1077
     end
     object ceSummaValidationResults: TcxCurrencyEdit
-      Left = 436
-      Top = 48
+      Left = 160
+      Top = 69
       Properties.DecimalPlaces = 2
       Properties.DisplayFormat = ',0.00'
       TabOrder = 16
       Width = 65
     end
     object cxLabel14: TcxLabel
-      Left = 339
-      Top = 49
+      Left = 11
+      Top = 71
       Caption = #1056#1077#1079#1091#1083#1100#1090'. '#1087#1088#1086#1074#1077#1088#1082#1080
     end
     object ceSummaTotal: TcxCurrencyEdit
       Left = 578
-      Top = 83
+      Top = 92
       Properties.DecimalPlaces = 2
       Properties.DisplayFormat = ',0.00'
       TabOrder = 18
@@ -443,7 +446,7 @@ inherited WagesUserForm: TWagesUserForm
     end
     object cxLabel15: TcxLabel
       Left = 536
-      Top = 84
+      Top = 93
       Caption = #1048#1090#1086#1075#1086':'
     end
     object cxLabel17: TcxLabel
@@ -452,33 +455,33 @@ inherited WagesUserForm: TWagesUserForm
       Caption = #1059#1073#1086#1088#1082#1072
     end
     object ceSUN1: TcxCurrencyEdit
-      Left = 578
-      Top = 48
+      Left = 298
+      Top = 70
       Properties.DecimalPlaces = 2
       Properties.DisplayFormat = ',0.00'
       TabOrder = 21
       Width = 65
     end
     object cxLabel18: TcxLabel
-      Left = 506
-      Top = 49
+      Left = 226
+      Top = 71
       Caption = #1064#1090#1088#1072#1092' '#1057#1059#1053'1'
     end
     object edPasswordEHels: TcxTextEdit
       Left = 518
-      Top = 105
+      Top = 48
       Properties.ReadOnly = True
       TabOrder = 23
       Width = 125
     end
     object cxLabel19: TcxLabel
       Left = 435
-      Top = 106
+      Top = 49
       Caption = #1055#1072#1088#1086#1083#1100' '#1045'-'#1061#1077#1083#1089
     end
     object ceSummaTechnicalRediscount: TcxCurrencyEdit
       Left = 74
-      Top = 83
+      Top = 92
       Hint = #1058#1077#1093#1085#1080#1095#1077#1089#1082#1080#1081' '#1087#1077#1088#1077#1091#1095#1077#1090
       ParentShowHint = False
       Properties.DecimalPlaces = 2
@@ -489,15 +492,15 @@ inherited WagesUserForm: TWagesUserForm
     end
     object cxLabel20: TcxLabel
       Left = 11
-      Top = 84
+      Top = 93
       Hint = #1058#1077#1093#1085#1080#1095#1077#1089#1082#1080#1081' '#1087#1077#1088#1077#1091#1095#1077#1090
       Caption = #1058#1077#1093'. '#1087#1077#1088#1077#1091#1095
       ParentShowHint = False
       ShowHint = True
     end
     object ceSummaMoneyBox: TcxCurrencyEdit
-      Left = 272
-      Top = 83
+      Left = 298
+      Top = 92
       Hint = #1050#1086#1087#1080#1083#1082#1072
       ParentShowHint = False
       Properties.DecimalPlaces = 2
@@ -507,16 +510,16 @@ inherited WagesUserForm: TWagesUserForm
       Width = 65
     end
     object cxLabel22: TcxLabel
-      Left = 225
-      Top = 83
+      Left = 226
+      Top = 93
       Hint = #1050#1086#1087#1080#1083#1082#1072
       Caption = #1050#1086#1087#1080#1083#1082#1072
       ParentShowHint = False
       ShowHint = True
     end
     object ceSummaFullCharge: TcxCurrencyEdit
-      Left = 162
-      Top = 83
+      Left = 160
+      Top = 92
       Hint = #1055#1086#1083#1085#1086#1077' '#1089#1087#1080#1089#1072#1085#1080#1077
       ParentShowHint = False
       Properties.DecimalPlaces = 2
@@ -526,16 +529,16 @@ inherited WagesUserForm: TWagesUserForm
       Width = 65
     end
     object cxLabel23: TcxLabel
-      Left = 142
-      Top = 84
+      Left = 140
+      Top = 93
       Hint = #1055#1086#1083#1085#1086#1077' '#1089#1087#1080#1089#1072#1085#1080#1077
       Caption = #1055#1057
       ParentShowHint = False
       ShowHint = True
     end
     object ceSummaMoneyBoxUsed: TcxCurrencyEdit
-      Left = 436
-      Top = 83
+      Left = 460
+      Top = 92
       ParentShowHint = False
       Properties.DecimalPlaces = 2
       Properties.DisplayFormat = ',0.00'
@@ -544,12 +547,30 @@ inherited WagesUserForm: TWagesUserForm
       Width = 65
     end
     object cxLabel24: TcxLabel
-      Left = 339
-      Top = 84
+      Left = 371
+      Top = 93
       Hint = #1048#1089#1087#1086#1083#1100#1079#1086#1074#1072#1085#1086' '#1080#1079' '#1082#1086#1087#1080#1083#1082#1080
       Caption = #1048#1089#1087'. '#1080#1079' '#1082#1086#1087#1080#1083#1082#1080
       ParentShowHint = False
       ShowHint = True
+    end
+    object ceSummaFine: TcxCurrencyEdit
+      Left = 578
+      Top = 70
+      Hint = 
+        #1064#1090#1088#1072#1092' '#1087#1086' '#1079#1072#1085#1091#1083#1077#1085#1080#1102' '#1087#1086#1090#1077#1088#1103#1085#1085#1086#1081' '#1087#1086#1079#1080#1094#1080#1080' '#1074' '#1057#1059#1053'  ('#1090#1086#1083#1100#1082#1086' '#1086#1079#1085#1072#1082#1086#1084#1083#1077#1085#1080 +
+        #1077')'
+      ParentShowHint = False
+      Properties.DecimalPlaces = 2
+      Properties.DisplayFormat = ',0.00'
+      ShowHint = True
+      TabOrder = 33
+      Width = 65
+    end
+    object cxLabel26: TcxLabel
+      Left = 426
+      Top = 74
+      Caption = #1064#1090#1088#1072#1092' '#1087#1086' '#1079#1072#1085#1091#1083#1077#1085#1080#1102' ('#1086#1079#1085'.)'
     end
   end
   inherited UserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn
@@ -560,8 +581,8 @@ inherited WagesUserForm: TWagesUserForm
     Left = 32
   end
   inherited ActionList: TActionList
-    Left = 119
-    Top = 191
+    Left = 111
+    Top = 207
     inherited actRefresh: TdsdDataSetRefresh
       StoredProcList = <
         item
@@ -596,12 +617,12 @@ inherited WagesUserForm: TWagesUserForm
     end
   end
   inherited MasterDS: TDataSource
-    Left = 32
-    Top = 184
+    Left = 24
+    Top = 200
   end
   inherited MasterCDS: TClientDataSet
-    Left = 32
-    Top = 104
+    Left = 296
+    Top = 168
   end
   inherited spSelect: TdsdStoredProc
     StoredProcName = 'gpSelect_MovementItem_WagesUser'
@@ -615,12 +636,12 @@ inherited WagesUserForm: TWagesUserForm
         ParamType = ptInput
         MultiSelectSeparator = ','
       end>
-    Left = 88
-    Top = 104
+    Left = 352
+    Top = 168
   end
   inherited BarManager: TdxBarManager
-    Left = 152
-    Top = 104
+    Left = 416
+    Top = 168
     DockControlHeights = (
       0
       0
@@ -688,8 +709,8 @@ inherited WagesUserForm: TWagesUserForm
   end
   inherited DBViewAddOn: TdsdDBViewAddOn
     KeepSelectColor = True
-    Left = 232
-    Top = 184
+    Left = 224
+    Top = 200
   end
   object FormParams: TdsdFormParams
     Params = <
@@ -699,8 +720,8 @@ inherited WagesUserForm: TWagesUserForm
         DataType = ftDateTime
         MultiSelectSeparator = ','
       end>
-    Left = 240
-    Top = 104
+    Left = 504
+    Top = 168
   end
   object spGet: TdsdStoredProc
     StoredProcName = 'gpGet_MovementItem_WagesUser'
@@ -884,17 +905,24 @@ inherited WagesUserForm: TWagesUserForm
         Component = cePenaltySUN
         DataType = ftFloat
         MultiSelectSeparator = ','
+      end
+      item
+        Name = 'SummaFine'
+        Value = Null
+        Component = ceSummaFine
+        DataType = ftFloat
+        MultiSelectSeparator = ','
       end>
     PackSize = 1
-    Left = 328
-    Top = 104
+    Left = 592
+    Top = 168
   end
   object RefreshDispatcher: TRefreshDispatcher
     IdParam.Value = Null
     IdParam.MultiSelectSeparator = ','
     RefreshAction = actRefresh
     ComponentList = <>
-    Left = 328
-    Top = 184
+    Left = 320
+    Top = 200
   end
 end

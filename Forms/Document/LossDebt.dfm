@@ -744,6 +744,14 @@ object LossDebtForm: TLossDebtForm
         end
         item
           Visible = True
+          ItemName = 'bb'
+        end
+        item
+          Visible = True
+          ItemName = 'bbStatic'
+        end
+        item
+          Visible = True
           ItemName = 'bbRefresh'
         end
         item
@@ -823,6 +831,10 @@ object LossDebtForm: TLossDebtForm
     end
     object bbMIContainer: TdxBarButton
       Action = actMIContainer
+      Category = 0
+    end
+    object bb: TdxBarButton
+      Action = actInsert_MI_LossDebt_70000
       Category = 0
     end
   end
@@ -1509,6 +1521,21 @@ object LossDebtForm: TLossDebtForm
         end>
       isShowModal = True
     end
+    object actInsert_MI_LossDebt_70000: TdsdExecStoredProc
+      Category = 'DSDLib'
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      StoredProc = spInsert_MI_LossDebt_70000
+      StoredProcList = <
+        item
+          StoredProc = spInsert_MI_LossDebt_70000
+        end
+        item
+          StoredProc = spSelectMI
+        end>
+      Caption = 'C'#1087#1080#1089#1072#1090#1100' '#1079#1072#1076#1086#1083#1078#1077#1085#1085#1086#1089#1090#1100' '#1054#1057
+      ImageIndex = 76
+    end
   end
   object MasterDS: TDataSource
     DataSet = MasterCDS
@@ -1750,7 +1777,8 @@ object LossDebtForm: TLossDebtForm
     ColumnAddOnList = <>
     ColumnEnterList = <>
     SummaryItemList = <>
-    Left = 328
+    PropertiesCellList = <>
+    Left = 352
     Top = 312
   end
   object UserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn
@@ -2183,5 +2211,22 @@ object LossDebtForm: TLossDebtForm
       end>
     Left = 824
     Top = 8
+  end
+  object spInsert_MI_LossDebt_70000: TdsdStoredProc
+    StoredProcName = 'gpInsert_MI_LossDebt_70000'
+    DataSets = <>
+    OutputType = otResult
+    Params = <
+      item
+        Name = 'inId'
+        Value = Null
+        Component = FormParams
+        ComponentItem = 'Id'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end>
+    PackSize = 1
+    Left = 875
+    Top = 209
   end
 end

@@ -40,11 +40,11 @@ BEGIN
                       FROM (
                            SELECT DISTINCT ObjectFloat_MinPrice.ValueData AS minPrice 
                            FROM ObjectFloat AS ObjectFloat_MinPrice
+                                INNER join Object ON Object.Id = ObjectFloat_MinPrice.ObjectId
+                                                 AND Object.IsErased = FALSE
                            WHERE ObjectFloat_MinPrice.DescId = zc_ObjectFloat_MarginCategoryItem_MinPrice()
                            ) AS tmp
                        )
-
-
 
      -- все данные  
    ,  tmpData AS (SELECT _tmpMarginCategory.MarginCategoryId
@@ -206,4 +206,6 @@ $BODY$
  20.11.19         * переписала
  15.11.19         * 
 */
+--
 --SELECT * FROM gpSelect_MarginCategory_All(inSession := '3':: TVarChar);
+--FETCH ALL "<unnamed portal 2>";

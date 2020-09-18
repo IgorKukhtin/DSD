@@ -146,6 +146,11 @@ inherited WagesAdditionalExpensesForm: TWagesAdditionalExpensesForm
               Format = ',0.00;-,0.00; ;'
               Kind = skSum
               Column = SummaMoneyBoxResidual
+            end
+            item
+              Format = ',0.00;-,0.00; ;'
+              Kind = skSum
+              Column = SummaFine
             end>
           DataController.Summary.SummaryGroups = <>
           OptionsView.Footer = True
@@ -232,6 +237,22 @@ inherited WagesAdditionalExpensesForm: TWagesAdditionalExpensesForm
             Width = 76
             Position.BandIndex = 1
             Position.ColIndex = 4
+            Position.RowIndex = 0
+          end
+          object SummaFine: TcxGridDBBandedColumn
+            Caption = #1047#1072#1085#1091#1083#1077#1085#1080#1077' '#1087#1086#1090#1077#1088#1103#1085#1085#1099#1093' '#1087#1086#1079#1080#1094#1080#1081' '#1074' '#1057#1059#1053'  ('#1086#1079#1085#1072#1082#1086#1084'.)'
+            DataBinding.FieldName = 'SummaFine'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DisplayFormat = ',0.00;-,0.00; ;'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            HeaderHint = 
+              #1064#1090#1088#1072#1092' '#1087#1086' '#1079#1072#1085#1091#1083#1077#1085#1080#1102' '#1087#1086#1090#1077#1088#1103#1085#1085#1086#1081' '#1087#1086#1079#1080#1094#1080#1080' '#1074' '#1057#1059#1053'  ('#1090#1086#1083#1100#1082#1086' '#1086#1079#1085#1072#1082#1086#1084#1083#1077#1085#1080 +
+              #1077')'
+            Options.Editing = False
+            Width = 76
+            Position.BandIndex = 1
+            Position.ColIndex = 5
             Position.RowIndex = 0
           end
           object SummaTechnicalRediscount: TcxGridDBBandedColumn
@@ -553,6 +574,34 @@ inherited WagesAdditionalExpensesForm: TWagesAdditionalExpensesForm
       QuestionBeforeExecute = #1054#1095#1080#1089#1090#1082#1072' '#1074#1074#1077#1076#1077#1085#1085#1086#1077' '#1079#1085#1072#1095#1077#1085#1080#1077' "'#1055#1086#1083#1085#1086#1077' '#1089#1087#1080#1089#1072#1085#1080#1077' '#1092#1072#1082#1090'"?'
       InfoAfterExecute = #1042#1099#1087#1086#1083#1085#1077#1085#1086
     end
+    object actReport_FoundPositionsSUN: TdsdOpenForm
+      Category = 'DSDLib'
+      MoveParams = <>
+      Caption = #1064#1090#1088#1072#1092#1099' '#1087#1086' '#1079#1072#1085#1091#1083#1077#1085#1080#1102' '#1087#1086#1090#1077#1088#1103#1085#1085#1086#1081' '#1087#1086#1079#1080#1094#1080#1080' '#1074' '#1057#1059#1053
+      Hint = #1064#1090#1088#1072#1092#1099' '#1087#1086' '#1079#1072#1085#1091#1083#1077#1085#1080#1102' '#1087#1086#1090#1077#1088#1103#1085#1085#1086#1081' '#1087#1086#1079#1080#1094#1080#1080' '#1074' '#1057#1059#1053
+      ImageIndex = 73
+      FormName = 'TReport_FoundPositionsSUNForm'
+      FormNameParam.Value = 'TReport_FoundPositionsSUNForm'
+      FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
+      GuiParams = <
+        item
+          Name = 'StartDate'
+          Value = 'NULL'
+          Component = edOperDate
+          DataType = ftDateTime
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'EndDate'
+          Value = 'NULL'
+          Component = FormParams
+          ComponentItem = 'EndDate'
+          DataType = ftDateTime
+          MultiSelectSeparator = ','
+        end>
+      isShowModal = False
+    end
   end
   inherited MasterDS: TDataSource
     Top = 224
@@ -631,6 +680,10 @@ inherited WagesAdditionalExpensesForm: TWagesAdditionalExpensesForm
         item
           Visible = True
           ItemName = 'dxBarStatic'
+        end
+        item
+          Visible = True
+          ItemName = 'dxBarButton14'
         end
         item
           Visible = True
@@ -758,6 +811,10 @@ inherited WagesAdditionalExpensesForm: TWagesAdditionalExpensesForm
       Action = actClearSummaFullChargeFact
       Category = 0
     end
+    object dxBarButton14: TdxBarButton
+      Action = actReport_FoundPositionsSUN
+      Category = 0
+    end
   end
   inherited DBViewAddOn: TdsdDBViewAddOn
     View = cxGridDBBandedTableView1
@@ -816,6 +873,12 @@ inherited WagesAdditionalExpensesForm: TWagesAdditionalExpensesForm
       item
         Name = 'PersonID'
         Value = Null
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'EndDate'
+        Value = 'NULL'
+        DataType = ftDateTime
         MultiSelectSeparator = ','
       end>
     Left = 40
@@ -908,6 +971,7 @@ inherited WagesAdditionalExpensesForm: TWagesAdditionalExpensesForm
       item
         Name = 'Comment'
         Value = Null
+        Component = FormParams
         DataType = ftString
         MultiSelectSeparator = ','
       end
@@ -933,6 +997,14 @@ inherited WagesAdditionalExpensesForm: TWagesAdditionalExpensesForm
         Name = 'DatePayment'
         Value = Null
         DataType = ftFloat
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'EndDate'
+        Value = 'NULL'
+        Component = FormParams
+        ComponentItem = 'EndDate'
+        DataType = ftDateTime
         MultiSelectSeparator = ','
       end>
     Left = 176
@@ -1001,10 +1073,42 @@ inherited WagesAdditionalExpensesForm: TWagesAdditionalExpensesForm
     Top = 312
   end
   inherited spErasedMIMaster: TdsdStoredProc
+    Params = <
+      item
+        Name = 'inMovementItemId'
+        Component = MasterCDS
+        ComponentItem = 'Id'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'outIsErased'
+        Value = False
+        Component = MasterCDS
+        ComponentItem = 'isErased'
+        DataType = ftBoolean
+        MultiSelectSeparator = ','
+      end>
     Left = 678
     Top = 248
   end
   inherited spUnErasedMIMaster: TdsdStoredProc
+    Params = <
+      item
+        Name = 'inMovementItemId'
+        Component = MasterCDS
+        ComponentItem = 'Id'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'outIsErased'
+        Value = False
+        Component = MasterCDS
+        ComponentItem = 'isErased'
+        DataType = ftBoolean
+        MultiSelectSeparator = ','
+      end>
     Left = 550
     Top = 256
   end

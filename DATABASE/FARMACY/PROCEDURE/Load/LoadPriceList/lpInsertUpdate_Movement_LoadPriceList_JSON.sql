@@ -163,7 +163,7 @@ BEGIN
          UPDATE LoadPriceList SET UserId_Insert = inUserId, Date_Insert = CURRENT_TIMESTAMP WHERE Id = vbLoadPriceListId;*/
     END IF;
 
-    -- ищем по общему коду
+/*    -- ищем по общему коду
     WITH tmpCommonCode AS
     (
         SELECT
@@ -268,7 +268,7 @@ BEGIN
     FROM tmpBarCode
     WHERE inBarCode = tmpBarCode.BarCode
       AND COALESCE (tblJSON.GoodsID, 0) = 0;
-
+*/
 
     -- ищем по коду и inJuridicalId
     WITH tmpGoodsCode AS
@@ -317,7 +317,7 @@ BEGIN
         isSpecCondition = tmpGoodsCode.isSpecCondition
     FROM tmpGoodsCode
     WHERE inGoodsCode = tmpGoodsCode.GoodsCode AND tblJSON.inGoodsCode <> '0' and COALESCE(tblJSON.inGoodsCode, '') <> '' AND ORD = 1
-      AND COALESCE (tblJSON.GoodsID, 0) = 0;
+      ;
 
     -- !!!замена параметра!!!
     UPDATE tblJSON
