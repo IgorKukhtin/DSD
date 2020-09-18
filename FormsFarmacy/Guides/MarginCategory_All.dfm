@@ -749,6 +749,7 @@ inherited MarginCategory_AllForm: TMarginCategory_AllForm
       Caption = #1048#1079#1084#1077#1085#1080#1090#1100' %% '#1085#1072#1094#1077#1085#1086#1082
       Hint = #1048#1079#1084#1077#1085#1080#1090#1100' %% '#1085#1072#1094#1077#1085#1086#1082
       ImageIndex = 76
+      ShortCut = 116
       RefreshOnTabSetChanges = True
     end
     object ExecuteDialog: TExecuteDialog
@@ -767,7 +768,7 @@ inherited MarginCategory_AllForm: TMarginCategory_AllForm
       GuiParams = <
         item
           Name = 'isVal1'
-          Value = 'false'
+          Value = False
           Component = FormParams
           ComponentItem = 'isVal11'
           DataType = ftBoolean
@@ -776,7 +777,7 @@ inherited MarginCategory_AllForm: TMarginCategory_AllForm
         end
         item
           Name = 'isVal2'
-          Value = 'false'
+          Value = False
           Component = FormParams
           ComponentItem = 'isVal22'
           DataType = ftBoolean
@@ -785,7 +786,7 @@ inherited MarginCategory_AllForm: TMarginCategory_AllForm
         end
         item
           Name = 'isVal3'
-          Value = 'false'
+          Value = False
           Component = FormParams
           ComponentItem = 'isVal33'
           DataType = ftBoolean
@@ -794,7 +795,7 @@ inherited MarginCategory_AllForm: TMarginCategory_AllForm
         end
         item
           Name = 'isVal4'
-          Value = 'false'
+          Value = False
           Component = FormParams
           ComponentItem = 'isVal44'
           DataType = ftBoolean
@@ -803,7 +804,7 @@ inherited MarginCategory_AllForm: TMarginCategory_AllForm
         end
         item
           Name = 'isVal5'
-          Value = 'false'
+          Value = False
           Component = FormParams
           ComponentItem = 'isVal55'
           DataType = ftBoolean
@@ -812,7 +813,7 @@ inherited MarginCategory_AllForm: TMarginCategory_AllForm
         end
         item
           Name = 'isVal6'
-          Value = 'false'
+          Value = False
           Component = FormParams
           ComponentItem = 'isVal66'
           DataType = ftBoolean
@@ -821,7 +822,7 @@ inherited MarginCategory_AllForm: TMarginCategory_AllForm
         end
         item
           Name = 'isVal7'
-          Value = 'false'
+          Value = False
           Component = FormParams
           ComponentItem = 'isVal77'
           DataType = ftBoolean
@@ -1600,6 +1601,7 @@ inherited MarginCategory_AllForm: TMarginCategory_AllForm
     ColumnAddOnList = <>
     ColumnEnterList = <>
     SummaryItemList = <>
+    PropertiesCellList = <>
     Left = 1166
     Top = 321
   end
