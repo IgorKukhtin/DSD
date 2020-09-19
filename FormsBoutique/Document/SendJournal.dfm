@@ -678,7 +678,7 @@ object SendJournalForm: TSendJournalForm
         end
         item
           Name = 'isOperPrice'
-          Value = 'True'
+          Value = True
           DataType = ftBoolean
           ParamType = ptInput
           MultiSelectSeparator = ','
@@ -733,14 +733,14 @@ object SendJournalForm: TSendJournalForm
         end
         item
           Name = 'isOperPrice'
-          Value = 'False'
+          Value = False
           DataType = ftBoolean
           ParamType = ptInput
           MultiSelectSeparator = ','
         end
         item
           Name = 'isPriceAll'
-          Value = 'true'
+          Value = True
           DataType = ftBoolean
           ParamType = ptInput
           MultiSelectSeparator = ','
@@ -796,14 +796,14 @@ object SendJournalForm: TSendJournalForm
         end
         item
           Name = 'isOperPrice'
-          Value = 'False'
+          Value = False
           DataType = ftBoolean
           ParamType = ptInput
           MultiSelectSeparator = ','
         end
         item
           Name = 'isPriceAll'
-          Value = 'false'
+          Value = False
           DataType = ftBoolean
           ParamType = ptInput
           MultiSelectSeparator = ','
@@ -1363,7 +1363,7 @@ object SendJournalForm: TSendJournalForm
     end
   end
   object spMovementUnComplete: TdsdStoredProc
-    StoredProcName = 'gpUnComplete_Movement'
+    StoredProcName = 'gpUnComplete_Movement_Send'
     DataSets = <>
     OutputType = otResult
     Params = <
@@ -1380,7 +1380,7 @@ object SendJournalForm: TSendJournalForm
     Top = 272
   end
   object spMovementSetErased: TdsdStoredProc
-    StoredProcName = 'gpSetErased_Movement'
+    StoredProcName = 'gpSetErased_Movement_Send'
     DataSet = ClientDataSet
     DataSets = <
       item

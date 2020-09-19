@@ -50,7 +50,7 @@ BEGIN
      --проверка нельзя выбрать чужую кассу, филиал можно, для пользователей с ролью админ не проверяем
      vbBranchId := (SELECT tmp.BranchId FROM gpGet_UserParams_bonus (inSession:= inSession) AS tmp);
 
-     IF NOT EXISTS (SELECT 1 AS Id FROM ObjectLink_UserRole_View WHERE RoleId = zc_Enum_Role_Admin() AND UserId = vbUserId) OR (vbBranchId <> zc_Branch_Basis())
+     IF NOT EXISTS (SELECT 1 AS Id FROM ObjectLink_UserRole_View WHERE RoleId = zc_Enum_Role_Admin() AND UserId = vbUserId) AND (vbBranchId <> zc_Branch_Basis()) AND (COALESCE (vbBranchId,0) <> 0)
      THEN
          IF (inBranchId <> vbBranchId ) OR (inPaidKindId <> zc_Enum_PaidKind_SecondForm())
          THEN
