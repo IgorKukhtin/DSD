@@ -430,6 +430,9 @@ type
     bbChangePercent: TdxBarButton;
     dsdDBViewAddOnAdvertising: TdsdDBViewAddOn;
     spUpdate_PromoPartner_ChangePercent: TdsdStoredProc;
+    spUpdate_MI_ContractCondition: TdsdStoredProc;
+    actUpdate_MI_ContractCondition: TdsdExecStoredProc;
+    bbUpdate_MI_ContractCondition: TdxBarButton;
   private
     { Private declarations }
   public
