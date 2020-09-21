@@ -42,6 +42,11 @@ inherited LossAssetJournalForm: TLossAssetJournalForm
             item
               Format = ',0.####'
               Kind = skSum
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = TotalSumm
             end>
           DataController.Summary.FooterSummaryItems = <
             item
@@ -56,6 +61,16 @@ inherited LossAssetJournalForm: TLossAssetJournalForm
             item
               Format = ',0.####'
               Kind = skSum
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = TotalSumm
+            end
+            item
+              Format = #1057#1090#1088#1086#1082': ,0'
+              Kind = skCount
+              Column = FromName
             end>
           OptionsBehavior.GoToNextCellOnEnter = False
           OptionsBehavior.FocusCellOnCycle = False
@@ -121,6 +136,17 @@ inherited LossAssetJournalForm: TLossAssetJournalForm
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Width = 70
+          end
+          object TotalSumm: TcxGridDBColumn
+            Caption = #1057#1091#1084#1084#1072' ('#1091#1089#1083#1091#1075#1080')'
+            DataBinding.FieldName = 'TotalSumm'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 4
+            Properties.DisplayFormat = ',0.####;-,0.####; ;'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 77
           end
           object ArticleLossName: TcxGridDBColumn
             Caption = #1057#1090#1072#1090#1100#1103' '#1089#1087#1080#1089#1072#1085#1080#1103
@@ -668,6 +694,8 @@ inherited LossAssetJournalForm: TLossAssetJournalForm
   end
   inherited spMovementReComplete: TdsdStoredProc
     StoredProcName = 'gpReComplete_Movement_LossAsset'
+    Left = 408
+    Top = 136
   end
   object PrintHeaderCDS: TClientDataSet
     Aggregates = <>

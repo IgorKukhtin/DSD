@@ -2,9 +2,8 @@ inherited LossAssetForm: TLossAssetForm
   Caption = #1044#1086#1082#1091#1084#1077#1085#1090' <'#1057#1087#1080#1089#1072#1085#1080#1077' ('#1054#1057')>'
   ClientHeight = 668
   ClientWidth = 984
-  ExplicitLeft = -201
   ExplicitWidth = 1000
-  ExplicitHeight = 703
+  ExplicitHeight = 706
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
@@ -72,6 +71,11 @@ inherited LossAssetForm: TLossAssetForm
               Format = ',0.####'
               Kind = skSum
               Column = Summ
+            end
+            item
+              Format = #1057#1090#1088#1086#1082': ,0'
+              Kind = skCount
+              Column = GoodsName
             end>
           OptionsBehavior.FocusCellOnCycle = False
           OptionsCustomize.DataRowSizing = False
@@ -1300,6 +1304,15 @@ inherited LossAssetForm: TLossAssetForm
         Value = Null
         Component = MasterCDS
         ComponentItem = 'Amount'
+        DataType = ftFloat
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inSumm'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'Summ'
         DataType = ftFloat
         ParamType = ptInput
         MultiSelectSeparator = ','

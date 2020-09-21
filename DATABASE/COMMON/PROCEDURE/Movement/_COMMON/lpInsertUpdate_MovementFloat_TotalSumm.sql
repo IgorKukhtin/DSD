@@ -29,6 +29,7 @@ $BODY$
   DECLARE vbOperSumm_PVAT_original TFloat;
   DECLARE vbOperSumm_VAT_2018      TFloat;
   DECLARE vbOperSumm_Inventory     TFloat;
+  DECLARE vbOperSumm_LossAsset     TFloat;
 
   DECLARE vbTotalSummToPay            TFloat;
   DECLARE vbTotalSummService          TFloat;
@@ -309,6 +310,8 @@ BEGIN
 
             -- сумма ввода остатка
           , OperSumm_Inventory AS OperSumm_Inventory
+            --
+          , OperSumm_LossAsset
 
             -- сумма начисления зп
           , OperSumm_ToPay
@@ -354,7 +357,7 @@ BEGIN
             INTO vbOperCount_Master, vbOperCount_Child, vbOperCount_Partner, vbOperCount_Second, vbOperCount_Tare, vbOperCount_Sh, vbOperCount_Kg, vbOperCount_ShFrom, vbOperCount_KgFrom
                , vbOperSumm_MVAT, vbOperSumm_PVAT, vbOperSumm_PVAT_original, vbOperSumm_VAT_2018
                , vbOperSumm_Partner, vbOperSumm_PartnerFrom, vbOperSumm_Currency
-               , vbOperCount_Packer, vbOperSumm_Packer, vbOperSumm_Inventory
+               , vbOperCount_Packer, vbOperSumm_Packer, vbOperSumm_Inventory, vbOperSumm_LossAsset
                , vbTotalSummToPay, vbTotalSummService, vbTotalSummCard, vbTotalSummCardSecond, vbTotalSummNalog, vbTotalSummMinus, vbTotalSummAdd, vbTotalSummAuditAdd, vbTotalDayAudit, vbTotalSummHoliday
                , vbTotalSummCardRecalc, vbTotalSummCardSecondRecalc, vbTotalSummCardSecondCash, vbTotalSummNalogRecalc, vbTotalSummSocialIn, vbTotalSummSocialAdd
                , vbTotalSummChild, vbTotalSummChildRecalc, vbTotalSummMinusExt, vbTotalSummMinusExtRecalc
@@ -439,6 +442,7 @@ BEGIN
                                , SUM (COALESCE (MIFloat_AmountSecond.ValueData, 0))  AS OperCount_Second  -- Количество дозаказ
 
                                , SUM (COALESCE (CASE WHEN Movement.DescId = zc_Movement_Inventory() THEN MIFloat_Summ.ValueData ELSE 0 END, 0)) AS OperSumm_Inventory
+                               , SUM (COALESCE (CASE WHEN Movement.DescId = zc_Movement_LossAsset() THEN MIFloat_Summ.ValueData ELSE 0 END, 0)) AS OperSumm_LossAsset
 
                                , SUM (COALESCE (MIFloat_SummToPay.ValueData, 0))              AS OperSumm_ToPay
                                , SUM (COALESCE (MIFloat_SummService.ValueData, 0))            AS OperSumm_Service
@@ -889,6 +893,8 @@ BEGIN
 
                   -- сумма ввода остатка
                 , OperSumm_Inventory AS OperSumm_Inventory
+                  --
+                , OperSumm_LossAsset
 
                   -- сумма начисления зп
                 , OperSumm_ToPay
@@ -1041,6 +1047,8 @@ BEGIN
 
                         -- сумма ввода остатка
                       , SUM (tmpMI.OperSumm_Inventory) AS OperSumm_Inventory
+                        --
+                      , SUM (tmpMI.OperSumm_LossAsset) AS OperSumm_LossAsset
 
                        -- сумма начисления зп
                       , SUM (tmpMI.OperSumm_ToPay)       AS OperSumm_ToPay
@@ -1167,6 +1175,7 @@ BEGIN
 
                               -- сумма ввода остатка
                             , tmpMI.OperSumm_Inventory
+                            , tmpMI.OperSumm_LossAsset
 
                               -- сумма начисления зп
                             , tmpMI.OperSumm_ToPay
@@ -1266,6 +1275,7 @@ BEGIN
                                    , tmpMI.OperCount_Second  -- Количество дозаказ
 
                                    , tmpMI.OperSumm_Inventory
+                                   , tmpMI.OperSumm_LossAsset
 
                                    , tmpMI.OperSumm_ToPay
                                    , tmpMI.OperSumm_Service
@@ -1410,6 +1420,7 @@ BEGIN
                                    , tmpMI.OperCount_Second  -- Количество дозаказ
 
                                    , tmpMI.OperSumm_Inventory
+                                   , tmpMI.OperSumm_LossAsset
 
                                    , tmpMI.OperSumm_ToPay
                                    , tmpMI.OperSumm_Service
@@ -1493,6 +1504,7 @@ BEGIN
                                    , tmpMI.OperCount_Second  -- Количество дозаказ
 
                                    , tmpMI.OperSumm_Inventory
+                                   , tmpMI.OperSumm_LossAsset
 
                                    , tmpMI.OperSumm_ToPay
                                    , tmpMI.OperSumm_Service
@@ -1721,7 +1733,7 @@ BEGIN
          -- Сохранили свойство <Итого сумма скидки по накладной>
          PERFORM lpInsertUpdate_MovementFloat (zc_MovementFloat_TotalSummChange(), inMovementId, vbOperSumm_Partner - vbOperSumm_PVAT_original);
          -- Сохранили свойство <Итого сумма по накладной (с учетом НДС и скидки)>
-         PERFORM lpInsertUpdate_MovementFloat (zc_MovementFloat_TotalSumm(), inMovementId, CASE WHEN vbMovementDescId = zc_Movement_Inventory() THEN vbOperSumm_Inventory ELSE vbOperSumm_Partner END);
+         PERFORM lpInsertUpdate_MovementFloat (zc_MovementFloat_TotalSumm(), inMovementId, CASE WHEN vbMovementDescId = zc_Movement_Inventory() THEN vbOperSumm_Inventory WHEN vbMovementDescId = zc_Movement_LossAsset() THEN vbOperSumm_LossAsset ELSE vbOperSumm_Partner END);
          -- Сохранили свойство <Итого сумма !!!в валюте!!! по накладной (с учетом НДС и скидки)>
          PERFORM lpInsertUpdate_MovementFloat (zc_MovementFloat_AmountCurrency(), inMovementId, vbOperSumm_Currency);
          -- Сохранили свойство <Итого сумма заготовителю по накладной (с учетом НДС)>

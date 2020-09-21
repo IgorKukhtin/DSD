@@ -1,12 +1,14 @@
 -- Function: gpInsertUpdate_MovementItem_LossAsset()
 
-DROP FUNCTION IF EXISTS gpInsertUpdate_MovementItem_LossAsset (Integer, Integer, Integer, TFloat, Integer, TVarChar);
+--DROP FUNCTION IF EXISTS gpInsertUpdate_MovementItem_LossAsset (Integer, Integer, Integer, TFloat, Integer, TVarChar);
+DROP FUNCTION IF EXISTS gpInsertUpdate_MovementItem_LossAsset (Integer, Integer, Integer, TFloat, TFloat, Integer, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpInsertUpdate_MovementItem_LossAsset(
  INOUT ioId                    Integer   , -- Ключ объекта <Элемент документа>
     IN inMovementId            Integer   , -- Ключ объекта <Документ>
     IN inGoodsId               Integer   , -- Товары
     IN inAmount                TFloat    , -- Количество
+    IN inSumm                  TFloat    , -- сумма услуги
     IN inContainerId           Integer   , -- Партия ОС
     IN inSession               TVarChar    -- сессия пользователя
 )
@@ -24,7 +26,7 @@ BEGIN
                                                   , inMovementId  := inMovementId
                                                   , inGoodsId     := inGoodsId
                                                   , inAmount      := inAmount
-                                                  , inSumm        := 0
+                                                  , inSumm        := inSumm
                                                   , inContainerId := inContainerId
                                                   , inUserId      := vbUserId
                                                    ) AS tmp;

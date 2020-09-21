@@ -31,6 +31,12 @@ BEGIN
          RAISE EXCEPTION 'Ошибка.Для ОС <%> не установлена партия.', lfGet_Object_ValueData_sh (inGoodsId);
      END IF;
 
+     -- проверка сумма вводится для ObjectId = уп статья
+     IF COALESCE (inSumm,0) <> 0 AND NOT EXISTS (SELECT 1 FROM Object WHERE Object.Id = inGoodsId AND Object.DescId = zc_Object_Infomoney())
+     THEN
+         RAISE EXCEPTION 'Ошибка.Сумма указывается для УП статьи.';
+     END IF;
+     
       -- сохранили <Элемент документа>
      ioId := lpInsertUpdate_MovementItem (ioId, zc_MI_Master(), inGoodsId, inMovementId, inAmount, null);
 

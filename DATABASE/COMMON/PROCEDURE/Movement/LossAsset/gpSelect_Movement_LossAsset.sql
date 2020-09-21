@@ -14,7 +14,7 @@ RETURNS TABLE (Id Integer, InvNumber TVarChar, OperDate TDateTime
              , FromId Integer, FromName TVarChar, ItemName_from TVarChar
              , ToId Integer, ToName TVarChar, ItemName_to TVarChar
              , ArticleLossId Integer, ArticleLossName TVarChar
-             , TotalCount TFloat
+             , TotalCount TFloat, TotalSumm TFloat
              , Comment TVarChar
              , isAuto Boolean
               )
@@ -67,6 +67,8 @@ BEGIN
            , Object_ArticleLoss.ValueData           AS ArticleLossName
            
            , MovementFloat_TotalCount.ValueData     AS TotalCount
+           , MovementFloat_TotalSumm.ValueData      AS TotalSumm
+
            , MovementString_Comment.ValueData       AS Comment
            , COALESCE (MovementBoolean_isAuto.ValueData, FALSE) :: Boolean AS isAuto
 
@@ -77,8 +79,11 @@ BEGIN
             LEFT JOIN Object AS Object_Status ON Object_Status.Id = Movement.StatusId
 
             LEFT JOIN MovementFloat AS MovementFloat_TotalCount
-                                    ON MovementFloat_TotalCount.MovementId =  Movement.Id
+                                    ON MovementFloat_TotalCount.MovementId = Movement.Id
                                    AND MovementFloat_TotalCount.DescId = zc_MovementFloat_TotalCount()
+            LEFT JOIN MovementFloat AS MovementFloat_TotalSumm
+                                    ON MovementFloat_TotalSumm.MovementId = Movement.Id
+                                   AND MovementFloat_TotalSumm.DescId = zc_MovementFloat_TotalSumm()
 
             LEFT JOIN MovementString AS MovementString_Comment
                                      ON MovementString_Comment.MovementId = Movement.Id
