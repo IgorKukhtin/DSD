@@ -24,6 +24,7 @@ BEGIN
                                                   , inMovementId  := inMovementId
                                                   , inGoodsId     := inGoodsId
                                                   , inAmount      := inAmount
+                                                  , inSumm        := 0
                                                   , inContainerId := inContainerId
                                                   , inUserId      := vbUserId
                                                    ) AS tmp;

@@ -69,7 +69,7 @@ BEGIN
 
      vbItearationCount_err:= 5;
 
-     -- inItearationCount:= 50;
+     --inItearationCount:= 50;
 
 
 -- !!!бпелеммн!!!
@@ -607,6 +607,7 @@ end if;
 --                                                            , 939977, 1511515, 125986, 939920, 1496124, 129848, 939979, 1496297, 125540, 935652, 1494455, 716864, 943278, 141221, 1496128, 1530795, 1510665, 716862, 539342, 1512974
 --                                                             ); -- 01.2020
 
+
 /*   -- 04.2018
      DELETE FROM _tmpMaster WHERE _tmpMaster.ContainerId IN (1150822, 1164386, 1178003, 1177898);
      DELETE FROM _tmpMaster WHERE _tmpMaster.ContainerId IN (
@@ -631,6 +632,7 @@ join ContainerLinkObject as CLO3 on CLO3.ContainerId = Container.Id
 
      -- DELETE FROM _tmpMaster WHERE _tmpMaster.ContainerId IN (154253, 154250); -- 12.2018
 
+     DELETE FROM _tmpMaster WHERE _tmpMaster.ContainerId IN (3190338, 3193380); -- 09.2020
 
      IF inBranchId = 0 -- OR 1 = 1
      THEN
@@ -1554,4 +1556,4 @@ SELECT * FROM HistoryCost WHERE ('01.03.2017' BETWEEN StartDate AND EndDate) and
 -- SELECT * FROM  ObjectProtocol WHERE ObjectId = zfCalc_UserAdmin() :: Integer ORDER BY ID DESC LIMIT 100
 -- SELECT * FROM gpInsertUpdate_HistoryCost (inStartDate:= '01.03.2020', inEndDate:= '01.03.2020', inBranchId:= 0, inItearationCount:= 10, inInsert:= -1, inDiffSumm:= 1, inSession:= '2') WHERE ContainerId in (2459386, 2459377) -- ORDER BY ABS (Price) DESC -- Price <> PriceNext-- WHERE CalcSummCurrent <> CalcSummNext
 -- SELECT * FROM gpInsertUpdate_HistoryCost (inStartDate:= '01.05.2020', inEndDate:= '31.05.2020', inBranchId:= 8379, inItearationCount:= 100, inInsert:= 12345, inDiffSumm:= 1, inSession:= '2') WHERE ContainerId in (2459386, 2459377) -- ORDER BY ABS (Price) DESC -- Price <> PriceNext-- WHERE CalcSummCurrent <> CalcSummNext
--- SELECT * FROM gpInsertUpdate_HistoryCost (inStartDate:= '01.05.2020', inEndDate:= '31.05.2020', inBranchId:= 3080683, inItearationCount:= 100, inInsert:= 12345, inDiffSumm:= 1, inSession:= '2') WHERE ContainerId in (2459386, 2459377) -- ORDER BY ABS (Price) DESC -- Price <> PriceNext-- WHERE CalcSummCurrent <> CalcSummNext
+-- SELECT * FROM gpInsertUpdate_HistoryCost (inStartDate:= '01.09.2020', inEndDate:= '16.09.2020', inBranchId:= 0, inItearationCount:= 100, inInsert:= -1, inDiffSumm:= 1, inSession:= '2') WHERE ContainerId in (2459386, 2459377) -- ORDER BY ABS (Price) DESC -- Price <> PriceNext-- WHERE CalcSummCurrent <> CalcSummNext

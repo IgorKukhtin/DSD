@@ -1,12 +1,14 @@
 -- Function: lpInsertUpdate_MovementItem_LossAsset()
 
 DROP FUNCTION IF EXISTS lpInsertUpdate_MovementItem_LossAsset (Integer, Integer, Integer, TFloat, Integer, Integer);
+DROP FUNCTION IF EXISTS lpInsertUpdate_MovementItem_LossAsset (Integer, Integer, Integer, TFloat, TFloat, Integer, Integer);
 
 CREATE OR REPLACE FUNCTION lpInsertUpdate_MovementItem_LossAsset(
  INOUT ioId                  Integer   , -- Ключ объекта <Элемент документа>
     IN inMovementId          Integer   , -- Ключ объекта <Документ>
     IN inGoodsId             Integer   , -- Товары
     IN inAmount              TFloat    , -- Количество
+    IN inSumm                TFloat    , -- Сумма ОС-услуги
     IN inContainerId         Integer   , -- Партия ОС
     IN inUserId              Integer     -- пользователь
 )
@@ -19,9 +21,9 @@ BEGIN
      vbIsInsert:= COALESCE (ioId, 0) = 0;
 
      -- Проверка
-     IF NOT EXISTS (SELECT 1 FROM Object WHERE Object.Id = inGoodsId AND Object.DescId = zc_Object_Asset())
+     IF 1=0 AND NOT EXISTS (SELECT 1 FROM Object WHERE Object.Id = inGoodsId AND Object.DescId = zc_Object_Asset())
      THEN
-         RAISE EXCEPTION 'Ошибка.Значение ОС не может быть пустым (<%>).', lfGet_Object_ValueData_sh (inGoodsId);
+         RAISE EXCEPTION 'Ошибка.Значение ОС не может быть пустым <%> <%>.', lfGet_Object_ValueData_sh (inGoodsId), lfGet_Object_ValueData_sh ((SELECT MLO.ObjectId FROM MovementLinkObject AS MLO WHERE MLO.MovementId = inMovementId AND MLO.DescId = zc_MovementLinkObject_From()));
      END IF;
      -- Проверка
      IF COALESCE (inContainerId, 0) = 0
@@ -31,6 +33,9 @@ BEGIN
 
       -- сохранили <Элемент документа>
      ioId := lpInsertUpdate_MovementItem (ioId, zc_MI_Master(), inGoodsId, inMovementId, inAmount, null);
+
+     -- сохранили свойство <Сумма ОС-услуги>
+     PERFORM lpInsertUpdate_MovementItemFloat (zc_MIFloat_Summ(), ioId, inSumm);
 
      -- сохранили свойство <Партия ОС>
      PERFORM lpInsertUpdate_MovementItemFloat (zc_MIFloat_ContainerId(), ioId, inContainerId);

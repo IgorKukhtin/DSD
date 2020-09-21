@@ -24,10 +24,11 @@ BEGIN
 
      RETURN QUERY
      WITH 
-     tmpAsset AS (SELECT Object_Asset.Id  AS AssetId
+     tmpAsset AS (SELECT Object_Asset.Id     AS AssetId
+                       , Object_Asset.DescId AS DescId
                   FROM Object AS Object_Asset
-                  WHERE Object_Asset.DescId = zc_Object_Asset()
-                    AND Object_Asset.isErased = FALSE
+                  WHERE Object_Asset.DescId IN (zc_Object_Asset(), zc_Object_Goods())
+                  --AND Object_Asset.isErased = FALSE
                  )
 
    , tmpRemains AS (SELECT Container.Id           AS ContainerId
@@ -41,6 +42,12 @@ BEGIN
                                                         ON CLO_Unit.ContainerId = Container.Id
                                                        AND CLO_Unit.DescId = zc_ContainerLinkObject_Unit()
                                                        AND (CLO_Unit.ObjectId = inUnitId OR inUnitId = 0)
+                         LEFT JOIN ContainerLinkObject AS CLO_AssetTo ON CLO_AssetTo.ContainerId = Container.Id
+                                                                     AND CLO_AssetTo.DescId = zc_ContainerLinkObject_AssetTo()
+                         LEFT JOIN ContainerLinkObject AS CLO_PartionGoods ON CLO_PartionGoods.ContainerId = Container.Id
+                                                                          AND CLO_PartionGoods.DescId      = zc_ContainerLinkObject_PartionGoods()
+                         LEFT JOIN Object AS Object_PartionGoods ON Object_PartionGoods.Id = CLO_PartionGoods.ObjectId
+                    WHERE (Object_PartionGoods.ObjectCode > 0 OR CLO_AssetTo.ObjectId > 0 OR tmpAsset.DescId = zc_Object_Asset())
                     GROUP BY Container.Id
                            , tmpAsset.AssetId
                    )
@@ -84,7 +91,7 @@ BEGIN
      FROM tmpRemains
           LEFT JOIN Object AS Object_Asset 
                            ON Object_Asset.Id = tmpRemains.AssetId
-                          AND Object_Asset.DescId = zc_Object_Asset()
+                        --AND Object_Asset.DescId = zc_Object_Asset()
 
           LEFT JOIN ObjectLink AS ObjectLink_Asset_AssetGroup
                                ON ObjectLink_Asset_AssetGroup.ObjectId = Object_Asset.Id

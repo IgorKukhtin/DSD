@@ -14,15 +14,44 @@ BEGIN
      vbUserId:= lpCheckRight (inSession, zc_Enum_Process_Insert_Movement_LossAsset_auto());
 
      -- таблица остатков всех ОС на дату
-      CREATE TEMP TABLE _tmpData (ContainerId Integer, LocationId Integer, GoodsId Integer, CountStart TFloat) ON COMMIT DROP;
-      INSERT INTO _tmpData (ContainerId, LocationId, GoodsId, CountStart)
+      CREATE TEMP TABLE _tmpData (ContainerId Integer, LocationId Integer, GoodsId Integer, CountStart TFloat, Summ_service TFloat) ON COMMIT DROP;
+      INSERT INTO _tmpData (ContainerId, LocationId, GoodsId, CountStart, Summ_service)
        SELECT tmp.ContainerId
             , tmp.LocationId
             , tmp.GoodsId
             , tmp.CountStart
+            , 0 AS Summ_service
        FROM gpReport_Remains_Asset(inStartDate := inStartDate, inSession := inSession) as tmp
        --WHERE tmp.GoodsId = 3354331
-       ;
+      ;
+
+      -- вторая часть: ОС-услуги
+      INSERT INTO _tmpData (ContainerId, LocationId, GoodsId, CountStart, Summ_service)
+       SELECT Container.Id, CLO_Unit.ObjectId, CLO_Goods.ObjectId, 0 AS CountStart, Container.Amount AS Summ_service
+       FROM Container
+            INNER JOIN ContainerLinkObject AS CLO_Goods
+                                           ON CLO_Goods.ContainerId = Container.Id
+                                          AND CLO_Goods.DescId      = zc_ContainerLinkObject_Goods()
+            INNER JOIN Object AS Object_InfoMoney ON Object_InfoMoney.Id     = CLO_Goods.ObjectId
+                                                 AND Object_InfoMoney.DescId = zc_Object_InfoMoney()
+            LEFT JOIN ContainerLinkObject AS CLO_Unit
+                                          ON CLO_Unit.ContainerId = Container.Id
+                                         AND CLO_Unit.DescId      = zc_ContainerLinkObject_Unit()
+            /*LEFT JOIN ContainerLinkObject AS CLO_Car
+                                          ON CLO_Car.ContainerId = Container.Id
+                                         AND CLO_Car.DescId      = zc_ContainerLinkObject_Car()
+            LEFT JOIN ContainerLinkObject AS CLO_Member
+                                          ON CLO_Member.ContainerId = Container.Id
+                                         AND CLO_Member.DescId      = zc_ContainerLinkObject_Member()*/
+            INNER JOIN ContainerLinkObject AS CLO_PartionGoods
+                                           ON CLO_PartionGoods.ContainerId = Container.Id
+                                          AND CLO_PartionGoods.DescId      = zc_ContainerLinkObject_PartionGoods()
+            /*LEFT JOIN ContainerLinkObject AS CLO_Asset
+                                          ON CLO_Asset.ContainerId = Container.Id
+                                         AND CLO_Asset.DescId      = zc_ContainerLinkObject_AssetTo()*/
+       WHERE Container.Amount <> 0
+         AND Container.DescId = zc_Container_Summ()
+      ;
 
      -- сохранили <Документ>
      PERFORM lpInsertUpdate_Movement_LossAsset_auto (ioId               := COALESCE (tmpMovement.MovementId,0) :: Integer
@@ -30,7 +59,7 @@ BEGIN
                                                    , inOperDate         := inStartDate ::TDateTime
                                                    , inFromId           := COALESCE (tmpMovement.FromId, tmp.LocationId) :: Integer
                                                    , inToId             := 0       :: Integer
-                                                   , inArticleLossId    := 0       :: Integer
+                                                   , inArticleLossId    := 5670650 -- Расх ОС забаланс
                                                    , inComment          := ''      :: TVarChar
                                                    , inisAuto           := TRUE    :: Boolean
                                                    , inUserId           := vbUserId :: Integer
@@ -50,6 +79,7 @@ BEGIN
                                                       AND MovementLinkObject_From.DescId = zc_MovementLinkObject_From()
                     WHERE Movement.DescId = zc_Movement_LossAsset()
                       AND Movement.OperDate = inStartDate
+                      AND Movement.StatusId <> zc_Enum_Status_Erased()
                     ) AS tmpMovement ON tmpMovement.FromId = tmp.LocationId;
 
      -- выбираем все созданные документы
@@ -66,13 +96,16 @@ BEGIN
                                          ON MovementLinkObject_From.MovementId = Movement.Id
                                         AND MovementLinkObject_From.DescId = zc_MovementLinkObject_From()
       WHERE Movement.DescId = zc_Movement_LossAsset()
-        AND Movement.OperDate = inStartDate;
+        AND Movement.OperDate = inStartDate
+        AND Movement.StatusId <> zc_Enum_Status_Erased()
+        ;
 
      -- сохраняем строки
      PERFORM lpInsertUpdate_MovementItem_LossAsset (ioId          := COALESCE (tmpMI.Id, 0)  ::Integer
                                                   , inMovementId  := _tmpMovement.MovementId ::Integer
                                                   , inGoodsId     := _tmpData.GoodsId        ::Integer
                                                   , inAmount      := _tmpData.CountStart     ::TFloat
+                                                  , inSumm        := _tmpData.Summ_service   ::TFloat
                                                   , inContainerId := _tmpData.ContainerId    ::Integer
                                                   , inUserId      := vbUserId                ::Integer
                                                   )

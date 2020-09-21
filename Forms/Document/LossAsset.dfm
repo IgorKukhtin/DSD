@@ -2,8 +2,9 @@ inherited LossAssetForm: TLossAssetForm
   Caption = #1044#1086#1082#1091#1084#1077#1085#1090' <'#1057#1087#1080#1089#1072#1085#1080#1077' ('#1054#1057')>'
   ClientHeight = 668
   ClientWidth = 984
+  ExplicitLeft = -201
   ExplicitWidth = 1000
-  ExplicitHeight = 706
+  ExplicitHeight = 703
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
@@ -32,6 +33,21 @@ inherited LossAssetForm: TLossAssetForm
             item
               Format = ',0.####'
               Kind = skSum
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = AmountRemains
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = Amount
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = Summ
             end>
           DataController.Summary.FooterSummaryItems = <
             item
@@ -41,6 +57,21 @@ inherited LossAssetForm: TLossAssetForm
             item
               Format = ',0.####'
               Kind = skSum
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = AmountRemains
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = Amount
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = Summ
             end>
           OptionsBehavior.FocusCellOnCycle = False
           OptionsCustomize.DataRowSizing = False
@@ -61,7 +92,15 @@ inherited LossAssetForm: TLossAssetForm
             Options.Editing = False
             Width = 193
           end
-          object GoodsCode: TcxGridDBColumn [1]
+          object ItemName: TcxGridDBColumn [1]
+            Caption = #1069#1083#1077#1084#1077#1085#1090
+            DataBinding.FieldName = 'ItemName'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 70
+          end
+          object GoodsCode: TcxGridDBColumn [2]
             Caption = #1050#1086#1076
             DataBinding.FieldName = 'GoodsCode'
             HeaderAlignmentHorz = taCenter
@@ -69,7 +108,7 @@ inherited LossAssetForm: TLossAssetForm
             Options.Editing = False
             Width = 50
           end
-          object GoodsName: TcxGridDBColumn [2]
+          object GoodsName: TcxGridDBColumn [3]
             Caption = ' '#1054#1057
             DataBinding.FieldName = 'GoodsName'
             PropertiesClassName = 'TcxButtonEditProperties'
@@ -84,7 +123,7 @@ inherited LossAssetForm: TLossAssetForm
             HeaderAlignmentVert = vaCenter
             Width = 235
           end
-          object AmountRemains: TcxGridDBColumn [3]
+          object AmountRemains: TcxGridDBColumn [4]
             Caption = #1054#1089#1090'. '#1082#1086#1083'-'#1074#1086' '
             DataBinding.FieldName = 'AmountRemains'
             PropertiesClassName = 'TcxCurrencyEditProperties'
@@ -93,9 +132,9 @@ inherited LossAssetForm: TLossAssetForm
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
-            Width = 82
+            Width = 70
           end
-          object Amount: TcxGridDBColumn [4]
+          object Amount: TcxGridDBColumn [5]
             Caption = #1050#1086#1083'-'#1074#1086
             DataBinding.FieldName = 'Amount'
             PropertiesClassName = 'TcxCurrencyEditProperties'
@@ -103,20 +142,26 @@ inherited LossAssetForm: TLossAssetForm
             Properties.DisplayFormat = ',0.####;-,0.####; ;'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
-            Width = 100
+            Width = 70
           end
-          inherited colIsErased: TcxGridDBColumn
+          object Summ: TcxGridDBColumn [6]
+            Caption = #1057#1091#1084#1084#1072' ('#1091#1089#1083#1091#1075#1080')'
+            DataBinding.FieldName = 'Summ'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 4
+            Properties.DisplayFormat = ',0.####;-,0.####; ;'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
+            Width = 70
           end
-          object InvNumber: TcxGridDBColumn
+          object InvNumber: TcxGridDBColumn [7]
             Caption = #1048#1085#1074#1077#1085#1090#1072#1088#1085#1099#1081' '#1085#1086#1084#1077#1088
             DataBinding.FieldName = 'InvNumber'
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
             Width = 142
           end
-          object SerialNumber: TcxGridDBColumn
+          object SerialNumber: TcxGridDBColumn [8]
             Caption = #1047#1072#1074#1086#1076#1089#1082#1086#1081' '#1085#1086#1084#1077#1088
             DataBinding.FieldName = 'SerialNumber'
             HeaderAlignmentHorz = taCenter
@@ -124,7 +169,7 @@ inherited LossAssetForm: TLossAssetForm
             Options.Editing = False
             Width = 68
           end
-          object PassportNumber: TcxGridDBColumn
+          object PassportNumber: TcxGridDBColumn [9]
             Caption = #1053#1086#1084#1077#1088' '#1087#1072#1089#1087#1086#1088#1090#1072
             DataBinding.FieldName = 'PassportNumber'
             HeaderAlignmentHorz = taCenter
@@ -132,7 +177,7 @@ inherited LossAssetForm: TLossAssetForm
             Options.Editing = False
             Width = 66
           end
-          object Release: TcxGridDBColumn
+          object Release: TcxGridDBColumn [10]
             Caption = #1044#1072#1090#1072' '#1074#1099#1087#1091#1089#1082#1072
             DataBinding.FieldName = 'Release'
             HeaderAlignmentHorz = taCenter
@@ -140,7 +185,7 @@ inherited LossAssetForm: TLossAssetForm
             Options.Editing = False
             Width = 66
           end
-          object MakerName: TcxGridDBColumn
+          object MakerName: TcxGridDBColumn [11]
             Caption = #1055#1088#1086#1080#1079#1074#1086#1076#1080#1090#1077#1083#1100
             DataBinding.FieldName = 'MakerName'
             HeaderAlignmentHorz = taCenter
@@ -148,7 +193,7 @@ inherited LossAssetForm: TLossAssetForm
             Options.Editing = False
             Width = 111
           end
-          object CarName: TcxGridDBColumn
+          object CarName: TcxGridDBColumn [12]
             Caption = #1043#1086#1089'. '#1085#1086#1084#1077#1088' '#1072#1074#1090#1086#1084#1086#1073#1080#1083#1103
             DataBinding.FieldName = 'CarName'
             HeaderAlignmentHorz = taCenter
@@ -156,7 +201,7 @@ inherited LossAssetForm: TLossAssetForm
             Options.Editing = False
             Width = 100
           end
-          object CarModelName: TcxGridDBColumn
+          object CarModelName: TcxGridDBColumn [13]
             Caption = #1052#1072#1088#1082#1072' '#1072#1074#1090#1086#1084#1086#1073#1080#1083#1103
             DataBinding.FieldName = 'CarModelName'
             HeaderAlignmentHorz = taCenter
@@ -164,7 +209,7 @@ inherited LossAssetForm: TLossAssetForm
             Options.Editing = False
             Width = 80
           end
-          object PeriodUse: TcxGridDBColumn
+          object PeriodUse: TcxGridDBColumn [14]
             Caption = #1055#1077#1088#1080#1086#1076' '#1101#1082#1089#1087'. ('#1083#1077#1090')'
             DataBinding.FieldName = 'PeriodUse'
             HeaderAlignmentHorz = taCenter
@@ -173,15 +218,18 @@ inherited LossAssetForm: TLossAssetForm
             Options.Editing = False
             Width = 100
           end
-          object ContainerId: TcxGridDBColumn
+          object ContainerId: TcxGridDBColumn [15]
             Caption = #1055#1072#1088#1090#1080#1103' '#1054#1057
             DataBinding.FieldName = 'ContainerId'
             Visible = False
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
-            VisibleForCustomization = False
             Width = 105
+          end
+          inherited colIsErased: TcxGridDBColumn
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
           end
         end
       end

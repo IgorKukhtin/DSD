@@ -17,8 +17,8 @@ BEGIN
      vbUserId:= lpCheckRight (inSession, zc_Enum_Process_Insert_MI_LossDebt_70000());
 
      SELECT Movement.OperDate
-          , COALESCE (MovementLinkObject_PaidKind.ObjectId,0) AS PaidKindId
-  INTO vbOperDate, vbPaidKindId
+          , COALESCE (MovementLinkObject_PaidKind.ObjectId, 0) AS PaidKindId
+            INTO vbOperDate, vbPaidKindId
      FROM Movement
           LEFT JOIN MovementLinkObject AS MovementLinkObject_PaidKind
                                        ON MovementLinkObject_PaidKind.MovementId = Movement.Id
@@ -32,12 +32,12 @@ BEGIN
                                                  , inPartnerId            := tmp.PartnerId
                                                  , inBranchId             := tmp.BranchId
                                                  , inContainerId          := tmp.ContainerId
-                                                 , inAmount               := CASE WHEN COALESCE (tmp.CurrencyId,0) = 0 OR tmp.CurrencyId = zc_Enum_Currency_Basis() THEN tmp.Amount ELSE 0 END :: TFloat
+                                                 , inAmount               := CASE WHEN COALESCE (tmp.CurrencyId,0) = 0 OR tmp.CurrencyId = zc_Enum_Currency_Basis() THEN -1 * tmp.Amount ELSE 0 END :: TFloat
                                                  , inSumm                 := 0
                                                  , inCurrencyPartnerValue := 0--tmp.CurrencyValue
                                                  , inParPartnerValue      := 0--tmp.ParValue
-                                                 , inAmountCurrency       := CASE WHEN COALESCE (tmp.CurrencyId,0) = 0 OR tmp.CurrencyId = zc_Enum_Currency_Basis() THEN 0 ELSE tmp.Amount END :: TFloat
-                                                 , inIsCalculated         := TRUE
+                                                 , inAmountCurrency       := CASE WHEN COALESCE (tmp.CurrencyId,0) = 0 OR tmp.CurrencyId = zc_Enum_Currency_Basis() THEN 0 ELSE -1 * tmp.Amount END :: TFloat
+                                                 , inIsCalculated         := FALSE
                                                  , inContractId           := tmp.ContractId
                                                  , inPaidKindId           := tmp.PaidKindId
                                                  , inInfoMoneyId          := tmp.InfoMoneyId

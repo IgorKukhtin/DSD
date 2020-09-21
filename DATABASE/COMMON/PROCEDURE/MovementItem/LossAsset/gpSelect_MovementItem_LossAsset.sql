@@ -7,10 +7,11 @@ CREATE OR REPLACE FUNCTION gpSelect_MovementItem_LossAsset(
     IN inIsErased    Boolean      , --
     IN inSession     TVarChar       -- сессия пользователя
 )
-RETURNS TABLE (Id Integer, GoodsId Integer, GoodsCode Integer, GoodsName TVarChar
+RETURNS TABLE (Id Integer, ItemName TVarChar, GoodsId Integer, GoodsCode Integer, GoodsName TVarChar
              , GoodsGroupNameFull TVarChar
              , ContainerId Integer
              , Amount TFloat
+             , Summ TFloat
              , AmountRemains TFloat
              , isErased Boolean
              , MakerId Integer, MakerCode Integer, MakerName TVarChar
@@ -42,13 +43,16 @@ BEGIN
        WITH tmpMI_Goods AS (SELECT MovementItem.Id                               AS MovementItemId
                                  , MovementItem.ObjectId                         AS GoodsId
                                  , MovementItem.Amount                           AS Amount
+                                 , MIFloat_Summ.ValueData                        AS Summ
                                  , MIFloat_ContainerId.ValueData      :: Integer AS ContainerId
                                  , MovementItem.isErased
                             FROM (SELECT FALSE AS isErased UNION ALL SELECT inIsErased AS isErased WHERE inIsErased = TRUE) AS tmpIsErased
                                  INNER JOIN MovementItem ON MovementItem.MovementId = inMovementId
                                                         AND MovementItem.DescId     = zc_MI_Master()
                                                         AND MovementItem.isErased   = tmpIsErased.isErased
-
+                                 LEFT JOIN MovementItemFloat AS MIFloat_Summ
+                                                             ON MIFloat_Summ.MovementItemId = MovementItem.Id
+                                                            AND MIFloat_Summ.DescId         = zc_MIFloat_Summ()
                                  LEFT JOIN MovementItemFloat AS MIFloat_ContainerId
                                                              ON MIFloat_ContainerId.MovementItemId = MovementItem.Id
                                                             AND MIFloat_ContainerId.DescId         = zc_MIFloat_ContainerId()
@@ -70,6 +74,7 @@ BEGIN
        -- Результат
        SELECT
              tmpMI_Goods.MovementItemId         AS Id
+           , ObjectDesc.ItemName                AS ItemName
            , Object_Goods.Id                    AS GoodsId
            , Object_Goods.ObjectCode            AS GoodsCode
            , Object_Goods.ValueData             AS GoodsName
@@ -77,6 +82,7 @@ BEGIN
 
            , tmpMI_Goods.ContainerId
            , tmpMI_Goods.Amount                 AS Amount
+           , tmpMI_Goods.Summ                   AS Summ
            , tmpRemains.Amount :: TFloat        AS AmountRemains
            
            , tmpMI_Goods.isErased               AS isErased
@@ -99,6 +105,7 @@ BEGIN
             LEFT JOIN tmpRemains ON tmpRemains.MovementItemId = tmpMI_Goods.MovementItemId
 
             LEFT JOIN Object AS Object_Goods ON Object_Goods.Id = tmpMI_Goods.GoodsId
+            LEFT JOIN ObjectDesc ON ObjectDesc.Id = Object_Goods.DescId
              
             LEFT JOIN ObjectLink AS ObjectLink_Goods_InfoMoney
                                  ON ObjectLink_Goods_InfoMoney.ObjectId = tmpMI_Goods.GoodsId

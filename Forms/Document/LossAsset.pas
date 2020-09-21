@@ -54,6 +54,8 @@ type
     actAssetChoiceForm: TOpenChoiceForm;
     InsertRecordGoods: TInsertRecord;
     cbisAuto: TcxCheckBox;
+    ItemName: TcxGridDBColumn;
+    Summ: TcxGridDBColumn;
   private
     { Private declarations }
   public

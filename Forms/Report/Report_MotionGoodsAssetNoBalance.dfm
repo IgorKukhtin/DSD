@@ -1929,16 +1929,6 @@ object Report_MotionGoodsAssetNoBalanceForm: TReport_MotionGoodsAssetNoBalanceFo
         Options.Editing = False
         Width = 200
       end
-      object ContainerId_Summ: TcxGridDBColumn
-        Caption = 'Id'
-        DataBinding.FieldName = 'ContainerId_Summ'
-        Visible = False
-        HeaderAlignmentHorz = taCenter
-        HeaderAlignmentVert = vaCenter
-        Options.Editing = False
-        VisibleForCustomization = False
-        Width = 55
-      end
       object InfoMoneyCode_Detail: TcxGridDBColumn
         Caption = #1050#1086#1076' '#1059#1055' ('#1076#1077#1090#1072#1083#1100#1085#1086')'
         DataBinding.FieldName = 'InfoMoneyCode_Detail'
@@ -1982,12 +1972,6 @@ object Report_MotionGoodsAssetNoBalanceForm: TReport_MotionGoodsAssetNoBalanceFo
         HeaderAlignmentVert = vaCenter
         Options.Editing = False
         Width = 200
-      end
-      object LineNum: TcxGridDBColumn
-        DataBinding.FieldName = 'LineNum'
-        Visible = False
-        Options.Editing = False
-        Width = 60
       end
       object CountEnd_calc: TcxGridDBColumn
         DataBinding.FieldName = 'CountEnd_calc'
@@ -2128,6 +2112,27 @@ object Report_MotionGoodsAssetNoBalanceForm: TReport_MotionGoodsAssetNoBalanceFo
         HeaderAlignmentVert = vaCenter
         Options.Editing = False
         VisibleForCustomization = False
+        Width = 55
+      end
+      object LineNum: TcxGridDBColumn
+        DataBinding.FieldName = 'LineNum'
+        Visible = False
+        Options.Editing = False
+        Width = 60
+      end
+      object ContainerId_Summ: TcxGridDBColumn
+        Caption = 'Id'
+        DataBinding.FieldName = 'ContainerId_Summ'
+        PropertiesClassName = 'TcxButtonEditProperties'
+        Properties.Buttons = <
+          item
+            Default = True
+            Kind = bkEllipsis
+          end>
+        Properties.ReadOnly = True
+        Visible = False
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
         Width = 55
       end
     end

@@ -58,6 +58,30 @@ BEGIN
        AND (COALESCE (ObjectLink_Goods_Fuel.ChildObjectId,0) = 0
          OR vbUserId NOT IN (SELECT UserId FROM tmpUserTransport))
    UNION ALL
+     SELECT Object_Asset.Id
+          , Object_Asset.ObjectCode AS Code
+          , zfCalc_Text_replace (Object_Asset.ValueData, CHR (39), '`' ) :: TVarChar AS Name
+          , Object_AssetGroup.ValueData AS GoodsGroupName
+          , ObjectString_Asset_FullName.ValueData AS GoodsGroupNameFull
+          , ''      :: TVarChat AS MeasureName
+          , 0       :: TFloat   AS Weight
+          , ObjectDesc.ItemName AS DescName
+          , Object_Asset.isErased
+     FROM Object AS Object_Asset
+          LEFT JOIN ObjectDesc ON ObjectDesc.Id = Object_Asset.DescId
+          LEFT JOIN ObjectLink AS ObjectLink_Asset_AssetGroup
+                               ON ObjectLink_Asset_AssetGroup.ObjectId = Object_Asset.Id
+                              AND ObjectLink_Asset_AssetGroup.DescId = zc_ObjectLink_Asset_AssetGroup()
+          LEFT JOIN Object AS Object_AssetGroup
+                           ON Object_AssetGroup.Id = ObjectLink_Asset_AssetGroup.ChildObjectId
+         
+          LEFT JOIN ObjectString AS ObjectString_Asset_FullName
+                                 ON ObjectString_Asset_FullName.ObjectId = Object_Asset.Id
+                                AND ObjectString_Asset_FullName.DescId = zc_ObjectString_Asset_FullName()
+
+     WHERE Object_Asset.DescId = zc_Object_Asset()
+       AND vbUserId NOT IN (SELECT UserId FROM tmpUserTransport))
+   UNION ALL
      SELECT Object_Fuel.Id
           , Object_Fuel.ObjectCode AS Code     
           , Object_Fuel.ValueData AS Name

@@ -215,8 +215,8 @@ BEGIN
 
      -- заполняем таблицу - элементы документа, со всеми свойствами для формирования Аналитик в проводках
      INSERT INTO _tmpItem (MovementItemId
-                         , ContainerId_Goods, ContainerId_asset, GoodsId, GoodsKindId, GoodsKindId_complete, AssetId, PartionGoods, PartionGoodsDate, PartionGoodsId_Item
-                         , OperCount
+                         , ContainerId_Goods, ContainerId_asset, ObjectDescId, GoodsId, GoodsKindId, GoodsKindId_complete, AssetId, PartionGoods, PartionGoodsDate, PartionGoodsId_Item
+                         , OperCount, Summ_service
                          , InfoMoneyGroupId, InfoMoneyDestinationId, InfoMoneyId
                          , BusinessId
                          , isPartionCount, isPartionSumm
@@ -239,7 +239,8 @@ BEGIN
                             , COALESCE (MIFloat_ContainerId.ValueData, 0) :: Integer AS ContainerId_asset
                             , COALESCE (CLO_PartionGoods.ObjectId, 0)                AS PartionGoodsId_asset
 
-                            , MovementItem.Amount AS OperCount
+                            , MovementItem.Amount    AS OperCount
+                            , MIFloat_Summ.ValueData AS Summ_service
 
                              -- Управленческая группа
                            , COALESCE (View_InfoMoney.InfoMoneyGroupId, 0) AS InfoMoneyGroupId
@@ -274,6 +275,10 @@ BEGIN
                                                        ON MIDate_PartionGoods.MovementItemId = MovementItem.Id
                                                       AND MIDate_PartionGoods.DescId = zc_MIDate_PartionGoods()
 
+                             LEFT JOIN MovementItemFloat AS MIFloat_Summ
+                                                         ON MIFloat_Summ.MovementItemId = MovementItem.Id
+                                                        AND MIFloat_Summ.DescId         = zc_MIFloat_Summ()
+                                                        AND vbMovementDescId                   = zc_Movement_LossAsset()
                              LEFT JOIN MovementItemFloat AS MIFloat_ContainerId
                                                          ON MIFloat_ContainerId.MovementItemId = MovementItem.Id
                                                         AND MIFloat_ContainerId.DescId         = zc_MIFloat_ContainerId()
@@ -318,9 +323,10 @@ BEGIN
         , tmpContainer_find
                    AS (SELECT tmpMI.MovementItemId
                             , tmpMI.GoodsId
-                            , tmpMI.OperCount   AS Amount
-                            , Container.Id      AS ContainerId
-                            , Container.Amount  AS Amount_container
+                            , tmpMI.OperCount    AS Amount
+                            , tmpMI.Summ_service AS Summ_service
+                            , Container.Id       AS ContainerId
+                            , Container.Amount   AS Amount_container
                             , COALESCE (ObjectDate_Value.ValueData, zc_DateStart()) AS PartionDate
                             , CLO_PartionGoods.ObjectId AS PartionGoodsId
                        FROM tmpMI
@@ -388,7 +394,10 @@ BEGIN
               tmpMI.MovementItemId
               -- !!!или подбор партий ИЛИ ОС!!!
             , CASE WHEN vbMovementDescId = zc_Movement_LossAsset() THEN tmpMI.ContainerId_asset ELSE COALESCE (tmpContainer.ContainerId, 0) END AS ContainerId_Goods
+              -- забалансовый
             , 0 AS ContainerId_asset
+
+            , Object.DescId AS ObjectDescId
             , tmpMI.GoodsId
             , tmpMI.GoodsKindId
             , tmpMI.GoodsKindId_complete
@@ -397,7 +406,8 @@ BEGIN
             , tmpMI.PartionGoodsDate
             , CASE WHEN vbMovementDescId = zc_Movement_LossAsset() THEN tmpMI.PartionGoodsId_asset ELSE COALESCE (tmpContainer.PartionGoodsId, 0) END AS PartionGoodsId_Item
 
-            , COALESCE (tmpContainer.Amount, tmpMI.OperCount) AS OperCount
+            , COALESCE (tmpContainer.Amount, tmpMI.OperCount)  AS OperCount
+            , COALESCE (tmpMI.Summ_service, 0)                 AS Summ_service
 
             , COALESCE (View_InfoMoney.InfoMoneyGroupId, tmpMI.InfoMoneyGroupId)             AS InfoMoneyGroupId       -- Управленческая группа
             , COALESCE (View_InfoMoney.InfoMoneyDestinationId, tmpMI.InfoMoneyDestinationId) AS InfoMoneyDestinationId -- Управленческие назначения
@@ -413,6 +423,7 @@ BEGIN
             , CASE WHEN vbMovementDescId = zc_Movement_LossAsset() THEN tmpMI.PartionGoodsId_asset ELSE 0 END AS PartionGoodsId
 
         FROM tmpMI
+             LEFT JOIN Object ON Object.Id = tmpMI.GoodsId
              LEFT JOIN tmpContainer ON tmpContainer.MovementItemId = tmpMI.MovementItemId
              LEFT JOIN tmpContainer_asset ON tmpContainer_asset.ContainerId_asset = tmpMI.ContainerId_asset
                                        AND tmpContainer_asset.Ord                 = 1
@@ -497,13 +508,15 @@ BEGIN
                                                     ELSE lpInsertFind_Object_PartionGoods ('')
 
                                                END
-     WHERE _tmpItem.InfoMoneyDestinationId = zc_Enum_InfoMoneyDestination_10100() -- Основное сырье + Мясное сырье
-        OR _tmpItem.InfoMoneyDestinationId = zc_Enum_InfoMoneyDestination_20100() -- Общефирменные + Запчасти и Ремонты
-        OR _tmpItem.InfoMoneyDestinationId = zc_Enum_InfoMoneyDestination_20200() -- Общефирменные + Прочие ТМЦ
-        OR _tmpItem.InfoMoneyDestinationId = zc_Enum_InfoMoneyDestination_20300() -- Общефирменные + МНМА
-        OR _tmpItem.InfoMoneyDestinationId = zc_Enum_InfoMoneyDestination_30100() -- Доходы + Продукция
-        OR _tmpItem.InfoMoneyDestinationId = zc_Enum_InfoMoneyDestination_30200() -- Доходы + Мясное сырье
-        OR _tmpItem.InfoMoneyDestinationId = zc_Enum_InfoMoneyDestination_70100() -- Капитальные инвестиции
+     WHERE (_tmpItem.InfoMoneyDestinationId = zc_Enum_InfoMoneyDestination_10100() -- Основное сырье + Мясное сырье
+         OR _tmpItem.InfoMoneyDestinationId = zc_Enum_InfoMoneyDestination_20100() -- Общефирменные + Запчасти и Ремонты
+         OR _tmpItem.InfoMoneyDestinationId = zc_Enum_InfoMoneyDestination_20200() -- Общефирменные + Прочие ТМЦ
+         OR _tmpItem.InfoMoneyDestinationId = zc_Enum_InfoMoneyDestination_20300() -- Общефирменные + МНМА
+         OR _tmpItem.InfoMoneyDestinationId = zc_Enum_InfoMoneyDestination_30100() -- Доходы + Продукция
+         OR _tmpItem.InfoMoneyDestinationId = zc_Enum_InfoMoneyDestination_30200() -- Доходы + Мясное сырье
+         OR _tmpItem.InfoMoneyDestinationId = zc_Enum_InfoMoneyDestination_70100() -- Капитальные инвестиции
+          )
+       AND _tmpItem.ObjectDescId <> zc_Object_InfoMoney()
      ;
 
      -- определили
@@ -532,7 +545,7 @@ BEGIN
                                                                                  )
                                              END;
 
-     -- 1.1.2. определяется ContainerId_asset для количественного учета
+     -- 1.1.2. определяется ContainerId_asset для количественного учета - забаланс
      UPDATE _tmpItem SET ContainerId_asset = lpInsertUpdate_ContainerCount_Asset (inOperDate               := vbOperDate
                                                                                 , inUnitId                 := CLO_Unit.ObjectId
                                                                                 , inCarId                  := CLO_Car.ObjectId
@@ -566,28 +579,40 @@ BEGIN
        AND _tmpItem.ContainerId_Goods = Container.Id
        -- !!!если НЕ перевыставление!!!
        AND vbContractId_send = 0
-      ;
+       -- !!!если НЕ услуги!!!
+       AND _tmpItem.ObjectDescId <> zc_Object_InfoMoney()
+    ;
 
      -- 1.1.3. !!! ContainerId !!!!
      UPDATE Container SET ParentId = _tmpItem.ContainerId_Goods
      FROM _tmpItem
-     WHERE Container.Id = _tmpItem.ContainerId_asset;
+     WHERE Container.Id = _tmpItem.ContainerId_asset
+       -- !!!если НЕ услуги!!!
+       AND _tmpItem.ObjectDescId <> zc_Object_InfoMoney()
+     ;
      
 
      -- 1.2.1. самое интересное: заполняем таблицу - суммовые элементы документа, со всеми свойствами для формирования Аналитик в проводках
      INSERT INTO _tmpItemSumm (MovementItemId, ContainerId_Goods, ContainerId_ProfitLoss, ContainerId, ContainerId_asset, AccountId, OperSumm)
         SELECT
               _tmpItem.MovementItemId
-            , _tmpItem.ContainerId_Goods
+            , CASE WHEN _tmpItem.ObjectDescId = zc_Object_InfoMoney() THEN 0 ELSE _tmpItem.ContainerId_Goods END AS ContainerId_Goods
+              -- корреспонденция - в прибыль
             , 0 AS ContainerId_ProfitLoss
-            , COALESCE (lfContainerSumm_20901.ContainerId, COALESCE (Container_Summ.Id, 0))     AS ContainerId
-            , 0                                                                                 AS ContainerId_asset
-            , COALESCE (lfContainerSumm_20901.AccountId, COALESCE (Container_Summ.ObjectId, 0)) AS AccountId
-            , SUM (CAST (_tmpItem.OperCount * COALESCE (HistoryCost.Price, 0) AS NUMERIC (16,4))
-                 + CASE WHEN _tmpItem.MovementItemId = HistoryCost.MovementItemId_diff AND ABS (CAST (_tmpItem.OperCount * COALESCE (HistoryCost.Price, 0) AS NUMERIC (16,4))) >= -1 * HistoryCost.Summ_diff
-                             THEN HistoryCost.Summ_diff -- !!!если есть "погрешность" при округлении, добавили сумму!!!
-                        ELSE 0
-                   END) AS OperSumm
+              -- отсюда списание
+            , CASE WHEN _tmpItem.ObjectDescId = zc_Object_InfoMoney() THEN _tmpItem.ContainerId_Goods ELSE COALESCE (lfContainerSumm_20901.ContainerId, COALESCE (Container_Summ.Id, 0)) END AS ContainerId
+              -- забаланс, определим позже
+            , 0 AS ContainerId_asset
+
+            , CASE WHEN _tmpItem.ObjectDescId = zc_Object_InfoMoney() THEN Container_asset.ObjectId ELSE COALESCE (lfContainerSumm_20901.AccountId, COALESCE (Container_Summ.ObjectId, 0)) END AS AccountId
+            , SUM (CASE WHEN _tmpItem.ObjectDescId = zc_Object_InfoMoney()
+                   THEN _tmpItem.Summ_service
+                   ELSE CAST (_tmpItem.OperCount * COALESCE (HistoryCost.Price, 0) AS NUMERIC (16,4))
+                      + CASE WHEN _tmpItem.MovementItemId = HistoryCost.MovementItemId_diff AND ABS (CAST (_tmpItem.OperCount * COALESCE (HistoryCost.Price, 0) AS NUMERIC (16,4))) >= -1 * HistoryCost.Summ_diff
+                                  THEN HistoryCost.Summ_diff -- !!!если есть "погрешность" при округлении, добавили сумму!!!
+                             ELSE 0
+                        END
+              END) AS OperSumm
         FROM _tmpItem
              -- так находим для тары
              LEFT JOIN lfSelect_ContainerSumm_byAccount (zc_Enum_Account_20901()) AS lfContainerSumm_20901
@@ -600,16 +625,55 @@ BEGIN
                                                   AND Container_Summ.DescId   = zc_Container_Summ()
              LEFT JOIN HistoryCost ON HistoryCost.ContainerId = COALESCE (lfContainerSumm_20901.ContainerId, Container_Summ.Id)
                                   AND vbOperDate BETWEEN HistoryCost.StartDate AND HistoryCost.EndDate
+
+             -- так находим ОС - услуги
+             LEFT JOIN Container AS Container_asset ON Container_asset.Id     = _tmpItem.ContainerId_Goods
+                                                   AND Container_asset.DescId = zc_Container_Summ()
+
         WHERE zc_isHistoryCost() = TRUE -- !!!если нужны проводки!!!
-          AND _tmpItem.OperCount * COALESCE (HistoryCost.Price, 0) <> 0 -- здесь нули !!!НЕ НУЖНЫ!!!
+          AND (_tmpItem.OperCount * COALESCE (HistoryCost.Price, 0) <> 0 -- здесь нули !!!НЕ НУЖНЫ!!!
+           -- !!!если услуги!!!
+            OR _tmpItem.ObjectDescId = zc_Object_InfoMoney()
+              )
         GROUP BY _tmpItem.MovementItemId
                , _tmpItem.ContainerId_Goods
+               , _tmpItem.ObjectDescId
+               , Container_asset.ObjectId
                , Container_Summ.Id
                , Container_Summ.ObjectId
                , lfContainerSumm_20901.ContainerId
                , lfContainerSumm_20901.AccountId
 
-       UNION ALL
+/*       UNION AL
+        -- если услуги
+        SELECT
+              _tmpItem.MovementItemId
+              -- его здесь нет
+            , 0 AS ContainerId_Goods
+              -- корреспонденция - в прибыль
+            , 0 AS ContainerId_ProfitLoss
+            , Container_Summ.Id       AS ContainerId
+            , 0                       AS ContainerId_asset
+            , Container_Summ.ObjectId AS AccountId
+            , CASE WHEN _tmpItem.OperCount = Container_Goods.Amount OR Container_Goods.Amount = 0
+                        THEN Container_Summ.Amount
+                   ELSE Container_Summ.Amount / Container_Goods.Amount * _tmpItem.OperCount
+              END AS OperSumm
+        FROM _tmpItem
+             -- так находим
+             LEFT JOIN Container AS Container_Goods ON Container_Goods.Id = _tmpItem.ContainerId_Goods
+             LEFT JOIN Container AS Container_Summ ON Container_Summ.ParentId = _tmpItem.ContainerId_Goods
+                                                  AND Container_Summ.DescId   = zc_Container_Summ()
+        WHERE zc_isHistoryCost() = TRUE -- !!!если нужны проводки!!!
+          AND vbMovementDescId = zc_Movement_LossAsset()
+          AND CASE WHEN _tmpItem.OperCount = Container_Goods.Amount OR Container_Goods.Amount = 0
+                        THEN Container_Summ.Amount
+                   ELSE Container_Summ.Amount / Container_Goods.Amount * _tmpItem.OperCount
+              END <> 0
+          AND inUserId = 5 -- !!! временно, т.к. нет с/с в HistoryCost для "будущих" месяцев
+          */
+
+       /*UNION ALL
         SELECT
               _tmpItem.MovementItemId
             , _tmpItem.ContainerId_Goods
@@ -633,6 +697,7 @@ BEGIN
                    ELSE Container_Summ.Amount / Container_Goods.Amount * _tmpItem.OperCount
               END <> 0
           AND inUserId = 5 -- !!! временно, т.к. нет с/с в HistoryCost для "будущих" месяцев
+       */
        ;
 
 
@@ -656,11 +721,12 @@ BEGIN
                      , _tmpItem_byProfitLoss.InfoMoneyDestinationId
                 FROM (-- нашли ProfitLossId - для InfoMoneyDestinationId_calc, оставили InfoMoneyDestinationId
                       SELECT CASE WHEN _tmpItem_group.InfoMoneyDestinationId = zc_Enum_InfoMoneyDestination_70100() -- Капитальные инвестиции
+                                    OR vbMovementDescId = zc_Movement_LossAsset()
                                        THEN CASE WHEN _tmpItem_group.InfoMoneyId = zc_Enum_InfoMoney_70102() -- Производственное оборудование
                                                           -- !!!...!!!
-                                                     THEN (SELECT Id FROM Object WHERE DescId = zc_Object_ProfitLoss() AND ObjectCode = 60201) -- Амортизация + Производственные ОС + Основные средства*****
+                                                     THEN (SELECT Id FROM Object WHERE DescId = zc_Object_ProfitLoss() AND ObjectCode = 60201) -- Расходы строительные + Производственные ОС + Основные средства*****
                                                      -- !!!...!!!
-                                                ELSE (SELECT Id FROM Object WHERE DescId = zc_Object_ProfitLoss() AND ObjectCode = 60101) -- Амортизация + Административные ОС + Основные средства*****
+                                                ELSE (SELECT Id FROM Object WHERE DescId = zc_Object_ProfitLoss() AND ObjectCode = 60101) -- Расходы строительные + Административные ОС + Основные средства*****
                                            END
                                   ELSE lpInsertFind_Object_ProfitLoss (inProfitLossGroupId      := vbProfitLossGroupId
                                                                      , inProfitLossDirectionId  := vbProfitLossDirectionId
@@ -745,7 +811,7 @@ BEGIN
      END IF;
 
 
-     -- 2.1.3. создаем ContainerId_asset для суммового учета
+     -- 2.1.3. создаем ContainerId_asset для суммового учета - забаланс
      UPDATE _tmpItemSumm SET ContainerId_asset = lpInsertUpdate_ContainerSumm_Asset (inOperDate               := vbOperDate
                                                                                    , inUnitId                 := CLO_Unit.ObjectId
                                                                                    , inCarId                  := CLO_Car.ObjectId
@@ -757,7 +823,7 @@ BEGIN
                                                                                    , inInfoMoneyDestinationId := _tmpItem.InfoMoneyDestinationId
                                                                                    , inInfoMoneyId            := (SELECT CLO.ObjectId FROM ContainerLinkObject AS CLO WHERE CLO.ContainerId = _tmpItemSumm.ContainerId AND CLO.DescId = zc_ContainerLinkObject_InfoMoney())
                                                                                    , inInfoMoneyId_Detail     := (SELECT CLO.ObjectId FROM ContainerLinkObject AS CLO WHERE CLO.ContainerId = _tmpItemSumm.ContainerId AND CLO.DescId = zc_ContainerLinkObject_InfoMoneyDetail())
-                                                                                   , inContainerId_Goods      := _tmpItem.ContainerId_asset
+                                                                                   , inContainerId_Goods      := CASE WHEN _tmpItem.ObjectDescId = zc_Object_InfoMoney() THEN _tmpItem.ContainerId_goods ELSE _tmpItem.ContainerId_asset END
                                                                                    , inGoodsId                := _tmpItem.GoodsId
                                                                                    , inGoodsKindId            := _tmpItem.GoodsKindId
                                                                                    , inIsPartionSumm          := _tmpItem.isPartionSumm
@@ -782,7 +848,7 @@ BEGIN
                                        AND CLO_Asset.DescId      = zc_ContainerLinkObject_AssetTo()
      WHERE vbIsContainer_Asset = TRUE AND vbMovementDescId = zc_Movement_LossAsset()
        AND _tmpItemSumm.MovementItemId    = _tmpItem.MovementItemId
-       AND _tmpItemSumm.ContainerId_Goods = _tmpItem.ContainerId_Goods
+       AND _tmpItemSumm.ContainerId_Goods = CASE WHEN _tmpItem.ObjectDescId = zc_Object_InfoMoney() THEN 0 ELSE _tmpItem.ContainerId_Goods END
        -- !!!если НЕ перевыставление!!!
        AND vbContractId_send = 0
       ;
@@ -819,7 +885,7 @@ BEGIN
                   , SUM (_tmpItemSumm.OperSumm) AS OperSumm
              FROM _tmpItemSumm
                   INNER JOIN _tmpItem ON _tmpItem.MovementItemId    = _tmpItemSumm.MovementItemId
-                                     AND _tmpItem.ContainerId_Goods = _tmpItemSumm.ContainerId_Goods
+                                     AND CASE WHEN _tmpItem.ObjectDescId = zc_Object_InfoMoney() THEN 0 ELSE _tmpItem.ContainerId_Goods END = _tmpItemSumm.ContainerId_Goods
              -- !!!если НЕ перевыставление!!!
              WHERE vbContractId_send = 0
              GROUP BY _tmpItemSumm.MovementItemId
@@ -884,8 +950,9 @@ BEGIN
             LEFT JOIN (SELECT DISTINCT _tmpItemSumm.MovementItemId, _tmpItemSumm.ContainerId_ProfitLoss FROM _tmpItemSumm
                       ) AS tmpProfitLoss ON tmpProfitLoss.MovementItemId = _tmpItem.MovementItemId
 
+       WHERE _tmpItem.ObjectDescId <> zc_Object_InfoMoney()
       UNION ALL
-       -- 1.1.3. формируются Проводки для количественного учета, ContainerId_asset
+       -- 1.1.3. формируются Проводки для количественного учета, ContainerId_asset - забаланс
        SELECT 0, zc_MIContainer_CountAsset() AS DescId, vbMovementDescId, inMovementId, _tmpItem.MovementItemId
             , _tmpItem.ContainerId_asset
             , 0                                       AS AccountId              -- нет счета
@@ -902,6 +969,7 @@ BEGIN
             , TRUE
        FROM _tmpItem
        WHERE _tmpItem.ContainerId_asset > 0
+         AND _tmpItem.ObjectDescId <> zc_Object_InfoMoney()
        ;
 
      -- 1.2.2. формируются Проводки для суммового учета, !!!после прибыли, т.к. нужен ContainerId_ProfitLoss!!!
@@ -924,18 +992,18 @@ BEGIN
             , FALSE
        FROM _tmpItem
             JOIN _tmpItemSumm ON _tmpItemSumm.MovementItemId    = _tmpItem.MovementItemId
-                             AND _tmpItemSumm.ContainerId_Goods = _tmpItem.ContainerId_Goods
+                             AND _tmpItemSumm.ContainerId_Goods = CASE WHEN _tmpItem.ObjectDescId = zc_Object_InfoMoney() THEN 0 ELSE _tmpItem.ContainerId_Goods END
 
       UNION ALL
-       -- 1.2.3. формируются Проводки для суммового учета, ContainerId_asset
+       -- 1.2.3. формируются Проводки для суммового учета, ContainerId_asset - забаланс
        SELECT 0, zc_MIContainer_SummAsset() AS DescId, vbMovementDescId, inMovementId, _tmpItemSumm.MovementItemId
             , _tmpItemSumm.ContainerId_asset
             , _tmpItemSumm.AccountId                  AS AccountId              -- счет есть всегда
             , vbAnalyzerId                            AS AnalyzerId             -- есть аналитика: Статья списания
             , _tmpItem.GoodsId                        AS ObjectId_Analyzer      -- Товар
             , vbWhereObjectId_Analyzer                AS WhereObjectId_Analyzer -- Подраделение или...
-              -- Контейнер суммового учета
-            , _tmpItemSumm.ContainerId_asset          AS ContainerId_Analyzer
+              -- Контейнер суммового учета / или это услуги, в ContainerId_Goods - суммовой учет
+            , CASE WHEN _tmpItem.ObjectDescId = zc_Object_InfoMoney() THEN _tmpItem.ContainerId_Goods ELSE _tmpItemSumm.ContainerId_asset END AS ContainerId_Analyzer
             , _tmpItem.GoodsKindId                    AS ObjectIntId_Analyzer   -- вид товара
             , vbObjectExtId_Analyzer                  AS ObjectExtId_Analyzer   -- Подраделение кому или...
             , 0                                       AS ParentId
@@ -944,8 +1012,8 @@ BEGIN
             , TRUE
        FROM _tmpItem
             JOIN _tmpItemSumm ON _tmpItemSumm.MovementItemId    = _tmpItem.MovementItemId
-                             AND _tmpItemSumm.ContainerId_Goods = _tmpItem.ContainerId_Goods
-       WHERE _tmpItem.ContainerId_asset > 0
+                             AND _tmpItemSumm.ContainerId_Goods = CASE WHEN _tmpItem.ObjectDescId = zc_Object_InfoMoney() THEN 0 ELSE _tmpItem.ContainerId_Goods END
+                             AND _tmpItemSumm.ContainerId_asset > 0
       ;
 
 
