@@ -84,6 +84,7 @@ type
     GuidesLanguage4: TdsdGuides;
     InsertRecord1: TInsertRecord;
     dsdUpdateDataSet1: TdsdUpdateDataSet;
+    FormName: TcxGridDBColumn;
   private
     { Private declarations }
   public

@@ -348,12 +348,16 @@ CREATE OR REPLACE FUNCTION zc_ObjectLink_TranslateWord_Parent() RETURNS Integer 
 INSERT INTO ObjectLinkDesc(Code, ItemName, DescId, ChildObjectDescId)
 SELECT 'zc_ObjectLink_TranslateWord_Parent', 'TranslateWord', zc_Object_TranslateWord(), zc_Object_TranslateWord() WHERE NOT EXISTS (SELECT * FROM ObjectLinkDesc WHERE Code = 'zc_ObjectLink_TranslateWord_Parent');
 
+CREATE OR REPLACE FUNCTION zc_ObjectLink_TranslateWord_Form() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM ObjectLinkDesc WHERE Code = 'zc_ObjectLink_TranslateWord_Form'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
+INSERT INTO ObjectLinkDesc(Code, ItemName, DescId, ChildObjectDescId)
+SELECT 'zc_ObjectLink_TranslateWord_Form', 'Form', zc_Object_TranslateWord(), zc_Object_Form() WHERE NOT EXISTS (SELECT * FROM ObjectLinkDesc WHERE Code = 'zc_ObjectLink_TranslateWord_Form');
 
 /*-------------------------------------------------------------------------------
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.  Полятыкин А.А.  Воробкало А.А.
 22.09.20          * zc_ObjectLink_TranslateWord_Language
                     zc_ObjectLink_TranslateWord_Parent
+                    zc_ObjectLink_TranslateWord_Form
 07.02.20          * zc_ObjectLink_Client_Currency
 28.01.20          * zc_ObjectLink_Unit_PriceList
 29.03.19          * zc_ObjectLink_ImportSettings_Juridical

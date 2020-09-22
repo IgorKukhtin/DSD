@@ -125,28 +125,28 @@ object TranslateWordForm: TTranslateWordForm
         DataBinding.FieldName = 'Value1'
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
-        Width = 190
+        Width = 150
       end
       object Value2: TcxGridDBColumn
         Caption = #1047#1085#1072#1095#1077#1085#1080#1077' 2'
         DataBinding.FieldName = 'Value2'
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
-        Width = 230
+        Width = 150
       end
       object Value3: TcxGridDBColumn
         Caption = #1047#1085#1072#1095#1077#1085#1080#1077' 3'
         DataBinding.FieldName = 'Value3'
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
-        Width = 245
+        Width = 150
       end
       object Value4: TcxGridDBColumn
         Caption = #1047#1085#1072#1095#1077#1085#1080#1077' 4'
         DataBinding.FieldName = 'Value4'
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
-        Width = 255
+        Width = 150
       end
       object isErased: TcxGridDBColumn
         Caption = #1059#1076#1072#1083#1077#1085
@@ -157,6 +157,15 @@ object TranslateWordForm: TTranslateWordForm
         HeaderAlignmentVert = vaCenter
         HeaderGlyphAlignmentHorz = taCenter
         Width = 78
+      end
+      object FormName: TcxGridDBColumn
+        Caption = #1060#1086#1088#1084#1072
+        DataBinding.FieldName = 'FormName'
+        GroupSummaryAlignment = taCenter
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Options.Editing = False
+        Width = 150
       end
     end
     object cxGridLevel: TcxGridLevel
@@ -171,9 +180,9 @@ object TranslateWordForm: TTranslateWordForm
     Align = alTop
     TabOrder = 3
     object cxLabel6: TcxLabel
-      Left = 41
+      Left = 33
       Top = 7
-      Caption = #1071#1079#1099#1082':'
+      Caption = #1071#1079#1099#1082' 1:'
     end
     object edLanguage1: TcxButtonEdit
       Left = 75
@@ -864,9 +873,6 @@ object TranslateWordForm: TTranslateWordForm
     OnDblClickActionList = <
       item
         Action = actChoiceGuides
-      end
-      item
-        Action = actUpdate
       end>
     ActionItemList = <
       item

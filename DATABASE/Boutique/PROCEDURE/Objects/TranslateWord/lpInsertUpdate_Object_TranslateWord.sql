@@ -41,8 +41,12 @@ BEGIN
    
    -- сохранили связь с <>
    PERFORM lpInsertUpdate_ObjectLink (zc_ObjectLink_TranslateWord_Language(), ioId, inLanguageId);
-   -- сохранили связь с <>
-   PERFORM lpInsertUpdate_ObjectLink (zc_ObjectLink_TranslateWord_Parent(), ioId, inParentId);
+
+   IF ioId <> inParentId
+   THEN
+       -- сохранили связь с <>
+       PERFORM lpInsertUpdate_ObjectLink (zc_ObjectLink_TranslateWord_Parent(), ioId, inParentId);
+   END IF;
 
 
    -- сохранили протокол
