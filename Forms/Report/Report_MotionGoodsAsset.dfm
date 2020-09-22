@@ -686,7 +686,6 @@ object Report_MotionGoodsAssetForm: TReport_MotionGoodsAssetForm
       OptionsCustomize.DataRowSizing = True
       OptionsData.Deleting = False
       OptionsData.DeletingConfirmation = False
-      OptionsData.Editing = False
       OptionsData.Inserting = False
       OptionsView.Footer = True
       OptionsView.GroupSummaryLayout = gslAlignWithColumns
@@ -777,6 +776,7 @@ object Report_MotionGoodsAssetForm: TReport_MotionGoodsAssetForm
         DataBinding.FieldName = 'AssetToName'
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
+        Options.Editing = False
         Width = 126
       end
       object GoodsGroupNameFull: TcxGridDBColumn

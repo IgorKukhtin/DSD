@@ -63,7 +63,7 @@ BEGIN
           , zfCalc_Text_replace (Object_Asset.ValueData, CHR (39), '`' ) :: TVarChar AS Name
           , Object_AssetGroup.ValueData AS GoodsGroupName
           , ObjectString_Asset_FullName.ValueData AS GoodsGroupNameFull
-          , ''      :: TVarChat AS MeasureName
+          , ''      :: TVarChar AS MeasureName
           , 0       :: TFloat   AS Weight
           , ObjectDesc.ItemName AS DescName
           , Object_Asset.isErased
@@ -80,7 +80,7 @@ BEGIN
                                 AND ObjectString_Asset_FullName.DescId = zc_ObjectString_Asset_FullName()
 
      WHERE Object_Asset.DescId = zc_Object_Asset()
-       AND vbUserId NOT IN (SELECT UserId FROM tmpUserTransport))
+       AND vbUserId NOT IN (SELECT UserId FROM tmpUserTransport)
    UNION ALL
      SELECT Object_Fuel.Id
           , Object_Fuel.ObjectCode AS Code     

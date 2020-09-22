@@ -17,7 +17,11 @@ BEGIN
      ELSE vbUserId:= lpCheckRight (inSession, zc_Enum_Process_Complete_LossAsset());
      END IF;
 
-
+/*IF vbUserId = 5
+then
+   update Movement set OperDate = '31.08.2020' where Id = inMovementId;
+end if;
+*/
      -- создаются временные таблицы - для формирование данных для проводок
      PERFORM lpComplete_Movement_Loss_CreateTemp();
 

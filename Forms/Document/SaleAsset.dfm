@@ -2,8 +2,9 @@ inherited SaleAssetForm: TSaleAssetForm
   Caption = #1044#1086#1082#1091#1084#1077#1085#1090' <'#1055#1088#1086#1076#1072#1078#1072' ('#1054#1057')>'
   ClientHeight = 668
   ClientWidth = 1079
+  ExplicitLeft = -296
   ExplicitWidth = 1095
-  ExplicitHeight = 706
+  ExplicitHeight = 703
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
@@ -70,7 +71,7 @@ inherited SaleAssetForm: TSaleAssetForm
             Width = 50
           end
           object GoodsName: TcxGridDBColumn [2]
-            Caption = ' '#1054#1057
+            Caption = #1054#1057
             DataBinding.FieldName = 'GoodsName'
             PropertiesClassName = 'TcxButtonEditProperties'
             Properties.Buttons = <
@@ -209,11 +210,17 @@ inherited SaleAssetForm: TSaleAssetForm
           object ContainerId: TcxGridDBColumn
             Caption = #1055#1072#1088#1090#1080#1103' '#1054#1057
             DataBinding.FieldName = 'ContainerId'
+            PropertiesClassName = 'TcxButtonEditProperties'
+            Properties.Buttons = <
+              item
+                Default = True
+                Kind = bkEllipsis
+              end>
+            Properties.ReadOnly = True
             Visible = False
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
-            VisibleForCustomization = False
             Width = 105
           end
         end
@@ -1235,7 +1242,7 @@ inherited SaleAssetForm: TSaleAssetForm
       end
       item
         Name = 'PriceWithVAT'
-        Value = 0.000000000000000000
+        Value = False
         Component = edPriceWithVAT
         DataType = ftBoolean
         MultiSelectSeparator = ','
@@ -1525,11 +1532,43 @@ inherited SaleAssetForm: TSaleAssetForm
   end
   inherited spErasedMIMaster: TdsdStoredProc
     StoredProcName = 'gpMovementItem_SaleAsset_SetErased'
+    Params = <
+      item
+        Name = 'inMovementItemId'
+        Component = MasterCDS
+        ComponentItem = 'Id'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'outIsErased'
+        Value = False
+        Component = MasterCDS
+        ComponentItem = 'isErased'
+        DataType = ftBoolean
+        MultiSelectSeparator = ','
+      end>
     Left = 718
     Top = 512
   end
   inherited spUnErasedMIMaster: TdsdStoredProc
     StoredProcName = 'gpMovementItem_SaleAsset_SetUnErased'
+    Params = <
+      item
+        Name = 'inMovementItemId'
+        Component = MasterCDS
+        ComponentItem = 'Id'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'outIsErased'
+        Value = False
+        Component = MasterCDS
+        ComponentItem = 'isErased'
+        DataType = ftBoolean
+        MultiSelectSeparator = ','
+      end>
     Left = 718
     Top = 464
   end

@@ -27,7 +27,8 @@ BEGIN
 
       -- вторая часть: ОС-услуги
       INSERT INTO _tmpData (ContainerId, LocationId, GoodsId, CountStart, Summ_service)
-       SELECT Container.Id, CLO_Unit.ObjectId, CLO_Goods.ObjectId, 0 AS CountStart, Container.Amount AS Summ_service
+       SELECT Container.Id, CLO_Unit.ObjectId, CLO_Goods.ObjectId, 0 AS CountStart
+            , Container.Amount - COALESCE (SUM (MIContainer.Amount), 0) AS Summ_service
        FROM Container
             INNER JOIN ContainerLinkObject AS CLO_Goods
                                            ON CLO_Goods.ContainerId = Container.Id
@@ -49,8 +50,13 @@ BEGIN
             /*LEFT JOIN ContainerLinkObject AS CLO_Asset
                                           ON CLO_Asset.ContainerId = Container.Id
                                          AND CLO_Asset.DescId      = zc_ContainerLinkObject_AssetTo()*/
+            LEFT JOIN MovementItemContainer AS MIContainer
+                                            ON MIContainer.ContainerId = Container.Id
+                                           AND MIContainer.OperDate >= inStartDate
        WHERE Container.Amount <> 0
          AND Container.DescId = zc_Container_Summ()
+       GROUP BY Container.Id, CLO_Unit.ObjectId, CLO_Goods.ObjectId, Container.Amount
+       HAVING Container.Amount - COALESCE (SUM (MIContainer.Amount), 0) <> 0
       ;
 
      -- сохранили <Документ>

@@ -3,7 +3,7 @@ inherited SendAssetForm: TSendAssetForm
   ClientHeight = 525
   ClientWidth = 864
   ExplicitWidth = 880
-  ExplicitHeight = 563
+  ExplicitHeight = 560
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
@@ -130,7 +130,7 @@ inherited SendAssetForm: TSendAssetForm
             Width = 75
           end
           object GoodsName: TcxGridDBColumn [2]
-            Caption = ' '#1054#1057
+            Caption = #1054#1057
             DataBinding.FieldName = 'GoodsName'
             PropertiesClassName = 'TcxButtonEditProperties'
             Properties.Buttons = <
@@ -236,11 +236,16 @@ inherited SendAssetForm: TSendAssetForm
           object ContainerId: TcxGridDBColumn
             Caption = #1055#1072#1088#1090#1080#1103' '#1054#1057
             DataBinding.FieldName = 'ContainerId'
+            PropertiesClassName = 'TcxButtonEditProperties'
+            Properties.Buttons = <
+              item
+                Default = True
+                Kind = bkEllipsis
+              end>
+            Properties.ReadOnly = True
             Visible = False
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
-            Options.Editing = False
-            VisibleForCustomization = False
             Width = 105
           end
         end
@@ -1311,12 +1316,44 @@ inherited SendAssetForm: TSendAssetForm
     Top = 352
   end
   inherited spErasedMIMaster: TdsdStoredProc
-    StoredProcName = 'gpMovementItem_Send_SetErased'
+    StoredProcName = 'gpMovementItem_SendAsset_SetErased'
+    Params = <
+      item
+        Name = 'inMovementItemId'
+        Component = MasterCDS
+        ComponentItem = 'Id'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'outIsErased'
+        Value = False
+        Component = MasterCDS
+        ComponentItem = 'isErased'
+        DataType = ftBoolean
+        MultiSelectSeparator = ','
+      end>
     Left = 718
     Top = 320
   end
   inherited spUnErasedMIMaster: TdsdStoredProc
-    StoredProcName = 'gpMovementItem_Send_SetUnErased'
+    StoredProcName = 'gpMovementItem_SendAsset_SetUnErased'
+    Params = <
+      item
+        Name = 'inMovementItemId'
+        Component = MasterCDS
+        ComponentItem = 'Id'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'outIsErased'
+        Value = False
+        Component = MasterCDS
+        ComponentItem = 'isErased'
+        DataType = ftBoolean
+        MultiSelectSeparator = ','
+      end>
     Left = 470
     Top = 408
   end
@@ -1528,7 +1565,7 @@ inherited SendAssetForm: TSendAssetForm
       end
       item
         Name = 'inisItem'
-        Value = 'false'
+        Value = False
         DataType = ftBoolean
         ParamType = ptInput
         MultiSelectSeparator = ','

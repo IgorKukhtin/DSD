@@ -681,7 +681,7 @@ end if;
 
                                             WHEN _tmpItem.AssetId <> 0 -- Основные средства
                                                  THEN -- 0.1.)Счет 0.2.)Главное Юр лицо 0.3.)Бизнес 1)Подразделение  2)УП 3)Партии товара 4)Основные средства (для которого закуплено ОС или ТМЦ) 5)Статьи назначения 6)Статьи назначения(детализация с/с)
-                                                      lpInsertFind_Container (inContainerDescId   := zc_Container_Summ()
+                                                      lpInsertFind_Container (inContainerDescId   := CASE WHEN _tmpItem.OperSumm_Asset <> 0 OR _tmpItem.OperSumm_Diff_Asset <> 0 THEN zc_Container_SummAsset() ELSE zc_Container_Summ() END
                                                                             , inParentId          := NULL
                                                                             , inObjectId          := _tmpItem.AccountId
                                                                             , inJuridicalId_basis := _tmpItem.JuridicalId_basis
