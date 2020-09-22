@@ -340,10 +340,20 @@ CREATE OR REPLACE FUNCTION zc_ObjectLink_ImportSettings_Email() RETURNS Integer 
 INSERT INTO ObjectLinkDesc(Code, ItemName, DescId, ChildObjectDescId)
 SELECT 'zc_ObjectLink_ImportSettings_Email', 'Почтовый ящик', zc_Object_ImportSettings(), zc_Object_Email() WHERE NOT EXISTS (SELECT * FROM ObjectLinkDesc WHERE Code = 'zc_ObjectLink_ImportSettings_Email');
 
+CREATE OR REPLACE FUNCTION zc_ObjectLink_TranslateWord_Language() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM ObjectLinkDesc WHERE Code = 'zc_ObjectLink_TranslateWord_Language'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
+INSERT INTO ObjectLinkDesc(Code, ItemName, DescId, ChildObjectDescId)
+SELECT 'zc_ObjectLink_TranslateWord_Language', 'Language', zc_Object_TranslateWord(), zc_Object_Language() WHERE NOT EXISTS (SELECT * FROM ObjectLinkDesc WHERE Code = 'zc_ObjectLink_TranslateWord_Language');
+
+CREATE OR REPLACE FUNCTION zc_ObjectLink_TranslateWord_Parent() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM ObjectLinkDesc WHERE Code = 'zc_ObjectLink_TranslateWord_Parent'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
+INSERT INTO ObjectLinkDesc(Code, ItemName, DescId, ChildObjectDescId)
+SELECT 'zc_ObjectLink_TranslateWord_Parent', 'TranslateWord', zc_Object_TranslateWord(), zc_Object_TranslateWord() WHERE NOT EXISTS (SELECT * FROM ObjectLinkDesc WHERE Code = 'zc_ObjectLink_TranslateWord_Parent');
+
 
 /*-------------------------------------------------------------------------------
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.  Полятыкин А.А.  Воробкало А.А.
+22.09.20          * zc_ObjectLink_TranslateWord_Language
+                    zc_ObjectLink_TranslateWord_Parent
 07.02.20          * zc_ObjectLink_Client_Currency
 28.01.20          * zc_ObjectLink_Unit_PriceList
 29.03.19          * zc_ObjectLink_ImportSettings_Juridical

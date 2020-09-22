@@ -241,6 +241,11 @@ type
     N3: TMenuItem;
     actReturnInPodium: TdsdOpenForm;
     actGoodsAccountPodium: TdsdOpenForm;
+    actLanguage: TdsdOpenForm;
+    miLanguage: TMenuItem;
+    N8: TMenuItem;
+    actTranslateWord: TdsdOpenForm;
+    miTranslateWord: TMenuItem;
   private
     { Private declarations }
   public

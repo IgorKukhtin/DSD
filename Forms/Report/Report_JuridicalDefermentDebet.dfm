@@ -1,5 +1,5 @@
 inherited Report_JuridicalDefermentDebetForm: TReport_JuridicalDefermentDebetForm
-  Caption = #1054#1090#1095#1077#1090' <'#1044#1086#1083#1075' '#1055#1086#1082#1091#1087#1072#1090#1077#1083#1077#1081'>'
+  Caption = #1054#1090#1095#1077#1090' <'#1044#1086#1083#1075' '#1055#1086#1082#1091#1087#1072#1090#1077#1083#1077#1081' '#1089' '#1086#1090#1089#1088#1086#1095#1082#1086#1081' ('#1076#1077#1090#1072#1083#1100#1085#1086')>'
   ClientHeight = 394
   ClientWidth = 1123
   AddOnFormData.ExecuteDialogAction = ExecuteDialog
@@ -1983,6 +1983,7 @@ inherited Report_JuridicalDefermentDebetForm: TReport_JuridicalDefermentDebetFor
         MultiSelectSeparator = ','
       end>
     PackSize = 1
+    NeedResetData = True
     Left = 200
     Top = 248
   end

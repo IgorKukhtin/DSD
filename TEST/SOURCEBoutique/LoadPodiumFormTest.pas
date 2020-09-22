@@ -78,6 +78,7 @@ type
     procedure LoadJuridicalFormTest;
     procedure LoadJuridicalBasisFormTest;
     procedure LoadLabelFormTest;
+    procedure LoadLanguageFormTest;
     procedure LoadLossFormTest;
     procedure LoadLineFabricaFormTest;
     procedure LoadMemberFormTest;
@@ -100,6 +101,7 @@ type
     procedure LoadServiceFormTest;
     procedure LoadSendFormTest;
     procedure LoadObjectUnionFormTest;
+    procedure LoadTranslateWordFormTest;
     procedure LoadUnitFormTest;
     procedure FormTest;
 
@@ -488,6 +490,14 @@ begin
   TdsdFormStorageFactory.GetStorage.Load('TLabelEditForm');
 end;
 
+     procedure TLoadFormTest.LoadLanguageFormTest;
+begin
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TLanguageForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TLanguageForm');
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TLanguageEditForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TLanguageEditForm');
+end;
+
 procedure TLoadFormTest.LoadLineFabricaFormTest;
 begin
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TLineFabricaForm'));
@@ -501,6 +511,14 @@ begin
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TMoneyPlaceCash_ObjectForm'));
   TdsdFormStorageFactory.GetStorage.Load('TMoneyPlaceCash_ObjectForm');
 
+end;
+
+procedure TLoadFormTest.LoadTranslateWordFormTest;
+begin
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TTranslateWordForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TTranslateWordForm');
+//  TdsdFormStorageFactory.GetStorage.Save(GetForm('TTranslateWordEditForm'));
+//  TdsdFormStorageFactory.GetStorage.Load('TTranslateWordEditForm');
 end;
 //
 //procedure TLoadFormTest.LoadBankFormTest;
