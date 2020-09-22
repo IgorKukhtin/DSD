@@ -946,7 +946,10 @@ uses
   CheckSite in '..\..\FormsFarmacy\Document\CheckSite.pas' {CheckSiteForm: TParentForm},
   CheckDelaySite in '..\..\FormsFarmacy\Document\CheckDelaySite.pas' {CheckDelaySiteForm: TParentForm},
   Report_ChangeCommentsSUN in '..\..\FormsFarmacy\Report\Report_ChangeCommentsSUN.pas' {Report_ChangeCommentsSUNForm: TParentForm},
-  Report_FoundPositionsSUN in '..\..\FormsFarmacy\Report\Report_FoundPositionsSUN.pas' {Report_FoundPositionsSUNForm: TParentForm};
+  Report_FoundPositionsSUN in '..\..\FormsFarmacy\Report\Report_FoundPositionsSUN.pas' {Report_FoundPositionsSUNForm: TParentForm},
+  Report_ArrivalWithoutSalesDialog in '..\..\FormsFarmacy\Report\Report_ArrivalWithoutSalesDialog.pas' {Report_ArrivalWithoutSalesDialogForm: TParentForm},
+  Report_ArrivalWithoutSales in '..\..\FormsFarmacy\Report\Report_ArrivalWithoutSales.pas' {Report_ArrivalWithoutSalesForm: TParentForm},
+  PartionDateGoodsList in '..\..\FormsFarmacy\Document\PartionDateGoodsList.pas';
 
 {$R *.res}
 {$R DevExpressRus.res}

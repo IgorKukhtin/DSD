@@ -452,6 +452,7 @@ end;
 
 function TCashMINI_FP54.DeleteArticules(const GoodsCode: integer): boolean;
 begin
+//  result := SendCommand('dps;2;');
 end;
 
 function TCashMINI_FP54.FiscalNumber: String;

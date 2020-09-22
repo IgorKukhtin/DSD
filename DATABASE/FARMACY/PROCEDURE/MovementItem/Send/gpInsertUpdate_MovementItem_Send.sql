@@ -114,14 +114,8 @@ BEGIN
            , tmpProtocol AS (SELECT tmpProtocolAll.Id
                                   , tmpProtocolAll.ObjectId
                                   , SUBSTRING(tmpProtocolAll.ProtocolData, 1, POSITION('"' IN tmpProtocolAll.ProtocolData) - 1)::TFloat AS AmountAuto
-                                  , tmpProtocolAll.Name
-                                  , tmpProtocolAll.Amount
                              FROM tmpProtocolAll
-                                  LEFT JOIN MovementItemLinkObject AS MILinkObject_CommentSend
-                                                                   ON MILinkObject_CommentSend.MovementItemId = tmpProtocolAll.Id
-                                                                  AND MILinkObject_CommentSend.DescId = zc_MILinkObject_CommentSend()
-                             WHERE tmpProtocolAll.Ord = 1
-                               AND COALESCE (MILinkObject_CommentSend.ObjectId, 0) = 0)
+                             WHERE tmpProtocolAll.Ord = 1)
 
        SELECT tmpProtocol.AmountAuto
        INTO vbAmountAuto

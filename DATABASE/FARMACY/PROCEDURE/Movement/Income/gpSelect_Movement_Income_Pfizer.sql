@@ -29,7 +29,7 @@ BEGIN
 
 
      -- Вернули все что надо загружать в медреестр Pfizer МДМ
-     PERFORM gpUpdate_Movement_Income_isRegistered_Auto (inStartDate:= CURRENT_DATE - INTERVAL '8 DAY', inEndDate:= CURRENT_DATE - INTERVAL '1 DAY', inSession:= inSession);
+     PERFORM gpUpdate_Movement_Income_isRegistered_Auto (inStartDate:= CURRENT_DATE - INTERVAL '8 DAY', inEndDate:= CURRENT_DATE, inSession:= inSession);
 
      -- Вернули все что надо загружать в медреестр Pfizer МДМ
      RETURN QUERY

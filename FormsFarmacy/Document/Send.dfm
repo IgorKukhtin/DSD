@@ -11,17 +11,17 @@ inherited SendForm: TSendForm
     Width = 992
     Height = 462
     ExplicitTop = 155
-    ExplicitWidth = 1001
+    ExplicitWidth = 992
     ExplicitHeight = 462
     ClientRectBottom = 462
     ClientRectRight = 992
     inherited tsMain: TcxTabSheet
-      ExplicitWidth = 1001
+      ExplicitWidth = 992
       ExplicitHeight = 438
       inherited cxGrid: TcxGrid
         Width = 992
         Height = 318
-        ExplicitWidth = 1001
+        ExplicitWidth = 992
         ExplicitHeight = 318
         inherited cxGridDBTableView: TcxGridDBTableView
           DataController.Summary.DefaultGroupSummaryItems = <
@@ -565,7 +565,6 @@ inherited SendForm: TSendForm
         HotZoneClassName = 'TcxMediaPlayer8Style'
         AlignSplitter = salBottom
         Control = cxGrid1
-        ExplicitWidth = 1001
       end
       object cxGrid1: TcxGrid
         Left = 0
@@ -575,7 +574,6 @@ inherited SendForm: TSendForm
         Align = alBottom
         PopupMenu = PopupMenu
         TabOrder = 2
-        ExplicitWidth = 1001
         object cxGridDBTableView1: TcxGridDBTableView
           Navigator.Buttons.CustomButtons = <>
           DataController.DataSource = DetailDS
@@ -720,7 +718,7 @@ inherited SendForm: TSendForm
     Width = 992
     Height = 129
     TabOrder = 3
-    ExplicitWidth = 1001
+    ExplicitWidth = 992
     ExplicitHeight = 129
     inherited edInvNumber: TcxTextEdit
       Left = 8
@@ -1743,6 +1741,61 @@ inherited SendForm: TSendForm
           Value = Null
         end>
     end
+    object actUpdate_MovementItem_ContainerId: TdsdExecStoredProc
+      Category = 'DSDLib'
+      MoveParams = <>
+      AfterAction = actRefresh
+      BeforeAction = actChoicePartionDateGoodsList
+      PostDataSetBeforeExecute = False
+      StoredProc = spUpdate_MovementItem_ContainerId
+      StoredProcList = <
+        item
+          StoredProc = spUpdate_MovementItem_ContainerId
+        end>
+      Caption = #1048#1079#1084#1077#1085#1080#1090#1100' '#1087#1088#1080#1074#1103#1079#1082#1091' '#1082' '#1072#1088#1090#1080#1081#1085#1086#1084#1091' '#1082#1086#1085#1090#1077#1081#1085#1077#1088#1091
+      Hint = #1048#1079#1084#1077#1085#1080#1090#1100' '#1087#1088#1080#1074#1103#1079#1082#1091' '#1082' '#1072#1088#1090#1080#1081#1085#1086#1084#1091' '#1082#1086#1085#1090#1077#1081#1085#1077#1088#1091
+      ImageIndex = 67
+    end
+    object actChoicePartionDateGoodsList: TOpenChoiceForm
+      Category = 'DSDLib'
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      Caption = 'actChoicePartionDateGoodsList'
+      FormName = 'TPartionDateGoodsListForm'
+      FormNameParam.Value = 'TPartionDateGoodsListForm'
+      FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
+      GuiParams = <
+        item
+          Name = 'Key'
+          Value = '0'
+          Component = FormParams
+          ComponentItem = 'ContainerID'
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'isAddNewLine'
+          Value = False
+          Component = FormParams
+          DataType = ftBoolean
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'UnitId'
+          Value = Null
+          Component = GuidesFrom
+          ComponentItem = 'Key'
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'GoodsId'
+          Value = Null
+          Component = DetailDCS
+          ComponentItem = 'GoodsId'
+          MultiSelectSeparator = ','
+        end>
+      isShowModal = True
+    end
   end
   inherited MasterDS: TDataSource
     Top = 424
@@ -1910,6 +1963,10 @@ inherited SendForm: TSendForm
         end
         item
           Visible = True
+          ItemName = 'dxBarButton7'
+        end
+        item
+          Visible = True
           ItemName = 'bbStatic'
         end
         item
@@ -1996,6 +2053,10 @@ inherited SendForm: TSendForm
     end
     object dxBarButton6: TdxBarButton
       Action = actExecSetConfirmed
+      Category = 0
+    end
+    object dxBarButton7: TdxBarButton
+      Action = actUpdate_MovementItem_ContainerId
       Category = 0
     end
   end
@@ -2085,6 +2146,23 @@ inherited SendForm: TSendForm
         Name = 'isConfirmed'
         Value = False
         DataType = ftBoolean
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'ContainerID'
+        Value = '0'
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'isAddNewLine'
+        Value = Null
+        DataType = ftBoolean
+        MultiSelectSeparator = ','
+      end
+      item
+        Value = 'False'
+        DataType = ftString
+        ParamType = ptInput
         MultiSelectSeparator = ','
       end>
     Left = 344
@@ -3750,5 +3828,46 @@ inherited SendForm: TSendForm
     PackSize = 1
     Left = 744
     Top = 291
+  end
+  object spUpdate_MovementItem_ContainerId: TdsdStoredProc
+    StoredProcName = 'gpUpdate_MovementItem_Send_ContainerId'
+    DataSets = <>
+    OutputType = otResult
+    Params = <
+      item
+        Name = 'inMovementItemId'
+        Value = False
+        Component = DetailDCS
+        ComponentItem = 'ID'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inParentId'
+        Value = Null
+        Component = DetailDCS
+        ComponentItem = 'ParentId'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'ContainerID'
+        Value = 'False'
+        Component = FormParams
+        ComponentItem = 'ContainerID'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inisAddNewLine'
+        Value = Null
+        Component = FormParams
+        ComponentItem = 'isAddNewLine'
+        DataType = ftBoolean
+        MultiSelectSeparator = ','
+      end>
+    PackSize = 1
+    Left = 640
+    Top = 379
   end
 end

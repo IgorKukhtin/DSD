@@ -1,15 +1,16 @@
 -- Function: gpSelect_MovementItem_PartionGoods()
 
-DROP FUNCTION IF EXISTS gpSelect_MovementItem_PartionGoods (Integer, Integer, TVarChar);
+DROP FUNCTION IF EXISTS gpSelect_PartionDateGoods (Integer, Integer, TVarChar);
 
-CREATE OR REPLACE FUNCTION gpSelect_MovementItem_PartionGoods(
+CREATE OR REPLACE FUNCTION gpSelect_PartionDateGoods(
     IN inUnitId   Integer      , -- ключ Документа
     IN inGoodsId  Integer      , -- ключ Документа
     IN inSession  TVarChar       -- сессия пользователя
 )
 RETURNS TABLE (GoodsId Integer, GoodsCode Integer, GoodsName TVarChar,
+               ExpirationDate TDateTime,
                PartionDateKindId  Integer, PartionDateKindName  TVarChar,
-               Remains TFloat
+               Amount TFloat, ContainerID Integer
               )
 AS
 $BODY$
@@ -49,7 +50,9 @@ BEGIN
                               AND Container.Amount <> 0)
        , tmpPDContainer AS (SELECT Container.Id,
                                    Container.ObjectId,
+                                   Container.ParentId,
                                    Container.Amount,
+                                   ObjectDate_ExpirationDate.ValueData AS ExpirationDate,
                                    CASE WHEN ObjectDate_ExpirationDate.ValueData <= vbDate_0 AND 
                                              COALESCE (ObjectBoolean_PartionGoods_Cat_5.ValueData, FALSE) = TRUE 
                                                                                               THEN zc_Enum_PartionDateKind_Cat_5() -- 5 кат (просрочка без наценки)
@@ -70,18 +73,6 @@ BEGIN
                                                          ON ObjectBoolean_PartionGoods_Cat_5.ObjectId =  Container.PartionGoodsId
                                                         AND ObjectBoolean_PartionGoods_Cat_5.DescID = zc_ObjectBoolean_PartionGoods_Cat_5() 
                                   )
-       , tmpPDGoodsRemains AS (SELECT Container.ObjectId
-                                    , Container.PartionDateKindId                                       AS PartionDateKindId
-                                    , SUM (Container.Amount)                                            AS Remains
-                               FROM tmpPDContainer AS Container
-                               GROUP BY Container.ObjectId
-                                      , Container.PartionDateKindId
-                               )
-       , tmpPDGoodsRemainsAll AS (SELECT tmpPDGoodsRemains.ObjectId
-                                       , SUM (tmpPDGoodsRemains.Remains)                                AS Remains
-                                  FROM tmpPDGoodsRemains
-                                  GROUP BY tmpPDGoodsRemains.ObjectId
-                                 )
           -- Остатки по основным контейнерам
        , tmpContainer AS (SELECT Container.Id, Container.ObjectId, Container.Amount
                           FROM Container
@@ -90,42 +81,29 @@ BEGIN
                             AND Container.WhereObjectId = inUnitId
                             AND Container.Amount <> 0
                          )
-       , tmpGoodsRemains AS (SELECT Container.ObjectId
-                                  , SUM (Container.Amount) AS Remains
-                             FROM tmpContainer AS Container
-                             GROUP BY Container.ObjectId
-                             )
-          -- Непосредственно остатки
-       , GoodsRemains AS (SELECT Container.ObjectId
-                               , Container.Remains - COALESCE(tmpPDGoodsRemainsAll.Remains, 0)                   AS Remains
-                               , NULL                                                                            AS PartionDateKindId
-                          FROM tmpGoodsRemains AS Container
-                               LEFT JOIN tmpPDGoodsRemainsAll ON tmpPDGoodsRemainsAll.ObjectId = Container.ObjectId
-                          UNION ALL
-                          SELECT tmpPDGoodsRemains.ObjectId
-                               , tmpPDGoodsRemains.Remains
-                               , tmpPDGoodsRemains.PartionDateKindId
-                          FROM tmpPDGoodsRemains
-                         )
 
     SELECT
-           Goods.ID                     AS GoodsId
-         , Goods.ObjectCode             AS GoodsCode
-         , Goods.ValueData              AS GoodsName
-         , PartionDateKind.ID           AS PartionDateKindId
-         , PartionDateKind.ValueData    AS PartionDateKindName
-         , GoodsRemains.Remains::TFloat AS Remains 
-    FROM GoodsRemains
+           Goods.ID                      AS GoodsId
+         , Goods.ObjectCode              AS GoodsCode
+         , Goods.ValueData               AS GoodsName
+         , tmpPDContainer.ExpirationDate AS ExpirationDate
+         , PartionDateKind.ID            AS PartionDateKindId
+         , PartionDateKind.ValueData     AS PartionDateKindName
+         , tmpPDContainer.Amount         AS Amount
+         , tmpPDContainer.ID             AS ContainerID
+    FROM tmpContainer
+    
+         INNER JOIN tmpPDContainer ON tmpPDContainer.ParentId = tmpContainer.Id
 
-         INNER JOIN Object AS Goods ON Goods.Id = GoodsRemains.ObjectId
+         INNER JOIN Object AS Goods ON Goods.Id = tmpPDContainer.ObjectId
 
-         LEFT JOIN Object AS PartionDateKind ON PartionDateKind.Id = GoodsRemains.PartionDateKindId;
+         LEFT JOIN Object AS PartionDateKind ON PartionDateKind.Id = tmpPDContainer.PartionDateKindId;
     
 
 END;
 $BODY$
   LANGUAGE PLPGSQL VOLATILE;
-ALTER FUNCTION gpSelect_MovementItem_PartionGoods (Integer, Integer, TVarChar) OWNER TO postgres;
+ALTER FUNCTION gpSelect_PartionDateGoods (Integer, Integer, TVarChar) OWNER TO postgres;
 
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
@@ -134,4 +112,6 @@ ALTER FUNCTION gpSelect_MovementItem_PartionGoods (Integer, Integer, TVarChar) O
 */
 
 -- тест
--- select * from gpSelect_MovementItem_PartionGoods(inUnitId := 377610 ,  inGoodsId := 2149403 ,  inSession := '3');
+-- 
+
+select * from gpSelect_PartionDateGoods(inUnitId := 7117700 , inGoodsId := 30745 ,  inSession := '3');

@@ -28,6 +28,8 @@ $BODY$
    DECLARE vbAmountIncome TFloat;
    DECLARE vbAmountOther TFloat;
    DECLARE vbOperDate TDateTime;
+   DECLARE vbMISendId Integer;
+   DECLARE vbCommentTRId Integer;
 BEGIN
 
      -- проверка прав пользователя на вызов процедуры
@@ -38,23 +40,38 @@ BEGIN
        RAISE EXCEPTION 'Ошибка.Фактическое количество не может быть ментше 0.';
      END IF;
 
-     IF EXISTS(SELECT 1 FROM MovementItemFloat 
+     IF EXISTS(SELECT 1 FROM MovementItemFloat
                WHERE MovementItemFloat.MovementItemId = ioId
                  AND MovementItemFloat.DescId = zc_MIFloat_MovementItemId())
-        AND COALESCE(inAmount, 0) <> COALESCE((SELECT MovementItem.Amount FROM MovementItem WHERE MovementItem.ID = ioId), 0) 
-        AND NOT EXISTS (SELECT 1 FROM ObjectLink_UserRole_View  WHERE UserId = vbUserId AND RoleId = zc_Enum_Role_Admin())
      THEN
-       RAISE EXCEPTION 'Ошибка.Изменятьпозиции количество по строкам сформированным из перемещений по СУН запрещено.';
+
+       SELECT MovementItemFloat.ValueData::Integer, MILinkObject_CommentTR.ObjectId
+       INTO vbMISendId, vbCommentTRId
+       FROM MovementItemFloat
+
+            LEFT JOIN MovementItemLinkObject AS MILinkObject_CommentTR
+                                             ON MILinkObject_CommentTR.MovementItemId = MovementItemFloat.MovementItemId
+                                            AND MILinkObject_CommentTR.DescId = zc_MILinkObject_CommentTR()
+
+       WHERE MovementItemFloat.MovementItemId = ioId
+                 AND MovementItemFloat.DescId = zc_MIFloat_MovementItemId();
+
+       IF (COALESCE(inAmount, 0) <> COALESCE((SELECT MovementItem.Amount FROM MovementItem WHERE MovementItem.ID = ioId), 0) OR
+           COALESCE(vbCommentTRId, 0) <> COALESCE(inCommentTRID, 0))
+          AND NOT EXISTS (SELECT 1 FROM ObjectLink_UserRole_View  WHERE UserId = vbUserId AND RoleId = zc_Enum_Role_Admin())
+       THEN
+         RAISE EXCEPTION 'Ошибка.Изменятьпозиции количество по строкам сформированным из перемещений по СУН запрещено.';
+       END IF;
      END IF;
 
      IF EXISTS(SELECT 1 FROM MovementBoolean
                WHERE MovementBoolean.MovementId = inMovementId
                  AND MovementBoolean.DescId = zc_MovementBoolean_CorrectionSUN()
                  AND MovementBoolean.ValueData = TRUE)
-        AND NOT EXISTS(SELECT 1 FROM MovementItemFloat 
+        AND NOT EXISTS(SELECT 1 FROM MovementItemFloat
                        WHERE MovementItemFloat.MovementItemId = ioId
                          AND MovementItemFloat.DescId = zc_MIFloat_MovementItemId())
-        AND COALESCE(inCommentTRID, 0) <> 13619611 
+        AND COALESCE(inCommentTRID, 0) <> 13619611
      THEN
        RAISE EXCEPTION 'Ошибка.В техническом переучете "Коррекция СУН" можно добавлять только товар с примечанием "Пересорт".';
      END IF;
@@ -124,4 +141,3 @@ LANGUAGE PLPGSQL VOLATILE;
 
 -- тест
 -- SELECT * FROM gpInsertUpdate_MovementItem_TechnicalRediscount (ioId:= 0, inMovementId:= 10, inGoodsId:= 1, inAmount:= 0, inHeadCount:= 0, inPartionGoods:= '', inGoodsKindId:= 0, inSession:= '2')
-

@@ -178,6 +178,9 @@ type
     actClearCommentSend: TdsdSetDefaultParams;
     TechnicalRediscountInvNumber: TcxGridDBColumn;
     TechnicalRediscountOperDate: TcxGridDBColumn;
+    spUpdate_MovementItem_ContainerId: TdsdStoredProc;
+    actUpdate_MovementItem_ContainerId: TdsdExecStoredProc;
+    dxBarButton7: TdxBarButton;
   private
     { Private declarations }
   public

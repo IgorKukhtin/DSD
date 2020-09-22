@@ -556,6 +556,40 @@ inherited TechnicalRediscountForm: TTechnicalRediscountForm
       DataSource = MasterDS
       IdFieldName = 'IDSend'
     end
+    object actChoiceCommentSend: TOpenChoiceForm
+      Category = 'DSDLib'
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      Caption = 'ChoiceCommentSend'
+      FormName = 'TCommentSendForm'
+      FormNameParam.Value = 'TCommentSendForm'
+      FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
+      GuiParams = <
+        item
+          Name = 'Key'
+          Value = Null
+          Component = FormParams
+          ComponentItem = 'CommentSendId'
+          MultiSelectSeparator = ','
+        end>
+      isShowModal = True
+    end
+    object actUpdateCommentSend: TdsdExecStoredProc
+      Category = 'DSDLib'
+      MoveParams = <>
+      AfterAction = actRefresh
+      BeforeAction = actChoiceCommentSend
+      PostDataSetBeforeExecute = False
+      StoredProc = spUpdateCommentSend
+      StoredProcList = <
+        item
+          StoredProc = spUpdateCommentSend
+        end>
+      Caption = #1048#1079#1084#1077#1085#1080#1090#1100' '#1082#1086#1084#1077#1085#1090#1072#1088#1080#1081' '#1074' '#1087#1077#1088#1077#1084#1077#1097#1077#1085#1080#1080' '#1057#1059#1053
+      Hint = #1048#1079#1084#1077#1085#1080#1090#1100' '#1082#1086#1084#1077#1085#1090#1072#1088#1080#1081' '#1074' '#1087#1077#1088#1077#1084#1077#1097#1077#1085#1080#1080' '#1057#1059#1053
+      ImageIndex = 79
+    end
   end
   inherited spSelect: TdsdStoredProc
     StoredProcName = 'gpSelect_MovementItem_TechnicalRediscount'
@@ -631,11 +665,15 @@ inherited TechnicalRediscountForm: TTechnicalRediscountForm
         end
         item
           Visible = True
-          ItemName = 'bbGridToExcel'
+          ItemName = 'dxBarButton4'
         end
         item
           Visible = True
           ItemName = 'dxBarStatic'
+        end
+        item
+          Visible = True
+          ItemName = 'bbGridToExcel'
         end>
     end
     inherited bbMovementItemProtocol: TdxBarButton
@@ -661,6 +699,10 @@ inherited TechnicalRediscountForm: TTechnicalRediscountForm
     end
     object dxBarButton3: TdxBarButton
       Action = actOpenSend
+      Category = 0
+    end
+    object dxBarButton4: TdxBarButton
+      Action = actUpdateCommentSend
       Category = 0
     end
   end
@@ -726,6 +768,11 @@ inherited TechnicalRediscountForm: TTechnicalRediscountForm
       end
       item
         Name = 'GoodsId'
+        Value = Null
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'CommentSendId'
         Value = Null
         MultiSelectSeparator = ','
       end>
@@ -1300,5 +1347,30 @@ inherited TechnicalRediscountForm: TTechnicalRediscountForm
       end>
     Left = 288
     Top = 16
+  end
+  object spUpdateCommentSend: TdsdStoredProc
+    StoredProcName = 'gpUpdate_MI_TechnicalRediscount_CommentSend'
+    DataSets = <>
+    OutputType = otResult
+    Params = <
+      item
+        Name = 'inMovementItemId'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'Id'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inCommentSendId'
+        Value = Null
+        Component = FormParams
+        ComponentItem = 'CommentSendId'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end>
+    PackSize = 1
+    Left = 678
+    Top = 312
   end
 end

@@ -58,6 +58,10 @@ type
     cbCorrectionSUN: TcxCheckBox;
     actOpenSend: TdsdInsertUpdateAction;
     dxBarButton3: TdxBarButton;
+    actChoiceCommentSend: TOpenChoiceForm;
+    spUpdateCommentSend: TdsdStoredProc;
+    actUpdateCommentSend: TdsdExecStoredProc;
+    dxBarButton4: TdxBarButton;
   private
     { Private declarations }
   public

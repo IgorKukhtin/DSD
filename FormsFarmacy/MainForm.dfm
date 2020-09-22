@@ -3894,6 +3894,18 @@ inherited MainForm: TMainForm
       GuiParams = <>
       isShowModal = False
     end
+    object actReport_ArrivalWithoutSales: TdsdOpenForm
+      Category = #1054#1090#1095#1077#1090#1099
+      MoveParams = <>
+      Caption = #1055#1088#1080#1093#1086#1076#1099' '#1073#1077#1079' '#1087#1088#1086#1076#1072#1078' '#1079#1072' '#1087#1077#1088#1080#1086#1076
+      Hint = #1055#1088#1080#1093#1086#1076#1099' '#1073#1077#1079' '#1087#1088#1086#1076#1072#1078' '#1079#1072' '#1087#1077#1088#1080#1086#1076
+      FormName = 'TReport_ArrivalWithoutSalesForm'
+      FormNameParam.Value = 'TReport_ArrivalWithoutSalesForm'
+      FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
+      GuiParams = <>
+      isShowModal = False
+    end
   end
   inherited UserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn
     Left = 496
@@ -4555,6 +4567,9 @@ inherited MainForm: TMainForm
       end
       object N207: TMenuItem
         Action = actReport_PromoEntrances
+      end
+      object N255: TMenuItem
+        Action = actReport_ArrivalWithoutSales
       end
     end
     object N200: TMenuItem [6]

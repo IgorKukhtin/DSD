@@ -263,8 +263,8 @@ BEGIN
                  , tmpAdditionalExpenses.SummaSP                AS SummaSP
                  , tmpAdditionalExpenses.SummaOther             AS SummaOther
                  , tmpAdditionalExpenses.SummaValidationResults AS SummaValidationResults
-                 , FoundPositionsSUN.SummaFine                  AS SummaFine
                  , tmpAdditionalExpenses.SummaSUN1              AS SummaSUN1
+                 , FoundPositionsSUN.SummaFine                  AS SummaFine
                  , tmpAdditionalExpenses.SummaTechnicalRediscount AS SummaTechnicalRediscount
                  , tmpAdditionalExpenses.SummaMoneyBox          AS SummaMoneyBox
                  , tmpAdditionalExpenses.SummaFullCharge        AS SummaFullCharge
