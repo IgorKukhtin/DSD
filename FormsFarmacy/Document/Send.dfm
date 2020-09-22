@@ -1777,6 +1777,7 @@ inherited SendForm: TSendForm
           Name = 'isAddNewLine'
           Value = False
           Component = FormParams
+          ComponentItem = 'isAddNewLine'
           DataType = ftBoolean
           MultiSelectSeparator = ','
         end
@@ -3851,7 +3852,7 @@ inherited SendForm: TSendForm
         MultiSelectSeparator = ','
       end
       item
-        Name = 'ContainerID'
+        Name = 'inContainerID'
         Value = 'False'
         Component = FormParams
         ComponentItem = 'ContainerID'
@@ -3864,6 +3865,7 @@ inherited SendForm: TSendForm
         Component = FormParams
         ComponentItem = 'isAddNewLine'
         DataType = ftBoolean
+        ParamType = ptInput
         MultiSelectSeparator = ','
       end>
     PackSize = 1
