@@ -774,12 +774,15 @@ CREATE OR REPLACE FUNCTION zc_ObjectBoolean_Goods_ExceptionUKTZED() RETURNS Inte
 INSERT INTO ObjectBooleanDesc (DescId, Code, ItemName)
   SELECT zc_Object_Goods(), 'zc_ObjectBoolean_Goods_ExceptionUKTZED', 'Исключение для запрета к фискальной продаже по УКТВЭД' WHERE NOT EXISTS (SELECT * FROM ObjectBooleanDesc WHERE Code = 'zc_ObjectBoolean_Goods_ExceptionUKTZED');
 
-
+CREATE OR REPLACE FUNCTION zc_ObjectBoolean_GoodsQuality_Klipsa() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM ObjectBooleanDesc WHERE Code = 'zc_ObjectBoolean_GoodsQuality_Klipsa'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
+INSERT INTO ObjectBooleanDesc (DescId, Code, ItemName)
+  SELECT zc_Object_GoodsQuality(), 'zc_ObjectBoolean_GoodsQuality_Klipsa', 'Клипсованный товар(да/нет)' WHERE NOT EXISTS (SELECT * FROM ObjectBooleanDesc WHERE Code = 'zc_ObjectBoolean_GoodsQuality_Klipsa');
 
 
 /*-------------------------------------------------------------------------------
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.  Воробкало А.А.  Ярошенко Р.Ф.   Подмогильный В.В.   Шаблий О.В.
+ 23.09.20         * zc_ObjectBoolean_GoodsQuality_Klipsa
  22.09.20                                                                                                          * zc_ObjectBoolean_Goods_ExceptionUKTZED 
  15.09.20                                                                                                          * zc_ObjectBoolean_CommentSun_LostPositions 
  10.09.20         * zc_ObjectBoolean_Receipt_Disabled

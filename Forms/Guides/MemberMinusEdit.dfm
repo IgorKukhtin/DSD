@@ -462,8 +462,8 @@ object MemberMinusEditForm: TMemberMinusEditForm
         ParamType = ptInput
         MultiSelectSeparator = ','
       end>
-    Left = 131
-    Top = 31
+    Left = 171
+    Top = 23
   end
   object GuidesTo: TdsdGuides
     KeyField = 'Id'
@@ -491,8 +491,8 @@ object MemberMinusEditForm: TMemberMinusEditForm
         ParamType = ptInput
         MultiSelectSeparator = ','
       end>
-    Left = 99
-    Top = 79
+    Left = 211
+    Top = 71
   end
   object GuidesBankAccountFrom: TdsdGuides
     KeyField = 'Id'

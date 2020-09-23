@@ -21,7 +21,7 @@ uses
   dsdDB, dsdAction, Vcl.ActnList, dxBarExtItems, dxBar, cxClasses,
   cxPropertiesStore, Datasnap.DBClient, cxGridLevel, cxGridCustomTableView,
   cxGridTableView, cxGridDBTableView, cxGridCustomView, cxGrid, cxCheckBox,
-  cxCurrencyEdit;
+  cxCurrencyEdit, cxButtonEdit;
 
 type
   TMemberMinusForm = class(TParentForm)
@@ -64,6 +64,12 @@ type
     Summ: TcxGridDBColumn;
     actShowAll: TBooleanStoredProcAction;
     bbShowAll: TdxBarButton;
+    spInsertUpdate: TdsdStoredProc;
+    actUpdateDataSet: TdsdUpdateDataSet;
+    ChoiceFormTo: TOpenChoiceForm;
+    ChoiceFormBankAccountFrom: TOpenChoiceForm;
+    ChoiceFormBankAccountTo: TOpenChoiceForm;
+    ChoiceFormFrom: TOpenChoiceForm;
   private
     { Private declarations }
   public
