@@ -66,10 +66,16 @@
 			<Projects Include="EDIOrdersLoader.dproj">
 				<Dependencies/>
 			</Projects>
+			<Projects Include="Boutique.dproj">
+				<Dependencies/>
+			</Projects>
 			<Projects Include="..\TEST\DPR\BoutiqueTest.dproj">
 				<Dependencies/>
 			</Projects>
-			<Projects Include="Boutique.dproj">
+			<Projects Include="ProjectBoat.dproj">
+				<Dependencies/>
+			</Projects>
+			<Projects Include="..\TEST\DPR\ProjectBoatTest.dproj">
 				<Dependencies/>
 			</Projects>
 		</ItemGroup>
@@ -269,15 +275,6 @@
 		<Target Name="EDIOrdersLoader:Make">
 			<MSBuild Projects="EDIOrdersLoader.dproj" Targets="Make"/>
 		</Target>
-		<Target Name="BoutiqueTest">
-			<MSBuild Projects="..\TEST\DPR\BoutiqueTest.dproj"/>
-		</Target>
-		<Target Name="BoutiqueTest:Clean">
-			<MSBuild Projects="..\TEST\DPR\BoutiqueTest.dproj" Targets="Clean"/>
-		</Target>
-		<Target Name="BoutiqueTest:Make">
-			<MSBuild Projects="..\TEST\DPR\BoutiqueTest.dproj" Targets="Make"/>
-		</Target>
 		<Target Name="Boutique">
 			<MSBuild Projects="Boutique.dproj"/>
 		</Target>
@@ -287,14 +284,41 @@
 		<Target Name="Boutique:Make">
 			<MSBuild Projects="Boutique.dproj" Targets="Make"/>
 		</Target>
+		<Target Name="BoutiqueTest">
+			<MSBuild Projects="..\TEST\DPR\BoutiqueTest.dproj"/>
+		</Target>
+		<Target Name="BoutiqueTest:Clean">
+			<MSBuild Projects="..\TEST\DPR\BoutiqueTest.dproj" Targets="Clean"/>
+		</Target>
+		<Target Name="BoutiqueTest:Make">
+			<MSBuild Projects="..\TEST\DPR\BoutiqueTest.dproj" Targets="Make"/>
+		</Target>
+		<Target Name="ProjectBoat">
+			<MSBuild Projects="ProjectBoat.dproj"/>
+		</Target>
+		<Target Name="ProjectBoat:Clean">
+			<MSBuild Projects="ProjectBoat.dproj" Targets="Clean"/>
+		</Target>
+		<Target Name="ProjectBoat:Make">
+			<MSBuild Projects="ProjectBoat.dproj" Targets="Make"/>
+		</Target>
+		<Target Name="ProjectBoatTest">
+			<MSBuild Projects="..\TEST\DPR\ProjectBoatTest.dproj"/>
+		</Target>
+		<Target Name="ProjectBoatTest:Clean">
+			<MSBuild Projects="..\TEST\DPR\ProjectBoatTest.dproj" Targets="Clean"/>
+		</Target>
+		<Target Name="ProjectBoatTest:Make">
+			<MSBuild Projects="..\TEST\DPR\ProjectBoatTest.dproj" Targets="Make"/>
+		</Target>
 		<Target Name="Build">
-			<CallTarget Targets="ProjectComponent;ProjectDesignComponent;Project;ProjectTest;Load_PostgreSql;FarmacyTest;Farmacy;FarmacyCash;FarmacyCashServise;ProjectCom;Scale;ScaleCeh;GetEmail;GetEmailMMO;GetEmailTEST;SavePriceToXls;ExportSalesForSuppliers;Podium;PodiumTest;Load_Repl;EDIOrdersLoader;BoutiqueTest;Boutique"/>
+			<CallTarget Targets="ProjectComponent;ProjectDesignComponent;Project;ProjectTest;Load_PostgreSql;FarmacyTest;Farmacy;FarmacyCash;FarmacyCashServise;ProjectCom;Scale;ScaleCeh;GetEmail;GetEmailMMO;GetEmailTEST;SavePriceToXls;ExportSalesForSuppliers;Podium;PodiumTest;Load_Repl;EDIOrdersLoader;Boutique;BoutiqueTest;ProjectBoat;ProjectBoatTest"/>
 		</Target>
 		<Target Name="Clean">
-			<CallTarget Targets="ProjectComponent:Clean;ProjectDesignComponent:Clean;Project:Clean;ProjectTest:Clean;Load_PostgreSql:Clean;FarmacyTest:Clean;Farmacy:Clean;FarmacyCash:Clean;FarmacyCashServise:Clean;ProjectCom:Clean;Scale:Clean;ScaleCeh:Clean;GetEmail:Clean;GetEmailMMO:Clean;GetEmailTEST:Clean;SavePriceToXls:Clean;ExportSalesForSuppliers:Clean;Podium:Clean;PodiumTest:Clean;Load_Repl:Clean;EDIOrdersLoader:Clean;BoutiqueTest:Clean;Boutique:Clean"/>
+			<CallTarget Targets="ProjectComponent:Clean;ProjectDesignComponent:Clean;Project:Clean;ProjectTest:Clean;Load_PostgreSql:Clean;FarmacyTest:Clean;Farmacy:Clean;FarmacyCash:Clean;FarmacyCashServise:Clean;ProjectCom:Clean;Scale:Clean;ScaleCeh:Clean;GetEmail:Clean;GetEmailMMO:Clean;GetEmailTEST:Clean;SavePriceToXls:Clean;ExportSalesForSuppliers:Clean;Podium:Clean;PodiumTest:Clean;Load_Repl:Clean;EDIOrdersLoader:Clean;Boutique:Clean;BoutiqueTest:Clean;ProjectBoat:Clean;ProjectBoatTest:Clean"/>
 		</Target>
 		<Target Name="Make">
-			<CallTarget Targets="ProjectComponent:Make;ProjectDesignComponent:Make;Project:Make;ProjectTest:Make;Load_PostgreSql:Make;FarmacyTest:Make;Farmacy:Make;FarmacyCash:Make;FarmacyCashServise:Make;ProjectCom:Make;Scale:Make;ScaleCeh:Make;GetEmail:Make;GetEmailMMO:Make;GetEmailTEST:Make;SavePriceToXls:Make;ExportSalesForSuppliers:Make;Podium:Make;PodiumTest:Make;Load_Repl:Make;EDIOrdersLoader:Make;BoutiqueTest:Make;Boutique:Make"/>
+			<CallTarget Targets="ProjectComponent:Make;ProjectDesignComponent:Make;Project:Make;ProjectTest:Make;Load_PostgreSql:Make;FarmacyTest:Make;Farmacy:Make;FarmacyCash:Make;FarmacyCashServise:Make;ProjectCom:Make;Scale:Make;ScaleCeh:Make;GetEmail:Make;GetEmailMMO:Make;GetEmailTEST:Make;SavePriceToXls:Make;ExportSalesForSuppliers:Make;Podium:Make;PodiumTest:Make;Load_Repl:Make;EDIOrdersLoader:Make;Boutique:Make;BoutiqueTest:Make;ProjectBoat:Make;ProjectBoatTest:Make"/>
 		</Target>
 		<Import Condition="Exists('$(BDS)\Bin\CodeGear.Group.Targets')" Project="$(BDS)\Bin\CodeGear.Group.Targets"/>
 	</Project>
