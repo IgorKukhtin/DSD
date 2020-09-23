@@ -47,6 +47,14 @@ object GoodsQualityForm: TGoodsQualityForm
       OptionsView.HeaderAutoHeight = True
       OptionsView.Indicator = True
       Styles.StyleSheet = dmMain.cxGridTableViewStyleSheet
+      object isKlipsa: TcxGridDBColumn
+        Caption = #1050#1083#1080#1087#1089'. '#1090#1086#1074'. ('#1076#1072'/'#1085#1077#1090')'
+        DataBinding.FieldName = 'isKlipsa'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        HeaderHint = #1050#1083#1080#1087#1089#1086#1074#1072#1085#1085#1099#1081' '#1090#1086#1074#1072#1088'('#1076#1072'/'#1085#1077#1090')'
+        Width = 70
+      end
       object Code: TcxGridDBColumn
         Caption = #1050#1086#1076
         DataBinding.FieldName = 'Code'
@@ -631,6 +639,7 @@ object GoodsQualityForm: TGoodsQualityForm
     ColumnAddOnList = <>
     ColumnEnterList = <>
     SummaryItemList = <>
+    PropertiesCellList = <>
     Left = 168
     Top = 216
   end
@@ -767,6 +776,15 @@ object GoodsQualityForm: TGoodsQualityForm
         Value = Null
         Component = ClientDataSet
         ComponentItem = 'QualityId'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inisKlipsa'
+        Value = False
+        Component = ClientDataSet
+        ComponentItem = 'isKlipsa'
+        DataType = ftBoolean
         ParamType = ptInput
         MultiSelectSeparator = ','
       end>
