@@ -433,6 +433,10 @@ type
     spUpdate_MI_ContractCondition: TdsdStoredProc;
     actUpdate_MI_ContractCondition: TdsdExecStoredProc;
     bbUpdate_MI_ContractCondition: TdxBarButton;
+    spInsertUpdate_MI_PriceCalc: TdsdStoredProc;
+    actInsertUpdate_MI_PriceCalc: TdsdExecStoredProc;
+    macUpdate_calc: TMultiAction;
+    actRefreshCalc: TdsdDataSetRefresh;
   private
     { Private declarations }
   public
