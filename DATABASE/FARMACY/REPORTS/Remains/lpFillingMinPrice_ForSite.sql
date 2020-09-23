@@ -40,79 +40,6 @@ BEGIN
                                 )
                                 , 0)  :: TFloat;
 
-    -- !!!ОПТИМИЗАЦИЯ!!!
-    ANALYZE ObjectLink;
-
-    IF EXISTS (SELECT * FROM INFORMATION_SCHEMA.tables WHERE TABLE_NAME = LOWER ('_tmpminprice_remains'))
-    THEN
-      DROP TABLE _tmpMinPrice_Remains;
-    END IF;
-
-    -- Остатки - оптимизация
-    CREATE TEMP TABLE _tmpMinPrice_Remains ON COMMIT DROP AS
-        (WITH tmpRemains AS
-              (SELECT Object_Goods_View.Id AS ObjectId_retail
-               FROM Object_Goods_View
-               WHERE Object_Goods_View.ObjectId = 4
-                 AND Object_Goods_View.isErased = False)
-
-        SELECT
-            ObjectLink_Child_NB.ChildObjectId         AS ObjectID           -- !!!временно захардкодил, будет всегда товар НеБолей!!!
-          , tmpRemains.ObjectId_retail                                      -- здесь товар "сети"
-        FROM tmpRemains
-                                    -- !!!временно захардкодил, будет всегда товар НеБолей!!!!
-                                    INNER JOIN ObjectLink AS ObjectLink_Child
-                                                          ON ObjectLink_Child.ChildObjectId = tmpRemains.ObjectId_retail
-                                                         AND ObjectLink_Child.DescId        = zc_ObjectLink_LinkGoods_Goods()
-                                    INNER JOIN  ObjectLink AS ObjectLink_Main ON ObjectLink_Main.ObjectId = ObjectLink_Child.ObjectId
-                                                                             AND ObjectLink_Main.DescId   = zc_ObjectLink_LinkGoods_GoodsMain()
-                                    INNER JOIN ObjectLink AS ObjectLink_Main_NB ON ObjectLink_Main_NB.ChildObjectId = ObjectLink_Main.ChildObjectId
-                                                                               AND ObjectLink_Main_NB.DescId        = zc_ObjectLink_LinkGoods_GoodsMain()
-                                    INNER JOIN ObjectLink AS ObjectLink_Child_NB ON ObjectLink_Child_NB.ObjectId = ObjectLink_Main_NB.ObjectId
-                                                                                AND ObjectLink_Child_NB.DescId   = zc_ObjectLink_LinkGoods_Goods()
-                                    INNER JOIN ObjectLink AS ObjectLink_Goods_Object
-                                                          ON ObjectLink_Goods_Object.ObjectId = ObjectLink_Child_NB.ChildObjectId
-                                                         AND ObjectLink_Goods_Object.DescId = zc_ObjectLink_Goods_Object()
-                                                         AND ObjectLink_Goods_Object.ChildObjectId = 4 -- !!!NeBoley!!!
-       );
-
-    ANALYZE _tmpMinPrice_Remains;
-
-    IF EXISTS (SELECT * FROM INFORMATION_SCHEMA.tables WHERE TABLE_NAME = LOWER ('_tmpminprice_remainslist'))
-    THEN
-      DROP TABLE _tmpMinPrice_RemainsList;
-    END IF;
-
-    -- Остатки + коды ...
-    CREATE TEMP TABLE _tmpMinPrice_RemainsList ON COMMIT DROP AS
-       (SELECT DISTINCT
-            _tmpMinPrice_Remains.ObjectId,                  -- здесь товар "сети"
-            _tmpMinPrice_Remains.ObjectId_retail,           -- здесь товар "сети"
-            ObjectLink_LinkGoods_Main.ChildObjectId       AS GoodsMainId, -- здесь "общий" товар
-            ObjectLink_LinkGoods_Child_jur.ChildObjectId  AS GoodsId        -- здесь товар "поставщика"
-        FROM _tmpMinPrice_Remains
-
-            INNER JOIN ObjectLink AS ObjectLink_LinkGoods_Child
-                                  ON ObjectLink_LinkGoods_Child.ChildObjectId = _tmpMinPrice_Remains.objectid
-                                 AND ObjectLink_LinkGoods_Child.DescId        = zc_ObjectLink_LinkGoods_Goods()
-            INNER JOIN ObjectLink AS ObjectLink_LinkGoods_Main
-                                  ON ObjectLink_LinkGoods_Main.ObjectId = ObjectLink_LinkGoods_Child.ObjectId
-                                 AND ObjectLink_LinkGoods_Main.DescId   = zc_ObjectLink_LinkGoods_GoodsMain()
-
-            INNER JOIN ObjectLink AS ObjectLink_LinkGoods_Main_jur
-                                  ON ObjectLink_LinkGoods_Main_jur.ChildObjectId = ObjectLink_LinkGoods_Main.ChildObjectId
-                                 AND ObjectLink_LinkGoods_Main_jur.DescId = zc_ObjectLink_LinkGoods_GoodsMain()
-            INNER JOIN ObjectLink AS ObjectLink_LinkGoods_Child_jur
-                                  ON ObjectLink_LinkGoods_Child_jur.ObjectId = ObjectLink_LinkGoods_Main_jur.ObjectId
-                                 AND ObjectLink_LinkGoods_Child_jur.DescId = zc_ObjectLink_LinkGoods_Goods()
-            INNER JOIN ObjectLink AS ObjectLink_Goods_Object_jur
-                                  ON ObjectLink_Goods_Object_jur.ObjectId = ObjectLink_LinkGoods_Child_jur.ChildObjectId
-                                 AND ObjectLink_Goods_Object_jur.DescId = zc_ObjectLink_Goods_Object()
-            INNER JOIN Object ON Object.Id =ObjectLink_Goods_Object_jur.ChildObjectId
-                              AND Object.DescId = zc_Object_Juridical()
-       );
-
-    ANALYZE _tmpMinPrice_RemainsList;
 
   CREATE TABLE MinPrice_ForSite_Temp
   (
@@ -163,14 +90,21 @@ BEGIN
                    FROM lpSelect_MovementItem_Promo_onDate (inOperDate:= CURRENT_DATE) AS tmp
                    WHERE vbIsGoodsPromo = TRUE -- !!!т.е. только в этом случае учитывается маркет. контракт!!!
                   )
+  , tmpObject_Goods AS (SELECT Object_Goods_Retail.id
+                             , Object_Goods_Retail.GoodsMainId
+                             , Object_Goods_Retail.isTop
+                             , Object_Goods_Main.ObjectCode
+                             , Object_Goods_Main.Name
+                        FROM Object_Goods_Retail
+                             LEFT JOIN Object_Goods_Main ON Object_Goods_Main.Id = Object_Goods_Retail.GoodsMainId
+                        WHERE Object_Goods_Retail.RetailId = inObjectId)
     -- Список цены + ТОП
   , GoodsPrice AS
-       (SELECT _tmpMinPrice_RemainsList.GoodsId
+       (SELECT tmpObject_Goods.Id                            AS GoodsId
              , COALESCE (ObjectBoolean_Top.ValueData, FALSE) AS isTOP
-        FROM _tmpMinPrice_RemainsList
+        FROM tmpObject_Goods
              INNER JOIN ObjectLink AS ObjectLink_Price_Goods
-                                   -- ON ObjectLink_Price_Goods.ChildObjectId = _tmpMinPrice_RemainsList.GoodsId
-                                   ON ObjectLink_Price_Goods.ChildObjectId = _tmpMinPrice_RemainsList.ObjectId_retail
+                                   ON ObjectLink_Price_Goods.ChildObjectId = tmpObject_Goods.Id
                                   AND ObjectLink_Price_Goods.DescId = zc_ObjectLink_Price_Goods()
              INNER JOIN ObjectLink AS ObjectLink_Price_Unit
                                    ON ObjectLink_Price_Unit.ChildObjectId = inUnitId
@@ -178,7 +112,6 @@ BEGIN
                                   AND ObjectLink_Price_Unit.DescId = zc_ObjectLink_Price_Unit()
              LEFT JOIN ObjectBoolean AS ObjectBoolean_Top
                                      ON ObjectBoolean_Top.ObjectId = ObjectLink_Price_Goods.ObjectId
-                                     -- ON ObjectBoolean_Top.ObjectId = _tmpMinPrice_RemainsList.ObjectId_retail
                                     AND ObjectBoolean_Top.DescId = zc_ObjectBoolean_Price_Top()
         WHERE ObjectBoolean_Top.ValueData = TRUE
        )
@@ -192,22 +125,32 @@ BEGIN
                                    , LoadPriceListItem.Price
                                    , LoadPriceListItem.ExpirationDate
                                    , ROW_NUMBER() OVER (PARTITION BY LoadPriceList.Id , LoadPriceListItem.GoodsId ORDER BY LoadPriceListItem.Price Desc)  AS Ord
+                                   , Object_JuridicalGoods.Id           AS Partner_GoodsId
+                                   , Object_JuridicalGoods.Code         AS Partner_GoodsCode
+                                   , Object_JuridicalGoods.Name         AS Partner_GoodsName
+                                   , Object_JuridicalGoods.MakerName    AS MakerName
+                                   , Object_JuridicalGoods.MinimumLot   AS MinimumLot
+                                   , Object_JuridicalGoods.IsPromo      AS IsPromo
 
 
                               FROM LoadPriceList
                                    INNER JOIN LoadPriceListItem ON LoadPriceList.Id = LoadPriceListItem.LoadPriceListId
-                                                               AND COALESCE (LoadPriceListItem.GoodsId, 0) <> 0)
+                                                               AND COALESCE (LoadPriceListItem.GoodsId, 0) <> 0
+                                   -- товар "поставщика", если он есть в прайсах !!!а он есть!!!
+                                   INNER JOIN Object_Goods_Juridical AS Object_JuridicalGoods
+                                                                     ON Object_JuridicalGoods.GoodsMainId = LoadPriceListItem.GoodsId
+                                                                    AND Object_JuridicalGoods.JuridicalId = LoadPriceList.JuridicalId)
 
               -- товары в прайс-листе (поставщика)
   , tmpMinPrice_RemainsPrice as (SELECT
-            _tmpMinPrice_RemainsList.ObjectId                 AS GoodsId
-          , _tmpMinPrice_RemainsList.ObjectId_retail          AS GoodsId_retail
-          , Goods.GoodsCodeInt                 AS GoodsCode
-          , Goods.GoodsName                    AS GoodsName
+            tmpObject_Goods.Id                 AS GoodsId
+          , tmpObject_Goods.Id                 AS GoodsId_retail
+          , tmpObject_Goods.ObjectCode         AS GoodsCode
+          , tmpObject_Goods.Name               AS GoodsName
             -- просто цена поставщика
           , LoadPriceListItem.Price            AS Price
             -- минимальная цена поставщика - для товара "сети"
-          , MIN (LoadPriceListItem.Price) OVER (PARTITION BY _tmpMinPrice_RemainsList.ObjectId) AS MinPrice
+          , MIN (LoadPriceListItem.Price) OVER (PARTITION BY  tmpObject_Goods.Id) AS MinPrice
           , LoadPriceListItem.ID               AS PriceListMovementItemId
           , LoadPriceListItem.ExpirationDate   AS PartionGoodsDate
           , CASE -- если Цена поставщика не попадает в ценовые промежутки
@@ -221,24 +164,24 @@ BEGIN
                   * (1 - COALESCE (GoodsPromo.ChangePercent, 0) / 100)
             END :: TFloat AS FinalPrice
 
-          , Object_JuridicalGoods.Id           AS Partner_GoodsId
-          , Object_JuridicalGoods.GoodsCode    AS Partner_GoodsCode
-          , Object_JuridicalGoods.GoodsName    AS Partner_GoodsName
-          , Object_JuridicalGoods.MakerName    AS MakerName
+          , LoadPriceListItem.Partner_GoodsId           AS Partner_GoodsId
+          , LoadPriceListItem.Partner_GoodsCode         AS Partner_GoodsCode
+          , LoadPriceListItem.Partner_GoodsName         AS Partner_GoodsName
+          , LoadPriceListItem.MakerName                 AS MakerName
           , LoadPriceListItem.ContractId       AS ContractId
           , Juridical.Id                       AS JuridicalId
           , Juridical.ValueData                AS JuridicalName
           , JuridicalSettings.isPriceClose     AS JuridicalIsPriceClose
           , COALESCE (ObjectFloat_Deferment.ValueData, 0) :: Integer AS Deferment
-          , COALESCE (NULLIF (GoodsPrice.isTOP, FALSE), COALESCE (ObjectBoolean_Goods_TOP.ValueData, FALSE) /*Goods.isTOP*/) AS isTOP
+          , COALESCE (NULLIF (GoodsPrice.isTOP, FALSE), COALESCE (tmpObject_Goods.isTOP, FALSE)) AS isTOP
 
           , LoadPriceListItem.AreaId           AS AreaId
 
         FROM -- Остатки + коды ...
-             _tmpMinPrice_RemainsList
+             tmpObject_Goods
 
               -- товары в прайс-листе (поставщика)
-             INNER JOIN tmpLoadPriceListItem AS LoadPriceListItem ON LoadPriceListItem.GoodsId = _tmpMinPrice_RemainsList.GoodsMainId
+             INNER JOIN tmpLoadPriceListItem AS LoadPriceListItem ON LoadPriceListItem.GoodsId = tmpObject_Goods.GoodsMainId
                                                                  AND LoadPriceListItem.Ord = 1
 
              -- Установки для юр. лиц (для поставщика определяется договор и т.п)
@@ -248,15 +191,7 @@ BEGIN
                                                AND LoadPriceListItem.Price >= tmpJuridicalSettingsItem.PriceLimit_min
                                                AND LoadPriceListItem.Price <= tmpJuridicalSettingsItem.PriceLimit
 
-             -- товар "поставщика", если он есть в прайсах !!!а он есть!!!
-             LEFT JOIN Object_Goods_View AS Object_JuridicalGoods ON Object_JuridicalGoods.Id = _tmpMinPrice_RemainsList.GoodsId
-             -- товар "сети"
-             LEFT JOIN Object_Goods_View AS Goods ON Goods.Id = _tmpMinPrice_RemainsList.ObjectId
-
-             LEFT JOIN ObjectBoolean AS ObjectBoolean_Goods_TOP
-                                     ON ObjectBoolean_Goods_TOP.ObjectId = _tmpMinPrice_RemainsList.ObjectId_retail
-                                    AND ObjectBoolean_Goods_TOP.DescId = zc_ObjectBoolean_Goods_TOP()
-             LEFT JOIN GoodsPrice ON GoodsPrice.GoodsId = _tmpMinPrice_RemainsList.ObjectId
+             LEFT JOIN GoodsPrice ON GoodsPrice.GoodsId = tmpObject_Goods.Id
 
              -- Поставщик
              INNER JOIN Object AS Juridical ON Juridical.Id = LoadPriceListItem.JuridicalId
@@ -267,10 +202,10 @@ BEGIN
                                   AND ObjectFloat_Deferment.DescId = zc_ObjectFloat_Contract_Deferment()
 
              -- % бонуса из Маркетинговый контракт
-             LEFT JOIN GoodsPromo ON GoodsPromo.GoodsId     = _tmpMinPrice_RemainsList.ObjectId
+             LEFT JOIN GoodsPromo ON GoodsPromo.GoodsId     =  tmpObject_Goods.Id
                                  AND GoodsPromo.JuridicalId = LoadPriceListItem.JuridicalId
-        WHERE (COALESCE (Object_JuridicalGoods.MinimumLot, 0) = 0
-            OR Object_JuridicalGoods.IsPromo                  = FALSE
+        WHERE (COALESCE (LoadPriceListItem.MinimumLot, 0) = 0
+            OR LoadPriceListItem.IsPromo                  = FALSE
               )
        )
 
@@ -392,5 +327,6 @@ ALTER FUNCTION lpFillingMinPrice_ForSite () OWNER TO postgres;
 */
 
 -- тест
---SELECT * FROM lpFillingMinPrice_ForSite ()
+--
+-- SELECT * FROM lpFillingMinPrice_ForSite ()
 -- SELECT Count(*) FROM MinPrice_ForSite    - 22572

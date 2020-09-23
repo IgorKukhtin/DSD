@@ -12,7 +12,9 @@ CREATE TABLE AccommodationLincGoods
 ALTER TABLE AccommodationLincGoods
   OWNER TO postgres;
 
-
+CREATE INDEX idx_AccommodationLincGoods_UnitId_GoodsId_Id ON public.AccommodationLincGoods
+  USING btree (UnitId, GoodsId, AccommodationId);
+  
 -------------------------------------------------------------------------------
 
 
@@ -25,3 +27,4 @@ ALTER TABLE AccommodationLincGoods
                  Шаблий О.В.
 22.08.2018         *
 */
+

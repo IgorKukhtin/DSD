@@ -213,6 +213,11 @@ type
     spUpdate_isSupplementSUN1_Revert: TdsdStoredProc;
     dxBarSubItem1: TdxBarSubItem;
     dxBarButton1: TdxBarButton;
+    isExceptionUKTZED: TcxGridDBColumn;
+    actUpdateExceptionUKTZED: TMultiAction;
+    execUpdate_ExceptionUKTZED: TdsdExecStoredProc;
+    spUpdate_inExceptionUKTZED_Revert: TdsdStoredProc;
+    dxBarButton2: TdxBarButton;
   private
     { Private declarations }
   public

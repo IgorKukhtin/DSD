@@ -582,6 +582,15 @@ inherited GoodsForm: TGoodsForm
             Options.Editing = False
             Width = 79
           end
+          object isExceptionUKTZED: TcxGridDBColumn
+            Caption = #1048#1089#1082#1083#1102#1095#1077#1085#1080#1077' '#1087#1086' '#1059#1050#1058#1042#1069#1044
+            DataBinding.FieldName = 'isExceptionUKTZED'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            HeaderHint = #1048#1089#1082#1083#1102#1095#1077#1085#1080#1077' '#1076#1083#1103' '#1079#1072#1087#1088#1077#1090#1072' '#1082' '#1092#1080#1089#1082#1072#1083#1100#1085#1086#1081' '#1087#1088#1086#1076#1072#1078#1077' '#1087#1086' '#1059#1050#1058#1042#1069#1044
+            Options.Editing = False
+            Width = 81
+          end
         end
       end
     end
@@ -721,7 +730,7 @@ inherited GoodsForm: TGoodsForm
         end
         item
           Name = 'inis_v1'
-          Value = 'false'
+          Value = False
           Component = FormParams
           ComponentItem = 'inis_v1'
           DataType = ftBoolean
@@ -1742,7 +1751,7 @@ inherited GoodsForm: TGoodsForm
         end
         item
           Name = 'inis_v1'
-          Value = 'false'
+          Value = False
           Component = FormParams
           ComponentItem = 'inis_v1'
           DataType = ftBoolean
@@ -1750,7 +1759,7 @@ inherited GoodsForm: TGoodsForm
         end
         item
           Name = 'inis_v2'
-          Value = 'false'
+          Value = False
           Component = FormParams
           ComponentItem = 'inis_v2'
           DataType = ftBoolean
@@ -1758,7 +1767,7 @@ inherited GoodsForm: TGoodsForm
         end
         item
           Name = 'inis_v4'
-          Value = 'false'
+          Value = False
           Component = FormParams
           ComponentItem = 'inis_v4'
           DataType = ftBoolean
@@ -1847,6 +1856,38 @@ inherited GoodsForm: TGoodsForm
           StoredProc = spUpdate_isSupplementSUN1_Revert
         end>
       Caption = 'execUpdate_isSupplementSUN1'
+    end
+    object actUpdateExceptionUKTZED: TMultiAction
+      Category = 'DSDLib'
+      MoveParams = <>
+      AfterAction = actRefresh
+      ActionList = <
+        item
+          Action = execUpdate_ExceptionUKTZED
+        end>
+      View = cxGridDBTableView
+      QuestionBeforeExecute = 
+        #1048#1079#1084#1077#1085#1080#1090#1100' '#1087#1088#1080#1079#1085#1072#1082' "'#1048#1089#1082#1083#1102#1095#1077#1085#1080#1077' '#1076#1083#1103' '#1079#1072#1087#1088#1077#1090#1072' '#1082' '#1092#1080#1089#1082#1072#1083#1100#1085#1086#1081' '#1087#1088#1086#1076#1072#1078#1077' '#1087#1086 +
+        ' '#1059#1050#1058#1042#1069#1044'"? '
+      InfoAfterExecute = #1042#1099#1087#1086#1083#1085#1077#1085#1086
+      Caption = 
+        #1048#1079#1084#1077#1085#1080#1090#1100' '#1087#1088#1080#1079#1085#1072#1082' "'#1048#1089#1082#1083#1102#1095#1077#1085#1080#1077' '#1076#1083#1103' '#1079#1072#1087#1088#1077#1090#1072' '#1082' '#1092#1080#1089#1082#1072#1083#1100#1085#1086#1081' '#1087#1088#1086#1076#1072#1078#1077' '#1087#1086 +
+        ' '#1059#1050#1058#1042#1069#1044'"'
+      Hint = 
+        #1048#1079#1084#1077#1085#1080#1090#1100' '#1087#1088#1080#1079#1085#1072#1082' "'#1048#1089#1082#1083#1102#1095#1077#1085#1080#1077' '#1076#1083#1103' '#1079#1072#1087#1088#1077#1090#1072' '#1082' '#1092#1080#1089#1082#1072#1083#1100#1085#1086#1081' '#1087#1088#1086#1076#1072#1078#1077' '#1087#1086 +
+        ' '#1059#1050#1058#1042#1069#1044'"'
+      ImageIndex = 79
+    end
+    object execUpdate_ExceptionUKTZED: TdsdExecStoredProc
+      Category = 'DSDLib'
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      StoredProc = spUpdate_inExceptionUKTZED_Revert
+      StoredProcList = <
+        item
+          StoredProc = spUpdate_inExceptionUKTZED_Revert
+        end>
+      Caption = 'execUpdate_ExceptionUKTZED'
     end
   end
   inherited MasterDS: TDataSource
@@ -2037,6 +2078,10 @@ inherited GoodsForm: TGoodsForm
         end
         item
           Visible = True
+          ItemName = 'dxBarButton2'
+        end
+        item
+          Visible = True
           ItemName = 'dxBarStatic'
         end
         item
@@ -2207,6 +2252,10 @@ inherited GoodsForm: TGoodsForm
     end
     object dxBarButton1: TdxBarButton
       Action = actUpdateisSupplementSUN1
+      Category = 0
+    end
+    object dxBarButton2: TdxBarButton
+      Action = actUpdateExceptionUKTZED
       Category = 0
     end
   end
@@ -2986,7 +3035,7 @@ inherited GoodsForm: TGoodsForm
       end
       item
         Name = 'inisNotMarion'
-        Value = 'TRUE'
+        Value = True
         DataType = ftBoolean
         ParamType = ptInput
         MultiSelectSeparator = ','
@@ -3018,7 +3067,7 @@ inherited GoodsForm: TGoodsForm
       end
       item
         Name = 'inisNotMarion'
-        Value = 'FALSE'
+        Value = False
         DataType = ftBoolean
         ParamType = ptInput
         MultiSelectSeparator = ','
@@ -3050,7 +3099,7 @@ inherited GoodsForm: TGoodsForm
       end
       item
         Name = 'inisNot'
-        Value = 'TRUE'
+        Value = True
         DataType = ftBoolean
         ParamType = ptInput
         MultiSelectSeparator = ','
@@ -3074,7 +3123,7 @@ inherited GoodsForm: TGoodsForm
       end
       item
         Name = 'inisNot'
-        Value = 'FALSE'
+        Value = False
         DataType = ftBoolean
         ParamType = ptInput
         MultiSelectSeparator = ','
@@ -3098,7 +3147,7 @@ inherited GoodsForm: TGoodsForm
       end
       item
         Name = 'inisNot'
-        Value = 'FALSE'
+        Value = False
         Component = MasterCDS
         ComponentItem = 'isNot'
         DataType = ftBoolean
@@ -3132,7 +3181,7 @@ inherited GoodsForm: TGoodsForm
       end
       item
         Name = 'inisNot_SUN_v2'
-        Value = 'TRUE'
+        Value = True
         DataType = ftBoolean
         ParamType = ptInput
         MultiSelectSeparator = ','
@@ -3156,7 +3205,7 @@ inherited GoodsForm: TGoodsForm
       end
       item
         Name = 'inisNot_SUN_v2'
-        Value = 'FALSE'
+        Value = False
         DataType = ftBoolean
         ParamType = ptInput
         MultiSelectSeparator = ','
@@ -3180,7 +3229,7 @@ inherited GoodsForm: TGoodsForm
       end
       item
         Name = 'inisSUN_v3'
-        Value = 'FALSE'
+        Value = False
         DataType = ftBoolean
         ParamType = ptInput
         MultiSelectSeparator = ','
@@ -3204,7 +3253,7 @@ inherited GoodsForm: TGoodsForm
       end
       item
         Name = 'inisSUN_v3'
-        Value = 'TRUE'
+        Value = True
         DataType = ftBoolean
         ParamType = ptInput
         MultiSelectSeparator = ','
@@ -3228,7 +3277,7 @@ inherited GoodsForm: TGoodsForm
       end
       item
         Name = 'inisClose'
-        Value = 'FALSE'
+        Value = False
         DataType = ftBoolean
         ParamType = ptInput
         MultiSelectSeparator = ','
@@ -3252,7 +3301,7 @@ inherited GoodsForm: TGoodsForm
       end
       item
         Name = 'inisClose'
-        Value = 'TRUE'
+        Value = True
         DataType = ftBoolean
         ParamType = ptInput
         MultiSelectSeparator = ','
@@ -3430,7 +3479,7 @@ inherited GoodsForm: TGoodsForm
       end
       item
         Name = 'inisNot_SUN_v4'
-        Value = 'FALSE'
+        Value = False
         DataType = ftBoolean
         ParamType = ptInput
         MultiSelectSeparator = ','
@@ -3454,7 +3503,7 @@ inherited GoodsForm: TGoodsForm
       end
       item
         Name = 'inisNot_SUN_v4'
-        Value = 'TRUE'
+        Value = True
         DataType = ftBoolean
         ParamType = ptInput
         MultiSelectSeparator = ','
@@ -3478,7 +3527,7 @@ inherited GoodsForm: TGoodsForm
       end
       item
         Name = 'inis_v1'
-        Value = 'false'
+        Value = False
         Component = FormParams
         ComponentItem = 'inis_v1'
         DataType = ftBoolean
@@ -3487,7 +3536,7 @@ inherited GoodsForm: TGoodsForm
       end
       item
         Name = 'inis_v2'
-        Value = 'false'
+        Value = False
         Component = FormParams
         ComponentItem = 'inis_v2'
         DataType = ftBoolean
@@ -3496,7 +3545,7 @@ inherited GoodsForm: TGoodsForm
       end
       item
         Name = 'inis_v4'
-        Value = 'false'
+        Value = False
         Component = FormParams
         ComponentItem = 'inis_v4'
         DataType = ftBoolean
@@ -3601,7 +3650,7 @@ inherited GoodsForm: TGoodsForm
       end
       item
         Name = 'inis_v1'
-        Value = 'false'
+        Value = False
         Component = FormParams
         ComponentItem = 'inis_v1'
         DataType = ftBoolean
@@ -3671,5 +3720,31 @@ inherited GoodsForm: TGoodsForm
     PackSize = 1
     Left = 664
     Top = 368
+  end
+  object spUpdate_inExceptionUKTZED_Revert: TdsdStoredProc
+    StoredProcName = 'gpUpdate_Goods_inExceptionUKTZED_Revert'
+    DataSets = <>
+    OutputType = otResult
+    Params = <
+      item
+        Name = 'inGoodsMainId'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'GoodsMainId'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inisExceptionUKTZED'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'isExceptionUKTZED'
+        DataType = ftBoolean
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end>
+    PackSize = 1
+    Left = 792
+    Top = 376
   end
 end

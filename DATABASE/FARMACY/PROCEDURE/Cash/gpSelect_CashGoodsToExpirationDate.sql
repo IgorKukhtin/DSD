@@ -53,21 +53,27 @@ BEGIN
 
      RETURN QUERY
      WITH tmpContainer AS (SELECT Container.Id,
+                                  Container.ParentId,
+                                  Container.DescId,
                                   Container.ObjectId                            AS GoodsId,
                                   Container.Amount
                              FROM Container
-                             WHERE Container.DescId = zc_Container_Count()
+                             WHERE Container.DescId in (zc_Container_Count(), zc_Container_CountPartionDate())
                                AND Container.WhereObjectId = vbUnitId
                                AND Container.Amount <> 0
                             )
-       , tmpContainerPDId AS (SELECT Container.ParentId                                          AS ContainerId
-                                   , Max(Container.Id)                                           AS ContainerPDId
-                              FROM Container
-                              WHERE Container.DescId = zc_Container_CountPartionDate()
-                                AND Container.WhereObjectId = vbUnitId
-                                AND Container.Amount <> 0
-                              GROUP BY Container.ParentId)
+       , tmpContainerPDId AS (SELECT Container.ParentId                         AS ContainerId
+                                   , Container.Amount
+                                   , ContainerLinkObject.ObjectId               AS PartionGoodsId
+                              FROM tmpContainer AS Container
+
+                                   LEFT JOIN ContainerLinkObject ON ContainerLinkObject.ContainerId = Container.Id
+                                                                AND ContainerLinkObject.DescId = zc_ContainerLinkObject_PartionGoods()
+
+
+                              WHERE Container.DescId = zc_Container_CountPartionDate())
        , tmpContainerPD AS (SELECT tmpContainerPDId.ContainerId                                  AS ContainerId
+                                 , tmpContainerPDId.Amount 
                                  , ObjectDate_ExpirationDate.ValueData                           AS ExpirationDate
                                  , CASE WHEN ObjectDate_ExpirationDate.ValueData <= vbDate_0 AND
                                               COALESCE (ObjectBoolean_PartionGoods_Cat_5.ValueData, FALSE) = TRUE
@@ -79,15 +85,12 @@ BEGIN
                                         ELSE  zc_Enum_PartionDateKind_Good() END  AS PartionDateKindId                              -- Востановлен с просрочки
                             FROM tmpContainerPDId
 
-                                 LEFT JOIN ContainerLinkObject ON ContainerLinkObject.ContainerId = tmpContainerPDId.ContainerPDId
-                                                              AND ContainerLinkObject.DescId = zc_ContainerLinkObject_PartionGoods()
-
                                  LEFT JOIN ObjectDate AS ObjectDate_ExpirationDate
-                                                      ON ObjectDate_ExpirationDate.ObjectId =  ContainerLinkObject.ObjectId
+                                                      ON ObjectDate_ExpirationDate.ObjectId =  tmpContainerPDId.PartionGoodsId
                                                      AND ObjectDate_ExpirationDate.DescId = zc_ObjectDate_PartionGoods_Value()
 
                                  LEFT JOIN ObjectBoolean AS ObjectBoolean_PartionGoods_Cat_5
-                                                         ON ObjectBoolean_PartionGoods_Cat_5.ObjectId = ContainerLinkObject.ObjectId
+                                                         ON ObjectBoolean_PartionGoods_Cat_5.ObjectId = tmpContainerPDId.PartionGoodsId
                                                         AND ObjectBoolean_PartionGoods_Cat_5.DescID = zc_ObjectBoolean_PartionGoods_Cat_5())
        , tmpExpirationIn AS (SELECT tmp.Id
                                     , tmp.GoodsId
@@ -108,10 +111,12 @@ BEGIN
                                                              AND MIFloat_MovementItem.DescId = zc_MIFloat_MovementItemId()
                                   -- элемента прихода от поставщика (если это партия, которая была создана инвентаризацией)
                                   LEFT JOIN MovementItem AS MI_Income_find ON MI_Income_find.Id  = (MIFloat_MovementItem.ValueData :: Integer)
+                                  
+                               WHERE tmp.DescId = zc_Container_Count()
                                )
        , tmpExpirationDate AS (SELECT tmp.Id
                                     , tmp.GoodsId
-                                    , tmp.Amount
+                                    , COALESCE(tmp.Amount, tmpContainerPD.Amount)                                             AS Amount
                                     , COALESCE (tmpContainerPD.ExpirationDate, MIDate_ExpirationDate.ValueData, zc_DateEnd()) AS ExpirationDate
                                     , tmpContainerPD.PartionDateKindId                                                        AS PartionDateKindId
                                FROM tmpExpirationIn AS tmp

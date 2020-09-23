@@ -43,6 +43,7 @@ RETURNS TABLE (Id Integer, GoodsMainId Integer, Code Integer, IdBarCode TVarChar
              , DateUpdateClose TDateTime
              , isInvisibleSUN boolean
              , isSupplementSUN1 boolean
+             , isExceptionUKTZED boolean
               ) AS
 $BODY$
   DECLARE vbUserId Integer;
@@ -322,6 +323,7 @@ BEGIN
            , Object_Goods_Main.DateUpdateClose                                   AS DateUpdateClose
            , Object_Goods_Main.isInvisibleSUN                                    AS isInvisibleSUN
            , Object_Goods_Main.isSupplementSUN1                                  AS isSupplementSUN1
+           , Object_Goods_Main.isExceptionUKTZED                                 AS isExceptionUKTZED
       FROM Object_Goods_Retail
 
            LEFT JOIN Object_Goods_Main ON Object_Goods_Main.Id = Object_Goods_Retail.GoodsMainId
@@ -602,6 +604,7 @@ $BODY$
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.  Ярошенко Р.Ф.  Шаблий О.В.
+ 22.09.20                                                                     * isExceptionUKTZED
  25.05.20         * dell LimitSUN_T1
  18.05.20         * GoodsPairSun
  17.05.20         * LimitSUN_T1

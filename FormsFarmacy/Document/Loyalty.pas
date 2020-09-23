@@ -185,6 +185,11 @@ type
     dxBarButton7: TdxBarButton;
     edSummRepay: TcxCurrencyEdit;
     cxLabel20: TcxLabel;
+    sqTotalSumm_CheckSale: TcxGridDBColumn;
+    actOpenCheckCreate: TdsdInsertUpdateAction;
+    actOpenCheckSale: TdsdInsertUpdateAction;
+    bbOpenCheckCreate: TdxBarButton;
+    bbOpenCheckSale: TdxBarButton;
   private
     { Private declarations }
   public

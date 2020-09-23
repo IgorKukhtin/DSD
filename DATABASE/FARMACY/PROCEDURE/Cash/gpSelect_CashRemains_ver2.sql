@@ -753,7 +753,8 @@ BEGIN
             Object_PartionDateKind.Name                        AS PartionDateKindName,
             NULLIF (CashSessionSnapShot.DivisionPartiesId, 0)  AS DivisionPartiesId,
             Object_DivisionParties.ValueData                   AS DivisionPartiesName,
-            COALESCE (ObjectBoolean_BanFiscalSale.ValueData, False) AS isBanFiscalSale,
+            COALESCE (ObjectBoolean_BanFiscalSale.ValueData, False) 
+              AND NOT Object_Goods_Main.isExceptionUKTZED      AS isBanFiscalSale,
             CASE WHEN vbDividePartionDate = False
               THEN
                 CASE WHEN CashSessionSnapShot.MinExpirationDate < CURRENT_DATE + zc_Interval_ExpirationDate() THEN zc_Color_Red() ELSE zc_Color_Black() END

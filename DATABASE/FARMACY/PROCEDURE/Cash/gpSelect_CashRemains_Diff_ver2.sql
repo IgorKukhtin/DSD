@@ -1,6 +1,6 @@
 -- Function: gpSelect_CashRemains_Diff_ver2()
 
- DROP FUNCTION IF EXISTS gpSelect_CashRemains_Diff_ver2 (TVarChar, TVarChar);
+DROP FUNCTION IF EXISTS gpSelect_CashRemains_Diff_ver2 (TVarChar, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpSelect_CashRemains_Diff_ver2(
     IN inCashSessionId TVarChar,   -- Сессия кассового места
@@ -119,8 +119,6 @@ BEGIN
 
     -- определяем разницу в остатках реальных и сессионных
     CREATE TEMP TABLE _DIFF (ObjectId  Integer
-                           , GoodsCode Integer
-                           , GoodsName TVarChar
                            , Price     TFloat
                            , NDSKindId Integer
                            , Remains   TFloat
@@ -134,8 +132,7 @@ BEGIN
                            , NewRow    Boolean
                            , AccommodationId Integer
                            , PartionDateDiscount TFloat
-                           , PriceWithVAT TFloat
-                           , Color_calc Integer) ON COMMIT DROP;
+                           , PriceWithVAT TFloat) ON COMMIT DROP;
 
     -- Данные
     WITH
@@ -173,81 +170,78 @@ BEGIN
                          FROM CashSessionSnapShot
                          WHERE CashSessionSnapShot.CashSessionId = inCashSessionId
                         )
+       , tmpDiff AS (SELECT GoodsRemains.ObjectId                                            AS ObjectId
+                           , GoodsRemains.Price                                               AS Price
+                           , GoodsRemains.NDSKindId                                           AS NDSKindId
+                           , GoodsRemains.MCSValue                                            AS MCSValue
+                           , GoodsRemains.Remains                                             AS Remains
+                           , GoodsRemains.Reserved                                            AS Reserved
+                           , GoodsRemains.DeferredSend                                        AS DeferredSend
+                           , CASE WHEN SESSIONDATA.ObjectId IS NULL
+                                       THEN TRUE
+                                   ELSE FALSE
+                             END                                                              AS NewRow
+                           , GoodsRemains.AccommodationId                                     AS AccommodationID
+                           , GoodsRemains.MinExpirationDate                                   AS MinExpirationDate
+                           , GoodsRemains.DiscountExternalID                                  AS DiscountExternalID
+                           , GoodsRemains.PartionDateKindId                                   AS PartionDateKindId
+                           , GoodsRemains.DivisionPartiesId                                   AS DivisionPartiesId
+                           , GoodsRemains.PartionDateDiscount                                 AS PartionDateDiscount
+                           , GoodsRemains.PriceWithVAT                                        AS PriceWithVAT
+                      FROM GoodsRemains
+                           LEFT JOIN SESSIONDATA ON SESSIONDATA.ObjectId  = GoodsRemains.ObjectId
+                                                 AND COALESCE (SESSIONDATA.NDSKindId,0) = COALESCE (GoodsRemains.NDSKindId, 0)
+                                                 AND COALESCE (SESSIONDATA.DiscountExternalID,0) = COALESCE (GoodsRemains.DiscountExternalID, 0)
+                                                 AND COALESCE (SESSIONDATA.PartionDateKindId,0) = COALESCE (GoodsRemains.PartionDateKindId, 0)
+                                                 AND COALESCE (SESSIONDATA.DivisionPartiesId,0) = COALESCE (GoodsRemains.DivisionPartiesId, 0)
+                      WHERE COALESCE (GoodsRemains.Price, 0) <> COALESCE (SESSIONDATA.Price, 0)
+                         OR COALESCE (GoodsRemains.NDSKindId, 0) <> COALESCE (SESSIONDATA.NDSKindId, 0)
+                         OR COALESCE (GoodsRemains.DiscountExternalID, 0) <> COALESCE (SESSIONDATA.DiscountExternalID, 0)
+                         OR COALESCE (GoodsRemains.MCSValue, 0) <> COALESCE (SESSIONDATA.MCSValue, 0)
+                         OR COALESCE (GoodsRemains.Remains, 0) <> COALESCE (SESSIONDATA.Remains, 0)
+                         OR COALESCE (GoodsRemains.Reserved, 0) <> COALESCE (SESSIONDATA.Reserved, 0)
+                         OR COALESCE (GoodsRemains.AccommodationID,0) <> COALESCE (SESSIONDATA.AccommodationId, 0)
+                         OR COALESCE (GoodsRemains.MinExpirationDate, zc_DateEnd()) <> COALESCE (SESSIONDATA.MinExpirationDate, zc_DateEnd())
+                         OR COALESCE (GoodsRemains.PartionDateKindId,0) <> COALESCE (SESSIONDATA.PartionDateKindId, 0)
+                         OR COALESCE (GoodsRemains.DivisionPartiesId,0) <> COALESCE (SESSIONDATA.DivisionPartiesId, 0)
+                         OR COALESCE (GoodsRemains.PartionDateDiscount,0) <> COALESCE (SESSIONDATA.PartionDateDiscount, 0)
+                         OR COALESCE (GoodsRemains.PriceWithVAT,0) <> COALESCE (SESSIONDATA.PriceWithVAT, 0)
+                         OR COALESCE (GoodsRemains.DeferredSend,0) <> COALESCE (SESSIONDATA.DeferredSend, 0)
+                      UNION ALL
+                      SELECT SESSIONDATA.ObjectId                                                AS ObjectId
+                           , SESSIONDATA.Price                                                   AS Price
+                           , SESSIONDATA.NDSKindId                                               AS NDSKindId
+                           , SESSIONDATA.MCSValue                                                AS MCSValue
+                           , 0                                                                   AS Remains
+                           , NULL                                                                AS Reserved
+                           , NULL                                                                AS DeferredSend
+                           , FALSE                                                               AS NewRow
+                           , SESSIONDATA.AccommodationId                                         AS AccommodationID
+                           , SESSIONDATA.MinExpirationDate                                       AS MinExpirationDate
+                           , SESSIONDATA.DiscountExternalID                                      AS DiscountExternalID
+                           , SESSIONDATA.PartionDateKindId                                       AS PartionDateKindId
+                           , SESSIONDATA.DivisionPartiesId                                       AS DivisionPartiesId
+                           , SESSIONDATA.PartionDateDiscount                                     AS PartionDateDiscount
+                           , SESSIONDATA.PriceWithVAT                                            AS PriceWithVAT
+                      FROM SESSIONDATA
+                           LEFT JOIN GoodsRemains ON GoodsRemains.ObjectId = SESSIONDATA.ObjectId
+                                                 AND COALESCE (GoodsRemains.PartionDateKindId, 0) = COALESCE (SESSIONDATA.PartionDateKindId, 0)
+                                                 AND COALESCE (GoodsRemains.NDSKindId, 0) = COALESCE (SESSIONDATA.NDSKindId, 0)
+                                                 AND COALESCE (GoodsRemains.DivisionPartiesId, 0) = COALESCE (SESSIONDATA.DivisionPartiesId, 0)
+                                                 AND COALESCE (GoodsRemains.DiscountExternalID, 0) = COALESCE (SESSIONDATA.DiscountExternalID, 0)
+                      WHERE COALESCE(GoodsRemains.ObjectId, 0) = 0
+                        AND (COALESCE(SESSIONDATA.Remains, 0) <> 0
+                             OR
+                             COALESCE(SESSIONDATA.Reserved, 0) <> 0
+                             OR
+                             COALESCE(SESSIONDATA.DeferredSend, 0) <> 0)
+                     )
 
     -- РЕЗУЛЬТАТ - заливаем разницу
-    INSERT INTO _DIFF (ObjectId, GoodsCode, GoodsName, Price, NDSKindId, Remains, MinExpirationDate, DiscountExternalID, PartionDateKindId, DivisionPartiesId,
-                       MCSValue, Reserved, DeferredSend, NewRow, AccommodationId, PartionDateDiscount, PriceWithVAT, Color_calc)
-       WITH tmpDiff AS (SELECT GoodsRemains.ObjectId                                            AS ObjectId
-                             , GoodsRemains.Price                                               AS Price
-                             , GoodsRemains.NDSKindId                                           AS NDSKindId
-                             , GoodsRemains.MCSValue                                            AS MCSValue
-                             , GoodsRemains.Remains                                             AS Remains
-                             , GoodsRemains.Reserved                                            AS Reserved
-                             , GoodsRemains.DeferredSend                                        AS DeferredSend
-                             , CASE WHEN SESSIONDATA.ObjectId IS NULL
-                                         THEN TRUE
-                                     ELSE FALSE
-                               END                                                              AS NewRow
-                             , GoodsRemains.AccommodationId                                     AS AccommodationID
-                             , GoodsRemains.MinExpirationDate                                   AS MinExpirationDate
-                             , GoodsRemains.DiscountExternalID                                  AS DiscountExternalID
-                             , GoodsRemains.PartionDateKindId                                   AS PartionDateKindId
-                             , GoodsRemains.DivisionPartiesId                                   AS DivisionPartiesId
-                             , GoodsRemains.PartionDateDiscount                                 AS PartionDateDiscount
-                             , GoodsRemains.PriceWithVAT                                        AS PriceWithVAT
-                        FROM GoodsRemains
-                             LEFT JOIN SESSIONDATA ON SESSIONDATA.ObjectId  = GoodsRemains.ObjectId
-                                                   AND COALESCE (SESSIONDATA.NDSKindId,0) = COALESCE (GoodsRemains.NDSKindId, 0)
-                                                   AND COALESCE (SESSIONDATA.DiscountExternalID,0) = COALESCE (GoodsRemains.DiscountExternalID, 0)
-                                                   AND COALESCE (SESSIONDATA.PartionDateKindId,0) = COALESCE (GoodsRemains.PartionDateKindId, 0)
-                                                   AND COALESCE (SESSIONDATA.DivisionPartiesId,0) = COALESCE (GoodsRemains.DivisionPartiesId, 0)
-                        WHERE COALESCE (GoodsRemains.Price, 0) <> COALESCE (SESSIONDATA.Price, 0)
-                           OR COALESCE (GoodsRemains.NDSKindId, 0) <> COALESCE (SESSIONDATA.NDSKindId, 0)
-                           OR COALESCE (GoodsRemains.DiscountExternalID, 0) <> COALESCE (SESSIONDATA.DiscountExternalID, 0)
-                           OR COALESCE (GoodsRemains.MCSValue, 0) <> COALESCE (SESSIONDATA.MCSValue, 0)
-                           OR COALESCE (GoodsRemains.Remains, 0) <> COALESCE (SESSIONDATA.Remains, 0)
-                           OR COALESCE (GoodsRemains.Reserved, 0) <> COALESCE (SESSIONDATA.Reserved, 0)
-                           OR COALESCE (GoodsRemains.AccommodationID,0) <> COALESCE (SESSIONDATA.AccommodationId, 0)
-                           OR COALESCE (GoodsRemains.MinExpirationDate, zc_DateEnd()) <> COALESCE (SESSIONDATA.MinExpirationDate, zc_DateEnd())
-                           OR COALESCE (GoodsRemains.PartionDateKindId,0) <> COALESCE (SESSIONDATA.PartionDateKindId, 0)
-                           OR COALESCE (GoodsRemains.DivisionPartiesId,0) <> COALESCE (SESSIONDATA.DivisionPartiesId, 0)
-                           OR COALESCE (GoodsRemains.PartionDateDiscount,0) <> COALESCE (SESSIONDATA.PartionDateDiscount, 0)
-                           OR COALESCE (GoodsRemains.PriceWithVAT,0) <> COALESCE (SESSIONDATA.PriceWithVAT, 0)
-                           OR COALESCE (GoodsRemains.DeferredSend,0) <> COALESCE (SESSIONDATA.DeferredSend, 0)
-                        UNION ALL
-                        SELECT SESSIONDATA.ObjectId                                                AS ObjectId
-                             , SESSIONDATA.Price                                                   AS Price
-                             , SESSIONDATA.NDSKindId                                               AS NDSKindId
-                             , SESSIONDATA.MCSValue                                                AS MCSValue
-                             , 0                                                                   AS Remains
-                             , NULL                                                                AS Reserved
-                             , NULL                                                                AS DeferredSend
-                             , FALSE                                                               AS NewRow
-                             , SESSIONDATA.AccommodationId                                         AS AccommodationID
-                             , SESSIONDATA.MinExpirationDate                                       AS MinExpirationDate
-                             , SESSIONDATA.DiscountExternalID                                      AS DiscountExternalID
-                             , SESSIONDATA.PartionDateKindId                                       AS PartionDateKindId
-                             , SESSIONDATA.DivisionPartiesId                                       AS DivisionPartiesId
-                             , SESSIONDATA.PartionDateDiscount                                     AS PartionDateDiscount
-                             , SESSIONDATA.PriceWithVAT                                            AS PriceWithVAT
-                        FROM SESSIONDATA
-                             LEFT JOIN GoodsRemains ON GoodsRemains.ObjectId = SESSIONDATA.ObjectId
-                                                   AND COALESCE (GoodsRemains.PartionDateKindId, 0) = COALESCE (SESSIONDATA.PartionDateKindId, 0)
-                                                   AND COALESCE (GoodsRemains.NDSKindId, 0) = COALESCE (SESSIONDATA.NDSKindId, 0)
-                                                   AND COALESCE (GoodsRemains.DivisionPartiesId, 0) = COALESCE (SESSIONDATA.DivisionPartiesId, 0)
-                                                   AND COALESCE (GoodsRemains.DiscountExternalID, 0) = COALESCE (SESSIONDATA.DiscountExternalID, 0)
-                        WHERE COALESCE(GoodsRemains.ObjectId, 0) = 0
-                          AND (COALESCE(SESSIONDATA.Remains, 0) <> 0
-                               OR
-                               COALESCE(SESSIONDATA.Reserved, 0) <> 0
-                               OR
-                               COALESCE(SESSIONDATA.DeferredSend, 0) <> 0)
-                       )
-
+    INSERT INTO _DIFF (ObjectId, Price, NDSKindId, Remains, MinExpirationDate, DiscountExternalID, PartionDateKindId, DivisionPartiesId,
+                       MCSValue, Reserved, DeferredSend, NewRow, AccommodationId, PartionDateDiscount, PriceWithVAT)
        -- РЕЗУЛЬТАТ
        SELECT tmpDiff.ObjectId
-            , Object_Goods.ObjectCode     AS GoodsCode
-            , Object_Goods.ValueData      AS GoodsName
             , tmpDiff.Price
             , tmpDiff.NDSKindId
             , tmpDiff.Remains
@@ -262,14 +256,7 @@ BEGIN
             , tmpDiff.AccommodationID
             , tmpDiff.PartionDateDiscount
             , tmpDiff.PriceWithVAT
-            , CASE WHEN COALESCE (ObjectBoolean_First.ValueData, FALSE) = TRUE THEN zc_Color_GreenL() ELSE zc_Color_White() END AS Color_calc
-       FROM tmpDiff
-            INNER JOIN Object AS Object_Goods ON Object_Goods.Id = tmpDiff.ObjectId
-            LEFT JOIN ObjectBoolean AS ObjectBoolean_First
-                                    ON ObjectBoolean_First.ObjectId = tmpDiff.ObjectId
-                                   AND ObjectBoolean_First.DescId   = zc_ObjectBoolean_Goods_First()
-       ;
-
+       FROM tmpDiff;
 
     --Обновляем данные в сессии
     UPDATE CashSessionSnapShot SET
@@ -373,77 +360,6 @@ WITH tmp as (SELECT tmp.*, ROW_NUMBER() OVER (PARTITION BY TextValue_calc ORDER 
                                                                  AND ObjectFloatDay.DescId = zc_ObjectFloat_PartionDateKind_Day()
                                        WHERE Object_PartionDateKind.DescId = zc_Object_PartionDateKind()
                                       )
-                 -- Все перемещения по СУН
-                ,tmpSendAll AS (SELECT DISTINCT Movement.Id AS MovementId
-                                FROM Movement
-
-                                     INNER JOIN MovementBoolean AS MovementBoolean_SUN
-                                                                ON MovementBoolean_SUN.MovementId = Movement.Id
-                                                               AND MovementBoolean_SUN.DescId = zc_MovementBoolean_SUN()
-
-
-                                WHERE Movement.DescId = zc_Movement_Send()
-                                  AND COALESCE (MovementBoolean_SUN.ValueData, FALSE) = TRUE
-                                  AND Movement.StatusId = zc_Enum_Status_Complete()
-                                )
-                   -- Перемещения по СУН основные контейнера
-                 , tmpRenainsSUNCount AS (SELECT Container.Id
-                                               , Container.ObjectId
-                                               , SUM(Container.Amount) AS Amount
-                                          FROM tmpSendAll AS Movement
-
-                                               INNER JOIN MovementItem ON MovementItem.MovementId =  Movement.MovementId
-                                                                      AND MovementItem.DescId = zc_MI_Child()
-
-                                               INNER JOIN MovementItemContainer ON MovementItemContainer.MovementId = Movement.MovementId
-                                                                               AND MovementItemContainer.MovementItemId = MovementItem.Id
-                                                                               AND MovementItemContainer.DescId = zc_Container_Count()
-                                                                               AND MovementItemContainer.isActive = TRUE
-
-                                               INNER JOIN Container ON Container.Id = MovementItemContainer.ContainerId
-                                                                   AND Container.WhereObjectId = vbUnitId
-
-                                          WHERE Container.Amount <> 0
-                                          GROUP BY Container.Id, Container.ObjectId
-                                          )
-                   -- Перемещения по СУН полный набор
-                 , tmpRenainsSUNAll AS (SELECT Container.Id                                       AS ID
-                                          , Container.ObjectId                                 AS GoodsID
-                                          , Container.Amount                                   AS Amount
-                                          , ContainerPD.Id                                     AS PDID
-                                          , ContainerPD.Amount                                 AS AmountPD
-                                          , CASE WHEN ObjectDate_ExpirationDate.ValueData <= vbDate_0 AND
-                                                      COALESCE (ObjectBoolean_PartionGoods_Cat_5.ValueData, FALSE) = TRUE
-                                                                                                       THEN zc_Enum_PartionDateKind_Cat_5()  -- 5 кат (просрочка без наценки)
-                                                 WHEN ObjectDate_ExpirationDate.ValueData <= vbDate_0  THEN zc_Enum_PartionDateKind_0()      -- просрочено
-                                                 WHEN ObjectDate_ExpirationDate.ValueData <= vbDate_1  THEN zc_Enum_PartionDateKind_1()      -- Меньше 1 месяца
-                                                 WHEN ObjectDate_ExpirationDate.ValueData <= vbDate_3  THEN zc_Enum_PartionDateKind_3()      -- Меньше 3 месяца
-                                                 WHEN ObjectDate_ExpirationDate.ValueData <= vbDate_6  THEN zc_Enum_PartionDateKind_6()      -- Меньше 6 месяца
-                                                 ELSE  zc_Enum_PartionDateKind_Good() END  AS PartionDateKindId                              -- Востановлен с просрочки
-                                     FROM tmpRenainsSUNCount AS Container
-
-                                          LEFT JOIN Container AS ContainerPD
-                                                              ON ContainerPD.ParentId = Container.Id
-                                                             AND ContainerPD.DescId = zc_Container_CountPartionDate()
-
-                                          LEFT JOIN ContainerLinkObject ON ContainerLinkObject.ContainerId = ContainerPD.Id
-                                                                       AND ContainerLinkObject.DescId = zc_ContainerLinkObject_PartionGoods()
-                                          LEFT JOIN ObjectDate AS ObjectDate_ExpirationDate
-                                                               ON ObjectDate_ExpirationDate.ObjectId = ContainerLinkObject.ObjectId
-                                                              AND ObjectDate_ExpirationDate.DescId = zc_ObjectDate_PartionGoods_Value()
-                                          LEFT JOIN ObjectBoolean AS ObjectBoolean_PartionGoods_Cat_5
-                                                                  ON ObjectBoolean_PartionGoods_Cat_5.ObjectId = ContainerLinkObject.ObjectId
-                                                                 AND ObjectBoolean_PartionGoods_Cat_5.DescID = zc_ObjectBoolean_PartionGoods_Cat_5()
-
-                                      )
-                   -- Перемещения по СУН остатки
-                 , tmpRenainsSUN AS (SELECT Container.GoodsID                                   AS GoodsID
-                                          , COALESCE(Container.PartionDateKindId, 0)            AS PartionDateKindId
-                                          , SUM(COALESCE(Container.AmountPD, Container.Amount)) AS Amount
-                                     FROM tmpRenainsSUNAll AS Container
-
-                                     GROUP BY Container.GoodsID, COALESCE(Container.PartionDateKindId, 0)
-                                      )
 
                  , tmpNDSKind AS (SELECT ObjectFloat_NDSKind_NDS.ObjectId
                                        , ObjectFloat_NDSKind_NDS.ValueData
@@ -487,8 +403,8 @@ WITH tmp as (SELECT tmp.*, ROW_NUMBER() OVER (PARTITION BY TextValue_calc ORDER 
 
         SELECT
             _DIFF.ObjectId,
-            _DIFF.GoodsCode,
-            _DIFF.GoodsName,
+            Object_Goods_Main.ObjectCode,
+            Object_Goods_Main.Name,
             _DIFF.Price,
             _DIFF.Remains,
             _DIFF.MCSValue,
@@ -511,11 +427,11 @@ WITH tmp as (SELECT tmp.*, ROW_NUMBER() OVER (PARTITION BY TextValue_calc ORDER 
                      END
                  ELSE NULL
             END                                          :: TFloat AS PricePartionDate,
-            _DIFF.Color_calc,
+            CASE WHEN COALESCE (Object_Goods_Retail.isFirst, FALSE) = TRUE THEN zc_Color_GreenL() ELSE zc_Color_White() END AS Color_calc,
             _DIFF.DeferredSend,
             RemainsSUN TFloat,
             ObjectFloat_NDSKind_NDS.ValueData AS NDS,
-            COALESCE(_DIFF.NDSKindId, ObjectLink_Goods_NDSKind.ChildObjectId) AS NDSKindId,
+            COALESCE(_DIFF.NDSKindId, Object_Goods_Main.NDSKindId)            AS NDSKindId,
             NULLIF (_DIFF.DiscountExternalID, 0)                              AS DiscountExternalId,
             Object_DiscountExternal.ValueData                                 AS DiscountExternalName,
             tmpGoodsDiscount.GoodsDiscountId                                  AS GoodsDiscountID,
@@ -524,7 +440,8 @@ WITH tmp as (SELECT tmp.*, ROW_NUMBER() OVER (PARTITION BY TextValue_calc ORDER 
             Object_Goods_PairSun.ID                                           AS GoodsPairSunId,
             NULLIF (_DIFF.DivisionPartiesId, 0),
             Object_DivisionParties.ValueData                                  AS DivisionPartiesName,
-            COALESCE (ObjectBoolean_BanFiscalSale.ValueData, False)           AS isBanFiscalSale,
+            COALESCE (ObjectBoolean_BanFiscalSale.ValueData, False) 
+              AND NOT Object_Goods_Main.isExceptionUKTZED                     AS isBanFiscalSale,
             COALESCE(tmpGoodsDiscount.isGoodsForProject, FALSE)               AS isGoodsForProject,
             Object_Goods_PairSun_Main.GoodsPairSunId                          AS GoodsPairSunMainId
         FROM _DIFF
@@ -551,21 +468,16 @@ WITH tmp as (SELECT tmp.*, ROW_NUMBER() OVER (PARTITION BY TextValue_calc ORDER 
             LEFT JOIN tmpGoodsDiscount ON tmpGoodsDiscount.GoodsMainId = Object_Goods_Main.Id
 
             LEFT JOIN Object AS Object_Accommodation  ON Object_Accommodation.ID = _DIFF.AccommodationId
-            -- Остаток товара по СУН
-            LEFT JOIN tmpRenainsSUN ON tmpRenainsSUN.GoodsID = _DIFF.ObjectId
-                                   AND tmpRenainsSUN.PartionDateKindId = _DIFF.PartionDateKindId
-            LEFT OUTER JOIN ObjectLink AS ObjectLink_Goods_NDSKind
-                                       ON ObjectLink_Goods_NDSKind.ObjectId = _DIFF.ObjectId
-                                      AND ObjectLink_Goods_NDSKind.DescId = zc_ObjectLink_Goods_NDSKind()
+
             LEFT OUTER JOIN tmpNDSKind AS ObjectFloat_NDSKind_NDS
-                                       ON ObjectFloat_NDSKind_NDS.ObjectId = COALESCE(_DIFF.NDSKindId, ObjectLink_Goods_NDSKind.ChildObjectId)
+                                       ON ObjectFloat_NDSKind_NDS.ObjectId = COALESCE(_DIFF.NDSKindId, Object_Goods_Main.NDSKindId)
             -- Коды UKTZED
             LEFT JOIN tmpGoodsUKTZED ON tmpGoodsUKTZED.GoodsMainId = Object_Goods_Retail.GoodsMainId
                                     AND tmpGoodsUKTZED.Ord = 1
             ;
 
     -- !!!Протокол - отладка Скорости!!!
-    PERFORM lpInsert_ResourseProtocol (inOperDate     := vbOperDate_StartBegin
+/*    PERFORM lpInsert_ResourseProtocol (inOperDate     := vbOperDate_StartBegin
                                      , inTime2        := NULL :: INTERVAL
                                      , inTime3        := NULL :: INTERVAL
                                      , inTime4        := NULL :: INTERVAL
@@ -573,7 +485,7 @@ WITH tmp as (SELECT tmp.*, ROW_NUMBER() OVER (PARTITION BY TextValue_calc ORDER 
                                      , inProtocolData := lfGet_Object_ValueData_sh (vbUnitId) || ' ,' || CHR (39) || inCashSessionId || CHR (39) || ', '   || CHR (39) || inSession || CHR (39)
                                      , inUserId       := vbUserId
                                       );
-
+*/
 END;
 $BODY$
   LANGUAGE PLPGSQL VOLATILE;
