@@ -76,6 +76,30 @@ BEGIN
 
 
     OPEN Cursor2 FOR
+       WITH
+       tmpGoodsQuality AS (SELECT ObjectLink_Goods.ChildObjectId AS GoodsId
+                                , CAST (CASE WHEN POSITION( 'год' IN ObjectString_Value2.ValueData) > 0 THEN CAST(LEFT (ObjectString_Value2.ValueData,POSITION( 'год' IN ObjectString_Value2.ValueData)-1 ) AS NUMERIC (16,0) ) / 24
+                                             WHEN POSITION( 'діб' IN ObjectString_Value2.ValueData) > 0 THEN CAST(LEFT (ObjectString_Value2.ValueData,POSITION( 'діб' IN ObjectString_Value2.ValueData)-1 ) AS NUMERIC (16,0) )
+                                             WHEN POSITION( 'доб' IN ObjectString_Value2.ValueData) > 0 THEN CAST(LEFT (ObjectString_Value2.ValueData,POSITION( 'доб' IN ObjectString_Value2.ValueData)-1 ) AS NUMERIC (16,0) )
+                                             WHEN POSITION( 'міс' IN ObjectString_Value2.ValueData) > 0 THEN CAST(LEFT (ObjectString_Value2.ValueData,POSITION( 'міс' IN ObjectString_Value2.ValueData)-1 ) AS NUMERIC (16,0) ) * 30
+                                             WHEN POSITION( 'рок' IN ObjectString_Value2.ValueData) > 0 THEN CAST(LEFT (ObjectString_Value2.ValueData,POSITION( 'рок' IN ObjectString_Value2.ValueData)-1 ) AS NUMERIC (16,0) ) * 364
+                                        ELSE 0
+                                        END AS NUMERIC (16,0) ) Value2   -- срок хранения в днях
+                           FROM ObjectBoolean AS ObjectBoolean_Klipsa
+                                INNER JOIN Object AS Object_GoodsQuality 
+                                                  ON Object_GoodsQuality.Id = ObjectBoolean_Klipsa.ObjectId
+                                                 AND Object_GoodsQuality.isErased = FALSE
+                                LEFT JOIN ObjectLink AS ObjectLink_Goods
+                                                     ON ObjectLink_Goods.ObjectId = ObjectBoolean_Klipsa.ObjectId
+                                                    AND ObjectLink_Goods.DescId = zc_ObjectLink_GoodsQuality_Goods()
+
+                                LEFT JOIN ObjectString AS ObjectString_Value2
+                                                       ON ObjectString_Value2.ObjectId = Object_GoodsQuality.Id 
+                                                      AND ObjectString_Value2.DescId = zc_ObjectString_GoodsQuality_Value2()
+                           WHERE ObjectBoolean_Klipsa.DescId = zc_ObjectBoolean_GoodsQuality_Klipsa()
+                             AND ObjectBoolean_Klipsa.ValueData = TRUE
+                           )
+
        SELECT
              (vbOperDate :: Date + tmpMI.StartProductionInDays :: Integer) :: TDateTime AS StartDate
            , (vbOperDate :: Date + (tmpMI.StartProductionInDays + tmpMI.TermProduction) :: Integer) :: TDateTime AS EndDate
@@ -99,6 +123,8 @@ BEGIN
            , tmpMI.CuterCount
            , tmpMI.CuterCountSecond
            , tmpMI.TermProduction
+           
+           , CASE WHEN tmpGoodsQuality.GoodsId IS NULL THEN NULL ELSE (vbOperDate :: Date + (tmpMI.StartProductionInDays + tmpMI.TermProduction + tmpGoodsQuality.Value2) :: Integer) END :: TDateTime AS KlipsaDate
 
        FROM (SELECT tmpMI.ReceiptId_basis
                   , tmpMI.GoodsId
@@ -186,6 +212,8 @@ BEGIN
 
             LEFT JOIN Object_GoodsByGoodsKind_View AS View_GoodsByGoodsKind ON View_GoodsByGoodsKind.GoodsId = Object_Goods.Id
                                                                            AND View_GoodsByGoodsKind.GoodsKindId = Object_GoodsKind.Id
+
+            LEFT JOIN tmpGoodsQuality ON tmpGoodsQuality.GoodsId = tmpMI.GoodsId
 
        WHERE tmpMI.Amount <> 0 OR tmpMI.AmountSecond <> 0
        ;
