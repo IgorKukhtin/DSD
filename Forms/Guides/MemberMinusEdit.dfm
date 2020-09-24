@@ -302,6 +302,12 @@ object MemberMinusEditForm: TMemberMinusEditForm
         Value = Null
         ParamType = ptInputOutput
         MultiSelectSeparator = ','
+      end
+      item
+        Name = 'MaskId'
+        Value = Null
+        ParamType = ptInput
+        MultiSelectSeparator = ','
       end>
     Left = 344
     Top = 160
@@ -316,6 +322,14 @@ object MemberMinusEditForm: TMemberMinusEditForm
         Value = Null
         Component = dsdFormParams
         ComponentItem = 'Id'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inMaskId'
+        Value = Null
+        Component = dsdFormParams
+        ComponentItem = 'MaskId'
         ParamType = ptInput
         MultiSelectSeparator = ','
       end

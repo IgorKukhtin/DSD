@@ -260,6 +260,18 @@ object MemberMinusForm: TMemberMinusForm
         end
         item
           Visible = True
+          ItemName = 'dxBarStatic'
+        end
+        item
+          Visible = True
+          ItemName = 'bbInsertMask'
+        end
+        item
+          Visible = True
+          ItemName = 'dxBarStatic'
+        end
+        item
+          Visible = True
           ItemName = 'bbEdit'
         end
         item
@@ -278,6 +290,14 @@ object MemberMinusForm: TMemberMinusForm
         item
           Visible = True
           ItemName = 'bbShowAll'
+        end
+        item
+          Visible = True
+          ItemName = 'dxBarStatic'
+        end
+        item
+          Visible = True
+          ItemName = 'bbShowErased'
         end
         item
           Visible = True
@@ -364,6 +384,14 @@ object MemberMinusForm: TMemberMinusForm
       Action = actShowAll
       Category = 0
     end
+    object bbShowErased: TdxBarButton
+      Action = actShowErased
+      Category = 0
+    end
+    object bbInsertMask: TdxBarButton
+      Action = actInsertMask
+      Category = 0
+    end
   end
   object ActionList: TActionList
     Images = dmMain.ImageList
@@ -398,6 +426,11 @@ object MemberMinusForm: TMemberMinusForm
           Name = 'Id'
           Value = Null
           MultiSelectSeparator = ','
+        end
+        item
+          Name = 'MaskId'
+          Value = '0'
+          MultiSelectSeparator = ','
         end>
       isShowModal = True
       DataSource = DataSource
@@ -420,6 +453,12 @@ object MemberMinusForm: TMemberMinusForm
           Value = Null
           Component = ClientDataSet
           ComponentItem = 'Id'
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'MaskId'
+          Value = '0'
           ParamType = ptInput
           MultiSelectSeparator = ','
         end>
@@ -530,14 +569,14 @@ object MemberMinusForm: TMemberMinusForm
         item
           StoredProc = spSelect
         end>
-      Caption = #1055#1086#1082#1072#1079#1072#1090#1100' '#1074#1077#1089#1100' '#1089#1087#1080#1089#1086#1082
-      Hint = #1055#1086#1082#1072#1079#1072#1090#1100' '#1074#1077#1089#1100' '#1089#1087#1080#1089#1086#1082
+      Caption = #1055#1086#1082#1072#1079#1072#1090#1100' '#1074#1077#1089#1100' '#1089#1087#1080#1089#1086#1082' '#1092#1080#1079'.'#1083#1080#1094
+      Hint = #1055#1086#1082#1072#1079#1072#1090#1100' '#1074#1077#1089#1100' '#1089#1087#1080#1089#1086#1082' '#1092#1080#1079'.'#1083#1080#1094
       ImageIndex = 63
       Value = False
       HintTrue = #1055#1086#1082#1072#1079#1072#1090#1100' '#1089#1086#1093#1088#1072#1085#1077#1085#1085#1099#1077
-      HintFalse = #1055#1086#1082#1072#1079#1072#1090#1100' '#1074#1077#1089#1100' '#1089#1087#1080#1089#1086#1082
+      HintFalse = #1055#1086#1082#1072#1079#1072#1090#1100' '#1074#1077#1089#1100' '#1089#1087#1080#1089#1086#1082' '#1092#1080#1079'.'#1083#1080#1094
       CaptionTrue = #1055#1086#1082#1072#1079#1072#1090#1100' '#1089#1086#1093#1088#1072#1085#1077#1085#1085#1099#1077
-      CaptionFalse = #1055#1086#1082#1072#1079#1072#1090#1100' '#1074#1077#1089#1100' '#1089#1087#1080#1089#1086#1082
+      CaptionFalse = #1055#1086#1082#1072#1079#1072#1090#1100' '#1074#1077#1089#1100' '#1089#1087#1080#1089#1086#1082' '#1092#1080#1079'.'#1083#1080#1094
       ImageIndexTrue = 62
       ImageIndexFalse = 63
     end
@@ -661,6 +700,54 @@ object MemberMinusForm: TMemberMinusForm
         end>
       isShowModal = True
     end
+    object actShowErased: TBooleanStoredProcAction
+      Category = 'DSDLib'
+      MoveParams = <>
+      StoredProc = spSelect
+      StoredProcList = <
+        item
+          StoredProc = spSelect
+        end
+        item
+        end>
+      Caption = #1055#1086#1082#1072#1079#1072#1090#1100' '#1074#1077#1089#1100' '#1089#1087#1080#1089#1086#1082
+      Hint = #1055#1086#1082#1072#1079#1072#1090#1100' '#1074#1077#1089#1100' '#1089#1087#1080#1089#1086#1082
+      ImageIndex = 64
+      Value = False
+      HintTrue = #1055#1086#1082#1072#1079#1072#1090#1100' '#1085#1077' '#1091#1076#1072#1083#1077#1085#1085#1099#1077
+      HintFalse = #1055#1086#1082#1072#1079#1072#1090#1100' '#1074#1077#1089#1100' '#1089#1087#1080#1089#1086#1082
+      CaptionTrue = #1055#1086#1082#1072#1079#1072#1090#1100' '#1085#1077' '#1091#1076#1072#1083#1077#1085#1085#1099#1077
+      CaptionFalse = #1055#1086#1082#1072#1079#1072#1090#1100' '#1074#1077#1089#1100' '#1089#1087#1080#1089#1086#1082
+      ImageIndexTrue = 65
+      ImageIndexFalse = 64
+    end
+    object actInsertMask: TdsdInsertUpdateAction
+      Category = 'DSDLib'
+      MoveParams = <>
+      Caption = #1044#1086#1073#1072#1074#1080#1090#1100' '#1087#1086' '#1084#1072#1089#1082#1077
+      Hint = #1044#1086#1073#1072#1074#1080#1090#1100' '#1087#1086' '#1084#1072#1089#1082#1077
+      ImageIndex = 54
+      FormName = 'TMemberMinusEditForm'
+      FormNameParam.Value = 'TMemberMinusEditForm'
+      FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
+      GuiParams = <
+        item
+          Name = 'Id'
+          Value = 0
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'MaskId'
+          Value = Null
+          Component = ClientDataSet
+          ComponentItem = 'Id'
+          MultiSelectSeparator = ','
+        end>
+      isShowModal = True
+      DataSetRefresh = actRefresh
+      IdFieldName = 'Id'
+    end
   end
   object spSelect: TdsdStoredProc
     StoredProcName = 'gpSelect_Object_MemberMinus'
@@ -674,6 +761,14 @@ object MemberMinusForm: TMemberMinusForm
         Name = 'inisShowAll'
         Value = Null
         Component = actShowAll
+        DataType = ftBoolean
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inisErased'
+        Value = Null
+        Component = actShowErased
         DataType = ftBoolean
         ParamType = ptInput
         MultiSelectSeparator = ','

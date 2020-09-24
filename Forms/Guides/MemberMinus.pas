@@ -70,6 +70,10 @@ type
     ChoiceFormBankAccountFrom: TOpenChoiceForm;
     ChoiceFormBankAccountTo: TOpenChoiceForm;
     ChoiceFormFrom: TOpenChoiceForm;
+    actShowErased: TBooleanStoredProcAction;
+    bbShowErased: TdxBarButton;
+    actInsertMask: TdsdInsertUpdateAction;
+    bbInsertMask: TdxBarButton;
   private
     { Private declarations }
   public
