@@ -1,10 +1,10 @@
 inherited MainForm: TMainForm
-  Caption = 'Boutique'
+  Caption = 'ProjectBoat'
   ClientHeight = 168
   ClientWidth = 723
   KeyPreview = True
   ExplicitWidth = 739
-  ExplicitHeight = 226
+  ExplicitHeight = 223
   PixelsPerInch = 96
   TextHeight = 13
   inherited ActionList: TActionList
@@ -1166,7 +1166,10 @@ inherited MainForm: TMainForm
         Hint = #1048#1085#1074#1077#1085#1090#1072#1088#1080#1079#1072#1094#1080#1103
       end
     end
-    object miFinance: TMenuItem [1]
+    object miSaleMovement: TMenuItem [1]
+      Caption = #1055#1088#1086#1080#1079#1074#1086#1076#1089#1090#1074#1086
+    end
+    object miFinance: TMenuItem [2]
       Caption = #1060#1080#1085#1072#1085#1089#1086#1074#1099#1081' '#1091#1095#1077#1090
       object miGoodsAccount: TMenuItem
         Action = actGoodsAccount
@@ -1187,7 +1190,7 @@ inherited MainForm: TMainForm
         Action = actCashJournal
       end
     end
-    object miHistory: TMenuItem [2]
+    object miHistory: TMenuItem [3]
       Caption = #1048#1089#1090#1086#1088#1080#1080
       object miPriceListItem: TMenuItem
         Action = actPriceListItem
@@ -1208,20 +1211,14 @@ inherited MainForm: TMainForm
         Action = actReport_OH_DiscountPeriod
       end
     end
-    object miSaleMovement: TMenuItem [3]
-      Action = actSaleMovement
-    end
-    object miSaleTwoMovement: TMenuItem [4]
-      Action = actSaleTwoMovement
-    end
-    object miReturnInMovement: TMenuItem [5]
+    object miReturnInMovement: TMenuItem [4]
       Action = actReturnInMovement
     end
-    object miGoodsAccountMovement: TMenuItem [6]
+    object miGoodsAccountMovement: TMenuItem [5]
       Action = actGoodsAccountMovement
     end
-    object miReport_Unit: TMenuItem [7]
-      Caption = #1054#1090#1095#1077#1090#1099' ('#1084#1072#1075#1072#1079#1080#1085')'
+    object miReport_Unit: TMenuItem [6]
+      Caption = #1054#1090#1095#1077#1090#1099' ('#1087#1088'-'#1074#1086')'
       object miReport_SaleReturnIn: TMenuItem
         Action = actReport_SaleReturnIn
       end
@@ -1253,8 +1250,8 @@ inherited MainForm: TMainForm
         Action = actReport_Goods_RemainsCurrent_onDate
       end
     end
-    object miReport: TMenuItem [8]
-      Caption = #1054#1090#1095#1077#1090#1099
+    object miReport: TMenuItem [7]
+      Caption = #1054#1090#1095#1077#1090#1099' ('#1089#1082#1083#1072#1076')'
       object miReport_MovementIncome: TMenuItem
         Action = actReport_MovementIncome
       end
@@ -1280,7 +1277,7 @@ inherited MainForm: TMainForm
         Action = actReport_GoodsCode
       end
     end
-    object miReport_Finance: TMenuItem [9]
+    object miReport_Finance: TMenuItem [8]
       Caption = #1054#1090#1095#1077#1090#1099' ('#1092#1080#1085'.)'
       object miReport_Cash: TMenuItem
         Action = actReport_Cash
@@ -1292,7 +1289,7 @@ inherited MainForm: TMainForm
         Action = actReport_MotionByClient
       end
     end
-    object miReport_Basis: TMenuItem [10]
+    object miReport_Basis: TMenuItem [9]
       Caption = #1054#1090#1095#1077#1090#1099' ('#1059#1055')'
       object miReport_Balance: TMenuItem
         Action = actReport_Balance

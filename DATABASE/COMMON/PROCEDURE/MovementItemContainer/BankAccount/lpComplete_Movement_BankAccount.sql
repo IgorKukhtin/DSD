@@ -115,6 +115,13 @@ BEGIN
        ;
 
 
+     -- проверка - Инвестиции
+     IF EXISTS (SELECT 1 FROM _tmpItem JOIN Object_InfoMoney_View AS View_InfoMoney ON View_InfoMoney.InfoMoneyId = _tmpItem.InfoMoneyId AND View_InfoMoney.InfoMoneyGroupId = zc_Enum_InfoMoneyGroup_70000())
+        AND COALESCE ((SELECT MLM.MovementChildId FROM MovementLinkMovement AS MLM WHERE MLM.DescId = zc_MovementLinkMovement_Invoice() AND MLM.MovementId = inMovementId), 0) = 0
+     THEN
+        RAISE EXCEPTION 'Ошибка.Для УП статьи <%> необходимо заполнить значение <№ док. Счет>.', lfGet_Object_ValueData ((SELECT DISTINCT _tmpItem.InfoMoneyId FROM _tmpItem JOIN Object_InfoMoney_View AS View_InfoMoney ON View_InfoMoney.InfoMoneyId = _tmpItem.InfoMoneyId AND View_InfoMoney.InfoMoneyGroupId = zc_Enum_InfoMoneyGroup_70000()));
+     END IF;
+
      -- проверка
      IF EXISTS (SELECT _tmpItem.ObjectId FROM _tmpItem WHERE _tmpItem.ObjectId = 0)
      THEN
@@ -662,7 +669,15 @@ BEGIN
                                 , inUserId     := inUserId
                                  );
 
-END;$BODY$
+     --
+     IF inUserId = 5
+     THEN
+         RAISE EXCEPTION 'Ошибка.Test Admin = OK';
+     END IF;
+
+
+END;
+$BODY$
   LANGUAGE plpgsql VOLATILE;
 
 /*-------------------------------------------------------------------------------

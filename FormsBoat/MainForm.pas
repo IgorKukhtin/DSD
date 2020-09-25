@@ -201,7 +201,6 @@ type
     actDiscountPeriod: TdsdOpenForm;
     miDiscountPeriod: TMenuItem;
     actSaleTwoMovement: TdsdOpenForm;
-    miSaleTwoMovement: TMenuItem;
     actIncomeKoeff: TdsdOpenForm;
     miIncomeKoeff: TMenuItem;
     N1: TMenuItem;

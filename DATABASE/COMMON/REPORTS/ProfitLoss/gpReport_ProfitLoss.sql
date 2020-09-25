@@ -92,13 +92,23 @@ BEGIN
                                              THEN MIContainer.ObjectIntId_Analyzer
                                         WHEN MIContainer.MovementDescId IN (zc_Movement_Sale()) 
                                              THEN MIContainer.ObjectId_Analyzer
+                                        WHEN MIContainer.MovementDescId IN (zc_Movement_Cash(), zc_Movement_BankAccount(), zc_Movement_Service()) 
+                                             THEN MovementItem_1.ObjectId -- MIContainer.ObjectId_Analyzer
                                         ELSE 0
                                    END AS ObjectId_inf
 
                                  , MIContainer.WhereObjectId_Analyzer AS DirectionId
                                  , MIContainer.MovementDescId
+                                 , MILinkObject_InfoMoney.ObjectId AS InfoMoney_inf
 
                             FROM MovementItemContainer AS MIContainer 
+                                 LEFT JOIN MovementItem AS MovementItem_1
+                                                                  ON MovementItem_1.Id = MIContainer.MovementItemId
+                                                                 AND MovementItem_1.DescId = zc_MI_Master()
+                                                                 AND MIContainer.MovementDescId IN (zc_Movement_Cash(), zc_Movement_BankAccount(), zc_Movement_Service())
+                                 LEFT JOIN MovementItemLinkObject AS MILinkObject_InfoMoney
+                                                                  ON MILinkObject_InfoMoney.MovementItemId = MovementItem_1.Id
+                                                                 AND MILinkObject_InfoMoney.DescId = zc_MILinkObject_InfoMoney()
                                  /*LEFT JOIN MovementItemLinkObject AS MILinkObject_Route
                                                                   ON MILinkObject_Route.MovementItemId = MIContainer .MovementItemId
                                                                  AND MILinkObject_Route.DescId = zc_MILinkObject_Route()
@@ -119,14 +129,17 @@ BEGIN
                                                THEN MIContainer.ObjectIntId_Analyzer
                                           WHEN MIContainer.MovementDescId IN (zc_Movement_Sale()) 
                                                THEN MIContainer.ObjectId_Analyzer
+                                          WHEN MIContainer.MovementDescId IN (zc_Movement_Cash(), zc_Movement_BankAccount(), zc_Movement_Service()) 
+                                               THEN MovementItem_1.ObjectId -- MIContainer.ObjectId_Analyzer
                                           ELSE 0
                                      END
+                                   , MILinkObject_InfoMoney.ObjectId
                            )
         , tmpProfitLoss AS (SELECT CLO_Branch.ObjectId                    AS BranchId_ProfitLoss
                                  , CLO_ProfitLoss.ObjectId                AS ProfitLossId
                                  , CLO_Business.ObjectId                  AS BusinessId
                                  , CLO_JuridicalBasis.ObjectId            AS JuridicalId_Basis
-                                 , COALESCE (OL_Goods_InfoMoney.ChildObjectId, 0) AS InfoMoneyId_inf
+                                 , CASE WHEN tmpMIContainer.InfoMoney_inf > 0 THEN tmpMIContainer.InfoMoney_inf ELSE COALESCE (OL_Goods_InfoMoney.ChildObjectId, 0) END AS InfoMoneyId_inf
                                  , tmpMIContainer.MovementDescId
                                  , tmpMIContainer.DirectionId
                                  , tmpMIContainer.UnitId_ProfitLoss
@@ -155,7 +168,7 @@ BEGIN
                                    , CLO_ProfitLoss.ObjectId
                                    , CLO_Business.ObjectId
                                    , CLO_JuridicalBasis.ObjectId
-                                   , COALESCE (OL_Goods_InfoMoney.ChildObjectId, 0)
+                                   , CASE WHEN tmpMIContainer.InfoMoney_inf > 0 THEN tmpMIContainer.InfoMoney_inf ELSE COALESCE (OL_Goods_InfoMoney.ChildObjectId, 0) END
                                    , tmpMIContainer.MovementDescId
                                    , tmpMIContainer.DirectionId
                                    , tmpMIContainer.UnitId_ProfitLoss
@@ -307,8 +320,8 @@ BEGIN
              COALESCE ('Расходы финансовые-Дивиденды', View_ProfitLoss.ProfitLossGroupName, Object_ProfitLoss.ValueData)     :: TVarChar AS ProfitLossGroupName
            , COALESCE ('Расходы финансовые-Дивиденды', View_ProfitLoss.ProfitLossDirectionName, Object_ProfitLoss.ValueData) :: TVarChar AS ProfitLossDirectionName
            , COALESCE ('Расходы финансовые-Дивиденды', View_ProfitLoss.ProfitLossName, Object_ProfitLoss.ValueData)          :: TVarChar AS ProfitLossName
-           --для печатной формы без кода
-             COALESCE ('Расходы финансовые-Дивиденды', View_ProfitLoss.ProfitLossGroupName_original, Object_ProfitLoss.ValueData)     :: TVarChar AS ProfitLossGroupName_original
+             --для печатной формы без кода
+           , COALESCE ('Расходы финансовые-Дивиденды', View_ProfitLoss.ProfitLossGroupName_original, Object_ProfitLoss.ValueData)     :: TVarChar AS ProfitLossGroupName_original
            , COALESCE ('Расходы финансовые-Дивиденды', View_ProfitLoss.ProfitLossDirectionName_original, Object_ProfitLoss.ValueData) :: TVarChar AS ProfitLossDirectionName_original
            , COALESCE ('Расходы финансовые-Дивиденды', View_ProfitLoss.ProfitLossName_original, Object_ProfitLoss.ValueData)          :: TVarChar AS ProfitLossName_original
 
