@@ -1940,6 +1940,9 @@ end;
 
 procedure TLoadFormTest.LoadQualityFormTest;
 begin
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TGoodsQualityForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TGoodsQualityForm');
+
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TGoodsQuality_RawForm'));
   TdsdFormStorageFactory.GetStorage.Load('TGoodsQuality_RawForm');
   exit;
@@ -1947,9 +1950,6 @@ begin
   TdsdFormStorageFactory.GetStorage.Load('TQualityForm');
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TQualityEditForm'));
   TdsdFormStorageFactory.GetStorage.Load('TQualityEditForm');
-
-  TdsdFormStorageFactory.GetStorage.Save(GetForm('TGoodsQualityForm'));
-  TdsdFormStorageFactory.GetStorage.Load('TGoodsQualityForm');
 end;
 
 procedure TLoadFormTest.LoadReportFormTest;

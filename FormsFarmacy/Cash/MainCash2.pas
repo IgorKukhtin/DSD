@@ -524,6 +524,7 @@ type
     actLoadSite_Search: TMultiAction;
     actOpenDelaySite: TdsdOpenForm;
     MemDataGOODSPMID: TIntegerField;
+    MainAmountSendIn: TcxGridDBColumn;
     procedure WM_KEYDOWN(var Msg: TWMKEYDOWN);
     procedure FormCreate(Sender: TObject);
     procedure actChoiceGoodsInRemainsGridExecute(Sender: TObject);
@@ -8305,7 +8306,9 @@ begin
             ShowMessage('Ошибка. Сумма чека ' + CurrToStr(FTotalSumm) +
               ' не равна сумме товара в фискальном чеке ' +
               CurrToStr(Cash.SummaReceipt) + '.'#13#10 +
-              'Чек анулирован...'#13#10'(Перезагрузите свой кассовый аппарат и перезайдите в программу)');
+              'Чек анулирован...'#13#10'(Перезагрузите свой кассовый аппарат и перезайдите в программу, ' +
+              'если перезагрузка РРО не помогла переключите USB кабель на стороне выключенного РРО, ' +
+              'соединительный разьем имеет форму трапеции)');
             Cash.Anulirovt;
           end
         end

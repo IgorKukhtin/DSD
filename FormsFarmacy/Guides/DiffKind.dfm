@@ -27,7 +27,6 @@ object DiffKindForm: TDiffKindForm
     LookAndFeel.Kind = lfStandard
     LookAndFeel.NativeStyle = False
     LookAndFeel.SkinName = ''
-    ExplicitWidth = 513
     object cxGridDBTableView: TcxGridDBTableView
       Navigator.Buttons.CustomButtons = <>
       DataController.DataSource = DataSource
@@ -55,13 +54,13 @@ object DiffKindForm: TDiffKindForm
         Caption = #1050#1086#1076
         DataBinding.FieldName = 'Code'
         HeaderAlignmentVert = vaCenter
-        Width = 50
+        Width = 57
       end
       object Name: TcxGridDBColumn
         Caption = #1053#1072#1079#1074#1072#1085#1080#1077
         DataBinding.FieldName = 'Name'
         HeaderAlignmentVert = vaCenter
-        Width = 219
+        Width = 249
       end
       object IsClose: TcxGridDBColumn
         Caption = #1047#1072#1082#1088#1099#1090' '#1076#1083#1103' '#1079#1072#1082#1072#1079#1072
@@ -70,7 +69,7 @@ object DiffKindForm: TDiffKindForm
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         Options.Editing = False
-        Width = 62
+        Width = 71
       end
       object Erased: TcxGridDBColumn
         Caption = #1059#1076#1072#1083#1077#1085
@@ -87,14 +86,22 @@ object DiffKindForm: TDiffKindForm
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         Options.Editing = False
-        Width = 84
+        Width = 95
       end
       object MaxOrderAmountSecond: TcxGridDBColumn
         Caption = #1052#1072#1082#1089#1080#1084#1072#1083#1100#1085#1072#1103' '#1089#1091#1084#1084#1072' '#1079#1072#1082#1072#1079#1072' '#1074#1090#1086#1088#1072#1103' '#1096#1082#1072#1083#1072
         DataBinding.FieldName = 'MaxOrderAmountSecond'
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
-        Width = 84
+        Width = 96
+      end
+      object DaysForSale: TcxGridDBColumn
+        Caption = #1044#1085#1077#1081' '#1076#1083#1103' '#1087#1088#1086#1076#1072#1078#1099
+        DataBinding.FieldName = 'DaysForSale'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Options.Editing = False
+        Width = 69
       end
     end
     object cxGridLevel: TcxGridLevel
@@ -478,6 +485,7 @@ object DiffKindForm: TDiffKindForm
     ColumnAddOnList = <>
     ColumnEnterList = <>
     SummaryItemList = <>
+    PropertiesCellList = <>
     Left = 128
     Top = 216
   end

@@ -6,8 +6,8 @@ DROP FUNCTION IF EXISTS gpSelect_Object_GoodsQuality (Integer, Boolean,TVarChar)
 
 CREATE OR REPLACE FUNCTION gpSelect_Object_GoodsQuality(
     IN inQualityId     Integer  , 
-    IN inShowAll     Boolean  , 
-    IN inSession     TVarChar        -- сессия пользователя
+    IN inShowAll       Boolean  , 
+    IN inSession       TVarChar        -- сессия пользователя
 )
 RETURNS TABLE (Id Integer, Code Integer, Name TVarChar, isErased boolean, 
                Value1 TVarChar, Value2 TVarChar, 
@@ -17,7 +17,8 @@ RETURNS TABLE (Id Integer, Code Integer, Name TVarChar, isErased boolean,
                Value9 TVarChar, Value10 TVarChar,
                GoodsId Integer, GoodsCode Integer, GoodsName TVarChar,
                GoodsGroupName TVarChar,
-               QualityId Integer, QualityCode Integer, QualityName TVarChar
+               QualityId Integer, QualityCode Integer, QualityName TVarChar,
+               isKlipsa Boolean
                )
 AS
 $BODY$
@@ -56,7 +57,9 @@ BEGIN
                      
            , Object_Quality.Id           AS QualityId
            , Object_Quality.ObjectCode   AS QualityCode
-           , Object_Quality.ValueData    AS QualityName 
+           , Object_Quality.ValueData    AS QualityName
+           
+           , COALESCE (ObjectBoolean_Klipsa.ValueData, FALSE) ::Boolean AS isKlipsa
                                 
        FROM Object AS Object_GoodsQuality
            LEFT JOIN ObjectLink AS GoodsQuality_Quality
@@ -94,7 +97,11 @@ BEGIN
            LEFT JOIN ObjectString AS ObjectString_Value10
                                ON ObjectString_Value10.ObjectId = Object_GoodsQuality.Id 
                               AND ObjectString_Value10.DescId = zc_ObjectString_GoodsQuality_Value10()
-                                                                       
+
+           LEFT JOIN ObjectBoolean AS ObjectBoolean_Klipsa
+                                   ON ObjectBoolean_Klipsa.ObjectId = Object_GoodsQuality.Id 
+                                  AND ObjectBoolean_Klipsa.DescId = zc_ObjectBoolean_GoodsQuality_Klipsa()
+
            LEFT JOIN ObjectLink AS GoodsQuality_Goods
                                 ON GoodsQuality_Goods.ObjectId = Object_GoodsQuality.Id
                                AND GoodsQuality_Goods.DescId = zc_ObjectLink_GoodsQuality_Goods()
@@ -131,7 +138,8 @@ BEGIN
                                                                           , zc_Enum_InfoMoneyDestination_10100()
                                                                            )
                     )
-         SELECT 
+
+         SELECT
              COALESCE (Object_GoodsQuality.Id, 0)::Integer           AS Id
            , COALESCE (Object_GoodsQuality.ObjectCode, 0)::Integer   AS Code
            , COALESCE (Object_GoodsQuality.ValueData, '')::TVarChar  AS Name
@@ -146,7 +154,7 @@ BEGIN
            , COALESCE (ObjectString_Value7.ValueData, '')::TVarChar  AS Value7
            , COALESCE (ObjectString_Value8.ValueData, '')::TVarChar  AS Value8
            , COALESCE (ObjectString_Value9.ValueData, '')::TVarChar  AS Value9           
-           , COALESCE (ObjectString_Value10.ValueData, '')::TVarChar  AS Value10
+           , COALESCE (ObjectString_Value10.ValueData,'')::TVarChar  AS Value10
                                                       
            , Object_Goods.GoodsId        AS GoodsId
            , Object_Goods.GoodsCode      AS GoodsCode
@@ -157,6 +165,7 @@ BEGIN
            , Object_Quality.ObjectCode   AS QualityCode
            , Object_Quality.ValueData    AS QualityName 
 
+           , COALESCE (ObjectBoolean_Klipsa.ValueData, FALSE) ::Boolean AS isKlipsa
          FROM tmpGoods AS Object_Goods
 
            LEFT JOIN ObjectLink AS GoodsQuality_Goods
@@ -195,7 +204,11 @@ BEGIN
            LEFT JOIN ObjectString AS ObjectString_Value10
                                ON ObjectString_Value10.ObjectId = Object_GoodsQuality.Id 
                               AND ObjectString_Value10.DescId = zc_ObjectString_GoodsQuality_Value10()
-                              
+
+           LEFT JOIN ObjectBoolean AS ObjectBoolean_Klipsa
+                                   ON ObjectBoolean_Klipsa.ObjectId = Object_GoodsQuality.Id 
+                                  AND ObjectBoolean_Klipsa.DescId = zc_ObjectBoolean_GoodsQuality_Klipsa()
+
            LEFT  JOIN ObjectLink AS GoodsQuality_Quality
                                 ON GoodsQuality_Quality.ObjectId = Object_GoodsQuality.Id
                                AND GoodsQuality_Quality.DescId = zc_ObjectLink_GoodsQuality_Quality()
@@ -205,8 +218,6 @@ BEGIN
      ;
      END IF;
 
-  
-  
 END;$BODY$
   LANGUAGE plpgsql VOLATILE;
 ALTER FUNCTION gpSelect_Object_GoodsQuality (Integer, Boolean, TVarChar) OWNER TO postgres;
@@ -216,6 +227,7 @@ ALTER FUNCTION gpSelect_Object_GoodsQuality (Integer, Boolean, TVarChar) OWNER T
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
+ 23.09.20         * isKlipsa
  12.02.15         * change inInfomoney на inQualityId
  09.02.15         * add Object_Quality               
  08.12.14         *            

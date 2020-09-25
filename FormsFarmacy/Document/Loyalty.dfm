@@ -26,11 +26,16 @@ inherited LoyaltyForm: TLoyaltyForm
         ExplicitHeight = 263
         inherited cxGridDBTableView: TcxGridDBTableView
           DataController.DataSource = SignDS
+          DataController.Summary.FooterSummaryItems = <
+            item
+              Format = ',0.00; -,0.00; ;'
+              Kind = skSum
+              Column = sqTotalSumm_CheckSale
+            end>
           OptionsBehavior.IncSearch = True
           OptionsData.Deleting = False
           OptionsData.DeletingConfirmation = False
           OptionsData.Editing = False
-          OptionsView.Footer = False
           Styles.Content = nil
           Styles.Inactive = nil
           Styles.Selection = nil
@@ -114,6 +119,16 @@ inherited LoyaltyForm: TLoyaltyForm
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
             Width = 75
+          end
+          object sqTotalSumm_CheckSale: TcxGridDBColumn
+            Caption = #1057#1091#1084#1084#1072' ('#1095#1077#1082' '#1087#1086#1075#1072#1096#1077#1085#1080#1103')'
+            DataBinding.FieldName = 'TotalSumm_CheckSale'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DisplayFormat = ',0.00; -,0.00; ;'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 82
           end
           object sqUnitName_CheckSale: TcxGridDBColumn
             Caption = #1040#1087#1090#1077#1082#1072' ('#1095#1077#1082' '#1087#1086#1075#1072#1096#1077#1085#1080#1103')'
@@ -1758,6 +1773,86 @@ inherited LoyaltyForm: TLoyaltyForm
       isShowModal = True
       OpenBeforeShow = True
     end
+    object actOpenCheckCreate: TdsdInsertUpdateAction
+      Category = 'DSDLib'
+      MoveParams = <>
+      Caption = #1054#1090#1082#1088#1099#1090#1100' '#1095#1077#1082' '#1089#1086#1079#1076#1072#1085#1080#1103
+      Hint = #1054#1090#1082#1088#1099#1090#1100' '#1095#1077#1082' '#1089#1086#1079#1076#1072#1085#1080#1103
+      ShortCut = 115
+      ImageIndex = 1
+      FormName = 'TCheckForm'
+      FormNameParam.Value = 'TCheckForm'
+      FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
+      GuiParams = <
+        item
+          Name = 'Id'
+          Value = Null
+          Component = SignDCS
+          ComponentItem = 'ID_Check'
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'ShowAll'
+          Value = False
+          DataType = ftBoolean
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'inOperDate'
+          Value = 42370d
+          Component = edOperDate
+          DataType = ftDateTime
+          MultiSelectSeparator = ','
+        end>
+      isShowModal = False
+      CheckIDRecords = True
+      ActionType = acUpdate
+      DataSource = SignDS
+      DataSetRefresh = actRefresh
+      IdFieldName = 'ID_Check'
+    end
+    object actOpenCheckSale: TdsdInsertUpdateAction
+      Category = 'DSDLib'
+      MoveParams = <>
+      Caption = #1054#1090#1082#1088#1099#1090#1100' '#1095#1077#1082' '#1087#1086#1075#1072#1096#1077#1085#1080#1103
+      Hint = #1054#1090#1082#1088#1099#1090#1100' '#1095#1077#1082' '#1087#1086#1075#1072#1096#1077#1085#1080#1103
+      ShortCut = 115
+      ImageIndex = 1
+      FormName = 'TCheckForm'
+      FormNameParam.Value = 'TCheckForm'
+      FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
+      GuiParams = <
+        item
+          Name = 'Id'
+          Value = Null
+          Component = SignDCS
+          ComponentItem = 'ID_CheckSale'
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'ShowAll'
+          Value = False
+          DataType = ftBoolean
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'inOperDate'
+          Value = 42370d
+          Component = edOperDate
+          DataType = ftDateTime
+          MultiSelectSeparator = ','
+        end>
+      isShowModal = False
+      CheckIDRecords = True
+      ActionType = acUpdate
+      DataSource = SignDS
+      DataSetRefresh = actRefresh
+      IdFieldName = 'ID_CheckSale'
+    end
   end
   inherited spSelect: TdsdStoredProc
     StoredProcName = 'gpSelect_MovementItem_Loyalty'
@@ -1862,6 +1957,18 @@ inherited LoyaltyForm: TLoyaltyForm
         item
           Visible = True
           ItemName = 'dxBarButton3'
+        end
+        item
+          Visible = True
+          ItemName = 'dxBarStatic'
+        end
+        item
+          Visible = True
+          ItemName = 'bbOpenCheckCreate'
+        end
+        item
+          Visible = True
+          ItemName = 'bbOpenCheckSale'
         end
         item
           Visible = True
@@ -2041,6 +2148,14 @@ inherited LoyaltyForm: TLoyaltyForm
       Action = actInsertPromoCodeScales
       Category = 0
     end
+    object bbOpenCheckCreate: TdxBarButton
+      Action = actOpenCheckCreate
+      Category = 0
+    end
+    object bbOpenCheckSale: TdxBarButton
+      Action = actOpenCheckSale
+      Category = 0
+    end
   end
   inherited DBViewAddOn: TdsdDBViewAddOn
     SummaryItemList = <
@@ -2049,7 +2164,7 @@ inherited LoyaltyForm: TLoyaltyForm
         Param.ComponentItem = 'TotalSumm'
         Param.DataType = ftString
         Param.MultiSelectSeparator = ','
-        DataSummaryItemIndex = 0
+        DataSummaryItemIndex = 10
       end>
     SearchAsFilter = False
   end

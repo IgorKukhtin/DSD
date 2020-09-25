@@ -59,6 +59,7 @@ type
     bbProtocol: TdxBarButton;
     MaxOrderAmount: TcxGridDBColumn;
     MaxOrderAmountSecond: TcxGridDBColumn;
+    DaysForSale: TcxGridDBColumn;
   private
     { Private declarations }
   public

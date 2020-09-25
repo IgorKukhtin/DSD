@@ -9,7 +9,8 @@ RETURNS TABLE (Id Integer, Code Integer, Name TVarChar
              , isClose Boolean
              , isErased boolean
              , MaxOrderAmount TFloat
-             , MaxOrderAmountSecond TFloat) AS
+             , MaxOrderAmountSecond TFloat
+             , DaysForSale Integer) AS
 $BODY$
 BEGIN
 
@@ -24,6 +25,7 @@ BEGIN
           , Object_DiffKind.isErased                             AS isErased
           , ObjectFloat_DiffKind_MaxOrderAmount.ValueData        AS MaxOrderAmount
           , ObjectFloat_DiffKind_MaxOrderAmountSecond.ValueData  AS MaxOrderAmount
+          , ObjectFloat_DiffKind_DaysForSale.ValueData::Integer  AS DaysForSale
      FROM Object AS Object_DiffKind
           LEFT JOIN ObjectBoolean AS ObjectBoolean_DiffKind_Close
                                   ON ObjectBoolean_DiffKind_Close.ObjectId = Object_DiffKind.Id
@@ -34,6 +36,9 @@ BEGIN
           LEFT JOIN ObjectFloat AS ObjectFloat_DiffKind_MaxOrderAmountSecond
                                 ON ObjectFloat_DiffKind_MaxOrderAmountSecond.ObjectId = Object_DiffKind.Id 
                                AND ObjectFloat_DiffKind_MaxOrderAmountSecond.DescId = zc_ObjectFloat_MaxOrderAmountSecond() 
+          LEFT JOIN ObjectFloat AS ObjectFloat_DiffKind_DaysForSale
+                                ON ObjectFloat_DiffKind_DaysForSale.ObjectId = Object_DiffKind.Id 
+                               AND ObjectFloat_DiffKind_DaysForSale.DescId = zc_ObjectFloat_DiffKind_DaysForSale() 
      WHERE Object_DiffKind.DescId = zc_Object_DiffKind();
   
 END;

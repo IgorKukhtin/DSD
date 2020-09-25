@@ -1,9 +1,11 @@
 -- Function: gpGet_Object_MemberMinus()
 
 DROP FUNCTION IF EXISTS gpGet_Object_MemberMinus(Integer, TVarChar);
+DROP FUNCTION IF EXISTS gpGet_Object_MemberMinus(Integer, Integer, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpGet_Object_MemberMinus(
-    IN inId          Integer,       -- Основные средства 
+    IN inId          Integer,       -- Основные средства
+    IN inMaskId      Integer,       --
     IN inSession     TVarChar       -- сессия пользователя
 )
 RETURNS TABLE (Id Integer, Name TVarChar
@@ -19,7 +21,7 @@ $BODY$BEGIN
    -- проверка прав пользователя на вызов процедуры
    -- PERFORM lpCheckRight(inSession, zc_Enum_Process_Get_Object_MemberMinus());
    
-   IF COALESCE (inId, 0) = 0
+   IF COALESCE (inId, 0) = 0 AND COALESCE (inMaskId, 0) = 0
    THEN
        RETURN QUERY 
        SELECT
@@ -47,8 +49,8 @@ $BODY$BEGIN
    ELSE
      RETURN QUERY 
      SELECT 
-           Object_MemberMinus.Id                AS Id 
-         , Object_MemberMinus.ValueData         AS Name
+           CASE WHEN inMaskId <> 0 THEN 0  ELSE Object_MemberMinus.Id        END :: Integer  AS Id
+         , CASE WHEN inMaskId <> 0 THEN '' ELSE Object_MemberMinus.ValueData END :: TVarChar AS Name
          
          , MemberMinus_From.Id                  AS FromId
          , MemberMinus_From.ValueData           AS FromName
@@ -104,7 +106,7 @@ $BODY$BEGIN
           LEFT JOIN ObjectFloat AS ObjectFloat_Summ
                                 ON ObjectFloat_Summ.ObjectId = Object_MemberMinus.Id
                                AND ObjectFloat_Summ.DescId = zc_ObjectFloat_MemberMinus_Summ()
-       WHERE Object_MemberMinus.Id = inId;
+       WHERE Object_MemberMinus.Id = CASE WHEN COALESCE (inId, 0) = 0 THEN inMaskId ELSE inId END;
    END IF;
    
 END;

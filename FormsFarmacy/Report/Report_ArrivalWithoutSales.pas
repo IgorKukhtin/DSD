@@ -25,7 +25,7 @@ uses
   dxSkinSevenClassic, dxSkinSharp, dxSkinSharpPlus, dxSkinSilver,
   dxSkinSpringTime, dxSkinStardust, dxSkinSummer2008, dxSkinTheAsphaltWorld,
   dxSkinValentine, dxSkinVS2010, dxSkinWhiteprint, dxSkinXmas2008Blue,
-  cxGridBandedTableView, cxGridDBBandedTableView;
+  cxGridBandedTableView, cxGridDBBandedTableView, cxSplitter, dsdTranslator;
 
 type
   TReport_ArrivalWithoutSalesForm = class(TAncestorReportForm)
@@ -40,7 +40,6 @@ type
     bbPrint: TdxBarButton;
     actRefreshJuridical: TdsdDataSetRefresh;
     actUpdateMainDS: TdsdUpdateDataSet;
-    UnitName: TcxGridDBColumn;
     GoodsCode: TcxGridDBColumn;
     GoodsName: TcxGridDBColumn;
     AmountIn: TcxGridDBColumn;
@@ -52,6 +51,28 @@ type
     bbMoneyBoxSun: TdxBarButton;
     ctMinSale: TcxCurrencyEdit;
     cxLabel3: TcxLabel;
+    cxGridMain: TcxGrid;
+    cxGridDBTableView1: TcxGridDBTableView;
+    mUnitName: TcxGridDBColumn;
+    mAmountIn: TcxGridDBColumn;
+    mAmount: TcxGridDBColumn;
+    mAmountCheck: TcxGridDBColumn;
+    mCheckSum: TcxGridDBColumn;
+    cxGridLevel1: TcxGridLevel;
+    cxSplitter1: TcxSplitter;
+    DetailDS: TDataSource;
+    DetailDCS: TClientDataSet;
+    DBViewAddOnMain: TdsdDBViewAddOn;
+    actGridMainToExcel: TdsdGridToExcel;
+    dxBarButton2: TdxBarButton;
+    OperDateInLast: TcxGridDBColumn;
+    AmountInLast: TcxGridDBColumn;
+    PriceInLast: TcxGridDBColumn;
+    cbConsecutiveParishes: TcxCheckBox;
+    actGoodsPartionHistory: TdsdOpenForm;
+    dxBarButton3: TdxBarButton;
+    cePriceIn: TcxCurrencyEdit;
+    cxLabel4: TcxLabel;
   private
     { Private declarations }
   public

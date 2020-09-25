@@ -35,6 +35,8 @@ type
     cxLabel4: TcxLabel;
     ceMaxOrderAmountSecond: TcxCurrencyEdit;
     cxLabel2: TcxLabel;
+    ceDaysForSale: TcxCurrencyEdit;
+    cxLabel3: TcxLabel;
   private
     { Private declarations }
   public

@@ -225,7 +225,7 @@ BEGIN
         -- Грохнули связи на то что в не текущем ТП
         PERFORM lpInsertUpdate_MovementItemFloat (zc_MIFloat_MITechnicalRediscountId(), MISend.ID, 0)
               , lpInsertUpdate_MovementItemFloat (zc_MIFloat_MovementItemId(), MITechnicalRediscount.ID, 0)
-              , gpSetErased_MovementItem (MITechnicalRediscount.ID, inSession)
+              , gpSetErased_MovementItem_TechnicalRediscount_Auto (MITechnicalRediscount.ID, inSession)
         FROM MovementItem AS MISend
 
              INNER JOIN MovementItemFloat AS MIFloat_MITechnicalRediscountId

@@ -14,7 +14,8 @@ RETURNS TABLE (Id               Integer,
                AmountDiffPrev   TFloat,
                AmountDiffKind   TFloat,
                AmountIncome TFloat, PriceSaleIncome TFloat,
-               ListDate TDateTime
+               ListDate TDateTime,
+               AmountSendIn TFloat
               )
 
 AS
@@ -114,6 +115,36 @@ BEGIN
                           WHERE Movement.DescId = zc_Movement_ListDiff()
                             AND Movement.StatusId in (zc_Enum_Status_Complete(), zc_Enum_Status_UnComplete())
                           GROUP BY MovementItem.ObjectId)
+              -- Отложенные перемещения
+         , tmpMovementID AS (SELECT Movement.Id
+                             FROM Movement
+                             WHERE Movement.DescId = zc_Movement_Send()
+                              AND Movement.StatusId = zc_Enum_Status_UnComplete()
+                            )
+         , tmpMovementSend AS (SELECT Movement.Id
+                               FROM tmpMovementID AS Movement
+
+                                    INNER JOIN MovementBoolean AS MovementBoolean_Deferred
+                                                               ON MovementBoolean_Deferred.MovementId = Movement.Id
+                                                              AND MovementBoolean_Deferred.DescId = zc_MovementBoolean_Deferred()
+                                                              AND MovementBoolean_Deferred.ValueData = TRUE
+                                                                      
+                                    INNER JOIN MovementLinkObject AS MovementLinkObject_To
+                                                                  ON MovementLinkObject_To.MovementId = Movement.Id
+                                                                 AND MovementLinkObject_To.DescId = zc_MovementLinkObject_To()
+                                                                 AND MovementLinkObject_To.ObjectId = vbUnitId
+                               )
+         , tmpDeferredSendIn AS (SELECT Container.ObjectId                  AS GoodsId
+                                      , SUM(- MovementItemContainer.Amount) AS Amount
+                                 FROM tmpMovementSend AS Movement
+               
+                                      INNER JOIN MovementItemContainer ON MovementItemContainer.MovementId = Movement.Id
+                                                                      AND MovementItemContainer.DescId = zc_Container_Count()
+               
+                                      INNER JOIN Container ON Container.Id = MovementItemContainer.ContainerId
+                                                
+                                 GROUP BY Container.ObjectId
+                               )
 
 
        SELECT Object_Goods.ID
@@ -124,11 +155,12 @@ BEGIN
             , COALESCE(tmpIncome.AmountIncome,0):: TFloat               AS AmountIncome
             , CASE WHEN COALESCE(tmpIncome.AmountIncome,0) <> 0 THEN COALESCE(tmpIncome.SummSale,0) / COALESCE(tmpIncome.AmountIncome,0) ELSE 0 END  :: TFloat AS PriceSaleIncome
             , tmpListDate.ListDate::TDateTime                           AS ListDate
+            , tmpDeferredSendIn.Amount :: TFloat                        AS AmountSendIn 
        FROM Object AS Object_Goods
             LEFT JOIN tmpMovement ON tmpMovement.Id = Object_Goods.Id
             LEFT JOIN tmpIncome ON tmpIncome.GoodsId = Object_Goods.Id
             LEFT JOIN tmpListDate ON tmpListDate.GoodsId = Object_Goods.Id
-
+            LEFT JOIN tmpDeferredSendIn ON tmpDeferredSendIn.GoodsId = Object_Goods.Id
        WHERE Object_Goods.ID = inGoodsID;
 END;
 $BODY$

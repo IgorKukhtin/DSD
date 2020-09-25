@@ -1834,10 +1834,15 @@ CREATE OR REPLACE FUNCTION zc_ObjectFloat_CashSettings_DaySaleForSUN() RETURNS I
 INSERT INTO ObjectFloatDesc (DescId, Code, ItemName)
   SELECT zc_Object_CashSettings(), 'zc_ObjectFloat_CashSettings_DaySaleForSUN', 'Количество дней для контроля <Продано/Продажа до след СУН>' WHERE NOT EXISTS (SELECT * FROM ObjectFloatDesc WHERE Code = 'zc_ObjectFloat_CashSettings_DaySaleForSUN');
 
+CREATE OR REPLACE FUNCTION zc_ObjectFloat_DiffKind_DaysForSale() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM ObjectFloatDesc WHERE Code = 'zc_ObjectFloat_DiffKind_DaysForSale'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
+INSERT INTO ObjectFloatDesc (DescId, Code, ItemName)
+  SELECT zc_Object_DiffKind(), 'zc_ObjectFloat_DiffKind_DaysForSale', 'Дней для продажы' WHERE NOT EXISTS (SELECT * FROM ObjectFloatDesc WHERE Code = 'zc_ObjectFloat_DiffKind_DaysForSale');
+
 
 /*-------------------------------------------------------------------------------
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.   Воробкало А.А.   Шаблий О.В.
+ 24.09.20                                                                                      * zc_ObjectFloat_DiffKind_DaysForSale
  15.09.20                                                                                      * zc_ObjectFloat_CashSettings_DaySaleForSUN
  04.09.20         * zc_ObjectFloat_MemberMinus_TotalSumm
                     zc_ObjectFloat_MemberMinus_Summ

@@ -29,6 +29,7 @@ RETURNS TABLE (Id         Integer
              , Invnumber_CheckSale Integer
              , OperDate_CheckSale  TDateTime
              , UnitName_CheckSale  TVarChar
+             , TotalSumm_CheckSale TFloat
 
               )
 AS
@@ -66,6 +67,7 @@ BEGIN
                           , Object_Unit.ValueData      AS UnitName
                           , Object_Juridical.ValueData AS JuridicalName
                           , Object_Retail.ValueData    AS RetailName
+                          , MovementFloat_TotalSumm.ValueData                                 AS TotalSumm
                      FROM tmpMI 
                      
                           LEFT JOIN Movement ON Movement.ID IN (tmpMI.MovementId, tmpMI.MovementSaleId) 
@@ -84,6 +86,10 @@ BEGIN
                                                ON ObjectLink_Juridical_Retail.ObjectId = Object_Juridical.Id
                                               AND ObjectLink_Juridical_Retail.DescId = zc_ObjectLink_Juridical_Retail()
                           LEFT JOIN Object AS Object_Retail ON Object_Retail.Id = ObjectLink_Juridical_Retail.ChildObjectId
+
+                          LEFT JOIN MovementFloat AS MovementFloat_TotalSumm
+                                                  ON MovementFloat_TotalSumm.MovementId =  Movement.Id
+                                                 AND MovementFloat_TotalSumm.DescId = zc_MovementFloat_TotalSumm()
                      )
 
            SELECT MI_Sign.Id
@@ -113,6 +119,7 @@ BEGIN
                 , tmpCheckSale.Invnumber        ::Integer   AS Invnumber_CheckSale
                 , tmpCheckSale.OperDate         ::TDateTime AS OperDate_CheckSale 
                 , tmpCheckSale.UnitName         ::TVarChar  AS UnitName_CheckSale
+                , tmpCheckSale.TotalSumm        ::TFloat    AS TotalSumm_CheckSale
                 
            FROM tmpMI AS MI_Sign
 
@@ -167,3 +174,5 @@ $BODY$
 
 
 -- select * from gpSelect_MovementItem_LoyaltySign(inMovementId := 16406918 , inIsErased := 'False' ,  inSession := '3');
+
+select * from gpSelect_MovementItem_LoyaltySign(inMovementId := 19620044 , inIsErased := 'False' ,  inSession := '3');

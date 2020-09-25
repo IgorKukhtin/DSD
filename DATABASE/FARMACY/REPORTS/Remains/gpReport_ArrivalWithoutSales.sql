@@ -4,24 +4,17 @@ DROP FUNCTION IF EXISTS gpReport_ArrivalWithoutSales (TDateTime, TDateTime, TFlo
 
 CREATE OR REPLACE FUNCTION gpReport_ArrivalWithoutSales(
     IN inStartDate        TDateTime,  -- Дата начала
-    IN inDateFinal        TDateTime,  -- Дата окончания
+    IN inEndDate          TDateTime,  -- Дата окончания
     IN inMinSale          TFloat   ,  -- Продано меньше или равно
     IN inSession          TVarChar    -- сессия пользователя
 )
-RETURNS TABLE (UnitCode    Integer
-             , UnitName    TVarChar
-             , GoodsCode   Integer
-             , GoodsName   TVarChar
-             , AmountIn    TFloat
-             , Amount      TFloat
-             , AmountCheck TFloat
-             , Price       TFloat
-             , CheckSum    TFloat
-             )
+RETURNS SETOF refcursor
 AS
 $BODY$
    DECLARE vbUserId Integer;
    DECLARE vbObjectId Integer;
+   DECLARE cur1 refcursor;
+   DECLARE cur2 refcursor;
 BEGIN
 
     -- проверка прав пользователя на вызов процедуры
@@ -29,16 +22,15 @@ BEGIN
     vbUserId:= lpGetUserBySession (inSession);
 
     inStartDate := date_trunc('day', inStartDate);
-    inDateFinal := date_trunc('day', inDateFinal);
+    inEndDate := date_trunc('day', inEndDate);
 
-
-    -- Результат
-    RETURN QUERY
+    CREATE TEMP TABLE tmpData ON COMMIT DROP AS
+    (
     WITH tmpIncome AS (SELECT MovementItemContainer.ContainerID
                             , MovementItemContainer.Amount               AS AmountIn
                        FROM MovementItemContainer
                        WHERE MovementItemContainer.MovementDescId = zc_Movement_Income()
-                         AND MovementItemContainer.OperDate BETWEEN inStartDate AND inDateFinal),
+                         AND MovementItemContainer.OperDate BETWEEN inStartDate AND inEndDate),
 
          tmpRemains AS (SELECT Container.ObjectId                         AS GoodsId
                              , Container.WhereObjectId                    AS UnitId
@@ -67,14 +59,11 @@ BEGIN
                            , sum(AnalysisContainerItem.AmountCheckSum)::TFloat AS AmountCheckSum
                       FROM AnalysisContainerItem
                       WHERE AnalysisContainerItem.AmountCheck > 0
-                        AND AnalysisContainerItem.OperDate BETWEEN inStartDate AND inDateFinal
+                        AND AnalysisContainerItem.OperDate BETWEEN inStartDate AND inEndDate
                       GROUP BY AnalysisContainerItem.GoodsId, AnalysisContainerItem.UnitId)
 
-
-    SELECT Object_Unit.ObjectCode          AS UnitCode
-         , Object_Unit.ValueData           AS UnitName
-         , Object_Goods.ObjectCode         AS GoodsCode
-         , Object_Goods.ValueData          AS GoodsName
+    SELECT tmpRemains.UnitId               AS UnitId
+         , tmpRemains.GoodsId              AS GoodsId
          , tmpRemains.AmountIn             AS AmountIn
          , tmpRemains.Amount               AS Amount
          , tmpSales.AmountCheck            AS AmountCheck
@@ -83,16 +72,44 @@ BEGIN
          , tmpSales.AmountCheckSum         AS CheckSum
     FROM tmpRemains
 
-         LEFT JOIN Object AS Object_Unit ON Object_Unit.ID = tmpRemains.UnitId
-
-         LEFT JOIN Object AS Object_Goods ON Object_Goods.ID = tmpRemains.GoodsId
-
          LEFT JOIN tmpSales ON tmpSales.GoodsId = tmpRemains.GoodsId
                            AND tmpSales.UnitId = tmpRemains.UnitId
 
-    WHERE COALESCE (tmpSales.AmountCheck, 0) <= inMinSale
+    WHERE COALESCE (tmpSales.AmountCheck, 0) <= inMinSale)
     ;
 
+  OPEN cur1 FOR
+  SELECT tmpData.UnitId
+       , Object_Unit.ObjectCode          AS UnitCode
+       , Object_Unit.ValueData           AS UnitName
+       , SUM(tmpData.AmountIn)           AS AmountIn
+       , SUM(tmpData.Amount)             AS Amount
+       , SUM(tmpData.AmountCheck)        AS AmountCheck
+       , SUM(tmpData.CheckSum)           AS CheckSum
+  FROM tmpData
+
+       LEFT JOIN Object AS Object_Unit ON Object_Unit.ID = tmpData.UnitId
+
+  GROUP BY tmpData.UnitId
+       , Object_Unit.ObjectCode
+       , Object_Unit.ValueData
+  ORDER BY 4 DESC;
+  RETURN NEXT cur1;
+
+  OPEN cur2 FOR
+  SELECT tmpData.UnitId
+       , Object_Goods.ObjectCode         AS GoodsCode
+       , Object_Goods.ValueData          AS GoodsName
+       , tmpData.AmountIn                AS AmountIn
+       , tmpData.Amount                  AS Amount
+       , tmpData.AmountCheck             AS AmountCheck
+       , tmpData.Price                   AS Price
+       , tmpData.CheckSum                AS CheckSum
+  FROM tmpData
+
+       LEFT JOIN Object AS Object_Goods ON Object_Goods.ID = tmpData.GoodsId;
+
+  RETURN NEXT cur2;
 
 END;
 $BODY$
@@ -105,4 +122,4 @@ $BODY$
 */
 
 -- тест
--- select * from gpReport_ArrivalWithoutSales(inStartDate := ('01.08.2020')::TDateTime , inDateFinal := ('31.08.2020')::TDateTime, inMinSale := 1, inSession := '3');      
+-- select * from gpReport_ArrivalWithoutSales(inStartDate := ('01.08.2020')::TDateTime , inEndDate := ('31.08.2020')::TDateTime , inMinSale := 0 ,  inSession := '3');

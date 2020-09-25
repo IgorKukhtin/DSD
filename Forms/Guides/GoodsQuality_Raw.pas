@@ -77,6 +77,7 @@ type
     QualityCode: TcxGridDBColumn;
     ProtocolOpenForm: TdsdOpenForm;
     bbProtocolOpenForm: TdxBarButton;
+    isKlipsa: TcxGridDBColumn;
   private
     { Private declarations }
   public

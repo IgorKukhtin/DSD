@@ -51,12 +51,10 @@ BEGIN
 
                             WHERE Object_CreditLimitJuridical.DescId = zc_Object_CreditLimitJuridical()),
 
-           tmpX AS (SELECT MovementLinkObject_From.ObjectId as JuridicalID
-                         , SUM(MovementFloat_TotalSumm.ValueData) AS X
+           tmpXM AS (SELECT Movement_Income.*
+                          , MovementLinkObject_From.ObjectId        AS FromID
+                          , MovementLinkObject_Juridical.ObjectId   AS JuridicalID
                     FROM Movement AS Movement_Income
-                         LEFT JOIN MovementLinkObject AS MovementLinkObject_To
-                                                      ON MovementLinkObject_To.MovementId = Movement_Income.Id
-                                                     AND MovementLinkObject_To.DescId = zc_MovementLinkObject_To()
 
                          LEFT JOIN MovementLinkObject AS MovementLinkObject_From
                                                       ON MovementLinkObject_From.MovementId = Movement_Income.Id
@@ -64,6 +62,18 @@ BEGIN
                          LEFT JOIN MovementLinkObject AS MovementLinkObject_Juridical
                                                       ON MovementLinkObject_Juridical.MovementId = Movement_Income.Id
                                                      AND MovementLinkObject_Juridical.DescId = zc_MovementLinkObject_Juridical()
+
+                    WHERE Movement_Income.DescId = zc_Movement_Income()
+                      AND MovementLinkObject_Juridical.ObjectId = vbJuridical
+                      AND MovementLinkObject_From.ObjectId in (SELECT tmpJuridical.ID FROM tmpJuridical)),
+
+           tmpX AS (SELECT Movement_Income.FromID                 AS JuridicalID
+                         , SUM(MovementFloat_TotalSumm.ValueData) AS X
+                    FROM tmpXM AS Movement_Income
+
+                         LEFT JOIN MovementLinkObject AS MovementLinkObject_From
+                                                      ON MovementLinkObject_From.MovementId = Movement_Income.Id
+                                                     AND MovementLinkObject_From.DescId = zc_MovementLinkObject_From()
 
                          LEFT JOIN MovementFloat AS MovementFloat_TotalSumm
                                                  ON MovementFloat_TotalSumm.MovementId = Movement_Income.Id
@@ -80,14 +90,11 @@ BEGIN
 
                          LEFT JOIN Container ON Container.DescId = zc_Container_SummIncomeMovementPayment()
                                             AND Container.ObjectId = Object_Movement.Id
-                                            AND Container.KeyValue like '%,'||MovementLinkObject_Juridical.ObjectId||';%'
+                                            AND Container.KeyValue like '%,'||Movement_Income.JuridicalID||';%'
 
                     WHERE CASE WHEN Container.Amount > 0.01 OR Movement_Income.StatusId <> zc_Enum_Status_Complete()
                                THEN MovementDate_Payment.ValueData END Is Not Null
-                      AND Movement_Income.DescId = zc_Movement_Income()
-                      AND MovementLinkObject_Juridical.ObjectId = vbJuridical
-                      AND MovementLinkObject_From.ObjectId in (SELECT tmpJuridical.ID FROM tmpJuridical)
-                    GROUP BY MovementLinkObject_From.ObjectId),
+                    GROUP BY Movement_Income.FromID),
 
            tmpY AS (SELECT MLO_From.ObjectId as JuridicalID
                          , SUM(MovementFloat_TotalSumm.ValueData) AS Y
@@ -157,3 +164,6 @@ LANGUAGE plpgsql VOLATILE;
 */
 
 -- SELECT * FROM gpSelect_ShowPUSH_OrderInternal(183292,'3')
+
+select * from gpSelect_ShowPUSH_OrderInternal(inUnitID := 7117700 ,  inSession := '3');
+

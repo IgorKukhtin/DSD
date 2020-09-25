@@ -40,6 +40,9 @@ type
     deStart: TcxDateEdit;
     cxLabel1: TcxLabel;
     ctMinSale: TcxCurrencyEdit;
+    cbConsecutiveParishes: TcxCheckBox;
+    cePriceIn: TcxCurrencyEdit;
+    cxLabel4: TcxLabel;
   private
     { Private declarations }
   public
