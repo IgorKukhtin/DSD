@@ -126,7 +126,9 @@ uses
   CashCloseReturnDialog in '..\FormsFarmacy\Cash\CashCloseReturnDialog.pas' {CashCloseReturnDialogForm: TParentForm},
   Cash_Emulation in '..\FormsFarmacy\Cash\Cash_Emulation.pas',
   Cash_MINI_FP54 in '..\FormsFarmacy\Cash\Cash_MINI_FP54.pas',
-  ecrmini_TLB in '..\FormsFarmacy\Cash\ecrmini_TLB.pas';
+  ecrmini_TLB in '..\FormsFarmacy\Cash\ecrmini_TLB.pas',
+  ChoiceListDiff in '..\FormsFarmacy\Cash\ChoiceListDiff.pas' {ChoiceListDiffForm: TParentForm},
+  dsdTranslator in '..\SOURCE\COMPONENT\dsdTranslator.pas';
 
 {$R *.res}
 

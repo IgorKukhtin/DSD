@@ -5,7 +5,11 @@ DROP FUNCTION IF EXISTS gpSelect_Object_DiffKindCash(TVarChar);
 CREATE OR REPLACE FUNCTION gpSelect_Object_DiffKindCash(
     IN inSession     TVarChar       -- сессия пользователя
 )
-RETURNS TABLE (Id Integer, Code Integer, Name TVarChar, MaxOrderUnitAmount TFloat, MaxOrderAmount TFloat, MaxOrderAmountSecond TFloat) 
+RETURNS TABLE (Id Integer, Code Integer, Name TVarChar
+             , MaxOrderUnitAmount TFloat
+             , MaxOrderAmount TFloat
+             , MaxOrderAmountSecond TFloat
+             , DaysForSale Integer) 
 AS
 $BODY$
    DECLARE vbUserId Integer;
@@ -37,6 +41,7 @@ BEGIN
                  ELSE ObjectFloat_DiffKind_MaxOrderAmount.ValueData END::TFloat  AS MaxOrderUnitAmount
           , ObjectFloat_DiffKind_MaxOrderAmount.ValueData                        AS MaxOrderAmount
           , ObjectFloat_DiffKind_MaxOrderAmountSecond.ValueData                  AS MaxOrderAmountSecond
+          , ObjectFloat_DiffKind_DaysForSale.ValueData::Integer  AS DaysForSale
      FROM Object AS Object_DiffKind
           LEFT JOIN ObjectFloat AS ObjectFloat_DiffKind_MaxOrderAmount
                                 ON ObjectFloat_DiffKind_MaxOrderAmount.ObjectId = Object_DiffKind.Id 
@@ -44,6 +49,9 @@ BEGIN
           LEFT JOIN ObjectFloat AS ObjectFloat_DiffKind_MaxOrderAmountSecond
                                 ON ObjectFloat_DiffKind_MaxOrderAmountSecond.ObjectId = Object_DiffKind.Id 
                                AND ObjectFloat_DiffKind_MaxOrderAmountSecond.DescId = zc_ObjectFloat_MaxOrderAmountSecond() 
+          LEFT JOIN ObjectFloat AS ObjectFloat_DiffKind_DaysForSale
+                                ON ObjectFloat_DiffKind_DaysForSale.ObjectId = Object_DiffKind.Id 
+                               AND ObjectFloat_DiffKind_DaysForSale.DescId = zc_ObjectFloat_DiffKind_DaysForSale() 
      WHERE Object_DiffKind.DescId = zc_Object_DiffKind()
        AND Object_DiffKind.isErased = FALSE
      ORDER BY Object_DiffKind.ValueData;

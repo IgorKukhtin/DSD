@@ -524,6 +524,7 @@ type
     actLoadSite_Search: TMultiAction;
     actOpenDelaySite: TdsdOpenForm;
     MemDataGOODSPMID: TIntegerField;
+    MainAmountSendIn: TcxGridDBColumn;
     procedure WM_KEYDOWN(var Msg: TWMKEYDOWN);
     procedure FormCreate(Sender: TObject);
     procedure actChoiceGoodsInRemainsGridExecute(Sender: TObject);

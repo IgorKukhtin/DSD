@@ -65,15 +65,23 @@ BEGIN
 
      -- Правим НДС если надо
      PERFORM lpInsertUpdate_MovementItemLinkObject (zc_MILinkObject_NDSKind(), T1.Id, T1.NDSKindId)
+           , lpInsertUpdate_MovementItemLinkObject (zc_MILinkObject_DivisionParties(), T1.Id, COALESCE (T1.DivisionPartiesId, 0))
      FROM (WITH
          tmpMI AS (SELECT MovementItem.*
+                        , COALESCE(MILinkObject_DivisionParties.ObjectId, 0)  AS DivisionPartiesID
                    FROM MovementItem_Check_View AS MovementItem
+                   
+                        LEFT JOIN MovementItemLinkObject AS MILinkObject_DivisionParties
+                                                         ON MILinkObject_DivisionParties.MovementItemId = MovementItem.Id
+                                                        AND MILinkObject_DivisionParties.DescId         = zc_MILinkObject_DivisionParties()
+                                                        
                    WHERE MovementItem.MovementId = inMovementId
                    )
        , tmpContainerAll AS (SELECT Container.ObjectId
                                   , CASE WHEN COALESCE (MovementBoolean_UseNDSKind.ValueData, FALSE) = FALSE
                                            OR COALESCE(MovementLinkObject_NDSKind.ObjectId, 0) = 0
                                     THEN Object_Goods.NDSKindId ELSE MovementLinkObject_NDSKind.ObjectId END  AS NDSKindId
+                                  , COALESCE(ContainerLinkObject_DivisionParties.ObjectId, 0)                 AS DivisionPartiesId
                                   , Container.Amount
                              FROM (SELECT DISTINCT tmpMI.GoodsId FROM tmpMI) AS tmp
 
@@ -85,6 +93,9 @@ BEGIN
                                   LEFT JOIN ContainerlinkObject AS CLO_MovementItem
                                                                 ON CLO_MovementItem.Containerid = Container.Id
                                                                AND CLO_MovementItem.DescId = zc_ContainerLinkObject_PartionMovementItem()
+                                  LEFT JOIN ContainerlinkObject AS ContainerLinkObject_DivisionParties
+                                                                ON ContainerLinkObject_DivisionParties.Containerid = Container.Id
+                                                               AND ContainerLinkObject_DivisionParties.DescId = zc_ContainerLinkObject_DivisionParties()
                                   LEFT OUTER JOIN Object AS Object_PartionMovementItem ON Object_PartionMovementItem.Id = CLO_MovementItem.ObjectId
                                   -- элемент прихода
                                   LEFT JOIN MovementItem AS MI_Income ON MI_Income.Id = Object_PartionMovementItem.ObjectCode
@@ -106,13 +117,16 @@ BEGIN
                              )
        , tmpContainer AS (SELECT Container.ObjectId
                                , Container.NDSKindId
+                               , Container.DivisionPartiesId
                                , SUM(Container.Amount) AS Amount
                           FROM tmpContainerAll AS Container
                           GROUP BY Container.ObjectId
                                  , Container.NDSKindId
+                                 , Container.DivisionPartiesId
                           )
        , tmpContainerOrd AS (SELECT Container.ObjectId
                                   , Container.NDSKindId
+                                  , Container.DivisionPartiesId
                                   , Container.Amount
                                   , COALESCE (ObjectFloat_NDSKind_NDS.ValueData, 0) AS NDS 
                                   , ROW_NUMBER() OVER (PARTITION BY Container.ObjectId ORDER BY Container.Amount DESC) AS Ord
@@ -125,10 +139,12 @@ BEGIN
            SELECT
                  MovementItem.Id
                , tmpContainerOrd.NDSKindId 
+               , tmpContainerOrd.DivisionPartiesId 
            FROM tmpMI AS MovementItem
 
-                LEFT JOIN tmpContainer ON tmpContainer.ObjectId = MovementItem.GoodsId
-                                      AND tmpContainer.NDSKindId = MovementItem.NDSKindId
+                LEFT JOIN tmpContainer ON tmpContainer.ObjectId          = MovementItem.GoodsId
+                                      AND tmpContainer.NDSKindId         = MovementItem.NDSKindId
+                                      AND tmpContainer.DivisionPartiesId = MovementItem.DivisionPartiesId
 
                 LEFT JOIN tmpContainerOrd ON tmpContainerOrd.ObjectId = MovementItem.GoodsId
                                          AND tmpContainerOrd.Ord = 1
@@ -136,7 +152,12 @@ BEGIN
                         OR (COALESCE(tmpContainer.Amount, 0) >= MovementItem.Amount)
                         OR (COALESCE(tmpContainerOrd.Amount, 0) < MovementItem.Amount)
                       THEN MovementItem.NDSKindId 
-                      ELSE tmpContainerOrd.NDSKindId END  <> MovementItem.NDSKindId) AS T1; 
+                      ELSE tmpContainerOrd.NDSKindId END  <> MovementItem.NDSKindId 
+              OR CASE WHEN (COALESCE(MovementItem.Amount, 0) <= 0)
+                        OR (COALESCE(tmpContainer.Amount, 0) >= MovementItem.Amount)
+                        OR (COALESCE(tmpContainerOrd.Amount, 0) < MovementItem.Amount)
+                      THEN MovementItem.DivisionPartiesId 
+                      ELSE tmpContainerOrd.DivisionPartiesId END  <> MovementItem.DivisionPartiesId) AS T1; 
 
      RETURN QUERY
      WITH

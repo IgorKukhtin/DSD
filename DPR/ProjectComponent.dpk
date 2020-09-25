@@ -139,6 +139,7 @@ contains
   DesadvFozzXML in '..\SOURCE\EDI\DesadvFozzXML.pas',
   IftminFozzXML in '..\SOURCE\EDI\IftminFozzXML.pas',
   OrderSpFozzXML in '..\SOURCE\EDI\OrderSpFozzXML.pas',
-  dsdAction in '..\SOURCE\COMPONENT\dsdAction.pas';
+  dsdAction in '..\SOURCE\COMPONENT\dsdAction.pas',
+  dsdTranslator in '..\SOURCE\COMPONENT\dsdTranslator.pas';
 
 end.

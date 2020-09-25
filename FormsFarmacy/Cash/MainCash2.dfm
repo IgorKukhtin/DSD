@@ -795,7 +795,7 @@ inherited MainCashForm2: TMainCashForm2
           Width = 110
         end
         object MainAmountIncome: TcxGridDBColumn
-          Caption = #1058#1086#1074'.'#1074' '#1087#1091#1090#1080
+          Caption = #1058#1086#1074#1072#1088' ('#1086#1090' '#1087#1086#1089#1090'.) '#1074' '#1087#1091#1090#1080
           DataBinding.FieldName = 'AmountIncome'
           PropertiesClassName = 'TcxCurrencyEditProperties'
           Properties.DisplayFormat = ',0.####;-,0.####; ;'
@@ -1026,6 +1026,16 @@ inherited MainCashForm2: TMainCashForm2
           HeaderAlignmentHorz = taCenter
           Options.Editing = False
           Width = 81
+        end
+        object MainAmountSendIn: TcxGridDBColumn
+          Caption = #1058#1086#1074#1072#1088' '#1074' '#1087#1091#1090#1080' '#1087#1086' '#1087#1077#1088#1077#1084#1077#1097'.'
+          DataBinding.FieldName = 'AmountSendIn'
+          PropertiesClassName = 'TcxCurrencyEditProperties'
+          Properties.DecimalPlaces = 4
+          Properties.DisplayFormat = ',0.####;-,0.####; ;'
+          HeaderAlignmentHorz = taCenter
+          Options.Editing = False
+          Width = 71
         end
       end
       object MainGridLevel: TcxGridLevel

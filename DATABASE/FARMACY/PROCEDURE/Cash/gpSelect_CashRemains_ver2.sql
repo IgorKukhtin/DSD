@@ -36,14 +36,15 @@ RETURNS TABLE (Id Integer, GoodsId_main Integer, GoodsGroupName TVarChar, GoodsN
                RemainsSUN TFloat,
                GoodsDiscountID  Integer, GoodsDiscountName  TVarChar, isGoodsForProject boolean,
                UKTZED TVarChar,
-               GoodsPairSunId Integer, GoodsPairSunMainId Integer
+               GoodsPairSunId Integer, GoodsPairSunMainId Integer,
+               AmountSendIn TFloat,
+               NotTransferTime boolean,
+               NDSKindId Integer
 
              , PartionDateKindId_check   Integer
              , Price_check               TFloat
              , PriceWithVAT_check        TFloat
              , PartionDateDiscount_check TFloat
-             , NotTransferTime boolean
-             , NDSKindId Integer
               )
 AS
 $BODY$
@@ -516,6 +517,37 @@ BEGIN
 
                                      GROUP BY Container.GoodsID, COALESCE(Container.PartionDateKindId, 0)
                                       )
+                      -- Отложенные перемещения
+                 , tmpMovementID AS (SELECT Movement.Id
+                                     FROM Movement
+                                     WHERE Movement.DescId = zc_Movement_Send()
+                                      AND Movement.StatusId = zc_Enum_Status_UnComplete()
+                                    )
+                 , tmpMovementSend AS (SELECT Movement.Id
+                                       FROM tmpMovementID AS Movement
+
+                                            INNER JOIN MovementBoolean AS MovementBoolean_Deferred
+                                                                       ON MovementBoolean_Deferred.MovementId = Movement.Id
+                                                                      AND MovementBoolean_Deferred.DescId = zc_MovementBoolean_Deferred()
+                                                                      AND MovementBoolean_Deferred.ValueData = TRUE
+                                                                      
+                                            INNER JOIN MovementLinkObject AS MovementLinkObject_To
+                                                                          ON MovementLinkObject_To.MovementId = Movement.Id
+                                                                         AND MovementLinkObject_To.DescId = zc_MovementLinkObject_To()
+                                                                         AND MovementLinkObject_To.ObjectId = vbUnitId
+                                       )
+                 , tmpDeferredSendIn AS (SELECT Container.ObjectId                  AS GoodsId
+                                              , SUM(- MovementItemContainer.Amount) AS Amount
+                                         FROM tmpMovementSend AS Movement
+               
+                                              INNER JOIN MovementItemContainer ON MovementItemContainer.MovementId = Movement.Id
+                                                                              AND MovementItemContainer.DescId = zc_Container_Count()
+               
+                                              INNER JOIN Container ON Container.Id = MovementItemContainer.ContainerId
+                                                
+                                         GROUP BY Container.ObjectId
+                                       )
+
                    -- Без Продажи за последнии 60 дней
                  , tmpIlliquidUnit AS (SELECT * FROM lpReport_IlliquidReductionPlanUser(inUserID := vbUserId))
 
@@ -818,14 +850,15 @@ BEGIN
           , Object_Goods_PairSun.ID                                AS GoodsPairSunId
           , Object_Goods_PairSun_Main.GoodsPairSunId               AS GoodsPairSunMainId
 
+          , tmpDeferredSendIn.Amount :: TFloat                                   AS AmountSendIn 
+          , COALESCE (ObjectBoolean_Goods_NotTransferTime.ValueData, False)      AS NotTransferTime
+          , COALESCE(CashSessionSnapShot.NDSKindId, Object_Goods_Main.NDSKindId) AS NDSKindId
+
           , CashSessionSnapShot.PartionDateKindId   AS PartionDateKindId_check
           , CashSessionSnapShot.Price               AS Price_check
           , CashSessionSnapShot.PriceWithVAT        AS PriceWithVAT_check
           , CashSessionSnapShot.PartionDateDiscount AS PartionDateDiscount_check
-
-          , COALESCE (ObjectBoolean_Goods_NotTransferTime.ValueData, False)      AS NotTransferTime
-          , COALESCE(CashSessionSnapShot.NDSKindId, Object_Goods_Main.NDSKindId) AS NDSKindId
-
+          
          FROM
             CashSessionSnapShot
             INNER JOIN Object AS Goods ON Goods.Id = CashSessionSnapShot.ObjectId
@@ -920,6 +953,8 @@ BEGIN
            -- Коды UKTZED
            LEFT JOIN tmpGoodsUKTZED ON tmpGoodsUKTZED.GoodsMainId = Object_Goods_Retail.GoodsMainId
                                    AND tmpGoodsUKTZED.Ord = 1
+                                   
+           LEFT JOIN tmpDeferredSendIn ON tmpDeferredSendIn.GoodsId = CashSessionSnapShot.ObjectId
 
         WHERE
             CashSessionSnapShot.CashSessionId = inCashSessionId

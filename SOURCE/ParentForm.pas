@@ -70,7 +70,7 @@ uses
   Vcl.DBActns, cxMemo, cxGridDBChartView, ShellAPI, CommonData,
   SHDocVw, GMClasses, GMMap, GMMapVCL, GMLinkedComponents,
   GMMarker, GMMarkerVCL, GMGeoCode, GMDirection, GMDirectionVCL, cxImage,
-  cxEditRepositoryItems, dsdPivotGrid, dsdExportToXLSAction,
+  cxEditRepositoryItems, dsdPivotGrid, dsdExportToXLSAction, dsdTranslator,
   dsdExportToXMLAction {DataModul}
   , StrUtils;
 
@@ -688,6 +688,8 @@ initialization
   RegisterClass (TdsdFileToBase64);
   RegisterClass (TdsdShowPUSHMessage);
   RegisterClass (TdsdFieldFilter);
+  RegisterClass (TdsdTranslator);
+
 
 // ƒÀﬂ “≈—“¿
 

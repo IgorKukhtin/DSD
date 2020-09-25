@@ -19,7 +19,7 @@ object Report_ArrivalWithoutSalesDialogForm: TReport_ArrivalWithoutSalesDialogFo
   TextHeight = 13
   object cxButton1: TcxButton
     Left = 41
-    Top = 159
+    Top = 167
     Width = 75
     Height = 25
     Caption = 'Ok'
@@ -29,7 +29,7 @@ object Report_ArrivalWithoutSalesDialogForm: TReport_ArrivalWithoutSalesDialogFo
   end
   object cxButton2: TcxButton
     Left = 233
-    Top = 159
+    Top = 167
     Width = 75
     Height = 25
     Caption = #1054#1090#1084#1077#1085#1072
@@ -68,17 +68,39 @@ object Report_ArrivalWithoutSalesDialogForm: TReport_ArrivalWithoutSalesDialogFo
     Caption = #1053#1072#1095#1072#1083#1086' '#1087#1077#1088#1080#1086#1076#1072':'
   end
   object ctMinSale: TcxCurrencyEdit
-    Left = 161
+    Left = 187
     Top = 72
     Properties.DisplayFormat = ',0.00;-,0.00'
     TabOrder = 7
     Width = 85
   end
+  object cbConsecutiveParishes: TcxCheckBox
+    Left = 8
+    Top = 127
+    Hint = #1095#1077#1088#1077#1079' '#1089#1072#1081#1090
+    Caption = #1055#1086#1076#1088#1103#1076' '#1087#1088#1080#1093#1086#1076#1099
+    ParentShowHint = False
+    ShowHint = True
+    TabOrder = 8
+    Width = 147
+  end
+  object cePriceIn: TcxCurrencyEdit
+    Left = 187
+    Top = 100
+    Properties.DisplayFormat = ',0.00;-,0.00'
+    TabOrder = 9
+    Width = 85
+  end
+  object cxLabel4: TcxLabel
+    Left = 8
+    Top = 101
+    Caption = #1062#1077#1085#1072' '#1079#1072#1082#1091#1087#1082#1080' '#1073#1086#1083#1100#1096#1077' '#1080#1083#1080' '#1088#1072#1074#1085#1072':'
+  end
   object PeriodChoice: TPeriodChoice
     DateStart = deStart
     DateEnd = deEnd
-    Left = 183
-    Top = 75
+    Left = 152
+    Top = 51
   end
   object dsdUserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn
     Left = 254
@@ -94,7 +116,7 @@ object Report_ArrivalWithoutSalesDialogForm: TReport_ArrivalWithoutSalesDialogFo
       end>
     StorageName = 'cxPropertiesStore'
     StorageType = stStream
-    Left = 271
+    Left = 231
     Top = 79
   end
   object FormParams: TdsdFormParams
@@ -120,9 +142,23 @@ object Report_ArrivalWithoutSalesDialogForm: TReport_ArrivalWithoutSalesDialogFo
         DataType = ftString
         ParamType = ptInput
         MultiSelectSeparator = ','
+      end
+      item
+        Name = 'PriceIn'
+        Value = Null
+        Component = cePriceIn
+        DataType = ftFloat
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'ConsecutiveParishes'
+        Value = Null
+        Component = cbConsecutiveParishes
+        DataType = ftBoolean
+        MultiSelectSeparator = ','
       end>
     Left = 46
-    Top = 81
+    Top = 65
   end
   object ActionList: TActionList
     Left = 155

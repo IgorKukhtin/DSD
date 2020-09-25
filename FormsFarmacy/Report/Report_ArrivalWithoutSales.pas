@@ -25,7 +25,7 @@ uses
   dxSkinSevenClassic, dxSkinSharp, dxSkinSharpPlus, dxSkinSilver,
   dxSkinSpringTime, dxSkinStardust, dxSkinSummer2008, dxSkinTheAsphaltWorld,
   dxSkinValentine, dxSkinVS2010, dxSkinWhiteprint, dxSkinXmas2008Blue,
-  cxGridBandedTableView, cxGridDBBandedTableView, cxSplitter;
+  cxGridBandedTableView, cxGridDBBandedTableView, cxSplitter, dsdTranslator;
 
 type
   TReport_ArrivalWithoutSalesForm = class(TAncestorReportForm)
@@ -63,6 +63,16 @@ type
     DetailDS: TDataSource;
     DetailDCS: TClientDataSet;
     DBViewAddOnMain: TdsdDBViewAddOn;
+    actGridMainToExcel: TdsdGridToExcel;
+    dxBarButton2: TdxBarButton;
+    OperDateInLast: TcxGridDBColumn;
+    AmountInLast: TcxGridDBColumn;
+    PriceInLast: TcxGridDBColumn;
+    cbConsecutiveParishes: TcxCheckBox;
+    actGoodsPartionHistory: TdsdOpenForm;
+    dxBarButton3: TdxBarButton;
+    cePriceIn: TcxCurrencyEdit;
+    cxLabel4: TcxLabel;
   private
     { Private declarations }
   public
