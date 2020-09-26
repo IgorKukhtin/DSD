@@ -1,12 +1,14 @@
  -- Function: gpReport_ArrivalWithoutSales()
 
-DROP FUNCTION IF EXISTS gpReport_ArrivalWithoutSales (TDateTime, TDateTime, TFloat, TVarChar);
+DROP FUNCTION IF EXISTS gpReport_ArrivalWithoutSales (TDateTime, TDateTime, TFloat, TFloat, Boolean, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpReport_ArrivalWithoutSales(
-    IN inStartDate        TDateTime,  -- Дата начала
-    IN inEndDate          TDateTime,  -- Дата окончания
-    IN inMinSale          TFloat   ,  -- Продано меньше или равно
-    IN inSession          TVarChar    -- сессия пользователя
+    IN inStartDate           TDateTime,  -- Дата начала
+    IN inEndDate             TDateTime,  -- Дата окончания
+    IN inMinSale             TFloat   ,  -- Продано меньше или равно
+    IN inPriceIn             TFloat   ,  -- Цена закупки больше или равна
+    IN inConsecutiveParishes Boolean  ,  -- Подряд приходы
+    IN inSession             TVarChar    -- сессия пользователя
 )
 RETURNS SETOF refcursor
 AS
@@ -27,36 +29,51 @@ BEGIN
     CREATE TEMP TABLE tmpData ON COMMIT DROP AS
     (
     WITH tmpIncome AS (SELECT MovementItemContainer.ContainerID
-                            , MovementItemContainer.Amount               AS AmountIn
+                            , MovementItemContainer.ObjectId_Analyzer       AS GoodsId
+                            , MovementItemContainer.WhereObjectId_Analyzer  AS UnitId
+                            , MovementItemContainer.OperDate
+                            , MovementItemContainer.Amount                   AS AmountIn
+                            , MIFloat_PriceWithVAT.ValueData                 AS PriceIn
+                            , ROW_NUMBER() OVER (PARTITION BY MovementItemContainer.WhereObjectId_Analyzer, MovementItemContainer.ObjectId_Analyzer
+                                                 ORDER BY MovementItemContainer.OperDate DESC, MovementItemContainer.ContainerID) AS Ord
                        FROM MovementItemContainer
-                       WHERE MovementItemContainer.MovementDescId = zc_Movement_Income()
-                         AND MovementItemContainer.OperDate BETWEEN inStartDate AND inEndDate),
 
-         tmpRemains AS (SELECT Container.ObjectId                         AS GoodsId
-                             , Container.WhereObjectId                    AS UnitId
+                            INNER JOIN ObjectLink AS ObjectLink_Unit_Juridical
+                                                  ON ObjectLink_Unit_Juridical.ObjectId = MovementItemContainer.WhereObjectId_Analyzer
+                                                 AND ObjectLink_Unit_Juridical.DescId = zc_ObjectLink_Unit_Juridical()
+
+                            INNER JOIN ObjectLink AS ObjectLink_Juridical_Retail
+                                                  ON ObjectLink_Juridical_Retail.ObjectId = ObjectLink_Unit_Juridical.ChildObjectId
+                                                 AND ObjectLink_Juridical_Retail.DescId = zc_ObjectLink_Juridical_Retail()
+                                                 AND ObjectLink_Juridical_Retail.ChildObjectId = 4
+
+                            LEFT JOIN MovementItemFloat AS MIFloat_PriceWithVAT
+                                                        ON MIFloat_PriceWithVAT.MovementItemId = MovementItemContainer.MovementItemId
+                                                       AND MIFloat_PriceWithVAT.DescId = zc_MIFloat_PriceWithVAT()
+
+                       WHERE MovementItemContainer.MovementDescId = zc_Movement_Income()
+                         AND MovementItemContainer.OperDate BETWEEN inStartDate AND inEndDate
+                         AND COALESCE ( MIFloat_PriceWithVAT.ValueData, 0) > COALESCE ( inPriceIn, 0)),
+
+         tmpRemains AS (SELECT tmpIncome.GoodsId                          AS GoodsId
+                             , tmpIncome.UnitId                           AS UnitId
                              , Sum(tmpIncome.AmountIn)::TFloat            AS AmountIn
                              , Sum(Container.Amount)::TFloat              AS Amount
+                             , MAX(tmpIncome.OperDate)                    AS OperDate
+                             , Count(*)                                   AS CountIn
                         FROM tmpIncome
 
                              INNER JOIN Container ON Container.ID = tmpIncome.ContainerID
                                                  AND Container.DescId = zc_Container_Count()
                                                  AND Container.Amount > 0
 
-                             INNER JOIN ObjectLink AS ObjectLink_Unit_Juridical
-                                                   ON ObjectLink_Unit_Juridical.ObjectId = Container.WhereObjectId
-                                                  AND ObjectLink_Unit_Juridical.DescId = zc_ObjectLink_Unit_Juridical()
-
-                             INNER JOIN ObjectLink AS ObjectLink_Juridical_Retail
-                                                   ON ObjectLink_Juridical_Retail.ObjectId = ObjectLink_Unit_Juridical.ChildObjectId
-                                                  AND ObjectLink_Juridical_Retail.DescId = zc_ObjectLink_Juridical_Retail()
-                                                  AND ObjectLink_Juridical_Retail.ChildObjectId = 4
-
-                        GROUP BY Container.ObjectId
-                               , Container.WhereObjectId),
+                        GROUP BY tmpIncome.GoodsId
+                               , tmpIncome.UnitId),
          tmpSales AS (SELECT AnalysisContainerItem.GoodsId
                            , AnalysisContainerItem.UnitId
                            , sum(AnalysisContainerItem.AmountCheck)::TFloat    AS AmountCheck
                            , sum(AnalysisContainerItem.AmountCheckSum)::TFloat AS AmountCheckSum
+                           , MIN(AnalysisContainerItem.OperDate)               AS OperDate
                       FROM AnalysisContainerItem
                       WHERE AnalysisContainerItem.AmountCheck > 0
                         AND AnalysisContainerItem.OperDate BETWEEN inStartDate AND inEndDate
@@ -70,13 +87,23 @@ BEGIN
          , CASE WHEN COALESCE (tmpSales.AmountCheck, 0) <> 0 THEN
            Round(tmpSales.AmountCheckSum / tmpSales.AmountCheck, 2) END::TFloat  AS Price
          , tmpSales.AmountCheckSum         AS CheckSum
+         , tmpIncome.OperDate              AS OperDateInLast
+         , tmpIncome.AmountIn              AS AmountInLast
+         , tmpIncome.PriceIn               AS PriceInLast
     FROM tmpRemains
 
          LEFT JOIN tmpSales ON tmpSales.GoodsId = tmpRemains.GoodsId
                            AND tmpSales.UnitId = tmpRemains.UnitId
 
-    WHERE COALESCE (tmpSales.AmountCheck, 0) <= inMinSale)
-    ;
+         LEFT JOIN tmpIncome ON tmpIncome.GoodsId = tmpRemains.GoodsId
+                            AND tmpIncome.UnitId = tmpRemains.UnitId
+                            AND tmpIncome.Ord = 1
+
+    WHERE COALESCE (tmpSales.AmountCheck, 0) <= inMinSale
+      AND (COALESCE (inConsecutiveParishes, False) = False OR tmpRemains.CountIn > 1 AND tmpRemains.OperDate >= COALESCE(tmpSales.OperDate, tmpRemains.OperDate))
+    );
+
+  raise notice 'Value 05: %', (select count(*) from tmpData);
 
   OPEN cur1 FOR
   SELECT tmpData.UnitId
@@ -98,6 +125,7 @@ BEGIN
 
   OPEN cur2 FOR
   SELECT tmpData.UnitId
+       , tmpData.GoodsId
        , Object_Goods.ObjectCode         AS GoodsCode
        , Object_Goods.ValueData          AS GoodsName
        , tmpData.AmountIn                AS AmountIn
@@ -105,11 +133,16 @@ BEGIN
        , tmpData.AmountCheck             AS AmountCheck
        , tmpData.Price                   AS Price
        , tmpData.CheckSum                AS CheckSum
+       , tmpData.OperDateInLast          AS OperDateInLast
+       , tmpData.AmountInLast            AS AmountInLast
+       , tmpData.PriceInLast             AS PriceInLast
   FROM tmpData
 
        LEFT JOIN Object AS Object_Goods ON Object_Goods.ID = tmpData.GoodsId;
 
   RETURN NEXT cur2;
+
+  raise notice 'Value 05: %', (select count(*) from tmpData);
 
 END;
 $BODY$
@@ -122,4 +155,5 @@ $BODY$
 */
 
 -- тест
--- select * from gpReport_ArrivalWithoutSales(inStartDate := ('01.08.2020')::TDateTime , inEndDate := ('31.08.2020')::TDateTime , inMinSale := 0 ,  inSession := '3');
+--
+select * from gpReport_ArrivalWithoutSales (inStartDate := ('01.08.2020')::TDateTime , inEndDate := ('31.08.2020')::TDateTime , inMinSale := 0.0 , inPriceIn := 0.20,  inConsecutiveParishes := True,  inSession := '3');
