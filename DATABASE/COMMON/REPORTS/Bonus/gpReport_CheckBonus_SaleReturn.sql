@@ -29,6 +29,7 @@ RETURNS TABLE (MovementId_pl Integer
              , Value TFloat
              , PercentRetBonus TFloat
              , PercentRetBonus_fact TFloat
+             , PercentRetBonus_diff TFloat
              , Sum_CheckBonus TFloat
              , Sum_CheckBonus_real TFloat
              , Sum_CheckBonusFact TFloat 
@@ -798,6 +799,7 @@ BEGIN
             , CAST (tmpData.Value AS TFloat)                AS Value
             , CAST (tmpData.PercentRetBonus AS TFloat)      AS PercentRetBonus
             , CAST (tmpData.PercentRetBonus_fact AS TFloat) AS PercentRetBonus_fact
+            , CAST (COALESCE (tmpData.PercentRetBonus_fact,0) - COALESCE (tmpData.PercentRetBonus, 0) AS TFloat) :: TFloat AS PercentRetBonus_diff
 
             , CAST (tmpData.Sum_CheckBonus AS TFloat)     AS Sum_CheckBonus
             , CAST (tmpData.Sum_CheckBonus_real AS TFloat) AS Sum_CheckBonus_real

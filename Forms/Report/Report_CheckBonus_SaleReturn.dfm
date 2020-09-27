@@ -4,7 +4,7 @@ inherited Report_CheckBonus_SaleReturnForm: TReport_CheckBonus_SaleReturnForm
   ClientWidth = 1180
   AddOnFormData.ExecuteDialogAction = ExecuteDialog
   ExplicitWidth = 1196
-  ExplicitHeight = 376
+  ExplicitHeight = 379
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
@@ -234,6 +234,19 @@ inherited Report_CheckBonus_SaleReturnForm: TReport_CheckBonus_SaleReturnForm
             Visible = False
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 48
+          end
+          object PercentRetBonus_diff: TcxGridDBColumn
+            Caption = #1054#1090#1082#1083'. Max % '#1074#1086#1079#1074#1088#1072#1090#1072' '#1092#1072#1082#1090#1072' '#1086#1090' '#1087#1083#1072#1085#1072
+            DataBinding.FieldName = 'PercentRetBonus_diff'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 4
+            Properties.DisplayFormat = ',0.####;-,0.####; ;'
+            Visible = False
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            HeaderHint = #1054#1090#1082#1083#1086#1085#1077#1085#1080#1077' Max % '#1074#1086#1079#1074#1088#1072#1090#1072' '#1092#1072#1082#1090#1072' '#1086#1090' '#1087#1083#1072#1085#1072
             Options.Editing = False
             Width = 48
           end
@@ -1133,5 +1146,136 @@ inherited Report_CheckBonus_SaleReturnForm: TReport_CheckBonus_SaleReturnForm
       end>
     Left = 525
     Top = 30
+  end
+  object spInsertMovement_ProfitLossService_ByReportGrid: TdsdStoredProc
+    StoredProcName = 'gpInsertUpdate_Movement_ProfitLossService_ByReportGrid'
+    DataSets = <>
+    OutputType = otResult
+    Params = <
+      item
+        Name = 'inEndDate'
+        Value = 43831d
+        Component = deEnd
+        DataType = ftDateTime
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inContractId_find'
+        Value = ''
+        Component = MasterCDS
+        ComponentItem = 'ContractId_find'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inContractId_master'
+        Value = ''
+        Component = MasterCDS
+        ComponentItem = 'ContractId_master'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inContractId_child'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'ContractId_child'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inInfoMoneyId_find'
+        Value = ''
+        Component = MasterCDS
+        ComponentItem = 'InfoMoneyId_find'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inInfoMoneyId_child'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'InfoMoneyId_child'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inJuridicalId'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'JuridicalId'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inPartnerId'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'PartnerId'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inPaidKindId'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'PaidKindId'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inConditionKindId'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'ConditionKindId'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inContractConditionKindId'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'ContractConditionKindId'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inBonusKindId'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'BonusKindId'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inBranchId'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'BranchId'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inSum_Bonus'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'Sum_Bonus'
+        DataType = ftFloat
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inSum_Bonus_real'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'Sum_Bonus_real'
+        DataType = ftFloat
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end>
+    PackSize = 1
+    Left = 472
+    Top = 216
   end
 end

@@ -37,7 +37,9 @@ RETURNS TABLE (OperDate_Movement TDateTime, InvNumber_Movement TVarChar, DescNam
              , Sum_Account  TFloat
              , PercentRetBonus  TFloat
              , PercentRetBonus_fact  TFloat
+             , PercentRetBonus_diff  TFloat
              , Comment TVarChar
+             , ReportBonusId Integer, isSend Boolean
               )  
 AS
 $BODY$
@@ -60,6 +62,24 @@ BEGIN
 
 
     RETURN QUERY
+      WITH 
+      tmpObjectBonus AS (SELECT ObjectLink_Juridical.ChildObjectId AS JuridicalId
+                              , ObjectLink_Partner.ChildObjectId   AS PartnerId
+                              , Object_ReportBonus.Id              AS Id
+                              , Object_ReportBonus.isErased
+                         FROM Object AS Object_ReportBonus
+                              INNER JOIN ObjectDate AS ObjectDate_Month
+                                                   ON ObjectDate_Month.ObjectId = Object_ReportBonus.Id
+                                                  AND ObjectDate_Month.DescId = zc_Object_ReportBonus_Month()
+                                                  AND ObjectDate_Month.ValueData =  DATE_TRUNC ('Month', inEndDate)
+                              LEFT JOIN ObjectLink AS ObjectLink_Juridical
+                                                   ON ObjectLink_Juridical.ObjectId = Object_ReportBonus.Id
+                                                  AND ObjectLink_Juridical.DescId = zc_ObjectLink_ReportBonus_Juridical()
+                              LEFT JOIN ObjectLink AS ObjectLink_Partner
+                                                   ON ObjectLink_Partner.ObjectId = Object_ReportBonus.Id
+                                                  AND ObjectLink_Partner.DescId = zc_ObjectLink_ReportBonus_Partner()
+                         WHERE Object_ReportBonus.DescId = zc_Object_ReportBonus()
+                         )
 
       SELECT tmp.OperDate_Movement, tmp.InvNumber_Movement, tmp.DescName_Movement
            , tmp.ContractId_master, tmp.ContractId_child, tmp.ContractId_find, tmp.InvNumber_master, tmp.InvNumber_child, tmp.InvNumber_find
@@ -86,15 +106,63 @@ BEGIN
            , tmp.Sum_Account
            , tmp.PercentRetBonus
            , tmp.PercentRetBonus_fact
+           , tmp.PercentRetBonus_diff
            , tmp.Comment
+           , tmpObjectBonus.Id :: Integer AS ReportBonusId
+           , CASE WHEN tmpObjectBonus.Id IS NULL OR tmpObjectBonus.isErased = True THEN TRUE ELSE FALSE END :: Boolean AS isSend
       FROM gpReport_CheckBonusTest2 (inStartDate           := inStartDate
                                    , inEndDate             := inEndDate
-                                   , inPaidKindID          := inPaidKindID
+                                   , inPaidKindID          := zc_Enum_PaidKind_FirstForm()
                                    , inJuridicalId         := inJuridicalId
                                    , inBranchId            := inBranchId
                                  --, inIsMovement          := inIsMovement
                                    , inSession             := inSession
-                                    ) AS tmp;
+                                    ) AS tmp
+           LEFT JOIN tmpObjectBonus ON tmpObjectBonus.JuridicalId = tmp.JuridicalId
+                                   AND COALESCE (tmpObjectBonus.PartnerId,0) = COALESCE (tmp.PartnerId,0)
+      WHERE inPaidKindId = zc_Enum_PaidKind_FirstForm() OR COALESCE (inPaidKindId,0) = 0
+  UNION ALL
+      SELECT tmp.OperDate_Movement, tmp.InvNumber_Movement, tmp.DescName_Movement
+           , tmp.ContractId_master, tmp.ContractId_child, tmp.ContractId_find, tmp.InvNumber_master, tmp.InvNumber_child, tmp.InvNumber_find
+           , tmp.ContractTagName_child, tmp.ContractStateKindCode_child
+           , tmp.InfoMoneyId_master, tmp.InfoMoneyId_find
+           , tmp.InfoMoneyName_master, tmp.InfoMoneyName_child, tmp.InfoMoneyName_find
+           , tmp.JuridicalId, tmp.JuridicalName
+           , tmp.PaidKindId, tmp.PaidKindName
+           , tmp.PaidKindName_Child
+           , tmp.ConditionKindId, tmp.ConditionKindName
+           , tmp.BonusKindId, tmp.BonusKindName
+           , tmp.BranchId, tmp.BranchName
+           , tmp.RetailName
+           , tmp.PersonalName
+           , tmp.PartnerId
+           , tmp.PartnerName
+           , tmp.Value
+           , tmp.Sum_CheckBonus
+           , tmp.Sum_CheckBonusFact
+           , tmp.Sum_Bonus
+           , tmp.Sum_BonusFact
+           , tmp.Sum_SaleFact
+           , tmp.Sum_SaleReturnIn
+           , tmp.Sum_Account
+           , tmp.PercentRetBonus
+           , tmp.PercentRetBonus_fact
+           , tmp.PercentRetBonus_diff
+           , tmp.Comment
+           , tmpObjectBonus.Id :: Integer AS ReportBonusId
+           , CASE WHEN tmpObjectBonus.Id IS NULL OR tmpObjectBonus.isErased = True THEN TRUE ELSE FALSE END :: Boolean AS isSend
+      FROM gpReport_CheckBonusTest2 (inStartDate           := inStartDate
+                                   , inEndDate             := inEndDate
+                                   , inPaidKindID          := zc_Enum_PaidKind_SecondForm()
+                                   , inJuridicalId         := inJuridicalId
+                                   , inBranchId            := inBranchId
+                                 --, inIsMovement          := inIsMovement
+                                   , inSession             := inSession
+                                    ) AS tmp
+           LEFT JOIN tmpObjectBonus ON tmpObjectBonus.JuridicalId = tmp.JuridicalId
+                                   AND COALESCE (tmpObjectBonus.PartnerId,0) = COALESCE (tmp.PartnerId,0)
+      WHERE inPaidKindId = zc_Enum_PaidKind_SecondForm() OR COALESCE (inPaidKindId,0) = 0
+      ;
 
 /*
 -- старый вариант

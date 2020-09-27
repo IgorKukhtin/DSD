@@ -69,6 +69,19 @@ type
     PartnerName: TcxGridDBColumn;
     actPrint: TdsdPrintAction;
     bbPrint: TdxBarButton;
+    isSend: TcxGridDBColumn;
+    spUpdateSend_No: TdsdStoredProc;
+    spUpdateSend_Yes: TdsdStoredProc;
+    actUpdateSend_Yes: TdsdExecStoredProc;
+    actUpdateSend_No: TdsdExecStoredProc;
+    macUpdateSend_Yes: TMultiAction;
+    macUpdateSend_No: TMultiAction;
+    bbUpdateSend_Yes: TdxBarButton;
+    bbUpdateSend_No: TdxBarButton;
+    actInsertByReportGrid: TdsdExecStoredProc;
+    macInsertByReportGrid: TMultiAction;
+    bbInsertByReportGrid: TdxBarButton;
+    spInsertByReportGrid: TdsdStoredProc;
   private
     { Private declarations }
   public

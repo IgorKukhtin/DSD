@@ -1778,6 +1778,17 @@ CREATE OR REPLACE FUNCTION zc_ObjectLink_MemberMinus_BankAccountTo() RETURNS Int
 INSERT INTO ObjectLinkDesc (Code, ItemName, DescId, ChildObjectDescId)
   SELECT 'zc_ObjectLink_MemberMinus_BankAccountTo', 'IBAN получателя платежа', zc_Object_MemberMinus(), zc_Object_BankAccount() WHERE NOT EXISTS (SELECT * FROM ObjectLinkDesc WHERE Code = 'zc_ObjectLink_MemberMinus_BankAccountTo');
 
+CREATE OR REPLACE FUNCTION zc_ObjectLink_ReportBonus_Juridical() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM ObjectLinkDesc WHERE Code = 'zc_ObjectLink_ReportBonus_Juridical'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
+INSERT INTO ObjectLinkDesc (Code, ItemName, DescId, ChildObjectDescId)
+  SELECT 'zc_ObjectLink_ReportBonus_Juridical', 'Юр. лицо', zc_Object_ReportBonus(), zc_Object_Juridical() WHERE NOT EXISTS (SELECT * FROM ObjectLinkDesc WHERE Code = 'zc_ObjectLink_ReportBonus_Juridical');
+
+CREATE OR REPLACE FUNCTION zc_ObjectLink_ReportBonus_Partner() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM ObjectLinkDesc WHERE Code = 'zc_ObjectLink_ReportBonus_Partner'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
+INSERT INTO ObjectLinkDesc (Code, ItemName, DescId, ChildObjectDescId)
+  SELECT 'zc_ObjectLink_ReportBonus_Partner', 'Контрагент', zc_Object_ReportBonus(), zc_Object_Partner() WHERE NOT EXISTS (SELECT * FROM ObjectLinkDesc WHERE Code = 'zc_ObjectLink_ReportBonus_Partner');
+
+CREATE OR REPLACE FUNCTION zc_ObjectLink_ReportBonus_Contract() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM ObjectLinkDesc WHERE Code = 'zc_ObjectLink_ReportBonus_Contract'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
+INSERT INTO ObjectLinkDesc (Code, ItemName, DescId, ChildObjectDescId)
+  SELECT 'zc_ObjectLink_ReportBonus_Contract', 'Договор', zc_Object_ReportBonus(), zc_Object_Contract() WHERE NOT EXISTS (SELECT * FROM ObjectLinkDesc WHERE Code = 'zc_ObjectLink_ReportBonus_Contract');
 
 --!!! АПТЕКА
 
@@ -2383,6 +2394,10 @@ SELECT 'zc_ObjectLink_JuridicalPriorities_Goods', 'Связь с главным товаром', zc_
 /*-------------------------------------------------------------------------------
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.   Воробкало А.А.   Шаблий О.В.
+ 25.09.20         * zc_ObjectLink_ReportBonus_Juridical
+                    zc_ObjectLink_ReportBonus_Partner
+                    zc_ObjectLink_ReportBonus_Contract
+ 
  09.09.20         * zc_ObjectLink_JuridicalOrderFinance_BankAccountMain
  04.09.20         * zc_ObjectLink_MemberMinus_From
                     zc_ObjectLink_MemberMinus_To

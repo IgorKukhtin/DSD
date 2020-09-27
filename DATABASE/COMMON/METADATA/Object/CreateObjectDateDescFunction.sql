@@ -192,6 +192,11 @@ CREATE OR REPLACE FUNCTION zc_ObjectDate_Goods_In() RETURNS Integer AS $BODY$BEG
 INSERT INTO ObjectDateDesc (DescId, Code, ItemName)
   SELECT zc_Object_Goods(), 'zc_ObjectDate_Goods_In', 'Дата прихода от поставщика' WHERE NOT EXISTS (SELECT * FROM ObjectDateDesc WHERE Code = 'zc_ObjectDate_Goods_In');
 
+
+CREATE OR REPLACE FUNCTION zc_Object_ReportBonus_Month() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM ObjectDateDesc WHERE Code = 'zc_Object_ReportBonus_Month'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
+INSERT INTO ObjectDateDesc (DescId, Code, ItemName)
+  SELECT zc_Object_ReportBonus(), 'zc_Object_ReportBonus_Month', 'Месяц начисления бонусов' WHERE NOT EXISTS (SELECT * FROM ObjectDateDesc WHERE Code = 'zc_Object_ReportBonus_Month');
+
 --!!!FARMACY
 
 CREATE OR REPLACE FUNCTION zc_ObjectDate_Price_DateChange() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM ObjectDateDesc WHERE Code = 'zc_ObjectDate_Price_DateChange'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
@@ -440,6 +445,7 @@ INSERT INTO ObjectDateDesc (DescId, Code, ItemName)
 
 /*-------------------------------------------------------------------------------
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.  Воробкало А.А.   Шаблий О.В.
+ 25.09.20         * zc_Object_ReportBonus_Month
  04.06.20                                                                                     * zc_ObjectDate_User_PUSH
  07.05.20                                                                                     * zc_ObjectDate_Buyer_DateBirth
  06.05.20         * zc_ObjectDate_Juridical_VatPrice
