@@ -1193,7 +1193,8 @@ uses
   ProfitLossService_51201Journal in '..\..\Forms\Document\ProfitLossService_51201Journal.pas' {ProfitLossService_51201JournalForm: TParentForm},
   MemberMinus in '..\..\Forms\Guides\MemberMinus.pas' {MemberMinusForm: TParentForm},
   MemberMinusEdit in '..\..\Forms\Guides\MemberMinusEdit.pas' {MemberMinusEditForm: TParentForm},
-  MemberExternal_Juridical_Object in '..\..\Forms\Guides\MemberExternal_Juridical_Object.pas' {MemberExternal_Juridical_ObjectForm: TParentForm};
+  MemberExternal_Juridical_Object in '..\..\Forms\Guides\MemberExternal_Juridical_Object.pas' {MemberExternal_Juridical_ObjectForm: TParentForm},
+  dsdTranslator in '..\..\SOURCE\COMPONENT\dsdTranslator.pas';
 
 {$R *.RES}
 {$R DevExpressRus.res}
