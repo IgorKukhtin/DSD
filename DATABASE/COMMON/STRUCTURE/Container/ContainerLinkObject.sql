@@ -21,7 +21,7 @@ CREATE TABLE ContainerLinkObject(
 /*                                  Индексы                                      */
 
 CREATE UNIQUE INDEX idx_ContainerLinkObject_ContainerId_DescId ON ContainerLinkObject (ContainerId, DescId);
-CREATE UNIQUE INDEX idx_ContainerLinkObject_ContainerId_ObjectId_DescId ON ContainerLinkObject (ContainerId, ObjectId, DescId);
+CREATE        INDEX idx_ContainerLinkObject_ContainerId_ObjectId_DescId ON ContainerLinkObject (ContainerId, ObjectId, DescId);
 CREATE        INDEX idx_ContainerLinkObject_ContainerId_DescId_ObjectId ON ContainerLinkObject (ContainerId, DescId, ObjectId);
 CREATE        INDEX idx_ContainerLinkObject_ObjectId_DescId_ContainerId ON ContainerLinkObject (ObjectId, DescId, ContainerId);
 

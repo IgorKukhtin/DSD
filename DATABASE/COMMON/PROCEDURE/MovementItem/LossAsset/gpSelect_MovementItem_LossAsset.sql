@@ -62,7 +62,7 @@ BEGIN
                                 , SUM (Container.Amount) AS Amount
                            FROM tmpMI_Goods
                                 INNER JOIN Container ON Container.ObjectId = tmpMI_Goods.GoodsId
-                                                    AND Container.DescId   = zc_Container_Count()
+                                                    AND Container.DescId   IN (zc_Container_Count(), zc_Container_CountAsset())
                                                     AND Container.Amount   <> 0
                                 INNER JOIN ContainerLinkObject AS CLO_Unit
                                                                ON CLO_Unit.ContainerId = Container.Id

@@ -6,7 +6,7 @@ CREATE OR REPLACE FUNCTION gpSelect_Object_AssetChoice(
     IN inUnitId      Integer ,
     IN inSession     TVarChar       -- сессия пользователя
 )
-RETURNS TABLE (ContainerId Integer, Id Integer, Code Integer, Name TVarChar
+RETURNS TABLE (ContainerId Integer, ItemName TVarChar, Id Integer, Code Integer, Name TVarChar
              , AssetGroupId Integer, AssetGroupCode Integer, AssetGroupName TVarChar
              , JuridicalId Integer, JuridicalCode Integer, JuridicalName TVarChar
              , MakerId Integer, MakerCode Integer, MakerName TVarChar
@@ -32,11 +32,12 @@ BEGIN
                  )
 
    , tmpRemains AS (SELECT Container.Id           AS ContainerId
+                         , Container.DescId       AS ContainerDescId
                          , tmpAsset.AssetId       AS AssetId
                          , SUM (Container.Amount) AS Amount
                     FROM tmpAsset
                          INNER JOIN Container ON Container.ObjectId = tmpAsset.AssetId
-                                             AND Container.DescId   = zc_Container_Count()
+                                             AND Container.DescId   IN (zc_Container_Count(), zc_Container_CountAsset())
                                              AND COALESCE (Container.Amount, 0) <> 0
                          INNER JOIN ContainerLinkObject AS CLO_Unit
                                                         ON CLO_Unit.ContainerId = Container.Id
@@ -49,10 +50,12 @@ BEGIN
                          LEFT JOIN Object AS Object_PartionGoods ON Object_PartionGoods.Id = CLO_PartionGoods.ObjectId
                     WHERE (Object_PartionGoods.ObjectCode > 0 OR CLO_AssetTo.ObjectId > 0 OR tmpAsset.DescId = zc_Object_Asset())
                     GROUP BY Container.Id
+                           , Container.DescId
                            , tmpAsset.AssetId
                    )
 
     SELECT tmpRemains.ContainerId :: Integer
+         , ContainerDesc.ItemName
          , Object_Asset.Id             AS Id 
          , Object_Asset.ObjectCode     AS Code
          , Object_Asset.ValueData      AS Name
@@ -89,6 +92,7 @@ BEGIN
          , Object_Asset.isErased            AS isErased
          
      FROM tmpRemains
+          LEFT JOIN ContainerDesc ON ContainerDesc.Id = tmpRemains.ContainerDescId
           LEFT JOIN Object AS Object_Asset 
                            ON Object_Asset.Id = tmpRemains.AssetId
                         --AND Object_Asset.DescId = zc_Object_Asset()

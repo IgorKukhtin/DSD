@@ -176,11 +176,12 @@ END IF;
           LEFT JOIN tmpUnit AS tmpUnit_To ON tmpUnit_To.UnitId = MLO_To.ObjectId
 
      WHERE Movement.OperDate BETWEEN inStartDate AND inEndDate
-       AND Movement.DescId IN (zc_Movement_Sale()) -- , zc_Movement_SendOnPrice()
+       AND Movement.DescId IN (zc_Movement_Sale(), zc_Movement_SaleAsset()) -- , zc_Movement_SendOnPrice()
        AND Movement.StatusId = zc_Enum_Status_Complete()
        AND inIsBefoHistoryCost = FALSE
        --*** AND inIsSale            = TRUE
        AND (tmpUnit_from.UnitId > 0
+         OR Movement.DescId = zc_Movement_SaleAsset()
        --OR tmpUnit_To.UnitId > 0
            )
        AND inGroupId <= 0 -- -1:Все 0:ф.Днепр 1:ф.Киев 2:остальные филиалы
@@ -205,11 +206,11 @@ END IF;
           LEFT JOIN tmpUnit_branch AS tmpUnit_branch_from ON tmpUnit_branch_from.UnitId = MLO_From.ObjectId
 
      WHERE Movement.OperDate BETWEEN inStartDate AND inEndDate
-       AND Movement.DescId IN (zc_Movement_Loss())
+       AND Movement.DescId IN (zc_Movement_Loss(), zc_Movement_LossAsset())
        AND Movement.StatusId = zc_Enum_Status_Complete()
        AND inIsBefoHistoryCost = FALSE
        -- AND (tmpUnit_from.UnitId > 0)
-       AND tmpUnit_branch_from.UnitId IS NULL
+       AND (tmpUnit_branch_from.UnitId IS NULL OR Movement.DescId = zc_Movement_LossAsset())
        AND inGroupId <= 0 -- -1:Все 0:ф.Днепр 1:ф.Киев 2:остальные филиалы
 
     UNION
@@ -313,7 +314,7 @@ END IF;
           LEFT JOIN MovementDesc ON MovementDesc.Id = Movement.DescId
      WHERE Movement.OperDate BETWEEN inStartDate AND inEndDate
        AND Movement.StatusId = zc_Enum_Status_Complete()
-       AND Movement.DescId IN (zc_Movement_Send(), zc_Movement_ProductionUnion(), zc_Movement_ProductionSeparate())
+       AND Movement.DescId IN (zc_Movement_Send(), zc_Movement_SendAsset(), zc_Movement_ProductionUnion(), zc_Movement_ProductionSeparate())
        -- AND inIsBefoHistoryCost = TRUE -- !!!***
        -- AND tmpUnit_pack_from.UnitId IS NULL AND tmpUnit_pack_To.UnitId IS NULL -- !!!***
        AND inGroupId <= 0 -- -1:Все 0:ф.Днепр 1:ф.Киев 2:остальные филиалы

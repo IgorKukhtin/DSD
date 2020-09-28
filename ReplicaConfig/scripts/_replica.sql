@@ -1,5 +1,6 @@
 CREATE SCHEMA _replica;
 
+-- update _replica.table_slave set master_fields = 'descid, containerid' , slave_fields = 'descid, containerid' where master_table ilike  'containerlinkobject'
 
 /* ************************************************************************** */
 /*                              ТАБЛИЦЫ                                       */
@@ -139,8 +140,8 @@ $$ LANGUAGE plpgsql;
 
 -- временно отлкючим триггер ддл
 --DROP EVENT TRIGGER IF EXISTS etg;
---CREATE EVENT TRIGGER etg ON DDL_COMMAND_END
---    EXECUTE PROCEDURE _replica.notice_ddl();
+CREATE EVENT TRIGGER etg ON DDL_COMMAND_END
+    EXECUTE PROCEDURE _replica.notice_ddl();
     
 /* ************************************************************************** */
 /* 
@@ -169,9 +170,17 @@ BEGIN
   -- При обновлении получим имена полей, данные которых имзенились.
   IF (TG_OP = 'UPDATE') THEN
   	FOR ri IN
+
+      -- !!! PG 9.5 or latter !!!
+      --SELECT pre.key AS columname, pre.value AS prevalue, post.value AS postvalue
+      --  FROM jsonb_each(to_jsonb(OLD)) AS pre, jsonb_each(to_jsonb(NEW)) AS post
+      --  WHERE pre.key = post.key AND pre.value IS DISTINCT FROM post.value
+
+      -- !!! PG 9.4 !!!
       SELECT pre.key AS columname, pre.value AS prevalue, post.value AS postvalue
-        FROM jsonb_each(to_jsonb(OLD)) AS pre, jsonb_each(to_jsonb(NEW)) AS post
-        WHERE pre.key = post.key AND pre.value IS DISTINCT FROM post.value
+        FROM json_each(to_json(OLD)) AS pre, json_each(to_json(NEW)) AS post
+        WHERE pre.key = post.key AND pre.value :: TVarChar IS DISTINCT FROM post.value :: TVarChar
+
     LOOP
       _cols  = array_append(_cols, ri.columname);	
     END LOOP;

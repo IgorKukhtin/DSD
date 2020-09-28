@@ -76,6 +76,7 @@ type
     ContainerId: TcxGridDBColumn;
     FormParams: TdsdFormParams;
     RefreshDispatcher: TRefreshDispatcher;
+    ItemName: TcxGridDBColumn;
   private
     { Private declarations }
   public
