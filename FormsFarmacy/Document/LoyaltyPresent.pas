@@ -18,9 +18,8 @@ uses
 
 type
   TLoyaltyPresentForm = class(TAncestorDocumentForm)
-    MasterAmount: TcxGridDBColumn;
-    MasterCount: TcxGridDBColumn;
-    spSelectPrint: TdsdStoredProc;
+    MasterGoodsCode: TcxGridDBColumn;
+    MasterGoodsName: TcxGridDBColumn;
     cxLabel7: TcxLabel;
     edComment: TcxTextEdit;
     cxGrid1: TcxGrid;
@@ -34,9 +33,7 @@ type
     dsdDBViewAddOn1: TdsdDBViewAddOn;
     IsErased: TcxGridDBColumn;
     spInsertUpdateMIChild: TdsdStoredProc;
-    edStartPromo: TcxDateEdit;
     cxLabel3: TcxLabel;
-    edEndPromo: TcxDateEdit;
     cxLabel6: TcxLabel;
     spErasedMIChild: TdsdStoredProc;
     spUnErasedMIChild: TdsdStoredProc;
@@ -49,8 +46,6 @@ type
     actDoLoad: TExecuteImportSettingsAction;
     spGetImportSettingId: TdsdStoredProc;
     bbactStartLoad: TdxBarButton;
-    cxLabel9: TcxLabel;
-    edDayCount: TcxCurrencyEdit;
     bbInsertRecordChild: TdxBarButton;
     bbOpenReportForm: TdxBarButton;
     cxGrid2: TcxGrid;
@@ -98,51 +93,25 @@ type
     bbChildIsCheckedYes: TdxBarButton;
     bbSignIsCheckedNo: TdxBarButton;
     bbSignIsCheckedYes: TdxBarButton;
-    sgInvnumber_Check: TcxGridDBColumn;
-    sgOperDate_Check: TcxGridDBColumn;
-    sgUnitName_Check: TcxGridDBColumn;
     Panel1: TPanel;
     Panel2: TPanel;
     Panel3: TPanel;
     cxSplitter3: TcxSplitter;
     cxGrid3: TcxGrid;
     cxGridDBTableView3: TcxGridDBTableView;
-    InfoOperDate: TcxGridDBColumn;
-    InfoAmount: TcxGridDBColumn;
     cxGridLevel3: TcxGridLevel;
     InfoDS: TDataSource;
     InfoDSD: TClientDataSet;
     spSelectLoyaltyPresentInfo: TdsdStoredProc;
     MasterErased: TcxGridDBColumn;
     edEndSale: TcxDateEdit;
-    cxLabel4: TcxLabel;
     edStartSale: TcxDateEdit;
-    cxLabel5: TcxLabel;
-    edStartSummCash: TcxCurrencyEdit;
-    cxLabel8: TcxLabel;
     sgOperDate: TcxGridDBColumn;
-    sgAmount: TcxGridDBColumn;
     sqInvnumber_CheckSale: TcxGridDBColumn;
     sqOperDate_CheckSale: TcxGridDBColumn;
     sqUnitName_CheckSale: TcxGridDBColumn;
     chIsChecked: TcxGridDBColumn;
-    sgUnitName: TcxGridDBColumn;
-    edMonthCount: TcxCurrencyEdit;
-    cxLabel14: TcxLabel;
-    edSummLimit: TcxCurrencyEdit;
-    cxLabel16: TcxLabel;
-    chDayCount: TcxGridDBColumn;
-    chSummLimit: TcxGridDBColumn;
-    edChangePercent: TcxCurrencyEdit;
-    cxLabel17: TcxLabel;
-    edServiceDate: TcxDateEdit;
-    cxLabel18: TcxLabel;
-    InfoAccrued: TcxGridDBColumn;
-    InfoSummChange: TcxGridDBColumn;
     dsdStoredProc1: TdsdStoredProc;
-    InfoAccruedCount: TcxGridDBColumn;
-    InfoChangeCount: TcxGridDBColumn;
-    InfoPercentUsed: TcxGridDBColumn;
     actExportToXLSLoyaltyPresentDay: TdsdExportToXLS;
     actExecLoyaltyPresentDay: TdsdExecStoredProc;
     spSelectPrintLoyaltyPresentDay: TdsdStoredProc;
@@ -160,10 +129,7 @@ type
     cxLabel19: TcxLabel;
     edRetail: TcxButtonEdit;
     GuidesRetail: TdsdGuides;
-    spUnhook_MovementItem: TdsdStoredProc;
-    actUnhook_MovementItem: TdsdExecStoredProc;
     dxBarButton4: TdxBarButton;
-    cbBeginning: TcxCheckBox;
     spUnhook_Movement: TdsdStoredProc;
     actUnhook_Movement: TdsdExecStoredProc;
     dxBarButton5: TdxBarButton;
@@ -186,10 +152,12 @@ type
     edSummRepay: TcxCurrencyEdit;
     cxLabel20: TcxLabel;
     sqTotalSumm_CheckSale: TcxGridDBColumn;
-    actOpenCheckCreate: TdsdInsertUpdateAction;
     actOpenCheckSale: TdsdInsertUpdateAction;
     bbOpenCheckCreate: TdxBarButton;
     bbOpenCheckSale: TdxBarButton;
+    MasterIsChecked: TcxGridDBColumn;
+    edMonthCount: TcxCurrencyEdit;
+    cxLabel14: TcxLabel;
   private
     { Private declarations }
   public

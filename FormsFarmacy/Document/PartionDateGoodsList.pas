@@ -21,6 +21,7 @@ type
     dxBarControlContainerItem1: TdxBarControlContainerItem;
     actSetDefaultParams: TdsdSetDefaultParams;
     FormParams: TdsdFormParams;
+    ContainerID: TcxGridDBColumn;
   private
     { Private declarations }
   public
