@@ -3906,6 +3906,18 @@ inherited MainForm: TMainForm
       GuiParams = <>
       isShowModal = False
     end
+    object actLoyaltyPresentJournal: TdsdOpenForm
+      Category = #1057#1087#1088#1072#1074#1086#1095#1085#1080#1082#1080
+      MoveParams = <>
+      Caption = #1055#1088#1086#1075#1088#1072#1084#1084#1072' '#1083#1086#1103#1083#1100#1085#1086#1089#1090#1080', '#1087#1086#1076#1072#1088#1086#1082
+      Hint = #1055#1088#1086#1075#1088#1072#1084#1084#1072' '#1083#1086#1103#1083#1100#1085#1086#1089#1090#1080', '#1087#1086#1076#1072#1088#1086#1082
+      FormName = 'TLoyaltyPresentJournalForm'
+      FormNameParam.Value = 'TLoyaltyPresentJournalForm'
+      FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
+      GuiParams = <>
+      isShowModal = False
+    end
   end
   inherited UserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn
     Left = 496
@@ -4176,6 +4188,9 @@ inherited MainForm: TMainForm
         end
         object N210: TMenuItem
           Action = actLoyaltySaveMoneyJournal
+        end
+        object N256: TMenuItem
+          Action = actLoyaltyPresentJournal
         end
         object N205: TMenuItem
           Action = actPermanentDiscount

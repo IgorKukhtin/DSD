@@ -98,7 +98,7 @@ BEGIN
                                AND ObjectFloat_CashSettings_DaySaleForSUN.DescId = zc_ObjectFloat_CashSettings_DaySaleForSUN()
                                
     WHERE Movement.Id = inMovementId;
-    
+
     IF COALESCE (inCommentTRID, 0) <> 0
     THEN
        WITH tmpProtocolAll AS (SELECT  MovementItem.Id
@@ -274,9 +274,35 @@ BEGIN
             END IF;
           END IF;
 
-          IF COALESCE (ioId, 0) <> 0 AND vbIsSUN = TRUE AND ceil(vbAmount) < inAmount
+          IF vbIsSUN = TRUE
           THEN
-            RAISE EXCEPTION 'Ошибка. Увеличивать количество в перемещениях по СУН вам запрещено.';
+             WITH tmpProtocolAll AS (SELECT  MovementItem.Id
+                                           , SUBSTRING(MovementItemProtocol.ProtocolData, POSITION('Значение' IN MovementItemProtocol.ProtocolData) + 24, 50) AS ProtocolData
+                                           , MovementItem.Amount
+                                           , MovementItem.ObjectId
+                                           , ROW_NUMBER() OVER (PARTITION BY MovementItemProtocol.MovementItemId ORDER BY MovementItemProtocol.Id) AS Ord
+                                      FROM MovementItem
+
+                                           INNER JOIN MovementItemProtocol ON MovementItemProtocol.MovementItemId = MovementItem.Id
+                                                                          AND MovementItemProtocol.ProtocolData ILIKE '%Значение%'
+                                                                          AND MovementItemProtocol.UserId = zfCalc_UserAdmin()::Integer
+                                      WHERE  MovementItem.Id = ioId
+                                      )
+                 , tmpProtocol AS (SELECT tmpProtocolAll.Id
+                                        , tmpProtocolAll.ObjectId
+                                        , SUBSTRING(tmpProtocolAll.ProtocolData, 1, POSITION('"' IN tmpProtocolAll.ProtocolData) - 1)::TFloat AS AmountAuto
+                                        , tmpProtocolAll.Amount
+                                   FROM tmpProtocolAll
+                                   WHERE tmpProtocolAll.Ord = 1)
+
+             SELECT tmpProtocol.AmountAuto
+             INTO vbAmountAuto
+             FROM tmpProtocol;
+
+            IF COALESCE (ioId, 0) <> 0 AND ceil(vbAmountAuto) < inAmount
+            THEN
+              RAISE EXCEPTION 'Ошибка. Увеличивать количество в перемещениях по СУН вам запрещено.';
+            END IF;
           END IF;
         END IF;
 

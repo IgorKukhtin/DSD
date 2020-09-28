@@ -949,7 +949,9 @@ uses
   Report_FoundPositionsSUN in '..\..\FormsFarmacy\Report\Report_FoundPositionsSUN.pas' {Report_FoundPositionsSUNForm: TParentForm},
   Report_ArrivalWithoutSalesDialog in '..\..\FormsFarmacy\Report\Report_ArrivalWithoutSalesDialog.pas' {Report_ArrivalWithoutSalesDialogForm: TParentForm},
   Report_ArrivalWithoutSales in '..\..\FormsFarmacy\Report\Report_ArrivalWithoutSales.pas' {Report_ArrivalWithoutSalesForm: TParentForm},
-  PartionDateGoodsList in '..\..\FormsFarmacy\Document\PartionDateGoodsList.pas';
+  PartionDateGoodsList in '..\..\FormsFarmacy\Document\PartionDateGoodsList.pas',
+  LoyaltyPresent in '..\..\FormsFarmacy\Document\LoyaltyPresent.pas' {LoyaltyPresentForm: TParentForm},
+  LoyaltyPresentJournal in '..\..\FormsFarmacy\Document\LoyaltyPresentJournal.pas' {LoyaltyPresentJournalForm: TParentForm};
 
 {$R *.res}
 {$R DevExpressRus.res}

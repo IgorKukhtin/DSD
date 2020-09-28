@@ -81,6 +81,7 @@ type
     procedure LoadLayoutFormTest;
     procedure LoadLoadFormTest;
     procedure LoadLoyaltyFormTest;
+    procedure LoadLoyaltyPresentFormTest;
     procedure LoadLoyaltySaveMoneyFormTest;
     procedure LoadLossDebtFormTest;
     procedure LoadLossFormTest;
@@ -903,6 +904,15 @@ begin
 
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TLoyaltySaveMoneyJournalForm'));
   TdsdFormStorageFactory.GetStorage.Load('TLoyaltySaveMoneyJournalForm');
+end;
+
+procedure TLoadFormTest.LoadLoyaltyPresentFormTest;
+begin
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TLoyaltyPresentJournalForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TLoyaltyPresentJournalForm');
+
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TLoyaltyPresentForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TLoyaltyPresentForm');
 end;
 
 procedure TLoadFormTest.LoadLossDebtFormTest;
