@@ -35,10 +35,14 @@ BEGIN
                                 LEFT JOIN MovementBoolean AS MovementBoolean_Adjustment
                                                           ON MovementBoolean_Adjustment.MovementId = Movement.Id
                                                          AND MovementBoolean_Adjustment.DescId = zc_MovementBoolean_Adjustment()
+                                LEFT JOIN MovementBoolean AS MovementBoolean_CorrectionSUN
+                                                          ON MovementBoolean_CorrectionSUN.MovementId = Movement.Id
+                                                         AND MovementBoolean_CorrectionSUN.DescId = zc_MovementBoolean_CorrectionSUN()
                            WHERE Movement.DescId = zc_Movement_TechnicalRediscount() 
                              AND Movement.StatusId = zc_Enum_Status_UnComplete()
                              AND COALESCE (MovementBoolean_RedCheck.ValueData, False) = False
                              AND COALESCE (MovementBoolean_Adjustment.ValueData, False) = False
+                             AND COALESCE (MovementBoolean_CorrectionSUN.ValueData, False) = False
                            )
          , tmpUnit AS (SELECT Object_Unit.Id AS UnitId
                        FROM Object AS Object_Unit

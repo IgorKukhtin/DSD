@@ -69,6 +69,7 @@ type
     PartnerName: TcxGridDBColumn;
     actPrint: TdsdPrintAction;
     bbPrint: TdxBarButton;
+    spInsertMovement_ProfitLossService_ByReportGrid: TdsdStoredProc;
   private
     { Private declarations }
   public

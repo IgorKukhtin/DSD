@@ -45,6 +45,10 @@ $BODY$
    DECLARE vbAmountPromo   TFloat;
    DECLARE vbRemains       TFloat;
    DECLARE vbDaySaleForSUN Integer;
+   DECLARE vbTRID          Integer;
+   DECLARE vbTRInvNumber   TVarChar; 
+   DECLARE vbTROperDate    TDateTime;
+   DECLARE vbTRStatusId    Integer;
 BEGIN
     -- проверка прав пользователя на вызов процедуры
     --vbUserId := lpCheckRight (inSession, zc_Enum_Process_InsertUpdate_MI_Send());
@@ -87,12 +91,14 @@ BEGIN
                                   ON MovementFloat_TotalCount.MovementId = Movement.Id
                                  AND MovementFloat_TotalCount.DescId = zc_MovementFloat_TotalCount()
           LEFT JOIN ObjectFloat AS ObjectFloat_CashSettings_DaySaleForSUN
-                                ON ObjectFloat_CashSettings_DaySaleForSUN.ObjectId = (SELECT MIN(Object_CashSettings.Id)
+                                ON ObjectFloat_CashSettings_DaySaleForSUN.ObjectId = (SELECT Object_CashSettings.Id
                                                                                       FROM Object AS Object_CashSettings
-                                                                                      WHERE Object_CashSettings.DescId = zc_Object_CashSettings())
+                                                                                      WHERE Object_CashSettings.DescId = zc_Object_CashSettings()
+                                                                                      LIMIT 1)
                                AND ObjectFloat_CashSettings_DaySaleForSUN.DescId = zc_ObjectFloat_CashSettings_DaySaleForSUN()
+                               
     WHERE Movement.Id = inMovementId;
-    
+
     IF COALESCE (inCommentTRID, 0) <> 0
     THEN
        WITH tmpProtocolAll AS (SELECT  MovementItem.Id
@@ -121,13 +127,12 @@ BEGIN
        INTO vbAmountAuto
        FROM tmpProtocol;
 
-       IF COALESCE(vbAmountAuto, 0) = COALESCE(inAmount, 0)
+       IF  COALESCE(vbAmountAuto, 0) = COALESCE(inAmount, 0)
        THEN
           RAISE EXCEPTION 'Ошибка. Количество % равно сформировано % уберите причину уменьшения количества!', inAmount, vbAmountAuto;
        END IF;
     END IF;
     
-
     IF COALESCE (ioId, 0) = 0 AND (vbIsSUN = TRUE OR vbIsSUN_v2 = TRUE OR vbIsSUN_v3 = TRUE) AND
       NOT EXISTS (SELECT 1 FROM ObjectLink_UserRole_View  WHERE UserId = vbUserId AND RoleId = zc_Enum_Role_Admin())
     THEN
@@ -140,18 +145,37 @@ BEGIN
          , COALESCE(MIFloat_AmountManual.ValueData,0)  AS AmountManual
          , COALESCE(MIFloat_AmountStorage.ValueData,0) AS AmountStorage
          , COALESCE (MILinkObject_CommentSend.ObjectId, 0)
-    INTO vbAmount, vbAmountManual, vbAmountStorage, vbCommentSendId
+         , MovementTR.ID
+         , MovementTR.InvNumber
+         , MovementTR.OperDate
+         , MovementTR.StatusId
+    INTO vbAmount, vbAmountManual, vbAmountStorage, vbCommentSendId, vbTRID, vbTRInvNumber, vbTROperDate, vbTRStatusId
     FROM MovementItem
-               LEFT JOIN MovementItemFloat AS MIFloat_AmountManual
-                                           ON MIFloat_AmountManual.MovementItemId = MovementItem.Id
-                                          AND MIFloat_AmountManual.DescId = zc_MIFloat_AmountManual()
-               LEFT JOIN MovementItemFloat AS MIFloat_AmountStorage
-                                           ON MIFloat_AmountStorage.MovementItemId = MovementItem.Id
-                                          AND MIFloat_AmountStorage.DescId = zc_MIFloat_AmountStorage()
-               LEFT JOIN MovementItemLinkObject AS MILinkObject_CommentSend
-                                                ON MILinkObject_CommentSend.MovementItemId = MovementItem.Id
-                                               AND MILinkObject_CommentSend.DescId = zc_MILinkObject_CommentSend()
+         LEFT JOIN MovementItemFloat AS MIFloat_AmountManual
+                                     ON MIFloat_AmountManual.MovementItemId = MovementItem.Id
+                                    AND MIFloat_AmountManual.DescId = zc_MIFloat_AmountManual()
+         LEFT JOIN MovementItemFloat AS MIFloat_AmountStorage
+                                     ON MIFloat_AmountStorage.MovementItemId = MovementItem.Id
+                                    AND MIFloat_AmountStorage.DescId = zc_MIFloat_AmountStorage()
+         LEFT JOIN MovementItemLinkObject AS MILinkObject_CommentSend
+                                          ON MILinkObject_CommentSend.MovementItemId = MovementItem.Id
+                                         AND MILinkObject_CommentSend.DescId = zc_MILinkObject_CommentSend()
+
+         LEFT JOIN MovementItemFloat AS MIFloat_MITRId
+                                     ON MIFloat_MITRId.MovementItemId = MovementItem.Id
+                                     AND MIFloat_MITRId.DescId = zc_MIFloat_MITechnicalRediscountId()
+                                                                                                                                    
+         LEFT JOIN MovementItem AS MITR ON MITR.ID = MIFloat_MITRId.ValueData::Integer
+
+         LEFT JOIN Movement AS MovementTR ON MovementTR.ID = MITR.MovementId
+                                     
     WHERE MovementItem.Id = ioId;
+    
+    IF (vbAmount <> inAmount OR COALESCE(vbCommentSendId, 0) <> COALESCE(inCommentTRID, 0))
+       AND COALESCE (vbTRStatusId, zc_Enum_Status_UnComplete()) = zc_Enum_Status_Complete()
+    THEN
+      RAISE EXCEPTION 'Ошибка. Технический переучет <%> проведен. Изменять количество или причину уменьшения количества запрещено.', vbTRInvNumber;    
+    END IF;
 
     IF vbisSUN = TRUE AND COALESCE (ioId, 0) <> 0
        AND COALESCE (vbCommentSendId, 0) <> COALESCE (inCommentTRID, 0)
@@ -250,9 +274,35 @@ BEGIN
             END IF;
           END IF;
 
-          IF COALESCE (ioId, 0) <> 0 AND vbIsSUN = TRUE AND ceil(vbAmount) < inAmount
+          IF vbIsSUN = TRUE
           THEN
-            RAISE EXCEPTION 'Ошибка. Увеличивать количество в перемещениях по СУН вам запрещено.';
+             WITH tmpProtocolAll AS (SELECT  MovementItem.Id
+                                           , SUBSTRING(MovementItemProtocol.ProtocolData, POSITION('Значение' IN MovementItemProtocol.ProtocolData) + 24, 50) AS ProtocolData
+                                           , MovementItem.Amount
+                                           , MovementItem.ObjectId
+                                           , ROW_NUMBER() OVER (PARTITION BY MovementItemProtocol.MovementItemId ORDER BY MovementItemProtocol.Id) AS Ord
+                                      FROM MovementItem
+
+                                           INNER JOIN MovementItemProtocol ON MovementItemProtocol.MovementItemId = MovementItem.Id
+                                                                          AND MovementItemProtocol.ProtocolData ILIKE '%Значение%'
+                                                                          AND MovementItemProtocol.UserId = zfCalc_UserAdmin()::Integer
+                                      WHERE  MovementItem.Id = ioId
+                                      )
+                 , tmpProtocol AS (SELECT tmpProtocolAll.Id
+                                        , tmpProtocolAll.ObjectId
+                                        , SUBSTRING(tmpProtocolAll.ProtocolData, 1, POSITION('"' IN tmpProtocolAll.ProtocolData) - 1)::TFloat AS AmountAuto
+                                        , tmpProtocolAll.Amount
+                                   FROM tmpProtocolAll
+                                   WHERE tmpProtocolAll.Ord = 1)
+
+             SELECT tmpProtocol.AmountAuto
+             INTO vbAmountAuto
+             FROM tmpProtocol;
+
+            IF COALESCE (ioId, 0) <> 0 AND ceil(vbAmountAuto) < inAmount
+            THEN
+              RAISE EXCEPTION 'Ошибка. Увеличивать количество в перемещениях по СУН вам запрещено.';
+            END IF;
           END IF;
         END IF;
 
@@ -385,7 +435,6 @@ BEGIN
                            COALESCE (vbRemains, 0) - COALESCE (vbAmountAuto, 0), COALESCE (vbAmountPromo, 0), (SELECT Object.ValueData FROM Object WHERE Object.ID = inCommentTRID);
         END IF;
       END IF;
-
 
       -- Для менеджеров
       IF EXISTS(SELECT * FROM gpSelect_Object_RoleUser (inSession) AS Object_RoleUser
@@ -557,3 +606,4 @@ $BODY$
 
 -- тест
 -- SELECT * FROM gpInsertUpdate_MovementItem_Send (ioId:= 0, inMovementId:= 10, inGoodsId:= 1, inAmount:= 0, inHeadCount:= 0, inPartionGoods:= '', inGoodsKindId:= 0, inSession:= '2')
+

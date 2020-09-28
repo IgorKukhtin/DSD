@@ -733,6 +733,8 @@ type
     N254: TMenuItem;
     N255: TMenuItem;
     actReport_ArrivalWithoutSales: TdsdOpenForm;
+    actLoyaltyPresentJournal: TdsdOpenForm;
+    N256: TMenuItem;
     procedure actSaveDataExecute(Sender: TObject);
 
     procedure miRepriceClick(Sender: TObject);

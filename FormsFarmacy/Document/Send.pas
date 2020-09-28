@@ -181,6 +181,8 @@ type
     spUpdate_MovementItem_ContainerId: TdsdStoredProc;
     actUpdate_MovementItem_ContainerId: TdsdExecStoredProc;
     dxBarButton7: TdxBarButton;
+    actMovementItem_ShowPUSH_Comment: TdsdShowPUSHMessage;
+    spMovementItem_ShowPUSH_Comment: TdsdStoredProc;
   private
     { Private declarations }
   public

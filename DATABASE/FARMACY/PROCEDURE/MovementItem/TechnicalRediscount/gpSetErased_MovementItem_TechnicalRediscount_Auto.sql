@@ -9,9 +9,17 @@ CREATE OR REPLACE FUNCTION gpSetErased_MovementItem_TechnicalRediscount_Auto(
   RETURNS VOID
 AS
 $BODY$
+   DECLARE vbMovementId  Integer;
 BEGIN
 
-  -- устанавливаем новое значение
+  SELECT MovementItem.MovementId
+  INTO vbMovementId
+  FROM MovementItem 
+       INNER JOIN Movement ON Movement.ID = MovementItem.MovementId
+  WHERE MovementItem.ID = inMovementItemId;
+  
+  
+    -- устанавливаем новое значение
   PERFORM gpSetErased_MovementItem (inMovementItemId:= inMovementItemId, inSession:= inSession);
 
   -- Пересчитываем суммы

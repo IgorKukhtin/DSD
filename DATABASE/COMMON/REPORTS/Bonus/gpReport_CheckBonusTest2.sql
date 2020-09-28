@@ -28,6 +28,7 @@ RETURNS TABLE (OperDate_Movement TDateTime, InvNumber_Movement TVarChar, DescNam
              , Value TFloat
              , PercentRetBonus TFloat
              , PercentRetBonus_fact TFloat
+             , PercentRetBonus_diff TFloat
              , Sum_CheckBonus TFloat
              , Sum_CheckBonusFact TFloat 
              , Sum_Bonus TFloat
@@ -92,7 +93,7 @@ BEGIN
                                                     LEFT JOIN ObjectLink AS ObjectLink_Partner_Juridical
                                                                          ON ObjectLink_Partner_Juridical.ChildObjectId = ObjectLink_Contract_Juridical.ChildObjectId
                                                                         AND ObjectLink_Partner_Juridical.DescId = zc_ObjectLink_Partner_Juridical()
-                                                    LEFT JOIN (SELECT DISTINCT tmp1.JuridicalId FROM tmp1) AS tmpContract ON tmpContract.JuridicalId = tmpContract_full.JuridicalId
+                                                   LEFT JOIN (SELECT DISTINCT tmp1.JuridicalId FROM tmp1) AS tmpContract ON tmpContract.JuridicalId = tmpContract_full.JuridicalId
                                                     --LEFT JOIN (SELECT DISTINCT tmp1.ContractId FROM tmp1) AS tmpContract ON tmpContract.ContractId = tmpContract_full.ContractId --ObjectLink_Contract_Juridical.ObjectId -- ContractId
                                                 WHERE tmpContract.JuridicalId IS NULL
                                                 )
@@ -360,7 +361,8 @@ BEGIN
                           FROM ContainerLinkObject
                           WHERE ContainerLinkObject.ContainerId IN (SELECT DISTINCT tmpContainer1.ContainerId
                                                                     FROM tmpContainer1
-                                                                    WHERE tmpContainer1.PaidKindId_byBase = zc_Enum_PaidKind_SecondForm())
+                                                                    --WHERE tmpContainer1.PaidKindId_byBase = zc_Enum_PaidKind_SecondForm()
+                                                                    )
                             AND ContainerLinkObject.DescId = zc_ContainerLinkObject_Partner()
                             AND ContainerLinkObject.ObjectId IN (SELECT DISTINCT tmpContractPartner.PartnerId FROM tmpContractPartner)
                           )
@@ -438,11 +440,12 @@ BEGIN
                                                       ON ObjectLink_Cash_Branch.ObjectId = MovementItem.ObjectId
                                                      AND ObjectLink_Cash_Branch.DescId = zc_ObjectLink_Cash_Branch()
                                                      AND MIContainer.MovementDescId = zc_Movement_Cash()
-
+                                 LEFT JOIN (SELECT DISTINCT tmpContractPartner.PartnerId FROM tmpContractPartner) AS tmpPartner ON tmpPartner.PartnerId = CASE WHEN MIContainer.MovementDescId IN (zc_Movement_BankAccount(),zc_Movement_Cash()) THEN MIContainer.ObjectId_Analyzer ELSE MIContainer.ObjectExtId_Analyzer END
                             WHERE MIContainer.DescId = zc_MIContainer_Summ()
                               AND (MIContainer.OperDate >= inStartDate AND MIContainer.OperDate < vbEndDate)
                               AND MIContainer.MovementDescId IN (zc_Movement_Sale(), zc_Movement_ReturnIn(), zc_Movement_BankAccount(),zc_Movement_Cash()/*, zc_Movement_SendDebt()*/)  -- взаимозачет убираем, чтоб он не влиял на бонусы
                               AND (COALESCE (ObjectLink_Cash_Branch.ChildObjectId, MILinkObject_Branch.ObjectId, ObjectLink_Unit_Branch.ChildObjectId,tmpContainer.BranchId,0) = inBranchId OR inBranchId = 0)
+                              AND (tmpPartner.PartnerId IS NOT NULL OR COALESCE (inPaidKindId, 0) = zc_Enum_PaidKind_FirstForm()) --PartnerId
                             GROUP BY tmpContainer.JuridicalId
                                    , tmpContainer.ContractId_child
                                    , tmpContainer.InfoMoneyId_child
@@ -777,6 +780,7 @@ BEGIN
             , CAST (tmpData.Value AS TFloat)                AS Value
             , CAST (tmpData.PercentRetBonus AS TFloat)      AS PercentRetBonus
             , CAST (tmpData.PercentRetBonus_fact AS TFloat) AS PercentRetBonus_fact
+            , CAST (COALESCE (tmpData.PercentRetBonus_fact,0) - COALESCE (tmpData.PercentRetBonus, 0) AS TFloat) :: TFloat AS PercentRetBonus_diff
 
             , CAST (tmpData.Sum_CheckBonus AS TFloat)     AS Sum_CheckBonus
             , CAST (tmpData.Sum_CheckBonusFact AS TFloat) AS Sum_CheckBonusFact

@@ -1688,6 +1688,7 @@ inherited SendForm: TSendForm
     object actChoiceCommentSend: TOpenChoiceForm
       Category = 'DSDLib'
       MoveParams = <>
+      AfterAction = actMovementItem_ShowPUSH_Comment
       PostDataSetBeforeExecute = False
       Caption = 'ChoiceCommentSend'
       FormName = 'TCommentSendForm'
@@ -1796,6 +1797,16 @@ inherited SendForm: TSendForm
           MultiSelectSeparator = ','
         end>
       isShowModal = True
+    end
+    object actMovementItem_ShowPUSH_Comment: TdsdShowPUSHMessage
+      Category = 'DSDLib'
+      MoveParams = <>
+      StoredProc = spMovementItem_ShowPUSH_Comment
+      StoredProcList = <
+        item
+          StoredProc = spMovementItem_ShowPUSH_Comment
+        end>
+      Caption = 'actMovementItem_ShowPUSH_Comment'
     end
   end
   inherited MasterDS: TDataSource
@@ -3871,5 +3882,39 @@ inherited SendForm: TSendForm
     PackSize = 1
     Left = 640
     Top = 379
+  end
+  object spMovementItem_ShowPUSH_Comment: TdsdStoredProc
+    StoredProcName = 'gpSelect_MovementItem_Send_ShowPUSH_Comment'
+    DataSets = <>
+    OutputType = otResult
+    Params = <
+      item
+        Name = 'inCommentSendId'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'CommentSendId'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'outShowMessage'
+        Value = Null
+        DataType = ftBoolean
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'outPUSHType'
+        Value = Null
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'outText'
+        Value = Null
+        DataType = ftWideString
+        MultiSelectSeparator = ','
+      end>
+    PackSize = 1
+    Left = 383
+    Top = 424
   end
 end
