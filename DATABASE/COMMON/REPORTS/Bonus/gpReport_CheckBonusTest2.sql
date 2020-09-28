@@ -361,7 +361,7 @@ BEGIN
                           FROM ContainerLinkObject
                           WHERE ContainerLinkObject.ContainerId IN (SELECT DISTINCT tmpContainer1.ContainerId
                                                                     FROM tmpContainer1
-                                                                    --WHERE tmpContainer1.PaidKindId_byBase = zc_Enum_PaidKind_SecondForm()
+                                                                    WHERE tmpContainer1.PaidKindId_byBase = zc_Enum_PaidKind_SecondForm()
                                                                     )
                             AND ContainerLinkObject.DescId = zc_ContainerLinkObject_Partner()
                             AND ContainerLinkObject.ObjectId IN (SELECT DISTINCT tmpContractPartner.PartnerId FROM tmpContractPartner)
@@ -440,12 +440,12 @@ BEGIN
                                                       ON ObjectLink_Cash_Branch.ObjectId = MovementItem.ObjectId
                                                      AND ObjectLink_Cash_Branch.DescId = zc_ObjectLink_Cash_Branch()
                                                      AND MIContainer.MovementDescId = zc_Movement_Cash()
-                                 LEFT JOIN (SELECT DISTINCT tmpContractPartner.PartnerId FROM tmpContractPartner) AS tmpPartner ON tmpPartner.PartnerId = CASE WHEN MIContainer.MovementDescId IN (zc_Movement_BankAccount(),zc_Movement_Cash()) THEN MIContainer.ObjectId_Analyzer ELSE MIContainer.ObjectExtId_Analyzer END
+                                 --LEFT JOIN (SELECT DISTINCT tmpContractPartner.PartnerId FROM tmpContractPartner) AS tmpPartner ON tmpPartner.PartnerId = CASE WHEN MIContainer.MovementDescId IN (zc_Movement_BankAccount(),zc_Movement_Cash()) THEN MIContainer.ObjectId_Analyzer ELSE MIContainer.ObjectExtId_Analyzer END
                             WHERE MIContainer.DescId = zc_MIContainer_Summ()
                               AND (MIContainer.OperDate >= inStartDate AND MIContainer.OperDate < vbEndDate)
                               AND MIContainer.MovementDescId IN (zc_Movement_Sale(), zc_Movement_ReturnIn(), zc_Movement_BankAccount(),zc_Movement_Cash()/*, zc_Movement_SendDebt()*/)  -- взаимозачет убираем, чтоб он не влиял на бонусы
                               AND (COALESCE (ObjectLink_Cash_Branch.ChildObjectId, MILinkObject_Branch.ObjectId, ObjectLink_Unit_Branch.ChildObjectId,tmpContainer.BranchId,0) = inBranchId OR inBranchId = 0)
-                              AND (tmpPartner.PartnerId IS NOT NULL OR COALESCE (inPaidKindId, 0) = zc_Enum_PaidKind_FirstForm()) --PartnerId
+                              --AND (tmpPartner.PartnerId IS NOT NULL OR COALESCE (inPaidKindId, 0) = zc_Enum_PaidKind_FirstForm()) --PartnerId
                             GROUP BY tmpContainer.JuridicalId
                                    , tmpContainer.ContractId_child
                                    , tmpContainer.InfoMoneyId_child
