@@ -4,9 +4,11 @@ DROP FUNCTION IF EXISTS gpSelect_MovementItem_Loyalty_GUID (TVarChar, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpSelect_MovementItem_Loyalty_GUID(
     IN inGUID                TVarChar  , --
-   OUT outID                 Integer   , -- Ключ объекта <Документ>
+   OUT outID                 Integer   , -- Ключ объекта <Строка документ>
    OUT outAmount             TFloat    , -- Сумма скидки
    OUT outError              TVarChar  , -- Ошибка
+   OUT outMovementId         Integer   , -- Ключ объекта <Документ>
+   OUT outisPresent          Boolean   , -- Подарок
     IN inSession             TVarChar    -- сессия пользователя
 )
 AS
@@ -25,6 +27,7 @@ $BODY$
 
    DECLARE vbInvNumber Integer;
    DECLARE vbStatusId Integer;
+   DECLARE vbDescId Integer;
    DECLARE vbStartSale TDateTime;
    DECLARE vbEndSale TDateTime;
    DECLARE vbIsInsert Boolean;
@@ -49,7 +52,13 @@ BEGIN
                    WHERE ObjectLink_Unit_Juridical.ObjectId = vbUnitId
                      AND ObjectLink_Unit_Juridical.DescId = zc_ObjectLink_Unit_Juridical());
 
-    SELECT MovementItem.ID, MovementItem.MovementID, MovementItem.Amount, MovementItem.isErased, MovementItem.ParentId, MovementFloat_MovementItemId.MovementId, MIDate_OperDate.ValueData
+    SELECT MovementItem.ID
+         , MovementItem.MovementID
+         , MovementItem.Amount
+         , MovementItem.isErased
+         , MovementItem.ParentId
+         , MovementFloat_MovementItemId.MovementId
+         , MIDate_OperDate.ValueData
     INTO vbMovementItemId, vbMovementId, vbAmount, vbisErased, vbParentId, vbMovementChackId, vbOperDate
     FROM MovementItem_Loyalty_GUID
          INNER JOIN MovementItem ON MovementItem.ID = MovementItem_Loyalty_GUID.MovementItemID
@@ -60,6 +69,7 @@ BEGIN
                                     ON MIDate_OperDate.MovementItemId = MovementItem.ID
                                    AND MIDate_OperDate.DescId = zc_MIDate_OperDate()
     WHERE MovementItem_Loyalty_GUID.GUID = inGUID;
+    
       
     IF COALESCE(vbMovementChackId, 0) <> 0
     THEN
@@ -79,14 +89,13 @@ BEGIN
       RETURN;
     END IF;
 
-    IF COALESCE(vbParentId, 0) = 0
-    THEN
-      outError := 'Ошибка. По промокоду '||COALESCE(inGUID, '')||' нет подтверждения продажи.';
-      RETURN;
-    END IF;
-
-    SELECT Movement.InvNumber::Integer, Movement.StatusId, MovementDate_StartSale.ValueData, MovementDate_EndSale.ValueData, MovementFloat_MonthCount.ValueData::Integer
-    INTO vbInvNumber, vbStatusId, vbStartSale, vbEndSale, vbMonthCount
+    SELECT Movement.InvNumber::Integer
+         , Movement.StatusId
+         , Movement.DescId
+         , MovementDate_StartSale.ValueData
+         , MovementDate_EndSale.ValueData
+         , MovementFloat_MonthCount.ValueData::Integer
+    INTO vbInvNumber, vbStatusId, vbDescId, vbStartSale, vbEndSale, vbMonthCount
     FROM Movement
          LEFT JOIN MovementDate AS MovementDate_StartSale
                                 ON MovementDate_StartSale.MovementId = Movement.Id
@@ -97,7 +106,14 @@ BEGIN
          LEFT JOIN MovementFloat AS MovementFloat_MonthCount
                                  ON MovementFloat_MonthCount.MovementId =  Movement.Id
                                 AND MovementFloat_MonthCount.DescId = zc_MovementFloat_MonthCount()
-    WHERE Movement.ID = vbMovementId;
+    WHERE Movement.ID = vbMovementId
+      AND Movement.DescId in (zc_Movement_Loyalty(), zc_Movement_LoyaltyPresent());
+
+    IF COALESCE(vbParentId, 0) = 0 AND vbDescId = zc_Movement_Loyalty()
+    THEN
+      outError := 'Ошибка. По промокоду '||COALESCE(inGUID, '')||' нет подтверждения продажи.';
+      RETURN;
+    END IF;
 
     -- Если документ неподписан
     IF COALESCE(vbStatusId, 0) <> zc_Enum_Status_Complete()
@@ -128,21 +144,27 @@ BEGIN
                     AND MI_Loyalty.DescId = zc_MI_Child()
                     AND MI_Loyalty.isErased = FALSE
                     AND MI_Loyalty.ObjectId = vbUnitId)
+       AND EXISTS(SELECT 1 FROM MovementItem AS MI_Loyalty
+                  WHERE MI_Loyalty.MovementId = vbMovementId
+                    AND MI_Loyalty.DescId = zc_MI_Child()
+                    AND MI_Loyalty.isErased = FALSE)
     THEN
       outError := 'Ошибка. "Программы лояльности" по промокоду '||COALESCE(inGUID, '')||' на аптеку не распространяеться.';
       RETURN;
     END IF;
 
     -- Если просрочен даты
-    IF (vbOperDate + (vbMonthCount||' MONTH' )::INTERVAL) < CURRENT_DATE
+    IF (vbOperDate + (vbMonthCount||' MONTH' )::INTERVAL) < CURRENT_DATE AND COALESCE (vbMonthCount, 0) > 0
     THEN
       outError := 'Ошибка. Срок действия промокода '||COALESCE(inGUID, '')||' закончен.';
       RETURN;
     END IF;
 
    outID := vbMovementItemId;
-   outAmount := vbAmount;
+   outAmount := CASE WHEN  vbDescId = zc_Movement_Loyalty() THEN vbAmount ELSE 0 end;
    outError := '';
+   outMovementId := vbMovementId;
+   outisPresent := vbDescId = zc_Movement_LoyaltyPresent();
 
 
 END;
@@ -159,3 +181,5 @@ $BODY$
 
 -- SELECT * FROM gpSelect_MovementItem_Loyalty_GUID ('1119-A887-001F-A46F', '3');
 -- SELECT * FROM gpSelect_MovementItem_Loyalty_GUID ('1119-2300-7A19-8EDC', '3');
+
+select * from gpSelect_MovementItem_Loyalty_GUID(inGUID := '0920-0513-7203-3049' ,  inSession := '3');

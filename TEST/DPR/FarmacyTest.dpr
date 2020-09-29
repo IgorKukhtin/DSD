@@ -951,7 +951,9 @@ uses
   Report_ArrivalWithoutSales in '..\..\FormsFarmacy\Report\Report_ArrivalWithoutSales.pas' {Report_ArrivalWithoutSalesForm: TParentForm},
   PartionDateGoodsList in '..\..\FormsFarmacy\Document\PartionDateGoodsList.pas',
   LoyaltyPresent in '..\..\FormsFarmacy\Document\LoyaltyPresent.pas' {LoyaltyPresentForm: TParentForm},
-  LoyaltyPresentJournal in '..\..\FormsFarmacy\Document\LoyaltyPresentJournal.pas' {LoyaltyPresentJournalForm: TParentForm};
+  LoyaltyPresentJournal in '..\..\FormsFarmacy\Document\LoyaltyPresentJournal.pas' {LoyaltyPresentJournalForm: TParentForm},
+  Report_ResortsByLot in '..\..\FormsFarmacy\Report\Report_ResortsByLot.pas' {Report_ResortsByLotForm: TParentForm},
+  Report_ResortsByLotDialog in '..\..\FormsFarmacy\Report\Report_ResortsByLotDialog.pas' {Report_ResortsByLotDialogForm: TParentForm};
 
 {$R *.res}
 {$R DevExpressRus.res}

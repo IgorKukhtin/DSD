@@ -735,6 +735,8 @@ type
     actReport_ArrivalWithoutSales: TdsdOpenForm;
     actLoyaltyPresentJournal: TdsdOpenForm;
     N256: TMenuItem;
+    actReport_ResortsByLot: TdsdOpenForm;
+    N257: TMenuItem;
     procedure actSaveDataExecute(Sender: TObject);
 
     procedure miRepriceClick(Sender: TObject);

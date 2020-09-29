@@ -3918,6 +3918,17 @@ inherited MainForm: TMainForm
       GuiParams = <>
       isShowModal = False
     end
+    object actReport_ResortsByLot: TdsdOpenForm
+      Category = #1057#1083#1091#1078#1077#1073#1085#1099#1077
+      MoveParams = <>
+      Caption = #1055#1077#1088#1077#1089#1086#1088#1090#1099' '#1087#1086' '#1087#1072#1088#1090#1080#1103#1084' '#1090#1086#1074#1072#1088#1072
+      FormName = 'TReport_ResortsByLotForm'
+      FormNameParam.Value = 'TReport_ResortsByLotForm'
+      FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
+      GuiParams = <>
+      isShowModal = False
+    end
   end
   inherited UserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn
     Left = 496
@@ -5026,6 +5037,9 @@ inherited MainForm: TMainForm
         end
         object N249: TMenuItem
           Action = actReport_LeftSend
+        end
+        object N257: TMenuItem
+          Action = actReport_ResortsByLot
         end
       end
       object miTaxUnit: TMenuItem [3]
