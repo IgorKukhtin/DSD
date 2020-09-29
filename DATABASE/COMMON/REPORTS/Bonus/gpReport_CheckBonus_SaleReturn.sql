@@ -13,7 +13,7 @@ CREATE OR REPLACE FUNCTION gpReport_CheckBonus_SaleReturn (
     IN inSessiON             TVarChar    -- сессия пользователя
 )
 RETURNS TABLE (MovementId_pl Integer
-             , OperDate_Movement TDateTime, InvNumber_Movement TVarChar, DescName_Movement TVarChar
+             , OperDate_Movement TDateTime, OperDatePartner TDateTime, InvNumber_Movement TVarChar, DescName_Movement TVarChar
              , ContractId_master Integer, ContractId_child Integer, ContractId_find Integer, ContractConditionKindId Integer
              , InvNumber_master TVarChar, InvNumber_child TVarChar, InvNumber_find TVarChar
              , ContractTagName_child TVarChar, ContractStateKindCode_child Integer
@@ -754,7 +754,8 @@ BEGIN
 
 
       SELECT  0 :: Integer                                  AS MovementId_pl
-            , Movement.OperDate                             AS OperDate_Movement
+            , Movement.OperDate                      :: TDateTime AS OperDate_Movement
+            , MovementDate_OperDatePartner.ValueData :: TDateTime AS OperDatePartner
             , Movement.InvNumber                            AS InvNumber_Movement
             , MovementDesc.ItemName                         AS DescName_Movement
             , tmpData.ContractId_master
@@ -838,6 +839,10 @@ BEGIN
                                  ON ObjectLink_Contract_Personal.ObjectId = tmpData.ContractId_child
                                 AND ObjectLink_Contract_Personal.DescId = zc_ObjectLink_Contract_Personal()
             LEFT JOIN Object_Personal_View ON Object_Personal_View.PersonalId = ObjectLink_Contract_Personal.ChildObjectId
+
+            LEFT JOIN MovementDate AS MovementDate_OperDatePartner
+                                   ON MovementDate_OperDatePartner.MovementId = tmpData.MovementId
+                                  AND MovementDate_OperDatePartner.DescId = zc_MovementDate_OperDatePartner()
      );
 
     -- Результат

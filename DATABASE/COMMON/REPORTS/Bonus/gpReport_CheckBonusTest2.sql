@@ -12,7 +12,7 @@ CREATE OR REPLACE FUNCTION gpReport_CheckBonusTest2 (
     IN inisMovement          Boolean   , -- по документам
     IN inSessiON             TVarChar    -- сессия пользователя
 )
-RETURNS TABLE (OperDate_Movement TDateTime, InvNumber_Movement TVarChar, DescName_Movement TVarChar
+RETURNS TABLE (OperDate_Movement TDateTime, OperDatePartner TDateTime, InvNumber_Movement TVarChar, DescName_Movement TVarChar
              , ContractId_master Integer, ContractId_child Integer, ContractId_find Integer, InvNumber_master TVarChar, InvNumber_child TVarChar, InvNumber_find TVarChar
              , ContractTagName_child TVarChar, ContractStateKindCode_child Integer
              , InfoMoneyId_master Integer, InfoMoneyId_find Integer
@@ -389,7 +389,9 @@ BEGIN
                                  , tmpContainer.InfoMoneyId_child
                                  , tmpContainer.PaidKindId_byBase
                                  , COALESCE (ObjectLink_Cash_Branch.ChildObjectId, MILinkObject_Branch.ObjectId, ObjectLink_Unit_Branch.ChildObjectId, tmpContainer.BranchId, 0) AS BranchId
-                                 , tmpContainer.PartnerId
+                                 , CASE WHEN inisMovement = FALSE THEN tmpContainer.PartnerId
+                                          ELSE CASE WHEN MIContainer.MovementDescId IN (zc_Movement_BankAccount(),zc_Movement_Cash()) THEN MIContainer.ObjectId_Analyzer ELSE MIContainer.ObjectExtId_Analyzer END
+                                   END AS PartnerId
                                  , SUM (CASE WHEN MIContainer.MovementDescId = zc_Movement_Sale() THEN COALESCE(MIContainer.Amount,0) ELSE 0 END) AS Sum_Sale -- Только продажи
                                  , SUM (CASE WHEN MIContainer.MovementDescId IN (zc_Movement_Sale(), zc_Movement_ReturnIn()) THEN COALESCE(MIContainer.Amount,0) ELSE 0 END) AS Sum_SaleReturnIn -- продажи - возвраты
                                  , SUM (CASE WHEN MIContainer.MovementDescId IN (zc_Movement_BankAccount(), zc_Movement_Cash()/*, zc_Movement_SendDebt()*/)
@@ -453,7 +455,9 @@ BEGIN
                                    , CASE WHEN inisMovement = TRUE THEN MIContainer.MovementDescId ELSE 0 END
                                    , CASE WHEN inisMovement = TRUE THEN MIContainer.MovementId ELSE 0 END
                                    , COALESCE ( ObjectLink_Cash_Branch.ChildObjectId, MILinkObject_Branch.ObjectId, ObjectLink_Unit_Branch.ChildObjectId,tmpContainer.BranchId,0)
-                                   , tmpContainer.PartnerId
+                                   , CASE WHEN inisMovement = FALSE THEN tmpContainer.PartnerId
+                                          ELSE CASE WHEN MIContainer.MovementDescId IN (zc_Movement_BankAccount(),zc_Movement_Cash()) THEN MIContainer.ObjectId_Analyzer ELSE MIContainer.ObjectExtId_Analyzer END
+                                     END
                             )
 
       , tmpMovement AS (SELECT tmpGroup.JuridicalId
@@ -706,8 +710,8 @@ BEGIN
                          , SUM (tmpAll.Sum_SaleReturnIn)   AS Sum_SaleReturnIn
                          , MAX (tmpAll.Comment) :: TVarChar AS Comment
                     FROM tmpAll
-                    WHERE (tmpAll.Sum_CheckBonus > 0
-                       OR tmpAll.Sum_Bonus > 0
+                    WHERE (tmpAll.Sum_CheckBonus <> 0
+                       OR tmpAll.Sum_Bonus <> 0
                        OR tmpAll.Sum_BonusFact <> 0)
                       AND (tmpAll.PaidKindId = inPaidKindId OR inPaidKindId = 0)
                       AND (tmpAll.JuridicalId = inJuridicalId OR inJuridicalId = 0)
@@ -735,7 +739,8 @@ BEGIN
                     )
 
 
-      SELECT  Movement.OperDate                             AS OperDate_Movement
+      SELECT  Movement.OperDate                      :: TDateTime AS OperDate_Movement
+            , MovementDate_OperDatePartner.ValueData :: TDateTime AS OperDatePartner
             , Movement.InvNumber                            AS InvNumber_Movement
             , MovementDesc.ItemName                         AS DescName_Movement
             , tmpData.ContractId_master
@@ -815,6 +820,10 @@ BEGIN
                                  ON ObjectLink_Contract_Personal.ObjectId = tmpData.ContractId_child
                                 AND ObjectLink_Contract_Personal.DescId = zc_ObjectLink_Contract_Personal()
             LEFT JOIN Object_Personal_View ON Object_Personal_View.PersonalId = ObjectLink_Contract_Personal.ChildObjectId
+            
+            LEFT JOIN MovementDate AS MovementDate_OperDatePartner
+                                   ON MovementDate_OperDatePartner.MovementId = tmpData.MovementId
+                                  AND MovementDate_OperDatePartner.DescId = zc_MovementDate_OperDatePartner()
     ;
 
 END;

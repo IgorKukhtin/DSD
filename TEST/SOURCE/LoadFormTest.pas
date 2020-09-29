@@ -2277,17 +2277,16 @@ begin
   }
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_CheckBonus_SaleReturnForm'));
   TdsdFormStorageFactory.GetStorage.Load('TReport_CheckBonus_SaleReturnForm');
-  {//exit;
 
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_CheckBonusTestForm'));
   TdsdFormStorageFactory.GetStorage.Load('TReport_CheckBonusTestForm');
-  }
+
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_CheckBonusForm'));
   TdsdFormStorageFactory.GetStorage.Load('TReport_CheckBonusForm');
 
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_CheckBonusDialogForm'));
   TdsdFormStorageFactory.GetStorage.Load('TReport_CheckBonusDialogForm');
-  exit;
+  //exit;
   {
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_CheckContractInMovementForm'));
   TdsdFormStorageFactory.GetStorage.Load('TReport_CheckContractInMovementForm');
@@ -2348,13 +2347,13 @@ begin
   exit;
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_MemberDialogForm'));
   TdsdFormStorageFactory.GetStorage.Load('TReport_MemberDialogForm');
-
+  }
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_CashForm'));
   TdsdFormStorageFactory.GetStorage.Load('TReport_CashForm');
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_CashDialogForm'));
   TdsdFormStorageFactory.GetStorage.Load('TReport_CashDialogForm');
   exit;
-
+  {
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_BankAccount_Cash_OlapForm'));
   TdsdFormStorageFactory.GetStorage.Load('TReport_BankAccount_Cash_OlapForm');
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_BankAccount_Cash_OlapDialogForm'));

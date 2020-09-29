@@ -540,10 +540,10 @@ object MemberMinusEditForm: TMemberMinusEditForm
   object GuidesBankAccountTo: TdsdGuides
     KeyField = 'Id'
     LookupControl = edBankAccountTo
-    FormNameParam.Value = 'TBankAccount_ObjectForm'
+    FormNameParam.Value = 'TBankAccountForm'
     FormNameParam.DataType = ftString
     FormNameParam.MultiSelectSeparator = ','
-    FormName = 'TBankAccount_ObjectForm'
+    FormName = 'TBankAccountForm'
     PositionDataSet = 'MasterCDS'
     Params = <
       item

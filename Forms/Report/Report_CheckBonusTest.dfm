@@ -4,7 +4,7 @@ inherited Report_CheckBonusTestForm: TReport_CheckBonusTestForm
   ClientWidth = 1180
   AddOnFormData.ExecuteDialogAction = ExecuteDialog
   ExplicitWidth = 1196
-  ExplicitHeight = 376
+  ExplicitHeight = 379
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
@@ -448,7 +448,6 @@ inherited Report_CheckBonusTestForm: TReport_CheckBonusTestForm
       Top = 5
       Action = actRefreshMovement
       TabOrder = 6
-      Visible = False
       Width = 102
     end
     object cxLabel6: TcxLabel
@@ -761,7 +760,7 @@ inherited Report_CheckBonusTestForm: TReport_CheckBonusTestForm
     Top = 208
   end
   inherited spSelect: TdsdStoredProc
-    StoredProcName = 'gpReport_CheckBonusTest2'
+    StoredProcName = 'gpReport_CheckBonusTest3'
     Params = <
       item
         Name = 'inStartDate'
@@ -808,7 +807,7 @@ inherited Report_CheckBonusTestForm: TReport_CheckBonusTestForm
         Value = Null
         Component = cbMovement
         DataType = ftBoolean
-        ParamType = ptUnknown
+        ParamType = ptInput
         MultiSelectSeparator = ','
       end>
     Left = 112

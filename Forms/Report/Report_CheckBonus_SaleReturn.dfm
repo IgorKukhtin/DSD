@@ -179,6 +179,13 @@ inherited Report_CheckBonus_SaleReturnForm: TReport_CheckBonus_SaleReturnForm
             Options.Editing = False
             Width = 60
           end
+          object OperDatePartner: TcxGridDBColumn
+            Caption = #1044#1072#1090#1072' '#1076#1086#1082'. '#1091' '#1087#1086#1082#1091#1087'.'
+            DataBinding.FieldName = 'OperDatePartner'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 60
+          end
           object InvNumber_child: TcxGridDBColumn
             Caption = #8470' '#1076#1086#1075'. ('#1073#1072#1079#1072')'
             DataBinding.FieldName = 'InvNumber_child'
