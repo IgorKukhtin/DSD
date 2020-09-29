@@ -1,13 +1,15 @@
 -- FunctiON: gpReport_CheckBonus_SaleReturn ()
 
-DROP FUNCTION IF EXISTS gpReport_CheckBonus_SaleReturn (TDateTime, TDateTime, Integer, Integer, Integer, TVarChar);
+--DROP FUNCTION IF EXISTS gpReport_CheckBonus_SaleReturn (TDateTime, TDateTime, Integer, Integer, Integer, TVarChar);
+DROP FUNCTION IF EXISTS gpReport_CheckBonus_SaleReturn (TDateTime, TDateTime, Integer, Integer, Integer, Boolean, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpReport_CheckBonus_SaleReturn (
     IN inStartDate           TDateTime ,  
     IN inEndDate             TDateTime ,
     IN inPaidKindID          Integer   ,
     IN inJuridicalId         Integer   ,
-    IN inBranchId            Integer   , 
+    IN inBranchId            Integer   ,
+    IN inisMovement          Boolean   , -- по документам
     IN inSessiON             TVarChar    -- сессия пользователя
 )
 RETURNS TABLE (MovementId_pl Integer
@@ -43,11 +45,11 @@ RETURNS TABLE (MovementId_pl Integer
               )  
 AS
 $BODY$
-   DECLARE inisMovement  Boolean ; -- по документам
+   --DECLARE inisMovement  Boolean ; -- по документам
    DECLARE vbEndDate     TDateTime;
 BEGIN
 
-   inisMovement:= FALSE;
+   --inisMovement:= FALSE;
    vbEndDate := inEndDate + INTERVAL '1 Day';
    
    -- временные таблицы

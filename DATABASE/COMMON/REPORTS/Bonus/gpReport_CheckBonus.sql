@@ -3,7 +3,8 @@
 DROP FUNCTION IF EXISTS gpReport_CheckBonus (TDateTime, TDateTime, TVarChar);
 DROP FUNCTION IF EXISTS gpReport_CheckBonus (TDateTime, TDateTime, Integer, Integer, Boolean, TVarChar);
 DROP FUNCTION IF EXISTS gpReport_CheckBonus (TDateTime, TDateTime, Integer, Integer, TVarChar);
-DROP FUNCTION IF EXISTS gpReport_CheckBonus (TDateTime, TDateTime, Integer, Integer, Integer, TVarChar);
+--DROP FUNCTION IF EXISTS gpReport_CheckBonus (TDateTime, TDateTime, Integer, Integer, Integer, TVarChar);
+DROP FUNCTION IF EXISTS gpReport_CheckBonus (TDateTime, TDateTime, Integer, Integer, Integer, Boolean, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpReport_CheckBonus (
     IN inStartDate           TDateTime ,  
@@ -11,7 +12,7 @@ CREATE OR REPLACE FUNCTION gpReport_CheckBonus (
     IN inPaidKindID          Integer   ,
     IN inJuridicalId         Integer   ,
     IN inBranchId            Integer   , 
-    -- IN inisMovement          Boolean   , -- по документам
+    IN inisMovement          Boolean   , -- по документам
     IN inSessiON             TVarChar    -- сессия пользователя
 )
 RETURNS TABLE (OperDate_Movement TDateTime, InvNumber_Movement TVarChar, DescName_Movement TVarChar
@@ -43,8 +44,7 @@ RETURNS TABLE (OperDate_Movement TDateTime, InvNumber_Movement TVarChar, DescNam
               )  
 AS
 $BODY$
-
-    DECLARE inisMovement Boolean ; -- по документам
+    --DECLARE inisMovement Boolean ; -- по документам
     DECLARE vbBranchId   Integer;
     DECLARE vbUserId Integer;
 BEGIN
@@ -115,7 +115,7 @@ BEGIN
                                    , inPaidKindID          := zc_Enum_PaidKind_FirstForm()
                                    , inJuridicalId         := inJuridicalId
                                    , inBranchId            := inBranchId
-                                 --, inIsMovement          := inIsMovement
+                                   , inIsMovement          := inIsMovement
                                    , inSession             := inSession
                                     ) AS tmp
            LEFT JOIN tmpObjectBonus ON tmpObjectBonus.JuridicalId = tmp.JuridicalId
@@ -156,7 +156,7 @@ BEGIN
                                    , inPaidKindID          := zc_Enum_PaidKind_SecondForm()
                                    , inJuridicalId         := inJuridicalId
                                    , inBranchId            := inBranchId
-                                 --, inIsMovement          := inIsMovement
+                                   , inIsMovement          := inIsMovement
                                    , inSession             := inSession
                                     ) AS tmp
            LEFT JOIN tmpObjectBonus ON tmpObjectBonus.JuridicalId = tmp.JuridicalId

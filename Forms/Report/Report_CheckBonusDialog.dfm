@@ -3,7 +3,7 @@ object Report_CheckBonusDialogForm: TReport_CheckBonusDialogForm
   Top = 0
   BorderStyle = bsDialog
   Caption = #1055#1072#1088#1072#1084#1077#1090#1088#1099' '#1086#1090#1095#1077#1090#1072' <'#1055#1088#1086#1074#1077#1088#1082#1072' '#1085#1072#1095#1080#1089#1083#1077#1085#1080#1081' '#1087#1086' '#1073#1086#1085#1091#1089#1072#1084'>'
-  ClientHeight = 218
+  ClientHeight = 253
   ClientWidth = 338
   Color = clBtnFace
   Font.Charset = DEFAULT_CHARSET
@@ -19,7 +19,7 @@ object Report_CheckBonusDialogForm: TReport_CheckBonusDialogForm
   TextHeight = 13
   object cxButton1: TcxButton
     Left = 48
-    Top = 179
+    Top = 211
     Width = 75
     Height = 25
     Caption = 'Ok'
@@ -29,7 +29,7 @@ object Report_CheckBonusDialogForm: TReport_CheckBonusDialogForm
   end
   object cxButton2: TcxButton
     Left = 217
-    Top = 179
+    Top = 211
     Width = 75
     Height = 25
     Caption = #1054#1090#1084#1077#1085#1072
@@ -116,12 +116,11 @@ object Report_CheckBonusDialogForm: TReport_CheckBonusDialogForm
     Width = 319
   end
   object cbMovement: TcxCheckBox
-    Left = 232
-    Top = 157
+    Left = 19
+    Top = 165
     Hint = #1054#1073#1085#1086#1074#1080#1090#1100' '#1076#1072#1085#1085#1099#1077
     Caption = #1087#1086' '#1044#1086#1082#1091#1084#1077#1085#1090#1072#1084
     TabOrder = 12
-    Visible = False
     Width = 104
   end
   object cxLabel4: TcxLabel

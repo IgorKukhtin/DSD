@@ -1,6 +1,7 @@
 -- FunctiON: gpReport_CheckBonusTest ()
 
-DROP FUNCTION IF EXISTS gpReport_CheckBonusTest2 (TDateTime, TDateTime, Integer, Integer, Integer, TVarChar);
+--DROP FUNCTION IF EXISTS gpReport_CheckBonusTest2 (TDateTime, TDateTime, Integer, Integer, Integer, TVarChar);
+DROP FUNCTION IF EXISTS gpReport_CheckBonusTest2 (TDateTime, TDateTime, Integer, Integer, Integer, Boolean, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpReport_CheckBonusTest2 (
     IN inStartDate           TDateTime ,  
@@ -8,7 +9,7 @@ CREATE OR REPLACE FUNCTION gpReport_CheckBonusTest2 (
     IN inPaidKindID          Integer   ,
     IN inJuridicalId         Integer   ,
     IN inBranchId            Integer   , 
-    -- IN inisMovement          Boolean   , -- по документам
+    IN inisMovement          Boolean   , -- по документам
     IN inSessiON             TVarChar    -- сессия пользователя
 )
 RETURNS TABLE (OperDate_Movement TDateTime, InvNumber_Movement TVarChar, DescName_Movement TVarChar
@@ -40,12 +41,11 @@ RETURNS TABLE (OperDate_Movement TDateTime, InvNumber_Movement TVarChar, DescNam
               )  
 AS
 $BODY$
-
-declare inisMovement  Boolean ; -- по документам
-DECLARE vbEndDate     TDateTime;
+--    DECLARE inisMovement  Boolean ; -- по документам
+    DECLARE vbEndDate     TDateTime;
 BEGIN
 
-     inisMovement:= FALSE;
+     --inisMovement:= FALSE;
      vbEndDate := inEndDate + INTERVAL '1 Day';
 
     RETURN QUERY

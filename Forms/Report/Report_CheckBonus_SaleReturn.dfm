@@ -509,7 +509,6 @@ inherited Report_CheckBonus_SaleReturnForm: TReport_CheckBonus_SaleReturnForm
       Top = 5
       Action = actRefreshMovement
       TabOrder = 6
-      Visible = False
       Width = 102
     end
     object cxLabel6: TcxLabel
@@ -869,7 +868,7 @@ inherited Report_CheckBonus_SaleReturnForm: TReport_CheckBonus_SaleReturnForm
         Value = Null
         Component = cbMovement
         DataType = ftBoolean
-        ParamType = ptUnknown
+        ParamType = ptInput
         MultiSelectSeparator = ','
       end>
     Left = 112
