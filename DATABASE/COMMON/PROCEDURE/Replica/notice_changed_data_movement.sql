@@ -41,10 +41,10 @@ BEGIN
   INSERT INTO _replica.table_update_data(schema_name, table_name, pk_keys, pk_values, upd_cols, operation, ParentId, transaction_id, user_name)  
        VALUES (TG_TABLE_SCHEMA, TG_TABLE_NAME, 'Id', current_row.Id, _cols, TG_OP, current_row.ParentId, txid_current(), session_user);  
 
-  
   -- уведомление клиенту
-  PERFORM pg_notify('_replica_table_notify_', '');
+  -- PERFORM pg_notify('_replica_table_notify_', '');
 
+  
   RETURN current_row;
 END;
 $$ LANGUAGE plpgsql;

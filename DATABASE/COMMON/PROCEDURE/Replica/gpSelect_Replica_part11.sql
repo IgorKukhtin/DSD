@@ -154,7 +154,13 @@ BEGIN
        SELECT 12 AS Part
             , case when a.operation ILIKE 'INSERT'
                       then ' when ' || _replica.zfStr_CHR_39 (a.Operation || '-' || a.table_name || '-' || COALESCE (a.upd_cols,a.pk_keys) || '-' || a.pk_keys) || ' THEN '
-                       || _replica.zfStr_CHR_39 ('INSERT INTO ' || a.table_name || ' (' || tmpColumn.COLUMN_NAME|| ') VALUES ( ' || _replica.zfStr_CHR_39 ('||' || tmpColumn.COLUMN_NAME_full ||'||' ) ||')' )
+
+                    -- !!!ON CONFLICT - RAISE EXCEPTION!!!
+                    -- || _replica.zfStr_CHR_39 ('INSERT INTO ' || a.table_name || ' (' || tmpColumn.COLUMN_NAME|| ') VALUES ( ' || _replica.zfStr_CHR_39 ('||' || tmpColumn.COLUMN_NAME_full ||'||' ) ||')')
+
+                       --  !!!ON CONFLICT DO NOTHING!!!
+                       || _replica.zfStr_CHR_39 ('INSERT INTO ' || a.table_name || ' (' || tmpColumn.COLUMN_NAME|| ') VALUES ( ' || _replica.zfStr_CHR_39 ('||' || tmpColumn.COLUMN_NAME_full ||'||' ) ||') ON CONFLICT DO NOTHING')
+
                 end :: Text AS res
           FROM
              ( SELECT DISTINCT tmp.Operation, tmp.table_name, tmp.upd_cols, tmp.pk_keys

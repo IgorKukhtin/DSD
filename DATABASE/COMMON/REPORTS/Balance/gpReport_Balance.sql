@@ -1,4 +1,4 @@
- -- Function: gpReport_Balance()
+-- Function: gpReport_Balance()
 
 DROP FUNCTION IF EXISTS gpReport_Balance (TDateTime, TDateTime, TVarChar);
 

@@ -78,7 +78,7 @@ BEGIN
 
   
   -- уведомление клиенту
-  PERFORM pg_notify('_replica_table_notify_', '');--Format('[%s, %s]',TG_TABLE_SCHEMA, TG_TABLE_NAME));
+  -- PERFORM pg_notify('_replica_table_notify_', '');--Format('[%s, %s]',TG_TABLE_SCHEMA, TG_TABLE_NAME));
 
   RETURN current_row;
 END;
@@ -174,7 +174,7 @@ BEGIN
 
   
   -- уведомление клиенту
-  PERFORM pg_notify('_replica_table_notify_', '');--Format('[%s, %s]',TG_TABLE_SCHEMA, TG_TABLE_NAME));
+  -- PERFORM pg_notify('_replica_table_notify_', '');--Format('[%s, %s]',TG_TABLE_SCHEMA, TG_TABLE_NAME));
 
   RETURN current_row;
 END;

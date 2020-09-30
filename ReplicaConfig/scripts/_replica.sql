@@ -170,7 +170,7 @@ BEGIN
   -- ѕри обновлении получим имена полей, данные которых имзенились.
   IF (TG_OP = 'UPDATE') THEN
   	FOR ri IN
-
+  	
       -- !!! PG 9.5 or latter !!!
       --SELECT pre.key AS columname, pre.value AS prevalue, post.value AS postvalue
       --  FROM jsonb_each(to_jsonb(OLD)) AS pre, jsonb_each(to_jsonb(NEW)) AS post
@@ -213,7 +213,7 @@ BEGIN
   END CASE;
   
   -- уведомление клиенту
-  PERFORM pg_notify('_replica_table_notify_', '');--Format('[%s, %s]',TG_TABLE_SCHEMA, TG_TABLE_NAME));
+  -- PERFORM pg_notify('_replica_table_notify_', '');--Format('[%s, %s]',TG_TABLE_SCHEMA, TG_TABLE_NAME));
 
   RETURN current_row;
 END;

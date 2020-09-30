@@ -374,6 +374,12 @@ begin
   cmd_req.FetchOptions.Items          := [fiBlobs];
   cmd_req.ResourceOptions.DirectExecute := true;
 
+//26.09.2020 - блокируем реплику из RBD.exe, т.к. данные из _replica.table_update_data переносит Replicator.exe
+//LogI('<·· необходим запуск Replicator.exe для переброски данных из _replica.table_update_data: Params.last_id = %d and Params.last_modified = %d··>', [Params.last_id, IncSecond(Params.last_modified, -1)]);
+//FTerminate:= true;
+//raise Exception.Create('необходим запуск Replicator.exe для переброски данных из _replica.table_update_data');
+//exit;
+
   cmd_tud.SQL.Text := 'select Count(*) as cnt, transaction_id, min(id) as min_id, max(id) as max_id FROM _replica.table_update_data'+sLineBreak+
                                   '	where (id > :id) AND (last_modified > :last_modified)  GROUP BY transaction_id order by min_id ASC';
 
@@ -1829,6 +1835,14 @@ begin
       if (Params.count > 0) and (Params.index = Params.count) then exit; //<< чтобы не зацикливать. Забираем только по уведомлениям.
       if Length(Params.txids) = 0 then
         begin
+
+//26.09.2020 - блокируем реплику из RBD.exe, т.к. данные из _replica.table_update_data переносит Replicator.exe
+//LogI('<·· необходим запуск Replicator.exe для переброски данных из _replica.table_update_data: Params.last_id = %d and Params.last_modified = %d··>', [Params.last_id, IncSecond(Params.last_modified, -1)]);
+//FTerminate:= true;
+//raise Exception.Create('необходим запуск Replicator.exe для переброски данных из _replica.table_update_data');
+//exit;
+
+
         	FQueryData.SQL.Text  := 'select Count(*) as cnt, transaction_id, min(id) as min_id FROM _replica.table_update_data'+sLineBreak+
                                   '	where (id > :id) AND (last_modified > :last_modified)  GROUP BY transaction_id order by min_id ASC';
           FQueryData.Params[0].AsInteger  := Params.last_id;
@@ -1935,6 +1949,13 @@ var
 begin
   query := TFDQuery.Create(nil);
   try
+//26.09.2020 - блокируем реплику из RBD.exe, т.к. данные из _replica.table_ddl переносит Replicator.exe
+//LogI('<·· необходим запуск Replicator.exe для переброски данных из _replica.table_ddl: last_modified = %d··>', [EncodeTimeSQLParam(last_modified)]);
+//FTerminate:= true;
+//raise Exception.Create('необходим запуск Replicator.exe для переброски данных из _replica.table_update_data');
+//exit;
+
+
     query.Connection := FSourceCon;
     query.SQL.Text   := 'SELECT * FROM _replica.table_ddl WHERE last_modified > '+EncodeTimeSQLParam(last_modified);
     query.Open();
