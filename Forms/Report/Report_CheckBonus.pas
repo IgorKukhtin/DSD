@@ -82,6 +82,8 @@ type
     macInsertByReportGrid: TMultiAction;
     bbInsertByReportGrid: TdxBarButton;
     spInsertByReportGrid: TdsdStoredProc;
+    spUpdateSend: TdsdStoredProc;
+    actUpdateDataSet: TdsdUpdateDataSet;
   private
     { Private declarations }
   public
