@@ -10,6 +10,7 @@ CREATE OR REPLACE FUNCTION gpGet_Movement_PersonalService(
 RETURNS TABLE (Id Integer, InvNumber TVarChar, OperDate TDateTime
              , StatusCode Integer, StatusName TVarChar
              , ServiceDate TDateTime
+             , TotalSummCardRecalc TFloat
              , Comment TVarChar
              , PersonalServiceListId Integer, PersonalServiceListName TVarChar
              , JuridicalId Integer, JuridicalName TVarChar
@@ -40,6 +41,7 @@ BEGIN
              , Object_Status.Name        AS StatusName
 
              , DATE_TRUNC ('MONTH', CURRENT_DATE - INTERVAL '1 MONTH') :: TDateTime  AS ServiceDate
+             , 0            :: TFloat    AS TotalSummCardRecalc
              , CAST ('' AS TVarChar)     AS Comment
              , 0                     	 AS PersonalServiceListId
              , CAST ('' AS TVarChar) 	 AS PersonalServiceListName
@@ -64,6 +66,7 @@ BEGIN
            , Object_Status.ObjectCode             AS StatusCode
            , Object_Status.ValueData              AS StatusName
            , COALESCE (MovementDate_ServiceDate.ValueData, DATE_TRUNC ('MONTH', Movement.OperDate)) :: TDateTime AS ServiceDate
+           , MovementFloat_TotalSummCardRecalc.ValueData  AS TotalSummCardRecalc
            , MovementString_Comment.ValueData     AS Comment
            , Object_PersonalServiceList.Id        AS PersonalServiceListId
            , Object_PersonalServiceList.ValueData AS PersonalServiceListName
@@ -89,6 +92,10 @@ BEGIN
                                       ON MovementBoolean_isAuto.MovementId = Movement.Id
                                      AND MovementBoolean_isAuto.DescId = zc_MovementBoolean_isAuto()
 
+            LEFT JOIN MovementFloat AS MovementFloat_TotalSummCardRecalc
+                                    ON MovementFloat_TotalSummCardRecalc.MovementId = Movement.Id
+                                   AND MovementFloat_TotalSummCardRecalc.DescId = zc_MovementFloat_TotalSummCardRecalc()
+
             LEFT JOIN MovementLinkObject AS MovementLinkObject_PersonalServiceList
                                          ON MovementLinkObject_PersonalServiceList.MovementId = Movement.Id
                                         AND MovementLinkObject_PersonalServiceList.DescId = zc_MovementLinkObject_PersonalServiceList()
@@ -105,6 +112,7 @@ BEGIN
                                  ON ObjectLink_PersonalServiceList_Member.ObjectId = Object_PersonalServiceList.Id
                                 AND ObjectLink_PersonalServiceList_Member.DescId = zc_ObjectLink_PersonalServiceList_Member()
             LEFT JOIN Object AS Object_Member ON Object_Member.Id = ObjectLink_PersonalServiceList_Member.ChildObjectId
+
        WHERE Movement.Id =  inMovementId;
 
        END IF;

@@ -1714,6 +1714,8 @@ inherited PersonalServiceForm: TPersonalServiceForm
         Align = alBottom
         TabOrder = 5
         Visible = False
+        ExplicitLeft = 3
+        ExplicitTop = 463
         object ExportXmlGridDBTableView: TcxGridDBTableView
           Navigator.Buttons.CustomButtons = <>
           DataController.DataSource = ExportDS
@@ -2724,13 +2726,10 @@ inherited PersonalServiceForm: TPersonalServiceForm
       MoveParams = <>
       ActionList = <
         item
-          Action = actGet_Export_FileName
+          Action = actGet_Export_FileNameOld
         end
         item
-          Action = actSelect_Export
-        end
-        item
-          Action = actExport_Grid
+          Action = actExport_file
         end>
       QuestionBeforeExecute = 
         #1044#1077#1081#1089#1090#1074#1080#1090#1077#1083#1100#1085#1086' '#1074#1099#1075#1088#1091#1079#1080#1090#1100' '#1091#1076#1077#1088#1078#1072#1085#1080#1103' '#1076#1083#1103' '#1082#1083#1080#1077#1085#1090'-'#1073#1072#1085#1082#1072' '#1074' '#1101#1083#1077#1082#1090#1088#1086#1085#1085#1099#1081 +
@@ -2739,6 +2738,63 @@ inherited PersonalServiceForm: TPersonalServiceForm
       Caption = #1042#1099#1075#1088#1091#1079#1080#1090#1100' '#1074' '#1092#1072#1081#1083' '#1091#1076#1077#1088#1078#1072#1085#1080#1103' '#1076#1083#1103' '#1082#1083#1080#1077#1085#1090'-'#1073#1072#1085#1082#1072
       Hint = #1042#1099#1075#1088#1091#1079#1080#1090#1100' '#1074' '#1092#1072#1081#1083' '#1091#1076#1077#1088#1078#1072#1085#1080#1103' '#1076#1083#1103' '#1082#1083#1080#1077#1085#1090'-'#1073#1072#1085#1082#1072
       ImageIndex = 53
+    end
+    object actGet_Export_FileNameOld: TdsdExecStoredProc
+      Category = 'Export_file'
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      StoredProc = spGet_Export_FileName1
+      StoredProcList = <
+        item
+          StoredProc = spGet_Export_FileName1
+        end>
+      Caption = 'actGet_Export_FileNameOld'
+    end
+    object actExportToFileZp: TdsdStoredProcExportToFile
+      Category = 'Export'
+      MoveParams = <>
+      dsdStoredProcName = spSelectExport
+      FileExt = '.txt'
+      FilenamePrefix = 'Vostok_'
+      Left = 1192
+      Top = 216
+    end
+    object actGet_Export_FileNameZp: TdsdExecStoredProc
+      Category = 'Export'
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      StoredProc = spGet_Export_FileNameZP
+      StoredProcList = <
+        item
+          StoredProc = spGet_Export_FileNameZP
+        end>
+      Caption = 'actGet_Export_Email'
+    end
+    object actExportZP: TMultiAction
+      Category = 'Export'
+      MoveParams = <>
+      ActionList = <
+        item
+          Action = actGet_Export_FileNameZp
+        end
+        item
+          Action = actExportToFileZp
+        end>
+      Caption = 
+        #1069#1082#1089#1087#1086#1088#1090' '#1074#1077#1076#1086#1084#1086#1089#1090#1080' '#1085#1072#1095#1080#1089#1083#1077#1085#1080#1103' '#1047#1055' '#1085#1072' '#1082#1072#1088#1090#1086#1095#1082#1091' '#1076#1083#1103' "'#1042#1054#1057#1058#1054#1050'" '#1080#1083#1080' "'#1054#1058 +
+        #1055'"'
+      Hint = 
+        #1069#1082#1089#1087#1086#1088#1090' '#1074#1077#1076#1086#1084#1086#1089#1090#1080' '#1085#1072#1095#1080#1089#1083#1077#1085#1080#1103' '#1047#1055' '#1085#1072' '#1082#1072#1088#1090#1086#1095#1082#1091' '#1076#1083#1103' "'#1042#1054#1057#1058#1054#1050'" '#1080#1083#1080' "'#1054#1058 +
+        #1055'"'
+      ImageIndex = 30
+    end
+    object actExport_file: TdsdStoredProcExportToFile
+      Category = 'Export_file'
+      MoveParams = <>
+      dsdStoredProcName = spSelect_Export
+      FileExt = '.xml'
+      Left = 1208
+      Top = 176
     end
     object actGet_Export_FileName: TdsdExecStoredProc
       Category = 'Export_file'
@@ -2932,6 +2988,14 @@ inherited PersonalServiceForm: TPersonalServiceForm
         end
         item
           Visible = True
+          ItemName = 'bbExportZP'
+        end
+        item
+          Visible = True
+          ItemName = 'bbStatic'
+        end
+        item
+          Visible = True
           ItemName = 'bbExport'
         end
         item
@@ -3020,6 +3084,10 @@ inherited PersonalServiceForm: TPersonalServiceForm
     end
     object bbExport: TdxBarButton
       Action = actExport
+      Category = 0
+    end
+    object bbExportZP: TdxBarButton
+      Action = actExportZP
       Category = 0
     end
   end
@@ -3229,6 +3297,14 @@ inherited PersonalServiceForm: TPersonalServiceForm
         Component = GuidesMember
         ComponentItem = 'TextValue'
         DataType = ftString
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'TotalSummCardRecalc'
+        Value = Null
+        Component = FormParams
+        ComponentItem = 'TotalSummCardRecalc'
+        DataType = ftFloat
         MultiSelectSeparator = ','
       end>
     Left = 216
@@ -4285,8 +4361,8 @@ inherited PersonalServiceForm: TPersonalServiceForm
         MultiSelectSeparator = ','
       end>
     PackSize = 1
-    Left = 704
-    Top = 600
+    Left = 696
+    Top = 544
   end
   object spInsertUpdateMIMessage: TdsdStoredProc
     StoredProcName = 'gpInsertUpdate_MI_Message'
@@ -4434,7 +4510,7 @@ inherited PersonalServiceForm: TPersonalServiceForm
     Left = 72
     Top = 624
   end
-  object spGet_Export_FileName: TdsdStoredProc
+  object spGet_Export_FileName1: TdsdStoredProc
     StoredProcName = 'gpGet_PersonalService_FileName'
     DataSets = <>
     OutputType = otResult
@@ -4506,7 +4582,7 @@ inherited PersonalServiceForm: TPersonalServiceForm
       item
         Name = 'inMovementId'
         Value = Null
-        Component = MasterCDS
+        Component = FormParams
         ComponentItem = 'Id'
         ParamType = ptInput
         MultiSelectSeparator = ','
@@ -4514,8 +4590,7 @@ inherited PersonalServiceForm: TPersonalServiceForm
       item
         Name = 'inInvNumber'
         Value = Null
-        Component = MasterCDS
-        ComponentItem = 'InvNumber'
+        Component = edInvNumber
         DataType = ftString
         ParamType = ptInput
         MultiSelectSeparator = ','
@@ -4523,7 +4598,7 @@ inherited PersonalServiceForm: TPersonalServiceForm
       item
         Name = 'inAmount'
         Value = Null
-        Component = MasterCDS
+        Component = FormParams
         ComponentItem = 'TotalSummCardRecalc'
         DataType = ftFloat
         ParamType = ptInput
@@ -4532,14 +4607,87 @@ inherited PersonalServiceForm: TPersonalServiceForm
       item
         Name = 'inOperDate'
         Value = 'NULL'
-        Component = MasterCDS
-        ComponentItem = 'OperDate'
+        Component = edOperDate
         DataType = ftDateTime
         ParamType = ptInput
         MultiSelectSeparator = ','
       end>
     PackSize = 1
-    Left = 485
-    Top = 629
+    Left = 469
+    Top = 621
+  end
+  object spGet_Export_FileNameZP: TdsdStoredProc
+    StoredProcName = 'gpGet_Movement_Export_FileName'
+    DataSets = <>
+    OutputType = otResult
+    Params = <
+      item
+        Name = 'inMovementId'
+        Value = Null
+        Component = FormParams
+        ComponentItem = 'Id'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'outFileNamePrefix'
+        Value = Null
+        Component = actExportToFileZp
+        ComponentItem = 'FileNamePrefix'
+        DataType = ftString
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'outFileExt'
+        Value = Null
+        Component = actExportToFileZp
+        ComponentItem = 'FileExt'
+        DataType = ftString
+        MultiSelectSeparator = ','
+      end>
+    PackSize = 1
+    Left = 554
+    Top = 626
+  end
+  object spGet_Export_FileName: TdsdStoredProc
+    StoredProcName = 'gpGet_PersonalService_FileName'
+    DataSets = <>
+    OutputType = otResult
+    Params = <
+      item
+        Name = 'inMovementId'
+        Value = Null
+        Component = FormParams
+        ComponentItem = 'Id'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'outFileName'
+        Value = Null
+        Component = actExport_file
+        ComponentItem = 'FileName'
+        DataType = ftString
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'outDefaultFileExt'
+        Value = Null
+        Component = actExport_file
+        ComponentItem = 'FileExt'
+        DataType = ftString
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'outFileNamePrefix'
+        Value = Null
+        Component = actExport_file
+        ComponentItem = 'FileNamePrefix'
+        DataType = ftString
+        MultiSelectSeparator = ','
+      end>
+    PackSize = 1
+    Left = 1176
+    Top = 304
   end
 end

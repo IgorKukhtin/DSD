@@ -13,17 +13,17 @@ inherited PersonalServiceJournalForm: TPersonalServiceJournalForm
     Height = 376
     TabOrder = 3
     ExplicitWidth = 1221
-    ExplicitHeight = 347
+    ExplicitHeight = 376
     ClientRectBottom = 376
     ClientRectRight = 1221
     inherited tsMain: TcxTabSheet
       ExplicitWidth = 1221
-      ExplicitHeight = 347
+      ExplicitHeight = 376
       inherited cxGrid: TcxGrid
         Width = 1221
         Height = 376
         ExplicitWidth = 1221
-        ExplicitHeight = 347
+        ExplicitHeight = 376
         inherited cxGridDBTableView: TcxGridDBTableView
           DataController.Filter.Options = [fcoCaseInsensitive, fcoShowOperatorDescription]
           DataController.Filter.TranslateBetween = True
@@ -2101,18 +2101,24 @@ inherited PersonalServiceJournalForm: TPersonalServiceJournalForm
       item
         Name = 'outFileName'
         Value = Null
+        Component = actExport_file
+        ComponentItem = 'FileName'
         DataType = ftString
         MultiSelectSeparator = ','
       end
       item
         Name = 'outDefaultFileExt'
         Value = Null
+        Component = actExport_file
+        ComponentItem = 'FileExt'
         DataType = ftString
         MultiSelectSeparator = ','
       end
       item
         Name = 'outFileNamePrefix'
         Value = Null
+        Component = actExport_file
+        ComponentItem = 'FileNamePrefix'
         DataType = ftString
         MultiSelectSeparator = ','
       end>
