@@ -199,6 +199,7 @@ type
     actExport: TMultiAction;
     actGet_Export_FileName: TdsdExecStoredProc;
     bbExport: TdxBarButton;
+    spSelectExport: TdsdStoredProc;
   private
     { Private declarations }
   public

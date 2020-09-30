@@ -1,9 +1,12 @@
 -- Function: gpGet_PersonalService_FileName(Integer, TVarChar)
 
-DROP FUNCTION IF EXISTS gpGet_PersonalService_FileName (TVarChar);
+--DROP FUNCTION IF EXISTS gpGet_PersonalService_FileName (TVarChar);
+DROP FUNCTION IF EXISTS gpGet_PersonalService_FileName (Integer, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpGet_PersonalService_FileName(
+    IN inMovementId           Integer   ,
    OUT outFileName            TVarChar  ,
+   OUT outFileNamePrefix      TVarChar  ,
    OUT outDefaultFileExt      TVarChar  ,
    OUT outEncodingANSI        Boolean   ,
     IN inSession              TVarChar
@@ -17,11 +20,13 @@ BEGIN
      vbUserId:= lpGetUserBySession (inSession);
 
      -- Результат
-     SELECT ('PersonalService_Child_' || CURRENT_DATE) AS outFileName
-          , 'xml'                             AS outDefaultFileExt
+     SELECT ('PersonalService_' || CURRENT_DATE) AS outFileNamePrefix
+          , Movement.Invnumber                AS outFileName
+          , '.xml'                            AS outDefaultFileExt
           , TRUE                              AS outEncodingANSI
-   INTO outFileName, outDefaultFileExt, outEncodingANSI
-     ;
+   INTO outFileNamePrefix, outFileName, outDefaultFileExt, outEncodingANSI
+     FROM Movement
+     WHERE Movement.Id = inMovementId;
 
 END;
 $BODY$
