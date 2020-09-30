@@ -84,7 +84,7 @@ BEGIN
                                              WHEN POSITION( 'міс' IN ObjectString_Value2.ValueData) > 0 THEN CAST(LEFT (ObjectString_Value2.ValueData,POSITION( 'міс' IN ObjectString_Value2.ValueData)-1 ) AS NUMERIC (16,0) ) * 30
                                              WHEN POSITION( 'рок' IN ObjectString_Value2.ValueData) > 0 THEN CAST(LEFT (ObjectString_Value2.ValueData,POSITION( 'рок' IN ObjectString_Value2.ValueData)-1 ) AS NUMERIC (16,0) ) * 364
                                         ELSE 0
-                                        END AS NUMERIC (16,0) ) Value2   -- срок хранения в днях
+                                        END AS NUMERIC (16,0) ) + 1 AS Value2   -- срок хранения в днях
                            FROM ObjectBoolean AS ObjectBoolean_Klipsa
                                 INNER JOIN Object AS Object_GoodsQuality 
                                                   ON Object_GoodsQuality.Id = ObjectBoolean_Klipsa.ObjectId
