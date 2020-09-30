@@ -89,6 +89,8 @@ type
     bbcbCurrency: TdxBarControlContainerItem;
     Summ_Currency_pl: TcxGridDBColumn;
     cbisDate: TcxCheckBox;
+    actPrint_byElements_byDate: TdsdPrintAction;
+    bbPrint_byElements_byDate: TdxBarButton;
   private
     { Private declarations }
   public

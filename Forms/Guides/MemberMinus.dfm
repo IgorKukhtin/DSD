@@ -69,6 +69,7 @@ object MemberMinusForm: TMemberMinusForm
       OptionsData.DeletingConfirmation = False
       OptionsData.Inserting = False
       OptionsSelection.InvertSelect = False
+      OptionsView.CellAutoHeight = True
       OptionsView.Footer = True
       OptionsView.GroupSummaryLayout = gslAlignWithColumns
       OptionsView.HeaderAutoHeight = True
@@ -597,8 +598,8 @@ object MemberMinusForm: TMemberMinusForm
       MoveParams = <>
       PostDataSetBeforeExecute = False
       Caption = 'ChoiceFormTo'
-      FormName = 'TBankAccount_ObjectForm'
-      FormNameParam.Value = 'TBankAccount_ObjectForm'
+      FormName = 'TBankAccountForm'
+      FormNameParam.Value = 'TBankAccountForm'
       FormNameParam.DataType = ftString
       FormNameParam.MultiSelectSeparator = ','
       GuiParams = <

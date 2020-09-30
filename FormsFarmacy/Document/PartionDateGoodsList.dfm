@@ -40,7 +40,7 @@ inherited PartionDateGoodsListForm: TPartionDateGoodsListForm
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
-            Width = 64
+            Width = 57
           end
           object GoodsName: TcxGridDBColumn
             Caption = #1053#1072#1079#1074#1072#1085#1080#1077
@@ -49,7 +49,15 @@ inherited PartionDateGoodsListForm: TPartionDateGoodsListForm
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
-            Width = 198
+            Width = 178
+          end
+          object ContainerID: TcxGridDBColumn
+            Caption = #1048#1076#1077#1085#1090#1080#1092'. '#1087#1072#1088#1090#1080#1080
+            DataBinding.FieldName = 'ContainerID'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 68
           end
           object ExpirationDate: TcxGridDBColumn
             Caption = #1057#1088#1086#1082' '#1075#1086#1076#1085#1086#1089#1090#1080
@@ -59,7 +67,7 @@ inherited PartionDateGoodsListForm: TPartionDateGoodsListForm
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
-            Width = 88
+            Width = 76
           end
           object PartionDateKindName: TcxGridDBColumn
             Caption = #1058#1080#1087' '#1089#1088#1086#1082#1072
@@ -71,7 +79,7 @@ inherited PartionDateGoodsListForm: TPartionDateGoodsListForm
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
-            Width = 115
+            Width = 98
           end
           object Amount: TcxGridDBColumn
             Caption = #1054#1089#1090#1072#1090#1086#1082
@@ -79,7 +87,7 @@ inherited PartionDateGoodsListForm: TPartionDateGoodsListForm
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
-            Width = 89
+            Width = 77
           end
         end
       end

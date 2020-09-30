@@ -57,6 +57,7 @@ BEGIN
     --определяем подразделение получателя
     SELECT Movement.StatusId
          , MovementLinkObject_To.ObjectId                               AS UnitId
+         , MovementLinkObject_From.ObjectId                             AS FromId
          , COALESCE (MovementBoolean_SUN.ValueData, FALSE)::Boolean     AS isSUN
          , COALESCE (MovementBoolean_SUN_v2.ValueData, FALSE)::Boolean  AS isSUN_v2
          , COALESCE (MovementBoolean_SUN_v3.ValueData, FALSE)::Boolean  AS isSUN_v3
@@ -64,11 +65,15 @@ BEGIN
          , DATE_TRUNC ('DAY', MovementDate_Insert.ValueData)
          , COALESCE (MovementFloat_TotalCount.ValueData, 0)
          , COALESCE (ObjectFloat_CashSettings_DaySaleForSUN.ValueData, 0)::Integer
-    INTO vbStatusId, vbUnitId, vbIsSUN, vbIsSUN_v2, vbIsSUN_v3, vbIsDefSUN, vbInsertDate, vbTotalCountOld, vbDaySaleForSUN
+    INTO vbStatusId, vbUnitId, vbFromId, vbIsSUN, vbIsSUN_v2, vbIsSUN_v3, vbIsDefSUN, vbInsertDate, vbTotalCountOld, vbDaySaleForSUN
     FROM Movement
           LEFT JOIN MovementLinkObject AS MovementLinkObject_To
                                        ON MovementLinkObject_To.MovementId = Movement.Id
                                       AND MovementLinkObject_To.DescId = zc_MovementLinkObject_To()
+
+          LEFT JOIN MovementLinkObject AS MovementLinkObject_From
+                                       ON MovementLinkObject_From.MovementId = Movement.Id
+                                      AND MovementLinkObject_From.DescId = zc_MovementLinkObject_From()
 
           LEFT JOIN MovementBoolean AS MovementBoolean_SUN
                                     ON MovementBoolean_SUN.MovementId = Movement.Id
@@ -98,7 +103,7 @@ BEGIN
                                AND ObjectFloat_CashSettings_DaySaleForSUN.DescId = zc_ObjectFloat_CashSettings_DaySaleForSUN()
                                
     WHERE Movement.Id = inMovementId;
-
+    
     IF COALESCE (inCommentTRID, 0) <> 0
     THEN
        WITH tmpProtocolAll AS (SELECT  MovementItem.Id
@@ -239,13 +244,6 @@ BEGIN
         THEN
           RAISE EXCEPTION 'Ошибка. Работа СУН пока невозможна, ожидайте сообщение IT.';
         END IF;
-
-        --определяем подразделение отправителя
-        SELECT MovementLinkObject_From.ObjectId AS vbFromId
-               INTO vbFromId
-        FROM MovementLinkObject AS MovementLinkObject_From
-        WHERE MovementLinkObject_From.MovementId = inMovementId
-          AND MovementLinkObject_From.DescId = zc_MovementLinkObject_From();
 
         IF COALESCE (vbFromId, 0) <> COALESCE (vbUserUnitId, 0) AND COALESCE (vbUnitId, 0) <> COALESCE (vbUserUnitId, 0)
         THEN
@@ -517,6 +515,8 @@ BEGIN
                 WHERE Movement.StatusId IN (zc_Enum_Status_Complete(), zc_Enum_Status_Erased())
                   AND Movement.DescId = zc_Movement_Send()
                   AND MovementDate_Insert.ValueData BETWEEN vbInsertDate - ((vbDaySaleForSUN + 7)::TVarChar||' DAY')::INTERVAL AND vbInsertDate - ((vbDaySaleForSUN - 1)::TVarChar||' DAY')::INTERVAL)
+        AND COALESCE((SELECT SUM(Container.Amount) FROM Container 
+                      WHERE Container.DescId = zc_Container_Count() AND Container.ObjectId = inGoodsId AND Container.WhereObjectId = vbFromId), 0) > 0
       THEN
          RAISE EXCEPTION 'Ошибка. По товару <%> был использован комментарий <%> % дней назад. Использовать сейчас запрещено',
                              (SELECT Object.ValueData FROM Object WHERE Object.ID = inGoodsId), vbDaySaleForSUN, 

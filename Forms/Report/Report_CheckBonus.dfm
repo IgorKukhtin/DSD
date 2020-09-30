@@ -111,13 +111,13 @@ inherited Report_CheckBonusForm: TReport_CheckBonusForm
           Styles.Footer = nil
           Styles.Header = nil
           object isSend: TcxGridDBColumn
-            Caption = #1055#1077#1088#1077#1085#1077#1089#1090#1080' '#1076#1072#1085#1085#1099#1077' '#1074' '#1078#1091#1088#1085#1072#1083
+            Caption = #1055#1077#1088#1077#1085#1077#1089#1090#1080' '#1076#1072#1085#1085#1099#1077' '#1074' '#1078#1091#1088#1085#1072#1083' '#1044#1072'/'#1053#1077#1090
             DataBinding.FieldName = 'isSend'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             HeaderHint = #1055#1077#1088#1077#1085#1077#1089#1090#1080' '#1076#1072#1085#1085#1099#1077' '#1074' '#1078#1091#1088#1085#1072#1083' '#1044#1072'/'#1053#1077#1090
             Options.Editing = False
-            Width = 75
+            Width = 93
           end
           object ContractStateKindName_child: TcxGridDBColumn
             Caption = #1057#1086#1089#1090#1086#1103#1085#1080#1077' '#1076#1086#1075'. ('#1073#1072#1079#1072')'
@@ -159,6 +159,13 @@ inherited Report_CheckBonusForm: TReport_CheckBonusForm
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
             Width = 81
+          end
+          object OperDatePartner: TcxGridDBColumn
+            Caption = #1044#1072#1090#1072' '#1076#1086#1082'. '#1091' '#1087#1086#1082#1091#1087'.'
+            DataBinding.FieldName = 'OperDatePartner'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 60
           end
           object InvNumber_master: TcxGridDBColumn
             Caption = #8470' '#1076#1086#1075'.'
@@ -478,7 +485,6 @@ inherited Report_CheckBonusForm: TReport_CheckBonusForm
       Top = 5
       Action = actRefreshMovement
       TabOrder = 6
-      Visible = False
       Width = 102
     end
     object cxLabel6: TcxLabel
@@ -819,6 +825,7 @@ inherited Report_CheckBonusForm: TReport_CheckBonusForm
           Action = actUpdateSend_Yes
         end>
       View = cxGridDBTableView
+      QuestionBeforeExecute = #1059#1089#1090#1072#1085#1086#1074#1080#1090#1100' '#1079#1085#1072#1095#1077#1085#1080#1077' '#1055#1077#1088#1077#1085#1077#1089#1090#1080' '#1076#1072#1085#1085#1099#1077' '#1074' '#1078#1091#1088#1085#1072#1083' - '#1044#1072'?'
       Caption = #1055#1077#1088#1077#1085#1077#1089#1090#1080' '#1076#1072#1085#1085#1099#1077' '#1074' '#1078#1091#1088#1085#1072#1083' - '#1044#1072
       Hint = #1055#1077#1088#1077#1085#1077#1089#1090#1080' '#1076#1072#1085#1085#1099#1077' '#1074' '#1078#1091#1088#1085#1072#1083' - '#1044#1072
       ImageIndex = 76
@@ -831,6 +838,7 @@ inherited Report_CheckBonusForm: TReport_CheckBonusForm
           Action = actUpdateSend_No
         end>
       View = cxGridDBTableView
+      QuestionBeforeExecute = #1059#1089#1090#1072#1085#1086#1074#1080#1090#1100' '#1079#1085#1072#1095#1077#1085#1080#1077' '#1055#1077#1088#1077#1085#1077#1089#1090#1080' '#1076#1072#1085#1085#1099#1077' '#1074' '#1078#1091#1088#1085#1072#1083' - '#1053#1077#1090'?'
       Caption = #1055#1077#1088#1077#1085#1077#1089#1090#1080' '#1076#1072#1085#1085#1099#1077' '#1074' '#1078#1091#1088#1085#1072#1083' - '#1053#1077#1090
       Hint = #1055#1077#1088#1077#1085#1077#1089#1090#1080' '#1076#1072#1085#1085#1099#1077' '#1074' '#1078#1091#1088#1085#1072#1083' - '#1053#1077#1090
       ImageIndex = 77
@@ -842,7 +850,6 @@ inherited Report_CheckBonusForm: TReport_CheckBonusForm
         item
           Action = actInsertByReportGrid
         end>
-      View = cxGridDBTableView
       QuestionBeforeExecute = 
         #1044#1077#1081#1089#1090#1074#1080#1090#1077#1083#1100#1085#1086' '#1089#1092#1086#1088#1084#1080#1088#1086#1074#1072#1090#1100' '#1076#1086#1082#1091#1084#1077#1085#1090#1099' <'#1053#1072#1095#1080#1089#1083#1077#1085#1080#1103' '#1087#1086' '#1073#1086#1085#1091#1089#1072#1084' ('#1088#1072#1089 +
         #1093#1086#1076#1099' '#1073#1091#1076#1091#1097#1080#1093' '#1087#1077#1088#1080#1086#1076#1086#1074')> '#1087#1086' '#1076#1072#1085#1085#1099#1084' '#1080#1079' '#1075#1088#1080#1076#1072'?'
@@ -865,9 +872,6 @@ inherited Report_CheckBonusForm: TReport_CheckBonusForm
       StoredProcList = <
         item
           StoredProc = spInsertByReportGrid
-        end
-        item
-          StoredProc = spSelect
         end>
       Caption = 
         #1057#1092#1086#1088#1084#1080#1088#1086#1074#1072#1090#1100' '#1076#1086#1082#1091#1084#1077#1085#1090#1099' <'#1053#1072#1095#1080#1089#1083#1077#1085#1080#1103' '#1087#1086' '#1073#1086#1085#1091#1089#1072#1084' ('#1088#1072#1089#1093#1086#1076#1099' '#1073#1091#1076#1091#1097#1080#1093' '#1087 +
@@ -934,10 +938,10 @@ inherited Report_CheckBonusForm: TReport_CheckBonusForm
         Value = Null
         Component = cbMovement
         DataType = ftBoolean
-        ParamType = ptUnknown
+        ParamType = ptInput
         MultiSelectSeparator = ','
       end>
-    Left = 112
+    Left = 104
     Top = 208
   end
   inherited BarManager: TdxBarManager

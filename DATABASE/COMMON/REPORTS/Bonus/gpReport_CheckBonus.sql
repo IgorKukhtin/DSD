@@ -3,7 +3,8 @@
 DROP FUNCTION IF EXISTS gpReport_CheckBonus (TDateTime, TDateTime, TVarChar);
 DROP FUNCTION IF EXISTS gpReport_CheckBonus (TDateTime, TDateTime, Integer, Integer, Boolean, TVarChar);
 DROP FUNCTION IF EXISTS gpReport_CheckBonus (TDateTime, TDateTime, Integer, Integer, TVarChar);
-DROP FUNCTION IF EXISTS gpReport_CheckBonus (TDateTime, TDateTime, Integer, Integer, Integer, TVarChar);
+--DROP FUNCTION IF EXISTS gpReport_CheckBonus (TDateTime, TDateTime, Integer, Integer, Integer, TVarChar);
+DROP FUNCTION IF EXISTS gpReport_CheckBonus (TDateTime, TDateTime, Integer, Integer, Integer, Boolean, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpReport_CheckBonus (
     IN inStartDate           TDateTime ,  
@@ -11,10 +12,10 @@ CREATE OR REPLACE FUNCTION gpReport_CheckBonus (
     IN inPaidKindID          Integer   ,
     IN inJuridicalId         Integer   ,
     IN inBranchId            Integer   , 
-    -- IN inisMovement          Boolean   , -- по документам
+    IN inisMovement          Boolean   , -- по документам
     IN inSessiON             TVarChar    -- сессия пользователя
 )
-RETURNS TABLE (OperDate_Movement TDateTime, InvNumber_Movement TVarChar, DescName_Movement TVarChar
+RETURNS TABLE (OperDate_Movement TDateTime, OperDatePartner TDateTime, InvNumber_Movement TVarChar, DescName_Movement TVarChar
              , ContractId_master Integer, ContractId_child Integer, ContractId_find Integer, InvNumber_master TVarChar, InvNumber_child TVarChar, InvNumber_find TVarChar
              , ContractTagName_child TVarChar, ContractStateKindCode_child Integer
              , InfoMoneyId_master Integer, InfoMoneyId_find Integer
@@ -43,8 +44,7 @@ RETURNS TABLE (OperDate_Movement TDateTime, InvNumber_Movement TVarChar, DescNam
               )  
 AS
 $BODY$
-
-    DECLARE inisMovement Boolean ; -- по документам
+    --DECLARE inisMovement Boolean ; -- по документам
     DECLARE vbBranchId   Integer;
     DECLARE vbUserId Integer;
 BEGIN
@@ -81,7 +81,7 @@ BEGIN
                          WHERE Object_ReportBonus.DescId = zc_Object_ReportBonus()
                          )
 
-      SELECT tmp.OperDate_Movement, tmp.InvNumber_Movement, tmp.DescName_Movement
+      SELECT tmp.OperDate_Movement, tmp.OperDatePartner, tmp.InvNumber_Movement, tmp.DescName_Movement
            , tmp.ContractId_master, tmp.ContractId_child, tmp.ContractId_find, tmp.InvNumber_master, tmp.InvNumber_child, tmp.InvNumber_find
            , tmp.ContractTagName_child, tmp.ContractStateKindCode_child
            , tmp.InfoMoneyId_master, tmp.InfoMoneyId_find
@@ -115,14 +115,14 @@ BEGIN
                                    , inPaidKindID          := zc_Enum_PaidKind_FirstForm()
                                    , inJuridicalId         := inJuridicalId
                                    , inBranchId            := inBranchId
-                                 --, inIsMovement          := inIsMovement
+                                   , inIsMovement          := inIsMovement
                                    , inSession             := inSession
                                     ) AS tmp
            LEFT JOIN tmpObjectBonus ON tmpObjectBonus.JuridicalId = tmp.JuridicalId
                                    AND COALESCE (tmpObjectBonus.PartnerId,0) = COALESCE (tmp.PartnerId,0)
       WHERE inPaidKindId = zc_Enum_PaidKind_FirstForm() OR COALESCE (inPaidKindId,0) = 0
   UNION ALL
-      SELECT tmp.OperDate_Movement, tmp.InvNumber_Movement, tmp.DescName_Movement
+      SELECT tmp.OperDate_Movement, tmp.OperDatePartner, tmp.InvNumber_Movement, tmp.DescName_Movement
            , tmp.ContractId_master, tmp.ContractId_child, tmp.ContractId_find, tmp.InvNumber_master, tmp.InvNumber_child, tmp.InvNumber_find
            , tmp.ContractTagName_child, tmp.ContractStateKindCode_child
            , tmp.InfoMoneyId_master, tmp.InfoMoneyId_find
@@ -156,7 +156,7 @@ BEGIN
                                    , inPaidKindID          := zc_Enum_PaidKind_SecondForm()
                                    , inJuridicalId         := inJuridicalId
                                    , inBranchId            := inBranchId
-                                 --, inIsMovement          := inIsMovement
+                                   , inIsMovement          := inIsMovement
                                    , inSession             := inSession
                                     ) AS tmp
            LEFT JOIN tmpObjectBonus ON tmpObjectBonus.JuridicalId = tmp.JuridicalId

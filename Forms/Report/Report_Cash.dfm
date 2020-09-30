@@ -774,6 +774,82 @@ inherited Report_CashForm: TReport_CashForm
           StoredProc = spSelect
         end>
     end
+    object actPrint_byElements_byDate: TdsdPrintAction
+      Category = 'DSDLib'
+      MoveParams = <
+        item
+          FromParam.Name = 'id'
+          FromParam.Value = Null
+          FromParam.ComponentItem = 'id'
+          FromParam.MultiSelectSeparator = ','
+          ToParam.Value = '0'
+          ToParam.Component = FormParams
+          ToParam.ComponentItem = 'Id'
+          ToParam.ParamType = ptInputOutput
+          ToParam.MultiSelectSeparator = ','
+        end
+        item
+          FromParam.Value = 43466d
+          FromParam.Component = deStart
+          FromParam.DataType = ftDateTime
+          FromParam.MultiSelectSeparator = ','
+          ToParam.Name = 'StartDate'
+          ToParam.Value = 'NULL'
+          ToParam.DataType = ftDateTime
+          ToParam.ParamType = ptInputOutput
+          ToParam.MultiSelectSeparator = ','
+        end
+        item
+          FromParam.Value = 43466d
+          FromParam.Component = deEnd
+          FromParam.DataType = ftDateTime
+          FromParam.MultiSelectSeparator = ','
+          ToParam.Name = 'EndDate'
+          ToParam.Value = 'NULL'
+          ToParam.DataType = ftDateTime
+          ToParam.ParamType = ptInputOutput
+          ToParam.MultiSelectSeparator = ','
+        end>
+      StoredProcList = <>
+      Caption = #1054#1073#1086#1088#1086#1090#1099' '#1087#1086' '#1082#1072#1089#1089#1077' ('#1087#1086' '#1076#1072#1090#1072#1084')'
+      Hint = #1054#1073#1086#1088#1086#1090#1099' '#1087#1086' '#1082#1072#1089#1089#1077' ('#1087#1086' '#1076#1072#1090#1072#1084')'
+      ImageIndex = 17
+      DataSets = <
+        item
+          UserName = 'frxDBDItems'
+          IndexFieldNames = 'cashname;OperDate;GroupId;InfoMoneyName_all;MoneyPlaceName'
+          GridView = cxGridDBTableView
+        end>
+      Params = <
+        item
+          Name = 'StartDate'
+          Value = 43466d
+          Component = deStart
+          DataType = ftDateTime
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'EndDate'
+          Value = 43466d
+          Component = deEnd
+          DataType = ftDateTime
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'maintext'
+          Value = #1082#1072#1089#1089#1077
+          DataType = ftString
+          MultiSelectSeparator = ','
+        end>
+      ReportName = #1054#1073#1086#1088#1086#1090#1099' '#1087#1086' '#1082#1072#1089#1089#1077' ('#1087#1086' '#1076#1072#1090#1072#1084')'
+      ReportNameParam.Value = #1054#1073#1086#1088#1086#1090#1099' '#1087#1086' '#1082#1072#1089#1089#1077' ('#1087#1086' '#1076#1072#1090#1072#1084')'
+      ReportNameParam.DataType = ftString
+      ReportNameParam.ParamType = ptInput
+      ReportNameParam.MultiSelectSeparator = ','
+      PrinterNameParam.Value = ''
+      PrinterNameParam.DataType = ftString
+      PrinterNameParam.MultiSelectSeparator = ','
+    end
     object actPrint_byElements_byComments: TdsdPrintAction
       Category = 'DSDLib'
       MoveParams = <
@@ -2574,6 +2650,14 @@ inherited Report_CashForm: TReport_CashForm
         end
         item
           Visible = True
+          ItemName = 'bbPrint_byElements_byDate'
+        end
+        item
+          Visible = True
+          ItemName = 'dxBarStatic'
+        end
+        item
+          Visible = True
           ItemName = 'bbPrint_byElements_byComments'
         end
         item
@@ -2611,6 +2695,10 @@ inherited Report_CashForm: TReport_CashForm
       Hint = 'cbCurrency'
       Visible = ivAlways
       Control = cbCurrency
+    end
+    object bbPrint_byElements_byDate: TdxBarButton
+      Action = actPrint_byElements_byDate
+      Category = 0
     end
   end
   inherited DBViewAddOn: TdsdDBViewAddOn
@@ -2936,8 +3024,8 @@ inherited Report_CashForm: TReport_CashForm
         DataType = ftString
         MultiSelectSeparator = ','
       end>
-    Left = 440
-    Top = 37
+    Left = 520
+    Top = 65533
   end
   object GuidesAccount: TdsdGuides
     KeyField = 'Id'
