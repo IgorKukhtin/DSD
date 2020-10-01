@@ -624,6 +624,24 @@ object Report_GoodsBalance_ServerForm: TReport_GoodsBalance_ServerForm
         Options.Editing = False
         Width = 80
       end
+      object UnitName_Location: TcxGridDBColumn
+        Caption = #1055#1086#1076#1088#1072#1079#1076#1077#1083#1077#1085#1080#1077' ('#1084#1077#1089#1090#1086' '#1091#1095#1077#1090#1072')'
+        DataBinding.FieldName = 'UnitName_Location'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        HeaderHint = #1055#1086#1076#1088#1072#1079#1076#1077#1083#1077#1085#1080#1077' ('#1084#1077#1089#1090#1086' '#1091#1095#1077#1090#1072')'
+        Options.Editing = False
+        Width = 80
+      end
+      object PositionName_Location: TcxGridDBColumn
+        Caption = #1044#1086#1083#1078#1085#1086#1089#1090#1100
+        DataBinding.FieldName = 'PositionName_Location'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        HeaderHint = #1044#1086#1083#1078#1085#1086#1089#1090#1100
+        Options.Editing = False
+        Width = 80
+      end
       object UnitName_to: TcxGridDBColumn
         Caption = #1055#1086#1076#1088#1072#1079#1076#1077#1083#1077#1085#1080#1077' ('#1080#1085#1092'.)'
         DataBinding.FieldName = 'UnitName_to'
