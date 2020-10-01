@@ -180,10 +180,6 @@
 				<Form>RoleUnionForm</Form>
 				<DesignClass>TParentForm</DesignClass>
 			</DCCReference>
-			<DCCReference Include="..\FormsBoat\Document\Movement_PeriodDialog.pas">
-				<Form>Movement_PeriodDialogForm</Form>
-				<DesignClass>TParentForm</DesignClass>
-			</DCCReference>
 			<DCCReference Include="..\SOURCE\MeDOC\IFIN_J1201009.pas"/>
 			<DCCReference Include="..\SOURCE\MeDOC\IFIN_J1201209.pas"/>
 			<DCCReference Include="..\SOURCE\COMPONENT\dsdOlap.pas"/>

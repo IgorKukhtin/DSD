@@ -15,8 +15,8 @@ CREATE TABLE Container(
    CONSTRAINT fk_Container_DescId    FOREIGN KEY (DescId)    REFERENCES ContainerDesc(Id),
    CONSTRAINT fk_Container_ObjectId  FOREIGN KEY (ObjectId)  REFERENCES Object(Id),
    CONSTRAINT fk_Container_PartionId FOREIGN KEY (PartionId) REFERENCES Object_PartionGoods (MovementItemId),
-   CONSTRAINT fk_Container_ParentId  FOREIGN KEY (ParentId)  REFERENCES Container(Id)
-   CONSTRAINT fk_Container_WhereObjectId FOREIGN KEY (WhereObjectId) REFERENCES Object(Id),
+   CONSTRAINT fk_Container_ParentId  FOREIGN KEY (ParentId)  REFERENCES Container(Id),
+   CONSTRAINT fk_Container_WhereObjectId FOREIGN KEY (WhereObjectId) REFERENCES Object(Id)
 );
 
 -------------------------------------------------------------------------------
