@@ -382,6 +382,14 @@ object InvoiceForm: TInvoiceForm
             HeaderAlignmentVert = vaCenter
             Width = 150
           end
+          object InvNumber: TcxGridDBColumn
+            Caption = #1048#1085#1074#1077#1085#1090#1072#1088#1085#1099#1081' '#1085#1086#1084#1077#1088
+            DataBinding.FieldName = 'InvNumber'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 135
+          end
           object AssetCode: TcxGridDBColumn
             Caption = #1050#1086#1076' ('#1076#1083#1103' '#1054'C / '#1052#1053#1052#1040')'
             DataBinding.FieldName = 'AssetCode'
@@ -606,7 +614,7 @@ object InvoiceForm: TInvoiceForm
     Height = 109
     Align = alBottom
     PopupMenu = PopupMenu
-    TabOrder = 7
+    TabOrder = 6
     object cxGridDBTableView1: TcxGridDBTableView
       Navigator.Buttons.CustomButtons = <>
       DataController.DataSource = ChildDS
@@ -770,7 +778,7 @@ object InvoiceForm: TInvoiceForm
     Properties.Alignment.Vert = taVCenter
     Properties.DecimalPlaces = 4
     Properties.DisplayFormat = ',0.####;-,0.####; ;'
-    TabOrder = 10
+    TabOrder = 8
     Width = 58
   end
   object cxLabel6: TcxLabel
@@ -2097,6 +2105,7 @@ object InvoiceForm: TInvoiceForm
         Param.MultiSelectSeparator = ','
         DataSummaryItemIndex = 4
       end>
+    PropertiesCellList = <>
     Left = 131
     Top = 377
   end
@@ -2175,7 +2184,7 @@ object InvoiceForm: TInvoiceForm
       end
       item
         Name = 'inPriceWithVAT'
-        Value = 'False'
+        Value = False
         Component = edPriceWithVAT
         DataType = ftBoolean
         ParamType = ptInput
@@ -2353,7 +2362,7 @@ object InvoiceForm: TInvoiceForm
       end
       item
         Name = 'PriceWithVAT'
-        Value = 'True'
+        Value = True
         Component = edPriceWithVAT
         DataType = ftBoolean
         MultiSelectSeparator = ','
@@ -2870,7 +2879,7 @@ object InvoiceForm: TInvoiceForm
       end
       item
         Name = 'inIsCalcAmountPartner'
-        Value = 'True'
+        Value = True
         DataType = ftBoolean
         ParamType = ptInput
         MultiSelectSeparator = ','
@@ -3110,6 +3119,7 @@ object InvoiceForm: TInvoiceForm
         DataSummaryItemIndex = 5
       end>
     SearchAsFilter = False
+    PropertiesCellList = <>
     Left = 878
     Top = 201
   end
@@ -3273,7 +3283,7 @@ object InvoiceForm: TInvoiceForm
       end
       item
         Name = 'inisClosed'
-        Value = 'False'
+        Value = False
         Component = edisClosed
         DataType = ftBoolean
         ParamType = ptInputOutput

@@ -18,7 +18,7 @@ RETURNS TABLE (Id Integer, MIId_OrderIncome Integer, InvNumber_OrderIncome TVarC
              , MeasureId Integer, MeasureName TVarChar
              , NameBeforeId Integer, NameBeforeCode Integer, NameBeforeName TVarChar
              , UnitId Integer, UnitCode Integer, UnitName TVarChar
-             , AssetId Integer, AssetCode Integer, AssetName TVarChar
+             , AssetId Integer, AssetCode Integer, AssetName TVarChar, InvNumber TVarChar
              , isErased Boolean
               )
 AS
@@ -218,6 +218,7 @@ BEGIN
            , (CASE WHEN tmpResult.Id > 0 AND tmpResult.AssetId <> tmpResult.AssetId_parent AND tmpResult.AssetId_parent > 0 THEN '??? ' ELSE '' END
            || COALESCE (Object_Asset.ValueData, '')
              ) :: TVarChar AS AssetName
+           , ObjectString_InvNumber.ValueData    AS InvNumber
 
            , tmpResult.isErased
 
@@ -233,7 +234,11 @@ BEGIN
             LEFT JOIN Object AS Object_Measure    ON Object_Measure.Id    = tmpResult.MeasureId
             LEFT JOIN Object AS Object_Unit       ON Object_Unit.Id       = tmpResult.UnitId
             LEFT JOIN Object AS Object_Asset      ON Object_Asset.Id      = tmpResult.AssetId
-            
+
+            LEFT JOIN ObjectString AS ObjectString_InvNumber
+                                   ON ObjectString_InvNumber.ObjectId = CASE WHEN COALESCE (tmpResult.AssetId,0) <> 0 THEN tmpResult.AssetId ELSE tmpResult.GoodsId END
+                                  AND ObjectString_InvNumber.DescId = zc_ObjectString_Asset_InvNumber()
+
             LEFT JOIN Movement AS Movement_OrderIncome ON Movement_OrderIncome.Id = tmpResult.MovementId_OrderIncome
             LEFT JOIN MovementDesc ON MovementDesc.Id = Movement_OrderIncome.DescId
           ;
@@ -245,7 +250,8 @@ $BODY$
 
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
-               Фелонюк И.В.   Кухтин И.В.   Климентьев К.И. 
+               Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
+ 01.10.20         * add zc_ObjectString_Asset_InvNumber
  15.07.16         * 
 */
 

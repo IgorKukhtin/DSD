@@ -70,24 +70,36 @@ BEGIN
                                )
            -- учитываем zc_Object_ContractPartner - т.е. БАЗУ берем только по этим точкам - если они установлены, иначе по всем
          , tmpContractPartner AS (WITH
-                                     -- сохраненные ContractPartner
-                                      tmp1 AS (SELECT ObjectLink_ContractPartner_Contract.ChildObjectId AS ContractId
+                                                 -- сохраненные ContractPartner
+                                     tmp1 AS
+ (SELECT ObjectLink_ContractPartner_Contract.ChildObjectId AS ContractId
                                                     , ObjectLink_ContractPartner_Partner.ChildObjectId  AS PartnerId
                                                     , tmpContract_full.JuridicalId
-                                                    , tmpContract_full.PaidKindId
+                                                    , ObjectLink_ContractCondition_PaidKind.ChildObjectId as PaidKindId_base
+--, tmpContract_full.*
+, tmpContract_full.PaidKindId
                                                FROM ObjectLink AS ObjectLink_ContractPartner_Contract
                                                     INNER JOIN tmpContract_full ON tmpContract_full.ContractId = ObjectLink_ContractPartner_Contract.ChildObjectId
-                                                                               --AND tmpContract_full.PaidKindId <> zc_Enum_PaidKind_FirstForm()
+                                                                               AND tmpContract_full.PaidKindId <> zc_Enum_PaidKind_FirstForm()
 
                                                     LEFT JOIN ObjectLink AS ObjectLink_ContractPartner_Partner
                                                                          ON ObjectLink_ContractPartner_Partner.ObjectId = ObjectLink_ContractPartner_Contract.ObjectId
                                                                         AND ObjectLink_ContractPartner_Partner.DescId = zc_ObjectLink_ContractPartner_Partner()
+          LEFT JOIN ObjectLink AS ObjectLink_ContractCondition_Contract
+                               ON ObjectLink_ContractCondition_Contract.ChildObjectId = ObjectLink_ContractPartner_Contract.ChildObjectId  --ObjectLink_ContractCondition_Contract.ObjectId = Object_ContractCondition.Id
+                              AND ObjectLink_ContractCondition_Contract.DescId = zc_ObjectLink_ContractCondition_Contract()
+          LEFT JOIN ObjectLink AS ObjectLink_ContractCondition_PaidKind
+                               ON ObjectLink_ContractCondition_PaidKind.ObjectId = ObjectLink_ContractCondition_Contract.ObjectId
+                              AND ObjectLink_ContractCondition_PaidKind.DescId = zc_ObjectLink_ContractCondition_PaidKind()
                                                WHERE ObjectLink_ContractPartner_Contract.DescId = zc_ObjectLink_ContractPartner_Contract()
                                                )
+
                                       --  Partner для договоров, для которых нет ContractPartner
                                     , tmp2 AS (SELECT ObjectLink_Contract_Juridical.ObjectId AS ContractId
                                                     , ObjectLink_Partner_Juridical.ObjectId  AS PartnerId
+                                                    , tmpContract_full.JuridicalId
                                                     , tmpContract_full.PaidKindId
+     , tmpContract_full.PaidKindId as PaidKindId_base
                                                FROM tmpContract_full
                                                     LEFT JOIN ObjectLink AS ObjectLink_Contract_Juridical
                                                                          ON ObjectLink_Contract_Juridical.ObjectId = tmpContract_full.ContractId --ObjectLink_Contract_Juridical.ChildObjectId = ObjectLink_Partner_Juridical.ChildObjectId      --  AS JuridicalId-- ObjectLink_Contract_Juridical.ObjectId = Object_Contract_InvNumber_View.ContractId 
@@ -97,19 +109,23 @@ BEGIN
                                                                         AND ObjectLink_Partner_Juridical.DescId = zc_ObjectLink_Partner_Juridical()
                                                    LEFT JOIN (SELECT DISTINCT tmp1.JuridicalId, tmp1.PaidKindId FROM tmp1) AS tmpContract 
                                                                                                           ON tmpContract.JuridicalId = tmpContract_full.JuridicalId
-                                                                                                         AND tmpContract.PaidKindId = tmpContract_full.PaidKindId
+                                                                                                        AND tmpContract.PaidKindId = tmpContract_full.PaidKindId
                                                     --LEFT JOIN (SELECT DISTINCT tmp1.ContractId FROM tmp1) AS tmpContract ON tmpContract.ContractId = tmpContract_full.ContractId --ObjectLink_Contract_Juridical.ObjectId -- ContractId
-                                                WHERE tmpContract.JuridicalId IS NULL
+                                    WHERE tmpContract.JuridicalId IS NULL
                                                 )
 
                                   SELECT tmp1.ContractId
                                        , tmp1.PartnerId
                                        , tmp1.PaidKindId
+                                       , tmp1.JuridicalId
+, tmp1.PaidKindId_base
                                   FROM tmp1
                                 UNION
                                   SELECT tmp2.ContractId
                                        , tmp2.PartnerId
-                                       , tmp2.PaidKindId
+                                      , tmp2.PaidKindId
+                                       , tmp2.JuridicalId
+, tmp2.PaidKindId_base
                                   FROM tmp2
                                   )
 
@@ -450,10 +466,10 @@ BEGIN
                                                      AND ObjectLink_Cash_Branch.DescId = zc_ObjectLink_Cash_Branch()
                                                      AND MIContainer.MovementDescId = zc_Movement_Cash()
 
-                                 LEFT JOIN (SELECT DISTINCT tmpContractPartner.PartnerId, tmpContractPartner.PaidKindId FROM tmpContractPartner
+                                 LEFT JOIN (SELECT DISTINCT tmpContractPartner.PartnerId, tmpContractPartner.PaidKindId_base FROM tmpContractPartner where tmpContractPartner.PaidKindId =  COALESCE (inPaidKindId, 0)
                                            ) AS tmpPartner 
                                              ON tmpPartner.PartnerId = CASE WHEN MIContainer.MovementDescId IN (zc_Movement_BankAccount(),zc_Movement_Cash()) THEN MIContainer.ObjectId_Analyzer ELSE MIContainer.ObjectExtId_Analyzer END
-                                            AND tmpPartner.PaidKindId = tmpContainer.PaidKindId_byBase
+                                            AND tmpPartner.PaidKindId_base = tmpContainer.PaidKindId_byBase
                                  LEFT JOIN Object ON Object.Id = CASE WHEN MIContainer.MovementDescId IN (zc_Movement_BankAccount(),zc_Movement_Cash()) THEN MIContainer.ObjectId_Analyzer ELSE MIContainer.ObjectExtId_Analyzer END
 
                             WHERE MIContainer.DescId = zc_MIContainer_Summ()

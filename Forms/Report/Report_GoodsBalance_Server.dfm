@@ -608,6 +608,22 @@ object Report_GoodsBalance_ServerForm: TReport_GoodsBalance_ServerForm
         Options.Editing = False
         Width = 55
       end
+      object isDateOut: TcxGridDBColumn
+        Caption = #1059#1074#1086#1083#1077#1085
+        DataBinding.FieldName = 'isDateOut'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Options.Editing = False
+        Width = 53
+      end
+      object DateOut: TcxGridDBColumn
+        Caption = #1044#1072#1090#1072' '#1091#1074#1086#1083#1100#1085#1077#1085#1080#1103
+        DataBinding.FieldName = 'DateOut'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Options.Editing = False
+        Width = 80
+      end
       object UnitName_to: TcxGridDBColumn
         Caption = #1055#1086#1076#1088#1072#1079#1076#1077#1083#1077#1085#1080#1077' ('#1080#1085#1092'.)'
         DataBinding.FieldName = 'UnitName_to'
@@ -2342,14 +2358,14 @@ object Report_GoodsBalance_ServerForm: TReport_GoodsBalance_ServerForm
         end
         item
           Name = 'isGoodsKind'
-          Value = 'False'
+          Value = False
           Component = cbGoodsKind
           DataType = ftBoolean
           MultiSelectSeparator = ','
         end
         item
           Name = 'isAmount'
-          Value = 'False'
+          Value = False
           Component = cbAmount
           DataType = ftBoolean
           MultiSelectSeparator = ','
@@ -2675,28 +2691,28 @@ object Report_GoodsBalance_ServerForm: TReport_GoodsBalance_ServerForm
         end
         item
           Name = 'isGoodsKind'
-          Value = 'False'
+          Value = False
           Component = cbGoodsKind
           DataType = ftBoolean
           MultiSelectSeparator = ','
         end
         item
           Name = 'isPartionGoods'
-          Value = 'False'
+          Value = False
           Component = cbPartionGoods
           DataType = ftBoolean
           MultiSelectSeparator = ','
         end
         item
           Name = 'isAmount'
-          Value = 'False'
+          Value = False
           Component = cbAmount
           DataType = ftBoolean
           MultiSelectSeparator = ','
         end
         item
           Name = 'isInfoMoney'
-          Value = 'False'
+          Value = False
           Component = cbInfoMoney
           DataType = ftBoolean
           MultiSelectSeparator = ','
@@ -2773,28 +2789,28 @@ object Report_GoodsBalance_ServerForm: TReport_GoodsBalance_ServerForm
         end
         item
           Name = 'isGoodsKind'
-          Value = 'False'
+          Value = False
           Component = cbGoodsKind
           DataType = ftBoolean
           MultiSelectSeparator = ','
         end
         item
           Name = 'isPartionGoods'
-          Value = 'False'
+          Value = False
           Component = cbPartionGoods
           DataType = ftBoolean
           MultiSelectSeparator = ','
         end
         item
           Name = 'isAmount'
-          Value = 'False'
+          Value = False
           Component = cbAmount
           DataType = ftBoolean
           MultiSelectSeparator = ','
         end
         item
           Name = 'isInfoMoney'
-          Value = 'False'
+          Value = False
           Component = cbInfoMoney
           DataType = ftBoolean
           MultiSelectSeparator = ','
@@ -2871,28 +2887,28 @@ object Report_GoodsBalance_ServerForm: TReport_GoodsBalance_ServerForm
         end
         item
           Name = 'isGoodsKind'
-          Value = 'False'
+          Value = False
           Component = cbGoodsKind
           DataType = ftBoolean
           MultiSelectSeparator = ','
         end
         item
           Name = 'isPartionGoods'
-          Value = 'False'
+          Value = False
           Component = cbPartionGoods
           DataType = ftBoolean
           MultiSelectSeparator = ','
         end
         item
           Name = 'isAmount'
-          Value = 'False'
+          Value = False
           Component = cbAmount
           DataType = ftBoolean
           MultiSelectSeparator = ','
         end
         item
           Name = 'isInfoMoney'
-          Value = 'False'
+          Value = False
           Component = cbInfoMoney
           DataType = ftBoolean
           MultiSelectSeparator = ','
@@ -2989,28 +3005,28 @@ object Report_GoodsBalance_ServerForm: TReport_GoodsBalance_ServerForm
         end
         item
           Name = 'isGoodsKind'
-          Value = 'False'
+          Value = False
           Component = cbGoodsKind
           DataType = ftBoolean
           MultiSelectSeparator = ','
         end
         item
           Name = 'isPartionGoods'
-          Value = 'False'
+          Value = False
           Component = cbPartionGoods
           DataType = ftBoolean
           MultiSelectSeparator = ','
         end
         item
           Name = 'isAmount'
-          Value = 'False'
+          Value = False
           Component = cbAmount
           DataType = ftBoolean
           MultiSelectSeparator = ','
         end
         item
           Name = 'isInfoMoney'
-          Value = 'False'
+          Value = False
           Component = cbInfoMoney
           DataType = ftBoolean
           MultiSelectSeparator = ','
@@ -3166,7 +3182,7 @@ object Report_GoodsBalance_ServerForm: TReport_GoodsBalance_ServerForm
         end
         item
           Name = 'IsPartner'
-          Value = 'TRUE'
+          Value = True
           DataType = ftBoolean
           ParamType = ptInput
           MultiSelectSeparator = ','
@@ -3237,28 +3253,28 @@ object Report_GoodsBalance_ServerForm: TReport_GoodsBalance_ServerForm
         end
         item
           Name = 'isGoodsKind'
-          Value = 'False'
+          Value = False
           Component = cbGoodsKind
           DataType = ftBoolean
           MultiSelectSeparator = ','
         end
         item
           Name = 'isPartionGoods'
-          Value = 'False'
+          Value = False
           Component = cbPartionGoods
           DataType = ftBoolean
           MultiSelectSeparator = ','
         end
         item
           Name = 'isAmount'
-          Value = 'False'
+          Value = False
           Component = cbAmount
           DataType = ftBoolean
           MultiSelectSeparator = ','
         end
         item
           Name = 'isInfoMoney'
-          Value = 'False'
+          Value = False
           Component = cbInfoMoney
           DataType = ftBoolean
           MultiSelectSeparator = ','
@@ -3349,28 +3365,28 @@ object Report_GoodsBalance_ServerForm: TReport_GoodsBalance_ServerForm
         end
         item
           Name = 'isGoodsKind'
-          Value = 'False'
+          Value = False
           Component = cbGoodsKind
           DataType = ftBoolean
           MultiSelectSeparator = ','
         end
         item
           Name = 'isPartionGoods'
-          Value = 'False'
+          Value = False
           Component = cbPartionGoods
           DataType = ftBoolean
           MultiSelectSeparator = ','
         end
         item
           Name = 'isAmount'
-          Value = 'False'
+          Value = False
           Component = cbAmount
           DataType = ftBoolean
           MultiSelectSeparator = ','
         end
         item
           Name = 'isInfoMoney'
-          Value = 'False'
+          Value = False
           Component = cbInfoMoney
           DataType = ftBoolean
           MultiSelectSeparator = ','
@@ -3552,6 +3568,7 @@ object Report_GoodsBalance_ServerForm: TReport_GoodsBalance_ServerForm
       end>
     ColumnEnterList = <>
     SummaryItemList = <>
+    PropertiesCellList = <>
     Left = 456
     Top = 392
   end
