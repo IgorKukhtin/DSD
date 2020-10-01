@@ -17,13 +17,13 @@ DECLARE vbId integer;
 DECLARE vbUserId integer;
 BEGIN
    -- !!!Нельзя вставить штатными средствами потому что не сработает проверка прав!!!
-   vbUserId:=      (SELECT Id FROM Object WHERE DescId = zc_Object_User() AND ValueData ILIKE 'Admin');
+   vbUserId:=      (SELECT Id FROM Object WHERE DescId = zc_Object_User() AND ValueData ILIKE 'Админ');
 
    IF COALESCE (vbUserId, 0) = 0
    THEN
        -- Создаем - Admin
-       vbUserId := lpInsertUpdate_Object (0, zc_Object_User(), 0, 'Admin');
-       PERFORM lpInsertUpdate_ObjectString (zc_ObjectString_User_Password(), vbUserId, 'Admin');
+       vbUserId := lpInsertUpdate_Object (0, zc_Object_User(), 0, 'Админ');
+       PERFORM lpInsertUpdate_ObjectString (zc_ObjectString_User_Password(), vbUserId, 'Админ');
    END IF;
 
    -- для Admin
@@ -48,14 +48,6 @@ BEGIN
    END IF;
 
    
-END $$;
-
-DO $$
-BEGIN
-     -- !!! Типы импорта
-     PERFORM lpInsertUpdate_Object_Enum (inId:= zc_Enum_FileTypeKind_Excel(),  inDescId:= zc_Object_FileTypeKind(), inCode:= 1, inName:= 'Excel', inEnumName:= 'zc_Enum_FileTypeKind_Excel');
-     PERFORM lpInsertUpdate_Object_Enum (inId:= zc_Enum_FileTypeKind_DBF(), inDescId:= zc_Object_FileTypeKind(), inCode:= 2, inName:= 'DBF', inEnumName:= 'zc_Enum_FileTypeKind_DBF');
-
 END $$;
 
 /*

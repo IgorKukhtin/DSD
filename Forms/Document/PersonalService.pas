@@ -191,14 +191,23 @@ type
     ExportXmlGridLevel: TcxGridLevel;
     ExportDS: TDataSource;
     ExportCDS: TClientDataSet;
-    spGet_Export_FileName: TdsdStoredProc;
+    spGet_Export_FileName1: TdsdStoredProc;
     spSelect_Export: TdsdStoredProc;
     actSelect_Export: TdsdExecStoredProc;
     actExport_Grid: TExportGrid;
     actSMTPFile: TdsdSMTPFileAction;
     actExport: TMultiAction;
-    actGet_Export_FileName: TdsdExecStoredProc;
+    actGet_Export_FileNameOld: TdsdExecStoredProc;
     bbExport: TdxBarButton;
+    spSelectExport: TdsdStoredProc;
+    actExportToFileZp: TdsdStoredProcExportToFile;
+    spGet_Export_FileNameZP: TdsdStoredProc;
+    actGet_Export_FileNameZp: TdsdExecStoredProc;
+    actExportZP: TMultiAction;
+    bbExportZP: TdxBarButton;
+    actExport_file: TdsdStoredProcExportToFile;
+    spGet_Export_FileName: TdsdStoredProc;
+    actGet_Export_FileName: TdsdExecStoredProc;
   private
     { Private declarations }
   public

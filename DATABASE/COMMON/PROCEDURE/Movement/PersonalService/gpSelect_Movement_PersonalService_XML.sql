@@ -11,13 +11,15 @@ AS
 $BODY$
    DECLARE vbUserId Integer;
    DECLARE vbMemberId Integer;
+   DECLARE vbSummMinus_MI TFloat;
+   DECLARE vbSummMinus TFloat;
 BEGIN
     -- проверка прав пользователя на вызов процедуры
     -- PERFORM lpCheckRight (inSession, zc_Enum_Process_Select_Movement_Income());
     vbUserId:= lpGetUserBySession (inSession);
 
-  CREATE TEMP TABLE tmpMI_All (OperDate TDateTime, Invnumber TVarChar, MemberId Integer, SummChild TFloat) ON COMMIT DROP;
-     INSERT INTO tmpMI_All (OperDate, Invnumber, MemberId, SummChild)
+  CREATE TEMP TABLE tmpMI_All (OperDate TDateTime, Invnumber TVarChar, MemberId Integer, SummMinus TFloat) ON COMMIT DROP;
+     INSERT INTO tmpMI_All (OperDate, Invnumber, MemberId, SummMinus)
       WITH
           tmpMovement AS (SELECT Movement.Id
                                , Movement.Invnumber
@@ -53,20 +55,26 @@ BEGIN
                                              AND ObjectLink_Personal_Member.DescId = zc_ObjectLink_Personal_Member()
                     )                         
 
-        , tmpMIFloat_SummChild AS (SELECT MovementItemFloat.*
+        , tmpMIFloat_SummMinus AS (SELECT MovementItemFloat.*
                                    FROM MovementItemFloat
                                    WHERE MovementItemFloat.MovementItemId IN (SELECT DISTINCT tmpMI.MovementItemId FROM tmpMI)
-                                     AND MovementItemFloat.DescId = zc_MIFloat_SummChildRecalc()
+                                     AND MovementItemFloat.DescId IN (zc_MIFloat_SummChildRecalc()
+                                                                    , zc_MIFloat_SummFineOthRecalc()
+                                                                    , zc_MIFloat_SummMinusExtRecalc()
+                                                                     )
                                    )
 
         SELECT tmpMI.OperDate
              , tmpMI.Invnumber
-             , tmpMI.MemberId_Personal     AS MemberId
-             , MIFloat_SummChild.ValueData AS MIFloat_SummChild
+             , tmpMI.MemberId_Personal                        AS MemberId
+             , SUM (COALESCE (MIFloat_SummMinus.ValueData,0)) AS SummMinus
         FROM tmpMI
-             LEFT JOIN tmpMIFloat_SummChild AS MIFloat_SummChild
-                                            ON MIFloat_SummChild.MovementItemId = tmpMI.MovementItemId
-         WHERE COALESCE (MIFloat_SummChild.ValueData,0) <> 0
+             LEFT JOIN tmpMIFloat_SummMinus AS MIFloat_SummMinus
+                                            ON MIFloat_SummMinus.MovementItemId = tmpMI.MovementItemId
+        GROUP BY tmpMI.OperDate
+               , tmpMI.Invnumber
+               , tmpMI.MemberId_Personal
+        HAVING SUM (COALESCE (MIFloat_SummMinus.ValueData,0)) <> 0
         ;
         
   CREATE TEMP TABLE tmpMemberMinus (FromId Integer, ToId Integer, ToName TVarChar, Summ TFloat, Summ_all TFloat, BankAccountToId Integer, BankAccountName_to TVarChar, BankAccountFromId Integer, BankAccountName_from TVarChar, BankAccountTo TVarChar,  DetailPayment TVarChar) ON COMMIT DROP;
@@ -98,16 +106,17 @@ BEGIN
         WHERE tmp.FromId IN (SELECT DISTINCT tmpMI_All.MemberId FROM tmpMI_All)
           AND tmp.isErased = FALSE;
 
-   -- проверка сумма итого по документу должна соответствовать сумме по справочнику
-   vbMemberId := (SELECT tmpMI_All.MemberId
-                  FROM tmpMI_All
-                       INNER JOIN (SELECT DISTINCT tmpMemberMinus.FromId, tmpMemberMinus.Summ_all FROM tmpMemberMinus) AS tmpMinus ON tmpMinus.FromId = tmpMI_All.MemberId
-                  WHERE tmpMI_All.SummChild <> tmpMinus.Summ_all
-                  LIMIT 1);
+       -- проверка сумма итого по документу должна соответствовать сумме по справочнику
+       SELECT tmpMI_All.MemberId, tmpMI_All.SummMinus, tmpMinus.Summ_all
+    INTO vbMemberId, vbSummMinus_MI, vbSummMinus
+       FROM tmpMI_All
+            INNER JOIN (SELECT DISTINCT tmpMemberMinus.FromId, tmpMemberMinus.Summ_all FROM tmpMemberMinus) AS tmpMinus ON tmpMinus.FromId = tmpMI_All.MemberId
+       WHERE tmpMI_All.SummMinus <> tmpMinus.Summ_all
+       LIMIT 1;
 
    IF COALESCE (vbMemberId,0) <> 0
    THEN
-        RAISE EXCEPTION 'Ошибка.Для физ. лица <%> сумма удержания по документу не соответствует сумме удержания по стравочнику.', lfGet_Object_ValueData (vbMemberId);
+        RAISE EXCEPTION 'Ошибка.Для физ. лица <%> сумма удержания по документу <%> не соответствует сумме удержания по стравочнику <%>.', lfGet_Object_ValueData (vbMemberId), zfConvert_FloatToString (vbSummMinus_MI), zfConvert_FloatToString (vbSummMinus);
    END IF;
 
   CREATE TEMP TABLE tmpData (AMOUNT           Integer  --Сумма платежа в копейках
@@ -147,7 +156,7 @@ BEGIN
             , 50                                   ::Integer   AS PRIORITY         --Приоритет
             , (lpad (EXTRACT (YEAR FROM tmpMI_All.OperDate)::tvarchar ,4, '0')||lpad (EXTRACT (MONTH FROM tmpMI_All.OperDate)::tvarchar ,2, '0') ||lpad (EXTRACT (DAY FROM tmpMI_All.OperDate)::tvarchar ,2, '0')) ::TVarchar AS DOCUMENTDATE     --Дата документа
             , ''                                   ::TVarChar  AS ADDENTRIES       --Дополнительные реквизиты платежа
-            , '000'                                ::TVarChar  AS PURPOSEPAYMENTID --Код назначения платежа   --????????????????????????????????????????
+            , '002'                                ::TVarChar  AS PURPOSEPAYMENTID --Код назначения платежа   --????????????????????????????????????????
             , Object_Bank_from.MFO                 ::TVarChar  AS BANKID           --Код банка плательщика (МФО)
        FROM tmpMI_All
             INNER JOIN tmpMemberMinus ON tmpMemberMinus.FromId = tmpMI_All.MemberId

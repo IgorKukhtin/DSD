@@ -555,8 +555,8 @@ BEGIN
                                   , 0 :: TFloat                  AS Sum_BonusFact
                                   , 0 :: TFloat                  AS Sum_CheckBonusFact
                                   , 0 :: TFloat                  AS Sum_SaleFact
-                                  , COALESCE (tmpMovement.Sum_Account) AS Sum_Account
-                                  , COALESCE (tmpMovement.Sum_SaleReturnIn) AS Sum_SaleReturnIn
+                                  , COALESCE (tmpMovement.Sum_Account,0)      AS Sum_Account
+                                  , COALESCE (tmpMovement.Sum_SaleReturnIn,0) AS Sum_SaleReturnIn
       
                                   , COALESCE (tmpContract.Comment, '')  AS Comment
                         

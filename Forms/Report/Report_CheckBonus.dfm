@@ -103,7 +103,6 @@ inherited Report_CheckBonusForm: TReport_CheckBonusForm
               Kind = skCount
               Column = JuridicalName
             end>
-          OptionsData.Editing = False
           OptionsView.GroupByBox = True
           Styles.Content = nil
           Styles.Inactive = nil
@@ -116,7 +115,6 @@ inherited Report_CheckBonusForm: TReport_CheckBonusForm
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             HeaderHint = #1055#1077#1088#1077#1085#1077#1089#1090#1080' '#1076#1072#1085#1085#1099#1077' '#1074' '#1078#1091#1088#1085#1072#1083' '#1044#1072'/'#1053#1077#1090
-            Options.Editing = False
             Width = 93
           end
           object ContractStateKindName_child: TcxGridDBColumn
@@ -165,6 +163,7 @@ inherited Report_CheckBonusForm: TReport_CheckBonusForm
             DataBinding.FieldName = 'OperDatePartner'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
+            Options.Editing = False
             Width = 60
           end
           object InvNumber_master: TcxGridDBColumn
@@ -180,6 +179,7 @@ inherited Report_CheckBonusForm: TReport_CheckBonusForm
             DataBinding.FieldName = 'InvNumber_child'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
+            Options.Editing = False
             Width = 60
           end
           object InvNumber_find: TcxGridDBColumn
@@ -187,6 +187,7 @@ inherited Report_CheckBonusForm: TReport_CheckBonusForm
             DataBinding.FieldName = 'InvNumber_find'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
+            Options.Editing = False
             Width = 85
           end
           object BranchName: TcxGridDBColumn
@@ -194,18 +195,21 @@ inherited Report_CheckBonusForm: TReport_CheckBonusForm
             DataBinding.FieldName = 'BranchName'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
+            Options.Editing = False
             Width = 74
           end
           object JuridicalName: TcxGridDBColumn
             Caption = #1070#1088#1080#1076#1080#1095#1077#1089#1082#1086#1077' '#1083#1080#1094#1086
             DataBinding.FieldName = 'JuridicalName'
             HeaderAlignmentVert = vaCenter
+            Options.Editing = False
             Width = 104
           end
           object ConditionKindName: TcxGridDBColumn
             Caption = #1059#1089#1083#1086#1074#1080#1077' '#1076#1086#1075#1086#1074#1086#1088#1072
             DataBinding.FieldName = 'ConditionKindName'
             HeaderAlignmentVert = vaCenter
+            Options.Editing = False
             Width = 75
           end
           object Value: TcxGridDBColumn
@@ -259,24 +263,28 @@ inherited Report_CheckBonusForm: TReport_CheckBonusForm
             DataBinding.FieldName = 'BonusKindName'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
+            Options.Editing = False
             Width = 50
           end
           object InfoMoneyName_master: TcxGridDBColumn
             Caption = #1059#1055' '#1089#1090#1072#1090#1100#1103' '#1085#1072#1079#1085#1072#1095#1077#1085#1080#1103
             DataBinding.FieldName = 'InfoMoneyName_master'
             HeaderAlignmentVert = vaCenter
+            Options.Editing = False
             Width = 89
           end
           object InfoMoneyName_child: TcxGridDBColumn
             Caption = #1059#1055' '#1089#1090#1072#1090#1100#1103' '#1085#1072#1079#1085#1072#1095#1077#1085#1080#1103' ('#1073#1072#1079#1072')'
             DataBinding.FieldName = 'InfoMoneyName_child'
             Visible = False
+            Options.Editing = False
             Width = 80
           end
           object InfoMoneyName_find: TcxGridDBColumn
             Caption = #1059#1055' '#1089#1090#1072#1090#1100#1103' '#1085#1072#1079#1085#1072#1095#1077#1085#1080#1103' ('#1085#1072#1095#1080#1089#1083#1077#1085#1080#1077')'
             DataBinding.FieldName = 'InfoMoneyName_find'
             HeaderAlignmentVert = vaCenter
+            Options.Editing = False
             Width = 151
           end
           object PaidKindName: TcxGridDBColumn
@@ -333,6 +341,7 @@ inherited Report_CheckBonusForm: TReport_CheckBonusForm
             Properties.ReadOnly = True
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
+            Options.Editing = False
             Width = 80
           end
           object Sum_SaleReturnIn: TcxGridDBColumn
@@ -346,6 +355,7 @@ inherited Report_CheckBonusForm: TReport_CheckBonusForm
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             HeaderHint = #1055#1088#1086#1076#1072#1078#1072' - '#1074#1086#1079#1074#1088#1072#1090
+            Options.Editing = False
             Width = 80
           end
           object Sum_Account: TcxGridDBColumn
@@ -358,6 +368,7 @@ inherited Report_CheckBonusForm: TReport_CheckBonusForm
             Visible = False
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
+            Options.Editing = False
             Width = 80
           end
           object Sum_Bonus: TcxGridDBColumn
@@ -369,6 +380,7 @@ inherited Report_CheckBonusForm: TReport_CheckBonusForm
             Properties.ReadOnly = True
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
+            Options.Editing = False
             Width = 80
           end
           object Sum_BonusFact: TcxGridDBColumn
@@ -380,6 +392,7 @@ inherited Report_CheckBonusForm: TReport_CheckBonusForm
             Properties.ReadOnly = True
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
+            Options.Editing = False
             Width = 80
           end
           object Sum_CheckBonusFact: TcxGridDBColumn
@@ -390,6 +403,7 @@ inherited Report_CheckBonusForm: TReport_CheckBonusForm
             Properties.DisplayFormat = ',0.####;-,0.####; ;'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
+            Options.Editing = False
             Width = 80
           end
           object Sum_SaleFact: TcxGridDBColumn
@@ -400,6 +414,7 @@ inherited Report_CheckBonusForm: TReport_CheckBonusForm
             Properties.DisplayFormat = ',0.####;-,0.####; ;'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
+            Options.Editing = False
             Width = 80
           end
           object Comment: TcxGridDBColumn
@@ -407,6 +422,7 @@ inherited Report_CheckBonusForm: TReport_CheckBonusForm
             DataBinding.FieldName = 'Comment'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
+            Options.Editing = False
             Width = 90
           end
           object DescName_Movement: TcxGridDBColumn
@@ -414,6 +430,7 @@ inherited Report_CheckBonusForm: TReport_CheckBonusForm
             DataBinding.FieldName = 'DescName_Movement'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
+            Options.Editing = False
             Width = 80
           end
           object InvNumber_Movement: TcxGridDBColumn
@@ -421,6 +438,7 @@ inherited Report_CheckBonusForm: TReport_CheckBonusForm
             DataBinding.FieldName = 'InvNumber_Movement'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
+            Options.Editing = False
             Width = 73
           end
           object OperDate_Movement: TcxGridDBColumn
@@ -428,6 +446,7 @@ inherited Report_CheckBonusForm: TReport_CheckBonusForm
             DataBinding.FieldName = 'OperDate_Movement'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
+            Options.Editing = False
             Width = 70
           end
         end
@@ -880,6 +899,18 @@ inherited Report_CheckBonusForm: TReport_CheckBonusForm
         #1057#1092#1086#1088#1084#1080#1088#1086#1074#1072#1090#1100' '#1076#1086#1082#1091#1084#1077#1085#1090#1099' <'#1053#1072#1095#1080#1089#1083#1077#1085#1080#1103' '#1087#1086' '#1073#1086#1085#1091#1089#1072#1084' ('#1088#1072#1089#1093#1086#1076#1099' '#1073#1091#1076#1091#1097#1080#1093' '#1087 +
         #1077#1088#1080#1086#1076#1086#1074')> '#1080#1079' '#1075#1088#1080#1076#1072
       ImageIndex = 27
+    end
+    object actUpdateDataSet: TdsdUpdateDataSet
+      Category = 'DSDLib'
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      StoredProc = spUpdateSend
+      StoredProcList = <
+        item
+          StoredProc = spUpdateSend
+        end>
+      Caption = 'actUpdateDataSet'
+      DataSource = MasterDS
     end
   end
   inherited MasterDS: TDataSource
@@ -1412,5 +1443,63 @@ inherited Report_CheckBonusForm: TReport_CheckBonusForm
     PackSize = 1
     Left = 312
     Top = 224
+  end
+  object spUpdateSend: TdsdStoredProc
+    StoredProcName = 'gpInsertUpdate_Object_ReportBonus'
+    DataSets = <>
+    OutputType = otResult
+    Params = <
+      item
+        Name = 'ioId'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'ReportBonusId'
+        ParamType = ptInputOutput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inMonth'
+        Value = 42370d
+        Component = deEnd
+        DataType = ftDateTime
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inJuridicalId'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'JuridicalId'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inPartnerId'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'PartnerId'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inisSend'
+        Value = True
+        Component = MasterCDS
+        ComponentItem = 'isSend'
+        DataType = ftBoolean
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'outisSend'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'isSend'
+        DataType = ftBoolean
+        MultiSelectSeparator = ','
+      end>
+    PackSize = 1
+    Left = 504
+    Top = 248
   end
 end

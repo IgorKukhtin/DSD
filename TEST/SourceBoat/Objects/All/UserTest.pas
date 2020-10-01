@@ -14,7 +14,7 @@ type
   private
     function InsertDefault: integer; override;
   public
-    function InsertUpdateUser(const Id, Code: integer; UserName, Password : string; MemberId: Integer): integer;
+    function InsertUpdateUser(const Id, Code: integer; UserName, Password, PrinterName : string; MemberId: Integer): integer;
     constructor Create; override;
   end;
 
@@ -35,17 +35,18 @@ end;
 
 function TUser.InsertDefault: integer;
 begin
-  result := InsertUpdateUser(0, -2, 'UserName', 'Password', 0);
+  result := InsertUpdateUser(0, -2, 'UserName', 'Password', 'PrinterName', 0);
   inherited;
 end;
 
-function TUser.InsertUpdateUser(const Id, Code: integer; UserName, Password: string; MemberId: Integer): integer;
+function TUser.InsertUpdateUser(const Id, Code: integer; UserName, Password, PrinterName: string; MemberId: Integer): integer;
 begin
   FParams.Clear;
   FParams.AddParam('ioId', ftInteger, ptInputOutput, Id);
   FParams.AddParam('inCode', ftInteger, ptInput, Code);
   FParams.AddParam('inUserName', ftString, ptInput, UserName);
   FParams.AddParam('inPassword', ftString, ptInput, Password);
+  FParams.AddParam('inPrinterName', ftString, ptInput, PrinterName);
   FParams.AddParam('inMemberId', ftInteger, ptInput, MemberId);
   FParams.AddParam('inUnitId', ftInteger, ptInput, 0);
   result := InsertUpdate(FParams);

@@ -18,6 +18,7 @@ CREATE OR REPLACE FUNCTION gpReport_GoodsBalance_Server(
 RETURNS TABLE (AccountGroupName TVarChar, AccountDirectionName TVarChar
              , AccountId Integer, AccountCode Integer, AccountName TVarChar, AccountName_All TVarChar
              , LocationDescName TVarChar, LocationId Integer, LocationCode Integer, LocationName TVarChar
+             , DateOut TDateTime, isDateOut Boolean,UnitName_Location TVarChar, PositionName_Location TVarChar
              , CarCode Integer, CarName TVarChar
              , GoodsGroupId Integer, GoodsGroupName TVarChar, GoodsGroupNameFull TVarChar
              , GoodsCode_basis Integer, GoodsName_basis TVarChar
@@ -1271,6 +1272,8 @@ BEGIN
       , tmpPersonal AS (SELECT lfSelect.MemberId
                              , lfSelect.UnitId
                              , lfSelect.PositionId
+                             , lfSelect.DateOut
+                             , lfSelect.isDateOut
                         FROM lfSelect_Object_Member_findPersonal (inSession) AS lfSelect
                        )
 
@@ -1295,6 +1298,7 @@ BEGIN
                                      )
 
 
+ 
      -- !!!–≈«”Ћ№“ј“!!!
      SELECT View_Account.AccountGroupName, View_Account.AccountDirectionName
           , View_Account.AccountId, View_Account.AccountCode, View_Account.AccountName, View_Account.AccountName_all
@@ -1302,6 +1306,10 @@ BEGIN
           , CAST (COALESCE(Object_Location.Id, 0) AS Integer)             AS LocationId
           , Object_Location.ObjectCode     AS LocationCode
           , CAST (COALESCE(Object_Location.ValueData,'') AS TVarChar)     AS LocationName
+          , CASE WHEN tmpPersonal.isDateOut = TRUE THEN tmpPersonal.DateOut ELSE NULL END :: TDateTime AS DateOut
+          , COALESCE (tmpPersonal.isDateOut, FALSE)  ::Boolean AS isDateOut
+          , Object_Unit_Location.ValueData     ::TVarChar AS UnitName_Location
+          , Object_Position_Location.ValueData ::TVarChar AS PositionName_Location
           , Object_Car.ObjectCode          AS CarCode
           , Object_Car.ValueData           AS CarName
           , Object_GoodsGroup.Id           AS GoodsGroupId
@@ -1536,7 +1544,11 @@ BEGIN
         LEFT JOIN Object AS Object_Location ON Object_Location.Id = tmpResult.LocationId
         LEFT JOIN Object AS Object_Car ON Object_Car.Id = tmpResult.LocationId
         LEFT JOIN ObjectDesc ON ObjectDesc.Id = Object_Location.DescId -- Object_Location_find.DescId
-
+  
+        -- данные по сотрудникам, если место учета физ лицо   
+       /* LEFT JOIN tmpPersonal ON tmpPersonal.MemberId = tmpResult.LocationId
+                             AND Object_Location.DescId = zc_Object_Member()
+*/
         LEFT JOIN ObjectLink AS ObjectLink_Goods_GoodsGroup
                              ON ObjectLink_Goods_GoodsGroup.ObjectId = Object_Goods.Id
                             AND ObjectLink_Goods_GoodsGroup.DescId = zc_ObjectLink_Goods_GoodsGroup()
@@ -1595,6 +1607,9 @@ BEGIN
         LEFT JOIN tmpPersonal ON tmpPersonal.MemberId = Object_Location.Id
         LEFT JOIN Object AS Object_Unit_to ON Object_Unit_to.Id = COALESCE (tmpPersonal.UnitId, ObjectLink_Car_Unit.ChildObjectId)
 
+        LEFT JOIN Object AS Object_Unit_Location ON Object_Unit_Location.Id = tmpPersonal.UnitId
+        LEFT JOIN Object AS Object_Position_Location ON Object_Position_Location.Id = tmpPersonal.PositionId
+        
         LEFT JOIN tmpGoodsByGoodsKindParam ON tmpGoodsByGoodsKindParam.GoodsId = tmpResult.GoodsId
                                           AND COALESCE (tmpGoodsByGoodsKindParam.GoodsKindId, 0) = COALESCE (tmpResult.GoodsKindId, 0)
       WHERE tmpResult.CountReal <> 0

@@ -13,15 +13,20 @@ type
 
 implementation
 
-uses UtilConst, TestFramework;
+uses zLibUtil, UtilConst, TestFramework;
 
 { ОбщиеПроцедурыОбъектов }
 
 procedure TView.ProcedureLoad;
 begin
+  ExecFile(ViewPath + 'Object\ObjectLink_UserRole_View.sql', ZQuery);
+  ExecFile(ViewPath + 'Object\Object_Role_Process_View.sql', ZQuery);
+  ExecFile(ViewPath + 'Object\Object_RoleAccessKey_View.sql', ZQuery);
+  ExecFile(ViewPath + 'Object\ObjectLink_RoleAction_View.sql', ZQuery);
+  ExecFile(ViewPath + 'Object\Object_Personal_View.sql', ZQuery);
 
-  ScriptDirectory := ViewPath;
-  inherited;
+//  ScriptDirectory := ViewPath;
+//  inherited;
 //  ScriptDirectory := LocalViewPath;
 //  inherited;
 end;

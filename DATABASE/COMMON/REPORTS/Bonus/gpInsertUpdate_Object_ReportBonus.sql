@@ -21,6 +21,26 @@ BEGIN
 
     outisSend := inisSend;
     
+    --пробуем найти, вдруг уже есть элемент
+    IF COALESCE (ioId,0) = 0
+    THEN
+        ioId := (SELECT Object_ReportBonus.Id
+                 FROM Object AS Object_ReportBonus
+                      INNER JOIN ObjectDate AS ObjectDate_Month
+                                           ON ObjectDate_Month.ObjectId = Object_ReportBonus.Id
+                                          AND ObjectDate_Month.DescId = zc_Object_ReportBonus_Month()
+                                          AND ObjectDate_Month.ValueData =  DATE_TRUNC ('Month', inMonth)
+                      INNER JOIN ObjectLink AS ObjectLink_Juridical
+                                            ON ObjectLink_Juridical.ObjectId = Object_ReportBonus.Id
+                                           AND ObjectLink_Juridical.DescId = zc_ObjectLink_ReportBonus_Juridical()
+                                           AND ObjectLink_Juridical.ChildObjectId = inJuridicalId
+                      LEFT JOIN ObjectLink AS ObjectLink_Partner
+                                           ON ObjectLink_Partner.ObjectId = Object_ReportBonus.Id
+                                          AND ObjectLink_Partner.DescId = zc_ObjectLink_ReportBonus_Partner()
+                 WHERE Object_ReportBonus.DescId = zc_Object_ReportBonus()
+                   AND (ObjectLink_Partner.ChildObjectId = inPartnerId OR inPartnerId = 0));
+    END IF;
+    
     --Если isSend =True и до этого был сохранен - нужно установить отметку на удаление = true
     IF COALESCE (ioId,0) <> 0 AND inisSend = True
     THEN 

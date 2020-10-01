@@ -1,29 +1,29 @@
 inherited PersonalServiceJournalForm: TPersonalServiceJournalForm
   Caption = #1046#1091#1088#1085#1072#1083' '#1076#1086#1082#1091#1084#1077#1085#1090#1086#1074' <'#1042#1077#1076#1086#1084#1086#1089#1090#1100' '#1085#1072#1095#1080#1089#1083#1077#1085#1080#1103' '#1079#1072#1088#1087#1083#1072#1090#1099'>'
-  ClientHeight = 404
+  ClientHeight = 433
   ClientWidth = 1221
   AddOnFormData.RefreshAction = actRefreshStart
   AddOnFormData.ExecuteDialogAction = ExecuteDialog
   ExplicitWidth = 1237
-  ExplicitHeight = 442
+  ExplicitHeight = 471
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
     Width = 1221
-    Height = 347
+    Height = 376
     TabOrder = 3
     ExplicitWidth = 1221
-    ExplicitHeight = 347
-    ClientRectBottom = 347
+    ExplicitHeight = 376
+    ClientRectBottom = 376
     ClientRectRight = 1221
     inherited tsMain: TcxTabSheet
       ExplicitWidth = 1221
-      ExplicitHeight = 347
+      ExplicitHeight = 376
       inherited cxGrid: TcxGrid
         Width = 1221
-        Height = 347
+        Height = 376
         ExplicitWidth = 1221
-        ExplicitHeight = 347
+        ExplicitHeight = 376
         inherited cxGridDBTableView: TcxGridDBTableView
           DataController.Filter.Options = [fcoCaseInsensitive, fcoShowOperatorDescription]
           DataController.Filter.TranslateBetween = True
@@ -947,27 +947,32 @@ inherited PersonalServiceJournalForm: TPersonalServiceJournalForm
   inherited ActionList: TActionList
     Left = 23
     Top = 194
-    object actExport: TMultiAction [0]
+    object actExportZP: TMultiAction [0]
       Category = 'Export'
       MoveParams = <>
       ActionList = <
         item
-          Action = actGet_Export_FileName
+          Action = actGet_Export_FileNameZp
         end
         item
-          Action = actExportToFile
+          Action = actExportToFileZp
         end>
-      Caption = #1069#1082#1089#1087#1086#1088#1090' '#1074' '#1041#1072#1085#1082
-      Hint = #1069#1082#1089#1087#1086#1088#1090' '#1074#1077#1076#1086#1084#1086#1089#1090#1080' '#1076#1083#1103' "'#1042#1054#1057#1058#1054#1050'" '#1080#1083#1080' "'#1054#1058#1055'"'
+      Caption = 
+        #1069#1082#1089#1087#1086#1088#1090' '#1074#1077#1076#1086#1084#1086#1089#1090#1080' '#1085#1072#1095#1080#1089#1083#1077#1085#1080#1103' '#1047#1055' '#1085#1072' '#1082#1072#1088#1090#1086#1095#1082#1091' '#1076#1083#1103' "'#1042#1054#1057#1058#1054#1050'" '#1080#1083#1080' "'#1054#1058 +
+        #1055'"'
+      Hint = 
+        #1069#1082#1089#1087#1086#1088#1090' '#1074#1077#1076#1086#1084#1086#1089#1090#1080' '#1085#1072#1095#1080#1089#1083#1077#1085#1080#1103' '#1047#1055' '#1085#1072' '#1082#1072#1088#1090#1086#1095#1082#1091' '#1076#1083#1103' "'#1042#1054#1057#1058#1054#1050'" '#1080#1083#1080' "'#1054#1058 +
+        #1055'"'
+      ImageIndex = 30
     end
-    object actGet_Export_FileName: TdsdExecStoredProc [1]
+    object actGet_Export_FileNameZp: TdsdExecStoredProc [1]
       Category = 'Export'
       MoveParams = <>
       PostDataSetBeforeExecute = False
-      StoredProc = spGet_Export_FileName
+      StoredProc = spGet_Export_FileNameZP
       StoredProcList = <
         item
-          StoredProc = spGet_Export_FileName
+          StoredProc = spGet_Export_FileNameZP
         end>
       Caption = 'actGet_Export_Email'
     end
@@ -1216,12 +1221,14 @@ inherited PersonalServiceJournalForm: TPersonalServiceJournalForm
       Caption = 'ExportGrid1'
       OpenAfterCreate = False
     end
-    object actExportToFile: TdsdStoredProcExportToFile
+    object actExportToFileZp: TdsdStoredProcExportToFile
       Category = 'Export'
       MoveParams = <>
       dsdStoredProcName = spSelectExport
       FileExt = '.txt'
       FilenamePrefix = 'Vostok_'
+      Left = 1192
+      Top = 216
     end
     object actRefreshStart: TdsdDataSetRefresh
       Category = 'DSDLib'
@@ -1268,7 +1275,7 @@ inherited PersonalServiceJournalForm: TPersonalServiceJournalForm
         end
         item
           Name = 'IsPartnerDate'
-          Value = 'False'
+          Value = False
           Component = cbIsServiceDate
           DataType = ftBoolean
           ParamType = ptInput
@@ -1346,6 +1353,89 @@ inherited PersonalServiceJournalForm: TPersonalServiceJournalForm
       Hint = #1054#1090#1084#1077#1085#1080#1090#1100' '#1101#1083#1077#1082#1090#1088#1086#1085#1085#1091#1102' '#1087#1086#1076#1087#1080#1089#1100' '#1042#1089#1077#1084' '#1076#1086#1082#1091#1084#1077#1085#1090#1072#1084
       ImageIndex = 52
     end
+    object actGet_Export_FileName: TdsdExecStoredProc
+      Category = 'Export_file'
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      StoredProc = spGet_Export_FileName
+      StoredProcList = <
+        item
+          StoredProc = spGet_Export_FileName
+        end>
+      Caption = 'actGet_Export_FileName'
+    end
+    object actSMTPFile: TdsdSMTPFileAction
+      Category = 'Export_file'
+      MoveParams = <>
+      Host.Value = Null
+      Host.ComponentItem = 'Host'
+      Host.DataType = ftString
+      Host.MultiSelectSeparator = ','
+      Port.Value = 25
+      Port.ComponentItem = 'Port'
+      Port.DataType = ftString
+      Port.MultiSelectSeparator = ','
+      UserName.Value = Null
+      UserName.ComponentItem = 'UserName'
+      UserName.DataType = ftString
+      UserName.MultiSelectSeparator = ','
+      Password.Value = Null
+      Password.ComponentItem = 'Password'
+      Password.DataType = ftString
+      Password.MultiSelectSeparator = ','
+      Body.Value = Null
+      Body.ComponentItem = 'Body'
+      Body.DataType = ftString
+      Body.MultiSelectSeparator = ','
+      Subject.Value = Null
+      Subject.ComponentItem = 'Subject'
+      Subject.DataType = ftString
+      Subject.MultiSelectSeparator = ','
+      FromAddress.Value = Null
+      FromAddress.ComponentItem = 'AddressFrom'
+      FromAddress.DataType = ftString
+      FromAddress.MultiSelectSeparator = ','
+      ToAddress.Value = Null
+      ToAddress.ComponentItem = 'AddressTo'
+      ToAddress.DataType = ftString
+      ToAddress.MultiSelectSeparator = ','
+    end
+    object actExport_Grid: TExportGrid
+      Category = 'Export_file'
+      MoveParams = <>
+      ExportType = cxegExportToText
+      Caption = 'actExport_Grid'
+      OpenAfterCreate = False
+      DefaultFileName = 'PersonalService_Child'
+      DefaultFileExt = 'XML'
+      EncodingANSI = True
+    end
+    object actExport: TMultiAction
+      Category = 'Export_file'
+      MoveParams = <>
+      ActionList = <
+        item
+          Action = actGet_Export_FileName
+        end
+        item
+          Action = actExport_file
+        end>
+      QuestionBeforeExecute = 
+        #1044#1077#1081#1089#1090#1074#1080#1090#1077#1083#1100#1085#1086' '#1074#1099#1075#1088#1091#1079#1080#1090#1100' '#1091#1076#1077#1088#1078#1072#1085#1080#1103' '#1076#1083#1103' '#1082#1083#1080#1077#1085#1090'-'#1073#1072#1085#1082#1072' '#1074' '#1101#1083#1077#1082#1090#1088#1086#1085#1085#1099#1081 +
+        ' '#1076#1086#1082#1091#1084#1077#1085#1090'?'
+      InfoAfterExecute = #1069#1083#1077#1082#1090#1088#1086#1085#1085#1099#1081' '#1076#1086#1082#1091#1084#1077#1085#1090' '#1091#1076#1077#1088#1078#1072#1085#1080#1081' '#1091#1089#1087#1077#1096#1085#1086' '#1089#1092#1086#1088#1084#1080#1088#1086#1074#1072#1085
+      Caption = #1042#1099#1075#1088#1091#1079#1080#1090#1100' '#1074' '#1092#1072#1081#1083' '#1091#1076#1077#1088#1078#1072#1085#1080#1103' '#1076#1083#1103' '#1082#1083#1080#1077#1085#1090'-'#1073#1072#1085#1082#1072
+      Hint = #1042#1099#1075#1088#1091#1079#1080#1090#1100' '#1074' '#1092#1072#1081#1083' '#1091#1076#1077#1088#1078#1072#1085#1080#1103' '#1076#1083#1103' '#1082#1083#1080#1077#1085#1090'-'#1073#1072#1085#1082#1072
+      ImageIndex = 53
+    end
+    object actExport_file: TdsdStoredProcExportToFile
+      Category = 'Export_file'
+      MoveParams = <>
+      dsdStoredProcName = spSelect_Export
+      FileExt = '.xml'
+      Left = 1208
+      Top = 176
+    end
   end
   inherited MasterDS: TDataSource
     Left = 64
@@ -1383,7 +1473,7 @@ inherited PersonalServiceJournalForm: TPersonalServiceJournalForm
       end
       item
         Name = 'inIsServiceDate'
-        Value = 'False'
+        Value = False
         Component = cbIsServiceDate
         DataType = ftBoolean
         ParamType = ptInput
@@ -1515,6 +1605,14 @@ inherited PersonalServiceJournalForm: TPersonalServiceJournalForm
         item
           BeginGroup = True
           Visible = True
+          ItemName = 'bbExportZp'
+        end
+        item
+          Visible = True
+          ItemName = 'dxBarStatic'
+        end
+        item
+          Visible = True
           ItemName = 'bbExport'
         end>
     end
@@ -1553,8 +1651,8 @@ inherited PersonalServiceJournalForm: TPersonalServiceJournalForm
       Visible = ivAlways
       ImageIndex = 21
     end
-    object bbExport: TdxBarButton
-      Action = actExport
+    object bbExportZp: TdxBarButton
+      Action = actExportZP
       Category = 0
     end
     object bbPrint_All: TdxBarButton
@@ -1572,6 +1670,10 @@ inherited PersonalServiceJournalForm: TPersonalServiceJournalForm
     end
     object bbPrint_Detail: TdxBarButton
       Action = actPrint_Detail
+      Category = 0
+    end
+    object bbExport: TdxBarButton
+      Action = actExport
       Category = 0
     end
   end
@@ -1724,7 +1826,7 @@ inherited PersonalServiceJournalForm: TPersonalServiceJournalForm
       end
       item
         Name = 'inisShowAll'
-        Value = 'FALSE'
+        Value = False
         DataType = ftBoolean
         ParamType = ptInput
         MultiSelectSeparator = ','
@@ -1777,14 +1879,14 @@ inherited PersonalServiceJournalForm: TPersonalServiceJournalForm
         MultiSelectSeparator = ','
       end>
     PackSize = 1
-    Left = 141
-    Top = 181
+    Left = 485
+    Top = 357
   end
   object ExportCDS: TClientDataSet
     Aggregates = <>
     Params = <>
-    Left = 88
-    Top = 192
+    Left = 80
+    Top = 200
   end
   object JuridicalBasisGuides: TdsdGuides
     KeyField = 'Id'
@@ -1813,8 +1915,8 @@ inherited PersonalServiceJournalForm: TPersonalServiceJournalForm
         ParamType = ptInput
         MultiSelectSeparator = ','
       end>
-    Left = 855
-    Top = 8
+    Left = 967
+    Top = 32
   end
   object spGet_UserJuridicalBasis: TdsdStoredProc
     StoredProcName = 'gpGet_User_JuridicalBasis'
@@ -1837,10 +1939,10 @@ inherited PersonalServiceJournalForm: TPersonalServiceJournalForm
         MultiSelectSeparator = ','
       end>
     PackSize = 1
-    Left = 744
-    Top = 32
+    Left = 752
+    Top = 88
   end
-  object spGet_Export_FileName: TdsdStoredProc
+  object spGet_Export_FileNameZP: TdsdStoredProc
     StoredProcName = 'gpGet_Movement_Export_FileName'
     DataSets = <>
     OutputType = otResult
@@ -1856,7 +1958,7 @@ inherited PersonalServiceJournalForm: TPersonalServiceJournalForm
       item
         Name = 'outFileNamePrefix'
         Value = Null
-        Component = actExportToFile
+        Component = actExportToFileZp
         ComponentItem = 'FileNamePrefix'
         DataType = ftString
         MultiSelectSeparator = ','
@@ -1864,7 +1966,7 @@ inherited PersonalServiceJournalForm: TPersonalServiceJournalForm
       item
         Name = 'outFileExt'
         Value = Null
-        Component = actExportToFile
+        Component = actExportToFileZp
         ComponentItem = 'FileExt'
         DataType = ftString
         MultiSelectSeparator = ','
@@ -1895,7 +1997,7 @@ inherited PersonalServiceJournalForm: TPersonalServiceJournalForm
       end
       item
         Name = 'inisShowAll'
-        Value = 'TRUE'
+        Value = True
         DataType = ftBoolean
         ParamType = ptInput
         MultiSelectSeparator = ','
@@ -1919,7 +2021,7 @@ inherited PersonalServiceJournalForm: TPersonalServiceJournalForm
       end
       item
         Name = 'inisSign'
-        Value = 'True'
+        Value = True
         DataType = ftBoolean
         ParamType = ptInput
         MultiSelectSeparator = ','
@@ -1943,7 +2045,7 @@ inherited PersonalServiceJournalForm: TPersonalServiceJournalForm
       end
       item
         Name = 'inisSign'
-        Value = 'False'
+        Value = False
         DataType = ftBoolean
         ParamType = ptInput
         MultiSelectSeparator = ','
@@ -1974,7 +2076,7 @@ inherited PersonalServiceJournalForm: TPersonalServiceJournalForm
       end
       item
         Name = 'inisShowAll'
-        Value = 'TRUE'
+        Value = True
         DataType = ftBoolean
         ParamType = ptInput
         MultiSelectSeparator = ','
@@ -1982,5 +2084,66 @@ inherited PersonalServiceJournalForm: TPersonalServiceJournalForm
     PackSize = 1
     Left = 527
     Top = 201
+  end
+  object spGet_Export_FileName: TdsdStoredProc
+    StoredProcName = 'gpGet_PersonalService_FileName'
+    DataSets = <>
+    OutputType = otResult
+    Params = <
+      item
+        Name = 'inMovementId'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'Id'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'outFileName'
+        Value = Null
+        Component = actExport_file
+        ComponentItem = 'FileName'
+        DataType = ftString
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'outDefaultFileExt'
+        Value = Null
+        Component = actExport_file
+        ComponentItem = 'FileExt'
+        DataType = ftString
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'outFileNamePrefix'
+        Value = Null
+        Component = actExport_file
+        ComponentItem = 'FileNamePrefix'
+        DataType = ftString
+        MultiSelectSeparator = ','
+      end>
+    PackSize = 1
+    Left = 992
+    Top = 168
+  end
+  object spSelect_Export: TdsdStoredProc
+    StoredProcName = 'gpSelect_Movement_PersonalService_XML'
+    DataSet = ExportCDS
+    DataSets = <
+      item
+        DataSet = ExportCDS
+      end>
+    Params = <
+      item
+        Name = 'inMovementId'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'Id'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end>
+    PackSize = 1
+    Left = 1104
+    Top = 176
   end
 end

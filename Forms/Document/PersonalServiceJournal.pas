@@ -24,7 +24,8 @@ uses
   dxSkinOffice2010Blue, dxSkinOffice2010Silver, dxSkinPumpkin, dxSkinSeven,
   dxSkinSevenClassic, dxSkinSharp, dxSkinSharpPlus, dxSkinSilver,
   dxSkinSpringTime, dxSkinStardust, dxSkinSummer2008, dxSkinTheAsphaltWorld,
-  dxSkinValentine, dxSkinVS2010, dxSkinWhiteprint, dxSkinXmas2008Blue;
+  dxSkinValentine, dxSkinVS2010, dxSkinWhiteprint, dxSkinXmas2008Blue,
+  dsdInternetAction;
 
 type
   TPersonalServiceJournalForm = class(TAncestorJournalForm)
@@ -65,17 +66,17 @@ type
     actExportTXTVostokSelect: TdsdExecStoredProc;
     FileDialogAction1: TFileDialogAction;
     ExportGrid1: TExportGrid;
-    bbExport: TdxBarButton;
-    actExportToFile: TdsdStoredProcExportToFile;
+    bbExportZp: TdxBarButton;
+    actExportToFileZp: TdsdStoredProcExportToFile;
     cxLabel27: TcxLabel;
     edJuridicalBasis: TcxButtonEdit;
     JuridicalBasisGuides: TdsdGuides;
     spGet_UserJuridicalBasis: TdsdStoredProc;
     actRefreshStart: TdsdDataSetRefresh;
     ExecuteDialog: TExecuteDialog;
-    actExport: TMultiAction;
-    actGet_Export_FileName: TdsdExecStoredProc;
-    spGet_Export_FileName: TdsdStoredProc;
+    actExportZP: TMultiAction;
+    actGet_Export_FileNameZp: TdsdExecStoredProc;
+    spGet_Export_FileNameZP: TdsdStoredProc;
     TotalSummNalog: TcxGridDBColumn;
     TotalSummNalogRecalc: TcxGridDBColumn;
     spSelectPrint_All: TdsdStoredProc;
@@ -97,6 +98,14 @@ type
     bbPrint_Detail: TdxBarButton;
     TotalSummFineOth: TcxGridDBColumn;
     TotalSummHospOth: TcxGridDBColumn;
+    spGet_Export_FileName: TdsdStoredProc;
+    spSelect_Export: TdsdStoredProc;
+    actGet_Export_FileName: TdsdExecStoredProc;
+    actSMTPFile: TdsdSMTPFileAction;
+    actExport_Grid: TExportGrid;
+    actExport: TMultiAction;
+    bbExport: TdxBarButton;
+    actExport_file: TdsdStoredProcExportToFile;
   private
     { Private declarations }
   public

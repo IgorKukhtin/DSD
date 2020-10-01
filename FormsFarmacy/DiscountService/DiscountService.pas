@@ -886,7 +886,7 @@ begin
 
       //если Штрих-код нашелся и программа Здоровье от Байер card
       else
-      if (gCode = 4) and (gUserName <> '') then
+      if (gCode in [4, 10]) and (gUserName <> '') then
       begin
         CheckCDS.First;
         while not CheckCDS.Eof do
@@ -932,7 +932,10 @@ begin
               RESTRequest.AddParameter('token', gExternalUnit, TRESTRequestParameterKind.pkGETorPOST);
               RESTRequest.AddParameter('request_format', 'xml', TRESTRequestParameterKind.pkGETorPOST);
               RESTRequest.AddParameter('response_format', 'xml', TRESTRequestParameterKind.pkGETorPOST);
-              RESTRequest.AddParameter('project_id', '3', TRESTRequestParameterKind.pkGETorPOST);
+              case gCode of
+                4  : RESTRequest.AddParameter('project_id', '3', TRESTRequestParameterKind.pkGETorPOST);
+                10 : RESTRequest.AddParameter('project_id', '4', TRESTRequestParameterKind.pkGETorPOST);
+              end;
               RESTRequest.AddParameter('data', '<?xml version="1.0"?>'+
                                                '<request><Operation>2</Operation>'+
                                                        '<PharmCard>' + gUserName + '</PharmCard>'+
@@ -1285,7 +1288,7 @@ begin
       then lPriceSale:= CheckCDS.FieldByName('PriceSale').asFloat
       else lPriceSale:= CheckCDS.FieldByName('Price').asFloat;
       //
-      if (lDiscountExternalId > 0) and ((gCode = 1) or (gCode = 2) and (gUserName <> '') or (gCode in [3, 4, 5, 6, 7, 8, 9])) and
+      if (lDiscountExternalId > 0) and ((gCode = 1) or (gCode = 2) and (gUserName <> '') or (gCode in [3, 4, 5, 6, 7, 8, 9, 10])) and
          (CheckCDS.FieldByName('Amount').AsFloat > 0)
       then
         //поиск Штрих-код
@@ -1674,6 +1677,7 @@ begin
                     + #10+ #13 + 'Товар (' + CheckCDS.FieldByName('GoodsCode').AsString + ')' + CheckCDS.FieldByName('GoodsName').AsString);
                     //ошибка
                   lMsg:='Error';
+                  FIdCasual := '';
                   exit;
                 end;
               end;
@@ -1754,8 +1758,8 @@ begin
                     exit;
                   end;
 
-                end;
-              end;
+                end else FIdCasual := '';
+              end else FIdCasual := '';
 
             except
                   ShowMessage ('Ошибка проверки возможности продажи.' + #10+ #13
@@ -1763,6 +1767,7 @@ begin
                   + #10+ #13 + 'Товар (' + CheckCDS.FieldByName('GoodsCode').AsString + ')' + CheckCDS.FieldByName('GoodsName').AsString);
                   //ошибка
                   lMsg:='Error';
+                  FIdCasual := '';
                   exit;
             end;
             //finally
@@ -1778,7 +1783,7 @@ begin
       end
 
       //если Штрих-код нашелся и программа Здоровье от Байер card
-      else   if (BarCode_find <> '') and (gCode = 4) and (gUserName <> '') then
+      else   if (BarCode_find <> '') and (gCode in [4, 10]) and (gUserName <> '') then
       begin
 
           //получение кода дистрибьюторов
@@ -1806,7 +1811,10 @@ begin
               RESTRequest.AddParameter('token', gExternalUnit, TRESTRequestParameterKind.pkGETorPOST);
               RESTRequest.AddParameter('request_format', 'xml', TRESTRequestParameterKind.pkGETorPOST);
               RESTRequest.AddParameter('response_format', 'xml', TRESTRequestParameterKind.pkGETorPOST);
-              RESTRequest.AddParameter('project_id', '3', TRESTRequestParameterKind.pkGETorPOST);
+              case gCode of
+                4  : RESTRequest.AddParameter('project_id', '3', TRESTRequestParameterKind.pkGETorPOST);
+                10 : RESTRequest.AddParameter('project_id', '4', TRESTRequestParameterKind.pkGETorPOST);
+              end;
               RESTRequest.AddParameter('data', '<?xml version="1.0"?>'+
                                                '<request><Operation>1</Operation>'+
                                                        '<PharmCard>' + gUserName + '</PharmCard>'+
@@ -1879,7 +1887,11 @@ begin
                   else if AnsiLowerCase(OperationResult) = 'not_patient_card' then OperationResult := 'Указанная карта не является картой пациента.'
                   else if AnsiLowerCase(OperationResult) = 'drug_limit' then OperationResult := 'Превышен лимит покупок по карте.'
                   else if AnsiLowerCase(OperationResult) = 'no_today_price' then OperationResult := 'Не установлена цена на препарат в личном кабинете аптеки.'
-                  else if AnsiLowerCase(OperationResult) = 'no_db_or_drug_link' then OperationResult := 'Дистрибьютор не назначен аптеке, либо препарат не назначен дистрибьютору. Продажа не возможна..';
+                  else if AnsiLowerCase(OperationResult) = 'no_db_or_drug_link' then OperationResult := 'Дистрибьютор не назначен аптеке, либо препарат не назначен дистрибьютору. Продажа не возможна..'
+                  else if AnsiLowerCase(OperationResult) = 'patient_not_registered' then OperationResult := 'Пациент еще не зарегистрирован в программе..'
+                  else if AnsiLowerCase(OperationResult) = 'high_price' then OperationResult := 'Превышен лимит по цене..'
+                  else if AnsiLowerCase(OperationResult) = 'low_price' then OperationResult := 'Превышен лимит по цене..'
+                  else if AnsiLowerCase(OperationResult) = 'no_patient_drug' then OperationResult := 'Данный препарат не доступен этому пациенту..';
                   ShowMessage ('Ошибка проверки возможности продажи.' + #10+ #13
                     + #10+ #13 + 'Ошибка <' + OperationResult + '>.'
                     + #10+ #13 + 'Для карты № <' + lCardNumber + '>.'

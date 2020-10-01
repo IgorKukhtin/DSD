@@ -13,18 +13,16 @@ type
     procedure CreateDataBase;
     procedure CreateType;
     procedure CreateObject;
-    procedure CreateObjectGoodsItem;
     procedure CreateObjectPartionGoods;
-    procedure CreateObjectGoodsPrint;
     procedure CreateContainer;
-    procedure CreateObjectCost;
+    //procedure CreateObjectCost;
     procedure CreateFunctionsForIndex;
     procedure CreateMovement;
     procedure CreateMovementItem;
     procedure CreateMovementItemContainer;
     procedure CreateHistory;
     procedure CreateProtocol;
-    procedure CreatePeriodClose;
+    //procedure CreatePeriodClose;
     procedure CreateLoad;
     procedure UpdateStructure;
 //    procedure CreateIndexes; // пустой скрипт
@@ -168,35 +166,25 @@ begin
   ExecFile(StructurePath + 'Object\ObjectLink.sql', ZQuery);
 end;
 
-procedure TdbCreateStructureTest.CreateObjectCost;
-begin
-  ExecFile(StructurePath + 'ObjectCost\ObjectCostDesc.sql', ZQuery);
-  ExecFile(StructurePath + 'ObjectCost\ObjectCostLinkDesc.sql', ZQuery);
-  ExecFile(StructurePath + 'ObjectCost\ObjectCostLink.sql', ZQuery);
-  ExecFile(StructurePath + 'ObjectCost\ContainerObjectCost.sql', ZQuery);
-  ExecFile(StructurePath + 'ObjectCost\HistoryCost.sql', ZQuery);
-  ExecFile(StructurePath + 'ObjectCost\ObjectCostSEQUENCE.sql', ZQuery);
-end;
-
-procedure TdbCreateStructureTest.CreateObjectGoodsItem;
-begin
-  ExecFile(StructurePath + 'ObjectGoodsItem - !!!\ObjectGoodsItem.sql', ZQuery);
-end;
+//procedure TdbCreateStructureTest.CreateObjectCost;
+//begin
+//  ExecFile(StructurePath + 'ObjectCost\ObjectCostDesc.sql', ZQuery);
+//  ExecFile(StructurePath + 'ObjectCost\ObjectCostLinkDesc.sql', ZQuery);
+//  ExecFile(StructurePath + 'ObjectCost\ObjectCostLink.sql', ZQuery);
+//  ExecFile(StructurePath + 'ObjectCost\ContainerObjectCost.sql', ZQuery);
+//  ExecFile(StructurePath + 'ObjectCost\HistoryCost.sql', ZQuery);
+//  ExecFile(StructurePath + 'ObjectCost\ObjectCostSEQUENCE.sql', ZQuery);
+//end;
 
 procedure TdbCreateStructureTest.CreateObjectPartionGoods;
 begin
- ExecFile(StructurePath + 'ObjectPartionGoods - !!!\ObjectPartionGoods.sql', ZQuery);
+ ExecFile(StructurePath + 'Object_PartionGoods - !!!\Object_PartionGoods.sql', ZQuery);
 end;
 
-procedure TdbCreateStructureTest.CreateObjectGoodsPrint;
-begin
-  ExecFile(StructurePath + 'ObjectGoodsPrint - !!!\ObjectGoodsPrint.sql', ZQuery);
-end;
-
-procedure TdbCreateStructureTest.CreatePeriodClose;
-begin
-  ExecFile(StructurePath + 'PeriodClose\PeriodClose.sql', ZQuery);
-end;
+//procedure TdbCreateStructureTest.CreatePeriodClose;
+//begin
+//  ExecFile(StructurePath + 'PeriodClose\PeriodClose.sql', ZQuery);
+//end;
 
 procedure TdbCreateStructureTest.CreateProtocol;
 begin

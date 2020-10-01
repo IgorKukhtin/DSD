@@ -5,6 +5,21 @@ interface
 uses TestFramework, ZConnection, ZDataset;
 
 type
+  TdbCommonMetaDataTest = class (TTestCase)
+  private
+    ZConnection: TZConnection;
+    ZQuery: TZQuery;
+  protected
+    // подготавливаем данные для тестирования
+    procedure SetUp; override;
+    // возвращаем данные для тестирования
+    procedure TearDown; override;
+  published
+    // Очередность важна - по алфавиту не ставить!!!
+    procedure CreateObjectDescFunction;
+  end;
+
+type
   TdbMetaDataTest = class (TTestCase)
   private
     ZConnection: TZConnection;
@@ -27,6 +42,7 @@ type
 
 var
   MetadataPath: string = '..\DATABASE\Boat\METADATA\';
+  CommonMetadataPath: string = '..\DATABASE\COMMON\METADATA\';
 
 implementation
 
@@ -110,7 +126,36 @@ begin
   ZQuery.Free;
 end;
 
+{ TdbCommonMetaDataTest }
+
+procedure TdbCommonMetaDataTest.CreateObjectDescFunction;
+begin
+  ExecFile(CommonMetadataPath + 'Object\CreateObjectDescFunction.sql', ZQuery);
+  ExecFile(CommonMetadataPath + 'Object\CreateObjectStringDescFunction.sql', ZQuery);
+  ExecFile(CommonMetadataPath + 'Object\CreateObjectLinkDescFunction.sql', ZQuery);
+  ExecFile(CommonMetadataPath + 'Object\CreateObjectBLOBDescFunction.sql', ZQuery);
+  ExecFile(CommonMetadataPath + 'Object\CreateObjectFloatDescFunction.sql', ZQuery);
+  ExecFile(CommonMetadataPath + 'Object\CreateObjectBooleanDescFunction.sql', ZQuery);
+  ExecFile(CommonMetadataPath + 'Object\CreateObjectDateDescFunction.sql', ZQuery);
+end;
+
+procedure TdbCommonMetaDataTest.SetUp;
+begin
+  inherited;
+  ZConnection := TConnectionFactory.GetConnection;
+  ZQuery := TZQuery.Create(nil);
+  ZQuery.Connection := ZConnection;
+end;
+
+procedure TdbCommonMetaDataTest.TearDown;
+begin
+  inherited;
+  ZConnection.Free;
+  ZQuery.Free;
+end;
+
 initialization
+  TestFramework.RegisterTest('Метаданные', TdbCommonMetaDataTest.Suite);
   TestFramework.RegisterTest('Метаданные', TdbMetaDataTest.Suite);
 
 end.
