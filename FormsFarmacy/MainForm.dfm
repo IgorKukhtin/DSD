@@ -3929,6 +3929,17 @@ inherited MainForm: TMainForm
       GuiParams = <>
       isShowModal = False
     end
+    object actReport_TwoVendorBindings: TdsdOpenForm
+      Category = #1057#1087#1088#1072#1074#1086#1095#1085#1080#1082#1080
+      MoveParams = <>
+      Caption = #1050' '#1086#1076#1085#1086#1084#1091' '#1090#1086#1074#1072#1088#1091' '#1087#1086#1089#1090#1072#1074#1097#1080#1082#1072' '#1085#1077#1089#1082#1086#1083#1100#1082#1086' '#1086#1089#1085#1086#1074#1085#1099#1093' '#1090#1086#1074#1072#1088#1086#1074
+      FormName = 'TReport_TwoVendorBindingsForm'
+      FormNameParam.Value = 'TReport_TwoVendorBindingsForm'
+      FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
+      GuiParams = <>
+      isShowModal = False
+    end
   end
   inherited UserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn
     Left = 496
@@ -3999,6 +4010,12 @@ inherited MainForm: TMainForm
         end
         object miGoodsRetailTab_Error: TMenuItem
           Action = actGoodsRetailTab_Error
+        end
+        object N258: TMenuItem
+          Caption = '-'
+        end
+        object N259: TMenuItem
+          Action = actReport_TwoVendorBindings
         end
       end
       object miAdditionalGoods: TMenuItem

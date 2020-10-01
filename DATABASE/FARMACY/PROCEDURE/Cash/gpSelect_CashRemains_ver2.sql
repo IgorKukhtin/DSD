@@ -39,7 +39,9 @@ RETURNS TABLE (Id Integer, GoodsId_main Integer, GoodsGroupName TVarChar, GoodsN
                GoodsPairSunId Integer, GoodsPairSunMainId Integer,
                AmountSendIn TFloat,
                NotTransferTime boolean,
-               NDSKindId Integer
+               NDSKindId Integer,
+               isPresent boolean,
+               LoyaltyPresentId Integer
 
              , PartionDateKindId_check   Integer
              , Price_check               TFloat
@@ -530,7 +532,7 @@ BEGIN
                                                                        ON MovementBoolean_Deferred.MovementId = Movement.Id
                                                                       AND MovementBoolean_Deferred.DescId = zc_MovementBoolean_Deferred()
                                                                       AND MovementBoolean_Deferred.ValueData = TRUE
-                                                                      
+
                                             INNER JOIN MovementLinkObject AS MovementLinkObject_To
                                                                           ON MovementLinkObject_To.MovementId = Movement.Id
                                                                          AND MovementLinkObject_To.DescId = zc_MovementLinkObject_To()
@@ -539,12 +541,12 @@ BEGIN
                  , tmpDeferredSendIn AS (SELECT Container.ObjectId                  AS GoodsId
                                               , SUM(- MovementItemContainer.Amount) AS Amount
                                          FROM tmpMovementSend AS Movement
-               
+
                                               INNER JOIN MovementItemContainer ON MovementItemContainer.MovementId = Movement.Id
                                                                               AND MovementItemContainer.DescId = zc_Container_Count()
-               
+
                                               INNER JOIN Container ON Container.Id = MovementItemContainer.ContainerId
-                                                
+
                                          GROUP BY Container.ObjectId
                                        )
 
@@ -572,7 +574,7 @@ BEGIN
                                               LEFT JOIN Object AS Object_Object ON Object_Object.Id = ObjectLink_BarCode_Object.ChildObjectId
 
                                               LEFT JOIN ObjectBoolean AS ObjectBoolean_GoodsForProject
-                                                                      ON ObjectBoolean_GoodsForProject.ObjectId = Object_Object.Id 
+                                                                      ON ObjectBoolean_GoodsForProject.ObjectId = Object_Object.Id
                                                                      AND ObjectBoolean_GoodsForProject.DescId = zc_ObjectBoolean_DiscountExternal_GoodsForProject()
                                           WHERE Object_BarCode.DescId = zc_Object_BarCode()
                                             AND Object_BarCode.isErased = False)
@@ -590,6 +592,44 @@ BEGIN
                                        FROM Object_Goods_Retail
                                        WHERE COALESCE (Object_Goods_Retail.GoodsPairSunId, 0) <> 0
                                          AND Object_Goods_Retail.RetailId = 4)
+                 , tmpLoyaltyPresent AS (SELECT Movement.Id
+                                         FROM Movement
+
+                                              INNER JOIN MovementLinkObject AS MovementLinkObject_Retail
+                                                                            ON MovementLinkObject_Retail.MovementId = Movement.Id
+                                                                           AND MovementLinkObject_Retail.DescId = zc_MovementLinkObject_Retail()
+                                                                           AND MovementLinkObject_Retail.ObjectId = vbRetailId
+
+                                              LEFT JOIN MovementDate AS MovementDate_StartSale
+                                                                     ON MovementDate_StartSale.MovementId = Movement.Id
+                                                                    AND MovementDate_StartSale.DescId = zc_MovementDate_StartSale()
+                                              LEFT JOIN MovementDate AS MovementDate_EndSale
+                                                                     ON MovementDate_EndSale.MovementId = Movement.Id
+                                                                    AND MovementDate_EndSale.DescId = zc_MovementDate_EndSale()
+
+                                              LEFT JOIN MovementItem ON MovementItem.MovementId = Movement.Id
+                                                                    AND MovementItem.DescId = zc_MI_Child()
+                                                                    AND MovementItem.Amount = 1
+                                                                    AND MovementItem.isErased = FALSE
+                                                                    AND MovementItem.ObjectId = vbUnitId
+
+                                         WHERE Movement.DescId = zc_Movement_LoyaltyPresent()
+                                           AND Movement.StatusId = zc_Enum_Status_Complete()
+                                           AND MovementDate_StartSale.ValueData <= CURRENT_DATE
+                                           AND MovementDate_EndSale.ValueData >= CURRENT_DATE
+                                           AND (COALESCE(MovementItem.Id, 0) <> 0 OR NOT EXISTS(SELECT 1 FROM MovementItem
+                                                                                                WHERE MovementItem.MovementId = Movement.Id
+                                                                                                  AND MovementItem.DescId = zc_MI_Child()
+                                                                                                  AND MovementItem.Amount = 1
+                                                                                                  AND MovementItem.isErased = FALSE)))
+                 , tmpLoyaltyPresentList AS (SELECT MovementItem.ObjectId               AS GoodsMainID
+                                                  , MAX(Movement.Id)                    AS LoyaltyPresentID
+                                             FROM tmpLoyaltyPresent AS Movement
+                                                  LEFT JOIN MovementItem ON MovementItem.MovementId = Movement.Id
+                                                                        AND MovementItem.DescId = zc_MI_Master()
+                                                                        AND MovementItem.Amount = 1
+                                                                        AND MovementItem.isErased = FALSE
+                                             GROUP BY MovementItem.ObjectId)
 
 
 
@@ -785,7 +825,7 @@ BEGIN
             Object_PartionDateKind.Name                        AS PartionDateKindName,
             NULLIF (CashSessionSnapShot.DivisionPartiesId, 0)  AS DivisionPartiesId,
             Object_DivisionParties.ValueData                   AS DivisionPartiesName,
-            COALESCE (ObjectBoolean_BanFiscalSale.ValueData, False) 
+            COALESCE (ObjectBoolean_BanFiscalSale.ValueData, False)
               AND NOT Object_Goods_Main.isExceptionUKTZED      AS isBanFiscalSale,
             CASE WHEN vbDividePartionDate = False
               THEN
@@ -850,15 +890,17 @@ BEGIN
           , Object_Goods_PairSun.ID                                AS GoodsPairSunId
           , Object_Goods_PairSun_Main.GoodsPairSunId               AS GoodsPairSunMainId
 
-          , tmpDeferredSendIn.Amount :: TFloat                                   AS AmountSendIn 
+          , tmpDeferredSendIn.Amount :: TFloat                                   AS AmountSendIn
           , COALESCE (ObjectBoolean_Goods_NotTransferTime.ValueData, False)      AS NotTransferTime
           , COALESCE(CashSessionSnapShot.NDSKindId, Object_Goods_Main.NDSKindId) AS NDSKindId
+          , Object_Goods_Main.isPresent                                          AS isPresent
+          , tmpLoyaltyPresentList.LoyaltyPresentID                               AS LoyaltyPresentId
 
           , CashSessionSnapShot.PartionDateKindId   AS PartionDateKindId_check
           , CashSessionSnapShot.Price               AS Price_check
           , CashSessionSnapShot.PriceWithVAT        AS PriceWithVAT_check
           , CashSessionSnapShot.PartionDateDiscount AS PartionDateDiscount_check
-          
+
          FROM
             CashSessionSnapShot
             INNER JOIN Object AS Goods ON Goods.Id = CashSessionSnapShot.ObjectId
@@ -953,8 +995,10 @@ BEGIN
            -- Коды UKTZED
            LEFT JOIN tmpGoodsUKTZED ON tmpGoodsUKTZED.GoodsMainId = Object_Goods_Retail.GoodsMainId
                                    AND tmpGoodsUKTZED.Ord = 1
-                                   
+
            LEFT JOIN tmpDeferredSendIn ON tmpDeferredSendIn.GoodsId = CashSessionSnapShot.ObjectId
+
+           LEFT JOIN tmpLoyaltyPresentList ON tmpLoyaltyPresentList.GoodsMainID = Object_Goods_Main.Id
 
         WHERE
             CashSessionSnapShot.CashSessionId = inCashSessionId

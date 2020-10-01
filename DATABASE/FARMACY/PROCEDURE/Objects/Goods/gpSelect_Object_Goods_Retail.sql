@@ -44,6 +44,7 @@ RETURNS TABLE (Id Integer, GoodsMainId Integer, Code Integer, IdBarCode TVarChar
              , isInvisibleSUN boolean
              , isSupplementSUN1 boolean
              , isExceptionUKTZED boolean
+             , isPresent boolean
               ) AS
 $BODY$
   DECLARE vbUserId Integer;
@@ -324,6 +325,7 @@ BEGIN
            , Object_Goods_Main.isInvisibleSUN                                    AS isInvisibleSUN
            , Object_Goods_Main.isSupplementSUN1                                  AS isSupplementSUN1
            , Object_Goods_Main.isExceptionUKTZED                                 AS isExceptionUKTZED
+           , Object_Goods_Main.isPresent                                         AS isPresent
       FROM Object_Goods_Retail
 
            LEFT JOIN Object_Goods_Main ON Object_Goods_Main.Id = Object_Goods_Retail.GoodsMainId

@@ -932,12 +932,16 @@ end;
 
 procedure TLoadFormTest.LoadReportFormTest;
 begin
+
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_TwoVendorBindingsForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TReport_TwoVendorBindingsForm');
+
+{
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_ResortsByLotForm'));
   TdsdFormStorageFactory.GetStorage.Load('TReport_ResortsByLotForm');
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_ResortsByLotDialogForm'));
   TdsdFormStorageFactory.GetStorage.Load('TReport_ResortsByLotDialogForm');
 
-  {
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_ArrivalWithoutSalesForm'));
   TdsdFormStorageFactory.GetStorage.Load('TReport_ArrivalWithoutSalesForm');
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_ArrivalWithoutSalesDialogForm'));
