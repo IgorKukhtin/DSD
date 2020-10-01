@@ -779,9 +779,15 @@ INSERT INTO ObjectBooleanDesc (DescId, Code, ItemName)
   SELECT zc_Object_GoodsQuality(), 'zc_ObjectBoolean_GoodsQuality_Klipsa', 'Клипсованный товар(да/нет)' WHERE NOT EXISTS (SELECT * FROM ObjectBooleanDesc WHERE Code = 'zc_ObjectBoolean_GoodsQuality_Klipsa');
 
 
+CREATE OR REPLACE FUNCTION zc_ObjectBoolean_Goods_Present() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM ObjectBooleanDesc WHERE Code = 'zc_ObjectBoolean_Goods_Present'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
+INSERT INTO ObjectBooleanDesc (DescId, Code, ItemName)
+  SELECT zc_Object_Goods(), 'zc_ObjectBoolean_Goods_Present', 'Подарок' WHERE NOT EXISTS (SELECT * FROM ObjectBooleanDesc WHERE Code = 'zc_ObjectBoolean_Goods_Present');
+
+
 /*-------------------------------------------------------------------------------
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.  Воробкало А.А.  Ярошенко Р.Ф.   Подмогильный В.В.   Шаблий О.В.
+ 01.10.20                                                                                                          * zc_ObjectBoolean_Goods_Present 
  23.09.20         * zc_ObjectBoolean_GoodsQuality_Klipsa
  22.09.20                                                                                                          * zc_ObjectBoolean_Goods_ExceptionUKTZED 
  15.09.20                                                                                                          * zc_ObjectBoolean_CommentSun_LostPositions 

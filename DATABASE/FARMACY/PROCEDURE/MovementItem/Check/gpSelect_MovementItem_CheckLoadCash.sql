@@ -49,6 +49,10 @@ AS
 $BODY$
   DECLARE vbUserId Integer;
   DECLARE vbUnitId Integer;
+  DECLARE vbDate_6 TDateTime;
+  DECLARE vbDate_3 TDateTime;
+  DECLARE vbDate_1 TDateTime;
+  DECLARE vbDate_0 TDateTime;
 BEGIN
 
      -- проверка прав пользователя на вызов процедуры
@@ -63,32 +67,75 @@ BEGIN
                                       AND MovementLinkObject_Unit.DescId = zc_MovementLinkObject_Unit()
      WHERE Movement.Id = inMovementId;
 
+     -- значения для разделения по срокам
+     SELECT Date_6, Date_3, Date_1, Date_0
+     INTO vbDate_6, vbDate_3, vbDate_1, vbDate_0
+     FROM lpSelect_PartionDateKind_SetDate ();
+
      -- Правим НДС если надо
      PERFORM lpInsertUpdate_MovementItemLinkObject (zc_MILinkObject_NDSKind(), T1.Id, T1.NDSKindId)
            , lpInsertUpdate_MovementItemLinkObject (zc_MILinkObject_DivisionParties(), T1.Id, COALESCE (T1.DivisionPartiesId, 0))
+           , lpInsertUpdate_MovementItemLinkObject (zc_MILinkObject_PartionDateKind(), T1.Id, COALESCE (T1.PartionDateKindId, 0))
      FROM (WITH
          tmpMI AS (SELECT MovementItem.*
+                        , COALESCE(MILinkObject_PartionDateKind.ObjectId, 0)  AS PartionDateKindId
                         , COALESCE(MILinkObject_DivisionParties.ObjectId, 0)  AS DivisionPartiesID
                    FROM MovementItem_Check_View AS MovementItem
                    
+                        LEFT JOIN MovementItemLinkObject AS MILinkObject_PartionDateKind
+                                                         ON MILinkObject_PartionDateKind.MovementItemId = MovementItem.Id
+                                                        AND MILinkObject_PartionDateKind.DescId         = zc_MILinkObject_PartionDateKind()
+                                                        
                         LEFT JOIN MovementItemLinkObject AS MILinkObject_DivisionParties
                                                          ON MILinkObject_DivisionParties.MovementItemId = MovementItem.Id
                                                         AND MILinkObject_DivisionParties.DescId         = zc_MILinkObject_DivisionParties()
                                                         
                    WHERE MovementItem.MovementId = inMovementId
                    )
+       , tmpContainerPD AS (SELECT Container.ParentId
+                                 , CASE WHEN ObjectDate_ExpirationDate.ValueData <= vbDate_0 AND
+                                             COALESCE (ObjectBoolean_PartionGoods_Cat_5.ValueData, FALSE) = TRUE
+                                                                                              THEN zc_Enum_PartionDateKind_Cat_5()  -- 5 кат (просрочка без наценки)
+                                        WHEN ObjectDate_ExpirationDate.ValueData <= vbDate_0  THEN zc_Enum_PartionDateKind_0()      -- просрочено
+                                        WHEN ObjectDate_ExpirationDate.ValueData <= vbDate_1  THEN zc_Enum_PartionDateKind_1()      -- Меньше 1 месяца
+                                        WHEN ObjectDate_ExpirationDate.ValueData <= vbDate_3  THEN zc_Enum_PartionDateKind_3()      -- Меньше 1 месяца
+                                        WHEN ObjectDate_ExpirationDate.ValueData <= vbDate_6  THEN zc_Enum_PartionDateKind_6()      -- Меньше 6 месяца
+                                        ELSE  zc_Enum_PartionDateKind_Good() END  AS PartionDateKindId                              -- Востановлен с просрочки
+                                 , Container.Amount
+                            FROM (SELECT DISTINCT tmpMI.GoodsId FROM tmpMI) AS tmp
+
+                                  INNER JOIN Container ON Container.ObjectId = tmp.GoodsId
+                                                      AND Container.DescId = zc_Container_CountPartionDate()
+                                                      AND Container.Amount <> 0
+                                                      AND Container.WhereObjectId = vbUnitId
+
+                                 LEFT JOIN ContainerLinkObject ON ContainerLinkObject.ContainerId = Container.Id
+                                                              AND ContainerLinkObject.DescId = zc_ContainerLinkObject_PartionGoods()
+                                                              
+                                                              
+                                 LEFT JOIN ObjectDate AS ObjectDate_ExpirationDate
+                                                      ON ObjectDate_ExpirationDate.ObjectId = ContainerLinkObject.ObjectId  
+                                                     AND ObjectDate_ExpirationDate.DescId = zc_ObjectDate_PartionGoods_Value()
+                                 LEFT JOIN ObjectBoolean AS ObjectBoolean_PartionGoods_Cat_5
+                                                         ON ObjectBoolean_PartionGoods_Cat_5.ObjectId = ContainerLinkObject.ObjectId  
+                                                        AND ObjectBoolean_PartionGoods_Cat_5.DescID = zc_ObjectBoolean_PartionGoods_Cat_5()
+                            
+                             )
        , tmpContainerAll AS (SELECT Container.ObjectId
                                   , CASE WHEN COALESCE (MovementBoolean_UseNDSKind.ValueData, FALSE) = FALSE
                                            OR COALESCE(MovementLinkObject_NDSKind.ObjectId, 0) = 0
                                     THEN Object_Goods.NDSKindId ELSE MovementLinkObject_NDSKind.ObjectId END  AS NDSKindId
+                                  , COALESCE(tmpContainerPD.PartionDateKindId, 0)                             AS PartionDateKindId
                                   , COALESCE(ContainerLinkObject_DivisionParties.ObjectId, 0)                 AS DivisionPartiesId
-                                  , Container.Amount
+                                  , COALESCE(tmpContainerPD.Amount,  Container.Amount)                        AS Amount
                              FROM (SELECT DISTINCT tmpMI.GoodsId FROM tmpMI) AS tmp
 
-                                   INNER JOIN Container ON Container.ObjectId = tmp.GoodsId
-                                                       AND Container.DescId = zc_Container_Count()
-                                                       AND Container.Amount <> 0
-                                                       AND Container.WhereObjectId = vbUnitId
+                                  INNER JOIN Container ON Container.ObjectId = tmp.GoodsId
+                                                      AND Container.DescId = zc_Container_Count()
+                                                      AND Container.Amount <> 0
+                                                      AND Container.WhereObjectId = vbUnitId
+                                                       
+                                  LEFT JOIN tmpContainerPD ON tmpContainerPD.ParentId = Container.Id
 
                                   LEFT JOIN ContainerlinkObject AS CLO_MovementItem
                                                                 ON CLO_MovementItem.Containerid = Container.Id
@@ -117,15 +164,18 @@ BEGIN
                              )
        , tmpContainer AS (SELECT Container.ObjectId
                                , Container.NDSKindId
+                               , Container.PartionDateKindId
                                , Container.DivisionPartiesId
                                , SUM(Container.Amount) AS Amount
                           FROM tmpContainerAll AS Container
                           GROUP BY Container.ObjectId
                                  , Container.NDSKindId
+                                 , Container.PartionDateKindId
                                  , Container.DivisionPartiesId
                           )
        , tmpContainerOrd AS (SELECT Container.ObjectId
                                   , Container.NDSKindId
+                                  , Container.PartionDateKindId
                                   , Container.DivisionPartiesId
                                   , Container.Amount
                                   , COALESCE (ObjectFloat_NDSKind_NDS.ValueData, 0) AS NDS 
@@ -139,6 +189,7 @@ BEGIN
            SELECT
                  MovementItem.Id
                , tmpContainerOrd.NDSKindId 
+               , tmpContainerOrd.PartionDateKindId 
                , tmpContainerOrd.DivisionPartiesId 
            FROM tmpMI AS MovementItem
 
@@ -153,6 +204,11 @@ BEGIN
                         OR (COALESCE(tmpContainerOrd.Amount, 0) < MovementItem.Amount)
                       THEN MovementItem.NDSKindId 
                       ELSE tmpContainerOrd.NDSKindId END  <> MovementItem.NDSKindId 
+              OR CASE WHEN (COALESCE(MovementItem.Amount, 0) <= 0)
+                        OR (COALESCE(tmpContainer.Amount, 0) >= MovementItem.Amount)
+                        OR (COALESCE(tmpContainerOrd.Amount, 0) < MovementItem.Amount)
+                      THEN MovementItem.PartionDateKindId 
+                      ELSE tmpContainerOrd.PartionDateKindId END  <> MovementItem.PartionDateKindId
               OR CASE WHEN (COALESCE(MovementItem.Amount, 0) <= 0)
                         OR (COALESCE(tmpContainer.Amount, 0) >= MovementItem.Amount)
                         OR (COALESCE(tmpContainerOrd.Amount, 0) < MovementItem.Amount)

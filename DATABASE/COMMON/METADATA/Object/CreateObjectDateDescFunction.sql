@@ -442,9 +442,14 @@ CREATE OR REPLACE FUNCTION zc_ObjectDate_User_PUSH() RETURNS Integer AS $BODY$BE
 INSERT INTO ObjectDateDesc (DescId, Code, ItemName)
   SELECT zc_Object_User(), 'zc_ObjectDate_User_PUSH', 'Дата последнего получения PUSH в Фармаси' WHERE NOT EXISTS (SELECT * FROM ObjectDateDesc WHERE Code = 'zc_ObjectDate_User_PUSH');
 
+CREATE OR REPLACE FUNCTION zc_ObjectDate_Unit_FirstCheck() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM ObjectDateDesc WHERE Code = 'zc_ObjectDate_Unit_FirstCheck'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
+INSERT INTO ObjectDateDesc (DescId, Code, ItemName)
+  SELECT zc_Object_Unit(), 'zc_ObjectDate_Unit_FirstCheck', 'Первый чек' WHERE NOT EXISTS (SELECT * FROM ObjectDateDesc WHERE Code = 'zc_ObjectDate_Unit_FirstCheck');
+
 
 /*-------------------------------------------------------------------------------
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.  Воробкало А.А.   Шаблий О.В.
+ 30.09.20                                                                                     * zc_ObjectDate_Unit_FirstCheck
  25.09.20         * zc_Object_ReportBonus_Month
  04.06.20                                                                                     * zc_ObjectDate_User_PUSH
  07.05.20                                                                                     * zc_ObjectDate_Buyer_DateBirth

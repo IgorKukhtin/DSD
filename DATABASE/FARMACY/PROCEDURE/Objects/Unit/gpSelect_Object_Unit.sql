@@ -75,12 +75,7 @@ BEGIN
                        , ROW_NUMBER() OVER (ORDER BY ObjectBoolean_UploadBadm.ObjectId )  ::integer  AS Num_byReportBadm
                   FROM ObjectBoolean AS ObjectBoolean_UploadBadm
                   WHERE ObjectBoolean_UploadBadm.DescId = zc_ObjectBoolean_Unit_UploadBadm()
-                    AND ObjectBoolean_UploadBadm.ValueData = TRUE),
-    tmpCheck AS (SELECT AnalysisContainerItem.UnitId                   AS UnitId
-                      , MIN(AnalysisContainerItem.OperDate)::TDateTime AS OperDate
-                 FROM AnalysisContainerItem
-                 WHERE AnalysisContainerItem.AmountCheck > 0
-                 GROUP BY AnalysisContainerItem.UnitId)
+                    AND ObjectBoolean_UploadBadm.ValueData = TRUE)
 
     SELECT 
         Object_Unit.Id                                       AS Id
@@ -227,7 +222,7 @@ BEGIN
              THEN 'Вс '||LEFT ((ObjectDate_SundayStart.ValueData::Time)::TVarChar,5)||'-'||LEFT ((ObjectDate_SundayEnd.ValueData::Time)::TVarChar,5)
              ELSE ''
         END) :: TVarChar AS TimeWork
-      , tmpCheck.OperDate                                                     AS  DateCheck
+      , ObjectDate_FirstCheck.ValueData                                         AS  DateCheck
 
       , COALESCE (Object_Layout.Id,0)          ::Integer   AS LayoutId
       , COALESCE (Object_Layout.ValueData, '') ::TVarChar  AS LayoutName
@@ -575,9 +570,10 @@ BEGIN
         LEFT JOIN ObjectDate AS ObjectDate_SundayEnd 
                              ON ObjectDate_SundayEnd.ObjectId = Object_Unit.Id
                             AND ObjectDate_SundayEnd.DescId = zc_ObjectDate_Unit_SundayEnd()
+        LEFT JOIN ObjectDate AS ObjectDate_FirstCheck
+                             ON ObjectDate_FirstCheck.ObjectId = Object_Unit.Id
+                            AND ObjectDate_FirstCheck.DescId = zc_ObjectDate_Unit_FirstCheck()
                             
-        LEFT JOIN tmpCheck ON tmpCheck.UnitId =  Object_Unit.Id
-
     WHERE Object_Unit.DescId = zc_Object_Unit()
       AND (inisShowAll = True OR Object_Unit.isErased = False);
   

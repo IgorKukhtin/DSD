@@ -29,7 +29,7 @@ BEGIN
 
      -- Расчет необходимости штрафа
     BEGIN
-        PERFORM lpInsertUpdate_MovementItem_WagesSUN1 (inSummaSUN1 := SummaSUN1, inUnitID := T1.UnitID, inInvNumber = InvNumber, inUserId := vbUserId)
+        PERFORM lpInsertUpdate_MovementItem_WagesSUN1 (inSummaSUN1 := SummaSUN1, inUnitID := T1.UnitID, inInvNumber := InvNumber, inUserId := vbUserId)
         FROM (WITH
                 tmpMovement AS (SELECT Movement.Id
                                      , Movement.InvNumber
