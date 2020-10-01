@@ -1515,6 +1515,12 @@ END IF;
         -- AND _tmpItem.OperSumm_Partner <> 0
        ;
 
+     -- проверка
+     IF COALESCE (vbMemberId_Packer, 0) = 0 AND EXISTS (SELECT 1 FROM _tmpItem WHERE _tmpItem.OperSumm_Packer <> 0)
+     THEN
+         RAISE EXCEPTION 'Ошибка.В документе не выбран Заготовитель для начисления по нему суммы <%>', zfConvert_FloatToString ((SELECT SUM (_tmpItem.OperSumm_Packer) FROM _tmpItem WHERE _tmpItem.OperSumm_Packer <> 0));
+     END IF;
+
      -- заполняем таблицу - элементы по Сотруднику (заготовитель), со всеми свойствами для формирования Аналитик в проводках, здесь по !!!InfoMoneyId!!!
      INSERT INTO _tmpItem_SummPacker (ContainerId, AccountId, InfoMoneyDestinationId, InfoMoneyId, BusinessId, OperSumm_Packer)
         SELECT 0 AS ContainerId, 0 AS AccountId

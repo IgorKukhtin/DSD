@@ -15,11 +15,13 @@ $BODY$
 BEGIN
      -- Проверка
      IF EXISTS (SELECT SUM (OperSumm + CASE WHEN _tmpItem.MovementDescId = zc_Movement_Cash() THEN 0 ELSE COALESCE (OperSumm_Diff, 0) END) FROM _tmpItem /*WHERE MovementDescId = zc_Movement_ProfitLossService()*/ HAVING SUM (OperSumm + CASE WHEN _tmpItem.MovementDescId = zc_Movement_Cash() THEN 0 ELSE COALESCE (OperSumm_Diff, 0) END) <> 0)
+    --OR inUserId = 5
      THEN
-         RAISE EXCEPTION 'Ошибка.В проводке отличаются сумма <Дебет> и сумма <Кредит> : (%) (%) = (%)  os = (%) (%) (%) (%)'
+         RAISE EXCEPTION 'Ошибка.В проводке отличаются сумма <Дебет> и сумма <Кредит> : (%) (%) = (%)  (%)  os = (%) (%) (%) (%)'
                        , (SELECT SUM (OperSumm + CASE WHEN _tmpItem.MovementDescId = zc_Movement_Cash() THEN 0 ELSE COALESCE (OperSumm_Diff, 0) END) FROM _tmpItem WHERE IsMaster = TRUE)
                        , (SELECT SUM (OperSumm + CASE WHEN _tmpItem.MovementDescId = zc_Movement_Cash() THEN 0 ELSE COALESCE (OperSumm_Diff, 0) END) FROM _tmpItem WHERE IsMaster = FALSE)
                        , (SELECT SUM (OperSumm + CASE WHEN _tmpItem.MovementDescId = zc_Movement_Cash() THEN 0 ELSE COALESCE (OperSumm_Diff, 0) END) FROM _tmpItem)
+                       , (SELECT SUM (COALESCE (OperSumm, 0) + COALESCE (OperSumm_Diff, 0)) FROM _tmpItem)
                        , (SELECT SUM (coalesce (OperSumm_Asset, 0)) FROM _tmpItem where OperSumm_Asset > 0)
                        , (SELECT SUM (coalesce (OperSumm_Asset, 0)) FROM _tmpItem where OperSumm_Asset < 0)
                        , (SELECT SUM (coalesce (OperSumm_Diff_Asset, 0)) FROM _tmpItem where OperSumm_Diff_Asset > 0)
@@ -892,8 +894,8 @@ end if;
                                             ELSE 0
                                        END
      WHERE _tmpItem.CurrencyId      <> zc_Enum_Currency_Basis()
-        OR ((_tmpItem.OperSumm_Diff  <> 0 OR _tmpItem.OperSumm_Diff_Asset <> 0)
-        AND _tmpItem.MovementDescId = zc_Movement_Cash()
+        OR ((_tmpItem.OperSumm_Diff <> 0 OR _tmpItem.OperSumm_Diff_Asset <> 0)
+      --AND _tmpItem.MovementDescId = zc_Movement_Cash()
            )
     ;
 
@@ -1005,7 +1007,7 @@ end if;
                       ) AS tmpFind ON tmpFind.MovementItemId = _tmpItem.MovementItemId
                                   AND tmpFind.IsActive       = _tmpItem.IsActive
                                   AND _tmpItem.AccountId <> zc_Enum_Account_100301() -- Прибыль текущего периода
-            INNER JOIN _tmpItem AS _tmpItem_Diff ON _tmpItem_Diff.ContainerId_Diff <> 0 AND _tmpItem_Diff.MovementItemId = _tmpItem.MovementItemId
+             INNER JOIN _tmpItem AS _tmpItem_Diff ON _tmpItem_Diff.ContainerId_Diff <> 0 AND _tmpItem_Diff.MovementItemId = _tmpItem.MovementItemId
 
        WHERE _tmpItem.ObjectDescId = zc_Object_BankAccount()
          AND _tmpItem.ContainerId_Diff = 0

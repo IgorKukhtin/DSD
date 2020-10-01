@@ -171,6 +171,37 @@ BEGIN
                          ;
      END IF;
 
+     -- проверка
+     IF EXISTS (SELECT 1
+                FROM _tmpItem
+                     JOIN ObjectLink AS Contract_ContractStateKind
+                                     ON Contract_ContractStateKind.ObjectId      = _tmpItem.ContractId
+                                    AND Contract_ContractStateKind.DescId        = zc_ObjectLink_Contract_ContractStateKind()
+                                    AND Contract_ContractStateKind.ChildObjectId = zc_Enum_ContractStateKind_Close()
+               )
+     OR EXISTS (SELECT 1
+                FROM _tmpItem
+                     JOIN Object ON Object.Id       = _tmpItem.ContractId
+                                AND Object.isErased = TRUE
+               )
+     THEN
+         RAISE EXCEPTION 'Ошибка.В документе договор № <%> %.Проведение невозможно.'
+                       , lfGet_Object_ValueData_sh ((SELECT Object.ValueData
+                                                     FROM _tmpItem
+                                                          JOIN ObjectLink AS Contract_ContractStateKind
+                                                                          ON Contract_ContractStateKind.ObjectId      = _tmpItem.ContractId
+                                                                         AND Contract_ContractStateKind.DescId        = zc_ObjectLink_Contract_ContractStateKind()
+                                                                         AND Contract_ContractStateKind.ChildObjectId = zc_Enum_ContractStateKind_Close()
+                                                          JOIN Object ON Object.ObjectId = _tmpItem.ContractId
+                                                     LIMIT 1
+                                                   ))
+                       , CASE WHEN EXISTS (SELECT 1 FROM _tmpItem JOIN Object ON Object.Id = _tmpItem.ContractId AND Object.isErased = TRUE)
+                                   THEN 'Удален'
+                                   ELSE 'в статусе <' || lfGet_Object_ValueData (zc_Enum_ContractStateKind_Close() || '>'
+                       END
+                         ;
+     END IF;
+
      -- заполняем таблицу - элементы документа, со всеми свойствами для формирования Аналитик в проводках
      WITH tmpPersonal AS (SELECT tmp.Id AS MemberId
                                , tmp.PersonalId
@@ -670,7 +701,7 @@ BEGIN
                                  );
 
      --
-     IF inUserId = 5
+     IF inUserId = 5 AND 1=0
      THEN
          RAISE EXCEPTION 'Ошибка.Test Admin = OK';
      END IF;
