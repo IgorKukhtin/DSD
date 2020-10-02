@@ -37,6 +37,15 @@ RETURNS TABLE (OperDate_Movement TDateTime, OperDatePartner TDateTime, InvNumber
              , Sum_Account TFloat
              , Sum_SaleReturnIn TFloat
              , Comment TVarChar
+             , FromName_Movement          TVarChar
+             , ToName_Movement            TVarChar
+             , PaidKindName_Movement      TVarChar
+             , ContractCode_Movement      TVarChar
+             , ContractName_Movement      TVarChar
+             , ContractTagName_Movement   TVarChar
+             , TotalCount_Movement        TFloat
+             , TotalCountPartner_Movement TFloat
+             , TotalSumm_Movement         TFloat
               )  
 AS
 $BODY$
@@ -44,7 +53,7 @@ $BODY$
     DECLARE vbEndDate     TDateTime;
 BEGIN
 
-     inisMovement:= FALSE;
+     --inisMovement:= FALSE;
      vbEndDate := inEndDate + INTERVAL '1 Day';
 
     RETURN QUERY
@@ -747,11 +756,87 @@ BEGIN
                             , tmpAll.PaidKindId_child
                     )
 
+      , tmpMovementParams AS (SELECT tmpMov.MovementId
+                                   , MovementDesc.ItemName
+                                   , Movement.InvNumber
+                                   , Movement.OperDate
+                                   , MovementDate_OperDatePartner.ValueData AS OperDatePartner
+                                   , COALESCE (Object_From.Id, Object_MoneyPlace.Id)                AS FromId
+                                   , COALESCE (Object_From.ValueData, Object_MoneyPlace.ValueData)  AS FromName
+                                   , Object_To.Id                               AS ToId
+                                   , Object_To.ValueData                        AS ToName
+                                   , Object_PaidKind.Id                         AS PaidKindId
+                                   , Object_PaidKind.ValueData                  AS PaidKindName
 
-      SELECT  Movement.OperDate                      :: TDateTime AS OperDate_Movement
-            , MovementDate_OperDatePartner.ValueData :: TDateTime AS OperDatePartner
-            , Movement.InvNumber                            AS InvNumber_Movement
-            , MovementDesc.ItemName                         AS DescName_Movement
+                                   , View_Contract_InvNumber.ContractId         AS ContractId
+                                   , View_Contract_InvNumber.ContractCode       AS ContractCode
+                                   , View_Contract_InvNumber.InvNumber          AS ContractName
+                                   , View_Contract_InvNumber.ContractTagName    AS ContractTagName
+
+                                   , MovementFloat_TotalCount.ValueData         AS TotalCount
+                                   , MovementFloat_TotalCountPartner.ValueData  AS TotalCountPartner
+                                   , CASE WHEN tmpMov.MovementDescId = zc_Movement_ReturnIn() THEN (-1) * MovementFloat_TotalSumm.ValueData 
+                                          WHEN tmpMov.MovementDescId = zc_Movement_Sale() THEN MovementFloat_TotalSumm.ValueData
+                                          WHEN tmpMov.MovementDescId IN (zc_Movement_BankAccount(), zc_Movement_Cash()) THEN MovementItem.Amount --MovementFloat_TotalSumm
+                                     END AS TotalSumm
+                              FROM (SELECT DISTINCT tmpData.MovementId, tmpData.MovementDescId FROM tmpData) AS tmpMov
+                                  LEFT JOIN Movement ON Movement.Id = tmpMov.MovementId
+                                  LEFT JOIN MovementDesc ON MovementDesc.Id = tmpMov.MovementDescId
+                                  LEFT JOIN MovementDate AS MovementDate_OperDatePartner
+                                                         ON MovementDate_OperDatePartner.MovementId = tmpMov.MovementId
+                                                        AND MovementDate_OperDatePartner.DescId = zc_MovementDate_OperDatePartner()
+
+                                  LEFT JOIN MovementLinkObject AS MovementLinkObject_From
+                                                               ON MovementLinkObject_From.MovementId = Movement.Id
+                                                              AND MovementLinkObject_From.DescId = CASE WHEN Movement.DescId = zc_Movement_ReturnIn() THEN zc_MovementLinkObject_From() ELSE zc_MovementLinkObject_To() END
+                                  LEFT JOIN Object AS Object_From ON Object_From.Id = MovementLinkObject_From.ObjectId
+                                  LEFT JOIN MovementLinkObject AS MovementLinkObject_To
+                                                                ON MovementLinkObject_To.MovementId = Movement.Id
+                                                              AND MovementLinkObject_To.DescId = CASE WHEN Movement.DescId = zc_Movement_ReturnIn() THEN zc_MovementLinkObject_To() ELSE zc_MovementLinkObject_From() END
+                                  LEFT JOIN Object AS Object_To ON Object_To.Id = MovementLinkObject_To.ObjectId
+ 
+                                  LEFT JOIN MovementLinkObject AS MovementLinkObject_PaidKind
+                                                               ON MovementLinkObject_PaidKind.MovementId = Movement.Id
+                                                              AND MovementLinkObject_PaidKind.DescId = zc_MovementLinkObject_PaidKind()
+                                  LEFT JOIN Object AS Object_PaidKind ON Object_PaidKind.Id = MovementLinkObject_PaidKind.ObjectId
+
+                                  LEFT JOIN MovementLinkObject AS MovementLinkObject_Contract
+                                                               ON MovementLinkObject_Contract.MovementId = Movement.Id
+                                                              AND MovementLinkObject_Contract.DescId = zc_MovementLinkObject_Contract()
+                                  LEFT JOIN Object_Contract_InvNumber_View AS View_Contract_InvNumber ON View_Contract_InvNumber.ContractId = MovementLinkObject_Contract.ObjectId
+                      
+                                  LEFT JOIN MovementFloat AS MovementFloat_TotalCount
+                                                          ON MovementFloat_TotalCount.MovementId = Movement.Id
+                                                         AND MovementFloat_TotalCount.DescId = zc_MovementFloat_TotalCount()
+                                  LEFT JOIN MovementFloat AS MovementFloat_TotalCountPartner
+                                                          ON MovementFloat_TotalCountPartner.MovementId =  Movement.Id
+                                                         AND MovementFloat_TotalCountPartner.DescId = zc_MovementFloat_TotalCountPartner()
+                      
+                                  LEFT JOIN MovementFloat AS MovementFloat_TotalSumm
+                                                          ON MovementFloat_TotalSumm.MovementId = Movement.Id
+                                                         AND MovementFloat_TotalSumm.DescId = zc_MovementFloat_TotalSumm()
+
+                                  LEFT JOIN MovementFloat AS MovementFloat_AmountSumm
+                                                          ON MovementFloat_AmountSumm.MovementId = Movement.Id
+                                                         AND MovementFloat_AmountSumm.DescId = zc_MovementFloat_Amount()
+                                                         AND tmpMov.MovementDescId IN (zc_Movement_BankAccount(), zc_Movement_Cash())
+
+                                  LEFT JOIN MovementItem ON MovementItem.MovementId = Movement.Id 
+                                                        AND MovementItem.DescId = zc_MI_Master()
+                                                        AND tmpMov.MovementDescId IN (zc_Movement_BankAccount(), zc_Movement_Cash())
+
+                                  LEFT JOIN MovementItemLinkObject AS MILinkObject_MoneyPlace
+                                                                   ON MILinkObject_MoneyPlace.MovementItemId = MovementItem.Id
+                                                                  AND MILinkObject_MoneyPlace.DescId         = zc_MILinkObject_MoneyPlace()
+                                  LEFT JOIN Object AS Object_MoneyPlace ON Object_MoneyPlace.Id = MILinkObject_MoneyPlace.ObjectId
+
+                              WHERE inisMovement = TRUE
+                              )
+
+      SELECT  tmpMovementParams.OperDate        :: TDateTime AS OperDate_Movement
+            , tmpMovementParams.OperDatePartner :: TDateTime AS OperDatePartner
+            , tmpMovementParams.InvNumber                    AS InvNumber_Movement
+            , tmpMovementParams.ItemName                     AS DescName_Movement
             , tmpData.ContractId_master
             , tmpData.ContractId_child
             , tmpData.ContractId_find
@@ -804,6 +889,16 @@ BEGIN
             , CAST (tmpData.Sum_Account    AS TFloat)     AS Sum_Account
             , CAST (tmpData.Sum_SaleReturnIn AS TFloat)   AS Sum_SaleReturnIn
             , tmpData.Comment :: TVarChar                 AS Comment
+            
+            , tmpMovementParams.FromName         :: TVarChar AS FromName_Movement
+            , tmpMovementParams.ToName           :: TVarChar AS ToName_Movement
+            , tmpMovementParams.PaidKindName     :: TVarChar AS PaidKindName_Movement
+            , tmpMovementParams.ContractCode     :: TVarChar AS ContractCode_Movement
+            , tmpMovementParams.ContractName     :: TVarChar AS ContractName_Movement
+            , tmpMovementParams.ContractTagName  :: TVarChar AS ContractTagName_Movement
+            , tmpMovementParams.TotalCount       :: TFloat   AS TotalCount_Movement
+            , tmpMovementParams.TotalCountPartner:: TFloat   AS TotalCountPartner_Movement
+            , tmpMovementParams.TotalSumm        :: TFloat   AS TotalSumm_Movement
       FROM tmpData
             LEFT JOIN Object AS Object_Juridical ON Object_Juridical.Id = tmpData.JuridicalId
             LEFT JOIN Object AS Object_Partner ON Object_Partner.Id = tmpData.PartnerId
@@ -817,8 +912,7 @@ BEGIN
             LEFT JOIN Object AS Object_InfoMoney_child ON Object_InfoMoney_child.Id = tmpData.InfoMoneyId_child
             LEFT JOIN Object AS Object_InfoMoney_find ON Object_InfoMoney_find.Id = tmpData.InfoMoneyId_find
 
-            LEFT JOIN Movement ON Movement.Id = tmpData.MovementId
-            LEFT JOIN MovementDesc ON MovementDesc.Id = tmpData.MovementDescId
+            LEFT JOIN tmpMovementParams ON tmpMovementParams.MovementId = tmpData.MovementId
 
             LEFT JOIN ObjectLink AS ObjectLink_Juridical_Retail
                                  ON ObjectLink_Juridical_Retail.ObjectId = tmpData.JuridicalId
@@ -828,12 +922,8 @@ BEGIN
             LEFT JOIN ObjectLink AS ObjectLink_Contract_Personal
                                  ON ObjectLink_Contract_Personal.ObjectId = tmpData.ContractId_child
                                 AND ObjectLink_Contract_Personal.DescId = zc_ObjectLink_Contract_Personal()
-            LEFT JOIN Object_Personal_View ON Object_Personal_View.PersonalId = ObjectLink_Contract_Personal.ChildObjectId
-            
-            LEFT JOIN MovementDate AS MovementDate_OperDatePartner
-                                   ON MovementDate_OperDatePartner.MovementId = tmpData.MovementId
-                                  AND MovementDate_OperDatePartner.DescId = zc_MovementDate_OperDatePartner()
-    ;
+            LEFT JOIN Object_Personal_View ON Object_Personal_View.PersonalId = ObjectLink_Contract_Personal.ChildObjectId           
+      ;
 
 END;
 $BODY$

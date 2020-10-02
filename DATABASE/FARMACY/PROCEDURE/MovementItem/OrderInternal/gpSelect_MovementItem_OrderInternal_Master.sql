@@ -810,10 +810,19 @@ BEGIN
                                MIFloat_AmountManual.ValueData
                                -- округлили ВВЕРХ AllLot
                              , CEIL ((
-                                      CASE WHEN (COALESCE (tmpMI.Amount, 0) + COALESCE (MIFloat_AmountSecond.ValueData, 0)) >= COALESCE (tmpMI.ListDiffAmount, 0)
-                                           THEN (COALESCE (tmpMI.Amount, 0) + COALESCE (MIFloat_AmountSecond.ValueData, 0))         -- Спецзаказ + Количество дополнительное
-                                           ELSE COALESCE (tmpMI.ListDiffAmount, 0)                                                   -- кол-во отказов
-                                      END
+                                     -- если расч.больше НТЗ то берем НТЗ
+                                     CASE WHEN COALESCE (tmpMI.MCS,0) <> 0
+                                       AND (CASE WHEN (COALESCE (tmpMI.Amount, 0) + COALESCE (MIFloat_AmountSecond.ValueData, 0)) >= COALESCE (tmpMI.ListDiffAmount, 0)
+                                                 THEN (COALESCE (tmpMI.Amount, 0) + COALESCE (MIFloat_AmountSecond.ValueData, 0))         -- Спецзаказ + Количество дополнительное
+                                                 ELSE COALESCE (tmpMI.ListDiffAmount, 0)                                                   -- кол-во отказов
+                                            END) > COALESCE (tmpMI.MCS,0)
+                                           THEN COALESCE (tmpMI.MCS,0)    
+                                           ELSE
+                                               CASE WHEN (COALESCE (tmpMI.Amount, 0) + COALESCE (MIFloat_AmountSecond.ValueData, 0)) >= COALESCE (tmpMI.ListDiffAmount, 0)
+                                                    THEN (COALESCE (tmpMI.Amount, 0) + COALESCE (MIFloat_AmountSecond.ValueData, 0))         -- Спецзаказ + Количество дополнительное
+                                                    ELSE COALESCE (tmpMI.ListDiffAmount, 0)                                                   -- кол-во отказов
+                                               END
+                                     END
                                      ) / COALESCE (tmpMI.MinimumLot, 1)
                                     ) * COALESCE (tmpMI.MinimumLot, 1)
                               ), 0) :: TFloat AS CalcAmountAll
@@ -823,11 +832,18 @@ BEGIN
                                   MIFloat_AmountManual.ValueData
                                   -- округлили ВВЕРХ AllLot
                                 , CEIL ((-- Спецзаказ
-                                         tmpMI.Amount
-                                         -- Количество дополнительное
-                                       + COALESCE (MIFloat_AmountSecond.ValueData, 0)
-                                         -- кол-во отказов
-                                       + COALESCE (tmpMI.ListDiffAmount, 0)
+                                         CASE WHEN COALESCE (tmpMI.MCS,0) <> 0
+                                         AND (CASE WHEN (COALESCE (tmpMI.Amount, 0) + COALESCE (MIFloat_AmountSecond.ValueData, 0)) >= COALESCE (tmpMI.ListDiffAmount, 0)
+                                                   THEN (COALESCE (tmpMI.Amount, 0) + COALESCE (MIFloat_AmountSecond.ValueData, 0))         -- Спецзаказ + Количество дополнительное
+                                                   ELSE COALESCE (tmpMI.ListDiffAmount, 0)                                                   -- кол-во отказов
+                                              END) > COALESCE (tmpMI.MCS,0)
+                                              THEN COALESCE (tmpMI.MCS,0)    
+                                              ELSE
+                                                 CASE WHEN (COALESCE (tmpMI.Amount, 0) + COALESCE (MIFloat_AmountSecond.ValueData, 0)) >= COALESCE (tmpMI.ListDiffAmount, 0)
+                                                      THEN (COALESCE (tmpMI.Amount, 0) + COALESCE (MIFloat_AmountSecond.ValueData, 0))         -- Спецзаказ + Количество дополнительное
+                                                      ELSE COALESCE (tmpMI.ListDiffAmount, 0)                                                   -- кол-во отказов
+                                                 END
+                                         END
                                         ) / COALESCE (tmpMI.MinimumLot, 1)
                                        ) * COALESCE (tmpMI.MinimumLot, 1)
                                  )
@@ -1752,7 +1768,7 @@ BEGIN
                             , MIFloat_AmountSecond.ValueData                                   AS AmountSecond
                             , MovementItem.Amount + COALESCE (MIFloat_AmountSecond.ValueData, 0) AS AmountAll
                               -- округлили ВВЕРХ AllLot
-                            /*, CEIL ((-- Спецзаказ
+                            , CEIL ((-- Спецзаказ
                                      MovementItem.Amount
                                      -- Количество дополнительное
                                    + COALESCE (MIFloat_AmountSecond.ValueData, 0)
@@ -1760,13 +1776,22 @@ BEGIN
                                    + COALESCE (MIFloat_ListDiff.ValueData, 0)
                                     ) / COALESCE (MovementItem.MinimumLot, 1)
                                    ) * COALESCE(MovementItem.MinimumLot, 1)                    AS CalcAmountAll
-                             */
-                            , CEIL (( CASE WHEN (COALESCE (MovementItem.Amount, 0) + COALESCE (MIFloat_AmountSecond.ValueData, 0)) >= COALESCE (MIFloat_ListDiff.ValueData, 0)
-                                          THEN (COALESCE (MovementItem.Amount, 0) + COALESCE (MIFloat_AmountSecond.ValueData, 0))         -- Спецзаказ + Количество дополнительное
-                                          ELSE COALESCE (MIFloat_ListDiff.ValueData, 0)                                                   -- кол-во отказов
+                             /*
+                            , CEIL ((CASE WHEN COALESCE (tmpMI.MCS,0) <> 0
+                                       AND (CASE WHEN (COALESCE (tmpMI.Amount, 0) + COALESCE (MIFloat_AmountSecond.ValueData, 0)) >= COALESCE (tmpMI.ListDiffAmount, 0)
+                                                 THEN (COALESCE (tmpMI.Amount, 0) + COALESCE (MIFloat_AmountSecond.ValueData, 0))         -- Спецзаказ + Количество дополнительное
+                                                 ELSE COALESCE (tmpMI.ListDiffAmount, 0)                                                   -- кол-во отказов
+                                            END) > COALESCE (tmpMI.MCS,0)
+                                           THEN COALESCE (tmpMI.MCS,0)    
+                                           ELSE
+                                               CASE WHEN (COALESCE (tmpMI.Amount, 0) + COALESCE (MIFloat_AmountSecond.ValueData, 0)) >= COALESCE (tmpMI.ListDiffAmount, 0)
+                                                    THEN (COALESCE (tmpMI.Amount, 0) + COALESCE (MIFloat_AmountSecond.ValueData, 0))         -- Спецзаказ + Количество дополнительное
+                                                    ELSE COALESCE (tmpMI.ListDiffAmount, 0)                                                   -- кол-во отказов
+                                               END
                                      END
                                      ) / COALESCE (MovementItem.MinimumLot, 1)
                                    ) * COALESCE(MovementItem.MinimumLot, 1)                    AS CalcAmountAll
+                                   */
 
                             , MIFloat_AmountManual.ValueData                                   AS AmountManual
                             , MIFloat_ListDiff.ValueData                                       AS ListDiffAmount
@@ -3298,10 +3323,18 @@ BEGIN
                                    ) * COALESCE (MovementItem.MinimumLot, 1)                   AS CalcAmountAll
 */
 --27.01.2020 Люба просит чтоб в расчет ложилась не сумма а большее из "Спец + Авто" и "Отказы" - поскольку сумма этих колонок приводит к затоварке аптек
-                            , CEIL ((                                -- Спецзаказ + Количество дополнительное                        -- кол-во отказов
-                                     CASE WHEN (COALESCE (MovementItem.Amount, 0) + COALESCE (MIFloat_AmountSecond.ValueData, 0)) >= COALESCE (MIFloat_ListDiff.ValueData, 0)
-                                          THEN (COALESCE (MovementItem.Amount, 0) + COALESCE (MIFloat_AmountSecond.ValueData, 0))         -- Спецзаказ + Количество дополнительное
-                                          ELSE COALESCE (MIFloat_ListDiff.ValueData, 0)                                                   -- кол-во отказов
+                            , CEIL (( -- Спецзаказ + Количество дополнительное                        -- кол-во отказов
+                                       CASE WHEN COALESCE (tmpMI.MCS,0) <> 0
+                                       AND (CASE WHEN (COALESCE (tmpMI.Amount, 0) + COALESCE (MIFloat_AmountSecond.ValueData, 0)) >= COALESCE (tmpMI.ListDiffAmount, 0)
+                                                 THEN (COALESCE (tmpMI.Amount, 0) + COALESCE (MIFloat_AmountSecond.ValueData, 0))         -- Спецзаказ + Количество дополнительное
+                                                 ELSE COALESCE (tmpMI.ListDiffAmount, 0)                                                   -- кол-во отказов
+                                            END) > COALESCE (tmpMI.MCS,0)
+                                           THEN COALESCE (tmpMI.MCS,0)    
+                                           ELSE
+                                               CASE WHEN (COALESCE (tmpMI.Amount, 0) + COALESCE (MIFloat_AmountSecond.ValueData, 0)) >= COALESCE (tmpMI.ListDiffAmount, 0)
+                                                    THEN (COALESCE (tmpMI.Amount, 0) + COALESCE (MIFloat_AmountSecond.ValueData, 0))         -- Спецзаказ + Количество дополнительное
+                                                    ELSE COALESCE (tmpMI.ListDiffAmount, 0)                                                   -- кол-во отказов
+                                               END
                                      END
                                     ) / COALESCE (MovementItem.MinimumLot, 1)
                                    ) * COALESCE (MovementItem.MinimumLot, 1)                   AS CalcAmountAll

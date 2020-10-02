@@ -504,6 +504,7 @@ inherited Report_CheckBonusForm: TReport_CheckBonusForm
       Top = 5
       Action = actRefreshMovement
       TabOrder = 6
+      Visible = False
       Width = 102
     end
     object cxLabel6: TcxLabel
@@ -966,8 +967,7 @@ inherited Report_CheckBonusForm: TReport_CheckBonusForm
       end
       item
         Name = 'inisMovement'
-        Value = Null
-        Component = cbMovement
+        Value = False
         DataType = ftBoolean
         ParamType = ptInput
         MultiSelectSeparator = ','

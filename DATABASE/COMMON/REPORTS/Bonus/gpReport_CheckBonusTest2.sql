@@ -255,6 +255,7 @@ BEGIN
                                 LEFT JOIN tmpContract_all AS View_Contract_InvNumber_find ON View_Contract_InvNumber_find.ContractId = tmpContract_find.ContractId_find
                            WHERE tmpContract_find.ContractId_find <> 0
                           )
+                          
       -- для всех юр лиц, у кого есть "Бонусы" формируется список всех других договоров (по ним будем делать расчет "базы")
     , tmpContract AS (SELECT tmpContractConditionKind.JuridicalId
                            , tmpContractConditionKind.InvNumber_master

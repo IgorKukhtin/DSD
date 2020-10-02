@@ -1,30 +1,31 @@
-inherited Report_CheckBonusTestForm: TReport_CheckBonusTestForm
-  Caption = #1054#1090#1095#1077#1090' <'#1055#1088#1086#1074#1077#1088#1082#1072' '#1085#1072#1095#1080#1089#1083#1077#1085#1080#1081' '#1087#1086' '#1073#1086#1085#1091#1089#1072#1084'> Test'
-  ClientHeight = 341
+inherited Report_CheckBonusDetailForm: TReport_CheckBonusDetailForm
+  Caption = #1054#1090#1095#1077#1090' <'#1055#1088#1086#1074#1077#1088#1082#1072' '#1085#1072#1095#1080#1089#1083#1077#1085#1080#1081' '#1087#1086' '#1073#1086#1085#1091#1089#1072#1084'> '#1087#1086' '#1076#1086#1082#1091#1084#1077#1085#1090#1072#1084
+  ClientHeight = 339
   ClientWidth = 1180
   AddOnFormData.ExecuteDialogAction = ExecuteDialog
+  AddOnFormData.Params = FormParams
   ExplicitWidth = 1196
-  ExplicitHeight = 379
+  ExplicitHeight = 377
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
     Top = 83
     Width = 1180
-    Height = 258
+    Height = 256
     TabOrder = 3
     ExplicitTop = 83
     ExplicitWidth = 1180
-    ExplicitHeight = 258
-    ClientRectBottom = 258
+    ExplicitHeight = 256
+    ClientRectBottom = 256
     ClientRectRight = 1180
     inherited tsMain: TcxTabSheet
       ExplicitWidth = 1180
-      ExplicitHeight = 258
+      ExplicitHeight = 256
       inherited cxGrid: TcxGrid
         Width = 1180
-        Height = 258
+        Height = 256
         ExplicitWidth = 1180
-        ExplicitHeight = 258
+        ExplicitHeight = 256
         inherited cxGridDBTableView: TcxGridDBTableView
           DataController.Summary.DefaultGroupSummaryItems = <
             item
@@ -61,6 +62,21 @@ inherited Report_CheckBonusTestForm: TReport_CheckBonusTestForm
               Format = ',0.00##'
               Kind = skSum
               Column = Sum_Account
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = TotalCount_Movement
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = TotalCountPartner_Movement
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = TotalSumm_Movement
             end>
           DataController.Summary.FooterSummaryItems = <
             item
@@ -102,6 +118,21 @@ inherited Report_CheckBonusTestForm: TReport_CheckBonusTestForm
               Format = #1057#1090#1088#1086#1082': ,0'
               Kind = skCount
               Column = JuridicalName
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = TotalCount_Movement
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = TotalCountPartner_Movement
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = TotalSumm_Movement
             end>
           OptionsData.Editing = False
           OptionsView.GroupByBox = True
@@ -176,18 +207,23 @@ inherited Report_CheckBonusTestForm: TReport_CheckBonusTestForm
           object BranchName: TcxGridDBColumn
             Caption = #1060#1080#1083#1080#1072#1083
             DataBinding.FieldName = 'BranchName'
+            Visible = False
+            HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Width = 104
           end
           object JuridicalName: TcxGridDBColumn
             Caption = #1070#1088#1080#1076#1080#1095#1077#1089#1082#1086#1077' '#1083#1080#1094#1086
             DataBinding.FieldName = 'JuridicalName'
+            Visible = False
+            HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Width = 104
           end
           object ConditionKindName: TcxGridDBColumn
             Caption = #1059#1089#1083#1086#1074#1080#1077' '#1076#1086#1075#1086#1074#1086#1088#1072
             DataBinding.FieldName = 'ConditionKindName'
+            Visible = False
             HeaderAlignmentVert = vaCenter
             Width = 75
           end
@@ -228,6 +264,7 @@ inherited Report_CheckBonusTestForm: TReport_CheckBonusTestForm
           object InfoMoneyName_master: TcxGridDBColumn
             Caption = #1059#1055' '#1089#1090#1072#1090#1100#1103' '#1085#1072#1079#1085#1072#1095#1077#1085#1080#1103
             DataBinding.FieldName = 'InfoMoneyName_master'
+            Visible = False
             HeaderAlignmentVert = vaCenter
             Width = 89
           end
@@ -240,6 +277,9 @@ inherited Report_CheckBonusTestForm: TReport_CheckBonusTestForm
           object InfoMoneyName_find: TcxGridDBColumn
             Caption = #1059#1055' '#1089#1090#1072#1090#1100#1103' '#1085#1072#1079#1085#1072#1095#1077#1085#1080#1103' ('#1085#1072#1095#1080#1089#1083#1077#1085#1080#1077')'
             DataBinding.FieldName = 'InfoMoneyName_find'
+            Visible = False
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
             Width = 151
           end
           object PaidKindName: TcxGridDBColumn
@@ -341,6 +381,7 @@ inherited Report_CheckBonusTestForm: TReport_CheckBonusTestForm
             Properties.DecimalPlaces = 4
             Properties.DisplayFormat = ',0.####;-,0.####; ;'
             Properties.ReadOnly = True
+            Visible = False
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Width = 80
@@ -351,6 +392,7 @@ inherited Report_CheckBonusTestForm: TReport_CheckBonusTestForm
             PropertiesClassName = 'TcxCurrencyEditProperties'
             Properties.DecimalPlaces = 4
             Properties.DisplayFormat = ',0.####;-,0.####; ;'
+            Visible = False
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Width = 80
@@ -361,16 +403,10 @@ inherited Report_CheckBonusTestForm: TReport_CheckBonusTestForm
             PropertiesClassName = 'TcxCurrencyEditProperties'
             Properties.DecimalPlaces = 4
             Properties.DisplayFormat = ',0.####;-,0.####; ;'
+            Visible = False
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Width = 80
-          end
-          object Comment: TcxGridDBColumn
-            Caption = #1055#1088#1080#1084#1077#1095#1072#1085#1080#1077
-            DataBinding.FieldName = 'Comment'
-            HeaderAlignmentHorz = taCenter
-            HeaderAlignmentVert = vaCenter
-            Width = 90
           end
           object DescName_Movement: TcxGridDBColumn
             Caption = #1042#1080#1076' '#1076#1086#1082#1091#1084#1077#1085#1090#1072
@@ -392,6 +428,84 @@ inherited Report_CheckBonusTestForm: TReport_CheckBonusTestForm
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Width = 70
+          end
+          object FromName_Movement: TcxGridDBColumn
+            Caption = #1054#1090' '#1082#1086#1075#1086' / '#1050#1086#1084#1091' ('#1076#1086#1082'.)'
+            DataBinding.FieldName = 'FromName_Movement'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 80
+          end
+          object PaidKindName_Movement: TcxGridDBColumn
+            Caption = #1060#1054' ('#1076#1086#1082'.)'
+            DataBinding.FieldName = 'PaidKindName_Movement'
+            Visible = False
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 80
+          end
+          object ContractCode_Movement: TcxGridDBColumn
+            Caption = #1050#1086#1076' '#1076#1086#1075'. ('#1076#1086#1082'.)'
+            DataBinding.FieldName = 'ContractCode_Movement'
+            Visible = False
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 80
+          end
+          object ContractName_Movement: TcxGridDBColumn
+            Caption = #8470' '#1076#1086#1075'. ('#1076#1086#1082'.)'
+            DataBinding.FieldName = 'ContractName_Movement'
+            Visible = False
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 80
+          end
+          object ContractTagName_Movement: TcxGridDBColumn
+            Caption = #1055#1088#1080#1079#1085#1072#1082' '#1076#1086#1075'. ('#1076#1086#1082')'
+            DataBinding.FieldName = 'ContractTagName_Movement'
+            Visible = False
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 80
+          end
+          object TotalCount_Movement: TcxGridDBColumn
+            Caption = #1050#1086#1083'-'#1074#1086' ('#1089#1082#1083#1072#1076') ('#1076#1086#1082')'
+            DataBinding.FieldName = 'TotalCount_Movement'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 4
+            Properties.DisplayFormat = ',0.####;-,0.####; ;'
+            Visible = False
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 70
+          end
+          object TotalCountPartner_Movement: TcxGridDBColumn
+            Caption = #1050#1086#1083'-'#1074#1086' ('#1091' '#1087#1086#1082#1091#1087'.) ('#1076#1086#1082')'
+            DataBinding.FieldName = 'TotalCountPartner_Movement'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 4
+            Properties.DisplayFormat = ',0.####;-,0.####; ;'
+            Visible = False
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 60
+          end
+          object TotalSumm_Movement: TcxGridDBColumn
+            Caption = #1057#1091#1084#1084#1072' '#1089' '#1053#1044#1057' ('#1080#1090#1086#1075') ('#1076#1086#1082')'
+            DataBinding.FieldName = 'TotalSumm_Movement'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 4
+            Properties.DisplayFormat = ',0.####;-,0.####; ;'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 75
+          end
+          object Comment: TcxGridDBColumn
+            Caption = #1055#1088#1080#1084#1077#1095#1072#1085#1080#1077
+            DataBinding.FieldName = 'Comment'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 90
           end
         end
       end
@@ -751,94 +865,6 @@ inherited Report_CheckBonusTestForm: TReport_CheckBonusTestForm
       PrinterNameParam.DataType = ftString
       PrinterNameParam.MultiSelectSeparator = ','
     end
-    object actOpenReportDetailForm: TdsdOpenForm
-      Category = 'DSDLib'
-      TabSheet = tsMain
-      MoveParams = <>
-      Caption = #1054#1090#1095#1077#1090' <'#1055#1088#1086#1074#1077#1088#1082#1072' '#1085#1072#1095#1080#1089#1083#1077#1085#1080#1081' '#1087#1086' '#1073#1086#1085#1091#1089#1072#1084'> '#1087#1086' '#1076#1086#1082#1091#1084#1077#1085#1090#1072#1084
-      Hint = #1054#1090#1095#1077#1090' <'#1055#1088#1086#1074#1077#1088#1082#1072' '#1085#1072#1095#1080#1089#1083#1077#1085#1080#1081' '#1087#1086' '#1073#1086#1085#1091#1089#1072#1084'> '#1087#1086' '#1076#1086#1082#1091#1084#1077#1085#1090#1072#1084
-      ImageIndex = 25
-      FormName = 'TReport_CheckBonusDetailForm'
-      FormNameParam.Value = 'TReport_CheckBonusDetailForm'
-      FormNameParam.DataType = ftString
-      FormNameParam.MultiSelectSeparator = ','
-      GuiParams = <
-        item
-          Name = 'inStartDate'
-          Value = 'NULL'
-          Component = deStart
-          DataType = ftDateTime
-          ParamType = ptInput
-          MultiSelectSeparator = ','
-        end
-        item
-          Name = 'inEndDate'
-          Value = 'NULL'
-          Component = deEnd
-          DataType = ftDateTime
-          ParamType = ptInput
-          MultiSelectSeparator = ','
-        end
-        item
-          Name = 'inPaidKindId'
-          Value = Null
-          Component = GuidesPaidKind
-          ComponentItem = 'Key'
-          ParamType = ptInput
-          MultiSelectSeparator = ','
-        end
-        item
-          Name = 'inPaidKindName'
-          Value = Null
-          Component = GuidesPaidKind
-          ComponentItem = 'TextValue'
-          DataType = ftString
-          ParamType = ptInput
-          MultiSelectSeparator = ','
-        end
-        item
-          Name = 'inJuridicalId'
-          Value = Null
-          Component = MasterCDS
-          ComponentItem = 'JuridicalId'
-          ParamType = ptInput
-          MultiSelectSeparator = ','
-        end
-        item
-          Name = 'inJuridicalName'
-          Value = Null
-          Component = MasterCDS
-          ComponentItem = 'JuridicalName'
-          DataType = ftString
-          ParamType = ptInput
-          MultiSelectSeparator = ','
-        end
-        item
-          Name = 'inBranchsId'
-          Value = '0'
-          Component = GuidesBranch
-          ComponentItem = 'Key'
-          ParamType = ptInput
-          MultiSelectSeparator = ','
-        end
-        item
-          Name = 'inBranchName'
-          Value = Null
-          Component = GuidesBranch
-          ComponentItem = 'TextValue'
-          DataType = ftString
-          ParamType = ptInput
-          MultiSelectSeparator = ','
-        end
-        item
-          Name = 'inisMovement'
-          Value = True
-          DataType = ftBoolean
-          ParamType = ptInput
-          MultiSelectSeparator = ','
-        end>
-      isShowModal = False
-    end
   end
   inherited MasterDS: TDataSource
     Left = 72
@@ -849,7 +875,7 @@ inherited Report_CheckBonusTestForm: TReport_CheckBonusTestForm
     Top = 208
   end
   inherited spSelect: TdsdStoredProc
-    StoredProcName = 'gpReport_CheckBonusTest3'
+    StoredProcName = 'gpReport_CheckBonusDetail'
     Params = <
       item
         Name = 'inStartDate'
@@ -892,10 +918,9 @@ inherited Report_CheckBonusTestForm: TReport_CheckBonusTestForm
         MultiSelectSeparator = ','
       end
       item
-        Name = 'inisMovement'
         Value = False
         DataType = ftBoolean
-        ParamType = ptInput
+        ParamType = ptUnknown
         MultiSelectSeparator = ','
       end>
     Left = 112
@@ -937,26 +962,6 @@ inherited Report_CheckBonusTestForm: TReport_CheckBonusTestForm
         end
         item
           Visible = True
-          ItemName = 'dxBarButton1'
-        end
-        item
-          Visible = True
-          ItemName = 'dxBarStatic'
-        end
-        item
-          Visible = True
-          ItemName = 'dxBarStatic'
-        end
-        item
-          Visible = True
-          ItemName = 'bbOpenReportDetailForm'
-        end
-        item
-          Visible = True
-          ItemName = 'dxBarStatic'
-        end
-        item
-          Visible = True
           ItemName = 'bbPrint'
         end
         item
@@ -985,17 +990,13 @@ inherited Report_CheckBonusTestForm: TReport_CheckBonusTestForm
       Action = actPrint
       Category = 0
     end
-    object bbOpenReportDetailForm: TdxBarButton
-      Action = actOpenReportDetailForm
-      Category = 0
-    end
   end
   inherited DBViewAddOn: TdsdDBViewAddOn
     Left = 368
   end
   inherited PeriodChoice: TPeriodChoice
-    Left = 80
-    Top = 144
+    Left = 256
+    Top = 256
   end
   inherited RefreshDispatcher: TRefreshDispatcher
     ComponentList = <
@@ -1014,8 +1015,8 @@ inherited Report_CheckBonusTestForm: TReport_CheckBonusTestForm
       item
         Component = GuidesBranch
       end>
-    Left = 184
-    Top = 136
+    Left = 232
+    Top = 200
   end
   object GuidesDocumentTaxKind: TdsdGuides
     KeyField = 'Id'
@@ -1184,5 +1185,77 @@ inherited Report_CheckBonusTestForm: TReport_CheckBonusTestForm
       end>
     Left = 525
     Top = 30
+  end
+  object FormParams: TdsdFormParams
+    Params = <
+      item
+        Name = 'inStartDate'
+        Value = ''
+        Component = deStart
+        DataType = ftDateTime
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inEndDate'
+        Value = ''
+        Component = deEnd
+        DataType = ftDateTime
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inJuridicalId'
+        Value = ''
+        Component = GuidesJuridical
+        ComponentItem = 'Key'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inJuridicalName'
+        Value = ''
+        Component = GuidesJuridical
+        ComponentItem = 'TextValue'
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inPaidKindId'
+        Value = ''
+        Component = GuidesPaidKind
+        ComponentItem = 'Key'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inPaidKindName'
+        Value = ''
+        Component = GuidesPaidKind
+        ComponentItem = 'TextValue'
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inBranchId'
+        Value = 0.000000000000000000
+        Component = GuidesBranch
+        ComponentItem = 'Key'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inBranchName'
+        Value = ''
+        Component = GuidesBranch
+        ComponentItem = 'TextValue'
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end>
+    Left = 328
+    Top = 170
   end
 end
