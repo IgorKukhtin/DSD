@@ -2271,6 +2271,9 @@ inherited MainCashForm2: TMainCashForm2
     ParentBackground = False
     TabOrder = 13
     Visible = False
+    DesignSize = (
+      858
+      21)
     object Label23: TLabel
       Left = 1
       Top = 1
@@ -2329,6 +2332,34 @@ inherited MainCashForm2: TMainCashForm2
       Font.Name = 'Tahoma'
       Font.Style = []
       ParentFont = False
+    end
+    object lblPresent: TLabel
+      Left = 361
+      Top = 2
+      Width = 48
+      Height = 13
+      Align = alCustom
+      Caption = #1055#1086#1076#1072#1088#1086#1082':'
+      Font.Charset = DEFAULT_CHARSET
+      Font.Color = clGray
+      Font.Height = -11
+      Font.Name = 'Tahoma'
+      Font.Style = []
+      ParentFont = False
+    end
+    object edPresent: TcxTextEdit
+      Left = 415
+      Top = 0
+      TabStop = False
+      Anchors = [akLeft, akTop, akRight]
+      Properties.AutoSelect = False
+      Properties.MaxLength = 8
+      Properties.ReadOnly = True
+      TabOrder = 1
+      OnExit = edPromoCodeExit
+      OnKeyDown = edPromoCodeKeyDown
+      OnKeyPress = edPromoCodeKeyPress
+      Width = 434
     end
     object edPromoCodeLoyaltySumm: TcxCurrencyEdit
       Left = 567
@@ -5802,6 +5833,22 @@ inherited MainCashForm2: TMainCashForm2
         MultiSelectSeparator = ','
       end
       item
+        Name = 'LoyaltyMovementId'
+        Value = Null
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'LoyaltyPresent'
+        Value = Null
+        DataType = ftBoolean
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'LoyaltyGoodsId'
+        Value = Null
+        MultiSelectSeparator = ','
+      end
+      item
         Name = 'Price1303'
         Value = Null
         DataType = ftFloat
@@ -6021,6 +6068,10 @@ inherited MainCashForm2: TMainCashForm2
         Name = 'DivisionPartiesName'
         DataType = ftString
         Size = 100
+      end
+      item
+        Name = 'isPresent'
+        DataType = ftBoolean
       end>
     IndexDefs = <>
     Params = <>
@@ -7319,6 +7370,22 @@ inherited MainCashForm2: TMainCashForm2
         Name = 'outError'
         Value = Null
         DataType = ftString
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'outMovementId'
+        Value = Null
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'outisPresent'
+        Value = Null
+        DataType = ftBoolean
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'outGoodsId'
+        Value = Null
         MultiSelectSeparator = ','
       end>
     PackSize = 1

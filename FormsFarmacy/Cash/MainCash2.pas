@@ -525,6 +525,8 @@ type
     actOpenDelaySite: TdsdOpenForm;
     MemDataGOODSPMID: TIntegerField;
     MainAmountSendIn: TcxGridDBColumn;
+    lblPresent: TLabel;
+    edPresent: TcxTextEdit;
     procedure WM_KEYDOWN(var Msg: TWMKEYDOWN);
     procedure FormCreate(Sender: TObject);
     procedure actChoiceGoodsInRemainsGridExecute(Sender: TObject);
@@ -820,7 +822,7 @@ type
       APromoName, APromoCodeGUID, ABayerName: String;
       APromoCodeChangePercent: Currency);
     procedure SetPromoCodeLoyalty(APromoCodeID: Integer; APromoCodeGUID: String;
-      APromoCodeSumma: Currency);
+      APromoCodeSumma: Currency; AMovementId : Integer; AisPresent : Boolean; AGoodsId : Integer);
     procedure SetPromoCodeLoyaltySM(ALoyaltySMID: Integer;
       APhone, AName: string; ASummaRemainder, AChangeSumma: Currency);
     procedure PromoCodeLoyaltyCalc;
@@ -1371,6 +1373,10 @@ begin
   // ***16.08.20
   FormParams.ParamByName('DivisionPartiesID').Value := 0;
   FormParams.ParamByName('DivisionPartiesName').Value := '';
+  // ***01.10.20
+  FormParams.ParamByName('LoyaltyMovementId').Value := 0;
+  FormParams.ParamByName('LoyaltyPresent').Value := False;
+  FormParams.ParamByName('LoyaltyGoodsId').Value := 0;
 
   ClearFilterAll;
 
@@ -1643,7 +1649,10 @@ begin
       if Length(FormParams.ParamByName('PromoCodeGUID').AsString) > 10 then
         SetPromoCodeLoyalty(FormParams.ParamByName('PromoCodeId').Value,
           FormParams.ParamByName('PromoCodeGUID').AsString,
-          FormParams.ParamByName('LoyaltyChangeSumma').Value)
+          FormParams.ParamByName('LoyaltyChangeSumma').Value,
+          FormParams.ParamByName('LoyaltyMovementId').Value,
+          FormParams.ParamByName('LoyaltyPresent').Value,
+          FormParams.ParamByName('LoyaltyGoodsId').Value)
       else
         SetPromoCode(FormParams.ParamByName('PromoCodeId').Value,
           FormParams.ParamByName('PromoName').AsString,
@@ -2847,6 +2856,13 @@ begin
           exit;
         end;
 
+        if (FieldByName('Amount').AsCurrency > 0) and FieldByName('isPresent').AsBoolean and
+           (FormParams.ParamByName('LoyaltyGoodsId').Value <> FieldByName('GoodsId').AsInteger)  then
+        begin
+          ShowMessage('Подарки можно продавать только по акции!');
+          exit;
+        end;
+
         Next;
       end;
     end;
@@ -3314,6 +3330,8 @@ begin
           vipList.FieldByName('GoodsPairSunId').AsVariant;
         CheckCDS.FieldByName('GoodsPairSunMainId').AsVariant :=
           vipList.FieldByName('GoodsPairSunMainId').AsVariant;
+        CheckCDS.FieldByName('isPresent').AsVariant :=
+          vipList.FieldByName('isPresent').AsVariant;
         // ***21.10.18
         GoodsId := RemainsCDS.FieldByName('Id').AsInteger;
         PartionDateKindId := RemainsCDS.FieldByName('PartionDateKindId').AsVariant;
@@ -4098,7 +4116,7 @@ begin
 end;
 
 procedure TMainCashForm2.SetPromoCodeLoyalty(APromoCodeID: Integer;
-  APromoCodeGUID: String; APromoCodeSumma: Currency);
+  APromoCodeGUID: String; APromoCodeSumma: Currency; AMovementId : Integer; AisPresent : Boolean; AGoodsId : Integer);
 var
   nRecNo: Integer;
 begin
@@ -4108,6 +4126,9 @@ begin
     FormParams.ParamByName('PromoCodeID').Value := 0;
     FormParams.ParamByName('PromoCodeGUID').Value := '';
     FormParams.ParamByName('LoyaltyChangeSumma').Value := 0;
+    FormParams.ParamByName('LoyaltyMovementId').Value := 0;
+    FormParams.ParamByName('LoyaltyPresent').Value := False;
+    FormParams.ParamByName('LoyaltyGoodsId').Value := 0;
 
     pnlPromoCodeLoyalty.Visible := false;
     lblPromoCodeLoyalty.Caption := '';
@@ -4118,6 +4139,9 @@ begin
     FormParams.ParamByName('PromoCodeID').Value := APromoCodeID;
     FormParams.ParamByName('PromoCodeGUID').Value := APromoCodeGUID;
     FormParams.ParamByName('LoyaltyChangeSumma').Value := APromoCodeSumma;
+    FormParams.ParamByName('LoyaltyMovementId').Value := AMovementId;
+    FormParams.ParamByName('LoyaltyPresent').Value := AisPresent;
+    FormParams.ParamByName('LoyaltyGoodsId').Value := AGoodsId;
     // ***27.06.18
 
     pnlPromoCodeLoyalty.Visible := APromoCodeID > 0;
@@ -4133,6 +4157,21 @@ begin
   lblPromoName.Caption := '';
   lblPromoCode.Caption := '';
   edPromoCodeChangePrice.Value := 0;
+
+  Label27.Visible := not AisPresent;
+  edPromoCodeLoyaltySumm.Visible := not AisPresent;
+
+  lblPresent.Visible := AisPresent;
+  edPresent.Visible := AisPresent;
+
+  if AisPresent and (AGoodsId <> 0) then
+  begin
+    if RemainsCDS.Locate('Id', AGoodsId, []) and (RemainsCDS.FieldByName('Remains').AsCurrency >= 1) then
+    begin
+      edAmount.Text := '1';
+      InsertUpdateBillCheckItems;
+    end;
+  end;
 
   PromoCodeLoyaltyCalc;
   CalcTotalSumm;
@@ -4184,6 +4223,9 @@ begin
   spLoyaltyCheckGUID.ParamByName('outID').Value := 0;
   spLoyaltyCheckGUID.ParamByName('outAmount').Value := 0;
   spLoyaltyCheckGUID.ParamByName('outError').Value := '';
+  spLoyaltyCheckGUID.ParamByName('outMovementId').Value := 0;
+  spLoyaltyCheckGUID.ParamByName('outisPresent').Value := False;
+  spLoyaltyCheckGUID.ParamByName('outGoodsId').Value := 0;
   spLoyaltyCheckGUID.Execute;
 
   if spLoyaltyCheckGUID.ParamByName('outError').Value <> '' then
@@ -4193,14 +4235,18 @@ begin
   end;
 
   if (spLoyaltyCheckGUID.ParamByName('outID').Value = 0) or
-    (spLoyaltyCheckGUID.ParamByName('outAmount').AsFloat = 0) then
+    (spLoyaltyCheckGUID.ParamByName('outAmount').AsFloat = 0) and
+    not spLoyaltyCheckGUID.ParamByName('outisPresent').Value then
   begin
     ShowMessage('Ошибка получения данных о скидке.');
     exit;
   end;
 
   SetPromoCodeLoyalty(spLoyaltyCheckGUID.ParamByName('outID').Value, сGUID,
-    spLoyaltyCheckGUID.ParamByName('outAmount').AsFloat);
+    spLoyaltyCheckGUID.ParamByName('outAmount').AsFloat,
+    spLoyaltyCheckGUID.ParamByName('outMovementId').Value,
+    spLoyaltyCheckGUID.ParamByName('outisPresent').Value,
+    spLoyaltyCheckGUID.ParamByName('outGoodsId').Value);
 end;
 
 procedure TMainCashForm2.edPromoCodeExit(Sender: TObject);
@@ -6366,6 +6412,13 @@ begin
   else nId := SourceClientDataSet.FieldByName('Id').AsInteger;
   nGoodsPairSunMainId := SourceClientDataSet.FieldByName('GoodsPairSunMainId').AsInteger;
 
+  if (nAmount > 0) and SourceClientDataSet.FieldByName('isPresent').AsBoolean and
+    (FormParams.ParamByName('LoyaltyGoodsId').Value <> nId) then
+  begin
+    ShowMessage('Подарки можно продавать только по акции!');
+    exit;
+  end;
+
   try
     if not FStepSecond and (SourceClientDataSet.FieldByName('GoodsPairSunId').AsInteger <> 0) then
     begin
@@ -6934,6 +6987,8 @@ begin
             SourceClientDataSet.FindField('GoodsPairSunId').AsVariant;
           CheckCDS.FieldByName('GoodsPairSunMainId').AsVariant :=
             SourceClientDataSet.FindField('GoodsPairSunMainId').AsVariant;
+          CheckCDS.FieldByName('isPresent').AsVariant :=
+            SourceClientDataSet.FindField('isPresent').AsVariant;
 
           if RemainsCDS <> SourceClientDataSet then
           begin
@@ -7056,6 +7111,8 @@ begin
             SourceClientDataSet.FieldByName('GoodsPairSunId').AsVariant;
           CheckCDS.FieldByName('GoodsPairSunMainId').AsVariant :=
             SourceClientDataSet.FieldByName('GoodsPairSunMainId').AsVariant;
+          CheckCDS.FieldByName('isPresent').AsVariant :=
+            SourceClientDataSet.FindField('isPresent').AsVariant;
 
           if RemainsCDS <> SourceClientDataSet then
           begin
@@ -7753,6 +7810,10 @@ begin
   // ***16.08.20
   FormParams.ParamByName('DivisionPartiesID').Value := 0;
   FormParams.ParamByName('DivisionPartiesName').Value := '';
+  // ***01.10.20
+  FormParams.ParamByName('LoyaltyMovementId').Value := 0;
+  FormParams.ParamByName('LoyaltyPresent').Value := False;
+  FormParams.ParamByName('LoyaltyGoodsId').Value := 0;
 
   FiscalNumber := '';
   pnlVIP.Visible := false;
@@ -9286,6 +9347,8 @@ begin
           ADS.FieldByName('GoodsPairSunId').AsVariant;
         myVIPListCDS.FieldByName('GoodsPairSunMainId').Value :=
           ADS.FieldByName('GoodsPairSunMainId').AsVariant;
+        myVIPListCDS.FieldByName('isPresent').Value :=
+          ADS.FieldByName('isPresent').AsVariant;
 
         myVIPListCDS.Post;
         ADS.Next;
@@ -9541,7 +9604,9 @@ begin
             // ***19.06.20
             ADS.FieldByName('DiscountExternalID').AsInteger, // Товар для проекта (дисконтные карты)
             // ***19.06.20
-            ADS.FieldByName('DivisionPartiesID').AsInteger // Разделение партий в кассе для продажи
+            ADS.FieldByName('DivisionPartiesID').AsInteger, // Разделение партий в кассе для продажи
+            // ***02.10.20
+            ADS.FieldByName('isPresent').AsBoolean // Разделение партий в кассе для продажи
             ]));
           // сохранили отгруженные препараты для корректировки полных остатков
           if FSaveCheckToMemData then

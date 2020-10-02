@@ -259,6 +259,8 @@ begin
       AddIntField(LocalDataBaseBody,   'DISCEXTID'); //Дисконтная программы
       //***19.06.20
       AddIntField(LocalDataBaseBody,   'DIVPARTID'); //Разделение партий в кассе для продажи
+      //***02.10.20
+      AddBoolField(LocalDataBaseBody,   'ISPRESENT'); //Подарок
 
       LocalDataBaseBody.CreateTable;
     end
@@ -286,6 +288,8 @@ begin
         if FindField('DISCEXTID') = nil then AddIntField(LFieldDefs, 'DISCEXTID');
         //***16.08.20
         if FindField('DIVPARTID') = nil then AddIntField(LFieldDefs, 'DIVPARTID');
+        //***02.10.20
+        if FindField('ISPRESENT') = nil then AddBoolField(LFieldDefs, 'ISPRESENT');
 
         if LFieldDefs.Count <> 0 then
           AddFields(LFieldDefs, 1000);
@@ -320,7 +324,9 @@ begin
         //***19.06.20
         (FindField('DISCEXTID') = nil) or
         //***16.08.20
-        (FindField('DIVPARTID') = nil));
+        (FindField('DIVPARTID') = nil) or
+        //***02.10.20
+        (FindField('ISPRESENT') = nil));
 
       Close;
 

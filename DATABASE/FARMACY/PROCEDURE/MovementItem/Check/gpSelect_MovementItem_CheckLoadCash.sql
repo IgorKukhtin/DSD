@@ -44,6 +44,7 @@ RETURNS TABLE (Id Integer
              , GoodsPairSunMainId Integer
              , DivisionPartiesId Integer
              , DivisionPartiesName TVarChar
+             , isPresent Boolean
               )
 AS
 $BODY$
@@ -257,7 +258,7 @@ BEGIN
            , zc_Color_Black()                                                    AS Color_ExpirationDate
            , Null::TVArChar                                                      AS AccommodationName
            , Null::TFloat                                                        AS Multiplicity
-           , COALESCE (ObjectBoolean_DoesNotShare.ValueData, FALSE)              AS DoesNotShare
+           , COALESCE (Object_Goods_Main.isDoesNotShare, FALSE)                  AS DoesNotShare
            , Null::TVArChar                                                      AS IdSP
            , Null::TFloat                                                        AS CountSP
            , Null::TFloat                                                        AS PriceRetSP
@@ -280,6 +281,8 @@ BEGIN
            , Object_Goods_PairSun_Main.GoodsPairSunId                            AS GoodsPairSunMainId
            , Object_DivisionParties.Id                                           AS DivisionPartiesId 
            , Object_DivisionParties.ValueData                                    AS DivisionPartiesName 
+           , Object_Goods_Main.isPresent                                         AS isPresent
+           
            FROM tmpMI AS MovementItem
 
             LEFT JOIN MovementItemFloat AS MIFloat_MovementItem
@@ -287,15 +290,13 @@ BEGIN
                                        AND MIFloat_MovementItem.DescId = zc_MIFloat_PricePartionDate()
             -- получаем GoodsMainId
             LEFT JOIN Object_Goods_Retail AS Object_Goods_Retail ON Object_Goods_Retail.Id = MovementItem.GoodsId
+            LEFT JOIN Object_Goods_Main AS Object_Goods_Main ON Object_Goods_Main.Id = Object_Goods_Retail.GoodsMainId
+
             LEFT JOIN tmpGoodsPairSun AS Object_Goods_PairSun 
                                       ON Object_Goods_PairSun.GoodsPairSunId = MovementItem.GoodsId
             LEFT JOIN tmpGoodsPairSun AS Object_Goods_PairSun_Main
                                       ON Object_Goods_PairSun_Main.Id = MovementItem.GoodsId
 
-            -- Не делить медикамент на кассах
-            LEFT JOIN ObjectBoolean AS ObjectBoolean_DoesNotShare
-                                    ON ObjectBoolean_DoesNotShare.ObjectId = MovementItem.GoodsId
-                                   AND ObjectBoolean_DoesNotShare.DescId = zc_ObjectBoolean_Goods_DoesNotShare()
             --Типы срок/не срок
             LEFT JOIN MovementItemLinkObject AS MI_PartionDateKind
                                              ON MI_PartionDateKind.MovementItemId = MovementItem.Id
@@ -332,5 +333,6 @@ ALTER FUNCTION gpSelect_MovementItem_CheckLoadCash (Integer, TVarChar) OWNER TO 
 
 -- тест
 -- select * from gpSelect_MovementItem_CheckLoadCash(inMovementId := 18769698 ,  inSession := '3');
--- select * from gpSelect_MovementItem_CheckLoadCash(inMovementId := 18805062    ,  inSession := '3');
+--
+ select * from gpSelect_MovementItem_CheckLoadCash(inMovementId := 18805062    ,  inSession := '3');
 
