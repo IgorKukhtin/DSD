@@ -16,6 +16,7 @@ type
   published
     procedure MainFormTest;
     procedure LoadServiceFormTest;
+    procedure LoadTranslateWordFormTest;
     procedure FormTest;
   end;
 
@@ -78,8 +79,6 @@ end;
 procedure TLoadFormTest.LoadServiceFormTest;
 begin
 //
-//  TdsdFormStorageFactory.GetStorage.Save(GetForm('TFormsForm'));
-//  TdsdFormStorageFactory.GetStorage.Load('TFormsForm');
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TObjectDescForm'));
   TdsdFormStorageFactory.GetStorage.Load('TObjectDescForm');
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TObjectForm'));
@@ -89,68 +88,40 @@ begin
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TRoleEditForm'));
   TdsdFormStorageFactory.GetStorage.Load('TRoleEditForm');
 //
-//  TdsdFormStorageFactory.GetStorage.Save(GetForm('TRoleUnionForm'));
-//  TdsdFormStorageFactory.GetStorage.Load('TRoleUnionForm');
 //
-//  TdsdFormStorageFactory.GetStorage.Save(GetForm('TUnionDescForm'));
-//  TdsdFormStorageFactory.GetStorage.Load('TUnionDescForm');
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TUserForm'));
   TdsdFormStorageFactory.GetStorage.Load('TUserForm');
-//  TdsdFormStorageFactory.GetStorage.Save(GetForm('TUserKeyForm'));
-//  TdsdFormStorageFactory.GetStorage.Load('TUserKeyForm');
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TUserEditForm'));
   TdsdFormStorageFactory.GetStorage.Load('TUserEditForm');
-//
-//  TdsdFormStorageFactory.GetStorage.Save(GetForm('TLoadObjectForm'));
-//  TdsdFormStorageFactory.GetStorage.Load('TLoadObjectForm');
-//
-//  TdsdFormStorageFactory.GetStorage.Save(GetForm('TPriceGroupSettingsForm'));
-//  TdsdFormStorageFactory.GetStorage.Load('TPriceGroupSettingsForm');
-//
-//  TdsdFormStorageFactory.GetStorage.Save(GetForm('TPriceGroupSettingsTopForm'));
-//  TdsdFormStorageFactory.GetStorage.Load('TPriceGroupSettingsTopForm');
 
-//  TdsdFormStorageFactory.GetStorage.Save(GetForm('TJuridicalSettingsForm'));
-//  TdsdFormStorageFactory.GetStorage.Load('TJuridicalSettingsForm');
-//  exit;
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TActionForm'));
   TdsdFormStorageFactory.GetStorage.Load('TActionForm');
 //
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TUserProtocolForm'));
   TdsdFormStorageFactory.GetStorage.Load('TUserProtocolForm');
-//  TdsdFormStorageFactory.GetStorage.Save(GetForm('TProcessForm'));
-//  TdsdFormStorageFactory.GetStorage.Load('TProcessForm');
+
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TProtocolForm'));
   TdsdFormStorageFactory.GetStorage.Load('TProtocolForm');
-//  TdsdFormStorageFactory.GetStorage.Save(GetForm('TMovementProtocolForm'));
-//  TdsdFormStorageFactory.GetStorage.Load('TMovementProtocolForm');
-//  TdsdFormStorageFactory.GetStorage.Save(GetForm('TMovementItemProtocolForm'));
-//  TdsdFormStorageFactory.GetStorage.Load('TMovementItemProtocolForm');
-//
-//  TdsdFormStorageFactory.GetStorage.Save(GetForm('TImportExportLinkForm'));
-//  TdsdFormStorageFactory.GetStorage.Load('TImportExportLinkForm');
-//
-//  TdsdFormStorageFactory.GetStorage.Save(GetForm('TImportExportLinkTypeForm'));
-//  TdsdFormStorageFactory.GetStorage.Load('TImportExportLinkTypeForm');
-//
-//  TdsdFormStorageFactory.GetStorage.Save(GetForm('TMovementItemContainerForm'));
-//  TdsdFormStorageFactory.GetStorage.Load('TMovementItemContainerForm');
-//
+
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TMovementDescDataForm'));
   TdsdFormStorageFactory.GetStorage.Load('TMovementDescDataForm');
-//
-//
-//  TdsdFormStorageFactory.GetStorage.Save(GetForm('TMovement_PeriodDialogForm'));
-//  TdsdFormStorageFactory.GetStorage.Load('TMovement_PeriodDialogForm');
-//
-//  {
-//  TdsdFormStorageFactory.GetStorage.Save(GetForm('TStatusForm'));
-//  TdsdFormStorageFactory.GetStorage.Load('TStatusForm');
-//
-//  TdsdFormStorageFactory.GetStorage.Save(GetForm('TPeriodCloseForm'));
-//  TdsdFormStorageFactory.GetStorage.Load('TPeriodCloseForm');
-//  }
+
 end;
+
+procedure TLoadFormTest.LoadTranslateWordFormTest;
+begin
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TLanguageForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TLanguageForm');
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TLanguageEditForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TLanguageEditForm');
+
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TTranslateWordForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TTranslateWordForm');
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TTranslateWordEditForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TTranslateWordEditForm');
+
+end;
+
 
 initialization
   TestFramework.RegisterTest('Загрузка форм', TLoadFormTest.Suite);

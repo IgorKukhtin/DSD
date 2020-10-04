@@ -93,11 +93,7 @@ uses
   RoleEdit in '..\..\FormsBoat\Guides\RoleEdit.pas' {RoleEditForm: TParentForm},
   Action in '..\..\Forms\Action.pas' {ActionForm: TParentForm},
   UserProtocol in '..\..\FormsBoat\Guides\UserProtocol.pas' {UserProtocol: TParentForm},
-  //MovementItemProtocol in '..\..\FormsBoat\Document\MovementItemProtocol.pas' {MovementItemProtocolForm: TParentForm},
-  //MovementProtocol in '..\..\FormsBoat\Document\MovementProtocol.pas' {MovementProtocolForm: TParentForm},
   CommonContainerProcedureTest in '..\SOURCEBoat\Container\CommonContainerProcedureTest.pas',
-  //MovementItemContainer in '..\..\FormsBoat\Document\MovementItemContainer.pas' {MovementItemContainerForm: TParentForm},
-  //Process in '..\..\FormsBoat\Guides\Process.pas' {ProcessForm: TParentForm},
   MovementDescForms in '..\..\FormsBoat\System\MovementDescForms.pas' {MovementDescDataForm: TParentForm},
   dsdPivotGrid in '..\..\SOURCE\COMPONENT\dsdPivotGrid.pas',
   dsdExportToXLSAction in '..\..\SOURCE\COMPONENT\dsdExportToXLSAction.pas',
@@ -110,7 +106,18 @@ uses
   MainForm in '..\..\FormsBoat\MainForm.pas' {MainForm},
   dbProcedureBoatTest in '..\SOURCEBoat\dbProcedureBoatTest.pas',
   LoadBoatFormTest in '..\SOURCEBoat\LoadBoatFormTest.pas',
-  LoadBoatReportTest in '..\SOURCEBoat\LoadBoatReportTest.pas';
+  LoadBoatReportTest in '..\SOURCEBoat\LoadBoatReportTest.pas',
+  dsdTranslator in '..\..\SOURCE\COMPONENT\dsdTranslator.pas',
+  MeDOC in '..\..\SOURCE\MeDOC\MeDOC.pas',
+  IFIN_J1201009 in '..\..\SOURCE\MeDOC\IFIN_J1201009.pas',
+  IFIN_J1201209 in '..\..\SOURCE\MeDOC\IFIN_J1201209.pas',
+  Medoc_J1201010 in '..\..\SOURCE\MeDOC\Medoc_J1201010.pas',
+  Medoc_J1201210 in '..\..\SOURCE\MeDOC\Medoc_J1201210.pas',
+  MeDocXML in '..\..\SOURCE\MeDOC\MeDocXML.pas',
+  Language in '..\..\FormsBoat\Guides\Language.pas' {LanguageForm: TParentForm},
+  LanguageEdit in '..\..\FormsBoat\Guides\LanguageEdit.pas' {LanguageEditForm: TParentForm},
+  TranslateWord in '..\..\FormsBoat\Guides\TranslateWord.pas' {TranslateWordForm: TParentForm},
+  TranslateWordEdit in '..\..\FormsBoat\Guides\TranslateWordEdit.pas' {TranslateWordEditForm: TParentForm};
 
 {$R *.res}
 {$R DevExpressRus.res}

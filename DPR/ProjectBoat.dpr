@@ -66,7 +66,6 @@ uses
   RecadvXML in '..\SOURCE\EDI\RecadvXML.pas',
   LocalWorkUnit in '..\SOURCE\LocalWorkUnit.pas',
   RoleUnion in '..\Forms\RoleUnion.pas' {RoleUnionForm: TParentForm},
-  //Movement_PeriodDialog in '..\FormsBoat\Document\Movement_PeriodDialog.pas' {Movement_PeriodDialogForm: TParentForm},
   IFIN_J1201009 in '..\SOURCE\MeDOC\IFIN_J1201009.pas',
   IFIN_J1201209 in '..\SOURCE\MeDOC\IFIN_J1201209.pas',
   dsdOlap in '..\SOURCE\COMPONENT\dsdOlap.pas',
@@ -81,7 +80,8 @@ uses
   DesadvFozzXML in '..\SOURCE\EDI\DesadvFozzXML.pas',
   IftminFozzXML in '..\SOURCE\EDI\IftminFozzXML.pas',
   OrderSpFozzXML in '..\SOURCE\EDI\OrderSpFozzXML.pas',
-  MainForm in '..\FormsBoat\MainForm.pas' {MainForm};
+  MainForm in '..\FormsBoat\MainForm.pas' {MainForm},
+  dsdTranslator in '..\SOURCE\COMPONENT\dsdTranslator.pas';
 
 {$R *.res}
 

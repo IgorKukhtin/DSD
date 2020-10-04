@@ -26,7 +26,7 @@ BEGIN
     IF COALESCE (vbId_End, 0) = 0 AND EXISTS (SELECT Id FROM _replica.table_update_data WHERE Id >= inId_start)
     THEN
         -- находим первого
-        inId_start:= (SELECT MAX (Id) FROM _replica.table_update_data WHERE Id >= inId_start);
+        inId_start:= (SELECT MIN (Id) FROM _replica.table_update_data WHERE Id >= inId_start);
         -- вторая попытка
         vbId_End := (SELECT MAX (Id)
                      FROM _replica.table_update_data

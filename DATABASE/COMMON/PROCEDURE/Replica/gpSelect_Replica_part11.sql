@@ -79,15 +79,15 @@ BEGIN
                        || _replica.zfCalc_WordText_Split_replica (a.pk_keys, 1)  || ' = ') || ' || CAST(' || a.table_name || '.' || _replica.zfCalc_WordText_Split_replica (a.pk_keys, 1)|| ' AS Text)'
     
                        || CASE WHEN _replica.zfCalc_WordText_Split_replica (a.pk_keys, 2) <> ''
-                          THEN '||' ||_replica.zfStr_CHR_39 (' AND '
+                          THEN '||'  || _replica.zfStr_CHR_39 (' AND '
                             || _replica.zfCalc_WordText_Split_replica (a.pk_keys, 2) || ' = ') || ' || CAST(' || a.table_name || '.' || _replica.zfCalc_WordText_Split_replica (a.pk_keys, 2)|| ' AS Text)'
                           ELSE '' END
                        || CASE WHEN _replica.zfCalc_WordText_Split_replica (a.pk_keys, 3) <> ''
-                          THEN '||' ||_replica.zfStr_CHR_39 (' AND '
+                          THEN '||'  || _replica.zfStr_CHR_39 (' AND '
                             || _replica.zfCalc_WordText_Split_replica (a.pk_keys, 3) || ' = ') || ' || CAST(' || a.table_name || '.' || _replica.zfCalc_WordText_Split_replica (a.pk_keys, 3)|| ' AS Text)'
                           ELSE '' END
                        || CASE WHEN _replica.zfCalc_WordText_Split_replica (a.pk_keys, 4) <> ''
-                          THEN '||' ||_replica.zfStr_CHR_39 (' AND '
+                          THEN '||'  || _replica.zfStr_CHR_39 (' AND '
                             || _replica.zfCalc_WordText_Split_replica (a.pk_keys, 4) || ' = ') || ' || CAST(' || a.table_name || '.' || _replica.zfCalc_WordText_Split_replica (a.pk_keys, 4)|| ' AS Text)'
                           ELSE '' END
                end :: Text as res
@@ -127,17 +127,17 @@ BEGIN
                        ||' AS Text)'
     
                        || CASE WHEN _replica.zfCalc_WordText_Split_replica (a.pk_keys, 2) <> ''
-                          THEN _replica.zfStr_CHR_39 (' AND '
+                          THEN ' ||' || _replica.zfStr_CHR_39 (' AND '
                             || _replica.zfCalc_WordText_Split_replica (a.pk_keys, 2) || ' = ') || '|| CAST (_replica.zfCalc_WordText_Split_replica (table_update_data.pk_values, 2)'
                        ||' AS Text)'
                           ELSE '' END
                        || CASE WHEN _replica.zfCalc_WordText_Split_replica (a.pk_keys, 3) <> ''
-                          THEN _replica.zfStr_CHR_39 (' AND '
+                          THEN ' ||' || _replica.zfStr_CHR_39 (' AND '
                             || _replica.zfCalc_WordText_Split_replica (a.pk_keys, 3) || ' = ') || '|| CAST (_replica.zfCalc_WordText_Split_replica (table_update_data.pk_values, 3)'
                        ||' AS Text)'
                           ELSE '' END
                        || CASE WHEN _replica.zfCalc_WordText_Split_replica (a.pk_keys, 4) <> ''
-                          THEN _replica.zfStr_CHR_39 (' AND '
+                          THEN ' ||' || _replica.zfStr_CHR_39 (' AND '
                             || _replica.zfCalc_WordText_Split_replica (a.pk_keys, 4) || ' = ') || '|| CAST (_replica.zfCalc_WordText_Split_replica (table_update_data.pk_values, 4)'
                        ||' AS Text)'
                           ELSE '' END

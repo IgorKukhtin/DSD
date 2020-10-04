@@ -160,6 +160,7 @@
 			<DCCReference Include="..\SOURCE\EDI\DesadvFozzXML.pas"/>
 			<DCCReference Include="..\SOURCE\EDI\IftminFozzXML.pas"/>
 			<DCCReference Include="..\SOURCE\EDI\OrderSpFozzXML.pas"/>
+			<DCCReference Include="..\SOURCE\COMPONENT\dsdTranslator.pas"/>
 			<None Include="Load_PostgreSql.todo"/>
 			<BuildConfiguration Include="Debug">
 				<Key>Cfg_2</Key>

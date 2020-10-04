@@ -1,4 +1,4 @@
-inherited MainForm: TMainForm
+﻿inherited MainForm: TMainForm
   Caption = 'ProjectBoat'
   ClientHeight = 168
   ClientWidth = 723
@@ -22,40 +22,7 @@ inherited MainForm: TMainForm
       GuiParams = <>
       isShowModal = False
     end
-    object actReport_ProfitDemoPeriod: TdsdOpenForm [1]
-      Category = #1054#1090#1095#1077#1090#1099' ('#1059#1055')'
-      MoveParams = <>
-      Caption = #1054#1090#1095#1077#1090' '#1086' '#1055#1088#1080#1073#1099#1083#1103#1093' '#1080' '#1059#1073#1099#1090#1082#1072#1093' ('#1089#1088#1072#1074#1085#1077#1085#1080#1077' '#1087#1077#1088#1080#1086#1076#1086#1074') ('#1044#1077#1084#1086'-'#1074#1077#1088#1089#1080#1103')'
-      FormName = 'TReport_ProfitDemoPeriodForm'
-      FormNameParam.Value = 'TReport_ProfitDemoPeriodForm'
-      FormNameParam.DataType = ftString
-      FormNameParam.MultiSelectSeparator = ','
-      GuiParams = <>
-      isShowModal = False
-    end
-    object actReport_SaleOLAP_Analysis: TdsdOpenForm [2]
-      Category = #1054#1090#1095#1077#1090#1099' ('#1059#1055')'
-      MoveParams = <>
-      Caption = #1040#1085#1072#1083#1080#1079' '#1087#1088#1086#1076#1072#1078
-      FormName = 'TReport_SaleOLAP_AnalysisForm'
-      FormNameParam.Value = 'TReport_SaleOLAP_AnalysisForm'
-      FormNameParam.DataType = ftString
-      FormNameParam.MultiSelectSeparator = ','
-      GuiParams = <>
-      isShowModal = False
-    end
-    object actReport_Sale_AnalysisAll: TdsdOpenForm [3]
-      Category = #1054#1090#1095#1077#1090#1099
-      MoveParams = <>
-      Caption = #1040#1085#1072#1083#1080#1090#1080#1082#1072' '#1082#1083#1102#1095#1077#1074#1099#1093' '#1087#1086#1082#1072#1079#1072#1090#1077#1083#1077#1081' ('#1042#1057#1045')'
-      FormName = 'TReport_Sale_AnalysisAllForm'
-      FormNameParam.Value = 'TReport_Sale_AnalysisAllForm'
-      FormNameParam.DataType = ftString
-      FormNameParam.MultiSelectSeparator = ','
-      GuiParams = <>
-      isShowModal = False
-    end
-    object actReport_ProfitLossPeriod: TdsdOpenForm [4]
+    object actReport_ProfitLossPeriod: TdsdOpenForm [1]
       Category = #1054#1090#1095#1077#1090#1099' ('#1059#1055')'
       MoveParams = <>
       Caption = #1054#1090#1095#1077#1090' '#1086' '#1055#1088#1080#1073#1099#1083#1103#1093' '#1080' '#1059#1073#1099#1090#1082#1072#1093' ('#1089#1088#1072#1074#1085#1077#1085#1080#1077' '#1087#1077#1088#1080#1086#1076#1086#1074')'
@@ -66,19 +33,8 @@ inherited MainForm: TMainForm
       GuiParams = <>
       isShowModal = False
     end
-    object actReport_ProfitDemo: TdsdOpenForm [5]
-      Category = #1054#1090#1095#1077#1090#1099' ('#1059#1055')'
-      MoveParams = <>
-      Caption = #1054#1090#1095#1077#1090' '#1086' '#1055#1088#1080#1073#1099#1083#1103#1093' '#1080' '#1059#1073#1099#1090#1082#1072#1093' ('#1044#1077#1084#1086'-'#1074#1077#1088#1089#1080#1103')'
-      FormName = 'TReport_ProfitDemoForm'
-      FormNameParam.Value = 'TReport_ProfitDemoForm'
-      FormNameParam.DataType = ftString
-      FormNameParam.MultiSelectSeparator = ','
-      GuiParams = <>
-      isShowModal = False
-    end
-    object actReport_Sale: TdsdOpenForm [6]
-      Category = #1054#1090#1095#1077#1090#1099
+    object actReport_Sale: TdsdOpenForm [2]
+      Category = #1054#1090#1095#1077#1090#1099' ('#1089#1082#1083#1072#1076')'
       MoveParams = <>
       Caption = #1055#1088#1086#1076#1072#1078#1072' '#1087#1086#1082#1091#1087#1072#1090#1077#1083#1102
       FormName = 'TReport_SaleForm'
@@ -88,43 +44,10 @@ inherited MainForm: TMainForm
       GuiParams = <>
       isShowModal = False
     end
-    object actReport_ReturnIn: TdsdOpenForm [7]
-      Category = #1054#1090#1095#1077#1090#1099
+    object actReport_Goods_RemainsCurrent_onDate: TdsdOpenForm [3]
+      Category = #1054#1090#1095#1077#1090#1099' ('#1089#1082#1083#1072#1076')'
       MoveParams = <>
-      Caption = #1042#1086#1079#1074#1088#1072#1090' '#1087#1086#1082#1091#1087#1072#1090#1077#1083#1103
-      FormName = 'TReport_ReturnInForm'
-      FormNameParam.Value = 'TReport_ReturnInForm'
-      FormNameParam.DataType = ftString
-      FormNameParam.MultiSelectSeparator = ','
-      GuiParams = <>
-      isShowModal = False
-    end
-    object actReport_Sale_Analysis: TdsdOpenForm [8]
-      Category = #1054#1090#1095#1077#1090#1099
-      MoveParams = <>
-      Caption = #1040#1085#1072#1083#1080#1090#1080#1082#1072' '#1082#1083#1102#1095#1077#1074#1099#1093' '#1087#1086#1082#1072#1079#1072#1090#1077#1083#1077#1081
-      FormName = 'TReport_Sale_AnalysisForm'
-      FormNameParam.Value = 'TReport_Sale_AnalysisForm'
-      FormNameParam.DataType = ftString
-      FormNameParam.MultiSelectSeparator = ','
-      GuiParams = <>
-      isShowModal = False
-    end
-    object actReport_OH_DiscountPeriod: TdsdOpenForm [9]
-      Category = #1048#1089#1090#1086#1088#1080#1080
-      MoveParams = <>
-      Caption = #1054#1090#1095#1077#1090' <'#1055#1077#1088#1080#1086#1076#1099' '#1089#1077#1079#1086#1085#1085#1099#1093' '#1089#1082#1080#1076#1086#1082'>'
-      FormName = 'TReport_OH_DiscountPeriodForm'
-      FormNameParam.Value = 'TReport_OH_DiscountPeriodForm'
-      FormNameParam.DataType = ftString
-      FormNameParam.MultiSelectSeparator = ','
-      GuiParams = <>
-      isShowModal = False
-    end
-    object actReport_Goods_RemainsCurrent_onDate: TdsdOpenForm [10]
-      Category = #1054#1090#1095#1077#1090#1099
-      MoveParams = <>
-      Caption = #1054#1089#1090#1072#1090#1082#1080' '#1090#1086#1074#1072#1088#1072' '#1085#1072' '#1076#1072#1090#1091
+      Caption = #1054#1089#1090#1072#1090#1082#1080' '#1085#1072' '#1076#1072#1090#1091
       FormName = 'TReport_Goods_RemainsCurrent_onDateForm'
       FormNameParam.Value = 'TReport_Goods_RemainsCurrent_onDateForm'
       FormNameParam.DataType = ftString
@@ -132,18 +55,7 @@ inherited MainForm: TMainForm
       GuiParams = <>
       isShowModal = False
     end
-    object actProfitLossDemo: TdsdOpenForm [11]
-      Category = #1057#1087#1088#1072#1074#1086#1095#1085#1080#1082#1080'\'#1059#1087#1088#1072#1074#1083#1077#1085#1095#1077#1089#1082#1080#1077' '#1089#1087#1088#1072#1074#1086#1095#1085#1080#1082#1080
-      MoveParams = <>
-      Caption = 'M'#1086#1076#1077#1083#1100' '#1086#1090#1095#1077#1090#1072' '#1076#1083#1103' '#1076#1077#1084#1086'-'#1074#1077#1088#1089#1080#1080
-      FormName = 'TProfitLossDemoForm'
-      FormNameParam.Value = 'TProfitLossDemoForm'
-      FormNameParam.DataType = ftString
-      FormNameParam.MultiSelectSeparator = ','
-      GuiParams = <>
-      isShowModal = False
-    end
-    object actReport_SaleOLAP: TdsdOpenForm [12]
+    object actReport_SaleOLAP: TdsdOpenForm [4]
       Category = #1054#1090#1095#1077#1090#1099' ('#1059#1055')'
       MoveParams = <>
       Caption = #1054#1090#1095#1077#1090' '#1087#1086' '#1087#1088#1086#1076#1072#1078#1072#1084' ('#1054#1051#1040#1055')'
@@ -154,18 +66,7 @@ inherited MainForm: TMainForm
       GuiParams = <>
       isShowModal = False
     end
-    object actIncomeKoeff: TdsdOpenForm [13]
-      Category = #1057#1083#1091#1078#1077#1073#1085#1099#1077
-      MoveParams = <>
-      Caption = #1053#1072#1089#1090#1088#1086#1081#1082#1072' '#1050#1086#1101#1092#1092'. '#1076#1083#1103' '#1087#1088#1080#1093#1086#1076#1072' '#1086#1090' '#1087#1086#1089#1090#1072#1074#1097'.'
-      FormName = 'TIncomeKoeffEditForm'
-      FormNameParam.Value = 'TIncomeKoeffEditForm'
-      FormNameParam.DataType = ftString
-      FormNameParam.MultiSelectSeparator = ','
-      GuiParams = <>
-      isShowModal = False
-    end
-    object actReport_CollationByClient: TdsdOpenForm [14]
+    object actReport_CollationByClient: TdsdOpenForm [5]
       Category = #1054#1090#1095#1077#1090#1099' ('#1092#1080#1085'.)'
       MoveParams = <>
       Caption = #1040#1082#1090' '#1089#1074#1077#1088#1082#1080
@@ -176,21 +77,10 @@ inherited MainForm: TMainForm
       GuiParams = <>
       isShowModal = False
     end
-    object actClientSMS: TdsdOpenForm [15]
-      Category = #1054#1090#1095#1077#1090#1099
+    object actReport_GoodsCode: TdsdOpenForm [6]
+      Category = #1054#1090#1095#1077#1090#1099' ('#1089#1082#1083#1072#1076')'
       MoveParams = <>
-      Caption = #1041#1072#1079#1072' '#1082#1083#1080#1077#1085#1090#1086#1074' '#1057#1052#1057
-      FormName = 'TClientSMSForm'
-      FormNameParam.Value = 'TClientSMSForm'
-      FormNameParam.DataType = ftString
-      FormNameParam.MultiSelectSeparator = ','
-      GuiParams = <>
-      isShowModal = False
-    end
-    object actReport_GoodsCode: TdsdOpenForm [16]
-      Category = #1054#1090#1095#1077#1090#1099
-      MoveParams = <>
-      Caption = #1044#1074#1080#1078#1077#1085#1080#1077' '#1090#1086#1074#1072#1088#1072' ('#1074#1074#1086#1076' '#1050#1086#1076#1072')'
+      Caption = #1044#1074#1080#1078#1077#1085#1080#1077' ('#1074#1074#1086#1076' '#1040#1088#1090#1080#1082#1091#1083#1072')'
       FormName = 'TReport_GoodsCodeForm'
       FormNameParam.Value = 'TReport_GoodsCodeForm'
       FormNameParam.DataType = ftString
@@ -198,149 +88,7 @@ inherited MainForm: TMainForm
       GuiParams = <>
       isShowModal = False
     end
-    object actReport_Sale_ContainerError: TdsdOpenForm [17]
-      Category = #1057#1083#1091#1078#1077#1073#1085#1099#1077
-      MoveParams = <>
-      Caption = #1055#1088#1086#1074#1077#1088#1082#1072' '#1044#1086#1083#1075#1086#1074
-      FormName = 'TReport_Sale_ContainerErrorForm'
-      FormNameParam.Value = 'TReport_Sale_ContainerErrorForm'
-      FormNameParam.DataType = ftString
-      FormNameParam.MultiSelectSeparator = ','
-      GuiParams = <>
-      isShowModal = False
-    end
-    object actReport_Client_LastError: TdsdOpenForm [18]
-      Category = #1057#1083#1091#1078#1077#1073#1085#1099#1077
-      MoveParams = <>
-      Caption = #1055#1088#1086#1074#1077#1088#1082#1072' '#1057#1091#1084#1084' '#1087#1086#1089#1083#1077#1076#1085#1077#1081' '#1087#1086#1082#1091#1087#1082#1080' '#1055#1086#1082#1091#1087#1072#1090#1077#1083#1077#1081
-      FormName = 'TReport_Client_LastErrorForm'
-      FormNameParam.Value = 'TReport_Client_LastErrorForm'
-      FormNameParam.DataType = ftString
-      FormNameParam.MultiSelectSeparator = ','
-      GuiParams = <>
-      isShowModal = False
-    end
-    object actReport_Client_TotalError: TdsdOpenForm [19]
-      Category = #1057#1083#1091#1078#1077#1073#1085#1099#1077
-      MoveParams = <>
-      Caption = #1055#1088#1086#1074#1077#1088#1082#1072' '#1048#1090#1086#1075#1086#1074#1099#1093' '#1089#1091#1084#1084' '#1055#1086#1082#1091#1087#1072#1090#1077#1083#1077#1081
-      FormName = 'TReport_Client_TotalErrorForm'
-      FormNameParam.Value = 'TReport_Client_TotalErrorForm'
-      FormNameParam.DataType = ftString
-      FormNameParam.MultiSelectSeparator = ','
-      GuiParams = <>
-      isShowModal = False
-    end
-    object actReport_Sale_TotalError: TdsdOpenForm [20]
-      Category = #1057#1083#1091#1078#1077#1073#1085#1099#1077
-      MoveParams = <>
-      Caption = #1055#1088#1086#1074#1077#1088#1082#1072' '#1048#1090#1086#1075#1086#1074#1099#1093' '#1057#1091#1084#1084' '#1074' '#1055#1088#1086#1076#1072#1078#1072#1093
-      FormName = 'TReport_Sale_TotalErrorForm'
-      FormNameParam.Value = 'TReport_Sale_TotalErrorForm'
-      FormNameParam.DataType = ftString
-      FormNameParam.MultiSelectSeparator = ','
-      GuiParams = <>
-      isShowModal = False
-    end
-    object actReport_ReturnIn_TotalError: TdsdOpenForm [21]
-      Category = #1057#1083#1091#1078#1077#1073#1085#1099#1077
-      MoveParams = <>
-      Caption = #1055#1088#1086#1074#1077#1088#1082#1072' '#1057#1091#1084#1084#1099' '#1074#1086#1079#1074#1088#1072#1090#1072' '#1086#1087#1083#1072#1090#1099' '#1074' '#1042#1086#1079#1074#1088#1072#1090#1072#1093
-      FormName = 'TReport_ReturnIn_TotalErrorForm'
-      FormNameParam.Value = 'TReport_ReturnIn_TotalErrorForm'
-      FormNameParam.DataType = ftString
-      FormNameParam.MultiSelectSeparator = ','
-      GuiParams = <>
-      isShowModal = False
-    end
-    object actGoodsAccountMovement: TdsdOpenForm [22]
-      Category = #1044#1086#1082#1091#1084#1077#1085#1090#1099
-      MoveParams = <>
-      Caption = #1056#1072#1089#1095#1077#1090#1099
-      Hint = #1057#1086#1079#1076#1072#1085#1080#1077' - '#1056#1072#1089#1095#1077#1090#1099' '#1089' '#1087#1086#1082#1091#1087#1072#1090#1077#1083#1077#1084' '#1079#1072' '#1055#1088#1086#1076#1072#1078#1091
-      FormName = 'TGoodsAccountForm'
-      FormNameParam.Value = 'TGoodsAccountForm'
-      FormNameParam.DataType = ftString
-      FormNameParam.MultiSelectSeparator = ','
-      GuiParams = <
-        item
-          Name = 'Id'
-          Value = 0
-          MultiSelectSeparator = ','
-        end
-        item
-          Name = 'ShowAll'
-          Value = True
-          DataType = ftBoolean
-          MultiSelectSeparator = ','
-        end
-        item
-          Name = 'inOperDate'
-          Value = 43101d
-          DataType = ftDateTime
-          MultiSelectSeparator = ','
-        end>
-      isShowModal = False
-    end
-    object actReturnInMovement: TdsdOpenForm [23]
-      Category = #1044#1086#1082#1091#1084#1077#1085#1090#1099
-      MoveParams = <>
-      Caption = #1042#1086#1079#1074#1088#1072#1090
-      Hint = #1057#1086#1079#1076#1072#1085#1080#1077' - '#1042#1086#1079#1074#1088#1072#1090' '#1086#1090' '#1087#1086#1082#1091#1087#1072#1090#1077#1083#1103
-      FormName = 'TReturnInForm'
-      FormNameParam.Value = 'TReturnInForm'
-      FormNameParam.DataType = ftString
-      FormNameParam.MultiSelectSeparator = ','
-      GuiParams = <
-        item
-          Name = 'Id'
-          Value = 0
-          MultiSelectSeparator = ','
-        end
-        item
-          Name = 'ShowAll'
-          Value = True
-          DataType = ftBoolean
-          MultiSelectSeparator = ','
-        end
-        item
-          Name = 'inOperDate'
-          Value = 43101d
-          DataType = ftDateTime
-          MultiSelectSeparator = ','
-        end>
-      isShowModal = False
-    end
-    object actSaleMovement: TdsdOpenForm [24]
-      Category = #1044#1086#1082#1091#1084#1077#1085#1090#1099
-      MoveParams = <>
-      Caption = #1055#1088#1086#1076#1072#1078#1072
-      Hint = #1057#1086#1079#1076#1072#1085#1080#1077' - '#1055#1088#1086#1076#1072#1078#1072' '#1087#1086#1082#1091#1087#1072#1090#1077#1083#1102
-      FormName = 'TSaleForm'
-      FormNameParam.Value = 'TSaleForm'
-      FormNameParam.DataType = ftString
-      FormNameParam.MultiSelectSeparator = ','
-      GuiParams = <
-        item
-          Name = 'Id'
-          Value = 0
-          MultiSelectSeparator = ','
-        end
-        item
-          Name = 'ShowAll'
-          Value = False
-          DataType = ftBoolean
-          MultiSelectSeparator = ','
-        end
-        item
-          Name = 'inOperDate'
-          Value = 43101d
-          DataType = ftDateTime
-          MultiSelectSeparator = ','
-        end>
-      isShowModal = False
-    end
-    object actReport_MotionByClient: TdsdOpenForm [25]
+    object actReport_MotionByClient: TdsdOpenForm [7]
       Category = #1054#1090#1095#1077#1090#1099' ('#1092#1080#1085'.)'
       MoveParams = <>
       Caption = #1044#1074#1080#1078#1077#1085#1080#1077' '#1087#1086' '#1087#1086#1082#1091#1087#1072#1090#1077#1083#1102
@@ -351,53 +99,7 @@ inherited MainForm: TMainForm
       GuiParams = <>
       isShowModal = False
     end
-    object actReport_ClientDebt: TdsdOpenForm [26]
-      Category = #1054#1090#1095#1077#1090#1099' ('#1092#1080#1085'.)'
-      MoveParams = <>
-      Caption = #1044#1086#1083#1075#1080' '#1055#1086#1082#1091#1087#1072#1090#1077#1083#1077#1081
-      FormName = 'TReport_ClientDebtForm'
-      FormNameParam.Value = 'TReport_ClientDebtForm'
-      FormNameParam.DataType = ftString
-      FormNameParam.MultiSelectSeparator = ','
-      GuiParams = <>
-      isShowModal = False
-    end
-    object actDiscountPeriod: TdsdOpenForm [27]
-      Category = #1048#1089#1090#1086#1088#1080#1080
-      MoveParams = <>
-      Caption = #1057#1087#1088#1072#1074#1086#1095#1085#1080#1082' <'#1055#1077#1088#1080#1086#1076#1099' '#1089#1077#1079#1086#1085#1085#1099#1093' '#1089#1082#1080#1076#1086#1082'>'
-      FormName = 'TDiscountPeriodForm'
-      FormNameParam.Value = 'TDiscountPeriodForm'
-      FormNameParam.DataType = ftString
-      FormNameParam.MultiSelectSeparator = ','
-      GuiParams = <>
-      isShowModal = False
-    end
-    object actGoodsAccount: TdsdOpenForm [28]
-      Category = #1044#1086#1082#1091#1084#1077#1085#1090#1099
-      MoveParams = <>
-      Caption = #1056#1072#1089#1095#1077#1090#1099' '#1079#1072' '#1055#1088#1086#1076#1072#1078#1091' ('#1074#1089#1077')'
-      Hint = #1056#1072#1089#1095#1077#1090#1099' '#1089' '#1087#1086#1082#1091#1087#1072#1090#1077#1083#1077#1084' '#1079#1072' '#1055#1088#1086#1076#1072#1078#1091' ('#1078#1091#1088#1085#1072#1083')'
-      FormName = 'TGoodsAccountJournalForm'
-      FormNameParam.Value = 'TGoodsAccountJournalForm'
-      FormNameParam.DataType = ftString
-      FormNameParam.MultiSelectSeparator = ','
-      GuiParams = <>
-      isShowModal = False
-    end
-    object actGoodsAccount_ReturnIn: TdsdOpenForm [29]
-      Category = #1044#1086#1082#1091#1084#1077#1085#1090#1099
-      MoveParams = <>
-      Caption = #1056#1072#1089#1095#1077#1090#1099' '#1079#1072' '#1042#1086#1079#1074#1088#1072#1090' ('#1074#1089#1077')'
-      Hint = #1056#1072#1089#1095#1077#1090#1099' '#1089' '#1087#1086#1082#1091#1087#1072#1090#1077#1083#1077#1084' '#1079#1072' '#1042#1086#1079#1074#1088#1072#1090' ('#1078#1091#1088#1085#1072#1083')'
-      FormName = 'TGoodsAccount_ReturnInJournalForm'
-      FormNameParam.Value = 'TGoodsAccount_ReturnInJournalForm'
-      FormNameParam.DataType = ftString
-      FormNameParam.MultiSelectSeparator = ','
-      GuiParams = <>
-      isShowModal = False
-    end
-    object actReport_GoodsMI_Account: TdsdOpenForm [30]
+    object actReport_GoodsMI_Account: TdsdOpenForm [8]
       Category = #1054#1090#1095#1077#1090#1099' ('#1092#1080#1085'.)'
       MoveParams = <>
       Caption = #1054#1090#1095#1077#1090' '#1087#1086' '#1088#1072#1089#1095#1077#1090#1072#1084
@@ -408,19 +110,8 @@ inherited MainForm: TMainForm
       GuiParams = <>
       isShowModal = False
     end
-    object actReport_GoodsAccount_TotalError: TdsdOpenForm [31]
-      Category = #1057#1083#1091#1078#1077#1073#1085#1099#1077
-      MoveParams = <>
-      Caption = #1055#1088#1086#1074#1077#1088#1082#1072' '#1057#1091#1084#1084#1099' '#1086#1087#1083#1072#1090#1099' '#1074' '#1056#1072#1089#1095#1077#1090#1072#1093' '#1087#1086#1082#1091#1087#1072#1090#1077#1083#1077#1081
-      FormName = 'TReport_GoodsAccount_TotalErrorForm'
-      FormNameParam.Value = 'TReport_GoodsAccount_TotalErrorForm'
-      FormNameParam.DataType = ftString
-      FormNameParam.MultiSelectSeparator = ','
-      GuiParams = <>
-      isShowModal = False
-    end
-    object actReport_MovementIncome: TdsdOpenForm [32]
-      Category = #1054#1090#1095#1077#1090#1099
+    object actReport_MovementIncome: TdsdOpenForm [9]
+      Category = #1054#1090#1095#1077#1090#1099' ('#1089#1082#1083#1072#1076')'
       MoveParams = <>
       Caption = #1055#1088#1080#1093#1086#1076' '#1086#1090' '#1087#1086#1089#1090#1072#1074#1097#1080#1082#1072
       Hint = #1055#1088#1080#1093#1086#1076' '#1086#1090' '#1087#1086#1089#1090#1072#1074#1097#1080#1082#1072
@@ -431,20 +122,8 @@ inherited MainForm: TMainForm
       GuiParams = <>
       isShowModal = False
     end
-    object actReport_MovementReturnOut: TdsdOpenForm [33]
-      Category = #1054#1090#1095#1077#1090#1099
-      MoveParams = <>
-      Caption = #1042#1086#1079#1074#1088#1072#1090' '#1087#1086#1089#1090#1072#1074#1097#1080#1082#1091
-      Hint = #1042#1086#1079#1074#1088#1072#1090' '#1087#1086#1089#1090#1072#1074#1097#1080#1082#1091
-      FormName = 'TReport_MovementReturnOutForm'
-      FormNameParam.Value = 'TReport_MovementReturnOutForm'
-      FormNameParam.DataType = ftString
-      FormNameParam.MultiSelectSeparator = ','
-      GuiParams = <>
-      isShowModal = False
-    end
-    object actReport_MovementSend: TdsdOpenForm [34]
-      Category = #1054#1090#1095#1077#1090#1099
+    object actReport_MovementSend: TdsdOpenForm [10]
+      Category = #1054#1090#1095#1077#1090#1099' ('#1089#1082#1083#1072#1076')'
       MoveParams = <>
       Caption = #1055#1077#1088#1077#1084#1077#1097#1077#1085#1080#1077
       Hint = #1055#1077#1088#1077#1084#1077#1097#1077#1085#1080#1077
@@ -455,21 +134,10 @@ inherited MainForm: TMainForm
       GuiParams = <>
       isShowModal = False
     end
-    object actReport_Goods: TdsdOpenForm [35]
-      Category = #1054#1090#1095#1077#1090#1099
+    object actReport_Goods_Remains: TdsdOpenForm [11]
+      Category = #1054#1090#1095#1077#1090#1099' ('#1089#1082#1083#1072#1076')'
       MoveParams = <>
-      Caption = #1044#1074#1080#1078#1077#1085#1080#1077' '#1090#1086#1074#1072#1088#1072
-      FormName = 'TReport_GoodsForm'
-      FormNameParam.Value = 'TReport_GoodsForm'
-      FormNameParam.DataType = ftString
-      FormNameParam.MultiSelectSeparator = ','
-      GuiParams = <>
-      isShowModal = False
-    end
-    object actReport_Goods_RemainsCurrent: TdsdOpenForm [36]
-      Category = #1054#1090#1095#1077#1090#1099
-      MoveParams = <>
-      Caption = #1056#1077#1077#1089#1090#1088' '#1090#1086#1074#1072#1088#1086#1074
+      Caption = #1054#1089#1090#1072#1090#1082#1080
       FormName = 'TReport_Goods_RemainsCurrentForm'
       FormNameParam.Value = 'TReport_Goods_RemainsCurrentForm'
       FormNameParam.DataType = ftString
@@ -477,19 +145,8 @@ inherited MainForm: TMainForm
       GuiParams = <>
       isShowModal = False
     end
-    object actGoodsPrint: TdsdOpenForm [37]
-      Category = #1057#1087#1088#1072#1074#1086#1095#1085#1080#1082#1080
-      MoveParams = <>
-      Caption = #1058#1086#1074#1072#1088#1099' '#1076#1083#1103' '#1087#1077#1095#1072#1090#1080' '#1094#1077#1085#1085#1080#1082#1086#1074
-      FormName = 'TGoodsPrintForm'
-      FormNameParam.Value = 'TGoodsPrintForm'
-      FormNameParam.DataType = ftString
-      FormNameParam.MultiSelectSeparator = ','
-      GuiParams = <>
-      isShowModal = False
-    end
-    object actReport_MovementLoss: TdsdOpenForm [38]
-      Category = #1054#1090#1095#1077#1090#1099
+    object actReport_MovementLoss: TdsdOpenForm [12]
+      Category = #1054#1090#1095#1077#1090#1099' ('#1089#1082#1083#1072#1076')'
       MoveParams = <>
       Caption = #1057#1087#1080#1089#1072#1085#1080#1077
       Hint = #1055#1077#1088#1077#1084#1077#1097#1077#1085#1080#1077
@@ -500,23 +157,11 @@ inherited MainForm: TMainForm
       GuiParams = <>
       isShowModal = False
     end
-    object actReturnIn: TdsdOpenForm [39]
-      Category = #1044#1086#1082#1091#1084#1077#1085#1090#1099
-      MoveParams = <>
-      Caption = #1042#1086#1079#1074#1088#1072#1090' '#1086#1090' '#1087#1086#1082#1091#1087#1072#1090#1077#1083#1103' ('#1074#1089#1077')'
-      Hint = #1042#1086#1079#1074#1088#1072#1090' '#1086#1090' '#1087#1086#1082#1091#1087#1072#1090#1077#1083#1103' ('#1078#1091#1088#1085#1072#1083')'
-      FormName = 'TReturnInJournalForm'
-      FormNameParam.Value = 'TReturnInJournalForm'
-      FormNameParam.DataType = ftString
-      FormNameParam.MultiSelectSeparator = ','
-      GuiParams = <>
-      isShowModal = False
-    end
-    object actDiscountPeriodItem: TdsdOpenForm [40]
+    object actDiscountItem: TdsdOpenForm [13]
       Category = #1048#1089#1090#1086#1088#1080#1080
       MoveParams = <>
-      Caption = #1048#1089#1090#1086#1088#1080#1103' '#1089#1077#1079#1086#1085#1085#1099#1093' '#1089#1082#1080#1076#1086#1082
-      Hint = #1048#1089#1090#1086#1088#1080#1103' '#1089#1077#1079#1086#1085#1085#1099#1093' '#1089#1082#1080#1076#1086#1082
+      Caption = #1048#1089#1090#1086#1088#1080#1103' '#1089#1082#1080#1076#1086#1082
+      Hint = #1048#1089#1090#1086#1088#1080#1103' '#1089#1082#1080#1076#1086#1082
       FormName = 'TDiscountPeriodItemForm'
       FormNameParam.Value = 'TDiscountPeriodItemForm'
       FormNameParam.DataType = ftString
@@ -524,11 +169,23 @@ inherited MainForm: TMainForm
       GuiParams = <>
       isShowModal = False
     end
-    object actSale: TdsdOpenForm [41]
+    object actIncome: TdsdOpenForm [14]
       Category = #1044#1086#1082#1091#1084#1077#1085#1090#1099
       MoveParams = <>
-      Caption = #1055#1088#1086#1076#1072#1078#1072' '#1087#1086#1082#1091#1087#1072#1090#1077#1083#1102' ('#1074#1089#1077')'
-      Hint = #1055#1088#1086#1076#1072#1078#1072' '#1087#1086#1082#1091#1087#1072#1090#1077#1083#1102' ('#1078#1091#1088#1085#1072#1083')'
+      Caption = #1055#1088#1080#1093#1086#1076' '#1086#1090' '#1055#1086#1089#1090#1072#1074#1097#1080#1082#1072
+      Hint = #1055#1088#1080#1093#1086#1076' '#1086#1090' '#1055#1086#1089#1090#1072#1074#1097#1080#1082#1072
+      FormName = 'TIncomeJournalForm'
+      FormNameParam.Value = 'TIncomeJournalForm'
+      FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
+      GuiParams = <>
+      isShowModal = False
+    end
+    object actSale: TdsdOpenForm [15]
+      Category = #1044#1086#1082#1091#1084#1077#1085#1090#1099
+      MoveParams = <>
+      Caption = #1055#1088#1086#1076#1072#1078#1072' '#1082#1083#1080#1077#1085#1090#1091
+      Hint = #1055#1088#1086#1076#1072#1078#1072' '#1082#1083#1080#1077#1085#1090#1091
       FormName = 'TSaleJournalForm'
       FormNameParam.Value = 'TSaleJournalForm'
       FormNameParam.DataType = ftString
@@ -536,7 +193,7 @@ inherited MainForm: TMainForm
       GuiParams = <>
       isShowModal = False
     end
-    object actSend: TdsdOpenForm [42]
+    object actSend: TdsdOpenForm [16]
       Category = #1044#1086#1082#1091#1084#1077#1085#1090#1099
       MoveParams = <>
       Caption = #1055#1077#1088#1077#1084#1077#1097#1077#1085#1080#1077
@@ -548,19 +205,19 @@ inherited MainForm: TMainForm
       GuiParams = <>
       isShowModal = False
     end
-    object actReturnOut: TdsdOpenForm [43]
+    object actLoss: TdsdOpenForm [17]
       Category = #1044#1086#1082#1091#1084#1077#1085#1090#1099
       MoveParams = <>
-      Caption = #1042#1086#1079#1074#1088#1072#1090' '#1087#1086#1089#1090#1072#1074#1097#1080#1082#1091
-      Hint = #1042#1086#1079#1074#1088#1072#1090' '#1087#1086#1089#1090#1072#1074#1097#1080#1082#1091
-      FormName = 'TReturnOutJournalForm'
-      FormNameParam.Value = 'TReturnOutJournalForm'
+      Caption = #1057#1087#1080#1089#1072#1085#1080#1077
+      Hint = #1057#1087#1080#1089#1072#1085#1080#1077
+      FormName = 'TLossJournalForm'
+      FormNameParam.Value = 'TLossJournalForm'
       FormNameParam.DataType = ftString
       FormNameParam.MultiSelectSeparator = ','
       GuiParams = <>
       isShowModal = False
     end
-    object actInventory: TdsdOpenForm [44]
+    object actInventory: TdsdOpenForm [18]
       Category = #1044#1086#1082#1091#1084#1077#1085#1090#1099
       MoveParams = <>
       Caption = #1048#1085#1074#1077#1085#1090#1072#1088#1080#1079#1072#1094#1080#1103
@@ -575,19 +232,7 @@ inherited MainForm: TMainForm
     inherited actExit: TFileExit
       Category = #1057#1083#1091#1078#1077#1073#1085#1099#1077
     end
-    object actIncome: TdsdOpenForm [47]
-      Category = #1044#1086#1082#1091#1084#1077#1085#1090#1099
-      MoveParams = <>
-      Caption = #1055#1088#1080#1093#1086#1076' '#1086#1090' '#1087#1086#1089#1090#1072#1074#1097#1080#1082#1072
-      Hint = #1055#1088#1080#1093#1086#1076' '#1086#1090' '#1087#1086#1089#1090#1072#1074#1097#1080#1082#1072
-      FormName = 'TIncomeJournalForm'
-      FormNameParam.Value = 'TIncomeJournalForm'
-      FormNameParam.DataType = ftString
-      FormNameParam.MultiSelectSeparator = ','
-      GuiParams = <>
-      isShowModal = False
-    end
-    object actUser: TdsdOpenForm [50]
+    object actUser: TdsdOpenForm [23]
       Category = #1057#1083#1091#1078#1077#1073#1085#1099#1077
       MoveParams = <>
       Caption = #1055#1086#1083#1100#1079#1086#1074#1072#1090#1077#1083#1080
@@ -598,7 +243,7 @@ inherited MainForm: TMainForm
       GuiParams = <>
       isShowModal = False
     end
-    object actForms: TdsdOpenForm [54]
+    object actForms: TdsdOpenForm [27]
       Category = #1057#1083#1091#1078#1077#1073#1085#1099#1077
       MoveParams = <>
       Caption = #1059#1087#1088#1072#1074#1083#1077#1085#1080#1077' '#1089#1087#1088#1072#1074#1086#1095#1085#1086#1081' '#1089#1080#1089#1090#1077#1084#1086#1081
@@ -610,7 +255,7 @@ inherited MainForm: TMainForm
       GuiParams = <>
       isShowModal = False
     end
-    object actRole: TdsdOpenForm [55]
+    object actRole: TdsdOpenForm [28]
       Category = #1057#1083#1091#1078#1077#1073#1085#1099#1077
       MoveParams = <>
       Caption = #1056#1086#1083#1080
@@ -621,7 +266,7 @@ inherited MainForm: TMainForm
       GuiParams = <>
       isShowModal = False
     end
-    object actPriceList: TdsdOpenForm [56]
+    object actPriceList: TdsdOpenForm [29]
       Category = #1057#1087#1088#1072#1074#1086#1095#1085#1080#1082#1080
       MoveParams = <>
       Caption = #1055#1088#1072#1081#1089' '#1083#1080#1089#1090#1099
@@ -635,11 +280,11 @@ inherited MainForm: TMainForm
     inherited actImportExportLink: TdsdOpenForm
       Enabled = False
     end
-    inherited actAccount: TdsdOpenForm [66]
+    inherited actAccount: TdsdOpenForm [39]
     end
-    inherited actProfitLossGroup: TdsdOpenForm [67]
+    inherited actProfitLossGroup: TdsdOpenForm [40]
     end
-    inherited actProfitLossDirection: TdsdOpenForm [68]
+    inherited actProfitLossDirection: TdsdOpenForm [41]
     end
     object actMeasure: TdsdOpenForm
       Category = #1057#1087#1088#1072#1074#1086#1095#1085#1080#1082#1080
@@ -647,28 +292,6 @@ inherited MainForm: TMainForm
       Caption = #1045#1076#1080#1085#1080#1094#1099' '#1080#1079#1084#1077#1088#1077#1085#1080#1103
       FormName = 'TMeasureForm'
       FormNameParam.Value = 'TMeasureForm'
-      FormNameParam.DataType = ftString
-      FormNameParam.MultiSelectSeparator = ','
-      GuiParams = <>
-      isShowModal = False
-    end
-    object actCompositionGroup: TdsdOpenForm
-      Category = #1057#1087#1088#1072#1074#1086#1095#1085#1080#1082#1080
-      MoveParams = <>
-      Caption = #1043#1088#1091#1087#1087#1072' '#1076#1083#1103' '#1089#1086#1089#1090#1072#1074#1072' '#1090#1086#1074#1072#1088#1072
-      FormName = 'TCompositionGroupForm'
-      FormNameParam.Value = 'TCompositionGroupForm'
-      FormNameParam.DataType = ftString
-      FormNameParam.MultiSelectSeparator = ','
-      GuiParams = <>
-      isShowModal = False
-    end
-    object actComposition: TdsdOpenForm
-      Category = #1057#1087#1088#1072#1074#1086#1095#1085#1080#1082#1080
-      MoveParams = <>
-      Caption = #1057#1086#1089#1090#1072#1074' '#1090#1086#1074#1072#1088#1072
-      FormName = 'TCompositionForm'
-      FormNameParam.Value = 'TCompositionForm'
       FormNameParam.DataType = ftString
       FormNameParam.MultiSelectSeparator = ','
       GuiParams = <>
@@ -691,39 +314,6 @@ inherited MainForm: TMainForm
       Caption = #1058#1086#1088#1075#1086#1074#1072#1103' '#1084#1072#1088#1082#1072
       FormName = 'TBrandForm'
       FormNameParam.Value = 'TBrandForm'
-      FormNameParam.DataType = ftString
-      FormNameParam.MultiSelectSeparator = ','
-      GuiParams = <>
-      isShowModal = False
-    end
-    object actFabrika: TdsdOpenForm
-      Category = #1057#1087#1088#1072#1074#1086#1095#1085#1080#1082#1080
-      MoveParams = <>
-      Caption = #1060#1072#1073#1088#1080#1082#1072' '#1087#1088#1086#1080#1079#1074#1086#1076#1080#1090#1077#1083#1100
-      FormName = 'TFabrikaForm'
-      FormNameParam.Value = 'TFabrikaForm'
-      FormNameParam.DataType = ftString
-      FormNameParam.MultiSelectSeparator = ','
-      GuiParams = <>
-      isShowModal = False
-    end
-    object actLineFabrica: TdsdOpenForm
-      Category = #1057#1087#1088#1072#1074#1086#1095#1085#1080#1082#1080
-      MoveParams = <>
-      Caption = #1051#1080#1085#1080#1103' '#1082#1086#1083#1083#1077#1082#1094#1080#1080
-      FormName = 'TLineFabricaForm'
-      FormNameParam.Value = 'TLineFabricaForm'
-      FormNameParam.DataType = ftString
-      FormNameParam.MultiSelectSeparator = ','
-      GuiParams = <>
-      isShowModal = False
-    end
-    object actGoodsInfo: TdsdOpenForm
-      Category = #1057#1087#1088#1072#1074#1086#1095#1085#1080#1082#1080
-      MoveParams = <>
-      Caption = #1054#1087#1080#1089#1072#1085#1080#1077' '#1090#1086#1074#1072#1088#1072
-      FormName = 'TGoodsInfoForm'
-      FormNameParam.Value = 'TGoodsInfoForm'
       FormNameParam.DataType = ftString
       FormNameParam.MultiSelectSeparator = ','
       GuiParams = <>
@@ -773,39 +363,6 @@ inherited MainForm: TMainForm
       GuiParams = <>
       isShowModal = False
     end
-    object actPeriod: TdsdOpenForm
-      Category = #1057#1087#1088#1072#1074#1086#1095#1085#1080#1082#1080
-      MoveParams = <>
-      Caption = #1057#1077#1079#1086#1085
-      FormName = 'TPeriodForm'
-      FormNameParam.Value = 'TPeriodForm'
-      FormNameParam.DataType = ftString
-      FormNameParam.MultiSelectSeparator = ','
-      GuiParams = <>
-      isShowModal = False
-    end
-    object actDiscount: TdsdOpenForm
-      Category = #1057#1087#1088#1072#1074#1086#1095#1085#1080#1082#1080
-      MoveParams = <>
-      Caption = #1053#1072#1079#1074#1072#1085#1080#1103' '#1085#1072#1082#1086#1087#1080#1090#1077#1083#1100#1085#1099#1093' '#1089#1082#1080#1076#1086#1082
-      FormName = 'TDiscountForm'
-      FormNameParam.Value = 'TDiscountForm'
-      FormNameParam.DataType = ftString
-      FormNameParam.MultiSelectSeparator = ','
-      GuiParams = <>
-      isShowModal = False
-    end
-    object actDiscountTools: TdsdOpenForm
-      Category = #1057#1087#1088#1072#1074#1086#1095#1085#1080#1082#1080
-      MoveParams = <>
-      Caption = #1053#1072#1089#1090#1088#1086#1081#1082#1072' '#1087#1088#1086#1094#1077#1085#1090#1086#1074' '#1087#1086' '#1085#1072#1082#1086#1087#1080#1090#1077#1083#1100#1085#1099#1084' '#1089#1082#1080#1076#1082#1072#1084
-      FormName = 'TDiscountToolsForm'
-      FormNameParam.Value = 'TDiscountToolsForm'
-      FormNameParam.DataType = ftString
-      FormNameParam.MultiSelectSeparator = ','
-      GuiParams = <>
-      isShowModal = False
-    end
     object actPartner: TdsdOpenForm
       Category = #1057#1087#1088#1072#1074#1086#1095#1085#1080#1082#1080
       MoveParams = <>
@@ -817,54 +374,10 @@ inherited MainForm: TMainForm
       GuiParams = <>
       isShowModal = False
     end
-    object actJuridicalGroup: TdsdOpenForm
-      Category = #1057#1087#1088#1072#1074#1086#1095#1085#1080#1082#1080
-      MoveParams = <>
-      Caption = #1043#1088#1091#1087#1087#1099' '#1102#1088#1080#1076#1080#1095#1077#1089#1082#1080#1093' '#1083#1080#1094
-      FormName = 'TJuridicalGroupForm'
-      FormNameParam.Value = 'TJuridicalGroupForm'
-      FormNameParam.DataType = ftString
-      FormNameParam.MultiSelectSeparator = ','
-      GuiParams = <>
-      isShowModal = False
-    end
-    object actJuridical: TdsdOpenForm
-      Category = #1057#1087#1088#1072#1074#1086#1095#1085#1080#1082#1080
-      MoveParams = <>
-      Caption = #1070#1088#1080#1076#1080#1095#1077#1089#1082#1080#1077' '#1083#1080#1094#1072
-      FormName = 'TJuridicalForm'
-      FormNameParam.Value = 'TJuridicalForm'
-      FormNameParam.DataType = ftString
-      FormNameParam.MultiSelectSeparator = ','
-      GuiParams = <>
-      isShowModal = False
-    end
-    object actUnit: TdsdOpenForm
-      Category = #1057#1087#1088#1072#1074#1086#1095#1085#1080#1082#1080
-      MoveParams = <>
-      Caption = #1055#1086#1076#1088#1072#1079#1076#1077#1083#1077#1085#1080#1103
-      FormName = 'TUnitForm'
-      FormNameParam.Value = 'TUnitForm'
-      FormNameParam.DataType = ftString
-      FormNameParam.MultiSelectSeparator = ','
-      GuiParams = <>
-      isShowModal = False
-    end
-    object actCity: TdsdOpenForm
-      Category = #1057#1087#1088#1072#1074#1086#1095#1085#1080#1082#1080
-      MoveParams = <>
-      Caption = #1053#1072#1089#1077#1083#1077#1085#1085#1099#1081' '#1087#1091#1085#1082#1090
-      FormName = 'TCityForm'
-      FormNameParam.Value = 'TCityForm'
-      FormNameParam.DataType = ftString
-      FormNameParam.MultiSelectSeparator = ','
-      GuiParams = <>
-      isShowModal = False
-    end
     object actClient: TdsdOpenForm
       Category = #1057#1087#1088#1072#1074#1086#1095#1085#1080#1082#1080
       MoveParams = <>
-      Caption = #1055#1086#1082#1091#1087#1072#1090#1077#1083#1080
+      Caption = #1050#1083#1080#1077#1085#1090#1099
       FormName = 'TClientForm'
       FormNameParam.Value = 'TClientForm'
       FormNameParam.DataType = ftString
@@ -883,12 +396,12 @@ inherited MainForm: TMainForm
         end>
       isShowModal = False
     end
-    object actLabel: TdsdOpenForm
+    object actUnit: TdsdOpenForm
       Category = #1057#1087#1088#1072#1074#1086#1095#1085#1080#1082#1080
       MoveParams = <>
-      Caption = #1053#1072#1079#1074#1072#1085#1080#1077' '#1076#1083#1103' '#1094#1077#1085#1085#1080#1082#1072
-      FormName = 'TLabelForm'
-      FormNameParam.Value = 'TLabelForm'
+      Caption = #1055#1086#1076#1088#1072#1079#1076#1077#1083#1077#1085#1080#1103
+      FormName = 'TUnitForm'
+      FormNameParam.Value = 'TUnitForm'
       FormNameParam.DataType = ftString
       FormNameParam.MultiSelectSeparator = ','
       GuiParams = <>
@@ -897,7 +410,7 @@ inherited MainForm: TMainForm
     object actGoods: TdsdOpenForm
       Category = #1057#1087#1088#1072#1074#1086#1095#1085#1080#1082#1080
       MoveParams = <>
-      Caption = #1058#1086#1074#1072#1088#1099' '#1089#1087#1080#1089#1086#1082
+      Caption = #1040#1088#1090#1080#1082#1091#1083#1099' '#1089#1087#1080#1089#1086#1082
       FormName = 'TGoodsForm'
       FormNameParam.Value = 'TGoodsForm'
       FormNameParam.DataType = ftString
@@ -908,20 +421,9 @@ inherited MainForm: TMainForm
     object actGoodsTree: TdsdOpenForm
       Category = #1057#1087#1088#1072#1074#1086#1095#1085#1080#1082#1080
       MoveParams = <>
-      Caption = #1058#1086#1074#1072#1088#1099
+      Caption = #1040#1088#1090#1080#1082#1091#1083#1099
       FormName = 'TGoodsTreeForm'
       FormNameParam.Value = 'TGoodsTreeForm'
-      FormNameParam.DataType = ftString
-      FormNameParam.MultiSelectSeparator = ','
-      GuiParams = <>
-      isShowModal = False
-    end
-    object catGoodsItem: TdsdOpenForm
-      Category = #1057#1087#1088#1072#1074#1086#1095#1085#1080#1082#1080
-      MoveParams = <>
-      Caption = #1058#1086#1074#1072#1088#1099' '#1089' '#1088#1072#1079#1084#1077#1088#1072#1084#1080
-      FormName = 'TGoodsItemForm'
-      FormNameParam.Value = 'TGoodsItemForm'
       FormNameParam.DataType = ftString
       FormNameParam.MultiSelectSeparator = ','
       GuiParams = <>
@@ -930,7 +432,7 @@ inherited MainForm: TMainForm
     object actPartionGoods: TdsdOpenForm
       Category = #1057#1087#1088#1072#1074#1086#1095#1085#1080#1082#1080
       MoveParams = <>
-      Caption = #1055#1072#1088#1090#1080#1080' '#1090#1086#1074#1072#1088#1086#1074
+      Caption = #1040#1088#1090#1080#1082#1091#1083#1099' '#1055#1072#1088#1090#1080#1080' '
       FormName = 'TPartionGoodsChoiceForm'
       FormNameParam.Value = 'TPartionGoodsChoiceForm'
       FormNameParam.DataType = ftString
@@ -960,18 +462,6 @@ inherited MainForm: TMainForm
       GuiParams = <>
       isShowModal = False
     end
-    object actLoss: TdsdOpenForm
-      Category = #1044#1086#1082#1091#1084#1077#1085#1090#1099
-      MoveParams = <>
-      Caption = #1057#1087#1080#1089#1072#1085#1080#1077
-      Hint = #1057#1087#1080#1089#1072#1085#1080#1077
-      FormName = 'TLossJournalForm'
-      FormNameParam.Value = 'TLossJournalForm'
-      FormNameParam.DataType = ftString
-      FormNameParam.MultiSelectSeparator = ','
-      GuiParams = <>
-      isShowModal = False
-    end
     object actCurrencyMovement: TdsdOpenForm
       Category = #1060#1080#1085#1072#1085#1089#1086#1074#1099#1081' '#1091#1095#1077#1090
       MoveParams = <>
@@ -987,7 +477,7 @@ inherited MainForm: TMainForm
     object actPriceListItem: TdsdOpenForm
       Category = #1048#1089#1090#1086#1088#1080#1080
       MoveParams = <>
-      Caption = #1048#1089#1090#1086#1088#1080#1103' '#1094#1077#1085' '#1090#1086#1074#1072#1088#1086#1074
+      Caption = #1048#1089#1090#1086#1088#1080#1103' '#1094#1077#1085
       Hint = #1048#1089#1090#1086#1088#1080#1103' '#1094#1077#1085' '#1090#1086#1074#1072#1088#1086#1074
       FormName = 'TPriceListItemForm'
       FormNameParam.Value = ''
@@ -999,7 +489,7 @@ inherited MainForm: TMainForm
     object actCash: TdsdOpenForm
       Category = #1057#1087#1088#1072#1074#1086#1095#1085#1080#1082#1080
       MoveParams = <>
-      Caption = #1050#1072#1089#1089#1072
+      Caption = #1050#1072#1089#1089#1099
       FormName = 'TCashForm'
       FormNameParam.Value = 'TCashForm'
       FormNameParam.DataType = ftString
@@ -1010,7 +500,7 @@ inherited MainForm: TMainForm
     object actBank: TdsdOpenForm
       Category = #1057#1087#1088#1072#1074#1086#1095#1085#1080#1082#1080
       MoveParams = <>
-      Caption = #1041#1072#1085#1082
+      Caption = #1041#1072#1085#1082#1080
       FormName = 'TBankForm'
       FormNameParam.Value = 'TBankForm'
       FormNameParam.DataType = ftString
@@ -1062,44 +552,98 @@ inherited MainForm: TMainForm
       GuiParams = <>
       isShowModal = False
     end
-    object actReport_SaleReturnIn: TdsdOpenForm
-      Category = #1054#1090#1095#1077#1090#1099
+    object actBankAccountJournal: TdsdOpenForm
+      Category = #1060#1080#1085#1072#1085#1089#1086#1074#1099#1081' '#1091#1095#1077#1090
       MoveParams = <>
-      Caption = #1054#1090#1095#1077#1090' '#1087#1086' '#1087#1088#1086#1076#1072#1078#1072#1084' / '#1074#1086#1079#1074#1088#1072#1090#1072#1084
-      FormName = 'TReport_SaleReturnInForm'
-      FormNameParam.Value = 'TReport_SaleReturnInForm'
+      Caption = #1056#1072#1089#1095#1077#1090#1085#1099#1081' '#1089#1095#1077#1090' '#1087#1088#1080#1093#1086#1076'/'#1088#1072#1089#1093#1086#1076
+      Hint = #1050#1072#1089#1089#1072', '#1087#1088#1080#1093#1086#1076'/'#1088#1072#1089#1093#1086#1076
+      FormName = 'TCashJournalForm'
+      FormNameParam.Value = 'TCashJournalForm'
       FormNameParam.DataType = ftString
       FormNameParam.MultiSelectSeparator = ','
       GuiParams = <>
       isShowModal = False
     end
-    object actSaleTwoMovement: TdsdOpenForm
+    object actOrderPartner: TdsdOpenForm
       Category = #1044#1086#1082#1091#1084#1077#1085#1090#1099
       MoveParams = <>
-      Caption = #1055#1088#1086#1076#1072#1078#1072' ('#1096'/'#1082')'
-      Hint = #1057#1086#1079#1076#1072#1085#1080#1077' - '#1055#1088#1086#1076#1072#1078#1072' '#1087#1086#1082#1091#1087#1072#1090#1077#1083#1102
-      FormName = 'TSaleTwoForm'
-      FormNameParam.Value = 'TSaleTwoForm'
+      Caption = #1047#1072#1082#1072#1079' '#1055#1086#1089#1090#1072#1074#1097#1080#1082#1091
+      Hint = #1055#1088#1080#1093#1086#1076' '#1086#1090' '#1055#1086#1089#1090#1072#1074#1097#1080#1082#1072
+      FormName = 'TIncomeJournalForm'
+      FormNameParam.Value = 'TIncomeJournalForm'
       FormNameParam.DataType = ftString
       FormNameParam.MultiSelectSeparator = ','
-      GuiParams = <
-        item
-          Name = 'Id'
-          Value = 0
-          MultiSelectSeparator = ','
-        end
-        item
-          Name = 'ShowAll'
-          Value = False
-          DataType = ftBoolean
-          MultiSelectSeparator = ','
-        end
-        item
-          Name = 'inOperDate'
-          Value = 43101d
-          DataType = ftDateTime
-          MultiSelectSeparator = ','
-        end>
+      GuiParams = <>
+      isShowModal = False
+    end
+    object actOrderClient: TdsdOpenForm
+      Category = #1044#1086#1082#1091#1084#1077#1085#1090#1099
+      MoveParams = <>
+      Caption = #1047#1072#1082#1072#1079' '#1050#1083#1080#1077#1085#1090#1072
+      Hint = #1047#1072#1082#1072#1079' '#1050#1083#1080#1077#1085#1090#1072
+      FormName = 'TIncomeJournalForm'
+      FormNameParam.Value = 'TIncomeJournalForm'
+      FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
+      GuiParams = <>
+      isShowModal = False
+    end
+    object actOrderProduction: TdsdOpenForm
+      Category = #1055#1088#1086#1080#1079#1074#1086#1076#1089#1090#1074#1086
+      MoveParams = <>
+      Caption = #1047#1072#1082#1072#1079' '#1055#1088#1086#1080#1079#1074#1086#1076#1089#1090#1074#1086
+      Hint = #1047#1072#1082#1072#1079' '#1055#1088#1086#1080#1079#1074#1086#1076#1089#1090#1074#1086
+      FormName = 'TIncomeJournalForm'
+      FormNameParam.Value = 'TIncomeJournalForm'
+      FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
+      GuiParams = <>
+      isShowModal = False
+    end
+    object actProductionUnion: TdsdOpenForm
+      Category = #1055#1088#1086#1080#1079#1074#1086#1076#1089#1090#1074#1086
+      MoveParams = <>
+      Caption = #1055#1088#1086#1080#1079#1074#1086#1076#1089#1090#1074#1086'-'#1082#1086#1084#1087#1083#1077#1082#1090#1072#1094#1080#1103
+      Hint = #1055#1088#1086#1080#1079#1074#1086#1076#1089#1090#1074#1086'-'#1082#1086#1084#1087#1083#1077#1082#1090#1072#1094#1080#1103
+      FormName = 'TIncomeJournalForm'
+      FormNameParam.Value = 'TIncomeJournalForm'
+      FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
+      GuiParams = <>
+      isShowModal = False
+    end
+    object actReport_ProductionOLAP: TdsdOpenForm
+      Category = #1054#1090#1095#1077#1090#1099' ('#1087#1088'-'#1074#1086')'
+      MoveParams = <>
+      Caption = #1054#1090#1095#1077#1090' '#1087#1086' '#1087#1088#1086#1080#1079#1074#1086#1076#1089#1090#1074#1091' (OLAP)'
+      Hint = #1054#1090#1095#1077#1090' '#1087#1086' '#1087#1088#1086#1080#1079#1074#1086#1076#1089#1090#1074#1091' (OLAP)'
+      FormName = 'TReport_ProfitLossForm'
+      FormNameParam.Value = ''
+      FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
+      GuiParams = <>
+      isShowModal = False
+    end
+    object actLanguage: TdsdOpenForm
+      Category = #1057#1083#1091#1078#1077#1073#1085#1099#1077
+      MoveParams = <>
+      Caption = #1071#1079#1099#1082#1080
+      FormName = 'TLanguageForm'
+      FormNameParam.Value = 'TLanguageForm'
+      FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
+      GuiParams = <>
+      isShowModal = False
+    end
+    object actTranslateWord: TdsdOpenForm
+      Category = #1057#1083#1091#1078#1077#1073#1085#1099#1077
+      MoveParams = <>
+      Caption = #1055#1077#1088#1077#1074#1086#1076' '#1089#1083#1086#1074
+      FormName = 'TTranslateWordForm'
+      FormNameParam.Value = 'TTranslateWordForm'
+      FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
+      GuiParams = <>
       isShowModal = False
     end
   end
@@ -1139,309 +683,310 @@ inherited MainForm: TMainForm
       Caption = #1044#1086#1082#1091#1084#1077#1085#1090#1099
       object miIncome: TMenuItem
         Action = actIncome
-      end
-      object miReturnOut: TMenuItem
-        Action = actReturnOut
+        Enabled = False
       end
       object miSend: TMenuItem
         Action = actSend
-      end
-      object miLoss: TMenuItem
-        Action = actLoss
+        Enabled = False
       end
       object miLine11: TMenuItem
         Caption = '-'
+        Enabled = False
       end
-      object miSale: TMenuItem
-        Action = actSale
+      object miOrderPartner: TMenuItem
+        Action = actOrderPartner
+        Enabled = False
       end
-      object miReturnIn: TMenuItem
-        Action = actReturnIn
+      object miOrderClient: TMenuItem
+        Action = actOrderClient
+        Enabled = False
       end
       object miLine12: TMenuItem
         Caption = '-'
+        Enabled = False
+      end
+      object miSale: TMenuItem
+        Action = actSale
+        Enabled = False
+      end
+      object miLoss: TMenuItem
+        Action = actLoss
+        Enabled = False
+      end
+      object miLine13: TMenuItem
+        Caption = '-'
+        Enabled = False
       end
       object miInventory: TMenuItem
         Action = actInventory
+        Enabled = False
         Hint = #1048#1085#1074#1077#1085#1090#1072#1088#1080#1079#1072#1094#1080#1103
       end
     end
-    object miSaleMovement: TMenuItem [1]
+    object miProduction: TMenuItem [1]
       Caption = #1055#1088#1086#1080#1079#1074#1086#1076#1089#1090#1074#1086
+      object miOrderProduction: TMenuItem
+        Action = actOrderProduction
+        Enabled = False
+      end
+      object ьшProductionUnion: TMenuItem
+        Action = actProductionUnion
+        Enabled = False
+      end
     end
     object miFinance: TMenuItem [2]
       Caption = #1060#1080#1085#1072#1085#1089#1086#1074#1099#1081' '#1091#1095#1077#1090
       object miGoodsAccount: TMenuItem
-        Action = actGoodsAccount
-      end
-      object miGoodsAccount_ReturnIn: TMenuItem
-        Action = actGoodsAccount_ReturnIn
+        Action = actBankAccountJournal
+        Enabled = False
       end
       object miLine21: TMenuItem
         Caption = '-'
-      end
-      object miCurrencyMovement: TMenuItem
-        Action = actCurrencyMovement
-      end
-      object N4: TMenuItem
-        Caption = '-'
+        Enabled = False
       end
       object miCashJournal: TMenuItem
         Action = actCashJournal
+        Enabled = False
+      end
+      object N4: TMenuItem
+        Caption = '-'
+        Enabled = False
+      end
+      object miCurrencyMovement: TMenuItem
+        Action = actCurrencyMovement
+        Enabled = False
       end
     end
     object miHistory: TMenuItem [3]
       Caption = #1048#1089#1090#1086#1088#1080#1080
       object miPriceListItem: TMenuItem
         Action = actPriceListItem
-      end
-      object miGoodsPrint: TMenuItem
-        Action = actGoodsPrint
+        Enabled = False
       end
       object miLine31: TMenuItem
         Caption = '-'
+        Enabled = False
       end
       object miDiscountPeriodItem: TMenuItem
-        Action = actDiscountPeriodItem
-      end
-      object miDiscountPeriod: TMenuItem
-        Action = actDiscountPeriod
-      end
-      object miReport_OH_DiscountPeriod: TMenuItem
-        Action = actReport_OH_DiscountPeriod
+        Action = actDiscountItem
+        Enabled = False
       end
     end
-    object miReturnInMovement: TMenuItem [4]
-      Action = actReturnInMovement
-    end
-    object miGoodsAccountMovement: TMenuItem [5]
-      Action = actGoodsAccountMovement
-    end
-    object miReport_Unit: TMenuItem [6]
+    object miReport_Unit: TMenuItem [4]
       Caption = #1054#1090#1095#1077#1090#1099' ('#1087#1088'-'#1074#1086')'
       object miReport_SaleReturnIn: TMenuItem
-        Action = actReport_SaleReturnIn
-      end
-      object miReport_GoodsMI_Account: TMenuItem
-        Action = actReport_GoodsMI_Account
+        Action = actReport_ProductionOLAP
+        Enabled = False
       end
       object miLine41: TMenuItem
         Caption = '-'
+        Enabled = False
       end
-      object miReport_CollationByPartner: TMenuItem
-        Action = actReport_CollationByClient
+      object miReport_Goods_Remains: TMenuItem
+        Action = actReport_Goods_Remains
+        Enabled = False
       end
-      object miReport_PartnerDebt: TMenuItem
-        Action = actReport_ClientDebt
-      end
-      object miLine42: TMenuItem
-        Caption = '-'
-      end
-      object miReport_Goods_RemainsCurrent: TMenuItem
-        Action = actReport_Goods_RemainsCurrent
-      end
-      object miClientSMS: TMenuItem
-        Action = actClientSMS
-      end
-      object N3: TMenuItem
-        Caption = '-'
-      end
-      object miReport_Goods_RemainsCurrent_OnDate: TMenuItem
+      object miReport_Goods_RemainsCurrent_onDate: TMenuItem
         Action = actReport_Goods_RemainsCurrent_onDate
+        Enabled = False
       end
     end
-    object miReport: TMenuItem [7]
+    object miReport: TMenuItem [5]
       Caption = #1054#1090#1095#1077#1090#1099' ('#1089#1082#1083#1072#1076')'
       object miReport_MovementIncome: TMenuItem
         Action = actReport_MovementIncome
-      end
-      object miReport_MovementReturnOut: TMenuItem
-        Action = actReport_MovementReturnOut
+        Enabled = False
       end
       object miReport_MovementSend: TMenuItem
         Action = actReport_MovementSend
+        Enabled = False
       end
       object miReport_MovementLoss: TMenuItem
         Action = actReport_MovementLoss
+        Enabled = False
       end
       object miReport_Sale: TMenuItem
         Action = actReport_Sale
-      end
-      object miReport_ReturnIn: TMenuItem
-        Action = actReport_ReturnIn
+        Caption = #1055#1088#1086#1076#1072#1078#1072' '#1082#1083#1080#1077#1085#1090#1091
+        Enabled = False
       end
       object miLine51: TMenuItem
         Caption = '-'
+        Enabled = False
+      end
+      object N5: TMenuItem
+        Action = actReport_Goods_Remains
+        Enabled = False
+      end
+      object N8: TMenuItem
+        Action = actReport_Goods_RemainsCurrent_onDate
+        Enabled = False
+      end
+      object N3: TMenuItem
+        Caption = '-'
+        Enabled = False
       end
       object miReport_GoodsCode: TMenuItem
         Action = actReport_GoodsCode
+        Enabled = False
       end
     end
-    object miReport_Finance: TMenuItem [8]
+    object miReport_Finance: TMenuItem [6]
       Caption = #1054#1090#1095#1077#1090#1099' ('#1092#1080#1085'.)'
+      object miReport_CollationByPartner: TMenuItem
+        Action = actReport_CollationByClient
+        Enabled = False
+      end
       object miReport_Cash: TMenuItem
         Action = actReport_Cash
+        Enabled = False
       end
       object miLine61: TMenuItem
         Caption = '-'
+        Enabled = False
       end
       object miReport_MotionByPartner: TMenuItem
         Action = actReport_MotionByClient
+        Enabled = False
       end
     end
-    object miReport_Basis: TMenuItem [9]
+    object miReport_Basis: TMenuItem [7]
       Caption = #1054#1090#1095#1077#1090#1099' ('#1059#1055')'
       object miReport_Balance: TMenuItem
         Action = actReport_Balance
+        Enabled = False
       end
       object miReport_ProfitLoss: TMenuItem
         Action = actReport_ProfitLoss
+        Enabled = False
       end
       object miReport_ProfitLossPeriod: TMenuItem
         Action = actReport_ProfitLossPeriod
+        Enabled = False
       end
       object N7: TMenuItem
         Caption = '-'
-      end
-      object miReport_ProfitDemo: TMenuItem
-        Action = actReport_ProfitDemo
-      end
-      object miReport_ProfitDemoPeriod: TMenuItem
-        Action = actReport_ProfitDemoPeriod
-      end
-      object miLine71: TMenuItem
-        Caption = '-'
+        Enabled = False
       end
       object miReport_SaleOLAP: TMenuItem
         Action = actReport_SaleOLAP
+        Caption = #1054#1090#1095#1077#1090' '#1087#1086' '#1087#1088#1086#1076#1072#1078#1072#1084' (OLAP)'
+        Enabled = False
+      end
+      object miLine71: TMenuItem
+        Caption = '-'
+        Enabled = False
       end
       object miReport_SaleOLAP_Analysis: TMenuItem
-        Action = actReport_SaleOLAP_Analysis
+        Caption = #1040#1085#1072#1083#1080#1079' '#1087#1088#1086#1076#1072#1078
+        Enabled = False
       end
       object N6: TMenuItem
         Caption = '-'
+        Enabled = False
       end
       object miReport_Sale_Analysis: TMenuItem
-        Action = actReport_Sale_Analysis
-      end
-      object miReport_Sale_AnalysisAll: TMenuItem
-        Action = actReport_Sale_AnalysisAll
+        Caption = #1040#1085#1072#1083#1080#1090#1080#1082#1072' '#1082#1083#1102#1095#1077#1074#1099#1093' '#1087#1086#1082#1072#1079#1072#1090#1077#1083#1077#1081
+        Enabled = False
       end
     end
     inherited miGuide: TMenuItem
       object miGoodsAll: TMenuItem
-        Caption = #1058#1086#1074#1072#1088#1099
+        Caption = #1040#1088#1090#1080#1082#1091#1083#1099
         object mioodsTree: TMenuItem
           Action = actGoodsTree
+          Visible = False
         end
         object miGoods: TMenuItem
           Action = actGoods
+          Visible = False
         end
         object miGoodsSize: TMenuItem
           Action = actGoodsSize
+          Caption = #1056#1072#1079#1084#1077#1088#1099
+          Visible = False
         end
         object miMeasure: TMenuItem
           Action = actMeasure
-        end
-        object miGoodsItem: TMenuItem
-          Action = catGoodsItem
+          Visible = False
         end
         object miPartionGoods: TMenuItem
           Action = actPartionGoods
-        end
-        object miLine711: TMenuItem
-          Caption = '-'
-        end
-        object miCompositionGroup: TMenuItem
-          Action = actCompositionGroup
-        end
-        object miComposition: TMenuItem
-          Action = actComposition
-        end
-        object miGoodsInfo: TMenuItem
-          Action = actGoodsInfo
-        end
-        object miLineFabrica: TMenuItem
-          Action = actLineFabrica
-        end
-        object miLabel: TMenuItem
-          Action = actLabel
+          Visible = False
         end
       end
       object miGoodsGroup: TMenuItem
         Action = actGoodsGroup
+        Caption = #1043#1088#1091#1087#1087#1099' '#1072#1088#1090#1080#1082#1091#1083#1086#1074
+        Visible = False
       end
       object miUnit: TMenuItem
         Action = actUnit
-      end
-      object miJuridical: TMenuItem
-        Action = actJuridical
-      end
-      object miJuridicalGroup: TMenuItem
-        Action = actJuridicalGroup
+        Visible = False
       end
       object miPriceList: TMenuItem
         Action = actPriceList
+        Visible = False
       end
       object miLine81: TMenuItem
         Caption = '-'
+        Visible = False
       end
       object miPartner: TMenuItem
         Action = actPartner
-      end
-      object miPeriod: TMenuItem
-        Action = actPeriod
+        Visible = False
       end
       object miBrand: TMenuItem
         Action = actBrand
+        Visible = False
       end
       object miCountryBrand: TMenuItem
         Action = actCountryBrand
-      end
-      object miFabrika: TMenuItem
-        Action = actFabrika
+        Visible = False
       end
       object miLine82: TMenuItem
         Caption = '-'
+        Visible = False
       end
       object miClient: TMenuItem
         Action = actClient
-      end
-      object miCity: TMenuItem
-        Action = actCity
-      end
-      object miDiscount: TMenuItem
-        Action = actDiscount
-      end
-      object miDiscountTools: TMenuItem
-        Action = actDiscountTools
+        Visible = False
       end
       object miLine83: TMenuItem
         Caption = '-'
+        Visible = False
       end
       object miCash: TMenuItem
         Action = actCash
+        Visible = False
       end
       object miBankAccount: TMenuItem
         Action = actBankAccount
+        Visible = False
       end
       object miBank: TMenuItem
         Action = actBank
+        Visible = False
       end
       object miCurrency: TMenuItem
         Action = actCurrency
+        Visible = False
       end
       object miLine84: TMenuItem
         Caption = '-'
+        Visible = False
       end
       object miPersonal: TMenuItem
         Action = actPersonal
+        Visible = False
       end
       object miPosition: TMenuItem
         Action = actPosition
+        Visible = False
       end
       object miMember: TMenuItem
         Action = actMember
+        Visible = False
       end
     end
     inherited miService: TMenuItem
@@ -1462,69 +1007,59 @@ inherited MainForm: TMainForm
         Caption = #1059#1087#1088#1072#1074#1083#1077#1085#1095#1077#1089#1082#1080#1077' '#1089#1087#1088#1072#1074#1086#1095#1085#1080#1082#1080
         object miAccountGroup: TMenuItem
           Action = actAccountGroup
+          Enabled = False
         end
         object miAccountDirection: TMenuItem
           Action = actAccountDirection
+          Enabled = False
         end
         object miAccount: TMenuItem
           Action = actAccount
+          Enabled = False
         end
         object miLine8001: TMenuItem
           Caption = '-'
+          Enabled = False
         end
         object miInfoMoneyGroup: TMenuItem
           Action = actInfoMoneyGroup
+          Enabled = False
         end
         object miInfoMoneyDestination: TMenuItem
           Action = actInfoMoneyDestination
+          Enabled = False
         end
         object miInfoMoney: TMenuItem
           Action = actInfoMoney
+          Enabled = False
         end
         object miLine8002: TMenuItem
           Caption = '-'
+          Enabled = False
         end
         object miProfitLossGroup: TMenuItem
           Action = actProfitLossGroup
+          Enabled = False
         end
         object miProfitLossDirection: TMenuItem
           Action = actProfitLossDirection
+          Enabled = False
         end
         object miProfitLoss: TMenuItem
           Action = actProfitLoss
-        end
-        object miProfitLossDemo: TMenuItem
-          Action = actProfitLossDemo
+          Enabled = False
         end
       end
       object N1: TMenuItem [5]
         Caption = '-'
       end
-      object miTotalError: TMenuItem [6]
-        Caption = #1055#1088#1086#1074#1077#1088#1082#1072
-        object miGoodsAccount_TotalError: TMenuItem
-          Action = actReport_GoodsAccount_TotalError
-        end
-        object miReturnIn_TotalError: TMenuItem
-          Action = actReport_ReturnIn_TotalError
-        end
-        object miSale_TotalError: TMenuItem
-          Action = actReport_Sale_TotalError
-        end
-        object miObject_Client_TotalError: TMenuItem
-          Action = actReport_Client_TotalError
-        end
-        object miObject_Client_LastError: TMenuItem
-          Action = actReport_Client_LastError
-        end
-        object miReport_Sale_ContainerError: TMenuItem
-          Action = actReport_Sale_ContainerError
-        end
+      object miLanguage: TMenuItem [6]
+        Action = actLanguage
       end
       inherited miLine801: TMenuItem [7]
       end
-      object miIncomeKoeff: TMenuItem [8]
-        Action = actIncomeKoeff
+      object miTranslateWord: TMenuItem [8]
+        Action = actTranslateWord
       end
       object N2: TMenuItem [9]
         Caption = '-'
@@ -1540,10 +1075,15 @@ inherited MainForm: TMainForm
       end
       inherited miProtocolAll: TMenuItem [13]
         inherited miProtocol: TMenuItem
+          Enabled = False
           Visible = False
         end
         inherited miMovementProtocol: TMenuItem
+          Enabled = False
           Visible = False
+        end
+        inherited miUserProtocol: TMenuItem
+          Enabled = False
         end
       end
     end
@@ -1551,5 +1091,9 @@ inherited MainForm: TMainForm
   inherited frxXLSExport: TfrxXLSExport
     Left = 152
     Top = 112
+  end
+  object dsdTranslator: TdsdTranslator
+    Left = 344
+    Top = 72
   end
 end
