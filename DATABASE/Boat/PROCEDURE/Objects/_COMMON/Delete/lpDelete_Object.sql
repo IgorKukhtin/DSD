@@ -8,8 +8,9 @@ IN Session tvarchar)
   RETURNS void AS
 $BODY$
 BEGIN
+  RAISE EXCEPTION 'Ошибка.<%>', 'lpDelete_Object';
   -- Серьезный скрипт !!!НЕ ДЛЯ РАБОЧЕЙ БАЗЫ!!!
---  DELETE FROM DefaultValue  WHERE UserKeyId = inId;
+/*  DELETE FROM DefaultValue  WHERE UserKeyId = inId;
   DELETE FROM Container WHERE ObjectId = inId;
   DELETE FROM ContainerLinkObject WHERE ObjectId = inId;
   DELETE FROM ObjectLink WHERE ObjectId = inId;
@@ -20,7 +21,7 @@ BEGIN
   DELETE FROM ObjectProtocol WHERE ObjectId = inId;
   DELETE FROM ObjectBoolean WHERE ObjectId = inId;
   DELETE FROM ObjectDate WHERE ObjectId = inId;
-  DELETE FROM Object WHERE Id = inId;
+  DELETE FROM Object WHERE Id = inId;*/
 
 END;
 $BODY$

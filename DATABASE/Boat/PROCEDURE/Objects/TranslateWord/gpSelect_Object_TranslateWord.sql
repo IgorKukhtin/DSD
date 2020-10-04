@@ -17,6 +17,7 @@ RETURNS TABLE (Id           Integer
              , Value4       TVarChar
              , FormId       Integer
              , FormName     TVarChar
+             , ControlName  TVarChar
              , isErased     Boolean
               ) 
 AS
@@ -25,6 +26,35 @@ $BODY$
 BEGIN
      -- проверка прав пользователя на вызов процедуры
      vbUserId:= lpGetUserBySession (inSession);
+
+     -- замена 
+     IF COALESCE (inLanguageId4, 0) = 0 THEN inLanguageId4:= (WITH tmpList AS (SELECT Object.Id, ROW_NUMBER() OVER (ORDER BY Object.Id ASC) AS Ord FROM Object WHERE Object.DescId = zc_Object_Language() AND Object.isErased = FALSE)
+                                                              SELECT tmpList.Id FROM tmpList
+                                                              WHERE tmpList.Ord = 4 - CASE WHEN inLanguageId1 > 0 THEN 1 ELSE 0 END
+                                                                                    - CASE WHEN inLanguageId2 > 0 THEN 1 ELSE 0 END
+                                                                                    - CASE WHEN inLanguageId3 > 0 THEN 1 ELSE 0 END
+                                                             );
+     END IF;
+     -- замена 
+     IF COALESCE (inLanguageId3, 0) = 0 THEN inLanguageId3:= (WITH tmpList AS (SELECT Object.Id, ROW_NUMBER() OVER (ORDER BY Object.Id ASC) AS Ord FROM Object WHERE Object.DescId = zc_Object_Language() AND Object.isErased = FALSE)
+                                                              SELECT tmpList.Id FROM tmpList
+                                                              WHERE tmpList.Ord = 3 - CASE WHEN inLanguageId1 > 0 THEN 1 ELSE 0 END
+                                                                                    - CASE WHEN inLanguageId2 > 0 THEN 1 ELSE 0 END
+                                                             );
+     END IF;
+     -- замена 
+     IF COALESCE (inLanguageId2, 0) = 0 THEN inLanguageId2:= (WITH tmpList AS (SELECT Object.Id, ROW_NUMBER() OVER (ORDER BY Object.Id ASC) AS Ord FROM Object WHERE Object.DescId = zc_Object_Language() AND Object.isErased = FALSE)
+                                                              SELECT tmpList.Id FROM tmpList
+                                                              WHERE tmpList.Ord = 2 - CASE WHEN inLanguageId1 > 0 THEN 1 ELSE 0 END
+                                                             );
+     END IF;
+     -- замена 
+     IF COALESCE (inLanguageId1, 0) = 0 THEN inLanguageId1:= (WITH tmpList AS (SELECT Object.Id, ROW_NUMBER() OVER (ORDER BY Object.Id ASC) AS Ord FROM Object WHERE Object.DescId = zc_Object_Language() AND Object.isErased = FALSE)
+                                                              SELECT tmpList.Id FROM tmpList
+                                                              WHERE tmpList.Ord = 1
+                                                             );
+     END IF;
+
 
      -- Результат
      RETURN QUERY 
@@ -37,6 +67,8 @@ BEGIN
             
             , Object_Form.Id          AS FormId
             , Object_Form.ValueData   AS FormName
+
+            , ObjectString_TranslateWord_Name.ValueData AS ControlName
 
             , CASE WHEN tmp.isErased = 1 THEN TRUE ELSE FALSE END AS isErased
 
@@ -68,6 +100,9 @@ BEGIN
                  OR inLanguageId4 <> 0)
                GROUP BY COALESCE (ObjectLink_TranslateWord_Parent.ChildObjectId, Object_TranslateWord.Id)
             ) AS tmp
+            LEFT JOIN ObjectString AS ObjectString_TranslateWord_Name
+                                   ON ObjectString_TranslateWord_Name.ObjectId = tmp.Id
+                                  AND ObjectString_TranslateWord_Name.DescId = zc_ObjectString_TranslateWord_Name()
             LEFT JOIN ObjectLink AS ObjectLink_TranslateWord_Form
                                  ON ObjectLink_TranslateWord_Form.ObjectId = tmp.Id
                                 AND ObjectLink_TranslateWord_Form.DescId = zc_ObjectLink_TranslateWord_Form()
@@ -85,4 +120,4 @@ $BODY$
 */
 
 -- тест
---select * from gpSelect_Object_TranslateWord(inLanguageId1 := 35539 , inLanguageId2 := 35544 , inLanguageId3 := 35546 , inLanguageId4 := 0 , inIsShowAll := 'False'::Boolean ,  inSession := '2'::TVarchar);
+-- SELECT * FROM gpSelect_Object_TranslateWord (inLanguageId1:= 0, inLanguageId2:= 0, inLanguageId3:= 0, inLanguageId4:= 0, inIsShowAll:= FALSE, inSession:= zfCalc_UserAdmin());

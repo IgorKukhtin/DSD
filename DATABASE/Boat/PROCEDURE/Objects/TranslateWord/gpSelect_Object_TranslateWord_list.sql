@@ -1,20 +1,24 @@
 -- Function: gpSelect_Object_TranslateWord_list (Boolean, TVarChar)
 
-DROP FUNCTION IF EXISTS gpSelect_Object_TranslateWord_list (Integer, Integer, Integer, Integer, Boolean, TVarChar);
+DROP FUNCTION IF EXISTS gpSelect_Object_TranslateWord_list (TVarChar);
 
 CREATE OR REPLACE FUNCTION gpSelect_Object_TranslateWord_list(
     IN inSession           TVarChar       --  сессия пользователя
 )
-RETURNS TABLE (Id           Integer
-             , Value1       TVarChar
-             , Value2       TVarChar
-             , Value3       TVarChar
-             , Value4       TVarChar
-             , isErased     Boolean
+RETURNS TABLE (Id            Integer
+             , Value1        TVarChar
+             , Value2        TVarChar
+             , Value3        TVarChar
+             , Value4        TVarChar
+             , LanguageName1 TVarChar
+             , LanguageName2 TVarChar
+             , LanguageName3 TVarChar
+             , LanguageName4 TVarChar
+             , isErased      Boolean
               ) 
 AS
 $BODY$
-   DECLARE vbUserId Integer;
+   DECLARE vbUserId            Integer;
    DECLARE inLanguageId1       Integer;
    DECLARE inLanguageId2       Integer;
    DECLARE inLanguageId3       Integer;
@@ -39,6 +43,10 @@ BEGIN
             , tmp.Value3 ::TVarChar
             , tmp.Value4 ::TVarChar
             
+            , Object_Language1.ValueData
+            , Object_Language2.ValueData
+            , Object_Language3.ValueData
+            , Object_Language4.ValueData
 
             , CASE WHEN tmp.isErased = 1 THEN TRUE ELSE FALSE END AS isErased
 
@@ -70,6 +78,10 @@ BEGIN
                  OR inLanguageId4 <> 0)
                GROUP BY COALESCE (ObjectLink_TranslateWord_Parent.ChildObjectId, Object_TranslateWord.Id)
             ) AS tmp
+            LEFT JOIN Object AS Object_Language1 ON Object_Language1.Id = inLanguageId1
+            LEFT JOIN Object AS Object_Language2 ON Object_Language2.Id = inLanguageId2
+            LEFT JOIN Object AS Object_Language3 ON Object_Language3.Id = inLanguageId3
+            LEFT JOIN Object AS Object_Language4 ON Object_Language4.Id = inLanguageId4
     ;
 
 END;
@@ -83,4 +95,4 @@ $BODY$
 */
 
 -- тест
--- select * from gpSelect_Object_TranslateWord_list(inSession := zfCalc_UserAdmin())
+-- SELECT * FROM gpSelect_Object_TranslateWord_list (inSession := zfCalc_UserAdmin())

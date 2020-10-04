@@ -6,7 +6,7 @@ CREATE OR REPLACE FUNCTION gpGet_Object_TranslateWord(
     IN inId          Integer,       -- Сотрудники
     IN inSession     TVarChar       -- сессия пользователя
 )
-RETURNS TABLE (Id Integer, Code Integer, Name TVarChar, LanguageId Integer, LanguageName TVarChar, ParentId Integer, ParentName TVarChar, UnitId Integer, UnitName TVarChar) 
+RETURNS TABLE (Id Integer, Code Integer, Name TVarChar, LanguageId Integer, LanguageName TVarChar, ParentId Integer, ParentName TVarChar) 
 AS
 $BODY$
 BEGIN
@@ -63,4 +63,4 @@ $BODY$
 */
 
 -- тест
--- SELECT * FROM gpSelect_TranslateWord (1,'2')
+-- SELECT * FROM gpGet_Object_TranslateWord (1, zfCalc_UserAdmin())

@@ -32,7 +32,7 @@ BEGIN
    END IF;
 
    -- по идее vbId = ioId , но на всякий случай поищем
-   vbId := (SELECT Object_TranslateWord.Id
+   vbId := ioId/*(SELECT Object_TranslateWord.Id
             FROM Object AS Object_TranslateWord
                  INNER JOIN ObjectLink AS ObjectLink_TranslateWord_Language
                                        ON ObjectLink_TranslateWord_Language.ObjectId = Object_TranslateWord.Id
@@ -46,7 +46,7 @@ BEGIN
             WHERE Object_TranslateWord.DescId = zc_Object_TranslateWord()
               AND (ObjectLink_TranslateWord_Parent.ChildObjectId = ioId OR ObjectLink_TranslateWord_Parent.ChildObjectId IS NULL)
             LIMIT 1 --
-             );
+             )*/;
 
    -- сохранили <Объект>
    ioId := lpInsertUpdate_Object_TranslateWord (vbId, ioId, inLanguageId1, inValue1, vbUserId);
@@ -132,4 +132,4 @@ $BODY$
 */
 
 -- тест
---select * from gpInsertUpdate_Object_TranslateWord(ioId := 35549 , inLanguageId1 := 35539 , inLanguageId2 := 35544 , inLanguageId3 := 0 , inLanguageId4 := 0 , inValue1 := 'Платье' , inValue2 := 'dress' , inValue3 := '' , inValue4 := '' ,  inSession := '2');
+-- SELECT * FROM gpInsertUpdate_Object_TranslateWord(ioId := 35549 , inLanguageId1 := 35539 , inLanguageId2 := 35544 , inLanguageId3 := 0 , inLanguageId4 := 0 , inValue1 := 'Платье' , inValue2 := 'dress' , inValue3 := '' , inValue4 := '' ,  inSession := zfCalc_UserAdmin());

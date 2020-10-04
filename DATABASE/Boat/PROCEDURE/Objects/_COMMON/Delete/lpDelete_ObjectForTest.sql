@@ -8,8 +8,9 @@ IN Session tvarchar)
   RETURNS void AS
 $BODY$
 BEGIN
+  RAISE EXCEPTION 'Ошибка.<%>', 'lpDelete_ObjectForTest';
   -- Серьезный скрипт !!!НЕ ДЛЯ РАБОЧЕЙ БАЗЫ!!!
-  DELETE FROM ObjectHistoryFloat WHERE ObjectHistoryFloat.objecthistoryid IN 
+/*  DELETE FROM ObjectHistoryFloat WHERE ObjectHistoryFloat.objecthistoryid IN 
         (SELECT ID FROM ObjectHistory WHERE ObjectId = inId);
   DELETE FROM ObjectHistoryString WHERE ObjectHistoryString.objecthistoryid IN 
         (SELECT ID FROM ObjectHistory WHERE ObjectId = inId);
@@ -38,7 +39,7 @@ BEGIN
   DELETE FROM ObjectProtocol WHERE ObjectId = inId;
   DELETE FROM ObjectBoolean WHERE ObjectId = inId;
   DELETE FROM ObjectDate WHERE ObjectId = inId;
-  DELETE FROM Object WHERE Id = inId;
+  DELETE FROM Object WHERE Id = inId;*/
 
 END;
 $BODY$
@@ -47,8 +48,7 @@ ALTER FUNCTION lpDelete_ObjectForTest(integer, tvarchar) OWNER TO postgres;
 
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
-               Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Воробкало А.А.
- 30.06.15                                                           *			   
+               Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
  25.04.15                                        * Серьезный скрипт !!!НЕ ДЛЯ РАБОЧЕЙ БАЗЫ!!!
  01.01.14          *
 */

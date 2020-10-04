@@ -15,26 +15,19 @@ $BODY$
    DECLARE vbCode_calc Integer; 
 BEGIN
 
-   IF COALESCE (ioId,0) <> 0
-   THEN
-       vbCode_calc := (SELECT Object.ObjectCode FROM Object WHERE Object.Id = ioId);
-   END IF;
-   
-   -- Нужен ВСЕГДА- ДЛЯ НОВОЙ СХЕМЫ С vbCode_calc -> vbCode_calc
-   IF COALESCE (ioId, 0) = 0 AND COALESCE (vbCode_calc, 0) <> 0 THEN vbCode_calc := NEXTVAL ('Object_TranslateWord_seq'); 
-   END IF; 
-
-   -- Нужен для загрузки из Sybase т.к. там код = 0 
-   IF COALESCE (ioId, 0) = 0 AND COALESCE (vbCode_calc, 0) = 0  THEN vbCode_calc := NEXTVAL ('Object_TranslateWord_seq'); 
-   ELSEIF vbCode_calc = 0
-         THEN vbCode_calc := COALESCE ((SELECT ObjectCode FROM Object WHERE Id = ioId), 0);
-   END IF; 
-   
-      -- проверка
+   -- проверка
    IF COALESCE (inLanguageId, 0) = 0
    THEN
        RAISE EXCEPTION 'Ошибка. <Язык> не выбран.';
    END IF;
+
+   IF ioId <> 0
+   THEN
+       vbCode_calc := (SELECT Object.ObjectCode FROM Object WHERE Object.Id = ioId);
+   ELSE
+       vbCode_calc := NEXTVAL ('Object_TranslateWord_seq')
+   END IF;
+   
    
    -- сохранили
    ioId := lpInsertUpdate_Object (ioId, zc_Object_TranslateWord(), vbCode_calc ::Integer, inValue);
