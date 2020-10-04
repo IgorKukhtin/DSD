@@ -30,16 +30,16 @@ type
     qrySlaveHelper: TZReadOnlyQuery;
     qryCompareSeqMS: TZReadOnlyQuery;
   strict private
-    FStartId: Integer;
-    FLastId: Integer;
-    FSelectRange: Integer;
-    FPacketRange: Integer;
-    FPacketNumber: Integer; // порядковый номер пакета в сессии
-    FSessionNumber: Integer;
+    FStartId: Int64;
+    FLastId: Int64;
+    FSelectRange: Int64;
+    FPacketRange: Int64;
+    FPacketNumber: Int64; // порядковый номер пакета в сессии
+    FSessionNumber: Int64;
     FMsgProc: TNotifyMessage;
     FStopped: Boolean;
     FWriteCommands: Boolean;
-    FStartReplicaAttempt: Integer; // номер попытки начать репликацию
+    FStartReplicaAttempt: Int64; // номер попытки начать репликацию
     FClient_Id: Int64;// идентфикатор базы данных slave
     FCommandData: TCommandData;
     FFailCmds: TCommandData;
@@ -53,7 +53,7 @@ type
 
   strict private
     procedure ApplyConnectionConfig(AConnection: TZConnection; ARank: TServerRank);
-    procedure BuildReplicaCommandsSQL(const AStartId, ARange: Integer);
+    procedure BuildReplicaCommandsSQL(const AStartId, ARange: Int64);
     procedure ExecuteCommandsOneByOne;
     procedure ExecuteErrCommands;
     procedure LogMsg(const AMsg: string); overload;
@@ -62,43 +62,43 @@ type
     procedure LogMsgFile(const AMsg, AFileName: string);
     procedure OnTerminateMoveErrors(Sender: TObject);
     procedure FetchSequences(AServer: TServerRank; out ASeqDataArr: TSequenceDataArray);
-    procedure SaveValueInDB(const AValue: Integer; const AFieldName: string; const ASaveInMaster: Boolean = True);
-    procedure SaveErrorInMaster(const AStep, AStartId, ALastId: Integer; const AClientId: Int64; const AErrDescription: string);
+    procedure SaveValueInDB(const AValue: Int64; const AFieldName: string; const ASaveInMaster: Boolean = True);
+    procedure SaveErrorInMaster(const AStep, AStartId, ALastId: Int64; const AClientId: Int64; const AErrDescription: string);
 
   strict private
-    procedure SetStartId(const AValue: Integer);
-    function GetLastId: Integer;
-    procedure SetLastId(const AValue: Integer);
-    function GetLastId_DDL: Integer;
-    procedure SetLastId_DDL(const AValue: Integer);
+    procedure SetStartId(const AValue: Int64);
+    function GetLastId: Int64;
+    procedure SetLastId(const AValue: Int64);
+    function GetLastId_DDL: Int64;
+    procedure SetLastId_DDL(const AValue: Int64);
 
   strict private
     function ApplyScriptsFor(AScriptsContent, AScriptNames: TStrings; AServer: TServerRank): TApplyScriptResult;
-    function ExecutePreparedPacket: Integer;
+    function ExecutePreparedPacket: Int64;
     function ExecuteReplica: TReplicaFinished;
     function IsConnected(AConnection: TZConnection; ARank: TServerRank): Boolean;
     function IsConnectionAlive(AConnection: TZConnection): Boolean;
     function IsBothConnectionsAlive: Boolean;
     function GetSlaveValues: TSlaveValues;
     function GetMasterValues(const AClientId: Int64): TMasterValues;
-    function SaveErrorInDB(AServerRank: TServerRank; const AStep, AStartId, ALastId: Integer;
+    function SaveErrorInDB(AServerRank: TServerRank; const AStep, AStartId, ALastId: Int64;
       const AClientId: Int64; const AErrDescription: string): Boolean;
 
   protected
-    property StartId: Integer read FStartId write SetStartId;
-    property LastId_DDL: Integer read GetLastId_DDL write SetLastId_DDL;
+    property StartId: Int64 read FStartId write SetStartId;
+    property LastId_DDL: Int64 read GetLastId_DDL write SetLastId_DDL;
 
   public
     constructor Create(AOwner: TComponent; AMsgProc: TNotifyMessage); reintroduce; overload;
-    constructor Create(AOwner: TComponent; const AStartId, ASelectRange, APacketRange: Integer; AMsgProc: TNotifyMessage); reintroduce; overload;
+    constructor Create(AOwner: TComponent; const AStartId, ASelectRange, APacketRange: Int64; AMsgProc: TNotifyMessage); reintroduce; overload;
     destructor Destroy; override;
 
     property OnChangeStartId: TOnChangeStartId read FOnChangeStartId write FOnChangeStartId;
     property OnNewSession: TOnNewSession read FOnNewSession write FOnNewSession;
     property OnEndSession: TNotifyEvent read FOnEndSession write FOnEndSession;
     property OnNeedRestart: TNotifyEvent read FOnNeedRestart write FOnNeedRestart;
-    property SelectRange: Integer read FSelectRange write FSelectRange;
-    property LastId: Integer read GetLastId write SetLastId;
+    property SelectRange: Int64 read FSelectRange write FSelectRange;
+    property LastId: Int64 read GetLastId write SetLastId;
     property ReplicaFinished: TReplicaFinished read FReplicaFinished;
 
     function ApplyScripts(AScriptsContent, AScriptNames: TStrings): TApplyScriptResult;
@@ -107,10 +107,10 @@ type
     function IsMasterConnected: Boolean;
     function IsSlaveConnected: Boolean;
     function IsBothConnected: Boolean;
-    function GetReplicaCmdCount: Integer;
+    function GetReplicaCmdCount: Int64;
     function GetMinMaxId: TMinMaxId;
-    function MinID: Integer;
-    function MaxID: Integer;
+    function MinID: Int64;
+    function MaxID: Int64;
 
     procedure AlterSlaveSequences;
     procedure MoveSavedProcToSlave;
@@ -121,9 +121,9 @@ type
 
   TWorkerThread = class(TThread)
   strict private
-    FStartId: Integer;
-    FSelectRange: Integer;
-    FPacketRange: Integer;
+    FStartId: Int64;
+    FSelectRange: Int64;
+    FPacketRange: Int64;
     FMsgProc: TNotifyMessage;
     FData: TdmData;
     FOnChangeStartId: TOnChangeStartId;
@@ -131,18 +131,18 @@ type
     FOnEndSession: TNotifyEvent;
     FOnNeedRestart: TNotifyEvent;
   strict private
-    procedure InnerChangeStartId(const ANewStartId: Integer);
-    procedure InnerNewSession(const AStart: TDateTime; const AMinId, AMaxId, ARecCount, ASessionNumber: Integer);
+    procedure InnerChangeStartId(const ANewStartId: Int64);
+    procedure InnerNewSession(const AStart: TDateTime; const AMinId, AMaxId, ARecCount, ASessionNumber: Int64);
     procedure InnerEndSession(Sender: TObject);
     procedure InnerNeedRestart(Sender: TObject);
   strict private
-    function GetReturnValue: Integer;
+    function GetReturnValue: Int64;
   protected
     procedure InnerMsgProc(const AMsg, AFileName: string; const aUID: Cardinal; AMsgType: TLogMessageType);
     procedure MySleep(const AInterval: Cardinal);
     property Data: TdmData read FData;
   public
-    constructor Create(CreateSuspended: Boolean; const AStartId, ASelectRange, APacketRange: Integer;
+    constructor Create(CreateSuspended: Boolean; const AStartId, ASelectRange, APacketRange: Int64;
       AMsgProc: TNotifyMessage; AKind: TThreadKind = tknNondriven); reintroduce; overload;
     constructor Create(CreateSuspended: Boolean; AMsgProc: TNotifyMessage; AKind: TThreadKind = tknNondriven); reintroduce; overload;
     destructor Destroy; override;
@@ -151,7 +151,7 @@ type
     property OnNewSession: TOnNewSession read FOnNewSession write FOnNewSession;
     property OnEndSession: TNotifyEvent read FOnEndSession write FOnEndSession;
     property OnNeedRestart: TNotifyEvent read FOnNeedRestart write FOnNeedRestart;
-    property MyReturnValue: Integer read GetReturnValue;
+    property MyReturnValue: Int64 read GetReturnValue;
   end;
 
   TSinglePacket = class(TWorkerThread)
@@ -260,7 +260,7 @@ const
   cAlterSequence = 'alter sequence if exists public.%s increment %d restart with %d';
   cSuccess       = 'Последние значения последовательностей перенесены в Slave';
 var
-  I: Integer;
+  I: Int64;
   arrSeq: TSequenceDataArray;
   sAlterSequence: string;
 begin
@@ -309,7 +309,7 @@ end;
 procedure TdmData.ApplyConnectionConfig(AConnection: TZConnection; ARank: TServerRank);
 var
   sHost, sDatabase, sUser, sPassword: string;
-  iPort: Integer;
+  iPort: Int64;
 begin
   iPort := TSettings.DefaultPort;
 
@@ -384,7 +384,7 @@ end;
 
 function TdmData.ApplyScriptsFor(AScriptsContent, AScriptNames: TStrings; AServer: TServerRank): TApplyScriptResult;
 var
-  I: Integer;
+  I: Int64;
   bConnected: Boolean;
   tmpStmt: IZPreparedStatement;
   tmpConn: TZConnection;
@@ -432,7 +432,7 @@ begin
       end;
 end;
 
-procedure TdmData.BuildReplicaCommandsSQL(const AStartId, ARange: Integer);
+procedure TdmData.BuildReplicaCommandsSQL(const AStartId, ARange: Int64);
 const
   cGetSQL       = 'формирование SQL ...';
   cFetch        = 'получение записей ...';
@@ -459,8 +459,8 @@ begin
     with qrySelectReplicaSQL do // результат запроса содержит SQL-текст, записанный в виде набора строк
     begin
       Close;
-      ParamByName('id_start').AsInteger  := AStartId;
-      ParamByName('rec_count').AsInteger := ARange;
+      ParamByName('id_start').AsLargeInt  := AStartId;
+      ParamByName('rec_count').AsLargeInt := ARange;
       Open;
       First;
       while not EOF and not FStopped do
@@ -482,7 +482,7 @@ begin
     qrySelectReplicaCmd.Open;
     qrySelectReplicaCmd.FetchAll;
     qrySelectReplicaCmd.First;
-    FStartId := qrySelectReplicaCmd.FieldByName('Id').AsInteger; // откорректируем значение StartId в соответствии с реальными данными
+    FStartId := qrySelectReplicaCmd.FieldByName('Id').AsLargeInt; // откорректируем значение StartId в соответствии с реальными данными
     LogMsg(Format(cElapsedFetch, [IntToStr(qrySelectReplicaCmd.RecordCount), Elapsed(crdStartFetch)]), crdStartFetch);
 
     if FStopped then Exit;
@@ -520,7 +520,7 @@ begin
   FMsgProc := AMsgProc;
 end;
 
-constructor TdmData.Create(AOwner: TComponent; const AStartId, ASelectRange, APacketRange: Integer; AMsgProc: TNotifyMessage);
+constructor TdmData.Create(AOwner: TComponent; const AStartId, ASelectRange, APacketRange: Int64; AMsgProc: TNotifyMessage);
 begin
   inherited Create(AOwner);
 
@@ -609,7 +609,7 @@ end;
 
 procedure TdmData.ExecuteCommandsOneByOne; // предполагается использовать внутри StartReplica после неудачи ExecutePreparedPacket
 var
-  iStartId, iLastId, iMaxId, iSuccCount, iFailCount: Integer;
+  iStartId, iLastId, iMaxId, iSuccCount, iFailCount: Int64;
   crdStart, crdLogMsg: Cardinal;
 begin
   // будем выполнять команды по одной
@@ -705,7 +705,7 @@ end;
 
 procedure TdmData.ExecuteErrCommands;
 var
-  iStartId, iEndId, iSuccCount, iFailCount: Integer;
+  iStartId, iEndId, iSuccCount, iFailCount: Int64;
   crdStart, crdLogMsg: Cardinal;
   sFileName: string;
 const
@@ -798,12 +798,12 @@ begin
   Sleep(25);
 end;
 
-function TdmData.ExecutePreparedPacket: Integer;
+function TdmData.ExecutePreparedPacket: Int64;
 var
   bStopIfError: Boolean;
   crdStart: Cardinal;
-  I, iMaxId, iStartId, iLastId, iRecCount: Integer;
-  iStartTrans, iEndTrans: Integer;
+  I, iMaxId, iStartId, iLastId, iRecCount: Int64;
+  iStartTrans, iEndTrans: Int64;
   rangeTransId: TMinMaxTransId;
   sFileName: string;
   tmpData: TCmdData;
@@ -969,7 +969,7 @@ end;
 
 function TdmData.ExecuteReplica: TReplicaFinished;
 var
-  iPrevStartId: Integer;
+  iPrevStartId: Int64;
 begin
   iPrevStartId := -1;
 
@@ -1033,7 +1033,7 @@ const
   cSelectSequences = 'select * from gpSelect_Sequences()';
   cSelectLastValue = 'select last_value from %s';
 var
-  I: Integer;
+  I: Int64;
   bConnected: Boolean;
   qryHelper: TZReadOnlyQuery;
   sSelectLastValue: string;
@@ -1082,7 +1082,7 @@ begin
           while not EOF and not FStopped do
           begin
             ASeqDataArr[I].Name := Fields[0].AsString;
-            ASeqDataArr[I].Increment := Fields[1].AsInteger;
+            ASeqDataArr[I].Increment := Fields[1].AsLargeInt;
             Inc(I);
             Next;
           end;
@@ -1113,7 +1113,7 @@ begin
   end;
 end;
 
-function TdmData.GetReplicaCmdCount: Integer;
+function TdmData.GetReplicaCmdCount: Int64;
 const
   cSQL = 'select Count(*) from (%s) as Commands';
 begin
@@ -1128,7 +1128,7 @@ begin
         SQL.Text := Format(cSQL, [qrySelectReplicaCmd.SQL.Text]);
         Open;
         if not Fields[0].IsNull then
-          Result := Fields[0].AsInteger;
+          Result := Fields[0].AsLargeInt;
         Close;
       end;
   except
@@ -1169,10 +1169,10 @@ begin
   end;
 end;
 
-function TdmData.GetLastId: Integer;
+function TdmData.GetLastId: Int64;
 var
   slvValues: TSlaveValues;
-  iMasterId, iSlaveId: Integer;
+  iMasterId, iSlaveId: Int64;
 begin
   slvValues := GetSlaveValues;
 
@@ -1182,10 +1182,10 @@ begin
   Result := Max(iSlaveId, iMasterId);
 end;
 
-function TdmData.GetLastId_DDL: Integer;
+function TdmData.GetLastId_DDL: Int64;
 var
   slvValues: TSlaveValues;
-  iMasterId, iSlaveId: Integer;
+  iMasterId, iSlaveId: Int64;
 begin
   slvValues := GetSlaveValues;
 
@@ -1214,7 +1214,7 @@ end;
 
 function TdmData.IsConnected(AConnection: TZConnection; ARank: TServerRank): Boolean;
 var
-  iAttempt: Integer;
+  iAttempt: Int64;
 const
   cWaitReconnect = c1Sec;
   cAttemptCount  = 3;
@@ -1285,8 +1285,8 @@ function TdmData.GetCompareRecCountMS_SQL(const ADeviationsOnly: Boolean): strin
 type
   TTableData = record
     Name: string;
-    MasterCount: Integer;
-    SlaveCount: Integer;
+    MasterCount: Int64;
+    SlaveCount: Int64;
     CountSQL: string;
   end;
 const
@@ -1296,7 +1296,7 @@ const
   cSelectCountId = 'SELECT COUNT(Id) AS RecCount FROM %s';
   cUnion         = ' UNION ALL ';
 var
-  I: Integer;
+  I: Int64;
   arrTables: array of TTableData;
   sTableName, sSQL: string;
 begin
@@ -1357,7 +1357,7 @@ begin
           SQL.Add(arrTables[I].CountSQL);
           Open;
           if not Fields[0].IsNull then
-            arrTables[I].MasterCount := Fields[0].AsInteger;
+            arrTables[I].MasterCount := Fields[0].AsLargeInt;
           Close;
         end;
 
@@ -1371,7 +1371,7 @@ begin
           SQL.Add(arrTables[I].CountSQL);
           Open;
           if not Fields[0].IsNull then
-            arrTables[I].SlaveCount := Fields[0].AsInteger;
+            arrTables[I].SlaveCount := Fields[0].AsLargeInt;
           Close;
         end;
     end;
@@ -1405,13 +1405,13 @@ type
     Name: string;
     MasterValue: Int64;
     SlaveValue: Int64;
-    MasterIncrement: Integer;
-    SlaveIncrement: Integer;
+    MasterIncrement: Int64;
+    SlaveIncrement: Int64;
   end;
 const
   cSelectUnion = 'select ''%s'' as SequenceName, %d as MasterValue, %d as SlaveValue, %d as MasterIncrement, %d as SlaveIncrement';
 var
-  I, J: Integer;
+  I, J: Int64;
   arrMasterSeq, arrSlaveSeq: TSequenceDataArray;
   arrUnion: array of TUnionData;
   sSelect: string;
@@ -1530,13 +1530,13 @@ begin
         Open;
 
         if not FieldByName('MinId').IsNull then
-          Result.MinId := FieldByName('MinId').AsInteger;
+          Result.MinId := FieldByName('MinId').AsLargeInt;
 
         if not FieldByName('MaxId').IsNull then
-          Result.MaxId := FieldByName('MaxId').AsInteger;
+          Result.MaxId := FieldByName('MaxId').AsLargeInt;
 
         if not FieldByName('RecCount').IsNull then
-          Result.RecCount := FieldByName('RecCount').AsInteger;
+          Result.RecCount := FieldByName('RecCount').AsLargeInt;
 
         Close;
       end;
@@ -1546,7 +1546,7 @@ begin
   end;
 end;
 
-function TdmData.MaxID: Integer;
+function TdmData.MaxID: Int64;
 const
   cSelect = 'select * from _replica.gpSelect_MaxId()';
 begin
@@ -1561,7 +1561,7 @@ begin
         Open;
 
         if not Fields[0].IsNull then
-          Result := Fields[0].AsInteger;
+          Result := Fields[0].AsLargeInt;
 
         Close;
       end;
@@ -1571,7 +1571,7 @@ begin
   end;
 end;
 
-function TdmData.MinID: Integer;
+function TdmData.MinID: Int64;
 const
   cSelect = 'select * from _replica.gpSelect_MinId()';
 begin
@@ -1586,7 +1586,7 @@ begin
         Open;
 
         if not Fields[0].IsNull then
-          Result := Fields[0].AsInteger;
+          Result := Fields[0].AsLargeInt;
 
         Close;
       end;
@@ -1629,9 +1629,9 @@ begin
             while not Eof do
             begin
               slCmds.Add(Format(cInsertMaster, [
-                FieldByName('Step').AsInteger,
-                FieldByName('Start_Id').AsInteger,
-                FieldByName('Last_Id').AsInteger,
+                FieldByName('Step').AsLargeInt,
+                FieldByName('Start_Id').AsLargeInt,
+                FieldByName('Last_Id').AsLargeInt,
                 FieldByName('Client_Id').AsLargeInt,
                 QuotedStr(FieldByName('Description').AsString)
               ]));
@@ -1692,8 +1692,8 @@ const
   cFileNameErr = cSession + 'Id_%d_ERR.txt'; // \DDL_Commands\2020-08-11_14-49-00\id_2095014_Error.txt
   cFileContent = c2CrLf + 'Last_modified: %s' + c2CrLf + '%s';
 var
-  I, idxId, idxQry, idxLM, iLastId: Integer;
-  iId: Integer;
+  I, idxId, idxQry, idxLM, iLastId: Int64;
+  iId: Int64;
   sQry, sSessionStart, sFileName, sFileContent: string;
   dtmLM: TDateTime;
   tmpStmt: IZPreparedStatement;
@@ -1712,7 +1712,7 @@ begin
           Close;
           SQL.Clear;
           SQL.Add(Format(cSelect, [iLastId]));
-          ParamByName('Id').AsInteger  := iLastId;
+          ParamByName('Id').AsLargeInt  := iLastId;
           Open;
           First;
 
@@ -1727,7 +1727,7 @@ begin
 
           while not EOF do
           begin
-            iId   := Fields[idxId].AsInteger;
+            iId   := Fields[idxId].AsLargeInt;
             sQry  := Fields[idxQry].AsString;
             dtmLM := Fields[idxLM].AsDateTime;
 
@@ -1775,17 +1775,17 @@ begin
   FMoveErrorsThrdFinished := True;
 end;
 
-procedure TdmData.SetLastId_DDL(const AValue: Integer);
+procedure TdmData.SetLastId_DDL(const AValue: Int64);
 begin
   SaveValueInDB(AValue, 'Last_Id_DDL');
 end;
 
-procedure TdmData.SetLastId(const AValue: Integer);
+procedure TdmData.SetLastId(const AValue: Int64);
 begin
   SaveValueInDB(AValue, 'Last_Id');
 end;
 
-function TdmData.SaveErrorInDB(AServerRank: TServerRank; const AStep, AStartId, ALastId: Integer;
+function TdmData.SaveErrorInDB(AServerRank: TServerRank; const AStep, AStartId, ALastId: Int64;
   const AClientId: Int64; const AErrDescription: string): Boolean;
 const
   cInsert    = 'SELECT _replica.gpInsert_Errors (%d, %d, %d, %d, %s)';
@@ -1845,14 +1845,14 @@ begin
   end;
 end;
 
-procedure TdmData.SaveErrorInMaster(const AStep, AStartId, ALastId: Integer; const AClientId: Int64; const AErrDescription: string);
+procedure TdmData.SaveErrorInMaster(const AStep, AStartId, ALastId: Int64; const AClientId: Int64; const AErrDescription: string);
 begin
   // сначала попытаемся сохранить ошибку в Master, а в случае неудачи - в Slave
   if not SaveErrorInDB(srMaster, AStep, AStartId, ALastId, AClientId, AErrDescription) then
     SaveErrorInDB(srSlave, AStep, AStartId, ALastId, AClientId, AErrDescription);
 end;
 
-procedure TdmData.SaveValueInDB(const AValue: Integer; const AFieldName: string; const ASaveInMaster: Boolean);
+procedure TdmData.SaveValueInDB(const AValue: Int64; const AFieldName: string; const ASaveInMaster: Boolean);
 const
   cSelectSettings    = 'select * from _replica.gpSelect_Settings()';
   cUpdateMaster      = 'select * from _replica.gpUpdate_Clients_LastId(%d, %d)';
@@ -1946,7 +1946,7 @@ begin
   end;
 end;
 
-procedure TdmData.SetStartId(const AValue: Integer);
+procedure TdmData.SetStartId(const AValue: Int64);
 begin
   if FStartId <> AValue then
   begin
@@ -1964,7 +1964,7 @@ end;
 
 { TWorkerThread }
 
-constructor TWorkerThread.Create(CreateSuspended: Boolean; const AStartId, ASelectRange, APacketRange: Integer;
+constructor TWorkerThread.Create(CreateSuspended: Boolean; const AStartId, ASelectRange, APacketRange: Int64;
   AMsgProc: TNotifyMessage; AKind: TThreadKind);
 begin
   FStartId := AStartId;
@@ -1995,12 +1995,12 @@ begin
   inherited;
 end;
 
-function TWorkerThread.GetReturnValue: Integer;
+function TWorkerThread.GetReturnValue: Int64;
 begin
   Result := ReturnValue;
 end;
 
-procedure TWorkerThread.InnerChangeStartId(const ANewStartId: Integer);
+procedure TWorkerThread.InnerChangeStartId(const ANewStartId: Int64);
 begin
   TThread.Queue(nil, procedure
                      begin
@@ -2032,7 +2032,7 @@ begin
                      end);
 end;
 
-procedure TWorkerThread.InnerNewSession(const AStart: TDateTime; const AMinId, AMaxId, ARecCount, ASessionNumber: Integer);
+procedure TWorkerThread.InnerNewSession(const AStart: TDateTime; const AMinId, AMaxId, ARecCount, ASessionNumber: Int64);
 begin
   TThread.Queue(nil, procedure
                      begin

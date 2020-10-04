@@ -15,10 +15,10 @@ type
 
   strict private
     class function GetBoolValue(const ASection, AParam: string; const ADefVal: Boolean): Boolean;
-    class function GetIntValue(const ASection, AParam: string; const ADefVal: Integer): Integer;
+    class function GetIntValue(const ASection, AParam: string; const ADefVal: Int64): Int64;
     class function GetStrValue(const ASection, AParam, ADefVal: string): string;
     class procedure SetBoolValue(const ASection, AParam: string; const AVal: Boolean);
-    class procedure SetIntValue(const ASection, AParam: string; const AVal: Integer);
+    class procedure SetIntValue(const ASection, AParam: string; const AVal: Int64);
     class procedure SetStrValue(const ASection, AParam, AVal: string);
 
   strict private
@@ -32,8 +32,8 @@ type
     class procedure SetMasterServer(const AValue: string); static;
     class function GetMasterDatabase: string; static;
     class procedure SetMasterDatabase(const AValue: string); static;
-    class function GetMasterPort: Integer; static;
-    class procedure SetMasterPort(const AValue: Integer); static;
+    class function GetMasterPort: Int64; static;
+    class procedure SetMasterPort(const AValue: Int64); static;
     class function GetMasterUser: string; static;
     class procedure SetMasterUser(const AValue: string); static;
     class function GetMasterPassword: string; static;
@@ -42,18 +42,18 @@ type
     class procedure SetSlaveServer(const AValue: string); static;
     class function GetSlaveDatabase: string; static;
     class procedure SetSlaveDatabase(const AValue: string); static;
-    class function GetSlavePort: Integer; static;
-    class procedure SetSlavePort(const AValue: Integer); static;
+    class function GetSlavePort: Int64; static;
+    class procedure SetSlavePort(const AValue: Int64); static;
     class function GetSlaveUser: string; static;
     class procedure SetSlaveUser(const AValue: string); static;
     class function GetSlavePassword: string; static;
     class procedure SetSlavePassword(const AValue: string); static;
-    class function GetReplicaSelectRange: Integer; static;
-    class procedure SetReplicaSelectRange(const AValue: Integer); static;
-    class function GetReplicaPacketRange: Integer; static;
-    class procedure SetReplicaPacketRange(const AValue: Integer); static;
-    class function GetReplicaLastId: Integer; static;
-    class procedure SetReplicaLastId(const AValue: Integer); static;
+    class function GetReplicaSelectRange: Int64; static;
+    class procedure SetReplicaSelectRange(const AValue: Int64); static;
+    class function GetReplicaPacketRange: Int64; static;
+    class procedure SetReplicaPacketRange(const AValue: Int64); static;
+    class function GetReplicaLastId: Int64; static;
+    class procedure SetReplicaLastId(const AValue: Int64); static;
     class function GetLibLocation: string; static;
     class procedure SetLibLocation(const AValue: string); static;
     class function GetMasterDriverID: string; static;
@@ -66,12 +66,12 @@ type
     class procedure SetCompareDeviationRecCountOnly(const AValue: Boolean); static;
     class function GetCompareDeviationSeqOnly: Boolean; static;
     class procedure SetCompareDeviationSeqOnly(const AValue: Boolean); static;
-    class function GetReconnectTimeoutMinute: Integer; static;
-    class procedure SetReconnectTimeoutMinute(const AValue: Integer); static;
+    class function GetReconnectTimeoutMinute: Int64; static;
+    class procedure SetReconnectTimeoutMinute(const AValue: Int64); static;
     class function GetScriptPath: string; static;
     class procedure SetScriptPath(const AValue: string); static;
-    class function GetDDLLastId: Integer; static;
-    class procedure SetDDLLastId(const AValue: Integer); static;
+    class function GetDDLLastId: Int64; static;
+    class procedure SetDDLLastId(const AValue: Int64); static;
     class function GetSaveErrStep1InDB: Boolean; static;
     class procedure SetSaveErrStep1InDB(const AValue: Boolean); static;
     class function GetSaveErrStep2InDB: Boolean; static;
@@ -81,32 +81,32 @@ type
     class constructor Create;
     class destructor Destroy;
     class function GetLogFolder: string;
-    class function DefaultPort: Integer;
+    class function DefaultPort: Int64;
     class property UseLog: Boolean read GetUseLog write SetUseLog;
     class property UseLogGUI: Boolean read GetUseLogGUI write SetUseLogGUI;
     class property WriteCommandsToFile: Boolean read GetWriteCommandsToFile write SetWriteCommandsToFile;
     class property MasterServer: string read GetMasterServer write SetMasterServer;
     class property MasterDatabase: string read GetMasterDatabase write SetMasterDatabase;
-    class property MasterPort: Integer read GetMasterPort write SetMasterPort;
+    class property MasterPort: Int64 read GetMasterPort write SetMasterPort;
     class property MasterUser: string read GetMasterUser write SetMasterUser;
     class property MasterPassword: string read GetMasterPassword write SetMasterPassword;
     class property SlaveServer: string read GetSlaveServer write SetSlaveServer;
     class property SlaveDatabase: string read GetSlaveDatabase write SetSlaveDatabase;
-    class property SlavePort: Integer read GetSlavePort write SetSlavePort;
+    class property SlavePort: Int64 read GetSlavePort write SetSlavePort;
     class property SlaveUser: string read GetSlaveUser write SetSlaveUser;
     class property SlavePassword: string read GetSlavePassword write SetSlavePassword;
-    class property ReplicaSelectRange: Integer read GetReplicaSelectRange write SetReplicaSelectRange;
-    class property ReplicaPacketRange: Integer read GetReplicaPacketRange write SetReplicaPacketRange;
-    class property ReplicaLastId: Integer read GetReplicaLastId write SetReplicaLastId;
+    class property ReplicaSelectRange: Int64 read GetReplicaSelectRange write SetReplicaSelectRange;
+    class property ReplicaPacketRange: Int64 read GetReplicaPacketRange write SetReplicaPacketRange;
+    class property ReplicaLastId: Int64 read GetReplicaLastId write SetReplicaLastId;
     class property LibLocation: string read GetLibLocation write SetLibLocation;
     class property MasterDriverID: string read GetMasterDriverID write SetMasterDriverID;
     class property SlaveDriverID: string read GetSlaveDriverID write SetSlaveDriverID;
     class property StopIfError: Boolean read GetStopIfError write SetStopIfError;
     class property CompareDeviationRecCountOnly: Boolean read GetCompareDeviationRecCountOnly write SetCompareDeviationRecCountOnly;
     class property CompareDeviationSequenceOnly: Boolean read GetCompareDeviationSeqOnly write SetCompareDeviationSeqOnly;
-    class property ReconnectTimeoutMinute: Integer read GetReconnectTimeoutMinute write SetReconnectTimeoutMinute;
+    class property ReconnectTimeoutMinute: Int64 read GetReconnectTimeoutMinute write SetReconnectTimeoutMinute;
     class property ScriptPath: string read GetScriptPath write SetScriptPath;
-    class property DDLLastId: Integer read GetDDLLastId write SetDDLLastId;
+    class property DDLLastId: Int64 read GetDDLLastId write SetDDLLastId;
     class property SaveErrStep1InDB: Boolean read GetSaveErrStep1InDB write SetSaveErrStep1InDB;
     class property SaveErrStep2InDB: Boolean read GetSaveErrStep2InDB write SetSaveErrStep2InDB;
 
@@ -270,7 +270,7 @@ begin
   sSlvDriverID := GetSlaveDriverID;
 end;
 
-class function TSettings.DefaultPort: Integer;
+class function TSettings.DefaultPort: Int64;
 begin
   Result := cDefPort;
 end;
@@ -315,12 +315,12 @@ begin
   Result := GetBoolValue(cSettingsSection, cCompareDeviationSeqParam, False);
 end;
 
-class function TSettings.GetDDLLastId: Integer;
+class function TSettings.GetDDLLastId: Int64;
 begin
   Result := GetIntValue(cReplicaSection, cReplicaDDLLastIdParam, cDefDDLLastId);
 end;
 
-class function TSettings.GetIntValue(const ASection, AParam: string; const ADefVal: Integer): Integer;
+class function TSettings.GetIntValue(const ASection, AParam: string; const ADefVal: Int64): Int64;
 var
   ValueExist: Boolean;
 begin
@@ -373,7 +373,7 @@ begin
   Result := GetStrValue(cMasterSection, cMasterPasswParam, EmptyStr);
 end;
 
-class function TSettings.GetMasterPort: Integer;
+class function TSettings.GetMasterPort: Int64;
 begin
   Result := GetIntValue(cMasterSection, cMasterPortParam, cDefPort);
 end;
@@ -388,22 +388,22 @@ begin
   Result := GetStrValue(cMasterSection, cMasterUserParam, cDefUser);
 end;
 
-class function TSettings.GetReconnectTimeoutMinute: Integer;
+class function TSettings.GetReconnectTimeoutMinute: Int64;
 begin
   Result := GetIntValue(cSettingsSection, cReconnectTimeoutParam, cDefReconnectTimeoutMinute);
 end;
 
-class function TSettings.GetReplicaPacketRange: Integer;
+class function TSettings.GetReplicaPacketRange: Int64;
 begin
   Result := GetIntValue(cReplicaSection, cReplicaPacketRangeParam, cDefReplicaPacketRange);
 end;
 
-class function TSettings.GetReplicaSelectRange: Integer;
+class function TSettings.GetReplicaSelectRange: Int64;
 begin
   Result := GetIntValue(cReplicaSection, cReplicaSelectRangeParam, cDefReplicaSelectRange);
 end;
 
-class function TSettings.GetReplicaLastId: Integer;
+class function TSettings.GetReplicaLastId: Int64;
 begin
   Result := GetIntValue(cReplicaSection, cReplicaLastIdParam, cDefReplicaLastId);
 end;
@@ -438,7 +438,7 @@ begin
   Result := GetStrValue(cSlaveSection, cSlavePasswParam, EmptyStr);
 end;
 
-class function TSettings.GetSlavePort: Integer;
+class function TSettings.GetSlavePort: Int64;
 begin
   Result := GetIntValue(cSlaveSection, cSlavePortParam, cDefPort);
 end;
@@ -529,12 +529,12 @@ begin
   SetBoolValue(cSettingsSection, cCompareDeviationSeqParam, AValue);
 end;
 
-class procedure TSettings.SetDDLLastId(const AValue: Integer);
+class procedure TSettings.SetDDLLastId(const AValue: Int64);
 begin
   SetIntValue(cReplicaSection, cReplicaDDLLastIdParam, AValue);
 end;
 
-class procedure TSettings.SetIntValue(const ASection, AParam: string; const AVal: Integer);
+class procedure TSettings.SetIntValue(const ASection, AParam: string; const AVal: Int64);
 begin
   if Assigned(FIni) then
   begin
@@ -567,7 +567,7 @@ begin
   SetStrValue(cMasterSection, cMasterPasswParam, AValue);
 end;
 
-class procedure TSettings.SetMasterPort(const AValue: Integer);
+class procedure TSettings.SetMasterPort(const AValue: Int64);
 begin
   SetIntValue(cMasterSection, cMasterPortParam, AValue);
 end;
@@ -582,22 +582,22 @@ begin
   SetStrValue(cMasterSection, cMasterUserParam, AValue);
 end;
 
-class procedure TSettings.SetReconnectTimeoutMinute(const AValue: Integer);
+class procedure TSettings.SetReconnectTimeoutMinute(const AValue: Int64);
 begin
   SetIntValue(cSettingsSection, cReconnectTimeoutParam, AValue);
 end;
 
-class procedure TSettings.SetReplicaPacketRange(const AValue: Integer);
+class procedure TSettings.SetReplicaPacketRange(const AValue: Int64);
 begin
   SetIntValue(cReplicaSection, cReplicaPacketRangeParam, AValue);
 end;
 
-class procedure TSettings.SetReplicaSelectRange(const AValue: Integer);
+class procedure TSettings.SetReplicaSelectRange(const AValue: Int64);
 begin
   SetIntValue(cReplicaSection, cReplicaSelectRangeParam, AValue);
 end;
 
-class procedure TSettings.SetReplicaLastId(const AValue: Integer);
+class procedure TSettings.SetReplicaLastId(const AValue: Int64);
 begin
   SetIntValue(cReplicaSection, cReplicaLastIdParam, AValue);
 end;
@@ -632,7 +632,7 @@ begin
   SetStrValue(cSlaveSection, cSlavePasswParam, AValue);
 end;
 
-class procedure TSettings.SetSlavePort(const AValue: Integer);
+class procedure TSettings.SetSlavePort(const AValue: Int64);
 begin
   SetIntValue(cSlaveSection, cSlavePortParam, AValue);
 end;
@@ -688,7 +688,7 @@ end;
 
 class procedure TSettings.WriteScriptFiles(AList: TStrings);
 var
-  I: Integer;
+  I: Int64;
 begin
   Assert(AList <> nil, 'Ожидается AList <> nil');
   FIni.EraseSection(cScriptSection);

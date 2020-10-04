@@ -199,8 +199,8 @@ type
     FApplyScriptThrd: TApplyScriptThread;
     FMoveProcToSlaveThrd: TMoveProcToSlaveThread;
     FAlterSlaveSequencesThrd: TAlterSlaveSequencesThread;
-    FSsnMinId: Integer;
-    FSsnMaxId: Integer;
+    FSsnMinId: Int64;
+    FSsnMaxId: Int64;
     FSsnStep: Double;
     FStartTimeReplica: TDateTime;
     FStartTimeSession: TDateTime;
@@ -224,14 +224,14 @@ type
     procedure StopAlterSlaveSequences;
     procedure StopApplyScriptThread;
     procedure StopMoveProcToSlaveThread;
-    procedure UpdateProgBarPosition(AProgBar: TProgressBar; const AMax, ACurrValue, ARecCount: Integer);
+    procedure UpdateProgBarPosition(AProgBar: TProgressBar; const AMax, ACurrValue, ARecCount: Int64);
     procedure LogMessage(const AMsg: string; const AFileName: string = ''; const aUID: Cardinal = 0;
       AMsgType: TLogMessageType = lmtPlain);
     procedure LogApplyScript(const AMsg: string; const AFileName: string = ''; const aUID: Cardinal = 0;
       AMsgType: TLogMessageType = lmtPlain);
 
-    procedure OnChangeStartId(const ANewStartId: Integer);
-    procedure OnNewSession(const AStart: TDateTime; const AMinId, AMaxId, ARecCount, ASessionNumber: Integer);
+    procedure OnChangeStartId(const ANewStartId: Int64);
+    procedure OnNewSession(const AStart: TDateTime; const AMinId, AMaxId, ARecCount, ASessionNumber: Int64);
     procedure OnEndSession(Sender: TObject);
     procedure OnNeedReplicaRestart(Sender: TObject);
     procedure OnTerminateAlterSlaveSequences(Sender: TObject);
@@ -349,7 +349,7 @@ procedure TfrmMain.StartReplica;
 const
   cStartPerlica = 'Старт репликации: StartId = %d    select %d    в пакете %d    версия %s';
 var
-  iStartId, iSelectRange, iPacketRange: Integer;
+  iStartId, iSelectRange, iPacketRange: Int64;
 begin
   FStartTimeReplica := Now;
   lbAllStart.Caption := Format(cStartPointReplica, [FormatDateTime(cTimeStrShort, Now)]);
@@ -532,7 +532,7 @@ end;
 
 procedure TfrmMain.AssignOnExitSettings;
 var
-  I: Integer;
+  I: Int64;
 begin
   for I := 0 to Pred(ComponentCount) do
     if Components[I] is TEdit then
@@ -617,7 +617,7 @@ const
   cStartPerlica = 'Старт репликации: %d, диапазон select: %d, команд в пакете: %d, SQL:' + #13#10 + '%s';
   cCmdCountMsg = 'В пакете всего команд: %d';
 //var
-//  iStart, iSelectRange: Integer;
+//  iStart, iSelectRange: Int64;
 begin
 //  iStart := StrToIntDef(edtSsnMinId.Text, 0);
 //  iSelectRange := seSelectRange.Value;
@@ -770,11 +770,11 @@ begin
   FLastIdThrd.Start;
 end;
 
-procedure TfrmMain.UpdateProgBarPosition(AProgBar: TProgressBar; const AMax, ACurrValue, ARecCount: Integer);
+procedure TfrmMain.UpdateProgBarPosition(AProgBar: TProgressBar; const AMax, ACurrValue, ARecCount: Int64);
 var
   extPart: Extended;
 begin
-  AProgBar.Min  := 1;
+  AProgBar.Min  := MIN (1, ARecCount);
   AProgBar.Max  := ARecCount;
   AProgBar.Step := 1;
 
@@ -954,7 +954,7 @@ end;
 
 procedure TfrmMain.LogMessage(const AMsg, AFileName: string; const aUID: Cardinal; AMsgType: TLogMessageType);
 var
-  iObjIndex, iPos: Integer;
+  iObjIndex, iPos: Int64;
   sMsg, sLine: string;
 begin
 
@@ -1025,9 +1025,9 @@ begin
   SendMessage((Sender as TMemo).Handle, EM_LINESCROLL, 0, (Sender as TMemo).Lines.Count);
 end;
 
-procedure TfrmMain.OnChangeStartId(const ANewStartId: Integer);
+procedure TfrmMain.OnChangeStartId(const ANewStartId: Int64);
 var
-  iReplicaMax, iRecCount: Integer;
+  iReplicaMax, iRecCount: Int64;
 begin
   edtSsnMinId.Text := IntToStr(ANewStartId);
 
@@ -1069,7 +1069,7 @@ begin
   end;
 end;
 
-procedure TfrmMain.OnNewSession(const AStart: TDateTime; const AMinId, AMaxId, ARecCount, ASessionNumber: Integer);
+procedure TfrmMain.OnNewSession(const AStart: TDateTime; const AMinId, AMaxId, ARecCount, ASessionNumber: Int64);
 begin
   edtSsnMinId.Text    := IntToStr(AMinId);
   edtSsnMaxId.Text    := IntToStr(AMaxId);
@@ -1226,7 +1226,7 @@ end;
 procedure TfrmMain.OnTerminateMinMaxId(Sender: TObject);
 var
   P: PMinMaxId;
-  iStart: Integer;
+  iStart: Int64;
   lwResult: LongWord;
   tmpThread: TWorkerThread;
 begin
@@ -1295,7 +1295,7 @@ end;
 procedure TfrmMain.OnTerminateSinglePacket(Sender: TObject);
 var
   tmpWorker: TWorkerThread;
-  iCount: Integer;
+  iCount: Int64;
 const
   cEnd = 'Окончание выгрузки одного пакета. Выполнено %d команд';
 begin

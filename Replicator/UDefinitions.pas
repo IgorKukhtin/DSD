@@ -5,42 +5,42 @@ interface
 type
   TLogMessageType = (lmtPlain, lmtError);
   TNotifyMessage = procedure(const AMsg: string; const AFileName: string = ''; const aUID: Cardinal = 0; AMsgType: TLogMessageType = lmtPlain) of object;
-  TOnChangeStartId = procedure (const ANewStartId: Integer) of object;
-  TOnNewSession = procedure(const AStart: TDateTime; const AMinId, AMaxId, ARecCount, ASessionNumber: Integer) of object;
+  TOnChangeStartId = procedure (const ANewStartId: Int64) of object;
+  TOnNewSession = procedure(const AStart: TDateTime; const AMinId, AMaxId, ARecCount, ASessionNumber: Int64) of object;
   TConditionFunc = reference to function(): Boolean;
 
   TCmdData = class
-    Id: Integer;
-    TranId: Integer;
+    Id: Int64;
+    TranId: Int64;
   end;
 
   PMinMaxId = ^TMinMaxId;
   TMinMaxId = record
-    MinId: Integer;
-    MaxId: Integer;
-    RecCount: Integer;
+    MinId: Int64;
+    MaxId: Int64;
+    RecCount: Int64;
   end;
 
   TMinMaxTransId = record
-    Min: Integer;
-    Max: Integer;
+    Min: Int64;
+    Max: Int64;
   end;
 
   TSlaveValues = record
-    LastId: Integer;
-    LastId_DDL: Integer;
+    LastId: Int64;
+    LastId_DDL: Int64;
     ClientId: Int64;
   end;
 
   TMasterValues = record
-    LastId: Integer;
-    LastId_DDL: Integer;
+    LastId: Int64;
+    LastId_DDL: Int64;
   end;
 
   TSequenceData = record
     Name: string;
     LastValue: Int64;
-    Increment: Integer;
+    Increment: Int64;
   end;
 
   TSequenceDataArray = array of TSequenceData;
@@ -57,14 +57,14 @@ type
   TThreadKind = (tknDriven, tknNondriven);
 
   TDataRec = record
-    Id: Integer;
-    TransId: Integer;
+    Id: Int64;
+    TransId: Int64;
     SQL: string;
   end;
 
   TMaxIdTransId = record
-    MaxId: Integer;
-    TransId: Integer;
+    MaxId: Int64;
+    TransId: Int64;
   end;
 
   TDataRecArray = array of TDataRec;
