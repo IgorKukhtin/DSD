@@ -520,12 +520,25 @@ begin
 end;
 
 procedure TParentForm.Loaded;
+
+procedure dsdTranslateForm(Form : TForm);
+  var I : Integer;
+begin
+  for I := 0 to Form.ComponentCount - 1 do
+  if Form.Components[I] is TdsdTranslator then
+  begin
+    TdsdTranslator(Form.Components[I]).TranslateForm;
+    Break;
+  end;
+end;
+
 begin
   inherited;
   if not (csDesigning in ComponentState) then
      if Assigned(AddOnFormData.OnLoadAction) then
         AddOnFormData.OnLoadAction.Execute;
   TranslateForm(Self);
+  dsdTranslateForm(Self);
 end;
 
 procedure TParentForm.Notification(AComponent: TComponent;

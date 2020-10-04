@@ -39,7 +39,8 @@ RETURNS TABLE (Id Integer, GoodsId_main Integer, GoodsGroupName TVarChar, GoodsN
                GoodsPairSunId Integer, GoodsPairSunMainId Integer,
                AmountSendIn TFloat,
                NotTransferTime boolean,
-               NDSKindId Integer
+               NDSKindId Integer,
+               isPresent boolean
 
              , PartionDateKindId_check   Integer
              , Price_check               TFloat
@@ -530,7 +531,7 @@ BEGIN
                                                                        ON MovementBoolean_Deferred.MovementId = Movement.Id
                                                                       AND MovementBoolean_Deferred.DescId = zc_MovementBoolean_Deferred()
                                                                       AND MovementBoolean_Deferred.ValueData = TRUE
-                                                                      
+
                                             INNER JOIN MovementLinkObject AS MovementLinkObject_To
                                                                           ON MovementLinkObject_To.MovementId = Movement.Id
                                                                          AND MovementLinkObject_To.DescId = zc_MovementLinkObject_To()
@@ -539,12 +540,12 @@ BEGIN
                  , tmpDeferredSendIn AS (SELECT Container.ObjectId                  AS GoodsId
                                               , SUM(- MovementItemContainer.Amount) AS Amount
                                          FROM tmpMovementSend AS Movement
-               
+
                                               INNER JOIN MovementItemContainer ON MovementItemContainer.MovementId = Movement.Id
                                                                               AND MovementItemContainer.DescId = zc_Container_Count()
-               
+
                                               INNER JOIN Container ON Container.Id = MovementItemContainer.ContainerId
-                                                
+
                                          GROUP BY Container.ObjectId
                                        )
 
@@ -572,7 +573,7 @@ BEGIN
                                               LEFT JOIN Object AS Object_Object ON Object_Object.Id = ObjectLink_BarCode_Object.ChildObjectId
 
                                               LEFT JOIN ObjectBoolean AS ObjectBoolean_GoodsForProject
-                                                                      ON ObjectBoolean_GoodsForProject.ObjectId = Object_Object.Id 
+                                                                      ON ObjectBoolean_GoodsForProject.ObjectId = Object_Object.Id
                                                                      AND ObjectBoolean_GoodsForProject.DescId = zc_ObjectBoolean_DiscountExternal_GoodsForProject()
                                           WHERE Object_BarCode.DescId = zc_Object_BarCode()
                                             AND Object_BarCode.isErased = False)
@@ -590,8 +591,6 @@ BEGIN
                                        FROM Object_Goods_Retail
                                        WHERE COALESCE (Object_Goods_Retail.GoodsPairSunId, 0) <> 0
                                          AND Object_Goods_Retail.RetailId = 4)
-
-
 
         -- Результат
         SELECT
@@ -772,9 +771,9 @@ BEGIN
             CashSessionSnapShot.MCSValue,
             Link_Goods_AlternativeGroup.ChildObjectId as AlternativeGroupId,
             ObjectFloat_NDSKind_NDS.ValueData AS NDS,
-            COALESCE(ObjectBoolean_First.ValueData, False)          AS isFirst,
-            COALESCE(ObjectBoolean_Second.ValueData, False)         AS isSecond,
-            CASE WHEN COALESCE(ObjectBoolean_Second.ValueData, False) = TRUE THEN 16440317 WHEN COALESCE(ObjectBoolean_First.ValueData, False) = TRUE THEN zc_Color_GreenL() ELSE zc_Color_White() END AS Color_calc,
+            COALESCE(Object_Goods_Retail.isFirst, False)          AS isFirst,
+            COALESCE(Object_Goods_Retail.isSecond, False)         AS isSecond,
+            CASE WHEN COALESCE(Object_Goods_Retail.isSecond, False) = TRUE THEN 16440317 WHEN COALESCE(Object_Goods_Retail.isFirst, False) = TRUE THEN zc_Color_GreenL() ELSE zc_Color_White() END AS Color_calc,
             CASE WHEN COALESCE(GoodsPromo.GoodsId,0) <> 0 THEN TRUE ELSE FALSE END AS isPromo,
             CASE WHEN tmpGoodsSP.GoodsId IS NULL THEN FALSE ELSE TRUE END :: Boolean  AS isSP,
             Object_IntenalSP.ValueData AS IntenalSPName,
@@ -785,7 +784,7 @@ BEGIN
             Object_PartionDateKind.Name                        AS PartionDateKindName,
             NULLIF (CashSessionSnapShot.DivisionPartiesId, 0)  AS DivisionPartiesId,
             Object_DivisionParties.ValueData                   AS DivisionPartiesName,
-            COALESCE (ObjectBoolean_BanFiscalSale.ValueData, False) 
+            COALESCE (ObjectBoolean_BanFiscalSale.ValueData, False)
               AND NOT Object_Goods_Main.isExceptionUKTZED      AS isBanFiscalSale,
             CASE WHEN vbDividePartionDate = False
               THEN
@@ -815,7 +814,7 @@ BEGIN
           , tmpPriceChange.FixPercent
           , tmpPriceChange.FixDiscount
           , tmpPriceChange.Multiplicity
-          , COALESCE (ObjectBoolean_DoesNotShare.ValueData, FALSE) AS DoesNotShare
+          , COALESCE (Object_Goods_Main.isDoesNotShare, FALSE)     AS DoesNotShare
           , NULL::Integer                                          AS GoodsAnalogId
           , NULL::TVarChar                                         AS GoodsAnalogName
           , ObjectString_Goods_Analog.ValueData                    AS GoodsAnalog
@@ -850,15 +849,16 @@ BEGIN
           , Object_Goods_PairSun.ID                                AS GoodsPairSunId
           , Object_Goods_PairSun_Main.GoodsPairSunId               AS GoodsPairSunMainId
 
-          , tmpDeferredSendIn.Amount :: TFloat                                   AS AmountSendIn 
-          , COALESCE (ObjectBoolean_Goods_NotTransferTime.ValueData, False)      AS NotTransferTime
+          , tmpDeferredSendIn.Amount :: TFloat                     AS AmountSendIn
+          , COALESCE (Object_Goods_Main.isNotTransferTime, False)  AS NotTransferTime
           , COALESCE(CashSessionSnapShot.NDSKindId, Object_Goods_Main.NDSKindId) AS NDSKindId
+          , Object_Goods_Main.isPresent                                          AS isPresent
 
           , CashSessionSnapShot.PartionDateKindId   AS PartionDateKindId_check
           , CashSessionSnapShot.Price               AS Price_check
           , CashSessionSnapShot.PriceWithVAT        AS PriceWithVAT_check
           , CashSessionSnapShot.PartionDateDiscount AS PartionDateDiscount_check
-          
+
          FROM
             CashSessionSnapShot
             INNER JOIN Object AS Goods ON Goods.Id = CashSessionSnapShot.ObjectId
@@ -877,13 +877,6 @@ BEGIN
                                       AND Link_Goods_AlternativeGroup.DescId = zc_ObjectLink_Goods_AlternativeGroup()
             LEFT OUTER JOIN tmpNDSKind AS ObjectFloat_NDSKind_NDS
                                        ON ObjectFloat_NDSKind_NDS.ObjectId = COALESCE(CashSessionSnapShot.NDSKindId, Object_Goods_Main.NDSKindId)
-
-            LEFT JOIN ObjectBoolean AS ObjectBoolean_First
-                                    ON ObjectBoolean_First.ObjectId = Goods.Id
-                                   AND ObjectBoolean_First.DescId = zc_ObjectBoolean_Goods_First()
-            LEFT JOIN ObjectBoolean AS ObjectBoolean_Second
-                                    ON ObjectBoolean_Second.ObjectId = Goods.Id
-                                   AND ObjectBoolean_Second.DescId = zc_ObjectBoolean_Goods_Second()
 
             LEFT JOIN GoodsPromo ON GoodsPromo.GoodsId = Goods.Id
             LEFT JOIN tmpIncome ON tmpIncome.GoodsId = Goods.Id
@@ -907,10 +900,6 @@ BEGIN
             LEFT JOIN tmpGoodsDiscount ON tmpGoodsDiscount.GoodsMainId = Object_Goods_Main.Id
             -- Цена со скидкой
             LEFT JOIN tmpPriceChange ON tmpPriceChange.GoodsId = Goods.Id
-            -- Не делить медикамент на кассах
-            LEFT JOIN ObjectBoolean AS ObjectBoolean_DoesNotShare
-                                    ON ObjectBoolean_DoesNotShare.ObjectId = Goods.Id
-                                   AND ObjectBoolean_DoesNotShare.DescId = zc_ObjectBoolean_Goods_DoesNotShare()
 
            -- Аналоги товара
            LEFT JOIN ObjectString AS ObjectString_Goods_Analog
@@ -945,15 +934,11 @@ BEGIN
            LEFT JOIN tmpRenainsSUN ON tmpRenainsSUN.GoodsID = CashSessionSnapShot.ObjectId
                                   AND tmpRenainsSUN.PartionDateKindId = CashSessionSnapShot.PartionDateKindId
 
-           -- Не перевдить в сроки
-           LEFT JOIN ObjectBoolean AS ObjectBoolean_Goods_NotTransferTime
-                                   ON ObjectBoolean_Goods_NotTransferTime.ObjectId = CashSessionSnapShot.ObjectId
-                                  AND ObjectBoolean_Goods_NotTransferTime.DescId = zc_ObjectBoolean_Goods_NotTransferTime()
 
            -- Коды UKTZED
            LEFT JOIN tmpGoodsUKTZED ON tmpGoodsUKTZED.GoodsMainId = Object_Goods_Retail.GoodsMainId
                                    AND tmpGoodsUKTZED.Ord = 1
-                                   
+
            LEFT JOIN tmpDeferredSendIn ON tmpDeferredSendIn.GoodsId = CashSessionSnapShot.ObjectId
 
         WHERE

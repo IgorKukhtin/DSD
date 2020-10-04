@@ -1,81 +1,55 @@
--- Function: gpSelect_MovementItem_CheckLoadCash()
+-- Function: gpUpdate_MovementItem_DeferredLincObject()
 
-DROP FUNCTION IF EXISTS gpSelect_MovementItem_CheckLoadCash (Integer, TVarChar);
+DROP FUNCTION IF EXISTS gpUpdate_MovementItem_DeferredLincObject (TVarChar);
 
-CREATE OR REPLACE FUNCTION gpSelect_MovementItem_CheckLoadCash(
-    IN inMovementId  Integer      , -- ключ Документа
+CREATE OR REPLACE FUNCTION gpUpdate_MovementItem_DeferredLincObject(
     IN inSession     TVarChar       -- сессия пользователя
 )
-RETURNS TABLE (Id Integer
-             , ParentId integer
-             , GoodsId Integer, GoodsCode Integer, GoodsName TVarChar
-             , Amount TFloat
-             , Price TFloat
-             , Summ TFloat
-             , NDS TFloat
-             , PriceSale TFloat
-             , ChangePercent TFloat
-             , SummChangePercent TFloat
-             , AmountOrder TFloat
-             , isErased Boolean
-             , List_UID TVarChar
-             , Remains TFloat
-             , Color_calc Integer
-             , Color_ExpirationDate Integer
-             , AccommodationName TVarChar
-             , Multiplicity TFloat
-             , DoesNotShare Boolean
-             , IdSP TVarChar
-             , CountSP TFloat
-             , PriceRetSP TFloat
-             , PaymentSP TFloat
-             , PartionDateKindId Integer
-             , PartionDateKindName TVarChar
-             , PricePartionDate TFloat
-             , PartionDateDiscount TFloat
-             , AmountMonth TFloat
-             , TypeDiscount Integer
-             , PriceDiscount TFloat
-             , NDSKindId Integer
-             , DiscountExternalID Integer
-             , DiscountExternalName TVarChar
-             , UKTZED TVarChar
-             , GoodsPairSunId Integer
-             , GoodsPairSunMainId Integer
-             , DivisionPartiesId Integer
-             , DivisionPartiesName TVarChar
-             , isPresent Boolean
-              )
+RETURNS VOID
 AS
 $BODY$
   DECLARE vbUserId Integer;
-  DECLARE vbUnitId Integer;
   DECLARE vbDate_6 TDateTime;
   DECLARE vbDate_3 TDateTime;
   DECLARE vbDate_1 TDateTime;
   DECLARE vbDate_0 TDateTime;
 BEGIN
 
-     -- проверка прав пользователя на вызов процедуры
-     -- vbUserId := PERFORM lpCheckRight (inSession, zc_Enum_Process_Select_MovementItem_Income());
-     vbUserId := inSession;
+    -- проверка прав пользователя на вызов процедуры
+    -- vbUserId := PERFORM lpCheckRight (inSession, zc_Enum_Process_Select_MovementItem_Income());
+    vbUserId := inSession;
 
-     SELECT MovementLinkObject_Unit.ObjectId
-     INTO vbUnitId
-     FROM Movement
-          LEFT JOIN MovementLinkObject AS MovementLinkObject_Unit
-                                       ON MovementLinkObject_Unit.MovementId = Movement.Id
-                                      AND MovementLinkObject_Unit.DescId = zc_MovementLinkObject_Unit()
-     WHERE Movement.Id = inMovementId;
-
-     -- значения для разделения по срокам
-     SELECT Date_6, Date_3, Date_1, Date_0
-     INTO vbDate_6, vbDate_3, vbDate_1, vbDate_0
-     FROM lpSelect_PartionDateKind_SetDate ();
+    -- значения для разделения по срокам
+    SELECT Date_6, Date_3, Date_1, Date_0
+    INTO vbDate_6, vbDate_3, vbDate_1, vbDate_0
+    FROM lpSelect_PartionDateKind_SetDate ();
 
     CREATE TEMP TABLE tmpMovementItem ON COMMIT DROP AS (
     WITH
-       tmpMI AS (SELECT MovementItem.Id
+       tmpMovementCheck AS (SELECT Movement.Id
+                            FROM Movement
+                            WHERE Movement.DescId = zc_Movement_Check()
+                            AND Movement.StatusId = zc_Enum_Status_UnComplete())
+     , tmpMovReserveId AS (
+                        SELECT Movement.Id
+                             , COALESCE(MovementBoolean_Deferred.ValueData, FALSE) AS  isDeferred
+                        FROM tmpMovementCheck AS Movement
+                             LEFT JOIN MovementBoolean AS MovementBoolean_Deferred ON Movement.Id     = MovementBoolean_Deferred.MovementId
+                                                       AND MovementBoolean_Deferred.DescId    = zc_MovementBoolean_Deferred()
+                          )
+
+     , tmpMov AS (
+                        SELECT Movement.Id
+                             , MovementLinkObject_Unit.ObjectId            AS UnitId
+                        FROM tmpMovReserveId AS Movement
+                             INNER JOIN MovementLinkObject AS MovementLinkObject_Unit
+                                                           ON MovementLinkObject_Unit.MovementId = Movement.Id
+                                                          AND MovementLinkObject_Unit.DescId = zc_MovementLinkObject_Unit()
+                                                    --      AND MovementLinkObject_Unit.ObjectId = 183292
+                        WHERE isDeferred = TRUE)
+
+     , tmpMI AS (SELECT Movement.UnitId
+                      , MovementItem.Id
                       , MovementItem.MovementId
                       , MovementItem.ObjectId                                                       AS GoodsID
                       , MovementItem.Amount
@@ -83,6 +57,8 @@ BEGIN
                       , COALESCE(MILinkObject_PartionDateKind.ObjectId, 0)  AS PartionDateKindId
                       , COALESCE(MILinkObject_DivisionParties.ObjectId, 0)  AS DivisionPartiesID
                  FROM MovementItem AS MovementItem
+
+                      LEFT JOIN tmpMov AS Movement ON Movement.Id = MovementItem.MovementId
 
                       LEFT JOIN Object_Goods_Retail AS Object_Goods_Retail ON Object_Goods_Retail.Id = MovementItem.ObjectId
                       LEFT JOIN Object_Goods_Main AS Object_Goods ON Object_Goods.Id = Object_Goods_Retail.GoodsMainId
@@ -97,7 +73,7 @@ BEGIN
                       LEFT JOIN MovementItemLinkObject AS MILinkObject_DivisionParties
                                                        ON MILinkObject_DivisionParties.MovementItemId = MovementItem.Id
                                                       AND MILinkObject_DivisionParties.DescId         = zc_MILinkObject_DivisionParties()
-                  WHERE MovementItem.MovementId = inMovementId
+                  WHERE MovementItem.MovementId in (SELECT tmpMov.ID FROM tmpMov)
                     AND MovementItem.DescId = zc_MI_Master()
                  )
      , tmpContainerPD AS (SELECT Container.ParentId
@@ -110,12 +86,12 @@ BEGIN
                                       WHEN ObjectDate_ExpirationDate.ValueData <= vbDate_6  THEN zc_Enum_PartionDateKind_6()      -- Меньше 6 месяца
                                       ELSE  zc_Enum_PartionDateKind_Good() END  AS PartionDateKindId                              -- Востановлен с просрочки
                                , Container.Amount
-                          FROM (SELECT DISTINCT tmpMI.GoodsId FROM tmpMI) AS tmp
+                          FROM (SELECT DISTINCT tmpMI.UnitId, tmpMI.GoodsId FROM tmpMI) AS tmp
 
                                 INNER JOIN Container ON Container.ObjectId = tmp.GoodsId
                                                     AND Container.DescId = zc_Container_CountPartionDate()
                                                     AND Container.Amount <> 0
-                                                    AND Container.WhereObjectId = vbUnitId
+                                                    AND Container.WhereObjectId = tmp.UnitId
 
                                LEFT JOIN ContainerLinkObject ON ContainerLinkObject.ContainerId = Container.Id
                                                             AND ContainerLinkObject.DescId = zc_ContainerLinkObject_PartionGoods()
@@ -136,12 +112,12 @@ BEGIN
                                 , COALESCE(tmpContainerPD.PartionDateKindId, 0)                             AS PartionDateKindId
                                 , COALESCE(ContainerLinkObject_DivisionParties.ObjectId, 0)                 AS DivisionPartiesId
                                 , COALESCE(tmpContainerPD.Amount,  Container.Amount)                        AS Amount
-                           FROM (SELECT DISTINCT tmpMI.GoodsId FROM tmpMI) AS tmp
+                           FROM (SELECT DISTINCT tmpMI.UnitId, tmpMI.GoodsId FROM tmpMI) AS tmp
 
                                 INNER JOIN Container ON Container.ObjectId = tmp.GoodsId
                                                     AND Container.DescId = zc_Container_Count()
                                                     AND Container.Amount <> 0
-                                                    AND Container.WhereObjectId = vbUnitId
+                                                    AND Container.WhereObjectId =  tmp.UnitId
 
                                 LEFT JOIN tmpContainerPD ON tmpContainerPD.ParentId = Container.Id
 
@@ -241,124 +217,17 @@ BEGIN
       FROM tmpMovementItem 
       WHERE COALESCE(tmpMovementItem.PartionDateKindId, 0) <> COALESCE(tmpMovementItem.PartionDateKindOldId, 0);
     END IF;
-    
-     RETURN QUERY
-     WITH
-     tmpMI AS (SELECT MovementItem.*
-               FROM MovementItem_Check_View AS MovementItem
-               WHERE MovementItem.MovementId = inMovementId
-               ),
-     tmpGoodsUKTZED AS (SELECT Object_Goods_Juridical.GoodsMainId
-                             , REPLACE(REPLACE(REPLACE(Object_Goods_Juridical.UKTZED, ' ', ''), '.', ''), Chr(160), '')::TVarChar AS UKTZED
-                             , ROW_NUMBER() OVER (PARTITION BY Object_Goods_Juridical.GoodsMainId 
-                                            ORDER BY COALESCE(Object_Goods_Juridical.AreaId, 0), Object_Goods_Juridical.JuridicalId) AS Ord
-                        FROM Object_Goods_Juridical
-                        WHERE COALESCE (Object_Goods_Juridical.UKTZED, '') <> ''
-                          AND length(REPLACE(REPLACE(REPLACE(Object_Goods_Juridical.UKTZED, ' ', ''), '.', ''), Chr(160), '')) <= 10
-                          AND Object_Goods_Juridical.GoodsMainId <> 0
-                        ), 
-     tmpGoodsPairSun AS (SELECT Object_Goods_Retail.Id
-                              , Object_Goods_Retail.GoodsPairSunId
-                         FROM Object_Goods_Retail 
-                         WHERE COALESCE (Object_Goods_Retail.GoodsPairSunId, 0) <> 0
-                           AND Object_Goods_Retail.RetailId = 4)
 
-       SELECT
-             MovementItem.Id
-           , MovementItem.ParentId
-           , MovementItem.GoodsId
-           , MovementItem.GoodsCode
-           , MovementItem.GoodsName
-           , MovementItem.Amount
-           , MovementItem.Price
-           , MovementItem.AmountSumm
-           , MovementItem.NDS                                                    AS NDS
-           , MovementItem.PriceSale
-           , MovementItem.ChangePercent
-           , MovementItem.SummChangePercent
-           , MovementItem.AmountOrder
-           , MovementItem.isErased
-           , MovementItem.List_UID
-           , MovementItem.Amount
-           , zc_Color_White()                                                    AS Color_calc
-           , zc_Color_Black()                                                    AS Color_ExpirationDate
-           , Null::TVArChar                                                      AS AccommodationName
-           , Null::TFloat                                                        AS Multiplicity
-           , COALESCE (Object_Goods_Main.isDoesNotShare, FALSE)                  AS DoesNotShare
-           , Null::TVArChar                                                      AS IdSP
-           , Null::TFloat                                                        AS CountSP
-           , Null::TFloat                                                        AS PriceRetSP
-           , Null::TFloat                                                        AS PaymentSP
-           , Object_PartionDateKind.Id                                           AS PartionDateKindId
-           , Object_PartionDateKind.ValueData                                    AS PartionDateKindName
-           , MIFloat_MovementItem.ValueData                                      AS PricePartionDate
-           , Null::TFloat                                                        AS PartionDateDiscount
-           , CASE Object_PartionDateKind.Id 
-             WHEN zc_Enum_PartionDateKind_Good() THEN 200 / 30.0 + 1.0
-             WHEN zc_Enum_PartionDateKind_Cat_5() THEN 200 / 30.0 - 1.0
-             ELSE COALESCE (ObjectFloatDay.ValueData / 30, 0) END::TFloat        AS AmountMonth
-           , 0::Integer                                                          AS TypeDiscount
-           , COALESCE(MIFloat_MovementItem.ValueData, MovementItem.PriceSale)    AS PriceDiscount
-           , MovementItem.NDSKindId                                              AS NDSKindId
-           , Object_DiscountExternal.ID                                          AS DiscountCardId
-           , Object_DiscountExternal.ValueData                                   AS DiscountCardName
-           , tmpGoodsUKTZED.UKTZED                                               AS UKTZED
-           , Object_Goods_PairSun.ID                                             AS GoodsPairSunId         
-           , Object_Goods_PairSun_Main.GoodsPairSunId                            AS GoodsPairSunMainId
-           , Object_DivisionParties.Id                                           AS DivisionPartiesId 
-           , Object_DivisionParties.ValueData                                    AS DivisionPartiesName 
-           , Object_Goods_Main.isPresent                                         AS isPresent
-           
-           FROM tmpMI AS MovementItem
-
-            LEFT JOIN MovementItemFloat AS MIFloat_MovementItem
-                                        ON MIFloat_MovementItem.MovementItemId = MovementItem.Id
-                                       AND MIFloat_MovementItem.DescId = zc_MIFloat_PricePartionDate()
-            -- получаем GoodsMainId
-            LEFT JOIN Object_Goods_Retail AS Object_Goods_Retail ON Object_Goods_Retail.Id = MovementItem.GoodsId
-            LEFT JOIN Object_Goods_Main AS Object_Goods_Main ON Object_Goods_Main.Id = Object_Goods_Retail.GoodsMainId
-
-            LEFT JOIN tmpGoodsPairSun AS Object_Goods_PairSun 
-                                      ON Object_Goods_PairSun.GoodsPairSunId = MovementItem.GoodsId
-            LEFT JOIN tmpGoodsPairSun AS Object_Goods_PairSun_Main
-                                      ON Object_Goods_PairSun_Main.Id = MovementItem.GoodsId
-
-            --Типы срок/не срок
-            LEFT JOIN MovementItemLinkObject AS MI_PartionDateKind
-                                             ON MI_PartionDateKind.MovementItemId = MovementItem.Id
-                                            AND MI_PartionDateKind.DescId = zc_MILinkObject_PartionDateKind()
-            LEFT JOIN Object AS Object_PartionDateKind ON Object_PartionDateKind.Id = MI_PartionDateKind.ObjectId
-            LEFT JOIN ObjectFloat AS ObjectFloatDay
-                                  ON ObjectFloatDay.ObjectId = Object_PartionDateKind.Id
-                                 AND ObjectFloatDay.DescId = zc_ObjectFloat_PartionDateKind_Day()
-
-            LEFT JOIN MovementItemLinkObject AS MILinkObject_DiscountExternal
-                                             ON MILinkObject_DiscountExternal.MovementItemId = MovementItem.Id
-                                            AND MILinkObject_DiscountExternal.DescId         = zc_MILinkObject_DiscountExternal()
-            LEFT JOIN Object AS Object_DiscountExternal ON Object_DiscountExternal.Id = MILinkObject_DiscountExternal.ObjectId
-
-            -- Коды UKTZED
-            LEFT JOIN tmpGoodsUKTZED ON tmpGoodsUKTZED.GoodsMainId = Object_Goods_Retail.GoodsMainId
-                                    AND tmpGoodsUKTZED.Ord = 1
-
-            LEFT JOIN MovementItemLinkObject AS MILinkObject_DivisionParties
-                                             ON MILinkObject_DivisionParties.MovementItemId = MovementItem.Id
-                                            AND MILinkObject_DivisionParties.DescId         = zc_MILinkObject_DivisionParties()
-            LEFT JOIN Object AS Object_DivisionParties ON Object_DivisionParties.Id = MILinkObject_DivisionParties.ObjectId
-       ;
 END;
 $BODY$
   LANGUAGE PLPGSQL VOLATILE;
-ALTER FUNCTION gpSelect_MovementItem_CheckLoadCash (Integer, TVarChar) OWNER TO postgres;
+ALTER FUNCTION gpUpdate_MovementItem_DeferredLincObject (TVarChar) OWNER TO postgres;
 
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А. Воробкало А.А   Шаблий О.В.
- 25.04.19                                                                                   *
+ 02.10.20                                                                                   *
  */
 
 -- тест
--- select * from gpSelect_MovementItem_CheckLoadCash(inMovementId := 18769698 ,  inSession := '3');
---
- select * from gpSelect_MovementItem_CheckLoadCash(inMovementId := 18805062    ,  inSession := '3');
-
+-- select * from gpUpdate_MovementItem_DeferredLincObject(inSession := '3');

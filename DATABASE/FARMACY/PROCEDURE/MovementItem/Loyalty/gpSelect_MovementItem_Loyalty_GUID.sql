@@ -9,6 +9,7 @@ CREATE OR REPLACE FUNCTION gpSelect_MovementItem_Loyalty_GUID(
    OUT outError              TVarChar  , -- Ошибка
    OUT outMovementId         Integer   , -- Ключ объекта <Документ>
    OUT outisPresent          Boolean   , -- Подарок
+   OUT outGoodsId            Integer   , -- Если один товар подарок в наличии
     IN inSession             TVarChar    -- сессия пользователя
 )
 AS
@@ -33,6 +34,7 @@ $BODY$
    DECLARE vbIsInsert Boolean;
    DECLARE vbMovementChackId Integer;
    DECLARE vbMonthCount Integer;
+   DECLARE vbGoodsCount Integer;
 BEGIN
 
       -- проверка прав пользователя на вызов процедуры
@@ -69,8 +71,8 @@ BEGIN
                                     ON MIDate_OperDate.MovementItemId = MovementItem.ID
                                    AND MIDate_OperDate.DescId = zc_MIDate_OperDate()
     WHERE MovementItem_Loyalty_GUID.GUID = inGUID;
-    
-      
+
+
     IF COALESCE(vbMovementChackId, 0) <> 0
     THEN
       outError := 'Ошибка. Продажа по промокоду '||COALESCE(inGUID, '')||' уже произведена.';
@@ -121,7 +123,7 @@ BEGIN
       outError := 'Ошибка. Документ "Программы лояльности" по промокоду '||COALESCE(inGUID, '')||' не найден.';
       RETURN;
     END IF;
-    
+
     IF COALESCE((SELECT MovementLinkObject_Retail.ObjectId FROM MovementLinkObject AS MovementLinkObject_Retail
                  WHERE MovementLinkObject_Retail.MovementId = vbMovementId
                    AND MovementLinkObject_Retail.DescId = zc_MovementLinkObject_Retail()), 0) <> COALESCE (vbRetailId, 0)
@@ -129,7 +131,7 @@ BEGIN
       outError := 'Ошибка. Документ "Программы лояльности" по промокоду '||COALESCE(inGUID, '')||' для другой сети.';
       RETURN;
     END IF;
-    
+
 
     -- Если неподходят даты
     IF vbStartSale > CURRENT_DATE OR vbEndSale < CURRENT_DATE
@@ -165,6 +167,43 @@ BEGIN
    outError := '';
    outMovementId := vbMovementId;
    outisPresent := vbDescId = zc_Movement_LoyaltyPresent();
+   outGoodsId := 0;
+
+   if outisPresent = TRUE
+   THEN
+     WITH tmpLoyaltyPresentList AS (SELECT Object_Goods_Retail.Id               AS GoodsID
+                                    FROM MovementItem
+
+                                         INNER JOIN Object_Goods_Retail AS Object_Goods_Retail ON Object_Goods_Retail.GoodsMainId = MovementItem.ObjectId
+                                                                                              AND Object_Goods_Retail.retailid = vbRetailId
+
+                                    WHERE MovementItem.MovementId = outMovementId
+                                                               AND MovementItem.DescId = zc_MI_Master()
+                                                               AND MovementItem.Amount = 1
+                                                               AND MovementItem.isErased = FALSE)
+        , tmpContainer AS (SELECT Container.ObjectId    AS GoodsID
+                                , SUM(Container.Amount) AS Amount
+                           FROM tmpLoyaltyPresentList
+                                INNER JOIN Container ON Container.DescId = zc_Container_Count()
+                                                    AND Container.Amount <> 0
+                                                    AND Container.ObjectId = tmpLoyaltyPresentList.GoodsID
+                                                    AND Container.WhereObjectId = vbUnitId
+                           GROUP BY Container.ObjectId
+                           HAVING SUM(Container.Amount) >= 1)
+                           
+     SELECT MIN(tmpContainer.GoodsID), COUNT(*)
+     INTO outGoodsId, vbGoodsCount
+     FROM tmpContainer;
+
+     IF vbGoodsCount = 0
+     THEN
+      outError := 'Ошибка. Нет в наличии подарка. Использование промо кода невозможно.';
+     ELSEIF vbGoodsCount > 1
+     THEN
+       outGoodsId := 0; 
+     END IF;
+
+   END IF;
 
 
 END;

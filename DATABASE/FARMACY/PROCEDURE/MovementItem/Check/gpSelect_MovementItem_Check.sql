@@ -187,17 +187,12 @@ BEGIN
            , COALESCE (tmpPartion.ContractName, NULL)          :: TVarChar       AS ContractName_Income
            */
        FROM tmpMI AS MovementItem 
-            -- получаем GoodsMainId
-            LEFT JOIN  ObjectLink AS ObjectLink_Child 
-                                  ON ObjectLink_Child.ChildObjectId = MovementItem.GoodsId
-                                 AND ObjectLink_Child.DescId = zc_ObjectLink_LinkGoods_Goods()
-            LEFT JOIN  ObjectLink AS ObjectLink_Main 
-                                  ON ObjectLink_Main.ObjectId = ObjectLink_Child.ObjectId
-                                 AND ObjectLink_Main.DescId = zc_ObjectLink_LinkGoods_GoodsMain()
-            LEFT JOIN ObjectLink AS ObjectLink_Goods_IntenalSP
-                                 ON ObjectLink_Goods_IntenalSP.ObjectId = ObjectLink_Main.ChildObjectId 
-                                AND ObjectLink_Goods_IntenalSP.DescId = zc_ObjectLink_Goods_IntenalSP()
-            LEFT JOIN Object AS Object_IntenalSP ON Object_IntenalSP.Id = ObjectLink_Goods_IntenalSP.ChildObjectId
+
+            -- получается GoodsMainId
+            LEFT JOIN Object_Goods_Retail AS Object_Goods_Retail ON Object_Goods_Retail.Id = MovementItem.GoodsId
+            LEFT JOIN Object_Goods_SP AS Object_Goods_SP ON Object_Goods_SP.Id = Object_Goods_Retail.GoodsMainId
+
+            LEFT JOIN Object AS Object_IntenalSP ON Object_IntenalSP.Id = Object_Goods_SP.IntenalSPID
 
             -- 
 
@@ -251,3 +246,5 @@ ALTER FUNCTION gpSelect_MovementItem_Check (Integer, TVarChar) OWNER TO postgres
 
 -- тест
 -- select * from gpSelect_MovementItem_Check(inMovementId := 19274728  ,  inSession := '3');
+
+select * from gpSelect_MovementItem_Check(inMovementId := 20500682 ,  inSession := '3');

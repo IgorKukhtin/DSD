@@ -191,7 +191,6 @@ type
     spUpdate_isInvisibleSUN: TdsdStoredProc;
     actUpdateInvisibleSUN: TMultiAction;
     ExecUpdate_isInvisibleSUN: TdsdExecStoredProc;
-    bbUpdateInvisibleSUN: TdxBarButton;
     spUpdate_isInvisibleSUN_Revert: TdsdStoredProc;
     spUpdate_Goods_LimitSun_T: TdsdStoredProc;
     actUpdate_Goods_LimitSun: TdsdDataSetRefresh;
@@ -218,6 +217,18 @@ type
     execUpdate_ExceptionUKTZED: TdsdExecStoredProc;
     spUpdate_inExceptionUKTZED_Revert: TdsdStoredProc;
     dxBarButton2: TdxBarButton;
+    isPresent: TcxGridDBColumn;
+    bsUpdate: TdxBarSubItem;
+    bbUpdateInvisibleSUN: TdxBarButton;
+    bbUpdateisSupplementSUN1: TdxBarButton;
+    bbUpdateExceptionUKTZED: TdxBarButton;
+    dxBarSubItem2: TdxBarSubItem;
+    dxBarSubItem3: TdxBarSubItem;
+    actUpdate_inPresent_Revert: TMultiAction;
+    execUpdate_inPresent_Revert: TdsdExecStoredProc;
+    spUpdate_inPresent_Revert: TdsdStoredProc;
+    dxBarSubItem4: TdxBarSubItem;
+    bbUpdate_inPresent_Revert: TdxBarButton;
   private
     { Private declarations }
   public

@@ -737,6 +737,9 @@ type
     N256: TMenuItem;
     actReport_ResortsByLot: TdsdOpenForm;
     N257: TMenuItem;
+    actReport_TwoVendorBindings: TdsdOpenForm;
+    N258: TMenuItem;
+    N259: TMenuItem;
     procedure actSaveDataExecute(Sender: TObject);
 
     procedure miRepriceClick(Sender: TObject);

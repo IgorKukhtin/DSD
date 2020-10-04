@@ -591,6 +591,15 @@ inherited GoodsForm: TGoodsForm
             Options.Editing = False
             Width = 81
           end
+          object isPresent: TcxGridDBColumn
+            Caption = #1055#1086#1076#1072#1088#1086#1082
+            DataBinding.FieldName = 'isPresent'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            HeaderHint = #1055#1086#1076#1072#1088#1086#1082'. '#1041#1083#1086#1082#1080#1088#1091#1077#1090#1100#1089#1103' '#1087#1088#1086#1076#1072#1078#1072' '#1085#1072' '#1082#1072#1089#1089#1072#1093
+            Options.Editing = False
+            Width = 61
+          end
         end
       end
     end
@@ -1889,6 +1898,32 @@ inherited GoodsForm: TGoodsForm
         end>
       Caption = 'execUpdate_ExceptionUKTZED'
     end
+    object actUpdate_inPresent_Revert: TMultiAction
+      Category = 'DSDLib'
+      MoveParams = <>
+      AfterAction = actRefresh
+      ActionList = <
+        item
+          Action = execUpdate_inPresent_Revert
+        end>
+      View = cxGridDBTableView
+      QuestionBeforeExecute = #1048#1079#1084#1077#1085#1080#1090#1100' '#1087#1088#1080#1079#1085#1072#1082' "'#1055#1086#1076#1072#1088#1086#1082'"?'
+      InfoAfterExecute = #1042#1099#1087#1086#1083#1085#1077#1085#1086
+      Caption = #1048#1079#1084#1077#1085#1080#1090#1100' '#1087#1088#1080#1079#1085#1072#1082' "'#1055#1086#1076#1072#1088#1086#1082'"'
+      Hint = #1048#1079#1084#1077#1085#1080#1090#1100' '#1087#1088#1080#1079#1085#1072#1082' "'#1055#1086#1076#1072#1088#1086#1082'"'
+      ImageIndex = 79
+    end
+    object execUpdate_inPresent_Revert: TdsdExecStoredProc
+      Category = 'DSDLib'
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      StoredProc = spUpdate_inPresent_Revert
+      StoredProcList = <
+        item
+          StoredProc = spUpdate_inPresent_Revert
+        end>
+      Caption = 'execUpdate_inPresent_Revert'
+    end
   end
   inherited MasterDS: TDataSource
     Left = 56
@@ -1966,7 +2001,7 @@ inherited GoodsForm: TGoodsForm
         end
         item
           Visible = True
-          ItemName = 'bbPublished'
+          ItemName = 'dxBarSubItem2'
         end
         item
           Visible = True
@@ -1974,11 +2009,7 @@ inherited GoodsForm: TGoodsForm
         end
         item
           Visible = True
-          ItemName = 'bbUpdateNotMarion_Yes'
-        end
-        item
-          Visible = True
-          ItemName = 'bbUpdateNotMarion_No'
+          ItemName = 'dxBarSubItem3'
         end
         item
           Visible = True
@@ -1986,99 +2017,7 @@ inherited GoodsForm: TGoodsForm
         end
         item
           Visible = True
-          ItemName = 'bbUpdateNot_Yes'
-        end
-        item
-          Visible = True
-          ItemName = 'bbUpdateNot_No'
-        end
-        item
-          Visible = True
-          ItemName = 'dxBarStatic'
-        end
-        item
-          Visible = True
-          ItemName = 'bbUpdateNot_v2_Yes'
-        end
-        item
-          Visible = True
-          ItemName = 'bbUpdateNot_v2_No'
-        end
-        item
-          Visible = True
-          ItemName = 'dxBarStatic'
-        end
-        item
-          Visible = True
-          ItemName = 'bbUpdate_isNot_Sun_v4_yes'
-        end
-        item
-          Visible = True
-          ItemName = 'bbUpdate_isNot_Sun_v4_No'
-        end
-        item
-          Visible = True
-          ItemName = 'dxBarStatic'
-        end
-        item
-          Visible = True
-          ItemName = 'bbUpdate_isSun_v3_yes'
-        end
-        item
-          Visible = True
-          ItemName = 'bbUpdate_isSun_v3_No'
-        end
-        item
-          Visible = True
-          ItemName = 'dxBarStatic'
-        end
-        item
-          Visible = True
-          ItemName = 'bbSetClose'
-        end
-        item
-          Visible = True
-          ItemName = 'bbClearClose'
-        end
-        item
-          Visible = True
-          ItemName = 'dxBarStatic'
-        end
-        item
-          Visible = True
-          ItemName = 'bbisResolution_224_Yes'
-        end
-        item
-          Visible = True
-          ItemName = 'bbinResolution_224_No'
-        end
-        item
-          Visible = True
-          ItemName = 'dxBarStatic'
-        end
-        item
-          Visible = True
-          ItemName = 'bbUpdate_inTop_Yes'
-        end
-        item
-          Visible = True
-          ItemName = 'bbUpdate_inTop_No'
-        end
-        item
-          Visible = True
-          ItemName = 'dxBarStatic'
-        end
-        item
-          Visible = True
-          ItemName = 'bbUpdateInvisibleSUN'
-        end
-        item
-          Visible = True
-          ItemName = 'dxBarButton1'
-        end
-        item
-          Visible = True
-          ItemName = 'dxBarButton2'
+          ItemName = 'bsUpdate'
         end
         item
           Visible = True
@@ -2232,10 +2171,6 @@ inherited GoodsForm: TGoodsForm
       Action = macUpdateGoods_KoeffSUN
       Category = 0
     end
-    object bbUpdateInvisibleSUN: TdxBarButton
-      Action = actUpdateInvisibleSUN
-      Category = 0
-    end
     object bbUpdateGoods_LimitSUN: TdxBarButton
       Action = macUpdateGoods_LimitSUN
       Category = 0
@@ -2256,6 +2191,128 @@ inherited GoodsForm: TGoodsForm
     end
     object dxBarButton2: TdxBarButton
       Action = actUpdateExceptionUKTZED
+      Category = 0
+    end
+    object bsUpdate: TdxBarSubItem
+      Caption = #1048#1079#1084#1077#1085#1080#1090#1100
+      Category = 0
+      Visible = ivAlways
+      ImageIndex = 79
+      ItemLinks = <
+        item
+          Visible = True
+          ItemName = 'bbUpdateInvisibleSUN'
+        end
+        item
+          Visible = True
+          ItemName = 'bbUpdateisSupplementSUN1'
+        end
+        item
+          Visible = True
+          ItemName = 'bbUpdateExceptionUKTZED'
+        end
+        item
+          Visible = True
+          ItemName = 'bbUpdate_inPresent_Revert'
+        end>
+    end
+    object bbUpdateInvisibleSUN: TdxBarButton
+      Action = actUpdateInvisibleSUN
+      Category = 0
+    end
+    object bbUpdateisSupplementSUN1: TdxBarButton
+      Action = actUpdateisSupplementSUN1
+      Category = 0
+    end
+    object bbUpdateExceptionUKTZED: TdxBarButton
+      Action = actUpdateExceptionUKTZED
+      Category = 0
+    end
+    object dxBarSubItem2: TdxBarSubItem
+      Caption = #1059#1089#1090#1072#1085#1086#1074#1080#1090#1100
+      Category = 0
+      Visible = ivAlways
+      ImageIndex = 79
+      ItemLinks = <
+        item
+          Visible = True
+          ItemName = 'bbUpdateNotMarion_Yes'
+        end
+        item
+          Visible = True
+          ItemName = 'bbUpdateNot_Yes'
+        end
+        item
+          Visible = True
+          ItemName = 'bbUpdateNot_v2_Yes'
+        end
+        item
+          Visible = True
+          ItemName = 'bbUpdate_isNot_Sun_v4_yes'
+        end
+        item
+          Visible = True
+          ItemName = 'bbUpdate_isSun_v3_yes'
+        end
+        item
+          Visible = True
+          ItemName = 'bbSetClose'
+        end
+        item
+          Visible = True
+          ItemName = 'bbisResolution_224_Yes'
+        end
+        item
+          Visible = True
+          ItemName = 'bbUpdate_inTop_Yes'
+        end>
+    end
+    object dxBarSubItem3: TdxBarSubItem
+      Caption = #1057#1085#1103#1090#1100
+      Category = 0
+      Visible = ivAlways
+      ImageIndex = 58
+      ItemLinks = <
+        item
+          Visible = True
+          ItemName = 'bbUpdateNotMarion_No'
+        end
+        item
+          Visible = True
+          ItemName = 'bbUpdateNot_No'
+        end
+        item
+          Visible = True
+          ItemName = 'bbUpdateNot_v2_No'
+        end
+        item
+          Visible = True
+          ItemName = 'bbUpdate_isNot_Sun_v4_No'
+        end
+        item
+          Visible = True
+          ItemName = 'bbUpdate_isSun_v3_No'
+        end
+        item
+          Visible = True
+          ItemName = 'bbClearClose'
+        end
+        item
+          Visible = True
+          ItemName = 'bbinResolution_224_No'
+        end
+        item
+          Visible = True
+          ItemName = 'bbUpdate_inTop_No'
+        end>
+    end
+    object dxBarSubItem4: TdxBarSubItem
+      Action = actUpdate_inPresent_Revert
+      Category = 0
+      ItemLinks = <>
+    end
+    object bbUpdate_inPresent_Revert: TdxBarButton
+      Action = actUpdate_inPresent_Revert
       Category = 0
     end
   end
@@ -3745,6 +3802,32 @@ inherited GoodsForm: TGoodsForm
       end>
     PackSize = 1
     Left = 792
+    Top = 376
+  end
+  object spUpdate_inPresent_Revert: TdsdStoredProc
+    StoredProcName = 'gpUpdate_Goods_inPresent_Revert'
+    DataSets = <>
+    OutputType = otResult
+    Params = <
+      item
+        Name = 'inGoodsMainId'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'GoodsMainId'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inisPresent'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'isPresent'
+        DataType = ftBoolean
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end>
+    PackSize = 1
+    Left = 520
     Top = 376
   end
 end

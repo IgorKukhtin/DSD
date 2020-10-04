@@ -953,7 +953,8 @@ uses
   LoyaltyPresent in '..\..\FormsFarmacy\Document\LoyaltyPresent.pas' {LoyaltyPresentForm: TParentForm},
   LoyaltyPresentJournal in '..\..\FormsFarmacy\Document\LoyaltyPresentJournal.pas' {LoyaltyPresentJournalForm: TParentForm},
   Report_ResortsByLot in '..\..\FormsFarmacy\Report\Report_ResortsByLot.pas' {Report_ResortsByLotForm: TParentForm},
-  Report_ResortsByLotDialog in '..\..\FormsFarmacy\Report\Report_ResortsByLotDialog.pas' {Report_ResortsByLotDialogForm: TParentForm};
+  Report_ResortsByLotDialog in '..\..\FormsFarmacy\Report\Report_ResortsByLotDialog.pas' {Report_ResortsByLotDialogForm: TParentForm},
+  Report_TwoVendorBindings in '..\..\FormsFarmacy\Report\Report_TwoVendorBindings.pas' {Report_TwoVendorBindingsForm: TParentForm};
 
 {$R *.res}
 {$R DevExpressRus.res}
