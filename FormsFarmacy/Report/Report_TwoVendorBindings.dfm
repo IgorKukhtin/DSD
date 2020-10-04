@@ -445,10 +445,6 @@ object Report_TwoVendorBindingsForm: TReport_TwoVendorBindingsForm
         end
         item
           Visible = True
-          ItemName = 'bbUpdate'
-        end
-        item
-          Visible = True
           ItemName = 'bbStaticText'
         end
         item

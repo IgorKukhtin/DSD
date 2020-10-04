@@ -134,15 +134,26 @@ BEGIN
     BEGIN
       IF date_part('HOUR',  CURRENT_TIME)::Integer = '6' AND date_part('MINUTE',  CURRENT_TIME)::Integer > 30
       THEN
-         PERFORM lpInsertUpdate_ObjectDate (zc_ObjectDate_Unit_FirstCheck(), AnalysisContainerItem.UnitId , MIN(AnalysisContainerItem.OperDate))
-         FROM AnalysisContainerItem
-         WHERE AnalysisContainerItem.AmountCheck > 0
-         GROUP BY AnalysisContainerItem.UnitId;
+         PERFORM lpInsertUpdate_ObjectDate (zc_ObjectDate_Unit_FirstCheck(), tmpMovementCheck.UnitId, tmpMovementCheck.OperDate)
+         FROM (SELECT AnalysisContainerItem.UnitId 
+                    , MIN(AnalysisContainerItem.OperDate)    AS OperDate
+               FROM AnalysisContainerItem
+               WHERE AnalysisContainerItem.AmountCheck > 0
+               GROUP BY AnalysisContainerItem.UnitId) AS tmpMovementCheck;
       END IF;
     EXCEPTION
        WHEN others THEN
          GET STACKED DIAGNOSTICS text_var1 = MESSAGE_TEXT;
        PERFORM lpLog_Run_Schedule_Function('gpFarmacy_Scheduler Run FirstCheck', True, text_var1::TVarChar, vbUserId);
+    END;
+
+    -- Правка вип чеков по НДС, срокам и исключенимм
+    BEGIN
+      PERFORM gpUpdate_MovementItem_DeferredLincObject (inSession := zfCalc_UserAdmin());
+    EXCEPTION
+       WHEN others THEN
+         GET STACKED DIAGNOSTICS text_var1 = MESSAGE_TEXT;
+       PERFORM lpLog_Run_Schedule_Function('gpFarmacy_Scheduler Run gpUpdate_MovementItem_DeferredLincObject', True, text_var1::TVarChar, vbUserId);
     END;
 
 END;
