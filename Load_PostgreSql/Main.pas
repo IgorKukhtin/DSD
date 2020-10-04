@@ -1546,14 +1546,14 @@ begin
           exit;
      end;
      //
-     if EditRepl3.Text = 'Project_master'
+     if EditRepl3.Text = 'Project'
      then
        with ZConnection_test do begin
           Connected:=false;
-          HostName:='192.168.0.194';
+          HostName:='integer-srv.alan.dp.ua';
           User:='admin';
           Password:='vas6ok';
-          Database:='project_master';
+          Database:='project';
           Connected:=true;
        end
      else
