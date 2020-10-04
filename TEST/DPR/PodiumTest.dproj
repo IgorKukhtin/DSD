@@ -1173,18 +1173,6 @@
 				<Form>ReturnInPodiumForm</Form>
 				<DesignClass>TParentForm</DesignClass>
 			</DCCReference>
-			<DCCReference Include="..\..\FormsBoutique\Guides\Language.pas">
-				<Form>LanguageForm</Form>
-				<DesignClass>TParentForm</DesignClass>
-			</DCCReference>
-			<DCCReference Include="..\..\FormsBoutique\Guides\LanguageEdit.pas">
-				<Form>LanguageEditForm</Form>
-				<DesignClass>TParentForm</DesignClass>
-			</DCCReference>
-			<DCCReference Include="..\..\FormsBoutique\Guides\TranslateWord.pas">
-				<Form>TranslateWordForm</Form>
-				<DesignClass>TParentForm</DesignClass>
-			</DCCReference>
 			<DCCReference Include="..\..\SOURCE\COMPONENT\dsdTranslator.pas"/>
 			<BuildConfiguration Include="Release">
 				<Key>Cfg_2</Key>

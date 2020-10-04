@@ -73,9 +73,7 @@ type
     actUpdateisOutlet: TdsdExecStoredProc;
     bbUpdateisOutlet: TdxBarButton;
     Value1: TcxGridDBColumn;
-    cxLabel1: TcxLabel;
     edLanguage2: TcxButtonEdit;
-    cxLabel2: TcxLabel;
     edLanguage3: TcxButtonEdit;
     cxLabel3: TcxLabel;
     edLanguage4: TcxButtonEdit;
@@ -86,6 +84,8 @@ type
     dsdUpdateDataSet1: TdsdUpdateDataSet;
     FormName: TcxGridDBColumn;
     ControlName: TcxGridDBColumn;
+    cxLabel1: TcxLabel;
+    cxLabel2: TcxLabel;
   private
     { Private declarations }
   public

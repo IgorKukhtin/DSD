@@ -1,7 +1,7 @@
 object TranslateWordForm: TTranslateWordForm
   Left = 0
   Top = 0
-  Caption = #1057#1087#1088#1072#1074#1086#1095#1085#1080#1082' <'#1055#1077#1088#1077#1074#1086#1076#1095#1080#1082'>'
+  Caption = #1057#1087#1088#1072#1074#1086#1095#1085#1080#1082' <'#1055#1077#1088#1077#1074#1086#1076' '#1089#1083#1086#1074'>'
   ClientHeight = 392
   ClientWidth = 916
   Color = clBtnFace
@@ -186,14 +186,14 @@ object TranslateWordForm: TTranslateWordForm
     Width = 916
     Height = 35
     Align = alTop
-    TabOrder = 2
+    TabOrder = 1
     object cxLabel6: TcxLabel
-      Left = 33
+      Left = 30
       Top = 7
-      Caption = #1071#1079#1099#1082' 1:'
+      Caption = #1055#1077#1088#1077#1074#1086#1076' 1:'
     end
     object edLanguage1: TcxButtonEdit
-      Left = 75
+      Left = 92
       Top = 6
       Properties.Buttons = <
         item
@@ -202,16 +202,33 @@ object TranslateWordForm: TTranslateWordForm
         end>
       Properties.ReadOnly = True
       TabOrder = 1
-      Width = 165
+      Width = 144
+    end
+    object cxLabel1: TcxLabel
+      Left = 250
+      Top = 7
+      Caption = #1055#1077#1088#1077#1074#1086#1076' 2:'
+    end
+    object cxLabel2: TcxLabel
+      Left = 470
+      Top = 8
+      Caption = #1055#1077#1088#1077#1074#1086#1076' 3:'
     end
   end
-  object cxLabel1: TcxLabel
-    Left = 250
-    Top = 7
-    Caption = #1071#1079#1099#1082' 2:'
-  end
   object edLanguage2: TcxButtonEdit
-    Left = 291
+    Left = 312
+    Top = 6
+    Properties.Buttons = <
+      item
+        Default = True
+        Kind = bkEllipsis
+      end>
+    Properties.ReadOnly = True
+    TabOrder = 2
+    Width = 144
+  end
+  object edLanguage3: TcxButtonEdit
+    Left = 532
     Top = 6
     Properties.Buttons = <
       item
@@ -220,41 +237,24 @@ object TranslateWordForm: TTranslateWordForm
       end>
     Properties.ReadOnly = True
     TabOrder = 4
-    Width = 165
-  end
-  object cxLabel2: TcxLabel
-    Left = 465
-    Top = 8
-    Caption = #1071#1079#1099#1082' 3:'
-  end
-  object edLanguage3: TcxButtonEdit
-    Left = 507
-    Top = 6
-    Properties.Buttons = <
-      item
-        Default = True
-        Kind = bkEllipsis
-      end>
-    Properties.ReadOnly = True
-    TabOrder = 7
-    Width = 165
+    Width = 144
   end
   object cxLabel3: TcxLabel
-    Left = 685
+    Left = 690
     Top = 7
-    Caption = #1071#1079#1099#1082' 4:'
+    Caption = #1055#1077#1088#1077#1074#1086#1076' 4:'
   end
   object edLanguage4: TcxButtonEdit
-    Left = 727
-    Top = 6
+    Left = 752
+    Top = 8
     Properties.Buttons = <
       item
         Default = True
         Kind = bkEllipsis
       end>
     Properties.ReadOnly = True
-    TabOrder = 11
-    Width = 165
+    TabOrder = 9
+    Width = 144
   end
   object DataSource: TDataSource
     DataSet = MasterCDS

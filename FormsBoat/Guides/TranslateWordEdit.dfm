@@ -1,7 +1,7 @@
 object TranslateWordEditForm: TTranslateWordEditForm
   Left = 0
   Top = 0
-  Caption = #1044#1086#1073#1072#1074#1080#1090#1100'/'#1048#1079#1084#1077#1085#1080#1090#1100' <'#1055#1086#1082#1091#1087#1072#1090#1077#1083#1080'>'
+  Caption = #1044#1086#1073#1072#1074#1080#1090#1100'/'#1048#1079#1084#1077#1085#1080#1090#1100' <'#1055#1077#1088#1077#1074#1086#1076' '#1089#1083#1086#1074'>'
   ClientHeight = 242
   ClientWidth = 339
   Color = clBtnFace
@@ -81,7 +81,7 @@ object TranslateWordEditForm: TTranslateWordEditForm
   object cxLabel14: TcxLabel
     Left = 30
     Top = 97
-    Caption = #1071#1079#1099#1082
+    Caption = #1071#1079#1099#1082' '#1087#1077#1088#1077#1074#1086#1076#1072
   end
   object edLanguage: TcxButtonEdit
     Left = 30
@@ -327,8 +327,8 @@ object TranslateWordEditForm: TTranslateWordEditForm
       end>
     StorageName = 'cxPropertiesStore'
     StorageType = stStream
-    Left = 30
-    Top = 137
+    Left = 22
+    Top = 185
   end
   object dsdUserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn
     Left = 262

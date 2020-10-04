@@ -336,9 +336,6 @@ uses
   ReturnInPodiumItemEdit in '..\..\FormsBoutique\Document\ReturnInPodiumItemEdit.pas' {ReturnInPodiumItemEditForm: TParentForm},
   ReturnInPodiumJournal in '..\..\FormsBoutique\Document\ReturnInPodiumJournal.pas' {ReturnInPodiumJournalForm: TParentForm},
   ReturnInPodium in '..\..\FormsBoutique\Document\ReturnInPodium.pas' {ReturnInPodiumForm: TParentForm},
-  Language in '..\..\FormsBoutique\Guides\Language.pas' {LanguageForm: TParentForm},
-  LanguageEdit in '..\..\FormsBoutique\Guides\LanguageEdit.pas' {LanguageEditForm: TParentForm},
-  TranslateWord in '..\..\FormsBoutique\Guides\TranslateWord.pas' {TranslateWordForm: TParentForm},
   dsdTranslator in '..\..\SOURCE\COMPONENT\dsdTranslator.pas';
 
 {$R *.res}
