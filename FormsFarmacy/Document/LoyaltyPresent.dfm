@@ -35,7 +35,6 @@ inherited LoyaltyPresentForm: TLoyaltyPresentForm
           OptionsBehavior.IncSearch = True
           OptionsData.Deleting = False
           OptionsData.DeletingConfirmation = False
-          OptionsData.Editing = False
           Styles.Content = nil
           Styles.Inactive = nil
           Styles.Selection = nil
@@ -53,6 +52,15 @@ inherited LoyaltyPresentForm: TLoyaltyPresentForm
             HeaderHint = #1055#1088#1086#1084#1086' '#1082#1086#1076
             Options.Editing = False
             Width = 150
+          end
+          object sqSumm: TcxGridDBColumn
+            Caption = #1057#1091#1084#1084#1072' '#1074' '#1087#1086#1076#1072#1088#1086#1082
+            DataBinding.FieldName = 'Summ'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DisplayFormat = ',0.00;-,0.00; ;'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 68
           end
           object sgOperDate: TcxGridDBColumn
             Caption = #1044#1072#1090#1072' '#1089#1086#1079#1076#1072#1085#1080#1103
@@ -101,7 +109,6 @@ inherited LoyaltyPresentForm: TLoyaltyPresentForm
             DataBinding.FieldName = 'Comment'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
-            Options.Editing = False
             Width = 166
           end
           object sgInsertName: TcxGridDBColumn
@@ -2699,39 +2706,21 @@ inherited LoyaltyPresentForm: TLoyaltyPresentForm
         MultiSelectSeparator = ','
       end
       item
-        Name = 'inBayerName'
-        Value = Null
-        Component = SignDCS
-        ComponentItem = 'BayerName'
-        DataType = ftString
-        ParamType = ptInput
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'inBayerPhone'
-        Value = Null
-        Component = SignDCS
-        ComponentItem = 'BayerPhone'
-        DataType = ftString
-        ParamType = ptInput
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'inBayerEmail'
-        Value = Null
-        Component = SignDCS
-        ComponentItem = 'BayerEmail'
-        DataType = ftString
-        ParamType = ptInput
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'ioGUID'
+        Name = 'inGUID'
         Value = Null
         Component = SignDCS
         ComponentItem = 'GUID'
         DataType = ftString
-        ParamType = ptInputOutput
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inSumm'
+        Value = Null
+        Component = SignDCS
+        ComponentItem = 'Summ'
+        DataType = ftFloat
+        ParamType = ptInput
         MultiSelectSeparator = ','
       end
       item
@@ -2740,15 +2729,6 @@ inherited LoyaltyPresentForm: TLoyaltyPresentForm
         Component = SignDCS
         ComponentItem = 'Comment'
         DataType = ftString
-        ParamType = ptInput
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'inIsChecked'
-        Value = Null
-        Component = SignDCS
-        ComponentItem = 'IsChecked'
-        DataType = ftBoolean
         ParamType = ptInput
         MultiSelectSeparator = ','
       end>

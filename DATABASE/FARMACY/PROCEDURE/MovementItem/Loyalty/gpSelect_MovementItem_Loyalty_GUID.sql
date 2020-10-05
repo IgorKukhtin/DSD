@@ -9,6 +9,7 @@ CREATE OR REPLACE FUNCTION gpSelect_MovementItem_Loyalty_GUID(
    OUT outError              TVarChar  , -- Ошибка
    OUT outMovementId         Integer   , -- Ключ объекта <Документ>
    OUT outisPresent          Boolean   , -- Подарок
+   OUT outAmountPresent      TFloat    , -- Количество подарка в чек
    OUT outGoodsId            Integer   , -- Если один товар подарок в наличии
     IN inSession             TVarChar    -- сессия пользователя
 )
@@ -34,6 +35,7 @@ $BODY$
    DECLARE vbIsInsert Boolean;
    DECLARE vbMovementChackId Integer;
    DECLARE vbMonthCount Integer;
+   DECLARE vbAmountPresent TFloat;
    DECLARE vbGoodsCount Integer;
 BEGIN
 
@@ -97,7 +99,8 @@ BEGIN
          , MovementDate_StartSale.ValueData
          , MovementDate_EndSale.ValueData
          , MovementFloat_MonthCount.ValueData::Integer
-    INTO vbInvNumber, vbStatusId, vbDescId, vbStartSale, vbEndSale, vbMonthCount
+         , MovementFloat_AmountPresent.ValueData
+    INTO vbInvNumber, vbStatusId, vbDescId, vbStartSale, vbEndSale, vbMonthCount, vbAmountPresent
     FROM Movement
          LEFT JOIN MovementDate AS MovementDate_StartSale
                                 ON MovementDate_StartSale.MovementId = Movement.Id
@@ -108,6 +111,9 @@ BEGIN
          LEFT JOIN MovementFloat AS MovementFloat_MonthCount
                                  ON MovementFloat_MonthCount.MovementId =  Movement.Id
                                 AND MovementFloat_MonthCount.DescId = zc_MovementFloat_MonthCount()
+         LEFT JOIN MovementFloat AS MovementFloat_AmountPresent
+                                 ON MovementFloat_AmountPresent.MovementId =  Movement.Id
+                                AND MovementFloat_AmountPresent.DescId = zc_MovementFloat_AmountPresent()
     WHERE Movement.ID = vbMovementId
       AND Movement.DescId in (zc_Movement_Loyalty(), zc_Movement_LoyaltyPresent());
 
@@ -163,10 +169,11 @@ BEGIN
     END IF;
 
    outID := vbMovementItemId;
-   outAmount := CASE WHEN  vbDescId = zc_Movement_Loyalty() THEN vbAmount ELSE 0 end;
+   outAmount := vbAmount;
    outError := '';
    outMovementId := vbMovementId;
-   outisPresent := vbDescId = zc_Movement_LoyaltyPresent();
+   outisPresent := vbAmount = 0 AND vbDescId = zc_Movement_LoyaltyPresent();
+   outAmountPresent := CASE WHEN outisPresent = TRUE THEN vbAmountPresent ELSE 0 END;
    outGoodsId := 0;
 
    if outisPresent = TRUE
@@ -221,4 +228,4 @@ $BODY$
 -- SELECT * FROM gpSelect_MovementItem_Loyalty_GUID ('1119-A887-001F-A46F', '3');
 -- SELECT * FROM gpSelect_MovementItem_Loyalty_GUID ('1119-2300-7A19-8EDC', '3');
 
-select * from gpSelect_MovementItem_Loyalty_GUID(inGUID := '0920-0513-7203-3049' ,  inSession := '3');
+select * from gpSelect_MovementItem_Loyalty_GUID(inGUID := '1020-5534-3512-6466' ,  inSession := '3');

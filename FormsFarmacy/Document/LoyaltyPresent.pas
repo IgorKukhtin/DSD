@@ -160,6 +160,7 @@ type
     cxLabel14: TcxLabel;
     edAmountPresent: TcxCurrencyEdit;
     cxLabel4: TcxLabel;
+    sqSumm: TcxGridDBColumn;
   private
     { Private declarations }
   public

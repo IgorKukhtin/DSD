@@ -417,7 +417,12 @@ BEGIN
                                                         AND MIFloat_AmountPlanMax.DescId = zc_MIFloat_AmountPlanMax()
                                                         AND Movement.DescId = zc_Movement_PromoUnit()
 
-                        WHERE Movement.Id = inMovementId
+                             LEFT JOIN MovementItemBoolean AS MIBoolean_Present
+                                                           ON MIBoolean_Present.MovementItemId = MovementItem.Id
+                                                          AND MIBoolean_Present.DescId         = zc_MIBoolean_Present()
+
+                        WHERE Movement.Id = inMovementId                        
+                          AND COALESCE (MIBoolean_Present.ValueData, False) = False
                         GROUP BY Movement.DescId
                                , MovementItem.DescId
                                , MovementItem.ObjectId

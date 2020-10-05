@@ -39,7 +39,7 @@ BEGIN
 
 
         -- сохранили <Ёлемент документа>
-        vbId := lpInsertUpdate_MovementItem (0, zc_MI_Sign(), 0, inMovementId, 1, NULL, zc_Enum_Process_Auto_PartionClose());
+        vbId := lpInsertUpdate_MovementItem (0, zc_MI_Sign(), 0, inMovementId, 0, NULL, zc_Enum_Process_Auto_PartionClose());
 
         -- —формировали промокод
         vbGUID := TO_CHAR(CURRENT_DATE, 'MMYY')||'-';
