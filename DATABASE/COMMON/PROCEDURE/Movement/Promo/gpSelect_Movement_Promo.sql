@@ -65,6 +65,8 @@ RETURNS TABLE (Id               Integer     --Идентификатор
              , Color_PromoStateKind Integer
              , strSign        TVarChar -- ФИО пользователей. - есть эл. подпись
              , strSignNo      TVarChar -- ФИО пользователей. - ожидается эл. подпись
+             , InsertName TVarChar
+             , InsertDate TDateTime
               )
 
 AS
@@ -268,6 +270,9 @@ BEGIN
              , tmpSign.strSign
              , tmpSign.strSignNo
 
+             , Object_User.ValueData                  AS InsertName
+             , MovementDate_Insert.ValueData          AS InsertDate
+
         FROM tmpMovement AS Movement_Promo
              LEFT JOIN Object AS Object_Status ON Object_Status.Id = Movement_Promo.StatusId
 
@@ -376,6 +381,15 @@ BEGIN
              LEFT JOIN tmpSign ON tmpSign.Id = Movement_Promo.Id   -- эл.подписи  --
 
              LEFT JOIN Object AS Object_SignInternal ON Object_SignInternal.Id = tmpSign.SignInternalId
+
+             LEFT JOIN MovementDate AS MovementDate_Insert
+                                    ON MovementDate_Insert.MovementId = Movement_Promo.Id
+                                   AND MovementDate_Insert.DescId = zc_MovementDate_Insert()
+
+             LEFT JOIN MovementLinkObject AS MovementLinkObject_Insert
+                                          ON MovementLinkObject_Insert.MovementId = Movement_Promo.Id
+                                         AND MovementLinkObject_Insert.DescId = zc_MovementLinkObject_Insert()
+             LEFT JOIN Object AS Object_User ON Object_User.Id = MovementLinkObject_Insert.ObjectId
          ;
 
 END;
@@ -386,6 +400,7 @@ $BODY$
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.   Воробкало А.А.
+ 05.10.20         *
  13.07.20         * ChangePercent
  01.04.20         *
  01.08.17         *
