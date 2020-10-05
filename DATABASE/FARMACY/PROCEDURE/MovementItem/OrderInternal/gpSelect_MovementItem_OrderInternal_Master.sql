@@ -3322,19 +3322,11 @@ BEGIN
                                     ) / COALESCE (MovementItem.MinimumLot, 1)
                                    ) * COALESCE (MovementItem.MinimumLot, 1)                   AS CalcAmountAll
 */
---27.01.2020 Люба просит чтоб в расчет ложилась не сумма а большее из "Спец + Авто" и "Отказы" - поскольку сумма этих колонок приводит к затоварке аптек
-                            , CEIL (( -- Спецзаказ + Количество дополнительное                        -- кол-во отказов
-                                       CASE WHEN COALESCE (tmpMI.MCS,0) <> 0
-                                       AND (CASE WHEN (COALESCE (tmpMI.Amount, 0) + COALESCE (MIFloat_AmountSecond.ValueData, 0)) >= COALESCE (tmpMI.ListDiffAmount, 0)
-                                                 THEN (COALESCE (tmpMI.Amount, 0) + COALESCE (MIFloat_AmountSecond.ValueData, 0))         -- Спецзаказ + Количество дополнительное
-                                                 ELSE COALESCE (tmpMI.ListDiffAmount, 0)                                                   -- кол-во отказов
-                                            END) > COALESCE (tmpMI.MCS,0)
-                                           THEN COALESCE (tmpMI.MCS,0)    
-                                           ELSE
-                                               CASE WHEN (COALESCE (tmpMI.Amount, 0) + COALESCE (MIFloat_AmountSecond.ValueData, 0)) >= COALESCE (tmpMI.ListDiffAmount, 0)
-                                                    THEN (COALESCE (tmpMI.Amount, 0) + COALESCE (MIFloat_AmountSecond.ValueData, 0))         -- Спецзаказ + Количество дополнительное
-                                                    ELSE COALESCE (tmpMI.ListDiffAmount, 0)                                                   -- кол-во отказов
-                                               END
+                    --27.01.2020 Люба просит чтоб в расчет ложилась не сумма а большее из "Спец + Авто" и "Отказы" - поскольку сумма этих колонок приводит к затоварке аптек
+                            , CEIL ((                                -- Спецзаказ + Количество дополнительное                        -- кол-во отказов
+                                     CASE WHEN (COALESCE (MovementItem.Amount, 0) + COALESCE (MIFloat_AmountSecond.ValueData, 0)) >= COALESCE (MIFloat_ListDiff.ValueData, 0)
+                                          THEN (COALESCE (MovementItem.Amount, 0) + COALESCE (MIFloat_AmountSecond.ValueData, 0))         -- Спецзаказ + Количество дополнительное
+                                          ELSE COALESCE (MIFloat_ListDiff.ValueData, 0)                                                   -- кол-во отказов
                                      END
                                     ) / COALESCE (MovementItem.MinimumLot, 1)
                                    ) * COALESCE (MovementItem.MinimumLot, 1)                   AS CalcAmountAll
