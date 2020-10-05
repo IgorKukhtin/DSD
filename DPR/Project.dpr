@@ -97,7 +97,8 @@ uses
   LabProductEdit in '..\Forms\Guides\LabProductEdit.pas' {LabProductEditForm: TParentForm},
   DesadvFozzXML in '..\SOURCE\EDI\DesadvFozzXML.pas',
   OrderSpFozzXML in '..\SOURCE\EDI\OrderSpFozzXML.pas',
-  IftminFozzXML in '..\SOURCE\EDI\IftminFozzXML.pas';
+  IftminFozzXML in '..\SOURCE\EDI\IftminFozzXML.pas',
+  dsdTranslator in '..\SOURCE\COMPONENT\dsdTranslator.pas';
 
 {$R *.res}
 {$R DevExpressRus.res}
@@ -124,7 +125,7 @@ begin
      TUpdater.AutomaticUpdateProgram;
      TUpdater.AutomaticCheckConnect;
      Application.CreateForm(TdmMain, dmMain);
-     Application.CreateForm(TMainForm, MainFormInstance);
+  Application.CreateForm(TMainForm, MainFormInstance);
   end
   else
     with TLoginForm.Create(Application) do

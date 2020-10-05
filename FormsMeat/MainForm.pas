@@ -1172,6 +1172,8 @@ type
     N218: TMenuItem;
     actMemberMinus: TdsdOpenForm;
     miMemberMinus: TMenuItem;
+    actMemberBranch: TdsdOpenForm;
+    miMemberBranch: TMenuItem;
     procedure actReport_OLAPSoldExecute(Sender: TObject);
     procedure FormShow(Sender: TObject);
     procedure FormClose(Sender: TObject; var Action: TCloseAction);

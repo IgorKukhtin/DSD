@@ -97,6 +97,7 @@ type
     procedure LoadMemberFormTest;
     procedure LoadMemberMinusFormTest;
     procedure LoadMemberBankAccountFormTest;
+    procedure LoadMemberBranchFormTest;
     procedure LoadMemberExternalFormTest;
     procedure LoadMemberSheetWorkTimeFormTest;
     procedure LoadMemberHolidayFormTest;
@@ -3249,6 +3250,14 @@ begin
   TdsdFormStorageFactory.GetStorage.Load('TMemberBankAccountForm');
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TMemberBankAccountEditForm'));
   TdsdFormStorageFactory.GetStorage.Load('TMemberBankAccountEditForm');
+end;
+
+procedure TLoadFormTest.LoadMemberBranchFormTest;
+begin
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TMemberBranchForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TMemberBranchForm');
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TMemberBranchEditForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TMemberBranchEditForm');
 end;
 
 procedure TLoadFormTest.LoadMemberExternalFormTest;
