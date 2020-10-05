@@ -451,12 +451,12 @@ inherited LoyaltyPresentForm: TLoyaltyPresentForm
       Width = 196
     end
     object cxLabel10: TcxLabel
-      Left = 646
+      Left = 711
       Top = 5
       Caption = #1055#1086#1083#1100#1079#1086#1074#1072#1090#1077#1083#1100' '#1089#1086#1079#1076'.'
     end
     object edInsertName: TcxButtonEdit
-      Left = 646
+      Left = 711
       Top = 23
       Properties.Buttons = <
         item
@@ -469,12 +469,12 @@ inherited LoyaltyPresentForm: TLoyaltyPresentForm
       Width = 118
     end
     object cxLabel11: TcxLabel
-      Left = 646
+      Left = 711
       Top = 45
       Caption = #1055#1086#1083#1100#1079#1086#1074#1072#1090#1077#1083#1100' '#1082#1086#1088#1088'.'
     end
     object edUpdateName: TcxButtonEdit
-      Left = 646
+      Left = 711
       Top = 62
       Properties.Buttons = <
         item
@@ -487,12 +487,12 @@ inherited LoyaltyPresentForm: TLoyaltyPresentForm
       Width = 118
     end
     object cxLabel13: TcxLabel
-      Left = 770
+      Left = 835
       Top = 45
       Caption = #1044#1072#1090#1072' '#1082#1086#1088#1088'.'
     end
     object edUpdateDate: TcxDateEdit
-      Left = 770
+      Left = 835
       Top = 62
       EditValue = 42485d
       Properties.Kind = ckDateTime
@@ -515,7 +515,7 @@ inherited LoyaltyPresentForm: TLoyaltyPresentForm
       Width = 100
     end
     object edInsertdate: TcxDateEdit
-      Left = 770
+      Left = 835
       Top = 23
       EditValue = 42485d
       Properties.Kind = ckDateTime
@@ -524,7 +524,7 @@ inherited LoyaltyPresentForm: TLoyaltyPresentForm
       Width = 120
     end
     object cxLabel12: TcxLabel
-      Left = 766
+      Left = 831
       Top = 5
       Caption = #1044#1072#1090#1072' '#1089#1086#1079#1076'.'
     end
@@ -566,7 +566,7 @@ inherited LoyaltyPresentForm: TLoyaltyPresentForm
       Width = 78
     end
     object edSummRepay: TcxCurrencyEdit
-      Left = 535
+      Left = 518
       Top = 62
       Hint = #1055#1086#1075#1072#1096#1072#1090#1100' '#1086#1090' '#1089#1091#1084#1084#1099' '#1095#1077#1082#1072
       ParentShowHint = False
@@ -577,7 +577,7 @@ inherited LoyaltyPresentForm: TLoyaltyPresentForm
       Width = 87
     end
     object cxLabel20: TcxLabel
-      Left = 532
+      Left = 518
       Top = 44
       Hint = #1055#1086#1075#1072#1096#1072#1090#1100' '#1086#1090' '#1089#1091#1084#1084#1099' '#1095#1077#1082#1072
       Caption = #1055#1086#1075#1072#1096#1072#1090#1100' '#1086#1090' '#1089#1091#1084'.'
@@ -597,6 +597,26 @@ inherited LoyaltyPresentForm: TLoyaltyPresentForm
       Left = 425
       Top = 44
       Caption = #1052#1077#1089'. '#1076#1083#1103' '#1087#1086#1075#1072#1096'.'
+    end
+    object edAmountPresent: TcxCurrencyEdit
+      Left = 611
+      Top = 62
+      Hint = #1055#1086#1075#1072#1096#1072#1090#1100' '#1086#1090' '#1089#1091#1084#1084#1099' '#1095#1077#1082#1072
+      ParentShowHint = False
+      Properties.DecimalPlaces = 3
+      Properties.DisplayFormat = ',0.000'
+      Properties.ReadOnly = False
+      ShowHint = True
+      TabOrder = 27
+      Width = 87
+    end
+    object cxLabel4: TcxLabel
+      Left = 611
+      Top = 45
+      Hint = #1055#1086#1075#1072#1096#1072#1090#1100' '#1086#1090' '#1089#1091#1084#1084#1099' '#1095#1077#1082#1072
+      Caption = #1050#1086#1083'-'#1074#1086' '#1087#1086#1076#1072#1088#1082#1086#1074
+      ParentShowHint = False
+      ShowHint = True
     end
   end
   inherited ActionList: TActionList
@@ -2093,6 +2113,13 @@ inherited LoyaltyPresentForm: TLoyaltyPresentForm
         Component = edSummRepay
         DataType = ftFloat
         MultiSelectSeparator = ','
+      end
+      item
+        Name = 'AmountPresent'
+        Value = Null
+        Component = edAmountPresent
+        DataType = ftFloat
+        MultiSelectSeparator = ','
       end>
     Left = 72
     Top = 224
@@ -2178,6 +2205,14 @@ inherited LoyaltyPresentForm: TLoyaltyPresentForm
         DataType = ftFloat
         ParamType = ptInput
         MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inAmountPresent'
+        Value = Null
+        Component = edAmountPresent
+        DataType = ftFloat
+        ParamType = ptInput
+        MultiSelectSeparator = ','
       end>
     NeedResetData = True
     ParamKeyField = 'ioId'
@@ -2223,6 +2258,9 @@ inherited LoyaltyPresentForm: TLoyaltyPresentForm
       end
       item
         Control = cbisElectron
+      end
+      item
+        Control = edAmountPresent
       end
       item
       end>
@@ -2777,8 +2815,8 @@ inherited LoyaltyPresentForm: TLoyaltyPresentForm
         Value = 81178
         MultiSelectSeparator = ','
       end>
-    Left = 698
-    Top = 65534
+    Left = 778
+    Top = 6
   end
   object GuidesUpdate: TdsdGuides
     KeyField = 'Id'
@@ -2812,8 +2850,8 @@ inherited LoyaltyPresentForm: TLoyaltyPresentForm
         Value = 81178
         MultiSelectSeparator = ','
       end>
-    Left = 698
-    Top = 38
+    Left = 778
+    Top = 46
   end
   object spErasedMISign: TdsdStoredProc
     StoredProcName = 'gpSetErased_MovementItem'

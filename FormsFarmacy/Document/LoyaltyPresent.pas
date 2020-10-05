@@ -158,6 +158,8 @@ type
     MasterIsChecked: TcxGridDBColumn;
     edMonthCount: TcxCurrencyEdit;
     cxLabel14: TcxLabel;
+    edAmountPresent: TcxCurrencyEdit;
+    cxLabel4: TcxLabel;
   private
     { Private declarations }
   public

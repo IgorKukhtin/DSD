@@ -1,6 +1,6 @@
 -- Function: gpInsertUpdate_Movement_LoyaltyPresent()
 
-DROP FUNCTION IF EXISTS gpInsertUpdate_Movement_LoyaltyPresent (Integer, TVarChar, TDateTime, Integer, TDateTime, TDateTime, Integer, TVarChar, Boolean, TFloat, TVarChar);
+DROP FUNCTION IF EXISTS gpInsertUpdate_Movement_LoyaltyPresent (Integer, TVarChar, TDateTime, Integer, TDateTime, TDateTime, Integer, TVarChar, Boolean, TFloat, TFloat, TVarChar);
 
 
 CREATE OR REPLACE FUNCTION gpInsertUpdate_Movement_LoyaltyPresent(
@@ -14,6 +14,7 @@ CREATE OR REPLACE FUNCTION gpInsertUpdate_Movement_LoyaltyPresent(
     IN inComment               TVarChar   , -- Примечание
     IN inisElectron            Boolean    , -- для Сайта
     IN inSummRepay             Tfloat     , -- Погашать от суммы чека
+    IN inAmountPresent         Tfloat     , -- Количество подарка в чек
     IN inSession               TVarChar     -- сессия пользователя
 )
 RETURNS Integer AS
@@ -34,6 +35,7 @@ BEGIN
                                            , inComment       := inComment
                                            , inisElectron    := inisElectron
                                            , inSummRepay     := inSummRepay
+                                           , inAmountPresent := inAmountPresent
                                            , inUserId        := vbUserId
                                            );
 

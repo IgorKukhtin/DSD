@@ -25,7 +25,8 @@ RETURNS TABLE (Id Integer
              , UpdateDate    TDateTime
              , Comment       TVarChar
              , isElectron    Boolean
-             , SummRepay   TFloat
+             , SummRepay     TFloat
+             , AmountPresent TFloat
              )
 AS
 $BODY$
@@ -59,6 +60,7 @@ BEGIN
           , NULL  ::TVarChar            AS Comment
           , FALSE                       AS isElectron
           , 0     ::TFloat              AS SummRepay
+          , 0     ::TFloat              AS AmountPresent
         FROM lfGet_Object_Status(zc_Enum_Status_UnComplete()) AS Object_Status
              LEFT JOIN Object AS Object_Insert ON Object_Insert.Id = vbUserId;
   
@@ -84,6 +86,7 @@ BEGIN
           , MovementString_Comment.ValueData                               AS Comment
           , COALESCE(MovementBoolean_Electron.ValueData, FALSE) ::Boolean  AS isElectron
           , MovementFloat_SummRepay.ValueData                              AS SummRepay
+          , MovementFloat_AmountPresent.ValueData                          AS AmountPresent
      FROM Movement 
         LEFT JOIN Object AS Object_Status ON Object_Status.Id = Movement.StatusId
 
@@ -93,6 +96,9 @@ BEGIN
         LEFT JOIN MovementFloat AS MovementFloat_SummRepay
                                 ON MovementFloat_SummRepay.MovementId =  Movement.Id
                                AND MovementFloat_SummRepay.DescId = zc_MovementFloat_SummRepay()
+        LEFT JOIN MovementFloat AS MovementFloat_AmountPresent
+                                ON MovementFloat_AmountPresent.MovementId =  Movement.Id
+                               AND MovementFloat_AmountPresent.DescId = zc_MovementFloat_AmountPresent()
 
         LEFT JOIN MovementDate AS MovementDate_StartSale
                                ON MovementDate_StartSale.MovementId = Movement.Id

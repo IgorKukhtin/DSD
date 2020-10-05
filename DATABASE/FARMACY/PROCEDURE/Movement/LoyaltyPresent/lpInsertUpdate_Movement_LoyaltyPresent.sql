@@ -1,6 +1,6 @@
 -- Function: lpInsertUpdate_Movement_LoyaltyPresent()
 
-DROP FUNCTION IF EXISTS lpInsertUpdate_Movement_LoyaltyPresent (Integer, TVarChar, TDateTime, Integer, TDateTime, TDateTime, Integer, TVarChar, Boolean, TFloat, Integer);
+DROP FUNCTION IF EXISTS lpInsertUpdate_Movement_LoyaltyPresent (Integer, TVarChar, TDateTime, Integer, TDateTime, TDateTime, Integer, TVarChar, Boolean, TFloat, TFloat, Integer);
 
 
 CREATE OR REPLACE FUNCTION lpInsertUpdate_Movement_LoyaltyPresent(
@@ -14,6 +14,7 @@ CREATE OR REPLACE FUNCTION lpInsertUpdate_Movement_LoyaltyPresent(
     IN inComment               TVarChar   , -- Примечание
     IN inisElectron            Boolean    , -- для Сайта
     IN inSummRepay             Tfloat     , -- Погашать от суммы чека
+    IN inAmountPresent         Tfloat     , -- Количество подарка в чек
     IN inUserId                Integer      -- сессия пользователя
 )
 RETURNS Integer AS
@@ -39,6 +40,8 @@ BEGIN
     PERFORM lpInsertUpdate_MovementFloat (zc_MovementFloat_MonthCount(), ioId, inMonthCount);
     -- сохранили <>
     PERFORM lpInsertUpdate_MovementFloat (zc_MovementFloat_SummRepay(), ioId, inSummRepay);
+    -- сохранили <>
+    PERFORM lpInsertUpdate_MovementFloat (zc_MovementFloat_AmountPresent(), ioId, inAmountPresent);
 
     -- сохранили <Примечание>
     PERFORM lpInsertUpdate_MovementString (zc_MovementString_Comment(), ioId, inComment);
