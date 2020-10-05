@@ -117,6 +117,8 @@ type
     FormParams: TdsdFormParams;
     actRefreshReserve: TdsdDataSetRefresh;
     cbReserve: TcxCheckBox;
+    cbDayListDiff: TcxCheckBox;
+    edDayListDiff: TcxCurrencyEdit;
   private
     { Private declarations }
   public

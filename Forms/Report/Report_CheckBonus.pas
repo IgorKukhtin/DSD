@@ -84,6 +84,8 @@ type
     spInsertByReportGrid: TdsdStoredProc;
     spUpdateSend: TdsdStoredProc;
     actUpdateDataSet: TdsdUpdateDataSet;
+    actOpenReportDetailForm: TdsdOpenForm;
+    bbOpenReportDetail: TdxBarButton;
   private
     { Private declarations }
   public

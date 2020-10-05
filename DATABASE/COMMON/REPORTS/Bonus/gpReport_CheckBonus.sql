@@ -1,6 +1,6 @@
 -- FunctiON: gpReport_CheckBonus ()
 
-DROP FUNCTION IF EXISTS gpReport_CheckBonus (TDateTime, TDateTime, TVarChar);
+ DROP FUNCTION IF EXISTS gpReport_CheckBonus (TDateTime, TDateTime, TVarChar);
 DROP FUNCTION IF EXISTS gpReport_CheckBonus (TDateTime, TDateTime, Integer, Integer, Boolean, TVarChar);
 DROP FUNCTION IF EXISTS gpReport_CheckBonus (TDateTime, TDateTime, Integer, Integer, TVarChar);
 --DROP FUNCTION IF EXISTS gpReport_CheckBonus (TDateTime, TDateTime, Integer, Integer, Integer, TVarChar);
@@ -49,19 +49,89 @@ $BODY$
     DECLARE vbUserId Integer;
 BEGIN
      vbUserId:= lpGetUserBySession (inSession);
-     --проверка нельзя выбрать чужую кассу, филиал можно, для пользователей с ролью админ не проверяем
+
+     -- нашли филиал
      vbBranchId := (SELECT tmp.BranchId FROM gpGet_UserParams_bonus (inSession:= inSession) AS tmp);
 
-     IF NOT EXISTS (SELECT 1 AS Id FROM ObjectLink_UserRole_View WHERE RoleId = zc_Enum_Role_Admin() AND UserId = vbUserId) AND (vbBranchId <> zc_Branch_Basis()) AND (COALESCE (vbBranchId,0) <> 0)
+     IF NOT EXISTS (SELECT 1 AS Id FROM ObjectLink_UserRole_View WHERE RoleId = zc_Enum_Role_Admin() AND UserId = vbUserId)
+        AND (vbBranchId <> zc_Branch_Basis()) AND (COALESCE (vbBranchId,0) <> 0)
      THEN
-         IF (inBranchId <> vbBranchId ) OR (inPaidKindId <> zc_Enum_PaidKind_SecondForm())
+         IF (inBranchId <> vbBranchId)
          THEN
-              RAISE EXCEPTION 'Ошибка.У пользователя не достаточно прав доступа для просмотра данных по <%> (<%>).', lfGet_Object_ValueData (inBranchId), lfGet_Object_ValueData (inPaidKindId);
+              RAISE EXCEPTION 'Ошибка.Нет прав для просмотра данных, необходимо выбрать <%>.', lfGet_Object_ValueData_sh (vbBranchId);
          END IF;
+
+         IF (inPaidKindId <> zc_Enum_PaidKind_SecondForm())
+         THEN
+              RAISE EXCEPTION 'Ошибка.Нет прав для просмотра данных, необходимо выбрать форму оплаты = <%>.', lfGet_Object_ValueData_sh (zc_Enum_PaidKind_SecondForm());
+         END IF;
+         
+     -- Павлов Д.В. + Мурзаева Е.В.
+     ELSEIF vbUserId IN (5080994, 714692)
+            AND (inBranchId <> zc_Branch_Basis() OR inPaidKindId <> zc_Enum_PaidKind_SecondForm())
+     THEN
+         IF (inBranchId <> zc_Branch_Basis())
+         THEN
+              RAISE EXCEPTION 'Ошибка.Нет прав для просмотра данных, необходимо выбрать <%>.', lfGet_Object_ValueData_sh (zc_Branch_Basis());
+         END IF;
+
+         IF (inPaidKindId <> zc_Enum_PaidKind_SecondForm())
+         THEN
+              RAISE EXCEPTION 'Ошибка.Нет прав для просмотра данных, необходимо выбрать форму оплаты = <%>.', lfGet_Object_ValueData_sh (zc_Enum_PaidKind_SecondForm());
+         END IF;
+
+     -- Спічка Є.А. - филиал Харьков + филиал Запорожье
+     ELSEIF vbUserId = 5835424
+            AND (inBranchId NOT IN (8381, 301310) OR inPaidKindId <> zc_Enum_PaidKind_SecondForm())
+     THEN
+         IF inBranchId NOT IN (8381, 301310)
+         THEN
+              RAISE EXCEPTION 'Ошибка.Нет прав для просмотра данных, необходимо выбрать <%> или <%>.', lfGet_Object_ValueData_sh (8381), lfGet_Object_ValueData_sh (301310);
+         END IF;
+
+         IF (inPaidKindId <> zc_Enum_PaidKind_SecondForm())
+         THEN
+              RAISE EXCEPTION 'Ошибка.Нет прав для просмотра данных, необходимо выбрать форму оплаты = <%>.', lfGet_Object_ValueData_sh (zc_Enum_PaidKind_SecondForm());
+         END IF;
+
+     -- Середа Ю.В. - филиал Одесса + филиал Николаев (Херсон)
+     ELSEIF vbUserId = 106596
+            AND (inBranchId NOT IN (8374, 8373) OR inPaidKindId <> zc_Enum_PaidKind_SecondForm())
+     THEN
+         IF inBranchId NOT IN (8374, 8373)
+         THEN
+              RAISE EXCEPTION 'Ошибка.Нет прав для просмотра данных, необходимо выбрать <%> или <%>.', lfGet_Object_ValueData_sh (8374), lfGet_Object_ValueData_sh (8373);
+         END IF;
+
+         IF (inPaidKindId <> zc_Enum_PaidKind_SecondForm())
+         THEN
+              RAISE EXCEPTION 'Ошибка.Нет прав для просмотра данных, необходимо выбрать форму оплаты = <%>.', lfGet_Object_ValueData_sh (zc_Enum_PaidKind_SecondForm());
+         END IF;
+
+
+     -- Няйко В.И. - zc_Branch_Basis + филиал Кр.Рог
+     ELSEIF vbUserId = 1058530
+            AND (inBranchId NOT IN (zc_Branch_Basis(), 8377) OR inPaidKindId <> zc_Enum_PaidKind_SecondForm())
+     THEN
+         IF inBranchId NOT IN (zc_Branch_Basis(), 8377)
+         THEN
+              RAISE EXCEPTION 'Ошибка.Нет прав для просмотра данных, необходимо выбрать <%> или <%>.', lfGet_Object_ValueData_sh (zc_Branch_Basis()), lfGet_Object_ValueData_sh (8377);
+         END IF;
+
+         IF (inPaidKindId <> zc_Enum_PaidKind_SecondForm())
+         THEN
+              RAISE EXCEPTION 'Ошибка.Нет прав для просмотра данных, необходимо выбрать форму оплаты = <%>.', lfGet_Object_ValueData_sh (zc_Enum_PaidKind_SecondForm());
+         END IF;
+
      END IF;
 
-
+    -- Результат
     RETURN QUERY
+
+    --!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+    --правильный расчет в процке gpReport_CheckBonusTest3
+    --!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+    
       WITH 
       tmpObjectBonus AS (SELECT ObjectLink_Juridical.ChildObjectId AS JuridicalId
                               , ObjectLink_Partner.ChildObjectId   AS PartnerId
@@ -110,7 +180,7 @@ BEGIN
            , tmp.Comment
            , tmpObjectBonus.Id :: Integer AS ReportBonusId
            , CASE WHEN tmpObjectBonus.Id IS NULL OR tmpObjectBonus.isErased = True THEN TRUE ELSE FALSE END :: Boolean AS isSend
-      FROM gpReport_CheckBonusTest2 (inStartDate           := inStartDate
+      FROM gpReport_CheckBonusTest3 (inStartDate           := inStartDate
                                    , inEndDate             := inEndDate
                                    , inPaidKindID          := zc_Enum_PaidKind_FirstForm()
                                    , inJuridicalId         := inJuridicalId
@@ -151,7 +221,7 @@ BEGIN
            , tmp.Comment
            , tmpObjectBonus.Id :: Integer AS ReportBonusId
            , CASE WHEN tmpObjectBonus.Id IS NULL OR tmpObjectBonus.isErased = True THEN TRUE ELSE FALSE END :: Boolean AS isSend
-      FROM gpReport_CheckBonusTest2 (inStartDate           := inStartDate
+      FROM gpReport_CheckBonusTest3 (inStartDate           := inStartDate
                                    , inEndDate             := inEndDate
                                    , inPaidKindID          := zc_Enum_PaidKind_SecondForm()
                                    , inJuridicalId         := inJuridicalId

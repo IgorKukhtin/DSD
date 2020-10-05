@@ -1195,7 +1195,9 @@ uses
   MemberMinusEdit in '..\..\Forms\Guides\MemberMinusEdit.pas' {MemberMinusEditForm: TParentForm},
   MemberExternal_Juridical_Object in '..\..\Forms\Guides\MemberExternal_Juridical_Object.pas' {MemberExternal_Juridical_ObjectForm: TParentForm},
   dsdTranslator in '..\..\SOURCE\COMPONENT\dsdTranslator.pas',
-  Report_CheckBonusDetail in '..\..\Forms\Report\Report_CheckBonusDetail.pas' {Report_CheckBonusDetailForm: TParentForm};
+  Report_CheckBonusDetail in '..\..\Forms\Report\Report_CheckBonusDetail.pas' {Report_CheckBonusDetailForm: TParentForm},
+  MemberBranchEdit in '..\..\Forms\Guides\MemberBranchEdit.pas' {MemberBranchEditForm: TParentForm},
+  MemberBranch in '..\..\Forms\Guides\MemberBranch.pas' {MemberBranchForm: TParentForm};
 
 {$R *.RES}
 {$R DevExpressRus.res}

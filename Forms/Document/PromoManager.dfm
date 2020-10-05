@@ -2324,6 +2324,14 @@
           DataType = ftString
           ParamType = ptInputOutput
           MultiSelectSeparator = ','
+        end
+        item
+          Name = 'MovementId'
+          Value = Null
+          Component = FormParams
+          ComponentItem = 'Id'
+          ParamType = ptInput
+          MultiSelectSeparator = ','
         end>
       isShowModal = True
       OpenBeforeShow = True
@@ -5811,8 +5819,8 @@
         MultiSelectSeparator = ','
       end>
     PackSize = 1
-    Left = 64
-    Top = 544
+    Left = 248
+    Top = 616
   end
   object dsdDBViewAddOnPartnerList: TdsdDBViewAddOn
     ErasedFieldName = 'isErased'
@@ -6142,8 +6150,8 @@
   end
   object PromoStateKindDS: TDataSource
     DataSet = PromoStateKindDCS
-    Left = 936
-    Top = 576
+    Left = 904
+    Top = 584
   end
   object PromoStateKindDCS: TClientDataSet
     Aggregates = <>
@@ -6196,8 +6204,8 @@
         MultiSelectSeparator = ','
       end>
     PackSize = 1
-    Left = 1296
-    Top = 448
+    Left = 1208
+    Top = 480
   end
   object spInsertUpdate_MI_PromoStateKind: TdsdStoredProc
     StoredProcName = 'gpInsertUpdate_MI_Message_PromoStateKind'

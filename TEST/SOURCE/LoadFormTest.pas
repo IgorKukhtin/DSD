@@ -97,6 +97,7 @@ type
     procedure LoadMemberFormTest;
     procedure LoadMemberMinusFormTest;
     procedure LoadMemberBankAccountFormTest;
+    procedure LoadMemberBranchFormTest;
     procedure LoadMemberExternalFormTest;
     procedure LoadMemberSheetWorkTimeFormTest;
     procedure LoadMemberHolidayFormTest;
@@ -2886,21 +2887,21 @@ begin
   {
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TChangePercentDialogForm'));
   TdsdFormStorageFactory.GetStorage.Load('TChangePercentDialogForm');
-
+  }
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TPromoManagerDialogForm'));
   TdsdFormStorageFactory.GetStorage.Load('TPromoManagerDialogForm');
-
-  TdsdFormStorageFactory.GetStorage.Save(GetForm('TPromoManagerJournalForm'));
-  TdsdFormStorageFactory.GetStorage.Load('TPromoManagerJournalForm');
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TPromoManagerForm'));
   TdsdFormStorageFactory.GetStorage.Load('TPromoManagerForm');
+  {
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TPromoManagerJournalForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TPromoManagerJournalForm');
 
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TPromoJournalForm'));
   TdsdFormStorageFactory.GetStorage.Load('TPromoJournalForm');
-  }
+
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TPromoForm'));
   TdsdFormStorageFactory.GetStorage.Load('TPromoForm');
-  {
+
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TPromoPartnerForm'));
   TdsdFormStorageFactory.GetStorage.Load('TPromoPartnerForm');
   }
@@ -3249,6 +3250,14 @@ begin
   TdsdFormStorageFactory.GetStorage.Load('TMemberBankAccountForm');
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TMemberBankAccountEditForm'));
   TdsdFormStorageFactory.GetStorage.Load('TMemberBankAccountEditForm');
+end;
+
+procedure TLoadFormTest.LoadMemberBranchFormTest;
+begin
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TMemberBranchForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TMemberBranchForm');
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TMemberBranchEditForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TMemberBranchEditForm');
 end;
 
 procedure TLoadFormTest.LoadMemberExternalFormTest;
