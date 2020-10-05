@@ -5,22 +5,22 @@ inherited Report_RemainsOverGoods_ToForm: TReport_RemainsOverGoods_ToForm
   AddOnFormData.ExecuteDialogAction = ExecuteDialog
   AddOnFormData.Params = FormParams
   ExplicitWidth = 1107
-  ExplicitHeight = 598
+  ExplicitHeight = 597
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
-    Top = 81
+    Top = 101
     Width = 1091
-    Height = 478
+    Height = 458
     ParentShowHint = False
     ShowHint = True
     TabOrder = 3
     Properties.ActivateFocusedTab = False
     Properties.Options = [pcoGradient, pcoGradientClientArea, pcoRedrawOnResize, pcoSort]
-    ExplicitTop = 81
+    ExplicitTop = 101
     ExplicitWidth = 1091
-    ExplicitHeight = 478
-    ClientRectBottom = 478
+    ExplicitHeight = 458
+    ClientRectBottom = 458
     ClientRectRight = 1091
     ClientRectTop = 24
     inherited tsMain: TcxTabSheet
@@ -28,12 +28,12 @@ inherited Report_RemainsOverGoods_ToForm: TReport_RemainsOverGoods_ToForm
       TabVisible = True
       ExplicitTop = 24
       ExplicitWidth = 1091
-      ExplicitHeight = 454
+      ExplicitHeight = 434
       inherited cxGrid: TcxGrid
         Width = 1091
-        Height = 217
+        Height = 197
         ExplicitWidth = 1091
-        ExplicitHeight = 217
+        ExplicitHeight = 197
         inherited cxGridDBTableView: TcxGridDBTableView
           DataController.Summary.DefaultGroupSummaryItems = <
             item
@@ -140,6 +140,11 @@ inherited Report_RemainsOverGoods_ToForm: TReport_RemainsOverGoods_ToForm
               Format = ',0.####'
               Kind = skSum
               Column = Amount_Reserve
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = AmountListDiff
             end>
           DataController.Summary.FooterSummaryItems = <
             item
@@ -251,6 +256,11 @@ inherited Report_RemainsOverGoods_ToForm: TReport_RemainsOverGoods_ToForm
               Format = ',0.####'
               Kind = skSum
               Column = Amount_Reserve
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = AmountListDiff
             end>
           OptionsData.CancelOnExit = True
           OptionsData.Deleting = False
@@ -426,6 +436,17 @@ inherited Report_RemainsOverGoods_ToForm: TReport_RemainsOverGoods_ToForm
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             HeaderHint = #1054#1090#1083#1086#1078#1077#1085#1085#1099#1081' '#1090#1086#1074#1072#1088' ('#1095#1077#1082')'
+            Options.Editing = False
+            Width = 51
+          end
+          object AmountListDiff: TcxGridDBColumn
+            Caption = #1054#1090#1082#1072#1079#1099
+            DataBinding.FieldName = 'AmountListDiff'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DisplayFormat = ',0.####;-,0.####; ;'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            HeaderHint = #1054#1090#1082#1072#1079#1099
             Options.Editing = False
             Width = 51
           end
@@ -669,7 +690,7 @@ inherited Report_RemainsOverGoods_ToForm: TReport_RemainsOverGoods_ToForm
       end
       object cxGrid1: TcxGrid
         Left = 0
-        Top = 222
+        Top = 202
         Width = 1091
         Height = 232
         Align = alBottom
@@ -749,6 +770,11 @@ inherited Report_RemainsOverGoods_ToForm: TReport_RemainsOverGoods_ToForm
               Format = ',0.####'
               Kind = skSum
               Column = chAmount_Reserve
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = chAmountListDiff
             end>
           DataController.Summary.FooterSummaryItems = <
             item
@@ -824,6 +850,11 @@ inherited Report_RemainsOverGoods_ToForm: TReport_RemainsOverGoods_ToForm
               Format = ',0.####'
               Kind = skSum
               Column = chAmount_Reserve
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = chAmountListDiff
             end>
           DataController.Summary.SummaryGroups = <>
           Images = dmMain.SortImageList
@@ -906,6 +937,17 @@ inherited Report_RemainsOverGoods_ToForm: TReport_RemainsOverGoods_ToForm
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             HeaderHint = #1054#1090#1083#1086#1078#1077#1085#1085#1099#1081' '#1090#1086#1074#1072#1088' ('#1095#1077#1082')'
+            Options.Editing = False
+            Width = 51
+          end
+          object chAmountListDiff: TcxGridDBColumn
+            Caption = #1054#1090#1082#1072#1079#1099
+            DataBinding.FieldName = 'AmountListDiff'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DisplayFormat = ',0.####;-,0.####; ;'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            HeaderHint = #1054#1090#1082#1072#1079#1099
             Options.Editing = False
             Width = 51
           end
@@ -1075,7 +1117,7 @@ inherited Report_RemainsOverGoods_ToForm: TReport_RemainsOverGoods_ToForm
       end
       object cxSplitterChild: TcxSplitter
         Left = 0
-        Top = 217
+        Top = 197
         Width = 1091
         Height = 5
         AlignSplitter = salBottom
@@ -1089,7 +1131,7 @@ inherited Report_RemainsOverGoods_ToForm: TReport_RemainsOverGoods_ToForm
         Left = 0
         Top = 0
         Width = 1091
-        Height = 454
+        Height = 434
         Align = alClient
         TabOrder = 0
         object cxGridTotalDBTableView: TcxGridDBTableView
@@ -1489,9 +1531,9 @@ inherited Report_RemainsOverGoods_ToForm: TReport_RemainsOverGoods_ToForm
   end
   inherited Panel: TPanel
     Width = 1091
-    Height = 55
+    Height = 75
     ExplicitWidth = 1091
-    ExplicitHeight = 55
+    ExplicitHeight = 75
     inherited deStart: TcxDateEdit
       Left = 99
       Top = 4
@@ -1595,6 +1637,26 @@ inherited Report_RemainsOverGoods_ToForm: TReport_RemainsOverGoods_ToForm
       ShowHint = True
       TabOrder = 13
       Width = 155
+    end
+    object cbDayListDiff: TcxCheckBox
+      Left = 6
+      Top = 51
+      Hint = #1076#1083#1103' '#1054#1090#1095#1077#1090#1072' <'#1056#1072#1089#1087#1088#1077#1076#1077#1083#1077#1085#1080#1077' '#1080#1079#1083#1080#1096#1082#1086#1074' '#1085#1072' '#1072#1087#1090#1077#1082#1091'>'
+      Caption = #1053#1077' '#1087#1077#1088#1077#1084#1077#1097#1072#1090#1100' '#1090#1086#1074#1072#1088' '#1080#1079' '#1051#1080#1089#1090#1072' '#1054#1090#1082#1072#1079#1072' '#1079#1072' '#1087#1086#1089#1083'. '#1061' '#1076#1085#1077#1081
+      ParentShowHint = False
+      ShowHint = True
+      TabOrder = 14
+      Width = 305
+    end
+    object edDayListDiff: TcxCurrencyEdit
+      Left = 309
+      Top = 51
+      EditValue = 15.000000000000000000
+      Properties.DecimalPlaces = 0
+      Properties.DisplayFormat = '0'
+      Properties.MinValue = 1.000000000000000000
+      TabOrder = 15
+      Width = 26
     end
   end
   object cxLabel5: TcxLabel [2]
@@ -1888,6 +1950,22 @@ inherited Report_RemainsOverGoods_ToForm: TReport_RemainsOverGoods_ToForm
           DataType = ftBoolean
           ParamType = ptInput
           MultiSelectSeparator = ','
+        end
+        item
+          Name = 'isDayListDiff'
+          Value = Null
+          Component = cbDayListDiff
+          DataType = ftBoolean
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'DayListDiff'
+          Value = Null
+          Component = edDayListDiff
+          DataType = ftFloat
+          ParamType = ptInput
+          MultiSelectSeparator = ','
         end>
       isShowModal = True
       RefreshDispatcher = RefreshDispatcher
@@ -2164,6 +2242,14 @@ inherited Report_RemainsOverGoods_ToForm: TReport_RemainsOverGoods_ToForm
         MultiSelectSeparator = ','
       end
       item
+        Name = 'inDayListDiff'
+        Value = Null
+        Component = edDayListDiff
+        DataType = ftFloat
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
         Name = 'inAssortment'
         Value = Null
         Component = edAssortment
@@ -2216,6 +2302,14 @@ inherited Report_RemainsOverGoods_ToForm: TReport_RemainsOverGoods_ToForm
         Name = 'inIsReserve'
         Value = Null
         Component = cbReserve
+        DataType = ftBoolean
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inisDayListDiff'
+        Value = Null
+        Component = cbDayListDiff
         DataType = ftBoolean
         ParamType = ptInput
         MultiSelectSeparator = ','

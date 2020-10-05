@@ -127,6 +127,11 @@ BEGIN
 
     -- Результат
     RETURN QUERY
+
+    --!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+    --правильный расчет в процке gpReport_CheckBonusTest3
+    --!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+    
       WITH 
       tmpObjectBonus AS (SELECT ObjectLink_Juridical.ChildObjectId AS JuridicalId
                               , ObjectLink_Partner.ChildObjectId   AS PartnerId

@@ -2,19 +2,22 @@
 
 --DROP FUNCTION IF EXISTS gpReport_RemainsOverGoods_To (Integer, TDateTime, TFloat, TFloat, TFloat, Boolean, Boolean, Boolean, Boolean, Boolean, TVarChar);
 DROP FUNCTION IF EXISTS gpReport_RemainsOverGoods_To (Integer, TDateTime, TFloat, TFloat, TFloat, Boolean, Boolean, Boolean, Boolean, TVarChar);
-DROP FUNCTION IF EXISTS gpReport_RemainsOverGoods_To (Integer, TDateTime, TFloat, TFloat, TFloat, Boolean, Boolean, Boolean, Boolean, Boolean, TVarChar);
+--DROP FUNCTION IF EXISTS gpReport_RemainsOverGoods_To (Integer, TDateTime, TFloat, TFloat, TFloat, Boolean, Boolean, Boolean, Boolean, Boolean, TVarChar);
+DROP FUNCTION IF EXISTS gpReport_RemainsOverGoods_To (Integer, TDateTime, TFloat, TFloat, TFloat, TFloat, Boolean, Boolean, Boolean, Boolean, Boolean, Boolean, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpReport_RemainsOverGoods_To(
     IN inUnitId           Integer  ,  -- Подразделение
     IN inStartDate        TDateTime,  -- Дата остатка
     IN inPeriod           TFloat,     -- Кол-во дней для анализа НТЗ
     IN inDay              TFloat,     -- Страховой запас НТЗ для Х дней
+    IN inDayListDiff      TFloat,     -- Х дней из Не перемещать товар из Листа Отказа за посл. Х дней
     IN inAssortment       TFloat,     -- кол-во для ассортимента
     IN inisMCS            Boolean,    -- для аптеки-отправителя изпользовать НТЗ из справочника
     IN inisInMCS          Boolean,    -- для аптек-получателей изпользовать НТЗ из справочника
     IN inisRecal          Boolean,    -- Да / нет - "Временно исправлются ошибки с датами в ценах"
     IN inisAssortment     Boolean,    -- оставить кол-во для ассортимента Да / нет
     IN inIsReserve        Boolean  ,  --  Учитывать отложенный товар Да/Нет
+    IN inisDayListDiff    Boolean  ,  -- Не перемещать товар из Листа Отказа за посл. Х дней
     --IN inisTo             Boolean,    -- перемещение "НА" выбраное подразделение со всех аптек (Да/нет) (в противном случае С выбранного подразделения)
     IN inSession          TVarChar    -- сессия пользователя
 )
@@ -80,7 +83,7 @@ BEGIN
     -- Таблицы
     CREATE TEMP TABLE tmpGoods_list (GoodsMainId Integer,GoodsId Integer, UnitId Integer, PriceId Integer, MCSValue TFloat, PRIMARY KEY (UnitId, GoodsId)) ON COMMIT DROP;
     CREATE TEMP TABLE tmpRemains_1 (GoodsId Integer, UnitId Integer, RemainsStart TFloat, ContainerId Integer, PRIMARY KEY (UnitId, GoodsId,ContainerId)) ON COMMIT DROP;
-    CREATE TEMP TABLE tmpRemains (GoodsId Integer, UnitId Integer, RemainsStart TFloat, RemainsStart_save TFloat, MinExpirationDate TDateTime, PRIMARY KEY (UnitId, GoodsId)) ON COMMIT DROP;
+    CREATE TEMP TABLE tmpRemains (GoodsId Integer, UnitId Integer, RemainsStart TFloat, RemainsStart_save TFloat, ListDiffAmount TFloat, MinExpirationDate TDateTime, PRIMARY KEY (UnitId, GoodsId)) ON COMMIT DROP;
     CREATE TEMP TABLE tmpMCS (GoodsId Integer, UnitId Integer, MCSValue TFloat, PRIMARY KEY (UnitId, GoodsId)) ON COMMIT DROP;
     CREATE TEMP TABLE tmpMIMaster (UnitId Integer, GoodsId Integer, Amount TFloat, Summa TFloat, InvNumber TVarChar, MovementId Integer, MIMaster_Id Integer, PRIMARY KEY (MovementId, MIMaster_Id, GoodsId, UnitId)) ON COMMIT DROP;
     CREATE TEMP TABLE tmpMIChild (UnitId Integer, GoodsMainId Integer, GoodsId Integer, Amount TFloat, Summa TFloat, MIChild_Id Integer, PRIMARY KEY (MIChild_Id, UnitId,GoodsId)) ON COMMIT DROP;
@@ -98,7 +101,7 @@ BEGIN
                              , RemainsStart TFloat, SummaRemainsStart TFloat
                              , RemainsMCS_from TFloat, SummaRemainsMCS_from TFloat
                              , RemainsMCS_to TFloat, SummaRemainsMCS_to TFloat
-                             , AmountSend TFloat, Amount_Reserve TFloat
+                             , AmountSend TFloat, Amount_Reserve TFloat, AmountListDiff TFloat
                              , isClose Boolean
                              , PRIMARY KEY (UnitId, GoodsId)
                               ) ON COMMIT DROP;
@@ -183,6 +186,38 @@ BEGIN
           ;
 ------------------------------------------------
 
+     -- Данные из док. отказов
+     CREATE TEMP TABLE tmpListDiff (UnitId Integer, GoodsId Integer, Amount TFloat) ON COMMIT DROP;
+       INSERT INTO tmpListDiff (UnitId, GoodsId, Amount)
+              WITH    
+                  -- документы отказа
+                  tmpListDifMov AS (SELECT Movement.Id
+                                         , MovementLinkObject_Unit.ObjectId AS UnitId
+                                    FROM Movement
+                                         LEFT JOIN MovementLinkObject AS MovementLinkObject_Unit
+                                                                       ON MovementLinkObject_Unit.MovementId = Movement.Id
+                                                                      AND MovementLinkObject_UNit.DescId = zc_MovementLinkObject_Unit()
+                                         
+                                         INNER JOIN tmpUnit_list ON tmpUnit_list.UnitId = MovementLinkObject_Unit.ObjectId
+                                    WHERE Movement.DescId = zc_Movement_ListDiff() 
+                                      AND Movement.StatusId <> zc_Enum_Status_Erased()
+                                      AND Movement.OperDate >= inStartDate - (''||inDayListDiff||' DAY')::INTERVAL
+                                      AND Movement.OperDate <= inStartDate
+                                      AND inisDayListDiff = TRUE
+                                   )
+     -- строки документа отказ
+     SELECT tmpListDifMov.UnitId
+          , MovementItem.ObjectId       AS GoodsId
+          , SUM (MovementItem.Amount)   AS Amount
+     FROM tmpListDifMov
+          INNER JOIN MovementItem ON MovementItem.MovementId = tmpListDifMov.Id
+                                 AND MovementItem.DescId     = zc_MI_Master()
+                                 AND MovementItem.isErased   = FALSE
+                                 AND COALESCE (MovementItem.Amount,0) > 0
+     GROUP BY tmpListDifMov.UnitId
+            , MovementItem.ObjectId;
+     --------------------------------------------
+
       -- Remains
        INSERT INTO tmpRemains_1 (GoodsId, UnitId, RemainsStart, ContainerId)
                               SELECT Container.Objectid      AS GoodsId
@@ -243,7 +278,7 @@ BEGIN
                        ;
 
        -- остатки
-       INSERT INTO tmpRemains (GoodsId, UnitId, RemainsStart, RemainsStart_save, MinExpirationDate)                              
+       INSERT INTO tmpRemains (GoodsId, UnitId, RemainsStart, RemainsStart_save, ListDiffAmount, MinExpirationDate)                              
                          WITH tmp AS
                         (SELECT tmp.GoodsId
                               , tmp.UnitId
@@ -264,11 +299,16 @@ BEGIN
                               - CASE WHEN inisAssortment = TRUE AND tmp.UnitId <> inUnitId
                                           THEN inAssortment
                                      ELSE 0
-                                END                                             AS RemainsStart
+                                END
+                              --если стоит галочка Не перемещать товар из Листа Отказа за посл. Х дней снимаем это колво с остатка
+                              - COALESCE (tmpListDiff.Amount,0)                 AS RemainsStart
+
                               , tmp.RemainsStart                                AS RemainsStart_save
+                              , COALESCE (tmpListDiff.Amount,0)                 AS ListDiffAmount
                               , tmp.MinExpirationDate
                          FROM tmp
                               LEFT JOIN tmpSend ON tmpSend.GoodsId = tmp.GoodsId AND tmpSend.UnitId = tmp.UnitId --AND tmpSend.UnitId = inUnitId
+                              LEFT JOIN tmpListDiff ON tmpListDiff.GoodsId = tmp.GoodsId AND tmpListDiff.UnitId = tmp.UnitId
                         UNION
                          SELECT tmpSend.GoodsId
                               , tmpSend.UnitId
@@ -278,6 +318,7 @@ BEGIN
                                      ELSE 0
                                 END                          AS RemainsStart
                               , 0                            AS RemainsStart_save
+                              , 0                            AS ListDiffAmount
                               , NULL                         AS MinExpirationDate
                          FROM tmpSend
                               LEFT JOIN tmp ON tmp.GoodsId = tmpSend.GoodsId AND tmp.UnitId = tmpSend.UnitId
@@ -392,6 +433,7 @@ BEGIN
                             , RemainsMCS_from, SummaRemainsMCS_from
                             , RemainsMCS_to, SummaRemainsMCS_to
                             , AmountSend, Amount_Reserve
+                            , AmountListDiff
                             , isClose
                              )
         WITH 
@@ -525,6 +567,7 @@ BEGIN
 
                , Object_Send.Amount               AS AmountSend
                , COALESCE (tmpReserve.Amount, 0)  AS Amount_Reserve
+               , COALESCE (Object_Remains.ListDiffAmount,0) AS AmountListDiff
 --               , Object_Send.Amount_To     AS AmountSend_To
                , COALESCE (ObjectBoolean_Goods_Close.ValueData, FALSE) :: Boolean AS isClose
 
@@ -672,6 +715,7 @@ BEGIN
              , (COALESCE (tmpDataTo.RemainsMCS_result, 0) - COALESCE (tmpMIChild.Amount, 0)) :: TFloat AS Amount_OverDiff
              , tmpData.AmountSend              :: TFloat  AS AmountSend
              , tmpData.Amount_Reserve          :: TFloat  AS Amount_Reserve
+             , tmpData.AmountListDiff          :: TFloat  AS AmountListDiff
 
              , tmpData.isClose                 :: Boolean
              , CASE WHEN COALESCE(GoodsPromo.GoodsId,0) <> 0 THEN TRUE ELSE FALSE END :: Boolean AS isPromo
@@ -751,6 +795,7 @@ BEGIN
 
                , (tmpData.AmountSend *(-1))    :: TFloat  AS AmountSend
                , tmpData.Amount_Reserve        :: TFloat  AS Amount_Reserve
+               , tmpData.AmountListDiff        :: TFloat  AS AmountListDiff
  
                , tmpData.GoodsId
                , tmpData.GoodsMainId

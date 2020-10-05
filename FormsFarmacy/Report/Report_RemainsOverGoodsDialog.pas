@@ -60,6 +60,8 @@ type
     cbSummSend: TcxCheckBox;
     edSummSend: TcxCurrencyEdit;
     cbSendAll: TcxCheckBox;
+    cbDayListDiff: TcxCheckBox;
+    edDayListDiff: TcxCurrencyEdit;
   private
     { Private declarations }
   public
