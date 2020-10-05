@@ -80,6 +80,8 @@ object MemberBranchEditForm: TMemberBranchEditForm
     Style.Font.Height = -11
     Style.Font.Name = 'Tahoma'
     Style.Font.Style = [fsBold]
+    Style.TextColor = clWindowText
+    Style.TextStyle = []
     Style.IsFontAssigned = True
     TabOrder = 6
     Width = 275
