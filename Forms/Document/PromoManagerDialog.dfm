@@ -3,8 +3,8 @@ object PromoManagerDialogForm: TPromoManagerDialogForm
   Top = 0
   BorderStyle = bsDialog
   Caption = #1055#1086#1076#1090#1074#1077#1088#1076#1080#1090#1100' '#1089#1086#1089#1090#1086#1103#1085#1080#1077' '#1040#1082#1094#1080#1080
-  ClientHeight = 212
-  ClientWidth = 357
+  ClientHeight = 218
+  ClientWidth = 799
   Color = clBtnFace
   Font.Charset = DEFAULT_CHARSET
   Font.Color = clWindowText
@@ -13,6 +13,7 @@ object PromoManagerDialogForm: TPromoManagerDialogForm
   Font.Style = []
   KeyPreview = True
   OldCreateOrder = False
+  AddOnFormData.RefreshAction = actRefresh
   AddOnFormData.isSingle = False
   AddOnFormData.Params = FormParams
   PixelsPerInch = 96
@@ -70,6 +71,111 @@ object PromoManagerDialogForm: TPromoManagerDialogForm
     Height = 104
     Width = 311
   end
+  object cxGridPromoStateKind: TcxGrid
+    Left = 357
+    Top = 0
+    Width = 442
+    Height = 218
+    Align = alRight
+    TabOrder = 6
+    ExplicitLeft = 560
+    ExplicitHeight = 785
+    object cxGridDBTableViewPromoStateKind: TcxGridDBTableView
+      Navigator.Buttons.CustomButtons = <>
+      DataController.DataSource = PromoStateKindDS
+      DataController.Filter.Options = [fcoCaseInsensitive]
+      DataController.Summary.DefaultGroupSummaryItems = <>
+      DataController.Summary.FooterSummaryItems = <>
+      DataController.Summary.SummaryGroups = <>
+      Images = dmMain.SortImageList
+      OptionsBehavior.GoToNextCellOnEnter = True
+      OptionsBehavior.IncSearch = True
+      OptionsBehavior.FocusCellOnCycle = True
+      OptionsCustomize.ColumnHiding = True
+      OptionsCustomize.ColumnsQuickCustomization = True
+      OptionsCustomize.DataRowSizing = True
+      OptionsData.Deleting = False
+      OptionsData.DeletingConfirmation = False
+      OptionsData.Inserting = False
+      OptionsView.CellAutoHeight = True
+      OptionsView.GroupByBox = False
+      OptionsView.GroupSummaryLayout = gslAlignWithColumns
+      OptionsView.HeaderAutoHeight = True
+      OptionsView.Indicator = True
+      Styles.StyleSheet = dmMain.cxGridTableViewStyleSheet
+      object psOrd: TcxGridDBColumn
+        Caption = #8470' '#1087'.'#1087'.'
+        DataBinding.FieldName = 'Ord'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Options.Editing = False
+        Width = 54
+      end
+      object psPromoStateKindName: TcxGridDBColumn
+        Caption = #1057#1086#1089#1090#1086#1103#1085#1080#1077
+        DataBinding.FieldName = 'PromoStateKindName'
+        PropertiesClassName = 'TcxButtonEditProperties'
+        Properties.Buttons = <
+          item
+            Default = True
+            Kind = bkEllipsis
+          end>
+        Properties.ReadOnly = True
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Width = 217
+      end
+      object psComment: TcxGridDBColumn
+        Caption = #1055#1088#1080#1084#1077#1095#1072#1085#1080#1077
+        DataBinding.FieldName = 'Comment'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Width = 154
+      end
+      object psInsertName: TcxGridDBColumn
+        Caption = #1055#1086#1083#1100#1079#1086#1074#1072#1090#1077#1083#1100' ('#1089#1086#1079#1076'.)'
+        DataBinding.FieldName = 'InsertName'
+        Visible = False
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Options.Editing = False
+        VisibleForCustomization = False
+        Width = 142
+      end
+      object psInsertDate: TcxGridDBColumn
+        Caption = #1044#1072#1090#1072' / '#1074#1088#1077#1084#1103' ('#1089#1086#1079#1076'.)'
+        DataBinding.FieldName = 'InsertDate'
+        Visible = False
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Options.Editing = False
+        VisibleForCustomization = False
+        Width = 168
+      end
+      object psisQuickly: TcxGridDBColumn
+        Caption = #1055#1088#1080#1086#1088#1080#1090#1077#1090
+        DataBinding.FieldName = 'isQuickly'
+        Visible = False
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        HeaderHint = #1057#1088#1086#1095#1085#1086' ('#1044#1072'/'#1053#1077#1090')'
+        VisibleForCustomization = False
+        Width = 70
+      end
+      object psIsErased: TcxGridDBColumn
+        Caption = #1059#1076#1072#1083#1077#1085
+        DataBinding.FieldName = 'isErased'
+        Visible = False
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Options.Editing = False
+        Width = 294
+      end
+    end
+    object cxGridLevel4: TcxGridLevel
+      GridView = cxGridDBTableViewPromoStateKind
+    end
+  end
   object dsdUserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn
     Left = 188
     Top = 55
@@ -117,7 +223,83 @@ object PromoManagerDialogForm: TPromoManagerDialogForm
         ParamType = ptInputOutput
         MultiSelectSeparator = ','
       end>
-    Left = 263
-    Top = 71
+    Left = 279
+    Top = 103
+  end
+  object PromoStateKindDS: TDataSource
+    DataSet = PromoStateKindDCS
+    Left = 632
+    Top = 88
+  end
+  object PromoStateKindDCS: TClientDataSet
+    Aggregates = <>
+    FilterOptions = [foCaseInsensitive]
+    Params = <>
+    Left = 600
+    Top = 56
+  end
+  object dsdDBViewAddOnPromoStateKind: TdsdDBViewAddOn
+    ErasedFieldName = 'isErased'
+    View = cxGridDBTableViewPromoStateKind
+    OnDblClickActionList = <
+      item
+      end>
+    ActionItemList = <
+      item
+      end>
+    SortImages = dmMain.SortImageList
+    OnlyEditingCellOnEnter = False
+    ColorRuleList = <>
+    ColumnAddOnList = <>
+    ColumnEnterList = <>
+    SummaryItemList = <>
+    PropertiesCellList = <>
+    Left = 752
+    Top = 63
+  end
+  object spSelectMIPromoStateKind: TdsdStoredProc
+    StoredProcName = 'gpSelect_MI_Message_PromoStateKind_byDialog'
+    DataSet = PromoStateKindDCS
+    DataSets = <
+      item
+        DataSet = PromoStateKindDCS
+      end>
+    Params = <
+      item
+        Name = 'inMovementId'
+        Value = Null
+        Component = FormParams
+        ComponentItem = 'MovementId'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inIsErased'
+        Value = False
+        DataType = ftBoolean
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end>
+    PackSize = 1
+    Left = 688
+    Top = 40
+  end
+  object ActionList: TActionList
+    Images = dmMain.ImageList
+    Left = 191
+    Top = 127
+    object actRefresh: TdsdDataSetRefresh
+      Category = 'DSDLib'
+      MoveParams = <>
+      StoredProc = spSelectMIPromoStateKind
+      StoredProcList = <
+        item
+          StoredProc = spSelectMIPromoStateKind
+        end>
+      Caption = #1055#1077#1088#1077#1095#1080#1090#1072#1090#1100
+      Hint = #1054#1073#1085#1086#1074#1080#1090#1100' '#1076#1072#1085#1085#1099#1077
+      ImageIndex = 4
+      RefreshOnTabSetChanges = False
+    end
   end
 end
