@@ -12,7 +12,7 @@ AS
 $BODY$      
 BEGIN
     RETURN QUERY
-        SELECT Min(Id) AS Min_Id, Max(id) AS Max_Id, Count(*) as RecCount 
+        SELECT Min(Id) AS Min_Id, Max(id) AS Max_Id, Count(Id) as RecCount 
         FROM   _replica.table_update_data;
 END;
 $BODY$
