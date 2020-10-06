@@ -845,7 +845,7 @@ BEGIN
                               INNER JOIN ObjectDate AS ObjectDate_Month
                                                    ON ObjectDate_Month.ObjectId = Object_ReportBonus.Id
                                                   AND ObjectDate_Month.DescId = zc_Object_ReportBonus_Month()
-                                                  AND ObjectDate_Month.ValueData =  DATE_TRUNC ('Month', inEndDate)
+                                                  AND ObjectDate_Month.ValueData =  DATE_TRUNC ('MONTH', inEndDate)
                               LEFT JOIN ObjectLink AS ObjectLink_Juridical
                                                    ON ObjectLink_Juridical.ObjectId = Object_ReportBonus.Id
                                                   AND ObjectLink_Juridical.DescId = zc_ObjectLink_ReportBonus_Juridical()
@@ -854,10 +854,7 @@ BEGIN
                                                   AND ObjectLink_Partner.DescId = zc_ObjectLink_ReportBonus_Partner()
                          WHERE Object_ReportBonus.DescId   = zc_Object_ReportBonus()
                            AND inPaidKindID                = zc_Enum_PaidKind_SecondForm()
-                           AND Object_ReportBonus.isErased = FALSE
-                         GROUP BY ObjectLink_Juridical.ChildObjectId
-                                , ObjectLink_Partner.ChildObjectId
-                                , Object_ReportBonus.isErased
+                         --AND Object_ReportBonus.isErased = TRUE
                          )
       SELECT  tmpMovementParams.OperDate        :: TDateTime AS OperDate_Movement
             , tmpMovementParams.OperDatePartner :: TDateTime AS OperDatePartner

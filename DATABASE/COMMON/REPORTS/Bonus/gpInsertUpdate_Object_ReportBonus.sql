@@ -7,8 +7,8 @@ CREATE OR REPLACE FUNCTION gpInsertUpdate_Object_ReportBonus(
     IN inMonth               TDateTime , --
     IN inJuridicalId         Integer   , --
     IN inPartnerId           Integer   , --
-    IN inisSend              Boolean   , -- Отмечен
-   OUT outisSend             Boolean   , -- Отмечен
+    IN inIsSend              Boolean   , -- Отмечен
+   OUT outIsSend             Boolean   , -- Отмечен
     IN inSession             TVarChar    -- сессия пользователя
 )
 RETURNS RECORD
@@ -19,7 +19,7 @@ BEGIN
      -- проверка прав пользователя на вызов процедуры
     vbUserId:= lpGetUserBySession (inSession);
 
-    outisSend := inisSend;
+    outIsSend := inIsSend;
     
     --пробуем найти, вдруг уже есть элемент
     IF COALESCE (ioId,0) = 0
@@ -64,26 +64,26 @@ BEGIN
         END IF;
     END IF;
     
-    --Если isSend =True и до этого был сохранен - нужно установить отметку на удаление = true
-    IF COALESCE (ioId,0) <> 0 AND inisSend = True
+    -- Если isSend = TRUE, удалеяем из списка тех, кого переносить НЕ надо, т.е. будет isErased = TRUE
+    IF COALESCE (ioId, 0) <> 0 AND inIsSend = TRUE
     THEN 
         UPDATE Object SET isErased = TRUE WHERE Object.Id = ioId AND Object.DescId = zc_Object_ReportBonus();
     END IF;
 
-    --если isSend =False - и такой элемент уже есть ставим отметку на удаление = false
-    IF COALESCE (ioId,0) <> 0 AND inisSend = False
+    -- Если isSend = FALSE и такой элемент есть, восстанавливаем в списке тех, кого переносить НЕ надо, т.е. будет isErased = FALSE
+    IF COALESCE (ioId,0) <> 0 AND inIsSend = FALSE
     THEN 
-        UPDATE Object SET isErased = False WHERE Object.Id = ioId AND Object.DescId = zc_Object_ReportBonus();
+        UPDATE Object SET isErased = FALSE WHERE Object.Id = ioId AND Object.DescId = zc_Object_ReportBonus();
     END IF;
     
-    --если isSend =False - и такой элемент еще не сохранен нужно его сохранить
-    IF COALESCE (ioId,0) = 0 AND inisSend = False
+    -- если isSend = FALSE - и это новый элемент, сохраняем в списке тех, кого переносить НЕ надо
+    IF COALESCE (ioId, 0) = 0 AND inIsSend = FALSE
     THEN
          -- сохранили <Объект>
          ioId := lpInsertUpdate_Object (ioId, zc_Object_ReportBonus(), 0, '');
          
          -- сохранили свойство <>
-         PERFORM lpInsertUpdate_ObjectDate (zc_Object_ReportBonus_Month(), ioId, DATE_TRUNC ('Month',inMonth) );
+         PERFORM lpInsertUpdate_ObjectDate (zc_Object_ReportBonus_Month(), ioId, DATE_TRUNC ('MONTH', inMonth));
 
          -- сохранили связь с <Юридическое лицо>
          PERFORM lpInsertUpdate_ObjectLink (zc_ObjectLink_ReportBonus_Juridical(), ioId, inJuridicalId);
@@ -91,6 +91,14 @@ BEGIN
          PERFORM lpInsertUpdate_ObjectLink (zc_ObjectLink_ReportBonus_Partner(), ioId, inPartnerId);
 
     END IF;
+    
+
+    IF ioId > 0
+    THEN
+        -- сохранили протокол
+        PERFORM lpInsert_ObjectProtocol (ioId, vbUserId);
+    END IF;
+
   
 END;
 $BODY$
