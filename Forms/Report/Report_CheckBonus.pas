@@ -45,7 +45,7 @@ type
     InvNumber_find: TcxGridDBColumn;
     InfoMoneyName_child: TcxGridDBColumn;
     InfoMoneyName_find: TcxGridDBColumn;
-    dxBarButton1: TdxBarButton;
+    bbDocBonus: TdxBarButton;
     actDocBonus: TdsdExecStoredProc;
     spInsertUpdate: TdsdStoredProc;
     Sum_CheckBonusFact: TcxGridDBColumn;

@@ -3,8 +3,9 @@ inherited Report_CheckBonusTestForm: TReport_CheckBonusTestForm
   ClientHeight = 341
   ClientWidth = 1180
   AddOnFormData.ExecuteDialogAction = ExecuteDialog
+  ExplicitLeft = -390
   ExplicitWidth = 1196
-  ExplicitHeight = 379
+  ExplicitHeight = 376
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
@@ -164,6 +165,7 @@ inherited Report_CheckBonusTestForm: TReport_CheckBonusTestForm
             DataBinding.FieldName = 'InvNumber_child'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
+            Options.Editing = False
             Width = 60
           end
           object InvNumber_find: TcxGridDBColumn
@@ -171,24 +173,28 @@ inherited Report_CheckBonusTestForm: TReport_CheckBonusTestForm
             DataBinding.FieldName = 'InvNumber_find'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
+            Options.Editing = False
             Width = 85
           end
           object BranchName: TcxGridDBColumn
             Caption = #1060#1080#1083#1080#1072#1083
             DataBinding.FieldName = 'BranchName'
             HeaderAlignmentVert = vaCenter
+            Options.Editing = False
             Width = 104
           end
           object JuridicalName: TcxGridDBColumn
             Caption = #1070#1088#1080#1076#1080#1095#1077#1089#1082#1086#1077' '#1083#1080#1094#1086
             DataBinding.FieldName = 'JuridicalName'
             HeaderAlignmentVert = vaCenter
+            Options.Editing = False
             Width = 104
           end
           object ConditionKindName: TcxGridDBColumn
             Caption = #1059#1089#1083#1086#1074#1080#1077' '#1076#1086#1075#1086#1074#1086#1088#1072
             DataBinding.FieldName = 'ConditionKindName'
             HeaderAlignmentVert = vaCenter
+            Options.Editing = False
             Width = 75
           end
           object Value: TcxGridDBColumn
@@ -223,23 +229,29 @@ inherited Report_CheckBonusTestForm: TReport_CheckBonusTestForm
             DataBinding.FieldName = 'BonusKindName'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
+            Options.Editing = False
             Width = 50
           end
           object InfoMoneyName_master: TcxGridDBColumn
             Caption = #1059#1055' '#1089#1090#1072#1090#1100#1103' '#1085#1072#1079#1085#1072#1095#1077#1085#1080#1103
             DataBinding.FieldName = 'InfoMoneyName_master'
             HeaderAlignmentVert = vaCenter
+            Options.Editing = False
             Width = 89
           end
           object InfoMoneyName_child: TcxGridDBColumn
             Caption = #1059#1055' '#1089#1090#1072#1090#1100#1103' '#1085#1072#1079#1085#1072#1095#1077#1085#1080#1103' ('#1073#1072#1079#1072')'
             DataBinding.FieldName = 'InfoMoneyName_child'
             Visible = False
+            Options.Editing = False
             Width = 80
           end
           object InfoMoneyName_find: TcxGridDBColumn
             Caption = #1059#1055' '#1089#1090#1072#1090#1100#1103' '#1085#1072#1079#1085#1072#1095#1077#1085#1080#1103' ('#1085#1072#1095#1080#1089#1083#1077#1085#1080#1077')'
             DataBinding.FieldName = 'InfoMoneyName_find'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
             Width = 151
           end
           object PaidKindName: TcxGridDBColumn
@@ -296,6 +308,7 @@ inherited Report_CheckBonusTestForm: TReport_CheckBonusTestForm
             Properties.ReadOnly = True
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
+            Options.Editing = False
             Width = 80
           end
           object Sum_SaleReturnIn: TcxGridDBColumn
@@ -309,6 +322,7 @@ inherited Report_CheckBonusTestForm: TReport_CheckBonusTestForm
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             HeaderHint = #1055#1088#1086#1076#1072#1078#1072' - '#1074#1086#1079#1074#1088#1072#1090
+            Options.Editing = False
             Width = 80
           end
           object Sum_Account: TcxGridDBColumn
@@ -321,6 +335,7 @@ inherited Report_CheckBonusTestForm: TReport_CheckBonusTestForm
             Visible = False
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
+            Options.Editing = False
             Width = 80
           end
           object Sum_Bonus: TcxGridDBColumn
@@ -332,6 +347,7 @@ inherited Report_CheckBonusTestForm: TReport_CheckBonusTestForm
             Properties.ReadOnly = True
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
+            Options.Editing = False
             Width = 80
           end
           object Sum_BonusFact: TcxGridDBColumn
@@ -343,6 +359,7 @@ inherited Report_CheckBonusTestForm: TReport_CheckBonusTestForm
             Properties.ReadOnly = True
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
+            Options.Editing = False
             Width = 80
           end
           object Sum_CheckBonusFact: TcxGridDBColumn
@@ -353,6 +370,7 @@ inherited Report_CheckBonusTestForm: TReport_CheckBonusTestForm
             Properties.DisplayFormat = ',0.####;-,0.####; ;'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
+            Options.Editing = False
             Width = 80
           end
           object Sum_SaleFact: TcxGridDBColumn
@@ -363,6 +381,7 @@ inherited Report_CheckBonusTestForm: TReport_CheckBonusTestForm
             Properties.DisplayFormat = ',0.####;-,0.####; ;'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
+            Options.Editing = False
             Width = 80
           end
           object Comment: TcxGridDBColumn
@@ -370,6 +389,7 @@ inherited Report_CheckBonusTestForm: TReport_CheckBonusTestForm
             DataBinding.FieldName = 'Comment'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
+            Options.Editing = False
             Width = 90
           end
           object DescName_Movement: TcxGridDBColumn
@@ -377,6 +397,7 @@ inherited Report_CheckBonusTestForm: TReport_CheckBonusTestForm
             DataBinding.FieldName = 'DescName_Movement'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
+            Options.Editing = False
             Width = 80
           end
           object InvNumber_Movement: TcxGridDBColumn
@@ -384,6 +405,7 @@ inherited Report_CheckBonusTestForm: TReport_CheckBonusTestForm
             DataBinding.FieldName = 'InvNumber_Movement'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
+            Options.Editing = False
             Width = 73
           end
           object OperDate_Movement: TcxGridDBColumn
@@ -391,7 +413,15 @@ inherited Report_CheckBonusTestForm: TReport_CheckBonusTestForm
             DataBinding.FieldName = 'OperDate_Movement'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
+            Options.Editing = False
             Width = 70
+          end
+          object isSend: TcxGridDBColumn
+            Caption = #1055#1077#1088#1077#1085#1077#1089#1090#1080' '#1076#1072#1085#1085#1099#1077' '#1074' '#1078#1091#1088#1085#1072#1083' '#1044#1072'/'#1053#1077#1090
+            DataBinding.FieldName = 'isSend'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 80
           end
         end
       end
@@ -839,6 +869,108 @@ inherited Report_CheckBonusTestForm: TReport_CheckBonusTestForm
         end>
       isShowModal = False
     end
+    object actUpdateDataSet: TdsdUpdateDataSet
+      Category = 'DSDLib'
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      StoredProc = spUpdateSend
+      StoredProcList = <
+        item
+          StoredProc = spUpdateSend
+        end>
+      Caption = 'actUpdateDataSet'
+      DataSource = MasterDS
+    end
+    object actUpdateSend_No: TdsdExecStoredProc
+      Category = 'DSDLib'
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      StoredProc = spUpdateSend_No
+      StoredProcList = <
+        item
+          StoredProc = spUpdateSend_No
+        end>
+      Caption = #1055#1077#1088#1077#1085#1077#1089#1090#1080' '#1076#1072#1085#1085#1099#1077' '#1074' '#1078#1091#1088#1085#1072#1083' - '#1053#1077#1090
+      Hint = #1055#1077#1088#1077#1085#1077#1089#1090#1080' '#1076#1072#1085#1085#1099#1077' '#1074' '#1078#1091#1088#1085#1072#1083' - '#1053#1077#1090
+      ImageIndex = 77
+    end
+    object actUpdateSend_Yes: TdsdExecStoredProc
+      Category = 'DSDLib'
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      StoredProc = spUpdateSend_Yes
+      StoredProcList = <
+        item
+          StoredProc = spUpdateSend_Yes
+        end>
+      Caption = #1055#1077#1088#1077#1085#1077#1089#1090#1080' '#1076#1072#1085#1085#1099#1077' '#1074' '#1078#1091#1088#1085#1072#1083' - '#1044#1072
+      Hint = #1055#1077#1088#1077#1085#1077#1089#1090#1080' '#1076#1072#1085#1085#1099#1077' '#1074' '#1078#1091#1088#1085#1072#1083' - '#1044#1072
+      ImageIndex = 76
+    end
+    object macUpdateSend_Yes: TMultiAction
+      Category = 'DSDLib'
+      MoveParams = <>
+      ActionList = <
+        item
+          Action = actUpdateSend_Yes
+        end>
+      View = cxGridDBTableView
+      QuestionBeforeExecute = #1059#1089#1090#1072#1085#1086#1074#1080#1090#1100' '#1042#1057#1045#1052' '#1079#1085#1072#1095#1077#1085#1080#1077' '#1055#1077#1088#1077#1085#1077#1089#1090#1080' '#1076#1072#1085#1085#1099#1077' '#1074' '#1078#1091#1088#1085#1072#1083' - '#1044#1072'?'
+      Caption = #1059#1089#1090#1072#1085#1086#1074#1080#1090#1100' '#1042#1057#1045#1052' '#1079#1085#1072#1095#1077#1085#1080#1077' '#1055#1077#1088#1077#1085#1077#1089#1090#1080' '#1076#1072#1085#1085#1099#1077' '#1074' '#1078#1091#1088#1085#1072#1083' - '#1044#1072
+      Hint = #1059#1089#1090#1072#1085#1086#1074#1080#1090#1100' '#1042#1057#1045#1052' '#1079#1085#1072#1095#1077#1085#1080#1077' '#1055#1077#1088#1077#1085#1077#1089#1090#1080' '#1076#1072#1085#1085#1099#1077' '#1074' '#1078#1091#1088#1085#1072#1083' - '#1044#1072
+      ImageIndex = 76
+    end
+    object macUpdateSend_No: TMultiAction
+      Category = 'DSDLib'
+      MoveParams = <>
+      ActionList = <
+        item
+          Action = actUpdateSend_No
+        end>
+      View = cxGridDBTableView
+      QuestionBeforeExecute = #1059#1089#1090#1072#1085#1086#1074#1080#1090#1100' '#1042#1057#1045#1052' '#1079#1085#1072#1095#1077#1085#1080#1077' '#1055#1077#1088#1077#1085#1077#1089#1090#1080' '#1076#1072#1085#1085#1099#1077' '#1074' '#1078#1091#1088#1085#1072#1083' - '#1053#1077#1090'?'
+      Caption = #1059#1089#1090#1072#1085#1086#1074#1080#1090#1100' '#1042#1057#1045#1052' '#1079#1085#1072#1095#1077#1085#1080#1077' '#1055#1077#1088#1077#1085#1077#1089#1090#1080' '#1076#1072#1085#1085#1099#1077' '#1074' '#1078#1091#1088#1085#1072#1083' - '#1053#1077#1090
+      Hint = #1059#1089#1090#1072#1085#1086#1074#1080#1090#1100' '#1042#1057#1045#1052' '#1079#1085#1072#1095#1077#1085#1080#1077' '#1055#1077#1088#1077#1085#1077#1089#1090#1080' '#1076#1072#1085#1085#1099#1077' '#1074' '#1078#1091#1088#1085#1072#1083' - '#1053#1077#1090
+      ImageIndex = 77
+    end
+    object macInsertByReportGrid: TMultiAction
+      Category = 'DSDLib'
+      MoveParams = <>
+      ActionList = <
+        item
+          Action = actInsertByReportGrid
+        end>
+      QuestionBeforeExecute = 
+        #1044#1077#1081#1089#1090#1074#1080#1090#1077#1083#1100#1085#1086' '#1089#1092#1086#1088#1084#1080#1088#1086#1074#1072#1090#1100' '#1076#1086#1082#1091#1084#1077#1085#1090#1099' <'#1053#1072#1095#1080#1089#1083#1077#1085#1080#1103' '#1087#1086' '#1073#1086#1085#1091#1089#1072#1084' ('#1088#1072#1089 +
+        #1093#1086#1076#1099' '#1073#1091#1076#1091#1097#1080#1093' '#1087#1077#1088#1080#1086#1076#1086#1074')> '#1087#1086' '#1076#1072#1085#1085#1099#1084' '#1085#1072' '#1101#1082#1088#1072#1085#1077'?'
+      InfoAfterExecute = 
+        #1047#1072#1074#1077#1088#1096#1077#1085#1086' '#1092#1086#1088#1084#1080#1088#1086#1074#1072#1085#1080#1077' '#1076#1086#1082#1091#1084#1077#1085#1090#1086#1074' <'#1053#1072#1095#1080#1089#1083#1077#1085#1080#1103' '#1087#1086' '#1073#1086#1085#1091#1089#1072#1084' ('#1088#1072#1089#1093#1086#1076 +
+        #1099' '#1073#1091#1076#1091#1097#1080#1093' '#1087#1077#1088#1080#1086#1076#1086#1074')> '#1087#1086' '#1076#1072#1085#1085#1099#1084' '#1080#1079' '#1075#1088#1080#1076#1072'.'
+      Caption = 
+        #1057#1092#1086#1088#1084#1080#1088#1086#1074#1072#1090#1100' '#1076#1086#1082#1091#1084#1077#1085#1090#1099' <'#1053#1072#1095#1080#1089#1083#1077#1085#1080#1103' '#1087#1086' '#1073#1086#1085#1091#1089#1072#1084' ('#1088#1072#1089#1093#1086#1076#1099' '#1073#1091#1076#1091#1097#1080#1093' '#1087 +
+        #1077#1088#1080#1086#1076#1086#1074')> '#1080#1079' '#1075#1088#1080#1076#1072
+      Hint = 
+        #1057#1092#1086#1088#1084#1080#1088#1086#1074#1072#1090#1100' '#1076#1086#1082#1091#1084#1077#1085#1090#1099' <'#1053#1072#1095#1080#1089#1083#1077#1085#1080#1103' '#1087#1086' '#1073#1086#1085#1091#1089#1072#1084' ('#1088#1072#1089#1093#1086#1076#1099' '#1073#1091#1076#1091#1097#1080#1093' '#1087 +
+        #1077#1088#1080#1086#1076#1086#1074')> '#1080#1079' '#1075#1088#1080#1076#1072
+      ImageIndex = 27
+    end
+    object actInsertByReportGrid: TdsdExecStoredProc
+      Category = 'DSDLib'
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      StoredProc = spInsertByReportGrid
+      StoredProcList = <
+        item
+          StoredProc = spInsertByReportGrid
+        end>
+      Caption = 
+        #1057#1092#1086#1088#1084#1080#1088#1086#1074#1072#1090#1100' '#1076#1086#1082#1091#1084#1077#1085#1090#1099' <'#1053#1072#1095#1080#1089#1083#1077#1085#1080#1103' '#1087#1086' '#1073#1086#1085#1091#1089#1072#1084' ('#1088#1072#1089#1093#1086#1076#1099' '#1073#1091#1076#1091#1097#1080#1093' '#1087 +
+        #1077#1088#1080#1086#1076#1086#1074')> '#1080#1079' '#1075#1088#1080#1076#1072
+      Hint = 
+        #1057#1092#1086#1088#1084#1080#1088#1086#1074#1072#1090#1100' '#1076#1086#1082#1091#1084#1077#1085#1090#1099' <'#1053#1072#1095#1080#1089#1083#1077#1085#1080#1103' '#1087#1086' '#1073#1086#1085#1091#1089#1072#1084' ('#1088#1072#1089#1093#1086#1076#1099' '#1073#1091#1076#1091#1097#1080#1093' '#1087 +
+        #1077#1088#1080#1086#1076#1086#1074')> '#1080#1079' '#1075#1088#1080#1076#1072
+      ImageIndex = 27
+    end
   end
   inherited MasterDS: TDataSource
     Left = 72
@@ -933,11 +1065,27 @@ inherited Report_CheckBonusTestForm: TReport_CheckBonusTestForm
         end
         item
           Visible = True
+          ItemName = 'bbUpdateSend_Yes'
+        end
+        item
+          Visible = True
+          ItemName = 'bbUpdateSend_No'
+        end
+        item
+          Visible = True
           ItemName = 'dxBarStatic'
         end
         item
           Visible = True
-          ItemName = 'dxBarButton1'
+          ItemName = 'bbInsertByReportGrid'
+        end
+        item
+          Visible = True
+          ItemName = 'dxBarStatic'
+        end
+        item
+          Visible = True
+          ItemName = 'bbDocBonus'
         end
         item
           Visible = True
@@ -972,7 +1120,7 @@ inherited Report_CheckBonusTestForm: TReport_CheckBonusTestForm
           ItemName = 'dxBarStatic'
         end>
     end
-    object dxBarButton1: TdxBarButton
+    object bbDocBonus: TdxBarButton
       Action = actDocBonus
       Category = 0
       ImageIndex = 28
@@ -987,6 +1135,18 @@ inherited Report_CheckBonusTestForm: TReport_CheckBonusTestForm
     end
     object bbOpenReportDetailForm: TdxBarButton
       Action = actOpenReportDetailForm
+      Category = 0
+    end
+    object bbUpdateSend_Yes: TdxBarButton
+      Action = macUpdateSend_Yes
+      Category = 0
+    end
+    object bbUpdateSend_No: TdxBarButton
+      Action = macUpdateSend_No
+      Category = 0
+    end
+    object bbInsertByReportGrid: TdxBarButton
+      Action = macInsertByReportGrid
       Category = 0
     end
   end
@@ -1184,5 +1344,224 @@ inherited Report_CheckBonusTestForm: TReport_CheckBonusTestForm
       end>
     Left = 525
     Top = 30
+  end
+  object spUpdateSend: TdsdStoredProc
+    StoredProcName = 'gpInsertUpdate_Object_ReportBonus'
+    DataSets = <>
+    OutputType = otResult
+    Params = <
+      item
+        Name = 'ioId'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'ReportBonusId'
+        ParamType = ptInputOutput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inMonth'
+        Value = 42370d
+        Component = deEnd
+        DataType = ftDateTime
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inJuridicalId'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'JuridicalId'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inPartnerId'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'PartnerId'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inisSend'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'isSend'
+        DataType = ftBoolean
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'outisSend'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'isSend'
+        DataType = ftBoolean
+        MultiSelectSeparator = ','
+      end>
+    PackSize = 1
+    Left = 464
+    Top = 184
+  end
+  object spUpdateSend_Yes: TdsdStoredProc
+    StoredProcName = 'gpInsertUpdate_Object_ReportBonus'
+    DataSets = <>
+    OutputType = otResult
+    Params = <
+      item
+        Name = 'ioId'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'ReportBonusId'
+        ParamType = ptInputOutput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inMonth'
+        Value = 42370d
+        Component = deEnd
+        DataType = ftDateTime
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inJuridicalId'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'JuridicalId'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inPartnerId'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'PartnerId'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inisSend'
+        Value = True
+        DataType = ftBoolean
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'outisSend'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'isSend'
+        DataType = ftBoolean
+        MultiSelectSeparator = ','
+      end>
+    PackSize = 1
+    Left = 624
+    Top = 216
+  end
+  object spUpdateSend_No: TdsdStoredProc
+    StoredProcName = 'gpInsertUpdate_Object_ReportBonus'
+    DataSets = <>
+    OutputType = otResult
+    Params = <
+      item
+        Name = 'ioId'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'ReportBonusId'
+        ParamType = ptInputOutput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inMonth'
+        Value = 42370d
+        Component = deEnd
+        DataType = ftDateTime
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inJuridicalId'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'JuridicalId'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inPartnerId'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'PartnerId'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inisSend'
+        Value = False
+        DataType = ftBoolean
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'outisSend'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'isSend'
+        DataType = ftBoolean
+        MultiSelectSeparator = ','
+      end>
+    PackSize = 1
+    Left = 736
+    Top = 224
+  end
+  object spInsertByReportGrid: TdsdStoredProc
+    StoredProcName = 'gpInsertUpdate_Movement_ProfitLossService_ByReportGrid'
+    DataSets = <>
+    OutputType = otResult
+    Params = <
+      item
+        Name = 'inStartDate'
+        Value = 42370d
+        Component = deStart
+        DataType = ftDateTime
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inEndDate'
+        Value = 42370d
+        Component = deEnd
+        DataType = ftDateTime
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inPaidKindId'
+        Value = ''
+        Component = GuidesPaidKind
+        ComponentItem = 'Key'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inJuridicalId'
+        Value = ''
+        Component = GuidesJuridical
+        ComponentItem = 'Key'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inBranchId'
+        Value = ''
+        Component = GuidesBranch
+        ComponentItem = 'Key'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end>
+    PackSize = 1
+    Left = 312
+    Top = 224
   end
 end

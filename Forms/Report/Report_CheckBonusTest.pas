@@ -45,7 +45,7 @@ type
     InvNumber_find: TcxGridDBColumn;
     InfoMoneyName_child: TcxGridDBColumn;
     InfoMoneyName_find: TcxGridDBColumn;
-    dxBarButton1: TdxBarButton;
+    bbDocBonus: TdxBarButton;
     actDocBonus: TdsdExecStoredProc;
     spInsertUpdate: TdsdStoredProc;
     Sum_CheckBonusFact: TcxGridDBColumn;
@@ -71,6 +71,21 @@ type
     bbPrint: TdxBarButton;
     actOpenReportDetailForm: TdsdOpenForm;
     bbOpenReportDetailForm: TdxBarButton;
+    isSend: TcxGridDBColumn;
+    spUpdateSend: TdsdStoredProc;
+    spUpdateSend_Yes: TdsdStoredProc;
+    spUpdateSend_No: TdsdStoredProc;
+    actUpdateDataSet: TdsdUpdateDataSet;
+    actUpdateSend_No: TdsdExecStoredProc;
+    actUpdateSend_Yes: TdsdExecStoredProc;
+    macUpdateSend_Yes: TMultiAction;
+    macUpdateSend_No: TMultiAction;
+    macInsertByReportGrid: TMultiAction;
+    actInsertByReportGrid: TdsdExecStoredProc;
+    spInsertByReportGrid: TdsdStoredProc;
+    bbUpdateSend_Yes: TdxBarButton;
+    bbUpdateSend_No: TdxBarButton;
+    bbInsertByReportGrid: TdxBarButton;
   private
     { Private declarations }
   public
