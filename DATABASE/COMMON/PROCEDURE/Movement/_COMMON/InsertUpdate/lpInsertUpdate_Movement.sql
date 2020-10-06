@@ -21,8 +21,10 @@ BEGIN
             VALUES (inDescId, inInvNumber, inOperDate, zc_Enum_Status_UnComplete(), inParentId, inAccessKeyId) RETURNING Id INTO ioId;
   ELSE
      --
-     UPDATE Movement SET DescId = inDescId, InvNumber = inInvNumber, OperDate = inOperDate, ParentId = inParentId/*, AccessKeyId = inAccessKeyId*/ WHERE Id = ioId
-            RETURNING StatusId INTO vbStatusId;
+     UPDATE Movement SET DescId = inDescId, InvNumber = inInvNumber, OperDate = inOperDate, ParentId = inParentId
+                       , AccessKeyId = CASE WHEN inDescId = zc_Movement_OrderExternal() THEN inAccessKeyId ELSE AccessKeyId END
+     WHERE Id = ioId
+     RETURNING StatusId INTO vbStatusId;
 
      --
      IF vbStatusId <> zc_Enum_Status_UnComplete() AND COALESCE (inParentId, 0) = 0
