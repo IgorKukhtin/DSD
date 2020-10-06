@@ -382,8 +382,9 @@ AS  (SELECT
                     ,MovementItemContainer.MovementDescId
                     ,MovementItemContainer.IsActive
          
-                    ,COALESCE (MLO_DocumentKind.ObjectId, 0) AS DocumentKindId
-         
+                    ,COALESCE (MLO_DocumentKind.ObjectId, 0)  AS DocumentKindId
+                    ,COALESCE (MLO_PersonalGroup.ObjectId, 0) AS PersonalGroupId
+
                     ,CASE WHEN MovementItemContainer.IsActive = TRUE
                                THEN MovementItemContainer.ObjectExtId_Analyzer
                           ELSE MovementItemContainer.WhereObjectId_Analyzer
@@ -463,6 +464,9 @@ AS  (SELECT
                                                                         AND OL_GoodsKindComplete.DescId   = zc_ObjectLink_PartionGoods_GoodsKindComplete()
                       LEFT OUTER JOIN MovementLinkObject AS MLO_DocumentKind ON MLO_DocumentKind.MovementId = MovementItemContainer.MovementId
                                                                             AND MLO_DocumentKind.DescId     = zc_MovementLinkObject_DocumentKind()
+                      LEFT JOIN MovementLinkObject AS MLO_PersonalGroup
+                                                   ON MLO_PersonalGroup.MovementId = MovementItemContainer.MovementId
+                                                  AND MLO_PersonalGroup.DescId = zc_MovementLinkObject_PersonalGroup()
                       LEFT OUTER JOIN MovementItemLinkObject AS MILO_StorageLine ON MILO_StorageLine.MovementItemId = MovementItemContainer.MovementItemId
                                                                                 AND MILO_StorageLine.DescId     = zc_MILinkObject_StorageLine()
                       LEFT JOIN MovementBoolean AS MovementBoolean_Peresort
@@ -476,6 +480,7 @@ AS  (SELECT
                     ,MovementItemContainer.MovementDescId
                     ,MovementItemContainer.IsActive
                     ,MLO_DocumentKind.ObjectId
+                    ,MLO_PersonalGroup.ObjectId
                     ,MovementItemContainer.ObjectIntId_Analyzer
                     ,CASE
                          WHEN MovementItemContainer.IsActive = TRUE
@@ -542,6 +547,7 @@ AS  (SELECT
                             , tmpMovement_all.MovementDescId
                             , tmpMovement_all.IsActive
                             , tmpMovement_all.DocumentKindId
+                            , tmpMovement_all.PersonalGroupId
                             , tmpMovement_all.FromId
                             , tmpMovement_all.ToId
                             , COALESCE (tmpGoodsMaster_out.GoodsId, tmpMovement_all.GoodsId_from) AS GoodsId_from
@@ -563,6 +569,7 @@ AS  (SELECT
                             , tmpMovement_all.MovementDescId
                             , tmpMovement_all.IsActive
                             , tmpMovement_all.DocumentKindId
+                            , tmpMovement_all.PersonalGroupId
                             , tmpMovement_all.FromId
                             , tmpMovement_all.ToId
                             , COALESCE (tmpGoodsMaster_out.GoodsId, tmpMovement_all.GoodsId_from)
@@ -680,6 +687,7 @@ AS  (SELECT
            ,Setting.GoodsKindComplete_ToId
            , COALESCE (tmpMovement.OperDate, tmpMovement_HeadCount.OperDate) AS OperDate
            , tmpMovement.DocumentKindId
+           , tmpMovement.PersonalGroupId
 
              -- Общая база, кол-во
            , SUM (CASE WHEN Setting.ServiceModelKindId = zc_Enum_ModelServiceKind_SatSheetWorkTime() -- по субботам табель
@@ -787,6 +795,7 @@ AS  (SELECT
            , Setting.GoodsKindComplete_ToId
            , COALESCE (tmpMovement.OperDate, tmpMovement_HeadCount.OperDate)
            , tmpMovement.DocumentKindId
+           , tmpMovement.PersonalGroupId
            , Setting.Price
            , Setting.Ratio
        )
@@ -1239,6 +1248,7 @@ AS  (SELECT
        , Movement_Sheet_Trainee AS
        (SELECT Movement_Sheet.PositionId
              , Movement_Sheet.PositionLevelId
+             , Movement_Sheet.PersonalGroupId
              , Movement_Sheet.StorageLineId
              , Movement_Sheet.OperDate
                -- Итого часов за день
@@ -1433,6 +1443,10 @@ AS  (SELECT
                                               OR (COALESCE (ServiceModelMovement.StorageLineId_From, 0) = 0
                                               AND COALESCE (ServiceModelMovement.StorageLineId_To,   0) = 0)
                                                 )
+                                            AND (COALESCE (Movement_SheetGroup.PersonalGroupId, 0)  = COALESCE (ServiceModelMovement.PersonalGroupId, 0)
+                                              OR COALESCE (Movement_SheetGroup.PersonalGroupId,  0) = 0
+                                              OR COALESCE (ServiceModelMovement.PersonalGroupId, 0) = 0
+                                                )
                                             /*AND (COALESCE (Movement_SheetGroup.StorageLineId, 0)  = COALESCE (Setting.StorageLineId_From, 0)
                                               OR COALESCE (Movement_SheetGroup.StorageLineId, 0)  = COALESCE (Setting.StorageLineId_To, 0)
                                               OR (COALESCE (Setting.StorageLineId_From, 0)        = 0
@@ -1446,6 +1460,10 @@ AS  (SELECT
                                          OR COALESCE (Movement_Sheet.StorageLineId, 0)  = COALESCE (ServiceModelMovement.StorageLineId_To, 0)
                                          OR (COALESCE (ServiceModelMovement.StorageLineId_From, 0) = 0
                                          AND COALESCE (ServiceModelMovement.StorageLineId_To,   0) = 0)
+                                           )
+                                       AND (COALESCE (Movement_SheetGroup.PersonalGroupId, 0)  = COALESCE (ServiceModelMovement.PersonalGroupId, 0)
+                                         OR COALESCE (Movement_SheetGroup.PersonalGroupId,  0) = 0
+                                         OR COALESCE (ServiceModelMovement.PersonalGroupId, 0) = 0
                                            )
                                        /*AND (COALESCE (Movement_Sheet.StorageLineId, 0)  = COALESCE (Setting.StorageLineId_From, 0)
                                          OR COALESCE (Movement_Sheet.StorageLineId, 0)  = COALESCE (Setting.StorageLineId_To, 0)
@@ -1466,6 +1484,10 @@ AS  (SELECT
                                        --
                                        AND Movement_Sheet.Tax_Trainee                           > 0
                                        AND Setting.ServiceModelKindId                           = zc_Enum_ModelServiceKind_DayHoursSheetWorkTime()
+                                       AND (COALESCE (Movement_Sheet_Trainee.PersonalGroupId, 0)  = COALESCE (ServiceModelMovement.PersonalGroupId, 0)
+                                         OR COALESCE (Movement_Sheet_Trainee.PersonalGroupId,  0) = 0
+                                         OR COALESCE (ServiceModelMovement.PersonalGroupId, 0)    = 0
+                                           )
 
          LEFT OUTER JOIN Movement_Sheet_Count_Day ON Movement_Sheet_Count_Day.MemberId        = COALESCE (Movement_SheetGroup.MemberId, Movement_Sheet.MemberId)
                                                  AND Movement_Sheet_Count_Day.PersonalGroupId = COALESCE (Movement_SheetGroup.PersonalGroupId, Movement_Sheet.PersonalGroupId)
@@ -1473,7 +1495,7 @@ AS  (SELECT
                                                  AND Movement_Sheet_Count_Day.PositionId      = COALESCE (Movement_SheetGroup.PositionId, Movement_Sheet.PositionId)
                                                  AND Movement_Sheet_Count_Day.StorageLineId   = COALESCE (Movement_SheetGroup.StorageLineId, Movement_Sheet.StorageLineId)
 
-        LEFT JOIN Object AS Object_PersonalGroup ON Object_PersonalGroup.Id = COALESCE (Movement_SheetGroup.PersonalGroupId, Movement_Sheet.PersonalGroupId)
+        LEFT JOIN Object AS Object_PersonalGroup ON Object_PersonalGroup.Id = COALESCE (Movement_SheetGroup.PersonalGroupId, Movement_Sheet.PersonalGroupId, ServiceModelMovement.PersonalGroupId)
 
         LEFT JOIN Object AS Object_StorageLine_From ON Object_StorageLine_From.Id = ServiceModelMovement.StorageLineId_From
         LEFT JOIN Object AS Object_StorageLine_To   ON Object_StorageLine_To.Id   = ServiceModelMovement.StorageLineId_To
