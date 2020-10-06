@@ -149,6 +149,7 @@ BEGIN
                                                    ON ObjectLink_Partner.ObjectId = Object_ReportBonus.Id
                                                   AND ObjectLink_Partner.DescId = zc_ObjectLink_ReportBonus_Partner()
                          WHERE Object_ReportBonus.DescId = zc_Object_ReportBonus()
+                           AND inPaidKindID = zc_Enum_PaidKind_SecondForm()
                          )
 
       SELECT tmp.OperDate_Movement, tmp.OperDatePartner, tmp.InvNumber_Movement, tmp.DescName_Movement
@@ -180,7 +181,7 @@ BEGIN
            , tmp.Comment
            , tmpObjectBonus.Id :: Integer AS ReportBonusId
            , CASE WHEN tmpObjectBonus.Id IS NULL OR tmpObjectBonus.isErased = True THEN TRUE ELSE FALSE END :: Boolean AS isSend
-      FROM gpReport_CheckBonusTest3 (inStartDate           := inStartDate
+      FROM gpReport_CheckBonusTest2 (inStartDate           := inStartDate
                                    , inEndDate             := inEndDate
                                    , inPaidKindID          := zc_Enum_PaidKind_FirstForm()
                                    , inJuridicalId         := inJuridicalId
@@ -221,7 +222,7 @@ BEGIN
            , tmp.Comment
            , tmpObjectBonus.Id :: Integer AS ReportBonusId
            , CASE WHEN tmpObjectBonus.Id IS NULL OR tmpObjectBonus.isErased = True THEN TRUE ELSE FALSE END :: Boolean AS isSend
-      FROM gpReport_CheckBonusTest3 (inStartDate           := inStartDate
+      FROM gpReport_CheckBonusTest2 (inStartDate           := inStartDate
                                    , inEndDate             := inEndDate
                                    , inPaidKindID          := zc_Enum_PaidKind_SecondForm()
                                    , inJuridicalId         := inJuridicalId
