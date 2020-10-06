@@ -65,6 +65,8 @@ type
     BranchName: TcxGridDBColumn;
     actOpenForm_51201: TdsdOpenForm;
     bbOpenForm_51201: TdxBarButton;
+    ContractTagName_master: TcxGridDBColumn;
+    ContractTagName_child: TcxGridDBColumn;
   private
     { Private declarations }
   public

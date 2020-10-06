@@ -8,7 +8,7 @@ inherited ProfitLossServiceJournalForm: TProfitLossServiceJournalForm
   AddOnFormData.ExecuteDialogAction = ExecuteDialog
   AddOnFormData.Params = FormParams
   ExplicitWidth = 1006
-  ExplicitHeight = 340
+  ExplicitHeight = 337
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
@@ -346,6 +346,14 @@ inherited ProfitLossServiceJournalForm: TProfitLossServiceJournalForm
             Options.Editing = False
             Width = 63
           end
+          object ContractTagName_master: TcxGridDBColumn
+            Caption = #1055#1088#1080#1079#1085#1072#1082' '#1076#1086#1075'. ('#1091#1089#1083#1086#1074#1080#1103')'
+            DataBinding.FieldName = 'ContractTagName_master'
+            Visible = False
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 70
+          end
           object ContractChildInvNumber: TcxGridDBColumn
             Caption = #8470' '#1076#1086#1075'. ('#1073#1072#1079#1072')'
             DataBinding.FieldName = 'ContractChildInvNumber'
@@ -353,6 +361,13 @@ inherited ProfitLossServiceJournalForm: TProfitLossServiceJournalForm
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
             Width = 60
+          end
+          object ContractTagName_child: TcxGridDBColumn
+            Caption = #1055#1088#1080#1079#1085#1072#1082' '#1076#1086#1075'. ('#1073#1072#1079#1072')'
+            DataBinding.FieldName = 'ContractTagName_child'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 70
           end
           object Comment: TcxGridDBColumn
             Caption = #1055#1088#1080#1084#1077#1095#1072#1085#1080#1077
