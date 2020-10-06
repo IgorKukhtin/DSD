@@ -455,16 +455,23 @@ BEGIN
        */
 
        -- получим "текущие" данные, МАстера со сроком годности менее года
-       CREATE TEMP TABLE _tmpMI_OrderInternal_Master (MovementItemId Integer, GoodsId Integer, Amount TFloat, Price TFloat, MCS TFloat, PartionGoodsDate TDateTime) ON COMMIT DROP;
-       INSERT INTO _tmpMI_OrderInternal_Master (MovementItemId, GoodsId, Amount, Price, MCS, PartionGoodsDate)
-       SELECT tmp.Id, tmp.GoodsId, tmp.Amount, tmp.Price, tmp.PartionGoodsDate
+       CREATE TEMP TABLE _tmpMI_OrderInternal_Master (MovementItemId Integer, GoodsId Integer, Amount TFloat, Price TFloat, MCS TFloat, CalcAmountAll TFloat, PartionGoodsDate TDateTime) ON COMMIT DROP;
+       INSERT INTO _tmpMI_OrderInternal_Master (MovementItemId, GoodsId, Amount, Price, MCS, CalcAmountAll, PartionGoodsDate)
+       SELECT tmp.Id, tmp.GoodsId, tmp.Amount, tmp.Price, tmp.MCS, tmp.CalcAmountAll, tmp.PartionGoodsDate
        FROM gpSelect_MovementItem_OrderInternal_Master (vbMovementId, FALSE, FALSE, FALSE, inSession) AS tmp
        ;
 
        --пересчитываем AmountManual, если больше НТЗ то берем НТЗ
-       PERFORM lpInsertUpdate_MovementItemFloat (zc_MIFloat_AmountManual(), tmp.MovementItemId, tmp.MCS :: TFloat)
+       PERFORM lpInsertUpdate_MovementItemFloat (zc_MIFloat_AmountManual()
+                                               , tmp.MovementItemId
+                                               -- округлили ВВЕРХ AllLot
+                                               , CEIL (tmp.MCS / COALESCE (CASE WHEN Object_Goods.MinimumLot = 0 THEN 1 ELSE Object_Goods.MinimumLot END, 1)                                                                      )
+                                                               * COALESCE (CASE WHEN Object_Goods.MinimumLot = 0 THEN 1 ELSE Object_Goods.MinimumLot END, 1) :: TFloat
+                                                )
        FROM _tmpMI_OrderInternal_Master AS tmp
-       WHERE tmp.AmountManual > tmp.MCS AND COALESCE (tmp.MCS,0) <> 0;      
+            INNER JOIN Object_Goods_View AS Object_Goods
+                                         ON Object_Goods.Id = tmp.GoodsId
+       WHERE tmp.CalcAmountAll > tmp.MCS AND COALESCE (tmp.MCS,0) <> 0;      
 
        -- обнуляем Amount, AmountManual, AmountSecond для товаров со сроком годности менее года
        PERFORM lpInsertUpdate_MovementItem (tmp.MovementItemId, zc_MI_Master(), tmp.GoodsId, vbMovementId, 0 :: TFloat, NULL)
