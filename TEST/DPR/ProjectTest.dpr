@@ -1197,7 +1197,8 @@ uses
   dsdTranslator in '..\..\SOURCE\COMPONENT\dsdTranslator.pas',
   Report_CheckBonusDetail in '..\..\Forms\Report\Report_CheckBonusDetail.pas' {Report_CheckBonusDetailForm: TParentForm},
   MemberBranchEdit in '..\..\Forms\Guides\MemberBranchEdit.pas' {MemberBranchEditForm: TParentForm},
-  MemberBranch in '..\..\Forms\Guides\MemberBranch.pas' {MemberBranchForm: TParentForm};
+  MemberBranch in '..\..\Forms\Guides\MemberBranch.pas' {MemberBranchForm: TParentForm},
+  Report_CheckBonusTest2 in '..\..\Forms\Report\Report_CheckBonusTest2.pas' {Report_CheckBonusTest2Form: TParentForm};
 
 {$R *.RES}
 {$R DevExpressRus.res}
