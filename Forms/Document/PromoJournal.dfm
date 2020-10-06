@@ -422,7 +422,7 @@ inherited PromoJournalForm: TPromoJournalForm
   end
   inherited ActionList: TActionList
     Left = 175
-    Top = 122
+    Top = 178
     object actRefreshPartner: TdsdDataSetRefresh [0]
       Category = 'DSDLib'
       MoveParams = <>
@@ -840,7 +840,8 @@ inherited PromoJournalForm: TPromoJournalForm
     Top = 131
   end
   inherited BarManager: TdxBarManager
-    Top = 123
+    Left = 136
+    Top = 219
     DockControlHeights = (
       0
       0
