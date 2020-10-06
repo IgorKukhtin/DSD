@@ -133,9 +133,9 @@ BEGIN
     --!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
     
       WITH 
-      tmpObjectBonus AS (SELECT ObjectLink_Juridical.ChildObjectId AS JuridicalId
-                              , ObjectLink_Partner.ChildObjectId   AS PartnerId
-                              , Object_ReportBonus.Id              AS Id
+      tmpObjectBonus AS (SELECT ObjectLink_Juridical.ChildObjectId             AS JuridicalId
+                              , COALESCE (ObjectLink_Partner.ChildObjectId, 0) AS PartnerId
+                              , Object_ReportBonus.Id                          AS Id
                               , Object_ReportBonus.isErased
                          FROM Object AS Object_ReportBonus
                               INNER JOIN ObjectDate AS ObjectDate_Month
@@ -148,10 +148,11 @@ BEGIN
                               LEFT JOIN ObjectLink AS ObjectLink_Partner
                                                    ON ObjectLink_Partner.ObjectId = Object_ReportBonus.Id
                                                   AND ObjectLink_Partner.DescId = zc_ObjectLink_ReportBonus_Partner()
-                         WHERE Object_ReportBonus.DescId = zc_Object_ReportBonus()
-                           AND inPaidKindID = zc_Enum_PaidKind_SecondForm()
-                         )
-
+                         WHERE Object_ReportBonus.DescId   = zc_Object_ReportBonus()
+                           AND inPaidKindID                = zc_Enum_PaidKind_SecondForm()
+                           AND Object_ReportBonus.isErased = FALSE
+                        )
+      -- Результат
       SELECT tmp.OperDate_Movement, tmp.OperDatePartner, tmp.InvNumber_Movement, tmp.DescName_Movement
            , tmp.ContractId_master, tmp.ContractId_child, tmp.ContractId_find, tmp.InvNumber_master, tmp.InvNumber_child, tmp.InvNumber_find
            , tmp.ContractTagName_child, tmp.ContractStateKindCode_child
@@ -190,8 +191,9 @@ BEGIN
                                    , inSession             := inSession
                                     ) AS tmp
            LEFT JOIN tmpObjectBonus ON tmpObjectBonus.JuridicalId = tmp.JuridicalId
-                                   AND COALESCE (tmpObjectBonus.PartnerId,0) = COALESCE (tmp.PartnerId,0)
-      WHERE inPaidKindId = zc_Enum_PaidKind_FirstForm() OR COALESCE (inPaidKindId,0) = 0
+                                   AND tmpObjectBonus.PartnerId   = COALESCE (tmp.PartnerId, 0)
+      WHERE inPaidKindId = zc_Enum_PaidKind_FirstForm() OR COALESCE (inPaidKindId, 0) = 0
+
   UNION ALL
       SELECT tmp.OperDate_Movement, tmp.OperDatePartner, tmp.InvNumber_Movement, tmp.DescName_Movement
            , tmp.ContractId_master, tmp.ContractId_child, tmp.ContractId_find, tmp.InvNumber_master, tmp.InvNumber_child, tmp.InvNumber_find
@@ -221,7 +223,7 @@ BEGIN
            , tmp.PercentRetBonus_diff
            , tmp.Comment
            , tmpObjectBonus.Id :: Integer AS ReportBonusId
-           , CASE WHEN tmpObjectBonus.Id IS NULL OR tmpObjectBonus.isErased = True THEN TRUE ELSE FALSE END :: Boolean AS isSend
+           , CASE WHEN tmpObjectBonus.Id IS NULL OR tmpObjectBonus.isErased = TRUE THEN TRUE ELSE FALSE END :: Boolean AS isSend
       FROM gpReport_CheckBonusTest2 (inStartDate           := inStartDate
                                    , inEndDate             := inEndDate
                                    , inPaidKindID          := zc_Enum_PaidKind_SecondForm()
@@ -231,8 +233,8 @@ BEGIN
                                    , inSession             := inSession
                                     ) AS tmp
            LEFT JOIN tmpObjectBonus ON tmpObjectBonus.JuridicalId = tmp.JuridicalId
-                                   AND COALESCE (tmpObjectBonus.PartnerId,0) = COALESCE (tmp.PartnerId,0)
-      WHERE inPaidKindId = zc_Enum_PaidKind_SecondForm() OR COALESCE (inPaidKindId,0) = 0
+                                   AND tmpObjectBonus.PartnerId   = COALESCE (tmp.PartnerId, 0)
+      WHERE inPaidKindId = zc_Enum_PaidKind_SecondForm() OR COALESCE (inPaidKindId, 0) = 0
       ;
 
 /*

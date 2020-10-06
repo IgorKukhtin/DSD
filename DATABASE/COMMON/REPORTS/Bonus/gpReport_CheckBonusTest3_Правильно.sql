@@ -39,6 +39,8 @@ RETURNS TABLE (OperDate_Movement TDateTime, OperDatePartner TDateTime, InvNumber
              , Sum_Account TFloat
              , Sum_SaleReturnIn TFloat
              , Comment TVarChar
+             , ReportBonusId Integer
+             , isSend Boolean
              , FromName_Movement          TVarChar
              , ToName_Movement            TVarChar
              , PaidKindName_Movement      TVarChar
@@ -835,6 +837,28 @@ BEGIN
                               WHERE inisMovement = TRUE
                               )
 
+    , tmpObjectBonus AS (SELECT ObjectLink_Juridical.ChildObjectId             AS JuridicalId
+                              , COALESCE (ObjectLink_Partner.ChildObjectId, 0) AS PartnerId
+                              , Object_ReportBonus.Id                          AS Id
+                              , Object_ReportBonus.isErased
+                         FROM Object AS Object_ReportBonus
+                              INNER JOIN ObjectDate AS ObjectDate_Month
+                                                   ON ObjectDate_Month.ObjectId = Object_ReportBonus.Id
+                                                  AND ObjectDate_Month.DescId = zc_Object_ReportBonus_Month()
+                                                  AND ObjectDate_Month.ValueData =  DATE_TRUNC ('Month', inEndDate)
+                              LEFT JOIN ObjectLink AS ObjectLink_Juridical
+                                                   ON ObjectLink_Juridical.ObjectId = Object_ReportBonus.Id
+                                                  AND ObjectLink_Juridical.DescId = zc_ObjectLink_ReportBonus_Juridical()
+                              LEFT JOIN ObjectLink AS ObjectLink_Partner
+                                                   ON ObjectLink_Partner.ObjectId = Object_ReportBonus.Id
+                                                  AND ObjectLink_Partner.DescId = zc_ObjectLink_ReportBonus_Partner()
+                         WHERE Object_ReportBonus.DescId   = zc_Object_ReportBonus()
+                           AND inPaidKindID                = zc_Enum_PaidKind_SecondForm()
+                           AND Object_ReportBonus.isErased = FALSE
+                         GROUP BY ObjectLink_Juridical.ChildObjectId
+                                , ObjectLink_Partner.ChildObjectId
+                                , Object_ReportBonus.isErased
+                         )
       SELECT  tmpMovementParams.OperDate        :: TDateTime AS OperDate_Movement
             , tmpMovementParams.OperDatePartner :: TDateTime AS OperDatePartner
             , tmpMovementParams.InvNumber                    AS InvNumber_Movement
@@ -892,6 +916,9 @@ BEGIN
             , CAST (tmpData.Sum_SaleReturnIn AS TFloat)   AS Sum_SaleReturnIn
             , tmpData.Comment :: TVarChar                 AS Comment
             
+            , tmpObjectBonus.Id :: Integer AS ReportBonusId
+            , CASE WHEN tmpObjectBonus.Id IS NULL OR tmpObjectBonus.isErased = True THEN TRUE ELSE FALSE END :: Boolean AS isSend
+
             , tmpMovementParams.FromName         :: TVarChar AS FromName_Movement
             , tmpMovementParams.ToName           :: TVarChar AS ToName_Movement
             , tmpMovementParams.PaidKindName     :: TVarChar AS PaidKindName_Movement
@@ -925,7 +952,10 @@ BEGIN
                                  ON ObjectLink_Contract_Personal.ObjectId = tmpData.ContractId_child
                                 AND ObjectLink_Contract_Personal.DescId = zc_ObjectLink_Contract_Personal()
             LEFT JOIN Object_Personal_View ON Object_Personal_View.PersonalId = ObjectLink_Contract_Personal.ChildObjectId           
-      ;
+
+            LEFT JOIN tmpObjectBonus ON tmpObjectBonus.JuridicalId = Object_Juridical.Id
+                                    AND tmpObjectBonus.PartnerId   = COALESCE (Object_Partner.Id, 0)
+          ;
 
 END;
 $BODY$
