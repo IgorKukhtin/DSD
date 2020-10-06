@@ -525,8 +525,6 @@ type
     actOpenDelaySite: TdsdOpenForm;
     MemDataGOODSPMID: TIntegerField;
     MainAmountSendIn: TcxGridDBColumn;
-    lblPresent: TLabel;
-    edPresent: TcxTextEdit;
     procedure WM_KEYDOWN(var Msg: TWMKEYDOWN);
     procedure FormCreate(Sender: TObject);
     procedure actChoiceGoodsInRemainsGridExecute(Sender: TObject);
@@ -716,7 +714,8 @@ type
     // Возвращает товар в верхний грид
     procedure UpdateRemainsFromCheck(AGoodsId: Integer = 0;
       APartionDateKindId: Integer = 0; ANDSKindId: Integer = 0; ADiscountExternalID: Integer = 0;
-      ADivisionPartiesID: Integer = 0; AAmount: Currency = 0; APriceSale: Currency = 0);
+      ADivisionPartiesID: Integer = 0;  AisPresent: Boolean = False;
+      AAmount: Currency = 0; APriceSale: Currency = 0);
 
     // Находится "ИТОГО" кол-во - сколько уже набрали в продаже и к нему плюсуется или минусуется "новое" кол-во
     function fGetCheckAmountTotal(AGoodsId: Integer = 0; AAmount: Currency = 0)
@@ -822,7 +821,8 @@ type
       APromoName, APromoCodeGUID, ABayerName: String;
       APromoCodeChangePercent: Currency);
     procedure SetPromoCodeLoyalty(APromoCodeID: Integer; APromoCodeGUID: String;
-      APromoCodeSumma: Currency; AMovementId : Integer; AisPresent : Boolean; AGoodsId : Integer);
+      APromoCodeSumma: Currency; AMovementId : Integer;
+      AisPresent : Boolean; AAmountPresent : Currency; AGoodsId : Integer);
     procedure SetPromoCodeLoyaltySM(ALoyaltySMID: Integer;
       APhone, AName: string; ASummaRemainder, AChangeSumma: Currency);
     procedure PromoCodeLoyaltyCalc;
@@ -1376,7 +1376,9 @@ begin
   // ***01.10.20
   FormParams.ParamByName('LoyaltyMovementId').Value := 0;
   FormParams.ParamByName('LoyaltyPresent').Value := False;
+  FormParams.ParamByName('LoyaltyAmountPresent').Value := 0;
   FormParams.ParamByName('LoyaltyGoodsId').Value := 0;
+  FormParams.ParamByName('AddPresent').Value := False;
 
   ClearFilterAll;
 
@@ -1652,6 +1654,7 @@ begin
           FormParams.ParamByName('LoyaltyChangeSumma').Value,
           FormParams.ParamByName('LoyaltyMovementId').Value,
           FormParams.ParamByName('LoyaltyPresent').Value,
+          FormParams.ParamByName('LoyaltyAmountPresent').Value,
           FormParams.ParamByName('LoyaltyGoodsId').Value)
       else
         SetPromoCode(FormParams.ParamByName('PromoCodeId').Value,
@@ -2664,7 +2667,7 @@ var
   GoodsId: Integer;
   nRecNo: Integer;
   GoodsIdPS: Integer;
-  nAmountPS: Currency;
+  nAmountPS, nPresent: Currency;
   PartionDateKindId, NDSKindId, DiscountExternalID, DivisionPartiesID: Variant;
 begin
   if CheckCDS.RecordCount = 0 then
@@ -2735,6 +2738,7 @@ begin
   NDSKindId := RemainsCDS.FieldByName('NDSKindId').AsVariant;
   DiscountExternalID := RemainsCDS.FieldByName('DiscountExternalID').AsVariant;
   DivisionPartiesID := RemainsCDS.FieldByName('DivisionPartiesID').AsVariant;
+  nPresent := 0;
   try
     RemainsCDS.DisableControls;
     RemainsCDS.Filtered := false;
@@ -2856,12 +2860,14 @@ begin
           exit;
         end;
 
-        if (FieldByName('Amount').AsCurrency > 0) and FieldByName('isPresent').AsBoolean and
-           (FormParams.ParamByName('LoyaltyGoodsId').Value <> FieldByName('GoodsId').AsInteger)  then
-        begin
-          ShowMessage('Подарки можно продавать только по акции!');
-          exit;
-        end;
+//        if (FieldByName('Amount').AsCurrency > 0) and FieldByName('isPresent').AsBoolean and
+//           (FormParams.ParamByName('LoyaltyGoodsId').Value <> FieldByName('GoodsId').AsInteger)  then
+//        begin
+//          ShowMessage('Подарки можно продавать только по акции!');
+//          exit;
+//        end;
+
+        if FieldByName('isPresent').AsBoolean  then nPresent := nPresent + FieldByName('Amount').AsCurrency;
 
         Next;
       end;
@@ -2871,6 +2877,18 @@ begin
     RemainsCDS.Locate('Id;PartionDateKindId;NDSKindId;DiscountExternalID;DivisionPartiesID',
       VarArrayOf([GoodsId, PartionDateKindId, NDSKindId, DiscountExternalID, DivisionPartiesID]), []);
     RemainsCDS.EnableControls;
+  end;
+
+  if (nPresent > 0) and not FormParams.ParamByName('LoyaltyPresent').Value then
+  begin
+    ShowMessage('Подарки можно продавать только по акции!');
+    exit;
+  end;
+
+  if nPresent > FormParams.ParamByName('LoyaltyAmountPresent').Value then
+  begin
+    ShowMessage('Количество подарков в чеке превышает количество по акции!');
+    exit;
   end;
 
   if UnitConfigCDS.FieldByName('LoyaltySaveMoneyCount').AsInteger > 0 then
@@ -3377,6 +3395,9 @@ begin
           CheckCDS.FieldByName('PriceSale').asCurrency then
           CheckCDS.FieldByName('Multiplicity').AsVariant :=
             RemainsCDS.FieldByName('Multiplicity').AsVariant;
+        if CheckCDS.FieldByName('isPresent').AsVariant then
+          CheckCDS.FieldByName('Color_calc').AsInteger := TColor($FFB0FF);
+
         CheckCDS.Post;
         Add_Log('Id - ' + vipList.FieldByName('Id').AsString + ' GoodsCode - ' +
           vipList.FieldByName('GoodsCode').AsString + ' GoodsName - ' +
@@ -3391,6 +3412,7 @@ begin
             vipList.FieldByName('NDSKindId').AsInteger,
             vipList.FieldByName('DiscountExternalID').AsInteger,
             vipList.FieldByName('DivisionPartiesID').AsInteger,
+            vipList.FieldByName('isPrice').AsBoolean,
             vipList.FieldByName('Amount').AsFloat,
             vipList.FieldByName('PriceSale').asCurrency);
         vipList.Next;
@@ -3982,14 +4004,17 @@ begin
       CheckCDS.First;
       while not CheckCDS.Eof do
       begin
-        if CheckCDS.FieldByName('PriceDiscount').asCurrency > 0 then
-          nSumAll := nSumAll + GetSumm(CheckCDS.FieldByName('Amount')
-            .asCurrency, CheckCDS.FieldByName('PriceDiscount').asCurrency,
-            FormParams.ParamByName('RoundingDown').Value)
-        else
-          nSumAll := nSumAll + GetSumm(CheckCDS.FieldByName('Amount')
-            .asCurrency, CheckCDS.FieldByName('PriceSale').asCurrency,
-            FormParams.ParamByName('RoundingDown').Value);
+        if not CheckCDS.FieldByName('isPresent').AsBoolean then
+        begin
+          if CheckCDS.FieldByName('PriceDiscount').asCurrency > 0 then
+            nSumAll := nSumAll + GetSumm(CheckCDS.FieldByName('Amount')
+              .asCurrency, CheckCDS.FieldByName('PriceDiscount').asCurrency,
+              FormParams.ParamByName('RoundingDown').Value)
+          else
+            nSumAll := nSumAll + GetSumm(CheckCDS.FieldByName('Amount').asCurrency,
+              CheckCDS.FieldByName('PriceSale').asCurrency,
+              FormParams.ParamByName('RoundingDown').Value);
+        end;
         CheckCDS.Next;
       end;
     end;
@@ -4116,7 +4141,8 @@ begin
 end;
 
 procedure TMainCashForm2.SetPromoCodeLoyalty(APromoCodeID: Integer;
-  APromoCodeGUID: String; APromoCodeSumma: Currency; AMovementId : Integer; AisPresent : Boolean; AGoodsId : Integer);
+  APromoCodeGUID: String; APromoCodeSumma: Currency; AMovementId : Integer;
+  AisPresent : Boolean; AAmountPresent : Currency; AGoodsId : Integer);
 var
   nRecNo: Integer;
 begin
@@ -4128,6 +4154,7 @@ begin
     FormParams.ParamByName('LoyaltyChangeSumma').Value := 0;
     FormParams.ParamByName('LoyaltyMovementId').Value := 0;
     FormParams.ParamByName('LoyaltyPresent').Value := False;
+    FormParams.ParamByName('LoyaltyAmountPresent').Value := 0;
     FormParams.ParamByName('LoyaltyGoodsId').Value := 0;
 
     pnlPromoCodeLoyalty.Visible := false;
@@ -4141,12 +4168,23 @@ begin
     FormParams.ParamByName('LoyaltyChangeSumma').Value := APromoCodeSumma;
     FormParams.ParamByName('LoyaltyMovementId').Value := AMovementId;
     FormParams.ParamByName('LoyaltyPresent').Value := AisPresent;
+    FormParams.ParamByName('LoyaltyAmountPresent').Value := AAmountPresent;
     FormParams.ParamByName('LoyaltyGoodsId').Value := AGoodsId;
     // ***27.06.18
 
     pnlPromoCodeLoyalty.Visible := APromoCodeID > 0;
     lblPromoCodeLoyalty.Caption := '  ' + APromoCodeGUID + '  ';
-    edPromoCodeLoyaltySumm.Value := APromoCodeSumma;
+
+    if AisPresent then
+    begin
+      Label27.Caption := 'Кол-во подакрков';
+      edPromoCodeLoyaltySumm.Value := AAmountPresent;
+    end else
+    begin
+      Label27.Caption := 'Сумма скидки';
+      edPromoCodeLoyaltySumm.Value := APromoCodeSumma;
+    end;
+
     FormParams.ParamByName('ManualDiscount').Value := 0;
   end;
 
@@ -4158,18 +4196,17 @@ begin
   lblPromoCode.Caption := '';
   edPromoCodeChangePrice.Value := 0;
 
-  Label27.Visible := not AisPresent;
-  edPromoCodeLoyaltySumm.Visible := not AisPresent;
-
-  lblPresent.Visible := AisPresent;
-  edPresent.Visible := AisPresent;
-
   if AisPresent and (AGoodsId <> 0) then
   begin
     if RemainsCDS.Locate('Id', AGoodsId, []) and (RemainsCDS.FieldByName('Remains').AsCurrency >= 1) then
     begin
-      edAmount.Text := '1';
-      InsertUpdateBillCheckItems;
+      try
+        edAmount.Text := CurrToStr(AAmountPresent);
+        FormParams.ParamByName('AddPresent').Value := True;
+        InsertUpdateBillCheckItems;
+      finally
+        FormParams.ParamByName('AddPresent').Value := False;
+      end;
     end;
   end;
 
@@ -4225,6 +4262,7 @@ begin
   spLoyaltyCheckGUID.ParamByName('outError').Value := '';
   spLoyaltyCheckGUID.ParamByName('outMovementId').Value := 0;
   spLoyaltyCheckGUID.ParamByName('outisPresent').Value := False;
+  spLoyaltyCheckGUID.ParamByName('outAmountPresent').Value := 0;
   spLoyaltyCheckGUID.ParamByName('outGoodsId').Value := 0;
   spLoyaltyCheckGUID.Execute;
 
@@ -4246,6 +4284,7 @@ begin
     spLoyaltyCheckGUID.ParamByName('outAmount').AsFloat,
     spLoyaltyCheckGUID.ParamByName('outMovementId').Value,
     spLoyaltyCheckGUID.ParamByName('outisPresent').Value,
+    spLoyaltyCheckGUID.ParamByName('outAmountPresent').AsFloat,
     spLoyaltyCheckGUID.ParamByName('outGoodsId').Value);
 end;
 
@@ -6412,12 +6451,12 @@ begin
   else nId := SourceClientDataSet.FieldByName('Id').AsInteger;
   nGoodsPairSunMainId := SourceClientDataSet.FieldByName('GoodsPairSunMainId').AsInteger;
 
-  if (nAmount > 0) and SourceClientDataSet.FieldByName('isPresent').AsBoolean and
-    (FormParams.ParamByName('LoyaltyGoodsId').Value <> nId) then
-  begin
-    ShowMessage('Подарки можно продавать только по акции!');
-    exit;
-  end;
+//  if (nAmount > 0) and SourceClientDataSet.FieldByName('isPresent').AsBoolean and
+//    (FormParams.ParamByName('LoyaltyGoodsId').Value <> nId) then
+//  begin
+//    ShowMessage('Подарки можно продавать только по акции!');
+//    exit;
+//  end;
 
   try
     if not FStepSecond and (SourceClientDataSet.FieldByName('GoodsPairSunId').AsInteger <> 0) then
@@ -6944,12 +6983,13 @@ begin
       try
         CheckCDS.Filtered := false;
         // попытка добавить препарат с другой ценой. обновляем цену у уже существующего и обнуляем суммы для пересчета
-        if CheckCDS.Locate('GoodsId;PartionDateKindId;NDSKindId;DiscountExternalID;DivisionPartiesID',
+        if CheckCDS.Locate('GoodsId;PartionDateKindId;NDSKindId;DiscountExternalID;DivisionPartiesID;isPresent',
           VarArrayOf([SourceClientDataSet.FieldByName('Id').AsInteger,
           SourceClientDataSet.FindField('PartionDateKindId').AsVariant,
           SourceClientDataSet.FindField('NDSKindId').AsVariant,
           SourceClientDataSet.FindField('DiscountExternalID').AsVariant,
-          SourceClientDataSet.FindField('DivisionPartiesID').AsVariant]), []) and
+          SourceClientDataSet.FindField('DivisionPartiesID').AsVariant,
+          FormParams.ParamByName('AddPresent').Value]), []) and
           ((CheckCDS.FieldByName('PriceSale').asCurrency <> lPriceSale) or
           (CheckCDS.FieldByName('Price').asCurrency <> lPrice)) then
         Begin
@@ -6988,7 +7028,7 @@ begin
           CheckCDS.FieldByName('GoodsPairSunMainId').AsVariant :=
             SourceClientDataSet.FindField('GoodsPairSunMainId').AsVariant;
           CheckCDS.FieldByName('isPresent').AsVariant :=
-            SourceClientDataSet.FindField('isPresent').AsVariant;
+            FormParams.ParamByName('AddPresent').Value;
 
           if RemainsCDS <> SourceClientDataSet then
           begin
@@ -7037,14 +7077,18 @@ begin
               CheckCDS.FieldByName('Color_ExpirationDate').AsInteger := clBlack;
             end;
           end;
+
+          if CheckCDS.FieldByName('isPresent').AsVariant then
+            CheckCDS.FieldByName('Color_calc').AsInteger := TColor($FFB0FF);
           CheckCDS.Post;
         End
-        else if not CheckCDS.Locate('GoodsId;PartionDateKindId;NDSKindId;DiscountExternalID;DivisionPartiesID',
+        else if not CheckCDS.Locate('GoodsId;PartionDateKindId;NDSKindId;DiscountExternalID;DivisionPartiesID;isPresent',
           VarArrayOf([SourceClientDataSet.FieldByName('Id').AsInteger,
           SourceClientDataSet.FindField('PartionDateKindId').AsVariant,
           SourceClientDataSet.FindField('NDSKindId').AsVariant,
           SourceClientDataSet.FindField('DiscountExternalID').AsVariant,
-          SourceClientDataSet.FindField('DivisionPartiesID').AsVariant]), []) then
+          SourceClientDataSet.FindField('DivisionPartiesID').AsVariant,
+          FormParams.ParamByName('AddPresent').Value]), []) then
         Begin
           CheckCDS.Append;
           CheckCDS.FieldByName('Id').AsInteger := 0;
@@ -7112,7 +7156,7 @@ begin
           CheckCDS.FieldByName('GoodsPairSunMainId').AsVariant :=
             SourceClientDataSet.FieldByName('GoodsPairSunMainId').AsVariant;
           CheckCDS.FieldByName('isPresent').AsVariant :=
-            SourceClientDataSet.FindField('isPresent').AsVariant;
+            FormParams.ParamByName('AddPresent').Value;
 
           if RemainsCDS <> SourceClientDataSet then
           begin
@@ -7165,6 +7209,10 @@ begin
             CheckCDS.FieldByName('AccommodationName').AsVariant :=
               SourceClientDataSet.FieldByName('AccommodationName').AsVariant;
           CheckCDS.FieldByName('Multiplicity').AsVariant := nMultiplicity;
+
+          if CheckCDS.FieldByName('isPresent').AsVariant then
+            CheckCDS.FieldByName('Color_calc').AsInteger := TColor($FFB0FF);
+
           CheckCDS.Post;
 
         End;
@@ -7176,7 +7224,8 @@ begin
         SourceClientDataSet.FindField('PartionDateKindId').AsInteger,
         SourceClientDataSet.FindField('NDSKindId').AsInteger,
         SourceClientDataSet.FindField('DiscountExternalID').AsInteger,
-        SourceClientDataSet.FindField('DivisionPartiesID').AsInteger, nAmount,
+        SourceClientDataSet.FindField('DivisionPartiesID').AsInteger,
+        FormParams.ParamByName('AddPresent').Value, nAmount,
         lPriceSale);
       // Update Дисконт в CDS - по всем "обновим" Дисконт
       if FormParams.ParamByName('DiscountExternalId').Value > 0 then
@@ -7203,7 +7252,8 @@ begin
         CheckCDS.FindField('PartionDateKindId').AsInteger,
         CheckCDS.FindField('NDSKindId').AsInteger,
         CheckCDS.FindField('DiscountExternalID').AsInteger,
-        CheckCDS.FindField('DivisionPartiesID').AsInteger, nAmount,
+        CheckCDS.FindField('DivisionPartiesID').AsInteger,
+        CheckCDS.FindField('isPresent').AsBoolean, nAmount,
         CheckCDS.FieldByName('PriceSale').asCurrency);
       // Update Дисконт в CDS - по всем "обновим" Дисконт
       if FormParams.ParamByName('DiscountExternalId').Value > 0 then
@@ -7469,7 +7519,8 @@ Begin
       First;
       while Not Eof do
       Begin
-        FTotalSumm := FTotalSumm + FieldByName('Summ').asCurrency;
+        if not FieldByName('isPresent').AsBoolean then
+          FTotalSumm := FTotalSumm + FieldByName('Summ').asCurrency;
         Next;
       End;
       GotoBookmark(B);
@@ -7813,7 +7864,9 @@ begin
   // ***01.10.20
   FormParams.ParamByName('LoyaltyMovementId').Value := 0;
   FormParams.ParamByName('LoyaltyPresent').Value := False;
+  FormParams.ParamByName('LoyaltyAmountPresent').Value := 0;
   FormParams.ParamByName('LoyaltyGoodsId').Value := 0;
+  FormParams.ParamByName('AddPresent').Value := False;
 
   FiscalNumber := '';
   pnlVIP.Visible := false;
@@ -8133,14 +8186,17 @@ begin
         CheckCDS.First;
         while not CheckCDS.Eof do
         begin
-          if CheckCDS.FieldByName('PricePartionDate').asCurrency > 0 then
-            nSumAll := nSumAll + GetSumm(CheckCDS.FieldByName('Amount')
-              .asCurrency, CheckCDS.FieldByName('PricePartionDate').asCurrency,
-              FormParams.ParamByName('RoundingDown').Value)
-          else
-            nSumAll := nSumAll + GetSumm(CheckCDS.FieldByName('Amount')
-              .asCurrency, CheckCDS.FieldByName('PriceSale').asCurrency,
-              FormParams.ParamByName('RoundingDown').Value);
+          if not CheckCDS.FieldByName('isPresent').AsVariant then
+          begin
+            if CheckCDS.FieldByName('PricePartionDate').asCurrency > 0 then
+              nSumAll := nSumAll + GetSumm(CheckCDS.FieldByName('Amount')
+                .asCurrency, CheckCDS.FieldByName('PricePartionDate').asCurrency,
+                FormParams.ParamByName('RoundingDown').Value)
+            else
+              nSumAll := nSumAll + GetSumm(CheckCDS.FieldByName('Amount')
+                .asCurrency, CheckCDS.FieldByName('PriceSale').asCurrency,
+                FormParams.ParamByName('RoundingDown').Value);
+          end;
           CheckCDS.Next;
         end;
         if nSumAll < (FormParams.ParamByName('LoyaltyChangeSumma').Value +
@@ -8166,23 +8222,26 @@ begin
           First;
           while not Eof do
           begin
-            if CheckCDS.FieldByName('Amount').asCurrency >= 0.001 then
-              Disc := Disc + (FieldByName('Summ').asCurrency -
-                GetSummFull(FieldByName('Amount').asCurrency,
-                FieldByName('Price').asCurrency));
-
-            if (FieldByName('Multiplicity').asCurrency <> 0) and
-              (FieldByName('Price').asCurrency <> FieldByName('PriceSale')
-              .asCurrency) and
-              (trunc(FieldByName('Amount').asCurrency /
-              FieldByName('Multiplicity').asCurrency * 100) mod 100 <> 0) then
+            if not CheckCDS.FieldByName('isPresent').AsVariant then
             begin
-              ShowMessage('Для медикамента '#13#10 + FieldByName('GoodsName')
-                .AsString +
-                #13#10'установлена кратность при отпуске со скидкой.'#13#10#13#10
-                + 'Отпускать со скидкой разрешено кратно ' +
-                FieldByName('Multiplicity').AsString + ' упаковки.');
-              exit;
+              if CheckCDS.FieldByName('Amount').asCurrency >= 0.001 then
+                Disc := Disc + (FieldByName('Summ').asCurrency -
+                  GetSummFull(FieldByName('Amount').asCurrency,
+                  FieldByName('Price').asCurrency));
+
+              if (FieldByName('Multiplicity').asCurrency <> 0) and
+                (FieldByName('Price').asCurrency <> FieldByName('PriceSale')
+                .asCurrency) and
+                (trunc(FieldByName('Amount').asCurrency /
+                FieldByName('Multiplicity').asCurrency * 100) mod 100 <> 0) then
+              begin
+                ShowMessage('Для медикамента '#13#10 + FieldByName('GoodsName')
+                  .AsString +
+                  #13#10'установлена кратность при отпуске со скидкой.'#13#10#13#10
+                  + 'Отпускать со скидкой разрешено кратно ' +
+                  FieldByName('Multiplicity').AsString + ' упаковки.');
+                exit;
+              end;
             end;
             Next;
           end;
@@ -8193,11 +8252,14 @@ begin
             Last;
             while not BOF do
             begin
-              if (GetSummFull(FieldByName('Amount').asCurrency,
-                FieldByName('Price').asCurrency) + Disc) > 0 then
+              if not CheckCDS.FieldByName('isPresent').AsVariant then
               begin
-                PosDisc := RecNo;
-                Break;
+                if (GetSummFull(FieldByName('Amount').asCurrency,
+                  FieldByName('Price').asCurrency) + Disc) > 0 then
+                begin
+                  PosDisc := RecNo;
+                  Break;
+                end;
               end;
               Prior;
             end;
@@ -8208,11 +8270,14 @@ begin
               Last;
               while not BOF do
               begin
-                if (GetSummFull(FieldByName('Amount').asCurrency,
-                  FieldByName('Price').asCurrency) + Disc) >= 0 then
+                if not CheckCDS.FieldByName('isPresent').AsVariant then
                 begin
-                  PosDisc := RecNo;
-                  Break;
+                  if (GetSummFull(FieldByName('Amount').asCurrency,
+                    FieldByName('Price').asCurrency) + Disc) >= 0 then
+                  begin
+                    PosDisc := RecNo;
+                    Break;
+                  end;
                 end;
                 Prior;
               end;
@@ -8223,11 +8288,14 @@ begin
             Last;
             while not BOF do
             begin
-              if GetSummFull(FieldByName('Amount').asCurrency,
-                FieldByName('Price').asCurrency) > Disc then
+              if CheckCDS.FieldByName('isPresent').AsVariant then
               begin
-                PosDisc := RecNo;
-                Break;
+                if GetSummFull(FieldByName('Amount').asCurrency,
+                  FieldByName('Price').asCurrency) > Disc then
+                begin
+                  PosDisc := RecNo;
+                  Break;
+                end;
               end;
               Prior;
             end;
@@ -8293,7 +8361,7 @@ begin
         First;
         while not Eof do
         begin
-          if Result then
+          if Result and not CheckCDS.FieldByName('isPresent').AsVariant then
           begin
             if CheckCDS.FieldByName('Amount').asCurrency >= 0.001 then
             begin
@@ -8443,7 +8511,8 @@ end;
 
 procedure TMainCashForm2.UpdateRemainsFromCheck(AGoodsId: Integer = 0;
   APartionDateKindId: Integer = 0; ANDSKindId: Integer = 0; ADiscountExternalID: Integer = 0;
-  ADivisionPartiesID: Integer = 0; AAmount: Currency = 0; APriceSale: Currency = 0);
+  ADivisionPartiesID: Integer = 0; AisPresent: Boolean = False;
+  AAmount: Currency = 0; APriceSale: Currency = 0);
 var
   GoodsId: Integer;
   PartionDateKindId, NDSKindId, DiscountExternalID, DivisionPartiesID: Variant;
@@ -8585,7 +8654,8 @@ begin
         and (CheckCDS.FieldByName('NDSKindId').AsInteger = ANDSKindId)
         and (CheckCDS.FieldByName('DiscountExternalID').AsInteger = ADiscountExternalID)
         and (CheckCDS.FieldByName('DivisionPartiesID').AsInteger = ADivisionPartiesID)
-        and (CheckCDS.FieldByName('PriceSale').asCurrency = APriceSale))
+        and (CheckCDS.FieldByName('PriceSale').AsCurrency = APriceSale)
+        and (CheckCDS.FieldByName('isPresent').AsBoolean = AisPresent))
         and RemainsCDS.Locate('Id;PartionDateKindId;NDSKindId;DiscountExternalID;DivisionPartiesID',
         VarArrayOf([CheckCDS.FieldByName('GoodsId').AsInteger,
         CheckCDS.FieldByName('PartionDateKindID').AsVariant,

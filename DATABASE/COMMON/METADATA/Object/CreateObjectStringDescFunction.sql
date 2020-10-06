@@ -1158,10 +1158,15 @@ CREATE OR REPLACE FUNCTION zc_ObjectString_DiscountExternalTools_Token() RETURNS
 INSERT INTO ObjectStringDesc (Code, DescId, ItemName)
   SELECT 'zc_ObjectString_DiscountExternalTools_Token', zc_Object_DiscountExternalTools(), 'API токен' WHERE NOT EXISTS (SELECT * FROM ObjectStringDesc WHERE Code = 'zc_ObjectString_DiscountExternalTools_Token');
 
+CREATE OR REPLACE FUNCTION zc_ObjectString_MemberBranch_Comment() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM ObjectStringDesc WHERE Code = 'zc_ObjectString_MemberBranch_Comment'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
+INSERT INTO ObjectStringDesc (Code, DescId, ItemName)
+  SELECT 'zc_ObjectString_MemberBranch_Comment', zc_Object_MemberBranch(), 'Примечание' WHERE NOT EXISTS (SELECT * FROM ObjectStringDesc WHERE Code = 'zc_ObjectString_MemberBranch_Comment');
+
 
 /*-------------------------------------------------------------------------------
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.  Воробкало А.А.   Подмогильный В.В.   Шаблий О.В.
+ 05.10.20         * zc_ObjectString_MemberBranch_Comment
  07.09.20         * zc_ObjectString_MemberExternal_INN
  04.09.20         * zc_ObjectString_MemberMinus_BankAccountTo
                     zc_ObjectString_MemberMinus_DetailPayment

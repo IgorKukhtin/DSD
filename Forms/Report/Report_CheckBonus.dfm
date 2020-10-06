@@ -913,6 +913,94 @@ inherited Report_CheckBonusForm: TReport_CheckBonusForm
       Caption = 'actUpdateDataSet'
       DataSource = MasterDS
     end
+    object actOpenReportDetailForm: TdsdOpenForm
+      Category = 'DSDLib'
+      TabSheet = tsMain
+      MoveParams = <>
+      Caption = #1054#1090#1095#1077#1090' <'#1055#1088#1086#1074#1077#1088#1082#1072' '#1085#1072#1095#1080#1089#1083#1077#1085#1080#1081' '#1087#1086' '#1073#1086#1085#1091#1089#1072#1084'> '#1087#1086' '#1076#1086#1082#1091#1084#1077#1085#1090#1072#1084
+      Hint = #1054#1090#1095#1077#1090' <'#1055#1088#1086#1074#1077#1088#1082#1072' '#1085#1072#1095#1080#1089#1083#1077#1085#1080#1081' '#1087#1086' '#1073#1086#1085#1091#1089#1072#1084'> '#1087#1086' '#1076#1086#1082#1091#1084#1077#1085#1090#1072#1084
+      ImageIndex = 25
+      FormName = 'TReport_CheckBonusDetailForm'
+      FormNameParam.Value = 'TReport_CheckBonusDetailForm'
+      FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
+      GuiParams = <
+        item
+          Name = 'inStartDate'
+          Value = 42370d
+          Component = deStart
+          DataType = ftDateTime
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'inEndDate'
+          Value = 42370d
+          Component = deEnd
+          DataType = ftDateTime
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'inPaidKindId'
+          Value = ''
+          Component = GuidesPaidKind
+          ComponentItem = 'Key'
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'inPaidKindName'
+          Value = ''
+          Component = GuidesPaidKind
+          ComponentItem = 'TextValue'
+          DataType = ftString
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'inJuridicalId'
+          Value = Null
+          Component = MasterCDS
+          ComponentItem = 'JuridicalId'
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'inJuridicalName'
+          Value = Null
+          Component = MasterCDS
+          ComponentItem = 'JuridicalName'
+          DataType = ftString
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'inBranchsId'
+          Value = ''
+          Component = GuidesBranch
+          ComponentItem = 'Key'
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'inBranchName'
+          Value = ''
+          Component = GuidesBranch
+          ComponentItem = 'TextValue'
+          DataType = ftString
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'inisMovement'
+          Value = True
+          DataType = ftBoolean
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end>
+      isShowModal = False
+    end
   end
   inherited MasterDS: TDataSource
     Left = 72
@@ -1032,6 +1120,14 @@ inherited Report_CheckBonusForm: TReport_CheckBonusForm
         item
           BeginGroup = True
           Visible = True
+          ItemName = 'bbOpenReportDetail'
+        end
+        item
+          Visible = True
+          ItemName = 'dxBarStatic'
+        end
+        item
+          Visible = True
           ItemName = 'dxBarStatic'
         end
         item
@@ -1085,6 +1181,10 @@ inherited Report_CheckBonusForm: TReport_CheckBonusForm
     end
     object bbInsertByReportGrid: TdxBarButton
       Action = macInsertByReportGrid
+      Category = 0
+    end
+    object bbOpenReportDetail: TdxBarButton
+      Action = actOpenReportDetailForm
       Category = 0
     end
   end

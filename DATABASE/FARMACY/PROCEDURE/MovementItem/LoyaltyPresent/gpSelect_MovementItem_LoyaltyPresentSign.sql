@@ -10,8 +10,8 @@ CREATE OR REPLACE FUNCTION gpSelect_MovementItem_LoyaltyPresentSign(
 )
 RETURNS TABLE (Id         Integer
              , GUID       TVarChar
+             , Summ       TFloat
              , OperDate   TDateTime
-             , Amount     TFloat
              , UnitID     Integer
              , UnitName   TVarChar
              , Comment    TVarChar
@@ -94,9 +94,9 @@ BEGIN
 
            SELECT MI_Sign.Id
                 , MIString_GUID.ValueData       ::TVarChar AS GUID
-
+                , MI_Sign.Amount                           AS Summ
+                
                 , MIDate_OperDate.ValueData                AS OperDate
-                , MI_Sign.Amount
                 , Object_Unit.ID                           AS UnitID
                 , Object_Unit.ValueData                    AS UnitName
                 , MIString_Comment.ValueData               AS Comment
@@ -135,6 +135,7 @@ BEGIN
                LEFT JOIN MovementItemString AS MIString_GUID
                                             ON MIString_GUID.MovementItemId = MI_Sign.Id
                                            AND MIString_GUID.DescId = zc_MIString_GUID()
+
                LEFT JOIN MovementItemDate AS MIDate_OperDate
                                           ON MIDate_OperDate.MovementItemId = MI_Sign.Id
                                          AND MIDate_OperDate.DescId = zc_MIDate_OperDate()
@@ -175,4 +176,4 @@ $BODY$
 
 -- select * from gpSelect_MovementItem_LoyaltyPresentSign(inMovementId := 16406918 , inIsErased := 'False' ,  inSession := '3');
 
-select * from gpSelect_MovementItem_LoyaltyPresentSign(inMovementId := 19620044 , inIsErased := 'False' ,  inSession := '3');
+select * from gpSelect_MovementItem_LoyaltyPresentSign(inMovementId := 20428980  , inIsErased := 'False' ,  inSession := '3');

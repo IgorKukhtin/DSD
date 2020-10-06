@@ -15,17 +15,17 @@ inherited PromoJournalForm: TPromoJournalForm
     TabOrder = 3
     ExplicitTop = 77
     ExplicitWidth = 1084
-    ExplicitHeight = 330
+    ExplicitHeight = 338
     ClientRectBottom = 338
     ClientRectRight = 1084
     inherited tsMain: TcxTabSheet
       ExplicitWidth = 1084
-      ExplicitHeight = 330
+      ExplicitHeight = 338
       inherited cxGrid: TcxGrid
         Width = 1084
         Height = 338
         ExplicitWidth = 1084
-        ExplicitHeight = 330
+        ExplicitHeight = 338
         inherited cxGridDBTableView: TcxGridDBTableView
           DataController.Summary.FooterSummaryItems = <
             item
@@ -321,6 +321,22 @@ inherited PromoJournalForm: TPromoJournalForm
             HeaderHint = #1048#1089#1087#1086#1083#1085#1080#1090#1077#1083#1100#1085#1099#1081' '#1044#1080#1088#1077#1082#1090#1086#1088' ('#1044#1072'/'#1053#1077#1090')'
             Width = 60
           end
+          object InsertDate: TcxGridDBColumn
+            Caption = #1044#1072#1090#1072'/'#1074#1088#1077#1084#1103' ('#1089#1086#1079#1076'.)'
+            DataBinding.FieldName = 'InsertDate'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 93
+          end
+          object InsertName: TcxGridDBColumn
+            Caption = #1055#1086#1083#1100#1079#1086#1074#1072#1090#1077#1083#1100' ('#1089#1086#1079#1076'.)'
+            DataBinding.FieldName = 'InsertName'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 106
+          end
           object Color_PromoStateKind: TcxGridDBColumn
             DataBinding.FieldName = 'Color_PromoStateKind'
             Visible = False
@@ -406,7 +422,7 @@ inherited PromoJournalForm: TPromoJournalForm
   end
   inherited ActionList: TActionList
     Left = 175
-    Top = 122
+    Top = 178
     object actRefreshPartner: TdsdDataSetRefresh [0]
       Category = 'DSDLib'
       MoveParams = <>
@@ -824,7 +840,8 @@ inherited PromoJournalForm: TPromoJournalForm
     Top = 131
   end
   inherited BarManager: TdxBarManager
-    Top = 123
+    Left = 136
+    Top = 219
     DockControlHeights = (
       0
       0

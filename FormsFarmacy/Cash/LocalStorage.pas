@@ -260,7 +260,7 @@ begin
       //***19.06.20
       AddIntField(LocalDataBaseBody,   'DIVPARTID'); //Разделение партий в кассе для продажи
       //***02.10.20
-      AddBoolField(LocalDataBaseBody,   'ISPRESENT'); //Подарок
+      AddBoolField(LocalDataBaseBody,  'ISPRESENT'); //Подарок
 
       LocalDataBaseBody.CreateTable;
     end

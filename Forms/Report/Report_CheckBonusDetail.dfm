@@ -428,9 +428,25 @@ inherited Report_CheckBonusDetailForm: TReport_CheckBonusDetailForm
             HeaderAlignmentVert = vaCenter
             Width = 70
           end
+          object OperDatePartner: TcxGridDBColumn
+            Caption = #1044#1072#1090#1072' '#1076#1086#1082'. '#1091' '#1087#1086#1082#1091#1087'.'
+            DataBinding.FieldName = 'OperDatePartner'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            HeaderHint = #1044#1072#1090#1072' '#1076#1086#1082'. '#1091' '#1087#1086#1082#1091#1087'.'
+            Options.Editing = False
+            Width = 70
+          end
           object FromName_Movement: TcxGridDBColumn
-            Caption = #1054#1090' '#1082#1086#1075#1086' / '#1050#1086#1084#1091' ('#1076#1086#1082'.)'
+            Caption = #1054#1090' '#1082#1086#1075#1086' ('#1076#1086#1082'.)'
             DataBinding.FieldName = 'FromName_Movement'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 80
+          end
+          object ToName_Movement: TcxGridDBColumn
+            Caption = #1050#1086#1084#1091' ('#1076#1086#1082'.)'
+            DataBinding.FieldName = 'ToName_Movement'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Width = 80

@@ -455,17 +455,23 @@ BEGIN
        */
 
        -- получим "текущие" данные, МАстера со сроком годности менее года
-       CREATE TEMP TABLE _tmpMI_OrderInternal_Master (MovementItemId Integer, GoodsId Integer, Amount TFloat, Price TFloat, PartionGoodsDate TDateTime) ON COMMIT DROP;
-       INSERT INTO _tmpMI_OrderInternal_Master (MovementItemId, GoodsId, Amount, Price, PartionGoodsDate)
+       CREATE TEMP TABLE _tmpMI_OrderInternal_Master (MovementItemId Integer, GoodsId Integer, Amount TFloat, Price TFloat, MCS TFloat, PartionGoodsDate TDateTime) ON COMMIT DROP;
+       INSERT INTO _tmpMI_OrderInternal_Master (MovementItemId, GoodsId, Amount, Price, MCS, PartionGoodsDate)
        SELECT tmp.Id, tmp.GoodsId, tmp.Amount, tmp.Price, tmp.PartionGoodsDate
        FROM gpSelect_MovementItem_OrderInternal_Master (vbMovementId, FALSE, FALSE, FALSE, inSession) AS tmp
-       WHERE tmp.PartionGoodsDate < vbDate180;
-       
+       ;
+
+       --пересчитываем AmountManual, если больше НТЗ то берем НТЗ
+       PERFORM lpInsertUpdate_MovementItemFloat (zc_MIFloat_AmountManual(), tmp.MovementItemId, tmp.MCS :: TFloat)
+       FROM _tmpMI_OrderInternal_Master AS tmp
+       WHERE tmp.AmountManual > tmp.MCS AND COALESCE (tmp.MCS,0) <> 0;      
+
        -- обнуляем Amount, AmountManual, AmountSecond для товаров со сроком годности менее года
        PERFORM lpInsertUpdate_MovementItem (tmp.MovementItemId, zc_MI_Master(), tmp.GoodsId, vbMovementId, 0 :: TFloat, NULL)
              , lpInsertUpdate_MovementItemFloat (zc_MIFloat_AmountManual(), tmp.MovementItemId, 0 :: TFloat)
              , lpInsertUpdate_MovementItemFloat (zc_MIFloat_AmountSecond(), tmp.MovementItemId, 0 :: TFloat)
-       FROM _tmpMI_OrderInternal_Master AS tmp;
+       FROM _tmpMI_OrderInternal_Master AS tmp
+       WHERE tmp.PartionGoodsDate < vbDate180;
 
     --
     IF EXISTS(  SELECT Movement.Id

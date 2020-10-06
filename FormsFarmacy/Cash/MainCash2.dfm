@@ -34,7 +34,7 @@ inherited MainCashForm2: TMainCashForm2
         Navigator.Buttons.CustomButtons = <>
         OnFocusedRecordChanged = CheckGridDBTableViewFocusedRecordChanged
         DataController.DataSource = CheckDS
-        DataController.KeyFieldNames = 'GoodsId;PartionDateKindId;NDSKindId;DivisionPartiesID'
+        DataController.KeyFieldNames = 'GoodsId;PartionDateKindId;NDSKindId;DivisionPartiesID;isPresent'
         DataController.Summary.DefaultGroupSummaryItems = <>
         DataController.Summary.FooterSummaryItems = <>
         DataController.Summary.SummaryGroups = <>
@@ -315,7 +315,7 @@ inherited MainCashForm2: TMainCashForm2
         OnSelectionChanged = MainGridDBTableViewSelectionChanged
         DataController.DataSource = RemainsDS
         DataController.Filter.Options = [fcoCaseInsensitive]
-        DataController.KeyFieldNames = 'Id;PartionDateKindId;NDSKindId;DivisionPartiesID'
+        DataController.KeyFieldNames = 'Id;PartionDateKindId;NDSKindId;DivisionPartiesID;isPresent'
         DataController.Summary.DefaultGroupSummaryItems = <>
         DataController.Summary.FooterSummaryItems = <>
         DataController.Summary.SummaryGroups = <>
@@ -2271,9 +2271,6 @@ inherited MainCashForm2: TMainCashForm2
     ParentBackground = False
     TabOrder = 13
     Visible = False
-    DesignSize = (
-      858
-      21)
     object Label23: TLabel
       Left = 1
       Top = 1
@@ -2320,7 +2317,7 @@ inherited MainCashForm2: TMainCashForm2
       ExplicitHeight = 14
     end
     object Label27: TLabel
-      Left = 488
+      Left = 461
       Top = 2
       Width = 73
       Height = 13
@@ -2333,38 +2330,11 @@ inherited MainCashForm2: TMainCashForm2
       Font.Style = []
       ParentFont = False
     end
-    object lblPresent: TLabel
-      Left = 361
-      Top = 2
-      Width = 48
-      Height = 13
-      Align = alCustom
-      Caption = #1055#1086#1076#1072#1088#1086#1082':'
-      Font.Charset = DEFAULT_CHARSET
-      Font.Color = clGray
-      Font.Height = -11
-      Font.Name = 'Tahoma'
-      Font.Style = []
-      ParentFont = False
-    end
-    object edPresent: TcxTextEdit
-      Left = 415
-      Top = 0
-      TabStop = False
-      Anchors = [akLeft, akTop, akRight]
-      Properties.AutoSelect = False
-      Properties.MaxLength = 8
-      Properties.ReadOnly = True
-      TabOrder = 1
-      OnExit = edPromoCodeExit
-      OnKeyDown = edPromoCodeKeyDown
-      OnKeyPress = edPromoCodeKeyPress
-      Width = 434
-    end
     object edPromoCodeLoyaltySumm: TcxCurrencyEdit
       Left = 567
       Top = -1
-      Properties.DisplayFormat = ',0.00;-,0.00'
+      Properties.DecimalPlaces = 4
+      Properties.DisplayFormat = ',0.00##;-,0.00##'
       Properties.ReadOnly = True
       TabOrder = 0
       Width = 60
@@ -2429,7 +2399,7 @@ inherited MainCashForm2: TMainCashForm2
       ExplicitHeight = 14
     end
     object lblLoyaltySMSummaRemainder: TLabel
-      Left = 544
+      Left = 543
       Top = 3
       Width = 55
       Height = 13
@@ -2442,7 +2412,6 @@ inherited MainCashForm2: TMainCashForm2
       Font.Name = 'Tahoma'
       Font.Style = []
       ParentFont = False
-      ExplicitLeft = 552
     end
     object lblLoyaltySMSumma: TLabel
       Left = 671
@@ -5844,6 +5813,12 @@ inherited MainCashForm2: TMainCashForm2
         MultiSelectSeparator = ','
       end
       item
+        Name = 'LoyaltyAmountPresent'
+        Value = Null
+        DataType = ftFloat
+        MultiSelectSeparator = ','
+      end
+      item
         Name = 'LoyaltyGoodsId'
         Value = Null
         MultiSelectSeparator = ','
@@ -5869,6 +5844,12 @@ inherited MainCashForm2: TMainCashForm2
         Name = 'DivisionPartiesName'
         Value = Null
         DataType = ftString
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'AddPresent'
+        Value = Null
+        DataType = ftBoolean
         MultiSelectSeparator = ','
       end>
     Left = 32
@@ -6073,7 +6054,10 @@ inherited MainCashForm2: TMainCashForm2
         Name = 'isPresent'
         DataType = ftBoolean
       end>
-    IndexDefs = <>
+    IndexDefs = <
+      item
+        Name = 'CheckCDSIndex1'
+      end>
     Params = <>
     StoreDefs = True
     BeforePost = CheckCDSBeforePost
@@ -7381,6 +7365,12 @@ inherited MainCashForm2: TMainCashForm2
         Name = 'outisPresent'
         Value = Null
         DataType = ftBoolean
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'outAmountPresent'
+        Value = Null
+        DataType = ftFloat
         MultiSelectSeparator = ','
       end
       item
