@@ -1174,6 +1174,8 @@ type
     miMemberMinus: TMenuItem;
     actMemberBranch: TdsdOpenForm;
     miMemberBranch: TMenuItem;
+    actReport_CheckBonusTest2: TdsdOpenForm;
+    miReport_CheckBonusTest2: TMenuItem;
     procedure actReport_OLAPSoldExecute(Sender: TObject);
     procedure FormShow(Sender: TObject);
     procedure FormClose(Sender: TObject; var Action: TCloseAction);

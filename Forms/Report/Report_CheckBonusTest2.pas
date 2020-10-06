@@ -1,4 +1,4 @@
-unit Report_CheckBonusTest;
+unit Report_CheckBonusTest2;
 
 interface
 
@@ -27,7 +27,7 @@ uses
   dxSkinXmas2008Blue;
 
 type
-  TReport_CheckBonusTestForm = class(TAncestorReportForm)
+  TReport_CheckBonusTest2Form = class(TAncestorReportForm)
     InvNumber_master: TcxGridDBColumn;
     Value: TcxGridDBColumn;
     Sum_CheckBonus: TcxGridDBColumn;
@@ -86,8 +86,6 @@ type
     bbUpdateSend_Yes: TdxBarButton;
     bbUpdateSend_No: TdxBarButton;
     bbInsertByReportGrid: TdxBarButton;
-    ProtocolReportBonusForm: TdsdOpenForm;
-    bbProtocolReportBonus: TdxBarButton;
   private
     { Private declarations }
   public
@@ -98,6 +96,6 @@ implementation
 
 {$R *.dfm}
 initialization
-  RegisterClass(TReport_CheckBonusTestForm);
+  RegisterClass(TReport_CheckBonusTest2Form);
 
 end.

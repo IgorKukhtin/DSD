@@ -2277,6 +2277,9 @@ begin
   TdsdFormStorageFactory.GetStorage.Load('TReport_CheckBonus_IncomeForm');
   exit;
   }
+    TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_CheckBonusTest2Form'));
+  TdsdFormStorageFactory.GetStorage.Load('TReport_CheckBonusTest2Form');
+
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_CheckBonusDetailForm'));
   TdsdFormStorageFactory.GetStorage.Load('TReport_CheckBonusDetailForm');
 
