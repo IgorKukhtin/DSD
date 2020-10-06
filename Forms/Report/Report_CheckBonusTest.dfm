@@ -104,7 +104,9 @@ inherited Report_CheckBonusTestForm: TReport_CheckBonusTestForm
               Kind = skCount
               Column = JuridicalName
             end>
-          OptionsData.Editing = False
+          OptionsData.CancelOnExit = True
+          OptionsData.Deleting = False
+          OptionsData.DeletingConfirmation = False
           OptionsView.GroupByBox = True
           Styles.Content = nil
           Styles.Inactive = nil
