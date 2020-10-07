@@ -1,12 +1,14 @@
 -- Function: gpInsertUpdate_Object_MemberMinus()
 
 DROP FUNCTION IF EXISTS gpInsertUpdate_Object_MemberMinus(Integer, TVarChar, TVarChar, TVarChar, Integer, Integer, Integer, Integer, TFloat, TFloat, TVarChar);
+DROP FUNCTION IF EXISTS gpInsertUpdate_Object_MemberMinus(Integer, TVarChar, TVarChar, TVarChar, TVarChar, Integer, Integer, Integer, Integer, TFloat, TFloat, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpInsertUpdate_Object_MemberMinus(
  INOUT ioId                  Integer   ,    -- ключ объекта < >
     IN inName                TVarChar  ,    -- Примечание 
     IN inBankAccountTo       TVarChar  ,    -- № счета получателя платежа
     IN inDetailPayment       TVarChar  ,    -- Назначение платежа
+    IN inINN_to              TVarChar  ,    -- ОКПО/ИНН получателя
     IN inFromId              Integer   ,    -- Физические лица
     IN inToId                Integer   ,    -- Физические лица(сторонние) / Юридические лица
     IN inBankAccountFromId   Integer   ,    -- IBAN плательщика платежа
@@ -18,6 +20,8 @@ CREATE OR REPLACE FUNCTION gpInsertUpdate_Object_MemberMinus(
   RETURNS integer AS
 $BODY$
    DECLARE vbUserId Integer;
+   DECLARE vbDescId_to Integer;
+   DECLARE vbINN_to TVarChar;
 BEGIN
    
    -- проверка прав пользователя на вызов процедуры
@@ -48,6 +52,26 @@ BEGIN
    -- сохранили свойство <>
    PERFORM lpInsertUpdate_ObjectFloat (zc_ObjectFloat_MemberMinus_Summ(), ioId, inSumm);
 
+   vbINN_to := (SELECT ObjectString_INN_to.ValueData
+                FROM ObjectString AS ObjectString_INN_to
+                WHERE ObjectString_INN_to.ObjectId = inToId
+                  AND ObjectString_INN_to.DescId = zc_ObjectString_Member_INN()
+               );
+   vbDescId_to := (SELECT Object.DescId FROM Object WHERE Object.Id = inToId);
+               
+   IF COALESCE (vbDescId_to,0) <> zc_Object_MemberExternal() AND COALESCE (vbINN_to,'') <> COALESCE (inINN_to,'')
+      THEN
+           RAISE EXCEPTION 'Ошибка.Ввод ИНН только для стронних физ.лиц.';
+   END IF;
+   
+   IF vbDescId_to = zc_Object_MemberExternal() AND COALESCE (inINN_to,'') <> '' AND COALESCE (vbINN_to,'') <> COALESCE (inINN_to,'')
+      THEN
+          -- сохранили свойство <>
+          PERFORM lpInsertUpdate_ObjectString (zc_ObjectString_MemberExternal_INN(), inToId, inINN_to);
+          -- сохранили протокол
+          PERFORM lpInsert_ObjectProtocol (inToId, vbUserId);
+   END IF;
+   
    -- сохранили протокол
    PERFORM lpInsert_ObjectProtocol (ioId, vbUserId);
 

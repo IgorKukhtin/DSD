@@ -63,6 +63,13 @@ object MemberExternal_Juridical_ObjectForm: TMemberExternal_Juridical_ObjectForm
         HeaderAlignmentVert = vaCenter
         Width = 200
       end
+      object INN: TcxGridDBColumn
+        Caption = #1048#1053#1053
+        DataBinding.FieldName = 'INN'
+        HeaderAlignmentVert = vaCenter
+        Options.Editing = False
+        Width = 89
+      end
       object ItemName: TcxGridDBColumn
         Caption = #1069#1083#1077#1084#1077#1085#1090
         DataBinding.FieldName = 'ItemName'
@@ -244,6 +251,14 @@ object MemberExternal_Juridical_ObjectForm: TMemberExternal_Juridical_ObjectForm
           Value = Null
           Component = MasterCDS
           ComponentItem = 'Name'
+          DataType = ftString
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'INN'
+          Value = Null
+          Component = MasterCDS
+          ComponentItem = 'INN'
           DataType = ftString
           MultiSelectSeparator = ','
         end>

@@ -61,6 +61,16 @@ inherited Report_CheckBonusTest2Form: TReport_CheckBonusTest2Form
               Format = ',0.00##'
               Kind = skSum
               Column = Sum_Account
+            end
+            item
+              Format = ',0.00##'
+              Kind = skSum
+              Column = Sum_Sale_weight
+            end
+            item
+              Format = ',0.00##'
+              Kind = skSum
+              Column = Sum_ReturnIn_weight
             end>
           DataController.Summary.FooterSummaryItems = <
             item
@@ -102,6 +112,16 @@ inherited Report_CheckBonusTest2Form: TReport_CheckBonusTest2Form
               Format = #1057#1090#1088#1086#1082': ,0'
               Kind = skCount
               Column = JuridicalName
+            end
+            item
+              Format = ',0.00##'
+              Kind = skSum
+              Column = Sum_Sale_weight
+            end
+            item
+              Format = ',0.00##'
+              Kind = skSum
+              Column = Sum_ReturnIn_weight
             end>
           OptionsData.CancelOnExit = True
           OptionsData.Deleting = False
@@ -315,6 +335,43 @@ inherited Report_CheckBonusTest2Form: TReport_CheckBonusTest2Form
           object Sum_SaleReturnIn: TcxGridDBColumn
             Caption = #1055#1088#1086#1076#1072#1078#1072' '#8212' '#1074#1086#1079#1074#1088#1072#1090
             DataBinding.FieldName = 'Sum_SaleReturnIn'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 4
+            Properties.DisplayFormat = ',0.####;-,0.####; ;'
+            Properties.ReadOnly = True
+            Visible = False
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            HeaderHint = #1055#1088#1086#1076#1072#1078#1072' - '#1074#1086#1079#1074#1088#1072#1090
+            Options.Editing = False
+            Width = 80
+          end
+          object PercentRetBonus_fact_weight: TcxGridDBColumn
+            Caption = 'Max % '#1074#1086#1079#1074#1088#1072#1090#1072' '#1092#1072#1082#1090' ('#1042#1077#1089')'
+            DataBinding.FieldName = 'PercentRetBonus_fact_weight'
+            Visible = False
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 48
+          end
+          object Sum_Sale_weight: TcxGridDBColumn
+            Caption = #1055#1088#1086#1076#1072#1085#1086' ('#1074#1077#1089')'
+            DataBinding.FieldName = 'Sum_Sale_weight'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 4
+            Properties.DisplayFormat = ',0.####;-,0.####; ;'
+            Properties.ReadOnly = True
+            Visible = False
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            HeaderHint = #1055#1088#1086#1076#1072#1078#1072' - '#1074#1086#1079#1074#1088#1072#1090
+            Options.Editing = False
+            Width = 80
+          end
+          object Sum_ReturnIn_weight: TcxGridDBColumn
+            Caption = #1042#1086#1079#1074#1088#1072#1090' ('#1074#1077#1089')'
+            DataBinding.FieldName = 'Sum_ReturnIn_weight'
             PropertiesClassName = 'TcxCurrencyEditProperties'
             Properties.DecimalPlaces = 4
             Properties.DisplayFormat = ',0.####;-,0.####; ;'

@@ -104,6 +104,15 @@ object MemberMinusForm: TMemberMinusForm
         HeaderAlignmentVert = vaCenter
         Width = 138
       end
+      object INN_From: TcxGridDBColumn
+        Caption = #1048#1053#1053' ('#1087#1083#1072#1090'.)'
+        DataBinding.FieldName = 'INN_From'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        HeaderHint = #1048#1053#1053' '#1092'.'#1083'. '#1089' '#1082#1086#1090#1086#1088#1086#1075#1086' '#1087#1088#1086#1080#1079#1074#1086#1076#1103#1090#1089#1103' '#1091#1076#1077#1088#1078#1072#1085#1080#1103
+        Options.Editing = False
+        Width = 109
+      end
       object ToName: TcxGridDBColumn
         Caption = #1060#1080#1079'. '#1083#1080#1094#1072'('#1089#1090#1086#1088#1086#1085#1085#1080#1077') / '#1070#1088'. '#1083#1080#1094#1072
         DataBinding.FieldName = 'ToName'
@@ -119,6 +128,14 @@ object MemberMinusForm: TMemberMinusForm
         HeaderAlignmentVert = vaCenter
         HeaderHint = #1060#1080#1079#1080#1095#1077#1089#1082#1080#1077' '#1083#1080#1094#1072'('#1089#1090#1086#1088#1086#1085#1085#1080#1077') / '#1070#1088#1080#1076#1080#1095#1077#1089#1082#1080#1077' '#1083#1080#1094#1072
         Width = 172
+      end
+      object INN_to: TcxGridDBColumn
+        Caption = #1054#1050#1055#1054' / '#1048#1053#1053' ('#1087#1086#1083#1091#1095'.)'
+        DataBinding.FieldName = 'INN_to'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        HeaderHint = #1048#1053#1053' '#1092'.'#1083'. '#1089' '#1082#1086#1090#1086#1088#1086#1075#1086' '#1087#1088#1086#1080#1079#1074#1086#1076#1103#1090#1089#1103' '#1091#1076#1077#1088#1078#1072#1085#1080#1103
+        Width = 109
       end
       object BankAccountFromName: TcxGridDBColumn
         Caption = 'IBAN '#1087#1083#1072#1090#1077#1083#1100#1097#1080#1082#1072
@@ -136,6 +153,13 @@ object MemberMinusForm: TMemberMinusForm
         HeaderHint = 'IBAN '#1087#1083#1072#1090#1077#1083#1100#1097#1080#1082#1072' '#1087#1083#1072#1090#1077#1078#1072
         Width = 134
       end
+      object BankName_From: TcxGridDBColumn
+        Caption = #1041#1072#1085#1082' '#1087#1083#1072#1090#1077#1083#1100#1097#1080#1082#1072
+        DataBinding.FieldName = 'BankName_From'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Width = 96
+      end
       object BankAccountToName: TcxGridDBColumn
         Caption = 'IBAN '#1087#1086#1083#1091#1095#1072#1090#1077#1083#1103
         DataBinding.FieldName = 'BankAccountToName'
@@ -151,6 +175,13 @@ object MemberMinusForm: TMemberMinusForm
         HeaderAlignmentVert = vaCenter
         HeaderHint = 'IBAN '#1087#1086#1083#1091#1095#1072#1090#1077#1083#1103' '#1087#1083#1072#1090#1077#1078#1072
         Width = 118
+      end
+      object BankName_To: TcxGridDBColumn
+        Caption = #1041#1072#1085#1082' '#1087#1086#1083#1091#1095#1072#1090#1077#1083#1103
+        DataBinding.FieldName = 'BankName_To'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Width = 96
       end
       object TotalSumm: TcxGridDBColumn
         Caption = #1057#1091#1084#1084#1072' '#1080#1090#1086#1075#1086
@@ -698,6 +729,14 @@ object MemberMinusForm: TMemberMinusForm
           ComponentItem = 'ToName'
           DataType = ftString
           MultiSelectSeparator = ','
+        end
+        item
+          Name = 'INN'
+          Value = Null
+          Component = ClientDataSet
+          ComponentItem = 'INN_to'
+          DataType = ftString
+          MultiSelectSeparator = ','
         end>
       isShowModal = True
     end
@@ -864,6 +903,15 @@ object MemberMinusForm: TMemberMinusForm
         Value = ''
         Component = ClientDataSet
         ComponentItem = 'DetailPayment'
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inINN_to'
+        Value = Null
+        Component = ClientDataSet
+        ComponentItem = 'INN_to'
         DataType = ftString
         ParamType = ptInput
         MultiSelectSeparator = ','
