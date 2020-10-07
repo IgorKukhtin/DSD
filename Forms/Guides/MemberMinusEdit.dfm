@@ -282,11 +282,11 @@ object MemberMinusEditForm: TMemberMinusEditForm
         MultiSelectSeparator = ','
       end
       item
-        Name = 'inBankAccountFromId'
+        Name = 'ioBankAccountFromId'
         Value = ''
         Component = GuidesBankAccountFrom
         ComponentItem = 'Key'
-        ParamType = ptInput
+        ParamType = ptInputOutput
         MultiSelectSeparator = ','
       end
       item
@@ -295,6 +295,22 @@ object MemberMinusEditForm: TMemberMinusEditForm
         Component = GuidesBankAccountTo
         ComponentItem = 'Key'
         ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inBankAccountId_Main'
+        Value = Null
+        Component = dsdFormParams
+        ComponentItem = 'BankAccountId_Main'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'outBankAccountFromName'
+        Value = Null
+        Component = GuidesBankAccountFrom
+        ComponentItem = 'TextValue'
+        DataType = ftString
         MultiSelectSeparator = ','
       end
       item
@@ -327,6 +343,12 @@ object MemberMinusEditForm: TMemberMinusEditForm
       end
       item
         Name = 'MaskId'
+        Value = Null
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'BankAccountId_Main'
         Value = Null
         ParamType = ptInput
         MultiSelectSeparator = ','
