@@ -414,10 +414,10 @@ end;
 
 procedure TLoadFormTest.LoadCheckFormTest;
 begin
-  TdsdFormStorageFactory.GetStorage.Save(GetForm('TCheckSummCardForm'));
+{  TdsdFormStorageFactory.GetStorage.Save(GetForm('TCheckSummCardForm'));
   TdsdFormStorageFactory.GetStorage.Load('TCheckSummCardForm');
 
-  {
+
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TCheckJournalDiscountExternalForm'));
   TdsdFormStorageFactory.GetStorage.Load('TCheckJournalDiscountExternalForm');
   Exit;
@@ -434,10 +434,11 @@ begin
   TdsdFormStorageFactory.GetStorage.Load('TChoiceDeferredCheckForm');
   exit;
 
+  }
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TCheckForm'));
   TdsdFormStorageFactory.GetStorage.Load('TCheckForm');
 
-
+   {
 
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TPartionGoodsListForm'));
   TdsdFormStorageFactory.GetStorage.Load('TPartionGoodsListForm');

@@ -186,7 +186,6 @@ BEGIN
 
                                     WHERE MovementItem.MovementId = outMovementId
                                                                AND MovementItem.DescId = zc_MI_Master()
-                                                               AND MovementItem.Amount = 1
                                                                AND MovementItem.isErased = FALSE)
         , tmpContainer AS (SELECT Container.ObjectId    AS GoodsID
                                 , SUM(Container.Amount) AS Amount

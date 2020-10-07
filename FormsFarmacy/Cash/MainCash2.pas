@@ -860,7 +860,7 @@ uses CashFactory, IniUtils, CashCloseDialog, VIPDialog, DiscountDialog,
   EnterRecipeNumber, CheckHelsiSign, CheckHelsiSignAllUnit,
   EmployeeScheduleCash,
   EnterLoyaltyNumber, Report_ImplementationPlanEmployeeCash,
-  EnterLoyaltySaveMoney,
+  EnterLoyaltySaveMoney, ChoosingPresent,
   LoyaltySMList, EnterLoyaltySMDiscount, GetSystemInfo, ListSelection;
 
 const
@@ -2854,7 +2854,8 @@ begin
           end;
         end;
 
-        if RemainsCDS.FieldByName('isBanFiscalSale').AsBoolean and not actSpec.Checked and (FieldByName('Amount').AsCurrency > 0) then
+        if RemainsCDS.FieldByName('isBanFiscalSale').AsBoolean and not actSpec.Checked and
+          (FieldByName('Amount').AsCurrency > 0) and not FieldByName('isPresent').AsBoolean then
         begin
           ShowMessage('Товар <' + FieldByName('GoodsName').AsString + '> из выбранной партии по техническим причинам пробивается по служебному чеку (зеленая галка)...');
           exit;
@@ -4207,6 +4208,43 @@ begin
       finally
         FormParams.ParamByName('AddPresent').Value := False;
       end;
+    end;
+  end;
+
+  if AisPresent and (AGoodsId = 0) then
+  begin
+    with TChoosingPresentForm.Create(nil) do
+    try
+      Amount := AAmountPresent;
+      FormParams.ParamByName('MovementId').Value := AMovementId;
+      Label10.Caption := 'Выбирите ' + CurrToStr(AAmountPresent) + ' едениц товара для вставки в документ';
+      actRefresh.Execute;
+      if ShowModal = mrOk then
+      begin
+        ChoosingPresentCDS.First;
+        while not ChoosingPresentCDS.Eof do
+        begin
+          if ChoosingPresentCDS.FieldByName('Amount').AsCurrency > 0 then
+          begin
+            if RemainsCDS.Locate('Id', ChoosingPresentCDS.FieldByName('GoodsId').AsInteger, []) and
+              (RemainsCDS.FieldByName('Remains').AsCurrency >= ChoosingPresentCDS.FieldByName('Amount').AsCurrency) then
+            try
+              edAmount.Text := CurrToStr(ChoosingPresentCDS.FieldByName('Amount').AsCurrency);
+              MainCashForm.FormParams.ParamByName('AddPresent').Value := True;
+              InsertUpdateBillCheckItems;
+            finally
+              MainCashForm.FormParams.ParamByName('AddPresent').Value := False;
+            end;
+          end;
+          ChoosingPresentCDS.Next;
+        end;
+      end else
+      begin
+        NewCheck;
+        Exit;
+      end;
+    finally
+      Free;
     end;
   end;
 

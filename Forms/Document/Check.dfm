@@ -21,6 +21,8 @@ inherited CheckForm: TCheckForm
       inherited cxGrid: TcxGrid
         Width = 804
         Height = 214
+        ExplicitLeft = 272
+        ExplicitTop = 16
         ExplicitWidth = 804
         ExplicitHeight = 214
         inherited cxGridDBTableView: TcxGridDBTableView
@@ -259,6 +261,19 @@ inherited CheckForm: TCheckForm
             HeaderHint = #1056#1072#1079#1076#1077#1083#1077#1085#1080#1077' '#1087#1072#1088#1090#1080#1081' '#1076#1083#1103' '#1087#1088#1086#1076#1072#1078#1080
             Options.Editing = False
             Width = 146
+          end
+          object colisPresent: TcxGridDBColumn
+            Caption = #1055#1086#1076#1072#1088#1086#1082
+            DataBinding.FieldName = 'isPresent'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 60
+          end
+          object colColor_calc: TcxGridDBColumn
+            DataBinding.FieldName = 'Color_calc'
+            Visible = False
+            VisibleForCustomization = False
           end
         end
       end
@@ -2070,6 +2085,11 @@ inherited CheckForm: TCheckForm
     end
   end
   inherited DBViewAddOn: TdsdDBViewAddOn
+    ColorRuleList = <
+      item
+        BackGroundValueColumn = colColor_calc
+        ColorValueList = <>
+      end>
     SummaryItemList = <
       item
         Param.Value = Null

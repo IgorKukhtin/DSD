@@ -97,6 +97,7 @@ BEGIN
                       LEFT JOIN MovementItemLinkObject AS MILinkObject_DivisionParties
                                                        ON MILinkObject_DivisionParties.MovementItemId = MovementItem.Id
                                                       AND MILinkObject_DivisionParties.DescId         = zc_MILinkObject_DivisionParties()
+
                   WHERE MovementItem.MovementId = inMovementId
                     AND MovementItem.DescId = zc_MI_Master()
                  )
@@ -245,7 +246,13 @@ BEGIN
      RETURN QUERY
      WITH
      tmpMI AS (SELECT MovementItem.*
+                    , COALESCE (MIBoolean_Present.ValueData, False)                               AS isPresent
                FROM MovementItem_Check_View AS MovementItem
+               
+                    LEFT JOIN MovementItemBoolean AS MIBoolean_Present
+                                                  ON MIBoolean_Present.MovementItemId = MovementItem.Id
+                                                 AND MIBoolean_Present.DescId         = zc_MIBoolean_Present()
+                                                 
                WHERE MovementItem.MovementId = inMovementId
                ),
      tmpGoodsUKTZED AS (SELECT Object_Goods_Juridical.GoodsMainId
@@ -307,7 +314,7 @@ BEGIN
            , Object_Goods_PairSun_Main.GoodsPairSunId                            AS GoodsPairSunMainId
            , Object_DivisionParties.Id                                           AS DivisionPartiesId 
            , Object_DivisionParties.ValueData                                    AS DivisionPartiesName 
-           , Object_Goods_Main.isPresent                                         AS isPresent
+           , MovementItem.isPresent                                              AS isPresent
            
            FROM tmpMI AS MovementItem
 

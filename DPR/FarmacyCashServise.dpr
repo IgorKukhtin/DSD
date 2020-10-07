@@ -76,7 +76,8 @@ uses
   PUSHMessage in '..\SOURCE\COMPONENT\PUSHMessage.pas' {PUSHMessageForm},
   OrderSpFozzXML in '..\SOURCE\EDI\OrderSpFozzXML.pas',
   DesadvFozzXML in '..\SOURCE\EDI\DesadvFozzXML.pas',
-  IftminFozzXML in '..\SOURCE\EDI\IftminFozzXML.pas';
+  IftminFozzXML in '..\SOURCE\EDI\IftminFozzXML.pas',
+  dsdTranslator in '..\SOURCE\COMPONENT\dsdTranslator.pas';
 
 {$R *.res}
 

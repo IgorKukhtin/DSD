@@ -36,6 +36,7 @@ RETURNS TABLE (Id Integer, ParentId integer
              , PartionDateKindId Integer, PartionDateKindName TVarChar
              , NDSKindId Integer
              , DivisionPartiesId Integer, DivisionPartiesName TVarChar
+             , isPresent Boolean
               )
 AS
 $BODY$
@@ -160,7 +161,8 @@ BEGIN
            , MovementItem.isErased
            , CASE WHEN COALESCE (vbMovementId_SP,0) = 0 THEN False ELSE TRUE END AS isSp
            , MovementItem.Amount
-           , zc_Color_White()                                                    AS Color_calc
+           , CASE WHEN COALESCE (MIBoolean_Present.ValueData, False) = TRUE 
+                  THEN 16756991 ELSE zc_Color_White() END                        AS Color_calc
            , zc_Color_Black()                                                    AS Color_ExpirationDate
            , Null::TVArChar                                                      AS AccommodationName  
            , Null::TFloat                                                        AS Multiplicity 
@@ -178,6 +180,8 @@ BEGIN
 
            , Object_DivisionParties.Id                                           AS DivisionPartiesId 
            , Object_DivisionParties.ValueData                                    AS DivisionPartiesName 
+           
+           , COALESCE (MIBoolean_Present.ValueData, False)                       AS isPresent
 
            /*, MIFloat_ContainerId.ContainerId  ::TFloat                         AS ContainerId
            , COALESCE (tmpContainer.ExpirationDate, NULL)      :: TDateTime      AS ExpirationDate
@@ -216,6 +220,10 @@ BEGIN
                                     ON ObjectBoolean_DoesNotShare.ObjectId = MovementItem.GoodsId
                                    AND ObjectBoolean_DoesNotShare.DescId = zc_ObjectBoolean_Goods_DoesNotShare()
 
+            LEFT JOIN MovementItemBoolean AS MIBoolean_Present
+                                          ON MIBoolean_Present.MovementItemId = MovementItem.Id
+                                         AND MIBoolean_Present.DescId         = zc_MIBoolean_Present()
+
             LEFT JOIN MovementItemLinkObject AS MILinkObject_DivisionParties
                                              ON MILinkObject_DivisionParties.MovementItemId = MovementItem.Id
                                             AND MILinkObject_DivisionParties.DescId         = zc_MILinkObject_DivisionParties()
@@ -247,4 +255,4 @@ ALTER FUNCTION gpSelect_MovementItem_Check (Integer, TVarChar) OWNER TO postgres
 -- тест
 -- select * from gpSelect_MovementItem_Check(inMovementId := 19274728  ,  inSession := '3');
 
-select * from gpSelect_MovementItem_Check(inMovementId := 20500682 ,  inSession := '3');
+select * from gpSelect_MovementItem_Check(inMovementId := 20526322 ,  inSession := '3');
