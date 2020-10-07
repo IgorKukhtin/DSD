@@ -15,7 +15,9 @@ BEGIN
      -- проверка прав пользовател€ на вызов процедуры
      vbUserId:= lpGetUserBySession (inSession);
 
+     -- –езультат
      RETURN QUERY
+     -- zc_Object_MemberExternal
      SELECT 
            Object_MemberExternal.Id         AS Id
          , Object_MemberExternal.ObjectCode AS Code
@@ -29,7 +31,9 @@ BEGIN
           LEFT JOIN ObjectDesc ON ObjectDesc.Id = Object_MemberExternal.DescId
      WHERE Object_MemberExternal.DescId = zc_Object_MemberExternal()
        AND (Object_MemberExternal.isErased = FALSE OR inIsShowAll = TRUE)
+
    UNION ALL
+     -- zc_Object_Member
      SELECT 
            Object_Member.Id         AS Id
          , Object_Member.ObjectCode AS Code
@@ -43,7 +47,9 @@ BEGIN
           LEFT JOIN ObjectDesc ON ObjectDesc.Id = Object_Member.DescId
      WHERE Object_Member.DescId = zc_Object_Member()
        AND (Object_Member.isErased = FALSE OR inIsShowAll = TRUE)                
+
    UNION ALL
+     -- zc_Object_Juridical
      SELECT 
            Object_Juridical.Id         AS Id
          , Object_Juridical.ObjectCode AS Code
@@ -57,6 +63,13 @@ BEGIN
           LEFT JOIN ObjectDesc ON ObjectDesc.Id = Object_Juridical.DescId
      WHERE Object_Juridical.DescId = zc_Object_Juridical()
        AND (Object_Juridical.isErased = FALSE OR inIsShowAll = TRUE)
+
+   UNION ALL
+    SELECT 0                     AS Id
+         , NULL :: Integer       AS Code
+         , '”ƒјЋ»“№' :: TVarChar AS Name
+         , '' :: TVarChar        AS ItemName
+         , FALSE                 AS isErased
    ;
 
 END;

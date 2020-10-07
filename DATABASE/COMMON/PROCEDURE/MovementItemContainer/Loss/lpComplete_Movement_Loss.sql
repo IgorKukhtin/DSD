@@ -610,12 +610,14 @@ BEGIN
 
             , CASE WHEN _tmpItem.ObjectDescId = zc_Object_InfoMoney() THEN Container_asset.ObjectId ELSE COALESCE (lfContainerSumm_20901.AccountId, COALESCE (Container_Summ.ObjectId, 0)) END AS AccountId
             , SUM (CASE WHEN _tmpItem.ObjectDescId = zc_Object_InfoMoney()
-                   THEN _tmpItem.Summ_service
-                   ELSE CAST (_tmpItem.OperCount * COALESCE (HistoryCost.Price, 0) AS NUMERIC (16,4))
-                      + CASE WHEN _tmpItem.MovementItemId = HistoryCost.MovementItemId_diff AND ABS (CAST (_tmpItem.OperCount * COALESCE (HistoryCost.Price, 0) AS NUMERIC (16,4))) >= -1 * HistoryCost.Summ_diff
-                                  THEN HistoryCost.Summ_diff -- !!!если есть "погрешность" при округлении, добавили сумму!!!
-                             ELSE 0
-                        END
+                        THEN _tmpItem.Summ_service
+                        WHEN ABS (Container_Summ.Amount - _tmpItem.OperCount * COALESCE (HistoryCost.Price, 0)) < 0.01
+                        THEN Container_Summ.Amount 
+                        ELSE CAST (_tmpItem.OperCount * COALESCE (HistoryCost.Price, 0) AS NUMERIC (16,4))
+                           + CASE WHEN _tmpItem.MovementItemId = HistoryCost.MovementItemId_diff AND ABS (CAST (_tmpItem.OperCount * COALESCE (HistoryCost.Price, 0) AS NUMERIC (16,4))) >= -1 * HistoryCost.Summ_diff
+                                       THEN HistoryCost.Summ_diff -- !!!если есть "погрешность" при округлении, добавили сумму!!!
+                                  ELSE 0
+                             END
               END) AS OperSumm
         FROM _tmpItem
              -- так находим для тары

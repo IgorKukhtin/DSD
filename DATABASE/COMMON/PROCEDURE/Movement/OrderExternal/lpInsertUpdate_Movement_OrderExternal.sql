@@ -1,9 +1,6 @@
 -- Function: lpInsertUpdate_Movement_OrderExternal()
 
-DROP FUNCTION IF EXISTS lpInsertUpdate_Movement_OrderExternal (Integer, TVarChar, TVarChar, TDateTime, TDateTime, TDateTime, Boolean, TFloat, TFloat, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer);
-DROP FUNCTION IF EXISTS lpInsertUpdate_Movement_OrderExternal (Integer, TVarChar, TVarChar, TDateTime, TDateTime, TDateTime, TDateTime, TDateTime, Boolean, TFloat, TFloat, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer);
-DROP FUNCTION IF EXISTS lpInsertUpdate_Movement_OrderExternal (Integer, TVarChar, TVarChar, TDateTime, TDateTime, TDateTime, TDateTime, TDateTime, Boolean, TFloat, TFloat, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer);
-
+DROP FUNCTION IF EXISTS lpInsertUpdate_Movement_OrderExternal (Integer, TVarChar, TVarChar, TDateTime, TDateTime, TDateTime, Boolean, TFloat, TFloat, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer);
 
 CREATE OR REPLACE FUNCTION lpInsertUpdate_Movement_OrderExternal(
  INOUT ioId                  Integer   , -- Ключ объекта <Документ Перемещение>
@@ -38,7 +35,25 @@ BEGIN
      END IF;
 
      -- определяем ключ доступа
-     vbAccessKeyId:= lpGetAccessKey (inUserId, zc_Enum_Process_InsertUpdate_Movement_OrderExternal());
+   --vbAccessKeyId:= lpGetAccessKey (inUserId, zc_Enum_Process_InsertUpdate_Movement_OrderExternal());
+     vbAccessKeyId:= CASE WHEN inFromId = 8411 -- Склад ГП ф Киев
+                               THEN zc_Enum_Process_AccessKey_DocumentKiev() 
+                          WHEN inToId = 346093 -- Склад ГП ф.Одесса
+                               THEN zc_Enum_Process_AccessKey_DocumentOdessa() 
+                          WHEN inToId = 8413 -- Склад ГП ф.Кривой Рог
+                               THEN zc_Enum_Process_AccessKey_DocumentKrRog() 
+                          WHEN inToId = 8417 -- Склад ГП ф.Николаев (Херсон)
+                               THEN zc_Enum_Process_AccessKey_DocumentNikolaev() 
+                          WHEN inToId = 8425 -- Склад ГП ф.Харьков
+                               THEN zc_Enum_Process_AccessKey_DocumentKharkov() 
+                          WHEN inToId = 8415 -- Склад ГП ф.Черкассы (Кировоград)
+                               THEN zc_Enum_Process_AccessKey_DocumentCherkassi() 
+                          WHEN inToId = 301309 -- Склад ГП ф.Запорожье
+                               THEN zc_Enum_Process_AccessKey_DocumentZaporozhye() 
+                          WHEN inToId = 3080691 -- Склад ГП ф.Львов
+                               THEN zc_Enum_Process_AccessKey_DocumentLviv() 
+                          ELSE lpGetAccessKey (inUserId, zc_Enum_Process_InsertUpdate_Movement_OrderExternal())
+                     END;
 
 
      -- определяем признак Создание/Корректировка
@@ -111,6 +126,59 @@ $BODY$
  19.02.15         * add OperDateStart, OperDateEnd
  25.08.14                                        *
 */
-
+/*
+-- update Movement set AccessKeyId = AccessKeyId_new from (
+select Movement.Id, CASE WHEN MovementLinkObject .ObjectId = 8411 -- Склад ГП ф Киев
+                               THEN zc_Enum_Process_AccessKey_DocumentKiev() 
+                          WHEN MovementLinkObject .ObjectId = 346093 -- Склад ГП ф.Одесса
+                               THEN zc_Enum_Process_AccessKey_DocumentOdessa() 
+                          WHEN MovementLinkObject .ObjectId= 8413 -- Склад ГП ф.Кривой Рог
+                               THEN zc_Enum_Process_AccessKey_DocumentKrRog() 
+                          WHEN MovementLinkObject .ObjectId= 8417 -- Склад ГП ф.Николаев (Херсон)
+                               THEN zc_Enum_Process_AccessKey_DocumentNikolaev() 
+                          WHEN MovementLinkObject .ObjectId= 8425 -- Склад ГП ф.Харьков
+                               THEN zc_Enum_Process_AccessKey_DocumentKharkov() 
+                          WHEN MovementLinkObject .ObjectId= 8415 -- Склад ГП ф.Черкассы (Кировоград)
+                               THEN zc_Enum_Process_AccessKey_DocumentCherkassi() 
+                          WHEN MovementLinkObject .ObjectId= 301309 -- Склад ГП ф.Запорожье
+                               THEN zc_Enum_Process_AccessKey_DocumentZaporozhye() 
+                          WHEN MovementLinkObject .ObjectId = 3080691 -- Склад ГП ф.Львов
+                               THEN zc_Enum_Process_AccessKey_DocumentLviv() 
+                          ELSE zc_Enum_Process_AccessKey_DocumentDnepr()
+                     END as AccessKeyId_new
+from Movement 
+ left join     MovementLinkObject as mlo on mlo.DescId = zc_MovementLinkObject_from() 
+            and mlo.MovementId = Movement .Id
+ left join     MovementLinkObject on MovementLinkObject.DescId = zc_MovementLinkObject_To() 
+            and MovementLinkObject .MovementId = Movement .Id
+ left join     Object as Object_from on Object_from.Id = MLO.ObjectId 
+ left join     Object as Object_to on Object_to.Id = MovementLinkObject.ObjectId 
+ left join     Object as Object_a on Object_a.Id = Movement.AccessKeyId
+where Movement.OperDate >= '01.10.2020'
+and Movement.DescId = zc_Movement_OrderExternal()
+and Object_from.DescId <> zc_Object_Unit()
+-- and Movement.StatusId <> zc_Enum_Status_Erased()
+and Movement.AccessKeyId <> CASE WHEN MovementLinkObject .ObjectId = 8411 -- Склад ГП ф Киев
+                               THEN zc_Enum_Process_AccessKey_DocumentKiev() 
+                          WHEN MovementLinkObject .ObjectId = 346093 -- Склад ГП ф.Одесса
+                               THEN zc_Enum_Process_AccessKey_DocumentOdessa() 
+                          WHEN MovementLinkObject .ObjectId= 8413 -- Склад ГП ф.Кривой Рог
+                               THEN zc_Enum_Process_AccessKey_DocumentKrRog() 
+                          WHEN MovementLinkObject .ObjectId= 8417 -- Склад ГП ф.Николаев (Херсон)
+                               THEN zc_Enum_Process_AccessKey_DocumentNikolaev() 
+                          WHEN MovementLinkObject .ObjectId= 8425 -- Склад ГП ф.Харьков
+                               THEN zc_Enum_Process_AccessKey_DocumentKharkov() 
+                          WHEN MovementLinkObject .ObjectId= 8415 -- Склад ГП ф.Черкассы (Кировоград)
+                               THEN zc_Enum_Process_AccessKey_DocumentCherkassi() 
+                          WHEN MovementLinkObject .ObjectId= 301309 -- Склад ГП ф.Запорожье
+                               THEN zc_Enum_Process_AccessKey_DocumentZaporozhye() 
+                          WHEN MovementLinkObject .ObjectId = 3080691 -- Склад ГП ф.Львов
+                               THEN zc_Enum_Process_AccessKey_DocumentLviv() 
+                          ELSE zc_Enum_Process_AccessKey_DocumentDnepr()
+                     END
+limit 100 
+--) as tmp 
+--where Movement.Id = tmp.Id
+*/*
 -- тест
 -- SELECT * FROM lpInsertUpdate_Movement_OrderExternal (ioId:= 0, inInvNumber:= '-1', inOperDate:= '01.01.2013', inOperDatePartner:= '01.01.2013', inOperDateMark:= '01.01.2013', inInvNumberPartner:= 'xxx', inFromId:= 1, inPersonalId:= 0, inRouteId:= 0, inRouteSortingId:= 0, inSession:= '2')

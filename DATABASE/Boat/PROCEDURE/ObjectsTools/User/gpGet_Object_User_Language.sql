@@ -10,6 +10,7 @@ RETURNS TABLE (UserId       Integer
              , LanguageId   Integer
              , LanguageCode Integer
              , LanguageName TVarChar
+             , isLock_CTRL_L_0 Boolean
               ) 
 AS
 $BODY$
@@ -38,6 +39,7 @@ BEGIN
            , vbLanguageId                             :: Integer  AS LanguageId
            , (SELECT Object.ObjectCode FROM Object WHERE Object.Id = vbLanguageId) AS LanguageCode
            , lfGet_Object_ValueData_sh (vbLanguageId) :: TVarChar AS LanguageName
+           , FALSE                                                AS isLock_CTRL_L_0
       ; 
   
 END;

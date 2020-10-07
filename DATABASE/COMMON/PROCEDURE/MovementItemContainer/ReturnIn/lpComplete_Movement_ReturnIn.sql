@@ -117,28 +117,6 @@ BEGIN
      DELETE FROM _tmpItem;
 
 
-     -- !!! только для Админа нужны проводки с/с (сделано для ускорения проведения)!!!
-     IF EXISTS (SELECT 1 FROM ObjectLink_UserRole_View AS View_UserRole WHERE View_UserRole.UserId = inUserId AND View_UserRole.RoleId = zc_Enum_Role_Admin())
-     THEN IF inIsLastComplete = FALSE
-     -- !!! нужны еще для Запорожья, понятно что временно!!!
-     -- !!! OR 301310 = (SELECT Object_RoleAccessKeyGuide_View.BranchId FROM Object_RoleAccessKeyGuide_View WHERE Object_RoleAccessKeyGuide_View.UserId = inUserId AND Object_RoleAccessKeyGuide_View.BranchId <> 0 GROUP BY Object_RoleAccessKeyGuide_View.BranchId)
-     -- !!! нужны еще для Одесса, понятно что временно!!!
-     -- !!! OR 8374 = (SELECT Object_RoleAccessKeyGuide_View.BranchId FROM Object_RoleAccessKeyGuide_View WHERE Object_RoleAccessKeyGuide_View.UserId = inUserId AND Object_RoleAccessKeyGuide_View.BranchId <> 0 GROUP BY Object_RoleAccessKeyGuide_View.BranchId)
-          THEN vbIsHistoryCost:= TRUE;
-          ELSE vbIsHistoryCost:= FALSE;
-          END IF;
-          vbIsHistoryCost:= TRUE;
-     ELSE
-         -- !!! для остальных тоже нужны проводки с/с!!!
-         IF 0 < (SELECT 1 FROM Object_RoleAccessKeyGuide_View AS View_RoleAccessKeyGuide WHERE View_RoleAccessKeyGuide.UserId = inUserId AND View_RoleAccessKeyGuide.BranchId <> 0 GROUP BY View_RoleAccessKeyGuide.BranchId LIMIT 1)
-           OR EXISTS (SELECT 1 FROM ObjectLink_UserRole_View AS View_UserRole WHERE View_UserRole.UserId = inUserId AND View_UserRole.RoleId IN (428382)) -- Кладовщик Днепр
-           OR EXISTS (SELECT 1 FROM ObjectLink_UserRole_View AS View_UserRole WHERE View_UserRole.UserId = inUserId AND View_UserRole.RoleId IN (97837)) -- Бухгалтер ДНЕПР
-         THEN vbIsHistoryCost:= FALSE;
-         ELSE vbIsHistoryCost:= TRUE;
-         END IF;
-     END IF;
-
-
      -- Эти параметры нужны для
      SELECT lfObject_PriceList.PriceWithVAT, lfObject_PriceList.VATPercent
             INTO vbPriceWithVAT_PriceList, vbVATPercent_PriceList
@@ -367,6 +345,30 @@ BEGIN
      -- определяется Управленческие назначения, параметр нужен для для формирования Аналитик в проводках (для Покупателя)
      SELECT View_InfoMoney.InfoMoneyDestinationId INTO vbInfoMoneyDestinationId_From FROM lfGet_Object_InfoMoney (vbInfoMoneyId_From) AS View_InfoMoney;
      SELECT View_InfoMoney.InfoMoneyDestinationId INTO vbInfoMoneyDestinationId_To FROM lfGet_Object_InfoMoney (vbInfoMoneyId_To) AS View_InfoMoney;
+
+
+     -- !!! только для Админа нужны проводки с/с (сделано для ускорения проведения)!!!
+     IF EXISTS (SELECT 1 FROM ObjectLink_UserRole_View AS View_UserRole WHERE View_UserRole.UserId = inUserId AND View_UserRole.RoleId = zc_Enum_Role_Admin())
+        OR vbOperDate < DATE_TRUNC ('MONTH', CURRENT_DATE - INTERVAL '2 DAY')
+     THEN IF inIsLastComplete = FALSE
+     -- !!! нужны еще для Запорожья, понятно что временно!!!
+     -- !!! OR 301310 = (SELECT Object_RoleAccessKeyGuide_View.BranchId FROM Object_RoleAccessKeyGuide_View WHERE Object_RoleAccessKeyGuide_View.UserId = inUserId AND Object_RoleAccessKeyGuide_View.BranchId <> 0 GROUP BY Object_RoleAccessKeyGuide_View.BranchId)
+     -- !!! нужны еще для Одесса, понятно что временно!!!
+     -- !!! OR 8374 = (SELECT Object_RoleAccessKeyGuide_View.BranchId FROM Object_RoleAccessKeyGuide_View WHERE Object_RoleAccessKeyGuide_View.UserId = inUserId AND Object_RoleAccessKeyGuide_View.BranchId <> 0 GROUP BY Object_RoleAccessKeyGuide_View.BranchId)
+          THEN vbIsHistoryCost:= TRUE;
+          ELSE vbIsHistoryCost:= FALSE;
+          END IF;
+          vbIsHistoryCost:= TRUE;
+     ELSE
+         -- !!! для остальных тоже нужны проводки с/с!!!
+         IF 0 < (SELECT 1 FROM Object_RoleAccessKeyGuide_View AS View_RoleAccessKeyGuide WHERE View_RoleAccessKeyGuide.UserId = inUserId AND View_RoleAccessKeyGuide.BranchId <> 0 GROUP BY View_RoleAccessKeyGuide.BranchId LIMIT 1)
+           OR EXISTS (SELECT 1 FROM ObjectLink_UserRole_View AS View_UserRole WHERE View_UserRole.UserId = inUserId AND View_UserRole.RoleId IN (428382)) -- Кладовщик Днепр
+           OR EXISTS (SELECT 1 FROM ObjectLink_UserRole_View AS View_UserRole WHERE View_UserRole.UserId = inUserId AND View_UserRole.RoleId IN (97837)) -- Бухгалтер ДНЕПР
+         THEN vbIsHistoryCost:= FALSE;
+         ELSE vbIsHistoryCost:= TRUE;
+         END IF;
+     END IF;
+
 
      -- !!!Если нет филиала для "основной деятельности", тогда это "главный филиал"
      IF COALESCE (vbBranchId_To, 0) = 0

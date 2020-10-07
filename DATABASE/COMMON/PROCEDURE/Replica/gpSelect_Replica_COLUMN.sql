@@ -18,6 +18,7 @@ BEGIN
                         || ' THEN ' || _replica.zfStr_CHR_39 ('NULL')
                         || ' ELSE CAST (' || CASE WHEN tmp.COLUMN_TYPENAME ILIKE 'TVarChar'
                                                     OR tmp.COLUMN_TYPENAME ILIKE 'TDateTime'
+                                                    OR tmp.COLUMN_TYPENAME ILIKE 'INTERVAL'
                                                     OR tmp.COLUMN_TYPENAME ILIKE 'Text'
                                                     OR tmp.COLUMN_TYPENAME ILIKE 'TBlob'
                                                THEN _replica.zfStr_CHR_39 ('n/e/ /p/r/i/d/u/m/a/l') || '||' || tmp.TABLE_NAME ||'.'||tmp.COLUMN_NAME || '||' || _replica.zfStr_CHR_39 ('n/e/ /p/r/i/d/u/m/a/l')

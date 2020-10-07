@@ -80,21 +80,6 @@ END IF;
      DELETE FROM _tmpItem;
 
 
-     -- !!! только для Админа нужны проводки с/с (сделано для ускорения проведения)!!!
-     IF EXISTS (SELECT 1 FROM ObjectLink_UserRole_View AS View_UserRole WHERE View_UserRole.UserId = inUserId AND View_UserRole.RoleId = zc_Enum_Role_Admin())
-     THEN
-          vbIsHistoryCost:= TRUE;
-     ELSE
-         -- !!! для остальных тоже нужны проводки с/с!!!
-         IF 0 < (SELECT 1 FROM Object_RoleAccessKeyGuide_View AS View_RoleAccessKeyGuide WHERE View_RoleAccessKeyGuide.UserId = inUserId AND View_RoleAccessKeyGuide.BranchId <> 0 GROUP BY View_RoleAccessKeyGuide.BranchId LIMIT 1)
-           OR EXISTS (SELECT 1 FROM ObjectLink_UserRole_View AS View_UserRole WHERE View_UserRole.UserId = inUserId AND View_UserRole.RoleId IN (428382)) -- Кладовщик Днепр
-           OR EXISTS (SELECT 1 FROM ObjectLink_UserRole_View AS View_UserRole WHERE View_UserRole.UserId = inUserId AND View_UserRole.RoleId IN (97837)) -- Бухгалтер ДНЕПР
-         THEN vbIsHistoryCost:= FALSE;
-         ELSE vbIsHistoryCost:= TRUE;
-         END IF;
-     END IF;
-
-
      -- Эти параметры нужны для 
      SELECT lfObject_PriceList.PriceWithVAT, lfObject_PriceList.VATPercent
        INTO vbPriceWithVAT_PriceList, vbVATPercent_PriceList
@@ -177,6 +162,22 @@ END IF;
        AND Movement.StatusId IN (zc_Enum_Status_UnComplete(), zc_Enum_Status_Erased());
 
      
+     -- !!! только для Админа нужны проводки с/с (сделано для ускорения проведения)!!!
+     IF EXISTS (SELECT 1 FROM ObjectLink_UserRole_View AS View_UserRole WHERE View_UserRole.UserId = inUserId AND View_UserRole.RoleId = zc_Enum_Role_Admin())
+        OR vbOperDate < DATE_TRUNC ('MONTH', CURRENT_DATE - INTERVAL '2 DAY')
+     THEN
+          vbIsHistoryCost:= TRUE;
+     ELSE
+         -- !!! для остальных тоже нужны проводки с/с!!!
+         IF 0 < (SELECT 1 FROM Object_RoleAccessKeyGuide_View AS View_RoleAccessKeyGuide WHERE View_RoleAccessKeyGuide.UserId = inUserId AND View_RoleAccessKeyGuide.BranchId <> 0 GROUP BY View_RoleAccessKeyGuide.BranchId LIMIT 1)
+           OR EXISTS (SELECT 1 FROM ObjectLink_UserRole_View AS View_UserRole WHERE View_UserRole.UserId = inUserId AND View_UserRole.RoleId IN (428382)) -- Кладовщик Днепр
+           OR EXISTS (SELECT 1 FROM ObjectLink_UserRole_View AS View_UserRole WHERE View_UserRole.UserId = inUserId AND View_UserRole.RoleId IN (97837)) -- Бухгалтер ДНЕПР
+         THEN vbIsHistoryCost:= FALSE;
+         ELSE vbIsHistoryCost:= TRUE;
+         END IF;
+     END IF;
+
+
      -- заполняем таблицу - количественные элементы документа, со всеми свойствами для формирования Аналитик в проводках
      INSERT INTO _tmpItem (MovementItemId, isLossMaterials
                          , MIContainerId_To, ContainerId_GoodsFrom, ContainerId_GoodsTo, ContainerId_GoodsTransit, GoodsId, GoodsKindId, AssetId, PartionGoods, PartionGoodsDate

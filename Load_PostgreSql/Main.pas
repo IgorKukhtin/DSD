@@ -1216,10 +1216,10 @@ begin
      //
      if (ParamStr(2)='autoALL') and (BranchEdit.Text <> 'BranchId : 0')
      then begin
-           if (Hour_calc = 4) and (Minute_calc > 25) and (Minute_calc < 40)
+           if (Hour_calc = 4) and (Minute_calc > 10) and (Minute_calc < 30)
            then begin
                      myLogMemo_add('start stop');
-                     MyDelay(15*60*1000);
+                     MyDelay(20*60*1000);
                      myLogMemo_add('end stop');
            end;
            //
@@ -1227,7 +1227,7 @@ begin
       end;
      //
      if ((Hour_calc = 7) or ((Hour_calc = 21) and (Minute_calc > 20)) or (Hour_calc = 23)
-      or ((Hour_calc = 4) and (Minute_calc > 25) {and (Minute_calc < 55)} and ((ParamStr(6)='VAC_5')or(ParamStr(7)='VAC_5')or(ParamStr(8)='VAC_5')))
+      or ((Hour_calc = 4) and (Minute_calc > 10) {and (Minute_calc < 55)} and ((ParamStr(6)='VAC_5')or(ParamStr(7)='VAC_5')or(ParamStr(8)='VAC_5')))
          )
         and (beginVACUUM < 4) and (ParamStr(2)='autoALL')
      //if (Hour_calc = 14) and (beginVACUUM < 4) and (ParamStr(2)='autoALL')
@@ -1736,7 +1736,7 @@ begin
              MyDelay(5 * 1000);
              //
              // vacuum
-             for ii:= 0 to 1000 do begin fBeginVACUUM;end;
+             for ii:= 0 to 25 do begin fBeginVACUUM;end;
              //
              //
              if cbInsertHistoryCost_andReComplete.Checked
@@ -2062,7 +2062,7 @@ begin
              begin
                   begin
                        beginVACUUM_ii:= beginVACUUM_ii + 1;
-                       if beginVACUUM_ii > 50 then fBeginVACUUM;
+                       if beginVACUUM_ii > 25 then fBeginVACUUM;
                        //
                        toStoredProc_two.Params.ParamByName('inMovementId').Value:=FieldByName('MovementId').AsInteger;
                        toStoredProc_two.Params.ParamByName('inIsNoHistoryCost').Value:=cbLastComplete.Checked;

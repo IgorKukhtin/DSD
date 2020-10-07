@@ -45,7 +45,7 @@ BEGIN
     FROM Object AS Object_InfoMoneyGroup
          LEFT JOIN ObjectDesc ON ObjectDesc.Id = Object_InfoMoneyGroup.DescId
     WHERE Object_InfoMoneyGroup.DescId = zc_Object_InfoMoneyGroup()
-    UNION ALL
+   UNION ALL
     SELECT 0                     AS Id
          , NULL :: Integer       AS Code
          , '”ƒ¿À»“‹' :: TVarChar AS Name

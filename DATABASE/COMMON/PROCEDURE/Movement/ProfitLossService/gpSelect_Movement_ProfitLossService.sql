@@ -26,8 +26,8 @@ RETURNS TABLE (Id Integer, InvNumber TVarChar, InvNumber_full TVarChar, OperDate
              , InfoMoneyDestinationName TVarChar
              , InfoMoneyCode Integer, InfoMoneyName TVarChar, InfoMoneyName_all TVarChar
              , ContractCode Integer, ContractInvNumber TVarChar, ContractTagName TVarChar
-             , ContractMasterId Integer, ContractMasterInvNumber TVarChar
-             , ContractChildId Integer, ContractChildInvNumber TVarChar
+             , ContractMasterId Integer, ContractMasterInvNumber TVarChar, ContractTagName_master TVarChar
+             , ContractChildId Integer, ContractChildInvNumber TVarChar, ContractTagName_child TVarChar
              , UnitName TVarChar
              , PaidKindName TVarChar
              , ContractConditionKindId Integer, ContractConditionKindName TVarChar
@@ -117,10 +117,13 @@ BEGIN
            , View_Contract_InvNumber.ContractCode
            , View_Contract_InvNumber.InvNumber              AS ContractInvNumber
            , View_Contract_InvNumber.ContractTagName
-           , View_Contract_InvNumber_master.ContractId     AS ContractMasterId
-           , View_Contract_InvNumber_master.InvNumber      AS ContractMasterInvNumber
-           , View_Contract_InvNumber_child.ContractId      AS ContractChildId
-           , View_Contract_InvNumber_child.InvNumber       AS ContractChildInvNumber
+           , View_Contract_InvNumber_master.ContractId      AS ContractMasterId
+           , View_Contract_InvNumber_master.InvNumber       AS ContractMasterInvNumber
+           , View_Contract_InvNumber_master.ContractTagName AS ContractTagName_master
+           , View_Contract_InvNumber_child.ContractId       AS ContractChildId
+           , View_Contract_InvNumber_child.InvNumber        AS ContractChildInvNumber
+           , View_Contract_InvNumber_child.ContractTagName  AS ContractTagName_child
+
            , Object_Unit.ValueData                          AS UnitName
            , Object_PaidKind.ValueData                      AS PaidKindName
            , Object_ContractConditionKind.Id                AS ContractConditionKindId
@@ -231,7 +234,6 @@ BEGIN
 END;
 $BODY$
   LANGUAGE plpgsql VOLATILE;
---ALTER FUNCTION gpSelect_Movement_ProfitLossService (TDateTime, TDateTime, Integer, Boolean, TVarChar) OWNER TO postgres;
 
 /*
  »—“Œ–»ﬂ –¿«–¿¡Œ“ »: ƒ¿“¿, ¿¬“Œ–
@@ -246,4 +248,4 @@ $BODY$
 */
 
 -- ÚÂÒÚ
--- SELECT * FROM gpSelect_Movement_ProfitLossService (inStartDate:= '30.01.2014' ::TDateTime, inEndDate:= '01.02.2014'::TDateTime, inJuridicalBasisId:=0, inBranchId:=0 , inPaidKindId := 0, inIsErased:=false::Boolean , inSession:= zfCalc_UserAdmin()::TVarChar)
+-- SELECT * FROM gpSelect_Movement_ProfitLossService (inStartDate:= '30.01.2020' ::TDateTime, inEndDate:= '01.02.2020'::TDateTime, inJuridicalBasisId:=0, inBranchId:=0 , inPaidKindId := 0, inIsErased:=false::Boolean , inSession:= zfCalc_UserAdmin()::TVarChar)
