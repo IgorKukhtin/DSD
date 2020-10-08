@@ -294,6 +294,7 @@
 			<DCCReference Include="..\FormsFarmacy\Document\SearchRemainsVIP.pas">
 				<Form>SearchRemainsVIPForm</Form>
 			</DCCReference>
+			<DCCReference Include="..\SOURCE\COMPONENT\dsdTranslator.pas"/>
 			<BuildConfiguration Include="Release">
 				<Key>Cfg_2</Key>
 				<CfgParent>Base</CfgParent>

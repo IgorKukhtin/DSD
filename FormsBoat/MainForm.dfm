@@ -1244,8 +1244,4 @@ inherited MainForm: TMainForm
     Left = 152
     Top = 112
   end
-  object dsdTranslator: TdsdTranslator
-    Left = 344
-    Top = 72
-  end
 end

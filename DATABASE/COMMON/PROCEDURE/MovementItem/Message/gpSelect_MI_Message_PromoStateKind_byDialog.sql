@@ -32,10 +32,10 @@ BEGIN
      FROM MovementItem
           LEFT JOIN Object AS Object_PromoStateKind ON Object_PromoStateKind.Id = MovementItem.ObjectId
 
-          INNER JOIN MovementItemString AS MIString_Comment
+          LEFT JOIN MovementItemString AS MIString_Comment
                                         ON MIString_Comment.MovementItemId = MovementItem.Id
                                        AND MIString_Comment.DescId = zc_MIString_Comment()
-                                       AND COALESCE (MIString_Comment.ValueData,'') <> ''
+                                     --AND COALESCE (MIString_Comment.ValueData,'') <> ''
  
      WHERE MovementItem.MovementId = inMovementId
        AND MovementItem.DescId     = zc_MI_Message()

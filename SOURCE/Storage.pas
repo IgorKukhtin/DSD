@@ -695,8 +695,11 @@ begin
 
       Logger.AddToLog(' TStorage.ExecuteProc( ... if Ok then Length = ' + IntToStr(Length(DString)) + ' ...');
 
-      //Logger.AddToLog(' TStorage.ExecuteProc( ... Length(FReceiveStream.DataString) = ' + IntToStr(Length(DString)) + ' ...');
+      //Logger.AddToLog(' TStorage.ExecuteProc( ... if Ok then Length = ' + IntToStr(Length(DString)) + ' ...');
+      //Logger.AddToLog('_DString_:');
       //Logger.AddToLog(DString);
+      //Logger.AddToLog('');
+      //Logger.AddToLog('_end_DString_:');
 
       ResultType := trim(Copy(DString, 1, ResultTypeLenght));
       isArchive := trim(lowercase(Copy(DString, ResultTypeLenght + 1, IsArchiveLenght))) = 't';
@@ -713,9 +716,13 @@ begin
       else if (ResultType = gcResult) or (ResultType = gcDataSet) then
         Result := PrepareStr;
 
+      //Logger.AddToLog('_Res_:');
       //Logger.AddToLog(Result);
+      //Logger.AddToLog('');
+      //Logger.AddToLog('_end_Res_:');
     end else
-      //Logger.AddToLog(' TStorage.ExecuteProc( ... else ...');
+      //Logger.AddToLog(' TStorage.ExecuteProc( ... else ...')
+      ;
   finally
     Logger.AddToLog(' TStorage.ExecuteProc( ... finally ...');
     Logger.AddToLog(' ');

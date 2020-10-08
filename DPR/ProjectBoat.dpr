@@ -96,21 +96,11 @@ begin
 
   TdsdApplication.Create;
 
-  // Процесс аутентификации
-  if gc_ProgramName = 'ProjectBoat_Demo.exe' then
-  begin
-     TAuthentication.CheckLogin(TStorageFactory.GetStorage, 'demo', 'demo', gc_User);
-     TUpdater.AutomaticUpdateProgram;
-     TUpdater.AutomaticCheckConnect;
-     Application.CreateForm(TdmMain, dmMain);
-     Application.CreateForm(TMainForm, MainFormInstance);
-  end
-  else
-
   with TLoginForm.Create(Application) do
     // Если все хорошо создаем главную форму Application.CreateForm();
     if ShowModal = mrOk then
     begin
+      dsdInitFullTranslator;
       TUpdater.AutomaticUpdateProgram;
       TUpdater.AutomaticCheckConnect;
       Application.CreateForm(TdmMain, dmMain);

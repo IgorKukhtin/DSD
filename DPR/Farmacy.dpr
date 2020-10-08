@@ -91,7 +91,8 @@ uses
   DesadvFozzXML in '..\SOURCE\EDI\DesadvFozzXML.pas',
   PUSHMessageFarmacy in '..\FormsFarmacy\System\PUSHMessageFarmacy.pas' {PUSHMessageFarmacyForm},
   IftminFozzXML in '..\SOURCE\EDI\IftminFozzXML.pas',
-  SearchRemainsVIP in '..\FormsFarmacy\Document\SearchRemainsVIP.pas' {SearchRemainsVIPForm};
+  SearchRemainsVIP in '..\FormsFarmacy\Document\SearchRemainsVIP.pas' {SearchRemainsVIPForm},
+  dsdTranslator in '..\SOURCE\COMPONENT\dsdTranslator.pas';
 
 {$R *.res}
 
