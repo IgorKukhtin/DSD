@@ -4,7 +4,7 @@ inherited MainForm: TMainForm
   ClientWidth = 723
   KeyPreview = True
   ExplicitWidth = 739
-  ExplicitHeight = 223
+  ExplicitHeight = 226
   PixelsPerInch = 96
   TextHeight = 13
   inherited ActionList: TActionList
@@ -168,8 +168,8 @@ inherited MainForm: TMainForm
       Category = #1051#1086#1076#1082#1080
       MoveParams = <>
       Caption = #1052#1086#1076#1077#1083#1080
-      FormName = 'TGoodsForm'
-      FormNameParam.Value = 'TGoodsForm'
+      FormName = 'TProdModelForm'
+      FormNameParam.Value = 'TProdModelForm'
       FormNameParam.DataType = ftString
       FormNameParam.MultiSelectSeparator = ','
       GuiParams = <>
@@ -179,8 +179,8 @@ inherited MainForm: TMainForm
       Category = #1051#1086#1076#1082#1080
       MoveParams = <>
       Caption = #1052#1086#1090#1086#1088#1099
-      FormName = 'TGoodsForm'
-      FormNameParam.Value = 'TGoodsForm'
+      FormName = 'TProdEngineForm'
+      FormNameParam.Value = 'TProdEngineForm'
       FormNameParam.DataType = ftString
       FormNameParam.MultiSelectSeparator = ','
       GuiParams = <>
@@ -677,8 +677,8 @@ inherited MainForm: TMainForm
       Category = #1051#1086#1076#1082#1080
       MoveParams = <>
       Caption = #1050#1072#1090#1077#1075#1086#1088#1080#1080' '#1094#1074#1077#1090#1086#1074
-      FormName = 'TGoodsForm'
-      FormNameParam.Value = 'TGoodsForm'
+      FormName = 'TProdColorGroupForm'
+      FormNameParam.Value = 'TProdColorGroupForm'
       FormNameParam.DataType = ftString
       FormNameParam.MultiSelectSeparator = ','
       GuiParams = <>
@@ -688,8 +688,8 @@ inherited MainForm: TMainForm
       Category = #1051#1086#1076#1082#1080
       MoveParams = <>
       Caption = #1062#1074#1077#1090#1072
-      FormName = 'TGoodsForm'
-      FormNameParam.Value = 'TGoodsForm'
+      FormName = 'TProdColorForm'
+      FormNameParam.Value = 'TProdColorForm'
       FormNameParam.DataType = ftString
       FormNameParam.MultiSelectSeparator = ','
       GuiParams = <>
@@ -710,8 +710,8 @@ inherited MainForm: TMainForm
       Category = #1051#1086#1076#1082#1080
       MoveParams = <>
       Caption = #1054#1087#1094#1080#1080
-      FormName = 'TGoodsForm'
-      FormNameParam.Value = 'TGoodsForm'
+      FormName = 'TProdOptionsForm'
+      FormNameParam.Value = 'TProdOptionsForm'
       FormNameParam.DataType = ftString
       FormNameParam.MultiSelectSeparator = ','
       GuiParams = <>

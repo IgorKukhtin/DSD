@@ -117,7 +117,19 @@ uses
   Language in '..\..\FormsBoat\Guides\Language.pas' {LanguageForm: TParentForm},
   LanguageEdit in '..\..\FormsBoat\Guides\LanguageEdit.pas' {LanguageEditForm: TParentForm},
   TranslateWord in '..\..\FormsBoat\Guides\TranslateWord.pas' {TranslateWordForm: TParentForm},
-  TranslateWordEdit in '..\..\FormsBoat\Guides\TranslateWordEdit.pas' {TranslateWordEditForm: TParentForm};
+  TranslateWordEdit in '..\..\FormsBoat\Guides\TranslateWordEdit.pas' {TranslateWordEditForm: TParentForm},
+  Brand in '..\..\FormsBoat\Guides\Brand.pas' {BrandForm: TParentForm},
+  BrandEdit in '..\..\FormsBoat\Guides\BrandEdit.pas' {BrandEditForm: TParentForm},
+  ProdModelEdit in '..\..\FormsBoat\Guides\ProdModelEdit.pas' {ProdModelEditForm: TParentForm},
+  ProdModel in '..\..\FormsBoat\Guides\ProdModel.pas' {ProdModelForm: TParentForm},
+  ProdEngine in '..\..\FormsBoat\Guides\ProdEngine.pas' {ProdEngineForm: TParentForm},
+  ProdEngineEdit in '..\..\FormsBoat\Guides\ProdEngineEdit.pas' {ProdEngineEditForm: TParentForm},
+  ProdColorGroup in '..\..\FormsBoat\Guides\ProdColorGroup.pas' {ProdColorGroupForm: TParentForm},
+  ProdOptions in '..\..\FormsBoat\Guides\ProdOptions.pas' {ProdOptionsForm: TParentForm},
+  ProdColorGroupEdit in '..\..\FormsBoat\Guides\ProdColorGroupEdit.pas' {ProdColorGroupEditForm: TParentForm},
+  ProdOptionsEdit in '..\..\FormsBoat\Guides\ProdOptionsEdit.pas' {ProdOptionsEditForm: TParentForm},
+  ProdColor in '..\..\FormsBoat\Guides\ProdColor.pas' {ProdColorForm: TParentForm},
+  ProdColorEdit in '..\..\FormsBoat\Guides\ProdColorEdit.pas' {ProdColorEditForm: TParentForm};
 
 {$R *.res}
 {$R DevExpressRus.res}

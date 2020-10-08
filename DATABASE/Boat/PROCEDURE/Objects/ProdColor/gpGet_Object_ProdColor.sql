@@ -1,8 +1,8 @@
 ﻿-- Торговая марка
 
-DROP FUNCTION IF EXISTS gpGet_Object_Brand (Integer, TVarChar);
+DROP FUNCTION IF EXISTS gpGet_Object_ProdColor (Integer, TVarChar);
 
-CREATE OR REPLACE FUNCTION gpGet_Object_Brand(
+CREATE OR REPLACE FUNCTION gpGet_Object_ProdColor(
     IN inId          Integer,       -- 
     IN inSession     TVarChar       -- сессия пользователя
 )
@@ -14,29 +14,29 @@ $BODY$
 BEGIN
 
   -- проверка прав пользователя на вызов процедуры
-  -- PERFORM lpCheckRight(inSession, zc_Enum_Process_Brand());
+  -- PERFORM lpCheckRight(inSession, zc_Enum_Process_ProdColor());
 
   IF COALESCE (inId, 0) = 0
    THEN
        RETURN QUERY
        SELECT
               0 :: Integer            AS Id
-           , lfGet_ObjectCode(0, zc_Object_Brand())   AS Code
+           , lfGet_ObjectCode(0, zc_Object_ProdColor())   AS Code
            , '' :: TVarChar           AS Name
            , '' :: TVarChar           AS Comment
        ;
    ELSE
        RETURN QUERY
        SELECT
-             Object_Brand.Id                 AS Id
-           , Object_Brand.ObjectCode         AS Code
-           , Object_Brand.ValueData          AS Name
+             Object_ProdColor.Id                 AS Id
+           , Object_ProdColor.ObjectCode         AS Code
+           , Object_ProdColor.ValueData          AS Name
            , ObjectString_Comment.ValueData  AS Comment
-       FROM Object AS Object_Brand
+       FROM Object AS Object_ProdColor
           LEFT JOIN ObjectString AS ObjectString_Comment
-                                 ON ObjectString_Comment.ObjectId = Object_Brand.Id
-                                AND ObjectString_Comment.DescId = zc_ObjectString_Brand_Comment() 
-       WHERE Object_Brand.Id = inId;
+                                 ON ObjectString_Comment.ObjectId = Object_ProdColor.Id
+                                AND ObjectString_Comment.DescId = zc_ObjectString_ProdColor_Comment() 
+       WHERE Object_ProdColor.Id = inId;
    END IF;
 
 END;
@@ -51,4 +51,4 @@ $BODY$
 */
 
 -- тест
--- SELECT * FROM gpGet_Object_Brand (1 ::integer,'2'::TVarChar)
+-- SELECT * FROM gpGet_Object_ProdColor (1 ::integer,'2'::TVarChar)

@@ -18,6 +18,12 @@ type
     procedure LoadServiceFormTest;
     procedure LoadTranslateWordFormTest;
     procedure LoadLanguageFormTest;
+    procedure LoadBrandFormTest;
+    procedure LoadProdColorFormTest;
+    procedure LoadProdColorGroupFormTest;
+    procedure LoadProdEngineFormTest;
+    procedure LoadProdModelFormTest;
+    procedure LoadProdOptionsFormTest;
     procedure FormTest;
   end;
 
@@ -126,7 +132,52 @@ begin
   TdsdFormStorageFactory.GetStorage.Load('TLanguageEditForm');
 end;
 
+procedure TLoadFormTest.LoadBrandFormTest;
+begin
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TBrandForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TBrandForm');
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TBrandEditForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TBrandEditForm');
+end;
 
+procedure TLoadFormTest.LoadProdColorFormTest;
+begin
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TProdColorForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TProdColorForm');
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TProdColorEditForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TProdColorEditForm');
+end;
+procedure TLoadFormTest.LoadProdColorGroupFormTest;
+begin
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TProdColorGroupForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TProdColorGroupForm');
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TProdColorGroupEditForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TProdColorGroupEditForm');
+end;
+
+procedure TLoadFormTest.LoadProdEngineFormTest;
+begin
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TProdEngineForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TProdEngineForm');
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TProdEngineEditForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TProdEngineEditForm');
+end;
+
+procedure TLoadFormTest.LoadProdModelFormTest;
+begin
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TProdModelForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TProdModelForm');
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TProdModelEditForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TProdModelEditForm');
+end;
+
+procedure TLoadFormTest.LoadProdOptionsFormTest;
+begin
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TProdOptionsForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TProdOptionsForm');
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TProdOptionsEditForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TProdOptionsEditForm');
+end;
 initialization
   TestFramework.RegisterTest('Загрузка форм', TLoadFormTest.Suite);
 

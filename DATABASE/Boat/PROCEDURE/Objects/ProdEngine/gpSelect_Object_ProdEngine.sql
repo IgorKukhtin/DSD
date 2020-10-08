@@ -1,7 +1,6 @@
 -- Function: gpSelect_Object_ProdEngine()
 
 DROP FUNCTION IF EXISTS gpSelect_Object_ProdEngine(Boolean, TVarChar);
-DROP FUNCTION IF EXISTS gpSelect_Object_ProdEngine(TVarChar);
 
 CREATE OR REPLACE FUNCTION gpSelect_Object_ProdEngine(
     IN inIsShowAll   Boolean,

@@ -1984,7 +1984,7 @@ object GoodsAccountForm: TGoodsAccountForm
         end
         item
           Name = 'isPayTotal'
-          Value = 'False'
+          Value = False
           DataType = ftBoolean
           ParamType = ptInput
           MultiSelectSeparator = ','
@@ -2033,7 +2033,7 @@ object GoodsAccountForm: TGoodsAccountForm
         end
         item
           Name = 'isPayTotal'
-          Value = 'TRUE'
+          Value = True
           DataType = ftBoolean
           MultiSelectSeparator = ','
         end>
@@ -2112,14 +2112,14 @@ object GoodsAccountForm: TGoodsAccountForm
         end
         item
           Name = 'isPeriod'
-          Value = 'TRUE'
+          Value = True
           DataType = ftBoolean
           ParamType = ptInput
           MultiSelectSeparator = ','
         end
         item
           Name = 'isPartion'
-          Value = 'False'
+          Value = False
           DataType = ftBoolean
           ParamType = ptInput
           MultiSelectSeparator = ','

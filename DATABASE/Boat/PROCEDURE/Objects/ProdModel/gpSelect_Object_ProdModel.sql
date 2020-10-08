@@ -1,6 +1,5 @@
 -- Function: gpSelect_Object_ProdModel()
 
-DROP FUNCTION IF EXISTS gpSelect_Object_ProdModel (TVarChar);
 DROP FUNCTION IF EXISTS gpSelect_Object_ProdModel (Boolean, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpSelect_Object_ProdModel(

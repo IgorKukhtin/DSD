@@ -20,7 +20,7 @@ $BODY$BEGIN
        RETURN QUERY 
        SELECT
              CAST (0 as Integer)    AS Id
-           , COALESCE (MAX (ObjectCode), 0) + 1 AS Code
+           , lfGet_ObjectCode(0, zc_Object_ProdEngine())   AS Code
            , CAST ('' as TVarChar)  AS NAME
            
            , CAST (0 AS TFloat)     AS Power
