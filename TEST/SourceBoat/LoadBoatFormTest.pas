@@ -17,6 +17,7 @@ type
     procedure MainFormTest;
     procedure LoadServiceFormTest;
     procedure LoadTranslateWordFormTest;
+    procedure LoadLanguageFormTest;
     procedure FormTest;
   end;
 
@@ -110,16 +111,19 @@ end;
 
 procedure TLoadFormTest.LoadTranslateWordFormTest;
 begin
-  TdsdFormStorageFactory.GetStorage.Save(GetForm('TLanguageForm'));
-  TdsdFormStorageFactory.GetStorage.Load('TLanguageForm');
-  TdsdFormStorageFactory.GetStorage.Save(GetForm('TLanguageEditForm'));
-  TdsdFormStorageFactory.GetStorage.Load('TLanguageEditForm');
-
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TTranslateWordForm'));
   TdsdFormStorageFactory.GetStorage.Load('TTranslateWordForm');
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TTranslateWordEditForm'));
   TdsdFormStorageFactory.GetStorage.Load('TTranslateWordEditForm');
 
+end;
+
+procedure TLoadFormTest.LoadLanguageFormTest;
+begin
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TLanguageForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TLanguageForm');
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TLanguageEditForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TLanguageEditForm');
 end;
 
 

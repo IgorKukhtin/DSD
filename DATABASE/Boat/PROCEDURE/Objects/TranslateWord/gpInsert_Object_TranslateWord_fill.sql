@@ -1,6 +1,5 @@
 -- Function: gpInsert_Object_TranslateWord_fill (TVarChar, TVarChar, TVarChar)
 
--- DROP FUNCTION IF EXISTS gpInsert_Object_TranslateWord_fill (TVarChar, TVarChar, TVarChar);
 DROP FUNCTION IF EXISTS gpInsert_Object_TranslateWord_fill (TVarChar, TVarChar, TVarChar, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpInsert_Object_TranslateWord_fill(
