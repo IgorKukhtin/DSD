@@ -206,7 +206,7 @@ begin
     if FTranslatorCDS.Locate('value' + IntToStr(ALanguageOld), AText, [loCaseInsensitive]) then
     begin
       if FTranslatorCDS.FieldByName('value1').AsString <> '' then
-        Result :=  FTranslatorCDS.FieldByName('value1' + IntToStr(ALanguageNew)).AsString;
+        Result :=  FTranslatorCDS.FieldByName('value' + IntToStr(ALanguageNew)).AsString;
     end;
       // если новый не русский переведем
     if ALanguageNew <> 1 then
@@ -264,12 +264,16 @@ procedure TTranslatorForm.TranslateProgramm(ALanguageNew : Integer);
   var I, J : Integer;
 begin
   for I := 0 to Screen.FormCount - 1 do
-    for J := 0 to Screen.Forms[I].ComponentCount - 1 do
-      if Screen.Forms[I].Components[J] is TdsdTranslator then
-      begin
-        TranslateForm(Screen.Forms[I], FLanguage, ALanguageNew);
-        Continue;
-      end;
+    if not FFullProject then
+    begin
+
+      for J := 0 to Screen.Forms[I].ComponentCount - 1 do
+        if Screen.Forms[I].Components[J] is TdsdTranslator then
+        begin
+          TranslateForm(Screen.Forms[I], FLanguage, ALanguageNew);
+          Continue;
+        end;
+    end else TranslateForm(Screen.Forms[I], FLanguage, ALanguageNew);
 
   UpdateLanguage(ALanguageNew);
 end;

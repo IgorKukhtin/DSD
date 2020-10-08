@@ -94,6 +94,10 @@ BEGIN
                                            AND tmpObject2.EmailToolsId = tmpObject1.EmailToolsId
                                            AND tmpObject2.JuridicalId  = tmpObject1.JuridicalId
                    )
+  , tmpObjectEmail AS (SELECT Object.*
+                       FROM Object
+                       WHERE Object.DescId in (zc_Object_Juridical(), zc_Object_EmailTools(), zc_Object_Email())
+                       )
 
        SELECT tmpObject.EmailSettingsId    AS Id
             , tmpObject.EmailSettingsCode  AS Code
@@ -110,9 +114,9 @@ BEGIN
             LEFT JOIN tmpObject ON tmpObject.EmailId      = tmpEnumEmail.EmailId
                                AND tmpObject.EmailToolsId = tmpEnumEmail.EmailToolsId
 
-            LEFT JOIN Object AS Object_Email ON Object_Email.Id = tmpEnumEmail.EmailId
-            LEFT JOIN Object AS Object_EmailTools ON Object_EmailTools.Id = tmpEnumEmail.EmailToolsId
-            LEFT JOIN Object AS Object_Juridical ON Object_Juridical.Id = tmpObject.JuridicalId
+            LEFT JOIN tmpObjectEmail AS Object_Email ON Object_Email.Id = tmpEnumEmail.EmailId
+            LEFT JOIN tmpObjectEmail AS Object_EmailTools ON Object_EmailTools.Id = tmpEnumEmail.EmailToolsId
+            LEFT JOIN tmpObjectEmail AS Object_Juridical ON Object_Juridical.Id = tmpObject.JuridicalId
                                     
        WHERE tmpEnumEmail.EmailId = inEmailId OR inEmailId = 0
       ;
@@ -121,7 +125,7 @@ END;
 $BODY$
   LANGUAGE plpgsql VOLATILE;
 
-/*-------------------------------------------------------------------------------*/
+-------------------------------------------------------------------------------
 /*
  »—“Œ–»ﬂ –¿«–¿¡Œ“ »: ƒ¿“¿, ¿¬“Œ–
                ‘ÂÎÓÌ˛Í ».¬.    ÛıÚËÌ ».¬.    ÎËÏÂÌÚ¸Â‚  .».
@@ -132,3 +136,5 @@ $BODY$
 
 -- ÚÂÒÚ
 -- SELECT * FROM gpSelect_Object_EmailSettings (0, FALSE, '2')
+
+

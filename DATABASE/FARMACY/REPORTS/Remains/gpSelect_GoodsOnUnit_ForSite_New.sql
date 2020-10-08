@@ -667,9 +667,9 @@ BEGIN
                  WHERE ObjectFloat_NDSKind_NDS.DescId = zc_ObjectFloat_NDSKind_NDS()
                 )
 
-        SELECT Object_Goods.Id                                                     AS Id
+        SELECT tmpList.GoodsId                                                     AS Id
 
-             , CASE WHEN Object_Goods.isErased = TRUE THEN 1 ELSE 0 END::Integer   AS deleted
+             , CASE WHEN FALSE /*Object_Goods.isErased*/ = TRUE THEN 1 ELSE 0 END::Integer   AS deleted
 
              , tmpList.UnitId                                                      AS UnitId
              , (tmpList2.Amount - COALESCE (tmpMI_Deferred.Amount, 0) -
@@ -735,17 +735,23 @@ BEGIN
                                                             AND MinPrice_List_D.AreaId   =
                                                                 CASE WHEN tmpList.AreaId <> 12487449 THEN tmpList.AreaId ELSE zc_Area_Basis() END
 
-             LEFT JOIN Object AS Object_Goods    ON Object_Goods.Id    = tmpList.GoodsId
+--             LEFT JOIN Object AS Object_Goods    ON Object_Goods.Id    = tmpList.GoodsId
              LEFT JOIN Object AS Object_Contract ON Object_Contract.Id = MinPrice_List.ContractId
 
+             LEFT JOIN Object_Goods_Retail AS Object_Goods_Retail ON Object_Goods_Retail.Id = tmpList.GoodsId
+             LEFT JOIN Object_Goods_Main AS Object_Goods_Main ON Object_Goods_Main.Id = Object_Goods_Retail.GoodsMainId
 
-             LEFT JOIN ObjectLink AS ObjectLink_Goods_NDSKind
-                                  ON ObjectLink_Goods_NDSKind.ObjectId = Object_Goods.Id
+             LEFT JOIN tmpNDSKind AS ObjectFloat_NDSKind_NDS
+                                  ON ObjectFloat_NDSKind_NDS.ObjectId = Object_Goods_Main.NDSKindId
+
+
+/*             LEFT JOIN ObjectLink AS ObjectLink_Goods_NDSKind
+                                  ON ObjectLink_Goods_NDSKind.ObjectId = tmpList.GoodsId
                                  AND ObjectLink_Goods_NDSKind.DescId = zc_ObjectLink_Goods_NDSKind()
              LEFT JOIN Object AS Object_NDSKind ON Object_NDSKind.Id = ObjectLink_Goods_NDSKind.ChildObjectId
              LEFT JOIN tmpNDSKind AS ObjectFloat_NDSKind_NDS
                                   ON ObjectFloat_NDSKind_NDS.ObjectId = ObjectLink_Goods_NDSKind.ChildObjectId
-
+*/
 
              LEFT JOIN MarginCategory      ON MinPrice_List.Price >= MarginCategory.MinPrice      AND MinPrice_List.Price < MarginCategory.MaxPrice
                                           AND MarginCategory.UnitId = tmpList.UnitId
@@ -813,4 +819,5 @@ $BODY$
 -- SELECT p.* FROM gpselect_goodsonunit_forsite ('375626,11769526,183292,4135547,377606,6128298,9951517,13338606,377595,12607257,377605,494882,10779386,394426,183289,8393158,6309262,13311246,377613,7117700,377610,377594,11300059,377574,12812109,183291,1781716,5120968,9771036,8698426,6608396,375627,11152911,10128935,472116', '22579,54100,6994,352890,54649,29983,48988,964555,54625,54613,28849,54640,30310,34831,982510,1106785,1243320,2366715,1243457,34867,50134,4509209,22573,50725,1106995,1960400,50152,51202,34846,28858', TRUE, zfCalc_UserSite()) AS p
 --
 
-SELECT OBJECT.valuedata, p.* FROM gpselect_goodsonunit_forsite ('375626,11769526,183292,4135547,377606,6128298,9951517,13338606,377595,12607257,377605,494882,10779386,394426,183289,8393158,6309262,13311246,377613,7117700,377610,377594,11300059,377574,12812109,183291,1781716,5120968,9771036,8698426,6608396,375627,11152911,10128935,472116', '494103', TRUE, zfCalc_UserSite()) AS p LEFT JOIN OBJECT ON OBJECT.ID = p.ID
+--SELECT OBJECT.valuedata, p.* FROM gpselect_goodsonunit_forsite ('375626,11769526,183292,4135547,377606,6128298,9951517,13338606,377595,12607257,377605,494882,10779386,394426,183289,8393158,6309262,13311246,377613,7117700,377610,377594,11300059,377574,12812109,183291,1781716,5120968,9771036,8698426,6608396,375627,11152911,10128935,472116', '494103', TRUE, zfCalc_UserSite()) AS p LEFT JOIN OBJECT ON OBJECT.ID = p.ID
+

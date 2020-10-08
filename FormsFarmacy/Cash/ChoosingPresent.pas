@@ -122,23 +122,23 @@ end;
 procedure TChoosingPresentForm.FormKeyDown(Sender: TObject; var Key: Word;
   Shift: TShiftState);
 begin
-  if ((Key = VK_SPACE) or (Key = VK_ADD)) AND (Shift = []) then
+  if ((Key = VK_SPACE) {or (Key = VK_ADD)}) AND (Shift = []) then
   Begin
     if ChoosingPresentCDS.IsEmpty then Exit;
     ChoosingPresentCDS.Edit;
     ChoosingPresentCDS.FieldByName('Amount').AsCurrency := ChoosingPresentCDS.FieldByName('Amount').AsCurrency + 1;
     ChoosingPresentCDS.Post
   End;
-  if (Key = VK_SUBTRACT) AND (Shift = []) then
-  Begin
-    if ChoosingPresentCDS.IsEmpty then Exit;
-    if ChoosingPresentCDS.FieldByName('Amount').AsCurrency >= 1 then
-    begin
-      ChoosingPresentCDS.Edit;
-      ChoosingPresentCDS.FieldByName('Amount').AsCurrency := ChoosingPresentCDS.FieldByName('Amount').AsCurrency - 1;
-      ChoosingPresentCDS.Post
-    end;
-  End;
+//  if (Key = VK_SUBTRACT) AND (Shift = []) then
+//  Begin
+//    if ChoosingPresentCDS.IsEmpty then Exit;
+//    if ChoosingPresentCDS.FieldByName('Amount').AsCurrency >= 1 then
+//    begin
+//      ChoosingPresentCDS.Edit;
+//      ChoosingPresentCDS.FieldByName('Amount').AsCurrency := ChoosingPresentCDS.FieldByName('Amount').AsCurrency - 1;
+//      ChoosingPresentCDS.Post
+//    end;
+//  End;
 end;
 
 End.

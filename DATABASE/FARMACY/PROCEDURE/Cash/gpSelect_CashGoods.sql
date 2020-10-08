@@ -163,7 +163,7 @@ BEGIN
                          ObjectFloat_NDSKind_NDS.ValueData, 0)::TFloat  AS NDS,
            LoadPriceListItem.Price             AS JuridicalPrice,
            CASE WHEN COALESCE (NULLIF (GoodsPrice.isTOP, FALSE), Object_Goods_Retail.isTop) = TRUE
-                     THEN COALESCE (NULLIF (GoodsPrice.PercentMarkup, 0), COALESCE (ObjectFloat_Goods_PercentMarkup.ValueData, 0))
+                     THEN COALESCE (NULLIF (GoodsPrice.PercentMarkup, 0), COALESCE (Object_Goods_Retail.PercentMarkup, 0))
                 ELSE COALESCE (MarginCondition.MarginPercent, 0) + COALESCE (ObjectFloat_Juridical_Percent.valuedata, 0)
              END                       :: TFloat AS MarginPercent,
            LoadPriceListItem.ExpirationDate    AS ExpirationDate,
@@ -177,9 +177,9 @@ BEGIN
                                   ELSE MarginCondition.MarginPercent + COALESCE (ObjectFloat_Juridical_Percent.valuedata, 0)
                              END,                                                                             -- % наценки в КАТЕГОРИИ
                              COALESCE (NULLIF (GoodsPrice.isTOP, FALSE), Object_Goods_Retail.isTop),           -- ТОП позиция
-                             COALESCE (NULLIF (GoodsPrice.PercentMarkup, 0), ObjectFloat_Goods_PercentMarkup.ValueData),  -- % наценки у товара
+                             COALESCE (NULLIF (GoodsPrice.PercentMarkup, 0), Object_Goods_Retail.PercentMarkup),  -- % наценки у товара
                              0.0, --ObjectFloat_Juridical_Percent.valuedata,                                  -- % корректировки у Юр Лица для ТОПа
-                             ObjectFloat_Goods_Price.valuedata                                                            -- Цена у товара (фиксированная)
+                             Object_Goods_Retail.Price                                                        -- Цена у товара (фиксированная)
                            )         :: TFloat AS Price,
            GoodsPrice.MCSValue       AS MCSValue,
            Object_Goods.IsClose AS IsClose,
@@ -253,12 +253,6 @@ BEGIN
                                                                    AND Object_Goods_Retail.RetailId = vbRetailId
               LEFT JOIN tmpNDSKind AS ObjectFloat_NDSKind_NDS
                                    ON ObjectFloat_NDSKind_NDS.ObjectId = Object_Goods.NDSKindId
-              LEFT JOIN ObjectFloat  AS ObjectFloat_Goods_PercentMarkup
-                                     ON ObjectFloat_Goods_PercentMarkup.ObjectId = Object_Goods_Retail.Id
-                                    AND ObjectFloat_Goods_PercentMarkup.DescId = zc_ObjectFloat_Goods_PercentMarkup()
-              LEFT JOIN ObjectFloat AS ObjectFloat_Goods_Price
-                                    ON ObjectFloat_Goods_Price.ObjectId = Object_Goods_Retail.Id
-                                   AND ObjectFloat_Goods_Price.DescId   = zc_ObjectFloat_Goods_Price()
 
               LEFT JOIN MarginCondition ON MarginCondition.MarginCategoryId = COALESCE (Object_MarginCategoryLink.MarginCategoryId, Object_MarginCategoryLink_all.MarginCategoryId)
                                       AND (LoadPriceListItem.Price * (100 + COALESCE(CASE WHEN LoadPriceListItem.GoodsNDS LIKE '%2%' THEN 20 
@@ -329,7 +323,7 @@ BEGIN
      SELECT
               GoodsPriceAll.GoodsId             AS Id,
               Object_Goods.ObjectCode           AS GoodsCode,
-              Object_Goods.ValueData            AS GoodsName,
+              Object_Goods.Name                 AS GoodsName,
               Object_Juridical.ValueData        AS JuridicalName,
               Object_Contract.ValueData         AS ContractName,
               Object_Area.ValueData             AS AreaName,
@@ -346,7 +340,9 @@ BEGIN
 
      FROM GoodsPriceAll
 
-          INNER JOIN Object AS Object_Goods ON Object_Goods.Id = GoodsPriceAll.GoodsId
+--          INNER JOIN Object AS Object_Goods ON Object_Goods.Id = GoodsPriceAll.GoodsId
+          INNER JOIN Object_Goods_Retail AS Object_Goods_Retail ON Object_Goods_Retail.Id = GoodsPriceAll.GoodsId
+          INNER JOIN Object_Goods_Main AS Object_Goods ON Object_Goods.Id = Object_Goods_Retail.GoodsMainId
 
           LEFT JOIN Object AS Object_Juridical ON Object_Juridical.Id = GoodsPriceAll.JuridicalId
           LEFT JOIN Object AS Object_Contract ON Object_Contract.Id = GoodsPriceAll.ContractId
@@ -374,3 +370,4 @@ $BODY$
 
 -- тест 
 SELECT * FROM gpSelect_CashGoods('3');
+

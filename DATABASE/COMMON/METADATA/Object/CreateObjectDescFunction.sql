@@ -1303,6 +1303,14 @@ CREATE OR REPLACE FUNCTION zc_Object_CancelReason() RETURNS Integer AS $BODY$BEG
 INSERT INTO ObjectDesc (Code, ItemName)
   SELECT 'zc_Object_CancelReason', 'Причина отказа для сайта' WHERE NOT EXISTS (SELECT * FROM ObjectDesc WHERE Code = 'zc_Object_CancelReason');
 
+CREATE OR REPLACE FUNCTION zc_Object_BuyerForSale() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM ObjectDesc WHERE Code = 'zc_Object_BuyerForSale'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
+INSERT INTO ObjectDesc (Code, ItemName)
+  SELECT 'zc_Object_BuyerForSale', 'ФИО покупателя (на продажу)' WHERE NOT EXISTS (SELECT * FROM ObjectDesc WHERE Code = 'zc_Object_BuyerForSale');
+
+CREATE OR REPLACE FUNCTION zc_Object_MedicForSale() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM ObjectDesc WHERE Code = 'zc_Object_MedicForSale'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
+INSERT INTO ObjectDesc (Code, ItemName)
+  SELECT 'zc_Object_MedicForSale', 'ФИО врача (на продажу)' WHERE NOT EXISTS (SELECT * FROM ObjectDesc WHERE Code = 'zc_Object_MedicForSale');
+
 
 
 --------------------------- !!!!!!!!!!!!!!!!!!!!!!!!!
@@ -1321,6 +1329,7 @@ INSERT INTO ObjectDesc (Code, ItemName)
 /*-------------------------------------------------------------------------------
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.   Воробкало А. А.   Шаблий О.В.
+ 07.10.20                                                                                        * zc_Object_BuyerForSale, zc_Object_MedicForSale
  05.10.20         * zc_Object_MemberBranch
  25.09.20         * zc_Object_ReportBonus
  04.09.20         * zc_Object_MemberMinus
