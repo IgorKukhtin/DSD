@@ -110,12 +110,13 @@ begin
       if GetKeyState(ord('0')) < 0 then
       begin
         if Assigned(Screen.ActiveForm) then SaveTranslateForm(Screen.ActiveForm);
+        Handled := True;
       end else for I := 1 to LanguageCount do if GetKeyState(ord(IntToStr(I)[1])) < 0 then
       begin
         if FLanguage <> I then TranslateProgramm(I);
+        Handled := True;
       end;
     end;
-    Handled := True;
   end;
 end;
 
@@ -141,23 +142,16 @@ begin
     sp.OutputType := otDataSet;
     sp.DataSet := FTranslatorCDS;
     sp.StoredProcName := 'gpGet_Object_User_Language';
-    try
-      sp.Execute();
-      if FTranslatorCDS.RecordCount > 0 then
-      begin
-        FLanguage := FTranslatorCDS.FieldByName('LanguageCode').AsInteger;
-        FisLock_Ctrl_L_0 := FTranslatorCDS.FieldByName('isLock_Ctrl_L_0').AsBoolean
-      end else FLanguage := 1;
-    except
-    end;
+    sp.Execute();
+    if FTranslatorCDS.RecordCount > 0 then
+    begin
+      FLanguage := FTranslatorCDS.FieldByName('LanguageCode').AsInteger;
+      FisLock_Ctrl_L_0 := FTranslatorCDS.FieldByName('isLock_Ctrl_L_0').AsBoolean
+    end else FLanguage := 1;
 
       // Получили справочник
     sp.StoredProcName := 'gpSelect_Object_TranslateWord_list';
-
-    try
-      sp.Execute();
-    except
-    end;
+    sp.Execute();
   finally
     sp.Free;
   end;
@@ -186,10 +180,7 @@ begin
     sp.DataSet := FTranslatorCDS;
     sp.StoredProcName := 'gpUpdate_Object_User_Language';
     sp.Params.AddParam('inLanguageCode ', ftInteger, ptInput, ALanguage);
-    try
-      sp.Execute();
-    except
-    end;
+    sp.Execute();
   finally
 
   end;
@@ -283,14 +274,13 @@ procedure TTranslatorForm.SaveTranslateForm(Form : TForm);
   var sp: TdsdStoredProc;
       I : integer;
 
-function spExecute(AText, AName, AProperties : string) : Boolean;
+procedure spExecute(AText, AName, AProperties : string);
 begin
   if (Trim(AText) <> '') and (Trim(AText) <> '-') and (AText <> AName) then
-  try
+  begin
     sp.ParamByName('inValue').Value := AText;
     sp.ParamByName('inName').Value := AName + '.' + AProperties;
     sp.Execute();
-  except
   end;
 end;
 
@@ -317,12 +307,12 @@ begin
   else sp.Params.AddParam('inFormName', ftString, ptInput, Form.Name);
 
   try
-    if not spExecute(Form.Caption, Form.Name, 'Caption') then Exit;
+    spExecute(Form.Caption, Form.Name, 'Caption');
     for I := 0 to Form.ComponentCount - 1 do
     begin
-      if IsPublishedProp(Form.Components[I], 'Caption') then if not spExecute(GetStrProp(Form.Components[I], 'Caption'), Form.Components[I].Name, 'Caption') then Exit;
-      if IsPublishedProp(Form.Components[I], 'Hint') then if not spExecute(GetStrProp(Form.Components[I], 'Hint'), Form.Components[I].Name, 'Hint') then Exit;
-      if IsPublishedProp(Form.Components[I], 'HeaderHint') then if not spExecute(GetStrProp(Form.Components[I], 'HeaderHint'), Form.Components[I].Name, 'HeaderHint') then Exit;
+      if IsPublishedProp(Form.Components[I], 'Caption') then spExecute(GetStrProp(Form.Components[I], 'Caption'), Form.Components[I].Name, 'Caption');
+      if IsPublishedProp(Form.Components[I], 'Hint') then spExecute(GetStrProp(Form.Components[I], 'Hint'), Form.Components[I].Name, 'Hint');
+      if IsPublishedProp(Form.Components[I], 'HeaderHint') then spExecute(GetStrProp(Form.Components[I], 'HeaderHint'), Form.Components[I].Name, 'HeaderHint');
     end;
   finally
     sp.Free;
