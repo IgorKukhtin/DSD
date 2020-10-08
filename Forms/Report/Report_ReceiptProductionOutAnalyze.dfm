@@ -3,9 +3,8 @@ inherited Report_ReceiptProductionOutAnalyzeForm: TReport_ReceiptProductionOutAn
   ClientHeight = 430
   ClientWidth = 1130
   AddOnFormData.ExecuteDialogAction = ExecuteDialog
-  ExplicitLeft = -340
   ExplicitWidth = 1146
-  ExplicitHeight = 465
+  ExplicitHeight = 468
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
