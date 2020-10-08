@@ -128,7 +128,7 @@ BEGIN
                                                                     ON MIDate_ExpirationDate.MovementItemId = tmp.MI_IncomeId
                                                                    AND MIDate_ExpirationDate.DescId = zc_MIDate_PartionGoods()
                                )
-       , tmpObject_Price AS (SELECT CASE WHEN ObjectBoolean_Goods_TOP.ValueData = TRUE
+/*       , tmpObject_Price AS (SELECT CASE WHEN ObjectBoolean_Goods_TOP.ValueData = TRUE
                                           AND ObjectFloat_Goods_Price.ValueData > 0
                                          THEN ROUND (ObjectFloat_Goods_Price.ValueData, 2)
                                          ELSE ROUND (Price_Value.ValueData, 2)
@@ -151,9 +151,10 @@ BEGIN
                              WHERE ObjectLink_Price_Unit.DescId        = zc_ObjectLink_Price_Unit()
                                AND ObjectLink_Price_Unit.ChildObjectId = vbUnitId
                              )
-
+*/
      SELECT Container.GoodsId                                                      AS ID
-          , COALESCE(tmpObject_Price.Price,0)::TFloat                              AS Price
+         -- , COALESCE(tmpObject_Price.Price,0)::TFloat                              AS Price
+          , 0::TFloat                                                             AS Price
           , Container.Amount                                                       AS Amount
           , tmpExpirationDate.ExpirationDate                                       AS MinExpirationDate
           , tmpExpirationDate.PartionDateKindId                                    AS PartionDateKindId
@@ -166,7 +167,7 @@ BEGIN
 
           LEFT JOIN tmpExpirationDate ON tmpExpirationDate.id = Container.Id
 
-          LEFT OUTER JOIN tmpObject_Price ON tmpObject_Price.GoodsId = Container.GoodsId
+        --  LEFT OUTER JOIN tmpObject_Price ON tmpObject_Price.GoodsId = Container.GoodsId
      ORDER BY 1, 4;
 
 END;

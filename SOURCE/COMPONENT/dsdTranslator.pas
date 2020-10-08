@@ -3,7 +3,7 @@ unit dsdTranslator;
 interface
 
 uses
-  Windows, Forms, ActnList, Controls, Classes, DB, DBClient, dsdDataSetDataLink;
+  Windows, Messages, Forms, ActnList, Controls, Classes, DB, DBClient, dsdDataSetDataLink;
 
 type
 
@@ -24,6 +24,11 @@ type
   published
   end;
 
+  procedure dsdInitFullTranslator;
+  function dsdTranslatorInit : boolean;
+  function dsdTranslatorFull : boolean;
+  procedure dsdTranslateForm(Form : TForm);
+
   procedure Register;
 
 implementation
@@ -43,6 +48,8 @@ type
   private
     FLanguage : Integer;
     FLanguageCount : Integer;
+    FisLock_Ctrl_L_0 : boolean;
+    FFullProject : Boolean;
 
     FTranslatorCDS : TClientDataSet;
 
@@ -52,9 +59,11 @@ type
     procedure UpdateLanguage(ALanguage : Integer);
     procedure TranslateStrProp(Instance: TObject; const PropName: string; ALanguageOld, ALanguageNew : Integer);
     function TranslateStr(AText: string; ALanguageOld, ALanguageNew : Integer) : String;
+    procedure HandleMessages(var Msg: tMsg; var Handled: Boolean);
+    procedure OnActiveFormChange(Sender: TObject);
   public
     { Public declarations }
-    constructor Create;
+    constructor Create(AFullProject : Boolean = False);
     destructor Destroy; override;
 
     // Переводит форму
@@ -66,22 +75,58 @@ type
 
     property Language : Integer read FLanguage;
     property LanguageCount : Integer read FLanguageCount;
+    property FullProject : Boolean read FFullProject;
   end;
 
 { TTranslatorForm  }
 
-constructor TTranslatorForm.Create;
+constructor TTranslatorForm.Create(AFullProject : Boolean = False);
 begin
   FTranslatorCDS := TClientDataSet.Create(Nil);
   FLanguage := 1;
   FLanguageCount := 0;
   InitTranslatorCDS;
+  FFullProject := AFullProject;
+  if FFullProject then
+  begin
+    Application.OnMessage := HandleMessages;
+    Screen.OnActiveFormChange := OnActiveFormChange;
+  end;
 end;
 
 destructor TTranslatorForm.Destroy;
 begin
   FTranslatorCDS.Free;
   inherited;
+end;
+
+procedure TTranslatorForm.HandleMessages(var Msg: tMsg; var Handled: Boolean);
+  var I : Integer;
+begin
+  if (Msg.Message = WM_KeyDown) then
+  begin
+    if (GetKeyState(VK_CONTROL) < 0) and (GetKeyState(ord('L')) < 0) then
+    begin
+      if GetKeyState(ord('0')) < 0 then
+      begin
+        if Assigned(Screen.ActiveForm) then SaveTranslateForm(Screen.ActiveForm);
+      end else for I := 1 to LanguageCount do if GetKeyState(ord(IntToStr(I)[1])) < 0 then
+      begin
+        if FLanguage <> I then TranslateProgramm(I);
+      end;
+    end;
+    Handled := True;
+  end;
+end;
+
+procedure TTranslatorForm.OnActiveFormChange(Sender: TObject);
+begin
+  if Assigned(Screen.ActiveForm) then
+    if not (Screen.ActiveForm is TParentForm) and (Screen.ActiveForm.Tag = 0) then
+    begin
+      TranslateForm(Screen.ActiveForm, 1, Language);
+      Screen.ActiveForm.Tag := 1;
+    end;
 end;
 
   // Иницилизация датасета
@@ -99,8 +144,10 @@ begin
     try
       sp.Execute();
       if FTranslatorCDS.RecordCount > 0 then
-        FLanguage := FTranslatorCDS.FieldByName('LanguageCode').AsInteger
-      else FLanguage := 1;
+      begin
+        FLanguage := FTranslatorCDS.FieldByName('LanguageCode').AsInteger;
+        FisLock_Ctrl_L_0 := FTranslatorCDS.FieldByName('isLock_Ctrl_L_0').AsBoolean
+      end else FLanguage := 1;
     except
     end;
 
@@ -159,7 +206,7 @@ begin
     if FTranslatorCDS.Locate('value' + IntToStr(ALanguageOld), AText, [loCaseInsensitive]) then
     begin
       if FTranslatorCDS.FieldByName('value1').AsString <> '' then
-        Result :=  FTranslatorCDS.FieldByName('value1' + IntToStr(ALanguageNew)).AsString;
+        Result :=  FTranslatorCDS.FieldByName('value' + IntToStr(ALanguageNew)).AsString;
     end;
       // если новый не русский переведем
     if ALanguageNew <> 1 then
@@ -217,12 +264,16 @@ procedure TTranslatorForm.TranslateProgramm(ALanguageNew : Integer);
   var I, J : Integer;
 begin
   for I := 0 to Screen.FormCount - 1 do
-    for J := 0 to Screen.Forms[I].ComponentCount - 1 do
-      if Screen.Forms[I].Components[J] is TdsdTranslator then
-      begin
-        TranslateForm(Screen.Forms[I], FLanguage, ALanguageNew);
-        Continue;
-      end;
+    if not FFullProject then
+    begin
+
+      for J := 0 to Screen.Forms[I].ComponentCount - 1 do
+        if Screen.Forms[I].Components[J] is TdsdTranslator then
+        begin
+          TranslateForm(Screen.Forms[I], FLanguage, ALanguageNew);
+          Continue;
+        end;
+    end else TranslateForm(Screen.Forms[I], FLanguage, ALanguageNew);
 
   UpdateLanguage(ALanguageNew);
 end;
@@ -232,7 +283,7 @@ procedure TTranslatorForm.SaveTranslateForm(Form : TForm);
   var sp: TdsdStoredProc;
       I : integer;
 
-procedure spExecute(AText, AName, AProperties : string);
+function spExecute(AText, AName, AProperties : string) : Boolean;
 begin
   if (Trim(AText) <> '') and (Trim(AText) <> '-') and (AText <> AName) then
   try
@@ -244,6 +295,8 @@ begin
 end;
 
 begin
+
+  if FisLock_Ctrl_L_0 then Exit;
   if FLanguage <> 1 then
   begin
     ShowMessage('Для сохранения русского текста наду установить русский язык.');
@@ -264,12 +317,12 @@ begin
   else sp.Params.AddParam('inFormName', ftString, ptInput, Form.Name);
 
   try
-    spExecute(Form.Caption, Form.Name, 'Caption');
+    if not spExecute(Form.Caption, Form.Name, 'Caption') then Exit;
     for I := 0 to Form.ComponentCount - 1 do
     begin
-      if IsPublishedProp(Form.Components[I], 'Caption') then spExecute(GetStrProp(Form.Components[I], 'Caption'), Form.Components[I].Name, 'Caption');
-      if IsPublishedProp(Form.Components[I], 'Hint') then spExecute(GetStrProp(Form.Components[I], 'Hint'), Form.Components[I].Name, 'Hint');
-      if IsPublishedProp(Form.Components[I], 'HeaderHint') then spExecute(GetStrProp(Form.Components[I], 'HeaderHint'), Form.Components[I].Name, 'HeaderHint');
+      if IsPublishedProp(Form.Components[I], 'Caption') then if not spExecute(GetStrProp(Form.Components[I], 'Caption'), Form.Components[I].Name, 'Caption') then Exit;
+      if IsPublishedProp(Form.Components[I], 'Hint') then if not spExecute(GetStrProp(Form.Components[I], 'Hint'), Form.Components[I].Name, 'Hint') then Exit;
+      if IsPublishedProp(Form.Components[I], 'HeaderHint') then if not spExecute(GetStrProp(Form.Components[I], 'HeaderHint'), Form.Components[I].Name, 'HeaderHint') then Exit;
     end;
   finally
     sp.Free;
@@ -287,7 +340,7 @@ begin
   if csDesigning in ComponentState then Exit;
   if not Assigned(TranslatorForm) then TranslatorForm := TTranslatorForm.Create;
 
-  if Owner is TForm then
+  if (Owner is TForm) and not TranslatorForm.FullProject then
   begin
     FOnFormKeyDown :=  TForm(Owner).OnKeyDown;
     TForm(Owner).OnKeyDown := OnFormKeyDown;
@@ -333,6 +386,28 @@ procedure TdsdTranslator.TranslateForm;
 begin
   if (Owner is TForm) and Assigned(TranslatorForm) then TranslatorForm.TranslateForm(TForm(Owner), 1, TranslatorForm.Language);
 end;
+
+
+procedure dsdInitFullTranslator;
+begin
+  if not Assigned(TranslatorForm) then TranslatorForm := TTranslatorForm.Create(True);
+end;
+
+function dsdTranslatorInit : boolean;
+begin
+  Result := Assigned(TranslatorForm);
+end;
+
+function dsdTranslatorFull : boolean;
+begin
+  Result := Assigned(TranslatorForm) and TranslatorForm.FullProject;
+end;
+
+procedure dsdTranslateForm(Form : TForm);
+begin
+  if Assigned(TranslatorForm) then TranslatorForm.TranslateForm(Form, 1, TranslatorForm.Language);
+end;
+
 
 initialization
 

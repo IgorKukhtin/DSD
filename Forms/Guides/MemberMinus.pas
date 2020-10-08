@@ -21,7 +21,7 @@ uses
   dsdDB, dsdAction, Vcl.ActnList, dxBarExtItems, dxBar, cxClasses,
   cxPropertiesStore, Datasnap.DBClient, cxGridLevel, cxGridCustomTableView,
   cxGridTableView, cxGridDBTableView, cxGridCustomView, cxGrid, cxCheckBox,
-  cxCurrencyEdit, cxButtonEdit;
+  cxCurrencyEdit, cxButtonEdit, cxContainer, dsdGuides, cxTextEdit, cxMaskEdit;
 
 type
   TMemberMinusForm = class(TParentForm)
@@ -74,6 +74,12 @@ type
     bbShowErased: TdxBarButton;
     actInsertMask: TdsdInsertUpdateAction;
     bbInsertMask: TdxBarButton;
+    edBankAccountMain: TcxButtonEdit;
+    GuidesBankAccountMain: TdsdGuides;
+    bbBankAccountMain: TdxBarControlContainerItem;
+    edBankMain: TcxButtonEdit;
+    GuidesBankMain: TdsdGuides;
+    bbbankMain: TdxBarControlContainerItem;
   private
     { Private declarations }
   public

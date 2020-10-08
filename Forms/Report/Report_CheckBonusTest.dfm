@@ -216,13 +216,50 @@ inherited Report_CheckBonusTestForm: TReport_CheckBonusTestForm
             Width = 48
           end
           object PercentRetBonus_fact: TcxGridDBColumn
-            Caption = 'Max % '#1074#1086#1079#1074#1088#1072#1090#1072' '#1092#1072#1082#1090
+            Caption = 'Max % '#1074#1086#1079#1074#1088#1072#1090#1072' '#1092#1072#1082#1090'('#1075#1088#1085')'
             DataBinding.FieldName = 'PercentRetBonus_fact'
             Visible = False
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
             Width = 48
+          end
+          object PercentRetBonus_fact_weight: TcxGridDBColumn
+            Caption = 'Max % '#1074#1086#1079#1074#1088#1072#1090#1072' '#1092#1072#1082#1090' ('#1042#1077#1089')'
+            DataBinding.FieldName = 'PercentRetBonus_fact_weight'
+            Visible = False
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 48
+          end
+          object Sum_Sale_weight: TcxGridDBColumn
+            Caption = #1055#1088#1086#1076#1072#1085#1086' ('#1074#1077#1089')'
+            DataBinding.FieldName = 'Sum_Sale_weight'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 4
+            Properties.DisplayFormat = ',0.####;-,0.####; ;'
+            Properties.ReadOnly = True
+            Visible = False
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            HeaderHint = #1055#1088#1086#1076#1072#1078#1072' - '#1074#1086#1079#1074#1088#1072#1090
+            Options.Editing = False
+            Width = 80
+          end
+          object Sum_ReturnIn_weight: TcxGridDBColumn
+            Caption = #1042#1086#1079#1074#1088#1072#1090' ('#1074#1077#1089')'
+            DataBinding.FieldName = 'Sum_ReturnIn_weight'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 4
+            Properties.DisplayFormat = ',0.####;-,0.####; ;'
+            Properties.ReadOnly = True
+            Visible = False
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            HeaderHint = #1055#1088#1086#1076#1072#1078#1072' - '#1074#1086#1079#1074#1088#1072#1090
+            Options.Editing = False
+            Width = 80
           end
           object BonusKindName: TcxGridDBColumn
             AlternateCaption = #1058#1080#1087' '#1085#1072#1083#1086#1075'.'#1076#1086#1082'.'
@@ -1012,7 +1049,7 @@ inherited Report_CheckBonusTestForm: TReport_CheckBonusTestForm
     Top = 208
   end
   inherited spSelect: TdsdStoredProc
-    StoredProcName = 'gpReport_CheckBonusTest3'
+    StoredProcName = 'gpReport_CheckBonusTest4'
     Params = <
       item
         Name = 'inStartDate'

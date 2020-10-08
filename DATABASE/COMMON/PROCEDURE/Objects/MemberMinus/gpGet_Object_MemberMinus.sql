@@ -10,7 +10,7 @@ CREATE OR REPLACE FUNCTION gpGet_Object_MemberMinus(
 )
 RETURNS TABLE (Id Integer, Name TVarChar
              , FromId Integer, FromName TVarChar
-             , ToId Integer, ToName TVarChar
+             , ToId Integer, ToName TVarChar, INN_to TVarChar
              , BankAccountFromId Integer, BankAccountFromName TVarChar
              , BankAccountToId Integer, BankAccountToName TVarChar
              , DetailPayment TVarChar, BankAccountTo TVarChar
@@ -33,6 +33,7 @@ $BODY$BEGIN
            
            , CAST (0 as Integer)    AS ToId
            , CAST ('' as TVarChar)  AS ToName
+           , CAST ('' AS TVarChar)  AS INN_to
            
            , CAST (0 as Integer)    AS BankAccountFromId
            , CAST ('' as TVarChar)  AS BankAccountFromName
@@ -57,6 +58,9 @@ $BODY$BEGIN
 
          , Object_To.Id                         AS ToId
          , Object_To.ValueData                  AS ToName
+         , CASE WHEN Object_To.DescId = zc_Object_Juridical() THEN ObjectHistory_JuridicalDetails_View.OKPO
+                ELSE ObjectString_INN_to.ValueData
+           END                                  AS INN_to
 
          , Object_BankAccountFrom.Id            AS BankAccountFromId
          , Object_BankAccountFrom.ValueData     AS BankAccountFromName
@@ -99,6 +103,13 @@ $BODY$BEGIN
                                  ON ObjectString_BankAccountTo.ObjectId = Object_MemberMinus.Id
                                 AND ObjectString_BankAccountTo.DescId = zc_ObjectString_MemberMinus_BankAccountTo()
 
+          LEFT JOIN ObjectString AS ObjectString_INN_to
+                                 ON ObjectString_INN_to.ObjectId = Object_To.Id
+                                AND ObjectString_INN_to.DescId IN (zc_ObjectString_MemberExternal_INN(), zc_ObjectString_Member_INN())
+                                AND Object_To.DescId = zc_Object_MemberExternal()
+          LEFT JOIN ObjectHistory_JuridicalDetails_View ON ObjectHistory_JuridicalDetails_View.JuridicalId = Object_To.Id
+                                                       AND Object_To.DescId = zc_Object_Juridical()
+
           LEFT JOIN ObjectFloat AS ObjectFloat_TotalSumm
                                 ON ObjectFloat_TotalSumm.ObjectId = Object_MemberMinus.Id
                                AND ObjectFloat_TotalSumm.DescId = zc_ObjectFloat_MemberMinus_TotalSumm()
@@ -122,4 +133,4 @@ LANGUAGE plpgsql VOLATILE;
 */
 
 -- тест
--- SELECT * FROM gpGet_Object_MemberMinus(0, '2')
+-- SELECT * FROM gpGet_Object_MemberMinus(0, 0,'2')

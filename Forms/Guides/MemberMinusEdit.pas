@@ -57,6 +57,8 @@ type
     edDetailPayment: TcxTextEdit;
     edTotalSumm: TcxCurrencyEdit;
     edSumm: TcxCurrencyEdit;
+    cxLabel5: TcxLabel;
+    edINN_to: TcxTextEdit;
   private
     { Private declarations }
   public

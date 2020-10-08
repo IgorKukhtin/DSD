@@ -521,10 +521,13 @@ end;
 
 procedure TParentForm.Loaded;
 
-procedure dsdTranslateForm(Form : TForm);
+procedure dsdTranslateCurrForm(Form : TForm);
   var I : Integer;
 begin
-  for I := 0 to Form.ComponentCount - 1 do
+  if not dsdTranslatorInit then Exit;
+
+  if dsdTranslatorFull then dsdTranslateForm(Form)
+  else for I := 0 to Form.ComponentCount - 1 do
   if Form.Components[I] is TdsdTranslator then
   begin
     TdsdTranslator(Form.Components[I]).TranslateForm;
@@ -538,7 +541,7 @@ begin
      if Assigned(AddOnFormData.OnLoadAction) then
         AddOnFormData.OnLoadAction.Execute;
   TranslateForm(Self);
-  dsdTranslateForm(Self);
+  dsdTranslateCurrForm(Self);
 end;
 
 procedure TParentForm.Notification(AComponent: TComponent;

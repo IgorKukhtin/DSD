@@ -30,6 +30,10 @@ RETURNS TABLE (OperDate_Movement TDateTime, OperDatePartner TDateTime, InvNumber
              , PercentRetBonus TFloat
              , PercentRetBonus_fact TFloat
              , PercentRetBonus_diff TFloat
+             
+             , PercentRetBonus_fact_weight TFloat
+             , PercentRetBonus_diff_weight TFloat
+             
              , Sum_CheckBonus TFloat
              , Sum_CheckBonusFact TFloat 
              , Sum_Bonus TFloat
@@ -37,6 +41,10 @@ RETURNS TABLE (OperDate_Movement TDateTime, OperDatePartner TDateTime, InvNumber
              , Sum_SaleFact TFloat
              , Sum_Account TFloat
              , Sum_SaleReturnIn TFloat
+             
+             , Sum_Sale_weight TFloat
+             , Sum_ReturnIn_weight TFloat
+             
              , Comment TVarChar
              , ReportBonusId Integer
              , isSend Boolean
@@ -406,9 +414,14 @@ BEGIN
                                              ELSE 0
                                         END) AS Sum_Account -- оплаты
 
-                                 , SUM (CASE WHEN MIContainer.MovementDescId = zc_Movement_ReturnIn() THEN COALESCE(MIContainer.Amount,0) ELSE 0 END) AS Sum_Return  -- возврат
+                                 , SUM (CASE WHEN MIContainer.MovementDescId = zc_Movement_ReturnIn() THEN (-1)*COALESCE(MIContainer.Amount,0) ELSE 0 END) AS Sum_Return  -- возврат
                                  , CASE WHEN inisMovement = TRUE THEN MIContainer.MovementDescId ELSE 0 END  AS MovementDescId
                                  , CASE WHEN inisMovement = TRUE THEN MIContainer.MovementId ELSE 0 END      AS MovementId
+
+                                 , SUM (CASE WHEN MIContainer.MovementDescId = zc_Movement_Sale() THEN COALESCE(MIFloat_AmountPartner.ValueData,0) ELSE 0 END
+                                      * CASE WHEN ObjectLink_Goods_Measure.ChildObjectId = zc_Measure_Sh() THEN ObjectFloat_Weight.ValueData ELSE 1 END) AS Sale_AmountPartner_Weight
+                                 , SUM (CASE WHEN MIContainer.MovementDescId = zc_Movement_ReturnIn() THEN COALESCE(MIFloat_AmountPartner.ValueData,0) ELSE 0 END
+                                      * CASE WHEN ObjectLink_Goods_Measure.ChildObjectId = zc_Measure_Sh() THEN ObjectFloat_Weight.ValueData ELSE 1 END) AS Return_AmountPartner_Weight
 
                             FROM MovementItemContainer AS MIContainer
                                  JOIN tmpContainer ON tmpContainer.ContainerId = MIContainer.ContainerId
@@ -421,6 +434,17 @@ BEGIN
                                  LEFT JOIN MovementItem ON MovementItem.Id = MIContainer.MovementItemId 
                                                        AND MovementItem.DescId = zc_MI_Master()
                                                        AND MIContainer.MovementDescId = zc_Movement_Cash()
+
+                                 LEFT JOIN MovementItemFloat AS MIFloat_AmountPartner
+                                                             ON MIFloat_AmountPartner.MovementItemId = MIContainer.MovementItemId
+                                                            AND MIFloat_AmountPartner.DescId = zc_MIFloat_AmountPartner()
+
+                                 LEFT JOIN ObjectLink AS ObjectLink_Goods_Measure
+                                                      ON ObjectLink_Goods_Measure.ObjectId = MovementItem.ObjectId
+                                                     AND ObjectLink_Goods_Measure.DescId = zc_ObjectLink_Goods_Measure()
+                                 LEFT JOIN ObjectFloat AS ObjectFloat_Weight
+                                                       ON ObjectFloat_Weight.ObjectId = MovementItem.ObjectId
+                                                      AND ObjectFloat_Weight.DescId = zc_ObjectFloat_Goods_Weight()
 
                                  /*LEFT JOIN MovementItemLinkObject AS MILinkObject_Unit
                                                                   ON MILinkObject_Unit.MovementItemId = MIContainer.MovementItemId   --BankAccount
@@ -492,8 +516,11 @@ BEGIN
                              , tmpGroup.Sum_Sale
                              , tmpGroup.Sum_SaleReturnIn
                              , tmpGroup.Sum_Account
+                             , tmpGroup.Sum_Sale_weight
+                             , tmpGroup.Sum_ReturnIn_weight
                              --расчитывем % возврата факт = факт возврата / факт отгрузки * 100
                              , CASE WHEN COALESCE (tmpGroup.Sum_Sale,0) <> 0 THEN tmpGroup.Sum_Return / tmpGroup.Sum_Sale * 100 ELSE 0 END AS PercentRetBonus_fact
+                             , CASE WHEN COALESCE (tmpGroup.Sum_Sale_weight,0) <> 0 THEN tmpGroup.Sum_ReturnIn_weight / tmpGroup.Sum_Sale_weight * 100 ELSE 0 END AS PercentRetBonus_fact_weight
                         FROM 
                             (SELECT tmpGroup.JuridicalId
                                   , tmpGroup.PartnerId
@@ -508,6 +535,8 @@ BEGIN
                                   , SUM (tmpGroup.Sum_SaleReturnIn) AS Sum_SaleReturnIn
                                   , SUM (tmpGroup.Sum_Account) AS Sum_Account
                                   , SUM (tmpGroup.Sum_Return)  AS Sum_Return
+                                  , SUM (tmpGroup.Sale_AmountPartner_Weight)   AS Sum_Sale_weight
+                                  , SUM (tmpGroup.Return_AmountPartner_Weight) AS Sum_ReturnIn_weight
                              FROM tmpMovementCont AS tmpGroup
                              WHERE tmpGroup.BranchId = inBranchId OR inBranchId = 0
                              GROUP BY tmpGroup.JuridicalId
@@ -560,8 +589,9 @@ BEGIN
                                   , tmpContract.ContractConditionKindId
                                   , tmpContract.BonusKindId
                                   , COALESCE (tmpContract.Value,0) AS Value
-                                  , COALESCE (tmpContract.PercentRetBonus,0)     ::TFloat AS PercentRetBonus
-                                  , COALESCE (tmpMovement.PercentRetBonus_fact,0)::TFloat AS PercentRetBonus_fact
+                                  , COALESCE (tmpContract.PercentRetBonus,0)            ::TFloat AS PercentRetBonus
+                                  , COALESCE (tmpMovement.PercentRetBonus_fact,0)       ::TFloat AS PercentRetBonus_fact
+                                  , COALESCE (tmpMovement.PercentRetBonus_fact_weight,0)::TFloat AS PercentRetBonus_fact_weight
       
                                   , CAST (CASE WHEN tmpContract.ContractConditionKindID = zc_Enum_ContractConditionKind_BonusPercentSale() THEN tmpMovement.Sum_Sale 
                                                WHEN tmpContract.ContractConditionKindID = zc_Enum_ContractConditionKind_BonusPercentSaleReturn() THEN tmpMovement.Sum_SaleReturnIn
@@ -569,7 +599,7 @@ BEGIN
                                           ELSE 0 END  AS TFloat) AS Sum_CheckBonus
       
                                   --когда % возврата факт превышает % возврата план, бонус не начисляется 
-                                  , CAST (CASE WHEN (COALESCE (tmpContract.PercentRetBonus,0) <> 0 AND tmpMovement.PercentRetBonus_fact > tmpContract.PercentRetBonus) THEN 0 
+                                  , CAST (CASE WHEN (COALESCE (tmpContract.PercentRetBonus,0) <> 0 AND tmpMovement.PercentRetBonus_fact_weight > tmpContract.PercentRetBonus) THEN 0 
                                                ELSE 
                                                   CASE WHEN tmpContract.ContractConditionKindID = zc_Enum_ContractConditionKind_BonusPercentSale() THEN (tmpMovement.Sum_Sale/100 * tmpContract.Value)
                                                        WHEN tmpContract.ContractConditionKindID = zc_Enum_ContractConditionKind_BonusPercentSaleReturn() THEN (tmpMovement.Sum_SaleReturnIn/100 * tmpContract.Value) 
@@ -579,9 +609,11 @@ BEGIN
                                   , 0 :: TFloat                  AS Sum_BonusFact
                                   , 0 :: TFloat                  AS Sum_CheckBonusFact
                                   , 0 :: TFloat                  AS Sum_SaleFact
-                                  , COALESCE (tmpMovement.Sum_Account,0)      AS Sum_Account
-                                  , COALESCE (tmpMovement.Sum_SaleReturnIn,0) AS Sum_SaleReturnIn
-      
+                                  , COALESCE (tmpMovement.Sum_Account,0)         AS Sum_Account
+                                  , COALESCE (tmpMovement.Sum_SaleReturnIn,0)    AS Sum_SaleReturnIn
+                                  , COALESCE (tmpMovement.Sum_Sale_weight,0)     AS Sum_Sale_weight    
+                                  , COALESCE (tmpMovement.Sum_ReturnIn_weight,0) AS Sum_ReturnIn_weight
+                             
                                   , COALESCE (tmpContract.Comment, '')  AS Comment
                         
                                   , COALESCE (tmpMovement.MovementId,0) AS MovementId
@@ -621,6 +653,7 @@ BEGIN
                             , COALESCE (MIFloat_BonusValue.ValueData,0)      AS Value
                             , 0 ::TFloat                                     AS PercentRetBonus
                             , 0 ::TFloat                                     AS PercentRetBonus_fact
+                            , 0 ::TFloat                                     AS PercentRetBonus_fact_weight
 
                             , 0 :: TFloat                                    AS Sum_CheckBonus
                             , 0 :: TFloat                                    AS Sum_Bonus
@@ -629,7 +662,9 @@ BEGIN
                             , MIFloat_AmountPartner.ValueData                AS Sum_SaleFact
                             , 0 :: TFloat                                    AS Sum_Account
                             , 0 :: TFloat                                    AS Sum_SaleReturnIn
-  
+
+                            , 0 :: TFloat                                    AS Sum_Sale_weight    
+                            , 0 :: TFloat                                    AS Sum_ReturnIn_weight
                             , COALESCE (MIString_Comment.ValueData,'')       AS Comment
 
                             , CASE WHEN inisMovement = TRUE THEN Movement.Id ELSE 0 END      AS MovementId
@@ -721,7 +756,8 @@ BEGIN
                          , tmpAll.Value
 
                          , MAX (tmpAll.PercentRetBonus)    AS PercentRetBonus
-                         , MAX (tmpAll.PercentRetBonus_fact)*(-1) AS PercentRetBonus_fact
+                         , MAX (tmpAll.PercentRetBonus_fact)        AS PercentRetBonus_fact
+                         , MAX (tmpAll.PercentRetBonus_fact_weight) AS PercentRetBonus_fact_weight
                          , SUM (tmpAll.Sum_CheckBonus)     AS Sum_CheckBonus
                          , SUM (tmpAll.Sum_CheckBonusFact) AS Sum_CheckBonusFact
                          , SUM (tmpAll.Sum_Bonus)          AS Sum_Bonus
@@ -729,6 +765,10 @@ BEGIN
                          , SUM (tmpAll.Sum_SaleFact)       AS Sum_SaleFact
                          , SUM (tmpAll.Sum_Account)        AS Sum_Account
                          , SUM (tmpAll.Sum_SaleReturnIn)   AS Sum_SaleReturnIn
+
+                         , SUM (COALESCE (tmpAll.Sum_Sale_weight,0))     AS Sum_Sale_weight    
+                         , SUM (COALESCE (tmpAll.Sum_ReturnIn_weight,0)) AS Sum_ReturnIn_weight
+
                          , MAX (tmpAll.Comment) :: TVarChar AS Comment
                     FROM tmpAll
                     WHERE (tmpAll.Sum_CheckBonus <> 0
@@ -903,6 +943,9 @@ BEGIN
             , CAST (tmpData.PercentRetBonus_fact AS TFloat) AS PercentRetBonus_fact
             , CAST (COALESCE (tmpData.PercentRetBonus_fact,0) - COALESCE (tmpData.PercentRetBonus, 0) AS TFloat) :: TFloat AS PercentRetBonus_diff
 
+            , CAST (tmpData.PercentRetBonus_fact_weight AS TFloat) AS PercentRetBonus_fact_weight
+            , CAST (COALESCE (tmpData.PercentRetBonus_fact_weight,0) - COALESCE (tmpData.PercentRetBonus, 0) AS TFloat) :: TFloat AS PercentRetBonus_diff_weight
+
             , CAST (tmpData.Sum_CheckBonus AS TFloat)     AS Sum_CheckBonus
             , CAST (tmpData.Sum_CheckBonusFact AS TFloat) AS Sum_CheckBonusFact
             , CAST (tmpData.Sum_Bonus      AS TFloat)     AS Sum_Bonus
@@ -910,6 +953,9 @@ BEGIN
             , CAST (tmpData.Sum_SaleFact   AS TFloat)     AS Sum_SaleFact
             , CAST (tmpData.Sum_Account    AS TFloat)     AS Sum_Account
             , CAST (tmpData.Sum_SaleReturnIn AS TFloat)   AS Sum_SaleReturnIn
+            , CAST (tmpData.Sum_Sale_weight     AS TFloat) AS Sum_Sale_weight
+            , CAST (tmpData.Sum_ReturnIn_weight AS TFloat) AS Sum_ReturnIn_weight
+            
             , tmpData.Comment :: TVarChar                 AS Comment
             
             , tmpObjectBonus.Id :: Integer AS ReportBonusId

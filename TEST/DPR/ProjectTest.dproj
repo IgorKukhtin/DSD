@@ -4152,7 +4152,9 @@
 						<VersionInfoKeys Name="ProductVersion">1.0.0.0</VersionInfoKeys>
 						<VersionInfoKeys Name="Comments"/>
 					</VersionInfoKeys>
-					<Excluded_Packages/>
+					<Excluded_Packages>
+						<Excluded_Packages Name="C:\Users\Андрей\Documents\DevExpress VCL\Library\RS16\dclcxPivotGridOLAPRS16.bpl">ExpressPivotGrid OLAP by Developer Express Inc.</Excluded_Packages>
+					</Excluded_Packages>
 					<Source>
 						<Source Name="MainSource">ProjectTest.dpr</Source>
 					</Source>

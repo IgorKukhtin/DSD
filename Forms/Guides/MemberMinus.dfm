@@ -104,6 +104,15 @@ object MemberMinusForm: TMemberMinusForm
         HeaderAlignmentVert = vaCenter
         Width = 138
       end
+      object INN_From: TcxGridDBColumn
+        Caption = #1048#1053#1053' ('#1087#1083#1072#1090'.)'
+        DataBinding.FieldName = 'INN_From'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        HeaderHint = #1048#1053#1053' '#1092'.'#1083'. '#1089' '#1082#1086#1090#1086#1088#1086#1075#1086' '#1087#1088#1086#1080#1079#1074#1086#1076#1103#1090#1089#1103' '#1091#1076#1077#1088#1078#1072#1085#1080#1103
+        Options.Editing = False
+        Width = 109
+      end
       object ToName: TcxGridDBColumn
         Caption = #1060#1080#1079'. '#1083#1080#1094#1072'('#1089#1090#1086#1088#1086#1085#1085#1080#1077') / '#1070#1088'. '#1083#1080#1094#1072
         DataBinding.FieldName = 'ToName'
@@ -119,6 +128,14 @@ object MemberMinusForm: TMemberMinusForm
         HeaderAlignmentVert = vaCenter
         HeaderHint = #1060#1080#1079#1080#1095#1077#1089#1082#1080#1077' '#1083#1080#1094#1072'('#1089#1090#1086#1088#1086#1085#1085#1080#1077') / '#1070#1088#1080#1076#1080#1095#1077#1089#1082#1080#1077' '#1083#1080#1094#1072
         Width = 172
+      end
+      object INN_to: TcxGridDBColumn
+        Caption = #1054#1050#1055#1054' / '#1048#1053#1053' ('#1087#1086#1083#1091#1095'.)'
+        DataBinding.FieldName = 'INN_to'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        HeaderHint = #1048#1053#1053' '#1092'.'#1083'. '#1089' '#1082#1086#1090#1086#1088#1086#1075#1086' '#1087#1088#1086#1080#1079#1074#1086#1076#1103#1090#1089#1103' '#1091#1076#1077#1088#1078#1072#1085#1080#1103
+        Width = 109
       end
       object BankAccountFromName: TcxGridDBColumn
         Caption = 'IBAN '#1087#1083#1072#1090#1077#1083#1100#1097#1080#1082#1072
@@ -136,6 +153,13 @@ object MemberMinusForm: TMemberMinusForm
         HeaderHint = 'IBAN '#1087#1083#1072#1090#1077#1083#1100#1097#1080#1082#1072' '#1087#1083#1072#1090#1077#1078#1072
         Width = 134
       end
+      object BankName_From: TcxGridDBColumn
+        Caption = #1041#1072#1085#1082' '#1087#1083#1072#1090#1077#1083#1100#1097#1080#1082#1072
+        DataBinding.FieldName = 'BankName_From'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Width = 96
+      end
       object BankAccountToName: TcxGridDBColumn
         Caption = 'IBAN '#1087#1086#1083#1091#1095#1072#1090#1077#1083#1103
         DataBinding.FieldName = 'BankAccountToName'
@@ -151,6 +175,13 @@ object MemberMinusForm: TMemberMinusForm
         HeaderAlignmentVert = vaCenter
         HeaderHint = 'IBAN '#1087#1086#1083#1091#1095#1072#1090#1077#1083#1103' '#1087#1083#1072#1090#1077#1078#1072
         Width = 118
+      end
+      object BankName_To: TcxGridDBColumn
+        Caption = #1041#1072#1085#1082' '#1087#1086#1083#1091#1095#1072#1090#1077#1083#1103
+        DataBinding.FieldName = 'BankName_To'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Width = 96
       end
       object TotalSumm: TcxGridDBColumn
         Caption = #1057#1091#1084#1084#1072' '#1080#1090#1086#1075#1086
@@ -192,6 +223,33 @@ object MemberMinusForm: TMemberMinusForm
     object cxGridLevel: TcxGridLevel
       GridView = cxGridDBTableView
     end
+  end
+  object edBankAccountMain: TcxButtonEdit
+    Left = 580
+    Top = 140
+    Properties.Buttons = <
+      item
+        Default = True
+        Kind = bkEllipsis
+      end>
+    Properties.ReadOnly = True
+    TabOrder = 5
+    Text = #1056'/'#1089#1095#1077#1090' '#1087#1083#1072#1090#1077#1083#1100#1097#1080#1082#1072
+    Width = 189
+  end
+  object edBankMain: TcxButtonEdit
+    Left = 580
+    Top = 196
+    Properties.Buttons = <
+      item
+        Default = True
+        Enabled = False
+        Kind = bkEllipsis
+      end>
+    Properties.ReadOnly = True
+    TabOrder = 6
+    Text = #1041#1072#1085#1082
+    Width = 117
   end
   object DataSource: TDataSource
     DataSet = ClientDataSet
@@ -306,6 +364,18 @@ object MemberMinusForm: TMemberMinusForm
         end
         item
           Visible = True
+          ItemName = 'bbBankAccountMain'
+        end
+        item
+          Visible = True
+          ItemName = 'bbbankMain'
+        end
+        item
+          Visible = True
+          ItemName = 'dxBarStatic'
+        end
+        item
+          Visible = True
           ItemName = 'bbRefresh'
         end
         item
@@ -393,6 +463,20 @@ object MemberMinusForm: TMemberMinusForm
       Action = actInsertMask
       Category = 0
     end
+    object bbBankAccountMain: TdxBarControlContainerItem
+      Caption = 'New Item'
+      Category = 0
+      Hint = 'BankAccountMain'
+      Visible = ivAlways
+      Control = edBankAccountMain
+    end
+    object bbbankMain: TdxBarControlContainerItem
+      Caption = 'New Item'
+      Category = 0
+      Hint = 'New Item'
+      Visible = ivAlways
+      Control = edBankMain
+    end
   end
   object ActionList: TActionList
     Images = dmMain.ImageList
@@ -432,6 +516,14 @@ object MemberMinusForm: TMemberMinusForm
           Name = 'MaskId'
           Value = '0'
           MultiSelectSeparator = ','
+        end
+        item
+          Name = 'BankAccountId_Main'
+          Value = Null
+          Component = GuidesBankAccountMain
+          ComponentItem = 'Key'
+          ParamType = ptInput
+          MultiSelectSeparator = ','
         end>
       isShowModal = True
       DataSource = DataSource
@@ -460,6 +552,14 @@ object MemberMinusForm: TMemberMinusForm
         item
           Name = 'MaskId'
           Value = '0'
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'BankAccountId_Main'
+          Value = Null
+          Component = GuidesBankAccountMain
+          ComponentItem = 'Key'
           ParamType = ptInput
           MultiSelectSeparator = ','
         end>
@@ -698,6 +798,14 @@ object MemberMinusForm: TMemberMinusForm
           ComponentItem = 'ToName'
           DataType = ftString
           MultiSelectSeparator = ','
+        end
+        item
+          Name = 'INN'
+          Value = Null
+          Component = ClientDataSet
+          ComponentItem = 'INN_to'
+          DataType = ftString
+          MultiSelectSeparator = ','
         end>
       isShowModal = True
     end
@@ -869,6 +977,15 @@ object MemberMinusForm: TMemberMinusForm
         MultiSelectSeparator = ','
       end
       item
+        Name = 'inINN_to'
+        Value = Null
+        Component = ClientDataSet
+        ComponentItem = 'INN_to'
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
         Name = 'inFromId'
         Value = ''
         Component = ClientDataSet
@@ -885,11 +1002,11 @@ object MemberMinusForm: TMemberMinusForm
         MultiSelectSeparator = ','
       end
       item
-        Name = 'inBankAccountFromId'
+        Name = 'ioBankAccountFromId'
         Value = ''
         Component = ClientDataSet
         ComponentItem = 'BankAccountFromId'
-        ParamType = ptInput
+        ParamType = ptInputOutput
         MultiSelectSeparator = ','
       end
       item
@@ -898,6 +1015,22 @@ object MemberMinusForm: TMemberMinusForm
         Component = ClientDataSet
         ComponentItem = 'BankAccountToId'
         ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inBankAccountId_Main'
+        Value = Null
+        Component = GuidesBankAccountMain
+        ComponentItem = 'Key'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'outBankAccountFromName'
+        Value = Null
+        Component = ClientDataSet
+        ComponentItem = 'BankAccountFromName'
+        DataType = ftString
         MultiSelectSeparator = ','
       end
       item
@@ -920,6 +1053,81 @@ object MemberMinusForm: TMemberMinusForm
       end>
     PackSize = 1
     Left = 472
+    Top = 216
+  end
+  object GuidesBankAccountMain: TdsdGuides
+    KeyField = 'Id'
+    LookupControl = edBankAccountMain
+    FormNameParam.Value = 'TBankAccount_ObjectForm'
+    FormNameParam.DataType = ftString
+    FormNameParam.MultiSelectSeparator = ','
+    FormName = 'TBankAccount_ObjectForm'
+    PositionDataSet = 'MasterCDS'
+    Params = <
+      item
+        Name = 'Key'
+        Value = ''
+        Component = GuidesBankAccountMain
+        ComponentItem = 'Key'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'TextValue'
+        Value = ''
+        Component = GuidesBankAccountMain
+        ComponentItem = 'TextValue'
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'BankId'
+        Value = Null
+        Component = GuidesBankMain
+        ComponentItem = 'Key'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'BankName'
+        Value = Null
+        Component = GuidesBankMain
+        ComponentItem = 'TextValue'
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end>
+    Left = 632
+    Top = 136
+  end
+  object GuidesBankMain: TdsdGuides
+    KeyField = 'Id'
+    LookupControl = edBankMain
+    FormNameParam.Value = 'TBankForm'
+    FormNameParam.DataType = ftString
+    FormNameParam.MultiSelectSeparator = ','
+    FormName = 'TBankForm'
+    PositionDataSet = 'ClientDataSet'
+    Params = <
+      item
+        Name = 'Key'
+        Value = ''
+        Component = GuidesBankMain
+        ComponentItem = 'Key'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'TextValue'
+        Value = ''
+        Component = GuidesBankMain
+        ComponentItem = 'TextValue'
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end>
+    Left = 632
     Top = 216
   end
 end

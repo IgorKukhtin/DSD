@@ -179,6 +179,8 @@ type
     dxBarButton13: TdxBarButton;
     colDiscountExternalName: TcxGridDBColumn;
     colDivisionPartiesName: TcxGridDBColumn;
+    colisPresent: TcxGridDBColumn;
+    colColor_calc: TcxGridDBColumn;
   private
     { Private declarations }
   public
