@@ -194,7 +194,8 @@ begin
   if ALanguageOld <> 1 then
   begin
       // переведем на русский
-    if FTranslatorCDS.Locate('value' + IntToStr(ALanguageOld), AText, [loCaseInsensitive]) then
+    if FTranslatorCDS.Locate('value' + IntToStr(ALanguageOld), AText, [loCaseInsensitive]) or
+       FTranslatorCDS.Locate('value' + IntToStr(ALanguageOld), StringReplace(AText, '&', '', [rfReplaceAll]), [loCaseInsensitive]) then
     begin
       if FTranslatorCDS.FieldByName('value1').AsString <> '' then
         Result :=  FTranslatorCDS.FieldByName('value1').AsString;
