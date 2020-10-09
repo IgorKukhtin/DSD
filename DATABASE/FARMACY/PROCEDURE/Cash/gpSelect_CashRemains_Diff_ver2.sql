@@ -32,7 +32,8 @@ RETURNS TABLE (
     GoodsPairSunId Integer,
     DivisionPartiesId  Integer,  DivisionPartiesName  TVarChar, isBanFiscalSale Boolean,
     isGoodsForProject boolean,
-    GoodsPairSunMainId Integer
+    GoodsPairSunMainId Integer,
+    GoodsDiscountMaxPrice TFloat
 )
 AS
 $BODY$
@@ -370,6 +371,7 @@ WITH tmp as (SELECT tmp.*, ROW_NUMBER() OVER (PARTITION BY TextValue_calc ORDER 
                                              , Object_Object.Id                             AS GoodsDiscountId
                                              , Object_Object.ValueData                      AS GoodsDiscountName
                                              , COALESCE(ObjectBoolean_GoodsForProject.ValueData, False)  AS isGoodsForProject
+                                             , COALESCE(ObjectFloat_MaxPrice.ValueData, 0)::TFloat       AS MaxPrice 
                                           FROM Object AS Object_BarCode
                                               INNER JOIN ObjectLink AS ObjectLink_BarCode_Goods
                                                                     ON ObjectLink_BarCode_Goods.ObjectId = Object_BarCode.Id
@@ -384,6 +386,10 @@ WITH tmp as (SELECT tmp.*, ROW_NUMBER() OVER (PARTITION BY TextValue_calc ORDER 
                                               LEFT JOIN ObjectBoolean AS ObjectBoolean_GoodsForProject
                                                                       ON ObjectBoolean_GoodsForProject.ObjectId = Object_Object.Id 
                                                                      AND ObjectBoolean_GoodsForProject.DescId = zc_ObjectBoolean_DiscountExternal_GoodsForProject()
+
+                                              LEFT JOIN ObjectFloat AS ObjectFloat_MaxPrice
+                                                                    ON ObjectFloat_MaxPrice.ObjectId = Object_BarCode.Id
+                                                                   AND ObjectFloat_MaxPrice.DescId = zc_ObjectFloat_BarCode_MaxPrice()
                                           WHERE Object_BarCode.DescId = zc_Object_BarCode()
                                             AND Object_BarCode.isErased = False)
                  , tmpGoodsUKTZED AS (SELECT Object_Goods_Juridical.GoodsMainId
@@ -443,7 +449,8 @@ WITH tmp as (SELECT tmp.*, ROW_NUMBER() OVER (PARTITION BY TextValue_calc ORDER 
             COALESCE (ObjectBoolean_BanFiscalSale.ValueData, False) 
               AND NOT Object_Goods_Main.isExceptionUKTZED                     AS isBanFiscalSale,
             COALESCE(tmpGoodsDiscount.isGoodsForProject, FALSE)               AS isGoodsForProject,
-            Object_Goods_PairSun_Main.GoodsPairSunId                          AS GoodsPairSunMainId
+            Object_Goods_PairSun_Main.GoodsPairSunId                          AS GoodsPairSunMainId,
+            tmpGoodsDiscount.MaxPrice                                         AS GoodsDiscountMaxPrice
         FROM _DIFF
 
             -- Тип срок/не срок

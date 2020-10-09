@@ -163,11 +163,12 @@ BEGIN
                  WHEN COALESCE (tmpExpirationDate.ExpirationDate, zc_DateEnd()) <= vbDate_3 THEN zc_Color_Cyan()       -- ћеньше 1 мес€ца
                  WHEN COALESCE (tmpExpirationDate.ExpirationDate, zc_DateEnd()) <= vbDate_6 THEN zc_Color_Cyan()       -- ћеньше 6 мес€ца
                  ELSE zc_Color_White() END                                         AS Color_calc
-     FROM tmpContainer AS Container
+     FROM tmpExpirationDate AS Container
 
           LEFT JOIN tmpExpirationDate ON tmpExpirationDate.id = Container.Id
 
         --  LEFT OUTER JOIN tmpObject_Price ON tmpObject_Price.GoodsId = Container.GoodsId
+     
      ORDER BY 1, 4;
 
 END;

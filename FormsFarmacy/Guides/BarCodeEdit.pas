@@ -36,6 +36,8 @@ type
     cxLabel4: TcxLabel;
     ceDiscountExternal: TcxButtonEdit;
     GuidesDiscountExternal: TdsdGuides;
+    cxLabel3: TcxLabel;
+    ceMaxPrice: TcxCurrencyEdit;
   private
     { Private declarations }
   public

@@ -1,6 +1,6 @@
 -- Function: gpInsertUpdate_Object_BarCode()
 
-DROP FUNCTION IF EXISTS gpInsertUpdate_Object_BarCode (Integer, Integer, TVarChar, Integer, Integer, tvarchar);
+DROP FUNCTION IF EXISTS gpInsertUpdate_Object_BarCode (Integer, Integer, TVarChar, Integer, Integer, TFloat, tvarchar);
 
 CREATE OR REPLACE FUNCTION gpInsertUpdate_Object_BarCode(
  INOUT ioId                      Integer   ,   	-- ключ объекта <Договор>
@@ -8,6 +8,7 @@ CREATE OR REPLACE FUNCTION gpInsertUpdate_Object_BarCode(
     IN inBarCodeName             TVarChar  ,    -- штрихкод
     IN inGoodsId                 Integer   ,    -- товар
     IN inObjectId                Integer   ,    -- Подключение к программе дисконтных карт
+    IN inMaxPrice                TFloat   ,     -- Максимальная цена
     IN inSession                 TVarChar       -- сессия пользователя
 )
   RETURNS Integer AS
@@ -37,6 +38,9 @@ BEGIN
    -- сохранили связь с <>
    PERFORM lpInsertUpdate_ObjectLink(zc_ObjectLink_BarCode_Object(), ioId, inObjectId);
 
+   -- Максимальная цена
+   PERFORM lpInsertUpdate_ObjectFloat(zc_ObjectFloat_BarCode_MaxPrice(), ioId, inMaxPrice);
+
    -- сохранили протокол
    PERFORM lpInsert_ObjectProtocol (ioId, vbUserId);
 END;$BODY$
@@ -44,7 +48,7 @@ END;$BODY$
 LANGUAGE plpgsql VOLATILE;
 
 
-/*-------------------------------------------------------------------------------*/
+-------------------------------------------------------------------------------
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.

@@ -56,7 +56,7 @@ object BarCodeForm: TBarCodeForm
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         Options.Editing = False
-        Width = 25
+        Width = 47
       end
       object BarCodeName: TcxGridDBColumn
         Caption = #1064#1090#1088#1080#1093'-'#1082#1086#1076
@@ -64,14 +64,14 @@ object BarCodeForm: TBarCodeForm
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         Options.Editing = False
-        Width = 100
+        Width = 160
       end
       object GoodsCode: TcxGridDBColumn
         Caption = #1050#1086#1076' '#1090#1086#1074'.'
         DataBinding.FieldName = 'GoodsCode'
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
-        Width = 35
+        Width = 67
       end
       object GoodsName: TcxGridDBColumn
         Caption = #1058#1086#1074#1072#1088
@@ -79,7 +79,7 @@ object BarCodeForm: TBarCodeForm
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         Options.Editing = False
-        Width = 104
+        Width = 203
       end
       object ObjectName: TcxGridDBColumn
         Caption = #1053#1072#1079#1074#1072#1085#1080#1077' '#1055#1088#1086#1077#1082#1090#1072
@@ -88,7 +88,17 @@ object BarCodeForm: TBarCodeForm
         HeaderAlignmentVert = vaCenter
         HeaderHint = #1050#1086#1084#1091' '#1086#1090#1087#1088#1072#1074#1083#1103#1090#1100' '#1089#1086#1086#1073#1097#1077#1085#1080#1077' '#1086#1073' '#1086#1096#1080#1073#1082#1077' '#1087#1088#1080' '#1079#1072#1075#1088#1091#1079#1082#1077' '#1076#1072#1085#1085#1099#1093' '#1089' '#1087'/'#1103' '#9
         Options.Editing = False
-        Width = 100
+        Width = 193
+      end
+      object MaxPrice: TcxGridDBColumn
+        Caption = #1052#1072#1082#1089'. '#1094#1077#1085#1072
+        DataBinding.FieldName = 'MaxPrice'
+        PropertiesClassName = 'TcxCurrencyEditProperties'
+        Properties.DisplayFormat = ',0.00;-,0.00; ;'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Options.Editing = False
+        Width = 109
       end
       object Erased: TcxGridDBColumn
         Caption = #1059#1076#1072#1083#1077#1085
@@ -454,6 +464,7 @@ object BarCodeForm: TBarCodeForm
     ColumnAddOnList = <>
     ColumnEnterList = <>
     SummaryItemList = <>
+    PropertiesCellList = <>
     Left = 368
     Top = 128
   end

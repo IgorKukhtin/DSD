@@ -26,7 +26,7 @@ inherited MainCashForm2: TMainCashForm2
     object CheckGrid: TcxGrid
       Left = 0
       Top = 0
-      Width = 393
+      Width = 396
       Height = 153
       Align = alClient
       TabOrder = 0
@@ -228,9 +228,9 @@ inherited MainCashForm2: TMainCashForm2
       end
     end
     object cxSplitter1: TcxSplitter
-      Left = 393
+      Left = 396
       Top = 0
-      Width = 3
+      Width = 0
       Height = 153
       AlignSplitter = salRight
       Control = ExpirationDateGrid
@@ -260,14 +260,7 @@ inherited MainCashForm2: TMainCashForm2
         object ExpirationDateExpirationDate: TcxGridDBColumn
           Caption = #1057#1088#1086#1082' '#1075#1086#1076#1085#1086#1089#1090#1080
           DataBinding.FieldName = 'ExpirationDate'
-          Width = 107
-        end
-        object ExpirationDatePrice: TcxGridDBColumn
-          Caption = #1062#1077#1085#1072
-          DataBinding.FieldName = 'Price'
-          PropertiesClassName = 'TcxCurrencyEditProperties'
-          Properties.DisplayFormat = ',0.00'
-          Width = 40
+          Width = 122
         end
         object ExpirationDateAmount: TcxGridDBColumn
           Caption = #1054#1089#1090'.'
@@ -6690,6 +6683,9 @@ inherited MainCashForm2: TMainCashForm2
     object MemDataGOODSPMID: TIntegerField
       FieldName = 'GOODSPMID'
     end
+    object MemDataGOODSDIMP: TFloatField
+      FieldName = 'GOODSDIMP'
+    end
   end
   object mdCheck: TdxMemData
     Indexes = <>
@@ -6828,7 +6824,7 @@ inherited MainCashForm2: TMainCashForm2
   end
   object pm_OpenVIP: TPopupMenu
     Left = 520
-    Top = 408
+    Top = 416
     object VIP6: TMenuItem
       Tag = 1
       Caption = #1055#1088#1086#1089#1084#1086#1090#1088' '#1074#1089#1077#1093' '#1086#1090#1083#1086#1078#1077#1085#1085#1099#1093' '#1095#1077#1082#1086#1074
@@ -7162,7 +7158,7 @@ inherited MainCashForm2: TMainCashForm2
   end
   object pm_OpenCheck: TPopupMenu
     Left = 456
-    Top = 408
+    Top = 416
     object pm_Check: TMenuItem
       Caption = #1055#1088#1086#1089#1084#1086#1090#1088' '#1095#1077#1082#1086#1074
       OnClick = pm_CheckClick

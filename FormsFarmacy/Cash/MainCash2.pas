@@ -349,7 +349,6 @@ type
     ExpirationDateView: TcxGridDBTableView;
     ExpirationDateExpirationDate: TcxGridDBColumn;
     ExpirationDateColor_calc: TcxGridDBColumn;
-    ExpirationDatePrice: TcxGridDBColumn;
     ExpirationDateAmount: TcxGridDBColumn;
     ExpirationDateLevel: TcxGridLevel;
     dsdDBViewAddOnExpirationDate: TdsdDBViewAddOn;
@@ -525,6 +524,7 @@ type
     actOpenDelaySite: TdsdOpenForm;
     MemDataGOODSPMID: TIntegerField;
     MainAmountSendIn: TcxGridDBColumn;
+    MemDataGOODSDIMP: TFloatField;
     procedure WM_KEYDOWN(var Msg: TWMKEYDOWN);
     procedure FormCreate(Sender: TObject);
     procedure actChoiceGoodsInRemainsGridExecute(Sender: TObject);
@@ -1179,6 +1179,8 @@ begin
         FLocalDataBaseDiff.FieldByName('GOODSPROJ').AsVariant;
       MemData.FieldByName('GOODSPROJ').AsVariant :=
         FLocalDataBaseDiff.FieldByName('GOODSPROJ').AsVariant;
+      MemData.FieldByName('GOODSDIMP').AsVariant :=
+        FLocalDataBaseDiff.FieldByName('GOODSDIMP').AsVariant;
       FLocalDataBaseDiff.Edit;
       FLocalDataBaseDiff.DeleteRecord;
       FLocalDataBaseDiff.Post;
@@ -1602,7 +1604,47 @@ begin
       DiscountServiceForm.fUpdateCDS_Discount(CheckCDS, lMsg,
         FormParams.ParamByName('DiscountExternalId').Value,
         FormParams.ParamByName('DiscountCardNumber').Value);
-      //
+
+      // Проверим цену
+      GoodsId := RemainsCDS.FieldByName('Id').AsInteger;
+      PartionDateKindId := RemainsCDS.FieldByName('PartionDateKindId').AsVariant;
+      NDSKindId := RemainsCDS.FieldByName('NDSKindId').AsVariant;
+      DiscountExternalID := RemainsCDS.FieldByName('DiscountExternalID').AsVariant;
+      DivisionPartiesID := RemainsCDS.FieldByName('DivisionPartiesID').AsVariant;
+      try
+        RemainsCDS.DisableControls;
+        RemainsCDS.Filtered := false;
+        with CheckCDS do
+        begin
+          First;
+          while not Eof do
+          begin
+
+            RemainsCDS.Locate('ID;PartionDateKindId;NDSKindId;DiscountExternalID;DivisionPartiesID',
+                VarArrayOf([FieldByName('GoodsId').AsInteger,
+                FieldByName('PartionDateKindId').AsVariant,
+                FieldByName('NDSKindId').AsVariant,
+                FieldByName('DiscountExternalID').AsVariant,
+                FieldByName('DivisionPartiesID').AsVariant]), []);
+
+            if (RemainsCDS.FieldByName('GoodsDiscountMaxPrice').AsCurrency > 0) and
+               (RemainsCDS.FieldByName('GoodsDiscountMaxPrice').AsCurrency < FieldByName('PriceSale').AsCurrency) and
+               (FieldByName('Amount').AsCurrency > 0) then
+            begin
+              ShowMessage('Превышена максимально возможная цена на препарат <' + FieldByName('GoodsName').AsString + '>. Обратитесь к Ирине Бажан...');
+            end;
+
+            Next;
+          end;
+        end;
+      finally
+        RemainsCDS.Filtered := True;
+        RemainsCDS.Locate('Id;PartionDateKindId;NDSKindId;DiscountExternalID;DivisionPartiesID',
+          VarArrayOf([GoodsId, PartionDateKindId, NDSKindId, DiscountExternalID, DivisionPartiesID]), []);
+        RemainsCDS.EnableControls;
+      end;
+
+      // Пересчитаем сумму
       CalcTotalSumm;
     end;
   end;
@@ -2816,6 +2858,15 @@ begin
             ShowMessage('Ошибка.Товар <' + FieldByName('GoodsName').AsString + '> не участвует в дисконтной программе ' + FormParams.ParamByName('DiscountExternalName').Value + '!');
             exit;
           end;
+
+          if (RemainsCDS.FieldByName('GoodsDiscountMaxPrice').AsCurrency > 0) and
+             (RemainsCDS.FieldByName('GoodsDiscountMaxPrice').AsCurrency < FieldByName('PriceSale').AsCurrency) and
+             (FieldByName('Amount').AsCurrency > 0) then
+          begin
+            ShowMessage('Превышена максимально возможная цена на препарат <' + FieldByName('GoodsName').AsString + '>. Обратитесь к Ирине Бажан...');
+            exit;
+          end;
+
         end else if RemainsCDS.FieldByName('isGoodsForProject').AsBoolean and (RemainsCDS.FieldByName('GoodsDiscountId').AsInteger <> 0) then
         begin
           ShowMessage('Ошибка.Товар <' + FieldByName('GoodsName').AsString + '> предназначен для дисконтной программе ' + RemainsCDS.FindField('GoodsDiscountName').AsString + '!');
@@ -4502,6 +4553,8 @@ begin
           MemData.FieldByName('GOODSPROJ').AsVariant;
         RemainsCDS.FieldByName('isBanFiscalSale').AsVariant :=
           MemData.FieldByName('GOODSPROJ').AsVariant;
+        RemainsCDS.FieldByName('GoodsDiscountMaxPrice').AsVariant :=
+          MemData.FieldByName('GOODSDIMP').AsVariant;
         RemainsCDS.Post;
       End
       else
@@ -4570,6 +4623,8 @@ begin
             MemData.FieldByName('BANFISCAL').AsVariant;
           RemainsCDS.FieldByName('isGoodsForProject').AsVariant :=
             MemData.FieldByName('GOODSPROJ').AsVariant;
+          RemainsCDS.FieldByName('GoodsDiscountMaxPrice').AsVariant :=
+            MemData.FieldByName('GOODSDIMP').AsVariant;
           RemainsCDS.Post;
         End;
       End;
@@ -4877,6 +4932,38 @@ begin
   DiscountServiceForm.fUpdateCDS_Discount(CheckCDS, lMsg,
     FormParams.ParamByName('DiscountExternalId').Value,
     FormParams.ParamByName('DiscountCardNumber').Value);
+
+  // Проверим цену
+  try
+    RemainsCDS.DisableControls;
+    RemainsCDS.Filtered := false;
+    with CheckCDS do
+    begin
+      First;
+      while not Eof do
+      begin
+
+        RemainsCDS.Locate('ID;PartionDateKindId;NDSKindId;DiscountExternalID;DivisionPartiesID',
+            VarArrayOf([FieldByName('GoodsId').AsInteger,
+            FieldByName('PartionDateKindId').AsVariant,
+            FieldByName('NDSKindId').AsVariant,
+            FieldByName('DiscountExternalID').AsVariant,
+            FieldByName('DivisionPartiesID').AsVariant]), []);
+
+        if (RemainsCDS.FieldByName('GoodsDiscountMaxPrice').AsCurrency > 0) and
+           (RemainsCDS.FieldByName('GoodsDiscountMaxPrice').AsCurrency < FieldByName('PriceSale').AsCurrency) and
+           (FieldByName('Amount').AsCurrency > 0) then
+        begin
+          ShowMessage('Превышена максимально возможная цена на препарат <' + FieldByName('GoodsName').AsString + '>. Обратитесь к Ирине Бажан...');
+        end;
+
+        Next;
+      end;
+    end;
+  finally
+    RemainsCDS.Filtered := True;
+    RemainsCDS.EnableControls;
+  end;
   //
   CalcTotalSumm;
   //
@@ -7267,9 +7354,43 @@ begin
         lPriceSale);
       // Update Дисконт в CDS - по всем "обновим" Дисконт
       if FormParams.ParamByName('DiscountExternalId').Value > 0 then
+      begin
         DiscountServiceForm.fUpdateCDS_Discount(CheckCDS, lMsg,
           FormParams.ParamByName('DiscountExternalId').Value,
           FormParams.ParamByName('DiscountCardNumber').Value);
+
+        // Проверим цену
+        try
+          RemainsCDS.DisableControls;
+          RemainsCDS.Filtered := false;
+          with CheckCDS do
+          begin
+            First;
+            while not Eof do
+            begin
+
+              RemainsCDS.Locate('ID;PartionDateKindId;NDSKindId;DiscountExternalID;DivisionPartiesID',
+                  VarArrayOf([FieldByName('GoodsId').AsInteger,
+                  FieldByName('PartionDateKindId').AsVariant,
+                  FieldByName('NDSKindId').AsVariant,
+                  FieldByName('DiscountExternalID').AsVariant,
+                  FieldByName('DivisionPartiesID').AsVariant]), []);
+
+              if (RemainsCDS.FieldByName('GoodsDiscountMaxPrice').AsCurrency > 0) and
+                 (RemainsCDS.FieldByName('GoodsDiscountMaxPrice').AsCurrency < FieldByName('PriceSale').AsCurrency) and
+                 (FieldByName('Amount').AsCurrency > 0) then
+              begin
+                ShowMessage('Превышена максимально возможная цена на препарат <' + FieldByName('GoodsName').AsString + '>. Обратитесь к Ирине Бажан...');
+              end;
+
+              Next;
+            end;
+          end;
+        finally
+          RemainsCDS.Filtered := True;
+          RemainsCDS.EnableControls;
+        end;
+      end;
 
       CalcTotalSumm;
     End
@@ -7295,9 +7416,43 @@ begin
         CheckCDS.FieldByName('PriceSale').asCurrency);
       // Update Дисконт в CDS - по всем "обновим" Дисконт
       if FormParams.ParamByName('DiscountExternalId').Value > 0 then
+      begin
         DiscountServiceForm.fUpdateCDS_Discount(CheckCDS, lMsg,
           FormParams.ParamByName('DiscountExternalId').Value,
           FormParams.ParamByName('DiscountCardNumber').Value);
+
+        // Проверим цену
+        try
+          RemainsCDS.DisableControls;
+          RemainsCDS.Filtered := false;
+          with CheckCDS do
+          begin
+            First;
+            while not Eof do
+            begin
+
+              RemainsCDS.Locate('ID;PartionDateKindId;NDSKindId;DiscountExternalID;DivisionPartiesID',
+                  VarArrayOf([FieldByName('GoodsId').AsInteger,
+                  FieldByName('PartionDateKindId').AsVariant,
+                  FieldByName('NDSKindId').AsVariant,
+                  FieldByName('DiscountExternalID').AsVariant,
+                  FieldByName('DivisionPartiesID').AsVariant]), []);
+
+              if (RemainsCDS.FieldByName('GoodsDiscountMaxPrice').AsCurrency > 0) and
+                 (RemainsCDS.FieldByName('GoodsDiscountMaxPrice').AsCurrency < FieldByName('PriceSale').AsCurrency) and
+                 (FieldByName('Amount').AsCurrency > 0) then
+              begin
+                ShowMessage('Превышена максимально возможная цена на препарат <' + FieldByName('GoodsName').AsString + '>. Обратитесь к Ирине Бажан...');
+              end;
+
+              Next;
+            end;
+          end;
+        finally
+          RemainsCDS.Filtered := True;
+          RemainsCDS.EnableControls;
+        end;
+      end;
 
       CalcTotalSumm;
     End
