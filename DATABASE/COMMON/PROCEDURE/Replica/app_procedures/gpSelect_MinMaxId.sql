@@ -12,8 +12,10 @@ AS
 $BODY$      
 BEGIN
     RETURN QUERY
-        SELECT Min(Id) AS Min_Id, Max(id) AS Max_Id, Count(Id) as RecCount 
-        FROM   _replica.table_update_data;
+       SELECT Min(Id) AS Min_Id, Max(id) AS Max_Id, Count(Id) as RecCount 
+       FROM   _replica.table_update_data;
+       -- SELECT 102243858 :: Integer AS Min_Id, 430715031 :: Integer AS Max_Id, 328381375:: Bigint as RecCount;
+       
 END;
 $BODY$
  LANGUAGE PLPGSQL VOLATILE;     
