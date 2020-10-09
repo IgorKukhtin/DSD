@@ -11,7 +11,8 @@ uses
   UCommandData in 'UCommandData.pas',
   UCommon in 'UCommon.pas',
   UScriptFiles in 'UScriptFiles.pas',
-  UFileVersion in 'UFileVersion.pas';
+  UFileVersion in 'UFileVersion.pas',
+  USnapshotThread in 'USnapshotThread.pas';
 
 {$R *.res}
 

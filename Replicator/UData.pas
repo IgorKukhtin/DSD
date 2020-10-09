@@ -13,7 +13,7 @@ uses
   ZAbstractRODataset,
   ZDataset,
   UDefinitions,
-  UCommandData;
+  UCommandData, System.ImageList, Vcl.ImgList, Vcl.Controls;
 
 type
   TWorkerThread = class;
@@ -29,6 +29,8 @@ type
     qryCompareRecCountMS: TZReadOnlyQuery;
     qrySlaveHelper: TZReadOnlyQuery;
     qryCompareSeqMS: TZReadOnlyQuery;
+    il16: TImageList;
+    qrySnapshotTables: TZReadOnlyQuery;
   strict private
     FStartId: Int64;
     FLastId: Int64;
@@ -111,6 +113,7 @@ type
     function GetMinMaxId: TMinMaxId;
     function MinID: Int64;
     function MaxID: Int64;
+    function InitConnection(AConnection: TZConnection; ARank: TServerRank): boolean;
 
     procedure AlterSlaveSequences;
     procedure MoveSavedProcToSlave;
@@ -1193,6 +1196,14 @@ begin
   iMasterId := GetMasterValues(slvValues.ClientId).LastId_DDL;
 
   Result := Max(iSlaveId, iMasterId);
+end;
+
+function TdmData.InitConnection(AConnection: TZConnection;
+  ARank: TServerRank): boolean;
+begin
+  if not Assigned(AConnection) then
+    raise Exception.Create('Connection is not created');
+  Result := IsConnected(AConnection, ARank);
 end;
 
 function TdmData.IsBothConnected: Boolean;

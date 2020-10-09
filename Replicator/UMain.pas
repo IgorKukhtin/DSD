@@ -8,6 +8,8 @@ uses
   System.SysUtils,
   System.Variants,
   System.Classes,
+  System.UITypes,
+  DateUtils,
   Data.DB,
   Vcl.Graphics,
   Vcl.Controls,
@@ -23,7 +25,8 @@ uses
   UDefinitions,
   ULog,
   UScriptFiles,
-  UData;
+  UData,
+  USnapshotThread;
 
 
 type
@@ -148,6 +151,28 @@ type
     tmrUpdateAllData: TTimer;
     splHrz: TSplitter;
     mmoError: TMemo;
+    tsSnapshot: TTabSheet;
+    SnapshotLog: TMemo;
+    btnSnapshotStart: TButton;
+    btnSnapshotPause: TButton;
+    lvTables: TListView;
+    SnapshotElapsedTimer: TTimer;
+    Panel1: TPanel;
+    lbElapsed: TLabel;
+    lbElapsedCaption: TLabel;
+    lbErrorsCaption: TLabel;
+    lbErrors: TLabel;
+    lbCurrentTableCaption: TLabel;
+    lbCurrentTable: TLabel;
+    lbProcessed: TLabel;
+    lbProcessedPercent: TLabel;
+    lbStatus: TLabel;
+    lbBatchCount: TLabel;
+    edtSnapshotSelectCount: TEdit;
+    Label1: TLabel;
+    edtSnapshotInsertCount: TEdit;
+    Label2: TLabel;
+    edtSnapshotBlobSelectCount: TEdit;
     {$WARNINGS ON}
     procedure chkShowLogClick(Sender: TObject);
     procedure btnLibLocationClick(Sender: TObject);
@@ -187,6 +212,11 @@ type
     procedure btnCancelCompareSeqClick(Sender: TObject);
     procedure btnStopAlterSlaveSequencesClick(Sender: TObject);
     procedure tmrUpdateAllDataTimer(Sender: TObject);
+    procedure btnSnapshotStartClick(Sender: TObject);
+    procedure FormCreate(Sender: TObject);
+    procedure btnSnapshotPauseClick(Sender: TObject);
+    procedure FormClose(Sender: TObject; var Action: TCloseAction);
+    procedure SnapshotElapsedTimerTimer(Sender: TObject);
   private
     FLog: TLog;
     FData: TdmData;
@@ -205,6 +235,13 @@ type
     FStartTimeReplica: TDateTime;
     FStartTimeSession: TDateTime;
     FPrevUID: Cardinal;
+    FSnapshotRunning: boolean;
+    FSnapShotThread: TSnapshotThread;
+    FSnapshotStartTime: TDateTime;
+    FSnapshotElapsedSeconds: Int64;
+    FSnapshotElapsedSecondsBeforePause: Int64;
+    FErrors: integer;
+    FSnapshotTableHasErrors: boolean;
   private
     procedure ReadSettings;
     procedure WriteSettings;
@@ -247,8 +284,18 @@ type
     procedure grdDrawColumnCell(Sender: TObject; const Rect: TRect; DataCol: Integer; Column: TColumn;
       State: TGridDrawState);
 
+    procedure SnapshotThreadError(AError: string);
+    procedure SnapshotThreadFinish;
+    procedure SnapshotThreadNewTable(ATableName: string);
+    procedure SnapshotThreadFinishTable(ATableName: string);
+    procedure SnapshotThreadProcessed(ATotalCount, AProcessedCount: int64);
+    procedure SnapshotThreadMessage(AMessage: string);
+    procedure SnapshotThreadStatus(AStatus: string);
   private
     procedure OnExitSettings(Sender: TObject);
+    procedure InitSnapshotTables;
+    procedure UpdateSnapshotElapsedTime;
+    procedure UpdateSnapshotErrors;
   public
     constructor Create(AOwner: TComponent); override;
     destructor Destroy; override;
@@ -326,6 +373,10 @@ begin
   chkDeviationOnlyRecCount.Checked := TSettings.CompareDeviationRecCountOnly;
   chkDeviationOnlySeq.Checked      := TSettings.CompareDeviationSequenceOnly;
 
+  edtSnapshotSelectCount.Text     := IntToStr(TSettings.SnapshotSelectCount);
+  edtSnapshotInsertCount.Text     := IntToStr(TSettings.SnapshotInsertCount);
+  edtSnapshotBlobSelectCount.Text := IntToStr(TSettings.SnapshotBlobSelectCount);
+
   SwitchShowLog;
 end;
 
@@ -343,6 +394,89 @@ end;
 procedure TfrmMain.seSelectRangeChange(Sender: TObject);
 begin
   TSettings.ReplicaSelectRange := seSelectRange.Value;
+end;
+
+procedure TfrmMain.SnapshotElapsedTimerTimer(Sender: TObject);
+begin
+  FSnapshotElapsedSeconds := SecondsBetween(FSnapshotStartTime, Now);
+  UpdateSnapshotElapsedTime;
+end;
+
+procedure TfrmMain.SnapshotThreadError(AError: string);
+begin
+  inc(FErrors);
+  FSnapshotTableHasErrors := true;
+  UpdateSnapshotErrors;
+  SnapshotLog.Lines.Add(AError);
+end;
+
+procedure TfrmMain.SnapshotThreadFinish;
+begin
+  TThread.CreateAnonymousThread(procedure
+    begin
+      TThread.Synchronize(nil,
+        procedure
+        begin
+          FSnapshotThread.Free;
+          FSnapshotThread := nil;
+          if FSnapshotRunning then
+            btnSnapshotStart.Click;
+        end)
+    end).Start;
+end;
+
+procedure TfrmMain.SnapshotThreadFinishTable(ATableName: string);
+var I: integer;
+begin
+  for I := 0 to lvTables.Items.Count - 1 do
+    if SameText(lvTables.Items[I].Caption, ATableName) then
+    begin
+      lvTables.Items[I].MakeVisible(false);
+      if FSnapshotTableHasErrors then
+        lvTables.Items[I].ImageIndex := 3
+      else
+        lvTables.Items[I].ImageIndex := 2;
+      break;
+    end;
+  lbStatus.Caption := '';
+end;
+
+procedure TfrmMain.SnapshotThreadMessage(AMessage: string);
+begin
+  SnapshotLog.Lines.Add(AMessage);
+end;
+
+procedure TfrmMain.SnapshotThreadNewTable(ATableName: string);
+var I: integer;
+begin
+  lbCurrentTable.Caption := ATableName;
+  FSnapshotTableHasErrors := false;
+  SnapshotThreadProcessed(0, 0);
+  for I := 0 to lvTables.Items.Count - 1 do
+    if SameText(lvTables.Items[I].Caption, ATableName) then
+    begin
+      lvTables.Items[I].MakeVisible(false);
+      lvTables.Items[I].ImageIndex := 1;
+      break;
+    end;
+end;
+
+procedure TfrmMain.SnapshotThreadProcessed(ATotalCount,
+  AProcessedCount: int64);
+begin
+  lbProcessed.Caption := IntToStr(AProcessedCount) + ' / ' + IntToStr(ATotalCount);
+  if ATotalCount = 0 then
+    lbProcessedPercent.Caption := '-'
+  else
+    lbProcessedPercent.Caption := FormatFloat('0.00' , AProcessedCount * 100.0 / ATotalCount) + ' %';
+  lbProcessed.Left := lbCurrentTable.Left + lbCurrentTable.Width + 20;
+  lbProcessedPercent.Left := lbProcessed.Left + lbProcessed.Width + 20;
+  lbStatus.Left := lbProcessedPercent.Left + lbProcessedPercent.Width + 20;
+end;
+
+procedure TfrmMain.SnapshotThreadStatus(AStatus: string);
+begin
+  lbStatus.Caption := AStatus;
 end;
 
 procedure TfrmMain.StartReplica;
@@ -501,6 +635,10 @@ begin
 
   TSettings.ReplicaSelectRange := seSelectRange.Value;
   TSettings.ReplicaPacketRange := sePacketRange.Value;
+
+  TSettings.SnapshotSelectCount     := StrToIntDef(edtSnapshotSelectCount.Text, TSettings.DefaultSnapshotSelectCount);
+  TSettings.SnapshotInsertCount     := StrToIntDef(edtSnapshotInsertCount.Text, TSettings.DefaultSnapshotInsertCount);
+  TSettings.SnapshotBlobSelectCount := StrToIntDef(edtSnapshotBlobSelectCount.Text, TSettings.DefaultSnapshotBlobSelectCount);
 end;
 
 procedure TfrmMain.ApplyScript;
@@ -541,6 +679,9 @@ begin
 //        OutputDebugString(PWideChar('Edit.name = ' + Components[I].Name));
         TEdit(Components[I]).OnExit := OnExitSettings;
       end;
+  edtSnapshotSelectCount.OnExit := OnExitSettings;
+  edtSnapshotInsertCount.OnExit := OnExitSettings;
+  edtSnapshotBlobSelectCount.OnExit := OnExitSettings;
 end;
 
 procedure TfrmMain.btnCancelCompareRecCountClick(Sender: TObject);
@@ -704,6 +845,81 @@ begin
   btnSendSinglePacket.Enabled := False;
 end;
 
+procedure TfrmMain.btnSnapshotPauseClick(Sender: TObject);
+begin
+  if not Assigned(FSnapshotThread) then Exit;
+  FSnapshotThread.Paused := not FSnapshotThread.Paused;
+  if FSnapshotThread.Paused then
+  begin
+    btnSnapshotPause.Caption := 'Продолжить';
+    FSnapshotElapsedSecondsBeforePause := FSnapshotElapsedSecondsBeforePause + FSnapshotElapsedSeconds;
+    SnapshotElapsedTimer.Enabled := false;
+  end
+  else
+  begin
+    btnSnapshotPause.Caption := 'Пауза';
+    FSnapshotStartTime := Now;
+    FSnapshotElapsedSeconds := 0;
+    SnapshotElapsedTimer.Enabled := true;
+  end;
+end;
+
+procedure TfrmMain.btnSnapshotStartClick(Sender: TObject);
+begin
+  if not FSnapshotRunning then
+  begin
+    if not FData.IsBothConnected then
+    begin
+      ShowMessage('Подключение к базам не установлено');
+      Exit;
+    end;
+    FSnapshotRunning := true;
+    btnSnapshotStart.Caption := 'Стоп';
+    btnSnapshotPause.Enabled := true;
+    FSnapshotStartTime := Now;
+    FSnapshotElapsedSeconds := 0;
+    FSnapshotElapsedSecondsBeforePause := 0;
+    UpdateSnapshotElapsedTime;
+    FErrors := 0;
+    UpdateSnapshotErrors;
+    SnapshotElapsedTimer.Enabled := true;
+    InitSnapshotTables;
+    FSnapshotThread := TSnapshotThread.Create;
+    FSnapshotThread.OnError := SnapshotThreadError;
+    FSnapshotThread.OnFinish := SnapshotThreadFinish;
+    FSnapshotThread.OnNewTable := SnapshotThreadNewTable;
+    FSnapshotThread.OnFinishTable := SnapshotThreadFinishTable;
+    FSnapshotThread.OnProcessed := SnapshotThreadProcessed;
+    FSnapshotThread.OnMessage := SnapshotThreadMessage;
+    FSnapshotThread.OnStatus := SnapshotThreadStatus;
+    FSnapshotThread.Start;
+  end
+  else
+  begin
+    FSnapshotRunning := false;
+    SnapshotElapsedTimer.Enabled := false;
+    if Assigned(FSnapshotThread) then
+    begin
+      Screen.Cursor := crHourGlass;
+      try
+        //FSnapshotThread.FreeOnTerminate := false;
+        if FSnapshotThread.Paused then
+          FSnapshotThread.Paused := false;
+        FSnapshotThread.Terminate;
+        FSnapshotThread.WaitFor;
+        FSnapshotThread.Free;
+        FSnapshotThread := nil;
+//        FreeAndNil(FSnapshotThread);
+      finally
+        Screen.Cursor := crDefault;
+      end;
+    end;
+    btnSnapshotStart.Caption := 'Старт';
+    btnSnapshotPause.Enabled := false;
+    btnSnapshotPause.Caption := 'Пауза';
+  end;
+end;
+
 procedure TfrmMain.btnStopAlterSlaveSequencesClick(Sender: TObject);
 begin
   StopAlterSlaveSequences;
@@ -770,6 +986,26 @@ begin
   FLastIdThrd.Start;
 end;
 
+procedure TfrmMain.FormClose(Sender: TObject; var Action: TCloseAction);
+begin
+  if FSnapshotRunning then
+  begin
+    if MessageDlg('Процедура переноса данных еще не завершена. Вы уверены, что хотите закрыть программу ?',
+                  mtConfirmation, [mbYes, mbNo], 0, mbYes) <> mrYes then
+      Action := caNone
+    else
+    begin
+      btnSnapshotStart.Click;
+      Sleep(100); // wait for anonymous thread to finish
+    end;
+  end;
+end;
+
+procedure TfrmMain.FormCreate(Sender: TObject);
+begin
+  FSnapshotRunning := false;
+end;
+
 procedure TfrmMain.UpdateProgBarPosition(AProgBar: TProgressBar; const AMax, ACurrValue, ARecCount: Int64);
 var
   extPart: Extended;
@@ -786,6 +1022,28 @@ begin
 
   extPart := ACurrValue / AMax;
   AProgBar.Position := Round(ARecCount * extPart);
+end;
+
+procedure TfrmMain.UpdateSnapshotElapsedTime;
+  function SecondsToTimeString(ASeconds: integer): string;
+  var nDate: TDateTime;
+      nHours, nMinutes, nSeconds: integer;
+  begin
+    nDate := IncSecond(0, ASeconds);
+    nSeconds := SecondOf(nDate);
+    nDate := IncSecond(nDate, -nSeconds);
+    nMinutes := MinuteOf(nDate);
+    nDate := IncMinute(nDate, -nMinutes);
+    nHours := HoursBetween(0, nDate);
+    Result := FormatFloat('#,##0', nHours) + ':' + FormatFloat('00', nMinutes) + ':' + FormatFloat('00', nSeconds);
+  end;
+begin
+  lbElapsed.Caption := SecondsToTimeString(FSnapshotElapsedSeconds + FSnapshotElapsedSecondsBeforePause);
+end;
+
+procedure TfrmMain.UpdateSnapshotErrors;
+begin
+  lbErrors.Caption := IntToStr(FErrors);
 end;
 
 procedure TfrmMain.chkDeviationOnlyRecCountClick(Sender: TObject);
@@ -933,6 +1191,29 @@ begin
   end
   else
     (Sender as TDBGrid).DefaultDrawColumnCell(Rect, DataCol, Column, State);
+end;
+
+procedure TfrmMain.InitSnapshotTables;
+var FItem: TListItem;
+begin
+  lvTables.Items.BeginUpdate;
+  try
+    lvTables.Clear;
+    with FData do
+    begin
+      qrySnapshotTables.Close;
+      qrySnapshotTables.Open;
+      while not qrySnapshotTables.Eof do
+      begin
+        FItem := lvTables.Items.Add;
+        FItem.Caption := qrySnapshotTables.FieldByName('table_name').AsString;
+        FItem.ImageIndex := 0;
+        qrySnapshotTables.Next;
+      end;
+    end;
+  finally
+    lvTables.Items.EndUpdate;
+  end;
 end;
 
 procedure TfrmMain.LogApplyScript(const AMsg, AFileName: string; const aUID: Cardinal; AMsgType: TLogMessageType);

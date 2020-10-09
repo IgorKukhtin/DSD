@@ -76,12 +76,21 @@ type
     class procedure SetSaveErrStep1InDB(const AValue: Boolean); static;
     class function GetSaveErrStep2InDB: Boolean; static;
     class procedure SetSaveErrStep2InDB(const AValue: Boolean); static;
+    class function GetSnapshotBlobSelectCount: Int64; static;
+    class procedure SetSnapshotBlobSelectCount(const AValue: Int64); static;
+    class function GetSnapshotInsertCount: Int64; static;
+    class procedure SetSnapshotInsertCount(const AValue: Int64); static;
+    class function GetSnapshotSelectCount: Int64; static;
+    class procedure SetSnapshotSelectCount(const AValue: Int64); static;
 
   public
     class constructor Create;
     class destructor Destroy;
     class function GetLogFolder: string;
     class function DefaultPort: Int64;
+    class function DefaultSnapshotSelectCount: Int64;
+    class function DefaultSnapshotInsertCount: Int64;
+    class function DefaultSnapshotBlobSelectCount: Int64;
     class property UseLog: Boolean read GetUseLog write SetUseLog;
     class property UseLogGUI: Boolean read GetUseLogGUI write SetUseLogGUI;
     class property WriteCommandsToFile: Boolean read GetWriteCommandsToFile write SetWriteCommandsToFile;
@@ -109,6 +118,9 @@ type
     class property DDLLastId: Int64 read GetDDLLastId write SetDDLLastId;
     class property SaveErrStep1InDB: Boolean read GetSaveErrStep1InDB write SetSaveErrStep1InDB;
     class property SaveErrStep2InDB: Boolean read GetSaveErrStep2InDB write SetSaveErrStep2InDB;
+    class property SnapshotSelectCount: Int64 read GetSnapshotSelectCount write SetSnapshotSelectCount;
+    class property SnapshotInsertCount: Int64 read GetSnapshotInsertCount write SetSnapshotInsertCount;
+    class property SnapshotBlobSelectCount: Int64 read GetSnapshotBlobSelectCount write SetSnapshotBlobSelectCount;
 
     class procedure WriteScriptFiles(AList: TStrings);
     class procedure ReadScriptFiles(AList: TStrings);
@@ -176,6 +188,12 @@ const
   // Scripts
   cScriptSection = 'scripts';
 
+  // Snapshot
+  cSnapshotSection         = 'Snapshot';
+  cSnapshotSelectCount     = 'SnapshotSelectCount';
+  cSnapshotInsertCount     = 'SnapshotInsertCount';
+  cSnapshotBlobSelectCount = 'SnapshotBlobSelectCount';
+
   // Default values
   cDefPort = 5432;
   cDefUser = 'admin';
@@ -186,6 +204,9 @@ const
   cDefReconnectTimeoutMinute = 15;
   cDefScriptFilesPath = '..\scripts';
   cDefDDLLastId = 0;
+  cDefSnapshotSelectCount = 100000;
+  cDefSnapshotInsertCount = 100000;
+  cDefSnapshotBlobSelectCount = 10;
 
 function IsService: Boolean;
 var
@@ -273,6 +294,21 @@ end;
 class function TSettings.DefaultPort: Int64;
 begin
   Result := cDefPort;
+end;
+
+class function TSettings.DefaultSnapshotBlobSelectCount: Int64;
+begin
+  Result := cDefSnapshotBlobSelectCount;
+end;
+
+class function TSettings.DefaultSnapshotInsertCount: Int64;
+begin
+  Result := cDefSnapshotInsertCount;
+end;
+
+class function TSettings.DefaultSnapshotSelectCount: Int64;
+begin
+  Result := cDefSnapshotSelectCount;
 end;
 
 class destructor TSettings.Destroy;
@@ -451,6 +487,21 @@ end;
 class function TSettings.GetSlaveUser: string;
 begin
   Result := GetStrValue(cSlaveSection, cSlaveUserParam, cDefUser);
+end;
+
+class function TSettings.GetSnapshotBlobSelectCount: Int64;
+begin
+  Result := GetIntValue(cSnapshotSection, cSnapshotBlobSelectCount, cDefSnapshotBlobSelectCount);
+end;
+
+class function TSettings.GetSnapshotInsertCount: Int64;
+begin
+  Result := GetIntValue(cSnapshotSection, cSnapshotInsertCount, cDefSnapshotInsertCount);
+end;
+
+class function TSettings.GetSnapshotSelectCount: Int64;
+begin
+  Result := GetIntValue(cSnapshotSection, cSnapshotSelectCount, cDefSnapshotSelectCount);
 end;
 
 class function TSettings.GetStopIfError: Boolean;
@@ -645,6 +696,21 @@ end;
 class procedure TSettings.SetSlaveUser(const AValue: string);
 begin
   SetStrValue(cSlaveSection, cSlaveUserParam, AValue);
+end;
+
+class procedure TSettings.SetSnapshotBlobSelectCount(const AValue: Int64);
+begin
+  SetIntValue(cSnapshotSection, cSnapshotBlobSelectCount, AValue);
+end;
+
+class procedure TSettings.SetSnapshotInsertCount(const AValue: Int64);
+begin
+  SetIntValue(cSnapshotSection, cSnapshotInsertCount, AValue);
+end;
+
+class procedure TSettings.SetSnapshotSelectCount(const AValue: Int64);
+begin
+  SetIntValue(cSnapshotSection, cSnapshotSelectCount, AValue);
 end;
 
 class procedure TSettings.SetStopIfError(const AValue: Boolean);
