@@ -577,11 +577,11 @@ end if;
        AND (_tmpItem.BranchId_Balance <> 0 OR _tmpItem.ObjectId NOT IN (9400, 9401))
        AND _tmpItem.InfoMoneyDestinationId <> zc_Enum_InfoMoneyDestination_20400()
        AND _tmpItem.PaidKindId = zc_Enum_PaidKind_SecondForm() AND _tmpItem.AccountDirectionId NOT IN (zc_Enum_AccountDirection_30200())
-       AND _tmpItem.MovementDescId <> zc_Movement_ProfitLossService()
     ;
     
      -- 2.0.2. проверка
      IF vbPartnerId_min <> vbPartnerId_max
+        AND NOT EXISTS (SELECT 1 FROM _tmpItem WHERE _tmpItem.MovementDescId = zc_Movement_ProfitLossService())
      THEN
          RAISE EXCEPTION 'Ошибка.Нельзя автоматически определить контрагента, т.к. их больше одного%<1. %>%<2. %>.'
                        , CHR (13)
