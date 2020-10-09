@@ -6,7 +6,7 @@ type
   TLogMessageType = (lmtPlain, lmtError);
   TNotifyMessage = procedure(const AMsg: string; const AFileName: string = ''; const aUID: Cardinal = 0; AMsgType: TLogMessageType = lmtPlain) of object;
   TOnChangeStartId = procedure (const ANewStartId: Int64) of object;
-  TOnNewSession = procedure(const AStart: TDateTime; const AMinId, AMaxId, ARecCount, ASessionNumber: Int64) of object;
+  TOnNewSession = procedure(const AStart: TDateTime; const AMinId, AMaxId: Int64; const ARecCount, ASessionNumber: Integer) of object;
   TConditionFunc = reference to function(): Boolean;
 
   TCmdData = class
@@ -40,7 +40,7 @@ type
   TSequenceData = record
     Name: string;
     LastValue: Int64;
-    Increment: Int64;
+    Increment: Integer;
   end;
 
   TSequenceDataArray = array of TSequenceData;

@@ -4,6 +4,7 @@ object dmData: TdmData
   Width = 770
   object conMaster: TZConnection
     ControlsCodePage = cCP_UTF16
+    AutoEncodeStrings = True
     Catalog = ''
     Properties.Strings = (
       'controls_cp=CP_UTF16')
@@ -18,6 +19,7 @@ object dmData: TdmData
   end
   object conSlave: TZConnection
     ControlsCodePage = cCP_UTF16
+    AutoEncodeStrings = True
     Catalog = ''
     HostName = ''
     Port = 0
@@ -124,7 +126,7 @@ object dmData: TdmData
     Left = 706
     Top = 15
     Bitmap = {
-      494C010104000800040010001000FFFFFFFFFF10FFFFFFFFFFFFFFFF424D3600
+      494C010104000800080010001000FFFFFFFFFF10FFFFFFFFFFFFFFFF424D3600
       0000000000003600000028000000400000002000000001002000000000000020
       0000000000000000000000000000000000000000000000000000000000000000
       0000000000000000000000000000000000000000000000000000000000000000
