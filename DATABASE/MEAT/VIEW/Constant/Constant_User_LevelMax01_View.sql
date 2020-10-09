@@ -13,6 +13,8 @@ AS
   SELECT 5 AS UserId -- Админ"
  UNION
   SELECT 9458 AS UserId -- Кухтин И.В.
+ UNION
+  SELECT 5851903 AS UserId -- Желєзнова А.Л.
   ;
 
 ALTER TABLE Constant_User_LevelMax01_View OWNER TO postgres;
