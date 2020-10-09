@@ -53,6 +53,7 @@ RETURNS TABLE (Id Integer, InvNumber TVarChar, OperDate TDateTime
              , SummToPay TFloat
              , SummPay   TFloat
              , RemainsToPay TFloat
+             , ContainerId_bonus Integer
               )
 AS
 $BODY$
@@ -78,7 +79,7 @@ BEGIN
               RAISE EXCEPTION 'Ошибка.Нет прав доступа для просмотра данных по <%>.', lfGet_Object_ValueData (inCashId);
          END IF;
      END IF;
-     
+
      -- Результат
      RETURN QUERY
        WITH tmpStatus AS (SELECT zc_Enum_Status_Complete() AS StatusId, inStartDate AS StartDate, inEndDate AS EndDate
@@ -295,29 +296,30 @@ BEGIN
                                                   WHERE MILinkObject_MoneyPlace.DescId = zc_MILinkObject_MoneyPlace()
                                                  )*/
                                        )
- 
+
          , tmpContainerBonus AS (SELECT CLO_Juridical.ObjectId AS JuridicalId
                                       , CLO_Partner.ObjectId   AS PartnerId
                                       , CLO_InfoMoney.ObjectId AS InfoMoneyId
                                       , CLO_Contract.ObjectId  AS ContractId
                                       , CLO_Branch.ObjectId    AS BranchId
                                       , SUM (COALESCE (Container.Amount,0)) * (-1) AS Amount
+                                      , MAX (Container.Id)     AS ContainerId
                                  FROM ContainerLinkObject AS CLO_Juridical
                                       INNER JOIN Container ON Container.Id = CLO_Juridical.ContainerId AND Container.DescId = zc_Container_Summ()
-                                      LEFT JOIN ContainerLinkObject AS CLO_InfoMoney 
+                                      LEFT JOIN ContainerLinkObject AS CLO_InfoMoney
                                                                     ON CLO_InfoMoney.ContainerId = Container.Id AND CLO_InfoMoney.DescId = zc_ContainerLinkObject_InfoMoney()
-      
+
                                       LEFT JOIN ContainerLinkObject AS CLO_Partner
                                                                     ON CLO_Partner.ContainerId = Container.Id
                                                                    AND CLO_Partner.DescId = zc_ContainerLinkObject_Partner()
-      
+
                                       LEFT JOIN ContainerLinkObject AS CLO_Branch
                                                                     ON CLO_Branch.ContainerId = Container.Id
                                                                    AND CLO_Branch.DescId = zc_ContainerLinkObject_Branch()
                                       LEFT JOIN ContainerLinkObject AS CLO_PaidKind
                                                                     ON CLO_PaidKind.ContainerId = Container.Id
                                                                    AND CLO_PaidKind.DescId = zc_ContainerLinkObject_PaidKind()
-      
+
                                       LEFT JOIN ContainerLinkObject AS CLO_Contract
                                                                     ON CLO_Contract.ContainerId = Container.Id
                                                                    AND CLO_Contract.DescId = zc_ContainerLinkObject_Contract()
@@ -343,7 +345,7 @@ BEGIN
                         , tmpMovement.OperDate
                         , tmpMovement.StatusCode
                         , tmpMovement.StatusName
-             
+
                         , CASE WHEN MILinkObject_Currency.ObjectId <> inCurrencyId AND inCurrencyId = zc_Enum_Currency_Basis()
                                 AND MovementItem.Amount < 0
                                     THEN MovementFloat_AmountSumm.ValueData
@@ -362,12 +364,12 @@ BEGIN
                                     THEN -1 * MovementItem.Amount
                                ELSE 0
                           END::TFloat AS AmountOut
-             
+
                         , MovementFloat_AmountCurrency.ValueData AS AmountCurrency
                         , CASE WHEN MovementFloat_AmountSumm.ValueData <> 0 THEN MovementFloat_AmountSumm.ValueData * CASE WHEN MovementItem.Amount < 0 THEN 1 ELSE -1 END
                                WHEN ObjectDesc.Id = zc_Object_Cash() AND Object_Currency.Id <> zc_Enum_Currency_Basis() THEN -1 * MovementItem.Amount -- !!!с обратным знаком!!!
                           END :: TFloat AS AmountSumm
-             
+
                         , MIDate_ServiceDate.ValueData      AS ServiceDate
                         , MIString_Comment.ValueData        AS Comment
                         , Object_Cash.ValueData             AS CashName
@@ -397,33 +399,33 @@ BEGIN
 
                         , Object_Unit.ObjectCode             AS UnitCode
                         , Object_Unit.ValueData              AS UnitName
-                        
+
                         , Object_Currency.ValueData                     AS CurrencyName
                         , Object_CurrencyPartner.ValueData              AS CurrencyPartnerName
                         , MovementFloat_CurrencyValue.ValueData         AS CurrencyValue
                         , MovementFloat_ParValue.ValueData              AS ParValue
                         , MovementFloat_CurrencyPartnerValue.ValueData  AS CurrencyPartnerValue
                         , MovementFloat_ParPartnerValue.ValueData       AS ParPartnerValue
-             
+
                         , COALESCE (MovementBoolean_isLoad.ValueData, FALSE) :: Boolean AS isLoad
-             
+
                         , zfCalc_PartionMovementName (Movement_PartionMovement.DescId, MovementDesc_PartionMovement.ItemName, Movement_PartionMovement.InvNumber, MovementDate_OperDatePartner_PartionMovement.ValueData) AS PartionMovementName
-             
+
                         , Movement_Invoice.Id                 AS MovementId_Invoice
                         , zfCalc_PartionMovementName (Movement_Invoice.DescId, MovementDesc_Invoice.ItemName, COALESCE (MovementString_InvNumberPartner.ValueData,'') || '/' || Movement_Invoice.InvNumber, Movement_Invoice.OperDate) AS InvNumber_Invoice
                         , MS_Comment_Invoice.ValueData        AS Comment_Invoice
-             
+
                         , MovementDate_Insert.ValueData          AS InsertDate
                         , MovementDate_InsertMobile.ValueData    AS InsertMobileDate
                         , Object_User.ValueData                  AS InsertName
                         , Object_Unit_mobile.ValueData           AS UnitName_Mobile
                         , CASE WHEN MovementString_GUID.ValueData <> '' THEN Object_Position_mobile.ValueData ELSE '' END :: TVarChar AS PositionName_Mobile
                         , MovementString_GUID.ValueData          AS GUID
-             
+
                         , MILinkObject_Currency.ObjectId     AS CurrencyId_x
                         , MovementItem.MovementId            AS MovementId_x
                         , MovementFloat_AmountSumm.ValueData AS AmountSumm_x
-             
+
                         -- расч. курс на дату - для курс разн.
                         , CASE WHEN (SELECT SUM (tmp.Amount)
                                      FROM (SELECT tmpMIContainer.Amount_Container - COALESCE (SUM (tmpMIContainer.Amount), 0) AS Amount
@@ -450,12 +452,13 @@ BEGIN
                                     )
                                ELSE 0
                           END :: TFloat AS CurrencyValue_calc
-             
+
                         -- факт. курс на дату - для курс разн.
                       , CASE WHEN MovementFloat_AmountCurrency.ValueData <> 0 THEN (ABS (MovementItem.Amount) + tmpMIС.Amount) / ABS (MovementFloat_AmountCurrency.ValueData) ELSE 0 END :: TFloat AS CurrencyValue_mi_calc
-             
-                      , COALESCE (tmpContainerBonus.Amount,0) ::TFloat AS AmountBonus
-                      
+
+                      , COALESCE (tmpContainerBonus.Amount,0) :: TFloat  AS AmountBonus
+                      , tmpContainerBonus.ContainerId         :: Integer AS ContainerId_bonus
+
                       , SUM (CASE WHEN MILinkObject_Currency.ObjectId <> inCurrencyId AND inCurrencyId = zc_Enum_Currency_Basis()
                                    AND MovementItem.Amount > 0
                                        THEN MovementFloat_AmountSumm.ValueData
@@ -468,9 +471,9 @@ BEGIN
                              ) OVER (PARTITION BY Object_Branch.Id, Object_Juridical.Id, View_InfoMoney.InfoMoneyId, View_Contract_InvNumber.ContractId, Object_MoneyPlace.Id)       ::TFloat  AS TotalAmountOut
                       , ROW_NUMBER() OVER (PARTITION BY Object_Branch.Id, Object_Juridical.Id, View_InfoMoney.InfoMoneyId, View_Contract_InvNumber.ContractId, Object_MoneyPlace.Id) ::Integer AS Ord
                     FROM tmpMovement
-             
+
                          LEFT JOIN tmpMIС ON tmpMIС.MovementId = tmpMovement.Id
-             
+
                          LEFT JOIN tmpMovementDate AS MovementDate_Insert
                                                    ON MovementDate_Insert.MovementId = tmpMovement.Id
                                                   AND MovementDate_Insert.DescId = zc_MovementDate_Insert()
@@ -481,18 +484,18 @@ BEGIN
                                           ON MovementLinkObject_Insert.MovementId = tmpMovement.Id
                                          AND MovementLinkObject_Insert.DescId = zc_MovementLinkObject_Insert()
                          LEFT JOIN Object AS Object_User ON Object_User.Id = MovementLinkObject_Insert.ObjectId
-             
+
                          LEFT JOIN ObjectLink AS ObjectLink_User_Member
                                               ON ObjectLink_User_Member.ObjectId = Object_User.Id
                                              AND ObjectLink_User_Member.DescId   = zc_ObjectLink_User_Member()
-             
+
                          LEFT JOIN tmpPersonal ON tmpPersonal.MemberId = ObjectLink_User_Member.ChildObjectId
                          LEFT JOIN Object AS Object_Position_mobile ON Object_Position_mobile.Id = tmpPersonal.PositionId
                          LEFT JOIN Object AS Object_Unit_mobile ON Object_Unit_mobile.Id = tmpPersonal.UnitId
-             
+
                          LEFT JOIN tmpMovementString_GUID AS MovementString_GUID
                                                           ON MovementString_GUID.MovementId = tmpMovement.Id
-             
+
                          LEFT JOIN tmpMLM_Invoice AS MLM_Invoice
                                                   ON MLM_Invoice.MovementId = tmpMovement.Id
                                                  AND MLM_Invoice.DescId = zc_MovementLinkMovement_Invoice()
@@ -504,29 +507,29 @@ BEGIN
                          LEFT JOIN tmpMovementString_Invoice AS MS_Comment_Invoice
                                                              ON MS_Comment_Invoice.MovementId = Movement_Invoice.Id
                                                             AND MS_Comment_Invoice.DescId = zc_MovementString_Comment()
-             
+
                          LEFT JOIN tmpMI AS MovementItem ON MovementItem.MovementId = tmpMovement.Id
-             
+
                          LEFT JOIN Object AS Object_Cash ON Object_Cash.Id = MovementItem.ObjectId
-             
+
                          LEFT JOIN tmpMovementBoolean_isLoad AS MovementBoolean_isLoad
                                                              ON MovementBoolean_isLoad.MovementId = tmpMovement.Id
-             
+
                          LEFT JOIN tmpMIFloat_MovementId AS MIFloat_MovementId
                                                          ON MIFloat_MovementId.MovementItemId = MovementItem.Id
                                                         AND MIFloat_MovementId.DescId = zc_MIFloat_MovementId()
                          LEFT JOIN Movement AS Movement_PartionMovement ON Movement_PartionMovement.Id = MIFloat_MovementId.ValueData
-             
+
                          LEFT JOIN MovementDesc AS MovementDesc_PartionMovement ON MovementDesc_PartionMovement.Id = Movement_PartionMovement.DescId
                          LEFT JOIN tmpMD_PartionMovement AS MovementDate_OperDatePartner_PartionMovement
                                                          ON MovementDate_OperDatePartner_PartionMovement.MovementId = Movement_PartionMovement.Id
                                                         AND MovementDate_OperDatePartner_PartionMovement.DescId = zc_MovementDate_OperDatePartner()
-             
+
                          LEFT JOIN tmpMILO AS MILinkObject_MoneyPlace
                                            ON MILinkObject_MoneyPlace.MovementItemId = MovementItem.Id
                                           AND MILinkObject_MoneyPlace.DescId = zc_MILinkObject_MoneyPlace()
-             
-             
+
+
                          LEFT JOIN tmpMILO AS MILinkObject_InfoMoney
                                            ON MILinkObject_InfoMoney.MovementItemId = MovementItem.Id
                                           AND MILinkObject_InfoMoney.DescId = zc_MILinkObject_InfoMoney()
@@ -534,7 +537,7 @@ BEGIN
                          LEFT JOIN tmpMILO AS MILinkObject_Contract
                                            ON MILinkObject_Contract.MovementItemId = MovementItem.Id
                                           AND MILinkObject_Contract.DescId = zc_MILinkObject_Contract()
-             
+
                          LEFT JOIN tmpMILO AS MILinkObject_Unit
                                            ON MILinkObject_Unit.MovementItemId = MovementItem.Id
                                           AND MILinkObject_Unit.DescId = zc_MILinkObject_Unit()
@@ -552,14 +555,14 @@ BEGIN
                          LEFT JOIN tmpMIString_Comment AS MIString_Comment
                                                        ON MIString_Comment.MovementItemId = MovementItem.Id
                                                       AND MIString_Comment.DescId = zc_MIString_Comment()
-             
+
                          -- Ограничили - Только одной валютой
                          LEFT JOIN tmpMILO AS MILinkObject_Currency
                                            ON MILinkObject_Currency.MovementItemId = MovementItem.Id
                                           AND MILinkObject_Currency.DescId         = zc_MILinkObject_Currency()
-             
+
                          LEFT JOIN Object AS Object_Currency ON Object_Currency.Id = MILinkObject_Currency.ObjectId
-             
+
                          LEFT JOIN tmpMILO AS MILinkObject_CurrencyPartner
                                            ON MILinkObject_CurrencyPartner.MovementItemId = MovementItem.Id
                                           AND MILinkObject_CurrencyPartner.DescId = zc_MILinkObject_CurrencyPartner()
@@ -571,7 +574,7 @@ BEGIN
                          LEFT JOIN tmpMovementFloat AS MovementFloat_AmountSumm
                                                     ON MovementFloat_AmountSumm.MovementId = tmpMovement.Id
                                                    AND MovementFloat_AmountSumm.DescId = zc_MovementFloat_Amount()
-             
+
                          LEFT JOIN tmpMovementFloat AS MovementFloat_CurrencyValue
                                                     ON MovementFloat_CurrencyValue.MovementId = tmpMovement.Id
                                                    AND MovementFloat_CurrencyValue.DescId = zc_MovementFloat_CurrencyValue()
@@ -588,7 +591,7 @@ BEGIN
                          LEFT JOIN ObjectLink AS ObjectLink_Partner_Juridical
                                               ON ObjectLink_Partner_Juridical.ObjectId = MILinkObject_MoneyPlace.ObjectId
                                              AND ObjectLink_Partner_Juridical.DescId = zc_ObjectLink_Partner_Juridical()
-                                             
+
                          FULL JOIN tmpContainerBonus ON tmpContainerBonus.JuridicalId = COALESCE (ObjectLink_Partner_Juridical.ChildObjectId, MILinkObject_MoneyPlace.ObjectId)
                                                     AND tmpContainerBonus.PartnerId   = MILinkObject_MoneyPlace.ObjectId
                                                     AND tmpContainerBonus.InfoMoneyId = MILinkObject_InfoMoney.ObjectId
@@ -602,9 +605,9 @@ BEGIN
                          LEFT JOIN Object AS Object_MoneyPlace ON Object_MoneyPlace.Id = COALESCE (MILinkObject_MoneyPlace.ObjectId, tmpContainerBonus.PartnerId)
                          LEFT JOIN ObjectDesc ON ObjectDesc.Id = Object_MoneyPlace.DescId
                          LEFT JOIN tmpInfoMoney_View AS View_InfoMoney ON View_InfoMoney.InfoMoneyId = COALESCE (MILinkObject_InfoMoney.ObjectId, tmpContainerBonus.InfoMoneyId)
-                         
+
                          LEFT JOIN tmpContract_View AS View_Contract_InvNumber ON View_Contract_InvNumber.ContractId = COALESCE (MILinkObject_Contract.ObjectId, tmpContainerBonus.ContractId)
-                         
+
                          LEFT JOIN ObjectLink AS OL_Cash_Branch
                                               ON OL_Cash_Branch.ObjectId = Object_Cash.Id
                                              AND OL_Cash_Branch.DescId = zc_ObjectLink_Cash_Branch()
@@ -676,12 +679,15 @@ BEGIN
             , tmpRes.AmountSumm_x
             , tmpRes.CurrencyValue_calc
             , tmpRes.CurrencyValue_mi_calc
-                     
-         , CASE WHEN tmpRes.Ord = 1 THEN COALESCE (tmpRes.AmountBonus,0) ELSE 0 END ::TFloat AS SummToPay
-         , CASE WHEN tmpRes.Ord = 1 THEN COALESCE (tmpRes.TotalAmountOut,0)   ELSE 0 END ::TFloat AS SummPay
-         , CASE WHEN tmpRes.Ord = 1 THEN (COALESCE(tmpRes.AmountBonus,0) - COALESCE (tmpRes.TotalAmountOut,0)) ELSE 0 END ::TFloat AS RemainsToPay
+
+            , CASE WHEN tmpRes.Ord = 1 THEN COALESCE (tmpRes.AmountBonus,0) ELSE 0 END ::TFloat AS SummToPay
+            , CASE WHEN tmpRes.Ord = 1 THEN COALESCE (tmpRes.TotalAmountOut,0)   ELSE 0 END ::TFloat AS SummPay
+            , CASE WHEN tmpRes.Ord = 1 THEN (COALESCE(tmpRes.AmountBonus,0) - COALESCE (tmpRes.TotalAmountOut,0)) ELSE 0 END ::TFloat AS RemainsToPay
+
+            , tmpRes.ContainerId_bonus
+
        FROM tmpRes
-       ;
+      ;
 
 END;
 $BODY$
