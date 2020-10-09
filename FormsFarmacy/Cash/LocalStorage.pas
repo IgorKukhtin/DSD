@@ -381,6 +381,7 @@ begin
       AddBoolField(LocalDataBaseDiff,  'BANFISCAL'); // Запрет фискальной продажи
       AddBoolField(LocalDataBaseDiff,  'GOODSPROJ'); // Товар только для проекта (дисконтные карты)
       AddIntField(LocalDataBaseDiff,   'GOODSPMID'); //Парный товпр СП главный
+      AddFloatField(LocalDataBaseDiff, 'GOODSDIMP'); //Максимальная цена по дисконтной программе
 
       LocalDataBaseDiff.CreateTable;
     end;
@@ -417,7 +418,8 @@ begin
         (FindField('DIVPARTNAM') = nil) or
         (FindField('BANFISCAL') = nil) or
         (FindField('GOODSPROJ') = nil) or
-        (FindField('GOODSPMID') = nil));
+        (FindField('GOODSPMID') = nil) or
+        (FindField('GOODSDIMP') = nil));
 
       Close;
 

@@ -59,7 +59,7 @@ end;
 
 procedure TScriptFiles.EnumFiles(const AScriptPath: string);
 var
-  I, iRootLen: Int64;
+  I, iRootLen: Integer;
   arrFiles: TStringDynArray;
   searchOpt: TSearchOption;
   fileMask, sShortName: string;
@@ -87,7 +87,7 @@ end;
 
 function TScriptFiles.GetScriptContent(AFiles: TStrings): TStrings;
 var
-  I, J: Int64;
+  I, J: Integer;
   sScriptSQL, sFileName: string;
 begin
   Result := FScriptContent;
@@ -123,7 +123,7 @@ var
   tmpFS: TFileStream;
   tmpBuffer: TBytes;
   tmpEncoding: TEncoding;
-  lenEncPreamble: Int64;
+  lenEncPreamble: Integer;
 const
   cErrFileNotExits = 'Файл %s не существует';
 begin

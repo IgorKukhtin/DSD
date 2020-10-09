@@ -34,7 +34,7 @@ RETURNS TABLE (Id Integer, GoodsId_main Integer, GoodsGroupName TVarChar, GoodsN
                NotSold boolean, NotSold60 boolean,
                DeferredSend TFloat,
                RemainsSUN TFloat,
-               GoodsDiscountID  Integer, GoodsDiscountName  TVarChar, isGoodsForProject boolean,
+               GoodsDiscountID  Integer, GoodsDiscountName  TVarChar, isGoodsForProject boolean, GoodsDiscountMaxPrice tfloat,
                UKTZED TVarChar,
                GoodsPairSunId Integer, GoodsPairSunMainId Integer,
                AmountSendIn TFloat,
@@ -561,6 +561,7 @@ BEGIN
                                              , Object_Object.Id                                          AS GoodsDiscountId
                                              , Object_Object.ValueData                                   AS GoodsDiscountName
                                              , COALESCE(ObjectBoolean_GoodsForProject.ValueData, False)  AS isGoodsForProject
+                                             , COALESCE(ObjectFloat_MaxPrice.ValueData, 0)::TFloat       AS MaxPrice 
                                           FROM Object AS Object_BarCode
                                               INNER JOIN ObjectLink AS ObjectLink_BarCode_Goods
                                                                     ON ObjectLink_BarCode_Goods.ObjectId = Object_BarCode.Id
@@ -575,6 +576,11 @@ BEGIN
                                               LEFT JOIN ObjectBoolean AS ObjectBoolean_GoodsForProject
                                                                       ON ObjectBoolean_GoodsForProject.ObjectId = Object_Object.Id
                                                                      AND ObjectBoolean_GoodsForProject.DescId = zc_ObjectBoolean_DiscountExternal_GoodsForProject()
+
+                                              LEFT JOIN ObjectFloat AS ObjectFloat_MaxPrice
+                                                                    ON ObjectFloat_MaxPrice.ObjectId = Object_BarCode.Id
+                                                                   AND ObjectFloat_MaxPrice.DescId = zc_ObjectFloat_BarCode_MaxPrice()
+                                                                   
                                           WHERE Object_BarCode.DescId = zc_Object_BarCode()
                                             AND Object_BarCode.isErased = False)
                  , tmpGoodsUKTZED AS (SELECT Object_Goods_Juridical.GoodsMainId
@@ -594,11 +600,11 @@ BEGIN
 
         -- Результат
         SELECT
-            Goods.Id,
+            CashSessionSnapShot.ObjectId,
             Object_Goods_Main.Id          AS GoodsId_main,
             Object_GoodsGroup.ValueData   AS GoodsGroupName,
-            Goods.ValueData,
-            Goods.ObjectCode,
+            Object_Goods_Main.Name,
+            Object_Goods_Main.ObjectCode,
             CashSessionSnapShot.Remains,
             CashSessionSnapShot.Price,
 
@@ -817,9 +823,9 @@ BEGIN
           , COALESCE (Object_Goods_Main.isDoesNotShare, FALSE)     AS DoesNotShare
           , NULL::Integer                                          AS GoodsAnalogId
           , NULL::TVarChar                                         AS GoodsAnalogName
-          , ObjectString_Goods_Analog.ValueData                    AS GoodsAnalog
-          , ObjectString_Goods_AnalogATC.ValueData                 AS GoodsAnalogATC
-          , ObjectString_Goods_ActiveSubstance.ValueData           AS GoodsActiveSubstance
+          , Object_Goods_Main.Analog                               AS GoodsAnalog
+          , Object_Goods_Main.AnalogATC                            AS GoodsAnalogATC
+          , Object_Goods_Main.ActiveSubstance                      AS GoodsActiveSubstance
           , tmpGoodsSP.CountSP                                     AS CountSP
           , tmpGoodsSP.IdSP                                        AS IdSP
           , tmpGoodsSP.DosageIdSP                                  AS DosageIdSP
@@ -845,6 +851,7 @@ BEGIN
           , tmpGoodsDiscount.GoodsDiscountId                       AS GoodsDiscountID
           , tmpGoodsDiscount.GoodsDiscountName                     AS GoodsDiscountName
           , COALESCE(tmpGoodsDiscount.isGoodsForProject, FALSE)    AS isGoodsForProject
+          , tmpGoodsDiscount.MaxPrice                              AS GoodsDiscountMaxPrice
           , tmpGoodsUKTZED.UKTZED                                  AS UKTZED
           , Object_Goods_PairSun.ID                                AS GoodsPairSunId
           , Object_Goods_PairSun_Main.GoodsPairSunId               AS GoodsPairSunMainId
@@ -861,10 +868,9 @@ BEGIN
 
          FROM
             CashSessionSnapShot
-            INNER JOIN Object AS Goods ON Goods.Id = CashSessionSnapShot.ObjectId
 
             -- получается GoodsMainId
-            LEFT JOIN Object_Goods_Retail AS Object_Goods_Retail ON Object_Goods_Retail.Id = Goods.Id
+            LEFT JOIN Object_Goods_Retail AS Object_Goods_Retail ON Object_Goods_Retail.Id = CashSessionSnapShot.ObjectId
             LEFT JOIN Object_Goods_Main AS Object_Goods_Main ON Object_Goods_Main.Id = Object_Goods_Retail.GoodsMainId
             LEFT JOIN tmpGoodsPairSun AS Object_Goods_PairSun
                                       ON Object_Goods_PairSun.GoodsPairSunId = Object_Goods_Retail.Id
@@ -873,13 +879,13 @@ BEGIN
 
             LEFT JOIN tmpMCSAuto ON tmpMCSAuto.ObjectId = CashSessionSnapShot.ObjectId
             LEFT OUTER JOIN ObjectLink AS Link_Goods_AlternativeGroup
-                                       ON Link_Goods_AlternativeGroup.ObjectId = Goods.Id
+                                       ON Link_Goods_AlternativeGroup.ObjectId = CashSessionSnapShot.ObjectId
                                       AND Link_Goods_AlternativeGroup.DescId = zc_ObjectLink_Goods_AlternativeGroup()
             LEFT OUTER JOIN tmpNDSKind AS ObjectFloat_NDSKind_NDS
                                        ON ObjectFloat_NDSKind_NDS.ObjectId = COALESCE(CashSessionSnapShot.NDSKindId, Object_Goods_Main.NDSKindId)
 
-            LEFT JOIN GoodsPromo ON GoodsPromo.GoodsId = Goods.Id
-            LEFT JOIN tmpIncome ON tmpIncome.GoodsId = Goods.Id
+            LEFT JOIN GoodsPromo ON GoodsPromo.GoodsId = CashSessionSnapShot.ObjectId
+            LEFT JOIN tmpIncome ON tmpIncome.GoodsId = CashSessionSnapShot.ObjectId
 
             -- Соц Проект
             LEFT JOIN tmpGoodsSP ON tmpGoodsSP.GoodsId = Object_Goods_Main.Id
@@ -899,18 +905,7 @@ BEGIN
 
             LEFT JOIN tmpGoodsDiscount ON tmpGoodsDiscount.GoodsMainId = Object_Goods_Main.Id
             -- Цена со скидкой
-            LEFT JOIN tmpPriceChange ON tmpPriceChange.GoodsId = Goods.Id
-
-           -- Аналоги товара
-           LEFT JOIN ObjectString AS ObjectString_Goods_Analog
-                                  ON ObjectString_Goods_Analog.ObjectId = Object_Goods_Main.Id
-                                 AND ObjectString_Goods_Analog.DescId = zc_ObjectString_Goods_Analog()
-           LEFT JOIN ObjectString AS ObjectString_Goods_AnalogATC
-                                  ON ObjectString_Goods_AnalogATC.ObjectId = Object_Goods_Main.Id
-                                 AND ObjectString_Goods_AnalogATC.DescId = zc_ObjectString_Goods_AnalogATC()
-           LEFT JOIN ObjectString AS ObjectString_Goods_ActiveSubstance
-                                  ON ObjectString_Goods_ActiveSubstance.ObjectId = Object_Goods_Main.Id
-                                 AND ObjectString_Goods_ActiveSubstance.DescId = zc_ObjectString_Goods_ActiveSubstance()
+            LEFT JOIN tmpPriceChange ON tmpPriceChange.GoodsId = CashSessionSnapShot.ObjectId
 
            -- Тип срок/не срок
            LEFT JOIN tmpPartionDateKind AS Object_PartionDateKind ON Object_PartionDateKind.Id = NULLIF (CashSessionSnapShot.PartionDateKindId, 0)
@@ -925,10 +920,10 @@ BEGIN
                                   AND ObjectBoolean_BanFiscalSale.DescId = zc_ObjectBoolean_DivisionParties_BanFiscalSale()
 
            -- Без Продажи за последнии 100 дней
-           LEFT JOIN tmpNotSold ON tmpNotSold.GoodsID = Goods.Id
+           LEFT JOIN tmpNotSold ON tmpNotSold.GoodsID = CashSessionSnapShot.ObjectId
 
            -- Без Продажи за последнии 60 дней
-           LEFT JOIN tmpIlliquidUnit ON tmpIlliquidUnit.GoodsID = Goods.Id
+           LEFT JOIN tmpIlliquidUnit ON tmpIlliquidUnit.GoodsID = CashSessionSnapShot.ObjectId
 
            -- Остаток товара по СУН
            LEFT JOIN tmpRenainsSUN ON tmpRenainsSUN.GoodsID = CashSessionSnapShot.ObjectId
@@ -944,9 +939,9 @@ BEGIN
         WHERE
             CashSessionSnapShot.CashSessionId = inCashSessionId
         ORDER BY
-            Goods.Id;
+            CashSessionSnapShot.ObjectId;
 
-    vb1:= (SELECT COUNT (*) FROM CashSessionSnapShot WHERE CashSessionSnapShot.CashSessionId = inCashSessionId) :: TVarChar;
+/*    vb1:= (SELECT COUNT (*) FROM CashSessionSnapShot WHERE CashSessionSnapShot.CashSessionId = inCashSessionId) :: TVarChar;
     vb2:= ((CLOCK_TIMESTAMP() - vbOperDate_StartBegin) :: INTERVAL) :: TVarChar;
 
     -- !!!Протокол - отладка Скорости!!!
@@ -958,7 +953,7 @@ BEGIN
     || ' + ' || lfGet_Object_ValueData_sh (vbUserId)
     || ','   || vbUnitId              :: TVarChar
     || ','   || CHR (39) || inCashSessionId || CHR (39)
-             );
+             );*/
 
 END;
 $BODY$

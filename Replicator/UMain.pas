@@ -261,14 +261,14 @@ type
     procedure StopAlterSlaveSequences;
     procedure StopApplyScriptThread;
     procedure StopMoveProcToSlaveThread;
-    procedure UpdateProgBarPosition(AProgBar: TProgressBar; const AMax, ACurrValue, ARecCount: Int64);
+    procedure UpdateProgBarPosition(AProgBar: TProgressBar; const AMax, ACurrValue, ARecCount: Integer);
     procedure LogMessage(const AMsg: string; const AFileName: string = ''; const aUID: Cardinal = 0;
       AMsgType: TLogMessageType = lmtPlain);
     procedure LogApplyScript(const AMsg: string; const AFileName: string = ''; const aUID: Cardinal = 0;
       AMsgType: TLogMessageType = lmtPlain);
 
     procedure OnChangeStartId(const ANewStartId: Int64);
-    procedure OnNewSession(const AStart: TDateTime; const AMinId, AMaxId, ARecCount, ASessionNumber: Int64);
+    procedure OnNewSession(const AStart: TDateTime; const AMinId, AMaxId: Int64; const ARecCount, ASessionNumber: Integer);
     procedure OnEndSession(Sender: TObject);
     procedure OnNeedReplicaRestart(Sender: TObject);
     procedure OnTerminateAlterSlaveSequences(Sender: TObject);
@@ -376,7 +376,6 @@ begin
   edtSnapshotSelectCount.Text     := IntToStr(TSettings.SnapshotSelectCount);
   edtSnapshotInsertCount.Text     := IntToStr(TSettings.SnapshotInsertCount);
   edtSnapshotBlobSelectCount.Text := IntToStr(TSettings.SnapshotBlobSelectCount);
-
   SwitchShowLog;
 end;
 
@@ -483,7 +482,7 @@ procedure TfrmMain.StartReplica;
 const
   cStartPerlica = 'Старт репликации: StartId = %d    select %d    в пакете %d    версия %s';
 var
-  iStartId, iSelectRange, iPacketRange: Int64;
+  iStartId, iSelectRange, iPacketRange: Integer;
 begin
   FStartTimeReplica := Now;
   lbAllStart.Caption := Format(cStartPointReplica, [FormatDateTime(cTimeStrShort, Now)]);
@@ -613,7 +612,7 @@ end;
 procedure TfrmMain.tmrUpdateAllDataTimer(Sender: TObject);
 begin
   (Sender as TTimer).Enabled := False;
-  CheckReplicaMaxMin;
+//  CheckReplicaMaxMin;
 end;
 
 procedure TfrmMain.WriteSettings;
@@ -635,7 +634,6 @@ begin
 
   TSettings.ReplicaSelectRange := seSelectRange.Value;
   TSettings.ReplicaPacketRange := sePacketRange.Value;
-
   TSettings.SnapshotSelectCount     := StrToIntDef(edtSnapshotSelectCount.Text, TSettings.DefaultSnapshotSelectCount);
   TSettings.SnapshotInsertCount     := StrToIntDef(edtSnapshotInsertCount.Text, TSettings.DefaultSnapshotInsertCount);
   TSettings.SnapshotBlobSelectCount := StrToIntDef(edtSnapshotBlobSelectCount.Text, TSettings.DefaultSnapshotBlobSelectCount);
@@ -670,7 +668,7 @@ end;
 
 procedure TfrmMain.AssignOnExitSettings;
 var
-  I: Int64;
+  I: Integer;
 begin
   for I := 0 to Pred(ComponentCount) do
     if Components[I] is TEdit then
@@ -758,7 +756,7 @@ const
   cStartPerlica = 'Старт репликации: %d, диапазон select: %d, команд в пакете: %d, SQL:' + #13#10 + '%s';
   cCmdCountMsg = 'В пакете всего команд: %d';
 //var
-//  iStart, iSelectRange: Int64;
+//  iStart, iSelectRange: Integer;
 begin
 //  iStart := StrToIntDef(edtSsnMinId.Text, 0);
 //  iSelectRange := seSelectRange.Value;
@@ -1006,12 +1004,13 @@ begin
   FSnapshotRunning := false;
 end;
 
-procedure TfrmMain.UpdateProgBarPosition(AProgBar: TProgressBar; const AMax, ACurrValue, ARecCount: Int64);
+procedure TfrmMain.UpdateProgBarPosition(AProgBar: TProgressBar; const AMax, ACurrValue, ARecCount: Integer);
 var
   extPart: Extended;
 begin
-  AProgBar.Min  := MIN (1, ARecCount);
+  Assert(ARecCount >= 0, 'Ожидается ARecCount >= 0, а имеем ARecCount= ' + IntToStr(ARecCount));
   AProgBar.Max  := ARecCount;
+  AProgBar.Min  := Min(1, ARecCount);
   AProgBar.Step := 1;
 
   if AMax <= 0 then
@@ -1235,7 +1234,7 @@ end;
 
 procedure TfrmMain.LogMessage(const AMsg, AFileName: string; const aUID: Cardinal; AMsgType: TLogMessageType);
 var
-  iObjIndex, iPos: Int64;
+  iObjIndex, iPos: Integer;
   sMsg, sLine: string;
 begin
 
@@ -1308,7 +1307,7 @@ end;
 
 procedure TfrmMain.OnChangeStartId(const ANewStartId: Int64);
 var
-  iReplicaMax, iRecCount: Int64;
+  iReplicaMax, iRecCount: Integer;
 begin
   edtSsnMinId.Text := IntToStr(ANewStartId);
 
@@ -1350,7 +1349,7 @@ begin
   end;
 end;
 
-procedure TfrmMain.OnNewSession(const AStart: TDateTime; const AMinId, AMaxId, ARecCount, ASessionNumber: Int64);
+procedure TfrmMain.OnNewSession(const AStart: TDateTime; const AMinId, AMaxId: Int64; const ARecCount, ASessionNumber: Integer);
 begin
   edtSsnMinId.Text    := IntToStr(AMinId);
   edtSsnMaxId.Text    := IntToStr(AMaxId);
@@ -1507,7 +1506,7 @@ end;
 procedure TfrmMain.OnTerminateMinMaxId(Sender: TObject);
 var
   P: PMinMaxId;
-  iStart: Int64;
+  iStart: Integer;
   lwResult: LongWord;
   tmpThread: TWorkerThread;
 begin
@@ -1576,7 +1575,7 @@ end;
 procedure TfrmMain.OnTerminateSinglePacket(Sender: TObject);
 var
   tmpWorker: TWorkerThread;
-  iCount: Int64;
+  iCount: Integer;
 const
   cEnd = 'Окончание выгрузки одного пакета. Выполнено %d команд';
 begin

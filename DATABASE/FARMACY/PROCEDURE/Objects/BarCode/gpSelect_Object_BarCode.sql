@@ -8,6 +8,7 @@ CREATE OR REPLACE FUNCTION gpSelect_Object_BarCode(
 RETURNS TABLE (Id Integer, Code Integer, BarCodeName TVarChar,
                GoodsId Integer, GoodsCode Integer, GoodsName TVarChar,
                ObjectId Integer, ObjectName TVarChar,
+               MaxPrice TFloat,
                isErased boolean) AS
 $BODY$
 BEGIN
@@ -28,6 +29,8 @@ BEGIN
            , Object_Object.Id            AS ObjectId
            , Object_Object.ValueData     AS ObjectName 
            
+           , ObjectFloat_MaxPrice.ValueData  AS MaxPrice 
+           
            , Object_BarCode.isErased     AS isErased
            
        FROM Object AS Object_BarCode
@@ -41,6 +44,10 @@ BEGIN
                                AND ObjectLink_BarCode_Object.DescId = zc_ObjectLink_BarCode_Object()
            LEFT JOIN Object AS Object_Object ON Object_Object.Id = ObjectLink_BarCode_Object.ChildObjectId           
 
+           LEFT JOIN ObjectFloat AS ObjectFloat_MaxPrice
+                                 ON ObjectFloat_MaxPrice.ObjectId = Object_BarCode.Id
+                                AND ObjectFloat_MaxPrice.DescId = zc_ObjectFloat_BarCode_MaxPrice()
+
        WHERE Object_BarCode.DescId = zc_Object_BarCode();
   
 END;
@@ -48,7 +55,7 @@ $BODY$
 
 LANGUAGE plpgsql VOLATILE;
 
-/*-------------------------------------------------------------------------------*/
+-------------------------------------------------------------------------------
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
@@ -57,4 +64,5 @@ LANGUAGE plpgsql VOLATILE;
 */
 
 -- тест
--- SELECT * FROM gpSelect_Object_BarCode ('2')
+-- 
+SELECT * FROM gpSelect_Object_BarCode ('3')

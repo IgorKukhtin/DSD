@@ -11,15 +11,15 @@ uses
 type
   TCommandData = class
   strict private
-    FPos: Int64;
+    FPos: Integer;
     FRecArray: TDataRecArray;
     FMaxId: Int64;
   strict private
-    function GetCount: Int64;
+    function GetCount: Integer;
     function GetEOF: Boolean;
-    function NearestId(const AId, ARange: Int64): Int64;
-    function GetPosition(const AId: Int64): Int64;
-    function GetId(const APos: Int64): Int64;
+    function NearestId(const AId: Int64; const ARange: Integer): Int64;
+    function GetPosition(const AId: Int64): Integer;
+    function GetId(const APos: Integer): Int64;
   public
     procedure Add(const AId, ATransId: Int64; const ASQL: string);
     procedure BuildData(ADataSet: TDataSet);
@@ -29,13 +29,13 @@ type
     procedure Next;
 
     function Data: TDataRec;
-    function GetMaxId(const AId, ARange: Int64): Int64;
+    function GetMaxId(const AId: Int64; const ARange: Integer): Int64;
     function MinMaxTransId(const AMinId, AMaxId: Int64): TMinMaxTransId;
-    function MoveToId(const AId: Int64): Int64;// вернет позицию записи с AId в массиве FRecArray
-    function RecordCount(const AStartId, AEndId: Int64): Int64;
+    function MoveToId(const AId: Int64): Integer;// вернет позицию записи с AId в массиве FRecArray
+    function RecordCount(const AStartId, AEndId: Int64): Integer;
 
     property EOF: Boolean read GetEOF;
-    property Count: Int64 read GetCount;
+    property Count: Integer read GetCount;
   end;
 
   ECommandData = class(Exception);
@@ -54,7 +54,7 @@ var
 
 function ProvideSemicolon(const AStr: string): string;
 var
-  iLen: Int64;
+  iLen: Integer;
 begin
   Result := AStr;
   iLen := Length(AStr);
@@ -80,10 +80,17 @@ begin
 end;
 
 procedure TCommandData.BuildData(ADataSet: TDataSet);
+type
+  TDataTemp = record
+    Id: Int64;
+    TransId: Int64;
+    SQL: string;
+    IsDuplicate: Boolean;
+  end;
 var
-  I, idxId, idxTran, idxResult: Int64;
-  iId, iTranId, iPrevTranId: Int64;
+  I, J, iUniqSize, idxId, idxTran, idxResult: Integer;
   sSQL, sPrevSQL: string;
+  arrTemp: array of TDataTemp;
 begin
   Assert(ADataSet <> nil, 'ќжидаетс€ ADataSet <> nil');
   Assert(ADataSet.Active, 'ќжидаетс€, что ADataSet уже открыт');
@@ -97,46 +104,60 @@ begin
   idxResult := -1;
 
   for I := 0 to Pred(ADataSet.FieldCount) do
-    if      LowerCase(ADataSet.Fields[I].FieldName) = 'id'             then idxId := I
-    else if LowerCase(ADataSet.Fields[I].FieldName) = 'transaction_id' then idxTran := I
-    else if LowerCase(ADataSet.Fields[I].FieldName) = 'result'         then idxResult := I;
+    if      SameText(ADataSet.Fields[I].FieldName, 'id')             then idxId := I
+    else if SameText(ADataSet.Fields[I].FieldName, 'transaction_id') then idxTran := I
+    else if SameText(ADataSet.Fields[I].FieldName, 'result')         then idxResult := I;
 
 
-  sPrevSQL := '';
-  iPrevTranId := 0;
+  I := 0;
+  iUniqSize := 0;
+  sPrevSQL  := '';
   SetLength(FRecArray, 0);
+  SetLength(arrTemp, ADataSet.RecordCount);
 
   with ADataSet do
   begin
     First;
     while not Eof do
     begin
-      // ѕакет может содержать одинаковые команды. ≈сли команда така€ же как и предыдуща€ и у нее такой же TransId,
-      // тогда добавл€ть ее не надо.
-      sSQL    := Fields[idxResult].AsString;
-      iId     := Fields[idxId].AsLargeInt;
-      iTranId := Fields[idxTran].AsLargeInt;
+      // ѕакет может содержать одинаковые команды. ћожно за один проход определ€ть дубликаты и записывать
+      // только уникальные команды, но тогда придетс€ выдел€ть пам€ть дл€ нового элемента массива при каждой итерации,
+      // а это очень замедлит выполнение. ƒл€ увеличени€ скорости сначала один раз выдел€ем пам€ть дл€ временного массива
+      // и записываем в него данные из датасета, дл€ дубликатов делаем пометку в IsDuplicate. ѕотом запишем в FRecArray только уникальные записи.
 
-      if not ((iTranId = iPrevTranId) and (sSQL = sPrevSQL)) then
-      begin
-        SetLength(FRecArray, Length(FRecArray) + 1);
-        I := High(FRecArray);
-        FRecArray[I].Id      := iId;
-        FRecArray[I].TransId := iTranId;
-        FRecArray[I].SQL     := sSQL + ';';
-      end;
+      sSQL := Fields[idxResult].AsString;
+
+      arrTemp[I].Id          := Fields[idxId].AsLargeInt;
+      arrTemp[I].TransId     := Fields[idxTran].AsLargeInt;
+      arrTemp[I].SQL         := sSQL;
+      arrTemp[I].IsDuplicate := SameText(sSQL, sPrevSQL);
+
+      if not arrTemp[I].IsDuplicate then Inc(iUniqSize);// сразу подсчитываем размер массива с уникальными командами
 
       {$IFDEF DEV_LOG}
-      if (iTranId = iPrevTranId) and (sSQL = sPrevSQL) then
+      if SameText(sSQL, sPrevSQL) then
         mLog.Write('Same records.txt', 'Id= ' + IntToStr(iId) + ' iTranId= ' + IntToStr(iTranId) + ' sSQL= ' + sSQL);
       {$ENDIF}
 
-
-      sPrevSQL    := sSQL;
-      iPrevTranId := iTranId;
+      Inc(I);
+      sPrevSQL := sSQL;
       Next;
     end;
   end;
+
+  // записываем уникальные команды в массив FRecArray
+  J := 0;
+  SetLength(FRecArray, iUniqSize);
+
+  for I := Low(arrTemp) to High(arrTemp) do
+    if not arrTemp[I].IsDuplicate then
+    begin
+      FRecArray[J].Id      := arrTemp[I].Id;
+      FRecArray[J].TransId := arrTemp[I].TransId;
+      FRecArray[J].SQL     := arrTemp[I].SQL + ';';
+      Inc(J);
+    end;
+
 
   FPos := 0;
 
@@ -166,7 +187,7 @@ begin
   FPos := Low(FRecArray);
 end;
 
-function TCommandData.GetCount: Int64;
+function TCommandData.GetCount: Integer;
 begin
   Result := Length(FRecArray);
 end;
@@ -176,9 +197,9 @@ begin
   Result := FPos > High(FRecArray);
 end;
 
-function TCommandData.GetId(const APos: Int64): Int64;
+function TCommandData.GetId(const APos: Integer): Int64;
 var
-  iPos: Int64;
+  iPos: Integer;
 begin
   iPos := Min(APos, High(FRecArray));
   iPos := Max(iPos, 0);
@@ -186,9 +207,9 @@ begin
   Result := FRecArray[iPos].Id;
 end;
 
-function TCommandData.GetMaxId(const AId, ARange: Int64): Int64;
+function TCommandData.GetMaxId(const AId: Int64; const ARange: Integer): Int64;
 var
-  iPos, iRange: Int64;
+  iPos, iRange: Integer;
 begin
   // BuildData не сохран€ет дубликаты команд, поэтому реальный размер нового пакета может быть меньше ARange
   // Ќужно скоректировать размер
@@ -205,7 +226,7 @@ end;
 
 function TCommandData.MinMaxTransId(const AMinId, AMaxId: Int64): TMinMaxTransId;
 var
-  I: Int64;
+  I: Integer;
 begin
   Result.Min := High(Int64);
   Result.Max := -1;
@@ -218,9 +239,9 @@ begin
     end;
 end;
 
-function TCommandData.MoveToId(const AId: Int64): Int64; // вернет позицию записи с AId в массиве FRecArray
+function TCommandData.MoveToId(const AId: Int64): Integer; // вернет позицию записи с AId в массиве FRecArray
 var
-  I: Int64;
+  I: Integer;
   bFound: Boolean;
 const
   cErrMsg = 'Id = %d не найден в массиве данных TCommandData';
@@ -240,10 +261,10 @@ begin
     raise EIdNotFound.CreateFmt(cErrMsg, [AId]);
 end;
 
-function TCommandData.NearestId(const AId, ARange: Int64): Int64;
+function TCommandData.NearestId(const AId: Int64; const ARange: Integer): Int64;
 var
-  I, iIndx, iMaxId, iNewTransId: Int64;
-  str:string;
+  I, iIndx: Integer;
+  iMaxId, iNewTransId: Int64;
 begin
   Assert(AId > 0, 'ќжидаетс€ AId > 0');
   Assert(ARange > 0, 'ќжидаетс€ ARange > 0');
@@ -261,52 +282,16 @@ begin
   // »щем элемент, который наиболее близок к заданному значению
   iIndx := -1;
   iNewTransId := 0;
-  str:=' ***';
   for I := Low(FRecArray) to High(FRecArray) do
     if FRecArray[I].Id >= Result then
     begin
       iIndx := I;
       Result := FRecArray[I].Id;
       iNewTransId := FRecArray[I].TransId;
-      str:= IntToStr(iIndx) + ' ' + IntToStr(iNewTransId);
       Break;
     end;
   Assert(iIndx > 0, 'ќжидаетс€ iIndx > 0');
-  Assert(iNewTransId > 0, 'ќжидаетс€ iNewTransId > 0 дл€ параметров: '
-   + ' Low(FRecArray) = ' + IntToStr(Low(FRecArray))
-   + ' High(FRecArray) = ' + IntToStr(High(FRecArray))
-   + ' Result = ' + IntToStr(Result)
-   + ' FRecArray[Low(FRecArray)].Id = ' + IntToStr(FRecArray[Low(FRecArray)].Id)
-   + ' FRecArray[Low(FRecArray)].TransId = ' + IntToStr(FRecArray[Low(FRecArray)].Id)
-   + ' FRecArray[High(FRecArray)].Id = ' + IntToStr(FRecArray[High(FRecArray)].TransId)
-   + ' FRecArray[High(FRecArray)].TransId = ' + IntToStr(FRecArray[High(FRecArray)].TransId)
-
-   + ' FRecArray[I-1].Id = ' + IntToStr(FRecArray[I-1].TransId)
-   + ' FRecArray[I-1].TransId = ' + IntToStr(FRecArray[I-1].TransId)
-
-   + ' FRecArray[I].Id = ' + IntToStr(FRecArray[I].TransId)
-   + ' FRecArray[I].TransId = ' + IntToStr(FRecArray[I].TransId)
-
-   + ' FRecArray[I+1].Id = ' + IntToStr(FRecArray[I+1].TransId)
-   + ' FRecArray[I+1].TransId = ' + IntToStr(FRecArray[I+1].TransId)
-
-   + ' FRecArray[1].Id = ' + IntToStr(FRecArray[1].TransId)
-   + ' FRecArray[1].TransId = ' + IntToStr(FRecArray[1].TransId)
-
-   + ' FRecArray[2].Id = ' + IntToStr(FRecArray[2].TransId)
-   + ' FRecArray[2].TransId = ' + IntToStr(FRecArray[2].TransId)
-
-   + ' I = ' + IntToStr(I)
-
-   + ' iIndx = ' + IntToStr(iIndx)
-
-   + ' str = ' + str
-
-   + ' AId = ' + IntToStr(AId)
-   + ' ARange = ' + IntToStr(ARange)
-   + ' iMaxId = ' + IntToStr(iMaxId)
-
-       );
+  Assert(iNewTransId > 0, 'ќжидаетс€ iNewTransId > 0');
 
   // Ќужно проверить TransId записей, следующих за iIndx. ≈сли у них такой же TransId, тогда нужно выбрать эти записи
   for I := iIndx + 1 to High(FRecArray) do
@@ -321,9 +306,9 @@ begin
   Inc(FPos);
 end;
 
-function TCommandData.GetPosition(const AId: Int64): Int64;
+function TCommandData.GetPosition(const AId: Int64): Integer;
 var
-  I: Int64;
+  I: Integer;
 begin
   Result := -1;
   for I := Low(FRecArray) to High(FRecArray) do
@@ -331,9 +316,9 @@ begin
       Exit(I);
 end;
 
-function TCommandData.RecordCount(const AStartId, AEndId: Int64): Int64;
+function TCommandData.RecordCount(const AStartId, AEndId: Int64): Integer;
 var
-  prevPos, iStartPos, iEndPos: Int64;
+  prevPos, iStartPos, iEndPos: Integer;
 begin
   prevPos := FPos;
 

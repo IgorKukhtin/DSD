@@ -9,6 +9,7 @@ CREATE OR REPLACE FUNCTION gpGet_Object_BarCode(
 RETURNS TABLE (Id Integer, Code Integer, BarCodeName TVarChar,  
                GoodsId Integer, GoodsName TVarChar,
                ObjectId Integer, ObjectName TVarChar,
+               MaxPrice TFloat,
                isErased boolean) AS
 $BODY$
 BEGIN
@@ -30,6 +31,8 @@ BEGIN
            , CAST (0 as Integer)    AS ObjectId
            , CAST ('' as TVarChar)  AS ObjectName 
        
+           , CAST (0 as TFloat)     AS MaxPrice
+
            , CAST (NULL AS Boolean) AS isErased;
    
    ELSE
@@ -45,6 +48,8 @@ BEGIN
            , Object_Object.Id            AS ObjectId
            , Object_Object.ValueData     AS ObjectName 
 
+           , ObjectFloat_MaxPrice.ValueData  AS MaxPrice 
+
            , Object_BarCode.isErased     AS isErased
            
        FROM Object AS Object_BarCode
@@ -58,6 +63,11 @@ BEGIN
                                AND ObjectLink_BarCode_Object.DescId = zc_ObjectLink_BarCode_Object()
            LEFT JOIN Object AS Object_Object ON Object_Object.Id = ObjectLink_BarCode_Object.ChildObjectId           
 
+
+           LEFT JOIN ObjectFloat AS ObjectFloat_MaxPrice
+                                 ON ObjectFloat_MaxPrice.ObjectId = Object_BarCode.Id
+                                AND ObjectFloat_MaxPrice.DescId = zc_ObjectFloat_BarCode_MaxPrice()
+
       WHERE Object_BarCode.Id = inId;
    END IF;
   
@@ -66,7 +76,7 @@ $BODY$
   LANGUAGE plpgsql VOLATILE;
 ALTER FUNCTION gpGet_Object_BarCode (Integer, TVarChar) OWNER TO postgres;
 
-/*-------------------------------------------------------------------------------*/
+-------------------------------------------------------------------------------
 /*
  »—“Œ–»ﬂ –¿«–¿¡Œ“ »: ƒ¿“¿, ¿¬“Œ–
                ‘ÂÎÓÌ˛Í ».¬.    ÛıÚËÌ ».¬.    ÎËÏÂÌÚ¸Â‚  .».
