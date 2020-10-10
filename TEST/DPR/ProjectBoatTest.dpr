@@ -129,7 +129,9 @@ uses
   ProdColorGroupEdit in '..\..\FormsBoat\Guides\ProdColorGroupEdit.pas' {ProdColorGroupEditForm: TParentForm},
   ProdOptionsEdit in '..\..\FormsBoat\Guides\ProdOptionsEdit.pas' {ProdOptionsEditForm: TParentForm},
   ProdColor in '..\..\FormsBoat\Guides\ProdColor.pas' {ProdColorForm: TParentForm},
-  ProdColorEdit in '..\..\FormsBoat\Guides\ProdColorEdit.pas' {ProdColorEditForm: TParentForm};
+  ProdColorEdit in '..\..\FormsBoat\Guides\ProdColorEdit.pas' {ProdColorEditForm: TParentForm},
+  Product in '..\..\FormsBoat\Guides\Product.pas' {ProductForm: TParentForm},
+  ProductEdit in '..\..\FormsBoat\Guides\ProductEdit.pas' {ProductEditForm: TParentForm};
 
 {$R *.res}
 {$R DevExpressRus.res}

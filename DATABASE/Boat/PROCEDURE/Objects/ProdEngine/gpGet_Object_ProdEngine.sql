@@ -25,9 +25,7 @@ $BODY$BEGIN
            
            , CAST (0 AS TFloat)     AS Power
            , CAST ('' AS TVarChar)  AS Comment
-           
-       FROM Object 
-       WHERE Object.DescId = zc_Object_ProdEngine();
+           ;
    ELSE
      RETURN QUERY 
      SELECT 
