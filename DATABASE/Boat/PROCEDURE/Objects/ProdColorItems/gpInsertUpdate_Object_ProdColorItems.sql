@@ -24,13 +24,13 @@ BEGIN
    vbUserId:= lpGetUserBySession (inSession);
 
     -- Если код не установлен, определяем его как последний+1, для каждой лодки начиная с 1
-   vbCode_calc:= COALESCE ((SELECT MAX (Object.ObjectCode) AS ObjectCode
-                            FROM Object
+   vbCode_calc:= COALESCE ((SELECT MAX (Object_ProdColorItems.ObjectCode) AS ObjectCode
+                            FROM Object AS Object_ProdColorItems
                                  INNER JOIN ObjectLink AS ObjectLink_Product
                                                        ON ObjectLink_Product.ObjectId = Object_ProdColorItems.Id
                                                       AND ObjectLink_Product.DescId = zc_ObjectLink_ProdColorItems_Product()
                                                       AND ObjectLink_Product.ChildObjectId = inProductId AND COALESCE (inProductId,0) <> 0
-                            WHERE Object.DescId = zc_Object_ProdColorItems())
+                            WHERE Object_ProdColorItems.DescId = zc_Object_ProdColorItems())
                            , 0) + 1; 
 
    -- проверка прав уникальности для свойства <Наименование >

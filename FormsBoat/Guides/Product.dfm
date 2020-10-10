@@ -209,10 +209,9 @@ object ProductForm: TProductForm
     Width = 524
     Height = 168
     Align = alRight
-    TabOrder = 4
+    TabOrder = 3
     LookAndFeel.NativeStyle = True
     LookAndFeel.SkinName = 'UserSkin'
-    ExplicitHeight = 129
     object cxGridDBTableViewProdOptItems: TcxGridDBTableView
       Navigator.Buttons.CustomButtons = <>
       DataController.DataSource = ProdOptItemsDS
@@ -257,7 +256,6 @@ object ProductForm: TProductForm
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         HeaderGlyphAlignmentHorz = taCenter
-        Options.Editing = False
         Width = 189
       end
       object optPriceIn: TcxGridDBColumn
@@ -267,7 +265,6 @@ object ProductForm: TProductForm
         Properties.DisplayFormat = ',0.##;-,0.##; ;'
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
-        Options.Editing = False
         Width = 80
       end
       object colPriceOut: TcxGridDBColumn
@@ -277,7 +274,6 @@ object ProductForm: TProductForm
         Properties.DisplayFormat = ',0.##;-,0.##; ;'
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
-        Options.Editing = False
         Width = 66
       end
       object optProdOptions: TcxGridDBColumn
@@ -286,14 +282,13 @@ object ProductForm: TProductForm
         PropertiesClassName = 'TcxButtonEditProperties'
         Properties.Buttons = <
           item
-            Action = actChoiceFormProdOptions
+            Caption = 'actChoiceFormProdColorGroup'
             Default = True
             Kind = bkEllipsis
           end>
         Properties.ReadOnly = True
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
-        Options.Editing = False
         Width = 80
       end
       object colPartNumber: TcxGridDBColumn
@@ -302,7 +297,6 @@ object ProductForm: TProductForm
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         HeaderHint = #8470' '#1087#1086' '#1090#1077#1093' '#1087#1072#1089#1087#1086#1088#1090#1091' '#1091#1089#1090#1072#1085#1086#1074#1083#1077#1085#1085#1086#1075#1086' '#1076#1086#1087'. '#1086#1073#1086#1088#1091#1076#1086#1074#1072#1085#1080#1103
-        Options.Editing = False
         Width = 80
       end
       object optComment: TcxGridDBColumn
@@ -311,7 +305,6 @@ object ProductForm: TProductForm
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         HeaderGlyphAlignmentHorz = taCenter
-        Options.Editing = False
         Width = 179
       end
       object optInsertDate: TcxGridDBColumn
@@ -356,7 +349,6 @@ object ProductForm: TProductForm
     TabOrder = 6
     LookAndFeel.NativeStyle = True
     LookAndFeel.SkinName = 'UserSkin'
-    ExplicitHeight = 129
     object cxGridDBTableViewProdColorItems: TcxGridDBTableView
       Navigator.Buttons.CustomButtons = <>
       DataController.DataSource = ProdColorItemsDS
@@ -380,6 +372,7 @@ object ProductForm: TProductForm
       Images = dmMain.SortImageList
       OptionsCustomize.ColumnHiding = True
       OptionsCustomize.ColumnsQuickCustomization = True
+      OptionsData.Appending = True
       OptionsData.Deleting = False
       OptionsData.DeletingConfirmation = False
       OptionsView.Footer = True
@@ -401,7 +394,6 @@ object ProductForm: TProductForm
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         HeaderGlyphAlignmentHorz = taCenter
-        Options.Editing = False
         Width = 132
       end
       object colProdColorGroupName: TcxGridDBColumn
@@ -417,7 +409,6 @@ object ProductForm: TProductForm
         Properties.ReadOnly = True
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
-        Options.Editing = False
         Width = 80
       end
       object colProdColor: TcxGridDBColumn
@@ -426,14 +417,12 @@ object ProductForm: TProductForm
         PropertiesClassName = 'TcxButtonEditProperties'
         Properties.Buttons = <
           item
-            Action = actChoiceFormProdColor
+            Caption = 'PartnerChoiceForm'
             Default = True
             Kind = bkEllipsis
           end>
-        Properties.ReadOnly = True
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
-        Options.Editing = False
         Width = 80
       end
       object colComment: TcxGridDBColumn
@@ -442,7 +431,6 @@ object ProductForm: TProductForm
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         HeaderGlyphAlignmentHorz = taCenter
-        Options.Editing = False
         Width = 179
       end
       object colInsertDate: TcxGridDBColumn
@@ -493,7 +481,6 @@ object ProductForm: TProductForm
     Height = 168
     AlignSplitter = salRight
     Control = cxGridProdOptItems
-    ExplicitHeight = 129
   end
   object DataSource: TDataSource
     DataSet = MasterCDS
@@ -817,6 +804,7 @@ object ProductForm: TProductForm
       Caption = #1059#1076#1072#1083#1080#1090#1100' '#1062#1074#1077#1090
       Hint = #1059#1076#1072#1083#1080#1090#1100' '#1076#1072#1085#1085#1099#1077
       ImageIndex = 2
+      ShortCut = 46
       ErasedFieldName = 'isErased'
       DataSource = DataSource
     end
@@ -831,6 +819,7 @@ object ProductForm: TProductForm
       Caption = #1059#1076#1072#1083#1080#1090#1100' '#1054#1087#1094#1080#1102
       Hint = #1059#1076#1072#1083#1080#1090#1100' '#1076#1072#1085#1085#1099#1077
       ImageIndex = 2
+      ShortCut = 46
       ErasedFieldName = 'isErased'
       DataSource = DataSource
     end
@@ -857,9 +846,10 @@ object ProductForm: TProductForm
         item
           StoredProc = spUnErasedOpt
         end>
-      Caption = #1042#1086#1089#1089#1090#1072#1085#1086#1074#1080#1090#1100' '#1054#1087#1094#1080#1102
+      Caption = #1042#1086#1089#1089#1090#1072#1085#1086#1074#1080#1090#1100
       Hint = #1042#1086#1089#1089#1090#1072#1085#1086#1074#1080#1090#1100' '#1076#1072#1085#1085#1099#1077
       ImageIndex = 8
+      ShortCut = 46
       ErasedFieldName = 'isErased'
       isSetErased = False
       DataSource = DataSource
@@ -872,9 +862,10 @@ object ProductForm: TProductForm
         item
           StoredProc = spUnErasedColor
         end>
-      Caption = #1042#1086#1089#1089#1090#1072#1085#1086#1074#1080#1090#1100' '#1062#1074#1077#1090
+      Caption = #1042#1086#1089#1089#1090#1072#1085#1086#1074#1080#1090#1100
       Hint = #1042#1086#1089#1089#1090#1072#1085#1086#1074#1080#1090#1100' '#1076#1072#1085#1085#1099#1077
       ImageIndex = 8
+      ShortCut = 46
       ErasedFieldName = 'isErased'
       isSetErased = False
       DataSource = DataSource
@@ -993,7 +984,6 @@ object ProductForm: TProductForm
       MoveParams = <>
       PostDataSetBeforeExecute = False
       View = cxGridDBTableViewProdOptItems
-      Action = actChoiceFormProdColorGroup
       Params = <>
       Caption = 'InsertRecordProdColorItems'
       ImageIndex = 0
@@ -1003,64 +993,9 @@ object ProductForm: TProductForm
       MoveParams = <>
       PostDataSetBeforeExecute = False
       View = cxGridDBTableViewProdColorItems
-      Action = actChoiceFormProdColorGroup
       Params = <>
       Caption = 'InsertRecordProdColorItems'
       ImageIndex = 0
-    end
-    object actChoiceFormProdOptions: TOpenChoiceForm
-      Category = 'DSDLib'
-      MoveParams = <>
-      PostDataSetBeforeExecute = False
-      Caption = 'actChoiceFormProdColorGroup'
-      FormName = 'TProdOptionsForm'
-      FormNameParam.Value = 'TProdOptionsForm'
-      FormNameParam.DataType = ftString
-      FormNameParam.MultiSelectSeparator = ','
-      GuiParams = <
-        item
-          Name = 'Key'
-          Value = Null
-          Component = ProdOptItemsCDS
-          ComponentItem = 'ProdOptionsId'
-          MultiSelectSeparator = ','
-        end
-        item
-          Name = 'TextValue'
-          Value = Null
-          Component = ProdOptItemsCDS
-          ComponentItem = 'ProdOptionsName'
-          DataType = ftString
-          MultiSelectSeparator = ','
-        end>
-      isShowModal = False
-    end
-    object actChoiceFormProdColor: TOpenChoiceForm
-      Category = 'DSDLib'
-      MoveParams = <>
-      PostDataSetBeforeExecute = False
-      Caption = 'actChoiceFormProdColorGroup'
-      FormName = 'TProdColorForm'
-      FormNameParam.Value = 'TProdColorForm'
-      FormNameParam.DataType = ftString
-      FormNameParam.MultiSelectSeparator = ','
-      GuiParams = <
-        item
-          Name = 'Key'
-          Value = Null
-          Component = ProdColorItemsCDS
-          ComponentItem = 'ProdColorId'
-          MultiSelectSeparator = ','
-        end
-        item
-          Name = 'TextValue'
-          Value = Null
-          Component = ProdColorItemsCDS
-          ComponentItem = 'ProdColorName'
-          DataType = ftString
-          MultiSelectSeparator = ','
-        end>
-      isShowModal = False
     end
     object actChoiceFormProdColorGroup: TOpenChoiceForm
       Category = 'DSDLib'

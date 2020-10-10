@@ -109,14 +109,11 @@ type
     spSelect_ProdColorItems: TdsdStoredProc;
     spSelect_ProdOptItems: TdsdStoredProc;
     InsertRecordProdColorItems: TInsertRecord;
-    actChoiceFormProdColorGroup: TOpenChoiceForm;
     bbInsertRecordProdColorItems: TdxBarButton;
     actUpdateDataSetProdColorItems: TdsdUpdateDataSet;
     spInsertUpdateProdColorItems: TdsdStoredProc;
     actUpdateDataSetProdOptItems: TdsdUpdateDataSet;
     spInsertUpdateProdOptItems: TdsdStoredProc;
-    actChoiceFormProdColor: TOpenChoiceForm;
-    actChoiceFormProdOptions: TOpenChoiceForm;
     InsertRecordProdOptItems: TInsertRecord;
     bbInsertRecordProdOptItems: TdxBarButton;
     spErasedColor: TdsdStoredProc;
@@ -131,6 +128,7 @@ type
     bbSetUnErasedColor: TdxBarButton;
     bbSetErasedOpt: TdxBarButton;
     bbSetUnErasedOpt: TdxBarButton;
+    actChoiceFormProdColorGroup: TOpenChoiceForm;
   private
     { Private declarations }
   public
