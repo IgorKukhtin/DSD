@@ -22,7 +22,7 @@ uses
   dxSkinSevenClassic, dxSkinSharp, dxSkinSharpPlus, dxSkinSilver,
   dxSkinSpringTime, dxSkinStardust, dxSkinSummer2008, dxSkinTheAsphaltWorld,
   dxSkinValentine, dxSkinVS2010, dxSkinWhiteprint, dxSkinXmas2008Blue,
-  cxCurrencyEdit, cxSplitter;
+  cxCurrencyEdit, cxSplitter, cxButtonEdit;
 
 type
   TProductForm = class(TParentForm)
@@ -108,6 +108,29 @@ type
     dsdDBViewAddOnProdColorItems: TdsdDBViewAddOn;
     spSelect_ProdColorItems: TdsdStoredProc;
     spSelect_ProdOptItems: TdsdStoredProc;
+    InsertRecordProdColorItems: TInsertRecord;
+    actChoiceFormProdColorGroup: TOpenChoiceForm;
+    bbInsertRecordProdColorItems: TdxBarButton;
+    actUpdateDataSetProdColorItems: TdsdUpdateDataSet;
+    spInsertUpdateProdColorItems: TdsdStoredProc;
+    actUpdateDataSetProdOptItems: TdsdUpdateDataSet;
+    spInsertUpdateProdOptItems: TdsdStoredProc;
+    actChoiceFormProdColor: TOpenChoiceForm;
+    actChoiceFormProdOptions: TOpenChoiceForm;
+    InsertRecordProdOptItems: TInsertRecord;
+    bbInsertRecordProdOptItems: TdxBarButton;
+    spErasedColor: TdsdStoredProc;
+    spUnErasedColor: TdsdStoredProc;
+    spErasedOpt: TdsdStoredProc;
+    spUnErasedOpt: TdsdStoredProc;
+    actSetErasedColor: TdsdUpdateErased;
+    actSetErasedOpt: TdsdUpdateErased;
+    actSetUnErasedOpt: TdsdUpdateErased;
+    actSetUnErasedColor: TdsdUpdateErased;
+    bbSetErasedColor: TdxBarButton;
+    bbSetUnErasedColor: TdxBarButton;
+    bbSetErasedOpt: TdxBarButton;
+    bbSetUnErasedOpt: TdxBarButton;
   private
     { Private declarations }
   public

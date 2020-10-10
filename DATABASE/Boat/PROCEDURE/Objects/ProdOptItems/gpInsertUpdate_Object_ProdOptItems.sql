@@ -8,8 +8,8 @@ CREATE OR REPLACE FUNCTION gpInsertUpdate_Object_ProdOptItems(
     IN inName             TVarChar  ,    -- Ќазвание объекта
     IN inProductId        Integer   ,
     IN inProdOptionsId    Integer   ,
-    IN inPraceIn          TFloat    ,
-    IN inPraceOut         TFloat    ,
+    IN inPriceIn          TFloat    ,
+    IN inPriceOut         TFloat    ,
     IN inPartNumber       TVarChar  ,
     IN inComment          TVarChar  ,
     IN inSession          TVarChar       -- сесси€ пользовател€
@@ -47,9 +47,9 @@ BEGIN
    PERFORM lpInsertUpdate_ObjectString (zc_ObjectString_ProdOptItems_Comment(), ioId, inComment);
 
    -- сохранили свойство <>
-   PERFORM lpInsertUpdate_ObjectFloat (zc_ObjectFloat_ProdOptItems_PriceIn(), ioId, inPraceIn);
+   PERFORM lpInsertUpdate_ObjectFloat (zc_ObjectFloat_ProdOptItems_PriceIn(), ioId, inPriceIn);
    -- сохранили свойство <>
-   PERFORM lpInsertUpdate_ObjectFloat (zc_ObjectFloat_ProdOptItems_PriceOut(), ioId, inPraceOut);
+   PERFORM lpInsertUpdate_ObjectFloat (zc_ObjectFloat_ProdOptItems_PriceOut(), ioId, inPriceOut);
    
    -- сохранили свойство <>
    PERFORM lpInsertUpdate_ObjectLink (zc_ObjectLink_ProdOptItems_Product(), ioId, inProductId);

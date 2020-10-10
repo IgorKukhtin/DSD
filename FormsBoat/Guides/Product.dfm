@@ -238,8 +238,6 @@ object ProductForm: TProductForm
       OptionsCustomize.ColumnsQuickCustomization = True
       OptionsData.Deleting = False
       OptionsData.DeletingConfirmation = False
-      OptionsData.Editing = False
-      OptionsData.Inserting = False
       OptionsView.Footer = True
       OptionsView.GroupByBox = False
       OptionsView.HeaderHeight = 40
@@ -285,6 +283,14 @@ object ProductForm: TProductForm
       object optProdOptions: TcxGridDBColumn
         Caption = #1054#1087#1094#1080#1103
         DataBinding.FieldName = 'ProdOptions'
+        PropertiesClassName = 'TcxButtonEditProperties'
+        Properties.Buttons = <
+          item
+            Action = actChoiceFormProdOptions
+            Default = True
+            Kind = bkEllipsis
+          end>
+        Properties.ReadOnly = True
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         Options.Editing = False
@@ -353,7 +359,7 @@ object ProductForm: TProductForm
     ExplicitHeight = 129
     object cxGridDBTableViewProdColorItems: TcxGridDBTableView
       Navigator.Buttons.CustomButtons = <>
-      DataController.DataSource = DataSource
+      DataController.DataSource = ProdColorItemsDS
       DataController.Filter.Options = [fcoCaseInsensitive]
       DataController.Summary.DefaultGroupSummaryItems = <
         item
@@ -376,8 +382,6 @@ object ProductForm: TProductForm
       OptionsCustomize.ColumnsQuickCustomization = True
       OptionsData.Deleting = False
       OptionsData.DeletingConfirmation = False
-      OptionsData.Editing = False
-      OptionsData.Inserting = False
       OptionsView.Footer = True
       OptionsView.GroupByBox = False
       OptionsView.HeaderHeight = 40
@@ -400,17 +404,33 @@ object ProductForm: TProductForm
         Options.Editing = False
         Width = 132
       end
-      object colProdColor: TcxGridDBColumn
-        Caption = #1062#1074#1077#1090
-        DataBinding.FieldName = 'ProdColor'
+      object colProdColorGroupName: TcxGridDBColumn
+        Caption = #1050#1072#1090#1077#1075#1086#1088#1080#1103
+        DataBinding.FieldName = 'ProdColorGroupName'
+        PropertiesClassName = 'TcxButtonEditProperties'
+        Properties.Buttons = <
+          item
+            Action = actChoiceFormProdColorGroup
+            Default = True
+            Kind = bkEllipsis
+          end>
+        Properties.ReadOnly = True
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         Options.Editing = False
         Width = 80
       end
-      object colProdColorGroupName: TcxGridDBColumn
-        Caption = #1050#1072#1090#1077#1075#1086#1088#1080#1103
-        DataBinding.FieldName = 'ProdColorGroupName'
+      object colProdColor: TcxGridDBColumn
+        Caption = #1062#1074#1077#1090
+        DataBinding.FieldName = 'ProdColor'
+        PropertiesClassName = 'TcxButtonEditProperties'
+        Properties.Buttons = <
+          item
+            Action = actChoiceFormProdColor
+            Default = True
+            Kind = bkEllipsis
+          end>
+        Properties.ReadOnly = True
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         Options.Editing = False
@@ -560,6 +580,50 @@ object ProductForm: TProductForm
         end
         item
           Visible = True
+          ItemName = 'dxBarStatic'
+        end
+        item
+          Visible = True
+          ItemName = 'bbInsertRecordProdColorItems'
+        end
+        item
+          Visible = True
+          ItemName = 'bbSetErasedColor'
+        end
+        item
+          Visible = True
+          ItemName = 'bbSetUnErasedColor'
+        end
+        item
+          Visible = True
+          ItemName = 'dxBarStatic'
+        end
+        item
+          Visible = True
+          ItemName = 'dxBarStatic'
+        end
+        item
+          Visible = True
+          ItemName = 'bbInsertRecordProdOptItems'
+        end
+        item
+          Visible = True
+          ItemName = 'bbSetErasedOpt'
+        end
+        item
+          Visible = True
+          ItemName = 'bbSetUnErasedOpt'
+        end
+        item
+          Visible = True
+          ItemName = 'dxBarStatic'
+        end
+        item
+          Visible = True
+          ItemName = 'dxBarStatic'
+        end
+        item
+          Visible = True
           ItemName = 'bbShowAll'
         end
         item
@@ -643,6 +707,32 @@ object ProductForm: TProductForm
       Action = actShowAll
       Category = 0
     end
+    object bbInsertRecordProdColorItems: TdxBarButton
+      Action = InsertRecordProdColorItems
+      Caption = #1044#1086#1073#1072#1074#1080#1090#1100' '#1094#1074#1077#1090
+      Category = 0
+    end
+    object bbInsertRecordProdOptItems: TdxBarButton
+      Action = InsertRecordProdOptItems
+      Caption = #1044#1086#1073#1072#1074#1080#1090#1100' '#1086#1087#1094#1080#1102
+      Category = 0
+    end
+    object bbSetErasedColor: TdxBarButton
+      Action = actSetErasedColor
+      Category = 0
+    end
+    object bbSetUnErasedColor: TdxBarButton
+      Action = actSetUnErasedColor
+      Category = 0
+    end
+    object bbSetErasedOpt: TdxBarButton
+      Action = actSetErasedOpt
+      Category = 0
+    end
+    object bbSetUnErasedOpt: TdxBarButton
+      Action = actSetUnErasedOpt
+      Category = 0
+    end
   end
   object ActionList: TActionList
     Images = dmMain.ImageList
@@ -716,6 +806,34 @@ object ProductForm: TProductForm
       DataSetRefresh = actRefresh
       IdFieldName = 'Id'
     end
+    object actSetErasedColor: TdsdUpdateErased
+      Category = 'DSDLib'
+      MoveParams = <>
+      StoredProc = spErasedColor
+      StoredProcList = <
+        item
+          StoredProc = spErasedColor
+        end>
+      Caption = #1059#1076#1072#1083#1080#1090#1100' '#1062#1074#1077#1090
+      Hint = #1059#1076#1072#1083#1080#1090#1100' '#1076#1072#1085#1085#1099#1077
+      ImageIndex = 2
+      ErasedFieldName = 'isErased'
+      DataSource = DataSource
+    end
+    object actSetErasedOpt: TdsdUpdateErased
+      Category = 'DSDLib'
+      MoveParams = <>
+      StoredProc = spErasedOpt
+      StoredProcList = <
+        item
+          StoredProc = spErasedOpt
+        end>
+      Caption = #1059#1076#1072#1083#1080#1090#1100' '#1054#1087#1094#1080#1102
+      Hint = #1059#1076#1072#1083#1080#1090#1100' '#1076#1072#1085#1085#1099#1077
+      ImageIndex = 2
+      ErasedFieldName = 'isErased'
+      DataSource = DataSource
+    end
     object actSetErased: TdsdUpdateErased
       Category = 'DSDLib'
       MoveParams = <>
@@ -729,6 +847,36 @@ object ProductForm: TProductForm
       ImageIndex = 2
       ShortCut = 8238
       ErasedFieldName = 'isErased'
+      DataSource = DataSource
+    end
+    object actSetUnErasedOpt: TdsdUpdateErased
+      Category = 'DSDLib'
+      MoveParams = <>
+      StoredProc = spUnErasedOpt
+      StoredProcList = <
+        item
+          StoredProc = spUnErasedOpt
+        end>
+      Caption = #1042#1086#1089#1089#1090#1072#1085#1086#1074#1080#1090#1100' '#1054#1087#1094#1080#1102
+      Hint = #1042#1086#1089#1089#1090#1072#1085#1086#1074#1080#1090#1100' '#1076#1072#1085#1085#1099#1077
+      ImageIndex = 8
+      ErasedFieldName = 'isErased'
+      isSetErased = False
+      DataSource = DataSource
+    end
+    object actSetUnErasedColor: TdsdUpdateErased
+      Category = 'DSDLib'
+      MoveParams = <>
+      StoredProc = spUnErasedColor
+      StoredProcList = <
+        item
+          StoredProc = spUnErasedColor
+        end>
+      Caption = #1042#1086#1089#1089#1090#1072#1085#1086#1074#1080#1090#1100' '#1062#1074#1077#1090
+      Hint = #1042#1086#1089#1089#1090#1072#1085#1086#1074#1080#1090#1100' '#1076#1072#1085#1085#1099#1077
+      ImageIndex = 8
+      ErasedFieldName = 'isErased'
+      isSetErased = False
       DataSource = DataSource
     end
     object actSetUnErased: TdsdUpdateErased
@@ -839,6 +987,131 @@ object ProductForm: TProductForm
         end>
       Caption = 'actUpdateDataSet'
       DataSource = DataSource
+    end
+    object InsertRecordProdOptItems: TInsertRecord
+      Category = 'DSDLib'
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      View = cxGridDBTableViewProdOptItems
+      Action = actChoiceFormProdColorGroup
+      Params = <>
+      Caption = 'InsertRecordProdColorItems'
+      ImageIndex = 0
+    end
+    object InsertRecordProdColorItems: TInsertRecord
+      Category = 'DSDLib'
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      View = cxGridDBTableViewProdColorItems
+      Action = actChoiceFormProdColorGroup
+      Params = <>
+      Caption = 'InsertRecordProdColorItems'
+      ImageIndex = 0
+    end
+    object actChoiceFormProdOptions: TOpenChoiceForm
+      Category = 'DSDLib'
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      Caption = 'actChoiceFormProdColorGroup'
+      FormName = 'TProdOptionsForm'
+      FormNameParam.Value = 'TProdOptionsForm'
+      FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
+      GuiParams = <
+        item
+          Name = 'Key'
+          Value = Null
+          Component = ProdOptItemsCDS
+          ComponentItem = 'ProdOptionsId'
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'TextValue'
+          Value = Null
+          Component = ProdOptItemsCDS
+          ComponentItem = 'ProdOptionsName'
+          DataType = ftString
+          MultiSelectSeparator = ','
+        end>
+      isShowModal = False
+    end
+    object actChoiceFormProdColor: TOpenChoiceForm
+      Category = 'DSDLib'
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      Caption = 'actChoiceFormProdColorGroup'
+      FormName = 'TProdColorForm'
+      FormNameParam.Value = 'TProdColorForm'
+      FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
+      GuiParams = <
+        item
+          Name = 'Key'
+          Value = Null
+          Component = ProdColorItemsCDS
+          ComponentItem = 'ProdColorId'
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'TextValue'
+          Value = Null
+          Component = ProdColorItemsCDS
+          ComponentItem = 'ProdColorName'
+          DataType = ftString
+          MultiSelectSeparator = ','
+        end>
+      isShowModal = False
+    end
+    object actChoiceFormProdColorGroup: TOpenChoiceForm
+      Category = 'DSDLib'
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      Caption = 'actChoiceFormProdColorGroup'
+      FormName = 'TProdColorGroupForm'
+      FormNameParam.Value = 'TProdColorGroupForm'
+      FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
+      GuiParams = <
+        item
+          Name = 'Key'
+          Value = Null
+          Component = ProdColorItemsCDS
+          ComponentItem = 'ProdColorGroupId'
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'TextValue'
+          Value = Null
+          Component = ProdColorItemsCDS
+          ComponentItem = 'ProdColorGroupName'
+          DataType = ftString
+          MultiSelectSeparator = ','
+        end>
+      isShowModal = False
+    end
+    object actUpdateDataSetProdOptItems: TdsdUpdateDataSet
+      Category = 'DSDLib'
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      StoredProc = spInsertUpdateProdOptItems
+      StoredProcList = <
+        item
+          StoredProc = spInsertUpdateProdOptItems
+        end>
+      Caption = 'actUpdateDataSetProdColorItems'
+      DataSource = ProdOptItemsDS
+    end
+    object actUpdateDataSetProdColorItems: TdsdUpdateDataSet
+      Category = 'DSDLib'
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      StoredProc = spInsertUpdateProdColorItems
+      StoredProcList = <
+        item
+          StoredProc = spInsertUpdateProdColorItems
+        end>
+      Caption = 'actUpdateDataSetProdColorItems'
+      DataSource = ProdColorItemsDS
     end
   end
   object spSelect: TdsdStoredProc
@@ -1077,5 +1350,253 @@ object ProductForm: TProductForm
     PackSize = 1
     Left = 536
     Top = 288
+  end
+  object spInsertUpdateProdColorItems: TdsdStoredProc
+    StoredProcName = 'gpInsertUpdate_Object_ProdColorItems'
+    DataSets = <>
+    OutputType = otResult
+    Params = <
+      item
+        Name = 'ioId'
+        Value = Null
+        Component = ProdColorItemsCDS
+        ComponentItem = 'Id'
+        ParamType = ptInputOutput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inCode'
+        Value = Null
+        Component = ProdColorItemsCDS
+        ComponentItem = 'Code'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inName'
+        Value = Null
+        Component = ProdColorItemsCDS
+        ComponentItem = 'Name'
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inProductId'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'Id'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inProdColorGroupId'
+        Value = Null
+        Component = ProdColorItemsCDS
+        ComponentItem = 'ProdColorGroupId'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inProdColorId'
+        Value = Null
+        Component = ProdColorItemsCDS
+        ComponentItem = 'ProdColorId'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inComment'
+        Value = Null
+        Component = ProdColorItemsCDS
+        ComponentItem = 'Comment'
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end>
+    PackSize = 1
+    Left = 40
+    Top = 288
+  end
+  object spInsertUpdateProdOptItems: TdsdStoredProc
+    StoredProcName = 'gpInsertUpdate_Object_ProdOptItems'
+    DataSets = <>
+    OutputType = otResult
+    Params = <
+      item
+        Name = 'ioId'
+        Value = Null
+        Component = ProdOptItemsCDS
+        ComponentItem = 'Id'
+        ParamType = ptInputOutput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inCode'
+        Value = Null
+        Component = ProdOptItemsCDS
+        ComponentItem = 'Code'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inName'
+        Value = Null
+        Component = ProdOptItemsCDS
+        ComponentItem = 'Name'
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inProductId'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'Id'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inProdOptionsId'
+        Value = Null
+        Component = ProdOptItemsCDS
+        ComponentItem = 'ProdOptionsId'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inPraceIn'
+        Value = Null
+        Component = ProdOptItemsCDS
+        ComponentItem = 'PraceIn'
+        DataType = ftFloat
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inPraceOut'
+        Value = Null
+        Component = ProdOptItemsCDS
+        ComponentItem = 'PraceOut'
+        DataType = ftFloat
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inPartNumber'
+        Value = Null
+        Component = ProdOptItemsCDS
+        ComponentItem = 'PartNumber'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inComment'
+        Value = Null
+        Component = ProdOptItemsCDS
+        ComponentItem = 'Comment'
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end>
+    PackSize = 1
+    Left = 568
+    Top = 336
+  end
+  object spErasedColor: TdsdStoredProc
+    StoredProcName = 'gpUpdate_Object_isErased_ProdColorItems'
+    DataSets = <>
+    OutputType = otResult
+    Params = <
+      item
+        Name = 'inObjectId'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'Id'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inIsErased'
+        Value = True
+        DataType = ftBoolean
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end>
+    PackSize = 1
+    Left = 176
+    Top = 208
+  end
+  object spUnErasedColor: TdsdStoredProc
+    StoredProcName = 'gpUpdate_Object_isErased_ProdColorItems'
+    DataSets = <>
+    OutputType = otResult
+    Params = <
+      item
+        Name = 'inObjectId'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'Id'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inIsErased'
+        Value = False
+        DataType = ftBoolean
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end>
+    PackSize = 1
+    Left = 176
+    Top = 256
+  end
+  object spErasedOpt: TdsdStoredProc
+    StoredProcName = 'gpUpdate_Object_isErased_ProdOptItems'
+    DataSets = <>
+    OutputType = otResult
+    Params = <
+      item
+        Name = 'inObjectId'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'Id'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inIsErased'
+        Value = True
+        DataType = ftBoolean
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end>
+    PackSize = 1
+    Left = 880
+    Top = 232
+  end
+  object spUnErasedOpt: TdsdStoredProc
+    StoredProcName = 'gpUpdate_Object_isErased_ProdOptItems'
+    DataSets = <>
+    OutputType = otResult
+    Params = <
+      item
+        Name = 'inObjectId'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'Id'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inIsErased'
+        Value = False
+        DataType = ftBoolean
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end>
+    PackSize = 1
+    Left = 880
+    Top = 280
   end
 end
