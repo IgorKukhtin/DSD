@@ -10,7 +10,8 @@ BEGIN
  
     vbQuery := (
     SELECT
-        'SELECT ''INSERT INTO ' || inTableName || ' (' || COLUMNS || ') SELECT '' || '|| REPLACE(COLUMN_VALUES, '''', '''') || ' || ' ||   
+        'SELECT ''INSERT INTO ' || inTableName || ' (' || COLUMNS || ') VALUES ('' || '|| REPLACE(COLUMN_VALUES, '''', '''')
+                                || ' || ' || quote_literal(')') || ' || ' ||   
         WHERE_VALUES || ' AS Query, ' || KEY_COLUMNS || ' ' || 
         'FROM ' || inTableName AS QUERY
     FROM
@@ -55,7 +56,7 @@ BEGIN
     (
         SELECT
             table_name,
-            ''' WHERE NOT EXISTS(SELECT * FROM ' || table_name || ' WHERE '' || ' || 
+          /*''' WHERE NOT EXISTS(SELECT * FROM ' || table_name || ' WHERE '' || ' || 
             STRING_AGG ( 'CASE WHEN CAST (' || table_name ||'.'||key_column || ' AS Text) IS NULL'
                                     || ' THEN ''' || T.key_column || ' IS NULL ''' 
                                     || ' ELSE ''' || T.key_column || ' = '' || ' || 
@@ -67,7 +68,8 @@ BEGIN
                                                          ELSE table_name ||'.'||key_column
                                                          END || ' '
                                     || ' END ' , '||'' AND ''||' ORDER BY position)
-                                    || ' || '')'' '  :: Text AS WHERE_VALUES,
+                                    || ' || '')'' '  :: Text AS WHERE_VALUES,*/
+            ''' ON CONFLICT DO NOTHING'' '  :: Text AS WHERE_VALUES,
             STRING_AGG (key_column, ',' ORDER BY position) AS KEY_COLUMNS
         FROM   
            (
