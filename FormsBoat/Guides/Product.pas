@@ -22,7 +22,7 @@ uses
   dxSkinSevenClassic, dxSkinSharp, dxSkinSharpPlus, dxSkinSilver,
   dxSkinSpringTime, dxSkinStardust, dxSkinSummer2008, dxSkinTheAsphaltWorld,
   dxSkinValentine, dxSkinVS2010, dxSkinWhiteprint, dxSkinXmas2008Blue,
-  cxCurrencyEdit, cxSplitter, cxButtonEdit;
+  cxCurrencyEdit, cxSplitter, cxButtonEdit, ExternalLoad;
 
 type
   TProductForm = class(TParentForm)
@@ -129,6 +129,12 @@ type
     bbSetErasedOpt: TdxBarButton;
     bbSetUnErasedOpt: TdxBarButton;
     actChoiceFormProdColorGroup: TOpenChoiceForm;
+    FormParams: TdsdFormParams;
+    spGetImportSettingId: TdsdStoredProc;
+    actGetImportSetting: TdsdExecStoredProc;
+    actDoLoad: TExecuteImportSettingsAction;
+    actStartLoad: TMultiAction;
+    bbStartLoad: TdxBarButton;
   private
     { Private declarations }
   public
