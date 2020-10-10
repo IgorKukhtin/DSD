@@ -108,6 +108,9 @@ var LastId: integer;
     FHadValues: boolean;
     cBatch: string;
     nBatchCount: integer;
+var tmpDate:TDateTime;
+    Hour, Min, Sec, MSec: Word;
+    StrTime:String;
 begin
   FHadValues := false;
   QSrc := TZQuery.Create(nil);
@@ -142,7 +145,19 @@ begin
           'LIMIT '+ IntToStr(TSettings.SnapshotSelectCount);
         QSrc.ParamByName('LastId').Value := LastId;
       end;
+
+      //
+      tmpDate:=NOw;
+      //
       QSrc.Open;
+      //
+      DecodeTime(now-tmpDate, Hour, Min, Sec, MSec);
+      StrTime:=IntToStr(Min)+':'+IntToStr(Sec)+':'+IntToStr(MSec);
+      DecodeTime(now, Hour, Min, Sec, MSec);
+      ProcessMessage('---');
+      ProcessMessage(IntToStr(Hour) + ':' + IntToStr(Min) + ':' + IntToStr(Sec) + ':' + IntToStr(MSec) + ' - open master time : ' + StrTime);
+      //
+
       if (QSrc.RecordCount = 0) then
       begin
         if FHadValues then
@@ -173,7 +188,16 @@ begin
               UpdateStatus('Добавление записей на slave ..');
               QDst.Close;
               QDst.SQL.Text := cBatch;
+              //
+              tmpDate:=NOw;
+              //
               QDst.ExecSQL;
+              //
+              DecodeTime(now-tmpDate, Hour, Min, Sec, MSec);
+              StrTime:=IntToStr(Min)+':'+IntToStr(Sec)+':'+IntToStr(MSec);
+              DecodeTime(now, Hour, Min, Sec, MSec);
+              ProcessMessage(IntToStr(Hour) + ':' + IntToStr(Min) + ':' + IntToStr(Sec) + ':' + IntToStr(MSec) + ' - insert slave time : ' + IntToStr (nBatchCount)+ '(' + IntToStr (FProcessedCount)+ ') : ' + StrTime);
+              //
               FProcessedCount := FProcessedCount + nBatchCount;
               nBatchCount := 0;
               UpdateProcessedCount;

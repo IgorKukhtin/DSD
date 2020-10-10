@@ -442,6 +442,7 @@ end;
 
 procedure TfrmMain.SnapshotThreadMessage(AMessage: string);
 begin
+  if SnapshotLog.Lines.Count > 100000 then SnapshotLog.Lines.Clear;
   SnapshotLog.Lines.Add(AMessage);
 end;
 
