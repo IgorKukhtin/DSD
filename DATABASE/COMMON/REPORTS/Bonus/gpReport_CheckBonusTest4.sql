@@ -433,7 +433,7 @@ BEGIN
                                                                                    END
                                  LEFT JOIN MovementItem ON MovementItem.Id = MIContainer.MovementItemId 
                                                        AND MovementItem.DescId = zc_MI_Master()
-                                                       AND MIContainer.MovementDescId = zc_Movement_Cash()
+                                                       --AND MIContainer.MovementDescId = zc_Movement_Cash()
 
                                  LEFT JOIN MovementItemFloat AS MIFloat_AmountPartner
                                                              ON MIFloat_AmountPartner.MovementItemId = MIContainer.MovementItemId

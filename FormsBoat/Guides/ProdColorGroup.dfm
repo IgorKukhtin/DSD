@@ -385,7 +385,6 @@ object ProdColorGroupForm: TProdColorGroupForm
           Value = Null
           Component = MasterCDS
           ComponentItem = 'Id'
-          DataType = ftString
           MultiSelectSeparator = ','
         end
         item

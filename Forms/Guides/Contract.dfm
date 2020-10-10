@@ -78,6 +78,7 @@
     Align = alTop
     TabOrder = 0
     LookAndFeel.NativeStyle = False
+    ExplicitTop = 55
     object cxGridDBTableView: TcxGridDBTableView
       Navigator.Buttons.CustomButtons = <>
       DataController.DataSource = DataSource
@@ -1143,6 +1144,8 @@
       LookAndFeel.Kind = lfStandard
       LookAndFeel.NativeStyle = False
       LookAndFeel.SkinName = ''
+      ExplicitLeft = 294
+      ExplicitTop = -144
       object cxGridDBTableViewGoods: TcxGridDBTableView
         Navigator.Buttons.CustomButtons = <>
         DataController.DataSource = DataSourceGoods
@@ -1638,6 +1641,7 @@
       Caption = #1055#1077#1088#1077#1095#1080#1090#1072#1090#1100
       Hint = #1054#1073#1085#1086#1074#1080#1090#1100' '#1076#1072#1085#1085#1099#1077
       ImageIndex = 4
+      ShortCut = 116
       RefreshOnTabSetChanges = False
     end
     object actRefresh: TdsdDataSetRefresh
@@ -2810,7 +2814,7 @@
       end
       item
         Name = 'inIsPeriod'
-        Value = 'False'
+        Value = False
         Component = cbPeriod
         DataType = ftBoolean
         ParamType = ptInput
@@ -2818,7 +2822,7 @@
       end
       item
         Name = 'inIsEndDate'
-        Value = 'False'
+        Value = False
         Component = cbEndDate
         DataType = ftBoolean
         ParamType = ptInput

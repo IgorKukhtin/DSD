@@ -32,9 +32,7 @@ $BODY$BEGIN
            , CAST (0 AS TFloat)     AS Speed
            , CAST (0 AS TFloat)     AS Seating
            , CAST ('' AS TVarChar)  AS Comment
-           
-       FROM Object 
-       WHERE Object.DescId = zc_Object_ProdModel();
+          ;
    ELSE
      RETURN QUERY 
      SELECT 

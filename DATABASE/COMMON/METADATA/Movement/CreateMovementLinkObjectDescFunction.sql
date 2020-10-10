@@ -468,6 +468,14 @@ CREATE OR REPLACE FUNCTION zc_MovementLinkObject_CancelReason() RETURNS Integer 
 INSERT INTO MovementLinkObjectDesc (Code, ItemName)
   SELECT 'zc_MovementLinkObject_CancelReason', 'Причина отказа для сайта' WHERE NOT EXISTS (SELECT * FROM MovementLinkObjectDesc WHERE Code = 'zc_MovementLinkObject_CancelReason');
 
+CREATE OR REPLACE FUNCTION zc_MovementLinkObject_MedicForSale() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM MovementLinkObjectDesc WHERE Code = 'zc_MovementLinkObject_MedicForSale'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
+INSERT INTO MovementLinkObjectDesc (Code, ItemName)
+  SELECT 'zc_MovementLinkObject_MedicForSale', 'ФИО врача (на продажу)' WHERE NOT EXISTS (SELECT * FROM MovementLinkObjectDesc WHERE Code = 'zc_MovementLinkObject_MedicForSale');
+
+CREATE OR REPLACE FUNCTION zc_MovementLinkObject_BuyerForSale() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM MovementLinkObjectDesc WHERE Code = 'zc_MovementLinkObject_BuyerForSale'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
+INSERT INTO MovementLinkObjectDesc (Code, ItemName)
+  SELECT 'zc_MovementLinkObject_BuyerForSale', 'ФИО покупателя (на продажу)' WHERE NOT EXISTS (SELECT * FROM MovementLinkObjectDesc WHERE Code = 'zc_MovementLinkObject_BuyerForSale');
+
 
 /*-------------------------------------------------------------------------------
 
@@ -475,6 +483,7 @@ INSERT INTO MovementLinkObjectDesc (Code, ItemName)
 
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.  Воробкало А.А.   Шаблий О.В.
+ 10.10.20                                                                                      * zc_MovementLinkObject_MedicForSale, zc_MovementLinkObject_BuyerForSale
  03.09.20                                                                                      * zc_MovementLinkObject_CancelReason
  27.08.20         * zc_MovementLinkObject_Layout
  07.08.20         * zc_MovementLinkObject_PersonalGroup

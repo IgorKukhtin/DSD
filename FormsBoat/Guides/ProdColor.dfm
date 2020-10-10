@@ -12,8 +12,8 @@ object ProdColorForm: TProdColorForm
   Font.Style = []
   KeyPreview = True
   OldCreateOrder = False
-  AddOnFormData.isAlwaysRefresh = False
   AddOnFormData.RefreshAction = actRefresh
+  AddOnFormData.isSingle = False
   AddOnFormData.ChoiceAction = actChoiceGuides
   PixelsPerInch = 96
   TextHeight = 13
@@ -385,7 +385,6 @@ object ProdColorForm: TProdColorForm
           Value = Null
           Component = MasterCDS
           ComponentItem = 'Id'
-          DataType = ftString
           MultiSelectSeparator = ','
         end
         item

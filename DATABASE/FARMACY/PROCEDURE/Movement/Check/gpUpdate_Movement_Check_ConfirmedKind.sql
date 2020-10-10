@@ -98,6 +98,10 @@ BEGIN
              PERFORM lpInsertUpdate_MovementDate (zc_MovementDate_UserConfirmedKind(), inMovementId, CURRENT_TIMESTAMP);
              -- сохранили свойство <ѕользователь (создание)>
              PERFORM lpInsertUpdate_MovementLinkObject (zc_MovementLinkObject_UserConfirmedKind(), inMovementId, vbUserId);
+             
+             -- сохранили протокол
+             PERFORM lpInsert_MovementProtocol (inMovementId, vbUserId, FALSE);
+             
         ELSE -- »наче вернем то значение что было
              ouConfirmedKindName:= COALESCE ((SELECT Object.ValueData FROM MovementLinkObject AS MLO JOIN Object ON Object.Id = MLO.ObjectId WHERE MLO.MovementId = inMovementId AND MLO.DescId = zc_MovementLinkObject_ConfirmedKind()), '');
         END IF;

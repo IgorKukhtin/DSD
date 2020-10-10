@@ -24,6 +24,7 @@ type
     procedure LoadProdEngineFormTest;
     procedure LoadProdModelFormTest;
     procedure LoadProdOptionsFormTest;
+    procedure LoadProductFormTest;
     procedure FormTest;
   end;
 
@@ -177,6 +178,13 @@ begin
   TdsdFormStorageFactory.GetStorage.Load('TProdOptionsForm');
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TProdOptionsEditForm'));
   TdsdFormStorageFactory.GetStorage.Load('TProdOptionsEditForm');
+end;
+procedure TLoadFormTest.LoadProductFormTest;
+begin
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TProductForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TProductForm');
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TProductEditForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TProductEditForm');
 end;
 initialization
   TestFramework.RegisterTest('Загрузка форм', TLoadFormTest.Suite);
