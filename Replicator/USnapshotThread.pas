@@ -200,6 +200,7 @@ begin
               //
               FProcessedCount := FProcessedCount + nBatchCount;
               nBatchCount := 0;
+              cBatch := '';
               UpdateProcessedCount;
             except on E: Exception do
               begin
