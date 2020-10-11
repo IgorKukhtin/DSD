@@ -270,6 +270,30 @@ object TranslateWordForm: TTranslateWordForm
   object cxPropertiesStore: TcxPropertiesStore
     Components = <
       item
+        Component = GuidesLanguage1
+        Properties.Strings = (
+          'Key'
+          'TextValue')
+      end
+      item
+        Component = GuidesLanguage2
+        Properties.Strings = (
+          'Key'
+          'TextValue')
+      end
+      item
+        Component = GuidesLanguage3
+        Properties.Strings = (
+          'Key'
+          'TextValue')
+      end
+      item
+        Component = GuidesLanguage4
+        Properties.Strings = (
+          'Key'
+          'TextValue')
+      end
+      item
         Component = Owner
         Properties.Strings = (
           'Height'
@@ -1064,6 +1088,20 @@ object TranslateWordForm: TTranslateWordForm
         Value = Null
         Component = MasterCDS
         ComponentItem = 'Value4'
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inFormName'
+        Value = Null
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inName'
+        Value = Null
         DataType = ftString
         ParamType = ptInput
         MultiSelectSeparator = ','

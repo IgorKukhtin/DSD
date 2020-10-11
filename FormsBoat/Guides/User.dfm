@@ -58,30 +58,6 @@ object UserForm: TUserForm
         Options.Editing = False
         Width = 87
       end
-      object UnitCode: TcxGridDBColumn
-        Caption = #1050#1086#1076' '#1087#1086#1076#1088'.'
-        DataBinding.FieldName = 'UnitCode'
-        HeaderAlignmentHorz = taCenter
-        HeaderAlignmentVert = vaCenter
-        Options.Editing = False
-        Width = 52
-      end
-      object UnitName: TcxGridDBColumn
-        Caption = #1055#1086#1076#1088#1072#1079#1076#1077#1083#1077#1085#1080#1077
-        DataBinding.FieldName = 'UnitName'
-        PropertiesClassName = 'TcxButtonEditProperties'
-        Properties.Buttons = <
-          item
-            Action = actChoiceUnit
-            Default = True
-            Kind = bkEllipsis
-          end>
-        Properties.ReadOnly = True
-        HeaderAlignmentHorz = taCenter
-        HeaderAlignmentVert = vaCenter
-        HeaderHint = #1055#1086#1076#1088#1072#1079#1076#1077#1083#1077#1085#1080#1077' '#1087#1086#1083#1100#1079#1086#1074#1072#1090#1077#1083#1103
-        Width = 132
-      end
       object MemberName: TcxGridDBColumn
         Caption = #1060#1048#1054
         DataBinding.FieldName = 'MemberName'
@@ -115,14 +91,6 @@ object UserForm: TUserForm
         HeaderAlignmentVert = vaCenter
         Options.Editing = False
         Width = 104
-      end
-      object PrinterName: TcxGridDBColumn
-        Caption = #1055#1088#1080#1085#1090#1077#1088
-        DataBinding.FieldName = 'PrinterName'
-        HeaderAlignmentHorz = taCenter
-        HeaderAlignmentVert = vaCenter
-        HeaderHint = #1055#1088#1080#1085#1090#1077#1088' ('#1087#1077#1095#1072#1090#1100' '#1062#1077#1085#1085#1080#1082#1086#1074')'
-        Width = 120
       end
       object User_: TcxGridDBColumn
         DataBinding.FieldName = 'User_'
@@ -417,7 +385,7 @@ object UserForm: TUserForm
         end
         item
         end>
-      Caption = #1055#1077#1088#1077#1095#1080#1090#1072#1090#1100
+      Caption = #1054#1073#1085#1086#1074#1080#1090#1100' '#1076#1072#1085#1085#1099#1077
       Hint = #1054#1073#1085#1086#1074#1080#1090#1100' '#1076#1072#1085#1085#1099#1077
       ImageIndex = 4
       ShortCut = 116
@@ -480,7 +448,7 @@ object UserForm: TUserForm
           StoredProc = spErased
         end>
       Caption = #1059#1076#1072#1083#1080#1090#1100
-      Hint = #1059#1076#1072#1083#1080#1090#1100' '#1076#1072#1085#1085#1099#1077
+      Hint = #1059#1076#1072#1083#1080#1090#1100
       ImageIndex = 2
       ShortCut = 8238
       ErasedFieldName = 'isErased'
@@ -495,7 +463,7 @@ object UserForm: TUserForm
           StoredProc = spUnErased
         end>
       Caption = #1042#1086#1089#1089#1090#1072#1085#1086#1074#1080#1090#1100
-      Hint = #1042#1086#1089#1089#1090#1072#1085#1086#1074#1080#1090#1100' '#1076#1072#1085#1085#1099#1077
+      Hint = #1042#1086#1089#1089#1090#1072#1085#1086#1074#1080#1090#1100
       ImageIndex = 8
       ShortCut = 8238
       ErasedFieldName = 'isErased'
@@ -762,6 +730,7 @@ object UserForm: TUserForm
     ColumnAddOnList = <>
     ColumnEnterList = <>
     SummaryItemList = <>
+    PropertiesCellList = <>
     Left = 248
     Top = 232
   end
@@ -803,6 +772,7 @@ object UserForm: TUserForm
     ColumnAddOnList = <>
     ColumnEnterList = <>
     SummaryItemList = <>
+    PropertiesCellList = <>
     Left = 344
     Top = 136
   end
@@ -875,6 +845,7 @@ object UserForm: TUserForm
     ColumnAddOnList = <>
     ColumnEnterList = <>
     SummaryItemList = <>
+    PropertiesCellList = <>
     Left = 472
     Top = 216
   end

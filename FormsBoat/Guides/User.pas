@@ -86,9 +86,6 @@ type
     actProtocolRole: TdsdOpenForm;
     bbProtocolRole: TdxBarButton;
     spUnErased: TdsdStoredProc;
-    UnitCode: TcxGridDBColumn;
-    UnitName: TcxGridDBColumn;
-    PrinterName: TcxGridDBColumn;
   private
     { Private declarations }
   public
