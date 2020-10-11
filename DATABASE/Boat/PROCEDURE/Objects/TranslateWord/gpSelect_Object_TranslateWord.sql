@@ -28,7 +28,7 @@ BEGIN
      vbUserId:= lpGetUserBySession (inSession);
 
      -- замена 
-     IF COALESCE (inLanguageId4, 0) = 0 THEN inLanguageId4:= (WITH tmpList AS (SELECT Object.Id, ROW_NUMBER() OVER (ORDER BY Object.Id ASC) AS Ord FROM Object WHERE Object.DescId = zc_Object_Language() AND Object.isErased = FALSE)
+     IF COALESCE (inLanguageId4, 0) = 0 THEN inLanguageId4:= (WITH tmpList AS (SELECT Object.Id, ROW_NUMBER() OVER (ORDER BY Object.Id ASC) AS Ord FROM Object WHERE Object.DescId = zc_Object_Language() AND Object.Id NOT IN (inLanguageId1, inLanguageId2, inLanguageId3))
                                                               SELECT tmpList.Id FROM tmpList
                                                               WHERE tmpList.Ord = 4 - CASE WHEN inLanguageId1 > 0 THEN 1 ELSE 0 END
                                                                                     - CASE WHEN inLanguageId2 > 0 THEN 1 ELSE 0 END
@@ -36,20 +36,20 @@ BEGIN
                                                              );
      END IF;
      -- замена 
-     IF COALESCE (inLanguageId3, 0) = 0 THEN inLanguageId3:= (WITH tmpList AS (SELECT Object.Id, ROW_NUMBER() OVER (ORDER BY Object.Id ASC) AS Ord FROM Object WHERE Object.DescId = zc_Object_Language() AND Object.isErased = FALSE)
+     IF COALESCE (inLanguageId3, 0) = 0 THEN inLanguageId3:= (WITH tmpList AS (SELECT Object.Id, ROW_NUMBER() OVER (ORDER BY Object.Id ASC) AS Ord FROM Object WHERE Object.DescId = zc_Object_Language() AND Object.Id NOT IN (inLanguageId1, inLanguageId2, inLanguageId4))
                                                               SELECT tmpList.Id FROM tmpList
                                                               WHERE tmpList.Ord = 3 - CASE WHEN inLanguageId1 > 0 THEN 1 ELSE 0 END
                                                                                     - CASE WHEN inLanguageId2 > 0 THEN 1 ELSE 0 END
                                                              );
      END IF;
      -- замена 
-     IF COALESCE (inLanguageId2, 0) = 0 THEN inLanguageId2:= (WITH tmpList AS (SELECT Object.Id, ROW_NUMBER() OVER (ORDER BY Object.Id ASC) AS Ord FROM Object WHERE Object.DescId = zc_Object_Language() AND Object.isErased = FALSE)
+     IF COALESCE (inLanguageId2, 0) = 0 THEN inLanguageId2:= (WITH tmpList AS (SELECT Object.Id, ROW_NUMBER() OVER (ORDER BY Object.Id ASC) AS Ord FROM Object WHERE Object.DescId = zc_Object_Language() AND Object.Id NOT IN (inLanguageId1, inLanguageId3, inLanguageId4))
                                                               SELECT tmpList.Id FROM tmpList
                                                               WHERE tmpList.Ord = 2 - CASE WHEN inLanguageId1 > 0 THEN 1 ELSE 0 END
                                                              );
      END IF;
      -- замена 
-     IF COALESCE (inLanguageId1, 0) = 0 THEN inLanguageId1:= (WITH tmpList AS (SELECT Object.Id, ROW_NUMBER() OVER (ORDER BY Object.Id ASC) AS Ord FROM Object WHERE Object.DescId = zc_Object_Language() AND Object.isErased = FALSE)
+     IF COALESCE (inLanguageId1, 0) = 0 THEN inLanguageId1:= (WITH tmpList AS (SELECT Object.Id, ROW_NUMBER() OVER (ORDER BY Object.Id ASC) AS Ord FROM Object WHERE Object.DescId = zc_Object_Language() AND Object.Id NOT IN (inLanguageId2, inLanguageId3, inLanguageId4))
                                                               SELECT tmpList.Id FROM tmpList
                                                               WHERE tmpList.Ord = 1
                                                              );
@@ -66,7 +66,7 @@ BEGIN
             , tmp.Value4 ::TVarChar
             
             , Object_Form.Id          AS FormId
-            , Object_Form.ValueData   AS FormName
+            , COALESCE (Object_Form.ValueData, 'MainForm') :: TVarChar AS FormName
 
             , ObjectString_TranslateWord_Name.ValueData AS ControlName
 
