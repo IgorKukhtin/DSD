@@ -220,6 +220,8 @@ type
     ZQuery_test2: TZQuery;
     EditRepl3: TEdit;
     cbRepl4: TCheckBox;
+    cbSnapshot: TCheckBox;
+    EditRepl_offset: TEdit;
     procedure cbAllGuideClick(Sender: TObject);
     procedure FormCreate(Sender: TObject);
     procedure StopButtonClick(Sender: TObject);
@@ -234,6 +236,7 @@ type
     procedure TimerTimer(Sender: TObject);
     procedure PanelErrDblClick(Sender: TObject);
     procedure OKDocumentButtonClick(Sender: TObject);
+    procedure cbSnapshotClick(Sender: TObject);
   private
     fStop:Boolean;
     isGlobalLoad,zc_rvYes,zc_rvNo:Integer;
@@ -766,6 +769,13 @@ end;
 procedure TMainForm.cbCompleteIncomeBNClick(Sender: TObject);
 begin
      if (not cbComplete.Checked)and(not cbUnComplete.Checked)then cbComplete.Checked:=true;
+end;
+//----------------------------------------------------------------------------------------------------------------------------------------------------
+procedure TMainForm.cbSnapshotClick(Sender: TObject);
+begin
+     if cbSnapshot.Checked
+     then EditRepl1.Text:='MovementItemContainer'
+     else EditRepl1.Text:='1';
 end;
 //----------------------------------------------------------------------------------------------------------------------------------------------------
 procedure TMainForm.FormCreate(Sender: TObject);
@@ -1536,7 +1546,9 @@ begin
           EditRepl1.Visible:= true;
           EditRepl2.Visible:= true;
           EditRepl3.Visible:= true;
+          EditRepl_offset.Visible:= true;
           cbRepl4.Visible:= true;
+          cbSnapshot.Visible:= true;
           //
           DBGrid.Visible:= false;
           DocumentPanel.Visible:= false;
@@ -1576,13 +1588,21 @@ begin
       with ZQuery_test do begin
         close;
         Sql.Clear;
-        Sql.Add('SELECT * FROM _replica.gpSelect_Replica_union (' + EditRepl1.Text+ ' , ' +EditRepl2.Text+')');
+        if cbSnapshot.Checked = true
+        then Sql.Add('SELECT * FROM _replica.grSelect_Snapshot_Insert_Query (' + chr(39)+EditRepl1.Text+chr(39)+')')
+        else Sql.Add('SELECT * FROM _replica.gpSelect_Replica_union (' + EditRepl1.Text+ ' , ' +EditRepl2.Text+')');
         Open;
         while not eof do
          begin
-         ZQuery_test2.Sql.Add(FieldByName('Value').AsString);
-         //
-         LogMemo.Lines.Add(FieldByName('Value').AsString);
+        if cbSnapshot.Checked = true
+        then begin
+           ZQuery_test2.Sql.Add(FieldByName('grSelect_Snapshot_Insert_Query').AsString);
+           LogMemo.Lines.Add(FieldByName('grSelect_Snapshot_Insert_Query').AsString);
+        end
+        else begin
+           ZQuery_test2.Sql.Add(FieldByName('Value').AsString);
+           LogMemo.Lines.Add(FieldByName('Value').AsString);
+        end;
          LogMemo.Lines.Add('');
          next;
         end;
@@ -1590,29 +1610,53 @@ begin
       end;
      //
      //
+     if cbSnapshot.Checked = true
+     then begin
+        ZQuery_test2.Sql.Add('ORDER BY 2');// + ZQuery_test.FieldByName('key_fields').AsString
+        ZQuery_test2.Sql.Add('LIMIT ' + EditRepl2.Text);
+        ZQuery_test2.Sql.Add('OFFSET ' + EditRepl_offset.Text);
+        LogMemo.Lines.Add('ORDER BY 2'); //+ ZQuery_test.FieldByName('key_fields').AsString
+        LogMemo.Lines.Add('LIMIT ' + EditRepl2.Text);
+        LogMemo.Lines.Add('OFFSET ' + EditRepl_offset.Text);
+     end;
+     //
+     //
      if cbRepl4.Checked = true
      then
       with ZQuery_test2 do begin
         //
-        for i:=0 to Sql.Count-1 do LogMemo2.Lines.Add(Sql[i]);
+        //for i:=0 to Sql.Count-1 do LogMemo2.Lines.Add(Sql[i]);
+        LogMemo2.Lines.Add('Start Open ZQuery_test2');
         //
         Open;
         //
         LogMemo2.Clear;
+        i:=0;
         while not eof do
          begin
+     if cbSnapshot.Checked = true
+     then begin
+         i:= i+1;
+         LogMemo2.Lines.Add('-- ¹ = ' + IntToStr(i) );
+         LogMemo2.Lines.Add(FieldByName('Query').AsString+';');
+         LogMemo2.Lines.Add('');
+         LogMemo2.Lines.Add('');
+     end
+     else begin
          LogMemo2.Lines.Add('-- Id = ' + FieldByName('Id').AsString);
          LogMemo2.Lines.Add('-- Transaction_Id =' + FieldByName('Transaction_Id').AsString);
          LogMemo2.Lines.Add('-- table_name =' + FieldByName('table_name').AsString);
          LogMemo2.Lines.Add(FieldByName('Result').AsString+';');
          LogMemo2.Lines.Add('');
          LogMemo2.Lines.Add('');
+     end;
          next;
         end;
         close;
       end;
+      //
+      LogMemo2.Lines.Add('-- end all');
 end;
-
 //----------------------------------------------------------------------------------------------------------------------------------------------------
 //----------------------------------------------------------------------------------------------------------------------------------------------------
 //----------------------------------------------------------------------------------------------------------------------------------------------------

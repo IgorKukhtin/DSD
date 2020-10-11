@@ -2354,7 +2354,7 @@ object MainForm: TMainForm
       TabOrder = 0
       OnDblClick = PanelErrDblClick
       object EditRepl1: TEdit
-        Left = 141
+        Left = 120
         Top = 17
         Width = 48
         Height = 21
@@ -2363,7 +2363,7 @@ object MainForm: TMainForm
         Visible = False
       end
       object EditRepl2: TEdit
-        Left = 191
+        Left = 170
         Top = 17
         Width = 48
         Height = 21
@@ -2372,9 +2372,9 @@ object MainForm: TMainForm
         Visible = False
       end
       object EditRepl3: TEdit
-        Left = 139
-        Top = -2
-        Width = 98
+        Left = 98
+        Top = -4
+        Width = 78
         Height = 21
         TabOrder = 2
         Text = 'Project_master'
@@ -2383,7 +2383,7 @@ object MainForm: TMainForm
       object cbRepl4: TCheckBox
         Left = 11
         Top = 4
-        Width = 122
+        Width = 80
         Height = 17
         Caption = #1045#1097#1077' test2'
         Font.Charset = DEFAULT_CHARSET
@@ -2394,7 +2394,31 @@ object MainForm: TMainForm
         ParentFont = False
         TabOrder = 3
         Visible = False
-        OnClick = cbCompleteClick
+      end
+      object cbSnapshot: TCheckBox
+        Left = 12
+        Top = 21
+        Width = 101
+        Height = 17
+        Caption = #1076#1083#1103' snapshot'
+        Font.Charset = DEFAULT_CHARSET
+        Font.Color = clWindowText
+        Font.Height = -11
+        Font.Name = 'MS Sans Serif'
+        Font.Style = [fsBold]
+        ParentFont = False
+        TabOrder = 4
+        Visible = False
+        OnClick = cbSnapshotClick
+      end
+      object EditRepl_offset: TEdit
+        Left = 178
+        Top = -4
+        Width = 48
+        Height = 21
+        TabOrder = 5
+        Text = '0'
+        Visible = False
       end
     end
     object LogMemo: TMemo
