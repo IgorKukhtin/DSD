@@ -209,7 +209,7 @@ object ProductForm: TProductForm
     Width = 524
     Height = 168
     Align = alRight
-    TabOrder = 3
+    TabOrder = 2
     LookAndFeel.NativeStyle = True
     LookAndFeel.SkinName = 'UserSkin'
     object cxGridDBTableViewProdOptItems: TcxGridDBTableView
@@ -631,6 +631,14 @@ object ProductForm: TProductForm
         end
         item
           Visible = True
+          ItemName = 'bbStartLoad'
+        end
+        item
+          Visible = True
+          ItemName = 'dxBarStatic'
+        end
+        item
+          Visible = True
           ItemName = 'bbProtocolOpenForm'
         end
         item
@@ -718,6 +726,10 @@ object ProductForm: TProductForm
     end
     object bbSetUnErasedOpt: TdxBarButton
       Action = actSetUnErasedOpt
+      Category = 0
+    end
+    object bbStartLoad: TdxBarButton
+      Action = actStartLoad
       Category = 0
     end
   end
@@ -1047,6 +1059,45 @@ object ProductForm: TProductForm
         end>
       Caption = 'actUpdateDataSetProdColorItems'
       DataSource = ProdColorItemsDS
+    end
+    object actGetImportSetting: TdsdExecStoredProc
+      Category = #1047#1072#1075#1088#1091#1079#1082#1072
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      StoredProc = spGetImportSettingId
+      StoredProcList = <
+        item
+          StoredProc = spGetImportSettingId
+        end>
+      Caption = 'actGetImportSetting'
+    end
+    object actDoLoad: TExecuteImportSettingsAction
+      Category = #1047#1072#1075#1088#1091#1079#1082#1072
+      MoveParams = <>
+      ImportSettingsId.Value = Null
+      ImportSettingsId.Component = FormParams
+      ImportSettingsId.ComponentItem = 'ImportSettingId'
+      ImportSettingsId.MultiSelectSeparator = ','
+      ExternalParams = <>
+    end
+    object actStartLoad: TMultiAction
+      Category = #1047#1072#1075#1088#1091#1079#1082#1072
+      MoveParams = <>
+      ActionList = <
+        item
+          Action = actGetImportSetting
+        end
+        item
+          Action = actDoLoad
+        end
+        item
+          Action = actRefresh
+        end>
+      QuestionBeforeExecute = #1053#1072#1095#1072#1090#1100' '#1079#1072#1075#1088#1091#1079#1082#1091' '#1042#1057#1045#1061' '#1044#1072#1085#1085#1099#1093'?'
+      InfoAfterExecute = #1047#1072#1075#1088#1091#1079#1082#1072' '#1074#1099#1087#1086#1083#1085#1077#1085#1072
+      Caption = #1047#1072#1075#1088#1091#1079#1080#1090#1100' '#1042#1057#1045' '#1044#1072#1085#1085#1099#1077' '#1051#1086#1076#1082#1072#1084
+      Hint = #1047#1072#1075#1088#1091#1079#1080#1090#1100' '#1042#1057#1045' '#1044#1072#1085#1085#1099#1077' '#1051#1086#1076#1082#1072#1084
+      ImageIndex = 41
     end
   end
   object spSelect: TdsdStoredProc
@@ -1533,5 +1584,57 @@ object ProductForm: TProductForm
     PackSize = 1
     Left = 880
     Top = 280
+  end
+  object FormParams: TdsdFormParams
+    Params = <
+      item
+        Name = 'ImportSettingId'
+        Value = Null
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'ImportSettingIsUploadId'
+        Value = Null
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'ImportSettingIsSpecConditionId'
+        Value = Null
+        MultiSelectSeparator = ','
+      end>
+    Left = 768
+    Top = 72
+  end
+  object spGetImportSettingId: TdsdStoredProc
+    StoredProcName = 'gpGet_DefaultValue'
+    DataSets = <
+      item
+      end>
+    OutputType = otResult
+    Params = <
+      item
+        Name = 'inDefaultKey'
+        Value = 'TBoatForm;zc_Object_ImportSetting_Boat'
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inUserKeyId'
+        Value = '0'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'gpGet_DefaultValue'
+        Value = Null
+        Component = FormParams
+        ComponentItem = 'ImportSettingId'
+        DataType = ftString
+        MultiSelectSeparator = ','
+      end>
+    PackSize = 1
+    Left = 840
+    Top = 72
   end
 end
