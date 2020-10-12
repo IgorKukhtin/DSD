@@ -83,7 +83,7 @@ type
     optName: TcxGridDBColumn;
     colPriceOut: TcxGridDBColumn;
     optPriceIn: TcxGridDBColumn;
-    optProdOptions: TcxGridDBColumn;
+    optProdOptionsName: TcxGridDBColumn;
     colPartNumber: TcxGridDBColumn;
     optComment: TcxGridDBColumn;
     optInsertDate: TcxGridDBColumn;
@@ -94,7 +94,7 @@ type
     cxGridDBTableViewProdColorItems: TcxGridDBTableView;
     colCode: TcxGridDBColumn;
     colName: TcxGridDBColumn;
-    colProdColor: TcxGridDBColumn;
+    colProdColorName: TcxGridDBColumn;
     colProdColorGroupName: TcxGridDBColumn;
     colComment: TcxGridDBColumn;
     colInsertDate: TcxGridDBColumn;

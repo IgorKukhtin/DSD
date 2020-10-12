@@ -277,9 +277,9 @@ object ProductForm: TProductForm
         HeaderAlignmentVert = vaCenter
         Width = 66
       end
-      object optProdOptions: TcxGridDBColumn
+      object optProdOptionsName: TcxGridDBColumn
         Caption = #1054#1087#1094#1080#1103
-        DataBinding.FieldName = 'ProdOptions'
+        DataBinding.FieldName = 'ProdOptionsName'
         PropertiesClassName = 'TcxButtonEditProperties'
         Properties.Buttons = <
           item
@@ -411,9 +411,9 @@ object ProductForm: TProductForm
         HeaderAlignmentVert = vaCenter
         Width = 80
       end
-      object colProdColor: TcxGridDBColumn
+      object colProdColorName: TcxGridDBColumn
         Caption = #1062#1074#1077#1090
-        DataBinding.FieldName = 'ProdColor'
+        DataBinding.FieldName = 'ProdColorName'
         PropertiesClassName = 'TcxButtonEditProperties'
         Properties.Buttons = <
           item
