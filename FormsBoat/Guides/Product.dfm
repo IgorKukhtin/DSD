@@ -1660,7 +1660,7 @@ object ProductForm: TProductForm
     Params = <
       item
         Name = 'inDefaultKey'
-        Value = 'TBoat2Form;zc_Object_ImportSetting_Boat2'
+        Value = 'TBoat1Form;zc_Object_ImportSetting_Boat1'
         DataType = ftString
         ParamType = ptInput
         MultiSelectSeparator = ','
