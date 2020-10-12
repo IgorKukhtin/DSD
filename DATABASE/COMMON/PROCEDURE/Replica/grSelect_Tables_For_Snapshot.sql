@@ -38,6 +38,8 @@ BEGIN
       from information_schema.columns C
       where table_schema = 'public' and data_type = 'text'
     ) B on T.table_name = B.table_name
+  --where T.table_name NOT ILIKE 'MovementItem'
+  --  and T.table_name NOT ILIKE 'Container'
     group by T.table_name, B.table_name; 
     
 END;
