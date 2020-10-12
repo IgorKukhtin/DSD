@@ -4,7 +4,7 @@ interface
 
 uses
   Classes, SyncObjs, UData, ZAbstractConnection, ZConnection, ZAbstractRODataset,
-  ZDataset, USettings, SysUtils, uConstants, System.UITypes;
+  ZDataset, USettings, SysUtils, uConstants, System.UITypes, DateUtils;
 
 type
   TOnError = procedure(AError: string) of object;
@@ -36,6 +36,10 @@ type
     FCurrTable: string;
     FTotalCount: Int64;
     FProcessedCount: Int64;
+
+    FSnapshotSelectCount: Int64;
+    FSnapshotInsertCount: Int64;
+    FSnapshotBlobSelectCount: Int64;
 
     procedure SetPaused(const Value: Boolean);
   protected
@@ -103,7 +107,7 @@ end;
 
 procedure TSnapshotThread.CopyBatchRecords;
 var LastId: integer;
-    QSrc, QDst: TZQuery;
+    QSrc: TZQuery;
     FInsertQuery: string;
     FHadValues: boolean;
     cBatch: string;
@@ -111,13 +115,12 @@ var LastId: integer;
 var tmpDate:TDateTime;
     Hour, Min, Sec, MSec: Word;
     StrTime:String;
+    tmpBatchTime: TDateTime;
 begin
   FHadValues := false;
   QSrc := TZQuery.Create(nil);
-  QDst := TZQuery.Create(nil);
   try
     QSrc.Connection := FMasterConn;
-    QDst.Connection := FSlaveConn;
     UpdateStatus('Генерация запроса на вставку ..');
     FInsertQuery := GetInsertQuery(FTables.FieldByName('table_name').AsString);
     if FInsertQuery.IsEmpty then
@@ -133,16 +136,20 @@ begin
       QSrc.Close;
       if FTables.FieldByName('is_composite_key').AsBoolean then
         QSrc.SQL.Text :=
-          FInsertQuery + sLineBreak +
-          'ORDER BY '+ FTables.FieldByName('key_fields').AsString + sLineBreak +
-          'LIMIT '+ IntToStr(TSettings.SnapshotSelectCount) + ' OFFSET '+ IntToStr(FProcessedCount)
+          'WITH '+ FTables.FieldByName('table_name').AsString + ' AS ' + sLineBreak +
+          '( '+ sLineBreak +
+          '   SELECT * FROM '+ FTables.FieldByName('table_name').AsString +
+          '   ORDER BY '+ FTables.FieldByName('key_fields').AsString + sLineBreak +
+          '   LIMIT '+ IntToStr(FSnapshotSelectCount) + ' OFFSET '+ IntToStr(FProcessedCount) +
+          ')' + sLineBreak +
+          FInsertQuery
       else
       begin
         QSrc.SQL.Text :=
           FInsertQuery + sLineBreak +
           'WHERE '+ FTables.FieldByName('key_fields').AsString + ' > :LastId '+ sLineBreak +
           'ORDER BY '+ FTables.FieldByName('key_fields').AsString + sLineBreak +
-          'LIMIT '+ IntToStr(TSettings.SnapshotSelectCount);
+          'LIMIT '+ IntToStr(FSnapshotSelectCount);
         QSrc.ParamByName('LastId').Value := LastId;
       end;
 
@@ -172,6 +179,7 @@ begin
       UpdateStatus('Формирование запроса на вставку ..');
       cBatch := '';
       nBatchCount := 0;
+      tmpBatchTime := Now;
       while not Terminated and not QSrc.Eof do
       begin
         cBatch := cBatch + QSrc.FieldByName('Query').AsString + ';' + sLineBreak;
@@ -181,17 +189,18 @@ begin
         QSrc.Next;
         inc(nBatchCount);
         if not Terminated then
-          if (nBatchCount >= TSettings.SnapshotInsertCount) or QSrc.Eof then
+          if (nBatchCount >= FSnapshotInsertCount) or QSrc.Eof then
           begin
             try
+//              DecodeTime(now, Hour, Min, Sec, MSec);
+//              ProcessMessage(IntToStr(Hour) + ':' + IntToStr(Min) + ':' + IntToStr(Sec) + ':' + IntToStr(MSec) +
+//                '  - insert start');
               CheckPaused;
               UpdateStatus('Добавление записей на slave ..');
-              QDst.Close;
-              QDst.SQL.Text := cBatch;
-              //
+
               tmpDate:=NOw;
               //
-              QDst.ExecSQL;
+              FSlaveConn.ExecuteDirect(cBatch);
               //
               DecodeTime(now-tmpDate, Hour, Min, Sec, MSec);
               StrTime:=IntToStr(Min)+':'+IntToStr(Sec)+':'+IntToStr(MSec);
@@ -209,10 +218,13 @@ begin
             end;
           end;
       end;
+      DecodeTime(now-tmpBatchTime, Hour, Min, Sec, MSec);
+      StrTime:=IntToStr(Min)+':'+IntToStr(Sec)+':'+IntToStr(MSec);
+      DecodeTime(now, Hour, Min, Sec, MSec);
+      ProcessMessage(IntToStr(Hour) + ':' + IntToStr(Min) + ':' + IntToStr(Sec) + ':' + IntToStr(MSec) + ' - batch total insert slave time : ' + IntToStr (nBatchCount)+ '(' + IntToStr (FProcessedCount)+ ') : ' + StrTime);
     end;
   finally
     QSrc.Free;
-    QDst.Free;
   end;
 end;
 
@@ -254,14 +266,14 @@ begin
         QSrc.SQL.Text :=
           'SELECT * FROM '+ FTables.FieldByName('table_name').AsString + sLineBreak +
           'ORDER BY '+ FTables.FieldByName('key_fields').AsString + sLineBreak +
-          'LIMIT '+ IntToStr(TSettings.SnapshotBlobSelectCount) + ' OFFSET '+ IntToStr(FProcessedCount)
+          'LIMIT '+ IntToStr(FSnapshotBlobSelectCount) + ' OFFSET '+ IntToStr(FProcessedCount)
       else
       begin
         QSrc.SQL.Text :=
           'SELECT * FROM '+ FTables.FieldByName('table_name').AsString + sLineBreak +
           'WHERE '+ FTables.FieldByName('key_fields').AsString + ' > :LastId '+ sLineBreak +
           'ORDER BY '+ FTables.FieldByName('key_fields').AsString + sLineBreak +
-          'LIMIT '+ IntToStr(TSettings.SnapshotBlobSelectCount);
+          'LIMIT '+ IntToStr(FSnapshotBlobSelectCount);
         QSrc.ParamByName('LastId').Value := LastId;
       end;
       QSrc.Open;
@@ -323,6 +335,10 @@ end;
 
 procedure TSnapshotThread.Execute;
 begin
+  FSnapshotSelectCount := TSettings.SnapshotSelectCount;
+  FSnapshotInsertCount := TSettings.SnapshotInsertCount;
+  FSnapshotBlobSelectCount := TSettings.SnapshotBlobSelectCount;
+
   FPaused := false;
   FEvent := TEvent.Create(nil, true, not FPaused, '');
   FMasterConn := TZConnection.Create(nil);
@@ -361,7 +377,7 @@ begin
       FTables.Connection := FMasterConn;
       FTables.SQL.Text :=
         ' select * from _replica.grSelect_Tables_For_Snapshot() '+
-        //' where table_name = ''object'' '+
+        //' where table_name ILIKE ''MovementItemLinkObject'' '+
         ' ;';
       FTables.Open;
 
