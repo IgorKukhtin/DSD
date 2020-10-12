@@ -19,6 +19,8 @@ type
     procedure LoadTranslateWordFormTest;
     procedure LoadLanguageFormTest;
     procedure LoadBrandFormTest;
+    procedure LoadImportSettingsFormTest;
+    procedure LoadImportTypeFormTest;
     procedure LoadProdColorFormTest;
     procedure LoadProdColorGroupFormTest;
     procedure LoadProdEngineFormTest;
@@ -186,6 +188,20 @@ begin
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TProductEditForm'));
   TdsdFormStorageFactory.GetStorage.Load('TProductEditForm');
 end;
+procedure TLoadFormTest.LoadImportSettingsFormTest;
+begin
+  // Настройки импорта
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TImportSettingsForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TImportSettingsForm');
+end;
+
+procedure TLoadFormTest.LoadImportTypeFormTest;
+begin
+  // Типы импорта
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TImportTypeForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TImportTypeForm');
+end;
+
 initialization
   TestFramework.RegisterTest('Загрузка форм', TLoadFormTest.Suite);
 

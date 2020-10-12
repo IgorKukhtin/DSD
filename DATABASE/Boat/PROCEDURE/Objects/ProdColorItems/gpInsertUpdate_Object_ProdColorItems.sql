@@ -24,6 +24,8 @@ BEGIN
    vbUserId:= lpGetUserBySession (inSession);
 
     -- Если код не установлен, определяем его как последний+1, для каждой лодки начиная с 1
+   IF COALESCE (ioId,0) = 0
+   THEN
    vbCode_calc:= COALESCE ((SELECT MAX (Object_ProdColorItems.ObjectCode) AS ObjectCode
                             FROM Object AS Object_ProdColorItems
                                  INNER JOIN ObjectLink AS ObjectLink_Product
@@ -32,7 +34,10 @@ BEGIN
                                                       AND ObjectLink_Product.ChildObjectId = inProductId AND COALESCE (inProductId,0) <> 0
                             WHERE Object_ProdColorItems.DescId = zc_Object_ProdColorItems())
                            , 0) + 1; 
-
+   ELSE 
+        vbCode_calc:= inCode;
+   END IF;
+   
    -- проверка прав уникальности для свойства <Наименование >
    --PERFORM lpCheckUnique_Object_ValueData (ioId, zc_Object_ProdColorItems(), inName);
 

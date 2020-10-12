@@ -131,7 +131,9 @@ uses
   ProdColor in '..\..\FormsBoat\Guides\ProdColor.pas' {ProdColorForm: TParentForm},
   ProdColorEdit in '..\..\FormsBoat\Guides\ProdColorEdit.pas' {ProdColorEditForm: TParentForm},
   Product in '..\..\FormsBoat\Guides\Product.pas' {ProductForm: TParentForm},
-  ProductEdit in '..\..\FormsBoat\Guides\ProductEdit.pas' {ProductEditForm: TParentForm};
+  ProductEdit in '..\..\FormsBoat\Guides\ProductEdit.pas' {ProductEditForm: TParentForm},
+  ImportSettings in '..\..\FormsBoat\Import\ImportSettings.pas' {ImportSettingsForm: TParentForm},
+  ImportType in '..\..\FormsBoat\Import\ImportType.pas' {ImportTypeForm: TParentForm};
 
 {$R *.res}
 {$R DevExpressRus.res}

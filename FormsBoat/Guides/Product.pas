@@ -128,13 +128,15 @@ type
     bbSetUnErasedColor: TdxBarButton;
     bbSetErasedOpt: TdxBarButton;
     bbSetUnErasedOpt: TdxBarButton;
-    actChoiceFormProdColorGroup: TOpenChoiceForm;
+    actChoiceFormProdColor: TOpenChoiceForm;
     FormParams: TdsdFormParams;
     spGetImportSettingId: TdsdStoredProc;
     actGetImportSetting: TdsdExecStoredProc;
     actDoLoad: TExecuteImportSettingsAction;
     actStartLoad: TMultiAction;
     bbStartLoad: TdxBarButton;
+    actChoiceFormProdColorGroup: TOpenChoiceForm;
+    actChoiceFormProdOptions: TOpenChoiceForm;
   private
     { Private declarations }
   public

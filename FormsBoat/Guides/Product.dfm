@@ -15,6 +15,7 @@ object ProductForm: TProductForm
   AddOnFormData.isAlwaysRefresh = False
   AddOnFormData.RefreshAction = actRefresh
   AddOnFormData.ChoiceAction = actChoiceGuides
+  AddOnFormData.Params = FormParams
   PixelsPerInch = 96
   TextHeight = 13
   object cxGrid: TcxGrid
@@ -209,7 +210,7 @@ object ProductForm: TProductForm
     Width = 524
     Height = 168
     Align = alRight
-    TabOrder = 2
+    TabOrder = 1
     LookAndFeel.NativeStyle = True
     LookAndFeel.SkinName = 'UserSkin'
     object cxGridDBTableViewProdOptItems: TcxGridDBTableView
@@ -282,11 +283,10 @@ object ProductForm: TProductForm
         PropertiesClassName = 'TcxButtonEditProperties'
         Properties.Buttons = <
           item
-            Caption = 'actChoiceFormProdColorGroup'
+            Action = actChoiceFormProdOptions
             Default = True
             Kind = bkEllipsis
           end>
-        Properties.ReadOnly = True
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         Width = 80
@@ -406,7 +406,7 @@ object ProductForm: TProductForm
             Default = True
             Kind = bkEllipsis
           end>
-        Properties.ReadOnly = True
+        Properties.ReadOnly = False
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         Width = 80
@@ -417,10 +417,11 @@ object ProductForm: TProductForm
         PropertiesClassName = 'TcxButtonEditProperties'
         Properties.Buttons = <
           item
-            Caption = 'PartnerChoiceForm'
+            Action = actChoiceFormProdColor
             Default = True
             Kind = bkEllipsis
           end>
+        Properties.ReadOnly = False
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         Width = 80
@@ -1036,6 +1037,60 @@ object ProductForm: TProductForm
         end>
       isShowModal = False
     end
+    object actChoiceFormProdOptions: TOpenChoiceForm
+      Category = 'DSDLib'
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      Caption = 'actChoiceFormProdColor'
+      FormName = 'TProdOptionsForm'
+      FormNameParam.Value = 'TProdOptionsForm'
+      FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
+      GuiParams = <
+        item
+          Name = 'Key'
+          Value = Null
+          Component = ProdOptItemsCDS
+          ComponentItem = 'ProdOptionsId'
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'TextValue'
+          Value = Null
+          Component = ProdOptItemsCDS
+          ComponentItem = 'ProdOptionsName'
+          DataType = ftString
+          MultiSelectSeparator = ','
+        end>
+      isShowModal = False
+    end
+    object actChoiceFormProdColor: TOpenChoiceForm
+      Category = 'DSDLib'
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      Caption = 'actChoiceFormProdColor'
+      FormName = 'TProdColorForm'
+      FormNameParam.Value = 'TProdColorForm'
+      FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
+      GuiParams = <
+        item
+          Name = 'Key'
+          Value = Null
+          Component = ProdColorItemsCDS
+          ComponentItem = 'ProdColorId'
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'TextValue'
+          Value = Null
+          Component = ProdColorItemsCDS
+          ComponentItem = 'ProdColorName'
+          DataType = ftString
+          MultiSelectSeparator = ','
+        end>
+      isShowModal = False
+    end
     object actUpdateDataSetProdOptItems: TdsdUpdateDataSet
       Category = 'DSDLib'
       MoveParams = <>
@@ -1451,19 +1506,19 @@ object ProductForm: TProductForm
         MultiSelectSeparator = ','
       end
       item
-        Name = 'inPraceIn'
+        Name = 'inPriceIn'
         Value = Null
         Component = ProdOptItemsCDS
-        ComponentItem = 'PraceIn'
+        ComponentItem = 'PriceIn'
         DataType = ftFloat
         ParamType = ptInput
         MultiSelectSeparator = ','
       end
       item
-        Name = 'inPraceOut'
+        Name = 'inPriceOut'
         Value = Null
         Component = ProdOptItemsCDS
-        ComponentItem = 'PraceOut'
+        ComponentItem = 'PriceOut'
         DataType = ftFloat
         ParamType = ptInput
         MultiSelectSeparator = ','
@@ -1473,6 +1528,7 @@ object ProductForm: TProductForm
         Value = Null
         Component = ProdOptItemsCDS
         ComponentItem = 'PartNumber'
+        DataType = ftString
         ParamType = ptInput
         MultiSelectSeparator = ','
       end
@@ -1591,16 +1647,6 @@ object ProductForm: TProductForm
         Name = 'ImportSettingId'
         Value = Null
         MultiSelectSeparator = ','
-      end
-      item
-        Name = 'ImportSettingIsUploadId'
-        Value = Null
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'ImportSettingIsSpecConditionId'
-        Value = Null
-        MultiSelectSeparator = ','
       end>
     Left = 768
     Top = 72
@@ -1614,7 +1660,7 @@ object ProductForm: TProductForm
     Params = <
       item
         Name = 'inDefaultKey'
-        Value = 'TBoatForm;zc_Object_ImportSetting_Boat'
+        Value = 'TBoat2Form;zc_Object_ImportSetting_Boat2'
         DataType = ftString
         ParamType = ptInput
         MultiSelectSeparator = ','
