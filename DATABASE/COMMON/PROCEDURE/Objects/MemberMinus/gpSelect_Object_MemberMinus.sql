@@ -11,7 +11,7 @@ CREATE OR REPLACE FUNCTION gpSelect_Object_MemberMinus(
 )
 RETURNS TABLE (Id Integer, Name TVarChar
              , FromId Integer, FromCode Integer, FromName TVarChar, INN_From TVarChar
-             , ToId Integer, ToCode Integer, ToName TVarChar, INN_To TVarChar
+             , ToId Integer, ToCode Integer, ToName TVarChar, INN_to TVarChar
              , BankAccountFromId Integer, BankAccountFromCode Integer, BankAccountFromName TVarChar, BankName_From TVarChar
              , BankAccountToId Integer, BankAccountToCode Integer, BankAccountToName TVarChar, BankName_To TVarChar
              , DetailPayment TVarChar, BankAccountTo TVarChar

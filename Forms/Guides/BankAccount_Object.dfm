@@ -461,6 +461,7 @@ object BankAccount_ObjectForm: TBankAccount_ObjectForm
     ColumnAddOnList = <>
     ColumnEnterList = <>
     SummaryItemList = <>
+    PropertiesCellList = <>
     Left = 216
     Top = 240
   end

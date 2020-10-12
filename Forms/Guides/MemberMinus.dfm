@@ -233,7 +233,7 @@ object MemberMinusForm: TMemberMinusForm
         Kind = bkEllipsis
       end>
     Properties.ReadOnly = True
-    TabOrder = 5
+    TabOrder = 4
     Text = #1056'/'#1089#1095#1077#1090' '#1087#1083#1072#1090#1077#1083#1100#1097#1080#1082#1072
     Width = 189
   end
@@ -717,6 +717,14 @@ object MemberMinusForm: TMemberMinusForm
           ComponentItem = 'BankAccountToName'
           DataType = ftString
           MultiSelectSeparator = ','
+        end
+        item
+          Name = 'BankName'
+          Value = Null
+          Component = ClientDataSet
+          ComponentItem = 'BankName_To'
+          DataType = ftString
+          MultiSelectSeparator = ','
         end>
       isShowModal = True
     end
@@ -742,6 +750,14 @@ object MemberMinusForm: TMemberMinusForm
           Value = Null
           Component = ClientDataSet
           ComponentItem = 'BankAccountFromName'
+          DataType = ftString
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'BankName'
+          Value = Null
+          Component = ClientDataSet
+          ComponentItem = 'BankName_From'
           DataType = ftString
           MultiSelectSeparator = ','
         end>
