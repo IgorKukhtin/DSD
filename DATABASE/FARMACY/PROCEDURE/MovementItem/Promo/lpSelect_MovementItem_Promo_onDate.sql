@@ -6,24 +6,20 @@ DROP FUNCTION IF EXISTS lpSelect_MovementItem_Promo_onDate (TDateTime);
 CREATE OR REPLACE FUNCTION lpSelect_MovementItem_Promo_onDate(
     IN inOperDate    TDateTime     -- 
 )
-RETURNS TABLE (MovementId Integer, JuridicalId Integer, GoodsId Integer, ChangePercent TFloat, MakerID Integer
+RETURNS TABLE (MovementId Integer, JuridicalId Integer, GoodsId Integer, ChangePercent TFloat, MakerID Integer, InvNumber TVarChar
               )
 AS
 $BODY$
 BEGIN
            -- Результат
            RETURN QUERY
-                   SELECT tmp.MovementId
-                        , tmp.JuridicalId
-                        , tmp.GoodsId        -- здесь товар "сети"
-                        , tmp.ChangePercent :: TFloat AS ChangePercent
-                        , tmp.MakerID
-                   FROM (SELECT Movement.Id                       AS MovementId
-                              , MovementLinkObject_Maker.ObjectId AS MakerID
-                              , MI_Juridical.ObjectId             AS JuridicalId
-                              , MI_Goods.ObjectId                 AS GoodsId
+           WITH 
+                
+            tmpMovement AS (SELECT Movement.Id                                      AS MovementId
+                              , Movement.InvNumber                                  AS InvNumber
+                              , MovementLinkObject_Maker.ObjectId                   AS MakerID
                               , COALESCE (MovementFloat_ChangePercent.ValueData, 0) AS ChangePercent
-                              , ROW_NUMBER() OVER (PARTITION BY MI_Juridical.ObjectId, MI_Goods.ObjectId ORDER BY MI_Juridical.ObjectId, MI_Goods.ObjectId, MovementDate_EndPromo.ValueData DESC, Movement.Id DESC) AS Ord
+                              , MovementDate_EndPromo.ValueData                     AS EndPromo 
                          FROM Movement
                               INNER JOIN MovementDate AS MovementDate_StartPromo
                                                       ON MovementDate_StartPromo.MovementId = Movement.Id
@@ -40,18 +36,36 @@ BEGIN
                                                            ON MovementLinkObject_Maker.MovementId = Movement.Id
                                                           AND MovementLinkObject_Maker.DescId = zc_MovementLinkObject_Maker()
                                                      
-                              INNER JOIN MovementItem AS MI_Goods ON MI_Goods.MovementId = Movement.Id
-                                                                 AND MI_Goods.DescId = zc_MI_Master()
-                                                                 AND MI_Goods.isErased = FALSE
-                              LEFT JOIN MovementItem AS MI_Juridical ON MI_Juridical.MovementId = Movement.Id
-                                                                    AND MI_Juridical.DescId = zc_MI_Child()
-                                                                    AND MI_Juridical.isErased = FALSE
 
                          WHERE Movement.StatusId = zc_Enum_Status_Complete()
-                           AND Movement.DescId = zc_Movement_Promo()
-                        ) AS tmp
-                   WHERE tmp.Ord = 1 -- т.е. выбираем "последний"
-                  ;
+                           AND Movement.DescId = zc_Movement_Promo()), 
+            tmpMI AS (SELECT Movement.MovementId               AS MovementId
+                           , Movement.InvNumber                AS InvNumber
+                           , Movement.MakerID                  AS MakerID
+                           , MI_Juridical.ObjectId             AS JuridicalId
+                           , MI_Goods.ObjectId                 AS GoodsId
+                           , Movement.ChangePercent            AS ChangePercent
+                           , ROW_NUMBER() OVER (PARTITION BY MI_Juridical.ObjectId, MI_Goods.ObjectId ORDER BY MI_Juridical.ObjectId, MI_Goods.ObjectId, Movement.EndPromo DESC, Movement.MovementId DESC) AS Ord
+                      FROM tmpMovement AS Movement
+  
+                           INNER JOIN MovementItem AS MI_Goods ON MI_Goods.MovementId = Movement.MovementId
+                                                              AND MI_Goods.DescId = zc_MI_Master()
+                                                              AND MI_Goods.isErased = FALSE
+                                                              
+                           LEFT JOIN MovementItem AS MI_Juridical ON MI_Juridical.MovementId = Movement.MovementId
+                                                                 AND MI_Juridical.DescId = zc_MI_Child()
+                                                                 AND MI_Juridical.isErased = FALSE
+                     )
+                        
+            SELECT tmp.MovementId
+                 , tmp.JuridicalId
+                 , tmp.GoodsId        -- здесь товар "сети"
+                 , tmp.ChangePercent :: TFloat AS ChangePercent
+                 , tmp.MakerID
+                 , tmp.InvNumber               AS InvNumber
+            FROM tmpMI AS tmp
+            WHERE tmp.Ord = 1 -- т.е. выбираем "последний"
+            ;
   
 END;
 $BODY$

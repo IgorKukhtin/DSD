@@ -935,6 +935,17 @@
         Top = 236
         Caption = #1057#1077#1088#1080#1081#1085#1099#1081' '#1085#1086#1084#1077#1088' '#1085#1072' '#1089#1072#1081#1090#1077' '#1090#1072#1073#1083#1077#1090#1086#1082
       end
+      object cxLabel48: TcxLabel
+        Left = 227
+        Top = 236
+        Caption = #1052#1072#1088#1082#1077#1090#1080#1085#1075#1086#1074#1099#1081' '#1082#1086#1085#1090#1088#1072#1082#1090
+      end
+      object edPromoForSale: TcxTextEdit
+        Left = 227
+        Top = 255
+        TabOrder = 21
+        Width = 129
+      end
     end
   end
   object ActionList: TActionList
@@ -1460,6 +1471,14 @@
         Name = 'inSerialNumberTabletki'
         Value = Null
         Component = ceSerialNumberTabletki
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inPromoForSale'
+        Value = Null
+        Component = edPromoForSale
+        DataType = ftString
         ParamType = ptInput
         MultiSelectSeparator = ','
       end>
@@ -2022,6 +2041,13 @@
         Value = Null
         Component = GuidesLayout
         ComponentItem = 'TextValue'
+        DataType = ftString
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'PromoForSale'
+        Value = Null
+        Component = edPromoForSale
         DataType = ftString
         MultiSelectSeparator = ','
       end>

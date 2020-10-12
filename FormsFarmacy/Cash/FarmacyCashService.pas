@@ -74,6 +74,9 @@ type
     //***15.01.20
     LOYALTYSM   : integer;       //Программа лояльности накопительная
     LOYALSMSUM  : Currency;      //Сумма скидки по Программа лояльности накопительная
+    //***15.01.20
+    MEDICFS  : String[100];      //ФИО врача (на продажу)
+    BUYERFS  : String[100];      //ФИО покупателя (на продажу)
 
   end;
   TBodyRecord = record
@@ -1350,6 +1353,9 @@ begin
                 // ***15.01.20
                 LOYALTYSM := FieldByName('LOYALTYSM').AsInteger;
                 LOYALSMSUM := FieldByName('LOYALSMSUM').AsCurrency;
+                // ***11.10.20
+                MEDICFS := FieldByName('MEDICFS').AsString;
+                BUYERFS := FieldByName('BUYERFS').AsString;
 
                 FNeedSaveVIP := (MANAGER <> 0);
               end;
@@ -1507,6 +1513,9 @@ begin
                   // ***15.01.20
                   dsdSave.Params.AddParam('inLoyaltySMID', ftInteger, ptInput, Head.LOYALTYSM);
                   dsdSave.Params.AddParam('inLoyaltySMDiscount', ftFloat, ptInput, Head.LOYALSMSUM);
+                  // ***11.10.20
+                  dsdSave.Params.AddParam('inMedicForSale', ftString, ptInput, Head.MEDICFS);
+                  dsdSave.Params.AddParam('inBuyerForSale', ftString, ptInput, Head.BUYERFS);
                   // ***24.01.17
                   dsdSave.Params.AddParam('inUserSession', ftString, ptInput, Head.USERSESION);
 

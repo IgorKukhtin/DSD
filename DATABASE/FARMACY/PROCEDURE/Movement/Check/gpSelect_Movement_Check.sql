@@ -46,6 +46,8 @@ RETURNS TABLE (Id Integer, InvNumber TVarChar, OperDate TDateTime, StatusCode In
              , PartionDateKindName TVarChar
              , Delay Boolean, DateDelay TDateTime
              , CheckSourceKindName TVarChar
+             , MedicForSaleName TVarChar
+             , BuyerForSaleName TVarChar
               )
 AS
 $BODY$
@@ -143,6 +145,9 @@ BEGIN
            , COALESCE (MovementBoolean_Delay.ValueData, False)::Boolean   AS Delay
            , MovementDate_Delay.ValueData                                 AS DateDelay
            , Object_CheckSourceKind.ValueData                             AS CheckSourceKindName
+           
+           , Object_MedicForSale.ValueData                                AS MedicForSaleName
+           , Object_BuyerForSale.ValueData                                AS BuyerForSaleName
 
         FROM (SELECT Movement.*
                    , MovementLinkObject_Unit.ObjectId                    AS UnitId
@@ -362,13 +367,20 @@ BEGIN
                                         AND MovementLinkObject_CheckSourceKind.DescId = zc_MovementLinkObject_CheckSourceKind()
             LEFT JOIN Object AS Object_CheckSourceKind ON Object_CheckSourceKind.Id = MovementLinkObject_CheckSourceKind.ObjectId
 
-            LEFT JOIN MovementString AS MovementString_OrderId
-                                     ON MovementString_OrderId.MovementId = Movement_Check.Id
-                                    AND MovementString_OrderId.DescId = zc_MovementString_OrderId()
-
             LEFT JOIN MovementString AS MovementString_BookingId
                                      ON MovementString_BookingId.MovementId = Movement_Check.Id
                                     AND MovementString_BookingId.DescId = zc_MovementString_BookingId()
+
+            LEFT JOIN MovementLinkObject AS MovementLinkObject_MedicForSale
+                                         ON MovementLinkObject_MedicForSale.MovementId =  Movement_Check.Id
+                                        AND MovementLinkObject_MedicForSale.DescId = zc_MovementLinkObject_MedicForSale()
+            LEFT JOIN Object AS Object_MedicForSale ON Object_MedicForSale.Id = MovementLinkObject_MedicForSale.ObjectId
+
+            LEFT JOIN MovementLinkObject AS MovementLinkObject_BuyerForSale
+                                         ON MovementLinkObject_BuyerForSale.MovementId =  Movement_Check.Id
+                                        AND MovementLinkObject_BuyerForSale.DescId = zc_MovementLinkObject_BuyerForSale()
+            LEFT JOIN Object AS Object_BuyerForSale ON Object_BuyerForSale.Id = MovementLinkObject_BuyerForSale.ObjectId
+
       ;
 
 END;
@@ -399,4 +411,3 @@ $BODY$
 
 -- тест
 -- SELECT * FROM gpSelect_Movement_Check (inStartDate:= '01.08.2020', inEndDate:= '01.08.2020', inIsErased := FALSE, inIsSP := FALSE, inIsVip := FALSE, inUnitId:= 0, inSession:= '2')
-

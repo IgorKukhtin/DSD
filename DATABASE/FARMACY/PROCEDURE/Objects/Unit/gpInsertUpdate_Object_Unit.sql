@@ -55,6 +55,14 @@ DROP FUNCTION IF EXISTS gpInsertUpdate_Object_Unit(Integer, Integer, TVarChar, T
                                                    Boolean, Boolean, Boolean, Boolean, Integer, Boolean, Boolean, 
                                                    TVarChar, TVarChar, TVarChar, TVarChar, TDateTime, TDateTime, TDateTime, TDateTime, TDateTime, TDateTime, Boolean, Boolean, Integer, 
                                                    Integer, TVarChar, Boolean, Boolean, Integer, TVarChar);
+
+DROP FUNCTION IF EXISTS gpInsertUpdate_Object_Unit(Integer, Integer, TVarChar, TVarChar, TVarChar, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat,
+                                                   TDateTime, TDateTime, TDateTime, TDateTime, TDateTime,TDateTime, TDateTime, TDateTime, TDateTime,
+                                                   Boolean, Boolean, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer,
+                                                   Boolean, Boolean, Boolean, Boolean, Integer, Boolean, Boolean, 
+                                                   TVarChar, TVarChar, TVarChar, TVarChar, TDateTime, TDateTime, TDateTime, TDateTime, TDateTime, TDateTime, Boolean, Boolean, Integer, 
+                                                   Integer, TVarChar, Boolean, Boolean, Integer, TVarChar, TVarChar);
+
 CREATE OR REPLACE FUNCTION gpInsertUpdate_Object_Unit(
  INOUT ioId                      Integer   ,   	-- ключ объекта <Подразделение>
     IN inCode                    Integer   ,    -- Код объекта <Подразделение>
@@ -123,7 +131,8 @@ CREATE OR REPLACE FUNCTION gpInsertUpdate_Object_Unit(
     IN inisAlertRecounting       Boolean   ,    -- Оповещение перед переучетом
     
     IN inSerialNumberTabletki    Integer   ,    -- Серийный номер на сайте таблеток
-
+    IN inPromoForSale            TVarChar  ,    -- Маркетинговый контракт для заполнения врачей и покупателей
+    
     IN inSession                 TVarChar       -- сессия пользователя
 )
 RETURNS Integer
@@ -436,6 +445,9 @@ BEGIN
 
    -- сохранили связь с <Выкладка>
    PERFORM lpInsertUpdate_ObjectLink(zc_ObjectLink_Unit_Layout(), ioId, inLayoutId);
+
+   -- Маркетинговый контракт для заполнения врачей и покупателей
+   PERFORM lpInsertUpdate_ObjectString(zc_ObjectString_Unit_PromoForSale(), ioId, TRIM(inPromoForSale));
 
    -- сохранили протокол
    PERFORM lpInsert_ObjectProtocol (ioId, vbUserId);

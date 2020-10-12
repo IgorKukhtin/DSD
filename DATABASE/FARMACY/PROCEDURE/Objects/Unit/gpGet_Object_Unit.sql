@@ -50,7 +50,8 @@ RETURNS TABLE (Id Integer, Code Integer, Name TVarChar,
                MorionCode Integer, AccessKeyYF TVarChar,
                isTechnicalRediscount Boolean, isAlertRecounting Boolean,
                SerialNumberTabletki Integer,
-               LayoutId  Integer, LayoutName TVarChar
+               LayoutId  Integer, LayoutName TVarChar,
+               PromoForSale TVarChar
                ) AS
 $BODY$
 BEGIN
@@ -163,6 +164,7 @@ BEGIN
            , CAST (0 as Integer)   AS SerialNumberTabletki
            , CAST (0 as Integer)   AS LayoutId
            , CAST ('' as TVarChar) AS LayoutName
+           , CAST ('' as TVarChar) AS PromoForSale
 ;
    ELSE
        RETURN QUERY 
@@ -274,6 +276,8 @@ BEGIN
 
       , COALESCE (Object_Layout.Id,0)          ::Integer   AS LayoutId
       , COALESCE (Object_Layout.ValueData, '') ::TVarChar  AS LayoutName
+      
+      , ObjectString_PromoForSale.ValueData                AS PromoForSale
     FROM Object AS Object_Unit
         LEFT JOIN ObjectLink AS ObjectLink_Unit_Parent
                              ON ObjectLink_Unit_Parent.ObjectId = Object_Unit.Id
@@ -372,6 +376,10 @@ BEGIN
         LEFT JOIN ObjectString AS ObjectString_AccessKeyYF
                                ON ObjectString_AccessKeyYF.ObjectId = Object_Unit.Id 
                               AND ObjectString_AccessKeyYF.DescId = zc_ObjectString_Unit_AccessKeyYF()
+
+        LEFT JOIN ObjectString AS ObjectString_PromoForSale
+                               ON ObjectString_PromoForSale.ObjectId = Object_Unit.Id 
+                              AND ObjectString_PromoForSale.DescId = zc_ObjectString_Unit_PromoForSale()
 
         LEFT JOIN ObjectFloat AS ObjectFloat_TaxService
                               ON ObjectFloat_TaxService.ObjectId = Object_Unit.Id

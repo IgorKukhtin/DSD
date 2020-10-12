@@ -5,7 +5,7 @@ inherited CheckJournalForm: TCheckJournalForm
   AddOnFormData.RefreshAction = actRefreshStart
   AddOnFormData.ExecuteDialogAction = ExecuteDialog
   ExplicitWidth = 927
-  ExplicitHeight = 592
+  ExplicitHeight = 593
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
@@ -24,8 +24,6 @@ inherited CheckJournalForm: TCheckJournalForm
       inherited cxGrid: TcxGrid
         Width = 911
         Height = 477
-        ExplicitLeft = 40
-        ExplicitTop = 80
         ExplicitWidth = 911
         ExplicitHeight = 477
         inherited cxGridDBTableView: TcxGridDBTableView
@@ -459,6 +457,22 @@ inherited CheckJournalForm: TCheckJournalForm
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
             Width = 96
+          end
+          object MedicForSaleName: TcxGridDBColumn
+            Caption = #1042#1088#1072#1095#1100' '#1076#1083#1103' '#1087#1088#1086#1076#1072#1078#1080
+            DataBinding.FieldName = 'MedicForSaleName'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 102
+          end
+          object BuyerForSaleName: TcxGridDBColumn
+            Caption = #1055#1086#1082#1091#1087#1072#1090#1077#1083#1100' '#1076#1083#1103' '#1087#1088#1086#1076#1072#1078#1080
+            DataBinding.FieldName = 'BuyerForSaleName'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 95
           end
         end
       end

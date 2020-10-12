@@ -571,7 +571,9 @@ begin
         ListName := '';//List[0];
         if Copy(ListName, 1, 1) = chr(39) then
            ListName := Copy(List[0], 2, length(List[0])-2);
-        TADOQuery(FDataSet).SQL.Text := 'SELECT * FROM [' + ListName + 'A' + IntToStr(FStartRecord)+ ':AZ60000]';
+        if Pos('.xlsx', AnsiLowerCase(FileName)) > 0 then
+          TADOQuery(FDataSet).SQL.Text := 'SELECT * FROM [' + ListName + 'A' + IntToStr(FStartRecord)+ ':CZ60000]'
+        else TADOQuery(FDataSet).SQL.Text := 'SELECT * FROM [' + ListName + 'A' + IntToStr(FStartRecord)+ ':AZ60000]';
         TADOQuery(FDataSet).Open;
       finally
         FreeAndNil(List);

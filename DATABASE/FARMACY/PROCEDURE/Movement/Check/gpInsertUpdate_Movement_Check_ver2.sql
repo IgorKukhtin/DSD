@@ -10,6 +10,7 @@
 --DROP FUNCTION IF EXISTS gpInsertUpdate_Movement_Check_ver2 (Integer, TDateTime,  TVarChar, Integer, Integer, TVarChar, TVarChar, Boolean, Integer, TVarChar, TVarChar, TVarChar, TVarChar, Integer, TVarChar, TVarChar, TVarChar, TDateTime, Integer, Integer, Integer, TFloat, Integer, Boolean, Integer, Integer, Boolean, Integer, TVarChar, TVarChar, TVarChar);
 --DROP FUNCTION IF EXISTS gpInsertUpdate_Movement_Check_ver2 (Integer, TDateTime,  TVarChar, Integer, Integer, TVarChar, TVarChar, Boolean, Integer, TVarChar, TVarChar, TVarChar, TVarChar, Integer, TVarChar, TVarChar, TVarChar, TDateTime, Integer, Integer, Integer, TFloat, Integer, Boolean, Integer, Integer, Boolean, Integer, TVarChar, Integer, TVarChar, TVarChar);
 --DROP FUNCTION IF EXISTS gpInsertUpdate_Movement_Check_ver2 (Integer, TDateTime,  TVarChar, Integer, Integer, TVarChar, TVarChar, Boolean, Integer, TVarChar, TVarChar, TVarChar, TVarChar, Integer, TVarChar, TVarChar, TVarChar, TDateTime, Integer, Integer, Integer, TFloat, Integer, Boolean, Integer, Integer, Boolean, Integer, TVarChar, Integer, Integer, TFloat, TVarChar, TVarChar);
+--DROP FUNCTION IF EXISTS gpInsertUpdate_Movement_Check_ver2 (Integer, TDateTime,  TVarChar, Integer, Integer, TVarChar, TVarChar, Boolean, Integer, TVarChar, TVarChar, TVarChar, TVarChar, Integer, TVarChar, TVarChar, TVarChar, TDateTime, Integer, Integer, Integer, TFloat, Integer, Boolean, Integer, Integer, Boolean, Integer, TVarChar, Integer, Integer, TFloat, TVarChar, TVarChar, TVarChar, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpInsertUpdate_Movement_Check_ver2(
  INOUT ioId                  Integer   , -- Ключ объекта <Документ ЧЕК>
@@ -44,6 +45,8 @@ CREATE OR REPLACE FUNCTION gpInsertUpdate_Movement_Check_ver2(
     IN inLoyaltySignID       Integer   , -- Регистрация промокода "Программа лояльности"
     IN inLoyaltySMID         Integer   , -- Программа лояльности накопительная
     IN inLoyaltySMDiscount   TFloat    , -- Сумма скидки по Программа лояльности накопительная
+    IN inMedicForSale        TVarChar  , -- ФИО врача (на продажу)
+    IN inBuyerForSale        TVarChar  , -- ФИО покупателя (на продажу)
     IN inUserSession	     TVarChar  , -- сессия пользователя под которой создан чек в программе
     IN inSession             TVarChar    -- сессия пользователя
 )
@@ -277,6 +280,17 @@ BEGIN
        END IF;
     END IF;
 
+    -- ФИО врача (на продажу)
+    IF COALESCE(inMedicForSale, '') <> ''
+    THEN
+      PERFORM lpInsertUpdate_MovementLinkObject (zc_MovementLinkObject_MedicForSale(), ioId, gpInsertUpdate_Object_MedicForSale(0, inMedicForSale, inSession));    
+    END IF;
+    
+    -- ФИО покупателя (на продажу)
+     IF COALESCE(inBuyerForSale, '') <> ''
+    THEN
+      PERFORM lpInsertUpdate_MovementLinkObject (zc_MovementLinkObject_BuyerForSale(), ioId, gpInsertUpdate_Object_BuyerForSale(0, inBuyerForSale, inSession));    
+    END IF;
 
     -- сохранили протокол
     PERFORM lpInsert_MovementProtocol (ioId, vbUserId, vbIsInsert);

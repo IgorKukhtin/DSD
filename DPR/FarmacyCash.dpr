@@ -129,7 +129,8 @@ uses
   ecrmini_TLB in '..\FormsFarmacy\Cash\ecrmini_TLB.pas',
   ChoiceListDiff in '..\FormsFarmacy\Cash\ChoiceListDiff.pas' {ChoiceListDiffForm: TParentForm},
   dsdTranslator in '..\SOURCE\COMPONENT\dsdTranslator.pas',
-  ChoosingPresent in '..\FormsFarmacy\Cash\ChoosingPresent.pas' {ChoosingPresentForm: TParentForm};
+  ChoosingPresent in '..\FormsFarmacy\Cash\ChoosingPresent.pas' {ChoosingPresentForm: TParentForm},
+  SelectionFromDirectory in '..\FormsFarmacy\Cash\SelectionFromDirectory.pas' {SelectionFromDirectoryForm: TParentForm};
 
 {$R *.res}
 
