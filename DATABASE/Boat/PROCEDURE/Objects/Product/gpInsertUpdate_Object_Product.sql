@@ -24,7 +24,7 @@ CREATE OR REPLACE FUNCTION gpInsertUpdate_Object_Product(
   RETURNS integer AS
 $BODY$
    DECLARE vbUserId Integer;
-   DECLARE vbCode_calc Integer;
+ --DECLARE vbCode_calc Integer;
    DECLARE vbIsInsert Boolean; 
 BEGIN
    
@@ -32,14 +32,19 @@ BEGIN
    -- PERFORM lpCheckRight(inSession, zc_Enum_Process_InsertUpdate_Object_Product());
    vbUserId:= lpGetUserBySession (inSession);
 
-    -- Если код не установлен, определяем его как последний+1
-   vbCode_calc:=lfGet_ObjectCode (inCode, zc_Object_Product()); 
+   -- Если код не установлен, определяем его как последний+1
+   -- vbCode_calc:= lfGet_ObjectCode (inCode, zc_Object_Product()); 
+
+   -- проверка - должен быть Артикул - лодки
+   IF COALESCE (inCode, 0) = 0 THEN
+      RAISE EXCEPTION 'Ошибка.Должен быть определен Код - лодки.';
+   END IF;
 
    -- проверка прав уникальности для свойства <Наименование >
    PERFORM lpCheckUnique_Object_ValueData (ioId, zc_Object_Product(), inName);
 
    -- сохранили <Объект>
-   ioId := lpInsertUpdate_Object(ioId, zc_Object_Product(), vbCode_calc, inName);
+   ioId := lpInsertUpdate_Object(ioId, zc_Object_Product(), inCode, inName);
 
    -- сохранили свойство <>
    PERFORM lpInsertUpdate_ObjectString(zc_ObjectString_Product_Comment(), ioId, inComment);
