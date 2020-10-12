@@ -10,7 +10,7 @@ RETURNS TABLE (Id Integer, GoodsId_main Integer, GoodsGroupName TVarChar, GoodsN
                Remains TFloat, Price TFloat, PriceSP TFloat, PriceSaleSP TFloat, DiffSP1 TFloat, DiffSP2 TFloat, Reserved TFloat, MCSValue TFloat,
                AlternativeGroupId Integer, NDS TFloat,
                isFirst boolean, isSecond boolean, Color_calc Integer,
-               isPromo boolean,
+               isPromo boolean, isPromoForSale boolean,
                isSP boolean,
                IntenalSPName TVarChar,
                MinExpirationDate TDateTime,
@@ -66,6 +66,7 @@ $BODY$
    DECLARE vbDate_0 TDateTime;
 
    DECLARE vbDividePartionDate   boolean;
+   DECLARE vbPromoForSale TVarChar;
 
    DECLARE vbAreaId   Integer;
 BEGIN
@@ -84,14 +85,6 @@ BEGIN
     END IF;
     vbUnitId := vbUnitKey::Integer;
 
-    vbRetailId := (SELECT ObjectLink_Juridical_Retail.ChildObjectId AS RetailId
-                   FROM ObjectLink AS ObjectLink_Unit_Juridical
-                        INNER JOIN ObjectLink AS ObjectLink_Juridical_Retail
-                                              ON ObjectLink_Juridical_Retail.ObjectId = ObjectLink_Unit_Juridical.ChildObjectId
-                                             AND ObjectLink_Juridical_Retail.DescId = zc_ObjectLink_Juridical_Retail()
-                   WHERE ObjectLink_Unit_Juridical.ObjectId = vbUnitId
-                     AND ObjectLink_Unit_Juridical.DescId = zc_ObjectLink_Unit_Juridical());
-
     -- для Теста
     -- IF inSession = '3' then vbUnitId:= 1781716; END IF;
 
@@ -109,23 +102,32 @@ BEGIN
     -- значения для разделения по срокам
     SELECT Day_6, Date_6, Date_3, Date_1, Date_0
     INTO vbDay_6, vbDate_6, vbDate_3, vbDate_1, vbDate_0
-    FROM lpSelect_PartionDateKind_SetDate ();
+    FROM lpSelect_PartionDateKind_SetDate (); 
+    
+    SELECT 
+        ObjectLink_Juridical_Retail.ChildObjectId AS RetailId
+      , COALESCE (ObjectBoolean_DividePartionDate.ValueData, FALSE)  :: Boolean   AS DividePartionDate
+      , ','||COALESCE(ObjectString_PromoForSale.ValueData, '')||','               AS PromoForSale
+    INTO  vbRetailId, vbDividePartionDate, vbPromoForSale
+    FROM Object AS Object_Unit
 
-    IF EXISTS(SELECT 1 FROM ObjectBoolean AS ObjectBoolean_DividePartionDate
-              WHERE ObjectBoolean_DividePartionDate.ObjectId = vbUnitId
-                AND ObjectBoolean_DividePartionDate.DescId = zc_ObjectBoolean_Unit_DividePartionDate())
-    THEN
+        LEFT JOIN ObjectLink AS ObjectLink_Unit_Juridical
+                             ON ObjectLink_Unit_Juridical.ObjectId = Object_Unit.Id
+                            AND ObjectLink_Unit_Juridical.DescId = zc_ObjectLink_Unit_Juridical()
+        LEFT JOIN ObjectLink AS ObjectLink_Juridical_Retail
+                             ON ObjectLink_Juridical_Retail.ObjectId = ObjectLink_Unit_Juridical.ChildObjectId
+                            AND ObjectLink_Juridical_Retail.DescId = zc_ObjectLink_Juridical_Retail()
 
-      SELECT COALESCE (ObjectBoolean_DividePartionDate.ValueData, FALSE)
-      INTO vbDividePartionDate
-      FROM ObjectBoolean AS ObjectBoolean_DividePartionDate
-      WHERE ObjectBoolean_DividePartionDate.ObjectId = vbUnitId
-        AND ObjectBoolean_DividePartionDate.DescId = zc_ObjectBoolean_Unit_DividePartionDate();
+        LEFT JOIN ObjectString AS ObjectString_PromoForSale
+                               ON ObjectString_PromoForSale.ObjectId = Object_Unit.Id 
+                              AND ObjectString_PromoForSale.DescId = zc_ObjectString_Unit_PromoForSale()
+        LEFT JOIN ObjectBoolean AS ObjectBoolean_DividePartionDate
+                                ON ObjectBoolean_DividePartionDate.ObjectId = Object_Unit.Id
+                               AND ObjectBoolean_DividePartionDate.DescId = zc_ObjectBoolean_Unit_DividePartionDate()
 
-    ELSE
-      vbDividePartionDate := False;
-    END IF;
-
+    WHERE Object_Unit.Id = vbUnitId;
+    
+        
     -- Объявили новую сессию кассового места / обновили дату последнего обращения
     PERFORM lpInsertUpdate_CashSession (inCashSessionId := inCashSessionId
                                       , inDateConnect   := CURRENT_TIMESTAMP :: TDateTime
@@ -215,23 +217,12 @@ BEGIN
                           WHERE Movement.DescId = zc_Movement_GoodsSP()
                             AND Movement.StatusId IN (zc_Enum_Status_Complete(), zc_Enum_Status_UnComplete())
                          )
-         , GoodsPromo AS (SELECT DISTINCT ObjectLink_Child_retail.ChildObjectId AS GoodsId  -- здесь товар "сети"
-                         --   , tmp.ChangePercent
-                       FROM lpSelect_MovementItem_Promo_onDate (inOperDate:= CURRENT_DATE) AS tmp   --CURRENT_DATE
-                                    INNER JOIN ObjectLink AS ObjectLink_Child
-                                                          ON ObjectLink_Child.ChildObjectId = tmp.GoodsId
-                                                         AND ObjectLink_Child.DescId        = zc_ObjectLink_LinkGoods_Goods()
-                                    INNER JOIN  ObjectLink AS ObjectLink_Main ON ObjectLink_Main.ObjectId = ObjectLink_Child.ObjectId
-                                                                             AND ObjectLink_Main.DescId   = zc_ObjectLink_LinkGoods_GoodsMain()
-                                    INNER JOIN ObjectLink AS ObjectLink_Main_retail ON ObjectLink_Main_retail.ChildObjectId = ObjectLink_Main.ChildObjectId
-                                                                                   AND ObjectLink_Main_retail.DescId        = zc_ObjectLink_LinkGoods_GoodsMain()
-                                    INNER JOIN ObjectLink AS ObjectLink_Child_retail ON ObjectLink_Child_retail.ObjectId = ObjectLink_Main_retail.ObjectId
-                                                                                    AND ObjectLink_Child_retail.DescId   = zc_ObjectLink_LinkGoods_Goods()
-                                    INNER JOIN ObjectLink AS ObjectLink_Goods_Object
-                                                          ON ObjectLink_Goods_Object.ObjectId = ObjectLink_Child_retail.ChildObjectId
-                                                         AND ObjectLink_Goods_Object.DescId = zc_ObjectLink_Goods_Object()
-                                                         AND ObjectLink_Goods_Object.ChildObjectId = vbObjectId
-                       )
+         , GoodsPromo AS (SELECT Object_Goods_Retail.GoodsMainId                                                    AS GoodsId        -- здесь товар "главный товар"
+                               , SUM(CASE WHEN vbPromoForSale ILIKE ','||tmp.InvNumber||',' THEN 1 ELSE 0 END) > 0  AS isPromoForSale
+                          FROM lpSelect_MovementItem_Promo_onDate (inOperDate:= CURRENT_DATE) AS tmp
+                               LEFT JOIN Object_Goods_Retail AS Object_Goods_Retail ON Object_Goods_Retail.Id = tmp.GoodsId
+                          GROUP BY Object_Goods_Retail.GoodsMainId
+                          )
                 -- товар в пути - непроведенные приходы сегодня
                 , tmpIncome AS (SELECT MI_Income.ObjectId                      AS GoodsId
                                      , SUM(COALESCE (MI_Income.Amount, 0))     AS AmountIncome
@@ -780,7 +771,8 @@ BEGIN
             COALESCE(Object_Goods_Retail.isFirst, False)          AS isFirst,
             COALESCE(Object_Goods_Retail.isSecond, False)         AS isSecond,
             CASE WHEN COALESCE(Object_Goods_Retail.isSecond, False) = TRUE THEN 16440317 WHEN COALESCE(Object_Goods_Retail.isFirst, False) = TRUE THEN zc_Color_GreenL() ELSE zc_Color_White() END AS Color_calc,
-            CASE WHEN COALESCE(GoodsPromo.GoodsId,0) <> 0 THEN TRUE ELSE FALSE END AS isPromo,
+            CASE WHEN COALESCE(GoodsPromo.GoodsId,0) <> 0 THEN TRUE ELSE FALSE END    AS isPromo,
+            COALESCE(GoodsPromo.isPromoForSale, FALSE)                                AS isPromoForSale,
             CASE WHEN tmpGoodsSP.GoodsId IS NULL THEN FALSE ELSE TRUE END :: Boolean  AS isSP,
             Object_IntenalSP.ValueData AS IntenalSPName,
             CashSessionSnapShot.MinExpirationDate,
@@ -884,7 +876,7 @@ BEGIN
             LEFT OUTER JOIN tmpNDSKind AS ObjectFloat_NDSKind_NDS
                                        ON ObjectFloat_NDSKind_NDS.ObjectId = COALESCE(CashSessionSnapShot.NDSKindId, Object_Goods_Main.NDSKindId)
 
-            LEFT JOIN GoodsPromo ON GoodsPromo.GoodsId = CashSessionSnapShot.ObjectId
+            LEFT JOIN GoodsPromo ON GoodsPromo.GoodsId = Object_Goods_Main.Id
             LEFT JOIN tmpIncome ON tmpIncome.GoodsId = CashSessionSnapShot.ObjectId
 
             -- Соц Проект

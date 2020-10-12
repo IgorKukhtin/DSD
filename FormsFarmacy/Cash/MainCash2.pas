@@ -750,7 +750,7 @@ type
       ASiteDiscount: Currency; ARoundingDown: Boolean;
       APartionDateKindId: Integer; AConfirmationCodeSP: string;
       ALoyaltySignID: Integer; ALoyaltySMID: Integer; ALoyaltySMSumma: Currency;
-      ADivisionPartiesID: Integer; ADivisionPartiesName: String;
+      ADivisionPartiesID: Integer; ADivisionPartiesName, AMedicForSale, ABuyerForSale: String;
       ANeedComplete: Boolean; FiscalCheckNumber: String;
       out AUID: String): Boolean;
 
@@ -858,7 +858,7 @@ uses CashFactory, IniUtils, CashCloseDialog, VIPDialog, DiscountDialog,
   GoodsToExpirationDate, ChoiceGoodsAnalog, Helsi, RegularExpressions,
   PUSHMessageCash, Updater,
   EnterRecipeNumber, CheckHelsiSign, CheckHelsiSignAllUnit,
-  EmployeeScheduleCash,
+  EmployeeScheduleCash, SelectionFromDirectory,
   EnterLoyaltyNumber, Report_ImplementationPlanEmployeeCash,
   EnterLoyaltySaveMoney, ChoosingPresent,
   LoyaltySMList, EnterLoyaltySMDiscount, GetSystemInfo, ListSelection;
@@ -1381,6 +1381,8 @@ begin
   FormParams.ParamByName('LoyaltyAmountPresent').Value := 0;
   FormParams.ParamByName('LoyaltyGoodsId').Value := 0;
   FormParams.ParamByName('AddPresent').Value := False;
+  FormParams.ParamByName('MedicForSale').Value := '';
+  FormParams.ParamByName('BuyerForSale').Value := '';
 
   ClearFilterAll;
 
@@ -2697,9 +2699,9 @@ end;
 
 procedure TMainCashForm2.actPutCheckToCashExecute(Sender: TObject);
 var
-  UID, CheckNumber, ConfirmationCode: String;
+  UID, CheckNumber, ConfirmationCode, S: String;
   lMsg: String;
-  fErr: Boolean;
+  fErr, isPromoForSale: Boolean;
   dsdSave: TdsdStoredProc;
   nBankPOSTerminal: Integer;
   nPOSTerminalCode: Integer;
@@ -2781,6 +2783,7 @@ begin
   DiscountExternalID := RemainsCDS.FieldByName('DiscountExternalID').AsVariant;
   DivisionPartiesID := RemainsCDS.FieldByName('DivisionPartiesID').AsVariant;
   nPresent := 0;
+  isPromoForSale := False;
   try
     RemainsCDS.DisableControls;
     RemainsCDS.Filtered := false;
@@ -2921,6 +2924,8 @@ begin
 
         if FieldByName('isPresent').AsBoolean  then nPresent := nPresent + FieldByName('Amount').AsCurrency;
 
+        if not isPromoForSale then isPromoForSale := RemainsCDS.FieldByName('isPromoForSale').AsBoolean;
+
         Next;
       end;
     end;
@@ -2929,6 +2934,17 @@ begin
     RemainsCDS.Locate('Id;PartionDateKindId;NDSKindId;DiscountExternalID;DivisionPartiesID',
       VarArrayOf([GoodsId, PartionDateKindId, NDSKindId, DiscountExternalID, DivisionPartiesID]), []);
     RemainsCDS.EnableControls;
+  end;
+
+  // Заполнение врача и покупателя для продажи
+  if isPromoForSale then
+  begin
+    if not ShowSelectionFromDirectory('Выбор врача для вставки в документ', 'Ф.И.О. врача',
+             'MedicForSale', 'gpSelect_Object_MedicForSale', 'Name', S) then Exit;
+    FormParams.ParamByName('MedicForSale').Value := S;
+    if not ShowSelectionFromDirectory('Выбор покупателя для вставки в документ', 'Ф.И.О. покупателя',
+             'BuyerForSale', 'gpSelect_Object_BuyerForSale', 'Name', S) then Exit;
+    FormParams.ParamByName('BuyerForSale').Value := S;
   end;
 
   if (nPresent > 0) and not FormParams.ParamByName('LoyaltyPresent').Value then
@@ -3130,6 +3146,9 @@ begin
           // ***16.08.20
           FormParams.ParamByName('DivisionPartiesID').Value,
           FormParams.ParamByName('DivisionPartiesName').Value,
+          // ***11.10.20
+          FormParams.ParamByName('MedicForSale').Value,
+          FormParams.ParamByName('BuyerForSale').Value,
 
           True, // NeedComplete
           CheckNumber, // FiscalCheckNumber
@@ -4752,8 +4771,11 @@ begin
     , FormParams.ParamByName('LoyaltySMID').Value,
     FormParams.ParamByName('LoyaltySMSumma').Value
     // ***16.08.20
-    , FormParams.ParamByName('DivisionPartiesID').Value,
-    FormParams.ParamByName('DivisionPartiesName').Value
+    , FormParams.ParamByName('DivisionPartiesID').Value
+    , FormParams.ParamByName('DivisionPartiesName').Value
+      // ***11.10.20
+    , FormParams.ParamByName('MedicForSale').Value
+    , FormParams.ParamByName('BuyerForSale').Value
 
     , false // NeedComplete
     , '' // FiscalCheckNumber
@@ -4842,16 +4864,19 @@ begin
     // ***02.04.19
     , FormParams.ParamByName('RoundingDown').Value
     // ***13.05.19
-    , FormParams.ParamByName('PartionDateKindId').Value,
-    FormParams.ParamByName('ConfirmationCodeSP').Value
+    , FormParams.ParamByName('PartionDateKindId').Value
+    , FormParams.ParamByName('ConfirmationCodeSP').Value
     // ***07.11.19
     , FormParams.ParamByName('LoyaltySignID').Value
     // ***08.01.20
-    , FormParams.ParamByName('LoyaltySMID').Value,
-    FormParams.ParamByName('LoyaltySMSumma').Value
+    , FormParams.ParamByName('LoyaltySMID').Value
+    , FormParams.ParamByName('LoyaltySMSumma').Value
     // ***16.08.20
-    , FormParams.ParamByName('DivisionPartiesID').Value,
-    FormParams.ParamByName('DivisionPartiesName').Value
+    , FormParams.ParamByName('DivisionPartiesID').Value
+    , FormParams.ParamByName('DivisionPartiesName').Value
+    // ***11.10.20
+    , FormParams.ParamByName('MedicForSale').Value
+    , FormParams.ParamByName('BuyerForSale').Value
 
     , false // NeedComplete
     , '' // FiscalCheckNumber
@@ -5629,16 +5654,19 @@ begin
     // ***02.04.19
     , FormParams.ParamByName('RoundingDown').Value
     // ***13.05.19
-    , FormParams.ParamByName('PartionDateKindId').Value,
-    FormParams.ParamByName('ConfirmationCodeSP').Value
+    , FormParams.ParamByName('PartionDateKindId').Value
+    , FormParams.ParamByName('ConfirmationCodeSP').Value
     // ***07.11.19
     , FormParams.ParamByName('LoyaltySignID').Value
     // ***08.01.20
-    , FormParams.ParamByName('LoyaltySMID').Value,
-    FormParams.ParamByName('LoyaltySMSumma').Value
+    , FormParams.ParamByName('LoyaltySMID').Value
+    , FormParams.ParamByName('LoyaltySMSumma').Value
     // ***16.08.20
-    , FormParams.ParamByName('DivisionPartiesID').Value,
-    FormParams.ParamByName('DivisionPartiesName').Value
+    , FormParams.ParamByName('DivisionPartiesID').Value
+    , FormParams.ParamByName('DivisionPartiesName').Value
+    // ***11.10.20
+    , FormParams.ParamByName('MedicForSale').Value
+    , FormParams.ParamByName('BuyerForSale').Value
 
     , false // NeedComplete
     , '' // FiscalCheckNumber
@@ -8060,6 +8088,8 @@ begin
   FormParams.ParamByName('LoyaltyAmountPresent').Value := 0;
   FormParams.ParamByName('LoyaltyGoodsId').Value := 0;
   FormParams.ParamByName('AddPresent').Value := False;
+  FormParams.ParamByName('MedicForSale').Value := '';
+  FormParams.ParamByName('BuyerForSale').Value := '';
 
   FiscalNumber := '';
   pnlVIP.Visible := false;
@@ -9449,7 +9479,7 @@ function TMainCashForm2.SaveLocal(ADS: TClientDataSet; AManagerId: Integer;
   ASiteDiscount: Currency; ARoundingDown: Boolean;
   APartionDateKindId: Integer; AConfirmationCodeSP: string;
   ALoyaltySignID: Integer; ALoyaltySMID: Integer; ALoyaltySMSumma: Currency;
-  ADivisionPartiesID: Integer; ADivisionPartiesName: String;
+  ADivisionPartiesID: Integer; ADivisionPartiesName, AMedicForSale, ABuyerForSale: String;
   ANeedComplete: Boolean; FiscalCheckNumber: String; out AUID: String): Boolean;
 var
   NextVIPId: Integer;
@@ -9708,7 +9738,9 @@ begin
           ALoyaltySignID, // Регистрация программы лояльности
           // ***08.01.20
           ALoyaltySMID, // Регистрация программы лояльности накопительной
-          ALoyaltySMSumma // Скидка по программе лояльности накопительной
+          ALoyaltySMSumma, // Скидка по программе лояльности накопительной
+          AMedicForSale, // ФИО врача (на продажу)
+          ABuyerForSale // ФИО покупателя (на продажу)
           ]));
       End
       else
@@ -9799,10 +9831,14 @@ begin
         // ***07.05.19
         FLocalDataBaseHead.FieldByName('LOYALTYID').Value := ALoyaltySignID;
         // ***13.05.19
-        FLocalDataBaseHead.FieldByName('LOYALTYSM').Value := ALoyaltySMID;
         // Регистрация программы лояльности накопительной
-        FLocalDataBaseHead.FieldByName('LOYALSMSUM').Value := ALoyaltySMSumma;
+        FLocalDataBaseHead.FieldByName('LOYALTYSM').Value := ALoyaltySMID;
         // Скидка по программе лояльности накопительной
+        FLocalDataBaseHead.FieldByName('LOYALSMSUM').Value := ALoyaltySMSumma;
+        // ФИО врача (на продажу)
+        FLocalDataBaseHead.FieldByName('MEDICFS').Value := AMedicForSale;
+        // ФИО покупателя (на продажу)
+        FLocalDataBaseHead.FieldByName('BUYERFS').Value := ABuyerForSale;
         FLocalDataBaseHead.Post;
       End;
     except

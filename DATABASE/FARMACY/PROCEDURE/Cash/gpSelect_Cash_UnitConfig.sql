@@ -25,7 +25,8 @@ RETURNS TABLE (id Integer, Code Integer, Name TVarChar,
                isPromoCodeDoctor boolean, isTechnicalRediscount Boolean, 
                isGetHardwareData boolean, isPairedOnlyPromo Boolean, 
                DiscountExternalId integer, DiscountExternalCode integer, DiscountExternalName TVarChar,
-               GoodsDiscountId integer, GoodsDiscountCode integer, GoodsDiscountName TVarChar
+               GoodsDiscountId integer, GoodsDiscountCode integer, GoodsDiscountName TVarChar,
+               isPromoForSale Boolean
 
               ) AS
 $BODY$
@@ -265,6 +266,8 @@ BEGIN
        , Object_DiscountCheck.Id                                                   AS GoodsDiscountId
        , Object_DiscountCheck.ObjectCode                                           AS GoodsDiscountCode
        , Object_DiscountCheck.ValueData                                            AS GoodsDiscountName
+       , COALESCE(ObjectString_PromoForSale.ValueData, '') <> ''                   AS isPromoForSale
+
 
    FROM Object AS Object_Unit
 
@@ -277,6 +280,10 @@ BEGIN
         LEFT JOIN ObjectBoolean AS ObjectBoolean_TechnicalRediscount
                                 ON ObjectBoolean_TechnicalRediscount.ObjectId = Object_Unit.Id
                                AND ObjectBoolean_TechnicalRediscount.DescId = zc_ObjectBoolean_Unit_TechnicalRediscount()
+
+        LEFT JOIN ObjectString AS ObjectString_PromoForSale
+                               ON ObjectString_PromoForSale.ObjectId = Object_Unit.Id 
+                              AND ObjectString_PromoForSale.DescId = zc_ObjectString_Unit_PromoForSale()
 
         LEFT JOIN ObjectLink AS ObjectLink_Unit_Parent
                              ON ObjectLink_Unit_Parent.ObjectId = Object_Unit.Id

@@ -159,6 +159,8 @@ type
     cxLabel47: TcxLabel;
     edLayout: TcxButtonEdit;
     GuidesLayout: TdsdGuides;
+    cxLabel48: TcxLabel;
+    edPromoForSale: TcxTextEdit;
   private
     { Private declarations }
   public
