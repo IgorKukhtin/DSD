@@ -819,7 +819,7 @@ object ProductForm: TProductForm
       ImageIndex = 2
       ShortCut = 46
       ErasedFieldName = 'isErased'
-      DataSource = DataSource
+      DataSource = ProdColorItemsDS
     end
     object actSetErasedOpt: TdsdUpdateErased
       Category = 'DSDLib'
@@ -834,7 +834,7 @@ object ProductForm: TProductForm
       ImageIndex = 2
       ShortCut = 46
       ErasedFieldName = 'isErased'
-      DataSource = DataSource
+      DataSource = ProdOptItemsDS
     end
     object actSetErased: TdsdUpdateErased
       Category = 'DSDLib'
@@ -865,7 +865,7 @@ object ProductForm: TProductForm
       ShortCut = 46
       ErasedFieldName = 'isErased'
       isSetErased = False
-      DataSource = DataSource
+      DataSource = ProdOptItemsDS
     end
     object actSetUnErasedColor: TdsdUpdateErased
       Category = 'DSDLib'
@@ -881,7 +881,7 @@ object ProductForm: TProductForm
       ShortCut = 46
       ErasedFieldName = 'isErased'
       isSetErased = False
-      DataSource = DataSource
+      DataSource = ProdColorItemsDS
     end
     object actSetUnErased: TdsdUpdateErased
       Category = 'DSDLib'
