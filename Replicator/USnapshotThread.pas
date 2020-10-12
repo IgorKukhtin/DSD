@@ -396,7 +396,10 @@ begin
 
         FTempQuery.Close;
         FTempQuery.Connection := FMasterConn;
-        FTempQuery.SQL.Text := 'select count(*) as TotalCount from '+ FCurrTable;
+        if FTables.FieldByName('is_composite_key').AsBoolean then
+          FTempQuery.SQL.Text := 'select count(*) as TotalCount from '+ FCurrTable
+        else
+          FTempQuery.SQL.Text := 'select count('+ FTables.FieldByName('key_fields').AsString +') as TotalCount from '+ FCurrTable;
         FTempQuery.Open;
 
         FTotalCount := FTempQuery.FieldByName('TotalCount').AsInteger;
