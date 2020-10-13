@@ -4,7 +4,7 @@ DROP FUNCTION IF EXISTS gpInsertUpdate_Object_ProdOptItems(Integer, Integer, TVa
 
 CREATE OR REPLACE FUNCTION gpInsertUpdate_Object_ProdOptItems(
  INOUT ioId               Integer   ,    -- ключ объекта <>
-    IN inCode             Integer   ,    -- Код объекта 
+ INOUT ioCode             Integer   ,    -- Код объекта 
     IN inName             TVarChar  ,    -- Название объекта
     IN inProductId        Integer   ,
     IN inProdOptionsId    Integer   ,
@@ -14,7 +14,7 @@ CREATE OR REPLACE FUNCTION gpInsertUpdate_Object_ProdOptItems(
     IN inComment          TVarChar  ,
     IN inSession          TVarChar       -- сессия пользователя
 )
-  RETURNS integer AS
+  RETURNS RECORD AS
 $BODY$
    DECLARE vbUserId Integer;
    DECLARE vbCode_calc Integer;
@@ -37,7 +37,7 @@ BEGIN
                                 WHERE Object_ProdOptItems.DescId = zc_Object_ProdOptItems())
                                , 0) + 1; 
    ELSE 
-       vbCode_calc:= inCode;
+        vbCode_calc:= ioCode;
    END IF;
    
    -- проверка прав уникальности для свойства <Наименование >

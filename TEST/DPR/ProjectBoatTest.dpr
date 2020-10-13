@@ -133,7 +133,9 @@ uses
   Product in '..\..\FormsBoat\Guides\Product.pas' {ProductForm: TParentForm},
   ProductEdit in '..\..\FormsBoat\Guides\ProductEdit.pas' {ProductEditForm: TParentForm},
   ImportSettings in '..\..\FormsBoat\Import\ImportSettings.pas' {ImportSettingsForm: TParentForm},
-  ImportType in '..\..\FormsBoat\Import\ImportType.pas' {ImportTypeForm: TParentForm};
+  ImportType in '..\..\FormsBoat\Import\ImportType.pas' {ImportTypeForm: TParentForm},
+  ProdOptItems in '..\..\FormsBoat\Guides\ProdOptItems.pas' {ProdOptItemsForm: TParentForm},
+  ProdOptItemsEdit in '..\..\FormsBoat\Guides\ProdOptItemsEdit.pas' {ProdOptItemsEditForm: TParentForm};
 
 {$R *.res}
 {$R DevExpressRus.res}
