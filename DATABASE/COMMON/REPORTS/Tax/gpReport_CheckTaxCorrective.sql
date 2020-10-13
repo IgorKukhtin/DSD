@@ -157,7 +157,7 @@ BEGIN
                      LEFT JOIN Movement AS Movement_Tax ON Movement_Tax.Id = MovementLinkMovement_Tax.MovementChildId
 
                 WHERE (MovementLO_DocumentTaxKind.ObjectId = inDocumentTaxKindId OR COALESCE (inDocumentTaxKindId, 0) = 0)
-                  AND (tmpPartner_Corrective.PartnerId > 0 OR MovementLO_DocumentTaxKind.ObjectId > 0)
+                --AND (tmpPartner_Corrective.PartnerId > 0 OR MovementLO_DocumentTaxKind.ObjectId > 0)
                 GROUP BY MovementItem.ParentId
                )
 
@@ -417,6 +417,10 @@ BEGIN
                            JOIN Movement ON Movement.Id       = MovementDate_OperDatePartner.MovementId
                                         AND Movement.DescId   = zc_Movement_ReturnIn()
                                         AND Movement.StatusId = zc_Enum_Status_Complete()
+                           INNER JOIN MovementLinkObject AS MovementLinkObject_PaidKind
+                                                         ON MovementLinkObject_PaidKind.MovementId = MovementDate_OperDatePartner.MovementId
+                                                        AND MovementLinkObject_PaidKind.DescId = zc_MovementLinkObject_PaidKind()
+                                                        AND MovementLinkObject_PaidKind.ObjectId = zc_Enum_PaidKind_FirstForm()
                            LEFT JOIN MovementFloat AS MovementFloat_ChangePercent
                                                    ON MovementFloat_ChangePercent.MovementId = Movement.Id
                                                   AND MovementFloat_ChangePercent.DescId = zc_MovementFloat_ChangePercent()
@@ -479,7 +483,7 @@ BEGIN
                      LEFT JOIN tmpReturnIn_child ON tmpReturnIn_child.ParentId = MovementItem.Id
 
                 WHERE (MovementLO_DocumentTaxKind.ObjectId = inDocumentTaxKindId OR COALESCE (inDocumentTaxKindId, 0) = 0)
-                  AND (tmpPartner_Corrective.PartnerId > 0 OR MovementLO_DocumentTaxKind.ObjectId > 0)
+                  --AND (tmpPartner_Corrective.PartnerId > 0 OR MovementLO_DocumentTaxKind.ObjectId > 0)
                 GROUP BY ObjectLink_Partner_Juridical.ChildObjectId
                        , ObjectLink_Contract_JuridicalBasis.ChildObjectId
                        , MovementBoolean_PriceWithVAT.ValueData
@@ -907,6 +911,7 @@ ALTER FUNCTION gpReport_CheckTaxCorrective (TDateTime, TDateTime, Integer, TVarC
 /*-------------------------------------------------------------------------------
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
+ 13.10.20         *
  08.07.18         *
  15.09.14                                        * add InvNumberPartner...
  29.08.14                                        * add tmpUnit_Corrective
