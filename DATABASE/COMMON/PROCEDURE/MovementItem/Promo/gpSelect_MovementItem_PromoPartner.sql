@@ -12,6 +12,7 @@ RETURNS TABLE (
       , Code                Integer --код объекта  <Партнер>
       , Name                TVarChar --наименование объекта <Партнер>
       , JuridicalName       TVarChar --Наименование объекта <Юр. лицо>
+      , RetailId Integer    Integer  --
       , RetailName          TVarChar --Наименование объекта <Торговая сеть>
       , AreaName            TVarChar --Наименование объекта <Регион>
       , ContractCode        TVarChar --№ контракта
@@ -34,6 +35,7 @@ BEGIN
           , Object_Partner.ObjectCode::Integer     AS Code            --код объекта  <Партнер>
           , Object_Partner.ValueData               AS Name            --наименование объекта <Партнер>
           , Object_Juridical.ValueData             AS JuridicalName   --Наименование объекта <Юр. лицо>
+          , Object_Retail.Id                       AS RetailId      --Наименование объекта <Торговая сеть>
           , Object_Retail.ValueData                AS RetailName      --Наименование объекта <Торговая сеть>
           , Object_Area.ValueData                  AS AreaName        --Наименование объекта <Регион>
           , Object_Contract.ContractCode::TVarChar AS ContractCode    --код контракта

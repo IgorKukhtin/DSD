@@ -331,7 +331,7 @@ BEGIN
                                     , MIFloat_PriceWithVAT.ValueData         AS PriceWithVAT        --Цена отгрузки с учетом НДС, с учетом скидки, грн
                                     , MIFloat_PriceSale.ValueData            AS PriceSale           --Цена на полке
 
-                                    , SUM (MovementItem.Amount)                    AS Amount              --% скидки на товар
+                                    , AVG (MovementItem.Amount)                    AS Amount              --% скидки на товар
                                     , SUM (MIFloat_AmountReal.ValueData)           AS AmountReal          --Объем продаж в аналогичный период, кг
                                     , SUM (MIFloat_AmountReal.ValueData
                                         * CASE WHEN ObjectLink_Goods_Measure.ChildObjectId = zc_Measure_Sh() THEN ObjectFloat_Goods_Weight.ValueData ELSE 1 END) :: TFloat AS AmountRealWeight    --Объем продаж в аналогичный период, кг Вес

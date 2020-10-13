@@ -141,26 +141,26 @@ BEGIN
                    , STRING_AGG (MI_PromoGoods.GoodsKindName, '; ')         ::TVarChar AS GoodsKindName       --Наименование обьекта <Вид товара>
                    , STRING_AGG (MI_PromoGoods.GoodsKindCompleteName, '; ') ::TVarChar AS GoodsKindCompleteName   
 
-                   , SUM (MI_PromoGoods.Amount) AS Amount              --% скидки на товар             
+                   , AVG (MI_PromoGoods.Amount) AS Amount              --% скидки на товар             
                    , SUM (MI_PromoGoods.AmountReal) AS AmountReal          --Объем продаж в аналогичный период, кг
                    , SUM (MI_PromoGoods.AmountRealWeight) AS AmountRealWeight    --Объем продаж в аналогичный период, кг Вес
              
-                   , MIN (MI_PromoGoods.AmountPlanMin)       AS AmountPlanMin       --Минимум планируемого объема продаж на акционный период (в кг)
-                   , MIN (MI_PromoGoods.AmountPlanMinWeight) AS AmountPlanMinWeight --Минимум планируемого объема продаж на акционный период (в кг) Вес
-                   , MAX (MI_PromoGoods.AmountPlanMax)       AS AmountPlanMax       --Максимум планируемого объема продаж на акционный период (в кг)
-                   , MAX (MI_PromoGoods.AmountPlanMaxWeight) AS AmountPlanMaxWeight --Максимум планируемого объема продаж на акционный период (в кг) Вес
+                   , SUM (COALESCE (MI_PromoGoods.AmountPlanMin,0))       AS AmountPlanMin       --Минимум планируемого объема продаж на акционный период (в кг)
+                   , SUM (COALESCE (MI_PromoGoods.AmountPlanMinWeight,0)) AS AmountPlanMinWeight --Минимум планируемого объема продаж на акционный период (в кг) Вес
+                   , SUM (COALESCE (MI_PromoGoods.AmountPlanMax,0))       AS AmountPlanMax       --Максимум планируемого объема продаж на акционный период (в кг)
+                   , SUM (COALESCE (MI_PromoGoods.AmountPlanMaxWeight,0)) AS AmountPlanMaxWeight --Максимум планируемого объема продаж на акционный период (в кг) Вес
              
-                   , SUM (MI_PromoGoods.AmountOut)        AS AmountOut         --Кол-во реализация (факт)
-                   , SUM (MI_PromoGoods.AmountOutWeight)  AS AmountOutWeight   --Кол-во реализация (факт) Вес
-                   , SUM (MI_PromoGoods.AmountIn)         AS AmountIn          --Кол-во возврат (факт)
-                   , SUM (MI_PromoGoods.AmountInWeight)   AS AmountInWeight    --Кол-во возврат (факт) Вес
+                   , SUM (COALESCE (MI_PromoGoods.AmountOut,0))        AS AmountOut         --Кол-во реализация (факт)
+                   , SUM (COALESCE (MI_PromoGoods.AmountOutWeight,0))  AS AmountOutWeight   --Кол-во реализация (факт) Вес
+                   , SUM (COALESCE (MI_PromoGoods.AmountIn,0))         AS AmountIn          --Кол-во возврат (факт)
+                   , SUM (COALESCE (MI_PromoGoods.AmountInWeight,0))   AS AmountInWeight    --Кол-во возврат (факт) Вес
              
-                   , SUM (COALESCE (MI_PromoGoods.AmountOut, 0) - COALESCE (MI_PromoGoods.AmountIn, 0))             :: TFloat  AS AmountSale       -- продажа - возврат 
+                   , SUM (COALESCE (MI_PromoGoods.AmountOut, 0) - COALESCE (MI_PromoGoods.AmountIn, 0))            :: TFloat  AS AmountSale       -- продажа - возврат 
                    , SUM(COALESCE (MI_PromoGoods.AmountOutWeight, 0) - COALESCE (MI_PromoGoods.AmountInWeight, 0)) :: TFloat  AS AmountSaleWeight -- продажа - возврат 
                    , SUM(COALESCE (MI_PromoGoods.Price, 0) - COALESCE (MI_PromoGoods.PriceWithVAT,0))              :: TFloat  AS Price_Diff
                    
-                   , SUM (COALESCE (MI_PromoGoods.MainDiscount,0))                                              ::TFloat   AS MainDiscount
-                   , MIFloat_PriceIn1.ValueData                                                                 :: TFloat  AS PriceIn1               --себестоимость факт,  за кг
+                   , AVG (COALESCE (MI_PromoGoods.MainDiscount,0))                                                 ::TFloat   AS MainDiscount
+                   , MAX (MIFloat_PriceIn1.ValueData)                                                              :: TFloat  AS PriceIn1               --себестоимость факт,  за кг
                    , ObjectString_Goods_GoodsGroupFull.ValueData                                                           AS GoodsGroupNameFull
               FROM tmpMovement AS Movement_Promo
 
@@ -187,7 +187,7 @@ BEGIN
                    , MI_PromoGoods.GoodsWeight
                    , CASE WHEN inisGoodsKind = FALSE THEN MI_PromoGoods.GoodsKindName ELSE '' END
                    , CASE WHEN inisGoodsKind = FALSE THEN MI_PromoGoods.GoodsKindCompleteName ELSE '' END 
-                   , MIFloat_PriceIn1.ValueData
+                   --, MIFloat_PriceIn1.ValueData
                    , ObjectString_Goods_GoodsGroupFull.ValueData
               )
                     
