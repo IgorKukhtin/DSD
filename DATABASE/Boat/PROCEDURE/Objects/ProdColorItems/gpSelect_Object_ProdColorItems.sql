@@ -7,13 +7,17 @@ CREATE OR REPLACE FUNCTION gpSelect_Object_ProdColorItems(
     IN inSession     TVarChar       -- сессия пользователя
 )
 RETURNS TABLE (Id Integer, Code Integer, Name TVarChar
+             , NPP Integer
              , Comment TVarChar
              , ProductId Integer, ProductName TVarChar
              , ProdColorGroupId Integer, ProdColorGroupName TVarChar
              , ProdColorId Integer, ProdColorName TVarChar
+             , Color_fon Integer
              , InsertName TVarChar
              , InsertDate TDateTime
-             , isErased boolean) AS
+             , isErased Boolean
+              )
+AS
 $BODY$
    DECLARE vbUserId Integer;
 BEGIN
@@ -25,9 +29,9 @@ BEGIN
      RETURN QUERY 
      SELECT 
            Object_ProdColorItems.Id         AS Id 
-       --, Object_ProdColorItems.ObjectCode AS Code
-         , ROW_NUMBER() OVER (PARTITION BY Object_Product.Id ORDER BY Object_ProdColorGroup.ObjectCode ASC, Object_ProdColorItems.ObjectCode ASC) :: Integer AS Code
+         , Object_ProdColorItems.ObjectCode AS Code
          , Object_ProdColorItems.ValueData  AS Name
+         , ROW_NUMBER() OVER (PARTITION BY Object_Product.Id ORDER BY Object_ProdColorGroup.ObjectCode ASC, Object_ProdColorItems.ObjectCode ASC) :: Integer AS NPP
 
          , ObjectString_Comment.ValueData   AS Comment
 
@@ -39,6 +43,13 @@ BEGIN
 
          , Object_ProdColor.Id              AS ProdColorId
          , Object_ProdColor.ValueData       AS ProdColorName
+
+         , CASE WHEN CEIL (Object_ProdColorGroup.ObjectCode / 2) * 2 <> Object_ProdColorGroup.ObjectCode
+                     THEN zc_Color_Yelow() -- zc_Color_Lime() -- zc_Color_Aqua()
+                ELSE
+                    -- нет цвета
+                    zc_Color_White()
+           END :: Integer AS Color_fon
 
          , Object_Insert.ValueData          AS InsertName
          , ObjectDate_Insert.ValueData      AS InsertDate

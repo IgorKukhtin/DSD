@@ -3,10 +3,10 @@
 DROP FUNCTION IF EXISTS gpSelect_Object_Product (Boolean, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpSelect_Object_Product(
-    IN inIsShowAll   Boolean,            -- признак показать удаленные да / нет 
+    IN inIsShowAll   Boolean,            -- признак показать удаленные да / нет
     IN inSession     TVarChar       -- сессия пользователя
 )
-RETURNS TABLE (Id Integer, Code Integer, Name TVarChar
+RETURNS TABLE (Id Integer, Code Integer, Name TVarChar, ProdColorName TVarChar
              , Hours TFloat
              , DateStart TDateTime, DateBegin TDateTime, DateSale TDateTime
              , Article TVarChar, CIN TVarChar, EngineNum TVarChar
@@ -26,11 +26,42 @@ BEGIN
    -- PERFORM lpCheckRight(inSession, zc_Enum_Process_Select_Object_Product());
    vbUserId:= lpGetUserBySession (inSession);
 
-     RETURN QUERY 
-     SELECT 
-           Object_Product.Id               AS Id 
+     RETURN QUERY
+     WITH tmpProdColorItems AS (SELECT ObjectLink_Product.ChildObjectId AS ProductId
+                                     , Object_ProdColorItems.ObjectCode AS ProdColorItemsCode
+                                     , Object_ProdColorItems.ValueData  AS ProdColorItemsName
+                                     , Object_ProdColorGroup.ObjectCode AS ProdColorGroupCode
+                                     , Object_ProdColorGroup.ValueData  AS ProdColorGroupName
+                                     , Object_ProdColor.ValueData       AS ProdColorName
+                                     , ROW_NUMBER() OVER (PARTITION BY ObjectLink_Product.ChildObjectId ORDER BY Object_ProdColorGroup.ObjectCode ASC, Object_ProdColorItems.ObjectCode ASC) :: Integer AS NPP
+                                 FROM Object AS Object_ProdColorItems
+                                      LEFT JOIN ObjectLink AS ObjectLink_Product
+                                                           ON ObjectLink_Product.ObjectId = Object_ProdColorItems.Id
+                                                          AND ObjectLink_Product.DescId = zc_ObjectLink_ProdColorItems_Product()
+
+                                      LEFT JOIN ObjectLink AS ObjectLink_ProdColorGroup
+                                                           ON ObjectLink_ProdColorGroup.ObjectId = Object_ProdColorItems.Id
+                                                          AND ObjectLink_ProdColorGroup.DescId = zc_ObjectLink_ProdColorItems_ProdColorGroup()
+                                      LEFT JOIN Object AS Object_ProdColorGroup ON Object_ProdColorGroup.Id = ObjectLink_ProdColorGroup.ChildObjectId
+
+                                      LEFT JOIN ObjectLink AS ObjectLink_ProdColor
+                                                           ON ObjectLink_ProdColor.ObjectId = Object_ProdColorItems.Id
+                                                          AND ObjectLink_ProdColor.DescId = zc_ObjectLink_ProdColorItems_ProdColor()
+                                      LEFT JOIN Object AS Object_ProdColor ON Object_ProdColor.Id = ObjectLink_ProdColor.ChildObjectId
+
+
+                                 WHERE Object_ProdColorItems.DescId = zc_Object_ProdColorItems()
+                                   AND Object_ProdColorItems.isErased = FALSE
+                                )
+
+     SELECT
+           Object_Product.Id               AS Id
          , Object_Product.ObjectCode       AS Code
          , Object_Product.ValueData        AS Name
+         , CASE WHEN tmpProdColorItems_1.ProdColorName ILIKE tmpProdColorItems_1.ProdColorName
+                THEN tmpProdColorItems_1.ProdColorName
+                ELSE COALESCE (tmpProdColorItems_1.ProdColorName, '') || ' / ' || COALESCE (tmpProdColorItems_1.ProdColorName, '')
+           END :: TVarChar AS ProdColorName
 
          , ObjectFloat_Hours.ValueData      AS Hours
          , ObjectDate_DateStart.ValueData   AS DateStart
@@ -56,11 +87,18 @@ BEGIN
          , Object_Insert.ValueData         AS InsertName
          , ObjectDate_Insert.ValueData     AS InsertDate
          , Object_Product.isErased         AS isErased
-         
+
      FROM Object AS Object_Product
+          LEFT JOIN tmpProdColorItems AS tmpProdColorItems_1
+                                      ON tmpProdColorItems_1.ProductId = Object_Product.Id
+                                     AND tmpProdColorItems_1.NPP = 1
+          LEFT JOIN tmpProdColorItems AS tmpProdColorItems_2
+                                      ON tmpProdColorItems_2.ProductId = Object_Product.Id
+                                     AND tmpProdColorItems_2.NPP = 2
+
           LEFT JOIN ObjectString AS ObjectString_Comment
                                  ON ObjectString_Comment.ObjectId = Object_Product.Id
-                                AND ObjectString_Comment.DescId = zc_ObjectString_Product_Comment()  
+                                AND ObjectString_Comment.DescId = zc_ObjectString_Product_Comment()
 
           LEFT JOIN ObjectFloat AS ObjectFloat_Hours
                                 ON ObjectFloat_Hours.ObjectId = Object_Product.Id
@@ -93,17 +131,17 @@ BEGIN
           LEFT JOIN ObjectLink AS ObjectLink_ProdGroup
                                ON ObjectLink_ProdGroup.ObjectId = Object_Product.Id
                               AND ObjectLink_ProdGroup.DescId = zc_ObjectLink_Product_ProdGroup()
-          LEFT JOIN Object AS Object_ProdGroup ON Object_ProdGroup.Id = ObjectLink_ProdGroup.ChildObjectId 
+          LEFT JOIN Object AS Object_ProdGroup ON Object_ProdGroup.Id = ObjectLink_ProdGroup.ChildObjectId
 
           LEFT JOIN ObjectLink AS ObjectLink_Brand
                                ON ObjectLink_Brand.ObjectId = Object_Product.Id
                               AND ObjectLink_Brand.DescId = zc_ObjectLink_Product_Brand()
-          LEFT JOIN Object AS Object_Brand ON Object_Brand.Id = ObjectLink_Brand.ChildObjectId 
+          LEFT JOIN Object AS Object_Brand ON Object_Brand.Id = ObjectLink_Brand.ChildObjectId
 
           LEFT JOIN ObjectLink AS ObjectLink_Model
                                ON ObjectLink_Model.ObjectId = Object_Product.Id
                               AND ObjectLink_Model.DescId = zc_ObjectLink_Product_Model()
-          LEFT JOIN Object AS Object_Model ON Object_Model.Id = ObjectLink_Model.ChildObjectId 
+          LEFT JOIN Object AS Object_Model ON Object_Model.Id = ObjectLink_Model.ChildObjectId
 
           LEFT JOIN ObjectLink AS ObjectLink_Engine
                                ON ObjectLink_Engine.ObjectId = Object_Product.Id
@@ -113,14 +151,14 @@ BEGIN
           LEFT JOIN ObjectLink AS ObjectLink_Insert
                                ON ObjectLink_Insert.ObjectId = Object_Product.Id
                               AND ObjectLink_Insert.DescId = zc_ObjectLink_Protocol_Insert()
-          LEFT JOIN Object AS Object_Insert ON Object_Insert.Id = ObjectLink_Insert.ChildObjectId 
+          LEFT JOIN Object AS Object_Insert ON Object_Insert.Id = ObjectLink_Insert.ChildObjectId
 
           LEFT JOIN ObjectDate AS ObjectDate_Insert
                                ON ObjectDate_Insert.ObjectId = Object_Product.Id
                               AND ObjectDate_Insert.DescId = zc_ObjectDate_Protocol_Insert()
 
      WHERE Object_Product.DescId = zc_Object_Product()
-      AND (Object_Product.isErased = FALSE OR inIsShowAll = TRUE);  
+      AND (Object_Product.isErased = FALSE OR inIsShowAll = TRUE);
 
 END;
 $BODY$

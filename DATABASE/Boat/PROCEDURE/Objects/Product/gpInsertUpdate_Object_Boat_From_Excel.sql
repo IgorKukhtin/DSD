@@ -207,10 +207,12 @@ BEGIN
      --
      IF COALESCE (vbProductId, 0) = 0 OR 1=1
      THEN
+    RAISE EXCEPTION 'Ошибка.<%>', SUBSTRING (inBrandName, 1, 3) || ' ' || inProdModelName || ' ' || inProdEngineName || ' ' || inCIN;
+
          -- Создание
          vbProductId := (SELECT tmp.ioId FROM gpInsertUpdate_Object_Product (ioId            := vbProductId
                                                                            , inCode          := CASE WHEN vbProductId > 0 THEN (SELECT Object.ObjectCode FROM Object WHERE Object.Id = vbProductId) ELSE NEXTVAL ('Object_Product_seq') END :: Integer
-                                                                           , inName          := inBrandName || ' ' || inProdModelName || ' ' || inProdEngineName || ' ' || inCIN
+                                                                           , inName          := SUBSTRING (inBrandName, 1, 2) || ' ' || inProdModelName || ' ' || inProdEngineName || ' ' || inCIN
                                                                            , inBrandId       := vbBrandId
                                                                            , inModelId       := vbProdModelId
                                                                            , inEngineId      := vbProdEngineId

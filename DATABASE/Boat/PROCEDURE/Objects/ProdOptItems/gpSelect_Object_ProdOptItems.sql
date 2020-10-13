@@ -3,8 +3,8 @@
 DROP FUNCTION IF EXISTS gpSelect_Object_ProdOptItems (Boolean, Boolean, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpSelect_Object_ProdOptItems(
-    IN inIsShowAll   Boolean,            -- признак показать все (уникальные по всему справочнику)
-    IN inIsErased    Boolean,            -- признак показать удаленные да / нет 
+    IN inIsShowAll   Boolean,       -- признак показать все (уникальные по всему справочнику)
+    IN inIsErased    Boolean,       -- признак показать удаленные да / нет 
     IN inSession     TVarChar       -- сессия пользователя
 )
 RETURNS TABLE (Id Integer, Code Integer, Name TVarChar
@@ -12,9 +12,12 @@ RETURNS TABLE (Id Integer, Code Integer, Name TVarChar
              , PartNumber TVarChar, Comment TVarChar
              , ProductId Integer, ProductName TVarChar
              , ProdOptionsId Integer, ProdOptionsName TVarChar
+             , Color_fon Integer
              , InsertName TVarChar
              , InsertDate TDateTime
-             , isErased boolean) AS
+             , isErased Boolean
+              )
+AS
 $BODY$
    DECLARE vbUserId Integer;
 BEGIN
@@ -81,6 +84,13 @@ BEGIN
 
          , Object_ProdOptions.Id            AS ProdOptionsId
          , Object_ProdOptions.ValueData     AS ProdOptionsName
+         
+         , CASE WHEN CEIL (Object_ProdOptItems.ObjectCode / 2) * 2 <> Object_ProdOptItems.ObjectCode
+                     THEN zc_Color_Aqua()
+                ELSE
+                    -- нет цвета
+                    zc_Color_White()
+           END :: Integer AS Color_fon
 
          , Object_Insert.ValueData          AS InsertName
          , ObjectDate_Insert.ValueData      AS InsertDate
@@ -136,4 +146,4 @@ $BODY$
 */
 
 -- тест
--- SELECT * FROM gpSelect_Object_ProdOptItems (false, zfCalc_UserAdmin())
+-- SELECT * FROM gpSelect_Object_ProdOptItems (false, false, zfCalc_UserAdmin())
