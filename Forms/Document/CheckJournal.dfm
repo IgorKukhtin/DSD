@@ -459,7 +459,7 @@ inherited CheckJournalForm: TCheckJournalForm
             Width = 96
           end
           object MedicForSaleName: TcxGridDBColumn
-            Caption = #1042#1088#1072#1095#1100' '#1076#1083#1103' '#1087#1088#1086#1076#1072#1078#1080
+            Caption = #1044#1086#1082#1090#1086#1088' '#1060#1048#1054
             DataBinding.FieldName = 'MedicForSaleName'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
@@ -467,7 +467,7 @@ inherited CheckJournalForm: TCheckJournalForm
             Width = 102
           end
           object BuyerForSaleName: TcxGridDBColumn
-            Caption = #1055#1086#1082#1091#1087#1072#1090#1077#1083#1100' '#1076#1083#1103' '#1087#1088#1086#1076#1072#1078#1080
+            Caption = #1055#1072#1094#1080#1077#1085#1090' '#1060#1048#1054
             DataBinding.FieldName = 'BuyerForSaleName'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter

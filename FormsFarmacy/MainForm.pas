@@ -740,6 +740,8 @@ type
     actReport_TwoVendorBindings: TdsdOpenForm;
     N258: TMenuItem;
     N259: TMenuItem;
+    actRelatedProduct: TdsdOpenForm;
+    N260: TMenuItem;
     procedure actSaveDataExecute(Sender: TObject);
 
     procedure miRepriceClick(Sender: TObject);

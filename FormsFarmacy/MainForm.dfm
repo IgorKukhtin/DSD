@@ -3940,6 +3940,17 @@ inherited MainForm: TMainForm
       GuiParams = <>
       isShowModal = False
     end
+    object actRelatedProduct: TdsdOpenForm
+      Category = #1057#1087#1088#1072#1074#1086#1095#1085#1080#1082#1080
+      MoveParams = <>
+      Caption = #1057#1086#1087#1091#1090#1089#1090#1074#1091#1102#1097#1080#1077' '#1090#1086#1074#1072#1088#1099
+      FormName = 'TRelatedProductJournalForm'
+      FormNameParam.Value = 'TRelatedProductJournalForm'
+      FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
+      GuiParams = <>
+      isShowModal = False
+    end
   end
   inherited UserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn
     Left = 496
@@ -3992,6 +4003,9 @@ inherited MainForm: TMainForm
         end
         object N91: TMenuItem
           Action = actGoodsAllJuridical
+        end
+        object N260: TMenuItem
+          Action = actRelatedProduct
         end
         object N192: TMenuItem
           Caption = '-'

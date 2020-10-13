@@ -3391,6 +3391,14 @@
 				<DesignClass>TParentForm</DesignClass>
 			</DCCReference>
 			<DCCReference Include="..\..\SOURCE\COMPONENT\dsdTranslator.pas"/>
+			<DCCReference Include="..\..\FormsFarmacy\Document\RelatedProduct.pas">
+				<Form>RelatedProductForm</Form>
+				<DesignClass>TParentForm</DesignClass>
+			</DCCReference>
+			<DCCReference Include="..\..\FormsFarmacy\Document\RelatedProductJournal.pas">
+				<Form>RelatedProductJournalForm</Form>
+				<DesignClass>TParentForm</DesignClass>
+			</DCCReference>
 			<BuildConfiguration Include="Release">
 				<Key>Cfg_2</Key>
 				<CfgParent>Base</CfgParent>

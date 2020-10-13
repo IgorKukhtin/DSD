@@ -124,6 +124,7 @@ type
     procedure LoadPromoUnitFormTest;
     procedure LoadProvinceCityFormTest;
     procedure LoadReasonDifferencesFormTest;
+    procedure LoadRelatedProductFormTest;
     procedure LoadReportPromoParamsFormTest;
     procedure LoadReportSoldParamsFormTest;
     procedure LoadReportFormTest;
@@ -931,6 +932,15 @@ procedure TLoadFormTest.LoadReasonDifferencesFormTest;
 begin
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TReasonDifferencesForm'));
   TdsdFormStorageFactory.GetStorage.Load('TReasonDifferencesForm');
+end;
+
+procedure TLoadFormTest.LoadRelatedProductFormTest;
+begin
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TRelatedProductForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TRelatedProductForm');
+
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TRelatedProductJournalForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TRelatedProductJournalForm');
 end;
 
 procedure TLoadFormTest.LoadReportFormTest;

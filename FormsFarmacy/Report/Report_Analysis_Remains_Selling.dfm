@@ -505,6 +505,24 @@ object Report_Analysis_Remains_SellingForm: TReport_Analysis_Remains_SellingForm
       Visible = True
       UniqueName = #1043#1088#1091#1087#1087#1072
     end
+    object cxDBPivotGrid1Field1: TcxDBPivotGridField
+      AreaIndex = 12
+      AllowedAreas = [faColumn, faRow, faFilter]
+      IsCaptionAssigned = True
+      Caption = #1050#1086#1076' '#1075#1088#1091#1087#1087#1099' '#1084#1072#1088#1082#1077#1090#1080#1085#1075#1072
+      DataBinding.FieldName = 'GoodsGroupPromoId'
+      Visible = True
+      UniqueName = #1050#1086#1076' '#1075#1088#1091#1087#1087#1099' '#1084#1072#1088#1082#1077#1090#1080#1085#1075#1072
+    end
+    object cxDBPivotGrid1Field2: TcxDBPivotGridField
+      AreaIndex = 13
+      AllowedAreas = [faColumn, faRow, faFilter]
+      IsCaptionAssigned = True
+      Caption = #1043#1088#1091#1087#1087#1072' '#1084#1072#1088#1082#1077#1090#1080#1085#1075#1072
+      DataBinding.FieldName = 'GoodsGroupPromoName'
+      Visible = True
+      UniqueName = #1043#1088#1091#1087#1087#1072' '#1084#1072#1088#1082#1077#1090#1080#1085#1075#1072
+    end
     object cxDBPivotGridField9: TcxDBPivotGridField
       AreaIndex = 4
       AllowedAreas = [faColumn, faRow, faFilter]
@@ -933,7 +951,7 @@ object Report_Analysis_Remains_SellingForm: TReport_Analysis_Remains_SellingForm
         MultiSelectSeparator = ','
       end>
     PackSize = 1
-    Left = 192
+    Left = 272
     Top = 264
   end
   object UserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn
