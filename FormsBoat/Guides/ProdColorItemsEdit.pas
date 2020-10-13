@@ -22,7 +22,7 @@ uses
   dsdGuides, cxMaskEdit, cxButtonEdit;
 
 type
-  TProdModelEditForm = class(TParentForm)
+  TProdColorItemsEditForm = class(TParentForm)
     edName: TcxTextEdit;
     cxLabel1: TcxLabel;
     cxButton1: TcxButton;
@@ -40,20 +40,15 @@ type
     dsdUserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn;
     cxLabel3: TcxLabel;
     edComment: TcxTextEdit;
-    cxLabel6: TcxLabel;
-    edLength: TcxCurrencyEdit;
+    cxLabel13: TcxLabel;
+    edProduct: TcxButtonEdit;
+    GuidesProduct: TdsdGuides;
     cxLabel4: TcxLabel;
-    edBeam: TcxCurrencyEdit;
-    edHeight: TcxCurrencyEdit;
+    edProdOptions: TcxButtonEdit;
+    GuidesProdColorGroup: TdsdGuides;
     cxLabel5: TcxLabel;
-    cxLabel7: TcxLabel;
-    edWeight: TcxCurrencyEdit;
-    edFuel: TcxCurrencyEdit;
-    cxLabel8: TcxLabel;
-    edSpeed: TcxCurrencyEdit;
-    cxLabel9: TcxLabel;
-    cxLabel10: TcxLabel;
-    edSeating: TcxCurrencyEdit;
+    GuidesProdColor: TdsdGuides;
+    edProdColor: TcxButtonEdit;
   private
     { Private declarations }
   public
@@ -65,6 +60,6 @@ implementation
 {$R *.dfm}
 
 initialization
-  RegisterClass(TProdModelEditForm);
+  RegisterClass(TProdColorItemsEditForm);
 
 end.

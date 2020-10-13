@@ -1,4 +1,4 @@
-unit ProdColorItems;
+unit ProdColorItems1;
 
 interface
 
@@ -22,10 +22,10 @@ uses
   dxSkinSevenClassic, dxSkinSharp, dxSkinSharpPlus, dxSkinSilver,
   dxSkinSpringTime, dxSkinStardust, dxSkinSummer2008, dxSkinTheAsphaltWorld,
   dxSkinValentine, dxSkinVS2010, dxSkinWhiteprint, dxSkinXmas2008Blue,
-  cxCurrencyEdit;
+  cxCurrencyEdit, cxButtonEdit;
 
 type
-  TProdModelForm = class(TParentForm)
+  TProdColorItems1Form = class(TParentForm)
     cxGridLevel: TcxGridLevel;
     cxGrid: TcxGrid;
     DataSource: TDataSource;
@@ -64,13 +64,7 @@ type
     Comment: TcxGridDBColumn;
     spUnErased: TdsdStoredProc;
     actUpdateDataSet: TdsdUpdateDataSet;
-    Length: TcxGridDBColumn;
-    Beam: TcxGridDBColumn;
-    Height: TcxGridDBColumn;
-    Weight: TcxGridDBColumn;
-    Fuel: TcxGridDBColumn;
-    Speed: TcxGridDBColumn;
-    Seating: TcxGridDBColumn;
+    ProductName: TcxGridDBColumn;
   private
     { Private declarations }
   public
@@ -82,6 +76,6 @@ implementation
 {$R *.dfm}
 
 initialization
-  RegisterClass(TProdModelForm);
+  RegisterClass(TProdColorItems1Form);
 
 end.

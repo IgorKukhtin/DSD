@@ -1,9 +1,9 @@
-object ProdModelForm: TProdModelForm
+object ProdColorItems1Form: TProdColorItems1Form
   Left = 0
   Top = 0
-  Caption = #1057#1087#1088#1072#1074#1086#1095#1085#1080#1082' <'#1052#1086#1076#1077#1083#1080'>'
+  Caption = #1057#1087#1088#1072#1074#1086#1095#1085#1080#1082' <'#1069#1083#1077#1084#1077#1085#1090#1099' '#1062#1074#1077#1090#1072' ('#1051#1086#1076#1082#1072')>'
   ClientHeight = 376
-  ClientWidth = 891
+  ClientWidth = 725
   Color = clBtnFace
   Font.Charset = DEFAULT_CHARSET
   Font.Color = clWindowText
@@ -20,7 +20,7 @@ object ProdModelForm: TProdModelForm
   object cxGrid: TcxGrid
     Left = 0
     Top = 26
-    Width = 891
+    Width = 725
     Height = 350
     Align = alClient
     TabOrder = 0
@@ -50,8 +50,15 @@ object ProdModelForm: TProdModelForm
       OptionsView.HeaderHeight = 40
       OptionsView.Indicator = True
       Styles.StyleSheet = dmMain.cxGridTableViewStyleSheet
+      object ProductName: TcxGridDBColumn
+        Caption = #1051#1086#1076#1082#1072
+        DataBinding.FieldName = 'ProductName'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Width = 137
+      end
       object Code: TcxGridDBColumn
-        Caption = #1040#1088#1090#1080#1082#1091#1083
+        Caption = #1050#1086#1076
         DataBinding.FieldName = 'Code'
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
@@ -59,13 +66,35 @@ object ProdModelForm: TProdModelForm
         Width = 43
       end
       object Name: TcxGridDBColumn
-        Caption = #1053#1072#1079#1074#1072#1085#1080#1077
+        Caption = #1069#1083#1077#1084#1077#1085#1090
         DataBinding.FieldName = 'Name'
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         HeaderGlyphAlignmentHorz = taCenter
         Options.Editing = False
         Width = 189
+      end
+      object ProdColorGroupName: TcxGridDBColumn
+        Caption = #1050#1072#1090#1077#1075#1086#1088#1080#1103
+        DataBinding.FieldName = 'ProdColorGroupName'
+        PropertiesClassName = 'TcxButtonEditProperties'
+        Properties.Buttons = <
+          item
+            Default = True
+            Kind = bkEllipsis
+          end>
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        HeaderHint = #1050#1072#1090#1077#1075#1086#1088#1080#1103
+        Width = 80
+      end
+      object ProdColorName: TcxGridDBColumn
+        Caption = #1062#1074#1077#1090
+        DataBinding.FieldName = 'ProdColorName'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        HeaderHint = #1062#1074#1077#1090
+        Width = 80
       end
       object isErased: TcxGridDBColumn
         Caption = #1059#1076#1072#1083#1077#1085
@@ -76,69 +105,6 @@ object ProdModelForm: TProdModelForm
         HeaderAlignmentVert = vaCenter
         Options.Editing = False
         Width = 78
-      end
-      object Length: TcxGridDBColumn
-        Caption = #1044#1083#1080#1085#1072
-        DataBinding.FieldName = 'Length'
-        PropertiesClassName = 'TcxCurrencyEditProperties'
-        Properties.DisplayFormat = ',0.####;-,0.####; ;'
-        HeaderAlignmentHorz = taCenter
-        HeaderAlignmentVert = vaCenter
-        Width = 66
-      end
-      object Beam: TcxGridDBColumn
-        Caption = #1064#1080#1088#1080#1085#1072
-        DataBinding.FieldName = 'Beam'
-        PropertiesClassName = 'TcxCurrencyEditProperties'
-        Properties.DisplayFormat = ',0.####;-,0.####; ;'
-        HeaderAlignmentHorz = taCenter
-        HeaderAlignmentVert = vaCenter
-        Width = 66
-      end
-      object Height: TcxGridDBColumn
-        Caption = #1042#1099#1089#1086#1090#1072
-        DataBinding.FieldName = 'Height'
-        PropertiesClassName = 'TcxCurrencyEditProperties'
-        Properties.DisplayFormat = ',0.####;-,0.####; ;'
-        HeaderAlignmentHorz = taCenter
-        HeaderAlignmentVert = vaCenter
-        Width = 66
-      end
-      object Weight: TcxGridDBColumn
-        Caption = #1042#1077#1089
-        DataBinding.FieldName = 'Weight'
-        PropertiesClassName = 'TcxCurrencyEditProperties'
-        Properties.DisplayFormat = ',0.####;-,0.####; ;'
-        HeaderAlignmentHorz = taCenter
-        HeaderAlignmentVert = vaCenter
-        Width = 66
-      end
-      object Fuel: TcxGridDBColumn
-        Caption = #1047#1072#1087#1072#1089' '#1090#1086#1087#1083#1080#1074#1072
-        DataBinding.FieldName = 'Fuel'
-        PropertiesClassName = 'TcxCurrencyEditProperties'
-        Properties.DisplayFormat = ',0.####;-,0.####; ;'
-        HeaderAlignmentHorz = taCenter
-        HeaderAlignmentVert = vaCenter
-        Width = 66
-      end
-      object Speed: TcxGridDBColumn
-        Caption = #1057#1082#1086#1088#1086#1089#1090#1100', '#1082#1084'/'#1095
-        DataBinding.FieldName = 'Speed'
-        PropertiesClassName = 'TcxCurrencyEditProperties'
-        Properties.DisplayFormat = ',0.####;-,0.####; ;'
-        HeaderAlignmentHorz = taCenter
-        HeaderAlignmentVert = vaCenter
-        Width = 66
-      end
-      object Seating: TcxGridDBColumn
-        Caption = #1057#1080#1076#1077#1085#1100#1103
-        DataBinding.FieldName = 'Seating'
-        PropertiesClassName = 'TcxCurrencyEditProperties'
-        Properties.DisplayFormat = ',0.####;-,0.####; ;'
-        HeaderAlignmentHorz = taCenter
-        HeaderAlignmentVert = vaCenter
-        Width = 66
       end
       object Comment: TcxGridDBColumn
         Caption = #1055#1088#1080#1084#1077#1095#1072#1085#1080#1077
@@ -366,8 +332,8 @@ object ProdModelForm: TProdModelForm
       Hint = #1044#1086#1073#1072#1074#1080#1090#1100
       ShortCut = 45
       ImageIndex = 0
-      FormName = 'TProdModelEditForm'
-      FormNameParam.Value = 'TProdModelEditForm'
+      FormName = 'TProdColorItemsEditForm'
+      FormNameParam.Value = 'TProdColorItemsEditForm'
       FormNameParam.DataType = ftString
       FormNameParam.MultiSelectSeparator = ','
       GuiParams = <
@@ -388,8 +354,8 @@ object ProdModelForm: TProdModelForm
       Hint = #1048#1079#1084#1077#1085#1080#1090#1100
       ShortCut = 115
       ImageIndex = 1
-      FormName = 'TProdModelEditForm'
-      FormNameParam.Value = 'TProdModelEditForm'
+      FormName = 'TProdColorItemsEditForm'
+      FormNameParam.Value = 'TProdColorItemsEditForm'
       FormNameParam.DataType = ftString
       FormNameParam.MultiSelectSeparator = ','
       GuiParams = <
@@ -533,7 +499,7 @@ object ProdModelForm: TProdModelForm
     end
   end
   object spSelect: TdsdStoredProc
-    StoredProcName = 'gpSelect_Object_ProdModel'
+    StoredProcName = 'gpSelect_Object_ProdColorItems'
     DataSet = MasterCDS
     DataSets = <
       item
@@ -542,6 +508,13 @@ object ProdModelForm: TProdModelForm
     Params = <
       item
         Name = 'inIsShowAll'
+        Value = False
+        DataType = ftBoolean
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inIsErased'
         Value = False
         Component = actShowAll
         DataType = ftBoolean
@@ -553,7 +526,7 @@ object ProdModelForm: TProdModelForm
     Top = 128
   end
   object spErased: TdsdStoredProc
-    StoredProcName = 'gpUpdate_Object_isErased_ProdModel'
+    StoredProcName = 'gpUpdate_Object_isErased_ProdColorItems'
     DataSets = <>
     OutputType = otResult
     Params = <
@@ -610,7 +583,7 @@ object ProdModelForm: TProdModelForm
     Top = 248
   end
   object spUnErased: TdsdStoredProc
-    StoredProcName = 'gpUpdate_Object_isErased_ProdModel'
+    StoredProcName = 'gpUpdate_Object_isErased_ProdColorItems'
     DataSets = <>
     OutputType = otResult
     Params = <
