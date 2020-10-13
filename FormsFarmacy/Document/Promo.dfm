@@ -239,9 +239,9 @@ inherited PromoForm: TPromoForm
     inherited ceStatus: TcxButtonEdit
       Top = 62
       ExplicitTop = 62
-      ExplicitWidth = 200
+      ExplicitWidth = 161
       ExplicitHeight = 22
-      Width = 200
+      Width = 161
     end
     object lblUnit: TcxLabel
       Left = 223
@@ -302,16 +302,16 @@ inherited PromoForm: TPromoForm
       Width = 71
     end
     object cxLabel7: TcxLabel
-      Left = 674
+      Left = 623
       Top = 45
       Caption = #1055#1088#1080#1084#1077#1095#1072#1085#1080#1077
     end
     object edComment: TcxTextEdit
-      Left = 674
+      Left = 623
       Top = 62
       Properties.ReadOnly = False
       TabOrder = 15
-      Width = 287
+      Width = 195
     end
     object edPrescribe: TcxTextEdit
       Left = 844
@@ -326,38 +326,62 @@ inherited PromoForm: TPromoForm
       Top = 5
       Caption = #1057#1090#1072#1090#1091#1089' '#1087#1088#1086#1087#1080#1089#1080
     end
+    object edRelatedProduct: TcxButtonEdit
+      Left = 824
+      Top = 62
+      Properties.Buttons = <
+        item
+          Action = actChoiceRelatedProduct
+          Default = True
+          Kind = bkEllipsis
+        end
+        item
+          Action = actClearRelatedProduct
+          ImageIndex = 52
+          Kind = bkGlyph
+        end>
+      Properties.Images = dmMain.ImageList
+      Properties.ReadOnly = True
+      TabOrder = 18
+      Width = 137
+    end
+    object cxLabel11: TcxLabel
+      Left = 824
+      Top = 45
+      Caption = #1057#1086#1087#1091#1090#1089#1090#1074#1091#1102#1097#1080#1077' '#1090#1086#1074#1072#1088#1099
+    end
   end
   object edStartPromo: TcxDateEdit [2]
-    Left = 223
+    Left = 175
     Top = 62
     EditValue = 42485d
     TabOrder = 6
     Width = 100
   end
   object cxLabel3: TcxLabel [3]
-    Left = 223
+    Left = 175
     Top = 45
     Caption = #1044#1072#1090#1072' '#1085#1072#1095'. '#1082#1086#1085#1090#1088'.'
   end
   object edEndPromo: TcxDateEdit [4]
-    Left = 339
+    Left = 291
     Top = 62
     EditValue = 42485d
     TabOrder = 8
     Width = 100
   end
   object cxLabel6: TcxLabel [5]
-    Left = 339
+    Left = 291
     Top = 45
     Caption = #1044#1072#1090#1072' '#1086#1082#1086#1085'. '#1082#1086#1085#1090#1088'.'
   end
   object cxLabel8: TcxLabel [6]
-    Left = 451
+    Left = 403
     Top = 44
     Caption = 'C'#1091#1084#1084#1072' '#1082#1086#1085#1090#1088#1072#1082#1090#1072
   end
   object edAmount: TcxCurrencyEdit [7]
-    Left = 451
+    Left = 403
     Top = 62
     Properties.DisplayFormat = ',0.00'
     Properties.ReadOnly = False
@@ -365,12 +389,12 @@ inherited PromoForm: TPromoForm
     Width = 90
   end
   object cxLabel9: TcxLabel [8]
-    Left = 553
+    Left = 505
     Top = 44
     Caption = '% '#1073#1086#1085#1091#1089#1072' '#1086#1090' '#1079#1072#1082#1091#1087#1082#1080
   end
   object edChangePercent: TcxCurrencyEdit [9]
-    Left = 553
+    Left = 505
     Top = 62
     Properties.DisplayFormat = ',0.00'
     Properties.ReadOnly = False
@@ -1126,6 +1150,66 @@ inherited PromoForm: TPromoForm
         end>
       isShowModal = True
     end
+    object actUpdate_RelatedProduct: TdsdExecStoredProc
+      Category = 'DSDLib'
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      StoredProc = spUpdate_RelatedProduct
+      StoredProcList = <
+        item
+          StoredProc = spUpdate_RelatedProduct
+        end>
+      Caption = 'actUpdate_RelatedProduct'
+    end
+    object actChoiceRelatedProduct: TOpenChoiceForm
+      Category = 'DSDLib'
+      MoveParams = <>
+      AfterAction = actUpdate_RelatedProduct
+      PostDataSetBeforeExecute = False
+      Caption = 'actChoiceRelatedProduct'
+      FormName = 'TChoiceRelatedProductForm'
+      FormNameParam.Value = 'TChoiceRelatedProductForm'
+      FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
+      GuiParams = <
+        item
+          Name = 'Key'
+          Value = Null
+          Component = FormParams
+          ComponentItem = 'RelatedProductId'
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'TextValue'
+          Value = Null
+          Component = edRelatedProduct
+          DataType = ftString
+          MultiSelectSeparator = ','
+        end>
+      isShowModal = True
+    end
+    object actClearRelatedProduct: TdsdSetDefaultParams
+      Category = 'DSDLib'
+      MoveParams = <>
+      AfterAction = actUpdate_RelatedProduct
+      Caption = 'actClearRelatedProduct'
+      DefaultParams = <
+        item
+          Param.Value = Null
+          Param.Component = FormParams
+          Param.ComponentItem = 'RelatedProductId'
+          Param.MultiSelectSeparator = ','
+          Value = 0
+        end
+        item
+          Param.Value = Null
+          Param.Component = edRelatedProduct
+          Param.DataType = ftString
+          Param.MultiSelectSeparator = ','
+          Value = ''
+        end>
+      QuestionBeforeExecute = #1059#1073#1088#1072#1090#1100' '#1087#1088#1080#1074#1103#1079#1082#1091' '#1082' '#1076#1086#1082#1091#1084#1077#1085#1090#1091' <'#1057#1086#1087#1091#1090#1089#1090#1074#1091#1102#1097#1080#1077' '#1090#1086#1074#1072#1088#1099'>?'
+    end
   end
   inherited spSelect: TdsdStoredProc
     StoredProcName = 'gpSelect_MovementItem_Promo'
@@ -1421,6 +1505,11 @@ inherited PromoForm: TPromoForm
         Name = 'ObjectId'
         Value = Null
         MultiSelectSeparator = ','
+      end
+      item
+        Name = 'RelatedProductId'
+        Value = Null
+        MultiSelectSeparator = ','
       end>
     Left = 40
     Top = 312
@@ -1560,6 +1649,13 @@ inherited PromoForm: TPromoForm
         Name = 'Prescribe'
         Value = Null
         Component = edPrescribe
+        DataType = ftString
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'RelatedProductName'
+        Value = Null
+        Component = edRelatedProduct
         DataType = ftString
         MultiSelectSeparator = ','
       end>
@@ -1705,10 +1801,42 @@ inherited PromoForm: TPromoForm
     Top = 312
   end
   inherited spErasedMIMaster: TdsdStoredProc
+    Params = <
+      item
+        Name = 'inMovementItemId'
+        Component = MasterCDS
+        ComponentItem = 'Id'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'outIsErased'
+        Value = False
+        Component = MasterCDS
+        ComponentItem = 'isErased'
+        DataType = ftBoolean
+        MultiSelectSeparator = ','
+      end>
     Left = 550
     Top = 224
   end
   inherited spUnErasedMIMaster: TdsdStoredProc
+    Params = <
+      item
+        Name = 'inMovementItemId'
+        Component = MasterCDS
+        ComponentItem = 'Id'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'outIsErased'
+        Value = False
+        Component = MasterCDS
+        ComponentItem = 'isErased'
+        DataType = ftBoolean
+        MultiSelectSeparator = ','
+      end>
     Left = 654
     Top = 248
   end
@@ -1982,6 +2110,7 @@ inherited PromoForm: TPromoForm
         DataSummaryItemIndex = -1
       end>
     SearchAsFilter = False
+    PropertiesCellList = <>
     Left = 334
     Top = 409
   end
@@ -2161,6 +2290,7 @@ inherited PromoForm: TPromoForm
         DataSummaryItemIndex = -1
       end>
     SearchAsFilter = False
+    PropertiesCellList = <>
     Left = 302
     Top = 513
   end
@@ -2323,7 +2453,7 @@ inherited PromoForm: TPromoForm
       end
       item
         Name = 'inisChecked'
-        Value = 'TRUE'
+        Value = True
         DataType = ftBoolean
         ParamType = ptInput
         MultiSelectSeparator = ','
@@ -2365,7 +2495,7 @@ inherited PromoForm: TPromoForm
       end
       item
         Name = 'inisChecked'
-        Value = 'FALSE'
+        Value = False
         DataType = ftBoolean
         ParamType = ptInput
         MultiSelectSeparator = ','
@@ -2445,5 +2575,32 @@ inherited PromoForm: TPromoForm
     ParamKeyField = 'ioId'
     Left = 706
     Top = 296
+  end
+  object spUpdate_RelatedProduct: TdsdStoredProc
+    StoredProcName = 'gpUpdate_Movement_Promo_RelatedProduct'
+    DataSets = <>
+    OutputType = otResult
+    Params = <
+      item
+        Name = 'inMovementId'
+        Value = Null
+        Component = FormParams
+        ComponentItem = 'Id'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inRelatedProductId'
+        Value = Null
+        Component = FormParams
+        ComponentItem = 'RelatedProductId'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end>
+    PackSize = 1
+    NeedResetData = True
+    ParamKeyField = 'inMovementId'
+    Left = 424
+    Top = 312
   end
 end

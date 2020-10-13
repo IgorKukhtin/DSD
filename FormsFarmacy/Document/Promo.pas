@@ -13,7 +13,7 @@ uses
   cxMaskEdit, cxDropDownEdit, cxCalendar, cxLabel, cxTextEdit, Vcl.ExtCtrls,
   cxGridLevel, cxGridCustomTableView, cxGridTableView, cxGridDBTableView,
   cxGridCustomView, cxGrid, cxPC, dxSkinsCore, dxSkinsDefaultPainters,
-  dxSkinscxPCPainter, dxSkinsdxBarPainter, cxSplitter, ExternalLoad;
+  dxSkinscxPCPainter, dxSkinsdxBarPainter, cxSplitter, ExternalLoad, DataModul;
 
 type
   TPromoForm = class(TAncestorDocumentForm)
@@ -136,6 +136,12 @@ type
     actLoad_From_Object: TdsdExecStoredProc;
     actPartnerChoice: TOpenChoiceForm;
     dxBarButton2: TdxBarButton;
+    edRelatedProduct: TcxButtonEdit;
+    cxLabel11: TcxLabel;
+    actUpdate_RelatedProduct: TdsdExecStoredProc;
+    actChoiceRelatedProduct: TOpenChoiceForm;
+    spUpdate_RelatedProduct: TdsdStoredProc;
+    actClearRelatedProduct: TdsdSetDefaultParams;
   private
     { Private declarations }
   public

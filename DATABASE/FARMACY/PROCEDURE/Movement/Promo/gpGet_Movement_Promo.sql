@@ -23,7 +23,8 @@ RETURNS TABLE (Id Integer
              , PersonalId Integer
              , PersonalName TVarChar
              , Comment TVarChar
-             , Prescribe TVarChar)
+             , Prescribe TVarChar
+             , RelatedProductName TVarChar)
 AS
 $BODY$
 BEGIN
@@ -52,6 +53,7 @@ BEGIN
           , NULL::TVarChar                                   AS PersonalName
           , NULL::TVarChar                                   AS Comment
           , NULL::TVarChar                                   AS Prescribe
+          , NULL::TVarChar                                   AS RelatedProductName
         FROM lfGet_Object_Status(zc_Enum_Status_UnComplete()) AS Object_Status;
   
    ELSE
@@ -77,6 +79,7 @@ BEGIN
           , CASE WHEN COALESCE(MovementBoolean_Prescribe.ValueData, FALSE)
             THEN 'Ожидает прописи'
             ELSE 'Прописано' END::TVarChar                                 AS Prescribe
+          , MS_RelatedProduct_Comment.ValueData                            AS RelatedProductName
      FROM Movement 
         LEFT JOIN Object AS Object_Status ON Object_Status.Id = Movement.StatusId
 
@@ -120,6 +123,14 @@ BEGIN
                                   ON MovementBoolean_Prescribe.MovementId =  Movement.Id
                                  AND MovementBoolean_Prescribe.DescId = zc_MovementBoolean_Promo_Prescribe()
 
+        LEFT JOIN MovementLinkMovement AS MovementLinkMovement_RelatedProduct
+                                       ON MovementLinkMovement_RelatedProduct.MovementId = Movement.Id
+                                      AND MovementLinkMovement_RelatedProduct.DescId = zc_MovementLinkMovement_RelatedProduct()
+        LEFT JOIN MovementString AS MS_RelatedProduct_Comment
+                                 ON MS_RelatedProduct_Comment.MovementId = MovementLinkMovement_RelatedProduct.MovementChildId
+                                AND MS_RelatedProduct_Comment.DescId = zc_MovementString_Comment()
+
+
      WHERE Movement.Id =  inMovementId;
 
     END IF;
@@ -138,3 +149,5 @@ $BODY$
 --тест 
 --select * from gpGet_Movement_Promo(inMovementId := 0 , inOperDate := ('13.03.2016')::TDateTime ,  inSession := '3');
 --select * from gpGet_Movement_Promo(inMovementId := 1923638 , inOperDate := ('24.04.2016')::TDateTime ,  inSession := '3');
+
+select * from gpGet_Movement_Promo(inMovementId := 18738568 , inOperDate := ('30.06.2050')::TDateTime ,  inSession := '3');

@@ -67,9 +67,14 @@ CREATE OR REPLACE FUNCTION zc_MovementLinkMovement_Income() RETURNS Integer AS $
 INSERT INTO MovementLinkMovementDesc (Code, ItemName)
   SELECT 'zc_MovementLinkMovement_Income', 'Приход от поставщика' WHERE NOT EXISTS (SELECT * FROM MovementLinkMovementDesc WHERE Code = 'zc_MovementLinkMovement_Income');
 
+CREATE OR REPLACE FUNCTION zc_MovementLinkMovement_RelatedProduct() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM MovementLinkMovementDesc WHERE Code = 'zc_MovementLinkMovement_RelatedProduct'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
+INSERT INTO MovementLinkMovementDesc (Code, ItemName)
+  SELECT 'zc_MovementLinkMovement_RelatedProduct', 'Сопутствующие товары' WHERE NOT EXISTS (SELECT * FROM MovementLinkMovementDesc WHERE Code = 'zc_MovementLinkMovement_RelatedProduct');
+
 /*-------------------------------------------------------------------------------
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
-               Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.
+               Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А. Шаблий О.В.
+ 13.10.20                                                                   *
  07.05.20         * zc_MovementLinkMovement_Income
  19.11.18         *
  21.07.16         * zc_MovementLinkMovement_Invoice

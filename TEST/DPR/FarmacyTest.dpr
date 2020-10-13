@@ -957,7 +957,8 @@ uses
   Report_TwoVendorBindings in '..\..\FormsFarmacy\Report\Report_TwoVendorBindings.pas' {Report_TwoVendorBindingsForm: TParentForm},
   dsdTranslator in '..\..\SOURCE\COMPONENT\dsdTranslator.pas',
   RelatedProduct in '..\..\FormsFarmacy\Document\RelatedProduct.pas' {RelatedProductForm: TParentForm},
-  RelatedProductJournal in '..\..\FormsFarmacy\Document\RelatedProductJournal.pas' {RelatedProductJournalForm: TParentForm};
+  RelatedProductJournal in '..\..\FormsFarmacy\Document\RelatedProductJournal.pas' {RelatedProductJournalForm: TParentForm},
+  ChoiceRelatedProduct in '..\..\FormsFarmacy\Guides\ChoiceRelatedProduct.pas' {ChoiceRelatedProductForm: TParentForm};
 
 {$R *.res}
 {$R DevExpressRus.res}

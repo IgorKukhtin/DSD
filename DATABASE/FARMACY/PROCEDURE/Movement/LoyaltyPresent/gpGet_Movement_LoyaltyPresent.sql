@@ -42,7 +42,7 @@ BEGIN
         RETURN QUERY
         SELECT
             0                           AS Id
-          , '1'::TVarChar     --CAST (NEXTVAL ('movement_LoyaltyPresent_seq') AS TVarChar) AS InvNumber
+          , CAST (NEXTVAL ('movement_LoyaltyPresent_seq') AS TVarChar) AS InvNumber
           , inOperDate		            AS OperDate
           , Object_Status.Code          AS StatusCode
           , Object_Status.Name          AS StatusName
