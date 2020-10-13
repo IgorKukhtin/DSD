@@ -44,7 +44,10 @@ BEGIN
    vbCode_calc:= lfGet_ObjectCode (inCode, zc_Object_Member());
    
    -- проверка уникальности <Ќаименование>
-   PERFORM lpCheckUnique_Object_ValueData(ioId, zc_Object_Member(), inName);
+   IF TRIM (inINN) = ''
+   THEN 
+       PERFORM lpCheckUnique_Object_ValueData(ioId, zc_Object_Member(), inName);
+   END IF;
    -- проверка уникальности < од>
    PERFORM lpCheckUnique_Object_ObjectCode (ioId, zc_Object_Member(), vbCode_calc);
    -- проверка уникальность <INN>
