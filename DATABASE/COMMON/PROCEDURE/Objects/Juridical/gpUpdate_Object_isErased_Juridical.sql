@@ -10,8 +10,15 @@ RETURNS VOID AS
 $BODY$
    DECLARE vbUserId Integer;
 BEGIN
-   -- проверка прав пользователя на вызов процедуры
-   vbUserId := lpCheckRight (inSession, zc_Enum_Process_Update_Object_isErased_Juridical());
+   IF inSession = '2731040' -- Зянько В.Я.
+      AND EXISTS (SELECT 1 FROM Object WHERE Object.Id = inObjectId AND Object.isErased = TRUE)
+   THEN
+       -- НЕТ проверки прав пользователя на вызов процедуры
+       vbUserId:= lpGetUserBySession (inSession);
+   ELSE
+       -- проверка прав пользователя на вызов процедуры
+       vbUserId := lpCheckRight (inSession, zc_Enum_Process_Update_Object_isErased_Juridical());
+   END IF;
 
    -- изменили
    PERFORM lpUpdate_Object_isErased (inObjectId:= inObjectId, inUserId:= vbUserId);
