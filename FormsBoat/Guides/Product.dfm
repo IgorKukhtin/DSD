@@ -277,9 +277,9 @@ object ProductForm: TProductForm
         HeaderAlignmentVert = vaCenter
         Width = 66
       end
-      object optProdOptions: TcxGridDBColumn
+      object optProdOptionsName: TcxGridDBColumn
         Caption = #1054#1087#1094#1080#1103
-        DataBinding.FieldName = 'ProdOptions'
+        DataBinding.FieldName = 'ProdOptionsName'
         PropertiesClassName = 'TcxButtonEditProperties'
         Properties.Buttons = <
           item
@@ -411,9 +411,9 @@ object ProductForm: TProductForm
         HeaderAlignmentVert = vaCenter
         Width = 80
       end
-      object colProdColor: TcxGridDBColumn
+      object colProdColorName: TcxGridDBColumn
         Caption = #1062#1074#1077#1090
-        DataBinding.FieldName = 'ProdColor'
+        DataBinding.FieldName = 'ProdColorName'
         PropertiesClassName = 'TcxButtonEditProperties'
         Properties.Buttons = <
           item
@@ -819,7 +819,7 @@ object ProductForm: TProductForm
       ImageIndex = 2
       ShortCut = 46
       ErasedFieldName = 'isErased'
-      DataSource = DataSource
+      DataSource = ProdColorItemsDS
     end
     object actSetErasedOpt: TdsdUpdateErased
       Category = 'DSDLib'
@@ -834,7 +834,7 @@ object ProductForm: TProductForm
       ImageIndex = 2
       ShortCut = 46
       ErasedFieldName = 'isErased'
-      DataSource = DataSource
+      DataSource = ProdOptItemsDS
     end
     object actSetErased: TdsdUpdateErased
       Category = 'DSDLib'
@@ -865,7 +865,7 @@ object ProductForm: TProductForm
       ShortCut = 46
       ErasedFieldName = 'isErased'
       isSetErased = False
-      DataSource = DataSource
+      DataSource = ProdOptItemsDS
     end
     object actSetUnErasedColor: TdsdUpdateErased
       Category = 'DSDLib'
@@ -881,7 +881,7 @@ object ProductForm: TProductForm
       ShortCut = 46
       ErasedFieldName = 'isErased'
       isSetErased = False
-      DataSource = DataSource
+      DataSource = ProdColorItemsDS
     end
     object actSetUnErased: TdsdUpdateErased
       Category = 'DSDLib'

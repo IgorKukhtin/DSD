@@ -34,6 +34,10 @@ type
     FOnStatus: TOnStatus;
 
     FCurrTable: string;
+    FKeyFields: string;
+    FHasBlob: boolean;
+    FIsCompositeKey: boolean;
+    FRealKeyField: string;
     FTotalCount: Int64;
     FProcessedCount: Int64;
 
@@ -121,11 +125,12 @@ begin
   QSrc := TZQuery.Create(nil);
   try
     QSrc.Connection := FMasterConn;
+    QSrc.FetchRow := 1000;
     UpdateStatus('Генерация запроса на вставку ..');
-    FInsertQuery := GetInsertQuery(FTables.FieldByName('table_name').AsString);
+    FInsertQuery := GetInsertQuery(FCurrTable);
     if FInsertQuery.IsEmpty then
     begin
-      ProcessError('Ошибка получения скрипта INSERT для '+ FTables.FieldByName('table_name').AsString);
+      ProcessError('Ошибка получения скрипта INSERT для '+ FCurrTable);
       Exit;
     end;
     LastId := 0;
@@ -134,24 +139,19 @@ begin
       CheckPaused;
       UpdateStatus('Получение данных от мастера ..');
       QSrc.Close;
-      if FTables.FieldByName('is_composite_key').AsBoolean then
-        QSrc.SQL.Text :=
-          'WITH '+ FTables.FieldByName('table_name').AsString + ' AS ' + sLineBreak +
-          '( '+ sLineBreak +
-          '   SELECT * FROM '+ FTables.FieldByName('table_name').AsString +
-          '   ORDER BY '+ FTables.FieldByName('key_fields').AsString + sLineBreak +
-          '   LIMIT '+ IntToStr(FSnapshotSelectCount) + ' OFFSET '+ IntToStr(FProcessedCount) +
-          ')' + sLineBreak +
-          FInsertQuery
-      else
-      begin
+      if FIsCompositeKey then
         QSrc.SQL.Text :=
           FInsertQuery + sLineBreak +
-          'WHERE '+ FTables.FieldByName('key_fields').AsString + ' > :LastId '+ sLineBreak +
-          'ORDER BY '+ FTables.FieldByName('key_fields').AsString + sLineBreak +
+          'WHERE '+ FRealKeyField + ' >= :LastId '+ sLineBreak +
+          'ORDER BY '+ FRealKeyField + ',' + FKeyFields + sLineBreak +
+          'LIMIT '+ IntToStr(FSnapshotSelectCount)
+      else
+        QSrc.SQL.Text :=
+          FInsertQuery + sLineBreak +
+          'WHERE '+ FRealKeyField + ' > :LastId '+ sLineBreak +
+          'ORDER BY '+ FKeyFields + sLineBreak +
           'LIMIT '+ IntToStr(FSnapshotSelectCount);
-        QSrc.ParamByName('LastId').Value := LastId;
-      end;
+      QSrc.ParamByName('LastId').Value := LastId;
 
       //
       tmpDate:=NOw;
@@ -168,9 +168,9 @@ begin
       if (QSrc.RecordCount = 0) then
       begin
         if FHadValues then
-          ProcessMessage('Данные для таблицы '+ FTables.FieldByName('table_name').AsString + ' перенесены')
+          ProcessMessage('Данные для таблицы '+ FCurrTable + ' перенесены')
         else
-          ProcessMessage('В таблице '+ FTables.FieldByName('table_name').AsString + ' нет данных для переноса');
+          ProcessMessage('В таблице '+ FCurrTable + ' нет данных для переноса');
         break;
       end;
       FHadValues := true;
@@ -183,9 +183,8 @@ begin
       while not Terminated and not QSrc.Eof do
       begin
         cBatch := cBatch + QSrc.FieldByName('Query').AsString + ';' + sLineBreak;
-        if not FTables.FieldByName('is_composite_key').AsBoolean then
-          if QSrc.FieldByName(FTables.FieldByName('key_fields').AsString).AsInteger > LastId then
-            LastId := QSrc.FieldByName(FTables.FieldByName('key_fields').AsString).AsInteger;
+        if QSrc.FieldByName(FRealKeyField).AsInteger > LastId then
+          LastId := QSrc.FieldByName(FRealKeyField).AsInteger;
         QSrc.Next;
         inc(nBatchCount);
         if not Terminated then
@@ -218,6 +217,9 @@ begin
             end;
           end;
       end;
+      // увеличиваем lastid, чтобы следующий QSrc.open вернул 0 записей
+      if FIsCompositeKey and (QSrc.RecordCount < FSnapshotSelectCount) then
+        inc(LastId);
       DecodeTime(now-tmpBatchTime, Hour, Min, Sec, MSec);
       StrTime:=IntToStr(Min)+':'+IntToStr(Sec)+':'+IntToStr(MSec);
       DecodeTime(now, Hour, Min, Sec, MSec);
@@ -244,7 +246,7 @@ begin
     QDst.Connection := FSlaveConn;
     LastId := 0;
 
-    A := FTables.FieldByName('key_fields').AsString.Split([','], TStringSplitOptions.ExcludeEmpty);
+    A := FKeyFields.Split([','], TStringSplitOptions.ExcludeEmpty);
     cSQL := '';
     for I := 0 to Length(A) - 1 do
     begin
@@ -254,7 +256,7 @@ begin
         cSQL := cSQL + ' AND ';
       cSQL := cSQL + A[I] + ' = :' + A[I];
     end;
-    cSQL := 'SELECT * FROM '+ FTables.FieldByName('table_name').AsString + sLineBreak + cSQL;
+    cSQL := 'SELECT * FROM '+ FCurrTable + sLineBreak + cSQL;
     QDst.SQL.Text := cSQL;
 
     while not Terminated do
@@ -262,17 +264,17 @@ begin
       CheckPaused;
       UpdateStatus('Получение данных от мастера ..');
       QSrc.Close;
-      if FTables.FieldByName('is_composite_key').AsBoolean then
+      if FIsCompositeKey then
         QSrc.SQL.Text :=
-          'SELECT * FROM '+ FTables.FieldByName('table_name').AsString + sLineBreak +
-          'ORDER BY '+ FTables.FieldByName('key_fields').AsString + sLineBreak +
+          'SELECT * FROM '+ FCurrTable + sLineBreak +
+          'ORDER BY '+ FKeyFields + sLineBreak +
           'LIMIT '+ IntToStr(FSnapshotBlobSelectCount) + ' OFFSET '+ IntToStr(FProcessedCount)
       else
       begin
         QSrc.SQL.Text :=
-          'SELECT * FROM '+ FTables.FieldByName('table_name').AsString + sLineBreak +
-          'WHERE '+ FTables.FieldByName('key_fields').AsString + ' > :LastId '+ sLineBreak +
-          'ORDER BY '+ FTables.FieldByName('key_fields').AsString + sLineBreak +
+          'SELECT * FROM '+ FCurrTable + sLineBreak +
+          'WHERE '+ FRealKeyField + ' > :LastId '+ sLineBreak +
+          'ORDER BY '+ FKeyFields + sLineBreak +
           'LIMIT '+ IntToStr(FSnapshotBlobSelectCount);
         QSrc.ParamByName('LastId').Value := LastId;
       end;
@@ -280,9 +282,9 @@ begin
       if (QSrc.RecordCount = 0) then
       begin
         if FHadValues then
-          ProcessMessage('Данные для таблицы '+ FTables.FieldByName('table_name').AsString + ' перенесены')
+          ProcessMessage('Данные для таблицы '+ FCurrTable + ' перенесены')
         else
-          ProcessMessage('В таблице '+ FTables.FieldByName('table_name').AsString + ' нет данных для переноса');
+          ProcessMessage('В таблице '+ FCurrTable + ' нет данных для переноса');
         break;
       end;
       FHadValues := true;
@@ -312,9 +314,9 @@ begin
         FProcessedCount := FProcessedCount + 1;
         UpdateProcessedCount;
 
-        if not FTables.FieldByName('is_composite_key').AsBoolean then
-          if QSrc.FieldByName(FTables.FieldByName('key_fields').AsString).AsInteger > LastId then
-            LastId := QSrc.FieldByName(FTables.FieldByName('key_fields').AsString).AsInteger;
+        if not FIsCompositeKey then
+          if QSrc.FieldByName(FRealKeyField).AsInteger > LastId then
+            LastId := QSrc.FieldByName(FRealKeyField).AsInteger;
 
         QSrc.Next;
         CheckPaused;
@@ -385,6 +387,15 @@ begin
       while not Terminated and not FTables.Eof do
       begin
         FCurrTable := FTables.FieldByName('table_name').AsString;
+        FKeyFields := FTables.FieldByName('key_fields').AsString;
+        FHasBlob := FTables.FieldByName('has_blob').AsBoolean;
+        FIsCompositeKey := FTables.FieldByName('is_composite_key').AsBoolean;
+        if SameText(FCurrTable, 'containerlinkobject') then
+          FRealKeyField := 'containerid'
+        else if FIsCompositeKey then
+          FRealKeyField := Copy(FKeyFields, 1, Pos(',', FKeyFields) - 1)
+        else
+          FRealKeyField := FKeyFields;
 
         Synchronize(
           procedure
@@ -396,17 +407,26 @@ begin
 
         FTempQuery.Close;
         FTempQuery.Connection := FMasterConn;
-        FTempQuery.SQL.Text := 'select count(*) as TotalCount from '+ FCurrTable;
+
+//        if FTables.FieldByName('is_composite_key').AsBoolean then
+//          FTempQuery.SQL.Text := 'select count(*) as TotalCount from '+ FCurrTable
+//        else
+//          FTempQuery.SQL.Text := 'select count('+ FTables.FieldByName('key_fields').AsString +') as TotalCount from '+ FCurrTable;
+
+        FTempQuery.ParamCheck := false;
+        FTempQuery.SQL.Text := 'SELECT reltuples::bigint AS TotalCount FROM pg_class WHERE relname='+ QuotedStr(FCurrTable) +';';
         FTempQuery.Open;
 
         FTotalCount := FTempQuery.FieldByName('TotalCount').AsInteger;
+        FTempQuery.Close;
+        FTempQuery.ParamCheck := true;
         FProcessedCount := 0;
 
         UpdateProcessedCount;
 
         if FSlaveConn.ExecuteDirect('ALTER TABLE '+ FCurrTable +' DISABLE TRIGGER ALL') then
           try
-            if not FTables.FieldByName('has_blob').AsBoolean then
+            if not FHasBlob then
               CopyBatchRecords
             else
               CopyBlobRecords;

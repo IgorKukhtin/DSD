@@ -60,13 +60,21 @@ BEGIN
    -- сохранили свойство <>
    PERFORM lpInsertUpdate_ObjectFloat (zc_ObjectFloat_MemberMinus_Summ(), ioId, inSumm);
 
-   vbINN_to := (SELECT ObjectString_INN_to.ValueData
-                FROM ObjectString AS ObjectString_INN_to
-                WHERE ObjectString_INN_to.ObjectId = inToId
-                  AND ObjectString_INN_to.DescId = zc_ObjectString_Member_INN()
-               );
-   vbDescId_to := (SELECT Object.DescId FROM Object WHERE Object.Id = inToId);
-               
+   SELECT CASE WHEN Object_To.DescId = zc_Object_Juridical() THEN ObjectHistory_JuridicalDetails_View.OKPO
+               ELSE ObjectString_INN_to.ValueData
+          END              AS INN_to
+        , Object_To.DescId AS DescId
+ INTO vbINN_to, vbDescId_to
+   FROM Object AS Object_to
+        LEFT JOIN ObjectString AS ObjectString_INN_to
+                               ON ObjectString_INN_to.ObjectId = Object_To.Id
+                              AND ObjectString_INN_to.DescId IN (zc_ObjectString_MemberExternal_INN(), zc_ObjectString_Member_INN())
+                              AND Object_To.DescId <> zc_Object_Juridical()
+        LEFT JOIN ObjectHistory_JuridicalDetails_View ON ObjectHistory_JuridicalDetails_View.JuridicalId = Object_To.Id
+                                                     AND Object_To.DescId = zc_Object_Juridical()
+   WHERE Object_to.Id = inToId;
+   
+   
    IF COALESCE (vbDescId_to,0) <> zc_Object_MemberExternal() AND COALESCE (vbINN_to,'') <> COALESCE (inINN_to,'')
       THEN
            RAISE EXCEPTION 'Ошибка.Ввод ИНН только для стронних физ.лиц.';

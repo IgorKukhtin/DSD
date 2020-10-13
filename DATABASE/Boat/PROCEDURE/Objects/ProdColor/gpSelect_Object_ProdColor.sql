@@ -25,14 +25,14 @@ BEGIN
    RETURN QUERY
        -- результат
        SELECT
-             Object_ProdColor.Id                 AS Id
-           , Object_ProdColor.ObjectCode         AS Code
-           , Object_ProdColor.ValueData          AS Name
+             Object_ProdColor.Id             AS Id
+           , Object_ProdColor.ObjectCode     AS Code
+           , Object_ProdColor.ValueData      AS Name
            , ObjectString_Comment.ValueData  AS Comment
 
            , Object_Insert.ValueData         AS InsertName
            , ObjectDate_Insert.ValueData     AS InsertDate
-           , Object_ProdColor.isErased           AS isErased
+           , Object_ProdColor.isErased       AS isErased
        FROM Object AS Object_ProdColor
           LEFT JOIN ObjectString AS ObjectString_Comment
                                  ON ObjectString_Comment.ObjectId = Object_ProdColor.Id
