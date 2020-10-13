@@ -26,6 +26,7 @@ type
     procedure LoadProdEngineFormTest;
     procedure LoadProdModelFormTest;
     procedure LoadProdOptionsFormTest;
+    procedure LoadProdOptItemsFormTest;
     procedure LoadProductFormTest;
     procedure FormTest;
   end;
@@ -181,6 +182,15 @@ begin
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TProdOptionsEditForm'));
   TdsdFormStorageFactory.GetStorage.Load('TProdOptionsEditForm');
 end;
+
+procedure TLoadFormTest.LoadProdOptItemsFormTest;
+begin
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TProdOptItemsForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TProdOptItemsForm');
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TProdOptItemsEditForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TProdOptItemsEditForm');
+end;
+
 procedure TLoadFormTest.LoadProductFormTest;
 begin
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TProductForm'));

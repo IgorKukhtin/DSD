@@ -955,7 +955,9 @@ uses
   Report_ResortsByLot in '..\..\FormsFarmacy\Report\Report_ResortsByLot.pas' {Report_ResortsByLotForm: TParentForm},
   Report_ResortsByLotDialog in '..\..\FormsFarmacy\Report\Report_ResortsByLotDialog.pas' {Report_ResortsByLotDialogForm: TParentForm},
   Report_TwoVendorBindings in '..\..\FormsFarmacy\Report\Report_TwoVendorBindings.pas' {Report_TwoVendorBindingsForm: TParentForm},
-  dsdTranslator in '..\..\SOURCE\COMPONENT\dsdTranslator.pas';
+  dsdTranslator in '..\..\SOURCE\COMPONENT\dsdTranslator.pas',
+  RelatedProduct in '..\..\FormsFarmacy\Document\RelatedProduct.pas' {RelatedProductForm: TParentForm},
+  RelatedProductJournal in '..\..\FormsFarmacy\Document\RelatedProductJournal.pas' {RelatedProductJournalForm: TParentForm};
 
 {$R *.res}
 {$R DevExpressRus.res}

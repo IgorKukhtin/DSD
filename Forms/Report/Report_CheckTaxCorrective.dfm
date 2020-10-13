@@ -75,6 +75,11 @@ inherited Report_CheckTaxCorrectiveForm: TReport_CheckTaxCorrectiveForm
               Format = ',0.####'
               Kind = skSum
               Column = Summ_Diff
+            end
+            item
+              Format = #1057#1090#1088#1086#1082': ,0'
+              Kind = skCount
+              Column = InvNumber_ReturnIn
             end>
           OptionsData.Editing = False
           OptionsView.GroupByBox = True
@@ -90,7 +95,7 @@ inherited Report_CheckTaxCorrectiveForm: TReport_CheckTaxCorrectiveForm
             HeaderAlignmentVert = vaCenter
             HeaderGlyphAlignmentHorz = taCenter
             Options.Editing = False
-            Width = 60
+            Width = 70
           end
           object InvNumberPartner_ReturnIn: TcxGridDBColumn
             Caption = #8470' '#1076#1086#1082'. '#1087#1086#1082'. '#1074#1086#1079#1074#1088'.'

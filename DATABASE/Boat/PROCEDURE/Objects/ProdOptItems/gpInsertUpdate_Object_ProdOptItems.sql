@@ -14,7 +14,7 @@ CREATE OR REPLACE FUNCTION gpInsertUpdate_Object_ProdOptItems(
     IN inComment          TVarChar  ,
     IN inSession          TVarChar       -- сессия пользователя
 )
-  RETURNS integer AS
+  RETURNS Integer AS
 $BODY$
    DECLARE vbUserId Integer;
    DECLARE vbCode_calc Integer;
@@ -37,7 +37,7 @@ BEGIN
                                 WHERE Object_ProdOptItems.DescId = zc_Object_ProdOptItems())
                                , 0) + 1; 
    ELSE 
-       vbCode_calc:= inCode;
+        vbCode_calc:= inCode;
    END IF;
    
    -- проверка прав уникальности для свойства <Наименование >

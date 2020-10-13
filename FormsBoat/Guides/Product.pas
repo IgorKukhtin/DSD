@@ -59,7 +59,7 @@ type
     DBViewAddOn: TdsdDBViewAddOn;
     actProtocol: TdsdOpenForm;
     bbProtocolOpenForm: TdxBarButton;
-    actShowAll: TBooleanStoredProcAction;
+    actShowAllErased: TBooleanStoredProcAction;
     bbShowAll: TdxBarButton;
     Comment: TcxGridDBColumn;
     spUnErased: TdsdStoredProc;
@@ -137,6 +137,10 @@ type
     bbStartLoad: TdxBarButton;
     actChoiceFormProdColorGroup: TOpenChoiceForm;
     actChoiceFormProdOptions: TOpenChoiceForm;
+    actShowAllOptItems: TBooleanStoredProcAction;
+    actShowAllColorItems: TBooleanStoredProcAction;
+    bbShowAllColorItems: TdxBarButton;
+    bbShowAllOptItems: TdxBarButton;
   private
     { Private declarations }
   public

@@ -12,8 +12,8 @@ object ProductForm: TProductForm
   Font.Style = []
   KeyPreview = True
   OldCreateOrder = False
-  AddOnFormData.isAlwaysRefresh = False
   AddOnFormData.RefreshAction = actRefresh
+  AddOnFormData.isSingle = False
   AddOnFormData.ChoiceAction = actChoiceGuides
   AddOnFormData.Params = FormParams
   PixelsPerInch = 96
@@ -62,7 +62,7 @@ object ProductForm: TProductForm
       OptionsView.Indicator = True
       Styles.StyleSheet = dmMain.cxGridTableViewStyleSheet
       object Code: TcxGridDBColumn
-        Caption = #1040#1088#1090#1080#1082#1091#1083
+        Caption = #1050#1086#1076
         DataBinding.FieldName = 'Code'
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
@@ -205,9 +205,9 @@ object ProductForm: TProductForm
     end
   end
   object cxGridProdOptItems: TcxGrid
-    Left = 464
+    Left = 456
     Top = 247
-    Width = 524
+    Width = 532
     Height = 168
     Align = alRight
     TabOrder = 1
@@ -246,6 +246,8 @@ object ProductForm: TProductForm
       object optCode: TcxGridDBColumn
         Caption = #8470' '#1087'/'#1087
         DataBinding.FieldName = 'Code'
+        PropertiesClassName = 'TcxCurrencyEditProperties'
+        Properties.DisplayFormat = ',0.##;-,0.##; ;'
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         Options.Editing = False
@@ -343,7 +345,7 @@ object ProductForm: TProductForm
   object cxGridProdColorItems: TcxGrid
     Left = 0
     Top = 247
-    Width = 456
+    Width = 448
     Height = 168
     Align = alClient
     TabOrder = 6
@@ -383,6 +385,8 @@ object ProductForm: TProductForm
       object colCode: TcxGridDBColumn
         Caption = #8470' '#1087'/'#1087
         DataBinding.FieldName = 'Code'
+        PropertiesClassName = 'TcxCurrencyEditProperties'
+        Properties.DisplayFormat = ',0.##;-,0.##; ;'
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         Options.Editing = False
@@ -476,7 +480,7 @@ object ProductForm: TProductForm
     Control = cxGrid
   end
   object cxRightSplitter: TcxSplitter
-    Left = 456
+    Left = 448
     Top = 247
     Width = 8
     Height = 168
@@ -584,6 +588,10 @@ object ProductForm: TProductForm
         end
         item
           Visible = True
+          ItemName = 'bbShowAllColorItems'
+        end
+        item
+          Visible = True
           ItemName = 'dxBarStatic'
         end
         item
@@ -604,6 +612,10 @@ object ProductForm: TProductForm
         end
         item
           Visible = True
+          ItemName = 'bbShowAllOptItems'
+        end
+        item
+          Visible = True
           ItemName = 'dxBarStatic'
         end
         item
@@ -613,6 +625,10 @@ object ProductForm: TProductForm
         item
           Visible = True
           ItemName = 'bbShowAll'
+        end
+        item
+          Visible = True
+          ItemName = 'dxBarStatic'
         end
         item
           Visible = True
@@ -700,7 +716,7 @@ object ProductForm: TProductForm
       Category = 0
     end
     object bbShowAll: TdxBarButton
-      Action = actShowAll
+      Action = actShowAllErased
       Category = 0
     end
     object bbInsertRecordProdColorItems: TdxBarButton
@@ -719,6 +735,7 @@ object ProductForm: TProductForm
     end
     object bbSetUnErasedColor: TdxBarButton
       Action = actSetUnErasedColor
+      Caption = #1042#1086#1089#1089#1090#1072#1085#1086#1074#1080#1090#1100' '#1094#1074#1077#1090
       Category = 0
     end
     object bbSetErasedOpt: TdxBarButton
@@ -727,10 +744,19 @@ object ProductForm: TProductForm
     end
     object bbSetUnErasedOpt: TdxBarButton
       Action = actSetUnErasedOpt
+      Caption = #1042#1086#1089#1089#1090#1072#1085#1086#1074#1080#1090#1100' '#1086#1087#1094#1080#1102
       Category = 0
     end
     object bbStartLoad: TdxBarButton
       Action = actStartLoad
+      Category = 0
+    end
+    object bbShowAllColorItems: TdxBarButton
+      Action = actShowAllColorItems
+      Category = 0
+    end
+    object bbShowAllOptItems: TdxBarButton
+      Action = actShowAllOptItems
       Category = 0
     end
   end
@@ -847,7 +873,7 @@ object ProductForm: TProductForm
       Caption = #1059#1076#1072#1083#1080#1090#1100
       Hint = #1059#1076#1072#1083#1080#1090#1100' '#1076#1072#1085#1085#1099#1077
       ImageIndex = 2
-      ShortCut = 8238
+      ShortCut = 46
       ErasedFieldName = 'isErased'
       DataSource = DataSource
     end
@@ -963,7 +989,7 @@ object ProductForm: TProductForm
         end>
       isShowModal = False
     end
-    object actShowAll: TBooleanStoredProcAction
+    object actShowAllErased: TBooleanStoredProcAction
       Category = 'DSDLib'
       MoveParams = <>
       StoredProc = spSelect
@@ -973,14 +999,14 @@ object ProductForm: TProductForm
         end>
       Caption = #1055#1086#1082#1072#1079#1072#1090#1100' '#1074#1077#1089#1100' '#1089#1087#1080#1089#1086#1082
       Hint = #1055#1086#1082#1072#1079#1072#1090#1100' '#1074#1077#1089#1100' '#1089#1087#1080#1089#1086#1082
-      ImageIndex = 63
+      ImageIndex = 64
       Value = False
       HintTrue = #1055#1086#1082#1072#1079#1072#1090#1100' '#1085#1077' '#1091#1076#1072#1083#1077#1085#1085#1099#1077
       HintFalse = #1055#1086#1082#1072#1079#1072#1090#1100' '#1074#1077#1089#1100' '#1089#1087#1080#1089#1086#1082
       CaptionTrue = #1055#1086#1082#1072#1079#1072#1090#1100' '#1085#1077' '#1091#1076#1072#1083#1077#1085#1085#1099#1077
       CaptionFalse = #1055#1086#1082#1072#1079#1072#1090#1100' '#1074#1077#1089#1100' '#1089#1087#1080#1089#1086#1082
-      ImageIndexTrue = 62
-      ImageIndexFalse = 63
+      ImageIndexTrue = 65
+      ImageIndexFalse = 64
     end
     object actUpdateDataSet: TdsdUpdateDataSet
       Category = 'DSDLib'
@@ -1126,6 +1152,25 @@ object ProductForm: TProductForm
         end>
       Caption = 'actGetImportSetting'
     end
+    object actShowAllColorItems: TBooleanStoredProcAction
+      Category = 'DSDLib'
+      MoveParams = <>
+      StoredProc = spSelect_ProdColorItems
+      StoredProcList = <
+        item
+          StoredProc = spSelect_ProdColorItems
+        end>
+      Caption = #1055#1086#1082#1072#1079#1072#1090#1100' '#1074#1077#1089#1100' '#1089#1087#1080#1089#1086#1082' '#1094#1074#1077#1090#1086#1074
+      Hint = #1055#1086#1082#1072#1079#1072#1090#1100' '#1074#1077#1089#1100' '#1089#1087#1080#1089#1086#1082' '#1094#1074#1077#1090#1086#1074
+      ImageIndex = 63
+      Value = False
+      HintTrue = #1055#1086#1082#1072#1079#1072#1090#1100' '#1089#1086#1093#1088#1072#1085#1077#1085#1085#1099#1077' '#1094#1074#1077#1090#1072
+      HintFalse = #1055#1086#1082#1072#1079#1072#1090#1100' '#1074#1077#1089#1100' '#1089#1087#1080#1089#1086#1082' '#1094#1074#1077#1090#1086#1074
+      CaptionTrue = #1055#1086#1082#1072#1079#1072#1090#1100' '#1089#1086#1093#1088#1072#1085#1077#1085#1085#1099#1077' '#1094#1074#1077#1090#1072
+      CaptionFalse = #1055#1086#1082#1072#1079#1072#1090#1100' '#1074#1077#1089#1100' '#1089#1087#1080#1089#1086#1082' '#1094#1074#1077#1090#1086#1074
+      ImageIndexTrue = 62
+      ImageIndexFalse = 63
+    end
     object actDoLoad: TExecuteImportSettingsAction
       Category = #1047#1072#1075#1088#1091#1079#1082#1072
       MoveParams = <>
@@ -1154,6 +1199,25 @@ object ProductForm: TProductForm
       Hint = #1047#1072#1075#1088#1091#1079#1080#1090#1100' '#1042#1057#1045' '#1044#1072#1085#1085#1099#1077' '#1051#1086#1076#1082#1072#1084
       ImageIndex = 41
     end
+    object actShowAllOptItems: TBooleanStoredProcAction
+      Category = 'DSDLib'
+      MoveParams = <>
+      StoredProc = spSelect_ProdOptItems
+      StoredProcList = <
+        item
+          StoredProc = spSelect_ProdOptItems
+        end>
+      Caption = #1055#1086#1082#1072#1079#1072#1090#1100' '#1074#1077#1089#1100' '#1089#1087#1080#1089#1086#1082' '#1086#1087#1094#1080#1081
+      Hint = #1055#1086#1082#1072#1079#1072#1090#1100' '#1074#1077#1089#1100' '#1089#1087#1080#1089#1086#1082' '#1086#1087#1094#1080#1081
+      ImageIndex = 63
+      Value = False
+      HintTrue = #1055#1086#1082#1072#1079#1072#1090#1100' '#1089#1086#1093#1088#1072#1085#1077#1085#1085#1099#1077' '#1086#1087#1094#1080#1080
+      HintFalse = #1055#1086#1082#1072#1079#1072#1090#1100' '#1074#1077#1089#1100' '#1089#1087#1080#1089#1086#1082' '#1086#1087#1094#1080#1081
+      CaptionTrue = #1055#1086#1082#1072#1079#1072#1090#1100' '#1089#1086#1093#1088#1072#1085#1077#1085#1085#1099#1077' '#1086#1087#1094#1080#1080
+      CaptionFalse = #1055#1086#1082#1072#1079#1072#1090#1100' '#1074#1077#1089#1100' '#1089#1087#1080#1089#1086#1082' '#1086#1087#1094#1080#1081
+      ImageIndexTrue = 62
+      ImageIndexFalse = 63
+    end
   end
   object spSelect: TdsdStoredProc
     StoredProcName = 'gpSelect_Object_Product'
@@ -1166,7 +1230,7 @@ object ProductForm: TProductForm
       item
         Name = 'inIsShowAll'
         Value = False
-        Component = actShowAll
+        Component = actShowAllErased
         DataType = ftBoolean
         ParamType = ptInput
         MultiSelectSeparator = ','
@@ -1353,9 +1417,17 @@ object ProductForm: TProductForm
       end>
     Params = <
       item
-        Name = 'inIsShowAll'
+        Name = 'inisShowAll'
+        Value = Null
+        Component = actShowAllColorItems
+        DataType = ftBoolean
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inIsErased'
         Value = False
-        Component = actShowAll
+        Component = actShowAllErased
         DataType = ftBoolean
         ParamType = ptInput
         MultiSelectSeparator = ','
@@ -1375,7 +1447,7 @@ object ProductForm: TProductForm
       item
         Name = 'inIsShowAll'
         Value = False
-        Component = actShowAll
+        Component = actShowAllOptItems
         DataType = ftBoolean
         ParamType = ptInput
         MultiSelectSeparator = ','
@@ -1383,7 +1455,7 @@ object ProductForm: TProductForm
       item
         Name = 'inIsErased'
         Value = Null
-        Component = actShowAll
+        Component = actShowAllErased
         DataType = ftBoolean
         ParamType = ptInput
         MultiSelectSeparator = ','
@@ -1461,7 +1533,11 @@ object ProductForm: TProductForm
   end
   object spInsertUpdateProdOptItems: TdsdStoredProc
     StoredProcName = 'gpInsertUpdate_Object_ProdOptItems'
-    DataSets = <>
+    DataSet = ProdOptItemsCDS
+    DataSets = <
+      item
+        DataSet = ProdOptItemsCDS
+      end>
     OutputType = otResult
     Params = <
       item
@@ -1614,8 +1690,8 @@ object ProductForm: TProductForm
         MultiSelectSeparator = ','
       end>
     PackSize = 1
-    Left = 880
-    Top = 232
+    Left = 832
+    Top = 296
   end
   object spUnErasedOpt: TdsdStoredProc
     StoredProcName = 'gpUpdate_Object_isErased_ProdOptItems'
@@ -1639,7 +1715,7 @@ object ProductForm: TProductForm
       end>
     PackSize = 1
     Left = 880
-    Top = 280
+    Top = 304
   end
   object FormParams: TdsdFormParams
     Params = <

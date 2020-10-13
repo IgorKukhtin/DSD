@@ -319,7 +319,7 @@ BEGIN
         END IF;
 */
 
-        IF vbIsSUN = TRUE AND vbInsertDate >= '25.08.2020' AND COALESCE (inCommentTRID, 0) = 0
+        IF vbIsSUN = TRUE AND vbInsertDate >= '25.08.2020' AND COALESCE (inCommentTRID, 0) = 0 AND COALESCE(vbAmount, 0) <> COALESCE(inAmount, 0)
         THEN
            WITH tmpProtocolAll AS (SELECT  MovementItem.Id
                                          , SUBSTRING(MovementItemProtocol.ProtocolData, POSITION('Значение' IN MovementItemProtocol.ProtocolData) + 24, 50) AS ProtocolData
@@ -337,6 +337,7 @@ BEGIN
                                                                         AND MovementItemProtocol.ProtocolData ILIKE '%Значение%'
                                                                         AND MovementItemProtocol.UserId = zfCalc_UserAdmin()::Integer
                                     WHERE  MovementItem.Id = ioId
+                                      AND  MovementItem.ObjectId
                                     )
                , tmpProtocol AS (SELECT tmpProtocolAll.Id
                                       , tmpProtocolAll.ObjectId
