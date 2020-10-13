@@ -26,18 +26,18 @@ BEGIN
    vbUserId:= lpGetUserBySession (inSession);
 
     -- Если код не установлен, определяем его как последний+1, для каждой лодки начиная с 1
-   IF COALESCE (ioId,0) = 0
+   IF COALESCE (ioId,0) = 0 AND inCode = 0
    THEN
-   vbCode_calc:= COALESCE ((SELECT MAX (Object_ProdOptItems.ObjectCode) AS ObjectCode
-                            FROM Object AS Object_ProdOptItems
-                                 INNER JOIN ObjectLink AS ObjectLink_Product
-                                                       ON ObjectLink_Product.ObjectId = Object_ProdOptItems.Id
-                                                      AND ObjectLink_Product.DescId = zc_ObjectLink_ProdOptItems_Product()
-                                                      AND ObjectLink_Product.ChildObjectId = inProductId AND COALESCE (inProductId,0) <> 0
-                            WHERE Object_ProdOptItems.DescId = zc_Object_ProdOptItems())
-                           , 0) + 1; 
+       vbCode_calc:= COALESCE ((SELECT MAX (Object_ProdOptItems.ObjectCode) AS ObjectCode
+                                FROM Object AS Object_ProdOptItems
+                                     INNER JOIN ObjectLink AS ObjectLink_Product
+                                                           ON ObjectLink_Product.ObjectId = Object_ProdOptItems.Id
+                                                          AND ObjectLink_Product.DescId = zc_ObjectLink_ProdOptItems_Product()
+                                                          AND ObjectLink_Product.ChildObjectId = inProductId AND COALESCE (inProductId,0) <> 0
+                                WHERE Object_ProdOptItems.DescId = zc_Object_ProdOptItems())
+                               , 0) + 1; 
    ELSE 
-        vbCode_calc:= inCode;
+       vbCode_calc:= inCode;
    END IF;
    
    -- проверка прав уникальности для свойства <Наименование >

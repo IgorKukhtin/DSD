@@ -4,25 +4,26 @@ DROP FUNCTION IF EXISTS gpInsertUpdate_Object_ProdEngine(Integer, Integer, TVarC
 
 CREATE OR REPLACE FUNCTION gpInsertUpdate_Object_ProdEngine(
  INOUT ioId       Integer   ,    -- ключ объекта <Модели>
-    IN inCode     Integer   ,    -- Код объекта 
-    IN inName     TVarChar  ,    -- Название объекта 
+    IN inCode     Integer   ,    -- Код объекта
+    IN inName     TVarChar  ,    -- Название объекта
     IN inPower    TFloat    ,
     IN inComment  TVarChar  ,
     IN inSession  TVarChar       -- сессия пользователя
 )
-  RETURNS integer AS
+RETURNS Integer
+AS
 $BODY$
    DECLARE vbUserId Integer;
    DECLARE vbCode_calc Integer;
-   DECLARE vbIsInsert Boolean; 
+   DECLARE vbIsInsert Boolean;
 BEGIN
-   
+
    -- проверка прав пользователя на вызов процедуры
    -- PERFORM lpCheckRight(inSession, zc_Enum_Process_InsertUpdate_Object_ProdEngine());
    vbUserId:= lpGetUserBySession (inSession);
 
     -- Если код не установлен, определяем его как последний+1
-   vbCode_calc:=lfGet_ObjectCode (inCode, zc_Object_ProdEngine()); 
+   vbCode_calc:=lfGet_ObjectCode (inCode, zc_Object_ProdEngine());
 
    -- проверка прав уникальности для свойства <Наименование >
    PERFORM lpCheckUnique_Object_ValueData (ioId, zc_Object_ProdEngine(), inName);

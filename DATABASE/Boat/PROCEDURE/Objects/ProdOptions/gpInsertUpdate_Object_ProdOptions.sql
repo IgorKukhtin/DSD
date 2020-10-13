@@ -10,7 +10,8 @@ CREATE OR REPLACE FUNCTION gpInsertUpdate_Object_ProdOptions(
     IN inComment  TVarChar  ,
     IN inSession  TVarChar       -- сессия пользователя
 )
-  RETURNS integer AS
+RETURNS Integer
+AS
 $BODY$
    DECLARE vbUserId Integer;
    DECLARE vbCode_calc Integer;

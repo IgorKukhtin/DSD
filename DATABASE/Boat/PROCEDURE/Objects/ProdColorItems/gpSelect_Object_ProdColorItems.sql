@@ -25,7 +25,8 @@ BEGIN
      RETURN QUERY 
      SELECT 
            Object_ProdColorItems.Id         AS Id 
-         , Object_ProdColorItems.ObjectCode AS Code
+       --, Object_ProdColorItems.ObjectCode AS Code
+         , ROW_NUMBER() OVER (PARTITION BY Object_Product.Id ORDER BY Object_ProdColorGroup.ObjectCode ASC, Object_ProdColorItems.ObjectCode ASC) :: Integer AS Code
          , Object_ProdColorItems.ValueData  AS Name
 
          , ObjectString_Comment.ValueData   AS Comment

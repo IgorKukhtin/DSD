@@ -9,7 +9,7 @@ CREATE OR REPLACE FUNCTION gpInsertUpdate_Object_ProdColorGroup(
     IN inComment         TVarChar,      -- 
     IN inSession         TVarChar       -- сессия пользователя
 )
-RETURNS record
+RETURNS RECORD
 AS
 $BODY$
    DECLARE vbUserId Integer;
@@ -21,7 +21,7 @@ BEGIN
    vbUserId:= lpGetUserBySession (inSession);
 
     -- Если код не установлен, определяем его как последний+1
-   vbCode_calc:=lfGet_ObjectCode (ioCode, zc_Object_ProdColorGroup()); 
+   vbCode_calc:= lfGet_ObjectCode (ioCode, zc_Object_ProdColorGroup()); 
 
    -- проверка прав уникальности для свойства <Наименование >
    PERFORM lpCheckUnique_Object_ValueData (ioId, zc_Object_ProdColorGroup(), inName);

@@ -6,22 +6,22 @@ CREATE OR REPLACE FUNCTION gpInsertUpdate_Object_Brand(
  INOUT ioId              Integer,       -- ключ объекта <Бренд>
  INOUT ioCode            Integer,       -- свойство <Код Бренда>
     IN inName            TVarChar,      -- главное Название Бренда
-    IN inComment         TVarChar,      -- 
+    IN inComment         TVarChar,      --
     IN inSession         TVarChar       -- сессия пользователя
 )
-RETURNS record
+RETURNS RECORD
 AS
 $BODY$
    DECLARE vbUserId Integer;
    DECLARE vbCode_calc Integer;
-   DECLARE vbIsInsert Boolean;  
+   DECLARE vbIsInsert Boolean;
 BEGIN
    -- проверка прав пользователя на вызов процедуры
    -- PERFORM lpCheckRight(inSession, zc_Enum_Process_Brand());
    vbUserId:= lpGetUserBySession (inSession);
 
     -- Если код не установлен, определяем его как последний+1
-   vbCode_calc:=lfGet_ObjectCode (inCode, zc_Object_Brand()); 
+   vbCode_calc:= lfGet_ObjectCode (ioCode, zc_Object_Brand());
 
    -- проверка прав уникальности для свойства <Наименование >
    PERFORM lpCheckUnique_Object_ValueData (ioId, zc_Object_Brand(), inName);

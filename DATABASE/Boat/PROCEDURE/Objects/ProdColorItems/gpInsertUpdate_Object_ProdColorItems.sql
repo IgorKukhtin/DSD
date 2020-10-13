@@ -12,7 +12,8 @@ CREATE OR REPLACE FUNCTION gpInsertUpdate_Object_ProdColorItems(
     IN inComment          TVarChar  ,
     IN inSession          TVarChar       -- сессия пользователя
 )
-  RETURNS integer AS
+RETURNS Integer
+AS
 $BODY$
    DECLARE vbUserId Integer;
    DECLARE vbCode_calc Integer;
@@ -24,16 +25,16 @@ BEGIN
    vbUserId:= lpGetUserBySession (inSession);
 
     -- Если код не установлен, определяем его как последний+1, для каждой лодки начиная с 1
-   IF COALESCE (ioId,0) = 0
+   IF COALESCE (ioId,0) = 0 AND inCode = 0
    THEN
-   vbCode_calc:= COALESCE ((SELECT MAX (Object_ProdColorItems.ObjectCode) AS ObjectCode
-                            FROM Object AS Object_ProdColorItems
-                                 INNER JOIN ObjectLink AS ObjectLink_Product
-                                                       ON ObjectLink_Product.ObjectId = Object_ProdColorItems.Id
-                                                      AND ObjectLink_Product.DescId = zc_ObjectLink_ProdColorItems_Product()
-                                                      AND ObjectLink_Product.ChildObjectId = inProductId AND COALESCE (inProductId,0) <> 0
-                            WHERE Object_ProdColorItems.DescId = zc_Object_ProdColorItems())
-                           , 0) + 1; 
+       vbCode_calc:= COALESCE ((SELECT MAX (Object_ProdColorItems.ObjectCode) AS ObjectCode
+                                FROM Object AS Object_ProdColorItems
+                                     INNER JOIN ObjectLink AS ObjectLink_Product
+                                                           ON ObjectLink_Product.ObjectId = Object_ProdColorItems.Id
+                                                          AND ObjectLink_Product.DescId = zc_ObjectLink_ProdColorItems_Product()
+                                                          AND ObjectLink_Product.ChildObjectId = inProductId AND COALESCE (inProductId,0) <> 0
+                                WHERE Object_ProdColorItems.DescId = zc_Object_ProdColorItems())
+                               , 0) + 1; 
    ELSE 
         vbCode_calc:= inCode;
    END IF;

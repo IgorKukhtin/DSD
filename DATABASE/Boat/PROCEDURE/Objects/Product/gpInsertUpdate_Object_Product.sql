@@ -2,38 +2,39 @@
 
 DROP FUNCTION IF EXISTS gpInsertUpdate_Object_Product(Integer, Integer, TVarChar, Integer, Integer, Integer, TFloat
                                                     , TDateTime, TDateTime, TDateTime
-                                                    , TVarChar, TVarChar, TVarChar, TVarChar, TVarChar);
+                                                    , TVarChar, TVarChar, TVarChar, TVarChar, TVarChar
+                                                     );
 
 CREATE OR REPLACE FUNCTION gpInsertUpdate_Object_Product(
  INOUT ioId            Integer   ,    -- ключ объекта <Лодки>
-    IN inCode          Integer   ,    -- Код объекта 
+    IN inCode          Integer   ,    -- Код объекта
     IN inName          TVarChar  ,    -- Название объекта
     IN inBrandId       Integer   ,
     IN inModelId       Integer   ,
     IN inEngineId      Integer   ,
     IN inHours         TFloat    ,
-    IN inDateStart     TDateTime  ,
-    IN inDateBegin     TDateTime  ,
-    IN inDateSale      TDateTime  ,
-    IN inArticle       TVarChar   ,
+    IN inDateStart     TDateTime ,
+    IN inDateBegin     TDateTime ,
+    IN inDateSale      TDateTime ,
+    IN inArticle       TVarChar  ,
     IN inCIN           TVarChar  ,
     IN inEngineNum     TVarChar  ,
     IN inComment       TVarChar  ,
     IN inSession       TVarChar       -- сессия пользователя
 )
-  RETURNS integer AS
+RETURNS Integer
+AS
 $BODY$
    DECLARE vbUserId Integer;
  --DECLARE vbCode_calc Integer;
-   DECLARE vbIsInsert Boolean; 
+   DECLARE vbIsInsert Boolean;
 BEGIN
-   
    -- проверка прав пользователя на вызов процедуры
    -- PERFORM lpCheckRight(inSession, zc_Enum_Process_InsertUpdate_Object_Product());
    vbUserId:= lpGetUserBySession (inSession);
 
    -- Если код не установлен, определяем его как последний+1
-   -- vbCode_calc:= lfGet_ObjectCode (inCode, zc_Object_Product()); 
+   -- vbCode_calc:= lfGet_ObjectCode (inCode, zc_Object_Product());
 
    -- проверка - должен быть Артикул - лодки
    IF COALESCE (inCode, 0) = 0 THEN
@@ -54,9 +55,9 @@ BEGIN
    -- сохранили свойство <>
    PERFORM lpInsertUpdate_ObjectDate (zc_ObjectDate_Product_DateStart(), ioId, inDateStart);
    -- сохранили свойство <>
-   PERFORM lpInsertUpdate_ObjectDate (zc_ObjectDate_Product_DateStart(), ioId, inDateBegin);
+   PERFORM lpInsertUpdate_ObjectDate (zc_ObjectDate_Product_DateBegin(), ioId, inDateBegin);
    -- сохранили свойство <>
-   PERFORM lpInsertUpdate_ObjectDate (zc_ObjectDate_Product_DateStart(), ioId, inDateSale);
+   PERFORM lpInsertUpdate_ObjectDate (zc_ObjectDate_Product_DateSale(), ioId, inDateSale);
    -- сохранили свойство <>
    PERFORM lpInsertUpdate_ObjectString (zc_ObjectString_Article(), ioId, inArticle);
    -- сохранили свойство <>
