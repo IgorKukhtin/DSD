@@ -117,7 +117,7 @@ BEGIN
     UNION ALL
      SELECT 0                         ::Integer   AS Id
           , 0                         ::Integer   AS Code
-          , ''                        ::TVarChar  AS Name
+          , 'DELETE'                  ::TVarChar  AS Name
           , 0                         ::TFloat    AS PriceIn
           , 0                         ::TFloat    AS PriceOut
           , ''                        ::TVarChar  AS PartNumber
@@ -126,11 +126,14 @@ BEGIN
           , tmpAll.ProductName        ::TVarChar  AS ProductName
           , tmpAll.ProdOptionsId      ::Integer   AS ProdOptionsId
           , tmpAll.ProdOptionsName    ::TVarChar  AS ProdOptionsName
+            -- нет цвета
+          , zc_Color_Red()            :: Integer  AS Color_fon
           , ''                        ::TVarChar  AS InsertName
           , NULL                      ::TDateTime AS InsertDate
           , FALSE                     ::Boolean   AS isErased
      FROM tmpAll
-     ;
+     WHERE inIsShowAll = TRUE
+    ;
 
 END;
 $BODY$

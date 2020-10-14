@@ -127,7 +127,8 @@ BEGIN
    UNION all
      SELECT 0                         ::Integer   AS Id 
           , 0                         ::Integer   AS Code
-          , ''                        ::TVarChar  AS Name
+          , 'DELETE'                  ::TVarChar  AS Name
+          , 0                         :: Integer  AS NPP
           , ''                        ::TVarChar  AS Comment
           , tmpAll.ProductId          ::Integer   AS ProductId
           , tmpAll.ProductName        ::TVarChar  AS ProductName
@@ -135,11 +136,14 @@ BEGIN
           , tmpAll.ProdColorGroupName ::TVarChar  AS ProdColorGroupName
           , tmpAll.ProdColorId        ::Integer   AS ProdColorId
           , tmpAll.ProdColorName      ::TVarChar  AS ProdColorName
+            -- нет цвета
+          , zc_Color_Red()            :: Integer  AS Color_fon
           , ''                        ::TVarChar  AS InsertName
           , NULL                      ::TDateTime AS InsertDate
           , FALSE                     ::Boolean   AS isErased
         FROM tmpAll
-        ;
+        WHERE inIsShowAll = TRUE
+       ;
 END;
 $BODY$
   LANGUAGE plpgsql VOLATILE;

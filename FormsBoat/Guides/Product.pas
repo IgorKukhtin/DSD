@@ -88,7 +88,7 @@ type
     optComment: TcxGridDBColumn;
     optInsertDate: TcxGridDBColumn;
     optInsertName: TcxGridDBColumn;
-    OptisErased: TcxGridDBColumn;
+    optIsErased: TcxGridDBColumn;
     cxGridLevel1: TcxGridLevel;
     cxGridProdColorItems: TcxGrid;
     cxGridDBTableViewProdColorItems: TcxGridDBTableView;
@@ -141,6 +141,10 @@ type
     actShowAllColorItems: TBooleanStoredProcAction;
     bbShowAllColorItems: TdxBarButton;
     bbShowAllOptItems: TdxBarButton;
+    ProdColorName: TcxGridDBColumn;
+    colNPP: TcxGridDBColumn;
+    colColor_fon: TcxGridDBColumn;
+    optColor_fon: TcxGridDBColumn;
   private
     { Private declarations }
   public
