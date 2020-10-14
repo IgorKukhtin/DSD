@@ -1,11 +1,12 @@
 -- Function: gpInsertUpdate_Object_ConditionsKeep()
 
-DROP FUNCTION IF EXISTS gpInsertUpdate_Object_ConditionsKeep(Integer, Integer, TVarChar, TVarChar);
+DROP FUNCTION IF EXISTS gpInsertUpdate_Object_ConditionsKeep(Integer, Integer, TVarChar, Integer, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpInsertUpdate_Object_ConditionsKeep(
- INOUT ioId	             Integer   ,    -- ключ объекта <Міжнародна непатентована назва (Соц. проект)> 
+ INOUT ioId	                 Integer   ,    -- ключ объекта <Міжнародна непатентована назва (Соц. проект)> 
     IN inCode                Integer   ,    -- код объекта 
     IN inName                TVarChar  ,    -- Название объекта <>
+    IN inRelatedProductId    Integer   ,    -- Сопутствующие товары
     IN inSession             TVarChar       -- сессия пользователя
 )
   RETURNS integer AS
@@ -33,6 +34,9 @@ BEGIN
    -- сохранили <Объект>
    ioId := lpInsertUpdate_Object(ioId, zc_Object_ConditionsKeep(), vbCode_calc, inName);
 
+   -- сохранили свойство <Сопутствующие товары>
+   PERFORM lpInsertUpdate_ObjectFloat(zc_ObjectFloat_ConditionsKeep_RelatedProduct(), ioId, inRelatedProductId);
+
    -- сохранили протокол
    PERFORM lpInsert_ObjectProtocol (ioId, vbUserId);
    
@@ -42,7 +46,8 @@ LANGUAGE plpgsql VOLATILE;
 
 /*-------------------------------------------------------------------------------
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
-               Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
+               Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.  Шаблий О.В.
+ 14.10.18                                                      *
  07.01.17         * 
 */
 

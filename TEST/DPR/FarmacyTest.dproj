@@ -1437,10 +1437,6 @@
 				<Form>ConditionsKeepEditForm</Form>
 				<DesignClass>TParentForm</DesignClass>
 			</DCCReference>
-			<DCCReference Include="..\..\FormsFarmacy\Guides\ConditionsKeep.pas">
-				<Form>ConditionsKeepForm</Form>
-				<DesignClass>TParentForm</DesignClass>
-			</DCCReference>
 			<DCCReference Include="..\..\FormsFarmacy\Object\ReportPromoParams.pas">
 				<Form>ReportPromoParamsForm</Form>
 				<DesignClass>TParentForm</DesignClass>
@@ -3401,6 +3397,10 @@
 			</DCCReference>
 			<DCCReference Include="..\..\FormsFarmacy\Guides\ChoiceRelatedProduct.pas">
 				<Form>ChoiceRelatedProductForm</Form>
+				<DesignClass>TParentForm</DesignClass>
+			</DCCReference>
+			<DCCReference Include="..\..\FormsFarmacy\Guides\ConditionsKeep.pas">
+				<Form>ConditionsKeepForm</Form>
 				<DesignClass>TParentForm</DesignClass>
 			</DCCReference>
 			<BuildConfiguration Include="Release">

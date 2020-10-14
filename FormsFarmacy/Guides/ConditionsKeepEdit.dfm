@@ -2,7 +2,7 @@
   Left = 0
   Top = 0
   Caption = #1053#1086#1074#1099#1081' '#1101#1083#1077#1084#1077#1085#1090' <'#1059#1089#1083#1086#1074#1080#1103' '#1093#1088#1072#1085#1077#1085#1080#1103'>'
-  ClientHeight = 159
+  ClientHeight = 190
   ClientWidth = 386
   Color = clBtnFace
   Font.Charset = DEFAULT_CHARSET
@@ -29,7 +29,7 @@
   end
   object cxButton1: TcxButton
     Left = 79
-    Top = 122
+    Top = 149
     Width = 75
     Height = 25
     Action = dsdInsertUpdateGuides
@@ -39,7 +39,7 @@
   end
   object cxButton2: TcxButton
     Left = 229
-    Top = 122
+    Top = 149
     Width = 75
     Height = 25
     Action = dsdFormClose
@@ -60,6 +60,22 @@
     Properties.DisplayFormat = '0'
     TabOrder = 5
     Width = 296
+  end
+  object ceRelatedProduct: TcxButtonEdit
+    Left = 40
+    Top = 122
+    Properties.Buttons = <
+      item
+        Default = True
+        Kind = bkEllipsis
+      end>
+    TabOrder = 6
+    Width = 296
+  end
+  object cxLabel5: TcxLabel
+    Left = 40
+    Top = 99
+    Caption = #1057#1086#1087#1091#1090#1089#1090#1074#1091#1102#1097#1080#1077' '#1090#1086#1074#1072#1088#1099
   end
   object ActionList: TActionList
     Left = 272
@@ -121,6 +137,14 @@
         DataType = ftString
         ParamType = ptInput
         MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inRelatedProductId'
+        Value = Null
+        Component = RelatedProductGuides
+        ComponentItem = 'Key'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
       end>
     PackSize = 1
     Left = 344
@@ -162,6 +186,21 @@
         Value = 0.000000000000000000
         Component = ceCode
         MultiSelectSeparator = ','
+      end
+      item
+        Name = 'RelatedProductId'
+        Value = Null
+        Component = RelatedProductGuides
+        ComponentItem = 'Key'
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'RelatedProductName'
+        Value = Null
+        Component = RelatedProductGuides
+        ComponentItem = 'TextValue'
+        DataType = ftString
+        MultiSelectSeparator = ','
       end>
     PackSize = 1
     Left = 344
@@ -185,5 +224,34 @@
     StorageType = stStream
     Left = 344
     Top = 64
+  end
+  object RelatedProductGuides: TdsdGuides
+    KeyField = 'Id'
+    LookupControl = ceRelatedProduct
+    FormNameParam.Value = 'TChoiceRelatedProductForm'
+    FormNameParam.DataType = ftString
+    FormNameParam.MultiSelectSeparator = ','
+    FormName = 'TChoiceRelatedProductForm'
+    PositionDataSet = 'MasterCDS'
+    Params = <
+      item
+        Name = 'Key'
+        Value = ''
+        Component = RelatedProductGuides
+        ComponentItem = 'Key'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'TextValue'
+        Value = ''
+        Component = RelatedProductGuides
+        ComponentItem = 'TextValue'
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end>
+    Left = 176
+    Top = 119
   end
 end

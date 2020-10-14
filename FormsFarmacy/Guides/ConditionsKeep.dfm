@@ -2,8 +2,8 @@ object ConditionsKeepForm: TConditionsKeepForm
   Left = 0
   Top = 0
   Caption = #1059#1089#1083#1086#1074#1080#1103' '#1093#1088#1072#1085#1077#1085#1080#1103
-  ClientHeight = 282
-  ClientWidth = 598
+  ClientHeight = 311
+  ClientWidth = 570
   Color = clBtnFace
   Font.Charset = DEFAULT_CHARSET
   Font.Color = clWindowText
@@ -20,8 +20,8 @@ object ConditionsKeepForm: TConditionsKeepForm
   object cxGrid: TcxGrid
     Left = 0
     Top = 26
-    Width = 598
-    Height = 256
+    Width = 570
+    Height = 285
     Align = alClient
     TabOrder = 0
     LookAndFeel.Kind = lfStandard
@@ -54,13 +54,13 @@ object ConditionsKeepForm: TConditionsKeepForm
         Caption = #1050#1086#1076
         DataBinding.FieldName = 'Code'
         HeaderAlignmentVert = vaCenter
-        Width = 103
+        Width = 53
       end
       object Name: TcxGridDBColumn
         Caption = #1053#1072#1079#1074#1072#1085#1080#1077
         DataBinding.FieldName = 'Name'
         HeaderAlignmentVert = vaCenter
-        Width = 279
+        Width = 314
       end
       object isErased: TcxGridDBColumn
         Caption = #1059#1076#1072#1083#1077#1085
@@ -68,7 +68,14 @@ object ConditionsKeepForm: TConditionsKeepForm
         PropertiesClassName = 'TcxCheckBoxProperties'
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
-        Width = 53
+        Width = 60
+      end
+      object RelatedProductName: TcxGridDBColumn
+        Caption = #1057#1086#1087#1091#1090#1089#1090#1074#1091#1102#1097#1080#1077' '#1090#1086#1074#1072#1088#1099
+        DataBinding.FieldName = 'RelatedProductName'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Width = 155
       end
     end
     object cxGridLevel: TcxGridLevel
@@ -180,6 +187,18 @@ object ConditionsKeepForm: TConditionsKeepForm
         end
         item
           Visible = True
+          ItemName = 'bbSetRelatedProduct'
+        end
+        item
+          Visible = True
+          ItemName = 'bbClearRelatedProduct'
+        end
+        item
+          Visible = True
+          ItemName = 'dxBarStatic'
+        end
+        item
+          Visible = True
           ItemName = 'bbGridToExcel'
         end>
       OneOnRow = True
@@ -220,6 +239,14 @@ object ConditionsKeepForm: TConditionsKeepForm
     end
     object bbChoiceGuides: TdxBarButton
       Action = dsdChoiceGuides
+      Category = 0
+    end
+    object bbSetRelatedProduct: TdxBarButton
+      Action = actSetRelatedProduct
+      Category = 0
+    end
+    object bbClearRelatedProduct: TdxBarButton
+      Action = actClearRelatedProduct
       Category = 0
     end
   end
@@ -351,6 +378,75 @@ object ConditionsKeepForm: TConditionsKeepForm
       ImageIndex = 6
       ShortCut = 16472
     end
+    object actSetRelatedProduct: TMultiAction
+      Category = 'DSDLib'
+      MoveParams = <>
+      AfterAction = actRefresh
+      BeforeAction = actChoiceRelatedProduct
+      ActionList = <
+        item
+          Action = actUpdate_SetRelatedProduct
+        end>
+      View = cxGridDBTableView
+      Caption = #1059#1089#1090#1072#1085#1086#1074#1080#1090#1100' <'#1057#1086#1087#1091#1090#1089#1090#1074#1091#1102#1097#1080#1077' '#1090#1086#1074#1072#1088#1099'>'
+      Hint = #1059#1089#1090#1072#1085#1086#1074#1080#1090#1100' <'#1057#1086#1087#1091#1090#1089#1090#1074#1091#1102#1097#1080#1077' '#1090#1086#1074#1072#1088#1099'>'
+      ImageIndex = 79
+    end
+    object actChoiceRelatedProduct: TOpenChoiceForm
+      Category = 'DSDLib'
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      Caption = 'actChoiceRelatedProduct'
+      FormName = 'TChoiceRelatedProductForm'
+      FormNameParam.Value = 'TChoiceRelatedProductForm'
+      FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
+      GuiParams = <
+        item
+          Name = 'Key'
+          Value = Null
+          Component = FormParams
+          ComponentItem = 'RelatedProductId'
+          MultiSelectSeparator = ','
+        end>
+      isShowModal = True
+    end
+    object actUpdate_SetRelatedProduct: TdsdExecStoredProc
+      Category = 'DSDLib'
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      StoredProc = spUpdate_SetRelatedProduct
+      StoredProcList = <
+        item
+          StoredProc = spUpdate_SetRelatedProduct
+        end>
+      Caption = 'actUpdate_SetRelatedProduct'
+    end
+    object actClearRelatedProduct: TMultiAction
+      Category = 'DSDLib'
+      MoveParams = <>
+      AfterAction = actRefresh
+      ActionList = <
+        item
+          Action = actUpdate_ClearRelatedProduct
+        end>
+      View = cxGridDBTableView
+      QuestionBeforeExecute = #1054#1095#1080#1089#1090#1080#1090#1100' <'#1057#1086#1087#1091#1090#1089#1090#1074#1091#1102#1097#1080#1077' '#1090#1086#1074#1072#1088#1099'>?'
+      Caption = #1054#1095#1080#1089#1090#1080#1090#1100' <'#1057#1086#1087#1091#1090#1089#1090#1074#1091#1102#1097#1080#1077' '#1090#1086#1074#1072#1088#1099'>'
+      Hint = #1054#1095#1080#1089#1090#1080#1090#1100' <'#1057#1086#1087#1091#1090#1089#1090#1074#1091#1102#1097#1080#1077' '#1090#1086#1074#1072#1088#1099'>'
+      ImageIndex = 76
+    end
+    object actUpdate_ClearRelatedProduct: TdsdExecStoredProc
+      Category = 'DSDLib'
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      StoredProc = spUpdate_ClearRelatedProduct
+      StoredProcList = <
+        item
+          StoredProc = spUpdate_ClearRelatedProduct
+        end>
+      Caption = 'actUpdate_ClearRelatedProduct'
+    end
   end
   object spSelect: TdsdStoredProc
     StoredProcName = 'gpSelect_Object_ConditionsKeep'
@@ -410,7 +506,68 @@ object ConditionsKeepForm: TConditionsKeepForm
     ColumnAddOnList = <>
     ColumnEnterList = <>
     SummaryItemList = <>
+    PropertiesCellList = <>
     Left = 128
     Top = 216
+  end
+  object spUpdate_SetRelatedProduct: TdsdStoredProc
+    StoredProcName = 'gpUpdate_ConditionsKeep_SetRelatedProduct'
+    DataSets = <>
+    OutputType = otResult
+    Params = <
+      item
+        Name = 'inId'
+        Value = Null
+        Component = ClientDataSet
+        ComponentItem = 'Id'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inRelatedProductId'
+        Value = Null
+        Component = FormParams
+        ComponentItem = 'RelatedProductId'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end>
+    PackSize = 1
+    NeedResetData = True
+    Left = 408
+    Top = 96
+  end
+  object FormParams: TdsdFormParams
+    Params = <
+      item
+        Name = 'RelatedProductId'
+        Value = Null
+        MultiSelectSeparator = ','
+      end>
+    Left = 288
+    Top = 264
+  end
+  object spUpdate_ClearRelatedProduct: TdsdStoredProc
+    StoredProcName = 'gpUpdate_ConditionsKeep_SetRelatedProduct'
+    DataSets = <>
+    OutputType = otResult
+    Params = <
+      item
+        Name = 'inId'
+        Value = Null
+        Component = ClientDataSet
+        ComponentItem = 'Id'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inRelatedProductId'
+        Value = 0
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end>
+    PackSize = 1
+    NeedResetData = True
+    Left = 408
+    Top = 144
   end
 end
