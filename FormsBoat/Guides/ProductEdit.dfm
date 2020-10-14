@@ -473,6 +473,36 @@ object ProductEditForm: TProductEditForm
         MultiSelectSeparator = ','
       end
       item
+        Name = 'ModelId'
+        Value = Null
+        Component = GuidesModel
+        ComponentItem = 'Key'
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'ModelName'
+        Value = Null
+        Component = GuidesModel
+        ComponentItem = 'TextValue'
+        DataType = ftString
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'EngineId'
+        Value = Null
+        Component = GuidesEngine
+        ComponentItem = 'Key'
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'EngineName'
+        Value = Null
+        Component = GuidesEngine
+        ComponentItem = 'TextValue'
+        DataType = ftString
+        MultiSelectSeparator = ','
+      end
+      item
         Name = 'Comment'
         Value = Null
         Component = edComment

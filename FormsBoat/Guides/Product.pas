@@ -145,6 +145,12 @@ type
     colNPP: TcxGridDBColumn;
     colColor_fon: TcxGridDBColumn;
     optColor_fon: TcxGridDBColumn;
+    PriceIn: TcxGridDBColumn;
+    PriceOut: TcxGridDBColumn;
+    PriceIn2: TcxGridDBColumn;
+    PriceOut2: TcxGridDBColumn;
+    PriceIn3: TcxGridDBColumn;
+    PriceOut3: TcxGridDBColumn;
   private
     { Private declarations }
   public
