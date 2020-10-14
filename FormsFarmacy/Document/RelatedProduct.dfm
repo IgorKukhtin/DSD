@@ -8,22 +8,23 @@ inherited RelatedProductForm: TRelatedProductForm
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
-    Top = 195
+    Top = 187
     Width = 783
-    Height = 385
-    ExplicitTop = 195
+    Height = 393
+    ExplicitTop = 187
     ExplicitWidth = 783
-    ExplicitHeight = 385
-    ClientRectBottom = 385
+    ExplicitHeight = 393
+    ClientRectBottom = 393
     ClientRectRight = 783
     inherited tsMain: TcxTabSheet
+      ExplicitTop = 0
       ExplicitWidth = 783
-      ExplicitHeight = 361
+      ExplicitHeight = 369
       inherited cxGrid: TcxGrid
         Width = 783
-        Height = 361
+        Height = 369
         ExplicitWidth = 783
-        ExplicitHeight = 361
+        ExplicitHeight = 369
         inherited cxGridDBTableView: TcxGridDBTableView
           DataController.Summary.DefaultGroupSummaryItems = <
             item
@@ -71,7 +72,13 @@ inherited RelatedProductForm: TRelatedProductForm
           Styles.Selection = nil
           Styles.Footer = nil
           Styles.Header = nil
-          object GoodsCode: TcxGridDBColumn [0]
+          object IsChecked: TcxGridDBColumn [0]
+            Caption = #1042#1099#1073#1088#1072#1085
+            DataBinding.FieldName = 'IsChecked'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+          end
+          object GoodsCode: TcxGridDBColumn [1]
             Caption = #1050#1086#1076
             DataBinding.FieldName = 'GoodsCode'
             GroupSummaryAlignment = taCenter
@@ -80,14 +87,14 @@ inherited RelatedProductForm: TRelatedProductForm
             Options.Editing = False
             Width = 70
           end
-          object GoodsName: TcxGridDBColumn [1]
+          object GoodsName: TcxGridDBColumn [2]
             Caption = #1058#1086#1074#1072#1088
             DataBinding.FieldName = 'GoodsName'
             GroupSummaryAlignment = taCenter
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
-            Width = 679
+            Width = 612
           end
           inherited colIsErased: TcxGridDBColumn
             GroupSummaryAlignment = taCenter
@@ -99,10 +106,10 @@ inherited RelatedProductForm: TRelatedProductForm
   end
   inherited DataPanel: TPanel
     Width = 783
-    Height = 169
+    Height = 161
     TabOrder = 3
     ExplicitWidth = 783
-    ExplicitHeight = 169
+    ExplicitHeight = 161
     inherited edInvNumber: TcxTextEdit
       Left = 10
       Top = 20
@@ -218,7 +225,40 @@ inherited RelatedProductForm: TRelatedProductForm
     Left = 55
     Top = 303
     inherited actRefresh: TdsdDataSetRefresh
+      StoredProcList = <
+        item
+          StoredProc = spGet
+        end
+        item
+        end
+        item
+          StoredProc = spSelect
+        end>
       RefreshOnTabSetChanges = True
+    end
+    inherited actMISetErased: TdsdUpdateErased
+      StoredProcList = <
+        item
+          StoredProc = spErasedMIMaster
+        end
+        item
+        end>
+    end
+    inherited actMISetUnErased: TdsdUpdateErased
+      StoredProcList = <
+        item
+          StoredProc = spUnErasedMIMaster
+        end
+        item
+        end>
+    end
+    inherited actUpdateMainDS: TdsdUpdateDataSet
+      StoredProcList = <
+        item
+          StoredProc = spInsertUpdateMIMaster
+        end
+        item
+        end>
     end
     inherited actPrint: TdsdPrintAction
       StoredProcList = <
@@ -742,10 +782,13 @@ inherited RelatedProductForm: TRelatedProductForm
         Control = edOperDate
       end
       item
+        Control = edMessage
       end
       item
+        Control = edPriceMin
       end
       item
+        Control = edRetail
       end
       item
         Control = edComment
@@ -758,7 +801,6 @@ inherited RelatedProductForm: TRelatedProductForm
     Left = 696
   end
   inherited spErasedMIMaster: TdsdStoredProc
-    StoredProcName = 'gpMovementItem_RelatedProduct_SetErased'
     Params = <
       item
         Name = 'inMovementItemId'
@@ -779,7 +821,6 @@ inherited RelatedProductForm: TRelatedProductForm
     Top = 512
   end
   inherited spUnErasedMIMaster: TdsdStoredProc
-    StoredProcName = 'gpMovementItem_RelatedProduct_SetUnErased'
     Params = <
       item
         Name = 'inMovementItemId'
@@ -823,6 +864,15 @@ inherited RelatedProductForm: TRelatedProductForm
         Value = Null
         Component = MasterCDS
         ComponentItem = 'GoodsId'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inIsChecked'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'IsChecked'
+        DataType = ftBoolean
         ParamType = ptInput
         MultiSelectSeparator = ','
       end>
@@ -900,7 +950,7 @@ inherited RelatedProductForm: TRelatedProductForm
     Top = 272
   end
   inherited spGetTotalSumm: TdsdStoredProc
-    StoredProcName = 'gpGet_Movement_TotalSummRelatedProduct'
+    StoredProcName = ''
     Left = 420
     Top = 188
   end

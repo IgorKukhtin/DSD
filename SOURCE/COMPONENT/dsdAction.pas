@@ -943,6 +943,8 @@ type
     property ImageIndex;
     property SecondaryShortCuts;
     property DefaultParams: TdsdDefaultParamsList read FDefaultParams write FDefaultParams;
+    property QuestionBeforeExecute;
+    property InfoAfterExecute;
   end;
 
 procedure Register;

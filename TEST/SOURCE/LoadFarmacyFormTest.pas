@@ -941,6 +941,9 @@ begin
 
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TRelatedProductJournalForm'));
   TdsdFormStorageFactory.GetStorage.Load('TRelatedProductJournalForm');
+
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TChoiceRelatedProductForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TChoiceRelatedProductForm');
 end;
 
 procedure TLoadFormTest.LoadReportFormTest;
@@ -1985,7 +1988,6 @@ procedure TLoadFormTest.LoadPromoFormTest;
 begin
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TPromoCodeDoctorForm'));
   TdsdFormStorageFactory.GetStorage.Load('TPromoCodeDoctorForm');
-  Exit;
 
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TPromoJournalForm'));
   TdsdFormStorageFactory.GetStorage.Load('TPromoJournalForm');

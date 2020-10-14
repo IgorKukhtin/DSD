@@ -51,6 +51,7 @@ type
     edRetail: TcxButtonEdit;
     cxLabel19: TcxLabel;
     GuidesRetail: TdsdGuides;
+    IsChecked: TcxGridDBColumn;
   private
     { Private declarations }
   public
