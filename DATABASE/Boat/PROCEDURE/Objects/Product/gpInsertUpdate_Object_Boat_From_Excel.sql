@@ -203,7 +203,7 @@ BEGIN
      END IF;
 
      -- Поиск
-     vbProductId:= (SELECT Object.Id FROM ObjectString AS OS_Article JOIN Object ON Object.Id = OS_Article.ObjectId AND Object.DescId = zc_Object_Product() WHERE OS_Article.DescId = zc_ObjectString_Article() AND OS_Article.ValueData ILIKE inArticle);
+     vbProductId:= (SELECT Object.Id FROM ObjectString AS OS_Article JOIN Object ON Object.Id = OS_Article.ObjectId AND Object.DescId = zc_Object_Product() AND Object.isErased = FALSE WHERE OS_Article.DescId = zc_ObjectString_Article() AND OS_Article.ValueData ILIKE inArticle);
      --
      IF COALESCE (vbProductId, 0) = 0 OR 1=1
      THEN

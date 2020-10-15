@@ -17,7 +17,12 @@ RETURNS TABLE (Id Integer, Code Integer, Name TVarChar, ProdColorName TVarChar
              , EngineId Integer, EngineName TVarChar
              , InsertName TVarChar
              , InsertDate TDateTime
-             , isErased boolean) AS
+             , isErased boolean
+             , PriceIn TFloat, PriceOut TFloat
+             , PriceIn2 TFloat, PriceOut2 TFloat
+             , PriceIn3 TFloat, PriceOut3 TFloat
+
+             ) AS
 $BODY$
    DECLARE vbUserId Integer;
 BEGIN
@@ -53,14 +58,39 @@ BEGIN
                                  WHERE Object_ProdColorItems.DescId = zc_Object_ProdColorItems()
                                    AND Object_ProdColorItems.isErased = FALSE
                                 )
+     , tmpProdOptItems AS (SELECT ObjectLink_Product.ChildObjectId AS ProductId
+                                , SUM (COALESCE (ObjectFloat_PriceIn.ValueData, 0))     ::TFloat    AS PriceIn
+                                , SUM (COALESCE (ObjectFloat_PriceOut.ValueData, 0))     ::TFloat    AS PriceOut
+                           FROM Object AS Object_ProdOptItems
+                                LEFT JOIN ObjectLink AS ObjectLink_Product
+                                                     ON ObjectLink_Product.ObjectId = Object_ProdOptItems.Id
+                                                    AND ObjectLink_Product.DescId = zc_ObjectLink_ProdOptItems_Product()
+                      
+                                LEFT JOIN ObjectFloat AS ObjectFloat_PriceIn
+                                                      ON ObjectFloat_PriceIn.ObjectId = Object_ProdOptItems.Id
+                                                     AND ObjectFloat_PriceIn.DescId = zc_ObjectFloat_ProdOptItems_PriceIn()
+                                LEFT JOIN ObjectFloat AS ObjectFloat_PriceOut
+                                                      ON ObjectFloat_PriceOut.ObjectId = Object_ProdOptItems.Id
+                                                     AND ObjectFloat_PriceOut.DescId = zc_ObjectFloat_ProdOptItems_PriceOut()
 
-     SELECT
+                           WHERE Object_ProdOptItems.DescId = zc_Object_ProdOptItems()
+                             AND Object_ProdOptItems.isErased = FALSE 
+                           GROUP BY ObjectLink_Product.ChildObjectId
+                          )
+, tmpObjAll AS (SELECT Object_Product.*
+                     ,  ROW_NUMBER() OVER (ORDER BY Object_Product.Id DESC) AS Ord
+                FROM Object AS Object_Product
+                WHERE Object_Product.DescId = zc_Object_Product()
+                  AND Object_Product.isErased = FALSE
+               )
+, tmpResAll AS 
+     (SELECT
            Object_Product.Id               AS Id
          , Object_Product.ObjectCode       AS Code
          , Object_Product.ValueData        AS Name
-         , CASE WHEN tmpProdColorItems_1.ProdColorName ILIKE tmpProdColorItems_1.ProdColorName
+         , CASE WHEN tmpProdColorItems_1.ProdColorName ILIKE tmpProdColorItems_2.ProdColorName
                 THEN tmpProdColorItems_1.ProdColorName
-                ELSE COALESCE (tmpProdColorItems_1.ProdColorName, '') || ' / ' || COALESCE (tmpProdColorItems_1.ProdColorName, '')
+                ELSE COALESCE (tmpProdColorItems_1.ProdColorName, '') || ' / ' || COALESCE (tmpProdColorItems_2.ProdColorName, '')
            END :: TVarChar AS ProdColorName
 
          , ObjectFloat_Hours.ValueData      AS Hours
@@ -88,7 +118,24 @@ BEGIN
          , ObjectDate_Insert.ValueData     AS InsertDate
          , Object_Product.isErased         AS isErased
 
+         , CASE WHEN tmpObjAll.Ord = 1 THEN 4750 
+                WHEN tmpObjAll.Ord = 2 THEN 4560 
+                WHEN tmpObjAll.Ord = 3 THEN 25456 
+                WHEN tmpObjAll.Ord = 4 THEN 29357
+                WHEN tmpObjAll.Ord = 5 THEN 32347
+                ELSE 0
+           END :: TFloat AS PriceIn
+
+         , CASE WHEN tmpObjAll.Ord = 1 THEN 4750  + 1645
+                WHEN tmpObjAll.Ord = 2 THEN 4560  + 1345 
+                WHEN tmpObjAll.Ord = 3 THEN 25456  + 14234
+                WHEN tmpObjAll.Ord = 4 THEN 29357  + 21700
+                WHEN tmpObjAll.Ord = 5 THEN 32347  + 18345
+                ELSE 0
+           END :: TFloat AS PriceOut
+
      FROM Object AS Object_Product
+          LEFT JOIN tmpObjAll ON tmpObjAll.Id =  Object_Product.Id
           LEFT JOIN tmpProdColorItems AS tmpProdColorItems_1
                                       ON tmpProdColorItems_1.ProductId = Object_Product.Id
                                      AND tmpProdColorItems_1.NPP = 1
@@ -158,7 +205,53 @@ BEGIN
                               AND ObjectDate_Insert.DescId = zc_ObjectDate_Protocol_Insert()
 
      WHERE Object_Product.DescId = zc_Object_Product()
-      AND (Object_Product.isErased = FALSE OR inIsShowAll = TRUE);
+      AND (Object_Product.isErased = FALSE OR inIsShowAll = TRUE)
+)
+
+     -- Результат
+     SELECT
+           tmpResAll.Id
+         , tmpResAll.Code
+         , tmpResAll.Name
+         , tmpResAll.ProdColorName
+
+         , tmpResAll.Hours
+         , tmpResAll.DateStart
+         , tmpResAll.DateBegin
+         , tmpResAll.DateSale
+         , tmpResAll.Article
+         , tmpResAll.CIN
+         , tmpResAll.EngineNum
+         , tmpResAll.Comment
+
+         , tmpResAll.ProdGroupId
+         , tmpResAll.ProdGroupName
+
+         , tmpResAll.BrandId
+         , tmpResAll.BrandName
+
+         , tmpResAll.ModelId
+         , tmpResAll.ModelName
+
+         , tmpResAll.EngineId
+         , tmpResAll.EngineName
+
+         , tmpResAll.InsertName
+         , tmpResAll.InsertDate
+         , tmpResAll.isErased
+
+         , tmpResAll.PriceIn
+         , tmpResAll.PriceOut
+
+         , tmpProdOptItems.PriceIn AS PriceIn2
+         , tmpProdOptItems.PriceOut AS PriceOut2
+
+         , (COALESCE (tmpResAll.PriceIn, 0) + COALESCE (tmpProdOptItems.PriceIn, 0))   :: TFloat AS PriceIn3
+         , (COALESCE (tmpResAll.PriceOut, 0) + COALESCE (tmpProdOptItems.PriceOut, 0)) :: TFloat AS PriceOut3
+
+     FROM tmpResAll
+          LEFT JOIN tmpProdOptItems on tmpProdOptItems. ProductId = tmpResAll.Id
+    ;
 
 END;
 $BODY$
