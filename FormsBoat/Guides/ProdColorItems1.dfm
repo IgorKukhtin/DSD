@@ -35,7 +35,7 @@ object ProdColorItems1Form: TProdColorItems1Form
         item
           Format = 'C'#1090#1088#1086#1082': ,0'
           Kind = skCount
-          Column = Name
+          Column = ProdColorPatternName
         end>
       DataController.Summary.SummaryGroups = <>
       Images = dmMain.SortImageList
@@ -65,9 +65,9 @@ object ProdColorItems1Form: TProdColorItems1Form
         Options.Editing = False
         Width = 43
       end
-      object Name: TcxGridDBColumn
+      object ProdColorPatternName: TcxGridDBColumn
         Caption = #1069#1083#1077#1084#1077#1085#1090
-        DataBinding.FieldName = 'Name'
+        DataBinding.FieldName = 'ProdColorPatternName'
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         HeaderGlyphAlignmentHorz = taCenter

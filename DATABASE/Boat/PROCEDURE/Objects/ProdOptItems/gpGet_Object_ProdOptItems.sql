@@ -11,6 +11,7 @@ RETURNS TABLE (Id Integer, Code Integer, Name TVarChar
              , PartNumber TVarChar, Comment TVarChar
              , ProductId Integer, ProductName TVarChar
              , ProdOptionsId Integer, ProdOptionsName TVarChar
+             , ProdOptPatternId Integer, ProdOptPatternName TVarChar
              ) AS
 $BODY$
    DECLARE vbUserId Integer;
@@ -20,6 +21,25 @@ BEGIN
    -- PERFORM lpCheckRight(inSession, zc_Enum_Process_Select_Object_ProdOptItems());
    vbUserId:= lpGetUserBySession (inSession);
 
+  IF COALESCE (inId, 0) = 0
+   THEN
+       RETURN QUERY
+       SELECT
+              0 :: Integer            AS Id
+           , lfGet_ObjectCode(0, zc_Object_Brand())   AS Code
+           , '' :: TVarChar           AS Name
+           ,  0 :: TFloat             AS PriceIn
+           ,  0 :: TFloat             AS PriceOut
+           , '' :: TFloat             AS PartNumber
+           , '' :: TVarChar           AS Comment
+           ,  0 :: Integer            AS ProductId
+           , '' :: TVarChar           AS ProductName
+           ,  0 :: Integer            AS ProdOptionsId
+           , '' :: TVarChar           AS ProdOptionsName
+           ,  0 :: Integer            AS ProdOptPatternId
+           , '' :: TVarChar           AS ProdOptPatternName
+       ;
+   ELSE
      RETURN QUERY
      SELECT 
            Object_ProdOptItems.Id             ::Integer   AS Id 
@@ -36,6 +56,9 @@ BEGIN
 
          , Object_ProdOptions.Id              ::Integer  AS ProdOptionsId
          , Object_ProdOptions.ValueData       ::TVarChar AS ProdOptionsName
+         
+         , Object_ProdOptPattern.Id           ::Integer  AS ProdOptPatternId
+         , Object_ProdOptPattern.ValueData    ::TVarChar AS ProdOptPatternName
          
      FROM Object AS Object_ProdOptItems
           LEFT JOIN ObjectString AS ObjectString_Comment
@@ -57,6 +80,11 @@ BEGIN
                               AND ObjectLink_Product.DescId = zc_ObjectLink_ProdOptItems_Product()
           LEFT JOIN Object AS Object_Product ON Object_Product.Id = ObjectLink_Product.ChildObjectId
 
+          LEFT JOIN ObjectLink AS ObjectLink_ProdOptPattern
+                               ON ObjectLink_ProdOptPattern.ObjectId = Object_ProdOptItems.Id
+                              AND ObjectLink_ProdOptPattern.DescId = zc_ObjectLink_ProdOptItems_ProdOptPattern()
+          LEFT JOIN Object AS Object_ProdOptPattern ON Object_ProdOptPattern.Id = ObjectLink_ProdOptPattern.ChildObjectId 
+          
           LEFT JOIN ObjectLink AS ObjectLink_ProdOptions
                                ON ObjectLink_ProdOptions.ObjectId = Object_ProdOptItems.Id
                               AND ObjectLink_ProdOptions.DescId = zc_ObjectLink_ProdOptItems_ProdOptions()
@@ -65,6 +93,7 @@ BEGIN
      WHERE Object_ProdOptItems.DescId = zc_Object_ProdOptItems()
        AND Object_ProdOptItems.Id = inId
      ;  
+   END IF;
 
 END;
 $BODY$

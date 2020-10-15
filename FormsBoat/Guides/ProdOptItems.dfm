@@ -26,7 +26,6 @@ object ProdOptItemsForm: TProdOptItemsForm
     TabOrder = 0
     LookAndFeel.NativeStyle = True
     LookAndFeel.SkinName = 'UserSkin'
-    ExplicitWidth = 891
     object cxGridDBTableView: TcxGridDBTableView
       Navigator.Buttons.CustomButtons = <>
       DataController.DataSource = DataSource
@@ -36,7 +35,7 @@ object ProdOptItemsForm: TProdOptItemsForm
         item
           Format = 'C'#1090#1088#1086#1082': ,0'
           Kind = skCount
-          Column = Name
+          Column = ProdOptPatternName
         end>
       DataController.Summary.SummaryGroups = <>
       Images = dmMain.SortImageList
@@ -64,11 +63,11 @@ object ProdOptItemsForm: TProdOptItemsForm
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         Options.Editing = False
-        Width = 43
+        Width = 36
       end
-      object Name: TcxGridDBColumn
+      object ProdOptPatternName: TcxGridDBColumn
         Caption = #1069#1083#1077#1084#1077#1085#1090
-        DataBinding.FieldName = 'Name'
+        DataBinding.FieldName = 'ProdOptPatternName'
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         HeaderGlyphAlignmentHorz = taCenter

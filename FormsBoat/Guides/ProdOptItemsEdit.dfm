@@ -16,12 +16,6 @@ object ProdOptItemsEditForm: TProdOptItemsEditForm
   AddOnFormData.Params = FormParams
   PixelsPerInch = 96
   TextHeight = 13
-  object edName: TcxTextEdit
-    Left = 10
-    Top = 72
-    TabOrder = 0
-    Width = 273
-  end
   object cxLabel1: TcxLabel
     Left = 10
     Top = 54
@@ -34,7 +28,7 @@ object ProdOptItemsEditForm: TProdOptItemsEditForm
     Height = 25
     Action = actInsertUpdateGuides
     Default = True
-    TabOrder = 2
+    TabOrder = 1
   end
   object cxButton2: TcxButton
     Left = 185
@@ -44,7 +38,7 @@ object ProdOptItemsEditForm: TProdOptItemsEditForm
     Action = actFormClose
     Cancel = True
     Caption = #1054#1090#1084#1077#1085#1072
-    TabOrder = 3
+    TabOrder = 2
   end
   object cxLabel2: TcxLabel
     Left = 10
@@ -58,7 +52,7 @@ object ProdOptItemsEditForm: TProdOptItemsEditForm
     Properties.DecimalPlaces = 0
     Properties.DisplayFormat = '0'
     Properties.ReadOnly = True
-    TabOrder = 5
+    TabOrder = 4
     Width = 273
   end
   object cxLabel3: TcxLabel
@@ -69,7 +63,7 @@ object ProdOptItemsEditForm: TProdOptItemsEditForm
   object edComment: TcxTextEdit
     Left = 10
     Top = 305
-    TabOrder = 7
+    TabOrder = 6
     Width = 273
   end
   object cxLabel7: TcxLabel
@@ -82,7 +76,7 @@ object ProdOptItemsEditForm: TProdOptItemsEditForm
     Top = 259
     Properties.DecimalPlaces = 2
     Properties.DisplayFormat = ',0.00'
-    TabOrder = 9
+    TabOrder = 8
     Width = 130
   end
   object cxLabel71: TcxLabel
@@ -95,7 +89,7 @@ object ProdOptItemsEditForm: TProdOptItemsEditForm
     Top = 260
     Properties.DecimalPlaces = 2
     Properties.DisplayFormat = ',0.00'
-    TabOrder = 11
+    TabOrder = 10
     Width = 130
   end
   object cxLabel6: TcxLabel
@@ -108,7 +102,7 @@ object ProdOptItemsEditForm: TProdOptItemsEditForm
     Top = 119
     Properties.DecimalPlaces = 2
     Properties.DisplayFormat = ',0.00'
-    TabOrder = 13
+    TabOrder = 12
     Width = 273
   end
   object cxLabel13: TcxLabel
@@ -125,7 +119,7 @@ object ProdOptItemsEditForm: TProdOptItemsEditForm
         Kind = bkEllipsis
       end>
     Properties.ReadOnly = True
-    TabOrder = 15
+    TabOrder = 14
     Width = 273
   end
   object cxLabel4: TcxLabel
@@ -136,6 +130,18 @@ object ProdOptItemsEditForm: TProdOptItemsEditForm
   object edProdOptions: TcxButtonEdit
     Left = 10
     Top = 212
+    Properties.Buttons = <
+      item
+        Default = True
+        Kind = bkEllipsis
+      end>
+    Properties.ReadOnly = True
+    TabOrder = 16
+    Width = 273
+  end
+  object edProdOptPattern: TcxButtonEdit
+    Left = 10
+    Top = 72
     Properties.Buttons = <
       item
         Default = True
@@ -198,14 +204,6 @@ object ProdOptItemsEditForm: TProdOptItemsEditForm
         MultiSelectSeparator = ','
       end
       item
-        Name = 'inName'
-        Value = ''
-        Component = edName
-        DataType = ftString
-        ParamType = ptInput
-        MultiSelectSeparator = ','
-      end
-      item
         Name = 'inProductId'
         Value = Null
         Component = GuidesProduct
@@ -217,6 +215,14 @@ object ProdOptItemsEditForm: TProdOptItemsEditForm
         Name = 'inProdOptionsId'
         Value = Null
         Component = GuidesProdOptions
+        ComponentItem = 'Key'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inProdOptPatternId'
+        Value = Null
+        Component = GuidesProdOptPattern
         ComponentItem = 'Key'
         ParamType = ptInput
         MultiSelectSeparator = ','
@@ -288,13 +294,6 @@ object ProdOptItemsEditForm: TProdOptItemsEditForm
         MultiSelectSeparator = ','
       end
       item
-        Name = 'Name'
-        Value = ''
-        Component = edName
-        DataType = ftString
-        MultiSelectSeparator = ','
-      end
-      item
         Name = 'ProductId'
         Value = Null
         Component = GuidesProduct
@@ -302,10 +301,26 @@ object ProdOptItemsEditForm: TProdOptItemsEditForm
         MultiSelectSeparator = ','
       end
       item
+        Name = 'ProductName'
+        Value = Null
+        Component = GuidesProduct
+        ComponentItem = 'TextValue'
+        DataType = ftString
+        MultiSelectSeparator = ','
+      end
+      item
         Name = 'ProdOptionsId'
         Value = Null
         Component = GuidesProdOptions
         ComponentItem = 'Key'
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'ProdOptionsName'
+        Value = Null
+        Component = GuidesProdOptions
+        ComponentItem = 'TextValue'
+        DataType = ftString
         MultiSelectSeparator = ','
       end
       item
@@ -333,6 +348,21 @@ object ProdOptItemsEditForm: TProdOptItemsEditForm
         Name = 'Comment'
         Value = Null
         Component = edComment
+        DataType = ftString
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'ProdOptPatternId'
+        Value = Null
+        Component = GuidesProdOptPattern
+        ComponentItem = 'Key'
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'ProdOptPatternName'
+        Value = Null
+        Component = GuidesProdOptPattern
+        ComponentItem = 'TextValue'
         DataType = ftString
         MultiSelectSeparator = ','
       end>
@@ -416,5 +446,34 @@ object ProdOptItemsEditForm: TProdOptItemsEditForm
       end>
     Left = 126
     Top = 203
+  end
+  object GuidesProdOptPattern: TdsdGuides
+    KeyField = 'Id'
+    LookupControl = edProdOptPattern
+    FormNameParam.Value = 'TProdEngineForm'
+    FormNameParam.DataType = ftString
+    FormNameParam.MultiSelectSeparator = ','
+    FormName = 'TProdEngineForm'
+    PositionDataSet = 'MasterCDS'
+    Params = <
+      item
+        Name = 'Key'
+        Value = ''
+        Component = GuidesProdOptPattern
+        ComponentItem = 'Key'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'TextValue'
+        Value = ''
+        Component = GuidesProdOptPattern
+        ComponentItem = 'TextValue'
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end>
+    Left = 190
+    Top = 95
   end
 end

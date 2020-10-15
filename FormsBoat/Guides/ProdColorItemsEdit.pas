@@ -23,7 +23,6 @@ uses
 
 type
   TProdColorItemsEditForm = class(TParentForm)
-    edName: TcxTextEdit;
     cxLabel1: TcxLabel;
     cxButton1: TcxButton;
     cxButton2: TcxButton;
@@ -49,6 +48,8 @@ type
     cxLabel5: TcxLabel;
     GuidesProdColor: TdsdGuides;
     edProdColor: TcxButtonEdit;
+    edProdColorPattern: TcxButtonEdit;
+    GuidesProdColorPattern: TdsdGuides;
   private
     { Private declarations }
   public

@@ -27,7 +27,6 @@ object ProductForm: TProductForm
     TabOrder = 0
     LookAndFeel.NativeStyle = True
     LookAndFeel.SkinName = 'UserSkin'
-    ExplicitTop = 31
     object cxGridDBTableView: TcxGridDBTableView
       Navigator.Buttons.CustomButtons = <>
       DataController.DataSource = DataSource
@@ -257,7 +256,7 @@ object ProductForm: TProductForm
         item
           Format = 'C'#1090#1088#1086#1082': ,0'
           Kind = skCount
-          Column = optName
+          Column = optProdOptPatternName
         end
         item
           Format = ',0.####'
@@ -294,13 +293,21 @@ object ProductForm: TProductForm
         Options.Editing = False
         Width = 43
       end
-      object optName: TcxGridDBColumn
+      object optProdOptPatternName: TcxGridDBColumn
         Caption = #1069#1083#1077#1084#1077#1085#1090
-        DataBinding.FieldName = 'Name'
+        DataBinding.FieldName = 'ProdOptPatternName'
+        PropertiesClassName = 'TcxButtonEditProperties'
+        Properties.Buttons = <
+          item
+            Action = actChoiceFormProdOptPattern
+            Default = True
+            Kind = bkEllipsis
+          end>
+        Properties.ReadOnly = False
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         HeaderGlyphAlignmentHorz = taCenter
-        Width = 189
+        Width = 152
       end
       object optProdOptionsName: TcxGridDBColumn
         Caption = #1054#1087#1094#1080#1103
@@ -386,6 +393,11 @@ object ProductForm: TProductForm
         VisibleForCustomization = False
         Width = 55
       end
+      object optName: TcxGridDBColumn
+        Caption = #1069#1083#1077#1084#1077#1085#1090' ('#1086#1083#1076')'
+        DataBinding.FieldName = 'Name'
+        Options.Editing = False
+      end
     end
     object cxGridLevel1: TcxGridLevel
       GridView = cxGridDBTableViewProdOptItems
@@ -413,7 +425,7 @@ object ProductForm: TProductForm
         item
           Format = 'C'#1090#1088#1086#1082': ,0'
           Kind = skCount
-          Column = colName
+          Column = colProdColorPatternName
         end
         item
           Format = ',0.####'
@@ -463,9 +475,17 @@ object ProductForm: TProductForm
         HeaderAlignmentVert = vaCenter
         Width = 80
       end
-      object colName: TcxGridDBColumn
+      object colProdColorPatternName: TcxGridDBColumn
         Caption = #1069#1083#1077#1084#1077#1085#1090
-        DataBinding.FieldName = 'Name'
+        DataBinding.FieldName = 'ProdColorPatternName'
+        PropertiesClassName = 'TcxButtonEditProperties'
+        Properties.Buttons = <
+          item
+            Action = actChoiceFormProdColorPattern
+            Default = True
+            Kind = bkEllipsis
+          end>
+        Properties.ReadOnly = False
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         HeaderGlyphAlignmentHorz = taCenter
@@ -527,6 +547,12 @@ object ProductForm: TProductForm
         Visible = False
         VisibleForCustomization = False
         Width = 55
+      end
+      object colName: TcxGridDBColumn
+        Caption = #1069#1083#1077#1084#1077#1085#1090' ('#1086#1083#1076')'
+        DataBinding.FieldName = 'Name'
+        Options.Editing = False
+        Width = 50
       end
     end
     object cxGridLevel2: TcxGridLevel
@@ -1158,6 +1184,33 @@ object ProductForm: TProductForm
         end>
       isShowModal = False
     end
+    object actChoiceFormProdOptPattern: TOpenChoiceForm
+      Category = 'DSDLib'
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      Caption = 'actChoiceFormProdColor'
+      FormName = 'TProdOptPatternForm'
+      FormNameParam.Value = 'TProdOptPatternForm'
+      FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
+      GuiParams = <
+        item
+          Name = 'Key'
+          Value = Null
+          Component = ProdOptItemsCDS
+          ComponentItem = 'ProdOptPatternId'
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'TextValue'
+          Value = Null
+          Component = ProdOptItemsCDS
+          ComponentItem = 'ProdOptPatternName'
+          DataType = ftString
+          MultiSelectSeparator = ','
+        end>
+      isShowModal = False
+    end
     object actChoiceFormProdOptions: TOpenChoiceForm
       Category = 'DSDLib'
       MoveParams = <>
@@ -1180,6 +1233,33 @@ object ProductForm: TProductForm
           Value = Null
           Component = ProdOptItemsCDS
           ComponentItem = 'ProdOptionsName'
+          DataType = ftString
+          MultiSelectSeparator = ','
+        end>
+      isShowModal = False
+    end
+    object actChoiceFormProdColorPattern: TOpenChoiceForm
+      Category = 'DSDLib'
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      Caption = 'actChoiceFormProdColor'
+      FormName = 'TProdOptPatternForm'
+      FormNameParam.Value = 'TProdOptPatternForm'
+      FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
+      GuiParams = <
+        item
+          Name = 'Key'
+          Value = Null
+          Component = ProdColorItemsCDS
+          ComponentItem = 'ProdColorPatternId'
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'TextValue'
+          Value = Null
+          Component = ProdColorItemsCDS
+          ComponentItem = 'ProdColorPatternName'
           DataType = ftString
           MultiSelectSeparator = ','
         end>
@@ -1616,15 +1696,6 @@ object ProductForm: TProductForm
         MultiSelectSeparator = ','
       end
       item
-        Name = 'inName'
-        Value = Null
-        Component = ProdColorItemsCDS
-        ComponentItem = 'Name'
-        DataType = ftString
-        ParamType = ptInput
-        MultiSelectSeparator = ','
-      end
-      item
         Name = 'inProductId'
         Value = Null
         Component = MasterCDS
@@ -1645,6 +1716,14 @@ object ProductForm: TProductForm
         Value = Null
         Component = ProdColorItemsCDS
         ComponentItem = 'ProdColorId'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inProdColorPatternId'
+        Value = Null
+        Component = ProdColorItemsCDS
+        ComponentItem = 'ProdColorPatternId'
         ParamType = ptInput
         MultiSelectSeparator = ','
       end
@@ -1687,15 +1766,6 @@ object ProductForm: TProductForm
         MultiSelectSeparator = ','
       end
       item
-        Name = 'inName'
-        Value = Null
-        Component = ProdOptItemsCDS
-        ComponentItem = 'Name'
-        DataType = ftString
-        ParamType = ptInput
-        MultiSelectSeparator = ','
-      end
-      item
         Name = 'inProductId'
         Value = Null
         Component = MasterCDS
@@ -1708,6 +1778,14 @@ object ProductForm: TProductForm
         Value = Null
         Component = ProdOptItemsCDS
         ComponentItem = 'ProdOptionsId'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inProdOptPatternId'
+        Value = Null
+        Component = ProdOptItemsCDS
+        ComponentItem = 'ProdOptPatternId'
         ParamType = ptInput
         MultiSelectSeparator = ','
       end
