@@ -27,6 +27,7 @@ object ProductForm: TProductForm
     TabOrder = 0
     LookAndFeel.NativeStyle = True
     LookAndFeel.SkinName = 'UserSkin'
+    ExplicitTop = 31
     object cxGridDBTableView: TcxGridDBTableView
       Navigator.Buttons.CustomButtons = <>
       DataController.DataSource = DataSource
@@ -61,6 +62,14 @@ object ProductForm: TProductForm
       OptionsView.HeaderHeight = 40
       OptionsView.Indicator = True
       Styles.StyleSheet = dmMain.cxGridTableViewStyleSheet
+      object isSale: TcxGridDBColumn
+        Caption = #1055#1088#1086#1076#1072#1085#1072' ('#1076#1072'/'#1085#1077#1090')'
+        DataBinding.FieldName = 'isSale'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        HeaderHint = #1055#1088#1086#1076#1072#1085#1072' ('#1076#1072'/'#1085#1077#1090')'
+        Width = 72
+      end
       object Code: TcxGridDBColumn
         Caption = #1050#1086#1076
         DataBinding.FieldName = 'Code'
@@ -604,24 +613,15 @@ object ProductForm: TProductForm
       ItemLinks = <
         item
           Visible = True
-          ItemName = 'bbInsert'
-        end
-        item
-          Visible = True
-          ItemName = 'bbEdit'
-        end
-        item
-          Visible = True
-          ItemName = 'bbSetErased'
-        end
-        item
-          Visible = True
-          ItemName = 'bbSetUnErased'
-        end
-        item
-          BeginGroup = True
-          Visible = True
           ItemName = 'dxBarStatic'
+        end
+        item
+          Visible = True
+          ItemName = 'BarSubItemBoat'
+        end
+        item
+          Visible = True
+          ItemName = 'bbShowAllBoatSale'
         end
         item
           Visible = True
@@ -629,15 +629,7 @@ object ProductForm: TProductForm
         end
         item
           Visible = True
-          ItemName = 'bbInsertRecordProdColorItems'
-        end
-        item
-          Visible = True
-          ItemName = 'bbSetErasedColor'
-        end
-        item
-          Visible = True
-          ItemName = 'bbSetUnErasedColor'
+          ItemName = 'BarSubItemColor'
         end
         item
           Visible = True
@@ -649,19 +641,7 @@ object ProductForm: TProductForm
         end
         item
           Visible = True
-          ItemName = 'dxBarStatic'
-        end
-        item
-          Visible = True
-          ItemName = 'bbInsertRecordProdOptItems'
-        end
-        item
-          Visible = True
-          ItemName = 'bbSetErasedOpt'
-        end
-        item
-          Visible = True
-          ItemName = 'bbSetUnErasedOpt'
+          ItemName = 'BarSubItemOption'
         end
         item
           Visible = True
@@ -810,6 +790,68 @@ object ProductForm: TProductForm
       Action = actShowAllOptItems
       Category = 0
     end
+    object BarSubItemBoat: TdxBarSubItem
+      Caption = #1051#1086#1076#1082#1072
+      Category = 0
+      Visible = ivAlways
+      ItemLinks = <
+        item
+          Visible = True
+          ItemName = 'bbInsert'
+        end
+        item
+          Visible = True
+          ItemName = 'bbEdit'
+        end
+        item
+          Visible = True
+          ItemName = 'bbSetErased'
+        end
+        item
+          Visible = True
+          ItemName = 'bbSetUnErased'
+        end>
+    end
+    object BarSubItemColor: TdxBarSubItem
+      Caption = #1062#1074#1077#1090
+      Category = 0
+      Visible = ivAlways
+      ItemLinks = <
+        item
+          Visible = True
+          ItemName = 'bbInsertRecordProdColorItems'
+        end
+        item
+          Visible = True
+          ItemName = 'bbSetErasedColor'
+        end
+        item
+          Visible = True
+          ItemName = 'bbSetUnErasedColor'
+        end>
+    end
+    object BarSubItemOption: TdxBarSubItem
+      Caption = #1054#1087#1094#1080#1103
+      Category = 0
+      Visible = ivAlways
+      ItemLinks = <
+        item
+          Visible = True
+          ItemName = 'bbInsertRecordProdOptItems'
+        end
+        item
+          Visible = True
+          ItemName = 'bbSetErasedOpt'
+        end
+        item
+          Visible = True
+          ItemName = 'bbSetUnErasedOpt'
+        end>
+    end
+    object bbShowAllBoatSale: TdxBarButton
+      Action = actShowAllBoatSale
+      Category = 0
+    end
   end
   object ActionList: TActionList
     Images = dmMain.ImageList
@@ -936,8 +978,8 @@ object ProductForm: TProductForm
         item
           StoredProc = spUnErasedOpt
         end>
-      Caption = #1042#1086#1089#1089#1090#1072#1085#1086#1074#1080#1090#1100' '#1054#1087#1094#1080#1102
-      Hint = #1042#1086#1089#1089#1090#1072#1085#1086#1074#1080#1090#1100' '#1054#1087#1094#1080#1102
+      Caption = #1042#1086#1089#1089#1090#1072#1085#1086#1074#1080#1090#1100
+      Hint = #1042#1086#1089#1089#1090#1072#1085#1086#1074#1080#1090#1100' '#1076#1072#1085#1085#1099#1077
       ImageIndex = 8
       ShortCut = 46
       ErasedFieldName = 'isErased'
@@ -952,8 +994,8 @@ object ProductForm: TProductForm
         item
           StoredProc = spUnErasedColor
         end>
-      Caption = #1042#1086#1089#1089#1090#1072#1085#1086#1074#1080#1090#1100' '#1062#1074#1077#1090
-      Hint = #1042#1086#1089#1089#1090#1072#1085#1086#1074#1080#1090#1100' '#1062#1074#1077#1090
+      Caption = #1042#1086#1089#1089#1090#1072#1085#1086#1074#1080#1090#1100
+      Hint = #1042#1086#1089#1089#1090#1072#1085#1086#1074#1080#1090#1100' '#1076#1072#1085#1085#1099#1077
       ImageIndex = 8
       ShortCut = 46
       ErasedFieldName = 'isErased'
@@ -1205,6 +1247,25 @@ object ProductForm: TProductForm
         end>
       Caption = 'actGetImportSetting'
     end
+    object actShowAllBoatSale: TBooleanStoredProcAction
+      Category = 'DSDLib'
+      MoveParams = <>
+      StoredProc = spSelect
+      StoredProcList = <
+        item
+          StoredProc = spSelect
+        end>
+      Caption = #1055#1086#1082#1072#1079#1072#1090#1100' '#1074#1089#1077' '#1083#1086#1076#1082#1080
+      Hint = #1055#1086#1082#1072#1079#1072#1090#1100' '#1074#1089#1077' '#1083#1086#1076#1082#1080
+      ImageIndex = 63
+      Value = False
+      HintTrue = #1055#1086#1082#1072#1079#1072#1090#1100' '#1085#1077' '#1087#1088#1086#1076#1072#1085#1085#1099#1077
+      HintFalse = #1055#1086#1082#1072#1079#1072#1090#1100' '#1074#1089#1077' '#1083#1086#1076#1082#1080
+      CaptionTrue = #1055#1086#1082#1072#1079#1072#1090#1100' '#1085#1077' '#1087#1088#1086#1076#1072#1085#1085#1099#1077
+      CaptionFalse = #1055#1086#1082#1072#1079#1072#1090#1100' '#1074#1089#1077' '#1083#1086#1076#1082#1080
+      ImageIndexTrue = 62
+      ImageIndexFalse = 63
+    end
     object actShowAllColorItems: TBooleanStoredProcAction
       Category = 'DSDLib'
       MoveParams = <>
@@ -1284,6 +1345,14 @@ object ProductForm: TProductForm
         Name = 'inIsShowAll'
         Value = False
         Component = actShowAllErased
+        DataType = ftBoolean
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inisSale'
+        Value = Null
+        Component = actShowAllBoatSale
         DataType = ftBoolean
         ParamType = ptInput
         MultiSelectSeparator = ','

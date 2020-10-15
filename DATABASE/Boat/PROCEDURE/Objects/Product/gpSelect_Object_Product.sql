@@ -1,9 +1,11 @@
 -- Function: gpSelect_Object_Product()
 
 DROP FUNCTION IF EXISTS gpSelect_Object_Product (Boolean, TVarChar);
+DROP FUNCTION IF EXISTS gpSelect_Object_Product (Boolean, Boolean, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpSelect_Object_Product(
-    IN inIsShowAll   Boolean,            -- признак показать удаленные да / нет
+    IN inIsShowAll   Boolean,       -- признак показать удаленные да / нет
+    IN inIsSale      Boolean,       -- признак показать проданные да / нет
     IN inSession     TVarChar       -- сессия пользователя
 )
 RETURNS TABLE (Id Integer, Code Integer, Name TVarChar, ProdColorName TVarChar
@@ -17,7 +19,8 @@ RETURNS TABLE (Id Integer, Code Integer, Name TVarChar, ProdColorName TVarChar
              , EngineId Integer, EngineName TVarChar
              , InsertName TVarChar
              , InsertDate TDateTime
-             , isErased boolean) AS
+             , isSale Boolean
+             , isErased Boolean) AS
 $BODY$
    DECLARE vbUserId Integer;
 BEGIN
@@ -86,6 +89,7 @@ BEGIN
 
          , Object_Insert.ValueData         AS InsertName
          , ObjectDate_Insert.ValueData     AS InsertDate
+         , CASE WHEN COALESCE (ObjectDate_DateSale.ValueData, zc_DateStart()) = zc_DateStart() THEN FALSE ELSE TRUE END ::Boolean AS isSale
          , Object_Product.isErased         AS isErased
 
      FROM Object AS Object_Product
@@ -158,7 +162,9 @@ BEGIN
                               AND ObjectDate_Insert.DescId = zc_ObjectDate_Protocol_Insert()
 
      WHERE Object_Product.DescId = zc_Object_Product()
-      AND (Object_Product.isErased = FALSE OR inIsShowAll = TRUE);
+      AND (Object_Product.isErased = FALSE OR inIsShowAll = TRUE)
+      AND (COALESCE (ObjectDate_DateSale.ValueData, zc_DateStart()) = zc_DateStart() OR inIsSale = TRUE)
+     ;
 
 END;
 $BODY$
@@ -172,4 +178,7 @@ $BODY$
 */
 
 -- тест
--- SELECT * FROM gpSelect_Object_Product (false, zfCalc_UserAdmin())
+--
+ --SELECT * FROM gpSelect_Object_Product (false, true, zfCalc_UserAdmin())
+ SELECT * FROM gpSelect_Object_Product (false, false, zfCalc_UserAdmin())
+--SELECT * FROM gpSelect_Object_Product (false,  zfCalc_UserAdmin())
