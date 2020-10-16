@@ -19,17 +19,11 @@ RETURNS TABLE (Id Integer, Code Integer, Name TVarChar, ProdColorName TVarChar
              , EngineId Integer, EngineName TVarChar
              , InsertName TVarChar
              , InsertDate TDateTime
-<<<<<<< HEAD
-             , isErased boolean
+             , isSale Boolean
              , PriceIn TFloat, PriceOut TFloat
              , PriceIn2 TFloat, PriceOut2 TFloat
              , PriceIn3 TFloat, PriceOut3 TFloat
-
-             ) AS
-=======
-             , isSale Boolean
              , isErased Boolean) AS
->>>>>>> origin/master
 $BODY$
    DECLARE vbUserId Integer;
 BEGIN
@@ -90,135 +84,132 @@ BEGIN
                 WHERE Object_Product.DescId = zc_Object_Product()
                   AND Object_Product.isErased = FALSE
                )
-, tmpResAll AS 
-     (SELECT
-           Object_Product.Id               AS Id
-         , Object_Product.ObjectCode       AS Code
-         , Object_Product.ValueData        AS Name
-         , CASE WHEN tmpProdColorItems_1.ProdColorName ILIKE tmpProdColorItems_2.ProdColorName
-                THEN tmpProdColorItems_1.ProdColorName
-                ELSE COALESCE (tmpProdColorItems_1.ProdColorName, '') || ' / ' || COALESCE (tmpProdColorItems_2.ProdColorName, '')
-           END :: TVarChar AS ProdColorName
-
-         , ObjectFloat_Hours.ValueData      AS Hours
-         , ObjectDate_DateStart.ValueData   AS DateStart
-         , ObjectDate_DateBegin.ValueData   AS DateBegin
-         , ObjectDate_DateSale.ValueData    AS DateSale
-         , ObjectString_Article.ValueData   AS Article
-         , ObjectString_CIN.ValueData       AS CIN
-         , ObjectString_EngineNum.ValueData AS EngineNum
-         , ObjectString_Comment.ValueData   AS Comment
-
-         , Object_ProdGroup.Id             AS ProdGroupId
-         , Object_ProdGroup.ValueData      AS ProdGroupName
-
-         , Object_Brand.Id                 AS BrandId
-         , Object_Brand.ValueData          AS BrandName
-
-         , Object_Model.Id                 AS ModelId
-         , Object_Model.ValueData          AS ModelName
-
-         , Object_Engine.Id                AS EngineId
-         , Object_Engine.ValueData         AS EngineName
-
-         , Object_Insert.ValueData         AS InsertName
-         , ObjectDate_Insert.ValueData     AS InsertDate
-         , CASE WHEN COALESCE (ObjectDate_DateSale.ValueData, zc_DateStart()) = zc_DateStart() THEN FALSE ELSE TRUE END ::Boolean AS isSale
-         , Object_Product.isErased         AS isErased
-
-         , CASE WHEN tmpObjAll.Ord = 1 THEN 4750 
-                WHEN tmpObjAll.Ord = 2 THEN 4560 
-                WHEN tmpObjAll.Ord = 3 THEN 25456 
-                WHEN tmpObjAll.Ord = 4 THEN 29357
-                WHEN tmpObjAll.Ord = 5 THEN 32347
-                ELSE 0
-           END :: TFloat AS PriceIn
-
-         , CASE WHEN tmpObjAll.Ord = 1 THEN 4750  + 1645
-                WHEN tmpObjAll.Ord = 2 THEN 4560  + 1345 
-                WHEN tmpObjAll.Ord = 3 THEN 25456  + 14234
-                WHEN tmpObjAll.Ord = 4 THEN 29357  + 21700
-                WHEN tmpObjAll.Ord = 5 THEN 32347  + 18345
-                ELSE 0
-           END :: TFloat AS PriceOut
-
-     FROM Object AS Object_Product
-          LEFT JOIN tmpObjAll ON tmpObjAll.Id =  Object_Product.Id
-          LEFT JOIN tmpProdColorItems AS tmpProdColorItems_1
-                                      ON tmpProdColorItems_1.ProductId = Object_Product.Id
-                                     AND tmpProdColorItems_1.NPP = 1
-          LEFT JOIN tmpProdColorItems AS tmpProdColorItems_2
-                                      ON tmpProdColorItems_2.ProductId = Object_Product.Id
-                                     AND tmpProdColorItems_2.NPP = 2
-
-          LEFT JOIN ObjectString AS ObjectString_Comment
-                                 ON ObjectString_Comment.ObjectId = Object_Product.Id
-                                AND ObjectString_Comment.DescId = zc_ObjectString_Product_Comment()
-
-          LEFT JOIN ObjectFloat AS ObjectFloat_Hours
-                                ON ObjectFloat_Hours.ObjectId = Object_Product.Id
-                               AND ObjectFloat_Hours.DescId = zc_ObjectFloat_Product_Hours()
-
-          LEFT JOIN ObjectDate AS ObjectDate_DateStart
-                               ON ObjectDate_DateStart.ObjectId = Object_Product.Id
-                              AND ObjectDate_DateStart.DescId = zc_ObjectDate_Product_DateStart()
-
-          LEFT JOIN ObjectDate AS ObjectDate_DateBegin
-                               ON ObjectDate_DateBegin.ObjectId = Object_Product.Id
-                              AND ObjectDate_DateBegin.DescId = zc_ObjectDate_Product_DateBegin()
-
-          LEFT JOIN ObjectDate AS ObjectDate_DateSale
-                               ON ObjectDate_DateSale.ObjectId = Object_Product.Id
-                              AND ObjectDate_DateSale.DescId = zc_ObjectDate_Product_DateSale()
-
-          LEFT JOIN ObjectString AS ObjectString_Article
-                                 ON ObjectString_Article.ObjectId = Object_Product.Id
-                                AND ObjectString_Article.DescId = zc_ObjectString_Article()
-
-          LEFT JOIN ObjectString AS ObjectString_CIN
-                                 ON ObjectString_CIN.ObjectId = Object_Product.Id
-                                AND ObjectString_CIN.DescId = zc_ObjectString_Product_CIN()
-
-          LEFT JOIN ObjectString AS ObjectString_EngineNum
-                                 ON ObjectString_EngineNum.ObjectId = Object_Product.Id
-                                AND ObjectString_EngineNum.DescId = zc_ObjectString_Product_EngineNum()
-
-          LEFT JOIN ObjectLink AS ObjectLink_ProdGroup
-                               ON ObjectLink_ProdGroup.ObjectId = Object_Product.Id
-                              AND ObjectLink_ProdGroup.DescId = zc_ObjectLink_Product_ProdGroup()
-          LEFT JOIN Object AS Object_ProdGroup ON Object_ProdGroup.Id = ObjectLink_ProdGroup.ChildObjectId
-
-          LEFT JOIN ObjectLink AS ObjectLink_Brand
-                               ON ObjectLink_Brand.ObjectId = Object_Product.Id
-                              AND ObjectLink_Brand.DescId = zc_ObjectLink_Product_Brand()
-          LEFT JOIN Object AS Object_Brand ON Object_Brand.Id = ObjectLink_Brand.ChildObjectId
-
-          LEFT JOIN ObjectLink AS ObjectLink_Model
-                               ON ObjectLink_Model.ObjectId = Object_Product.Id
-                              AND ObjectLink_Model.DescId = zc_ObjectLink_Product_Model()
-          LEFT JOIN Object AS Object_Model ON Object_Model.Id = ObjectLink_Model.ChildObjectId
-
-          LEFT JOIN ObjectLink AS ObjectLink_Engine
-                               ON ObjectLink_Engine.ObjectId = Object_Product.Id
-                              AND ObjectLink_Engine.DescId = zc_ObjectLink_Product_Engine()
-          LEFT JOIN Object AS Object_Engine ON Object_Engine.Id = ObjectLink_Engine.ChildObjectId
-
-          LEFT JOIN ObjectLink AS ObjectLink_Insert
-                               ON ObjectLink_Insert.ObjectId = Object_Product.Id
-                              AND ObjectLink_Insert.DescId = zc_ObjectLink_Protocol_Insert()
-          LEFT JOIN Object AS Object_Insert ON Object_Insert.Id = ObjectLink_Insert.ChildObjectId
-
-          LEFT JOIN ObjectDate AS ObjectDate_Insert
-                               ON ObjectDate_Insert.ObjectId = Object_Product.Id
-                              AND ObjectDate_Insert.DescId = zc_ObjectDate_Protocol_Insert()
-
-     WHERE Object_Product.DescId = zc_Object_Product()
-      AND (Object_Product.isErased = FALSE OR inIsShowAll = TRUE)
-<<<<<<< HEAD
-)
-
+  , tmpResAll AS(SELECT Object_Product.Id               AS Id
+                      , Object_Product.ObjectCode       AS Code
+                      , Object_Product.ValueData        AS Name
+                      , CASE WHEN tmpProdColorItems_1.ProdColorName ILIKE tmpProdColorItems_2.ProdColorName
+                             THEN tmpProdColorItems_1.ProdColorName
+                             ELSE COALESCE (tmpProdColorItems_1.ProdColorName, '') || ' / ' || COALESCE (tmpProdColorItems_2.ProdColorName, '')
+                        END :: TVarChar AS ProdColorName
+             
+                      , ObjectFloat_Hours.ValueData      AS Hours
+                      , ObjectDate_DateStart.ValueData   AS DateStart
+                      , ObjectDate_DateBegin.ValueData   AS DateBegin
+                      , ObjectDate_DateSale.ValueData    AS DateSale
+                      , ObjectString_Article.ValueData   AS Article
+                      , ObjectString_CIN.ValueData       AS CIN
+                      , ObjectString_EngineNum.ValueData AS EngineNum
+                      , ObjectString_Comment.ValueData   AS Comment
+             
+                      , Object_ProdGroup.Id             AS ProdGroupId
+                      , Object_ProdGroup.ValueData      AS ProdGroupName
+             
+                      , Object_Brand.Id                 AS BrandId
+                      , Object_Brand.ValueData          AS BrandName
+             
+                      , Object_Model.Id                 AS ModelId
+                      , Object_Model.ValueData          AS ModelName
+             
+                      , Object_Engine.Id                AS EngineId
+                      , Object_Engine.ValueData         AS EngineName
+             
+                      , Object_Insert.ValueData         AS InsertName
+                      , ObjectDate_Insert.ValueData     AS InsertDate
+                      , CASE WHEN COALESCE (ObjectDate_DateSale.ValueData, zc_DateStart()) = zc_DateStart() THEN FALSE ELSE TRUE END ::Boolean AS isSale
+                      , Object_Product.isErased         AS isErased
+             
+                      , CASE WHEN tmpObjAll.Ord = 1 THEN 4750 
+                             WHEN tmpObjAll.Ord = 2 THEN 4560 
+                             WHEN tmpObjAll.Ord = 3 THEN 25456 
+                             WHEN tmpObjAll.Ord = 4 THEN 29357
+                             WHEN tmpObjAll.Ord = 5 THEN 32347
+                             ELSE 0
+                        END :: TFloat AS PriceIn
+             
+                      , CASE WHEN tmpObjAll.Ord = 1 THEN 4750  + 1645
+                             WHEN tmpObjAll.Ord = 2 THEN 4560  + 1345 
+                             WHEN tmpObjAll.Ord = 3 THEN 25456  + 14234
+                             WHEN tmpObjAll.Ord = 4 THEN 29357  + 21700
+                             WHEN tmpObjAll.Ord = 5 THEN 32347  + 18345
+                             ELSE 0
+                        END :: TFloat AS PriceOut
+             
+                  FROM Object AS Object_Product
+                       LEFT JOIN tmpObjAll ON tmpObjAll.Id =  Object_Product.Id
+                       LEFT JOIN tmpProdColorItems AS tmpProdColorItems_1
+                                                   ON tmpProdColorItems_1.ProductId = Object_Product.Id
+                                                  AND tmpProdColorItems_1.NPP = 1
+                       LEFT JOIN tmpProdColorItems AS tmpProdColorItems_2
+                                                   ON tmpProdColorItems_2.ProductId = Object_Product.Id
+                                                  AND tmpProdColorItems_2.NPP = 2
+             
+                       LEFT JOIN ObjectString AS ObjectString_Comment
+                                              ON ObjectString_Comment.ObjectId = Object_Product.Id
+                                             AND ObjectString_Comment.DescId = zc_ObjectString_Product_Comment()
+             
+                       LEFT JOIN ObjectFloat AS ObjectFloat_Hours
+                                             ON ObjectFloat_Hours.ObjectId = Object_Product.Id
+                                            AND ObjectFloat_Hours.DescId = zc_ObjectFloat_Product_Hours()
+             
+                       LEFT JOIN ObjectDate AS ObjectDate_DateStart
+                                            ON ObjectDate_DateStart.ObjectId = Object_Product.Id
+                                           AND ObjectDate_DateStart.DescId = zc_ObjectDate_Product_DateStart()
+             
+                       LEFT JOIN ObjectDate AS ObjectDate_DateBegin
+                                            ON ObjectDate_DateBegin.ObjectId = Object_Product.Id
+                                           AND ObjectDate_DateBegin.DescId = zc_ObjectDate_Product_DateBegin()
+             
+                       LEFT JOIN ObjectDate AS ObjectDate_DateSale
+                                            ON ObjectDate_DateSale.ObjectId = Object_Product.Id
+                                           AND ObjectDate_DateSale.DescId = zc_ObjectDate_Product_DateSale()
+             
+                       LEFT JOIN ObjectString AS ObjectString_Article
+                                              ON ObjectString_Article.ObjectId = Object_Product.Id
+                                             AND ObjectString_Article.DescId = zc_ObjectString_Article()
+             
+                       LEFT JOIN ObjectString AS ObjectString_CIN
+                                              ON ObjectString_CIN.ObjectId = Object_Product.Id
+                                             AND ObjectString_CIN.DescId = zc_ObjectString_Product_CIN()
+             
+                       LEFT JOIN ObjectString AS ObjectString_EngineNum
+                                              ON ObjectString_EngineNum.ObjectId = Object_Product.Id
+                                             AND ObjectString_EngineNum.DescId = zc_ObjectString_Product_EngineNum()
+             
+                       LEFT JOIN ObjectLink AS ObjectLink_ProdGroup
+                                            ON ObjectLink_ProdGroup.ObjectId = Object_Product.Id
+                                           AND ObjectLink_ProdGroup.DescId = zc_ObjectLink_Product_ProdGroup()
+                       LEFT JOIN Object AS Object_ProdGroup ON Object_ProdGroup.Id = ObjectLink_ProdGroup.ChildObjectId
+             
+                       LEFT JOIN ObjectLink AS ObjectLink_Brand
+                                            ON ObjectLink_Brand.ObjectId = Object_Product.Id
+                                           AND ObjectLink_Brand.DescId = zc_ObjectLink_Product_Brand()
+                       LEFT JOIN Object AS Object_Brand ON Object_Brand.Id = ObjectLink_Brand.ChildObjectId
+             
+                       LEFT JOIN ObjectLink AS ObjectLink_Model
+                                            ON ObjectLink_Model.ObjectId = Object_Product.Id
+                                           AND ObjectLink_Model.DescId = zc_ObjectLink_Product_Model()
+                       LEFT JOIN Object AS Object_Model ON Object_Model.Id = ObjectLink_Model.ChildObjectId
+             
+                       LEFT JOIN ObjectLink AS ObjectLink_Engine
+                                            ON ObjectLink_Engine.ObjectId = Object_Product.Id
+                                           AND ObjectLink_Engine.DescId = zc_ObjectLink_Product_Engine()
+                       LEFT JOIN Object AS Object_Engine ON Object_Engine.Id = ObjectLink_Engine.ChildObjectId
+             
+                       LEFT JOIN ObjectLink AS ObjectLink_Insert
+                                            ON ObjectLink_Insert.ObjectId = Object_Product.Id
+                                           AND ObjectLink_Insert.DescId = zc_ObjectLink_Protocol_Insert()
+                       LEFT JOIN Object AS Object_Insert ON Object_Insert.Id = ObjectLink_Insert.ChildObjectId
+             
+                       LEFT JOIN ObjectDate AS ObjectDate_Insert
+                                            ON ObjectDate_Insert.ObjectId = Object_Product.Id
+                                           AND ObjectDate_Insert.DescId = zc_ObjectDate_Protocol_Insert()
+             
+                  WHERE Object_Product.DescId = zc_Object_Product()
+                   AND (Object_Product.isErased = FALSE OR inIsShowAll = TRUE)
+                   AND (COALESCE (ObjectDate_DateSale.ValueData, zc_DateStart()) = zc_DateStart() OR inIsSale = TRUE)
+                 )
      -- Результат
-     SELECT
+    SELECT
            tmpResAll.Id
          , tmpResAll.Code
          , tmpResAll.Name
@@ -247,7 +238,7 @@ BEGIN
 
          , tmpResAll.InsertName
          , tmpResAll.InsertDate
-         , tmpResAll.isErased
+         , tmpResAll.isSale
 
          , tmpResAll.PriceIn
          , tmpResAll.PriceOut
@@ -258,13 +249,11 @@ BEGIN
          , (COALESCE (tmpResAll.PriceIn, 0) + COALESCE (tmpProdOptItems.PriceIn, 0))   :: TFloat AS PriceIn3
          , (COALESCE (tmpResAll.PriceOut, 0) + COALESCE (tmpProdOptItems.PriceOut, 0)) :: TFloat AS PriceOut3
 
+         , tmpResAll.isErased
+
      FROM tmpResAll
-          LEFT JOIN tmpProdOptItems on tmpProdOptItems. ProductId = tmpResAll.Id
-    ;
-=======
-      AND (COALESCE (ObjectDate_DateSale.ValueData, zc_DateStart()) = zc_DateStart() OR inIsSale = TRUE)
+          LEFT JOIN tmpProdOptItems ON tmpProdOptItems. ProductId = tmpResAll.Id
      ;
->>>>>>> origin/master
 
 END;
 $BODY$
@@ -280,5 +269,4 @@ $BODY$
 -- тест
 --
  --SELECT * FROM gpSelect_Object_Product (false, true, zfCalc_UserAdmin())
- SELECT * FROM gpSelect_Object_Product (false, false, zfCalc_UserAdmin())
---SELECT * FROM gpSelect_Object_Product (false,  zfCalc_UserAdmin())
+-- SELECT * FROM gpSelect_Object_Product (false, false, zfCalc_UserAdmin())
