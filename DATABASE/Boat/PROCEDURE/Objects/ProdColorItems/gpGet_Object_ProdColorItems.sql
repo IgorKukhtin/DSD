@@ -11,6 +11,7 @@ RETURNS TABLE (Id Integer, Code Integer, Name TVarChar
              , ProductId Integer, ProductName TVarChar
              , ProdColorGroupId Integer, ProdColorGroupName TVarChar
              , ProdColorId Integer, ProdColorName TVarChar
+             , ProdColorPatternId Integer, ProdColorPatternName TVarChar
 ) AS
 $BODY$
    DECLARE vbUserId Integer;
@@ -20,8 +21,25 @@ BEGIN
    -- PERFORM lpCheckRight(inSession, zc_Enum_Process_Select_Object_ProdColorItems());
    vbUserId:= lpGetUserBySession (inSession);
 
+  IF COALESCE (inId, 0) = 0
+   THEN
+       RETURN QUERY
+       SELECT
+              0 :: Integer            AS Id
+           , lfGet_ObjectCode(0, zc_Object_Brand())   AS Code
+           , '' :: TVarChar           AS Name
+           , '' :: TVarChar           AS Comment
+           ,  0 :: Integer            AS ProductId
+           , '' :: TVarChar           AS ProductName
+           ,  0 :: Integer            AS ProdColorGroupId
+           , '' :: TVarChar           AS ProdColorGroupName
+           ,  0 :: Integer            AS ProdColorId
+           , '' :: TVarChar           AS ProdColorName
+           ,  0 :: Integer            AS ProdColorPatternId
+           , '' :: TVarChar           AS ProdColorPatternName
+       ;
+   ELSE
      RETURN QUERY
-
      SELECT 
            Object_ProdColorItems.Id         AS Id 
          , ROW_NUMBER() OVER (PARTITION BY Object_Product.Id ORDER BY Object_ProdColorGroup.ObjectCode ASC, Object_ProdColorItems.ObjectCode ASC) :: Integer AS Code
@@ -37,7 +55,9 @@ BEGIN
 
          , Object_ProdColor.Id                ::Integer  AS ProdColorId
          , Object_ProdColor.ValueData         ::TVarChar AS ProdColorName
-         
+
+         , Object_ProdColorPattern.Id         ::Integer  AS ProdColorPatternId
+         , Object_ProdColorPattern.ValueData  ::TVarChar AS ProdColorPatternName
      FROM Object AS Object_ProdColorItems
           LEFT JOIN ObjectString AS ObjectString_Comment
                                  ON ObjectString_Comment.ObjectId = Object_ProdColorItems.Id
@@ -58,9 +78,16 @@ BEGIN
                               AND ObjectLink_ProdColor.DescId = zc_ObjectLink_ProdColorItems_ProdColor()
           LEFT JOIN Object AS Object_ProdColor ON Object_ProdColor.Id = ObjectLink_ProdColor.ChildObjectId 
 
+          LEFT JOIN ObjectLink AS ObjectLink_ProdColorPattern
+                               ON ObjectLink_ProdColorPattern.ObjectId = Object_ProdColorItems.Id
+                              AND ObjectLink_ProdColorPattern.DescId = zc_ObjectLink_ProdColorItems_ProdColorPattern()
+          LEFT JOIN Object AS Object_ProdColorPattern ON Object_ProdColorPattern.Id = ObjectLink_ProdColorPattern.ChildObjectId 
+
      WHERE Object_ProdColorItems.DescId = zc_Object_ProdColorItems()
       AND Object_ProdColorItems.Id = inId
      ;
+   END IF;
+
 END;
 $BODY$
   LANGUAGE plpgsql VOLATILE;

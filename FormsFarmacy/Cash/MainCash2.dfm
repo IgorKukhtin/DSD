@@ -5140,6 +5140,17 @@ inherited MainCashForm2: TMainCashForm2
       GuiParams = <>
       isShowModal = False
     end
+    object actShowPUSH_UKTZED: TdsdShowPUSHMessage
+      Category = 'DSDLib'
+      MoveParams = <>
+      StoredProc = spShowPUSH_UKTZED
+      StoredProcList = <
+        item
+          StoredProc = spShowPUSH_UKTZED
+        end>
+      Caption = 'actShowPUSH_UKTZED'
+      PUSHMessageType = pmtInformation
+    end
   end
   object dsdDBViewAddOnMain: TdsdDBViewAddOn
     ErasedFieldName = 'isErased'
@@ -7679,5 +7690,39 @@ inherited MainCashForm2: TMainCashForm2
     PackSize = 1
     Left = 608
     Top = 144
+  end
+  object spShowPUSH_UKTZED: TdsdStoredProc
+    StoredProcName = 'gpSelect_Cash_ShowPUSH_UKTZED'
+    DataSets = <>
+    OutputType = otResult
+    Params = <
+      item
+        Name = 'inGoodsId'
+        Value = Null
+        Component = RemainsCDS
+        ComponentItem = 'Id'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'outShowMessage'
+        Value = Null
+        DataType = ftBoolean
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'outPUSHType'
+        Value = Null
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'outText'
+        Value = Null
+        DataType = ftWideString
+        MultiSelectSeparator = ','
+      end>
+    PackSize = 1
+    Left = 47
+    Top = 488
   end
 end

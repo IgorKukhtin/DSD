@@ -1092,9 +1092,9 @@ object frmMain: TfrmMain
         634)
       object SnapshotLog: TMemo
         Left = 272
-        Top = 54
+        Top = 76
         Width = 689
-        Height = 563
+        Height = 546
         Anchors = [akLeft, akTop, akRight, akBottom]
         Color = clWindowText
         Font.Charset = DEFAULT_CHARSET
@@ -1111,9 +1111,9 @@ object frmMain: TfrmMain
       end
       object lvTables: TListView
         Left = 16
-        Top = 54
+        Top = 76
         Width = 250
-        Height = 563
+        Height = 546
         Anchors = [akLeft, akTop, akBottom]
         Columns = <
           item
@@ -1130,13 +1130,13 @@ object frmMain: TfrmMain
         Left = 0
         Top = 0
         Width = 976
-        Height = 48
+        Height = 73
         Align = alTop
         BevelOuter = bvNone
         TabOrder = 2
         DesignSize = (
           976
-          48)
+          73)
         object lbElapsed: TLabel
           Left = 257
           Top = 8
@@ -1173,35 +1173,35 @@ object frmMain: TfrmMain
         end
         object lbCurrentTableCaption: TLabel
           Left = 16
-          Top = 32
+          Top = 56
           Width = 94
           Height = 13
           Caption = #1058#1077#1082#1091#1097#1072#1103' '#1090#1072#1073#1083#1080#1094#1072':'
         end
         object lbCurrentTable: TLabel
           Left = 116
-          Top = 32
+          Top = 56
           Width = 24
           Height = 13
           Caption = 'none'
         end
         object lbProcessed: TLabel
           Left = 152
-          Top = 32
+          Top = 56
           Width = 16
           Height = 13
           Caption = '0/0'
         end
         object lbProcessedPercent: TLabel
           Left = 184
-          Top = 32
+          Top = 56
           Width = 20
           Height = 13
           Caption = '0 %'
         end
         object lbStatus: TLabel
           Left = 220
-          Top = 32
+          Top = 56
           Width = 3
           Height = 13
         end
@@ -1225,6 +1225,20 @@ object frmMain: TfrmMain
           Width = 73
           Height = 13
           Caption = #1074' select (BLOB)'
+        end
+        object lbBatchTextCount: TLabel
+          Left = 374
+          Top = 33
+          Width = 72
+          Height = 13
+          Caption = #1074' select c TEXT'
+        end
+        object Label4: TLabel
+          Left = 523
+          Top = 33
+          Width = 36
+          Height = 13
+          Caption = #1074' insert'
         end
         object btnSnapshotPause: TButton
           Left = 882
@@ -1273,6 +1287,35 @@ object frmMain: TfrmMain
           Alignment = taRightJustify
           TabOrder = 4
           Text = '10'
+        end
+        object edtSnapshotSelectTextCount: TEdit
+          Left = 454
+          Top = 30
+          Width = 59
+          Height = 21
+          Alignment = taRightJustify
+          TabOrder = 5
+          Text = '100000'
+        end
+        object edtSnapshotInsertTextCount: TEdit
+          Left = 568
+          Top = 30
+          Width = 59
+          Height = 21
+          Alignment = taRightJustify
+          TabOrder = 6
+          Text = '20000'
+        end
+        object btnClearSnapshotLog: TButton
+          Left = 882
+          Top = 42
+          Width = 79
+          Height = 25
+          Anchors = [akTop, akRight]
+          Caption = #1054#1095#1080#1089#1090#1080#1090#1100' '#1083#1086#1075
+          Enabled = False
+          TabOrder = 7
+          OnClick = btnClearSnapshotLogClick
         end
       end
     end

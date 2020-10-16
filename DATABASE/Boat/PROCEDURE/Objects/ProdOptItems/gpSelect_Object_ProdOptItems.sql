@@ -12,6 +12,7 @@ RETURNS TABLE (Id Integer, Code Integer, Name TVarChar
              , PartNumber TVarChar, Comment TVarChar
              , ProductId Integer, ProductName TVarChar
              , ProdOptionsId Integer, ProdOptionsName TVarChar
+             , ProdOptPatternId Integer, ProdOptPatternName TVarChar
              , Color_fon Integer
              , InsertName TVarChar
              , InsertDate TDateTime
@@ -67,6 +68,9 @@ BEGIN
          , Object_ProdOptions.Id            AS ProdOptionsId
          , Object_ProdOptions.ValueData     AS ProdOptionsName
 
+         , Object_ProdOptPattern.Id           ::Integer  AS ProdOptPatternId
+         , Object_ProdOptPattern.ValueData    ::TVarChar AS ProdOptPatternName
+
          , CASE WHEN CEIL (Object_ProdOptItems.ObjectCode / 2) * 2 <> Object_ProdOptItems.ObjectCode
                      THEN zc_Color_Aqua()
                 ELSE
@@ -103,6 +107,11 @@ BEGIN
                               AND ObjectLink_ProdOptions.DescId = zc_ObjectLink_ProdOptItems_ProdOptions()
           LEFT JOIN Object AS Object_ProdOptions ON Object_ProdOptions.Id = ObjectLink_ProdOptions.ChildObjectId
 
+          LEFT JOIN ObjectLink AS ObjectLink_ProdOptPattern
+                               ON ObjectLink_ProdOptPattern.ObjectId = Object_ProdOptItems.Id
+                              AND ObjectLink_ProdOptPattern.DescId = zc_ObjectLink_ProdOptItems_ProdOptPattern()
+          LEFT JOIN Object AS Object_ProdOptPattern ON Object_ProdOptPattern.Id = ObjectLink_ProdOptPattern.ChildObjectId
+
           LEFT JOIN ObjectLink AS ObjectLink_Insert
                                ON ObjectLink_Insert.ObjectId = Object_ProdOptItems.Id
                               AND ObjectLink_Insert.DescId = zc_ObjectLink_Protocol_Insert()
@@ -126,6 +135,8 @@ BEGIN
           , tmpAll.ProductName        ::TVarChar  AS ProductName
           , tmpAll.ProdOptionsId      ::Integer   AS ProdOptionsId
           , tmpAll.ProdOptionsName    ::TVarChar  AS ProdOptionsName
+          ,  0                        :: Integer  AS ProdOptPatternId
+          , ''                        :: TVarChar AS ProdOptPatternName
             -- нет цвета
           , zc_Color_Red()            :: Integer  AS Color_fon
           , ''                        ::TVarChar  AS InsertName

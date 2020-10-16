@@ -451,7 +451,6 @@ uses
   PartnerMedical in '..\..\FormsFarmacy\Guides\PartnerMedical.pas' {PartnerMedicalForm: TParentForm},
   PartnerMedicalEdit in '..\..\FormsFarmacy\Guides\PartnerMedicalEdit.pas' {PartnerMedicalEditForm: TParentForm},
   ConditionsKeepEdit in '..\..\FormsFarmacy\Guides\ConditionsKeepEdit.pas' {ConditionsKeepEditForm: TParentForm},
-  ConditionsKeep in '..\..\FormsFarmacy\Guides\ConditionsKeep.pas' {ConditionsKeepForm: TParentForm},
   ReportPromoParams in '..\..\FormsFarmacy\Object\ReportPromoParams.pas' {ReportPromoParamsForm: TParentForm},
   Report_MinPrice_onGoods in '..\..\FormsFarmacy\Report\Report_MinPrice_onGoods.pas' {Report_MinPrice_onGoodsForm: TParentForm},
   Report_MinPrice_onGoodsDialog in '..\..\FormsFarmacy\Report\Report_MinPrice_onGoodsDialog.pas' {Report_MinPrice_onGoodsDialogForm: TParentForm},
@@ -958,7 +957,8 @@ uses
   dsdTranslator in '..\..\SOURCE\COMPONENT\dsdTranslator.pas',
   RelatedProduct in '..\..\FormsFarmacy\Document\RelatedProduct.pas' {RelatedProductForm: TParentForm},
   RelatedProductJournal in '..\..\FormsFarmacy\Document\RelatedProductJournal.pas' {RelatedProductJournalForm: TParentForm},
-  ChoiceRelatedProduct in '..\..\FormsFarmacy\Guides\ChoiceRelatedProduct.pas' {ChoiceRelatedProductForm: TParentForm};
+  ChoiceRelatedProduct in '..\..\FormsFarmacy\Guides\ChoiceRelatedProduct.pas' {ChoiceRelatedProductForm: TParentForm},
+  ConditionsKeep in '..\..\FormsFarmacy\Guides\ConditionsKeep.pas' {ConditionsKeepForm: TParentForm};
 
 {$R *.res}
 {$R DevExpressRus.res}

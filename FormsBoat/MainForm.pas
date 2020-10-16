@@ -191,6 +191,10 @@ type
     miBrand: TMenuItem;
     miProdModel: TMenuItem;
     miProdEngine: TMenuItem;
+    actProdColorPattern: TdsdOpenForm;
+    actProdOptPattern: TdsdOpenForm;
+    miProdColorPattern: TMenuItem;
+    miProdOptPattern: TMenuItem;
   private
     { Private declarations }
   public

@@ -1,13 +1,15 @@
 -- Function: gpInsertUpdate_Object_ProdOptItems()
 
 DROP FUNCTION IF EXISTS gpInsertUpdate_Object_ProdOptItems(Integer, Integer, TVarChar, Integer, Integer, TFloat, TFloat, TVarChar, TVarChar, TVarChar);
+DROP FUNCTION IF EXISTS gpInsertUpdate_Object_ProdOptItems(Integer, Integer, Integer, Integer, Integer, TFloat, TFloat, TVarChar, TVarChar, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpInsertUpdate_Object_ProdOptItems(
  INOUT ioId               Integer   ,    -- ключ объекта <>
     IN inCode             Integer   ,    -- Код объекта 
-    IN inName             TVarChar  ,    -- Название объекта
+    --IN inName             TVarChar  ,    -- Название объекта
     IN inProductId        Integer   ,
     IN inProdOptionsId    Integer   ,
+    IN inProdOptPatternId Integer   ,
     IN inPriceIn          TFloat    ,
     IN inPriceOut         TFloat    ,
     IN inPartNumber       TVarChar  ,
@@ -44,7 +46,7 @@ BEGIN
    --PERFORM lpCheckUnique_Object_ValueData (ioId, zc_Object_ProdOptItems(), inName);
 
    -- сохранили <Объект>
-   ioId := lpInsertUpdate_Object(ioId, zc_Object_ProdOptItems(), vbCode_calc, inName);
+   ioId := lpInsertUpdate_Object(ioId, zc_Object_ProdOptItems(), vbCode_calc, Null);
 
    -- сохранили свойство <>
    PERFORM lpInsertUpdate_ObjectString (zc_ObjectString_ProdOptItems_PartNumber(), ioId, inPartNumber);
@@ -62,6 +64,8 @@ BEGIN
    -- сохранили свойство <>
    PERFORM lpInsertUpdate_ObjectLink (zc_ObjectLink_ProdOptItems_ProdOptions(), ioId, inProdOptionsId);
 
+   -- сохранили свойство <>
+   PERFORM lpInsertUpdate_ObjectLink (zc_ObjectLink_ProdOptItems_ProdOptPattern(), ioId, inProdOptPatternId);
 
    IF vbIsInsert = TRUE THEN
       -- сохранили свойство <Дата создания>

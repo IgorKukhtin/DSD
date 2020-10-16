@@ -12,6 +12,8 @@ type
     ErrCode: Integer;
     Connected: Boolean;
     FTotalSummaCheck: Currency;
+    pData: Integer;
+    pString: WideString;
     procedure SetAlwaysSold(Value: boolean);
     function GetAlwaysSold: boolean;
     function PrinterException(ACreateException: Boolean = False): Boolean;
@@ -50,6 +52,8 @@ type
     function SummaReceipt : Currency;
     function GetTaxRate : string;
     function SensZReportBefore : boolean;
+    function ReservedWordCurr : currency;
+    function ReservedWordInt : integer;
   public
     constructor Create;
   end;
@@ -63,9 +67,26 @@ const
 
 { TCashFP320 }
 
+function TCashFP320.ReservedWordCurr : currency;
+  var r : Currency;
+begin
+  if TryStrToCurr(StringReplace(FPrinter.ReservedWord, '.', FormatSettings.DecimalSeparator, [rfReplaceAll, rfIgnoreCase]), r) then
+    Result := r
+  else Result := 0;
+end;
+
+function TCashFP320.ReservedWordInt : integer;
+  var r : integer;
+begin
+  if TryStrToInt(FPrinter.ReservedWord, r) then Result := r
+  else Result := 0;
+end;
+
+
 procedure TCashFP320.Anulirovt;
 begin
-
+  FPrinter.ResetPrinter;
+  PrinterException;
 end;
 
 function TCashFP320.CashInputOutput(const Summa: double): boolean;
@@ -155,16 +176,19 @@ begin
 end;
 
 function TCashFP320.FiscalNumber: String;
-var
-  arg: Integer;
-  Data: WideString;
 begin
-  Result := iniCashSerialNumber;
+  pData := 0;
+  pString := Password + ';';
+  FPrinter.DirectIO($42, pData, pString);
+  Result := FPrinter.ReservedWord;
 end;
 
 function TCashFP320.SerialNumber:String;
 begin
-  Result := '';
+  pData := 0;
+  pString := Password + ';';
+  FPrinter.DirectIO($44, pData, pString);
+  Result := FPrinter.ReservedWord;
 end;
 
 function TCashFP320.GetAlwaysSold: boolean;
@@ -286,10 +310,9 @@ begin
 
   Name75 := Copy(GoodsName,1,75);
 
-	if NDS = 20 Then
-    NDSType := 0
-	Else
-    NDSType := iniTaxGroup7;
+  if NDS = 20 then NDSType := 0
+  else if NDS =  0 then NDSType := 2
+  else NDSType := 1;
 
 	If FPrinter.PrinterState = 9 then
 		FPrinter.PrintNormal(2,GoodsName)
@@ -358,7 +381,11 @@ end;
 
 function TCashFP320.DiscountGoods(Summ: double): boolean;
 begin
-
+  if not Connected then exit;
+  if Summ > 0 then
+    FPrinter.PrintRecItemAdjustment(2, '', Abs(Summ), 0)
+  else FPrinter.PrintRecItemAdjustment(1, '', Abs(Summ), 0);
+  Result := not PrinterException;
 end;
 
 function TCashFP320.XReport: boolean;
@@ -383,17 +410,35 @@ end;
 
 function TCashFP320.ZReport : Integer;
 begin
-  Result := 0;
+  pData := 0;
+  pString := Password + ';0;';
+  FPrinter.DirectIO($E2, pData, pString);
+  Result := ReservedWordInt;
 end;
 
 function TCashFP320.SummaReceipt : Currency;
 begin
-  Result := 0;
+  pData := 3;
+  pString := Password + ';1;';
+  FPrinter.DirectIO($E1, pData, pString);
+  Result := ReservedWordCurr;
 end;
 
 function TCashFP320.GetTaxRate : string;
+  var I : Integer;
+  const TaxName : String = '¿¡¬√';
 begin
   Result := '';
+
+  for I := 0 to 3 do
+  begin
+    pData := I;
+    pString := Password + ';2;';
+    FPrinter.DirectIO($E2, pData, pString);
+    if Result <> '' then Result := Result + '; ';
+    Result := Result + TaxName[I + 1] + ' ' + FormatCurr('0.00', ReservedWordCurr) + '%';
+  end;
+
 end;
 
 function TCashFP320.SensZReportBefore : boolean;

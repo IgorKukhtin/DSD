@@ -23,11 +23,13 @@ type
     procedure LoadImportTypeFormTest;
     procedure LoadProdColorFormTest;
     procedure LoadProdColorItemsFormTest;
+    procedure LoadProdColorPatternFormTest;
     procedure LoadProdColorGroupFormTest;
     procedure LoadProdEngineFormTest;
     procedure LoadProdModelFormTest;
     procedure LoadProdOptionsFormTest;
     procedure LoadProdOptItemsFormTest;
+    procedure LoadProdOptPatternFormTest;
     procedure LoadProductFormTest;
     procedure FormTest;
   end;
@@ -161,6 +163,13 @@ begin
   TdsdFormStorageFactory.GetStorage.Load('TProdColorItemsEditForm');
 end;
 
+procedure TLoadFormTest.LoadProdColorPatternFormTest;
+begin
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TProdColorPatternForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TProdColorPatternForm');
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TProdColorPatternEditForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TProdColorPatternEditForm');
+end;
 procedure TLoadFormTest.LoadProdColorGroupFormTest;
 begin
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TProdColorGroupForm'));
@@ -199,6 +208,14 @@ begin
   TdsdFormStorageFactory.GetStorage.Load('TProdOptItemsForm');
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TProdOptItemsEditForm'));
   TdsdFormStorageFactory.GetStorage.Load('TProdOptItemsEditForm');
+end;
+
+procedure TLoadFormTest.LoadProdOptPatternFormTest;
+begin
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TProdOptPatternForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TProdOptPatternForm');
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TProdOptPatternEditForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TProdOptPatternEditForm');
 end;
 
 procedure TLoadFormTest.LoadProductFormTest;

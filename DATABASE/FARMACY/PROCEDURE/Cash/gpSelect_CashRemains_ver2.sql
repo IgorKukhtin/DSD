@@ -10,7 +10,7 @@ RETURNS TABLE (Id Integer, GoodsId_main Integer, GoodsGroupName TVarChar, GoodsN
                Remains TFloat, Price TFloat, PriceSP TFloat, PriceSaleSP TFloat, DiffSP1 TFloat, DiffSP2 TFloat, Reserved TFloat, MCSValue TFloat,
                AlternativeGroupId Integer, NDS TFloat,
                isFirst boolean, isSecond boolean, Color_calc Integer,
-               isPromo boolean, isPromoForSale boolean,
+               isPromo boolean, isPromoForSale boolean, RelatedProductId Integer,
                isSP boolean,
                IntenalSPName TVarChar,
                MinExpirationDate TDateTime,
@@ -219,6 +219,7 @@ BEGIN
                          )
          , GoodsPromo AS (SELECT Object_Goods_Retail.GoodsMainId                                                    AS GoodsId        -- здесь товар "главный товар"
                                , SUM(CASE WHEN vbPromoForSale ILIKE ','||tmp.InvNumber||',' THEN 1 ELSE 0 END) > 0  AS isPromoForSale
+                               , max(tmp.RelatedProductId)                                                          AS RelatedProductId
                           FROM lpSelect_MovementItem_Promo_onDate (inOperDate:= CURRENT_DATE) AS tmp
                                LEFT JOIN Object_Goods_Retail AS Object_Goods_Retail ON Object_Goods_Retail.Id = tmp.GoodsId
                           GROUP BY Object_Goods_Retail.GoodsMainId
@@ -773,6 +774,7 @@ BEGIN
             CASE WHEN COALESCE(Object_Goods_Retail.isSecond, False) = TRUE THEN 16440317 WHEN COALESCE(Object_Goods_Retail.isFirst, False) = TRUE THEN zc_Color_GreenL() ELSE zc_Color_White() END AS Color_calc,
             CASE WHEN COALESCE(GoodsPromo.GoodsId,0) <> 0 THEN TRUE ELSE FALSE END    AS isPromo,
             COALESCE(GoodsPromo.isPromoForSale, FALSE)                                AS isPromoForSale,
+            COALESCE(GoodsPromo.RelatedProductId, ObjectFloat_RelatedProduct.ValueData)::Integer  AS RelatedProductId,
             CASE WHEN tmpGoodsSP.GoodsId IS NULL THEN FALSE ELSE TRUE END :: Boolean  AS isSP,
             Object_IntenalSP.ValueData AS IntenalSPName,
             CashSessionSnapShot.MinExpirationDate,
@@ -886,6 +888,9 @@ BEGIN
 
             -- условия хранения
             LEFT JOIN Object AS Object_ConditionsKeep ON Object_ConditionsKeep.Id = Object_Goods_Main.ConditionsKeepId
+            LEFT JOIN ObjectFloat AS ObjectFloat_RelatedProduct
+                                  ON ObjectFloat_RelatedProduct.ObjectId = Object_ConditionsKeep.Id
+                                 AND ObjectFloat_RelatedProduct.DescId = zc_ObjectFloat_ConditionsKeep_RelatedProduct()            
             --
             LEFT JOIN Object AS Object_GoodsGroup ON Object_GoodsGroup.Id = Object_Goods_Main.GoodsGroupId
             -- штрих-код производителя

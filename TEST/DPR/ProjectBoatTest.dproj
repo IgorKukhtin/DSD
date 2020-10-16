@@ -387,6 +387,22 @@
 				<Form>ProdColorItems1Form</Form>
 				<DesignClass>TParentForm</DesignClass>
 			</DCCReference>
+			<DCCReference Include="..\..\FormsBoat\Guides\ProdOptPattern.pas">
+				<Form>ProdOptPatternForm</Form>
+				<DesignClass>TParentForm</DesignClass>
+			</DCCReference>
+			<DCCReference Include="..\..\FormsBoat\Guides\ProdOptPatternEdit.pas">
+				<Form>ProdOptPatternEditForm</Form>
+				<DesignClass>TParentForm</DesignClass>
+			</DCCReference>
+			<DCCReference Include="..\..\FormsBoat\Guides\ProdColorPatternEdit.pas">
+				<Form>ProdColorPatternEditForm</Form>
+				<DesignClass>TParentForm</DesignClass>
+			</DCCReference>
+			<DCCReference Include="..\..\FormsBoat\Guides\ProdColorPattern.pas">
+				<Form>ProdColorPatternForm</Form>
+				<DesignClass>TParentForm</DesignClass>
+			</DCCReference>
 			<BuildConfiguration Include="Release">
 				<Key>Cfg_2</Key>
 				<CfgParent>Base</CfgParent>

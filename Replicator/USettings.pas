@@ -82,7 +82,10 @@ type
     class procedure SetSnapshotInsertCount(const AValue: Int64); static;
     class function GetSnapshotSelectCount: Int64; static;
     class procedure SetSnapshotSelectCount(const AValue: Int64); static;
-
+    class function GetSnapshotInsertTextCount: Int64; static;
+    class procedure SetSnapshotInsertTextCount(const Value: Int64); static;
+    class function GetSnapshotSelectTextCount: Int64; static;
+    class procedure SetSnapshotSelectTextCount(const Value: Int64); static;
   public
     class constructor Create;
     class destructor Destroy;
@@ -91,6 +94,8 @@ type
     class function DefaultSnapshotSelectCount: Int64;
     class function DefaultSnapshotInsertCount: Int64;
     class function DefaultSnapshotBlobSelectCount: Int64;
+    class function DefaultSnapshotSelectTextCount: Int64;
+    class function DefaultSnapshotInsertTextCount: Int64;
     class property UseLog: Boolean read GetUseLog write SetUseLog;
     class property UseLogGUI: Boolean read GetUseLogGUI write SetUseLogGUI;
     class property WriteCommandsToFile: Boolean read GetWriteCommandsToFile write SetWriteCommandsToFile;
@@ -121,6 +126,8 @@ type
     class property SnapshotSelectCount: Int64 read GetSnapshotSelectCount write SetSnapshotSelectCount;
     class property SnapshotInsertCount: Int64 read GetSnapshotInsertCount write SetSnapshotInsertCount;
     class property SnapshotBlobSelectCount: Int64 read GetSnapshotBlobSelectCount write SetSnapshotBlobSelectCount;
+    class property SnapshotSelectTextCount: Int64 read GetSnapshotSelectTextCount write SetSnapshotSelectTextCount;
+    class property SnapshotInsertTextCount: Int64 read GetSnapshotInsertTextCount write SetSnapshotInsertTextCount;
 
     class procedure WriteScriptFiles(AList: TStrings);
     class procedure ReadScriptFiles(AList: TStrings);
@@ -193,6 +200,8 @@ const
   cSnapshotSelectCount     = 'SnapshotSelectCount';
   cSnapshotInsertCount     = 'SnapshotInsertCount';
   cSnapshotBlobSelectCount = 'SnapshotBlobSelectCount';
+  cSnapshotSelectTextCount = 'SnapshotSelectTextCount';
+  cSnapshotInsertTextCount = 'SnapshotInsertTextCount';
 
   // Default values
   cDefPort = 5432;
@@ -207,6 +216,8 @@ const
   cDefSnapshotSelectCount = 100000;
   cDefSnapshotInsertCount = 100000;
   cDefSnapshotBlobSelectCount = 10;
+  cDefSnapshotSelectTextCount = 100000;
+  cDefSnapshotInsertTextCount = 100000;
 
 function IsService: Boolean;
 var
@@ -306,9 +317,19 @@ begin
   Result := cDefSnapshotInsertCount;
 end;
 
+class function TSettings.DefaultSnapshotInsertTextCount: Int64;
+begin
+  Result := cDefSnapshotInsertTextCount;
+end;
+
 class function TSettings.DefaultSnapshotSelectCount: Int64;
 begin
   Result := cDefSnapshotSelectCount;
+end;
+
+class function TSettings.DefaultSnapshotSelectTextCount: Int64;
+begin
+  Result := cDefSnapshotSelectTextCount;
 end;
 
 class destructor TSettings.Destroy;
@@ -499,9 +520,19 @@ begin
   Result := GetIntValue(cSnapshotSection, cSnapshotInsertCount, cDefSnapshotInsertCount);
 end;
 
+class function TSettings.GetSnapshotInsertTextCount: Int64;
+begin
+  Result := GetIntValue(cSnapshotSection, cSnapshotInsertTextCount, cDefSnapshotInsertTextCount);
+end;
+
 class function TSettings.GetSnapshotSelectCount: Int64;
 begin
   Result := GetIntValue(cSnapshotSection, cSnapshotSelectCount, cDefSnapshotSelectCount);
+end;
+
+class function TSettings.GetSnapshotSelectTextCount: Int64;
+begin
+  Result := GetIntValue(cSnapshotSection, cSnapshotSelectTextCount, cDefSnapshotSelectTextCount);
 end;
 
 class function TSettings.GetStopIfError: Boolean;
@@ -708,9 +739,19 @@ begin
   SetIntValue(cSnapshotSection, cSnapshotInsertCount, AValue);
 end;
 
+class procedure TSettings.SetSnapshotInsertTextCount(const Value: Int64);
+begin
+  SetIntValue(cSnapshotSection, cSnapshotInsertTextCount, Value);
+end;
+
 class procedure TSettings.SetSnapshotSelectCount(const AValue: Int64);
 begin
   SetIntValue(cSnapshotSection, cSnapshotSelectCount, AValue);
+end;
+
+class procedure TSettings.SetSnapshotSelectTextCount(const Value: Int64);
+begin
+  SetIntValue(cSnapshotSection, cSnapshotSelectTextCount, Value);
 end;
 
 class procedure TSettings.SetStopIfError(const AValue: Boolean);

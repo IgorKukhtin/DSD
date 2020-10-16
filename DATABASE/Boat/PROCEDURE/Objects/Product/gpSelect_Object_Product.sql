@@ -1,9 +1,11 @@
 -- Function: gpSelect_Object_Product()
 
 DROP FUNCTION IF EXISTS gpSelect_Object_Product (Boolean, TVarChar);
+DROP FUNCTION IF EXISTS gpSelect_Object_Product (Boolean, Boolean, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpSelect_Object_Product(
-    IN inIsShowAll   Boolean,            -- признак показать удаленные да / нет
+    IN inIsShowAll   Boolean,       -- признак показать удаленные да / нет
+    IN inIsSale      Boolean,       -- признак показать проданные да / нет
     IN inSession     TVarChar       -- сессия пользователя
 )
 RETURNS TABLE (Id Integer, Code Integer, Name TVarChar, ProdColorName TVarChar
@@ -17,12 +19,17 @@ RETURNS TABLE (Id Integer, Code Integer, Name TVarChar, ProdColorName TVarChar
              , EngineId Integer, EngineName TVarChar
              , InsertName TVarChar
              , InsertDate TDateTime
+<<<<<<< HEAD
              , isErased boolean
              , PriceIn TFloat, PriceOut TFloat
              , PriceIn2 TFloat, PriceOut2 TFloat
              , PriceIn3 TFloat, PriceOut3 TFloat
 
              ) AS
+=======
+             , isSale Boolean
+             , isErased Boolean) AS
+>>>>>>> origin/master
 $BODY$
    DECLARE vbUserId Integer;
 BEGIN
@@ -116,6 +123,7 @@ BEGIN
 
          , Object_Insert.ValueData         AS InsertName
          , ObjectDate_Insert.ValueData     AS InsertDate
+         , CASE WHEN COALESCE (ObjectDate_DateSale.ValueData, zc_DateStart()) = zc_DateStart() THEN FALSE ELSE TRUE END ::Boolean AS isSale
          , Object_Product.isErased         AS isErased
 
          , CASE WHEN tmpObjAll.Ord = 1 THEN 4750 
@@ -206,6 +214,7 @@ BEGIN
 
      WHERE Object_Product.DescId = zc_Object_Product()
       AND (Object_Product.isErased = FALSE OR inIsShowAll = TRUE)
+<<<<<<< HEAD
 )
 
      -- Результат
@@ -252,6 +261,10 @@ BEGIN
      FROM tmpResAll
           LEFT JOIN tmpProdOptItems on tmpProdOptItems. ProductId = tmpResAll.Id
     ;
+=======
+      AND (COALESCE (ObjectDate_DateSale.ValueData, zc_DateStart()) = zc_DateStart() OR inIsSale = TRUE)
+     ;
+>>>>>>> origin/master
 
 END;
 $BODY$
@@ -265,4 +278,7 @@ $BODY$
 */
 
 -- тест
--- SELECT * FROM gpSelect_Object_Product (false, zfCalc_UserAdmin())
+--
+ --SELECT * FROM gpSelect_Object_Product (false, true, zfCalc_UserAdmin())
+ SELECT * FROM gpSelect_Object_Product (false, false, zfCalc_UserAdmin())
+--SELECT * FROM gpSelect_Object_Product (false,  zfCalc_UserAdmin())

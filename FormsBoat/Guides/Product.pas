@@ -80,7 +80,7 @@ type
     cxGridProdOptItems: TcxGrid;
     cxGridDBTableViewProdOptItems: TcxGridDBTableView;
     optCode: TcxGridDBColumn;
-    optName: TcxGridDBColumn;
+    optProdOptPatternName: TcxGridDBColumn;
     colPriceOut: TcxGridDBColumn;
     optPriceIn: TcxGridDBColumn;
     optProdOptionsName: TcxGridDBColumn;
@@ -93,7 +93,7 @@ type
     cxGridProdColorItems: TcxGrid;
     cxGridDBTableViewProdColorItems: TcxGridDBTableView;
     colCode: TcxGridDBColumn;
-    colName: TcxGridDBColumn;
+    colProdColorPatternName: TcxGridDBColumn;
     colProdColorName: TcxGridDBColumn;
     colProdColorGroupName: TcxGridDBColumn;
     colComment: TcxGridDBColumn;
@@ -145,12 +145,16 @@ type
     colNPP: TcxGridDBColumn;
     colColor_fon: TcxGridDBColumn;
     optColor_fon: TcxGridDBColumn;
-    PriceIn: TcxGridDBColumn;
-    PriceOut: TcxGridDBColumn;
-    PriceIn2: TcxGridDBColumn;
-    PriceOut2: TcxGridDBColumn;
-    PriceIn3: TcxGridDBColumn;
-    PriceOut3: TcxGridDBColumn;
+    BarSubItemBoat: TdxBarSubItem;
+    BarSubItemColor: TdxBarSubItem;
+    BarSubItemOption: TdxBarSubItem;
+    actShowAllBoatSale: TBooleanStoredProcAction;
+    bbShowAllBoatSale: TdxBarButton;
+    isSale: TcxGridDBColumn;
+    actChoiceFormProdColorPattern: TOpenChoiceForm;
+    actChoiceFormProdOptPattern: TOpenChoiceForm;
+    colName: TcxGridDBColumn;
+    optName: TcxGridDBColumn;
   private
     { Private declarations }
   public

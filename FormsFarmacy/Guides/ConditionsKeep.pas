@@ -55,6 +55,17 @@ type
     isErased: TcxGridDBColumn;
     spErasedUnErased: TdsdStoredProc;
     dsdDBViewAddOn: TdsdDBViewAddOn;
+    RelatedProductName: TcxGridDBColumn;
+    actSetRelatedProduct: TMultiAction;
+    actChoiceRelatedProduct: TOpenChoiceForm;
+    actUpdate_SetRelatedProduct: TdsdExecStoredProc;
+    spUpdate_SetRelatedProduct: TdsdStoredProc;
+    FormParams: TdsdFormParams;
+    spUpdate_ClearRelatedProduct: TdsdStoredProc;
+    actClearRelatedProduct: TMultiAction;
+    actUpdate_ClearRelatedProduct: TdsdExecStoredProc;
+    bbSetRelatedProduct: TdxBarButton;
+    bbClearRelatedProduct: TdxBarButton;
   private
     { Private declarations }
   public

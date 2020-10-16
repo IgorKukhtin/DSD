@@ -1,16 +1,18 @@
 -- Function: gpInsertUpdate_Object_ProdColorItems()
 
 DROP FUNCTION IF EXISTS gpInsertUpdate_Object_ProdColorItems(Integer, Integer, TVarChar, Integer, Integer, Integer, TVarChar, TVarChar);
+DROP FUNCTION IF EXISTS gpInsertUpdate_Object_ProdColorItems(Integer, Integer, Integer, Integer, Integer, Integer, TVarChar, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpInsertUpdate_Object_ProdColorItems(
- INOUT ioId               Integer   ,    -- ключ объекта <Лодки>
-    IN inCode             Integer   ,    -- Код объекта 
-    IN inName             TVarChar  ,    -- Название объекта
-    IN inProductId        Integer   ,
-    IN inProdColorGroupId Integer   ,
-    IN inProdColorId      Integer   ,
-    IN inComment          TVarChar  ,
-    IN inSession          TVarChar       -- сессия пользователя
+ INOUT ioId                 Integer   ,    -- ключ объекта <Лодки>
+    IN inCode               Integer   ,    -- Код объекта 
+    --IN inName               TVarChar  ,    -- Название объекта
+    IN inProductId          Integer   ,
+    IN inProdColorGroupId   Integer   ,
+    IN inProdColorId        Integer   ,
+    IN inProdColorPatternId Integer   ,
+    IN inComment            TVarChar  ,
+    IN inSession            TVarChar       -- сессия пользователя
 )
 RETURNS Integer
 AS
@@ -43,7 +45,7 @@ BEGIN
    --PERFORM lpCheckUnique_Object_ValueData (ioId, zc_Object_ProdColorItems(), inName);
 
    -- сохранили <Объект>
-   ioId := lpInsertUpdate_Object(ioId, zc_Object_ProdColorItems(), vbCode_calc, inName);
+   ioId := lpInsertUpdate_Object(ioId, zc_Object_ProdColorItems(), vbCode_calc, Null);
 
    -- сохранили свойство <>
    PERFORM lpInsertUpdate_ObjectString(zc_ObjectString_ProdColorItems_Comment(), ioId, inComment);
@@ -56,6 +58,9 @@ BEGIN
 
    -- сохранили свойство <>
    PERFORM lpInsertUpdate_ObjectLink (zc_ObjectLink_ProdColorItems_ProdColor(), ioId, inProdColorId);
+
+   -- сохранили свойство <>
+   PERFORM lpInsertUpdate_ObjectLink (zc_ObjectLink_ProdColorItems_ProdColorPattern(), ioId, inProdColorPatternId);
 
    IF vbIsInsert = TRUE THEN
       -- сохранили свойство <Дата создания>

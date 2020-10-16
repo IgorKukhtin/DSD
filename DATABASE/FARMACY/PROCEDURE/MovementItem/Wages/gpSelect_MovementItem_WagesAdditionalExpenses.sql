@@ -122,7 +122,13 @@ BEGIN
                                     AND Movement.DescId = zc_Movement_Send()
                                     AND Movement.StatusId = zc_Enum_Status_UnComplete()
                                     AND COALESCE (MovementBoolean_Deferred.ValueData, False) = True
-                                  GROUP BY MovementLinkObject_Unit.ObjectId)
+                                  GROUP BY MovementLinkObject_Unit.ObjectId),
+                tmpFoundPositionsSUN AS (SELECT T1.UnitId
+                                              , SUM(T1.SummaFine)::TFloat   AS SummaFine
+                                         FROM gpReport_FoundPositionsSUN (date_trunc('month', vbStartDate), 
+                                                                          date_trunc('month', vbStartDate) + INTERVAL '1 MONTH' - INTERVAL '1 DAY', 
+                                                                          inSession) AS T1
+                                         GROUP BY T1.UnitId)
 
             SELECT 0                                  AS Id
                  , Object_Unit.Id                     AS UserID
@@ -134,6 +140,7 @@ BEGIN
                  , NULL::TFloat                       AS SummaOther
                  , NULL::TFloat                       AS SummaValidationResults
                  , NULL::TFloat                       AS SummaSUN1
+                 , NULL::TFloat                       AS SummaFine 
                  , NULL::TFloat                       AS SummaTechnicalRediscount
                  , NULL::TFloat                       AS SummaMoneyBox
                  , NULL::TFloat                       AS SummaFullCharge
@@ -170,6 +177,7 @@ BEGIN
                  , MIFloat_SummaOther.ValueData        AS SummaOther
                  , MIFloat_ValidationResults.ValueData AS SummaValidationResults
                  , MIFloat_SummaSUN1.ValueData         AS SummaSUN1
+                 , FoundPositionsSUN.SummaFine         AS SummaFine
 --                 , tmpTechnicalRediscount.SummWages    AS SummaTechnicalRediscount
                  , MIFloat_SummaTechnicalRediscount.ValueData         AS SummaTechnicalRediscount
                  , CASE WHEN COALESCE(MIFloat_SummaMoneyBox.ValueData, 0) + COALESCE(MIFloat_SummaMoneyBoxMonth.ValueData, 0) > 0 THEN 
@@ -253,6 +261,9 @@ BEGIN
                   LEFT JOIN MovementItemString AS MIS_Comment
                                                ON MIS_Comment.MovementItemId = MovementItem.Id
                                               AND MIS_Comment.DescId = zc_MIString_Comment()
+
+                  LEFT JOIN tmpFoundPositionsSUN AS FoundPositionsSUN
+                                                 ON FoundPositionsSUN.UnitID = MovementItem.ObjectId
 
             WHERE MovementItem.MovementId = inMovementId
               AND MovementItem.DescId = zc_MI_Sign()
@@ -442,4 +453,4 @@ $BODY$
 */
 -- select * from gpSelect_MovementItem_WagesAdditionalExpenses(inMovementId := 17449644  , inShowAll := 'False' , inIsErased := 'False' ,  inSession := '3');
 
-select * from gpSelect_MovementItem_WagesAdditionalExpenses(inMovementId := 19723482 , inShowAll := 'False' , inIsErased := 'False' ,  inSession := '3');
+select * from gpSelect_MovementItem_WagesAdditionalExpenses(inMovementId := 19723487 , inShowAll := 'True' , inIsErased := 'False' ,  inSession := '3');

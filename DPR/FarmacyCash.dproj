@@ -106,8 +106,8 @@
         <DCC_DebugInformation>0</DCC_DebugInformation>
     </PropertyGroup>
     <PropertyGroup Condition="'$(Cfg_2_Win32)'!=''">
-        <VerInfo_Keys>CompanyName=;FileVersion=1.1.12.169;InternalName=;LegalCopyright=;LegalTrademarks=;OriginalFilename=;ProductVersion=1.0.0.0;Comments=;ProgramID=com.embarcadero.$(MSBuildProjectName);FileDescription=$(MSBuildProjectName);ProductName=$(MSBuildProjectName)</VerInfo_Keys>
-        <VerInfo_Build>169</VerInfo_Build>
+        <VerInfo_Keys>CompanyName=;FileVersion=1.1.12.170;InternalName=;LegalCopyright=;LegalTrademarks=;OriginalFilename=;ProductVersion=1.0.0.0;Comments=;ProgramID=com.embarcadero.$(MSBuildProjectName);FileDescription=$(MSBuildProjectName);ProductName=$(MSBuildProjectName)</VerInfo_Keys>
+        <VerInfo_Build>170</VerInfo_Build>
         <VerInfo_IncludeVerInfo>true</VerInfo_IncludeVerInfo>
         <VerInfo_MinorVer>1</VerInfo_MinorVer>
         <VerInfo_Release>12</VerInfo_Release>
@@ -315,34 +315,27 @@
         </DCCReference>
         <DCCReference Include="..\FormsFarmacy\Cash\Report_ImplementationPlanEmployeeCash.pas">
             <Form>Report_ImplementationPlanEmployeeCashForm</Form>
-            <FormType>dfm</FormType>
         </DCCReference>
         <DCCReference Include="..\SOURCE\EDI\IftminFozzXML.pas"/>
         <DCCReference Include="..\FormsFarmacy\Cash\EnterLoyaltySaveMoney.pas">
             <Form>EnterLoyaltySaveMoneyForm</Form>
-            <FormType>dfm</FormType>
         </DCCReference>
         <DCCReference Include="..\FormsFarmacy\Cash\LoyaltySMList.pas">
             <Form>LoyaltySMListForm</Form>
-            <FormType>dfm</FormType>
             <DesignClass>TParentForm</DesignClass>
         </DCCReference>
         <DCCReference Include="..\FormsFarmacy\Cash\BuyerList.pas">
             <Form>BuyerListForm</Form>
-            <FormType>dfm</FormType>
         </DCCReference>
         <DCCReference Include="..\FormsFarmacy\Cash\EnterLoyaltySMDiscount.pas">
             <Form>EnterLoyaltySMDiscountForm</Form>
-            <FormType>dfm</FormType>
         </DCCReference>
         <DCCReference Include="..\SOURCE\GetSystemInfo.pas"/>
         <DCCReference Include="..\FormsFarmacy\Cash\ListSelection.pas">
             <Form>ListSelectionForm</Form>
-            <FormType>dfm</FormType>
         </DCCReference>
         <DCCReference Include="..\FormsFarmacy\Cash\CashCloseReturnDialog.pas">
             <Form>CashCloseReturnDialogForm</Form>
-            <FormType>dfm</FormType>
             <DesignClass>TParentForm</DesignClass>
         </DCCReference>
         <DCCReference Include="..\FormsFarmacy\Cash\Cash_Emulation.pas"/>
@@ -350,19 +343,20 @@
         <DCCReference Include="..\FormsFarmacy\Cash\ecrmini_TLB.pas"/>
         <DCCReference Include="..\FormsFarmacy\Cash\ChoiceListDiff.pas">
             <Form>ChoiceListDiffForm</Form>
-            <FormType>dfm</FormType>
             <DesignClass>TParentForm</DesignClass>
         </DCCReference>
         <DCCReference Include="..\SOURCE\COMPONENT\dsdTranslator.pas"/>
         <DCCReference Include="..\FormsFarmacy\Cash\ChoosingPresent.pas">
             <Form>ChoosingPresentForm</Form>
-            <FormType>dfm</FormType>
             <DesignClass>TParentForm</DesignClass>
         </DCCReference>
         <DCCReference Include="..\FormsFarmacy\Cash\SelectionFromDirectory.pas">
             <Form>SelectionFromDirectoryForm</Form>
-            <FormType>dfm</FormType>
             <DesignClass>TParentForm</DesignClass>
+        </DCCReference>
+        <DCCReference Include="..\FormsFarmacy\Cash\ChoosingRelatedProduct.pas">
+            <Form>ChoosingRelatedProductForm</Form>
+            <FormType>dfm</FormType>
         </DCCReference>
         <BuildConfiguration Include="Release">
             <Key>Cfg_2</Key>

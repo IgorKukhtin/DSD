@@ -234,9 +234,19 @@ CREATE OR REPLACE FUNCTION zc_Object_ProdOptItems() RETURNS Integer AS $BODY$BEG
 INSERT INTO ObjectDesc (Code, ItemName)
   SELECT 'zc_Object_ProdOptItems', 'Элементы Опций (Лодка)' WHERE NOT EXISTS (SELECT * FROM ObjectDesc WHERE Code = 'zc_Object_ProdOptItems');
 
+CREATE OR REPLACE FUNCTION zc_Object_ProdOptPattern() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM ObjectDesc WHERE Code = 'zc_Object_ProdOptPattern'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
+INSERT INTO ObjectDesc (Code, ItemName)
+  SELECT 'zc_Object_ProdOptPattern', 'Шаблоны Опций (Лодка)' WHERE NOT EXISTS (SELECT * FROM ObjectDesc WHERE Code = 'zc_Object_ProdOptPattern');
+
+CREATE OR REPLACE FUNCTION zc_Object_ProdColorPattern() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM ObjectDesc WHERE Code = 'zc_Object_ProdColorPattern'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
+INSERT INTO ObjectDesc (Code, ItemName)
+  SELECT 'zc_Object_ProdColorPattern', 'Шаблоны Цвета (Лодка)' WHERE NOT EXISTS (SELECT * FROM ObjectDesc WHERE Code = 'zc_Object_ProdColorPattern');
+
 /*-------------------------------------------------------------------------------
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
+ 15.10.20         * zc_Object_ProdOptPattern
+                    zc_Object_ProdColorPattern
  09.10.20         * zc_Object_Product
                     zc_Object_ProdColorItems
                     zc_Object_ProdOptItems

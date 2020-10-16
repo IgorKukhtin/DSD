@@ -52,7 +52,7 @@ type
     bbChoice: TdxBarButton;
     cxGridDBTableView: TcxGridDBTableView;
     Code: TcxGridDBColumn;
-    Name: TcxGridDBColumn;
+    ProdColorPatternName: TcxGridDBColumn;
     isErased: TcxGridDBColumn;
     UserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn;
     actChoiceGuides: TdsdChoiceGuides;

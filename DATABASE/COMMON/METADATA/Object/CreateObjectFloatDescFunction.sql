@@ -1842,9 +1842,14 @@ CREATE OR REPLACE FUNCTION zc_ObjectFloat_BarCode_MaxPrice() RETURNS Integer AS 
 INSERT INTO ObjectFloatDesc (DescId, Code, ItemName)
   SELECT zc_Object_BarCode(), 'zc_ObjectFloat_BarCode_MaxPrice', 'Максимально допустимая цена' WHERE NOT EXISTS (SELECT * FROM ObjectFloatDesc WHERE Code = 'zc_ObjectFloat_BarCode_MaxPrice');
 
+CREATE OR REPLACE FUNCTION zc_ObjectFloat_ConditionsKeep_RelatedProduct() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM ObjectFloatDesc WHERE Code = 'zc_ObjectFloat_ConditionsKeep_RelatedProduct'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
+INSERT INTO ObjectFloatDesc (DescId, Code, ItemName)
+  SELECT zc_Object_ConditionsKeep(), 'zc_ObjectFloat_ConditionsKeep_RelatedProduct', 'Сопутствующие товары' WHERE NOT EXISTS (SELECT * FROM ObjectFloatDesc WHERE Code = 'zc_ObjectFloat_ConditionsKeep_RelatedProduct');
+
 /*-------------------------------------------------------------------------------
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.   Воробкало А.А.   Шаблий О.В.
+ 14.10.20                                                                                      * zc_ObjectFloat_ConditionsKeep_RelatedProduct
  07.09.20                                                                                      * zc_ObjectFloat_BarCode_MaxPrice
  24.09.20                                                                                      * zc_ObjectFloat_DiffKind_DaysForSale
  15.09.20                                                                                      * zc_ObjectFloat_CashSettings_DaySaleForSUN

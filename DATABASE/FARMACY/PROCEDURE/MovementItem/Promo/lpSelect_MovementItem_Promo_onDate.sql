@@ -6,7 +6,13 @@ DROP FUNCTION IF EXISTS lpSelect_MovementItem_Promo_onDate (TDateTime);
 CREATE OR REPLACE FUNCTION lpSelect_MovementItem_Promo_onDate(
     IN inOperDate    TDateTime     -- 
 )
-RETURNS TABLE (MovementId Integer, JuridicalId Integer, GoodsId Integer, ChangePercent TFloat, MakerID Integer, InvNumber TVarChar
+RETURNS TABLE (MovementId Integer
+             , JuridicalId Integer
+             , GoodsId Integer
+             , ChangePercent TFloat
+             , MakerID Integer
+             , InvNumber TVarChar
+             , RelatedProductId Integer
               )
 AS
 $BODY$
@@ -20,6 +26,7 @@ BEGIN
                               , MovementLinkObject_Maker.ObjectId                   AS MakerID
                               , COALESCE (MovementFloat_ChangePercent.ValueData, 0) AS ChangePercent
                               , MovementDate_EndPromo.ValueData                     AS EndPromo 
+                              , MovementLinkMovement_RelatedProduct.MovementChildId AS RelatedProductId
                          FROM Movement
                               INNER JOIN MovementDate AS MovementDate_StartPromo
                                                       ON MovementDate_StartPromo.MovementId = Movement.Id
@@ -35,6 +42,9 @@ BEGIN
                               LEFT JOIN MovementLinkObject AS MovementLinkObject_Maker
                                                            ON MovementLinkObject_Maker.MovementId = Movement.Id
                                                           AND MovementLinkObject_Maker.DescId = zc_MovementLinkObject_Maker()
+                              LEFT JOIN MovementLinkMovement AS MovementLinkMovement_RelatedProduct
+                                                             ON MovementLinkMovement_RelatedProduct.MovementId = Movement.Id
+                                                            AND MovementLinkMovement_RelatedProduct.DescId = zc_MovementLinkMovement_RelatedProduct()
                                                      
 
                          WHERE Movement.StatusId = zc_Enum_Status_Complete()
@@ -45,6 +55,7 @@ BEGIN
                            , MI_Juridical.ObjectId             AS JuridicalId
                            , MI_Goods.ObjectId                 AS GoodsId
                            , Movement.ChangePercent            AS ChangePercent
+                           , Movement.RelatedProductId         AS RelatedProductId
                            , ROW_NUMBER() OVER (PARTITION BY MI_Juridical.ObjectId, MI_Goods.ObjectId ORDER BY MI_Juridical.ObjectId, MI_Goods.ObjectId, Movement.EndPromo DESC, Movement.MovementId DESC) AS Ord
                       FROM tmpMovement AS Movement
   
@@ -63,6 +74,7 @@ BEGIN
                  , tmp.ChangePercent :: TFloat AS ChangePercent
                  , tmp.MakerID
                  , tmp.InvNumber               AS InvNumber
+                 , tmp.RelatedProductId         AS RelatedProductId
             FROM tmpMI AS tmp
             WHERE tmp.Ord = 1 -- т.е. выбираем "последний"
             ;
@@ -73,7 +85,8 @@ $BODY$
 
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
-               Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.    Воробкало А.А.
+               Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Воробкало А.А.  Шаблий О.В.
+ 14.10.18                                                                       *
  12.04.17         *
  28.04.16                                        *
 */

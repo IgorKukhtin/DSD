@@ -23,7 +23,6 @@ uses
 
 type
   TProdOptItemsEditForm = class(TParentForm)
-    edName: TcxTextEdit;
     cxLabel1: TcxLabel;
     cxButton1: TcxButton;
     cxButton2: TcxButton;
@@ -52,6 +51,8 @@ type
     cxLabel4: TcxLabel;
     edProdOptions: TcxButtonEdit;
     GuidesProdOptions: TdsdGuides;
+    edProdOptPattern: TcxButtonEdit;
+    GuidesProdOptPattern: TdsdGuides;
   private
     { Private declarations }
   public
