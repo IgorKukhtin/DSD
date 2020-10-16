@@ -61,7 +61,7 @@ BEGIN
                               AND ObjectDate_Insert.DescId = zc_ObjectDate_Protocol_Insert()
 
      WHERE Object_ProdColorPattern.DescId = zc_Object_ProdColorPattern()
-      AND (Object_ProdColorPattern.isErased = FALSE OR inIsErased = TRUE) 
+      AND (Object_ProdColorPattern.isErased = FALSE OR inIsErased = TRUE)
      ;
 END;
 $BODY$

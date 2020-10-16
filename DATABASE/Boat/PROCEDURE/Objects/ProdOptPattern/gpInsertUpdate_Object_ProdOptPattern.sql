@@ -1,8 +1,8 @@
--- Function: gpInsertUpdate_Object_ProdColorPattern()
+-- Function: gpInsertUpdate_Object_ProdOptPattern()
 
-DROP FUNCTION IF EXISTS gpInsertUpdate_Object_ProdColorPattern(Integer, Integer, TVarChar, Integer, Integer, Integer, TVarChar, TVarChar);
+DROP FUNCTION IF EXISTS gpInsertUpdate_Object_ProdOptPattern(Integer, Integer, TVarChar, TVarChar, TVarChar);
 
-CREATE OR REPLACE FUNCTION gpInsertUpdate_Object_ProdColorPattern(
+CREATE OR REPLACE FUNCTION gpInsertUpdate_Object_ProdOptPattern(
  INOUT ioId               Integer   ,    -- ключ объекта <>
     IN inCode             Integer   ,    -- Код объекта 
     IN inName             TVarChar  ,    -- Название объекта
@@ -18,17 +18,17 @@ $BODY$
 BEGIN
    
    -- проверка прав пользователя на вызов процедуры
-   -- PERFORM lpCheckRight(inSession, zc_Enum_Process_InsertUpdate_Object_ProdColorPattern());
+   -- PERFORM lpCheckRight(inSession, zc_Enum_Process_InsertUpdate_Object_ProdOptPattern());
    vbUserId:= lpGetUserBySession (inSession);
 
     -- Если код не установлен, определяем его как последний+1, для каждой лодки начиная с 1
     vbCode_calc:= lfGet_ObjectCode (inCode, zc_Object_ProdOptPattern()); 
    
    -- сохранили <Объект>
-   ioId := lpInsertUpdate_Object(ioId, zc_Object_ProdColorPattern(), vbCode_calc, inName);
+   ioId := lpInsertUpdate_Object(ioId, zc_Object_ProdOptPattern(), vbCode_calc, inName);
 
    -- сохранили свойство <>
-   PERFORM lpInsertUpdate_ObjectString(zc_ObjectString_ProdColorPattern_Comment(), ioId, inComment);
+   PERFORM lpInsertUpdate_ObjectString(zc_ObjectString_ProdOptPattern_Comment(), ioId, inComment);
 
    IF vbIsInsert = TRUE THEN
       -- сохранили свойство <Дата создания>
@@ -51,4 +51,5 @@ $BODY$
 */
 
 -- тест
--- SELECT * FROM gpInsertUpdate_Object_ProdColorPattern()
+-- SELECT * FROM gpInsertUpdate_Object_ProdOptPattern()
+

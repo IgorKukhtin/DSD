@@ -1243,8 +1243,8 @@ object ProductForm: TProductForm
       MoveParams = <>
       PostDataSetBeforeExecute = False
       Caption = 'actChoiceFormProdColor'
-      FormName = 'TProdOptPatternForm'
-      FormNameParam.Value = 'TProdOptPatternForm'
+      FormName = 'TProdColorPatternForm'
+      FormNameParam.Value = 'TProdColorPatternForm'
       FormNameParam.DataType = ftString
       FormNameParam.MultiSelectSeparator = ','
       GuiParams = <

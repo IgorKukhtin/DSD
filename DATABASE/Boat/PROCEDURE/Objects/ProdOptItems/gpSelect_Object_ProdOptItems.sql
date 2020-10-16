@@ -29,100 +29,101 @@ BEGIN
 
      RETURN QUERY
      WITH
-     tmpProdOptItemsAll AS (SELECT DISTINCT
-                                   Object_ProdOptions.Id            AS ProdOptionsId
-                                 , Object_ProdOptions.ValueData     AS ProdOptionsName
-                            FROM Object AS Object_ProdOptItems
-                                 LEFT JOIN ObjectLink AS ObjectLink_ProdOptions
-                                                      ON ObjectLink_ProdOptions.ObjectId = Object_ProdOptItems.Id
-                                                     AND ObjectLink_ProdOptions.DescId = zc_ObjectLink_ProdOptItems_ProdOptions()
-                                 LEFT JOIN Object AS Object_ProdOptions ON Object_ProdOptions.Id = ObjectLink_ProdOptions.ChildObjectId
-                            WHERE Object_ProdOptItems.DescId = zc_Object_ProdOptItems()
-                            AND (Object_ProdOptItems.isErased = FALSE OR inIsErased = TRUE)
-                            AND inIsShowAll = TRUE
-                            )
-   , tmpAll AS (SELECT Object_Product.Id        AS ProductId
-                     , Object_Product.ValueData AS ProductName
-                     , tmpProdOptItemsAll.ProdOptionsId
-                     , tmpProdOptItemsAll.ProdOptionsName
-                FROM Object AS Object_Product
-                     LEFT JOIN tmpProdOptItemsAll ON 1=1
-                WHERE Object_Product.DescId = zc_Object_Product()
-                 AND (Object_Product.isErased = FALSE OR inIsErased = TRUE)
+     tmpProdOptPatternAll AS (SELECT Object_ProdOptPattern.Id         AS Id 
+                                   , Object_ProdOptPattern.ObjectCode AS Code
+                                   , Object_ProdOptPattern.ValueData  AS Name
+                                   , Object_ProdOptPattern.isErased   AS isErased
+                              FROM Object AS Object_ProdOptPattern
+                              WHERE Object_ProdOptPattern.DescId = zc_Object_ProdOptPattern()
+                               AND (Object_ProdOptPattern.isErased = FALSE OR inIsErased = TRUE)
+                               AND inIsShowAll = TRUE
+                             )
+
+   , tmpAll AS (SELECT Object_Product.Id          AS ProductId
+                     , Object_Product.ValueData   AS ProductName
+                     , tmpProdOptPatternAll.Id    AS ProdOptPatternId
+                     , tmpProdOptPatternAll.Name  AS ProdOptPatternName
+                     , CASE WHEN Object_Product.isErased = TRUE OR tmpProdOptPatternAll.isErased = TRUE THEN TRUE ELSE FALSE END isErased
+                FROM tmpProdOptPatternAll
+                     LEFT JOIN Object AS Object_Product ON Object_Product.DescId = zc_Object_Product()
+                WHERE (Object_Product.isErased = FALSE OR inIsErased = TRUE)
                  AND inIsShowAll = TRUE
                )
 
-     SELECT
-           Object_ProdOptItems.Id             ::Integer   AS Id
-         , Object_ProdOptItems.ObjectCode     ::Integer   AS Code
-         , Object_ProdOptItems.ValueData      ::TVarChar  AS Name
+   , tmpProdOptItems AS (SELECT Object_ProdOptItems.Id             ::Integer   AS Id
+                              , Object_ProdOptItems.ObjectCode     ::Integer   AS Code
+                              , Object_ProdOptItems.ValueData      ::TVarChar  AS Name
 
-         , ObjectFloat_PriceIn.ValueData      ::TFloat    AS PriceIn
-         , ObjectFloat_PriceOut.ValueData     ::TFloat    AS PriceOut
-         , ObjectString_PartNumber.ValueData  ::TVarChar  AS PartNumber
-         , ObjectString_Comment.ValueData     ::TVarChar  AS Comment
+                              , ObjectFloat_PriceIn.ValueData      ::TFloat    AS PriceIn
+                              , ObjectFloat_PriceOut.ValueData     ::TFloat    AS PriceOut
+                              , ObjectString_PartNumber.ValueData  ::TVarChar  AS PartNumber
+                              , ObjectString_Comment.ValueData     ::TVarChar  AS Comment
 
-         , Object_Product.Id                  ::Integer   AS ProductId
-         , Object_Product.ValueData           ::TVarChar  AS ProductName
+                              , Object_Product.Id                  ::Integer   AS ProductId
+                              , Object_Product.ValueData           ::TVarChar  AS ProductName
 
-         , Object_ProdOptions.Id            AS ProdOptionsId
-         , Object_ProdOptions.ValueData     AS ProdOptionsName
+                              , Object_ProdOptions.Id            AS ProdOptionsId
+                              , Object_ProdOptions.ValueData     AS ProdOptionsName
 
-         , Object_ProdOptPattern.Id           ::Integer  AS ProdOptPatternId
-         , Object_ProdOptPattern.ValueData    ::TVarChar AS ProdOptPatternName
+                              , Object_ProdOptPattern.Id           ::Integer  AS ProdOptPatternId
+                              , Object_ProdOptPattern.ValueData    ::TVarChar AS ProdOptPatternName
 
-         , CASE WHEN CEIL (Object_ProdOptItems.ObjectCode / 2) * 2 <> Object_ProdOptItems.ObjectCode
-                     THEN zc_Color_Aqua()
-                ELSE
-                    -- ÌÂÚ ˆ‚ÂÚ‡
-                    zc_Color_White()
-           END :: Integer AS Color_fon
+                              , CASE WHEN CEIL (Object_ProdOptItems.ObjectCode / 2) * 2 <> Object_ProdOptItems.ObjectCode
+                                          THEN zc_Color_Aqua()
+                                     ELSE
+                                         -- ÌÂÚ ˆ‚ÂÚ‡
+                                         zc_Color_White()
+                                END :: Integer AS Color_fon
 
-         , Object_Insert.ValueData            ::TVarChar  AS InsertName
-         , ObjectDate_Insert.ValueData        ::TDateTime AS InsertDate
-         , Object_ProdOptItems.isErased       ::Boolean   AS isErased
+                              , Object_Insert.ValueData            ::TVarChar  AS InsertName
+                              , ObjectDate_Insert.ValueData        ::TDateTime AS InsertDate
+                              , Object_ProdOptItems.isErased       ::Boolean   AS isErased
 
-     FROM Object AS Object_ProdOptItems
-          LEFT JOIN ObjectString AS ObjectString_Comment
-                                 ON ObjectString_Comment.ObjectId = Object_ProdOptItems.Id
-                                AND ObjectString_Comment.DescId = zc_ObjectString_ProdOptItems_Comment()
-          LEFT JOIN ObjectString AS ObjectString_PartNumber
-                                 ON ObjectString_PartNumber.ObjectId = Object_ProdOptItems.Id
-                                AND ObjectString_PartNumber.DescId = zc_ObjectString_ProdOptItems_PartNumber()
+                          FROM Object AS Object_ProdOptItems
+                               LEFT JOIN ObjectString AS ObjectString_Comment
+                                                      ON ObjectString_Comment.ObjectId = Object_ProdOptItems.Id
+                                                     AND ObjectString_Comment.DescId = zc_ObjectString_ProdOptItems_Comment()
+                               LEFT JOIN ObjectString AS ObjectString_PartNumber
+                                                      ON ObjectString_PartNumber.ObjectId = Object_ProdOptItems.Id
+                                                     AND ObjectString_PartNumber.DescId = zc_ObjectString_ProdOptItems_PartNumber()
 
-          LEFT JOIN ObjectFloat AS ObjectFloat_PriceIn
-                                ON ObjectFloat_PriceIn.ObjectId = Object_ProdOptItems.Id
-                               AND ObjectFloat_PriceIn.DescId = zc_ObjectFloat_ProdOptItems_PriceIn()
-          LEFT JOIN ObjectFloat AS ObjectFloat_PriceOut
-                                ON ObjectFloat_PriceOut.ObjectId = Object_ProdOptItems.Id
-                               AND ObjectFloat_PriceOut.DescId = zc_ObjectFloat_ProdOptItems_PriceOut()
+                               LEFT JOIN ObjectFloat AS ObjectFloat_PriceIn
+                                                     ON ObjectFloat_PriceIn.ObjectId = Object_ProdOptItems.Id
+                                                    AND ObjectFloat_PriceIn.DescId = zc_ObjectFloat_ProdOptItems_PriceIn()
+                               LEFT JOIN ObjectFloat AS ObjectFloat_PriceOut
+                                                     ON ObjectFloat_PriceOut.ObjectId = Object_ProdOptItems.Id
+                                                    AND ObjectFloat_PriceOut.DescId = zc_ObjectFloat_ProdOptItems_PriceOut()
+                     
+                               LEFT JOIN ObjectLink AS ObjectLink_Product
+                                                    ON ObjectLink_Product.ObjectId = Object_ProdOptItems.Id
+                                                   AND ObjectLink_Product.DescId = zc_ObjectLink_ProdOptItems_Product()
+                               LEFT JOIN Object AS Object_Product ON Object_Product.Id = ObjectLink_Product.ChildObjectId
+                     
+                               LEFT JOIN ObjectLink AS ObjectLink_ProdOptions
+                                                    ON ObjectLink_ProdOptions.ObjectId = Object_ProdOptItems.Id
+                                                   AND ObjectLink_ProdOptions.DescId = zc_ObjectLink_ProdOptItems_ProdOptions()
+                               LEFT JOIN Object AS Object_ProdOptions ON Object_ProdOptions.Id = ObjectLink_ProdOptions.ChildObjectId
+                     
+                               LEFT JOIN ObjectLink AS ObjectLink_ProdOptPattern
+                                                    ON ObjectLink_ProdOptPattern.ObjectId = Object_ProdOptItems.Id
+                                                   AND ObjectLink_ProdOptPattern.DescId = zc_ObjectLink_ProdOptItems_ProdOptPattern()
+                               LEFT JOIN Object AS Object_ProdOptPattern ON Object_ProdOptPattern.Id = ObjectLink_ProdOptPattern.ChildObjectId
+                     
+                               LEFT JOIN ObjectLink AS ObjectLink_Insert
+                                                    ON ObjectLink_Insert.ObjectId = Object_ProdOptItems.Id
+                                                   AND ObjectLink_Insert.DescId = zc_ObjectLink_Protocol_Insert()
+                               LEFT JOIN Object AS Object_Insert ON Object_Insert.Id = ObjectLink_Insert.ChildObjectId
+                     
+                               LEFT JOIN ObjectDate AS ObjectDate_Insert
+                                                    ON ObjectDate_Insert.ObjectId = Object_ProdOptItems.Id
+                                                   AND ObjectDate_Insert.DescId = zc_ObjectDate_Protocol_Insert()
+                     
+                          WHERE Object_ProdOptItems.DescId = zc_Object_ProdOptItems()
+                           AND (Object_ProdOptItems.isErased = FALSE OR inIsErased = TRUE)
+                         ) 
 
-          LEFT JOIN ObjectLink AS ObjectLink_Product
-                               ON ObjectLink_Product.ObjectId = Object_ProdOptItems.Id
-                              AND ObjectLink_Product.DescId = zc_ObjectLink_ProdOptItems_Product()
-          LEFT JOIN Object AS Object_Product ON Object_Product.Id = ObjectLink_Product.ChildObjectId
-
-          LEFT JOIN ObjectLink AS ObjectLink_ProdOptions
-                               ON ObjectLink_ProdOptions.ObjectId = Object_ProdOptItems.Id
-                              AND ObjectLink_ProdOptions.DescId = zc_ObjectLink_ProdOptItems_ProdOptions()
-          LEFT JOIN Object AS Object_ProdOptions ON Object_ProdOptions.Id = ObjectLink_ProdOptions.ChildObjectId
-
-          LEFT JOIN ObjectLink AS ObjectLink_ProdOptPattern
-                               ON ObjectLink_ProdOptPattern.ObjectId = Object_ProdOptItems.Id
-                              AND ObjectLink_ProdOptPattern.DescId = zc_ObjectLink_ProdOptItems_ProdOptPattern()
-          LEFT JOIN Object AS Object_ProdOptPattern ON Object_ProdOptPattern.Id = ObjectLink_ProdOptPattern.ChildObjectId
-
-          LEFT JOIN ObjectLink AS ObjectLink_Insert
-                               ON ObjectLink_Insert.ObjectId = Object_ProdOptItems.Id
-                              AND ObjectLink_Insert.DescId = zc_ObjectLink_Protocol_Insert()
-          LEFT JOIN Object AS Object_Insert ON Object_Insert.Id = ObjectLink_Insert.ChildObjectId
-
-          LEFT JOIN ObjectDate AS ObjectDate_Insert
-                               ON ObjectDate_Insert.ObjectId = Object_ProdOptItems.Id
-                              AND ObjectDate_Insert.DescId = zc_ObjectDate_Protocol_Insert()
-
-     WHERE Object_ProdOptItems.DescId = zc_Object_ProdOptItems()
-      AND (Object_ProdOptItems.isErased = FALSE OR inIsErased = TRUE)
+     SELECT tmpProdOptItems.*
+     FROM tmpProdOptItems
     UNION ALL
      SELECT 0                         ::Integer   AS Id
           , 0                         ::Integer   AS Code
@@ -133,17 +134,20 @@ BEGIN
           , ''                        ::TVarChar  AS Comment
           , tmpAll.ProductId          ::Integer   AS ProductId
           , tmpAll.ProductName        ::TVarChar  AS ProductName
-          , tmpAll.ProdOptionsId      ::Integer   AS ProdOptionsId
-          , tmpAll.ProdOptionsName    ::TVarChar  AS ProdOptionsName
-          ,  0                        :: Integer  AS ProdOptPatternId
-          , ''                        :: TVarChar AS ProdOptPatternName
+          , 0                         ::Integer   AS ProdOptionsId
+          , ''                        ::TVarChar  AS ProdOptionsName
+          , tmpAll.ProdOptPatternId   :: Integer  AS ProdOptPatternId
+          , tmpAll.ProdOptPatternName :: TVarChar AS ProdOptPatternName
             -- ÌÂÚ ˆ‚ÂÚ‡
           , zc_Color_Red()            :: Integer  AS Color_fon
           , ''                        ::TVarChar  AS InsertName
           , NULL                      ::TDateTime AS InsertDate
           , FALSE                     ::Boolean   AS isErased
      FROM tmpAll
+          LEFT JOIN tmpProdOptItems ON tmpProdOptItems.ProductId = tmpAll.ProductId
+                                   AND tmpProdOptItems.ProdOptPatternId = tmpAll.ProdOptPatternId
      WHERE inIsShowAll = TRUE
+       AND tmpProdOptItems.ProductId IS NULL
     ;
 
 END;
@@ -154,6 +158,7 @@ $BODY$
 /*-------------------------------------------------------------------------------
  »—“Œ–»ﬂ –¿«–¿¡Œ“ »: ƒ¿“¿, ¿¬“Œ–
                ‘ÂÎÓÌ˛Í ».¬.    ÛıÚËÌ ».¬.    ÎËÏÂÌÚ¸Â‚  .».
+ 16.10.20         * ProdOptPatternId
  08.10.20         *
 */
 
