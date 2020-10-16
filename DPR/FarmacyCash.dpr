@@ -2,6 +2,7 @@ program FarmacyCash;
 
 uses
   MidasLib,
+  Windows,
   Vcl.Forms,
   SysUtils,
   Controls,
@@ -130,11 +131,23 @@ uses
   ChoiceListDiff in '..\FormsFarmacy\Cash\ChoiceListDiff.pas' {ChoiceListDiffForm: TParentForm},
   dsdTranslator in '..\SOURCE\COMPONENT\dsdTranslator.pas',
   ChoosingPresent in '..\FormsFarmacy\Cash\ChoosingPresent.pas' {ChoosingPresentForm: TParentForm},
-  SelectionFromDirectory in '..\FormsFarmacy\Cash\SelectionFromDirectory.pas' {SelectionFromDirectoryForm: TParentForm};
+  SelectionFromDirectory in '..\FormsFarmacy\Cash\SelectionFromDirectory.pas' {SelectionFromDirectoryForm: TParentForm},
+  ChoosingRelatedProduct in '..\FormsFarmacy\Cash\ChoosingRelatedProduct.pas' {ChoosingRelatedProductForm};
 
 {$R *.res}
 
+  var hMutexCurr: HWND;
+
 begin
+
+  hMutexCurr := CreateMutex(nil, false, PChar(ExtractFileName(ParamStr(0))));
+  if GetLastError = ERROR_ALREADY_EXISTS then
+  begin
+    CloseHandle(hMutexCurr);
+    MessageBox(FindWindow('ProgMan', nil), PChar('Программа уже запущена.'), 'Ошибка', MB_OK);
+    Exit;
+  end;
+
   Application.Initialize;
   Logger.Enabled := FindCmdLineSwitch('log');
   ConnectionPath := '..\INIT\farmacy_init.php';
@@ -203,4 +216,5 @@ begin
     end;
   End;
   Application.Run;
+  CloseHandle(hMutexCurr);
 end.

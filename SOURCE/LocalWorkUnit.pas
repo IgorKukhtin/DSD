@@ -340,6 +340,7 @@ end;
 procedure SaveLocalData(ASrc: TClientDataSet; AFileName: String);
   var I : integer; Tmp: TClientDataSet;
 Begin
+  if not ASrc.Active then Exit;
   if FileExists(AFileName) and (GetFileSizeByName(AFileName) > 0) then
     CopyFile(PChar(AFileName), PChar(GetBackupFileName(AFileName)), false);
   Tmp := TClientDataSet.Create(Nil);

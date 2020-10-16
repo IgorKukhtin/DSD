@@ -11,11 +11,11 @@ unit OposFiscalPrinter_1_11_Lib_TLB;
 // manual modifications will be lost.                                         
 // ************************************************************************ //
 
-// $Rev: 45604 $
-// File generated on 24.02.2016 17:18:53 from Type Library described below.
+// $Rev: 98336 $
+// File generated on 14.10.2020 23:47:21 from Type Library described below.
 
 // ************************************************************************  //
-// Type Lib: C:\DatecsOPOS\OPOSFiscalPrinter.ocx (1)
+// Type Lib: C:\WINDOWS\SysWow64\OPOSFiscalPrinter.ocx (1)
 // LIBID: {CCB90070-B81E-11D2-AB74-0040054C3719}
 // LCID: 0
 // Helpfile: 
@@ -1833,8 +1833,731 @@ type
                               VatInfo: Integer; UnitPrice: Currency; const UnitName: WideString): Integer; dispid 198;
   end;
 
+
+// *********************************************************************//
+// OLE Control Proxy class declaration
+// Control Name     : TOPOSFiscalPrinter
+// Help String      : OPOS FiscalPrinter Control 1.11.000 [Public, by CRM/RCS-Dayton]
+// Default Interface: IOPOSFiscalPrinter
+// Def. Intf. DISP? : No
+// Event   Interface: _IOPOSFiscalPrinterEvents
+// TypeFlags        : (2) CanCreate
+// *********************************************************************//
+  TOPOSFiscalPrinterDirectIOEvent = procedure(ASender: TObject; EventNumber: Integer; 
+                                                                var pData: Integer; 
+                                                                var pString: WideString) of object;
+  TOPOSFiscalPrinterErrorEvent = procedure(ASender: TObject; ResultCode: Integer; 
+                                                             ResultCodeExtended: Integer; 
+                                                             ErrorLocus: Integer; 
+                                                             var pErrorResponse: Integer) of object;
+  TOPOSFiscalPrinterOutputCompleteEvent = procedure(ASender: TObject; OutputID: Integer) of object;
+  TOPOSFiscalPrinterStatusUpdateEvent = procedure(ASender: TObject; Data: Integer) of object;
+
+  TOPOSFiscalPrinter = class(TOleControl)
+  private
+    FOnDirectIOEvent: TOPOSFiscalPrinterDirectIOEvent;
+    FOnErrorEvent: TOPOSFiscalPrinterErrorEvent;
+    FOnOutputCompleteEvent: TOPOSFiscalPrinterOutputCompleteEvent;
+    FOnStatusUpdateEvent: TOPOSFiscalPrinterStatusUpdateEvent;
+    FIntf: IOPOSFiscalPrinter;
+    function  GetControlInterface: IOPOSFiscalPrinter;
+  protected
+    procedure CreateControl;
+    procedure InitControlData; override;
+  public
+    procedure SODataDummy(Status: Integer);
+    procedure SODirectIO(EventNumber: Integer; var pData: Integer; var pString: WideString);
+    procedure SOError(ResultCode: Integer; ResultCodeExtended: Integer; ErrorLocus: Integer; 
+                      var pErrorResponse: Integer);
+    procedure SOOutputComplete(OutputID: Integer);
+    procedure SOStatusUpdate(Data: Integer);
+    function SOProcessID: Integer;
+    function CheckHealth(Level: Integer): Integer;
+    function ClaimDevice(Timeout: Integer): Integer;
+    function ClearOutput: Integer;
+    function Close: Integer;
+    function DirectIO(Command: Integer; var pData: Integer; var pString: WideString): Integer;
+    function Open(const DeviceName: WideString): Integer;
+    function ReleaseDevice: Integer;
+    function BeginFiscalDocument(DocumentAmount: Integer): Integer;
+    function BeginFiscalReceipt(PrintHeader: WordBool): Integer;
+    function BeginFixedOutput(Station: Integer; DocumentType: Integer): Integer;
+    function BeginInsertion(Timeout: Integer): Integer;
+    function BeginItemList(VatID: Integer): Integer;
+    function BeginNonFiscal: Integer;
+    function BeginRemoval(Timeout: Integer): Integer;
+    function BeginTraining: Integer;
+    function ClearError: Integer;
+    function EndFiscalDocument: Integer;
+    function EndFiscalReceipt(PrintHeader: WordBool): Integer;
+    function EndFixedOutput: Integer;
+    function EndInsertion: Integer;
+    function EndItemList: Integer;
+    function EndNonFiscal: Integer;
+    function EndRemoval: Integer;
+    function EndTraining: Integer;
+    function GetData(DataItem: Integer; out OptArgs: Integer; out Data: WideString): Integer;
+    function GetDate(out Date: WideString): Integer;
+    function GetTotalizer(VatID: Integer; OptArgs: Integer; out Data: WideString): Integer;
+    function GetVatEntry(VatID: Integer; OptArgs: Integer; out VatRate: Integer): Integer;
+    function PrintDuplicateReceipt: Integer;
+    function PrintFiscalDocumentLine(const DocumentLine: WideString): Integer;
+    function PrintFixedOutput(DocumentType: Integer; LineNumber: Integer; const Data: WideString): Integer;
+    function PrintNormal(Station: Integer; const Data: WideString): Integer;
+    function PrintPeriodicTotalsReport(const Date1: WideString; const Date2: WideString): Integer;
+    function PrintPowerLossReport: Integer;
+    function PrintRecItem(const Description: WideString; Price: Currency; Quantity: Integer; 
+                          VatInfo: Integer; UnitPrice: Currency; const UnitName: WideString): Integer;
+    function PrintRecItemAdjustment(AdjustmentType: Integer; const Description: WideString; 
+                                    Amount: Currency; VatInfo: Integer): Integer;
+    function PrintRecMessage(const Message: WideString): Integer;
+    function PrintRecNotPaid(const Description: WideString; Amount: Currency): Integer;
+    function PrintRecRefund(const Description: WideString; Amount: Currency; VatInfo: Integer): Integer;
+    function PrintRecSubtotal(Amount: Currency): Integer;
+    function PrintRecSubtotalAdjustment(AdjustmentType: Integer; const Description: WideString; 
+                                        Amount: Currency): Integer;
+    function PrintRecTotal(Total: Currency; Payment: Currency; const Description: WideString): Integer;
+    function PrintRecVoid(const Description: WideString): Integer;
+    function PrintRecVoidItem(const Description: WideString; Amount: Currency; Quantity: Integer; 
+                              AdjustmentType: Integer; Adjustment: Currency; VatInfo: Integer): Integer;
+    function PrintReport(ReportType: Integer; const StartNum: WideString; const EndNum: WideString): Integer;
+    function PrintXReport: Integer;
+    function PrintZReport: Integer;
+    function ResetPrinter: Integer;
+    function SetDate(const Date: WideString): Integer;
+    function SetHeaderLine(LineNumber: Integer; const Text: WideString; DoubleWidth: WordBool): Integer;
+    function SetPOSID(const POSID: WideString; const CashierID: WideString): Integer;
+    function SetStoreFiscalID(const ID: WideString): Integer;
+    function SetTrailerLine(LineNumber: Integer; const Text: WideString; DoubleWidth: WordBool): Integer;
+    function SetVatTable: Integer;
+    function SetVatValue(VatID: Integer; const VatValue: WideString): Integer;
+    function VerifyItem(const ItemName: WideString; VatID: Integer): Integer;
+    function PrintRecCash(Amount: Currency): Integer;
+    function PrintRecItemFuel(const Description: WideString; Price: Currency; Quantity: Integer; 
+                              VatInfo: Integer; UnitPrice: Currency; const UnitName: WideString; 
+                              SpecialTax: Currency; const SpecialTaxName: WideString): Integer;
+    function PrintRecItemFuelVoid(const Description: WideString; Price: Currency; VatInfo: Integer; 
+                                  SpecialTax: Currency): Integer;
+    function PrintRecPackageAdjustment(AdjustmentType: Integer; const Description: WideString; 
+                                       const VatAdjustment: WideString): Integer;
+    function PrintRecPackageAdjustVoid(AdjustmentType: Integer; const VatAdjustment: WideString): Integer;
+    function PrintRecRefundVoid(const Description: WideString; Amount: Currency; VatInfo: Integer): Integer;
+    function PrintRecSubtotalAdjustVoid(AdjustmentType: Integer; Amount: Currency): Integer;
+    function PrintRecTaxID(const TaxID: WideString): Integer;
+    function SetCurrency(NewCurrency: Integer): Integer;
+    function ResetStatistics(const StatisticsBuffer: WideString): Integer;
+    function RetrieveStatistics(var pStatisticsBuffer: WideString): Integer;
+    function UpdateStatistics(const StatisticsBuffer: WideString): Integer;
+    function CompareFirmwareVersion(const FirmwareFileName: WideString; out pResult: Integer): Integer;
+    function UpdateFirmware(const FirmwareFileName: WideString): Integer;
+    function PrintRecItemAdjustmentVoid(AdjustmentType: Integer; const Description: WideString; 
+                                        Amount: Currency; VatInfo: Integer): Integer;
+    function PrintRecItemVoid(const Description: WideString; Price: Currency; Quantity: Integer; 
+                              VatInfo: Integer; UnitPrice: Currency; const UnitName: WideString): Integer;
+    property  ControlInterface: IOPOSFiscalPrinter read GetControlInterface;
+    property  DefaultInterface: IOPOSFiscalPrinter read GetControlInterface;
+    property OpenResult: Integer index 49 read GetIntegerProp;
+    property CapPowerReporting: Integer index 12 read GetIntegerProp;
+    property CheckHealthText: WideString index 13 read GetWideStringProp;
+    property Claimed: WordBool index 14 read GetWordBoolProp;
+    property OutputID: Integer index 19 read GetIntegerProp;
+    property PowerState: Integer index 21 read GetIntegerProp;
+    property ResultCode: Integer index 22 read GetIntegerProp;
+    property ResultCodeExtended: Integer index 23 read GetIntegerProp;
+    property State: Integer index 24 read GetIntegerProp;
+    property ControlObjectDescription: WideString index 25 read GetWideStringProp;
+    property ControlObjectVersion: Integer index 26 read GetIntegerProp;
+    property ServiceObjectDescription: WideString index 27 read GetWideStringProp;
+    property ServiceObjectVersion: Integer index 28 read GetIntegerProp;
+    property DeviceDescription: WideString index 29 read GetWideStringProp;
+    property DeviceName: WideString index 30 read GetWideStringProp;
+    property AmountDecimalPlaces: Integer index 50 read GetIntegerProp;
+    property CapAdditionalLines: WordBool index 52 read GetWordBoolProp;
+    property CapAmountAdjustment: WordBool index 53 read GetWordBoolProp;
+    property CapAmountNotPaid: WordBool index 54 read GetWordBoolProp;
+    property CapCheckTotal: WordBool index 55 read GetWordBoolProp;
+    property CapCoverSensor: WordBool index 56 read GetWordBoolProp;
+    property CapDoubleWidth: WordBool index 57 read GetWordBoolProp;
+    property CapDuplicateReceipt: WordBool index 58 read GetWordBoolProp;
+    property CapFixedOutput: WordBool index 59 read GetWordBoolProp;
+    property CapHasVatTable: WordBool index 60 read GetWordBoolProp;
+    property CapIndependentHeader: WordBool index 61 read GetWordBoolProp;
+    property CapItemList: WordBool index 62 read GetWordBoolProp;
+    property CapJrnEmptySensor: WordBool index 63 read GetWordBoolProp;
+    property CapJrnNearEndSensor: WordBool index 64 read GetWordBoolProp;
+    property CapJrnPresent: WordBool index 65 read GetWordBoolProp;
+    property CapNonFiscalMode: WordBool index 66 read GetWordBoolProp;
+    property CapOrderAdjustmentFirst: WordBool index 67 read GetWordBoolProp;
+    property CapPercentAdjustment: WordBool index 68 read GetWordBoolProp;
+    property CapPositiveAdjustment: WordBool index 69 read GetWordBoolProp;
+    property CapPowerLossReport: WordBool index 70 read GetWordBoolProp;
+    property CapPredefinedPaymentLines: WordBool index 71 read GetWordBoolProp;
+    property CapReceiptNotPaid: WordBool index 72 read GetWordBoolProp;
+    property CapRecEmptySensor: WordBool index 73 read GetWordBoolProp;
+    property CapRecNearEndSensor: WordBool index 74 read GetWordBoolProp;
+    property CapRecPresent: WordBool index 75 read GetWordBoolProp;
+    property CapRemainingFiscalMemory: WordBool index 76 read GetWordBoolProp;
+    property CapReservedWord: WordBool index 77 read GetWordBoolProp;
+    property CapSetHeader: WordBool index 78 read GetWordBoolProp;
+    property CapSetPOSID: WordBool index 79 read GetWordBoolProp;
+    property CapSetStoreFiscalID: WordBool index 80 read GetWordBoolProp;
+    property CapSetTrailer: WordBool index 81 read GetWordBoolProp;
+    property CapSetVatTable: WordBool index 82 read GetWordBoolProp;
+    property CapSlpEmptySensor: WordBool index 83 read GetWordBoolProp;
+    property CapSlpFiscalDocument: WordBool index 84 read GetWordBoolProp;
+    property CapSlpFullSlip: WordBool index 85 read GetWordBoolProp;
+    property CapSlpNearEndSensor: WordBool index 86 read GetWordBoolProp;
+    property CapSlpPresent: WordBool index 87 read GetWordBoolProp;
+    property CapSlpValidation: WordBool index 88 read GetWordBoolProp;
+    property CapSubAmountAdjustment: WordBool index 89 read GetWordBoolProp;
+    property CapSubPercentAdjustment: WordBool index 90 read GetWordBoolProp;
+    property CapSubtotal: WordBool index 91 read GetWordBoolProp;
+    property CapTrainingMode: WordBool index 92 read GetWordBoolProp;
+    property CapValidateJournal: WordBool index 93 read GetWordBoolProp;
+    property CapXReport: WordBool index 94 read GetWordBoolProp;
+    property CountryCode: Integer index 96 read GetIntegerProp;
+    property CoverOpen: WordBool index 97 read GetWordBoolProp;
+    property DayOpened: WordBool index 98 read GetWordBoolProp;
+    property DescriptionLength: Integer index 99 read GetIntegerProp;
+    property ErrorLevel: Integer index 101 read GetIntegerProp;
+    property ErrorOutID: Integer index 102 read GetIntegerProp;
+    property ErrorState: Integer index 103 read GetIntegerProp;
+    property ErrorStation: Integer index 104 read GetIntegerProp;
+    property ErrorString: WideString index 105 read GetWideStringProp;
+    property JrnEmpty: WordBool index 107 read GetWordBoolProp;
+    property JrnNearEnd: WordBool index 108 read GetWordBoolProp;
+    property MessageLength: Integer index 109 read GetIntegerProp;
+    property NumHeaderLines: Integer index 110 read GetIntegerProp;
+    property NumTrailerLines: Integer index 111 read GetIntegerProp;
+    property NumVatRates: Integer index 112 read GetIntegerProp;
+    property PredefinedPaymentLines: WideString index 113 read GetWideStringProp;
+    property PrinterState: Integer index 114 read GetIntegerProp;
+    property QuantityDecimalPlaces: Integer index 115 read GetIntegerProp;
+    property QuantityLength: Integer index 116 read GetIntegerProp;
+    property RecEmpty: WordBool index 117 read GetWordBoolProp;
+    property RecNearEnd: WordBool index 118 read GetWordBoolProp;
+    property RemainingFiscalMemory: Integer index 119 read GetIntegerProp;
+    property ReservedWord: WideString index 120 read GetWideStringProp;
+    property SlpEmpty: WordBool index 122 read GetWordBoolProp;
+    property SlpNearEnd: WordBool index 123 read GetWordBoolProp;
+    property TrainingModeActive: WordBool index 124 read GetWordBoolProp;
+    property ActualCurrency: Integer index 210 read GetIntegerProp;
+    property CapAdditionalHeader: WordBool index 213 read GetWordBoolProp;
+    property CapAdditionalTrailer: WordBool index 214 read GetWordBoolProp;
+    property CapChangeDue: WordBool index 215 read GetWordBoolProp;
+    property CapEmptyReceiptIsVoidable: WordBool index 216 read GetWordBoolProp;
+    property CapFiscalReceiptStation: WordBool index 217 read GetWordBoolProp;
+    property CapFiscalReceiptType: WordBool index 218 read GetWordBoolProp;
+    property CapMultiContractor: WordBool index 219 read GetWordBoolProp;
+    property CapOnlyVoidLastItem: WordBool index 220 read GetWordBoolProp;
+    property CapPackageAdjustment: WordBool index 221 read GetWordBoolProp;
+    property CapPostPreLine: WordBool index 222 read GetWordBoolProp;
+    property CapSetCurrency: WordBool index 223 read GetWordBoolProp;
+    property CapTotalizerType: WordBool index 224 read GetWordBoolProp;
+    property CapStatisticsReporting: WordBool index 39 read GetWordBoolProp;
+    property CapUpdateStatistics: WordBool index 40 read GetWordBoolProp;
+    property CapCompareFirmwareVersion: WordBool index 44 read GetWordBoolProp;
+    property CapUpdateFirmware: WordBool index 45 read GetWordBoolProp;
+    property CapPositiveSubtotalAdjustment: WordBool index 234 read GetWordBoolProp;
+  published
+    property Anchors;
+    property BinaryConversion: Integer index 11 read GetIntegerProp write SetIntegerProp stored False;
+    property DeviceEnabled: WordBool index 17 read GetWordBoolProp write SetWordBoolProp stored False;
+    property FreezeEvents: WordBool index 18 read GetWordBoolProp write SetWordBoolProp stored False;
+    property PowerNotify: Integer index 20 read GetIntegerProp write SetIntegerProp stored False;
+    property AsyncMode: WordBool index 51 read GetWordBoolProp write SetWordBoolProp stored False;
+    property CheckTotal: WordBool index 95 read GetWordBoolProp write SetWordBoolProp stored False;
+    property DuplicateReceipt: WordBool index 100 read GetWordBoolProp write SetWordBoolProp stored False;
+    property FlagWhenIdle: WordBool index 106 read GetWordBoolProp write SetWordBoolProp stored False;
+    property SlipSelection: Integer index 121 read GetIntegerProp write SetIntegerProp stored False;
+    property AdditionalHeader: WideString index 211 read GetWideStringProp write SetWideStringProp stored False;
+    property AdditionalTrailer: WideString index 212 read GetWideStringProp write SetWideStringProp stored False;
+    property ChangeDue: WideString index 225 read GetWideStringProp write SetWideStringProp stored False;
+    property ContractorId: Integer index 226 read GetIntegerProp write SetIntegerProp stored False;
+    property DateType: Integer index 227 read GetIntegerProp write SetIntegerProp stored False;
+    property FiscalReceiptStation: Integer index 228 read GetIntegerProp write SetIntegerProp stored False;
+    property FiscalReceiptType: Integer index 229 read GetIntegerProp write SetIntegerProp stored False;
+    property MessageType: Integer index 230 read GetIntegerProp write SetIntegerProp stored False;
+    property PostLine: WideString index 231 read GetWideStringProp write SetWideStringProp stored False;
+    property PreLine: WideString index 232 read GetWideStringProp write SetWideStringProp stored False;
+    property TotalizerType: Integer index 233 read GetIntegerProp write SetIntegerProp stored False;
+    property OnDirectIOEvent: TOPOSFiscalPrinterDirectIOEvent read FOnDirectIOEvent write FOnDirectIOEvent;
+    property OnErrorEvent: TOPOSFiscalPrinterErrorEvent read FOnErrorEvent write FOnErrorEvent;
+    property OnOutputCompleteEvent: TOPOSFiscalPrinterOutputCompleteEvent read FOnOutputCompleteEvent write FOnOutputCompleteEvent;
+    property OnStatusUpdateEvent: TOPOSFiscalPrinterStatusUpdateEvent read FOnStatusUpdateEvent write FOnStatusUpdateEvent;
+  end;
+
+procedure Register;
+
+resourcestring
+  dtlServerPage = 'ActiveX';
+
+  dtlOcxPage = 'ActiveX';
+
 implementation
 
 uses System.Win.ComObj;
+
+procedure TOPOSFiscalPrinter.InitControlData;
+const
+  CEventDispIDs: array [0..3] of DWORD = (
+    $00000002, $00000003, $00000004, $00000005);
+  CControlData: TControlData2 = (
+    ClassID:      '{CCB90072-B81E-11D2-AB74-0040054C3719}';
+    EventIID:     '{CCB90073-B81E-11D2-AB74-0040054C3719}';
+    EventCount:   4;
+    EventDispIDs: @CEventDispIDs;
+    LicenseKey:   nil (*HR:$80004002*);
+    Flags:        $00000000;
+    Version:      500);
+begin
+  ControlData := @CControlData;
+  TControlData2(CControlData).FirstEventOfs := UIntPtr(@@FOnDirectIOEvent) - UIntPtr(Self);
+end;
+
+procedure TOPOSFiscalPrinter.CreateControl;
+
+  procedure DoCreate;
+  begin
+    FIntf := IUnknown(OleObject) as IOPOSFiscalPrinter;
+  end;
+
+begin
+  if FIntf = nil then DoCreate;
+end;
+
+function TOPOSFiscalPrinter.GetControlInterface: IOPOSFiscalPrinter;
+begin
+  CreateControl;
+  Result := FIntf;
+end;
+
+procedure TOPOSFiscalPrinter.SODataDummy(Status: Integer);
+begin
+  DefaultInterface.SODataDummy(Status);
+end;
+
+procedure TOPOSFiscalPrinter.SODirectIO(EventNumber: Integer; var pData: Integer; 
+                                        var pString: WideString);
+begin
+  DefaultInterface.SODirectIO(EventNumber, pData, pString);
+end;
+
+procedure TOPOSFiscalPrinter.SOError(ResultCode: Integer; ResultCodeExtended: Integer; 
+                                     ErrorLocus: Integer; var pErrorResponse: Integer);
+begin
+  DefaultInterface.SOError(ResultCode, ResultCodeExtended, ErrorLocus, pErrorResponse);
+end;
+
+procedure TOPOSFiscalPrinter.SOOutputComplete(OutputID: Integer);
+begin
+  DefaultInterface.SOOutputComplete(OutputID);
+end;
+
+procedure TOPOSFiscalPrinter.SOStatusUpdate(Data: Integer);
+begin
+  DefaultInterface.SOStatusUpdate(Data);
+end;
+
+function TOPOSFiscalPrinter.SOProcessID: Integer;
+begin
+  Result := DefaultInterface.SOProcessID;
+end;
+
+function TOPOSFiscalPrinter.CheckHealth(Level: Integer): Integer;
+begin
+  Result := DefaultInterface.CheckHealth(Level);
+end;
+
+function TOPOSFiscalPrinter.ClaimDevice(Timeout: Integer): Integer;
+begin
+  Result := DefaultInterface.ClaimDevice(Timeout);
+end;
+
+function TOPOSFiscalPrinter.ClearOutput: Integer;
+begin
+  Result := DefaultInterface.ClearOutput;
+end;
+
+function TOPOSFiscalPrinter.Close: Integer;
+begin
+  Result := DefaultInterface.Close;
+end;
+
+function TOPOSFiscalPrinter.DirectIO(Command: Integer; var pData: Integer; var pString: WideString): Integer;
+begin
+  Result := DefaultInterface.DirectIO(Command, pData, pString);
+end;
+
+function TOPOSFiscalPrinter.Open(const DeviceName: WideString): Integer;
+begin
+  Result := DefaultInterface.Open(DeviceName);
+end;
+
+function TOPOSFiscalPrinter.ReleaseDevice: Integer;
+begin
+  Result := DefaultInterface.ReleaseDevice;
+end;
+
+function TOPOSFiscalPrinter.BeginFiscalDocument(DocumentAmount: Integer): Integer;
+begin
+  Result := DefaultInterface.BeginFiscalDocument(DocumentAmount);
+end;
+
+function TOPOSFiscalPrinter.BeginFiscalReceipt(PrintHeader: WordBool): Integer;
+begin
+  Result := DefaultInterface.BeginFiscalReceipt(PrintHeader);
+end;
+
+function TOPOSFiscalPrinter.BeginFixedOutput(Station: Integer; DocumentType: Integer): Integer;
+begin
+  Result := DefaultInterface.BeginFixedOutput(Station, DocumentType);
+end;
+
+function TOPOSFiscalPrinter.BeginInsertion(Timeout: Integer): Integer;
+begin
+  Result := DefaultInterface.BeginInsertion(Timeout);
+end;
+
+function TOPOSFiscalPrinter.BeginItemList(VatID: Integer): Integer;
+begin
+  Result := DefaultInterface.BeginItemList(VatID);
+end;
+
+function TOPOSFiscalPrinter.BeginNonFiscal: Integer;
+begin
+  Result := DefaultInterface.BeginNonFiscal;
+end;
+
+function TOPOSFiscalPrinter.BeginRemoval(Timeout: Integer): Integer;
+begin
+  Result := DefaultInterface.BeginRemoval(Timeout);
+end;
+
+function TOPOSFiscalPrinter.BeginTraining: Integer;
+begin
+  Result := DefaultInterface.BeginTraining;
+end;
+
+function TOPOSFiscalPrinter.ClearError: Integer;
+begin
+  Result := DefaultInterface.ClearError;
+end;
+
+function TOPOSFiscalPrinter.EndFiscalDocument: Integer;
+begin
+  Result := DefaultInterface.EndFiscalDocument;
+end;
+
+function TOPOSFiscalPrinter.EndFiscalReceipt(PrintHeader: WordBool): Integer;
+begin
+  Result := DefaultInterface.EndFiscalReceipt(PrintHeader);
+end;
+
+function TOPOSFiscalPrinter.EndFixedOutput: Integer;
+begin
+  Result := DefaultInterface.EndFixedOutput;
+end;
+
+function TOPOSFiscalPrinter.EndInsertion: Integer;
+begin
+  Result := DefaultInterface.EndInsertion;
+end;
+
+function TOPOSFiscalPrinter.EndItemList: Integer;
+begin
+  Result := DefaultInterface.EndItemList;
+end;
+
+function TOPOSFiscalPrinter.EndNonFiscal: Integer;
+begin
+  Result := DefaultInterface.EndNonFiscal;
+end;
+
+function TOPOSFiscalPrinter.EndRemoval: Integer;
+begin
+  Result := DefaultInterface.EndRemoval;
+end;
+
+function TOPOSFiscalPrinter.EndTraining: Integer;
+begin
+  Result := DefaultInterface.EndTraining;
+end;
+
+function TOPOSFiscalPrinter.GetData(DataItem: Integer; out OptArgs: Integer; out Data: WideString): Integer;
+begin
+  Result := DefaultInterface.GetData(DataItem, OptArgs, Data);
+end;
+
+function TOPOSFiscalPrinter.GetDate(out Date: WideString): Integer;
+begin
+  Result := DefaultInterface.GetDate(Date);
+end;
+
+function TOPOSFiscalPrinter.GetTotalizer(VatID: Integer; OptArgs: Integer; out Data: WideString): Integer;
+begin
+  Result := DefaultInterface.GetTotalizer(VatID, OptArgs, Data);
+end;
+
+function TOPOSFiscalPrinter.GetVatEntry(VatID: Integer; OptArgs: Integer; out VatRate: Integer): Integer;
+begin
+  Result := DefaultInterface.GetVatEntry(VatID, OptArgs, VatRate);
+end;
+
+function TOPOSFiscalPrinter.PrintDuplicateReceipt: Integer;
+begin
+  Result := DefaultInterface.PrintDuplicateReceipt;
+end;
+
+function TOPOSFiscalPrinter.PrintFiscalDocumentLine(const DocumentLine: WideString): Integer;
+begin
+  Result := DefaultInterface.PrintFiscalDocumentLine(DocumentLine);
+end;
+
+function TOPOSFiscalPrinter.PrintFixedOutput(DocumentType: Integer; LineNumber: Integer; 
+                                             const Data: WideString): Integer;
+begin
+  Result := DefaultInterface.PrintFixedOutput(DocumentType, LineNumber, Data);
+end;
+
+function TOPOSFiscalPrinter.PrintNormal(Station: Integer; const Data: WideString): Integer;
+begin
+  Result := DefaultInterface.PrintNormal(Station, Data);
+end;
+
+function TOPOSFiscalPrinter.PrintPeriodicTotalsReport(const Date1: WideString; 
+                                                      const Date2: WideString): Integer;
+begin
+  Result := DefaultInterface.PrintPeriodicTotalsReport(Date1, Date2);
+end;
+
+function TOPOSFiscalPrinter.PrintPowerLossReport: Integer;
+begin
+  Result := DefaultInterface.PrintPowerLossReport;
+end;
+
+function TOPOSFiscalPrinter.PrintRecItem(const Description: WideString; Price: Currency; 
+                                         Quantity: Integer; VatInfo: Integer; UnitPrice: Currency; 
+                                         const UnitName: WideString): Integer;
+begin
+  Result := DefaultInterface.PrintRecItem(Description, Price, Quantity, VatInfo, UnitPrice, UnitName);
+end;
+
+function TOPOSFiscalPrinter.PrintRecItemAdjustment(AdjustmentType: Integer; 
+                                                   const Description: WideString; Amount: Currency; 
+                                                   VatInfo: Integer): Integer;
+begin
+  Result := DefaultInterface.PrintRecItemAdjustment(AdjustmentType, Description, Amount, VatInfo);
+end;
+
+function TOPOSFiscalPrinter.PrintRecMessage(const Message: WideString): Integer;
+begin
+  Result := DefaultInterface.PrintRecMessage(Message);
+end;
+
+function TOPOSFiscalPrinter.PrintRecNotPaid(const Description: WideString; Amount: Currency): Integer;
+begin
+  Result := DefaultInterface.PrintRecNotPaid(Description, Amount);
+end;
+
+function TOPOSFiscalPrinter.PrintRecRefund(const Description: WideString; Amount: Currency; 
+                                           VatInfo: Integer): Integer;
+begin
+  Result := DefaultInterface.PrintRecRefund(Description, Amount, VatInfo);
+end;
+
+function TOPOSFiscalPrinter.PrintRecSubtotal(Amount: Currency): Integer;
+begin
+  Result := DefaultInterface.PrintRecSubtotal(Amount);
+end;
+
+function TOPOSFiscalPrinter.PrintRecSubtotalAdjustment(AdjustmentType: Integer; 
+                                                       const Description: WideString; 
+                                                       Amount: Currency): Integer;
+begin
+  Result := DefaultInterface.PrintRecSubtotalAdjustment(AdjustmentType, Description, Amount);
+end;
+
+function TOPOSFiscalPrinter.PrintRecTotal(Total: Currency; Payment: Currency; 
+                                          const Description: WideString): Integer;
+begin
+  Result := DefaultInterface.PrintRecTotal(Total, Payment, Description);
+end;
+
+function TOPOSFiscalPrinter.PrintRecVoid(const Description: WideString): Integer;
+begin
+  Result := DefaultInterface.PrintRecVoid(Description);
+end;
+
+function TOPOSFiscalPrinter.PrintRecVoidItem(const Description: WideString; Amount: Currency; 
+                                             Quantity: Integer; AdjustmentType: Integer; 
+                                             Adjustment: Currency; VatInfo: Integer): Integer;
+begin
+  Result := DefaultInterface.PrintRecVoidItem(Description, Amount, Quantity, AdjustmentType, 
+                                              Adjustment, VatInfo);
+end;
+
+function TOPOSFiscalPrinter.PrintReport(ReportType: Integer; const StartNum: WideString; 
+                                        const EndNum: WideString): Integer;
+begin
+  Result := DefaultInterface.PrintReport(ReportType, StartNum, EndNum);
+end;
+
+function TOPOSFiscalPrinter.PrintXReport: Integer;
+begin
+  Result := DefaultInterface.PrintXReport;
+end;
+
+function TOPOSFiscalPrinter.PrintZReport: Integer;
+begin
+  Result := DefaultInterface.PrintZReport;
+end;
+
+function TOPOSFiscalPrinter.ResetPrinter: Integer;
+begin
+  Result := DefaultInterface.ResetPrinter;
+end;
+
+function TOPOSFiscalPrinter.SetDate(const Date: WideString): Integer;
+begin
+  Result := DefaultInterface.SetDate(Date);
+end;
+
+function TOPOSFiscalPrinter.SetHeaderLine(LineNumber: Integer; const Text: WideString; 
+                                          DoubleWidth: WordBool): Integer;
+begin
+  Result := DefaultInterface.SetHeaderLine(LineNumber, Text, DoubleWidth);
+end;
+
+function TOPOSFiscalPrinter.SetPOSID(const POSID: WideString; const CashierID: WideString): Integer;
+begin
+  Result := DefaultInterface.SetPOSID(POSID, CashierID);
+end;
+
+function TOPOSFiscalPrinter.SetStoreFiscalID(const ID: WideString): Integer;
+begin
+  Result := DefaultInterface.SetStoreFiscalID(ID);
+end;
+
+function TOPOSFiscalPrinter.SetTrailerLine(LineNumber: Integer; const Text: WideString; 
+                                           DoubleWidth: WordBool): Integer;
+begin
+  Result := DefaultInterface.SetTrailerLine(LineNumber, Text, DoubleWidth);
+end;
+
+function TOPOSFiscalPrinter.SetVatTable: Integer;
+begin
+  Result := DefaultInterface.SetVatTable;
+end;
+
+function TOPOSFiscalPrinter.SetVatValue(VatID: Integer; const VatValue: WideString): Integer;
+begin
+  Result := DefaultInterface.SetVatValue(VatID, VatValue);
+end;
+
+function TOPOSFiscalPrinter.VerifyItem(const ItemName: WideString; VatID: Integer): Integer;
+begin
+  Result := DefaultInterface.VerifyItem(ItemName, VatID);
+end;
+
+function TOPOSFiscalPrinter.PrintRecCash(Amount: Currency): Integer;
+begin
+  Result := DefaultInterface.PrintRecCash(Amount);
+end;
+
+function TOPOSFiscalPrinter.PrintRecItemFuel(const Description: WideString; Price: Currency; 
+                                             Quantity: Integer; VatInfo: Integer; 
+                                             UnitPrice: Currency; const UnitName: WideString; 
+                                             SpecialTax: Currency; const SpecialTaxName: WideString): Integer;
+begin
+  Result := DefaultInterface.PrintRecItemFuel(Description, Price, Quantity, VatInfo, UnitPrice, 
+                                              UnitName, SpecialTax, SpecialTaxName);
+end;
+
+function TOPOSFiscalPrinter.PrintRecItemFuelVoid(const Description: WideString; Price: Currency; 
+                                                 VatInfo: Integer; SpecialTax: Currency): Integer;
+begin
+  Result := DefaultInterface.PrintRecItemFuelVoid(Description, Price, VatInfo, SpecialTax);
+end;
+
+function TOPOSFiscalPrinter.PrintRecPackageAdjustment(AdjustmentType: Integer; 
+                                                      const Description: WideString; 
+                                                      const VatAdjustment: WideString): Integer;
+begin
+  Result := DefaultInterface.PrintRecPackageAdjustment(AdjustmentType, Description, VatAdjustment);
+end;
+
+function TOPOSFiscalPrinter.PrintRecPackageAdjustVoid(AdjustmentType: Integer; 
+                                                      const VatAdjustment: WideString): Integer;
+begin
+  Result := DefaultInterface.PrintRecPackageAdjustVoid(AdjustmentType, VatAdjustment);
+end;
+
+function TOPOSFiscalPrinter.PrintRecRefundVoid(const Description: WideString; Amount: Currency; 
+                                               VatInfo: Integer): Integer;
+begin
+  Result := DefaultInterface.PrintRecRefundVoid(Description, Amount, VatInfo);
+end;
+
+function TOPOSFiscalPrinter.PrintRecSubtotalAdjustVoid(AdjustmentType: Integer; Amount: Currency): Integer;
+begin
+  Result := DefaultInterface.PrintRecSubtotalAdjustVoid(AdjustmentType, Amount);
+end;
+
+function TOPOSFiscalPrinter.PrintRecTaxID(const TaxID: WideString): Integer;
+begin
+  Result := DefaultInterface.PrintRecTaxID(TaxID);
+end;
+
+function TOPOSFiscalPrinter.SetCurrency(NewCurrency: Integer): Integer;
+begin
+  Result := DefaultInterface.SetCurrency(NewCurrency);
+end;
+
+function TOPOSFiscalPrinter.ResetStatistics(const StatisticsBuffer: WideString): Integer;
+begin
+  Result := DefaultInterface.ResetStatistics(StatisticsBuffer);
+end;
+
+function TOPOSFiscalPrinter.RetrieveStatistics(var pStatisticsBuffer: WideString): Integer;
+begin
+  Result := DefaultInterface.RetrieveStatistics(pStatisticsBuffer);
+end;
+
+function TOPOSFiscalPrinter.UpdateStatistics(const StatisticsBuffer: WideString): Integer;
+begin
+  Result := DefaultInterface.UpdateStatistics(StatisticsBuffer);
+end;
+
+function TOPOSFiscalPrinter.CompareFirmwareVersion(const FirmwareFileName: WideString; 
+                                                   out pResult: Integer): Integer;
+begin
+  Result := DefaultInterface.CompareFirmwareVersion(FirmwareFileName, pResult);
+end;
+
+function TOPOSFiscalPrinter.UpdateFirmware(const FirmwareFileName: WideString): Integer;
+begin
+  Result := DefaultInterface.UpdateFirmware(FirmwareFileName);
+end;
+
+function TOPOSFiscalPrinter.PrintRecItemAdjustmentVoid(AdjustmentType: Integer; 
+                                                       const Description: WideString; 
+                                                       Amount: Currency; VatInfo: Integer): Integer;
+begin
+  Result := DefaultInterface.PrintRecItemAdjustmentVoid(AdjustmentType, Description, Amount, VatInfo);
+end;
+
+function TOPOSFiscalPrinter.PrintRecItemVoid(const Description: WideString; Price: Currency; 
+                                             Quantity: Integer; VatInfo: Integer; 
+                                             UnitPrice: Currency; const UnitName: WideString): Integer;
+begin
+  Result := DefaultInterface.PrintRecItemVoid(Description, Price, Quantity, VatInfo, UnitPrice, 
+                                              UnitName);
+end;
+
+procedure Register;
+begin
+  RegisterComponents(dtlOcxPage, [TOPOSFiscalPrinter]);
+end;
 
 end.

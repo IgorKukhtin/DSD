@@ -36,40 +36,21 @@ BEGIN
     WHERE Movement.OperDate = vbOperDate - INTERVAL '1 MONTH' 
       AND Movement.DescId = zc_Movement_Wages();
     
-
-    IF NOT EXISTS(SELECT 1 FROM MovementItem
-                         LEFT JOIN MovementItemFloat AS MIFloat_SummaCleaning
-                                                     ON MIFloat_SummaCleaning.MovementItemId = MovementItem.Id
-                                                    AND MIFloat_SummaCleaning.DescId = zc_MIFloat_SummaCleaning()
-
-                         LEFT JOIN MovementItemFloat AS MIFloat_SummaOther
-                                                     ON MIFloat_SummaOther.MovementItemId = MovementItem.Id
-                                                    AND MIFloat_SummaOther.DescId = zc_MIFloat_SummaOther()
-                  WHERE MovementItem.MovementID = vbMovementId
-                    AND MovementItem.ObjectID NOT IN (SELECT MovementItem.ObjectID FROM MovementItem
-                                                      WHERE MovementItem.MovementID = inMovementId
-                                                        AND MovementItem.DescId = zc_MI_Sign())
-                    AND MovementItem.DescId = zc_MI_Sign()
-                    AND (COALESCE(MIFloat_SummaCleaning.ValueData, 0) <> 0 OR COALESCE(MIFloat_SummaOther.ValueData, 0) <> 0))
-    THEN
-      RAISE EXCEPTION 'Ошибка. Не найдены новые данные для копирования.';
-    END IF;
-      
-
     -- сохранили
-    PERFORM lpInsertUpdate_MovementItem_WagesAdditionalExpenses (ioId                      := 0                                            -- Ключ объекта <Элемент документа>
-                                                               , inMovementId              := inMovementId                                 -- ключ Документа
-                                                               , inUnitID                  := MovementItem.ObjectID                        -- Подразделение
-                                                               , inSummaCleaning           := COALESCE(MIFloat_SummaCleaning.ValueData, 0) -- Уборка
-                                                               , inSummaSP                 := 0::TFloat                                    -- СП
-                                                               , inSummaOther              := COALESCE(MIFloat_SummaOther.ValueData, 0)    -- Прочее
-                                                               , inSummaValidationResults  := 0                                            -- Результаты проверки
-                                                               , inSummaFullChargeFact     := 0                                            -- Полное списание факт
-                                                               , inisIssuedBy              := False                                        -- Выдано
-                                                               , inComment                 := COALESCE(MIS_Comment.ValueData, '')          -- Примечание
-                                                               , inUserId                  := vbUserId                                     -- пользователь
-                                                                 )
+    PERFORM lpInsertUpdate_MovementItem_WagesAdditionalExpenses_Copy (ioId                      := COALESCE(MovementItemCurr.Id, 0)             -- Ключ объекта <Элемент документа>
+                                                                    , inMovementId              := inMovementId                                 -- ключ Документа
+                                                                    , inUnitID                  := MovementItem.ObjectID                        -- Подразделение
+                                                                    , inSummaCleaning           := COALESCE(MIFloat_SummaCleaning.ValueData, 0) -- Уборка
+                                                                    , inSummaOther              := COALESCE(MIFloat_SummaOther.ValueData, 0)    -- Прочее
+                                                                    , inComment                 := COALESCE(MIS_Comment.ValueData, '')          -- Примечание
+                                                                    , inUserId                  := vbUserId                                     -- пользователь
+                                                                      )
     FROM MovementItem
+    
+         LEFT JOIN MovementItem AS MovementItemCurr 
+                                ON MovementItemCurr.MovementID = inMovementId
+                               AND MovementItemCurr.ObjectID = MovementItem.ObjectID
+                               AND MovementItemCurr.DescId = zc_MI_Sign()
 
          LEFT JOIN MovementItemFloat AS MIFloat_SummaCleaning
                                      ON MIFloat_SummaCleaning.MovementItemId = MovementItem.Id
@@ -83,12 +64,18 @@ BEGIN
                                       ON MIS_Comment.MovementItemId = MovementItem.Id
                                      AND MIS_Comment.DescId = zc_MIString_Comment()
     
+         LEFT JOIN MovementItemFloat AS MIFloat_SummaCleaningCurr
+                                     ON MIFloat_SummaCleaningCurr.MovementItemId = MovementItemCurr.Id
+                                    AND MIFloat_SummaCleaningCurr.DescId = zc_MIFloat_SummaCleaning()
+
+         LEFT JOIN MovementItemFloat AS MIFloat_SummaOtherCurr
+                                     ON MIFloat_SummaOtherCurr.MovementItemId = MovementItemCurr.Id
+                                    AND MIFloat_SummaOtherCurr.DescId = zc_MIFloat_SummaOther()
+
     WHERE MovementItem.MovementID = vbMovementId
-      AND MovementItem.ObjectID NOT IN (SELECT MovementItem.ObjectID FROM MovementItem
-                                        WHERE MovementItem.MovementID = inMovementId
-                                          AND MovementItem.DescId = zc_MI_Sign())
       AND MovementItem.DescId = zc_MI_Sign()
-      AND (COALESCE(MIFloat_SummaCleaning.ValueData, 0) <> 0 OR COALESCE(MIFloat_SummaOther.ValueData, 0) <> 0);
+      AND (COALESCE(MIFloat_SummaCleaning.ValueData, 0) <> COALESCE(MIFloat_SummaCleaningCurr.ValueData, 0)
+        OR COALESCE(MIFloat_SummaOther.ValueData, 0) <> COALESCE(MIFloat_SummaOtherCurr.ValueData, 0));
    
 END;
 $BODY$
@@ -98,6 +85,7 @@ $BODY$
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                 Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Шаблий О.В.
+ 15.10.20                                                        *
  02.10.19                                                        *
 */
 

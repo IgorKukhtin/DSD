@@ -525,6 +525,8 @@ type
     MemDataGOODSPMID: TIntegerField;
     MainAmountSendIn: TcxGridDBColumn;
     MemDataGOODSDIMP: TFloatField;
+    spShowPUSH_UKTZED: TdsdStoredProc;
+    actShowPUSH_UKTZED: TdsdShowPUSHMessage;
     procedure WM_KEYDOWN(var Msg: TWMKEYDOWN);
     procedure FormCreate(Sender: TObject);
     procedure actChoiceGoodsInRemainsGridExecute(Sender: TObject);
@@ -860,7 +862,7 @@ uses CashFactory, IniUtils, CashCloseDialog, VIPDialog, DiscountDialog,
   EnterRecipeNumber, CheckHelsiSign, CheckHelsiSignAllUnit,
   EmployeeScheduleCash, SelectionFromDirectory,
   EnterLoyaltyNumber, Report_ImplementationPlanEmployeeCash,
-  EnterLoyaltySaveMoney, ChoosingPresent,
+  EnterLoyaltySaveMoney, ChoosingPresent, ChoosingRelatedProduct,
   LoyaltySMList, EnterLoyaltySMDiscount, GetSystemInfo, ListSelection;
 
 const
@@ -2701,7 +2703,7 @@ procedure TMainCashForm2.actPutCheckToCashExecute(Sender: TObject);
 var
   UID, CheckNumber, ConfirmationCode, S: String;
   lMsg: String;
-  fErr, isPromoForSale: Boolean;
+  fErr, isPromoForSale, isYes: Boolean;
   dsdSave: TdsdStoredProc;
   nBankPOSTerminal: Integer;
   nPOSTerminalCode: Integer;
@@ -2713,6 +2715,9 @@ var
   GoodsIdPS: Integer;
   nAmountPS, nPresent: Currency;
   PartionDateKindId, NDSKindId, DiscountExternalID, DivisionPartiesID: Variant;
+  aRelatedProductId : array of Integer;
+  aRelatedProductPrice : array of Currency;
+  I : integer;
 begin
   if CheckCDS.RecordCount = 0 then
     exit;
@@ -2911,7 +2916,10 @@ begin
         if RemainsCDS.FieldByName('isBanFiscalSale').AsBoolean and not actSpec.Checked and
           (FieldByName('Amount').AsCurrency > 0) and not FieldByName('isPresent').AsBoolean then
         begin
-          ShowMessage('Товар <' + FieldByName('GoodsName').AsString + '> из выбранной партии по техническим причинам пробивается по служебному чеку (зеленая галка)...');
+          if not gc_User.Local then
+          begin
+            actShowPUSH_UKTZED.Execute
+          end else ShowMessage('Товар <' + FieldByName('GoodsName').AsString + '> из выбранной партии по техническим причинам пробивается по служебному чеку (зеленая галка)...');
           exit;
         end;
 
@@ -2926,6 +2934,28 @@ begin
 
         if not isPromoForSale then isPromoForSale := RemainsCDS.FieldByName('isPromoForSale').AsBoolean;
 
+        isYes := False;
+        if (RemainsCDS.FieldByName('RelatedProductId').AsInteger <> 0) then
+        begin
+
+          for I := Low(aRelatedProductId) to High(aRelatedProductId) do
+            if aRelatedProductId[I] = RemainsCDS.FieldByName('RelatedProductId').AsInteger then
+          begin
+            if aRelatedProductPrice[I] < RemainsCDS.FieldByName('Price').AsCurrency then
+              aRelatedProductPrice[I] := RemainsCDS.FieldByName('Price').AsCurrency;
+            isYes := True;
+          end;
+
+          if not isYes then
+          begin
+            SetLength(aRelatedProductId, Length(aRelatedProductId) + 1);
+            SetLength(aRelatedProductPrice, Length(aRelatedProductPrice) + 1 );
+            aRelatedProductId[High(aRelatedProductId)] := RemainsCDS.FieldByName('RelatedProductId').AsInteger;
+            aRelatedProductPrice[High(aRelatedProductPrice)] := RemainsCDS.FieldByName('Price').AsCurrency;
+          end;
+
+        end;
+
         Next;
       end;
     end;
@@ -2935,6 +2965,50 @@ begin
       VarArrayOf([GoodsId, PartionDateKindId, NDSKindId, DiscountExternalID, DivisionPartiesID]), []);
     RemainsCDS.EnableControls;
   end;
+
+  // Выбор сопутствующего товара
+  isYes := False;
+  if Length(aRelatedProductId) > 0 then for I := Low(aRelatedProductId) to High(aRelatedProductId) do
+  begin
+    MainCashForm.RemainsCDS.DisableControls;
+    MainCashForm.RemainsCDS.Filtered := false;
+    try
+      with TChoosingRelatedProductForm.Create(nil) do
+      try
+        if not SetRelatedProduct(aRelatedProductId[I], aRelatedProductPrice[I]) then Continue;
+        if ShowModal = mrOk then
+        begin
+          ChoosingRelatedProductCDS.First;
+          while not ChoosingRelatedProductCDS.Eof do
+          begin
+            if ChoosingRelatedProductCDS.FieldByName('Amount').AsCurrency > 0 then
+            begin
+              if RemainsCDS.Locate('ID;PartionDateKindId;NDSKindId;DiscountExternalID;DivisionPartiesID',
+                        VarArrayOf([ChoosingRelatedProductCDS.FieldByName('GoodsId').AsInteger,
+                                    ChoosingRelatedProductCDS.FieldByName('PartionDateKindId').AsVariant,
+                                    ChoosingRelatedProductCDS.FieldByName('NDSKindId').AsVariant,
+                                    ChoosingRelatedProductCDS.FieldByName('DiscountExternalID').AsVariant,
+                                    ChoosingRelatedProductCDS.FieldByName('DivisionPartiesID').AsVariant]), []) and
+                (RemainsCDS.FieldByName('Remains').AsCurrency >= ChoosingRelatedProductCDS.FieldByName('Amount').AsCurrency) then
+              try
+                edAmount.Text := CurrToStr(ChoosingRelatedProductCDS.FieldByName('Amount').AsCurrency);
+                InsertUpdateBillCheckItems;
+                isYes := True;
+              finally
+              end;
+            end;
+            ChoosingRelatedProductCDS.Next;
+          end;
+        end;
+      finally
+        Free;
+      end;
+    finally
+      MainCashForm.RemainsCDS.Filtered := True;
+      MainCashForm.RemainsCDS.EnableControls;
+    end;
+  end;
+  if isYes then Exit;
 
   // Заполнение врача и покупателя для продажи
   if isPromoForSale then

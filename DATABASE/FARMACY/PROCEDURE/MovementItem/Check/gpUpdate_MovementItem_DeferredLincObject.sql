@@ -189,18 +189,18 @@ BEGIN
          WHERE CASE WHEN (COALESCE(MovementItem.Amount, 0) <= 0)
                       OR (COALESCE(tmpContainer.Amount, 0) >= MovementItem.Amount)
                       OR (COALESCE(tmpContainerOrd.Amount, 0) < MovementItem.Amount)
-                    THEN MovementItem.NDSKindId
-                    ELSE tmpContainerOrd.NDSKindId END  <> MovementItem.NDSKindId
+                    THEN COALESCE(MovementItem.NDSKindId, 0)
+                    ELSE COALESCE(tmpContainerOrd.NDSKindId, 0) END  <> COALESCE(MovementItem.NDSKindId, 0)
             OR CASE WHEN (COALESCE(MovementItem.Amount, 0) <= 0)
                       OR (COALESCE(tmpContainer.Amount, 0) >= MovementItem.Amount)
                       OR (COALESCE(tmpContainerOrd.Amount, 0) < MovementItem.Amount)
-                    THEN MovementItem.PartionDateKindId
-                    ELSE tmpContainerOrd.PartionDateKindId END  <> MovementItem.PartionDateKindId
+                    THEN COALESCE(MovementItem.PartionDateKindId, 0)
+                    ELSE COALESCE(tmpContainerOrd.PartionDateKindId, 0) END  <> COALESCE(MovementItem.PartionDateKindId, 0)
             OR CASE WHEN (COALESCE(MovementItem.Amount, 0) <= 0)
                       OR (COALESCE(tmpContainer.Amount, 0) >= MovementItem.Amount)
                       OR (COALESCE(tmpContainerOrd.Amount, 0) < MovementItem.Amount)
-                    THEN MovementItem.DivisionPartiesId
-                    ELSE tmpContainerOrd.DivisionPartiesId END  <> MovementItem.DivisionPartiesId)
+                    THEN COALESCE(MovementItem.DivisionPartiesId, 0)
+                    ELSE COALESCE(tmpContainerOrd.DivisionPartiesId, 0) END  <> COALESCE(MovementItem.DivisionPartiesId, 0))
          ;
 
      -- Правим НДС если надо
