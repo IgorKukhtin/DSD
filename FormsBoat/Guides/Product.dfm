@@ -397,6 +397,7 @@ object ProductForm: TProductForm
         Caption = #1069#1083#1077#1084#1077#1085#1090' ('#1086#1083#1076')'
         DataBinding.FieldName = 'Name'
         Options.Editing = False
+        Width = 50
       end
     end
     object cxGridLevel1: TcxGridLevel
