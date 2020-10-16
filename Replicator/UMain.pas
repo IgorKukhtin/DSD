@@ -173,6 +173,11 @@ type
     edtSnapshotInsertCount: TEdit;
     Label2: TLabel;
     edtSnapshotBlobSelectCount: TEdit;
+    lbBatchTextCount: TLabel;
+    edtSnapshotSelectTextCount: TEdit;
+    Label4: TLabel;
+    edtSnapshotInsertTextCount: TEdit;
+    btnClearSnapshotLog: TButton;
     {$WARNINGS ON}
     procedure chkShowLogClick(Sender: TObject);
     procedure btnLibLocationClick(Sender: TObject);
@@ -217,6 +222,7 @@ type
     procedure btnSnapshotPauseClick(Sender: TObject);
     procedure FormClose(Sender: TObject; var Action: TCloseAction);
     procedure SnapshotElapsedTimerTimer(Sender: TObject);
+    procedure btnClearSnapshotLogClick(Sender: TObject);
   private
     FLog: TLog;
     FData: TdmData;
@@ -376,6 +382,8 @@ begin
   edtSnapshotSelectCount.Text     := IntToStr(TSettings.SnapshotSelectCount);
   edtSnapshotInsertCount.Text     := IntToStr(TSettings.SnapshotInsertCount);
   edtSnapshotBlobSelectCount.Text := IntToStr(TSettings.SnapshotBlobSelectCount);
+  edtSnapshotSelectTextCount.Text := IntToStr(TSettings.SnapshotSelectTextCount);
+  edtSnapshotInsertTextCount.Text := IntToStr(TSettings.SnapshotInsertTextCount);
   SwitchShowLog;
 end;
 
@@ -459,6 +467,7 @@ begin
       lvTables.Items[I].ImageIndex := 1;
       break;
     end;
+  SnapshotLog.Lines.Add('     '+ ATableName);
 end;
 
 procedure TfrmMain.SnapshotThreadProcessed(ATotalCount,
@@ -638,6 +647,8 @@ begin
   TSettings.SnapshotSelectCount     := StrToIntDef(edtSnapshotSelectCount.Text, TSettings.DefaultSnapshotSelectCount);
   TSettings.SnapshotInsertCount     := StrToIntDef(edtSnapshotInsertCount.Text, TSettings.DefaultSnapshotInsertCount);
   TSettings.SnapshotBlobSelectCount := StrToIntDef(edtSnapshotBlobSelectCount.Text, TSettings.DefaultSnapshotBlobSelectCount);
+  TSettings.SnapshotSelectTextCount := StrToIntDef(edtSnapshotSelectTextCount.Text, TSettings.DefaultSnapshotSelectTextCount);
+  TSettings.SnapshotInsertTextCount := StrToIntDef(edtSnapshotInsertTextCount.Text, TSettings.DefaultSnapshotInsertTextCount);
 end;
 
 procedure TfrmMain.ApplyScript;
@@ -681,6 +692,8 @@ begin
   edtSnapshotSelectCount.OnExit := OnExitSettings;
   edtSnapshotInsertCount.OnExit := OnExitSettings;
   edtSnapshotBlobSelectCount.OnExit := OnExitSettings;
+  edtSnapshotSelectTextCount.OnExit := OnExitSettings;
+  edtSnapshotInsertTextCount.OnExit := OnExitSettings;
 end;
 
 procedure TfrmMain.btnCancelCompareRecCountClick(Sender: TObject);
@@ -699,6 +712,11 @@ procedure TfrmMain.btnCancelScriptClick(Sender: TObject);
 begin
   btnCancelScript.Enabled := False;
   StopApplyScriptThread;
+end;
+
+procedure TfrmMain.btnClearSnapshotLogClick(Sender: TObject);
+begin
+  SnapshotLog.Clear;
 end;
 
 procedure TfrmMain.btnLibLocationClick(Sender: TObject);

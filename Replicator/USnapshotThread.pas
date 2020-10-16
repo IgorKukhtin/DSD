@@ -44,6 +44,8 @@ type
     FSnapshotSelectCount: Int64;
     FSnapshotInsertCount: Int64;
     FSnapshotBlobSelectCount: Int64;
+    FSnapshotSelectTextCount: Int64;
+    FSnapshotInsertTextCount: Int64;
 
     procedure SetPaused(const Value: Boolean);
   protected
@@ -60,6 +62,7 @@ type
     procedure ProcessMessage(AMessage: string);
     procedure UpdateStatus(AStatus: string);
     procedure UpdateProcessedCount;
+    procedure ReadSettings;
   public
     constructor Create;
 
@@ -110,7 +113,7 @@ begin
 end;
 
 procedure TSnapshotThread.CopyBatchRecords;
-var LastId: integer;
+var LastId: int64;
     QSrc: TZQuery;
     FInsertQuery: string;
     FHadValues: boolean;
@@ -120,12 +123,28 @@ var tmpDate:TDateTime;
     Hour, Min, Sec, MSec: Word;
     StrTime:String;
     tmpBatchTime: TDateTime;
+
+    function GetSelectCount: int64;
+    begin
+      if FHasBlob then
+        Result := FSnapshotSelectTextCount
+      else
+        Result := FSnapshotSelectCount;
+    end;
+
+    function GetInsertCount: int64;
+    begin
+      if FHasBlob then
+        Result := FSnapshotInsertTextCount
+      else
+        Result := FSnapshotInsertCount;
+    end;
+
 begin
   FHadValues := false;
   QSrc := TZQuery.Create(nil);
   try
     QSrc.Connection := FMasterConn;
-    QSrc.FetchRow := 1000;
     UpdateStatus('Генерация запроса на вставку ..');
     FInsertQuery := GetInsertQuery(FCurrTable);
     if FInsertQuery.IsEmpty then
@@ -144,13 +163,13 @@ begin
           FInsertQuery + sLineBreak +
           'WHERE '+ FRealKeyField + ' >= :LastId '+ sLineBreak +
           'ORDER BY '+ FRealKeyField + ',' + FKeyFields + sLineBreak +
-          'LIMIT '+ IntToStr(FSnapshotSelectCount)
+          'LIMIT '+ IntToStr(GetSelectCount)
       else
         QSrc.SQL.Text :=
           FInsertQuery + sLineBreak +
           'WHERE '+ FRealKeyField + ' > :LastId '+ sLineBreak +
           'ORDER BY '+ FKeyFields + sLineBreak +
-          'LIMIT '+ IntToStr(FSnapshotSelectCount);
+          'LIMIT '+ IntToStr(GetSelectCount);
       QSrc.ParamByName('LastId').Value := LastId;
 
       //
@@ -183,12 +202,12 @@ begin
       while not Terminated and not QSrc.Eof do
       begin
         cBatch := cBatch + QSrc.FieldByName('Query').AsString + ';' + sLineBreak;
-        if QSrc.FieldByName(FRealKeyField).AsInteger > LastId then
-          LastId := QSrc.FieldByName(FRealKeyField).AsInteger;
+        if QSrc.FieldByName(FRealKeyField).AsLargeInt > LastId then
+          LastId := QSrc.FieldByName(FRealKeyField).AsLargeInt;
         QSrc.Next;
         inc(nBatchCount);
         if not Terminated then
-          if (nBatchCount >= FSnapshotInsertCount) or QSrc.Eof then
+          if (nBatchCount >= GetInsertCount) or QSrc.Eof then
           begin
             try
 //              DecodeTime(now, Hour, Min, Sec, MSec);
@@ -218,7 +237,7 @@ begin
           end;
       end;
       // увеличиваем lastid, чтобы следующий QSrc.open вернул 0 записей
-      if FIsCompositeKey and (QSrc.RecordCount < FSnapshotSelectCount) then
+      if FIsCompositeKey and (QSrc.RecordCount < GetSelectCount) then
         inc(LastId);
       DecodeTime(now-tmpBatchTime, Hour, Min, Sec, MSec);
       StrTime:=IntToStr(Min)+':'+IntToStr(Sec)+':'+IntToStr(MSec);
@@ -337,10 +356,7 @@ end;
 
 procedure TSnapshotThread.Execute;
 begin
-  FSnapshotSelectCount := TSettings.SnapshotSelectCount;
-  FSnapshotInsertCount := TSettings.SnapshotInsertCount;
-  FSnapshotBlobSelectCount := TSettings.SnapshotBlobSelectCount;
-
+  ReadSettings;
   FPaused := false;
   FEvent := TEvent.Create(nil, true, not FPaused, '');
   FMasterConn := TZConnection.Create(nil);
@@ -379,7 +395,7 @@ begin
       FTables.Connection := FMasterConn;
       FTables.SQL.Text :=
         ' select * from _replica.grSelect_Tables_For_Snapshot() '+
-        //' where table_name ILIKE ''MovementItemLinkObject'' '+
+        //' where table_name ILIKE ''_micontainer_20_03_2020_test'' '+
         ' ;';
       FTables.Open;
 
@@ -426,10 +442,10 @@ begin
 
         if FSlaveConn.ExecuteDirect('ALTER TABLE '+ FCurrTable +' DISABLE TRIGGER ALL') then
           try
-            if not FHasBlob then
-              CopyBatchRecords
+            if SameText(FCurrTable, 'objectblob') then
+              CopyBlobRecords
             else
-              CopyBlobRecords;
+              CopyBatchRecords;
           finally
             if not FSlaveConn.ExecuteDirect('ALTER TABLE '+ FCurrTable +' ENABLE TRIGGER ALL') then
               ProcessError('Для таблицы '+ FCurrTable +' триггеры были отключены, но не восстановлены');
@@ -505,6 +521,15 @@ begin
     end);
 end;
 
+procedure TSnapshotThread.ReadSettings;
+begin
+  FSnapshotSelectCount := TSettings.SnapshotSelectCount;
+  FSnapshotInsertCount := TSettings.SnapshotInsertCount;
+  FSnapshotBlobSelectCount := TSettings.SnapshotBlobSelectCount;
+  FSnapshotSelectTextCount := TSettings.SnapshotSelectTextCount;
+  FSnapshotInsertTextCount := TSettings.SnapshotInsertTextCount;
+end;
+
 procedure TSnapshotThread.SetPaused(const Value: Boolean);
 begin
   if (not Terminated) and (FPaused <> Value) then
@@ -513,7 +538,10 @@ begin
     if FPaused then
       FEvent.ResetEvent
     else
+    begin
       FEvent.SetEvent;
+      ReadSettings;
+    end;
   end;
 end;
 
