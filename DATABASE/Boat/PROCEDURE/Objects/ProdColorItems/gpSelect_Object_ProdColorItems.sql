@@ -32,6 +32,7 @@ BEGIN
      RETURN QUERY
 
      WITH
+<<<<<<< HEAD
      -- получили все шаблоны
      tmpProdColorPattern AS (SELECT Object_ProdColorPattern.Id               AS ProdColorPatternId
                                   , ObjectLink_ProdColorGroup.ChildObjectId  AS ProdColorGroupId
@@ -150,6 +151,125 @@ BEGIN
           LEFT JOIN Object AS Object_Product          ON Object_Product.Id          = Object_ProdColorItems.ProductId
           LEFT JOIN Object AS Object_ProdColorGroup   ON Object_ProdColorGroup.Id   = Object_ProdColorItems.ProdColorGroupId
           LEFT JOIN Object AS Object_ProdColorPattern ON Object_ProdColorPattern.Id = Object_ProdColorItems.ProdColorPatternId
+=======
+     tmpProdColorPatternAll AS (SELECT DISTINCT
+                                       Object_ProdColorPattern.Id         AS Id 
+                                     , Object_ProdColorPattern.ObjectCode AS Code
+                                     , Object_ProdColorPattern.ValueData  AS Name
+                                     , Object_ProdColorGroup.Id           ::Integer  AS ProdColorGroupId
+                                     , Object_ProdColorGroup.ValueData    ::TVarChar AS ProdColorGroupName
+                                     , Object_ProdColorPattern.isErased   AS isErased
+                                FROM Object AS Object_ProdColorPattern
+                                     LEFT JOIN ObjectLink AS ObjectLink_ProdColorGroup
+                                                          ON ObjectLink_ProdColorGroup.ObjectId = Object_ProdColorPattern.Id
+                                                         AND ObjectLink_ProdColorGroup.DescId = zc_ObjectLink_ProdColorPattern_ProdColorGroup()
+                                     LEFT JOIN Object AS Object_ProdColorGroup ON Object_ProdColorGroup.Id = ObjectLink_ProdColorGroup.ChildObjectId 
+                                WHERE Object_ProdColorPattern.DescId = zc_Object_ProdColorPattern()
+                                 AND (Object_ProdColorPattern.isErased = FALSE OR inIsErased = TRUE) 
+                                 AND inIsShowAll = TRUE
+                               )
+
+   , tmpAll AS (SELECT Object_Product.Id             AS ProductId
+                     , Object_Product.ValueData      AS ProductName
+                     , tmpProdColorPatternAll.ProdColorGroupId
+                     , tmpProdColorPatternAll.ProdColorGroupName
+                     , tmpProdColorPatternAll.Id     AS ProdColorPatternId
+                     , tmpProdColorPatternAll.Name   AS ProdColorPatternName
+                     , CASE WHEN Object_Product.isErased = TRUE OR tmpProdColorPatternAll.isErased = TRUE THEN TRUE ELSE FALSE END AS isErased
+                FROM tmpProdColorPatternAll
+                     LEFT JOIN Object AS Object_Product ON Object_Product.DescId = zc_Object_Product()
+                WHERE (Object_Product.isErased = FALSE OR inIsErased = TRUE)
+                  AND inIsShowAll = TRUE
+               )
+
+   , tmpProdColorItems AS (SELECT Object_ProdColorItems.Id         AS Id 
+                                , Object_ProdColorItems.ObjectCode AS Code
+                                , Object_ProdColorItems.ValueData  AS Name
+                                , ROW_NUMBER() OVER (PARTITION BY Object_Product.Id ORDER BY Object_ProdColorGroup.ObjectCode ASC, Object_ProdColorItems.ObjectCode ASC) :: Integer AS NPP
+                                , ObjectString_Comment.ValueData     ::TVarChar  AS Comment
+                                , Object_Product.Id                  ::Integer   AS ProductId
+                                , Object_Product.ValueData           ::TVarChar  AS ProductName
+                                , Object_ProdColorGroup.Id           ::Integer  AS ProdColorGroupId
+                                , Object_ProdColorGroup.ValueData    ::TVarChar AS ProdColorGroupName
+                                , Object_ProdColor.Id                ::Integer  AS ProdColorId
+                                , Object_ProdColor.ValueData         ::TVarChar AS ProdColorName
+                                , Object_ProdColorPattern.Id         ::Integer  AS ProdColorPatternId
+                                , Object_ProdColorPattern.ValueData  ::TVarChar AS ProdColorPatternName
+                                , CASE WHEN CEIL (Object_ProdColorGroup.ObjectCode / 2) * 2 <> Object_ProdColorGroup.ObjectCode
+                                            THEN zc_Color_Yelow() -- zc_Color_Lime() -- zc_Color_Aqua()
+                                       ELSE
+                                           -- нет цвета
+                                           zc_Color_White()
+                                  END :: Integer AS Color_fon
+                                , Object_Insert.ValueData          AS InsertName
+                                , ObjectDate_Insert.ValueData      AS InsertDate
+                                , Object_ProdColorItems.isErased   AS isErased
+                            FROM Object AS Object_ProdColorItems
+                                 LEFT JOIN ObjectString AS ObjectString_Comment
+                                                        ON ObjectString_Comment.ObjectId = Object_ProdColorItems.Id
+                                                       AND ObjectString_Comment.DescId = zc_ObjectString_ProdColorItems_Comment()  
+
+                                 LEFT JOIN ObjectLink AS ObjectLink_Product
+                                                      ON ObjectLink_Product.ObjectId = Object_ProdColorItems.Id
+                                                     AND ObjectLink_Product.DescId = zc_ObjectLink_ProdColorItems_Product()
+                                 LEFT JOIN Object AS Object_Product ON Object_Product.Id = ObjectLink_Product.ChildObjectId
+
+                                 LEFT JOIN ObjectLink AS ObjectLink_ProdColorGroup
+                                                      ON ObjectLink_ProdColorGroup.ObjectId = Object_ProdColorItems.Id
+                                                     AND ObjectLink_ProdColorGroup.DescId = zc_ObjectLink_ProdColorItems_ProdColorGroup()
+                                 LEFT JOIN Object AS Object_ProdColorGroup ON Object_ProdColorGroup.Id = ObjectLink_ProdColorGroup.ChildObjectId 
+
+                                 LEFT JOIN ObjectLink AS ObjectLink_ProdColor
+                                                      ON ObjectLink_ProdColor.ObjectId = Object_ProdColorItems.Id
+                                                     AND ObjectLink_ProdColor.DescId = zc_ObjectLink_ProdColorItems_ProdColor()
+                                 LEFT JOIN Object AS Object_ProdColor ON Object_ProdColor.Id = ObjectLink_ProdColor.ChildObjectId 
+
+                                 LEFT JOIN ObjectLink AS ObjectLink_ProdColorPattern
+                                                      ON ObjectLink_ProdColorPattern.ObjectId = Object_ProdColorItems.Id
+                                                     AND ObjectLink_ProdColorPattern.DescId = zc_ObjectLink_ProdColorItems_ProdColorPattern()
+                                 LEFT JOIN Object AS Object_ProdColorPattern ON Object_ProdColorPattern.Id = ObjectLink_ProdColorPattern.ChildObjectId 
+
+                                 LEFT JOIN ObjectLink AS ObjectLink_Insert
+                                                      ON ObjectLink_Insert.ObjectId = Object_ProdColorItems.Id
+                                                     AND ObjectLink_Insert.DescId = zc_ObjectLink_Protocol_Insert()
+                                 LEFT JOIN Object AS Object_Insert ON Object_Insert.Id = ObjectLink_Insert.ChildObjectId 
+
+                                 LEFT JOIN ObjectDate AS ObjectDate_Insert
+                                                      ON ObjectDate_Insert.ObjectId = Object_ProdColorItems.Id
+                                                     AND ObjectDate_Insert.DescId = zc_ObjectDate_Protocol_Insert()
+
+                            WHERE Object_ProdColorItems.DescId = zc_Object_ProdColorItems()
+                             AND (Object_ProdColorItems.isErased = FALSE OR inIsErased = TRUE)
+                            )
+
+     SELECT tmpProdColorItems.*         
+     FROM tmpProdColorItems
+   UNION all
+     SELECT 0                           ::Integer   AS Id 
+          , 0                           ::Integer   AS Code
+          , 'DELETE'                    ::TVarChar  AS Name
+          , 0                           :: Integer  AS NPP
+          , ''                          ::TVarChar  AS Comment
+          , tmpAll.ProductId            ::Integer   AS ProductId
+          , tmpAll.ProductName          ::TVarChar  AS ProductName
+          , tmpAll.ProdColorGroupId     ::Integer   AS ProdColorGroupId
+          , tmpAll.ProdColorGroupName   ::TVarChar  AS ProdColorGroupName
+          , 0                           ::Integer   AS ProdColorId
+          , ''                          ::TVarChar  AS ProdColorName
+          , tmpAll.ProdColorPatternId   ::Integer   AS ProdColorPatternId
+          , tmpAll.ProdColorPatternName ::TVarChar  AS ProdColorPatternName
+            -- нет цвета
+          , zc_Color_Red()              :: Integer  AS Color_fon
+          , ''                          ::TVarChar  AS InsertName
+          , NULL                        ::TDateTime AS InsertDate
+          , FALSE                       ::Boolean   AS isErased
+        FROM tmpAll
+             LEFT JOIN tmpProdColorItems ON tmpProdColorItems.ProductId = tmpAll.ProductId
+                                        AND tmpProdColorItems.ProdColorPatternId = tmpAll.ProdColorPatternId
+                             
+        WHERE inIsShowAll = TRUE
+          AND tmpProdColorItems.ProductId IS NULL
+>>>>>>> origin/master
        ;
 
 END;
