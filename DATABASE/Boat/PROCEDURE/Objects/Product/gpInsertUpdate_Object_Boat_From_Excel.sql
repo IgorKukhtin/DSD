@@ -104,14 +104,23 @@ $BODY$
 
    DECLARE vbColorId Integer;
    DECLARE vbProdColorItemsId Integer;
+   DECLARE vbProdColorPatternId Integer;
+   DECLARE vbProdColorPatternName TVarChar;
+
+   DECLARE vbIsUpdate_ProdColorItems Boolean;
 
    DECLARE vbProdOptionsId Integer;
    DECLARE vbProdOptItemsId Integer;
+   DECLARE vbProdOptPatternId Integer;
+   DECLARE vbProdOptPatternName TVarChar;
 
 BEGIN
      -- проверка прав пользователя на вызов процедуры
    --vbUserId := lpCheckRight (inSession, zc_Enum_Process_InsertUpdate_Object_Product());
      vbUserId:= lpGetUserBySession (inSession);
+     
+     --
+     vbIsUpdate_ProdColorItems:= TRUE;
 
      -- 1.1. Торговая Марка
      inBrandName:= TRIM (inBrandName);
@@ -217,7 +226,7 @@ BEGIN
                                                                            , inHours         := inHours
                                                                            , inDateStart     := inDateStart
                                                                            , inDateBegin     := inDateBegin
-                                                                           , inDateSale      := inDateSale
+                                                                           , inDateSale      := CASE WHEN EXISTS (SELECT 1 FROM ObjectDate WHERE ObjectDate.ObjectId = vbProductId AND ObjectDate.DescId = zc_ObjectDate_Product_DateSale() AND ObjectDate.ValueData = zc_DateStart()) OR COALESCE (vbProductId, 0) = 0 THEN inDateSale ELSE NULL END
                                                                            , inArticle       := inArticle
                                                                            , inCIN           := inCIN
                                                                            , inEngineNum     := inEngineNum
@@ -302,10 +311,33 @@ BEGIN
                                                                                           ) AS tmp);
      END IF;
 
+
      -- 4.1.  ProdColorItemsId - Hypalon
      inHypalon1:= TRIM (inHypalon1);
      IF inHypalon1 <> ''
      THEN
+         vbProdColorPatternId:= 0;
+         vbProdColorPatternName:= '№1';
+         -- Поиск - ProdColorPattern
+         vbProdColorPatternId:= (SELECT Object.Id
+                                 FROM ObjectLink AS OL_ProdColorGroup
+                                      JOIN Object ON Object.Id = OL_ProdColorGroup.ObjectId
+                                                 AND Object.ValueData ILIKE vbProdColorPatternName
+                                 WHERE OL_ProdColorGroup.ChildObjectId = vbProdColorGroupId1
+                                   AND OL_ProdColorGroup.DescId        = zc_ObjectLink_ProdColorPattern_ProdColorGroup()
+                                );
+         IF COALESCE (vbProdColorPatternId, 0) = 0
+         THEN
+             -- Создание
+             vbProdColorPatternId:= (SELECT tmp.ioId FROM gpInsertUpdate_Object_ProdColorPattern (ioId              := 0
+                                                                                                , inCode            := 0
+                                                                                                , inName            := vbProdColorPatternName
+                                                                                                , inProdColorGroupId:= vbProdColorGroupId1
+                                                                                                , inComment         := ''
+                                                                                                , inSession         := inSession
+                                                                                                 ) AS tmp);
+         END IF;
+
          vbColorId:= 0;
          -- Поиск - Color
          vbColorId:= (SELECT Object.Id FROM Object WHERE Object.ValueData ILIKE inHypalon1 AND Object.DescId = zc_Object_ProdColor());
@@ -329,22 +361,26 @@ BEGIN
                                                          AND OL_ProdColorGroup.ChildObjectId = vbProdColorGroupId1
                                     INNER JOIN Object AS Object_ProdColorItems
                                                       ON Object_ProdColorItems.Id         = OL_Product.ObjectId
-                                                     AND Object_ProdColorItems.ObjectCode = 1
                                                      AND Object_ProdColorItems.isErased   = FALSE
+                                    INNER JOIN ObjectLink AS OL_ProdColorPattern
+                                                          ON OL_ProdColorPattern.ObjectId      = OL_Product.ObjectId
+                                                         AND OL_ProdColorPattern.DescId        = zc_ObjectLink_ProdColorItems_ProdColorPattern()
+                                                         AND OL_ProdColorPattern.ChildObjectId = vbProdColorPatternId
                                WHERE OL_Product.ChildObjectId = vbProductId
                                  AND OL_Product.DescId        = zc_ObjectLink_ProdColorItems_Product()
                               );
-         IF COALESCE (vbProdColorItemsId, 0) = 0
+
+         IF COALESCE (vbProdColorItemsId, 0) = 0 OR vbIsUpdate_ProdColorItems = TRUE
          THEN
              -- Создание
-             vbProdColorItemsId:= (SELECT tmp.ioId FROM gpInsertUpdate_Object_ProdColorItems (ioId              := 0
-                                                                                            , inCode            := 1
-                                                                                            , inName            := '№1'
-                                                                                            , inProductId       := vbProductId
-                                                                                            , inProdColorGroupId:= vbProdColorGroupId1
-                                                                                            , inProdColorId     := vbColorId
-                                                                                            , inComment         := ''
-                                                                                            , inSession         := inSession
+             vbProdColorItemsId:= (SELECT tmp.ioId FROM gpInsertUpdate_Object_ProdColorItems (ioId                := 0
+                                                                                            , inCode              := 1
+                                                                                            , inProductId         := vbProductId
+                                                                                            , inProdColorGroupId  := vbProdColorGroupId1
+                                                                                            , inProdColorId       := vbColorId
+                                                                                            , inProdColorPatternId:= vbProdColorPatternId
+                                                                                            , inComment           := ''
+                                                                                            , inSession           := inSession
                                                                                              ) AS tmp);
          END IF;
 
@@ -355,6 +391,28 @@ BEGIN
      inHypalon2:= TRIM (inHypalon2);
      IF inHypalon2 <> ''
      THEN
+         vbProdColorPatternId:= 0;
+         vbProdColorPatternName:= '№2';
+         -- Поиск - ProdColorPattern
+         vbProdColorPatternId:= (SELECT Object.Id
+                                 FROM ObjectLink AS OL_ProdColorGroup
+                                      JOIN Object ON Object.Id = OL_ProdColorGroup.ObjectId
+                                                 AND Object.ValueData ILIKE vbProdColorPatternName
+                                 WHERE OL_ProdColorGroup.ChildObjectId = vbProdColorGroupId1
+                                   AND OL_ProdColorGroup.DescId        = zc_ObjectLink_ProdColorPattern_ProdColorGroup()
+                                );
+         IF COALESCE (vbProdColorPatternId, 0) = 0
+         THEN
+             -- Создание
+             vbProdColorPatternId:= (SELECT tmp.ioId FROM gpInsertUpdate_Object_ProdColorPattern (ioId              := 0
+                                                                                                , inCode            := 0
+                                                                                                , inName            := vbProdColorPatternName
+                                                                                                , inProdColorGroupId:= vbProdColorGroupId1
+                                                                                                , inComment         := ''
+                                                                                                , inSession         := inSession
+                                                                                                 ) AS tmp);
+         END IF;
+
          vbColorId:= 0;
          -- Поиск - Color
          vbColorId:= (SELECT Object.Id FROM Object WHERE Object.ValueData ILIKE inHypalon2 AND Object.DescId = zc_Object_ProdColor());
@@ -378,22 +436,26 @@ BEGIN
                                                          AND OL_ProdColorGroup.ChildObjectId = vbProdColorGroupId1
                                     INNER JOIN Object AS Object_ProdColorItems
                                                       ON Object_ProdColorItems.Id         = OL_Product.ObjectId
-                                                     AND Object_ProdColorItems.ObjectCode = 2
                                                      AND Object_ProdColorItems.isErased   = FALSE
+                                    INNER JOIN ObjectLink AS OL_ProdColorPattern
+                                                          ON OL_ProdColorPattern.ObjectId      = OL_Product.ObjectId
+                                                         AND OL_ProdColorPattern.DescId        = zc_ObjectLink_ProdColorItems_ProdColorPattern()
+                                                         AND OL_ProdColorPattern.ChildObjectId = vbProdColorPatternId
                                WHERE OL_Product.ChildObjectId = vbProductId
                                  AND OL_Product.DescId        = zc_ObjectLink_ProdColorItems_Product()
                               );
-         IF COALESCE (vbProdColorItemsId, 0) = 0
+
+         IF COALESCE (vbProdColorItemsId, 0) = 0 OR vbIsUpdate_ProdColorItems = TRUE
          THEN
              -- Создание
-             vbProdColorItemsId:= (SELECT tmp.ioId FROM gpInsertUpdate_Object_ProdColorItems (ioId              := 0
-                                                                                            , inCode            := 2
-                                                                                            , inName            := '№2'
-                                                                                            , inProductId       := vbProductId
-                                                                                            , inProdColorGroupId:= vbProdColorGroupId1
-                                                                                            , inProdColorId     := vbColorId
-                                                                                            , inComment         := ''
-                                                                                            , inSession         := inSession
+             vbProdColorItemsId:= (SELECT tmp.ioId FROM gpInsertUpdate_Object_ProdColorItems (ioId                := vbProdColorItemsId
+                                                                                            , inCode              := 2
+                                                                                            , inProductId         := vbProductId
+                                                                                            , inProdColorGroupId  := vbProdColorGroupId1
+                                                                                            , inProdColorId       := vbColorId
+                                                                                            , inProdColorPatternId:= vbProdColorPatternId
+                                                                                            , inComment           := ''
+                                                                                            , inSession           := inSession
                                                                                              ) AS tmp);
          END IF;
 
@@ -404,6 +466,28 @@ BEGIN
      inFiberglassHull:= TRIM (inFiberglassHull);
      IF inFiberglassHull <> ''
      THEN
+         vbProdColorPatternId:= 0;
+         vbProdColorPatternName:= 'Hull';
+         -- Поиск - ProdColorPattern
+         vbProdColorPatternId:= (SELECT Object.Id
+                                 FROM ObjectLink AS OL_ProdColorGroup
+                                      JOIN Object ON Object.Id = OL_ProdColorGroup.ObjectId
+                                                 AND Object.ValueData ILIKE vbProdColorPatternName
+                                 WHERE OL_ProdColorGroup.ChildObjectId = vbProdColorGroupId2
+                                   AND OL_ProdColorGroup.DescId        = zc_ObjectLink_ProdColorPattern_ProdColorGroup()
+                                );
+         IF COALESCE (vbProdColorPatternId, 0) = 0
+         THEN
+             -- Создание
+             vbProdColorPatternId:= (SELECT tmp.ioId FROM gpInsertUpdate_Object_ProdColorPattern (ioId              := 0
+                                                                                                , inCode            := 0
+                                                                                                , inName            := vbProdColorPatternName
+                                                                                                , inProdColorGroupId:= vbProdColorGroupId2
+                                                                                                , inComment         := ''
+                                                                                                , inSession         := inSession
+                                                                                                 ) AS tmp);
+         END IF;
+
          vbColorId:= 0;
          -- Поиск - Color
          vbColorId:= (SELECT Object.Id FROM Object WHERE Object.ValueData ILIKE inFiberglassHull AND Object.DescId = zc_Object_ProdColor());
@@ -427,22 +511,26 @@ BEGIN
                                                          AND OL_ProdColorGroup.ChildObjectId = vbProdColorGroupId2
                                     INNER JOIN Object AS Object_ProdColorItems
                                                       ON Object_ProdColorItems.Id         = OL_Product.ObjectId
-                                                     AND Object_ProdColorItems.ObjectCode = 1
                                                      AND Object_ProdColorItems.isErased   = FALSE
+                                    INNER JOIN ObjectLink AS OL_ProdColorPattern
+                                                          ON OL_ProdColorPattern.ObjectId      = OL_Product.ObjectId
+                                                         AND OL_ProdColorPattern.DescId        = zc_ObjectLink_ProdColorItems_ProdColorPattern()
+                                                         AND OL_ProdColorPattern.ChildObjectId = vbProdColorPatternId
                                WHERE OL_Product.ChildObjectId = vbProductId
                                  AND OL_Product.DescId        = zc_ObjectLink_ProdColorItems_Product()
                               );
-         IF COALESCE (vbProdColorItemsId, 0) = 0
+
+         IF COALESCE (vbProdColorItemsId, 0) = 0 OR vbIsUpdate_ProdColorItems = TRUE
          THEN
              -- Создание
-             vbProdColorItemsId:= (SELECT tmp.ioId FROM gpInsertUpdate_Object_ProdColorItems (ioId              := 0
-                                                                                            , inCode            := 1
-                                                                                            , inName            := 'Hull'
-                                                                                            , inProductId       := vbProductId
-                                                                                            , inProdColorGroupId:= vbProdColorGroupId2
-                                                                                            , inProdColorId     := vbColorId
-                                                                                            , inComment         := ''
-                                                                                            , inSession         := inSession
+             vbProdColorItemsId:= (SELECT tmp.ioId FROM gpInsertUpdate_Object_ProdColorItems (ioId                := vbProdColorItemsId
+                                                                                            , inCode              := 1
+                                                                                            , inProductId         := vbProductId
+                                                                                            , inProdColorGroupId  := vbProdColorGroupId2
+                                                                                            , inProdColorId       := vbColorId
+                                                                                            , inProdColorPatternId:= vbProdColorPatternId
+                                                                                            , inComment           := ''
+                                                                                            , inSession           := inSession
                                                                                              ) AS tmp);
          END IF;
 
@@ -452,6 +540,28 @@ BEGIN
      inFiberglassDeck:= TRIM (inFiberglassDeck);
      IF inFiberglassDeck <> ''
      THEN
+         vbProdColorPatternId:= 0;
+         vbProdColorPatternName:= 'Deck';
+         -- Поиск - ProdColorPattern
+         vbProdColorPatternId:= (SELECT Object.Id
+                                 FROM ObjectLink AS OL_ProdColorGroup
+                                      JOIN Object ON Object.Id = OL_ProdColorGroup.ObjectId
+                                                 AND Object.ValueData ILIKE vbProdColorPatternName
+                                 WHERE OL_ProdColorGroup.ChildObjectId = vbProdColorGroupId2
+                                   AND OL_ProdColorGroup.DescId        = zc_ObjectLink_ProdColorPattern_ProdColorGroup()
+                                );
+         IF COALESCE (vbProdColorPatternId, 0) = 0
+         THEN
+             -- Создание
+             vbProdColorPatternId:= (SELECT tmp.ioId FROM gpInsertUpdate_Object_ProdColorPattern (ioId              := 0
+                                                                                                , inCode            := 0
+                                                                                                , inName            := vbProdColorPatternName
+                                                                                                , inProdColorGroupId:= vbProdColorGroupId2
+                                                                                                , inComment         := ''
+                                                                                                , inSession         := inSession
+                                                                                                 ) AS tmp);
+         END IF;
+
          vbColorId:= 0;
          -- Поиск - Color
          vbColorId:= (SELECT Object.Id FROM Object WHERE Object.ValueData ILIKE inFiberglassDeck AND Object.DescId = zc_Object_ProdColor());
@@ -475,22 +585,26 @@ BEGIN
                                                          AND OL_ProdColorGroup.ChildObjectId = vbProdColorGroupId2
                                     INNER JOIN Object AS Object_ProdColorItems
                                                       ON Object_ProdColorItems.Id         = OL_Product.ObjectId
-                                                     AND Object_ProdColorItems.ObjectCode = 2
                                                      AND Object_ProdColorItems.isErased   = FALSE
+                                    INNER JOIN ObjectLink AS OL_ProdColorPattern
+                                                          ON OL_ProdColorPattern.ObjectId      = OL_Product.ObjectId
+                                                         AND OL_ProdColorPattern.DescId        = zc_ObjectLink_ProdColorItems_ProdColorPattern()
+                                                         AND OL_ProdColorPattern.ChildObjectId = vbProdColorPatternId
                                WHERE OL_Product.ChildObjectId = vbProductId
                                  AND OL_Product.DescId        = zc_ObjectLink_ProdColorItems_Product()
                               );
-         IF COALESCE (vbProdColorItemsId, 0) = 0
+
+         IF COALESCE (vbProdColorItemsId, 0) = 0 OR vbIsUpdate_ProdColorItems = TRUE
          THEN
              -- Создание
-             vbProdColorItemsId:= (SELECT tmp.ioId FROM gpInsertUpdate_Object_ProdColorItems (ioId              := 0
-                                                                                            , inCode            := 2
-                                                                                            , inName            := 'Deck'
-                                                                                            , inProductId       := vbProductId
-                                                                                            , inProdColorGroupId:= vbProdColorGroupId2
-                                                                                            , inProdColorId     := vbColorId
-                                                                                            , inComment         := ''
-                                                                                            , inSession         := inSession
+             vbProdColorItemsId:= (SELECT tmp.ioId FROM gpInsertUpdate_Object_ProdColorItems (ioId                := vbProdColorItemsId
+                                                                                            , inCode              := 2
+                                                                                            , inProductId         := vbProductId
+                                                                                            , inProdColorGroupId  := vbProdColorGroupId2
+                                                                                            , inProdColorId       := vbColorId
+                                                                                            , inProdColorPatternId:= vbProdColorPatternId
+                                                                                            , inComment           := ''
+                                                                                            , inSession           := inSession
                                                                                              ) AS tmp);
          END IF;
 
@@ -501,6 +615,28 @@ BEGIN
      inFiberglassSteeringConsole:= TRIM (inFiberglassSteeringConsole);
      IF inFiberglassSteeringConsole <> ''
      THEN
+         vbProdColorPatternId:= 0;
+         vbProdColorPatternName:= 'SteeringConsole';
+         -- Поиск - ProdColorPattern
+         vbProdColorPatternId:= (SELECT Object.Id
+                                 FROM ObjectLink AS OL_ProdColorGroup
+                                      JOIN Object ON Object.Id = OL_ProdColorGroup.ObjectId
+                                                 AND Object.ValueData ILIKE vbProdColorPatternName
+                                 WHERE OL_ProdColorGroup.ChildObjectId = vbProdColorGroupId2
+                                   AND OL_ProdColorGroup.DescId        = zc_ObjectLink_ProdColorPattern_ProdColorGroup()
+                                );
+         IF COALESCE (vbProdColorPatternId, 0) = 0
+         THEN
+             -- Создание
+             vbProdColorPatternId:= (SELECT tmp.ioId FROM gpInsertUpdate_Object_ProdColorPattern (ioId              := 0
+                                                                                                , inCode            := 0
+                                                                                                , inName            := vbProdColorPatternName
+                                                                                                , inProdColorGroupId:= vbProdColorGroupId2
+                                                                                                , inComment         := ''
+                                                                                                , inSession         := inSession
+                                                                                                 ) AS tmp);
+         END IF;
+
          vbColorId:= 0;
          -- Поиск - Color
          vbColorId:= (SELECT Object.Id FROM Object WHERE Object.ValueData ILIKE inFiberglassSteeringConsole AND Object.DescId = zc_Object_ProdColor());
@@ -524,22 +660,26 @@ BEGIN
                                                          AND OL_ProdColorGroup.ChildObjectId = vbProdColorGroupId2
                                     INNER JOIN Object AS Object_ProdColorItems
                                                       ON Object_ProdColorItems.Id         = OL_Product.ObjectId
-                                                     AND Object_ProdColorItems.ObjectCode = 3
                                                      AND Object_ProdColorItems.isErased   = FALSE
+                                    INNER JOIN ObjectLink AS OL_ProdColorPattern
+                                                          ON OL_ProdColorPattern.ObjectId      = OL_Product.ObjectId
+                                                         AND OL_ProdColorPattern.DescId        = zc_ObjectLink_ProdColorItems_ProdColorPattern()
+                                                         AND OL_ProdColorPattern.ChildObjectId = vbProdColorPatternId
                                WHERE OL_Product.ChildObjectId = vbProductId
                                  AND OL_Product.DescId        = zc_ObjectLink_ProdColorItems_Product()
                               );
-         IF COALESCE (vbProdColorItemsId, 0) = 0
+
+         IF COALESCE (vbProdColorItemsId, 0) = 0 OR vbIsUpdate_ProdColorItems = TRUE
          THEN
              -- Создание
-             vbProdColorItemsId:= (SELECT tmp.ioId FROM gpInsertUpdate_Object_ProdColorItems (ioId              := 0
-                                                                                            , inCode            := 3
-                                                                                            , inName            := 'SteeringConsole'
-                                                                                            , inProductId       := vbProductId
-                                                                                            , inProdColorGroupId:= vbProdColorGroupId2
-                                                                                            , inProdColorId     := vbColorId
-                                                                                            , inComment         := ''
-                                                                                            , inSession         := inSession
+             vbProdColorItemsId:= (SELECT tmp.ioId FROM gpInsertUpdate_Object_ProdColorItems (ioId                := vbProdColorItemsId
+                                                                                            , inCode              := 3
+                                                                                            , inProductId         := vbProductId
+                                                                                            , inProdColorGroupId  := vbProdColorGroupId2
+                                                                                            , inProdColorId       := vbColorId
+                                                                                            , inProdColorPatternId:= vbProdColorPatternId
+                                                                                            , inComment           := ''
+                                                                                            , inSession           := inSession
                                                                                              ) AS tmp);
          END IF;
 
@@ -550,6 +690,28 @@ BEGIN
      inUpholstery1:= TRIM (inUpholstery1);
      IF inUpholstery1 <> ''
      THEN
+         vbProdColorPatternId:= 0;
+         vbProdColorPatternName:= '1';
+         -- Поиск - ProdColorPattern
+         vbProdColorPatternId:= (SELECT Object.Id
+                                 FROM ObjectLink AS OL_ProdColorGroup
+                                      JOIN Object ON Object.Id = OL_ProdColorGroup.ObjectId
+                                                 AND Object.ValueData ILIKE vbProdColorPatternName
+                                 WHERE OL_ProdColorGroup.ChildObjectId = vbProdColorGroupId3
+                                   AND OL_ProdColorGroup.DescId        = zc_ObjectLink_ProdColorPattern_ProdColorGroup()
+                                );
+         IF COALESCE (vbProdColorPatternId, 0) = 0
+         THEN
+             -- Создание
+             vbProdColorPatternId:= (SELECT tmp.ioId FROM gpInsertUpdate_Object_ProdColorPattern (ioId              := 0
+                                                                                                , inCode            := 0
+                                                                                                , inName            := vbProdColorPatternName
+                                                                                                , inProdColorGroupId:= vbProdColorGroupId3
+                                                                                                , inComment         := ''
+                                                                                                , inSession         := inSession
+                                                                                                 ) AS tmp);
+         END IF;
+
          vbColorId:= 0;
          -- Поиск - Color
          vbColorId:= (SELECT Object.Id FROM Object WHERE Object.ValueData ILIKE inUpholstery1 AND Object.DescId = zc_Object_ProdColor());
@@ -573,22 +735,26 @@ BEGIN
                                                          AND OL_ProdColorGroup.ChildObjectId = vbProdColorGroupId3
                                     INNER JOIN Object AS Object_ProdColorItems
                                                       ON Object_ProdColorItems.Id         = OL_Product.ObjectId
-                                                     AND Object_ProdColorItems.ObjectCode = 1
                                                      AND Object_ProdColorItems.isErased   = FALSE
+                                    INNER JOIN ObjectLink AS OL_ProdColorPattern
+                                                          ON OL_ProdColorPattern.ObjectId      = OL_Product.ObjectId
+                                                         AND OL_ProdColorPattern.DescId        = zc_ObjectLink_ProdColorItems_ProdColorPattern()
+                                                         AND OL_ProdColorPattern.ChildObjectId = vbProdColorPatternId
                                WHERE OL_Product.ChildObjectId = vbProductId
                                  AND OL_Product.DescId        = zc_ObjectLink_ProdColorItems_Product()
                               );
-         IF COALESCE (vbProdColorItemsId, 0) = 0
+
+         IF COALESCE (vbProdColorItemsId, 0) = 0 OR vbIsUpdate_ProdColorItems = TRUE
          THEN
              -- Создание
-             vbProdColorItemsId:= (SELECT tmp.ioId FROM gpInsertUpdate_Object_ProdColorItems (ioId              := 0
-                                                                                            , inCode            := 1
-                                                                                            , inName            := '1'
-                                                                                            , inProductId       := vbProductId
-                                                                                            , inProdColorGroupId:= vbProdColorGroupId3
-                                                                                            , inProdColorId     := vbColorId
-                                                                                            , inComment         := ''
-                                                                                            , inSession         := inSession
+             vbProdColorItemsId:= (SELECT tmp.ioId FROM gpInsertUpdate_Object_ProdColorItems (ioId                := vbProdColorItemsId
+                                                                                            , inCode              := 1
+                                                                                            , inProductId         := vbProductId
+                                                                                            , inProdColorGroupId  := vbProdColorGroupId3
+                                                                                            , inProdColorId       := vbColorId
+                                                                                            , inProdColorPatternId:= vbProdColorPatternId
+                                                                                            , inComment           := ''
+                                                                                            , inSession           := inSession
                                                                                              ) AS tmp);
          END IF;
 
@@ -599,6 +765,28 @@ BEGIN
      inUpholstery2:= TRIM (inUpholstery2);
      IF inUpholstery2 <> ''
      THEN
+         vbProdColorPatternId:= 0;
+         vbProdColorPatternName:= '2';
+         -- Поиск - ProdColorPattern
+         vbProdColorPatternId:= (SELECT Object.Id
+                                 FROM ObjectLink AS OL_ProdColorGroup
+                                      JOIN Object ON Object.Id = OL_ProdColorGroup.ObjectId
+                                                 AND Object.ValueData ILIKE vbProdColorPatternName
+                                 WHERE OL_ProdColorGroup.ChildObjectId = vbProdColorGroupId3
+                                   AND OL_ProdColorGroup.DescId        = zc_ObjectLink_ProdColorPattern_ProdColorGroup()
+                                );
+         IF COALESCE (vbProdColorPatternId, 0) = 0
+         THEN
+             -- Создание
+             vbProdColorPatternId:= (SELECT tmp.ioId FROM gpInsertUpdate_Object_ProdColorPattern (ioId              := 0
+                                                                                                , inCode            := 0
+                                                                                                , inName            := vbProdColorPatternName
+                                                                                                , inProdColorGroupId:= vbProdColorGroupId3
+                                                                                                , inComment         := ''
+                                                                                                , inSession         := inSession
+                                                                                                 ) AS tmp);
+         END IF;
+
          vbColorId:= 0;
          -- Поиск - Color
          vbColorId:= (SELECT Object.Id FROM Object WHERE Object.ValueData ILIKE inUpholstery2 AND Object.DescId = zc_Object_ProdColor());
@@ -622,22 +810,26 @@ BEGIN
                                                          AND OL_ProdColorGroup.ChildObjectId = vbProdColorGroupId3
                                     INNER JOIN Object AS Object_ProdColorItems
                                                       ON Object_ProdColorItems.Id         = OL_Product.ObjectId
-                                                     AND Object_ProdColorItems.ObjectCode = 2
                                                      AND Object_ProdColorItems.isErased   = FALSE
+                                    INNER JOIN ObjectLink AS OL_ProdColorPattern
+                                                          ON OL_ProdColorPattern.ObjectId      = OL_Product.ObjectId
+                                                         AND OL_ProdColorPattern.DescId        = zc_ObjectLink_ProdColorItems_ProdColorPattern()
+                                                         AND OL_ProdColorPattern.ChildObjectId = vbProdColorPatternId
                                WHERE OL_Product.ChildObjectId = vbProductId
                                  AND OL_Product.DescId        = zc_ObjectLink_ProdColorItems_Product()
                               );
-         IF COALESCE (vbProdColorItemsId, 0) = 0
+
+         IF COALESCE (vbProdColorItemsId, 0) = 0 OR vbIsUpdate_ProdColorItems = TRUE
          THEN
              -- Создание
-             vbProdColorItemsId:= (SELECT tmp.ioId FROM gpInsertUpdate_Object_ProdColorItems (ioId              := 0
-                                                                                            , inCode            := 2
-                                                                                            , inName            := '2'
-                                                                                            , inProductId       := vbProductId
-                                                                                            , inProdColorGroupId:= vbProdColorGroupId3
-                                                                                            , inProdColorId     := vbColorId
-                                                                                            , inComment         := ''
-                                                                                            , inSession         := inSession
+             vbProdColorItemsId:= (SELECT tmp.ioId FROM gpInsertUpdate_Object_ProdColorItems (ioId                := vbProdColorItemsId
+                                                                                            , inCode              := 2
+                                                                                            , inProductId         := vbProductId
+                                                                                            , inProdColorGroupId  := vbProdColorGroupId3
+                                                                                            , inProdColorId       := vbColorId
+                                                                                            , inProdColorPatternId:= vbProdColorPatternId
+                                                                                            , inComment           := ''
+                                                                                            , inSession           := inSession
                                                                                              ) AS tmp);
          END IF;
 
@@ -647,6 +839,28 @@ BEGIN
      inUpholstery3:= TRIM (inUpholstery3);
      IF inUpholstery3 <> ''
      THEN
+         vbProdColorPatternId:= 0;
+         vbProdColorPatternName:= '3';
+         -- Поиск - ProdColorPattern
+         vbProdColorPatternId:= (SELECT Object.Id
+                                 FROM ObjectLink AS OL_ProdColorGroup
+                                      JOIN Object ON Object.Id = OL_ProdColorGroup.ObjectId
+                                                 AND Object.ValueData ILIKE vbProdColorPatternName
+                                 WHERE OL_ProdColorGroup.ChildObjectId = vbProdColorGroupId3
+                                   AND OL_ProdColorGroup.DescId        = zc_ObjectLink_ProdColorPattern_ProdColorGroup()
+                                );
+         IF COALESCE (vbProdColorPatternId, 0) = 0
+         THEN
+             -- Создание
+             vbProdColorPatternId:= (SELECT tmp.ioId FROM gpInsertUpdate_Object_ProdColorPattern (ioId              := 0
+                                                                                                , inCode            := 0
+                                                                                                , inName            := vbProdColorPatternName
+                                                                                                , inProdColorGroupId:= vbProdColorGroupId3
+                                                                                                , inComment         := ''
+                                                                                                , inSession         := inSession
+                                                                                                 ) AS tmp);
+         END IF;
+
          vbColorId:= 0;
          -- Поиск - Color
          vbColorId:= (SELECT Object.Id FROM Object WHERE Object.ValueData ILIKE inUpholstery3 AND Object.DescId = zc_Object_ProdColor());
@@ -670,22 +884,26 @@ BEGIN
                                                          AND OL_ProdColorGroup.ChildObjectId = vbProdColorGroupId3
                                     INNER JOIN Object AS Object_ProdColorItems
                                                       ON Object_ProdColorItems.Id         = OL_Product.ObjectId
-                                                     AND Object_ProdColorItems.ObjectCode = 3
                                                      AND Object_ProdColorItems.isErased   = FALSE
+                                    INNER JOIN ObjectLink AS OL_ProdColorPattern
+                                                          ON OL_ProdColorPattern.ObjectId      = OL_Product.ObjectId
+                                                         AND OL_ProdColorPattern.DescId        = zc_ObjectLink_ProdColorItems_ProdColorPattern()
+                                                         AND OL_ProdColorPattern.ChildObjectId = vbProdColorPatternId
                                WHERE OL_Product.ChildObjectId = vbProductId
                                  AND OL_Product.DescId        = zc_ObjectLink_ProdColorItems_Product()
                               );
-         IF COALESCE (vbProdColorItemsId, 0) = 0
+
+         IF COALESCE (vbProdColorItemsId, 0) = 0 OR vbIsUpdate_ProdColorItems = TRUE
          THEN
              -- Создание
-             vbProdColorItemsId:= (SELECT tmp.ioId FROM gpInsertUpdate_Object_ProdColorItems (ioId              := 0
-                                                                                            , inCode            := 3
-                                                                                            , inName            := '3'
-                                                                                            , inProductId       := vbProductId
-                                                                                            , inProdColorGroupId:= vbProdColorGroupId3
-                                                                                            , inProdColorId     := vbColorId
-                                                                                            , inComment         := ''
-                                                                                            , inSession         := inSession
+             vbProdColorItemsId:= (SELECT tmp.ioId FROM gpInsertUpdate_Object_ProdColorItems (ioId                := vbProdColorItemsId
+                                                                                            , inCode              := 3
+                                                                                            , inProductId         := vbProductId
+                                                                                            , inProdColorGroupId  := vbProdColorGroupId3
+                                                                                            , inProdColorId       := vbColorId
+                                                                                            , inProdColorPatternId:= vbProdColorPatternId
+                                                                                            , inComment           := ''
+                                                                                            , inSession           := inSession
                                                                                              ) AS tmp);
          END IF;
 
@@ -695,6 +913,28 @@ BEGIN
      inUpholstery4:= TRIM (inUpholstery4);
      IF inUpholstery4 <> ''
      THEN
+         vbProdColorPatternId:= 0;
+         vbProdColorPatternName:= '4';
+         -- Поиск - ProdColorPattern
+         vbProdColorPatternId:= (SELECT Object.Id
+                                 FROM ObjectLink AS OL_ProdColorGroup
+                                      JOIN Object ON Object.Id = OL_ProdColorGroup.ObjectId
+                                                 AND Object.ValueData ILIKE vbProdColorPatternName
+                                 WHERE OL_ProdColorGroup.ChildObjectId = vbProdColorGroupId3
+                                   AND OL_ProdColorGroup.DescId        = zc_ObjectLink_ProdColorPattern_ProdColorGroup()
+                                );
+         IF COALESCE (vbProdColorPatternId, 0) = 0
+         THEN
+             -- Создание
+             vbProdColorPatternId:= (SELECT tmp.ioId FROM gpInsertUpdate_Object_ProdColorPattern (ioId              := 0
+                                                                                                , inCode            := 0
+                                                                                                , inName            := vbProdColorPatternName
+                                                                                                , inProdColorGroupId:= vbProdColorGroupId3
+                                                                                                , inComment         := ''
+                                                                                                , inSession         := inSession
+                                                                                                 ) AS tmp);
+         END IF;
+
          vbColorId:= 0;
          -- Поиск - Color
          vbColorId:= (SELECT Object.Id FROM Object WHERE Object.ValueData ILIKE inUpholstery4 AND Object.DescId = zc_Object_ProdColor());
@@ -718,22 +958,26 @@ BEGIN
                                                          AND OL_ProdColorGroup.ChildObjectId = vbProdColorGroupId3
                                     INNER JOIN Object AS Object_ProdColorItems
                                                       ON Object_ProdColorItems.Id         = OL_Product.ObjectId
-                                                     AND Object_ProdColorItems.ObjectCode = 4
                                                      AND Object_ProdColorItems.isErased   = FALSE
+                                    INNER JOIN ObjectLink AS OL_ProdColorPattern
+                                                          ON OL_ProdColorPattern.ObjectId      = OL_Product.ObjectId
+                                                         AND OL_ProdColorPattern.DescId        = zc_ObjectLink_ProdColorItems_ProdColorPattern()
+                                                         AND OL_ProdColorPattern.ChildObjectId = vbProdColorPatternId
                                WHERE OL_Product.ChildObjectId = vbProductId
                                  AND OL_Product.DescId        = zc_ObjectLink_ProdColorItems_Product()
                               );
-         IF COALESCE (vbProdColorItemsId, 0) = 0
+
+         IF COALESCE (vbProdColorItemsId, 0) = 0 OR vbIsUpdate_ProdColorItems = TRUE
          THEN
              -- Создание
-             vbProdColorItemsId:= (SELECT tmp.ioId FROM gpInsertUpdate_Object_ProdColorItems (ioId              := 0
-                                                                                            , inCode            := 4
-                                                                                            , inName            := '4'
-                                                                                            , inProductId       := vbProductId
-                                                                                            , inProdColorGroupId:= vbProdColorGroupId3
-                                                                                            , inProdColorId     := vbColorId
-                                                                                            , inComment         := ''
-                                                                                            , inSession         := inSession
+             vbProdColorItemsId:= (SELECT tmp.ioId FROM gpInsertUpdate_Object_ProdColorItems (ioId                := vbProdColorItemsId
+                                                                                            , inCode              := 4
+                                                                                            , inProductId         := vbProductId
+                                                                                            , inProdColorGroupId  := vbProdColorGroupId3
+                                                                                            , inProdColorId       := vbColorId
+                                                                                            , inProdColorPatternId:= vbProdColorPatternId
+                                                                                            , inComment           := ''
+                                                                                            , inSession           := inSession
                                                                                              ) AS tmp);
          END IF;
 
@@ -744,6 +988,28 @@ BEGIN
      inStitchingColor:= TRIM (inStitchingColor);
      IF inStitchingColor <> ''
      THEN
+         vbProdColorPatternId:= 0;
+         vbProdColorPatternName:= 'Color';
+         -- Поиск - ProdColorPattern
+         vbProdColorPatternId:= (SELECT Object.Id
+                                 FROM ObjectLink AS OL_ProdColorGroup
+                                      JOIN Object ON Object.Id = OL_ProdColorGroup.ObjectId
+                                                 AND Object.ValueData ILIKE vbProdColorPatternName
+                                 WHERE OL_ProdColorGroup.ChildObjectId = vbProdColorGroupId4
+                                   AND OL_ProdColorGroup.DescId        = zc_ObjectLink_ProdColorPattern_ProdColorGroup()
+                                );
+         IF COALESCE (vbProdColorPatternId, 0) = 0
+         THEN
+             -- Создание
+             vbProdColorPatternId:= (SELECT tmp.ioId FROM gpInsertUpdate_Object_ProdColorPattern (ioId              := 0
+                                                                                                , inCode            := 0
+                                                                                                , inName            := vbProdColorPatternName
+                                                                                                , inProdColorGroupId:= vbProdColorGroupId4
+                                                                                                , inComment         := ''
+                                                                                                , inSession         := inSession
+                                                                                                 ) AS tmp);
+         END IF;
+
          vbColorId:= 0;
          -- Поиск - Color
          vbColorId:= (SELECT Object.Id FROM Object WHERE Object.ValueData ILIKE inStitchingColor AND Object.DescId = zc_Object_ProdColor());
@@ -767,22 +1033,26 @@ BEGIN
                                                          AND OL_ProdColorGroup.ChildObjectId = vbProdColorGroupId4
                                     INNER JOIN Object AS Object_ProdColorItems
                                                       ON Object_ProdColorItems.Id         = OL_Product.ObjectId
-                                                     AND Object_ProdColorItems.ObjectCode = 1
                                                      AND Object_ProdColorItems.isErased   = FALSE
+                                    INNER JOIN ObjectLink AS OL_ProdColorPattern
+                                                          ON OL_ProdColorPattern.ObjectId      = OL_Product.ObjectId
+                                                         AND OL_ProdColorPattern.DescId        = zc_ObjectLink_ProdColorItems_ProdColorPattern()
+                                                         AND OL_ProdColorPattern.ChildObjectId = vbProdColorPatternId
                                WHERE OL_Product.ChildObjectId = vbProductId
                                  AND OL_Product.DescId        = zc_ObjectLink_ProdColorItems_Product()
                               );
-         IF COALESCE (vbProdColorItemsId, 0) = 0
+
+         IF COALESCE (vbProdColorItemsId, 0) = 0 OR vbIsUpdate_ProdColorItems = TRUE
          THEN
              -- Создание
-             vbProdColorItemsId:= (SELECT tmp.ioId FROM gpInsertUpdate_Object_ProdColorItems (ioId              := 0
-                                                                                            , inCode            := 1
-                                                                                            , inName            := 'Color'
-                                                                                            , inProductId       := vbProductId
-                                                                                            , inProdColorGroupId:= vbProdColorGroupId4
-                                                                                            , inProdColorId     := vbColorId
-                                                                                            , inComment         := ''
-                                                                                            , inSession         := inSession
+             vbProdColorItemsId:= (SELECT tmp.ioId FROM gpInsertUpdate_Object_ProdColorItems (ioId                := vbProdColorItemsId
+                                                                                            , inCode              := 1
+                                                                                            , inProductId         := vbProductId
+                                                                                            , inProdColorGroupId  := vbProdColorGroupId4
+                                                                                            , inProdColorId       := vbColorId
+                                                                                            , inProdColorPatternId:= vbProdColorPatternId
+                                                                                            , inComment           := ''
+                                                                                            , inSession           := inSession
                                                                                              ) AS tmp);
          END IF;
 
@@ -792,6 +1062,28 @@ BEGIN
      inStitchingType:= TRIM (inStitchingType);
      IF inStitchingType <> ''
      THEN
+         vbProdColorPatternId:= 0;
+         vbProdColorPatternName:= 'Type';
+         -- Поиск - ProdColorPattern
+         vbProdColorPatternId:= (SELECT Object.Id
+                                 FROM ObjectLink AS OL_ProdColorGroup
+                                      JOIN Object ON Object.Id = OL_ProdColorGroup.ObjectId
+                                                 AND Object.ValueData ILIKE vbProdColorPatternName
+                                 WHERE OL_ProdColorGroup.ChildObjectId = vbProdColorGroupId4
+                                   AND OL_ProdColorGroup.DescId        = zc_ObjectLink_ProdColorPattern_ProdColorGroup()
+                                );
+         IF COALESCE (vbProdColorPatternId, 0) = 0
+         THEN
+             -- Создание
+             vbProdColorPatternId:= (SELECT tmp.ioId FROM gpInsertUpdate_Object_ProdColorPattern (ioId              := 0
+                                                                                                , inCode            := 0
+                                                                                                , inName            := vbProdColorPatternName
+                                                                                                , inProdColorGroupId:= vbProdColorGroupId4
+                                                                                                , inComment         := ''
+                                                                                                , inSession         := inSession
+                                                                                                 ) AS tmp);
+         END IF;
+
          vbColorId:= 0;
          -- Поиск - Color
          vbColorId:= (SELECT Object.Id FROM Object WHERE Object.ValueData ILIKE inStitchingType AND Object.DescId = zc_Object_ProdColor());
@@ -815,33 +1107,58 @@ BEGIN
                                                          AND OL_ProdColorGroup.ChildObjectId = vbProdColorGroupId4
                                     INNER JOIN Object AS Object_ProdColorItems
                                                       ON Object_ProdColorItems.Id         = OL_Product.ObjectId
-                                                     AND Object_ProdColorItems.ObjectCode = 2
                                                      AND Object_ProdColorItems.isErased   = FALSE
+                                    INNER JOIN ObjectLink AS OL_ProdColorPattern
+                                                          ON OL_ProdColorPattern.ObjectId      = OL_Product.ObjectId
+                                                         AND OL_ProdColorPattern.DescId        = zc_ObjectLink_ProdColorItems_ProdColorPattern()
+                                                         AND OL_ProdColorPattern.ChildObjectId = vbProdColorPatternId
                                WHERE OL_Product.ChildObjectId = vbProductId
                                  AND OL_Product.DescId        = zc_ObjectLink_ProdColorItems_Product()
                               );
-         IF COALESCE (vbProdColorItemsId, 0) = 0
+
+         IF COALESCE (vbProdColorItemsId, 0) = 0 OR vbIsUpdate_ProdColorItems = TRUE
          THEN
              -- Создание
-             vbProdColorItemsId:= (SELECT tmp.ioId FROM gpInsertUpdate_Object_ProdColorItems (ioId              := 0
-                                                                                            , inCode            := 2
-                                                                                            , inName            := 'Type'
-                                                                                            , inProductId       := vbProductId
-                                                                                            , inProdColorGroupId:= vbProdColorGroupId4
-                                                                                            , inProdColorId     := vbColorId
-                                                                                            , inComment         := ''
-                                                                                            , inSession         := inSession
+             vbProdColorItemsId:= (SELECT tmp.ioId FROM gpInsertUpdate_Object_ProdColorItems (ioId                := vbProdColorItemsId
+                                                                                            , inCode              := 2
+                                                                                            , inProductId         := vbProductId
+                                                                                            , inProdColorGroupId  := vbProdColorGroupId4
+                                                                                            , inProdColorId       := vbColorId
+                                                                                            , inProdColorPatternId:= vbProdColorPatternId
+                                                                                            , inComment           := ''
+                                                                                            , inSession           := inSession
                                                                                              ) AS tmp);
          END IF;
 
      END IF;
 
 
-
      -- 8.1.  ProdColorItemsId - Color
      inColor1:= TRIM (inColor1);
      IF inColor1 <> ''
      THEN
+         vbProdColorPatternId:= 0;
+         vbProdColorPatternName:= '1';
+         -- Поиск - ProdColorPattern
+         vbProdColorPatternId:= (SELECT Object.Id
+                                 FROM ObjectLink AS OL_ProdColorGroup
+                                      JOIN Object ON Object.Id = OL_ProdColorGroup.ObjectId
+                                                 AND Object.ValueData ILIKE vbProdColorPatternName
+                                 WHERE OL_ProdColorGroup.ChildObjectId = vbProdColorGroupId5
+                                   AND OL_ProdColorGroup.DescId        = zc_ObjectLink_ProdColorPattern_ProdColorGroup()
+                                );
+         IF COALESCE (vbProdColorPatternId, 0) = 0
+         THEN
+             -- Создание
+             vbProdColorPatternId:= (SELECT tmp.ioId FROM gpInsertUpdate_Object_ProdColorPattern (ioId              := 0
+                                                                                                , inCode            := 0
+                                                                                                , inName            := vbProdColorPatternName
+                                                                                                , inProdColorGroupId:= vbProdColorGroupId5
+                                                                                                , inComment         := ''
+                                                                                                , inSession         := inSession
+                                                                                                 ) AS tmp);
+         END IF;
+
          vbColorId:= 0;
          -- Поиск - Color
          vbColorId:= (SELECT Object.Id FROM Object WHERE Object.ValueData ILIKE inColor1 AND Object.DescId = zc_Object_ProdColor());
@@ -865,22 +1182,26 @@ BEGIN
                                                          AND OL_ProdColorGroup.ChildObjectId = vbProdColorGroupId5
                                     INNER JOIN Object AS Object_ProdColorItems
                                                       ON Object_ProdColorItems.Id         = OL_Product.ObjectId
-                                                     AND Object_ProdColorItems.ObjectCode = 1
                                                      AND Object_ProdColorItems.isErased   = FALSE
+                                    INNER JOIN ObjectLink AS OL_ProdColorPattern
+                                                          ON OL_ProdColorPattern.ObjectId      = OL_Product.ObjectId
+                                                         AND OL_ProdColorPattern.DescId        = zc_ObjectLink_ProdColorItems_ProdColorPattern()
+                                                         AND OL_ProdColorPattern.ChildObjectId = vbProdColorPatternId
                                WHERE OL_Product.ChildObjectId = vbProductId
                                  AND OL_Product.DescId        = zc_ObjectLink_ProdColorItems_Product()
                               );
-         IF COALESCE (vbProdColorItemsId, 0) = 0
+
+         IF COALESCE (vbProdColorItemsId, 0) = 0 OR vbIsUpdate_ProdColorItems = TRUE
          THEN
              -- Создание
-             vbProdColorItemsId:= (SELECT tmp.ioId FROM gpInsertUpdate_Object_ProdColorItems (ioId              := 0
-                                                                                            , inCode            := 1
-                                                                                            , inName            := '1'
-                                                                                            , inProductId       := vbProductId
-                                                                                            , inProdColorGroupId:= vbProdColorGroupId5
-                                                                                            , inProdColorId     := vbColorId
-                                                                                            , inComment         := ''
-                                                                                            , inSession         := inSession
+             vbProdColorItemsId:= (SELECT tmp.ioId FROM gpInsertUpdate_Object_ProdColorItems (ioId                := vbProdColorItemsId
+                                                                                            , inCode              := 1
+                                                                                            , inProductId         := vbProductId
+                                                                                            , inProdColorGroupId  := vbProdColorGroupId5
+                                                                                            , inProdColorId       := vbColorId
+                                                                                            , inProdColorPatternId:= vbProdColorPatternId
+                                                                                            , inComment           := ''
+                                                                                            , inSession           := inSession
                                                                                              ) AS tmp);
          END IF;
 
@@ -891,6 +1212,28 @@ BEGIN
      inColor2:= TRIM (inColor2);
      IF inColor2 <> ''
      THEN
+         vbProdColorPatternId:= 0;
+         vbProdColorPatternName:= '2';
+         -- Поиск - ProdColorPattern
+         vbProdColorPatternId:= (SELECT Object.Id
+                                 FROM ObjectLink AS OL_ProdColorGroup
+                                      JOIN Object ON Object.Id = OL_ProdColorGroup.ObjectId
+                                                 AND Object.ValueData ILIKE vbProdColorPatternName
+                                 WHERE OL_ProdColorGroup.ChildObjectId = vbProdColorGroupId5
+                                   AND OL_ProdColorGroup.DescId        = zc_ObjectLink_ProdColorPattern_ProdColorGroup()
+                                );
+         IF COALESCE (vbProdColorPatternId, 0) = 0
+         THEN
+             -- Создание
+             vbProdColorPatternId:= (SELECT tmp.ioId FROM gpInsertUpdate_Object_ProdColorPattern (ioId              := 0
+                                                                                                , inCode            := 0
+                                                                                                , inName            := vbProdColorPatternName
+                                                                                                , inProdColorGroupId:= vbProdColorGroupId5
+                                                                                                , inComment         := ''
+                                                                                                , inSession         := inSession
+                                                                                                 ) AS tmp);
+         END IF;
+
          vbColorId:= 0;
          -- Поиск - Color
          vbColorId:= (SELECT Object.Id FROM Object WHERE Object.ValueData ILIKE inColor2 AND Object.DescId = zc_Object_ProdColor());
@@ -914,22 +1257,26 @@ BEGIN
                                                          AND OL_ProdColorGroup.ChildObjectId = vbProdColorGroupId5
                                     INNER JOIN Object AS Object_ProdColorItems
                                                       ON Object_ProdColorItems.Id         = OL_Product.ObjectId
-                                                     AND Object_ProdColorItems.ObjectCode = 2
                                                      AND Object_ProdColorItems.isErased   = FALSE
+                                    INNER JOIN ObjectLink AS OL_ProdColorPattern
+                                                          ON OL_ProdColorPattern.ObjectId      = OL_Product.ObjectId
+                                                         AND OL_ProdColorPattern.DescId        = zc_ObjectLink_ProdColorItems_ProdColorPattern()
+                                                         AND OL_ProdColorPattern.ChildObjectId = vbProdColorPatternId
                                WHERE OL_Product.ChildObjectId = vbProductId
                                  AND OL_Product.DescId        = zc_ObjectLink_ProdColorItems_Product()
                               );
-         IF COALESCE (vbProdColorItemsId, 0) = 0
+
+         IF COALESCE (vbProdColorItemsId, 0) = 0 OR vbIsUpdate_ProdColorItems = TRUE
          THEN
              -- Создание
-             vbProdColorItemsId:= (SELECT tmp.ioId FROM gpInsertUpdate_Object_ProdColorItems (ioId              := 0
-                                                                                            , inCode            := 2
-                                                                                            , inName            := '2'
-                                                                                            , inProductId       := vbProductId
-                                                                                            , inProdColorGroupId:= vbProdColorGroupId5
-                                                                                            , inProdColorId     := vbColorId
-                                                                                            , inComment         := ''
-                                                                                            , inSession         := inSession
+             vbProdColorItemsId:= (SELECT tmp.ioId FROM gpInsertUpdate_Object_ProdColorItems (ioId                := vbProdColorItemsId
+                                                                                            , inCode              := 2
+                                                                                            , inProductId         := vbProductId
+                                                                                            , inProdColorGroupId  := vbProdColorGroupId5
+                                                                                            , inProdColorId       := vbColorId
+                                                                                            , inProdColorPatternId:= vbProdColorPatternId
+                                                                                            , inComment           := ''
+                                                                                            , inSession           := inSession
                                                                                              ) AS tmp);
          END IF;
 
@@ -939,6 +1286,28 @@ BEGIN
      inColor3:= TRIM (inColor3);
      IF inColor3 <> ''
      THEN
+         vbProdColorPatternId:= 0;
+         vbProdColorPatternName:= '3';
+         -- Поиск - ProdColorPattern
+         vbProdColorPatternId:= (SELECT Object.Id
+                                 FROM ObjectLink AS OL_ProdColorGroup
+                                      JOIN Object ON Object.Id = OL_ProdColorGroup.ObjectId
+                                                 AND Object.ValueData ILIKE vbProdColorPatternName
+                                 WHERE OL_ProdColorGroup.ChildObjectId = vbProdColorGroupId5
+                                   AND OL_ProdColorGroup.DescId        = zc_ObjectLink_ProdColorPattern_ProdColorGroup()
+                                );
+         IF COALESCE (vbProdColorPatternId, 0) = 0
+         THEN
+             -- Создание
+             vbProdColorPatternId:= (SELECT tmp.ioId FROM gpInsertUpdate_Object_ProdColorPattern (ioId              := 0
+                                                                                                , inCode            := 0
+                                                                                                , inName            := vbProdColorPatternName
+                                                                                                , inProdColorGroupId:= vbProdColorGroupId5
+                                                                                                , inComment         := ''
+                                                                                                , inSession         := inSession
+                                                                                                 ) AS tmp);
+         END IF;
+
          vbColorId:= 0;
          -- Поиск - Color
          vbColorId:= (SELECT Object.Id FROM Object WHERE Object.ValueData ILIKE inColor3 AND Object.DescId = zc_Object_ProdColor());
@@ -962,22 +1331,26 @@ BEGIN
                                                          AND OL_ProdColorGroup.ChildObjectId = vbProdColorGroupId5
                                     INNER JOIN Object AS Object_ProdColorItems
                                                       ON Object_ProdColorItems.Id         = OL_Product.ObjectId
-                                                     AND Object_ProdColorItems.ObjectCode = 3
                                                      AND Object_ProdColorItems.isErased   = FALSE
+                                    INNER JOIN ObjectLink AS OL_ProdColorPattern
+                                                          ON OL_ProdColorPattern.ObjectId      = OL_Product.ObjectId
+                                                         AND OL_ProdColorPattern.DescId        = zc_ObjectLink_ProdColorItems_ProdColorPattern()
+                                                         AND OL_ProdColorPattern.ChildObjectId = vbProdColorPatternId
                                WHERE OL_Product.ChildObjectId = vbProductId
                                  AND OL_Product.DescId        = zc_ObjectLink_ProdColorItems_Product()
                               );
-         IF COALESCE (vbProdColorItemsId, 0) = 0
+
+         IF COALESCE (vbProdColorItemsId, 0) = 0 OR vbIsUpdate_ProdColorItems = TRUE
          THEN
              -- Создание
-             vbProdColorItemsId:= (SELECT tmp.ioId FROM gpInsertUpdate_Object_ProdColorItems (ioId              := 0
-                                                                                            , inCode            := 3
-                                                                                            , inName            := '3'
-                                                                                            , inProductId       := vbProductId
-                                                                                            , inProdColorGroupId:= vbProdColorGroupId5
-                                                                                            , inProdColorId     := vbColorId
-                                                                                            , inComment         := ''
-                                                                                            , inSession         := inSession
+             vbProdColorItemsId:= (SELECT tmp.ioId FROM gpInsertUpdate_Object_ProdColorItems (ioId                := vbProdColorItemsId
+                                                                                            , inCode              := 3
+                                                                                            , inProductId         := vbProductId
+                                                                                            , inProdColorGroupId  := vbProdColorGroupId5
+                                                                                            , inProdColorId       := vbColorId
+                                                                                            , inProdColorPatternId:= vbProdColorPatternId
+                                                                                            , inComment           := ''
+                                                                                            , inSession           := inSession
                                                                                              ) AS tmp);
          END IF;
 
@@ -987,6 +1360,28 @@ BEGIN
      inColor4:= TRIM (inColor4);
      IF inColor4 <> ''
      THEN
+         vbProdColorPatternId:= 0;
+         vbProdColorPatternName:= '4';
+         -- Поиск - ProdColorPattern
+         vbProdColorPatternId:= (SELECT Object.Id
+                                 FROM ObjectLink AS OL_ProdColorGroup
+                                      JOIN Object ON Object.Id = OL_ProdColorGroup.ObjectId
+                                                 AND Object.ValueData ILIKE vbProdColorPatternName
+                                 WHERE OL_ProdColorGroup.ChildObjectId = vbProdColorGroupId5
+                                   AND OL_ProdColorGroup.DescId        = zc_ObjectLink_ProdColorPattern_ProdColorGroup()
+                                );
+         IF COALESCE (vbProdColorPatternId, 0) = 0
+         THEN
+             -- Создание
+             vbProdColorPatternId:= (SELECT tmp.ioId FROM gpInsertUpdate_Object_ProdColorPattern (ioId              := 0
+                                                                                                , inCode            := 0
+                                                                                                , inName            := vbProdColorPatternName
+                                                                                                , inProdColorGroupId:= vbProdColorGroupId5
+                                                                                                , inComment         := ''
+                                                                                                , inSession         := inSession
+                                                                                                 ) AS tmp);
+         END IF;
+
          vbColorId:= 0;
          -- Поиск - Color
          vbColorId:= (SELECT Object.Id FROM Object WHERE Object.ValueData ILIKE inColor4 AND Object.DescId = zc_Object_ProdColor());
@@ -1010,22 +1405,26 @@ BEGIN
                                                          AND OL_ProdColorGroup.ChildObjectId = vbProdColorGroupId5
                                     INNER JOIN Object AS Object_ProdColorItems
                                                       ON Object_ProdColorItems.Id         = OL_Product.ObjectId
-                                                     AND Object_ProdColorItems.ObjectCode = 4
                                                      AND Object_ProdColorItems.isErased   = FALSE
+                                    INNER JOIN ObjectLink AS OL_ProdColorPattern
+                                                          ON OL_ProdColorPattern.ObjectId      = OL_Product.ObjectId
+                                                         AND OL_ProdColorPattern.DescId        = zc_ObjectLink_ProdColorItems_ProdColorPattern()
+                                                         AND OL_ProdColorPattern.ChildObjectId = vbProdColorPatternId
                                WHERE OL_Product.ChildObjectId = vbProductId
                                  AND OL_Product.DescId        = zc_ObjectLink_ProdColorItems_Product()
                               );
-         IF COALESCE (vbProdColorItemsId, 0) = 0
+
+         IF COALESCE (vbProdColorItemsId, 0) = 0 OR vbIsUpdate_ProdColorItems = TRUE
          THEN
              -- Создание
-             vbProdColorItemsId:= (SELECT tmp.ioId FROM gpInsertUpdate_Object_ProdColorItems (ioId              := 0
-                                                                                            , inCode            := 4
-                                                                                            , inName            := '4'
-                                                                                            , inProductId       := vbProductId
-                                                                                            , inProdColorGroupId:= vbProdColorGroupId5
-                                                                                            , inProdColorId     := vbColorId
-                                                                                            , inComment         := ''
-                                                                                            , inSession         := inSession
+             vbProdColorItemsId:= (SELECT tmp.ioId FROM gpInsertUpdate_Object_ProdColorItems (ioId                := vbProdColorItemsId
+                                                                                            , inCode              := 4
+                                                                                            , inProductId         := vbProductId
+                                                                                            , inProdColorGroupId  := vbProdColorGroupId5
+                                                                                            , inProdColorId       := vbColorId
+                                                                                            , inProdColorPatternId:= vbProdColorPatternId
+                                                                                            , inComment           := ''
+                                                                                            , inSession           := inSession
                                                                                              ) AS tmp);
          END IF;
 
@@ -1035,6 +1434,28 @@ BEGIN
      inColor5:= TRIM (inColor5);
      IF inColor5 <> ''
      THEN
+         vbProdColorPatternId:= 0;
+         vbProdColorPatternName:= '5';
+         -- Поиск - ProdColorPattern
+         vbProdColorPatternId:= (SELECT Object.Id
+                                 FROM ObjectLink AS OL_ProdColorGroup
+                                      JOIN Object ON Object.Id = OL_ProdColorGroup.ObjectId
+                                                 AND Object.ValueData ILIKE vbProdColorPatternName
+                                 WHERE OL_ProdColorGroup.ChildObjectId = vbProdColorGroupId5
+                                   AND OL_ProdColorGroup.DescId        = zc_ObjectLink_ProdColorPattern_ProdColorGroup()
+                                );
+         IF COALESCE (vbProdColorPatternId, 0) = 0
+         THEN
+             -- Создание
+             vbProdColorPatternId:= (SELECT tmp.ioId FROM gpInsertUpdate_Object_ProdColorPattern (ioId              := 0
+                                                                                                , inCode            := 0
+                                                                                                , inName            := vbProdColorPatternName
+                                                                                                , inProdColorGroupId:= vbProdColorGroupId5
+                                                                                                , inComment         := ''
+                                                                                                , inSession         := inSession
+                                                                                                 ) AS tmp);
+         END IF;
+
          vbColorId:= 0;
          -- Поиск - Color
          vbColorId:= (SELECT Object.Id FROM Object WHERE Object.ValueData ILIKE inColor5 AND Object.DescId = zc_Object_ProdColor());
@@ -1058,22 +1479,26 @@ BEGIN
                                                          AND OL_ProdColorGroup.ChildObjectId = vbProdColorGroupId5
                                     INNER JOIN Object AS Object_ProdColorItems
                                                       ON Object_ProdColorItems.Id         = OL_Product.ObjectId
-                                                     AND Object_ProdColorItems.ObjectCode = 5
                                                      AND Object_ProdColorItems.isErased   = FALSE
+                                    INNER JOIN ObjectLink AS OL_ProdColorPattern
+                                                          ON OL_ProdColorPattern.ObjectId      = OL_Product.ObjectId
+                                                         AND OL_ProdColorPattern.DescId        = zc_ObjectLink_ProdColorItems_ProdColorPattern()
+                                                         AND OL_ProdColorPattern.ChildObjectId = vbProdColorPatternId
                                WHERE OL_Product.ChildObjectId = vbProductId
                                  AND OL_Product.DescId        = zc_ObjectLink_ProdColorItems_Product()
                               );
-         IF COALESCE (vbProdColorItemsId, 0) = 0
+
+         IF COALESCE (vbProdColorItemsId, 0) = 0 OR vbIsUpdate_ProdColorItems = TRUE
          THEN
              -- Создание
-             vbProdColorItemsId:= (SELECT tmp.ioId FROM gpInsertUpdate_Object_ProdColorItems (ioId              := 0
-                                                                                            , inCode            := 5
-                                                                                            , inName            := '5'
-                                                                                            , inProductId       := vbProductId
-                                                                                            , inProdColorGroupId:= vbProdColorGroupId5
-                                                                                            , inProdColorId     := vbColorId
-                                                                                            , inComment         := ''
-                                                                                            , inSession         := inSession
+             vbProdColorItemsId:= (SELECT tmp.ioId FROM gpInsertUpdate_Object_ProdColorItems (ioId                := vbProdColorItemsId
+                                                                                            , inCode              := 5
+                                                                                            , inProductId         := vbProductId
+                                                                                            , inProdColorGroupId  := vbProdColorGroupId5
+                                                                                            , inProdColorId       := vbColorId
+                                                                                            , inProdColorPatternId:= vbProdColorPatternId
+                                                                                            , inComment           := ''
+                                                                                            , inSession           := inSession
                                                                                              ) AS tmp);
          END IF;
 
@@ -1084,6 +1509,25 @@ BEGIN
      inOptionName1:= TRIM (inOptionName1);
      IF inOptionName1 <> ''
      THEN
+         vbProdOptPatternId:= 0;
+         vbProdOptPatternName:= 'Option 1';
+         -- Поиск - ProdOptPattern
+         vbProdOptPatternId:= (SELECT Object_ProdOptPattern.Id
+                               FROM Object AS Object_ProdOptPattern
+                               WHERE Object_ProdOptPattern.DescId    = zc_Object_ProdOptPattern()
+                                 AND Object_ProdOptPattern.ValueData ILIKE vbProdOptPatternName
+                              );
+         IF COALESCE (vbProdOptPatternId, 0) = 0
+         THEN
+             -- Создание
+             vbProdOptPatternId:= (SELECT tmp.ioId FROM gpInsertUpdate_Object_ProdOptPattern (ioId              := 0
+                                                                                            , inCode            := 0
+                                                                                            , inName            := vbProdOptPatternName
+                                                                                            , inComment         := ''
+                                                                                            , inSession         := inSession
+                                                                                             ) AS tmp);
+         END IF;
+
          vbProdOptionsId:= 0;
          -- Поиск - Options
          vbProdOptionsId:= (SELECT Object.Id FROM Object WHERE Object.ValueData ILIKE inOptionName1 AND Object.DescId = zc_Object_ProdOptions());
@@ -1104,8 +1548,11 @@ BEGIN
                              FROM ObjectLink AS OL_Product
                                   INNER JOIN Object AS Object_ProdOptItems
                                                     ON Object_ProdOptItems.Id         = OL_Product.ObjectId
-                                                   AND Object_ProdOptItems.ObjectCode = 1
                                                    AND Object_ProdOptItems.isErased   = FALSE
+                                  INNER JOIN ObjectLink AS OL_ProdOptPattern
+                                                        ON OL_ProdOptPattern.ObjectId      = OL_Product.ObjectId
+                                                       AND OL_ProdOptPattern.DescId        = zc_ObjectLink_ProdOptItems_ProdOptPattern()
+                                                       AND OL_ProdOptPattern.ChildObjectId = vbProdOptPatternId
                              WHERE OL_Product.ChildObjectId = vbProductId
                                AND OL_Product.DescId        = zc_ObjectLink_ProdOptItems_Product()
                             );
@@ -1114,9 +1561,9 @@ BEGIN
              -- Создание
              vbProdOptItemsId:= (SELECT tmp.ioId FROM gpInsertUpdate_Object_ProdOptItems (ioId              := 0
                                                                                         , inCode            := 1
-                                                                                        , inName            := 'Option 1'
                                                                                         , inProductId       := vbProductId
                                                                                         , inProdOptionsId   := vbProdOptionsId
+                                                                                        , inProdOptPatternId:= vbProdOptPatternId
                                                                                         , inPriceIn         := inOptionPrice1 * 0.75
                                                                                         , inPriceOut        := inOptionPrice1
                                                                                         , inPartNumber      := inOptionPartNumber1
@@ -1131,6 +1578,25 @@ BEGIN
      inOptionName2:= TRIM (inOptionName2);
      IF inOptionName2 <> ''
      THEN
+         vbProdOptPatternId:= 0;
+         vbProdOptPatternName:= 'Option 2';
+         -- Поиск - ProdOptPattern
+         vbProdOptPatternId:= (SELECT Object_ProdOptPattern.Id
+                                 FROM Object AS Object_ProdOptPattern
+                                 WHERE Object_ProdOptPattern.DescId    = zc_Object_ProdOptPattern()
+                                   AND Object_ProdOptPattern.ValueData ILIKE vbProdOptPatternName
+                                );
+         IF COALESCE (vbProdOptPatternId, 0) = 0
+         THEN
+             -- Создание
+             vbProdOptPatternId:= (SELECT tmp.ioId FROM gpInsertUpdate_Object_ProdOptPattern (ioId              := 0
+                                                                                            , inCode            := 0
+                                                                                            , inName            := vbProdOptPatternName
+                                                                                            , inComment         := ''
+                                                                                            , inSession         := inSession
+                                                                                             ) AS tmp);
+         END IF;
+
          vbProdOptionsId:= 0;
          -- Поиск - Options
          vbProdOptionsId:= (SELECT Object.Id FROM Object WHERE Object.ValueData ILIKE inOptionName2 AND Object.DescId = zc_Object_ProdOptions());
@@ -1150,9 +1616,12 @@ BEGIN
          vbProdOptItemsId:= (SELECT OL_Product.ObjectId
                              FROM ObjectLink AS OL_Product
                                   INNER JOIN Object AS Object_ProdOptItems
-                                                    ON Object_ProdOptItems.Id         = OL_Product.ObjectId
-                                                   AND Object_ProdOptItems.ObjectCode = 2
-                                                   AND Object_ProdOptItems.isErased   = FALSE
+                                                    ON Object_ProdOptItems.Id       = OL_Product.ObjectId
+                                                   AND Object_ProdOptItems.isErased = FALSE
+                                  INNER JOIN ObjectLink AS OL_ProdOptPattern
+                                                        ON OL_ProdOptPattern.ObjectId      = OL_Product.ObjectId
+                                                       AND OL_ProdOptPattern.DescId        = zc_ObjectLink_ProdOptItems_ProdOptPattern()
+                                                       AND OL_ProdOptPattern.ChildObjectId = vbProdOptPatternId
                              WHERE OL_Product.ChildObjectId = vbProductId
                                AND OL_Product.DescId        = zc_ObjectLink_ProdOptItems_Product()
                             );
@@ -1161,9 +1630,9 @@ BEGIN
              -- Создание
              vbProdOptItemsId:= (SELECT tmp.ioId FROM gpInsertUpdate_Object_ProdOptItems (ioId              := 0
                                                                                         , inCode            := 2
-                                                                                        , inName            := 'Option 2'
                                                                                         , inProductId       := vbProductId
                                                                                         , inProdOptionsId   := vbProdOptionsId
+                                                                                        , inProdOptPatternId:= vbProdOptPatternId
                                                                                         , inPriceIn         := inOptionPrice2 * 0.75
                                                                                         , inPriceOut        := inOptionPrice2
                                                                                         , inPartNumber      := inOptionPartNumber2
@@ -1179,6 +1648,25 @@ BEGIN
      inOptionName3:= TRIM (inOptionName3);
      IF inOptionName3 <> ''
      THEN
+         vbProdOptPatternId:= 0;
+         vbProdOptPatternName:= 'Option 3';
+         -- Поиск - ProdOptPattern
+         vbProdOptPatternId:= (SELECT Object_ProdOptPattern.Id
+                                 FROM Object AS Object_ProdOptPattern
+                                 WHERE Object_ProdOptPattern.DescId    = zc_Object_ProdOptPattern()
+                                   AND Object_ProdOptPattern.ValueData ILIKE vbProdOptPatternName
+                                );
+         IF COALESCE (vbProdOptPatternId, 0) = 0
+         THEN
+             -- Создание
+             vbProdOptPatternId:= (SELECT tmp.ioId FROM gpInsertUpdate_Object_ProdOptPattern (ioId              := 0
+                                                                                            , inCode            := 0
+                                                                                            , inName            := vbProdOptPatternName
+                                                                                            , inComment         := ''
+                                                                                            , inSession         := inSession
+                                                                                             ) AS tmp);
+         END IF;
+
          vbProdOptionsId:= 0;
          -- Поиск - Options
          vbProdOptionsId:= (SELECT Object.Id FROM Object WHERE Object.ValueData ILIKE inOptionName3 AND Object.DescId = zc_Object_ProdOptions());
@@ -1198,9 +1686,12 @@ BEGIN
          vbProdOptItemsId:= (SELECT OL_Product.ObjectId
                              FROM ObjectLink AS OL_Product
                                   INNER JOIN Object AS Object_ProdOptItems
-                                                    ON Object_ProdOptItems.Id         = OL_Product.ObjectId
-                                                   AND Object_ProdOptItems.ObjectCode = 3
-                                                   AND Object_ProdOptItems.isErased   = FALSE
+                                                    ON Object_ProdOptItems.Id       = OL_Product.ObjectId
+                                                   AND Object_ProdOptItems.isErased = FALSE
+                                  INNER JOIN ObjectLink AS OL_ProdOptPattern
+                                                        ON OL_ProdOptPattern.ObjectId      = OL_Product.ObjectId
+                                                       AND OL_ProdOptPattern.DescId        = zc_ObjectLink_ProdOptItems_ProdOptPattern()
+                                                       AND OL_ProdOptPattern.ChildObjectId = vbProdOptPatternId
                              WHERE OL_Product.ChildObjectId = vbProductId
                                AND OL_Product.DescId        = zc_ObjectLink_ProdOptItems_Product()
                             );
@@ -1209,9 +1700,9 @@ BEGIN
              -- Создание
              vbProdOptItemsId:= (SELECT tmp.ioId FROM gpInsertUpdate_Object_ProdOptItems (ioId              := 0
                                                                                         , inCode            := 3
-                                                                                        , inName            := 'Option 3'
                                                                                         , inProductId       := vbProductId
                                                                                         , inProdOptionsId   := vbProdOptionsId
+                                                                                        , inProdOptPatternId:= vbProdOptPatternId
                                                                                         , inPriceIn         := inOptionPrice3 * 0.75
                                                                                         , inPriceOut        := inOptionPrice3
                                                                                         , inPartNumber      := inOptionPartNumber3
@@ -1226,6 +1717,25 @@ BEGIN
      inOptionName4:= TRIM (inOptionName4);
      IF inOptionName4 <> ''
      THEN
+         vbProdOptPatternId:= 0;
+         vbProdOptPatternName:= 'Option 4';
+         -- Поиск - ProdOptPattern
+         vbProdOptPatternId:= (SELECT Object_ProdOptPattern.Id
+                                 FROM Object AS Object_ProdOptPattern
+                                 WHERE Object_ProdOptPattern.DescId    = zc_Object_ProdOptPattern()
+                                   AND Object_ProdOptPattern.ValueData ILIKE vbProdOptPatternName
+                                );
+         IF COALESCE (vbProdOptPatternId, 0) = 0
+         THEN
+             -- Создание
+             vbProdOptPatternId:= (SELECT tmp.ioId FROM gpInsertUpdate_Object_ProdOptPattern (ioId              := 0
+                                                                                            , inCode            := 0
+                                                                                            , inName            := vbProdOptPatternName
+                                                                                            , inComment         := ''
+                                                                                            , inSession         := inSession
+                                                                                             ) AS tmp);
+         END IF;
+
          vbProdOptionsId:= 0;
          -- Поиск - Options
          vbProdOptionsId:= (SELECT Object.Id FROM Object WHERE Object.ValueData ILIKE inOptionName4 AND Object.DescId = zc_Object_ProdOptions());
@@ -1245,9 +1755,12 @@ BEGIN
          vbProdOptItemsId:= (SELECT OL_Product.ObjectId
                              FROM ObjectLink AS OL_Product
                                   INNER JOIN Object AS Object_ProdOptItems
-                                                    ON Object_ProdOptItems.Id         = OL_Product.ObjectId
-                                                   AND Object_ProdOptItems.ObjectCode = 4
-                                                   AND Object_ProdOptItems.isErased   = FALSE
+                                                    ON Object_ProdOptItems.Id       = OL_Product.ObjectId
+                                                   AND Object_ProdOptItems.isErased = FALSE
+                                  INNER JOIN ObjectLink AS OL_ProdOptPattern
+                                                        ON OL_ProdOptPattern.ObjectId      = OL_Product.ObjectId
+                                                       AND OL_ProdOptPattern.DescId        = zc_ObjectLink_ProdOptItems_ProdOptPattern()
+                                                       AND OL_ProdOptPattern.ChildObjectId = vbProdOptPatternId
                              WHERE OL_Product.ChildObjectId = vbProductId
                                AND OL_Product.DescId        = zc_ObjectLink_ProdOptItems_Product()
                             );
@@ -1256,9 +1769,9 @@ BEGIN
              -- Создание
              vbProdOptItemsId:= (SELECT tmp.ioId FROM gpInsertUpdate_Object_ProdOptItems (ioId              := 0
                                                                                         , inCode            := 4
-                                                                                        , inName            := 'Option 4'
                                                                                         , inProductId       := vbProductId
                                                                                         , inProdOptionsId   := vbProdOptionsId
+                                                                                        , inProdOptPatternId:= vbProdOptPatternId
                                                                                         , inPriceIn         := inOptionPrice4 * 0.75
                                                                                         , inPriceOut        := inOptionPrice4
                                                                                         , inPartNumber      := inOptionPartNumber4
@@ -1273,6 +1786,25 @@ BEGIN
      inOptionName5:= TRIM (inOptionName5);
      IF inOptionName5 <> ''
      THEN
+         vbProdOptPatternId:= 0;
+         vbProdOptPatternName:= 'Option 5';
+         -- Поиск - ProdOptPattern
+         vbProdOptPatternId:= (SELECT Object_ProdOptPattern.Id
+                                 FROM Object AS Object_ProdOptPattern
+                                 WHERE Object_ProdOptPattern.DescId    = zc_Object_ProdOptPattern()
+                                   AND Object_ProdOptPattern.ValueData ILIKE vbProdOptPatternName
+                                );
+         IF COALESCE (vbProdOptPatternId, 0) = 0
+         THEN
+             -- Создание
+             vbProdOptPatternId:= (SELECT tmp.ioId FROM gpInsertUpdate_Object_ProdOptPattern (ioId              := 0
+                                                                                            , inCode            := 0
+                                                                                            , inName            := vbProdOptPatternName
+                                                                                            , inComment         := ''
+                                                                                            , inSession         := inSession
+                                                                                             ) AS tmp);
+         END IF;
+
          vbProdOptionsId:= 0;
          -- Поиск - Options
          vbProdOptionsId:= (SELECT Object.Id FROM Object WHERE Object.ValueData ILIKE inOptionName5 AND Object.DescId = zc_Object_ProdOptions());
@@ -1292,9 +1824,12 @@ BEGIN
          vbProdOptItemsId:= (SELECT OL_Product.ObjectId
                              FROM ObjectLink AS OL_Product
                                   INNER JOIN Object AS Object_ProdOptItems
-                                                    ON Object_ProdOptItems.Id         = OL_Product.ObjectId
-                                                   AND Object_ProdOptItems.ObjectCode = 5
-                                                   AND Object_ProdOptItems.isErased   = FALSE
+                                                    ON Object_ProdOptItems.Id       = OL_Product.ObjectId
+                                                   AND Object_ProdOptItems.isErased = FALSE
+                                  INNER JOIN ObjectLink AS OL_ProdOptPattern
+                                                        ON OL_ProdOptPattern.ObjectId      = OL_Product.ObjectId
+                                                       AND OL_ProdOptPattern.DescId        = zc_ObjectLink_ProdOptItems_ProdOptPattern()
+                                                       AND OL_ProdOptPattern.ChildObjectId = vbProdOptPatternId
                              WHERE OL_Product.ChildObjectId = vbProductId
                                AND OL_Product.DescId        = zc_ObjectLink_ProdOptItems_Product()
                             );
@@ -1303,9 +1838,9 @@ BEGIN
              -- Создание
              vbProdOptItemsId:= (SELECT tmp.ioId FROM gpInsertUpdate_Object_ProdOptItems (ioId              := 0
                                                                                         , inCode            := 5
-                                                                                        , inName            := 'Option 5'
                                                                                         , inProductId       := vbProductId
                                                                                         , inProdOptionsId   := vbProdOptionsId
+                                                                                        , inProdOptPatternId:= vbProdOptPatternId
                                                                                         , inPriceIn         := inOptionPrice5 * 0.75
                                                                                         , inPriceOut        := inOptionPrice5
                                                                                         , inPartNumber      := inOptionPartNumber5
@@ -1320,6 +1855,25 @@ BEGIN
      inOptionName6:= TRIM (inOptionName6);
      IF inOptionName6 <> ''
      THEN
+         vbProdOptPatternId:= 0;
+         vbProdOptPatternName:= 'Option 6';
+         -- Поиск - ProdOptPattern
+         vbProdOptPatternId:= (SELECT Object_ProdOptPattern.Id
+                                 FROM Object AS Object_ProdOptPattern
+                                 WHERE Object_ProdOptPattern.DescId    = zc_Object_ProdOptPattern()
+                                   AND Object_ProdOptPattern.ValueData ILIKE vbProdOptPatternName
+                                );
+         IF COALESCE (vbProdOptPatternId, 0) = 0
+         THEN
+             -- Создание
+             vbProdOptPatternId:= (SELECT tmp.ioId FROM gpInsertUpdate_Object_ProdOptPattern (ioId              := 0
+                                                                                            , inCode            := 0
+                                                                                            , inName            := vbProdOptPatternName
+                                                                                            , inComment         := ''
+                                                                                            , inSession         := inSession
+                                                                                             ) AS tmp);
+         END IF;
+
          vbProdOptionsId:= 0;
          -- Поиск - Options
          vbProdOptionsId:= (SELECT Object.Id FROM Object WHERE Object.ValueData ILIKE inOptionName6 AND Object.DescId = zc_Object_ProdOptions());
@@ -1339,9 +1893,12 @@ BEGIN
          vbProdOptItemsId:= (SELECT OL_Product.ObjectId
                              FROM ObjectLink AS OL_Product
                                   INNER JOIN Object AS Object_ProdOptItems
-                                                    ON Object_ProdOptItems.Id         = OL_Product.ObjectId
-                                                   AND Object_ProdOptItems.ObjectCode = 6
-                                                   AND Object_ProdOptItems.isErased   = FALSE
+                                                    ON Object_ProdOptItems.Id       = OL_Product.ObjectId
+                                                   AND Object_ProdOptItems.isErased = FALSE
+                                  INNER JOIN ObjectLink AS OL_ProdOptPattern
+                                                        ON OL_ProdOptPattern.ObjectId      = OL_Product.ObjectId
+                                                       AND OL_ProdOptPattern.DescId        = zc_ObjectLink_ProdOptItems_ProdOptPattern()
+                                                       AND OL_ProdOptPattern.ChildObjectId = vbProdOptPatternId
                              WHERE OL_Product.ChildObjectId = vbProductId
                                AND OL_Product.DescId        = zc_ObjectLink_ProdOptItems_Product()
                             );
@@ -1350,9 +1907,9 @@ BEGIN
              -- Создание
              vbProdOptItemsId:= (SELECT tmp.ioId FROM gpInsertUpdate_Object_ProdOptItems (ioId              := 0
                                                                                         , inCode            := 6
-                                                                                        , inName            := 'Option 6'
                                                                                         , inProductId       := vbProductId
                                                                                         , inProdOptionsId   := vbProdOptionsId
+                                                                                        , inProdOptPatternId:= vbProdOptPatternId
                                                                                         , inPriceIn         := inOptionPrice6 * 0.75
                                                                                         , inPriceOut        := inOptionPrice6
                                                                                         , inPartNumber      := inOptionPartNumber6
@@ -1367,6 +1924,25 @@ BEGIN
      inOptionName7:= TRIM (inOptionName7);
      IF inOptionName7 <> ''
      THEN
+         vbProdOptPatternId:= 0;
+         vbProdOptPatternName:= 'Option 7';
+         -- Поиск - ProdOptPattern
+         vbProdOptPatternId:= (SELECT Object_ProdOptPattern.Id
+                                 FROM Object AS Object_ProdOptPattern
+                                 WHERE Object_ProdOptPattern.DescId    = zc_Object_ProdOptPattern()
+                                   AND Object_ProdOptPattern.ValueData ILIKE vbProdOptPatternName
+                                );
+         IF COALESCE (vbProdOptPatternId, 0) = 0
+         THEN
+             -- Создание
+             vbProdOptPatternId:= (SELECT tmp.ioId FROM gpInsertUpdate_Object_ProdOptPattern (ioId              := 0
+                                                                                            , inCode            := 0
+                                                                                            , inName            := vbProdOptPatternName
+                                                                                            , inComment         := ''
+                                                                                            , inSession         := inSession
+                                                                                             ) AS tmp);
+         END IF;
+
          vbProdOptionsId:= 0;
          -- Поиск - Options
          vbProdOptionsId:= (SELECT Object.Id FROM Object WHERE Object.ValueData ILIKE inOptionName7 AND Object.DescId = zc_Object_ProdOptions());
@@ -1386,9 +1962,12 @@ BEGIN
          vbProdOptItemsId:= (SELECT OL_Product.ObjectId
                              FROM ObjectLink AS OL_Product
                                   INNER JOIN Object AS Object_ProdOptItems
-                                                    ON Object_ProdOptItems.Id         = OL_Product.ObjectId
-                                                   AND Object_ProdOptItems.ObjectCode = 7
-                                                   AND Object_ProdOptItems.isErased   = FALSE
+                                                    ON Object_ProdOptItems.Id       = OL_Product.ObjectId
+                                                   AND Object_ProdOptItems.isErased = FALSE
+                                  INNER JOIN ObjectLink AS OL_ProdOptPattern
+                                                        ON OL_ProdOptPattern.ObjectId      = OL_Product.ObjectId
+                                                       AND OL_ProdOptPattern.DescId        = zc_ObjectLink_ProdOptItems_ProdOptPattern()
+                                                       AND OL_ProdOptPattern.ChildObjectId = vbProdOptPatternId
                              WHERE OL_Product.ChildObjectId = vbProductId
                                AND OL_Product.DescId        = zc_ObjectLink_ProdOptItems_Product()
                             );
@@ -1397,9 +1976,9 @@ BEGIN
              -- Создание
              vbProdOptItemsId:= (SELECT tmp.ioId FROM gpInsertUpdate_Object_ProdOptItems (ioId              := 0
                                                                                         , inCode            := 7
-                                                                                        , inName            := 'Option 7'
                                                                                         , inProductId       := vbProductId
                                                                                         , inProdOptionsId   := vbProdOptionsId
+                                                                                        , inProdOptPatternId:= vbProdOptPatternId
                                                                                         , inPriceIn         := inOptionPrice7 * 0.75
                                                                                         , inPriceOut        := inOptionPrice7
                                                                                         , inPartNumber      := inOptionPartNumber7
@@ -1414,6 +1993,25 @@ BEGIN
      inOptionName8:= TRIM (inOptionName8);
      IF inOptionName8 <> ''
      THEN
+         vbProdOptPatternId:= 0;
+         vbProdOptPatternName:= 'Option 8';
+         -- Поиск - ProdOptPattern
+         vbProdOptPatternId:= (SELECT Object_ProdOptPattern.Id
+                                 FROM Object AS Object_ProdOptPattern
+                                 WHERE Object_ProdOptPattern.DescId    = zc_Object_ProdOptPattern()
+                                   AND Object_ProdOptPattern.ValueData ILIKE vbProdOptPatternName
+                                );
+         IF COALESCE (vbProdOptPatternId, 0) = 0
+         THEN
+             -- Создание
+             vbProdOptPatternId:= (SELECT tmp.ioId FROM gpInsertUpdate_Object_ProdOptPattern (ioId              := 0
+                                                                                            , inCode            := 0
+                                                                                            , inName            := vbProdOptPatternName
+                                                                                            , inComment         := ''
+                                                                                            , inSession         := inSession
+                                                                                             ) AS tmp);
+         END IF;
+
          vbProdOptionsId:= 0;
          -- Поиск - Options
          vbProdOptionsId:= (SELECT Object.Id FROM Object WHERE Object.ValueData ILIKE inOptionName8 AND Object.DescId = zc_Object_ProdOptions());
@@ -1433,9 +2031,12 @@ BEGIN
          vbProdOptItemsId:= (SELECT OL_Product.ObjectId
                              FROM ObjectLink AS OL_Product
                                   INNER JOIN Object AS Object_ProdOptItems
-                                                    ON Object_ProdOptItems.Id         = OL_Product.ObjectId
-                                                   AND Object_ProdOptItems.ObjectCode = 8
-                                                   AND Object_ProdOptItems.isErased   = FALSE
+                                                    ON Object_ProdOptItems.Id       = OL_Product.ObjectId
+                                                   AND Object_ProdOptItems.isErased = FALSE
+                                  INNER JOIN ObjectLink AS OL_ProdOptPattern
+                                                        ON OL_ProdOptPattern.ObjectId      = OL_Product.ObjectId
+                                                       AND OL_ProdOptPattern.DescId        = zc_ObjectLink_ProdOptItems_ProdOptPattern()
+                                                       AND OL_ProdOptPattern.ChildObjectId = vbProdOptPatternId
                              WHERE OL_Product.ChildObjectId = vbProductId
                                AND OL_Product.DescId        = zc_ObjectLink_ProdOptItems_Product()
                             );
@@ -1444,9 +2045,9 @@ BEGIN
              -- Создание
              vbProdOptItemsId:= (SELECT tmp.ioId FROM gpInsertUpdate_Object_ProdOptItems (ioId              := 0
                                                                                         , inCode            := 8
-                                                                                        , inName            := 'Option 8'
                                                                                         , inProductId       := vbProductId
                                                                                         , inProdOptionsId   := vbProdOptionsId
+                                                                                        , inProdOptPatternId:= vbProdOptPatternId
                                                                                         , inPriceIn         := inOptionPrice8 * 0.75
                                                                                         , inPriceOut        := inOptionPrice8
                                                                                         , inPartNumber      := inOptionPartNumber8
@@ -1470,7 +2071,7 @@ END;$BODY$
  11.10.20         *
 */
 
-
+-- update Object set isErased = true where DescId in (zc_Object_ProdColorItems() , zc_Object_ProdOptItems(), zc_Object_Product())
 /*
 select * from gpSelect_Object_ImportSettingsItems(inImportSettingsId := 1321 ,  inSession := '3');
 select * from gpSelect_Object_ImportSettings( inSession := '3');

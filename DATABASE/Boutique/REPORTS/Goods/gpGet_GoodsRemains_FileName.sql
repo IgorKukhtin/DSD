@@ -19,7 +19,7 @@ BEGIN
      -- Результат
      SELECT ('GoodsRemains_' || CURRENT_DATE) AS outFileName
           , 'xml'                             AS outDefaultFileExt
-          , TRUE                              AS outEncodingANSI
+          , FALSE                              AS outEncodingANSI
    INTO outFileName, outDefaultFileExt, outEncodingANSI
      ;
 

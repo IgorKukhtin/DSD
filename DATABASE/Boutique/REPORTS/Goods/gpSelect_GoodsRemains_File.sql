@@ -40,10 +40,10 @@ BEGIN
 
      -- таблица остатков
      CREATE TEMP TABLE _tmpData (UnitId Integer, GoodsId Integer, GoodsCode TVarChar, GoodsName TVarChar, LabelName TVarChar
-                               , GoodsGroupCode TVarChar, GoodsGroupName TVarChar, ParentCode TVarChar, PartnerName TVarChar
+                               , GoodsGroupId Integer, GoodsGroupName TVarChar, GoodsGroupId_parent Integer, PartnerName TVarChar
                                , BrandName TVarChar, PeriodName TVarChar, PeriodYear TVarChar, SizeName TVarChar, CurrencyName TVarChar, Amount TFloat, OperPriceList TFloat) ON COMMIT DROP;
    
-     INSERT INTO _tmpData (UnitId, GoodsId, GoodsCode, GoodsName, LabelName, GoodsGroupCode, GoodsGroupName, ParentCode
+     INSERT INTO _tmpData (UnitId, GoodsId, GoodsCode, GoodsName, LabelName, GoodsGroupId, GoodsGroupName, GoodsGroupId_parent
                          , PartnerName, BrandName, PeriodName, PeriodYear, SizeName, CurrencyName, Amount, OperPriceList)
      WITH
      -- Последняя цена из Прайс-листа
@@ -73,7 +73,7 @@ BEGIN
                                                       AND ObjectHistoryLink_Currency.DescId          = zc_ObjectHistoryLink_PriceListItem_Currency()
                       WHERE zc_Enum_GlobalConst_isTerry() = FALSE
                      )
-     -- Остатки + Партии
+     -- Остатки + Партии - PREMIATA Весна-Лето 2020
    , tmpContainer AS (SELECT Container.WhereObjectId                                   AS UnitId
                            , Container.ObjectId                                        AS GoodsId    -- Id код товара
                            , CASE WHEN CLO_Client.ContainerId IS NULL THEN Container.Amount ELSE 0 END AS Remains    -- Кол-во - остаток в магазине  --Amount
@@ -91,6 +91,8 @@ BEGIN
                       FROM Container
                            INNER JOIN Object_PartionGoods ON Object_PartionGoods.MovementItemId = Container.PartionId
                                                          AND Object_PartionGoods.GoodsId        = Container.ObjectId
+                                                         -- !!! PREMIATA Весна-Лето 2020
+                                                         AND Object_PartionGoods.PartnerId      = 25386
                            LEFT JOIN ObjectLink AS ObjectLink_Partner_Period
                                                 ON ObjectLink_Partner_Period.ObjectId = Object_PartionGoods.PartnerId
                                                AND ObjectLink_Partner_Period.DescId = zc_ObjectLink_Partner_Period()
@@ -116,9 +118,9 @@ BEGIN
           , Object_Goods.ObjectCode        AS GoodsCode
           , Object_Goods.ValueData         AS GoodsName       -- артикул
           , Object_Label.ValueData         AS LabelName       -- description
-          , Object_GoodsGroup.ObjectCode   AS GoodsGroupCode  -- categoryId
+          , Object_GoodsGroup.Id           AS GoodsGroupId    -- categoryId
           , Object_GoodsGroup.ValueData    AS GoodsGroupName  -- categoryId
-          , Object_Parent.ObjectCode       AS ParentCode      -- categoryId
+          , Object_Parent.Id               AS GoodsGroupId_parent      -- categoryId
           , Object_Partner.ValueData       AS PartnerName
           , Object_Brand.ValueData         AS BrandName
           , Object_Period.ValueData        AS PeriodName
@@ -138,10 +140,10 @@ BEGIN
           LEFT JOIN Object AS Object_Period     ON Object_Period.Id     = tmpContainer.PeriodId
           LEFT JOIN Object AS Object_Currency   ON Object_Currency.Id   = tmpContainer.CurrencyId_pl
 
-          LEFT JOIN ObjectLink AS ObjectLink_Unit_Parent
-                               ON ObjectLink_Unit_Parent.ObjectId = tmpContainer.GoodsGroupId
-                              AND ObjectLink_Unit_Parent.DescId = zc_ObjectLink_GoodsGroup_Parent()
-          LEFT JOIN Object AS Object_Parent ON Object_Parent.Id = ObjectLink_Unit_Parent.ChildObjectId
+          LEFT JOIN ObjectLink AS ObjectLink_GoodsGroup_Parent
+                               ON ObjectLink_GoodsGroup_Parent.ObjectId = tmpContainer.GoodsGroupId
+                              AND ObjectLink_GoodsGroup_Parent.DescId = zc_ObjectLink_GoodsGroup_Parent()
+          LEFT JOIN Object AS Object_Parent ON Object_Parent.Id = ObjectLink_GoodsGroup_Parent.ChildObjectId
      ;
 
      -- Таблица для результата
@@ -166,37 +168,49 @@ BEGIN
      -- данные Категорий - Группы товаров
      INSERT INTO _Result(RowData) VALUES ('<categories>');
      INSERT INTO _Result(RowData)
-     SELECT '<category id="' ||tmp.GoodsGroupCode
-         || CASE WHEN COALESCE (tmp.ParentCode,'') <> '' THEN '" parentId="'||tmp.ParentCode ELSE '' END
+     SELECT '<category id="' ||tmp.GoodsGroupId
+         || CASE WHEN COALESCE (tmp.GoodsGroupId_parent,'') <> '' THEN '" parentId="'||tmp.GoodsGroupId_parent ELSE '' END
          || '">'||tmp.GoodsGroupName||'</category>'
          --||'</categories>'
      FROM (SELECT DISTINCT 
-                  _tmpData.GoodsGroupCode
+                  _tmpData.GoodsGroupId :: TVarChar
                 , _tmpData.GoodsGroupName
-                , _tmpData.ParentCode::TVarChar
+                , _tmpData.GoodsGroupId_parent :: TVarChar
            FROM _tmpData
+          UNION ALL
+           SELECT DISTINCT 
+                  Object_Parent.Id :: TVarChar AS GoodsGroupId
+                , Object_Parent.ValueData AS GoodsGroupName
+                , ObjectLink_GoodsGroup_Parent.ChildObjectId :: TVarChar AS GoodsGroupId_parent
+           FROM _tmpData
+                INNER JOIN Object AS Object_Parent ON Object_Parent.Id = _tmpData.GoodsGroupId_parent
+                INNER JOIN ObjectLink AS ObjectLink_GoodsGroup_Parent
+                                      ON ObjectLink_GoodsGroup_Parent.ObjectId = _tmpData.GoodsGroupId_parent
+                                     AND ObjectLink_GoodsGroup_Parent.DescId = zc_ObjectLink_GoodsGroup_Parent()
            ) AS tmp ;
      INSERT INTO _Result(RowData) VALUES ('</categories>');
 
      -- данные остатков
      INSERT INTO _Result(RowData) VALUES ('<offers>');
      INSERT INTO _Result(RowData)
-     SELECT '<offer id="' ||tmp.GoodsName
-         || CASE WHEN COALESCE (tmp.Amount,0) <> 0 THEN '" available="true">' ELSE '" available="false">' END
+     SELECT '<offer id="' ||tmp.GoodsCode :: TVarChar || '"'
+         || CASE WHEN COALESCE (tmp.Amount,0) <> 0 THEN ' available="true">' ELSE ' available="false">' END
+       --|| '<labelname>'||tmp.LabelName||'</labelname>'
+         || '<sizename>'||tmp.SizeName||'</sizename>'
          --|| '<url>'||tmp.PartnerName||'</url>' 
-         || '<url>http://podium-shop.com/product/premiata_1o/</url>'
+       --|| '<url>http://podium-shop.com/product/premiata_1o/</url>'
          || '<price>'||tmp.OperPriceList||'</price>'
          || '<amount>'||tmp.Amount||'</amount>'
          || '<currencyId>'||tmp.CurrencyName||'</currencyId>'
          || '<vat>NO_VAT</vat>'
-         || '<categoryId>'||tmp.GoodsGroupCode||'</categoryId>'
+         || '<categoryId>'||tmp.GoodsGroupId :: TVarChar ||'</categoryId>'
          || '<name>'||tmp.BrandName||'</name>'
          || '<description>'
          || '<![CDATA['||tmp.LabelName||']]>'
          || '</description>'
          || '</offer>'
      FROM _tmpData AS tmp ;
- 
+ 	
      --последнии строчки XML
      INSERT INTO _Result(RowData) VALUES ('</offers>');
      INSERT INTO _Result(RowData) VALUES ('</shop>');

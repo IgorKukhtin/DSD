@@ -36,6 +36,36 @@ object ProductForm: TProductForm
           Format = ',0.####'
           Kind = skSum
           Column = Hours
+        end
+        item
+          Format = ',0.00'
+          Kind = skSum
+          Column = PriceIn
+        end
+        item
+          Format = ',0.00'
+          Kind = skSum
+          Column = PriceOut
+        end
+        item
+          Format = ',0.00'
+          Kind = skSum
+          Column = PriceIn2
+        end
+        item
+          Format = ',0.00'
+          Kind = skSum
+          Column = PriceOut2
+        end
+        item
+          Format = ',0.00'
+          Kind = skSum
+          Column = PriceIn3
+        end
+        item
+          Format = ',0.00'
+          Kind = skSum
+          Column = PriceOut3
         end>
       DataController.Summary.FooterSummaryItems = <
         item
@@ -47,6 +77,36 @@ object ProductForm: TProductForm
           Format = ',0.####'
           Kind = skSum
           Column = Hours
+        end
+        item
+          Format = ',0.00'
+          Kind = skSum
+          Column = PriceIn
+        end
+        item
+          Format = ',0.00'
+          Kind = skSum
+          Column = PriceOut
+        end
+        item
+          Format = ',0.00'
+          Kind = skSum
+          Column = PriceIn2
+        end
+        item
+          Format = ',0.00'
+          Kind = skSum
+          Column = PriceOut2
+        end
+        item
+          Format = ',0.00'
+          Kind = skSum
+          Column = PriceIn3
+        end
+        item
+          Format = ',0.00'
+          Kind = skSum
+          Column = PriceOut3
         end>
       DataController.Summary.SummaryGroups = <>
       Images = dmMain.SortImageList
@@ -56,8 +116,10 @@ object ProductForm: TProductForm
       OptionsData.DeletingConfirmation = False
       OptionsData.Editing = False
       OptionsData.Inserting = False
+      OptionsView.CellAutoHeight = True
       OptionsView.Footer = True
-      OptionsView.GroupByBox = False
+      OptionsView.GroupSummaryLayout = gslAlignWithColumns
+      OptionsView.HeaderAutoHeight = True
       OptionsView.HeaderHeight = 40
       OptionsView.Indicator = True
       Styles.StyleSheet = dmMain.cxGridTableViewStyleSheet
@@ -144,6 +206,72 @@ object ProductForm: TProductForm
         Options.Editing = False
         Width = 76
       end
+      object PriceIn: TcxGridDBColumn
+        Caption = #1062#1077#1085#1072' '#1074#1093'.'
+        DataBinding.FieldName = 'PriceIn'
+        PropertiesClassName = 'TcxCurrencyEditProperties'
+        Properties.DecimalPlaces = 4
+        Properties.DisplayFormat = ',0.00;-,0.00; ;'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Options.Editing = False
+        Width = 80
+      end
+      object PriceOut: TcxGridDBColumn
+        Caption = #1062#1077#1085#1072' '#1087#1088#1086#1076#1072#1078#1080' '
+        DataBinding.FieldName = 'PriceOut'
+        PropertiesClassName = 'TcxCurrencyEditProperties'
+        Properties.DecimalPlaces = 4
+        Properties.DisplayFormat = ',0.00;-,0.00; ;'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Options.Editing = False
+        Width = 80
+      end
+      object PriceIn2: TcxGridDBColumn
+        Caption = #1062#1077#1085#1072' '#1074#1093'. (options)'
+        DataBinding.FieldName = 'PriceIn2'
+        PropertiesClassName = 'TcxCurrencyEditProperties'
+        Properties.DecimalPlaces = 4
+        Properties.DisplayFormat = ',0.00;-,0.00; ;'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Options.Editing = False
+        Width = 80
+      end
+      object PriceOut2: TcxGridDBColumn
+        Caption = #1062#1077#1085#1072' '#1087#1088#1086#1076#1072#1078#1080' (options)'
+        DataBinding.FieldName = 'PriceOut2'
+        PropertiesClassName = 'TcxCurrencyEditProperties'
+        Properties.DecimalPlaces = 4
+        Properties.DisplayFormat = ',0.00;-,0.00; ;'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Options.Editing = False
+        Width = 80
+      end
+      object PriceIn3: TcxGridDBColumn
+        Caption = #1062#1077#1085#1072' '#1074#1093'. ('#1080#1090#1086#1075#1086')'
+        DataBinding.FieldName = 'PriceIn3'
+        PropertiesClassName = 'TcxCurrencyEditProperties'
+        Properties.DecimalPlaces = 4
+        Properties.DisplayFormat = ',0.00;-,0.00; ;'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Options.Editing = False
+        Width = 80
+      end
+      object PriceOut3: TcxGridDBColumn
+        Caption = #1062#1077#1085#1072' '#1087#1088#1086#1076#1072#1078#1080'  ('#1080#1090#1086#1075#1086')'
+        DataBinding.FieldName = 'PriceOut3'
+        PropertiesClassName = 'TcxCurrencyEditProperties'
+        Properties.DecimalPlaces = 4
+        Properties.DisplayFormat = ',0.00;-,0.00; ;'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Options.Editing = False
+        Width = 80
+      end
       object Hours: TcxGridDBColumn
         Caption = #1042#1088#1077#1084#1103' '#1086#1073#1089#1083#1091#1078'., '#1095'.'
         DataBinding.FieldName = 'Hours'
@@ -219,6 +347,11 @@ object ProductForm: TProductForm
         Options.Editing = False
         Width = 78
       end
+      object Color_fon: TcxGridDBColumn
+        DataBinding.FieldName = 'Color_fon'
+        Visible = False
+        VisibleForCustomization = False
+      end
     end
     object cxGridLevel: TcxGridLevel
       GridView = cxGridDBTableView
@@ -278,16 +411,27 @@ object ProductForm: TProductForm
       OptionsCustomize.ColumnsQuickCustomization = True
       OptionsData.Deleting = False
       OptionsData.DeletingConfirmation = False
+      OptionsView.CellAutoHeight = True
       OptionsView.Footer = True
-      OptionsView.GroupByBox = False
+      OptionsView.GroupSummaryLayout = gslAlignWithColumns
+      OptionsView.HeaderAutoHeight = True
       OptionsView.HeaderHeight = 40
       OptionsView.Indicator = True
       Styles.StyleSheet = dmMain.cxGridTableViewStyleSheet
-      object optCode: TcxGridDBColumn
+      object optNPP: TcxGridDBColumn
         Caption = #8470' '#1087'/'#1087
+        DataBinding.FieldName = 'NPP'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Options.Editing = False
+        Width = 40
+      end
+      object optCode: TcxGridDBColumn
+        Caption = #1050#1086#1076
         DataBinding.FieldName = 'Code'
         PropertiesClassName = 'TcxCurrencyEditProperties'
         Properties.DisplayFormat = ',0.##;-,0.##; ;'
+        Visible = False
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         Options.Editing = False
@@ -393,11 +537,6 @@ object ProductForm: TProductForm
         VisibleForCustomization = False
         Width = 55
       end
-      object optName: TcxGridDBColumn
-        Caption = #1069#1083#1077#1084#1077#1085#1090' ('#1086#1083#1076')'
-        DataBinding.FieldName = 'Name'
-        Options.Editing = False
-      end
     end
     object cxGridLevel1: TcxGridLevel
       GridView = cxGridDBTableViewProdOptItems
@@ -438,8 +577,10 @@ object ProductForm: TProductForm
       OptionsData.Appending = True
       OptionsData.Deleting = False
       OptionsData.DeletingConfirmation = False
+      OptionsView.CellAutoHeight = True
       OptionsView.Footer = True
-      OptionsView.GroupByBox = False
+      OptionsView.GroupSummaryLayout = gslAlignWithColumns
+      OptionsView.HeaderAutoHeight = True
       OptionsView.HeaderHeight = 40
       OptionsView.Indicator = True
       Styles.StyleSheet = dmMain.cxGridTableViewStyleSheet
@@ -547,12 +688,6 @@ object ProductForm: TProductForm
         Visible = False
         VisibleForCustomization = False
         Width = 55
-      end
-      object colName: TcxGridDBColumn
-        Caption = #1069#1083#1077#1084#1077#1085#1090' ('#1086#1083#1076')'
-        DataBinding.FieldName = 'Name'
-        Options.Editing = False
-        Width = 50
       end
     end
     object cxGridLevel2: TcxGridLevel
@@ -839,7 +974,7 @@ object ProductForm: TProductForm
         end>
     end
     object BarSubItemColor: TdxBarSubItem
-      Caption = #1062#1074#1077#1090
+      Caption = #1062#1074#1077#1090#1072
       Category = 0
       Visible = ivAlways
       ItemLinks = <
@@ -857,7 +992,7 @@ object ProductForm: TProductForm
         end>
     end
     object BarSubItemOption: TdxBarSubItem
-      Caption = #1054#1087#1094#1080#1103
+      Caption = #1054#1087#1094#1080#1080
       Category = 0
       Visible = ivAlways
       ItemLinks = <
@@ -908,7 +1043,6 @@ object ProductForm: TProductForm
       MoveParams = <>
       Caption = #1044#1086#1073#1072#1074#1080#1090#1100
       Hint = #1044#1086#1073#1072#1074#1080#1090#1100
-      ShortCut = 45
       ImageIndex = 0
       FormName = 'TProductEditForm'
       FormNameParam.Value = 'TProductEditForm'
@@ -930,7 +1064,6 @@ object ProductForm: TProductForm
       MoveParams = <>
       Caption = #1048#1079#1084#1077#1085#1080#1090#1100
       Hint = #1048#1079#1084#1077#1085#1080#1090#1100
-      ShortCut = 115
       ImageIndex = 1
       FormName = 'TProductEditForm'
       FormNameParam.Value = 'TProductEditForm'
@@ -962,7 +1095,6 @@ object ProductForm: TProductForm
       Caption = #1059#1076#1072#1083#1080#1090#1100' '#1062#1074#1077#1090
       Hint = #1059#1076#1072#1083#1080#1090#1100' '#1062#1074#1077#1090
       ImageIndex = 2
-      ShortCut = 46
       ErasedFieldName = 'isErased'
       DataSource = ProdColorItemsDS
     end
@@ -977,7 +1109,6 @@ object ProductForm: TProductForm
       Caption = #1059#1076#1072#1083#1080#1090#1100' '#1054#1087#1094#1080#1102
       Hint = #1059#1076#1072#1083#1080#1090#1100' '#1054#1087#1094#1080#1102
       ImageIndex = 2
-      ShortCut = 46
       ErasedFieldName = 'isErased'
       DataSource = ProdOptItemsDS
     end
@@ -992,7 +1123,6 @@ object ProductForm: TProductForm
       Caption = #1059#1076#1072#1083#1080#1090#1100
       Hint = #1059#1076#1072#1083#1080#1090#1100' '#1076#1072#1085#1085#1099#1077
       ImageIndex = 2
-      ShortCut = 46
       ErasedFieldName = 'isErased'
       DataSource = DataSource
     end
@@ -1007,7 +1137,6 @@ object ProductForm: TProductForm
       Caption = #1042#1086#1089#1089#1090#1072#1085#1086#1074#1080#1090#1100
       Hint = #1042#1086#1089#1089#1090#1072#1085#1086#1074#1080#1090#1100' '#1076#1072#1085#1085#1099#1077
       ImageIndex = 8
-      ShortCut = 46
       ErasedFieldName = 'isErased'
       isSetErased = False
       DataSource = ProdOptItemsDS
@@ -1023,7 +1152,6 @@ object ProductForm: TProductForm
       Caption = #1042#1086#1089#1089#1090#1072#1085#1086#1074#1080#1090#1100
       Hint = #1042#1086#1089#1089#1090#1072#1085#1086#1074#1080#1090#1100' '#1076#1072#1085#1085#1099#1077
       ImageIndex = 8
-      ShortCut = 46
       ErasedFieldName = 'isErased'
       isSetErased = False
       DataSource = ProdColorItemsDS
@@ -1039,7 +1167,6 @@ object ProductForm: TProductForm
       Caption = #1042#1086#1089#1089#1090#1072#1085#1086#1074#1080#1090#1100
       Hint = #1042#1086#1089#1089#1090#1072#1085#1086#1074#1080#1090#1100' '#1076#1072#1085#1085#1099#1077
       ImageIndex = 8
-      ShortCut = 8238
       ErasedFieldName = 'isErased'
       isSetErased = False
       DataSource = DataSource
@@ -1242,9 +1369,9 @@ object ProductForm: TProductForm
       Category = 'DSDLib'
       MoveParams = <>
       PostDataSetBeforeExecute = False
-      Caption = 'actChoiceFormProdColor'
-      FormName = 'TProdOptPatternForm'
-      FormNameParam.Value = 'TProdOptPatternForm'
+      Caption = 'actChoiceFormProdColorPattern'
+      FormName = 'TProdColorPatternForm'
+      FormNameParam.Value = 'TProdColorPatternForm'
       FormNameParam.DataType = ftString
       FormNameParam.MultiSelectSeparator = ','
       GuiParams = <
@@ -1335,14 +1462,14 @@ object ProductForm: TProductForm
         item
           StoredProc = spSelect
         end>
-      Caption = #1055#1086#1082#1072#1079#1072#1090#1100' '#1074#1089#1077' '#1083#1086#1076#1082#1080
-      Hint = #1055#1086#1082#1072#1079#1072#1090#1100' '#1074#1089#1077' '#1083#1086#1076#1082#1080
+      Caption = #1055#1086#1082#1072#1079#1072#1090#1100' '#1074#1089#1077' '#1083#1086#1076#1082#1080' (+'#1087#1088#1086#1076#1072#1085#1085#1099#1077')'
+      Hint = #1055#1086#1082#1072#1079#1072#1090#1100' '#1074#1089#1077' '#1083#1086#1076#1082#1080' (+'#1087#1088#1086#1076#1072#1085#1085#1099#1077')'
       ImageIndex = 63
       Value = False
       HintTrue = #1055#1086#1082#1072#1079#1072#1090#1100' '#1085#1077' '#1087#1088#1086#1076#1072#1085#1085#1099#1077
-      HintFalse = #1055#1086#1082#1072#1079#1072#1090#1100' '#1074#1089#1077' '#1083#1086#1076#1082#1080
+      HintFalse = #1055#1086#1082#1072#1079#1072#1090#1100' '#1074#1089#1077' '#1083#1086#1076#1082#1080' (+'#1087#1088#1086#1076#1072#1085#1085#1099#1077')'
       CaptionTrue = #1055#1086#1082#1072#1079#1072#1090#1100' '#1085#1077' '#1087#1088#1086#1076#1072#1085#1085#1099#1077
-      CaptionFalse = #1055#1086#1082#1072#1079#1072#1090#1100' '#1074#1089#1077' '#1083#1086#1076#1082#1080
+      CaptionFalse = #1055#1086#1082#1072#1079#1072#1090#1100' '#1074#1089#1077' '#1083#1086#1076#1082#1080' (+'#1087#1088#1086#1076#1072#1085#1085#1099#1077')'
       ImageIndexTrue = 62
       ImageIndexFalse = 63
     end
@@ -1354,14 +1481,14 @@ object ProductForm: TProductForm
         item
           StoredProc = spSelect_ProdColorItems
         end>
-      Caption = #1055#1086#1082#1072#1079#1072#1090#1100' '#1074#1077#1089#1100' '#1089#1087#1080#1089#1086#1082' '#1094#1074#1077#1090#1086#1074
-      Hint = #1055#1086#1082#1072#1079#1072#1090#1100' '#1074#1077#1089#1100' '#1089#1087#1080#1089#1086#1082' '#1094#1074#1077#1090#1086#1074
+      Caption = #1055#1086#1082#1072#1079#1072#1090#1100' '#1042#1089#1077' '#1096#1072#1073#1083#1086#1085#1099
+      Hint = #1055#1086#1082#1072#1079#1072#1090#1100' '#1042#1089#1077' '#1096#1072#1073#1083#1086#1085#1099
       ImageIndex = 63
       Value = False
-      HintTrue = #1055#1086#1082#1072#1079#1072#1090#1100' '#1089#1086#1093#1088#1072#1085#1077#1085#1085#1099#1077' '#1094#1074#1077#1090#1072
-      HintFalse = #1055#1086#1082#1072#1079#1072#1090#1100' '#1074#1077#1089#1100' '#1089#1087#1080#1089#1086#1082' '#1094#1074#1077#1090#1086#1074
-      CaptionTrue = #1055#1086#1082#1072#1079#1072#1090#1100' '#1089#1086#1093#1088#1072#1085#1077#1085#1085#1099#1077' '#1094#1074#1077#1090#1072
-      CaptionFalse = #1055#1086#1082#1072#1079#1072#1090#1100' '#1074#1077#1089#1100' '#1089#1087#1080#1089#1086#1082' '#1094#1074#1077#1090#1086#1074
+      HintTrue = #1055#1086#1082#1072#1079#1072#1090#1100' '#1074#1099#1073#1088#1072#1085#1085#1099#1077
+      HintFalse = #1055#1086#1082#1072#1079#1072#1090#1100' '#1042#1089#1077' '#1096#1072#1073#1083#1086#1085#1099
+      CaptionTrue = #1055#1086#1082#1072#1079#1072#1090#1100' '#1074#1099#1073#1088#1072#1085#1085#1099#1077
+      CaptionFalse = #1055#1086#1082#1072#1079#1072#1090#1100' '#1042#1089#1077' '#1096#1072#1073#1083#1086#1085#1099
       ImageIndexTrue = 62
       ImageIndexFalse = 63
     end
@@ -1401,14 +1528,14 @@ object ProductForm: TProductForm
         item
           StoredProc = spSelect_ProdOptItems
         end>
-      Caption = #1055#1086#1082#1072#1079#1072#1090#1100' '#1074#1077#1089#1100' '#1089#1087#1080#1089#1086#1082' '#1086#1087#1094#1080#1081
-      Hint = #1055#1086#1082#1072#1079#1072#1090#1100' '#1074#1077#1089#1100' '#1089#1087#1080#1089#1086#1082' '#1086#1087#1094#1080#1081
+      Caption = #1055#1086#1082#1072#1079#1072#1090#1100' '#1042#1089#1077' '#1096#1072#1073#1083#1086#1085#1099
+      Hint = #1055#1086#1082#1072#1079#1072#1090#1100' '#1042#1089#1077' '#1096#1072#1073#1083#1086#1085#1099
       ImageIndex = 63
       Value = False
-      HintTrue = #1055#1086#1082#1072#1079#1072#1090#1100' '#1089#1086#1093#1088#1072#1085#1077#1085#1085#1099#1077' '#1086#1087#1094#1080#1080
-      HintFalse = #1055#1086#1082#1072#1079#1072#1090#1100' '#1074#1077#1089#1100' '#1089#1087#1080#1089#1086#1082' '#1086#1087#1094#1080#1081
-      CaptionTrue = #1055#1086#1082#1072#1079#1072#1090#1100' '#1089#1086#1093#1088#1072#1085#1077#1085#1085#1099#1077' '#1086#1087#1094#1080#1080
-      CaptionFalse = #1055#1086#1082#1072#1079#1072#1090#1100' '#1074#1077#1089#1100' '#1089#1087#1080#1089#1086#1082' '#1086#1087#1094#1080#1081
+      HintTrue = #1055#1086#1082#1072#1079#1072#1090#1100' '#1074#1099#1073#1088#1072#1085#1085#1099#1077
+      HintFalse = #1055#1086#1082#1072#1079#1072#1090#1100' '#1042#1089#1077' '#1096#1072#1073#1083#1086#1085#1099
+      CaptionTrue = #1055#1086#1082#1072#1079#1072#1090#1100' '#1074#1099#1073#1088#1072#1085#1085#1099#1077
+      CaptionFalse = #1055#1086#1082#1072#1079#1072#1090#1100' '#1042#1089#1077' '#1096#1072#1073#1083#1086#1085#1099
       ImageIndexTrue = 62
       ImageIndexFalse = 63
     end
@@ -1490,7 +1617,11 @@ object ProductForm: TProductForm
       end>
     SortImages = dmMain.SortImageList
     OnlyEditingCellOnEnter = False
-    ColorRuleList = <>
+    ColorRuleList = <
+      item
+        BackGroundValueColumn = Color_fon
+        ColorValueList = <>
+      end>
     ColumnAddOnList = <>
     ColumnEnterList = <>
     SummaryItemList = <>

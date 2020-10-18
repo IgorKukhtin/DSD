@@ -45,7 +45,7 @@ BEGIN
                     FROM tmpMovement AS Movement
                          INNER JOIN MovementItem ON MovementItem.MovementId = Movement.Id
                                                 AND MovementItem.DescId = zc_MI_Master()
-                                                AND MovementItem.isErased = False
+                                                AND MovementItem.isErased = FALSE
 
                          LEFT JOIN MovementItemLinkObject AS MILinkObject_Member
                                                           ON MILinkObject_Member.MovementItemId = MovementItem.Id
@@ -78,22 +78,25 @@ BEGIN
         ;
         
   CREATE TEMP TABLE tmpMemberMinus (FromId Integer, ToId Integer, ToName TVarChar, Summ TFloat, Summ_all TFloat, BankAccountToId Integer, BankAccountName_to TVarChar, BankAccountFromId Integer, BankAccountName_from TVarChar, BankAccountTo TVarChar,  DetailPayment TVarChar) ON COMMIT DROP;
-     INSERT INTO tmpMemberMinus (FromId, ToId, ToName, Summ, Summ_all, BankAccountToId, BankAccountName_to, BankAccountFromId, BankAccountName_from, BankAccountTo, DetailPayment)
+     INSERT INTO tmpMemberMinus (FromId, ToId, ToName, Summ, Summ_all, BankAccountFromId, BankAccountName_from, BankAccountToId, BankAccountName_to, BankAccountTo, DetailPayment)
         SELECT tmp.FromId
              , tmp.ToId
              , tmp.ToName
              , tmp.Summ
              , SUM (tmp.Summ) OVER (PARTITION BY tmp.FromId) AS Summ_all
-             , tmp.BankAccountToId
-             , Object_Account_to.ValueData   AS BankAccountName_to
+               -- IBAN плательщика
              , tmp.BankAccountFromId
-             , Object_Account_from.ValueData AS BankAccountName_from
-             , tmp.BankAccountTo -- № счета получателя
+             , tmp.BankAccountFromName AS BankAccountName_from
+               --IBAN получателя
+             , tmp.BankAccountToId
+             , tmp.BankAccountToName   AS BankAccountName_to
+               -- № счета получателя
+             , tmp.BankAccountTo
              , tmp.DetailPayment
              
-        FROM gpSelect_Object_MemberMinus (inSession) AS tmp
+        FROM gpSelect_Object_MemberMinus (FALSE, FALSE, inSession) AS tmp
         
-             LEFT JOIN ObjectLink AS OL_BankAccount_Account_to
+             /*LEFT JOIN ObjectLink AS OL_BankAccount_Account_to
                                   ON OL_BankAccount_Account_to.ObjectId = tmp.BankAccountToId
                                  AND OL_BankAccount_Account_to.DescId = zc_ObjectLink_BankAccount_Account()
              LEFT JOIN Object AS Object_Account_to ON Object_Account_to.Id = OL_BankAccount_Account_to.ChildObjectId
@@ -101,17 +104,18 @@ BEGIN
              LEFT JOIN ObjectLink AS OL_BankAccount_Account_from
                                   ON OL_BankAccount_Account_from.ObjectId = tmp.BankAccountFromId
                                  AND OL_BankAccount_Account_from.DescId = zc_ObjectLink_BankAccount_Account()
-             LEFT JOIN Object AS Object_Account_from ON Object_Account_from.Id = OL_BankAccount_Account_from.ChildObjectId
+             LEFT JOIN Object AS Object_Account_from ON Object_Account_from.Id = OL_BankAccount_Account_from.ChildObjectId*/
 
         WHERE tmp.FromId IN (SELECT DISTINCT tmpMI_All.MemberId FROM tmpMI_All)
           AND tmp.isErased = FALSE;
 
        -- проверка сумма итого по документу должна соответствовать сумме по справочнику
        SELECT tmpMI_All.MemberId, tmpMI_All.SummMinus, tmpMinus.Summ_all
-    INTO vbMemberId, vbSummMinus_MI, vbSummMinus
+             INTO vbMemberId, vbSummMinus_MI, vbSummMinus
        FROM tmpMI_All
             INNER JOIN (SELECT DISTINCT tmpMemberMinus.FromId, tmpMemberMinus.Summ_all FROM tmpMemberMinus) AS tmpMinus ON tmpMinus.FromId = tmpMI_All.MemberId
        WHERE tmpMI_All.SummMinus <> tmpMinus.Summ_all
+         AND inSession <> zfCalc_UserAdmin()
        LIMIT 1;
 
    IF COALESCE (vbMemberId,0) <> 0
@@ -146,7 +150,7 @@ BEGIN
             , tmpMemberMinus.BankAccountName_to    ::TVarChar  AS CORRIBAN         --IBAN получателя платежа
             , ''                                   ::TVarChar  AS ACCOUNTNO        --№ счета плательщика
             , tmpMemberMinus.BankAccountName_from  ::TVarChar  AS IBAN             --IBAN плательщика
-            , Object_Bank_to.MFO                   ::TVarChar  AS CORRBANKID       --Код банка получателя платежа (МФО)
+            , CASE WHEN TRIM (Object_Bank_to.MFO) <> '' THEN Object_Bank_to.MFO ELSE Object_Bank_to.BankName END :: TVarChar AS CORRBANKID       --Код банка получателя платежа (МФО)
             , CASE WHEN Object_To.DescId = zc_Object_Juridical() THEN COALESCE (ObjectHistory_JuridicalDetails_View.INN,'')
                    ELSE COALESCE (ObjectString_INN.ValueData,'')
               END                                  ::TVarChar  AS CORRIDENTIFYCODE --Идентификационный код получателя платежа (ЕГРПОУ)
@@ -157,7 +161,7 @@ BEGIN
             , (lpad (EXTRACT (YEAR FROM tmpMI_All.OperDate)::tvarchar ,4, '0')||lpad (EXTRACT (MONTH FROM tmpMI_All.OperDate)::tvarchar ,2, '0') ||lpad (EXTRACT (DAY FROM tmpMI_All.OperDate)::tvarchar ,2, '0')) ::TVarchar AS DOCUMENTDATE     --Дата документа
             , ''                                   ::TVarChar  AS ADDENTRIES       --Дополнительные реквизиты платежа
             , '002'                                ::TVarChar  AS PURPOSEPAYMENTID --Код назначения платежа   --????????????????????????????????????????
-            , Object_Bank_from.MFO                 ::TVarChar  AS BANKID           --Код банка плательщика (МФО)
+            , CASE WHEN TRIM (Object_Bank_from.MFO) <> '' THEN Object_Bank_from.MFO ELSE Object_Bank_from.BankName END :: TVarChar  AS BANKID           --Код банка плательщика (МФО)
        FROM tmpMI_All
             INNER JOIN tmpMemberMinus ON tmpMemberMinus.FromId = tmpMI_All.MemberId
 
@@ -198,7 +202,8 @@ BEGIN
          || 'DETAILSOFPAYMENT="'||COALESCE (tmp.DETAILSOFPAYMENT,'')::TVarChar||'" '
          || 'CORRACCOUNTNO="'||COALESCE (tmp.CORRACCOUNTNO,'')::TVarChar||'" '
          || 'CORRIBAN="'||COALESCE (tmp.CORRIBAN,'')::TVarChar||'" '
-         || 'ACCOUNTNO="'||COALESCE (tmp.ACCOUNTNO,'')::TVarChar||'" '
+       --|| 'ACCOUNTNO="'||COALESCE (tmp.ACCOUNTNO,'')::TVarChar||'" '
+         || 'ACCOUNTNO="'||COALESCE (tmp.IBAN,'')::TVarChar||'" '
          || 'IBAN="'||COALESCE (tmp.IBAN,'')::TVarChar||'" '
          || 'CORRBANKID="'||COALESCE (tmp.CORRBANKID,'')::TVarChar||'" '
          || 'CORRIDENTIFYCODE="'||COALESCE (tmp.CORRIDENTIFYCODE,'')::TVarChar||'" '
@@ -231,4 +236,4 @@ $BODY$
 */
 
 -- тест
---  SELECT * FROM gpSelect_Movement_PersonalService_XML(inMovementId :=17388288 , inSession := '3');
+-- SELECT * FROM gpSelect_Movement_PersonalService_XML (inMovementId:= 17651138, inSession:= zfCalc_UserAdmin());

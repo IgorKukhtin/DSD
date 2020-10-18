@@ -23,7 +23,10 @@ RETURNS TABLE (Id Integer, Code Integer, Name TVarChar, ProdColorName TVarChar
              , PriceIn TFloat, PriceOut TFloat
              , PriceIn2 TFloat, PriceOut2 TFloat
              , PriceIn3 TFloat, PriceOut3 TFloat
-             , isErased Boolean) AS
+             , Color_fon Integer
+             , isErased Boolean
+              )
+AS
 $BODY$
    DECLARE vbUserId Integer;
 BEGIN
@@ -79,7 +82,7 @@ BEGIN
                            GROUP BY ObjectLink_Product.ChildObjectId
                           )
 , tmpObjAll AS (SELECT Object_Product.*
-                     ,  ROW_NUMBER() OVER (ORDER BY Object_Product.Id DESC) AS Ord
+                     , ROW_NUMBER() OVER (ORDER BY Object_Product.Id DESC) AS Ord
                 FROM Object AS Object_Product
                 WHERE Object_Product.DescId = zc_Object_Product()
                   AND Object_Product.isErased = FALSE
@@ -248,6 +251,13 @@ BEGIN
 
          , (COALESCE (tmpResAll.PriceIn, 0) + COALESCE (tmpProdOptItems.PriceIn, 0))   :: TFloat AS PriceIn3
          , (COALESCE (tmpResAll.PriceOut, 0) + COALESCE (tmpProdOptItems.PriceOut, 0)) :: TFloat AS PriceOut3
+         
+         , CASE WHEN tmpResAll.isSale
+                     THEN zc_Color_Lime()
+                ELSE
+                    -- нет цвета
+                    zc_Color_White()
+           END :: Integer AS Color_fon
 
          , tmpResAll.isErased
 

@@ -1,6 +1,6 @@
 -- Function: gpSelect_Object_MemberMinus()
 
---DROP FUNCTION IF EXISTS gpSelect_Object_MemberMinus(TVarChar);
+DROP FUNCTION IF EXISTS gpSelect_Object_MemberMinus(TVarChar);
 DROP FUNCTION IF EXISTS gpSelect_Object_MemberMinus(Boolean, TVarChar);
 DROP FUNCTION IF EXISTS gpSelect_Object_MemberMinus(Boolean, Boolean, TVarChar);
 
@@ -272,4 +272,4 @@ $BODY$
 */
 
 -- тест
---  SELECT * FROM gpSelect_Object_MemberMinus (false, false, zfCalc_UserAdmin())
+-- SELECT * FROM gpSelect_Object_MemberMinus (FALSE, FALSE, zfCalc_UserAdmin())

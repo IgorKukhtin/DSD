@@ -35,6 +35,9 @@ BEGIN
 
    -- ≈сли код не установлен, определ€ем его как последний+1
    -- vbCode_calc:= lfGet_ObjectCode (inCode, zc_Object_Product());
+   
+   -- !!! временно !!!
+   IF COALESCE (ioId, 0) = 0 AND CEIL (inCode / 2) * 2 = inCode THEN inDateSale:= NULL; END IF;
 
    -- проверка - должен быть јртикул - лодки
    IF COALESCE (inCode, 0) = 0 THEN
