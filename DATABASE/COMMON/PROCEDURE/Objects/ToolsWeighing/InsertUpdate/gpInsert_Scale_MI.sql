@@ -421,6 +421,10 @@ BEGIN
                                                                                        */
                                                                                        WHEN inBranchCode BETWEEN 301 AND 310 AND vbAmount_byWeightTare_goods > 0
                                                                                             THEN vbAmount_byWeightTare_goods
+                                                                                       -- на филиалах при сканировании, на приход ставим расчетное значение
+                                                                                       WHEN inIsBarCode = TRUE AND vbMovementDescId = zc_Movement_SendOnPrice()
+                                                                                        AND vbAmount_byPack <> 0
+                                                                                            THEN vbAmount_byPack
                                                                                        WHEN inIsBarCode = TRUE
                                                                                             THEN (inRealWeight - inCountTare * inWeightTare - inCountTare1 * inWeightTare1 - inCountTare2 * inWeightTare2 - inCountTare3 * inWeightTare3 - inCountTare4 * inWeightTare4 - inCountTare5 * inWeightTare5 - inCountTare6 * inWeightTare6)
                                                                                        WHEN inChangePercentAmount = 0
