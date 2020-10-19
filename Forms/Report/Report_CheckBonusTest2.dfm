@@ -1,5 +1,5 @@
 inherited Report_CheckBonusTest2Form: TReport_CheckBonusTest2Form
-  Caption = #1054#1090#1095#1077#1090' <'#1055#1088#1086#1074#1077#1088#1082#1072' '#1085#1072#1095#1080#1089#1083#1077#1085#1080#1081' '#1087#1086' '#1073#1086#1085#1091#1089#1072#1084'> Test4'
+  Caption = #1054#1090#1095#1077#1090' <'#1055#1088#1086#1074#1077#1088#1082#1072' '#1085#1072#1095#1080#1089#1083#1077#1085#1080#1081' '#1087#1086' '#1073#1086#1085#1091#1089#1072#1084'> Old'
   ClientHeight = 341
   ClientWidth = 1180
   AddOnFormData.ExecuteDialogAction = ExecuteDialog
@@ -1039,7 +1039,7 @@ inherited Report_CheckBonusTest2Form: TReport_CheckBonusTest2Form
     Top = 208
   end
   inherited spSelect: TdsdStoredProc
-    StoredProcName = 'gpReport_CheckBonusTest4'
+    StoredProcName = 'gpReport_CheckBonusTest2_old'
     Params = <
       item
         Name = 'inStartDate'

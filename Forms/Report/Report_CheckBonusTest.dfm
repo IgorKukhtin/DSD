@@ -1119,7 +1119,7 @@ inherited Report_CheckBonusTestForm: TReport_CheckBonusTestForm
     Top = 208
   end
   inherited spSelect: TdsdStoredProc
-    StoredProcName = 'gpReport_CheckBonusTest4'
+    StoredProcName = 'gpReport_CheckBonusTest2'
     Params = <
       item
         Name = 'inStartDate'
