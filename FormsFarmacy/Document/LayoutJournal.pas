@@ -43,6 +43,7 @@ type
     bbOpenFormLayout: TdxBarButton;
     actChoiceGuides: TdsdChoiceGuides;
     bbChoiceGuides: TdxBarButton;
+    isPharmacyItem: TcxGridDBColumn;
   private
     { Private declarations }
   public

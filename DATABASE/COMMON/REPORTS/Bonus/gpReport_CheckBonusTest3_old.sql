@@ -1,6 +1,6 @@
 -- FunctiON: gpReport_CheckBonusTest ()
 
---!!!!!!!!!!!!!!!!!!! подключено к gpReport_CheckBonus !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+--!!!!!!!!!!!!!!!!!!! !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 
 DROP FUNCTION IF EXISTS gpReport_CheckBonusTest3 (TDateTime, TDateTime, Integer, Integer, Integer, Boolean, TVarChar);
 

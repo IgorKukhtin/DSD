@@ -1,6 +1,6 @@
 -- Function: lpInsertUpdate_Movement_Layout()
 
-DROP FUNCTION IF EXISTS lpInsertUpdate_Movement_Layout (Integer, TVarChar, TDateTime, Integer, TVarChar, Integer);
+DROP FUNCTION IF EXISTS lpInsertUpdate_Movement_Layout (Integer, TVarChar, TDateTime, Integer, TVarChar, Boolean, Integer);
 
 CREATE OR REPLACE FUNCTION lpInsertUpdate_Movement_Layout(
  INOUT ioId                  Integer   , -- Ключ объекта <Документ Выкладка>
@@ -8,6 +8,7 @@ CREATE OR REPLACE FUNCTION lpInsertUpdate_Movement_Layout(
     IN inOperDate            TDateTime , -- Дата документа
     IN inLayoutId            Integer   , -- Название выкладки
     IN inComment             TVarChar  , -- Примечание
+    IN inisPharmacyItem      Boolean   , -- Для аптечных пунктов
     IN inUserId              Integer     -- пользователь
 )
 RETURNS Integer
@@ -36,6 +37,9 @@ BEGIN
 
      -- сохранили <Примечание>
      PERFORM lpInsertUpdate_MovementString (zc_MovementString_Comment(), ioId, inComment);
+
+     -- сохранили <Для аптечных пунктов>
+     PERFORM lpInsertUpdate_MovementBoolean (zc_MovementBoolean_PharmacyItem(), ioId, inisPharmacyItem);
 
      -- пересчитали Итоговые суммы по накладной
      PERFORM lpInsertUpdate_MovementFloat_TotalSumm (ioId);

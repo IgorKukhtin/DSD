@@ -631,11 +631,31 @@ BEGIN
                          GROUP BY Container.WhereObjectId
                                 , Container.ObjectId
                         )
+          -- Выкладки
+        , tmpLayoutMovement AS (SELECT Movement.Id                                             AS Id
+                                     , COALESCE(MovementBoolean_PharmacyItem.ValueData, FALSE) AS isPharmacyItem
+                                FROM Movement
+                                     LEFT JOIN MovementBoolean AS MovementBoolean_PharmacyItem
+                                                               ON MovementBoolean_PharmacyItem.MovementId = Movement.Id
+                                                              AND MovementBoolean_PharmacyItem.DescId = zc_MovementBoolean_PharmacyItem()
+                                WHERE Movement.DescId = zc_Movement_Layout()
+                                  AND Movement.StatusId = zc_Enum_Status_Complete()
+                               )
+        , tmpLayout AS (SELECT MovementItem.ObjectId              AS GoodsId
+                             , MAX (MovementItem.Amount):: TFloat AS Amount
+                             , CASE WHEN SUM(CASE WHEN Movement.isPharmacyItem = TRUE THEN 1 ELSE 0 END) > 0 THEN TRUE ELSE FALSE END AS isPharmacyItem
+                        FROM tmpLayoutMovement AS Movement
+                             INNER JOIN MovementItem ON MovementItem.MovementId = Movement.Id
+                                                    AND MovementItem.DescId = zc_MI_Master()
+                                                    AND MovementItem.isErased = FALSE
+                                                    AND MovementItem.Amount > 0
+                        GROUP BY MovementItem.ObjectId
+                       )
           -- цены
         , tmpPrice AS (SELECT OL_Price_Unit.ChildObjectId       AS UnitId
                             , OL_Price_Goods.ChildObjectId      AS GoodsId
                             , ROUND (Price_Value.ValueData, 2)  AS Price
-                            , MCS_Value.ValueData               AS MCSValue
+                            , CASE WHEN COALESCE(tmpLayout.Amount, 0) > COALESCE(MCS_Value.ValueData, 0) THEN tmpLayout.Amount ELSE MCS_Value.ValueData END AS MCSValue
                             , CASE WHEN Price_MCSValueMin.ValueData IS NOT NULL
                                    THEN CASE WHEN COALESCE (Price_MCSValueMin.ValueData, 0) < COALESCE (MCS_Value.ValueData, 0) THEN COALESCE (Price_MCSValueMin.ValueData, 0) ELSE MCS_Value.ValueData END
                                    ELSE 0
@@ -662,6 +682,12 @@ BEGIN
                             LEFT JOIN ObjectFloat AS Price_MCSValueMin
                                                   ON Price_MCSValueMin.ObjectId = OL_Price_Unit.ObjectId
                                                  AND Price_MCSValueMin.DescId = zc_ObjectFloat_Price_MCSValueMin()
+
+                            LEFT JOIN ObjectBoolean AS Unit_PharmacyItem
+                                                    ON Unit_PharmacyItem.ObjectId  = OL_Price_Unit.ChildObjectId
+                                                   AND Unit_PharmacyItem.DescId    = zc_ObjectBoolean_Unit_PharmacyItem()
+                            LEFT JOIN tmpLayout ON tmpLayout.GoodsId = OL_Price_Goods.ChildObjectId
+                                               AND (COALESCE (Unit_PharmacyItem.ValueData, False) = FALSE OR tmpLayout.isPharmacyItem = TRUE)
                        WHERE OL_Price_Unit.DescId = zc_ObjectLink_Price_Unit()
                          -- товары "убит код"
                          AND (MCS_isClose.ObjectId IS NULL OR _tmpUnit_SUN.isLock_ClosePL = FALSE)
@@ -714,6 +740,7 @@ BEGIN
                                  OR COALESCE (tmpPrice.MCSValue, 0) <> 0
                                  OR COALESCE (tmpPrice.Price, 0) <> 0
                              )
+
      -- 1.1. Результат: все остатки, НТЗ => получаем кол-ва автозаказа: от колонки Остаток отнять Данные по отложенным чекам - получится реальный остаток на точке
      INSERT INTO  _tmpRemains_all (UnitId, GoodsId, Price, MCS, AmountResult, AmountRemains, AmountIncome, AmountSend_in, AmountSend_out, AmountOrderExternal, AmountReserve)
         SELECT tmpObject_Price.UnitId
@@ -882,6 +909,7 @@ BEGIN
                    ELSE 0
               END > 0*/
        ;
+
      -- 1.1. Результат: все остатки, НТЗ => получаем кол-ва автозаказа: от колонки Остаток отнять Данные по отложенным чекам - получится реальный остаток на точке
      INSERT INTO  _tmpRemains (UnitId, GoodsId, Price, MCS, AmountResult, AmountRemains, AmountIncome, AmountSend_in, AmountSend_out, AmountOrderExternal, AmountReserve)
         SELECT _tmpRemains_all.UnitId, _tmpRemains_all.GoodsId, _tmpRemains_all.Price, _tmpRemains_all.MCS, _tmpRemains_all.AmountResult, _tmpRemains_all.AmountRemains, _tmpRemains_all.AmountIncome, _tmpRemains_all.AmountSend_in, _tmpRemains_all.AmountSend_out, _tmpRemains_all.AmountOrderExternal, _tmpRemains_all.AmountReserve
@@ -1464,11 +1492,31 @@ BEGIN
                                WHERE Object_GoodsCategory.DescId   = zc_Object_GoodsCategory()
                                  AND Object_GoodsCategory.isErased = FALSE
                               )
+          -- Выкладки
+        , tmpLayoutMovement AS (SELECT Movement.Id                                             AS Id
+                                     , COALESCE(MovementBoolean_PharmacyItem.ValueData, FALSE) AS isPharmacyItem
+                                FROM Movement
+                                     LEFT JOIN MovementBoolean AS MovementBoolean_PharmacyItem
+                                                               ON MovementBoolean_PharmacyItem.MovementId = Movement.Id
+                                                              AND MovementBoolean_PharmacyItem.DescId = zc_MovementBoolean_PharmacyItem()
+                                WHERE Movement.DescId = zc_Movement_Layout()
+                                  AND Movement.StatusId = zc_Enum_Status_Complete()
+                               )
+        , tmpLayout AS (SELECT MovementItem.ObjectId              AS GoodsId
+                             , MAX (MovementItem.Amount):: TFloat AS Amount
+                             , CASE WHEN SUM(CASE WHEN Movement.isPharmacyItem = TRUE THEN 1 ELSE 0 END) > 0 THEN TRUE ELSE FALSE END AS isPharmacyItem
+                        FROM tmpLayoutMovement AS Movement
+                             INNER JOIN MovementItem ON MovementItem.MovementId = Movement.Id
+                                                    AND MovementItem.DescId = zc_MI_Master()
+                                                    AND MovementItem.isErased = FALSE
+                                                    AND MovementItem.Amount > 0
+                        GROUP BY MovementItem.ObjectId
+                       )
            -- MCS + Price
          , tmpMCS_all AS (SELECT OL_Price_Unit.ChildObjectId       AS UnitId
                                , OL_Price_Goods.ChildObjectId      AS GoodsId
                                , Price_Value.ValueData             AS Price
-                               , MCS_Value.ValueData               AS MCSValue
+                               , CASE WHEN COALESCE(tmpLayout.Amount, 0) > COALESCE(MCS_Value.ValueData, 0) THEN tmpLayout.Amount ELSE MCS_Value.ValueData END AS MCSValue
                                , CASE WHEN Price_MCSValueMin.ValueData IS NOT NULL
                                       THEN CASE WHEN COALESCE (Price_MCSValueMin.ValueData, 0) < COALESCE (MCS_Value.ValueData, 0) THEN COALESCE (Price_MCSValueMin.ValueData, 0) ELSE MCS_Value.ValueData END
                                       ELSE 0
@@ -1498,6 +1546,12 @@ BEGIN
                                                       AND tmpGoods_sum.GoodsId = OL_Price_Goods.ChildObjectId
                                -- !!!
                                LEFT JOIN _tmpUnit_SUN ON _tmpUnit_SUN.UnitId = OL_Price_Unit.ChildObjectId
+
+                               LEFT JOIN ObjectBoolean AS Unit_PharmacyItem
+                                                       ON Unit_PharmacyItem.ObjectId  = OL_Price_Unit.ChildObjectId
+                                                      AND Unit_PharmacyItem.DescId    = zc_ObjectBoolean_Unit_PharmacyItem()
+                               LEFT JOIN tmpLayout ON tmpLayout.GoodsId = OL_Price_Goods.ChildObjectId
+                                                  AND (COALESCE (Unit_PharmacyItem.ValueData, False) = FALSE OR tmpLayout.isPharmacyItem = TRUE)
 
                           WHERE OL_Price_Unit.DescId = zc_ObjectLink_Price_Unit()
                             -- товары "убит код"

@@ -61,6 +61,26 @@ inherited Report_CheckBonusTestForm: TReport_CheckBonusTestForm
               Format = ',0.00##'
               Kind = skSum
               Column = Sum_Account
+            end
+            item
+              Format = ',0.00##'
+              Kind = skSum
+              Column = Sum_Sale_weight
+            end
+            item
+              Format = ',0.00##'
+              Kind = skSum
+              Column = Sum_ReturnIn_weight
+            end
+            item
+              Format = ',0.00##'
+              Kind = skSum
+              Column = Sum_Sale
+            end
+            item
+              Format = ',0.00##'
+              Kind = skSum
+              Column = Sum_Return
             end>
           DataController.Summary.FooterSummaryItems = <
             item
@@ -102,6 +122,26 @@ inherited Report_CheckBonusTestForm: TReport_CheckBonusTestForm
               Format = #1057#1090#1088#1086#1082': ,0'
               Kind = skCount
               Column = JuridicalName
+            end
+            item
+              Format = ',0.00##'
+              Kind = skSum
+              Column = Sum_Sale_weight
+            end
+            item
+              Format = ',0.00##'
+              Kind = skSum
+              Column = Sum_ReturnIn_weight
+            end
+            item
+              Format = ',0.00##'
+              Kind = skSum
+              Column = Sum_Sale
+            end
+            item
+              Format = ',0.00##'
+              Kind = skSum
+              Column = Sum_Return
             end>
           OptionsData.CancelOnExit = True
           OptionsData.Deleting = False
@@ -209,6 +249,8 @@ inherited Report_CheckBonusTestForm: TReport_CheckBonusTestForm
           object PercentRetBonus: TcxGridDBColumn
             Caption = 'Max % '#1074#1086#1079#1074#1088#1072#1090#1072' '#1087#1083#1072#1085
             DataBinding.FieldName = 'PercentRetBonus'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DisplayFormat = ',0.####;-,0.####; ;'
             Visible = False
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
@@ -218,6 +260,8 @@ inherited Report_CheckBonusTestForm: TReport_CheckBonusTestForm
           object PercentRetBonus_fact: TcxGridDBColumn
             Caption = 'Max % '#1074#1086#1079#1074#1088#1072#1090#1072' '#1092#1072#1082#1090'('#1075#1088#1085')'
             DataBinding.FieldName = 'PercentRetBonus_fact'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DisplayFormat = ',0.####;-,0.####; ;'
             Visible = False
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
@@ -227,6 +271,8 @@ inherited Report_CheckBonusTestForm: TReport_CheckBonusTestForm
           object PercentRetBonus_fact_weight: TcxGridDBColumn
             Caption = 'Max % '#1074#1086#1079#1074#1088#1072#1090#1072' '#1092#1072#1082#1090' ('#1042#1077#1089')'
             DataBinding.FieldName = 'PercentRetBonus_fact_weight'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DisplayFormat = ',0.####;-,0.####; ;'
             Visible = False
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
@@ -243,7 +289,7 @@ inherited Report_CheckBonusTestForm: TReport_CheckBonusTestForm
             Visible = False
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
-            HeaderHint = #1055#1088#1086#1076#1072#1078#1072' - '#1074#1086#1079#1074#1088#1072#1090
+            HeaderHint = #1055#1088#1086#1076#1072#1078#1072' ('#1074#1077#1089')'
             Options.Editing = False
             Width = 80
           end
@@ -257,7 +303,31 @@ inherited Report_CheckBonusTestForm: TReport_CheckBonusTestForm
             Visible = False
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
-            HeaderHint = #1055#1088#1086#1076#1072#1078#1072' - '#1074#1086#1079#1074#1088#1072#1090
+            HeaderHint = #1042#1086#1079#1074#1088#1072#1090' ('#1074#1077#1089')'
+            Options.Editing = False
+            Width = 80
+          end
+          object Sum_Sale: TcxGridDBColumn
+            Caption = #1055#1088#1086#1076#1072#1085#1086' ('#1075#1088#1085')'
+            DataBinding.FieldName = 'Sum_Sale'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DisplayFormat = ',0.####;-,0.####; ;'
+            Visible = False
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            HeaderHint = #1055#1088#1086#1076#1072#1085#1086
+            Options.Editing = False
+            Width = 80
+          end
+          object Sum_Return: TcxGridDBColumn
+            Caption = #1042#1086#1079#1074#1088#1072#1090' ('#1075#1088#1085')'
+            DataBinding.FieldName = 'Sum_Return'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DisplayFormat = ',0.####;-,0.####; ;'
+            Visible = False
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            HeaderHint = #1042#1086#1079#1074#1088#1072#1090
             Options.Editing = False
             Width = 80
           end
@@ -1049,7 +1119,7 @@ inherited Report_CheckBonusTestForm: TReport_CheckBonusTestForm
     Top = 208
   end
   inherited spSelect: TdsdStoredProc
-    StoredProcName = 'gpReport_CheckBonusTest4'
+    StoredProcName = 'gpReport_CheckBonusTest2'
     Params = <
       item
         Name = 'inStartDate'

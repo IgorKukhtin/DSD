@@ -3,7 +3,7 @@ inherited Layout_MovementForm: TLayout_MovementForm
   ClientHeight = 516
   ClientWidth = 708
   ExplicitWidth = 724
-  ExplicitHeight = 554
+  ExplicitHeight = 555
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
@@ -11,17 +11,17 @@ inherited Layout_MovementForm: TLayout_MovementForm
     Width = 708
     Height = 397
     ExplicitTop = 119
-    ExplicitWidth = 685
+    ExplicitWidth = 708
     ExplicitHeight = 397
     ClientRectBottom = 397
     ClientRectRight = 708
     inherited tsMain: TcxTabSheet
-      ExplicitWidth = 685
+      ExplicitWidth = 708
       ExplicitHeight = 373
       inherited cxGrid: TcxGrid
         Width = 708
         Height = 373
-        ExplicitWidth = 685
+        ExplicitWidth = 708
         ExplicitHeight = 373
         inherited cxGridDBTableView: TcxGridDBTableView
           DataController.Summary.DefaultGroupSummaryItems = <
@@ -113,7 +113,7 @@ inherited Layout_MovementForm: TLayout_MovementForm
     Width = 708
     Height = 93
     TabOrder = 3
-    ExplicitWidth = 685
+    ExplicitWidth = 708
     ExplicitHeight = 93
     inherited edInvNumber: TcxTextEdit
       Left = 182
@@ -171,6 +171,16 @@ inherited Layout_MovementForm: TLayout_MovementForm
       Left = 8
       Top = 48
       Caption = #1055#1088#1080#1084#1077#1095#1072#1085#1080#1077
+    end
+    object cbPharmacyItem: TcxCheckBox
+      Left = 110
+      Top = 46
+      Hint = #1048#1089#1087#1086#1083#1100#1079#1091#1077#1090#1100#1089#1103' '#1080' '#1076#1083#1103' '#1072#1087#1090#1077#1095#1085#1099#1093' '#1087#1091#1085#1082#1090#1086#1074
+      Caption = #1048#1089#1087#1086#1083#1100#1079#1091#1077#1090#1100#1089#1103' '#1080' '#1076#1083#1103' '#1072#1087#1090#1077#1095#1085#1099#1093' '#1087#1091#1085#1082#1090#1086#1074
+      ParentShowHint = False
+      ShowHint = True
+      TabOrder = 10
+      Width = 235
     end
   end
   inherited UserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn
@@ -722,8 +732,8 @@ inherited Layout_MovementForm: TLayout_MovementForm
     StoredProcName = 'gpUpdate_Status_Layout'
     NeedResetData = True
     ParamKeyField = 'inMovementId'
-    Left = 120
-    Top = 16
+    Left = 104
+    Top = 8
   end
   inherited spGet: TdsdStoredProc
     StoredProcName = 'gpGet_Movement_Layout'
@@ -795,6 +805,13 @@ inherited Layout_MovementForm: TLayout_MovementForm
         Component = edComment
         DataType = ftString
         MultiSelectSeparator = ','
+      end
+      item
+        Name = 'isPharmacyItem'
+        Value = Null
+        Component = cbPharmacyItem
+        DataType = ftBoolean
+        MultiSelectSeparator = ','
       end>
     Left = 216
     Top = 248
@@ -841,6 +858,14 @@ inherited Layout_MovementForm: TLayout_MovementForm
         DataType = ftString
         ParamType = ptInput
         MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inisPharmacyItem'
+        Value = Null
+        Component = cbPharmacyItem
+        DataType = ftBoolean
+        ParamType = ptInput
+        MultiSelectSeparator = ','
       end>
     NeedResetData = True
     ParamKeyField = 'ioId'
@@ -872,6 +897,9 @@ inherited Layout_MovementForm: TLayout_MovementForm
       end
       item
         Control = edComment
+      end
+      item
+        Control = cbPharmacyItem
       end>
     Left = 232
     Top = 193

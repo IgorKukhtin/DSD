@@ -4,7 +4,7 @@ inherited Report_CheckBonusForm: TReport_CheckBonusForm
   ClientWidth = 1180
   AddOnFormData.ExecuteDialogAction = ExecuteDialog
   ExplicitWidth = 1196
-  ExplicitHeight = 376
+  ExplicitHeight = 379
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
@@ -236,10 +236,9 @@ inherited Report_CheckBonusForm: TReport_CheckBonusForm
             Width = 48
           end
           object PercentRetBonus_fact: TcxGridDBColumn
-            Caption = 'Max % '#1074#1086#1079#1074#1088#1072#1090#1072' '#1092#1072#1082#1090
+            Caption = 'Max % '#1074#1086#1079#1074#1088#1072#1090#1072' '#1092#1072#1082#1090'('#1075#1088#1085')'
             DataBinding.FieldName = 'PercentRetBonus_fact'
             PropertiesClassName = 'TcxCurrencyEditProperties'
-            Properties.DecimalPlaces = 4
             Properties.DisplayFormat = ',0.####;-,0.####; ;'
             Visible = False
             HeaderAlignmentHorz = taCenter
@@ -247,9 +246,85 @@ inherited Report_CheckBonusForm: TReport_CheckBonusForm
             Options.Editing = False
             Width = 48
           end
+          object PercentRetBonus_fact_weight: TcxGridDBColumn
+            Caption = 'Max % '#1074#1086#1079#1074#1088#1072#1090#1072' '#1092#1072#1082#1090' ('#1042#1077#1089')'
+            DataBinding.FieldName = 'PercentRetBonus_fact_weight'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DisplayFormat = ',0.####;-,0.####; ;'
+            Visible = False
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 48
+          end
+          object Sum_Sale_weight: TcxGridDBColumn
+            Caption = #1055#1088#1086#1076#1072#1085#1086' ('#1074#1077#1089')'
+            DataBinding.FieldName = 'Sum_Sale_weight'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 4
+            Properties.DisplayFormat = ',0.####;-,0.####; ;'
+            Properties.ReadOnly = True
+            Visible = False
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            HeaderHint = #1055#1088#1086#1076#1072#1078#1072' ('#1074#1077#1089')'
+            Options.Editing = False
+            Width = 80
+          end
+          object Sum_ReturnIn_weight: TcxGridDBColumn
+            Caption = #1042#1086#1079#1074#1088#1072#1090' ('#1074#1077#1089')'
+            DataBinding.FieldName = 'Sum_ReturnIn_weight'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 4
+            Properties.DisplayFormat = ',0.####;-,0.####; ;'
+            Properties.ReadOnly = True
+            Visible = False
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            HeaderHint = #1042#1086#1079#1074#1088#1072#1090' ('#1074#1077#1089')'
+            Options.Editing = False
+            Width = 80
+          end
+          object Sum_Sale: TcxGridDBColumn
+            Caption = #1055#1088#1086#1076#1072#1085#1086' ('#1075#1088#1085')'
+            DataBinding.FieldName = 'Sum_Sale'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DisplayFormat = ',0.####;-,0.####; ;'
+            Visible = False
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            HeaderHint = #1055#1088#1086#1076#1072#1085#1086
+            Options.Editing = False
+            Width = 80
+          end
+          object Sum_Return: TcxGridDBColumn
+            Caption = #1042#1086#1079#1074#1088#1072#1090' ('#1075#1088#1085')'
+            DataBinding.FieldName = 'Sum_Return'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DisplayFormat = ',0.####;-,0.####; ;'
+            Visible = False
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            HeaderHint = #1042#1086#1079#1074#1088#1072#1090
+            Options.Editing = False
+            Width = 80
+          end
           object PercentRetBonus_diff: TcxGridDBColumn
-            Caption = #1054#1090#1082#1083'. Max % '#1074#1086#1079#1074#1088#1072#1090#1072' '#1092#1072#1082#1090#1072' '#1086#1090' '#1087#1083#1072#1085#1072
+            Caption = #1054#1090#1082#1083'. Max % '#1074#1086#1079#1074#1088#1072#1090#1072' '#1092#1072#1082#1090#1072' '#1086#1090' '#1087#1083#1072#1085#1072' ('#1075#1088#1085')'
             DataBinding.FieldName = 'PercentRetBonus_diff'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 4
+            Properties.DisplayFormat = ',0.####;-,0.####; ;'
+            Visible = False
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            HeaderHint = #1054#1090#1082#1083#1086#1085#1077#1085#1080#1077' Max % '#1074#1086#1079#1074#1088#1072#1090#1072' '#1092#1072#1082#1090#1072' '#1086#1090' '#1087#1083#1072#1085#1072
+            Options.Editing = False
+            Width = 48
+          end
+          object PercentRetBonus_diff_weight: TcxGridDBColumn
+            Caption = #1054#1090#1082#1083'. Max % '#1074#1086#1079#1074#1088#1072#1090#1072' '#1092#1072#1082#1090#1072' '#1086#1090' '#1087#1083#1072#1085#1072' ('#1074#1077#1089')'
+            DataBinding.FieldName = 'PercentRetBonus_diff_weight'
             PropertiesClassName = 'TcxCurrencyEditProperties'
             Properties.DecimalPlaces = 4
             Properties.DisplayFormat = ',0.####;-,0.####; ;'

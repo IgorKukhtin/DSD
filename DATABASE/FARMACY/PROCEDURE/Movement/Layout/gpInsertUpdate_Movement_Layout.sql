@@ -8,6 +8,7 @@ CREATE OR REPLACE FUNCTION gpInsertUpdate_Movement_Layout(
     IN inOperDate            TDateTime , -- Дата документа
     IN inLayoutId            Integer   , -- название выкладки
     IN inComment             TVarChar  , -- Примечание
+    IN inisPharmacyItem      Boolean   , -- Для аптечных пунктов
     IN inSession             TVarChar    -- сессия пользователя
 )
 RETURNS Integer
@@ -35,12 +36,13 @@ BEGIN
      END IF;
      
      -- сохранили <Документ>
-     ioId := lpInsertUpdate_Movement_Layout (ioId           := ioId
-                                           , inInvNumber    := inInvNumber
-                                           , inOperDate     := inOperDate
-                                           , inLayoutId     := inLayoutId
-                                           , inComment      := inComment
-                                           , inUserId       := vbUserId
+     ioId := lpInsertUpdate_Movement_Layout (ioId              := ioId
+                                           , inInvNumber       := inInvNumber
+                                           , inOperDate        := inOperDate
+                                           , inLayoutId        := inLayoutId
+                                           , inComment         := inComment
+                                           , inisPharmacyItem  := inisPharmacyItem
+                                           , inUserId          := vbUserId
                                             );
 
 END;

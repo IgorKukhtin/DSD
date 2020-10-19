@@ -9,7 +9,7 @@ inherited LayoutJournalForm: TLayoutJournalForm
   AddOnFormData.AddOnFormRefresh.KeyParam = 'inMovementId'
   AddOnFormData.AddOnFormRefresh.GetStoredProc = spGet
   ExplicitWidth = 833
-  ExplicitHeight = 573
+  ExplicitHeight = 574
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
@@ -95,6 +95,14 @@ inherited LayoutJournalForm: TLayoutJournalForm
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Width = 70
+          end
+          object isPharmacyItem: TcxGridDBColumn
+            Caption = #1044#1083#1103' '#1072#1087#1090'. '#1087#1091#1085#1082#1090#1086#1074
+            DataBinding.FieldName = 'isPharmacyItem'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            HeaderHint = #1048#1089#1087#1086#1083#1100#1079#1091#1077#1090#1100#1089#1103' '#1080' '#1076#1083#1103' '#1072#1087#1090#1077#1095#1085#1099#1093' '#1087#1091#1085#1082#1090#1086#1074
+            Width = 71
           end
           object Comment: TcxGridDBColumn
             Caption = #1050#1086#1084#1084#1077#1085#1090#1072#1088#1080#1081

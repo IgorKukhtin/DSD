@@ -120,6 +120,7 @@ BEGIN
      -- 1. все остатки, продажи => получаем кол-ва ПОТРЕБНОСТЬ у получателя
      DELETE FROM _tmpRemains_all;
      DELETE FROM _tmpRemains;
+     DELETE FROM _tmpGoods_TP_exception;
      -- 2.1. вся статистика продаж: 1) у отправителя в разрезе T1=60 дней 2) у получателя в разрезе T2=45
      DELETE FROM _tmpSale_over;
      -- 2.2. NotSold
@@ -203,7 +204,7 @@ BEGIN
      vbDaySendSUN_max:= (SELECT MAX (_tmpUnit_SUN.DaySendSUN) FROM _tmpUnit_SUN);
      -- находим максимальный
      vbDaySendSUNAll_max:= (SELECT MAX (_tmpUnit_SUN.DaySendSUNAll) FROM _tmpUnit_SUN);
-     
+
      -- находим максимальный
      vbPeriod_t_max := (SELECT MAX (CASE WHEN _tmpUnit_SUN.Value_T1 > _tmpUnit_SUN.Value_T2 THEN _tmpUnit_SUN.Value_T1 ELSE _tmpUnit_SUN.Value_T2 END)
                         FROM _tmpUnit_SUN
@@ -217,6 +218,44 @@ BEGIN
         WHERE OL_GoodsPairSun.ChildObjectId > 0 AND OL_GoodsPairSun.DescId = zc_ObjectLink_Goods_GoodsPairSun()
        ;
 
+
+     -- Исключения по техническим переучетам по Аптекам - если есть в непроведенных ТП то исключаем из распределения
+     WITH
+         tmpMovement AS (SELECT Movement.Id
+                              , MovementLinkObject_Unit.ObjectId AS UnitId
+                         FROM Movement
+
+                              LEFT JOIN MovementLinkObject AS MovementLinkObject_Unit
+                                                           ON MovementLinkObject_Unit.MovementId = Movement.Id
+                                                          AND MovementLinkObject_Unit.DescId = zc_MovementLinkObject_Unit()
+
+                         WHERE Movement.DescId = zc_Movement_TechnicalRediscount()
+                            AND Movement.StatusId = zc_Enum_Status_UnComplete())
+      , tmpGoods AS (SELECT Movement.UnitId
+                          , MovementItem.ObjectId       AS GoodsId
+                          , SUM(MovementItem.Amount)    AS Amount
+                     FROM _tmpUnit_SUN
+
+                          INNER JOIN tmpMovement AS Movement ON Movement.UnitId = _tmpUnit_SUN.UnitId
+
+                          INNER JOIN MovementItem ON MovementItem.MovementId = Movement.Id
+                                         AND MovementItem.DescId     = zc_MI_Master()
+                                         AND MovementItem.isErased  = FALSE
+                                         AND MovementItem.Amount < 0
+                          INNER JOIN MovementItemLinkObject AS MILinkObject_CommentTR
+                                                            ON MILinkObject_CommentTR.MovementItemId = MovementItem.Id
+                                                           AND MILinkObject_CommentTR.DescId = zc_MILinkObject_CommentTR()
+                          INNER JOIN ObjectBoolean AS ObjectBoolean_CommentTR_BlockFormSUN
+                                                   ON ObjectBoolean_CommentTR_BlockFormSUN.ObjectId = MILinkObject_CommentTR.ObjectId
+                                                  AND ObjectBoolean_CommentTR_BlockFormSUN.DescId = zc_ObjectFloat_CommentTR_BlockFormSUN()
+                                                  AND ObjectBoolean_CommentTR_BlockFormSUN.ValueData = True
+                     GROUP BY Movement.UnitId
+                            , MovementItem.ObjectId
+                     )
+
+     INSERT INTO _tmpGoods_TP_exception   (UnitId, GoodsId)
+     SELECT tmpGoods.UnitId, tmpGoods.GoodsId
+     FROM tmpGoods;
 
      -- исключаем такие перемещения
      INSERT INTO _tmpUnit_SunExclusion (UnitId_from, UnitId_to, isMCS_to)
@@ -784,6 +823,10 @@ BEGIN
                                      ON OB_Unit_SUN_out.ObjectId  = tmpObject_Price.UnitId
                                     AND OB_Unit_SUN_out.DescId    = zc_ObjectBoolean_Unit_SUN_v4_out()
                                     AND OB_Unit_SUN_out.ValueData = TRUE
+             -- Исключения по техническим переучетам
+             LEFT JOIN _tmpGoods_TP_exception AS tmpGoods_TP_exception
+                                              ON tmpGoods_TP_exception.UnitId  = tmpObject_Price.UnitId
+                                             AND tmpGoods_TP_exception.GoodsId = tmpObject_Price.GoodsId
              LEFT JOIN tmpRemains AS tmpRemains
                                   ON tmpRemains.UnitId  = tmpObject_Price.UnitId
                                  AND tmpRemains.GoodsId = tmpObject_Price.GoodsId
@@ -815,7 +858,7 @@ BEGIN
              -- 25.05.20 -- временно отключил - 13.05.20
              LEFT JOIN ObjectBoolean AS ObjectBoolean_Goods_isClose
                                      ON ObjectBoolean_Goods_isClose.ObjectId  = tmpObject_Price.GoodsId
-                                    AND ObjectBoolean_Goods_isClose.DescId    = zc_ObjectBoolean_Goods_Close()   
+                                    AND ObjectBoolean_Goods_isClose.DescId    = zc_ObjectBoolean_Goods_Close()
                                     AND ObjectBoolean_Goods_isClose.ValueData = TRUE
              -- !!!
              LEFT JOIN _tmpUnit_SUN ON _tmpUnit_SUN.UnitId = tmpObject_Price.UnitId
@@ -832,6 +875,8 @@ BEGIN
         WHERE OB_Unit_SUN_out.ObjectId IS NULL
           -- товары "закрыт код"
           AND (ObjectBoolean_Goods_isClose.ObjectId IS NULL OR _tmpUnit_SUN.isLock_CloseGd = FALSE)
+          -- Исключения по техническим переучетам
+          AND COALESCE (tmpGoods_TP_exception.GoodsId, 0) = 0
        ;
      -- 2.6. Результат: все остатки ПОЛУЧАТЕЛЯ, продажи => получаем кол-ва ПОТРЕБНОСТЬ
      INSERT INTO  _tmpRemains (UnitId, GoodsId, Price, MCS, AmountResult, AmountRemains, AmountIncome, AmountSend_in, AmountSend_out, AmountOrderExternal, AmountReserve)
@@ -1372,7 +1417,7 @@ BEGIN
           ;
 
      -- Правим количество распределения если остаток меньше отгружать товар по СУН , если у него остаток больше чем N
-     UPDATE _tmpRemains_Partion SET Amount = FLOOR (CASE WHEN _tmpRemains_Partion.Amount_save - COALESCE(_tmpUnit_SUN.Limit_N, 0) <= 0 THEN 0 
+     UPDATE _tmpRemains_Partion SET Amount = FLOOR (CASE WHEN _tmpRemains_Partion.Amount_save - COALESCE(_tmpUnit_SUN.Limit_N, 0) <= 0 THEN 0
                                                          ELSE  _tmpRemains_Partion.Amount_save - COALESCE(_tmpUnit_SUN.Limit_N, 0) END)
      FROM _tmpUnit_SUN
      WHERE _tmpRemains_Partion.UnitId = _tmpUnit_SUN.UnitId
@@ -1428,7 +1473,8 @@ BEGIN
 
         WHERE _tmpRemains.AmountResult >= 1.0
           -- или товар среди парных
-          OR _tmpGoods_SUN_PairSun_find.GoodsId_PairSun > 0
+          -- OR _tmpGoods_SUN_PairSun_find.GoodsId_PairSun > 0
+          AND COALESCE (_tmpGoods_SUN_PairSun_find.GoodsId_PairSun, 0) = 0
 
  --        AND (tmpRemains_Partion_sum.GoodsId > 0
  --         OR _tmpRemains.GoodsId IN (SELECT Object.Id FROM Object WHERE Object.DescId = zc_Object_Goods() AND Object.ObjectCode = 20392))
@@ -1549,7 +1595,8 @@ BEGIN
         WHERE -- !!!Отключили парные!!!
               _tmpGoods_SUN_PairSun_find.GoodsId_PairSun IS NULL
 
-          AND CASE -- если у парного ост = 0, не отдаем
+          AND _tmpRemains_Partion.Amount > 0
+/*          AND CASE -- если у парного ост = 0, не отдаем
                     WHEN _tmpGoods_SUN_PairSun_find.GoodsId_PairSun > 0 AND COALESCE (_tmpRemains_Partion_PairSun.Amount, 0) <= 0
                          THEN 0
                     -- если у парного ост < чем у "основного", меняем на меньшее
@@ -1558,7 +1605,7 @@ BEGIN
                     -- инче берем ост "основного"
                     ELSE _tmpRemains_Partion.Amount
                END > 0
-        ORDER BY 3 /*tmpSumm_limit.Summ*/ DESC, _tmpRemains_Partion.UnitId, _tmpRemains_Partion.GoodsId
+*/        ORDER BY 3 /*tmpSumm_limit.Summ*/ DESC, _tmpRemains_Partion.UnitId, _tmpRemains_Partion.GoodsId
        ;
      -- начало цикла по курсору1
      LOOP
@@ -1696,8 +1743,62 @@ BEGIN
      CLOSE curPartion; -- закрыли курсор1
 
 
-     -- !!!Удаляем НЕ получившиеся пары!!!
-     DELETE FROM _tmpResult_Partion 
+    -- !!! Добавили парные, после распределения ...
+     WITH -- Товар к которому нужна пара
+          tmpResult_Partion AS (SELECT _tmpResult_Partion.*, _tmpGoods_SUN_PairSun.GoodsId_PairSun
+                                FROM _tmpResult_Partion
+
+                                     INNER JOIN _tmpGoods_SUN_PairSun ON _tmpGoods_SUN_PairSun.GoodsId = _tmpResult_Partion.GoodsId
+                                ),
+          -- Наличие парных
+          tmpRemains_Pair  AS (SELECT _tmpGoods_SUN_PairSun.GoodsId
+                                    , _tmpRemains.UnitId
+                                    , _tmpRemains.Price
+                                    , _tmpRemains.AmountRemains
+                               FROM _tmpRemains
+
+                                    INNER JOIN  _tmpGoods_SUN_PairSun ON _tmpGoods_SUN_PairSun.GoodsId_PairSun = _tmpRemains.GoodsId
+                               ),
+          -- Распределение
+          tmpResult AS (SELECT Result_Partion.*
+                             , Remains_Pair.AmountRemains                AS AmountRemains
+                             , Remains_Pair.Price                        AS PricePair
+                             , SUM (Result_Partion.Amount) OVER (PARTITION BY Result_Partion.UnitId_from, Result_Partion.GoodsId_PairSun
+                                                           ORDER BY Result_Partion.UnitId_to) AS AmountSUM
+                         --    , ROW_NUMBER() OVER (PARTITION BY  Result_Partion.UnitId_from, Result_Partion.GoodsId_PairSun
+                         --                         ORDER BY Result_Partion.UnitId_to DESC) AS DOrd
+                       FROM tmpResult_Partion AS Result_Partion
+                            INNER JOIN tmpRemains_Pair AS Remains_Pair
+                                                         ON Remains_Pair.GoodsId = Result_Partion.GoodsId
+                                                        AND Remains_Pair.UnitId  = Result_Partion.UnitId_from
+                          )
+
+     INSERT INTO _tmpResult_Partion (DriverId, UnitId_from, UnitId_to, GoodsId, Amount, Summ, Amount_next, Summ_next, MovementId, MovementItemId, Amount_not_out, Summ_not_out, Amount_not_in, Summ_not_in)
+     SELECT DriverId
+          , UnitId_from
+          , UnitId_to
+          , GoodsId_PairSun
+          , AmountAdd
+          , (AmountAdd * PricePair)
+          , 0 as Amount_next
+          , 0 as Summ_next
+          , 0 as MovementId
+          , 0 as MovementItemId
+          , 0 as Amount_not_out
+          , 0 as Summ_not_out
+          , 0 as Amount_not_in
+          , 0 as Summ_not_in
+        FROM (SELECT DD.*
+                   , CASE WHEN DD.AmountRemains - DD.AmountSUM > 0 --AND DD.DOrd <> 1
+                               THEN DD.Amount
+                          ELSE DD.AmountRemains - DD.AmountSUM + DD.Amount
+                     END AS AmountAdd
+              FROM tmpResult AS DD
+              WHERE DD.AmountRemains - (DD.AmountSUM - DD.Amount) > 0
+             ) AS tmpItem;
+
+/*     -- !!!Удаляем НЕ получившиеся пары!!!
+     DELETE FROM _tmpResult_Partion
      WHERE (_tmpResult_Partion.UnitId_from :: TVarChar || '_' || _tmpResult_Partion.UnitId_to :: TVarChar || '_' || _tmpResult_Partion.GoodsId :: TVarChar)
            IN (SELECT _tmpResult_Partion.UnitId_from :: TVarChar || '_' || _tmpResult_Partion.UnitId_to :: TVarChar || '_' || _tmpResult_Partion.GoodsId :: TVarChar
                FROM _tmpResult_Partion
@@ -1754,7 +1855,7 @@ BEGIN
                                                                           WHERE _tmpResult_Partion_check.GoodsId IS NULL
                                                                          );
      END IF;
-
+*/
 
      -- 6.1.2. !!!важно, для vbSumm_limit - оставляем только по условию!!!
      DELETE FROM _tmpResult_Partion
