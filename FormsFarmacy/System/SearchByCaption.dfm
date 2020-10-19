@@ -47,7 +47,7 @@ object SearchByCaptionForm: TSearchByCaptionForm
       OptionsView.Indicator = True
       Styles.StyleSheet = dmMain.cxGridTableViewStyleSheet
       object colCaption: TcxGridDBColumn
-        Caption = #1055#1077#1085#1082#1090' '#1084#1077#1085#1102
+        Caption = #1055#1091#1085#1082#1090' '#1084#1077#1085#1102
         DataBinding.FieldName = 'Caption'
         OnCustomDrawCell = colCaptionCustomDrawCell
         HeaderAlignmentHorz = taCenter
