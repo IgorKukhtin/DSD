@@ -182,7 +182,7 @@ BEGIN
            , tmp.Comment
            , tmpObjectBonus.Id :: Integer AS ReportBonusId
            , CASE WHEN tmpObjectBonus.Id IS NULL OR tmpObjectBonus.isErased = True THEN TRUE ELSE FALSE END :: Boolean AS isSend
-      FROM gpReport_CheckBonusTest2 (inStartDate           := inStartDate
+      FROM gpReport_CheckBonusTest2 (inStartDate           := inStartDate                                --gpReport_CheckBonusTest2
                                    , inEndDate             := inEndDate
                                    , inPaidKindID          := zc_Enum_PaidKind_FirstForm()
                                    , inJuridicalId         := inJuridicalId
@@ -224,7 +224,7 @@ BEGIN
            , tmp.Comment
            , tmpObjectBonus.Id :: Integer AS ReportBonusId
            , CASE WHEN tmpObjectBonus.Id IS NULL OR tmpObjectBonus.isErased = TRUE THEN TRUE ELSE FALSE END :: Boolean AS isSend
-      FROM gpReport_CheckBonusTest2 (inStartDate           := inStartDate
+      FROM gpReport_CheckBonusTest2 (inStartDate           := inStartDate                                --gpReport_CheckBonusTest2 
                                    , inEndDate             := inEndDate
                                    , inPaidKindID          := zc_Enum_PaidKind_SecondForm()
                                    , inJuridicalId         := inJuridicalId
