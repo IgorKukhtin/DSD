@@ -40,11 +40,13 @@ RETURNS TABLE (OperDate_Movement TDateTime, OperDatePartner TDateTime, InvNumber
              , Sum_BonusFact TFloat
              , Sum_SaleFact TFloat
              , Sum_Account TFloat
+             , Sum_Sale TFloat
+             , Sum_Return TFloat
              , Sum_SaleReturnIn TFloat
-             
+
              , Sum_Sale_weight TFloat
              , Sum_ReturnIn_weight TFloat
-             
+
              , Comment TVarChar
              , ReportBonusId Integer
              , isSend Boolean
@@ -514,6 +516,7 @@ BEGIN
                              , tmpGroup.MovementId
                              , tmpGroup.MovementDescId
                              , tmpGroup.Sum_Sale
+                             , tmpGroup.Sum_Return
                              , tmpGroup.Sum_SaleReturnIn
                              , tmpGroup.Sum_Account
                              , tmpGroup.Sum_Sale_weight
@@ -610,6 +613,8 @@ BEGIN
                                   , 0 :: TFloat                  AS Sum_CheckBonusFact
                                   , 0 :: TFloat                  AS Sum_SaleFact
                                   , COALESCE (tmpMovement.Sum_Account,0)         AS Sum_Account
+                                  , COALESCE (tmpMovement.Sum_Sale,0)            AS Sum_Sale
+                                  , COALESCE (tmpMovement.Sum_Return,0)          AS Sum_Return
                                   , COALESCE (tmpMovement.Sum_SaleReturnIn,0)    AS Sum_SaleReturnIn
                                   , COALESCE (tmpMovement.Sum_Sale_weight,0)     AS Sum_Sale_weight    
                                   , COALESCE (tmpMovement.Sum_ReturnIn_weight,0) AS Sum_ReturnIn_weight
@@ -661,6 +666,8 @@ BEGIN
                             , MIFloat_Summ.ValueData                         AS Sum_CheckBonusFact
                             , MIFloat_AmountPartner.ValueData                AS Sum_SaleFact
                             , 0 :: TFloat                                    AS Sum_Account
+                            , 0 :: TFloat                                    AS Sum_Sale
+                            , 0 :: TFloat                                    AS Sum_Return
                             , 0 :: TFloat                                    AS Sum_SaleReturnIn
 
                             , 0 :: TFloat                                    AS Sum_Sale_weight    
@@ -733,7 +740,8 @@ BEGIN
                          AND (COALESCE (MILinkObject_Branch.ObjectId,0) = inBranchId OR inBranchId = 0)
                          -- AND MILinkObject_ContractConditionKind.ObjectId IN (zc_Enum_ContractConditionKind_BonusPercentAccount(), zc_Enum_ContractConditionKind_BonusPercentSaleReturn(), zc_Enum_ContractConditionKind_BonusPercentSale())
                       )
-      , tmpData AS (SELECT tmpAll.ContractId_master
+      , tmpData AS (SELECT tmpAll.* 
+                    FROM (SELECT tmpAll.ContractId_master
                          , tmpAll.ContractId_child
                          , tmpAll.ContractId_find
                          , tmpAll.InvNumber_master
@@ -764,6 +772,8 @@ BEGIN
                          , SUM (tmpAll.Sum_BonusFact)*(-1) AS Sum_BonusFact
                          , SUM (tmpAll.Sum_SaleFact)       AS Sum_SaleFact
                          , SUM (tmpAll.Sum_Account)        AS Sum_Account
+                         , SUM (tmpAll.Sum_Sale)           AS Sum_Sale
+                         , SUM (tmpAll.Sum_Return)         AS Sum_Return
                          , SUM (tmpAll.Sum_SaleReturnIn)   AS Sum_SaleReturnIn
 
                          , SUM (COALESCE (tmpAll.Sum_Sale_weight,0))     AS Sum_Sale_weight    
@@ -771,10 +781,10 @@ BEGIN
 
                          , MAX (tmpAll.Comment) :: TVarChar AS Comment
                     FROM tmpAll
-                    WHERE (tmpAll.Sum_CheckBonus <> 0
+                    WHERE/* (tmpAll.Sum_CheckBonus <> 0
                        OR tmpAll.Sum_Bonus <> 0
                        OR tmpAll.Sum_BonusFact <> 0)
-                      AND (tmpAll.PaidKindId = inPaidKindId OR inPaidKindId = 0)
+                      AND */(tmpAll.PaidKindId = inPaidKindId OR inPaidKindId = 0)
                       AND (tmpAll.JuridicalId = inJuridicalId OR inJuridicalId = 0)
                     GROUP BY  tmpAll.ContractId_master
                             , tmpAll.ContractId_child
@@ -797,6 +807,10 @@ BEGIN
                             , tmpAll.MovementDescId
                             , tmpAll.BranchId
                             , tmpAll.PaidKindId_child
+                    ) AS tmpAll
+                    WHERE (tmpAll.Sum_CheckBonus <> 0
+                       OR tmpAll.Sum_Bonus <> 0
+                       OR tmpAll.Sum_BonusFact <> 0)
                     )
 
       , tmpMovementParams AS (SELECT tmpMov.MovementId
@@ -952,6 +966,8 @@ BEGIN
             , CAST (tmpData.Sum_BonusFact  AS TFloat)     AS Sum_BonusFact
             , CAST (tmpData.Sum_SaleFact   AS TFloat)     AS Sum_SaleFact
             , CAST (tmpData.Sum_Account    AS TFloat)     AS Sum_Account
+            , CAST (tmpData.Sum_Account    AS TFloat)     AS Sum_Sale
+            , CAST (tmpData.Sum_Account    AS TFloat)     AS Sum_Return
             , CAST (tmpData.Sum_SaleReturnIn AS TFloat)   AS Sum_SaleReturnIn
             , CAST (tmpData.Sum_Sale_weight     AS TFloat) AS Sum_Sale_weight
             , CAST (tmpData.Sum_ReturnIn_weight AS TFloat) AS Sum_ReturnIn_weight
