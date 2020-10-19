@@ -2,10 +2,12 @@
 
 DROP FUNCTION IF EXISTS gpSelect_Object_ProdColorItems (Boolean, TVarChar);
 DROP FUNCTION IF EXISTS gpSelect_Object_ProdColorItems (Boolean, Boolean, TVarChar);
+DROP FUNCTION IF EXISTS gpSelect_Object_ProdColorItems (Boolean, Boolean, Boolean, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpSelect_Object_ProdColorItems(
     IN inIsShowAll   Boolean,       -- признак показать все (уникальные по всему справочнику)
     IN inIsErased    Boolean,       -- признак показать удаленные да / нет
+    IN inIsSale      Boolean,       -- признак показать проданные да / нет
     IN inSession     TVarChar       -- сессия пользователя
 )
 RETURNS TABLE (Id Integer, Code Integer, Name TVarChar
@@ -18,6 +20,7 @@ RETURNS TABLE (Id Integer, Code Integer, Name TVarChar
              , Color_fon Integer
              , InsertName TVarChar
              , InsertDate TDateTime
+             , isSale Boolean
              , isErased Boolean
               )
 AS
@@ -43,7 +46,17 @@ BEGIN
                                AND Object_ProdColorPattern.isErased = FALSE
                                AND inIsShowAll = TRUE
                             )
-     --
+   -- выбираем все лодки + определяем продана да/нет
+   , tmpProduct AS (SELECT Object_Product.*
+                         , CASE WHEN COALESCE (ObjectDate_DateSale.ValueData, zc_DateStart()) = zc_DateStart() THEN FALSE ELSE TRUE END ::Boolean AS isSale
+                    FROM Object AS Object_Product
+                         LEFT JOIN ObjectDate AS ObjectDate_DateSale
+                                              ON ObjectDate_DateSale.ObjectId = Object_Product.Id
+                                             AND ObjectDate_DateSale.DescId = zc_ObjectDate_Product_DateSale()
+                    WHERE Object_Product.DescId = zc_Object_Product()
+                     AND (COALESCE (ObjectDate_DateSale.ValueData, zc_DateStart()) = zc_DateStart() OR inIsSale = TRUE)
+                    )
+
    , tmpRes_all AS (SELECT Object_ProdColorItems.Id         AS Id
                          , Object_ProdColorItems.ObjectCode AS Code
                          , Object_ProdColorItems.ValueData  AS Name
@@ -57,6 +70,7 @@ BEGIN
                          LEFT JOIN ObjectLink AS ObjectLink_Product
                                               ON ObjectLink_Product.ObjectId = Object_ProdColorItems.Id
                                              AND ObjectLink_Product.DescId   = zc_ObjectLink_ProdColorItems_Product()
+                         INNER JOIN tmpProduct ON tmpProduct.Id = ObjectLink_Product.ChildObjectId
 
                          LEFT JOIN ObjectLink AS ObjectLink_ProdColorGroup
                                               ON ObjectLink_ProdColorGroup.ObjectId = Object_ProdColorItems.Id
@@ -89,13 +103,13 @@ BEGIN
                         , tmpProdColorPattern.ProdColorGroupId
                         , tmpProdColorPattern.ProdColorPatternId
                     FROM tmpProdColorPattern
-                         JOIN Object AS Object_Product ON Object_Product.DescId   = zc_Object_Product()
-                                                      AND Object_Product.isErased = FALSE
+                         JOIN tmpProduct AS Object_Product ON Object_Product.isErased = FALSE
                          LEFT JOIN tmpRes_all ON tmpRes_all.ProductId          = Object_Product.Id
                                              AND tmpRes_all.ProdColorGroupId   = tmpProdColorPattern.ProdColorGroupId
                                              AND tmpRes_all.ProdColorPatternId = tmpProdColorPattern.ProdColorPatternId
                     WHERE tmpRes_all.ProductId IS NULL
                    )
+
      -- Результат
      SELECT
            Object_ProdColorItems.Id    AS Id
@@ -126,6 +140,7 @@ BEGIN
 
          , Object_Insert.ValueData          AS InsertName
          , ObjectDate_Insert.ValueData      AS InsertDate
+         , Object_Product.isSale ::Boolean  AS isSale
          , Object_ProdColorItems.isErased   AS isErased
 
      FROM tmpRes AS Object_ProdColorItems
@@ -147,7 +162,7 @@ BEGIN
                                ON ObjectDate_Insert.ObjectId = Object_ProdColorItems.Id
                               AND ObjectDate_Insert.DescId = zc_ObjectDate_Protocol_Insert()
 
-          LEFT JOIN Object AS Object_Product          ON Object_Product.Id          = Object_ProdColorItems.ProductId
+          LEFT JOIN tmpProduct AS Object_Product      ON Object_Product.Id          = Object_ProdColorItems.ProductId
           LEFT JOIN Object AS Object_ProdColorGroup   ON Object_ProdColorGroup.Id   = Object_ProdColorItems.ProdColorGroupId
           LEFT JOIN Object AS Object_ProdColorPattern ON Object_ProdColorPattern.Id = Object_ProdColorItems.ProdColorPatternId
        ;

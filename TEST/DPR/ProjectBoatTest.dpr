@@ -134,14 +134,14 @@ uses
   ProductEdit in '..\..\FormsBoat\Guides\ProductEdit.pas' {ProductEditForm: TParentForm},
   ImportSettings in '..\..\FormsBoat\Import\ImportSettings.pas' {ImportSettingsForm: TParentForm},
   ImportType in '..\..\FormsBoat\Import\ImportType.pas' {ImportTypeForm: TParentForm},
-  ProdOptItems in '..\..\FormsBoat\Guides\ProdOptItems.pas' {ProdColorItemsForm: TParentForm},
   ProdOptItemsEdit in '..\..\FormsBoat\Guides\ProdOptItemsEdit.pas' {ProdOptItemsEditForm: TParentForm},
   ProdColorItemsEdit in '..\..\FormsBoat\Guides\ProdColorItemsEdit.pas' {ProdColorItemsEditForm: TParentForm},
-  ProdColorItems1 in '..\..\FormsBoat\Guides\ProdColorItems1.pas' {ProdColorItems1Form: TParentForm},
   ProdOptPattern in '..\..\FormsBoat\Guides\ProdOptPattern.pas' {ProdOptPatternForm: TParentForm},
   ProdOptPatternEdit in '..\..\FormsBoat\Guides\ProdOptPatternEdit.pas' {ProdOptPatternEditForm: TParentForm},
   ProdColorPatternEdit in '..\..\FormsBoat\Guides\ProdColorPatternEdit.pas' {ProdColorPatternEditForm: TParentForm},
-  ProdColorPattern in '..\..\FormsBoat\Guides\ProdColorPattern.pas' {ProdColorPatternForm: TParentForm};
+  ProdColorPattern in '..\..\FormsBoat\Guides\ProdColorPattern.pas' {ProdColorPatternForm: TParentForm},
+  ProdColorItems in '..\..\FormsBoat\Guides\ProdColorItems.pas' {ProdColorItemsForm: TParentForm},
+  ProdOptItems in '..\..\FormsBoat\Guides\ProdOptItems.pas' {ProdOptItemsForm: TParentForm};
 
 {$R *.res}
 {$R DevExpressRus.res}

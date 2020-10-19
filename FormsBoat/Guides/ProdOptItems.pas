@@ -65,6 +65,8 @@ type
     spUnErased: TdsdStoredProc;
     actUpdateDataSet: TdsdUpdateDataSet;
     ProductName: TcxGridDBColumn;
+    actShowAllBoatSale: TBooleanStoredProcAction;
+    bbShowAllBoatSale: TdxBarButton;
   private
     { Private declarations }
   public

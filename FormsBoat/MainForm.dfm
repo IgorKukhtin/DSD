@@ -721,8 +721,8 @@ inherited MainForm: TMainForm
       Category = #1051#1086#1076#1082#1080
       MoveParams = <>
       Caption = #1069#1083#1077#1084#1077#1085#1090#1099' '#1062#1074#1077#1090#1072' ('#1051#1086#1076#1082#1072') '
-      FormName = 'TProdColorItems1Form'
-      FormNameParam.Value = 'TProdColorItems1Form'
+      FormName = 'TProdColorItemsForm'
+      FormNameParam.Value = 'TProdColorItemsForm'
       FormNameParam.DataType = ftString
       FormNameParam.MultiSelectSeparator = ','
       GuiParams = <>

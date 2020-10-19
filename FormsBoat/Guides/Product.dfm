@@ -1017,7 +1017,7 @@ object ProductForm: TProductForm
   object ActionList: TActionList
     Images = dmMain.ImageList
     Left = 8
-    Top = 64
+    Top = 96
     object actRefresh: TdsdDataSetRefresh
       Category = 'DSDLib'
       MoveParams = <>
@@ -1482,6 +1482,12 @@ object ProductForm: TProductForm
       StoredProcList = <
         item
           StoredProc = spSelect
+        end
+        item
+          StoredProc = spSelect_ProdColorItems
+        end
+        item
+          StoredProc = spSelect_ProdOptItems
         end>
       Caption = #1055#1086#1082#1072#1079#1072#1090#1100' '#1074#1089#1077' '#1083#1086#1076#1082#1080' (+'#1087#1088#1086#1076#1072#1085#1085#1099#1077')'
       Hint = #1055#1086#1082#1072#1079#1072#1090#1100' '#1074#1089#1077' '#1083#1086#1076#1082#1080' (+'#1087#1088#1086#1076#1072#1085#1085#1099#1077')'
@@ -1793,6 +1799,14 @@ object ProductForm: TProductForm
         DataType = ftBoolean
         ParamType = ptInput
         MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inIsSale'
+        Value = Null
+        Component = actShowAllBoatSale
+        DataType = ftBoolean
+        ParamType = ptInput
+        MultiSelectSeparator = ','
       end>
     PackSize = 1
     Left = 104
@@ -1818,6 +1832,14 @@ object ProductForm: TProductForm
         Name = 'inIsErased'
         Value = Null
         Component = actShowAllErased
+        DataType = ftBoolean
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inIsSale'
+        Value = Null
+        Component = actShowAllBoatSale
         DataType = ftBoolean
         ParamType = ptInput
         MultiSelectSeparator = ','

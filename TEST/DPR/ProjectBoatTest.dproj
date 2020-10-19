@@ -371,20 +371,12 @@
 				<Form>ImportTypeForm</Form>
 				<DesignClass>TParentForm</DesignClass>
 			</DCCReference>
-			<DCCReference Include="..\..\FormsBoat\Guides\ProdOptItems.pas">
-				<Form>ProdColorItemsForm</Form>
-				<DesignClass>TParentForm</DesignClass>
-			</DCCReference>
 			<DCCReference Include="..\..\FormsBoat\Guides\ProdOptItemsEdit.pas">
 				<Form>ProdOptItemsEditForm</Form>
 				<DesignClass>TParentForm</DesignClass>
 			</DCCReference>
 			<DCCReference Include="..\..\FormsBoat\Guides\ProdColorItemsEdit.pas">
 				<Form>ProdColorItemsEditForm</Form>
-				<DesignClass>TParentForm</DesignClass>
-			</DCCReference>
-			<DCCReference Include="..\..\FormsBoat\Guides\ProdColorItems1.pas">
-				<Form>ProdColorItems1Form</Form>
 				<DesignClass>TParentForm</DesignClass>
 			</DCCReference>
 			<DCCReference Include="..\..\FormsBoat\Guides\ProdOptPattern.pas">
@@ -401,6 +393,14 @@
 			</DCCReference>
 			<DCCReference Include="..\..\FormsBoat\Guides\ProdColorPattern.pas">
 				<Form>ProdColorPatternForm</Form>
+				<DesignClass>TParentForm</DesignClass>
+			</DCCReference>
+			<DCCReference Include="..\..\FormsBoat\Guides\ProdColorItems.pas">
+				<Form>ProdColorItemsForm</Form>
+				<DesignClass>TParentForm</DesignClass>
+			</DCCReference>
+			<DCCReference Include="..\..\FormsBoat\Guides\ProdOptItems.pas">
+				<Form>ProdOptItemsForm</Form>
 				<DesignClass>TParentForm</DesignClass>
 			</DCCReference>
 			<BuildConfiguration Include="Release">

@@ -1,4 +1,4 @@
-unit ProdColorItems1;
+unit ProdColorItems;
 
 interface
 
@@ -25,7 +25,7 @@ uses
   cxCurrencyEdit, cxButtonEdit;
 
 type
-  TProdColorItems1Form = class(TParentForm)
+  TProdColorItemsForm = class(TParentForm)
     cxGridLevel: TcxGridLevel;
     cxGrid: TcxGrid;
     DataSource: TDataSource;
@@ -65,6 +65,8 @@ type
     spUnErased: TdsdStoredProc;
     actUpdateDataSet: TdsdUpdateDataSet;
     ProductName: TcxGridDBColumn;
+    actShowAllBoatSale: TBooleanStoredProcAction;
+    bbShowAllBoatSale: TdxBarButton;
   private
     { Private declarations }
   public
@@ -76,6 +78,6 @@ implementation
 {$R *.dfm}
 
 initialization
-  RegisterClass(TProdColorItems1Form);
+  RegisterClass(TProdColorItemsForm);
 
 end.

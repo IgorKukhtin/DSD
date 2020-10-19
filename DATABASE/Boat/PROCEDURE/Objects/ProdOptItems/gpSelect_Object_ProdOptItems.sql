@@ -1,10 +1,12 @@
 -- Function: gpSelect_Object_ProdOptItems()
 
-DROP FUNCTION IF EXISTS gpSelect_Object_ProdOptItems (Boolean, Boolean, TVarChar);
+--DROP FUNCTION IF EXISTS gpSelect_Object_ProdOptItems (Boolean, Boolean, TVarChar);
+DROP FUNCTION IF EXISTS gpSelect_Object_ProdOptItems (Boolean, Boolean, Boolean, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpSelect_Object_ProdOptItems(
     IN inIsShowAll   Boolean,       -- признак показать все (уникальные по всему справочнику)
     IN inIsErased    Boolean,       -- признак показать удаленные да / нет
+    IN inIsSale      Boolean,       -- признак показать проданные да / нет
     IN inSession     TVarChar       -- сессия пользователя
 )
 RETURNS TABLE (Id Integer, Code Integer, Name TVarChar
@@ -17,6 +19,7 @@ RETURNS TABLE (Id Integer, Code Integer, Name TVarChar
              , Color_fon Integer
              , InsertName TVarChar
              , InsertDate TDateTime
+             , isSale Boolean
              , isErased Boolean
               )
 AS
@@ -37,6 +40,18 @@ BEGIN
                              AND Object_ProdOptPattern.isErased = FALSE
                              AND inIsShowAll = TRUE
                           )
+
+   -- выбираем все лодки + определяем продана да/нет
+   , tmpProduct AS (SELECT Object_Product.*
+                         , CASE WHEN COALESCE (ObjectDate_DateSale.ValueData, zc_DateStart()) = zc_DateStart() THEN FALSE ELSE TRUE END ::Boolean AS isSale
+                    FROM Object AS Object_Product
+                         LEFT JOIN ObjectDate AS ObjectDate_DateSale
+                                              ON ObjectDate_DateSale.ObjectId = Object_Product.Id
+                                             AND ObjectDate_DateSale.DescId = zc_ObjectDate_Product_DateSale()
+                    WHERE Object_Product.DescId = zc_Object_Product()
+                     AND (COALESCE (ObjectDate_DateSale.ValueData, zc_DateStart()) = zc_DateStart() OR inIsSale = TRUE)
+                    )
+
    , tmpRes_all AS (SELECT Object_ProdOptItems.Id           AS Id
                          , Object_ProdOptItems.ObjectCode   AS Code
                          , Object_ProdOptItems.ValueData    AS Name
@@ -48,6 +63,8 @@ BEGIN
                          LEFT JOIN ObjectLink AS ObjectLink_Product
                                               ON ObjectLink_Product.ObjectId = Object_ProdOptItems.Id
                                              AND ObjectLink_Product.DescId   = zc_ObjectLink_ProdOptItems_Product()
+                         INNER JOIN tmpProduct ON tmpProduct.Id = ObjectLink_Product.ChildObjectId
+
                          LEFT JOIN ObjectLink AS ObjectLink_ProdOptPattern
                                               ON ObjectLink_ProdOptPattern.ObjectId = Object_ProdOptItems.Id
                                              AND ObjectLink_ProdOptPattern.DescId   = zc_ObjectLink_ProdOptItems_ProdOptPattern()
@@ -73,8 +90,8 @@ BEGIN
                         , Object_Product.Id AS ProductId
                         , tmpProdOptPattern.ProdOptPatternId
                     FROM tmpProdOptPattern
-                         JOIN Object AS Object_Product ON Object_Product.DescId   = zc_Object_Product()
-                                                      AND Object_Product.isErased = FALSE
+                         JOIN tmpProduct AS Object_Product ON Object_Product.isErased = FALSE
+                                                      
                          LEFT JOIN tmpRes_all ON tmpRes_all.ProductId        = Object_Product.Id
                                              AND tmpRes_all.ProdOptPatternId = tmpProdOptPattern.ProdOptPatternId
                     WHERE tmpRes_all.ProductId IS NULL
@@ -108,6 +125,7 @@ BEGIN
 
          , Object_Insert.ValueData            ::TVarChar  AS InsertName
          , ObjectDate_Insert.ValueData        ::TDateTime AS InsertDate
+         , Object_Product.isSale              ::Boolean   AS isSale
          , Object_ProdOptItems.isErased       ::Boolean   AS isErased
 
      FROM tmpRes AS Object_ProdOptItems
@@ -139,7 +157,7 @@ BEGIN
                                ON ObjectDate_Insert.ObjectId = Object_ProdOptItems.Id
                               AND ObjectDate_Insert.DescId = zc_ObjectDate_Protocol_Insert()
 
-          LEFT JOIN Object AS Object_Product        ON Object_Product.Id        = Object_ProdOptItems.ProductId
+          LEFT JOIN tmpProduct AS Object_Product    ON Object_Product.Id        = Object_ProdOptItems.ProductId
           LEFT JOIN Object AS Object_ProdOptPattern ON Object_ProdOptPattern.Id = Object_ProdOptItems.ProdOptPatternId
 
     ;
@@ -157,4 +175,4 @@ $BODY$
 
 -- тест
 -- SELECT * FROM gpSelect_Object_ProdOptItems (false, false, zfCalc_UserAdmin())
--- SELECT * FROM gpSelect_Object_ProdOptItems (true, true, zfCalc_UserAdmin())
+-- SELECT * FROM gpSelect_Object_ProdOptItems (false, false,true, zfCalc_UserAdmin())
