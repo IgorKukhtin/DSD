@@ -158,7 +158,7 @@ BEGIN
             , tmpMI_All.Invnumber                  ::TVarChar  AS DOCUMENTNO       --№ документа
             , Null                                 ::TDateTime AS VALUEDATE        --Дата валютирования
             , 50                                   ::Integer   AS PRIORITY         --Приоритет
-            , (lpad (EXTRACT (YEAR FROM tmpMI_All.OperDate)::tvarchar ,4, '0')||lpad (EXTRACT (MONTH FROM tmpMI_All.OperDate)::tvarchar ,2, '0') ||lpad (EXTRACT (DAY FROM tmpMI_All.OperDate)::tvarchar ,2, '0')) ::TVarchar AS DOCUMENTDATE     --Дата документа
+            , (lpad (EXTRACT (YEAR FROM tmpMI_All.OperDate)::TVarChar ,4, '0')||lpad (EXTRACT (MONTH FROM tmpMI_All.OperDate)::TVarChar ,2, '0') ||lpad (EXTRACT (DAY FROM tmpMI_All.OperDate)::TVarChar ,2, '0')) ::TVarChar AS DOCUMENTDATE     --Дата документа
             , ''                                   ::TVarChar  AS ADDENTRIES       --Дополнительные реквизиты платежа
             , '002'                                ::TVarChar  AS PURPOSEPAYMENTID --Код назначения платежа   --????????????????????????????????????????
             , CASE WHEN TRIM (Object_Bank_from.MFO) <> '' THEN Object_Bank_from.MFO ELSE Object_Bank_from.BankName END :: TVarChar  AS BANKID           --Код банка плательщика (МФО)
@@ -208,10 +208,13 @@ BEGIN
          || 'CORRBANKID="'||COALESCE (tmp.CORRBANKID,'')::TVarChar||'" '
          || 'CORRIDENTIFYCODE="'||COALESCE (tmp.CORRIDENTIFYCODE,'')::TVarChar||'" '
          || 'CORRCOUNTRYID="'||COALESCE (tmp.CORRCOUNTRYID,'')::TVarChar||'" '
-         || 'DOCUMENTNO="'||COALESCE (tmp.DOCUMENTNO,'')::TVarChar||'" '
+       --|| 'DOCUMENTNO="'||COALESCE (tmp.DOCUMENTNO,'')::TVarChar||'" '
+         || 'DOCUMENTNO="'||CAST (NEXTVAL ('movement_bankaccount_plat_seq') AS TVarChar)||'" '
+         
          || 'VALUEDATE="'||COALESCE (tmp.VALUEDATE::TVarChar,'')::TVarChar||'" '
          || 'PRIORITY="'||tmp.PRIORITY||'" '
-         || 'DOCUMENTDATE="'||tmp.DOCUMENTDATE||'" '
+       --|| 'DOCUMENTDATE="'||tmp.DOCUMENTDATE||'" '
+         || 'DOCUMENTDATE="'||(lpad (EXTRACT (YEAR FROM CURRENT_DATE + INTERVAL '1 DAY')::TVarChar ,4, '0')||lpad (EXTRACT (MONTH FROM CURRENT_DATE + INTERVAL '1 DAY')::TVarChar ,2, '0') ||lpad (EXTRACT (DAY FROM CURRENT_DATE + INTERVAL '1 DAY')::TVarChar ,2, '0')) ::TVarChar||'" '
          || 'ADDENTRIES="'||COALESCE (tmp.ADDENTRIES,'')::TVarChar||'" '
          || 'PURPOSEPAYMENTID="'||COALESCE (tmp.PURPOSEPAYMENTID,'')||'" '
          || 'BANKID="'||COALESCE (tmp.BANKID,'')::TVarChar||'" '
