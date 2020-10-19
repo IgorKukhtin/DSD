@@ -168,6 +168,19 @@ BEGIN
                 AND MovementItem.Id         = inSaleMI_Id
                 AND MovementItem.isErased   = FALSE
                 ;
+
+              -- Определили
+              IF COALESCE (outCurrencyValue, 0) = 0
+              THEN
+                   -- Определили курс на Дату документа
+                   SELECT COALESCE (tmp.Amount, 1), COALESCE (tmp.ParValue, 0)
+                          INTO outCurrencyValue, outParValue
+                   FROM lfSelect_Movement_Currency_byDate (inOperDate      := vbOperDate
+                                                         , inCurrencyFromId:= zc_Currency_Basis()
+                                                         , inCurrencyToId  := vbCurrencyId
+                                                          ) AS tmp;
+              END IF;
+
          ELSE
              -- Определили курс на Дату документа
              SELECT COALESCE (tmp.Amount, 1), COALESCE (tmp.ParValue, 0)
@@ -184,7 +197,7 @@ BEGIN
          END IF;
          -- проверка
          IF COALESCE (outCurrencyValue, 0) = 0 THEN
-            RAISE EXCEPTION 'Ошибка.Не определено значение <Курс>.';
+            RAISE EXCEPTION 'Ошибка.Не определено значение <Курс>. %  %  %', vbOperDate, lfGet_Object_ValueData_sh (zc_Currency_Basis()),  lfGet_Object_ValueData_sh (vbCurrencyId);
          END IF;
          -- проверка
          IF COALESCE (outParValue, 0) = 0 THEN

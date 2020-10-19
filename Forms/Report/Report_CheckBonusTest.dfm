@@ -249,6 +249,8 @@ inherited Report_CheckBonusTestForm: TReport_CheckBonusTestForm
           object PercentRetBonus: TcxGridDBColumn
             Caption = 'Max % '#1074#1086#1079#1074#1088#1072#1090#1072' '#1087#1083#1072#1085
             DataBinding.FieldName = 'PercentRetBonus'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DisplayFormat = ',0.####;-,0.####; ;'
             Visible = False
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
@@ -258,6 +260,8 @@ inherited Report_CheckBonusTestForm: TReport_CheckBonusTestForm
           object PercentRetBonus_fact: TcxGridDBColumn
             Caption = 'Max % '#1074#1086#1079#1074#1088#1072#1090#1072' '#1092#1072#1082#1090'('#1075#1088#1085')'
             DataBinding.FieldName = 'PercentRetBonus_fact'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DisplayFormat = ',0.####;-,0.####; ;'
             Visible = False
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
@@ -267,6 +271,8 @@ inherited Report_CheckBonusTestForm: TReport_CheckBonusTestForm
           object PercentRetBonus_fact_weight: TcxGridDBColumn
             Caption = 'Max % '#1074#1086#1079#1074#1088#1072#1090#1072' '#1092#1072#1082#1090' ('#1042#1077#1089')'
             DataBinding.FieldName = 'PercentRetBonus_fact_weight'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DisplayFormat = ',0.####;-,0.####; ;'
             Visible = False
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
@@ -305,9 +311,7 @@ inherited Report_CheckBonusTestForm: TReport_CheckBonusTestForm
             Caption = #1055#1088#1086#1076#1072#1085#1086' ('#1075#1088#1085')'
             DataBinding.FieldName = 'Sum_Sale'
             PropertiesClassName = 'TcxCurrencyEditProperties'
-            Properties.DecimalPlaces = 4
             Properties.DisplayFormat = ',0.####;-,0.####; ;'
-            Properties.ReadOnly = True
             Visible = False
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
@@ -319,9 +323,7 @@ inherited Report_CheckBonusTestForm: TReport_CheckBonusTestForm
             Caption = #1042#1086#1079#1074#1088#1072#1090' ('#1075#1088#1085')'
             DataBinding.FieldName = 'Sum_Return'
             PropertiesClassName = 'TcxCurrencyEditProperties'
-            Properties.DecimalPlaces = 4
             Properties.DisplayFormat = ',0.####;-,0.####; ;'
-            Properties.ReadOnly = True
             Visible = False
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
@@ -1117,7 +1119,7 @@ inherited Report_CheckBonusTestForm: TReport_CheckBonusTestForm
     Top = 208
   end
   inherited spSelect: TdsdStoredProc
-    StoredProcName = 'gpReport_CheckBonusTest4'
+    StoredProcName = 'gpReport_CheckBonusTest2'
     Params = <
       item
         Name = 'inStartDate'

@@ -1,9 +1,10 @@
 -- FunctiON: gpReport_CheckBonusTest ()
 
+-- gpReport_CheckBonusTest = gpReport_CheckBonusTest2
 
-DROP FUNCTION IF EXISTS gpReport_CheckBonusTest (TDateTime, TDateTime, Integer, Integer, Integer, Boolean, TVarChar);
+DROP FUNCTION IF EXISTS gpReport_CheckBonusTest2 (TDateTime, TDateTime, Integer, Integer, Integer, Boolean, TVarChar);
 
-CREATE OR REPLACE FUNCTION gpReport_CheckBonusTest (
+CREATE OR REPLACE FUNCTION gpReport_CheckBonusTest2 (
     IN inStartDate           TDateTime ,  
     IN inEndDate             TDateTime ,
     IN inPaidKindID          Integer   ,
@@ -1035,9 +1036,9 @@ $BODY$
 
 -- тест
 -- select * from gpReport_CheckBonusTest (inStartDate:= '15.03.2016', inEndDate:= '15.03.2016', inPaidKindID:= zc_Enum_PaidKind_FirstForm(), inJuridicalId:= 0, inBranchId:= 0, inSession:= zfCalc_UserAdmin());
--- select * from gpReport_CheckBonusTest(inStartDate := ('28.05.2020')::TDateTime , inEndDate := ('28.05.2020')::TDateTime , inPaidKindId := 4 , inJuridicalId := 344240 , inBranchId := 0 ,  inSession := '5');--
+-- select * from gpReport_CheckBonusTest2(inStartDate := ('28.05.2020')::TDateTime , inEndDate := ('28.05.2020')::TDateTime , inPaidKindId := 4 , inJuridicalId := 344240 , inBranchId := 0 ,  inSession := '5');--
 
- --select * from gpReport_CheckBonusTest4(inStartDate := ('01.07.2020')::TDateTime , inEndDate := ('03.07.2020')::TDateTime , inPaidKindId := 4 , inJuridicalId := 0 , inBranchId := 0 ,  inSession := '5');
- --select * from gpReport_CheckBonusTest4(inStartDate := ('01.06.2020')::TDateTime , inEndDate := ('30.06.2020')::TDateTime , inPaidKindId := 3 , inJuridicalId := 0 , inBranchId := 0 ,  inSession := '5')
+ --select * from gpReport_CheckBonusTest2(inStartDate := ('01.07.2020')::TDateTime , inEndDate := ('03.07.2020')::TDateTime , inPaidKindId := 4 , inJuridicalId := 0 , inBranchId := 0 ,  inSession := '5');
+ --select * from gpReport_CheckBonusTest2(inStartDate := ('01.06.2020')::TDateTime , inEndDate := ('30.06.2020')::TDateTime , inPaidKindId := 3 , inJuridicalId := 0 , inBranchId := 0 ,  inSession := '5')
 --where JuridicalId =862910 ;
  

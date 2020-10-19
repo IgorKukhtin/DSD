@@ -1095,6 +1095,7 @@ object ProductForm: TProductForm
       Caption = #1059#1076#1072#1083#1080#1090#1100' '#1062#1074#1077#1090
       Hint = #1059#1076#1072#1083#1080#1090#1100' '#1062#1074#1077#1090
       ImageIndex = 2
+      ShortCut = 46
       ErasedFieldName = 'isErased'
       DataSource = ProdColorItemsDS
     end
@@ -1109,6 +1110,7 @@ object ProductForm: TProductForm
       Caption = #1059#1076#1072#1083#1080#1090#1100' '#1054#1087#1094#1080#1102
       Hint = #1059#1076#1072#1083#1080#1090#1100' '#1054#1087#1094#1080#1102
       ImageIndex = 2
+      ShortCut = 46
       ErasedFieldName = 'isErased'
       DataSource = ProdOptItemsDS
     end
@@ -1123,6 +1125,7 @@ object ProductForm: TProductForm
       Caption = #1059#1076#1072#1083#1080#1090#1100
       Hint = #1059#1076#1072#1083#1080#1090#1100' '#1076#1072#1085#1085#1099#1077
       ImageIndex = 2
+      ShortCut = 46
       ErasedFieldName = 'isErased'
       DataSource = DataSource
     end
@@ -1137,6 +1140,7 @@ object ProductForm: TProductForm
       Caption = #1042#1086#1089#1089#1090#1072#1085#1086#1074#1080#1090#1100
       Hint = #1042#1086#1089#1089#1090#1072#1085#1086#1074#1080#1090#1100' '#1076#1072#1085#1085#1099#1077
       ImageIndex = 8
+      ShortCut = 46
       ErasedFieldName = 'isErased'
       isSetErased = False
       DataSource = ProdOptItemsDS
@@ -1152,6 +1156,7 @@ object ProductForm: TProductForm
       Caption = #1042#1086#1089#1089#1090#1072#1085#1086#1074#1080#1090#1100
       Hint = #1042#1086#1089#1089#1090#1072#1085#1086#1074#1080#1090#1100' '#1076#1072#1085#1085#1099#1077
       ImageIndex = 8
+      ShortCut = 46
       ErasedFieldName = 'isErased'
       isSetErased = False
       DataSource = ProdColorItemsDS
@@ -1167,6 +1172,7 @@ object ProductForm: TProductForm
       Caption = #1042#1086#1089#1089#1090#1072#1085#1086#1074#1080#1090#1100
       Hint = #1042#1086#1089#1089#1090#1072#1085#1086#1074#1080#1090#1100' '#1076#1072#1085#1085#1099#1077
       ImageIndex = 8
+      ShortCut = 46
       ErasedFieldName = 'isErased'
       isSetErased = False
       DataSource = DataSource
@@ -1387,6 +1393,21 @@ object ProductForm: TProductForm
           Value = Null
           Component = ProdColorItemsCDS
           ComponentItem = 'ProdColorPatternName'
+          DataType = ftString
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'ProdColorGroupId'
+          Value = Null
+          Component = ProdColorItemsCDS
+          ComponentItem = 'ProdColorGroupId'
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'ProdColorGroupName'
+          Value = Null
+          Component = ProdColorItemsCDS
+          ComponentItem = 'ProdColorGroupName'
           DataType = ftString
           MultiSelectSeparator = ','
         end>
