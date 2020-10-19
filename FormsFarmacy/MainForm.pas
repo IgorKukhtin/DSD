@@ -742,6 +742,7 @@ type
     N259: TMenuItem;
     actRelatedProduct: TdsdOpenForm;
     N260: TMenuItem;
+    N261: TMenuItem;
     procedure actSaveDataExecute(Sender: TObject);
 
     procedure miRepriceClick(Sender: TObject);
@@ -754,6 +755,7 @@ type
     procedure miReprice_testClick(Sender: TObject);
     procedure TimerPUSHTimer(Sender: TObject);
     procedure FormCreate(Sender: TObject);
+    procedure N261Click(Sender: TObject);
   private
     { Private declarations }
     FLoadPUSH: Integer;
@@ -771,7 +773,7 @@ implementation
 
 uses
   UploadUnloadData, Dialogs, Forms, SysUtils, CommonData, IdGlobal, RepriceUnit,  RepriceUnit_test,
-  RepriceChangeRetail, ExportSalesForSupp, Report_Analysis_Remains_Selling,
+  RepriceChangeRetail, ExportSalesForSupp, Report_Analysis_Remains_Selling, SearchByCaption,
   Report_ImplementationPlanEmployee, Report_IncomeConsumptionBalance, PUSHMessageFarmacy;
 
 
@@ -863,6 +865,17 @@ end;
 procedure TMainForm.miReprice_testClick(Sender: TObject);
 begin
   with TRepriceUnit_testForm.Create(Self) do
+  try
+     Show;
+  finally
+     //Free;
+  end;
+end;
+
+procedure TMainForm.N261Click(Sender: TObject);
+begin
+  inherited;
+  with TSearchByCaptionForm.Create(Self) do
   try
      Show;
   finally

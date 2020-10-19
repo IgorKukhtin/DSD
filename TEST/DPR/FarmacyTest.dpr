@@ -958,7 +958,8 @@ uses
   RelatedProduct in '..\..\FormsFarmacy\Document\RelatedProduct.pas' {RelatedProductForm: TParentForm},
   RelatedProductJournal in '..\..\FormsFarmacy\Document\RelatedProductJournal.pas' {RelatedProductJournalForm: TParentForm},
   ChoiceRelatedProduct in '..\..\FormsFarmacy\Guides\ChoiceRelatedProduct.pas' {ChoiceRelatedProductForm: TParentForm},
-  ConditionsKeep in '..\..\FormsFarmacy\Guides\ConditionsKeep.pas' {ConditionsKeepForm: TParentForm};
+  ConditionsKeep in '..\..\FormsFarmacy\Guides\ConditionsKeep.pas' {ConditionsKeepForm: TParentForm},
+  SearchByCaption in '..\..\FormsFarmacy\System\SearchByCaption.pas' {SearchByCaptionForm: TParentForm};
 
 {$R *.res}
 {$R DevExpressRus.res}

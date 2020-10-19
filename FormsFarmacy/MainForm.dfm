@@ -5184,6 +5184,10 @@ inherited MainForm: TMainForm
       object miRecalcMCSSheduler: TMenuItem [36]
         Action = actRecalcMCSSheduler
       end
+      object N261: TMenuItem [39]
+        Caption = #1055#1086#1080#1089#1082' '#1087#1086' '#1085#1072#1079#1074#1072#1085#1080#1103#1084' '#1074' '#1084#1077#1085#1102
+        OnClick = N261Click
+      end
     end
   end
   object DSGetInfo: TDataSource

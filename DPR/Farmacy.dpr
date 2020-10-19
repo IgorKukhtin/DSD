@@ -1,7 +1,6 @@
 program Farmacy;
 
 uses
-  {$IFDEF VER340} MidasLib, {$ENDIF}
   Windows,
   Vcl.Forms,
   Controls,
@@ -92,7 +91,8 @@ uses
   PUSHMessageFarmacy in '..\FormsFarmacy\System\PUSHMessageFarmacy.pas' {PUSHMessageFarmacyForm},
   IftminFozzXML in '..\SOURCE\EDI\IftminFozzXML.pas',
   SearchRemainsVIP in '..\FormsFarmacy\Document\SearchRemainsVIP.pas' {SearchRemainsVIPForm},
-  dsdTranslator in '..\SOURCE\COMPONENT\dsdTranslator.pas';
+  dsdTranslator in '..\SOURCE\COMPONENT\dsdTranslator.pas',
+  SearchByCaption in '..\FormsFarmacy\System\SearchByCaption.pas' {SearchByCaptionForm};
 
 {$R *.res}
 
