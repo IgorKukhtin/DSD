@@ -15,6 +15,7 @@ RETURNS TABLE (Id Integer, InvNumber TVarChar, OperDate TDateTime
 --             , JuridicalName TVarChar
              , LayoutId Integer, LayoutName TVarChar
              , Comment TVarChar
+             , isPharmacyItem Boolean
               )
 
 AS
@@ -48,6 +49,7 @@ BEGIN
            , Object_Layout.Id                   AS LayoutId
            , Object_Layout.ValueData            AS LayoutName
            , COALESCE (MovementString_Comment.ValueData,'') :: TVarChar AS Comment
+           , COALESCE(MovementBoolean_PharmacyItem.ValueData, FALSE)    AS isPharmacyItem
 
        FROM tmpMovement AS Movement
 
@@ -60,6 +62,10 @@ BEGIN
             LEFT JOIN MovementString AS MovementString_Comment
                                      ON MovementString_Comment.MovementId = Movement.Id
                                     AND MovementString_Comment.DescId = zc_MovementString_Comment()
+
+            LEFT JOIN MovementBoolean AS MovementBoolean_PharmacyItem
+                                      ON MovementBoolean_PharmacyItem.MovementId = Movement.Id
+                                     AND MovementBoolean_PharmacyItem.DescId = zc_MovementBoolean_PharmacyItem()
 
             LEFT JOIN MovementLinkObject AS MovementLinkObject_Layout
                                          ON MovementLinkObject_Layout.MovementId = Movement.Id

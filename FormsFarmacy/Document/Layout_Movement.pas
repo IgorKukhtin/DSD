@@ -62,6 +62,7 @@ type
     actInsertMaster: TdsdExecStoredProc;
     spInsertByLayout: TdsdStoredProc;
     bbInsertByLayout: TdxBarButton;
+    cbPharmacyItem: TcxCheckBox;
   private
     { Private declarations }
   public
