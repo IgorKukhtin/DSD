@@ -162,6 +162,16 @@
               Format = ',0.####'
               Kind = skSum
               Column = Return_Summ_10700
+            end
+            item
+              Format = ',0.00##;-,0.00##; ;'
+              Kind = skSum
+              Column = Sale_Summ_CostZat
+            end
+            item
+              Format = ',0.00##;-,0.00##; ;'
+              Kind = skSum
+              Column = Sale_Summ_zat
             end>
           DataController.Summary.FooterSummaryItems = <
             item
@@ -303,6 +313,16 @@
               Format = #1042#1089#1077#1075#1086' '#1089#1090#1088#1086#1082': ,0'
               Kind = skCount
               Column = BranchName
+            end
+            item
+              Format = ',0.00##;-,0.00##; ;'
+              Kind = skSum
+              Column = Sale_Summ_CostZat
+            end
+            item
+              Format = ',0.00##;-,0.00##; ;'
+              Kind = skSum
+              Column = Sale_Summ_zat
             end>
           OptionsData.CancelOnExit = True
           OptionsData.Deleting = False
@@ -757,6 +777,39 @@
             Properties.DecimalPlaces = 4
             Properties.DisplayFormat = ',0.00##;-,0.00##; ;'
             Visible = False
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 80
+          end
+          object Price_zat: TcxGridDBColumn
+            Caption = #1062#1077#1085#1072' '#1079#1072#1090#1088#1072#1090#1099
+            DataBinding.FieldName = 'Price_zat'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 4
+            Properties.DisplayFormat = ',0.####;-,0.####; ;'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            HeaderHint = #1062#1077#1085#1072' '#1079#1072#1090#1088#1072#1090#1099' '#1055#1056#1040#1049#1057' - '#1060#1040#1050#1058' '#1082#1072#1083#1100#1082#1091#1083#1103#1094#1080#1080' ('#1057#1067#1056#1068#1045')'
+            Width = 55
+          end
+          object Sale_Summ_zat: TcxGridDBColumn
+            Caption = #1057#1091#1084#1084#1072' '#1079#1072#1090#1088#1072#1090#1099
+            DataBinding.FieldName = 'Sale_Summ_zat'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 4
+            Properties.DisplayFormat = ',0.00##;-,0.00##; ;'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 80
+          end
+          object Sale_Summ_CostZat: TcxGridDBColumn
+            Caption = #1048#1090#1086#1075#1086' '#1055#1088#1086#1076' '#1089'/'#1089' + '#1079#1072#1090#1088#1072#1090#1099
+            DataBinding.FieldName = 'Sale_Summ_CostZat'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 4
+            Properties.DisplayFormat = ',0.00##;-,0.00##; ;'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Options.Editing = False

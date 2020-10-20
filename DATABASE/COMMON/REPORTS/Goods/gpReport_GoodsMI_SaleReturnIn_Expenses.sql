@@ -27,13 +27,14 @@ RETURNS TABLE (GoodsGroupName TVarChar, GoodsGroupNameFull TVarChar
              , TradeMarkId Integer, TradeMarkName TVarChar
              , GoodsGroupAnalystName TVarChar, GoodsTagName TVarChar, GoodsGroupStatName TVarChar
              , GoodsPlatformName TVarChar
-             , JuridicalGroupName TVarChar
+             
+, JuridicalGroupName TVarChar
              , BranchId Integer, BranchCode Integer, BranchName TVarChar
              , BusinessId Integer, BusinessCode Integer, BusinessName TVarChar
-             , JuridicalId Integer, JuridicalCode Integer, JuridicalName TVarChar/*, OKPO TVarChar*/
+             , JuridicalId Integer, JuridicalCode Integer, JuridicalName TVarChar
              , RetailName TVarChar, RetailReportName TVarChar
              , AreaName TVarChar, PartnerTagName TVarChar
-             , Address TVarChar, RegionName TVarChar, ProvinceName TVarChar, CityKindName TVarChar, CityName TVarChar/*, ProvinceCityName TVarChar, StreetKindName TVarChar, StreetName TVarChar*/
+             , Address TVarChar, RegionName TVarChar, ProvinceName TVarChar, CityKindName TVarChar, CityName TVarChar
              , PartnerId Integer, PartnerCode Integer, PartnerName TVarChar
              , ContractId Integer, ContractCode Integer, ContractNumber TVarChar, ContractTagName TVarChar, ContractTagGroupName TVarChar
              , PersonalName TVarChar, UnitName_Personal TVarChar, BranchName_Personal TVarChar
@@ -53,7 +54,9 @@ RETURNS TABLE (GoodsGroupName TVarChar, GoodsGroupNameFull TVarChar
              , ReturnPercent TFloat
              , Sale_SummMVAT TFloat, Sale_SummVAT TFloat
              , Return_SummMVAT TFloat, Return_SummVAT TFloat
-              )
+             , Price_zat TFloat, Sale_Summ_zat TFloat, Sale_Summ_CostZat TFloat
+             
+ )
 AS
 $BODY$
    DECLARE vbUserId Integer;
@@ -148,6 +151,7 @@ BEGIN
        SELECT * 
             , 0 :: TFloat AS Sale_SummMVAT,   0 :: TFloat AS Sale_SummVAT
             , 0 :: TFloat AS Return_SummMVAT, 0 :: TFloat AS Return_SummVAT
+            , 0 :: TFloat AS Price_zat, 0 :: TFloat AS Sale_Summ_zat, 0 :: TFloat AS Sale_Summ_CostZat
        FROM gpReport_GoodsMI_SaleReturnIn_OLD_TWO (inStartDate
                                                  , inEndDate
                                                  , inBranchId
@@ -351,6 +355,55 @@ BEGIN
                        UNION ALL
                         SELECT * FROM tmpReport_after WHERE vbEndDate_olap < inEndDate
                        )
+
+-- для затраты выбираем рецептуры
+ , tmpChildReceiptTable AS (SELECT lpSelect.ReceiptId_from, lpSelect.ReceiptId, lpSelect.GoodsId_in, lpSelect.GoodsKindId_in, lpSelect.Amount_in
+                                 , lpSelect.ReceiptChildId, lpSelect.GoodsId_out, lpSelect.GoodsKindId_out, lpSelect.Amount_out, lpSelect.isStart, lpSelect.isCost
+                                 ,  COALESCE (PriceList2.Price, 0) AS Price2
+                            FROM lpSelect_Object_ReceiptChildDetail () AS lpSelect
+                                 LEFT JOIN ObjectHistory_PriceListItem_View AS PriceList2 ON PriceList2.PriceListId = 18887 -- "ПРАЙС - ФАКТ калькуляции (СЫРЬЕ)" inPriceListId_2 
+                                                                                         AND PriceList2.GoodsId = lpSelect.GoodsId_out
+                                                                                         AND inEndDate >= PriceList2.StartDate AND inEndDate < PriceList2.EndDate
+                            )
+
+ , tmpReceiptCost AS (SELECT tmpAll.GoodsId
+                           , tmpAll.GoodsKindId
+                           , SUM (tmpAll.Summ2_cost) AS Summ2_cost
+                           , SUM (CASE WHEN ObjectFloat_Value.ValueData <> 0 THEN CAST (tmpAll.Summ2_cost / ObjectFloat_Value.ValueData AS NUMERIC (16, 3)) ELSE 0 END) AS newSumm2_cost --затрата на 1 кг
+                      FROM (SELECT tmp.ReceiptId
+                                 , tmpMI.GoodsId
+                                 , tmpMI.GoodsKindId
+                                 , SUM (tmp.Summ2_cost) AS Summ2_cost
+                            FROM (SELECT tmpChildReceiptTable.ReceiptId
+                                       , SUM (CASE WHEN tmpChildReceiptTable.isCost = TRUE THEN tmpChildReceiptTable.Amount_out * tmpChildReceiptTable.Price2 ELSE 0 END) AS Summ2_cost
+                                  FROM tmpChildReceiptTable
+                                  WHERE tmpChildReceiptTable.ReceiptId_from = 0
+                                  GROUP BY tmpChildReceiptTable.ReceiptId
+                                 ) AS tmp
+                                 LEFT JOIN ObjectLink AS ObjectLink_Receipt_Goods
+                                                      ON ObjectLink_Receipt_Goods.ObjectId = tmp.ReceiptId
+                                                     AND ObjectLink_Receipt_Goods.DescId   = zc_ObjectLink_Receipt_Goods()
+                                 LEFT JOIN ObjectLink AS ObjectLink_Receipt_GoodsKind
+                                                      ON ObjectLink_Receipt_GoodsKind.ObjectId = tmp.ReceiptId
+                                                     AND ObjectLink_Receipt_GoodsKind.DescId   = zc_ObjectLink_Receipt_GoodsKind()
+                                 INNER JOIN (SELECT tmpData.GoodsId, tmpData.GoodsKindId 
+                                             FROM tmpData 
+                                             WHERE tmpData.Sale_AmountPartner_Weight <> 0 
+                                                OR tmpData.Sale_AmountPartner_Sh <> 0
+                                             GROUP BY tmpData.GoodsId, tmpData.GoodsKindId
+                                            ) AS tmpMI ON tmpMI.GoodsId     = ObjectLink_Receipt_Goods.ChildObjectId
+                                                      AND tmpMI.GoodsKindId = COALESCE (ObjectLink_Receipt_GoodsKind.ChildObjectId, 0)
+                            GROUP BY tmp.ReceiptId
+                                   , tmpMI.GoodsId
+                                   , tmpMI.GoodsKindId
+                            ) AS tmpALL
+                       LEFT JOIN ObjectFloat AS ObjectFloat_Value
+                                             ON ObjectFloat_Value.ObjectId = tmpAll.ReceiptId
+                                            AND ObjectFloat_Value.DescId   = zc_ObjectFloat_Receipt_Value()
+                      GROUP BY tmpAll.GoodsId
+                             , tmpAll.GoodsKindId
+                      )
+--
        --
        SELECT gpReport.GoodsGroupName, gpReport.GoodsGroupNameFull
             , gpReport.GoodsId, gpReport.GoodsCode, gpReport.GoodsName
@@ -384,7 +437,13 @@ BEGIN
             , CAST (CASE WHEN SUM (gpReport.Sale_AmountPartner_Weight) > 0 THEN 100 * SUM (gpReport.Return_AmountPartner_Weight) / SUM (gpReport.Sale_AmountPartner_Weight) ELSE 0 END AS NUMERIC (16, 1)) :: TFloat AS ReturnPercent
             , 0 :: TFloat AS Sale_SummMVAT,   0 :: TFloat AS Sale_SummVAT
             , 0 :: TFloat AS Return_SummMVAT, 0 :: TFloat AS Return_SummVAT
+            
+            , tmpReceiptCost.newSumm2_cost                                            :: TFloat AS Price_zat
+            , SUM (tmpReceiptCost.newSumm2_cost * gpReport.Sale_AmountPartner_Weight) :: TFloat AS Sale_Summ_zat
+            , SUM ((tmpReceiptCost.newSumm2_cost * gpReport.Sale_AmountPartner_Weight) + gpReport.Sale_SummCost) :: TFloat AS Sale_Summ_CostZat
        FROM tmpData AS gpReport
+            LEFT JOIN tmpReceiptCost ON tmpReceiptCost.GoodsId = gpReport.GoodsId
+                                    AND COALESCE (tmpReceiptCost.GoodsKindId,0) = COALESCE (gpReport.GoodsKindId,0)
        GROUP BY gpReport.GoodsGroupName, gpReport.GoodsGroupNameFull
               , gpReport.GoodsId, gpReport.GoodsCode, gpReport.GoodsName
               , gpReport.GoodsKindId, gpReport.GoodsKindName, gpReport.MeasureName
@@ -403,6 +462,7 @@ BEGIN
               , gpReport.PersonalTradeName, gpReport.UnitName_PersonalTrade
               , gpReport.InfoMoneyGroupName, gpReport.InfoMoneyDestinationName
               , gpReport.InfoMoneyId, gpReport.InfoMoneyCode, gpReport.InfoMoneyName, gpReport.InfoMoneyName_all
+              , tmpReceiptCost.newSumm2_cost
                ;
        --
        RETURN;
@@ -613,6 +673,54 @@ BEGIN
                                 , ContainerLO_InfoMoney.ObjectId
                         )
 
+-- для затраты выбираем рецептуры
+ , tmpChildReceiptTable AS (SELECT lpSelect.ReceiptId_from, lpSelect.ReceiptId, lpSelect.GoodsId_in, lpSelect.GoodsKindId_in, lpSelect.Amount_in
+                                 , lpSelect.ReceiptChildId, lpSelect.GoodsId_out, lpSelect.GoodsKindId_out, lpSelect.Amount_out, lpSelect.isStart, lpSelect.isCost
+                                 ,  COALESCE (PriceList2.Price, 0) AS Price2
+                            FROM lpSelect_Object_ReceiptChildDetail () AS lpSelect
+                                 LEFT JOIN ObjectHistory_PriceListItem_View AS PriceList2 ON PriceList2.PriceListId = 18887 -- "ПРАЙС - ФАКТ калькуляции (СЫРЬЕ)" inPriceListId_2 
+                                                                                         AND PriceList2.GoodsId = lpSelect.GoodsId_out
+                                                                                         AND inEndDate >= PriceList2.StartDate AND inEndDate < PriceList2.EndDate
+                            )
+
+ , tmpReceiptCost AS (SELECT tmpAll.GoodsId
+                           , tmpAll.GoodsKindId
+                           , SUM (tmpAll.Summ2_cost) AS Summ2_cost
+                           , SUM (CASE WHEN ObjectFloat_Value.ValueData <> 0 THEN CAST (tmpAll.Summ2_cost / ObjectFloat_Value.ValueData AS NUMERIC (16, 3)) ELSE 0 END) AS newSumm2_cost --затрата на 1 кг
+                      FROM (SELECT tmp.ReceiptId
+                                 , tmpMI.GoodsId
+                                 , tmpMI.GoodsKindId
+                                 , SUM (tmp.Summ2_cost) AS Summ2_cost
+                            FROM (SELECT tmpChildReceiptTable.ReceiptId
+                                       , SUM (CASE WHEN tmpChildReceiptTable.isCost = TRUE THEN tmpChildReceiptTable.Amount_out * tmpChildReceiptTable.Price2 ELSE 0 END) AS Summ2_cost
+                                  FROM tmpChildReceiptTable
+                                  WHERE tmpChildReceiptTable.ReceiptId_from = 0
+                                  GROUP BY tmpChildReceiptTable.ReceiptId
+                                 ) AS tmp
+                                 LEFT JOIN ObjectLink AS ObjectLink_Receipt_Goods
+                                                      ON ObjectLink_Receipt_Goods.ObjectId = tmp.ReceiptId
+                                                     AND ObjectLink_Receipt_Goods.DescId   = zc_ObjectLink_Receipt_Goods()
+                                 LEFT JOIN ObjectLink AS ObjectLink_Receipt_GoodsKind
+                                                      ON ObjectLink_Receipt_GoodsKind.ObjectId = tmp.ReceiptId
+                                                     AND ObjectLink_Receipt_GoodsKind.DescId   = zc_ObjectLink_Receipt_GoodsKind()
+                                 INNER JOIN (SELECT tmpOperationGroup2.GoodsId, tmpOperationGroup2.GoodsKindId 
+                                             FROM tmpOperationGroup2 
+                                             WHERE tmpOperationGroup2.Sale_AmountPartner <> 0 
+                                                OR tmpOperationGroup2.Return_AmountPartner <> 0
+                                             GROUP BY tmpOperationGroup2.GoodsId, tmpOperationGroup2.GoodsKindId
+                                            ) AS tmpMI ON tmpMI.GoodsId     = ObjectLink_Receipt_Goods.ChildObjectId
+                                                      AND tmpMI.GoodsKindId = COALESCE (ObjectLink_Receipt_GoodsKind.ChildObjectId, 0)
+                            GROUP BY tmp.ReceiptId
+                                   , tmpMI.GoodsId
+                                   , tmpMI.GoodsKindId
+                            ) AS tmpALL
+                       LEFT JOIN ObjectFloat AS ObjectFloat_Value
+                                             ON ObjectFloat_Value.ObjectId = tmpAll.ReceiptId
+                                            AND ObjectFloat_Value.DescId   = zc_ObjectFloat_Receipt_Value()
+                      GROUP BY tmpAll.GoodsId
+                             , tmpAll.GoodsKindId
+                      )
+--
  , tmpOperationGroup AS (SELECT CASE WHEN inIsPartner  = TRUE  THEN tmpOperationGroup2.JuridicalId ELSE 0 END AS JuridicalId
                               , CASE WHEN inIsContract = TRUE  THEN ContainerLinkObject_Contract.ObjectId ELSE 0 END AS ContractId
                               , CASE WHEN inIsPartner  = FALSE THEN 0 ELSE tmpOperationGroup2.PartnerId END AS PartnerId
@@ -658,6 +766,9 @@ BEGIN
 
                               , SUM (tmpOperationGroup2.Return_SummCost) AS Return_SummCost
                               , SUM (tmpOperationGroup2.Return_SummCost_40200) AS Return_SummCost_40200
+                              
+                              , tmpReceiptCost.newSumm2_cost                                               AS Price_zat
+                              , SUM (tmpReceiptCost.newSumm2_cost * tmpOperationGroup2.Sale_AmountPartner) AS Sale_Summ_zat
 
                          FROM tmpOperationGroup2
                               LEFT JOIN ContainerLinkObject AS ContainerLinkObject_Contract
@@ -679,7 +790,8 @@ BEGIN
                               LEFT JOIN _tmpPartner ON _tmpPartner.PartnerId = tmpOperationGroup2.PartnerId
                               LEFT JOIN _tmpGoods ON _tmpGoods.GoodsId = tmpOperationGroup2.GoodsId
 
-
+                              LEFT JOIN tmpReceiptCost ON tmpReceiptCost.GoodsId = tmpOperationGroup2.GoodsId
+                                                      AND COALESCE (tmpReceiptCost.GoodsKindId,0) = COALESCE (tmpOperationGroup2.GoodsKindId,0)
                          WHERE (_tmpPartner.PartnerId > 0 OR vbIsPartner_where = FALSE)
                            AND (_tmpGoods.GoodsId > 0 OR vbIsGoods_where = FALSE)
                          GROUP BY CASE WHEN inIsPartner  = TRUE  THEN tmpOperationGroup2.JuridicalId ELSE 0 END
@@ -691,6 +803,7 @@ BEGIN
                                 , _tmpGoods.TradeMarkId
                                 , CASE WHEN inIsGoods = TRUE THEN tmpOperationGroup2.GoodsId ELSE 0 END
                                 , CASE WHEN inIsGoodsKind = TRUE THEN tmpOperationGroup2.GoodsKindId ELSE 0 END
+                                , tmpReceiptCost.newSumm2_cost
                         )
 
      SELECT Object_GoodsGroup.ValueData        AS GoodsGroupName
@@ -719,8 +832,7 @@ BEGIN
           , Object_Juridical.Id              AS JuridicalId
           , Object_Juridical.ObjectCode      AS JuridicalCode
           , Object_Juridical.ValueData       AS JuridicalName
-          /*, '' :: TVarChar                   AS OKPO*/
-
+     
           , Object_Retail.ValueData       AS RetailName
           , Object_RetailReport.ValueData AS RetailReportName
 
@@ -731,9 +843,6 @@ BEGIN
           , View_Partner_Address.ProvinceName
           , View_Partner_Address.CityKindName
           , View_Partner_Address.CityName
-          /*, View_Partner_Address.ProvinceCityName
-          , View_Partner_Address.StreetKindName
-          , View_Partner_Address.StreetName*/
 
           , View_Partner_Address.PartnerId
           , View_Partner_Address.PartnerCode
@@ -801,7 +910,11 @@ BEGIN
 
          , 0 :: TFloat AS Sale_SummMVAT,   0 :: TFloat AS Sale_SummVAT
          , 0 :: TFloat AS Return_SummMVAT, 0 :: TFloat AS Return_SummVAT
-
+         
+         , tmpOperationGroup.Price_zat      ::TFloat AS Price_zat
+         , tmpOperationGroup.Sale_Summ_zat  ::TFloat AS Sale_Summ_zat
+         , (COALESCE (tmpOperationGroup.Sale_Summ_zat,0) + COALESCE (tmpOperationGroup.Sale_SummCost,0))  ::TFloat AS Sale_Summ_CostZat
+        
      FROM tmpOperationGroup
 
           LEFT JOIN Object AS Object_Branch ON Object_Branch.Id = tmpOperationGroup.BranchId
@@ -936,3 +1049,4 @@ $BODY$
 */
 -- тест
 -- SELECT * FROM gpReport_GoodsMI_SaleReturnIn_Expenses (inStartDate:= '01.08.2019', inEndDate:= '01.08.2019', inBranchId:= 0, inAreaId:= 0, inRetailId:= 0, inJuridicalId:= 0, inPaidKindId:= zc_Enum_PaidKind_FirstForm(), inTradeMarkId:= 0, inGoodsGroupId:= 0, inInfoMoneyId:= zc_Enum_InfoMoney_30101(), inIsPartner:= TRUE, inIsTradeMark:= TRUE, inIsGoods:= TRUE, inIsGoodsKind:= TRUE, inIsContract:= FALSE, inIsOLAP:= TRUE, inSession:= zfCalc_UserAdmin());
+-- select * from gpReport_GoodsMI_SaleReturnIn_Expenses(inStartDate := ('30.09.2020')::TDateTime , inEndDate := ('30.09.2020')::TDateTime , inBranchId := 0 , inAreaId := 0 , inRetailId := 310855 , inJuridicalId := 0 , inPaidKindId := 0 , inTradeMarkId := 0 , inGoodsGroupId := 0 , inInfoMoneyId := 0 , inIsPartner := 'True' , inIsTradeMark := 'False' , inIsGoods := 'True' , inIsGoodsKind := 'True' , inisContract := 'False' , inIsOLAP := 'True' ,  inSession := '5');
