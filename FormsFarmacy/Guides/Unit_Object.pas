@@ -308,6 +308,14 @@ type
     dxBarStatic1: TdxBarStatic;
     HT_SUN_All: TcxGridDBColumn;
     DateCheck: TcxGridDBColumn;
+    TypeSAUA: TcxGridDBColumn;
+    MasterSAUA: TcxGridDBColumn;
+    SlaveSAUA: TcxGridDBColumn;
+    spUpdate_UnitSAUA: TdsdStoredProc;
+    spClear_UnitSAUA: TdsdStoredProc;
+    actChoiceUnitSAUA: TOpenChoiceForm;
+    actUpdate_UnitSAUA: TdsdExecStoredProc;
+    actClear_UnitSAUA: TdsdExecStoredProc;
   private
     { Private declarations }
   public

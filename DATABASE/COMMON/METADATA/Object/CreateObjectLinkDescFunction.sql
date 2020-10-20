@@ -2401,9 +2401,14 @@ CREATE OR REPLACE FUNCTION zc_ObjectLink_JuridicalPriorities_Goods() RETURNS Int
 INSERT INTO ObjectLinkDesc(Code, ItemName, DescId, ChildObjectDescId)
 SELECT 'zc_ObjectLink_JuridicalPriorities_Goods', 'Связь с главным товаром', zc_Object_JuridicalPriorities(), zc_Object_Goods() WHERE NOT EXISTS (SELECT * FROM ObjectLinkDesc WHERE Code = 'zc_ObjectLink_JuridicalPriorities_Goods');
 
+CREATE OR REPLACE FUNCTION zc_ObjectLink_Unit_UnitSAUA() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM ObjectLinkDesc WHERE Code = 'zc_ObjectLink_Unit_UnitSAUA'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
+INSERT INTO ObjectLinkDesc(Code, ItemName, DescId, ChildObjectDescId)
+SELECT 'zc_ObjectLink_Unit_UnitSAUA', 'Связь со Slave в системе автоматического управления ассортиментом САУА', zc_Object_Unit(), zc_Object_Unit() WHERE NOT EXISTS (SELECT * FROM ObjectLinkDesc WHERE Code = 'zc_ObjectLink_Unit_UnitSAUA');
+
 /*-------------------------------------------------------------------------------
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.   Воробкало А.А.   Шаблий О.В.
+ 20.10.20                                                                                      * zc_ObjectLink_Unit_UnitSAUA
  05.10.20         * zc_ObjectLink_MemberBranch_Branch
                     zc_ObjectLink_MemberBranch_Member
  25.09.20         * zc_ObjectLink_ReportBonus_Juridical

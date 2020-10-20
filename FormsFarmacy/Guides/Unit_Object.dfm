@@ -4,7 +4,7 @@ inherited Unit_ObjectForm: TUnit_ObjectForm
   ClientWidth = 1434
   PopupMenu = PopupMenu
   ExplicitWidth = 1450
-  ExplicitHeight = 515
+  ExplicitHeight = 516
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
@@ -829,6 +829,42 @@ inherited Unit_ObjectForm: TUnit_ObjectForm
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
+            Width = 103
+          end
+          object TypeSAUA: TcxGridDBColumn
+            Caption = #1058#1080#1087' '#1074' '#1057#1040#1059#1040
+            DataBinding.FieldName = 'TypeSAUA'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 56
+          end
+          object MasterSAUA: TcxGridDBColumn
+            Caption = 'Master '#1074' '#1057#1040#1059#1040
+            DataBinding.FieldName = 'MasterSAUA'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 102
+          end
+          object SlaveSAUA: TcxGridDBColumn
+            Caption = 'Slave '#1074' '#1057#1040#1059#1040
+            DataBinding.FieldName = 'SlaveSAUA'
+            PropertiesClassName = 'TcxButtonEditProperties'
+            Properties.Buttons = <
+              item
+                Action = actUpdate_UnitSAUA
+                Default = True
+                Kind = bkEllipsis
+              end
+              item
+                Action = actClear_UnitSAUA
+                Kind = bkGlyph
+              end>
+            Properties.Images = dmMain.ImageList
+            Properties.ReadOnly = True
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
             Width = 103
           end
         end
@@ -2873,6 +2909,54 @@ inherited Unit_ObjectForm: TUnit_ObjectForm
       isShowModal = True
       OpenBeforeShow = True
     end
+    object actChoiceUnitSAUA: TOpenChoiceForm
+      Category = 'DSDLib'
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      Caption = 'actChoiceUnitSAUA'
+      FormName = 'TUnitTreeForm'
+      FormNameParam.Value = 'TUnitTreeForm'
+      FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
+      GuiParams = <
+        item
+          Name = 'Key'
+          Value = Null
+          Component = FormParams
+          ComponentItem = 'UnitSAUA'
+          MultiSelectSeparator = ','
+        end>
+      isShowModal = True
+    end
+    object actUpdate_UnitSAUA: TdsdExecStoredProc
+      Category = 'DSDLib'
+      MoveParams = <>
+      AfterAction = actRefresh
+      BeforeAction = actChoiceUnitSAUA
+      PostDataSetBeforeExecute = False
+      StoredProc = spUpdate_UnitSAUA
+      StoredProcList = <
+        item
+          StoredProc = spUpdate_UnitSAUA
+        end>
+      Caption = #1059#1089#1090#1072#1085#1086#1074#1080#1090#1100' Slave '#1076#1083#1103' '#1087#1086#1076#1088#1072#1079#1076#1077#1083#1077#1085#1080#1103' '#1087#1086' '#1057#1040#1059#1040
+      Hint = #1059#1089#1090#1072#1085#1086#1074#1080#1090#1100' Slave '#1076#1083#1103' '#1087#1086#1076#1088#1072#1079#1076#1077#1083#1077#1085#1080#1103' '#1087#1086' '#1057#1040#1059#1040
+    end
+    object actClear_UnitSAUA: TdsdExecStoredProc
+      Category = 'DSDLib'
+      MoveParams = <>
+      AfterAction = actRefresh
+      PostDataSetBeforeExecute = False
+      StoredProc = spClear_UnitSAUA
+      StoredProcList = <
+        item
+          StoredProc = spClear_UnitSAUA
+        end>
+      Caption = #1054#1095#1080#1089#1090#1080#1090#1100' Slave '#1076#1083#1103' '#1087#1086#1076#1088#1072#1079#1076#1077#1083#1077#1085#1080#1103' '#1087#1086' '#1057#1040#1059#1040
+      Hint = #1054#1095#1080#1089#1090#1080#1090#1100' Slave '#1076#1083#1103' '#1087#1086#1076#1088#1072#1079#1076#1077#1083#1077#1085#1080#1103' '#1087#1086' '#1057#1040#1059#1040
+      ImageIndex = 52
+      QuestionBeforeExecute = #1054#1095#1080#1089#1090#1080#1090#1100' Slave '#1076#1083#1103' '#1087#1086#1076#1088#1072#1079#1076#1077#1083#1077#1085#1080#1103' '#1087#1086' '#1057#1040#1059#1040'?'
+    end
   end
   inherited MasterDS: TDataSource
     Left = 64
@@ -4550,6 +4634,11 @@ inherited Unit_ObjectForm: TUnit_ObjectForm
         Name = 'ValuesInt'
         Value = '0'
         MultiSelectSeparator = ','
+      end
+      item
+        Name = 'UnitSAUA'
+        Value = Null
+        MultiSelectSeparator = ','
       end>
     Left = 29
     Top = 146
@@ -5677,5 +5766,53 @@ inherited Unit_ObjectForm: TUnit_ObjectForm
     PackSize = 1
     Left = 1032
     Top = 403
+  end
+  object spUpdate_UnitSAUA: TdsdStoredProc
+    StoredProcName = 'gpUpdate_Unit_UnitSAUA'
+    DataSets = <>
+    OutputType = otResult
+    Params = <
+      item
+        Name = 'inId'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'Id'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inUnitSAUA'
+        Value = ''
+        Component = FormParams
+        ComponentItem = 'UnitSAUA'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end>
+    PackSize = 1
+    Left = 728
+    Top = 323
+  end
+  object spClear_UnitSAUA: TdsdStoredProc
+    StoredProcName = 'gpUpdate_Unit_UnitSAUA'
+    DataSets = <>
+    OutputType = otResult
+    Params = <
+      item
+        Name = 'inId'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'Id'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inUnitSAUA'
+        Value = 0
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end>
+    PackSize = 1
+    Left = 840
+    Top = 323
   end
 end

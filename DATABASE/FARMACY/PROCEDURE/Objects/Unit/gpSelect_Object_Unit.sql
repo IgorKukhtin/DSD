@@ -61,7 +61,7 @@ RETURNS TABLE (Id Integer, Code Integer, Name TVarChar
              , TimeWork TVarChar
              , DateCheck TDateTime
              , LayoutId  Integer, LayoutName TVarChar
-
+             , TypeSAUA TVarChar, MasterSAUA TVarChar, SlaveSAUA TVarChar 
 ) AS
 $BODY$
 BEGIN
@@ -226,6 +226,13 @@ BEGIN
 
       , COALESCE (Object_Layout.Id,0)          ::Integer   AS LayoutId
       , COALESCE (Object_Layout.ValueData, '') ::TVarChar  AS LayoutName
+      
+      , CASE WHEN COALESCE (Object_UnitSAUA_Slave.Id, 0) <> 0 THEN 'Master'
+             WHEN COALESCE(Object_UnitSAUA_Master.Id, 0) <> 0 THEN 'Slave' END::TVarChar AS TypeSAUA 
+      , CASE WHEN COALESCE (Object_UnitSAUA_Slave.Id, 0) <> 0 THEN Object_Unit.ValueData
+             ELSE Object_UnitSAUA_Master.ValueData END                                   AS MasterSAUA
+      , CASE WHEN COALESCE (Object_UnitSAUA_Master.Id, 0) <> 0 THEN Object_Unit.ValueData
+             ELSE Object_UnitSAUA_Slave.ValueData END                                    AS SlaveSAUA
 
     FROM Object AS Object_Unit
         LEFT JOIN ObjectLink AS ObjectLink_Unit_Parent
@@ -574,6 +581,16 @@ BEGIN
                              ON ObjectDate_FirstCheck.ObjectId = Object_Unit.Id
                             AND ObjectDate_FirstCheck.DescId = zc_ObjectDate_Unit_FirstCheck()
                             
+        LEFT JOIN ObjectLink AS ObjectLink_UnitSAUA_Slave 
+                             ON ObjectLink_UnitSAUA_Slave.ObjectId = Object_Unit.Id 
+                            AND ObjectLink_UnitSAUA_Slave.DescId = zc_ObjectLink_Unit_UnitSAUA()
+        LEFT JOIN Object AS Object_UnitSAUA_Slave ON Object_UnitSAUA_Slave.Id = ObjectLink_UnitSAUA_Slave.ChildObjectId
+                            
+        LEFT JOIN ObjectLink AS ObjectLink_UnitSAUA_Master 
+                             ON ObjectLink_UnitSAUA_Master.ChildObjectId = Object_Unit.Id 
+                            AND ObjectLink_UnitSAUA_Master.DescId = zc_ObjectLink_Unit_UnitSAUA()
+        LEFT JOIN Object AS Object_UnitSAUA_Master  ON Object_UnitSAUA_Master.Id = ObjectLink_UnitSAUA_Master.ObjectId
+
     WHERE Object_Unit.DescId = zc_Object_Unit()
       AND (inisShowAll = True OR Object_Unit.isErased = False);
   
@@ -625,4 +642,5 @@ LANGUAGE plpgsql VOLATILE;
 */
 
 -- тест
--- SELECT * FROM gpSelect_Object_Unit (False, '2')
+-- 
+SELECT * FROM gpSelect_Object_Unit (False, '2')
