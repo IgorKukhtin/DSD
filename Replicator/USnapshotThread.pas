@@ -231,8 +231,8 @@ begin
               cBatch := '';
               UpdateProcessedCount;
 
-              if FProcessedCount >= 300000 then
-                Exit;
+//              if FProcessedCount >= 300000 then
+//                Exit;
 
             except on E: Exception do
               begin
@@ -386,8 +386,8 @@ begin
               cBatch := '';
               UpdateProcessedCount;
 
-              if FProcessedCount >= 300000 then
-                Exit;
+//              if FProcessedCount >= 300000 then
+//                Exit;
 
             except on E: Exception do
               begin
@@ -554,7 +554,7 @@ begin
       FTables.Connection := FMasterConn;
       FTables.SQL.Text :=
         ' select * from _replica.grSelect_Tables_For_Snapshot() '+
-        ' where table_name ILIKE ''MovementItemContainer'' '+
+        //' where table_name ILIKE ''MovementItemContainer'' '+
         ' ;';
       FTables.Open;
 
@@ -604,8 +604,8 @@ begin
             if SameText(FCurrTable, 'objectblob') then
               CopyBlobRecords
             else
-              //CopyBatchRecordsValues;
-              CopyBatchRecords;
+              CopyBatchRecordsValues;
+              //CopyBatchRecords;
           finally
             if not FSlaveConn.ExecuteDirect('ALTER TABLE '+ FCurrTable +' ENABLE TRIGGER ALL') then
               ProcessError('Для таблицы '+ FCurrTable +' триггеры были отключены, но не восстановлены');
