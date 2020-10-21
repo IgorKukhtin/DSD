@@ -57,6 +57,7 @@ type
 
     procedure CopyBlobRecords;
     procedure CopyBatchRecords;
+    procedure CopyBatchRecordsValues;
 
     procedure ProcessError(AError: string);
     procedure ProcessMessage(AMessage: string);
@@ -229,6 +230,165 @@ begin
               nBatchCount := 0;
               cBatch := '';
               UpdateProcessedCount;
+
+              if FProcessedCount >= 300000 then
+                Exit;
+
+            except on E: Exception do
+              begin
+                ProcessError(E.Message);
+              end;
+            end;
+          end;
+      end;
+      // увеличиваем lastid, чтобы следующий QSrc.open вернул 0 записей
+      if FIsCompositeKey and (QSrc.RecordCount < GetSelectCount) then
+        inc(LastId);
+      DecodeTime(now-tmpBatchTime, Hour, Min, Sec, MSec);
+      StrTime:=IntToStr(Min)+':'+IntToStr(Sec)+':'+IntToStr(MSec);
+      DecodeTime(now, Hour, Min, Sec, MSec);
+      ProcessMessage(IntToStr(Hour) + ':' + IntToStr(Min) + ':' + IntToStr(Sec) + ':' + IntToStr(MSec) + ' - batch total insert slave time : ' + IntToStr (nBatchCount)+ '(' + IntToStr (FProcessedCount)+ ') : ' + StrTime);
+    end;
+  finally
+    QSrc.Free;
+  end;
+end;
+
+procedure TSnapshotThread.CopyBatchRecordsValues;
+var LastId: int64;
+    QSrc: TZQuery;
+    FHadValues: boolean;
+    cBatch: string;
+    nBatchCount: integer;
+var tmpDate:TDateTime;
+    Hour, Min, Sec, MSec: Word;
+    StrTime:String;
+    tmpBatchTime: TDateTime;
+    FInsertPart, FValuesPart: string;
+
+    function GetSelectCount: int64;
+    begin
+      if FHasBlob then
+        Result := FSnapshotSelectTextCount
+      else
+        Result := FSnapshotSelectCount;
+    end;
+
+    function GetInsertCount: int64;
+    begin
+      if FHasBlob then
+        Result := FSnapshotInsertTextCount
+      else
+        Result := FSnapshotInsertCount;
+    end;
+
+begin
+  FHadValues := false;
+  QSrc := TZQuery.Create(nil);
+  try
+    QSrc.Connection := FMasterConn;
+    UpdateStatus('Генерация запроса на вставку ..');
+    FTempQuery.Close;
+    FTempQuery.Connection := FMasterConn;
+    FTempQuery.SQL.Text := 'select * from  _replica.grSelect_Snapshot_Insert_QueryV2(:table);';
+    FTempQuery.ParamByName('table').Value := FCurrTable;
+    FTempQuery.Open;
+
+    FInsertPart := FTempQuery.FieldByName('InsertPart').AsString;
+    FValuesPart := FTempQuery.FieldByName('ValuesPart').AsString;
+    if FInsertPart.IsEmpty or FValuesPart.IsEmpty then
+    begin
+      ProcessError('Ошибка получения скрипта INSERT для '+ FCurrTable);
+      Exit;
+    end;
+    LastId := 0;
+    while not Terminated do
+    begin
+      CheckPaused;
+      UpdateStatus('Получение данных от мастера ..');
+      QSrc.Close;
+      if FIsCompositeKey then
+        QSrc.SQL.Text :=
+          FValuesPart + ', ' + FRealKeyField + sLineBreak +
+          'FROM '+ FCurrTable + sLineBreak +
+          'WHERE '+ FRealKeyField + ' >= :LastId '+ sLineBreak +
+          'ORDER BY '+ FRealKeyField + ',' + FKeyFields + sLineBreak +
+          'LIMIT '+ IntToStr(GetSelectCount)
+      else
+        QSrc.SQL.Text :=
+          FValuesPart + ', ' + FRealKeyField + sLineBreak +
+          'FROM '+ FCurrTable + sLineBreak +
+          'WHERE '+ FRealKeyField + ' > :LastId '+ sLineBreak +
+          'ORDER BY '+ FKeyFields + sLineBreak +
+          'LIMIT '+ IntToStr(GetSelectCount);
+      QSrc.ParamByName('LastId').Value := LastId;
+
+      //
+      tmpDate:=NOw;
+      //
+      QSrc.Open;
+      //
+      DecodeTime(now-tmpDate, Hour, Min, Sec, MSec);
+      StrTime:=IntToStr(Min)+':'+IntToStr(Sec)+':'+IntToStr(MSec);
+      DecodeTime(now, Hour, Min, Sec, MSec);
+      ProcessMessage('---');
+      ProcessMessage(IntToStr(Hour) + ':' + IntToStr(Min) + ':' + IntToStr(Sec) + ':' + IntToStr(MSec) + ' - open master time : ' + StrTime);
+      //
+
+      if (QSrc.RecordCount = 0) then
+      begin
+        if FHadValues then
+          ProcessMessage('Данные для таблицы '+ FCurrTable + ' перенесены')
+        else
+          ProcessMessage('В таблице '+ FCurrTable + ' нет данных для переноса');
+        break;
+      end;
+      FHadValues := true;
+      CheckPaused;
+
+      UpdateStatus('Формирование запроса на вставку ..');
+      cBatch := '';
+      nBatchCount := 0;
+      tmpBatchTime := Now;
+      while not Terminated and not QSrc.Eof do
+      begin
+        if cBatch.IsEmpty then
+          cBatch := FInsertPart + ' VALUES '
+        else
+          cBatch := cBatch + ',';
+        cBatch := cBatch + QSrc.FieldByName('Query').AsString;
+        //cBatch := cBatch + QSrc.FieldByName('Query').AsString + ';' + sLineBreak;
+        if QSrc.FieldByName(FRealKeyField).AsLargeInt > LastId then
+          LastId := QSrc.FieldByName(FRealKeyField).AsLargeInt;
+        QSrc.Next;
+        inc(nBatchCount);
+        if not Terminated then
+          if (nBatchCount >= GetInsertCount) or QSrc.Eof then
+          begin
+            try
+//              DecodeTime(now, Hour, Min, Sec, MSec);
+//              ProcessMessage(IntToStr(Hour) + ':' + IntToStr(Min) + ':' + IntToStr(Sec) + ':' + IntToStr(MSec) +
+//                '  - insert start');
+              CheckPaused;
+              UpdateStatus('Добавление записей на slave ..');
+
+              tmpDate:=NOw;
+              //
+              FSlaveConn.ExecuteDirect(cBatch + ' ON CONFLICT DO NOTHING');
+              //
+              DecodeTime(now-tmpDate, Hour, Min, Sec, MSec);
+              StrTime:=IntToStr(Min)+':'+IntToStr(Sec)+':'+IntToStr(MSec);
+              DecodeTime(now, Hour, Min, Sec, MSec);
+              ProcessMessage(IntToStr(Hour) + ':' + IntToStr(Min) + ':' + IntToStr(Sec) + ':' + IntToStr(MSec) + ' - insert slave time : ' + IntToStr (nBatchCount)+ '(' + IntToStr (FProcessedCount)+ ') : ' + StrTime);
+              //
+              FProcessedCount := FProcessedCount + nBatchCount;
+              nBatchCount := 0;
+              cBatch := '';
+              UpdateProcessedCount;
+
+              if FProcessedCount >= 300000 then
+                Exit;
+
             except on E: Exception do
               begin
                 ProcessError(E.Message);
@@ -345,7 +505,6 @@ begin
     QSrc.Free;
     QDst.Free;
   end;
-
 end;
 
 constructor TSnapshotThread.Create;
@@ -395,7 +554,7 @@ begin
       FTables.Connection := FMasterConn;
       FTables.SQL.Text :=
         ' select * from _replica.grSelect_Tables_For_Snapshot() '+
-        //' where table_name ILIKE ''_micontainer_20_03_2020_test'' '+
+        ' where table_name ILIKE ''MovementItemContainer'' '+
         ' ;';
       FTables.Open;
 
@@ -430,7 +589,7 @@ begin
 //          FTempQuery.SQL.Text := 'select count('+ FTables.FieldByName('key_fields').AsString +') as TotalCount from '+ FCurrTable;
 
         FTempQuery.ParamCheck := false;
-        FTempQuery.SQL.Text := 'SELECT reltuples::bigint AS TotalCount FROM pg_class WHERE relname='+ QuotedStr(FCurrTable) +';';
+        FTempQuery.SQL.Text := 'SELECT reltuples::bigint AS TotalCount FROM pg_class WHERE relname ILIKE '+ QuotedStr(FCurrTable) +';';
         FTempQuery.Open;
 
         FTotalCount := FTempQuery.FieldByName('TotalCount').AsInteger;
@@ -445,6 +604,7 @@ begin
             if SameText(FCurrTable, 'objectblob') then
               CopyBlobRecords
             else
+              //CopyBatchRecordsValues;
               CopyBatchRecords;
           finally
             if not FSlaveConn.ExecuteDirect('ALTER TABLE '+ FCurrTable +' ENABLE TRIGGER ALL') then

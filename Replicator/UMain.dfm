@@ -1313,7 +1313,6 @@ object frmMain: TfrmMain
           Height = 25
           Anchors = [akTop, akRight]
           Caption = #1054#1095#1080#1089#1090#1080#1090#1100' '#1083#1086#1075
-          Enabled = False
           TabOrder = 7
           OnClick = btnClearSnapshotLogClick
         end
