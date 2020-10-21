@@ -99,6 +99,14 @@ object UserForm: TUserForm
         Options.Editing = False
         Width = 47
       end
+      object LanguageName: TcxGridDBColumn
+        Caption = #1071#1079#1099#1082
+        DataBinding.FieldName = 'LanguageName'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Options.Editing = False
+        Width = 70
+      end
       object Erased: TcxGridDBColumn
         Caption = #1059#1076#1072#1083#1077#1085
         DataBinding.FieldName = 'isErased'
@@ -463,7 +471,7 @@ object UserForm: TUserForm
           StoredProc = spUnErased
         end>
       Caption = #1042#1086#1089#1089#1090#1072#1085#1086#1074#1080#1090#1100
-      Hint = #1042#1086#1089#1089#1090#1072#1085#1086#1074#1080#1090#1100
+      Hint = #1042#1086#1089#1089#1090#1072#1085#1086#1074#1080#1090#1100' '#1076#1072#1085#1085#1099#1077
       ImageIndex = 8
       ShortCut = 8238
       ErasedFieldName = 'isErased'
@@ -702,8 +710,8 @@ object UserForm: TUserForm
       end>
     Params = <>
     PackSize = 1
-    Left = 80
-    Top = 152
+    Left = 64
+    Top = 168
   end
   object dsdDBViewAddOn: TdsdDBViewAddOn
     ErasedFieldName = 'isErased'
@@ -906,10 +914,10 @@ object UserForm: TUserForm
         MultiSelectSeparator = ','
       end
       item
-        Name = 'inUnitId'
+        Name = 'inLanguageId'
         Value = Null
         Component = MasterCDS
-        ComponentItem = 'UnitId'
+        ComponentItem = 'LanguageId'
         ParamType = ptInput
         MultiSelectSeparator = ','
       end>

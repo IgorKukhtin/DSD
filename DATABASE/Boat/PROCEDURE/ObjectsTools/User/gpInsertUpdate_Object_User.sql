@@ -7,14 +7,16 @@ DROP FUNCTION IF EXISTS gpInsertUpdate_Object_User (Integer, Integer, TVarChar, 
 DROP FUNCTION IF EXISTS gpInsertUpdate_Object_User (Integer, Integer, TVarChar, TVarChar, Integer, Integer, TVarChar);
 DROP FUNCTION IF EXISTS gpInsertUpdate_Object_User (Integer, Integer, TVarChar, TVarChar, TVarChar, Integer, Integer, TVarChar);
 
+DROP FUNCTION IF EXISTS gpInsertUpdate_Object_User (Integer, Integer, TVarChar, TVarChar, Integer, Integer, TVarChar);
+
 CREATE OR REPLACE FUNCTION gpInsertUpdate_Object_User(
  INOUT ioId          Integer   ,    -- ключ объекта <Пользователь> 
     IN inCode        Integer   ,    -- 
     IN inUserName    TVarChar  ,    -- главное Название пользователя объекта <Пользователь> 
     IN inPassword    TVarChar  ,    -- пароль пользователя 
-    IN inPrinterName TVarChar  ,    -- Принтер (печать Ценников)
+    --IN inPrinterName TVarChar  ,    -- Принтер (печать Ценников)
     IN inMemberId    Integer   ,    -- физ. лицо
-    IN inUnitId      Integer   ,    -- Подразделение
+    IN inгыукId  Integer   ,    -- Язык
     IN inSession     TVarChar       -- сессия пользователя
 )
 RETURNS Integer 
@@ -38,12 +40,12 @@ BEGIN
    -- сохранили свойство  <пароль>
    PERFORM lpInsertUpdate_ObjectString (zc_ObjectString_User_Password(), ioId, inPassword);
    -- сохранили свойство  <Принтер>
-   PERFORM lpInsertUpdate_ObjectString (zc_ObjectString_User_Printer(), ioId, inPrinterName);
+   --PERFORM lpInsertUpdate_ObjectString (zc_ObjectString_User_Printer(), ioId, inPrinterName);
 
    -- сохранили свойство  <физ. лицо>
    PERFORM lpInsertUpdate_ObjectLink (zc_ObjectLink_User_Member(), ioId, inMemberId);
    -- сохранили свойство  <Подразделение>
-   PERFORM lpInsertUpdate_ObjectLink (zc_ObjectLink_User_Unit(), ioId, inUnitId);
+   PERFORM lpInsertUpdate_ObjectLink (zc_ObjectLink_User_Language(), ioId, inLanguageId);
 
    -- Ведение протокола
    PERFORM lpInsert_ObjectProtocol (ioId, vbUserId);

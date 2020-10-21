@@ -15,6 +15,7 @@ RETURNS TABLE (Id Integer
              , UnitId Integer
              , UnitName TVarChar
              , PrinterName TVarChar
+             , LanguageId Integer, LanguageName TVarChar
              )
 AS
 $BODY$
@@ -37,7 +38,9 @@ BEGIN
            , '' :: TVarChar  AS MemberName
            ,  0 :: Integer   AS UnitId
            , '' :: TVarChar  AS UnitName
-           , '' :: TVarChar  AS PrinterName;
+           , '' :: TVarChar  AS PrinterName
+           ,  0 :: Integer   AS LanguageId
+           , '' :: TVarChar  AS LanguageName;
    ELSE
       RETURN QUERY 
       SELECT 
@@ -50,6 +53,8 @@ BEGIN
           , Object_Unit.Id                       AS UnitId
           , Object_Unit.ValueData                AS UnitName
           , ObjectString_Printer.ValueData       AS PrinterName
+          , Object_Language.Id                   AS LanguageId
+          , Object_Language.ValueData            AS LanguageName
       FROM Object AS Object_User
            LEFT JOIN ObjectString AS ObjectString_UserPassword 
                                   ON ObjectString_UserPassword.DescId = zc_ObjectString_User_Password() 
@@ -68,6 +73,12 @@ BEGIN
                                 ON ObjectLink_User_Unit.ObjectId = Object_User.Id
                                AND ObjectLink_User_Unit.DescId = zc_ObjectLink_User_Unit()
            LEFT JOIN Object AS Object_Unit ON Object_Unit.Id = ObjectLink_User_Unit.ChildObjectId
+
+           LEFT JOIN ObjectLink AS ObjectLink_User_Language
+                                ON ObjectLink_User_Language.ObjectId = Object_User.Id
+                               AND ObjectLink_User_Language.DescId = zc_ObjectLink_User_Language()
+           LEFT JOIN Object AS Object_Language ON Object_Language.Id = ObjectLink_User_Language.ChildObjectId
+
       WHERE Object_User.Id = inId;
    END IF;
   
@@ -78,6 +89,7 @@ END;$BODY$
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.    Полятыкин А.А.
+ 21.10.20         * Language
  15.02.18         *
  05.05.17                                                          *
  12.09.16         *

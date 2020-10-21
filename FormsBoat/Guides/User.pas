@@ -86,6 +86,7 @@ type
     actProtocolRole: TdsdOpenForm;
     bbProtocolRole: TdxBarButton;
     spUnErased: TdsdStoredProc;
+    LanguageName: TcxGridDBColumn;
   private
     { Private declarations }
   public

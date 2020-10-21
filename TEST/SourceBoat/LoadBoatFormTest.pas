@@ -21,6 +21,7 @@ type
     procedure LoadBrandFormTest;
     procedure LoadImportSettingsFormTest;
     procedure LoadImportTypeFormTest;
+    procedure LoadMemberFormTest;
     procedure LoadProdColorFormTest;
     procedure LoadProdColorItemsFormTest;
     procedure LoadProdColorPatternFormTest;
@@ -31,6 +32,7 @@ type
     procedure LoadProdOptItemsFormTest;
     procedure LoadProdOptPatternFormTest;
     procedure LoadProductFormTest;
+    procedure LoadUnitFormTest;
     procedure FormTest;
   end;
 
@@ -147,6 +149,14 @@ begin
   TdsdFormStorageFactory.GetStorage.Load('TBrandEditForm');
 end;
 
+procedure TLoadFormTest.LoadMemberFormTest;
+begin
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TMemberForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TMemberForm');
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TMemberEditForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TMemberEditForm');
+end;
+
 procedure TLoadFormTest.LoadProdColorFormTest;
 begin
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TProdColorForm'));
@@ -225,6 +235,15 @@ begin
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TProductEditForm'));
   TdsdFormStorageFactory.GetStorage.Load('TProductEditForm');
 end;
+
+procedure TLoadFormTest.LoadUnitFormTest;
+begin
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TUnitForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TUnitForm');
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TUnitEditForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TUnitEditForm');
+end;
+
 procedure TLoadFormTest.LoadImportSettingsFormTest;
 begin
   // Настройки импорта

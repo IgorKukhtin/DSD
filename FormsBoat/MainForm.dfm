@@ -1094,8 +1094,6 @@ inherited MainForm: TMainForm
       end
       object miUnit: TMenuItem
         Action = actUnit
-        Enabled = False
-        Visible = False
       end
       object miPriceList: TMenuItem
         Action = actPriceList
@@ -1165,8 +1163,6 @@ inherited MainForm: TMainForm
       end
       object miMember: TMenuItem
         Action = actMember
-        Enabled = False
-        Visible = False
       end
     end
     inherited miService: TMenuItem

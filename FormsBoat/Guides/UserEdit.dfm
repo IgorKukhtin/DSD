@@ -2,7 +2,7 @@
   Left = 0
   Top = 0
   Caption = #1055#1086#1083#1100#1079#1086#1074#1072#1090#1077#1083#1100
-  ClientHeight = 347
+  ClientHeight = 298
   ClientWidth = 303
   Color = clBtnFace
   Font.Charset = DEFAULT_CHARSET
@@ -29,7 +29,7 @@
   end
   object cxButton1: TcxButton
     Left = 45
-    Top = 314
+    Top = 261
     Width = 75
     Height = 25
     Action = dsdInsertUpdateGuides
@@ -39,7 +39,7 @@
   end
   object cxButton2: TcxButton
     Left = 189
-    Top = 314
+    Top = 261
     Width = 75
     Height = 25
     Action = dsdFormClose
@@ -94,9 +94,9 @@
   object cxLabel4: TcxLabel
     Left = 13
     Top = 201
-    Caption = #1055#1086#1076#1088#1072#1079#1076#1077#1083#1077#1085#1080#1077
+    Caption = #1071#1079#1099#1082
   end
-  object edUnit: TcxButtonEdit
+  object edLanguage: TcxButtonEdit
     Left = 13
     Top = 221
     Properties.Buttons = <
@@ -106,18 +106,6 @@
       end>
     Properties.ReadOnly = True
     TabOrder = 11
-    Width = 273
-  end
-  object cxLabel5: TcxLabel
-    Left = 13
-    Top = 249
-    Caption = #1055#1088#1080#1085#1090#1077#1088' ('#1087#1077#1095#1072#1090#1100' '#1062#1077#1085#1085#1080#1082#1086#1074')'
-  end
-  object edPrinter: TcxTextEdit
-    Left = 13
-    Top = 269
-    Properties.PasswordChar = '*'
-    TabOrder = 13
     Width = 273
   end
   object ActionList: TActionList
@@ -190,14 +178,6 @@
         MultiSelectSeparator = ','
       end
       item
-        Name = 'inPrinterName'
-        Value = Null
-        Component = edPrinter
-        DataType = ftString
-        ParamType = ptInput
-        MultiSelectSeparator = ','
-      end
-      item
         Name = 'inMemberId'
         Value = ''
         Component = GuidesMember
@@ -206,9 +186,9 @@
         MultiSelectSeparator = ','
       end
       item
-        Name = 'inUnitId'
+        Name = 'inLanguageId'
         Value = Null
-        Component = GuidesUnit
+        Component = GuidesLanguage
         ComponentItem = 'Key'
         ParamType = ptInput
         MultiSelectSeparator = ','
@@ -295,24 +275,17 @@
         MultiSelectSeparator = ','
       end
       item
-        Name = 'UnitId'
+        Name = 'LanguageId'
         Value = Null
-        Component = GuidesUnit
+        Component = GuidesLanguage
         ComponentItem = 'Key'
         MultiSelectSeparator = ','
       end
       item
-        Name = 'UnitName'
+        Name = 'LanguageName'
         Value = Null
-        Component = GuidesUnit
+        Component = GuidesLanguage
         ComponentItem = 'TextValue'
-        DataType = ftString
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'PrinterName'
-        Value = Null
-        Component = edPrinter
         DataType = ftString
         MultiSelectSeparator = ','
       end>
@@ -366,26 +339,26 @@
     Left = 229
     Top = 136
   end
-  object GuidesUnit: TdsdGuides
+  object GuidesLanguage: TdsdGuides
     KeyField = 'Id'
-    LookupControl = edUnit
-    FormNameParam.Value = 'TUnitForm'
+    LookupControl = edLanguage
+    FormNameParam.Value = 'TLanguageForm'
     FormNameParam.DataType = ftString
     FormNameParam.MultiSelectSeparator = ','
-    FormName = 'TUnitForm'
+    FormName = 'TLanguageForm'
     PositionDataSet = 'MasterCDS'
     Params = <
       item
         Name = 'Key'
         Value = ''
-        Component = GuidesUnit
+        Component = GuidesLanguage
         ComponentItem = 'Key'
         MultiSelectSeparator = ','
       end
       item
         Name = 'TextValue'
         Value = ''
-        Component = GuidesUnit
+        Component = GuidesLanguage
         ComponentItem = 'TextValue'
         DataType = ftString
         MultiSelectSeparator = ','

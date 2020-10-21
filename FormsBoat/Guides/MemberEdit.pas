@@ -1,15 +1,15 @@
-unit UserEdit;
+unit MemberEdit;
 
 interface
 
 uses
   Winapi.Windows, Winapi.Messages, System.SysUtils, System.Variants, System.Classes, Vcl.Graphics,
-  Vcl.Controls, Vcl.Forms, Vcl.Dialogs, ParentForm, cxGraphics, cxControls,
-  cxLookAndFeels, cxLookAndFeelPainters, cxContainer, cxEdit, Vcl.Menus,
-  cxPropertiesStore, dsdAddOn, dsdGuides, dsdDB, dsdAction, Vcl.ActnList,
-  cxMaskEdit, cxButtonEdit, cxCurrencyEdit, Vcl.StdCtrls, cxButtons, cxLabel,
-  cxTextEdit, dxSkinsCore, dxSkinsDefaultPainters, dxSkinBlack, dxSkinBlue,
-  dxSkinBlueprint, dxSkinCaramel, dxSkinCoffee, dxSkinDarkRoom, dxSkinDarkSide,
+  Vcl.Controls, Vcl.Forms, Vcl.Dialogs, cxPropertiesStore,
+  cxGraphics, cxControls, cxLookAndFeels, cxLookAndFeelPainters, cxContainer,
+  cxEdit, Vcl.Menus, Vcl.StdCtrls, cxButtons, cxLabel, cxTextEdit, Vcl.ActnList,
+  Vcl.StdActns, ParentForm, dsdDB, dsdAction, cxCurrencyEdit, dsdAddOn,
+  dxSkinsCore, dxSkinsDefaultPainters, dxSkinBlack, dxSkinBlue, dxSkinBlueprint,
+  dxSkinCaramel, dxSkinCoffee, dxSkinDarkRoom, dxSkinDarkSide,
   dxSkinDevExpressDarkStyle, dxSkinDevExpressStyle, dxSkinFoggy,
   dxSkinGlassOceans, dxSkinHighContrast, dxSkiniMaginary, dxSkinLilian,
   dxSkinLiquidSky, dxSkinLondonLiquidSky, dxSkinMcSkin, dxSkinMoneyTwins,
@@ -21,30 +21,28 @@ uses
   dxSkinValentine, dxSkinVS2010, dxSkinWhiteprint, dxSkinXmas2008Blue;
 
 type
-  TUserEditForm = class(TParentForm)
+  TMemberEditForm = class(TParentForm)
     edName: TcxTextEdit;
     cxLabel1: TcxLabel;
     cxButton1: TcxButton;
     cxButton2: TcxButton;
-    Код: TcxLabel;
-    ceCode: TcxCurrencyEdit;
-    cxLabel3: TcxLabel;
-    edMember: TcxButtonEdit;
     ActionList: TActionList;
-    dsdDataSetRefresh: TdsdDataSetRefresh;
-    dsdInsertUpdateGuides: TdsdInsertUpdateGuides;
-    dsdFormClose: TdsdFormClose;
     spInsertUpdate: TdsdStoredProc;
     FormParams: TdsdFormParams;
     spGet: TdsdStoredProc;
-    GuidesMember: TdsdGuides;
-    UserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn;
-    cxPropertiesStore: TcxPropertiesStore;
-    edPassword: TcxTextEdit;
+    dsdDataSetRefresh: TdsdDataSetRefresh;
+    dsdInsertUpdateGuides: TdsdInsertUpdateGuides;
+    dsdFormClose: TdsdFormClose;
     cxLabel2: TcxLabel;
+    edCode: TcxCurrencyEdit;
+    cxPropertiesStore: TcxPropertiesStore;
+    dsdUserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn;
+    cxLabel3: TcxLabel;
     cxLabel4: TcxLabel;
-    edLanguage: TcxButtonEdit;
-    GuidesLanguage: TdsdGuides;
+    edComment: TcxTextEdit;
+    edINN: TcxTextEdit;
+    edEMail: TcxTextEdit;
+    cxLabel5: TcxLabel;
   private
     { Private declarations }
   public
@@ -56,7 +54,6 @@ implementation
 {$R *.dfm}
 
 initialization
-  RegisterClass(TUserEditForm);
-
+  RegisterClass(TMemberEditForm);
 
 end.

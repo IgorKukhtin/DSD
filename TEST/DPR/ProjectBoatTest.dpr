@@ -141,7 +141,12 @@ uses
   ProdColorPatternEdit in '..\..\FormsBoat\Guides\ProdColorPatternEdit.pas' {ProdColorPatternEditForm: TParentForm},
   ProdColorPattern in '..\..\FormsBoat\Guides\ProdColorPattern.pas' {ProdColorPatternForm: TParentForm},
   ProdColorItems in '..\..\FormsBoat\Guides\ProdColorItems.pas' {ProdColorItemsForm: TParentForm},
-  ProdOptItems in '..\..\FormsBoat\Guides\ProdOptItems.pas' {ProdOptItemsForm: TParentForm};
+  ProdOptItems in '..\..\FormsBoat\Guides\ProdOptItems.pas' {ProdOptItemsForm: TParentForm},
+  Units in '..\..\FormsBoat\Guides\Units.pas' {UnitForm: TParentForm},
+  UnitEdit in '..\..\FormsBoat\Guides\UnitEdit.pas' {UnitEditForm: TParentForm},
+  Unit_Object in '..\..\FormsBoat\Guides\Unit_Object.pas' {Unit_ObjectForm: TParentForm},
+  MemberEdit in '..\..\FormsBoat\Guides\MemberEdit.pas' {MemberEditForm: TParentForm},
+  Member in '..\..\FormsBoat\Guides\Member.pas' {MemberForm: TParentForm};
 
 {$R *.res}
 {$R DevExpressRus.res}

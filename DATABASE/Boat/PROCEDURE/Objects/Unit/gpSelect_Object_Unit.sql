@@ -18,9 +18,9 @@ RETURNS TABLE (Id Integer, Code Integer, Name TVarChar
              , PriceListId Integer, PriceListName TVarChar
              , GoodsTagId Integer, GoodsTagName TVarChar
              , PeriodTagId Integer, PeriodTagName TVarChar
-             , StartDate_sybase TDateTime
+             , InsertName TVarChar
+             , InsertDate TDateTime
              , isPartnerBarCode Boolean
-             , isOLAP Boolean
              , isErased boolean)
 AS
 $BODY$
@@ -33,19 +33,6 @@ BEGIN
 
      -- Результат
      RETURN QUERY
-       WITH tmpReportOLAP AS (SELECT ObjectLink_Object.ChildObjectId AS UnitId
-                              FROM Object
-                                   INNER JOIN ObjectLink AS ObjectLink_User
-                                                         ON ObjectLink_User.ObjectId      = Object.Id
-                                                        AND ObjectLink_User.DescId        = zc_ObjectLink_ReportOLAP_User()
-                                                        AND ObjectLink_User.ChildObjectId = vbUserId
-                                   INNER JOIN ObjectLink AS ObjectLink_Object
-                                                         ON ObjectLink_Object.ObjectId    = Object.Id
-                                                        AND ObjectLink_Object.DescId      = zc_ObjectLink_ReportOLAP_Object()
-                              WHERE Object.DescId     = zc_Object_ReportOLAP()
-                                AND Object.ObjectCode = zc_ReportOLAP_Unit()
-                                AND Object.isErased   = FALSE
-                             )
 
        SELECT
              Object_Unit.Id                  AS Id
@@ -70,60 +57,16 @@ BEGIN
            , Object_PriceList.Id            AS PriceListId
            , Object_PriceList.ValueData     AS PriceListName
 
-           , Object_GoodsTag.Id            AS GoodsTagId
-           , Object_GoodsTag.ValueData     AS GoodsTagName
+           , Object_GoodsTag.Id             AS GoodsTagId
+           , Object_GoodsTag.ValueData      AS GoodsTagName
 
            , Object_PeriodTag.Id            AS PeriodTagId
            , Object_PeriodTag.ValueData     AS PeriodTagName
 
-           , CASE WHEN Object_Unit.ValueData = 'магазин MaxMara'
-                       THEN '2006-01-01' -- MaxMara -- OK
-
-                  WHEN Object_Unit.ValueData = 'магазин Terri-Luxury'
-                       THEN '2007-04-28' -- TerryL  -- 30762 + 32257(M) + 35078(XS) + 41063(36) + 65813(40) + 77309(XS) in (54663,46751,42986,71924,192757,155479)
-
-                  WHEN Object_Unit.ValueData = 'магазин 5 Элемент'
-                       THEN '2007-04-01' -- 5 Elem  -- 28025(36) in (36477)
-
-                  WHEN Object_Unit.ValueData = 'магазин CHADO'
-                       THEN '2007-12-03' -- Chado   -- 70064 + 39629(I) + 103288(m12) in (169245,67594,284803) 
-
-                  WHEN Object_Unit.ValueData = 'магазин SAVOY'
-                       THEN '2008-03-31' -- Savoy   -- OK
-
-                  WHEN Object_Unit.ValueData = 'магазин Savoy-P.Z.'
-                       THEN '2008-03-01' -- PZ      -- OK
-
-                  WHEN Object_Unit.ValueData = 'магазин Терри-Out'
-                       THEN '2007-04-28' -- Terry   -- OK -- 30762 + 32257(M) + 35978(XS) + 41063(36) in (54663,46751,42986,71924)
-
-                  WHEN Object_Unit.ValueData = 'магазин Vintag'
-                       THEN '2011-03-31' -- Vintag  -- OK
-
-                  -- WHEN Object_Unit.ValueData = 'магазин Vintag 50'
-                  --      THEN '2011-03-31' -- Vintag  -- OK
-                  -- WHEN Object_Unit.ValueData = 'магазин Vintag 80'
-                  --      THEN '2011-03-31' -- Vintag  -- OK
-                  -- WHEN Object_Unit.ValueData = 'магазин Vintag 90'
-                  --      THEN '2011-03-31' -- Vintag  -- OK
-
-                  WHEN Object_Unit.ValueData = 'магазин ESCADA'
-                       THEN '2012-04-01' -- Escada  -- OK
-
-                  WHEN Object_Unit.ValueData = 'магазин Savoy-O'
-                       THEN '2008-03-31' -- Savoy-2 -- OK
-
-                  WHEN Object_Unit.ValueData = 'магазин Terry-Vintage'
-                       THEN '2014-01-13' -- Sopra   -- OK
-
-                  WHEN Object_Unit.ValueData = 'магазин Chado-Outlet'
-                       THEN '2014-01-13' -- 11      -- OK
-
-             END :: TDateTime AS StartDate_sybase
+           , Object_Insert.ValueData         AS InsertName
+           , ObjectDate_Insert.ValueData     AS InsertDate
 
            , COALESCE (ObjectBoolean_PartnerBarCode.ValueData, FALSE) :: Boolean  AS isPartnerBarCode
-           
-           , CASE WHEN tmpReportOLAP.UnitId > 0 THEN TRUE ELSE FALSE END :: Boolean AS isOLAP
 
            , Object_Unit.isErased            AS isErased
 
@@ -207,11 +150,17 @@ BEGIN
                                  ON ObjectLink_User_Unit.ObjectId = vbUserId
                                 AND ObjectLink_User_Unit.DescId   = zc_ObjectLink_User_Unit()
 
-            LEFT JOIN tmpReportOLAP ON tmpReportOLAP.UnitId = Object_Unit.Id
+            LEFT JOIN ObjectLink AS ObjectLink_Insert
+                                 ON ObjectLink_Insert.ObjectId = Object_Unit.Id
+                                AND ObjectLink_Insert.DescId = zc_ObjectLink_Protocol_Insert()
+            LEFT JOIN Object AS Object_Insert ON Object_Insert.Id = ObjectLink_Insert.ChildObjectId
+
+            LEFT JOIN ObjectDate AS ObjectDate_Insert
+                                 ON ObjectDate_Insert.ObjectId = Object_Unit.Id
+                                AND ObjectDate_Insert.DescId = zc_ObjectDate_Protocol_Insert()
 
      WHERE Object_Unit.DescId = zc_Object_Unit()
        AND (Object_Unit.isErased = FALSE OR inIsShowAll = TRUE)
-       -- AND (Object_Unit.Id = ObjectLink_User_Unit.ChildObjectId OR ObjectLink_User_Unit.ChildObjectId IS NULL)
     ;
 
 END;

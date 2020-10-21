@@ -13,6 +13,7 @@ RETURNS TABLE (Id Integer, Code Integer, Name TVarChar, isErased boolean
              , UnitName_Personal TVarChar
              , PositionName TVarChar
              , PrinterName TVarChar
+             , LanguageId Integer, LanguageName TVarChar
               )
 AS
 $BODY$
@@ -60,6 +61,8 @@ END IF;
        
        , ObjectString_Printer.ValueData   AS PrinterName
 
+       , Object_Language.Id               AS LanguageId
+       , Object_Language.ValueData        AS LanguageName
    FROM Object AS Object_User
         LEFT JOIN ObjectString AS ObjectString_User_
                                ON ObjectString_User_.ObjectId = Object_User.Id
@@ -78,7 +81,12 @@ END IF;
                              ON ObjectLink_User_Unit.ObjectId = Object_User.Id
                             AND ObjectLink_User_Unit.DescId = zc_ObjectLink_User_Unit()
         LEFT JOIN Object AS Object_Unit ON Object_Unit.Id = ObjectLink_User_Unit.ChildObjectId
-        
+
+        LEFT JOIN ObjectLink AS ObjectLink_User_Language
+                             ON ObjectLink_User_Language.ObjectId = Object_User.Id
+                            AND ObjectLink_User_Language.DescId = zc_ObjectLink_User_Language()
+        LEFT JOIN Object AS Object_Language ON Object_Language.Id = ObjectLink_User_Language.ChildObjectId
+
         LEFT JOIN tmpPersonal ON tmpPersonal.MemberId = ObjectLink_User_Member.ChildObjectId
         LEFT JOIN Object AS Object_Position ON Object_Position.Id = tmpPersonal.PositionId
         LEFT JOIN Object AS Object_Unit_Personal ON Object_Unit_Personal.Id = tmpPersonal.UnitId
