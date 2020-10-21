@@ -49,11 +49,10 @@ BEGIN
        INNER JOIN MovementDesc ON MovementDesc.id = Movement.DescId
        INNER JOIN Object AS Object_Status ON Object_Status.Id = Movement.StatusId
 
-       INNER JOIN MovementLinkObject AS MovementLinkObject_Unit
-                                     ON MovementLinkObject_Unit.MovementId = Movement.Id
-                                    AND MovementLinkObject_Unit.DescId in (zc_MovementLinkObject_Unit(), zc_MovementLinkObject_From() , zc_MovementLinkObject_To())
-                                    AND (MovementLinkObject_Unit.ObjectId = inUnitId OR COALESCE (inUnitId, 0) = 0)
-       INNER JOIN Object AS Object_Unit ON Object_Unit.Id = MovementLinkObject_Unit.ObjectId
+       LEFT JOIN MovementLinkObject AS MovementLinkObject_Unit
+                                    ON MovementLinkObject_Unit.MovementId = Movement.Id
+                                   AND MovementLinkObject_Unit.DescId in (zc_MovementLinkObject_Unit(), zc_MovementLinkObject_From() , zc_MovementLinkObject_To())
+       LEFT JOIN Object AS Object_Unit ON Object_Unit.Id = MovementLinkObject_Unit.ObjectId
 
        LEFT JOIN MovementBoolean AS MovementBoolean_Deferred
                                  ON MovementBoolean_Deferred.MovementId = Movement.Id
@@ -62,6 +61,7 @@ BEGIN
     WHERE MovementItem.ObjectId IN
           (SELECT Object_Goods_Retail.ID FROM Object_Goods_Retail WHERE Object_Goods_Retail.GoodsMainId =
             (SELECT Object_Goods_Retail.GoodsMainId FROM Object_Goods_Retail WHERE Object_Goods_Retail.ID = inGoodsId))
+      AND (MovementLinkObject_Unit.ObjectId = inUnitId OR COALESCE (inUnitId, 0) = 0)
     ORDER BY Movement.OperDate;
 
 END;
@@ -77,3 +77,5 @@ $BODY$
 -- тест
 -- select * from gpReport_EntryGoodsMovement(inStartDate := ('01.01.2016')::TDateTime , inEndDate := ('30.04.2021')::TDateTime , inUnitId := 1529734 , inGoodsId := 1267302 ,  inSession := '3');
 
+
+select * from gpReport_EntryGoodsMovement(inStartDate := ('01.03.2014')::TDateTime , inEndDate := ('31.08.2021')::TDateTime , inUnitId := 0 , inGoodsId := 9937 ,  inSession := '3');

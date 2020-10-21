@@ -41,6 +41,8 @@ type
     cbPairedOnlyPromo: TcxCheckBox;
     edDaySaleForSUN: TcxCurrencyEdit;
     cxLabel5: TcxLabel;
+    edAttemptsSub: TcxCurrencyEdit;
+    cxLabel6: TcxLabel;
   private
     { Private declarations }
   public

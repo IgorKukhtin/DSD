@@ -337,6 +337,8 @@ inherited Report_EntryGoodsMovementForm: TReport_EntryGoodsMovementForm
       item
         Name = 'inUnitId'
         Value = Null
+        Component = UnitGuides
+        ComponentItem = 'Key'
         ParamType = ptInput
         MultiSelectSeparator = ','
       end

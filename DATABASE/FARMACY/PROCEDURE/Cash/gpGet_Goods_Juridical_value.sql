@@ -72,7 +72,7 @@ BEGIN
          INTO outJuridicalID, outInvoiceNumber, outInvoiceDate, outContainerID
          FROM tmpContainer AS Container
          LIMIT 1;
-    ELSEIF (SELECT Object.ObjectCode FROM Object WHERE Object.ID = inDiscountExternal) in (9)
+    ELSEIF (SELECT Object.ObjectCode FROM Object WHERE Object.ID = inDiscountExternal) in (9, 11)
     THEN
       WITH
           tmpDiscountExternal AS (SELECT Object.ObjectCode FROM Object WHERE Object.ID = inDiscountExternal)

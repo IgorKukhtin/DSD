@@ -959,7 +959,9 @@ uses
   RelatedProductJournal in '..\..\FormsFarmacy\Document\RelatedProductJournal.pas' {RelatedProductJournalForm: TParentForm},
   ChoiceRelatedProduct in '..\..\FormsFarmacy\Guides\ChoiceRelatedProduct.pas' {ChoiceRelatedProductForm: TParentForm},
   ConditionsKeep in '..\..\FormsFarmacy\Guides\ConditionsKeep.pas' {ConditionsKeepForm: TParentForm},
-  SearchByCaption in '..\..\FormsFarmacy\System\SearchByCaption.pas' {SearchByCaptionForm: TParentForm};
+  SearchByCaption in '..\..\FormsFarmacy\System\SearchByCaption.pas' {SearchByCaptionForm: TParentForm},
+  GoodsSP_Cash in '..\..\FormsFarmacy\Cash\GoodsSP_Cash.pas' {GoodsSP_CashForm: TParentForm},
+  GoodsUnitRetail_Cash in '..\..\FormsFarmacy\Cash\GoodsUnitRetail_Cash.pas' {GoodsUnitRetail_CashForm: TParentForm};
 
 {$R *.res}
 {$R DevExpressRus.res}

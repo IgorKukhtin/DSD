@@ -365,11 +365,16 @@ end;
 procedure TLoadFormTest.LoadCashRegisterFormTest;
 begin
 
-  TdsdFormStorageFactory.GetStorage.Save(GetForm('TOverdueChangeCashPUSHSendForm'));
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TGoodsSP_CashForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TGoodsSP_CashForm');
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TGoodsUnitRetail_CashForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TGoodsUnitRetail_CashForm');
+
+{  TdsdFormStorageFactory.GetStorage.Save(GetForm('TOverdueChangeCashPUSHSendForm'));
   TdsdFormStorageFactory.GetStorage.Load('TOverdueChangeCashPUSHSendForm');
 
 
-{  TdsdFormStorageFactory.GetStorage.Save(GetForm('TOverdueChangeCashJournalForm'));
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TOverdueChangeCashJournalForm'));
   TdsdFormStorageFactory.GetStorage.Load('TOverdueChangeCashJournalForm');
 
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TCashRegisterForm'));

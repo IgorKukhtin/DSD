@@ -527,6 +527,8 @@ type
     MemDataGOODSDIMP: TFloatField;
     spShowPUSH_UKTZED: TdsdStoredProc;
     actShowPUSH_UKTZED: TdsdShowPUSHMessage;
+    actGoodsSP_Cash: TdsdOpenForm;
+    N53: TMenuItem;
     procedure WM_KEYDOWN(var Msg: TWMKEYDOWN);
     procedure FormCreate(Sender: TObject);
     procedure actChoiceGoodsInRemainsGridExecute(Sender: TObject);

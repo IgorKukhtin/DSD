@@ -15,6 +15,7 @@ RETURNS TABLE (Id Integer, Code Integer, Name TVarChar
              , DaySaleForSUN Integer
              , isBlockVIP Boolean
              , isPairedOnlyPromo Boolean
+             , AttemptsSub Integer
              ) AS
 $BODY$
 BEGIN
@@ -35,6 +36,7 @@ BEGIN
         , ObjectFloat_CashSettings_DaySaleForSUN.ValueData::Integer                AS DaySaleForSUN
         , COALESCE(ObjectBoolean_CashSettings_BlockVIP.ValueData, FALSE)           AS isBlockVIP
         , COALESCE(ObjectBoolean_CashSettings_PairedOnlyPromo.ValueData, FALSE)    AS isPairedOnlyPromo
+        , ObjectFloat_CashSettings_AttemptsSub.ValueData::Integer                  AS AttemptsSub
    FROM Object AS Object_CashSettings
         LEFT JOIN ObjectString AS ObjectString_CashSettings_ShareFromPriceName
                                ON ObjectString_CashSettings_ShareFromPriceName.ObjectId = Object_CashSettings.Id 
@@ -57,6 +59,9 @@ BEGIN
         LEFT JOIN ObjectFloat AS ObjectFloat_CashSettings_DaySaleForSUN
                               ON ObjectFloat_CashSettings_DaySaleForSUN.ObjectId = Object_CashSettings.Id 
                              AND ObjectFloat_CashSettings_DaySaleForSUN.DescId = zc_ObjectFloat_CashSettings_DaySaleForSUN()
+        LEFT JOIN ObjectFloat AS ObjectFloat_CashSettings_AttemptsSub
+                              ON ObjectFloat_CashSettings_AttemptsSub.ObjectId = Object_CashSettings.Id 
+                             AND ObjectFloat_CashSettings_AttemptsSub.DescId = zc_ObjectFloat_CashSettings_AttemptsSub()
         LEFT JOIN ObjectBoolean AS ObjectBoolean_CashSettings_BlockVIP
                                 ON ObjectBoolean_CashSettings_BlockVIP.ObjectId = Object_CashSettings.Id 
                                AND ObjectBoolean_CashSettings_BlockVIP.DescId = zc_ObjectBoolean_CashSettings_BlockVIP()
