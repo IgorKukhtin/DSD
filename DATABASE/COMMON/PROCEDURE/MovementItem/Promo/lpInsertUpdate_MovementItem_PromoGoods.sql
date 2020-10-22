@@ -1,7 +1,8 @@
 -- Function: lpInsertUpdate_MovementItem_PromoGoods()
 
 --DROP FUNCTION IF EXISTS lpInsertUpdate_MovementItem_PromoGoods (Integer, Integer, Integer, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, Integer, Integer, TVarChar, Integer);
-DROP FUNCTION IF EXISTS lpInsertUpdate_MovementItem_PromoGoods (Integer, Integer, Integer, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, Integer, Integer, TVarChar, Integer);
+--DROP FUNCTION IF EXISTS lpInsertUpdate_MovementItem_PromoGoods (Integer, Integer, Integer, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, Integer, Integer, TVarChar, Integer);
+DROP FUNCTION IF EXISTS lpInsertUpdate_MovementItem_PromoGoods (Integer, Integer, Integer, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, Integer, Integer, TVarChar, Integer);
 
 CREATE OR REPLACE FUNCTION lpInsertUpdate_MovementItem_PromoGoods(
  INOUT ioId                    Integer   , -- Ключ объекта <Элемент документа>
@@ -17,6 +18,7 @@ CREATE OR REPLACE FUNCTION lpInsertUpdate_MovementItem_PromoGoods(
     IN inAmountReal            TFloat    , --Объем продаж в аналогичный период, кг
     IN inAmountPlanMin         TFloat    , --Минимум планируемого объема продаж на акционный период (в кг)
     IN inAmountPlanMax         TFloat    , --Максимум планируемого объема продаж на акционный период (в кг)
+    IN inTaxRetIn              TFloat    , -- % возврата
     IN inGoodsKindId           Integer   , --ИД обьекта <Вид товара>
     IN inGoodsKindCompleteId   Integer   , --ИД обьекта <Вид товара (примечание)>
     IN inComment               TVarChar  , --Комментарий
@@ -66,7 +68,7 @@ BEGIN
     
     -- сохранили <Максимум планируемого объема продаж на акционный период (в кг)>
     PERFORM lpInsertUpdate_MovementItemFloat (zc_MIFloat_AmountPlanMax(), ioId, COALESCE(inAmountPlanMax,0));
-    
+
     -- сохранили связь с <Вид товара>
     PERFORM lpInsertUpdate_MovementItemLinkObject (zc_MILinkObject_GoodsKind(), ioId, inGoodsKindId);
     -- сохранили связь с <Вид товара (примечание)>
@@ -74,7 +76,13 @@ BEGIN
 
     -- сохранили <Комментарий>
     PERFORM lpInsertUpdate_MovementItemString (zc_MIString_Comment(), ioId, inComment);
-    
+
+    -- сохраняем % Возврат для всех товаров
+    PERFORM lpInsertUpdate_MovementItemFloat (zc_MIFloat_TaxRetIn(), MovementItem.Id, inTaxRetIn)
+    FROM MovementItem
+    WHERE MovementItem.MovementId = inMovementId
+      AND MovementItem.ObjectId = inGoodsId;
+
     -- сохранили протокол
     IF inUserId > 0 THEN 
       PERFORM lpInsert_MovementItemProtocol (ioId, inUserId, vbIsInsert);
@@ -89,6 +97,7 @@ $BODY$
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.  Воробкало А.А.
+ 22.10.20         * inTaxRetIn
  14.07.20         * inOperPriceList
  24.01.18         * inPriceTender
  28.11.17         * inGoodsKindCompleteId

@@ -42,6 +42,7 @@ RETURNS TABLE (
       , AmountIn            TFloat --Кол-во возврат (факт)
       , AmountInWeight      TFloat --Кол-во возврат (факт) Вес
       
+      , TaxRetIn            TFloat -- % возврат
       , AmountPlan1         TFloat -- Кол-во план отгрузки за пн.
       , AmountPlan2         TFloat -- Кол-во план отгрузки за вт.
       , AmountPlan3         TFloat -- Кол-во план отгрузки за ср.
@@ -317,6 +318,7 @@ ALTER FUNCTION gpSelect_MovementItem_PromoGoods (Integer, Boolean, TVarChar) OWN
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.    Воробкало А.А.
+ 22.10.20         * add TaxRetIn
  14.07.20         * add OperPriceList
  06.07.20         * add AmountRealPromo
  01.07.20         * add MainDiscount
