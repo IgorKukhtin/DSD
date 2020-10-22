@@ -145,11 +145,17 @@ BEGIN
                  -- Текущий остаток
                , REMAINS AS (SELECT Container.ObjectId                                                    AS GoodsId
                                   , SUM (Container.Amount)                                                AS Amount
-                             FROM (SELECT DISTINCT tmpMovementItem.GoodsId FROM tmpMovementItem) AS  tmpMovementItem
-                                  LEFT OUTER JOIN Container ON Container.ObjectId = tmpMovementItem.GoodsId
-                                                           AND Container.DescID = zc_Container_Count()
-                                                           AND Container.WhereObjectId = vbUnitId
-                                                           AND Container.Amount <> 0
+                             FROM (SELECT Container.Id   
+                                        , Container.ObjectId   
+                                        , Container.Amount - COALESCE (SUM (MovementItemContainer.Amount), 0.0)  AS Amount
+                                   FROM (SELECT DISTINCT tmpMovementItem.GoodsId FROM tmpMovementItem) AS  tmpMovementItem
+                                        LEFT OUTER JOIN Container ON Container.ObjectId = tmpMovementItem.GoodsId
+                                                                 AND Container.DescID = zc_Container_Count()
+                                                                 AND Container.WhereObjectId = vbUnitId
+                                                                 AND Container.Amount <> 0
+                                        LEFT OUTER JOIN MovementItemContainer ON MovementItemContainer.ContainerId = Container.Id
+                                                                             AND MovementItemContainer.Operdate >= vbOperDate
+                                   GROUP BY Container.Id, Container.ObjectId) AS Container                                                                                                                                           
                              GROUP BY Container.ObjectId
                              HAVING SUM (Container.Amount) <> 0
                             )
@@ -268,7 +274,7 @@ BEGIN
         END IF;
 
         -- сохранили <Документ>
-        vbInventoryID := lpInsertUpdate_Movement (vbInventoryID, zc_Movement_Inventory(), vbInventoryNumber, CURRENT_DATE, inMovementId);
+        vbInventoryID := lpInsertUpdate_Movement (vbInventoryID, zc_Movement_Inventory(), vbInventoryNumber, vbOperDate, inMovementId);
 
         -- Востановили все удаленное в инвентаризации
         PERFORM gpMovementItem_Inventory_SetUnErased(MovementItem.ID, inUserId::TVarChar)
@@ -279,7 +285,7 @@ BEGIN
     ELSE
         vbInventoryNumber := CAST (NEXTVAL ('Movement_Inventory_seq') AS TVarChar);
         -- сохранили <Документ>
-        vbInventoryID := lpInsertUpdate_Movement (0, zc_Movement_Inventory(), vbInventoryNumber, CURRENT_DATE, inMovementId);
+        vbInventoryID := lpInsertUpdate_Movement (0, zc_Movement_Inventory(), vbInventoryNumber, vbOperDate, inMovementId);
     END IF;
 
 

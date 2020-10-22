@@ -55,10 +55,10 @@ BEGIN
 
     WHERE ObjectLink_User_Member.ObjectId = vbUserId
       AND ObjectLink_User_Member.DescId = zc_ObjectLink_User_Member();
-      
-   vbDatePUSH := (SELECT ObjectDate.ValueData FROM ObjectDate  
+
+   vbDatePUSH := (SELECT ObjectDate.ValueData FROM ObjectDate
                   WHERE ObjectDate.ObjectId = vbUserId
-                    AND ObjectDate.DescId = zc_ObjectDate_User_PUSH()); 
+                    AND ObjectDate.DescId = zc_ObjectDate_User_PUSH());
 
    -- сохранили дату
    PERFORM lpInsertUpdate_ObjectDate (zc_ObjectDate_User_PUSH(), vbUserId, CURRENT_TIMESTAMP);
@@ -311,9 +311,74 @@ BEGIN
          INSERT INTO _PUSH (Id, Text) VALUES (9, 'Сотрудники по которым за вчера чеков менее 20:'||CHR(13)||CHR(13)||vbText);
        END IF;
 
+       WITH tmpCashSettings AS (SELECT ObjectFloat_CashSettings_AttemptsSub.ValueData::Integer AS AttemptsSub
+                               FROM Object AS Object_CashSettings
+                                    LEFT JOIN ObjectFloat AS ObjectFloat_CashSettings_AttemptsSub
+                                                          ON ObjectFloat_CashSettings_AttemptsSub.ObjectId = Object_CashSettings.Id
+                                                         AND ObjectFloat_CashSettings_AttemptsSub.DescId = zc_ObjectFloat_CashSettings_AttemptsSub()
+                               WHERE Object_CashSettings.DescId = zc_Object_CashSettings()
+                               LIMIT 1),
+           tmpMovement AS (SELECT Movement.OperDate
+                                 , Movement.Id
+                            FROM Movement
+                            WHERE Movement.DescId = zc_Movement_TestingUser()
+                              AND Movement.OperDate = date_trunc('month', CURRENT_DATE)),
+           tmpMI AS (SELECT        Movement.OperDate
+                                 , MovementItem.ObjectId                                          AS UserID
+                                 , MovementItem.Id
+                            FROM tmpMovement AS Movement
+
+                                 LEFT JOIN MovementItem ON MovementItem.MovementId = Movement.Id
+                                                       AND MovementItem.DescId = zc_MI_Master()),
+           tmpMIF AS (SELECT * FROM MovementItemFloat
+                      WHERE MovementItemFloat.MovementItemId in (SELECT tmpMI.Id FROM tmpMI)
+                        AND MovementItemFloat.DescId = zc_MIFloat_TestingUser_Attempts()
+                        AND MovementItemFloat.ValueData >= (SELECT tmpCashSettings.AttemptsSub FROM tmpCashSettings)),
+           tmpSubstitution AS (SELECT MIMaster.ObjectId            AS UserID
+                                    , COUNT(*)                     AS CountSubstitution
+                              FROM Movement
+
+                                   INNER JOIN MovementItem AS MIMaster
+                                                           ON MIMaster.MovementId = Movement.id
+                                                          AND MIMaster.DescId = zc_MI_Master()
+
+                                   LEFT JOIN MovementItem AS MIChild
+                                                          ON MIChild.MovementId = Movement.id
+                                                         AND MIChild.ParentId = MIMaster.ID
+                                                         AND MIChild.DescId = zc_MI_Child()
+
+                                   LEFT JOIN MovementItemLinkObject AS MILinkObject_PayrollType
+                                                                    ON MILinkObject_PayrollType.MovementItemId = MIChild.Id
+                                                                   AND MILinkObject_PayrollType.DescId = zc_MILinkObject_PayrollType()
+
+                              WHERE Movement.ID = (SELECT Max(Movement.ID) FROM Movement
+                                                   WHERE Movement.DescId = zc_Movement_EmployeeSchedule()
+                                                     AND Movement.OperDate = date_trunc('month', CURRENT_DATE))
+                                AND MILinkObject_PayrollType.ObjectId IN (zc_Enum_PayrollType_WorkSCS(), zc_Enum_PayrollType_WorkSAS())
+                                GROUP BY MIMaster.ObjectId)
+
+
+        SELECT string_agg(Object_User.ValueData||' - '||(tmpMIF.ValueData - COALESCE (tmpSubstitution.CountSubstitution * 5, 0))::Integer::TVarchar, Chr(13))
+        INTO vbText
+        FROM tmpMI AS MovementItem
+
+             INNER JOIN tmpMIF ON tmpMIF.MovementItemId = MovementItem.Id
+                              AND tmpMIF.DescId = zc_MIFloat_TestingUser_Attempts()
+
+             LEFT JOIN tmpSubstitution ON tmpSubstitution.UserID = MovementItem.UserID
+
+             INNER JOIN Object AS Object_User ON Object_User.ID = MovementItem.UserID
+        WHERE (tmpMIF.ValueData - COALESCE (tmpSubstitution.CountSubstitution * 5, 0)) >=
+              ((SELECT tmpCashSettings.AttemptsSub FROM tmpCashSettings) + 5);
+
+       IF COALESCE (vbText, '') <> ''
+       THEN
+         INSERT INTO _PUSH (Id, Text) VALUES (9, 'Сотрудники по кот назначены штрафные балы:'||CHR(13)||CHR(13)||vbText);
+       END IF;
+
    END IF;
 
-   
+
    SELECT string_agg(Movement.InvNumber||' от '||TO_CHAR(Movement.OperDate, 'DD.MM.YYYY'), CHR(13))
    INTO vbText
    FROM Movement
@@ -336,9 +401,9 @@ BEGIN
    WHERE Movement.DescId = zc_Movement_Send()
      AND Movement.StatusId = zc_Enum_Status_UnComplete()
      AND (MovementDate_UserConfirmedKind.ValueData >= vbDatePUSH OR vbDatePUSH IS NULL)
-     AND COALESCE (MovementBoolean_VIP.ValueData, FALSE) = TRUE   
+     AND COALESCE (MovementBoolean_VIP.ValueData, FALSE) = TRUE
      AND COALESCE (MovementBoolean_Confirmed.ValueData, FALSE) = TRUE
-     AND MovementLinkObject_Insert.ObjectId = vbUserId;   
+     AND MovementLinkObject_Insert.ObjectId = vbUserId;
 
    IF COALESCE (vbText, '') <> ''
    THEN
@@ -367,9 +432,9 @@ BEGIN
    WHERE Movement.DescId = zc_Movement_Send()
      AND Movement.StatusId = zc_Enum_Status_UnComplete()
      AND (MovementDate_UserConfirmedKind.ValueData >= vbDatePUSH OR vbDatePUSH IS NULL)
-     AND COALESCE (MovementBoolean_VIP.ValueData, FALSE) = TRUE   
+     AND COALESCE (MovementBoolean_VIP.ValueData, FALSE) = TRUE
      AND COALESCE (MovementBoolean_Confirmed.ValueData, FALSE) = FALSE
-     AND MovementLinkObject_Insert.ObjectId = vbUserId;   
+     AND MovementLinkObject_Insert.ObjectId = vbUserId;
 
    IF COALESCE (vbText, '') <> ''
    THEN
@@ -400,4 +465,5 @@ LANGUAGE plpgsql VOLATILE;
 
 -- тест
 -- SELECT * FROM gpGet_PUSH_Farmacy('12198759')
--- SELECT * FROM gpGet_PUSH_Farmacy(1, '3')
+--
+SELECT * FROM gpGet_PUSH_Farmacy(1, '3')

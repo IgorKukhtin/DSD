@@ -61,7 +61,7 @@ RETURNS TABLE (Id Integer, Code Integer, Name TVarChar
              , TimeWork TVarChar
              , DateCheck TDateTime
              , LayoutId  Integer, LayoutName TVarChar
-             , TypeSAUA TVarChar, MasterSAUA TVarChar, SlaveSAUA TVarChar 
+             , TypeSAUA TVarChar, MasterSAUA TVarChar
 ) AS
 $BODY$
 BEGIN
@@ -75,8 +75,12 @@ BEGIN
                        , ROW_NUMBER() OVER (ORDER BY ObjectBoolean_UploadBadm.ObjectId )  ::integer  AS Num_byReportBadm
                   FROM ObjectBoolean AS ObjectBoolean_UploadBadm
                   WHERE ObjectBoolean_UploadBadm.DescId = zc_ObjectBoolean_Unit_UploadBadm()
-                    AND ObjectBoolean_UploadBadm.ValueData = TRUE)
-
+                    AND ObjectBoolean_UploadBadm.ValueData = TRUE),
+    tmpMasterSAUA AS (SELECT DISTINCT ObjectLink.ChildObjectId  AS UnitId      
+                      FROM ObjectLink 
+                      WHERE ObjectLink.DescId = zc_ObjectLink_Unit_UnitSAUA()
+                        AND ObjectLink.ChildObjectId <> 0)
+                            
     SELECT 
         Object_Unit.Id                                       AS Id
       , Object_Unit.ObjectCode                               AS Code
@@ -227,12 +231,9 @@ BEGIN
       , COALESCE (Object_Layout.Id,0)          ::Integer   AS LayoutId
       , COALESCE (Object_Layout.ValueData, '') ::TVarChar  AS LayoutName
       
-      , CASE WHEN COALESCE (Object_UnitSAUA_Slave.Id, 0) <> 0 THEN 'Master'
+      , CASE WHEN COALESCE (tmpMasterSAUA.UnitId, 0) <> 0     THEN 'Master'
              WHEN COALESCE(Object_UnitSAUA_Master.Id, 0) <> 0 THEN 'Slave' END::TVarChar AS TypeSAUA 
-      , CASE WHEN COALESCE (Object_UnitSAUA_Slave.Id, 0) <> 0 THEN Object_Unit.ValueData
-             ELSE Object_UnitSAUA_Master.ValueData END                                   AS MasterSAUA
-      , CASE WHEN COALESCE (Object_UnitSAUA_Master.Id, 0) <> 0 THEN Object_Unit.ValueData
-             ELSE Object_UnitSAUA_Slave.ValueData END                                    AS SlaveSAUA
+      , Object_UnitSAUA_Master.ValueData                                                 AS MasterSAUA
 
     FROM Object AS Object_Unit
         LEFT JOIN ObjectLink AS ObjectLink_Unit_Parent
@@ -581,15 +582,13 @@ BEGIN
                              ON ObjectDate_FirstCheck.ObjectId = Object_Unit.Id
                             AND ObjectDate_FirstCheck.DescId = zc_ObjectDate_Unit_FirstCheck()
                             
-        LEFT JOIN ObjectLink AS ObjectLink_UnitSAUA_Slave 
-                             ON ObjectLink_UnitSAUA_Slave.ObjectId = Object_Unit.Id 
-                            AND ObjectLink_UnitSAUA_Slave.DescId = zc_ObjectLink_Unit_UnitSAUA()
-        LEFT JOIN Object AS Object_UnitSAUA_Slave ON Object_UnitSAUA_Slave.Id = ObjectLink_UnitSAUA_Slave.ChildObjectId
+        LEFT JOIN ObjectLink AS ObjectLink_UnitSAUA_Master  
+                             ON ObjectLink_UnitSAUA_Master .ObjectId = Object_Unit.Id 
+                            AND ObjectLink_UnitSAUA_Master .DescId = zc_ObjectLink_Unit_UnitSAUA()
+        LEFT JOIN Object AS Object_UnitSAUA_Master ON Object_UnitSAUA_Master.Id = ObjectLink_UnitSAUA_Master .ChildObjectId
                             
-        LEFT JOIN ObjectLink AS ObjectLink_UnitSAUA_Master 
-                             ON ObjectLink_UnitSAUA_Master.ChildObjectId = Object_Unit.Id 
-                            AND ObjectLink_UnitSAUA_Master.DescId = zc_ObjectLink_Unit_UnitSAUA()
-        LEFT JOIN Object AS Object_UnitSAUA_Master  ON Object_UnitSAUA_Master.Id = ObjectLink_UnitSAUA_Master.ObjectId
+        LEFT JOIN tmpMasterSAUA AS tmpMasterSAUA
+                                ON tmpMasterSAUA.UnitId  = Object_Unit.Id 
 
     WHERE Object_Unit.DescId = zc_Object_Unit()
       AND (inisShowAll = True OR Object_Unit.isErased = False);

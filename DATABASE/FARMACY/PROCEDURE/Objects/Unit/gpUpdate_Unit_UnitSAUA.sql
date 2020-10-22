@@ -4,7 +4,7 @@ DROP FUNCTION IF EXISTS gpUpdate_Unit_UnitSAUA(Integer, Integer, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpUpdate_Unit_UnitSAUA(
     IN inId                  Integer   ,    -- ключ объекта <Подразделение>
-    IN inUnitSAUA            Integer   ,    -- Связь со Slave в системе автоматического управления ассортиментом САУА
+    IN inUnitSAUA            Integer   ,    -- Связь с Мастер в системе автоматического управления ассортиментом САУА
     IN inSession             TVarChar       -- текущий пользователь
 )
 RETURNS VOID AS
@@ -20,25 +20,15 @@ BEGIN
    
    IF COALESCE(inId, 0) = COALESCE(inUnitSAUA, 0)
    THEN
-     RAISE EXCEPTION 'Ошибка.Slave на может ссылаться на самого себя';   
+     RAISE EXCEPTION 'Ошибка.Мастер на может ссылаться на самого себя';   
    END IF;
    
    IF EXISTS(SELECT 1 FROM ObjectLink 
-             WHERE ObjectLink.ChildObjectId = inUnitSAUA 
-               AND ObjectLink.ObjectId <> inId 
+             WHERE ObjectLink.ChildObjectId = inId
                AND ObjectLink.DescId = zc_ObjectLink_Unit_UnitSAUA())
      AND COALESCE (inUnitSAUA, 0) <> 0
    THEN
-     RAISE EXCEPTION 'Ошибка.Подразделение <%> уже используеться как Slave', (SELECT Object.ValueData FROM Object WHERE Object.Id = inUnitSAUA);   
-   END IF;
-
-   IF EXISTS(SELECT 1 FROM ObjectLink 
-             WHERE ObjectLink.ChildObjectId <> 0
-               AND ObjectLink.ObjectId = inUnitSAUA
-               AND ObjectLink.DescId = zc_ObjectLink_Unit_UnitSAUA())
-     AND COALESCE (inUnitSAUA, 0) <> 0
-   THEN
-     RAISE EXCEPTION 'Ошибка.Подразделение <%> уже используеться как Master', (SELECT Object.ValueData FROM Object WHERE Object.Id = inUnitSAUA);   
+     RAISE EXCEPTION 'Ошибка.Подразделение <%> используеться как Master', (SELECT Object.ValueData FROM Object WHERE Object.Id = inId);   
    END IF;
 
    -- сохранили связь с <Подразделения>
