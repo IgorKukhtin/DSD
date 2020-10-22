@@ -915,28 +915,30 @@ object ProductForm: TProductForm
     end
     object bbInsertRecordProdColorItems: TdxBarButton
       Action = InsertRecordProdColorItems
+      Caption = #1044#1086#1073#1072#1074#1080#1090#1100
       Category = 0
     end
     object bbInsertRecordProdOptItems: TdxBarButton
       Action = InsertRecordProdOptItems
+      Caption = #1044#1086#1073#1072#1074#1080#1090#1100
       Category = 0
     end
     object bbSetErasedColor: TdxBarButton
       Action = actSetErasedColor
+      Caption = #1059#1076#1072#1083#1080#1090#1100
       Category = 0
     end
     object bbSetUnErasedColor: TdxBarButton
       Action = actSetUnErasedColor
-      Caption = #1042#1086#1089#1089#1090#1072#1085#1086#1074#1080#1090#1100' '#1094#1074#1077#1090
       Category = 0
     end
     object bbSetErasedOpt: TdxBarButton
       Action = actSetErasedOpt
+      Caption = #1059#1076#1072#1083#1080#1090#1100
       Category = 0
     end
     object bbSetUnErasedOpt: TdxBarButton
       Action = actSetUnErasedOpt
-      Caption = #1042#1086#1089#1089#1090#1072#1085#1086#1074#1080#1090#1100' '#1086#1087#1094#1080#1102
       Category = 0
     end
     object bbStartLoad: TdxBarButton

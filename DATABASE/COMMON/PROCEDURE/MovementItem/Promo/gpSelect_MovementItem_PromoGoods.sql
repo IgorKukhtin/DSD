@@ -175,7 +175,9 @@ BEGIN
              , MIFloat_AmountIn.ValueData             AS AmountIn            --Кол-во возврат (факт)
              , (MIFloat_AmountIn.ValueData
                  * CASE WHEN ObjectLink_Goods_Measure.ChildObjectId = zc_Measure_Sh() THEN ObjectFloat_Goods_Weight.ValueData ELSE 1 END) :: TFloat AS AmountInWeight      --Кол-во возврат (факт) Вес
-       
+
+             , MIFloat_TaxRetIn.ValueData             AS TaxRetIn               -- % возврат
+
              , MIFloat_Plan1.ValueData                AS AmountPlan1
              , MIFloat_Plan2.ValueData                AS AmountPlan2
              , MIFloat_Plan3.ValueData                AS AmountPlan3
@@ -235,6 +237,10 @@ BEGIN
              LEFT JOIN MovementItemFloat AS MIFloat_AmountPlanMax
                                          ON MIFloat_AmountPlanMax.MovementItemId = MovementItem.Id
                                         AND MIFloat_AmountPlanMax.DescId = zc_MIFloat_AmountPlanMax()
+
+             LEFT JOIN MovementItemFloat AS MIFloat_TaxRetIn
+                                         ON MIFloat_TaxRetIn.MovementItemId = MovementItem.Id
+                                        AND MIFloat_TaxRetIn.DescId = zc_MIFloat_TaxRetIn()
 
              LEFT JOIN MovementItemFloat AS MIFloat_Plan1
                                          ON MIFloat_Plan1.MovementItemId = MovementItem.Id 

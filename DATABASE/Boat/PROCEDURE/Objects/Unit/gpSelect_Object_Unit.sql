@@ -66,8 +66,6 @@ BEGIN
            , Object_Insert.ValueData         AS InsertName
            , ObjectDate_Insert.ValueData     AS InsertDate
 
-           , COALESCE (ObjectBoolean_PartnerBarCode.ValueData, FALSE) :: Boolean  AS isPartnerBarCode
-
            , Object_Unit.isErased            AS isErased
 
        FROM Object AS Object_Unit

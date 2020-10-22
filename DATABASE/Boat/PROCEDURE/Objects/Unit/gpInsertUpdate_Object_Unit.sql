@@ -34,11 +34,14 @@ RETURNS RECORD
 AS
 $BODY$
    DECLARE vbUserId Integer;
+   DECLARE vbIsInsert Boolean;
 BEGIN
    -- проверка прав пользователя на вызов процедуры
    -- vbUserId := lpCheckRight (inSession, zc_Enum_Process_InsertUpdate_Object_Unit());
    vbUserId:= lpGetUserBySession (inSession);
 
+   -- определяем признак Создание/Корректировка
+   vbIsInsert:= COALESCE (ioId, 0) = 0;
 
    -- Нужен ВСЕГДА- ДЛЯ НОВОЙ СХЕМЫ С ioCode -> ioCode
    IF COALESCE (ioId, 0) = 0 AND COALESCE (ioCode, 0) <> 0 THEN ioCode := NEXTVAL ('Object_Unit_seq'); 
@@ -68,32 +71,20 @@ BEGIN
    PERFORM lpInsertUpdate_ObjectString (zc_ObjectString_Unit_Address(), ioId, inAddress);
    -- сохранили Телефон
    PERFORM lpInsertUpdate_ObjectString (zc_ObjectString_Unit_Phone(), ioId, inPhone);
-   -- сохранили Принтер
-   PERFORM lpInsertUpdate_ObjectString (zc_ObjectString_Unit_Printer(), ioId, inPrinter);
-   -- сохранили 
-   PERFORM lpInsertUpdate_ObjectString (zc_ObjectString_Unit_Print(), ioId, inPrint);
-
-   -- сохранили % скидки ВИНТАЖ
-   PERFORM lpInsertUpdate_ObjectFloat (zc_ObjectFloat_Unit_DiscountTax(), ioId, inDiscountTax);
-
-   -- сохранили Признак Ш/К поставщика
-   PERFORM lpInsertUpdate_ObjectBoolean (zc_ObjectBoolean_Unit_PartnerBarCode(), ioId, inisPartnerBarCode);
-   
    -- сохранили связь с <Юридические лица>
    PERFORM lpInsertUpdate_ObjectLink (zc_ObjectLink_Unit_Juridical(), ioId, inJuridicalId);
    -- сохранили связь с <Група>
    PERFORM lpInsertUpdate_ObjectLink (zc_ObjectLink_Unit_Parent(), ioId, inParentId);
    -- сохранили связь с <Склад>
    PERFORM lpInsertUpdate_ObjectLink (zc_ObjectLink_Unit_Child(), ioId, inChildId);
-   -- сохранили связь с <Расчетный счет>
-   PERFORM lpInsertUpdate_ObjectLink (zc_ObjectLink_Unit_BankAccount(), ioId, inBankAccountId);
-   -- сохранили связь с <Аналитики управленческих счетов - направление>
-   PERFORM lpInsertUpdate_ObjectLink (zc_ObjectLink_Unit_AccountDirection(), ioId, inAccountDirectionId);
-   -- сохранили связь с <Группа товара>
-   PERFORM lpInsertUpdate_ObjectLink (zc_ObjectLink_Unit_GoodsGroup(), ioId, inGoodsGroupId);
-   -- сохранили связь с <Прайс лист>
-   PERFORM lpInsertUpdate_ObjectLink (zc_ObjectLink_Unit_PriceList(), ioId, inPriceListId);
-   
+
+   IF vbIsInsert = TRUE THEN
+      -- сохранили свойство <Дата создания>
+      PERFORM lpInsertUpdate_ObjectDate (zc_ObjectDate_Protocol_Insert(), ioId, CURRENT_TIMESTAMP);
+      -- сохранили свойство <Пользователь (создание)>
+      PERFORM lpInsertUpdate_ObjectLink (zc_ObjectLink_Protocol_Insert(), ioId, vbUserId);
+   END IF;
+
    -- сохранили протокол
    PERFORM lpInsert_ObjectProtocol (ioId, vbUserId);
    
@@ -105,18 +96,8 @@ $BODY$
 /*-------------------------------------------------------------------------------*/
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
-               Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.    Полятикин А.А.
-20.01.20          * add inPriceListId
-22.03.18          * 
-05.03.18          *
-27.02.18          * Printer
-07.06.17          * add AccountDirection
-23.05.17                                                           *
-13.05.17                                                           *
-10.05.17                                                           *
-08.05.17                                                           *
-28.02.17                                                           *
-
+               Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
+ 22.10.20          *
 */
 
 -- тест
