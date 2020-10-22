@@ -24,6 +24,7 @@ object ProductForm: TProductForm
     Width = 988
     Height = 216
     Align = alTop
+    PopupMenu = PopupMenu
     TabOrder = 0
     LookAndFeel.NativeStyle = True
     LookAndFeel.SkinName = 'UserSkin'
@@ -363,6 +364,7 @@ object ProductForm: TProductForm
     Width = 532
     Height = 168
     Align = alRight
+    PopupMenu = PopupMenuOption
     TabOrder = 1
     LookAndFeel.NativeStyle = True
     LookAndFeel.SkinName = 'UserSkin'
@@ -548,6 +550,7 @@ object ProductForm: TProductForm
     Width = 448
     Height = 168
     Align = alClient
+    PopupMenu = PopupMenuColor
     TabOrder = 6
     LookAndFeel.NativeStyle = True
     LookAndFeel.SkinName = 'UserSkin'
@@ -701,6 +704,8 @@ object ProductForm: TProductForm
     Height = 5
     AlignSplitter = salTop
     Control = cxGrid
+    ExplicitLeft = 184
+    ExplicitTop = 210
   end
   object cxRightSplitter: TcxSplitter
     Left = 448
@@ -916,17 +921,14 @@ object ProductForm: TProductForm
     end
     object bbInsertRecordProdColorItems: TdxBarButton
       Action = InsertRecordProdColorItems
-      Caption = #1044#1086#1073#1072#1074#1080#1090#1100
       Category = 0
     end
     object bbInsertRecordProdOptItems: TdxBarButton
       Action = InsertRecordProdOptItems
-      Caption = #1044#1086#1073#1072#1074#1080#1090#1100
       Category = 0
     end
     object bbSetErasedColor: TdxBarButton
       Action = actSetErasedColor
-      Caption = #1059#1076#1072#1083#1080#1090#1100
       Category = 0
     end
     object bbSetUnErasedColor: TdxBarButton
@@ -935,7 +937,6 @@ object ProductForm: TProductForm
     end
     object bbSetErasedOpt: TdxBarButton
       Action = actSetErasedOpt
-      Caption = #1059#1076#1072#1083#1080#1090#1100
       Category = 0
     end
     object bbSetUnErasedOpt: TdxBarButton
@@ -1095,10 +1096,9 @@ object ProductForm: TProductForm
         item
           StoredProc = spErasedColor
         end>
-      Caption = #1059#1076#1072#1083#1080#1090#1100' '#1062#1074#1077#1090
-      Hint = #1059#1076#1072#1083#1080#1090#1100' '#1062#1074#1077#1090
+      Caption = #1059#1076#1072#1083#1080#1090#1100
+      Hint = #1059#1076#1072#1083#1080#1090#1100
       ImageIndex = 2
-      ShortCut = 46
       ErasedFieldName = 'isErased'
       DataSource = ProdColorItemsDS
     end
@@ -1110,10 +1110,9 @@ object ProductForm: TProductForm
         item
           StoredProc = spErasedOpt
         end>
-      Caption = #1059#1076#1072#1083#1080#1090#1100' '#1054#1087#1094#1080#1102
-      Hint = #1059#1076#1072#1083#1080#1090#1100' '#1054#1087#1094#1080#1102
+      Caption = #1059#1076#1072#1083#1080#1090#1100
+      Hint = #1059#1076#1072#1083#1080#1090#1100
       ImageIndex = 2
-      ShortCut = 46
       ErasedFieldName = 'isErased'
       DataSource = ProdOptItemsDS
     end
@@ -1126,7 +1125,7 @@ object ProductForm: TProductForm
           StoredProc = spErased
         end>
       Caption = #1059#1076#1072#1083#1080#1090#1100
-      Hint = #1059#1076#1072#1083#1080#1090#1100' '#1076#1072#1085#1085#1099#1077
+      Hint = #1059#1076#1072#1083#1080#1090#1100
       ImageIndex = 2
       ShortCut = 46
       ErasedFieldName = 'isErased'
@@ -1141,9 +1140,8 @@ object ProductForm: TProductForm
           StoredProc = spUnErasedOpt
         end>
       Caption = #1042#1086#1089#1089#1090#1072#1085#1086#1074#1080#1090#1100
-      Hint = #1042#1086#1089#1089#1090#1072#1085#1086#1074#1080#1090#1100' '#1076#1072#1085#1085#1099#1077
+      Hint = #1042#1086#1089#1089#1090#1072#1085#1086#1074#1080#1090#1100
       ImageIndex = 8
-      ShortCut = 46
       ErasedFieldName = 'isErased'
       isSetErased = False
       DataSource = ProdOptItemsDS
@@ -1157,9 +1155,8 @@ object ProductForm: TProductForm
           StoredProc = spUnErasedColor
         end>
       Caption = #1042#1086#1089#1089#1090#1072#1085#1086#1074#1080#1090#1100
-      Hint = #1042#1086#1089#1089#1090#1072#1085#1086#1074#1080#1090#1100' '#1076#1072#1085#1085#1099#1077
+      Hint = #1042#1086#1089#1089#1090#1072#1085#1086#1074#1080#1090#1100
       ImageIndex = 8
-      ShortCut = 46
       ErasedFieldName = 'isErased'
       isSetErased = False
       DataSource = ProdColorItemsDS
@@ -1173,7 +1170,7 @@ object ProductForm: TProductForm
           StoredProc = spUnErased
         end>
       Caption = #1042#1086#1089#1089#1090#1072#1085#1086#1074#1080#1090#1100
-      Hint = #1042#1086#1089#1089#1090#1072#1085#1086#1074#1080#1090#1100' '#1076#1072#1085#1085#1099#1077
+      Hint = #1042#1086#1089#1089#1090#1072#1085#1086#1074#1080#1090#1100
       ImageIndex = 8
       ShortCut = 46
       ErasedFieldName = 'isErased'
@@ -1279,8 +1276,8 @@ object ProductForm: TProductForm
       PostDataSetBeforeExecute = False
       View = cxGridDBTableViewProdOptItems
       Params = <>
-      Caption = #1044#1086#1073#1072#1074#1080#1090#1100' '#1054#1087#1094#1080#1102
-      Hint = #1044#1086#1073#1072#1074#1080#1090#1100' '#1054#1087#1094#1080#1102
+      Caption = #1044#1086#1073#1072#1074#1080#1090#1100
+      Hint = #1044#1086#1073#1072#1074#1080#1090#1100
       ImageIndex = 0
     end
     object InsertRecordProdColorItems: TInsertRecord
@@ -1289,8 +1286,8 @@ object ProductForm: TProductForm
       PostDataSetBeforeExecute = False
       View = cxGridDBTableViewProdColorItems
       Params = <>
-      Caption = #1044#1086#1073#1072#1074#1080#1090#1100' '#1094#1074#1077#1090
-      Hint = #1044#1086#1073#1072#1074#1080#1090#1100' '#1094#1074#1077#1090
+      Caption = #1044#1086#1073#1072#1074#1080#1090#1100
+      Hint = #1044#1086#1073#1072#1074#1080#1090#1100
       ImageIndex = 0
     end
     object actChoiceFormProdColorGroup: TOpenChoiceForm
@@ -2143,5 +2140,54 @@ object ProductForm: TProductForm
     PackSize = 1
     Left = 840
     Top = 72
+  end
+  object PopupMenu: TPopupMenu
+    Images = dmMain.ImageList
+    Left = 376
+    Top = 208
+    object N1: TMenuItem
+      Action = actRefresh
+      Caption = #1054#1073#1085#1086#1074#1080#1090#1100' '#1076#1072#1085#1085#1099#1077
+    end
+    object N2: TMenuItem
+      Action = actInsert
+    end
+    object N4: TMenuItem
+      Action = actUpdate
+    end
+    object N3: TMenuItem
+      Action = actSetErased
+    end
+    object N5: TMenuItem
+      Action = actSetUnErased
+    end
+  end
+  object PopupMenuColor: TPopupMenu
+    Images = dmMain.ImageList
+    Left = 440
+    Top = 208
+    object MenuItem2: TMenuItem
+      Action = InsertRecordProdColorItems
+    end
+    object MenuItem3: TMenuItem
+      Action = actSetErasedColor
+    end
+    object MenuItem4: TMenuItem
+      Action = actSetUnErasedColor
+    end
+  end
+  object PopupMenuOption: TPopupMenu
+    Images = dmMain.ImageList
+    Left = 496
+    Top = 208
+    object MenuItem1: TMenuItem
+      Action = InsertRecordProdOptItems
+    end
+    object MenuItem5: TMenuItem
+      Action = actSetErasedOpt
+    end
+    object MenuItem6: TMenuItem
+      Action = actSetUnErasedOpt
+    end
   end
 end
