@@ -38,8 +38,9 @@ BEGIN
              Object_Unit.Id                  AS Id
            , Object_Unit.ObjectCode          AS Code
            , Object_Unit.ValueData           AS Name
-           , OS_Unit_Address.ValueData       AS Address
-           , OS_Unit_Phone.ValueData         AS Phone
+           , ObjectString_Address.ValueData  AS Address
+           , ObjectString_Phone.ValueData    AS Phone
+           , ObjectString_Comment.ValueData  AS Comment
            , Object_Juridical.ValueData      AS JuridicalName
            , Object_Parent.ValueData         AS ParentName
            , Object_Child.ValueData          AS ChildName
@@ -50,12 +51,15 @@ BEGIN
            , Object_Unit.isErased            AS isErased
 
        FROM Object AS Object_Unit
-            LEFT JOIN ObjectString AS OS_Unit_Address
-                                   ON OS_Unit_Address.ObjectId = Object_Unit.Id
-                                  AND OS_Unit_Address.DescId = zc_ObjectString_Unit_Address()
-            LEFT JOIN ObjectString AS OS_Unit_Phone
-                                   ON OS_Unit_Phone.ObjectId = Object_Unit.Id
-                                  AND OS_Unit_Phone.DescId = zc_ObjectString_Unit_Phone()
+            LEFT JOIN ObjectString AS ObjectString_Address
+                                   ON ObjectString_Address.ObjectId = Object_Unit.Id
+                                  AND ObjectString_Address.DescId = zc_ObjectString_Unit_Address()
+            LEFT JOIN ObjectString AS ObjectString_Phone
+                                   ON ObjectString_Phone.ObjectId = Object_Unit.Id
+                                  AND ObjectString_Phone.DescId = zc_ObjectString_Unit_Phone()
+            LEFT JOIN ObjectString AS ObjectString_Comment
+                                   ON ObjectString_Comment.ObjectId = Object_Unit.Id
+                                  AND ObjectString_Comment.DescId = zc_ObjectString_Unit_Comment()
 
             LEFT JOIN ObjectLink AS ObjectLink_Unit_Juridical
                                  ON ObjectLink_Unit_Juridical.ObjectId = Object_Unit.Id

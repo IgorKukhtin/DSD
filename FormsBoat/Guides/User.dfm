@@ -56,7 +56,7 @@ object UserForm: TUserForm
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         Options.Editing = False
-        Width = 87
+        Width = 117
       end
       object MemberName: TcxGridDBColumn
         Caption = #1060#1048#1054
@@ -64,11 +64,12 @@ object UserForm: TUserForm
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         Options.Editing = False
-        Width = 87
+        Width = 192
       end
       object UnitCode_Personal: TcxGridDBColumn
         Caption = #1050#1086#1076' '#1087'. '#1089#1086#1090#1088'.'
         DataBinding.FieldName = 'UnitCode_Personal'
+        Visible = False
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         HeaderHint = #1050#1086#1076' '#1087#1086#1076#1088'. '#1089#1086#1090#1088#1091#1076#1085#1080#1082#1072
@@ -78,6 +79,7 @@ object UserForm: TUserForm
       object UnitName_Personal: TcxGridDBColumn
         Caption = #1055#1086#1076#1088#1072#1079#1076#1077#1083#1077#1085#1080#1077' '#1089#1086#1090#1088'.'
         DataBinding.FieldName = 'UnitName_Personal'
+        Visible = False
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         HeaderHint = #1055#1086#1076#1088#1072#1079#1076#1077#1083#1077#1085#1080#1077' '#1089#1086#1090#1088#1091#1076#1085#1080#1082#1072
@@ -87,6 +89,7 @@ object UserForm: TUserForm
       object PositionName: TcxGridDBColumn
         Caption = #1044#1086#1083#1078#1085#1086#1089#1090#1100
         DataBinding.FieldName = 'PositionName'
+        Visible = False
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         Options.Editing = False
@@ -97,7 +100,7 @@ object UserForm: TUserForm
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         Options.Editing = False
-        Width = 47
+        Width = 87
       end
       object LanguageName: TcxGridDBColumn
         Caption = #1071#1079#1099#1082
@@ -105,7 +108,7 @@ object UserForm: TUserForm
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         Options.Editing = False
-        Width = 70
+        Width = 145
       end
       object Erased: TcxGridDBColumn
         Caption = #1059#1076#1072#1083#1077#1085
@@ -145,6 +148,8 @@ object UserForm: TUserForm
       TabOrder = 0
       LookAndFeel.NativeStyle = True
       LookAndFeel.SkinName = 'UserSkin'
+      ExplicitLeft = 4
+      ExplicitTop = 0
       object RoleGridView: TcxGridDBTableView
         Navigator.Buttons.CustomButtons = <>
         DataController.DataSource = RoleDS

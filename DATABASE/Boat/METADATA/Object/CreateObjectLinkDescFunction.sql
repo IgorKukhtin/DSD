@@ -135,6 +135,7 @@ CREATE OR REPLACE FUNCTION zc_ObjectLink_ProdColorPattern_ProdColorGroup() RETUR
 INSERT INTO ObjectLinkDesc(Code, ItemName, DescId, ChildObjectDescId)
 SELECT 'zc_ObjectLink_ProdColorPattern_ProdColorGroup', 'Категория', zc_Object_ProdColorPattern(), zc_Object_ProdColorGroup() WHERE NOT EXISTS (SELECT * FROM ObjectLinkDesc WHERE Code = 'zc_ObjectLink_ProdColorPattern_ProdColorGroup');
 
+
 /*-------------------------------------------------------------------------------
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.

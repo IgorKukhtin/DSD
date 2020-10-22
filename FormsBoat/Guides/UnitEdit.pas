@@ -40,36 +40,19 @@ type
     dsdUserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn;
     cxLabel3: TcxLabel;
     ceJuridical: TcxButtonEdit;
-    GuidesJuridical: TdsdGuides;
-    edDiscountTax: TcxCurrencyEdit;
     edAddress: TcxTextEdit;
     cxLabel4: TcxLabel;
     edPhone: TcxTextEdit;
     cxLabel5: TcxLabel;
-    cxLabel6: TcxLabel;
     cxLabel7: TcxLabel;
     ceParent: TcxButtonEdit;
     GuidesParent: TdsdGuides;
     cxLabel8: TcxLabel;
     ceChild: TcxButtonEdit;
     GuidesChild: TdsdGuides;
-    cxLabel9: TcxLabel;
-    ceBankAccount: TcxButtonEdit;
-    GuidesBankAccount: TdsdGuides;
-    cxLabel10: TcxLabel;
-    ceAccountDirection: TcxButtonEdit;
-    GuidesAccountDirection: TdsdGuides;
-    cxLabel11: TcxLabel;
-    edPrinter: TcxTextEdit;
-    cxLabel12: TcxLabel;
-    edPrintName: TcxTextEdit;
     cbisPartnerBarCode: TcxCheckBox;
-    cxLabel13: TcxLabel;
-    edGoodsGroup: TcxButtonEdit;
-    GuidesGoodsGroup: TdsdGuides;
-    cxLabel14: TcxLabel;
-    edPriceList: TcxButtonEdit;
-    GuidesPriceList: TdsdGuides;
+    cxLabel6: TcxLabel;
+    edComment: TcxTextEdit;
   private
     { Private declarations }
   public

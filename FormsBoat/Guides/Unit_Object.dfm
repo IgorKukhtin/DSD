@@ -60,15 +60,6 @@ object Unit_ObjectForm: TUnit_ObjectForm
         Options.Editing = False
         Width = 339
       end
-      object PrintName: TcxGridDBColumn
-        Caption = #1053#1072#1079#1074#1072#1085#1080#1077' '#1087#1088#1080' '#1087#1077#1095#1072#1090#1080
-        DataBinding.FieldName = 'PrintName'
-        HeaderAlignmentHorz = taCenter
-        HeaderAlignmentVert = vaCenter
-        HeaderHint = #1053#1072#1079#1074#1072#1085#1080#1077' '#1087#1088#1080' '#1087#1077#1095#1072#1090#1080
-        Options.Editing = False
-        Width = 90
-      end
       object Address: TcxGridDBColumn
         Caption = #1040#1076#1088#1077#1089
         DataBinding.FieldName = 'Address'
@@ -86,26 +77,6 @@ object Unit_ObjectForm: TUnit_ObjectForm
         HeaderGlyphAlignmentHorz = taCenter
         Options.Editing = False
         Width = 100
-      end
-      object Printer: TcxGridDBColumn
-        Caption = #1055#1088#1080#1085#1090#1077#1088
-        DataBinding.FieldName = 'Printer'
-        Visible = False
-        HeaderAlignmentHorz = taCenter
-        HeaderAlignmentVert = vaCenter
-        HeaderGlyphAlignmentHorz = taCenter
-        HeaderHint = #1055#1088#1080#1085#1090#1077#1088' ('#1087#1077#1095#1072#1090#1100' '#1095#1077#1082#1086#1074')'
-        Options.Editing = False
-        Width = 100
-      end
-      object DiscountTax: TcxGridDBColumn
-        Caption = '% '#1089#1082#1080#1076#1082#1080' OUTLET'
-        DataBinding.FieldName = 'DiscountTax'
-        HeaderAlignmentHorz = taCenter
-        HeaderAlignmentVert = vaCenter
-        HeaderGlyphAlignmentHorz = taCenter
-        Options.Editing = False
-        Width = 120
       end
       object JuridicalName: TcxGridDBColumn
         Caption = #1070#1088#1080#1076#1080#1095#1077#1089#1082#1086#1077' '#1083#1080#1094#1086
@@ -133,32 +104,6 @@ object Unit_ObjectForm: TUnit_ObjectForm
         HeaderGlyphAlignmentHorz = taCenter
         Options.Editing = False
         Width = 165
-      end
-      object BankAccountName: TcxGridDBColumn
-        Caption = #1053#1086#1084#1077#1088' '#1089#1095#1077#1090#1072
-        DataBinding.FieldName = 'BankAccountName'
-        HeaderAlignmentHorz = taCenter
-        HeaderAlignmentVert = vaCenter
-        HeaderGlyphAlignmentHorz = taCenter
-        Options.Editing = False
-        Width = 100
-      end
-      object BankName: TcxGridDBColumn
-        Caption = #1041#1072#1085#1082
-        DataBinding.FieldName = 'BankName'
-        HeaderAlignmentHorz = taCenter
-        HeaderAlignmentVert = vaCenter
-        HeaderGlyphAlignmentHorz = taCenter
-        Options.Editing = False
-        Width = 100
-      end
-      object AccountDirectionName: TcxGridDBColumn
-        Caption = #1040#1085#1072#1083#1080#1090#1080#1082#1080' '#1089#1095#1077#1090#1086#1074' - '#1085#1072#1087#1088#1072#1074#1083#1077#1085#1080#1077
-        DataBinding.FieldName = 'AccountDirectionName'
-        HeaderAlignmentHorz = taCenter
-        HeaderAlignmentVert = vaCenter
-        Options.Editing = False
-        Width = 130
       end
       object Erased: TcxGridDBColumn
         Caption = #1059#1076#1072#1083#1077#1085
