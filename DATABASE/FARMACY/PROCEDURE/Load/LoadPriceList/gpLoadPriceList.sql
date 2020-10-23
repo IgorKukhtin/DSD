@@ -97,6 +97,12 @@ BEGIN
                                AND ObjectDate_LastPriceOld.DescId = zc_ObjectDate_Goods_LastPriceOld()
       WHERE GoodsId <> 0 AND LoadPriceListId = inId;
       
+     -- Востановим если чтото удалиди раньше
+     UPDATE MovementItem SET isErased = FALSE 
+     WHERE MovementItem.Id = vbMovementId_pl 
+       AND MovementItem.isErased = TRUE;
+     
+      
      -- Перенос элементов прайса
      PERFORM 
          lpInsertUpdate_MovementItem_PriceList (tmp.MovementItemId , -- Ключ объекта <Элемент документа>
@@ -160,7 +166,15 @@ BEGIN
              WHERE LoadPriceListItem.GoodsId > 0 AND LoadPriceListItem.LoadPriceListId = inId
             ) AS tmp;
 
-
+     -- Удалим если чтото ушло из прайса
+     UPDATE MovementItem SET isErased = TRUE
+     WHERE MovementItem.MovementId = vbMovementId_pl
+       AND MovementItem.ID NOT IN (SELECT  MovementItem.Id AS MovementItemId
+                                   FROM LoadPriceListItem 
+                                        JOIN LoadPriceList ON LoadPriceList.Id = LoadPriceListItem.LoadPriceListId      
+                                        LEFT JOIN MovementItem ON MovementItem.ObjectId = LoadPriceListItem.GoodsId AND MovementItem.MovementId = vbMovementId_pl
+                                   WHERE LoadPriceListItem.GoodsId > 0 AND LoadPriceListItem.LoadPriceListId = inId);
+                   
      -- сохранили протокол
      -- PERFORM lpInsert_MovementProtocol (ioId, vbUserId);
 

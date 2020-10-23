@@ -715,6 +715,7 @@ BEGIN
 
                FROM MovementItemOrder
                     LEFT OUTER JOIN MovementItemLastPriceList_View ON MovementItemLastPriceList_View.GoodsId = MovementItemOrder.GoodsId
+                                                                  AND MovementItemLastPriceList_View.isErased = False
 
                     JOIN tmpJuridicalArea ON tmpJuridicalArea.JuridicalId = MovementItemLastPriceList_View.JuridicalId
                                          AND tmpJuridicalArea.AreaId      = MovementItemLastPriceList_View.AreaId
@@ -1180,6 +1181,7 @@ BEGIN
 
                FROM MovementItemOrder
                     LEFT OUTER JOIN MovementItemLastPriceList_View ON MovementItemLastPriceList_View.GoodsId = MovementItemOrder.GoodsId
+                                                                  AND MovementItemLastPriceList_View.isErased = False
 
                     JOIN tmpJuridicalArea ON tmpJuridicalArea.JuridicalId = MovementItemLastPriceList_View.JuridicalId
                                          AND tmpJuridicalArea.AreaId      = MovementItemLastPriceList_View.AreaId

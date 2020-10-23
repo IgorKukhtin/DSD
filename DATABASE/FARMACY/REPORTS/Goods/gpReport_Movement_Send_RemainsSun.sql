@@ -104,10 +104,10 @@ BEGIN
      CREATE TEMP TABLE _tmpGoods_TP_exception   (UnitId Integer, GoodsId Integer) ON COMMIT DROP;
 
      -- 1. все остатки, НТЗ => получаем кол-ва автозаказа
-     CREATE TEMP TABLE _tmpRemains_all   (UnitId Integer, GoodsId Integer, Price TFloat, MCS TFloat, AmountResult TFloat, AmountRemains TFloat, AmountIncome TFloat, AmountSend_in TFloat, AmountSend_out TFloat, AmountOrderExternal TFloat, AmountReserve TFloat) ON COMMIT DROP;
-     CREATE TEMP TABLE _tmpRemains_all_a (UnitId Integer, GoodsId Integer, Price TFloat, MCS TFloat, AmountResult TFloat, AmountRemains TFloat, AmountIncome TFloat, AmountSend_in TFloat, AmountSend_out TFloat, AmountOrderExternal TFloat, AmountReserve TFloat) ON COMMIT DROP;
-     CREATE TEMP TABLE _tmpRemains   (UnitId Integer, GoodsId Integer, Price TFloat, MCS TFloat, AmountResult TFloat, AmountRemains TFloat, AmountIncome TFloat, AmountSend_in TFloat, AmountSend_out TFloat, AmountOrderExternal TFloat, AmountReserve TFloat) ON COMMIT DROP;
-     CREATE TEMP TABLE _tmpRemains_a (UnitId Integer, GoodsId Integer, Price TFloat, MCS TFloat, AmountResult TFloat, AmountRemains TFloat, AmountIncome TFloat, AmountSend_in TFloat, AmountSend_out TFloat, AmountOrderExternal TFloat, AmountReserve TFloat) ON COMMIT DROP;
+     CREATE TEMP TABLE _tmpRemains_all   (UnitId Integer, GoodsId Integer, Price TFloat, MCS TFloat, Layout TFloat, AmountResult TFloat, AmountRemains TFloat, AmountIncome TFloat, AmountSend_in TFloat, AmountSend_out TFloat, AmountOrderExternal TFloat, AmountReserve TFloat) ON COMMIT DROP;
+     CREATE TEMP TABLE _tmpRemains_all_a (UnitId Integer, GoodsId Integer, Price TFloat, MCS TFloat, Layout TFloat, AmountResult TFloat, AmountRemains TFloat, AmountIncome TFloat, AmountSend_in TFloat, AmountSend_out TFloat, AmountOrderExternal TFloat, AmountReserve TFloat) ON COMMIT DROP;
+     CREATE TEMP TABLE _tmpRemains   (UnitId Integer, GoodsId Integer, Price TFloat, MCS TFloat, Layout TFloat, AmountResult TFloat, AmountRemains TFloat, AmountIncome TFloat, AmountSend_in TFloat, AmountSend_out TFloat, AmountOrderExternal TFloat, AmountReserve TFloat) ON COMMIT DROP;
+     CREATE TEMP TABLE _tmpRemains_a (UnitId Integer, GoodsId Integer, Price TFloat, MCS TFloat, Layout TFloat, AmountResult TFloat, AmountRemains TFloat, AmountIncome TFloat, AmountSend_in TFloat, AmountSend_out TFloat, AmountOrderExternal TFloat, AmountReserve TFloat) ON COMMIT DROP;
 
      -- 2.1. вся статистика продаж
      CREATE TEMP TABLE _tmpSale   (UnitId Integer, GoodsId Integer, Amount TFloat, Summ TFloat) ON COMMIT DROP;
@@ -123,13 +123,13 @@ BEGIN
      CREATE TEMP TABLE _tmpRemains_Partion_all   (ContainerDescId Integer, UnitId Integer, ContainerId_Parent Integer, ContainerId Integer, GoodsId Integer, Amount TFloat, PartionDateKindId Integer, ExpirationDate TDateTime, Amount_sun TFloat, Amount_notSold TFloat) ON COMMIT DROP;
      CREATE TEMP TABLE _tmpRemains_Partion_all_a (ContainerDescId Integer, UnitId Integer, ContainerId_Parent Integer, ContainerId Integer, GoodsId Integer, Amount TFloat, PartionDateKindId Integer, ExpirationDate TDateTime, Amount_sun TFloat, Amount_notSold TFloat) ON COMMIT DROP;
      -- 3.2. остатки, СРОК - для распределения
-     CREATE TEMP TABLE _tmpRemains_Partion   (ContainerDescId Integer, UnitId Integer, GoodsId Integer, MCSValue TFloat, Amount_sale TFloat, Amount TFloat, Amount_save TFloat, Amount_real TFloat, Amount_sun TFloat, Amount_notSold TFloat) ON COMMIT DROP;
-     CREATE TEMP TABLE _tmpRemains_Partion_a (ContainerDescId Integer, UnitId Integer, GoodsId Integer, MCSValue TFloat, Amount_sale TFloat, Amount TFloat, Amount_save TFloat, Amount_real TFloat, Amount_sun TFloat, Amount_notSold TFloat) ON COMMIT DROP;
+     CREATE TEMP TABLE _tmpRemains_Partion   (ContainerDescId Integer, UnitId Integer, GoodsId Integer, MCSValue TFloat, Layout TFloat, Amount_sale TFloat, Amount TFloat, Amount_save TFloat, Amount_real TFloat, Amount_sun TFloat, Amount_notSold TFloat) ON COMMIT DROP;
+     CREATE TEMP TABLE _tmpRemains_Partion_a (ContainerDescId Integer, UnitId Integer, GoodsId Integer, MCSValue TFloat, Layout TFloat, Amount_sale TFloat, Amount TFloat, Amount_save TFloat, Amount_real TFloat, Amount_sun TFloat, Amount_notSold TFloat) ON COMMIT DROP;
 
 
      -- 4. Остатки по которым есть Автозаказ и срок
-     CREATE TEMP TABLE _tmpRemains_calc   (UnitId Integer, GoodsId Integer, Price TFloat, MCS TFloat, AmountResult TFloat, AmountRemains TFloat, AmountIncome TFloat, AmountSend_in TFloat, AmountSend_out TFloat, AmountOrderExternal TFloat, AmountReserve TFloat, AmountSun_real TFloat, AmountSun_summ TFloat, AmountSun_summ_save TFloat, AmountSun_unit TFloat, AmountSun_unit_save TFloat) ON COMMIT DROP;
-     CREATE TEMP TABLE _tmpRemains_calc_a (UnitId Integer, GoodsId Integer, Price TFloat, MCS TFloat, AmountResult TFloat, AmountRemains TFloat, AmountIncome TFloat, AmountSend_in TFloat, AmountSend_out TFloat, AmountOrderExternal TFloat, AmountReserve TFloat, AmountSun_real TFloat, AmountSun_summ TFloat, AmountSun_summ_save TFloat, AmountSun_unit TFloat, AmountSun_unit_save TFloat) ON COMMIT DROP;
+     CREATE TEMP TABLE _tmpRemains_calc   (UnitId Integer, GoodsId Integer, Price TFloat, MCS TFloat, Layout TFloat, AmountResult TFloat, AmountRemains TFloat, AmountIncome TFloat, AmountSend_in TFloat, AmountSend_out TFloat, AmountOrderExternal TFloat, AmountReserve TFloat, AmountSun_real TFloat, AmountSun_summ TFloat, AmountSun_summ_save TFloat, AmountSun_unit TFloat, AmountSun_unit_save TFloat) ON COMMIT DROP;
+     CREATE TEMP TABLE _tmpRemains_calc_a (UnitId Integer, GoodsId Integer, Price TFloat, MCS TFloat, Layout TFloat, AmountResult TFloat, AmountRemains TFloat, AmountIncome TFloat, AmountSend_in TFloat, AmountSend_out TFloat, AmountOrderExternal TFloat, AmountReserve TFloat, AmountSun_real TFloat, AmountSun_summ TFloat, AmountSun_summ_save TFloat, AmountSun_unit TFloat, AmountSun_unit_save TFloat) ON COMMIT DROP;
 
      -- 5. из каких аптек остатки со сроками "полностью" закрывают АВТОЗАКАЗ
      CREATE TEMP TABLE _tmpSumm_limit   (UnitId_from Integer, UnitId_to Integer, Summ TFloat) ON COMMIT DROP;
@@ -173,6 +173,7 @@ BEGIN
                                  , AmountSun_unit_save TFloat -- инф.=0, сроковые на этой аптеке, без учета изменения
                                  , Price               TFloat -- Цена
                                  , MCS                 TFloat -- НТЗ
+                                 , Layout              TFloat
                                  , Summ_min            TFloat -- информативно - мнимальн сумма
                                  , Summ_max            TFloat -- информативно - максимальн сумма
                                  , Unit_count          TFloat -- информативно - кол-во таких накл.
@@ -219,6 +220,7 @@ BEGIN
                            , AmountSun_unit_save
                            , Price
                            , MCS
+                           , Layout
                            , Summ_min
                            , Summ_max
                            , Unit_count
@@ -266,7 +268,8 @@ BEGIN
                , tmp.AmountSun_unit
                , tmp.AmountSun_unit_save
                , COALESCE (tmp.Price, 0) :: TFloat AS Price
-               , COALESCE (tmp.MCS, 0)     :: TFloat AS MCS
+               , COALESCE (tmp.MCS, 0)   :: TFloat AS MCS
+               , COALESCE (tmp.Layout, 0):: TFloat AS Layout
                , tmp.Summ_min
                , tmp.Summ_max
                , tmp.Unit_count
@@ -344,6 +347,7 @@ BEGIN
                            , AmountSun_unit_save
                            , Price
                            , MCS
+                           , Layout
                            , Summ_min
                            , Summ_max
                            , Unit_count
@@ -386,8 +390,9 @@ BEGIN
                , COALESCE (tmp.AmountReserve, 0)       :: TFloat AS AmountReserve
                , tmp.AmountSun_unit
                , tmp.AmountSun_unit_save
-               , COALESCE (tmp.Price, 0) :: TFloat AS Price
-               , COALESCE (tmp.MCS, 0)     :: TFloat AS MCS
+               , COALESCE (tmp.Price, 0)  :: TFloat AS Price
+               , COALESCE (tmp.MCS, 0)    :: TFloat AS MCS
+               , COALESCE (tmp.Layout, 0) :: TFloat AS Layout
                , tmp.Summ_min
                , tmp.Summ_max
                , tmp.Unit_count
@@ -459,6 +464,7 @@ BEGIN
                            , AmountSun_unit_save
                            , Price
                            , MCS
+                           , Layout
                            , Summ_min
                            , Summ_max
                            , Unit_count
@@ -499,8 +505,9 @@ BEGIN
                , COALESCE (tmp.AmountReserve, _tmpRemains_all.AmountReserve)             :: TFloat AS AmountReserve
                , tmp.AmountSun_unit
                , tmp.AmountSun_unit_save
-               , COALESCE (tmp.Price, _tmpRemains_all.Price) :: TFloat AS Price
-               , COALESCE (tmp.MCS, _tmpRemains_all.MCS)     :: TFloat AS MCS
+               , COALESCE (tmp.Price, _tmpRemains_all.Price)   :: TFloat AS Price
+               , COALESCE (tmp.MCS, _tmpRemains_all.MCS)       :: TFloat AS MCS
+               , COALESCE (tmp.Layout, _tmpRemains_all.Layout) :: TFloat AS Layout
                , tmp.Summ_min
                , tmp.Summ_max
                , tmp.Unit_count
@@ -569,6 +576,7 @@ BEGIN
                  --
                , tmpRemains_Partion_sum.Amount_sale
                , tmpRemains_Partion_sum.MCSValue AS MCS
+               , tmpRemains_Partion_sum.Layout   AS Layout
                , _tmpRemains.AmountResult
                , _tmpRemains.AmountRemains
                  -- отложенные Чеки + не проведенные с CommentError
@@ -588,13 +596,13 @@ BEGIN
                LEFT JOIN Object AS Object_UnitFrom  ON Object_UnitFrom.Id  = tmp.UnitId_from
                LEFT JOIN Object AS Object_UnitTo  ON Object_UnitTo.Id  = tmp.UnitId_to
                -- итого сроковые + notSold которые будем распределять
-               LEFT JOIN (SELECT _tmpRemains_Partion.UnitId, _tmpRemains_Partion.GoodsId, _tmpRemains_Partion.MCSValue, _tmpRemains_Partion.Amount_sale
+               LEFT JOIN (SELECT _tmpRemains_Partion.UnitId, _tmpRemains_Partion.GoodsId, _tmpRemains_Partion.MCSValue, _tmpRemains_Partion.Layout, _tmpRemains_Partion.Amount_sale
                                 , SUM (_tmpRemains_Partion.Amount_save)    AS AmountSun_summ_save
                                 , SUM (_tmpRemains_Partion.Amount)         AS AmountSun_summ
                                 , SUM (_tmpRemains_Partion.Amount_sun)     AS AmountSunOnly_summ
                                 , SUM (_tmpRemains_Partion.Amount_notSold) AS Amount_notSold_summ
                           FROM _tmpRemains_Partion_a AS _tmpRemains_Partion
-                          GROUP BY _tmpRemains_Partion.UnitId, _tmpRemains_Partion.GoodsId, _tmpRemains_Partion.MCSValue, _tmpRemains_Partion.Amount_sale
+                          GROUP BY _tmpRemains_Partion.UnitId, _tmpRemains_Partion.GoodsId, _tmpRemains_Partion.MCSValue, _tmpRemains_Partion.Layout, _tmpRemains_Partion.Amount_sale
                          ) AS tmpRemains_Partion_sum ON tmpRemains_Partion_sum.UnitId  = tmp.UnitId_from
                                                     AND tmpRemains_Partion_sum.GoodsId = tmp.GoodsId
                -- все остатки, НТЗ

@@ -133,6 +133,8 @@ type
     chSumm_not_out: TcxGridDBColumn;
     chAmount_not_in: TcxGridDBColumn;
     chSumm_not_in: TcxGridDBColumn;
+    Layout: TcxGridDBColumn;
+    ñðLayout: TcxGridDBColumn;
   private
     { Private declarations }
   public

@@ -1967,7 +1967,7 @@ end;
 
 function TDiscountServiceForm.GetBeforeSale : boolean;
 begin
-  if (gCode in [3, 5, 6, 7, 8, 9]) and (FIdCasual <> '') then
+  if (gCode in [3, 5, 6, 7, 8, 9, 11]) and (FIdCasual <> '') then
   begin
     Result := True;
   end else Result := False;

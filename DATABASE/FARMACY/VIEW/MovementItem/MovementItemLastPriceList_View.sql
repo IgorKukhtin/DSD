@@ -11,7 +11,8 @@ CREATE MATERIALIZED VIEW MovementItemLastPriceList_View
    , GoodsName
    , MakerName
    , PartionGoodsDate
-   , AreaId)
+   , AreaId
+   , isErased)
 
 AS
     SELECT LastMovement.MovementId
@@ -25,6 +26,7 @@ AS
          , ObjectString_Goods_Maker.ValueData AS MakerName
          , MIDate_PartionGoods.ValueData      AS PartionGoodsDate
          , LastMovement.AreaId                AS AreaId
+         , MovementItem.isErased              AS isErased
     FROM
         (
             SELECT 
@@ -87,7 +89,7 @@ AS
                                   
 ALTER TABLE MovementItemLastPriceList_View OWNER TO postgres;
 
-CREATE INDEX MovementItemLastPriceList_GoodsId
+ CREATE INDEX MovementItemLastPriceList_GoodsId
     ON MovementItemLastPriceList_View (GoodsId);
 /*-------------------------------------------------------------------------------*/
 /*
@@ -98,7 +100,7 @@ CREATE INDEX MovementItemLastPriceList_GoodsId
  */
 
 -- тест
--- SELECT * FROM MovementItemLastPriceList_View
+-- SELECT * FROM MovementItemLastPriceList_View limit 100
 
 -- Обновление 
 -- REFRESH MATERIALIZED VIEW MovementItemLastPriceList_View
