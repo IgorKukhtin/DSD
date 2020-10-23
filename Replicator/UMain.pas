@@ -290,6 +290,7 @@ type
     procedure grdDrawColumnCell(Sender: TObject; const Rect: TRect; DataCol: Integer; Column: TColumn;
       State: TGridDrawState);
 
+    procedure SaveSnapshotLog(ALogMessage: string);
     procedure SnapshotThreadError(AError: string);
     procedure SnapshotThreadFinish;
     procedure SnapshotThreadNewTable(ATableName: string);
@@ -387,6 +388,20 @@ begin
   SwitchShowLog;
 end;
 
+procedure TfrmMain.SaveSnapshotLog(ALogMessage: string);
+var F: TextFile;
+    cFile: string;
+begin
+  cFile := ExtractFilePath(ParamStr(0))+'\Replicator_Snapshot.log';
+  AssignFile(F, cFile);
+  if FileExists(cFile) then
+    Append(F)
+  else
+    Rewrite(F);
+  WriteLn(F, DateTimeToStr(Now) + ' : ' + lbCurrentTable.Caption + ' - ' + ALogMessage);
+  CloseFile(F);
+end;
+
 procedure TfrmMain.sePacketRangeChange(Sender: TObject);
 begin
   TSettings.ReplicaPacketRange := sePacketRange.Value;
@@ -415,6 +430,7 @@ begin
   FSnapshotTableHasErrors := true;
   UpdateSnapshotErrors;
   SnapshotLog.Lines.Add(AError);
+  SaveSnapshotLog(AError);
 end;
 
 procedure TfrmMain.SnapshotThreadFinish;
