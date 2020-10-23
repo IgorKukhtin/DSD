@@ -1,7 +1,7 @@
 -- Function: gpGet_Movement_Income()
 
 DROP FUNCTION IF EXISTS gpGet_MI_Sale_Child_isDiscount (Boolean,TFloat,TFloat,TFloat,TFloat,TFloat,TFloat,TFloat,TVarChar);
--- DROP FUNCTION IF EXISTS gpGet_MI_Sale_Child_isDiscount (Boolean,TFloat,TFloat,TFloat,TFloat,TFloat,TFloat,TFloat,TFloat,TVarChar);
+DROP FUNCTION IF EXISTS gpGet_MI_Sale_Child_isDiscount (Boolean,TFloat,TFloat,TFloat,TFloat,TFloat,TFloat,TFloat,TFloat,TVarChar);
 DROP FUNCTION IF EXISTS gpGet_MI_Sale_Child_isDiscount (Boolean,TFloat,TFloat,TFloat,TFloat,TFloat,TFloat,TFloat,TFloat,Integer,TVarChar);
 
 CREATE OR REPLACE FUNCTION gpGet_MI_Sale_Child_isDiscount(
@@ -28,39 +28,33 @@ AS
 $BODY$
    DECLARE vbUserId Integer;
    DECLARE vbAmountDiscount TFloat;
-   DECLARE vbAmountPay TFloat;
+   DECLARE vbAmountPay_grn  TFloat;
 BEGIN
      -- проверка прав пользователя на вызов процедуры
      vbUserId:= lpGetUserBySession (inSession);
 
 
-     -- сумма оплаты - или ГРН или EUR
-     vbAmountPay := CASE WHEN inCurrencyId_Client = zc_Currency_EUR()
-                              -- переводим все в EUR
-                              THEN zfCalc_SummPriceList (1, zfCalc_CurrencyTo (inAmountGRN, inCurrencyValueEUR, 1))
-                                 + zfCalc_SummPriceList (1, zfCalc_CurrencyTo (zfCalc_CurrencyFrom (inAmountUSD, inCurrencyValueUSD, 1), inCurrencyValueEUR, 1))
-                                 + COALESCE (inAmountEUR, 0)
-                                 + zfCalc_SummPriceList (1, zfCalc_CurrencyTo (inAmountCard, inCurrencyValueEUR, 1))
+     -- сумма оплаты - ГРН
+     vbAmountPay_grn := COALESCE (inAmountGRN, 0)
+                      + zfCalc_CurrencyFrom (inAmountUSD, inCurrencyValueUSD, 1)
+                      + zfCalc_CurrencyFrom (inAmountEUR, inCurrencyValueEUR, 1)
+                      + COALESCE (inAmountCard, 0)
+                       ;
 
-                              -- переводим все в ГРН
-                              ELSE inAmountGRN
-                                 + zfCalc_CurrencyFrom (inAmountUSD, inCurrencyValueUSD, 1)
-                                 + zfCalc_CurrencyFrom (inAmountEUR, inCurrencyValueEUR, 1)
-                                 + inAmountCard
-                    END;
-
-     -- сумма Дополнительной скидки - или ГРН или EUR
+     -- Сумма Дополнительной скидки - или ГРН или EUR
      IF inIsDiscount = TRUE THEN
          IF inAmountDiscount = 0
          THEN -- округлили до 2-х знаков
               vbAmountDiscount := CASE WHEN inCurrencyId_Client = zc_Currency_EUR()
-                                            THEN CAST (inAmountToPay_curr - vbAmountPay AS NUMERIC (16, 2))
-                                            ELSE CAST (inAmountToPay      - vbAmountPay AS NUMERIC (16, 2))
+                                            THEN CAST (zfCalc_CurrencyTo (zfCalc_SummPriceList (1, zfCalc_CurrencyFrom (inAmountToPay_curr, inCurrencyValueEUR, 1))
+                                                                        - vbAmountPay_grn
+                                                                        , inCurrencyValueEUR, 1)
+                                                      AS NUMERIC (16, 2))
+                                            ELSE CAST (inAmountToPay - vbAmountPay_grn AS NUMERIC (16, 2))
                                   END;
 
          ELSE -- оставили без изменений
               vbAmountDiscount := inAmountDiscount;
-
          END IF;
      ELSE
          -- обнулили
@@ -68,17 +62,21 @@ BEGIN
      END IF;
 
 
-
      -- Результат
      RETURN QUERY
       WITH -- только остаток к оплате - или ГРН или EUR
            tmpData_all AS (SELECT CASE WHEN inCurrencyId_Client = zc_Currency_EUR()
-                                       THEN inAmountToPay_curr - (vbAmountPay + vbAmountDiscount)
-                                       ELSE inAmountToPay      - (vbAmountPay + vbAmountDiscount)
+                                       THEN zfCalc_SummIn (1
+                                                         , zfCalc_CurrencyTo (zfCalc_SummPriceList (1, zfCalc_CurrencyFrom (inAmountToPay_curr, inCurrencyValueEUR, 1))
+                                                                            - (vbAmountPay_grn
+                                                                             + zfCalc_CurrencyFrom (vbAmountDiscount, inCurrencyValueEUR, 1))
+                                                                            , inCurrencyValueEUR, 1)
+                                                         , 1)
+                                       ELSE inAmountToPay  - (vbAmountPay_grn + vbAmountDiscount)
                                   END AS AmountRemains
                           )
               -- данные - или ГРН или EUR
-            , tmpData AS (SELECT CASE WHEN tmpData_all.AmountRemains > 0 
+            , tmpData AS (SELECT CASE WHEN tmpData_all.AmountRemains > 0
                                       THEN tmpData_all.AmountRemains
                                       ELSE 0
                                  END AS AmountRemains
@@ -87,24 +85,26 @@ BEGIN
                                       THEN -1 * tmpData_all.AmountRemains
                                       ELSE 0
                                  END AS AmountDiff
+
                                , vbAmountDiscount AS AmountDiscount
+
                           FROM tmpData_all
                          )
       -- Результат
       SELECT -- Остаток, грн
-             CASE WHEN inCurrencyId_Client = zc_Currency_EUR() 
-                       THEN zfCalc_SummPriceList (1, zfCalc_CurrencyFrom (tmpData.AmountRemains, inCurrencyValueEUR, 1))
+             CASE WHEN inCurrencyId_Client = zc_Currency_EUR()
+                       THEN zfCalc_SummPriceList (1, zfCalc_CurrencyFrom (tmpData.AmountRemains, inCurrencyValueEUR, 1), 0)
                        ELSE tmpData.AmountRemains
              END :: TFloat AS AmountRemains
              -- Остаток, EUR
-           , CASE WHEN inCurrencyId_Client = zc_Currency_EUR() 
+           , CASE WHEN inCurrencyId_Client = zc_Currency_EUR()
                        THEN tmpData.AmountRemains
-                       ELSE zfCalc_SummPriceList (1, zfCalc_CurrencyTo (tmpData.AmountRemains, inCurrencyValueEUR, 1))
+                       ELSE zfCalc_SummIn (1, zfCalc_CurrencyTo (tmpData.AmountRemains, inCurrencyValueEUR, 1), 1)
              END :: TFloat AS AmountRemains_curr
 
              -- Сдача, грн
-           , CASE WHEN inCurrencyId_Client = zc_Currency_EUR() 
-                       THEN zfCalc_SummPriceList (1, zfCalc_CurrencyFrom (tmpData.AmountDiff, inCurrencyValueEUR, 1))
+           , CASE WHEN inCurrencyId_Client = zc_Currency_EUR()
+                       THEN zfCalc_SummPriceList (1, zfCalc_CurrencyFrom (tmpData.AmountDiff, inCurrencyValueEUR, 1), 0)
                        ELSE tmpData.AmountDiff
              END :: TFloat AS AmountDiff
 
@@ -112,12 +112,12 @@ BEGIN
            , tmpData.AmountDiscount :: TFloat AS AmountDiscount
 
              -- Дополнительная скидка
-           , CASE WHEN inCurrencyId_Client = zc_Currency_EUR() 
+           , CASE WHEN inCurrencyId_Client = zc_Currency_EUR()
                        THEN -- переводим в ГРН
-                            zfCalc_SummPriceList (1, zfCalc_CurrencyFrom (tmpData.AmountDiscount, inCurrencyValueEUR, 1))
+                            zfCalc_SummPriceList (1, zfCalc_CurrencyFrom (tmpData.AmountDiscount, inCurrencyValueEUR, 1), 0)
 
                        ELSE -- переводим в EUR
-                            zfCalc_SummPriceList (1, zfCalc_CurrencyTo (tmpData.AmountDiscount, inCurrencyValueEUR, 1))
+                            zfCalc_SummIn (1, zfCalc_CurrencyTo (tmpData.AmountDiscount, inCurrencyValueEUR, 1), 1)
 
              END :: TFloat AS AmountDiscount_curr
 
@@ -136,4 +136,4 @@ $BODY$
 */
 
 -- тест
--- SELECT * FROM gpGet_MI_Sale_Child_isDiscount(inIsDiscount := 'True' , inCurrencyValueUSD := 26.25 , inCurrencyValueEUR := 31.2 , inAmount := 5247.4 , inAmountGRN := 1.2 , inAmountUSD := 100 , inAmountEUR := 84 , inAmountCard := 0 , inAmountDiscount:= 1, inSession := '2');
+-- SELECT * FROM gpGet_MI_Sale_Child_isDiscount(inIsDiscount:= TRUE, inCurrencyValueUSD:= 26.25, inCurrencyValueEUR:= 31.2, inAmountToPay:= 5247.4, inAmountToPay_curr:= 123, inAmountGRN:= 1.2, inAmountUSD:= 100, inAmountEUR:= 84, inAmountCard:= 0, inAmountDiscount:= 1, inCurrencyId_Client:= zc_Currency_EUR(), inSession:= zfCalc_UserAdmin());
