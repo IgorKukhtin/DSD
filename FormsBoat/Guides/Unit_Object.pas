@@ -56,11 +56,8 @@ type
     spUnErased: TdsdStoredProc;
     Address: TcxGridDBColumn;
     Phone: TcxGridDBColumn;
-    DiscountTax: TcxGridDBColumn;
     ParentName: TcxGridDBColumn;
     ChildName: TcxGridDBColumn;
-    BankAccountName: TcxGridDBColumn;
-    BankName: TcxGridDBColumn;
     spInsertUpdate: TdsdStoredProc;
     actUpdateDataSet: TdsdUpdateDataSet;
   private

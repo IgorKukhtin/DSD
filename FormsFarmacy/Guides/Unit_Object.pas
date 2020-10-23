@@ -310,7 +310,6 @@ type
     DateCheck: TcxGridDBColumn;
     TypeSAUA: TcxGridDBColumn;
     MasterSAUA: TcxGridDBColumn;
-    SlaveSAUA: TcxGridDBColumn;
     spUpdate_UnitSAUA: TdsdStoredProc;
     spClear_UnitSAUA: TdsdStoredProc;
     actChoiceUnitSAUA: TOpenChoiceForm;

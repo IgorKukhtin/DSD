@@ -35,7 +35,10 @@ BEGIN
 
    -- Если код не установлен, определяем его как последний+1
    -- vbCode_calc:= lfGet_ObjectCode (inCode, zc_Object_Product());
-   
+
+   -- определяем признак Создание/Корректировка
+   vbIsInsert:= COALESCE (ioId, 0) = 0;
+
    -- !!! временно !!!
    IF COALESCE (ioId, 0) = 0 AND CEIL (inCode / 2) * 2 = inCode THEN inDateSale:= NULL; END IF;
 

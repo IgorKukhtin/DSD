@@ -22,6 +22,9 @@ BEGIN
    -- PERFORM lpCheckRight(inSession, zc_Enum_Process_InsertUpdate_Object_ProdOptions());
    vbUserId:= lpGetUserBySession (inSession);
 
+   -- определяем признак Создание/Корректировка
+   vbIsInsert:= COALESCE (ioId, 0) = 0;
+
     -- Если код не установлен, определяем его как последний+1
    vbCode_calc:=lfGet_ObjectCode (inCode, zc_Object_ProdOptions()); 
 

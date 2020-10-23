@@ -2640,6 +2640,9 @@ begin
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_TestingUserForm'));
   TdsdFormStorageFactory.GetStorage.Load('TReport_TestingUserForm');
 
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_TestingUserAttemptsForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TReport_TestingUserAttemptsForm');
+
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TPUSHJournalForm'));
   TdsdFormStorageFactory.GetStorage.Load('TPUSHJournalForm');
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TPUSHForm'));

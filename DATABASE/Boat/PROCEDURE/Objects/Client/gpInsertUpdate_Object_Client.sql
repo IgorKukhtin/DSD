@@ -1,39 +1,38 @@
 -- Торговая марка
 
-DROP FUNCTION IF EXISTS gpInsertUpdate_Object_ProdColor (Integer, Integer, TVarChar, TVarChar, TVarChar);
+DROP FUNCTION IF EXISTS gpInsertUpdate_Object_Client (Integer, Integer, TVarChar, TVarChar, TVarChar);
 
-CREATE OR REPLACE FUNCTION gpInsertUpdate_Object_ProdColor(
+CREATE OR REPLACE FUNCTION gpInsertUpdate_Object_Client(
  INOUT ioId              Integer,       -- ключ объекта <Бренд>
  INOUT ioCode            Integer,       -- свойство <Код Бренда>
     IN inName            TVarChar,      -- главное Название Бренда
-    IN inComment         TVarChar,      -- 
+    IN inComment         TVarChar,      --
     IN inSession         TVarChar       -- сессия пользователя
 )
 RETURNS RECORD
 AS
 $BODY$
    DECLARE vbUserId Integer;
-   DECLARE vbCode_calc Integer;
-   DECLARE vbIsInsert Boolean;  
+   DECLARE vbIsInsert Boolean;
 BEGIN
    -- проверка прав пользователя на вызов процедуры
-   -- PERFORM lpCheckRight(inSession, zc_Enum_Process_ProdColor());
+   -- PERFORM lpCheckRight(inSession, zc_Enum_Process_Client());
    vbUserId:= lpGetUserBySession (inSession);
 
    -- определяем признак Создание/Корректировка
    vbIsInsert:= COALESCE (ioId, 0) = 0;
-
+   
     -- Если код не установлен, определяем его как последний+1
-   vbCode_calc:= lfGet_ObjectCode (ioCode, zc_Object_ProdColor()); 
+   ioCode:= lfGet_ObjectCode (ioCode, zc_Object_Client());
 
    -- проверка прав уникальности для свойства <Наименование >
-   PERFORM lpCheckUnique_Object_ValueData (ioId, zc_Object_ProdColor(), inName);
+   PERFORM lpCheckUnique_Object_ValueData (ioId, zc_Object_Client(), inName);
 
    -- сохранили <Объект>
-   ioId := lpInsertUpdate_Object(ioId, zc_Object_ProdColor(), vbCode_calc, inName);
+   ioId := lpInsertUpdate_Object(ioId, zc_Object_Client(), ioCode, inName);
 
    -- сохранили свойство <>
-   PERFORM lpInsertUpdate_ObjectString(zc_ObjectString_ProdColor_Comment(), ioId, inComment);
+   PERFORM lpInsertUpdate_ObjectString(zc_ObjectString_Client_Comment(), ioId, inComment);
 
    IF vbIsInsert = TRUE THEN
       -- сохранили свойство <Дата создания>
@@ -56,4 +55,4 @@ $BODY$
 */
 
 -- тест
--- SELECT * FROM gpInsertUpdate_Object_ProdColor()
+-- SELECT * FROM gpInsertUpdate_Object_Client()

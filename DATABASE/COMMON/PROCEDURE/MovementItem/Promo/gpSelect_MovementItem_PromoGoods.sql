@@ -42,6 +42,7 @@ RETURNS TABLE (
       , AmountIn            TFloat --Кол-во возврат (факт)
       , AmountInWeight      TFloat --Кол-во возврат (факт) Вес
       
+      , TaxRetIn            TFloat -- % возврат
       , AmountPlan1         TFloat -- Кол-во план отгрузки за пн.
       , AmountPlan2         TFloat -- Кол-во план отгрузки за вт.
       , AmountPlan3         TFloat -- Кол-во план отгрузки за ср.
@@ -175,7 +176,9 @@ BEGIN
              , MIFloat_AmountIn.ValueData             AS AmountIn            --Кол-во возврат (факт)
              , (MIFloat_AmountIn.ValueData
                  * CASE WHEN ObjectLink_Goods_Measure.ChildObjectId = zc_Measure_Sh() THEN ObjectFloat_Goods_Weight.ValueData ELSE 1 END) :: TFloat AS AmountInWeight      --Кол-во возврат (факт) Вес
-       
+
+             , MIFloat_TaxRetIn.ValueData             AS TaxRetIn               -- % возврат
+
              , MIFloat_Plan1.ValueData                AS AmountPlan1
              , MIFloat_Plan2.ValueData                AS AmountPlan2
              , MIFloat_Plan3.ValueData                AS AmountPlan3
@@ -235,6 +238,10 @@ BEGIN
              LEFT JOIN MovementItemFloat AS MIFloat_AmountPlanMax
                                          ON MIFloat_AmountPlanMax.MovementItemId = MovementItem.Id
                                         AND MIFloat_AmountPlanMax.DescId = zc_MIFloat_AmountPlanMax()
+
+             LEFT JOIN MovementItemFloat AS MIFloat_TaxRetIn
+                                         ON MIFloat_TaxRetIn.MovementItemId = MovementItem.Id
+                                        AND MIFloat_TaxRetIn.DescId = zc_MIFloat_TaxRetIn()
 
              LEFT JOIN MovementItemFloat AS MIFloat_Plan1
                                          ON MIFloat_Plan1.MovementItemId = MovementItem.Id 
@@ -311,6 +318,7 @@ ALTER FUNCTION gpSelect_MovementItem_PromoGoods (Integer, Boolean, TVarChar) OWN
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.    Воробкало А.А.
+ 22.10.20         * add TaxRetIn
  14.07.20         * add OperPriceList
  06.07.20         * add AmountRealPromo
  01.07.20         * add MainDiscount

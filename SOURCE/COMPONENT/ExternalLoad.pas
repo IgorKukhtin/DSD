@@ -908,7 +908,19 @@ begin
                                    else ExternalParams.ParamByName('outMsgText').Value:=saFound[i] + TextMessage;
                            end;
                        end
-                  else begin Load; fErr:= false; end;
+                  else try
+                    Load;
+                    fErr:= false;
+                       except
+                           on E: Exception do begin
+                              fErr:= true;
+                              TextMessage := E.Message;
+                              if pos('context', AnsilowerCase(TextMessage)) > 0 then
+                                TextMessage:=trim (Copy(TextMessage, 1, pos('context', AnsilowerCase(TextMessage)) - 1));
+                              if TextMessage <> ''
+                              then TextMessage := ' - ' + ReplaceStr(TextMessage, 'ERROR:', 'ОШИБКА:');
+                           end;
+                       end;
                   // Перенесли в Archive
                   if fErr = false then
                   begin

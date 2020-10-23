@@ -7,13 +7,12 @@ CREATE OR REPLACE FUNCTION gpSelect_Object_User(
 )
 RETURNS TABLE (Id Integer, Code Integer, Name TVarChar, isErased boolean
              , MemberId Integer, MemberName TVarChar
-             , UnitId Integer, UnitCode Integer, UnitName TVarChar
              , User_ TVarChar
              , UnitCode_Personal Integer
              , UnitName_Personal TVarChar
              , PositionName TVarChar
-             , PrinterName TVarChar
-             , LanguageId Integer, LanguageName TVarChar
+             , LanguageId Integer
+             , LanguageName TVarChar
               )
 AS
 $BODY$
@@ -49,17 +48,11 @@ END IF;
        , Object_Member.Id                 AS MemberId
        , Object_Member.ValueData          AS MemberName
 
-       , Object_Unit.Id                   AS UnitId
-       , Object_Unit.ObjectCode           AS UnitCode
-       , Object_Unit.ValueData            AS UnitName
-       
        , ObjectString_User_.ValueData     AS User_
 
        , Object_Unit_Personal.ObjectCode  AS UnitCode_Personal
        , Object_Unit_Personal.ValueData   AS UnitName_Personal
        , Object_Position.ValueData        AS PositionName
-       
-       , ObjectString_Printer.ValueData   AS PrinterName
 
        , Object_Language.Id               AS LanguageId
        , Object_Language.ValueData        AS LanguageName
@@ -68,19 +61,10 @@ END IF;
                                ON ObjectString_User_.ObjectId = Object_User.Id
                               AND ObjectString_User_.DescId = zc_ObjectString_User_Password()
 
-        LEFT JOIN ObjectString AS ObjectString_Printer
-                               ON ObjectString_Printer.ObjectId = Object_User.Id
-                              AND ObjectString_Printer.DescId = zc_ObjectString_User_Printer()
-
         LEFT JOIN ObjectLink AS ObjectLink_User_Member
                              ON ObjectLink_User_Member.ObjectId = Object_User.Id
                             AND ObjectLink_User_Member.DescId = zc_ObjectLink_User_Member()
         LEFT JOIN Object AS Object_Member ON Object_Member.Id = ObjectLink_User_Member.ChildObjectId
-
-        LEFT JOIN ObjectLink AS ObjectLink_User_Unit
-                             ON ObjectLink_User_Unit.ObjectId = Object_User.Id
-                            AND ObjectLink_User_Unit.DescId = zc_ObjectLink_User_Unit()
-        LEFT JOIN Object AS Object_Unit ON Object_Unit.Id = ObjectLink_User_Unit.ChildObjectId
 
         LEFT JOIN ObjectLink AS ObjectLink_User_Language
                              ON ObjectLink_User_Language.ObjectId = Object_User.Id

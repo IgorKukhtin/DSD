@@ -22,7 +22,7 @@ uses
   dxSkinSevenClassic, dxSkinSharp, dxSkinSharpPlus, dxSkinSilver,
   dxSkinSpringTime, dxSkinStardust, dxSkinSummer2008, dxSkinTheAsphaltWorld,
   dxSkinValentine, dxSkinVS2010, dxSkinWhiteprint, dxSkinXmas2008Blue,
-  cxCurrencyEdit, cxSplitter, cxButtonEdit, ExternalLoad;
+  cxCurrencyEdit, cxSplitter, cxButtonEdit, ExternalLoad, Vcl.Menus;
 
 type
   TProductForm = class(TParentForm)
@@ -161,6 +161,20 @@ type
     PriceOut3: TcxGridDBColumn;
     optNPP: TcxGridDBColumn;
     Color_fon: TcxGridDBColumn;
+    PopupMenu: TPopupMenu;
+    N1: TMenuItem;
+    N2: TMenuItem;
+    N3: TMenuItem;
+    N4: TMenuItem;
+    N5: TMenuItem;
+    PopupMenuColor: TPopupMenu;
+    MenuItem2: TMenuItem;
+    MenuItem3: TMenuItem;
+    MenuItem4: TMenuItem;
+    PopupMenuOption: TPopupMenu;
+    MenuItem1: TMenuItem;
+    MenuItem5: TMenuItem;
+    MenuItem6: TMenuItem;
   private
     { Private declarations }
   public

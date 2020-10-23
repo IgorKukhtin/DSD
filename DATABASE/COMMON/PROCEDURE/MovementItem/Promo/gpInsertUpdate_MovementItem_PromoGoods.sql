@@ -6,6 +6,7 @@ DROP FUNCTION IF EXISTS gpInsertUpdate_MovementItem_PromoGoods (Integer, Integer
 DROP FUNCTION IF EXISTS gpInsertUpdate_MovementItem_PromoGoods (Integer, Integer, Integer, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, Integer, TVarChar, TVarChar);
 DROP FUNCTION IF EXISTS gpInsertUpdate_MovementItem_PromoGoods (Integer, Integer, Integer, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, Integer, Integer, TVarChar, TVarChar);
 --DROP FUNCTION IF EXISTS gpInsertUpdate_MovementItem_PromoGoods (Integer, Integer, Integer, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, Integer, Integer, TVarChar, TVarChar);
+--DROP FUNCTION IF EXISTS gpInsertUpdate_MovementItem_PromoGoods (Integer, Integer, Integer, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, Integer, Integer, TVarChar, TVarChar);
 DROP FUNCTION IF EXISTS gpInsertUpdate_MovementItem_PromoGoods (Integer, Integer, Integer, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, Integer, Integer, TVarChar, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpInsertUpdate_MovementItem_PromoGoods(
@@ -25,6 +26,7 @@ CREATE OR REPLACE FUNCTION gpInsertUpdate_MovementItem_PromoGoods(
    OUT outAmountPlanMinWeight TFloat    , -- Минимум планируемого объема продаж на акционный период (в кг) вес
     IN inAmountPlanMax        TFloat    , -- Максимум планируемого объема продаж на акционный период (в кг)
    OUT outAmountPlanMaxWeight TFloat    , -- Максимум планируемого объема продаж на акционный период (в кг) Вес
+ INOUT ioTaxRetIn             TFloat    , -- % возвратa
     IN inGoodsKindId          Integer   , -- ИД обьекта <Вид товара>
     IN inGoodsKindCompleteId  Integer   , -- ИД обьекта <Вид товара (примечание)>
     IN inComment              TVarChar  , -- Комментарий
@@ -151,7 +153,20 @@ BEGIN
     WHERE ObjectLink_Goods_Measure.ObjectId = inGoodsId
       AND ObjectLink_Goods_Measure.DescId = zc_ObjectLink_Goods_Measure();
     
-    
+    -- Еслт % Возврата пусто пробуем найти у аналогичного товара
+    IF COALESCE (ioTaxRetIn,0) = 0 AND COALESCE (ioId, 0) = 0
+    THEN
+        ioTaxRetIn := (SELECT COALESCE (MIFloat_TaxRetIn.ValueData,0) ::TFloat AS TaxRetIn
+                       FROM MovementItem
+                            INNER JOIN MovementItemFloat AS MIFloat_TaxRetIn
+                                                         ON MIFloat_TaxRetIn.MovementItemId = MovementItem.Id
+                                                        AND MIFloat_TaxRetIn.DescId = zc_MIFloat_TaxRetIn()
+                                                        AND COALESCE (MIFloat_TaxRetIn.ValueData,0) <> 0
+                       WHERE MovementItem.MovementId = inMovementId
+                         AND MovementItem.ObjectId = inGoodsId
+                       LIMIT 1);
+    END IF;
+
     -- сохранили
     ioId := lpInsertUpdate_MovementItem_PromoGoods (ioId                   := ioId
                                                   , inMovementId           := inMovementId
@@ -166,6 +181,7 @@ BEGIN
                                                   , inAmountReal           := inAmountReal
                                                   , inAmountPlanMin        := inAmountPlanMin
                                                   , inAmountPlanMax        := inAmountPlanMax
+                                                  , inTaxRetIn             := ioTaxRetIn
                                                   , inGoodsKindId          := inGoodsKindId
                                                   , inGoodsKindCompleteId  := inGoodsKindCompleteId
                                                   , inComment              := inComment

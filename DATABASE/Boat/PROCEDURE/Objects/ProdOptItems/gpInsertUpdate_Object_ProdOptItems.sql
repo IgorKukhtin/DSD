@@ -27,6 +27,9 @@ BEGIN
    -- PERFORM lpCheckRight(inSession, zc_Enum_Process_InsertUpdate_Object_ProdOptItems());
    vbUserId:= lpGetUserBySession (inSession);
 
+   -- определяем признак Создание/Корректировка
+   vbIsInsert:= COALESCE (ioId, 0) = 0;
+
     -- Если код не установлен, определяем его как последний+1, для каждой лодки начиная с 1
    IF COALESCE (ioId,0) = 0 AND inCode = 0
    THEN

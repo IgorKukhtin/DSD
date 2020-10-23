@@ -2901,13 +2901,13 @@ begin
   {
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TPromoManagerJournalForm'));
   TdsdFormStorageFactory.GetStorage.Load('TPromoManagerJournalForm');
-  }
+
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TPromoJournalForm'));
   TdsdFormStorageFactory.GetStorage.Load('TPromoJournalForm');
-   {
+   }
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TPromoForm'));
   TdsdFormStorageFactory.GetStorage.Load('TPromoForm');
-
+  {
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TPromoPartnerForm'));
   TdsdFormStorageFactory.GetStorage.Load('TPromoPartnerForm');
   }

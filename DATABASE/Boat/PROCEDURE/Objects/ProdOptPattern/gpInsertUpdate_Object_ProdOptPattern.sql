@@ -21,8 +21,11 @@ BEGIN
    -- PERFORM lpCheckRight(inSession, zc_Enum_Process_InsertUpdate_Object_ProdOptPattern());
    vbUserId:= lpGetUserBySession (inSession);
 
-    -- Если код не установлен, определяем его как последний+1, для каждой лодки начиная с 1
-    vbCode_calc:= lfGet_ObjectCode (inCode, zc_Object_ProdOptPattern()); 
+   -- определяем признак Создание/Корректировка
+   vbIsInsert:= COALESCE (ioId, 0) = 0;
+
+   -- Если код не установлен, определяем его как последний+1, для каждой лодки начиная с 1
+   vbCode_calc:= lfGet_ObjectCode (inCode, zc_Object_ProdOptPattern()); 
    
    -- сохранили <Объект>
    ioId := lpInsertUpdate_Object(ioId, zc_Object_ProdOptPattern(), vbCode_calc, inName);
