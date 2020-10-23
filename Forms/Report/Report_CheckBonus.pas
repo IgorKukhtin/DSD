@@ -86,6 +86,8 @@ type
     actUpdateDataSet: TdsdUpdateDataSet;
     actOpenReportDetailForm: TdsdOpenForm;
     bbOpenReportDetail: TdxBarButton;
+    actPrintSing: TdsdPrintAction;
+    bbPrintSing: TdxBarButton;
   private
     { Private declarations }
   public

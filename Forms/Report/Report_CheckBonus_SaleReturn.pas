@@ -70,6 +70,8 @@ type
     actPrint: TdsdPrintAction;
     bbPrint: TdxBarButton;
     spInsertMovement_ProfitLossService_ByReportGrid: TdsdStoredProc;
+    actPrintSing: TdsdPrintAction;
+    bbPrintSing: TdxBarButton;
   private
     { Private declarations }
   public
