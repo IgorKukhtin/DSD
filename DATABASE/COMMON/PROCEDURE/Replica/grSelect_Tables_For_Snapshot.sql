@@ -18,6 +18,7 @@ BEGIN
         string_agg(key_column, ',') :: TVarChar as key_fields, 
         case when max(position) > 1 then 1 else 0 end :: Boolean as is_composite_key,
         case when B.table_name is not null then 1 else 0 end ::Boolean as has_blob
+      --case when T.table_name ILIKE 'ObjectBlob' then 1 else 0 end ::Boolean as has_blob
     from
     (
       select kcu.table_name,
@@ -38,9 +39,33 @@ BEGIN
       from information_schema.columns C
       where table_schema = 'public' and data_type = 'text'
     ) B on T.table_name = B.table_name
-  --where T.table_name NOT ILIKE 'MovementItem'
-  --  and T.table_name NOT ILIKE 'Container'
-    group by T.table_name, B.table_name; 
+  /*where T.table_name NOT ILIKE 'MovementItem'
+      and T.table_name NOT ILIKE 'objecthistorylinkdesc'
+      and T.table_name NOT ILIKE 'Container'
+      and T.table_name NOT ILIKE 'movementitemlinkobject'
+      and T.table_name NOT ILIKE 'movementitemlinkobjectdesc'
+      and T.table_name NOT ILIKE 'objectdesc'
+      and T.table_name NOT ILIKE 'movementfloatdesc'
+      and T.table_name NOT ILIKE 'objectprint'
+      and T.table_name NOT ILIKE 'movementlinkmovement'
+      and T.table_name NOT ILIKE 'objecthistorystring'
+      and T.table_name NOT ILIKE 'movementprotocol_arc'
+      and T.table_name NOT ILIKE 'objecthistorydate'
+      and T.table_name NOT ILIKE 'defaultkeys'
+      and T.table_name NOT ILIKE 'movementdate'
+      and T.table_name NOT ILIKE 'objectbooleandesc'
+      and T.table_name NOT ILIKE 'objectprotocol'
+      and T.table_name NOT ILIKE 'wms_tohostheader'
+      and T.table_name NOT ILIKE 'objectblobdesc'
+      and T.table_name NOT ILIKE 'reportprotocol'
+      and T.table_name NOT ILIKE 'movement'
+      and T.table_name NOT ILIKE 'movementitembooleandesc'
+      and T.table_name NOT ILIKE 'movementbooleandesc'
+
+      and T.table_name not ILIKE 'movementitemcontainer'*/
+    group by T.table_name, B.table_name
+  --order by case when T.table_name ilike 'movementblob' then 0 else 1 end
+    ; 
     
 END;
 $BODY$
@@ -52,3 +77,6 @@ $BODY$
                Подмогильный В.В.
  07.10.20          *
 */
+
+-- тест
+-- SELECT * FROM _replica.grSelect_Tables_For_Snapshot()
