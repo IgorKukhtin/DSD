@@ -11,7 +11,8 @@
 /*-------------------------------------------------------------------------------*/
 CREATE TABLE SoldTable
 (
-   OperDate           TDateTime
+   Id                  BIGSERIAL NOT NULL PRIMARY KEY 
+ , OperDate           TDateTime
 --  , InvNumber          TVarChar
  , AccountId          Integer -- ***
 

@@ -10,7 +10,8 @@
 /*-------------------------------------------------------------------------------*/
 CREATE TABLE RemainsOLAPTable
 (
-   OperDate            TDateTime
+   Id                  BIGSERIAL NOT NULL PRIMARY KEY 
+ , OperDate            TDateTime
 
  , UnitId              Integer
  , GoodsId             Integer
