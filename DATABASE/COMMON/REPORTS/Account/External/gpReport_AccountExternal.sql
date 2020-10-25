@@ -42,6 +42,11 @@ BEGIN
 
             LEFT JOIN MovementItem ON MovementItem.MovementId = Report_Account.MovementId
 
+            INNER JOIN MovementItemLinkObject AS MILO_PaidKind
+                                              ON MILO_PaidKind.MovementItemId = MovementItem.Id
+                                             AND MILO_PaidKind.DescId         = zc_MILinkObject_PaidKind()
+                                             AND MILO_PaidKind.ObjectId       = zc_Enum_PaidKind_FirstForm()
+
             LEFT JOIN MovementItemString AS MIString_Comment 
                                          ON MIString_Comment.MovementItemId = MovementItem.Id
                                         AND MIString_Comment.DescId = zc_MIString_Comment()
@@ -68,4 +73,4 @@ ALTER FUNCTION gpReport_AccountExternal (TDateTime, TDateTime, Integer, TVarChar
 */
 
 -- тест
--- SELECT * FROM gpReport_AccountExternal (inStartDate:= '01.09.2014', inEndDate:= '30.09.2014', inAccountId:= 0, inSession:= zfCalc_UserAdmin());
+-- SELECT * FROM gpReport_AccountExternal (inStartDate:= '01.09.2020', inEndDate:= '30.09.2020', inAccountId:= 0, inSession:= zfCalc_UserAdmin());
