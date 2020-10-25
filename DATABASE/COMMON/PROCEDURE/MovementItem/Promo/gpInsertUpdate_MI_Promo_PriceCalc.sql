@@ -13,16 +13,76 @@ $BODY$
    DECLARE vbMonthPromo TDateTime;
    DECLARE vbStartDate TDateTime;
    DECLARE vbEndDate TDateTime;
+
+   DECLARE vbContractCondition TFloat;
 BEGIN
      -- проверка прав пользовател€ на вызов процедуры
      vbUserId:= lpCheckRight (inSession, zc_Enum_Process_InsertUpdate_MI_Promo());
 
-     vbMonthPromo := (SELECT DATE_TRUNC ('MONTH', MovementDate_Month.ValueData) :: TDateTime
+     -- рассчитываем бонус сети
+     vbContractCondition := (SELECT MAX (tmp.Value) AS ContractCondition
+                             FROM (SELECT MovementLinkObject_Contract.ObjectId            AS ContractId
+                                        , SUM ( COALESCE (ObjectFloat_Value.ValueData,0)) AS Value
+                                   FROM Movement AS Movement_Promo
+                                       INNER JOIN MovementLinkObject AS MovementLinkObject_Contract
+                                                                     ON MovementLinkObject_Contract.MovementId = Movement_Promo.Id
+                                                                    AND MovementLinkObject_Contract.DescId = zc_MovementLinkObject_Contract()
+  
+                                       LEFT JOIN ObjectLink AS ObjectLink_ContractCondition_Contract
+                                                            ON ObjectLink_ContractCondition_Contract.ChildObjectId = MovementLinkObject_Contract.ObjectId
+                                                           AND ObjectLink_ContractCondition_Contract.DescId = zc_ObjectLink_ContractCondition_Contract()
+                                       INNER JOIN Object AS Object_ContractCondition 
+                                                         ON Object_ContractCondition.Id = ObjectLink_ContractCondition_Contract.ObjectId
+                                                        AND Object_ContractCondition.isErased = FALSE
+  
+                                       LEFT JOIN ObjectLink AS ObjectLink_ContractCondition_BonusKind
+                                                            ON ObjectLink_ContractCondition_BonusKind.ObjectId = Object_ContractCondition.Id
+                                                           AND ObjectLink_ContractCondition_BonusKind.DescId = zc_ObjectLink_ContractCondition_BonusKind()
+                                       INNER JOIN Object AS Object_BonusKind
+                                                         ON Object_BonusKind.Id = ObjectLink_ContractCondition_BonusKind.ChildObjectId
+                                                        AND Object_BonusKind.Id = 81959   ---Ѕонус
+                               
+                                       INNER JOIN ObjectFloat AS ObjectFloat_Value 
+                                                              ON ObjectFloat_Value.ObjectId = Object_ContractCondition.Id 
+                                                             AND ObjectFloat_Value.DescId = zc_ObjectFloat_ContractCondition_Value()
+                               
+                                   WHERE Movement_Promo.DescId = zc_Movement_PromoPartner()
+                                     AND Movement_Promo.StatusId <> zc_Enum_Status_Erased()
+                                     AND Movement_Promo.ParentId = inMovementId  ---—сылка на основной документ <јкции> (zc_Movement_Promo)
+                                   GROUP BY MovementLinkObject_Contract.ObjectId
+                                   ) AS tmp
+                             );
+     -- 
+     IF COALESCE (vbContractCondition,0) <> 0
+     THEN
+        -- сохран€ем 
+        PERFORM lpInsertUpdate_MovementItemFloat (zc_MIFloat_ContractCondition(), MovementItem.Id, vbContractCondition)
+        FROM MovementItem
+        WHERE MovementItem.MovementId = inMovementId
+          AND MovementItem.DescId = zc_MI_Master()
+          AND MovementItem.isErased = FALSE
+       ;
+     END IF;
+
+
+     -- дальше считаем с/с
+     
+     -- нашли мес€ц
+     vbMonthPromo := (SELECT CASE WHEN EXTRACT (DAY FROM MovementDate_Insert.ValueData) BETWEEN 1 AND 9
+                                       THEN DATE_TRUNC ('MONTH', (MovementDate_Insert.ValueData - INTERVAL '1 MONTH'))
+                                  WHEN EXTRACT (DAY FROM MovementDate_Insert.ValueData) BETWEEN 10 AND 31
+                                       THEN DATE_TRUNC ('MONTH', MovementDate_Insert.ValueData) 
+                                  ELSE DATE_TRUNC ('MONTH', MovementDate_Month.ValueData)
+                        END :: TDateTime
                       FROM Movement 
+                           LEFT JOIN MovementDate AS MovementDate_Insert
+                                                  ON MovementDate_Insert.MovementId = Movement.Id
+                                                 AND MovementDate_Insert.DescId     = zc_MovementDate_Insert()
                            LEFT JOIN MovementDate AS MovementDate_Month
                                                   ON MovementDate_Month.MovementId = Movement.Id
                                                  AND MovementDate_Month.DescId = zc_MovementDate_Month()
-                      WHERE Movement.Id = inMovementId);
+                      WHERE Movement.Id = inMovementId
+                     );
 
      -- расчет цен за предыдущий мес€ц от проведени€ акции
      vbEndDate   := (vbMonthPromo - INTERVAL '1 DAY') :: TDateTime;
@@ -214,13 +274,13 @@ BEGIN
                     
        SELECT tmp.GoodsId
             , tmp.Price3_cost   -- цена затраты
-            , CASE WHEN tmp.OperCount_sale <> 0 THEN CAST ( tmp.SummIn_sale / tmp.OperCount_sale AS NUMERIC (16, 3)) ELSE 0 END AS PriceSale_cost
-            , COALESCE (tmp.Price3_cost,0) + COALESCE (CASE WHEN tmp.OperCount_sale <> 0 THEN CAST ( tmp.SummIn_sale / tmp.OperCount_sale AS NUMERIC (16, 3)) ELSE 0 END,0) AS Price_cost 
+            , CASE WHEN tmp.OperCount_sale <> 0 THEN CAST ( tmp.SummIn_sale / tmp.OperCount_sale AS NUMERIC (16, 2)) ELSE 0 END AS PriceSale_cost
+            , COALESCE (tmp.Price3_cost,0) + COALESCE (CASE WHEN tmp.OperCount_sale <> 0 THEN CAST ( tmp.SummIn_sale / tmp.OperCount_sale AS NUMERIC (16, 2)) ELSE 0 END,0) AS Price_cost 
        FROM (SELECT tmpAll.GoodsId
                   , SUM (tmpAll.OperCount_sale) AS OperCount_sale
                   , SUM (tmpAll.SummIn_sale)    AS SummIn_sale
                   , SUM (tmpAll.Summ3_cost)     AS Summ3_cost
-                  , MAX (CASE WHEN ObjectFloat_Value.ValueData <> 0 THEN CAST (tmpAll.Summ3_cost / ObjectFloat_Value.ValueData AS NUMERIC (16, 3)) ELSE 0 END) AS Price3_cost
+                  , MAX (CASE WHEN ObjectFloat_Value.ValueData <> 0 THEN CAST (tmpAll.Summ3_cost / ObjectFloat_Value.ValueData AS NUMERIC (16, 2)) ELSE 0 END) AS Price3_cost
              FROM tmpAll
                    LEFT JOIN ObjectFloat AS ObjectFloat_Value
                                          ON ObjectFloat_Value.ObjectId = tmpAll.ReceiptId
@@ -230,13 +290,52 @@ BEGIN
 
         -- сохран€ем полученную с/с
         PERFORM lpInsertUpdate_MovementItemFloat (zc_MIFloat_PriceIn2(), MovementItem.Id, COALESCE (_tmpData.Price_cost,0) ::TFloat ) -- факт
-              , lpInsertUpdate_MovementItemFloat (zc_MIFloat_PriceIn1(), MovementItem.Id, (COALESCE (_tmpData.Price_cost,0) * 1.1) ::TFloat) -- план   = факт + 10 %
+              , lpInsertUpdate_MovementItemFloat (zc_MIFloat_PriceIn1(), MovementItem.Id, (CAST (COALESCE (_tmpData.Price_cost,0) * 1.1 AS NUMERIC (16, 2))) ::TFloat) -- план   = факт + 10 %
         FROM MovementItem
              LEFT JOIN _tmpData ON _tmpData.GoodsId = MovementItem.ObjectId
         WHERE MovementItem.MovementId = inMovementId
           AND MovementItem.DescId = zc_MI_Master()
           AND MovementItem.isErased = FALSE
        ;
+
+    IF inSession = '5'
+    THEN
+        RAISE EXCEPTION 'ќшибка.Admin <%> <%> <%> <%>'
+          , (SELECT DISTINCT MIF.ValueData
+             FROM MovementItem
+                  LEFT JOIN MovementItemFloat AS MIF
+                                              ON MIF.MovementItemId = MovementItem.Id
+                                             AND MIF.DescId         = zc_MIFloat_ContractCondition()
+             WHERE MovementItem.MovementId = inMovementId
+               AND MovementItem.DescId = zc_MI_Master()
+               AND MovementItem.isErased = FALSE
+          -- ORDER BY MovementItem.Id LIMIT 1
+            )
+          , (SELECT STRING_AGG (zfConvert_FloatToString (MIF.ValueData), ' ; ')
+             FROM MovementItem
+                  LEFT JOIN MovementItemFloat AS MIF
+                                              ON MIF.MovementItemId = MovementItem.Id
+                                             AND MIF.DescId         = zc_MIFloat_PriceIn1()
+             WHERE MovementItem.MovementId = inMovementId
+               AND MovementItem.DescId = zc_MI_Master()
+               AND MovementItem.isErased = FALSE
+             --ORDER BY MovementItem.Id
+           --LIMIT 1
+            )
+          , (SELECT STRING_AGG (zfConvert_FloatToString (MIF.ValueData), ' ; ')
+             FROM MovementItem
+                  LEFT JOIN MovementItemFloat AS MIF
+                                              ON MIF.MovementItemId = MovementItem.Id
+                                             AND MIF.DescId         = zc_MIFloat_PriceIn2()
+             WHERE MovementItem.MovementId = inMovementId
+               AND MovementItem.DescId = zc_MI_Master()
+               AND MovementItem.isErased = FALSE
+             -- ORDER BY MovementItem.Id
+           --LIMIT 1
+            )
+          , vbMonthPromo
+            ;
+    END IF;
 
 END;
 $BODY$

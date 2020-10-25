@@ -156,15 +156,16 @@ BEGIN
     -- Еслт % Возврата пусто пробуем найти у аналогичного товара
     IF COALESCE (ioTaxRetIn,0) = 0 AND COALESCE (ioId, 0) = 0
     THEN
-        ioTaxRetIn := (SELECT COALESCE (MIFloat_TaxRetIn.ValueData,0) ::TFloat AS TaxRetIn
-                       FROM MovementItem
-                            INNER JOIN MovementItemFloat AS MIFloat_TaxRetIn
-                                                         ON MIFloat_TaxRetIn.MovementItemId = MovementItem.Id
-                                                        AND MIFloat_TaxRetIn.DescId = zc_MIFloat_TaxRetIn()
-                                                        AND COALESCE (MIFloat_TaxRetIn.ValueData,0) <> 0
-                       WHERE MovementItem.MovementId = inMovementId
-                         AND MovementItem.ObjectId = inGoodsId
-                       LIMIT 1);
+        ioTaxRetIn := COALESCE ((SELECT COALESCE (MIFloat_TaxRetIn.ValueData,0) ::TFloat AS TaxRetIn
+                                 FROM MovementItem
+                                      INNER JOIN MovementItemFloat AS MIFloat_TaxRetIn
+                                                                   ON MIFloat_TaxRetIn.MovementItemId = MovementItem.Id
+                                                                  AND MIFloat_TaxRetIn.DescId         = zc_MIFloat_TaxRetIn()
+                                                                  AND MIFloat_TaxRetIn.ValueData      <> 0
+                                 WHERE MovementItem.MovementId = inMovementId
+                                   AND MovementItem.ObjectId = inGoodsId
+                                 LIMIT 1
+                                ), 0);
     END IF;
 
     -- сохранили

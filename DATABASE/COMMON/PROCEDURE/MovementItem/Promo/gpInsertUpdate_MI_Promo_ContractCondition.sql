@@ -13,9 +13,11 @@ $BODY$
    DECLARE vbContractCondition TFloat;
 BEGIN
      -- проверка прав пользователя на вызов процедуры
-     vbUserId:= lpCheckRight (inSession, zc_Enum_Process_InsertUpdate_MI_Promo();
+     vbUserId:= lpCheckRight (inSession, zc_Enum_Process_InsertUpdate_MI_Promo());
 
-     --рассчитываем бонус сети
+RETURN;
+
+     -- рассчитываем бонус сети
      vbContractCondition := (SELECT MAX (tmp.Value) AS ContractCondition
                              FROM (SELECT MovementLinkObject_Contract.ObjectId            AS ContractId
                                         , SUM ( COALESCE (ObjectFloat_Value.ValueData,0)) AS Value

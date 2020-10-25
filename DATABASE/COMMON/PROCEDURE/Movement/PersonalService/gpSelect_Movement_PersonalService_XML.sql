@@ -6,7 +6,7 @@ CREATE OR REPLACE FUNCTION  gpSelect_Movement_PersonalService_XML(
     IN inMovementId   Integer  ,  -- Подразделение
     IN inSession                  TVarChar    -- сессия пользователя
 )
-RETURNS TABLE (RowData TBlob)
+RETURNS TABLE (RowData TBlob, Summa TFloat)
 AS
 $BODY$
    DECLARE vbUserId Integer;
@@ -151,7 +151,7 @@ BEGIN
             , ''                                   ::TVarChar  AS ACCOUNTNO        --№ счета плательщика
             , tmpMemberMinus.BankAccountName_from  ::TVarChar  AS IBAN             --IBAN плательщика
             , CASE WHEN TRIM (Object_Bank_to.MFO) <> '' THEN Object_Bank_to.MFO ELSE Object_Bank_to.BankName END :: TVarChar AS CORRBANKID       --Код банка получателя платежа (МФО)
-            , CASE WHEN Object_To.DescId = zc_Object_Juridical() THEN COALESCE (ObjectHistory_JuridicalDetails_View.INN,'')
+            , CASE WHEN Object_To.DescId = zc_Object_Juridical() THEN COALESCE (ObjectHistory_JuridicalDetails_View.OKPO,'')
                    ELSE COALESCE (ObjectString_INN.ValueData,'')
               END                                  ::TVarChar  AS CORRIDENTIFYCODE --Идентификационный код получателя платежа (ЕГРПОУ)
             , 804                                  ::TVarChar  AS CORRCOUNTRYID    --Код страны корреспондента
@@ -219,6 +219,7 @@ BEGIN
          || 'PURPOSEPAYMENTID="'||COALESCE (tmp.PURPOSEPAYMENTID,'')||'" '
          || 'BANKID="'||COALESCE (tmp.BANKID,'')::TVarChar||'" '
          || '/>'
+         , tmp.AMOUNT :: TFloat AS Summa
      FROM tmpData AS tmp ;
 
      --последнии строчки XML
