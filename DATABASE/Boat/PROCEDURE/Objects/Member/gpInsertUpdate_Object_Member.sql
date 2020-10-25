@@ -7,7 +7,7 @@ CREATE OR REPLACE FUNCTION gpInsertUpdate_Object_Member(
  INOUT ioId           Integer,       -- Ключ объекта <Физические лица>    
  INOUT ioCode         Integer,       -- Код объекта <Физические лица>     
     IN inName         TVarChar,      -- Название объекта ФИО <Физические лица>
-    --IN inINN          TVarChar,      -- ИНН
+    IN inINN          TVarChar,      -- ИНН
     IN inComment      TVarChar,      -- Примечание
     IN inEMail        TVarChar,      -- E-Mail
     IN inSession      TVarChar       -- сессия пользователя
@@ -36,7 +36,7 @@ BEGIN
    ioId := lpInsertUpdate_Object (ioId, zc_Object_Member(), ioCode, inName);
 
    -- сохранили ИНН
-   --PERFORM lpInsertUpdate_ObjectString (zc_ObjectString_Member_INN(), ioId, inINN);
+   PERFORM lpInsertUpdate_ObjectString (zc_ObjectString_Member_INN(), ioId, inINN);
    -- сохранили Примечание  
    PERFORM lpInsertUpdate_ObjectString (zc_ObjectString_Member_Comment(), ioId, inComment);
    -- сохранили E-Mail

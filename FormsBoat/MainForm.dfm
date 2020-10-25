@@ -1106,8 +1106,6 @@ inherited MainForm: TMainForm
       end
       object miPartner: TMenuItem
         Action = actPartner
-        Enabled = False
-        Visible = False
       end
       object miCountryBrand: TMenuItem
         Action = actCountryBrand
@@ -1120,8 +1118,6 @@ inherited MainForm: TMainForm
       end
       object miClient: TMenuItem
         Action = actClient
-        Enabled = False
-        Visible = False
       end
       object miLine83: TMenuItem
         Caption = '-'
@@ -1153,13 +1149,9 @@ inherited MainForm: TMainForm
       end
       object miPersonal: TMenuItem
         Action = actPersonal
-        Enabled = False
-        Visible = False
       end
       object miPosition: TMenuItem
         Action = actPosition
-        Enabled = False
-        Visible = False
       end
       object miMember: TMenuItem
         Action = actMember

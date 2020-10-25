@@ -19,9 +19,13 @@ type
     procedure LoadTranslateWordFormTest;
     procedure LoadLanguageFormTest;
     procedure LoadBrandFormTest;
+    procedure LoadClientFormTest;
     procedure LoadImportSettingsFormTest;
     procedure LoadImportTypeFormTest;
     procedure LoadMemberFormTest;
+    procedure LoadPartnerFormTest;
+    procedure LoadPersonalFormTest;
+    procedure LoadPositionFormTest;
     procedure LoadProdColorFormTest;
     procedure LoadProdColorItemsFormTest;
     procedure LoadProdColorPatternFormTest;
@@ -149,12 +153,44 @@ begin
   TdsdFormStorageFactory.GetStorage.Load('TBrandEditForm');
 end;
 
+procedure TLoadFormTest.LoadClientFormTest;
+begin
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TClientForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TClientForm');
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TClientEditForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TClientEditForm');
+end;
+
 procedure TLoadFormTest.LoadMemberFormTest;
 begin
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TMemberForm'));
   TdsdFormStorageFactory.GetStorage.Load('TMemberForm');
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TMemberEditForm'));
   TdsdFormStorageFactory.GetStorage.Load('TMemberEditForm');
+end;
+
+procedure TLoadFormTest.LoadPartnerFormTest;
+begin
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TPartnerForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TPartnerForm');
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TPartnerEditForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TPartnerEditForm');
+end;
+
+procedure TLoadFormTest.LoadPersonalFormTest;
+begin
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TPersonalForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TPersonalForm');
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TPersonalEditForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TPersonalEditForm');
+end;
+
+procedure TLoadFormTest.LoadPositionFormTest;
+begin
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TPositionForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TPositionForm');
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TPositionEditForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TPositionEditForm');
 end;
 
 procedure TLoadFormTest.LoadProdColorFormTest;
@@ -242,6 +278,8 @@ begin
   TdsdFormStorageFactory.GetStorage.Load('TUnitForm');
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TUnitEditForm'));
   TdsdFormStorageFactory.GetStorage.Load('TUnitEditForm');
+    TdsdFormStorageFactory.GetStorage.Save(GetForm('TUnit_ObjectForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TUnit_ObjectForm');
 end;
 
 procedure TLoadFormTest.LoadImportSettingsFormTest;
