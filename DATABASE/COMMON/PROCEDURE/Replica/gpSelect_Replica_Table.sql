@@ -1,10 +1,11 @@
 -- Function: _replica.gpSelect_Replica_Table()
 
 DROP FUNCTION IF EXISTS _replica.gpSelect_Replica_Table (Integer, Integer);
+DROP FUNCTION IF EXISTS _replica.gpSelect_Replica_Table (BigInt, BigInt);
 
 CREATE OR REPLACE FUNCTION _replica.gpSelect_Replica_Table(
-    IN inId_start     Integer,
-    IN inId_end       Integer
+    IN inId_start     BigInt,
+    IN inId_end       BigInt
 )
 RETURNS TABLE (TABLE_NAME Text, COLUMN_NAME Text, COLUMN_POSITION Integer, COLUMN_DATATYPE Integer, COLUMN_TYPENAME Text, COLUMN_ATTRIBUTES Integer)
 AS

@@ -1,10 +1,11 @@
 -- Function: _replica.gpSelect_Replica_part30()
 
 DROP FUNCTION IF EXISTS _replica.gpSelect_Replica_part30 (Integer, Integer);
+DROP FUNCTION IF EXISTS _replica.gpSelect_Replica_part30 (BigInt, BigInt);
 
 CREATE OR REPLACE FUNCTION _replica.gpSelect_Replica_part30(
-    IN inId_start     Integer,
-    IN inId_end       Integer
+    IN inId_start     BigInt,
+    IN inId_end       BigInt
 )
 RETURNS TABLE (Part Integer,  Sort Integer, Value Text
 ) AS

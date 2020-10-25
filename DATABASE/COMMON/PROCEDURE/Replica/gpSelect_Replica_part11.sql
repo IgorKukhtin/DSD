@@ -1,11 +1,11 @@
 -- Function: _replica.gpSELECT_Replica_part10()
 
 DROP FUNCTION IF EXISTS _replica.gpSELECT_Replica_part11 (Integer, Integer);
-DROP FUNCTION IF EXISTS _replica.gpSELECT_Replica_part10 (Integer, Integer);
+DROP FUNCTION IF EXISTS _replica.gpSELECT_Replica_part10 (BigInt, BigInt);
 
 CREATE OR REPLACE FUNCTION _replica.gpSELECT_Replica_part10(
-    IN inId_start     Integer,
-    IN inId_end       Integer
+    IN inId_start     BigInt,
+    IN inId_end       BigInt
 )
 RETURNS TABLE (Part Integer, Sort Integer, Value Text
              , len_str     Integer
@@ -29,53 +29,53 @@ BEGIN
             , case when a.operation ILIKE 'update'
                       then ' when ' || _replica.zfStr_CHR_39 (a.Operation || '-' || a.table_name || '-' || a.upd_cols || '-' || a.pk_keys) || ' THEN '
                        ||  _replica.zfStr_CHR_39 ('update ' || a.table_name || ' SET ' || _replica.zfCalc_WordText_Split_replica (a.upd_cols, 1) || ' = ')
-                       || '|| CAST('
+                       || '|| replace (CAST('
                        ||          CASE WHEN tmpTable1.COLUMN_TYPENAME ILIKE 'TVarChar'
                                           OR tmpTable1.COLUMN_TYPENAME ILIKE 'TDateTime'
                                           OR tmpTable1.COLUMN_TYPENAME ILIKE 'INTERVAL'
                                           OR tmpTable1.COLUMN_TYPENAME ILIKE 'Text'
                                           OR tmpTable1.COLUMN_TYPENAME ILIKE 'TBlob'
-                                        THEN _replica.zfStr_CHR_39 ('n/e/ /p/r/i/d/u/m/a/l') || '||' || a.table_name || '.' || _replica.zfCalc_WordText_Split_replica (a.upd_cols, 1) || ' AS Text) ||' || _replica.zfStr_CHR_39 ('n/e/ /p/r/i/d/u/m/a/l') || '||'
-                                        ELSE a.table_name || '.' || _replica.zfCalc_WordText_Split_replica (a.upd_cols, 1) || ' AS Text) ||'
+                                        THEN _replica.zfStr_CHR_39 ('n/e/ /p/r/i/d/u/m/a/l') || '||' || a.table_name || '.' || _replica.zfCalc_WordText_Split_replica (a.upd_cols, 1) || ' AS Text), CHR (13), ''`'') ||' || _replica.zfStr_CHR_39 ('n/e/ /p/r/i/d/u/m/a/l') || '||'
+                                        ELSE a.table_name || '.' || _replica.zfCalc_WordText_Split_replica (a.upd_cols, 1) || ' AS Text), CHR (13), ''`'') ||'
                                    END
 
     
                        || CASE WHEN _replica.zfCalc_WordText_Split_replica (a.upd_cols, 2) <> ''
                           THEN  _replica.zfStr_CHR_39 ( ', ' || _replica.zfCalc_WordText_Split_replica (a.upd_cols, 2) || ' = ')
-                       || '|| CAST('
+                       || '|| replace (CAST('
                        ||          CASE WHEN tmpTable2.COLUMN_TYPENAME ILIKE 'TVarChar'
                                           OR tmpTable2.COLUMN_TYPENAME ILIKE 'TDateTime'
                                           OR tmpTable2.COLUMN_TYPENAME ILIKE 'INTERVAL'
                                           OR tmpTable2.COLUMN_TYPENAME ILIKE 'Text'
                                           OR tmpTable2.COLUMN_TYPENAME ILIKE 'TBlob'
-                                        THEN _replica.zfStr_CHR_39 ('n/e/ /p/r/i/d/u/m/a/l') || '||' || a.table_name || '.' || _replica.zfCalc_WordText_Split_replica (a.upd_cols, 2) || ' AS Text) ||' || _replica.zfStr_CHR_39 ('n/e/ /p/r/i/d/u/m/a/l') || '||'
-                                        ELSE a.table_name || '.' || _replica.zfCalc_WordText_Split_replica (a.upd_cols, 2) || ' AS Text) ||'
+                                        THEN _replica.zfStr_CHR_39 ('n/e/ /p/r/i/d/u/m/a/l') || '||' || a.table_name || '.' || _replica.zfCalc_WordText_Split_replica (a.upd_cols, 2) || ' AS Text), CHR (13), ''`'') ||' || _replica.zfStr_CHR_39 ('n/e/ /p/r/i/d/u/m/a/l') || '||'
+                                        ELSE a.table_name || '.' || _replica.zfCalc_WordText_Split_replica (a.upd_cols, 2) || ' AS Text), CHR (13), ''`'') ||'
                                    END
                           ELSE '' END
     
                        || CASE WHEN _replica.zfCalc_WordText_Split_replica (a.upd_cols, 3) <> ''
                           THEN  _replica.zfStr_CHR_39 ( ' , ' || _replica.zfCalc_WordText_Split_replica (a.upd_cols, 3) || ' = ')
-                       || '|| CAST('
+                       || '|| replace (CAST('
                        ||          CASE WHEN tmpTable3.COLUMN_TYPENAME ILIKE 'TVarChar'
                                           OR tmpTable3.COLUMN_TYPENAME ILIKE 'TDateTime'
                                           OR tmpTable3.COLUMN_TYPENAME ILIKE 'INTERVAL'
                                           OR tmpTable3.COLUMN_TYPENAME ILIKE 'Text'
                                           OR tmpTable3.COLUMN_TYPENAME ILIKE 'TBlob'
-                                        THEN _replica.zfStr_CHR_39 ('n/e/ /p/r/i/d/u/m/a/l') || '||' || a.table_name || '.' || _replica.zfCalc_WordText_Split_replica (a.upd_cols, 3) || ' AS Text) ||' || _replica.zfStr_CHR_39 ('n/e/ /p/r/i/d/u/m/a/l') || '||'
-                                        ELSE a.table_name || '.' || _replica.zfCalc_WordText_Split_replica (a.upd_cols, 3) || ' AS Text) ||'
+                                        THEN _replica.zfStr_CHR_39 ('n/e/ /p/r/i/d/u/m/a/l') || '||' || a.table_name || '.' || _replica.zfCalc_WordText_Split_replica (a.upd_cols, 3) || ' AS Text), CHR (13), ''`'') ||' || _replica.zfStr_CHR_39 ('n/e/ /p/r/i/d/u/m/a/l') || '||'
+                                        ELSE a.table_name || '.' || _replica.zfCalc_WordText_Split_replica (a.upd_cols, 3) || ' AS Text), CHR (13), ''`'') ||'
                                    END
                           ELSE '' END
     
                        || CASE WHEN _replica.zfCalc_WordText_Split_replica (a.upd_cols, 4) <> ''
                           THEN  _replica.zfStr_CHR_39 ( ', ' || _replica.zfCalc_WordText_Split_replica (a.upd_cols, 4) || ' = ')
-                       || '|| CAST('
+                       || '|| replace (CAST('
                        ||          CASE WHEN tmpTable4.COLUMN_TYPENAME ILIKE 'TVarChar'
                                           OR tmpTable4.COLUMN_TYPENAME ILIKE 'TDateTime'
                                           OR tmpTable4.COLUMN_TYPENAME ILIKE 'INTERVAL'
                                           OR tmpTable4.COLUMN_TYPENAME ILIKE 'Text'
                                           OR tmpTable4.COLUMN_TYPENAME ILIKE 'TBlob'
-                                        THEN _replica.zfStr_CHR_39 ('n/e/ /p/r/i/d/u/m/a/l') || '||' || a.table_name || '.' || _replica.zfCalc_WordText_Split_replica (a.upd_cols, 4) || ' AS Text) ||' || _replica.zfStr_CHR_39 ('n/e/ /p/r/i/d/u/m/a/l') || '||'
-                                        ELSE a.table_name || '.' || _replica.zfCalc_WordText_Split_replica (a.upd_cols, 4) || ' AS Text) ||'
+                                        THEN _replica.zfStr_CHR_39 ('n/e/ /p/r/i/d/u/m/a/l') || '||' || a.table_name || '.' || _replica.zfCalc_WordText_Split_replica (a.upd_cols, 4) || ' AS Text), CHR (13), ''`'') ||' || _replica.zfStr_CHR_39 ('n/e/ /p/r/i/d/u/m/a/l') || '||'
+                                        ELSE a.table_name || '.' || _replica.zfCalc_WordText_Split_replica (a.upd_cols, 4) || ' AS Text), CHR (13), ''`'') ||'
                                    END
                           ELSE '' END
     
