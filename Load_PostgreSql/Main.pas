@@ -1226,10 +1226,10 @@ begin
      //
      if (ParamStr(2)='autoALL') and (BranchEdit.Text <> 'BranchId : 0')
      then begin
-           if (Hour_calc = 4) and (Minute_calc > 10) and (Minute_calc < 30)
+           if (Hour_calc = 4) and (Minute_calc >=20 ) and (Minute_calc < 55)
            then begin
-                     myLogMemo_add('start stop');
-                     MyDelay(20*60*1000);
+                     myLogMemo_add('start stop 30 min');
+                     MyDelay(35*60*1000);
                      myLogMemo_add('end stop');
            end;
            //
@@ -1237,7 +1237,7 @@ begin
       end;
      //
      if ((Hour_calc = 7) or ((Hour_calc = 21) and (Minute_calc > 20)) or (Hour_calc = 23)
-      or ((Hour_calc = 4) and (Minute_calc > 10) {and (Minute_calc < 55)} and ((ParamStr(6)='VAC_5')or(ParamStr(7)='VAC_5')or(ParamStr(8)='VAC_5')))
+      or ((Hour_calc = 4) and (Minute_calc > 20) and (Minute_calc <= 55) and ((ParamStr(6)='VAC_5')or(ParamStr(7)='VAC_5')or(ParamStr(8)='VAC_5')))
          )
         and (beginVACUUM < 4) and (ParamStr(2)='autoALL')
      //if (Hour_calc = 14) and (beginVACUUM < 4) and (ParamStr(2)='autoALL')
@@ -1248,26 +1248,56 @@ begin
               then myLogMemo_add('beginVACUUM_ii = ' + IntToStr(beginVACUUM_ii))
               else beginVACUUM_ii:=0;
               //
-              fOpenSqToQuery_two('select pId from pg_stat_activity as a'
+              fOpenSqToQuery_two('select pId, Query, query_start from pg_stat_activity as a'
                                +' where state = ' + FormatToVarCharServer_notNULL('active')
                                +'   and query ILIKE ' + FormatToVarCharServer_notNULL('%VACUUM%')
                                  );
-              myLogMemo_add('rec1 = ' + IntToStr(toSqlQuery_two.RecordCount));
+              myLogMemo_add('rec VACUUM = ' + IntToStr(toSqlQuery_two.RecordCount));
               if toSqlQuery_two.RecordCount > 1 then
               begin
-                   myLogMemo_add('rec1 = ' + IntToStr(toSqlQuery_two.RecordCount));
-                   MyDelay(1 * 1000);
-                   exit;
+                   myLogMemo_add('-');
+                   myLogMemo_add('-');
+                   with toSqlQuery_two do
+                     while not EOF do begin
+                       myLogMemo_add('query_start = ' + DateTimeToStr(FieldByName('query_start').AsDateTime));
+                       myLogMemo_add(FieldByName('Query').AsString);
+                       myLogMemo_add('-');
+                       Next;
+                     end;
+                   //
+                   myLogMemo_add('-');
+                   //
+                   if not ((Hour_calc = 4) and (Minute_calc > 20) and (Minute_calc <= 55)) then
+                   begin
+                      MyDelay(1 * 1000);
+                      exit;
+                   end;
               end;
               //
-              fOpenSqToQuery_two('select pId from pg_stat_activity as a'
+              fOpenSqToQuery_two('select pId, Query, query_start from pg_stat_activity as a'
                                +' where state = ' + FormatToVarCharServer_notNULL('active')
                                  );
               //myLogMemo_add('rec2 = ' + IntToStr(toSqlQuery_two.RecordCount));
               if toSqlQuery_two.RecordCount > 1 then
               begin
-                   MyDelay(1 * 1000);
-                   exit;
+                   myLogMemo_add('rec oth = ' + IntToStr(toSqlQuery_two.RecordCount));
+                   //
+                   myLogMemo_add('-');
+                   myLogMemo_add('-');
+                   with toSqlQuery_two do
+                     while not EOF do begin
+                       myLogMemo_add('query_start = ' + DateTimeToStr(FieldByName('query_start').AsDateTime));
+                       myLogMemo_add(FieldByName('Query').AsString);
+                       myLogMemo_add('-');
+                       Next;
+                     end;
+                   //
+                   myLogMemo_add('-');
+                   if not ((Hour_calc = 4) and (Minute_calc > 25) and (Minute_calc <= 55)) then
+                   begin
+                      MyDelay(1 * 1000);
+                      exit;
+                   end;
               end;
               //
               with zConnection_vacuum do
