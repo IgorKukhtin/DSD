@@ -887,6 +887,7 @@ BEGIN
                                                  , inPartionGoodsDate       := NULL
                                                  , inPartionGoods           := NULL
                                                  , inGoodsKindId            := tmp.GoodsKindId
+                                                 , inGoodsKindId_Complete   := NULL
                                                  , inUserId                 := inUserId
                                                   )
      FROM (SELECT _tmpResult.ContainerId, CLO_GoodsKind.ObjectId AS GoodsKindId

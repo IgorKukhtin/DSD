@@ -277,6 +277,7 @@ BEGIN
                                                               , inPartionGoodsDate := NULL
                                                               , inPartionGoods     := NULL
                                                               , inGoodsKindId      := CLO_GoodsKind.ObjectId
+                                                              , inGoodsKindId_Complete   := NULL
                                                               , inUserId           := inUserId
                                                                ) AS MovementItemId
                     , _tmpResult.ContainerId

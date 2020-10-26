@@ -10,17 +10,17 @@ inherited ProductionUnionForm: TProductionUnionForm
     Height = 552
     TabOrder = 2
     ExplicitTop = 122
-    ExplicitWidth = 1020
+    ExplicitWidth = 1000
     ExplicitHeight = 552
     ClientRectBottom = 552
     ClientRectRight = 1000
     inherited tsMain: TcxTabSheet
-      ExplicitWidth = 1020
+      ExplicitWidth = 1000
       ExplicitHeight = 528
       inherited cxGrid: TcxGrid
         Width = 1000
         Height = 220
-        ExplicitWidth = 1020
+        ExplicitWidth = 1000
         ExplicitHeight = 220
         inherited cxGridDBTableView: TcxGridDBTableView
           DataController.Summary.DefaultGroupSummaryItems = <
@@ -129,9 +129,9 @@ inherited ProductionUnionForm: TProductionUnionForm
                 Default = True
                 Kind = bkEllipsis
               end>
+            Properties.ReadOnly = True
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
-            Options.Editing = False
             Width = 80
           end
           object CuterCount: TcxGridDBColumn [6]
@@ -302,7 +302,7 @@ inherited ProductionUnionForm: TProductionUnionForm
         Top = 225
         Width = 1000
         ExplicitTop = 225
-        ExplicitWidth = 1020
+        ExplicitWidth = 1000
         inherited cxGridDBTableViewChild: TcxGridDBTableView
           DataController.Summary.DefaultGroupSummaryItems = <
             item
@@ -452,14 +452,14 @@ inherited ProductionUnionForm: TProductionUnionForm
         Top = 220
         Width = 1000
         ExplicitTop = 220
-        ExplicitWidth = 1020
+        ExplicitWidth = 1000
       end
     end
   end
   inherited DataPanel: TPanel
     Width = 1000
     Height = 96
-    ExplicitWidth = 1020
+    ExplicitWidth = 1000
     ExplicitHeight = 96
     inherited ceStatus: TcxButtonEdit
       ExplicitWidth = 200
@@ -1078,7 +1078,7 @@ inherited ProductionUnionForm: TProductionUnionForm
       end
       item
         Name = 'IsAuto'
-        Value = ''
+        Value = False
         Component = edIsAuto
         DataType = ftBoolean
         MultiSelectSeparator = ','
@@ -1220,9 +1220,41 @@ inherited ProductionUnionForm: TProductionUnionForm
   end
   inherited spErasedMIMaster: TdsdStoredProc
     StoredProcName = 'gpMovementItem_ProductionUnion_Master_SetErased'
+    Params = <
+      item
+        Name = 'inMovementItemId'
+        Component = MasterCDS
+        ComponentItem = 'Id'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'outIsErased'
+        Value = False
+        Component = MasterCDS
+        ComponentItem = 'isErased'
+        DataType = ftBoolean
+        MultiSelectSeparator = ','
+      end>
   end
   inherited spUnErasedMIMaster: TdsdStoredProc
     StoredProcName = 'gpMovementItem_ProductionUnion_Master_SetUnErased'
+    Params = <
+      item
+        Name = 'inMovementItemId'
+        Component = MasterCDS
+        ComponentItem = 'Id'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'outIsErased'
+        Value = False
+        Component = MasterCDS
+        ComponentItem = 'isErased'
+        DataType = ftBoolean
+        MultiSelectSeparator = ','
+      end>
     Left = 334
     Top = 224
   end
@@ -1303,6 +1335,14 @@ inherited ProductionUnionForm: TProductionUnionForm
         Value = Null
         Component = MasterCDS
         ComponentItem = 'GoodsKindId'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inGoodsKindId_Complete'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'GoodsKindId_Complete'
         ParamType = ptInput
         MultiSelectSeparator = ','
       end>
@@ -1386,9 +1426,41 @@ inherited ProductionUnionForm: TProductionUnionForm
   end
   inherited spErasedMIChild: TdsdStoredProc
     StoredProcName = 'gpMovementItem_ProductionUnion_Child_SetErased'
+    Params = <
+      item
+        Name = 'inMovementItemId'
+        Component = ChildCDS
+        ComponentItem = 'Id'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'outIsErased'
+        Value = False
+        Component = ChildCDS
+        ComponentItem = 'isErased'
+        DataType = ftBoolean
+        MultiSelectSeparator = ','
+      end>
   end
   inherited spUnErasedMIChild: TdsdStoredProc
     StoredProcName = 'gpMovementItem_ProductionUnion_Child_SetUnErased'
+    Params = <
+      item
+        Name = 'inMovementItemId'
+        Component = ChildCDS
+        ComponentItem = 'Id'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'outIsErased'
+        Value = False
+        Component = ChildCDS
+        ComponentItem = 'isErased'
+        DataType = ftBoolean
+        MultiSelectSeparator = ','
+      end>
   end
   inherited GuidesTo: TdsdGuides
     FormNameParam.Value = 'TStoragePlace_ObjectForm'
@@ -1518,7 +1590,7 @@ inherited ProductionUnionForm: TProductionUnionForm
       end
       item
         Name = 'inisItem'
-        Value = 'false'
+        Value = False
         DataType = ftBoolean
         ParamType = ptInput
         MultiSelectSeparator = ','
@@ -1743,7 +1815,7 @@ inherited ProductionUnionForm: TProductionUnionForm
       end
       item
         Name = 'inisItem'
-        Value = 'true'
+        Value = True
         DataType = ftBoolean
         ParamType = ptInput
         MultiSelectSeparator = ','

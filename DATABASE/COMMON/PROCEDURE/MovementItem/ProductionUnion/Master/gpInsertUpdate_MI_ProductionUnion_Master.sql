@@ -2,19 +2,21 @@
 
 DROP FUNCTION IF EXISTS gpInsertUpdate_MI_ProductionUnion_Master  (Integer, Integer, Integer, TFloat, TDateTime, TVarChar, Integer, TVarChar);
 DROP FUNCTION IF EXISTS gpInsertUpdate_MI_ProductionUnion_Master  (Integer, Integer, Integer, TFloat, TFloat, TDateTime, TVarChar, Integer, TVarChar);
-DROP FUNCTION IF EXISTS gpInsertUpdate_MI_ProductionUnion_Master  (Integer, Integer, Integer, TFloat, TFloat, TFloat, TDateTime, TVarChar, Integer, TVarChar);
+--DROP FUNCTION IF EXISTS gpInsertUpdate_MI_ProductionUnion_Master  (Integer, Integer, Integer, TFloat, TFloat, TFloat, TDateTime, TVarChar, Integer, TVarChar);
+DROP FUNCTION IF EXISTS gpInsertUpdate_MI_ProductionUnion_Master  (Integer, Integer, Integer, TFloat, TFloat, TFloat, TDateTime, TVarChar, Integer, Integer, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpInsertUpdate_MI_ProductionUnion_Master(
- INOUT ioId                  Integer   , -- Ключ объекта <Элемент документа>
-    IN inMovementId          Integer   , -- Ключ объекта <Документ>
-    IN inGoodsId             Integer   , -- Товары
-    IN inAmount              TFloat    , -- Количество
-    IN inCount	             TFloat    , -- Количество батонов
-    IN inCuterWeight	     TFloat    , -- Фактический вес(куттера)
-    IN inPartionGoodsDate    TDateTime , -- Партия товара
-    IN inPartionGoods        TVarChar  , -- Партия товара
-    IN inGoodsKindId         Integer   , -- Виды товаров
-    IN inSession             TVarChar    -- сессия пользователя
+ INOUT ioId                    Integer   , -- Ключ объекта <Элемент документа>
+    IN inMovementId            Integer   , -- Ключ объекта <Документ>
+    IN inGoodsId               Integer   , -- Товары
+    IN inAmount                TFloat    , -- Количество
+    IN inCount	               TFloat    , -- Количество батонов
+    IN inCuterWeight	       TFloat    , -- Фактический вес(куттера)
+    IN inPartionGoodsDate      TDateTime , -- Партия товара
+    IN inPartionGoods          TVarChar  , -- Партия товара
+    IN inGoodsKindId           Integer   , -- Виды товаров
+    IN inGoodsKindId_Complete  Integer   , -- Виды товаров ГП
+    IN inSession               TVarChar    -- сессия пользователя
 )
 RETURNS Integer
 AS
@@ -44,6 +46,7 @@ $BODY$
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.
+ 26.10.20         * add inGoodsKindId_Complete
  29.06.16         * add inCuterWeight
  12.06.15                                        * add inPartionGoodsDate
  21.03.15                                        * all

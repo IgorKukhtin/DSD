@@ -267,6 +267,7 @@ BEGIN
                                                  , inPartionGoodsDate       := NULL
                                                  , inPartionGoods           := NULL
                                                  , inGoodsKindId            := tmp.GoodsKindId_to
+                                                 , inGoodsKindId_Complete   := NULL
                                                  , inUserId                 := inUserId
                                                   ) AS MovementItemId_new
                FROM (-- обязательно взяли только там где нет составляющих

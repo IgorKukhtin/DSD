@@ -732,6 +732,7 @@ BEGIN
                                                         , inPartionGoodsDate    := tmp.PartionGoodsDate
                                                         , inPartionGoods        := tmp.PartionGoods
                                                         , inGoodsKindId         := tmp.GoodsKindId
+                                                        , inGoodsKindId_Complete   := NULL
                                                         , inUserId              := vbUserId
                                                          )
                        WHEN vbMovementDescId = zc_Movement_ProductionSeparate() AND vbIsProductionIn = FALSE
@@ -908,6 +909,7 @@ BEGIN
                            LEFT JOIN MovementItemLinkObject AS MILinkObject_GoodsKind
                                                             ON MILinkObject_GoodsKind.MovementItemId = MovementItem.Id
                                                            AND MILinkObject_GoodsKind.DescId = zc_MILinkObject_GoodsKind()
+
                            LEFT JOIN MovementItemLinkObject AS MILinkObject_StorageLine
                                                             ON MILinkObject_StorageLine.MovementItemId = MovementItem.Id
                                                            AND MILinkObject_StorageLine.DescId = zc_MILinkObject_StorageLine()
