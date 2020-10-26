@@ -37,6 +37,12 @@ BEGIN
                     );
 
     END IF;
+    
+    -- если реальное кол-во записей не соответсвует разнице по Id, значит вклинились транзакции, которые не видно
+    IF (vbId_End - inId_start + 1) <> (SELECT COUNT(*) FROM _replica.table_update_data WHERE Id BETWEEN inId_start AND vbId_End)
+    THEN
+        vbId_End:= (SELECT MAX (Id) FROM _replica.table_update_data) - inRec_count * 4;
+    END IF;
 
     -- Результат
     RETURN vbId_End;
@@ -52,4 +58,17 @@ $BODY$
 */
 
 -- тест
--- SELECT * FROM _replica.gpSelect_Replica_LastId (inId_start:= 60540769, inRec_count:= 100000)
+
+-- WITH tmpParams2 AS (SELECT 789863512 AS Id_start, 200000 AS Rec_count, 0 AS Rec_count_diff)
+ WITH tmpParams2 AS (SELECT 651426894 AS Id_start, 200000 AS Rec_count, 80000 AS Rec_count_diff)
+    , tmpParams AS (SELECT COALESCE ((SELECT MAX (Id) FROM _replica.table_update_data WHERE (SELECT Rec_count_diff FROM tmpParams2) > 0) - (SELECT Rec_count_diff FROM tmpParams2 WHERE Rec_count_diff > 0)
+                                   , (SELECT Id_start FROM tmpParams2)) AS Id_start
+                         , (SELECT Rec_count FROM tmpParams2) AS Rec_count
+                   )
+    , tmpRes AS (SELECT _replica.gpSelect_Replica_LastId (inId_start:= (SELECT Id_start FROM tmpParams), inRec_count:= (SELECT Rec_count FROM tmpParams)) AS Id_end)
+    , tmpCount AS (SELECT COUNT(*) AS Rec_count_real FROM _replica.table_update_data WHERE Id >= (SELECT Id_start FROM tmpParams) AND Id <= (SELECT Id_end FROM tmpRes))
+    SELECT (SELECT Id_start FROM tmpParams)       AS Id_start
+         , (SELECT Id_end FROM tmpRes)            AS Id_end
+         , (SELECT Rec_count_real FROM tmpCount)  AS Rec_count_real
+         , (SELECT Id_end FROM tmpRes) - (SELECT Id_start FROM tmpParams) + 1 AS Rec_count_calc
+         , (SELECT Rec_count      FROM tmpParams) AS Rec_count

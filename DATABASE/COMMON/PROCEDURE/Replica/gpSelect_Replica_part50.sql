@@ -37,7 +37,14 @@ BEGIN
     SELECT tmpRes.Part, (Ord * 10 + 1) :: Integer AS Sort
          , tmpRes.res AS Value
     FROM tmpRes
-    ORDER BY 1, 2;
+
+   UNION
+    SELECT 50 :: Integer AS Part, 51 :: Integer AS Sort
+         , 'WHEN 1=0 THEN 0'
+    WHERE NOT EXISTS (SELECT 1 FROM tmpRes)
+
+    ORDER BY 1, 2
+    ;
 
 END;
 $BODY$

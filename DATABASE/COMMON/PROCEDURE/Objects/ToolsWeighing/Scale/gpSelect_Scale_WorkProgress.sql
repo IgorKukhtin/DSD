@@ -123,7 +123,7 @@ BEGIN
                                                              ON MIFloat_CuterWeight.MovementItemId = MovementItem.Id
                                                             AND MIFloat_CuterWeight.DescId         = zc_MIFloat_CuterWeight()
 
-                            WHERE Movement.OperDate BETWEEN inOperDate - INTERVAL '10 DAY' AND inOperDate
+                            WHERE Movement.OperDate BETWEEN inOperDate - CASE WHEN inUnitId = 8448 THEN INTERVAL '30 DAY' ELSE INTERVAL '10 DAY' END :: INTERVAL AND inOperDate
                               AND Movement.DescId   = zc_Movement_ProductionUnion()
                               AND Movement.StatusId = zc_Enum_Status_Complete()
                            )

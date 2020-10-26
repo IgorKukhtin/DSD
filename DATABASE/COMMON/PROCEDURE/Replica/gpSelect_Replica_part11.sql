@@ -1,6 +1,7 @@
 -- Function: _replica.gpSELECT_Replica_part10()
 
 DROP FUNCTION IF EXISTS _replica.gpSELECT_Replica_part11 (Integer, Integer);
+DROP FUNCTION IF EXISTS _replica.gpSELECT_Replica_part10 (Integer, Integer);
 DROP FUNCTION IF EXISTS _replica.gpSELECT_Replica_part10 (BigInt, BigInt);
 
 CREATE OR REPLACE FUNCTION _replica.gpSELECT_Replica_part10(
@@ -35,8 +36,8 @@ BEGIN
                                           OR tmpTable1.COLUMN_TYPENAME ILIKE 'INTERVAL'
                                           OR tmpTable1.COLUMN_TYPENAME ILIKE 'Text'
                                           OR tmpTable1.COLUMN_TYPENAME ILIKE 'TBlob'
-                                        THEN _replica.zfStr_CHR_39 ('n/e/ /p/r/i/d/u/m/a/l') || '||' || a.table_name || '.' || _replica.zfCalc_WordText_Split_replica (a.upd_cols, 1) || ' AS Text), CHR (13), ''`'') ||' || _replica.zfStr_CHR_39 ('n/e/ /p/r/i/d/u/m/a/l') || '||'
-                                        ELSE a.table_name || '.' || _replica.zfCalc_WordText_Split_replica (a.upd_cols, 1) || ' AS Text), CHR (13), ''`'') ||'
+                                        THEN _replica.zfStr_CHR_39 ('n/e/ /p/r/i/d/u/m/a/l') || '||' || a.table_name || '.' || _replica.zfCalc_WordText_Split_replica (a.upd_cols, 1) || ' AS Text), CHR (39), ''`'') ||' || _replica.zfStr_CHR_39 ('n/e/ /p/r/i/d/u/m/a/l') || '||'
+                                        ELSE a.table_name || '.' || _replica.zfCalc_WordText_Split_replica (a.upd_cols, 1) || ' AS Text), CHR (39), ''`'') ||'
                                    END
 
     
@@ -48,8 +49,8 @@ BEGIN
                                           OR tmpTable2.COLUMN_TYPENAME ILIKE 'INTERVAL'
                                           OR tmpTable2.COLUMN_TYPENAME ILIKE 'Text'
                                           OR tmpTable2.COLUMN_TYPENAME ILIKE 'TBlob'
-                                        THEN _replica.zfStr_CHR_39 ('n/e/ /p/r/i/d/u/m/a/l') || '||' || a.table_name || '.' || _replica.zfCalc_WordText_Split_replica (a.upd_cols, 2) || ' AS Text), CHR (13), ''`'') ||' || _replica.zfStr_CHR_39 ('n/e/ /p/r/i/d/u/m/a/l') || '||'
-                                        ELSE a.table_name || '.' || _replica.zfCalc_WordText_Split_replica (a.upd_cols, 2) || ' AS Text), CHR (13), ''`'') ||'
+                                        THEN _replica.zfStr_CHR_39 ('n/e/ /p/r/i/d/u/m/a/l') || '||' || a.table_name || '.' || _replica.zfCalc_WordText_Split_replica (a.upd_cols, 2) || ' AS Text), CHR (39), ''`'') ||' || _replica.zfStr_CHR_39 ('n/e/ /p/r/i/d/u/m/a/l') || '||'
+                                        ELSE a.table_name || '.' || _replica.zfCalc_WordText_Split_replica (a.upd_cols, 2) || ' AS Text), CHR (39), ''`'') ||'
                                    END
                           ELSE '' END
     
@@ -61,8 +62,8 @@ BEGIN
                                           OR tmpTable3.COLUMN_TYPENAME ILIKE 'INTERVAL'
                                           OR tmpTable3.COLUMN_TYPENAME ILIKE 'Text'
                                           OR tmpTable3.COLUMN_TYPENAME ILIKE 'TBlob'
-                                        THEN _replica.zfStr_CHR_39 ('n/e/ /p/r/i/d/u/m/a/l') || '||' || a.table_name || '.' || _replica.zfCalc_WordText_Split_replica (a.upd_cols, 3) || ' AS Text), CHR (13), ''`'') ||' || _replica.zfStr_CHR_39 ('n/e/ /p/r/i/d/u/m/a/l') || '||'
-                                        ELSE a.table_name || '.' || _replica.zfCalc_WordText_Split_replica (a.upd_cols, 3) || ' AS Text), CHR (13), ''`'') ||'
+                                        THEN _replica.zfStr_CHR_39 ('n/e/ /p/r/i/d/u/m/a/l') || '||' || a.table_name || '.' || _replica.zfCalc_WordText_Split_replica (a.upd_cols, 3) || ' AS Text), CHR (39), ''`'') ||' || _replica.zfStr_CHR_39 ('n/e/ /p/r/i/d/u/m/a/l') || '||'
+                                        ELSE a.table_name || '.' || _replica.zfCalc_WordText_Split_replica (a.upd_cols, 3) || ' AS Text), CHR (39), ''`'') ||'
                                    END
                           ELSE '' END
     
@@ -74,8 +75,8 @@ BEGIN
                                           OR tmpTable4.COLUMN_TYPENAME ILIKE 'INTERVAL'
                                           OR tmpTable4.COLUMN_TYPENAME ILIKE 'Text'
                                           OR tmpTable4.COLUMN_TYPENAME ILIKE 'TBlob'
-                                        THEN _replica.zfStr_CHR_39 ('n/e/ /p/r/i/d/u/m/a/l') || '||' || a.table_name || '.' || _replica.zfCalc_WordText_Split_replica (a.upd_cols, 4) || ' AS Text), CHR (13), ''`'') ||' || _replica.zfStr_CHR_39 ('n/e/ /p/r/i/d/u/m/a/l') || '||'
-                                        ELSE a.table_name || '.' || _replica.zfCalc_WordText_Split_replica (a.upd_cols, 4) || ' AS Text), CHR (13), ''`'') ||'
+                                        THEN _replica.zfStr_CHR_39 ('n/e/ /p/r/i/d/u/m/a/l') || '||' || a.table_name || '.' || _replica.zfCalc_WordText_Split_replica (a.upd_cols, 4) || ' AS Text), CHR (39), ''`'') ||' || _replica.zfStr_CHR_39 ('n/e/ /p/r/i/d/u/m/a/l') || '||'
+                                        ELSE a.table_name || '.' || _replica.zfCalc_WordText_Split_replica (a.upd_cols, 4) || ' AS Text), CHR (39), ''`'') ||'
                                    END
                           ELSE '' END
     
@@ -188,58 +189,15 @@ BEGIN
          , tmpRes.len_str    :: Integer
          , tmpRes.part_count :: Integer
     FROM tmpRes
-/*    WHERE tmpRes.part_count = 1 
+   UNION
+    SELECT 10 :: Integer AS Part, 11 :: Integer AS Sort
+         , 'WHEN ' || _replica.zfStr_CHR_39 ('') || ' THEN ' || _replica.zfStr_CHR_39 ('') AS Value
+         , 0 :: Integer
+         , 0 :: Integer
+    WHERE NOT EXISTS (SELECT 1 FROM tmpRes)
 
-    -- 2
-  UNION ALL
-    SELECT tmpRes.Part, (Ord * 10 + 1) :: Integer AS Sort
-         , SUBSTRING (tmpRes.res, 1, CASE WHEN zfCalc_Position( tmpRes.res, '||', vbLen_start) <> 0 THEN vbLen_start + zfCalc_Position( tmpRes.res, '||', vbLen_start) - 2 ELSE tmpRes.len_str END) AS Value
-         , tmpRes.len_str    :: Integer
-         , tmpRes.part_count :: Integer
-    FROM tmpRes
-    WHERE tmpRes.part_count = 2 
-   UNION ALL
-    SELECT tmpRes.Part, (Ord * 10 + 2) :: Integer AS Sort
-         , SUBSTRING (tmpRes.res, vbLen_start + zfCalc_Position( tmpRes.res, '||', vbLen_start) - 1 , CASE WHEN zfCalc_Position( tmpRes.res, '||', vbLen_start) <> 0 THEN (2*vbLen_start + zfCalc_Position( tmpRes.res, '||', 2*vbLen_start)) -  (vbLen_start + zfCalc_Position( tmpRes.res, '||', vbLen_start)) ELSE 0 END )  AS Value
-         , tmpRes.len_str    :: Integer
-         , tmpRes.part_count :: Integer
-    FROM tmpRes
-    WHERE tmpRes.part_count = 2 
-
-  --3
-  UNION ALL
-    SELECT tmpRes.Part, (Ord * 10 + 1) :: Integer AS Sort
-         , SUBSTRING (tmpRes.res, 1, vbLen_start + zfCalc_Position( tmpRes.res, '||', vbLen_start) - 2 ) AS Value
-         , tmpRes.len_str    :: Integer
-         , tmpRes.part_count :: Integer
-    FROM tmpRes
-    WHERE tmpRes.part_count IN (3,4) 
-
-   UNION ALL
-    SELECT tmpRes.Part, (Ord * 10 + 2) :: Integer AS Sort
-         , SUBSTRING (tmpRes.res, vbLen_start + zfCalc_Position( tmpRes.res, '||', vbLen_start) - 1 , (2*vbLen_start + zfCalc_Position( tmpRes.res, '||', 2*vbLen_start)) -  (vbLen_start + zfCalc_Position( tmpRes.res, '||', vbLen_start)) )  AS Value
-         , tmpRes.len_str    :: Integer
-         , tmpRes.part_count :: Integer
-    FROM tmpRes
-    WHERE tmpRes.part_count IN (3,4) 
-UNION ALL
-    --
-    SELECT tmpRes.Part, (Ord * 10 + 3) :: Integer AS Sort
-         , SUBSTRING (tmpRes.res, 2*vbLen_start + zfCalc_Position( tmpRes.res, '||', 2*vbLen_start, tmpRes.len_str) -1  , (3*vbLen_start + zfCalc_Position( tmpRes.res, '||', 3*vbLen_start,tmpRes.len_str)) - (2*vbLen_start + zfCalc_Position( tmpRes.res, '||', 2*vbLen_start,tmpRes.len_str) ))  AS Value
-         , tmpRes.len_str    :: Integer
-         , tmpRes.part_count :: Integer
-    FROM tmpRes
-    WHERE tmpRes.part_count IN (3,4)
-UNION ALL
-    --
-    SELECT tmpRes.Part, (Ord * 10 + 4) :: Integer AS Sort
-         , replace (SUBSTRING (tmpRes.res,  (3*vbLen_start + zfCalc_Position( tmpRes.res, '||', 3*vbLen_start,tmpRes.len_str)) -1  , tmpRes.len_str ) , '||||', '||')  AS Value
-         , tmpRes.len_str    :: Integer
-         , tmpRes.part_count :: Integer
-    FROM tmpRes
-    WHERE tmpRes.part_count IN (3,4)*/
-   ORDER BY 1,2
-    ;
+    ORDER BY 1, 2
+   ;
 
 END;
 $BODY$

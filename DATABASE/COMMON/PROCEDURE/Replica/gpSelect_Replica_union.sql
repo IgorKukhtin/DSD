@@ -22,9 +22,9 @@ BEGIN
      UNION SELECT gpSelect.Part, gpSelect.Sort, gpSelect.Value FROM _replica.gpSelect_Replica_part30 (inId_start, inId_end) AS gpSelect
  --  UNION SELECT  38,0, 'LEFT JOIN gpSelect_Replica_Column(' || inId_start || ','|| inId_end||' ) AS tmpColumn ON tmpColumn.Table_Name = table_update_data.Table_Name'
      UNION SELECT  40,0, 'WHERE table_update_data.Id BETWEEN ' || inId_start :: TVarChar || ' AND ' || inId_end  :: TVarChar
-     UNION SELECT  41,0, '  AND table_update_data.table_name NOT ILIKE ' || _replica.zfStr_CHR_39 ('reportprotocol')
-     UNION SELECT  41,0, '  AND table_update_data.table_name NOT ILIKE ' || _replica.zfStr_CHR_39 ('resourseprotocol')
-     UNION SELECT  41,0, '  AND table_update_data.table_name NOT ILIKE ' || _replica.zfStr_CHR_39 ('userprotocol')
+--    UNION SELECT  41,0, '  AND table_update_data.table_name NOT ILIKE ' || _replica.zfStr_CHR_39 ('reportprotocol')
+--    UNION SELECT  41,0, '  AND table_update_data.table_name NOT ILIKE ' || _replica.zfStr_CHR_39 ('resourseprotocol')
+--    UNION SELECT  41,0, '  AND table_update_data.table_name NOT ILIKE ' || _replica.zfStr_CHR_39 ('userprotocol')
      
      UNION SELECT  47,0, '  AND (table_update_data.Operation ILIKE ' || _replica.zfStr_CHR_39 ('DELETE')
      UNION SELECT  48,0, '    OR CASE '
