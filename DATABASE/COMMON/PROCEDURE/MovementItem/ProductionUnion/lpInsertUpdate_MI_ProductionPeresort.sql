@@ -38,6 +38,7 @@ BEGIN
                                                   , inPartionGoodsDate := inPartionGoodsDate
                                                   , inPartionGoods     := inPartionGoods
                                                   , inGoodsKindId      := inGoodsKindId
+                                                  , inGoodsKindId_Complete  := NULL
                                                   , inUserId           := inUserId
                                                    );
 

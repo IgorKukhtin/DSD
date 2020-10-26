@@ -3,19 +3,21 @@
 DROP FUNCTION IF EXISTS lpInsertUpdate_MI_ProductionUnion_Master (Integer, Integer, Integer, TFloat, TVarChar, Integer, Integer);
 DROP FUNCTION IF EXISTS lpInsertUpdate_MI_ProductionUnion_Master (Integer, Integer, Integer, TFloat, TFloat, TVarChar, Integer, Integer);
 DROP FUNCTION IF EXISTS lpInsertUpdate_MI_ProductionUnion_Master (Integer, Integer, Integer, TFloat, TFloat, TDateTime, TVarChar, Integer, Integer);
-DROP FUNCTION IF EXISTS lpInsertUpdate_MI_ProductionUnion_Master (Integer, Integer, Integer, TFloat, TFloat, TFloat, TDateTime, TVarChar, Integer, Integer);
+--DROP FUNCTION IF EXISTS lpInsertUpdate_MI_ProductionUnion_Master (Integer, Integer, Integer, TFloat, TFloat, TFloat, TDateTime, TVarChar, Integer, Integer);
+DROP FUNCTION IF EXISTS lpInsertUpdate_MI_ProductionUnion_Master (Integer, Integer, Integer, TFloat, TFloat, TFloat, TDateTime, TVarChar, Integer, Integer, Integer);
 
 CREATE OR REPLACE FUNCTION lpInsertUpdate_MI_ProductionUnion_Master(
- INOUT ioId                  Integer   , -- Ключ объекта <Элемент документа>
-    IN inMovementId          Integer   , -- Ключ объекта <Документ>
-    IN inGoodsId             Integer   , -- Товары
-    IN inAmount              TFloat    , -- Количество
-    IN inCount	             TFloat    , -- Количество батонов
-    IN inCuterWeight	     TFloat    , -- Фактический вес(куттера)
-    IN inPartionGoodsDate    TDateTime , -- Партия товара
-    IN inPartionGoods        TVarChar  , -- Партия товара
-    IN inGoodsKindId         Integer   , -- Виды товаров
-    IN inUserId              Integer     -- пользователь
+ INOUT ioId                    Integer   , -- Ключ объекта <Элемент документа>
+    IN inMovementId            Integer   , -- Ключ объекта <Документ>
+    IN inGoodsId               Integer   , -- Товары
+    IN inAmount                TFloat    , -- Количество
+    IN inCount	               TFloat    , -- Количество батонов
+    IN inCuterWeight	       TFloat    , -- Фактический вес(куттера)
+    IN inPartionGoodsDate      TDateTime , -- Партия товара
+    IN inPartionGoods          TVarChar  , -- Партия товара
+    IN inGoodsKindId           Integer   , -- Виды товаров
+    IN inGoodsKindId_Complete  Integer   , -- Виды товаров ГП
+    IN inUserId                Integer     -- пользователь
 )
 RETURNS Integer
 AS
@@ -40,6 +42,8 @@ BEGIN
 
    -- сохранили связь с <Виды товаров>
    PERFORM lpInsertUpdate_MovementItemLinkObject(zc_MILinkObject_GoodsKind(), ioId, inGoodsKindId);
+   -- сохранили связь с <Виды товаров ГП>
+   PERFORM lpInsertUpdate_MovementItemLinkObject(zc_MILinkObject_GoodsKindComplete(), ioId, inGoodsKindId_Complete);
 
    -- сохранили свойство <Количество батонов>
    PERFORM lpInsertUpdate_MovementItemFloat(zc_MIFloat_Count(), ioId, inCount);
@@ -81,6 +85,7 @@ $BODY$
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.
+ 26.10.20         * add inGoodsKindId_Complete
  29.06.16         * add inCuterWeight
  21.03.15                                        * all
  19.12.14                                                       * add zc_MILinkObject_???GoodsKindComplete
