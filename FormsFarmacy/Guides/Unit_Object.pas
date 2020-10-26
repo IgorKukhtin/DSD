@@ -315,6 +315,13 @@ type
     actChoiceUnitSAUA: TOpenChoiceForm;
     actUpdate_UnitSAUA: TdsdExecStoredProc;
     actClear_UnitSAUA: TdsdExecStoredProc;
+    PercentSAUA: TcxGridDBColumn;
+    actExecutePercentSAUA: TExecuteDialog;
+    actUpdate_PercentSAUA: TMultiAction;
+    spUpdate_PercentSAUA: TdsdStoredProc;
+    actExecUpdate_PercentSAUA: TdsdExecStoredProc;
+    dxBarButton8: TdxBarButton;
+    actExecuteUpdatePercentSAUA: TExecuteDialog;
   private
     { Private declarations }
   public

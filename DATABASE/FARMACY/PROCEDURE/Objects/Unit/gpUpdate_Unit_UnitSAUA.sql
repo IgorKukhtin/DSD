@@ -1,10 +1,11 @@
 -- Function: gpUpdate_Unit_UnitSAUA()
 
-DROP FUNCTION IF EXISTS gpUpdate_Unit_UnitSAUA(Integer, Integer, TVarChar);
+DROP FUNCTION IF EXISTS gpUpdate_Unit_UnitSAUA(Integer, Integer, TFloat, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpUpdate_Unit_UnitSAUA(
     IN inId                  Integer   ,    -- ключ объекта <Подразделение>
     IN inUnitSAUA            Integer   ,    -- Связь с Мастер в системе автоматического управления ассортиментом САУА
+    IN inPercentSAUA         TFloat    ,    -- Процент количество кодов в чеках для САУА
     IN inSession             TVarChar       -- текущий пользователь
 )
 RETURNS VOID AS
@@ -33,6 +34,9 @@ BEGIN
 
    -- сохранили связь с <Подразделения>
    PERFORM lpInsertUpdate_ObjectLink(zc_ObjectLink_Unit_UnitSAUA(), inId, inUnitSAUA);
+   
+      -- сохранили <>
+   PERFORM lpInsertUpdate_ObjectFloat(zc_ObjectFloat_Unit_PercentSAUA(), inId, inPercentSAUA);
 
 
    -- сохранили протокол

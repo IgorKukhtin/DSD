@@ -154,7 +154,7 @@ BEGIN
                                                                  AND Container.WhereObjectId = vbUnitId
                                                                  AND Container.Amount <> 0
                                         LEFT OUTER JOIN MovementItemContainer ON MovementItemContainer.ContainerId = Container.Id
-                                                                             AND MovementItemContainer.Operdate >= vbOperDate
+                                                                             AND MovementItemContainer.Operdate >= vbOperDate + INTERVAL '1 DAY'
                                    GROUP BY Container.Id, Container.ObjectId) AS Container                                                                                                                                           
                              GROUP BY Container.ObjectId
                              HAVING SUM (Container.Amount) <> 0

@@ -2,7 +2,7 @@ object SummaDialogForm: TSummaDialogForm
   Left = 0
   Top = 0
   BorderStyle = bsDialog
-  Caption = #1042#1074#1086#1076' '#1089#1091#1084#1084#1099
+  Caption = #1042#1074#1086#1076
   ClientHeight = 160
   ClientWidth = 324
   Color = clBtnFace
