@@ -1773,7 +1773,7 @@ BEGIN
                                                         AND Remains_Pair.UnitId  = Result_Partion.UnitId_from
                           )
 
-     INSERT INTO _tmpResult_Partion (DriverId, UnitId_from, UnitId_to, GoodsId, Amount, Summ, Amount_next, Summ_next, MovementId, MovementItemId, Amount_not_out, Summ_not_out, Amount_not_in, Summ_not_in)
+     INSERT INTO _tmpResult_Partion (DriverId, UnitId_from, UnitId_to, GoodsId, Amount, Summ, Amount_next, Summ_next, MovementId, MovementItemId)
      SELECT DriverId
           , UnitId_from
           , UnitId_to
@@ -1784,10 +1784,6 @@ BEGIN
           , 0 as Summ_next
           , 0 as MovementId
           , 0 as MovementItemId
-          , 0 as Amount_not_out
-          , 0 as Summ_not_out
-          , 0 as Amount_not_in
-          , 0 as Summ_not_in
         FROM (SELECT DD.*
                    , CASE WHEN DD.AmountRemains - DD.AmountSUM > 0 --AND DD.DOrd <> 1
                                THEN DD.Amount
@@ -2128,3 +2124,6 @@ WHERE Movement.OperDate  >= '01.01.2019'
 
  SELECT * FROM lpInsert_Movement_Send_RemainsSun_pi (inOperDate:= CURRENT_DATE + INTERVAL '4 DAY', inDriverId:= (SELECT MAX (OL.ChildObjectId) FROM ObjectLink AS OL WHERE OL.DescId = zc_ObjectLink_Unit_Driver()), inStep:= 1, inUserId:= 3) -- WHERE Amount_calc < AmountResult_summ -- WHERE AmountSun_summ_save <> AmountSun_summ
 */
+
+
+select * from gpReport_Movement_Send_RemainsSun_pi(inOperDate := ('26.10.2020')::TDateTime ,  inSession := '3');

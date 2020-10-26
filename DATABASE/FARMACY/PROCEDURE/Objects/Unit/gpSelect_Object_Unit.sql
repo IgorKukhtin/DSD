@@ -61,7 +61,7 @@ RETURNS TABLE (Id Integer, Code Integer, Name TVarChar
              , TimeWork TVarChar
              , DateCheck TDateTime
              , LayoutId  Integer, LayoutName TVarChar
-             , TypeSAUA TVarChar, MasterSAUA TVarChar
+             , TypeSAUA TVarChar, MasterSAUA TVarChar, PercentSAUA TFloat
 ) AS
 $BODY$
 BEGIN
@@ -234,6 +234,7 @@ BEGIN
       , CASE WHEN COALESCE (tmpMasterSAUA.UnitId, 0) <> 0     THEN 'Master'
              WHEN COALESCE(Object_UnitSAUA_Master.Id, 0) <> 0 THEN 'Slave' END::TVarChar AS TypeSAUA 
       , Object_UnitSAUA_Master.ValueData                                                 AS MasterSAUA
+      , COALESCE (ObjectFloat_PercentSAUA.ValueData,0) ::TFloat                          AS  PercentSAUA
 
     FROM Object AS Object_Unit
         LEFT JOIN ObjectLink AS ObjectLink_Unit_Parent
@@ -499,6 +500,10 @@ BEGIN
         LEFT JOIN ObjectFloat AS ObjectFloat_MonthSupplSun1
                               ON ObjectFloat_MonthSupplSun1.ObjectId = Object_Unit.Id
                              AND ObjectFloat_MonthSupplSun1.DescId = zc_ObjectFloat_Unit_MonthSupplSun1()
+
+        LEFT JOIN ObjectFloat AS ObjectFloat_PercentSAUA
+                              ON ObjectFloat_PercentSAUA.ObjectId = Object_Unit.Id
+                             AND ObjectFloat_PercentSAUA.DescId = zc_ObjectFloat_Unit_PercentSAUA()
 
         LEFT JOIN ObjectBoolean AS ObjectBoolean_RepriceAuto
                                 ON ObjectBoolean_RepriceAuto.ObjectId = Object_Unit.Id

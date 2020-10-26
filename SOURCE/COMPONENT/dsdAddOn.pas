@@ -2533,6 +2533,11 @@ end;
 function TExecuteDialog.Execute: boolean;
 begin
   result := false;
+  if Assigned(BeforeAction) then
+  begin
+    if not BeforeAction.Execute then Exit;
+  end;
+
   with TParentForm(ShowForm) do
     if ModalResult = mrOk then begin
        result := true;
@@ -2550,6 +2555,13 @@ begin
             RefreshDispatcher.FNotRefresh := false;
        end;
     end;
+
+  if not result then
+  begin
+    if Assigned(CancelAction) then
+      CancelAction.Execute;
+  end else if Assigned(AfterAction) then
+      AfterAction.Execute;
 end;
 
 procedure TExecuteDialog.Notification(AComponent: TComponent;

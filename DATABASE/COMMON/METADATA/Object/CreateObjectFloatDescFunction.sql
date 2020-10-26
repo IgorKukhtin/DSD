@@ -1850,11 +1850,16 @@ CREATE OR REPLACE FUNCTION zc_ObjectFloat_CashSettings_AttemptsSub() RETURNS Int
 INSERT INTO ObjectFloatDesc (DescId, Code, ItemName)
   SELECT zc_Object_CashSettings(), 'zc_ObjectFloat_CashSettings_AttemptsSub', 'Количество попыток до успешной сдачи теста для предложения подмен' WHERE NOT EXISTS (SELECT * FROM ObjectFloatDesc WHERE Code = 'zc_ObjectFloat_CashSettings_AttemptsSub');
 
+CREATE OR REPLACE FUNCTION zc_ObjectFloat_Unit_PercentSAUA() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM ObjectFloatDesc WHERE Code = 'zc_ObjectFloat_Unit_PercentSAUA'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
+INSERT INTO ObjectFloatDesc (DescId, Code, ItemName)
+  SELECT zc_Object_Unit(), 'zc_ObjectFloat_Unit_PercentSAUA', 'Процент количество кодов в чеках для САУА' WHERE NOT EXISTS (SELECT * FROM ObjectFloatDesc WHERE Code = 'zc_ObjectFloat_Unit_PercentSAUA');
+
 
 
 /*-------------------------------------------------------------------------------
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.   Воробкало А.А.   Шаблий О.В.
+ 26.10.20                                                                                      * zc_ObjectFloat_Unit_PercentSAUA
  21.10.20                                                                                      * zc_ObjectFloat_CashSettings_AttemptsSub
  14.10.20                                                                                      * zc_ObjectFloat_ConditionsKeep_RelatedProduct
  07.09.20                                                                                      * zc_ObjectFloat_BarCode_MaxPrice

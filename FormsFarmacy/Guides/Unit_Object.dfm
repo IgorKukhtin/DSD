@@ -859,6 +859,17 @@ inherited Unit_ObjectForm: TUnit_ObjectForm
             HeaderAlignmentVert = vaCenter
             Width = 103
           end
+          object PercentSAUA: TcxGridDBColumn
+            Caption = #1055#1088#1086#1094#1077#1085#1090' '#1057#1040#1059#1040
+            DataBinding.FieldName = 'PercentSAUA'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DisplayFormat = ',0.00;-,0.00; ;'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            HeaderHint = ' '#1055#1088#1086#1094#1077#1085#1090' '#1082#1086#1083#1080#1095#1077#1089#1090#1074#1086' '#1082#1086#1076#1086#1074' '#1074' '#1095#1077#1082#1072#1093' '#1076#1083#1103' '#1057#1040#1059#1040' '
+            Options.Editing = False
+            Width = 66
+          end
         end
       end
     end
@@ -2920,11 +2931,39 @@ inherited Unit_ObjectForm: TUnit_ObjectForm
         end>
       isShowModal = True
     end
+    object actExecutePercentSAUA: TExecuteDialog
+      Category = 'DSDLib'
+      MoveParams = <>
+      BeforeAction = actChoiceUnitSAUA
+      Caption = 'actExecutePercentSAUA'
+      FormName = 'TSummaDialogForm'
+      FormNameParam.Value = 'TSummaDialogForm'
+      FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
+      GuiParams = <
+        item
+          Name = 'Summa'
+          Value = Null
+          Component = FormParams
+          ComponentItem = 'PercentSAUA'
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'Label'
+          Value = Null
+          Component = FormParams
+          ComponentItem = 'LabelPercentSAUA'
+          DataType = ftString
+          MultiSelectSeparator = ','
+        end>
+      isShowModal = True
+      OpenBeforeShow = True
+    end
     object actUpdate_UnitSAUA: TdsdExecStoredProc
       Category = 'DSDLib'
       MoveParams = <>
       AfterAction = actRefresh
-      BeforeAction = actChoiceUnitSAUA
+      BeforeAction = actExecutePercentSAUA
       PostDataSetBeforeExecute = False
       StoredProc = spUpdate_UnitSAUA
       StoredProcList = <
@@ -2948,6 +2987,59 @@ inherited Unit_ObjectForm: TUnit_ObjectForm
       Hint = #1054#1095#1080#1089#1090#1080#1090#1100' Slave '#1076#1083#1103' '#1087#1086#1076#1088#1072#1079#1076#1077#1083#1077#1085#1080#1103' '#1087#1086' '#1057#1040#1059#1040
       ImageIndex = 52
       QuestionBeforeExecute = #1054#1095#1080#1089#1090#1080#1090#1100' Master '#1076#1083#1103' '#1087#1086#1076#1088#1072#1079#1076#1077#1083#1077#1085#1080#1103' '#1087#1086' '#1057#1040#1059#1040'?'
+    end
+    object actUpdate_PercentSAUA: TMultiAction
+      Category = 'DSDLib'
+      MoveParams = <>
+      AfterAction = actRefresh
+      BeforeAction = actExecuteUpdatePercentSAUA
+      ActionList = <
+        item
+          Action = actExecUpdate_PercentSAUA
+        end>
+      View = cxGridDBTableView
+      QuestionBeforeExecute = #1047#1072#1087#1086#1083#1085#1080#1090#1100' '#1087#1088#1086#1094#1077#1085#1090' '#1082#1086#1083#1080#1095#1077#1089#1090#1074#1086' '#1082#1086#1076#1086#1074' '#1074' '#1095#1077#1082#1072#1093' '#1076#1083#1103' '#1057#1040#1059#1040' ?'
+      Caption = #1047#1072#1087#1086#1083#1085#1080#1090#1100' '#1087#1088#1086#1094#1077#1085#1090' '#1082#1086#1083#1080#1095#1077#1089#1090#1074#1086' '#1082#1086#1076#1086#1074' '#1074' '#1095#1077#1082#1072#1093' '#1076#1083#1103' '#1057#1040#1059#1040' '
+      Hint = #1047#1072#1087#1086#1083#1085#1080#1090#1100' '#1087#1088#1086#1094#1077#1085#1090' '#1082#1086#1083#1080#1095#1077#1089#1090#1074#1086' '#1082#1086#1076#1086#1074' '#1074' '#1095#1077#1082#1072#1093' '#1076#1083#1103' '#1057#1040#1059#1040' '
+      ImageIndex = 43
+    end
+    object actExecUpdate_PercentSAUA: TdsdExecStoredProc
+      Category = 'DSDLib'
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      StoredProc = spUpdate_PercentSAUA
+      StoredProcList = <
+        item
+          StoredProc = spUpdate_PercentSAUA
+        end>
+      Caption = 'actExecUpdate_PercentSAUA'
+    end
+    object actExecuteUpdatePercentSAUA: TExecuteDialog
+      Category = 'DSDLib'
+      MoveParams = <>
+      Caption = 'actExecuteUpdatePercentSAUA'
+      FormName = 'TSummaDialogForm'
+      FormNameParam.Value = 'TSummaDialogForm'
+      FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
+      GuiParams = <
+        item
+          Name = 'Summa'
+          Value = 0c
+          Component = FormParams
+          ComponentItem = 'PercentSAUA'
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'Label'
+          Value = ' '#1055#1088#1086#1094#1077#1085#1090' '#1082#1086#1083#1080#1095#1077#1089#1090#1074#1072' '#1076#1083#1103' '#1057#1040#1059#1040' '
+          Component = FormParams
+          ComponentItem = 'LabelPercentSAUA'
+          DataType = ftString
+          MultiSelectSeparator = ','
+        end>
+      isShowModal = True
+      OpenBeforeShow = True
     end
   end
   inherited MasterDS: TDataSource
@@ -3601,6 +3693,10 @@ inherited Unit_ObjectForm: TUnit_ObjectForm
         item
           Visible = True
           ItemName = 'dxBarButton7'
+        end
+        item
+          Visible = True
+          ItemName = 'dxBarButton8'
         end>
     end
     object dxBarButton6: TdxBarButton
@@ -3620,6 +3716,10 @@ inherited Unit_ObjectForm: TUnit_ObjectForm
     object dxBarStatic1: TdxBarStatic
       Category = 0
       Visible = ivAlways
+    end
+    object dxBarButton8: TdxBarButton
+      Action = actUpdate_PercentSAUA
+      Category = 0
     end
   end
   inherited DBViewAddOn: TdsdDBViewAddOn
@@ -4630,6 +4730,18 @@ inherited Unit_ObjectForm: TUnit_ObjectForm
       item
         Name = 'UnitSAUA'
         Value = Null
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'PercentSAUA'
+        Value = 0c
+        DataType = ftFloat
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'LabelPercentSAUA'
+        Value = ' '#1055#1088#1086#1094#1077#1085#1090' '#1082#1086#1083#1080#1095#1077#1089#1090#1074#1072' '#1076#1083#1103' '#1057#1040#1059#1040' '
+        DataType = ftString
         MultiSelectSeparator = ','
       end>
     Left = 29
@@ -5779,6 +5891,15 @@ inherited Unit_ObjectForm: TUnit_ObjectForm
         ComponentItem = 'UnitSAUA'
         ParamType = ptInput
         MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inPercentSAUA'
+        Value = Null
+        Component = FormParams
+        ComponentItem = 'PercentSAUA'
+        DataType = ftFloat
+        ParamType = ptInput
+        MultiSelectSeparator = ','
       end>
     PackSize = 1
     Left = 728
@@ -5802,9 +5923,42 @@ inherited Unit_ObjectForm: TUnit_ObjectForm
         Value = 0
         ParamType = ptInput
         MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inPercentSAUA'
+        Value = 0c
+        DataType = ftFloat
+        ParamType = ptInput
+        MultiSelectSeparator = ','
       end>
     PackSize = 1
-    Left = 840
+    Left = 832
+    Top = 323
+  end
+  object spUpdate_PercentSAUA: TdsdStoredProc
+    StoredProcName = 'gpUpdate_Unit_PercentSAUA'
+    DataSets = <>
+    OutputType = otResult
+    Params = <
+      item
+        Name = 'inId'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'Id'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inPercentSAUA'
+        Value = Null
+        Component = FormParams
+        ComponentItem = 'PercentSAUA'
+        DataType = ftFloat
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end>
+    PackSize = 1
+    Left = 932
     Top = 323
   end
 end
