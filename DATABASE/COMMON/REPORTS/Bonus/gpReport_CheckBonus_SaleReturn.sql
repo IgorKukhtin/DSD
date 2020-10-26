@@ -1026,10 +1026,15 @@ BEGIN
                                 AND ObjectLink_Juridical_Retail.DescId = zc_ObjectLink_Juridical_Retail()
             LEFT JOIN Object AS Object_Retail ON Object_Retail.Id = ObjectLink_Juridical_Retail.ChildObjectId
 
-            LEFT JOIN ObjectLink AS ObjectLink_Contract_Personal
+            /*LEFT JOIN ObjectLink AS ObjectLink_Contract_Personal
                                  ON ObjectLink_Contract_Personal.ObjectId = tmpData.ContractId_child
                                 AND ObjectLink_Contract_Personal.DescId = zc_ObjectLink_Contract_Personal()
-            LEFT JOIN Object_Personal_View ON Object_Personal_View.PersonalId = ObjectLink_Contract_Personal.ChildObjectId
+            LEFT JOIN Object_Personal_View ON Object_Personal_View.PersonalId = ObjectLink_Contract_Personal.ChildObjectId*/
+
+            LEFT JOIN ObjectLink AS ObjectLink_Partner_Personal
+                                 ON ObjectLink_Partner_Personal.ObjectId = tmpData.PartnerId
+                                AND ObjectLink_Partner_Personal.DescId = zc_ObjectLink_Partner_Personal()
+            LEFT JOIN Object_Personal_View ON Object_Personal_View.PersonalId = ObjectLink_Partner_Personal.ChildObjectId
 
             LEFT JOIN tmpObjectBonus ON tmpObjectBonus.JuridicalId = Object_Juridical.Id
                                     AND tmpObjectBonus.PartnerId   = COALESCE (Object_Partner.Id, 0)
