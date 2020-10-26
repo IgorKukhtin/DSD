@@ -60,6 +60,7 @@ type
     ChildName: TcxGridDBColumn;
     spInsertUpdate: TdsdStoredProc;
     actUpdateDataSet: TdsdUpdateDataSet;
+    Comment: TcxGridDBColumn;
   private
     { Private declarations }
   public

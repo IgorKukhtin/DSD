@@ -8,19 +8,10 @@ CREATE OR REPLACE FUNCTION gpSelect_Object_Unit(
 )
 RETURNS TABLE (Id Integer, Code Integer, Name TVarChar
              , Address TVarChar, Phone TVarChar
-             , Printer TVarChar, PrintName TVarChar
-             , DiscountTax TFloat
-             , PeriodYearTag TFloat
+             , Comment TVarChar
              , JuridicalName TVarChar, ParentName TVarChar, ChildName TVarChar
-             , BankAccountName TVarChar, BankName TVarChar
-             , AccountDirectionName TVarChar
-             , GoodsGroupName  TVarChar
-             , PriceListId Integer, PriceListName TVarChar
-             , GoodsTagId Integer, GoodsTagName TVarChar
-             , PeriodTagId Integer, PeriodTagName TVarChar
              , InsertName TVarChar
              , InsertDate TDateTime
-             , isPartnerBarCode Boolean
              , isErased boolean)
 AS
 $BODY$
@@ -102,3 +93,6 @@ $BODY$
 
 -- тест
 -- SELECT * FROM gpSelect_Object_Unit (TRUE, zfCalc_UserAdmin())
+
+
+

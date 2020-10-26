@@ -50,9 +50,9 @@ type
     cxLabel8: TcxLabel;
     ceChild: TcxButtonEdit;
     GuidesChild: TdsdGuides;
-    cbisPartnerBarCode: TcxCheckBox;
     cxLabel6: TcxLabel;
     edComment: TcxTextEdit;
+    GuidesJuridical: TdsdGuides;
   private
     { Private declarations }
   public

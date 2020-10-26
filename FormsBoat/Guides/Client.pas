@@ -1,4 +1,4 @@
-unit Units;
+unit Client;
 
 interface
 
@@ -21,11 +21,10 @@ uses
   dxSkinOffice2010Blue, dxSkinOffice2010Silver, dxSkinPumpkin, dxSkinSeven,
   dxSkinSevenClassic, dxSkinSharp, dxSkinSharpPlus, dxSkinSilver,
   dxSkinSpringTime, dxSkinStardust, dxSkinSummer2008, dxSkinTheAsphaltWorld,
-  dxSkinValentine, dxSkinVS2010, dxSkinWhiteprint, dxSkinXmas2008Blue,
-  cxCurrencyEdit;
+  dxSkinValentine, dxSkinVS2010, dxSkinWhiteprint, dxSkinXmas2008Blue;
 
 type
-  TUnitForm = class(TParentForm)
+  TClientForm = class(TParentForm)
     cxGridLevel: TcxGridLevel;
     cxGrid: TcxGrid;
     DataSource: TDataSource;
@@ -53,21 +52,17 @@ type
     cxGridDBTableView: TcxGridDBTableView;
     Code: TcxGridDBColumn;
     Name: TcxGridDBColumn;
-    Erased: TcxGridDBColumn;
-    dsdUserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn;
+    isErased: TcxGridDBColumn;
+    UserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn;
     actChoiceGuides: TdsdChoiceGuides;
-    dsdDBViewAddOn: TdsdDBViewAddOn;
+    DBViewAddOn: TdsdDBViewAddOn;
     actProtocol: TdsdOpenForm;
     bbProtocolOpenForm: TdxBarButton;
     actShowAll: TBooleanStoredProcAction;
     bbShowAll: TdxBarButton;
-    JuridicalName: TcxGridDBColumn;
-    spUnErased: TdsdStoredProc;
-    Address: TcxGridDBColumn;
-    Phone: TcxGridDBColumn;
-    ParentName: TcxGridDBColumn;
-    ChildName: TcxGridDBColumn;
     Comment: TcxGridDBColumn;
+    spUnErased: TdsdStoredProc;
+    actUpdateDataSet: TdsdUpdateDataSet;
   private
     { Private declarations }
   public
@@ -79,6 +74,6 @@ implementation
 {$R *.dfm}
 
 initialization
-  RegisterClass(TUnitForm);
+  RegisterClass(TClientForm);
 
 end.

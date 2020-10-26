@@ -146,7 +146,16 @@ uses
   UnitEdit in '..\..\FormsBoat\Guides\UnitEdit.pas' {UnitEditForm: TParentForm},
   Unit_Object in '..\..\FormsBoat\Guides\Unit_Object.pas' {Unit_ObjectForm: TParentForm},
   MemberEdit in '..\..\FormsBoat\Guides\MemberEdit.pas' {MemberEditForm: TParentForm},
-  Member in '..\..\FormsBoat\Guides\Member.pas' {MemberForm: TParentForm};
+  Member in '..\..\FormsBoat\Guides\Member.pas' {MemberForm: TParentForm},
+  Client in '..\..\FormsBoat\Guides\Client.pas' {ClientForm: TParentForm},
+  ClientEdit in '..\..\FormsBoat\Guides\ClientEdit.pas' {ClientEditForm: TParentForm},
+  Partner in '..\..\FormsBoat\Guides\Partner.pas' {PartnerForm: TParentForm},
+  PartnerEdit in '..\..\FormsBoat\Guides\PartnerEdit.pas' {PartnerEditForm: TParentForm},
+  Position in '..\..\FormsBoat\Guides\Position.pas' {PositionForm: TParentForm},
+  PositionEdit in '..\..\FormsBoat\Guides\PositionEdit.pas' {PositionEditForm: TParentForm},
+  PersonalEdit in '..\..\FormsBoat\Guides\PersonalEdit.pas' {PersonalEditForm: TParentForm},
+  Personal_Object in '..\..\FormsBoat\Guides\Personal_Object.pas' {Personal_ObjectForm: TParentForm},
+  Personal in '..\..\FormsBoat\Guides\Personal.pas' {PersonalForm: TParentForm};
 
 {$R *.res}
 {$R DevExpressRus.res}

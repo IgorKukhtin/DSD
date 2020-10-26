@@ -59,7 +59,7 @@ object UnitEditForm: TUnitEditForm
     Properties.DisplayFormat = '0'
     Properties.ReadOnly = True
     TabOrder = 8
-    Width = 142
+    Width = 273
   end
   object cxLabel3: TcxLabel
     Left = 10
@@ -134,13 +134,6 @@ object UnitEditForm: TUnitEditForm
     TabOrder = 5
     Width = 275
   end
-  object cbisPartnerBarCode: TcxCheckBox
-    Left = 170
-    Top = 30
-    Caption = #1064'/'#1050' '#1087#1086#1089#1090#1072#1074#1097#1080#1082#1072
-    TabOrder = 16
-    Width = 113
-  end
   object cxLabel6: TcxLabel
     Left = 10
     Top = 304
@@ -149,7 +142,7 @@ object UnitEditForm: TUnitEditForm
   object edComment: TcxTextEdit
     Left = 10
     Top = 322
-    TabOrder = 18
+    TabOrder = 17
     Width = 273
   end
   object ActionList: TActionList
@@ -270,8 +263,8 @@ object UnitEditForm: TUnitEditForm
         ParamType = ptInputOutput
         MultiSelectSeparator = ','
       end>
-    Left = 40
-    Top = 40
+    Left = 56
+    Top = 104
   end
   object spGet: TdsdStoredProc
     StoredProcName = 'gpGet_Object_Unit'
@@ -315,32 +308,25 @@ object UnitEditForm: TUnitEditForm
         MultiSelectSeparator = ','
       end
       item
-        Name = 'Printer'
+        Name = 'Comment'
         Value = Null
+        Component = edComment
         DataType = ftString
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'PrintName'
-        Value = Null
-        DataType = ftString
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'DiscountTax'
-        Value = Null
-        DataType = ftFloat
         MultiSelectSeparator = ','
       end
       item
         Name = 'JuridicalId'
         Value = Null
+        Component = GuidesJuridical
+        ComponentItem = 'Key'
         DataType = ftString
         MultiSelectSeparator = ','
       end
       item
         Name = 'JuridicalName'
         Value = Null
+        Component = GuidesJuridical
+        ComponentItem = 'TextValue'
         DataType = ftString
         MultiSelectSeparator = ','
       end
@@ -371,57 +357,6 @@ object UnitEditForm: TUnitEditForm
         Value = Null
         Component = GuidesChild
         ComponentItem = 'TextValue'
-        DataType = ftString
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'BankAccountId'
-        Value = Null
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'BankAccountName'
-        Value = Null
-        DataType = ftString
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'AccountDirectionId'
-        Value = Null
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'AccountDirectionName'
-        Value = Null
-        DataType = ftString
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'isPartnerBarCode'
-        Value = Null
-        Component = cbisPartnerBarCode
-        DataType = ftBoolean
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'GoodsGroupId'
-        Value = Null
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'GoodsGroupName'
-        Value = Null
-        DataType = ftString
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'PriceListId'
-        Value = Null
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'PriceListName'
-        Value = Null
         DataType = ftString
         MultiSelectSeparator = ','
       end>
@@ -505,5 +440,34 @@ object UnitEditForm: TUnitEditForm
       end>
     Left = 192
     Top = 250
+  end
+  object GuidesJuridical: TdsdGuides
+    KeyField = 'Id'
+    LookupControl = ceJuridical
+    FormNameParam.Value = 'TJuridicalForm'
+    FormNameParam.DataType = ftString
+    FormNameParam.MultiSelectSeparator = ','
+    FormName = 'TJuridicalForm'
+    PositionDataSet = 'MasterCDS'
+    Params = <
+      item
+        Name = 'Key'
+        Value = ''
+        Component = GuidesJuridical
+        ComponentItem = 'Key'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'TextValue'
+        Value = ''
+        Component = GuidesJuridical
+        ComponentItem = 'TextValue'
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end>
+    Left = 128
+    Top = 162
   end
 end
