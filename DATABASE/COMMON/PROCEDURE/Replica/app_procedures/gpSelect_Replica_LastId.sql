@@ -10,6 +10,7 @@ RETURNS Integer
 AS
 $BODY$
     DECLARE vbId_End    Integer;
+    DECLARE vbLast_modified TDateTime;
 BEGIN
     -- Нужно передать в gpSelect_Replica_union значения Id из _replica.table_update_data в диапазоне "inId_start..(inId_start + inRec_count)"
     -- и при этом соблюсти условие - "все соответствующие transaction_id находятся в передаваемом диапазоне".
@@ -38,10 +39,18 @@ BEGIN
 
     END IF;
     
-    -- если реальное кол-во записей не соответсвует разнице по Id, значит вклинились транзакции, которые не видно
+    -- если реальное кол-во записей не соответсвует разнице по Id, значит вклинились транзакции, которые не видно, хотя могут быть и "потерянные" Id
     IF (vbId_End - inId_start + 1) <> (SELECT COUNT(*) FROM _replica.table_update_data WHERE Id BETWEEN inId_start AND vbId_End)
     THEN
-        vbId_End:= (SELECT MAX (Id) FROM _replica.table_update_data) - inRec_count * 4;
+       -- нашли время начала этой транзакции
+       vbLast_modified:= (SELECT last_modified FROM _replica.table_update_data WHERE Id = vbId_End;
+
+       -- если найдена активная транзакция
+       IF EXISTS (SELECT 1 FROM pg_stat_activity WHERE state ILIKE 'active' AND query_start < vbLast_modified + INTERVAL '25 SECOND')
+       THEN
+           vbId_End:= inId_start - 1;
+       END IF;
+
     END IF;
 
     -- Результат
