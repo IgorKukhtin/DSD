@@ -267,7 +267,7 @@ type
     procedure StopAlterSlaveSequences;
     procedure StopApplyScriptThread;
     procedure StopMoveProcToSlaveThread;
-    procedure UpdateProgBarPosition(AProgBar: TProgressBar; const AMax, ACurrValue, ARecCount: Integer);
+    procedure UpdateProgBarPosition(AProgBar: TProgressBar; const AMax, ACurrValue, ARecCount: Int64);
     procedure LogMessage(const AMsg: string; const AFileName: string = ''; const aUID: Cardinal = 0;
       AMsgType: TLogMessageType = lmtPlain);
     procedure LogApplyScript(const AMsg: string; const AFileName: string = ''; const aUID: Cardinal = 0;
@@ -638,7 +638,7 @@ end;
 procedure TfrmMain.tmrUpdateAllDataTimer(Sender: TObject);
 begin
   (Sender as TTimer).Enabled := False;
-//  CheckReplicaMaxMin;
+  CheckReplicaMaxMin;
 end;
 
 procedure TfrmMain.WriteSettings;
@@ -1039,23 +1039,19 @@ begin
   FSnapshotRunning := false;
 end;
 
-procedure TfrmMain.UpdateProgBarPosition(AProgBar: TProgressBar; const AMax, ACurrValue, ARecCount: Integer);
-var
-  extPart: Extended;
+procedure TfrmMain.UpdateProgBarPosition(AProgBar: TProgressBar; const AMax, ACurrValue, ARecCount: Int64);
 begin
-  Assert(ARecCount >= 0, 'Ожидается ARecCount >= 0, а имеем ARecCount= ' + IntToStr(ARecCount));
-  AProgBar.Max  := ARecCount;
-  AProgBar.Min  := Min(1, ARecCount);
-  AProgBar.Step := 1;
+  AProgBar.Max  := 100;
+  AProgBar.Min  := 1;
 
-  if AMax <= 0 then
+  if (AMax <= 0) or (ARecCount <= 0) then
   begin
     AProgBar.Position := 0;
     Exit;
   end;
 
-  extPart := ACurrValue / AMax;
-  AProgBar.Position := Round(ARecCount * extPart);
+  Assert(AMax > 0, 'Ожидается AMax > 0, а имеем AMax = ' + IntTosTr(AMax));
+  AProgBar.Position := Round(100 * ACurrValue / AMax);
 end;
 
 procedure TfrmMain.UpdateSnapshotElapsedTime;
@@ -1158,7 +1154,6 @@ begin
   pgcMain.ActivePage := tsLog;
 
   FetchLastId;
-  CheckReplicaMaxMin;
 
   FData := TdmData.Create(nil, LogMessage);
 
@@ -1342,15 +1337,18 @@ end;
 
 procedure TfrmMain.OnChangeStartId(const ANewStartId: Int64);
 var
-  iReplicaMax, iRecCount: Integer;
+  iReplicaMax, iRecCount: Int64;
 begin
   edtSsnMinId.Text := IntToStr(ANewStartId);
 
   if FSsnStep > 0 then
-    pbSession.Position := Trunc((ANewStartId - FSsnMinId) / FSsnStep);
+  begin
+    pbSession.Position := Max(0, Trunc((ANewStartId - FSsnMinId) / FSsnStep));
+    pbSession.Position := Min(pbSession.Position, pbSession.Max);
+  end;
 
-  iReplicaMax := StrToIntDef(edtAllMaxId.Text, 0);
-  iRecCount   := StrToIntDef(edtAllRecCount.Text, 0);
+  iReplicaMax := StrToInt64Def(edtAllMaxId.Text, 0);
+  iRecCount   := StrToInt64Def(edtAllRecCount.Text, 0);
   UpdateProgBarPosition(pbAll, iReplicaMax, ANewStartId, iRecCount);
 
   if (ANewStartId mod 2) = 0 then Exit;
@@ -1397,13 +1395,15 @@ begin
 
   pbSession.Visible  := True;
   pbSession.Position := 0;
-  pbSession.Step     := 1;
   pbSession.Min      := 1;
-  pbSession.Max      := ARecCount;
+  pbSession.Max      := Max(pbSession.Min, ARecCount);
 
   FSsnMinId := AMinId;
   FSsnMaxId := AMaxId;
-  FSsnStep  := (FSsnMaxId - FSsnMinId) / ARecCount;
+  if ARecCount > 0 then
+    FSsnStep  := (FSsnMaxId - FSsnMinId) / ARecCount
+  else
+    FSsnStep := 1;
 end;
 
 procedure TfrmMain.OnTerminateAlterSlaveSequences(Sender: TObject);
@@ -1536,6 +1536,10 @@ begin
   btnStartReplication.Enabled         := True;
   btnMoveProcsToSlave.Enabled         := True;
   btnStartAlterSlaveSequences.Enabled := True;
+
+  // Запускаем CheckReplicaMaxMin после того, как стало известно значение LastId
+  // Это нужно чтобы правильно установить параметры прогресбара в OnTerminateMinMaxId
+   CheckReplicaMaxMin;
 end;
 
 procedure TfrmMain.OnTerminateMinMaxId(Sender: TObject);
