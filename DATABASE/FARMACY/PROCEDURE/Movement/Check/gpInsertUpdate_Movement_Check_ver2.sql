@@ -281,15 +281,15 @@ BEGIN
     END IF;
 
     -- ФИО врача (на продажу)
-    IF COALESCE(inMedicForSale, '') <> ''
+    IF COALESCE(TRIM(inMedicForSale), '') <> ''
     THEN
-      PERFORM lpInsertUpdate_MovementLinkObject (zc_MovementLinkObject_MedicForSale(), ioId, gpInsertUpdate_Object_MedicForSale(0, inMedicForSale, inSession));    
+      PERFORM lpInsertUpdate_MovementLinkObject (zc_MovementLinkObject_MedicForSale(), ioId, gpInsertUpdate_Object_MedicForSale(0, TRIM(inMedicForSale), inSession));    
     END IF;
     
     -- ФИО покупателя (на продажу)
-     IF COALESCE(inBuyerForSale, '') <> ''
+     IF COALESCE(TRIM(inBuyerForSale), '') <> ''
     THEN
-      PERFORM lpInsertUpdate_MovementLinkObject (zc_MovementLinkObject_BuyerForSale(), ioId, gpInsertUpdate_Object_BuyerForSale(0, inBuyerForSale, inSession));    
+      PERFORM lpInsertUpdate_MovementLinkObject (zc_MovementLinkObject_BuyerForSale(), ioId, gpInsertUpdate_Object_BuyerForSale(0, TRIM(inBuyerForSale), inSession));    
     END IF;
 
     -- сохранили протокол

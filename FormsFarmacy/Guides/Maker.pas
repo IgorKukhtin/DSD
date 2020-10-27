@@ -102,6 +102,8 @@ type
     is4Month: TcxGridDBColumn;
     isReport5: TcxGridDBColumn;
     isReport6: TcxGridDBColumn;
+    bbProtocolOpenForm: TdxBarButton;
+    actProtocolOpenForm: TdsdOpenForm;
   private
     { Private declarations }
   public
