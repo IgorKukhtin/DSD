@@ -113,18 +113,28 @@ object ChoosingRelatedProductForm: TChoosingRelatedProductForm
     Caption = 'plMessage'
     ShowCaption = False
     TabOrder = 5
-    object mMessage: TMemo
+    object mMessage: TcxMemo
       Left = 1
       Top = 1
-      Width = 572
-      Height = 87
-      TabStop = False
       Align = alClient
-      Alignment = taCenter
       Lines.Strings = (
         'mMessage')
-      ReadOnly = True
+      ParentFont = False
+      Properties.Alignment = taCenter
+      Properties.ReadOnly = True
+      Style.Font.Charset = DEFAULT_CHARSET
+      Style.Font.Color = clWindowText
+      Style.Font.Height = -11
+      Style.Font.Name = 'Tahoma'
+      Style.Font.Style = []
+      Style.IsFontAssigned = True
       TabOrder = 0
+      ExplicitLeft = 120
+      ExplicitTop = 40
+      ExplicitWidth = 185
+      ExplicitHeight = 89
+      Height = 87
+      Width = 572
     end
   end
   object ChoosingRelatedProductDS: TDataSource
