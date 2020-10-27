@@ -178,6 +178,10 @@ type
     Label4: TLabel;
     edtSnapshotInsertTextCount: TEdit;
     btnClearSnapshotLog: TButton;
+    chkStartNewReplica: TCheckBox;
+    seStartNewReplicaInterval: TSpinEdit;
+    lbStartNewReplica: TLabel;
+    tmrStartNewReplica: TTimer;
     {$WARNINGS ON}
     procedure chkShowLogClick(Sender: TObject);
     procedure btnLibLocationClick(Sender: TObject);
@@ -223,6 +227,9 @@ type
     procedure FormClose(Sender: TObject; var Action: TCloseAction);
     procedure SnapshotElapsedTimerTimer(Sender: TObject);
     procedure btnClearSnapshotLogClick(Sender: TObject);
+    procedure chkStartNewReplicaClick(Sender: TObject);
+    procedure seStartNewReplicaIntervalChange(Sender: TObject);
+    procedure tmrStartNewReplicaTimer(Sender: TObject);
   private
     FLog: TLog;
     FData: TdmData;
@@ -377,6 +384,9 @@ begin
   chkSaveErr1.Checked      := TSettings.SaveErrStep1InDB;
   chkSaveErr2.Checked      := TSettings.SaveErrStep2InDB;
 
+  chkStartNewReplica.Checked      := TSettings.StartNewReplica;
+  seStartNewReplicaInterval.Value := TSettings.StartNewReplicaIntervalSec;
+
   chkDeviationOnlyRecCount.Checked := TSettings.CompareDeviationRecCountOnly;
   chkDeviationOnlySeq.Checked      := TSettings.CompareDeviationSequenceOnly;
 
@@ -416,6 +426,12 @@ end;
 procedure TfrmMain.seSelectRangeChange(Sender: TObject);
 begin
   TSettings.ReplicaSelectRange := seSelectRange.Value;
+end;
+
+procedure TfrmMain.seStartNewReplicaIntervalChange(Sender: TObject);
+begin
+  seStartNewReplicaInterval.Value      := Max(seStartNewReplicaInterval.MinValue, seStartNewReplicaInterval.Value);
+  TSettings.StartNewReplicaIntervalSec := seStartNewReplicaInterval.Value;
 end;
 
 procedure TfrmMain.SnapshotElapsedTimerTimer(Sender: TObject);
@@ -635,6 +651,12 @@ begin
     lbSsnElapsed.Caption := Format(cElapsedSession, [Elapsed(FStartTimeSession)]);
 end;
 
+procedure TfrmMain.tmrStartNewReplicaTimer(Sender: TObject);
+begin
+  (Sender as TTimer).Enabled := False;
+  StartReplica;
+end;
+
 procedure TfrmMain.tmrUpdateAllDataTimer(Sender: TObject);
 begin
   (Sender as TTimer).Enabled := False;
@@ -657,6 +679,9 @@ begin
 
   TSettings.LibLocation  := edtLibLocation.Text;
   TSettings.UseLogGUI    := chkShowLog.Checked;
+
+  TSettings.StartNewReplica            := chkStartNewReplica.Checked;
+  TSettings.StartNewReplicaIntervalSec := seStartNewReplicaInterval.Value;
 
   TSettings.ReplicaSelectRange := seSelectRange.Value;
   TSettings.ReplicaPacketRange := sePacketRange.Value;
@@ -1100,6 +1125,11 @@ procedure TfrmMain.chkShowLogClick(Sender: TObject);
 begin
   SwitchShowLog;
   TSettings.UseLogGUI := chkShowLog.Checked;
+end;
+
+procedure TfrmMain.chkStartNewReplicaClick(Sender: TObject);
+begin
+  TSettings.StartNewReplica := chkStartNewReplica.Checked;
 end;
 
 procedure TfrmMain.chkStopIfErrClick(Sender: TObject);
@@ -1609,6 +1639,13 @@ begin
 
   // нужно сохранить в Ѕƒ значение LastId
   FData.LastId := TSettings.ReplicaLastId;
+
+  // старт новой репликации после успешного завершени€ текущей
+  if (replicaFinish = rfComplete) and chkStartNewReplica.Checked then
+  begin
+    tmrStartNewReplica.Interval := c1Sec * seStartNewReplicaInterval.Value;
+    tmrStartNewReplica.Enabled := True;
+  end;
 end;
 
 procedure TfrmMain.OnTerminateSinglePacket(Sender: TObject);
