@@ -86,6 +86,10 @@ type
     class procedure SetSnapshotInsertTextCount(const Value: Int64); static;
     class function GetSnapshotSelectTextCount: Int64; static;
     class procedure SetSnapshotSelectTextCount(const Value: Int64); static;
+    class function GetStartNewReplica: Boolean; static;
+    class procedure SetStartNewReplica(const AValue: Boolean); static;
+    class function GetStartNewReplicaIntervalSec: Integer; static;
+    class procedure SetStartNewReplicaIntervalSec(const AValue: Integer); static;
   public
     class constructor Create;
     class destructor Destroy;
@@ -128,6 +132,8 @@ type
     class property SnapshotBlobSelectCount: Int64 read GetSnapshotBlobSelectCount write SetSnapshotBlobSelectCount;
     class property SnapshotSelectTextCount: Int64 read GetSnapshotSelectTextCount write SetSnapshotSelectTextCount;
     class property SnapshotInsertTextCount: Int64 read GetSnapshotInsertTextCount write SetSnapshotInsertTextCount;
+    class property StartNewReplica: Boolean read GetStartNewReplica write SetStartNewReplica;
+    class property StartNewReplicaIntervalSec: Integer read GetStartNewReplicaIntervalSec write SetStartNewReplicaIntervalSec;
 
     class procedure WriteScriptFiles(AList: TStrings);
     class procedure ReadScriptFiles(AList: TStrings);
@@ -170,6 +176,8 @@ const
   cScriptFilesPathParam  = 'ScriptFilesPath';
   cSaveErr1InDBParam     = 'SaveErrorStep1InDB';
   cSaveErr2InDBParam     = 'SaveErrorStep2InDB';
+  cStartNewReplicaParam  = 'StartNewReplica';
+  cStartNewReplicaIntervalParam  = 'StartNewReplicaIntervalSecond';
 
   cCompareDeviationRecCountParam = 'CompareDeviationRecCountOnly';
   cCompareDeviationSeqParam      = 'CompareDeviationSequenceOnly';
@@ -218,6 +226,7 @@ const
   cDefSnapshotBlobSelectCount = 10;
   cDefSnapshotSelectTextCount = 100000;
   cDefSnapshotInsertTextCount = 100000;
+  cDefStartNewReplicaInterval = 60; // секунд
 
 function IsService: Boolean;
 var
@@ -535,6 +544,16 @@ begin
   Result := GetIntValue(cSnapshotSection, cSnapshotSelectTextCount, cDefSnapshotSelectTextCount);
 end;
 
+class function TSettings.GetStartNewReplica: Boolean;
+begin
+  Result := GetBoolValue(cSettingsSection, cStartNewReplicaParam, True);
+end;
+
+class function TSettings.GetStartNewReplicaIntervalSec: Integer;
+begin
+  Result := GetIntValue(cSettingsSection, cStartNewReplicaIntervalParam, cDefStartNewReplicaInterval);
+end;
+
 class function TSettings.GetStopIfError: Boolean;
 begin
   Result := GetBoolValue(cSettingsSection, cStopIfErrorParam, False);
@@ -752,6 +771,16 @@ end;
 class procedure TSettings.SetSnapshotSelectTextCount(const Value: Int64);
 begin
   SetIntValue(cSnapshotSection, cSnapshotSelectTextCount, Value);
+end;
+
+class procedure TSettings.SetStartNewReplica(const AValue: Boolean);
+begin
+  SetBoolValue(cSettingsSection, cStartNewReplicaParam, AValue);
+end;
+
+class procedure TSettings.SetStartNewReplicaIntervalSec(const AValue: Integer);
+begin
+  SetIntValue(cSettingsSection, cStartNewReplicaIntervalParam, AValue);
 end;
 
 class procedure TSettings.SetStopIfError(const AValue: Boolean);

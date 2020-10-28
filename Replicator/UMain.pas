@@ -178,6 +178,10 @@ type
     Label4: TLabel;
     edtSnapshotInsertTextCount: TEdit;
     btnClearSnapshotLog: TButton;
+    chkStartNewReplica: TCheckBox;
+    seStartNewReplicaInterval: TSpinEdit;
+    lbStartNewReplica: TLabel;
+    tmrStartNewReplica: TTimer;
     {$WARNINGS ON}
     procedure chkShowLogClick(Sender: TObject);
     procedure btnLibLocationClick(Sender: TObject);
@@ -223,6 +227,9 @@ type
     procedure FormClose(Sender: TObject; var Action: TCloseAction);
     procedure SnapshotElapsedTimerTimer(Sender: TObject);
     procedure btnClearSnapshotLogClick(Sender: TObject);
+    procedure chkStartNewReplicaClick(Sender: TObject);
+    procedure seStartNewReplicaIntervalChange(Sender: TObject);
+    procedure tmrStartNewReplicaTimer(Sender: TObject);
   private
     FLog: TLog;
     FData: TdmData;
@@ -267,7 +274,7 @@ type
     procedure StopAlterSlaveSequences;
     procedure StopApplyScriptThread;
     procedure StopMoveProcToSlaveThread;
-    procedure UpdateProgBarPosition(AProgBar: TProgressBar; const AMax, ACurrValue, ARecCount: Integer);
+    procedure UpdateProgBarPosition(AProgBar: TProgressBar; const AMax, ACurrValue, ARecCount: Int64);
     procedure LogMessage(const AMsg: string; const AFileName: string = ''; const aUID: Cardinal = 0;
       AMsgType: TLogMessageType = lmtPlain);
     procedure LogApplyScript(const AMsg: string; const AFileName: string = ''; const aUID: Cardinal = 0;
@@ -377,6 +384,9 @@ begin
   chkSaveErr1.Checked      := TSettings.SaveErrStep1InDB;
   chkSaveErr2.Checked      := TSettings.SaveErrStep2InDB;
 
+  chkStartNewReplica.Checked      := TSettings.StartNewReplica;
+  seStartNewReplicaInterval.Value := TSettings.StartNewReplicaIntervalSec;
+
   chkDeviationOnlyRecCount.Checked := TSettings.CompareDeviationRecCountOnly;
   chkDeviationOnlySeq.Checked      := TSettings.CompareDeviationSequenceOnly;
 
@@ -416,6 +426,12 @@ end;
 procedure TfrmMain.seSelectRangeChange(Sender: TObject);
 begin
   TSettings.ReplicaSelectRange := seSelectRange.Value;
+end;
+
+procedure TfrmMain.seStartNewReplicaIntervalChange(Sender: TObject);
+begin
+  seStartNewReplicaInterval.Value      := Max(seStartNewReplicaInterval.MinValue, seStartNewReplicaInterval.Value);
+  TSettings.StartNewReplicaIntervalSec := seStartNewReplicaInterval.Value;
 end;
 
 procedure TfrmMain.SnapshotElapsedTimerTimer(Sender: TObject);
@@ -635,10 +651,16 @@ begin
     lbSsnElapsed.Caption := Format(cElapsedSession, [Elapsed(FStartTimeSession)]);
 end;
 
+procedure TfrmMain.tmrStartNewReplicaTimer(Sender: TObject);
+begin
+  (Sender as TTimer).Enabled := False;
+  StartReplica;
+end;
+
 procedure TfrmMain.tmrUpdateAllDataTimer(Sender: TObject);
 begin
   (Sender as TTimer).Enabled := False;
-//  CheckReplicaMaxMin;
+  CheckReplicaMaxMin;
 end;
 
 procedure TfrmMain.WriteSettings;
@@ -657,6 +679,9 @@ begin
 
   TSettings.LibLocation  := edtLibLocation.Text;
   TSettings.UseLogGUI    := chkShowLog.Checked;
+
+  TSettings.StartNewReplica            := chkStartNewReplica.Checked;
+  TSettings.StartNewReplicaIntervalSec := seStartNewReplicaInterval.Value;
 
   TSettings.ReplicaSelectRange := seSelectRange.Value;
   TSettings.ReplicaPacketRange := sePacketRange.Value;
@@ -1039,23 +1064,19 @@ begin
   FSnapshotRunning := false;
 end;
 
-procedure TfrmMain.UpdateProgBarPosition(AProgBar: TProgressBar; const AMax, ACurrValue, ARecCount: Integer);
-var
-  extPart: Extended;
+procedure TfrmMain.UpdateProgBarPosition(AProgBar: TProgressBar; const AMax, ACurrValue, ARecCount: Int64);
 begin
-  Assert(ARecCount >= 0, 'ќжидаетс€ ARecCount >= 0, а имеем ARecCount= ' + IntToStr(ARecCount));
-  AProgBar.Max  := ARecCount;
-  AProgBar.Min  := Min(1, ARecCount);
-  AProgBar.Step := 1;
+  AProgBar.Max  := 100;
+  AProgBar.Min  := 1;
 
-  if AMax <= 0 then
+  if (AMax <= 0) or (ARecCount <= 0) then
   begin
     AProgBar.Position := 0;
     Exit;
   end;
 
-  extPart := ACurrValue / AMax;
-  AProgBar.Position := Round(ARecCount * extPart);
+  Assert(AMax > 0, 'ќжидаетс€ AMax > 0, а имеем AMax = ' + IntTosTr(AMax));
+  AProgBar.Position := Round(100 * ACurrValue / AMax);
 end;
 
 procedure TfrmMain.UpdateSnapshotElapsedTime;
@@ -1104,6 +1125,11 @@ procedure TfrmMain.chkShowLogClick(Sender: TObject);
 begin
   SwitchShowLog;
   TSettings.UseLogGUI := chkShowLog.Checked;
+end;
+
+procedure TfrmMain.chkStartNewReplicaClick(Sender: TObject);
+begin
+  TSettings.StartNewReplica := chkStartNewReplica.Checked;
 end;
 
 procedure TfrmMain.chkStopIfErrClick(Sender: TObject);
@@ -1158,7 +1184,6 @@ begin
   pgcMain.ActivePage := tsLog;
 
   FetchLastId;
-  CheckReplicaMaxMin;
 
   FData := TdmData.Create(nil, LogMessage);
 
@@ -1342,15 +1367,18 @@ end;
 
 procedure TfrmMain.OnChangeStartId(const ANewStartId: Int64);
 var
-  iReplicaMax, iRecCount: Integer;
+  iReplicaMax, iRecCount: Int64;
 begin
   edtSsnMinId.Text := IntToStr(ANewStartId);
 
   if FSsnStep > 0 then
-    pbSession.Position := Trunc((ANewStartId - FSsnMinId) / FSsnStep);
+  begin
+    pbSession.Position := Max(0, Trunc((ANewStartId - FSsnMinId) / FSsnStep));
+    pbSession.Position := Min(pbSession.Position, pbSession.Max);
+  end;
 
-  iReplicaMax := StrToIntDef(edtAllMaxId.Text, 0);
-  iRecCount   := StrToIntDef(edtAllRecCount.Text, 0);
+  iReplicaMax := StrToInt64Def(edtAllMaxId.Text, 0);
+  iRecCount   := StrToInt64Def(edtAllRecCount.Text, 0);
   UpdateProgBarPosition(pbAll, iReplicaMax, ANewStartId, iRecCount);
 
   if (ANewStartId mod 2) = 0 then Exit;
@@ -1397,13 +1425,15 @@ begin
 
   pbSession.Visible  := True;
   pbSession.Position := 0;
-  pbSession.Step     := 1;
   pbSession.Min      := 1;
-  pbSession.Max      := ARecCount;
+  pbSession.Max      := Max(pbSession.Min, ARecCount);
 
   FSsnMinId := AMinId;
   FSsnMaxId := AMaxId;
-  FSsnStep  := (FSsnMaxId - FSsnMinId) / ARecCount;
+  if ARecCount > 0 then
+    FSsnStep  := (FSsnMaxId - FSsnMinId) / ARecCount
+  else
+    FSsnStep := 1;
 end;
 
 procedure TfrmMain.OnTerminateAlterSlaveSequences(Sender: TObject);
@@ -1536,6 +1566,10 @@ begin
   btnStartReplication.Enabled         := True;
   btnMoveProcsToSlave.Enabled         := True;
   btnStartAlterSlaveSequences.Enabled := True;
+
+  // «апускаем CheckReplicaMaxMin после того, как стало известно значение LastId
+  // Ёто нужно чтобы правильно установить параметры прогресбара в OnTerminateMinMaxId
+   CheckReplicaMaxMin;
 end;
 
 procedure TfrmMain.OnTerminateMinMaxId(Sender: TObject);
@@ -1605,6 +1639,13 @@ begin
 
   // нужно сохранить в Ѕƒ значение LastId
   FData.LastId := TSettings.ReplicaLastId;
+
+  // старт новой репликации после успешного завершени€ текущей
+  if (replicaFinish = rfComplete) and chkStartNewReplica.Checked then
+  begin
+    tmrStartNewReplica.Interval := c1Sec * seStartNewReplicaInterval.Value;
+    tmrStartNewReplica.Enabled := True;
+  end;
 end;
 
 procedure TfrmMain.OnTerminateSinglePacket(Sender: TObject);

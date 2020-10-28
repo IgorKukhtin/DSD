@@ -962,7 +962,8 @@ uses
   SearchByCaption in '..\..\FormsFarmacy\System\SearchByCaption.pas' {SearchByCaptionForm: TParentForm},
   GoodsSP_Cash in '..\..\FormsFarmacy\Cash\GoodsSP_Cash.pas' {GoodsSP_CashForm: TParentForm},
   GoodsUnitRetail_Cash in '..\..\FormsFarmacy\Cash\GoodsUnitRetail_Cash.pas' {GoodsUnitRetail_CashForm: TParentForm},
-  Report_TestingUserAttempts in '..\..\FormsFarmacy\Report\Report_TestingUserAttempts.pas' {Report_TestingUserAttemptsForm: TParentForm};
+  Report_TestingUserAttempts in '..\..\FormsFarmacy\Report\Report_TestingUserAttempts.pas' {Report_TestingUserAttemptsForm: TParentForm},
+  Report_SAUA in '..\..\FormsFarmacy\Report\Report_SAUA.pas' {Report_SAUAForm: TParentForm};
 
 {$R *.res}
 {$R DevExpressRus.res}

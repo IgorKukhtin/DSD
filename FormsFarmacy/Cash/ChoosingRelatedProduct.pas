@@ -14,7 +14,8 @@ uses
   Datasnap.DBClient, cxGridLevel, cxGridCustomView, cxGrid, cxCurrencyEdit,
   dxSkinsdxBarPainter, dxBar, cxSpinEdit, dxBarExtItems, cxBarEditItem,
   cxBlobEdit, cxCheckBox, cxNavigator,
-  cxDataControllerConditionalFormattingRulesManagerDialog, System.Actions;
+  cxDataControllerConditionalFormattingRulesManagerDialog, System.Actions,
+  cxMemo;
 
 type
   TChoosingRelatedProductForm = class(TForm)
@@ -46,7 +47,6 @@ type
     actOk: TAction;
     dxBarButton4: TdxBarButton;
     plMessage: TPanel;
-    mMessage: TMemo;
     RelatedProductCDS: TClientDataSet;
     RelatedProductListCDS: TClientDataSet;
     ChoosingRelatedProductCDSGoodsId: TIntegerField;
@@ -59,6 +59,7 @@ type
     ChoosingRelatedProductCDSDivisionPartiesID: TIntegerField;
     ChoosingRelatedProductCDSPartionDateKindId: TIntegerField;
     ChoosingRelatedProductCDSDiscountExternalID: TIntegerField;
+    mMessage: TcxMemo;
     procedure actOkExecute(Sender: TObject);
     procedure FormClose(Sender: TObject; var Action: TCloseAction);
     procedure ChoosingRelatedProductGridDBTableViewDblClick(Sender: TObject);
@@ -120,6 +121,7 @@ end;
 
 procedure TChoosingRelatedProductForm.FormCreate(Sender: TObject);
 begin
+  mMessage.Style.Font.Size := mMessage.Style.Font.Size + 4;
 
   if not gc_User.Local then
   begin

@@ -3962,6 +3962,17 @@ inherited MainForm: TMainForm
       GuiParams = <>
       isShowModal = False
     end
+    object acTReport_SAUA: TdsdOpenForm
+      Category = #1041#1040#1048
+      MoveParams = <>
+      Caption = #1054#1090#1095#1077#1090' '#1087#1086' '#1089#1080#1089#1090#1077#1084#1077' '#1072#1074#1090#1086#1084#1072#1090#1080#1095#1077#1089#1082#1086#1075#1086' '#1091#1087#1088#1072#1074#1083#1077#1085#1080#1103' '#1072#1089#1089#1086#1088#1090#1080#1084#1077#1085#1090#1086#1084
+      FormName = 'TReport_SAUAForm'
+      FormNameParam.Value = 'TReport_SAUAForm'
+      FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
+      GuiParams = <>
+      isShowModal = False
+    end
   end
   inherited UserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn
     Left = 496
@@ -4779,6 +4790,9 @@ inherited MainForm: TMainForm
       end
       object N137: TMenuItem
         Action = actReport_MovementPriceList_Cross
+      end
+      object N263: TMenuItem
+        Action = acTReport_SAUA
       end
       object N148: TMenuItem
         Caption = '-'

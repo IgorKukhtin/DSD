@@ -21,7 +21,7 @@ object frmMain: TfrmMain
     Top = 0
     Width = 984
     Height = 662
-    ActivePage = tsSnapshot
+    ActivePage = tsLog
     Align = alClient
     TabOrder = 0
     object tsLog: TTabSheet
@@ -694,6 +694,8 @@ object frmMain: TfrmMain
     object tsSettings: TTabSheet
       Caption = #1053#1072#1089#1090#1088#1086#1081#1082#1080
       ImageIndex = 1
+      ExplicitLeft = 8
+      ExplicitTop = 28
       DesignSize = (
         976
         634)
@@ -718,6 +720,13 @@ object frmMain: TfrmMain
         Width = 288
         Height = 13
         Caption = #1084#1080#1085#1091#1090'   ( 0  '#1086#1079#1085#1072#1095#1072#1077#1090' "'#1085#1077' '#1074#1099#1087#1086#1083#1085#1103#1090#1100' '#1087#1077#1088#1077#1087#1086#1076#1082#1083#1102#1095#1077#1085#1080#1077'")'
+      end
+      object lbStartNewReplica: TLabel
+        Left = 724
+        Top = 488
+        Width = 21
+        Height = 13
+        Caption = #1089#1077#1082'.'
       end
       object grpMaster: TGroupBox
         Left = 24
@@ -918,7 +927,7 @@ object frmMain: TfrmMain
         OnClick = btnLibLocationClick
       end
       object chkWriteLog: TCheckBox
-        Left = 219
+        Left = 236
         Top = 446
         Width = 169
         Height = 17
@@ -936,7 +945,7 @@ object frmMain: TfrmMain
         OnClick = chkShowLogClick
       end
       object chkWriteCommands: TCheckBox
-        Left = 395
+        Left = 450
         Top = 446
         Width = 177
         Height = 17
@@ -1073,13 +1082,34 @@ object frmMain: TfrmMain
         OnClick = chkSaveErr1Click
       end
       object chkSaveErr2: TCheckBox
-        Left = 261
+        Left = 236
         Top = 485
         Width = 190
         Height = 17
         Caption = #1089#1086#1093#1088#1072#1085#1103#1090#1100' '#1086#1096#1080#1073#1082#1080' '#1096#1072#1075#1072' '#8470'2 '#1074' '#1041#1044
         TabOrder = 10
         OnClick = chkSaveErr2Click
+      end
+      object chkStartNewReplica: TCheckBox
+        Left = 450
+        Top = 485
+        Width = 207
+        Height = 17
+        Caption = #1085#1072#1095#1080#1085#1072#1090#1100' '#1085#1086#1074#1091#1102' '#1088#1077#1087#1083#1080#1082#1072#1094#1080#1102' '#1095#1077#1088#1077#1079
+        TabOrder = 11
+        OnClick = chkStartNewReplicaClick
+      end
+      object seStartNewReplicaInterval: TSpinEdit
+        Left = 655
+        Top = 485
+        Width = 64
+        Height = 22
+        Increment = 60
+        MaxValue = 3600
+        MinValue = 5
+        TabOrder = 12
+        Value = 60
+        OnChange = seStartNewReplicaIntervalChange
       end
     end
     object tsSnapshot: TTabSheet
@@ -1356,5 +1386,12 @@ object frmMain: TfrmMain
     OnTimer = SnapshotElapsedTimerTimer
     Left = 873
     Top = 552
+  end
+  object tmrStartNewReplica: TTimer
+    Enabled = False
+    Interval = 60000
+    OnTimer = tmrStartNewReplicaTimer
+    Left = 766
+    Top = 553
   end
 end

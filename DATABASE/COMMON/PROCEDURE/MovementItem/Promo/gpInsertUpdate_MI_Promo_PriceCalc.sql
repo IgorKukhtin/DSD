@@ -21,15 +21,32 @@ BEGIN
 
      -- рассчитываем бонус сети
      vbContractCondition := (SELECT MAX (tmp.Value) AS ContractCondition
-                             FROM (SELECT MovementLinkObject_Contract.ObjectId            AS ContractId
-                                        , SUM ( COALESCE (ObjectFloat_Value.ValueData,0)) AS Value
+                             FROM (SELECT COALESCE (MovementLinkObject_Contract.ObjectId, ObjectLink_Contract_Juridical.ObjectId) AS ContractId
+                                        , SUM( COALESCE (ObjectFloat_Value.ValueData,0)) AS Value
+
                                    FROM Movement AS Movement_Promo
-                                       INNER JOIN MovementLinkObject AS MovementLinkObject_Contract
-                                                                     ON MovementLinkObject_Contract.MovementId = Movement_Promo.Id
-                                                                    AND MovementLinkObject_Contract.DescId = zc_MovementLinkObject_Contract()
-  
+                                       LEFT JOIN MovementLinkObject AS MovementLinkObject_Contract
+                                                                    ON MovementLinkObject_Contract.MovementId = Movement_Promo.Id
+                                                                   AND MovementLinkObject_Contract.DescId = zc_MovementLinkObject_Contract()
+
+                                       LEFT JOIN MovementLinkObject AS MovementLinkObject_Partner
+                                                                    ON MovementLinkObject_Partner.MovementId = Movement_Promo.Id
+                                                                   AND MovementLinkObject_Partner.DescId = zc_MovementLinkObject_Partner()
+                                                                   AND MovementLinkObject_Contract.ObjectId IS NULL
+
+                                       LEFT OUTER JOIN ObjectLink AS ObjectLink_Partner_Juridical
+                                                                  ON ObjectLink_Partner_Juridical.ObjectId = MovementLinkObject_Partner.ObjectId
+                                                                 AND ObjectLink_Partner_Juridical.DescId = zc_ObjectLink_Partner_Juridical()
+
+                                       LEFT JOIN ObjectLink AS ObjectLink_Contract_Juridical
+                                                            ON ObjectLink_Contract_Juridical.ChildObjectId = COALESCE (ObjectLink_Partner_Juridical.ChildObjectId, MovementLinkObject_Partner.ObjectId)
+                                                           AND ObjectLink_Contract_Juridical.DescId = zc_ObjectLink_Contract_Juridical()
+
+                                       INNER JOIN Object_Contract_InvNumber_View ON Object_Contract_InvNumber_View.ContractId = COALESCE (MovementLinkObject_Contract.ObjectId, ObjectLink_Contract_Juridical.ObjectId)
+                                                                                AND Object_Contract_InvNumber_View.ContractStateKindCode = 1 -- ищем бонусы в подписанных договорах
+
                                        LEFT JOIN ObjectLink AS ObjectLink_ContractCondition_Contract
-                                                            ON ObjectLink_ContractCondition_Contract.ChildObjectId = MovementLinkObject_Contract.ObjectId
+                                                            ON ObjectLink_ContractCondition_Contract.ChildObjectId = COALESCE (MovementLinkObject_Contract.ObjectId, ObjectLink_Contract_Juridical.ObjectId)
                                                            AND ObjectLink_ContractCondition_Contract.DescId = zc_ObjectLink_ContractCondition_Contract()
                                        INNER JOIN Object AS Object_ContractCondition 
                                                          ON Object_ContractCondition.Id = ObjectLink_ContractCondition_Contract.ObjectId
@@ -41,15 +58,15 @@ BEGIN
                                        INNER JOIN Object AS Object_BonusKind
                                                          ON Object_BonusKind.Id = ObjectLink_ContractCondition_BonusKind.ChildObjectId
                                                         AND Object_BonusKind.Id = 81959   ---Бонус
-                               
+
                                        INNER JOIN ObjectFloat AS ObjectFloat_Value 
                                                               ON ObjectFloat_Value.ObjectId = Object_ContractCondition.Id 
                                                              AND ObjectFloat_Value.DescId = zc_ObjectFloat_ContractCondition_Value()
-                               
+
                                    WHERE Movement_Promo.DescId = zc_Movement_PromoPartner()
                                      AND Movement_Promo.StatusId <> zc_Enum_Status_Erased()
                                      AND Movement_Promo.ParentId = inMovementId  ---Ссылка на основной документ <Акции> (zc_Movement_Promo)
-                                   GROUP BY MovementLinkObject_Contract.ObjectId
+                                   GROUP BY COALESCE (MovementLinkObject_Contract.ObjectId, ObjectLink_Contract_Juridical.ObjectId)
                                    ) AS tmp
                              );
      -- 
