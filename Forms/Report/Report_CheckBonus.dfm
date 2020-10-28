@@ -853,7 +853,9 @@ inherited Report_CheckBonusForm: TReport_CheckBonusForm
       DataSets = <
         item
           UserName = 'frxDBDMaster'
-          IndexFieldNames = 'RetailName;JuridicalName;PersonalName'
+          IndexFieldNames = 
+            'RetailName;JuridicalName;PartnerName;PaidKindName_Child;Personal' +
+            'Name;ConditionKindName;Value;PersonalName'
           GridView = cxGridDBTableView
         end>
       Params = <
@@ -931,7 +933,9 @@ inherited Report_CheckBonusForm: TReport_CheckBonusForm
       DataSets = <
         item
           UserName = 'frxDBDMaster'
-          IndexFieldNames = 'RetailName;JuridicalName;PersonalName'
+          IndexFieldNames = 
+            'RetailName;JuridicalName;PartnerName;PaidKindName_Child;Personal' +
+            'Name;ConditionKindName;Value;PersonalName'
           GridView = cxGridDBTableView
         end>
       Params = <

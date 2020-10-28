@@ -113,7 +113,7 @@ object Report_MotionGoodsAssetDialogForm: TReport_MotionGoodsAssetDialogForm
   object cxLabel1: TcxLabel
     Left = 9
     Top = 157
-    Caption = #1043#1088#1091#1087#1087#1072' '#1090#1086#1074#1072#1088#1086#1074':'
+    Caption = #1043#1088#1091#1087#1087#1072' '#1054#1057':'
   end
   object cxLabel2: TcxLabel
     Left = 241
@@ -394,10 +394,10 @@ object Report_MotionGoodsAssetDialogForm: TReport_MotionGoodsAssetDialogForm
   object GuidesGoodsGroup: TdsdGuides
     KeyField = 'Id'
     LookupControl = edGoodsGroup
-    FormNameParam.Value = 'TGoodsGroupForm'
+    FormNameParam.Value = 'TAssetGroupForm'
     FormNameParam.DataType = ftString
     FormNameParam.MultiSelectSeparator = ','
-    FormName = 'TGoodsGroupForm'
+    FormName = 'TAssetGroupForm'
     PositionDataSet = 'ClientDataSet'
     Params = <
       item
@@ -545,8 +545,8 @@ object Report_MotionGoodsAssetDialogForm: TReport_MotionGoodsAssetDialogForm
         ParamType = ptInput
         MultiSelectSeparator = ','
       end>
-    Left = 48
-    Top = 128
+    Left = 80
+    Top = 112
   end
   object GuidesLocation_by: TdsdGuides
     KeyField = 'Id'
