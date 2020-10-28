@@ -43,7 +43,7 @@ BEGIN
     IF (vbId_End - inId_start + 1) <> (SELECT COUNT(*) FROM _replica.table_update_data WHERE Id BETWEEN inId_start AND vbId_End)
     THEN
        -- нашли время начала этой транзакции
-       vbLast_modified:= (SELECT last_modified FROM _replica.table_update_data WHERE Id = vbId_End;
+       vbLast_modified:= (SELECT last_modified FROM _replica.table_update_data WHERE Id = vbId_End);
 
        -- если найдена активная транзакция
        IF EXISTS (SELECT 1 FROM pg_stat_activity WHERE state ILIKE 'active' AND query_start < vbLast_modified + INTERVAL '25 SECOND')
