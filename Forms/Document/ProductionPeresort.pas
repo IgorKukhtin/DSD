@@ -63,6 +63,10 @@ type
     cxLabel19: TcxLabel;
     edInvNumberSale: TcxButtonEdit;
     SaleChoiceGuides: TdsdGuides;
+    GoodsKindName_Complete: TcxGridDBColumn;
+    GoodsKindName_Complete_child: TcxGridDBColumn;
+    actGoodsKind_CompleteChoice: TOpenChoiceForm;
+    actGoodsKind_Complete_childChoice: TOpenChoiceForm;
   private
     { Private declarations }
   public

@@ -338,6 +338,8 @@ var
   FileData: string;
   DocData: TDateTime;
   ЕлектроннийДокумент: IXMLЕлектроннийДокументType;
+  Present: TDateTime;
+  Year, Month, Day: Word;
 begin
   FTPSetConnection;
   // загружаем файлы с FTP
@@ -358,7 +360,12 @@ begin
             if (copy(List[i], 1, 6) = 'comdoc') and
               (ExtractFileExt(List[i]) = '.p7s') then
             begin
-              DocData := gfStrFormatToDate(copy(List[i], 8, 8), 'yyyymmdd');
+              Present:=Now;
+              DecodeDate(Present, Year, Month, Day);
+              if Pos('_'+IntToStr(Year),List[i]) > 0
+              then DocData := gfStrFormatToDate(copy(List[i], Pos('_'+IntToStr(Year),List[i])+1, 8), 'yyyymmdd')
+              else DocData := gfStrFormatToDate(copy(List[i], Pos('_'+IntToStr(Year-1),List[i])+1, 8), 'yyyymmdd');
+              //
               if (StartDate <= DocData) and (DocData <= EndDate) then
               begin
                 // тянем файл к нам

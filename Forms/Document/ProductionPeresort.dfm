@@ -2,10 +2,9 @@ inherited ProductionPeresortForm: TProductionPeresortForm
   Caption = #1044#1086#1082#1091#1084#1077#1085#1090' <'#1055#1077#1088#1077#1089#1086#1088#1090#1080#1094#1072'>'
   ClientHeight = 502
   ClientWidth = 1128
-  ExplicitLeft = -125
-  ExplicitTop = -22
+  ExplicitTop = -80
   ExplicitWidth = 1144
-  ExplicitHeight = 541
+  ExplicitHeight = 537
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
@@ -149,7 +148,22 @@ inherited ProductionPeresortForm: TProductionPeresortForm
             HeaderAlignmentVert = vaCenter
             Width = 100
           end
-          object MeasureName: TcxGridDBColumn [4]
+          object GoodsKindName_Complete: TcxGridDBColumn [4]
+            Caption = #1042#1080#1076' '#1090#1086#1074#1072#1088#1072' '#1043#1055' ('#1087#1088#1080#1093#1086#1076')'
+            DataBinding.FieldName = 'GoodsKindName_Complete'
+            PropertiesClassName = 'TcxButtonEditProperties'
+            Properties.Buttons = <
+              item
+                Action = actGoodsKind_CompleteChoice
+                Default = True
+                Kind = bkEllipsis
+              end>
+            Properties.ReadOnly = True
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 80
+          end
+          object MeasureName: TcxGridDBColumn [5]
             Caption = #1045#1076'. '#1080#1079#1084'. ('#1087#1088#1080#1093#1086#1076')'
             DataBinding.FieldName = 'MeasureName'
             HeaderAlignmentHorz = taCenter
@@ -157,7 +171,7 @@ inherited ProductionPeresortForm: TProductionPeresortForm
             Options.Editing = False
             Width = 59
           end
-          object PartionGoods: TcxGridDBColumn [5]
+          object PartionGoods: TcxGridDBColumn [6]
             Caption = #1055#1072#1088#1090#1080#1103' '#1090#1086#1074#1072#1088#1072' / '#1048#1085#1074'. '#1085#1086#1084#1077#1088'('#1087#1088#1080#1093#1086#1076')'
             DataBinding.FieldName = 'PartionGoods'
             Visible = False
@@ -165,7 +179,7 @@ inherited ProductionPeresortForm: TProductionPeresortForm
             HeaderAlignmentVert = vaCenter
             Width = 121
           end
-          object PartionGoodsDate: TcxGridDBColumn [6]
+          object PartionGoodsDate: TcxGridDBColumn [7]
             Caption = #1044#1072#1090#1072' '#1087#1072#1088#1090#1080#1080' ('#1087#1088#1080#1093#1086#1076')'
             DataBinding.FieldName = 'PartionGoodsDate'
             Visible = False
@@ -173,7 +187,7 @@ inherited ProductionPeresortForm: TProductionPeresortForm
             HeaderAlignmentVert = vaCenter
             Width = 70
           end
-          object GoodsChildGroupNameFull: TcxGridDBColumn [7]
+          object GoodsChildGroupNameFull: TcxGridDBColumn [8]
             Caption = #1043#1088#1091#1087#1087#1072' ('#1074#1089#1077') ('#1088#1072#1089#1093#1086#1076')'
             DataBinding.FieldName = 'GoodsChildGroupNameFull'
             Visible = False
@@ -182,7 +196,7 @@ inherited ProductionPeresortForm: TProductionPeresortForm
             Options.Editing = False
             Width = 100
           end
-          object GoodsChildCode: TcxGridDBColumn [8]
+          object GoodsChildCode: TcxGridDBColumn [9]
             Caption = #1050#1086#1076' ('#1088#1072#1089#1093#1086#1076')'
             DataBinding.FieldName = 'GoodsChildCode'
             HeaderAlignmentHorz = taCenter
@@ -190,7 +204,7 @@ inherited ProductionPeresortForm: TProductionPeresortForm
             Options.Editing = False
             Width = 55
           end
-          object GoodsChildName: TcxGridDBColumn [9]
+          object GoodsChildName: TcxGridDBColumn [10]
             Caption = #1058#1086#1074#1072#1088' ('#1088#1072#1089#1093#1086#1076')'
             DataBinding.FieldName = 'GoodsChildName'
             PropertiesClassName = 'TcxButtonEditProperties'
@@ -205,13 +219,13 @@ inherited ProductionPeresortForm: TProductionPeresortForm
             HeaderAlignmentVert = vaCenter
             Width = 133
           end
-          object MeasureChildName: TcxGridDBColumn [10]
+          object MeasureChildName: TcxGridDBColumn [11]
             Caption = #1045#1076'. '#1080#1079#1084'. ('#1088#1072#1089#1093#1086#1076')'
             DataBinding.FieldName = 'MeasureChildName'
             Options.Editing = False
             Width = 59
           end
-          object GoodsKindChildName: TcxGridDBColumn [11]
+          object GoodsKindChildName: TcxGridDBColumn [12]
             Caption = #1042#1080#1076' '#1090#1086#1074#1072#1088#1072' ('#1088#1072#1089#1093#1086#1076')'
             DataBinding.FieldName = 'GoodsKindChildName'
             PropertiesClassName = 'TcxButtonEditProperties'
@@ -226,7 +240,22 @@ inherited ProductionPeresortForm: TProductionPeresortForm
             HeaderAlignmentVert = vaCenter
             Width = 100
           end
-          object PartionGoodsChild: TcxGridDBColumn [12]
+          object GoodsKindName_Complete_child: TcxGridDBColumn [13]
+            Caption = #1042#1080#1076' '#1090#1086#1074#1072#1088#1072' '#1043#1055' ('#1088#1072#1089#1093#1086#1076')'
+            DataBinding.FieldName = 'GoodsKindName_Complete_child'
+            PropertiesClassName = 'TcxButtonEditProperties'
+            Properties.Buttons = <
+              item
+                Action = actGoodsKind_Complete_childChoice
+                Default = True
+                Kind = bkEllipsis
+              end>
+            Properties.ReadOnly = True
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 80
+          end
+          object PartionGoodsChild: TcxGridDBColumn [14]
             Caption = #1055#1072#1088#1090#1080#1103' '#1090#1086#1074#1072#1088#1072' / '#1048#1085#1074'. '#1085#1086#1084#1077#1088' ('#1088#1072#1089#1093#1086#1076')'
             DataBinding.FieldName = 'PartionGoodsChild'
             Visible = False
@@ -234,7 +263,7 @@ inherited ProductionPeresortForm: TProductionPeresortForm
             HeaderAlignmentVert = vaCenter
             Width = 166
           end
-          object PartionGoodsDateChild: TcxGridDBColumn [13]
+          object PartionGoodsDateChild: TcxGridDBColumn [15]
             Caption = #1044#1072#1090#1072' '#1087#1072#1088#1090#1080#1080' ('#1088#1072#1089#1093#1086#1076')'
             DataBinding.FieldName = 'PartionGoodsDateChild'
             Visible = False
@@ -242,7 +271,7 @@ inherited ProductionPeresortForm: TProductionPeresortForm
             HeaderAlignmentVert = vaCenter
             Width = 70
           end
-          object AmountOut: TcxGridDBColumn [14]
+          object AmountOut: TcxGridDBColumn [16]
             Caption = #1050#1086#1083'-'#1074#1086' '#1088#1072#1089#1093#1086#1076
             DataBinding.FieldName = 'AmountOut'
             PropertiesClassName = 'TcxCurrencyEditProperties'
@@ -252,7 +281,7 @@ inherited ProductionPeresortForm: TProductionPeresortForm
             HeaderAlignmentVert = vaCenter
             Width = 91
           end
-          object AmountIn: TcxGridDBColumn [15]
+          object AmountIn: TcxGridDBColumn [17]
             Caption = #1050#1086#1083'-'#1074#1086' '#1087#1088#1080#1093#1086#1076
             DataBinding.FieldName = 'AmountIn'
             HeaderAlignmentHorz = taCenter
@@ -260,7 +289,7 @@ inherited ProductionPeresortForm: TProductionPeresortForm
             Options.Editing = False
             Width = 91
           end
-          object Comment: TcxGridDBColumn [16]
+          object Comment: TcxGridDBColumn [18]
             Caption = #1055#1088#1080#1084#1077#1095#1072#1085#1080#1077
             DataBinding.FieldName = 'Comment'
             HeaderAlignmentHorz = taCenter
@@ -587,6 +616,60 @@ inherited ProductionPeresortForm: TProductionPeresortForm
           ComponentItem = 'PartionGoodsOperDate'
           DataType = ftDateTime
           ParamType = ptInput
+          MultiSelectSeparator = ','
+        end>
+      isShowModal = True
+    end
+    object actGoodsKind_CompleteChoice: TOpenChoiceForm
+      Category = 'DSDLib'
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      Caption = 'GoodsKindForm'
+      FormName = 'TGoodsKind_ObjectForm'
+      FormNameParam.Value = 'TGoodsKind_ObjectForm'
+      FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
+      GuiParams = <
+        item
+          Name = 'Key'
+          Value = Null
+          Component = MasterCDS
+          ComponentItem = 'GoodsKindId_Complete'
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'TextValue'
+          Value = Null
+          Component = MasterCDS
+          ComponentItem = 'GoodsKindName_Complete'
+          DataType = ftString
+          MultiSelectSeparator = ','
+        end>
+      isShowModal = True
+    end
+    object actGoodsKind_Complete_childChoice: TOpenChoiceForm
+      Category = 'DSDLib'
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      Caption = 'GoodsKindForm'
+      FormName = 'TGoodsKind_ObjectForm'
+      FormNameParam.Value = 'TGoodsKind_ObjectForm'
+      FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
+      GuiParams = <
+        item
+          Name = 'Key'
+          Value = Null
+          Component = MasterCDS
+          ComponentItem = 'GoodsKindId_Complete_child'
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'TextValue'
+          Value = Null
+          Component = MasterCDS
+          ComponentItem = 'GoodsKindName_Complete_child'
+          DataType = ftString
           MultiSelectSeparator = ','
         end>
       isShowModal = True
@@ -949,7 +1032,7 @@ inherited ProductionPeresortForm: TProductionPeresortForm
         MultiSelectSeparator = ','
       end
       item
-        Value = 'False'
+        Value = False
         DataType = ftBoolean
         ParamType = ptUnknown
         MultiSelectSeparator = ','
@@ -1115,11 +1198,43 @@ inherited ProductionPeresortForm: TProductionPeresortForm
   end
   inherited spErasedMIMaster: TdsdStoredProc
     StoredProcName = 'gpMovementItem_ProductionPeresort_SetErased'
+    Params = <
+      item
+        Name = 'inMovementItemId'
+        Component = MasterCDS
+        ComponentItem = 'Id'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'outIsErased'
+        Value = False
+        Component = MasterCDS
+        ComponentItem = 'isErased'
+        DataType = ftBoolean
+        MultiSelectSeparator = ','
+      end>
     Left = 782
     Top = 400
   end
   inherited spUnErasedMIMaster: TdsdStoredProc
     StoredProcName = 'gpMovementItem_ProductionPeresort_SetUnErased'
+    Params = <
+      item
+        Name = 'inMovementItemId'
+        Component = MasterCDS
+        ComponentItem = 'Id'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'outIsErased'
+        Value = False
+        Component = MasterCDS
+        ComponentItem = 'isErased'
+        DataType = ftBoolean
+        MultiSelectSeparator = ','
+      end>
     Left = 710
     Top = 376
   end
@@ -1195,6 +1310,14 @@ inherited ProductionPeresortForm: TProductionPeresortForm
         MultiSelectSeparator = ','
       end
       item
+        Name = 'inGoodsKindId_Complete'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'GoodsKindId_Complete'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
         Name = 'ioGoodsChildId'
         Value = Null
         Component = MasterCDS
@@ -1225,6 +1348,14 @@ inherited ProductionPeresortForm: TProductionPeresortForm
         Value = Null
         Component = MasterCDS
         ComponentItem = 'GoodsKindChildId'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inGoodsKindId_Complete_child'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'GoodsKindId_Complete_child'
         ParamType = ptInput
         MultiSelectSeparator = ','
       end
@@ -1322,6 +1453,14 @@ inherited ProductionPeresortForm: TProductionPeresortForm
         MultiSelectSeparator = ','
       end
       item
+        Name = 'inGoodsKindId_Complete'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'GoodsKindId_Complete'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
         Name = 'ioGoodsChildId'
         Value = Null
         Component = MasterCDS
@@ -1352,6 +1491,14 @@ inherited ProductionPeresortForm: TProductionPeresortForm
         Value = Null
         Component = MasterCDS
         ComponentItem = 'GoodsKindChildId'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inGoodsKindId_Complete_child'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'GoodsKindId_Complete_child'
         ParamType = ptInput
         MultiSelectSeparator = ','
       end
