@@ -27,16 +27,17 @@ BEGIN
    vbUserId:= lpCheckRight (inSession, zc_Enum_Process_InsertUpdate_MI_ProductionUnion());
 
    -- сохранили <Ёлемент документа>
-   ioId :=lpInsertUpdate_MI_ProductionUnion_Master (ioId               := ioId
-                                                  , inMovementId       := inMovementId
-                                                  , inGoodsId          := inGoodsId
-                                                  , inAmount           := inAmount
-                                                  , inCount            := inCount
-                                                  , inCuterWeight      := inCuterWeight
-                                                  , inPartionGoodsDate := inPartionGoodsDate
-                                                  , inPartionGoods     := inPartionGoods
-                                                  , inGoodsKindId      := inGoodsKindId
-                                                  , inUserId           := vbUserId
+   ioId :=lpInsertUpdate_MI_ProductionUnion_Master (ioId                  := ioId
+                                                  , inMovementId          := inMovementId
+                                                  , inGoodsId             := inGoodsId
+                                                  , inAmount              := inAmount
+                                                  , inCount               := inCount
+                                                  , inCuterWeight         := inCuterWeight
+                                                  , inPartionGoodsDate    := inPartionGoodsDate
+                                                  , inPartionGoods        := inPartionGoods
+                                                  , inGoodsKindId         := inGoodsKindId
+                                                  , inGoodsKindId_Complete:= inGoodsKindId_Complete
+                                                  , inUserId              := vbUserId
                                                    );
 
 END;
