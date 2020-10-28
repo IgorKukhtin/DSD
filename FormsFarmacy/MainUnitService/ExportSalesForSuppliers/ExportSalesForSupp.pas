@@ -206,6 +206,34 @@ type
     grMDMPfizerLevel: TcxGridLevel;
     dsReport_Upload_MDMPfizer: TDataSource;
     qryReport_Upload_MDMPfizer: TZQuery;
+    tsDanhsonPharma: TTabSheet;
+    Panel6: TPanel;
+    btnDanhsonPharmaEmail: TButton;
+    btnDanhsonPharmaExport: TButton;
+    btnDanhsonPharmaExecute: TButton;
+    btnDanhsonPharmaAll: TButton;
+    DanhsonPharmaDate: TcxDateEdit;
+    cxLabel9: TcxLabel;
+    dsReport_Upload_DanhsonPharma: TDataSource;
+    qryReport_Upload_DanhsonPharma: TZQuery;
+    grDanhsonPharma: TcxGrid;
+    grDanhsonPharmaDBTableView: TcxGridDBTableView;
+    DanhsonPharmaCode: TcxGridDBColumn;
+    DanhsonPharmaName: TcxGridDBColumn;
+    DanhsonPharmaNDS: TcxGridDBColumn;
+    DanhsonPharmaPriceWithVAT: TcxGridDBColumn;
+    DanhsonPharmaTotalAmount: TcxGridDBColumn;
+    DanhsonPharmaSummaWithVAT: TcxGridDBColumn;
+    DanhsonPharmaItemName: TcxGridDBColumn;
+    DanhsonPharmaMainJuridicalName: TcxGridDBColumn;
+    DanhsonPharmaUnitName: TcxGridDBColumn;
+    DanhsonPharmaOperDate: TcxGridDBColumn;
+    DanhsonPharmaInvNumber: TcxGridDBColumn;
+    DanhsonPharmaStatusName: TcxGridDBColumn;
+    DanhsonPharmaJuridicalName: TcxGridDBColumn;
+    grDanhsonPharmaLevel: TcxGridLevel;
+    DanhsonPharmaMedicForSaleName: TcxGridDBColumn;
+    DanhsonPharmaBuyerForSaleName: TcxGridDBColumn;
     procedure btnBaDMExecuteClick(Sender: TObject);
     procedure btnBaDMExportClick(Sender: TObject);
     procedure FormCreate(Sender: TObject);
@@ -232,6 +260,10 @@ type
     procedure btnMDMPfizerExecuteClick(Sender: TObject);
     procedure btnMDMPfizerExportClick(Sender: TObject);
     procedure btnMDMPfizerEmailClick(Sender: TObject);
+    procedure btnDanhsonPharmaExecuteClick(Sender: TObject);
+    procedure btnDanhsonPharmaExportClick(Sender: TObject);
+    procedure btnDanhsonPharmaEmailClick(Sender: TObject);
+    procedure btnDanhsonPharmaAllClick(Sender: TObject);
   private
     { Private declarations }
     FileNameBaDM_byUnit: String;
@@ -272,6 +304,11 @@ type
     SubjectMDMPfizer: String;
     SavePathMDMPfizer: String;
     FileNameMDMPfizer: String;
+
+    RecipientDanhsonPharma: String;
+    SubjectDanhsonPharma: String;
+    SavePathDanhsonPharma: String;
+    FileNameDanhsonPharma: String;
 
     function SendMail(const Host: String; const Port: integer; const Password,
       Username: String; const Recipients: array of String; const FromAdres,
@@ -646,6 +683,101 @@ begin
     end;
   finally
     idFTP1.Disconnect;
+  end;
+end;
+
+procedure TExportSalesForSuppForm.btnDanhsonPharmaAllClick(Sender: TObject);
+begin
+  try
+    btnDanhsonPharmaExecuteClick(nil);
+    Application.ProcessMessages;
+    btnDanhsonPharmaExportClick(nil);
+    Application.ProcessMessages;
+    btnDanhsonPharmaEmailClick(nil);
+    Application.ProcessMessages;
+  except
+    on E: Exception do
+      Add_Log(E.Message);
+  end;
+end;
+
+procedure TExportSalesForSuppForm.btnDanhsonPharmaEmailClick(Sender: TObject);
+var
+  addr: array of string;
+  S, S1: string;
+begin
+//  if qryReport_Upload_DanhsonPharma.IsEmpty then Exit;
+
+  S := Trim(RecipientDanhsonPharma);
+
+  if S[Length(S)] <> ',' then
+    S := S + ',';
+
+  while S <> '' do
+  begin
+    S1 := Copy(S, 1, Pos(',', S) - 1);
+    Delete(S, 1, Pos(',', S));
+    SetLength(addr, Length(addr) + 1);
+    addr[Length(addr) - 1] := S1;
+  end;
+
+  if SendMail(qryMailParam.FieldByName('Mail_Host').AsString,
+       qryMailParam.FieldByName('Mail_Port').AsInteger,
+       qryMailParam.FieldByName('Mail_Password').AsString,
+       qryMailParam.FieldByName('Mail_User').AsString,
+       addr,
+       qryMailParam.FieldByName('Mail_From').AsString,
+       SubjectDanhsonPharma,
+       '',
+       [SavePathDanhsonPharma + FileNameDanhsonPharma]) then
+  begin
+    try
+      DeleteFile(SavePathDanhsonPharma + FileNameDanhsonPharma);
+    except
+      on E: Exception do
+        Add_Log(E.Message);
+    end;
+  end;
+end;
+
+procedure TExportSalesForSuppForm.btnDanhsonPharmaExecuteClick(Sender: TObject);
+begin
+  Add_Log('Начало Формирования отчета Дансон фарма');
+
+  qryReport_Upload_DanhsonPharma.Close;
+  qryReport_Upload_DanhsonPharma.Params.ParamByName('StartDate').Value := DanhsonPharmaDate.Date;
+  qryReport_Upload_DanhsonPharma.Params.ParamByName('EndDate').Value := DanhsonPharmaDate.Date;
+
+  try
+    qryReport_Upload_DanhsonPharma.Open;
+  except
+    on E:Exception do
+    begin
+      Add_Log(E.Message);
+      Exit;
+    end;
+  end;
+
+  FileNameDanhsonPharma := 'DanhsonPharma_' + FormatDateTime('DD_MM_YYYY', DanhsonPharmaDate.Date) + '.xls';
+end;
+
+procedure TExportSalesForSuppForm.btnDanhsonPharmaExportClick(Sender: TObject);
+begin
+//  if qryReport_Upload_DanhsonPharma.IsEmpty then Exit;
+
+  Add_Log('Начало выгрузки отчета Дансон фарма');
+  if not ForceDirectories(SavePathDanhsonPharma) then
+  Begin
+    Add_Log('Не могу создать директорию выгрузки');
+    exit;
+  end;
+  try
+    ExportGridToExcel(SavePathDanhsonPharma+FileNameDanhsonPharma,grDanhsonPharma);
+  except ON E: Exception DO
+    Begin
+      Add_Log(E.Message);
+      exit;
+    End;
   end;
 end;
 
@@ -1471,6 +1603,11 @@ begin
       SavePathMDMPfizer := SavePathMDMPfizer + '\';
     Ini.WriteString('Options', 'PathMDMPfizer', SavePathMDMPfizer);
 
+    SavePathDanhsonPharma := Trim(Ini.ReadString('Options', 'PathDanhsonPharma', ExtractFilePath(Application.ExeName)));
+    if SavePathDanhsonPharma[Length(SavePathDanhsonPharma)] <> '\' then
+      SavePathDanhsonPharma := SavePathDanhsonPharma + '\';
+    Ini.WriteString('Options', 'PathDanhsonPharma', SavePathDanhsonPharma);
+
     BaDMID.Value := Ini.ReadInteger('Options','BaDM_ID',59610);
     Ini.WriteInteger('Options','BaDM_ID',BaDMID.Value);
 
@@ -1543,6 +1680,12 @@ begin
     SubjectMDMPfizer := Ini.ReadString('Mail', 'SubjectMDMPfizer', '');
     Ini.WriteString('Mail', 'SubjectMDMPfizer', SubjectMDMPfizer);
 
+    RecipientDanhsonPharma := Ini.ReadString('Mail', 'RecipientDanhsonPharma', '');
+    Ini.WriteString('Mail', 'RecipientDanhsonPharma', RecipientDanhsonPharma);
+
+    SubjectDanhsonPharma := Ini.ReadString('Mail', 'SubjectDanhsonPharma', '');
+    Ini.WriteString('Mail', 'SubjectDanhsonPharma', SubjectDanhsonPharma);
+
   finally
     Ini.free;
   end;
@@ -1553,6 +1696,7 @@ begin
   AVDDate.Date := Date - 1;
   YuriFarmDate.Date := Date - 1;
   MDMPfizerDate.Date := Date - 1;
+  DanhsonPharmaDate.Date := Date - 1;
   ZConnection1.LibraryLocation := ExtractFilePath(Application.ExeName) + 'libpq.dll';
 
   try
@@ -1655,6 +1799,8 @@ begin
     btnYuriFarmAllClick(Nil);
 
 //    btnMDMPfizerAllClick(Nil);
+
+    btnDanhsonPharmaAllClick(Nil);
   finally
     Close;
   end;

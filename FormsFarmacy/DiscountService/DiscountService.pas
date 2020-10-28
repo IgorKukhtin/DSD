@@ -725,7 +725,7 @@ begin
       else
 
       //если программа Medicard
-      if gCode in [3, 5, 6, 7, 8, 9, 11] then
+      if gCode in [3, 5, 6, 7, 8, 9, 11, 12, 13] then
       begin
 
         if (FIdCasual = '') or (FSupplier = 0) or (FBarCode_find = '') then
@@ -1288,7 +1288,7 @@ begin
       then lPriceSale:= CheckCDS.FieldByName('PriceSale').asFloat
       else lPriceSale:= CheckCDS.FieldByName('Price').asFloat;
       //
-      if (lDiscountExternalId > 0) and ((gCode = 1) or (gCode = 2) and (gUserName <> '') or (gCode in [3, 4, 5, 6, 7, 8, 9, 10, 11])) and
+      if (lDiscountExternalId > 0) and ((gCode = 1) or (gCode = 2) and (gUserName <> '') or (gCode in [3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13])) and
          (CheckCDS.FieldByName('Amount').AsFloat > 0)
       then
         //поиск Штрих-код
@@ -1606,12 +1606,22 @@ begin
       end // if BarCode_find <> ''
 
       //если Штрих-код нашелся и программа Medicard card
-      else  if (BarCode_find <> '') and (gCode in [3, 5, 6, 7, 8, 9, 11]) then
+      else  if (BarCode_find <> '') and (gCode in [3, 5, 6, 7, 8, 9, 11, 12, 13]) then
       begin
 
           if CheckCDS.FieldByName('Amount').AsInteger <> CheckCDS.FieldByName('Amount').AsCurrency then
           begin
               ShowMessage ('Количество должно быть целым.' + #10+ #13
+              + #10+ #13 + 'Для карты № <' + lCardNumber + '>.'
+              + #10+ #13 + 'Товар (' + CheckCDS.FieldByName('GoodsCode').AsString + ')' + CheckCDS.FieldByName('GoodsName').AsString);
+               //ошибка
+              lMsg:='Error';
+              exit;
+          end;
+
+          if (CheckCDS.FieldByName('Amount').AsInteger <> 2) and (gCode in [12]) then
+          begin
+              ShowMessage ('По условиям программы количество должно быть 2 уп.' + #10+ #13
               + #10+ #13 + 'Для карты № <' + lCardNumber + '>.'
               + #10+ #13 + 'Товар (' + CheckCDS.FieldByName('GoodsCode').AsString + ')' + CheckCDS.FieldByName('GoodsName').AsString);
                //ошибка
@@ -1699,12 +1709,14 @@ begin
                     if Assigned(XMLNode) then
                     begin
                       FDiscont := XMLNode.NodeValue;
+                    //  if gCode in [12] then FDiscont := FDiscont / 2;
                     end;
 
                     XMLNode := XMLData.ChildNodes.FindNode('discont_absolute');
                     if Assigned(XMLNode) then
                     begin
                       FDiscontАbsolute := XMLNode.NodeValue;
+                     // if gCode in [12] then FDiscontАbsolute := FDiscontАbsolute / 2;
                     end;
 
                     XMLNode := XMLData.ChildNodes.FindNode('error');
@@ -1967,7 +1979,7 @@ end;
 
 function TDiscountServiceForm.GetBeforeSale : boolean;
 begin
-  if (gCode in [3, 5, 6, 7, 8, 9, 11]) and (FIdCasual <> '') then
+  if (gCode in [3, 5, 6, 7, 8, 9, 11, 12, 13]) and (FIdCasual <> '') then
   begin
     Result := True;
   end else Result := False;
