@@ -16,6 +16,7 @@ RETURNS TABLE (InvNumber_ReturnIn TVarChar, InvNumberPartner_ReturnIn TVarChar
              , ContractName TVarChar, ContractTagName TVarChar
              , DocumentTaxKindName TVarChar
              , PartnerCode Integer, PartnerName TVarChar
+             , BranchCode Integer, BranchName TVarChar
              , InfoMoneyGroupName TVarChar, InfoMoneyDestinationName TVarChar, InfoMoneyCode Integer, InfoMoneyName TVarChar
              , GoodsCode Integer, GoodsName TVarChar, GoodsKindName TVarChar
              , Price TFloat
@@ -177,7 +178,10 @@ BEGIN
          , Object_DocumentTaxKind.ValueData                AS DocumentTaxKindName
          , Object_Partner.ObjectCode                       AS PartnerCode
          , Object_Partner.ValueData                        AS PartnerName
-     
+
+         , Object_Branch.ObjectCode                        AS BranchCode
+         , Object_Branch.ValueData                         AS BranchName
+
          , View_InfoMoney.InfoMoneyGroupName
          , View_InfoMoney.InfoMoneyDestinationName
          , View_InfoMoney.InfoMoneyCode
@@ -896,6 +900,19 @@ BEGIN
          LEFT JOIN Object AS Object_DocumentTaxKind ON Object_DocumentTaxKind.Id = tmpGroupMovement.DocumentTaxKindId
          LEFT JOIN Object_Contract_InvNumber_View AS View_Contract_InvNumber ON View_Contract_InvNumber.ContractId = tmpGroupMovement.ContractId
          LEFT JOIN Object_InfoMoney_View AS View_InfoMoney ON View_InfoMoney.InfoMoneyId = View_Contract_InvNumber.InfoMoneyId
+
+         -- для оплат берем филиал по отв. сотруднику
+         LEFT JOIN ObjectLink AS ObjectLink_Contract_Personal
+                              ON ObjectLink_Contract_Personal.ObjectId = tmpGroupMovement.ContractId
+                             AND ObjectLink_Contract_Personal.DescId = zc_ObjectLink_Contract_Personal()
+         LEFT JOIN ObjectLink AS ObjectLink_Personal_Unit
+                              ON ObjectLink_Personal_Unit.ObjectId = ObjectLink_Contract_Personal.ChildObjectId
+                             AND ObjectLink_Personal_Unit.DescId = zc_ObjectLink_Personal_Unit()
+         LEFT JOIN ObjectLink AS ObjectLink_Unit_Branch
+                              ON ObjectLink_Unit_Branch.ObjectId = ObjectLink_Personal_Unit.ChildObjectId
+                             AND ObjectLink_Unit_Branch.DescId = zc_ObjectLink_Unit_Branch()
+         LEFT JOIN Object AS Object_Branch ON Object_Branch.Id = ObjectLink_Unit_Branch.ChildObjectId
+
     WHERE tmpGroupMovement.Amount_ReturnIn <> tmpGroupMovement.Amount_TaxCorrective
        OR (inDocumentTaxKindId <> 0
            AND (tmpGroupMovement.Amount_ReturnIn <> 0 OR tmpGroupMovement.Amount_TaxCorrective <> 0)

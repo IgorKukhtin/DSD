@@ -1199,7 +1199,8 @@ uses
   MemberBranchEdit in '..\..\Forms\Guides\MemberBranchEdit.pas' {MemberBranchEditForm: TParentForm},
   MemberBranch in '..\..\Forms\Guides\MemberBranch.pas' {MemberBranchForm: TParentForm},
   Report_CheckBonusTest2 in '..\..\Forms\Report\Report_CheckBonusTest2.pas' {Report_CheckBonusTest2Form: TParentForm},
-  Report_GoodsMI_SaleReturnIn_Expenses in '..\..\Forms\Report\Report_GoodsMI_SaleReturnIn_Expenses.pas' {Report_GoodsMI_SaleReturnIn_ExpensesForm: TParentForm};
+  Report_GoodsMI_SaleReturnIn_Expenses in '..\..\Forms\Report\Report_GoodsMI_SaleReturnIn_Expenses.pas' {Report_GoodsMI_SaleReturnIn_ExpensesForm: TParentForm},
+  Juridical_Dialog in '..\..\Forms\Guides\Juridical_Dialog.pas' {Juridical_DialogForm: TParentForm};
 
 {$R *.RES}
 {$R DevExpressRus.res}

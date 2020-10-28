@@ -1,8 +1,10 @@
 -- Function: gpSelect_Object_ContractConditionValue()
 
-DROP FUNCTION IF EXISTS gpSelect_Object_ContractConditionValue (TVarChar);
+--DROP FUNCTION IF EXISTS gpSelect_Object_ContractConditionValue (TVarChar);
+DROP FUNCTION IF EXISTS gpSelect_Object_ContractConditionValue (Integer, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpSelect_Object_ContractConditionValue(
+    IN inJuridicalId    Integer,
     IN inSession        TVarChar       -- сессия пользователя
 )
 RETURNS TABLE (Id Integer, Code Integer
@@ -271,18 +273,20 @@ BEGIN
                              ON ObjectLink_ContractCondition_InfoMoney.ObjectId = tmpContractCondition.ContractConditionId
                             AND ObjectLink_ContractCondition_InfoMoney.DescId = zc_ObjectLink_ContractCondition_InfoMoney()
         LEFT JOIN Object_InfoMoney_View AS View_InfoMoney_ContractCondition ON View_InfoMoney_ContractCondition.InfoMoneyId = ObjectLink_ContractCondition_InfoMoney.ChildObjectId
+   WHERE Object_Contract_View.JuridicalId = inJuridicalId OR inJuridicalId = 0
 
    ;
   
 END;
 $BODY$
   LANGUAGE plpgsql VOLATILE;
-ALTER FUNCTION gpSelect_Object_ContractConditionValue (TVarChar) OWNER TO postgres;
+--ALTER FUNCTION gpSelect_Object_ContractConditionValue (TVarChar) OWNER TO postgres;
 
 /*-------------------------------------------------------------------------------*/
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.
+ 29.10.20         * add inJuridicalId
  18.01.19         * DefaultOut
  13.04.16         *
  02.03.16         *

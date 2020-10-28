@@ -389,13 +389,14 @@ end;
 
 procedure TLoadFormTest.LoadContractFormTest;
 begin
-
+  {
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TContractForm'));
   TdsdFormStorageFactory.GetStorage.Load('TContractForm');
-  {
+  }
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TContractConditionValueForm'));
   TdsdFormStorageFactory.GetStorage.Load('TContractConditionValueForm');
-
+  exit;
+  {
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TContractChoiceForm'));
   TdsdFormStorageFactory.GetStorage.Load('TContractChoiceForm');
 
@@ -1487,16 +1488,18 @@ end;
 
 procedure TLoadFormTest.LoadJuridicalFormTest;
 begin
-
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TJuridical_DialogForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TJuridical_DialogForm');
+  {
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TJuridicalVatPriceDialogForm'));
   TdsdFormStorageFactory.GetStorage.Load('TJuridicalVatPriceDialogForm');
-  {
+
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TJuridical_BasisForm'));
   TdsdFormStorageFactory.GetStorage.Load('TJuridical_BasisForm');
-  }
+
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TJuridicalForm'));
   TdsdFormStorageFactory.GetStorage.Load('TJuridicalForm');
-  {
+
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TJuridical_ObjectForm'));
   TdsdFormStorageFactory.GetStorage.Load('TJuridical_ObjectForm');
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TJuridicalEditForm'));
@@ -2272,11 +2275,11 @@ begin
 
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_CheckTaxForm'));
   TdsdFormStorageFactory.GetStorage.Load('TReport_CheckTaxForm');
-
+   }
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_CheckTaxCorrectiveForm'));
   TdsdFormStorageFactory.GetStorage.Load('TReport_CheckTaxCorrectiveForm');
   exit;
-
+  {
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_CheckBonus_IncomeForm'));
   TdsdFormStorageFactory.GetStorage.Load('TReport_CheckBonus_IncomeForm');
   exit;

@@ -2203,9 +2203,9 @@ object Report_MotionGoodsAssetNoBalanceForm: TReport_MotionGoodsAssetNoBalanceFo
       Caption = #1043#1088#1091#1087#1087#1072' '#1087#1086#1076#1088#1072#1079#1076#1077#1083#1077#1085#1080#1081':'
     end
     object cxLabel1: TcxLabel
-      Left = 762
+      Left = 789
       Top = 6
-      Caption = #1043#1088#1091#1087#1087#1072' '#1090#1086#1074#1072#1088#1086#1074':'
+      Caption = #1043#1088#1091#1087#1087#1072' '#1054#1057':'
     end
     object edGoods: TcxButtonEdit
       Left = 853
@@ -3710,10 +3710,10 @@ object Report_MotionGoodsAssetNoBalanceForm: TReport_MotionGoodsAssetNoBalanceFo
   object GuidesGoodsGroup: TdsdGuides
     KeyField = 'Id'
     LookupControl = edGoodsGroup
-    FormNameParam.Value = 'TGoodsGroup_ObjectForm'
+    FormNameParam.Value = 'TAssetGroupForm'
     FormNameParam.DataType = ftString
     FormNameParam.MultiSelectSeparator = ','
-    FormName = 'TGoodsGroup_ObjectForm'
+    FormName = 'TAssetGroupForm'
     PositionDataSet = 'ClientDataSet'
     Params = <
       item
