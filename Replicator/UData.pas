@@ -1026,7 +1026,7 @@ begin
     FPacketNumber := 0; // сбрасываем нумерацию пакетов перед началом сессии
 
     // Передаем команды из дипазона StartId..(StartId + SelectRange) порциями
-    while (FStartId < FLastId) and not FStopped do
+    while (FStartId <= FLastId) and not FStopped do
     begin
       // проверяем, нужно ли записывать текст команд в файл
       FWriteCommands := TSettings.WriteCommandsToFile;
