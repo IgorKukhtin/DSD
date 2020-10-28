@@ -42,8 +42,9 @@ BEGIN
                                                             ON ObjectLink_Contract_Juridical.ChildObjectId = COALESCE (ObjectLink_Partner_Juridical.ChildObjectId, MovementLinkObject_Partner.ObjectId)
                                                            AND ObjectLink_Contract_Juridical.DescId = zc_ObjectLink_Contract_Juridical()
 
-                                       INNER JOIN Object_Contract_InvNumber_View ON Object_Contract_InvNumber_View.ContractId = COALESCE (MovementLinkObject_Contract.ObjectId, ObjectLink_Contract_Juridical.ObjectId)
-                                                                                AND Object_Contract_InvNumber_View.ContractStateKindCode = 1 -- ищем бонусы в подписанных договорах
+                                       INNER JOIN Object_Contract_InvNumber_View ON Object_Contract_InvNumber_View.ContractId          = COALESCE (MovementLinkObject_Contract.ObjectId, ObjectLink_Contract_Juridical.ObjectId)
+                                                                                AND Object_Contract_InvNumber_View.ContractStateKindId <> zc_Enum_ContractStateKind_Close()
+                                                                                AND Object_Contract_InvNumber_View.isErased            = FALSE
 
                                        LEFT JOIN ObjectLink AS ObjectLink_ContractCondition_Contract
                                                             ON ObjectLink_ContractCondition_Contract.ChildObjectId = COALESCE (MovementLinkObject_Contract.ObjectId, ObjectLink_Contract_Juridical.ObjectId)
