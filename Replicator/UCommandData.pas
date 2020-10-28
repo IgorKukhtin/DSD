@@ -97,6 +97,8 @@ begin
 
   Clear;
 
+  if ADataSet.RecordCount = 0 then Exit;
+
   // Обращение к FieldByName в цикле замедляет выполнение программы. Лучше использовать Fields[Index]
   // Определим индексы полей 'Id', 'Transaction_Id', 'Result'
   idxId := -1;

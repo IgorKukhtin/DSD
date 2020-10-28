@@ -486,7 +486,10 @@ begin
     qrySelectReplicaCmd.Open;
     qrySelectReplicaCmd.FetchAll;
     qrySelectReplicaCmd.First;
-    FStartId := qrySelectReplicaCmd.FieldByName('Id').AsLargeInt; // откорректируем значение StartId в соответствии с реальными данными
+    if qrySelectReplicaCmd.RecordCount = 0 then
+      FStartId := 0
+    else
+      FStartId := qrySelectReplicaCmd.FieldByName('Id').AsLargeInt; // откорректируем значение StartId в соответствии с реальными данными
     LogMsg(Format(cElapsedFetch, [IntToStr(qrySelectReplicaCmd.RecordCount), Elapsed(crdStartFetch)]), crdStartFetch);
 
     if FStopped then Exit;
@@ -506,7 +509,7 @@ begin
     FLastId := FCommandData.Data.Id;
 
     // показать инфу о новой сессии в GUI
-    if Assigned(FOnNewSession) then
+    if (FStartId > 0) and (FLastId > 0) and (FStartId <= FLastId) and  Assigned(FOnNewSession) then
       FOnNewSession(dtmStart, FStartId, FLastId, FCommandData.Count, FSessionNumber);
   except
     on E: Exception do
@@ -1020,6 +1023,9 @@ begin
     // Реальная правая граница может быть > (StartId + SelectRange), потому что BuildReplicaCommandsSQL учитывает номера транзакций
     // и обеспечивает условие, чтобы записи с одинаковыми номерами транзакций были в одном наборе
     BuildReplicaCommandsSQL(FStartId, FSelectRange);
+
+    if (FStartId = 0) and (FLastId = 0) then Break;
+
 
     // FStartId увеличивается в процессе выполнения команд
 
