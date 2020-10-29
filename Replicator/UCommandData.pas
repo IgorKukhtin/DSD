@@ -91,6 +91,7 @@ var
   I, J, iUniqSize, idxId, idxTran, idxResult: Integer;
   sSQL, sPrevSQL: string;
   arrTemp: array of TDataTemp;
+//  fakeArr: TDataRecArray;
 begin
   Assert(ADataSet <> nil, 'Ожидается ADataSet <> nil');
   Assert(ADataSet.Active, 'Ожидается, что ADataSet уже открыт');
@@ -168,6 +169,16 @@ begin
      mLog.Write('CommandData.txt', 'Id= ' + IntToStr(FRecArray[I].Id) +
                 ' TransId= ' + IntToStr(FRecArray[I].TransId) + ' sSQL= ' + FRecArray[I].SQL);
   {$ENDIF}
+
+//  SetLength(fakeArr, 1);
+//  fakeArr[0].Id := FRecArray[0].Id;
+//  fakeArr[0].TransId := FRecArray[0].TransId;
+//  fakeArr[0].SQL := FRecArray[0].SQL;
+//
+//  SetLength(FRecArray, 1);
+//  FRecArray[0].Id := fakeArr[0].Id;
+//  FRecArray[0].TransId := fakeArr[0].TransId;
+//  FRecArray[0].SQL := fakeArr[0].SQL;
 end;
 
 procedure TCommandData.Clear;
@@ -203,6 +214,7 @@ function TCommandData.GetId(const APos: Integer): Int64;
 var
   iPos: Integer;
 begin
+  Assert(Length(FRecArray) > 0, 'Ожидается Length(FRecArray) > 0');
   iPos := Min(APos, High(FRecArray));
   iPos := Max(iPos, 0);
 
@@ -215,7 +227,11 @@ var
 begin
   // BuildData не сохраняет дубликаты команд, поэтому реальный размер нового пакета может быть меньше ARange
   // Нужно скоректировать размер
-  iPos := GetPosition(AId) + ARange - 100;
+  iPos := GetPosition(AId);
+
+  if iPos = -1 then Exit(-1);
+
+  iPos := iPos + ARange - 100;
   iRange := GetId(iPos) - AId;
 
   Result := NearestId(AId, iRange);
@@ -268,8 +284,12 @@ var
   I, iIndx: Integer;
   iMaxId, iNewTransId: Int64;
 begin
-  Assert(AId > 0, 'Ожидается AId > 0');
-  Assert(ARange > 0, 'Ожидается ARange > 0');
+  Result := -1;
+
+  if Length(FRecArray) = 0 then Exit;
+
+  Assert(AId > 0, 'Ожидается AId > 0, имеем AId= ' + IntToStr(AId));
+  Assert(ARange >= 0, 'Ожидается ARange >= 0, имеем ARange= ' + IntToStr(ARange));
   Assert(Length(FRecArray) > 0, 'Ожидается Length(FRecArray) > 0');
 
   Result := AId + ARange;

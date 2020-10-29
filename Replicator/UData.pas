@@ -249,7 +249,7 @@ const
   cStep3 = 3;
 
   // Сообщения об ошибке
-  cWrongRange = 'Ожидается, что MaxId > StartId, а имеем MaxId = %d, StartId = %d';
+  cWrongRange = 'Ожидается, что MaxId >= StartId, а имеем MaxId = %d, StartId = %d';
   cTransWrongRange = 'Команды с транзакциями из диапазона <%d-%d> уже выполнялись в другом пакете';
 
   // Пороговые значения
@@ -838,7 +838,7 @@ begin
   iMaxId := FCommandData.GetMaxId(FStartId, FPacketRange);
 
   // проверим диапазон Id нового пакета
-  if iStartId >= iMaxId then
+  if iStartId > iMaxId then
   begin
     LogErrMsg(Format(cWrongRange, [iMaxId, iStartId]));
     FStopped := True;
