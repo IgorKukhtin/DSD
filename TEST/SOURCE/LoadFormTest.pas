@@ -2625,6 +2625,9 @@ end;
 
 procedure TLoadFormTest.LoadReportProductionOutAnalyzeFormTest;
 begin
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_ReceiptProductionOutAnalyzeTestForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TReport_ReceiptProductionOutAnalyzeTestForm');
+  exit;
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_ReceiptProductionOutAnalyzeForm'));
   TdsdFormStorageFactory.GetStorage.Load('TReport_ReceiptProductionOutAnalyzeForm');
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_ReceiptProductionOutAnalyzeDialogForm'));
