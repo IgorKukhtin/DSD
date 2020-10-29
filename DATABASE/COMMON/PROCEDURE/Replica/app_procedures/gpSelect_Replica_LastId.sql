@@ -42,14 +42,57 @@ BEGIN
     -- если реальное кол-во записей не соответсвует разнице по Id, значит вклинились транзакции, которые не видно, хотя могут быть и "потерянные" Id
     IF (vbId_End - inId_start + 1) <> (SELECT COUNT(*) FROM _replica.table_update_data WHERE Id BETWEEN inId_start AND vbId_End)
     THEN
-       -- нашли время начала этой транзакции
-       vbLast_modified:= (SELECT last_modified FROM _replica.table_update_data WHERE Id = vbId_End);
+       -- нашли время начала этой транзакции - здесь значение без timezone
+       vbLast_modified:= (SELECT MAX (last_modified) FROM _replica.table_update_data WHERE Id BETWEEN vbId_End AND vbId_End);
 
-       -- если найдена активная транзакция
-       IF EXISTS (SELECT 1 FROM pg_stat_activity WHERE state ILIKE 'active' AND query_start < vbLast_modified + INTERVAL '25 SECOND')
+       -- Активные процессы
+       CREATE TEMP TABLE _tmp_pg_stat_activity ON COMMIT DROP AS SELECT * FROM pg_stat_activity WHERE state ILIKE 'active'
+                                                           AND query NOT ILIKE '%_replica.gpSelect_Replica_LastId(%'
+                                                           AND query NOT ILIKE '% _replica.gpSelect_Replica_commands(%';
+
+--    RAISE EXCEPTION 'Ошибка.<%>', (select count(*) from _tmp_pg_stat_activity);
+
+       -- если найдена активная транзакция - для значения без timezone
+       IF EXISTS (SELECT 1 FROM _tmp_pg_stat_activity WHERE state ILIKE 'active' AND timezone('utc'::text, query_start) < vbLast_modified + INTERVAL '25 SECOND')
        THEN
            vbId_End:= inId_start - 1;
        END IF;
+
+       -- Item
+       INSERT INTO ResourseItemProtocol (pid
+                                       , query_start_no_timezone
+                                       , query_start
+                                       , datname
+                                       , usename
+                                       , client_addr
+                                       , state
+                                     --, wait_event_type
+                                     --, wait_event
+                                       , waiting
+                                       , query
+                                       , InsertDate
+                                       , Id_start
+                                       , Id_end
+                                       , Last_modified
+                                        )
+          SELECT tmp.pid
+                 -- здесь значение без timezone
+               , timezone('utc'::text, tmp.query_start)
+               , tmp.query_start
+               , tmp.datname
+               , tmp.usename
+               , tmp.client_addr
+               , tmp.state
+             --, tmp.wait_event_type
+             --, tmp.wait_event
+               , tmp.waiting
+               , tmp.query
+               , CURRENT_TIMESTAMP
+               , inId_start
+               , vbId_End
+                 -- здесь значение без timezone
+               , vbLast_modified
+          FROM _tmp_pg_stat_activity AS tmp;
 
     END IF;
 
@@ -68,8 +111,8 @@ $BODY$
 
 -- тест
 
--- WITH tmpParams2 AS (SELECT 789863512 AS Id_start, 200000 AS Rec_count, 0 AS Rec_count_diff)
- WITH tmpParams2 AS (SELECT 651426894 AS Id_start, 200000 AS Rec_count, 80000 AS Rec_count_diff)
+ WITH tmpParams2 AS (SELECT 789863512 AS Id_start, 200000 AS Rec_count, 0 AS Rec_count_diff)
+-- WITH tmpParams2 AS (SELECT 651426894 AS Id_start, 200000 AS Rec_count, 80000 AS Rec_count_diff)
     , tmpParams AS (SELECT COALESCE ((SELECT MAX (Id) FROM _replica.table_update_data WHERE (SELECT Rec_count_diff FROM tmpParams2) > 0) - (SELECT Rec_count_diff FROM tmpParams2 WHERE Rec_count_diff > 0)
                                    , (SELECT Id_start FROM tmpParams2)) AS Id_start
                          , (SELECT Rec_count FROM tmpParams2) AS Rec_count
