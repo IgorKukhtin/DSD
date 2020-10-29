@@ -1083,10 +1083,18 @@ begin
   iMin      := Max(0, AMax - ARecCount);
   iCurCount := Max(0, ACurrValue - iMin);
 
-  if (ARecCount > 0) and (iCurCount < ARecCount) then
-    AProgBar.Position := Round(100 * iCurCount / ARecCount)
-  else
-    AProgBar.Position := 0;
+  if (ARecCount > 0) and (iCurCount <= ARecCount) then
+    AProgBar.Position := Round(100 * iCurCount / ARecCount);
+
+  // Когда состояние новой базы данных уже практически идентично оригинальной, тогда iCurCount может превысить ARecCount,
+  // потому что ARecCount получаем через определенный интервал времени (по умолчанию каждые 5 минут),
+  // а новая репликация завершается намного быстрее т.к. записей для репликации мало.
+  // ARecCount устаревает и нужно его обновить.
+  if (ARecCount > 0) and (iCurCount > ARecCount) then
+  begin
+    AProgBar.Position := AProgBar.Max;
+    CheckReplicaMaxMin;
+  end;
 end;
 
 procedure TfrmMain.UpdateSnapshotElapsedTime;
