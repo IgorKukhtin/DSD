@@ -229,6 +229,8 @@ type
     spUpdate_inPresent_Revert: TdsdStoredProc;
     dxBarSubItem4: TdxBarSubItem;
     bbUpdate_inPresent_Revert: TdxBarButton;
+    SummaWages: TcxGridDBColumn;
+    PercentWages: TcxGridDBColumn;
   private
     { Private declarations }
   public

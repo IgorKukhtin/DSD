@@ -1854,11 +1854,18 @@ CREATE OR REPLACE FUNCTION zc_ObjectFloat_Unit_PercentSAUA() RETURNS Integer AS 
 INSERT INTO ObjectFloatDesc (DescId, Code, ItemName)
   SELECT zc_Object_Unit(), 'zc_ObjectFloat_Unit_PercentSAUA', 'Процент количество кодов в чеках для САУА' WHERE NOT EXISTS (SELECT * FROM ObjectFloatDesc WHERE Code = 'zc_ObjectFloat_Unit_PercentSAUA');
 
-
+CREATE OR REPLACE FUNCTION zc_ObjectFloat_Goods_SummaWages() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM ObjectFloatDesc WHERE Code = 'zc_ObjectFloat_Goods_SummaWages'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
+INSERT INTO ObjectFloatDesc (DescId, Code, ItemName)
+  SELECT zc_Object_Goods(), 'zc_ObjectFloat_Goods_SummaWages', 'Статичиское значение за 1 единицу продажи в зарплату' WHERE NOT EXISTS (SELECT * FROM ObjectFloatDesc WHERE Code = 'zc_ObjectFloat_Goods_SummaWages');
+  
+CREATE OR REPLACE FUNCTION zc_ObjectFloat_Goods_PercentWages() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM ObjectFloatDesc WHERE Code = 'zc_ObjectFloat_Goods_PercentWages'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
+INSERT INTO ObjectFloatDesc (DescId, Code, ItemName)
+  SELECT zc_Object_Goods(), 'zc_ObjectFloat_Goods_PercentWages', '% от продажи в зарплату' WHERE NOT EXISTS (SELECT * FROM ObjectFloatDesc WHERE Code = 'zc_ObjectFloat_Goods_PercentWages');  
 
 /*-------------------------------------------------------------------------------
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.   Воробкало А.А.   Шаблий О.В.
+ 29.10.20                                                                                      * zc_ObjectFloat_Goods_SummaWages, zc_ObjectFloat_Goods_PercentWages
  26.10.20                                                                                      * zc_ObjectFloat_Unit_PercentSAUA
  21.10.20                                                                                      * zc_ObjectFloat_CashSettings_AttemptsSub
  14.10.20                                                                                      * zc_ObjectFloat_ConditionsKeep_RelatedProduct
