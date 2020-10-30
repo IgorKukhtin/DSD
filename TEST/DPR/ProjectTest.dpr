@@ -1201,7 +1201,9 @@ uses
   Report_CheckBonusTest2 in '..\..\Forms\Report\Report_CheckBonusTest2.pas' {Report_CheckBonusTest2Form: TParentForm},
   Report_GoodsMI_SaleReturnIn_Expenses in '..\..\Forms\Report\Report_GoodsMI_SaleReturnIn_Expenses.pas' {Report_GoodsMI_SaleReturnIn_ExpensesForm: TParentForm},
   Juridical_Dialog in '..\..\Forms\Guides\Juridical_Dialog.pas' {Juridical_DialogForm: TParentForm},
-  Report_ReceiptProductionOutAnalyzeTest in '..\..\Forms\Report\Report_ReceiptProductionOutAnalyzeTest.pas' {Report_ReceiptProductionOutAnalyzeTestForm: TParentForm};
+  Report_ReceiptProductionOutAnalyzeTest in '..\..\Forms\Report\Report_ReceiptProductionOutAnalyzeTest.pas' {Report_ReceiptProductionOutAnalyzeTestForm: TParentForm},
+  PartnerExternal in '..\..\Forms\Guides\PartnerExternal.pas' {PartnerExternalForm: TParentForm},
+  PartnerExternalEdit in '..\..\Forms\Guides\PartnerExternalEdit.pas' {PartnerExternalEditForm: TParentForm};
 
 {$R *.RES}
 {$R DevExpressRus.res}

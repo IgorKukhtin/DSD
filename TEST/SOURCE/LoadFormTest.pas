@@ -116,6 +116,7 @@ type
     procedure LoadOrderTypeFormTest;
     procedure LoadPartnerFormTest;
     procedure LoadPartnerTagFormTest;
+    procedure LoadPartnerExternalFormTest;
     procedure LoadPartionGoodsChoiceFormTest;
     procedure LoadPartionRemainsFormTest;
     procedure LoadPaidKindFormTest;
@@ -1905,6 +1906,14 @@ begin
   TdsdFormStorageFactory.GetStorage.Load('TPartnerTagForm');
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TPartnerTagEditForm'));
   TdsdFormStorageFactory.GetStorage.Load('TPartnerTagEditForm');
+end;
+
+procedure TLoadFormTest.LoadPartnerExternalFormTest;
+begin
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TPartnerExternalForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TPartnerExternalForm');
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TPartnerExternalEditForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TPartnerExternalEditForm');
 end;
 
 procedure TLoadFormTest.LoadPartionGoodsChoiceFormTest;
