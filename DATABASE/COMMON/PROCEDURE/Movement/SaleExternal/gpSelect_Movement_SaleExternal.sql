@@ -12,7 +12,7 @@ CREATE OR REPLACE FUNCTION gpSelect_Movement_SaleExternal(
 )
 RETURNS TABLE (Id Integer, InvNumber TVarChar, OperDate TDateTime
              , StatusCode Integer, StatusName TVarChar
-             , TotalCount TFloat,
+             , TotalCount TFloat
              , TotalCountSh TFloat
              , TotalCountKg TFloat
              
@@ -28,8 +28,6 @@ RETURNS TABLE (Id Integer, InvNumber TVarChar, OperDate TDateTime
 AS
 $BODY$
    DECLARE vbUserId Integer;
-
-   DECLARE vbIsXleb Boolean;
 BEGIN
      -- проверка прав пользователя на вызов процедуры
      -- vbUserId:= lpCheckRight (inSession, zc_Enum_Process_Select_Movement_SaleExternal());
