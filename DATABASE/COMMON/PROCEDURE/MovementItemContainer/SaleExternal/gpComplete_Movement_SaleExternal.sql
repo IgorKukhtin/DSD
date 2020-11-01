@@ -19,7 +19,7 @@ BEGIN
 
      -- проводим ƒокумент + сохранили протокол
      PERFORM lpComplete_Movement_SaleExternal (inMovementId := inMovementId
-                                            , inUserId     := vbUserId
+                                             , inUserId     := vbUserId
                                              );
 
 END;
