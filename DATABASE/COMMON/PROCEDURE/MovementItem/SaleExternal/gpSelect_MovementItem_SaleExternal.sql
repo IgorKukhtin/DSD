@@ -24,6 +24,7 @@ RETURNS TABLE (Id Integer
 AS
 $BODY$
   DECLARE vbUserId Integer;
+  DECLARE vbGoodsPropertyId Integer;
 BEGIN
      -- проверка прав пользователя на вызов процедуры
      -- PERFORM lpCheckRight (inSession, zc_Enum_Process_Select_MovementItem_SaleExternal());
@@ -97,30 +98,36 @@ BEGIN
                                                       , tmpObject_GoodsPropertyValue.ArticleGLN
                                                       , tmpObject_GoodsPropertyValue.BarCode
                                                       , tmpObject_GoodsPropertyValue.BarCodeGLN
-                                                 FROM (SELECT MAX (tmpObject_GoodsPropertyValue.ObjectId) AS ObjectId, GoodsId FROM tmpObject_GoodsPropertyValue WHERE Article <> '' OR ArticleGLN <> '' OR BarCodeGLN <> '' GROUP BY GoodsId
+                                                 FROM (SELECT MAX (tmpObject_GoodsPropertyValue.ObjectId) AS ObjectId
+                                                            , tmpObject_GoodsPropertyValue.GoodsId 
+                                                       FROM tmpObject_GoodsPropertyValue 
+                                                       WHERE tmpObject_GoodsPropertyValue.Article <> ''
+                                                          OR tmpObject_GoodsPropertyValue.ArticleGLN <> ''
+                                                          OR tmpObject_GoodsPropertyValue.BarCodeGLN <> ''
+                                                       GROUP BY tmpObject_GoodsPropertyValue.GoodsId
                                                       ) AS tmpGoodsProperty_find
                                                       LEFT JOIN tmpObject_GoodsPropertyValue ON tmpObject_GoodsPropertyValue.ObjectId =  tmpGoodsProperty_find.ObjectId
                                                 )
 
         SELECT
-             tmpMI.MovementItemId :: Integer AS Id
+             tmpMI.MovementItemId    :: Integer AS Id
            , Object_Goods.Id          		AS GoodsId
            , Object_Goods.ObjectCode  		AS GoodsCode
            , Object_Goods.ValueData   		AS GoodsName
            , ObjectString_Goods_GoodsGroupFull.ValueData AS GoodsGroupNameFull
 
-           , tmpMI.Amount        :: TFloat  AS Amount
+           , tmpMI.Amount            :: TFloat  AS Amount
 
            , Object_GoodsKind.Id        	AS GoodsKindId
            , Object_GoodsKind.ValueData 	AS GoodsKindName
            , Object_Measure.ValueData           AS MeasureName
 
-           , COALESCE (tmpObject_GoodsPropertyValue.Name, '')       AS GoodsName_Juridical
-           , COALESCE (tmpObject_GoodsPropertyValue.Amount, 0)      AS AmountInPack_Juridical
-           , COALESCE (tmpObject_GoodsPropertyValueGroup.Article,    COALESCE (tmpObject_GoodsPropertyValue.Article, ''))    AS Article_Juridical
-           , COALESCE (tmpObject_GoodsPropertyValueGroup.BarCode,    COALESCE (tmpObject_GoodsPropertyValue.BarCode, ''))    AS BarCode_Juridical
-           , COALESCE (tmpObject_GoodsPropertyValueGroup.ArticleGLN, COALESCE (tmpObject_GoodsPropertyValue.ArticleGLN, '')) AS ArticleGLN_Juridical
-           , COALESCE (tmpObject_GoodsPropertyValueGroup.BarCodeGLN, COALESCE (tmpObject_GoodsPropertyValue.BarCodeGLN, '')) AS BarCodeGLN_Juridical
+           , COALESCE (tmpObject_GoodsPropertyValue.Name, '')     :: TVarChar  AS GoodsName_Juridical
+           , COALESCE (tmpObject_GoodsPropertyValue.Amount, 0)    :: TFloat    AS AmountInPack_Juridical
+           , COALESCE (tmpObject_GoodsPropertyValueGroup.Article,    COALESCE (tmpObject_GoodsPropertyValue.Article, ''))    :: TVarChar AS Article_Juridical
+           , COALESCE (tmpObject_GoodsPropertyValueGroup.BarCode,    COALESCE (tmpObject_GoodsPropertyValue.BarCode, ''))    :: TVarChar AS BarCode_Juridical
+           , COALESCE (tmpObject_GoodsPropertyValueGroup.ArticleGLN, COALESCE (tmpObject_GoodsPropertyValue.ArticleGLN, '')) :: TVarChar AS ArticleGLN_Juridical
+           , COALESCE (tmpObject_GoodsPropertyValueGroup.BarCodeGLN, COALESCE (tmpObject_GoodsPropertyValue.BarCodeGLN, '')) :: TVarChar AS BarCodeGLN_Juridical
 
            , tmpMI.isErased                AS isErased
 
@@ -145,8 +152,6 @@ BEGIN
             LEFT JOIN tmpObject_GoodsPropertyValueGroup ON tmpObject_GoodsPropertyValueGroup.GoodsId = tmpMI.GoodsId
                                                        AND tmpObject_GoodsPropertyValue.GoodsId IS NULL
            ;
-
-     END IF;
 
 END;
 $BODY$

@@ -7,13 +7,11 @@ CREATE OR REPLACE FUNCTION gpInsertUpdate_Movement_SaleExternal(
     IN inInvNumber           TVarChar  , -- Номер документа
     IN inOperDate            TDateTime , -- Дата документа
     IN inFromId              Integer   , -- От кого (в документе)
---    IN inToId                Integer   , -- Кому (в документе)
---    IN inPaidKindId          Integer   , -- Виды форм оплаты
     IN inGoodsPropertyId     Integer   , -- 
     In inComment             TVarChar  , -- примечание
     IN inSession             TVarChar    -- сессия пользователя
 )
-RETURNS RECORD
+RETURNS Integer
 AS
 $BODY$
    DECLARE vbUserId Integer;

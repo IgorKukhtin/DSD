@@ -11,10 +11,10 @@ RETURNS TABLE (Id Integer, InvNumber TVarChar, OperDate TDateTime
              , StatusId Integer, StatusCode Integer, StatusName TVarChar
              , FromId Integer, FromName TVarChar
              , PartnerId_From Integer, PartnerName_From TVarChar
-             --, ToId Integer, ToName TVarChar
-             --, PaidKindId Integer, PaidKindName TVarChar
              , GoodsPropertyId Integer, GoodsPropertyName TVarChar
              , Comment TVarChar
+             , InsertName TVarChar
+             , InsertDate TDateTime
              )
 AS
 $BODY$
@@ -39,16 +39,16 @@ BEGIN
              , 0                                        AS PartnerId_From
              , CAST ('' as TVarChar)                    AS PartnerName_From
 
---             , 0                                      AS ToId
---             , CAST ('' as TVarChar)                  AS ToName
---             , 0                     		        AS PaidKindId
---             , CAST ('' as TVarChar)		        AS PaidKindName
              , 0                                        AS GoodsPropertyId
              , CAST ('' as TVarChar)                    AS GoodsPropertyName
 
              , CAST ('' as TVarChar) 		        AS Comment
+             
+             , Object_User.ValueData                    AS InsertName
+             , CURRENT_TIMESTAMP                        AS InsertDate
 
           FROM lfGet_Object_Status (zc_Enum_Status_UnComplete()) AS Object_Status
+              LEFT JOIN Object AS Object_User ON Object_User.Id = vbUserId
           ;
      ELSE
 
@@ -65,14 +65,13 @@ BEGIN
            , Object_PartnerFrom.id                  AS PartnerId_From
            , Object_PartnerFrom.ValueData           AS PartnerName_From
 
---           , Object_To.Id                      	    AS ToId
---           , Object_To.ValueData               	    AS ToName
---           , Object_PaidKind.Id                	    AS PaidKindId
---           , Object_PaidKind.ValueData         	    AS PaidKindName
            , Object_GoodsProperty.Id                AS GoodsPropertyId
            , Object_GoodsProperty.ValueData         AS GoodsPropertyName
 
            , MovementString_Comment.ValueData       AS Comment
+
+           , Object_User.ValueData                 AS InsertName
+           , MovementDate_Insert.ValueData         AS InsertDate
 
        FROM Movement
             LEFT JOIN Object AS Object_Status ON Object_Status.Id = Movement.StatusId
@@ -91,15 +90,18 @@ BEGIN
                                 AND ObjectLink_PartnerExternal_Partner.DescId = zc_ObjectLink_PartnerExternal_Partner()
             LEFT JOIN Object AS Object_PartnerFrom ON Object_PartnerFrom.Id = ObjectLink_PartnerExternal_Partner.ChildObjectId
 
-            /*LEFT JOIN MovementLinkObject AS MovementLinkObject_To
-                                         ON MovementLinkObject_To.MovementId = Movement.Id
-                                        AND MovementLinkObject_To.DescId = zc_MovementLinkObject_To()
-            LEFT JOIN Object AS Object_To ON Object_To.Id = MovementLinkObject_To.ObjectId
+            LEFT JOIN MovementLinkObject AS MovementLinkObject_GoodsProperty
+                                         ON MovementLinkObject_GoodsProperty.MovementId = Movement.Id
+                                        AND MovementLinkObject_GoodsProperty.DescId = zc_MovementLinkObject_GoodsProperty()
+            LEFT JOIN Object AS Object_GoodsProperty ON Object_GoodsProperty.Id = MovementLinkObject_GoodsProperty.ObjectId
 
-            LEFT JOIN MovementLinkObject AS MovementLinkObject_PaidKind
-                                         ON MovementLinkObject_PaidKind.MovementId = Movement.Id
-                                        AND MovementLinkObject_PaidKind.DescId = zc_MovementLinkObject_PaidKind()
-            LEFT JOIN Object AS Object_PaidKind ON Object_PaidKind.Id = MovementLinkObject_PaidKind.ObjectId*/
+            LEFT JOIN MovementDate AS MovementDate_Insert
+                                   ON MovementDate_Insert.MovementId = Movement.Id
+                                  AND MovementDate_Insert.DescId = zc_MovementDate_Insert()
+            LEFT JOIN MovementLinkObject AS MovementLinkObject_Insert
+                                         ON MovementLinkObject_Insert.MovementId = Movement.Id
+                                        AND MovementLinkObject_Insert.DescId = zc_MovementLinkObject_Insert()
+            LEFT JOIN Object AS Object_User ON Object_User.Id = MovementLinkObject_Insert.ObjectId
 
          WHERE Movement.Id     =  inMovementId
            AND Movement.DescId = zc_Movement_SaleExternal();

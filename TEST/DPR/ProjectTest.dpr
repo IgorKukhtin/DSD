@@ -1203,7 +1203,9 @@ uses
   Juridical_Dialog in '..\..\Forms\Guides\Juridical_Dialog.pas' {Juridical_DialogForm: TParentForm},
   Report_ReceiptProductionOutAnalyzeTest in '..\..\Forms\Report\Report_ReceiptProductionOutAnalyzeTest.pas' {Report_ReceiptProductionOutAnalyzeTestForm: TParentForm},
   PartnerExternal in '..\..\Forms\Guides\PartnerExternal.pas' {PartnerExternalForm: TParentForm},
-  PartnerExternalEdit in '..\..\Forms\Guides\PartnerExternalEdit.pas' {PartnerExternalEditForm: TParentForm};
+  PartnerExternalEdit in '..\..\Forms\Guides\PartnerExternalEdit.pas' {PartnerExternalEditForm: TParentForm},
+  SaleExternalJournal in '..\..\Forms\Document\SaleExternalJournal.pas' {SaleExternalJournalForm: TParentForm},
+  SaleExternal in '..\..\Forms\Document\SaleExternal.pas' {SaleExternalForm: TParentForm};
 
 {$R *.RES}
 {$R DevExpressRus.res}

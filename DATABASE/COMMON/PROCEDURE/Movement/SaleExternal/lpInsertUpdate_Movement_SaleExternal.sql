@@ -1,6 +1,6 @@
 -- Function: lpInsertUpdate_Movement_SaleExternal()
 
-DROP FUNCTION IF EXISTS lpInsertUpdate_Movement_SaleExternal (Integer, TVarChar, TVarChar, TVarChar, Integer, TDateTime, TDateTime, Boolean, Boolean, Boolean, Boolean, TFloat, TFloat, Integer, Integer, Integer, Integer, Integer, Integer, TFloat, TVarChar, Integer);
+DROP FUNCTION IF EXISTS lpInsertUpdate_Movement_SaleExternal (Integer, TVarChar, TDateTime, Integer, Integer, TVarChar, Integer);
 
 CREATE OR REPLACE FUNCTION lpInsertUpdate_Movement_SaleExternal(
  INOUT ioId                  Integer   , -- Ключ объекта <Документ Возврат покупателя>

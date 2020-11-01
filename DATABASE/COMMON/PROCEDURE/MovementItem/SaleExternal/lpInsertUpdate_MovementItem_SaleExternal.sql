@@ -1,16 +1,16 @@
 -- Function: lpInsertUpdate_MovementItem_SaleExternal()
 
-DROP FUNCTION IF EXISTS lpInsertUpdate_MovementItem_SaleExternal (Integer, Integer, Integer, TFloat, Integer, Integer);
+DROP FUNCTION IF EXISTS lpInsertUpdate_MovementItem_SaleExternal (Integer, Integer, Integer, Integer, TFloat, Integer);
 
 CREATE OR REPLACE FUNCTION lpInsertUpdate_MovementItem_SaleExternal(
  INOUT ioId                  Integer   , -- Ключ объекта <Элемент документа>
     IN inMovementId          Integer   , -- Ключ объекта <Документ Возврат покупателя>
     IN inGoodsId             Integer   , -- Товары
-    IN inAmount              TFloat    , -- Количество
     IN inGoodsKindId         Integer   , -- Виды товаров
+    IN inAmount              TFloat    , -- Количество
     IN inUserId              Integer     -- сессия пользователя
 )
-RETURNS RECORD AS
+RETURNS Integer AS
 $BODY$
    DECLARE vbIsInsert Boolean;
 BEGIN

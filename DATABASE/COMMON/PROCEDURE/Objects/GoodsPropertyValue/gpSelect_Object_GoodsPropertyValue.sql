@@ -9,6 +9,7 @@ CREATE OR REPLACE FUNCTION gpSelect_Object_GoodsPropertyValue(
     IN inSession           TVarChar       -- сессия пользователя
 )
 RETURNS TABLE (Id Integer, Code Integer, Name TVarChar
+             , NameExternal TVarChar
              , Amount TFloat, BoxCount TFloat, AmountDoc TFloat
              , BarCodeShort TVarChar, BarCode TVarChar, Article TVarChar, BarCodeGLN TVarChar, ArticleGLN TVarChar
              , CodeSticker TVarChar
@@ -60,6 +61,7 @@ BEGIN
          Object_GoodsPropertyValue.Id         AS Id
        , Object_GoodsPropertyValue.ObjectCode AS Code
        , Object_GoodsPropertyValue.ValueData  AS Name
+       , ObjectString_NameExternal.ValueData  AS NameExternal
 
        , ObjectFloat_Amount.ValueData         AS Amount
        , ObjectFloat_BoxCount.ValueData       AS BoxCount
@@ -170,6 +172,10 @@ BEGIN
         LEFT JOIN ObjectString AS ObjectString_Quality10
                                ON ObjectString_Quality10.ObjectId = Object_GoodsPropertyValue.Id
                               AND ObjectString_Quality10.DescId = zc_ObjectString_GoodsPropertyValue_Quality10()
+
+        LEFT JOIN ObjectString AS ObjectString_NameExternal
+                               ON ObjectString_NameExternal.ObjectId = Object_GoodsPropertyValue.Id
+                              AND ObjectString_NameExternal.DescId = zc_ObjectString_GoodsPropertyValue_NameExternal()
 
         LEFT JOIN ObjectBoolean AS ObjectBoolean_Weigth
                                 ON ObjectBoolean_Weigth.ObjectId = Object_GoodsPropertyValue.Id
@@ -289,6 +295,7 @@ BEGIN
          tmpObjectLink.GoodsPropertyValueId         AS Id
        , tmpObjectLink.GoodsPropertyValueCode       AS Code
        , tmpObjectLink.GoodsPropertyValueName       AS Name
+       , tmpObjectLink.GoodsPropertyValueNameExternal AS NameExternal
 
        , tmpObjectLink.Amount
        , tmpObjectLink.BoxCount
@@ -342,6 +349,7 @@ BEGIN
         LEFT JOIN (SELECT Object_GoodsPropertyValue.Id          AS GoodsPropertyValueId
                         , Object_GoodsPropertyValue.ObjectCode  AS GoodsPropertyValueCode
                         , Object_GoodsPropertyValue.ValueData   AS GoodsPropertyValueName
+                        , ObjectString_NameExternal.ValueData   AS GoodsPropertyValueNameExternal
                         , Object_GoodsPropertyValue.isErased    AS isErased
                         , ObjectLink_GoodsPropertyValue_GoodsProperty.ChildObjectId  as GoodsPropertyId
  
@@ -467,6 +475,10 @@ BEGIN
                                             ON ObjectString_Quality10.ObjectId = Object_GoodsPropertyValue.Id
                                            AND ObjectString_Quality10.DescId = zc_ObjectString_GoodsPropertyValue_Quality10()
 
+                     LEFT JOIN ObjectString AS ObjectString_NameExternal
+                                            ON ObjectString_NameExternal.ObjectId = Object_GoodsPropertyValue.Id
+                                           AND ObjectString_NameExternal.DescId = zc_ObjectString_GoodsPropertyValue_NameExternal()
+
                      LEFT JOIN ObjectBoolean AS ObjectBoolean_Weigth
                                              ON ObjectBoolean_Weigth.ObjectId = Object_GoodsPropertyValue.Id
                                             AND ObjectBoolean_Weigth.DescId = zc_ObjectBoolean_GoodsPropertyValue_Weigth()
@@ -489,6 +501,7 @@ END;$BODY$
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.
+ 01.11.20         * add NameExternal
  09.08.19         * add isWeigth
  10.04.19         * 
  30.03.19         * add Quality

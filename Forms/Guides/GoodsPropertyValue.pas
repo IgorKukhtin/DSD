@@ -91,6 +91,7 @@ type
     actUpdateisWeigth: TdsdDataSetRefresh;
     bbUpdateisWeigth: TdxBarButton;
     isWeigth: TcxGridDBColumn;
+    NameExternal: TcxGridDBColumn;
   private
     { Private declarations }
   public

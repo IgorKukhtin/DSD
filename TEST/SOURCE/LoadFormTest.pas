@@ -175,6 +175,7 @@ type
     procedure LoadNameBeforeFormTest;
     procedure LoadSaleFormTest;
     procedure LoadSaleAssetFormTest;
+    procedure LoadSaleExternalFormTest;
     procedure LoadSendFormTest;
     procedure LoadSendAssetFormTest;
     procedure LoadSendDebtFormTest;
@@ -1256,12 +1257,22 @@ procedure TLoadFormTest.LoadSaleAssetFormTest;
 begin
 
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TSaleAssetForm'));
-  TdsdFormStorageFactory.GetStorage.Load('TSaleForm');
+  TdsdFormStorageFactory.GetStorage.Load('TSaleAssetForm');
 
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TSaleAssetJournalForm'));
   TdsdFormStorageFactory.GetStorage.Load('TSaleAssetJournalForm');
 
 end;
+
+procedure TLoadFormTest.LoadSaleExternalFormTest;
+begin
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TSaleExternalForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TSaleExternalForm');
+
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TSaleExternalJournalForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TSaleExternalJournalForm');
+end;
+
 procedure TLoadFormTest.LoadTaxFormTest;
 begin
   {
