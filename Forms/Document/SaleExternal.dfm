@@ -190,6 +190,15 @@ inherited SaleExternalForm: TSaleExternalForm
             Options.Editing = False
             Width = 110
           end
+          object NameExternal_Juridical: TcxGridDBColumn
+            Caption = #1053#1072#1079#1074#1072#1085#1080#1077' '#1074' '#1073#1072#1079#1077' '#1087#1086#1082#1091#1087#1072#1090#1077#1083#1103
+            DataBinding.FieldName = 'NameExternal_Juridical'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            HeaderHint = #1053#1072#1079#1074#1072#1085#1080#1077' '#1074' '#1073#1072#1079#1077' '#1087#1086#1082#1091#1087#1072#1090#1077#1083#1103
+            Options.Editing = False
+            Width = 120
+          end
           object AmountInPack_Juridical: TcxGridDBColumn
             Caption = #1050#1086#1083'-'#1074#1086' '#1096#1090'. '#1087#1088#1080' '#1089#1082#1072#1085'.'
             DataBinding.FieldName = 'AmountInPack_Juridical'

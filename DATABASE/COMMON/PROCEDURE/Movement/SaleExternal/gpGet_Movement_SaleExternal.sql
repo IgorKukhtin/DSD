@@ -45,7 +45,7 @@ BEGIN
              , CAST ('' as TVarChar) 		        AS Comment
              
              , Object_User.ValueData                    AS InsertName
-             , CURRENT_TIMESTAMP                        AS InsertDate
+             , CURRENT_TIMESTAMP        ::TDateTime     AS InsertDate
 
           FROM lfGet_Object_Status (zc_Enum_Status_UnComplete()) AS Object_Status
               LEFT JOIN Object AS Object_User ON Object_User.Id = vbUserId

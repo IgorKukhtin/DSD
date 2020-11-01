@@ -26,7 +26,7 @@ BEGIN
      vbIsInsert:= COALESCE (ioId, 0) = 0;
 
      -- сохранили <Документ>
-     ioId := lpInsertUpdate_Movement (ioId, zc_Movement_SaleExternal(), inInvNumber, inOperDate, NULL);
+     ioId := lpInsertUpdate_Movement (ioId, zc_Movement_SaleExternal(), inInvNumber,  DATE_TRUNC ('MONTH', inOperDate), NULL);
 
      -- сохранили свойство <Примечание>
      PERFORM lpInsertUpdate_MovementString (zc_MovementString_Comment(), ioId, inComment);

@@ -18,6 +18,7 @@ RETURNS TABLE (Id Integer
              , BarCode_Juridical TVarChar
              , ArticleGLN_Juridical TVarChar
              , BarCodeGLN_Juridical TVarChar
+             , NameExternal_Juridical TVarChar
            
              , isErased Boolean
              )
@@ -61,6 +62,7 @@ BEGIN
                                                  , ObjectString_Article.ValueData       AS Article
                                                  , ObjectString_BarCodeGLN.ValueData    AS BarCodeGLN
                                                  , ObjectString_ArticleGLN.ValueData    AS ArticleGLN
+                                                 , ObjectString_NameExternal.ValueData  AS NameExternal
                                             FROM (SELECT vbGoodsPropertyId AS GoodsPropertyId WHERE vbGoodsPropertyId <> 0
                                                  ) AS tmpGoodsProperty
                                                  INNER JOIN ObjectLink AS ObjectLink_GoodsPropertyValue_GoodsProperty
@@ -84,6 +86,9 @@ BEGIN
                                                  LEFT JOIN ObjectString AS ObjectString_ArticleGLN
                                                                         ON ObjectString_ArticleGLN.ObjectId = ObjectLink_GoodsPropertyValue_GoodsProperty.ObjectId
                                                                        AND ObjectString_ArticleGLN.DescId = zc_ObjectString_GoodsPropertyValue_ArticleGLN()
+                                                 LEFT JOIN ObjectString AS ObjectString_NameExternal
+                                                                        ON ObjectString_NameExternal.ObjectId = ObjectLink_GoodsPropertyValue_GoodsProperty.ObjectId
+                                                                       AND ObjectString_NameExternal.DescId = zc_ObjectString_GoodsPropertyValue_NameExternal()
 
                                                  LEFT JOIN ObjectLink AS ObjectLink_GoodsPropertyValue_Goods
                                                                       ON ObjectLink_GoodsPropertyValue_Goods.ObjectId = ObjectLink_GoodsPropertyValue_GoodsProperty.ObjectId
@@ -91,6 +96,7 @@ BEGIN
                                                  LEFT JOIN ObjectLink AS ObjectLink_GoodsPropertyValue_GoodsKind
                                                                       ON ObjectLink_GoodsPropertyValue_GoodsKind.ObjectId = ObjectLink_GoodsPropertyValue_GoodsProperty.ObjectId
                                                                      AND ObjectLink_GoodsPropertyValue_GoodsKind.DescId = zc_ObjectLink_GoodsPropertyValue_GoodsKind()
+
                                            )
 
          , tmpObject_GoodsPropertyValueGroup AS (SELECT tmpObject_GoodsPropertyValue.GoodsId
@@ -128,6 +134,7 @@ BEGIN
            , COALESCE (tmpObject_GoodsPropertyValueGroup.BarCode,    COALESCE (tmpObject_GoodsPropertyValue.BarCode, ''))    :: TVarChar AS BarCode_Juridical
            , COALESCE (tmpObject_GoodsPropertyValueGroup.ArticleGLN, COALESCE (tmpObject_GoodsPropertyValue.ArticleGLN, '')) :: TVarChar AS ArticleGLN_Juridical
            , COALESCE (tmpObject_GoodsPropertyValueGroup.BarCodeGLN, COALESCE (tmpObject_GoodsPropertyValue.BarCodeGLN, '')) :: TVarChar AS BarCodeGLN_Juridical
+           , COALESCE (tmpObject_GoodsPropertyValue.NameExternal, '') :: TVarChar AS NameExternal_Juridical
 
            , tmpMI.isErased                AS isErased
 

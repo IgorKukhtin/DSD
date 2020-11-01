@@ -22,6 +22,7 @@ inherited SaleExternalJournalForm: TSaleExternalJournalForm
       inherited cxGrid: TcxGrid
         Width = 876
         Height = 478
+        ExplicitTop = 3
         ExplicitWidth = 876
         ExplicitHeight = 478
         inherited cxGridDBTableView: TcxGridDBTableView
@@ -166,6 +167,22 @@ inherited SaleExternalJournalForm: TSaleExternalJournalForm
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Width = 90
+          end
+          object PartnerName_from: TcxGridDBColumn
+            Caption = #1050#1086#1085#1090#1088#1072#1075#1077#1085#1090
+            DataBinding.FieldName = 'PartnerName_from'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 104
+          end
+          object GoodsPropertyName: TcxGridDBColumn
+            Caption = #1050#1083#1072#1089#1089#1080#1092#1080#1082#1072#1090#1086#1088' '#1089#1074#1086#1081#1089#1090#1074' '#1090#1086#1074#1072#1088#1086#1074
+            DataBinding.FieldName = 'GoodsPropertyName'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 117
           end
           object TotalCount: TcxGridDBColumn
             Caption = #1050#1086#1083'-'#1074#1086
@@ -533,6 +550,52 @@ inherited SaleExternalJournalForm: TSaleExternalJournalForm
       PrinterNameParam.DataType = ftString
       PrinterNameParam.MultiSelectSeparator = ','
     end
+    object actDoLoad: TExecuteImportSettingsAction
+      Category = #1047#1072#1075#1088#1091#1079#1082#1072
+      MoveParams = <>
+      ImportSettingsId.Value = Null
+      ImportSettingsId.Component = FormParams
+      ImportSettingsId.ComponentItem = 'ImportSettingId'
+      ImportSettingsId.MultiSelectSeparator = ','
+      ExternalParams = <
+        item
+          Name = 'inOperDate'
+          Value = 43831d
+          Component = deStart
+          DataType = ftDateTime
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end>
+    end
+    object actGetImportSetting: TdsdExecStoredProc
+      Category = #1047#1072#1075#1088#1091#1079#1082#1072
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      StoredProc = spGetImportSettingId
+      StoredProcList = <
+        item
+          StoredProc = spGetImportSettingId
+        end>
+      Caption = 'actGetImportSetting'
+    end
+    object actStartLoad: TMultiAction
+      Category = #1047#1072#1075#1088#1091#1079#1082#1072
+      MoveParams = <>
+      ActionList = <
+        item
+          Action = actGetImportSetting
+        end
+        item
+          Action = actDoLoad
+        end
+        item
+          Action = actRefresh
+        end>
+      QuestionBeforeExecute = #1053#1072#1095#1072#1090#1100' '#1079#1072#1075#1088#1091#1079#1082#1091' '#1044#1072#1085#1085#1099#1093' '#1080#1079' '#1092#1072#1081#1083#1072'?'
+      Caption = #1047#1072#1075#1088#1091#1079#1080#1090#1100' '#1080#1079' '#1101#1082#1089#1077#1083#1103
+      Hint = #1047#1072#1075#1088#1091#1079#1080#1090#1100' '#1080#1079' '#1101#1082#1089#1077#1083#1103
+      ImageIndex = 41
+    end
   end
   inherited MasterDS: TDataSource
     Left = 64
@@ -633,6 +696,14 @@ inherited SaleExternalJournalForm: TSaleExternalJournalForm
         end
         item
           Visible = True
+          ItemName = 'bbStartLoad'
+        end
+        item
+          Visible = True
+          ItemName = 'dxBarStatic'
+        end
+        item
+          Visible = True
           ItemName = 'bbMovementItemContainer'
         end
         item
@@ -666,6 +737,10 @@ inherited SaleExternalJournalForm: TSaleExternalJournalForm
     end
     object bbPrint: TdxBarButton
       Action = actPrint
+      Category = 0
+    end
+    object bbStartLoad: TdxBarButton
+      Action = actStartLoad
       Category = 0
     end
   end
@@ -743,31 +818,8 @@ inherited SaleExternalJournalForm: TSaleExternalJournalForm
         MultiSelectSeparator = ','
       end
       item
-        Name = 'Key'
+        Name = 'ImportSettingId'
         Value = Null
-        DataType = ftString
-        ParamType = ptInput
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'ShowAll'
-        Value = False
-        DataType = ftBoolean
-        ParamType = ptInputOutput
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'ReportNameSend'
-        Value = Null
-        DataType = ftString
-        ParamType = ptInput
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'ReportNameSendTax'
-        Value = Null
-        DataType = ftString
-        ParamType = ptInput
         MultiSelectSeparator = ','
       end>
     Left = 400
@@ -781,14 +833,14 @@ inherited SaleExternalJournalForm: TSaleExternalJournalForm
   object PrintHeaderCDS: TClientDataSet
     Aggregates = <>
     Params = <>
-    Left = 660
-    Top = 217
+    Left = 708
+    Top = 153
   end
   object PrintItemsCDS: TClientDataSet
     Aggregates = <>
     Params = <>
-    Left = 652
-    Top = 270
+    Left = 788
+    Top = 158
   end
   object spSelectPrint: TdsdStoredProc
     StoredProcName = 'gpSelect_Movement_SaleExternal_Print'
@@ -880,5 +932,37 @@ inherited SaleExternalJournalForm: TSaleExternalJournalForm
     PackSize = 1
     Left = 616
     Top = 104
+  end
+  object spGetImportSettingId: TdsdStoredProc
+    StoredProcName = 'gpGet_DefaultValue'
+    DataSets = <
+      item
+      end>
+    OutputType = otResult
+    Params = <
+      item
+        Name = 'inDefaultKey'
+        Value = 'TSaleExternalForm;zc_Object_ImportSetting_SaleExternal'
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inUserKeyId'
+        Value = '0'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'gpGet_DefaultValue'
+        Value = Null
+        Component = FormParams
+        ComponentItem = 'ImportSettingId'
+        DataType = ftString
+        MultiSelectSeparator = ','
+      end>
+    PackSize = 1
+    Left = 696
+    Top = 272
   end
 end
