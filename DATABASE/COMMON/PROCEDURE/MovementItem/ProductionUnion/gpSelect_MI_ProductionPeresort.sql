@@ -16,7 +16,9 @@ RETURNS TABLE (Id Integer, LineNum Integer
              , PartionGoodsChild TVarChar, PartionGoodsDateChild TDateTime
              , Comment TVarChar
              , GoodsKindId Integer, GoodsKindCode Integer, GoodsKindName TVarChar
+             , GoodsKindId_Complete Integer, GoodsKindCode_Complete Integer, GoodsKindName_Complete TVarChar
              , GoodsKindChildId Integer, GoodsKindChildCode Integer, GoodsKindChildName TVarChar
+             , GoodsKindId_Complete_child Integer, GoodsKindCode_Complete_child Integer, GoodsKindName_Complete_child TVarChar
              , isErased Boolean
              )
 AS
@@ -56,10 +58,16 @@ BEGIN
             , CAST (NULL AS Integer)                AS GoodsKindId
             , CAST (NULL AS Integer)                AS GoodsKindCode
             , CAST (NULL AS TVarchar)               AS GoodsKindName
+            , CAST (NULL AS Integer)                AS GoodsKindId_Complete
+            , CAST (NULL AS Integer)                AS GoodsKindCode_Complete
+            , CAST (NULL AS TVarchar)               AS GoodsKindName_Complete
 
             , CAST (NULL AS Integer)                AS GoodsKindChildId
             , CAST (NULL AS Integer)                AS GoodsKindChildCode
             , CAST (NULL AS TVarchar)               AS GoodsKindChildName
+            , CAST (NULL AS Integer)                AS GoodsKindId_Complete_child
+            , CAST (NULL AS Integer)                AS GoodsKindCode_Complete_child
+            , CAST (NULL AS TVarchar)               AS GoodsKindName_Complete_child
 
             , FALSE                                  AS isErased
 
@@ -118,10 +126,17 @@ BEGIN
             , Object_GoodsKind.Id               AS GoodsKindId
             , Object_GoodsKind.ObjectCode       AS GoodsKindCode
             , Object_GoodsKind.ValueData        AS GoodsKindName
+            , Object_GoodsKind_Complete.Id               AS GoodsKindId_Complete
+            , Object_GoodsKind_Complete.ObjectCode       AS GoodsKindCode_Complete
+            , Object_GoodsKind_Complete.ValueData        AS GoodsKindName_Complete
+            
 
             , Object_GoodsKindChild.Id               AS GoodsKindChildId
             , Object_GoodsKindChild.ObjectCode       AS GoodsKindChildCode
             , Object_GoodsKindChild.ValueData        AS GoodsKindChildName
+            , Object_GoodsKind_Complete_child.Id               AS GoodsKindId_Complete_child
+            , Object_GoodsKind_Complete_child.ObjectCode       AS GoodsKindCode_Complete_child
+            , Object_GoodsKind_Complete_child.ValueData        AS GoodsKindName_Complete_child
 
             , MovementItem.isErased             AS isErased
 
@@ -136,6 +151,11 @@ BEGIN
                                               ON MILinkObject_GoodsKind.MovementItemId = MovementItem.Id
                                              AND MILinkObject_GoodsKind.DescId = zc_MILinkObject_GoodsKind()
              LEFT JOIN Object AS Object_GoodsKind ON Object_GoodsKind.Id = MILinkObject_GoodsKind.ObjectId
+
+             LEFT JOIN MovementItemLinkObject AS MILinkObject_GoodsKind_Complete
+                                              ON MILinkObject_GoodsKind_Complete.MovementItemId = MovementItem.Id
+                                             AND MILinkObject_GoodsKind_Complete.DescId         = zc_MILinkObject_GoodsKindComplete()
+             LEFT JOIN Object AS Object_GoodsKind_Complete ON Object_GoodsKind_Complete.Id = MILinkObject_GoodsKind_Complete.ObjectId
 
              LEFT JOIN MovementItemString AS MIString_Comment
                                           ON MIString_Comment.MovementItemId = MovementItem.Id
@@ -179,6 +199,11 @@ BEGIN
                                              AND MILinkObject_GoodsKindChild.DescId = zc_MILinkObject_GoodsKind()
              LEFT JOIN Object AS Object_GoodsKindChild ON Object_GoodsKindChild.Id = MILinkObject_GoodsKindChild.ObjectId
 
+             LEFT JOIN MovementItemLinkObject AS MILinkObject_GoodsKind_Complete_child
+                                              ON MILinkObject_GoodsKind_Complete_child.MovementItemId = MovementItemChild.Id
+                                             AND MILinkObject_GoodsKind_Complete_child.DescId         = zc_MILinkObject_GoodsKindComplete()
+             LEFT JOIN Object AS Object_GoodsKind_Complete_child ON Object_GoodsKind_Complete_child.Id = MILinkObject_GoodsKind_Complete_child.ObjectId
+
              LEFT JOIN ObjectString AS ObjectString_GoodsChild_GoodsGroupFull
                                     ON ObjectString_GoodsChild_GoodsGroupFull.ObjectId = Object_GoodsChild.Id
                                    AND ObjectString_GoodsChild_GoodsGroupFull.DescId = zc_ObjectString_Goods_GroupNameFull()
@@ -221,10 +246,16 @@ BEGIN
             , Object_GoodsKind.Id               AS GoodsKindId
             , Object_GoodsKind.ObjectCode       AS GoodsKindCode
             , Object_GoodsKind.ValueData        AS GoodsKindName
+            , Object_GoodsKind_Complete.Id               AS GoodsKindId_Complete
+            , Object_GoodsKind_Complete.ObjectCode       AS GoodsKindCode_Complete
+            , Object_GoodsKind_Complete.ValueData        AS GoodsKindName_Complete
 
             , Object_GoodsKindChild.Id               AS GoodsKindChildId
             , Object_GoodsKindChild.ObjectCode       AS GoodsKindChildCode
             , Object_GoodsKindChild.ValueData        AS GoodsKindChildName
+            , Object_GoodsKind_Complete_child.Id               AS GoodsKindId_Complete_child
+            , Object_GoodsKind_Complete_child.ObjectCode       AS GoodsKindCode_Complete_child
+            , Object_GoodsKind_Complete_child.ValueData        AS GoodsKindName_Complete_child
 
             , MovementItem.isErased             AS isErased
 
@@ -238,6 +269,11 @@ BEGIN
                                               ON MILinkObject_GoodsKind.MovementItemId = MovementItem.Id
                                              AND MILinkObject_GoodsKind.DescId = zc_MILinkObject_GoodsKind()
              LEFT JOIN Object AS Object_GoodsKind ON Object_GoodsKind.Id = MILinkObject_GoodsKind.ObjectId
+
+             LEFT JOIN MovementItemLinkObject AS MILinkObject_GoodsKind_Complete
+                                              ON MILinkObject_GoodsKind_Complete.MovementItemId = MovementItem.Id
+                                             AND MILinkObject_GoodsKind_Complete.DescId         = zc_MILinkObject_GoodsKindComplete()
+             LEFT JOIN Object AS Object_GoodsKind_Complete ON Object_GoodsKind_Complete.Id = MILinkObject_GoodsKind_Complete.ObjectId
 
              LEFT JOIN MovementItemString AS MIString_Comment
                                           ON MIString_Comment.MovementItemId = MovementItem.Id
@@ -280,6 +316,11 @@ BEGIN
                                               ON MILinkObject_GoodsKindChild.MovementItemId = MovementItemChild.Id
                                              AND MILinkObject_GoodsKindChild.DescId = zc_MILinkObject_GoodsKind()
              LEFT JOIN Object AS Object_GoodsKindChild ON Object_GoodsKindChild.Id = MILinkObject_GoodsKindChild.ObjectId
+
+             LEFT JOIN MovementItemLinkObject AS MILinkObject_GoodsKind_Complete_child
+                                              ON MILinkObject_GoodsKind_Complete_child.MovementItemId = MovementItemChild.Id
+                                             AND MILinkObject_GoodsKind_Complete_child.DescId         = zc_MILinkObject_GoodsKindComplete()
+             LEFT JOIN Object AS Object_GoodsKind_Complete_child ON Object_GoodsKind_Complete_child.Id = MILinkObject_GoodsKind_Complete_child.ObjectId
 
              LEFT JOIN ObjectString AS ObjectString_GoodsChild_GoodsGroupFull
                                     ON ObjectString_GoodsChild_GoodsGroupFull.ObjectId = Object_GoodsChild.Id

@@ -1,6 +1,7 @@
 -- Function: lpInsertUpdate_MI_ProductionPeresort
 
-DROP FUNCTION IF EXISTS lpInsertUpdate_MI_ProductionPeresort (Integer, Integer, Integer, Integer, Integer, Integer, TFloat, TFloat, TVarChar, TVarChar, TDateTime, TDateTime, Integer);
+-- DROP FUNCTION IF EXISTS lpInsertUpdate_MI_ProductionPeresort (Integer, Integer, Integer, Integer, Integer, Integer, TFloat, TFloat, TVarChar, TVarChar, TDateTime, TDateTime, Integer);
+DROP FUNCTION IF EXISTS lpInsertUpdate_MI_ProductionPeresort (Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, TFloat, TFloat, TVarChar, TVarChar, TDateTime, TDateTime, Integer);
 
 CREATE OR REPLACE FUNCTION lpInsertUpdate_MI_ProductionPeresort(
     INOUT ioId Integer,
@@ -8,7 +9,9 @@ CREATE OR REPLACE FUNCTION lpInsertUpdate_MI_ProductionPeresort(
     IN inGoodsId Integer,
     IN inGoodsId_child Integer,
     IN inGoodsKindId Integer,
+    IN inGoodsKindId_Complete   Integer   , -- Виды товаров
     IN inGoodsKindId_child Integer,
+    IN inGoodsKindId_Complete_child  Integer   , -- Виды товаров
     IN inAmount TFloat,
     IN inAmount_child TFloat,
     IN inPartionGoods TVarChar,
@@ -38,7 +41,7 @@ BEGIN
                                                   , inPartionGoodsDate := inPartionGoodsDate
                                                   , inPartionGoods     := inPartionGoods
                                                   , inGoodsKindId      := inGoodsKindId
-                                                  , inGoodsKindId_Complete  := NULL
+                                                  , inGoodsKindId_Complete := inGoodsKindId_Complete
                                                   , inUserId           := inUserId
                                                    );
 
@@ -51,7 +54,7 @@ BEGIN
                                                   , inPartionGoodsDate := inPartionGoodsDate_child
                                                   , inPartionGoods     := inPartionGoods_child
                                                   , inGoodsKindId      := inGoodsKindId_child
-                                                  , inGoodsKindCompleteId := NULL
+                                                  , inGoodsKindCompleteId := inGoodsKindId_Complete_child
                                                   , inCount_onCount    := 0
                                                   , inUserId           := inUserId
                                                    );

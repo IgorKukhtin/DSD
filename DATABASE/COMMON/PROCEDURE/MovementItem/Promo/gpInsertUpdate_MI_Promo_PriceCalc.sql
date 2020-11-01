@@ -22,7 +22,7 @@ BEGIN
      -- рассчитываем бонус сети
      vbContractCondition := (SELECT MAX (tmp.Value) AS ContractCondition
                              FROM (SELECT COALESCE (MovementLinkObject_Contract.ObjectId, ObjectLink_Contract_Juridical.ObjectId) AS ContractId
-                                        , SUM( COALESCE (ObjectFloat_Value.ValueData,0)) AS Value
+                                        , SUM (COALESCE (ObjectFloat_Value.ValueData, 0)) AS Value
 
                                    FROM Movement AS Movement_Promo
                                        LEFT JOIN MovementLinkObject AS MovementLinkObject_Contract
@@ -45,20 +45,29 @@ BEGIN
                                        INNER JOIN Object_Contract_InvNumber_View ON Object_Contract_InvNumber_View.ContractId          = COALESCE (MovementLinkObject_Contract.ObjectId, ObjectLink_Contract_Juridical.ObjectId)
                                                                                 AND Object_Contract_InvNumber_View.ContractStateKindId <> zc_Enum_ContractStateKind_Close()
                                                                                 AND Object_Contract_InvNumber_View.isErased            = FALSE
+                                                                                -- Готовая продукция OR  Маркетинг + Бонусы за продукцию
+                                                                              AND Object_Contract_InvNumber_View.InfoMoneyId         IN (zc_Enum_InfoMoney_30101(), zc_Enum_InfoMoney_21501())
 
                                        LEFT JOIN ObjectLink AS ObjectLink_ContractCondition_Contract
                                                             ON ObjectLink_ContractCondition_Contract.ChildObjectId = COALESCE (MovementLinkObject_Contract.ObjectId, ObjectLink_Contract_Juridical.ObjectId)
                                                            AND ObjectLink_ContractCondition_Contract.DescId = zc_ObjectLink_ContractCondition_Contract()
                                        INNER JOIN Object AS Object_ContractCondition 
-                                                         ON Object_ContractCondition.Id = ObjectLink_ContractCondition_Contract.ObjectId
-                                                        AND Object_ContractCondition.isErased = FALSE
-  
+                                                         ON Object_ContractCondition.Id       = ObjectLink_ContractCondition_Contract.ObjectId
+                                                      --AND Object_ContractCondition.isErased = FALSE
+                                       INNER JOIN ObjectLink AS ObjectLink_ContractConditionKind
+                                                             ON ObjectLink_ContractConditionKind.ObjectId = ObjectLink_ContractCondition_Contract.ObjectId
+                                                            AND ObjectLink_ContractConditionKind.ChildObjectId IN (zc_Enum_ContractConditionKind_BonusPercentAccount()
+                                                                                                                 , zc_Enum_ContractConditionKind_BonusPercentSaleReturn()
+                                                                                                                 , zc_Enum_ContractConditionKind_BonusPercentSale()
+                                                                                                                  )
+                                                            AND ObjectLink_ContractConditionKind.DescId = zc_ObjectLink_ContractCondition_ContractConditionKind()
+
                                        LEFT JOIN ObjectLink AS ObjectLink_ContractCondition_BonusKind
                                                             ON ObjectLink_ContractCondition_BonusKind.ObjectId = Object_ContractCondition.Id
                                                            AND ObjectLink_ContractCondition_BonusKind.DescId = zc_ObjectLink_ContractCondition_BonusKind()
                                        INNER JOIN Object AS Object_BonusKind
                                                          ON Object_BonusKind.Id = ObjectLink_ContractCondition_BonusKind.ChildObjectId
-                                                        AND Object_BonusKind.Id = 81959   ---Бонус
+                                                      --AND Object_BonusKind.Id = 81959   ---Бонус
 
                                        INNER JOIN ObjectFloat AS ObjectFloat_Value 
                                                               ON ObjectFloat_Value.ObjectId = Object_ContractCondition.Id 

@@ -1,6 +1,7 @@
 -- Function: gpInsertUpdate_MI_ProductionPeresort()
 
-DROP FUNCTION IF EXISTS gpInsertUpdate_MI_ProductionPeresort  (Integer, Integer, Integer, TFloat, TVarChar, TDateTime, TVarChar, Integer, Integer, TVarChar, TDateTime, Integer, TVarChar);
+-- DROP FUNCTION IF EXISTS gpInsertUpdate_MI_ProductionPeresort  (Integer, Integer, Integer, TFloat, TVarChar, TDateTime, TVarChar, Integer, Integer, TVarChar, TDateTime, Integer, TVarChar);
+DROP FUNCTION IF EXISTS gpInsertUpdate_MI_ProductionPeresort  (Integer, Integer, Integer, TFloat, TVarChar, TDateTime, TVarChar, Integer, Integer, Integer, TVarChar, TDateTime, Integer, Integer, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpInsertUpdate_MI_ProductionPeresort(
  INOUT ioId                     Integer   , -- Ключ объекта <Элемент документа>
@@ -12,10 +13,12 @@ CREATE OR REPLACE FUNCTION gpInsertUpdate_MI_ProductionPeresort(
     IN inPartionGoodsDate       TDateTime , -- Партия товара
     IN inComment                TVarChar  , -- Примечание	                   
     IN inGoodsKindId            Integer   , -- Виды товаров 
+    IN inGoodsKindId_Complete   Integer   , -- Виды товаров
  INOUT ioGoodsChildId           Integer   , -- Товары
     IN inPartionGoodsChild      TVarChar  , -- Партия товара  
     IN inPartionGoodsDateChild  TDateTime , -- Партия товара    
     IN inGoodsKindChildId       Integer   , -- Виды товаров
+    IN inGoodsKindId_Complete_child  Integer   , -- Виды товаров
    OUT outGoodsChilCode         Integer   , --
    OUT outGoodsChildName        TVarChar  , --
    OUT outAmountIn              TFloat    , -- Количество приход  - расчет такой : outAmountIn= inAmountOut * вес  ИЛИ inAmountOut / вес ИЛИ  inAmountOut
