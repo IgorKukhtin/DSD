@@ -136,6 +136,15 @@ object GoodsPropertyValueForm: TGoodsPropertyValueForm
         HeaderAlignmentVert = vaCenter
         Width = 80
       end
+      object NameExternal: TcxGridDBColumn
+        Caption = #1053#1072#1079#1074#1072#1085#1080#1077' '#1074' '#1073#1072#1079#1077' '#1087#1086#1082#1091#1087#1072#1090#1077#1083#1103
+        DataBinding.FieldName = 'NameExternal'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        HeaderHint = #1053#1072#1079#1074#1072#1085#1080#1077' '#1074' '#1073#1072#1079#1077' '#1087#1086#1082#1091#1087#1072#1090#1077#1083#1103
+        Options.Editing = False
+        Width = 120
+      end
       object GoodsKindName: TcxGridDBColumn
         Caption = #1042#1080#1076' '#1090#1086#1074#1072#1088#1072
         DataBinding.FieldName = 'GoodsKindName'
@@ -948,6 +957,7 @@ object GoodsPropertyValueForm: TGoodsPropertyValueForm
     ColumnAddOnList = <>
     ColumnEnterList = <>
     SummaryItemList = <>
+    PropertiesCellList = <>
     Left = 480
     Top = 280
   end
@@ -1140,7 +1150,7 @@ object GoodsPropertyValueForm: TGoodsPropertyValueForm
       end
       item
         Name = 'inisWeigth'
-        Value = 'TRUE'
+        Value = True
         Component = ClientDataSet
         ComponentItem = 'isWeigth'
         DataType = ftBoolean

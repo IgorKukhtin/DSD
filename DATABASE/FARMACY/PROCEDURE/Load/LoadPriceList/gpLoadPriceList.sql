@@ -99,7 +99,7 @@ BEGIN
       
      -- ¬остановим если чтото удалиди раньше
      UPDATE MovementItem SET isErased = FALSE 
-     WHERE MovementItem.Id = vbMovementId_pl 
+     WHERE MovementItem.MovementId = vbMovementId_pl 
        AND MovementItem.isErased = TRUE;
      
       

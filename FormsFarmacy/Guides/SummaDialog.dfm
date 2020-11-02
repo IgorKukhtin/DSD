@@ -38,26 +38,31 @@ object SummaDialogForm: TSummaDialogForm
   end
   object ceSumma: TcxCurrencyEdit
     Left = 41
-    Top = 61
+    Top = 77
     EditValue = 0.000000000000000000
     Properties.DecimalPlaces = 2
     Properties.DisplayFormat = ',0.00'
     TabOrder = 2
     Width = 249
   end
-  object edLabel: TcxTextEdit
-    Left = 42
-    Top = 34
+  object cxMemo1: TcxMemo
+    AlignWithMargins = True
+    Left = 41
+    Top = 24
     TabStop = False
     Enabled = False
-    Properties.AutoSelect = False
+    Lines.Strings = (
+      #1042#1074#1086#1076' '#1089#1091#1084#1084#1099)
     Properties.ReadOnly = True
-    StyleDisabled.BorderColor = clNone
+    Style.BorderStyle = ebsNone
+    Style.Color = clBtnFace
+    Style.Edges = [bLeft, bTop, bRight, bBottom]
+    Style.Shadow = False
     StyleDisabled.BorderStyle = ebsNone
     StyleDisabled.TextColor = clWindowText
     TabOrder = 3
-    Text = #1057#1091#1084#1084#1072
-    Width = 248
+    Height = 47
+    Width = 249
   end
   object dsdUserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn
     Left = 158
@@ -89,7 +94,7 @@ object SummaDialogForm: TSummaDialogForm
       item
         Name = 'Label'
         Value = Null
-        Component = edLabel
+        Component = cxMemo1
         DataType = ftString
         ParamType = ptInput
         MultiSelectSeparator = ','

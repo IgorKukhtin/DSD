@@ -1178,6 +1178,12 @@ type
     miReport_CheckBonusTest2: TMenuItem;
     actReport_GoodsMI_SaleReturnIn_Expenses: TdsdOpenForm;
     miReport_GoodsMI_SaleReturnIn_Expenses: TMenuItem;
+    actReport_ReceiptProductionOutAnalyzeTest: TdsdOpenForm;
+    miReport_ReceiptProductionOutAnalyzeTest: TMenuItem;
+    actPartnerExternal: TdsdOpenForm;
+    N219: TMenuItem;
+    actSaleExternal: TdsdOpenForm;
+    miSaleExternal: TMenuItem;
     procedure actReport_OLAPSoldExecute(Sender: TObject);
     procedure FormShow(Sender: TObject);
     procedure FormClose(Sender: TObject; var Action: TCloseAction);

@@ -116,6 +116,7 @@ type
     procedure LoadOrderTypeFormTest;
     procedure LoadPartnerFormTest;
     procedure LoadPartnerTagFormTest;
+    procedure LoadPartnerExternalFormTest;
     procedure LoadPartionGoodsChoiceFormTest;
     procedure LoadPartionRemainsFormTest;
     procedure LoadPaidKindFormTest;
@@ -174,6 +175,7 @@ type
     procedure LoadNameBeforeFormTest;
     procedure LoadSaleFormTest;
     procedure LoadSaleAssetFormTest;
+    procedure LoadSaleExternalFormTest;
     procedure LoadSendFormTest;
     procedure LoadSendAssetFormTest;
     procedure LoadSendDebtFormTest;
@@ -389,13 +391,14 @@ end;
 
 procedure TLoadFormTest.LoadContractFormTest;
 begin
-
+  {
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TContractForm'));
   TdsdFormStorageFactory.GetStorage.Load('TContractForm');
-  {
+  }
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TContractConditionValueForm'));
   TdsdFormStorageFactory.GetStorage.Load('TContractConditionValueForm');
-
+  exit;
+  {
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TContractChoiceForm'));
   TdsdFormStorageFactory.GetStorage.Load('TContractChoiceForm');
 
@@ -1254,12 +1257,22 @@ procedure TLoadFormTest.LoadSaleAssetFormTest;
 begin
 
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TSaleAssetForm'));
-  TdsdFormStorageFactory.GetStorage.Load('TSaleForm');
+  TdsdFormStorageFactory.GetStorage.Load('TSaleAssetForm');
 
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TSaleAssetJournalForm'));
   TdsdFormStorageFactory.GetStorage.Load('TSaleAssetJournalForm');
 
 end;
+
+procedure TLoadFormTest.LoadSaleExternalFormTest;
+begin
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TSaleExternalForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TSaleExternalForm');
+
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TSaleExternalJournalForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TSaleExternalJournalForm');
+end;
+
 procedure TLoadFormTest.LoadTaxFormTest;
 begin
   {
@@ -1487,16 +1500,18 @@ end;
 
 procedure TLoadFormTest.LoadJuridicalFormTest;
 begin
-
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TJuridical_DialogForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TJuridical_DialogForm');
+  {
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TJuridicalVatPriceDialogForm'));
   TdsdFormStorageFactory.GetStorage.Load('TJuridicalVatPriceDialogForm');
-  {
+
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TJuridical_BasisForm'));
   TdsdFormStorageFactory.GetStorage.Load('TJuridical_BasisForm');
-  }
+
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TJuridicalForm'));
   TdsdFormStorageFactory.GetStorage.Load('TJuridicalForm');
-  {
+
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TJuridical_ObjectForm'));
   TdsdFormStorageFactory.GetStorage.Load('TJuridical_ObjectForm');
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TJuridicalEditForm'));
@@ -1904,6 +1919,14 @@ begin
   TdsdFormStorageFactory.GetStorage.Load('TPartnerTagEditForm');
 end;
 
+procedure TLoadFormTest.LoadPartnerExternalFormTest;
+begin
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TPartnerExternalForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TPartnerExternalForm');
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TPartnerExternalEditForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TPartnerExternalEditForm');
+end;
+
 procedure TLoadFormTest.LoadPartionGoodsChoiceFormTest;
 begin
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TPartionGoodsChoiceForm'));
@@ -2272,11 +2295,11 @@ begin
 
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_CheckTaxForm'));
   TdsdFormStorageFactory.GetStorage.Load('TReport_CheckTaxForm');
-
+   }
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_CheckTaxCorrectiveForm'));
   TdsdFormStorageFactory.GetStorage.Load('TReport_CheckTaxCorrectiveForm');
   exit;
-
+  {
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_CheckBonus_IncomeForm'));
   TdsdFormStorageFactory.GetStorage.Load('TReport_CheckBonus_IncomeForm');
   exit;
@@ -2622,6 +2645,9 @@ end;
 
 procedure TLoadFormTest.LoadReportProductionOutAnalyzeFormTest;
 begin
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_ReceiptProductionOutAnalyzeTestForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TReport_ReceiptProductionOutAnalyzeTestForm');
+  exit;
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_ReceiptProductionOutAnalyzeForm'));
   TdsdFormStorageFactory.GetStorage.Load('TReport_ReceiptProductionOutAnalyzeForm');
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_ReceiptProductionOutAnalyzeDialogForm'));

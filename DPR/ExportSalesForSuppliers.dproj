@@ -96,7 +96,7 @@
 			<DelphiCompile Include="$(MainSource)">
 				<MainSource>MainSource</MainSource>
 			</DelphiCompile>
-			<DCCReference Include="..\ExportSalesForSuppliers\ExportSalesForSupp.pas">
+			<DCCReference Include="..\FormsFarmacy\MainUnitService\ExportSalesForSuppliers\ExportSalesForSupp.pas">
 				<Form>ExportSalesForSuppForm</Form>
 			</DCCReference>
 			<BuildConfiguration Include="Release">

@@ -22,7 +22,8 @@ uses
   dxSkinSilver, dxSkinSpringTime, dxSkinStardust, dxSkinSummer2008,
   dxSkinTheAsphaltWorld, dxSkinsDefaultPainters, dxSkinValentine, dxSkinVS2010,
   dxSkinWhiteprint, dxSkinXmas2008Blue, dxSkinscxPCPainter, dxSkinsdxBarPainter,
-  dsdAddOn, dxBarExtItems, cxButtonEdit, cxImageComboBox;
+  dsdAddOn, dxBarExtItems, cxButtonEdit, cxImageComboBox, cxContainer,
+  dsdGuides, cxTextEdit, cxLabel;
 
 type
   TContractConditionValueForm = class(TParentForm)
@@ -121,6 +122,13 @@ type
     IsPersonal: TcxGridDBColumn;
     ContractSendName: TcxGridDBColumn;
     CurrencyName: TcxGridDBColumn;
+    cxLabel6: TcxLabel;
+    edJuridical: TcxButtonEdit;
+    GuidesJuridical: TdsdGuides;
+    dxBarControlContainerItem1: TdxBarControlContainerItem;
+    dxBarControlContainerItem2: TdxBarControlContainerItem;
+    ExecuteDialog: TExecuteDialog;
+    RefreshDispatcher: TRefreshDispatcher;
   private
     { Private declarations }
   public

@@ -21,7 +21,7 @@ object ExportSalesForSuppForm: TExportSalesForSuppForm
     Top = 0
     Width = 909
     Height = 543
-    ActivePage = tsMDMPfizer
+    ActivePage = tsDanhsonPharma
     Align = alClient
     TabOrder = 0
     object tsOptima: TTabSheet
@@ -1758,6 +1758,314 @@ object ExportSalesForSuppForm: TExportSalesForSuppForm
         end
       end
     end
+    object tsDanhsonPharma: TTabSheet
+      Caption = #1044#1072#1085#1089#1086#1085' '#1092#1072#1088#1084#1072
+      ImageIndex = 6
+      object Panel6: TPanel
+        Left = 0
+        Top = 0
+        Width = 901
+        Height = 31
+        Align = alTop
+        TabOrder = 0
+        object btnDanhsonPharmaEmail: TButton
+          Left = 782
+          Top = 0
+          Width = 113
+          Height = 25
+          Caption = #1054#1090#1087#1088#1072#1074#1080#1090#1100' Email'
+          TabOrder = 0
+          OnClick = btnDanhsonPharmaEmailClick
+        end
+        object btnDanhsonPharmaExport: TButton
+          Left = 519
+          Top = 0
+          Width = 58
+          Height = 25
+          Caption = #1069#1082#1089#1087#1086#1088#1090
+          TabOrder = 1
+          OnClick = btnDanhsonPharmaExportClick
+        end
+        object btnDanhsonPharmaExecute: TButton
+          Left = 423
+          Top = 0
+          Width = 90
+          Height = 25
+          Caption = #1057#1092#1086#1088#1084#1080#1088#1086#1074#1072#1090#1100
+          TabOrder = 2
+          OnClick = btnDanhsonPharmaExecuteClick
+        end
+        object btnDanhsonPharmaAll: TButton
+          Left = 359
+          Top = 0
+          Width = 58
+          Height = 25
+          Caption = #1042#1089#1105'!'
+          TabOrder = 3
+          OnClick = btnDanhsonPharmaAllClick
+        end
+        object DanhsonPharmaDate: TcxDateEdit
+          Left = 85
+          Top = 4
+          EditValue = 42339d
+          Properties.ShowTime = False
+          TabOrder = 4
+          Width = 85
+        end
+        object cxLabel9: TcxLabel
+          Left = 6
+          Top = 5
+          Caption = #1044#1072#1090#1072' '#1086#1090#1095#1077#1090#1072':'
+        end
+      end
+      object grDanhsonPharma: TcxGrid
+        Left = 0
+        Top = 31
+        Width = 901
+        Height = 484
+        Align = alClient
+        TabOrder = 1
+        object grDanhsonPharmaDBTableView: TcxGridDBTableView
+          Navigator.Buttons.CustomButtons = <>
+          DataController.DataSource = dsReport_Upload_DanhsonPharma
+          DataController.Filter.Options = [fcoCaseInsensitive]
+          DataController.Summary.DefaultGroupSummaryItems = <
+            item
+              Format = ',0.####'
+              Kind = skSum
+            end
+            item
+              Kind = skSum
+              Position = spFooter
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = DanhsonPharmaTotalAmount
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = DanhsonPharmaSummaWithVAT
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+            end>
+          DataController.Summary.FooterSummaryItems = <
+            item
+              Format = ',0.####'
+              Kind = skSum
+            end
+            item
+              Format = #1042#1089#1077#1075#1086' '#1089#1090#1088#1086#1082': ,0'
+              Kind = skCount
+              Column = DanhsonPharmaName
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = DanhsonPharmaTotalAmount
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = DanhsonPharmaSummaWithVAT
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+            end>
+          DataController.Summary.SummaryGroups = <>
+          OptionsBehavior.GoToNextCellOnEnter = True
+          OptionsBehavior.FocusCellOnCycle = True
+          OptionsCustomize.ColumnHiding = True
+          OptionsCustomize.ColumnsQuickCustomization = True
+          OptionsCustomize.DataRowSizing = True
+          OptionsData.CancelOnExit = False
+          OptionsData.Inserting = False
+          OptionsView.Footer = True
+          OptionsView.GroupByBox = False
+          OptionsView.GroupSummaryLayout = gslAlignWithColumns
+          OptionsView.HeaderAutoHeight = True
+          OptionsView.Indicator = True
+          object DanhsonPharmaCode: TcxGridDBColumn
+            Caption = #1050#1086#1076
+            DataBinding.FieldName = 'Code'
+            PropertiesClassName = 'TcxButtonEditProperties'
+            Properties.Buttons = <
+              item
+                Caption = 'mactChoiceGoodsForm'
+                Default = True
+                Kind = bkEllipsis
+              end>
+            Properties.ReadOnly = True
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 39
+          end
+          object DanhsonPharmaName: TcxGridDBColumn
+            Caption = #1053#1072#1079#1074#1072#1085#1080#1077
+            DataBinding.FieldName = 'Name'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 224
+          end
+          object DanhsonPharmaNDS: TcxGridDBColumn
+            Caption = #1053#1044#1057
+            DataBinding.FieldName = 'NDS'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DisplayFormat = ',0.00'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 38
+          end
+          object DanhsonPharmaPriceWithVAT: TcxGridDBColumn
+            Caption = #1062#1077#1085#1072' '#1087#1088#1080#1093#1086#1076#1072' '#1089' '#1053#1044#1057
+            DataBinding.FieldName = 'PriceWithVAT'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DisplayFormat = ',0.00'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 66
+          end
+          object DanhsonPharmaTotalAmount: TcxGridDBColumn
+            Caption = #1048#1090#1086#1075#1086' '#1082#1086#1083'-'#1074#1086
+            DataBinding.FieldName = 'TotalAmount'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DisplayFormat = ',0.00;-,0.00; ;'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 71
+          end
+          object DanhsonPharmaSummaWithVAT: TcxGridDBColumn
+            Caption = #1057#1091#1084#1084#1072', '#1074' '#1094#1077#1085#1072#1093' '#1087#1088#1080#1093#1086#1076#1072' '#1089' '#1053#1044#1057
+            DataBinding.FieldName = 'SummaWithVAT'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DisplayFormat = ',0.00;-,0.00; ;'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 88
+          end
+          object DanhsonPharmaStatusName: TcxGridDBColumn
+            Caption = #1057#1090#1072#1090#1091#1089
+            DataBinding.FieldName = 'StatusName'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 82
+          end
+          object DanhsonPharmaItemName: TcxGridDBColumn
+            Caption = #1058#1080#1087' '#1076#1086#1082#1091#1084#1077#1085#1090#1072
+            DataBinding.FieldName = 'ItemName'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 90
+          end
+          object DanhsonPharmaMainJuridicalName: TcxGridDBColumn
+            Caption = #1053#1072#1096#1077' '#1102#1088'. '#1083#1080#1094#1086
+            DataBinding.FieldName = 'MainJuridicalName'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 113
+          end
+          object DanhsonPharmaUnitName: TcxGridDBColumn
+            Caption = #1055#1086#1076#1088#1072#1079#1076#1077#1083#1077#1085#1080#1077
+            DataBinding.FieldName = 'UnitName'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 137
+          end
+          object DanhsonPharmaOperDate: TcxGridDBColumn
+            Caption = #1044#1072#1090#1072
+            DataBinding.FieldName = 'OperDate'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 106
+          end
+          object DanhsonPharmaInvNumber: TcxGridDBColumn
+            Caption = #8470' '#1076#1086#1082#1091#1084#1077#1085#1090#1072
+            DataBinding.FieldName = 'InvNumber'
+            FooterAlignmentHorz = taCenter
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 74
+          end
+          object DanhsonPharmaJuridicalName: TcxGridDBColumn
+            Caption = #1055#1086#1089#1090#1072#1074#1097#1080#1082
+            DataBinding.FieldName = 'JuridicalName'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 113
+          end
+          object DanhsonPharmaMedicForSaleName: TcxGridDBColumn
+            Caption = #1060#1048#1054' '#1042#1088#1072#1095#1072
+            DataBinding.FieldName = 'MedicForSaleName'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 99
+          end
+          object DanhsonPharmaBuyerForSaleName: TcxGridDBColumn
+            Caption = #1060#1048#1054' '#1087#1086#1082#1091#1087#1072#1090#1077#1083#1103
+            DataBinding.FieldName = 'BuyerForSaleName'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 99
+          end
+        end
+        object grDanhsonPharmaLevel: TcxGridLevel
+          GridView = grDanhsonPharmaDBTableView
+        end
+      end
+    end
   end
   object ZConnection1: TZConnection
     ControlsCodePage = cCP_UTF16
@@ -2200,6 +2508,76 @@ object ExportSalesForSuppForm: TExportSalesForSuppForm
         ParamType = ptUnknown
       end>
     Left = 644
+    Top = 216
+    ParamData = <
+      item
+        DataType = ftUnknown
+        Name = 'StartDate'
+        ParamType = ptUnknown
+      end
+      item
+        DataType = ftUnknown
+        Name = 'EndDate'
+        ParamType = ptUnknown
+      end>
+  end
+  object dsReport_Upload_DanhsonPharma: TDataSource
+    DataSet = qryReport_Upload_DanhsonPharma
+    Left = 760
+    Top = 296
+  end
+  object qryReport_Upload_DanhsonPharma: TZQuery
+    Connection = ZConnection1
+    SQL.Strings = (
+      'SELECT MovementCheck_Promo.*'
+      
+        '     , Object_MedicForSale.ValueData                            ' +
+        '    AS MedicForSaleName'
+      
+        '     , Object_BuyerForSale.ValueData                            ' +
+        '    AS BuyerForSaleName'
+      
+        'FROM gpReport_MovementCheck_Promo(15451717, :StartDate, :EndDate' +
+        ', '#39'3'#39') AS MovementCheck_Promo'
+      ''
+      
+        '     LEFT JOIN MovementLinkObject AS MovementLinkObject_MedicFor' +
+        'Sale'
+      
+        '                                  ON MovementLinkObject_MedicFor' +
+        'Sale.MovementId =  MovementCheck_Promo.MovementId'
+      
+        '                                 AND MovementLinkObject_MedicFor' +
+        'Sale.DescId = zc_MovementLinkObject_MedicForSale()'
+      
+        '     LEFT JOIN Object AS Object_MedicForSale ON Object_MedicForS' +
+        'ale.Id = MovementLinkObject_MedicForSale.ObjectId'
+      ''
+      
+        '     LEFT JOIN MovementLinkObject AS MovementLinkObject_BuyerFor' +
+        'Sale'
+      
+        '                                  ON MovementLinkObject_BuyerFor' +
+        'Sale.MovementId =  MovementCheck_Promo.MovementId'
+      
+        '                                 AND MovementLinkObject_BuyerFor' +
+        'Sale.DescId = zc_MovementLinkObject_BuyerForSale()'
+      
+        '     LEFT JOIN Object AS Object_BuyerForSale ON Object_BuyerForS' +
+        'ale.Id = MovementLinkObject_BuyerForSale.ObjectId'
+      '')
+    Params = <
+      item
+        DataType = ftUnknown
+        Name = 'StartDate'
+        ParamType = ptUnknown
+      end
+      item
+        DataType = ftUnknown
+        Name = 'EndDate'
+        ParamType = ptUnknown
+      end>
+    Left = 756
     Top = 216
     ParamData = <
       item

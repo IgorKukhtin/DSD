@@ -148,6 +148,21 @@ procedure AddToLog(ALogMessage: string);
 var F: TextFile;
 begin
   if not SAVE_LOG then Exit;
+
+  AssignFile(F, ChangeFileExt(Application.ExeName,'_Test.log'));
+  if FileExists(ChangeFileExt(Application.ExeName,'_Test.log')) then
+    Append(F)
+  else
+    Rewrite(F);
+  //
+  if (ALogMessage = '---- Start') or (ALogMessage = 'start all VACUUM') or (ALogMessage = 'end all VACUUM')
+  then WriteLn(F, '');
+  WriteLn(F, DateTimeToStr(Now) + ' : ' + ALogMessage);
+  if (ALogMessage = '---- Start') or (ALogMessage = 'start all VACUUM') or (ALogMessage = 'end all VACUUM')
+  then WriteLn(F, '');
+  CloseFile(F);
+
+
   //
   if (Pos('Error', ALogMessage) = 0) and (Pos('Exception', ALogMessage) = 0) and (Pos('---- Start', ALogMessage) = 0)
     and (Pos('VACUUM', ALogMessage) = 0)
@@ -1065,7 +1080,7 @@ begin
                                ;
                       except on E: Exception do //а здесь уже ошибка
                         begin
-                             AddToLog('Exception (fBeginMMO): '+ E.Message);
+                             AddToLog('Exception (fBeginMMO): '+ E.Message + '???'+actExecuteImportSettings.ExternalParams.ParamByName('outMsgText').Value);
                              fError_SendEmail(FieldByName('Id').AsInteger
                                             , FieldByName('ContactPersonId').AsInteger
                                             , msgDate

@@ -16,6 +16,7 @@ RETURNS TABLE (InvNumber_ReturnIn TVarChar, InvNumberPartner_ReturnIn TVarChar
              , ContractName TVarChar, ContractTagName TVarChar
              , DocumentTaxKindName TVarChar
              , PartnerCode Integer, PartnerName TVarChar
+             , BranchCode Integer, BranchName TVarChar
              , InfoMoneyGroupName TVarChar, InfoMoneyDestinationName TVarChar, InfoMoneyCode Integer, InfoMoneyName TVarChar
              , GoodsCode Integer, GoodsName TVarChar, GoodsKindName TVarChar
              , Price TFloat
@@ -177,7 +178,10 @@ BEGIN
          , Object_DocumentTaxKind.ValueData                AS DocumentTaxKindName
          , Object_Partner.ObjectCode                       AS PartnerCode
          , Object_Partner.ValueData                        AS PartnerName
-     
+
+         , Object_Branch.ObjectCode                        AS BranchCode
+         , Object_Branch.ValueData                         AS BranchName
+
          , View_InfoMoney.InfoMoneyGroupName
          , View_InfoMoney.InfoMoneyDestinationName
          , View_InfoMoney.InfoMoneyCode
@@ -228,6 +232,7 @@ BEGIN
 
     FROM (SELECT tmpMovement.FromId
                , tmpMovement.ToId
+               , MAX (tmpMovement.BranchId) AS BranchId
                , tmpMovement.PriceWithVAT
                , tmpMovement.VATPercent
                , tmpMovement.ContractId
@@ -246,6 +251,7 @@ BEGIN
           FROM  -- Продажа покупателю
                (SELECT ObjectLink_Partner_Juridical.ChildObjectId        AS FromId
                      , ObjectLink_Contract_JuridicalBasis.ChildObjectId  AS ToId
+                     , COALESCE (ObjectLink_Unit_Branch.ChildObjectId,0) AS BranchId
                      , MovementBoolean_PriceWithVAT.ValueData            AS PriceWithVAT
                      , MovementFloat_VATPercent.ValueData                AS VATPercent
                      , MovementLinkObject_Contract.ObjectId              AS ContractId
@@ -302,6 +308,7 @@ BEGIN
                                                    ON MovementLO_DocumentTaxKind.MovementId = MovementLinkMovement.MovementChildId
                                                   AND MovementLO_DocumentTaxKind.DescId = zc_MovementLinkObject_DocumentTaxKind()
                                                   AND MovementLO_DocumentTaxKind.ObjectId IN (zc_Enum_DocumentTaxKind_TaxSummaryJuridicalSR(), zc_Enum_DocumentTaxKind_TaxSummaryPartnerSR())
+
                      INNER JOIN MovementItem ON MovementItem.MovementId = Movement.Id
                                             AND MovementItem.DescId     = zc_MI_Master()
                                             AND MovementItem.isErased   = FALSE
@@ -338,6 +345,13 @@ BEGIN
                                           ON ObjectLink_Partner_Juridical.ObjectId = MovementLinkObject_To.ObjectId
                                          AND ObjectLink_Partner_Juridical.DescId = zc_ObjectLink_Partner_Juridical()
 
+                     LEFT JOIN MovementLinkObject AS MovementLinkObject_From
+                                                  ON MovementLinkObject_From.MovementId = Movement.Id
+                                                 AND MovementLinkObject_From.DescId = zc_MovementLinkObject_From()
+                     LEFT JOIN ObjectLink AS ObjectLink_Unit_Branch
+                                          ON ObjectLink_Unit_Branch.ObjectId = MovementLinkObject_From.ObjectId
+                                         AND ObjectLink_Unit_Branch.DescId = zc_ObjectLink_Unit_Branch()
+                     
                      LEFT JOIN MovementLinkObject AS MovementLinkObject_Contract
                                                   ON MovementLinkObject_Contract.MovementId = Movement.Id
                                                  AND MovementLinkObject_Contract.DescId = zc_MovementLinkObject_Contract()
@@ -372,10 +386,12 @@ BEGIN
                          END
                        , MIFloat_CountForPrice.ValueData
                        , Movement.MovementDescId
+                       , COALESCE (ObjectLink_Unit_Branch.ChildObjectId,0)
                UNION ALL
                 -- Возврат от покупателя
                 SELECT ObjectLink_Partner_Juridical.ChildObjectId        AS FromId
                      , ObjectLink_Contract_JuridicalBasis.ChildObjectId  AS ToId
+                     , COALESCE (ObjectLink_Unit_Branch.ChildObjectId,0) AS BranchId
                      , MovementBoolean_PriceWithVAT.ValueData            AS PriceWithVAT
                      , MovementFloat_VATPercent.ValueData                AS VATPercent
                      , MovementLinkObject_Contract.ObjectId              AS ContractId
@@ -443,6 +459,10 @@ BEGIN
                      LEFT JOIN tmpPartner_Corrective ON tmpPartner_Corrective.PartnerId = MovementLinkObject_From.ObjectId
                                                     AND tmpPartner_Corrective.ContractId = MovementLinkObject_Contract.ObjectId
                                                     AND (tmpPartner_Corrective.UnitId = MovementLinkObject_To.ObjectId OR tmpPartner_Corrective.UnitId = 0)
+
+                     LEFT JOIN ObjectLink AS ObjectLink_Unit_Branch
+                                          ON ObjectLink_Unit_Branch.ObjectId = MovementLinkObject_To.ObjectId
+                                         AND ObjectLink_Unit_Branch.DescId = zc_ObjectLink_Unit_Branch()
 
                      INNER JOIN MovementItem ON MovementItem.MovementId = Movement.Id
                                             AND MovementItem.DescId     = zc_MI_Master()
@@ -514,10 +534,12 @@ BEGIN
                          END
                        , MIFloat_CountForPrice.ValueData
                        , Movement.MovementDescId
+                       , COALESCE (ObjectLink_Unit_Branch.ChildObjectId,0)
                UNION ALL
                 -- Перевод долга (расход)
                 SELECT MovementLinkObject_To.ObjectId                    AS FromId
                      , ObjectLink_Contract_JuridicalBasis.ChildObjectId  AS ToId
+                     , 0                                                 AS BranchId
                      , MovementBoolean_PriceWithVAT.ValueData            AS PriceWithVAT
                      , MovementFloat_VATPercent.ValueData                AS VATPercent
                      , MovementLinkObject_Contract.ObjectId              AS ContractId
@@ -608,6 +630,7 @@ BEGIN
                 -- Перевод долга (приход)
                 SELECT MovementLinkObject_From.ObjectId                  AS FromId
                      , ObjectLink_Contract_JuridicalBasis.ChildObjectId  AS ToId
+                     , 0                                                 AS BranchId
                      , MovementBoolean_PriceWithVAT.ValueData            AS PriceWithVAT
                      , MovementFloat_VATPercent.ValueData                AS VATPercent
                      , MovementLinkObject_Contract.ObjectId              AS ContractId
@@ -697,6 +720,7 @@ BEGIN
                 -- Корректировка цены
                 SELECT MovementLinkObject_From.ObjectId                  AS FromId
                      , MovementLinkObject_To.ObjectId                    AS ToId
+                     , COALESCE (MovementLinkObject_Branch.ObjectId,0)   AS BranchId
                      , MovementBoolean_PriceWithVAT.ValueData            AS PriceWithVAT
                      , MovementFloat_VATPercent.ValueData                AS VATPercent
                      , MovementLinkObject_Contract.ObjectId              AS ContractId
@@ -724,6 +748,10 @@ BEGIN
                                                   ON MovementLO_DocumentTaxKind.MovementId = Movement.Id
                                                  AND MovementLO_DocumentTaxKind.DescId = zc_MovementLinkObject_DocumentTaxKind()
 
+                     LEFT JOIN MovementLinkObject AS MovementLinkObject_Branch
+                                                  ON MovementLinkObject_Branch.MovementId = Movement.Id
+                                                 AND MovementLinkObject_Branch.DescId = zc_MovementLinkObject_Branch()
+            
                      INNER JOIN MovementItem ON MovementItem.MovementId = Movement.Id
                                             AND MovementItem.DescId     = zc_MI_Master()
                                             AND MovementItem.isErased   = FALSE
@@ -776,10 +804,12 @@ BEGIN
                        , MILinkObject_GoodsKind.ObjectId
                        , MIFloat_Price.ValueData
                        , MIFloat_CountForPrice.ValueData
+                       , COALESCE (MovementLinkObject_Branch.ObjectId,0)
                UNION ALL
                 -- Корректировки
                 SELECT MovementLinkObject_From.ObjectId                  AS FromId
                      , MovementLinkObject_To.ObjectId                    AS ToId
+                     , COALESCE (MovementLinkObject_Branch.ObjectId,0)   AS BranchId
                      , MovementBoolean_PriceWithVAT.ValueData            AS PriceWithVAT
                      , MovementFloat_VATPercent.ValueData                AS VATPercent
                      , MovementLinkObject_Contract.ObjectId              AS ContractId
@@ -837,7 +867,11 @@ BEGIN
                      LEFT JOIN MovementLinkObject AS MovementLinkObject_Partner
                                                   ON MovementLinkObject_Partner.MovementId = Movement.Id
                                                  AND MovementLinkObject_Partner.DescId = zc_MovementLinkObject_Partner()
-                     
+
+                     LEFT JOIN MovementLinkObject AS MovementLinkObject_Branch
+                                                  ON MovementLinkObject_Branch.MovementId = Movement.Id
+                                                 AND MovementLinkObject_Branch.DescId = zc_MovementLinkObject_Branch()
+
                 WHERE Movement.DescId = zc_Movement_TaxCorrective()
                   AND Movement.StatusId = zc_Enum_Status_Complete() 
                   AND Movement.OperDate BETWEEN inStartDate AND inEndDate
@@ -860,9 +894,11 @@ BEGIN
                        , MILinkObject_GoodsKind.ObjectId
                        , MIFloat_Price.ValueData
                        , MIFloat_CountForPrice.ValueData
+                       , COALESCE (MovementLinkObject_Branch.ObjectId,0)
           ) AS tmpMovement 
           GROUP BY tmpMovement.FromId
                  , tmpMovement.ToId
+                 --, tmpMovement.BranchId
                  , tmpMovement.PriceWithVAT
                  , tmpMovement.VATPercent
                  , tmpMovement.ContractId
@@ -896,6 +932,21 @@ BEGIN
          LEFT JOIN Object AS Object_DocumentTaxKind ON Object_DocumentTaxKind.Id = tmpGroupMovement.DocumentTaxKindId
          LEFT JOIN Object_Contract_InvNumber_View AS View_Contract_InvNumber ON View_Contract_InvNumber.ContractId = tmpGroupMovement.ContractId
          LEFT JOIN Object_InfoMoney_View AS View_InfoMoney ON View_InfoMoney.InfoMoneyId = View_Contract_InvNumber.InfoMoneyId
+
+         /*-- для оплат берем филиал по отв. сотруднику
+         LEFT JOIN ObjectLink AS ObjectLink_Contract_Personal
+                              ON ObjectLink_Contract_Personal.ObjectId = tmpGroupMovement.ContractId
+                             AND ObjectLink_Contract_Personal.DescId = zc_ObjectLink_Contract_Personal()
+         LEFT JOIN ObjectLink AS ObjectLink_Personal_Unit
+                              ON ObjectLink_Personal_Unit.ObjectId = ObjectLink_Contract_Personal.ChildObjectId
+                             AND ObjectLink_Personal_Unit.DescId = zc_ObjectLink_Personal_Unit()
+         LEFT JOIN ObjectLink AS ObjectLink_Unit_Branch
+                              ON ObjectLink_Unit_Branch.ObjectId = ObjectLink_Personal_Unit.ChildObjectId
+                             AND ObjectLink_Unit_Branch.DescId = zc_ObjectLink_Unit_Branch()
+         LEFT JOIN Object AS Object_Branch ON Object_Branch.Id = ObjectLink_Unit_Branch.ChildObjectId*/
+         
+         LEFT JOIN Object AS Object_Branch ON Object_Branch.Id = tmpGroupMovement.BranchId
+         
     WHERE tmpGroupMovement.Amount_ReturnIn <> tmpGroupMovement.Amount_TaxCorrective
        OR (inDocumentTaxKindId <> 0
            AND (tmpGroupMovement.Amount_ReturnIn <> 0 OR tmpGroupMovement.Amount_TaxCorrective <> 0)
@@ -911,6 +962,7 @@ ALTER FUNCTION gpReport_CheckTaxCorrective (TDateTime, TDateTime, Integer, TVarC
 /*-------------------------------------------------------------------------------
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
+ 29.10.20         *
  13.10.20         *
  08.07.18         *
  15.09.14                                        * add InvNumberPartner...

@@ -219,6 +219,9 @@ CREATE OR REPLACE FUNCTION zc_ObjectString_GoodsPropertyValue_Quality() RETURNS 
 INSERT INTO ObjectStringDesc (Code, DescId, ItemName)
   SELECT 'zc_ObjectString_GoodsPropertyValue_Quality', zc_Object_GoodsPropertyValue(), 'Значение ГОСТ, ДСТУ,ТУ (КУ)' WHERE NOT EXISTS (SELECT * FROM ObjectStringDesc WHERE Code = 'zc_ObjectString_GoodsPropertyValue_Quality');
 
+CREATE OR REPLACE FUNCTION zc_ObjectString_GoodsPropertyValue_NameExternal() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM ObjectStringDesc WHERE Code = 'zc_ObjectString_GoodsPropertyValue_NameExternal'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
+INSERT INTO ObjectStringDesc (Code, DescId, ItemName)
+  SELECT 'zc_ObjectString_GoodsPropertyValue_NameExternal', zc_Object_GoodsPropertyValue(), 'Название в базе покупателя' WHERE NOT EXISTS (SELECT * FROM ObjectStringDesc WHERE Code = 'zc_ObjectString_GoodsPropertyValue_NameExternal');
 
 CREATE OR REPLACE FUNCTION zc_ObjectString_Juridical_GLNCode() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM ObjectStringDesc WHERE Code = 'zc_ObjectString_Juridical_GLNCode'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
 INSERT INTO ObjectStringDesc (Code, DescId, ItemName)
@@ -759,6 +762,10 @@ CREATE OR REPLACE FUNCTION zc_ObjectString_MemberMinus_DetailPayment() RETURNS I
 INSERT INTO ObjectStringDesc (Code, DescId, ItemName)
   SELECT 'zc_ObjectString_MemberMinus_DetailPayment', zc_object_MemberMinus(), 'Назначение платежа' WHERE NOT EXISTS (SELECT * FROM ObjectStringDesc WHERE Code = 'zc_ObjectString_MemberMinus_DetailPayment');
 
+CREATE OR REPLACE FUNCTION zc_ObjectString_PartnerExternal_ObjectCode() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM ObjectStringDesc WHERE Code = 'zc_ObjectString_PartnerExternal_ObjectCode'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
+INSERT INTO ObjectStringDesc (Code, DescId, ItemName)
+  SELECT 'zc_ObjectString_PartnerExternal_ObjectCode', zc_object_PartnerExternal(), 'Код внешний' WHERE NOT EXISTS (SELECT * FROM ObjectStringDesc WHERE Code = 'zc_ObjectString_PartnerExternal_ObjectCode');
+
 
 ---!!! Аптека
 CREATE OR REPLACE FUNCTION zc_ObjectString_Goods_Code() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM ObjectStringDesc WHERE Code = 'zc_ObjectString_Goods_Code'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
@@ -1166,12 +1173,17 @@ CREATE OR REPLACE FUNCTION zc_ObjectString_Unit_PromoForSale() RETURNS Integer A
 INSERT INTO ObjectStringDesc (Code, DescId, ItemName)
   SELECT 'zc_ObjectString_Unit_PromoForSale', zc_object_Unit(), 'Маркетинговый контракт для заполнения врачей и покупателей' WHERE NOT EXISTS (SELECT * FROM ObjectStringDesc WHERE Code = 'zc_ObjectString_Unit_PromoForSale');
 
+CREATE OR REPLACE FUNCTION zc_ObjectString_BuyerForSale_Phone() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM ObjectStringDesc WHERE Code = 'zc_ObjectString_BuyerForSale_Phone'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
+INSERT INTO ObjectStringDesc (Code, DescId, ItemName)
+  SELECT 'zc_ObjectString_BuyerForSale_Phone', zc_Object_BuyerForSale(), 'Телефон' WHERE NOT EXISTS (SELECT * FROM ObjectStringDesc WHERE Code = 'zc_ObjectString_BuyerForSale_Phone');
 
 
 /*-------------------------------------------------------------------------------
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.  Воробкало А.А.   Подмогильный В.В.   Шаблий О.В.
- 10.10.20                                                                                                         * zc_ObjectString_Unit_PromoForSale  
+ 30.10.20         * zc_ObjectString_PartnerExternal_ObjectCode
+ 30.10.20                                                                                                         * zc_ObjectString_Unit_PromoForSale  
+ 10.10.20                                                                                                         * zc_ObjectString_BuyerForSale_Phone  
  05.10.20         * zc_ObjectString_MemberBranch_Comment
  07.09.20         * zc_ObjectString_MemberExternal_INN
  04.09.20         * zc_ObjectString_MemberMinus_BankAccountTo

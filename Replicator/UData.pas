@@ -249,7 +249,7 @@ const
   cStep3 = 3;
 
   // Сообщения об ошибке
-  cWrongRange = 'Ожидается, что MaxId > StartId, а имеем MaxId = %d, StartId = %d';
+  cWrongRange = 'Ожидается, что MaxId >= StartId, а имеем MaxId = %d, StartId = %d';
   cTransWrongRange = 'Команды с транзакциями из диапазона <%d-%d> уже выполнялись в другом пакете';
 
   // Пороговые значения
@@ -486,7 +486,10 @@ begin
     qrySelectReplicaCmd.Open;
     qrySelectReplicaCmd.FetchAll;
     qrySelectReplicaCmd.First;
-    FStartId := qrySelectReplicaCmd.FieldByName('Id').AsLargeInt; // откорректируем значение StartId в соответствии с реальными данными
+    if qrySelectReplicaCmd.RecordCount = 0 then
+      FStartId := 0
+    else
+      FStartId := qrySelectReplicaCmd.FieldByName('Id').AsLargeInt; // откорректируем значение StartId в соответствии с реальными данными
     LogMsg(Format(cElapsedFetch, [IntToStr(qrySelectReplicaCmd.RecordCount), Elapsed(crdStartFetch)]), crdStartFetch);
 
     if FStopped then Exit;
@@ -506,7 +509,7 @@ begin
     FLastId := FCommandData.Data.Id;
 
     // показать инфу о новой сессии в GUI
-    if Assigned(FOnNewSession) then
+    if (FStartId > 0) and (FLastId > 0) and (FStartId <= FLastId) and  Assigned(FOnNewSession) then
       FOnNewSession(dtmStart, FStartId, FLastId, FCommandData.Count, FSessionNumber);
   except
     on E: Exception do
@@ -835,7 +838,7 @@ begin
   iMaxId := FCommandData.GetMaxId(FStartId, FPacketRange);
 
   // проверим диапазон Id нового пакета
-  if iStartId >= iMaxId then
+  if iStartId > iMaxId then
   begin
     LogErrMsg(Format(cWrongRange, [iMaxId, iStartId]));
     FStopped := True;
@@ -1021,12 +1024,15 @@ begin
     // и обеспечивает условие, чтобы записи с одинаковыми номерами транзакций были в одном наборе
     BuildReplicaCommandsSQL(FStartId, FSelectRange);
 
+    if (FStartId = 0) and (FLastId = 0) then Break;
+
+
     // FStartId увеличивается в процессе выполнения команд
 
     FPacketNumber := 0; // сбрасываем нумерацию пакетов перед началом сессии
 
     // Передаем команды из дипазона StartId..(StartId + SelectRange) порциями
-    while (FStartId < FLastId) and not FStopped do
+    while (FStartId <= FLastId) and not FStopped do
     begin
       // проверяем, нужно ли записывать текст команд в файл
       FWriteCommands := TSettings.WriteCommandsToFile;

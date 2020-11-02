@@ -129,7 +129,7 @@ object Juridical_ObjectForm: TJuridical_ObjectForm
         DataBinding.FieldName = 'InfoMoneyName'
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
-        Width = 115
+        Width = 219
       end
       object InfoMoneyName_all: TcxGridDBColumn
         Caption = #1059#1055' '#1089#1090#1072#1090#1100#1103
@@ -530,6 +530,7 @@ object Juridical_ObjectForm: TJuridical_ObjectForm
     ColumnAddOnList = <>
     ColumnEnterList = <>
     SummaryItemList = <>
+    PropertiesCellList = <>
     Left = 208
     Top = 184
   end

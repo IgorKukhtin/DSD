@@ -30,6 +30,8 @@ RETURNS TABLE (AccountGroupName TVarChar, AccountDirectionName TVarChar
              , PartnerCode Integer, PartnerName TVarChar
              , StorageName TVarChar
              , UnitCode Integer, UnitName TVarChar
+             , CarName TVarChar
+             
 
              , CountStart TFloat
              , CountStart_Weight TFloat
@@ -364,6 +366,8 @@ BEGIN
         , Object_Storage.ValueData       AS StorageName
         , Object_Unit.ObjectCode         AS UnitCode
         , Object_Unit.ValueData          AS UnitName
+
+        , Object_Car.ValueData           AS CarName  --гос номер авто 
 
         , CAST (tmpMIContainer_group.CountStart          AS TFloat) AS CountStart
         , CAST (tmpMIContainer_group.CountStart * CASE WHEN Object_Measure.Id = zc_Measure_Sh() THEN ObjectFloat_Weight.ValueData ELSE 1 END          AS TFloat) AS CountStart_Weight
@@ -753,6 +757,11 @@ BEGIN
                               AND ObjectString_Goods_GroupNameFull.DescId = zc_ObjectString_Goods_GroupNameFull()
         LEFT JOIN ObjectFloat AS ObjectFloat_Weight ON ObjectFloat_Weight.ObjectId = Object_Goods.Id
                              AND ObjectFloat_Weight.DescId = zc_ObjectFloat_Goods_Weight()
+
+        LEFT JOIN ObjectLink AS ObjectLink_Asset_Car
+                             ON ObjectLink_Asset_Car.ObjectId = Object_Goods.Id
+                            AND ObjectLink_Asset_Car.DescId = zc_ObjectLink_Asset_Car()
+        LEFT JOIN Object AS Object_Car ON Object_Car.Id = ObjectLink_Asset_Car.ChildObjectId
 
         LEFT JOIN Object AS Object_PartionGoods ON Object_PartionGoods.Id = tmpMIContainer_group.PartionGoodsId
         LEFT JOIN Object AS Object_AssetTo ON Object_AssetTo.Id = tmpMIContainer_group.AssetToId

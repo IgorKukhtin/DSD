@@ -1799,6 +1799,10 @@ CREATE OR REPLACE FUNCTION zc_ObjectLink_MemberBranch_Member() RETURNS Integer A
 INSERT INTO ObjectLinkDesc (Code, ItemName, DescId, ChildObjectDescId)
   SELECT 'zc_ObjectLink_MemberBranch_Member', 'Физ.лицо', zc_Object_MemberBranch(), zc_Object_Member() WHERE NOT EXISTS (SELECT * FROM ObjectLinkDesc WHERE Code = 'zc_ObjectLink_MemberBranch_Member');
 
+CREATE OR REPLACE FUNCTION zc_ObjectLink_PartnerExternal_Partner() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM ObjectLinkDesc WHERE Code = 'zc_ObjectLink_PartnerExternal_Partner'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
+INSERT INTO ObjectLinkDesc (Code, ItemName, DescId, ChildObjectDescId)
+  SELECT 'zc_ObjectLink_PartnerExternal_Partner', 'Контрагент', zc_Object_PartnerExternal(), zc_Object_Partner() WHERE NOT EXISTS (SELECT * FROM ObjectLinkDesc WHERE Code = 'zc_ObjectLink_PartnerExternal_Partner');
+
 
 --!!! АПТЕКА
 
@@ -2408,6 +2412,7 @@ SELECT 'zc_ObjectLink_Unit_UnitSAUA', 'Связь со Slave в системе автоматического 
 /*-------------------------------------------------------------------------------
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.   Воробкало А.А.   Шаблий О.В.
+ 30.10.20         * zc_ObjectLink_PartnerExternal_Partner
  20.10.20                                                                                      * zc_ObjectLink_Unit_UnitSAUA
  05.10.20         * zc_ObjectLink_MemberBranch_Branch
                     zc_ObjectLink_MemberBranch_Member

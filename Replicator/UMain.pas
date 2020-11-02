@@ -1065,6 +1065,8 @@ begin
 end;
 
 procedure TfrmMain.UpdateProgBarPosition(AProgBar: TProgressBar; const AMax, ACurrValue, ARecCount: Int64);
+var
+  iMin, iCurCount: Int64;
 begin
   AProgBar.Max  := 100;
   AProgBar.Min  := 1;
@@ -1076,7 +1078,23 @@ begin
   end;
 
   Assert(AMax > 0, 'Ожидается AMax > 0, а имеем AMax = ' + IntTosTr(AMax));
-  AProgBar.Position := Round(100 * ACurrValue / AMax);
+  Assert(ARecCount > 0, 'Ожидается ARecCount > 0, а имеем ARecCount = ' + IntTosTr(ARecCount));
+
+  iMin      := Max(0, AMax - ARecCount);
+  iCurCount := Max(0, ACurrValue - iMin);
+
+  if (ARecCount > 0) and (iCurCount <= ARecCount) then
+    AProgBar.Position := Round(100 * iCurCount / ARecCount);
+
+  // Когда состояние новой базы данных уже практически идентично оригинальной, тогда iCurCount может превысить ARecCount,
+  // потому что ARecCount получаем через определенный интервал времени (по умолчанию каждые 5 минут),
+  // а новая репликация завершается намного быстрее т.к. записей для репликации мало.
+  // ARecCount устаревает и нужно его обновить.
+  if (ARecCount > 0) and (iCurCount > ARecCount) then
+  begin
+    AProgBar.Position := AProgBar.Max;
+    CheckReplicaMaxMin;
+  end;
 end;
 
 procedure TfrmMain.UpdateSnapshotElapsedTime;

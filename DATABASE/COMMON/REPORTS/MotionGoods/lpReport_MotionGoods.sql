@@ -194,7 +194,16 @@ BEGIN
     -- группа товаров или товар или все товары из проводок
     IF inGoodsGroupId <> 0 AND COALESCE (inGoodsId, 0) = 0
     THEN
-        WITH tmpGoods AS (SELECT lfSelect.GoodsId FROM lfSelect_Object_Goods_byGoodsGroup (inGoodsGroupId) AS lfSelect)
+        WITH tmpGoods AS (SELECT lfSelect.GoodsId FROM lfSelect_Object_Goods_byGoodsGroup (inGoodsGroupId) AS lfSelect WHERE vbIsAssetTo = FALSE
+                         UNION ALL
+                         -- если отбор по группе ОС 
+                          SELECT ObjectLink_Asset_AssetGroup.ObjectId AS GoodsId
+                          FROM ObjectLink AS ObjectLink_Asset_AssetGroup
+                          WHERE ObjectLink_Asset_AssetGroup.DescId = zc_ObjectLink_Asset_AssetGroup()
+                            AND ObjectLink_Asset_AssetGroup.ChildObjectId = inGoodsGroupId
+                            AND vbIsAssetTo = TRUE
+                         )
+
            , tmpAccount AS (SELECT View_Account.AccountGroupId, View_Account.AccountId
                             FROM (SELECT inAccountGroupId              AS AccountGroupId WHERE inAccountGroupId <> 0
                             UNION SELECT zc_Enum_AccountGroup_10000()  AS AccountGroupId WHERE inAccountGroupId = 0
