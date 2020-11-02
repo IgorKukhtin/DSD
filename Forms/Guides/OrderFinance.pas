@@ -71,6 +71,8 @@ type
     InfoMoneyChoiceForm: TOpenChoiceForm;
     InfoMoneyDestinationChoiceForm: TOpenChoiceForm;
     InfoMoneyGroupChoiceForm: TOpenChoiceForm;
+    actShowErased: TBooleanStoredProcAction;
+    bb: TdxBarButton;
   private
     { Private declarations }
   public
