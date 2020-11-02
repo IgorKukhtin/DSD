@@ -53,7 +53,7 @@ BEGIN
 --    RAISE EXCEPTION 'Ошибка.<%>', (select count(*) from _tmp_pg_stat_activity);
 
        -- если найдена активная транзакция - для значения без timezone
-       IF EXISTS (SELECT 1 FROM _tmp_pg_stat_activity WHERE state ILIKE 'active' AND timezone('utc'::text, query_start) < vbLast_modified + INTERVAL '25 SECOND')
+       IF EXISTS (SELECT 1 FROM _tmp_pg_stat_activity WHERE state ILIKE 'active' AND timezone('utc'::text, query_start) < vbLast_modified + INTERVAL '400 SECOND')
        THEN
            vbId_End:= inId_start - 1;
        END IF;

@@ -41,6 +41,8 @@ type
     JuridicalCode: TcxGridDBColumn;
     BankAccountName: TcxGridDBColumn;
     InfoMoneyCode: TcxGridDBColumn;
+    InfoMoneyGroupName: TcxGridDBColumn;
+    InfoMoneyDestinationName: TcxGridDBColumn;
   private
     { Private declarations }
   public

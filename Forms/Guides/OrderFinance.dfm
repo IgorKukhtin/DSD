@@ -5,18 +5,18 @@ inherited OrderFinanceForm: TOrderFinanceForm
   AddOnFormData.isAlwaysRefresh = False
   AddOnFormData.ChoiceAction = dsdChoiceGuides
   ExplicitWidth = 919
-  ExplicitHeight = 383
+  ExplicitHeight = 380
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
     Width = 903
     Height = 319
-    ExplicitWidth = 873
+    ExplicitWidth = 903
     ExplicitHeight = 319
     ClientRectBottom = 319
     ClientRectRight = 903
     inherited tsMain: TcxTabSheet
-      ExplicitWidth = 873
+      ExplicitWidth = 903
       ExplicitHeight = 319
       inherited cxGrid: TcxGrid
         Width = 569
@@ -61,18 +61,19 @@ inherited OrderFinanceForm: TOrderFinanceForm
             Width = 55
           end
           object BankName: TcxGridDBColumn
-            Caption = #1041#1072#1085#1082
+            Caption = #1041#1072#1085#1082' ('#1087#1083#1072#1090#1077#1083#1100#1097#1080#1082#1072')'
             DataBinding.FieldName = 'BankName'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
-            Width = 91
+            Width = 94
           end
           object BankAccountName: TcxGridDBColumn
-            Caption = #1056#1072#1089#1095#1077#1090#1085#1099#1081' '#1089#1095#1077#1090
+            Caption = #1056'/'#1057#1095#1077#1090' ('#1087#1083#1072#1090#1077#1083#1100#1097#1080#1082#1072')'
             DataBinding.FieldName = 'BankAccountName'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
+            HeaderHint = #1088'/'#1089#1095#1077#1090', '#1089' '#1082#1086#1090#1086#1088#1086#1075#1086' '#1084#1099' '#1087#1083#1072#1090#1080#1084
             Options.Editing = False
             Width = 125
           end
@@ -103,8 +104,6 @@ inherited OrderFinanceForm: TOrderFinanceForm
         Align = alClient
         PopupMenu = PopupMenu
         TabOrder = 1
-        ExplicitLeft = 452
-        ExplicitWidth = 421
         object cxGridDBTableView1: TcxGridDBTableView
           Navigator.Buttons.CustomButtons = <>
           DataController.DataSource = ChildDS
@@ -197,7 +196,6 @@ inherited OrderFinanceForm: TOrderFinanceForm
         Height = 319
         AutoPosition = False
         Control = cxGrid
-        ExplicitLeft = 449
       end
     end
   end
@@ -837,6 +835,7 @@ inherited OrderFinanceForm: TOrderFinanceForm
     ColumnAddOnList = <>
     ColumnEnterList = <>
     SummaryItemList = <>
+    PropertiesCellList = <>
     Left = 528
     Top = 208
   end
