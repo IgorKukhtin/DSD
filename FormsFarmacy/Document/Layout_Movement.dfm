@@ -1,27 +1,27 @@
 inherited Layout_MovementForm: TLayout_MovementForm
   Caption = #1044#1086#1082#1091#1084#1077#1085#1090' <'#1042#1099#1082#1083#1072#1076#1082#1072'>'
   ClientHeight = 516
-  ClientWidth = 708
-  ExplicitWidth = 724
+  ClientWidth = 855
+  ExplicitWidth = 871
   ExplicitHeight = 555
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
     Top = 119
-    Width = 708
+    Width = 855
     Height = 397
     ExplicitTop = 119
-    ExplicitWidth = 708
+    ExplicitWidth = 855
     ExplicitHeight = 397
     ClientRectBottom = 397
-    ClientRectRight = 708
+    ClientRectRight = 855
     inherited tsMain: TcxTabSheet
-      ExplicitWidth = 708
+      ExplicitWidth = 855
       ExplicitHeight = 373
       inherited cxGrid: TcxGrid
-        Width = 708
+        Width = 448
         Height = 373
-        ExplicitWidth = 708
+        ExplicitWidth = 448
         ExplicitHeight = 373
         inherited cxGridDBTableView: TcxGridDBTableView
           DataController.Summary.DefaultGroupSummaryItems = <
@@ -99,7 +99,7 @@ inherited Layout_MovementForm: TLayout_MovementForm
             GroupSummaryAlignment = taCenter
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
-            Width = 228
+            Width = 66
           end
           inherited colIsErased: TcxGridDBColumn
             GroupSummaryAlignment = taCenter
@@ -107,13 +107,92 @@ inherited Layout_MovementForm: TLayout_MovementForm
           end
         end
       end
+      object cxGridChild: TcxGrid
+        Left = 456
+        Top = 0
+        Width = 399
+        Height = 373
+        Align = alRight
+        PopupMenu = PopupMenu
+        TabOrder = 1
+        object cxGridDBTableView1: TcxGridDBTableView
+          Navigator.Buttons.CustomButtons = <>
+          DataController.DataSource = DetailDS
+          DataController.Filter.Options = [fcoCaseInsensitive]
+          DataController.Summary.DefaultGroupSummaryItems = <>
+          DataController.Summary.FooterSummaryItems = <>
+          DataController.Summary.SummaryGroups = <>
+          Images = dmMain.SortImageList
+          OptionsBehavior.GoToNextCellOnEnter = True
+          OptionsBehavior.IncSearch = True
+          OptionsBehavior.FocusCellOnCycle = True
+          OptionsCustomize.ColumnHiding = True
+          OptionsCustomize.ColumnsQuickCustomization = True
+          OptionsCustomize.DataRowSizing = True
+          OptionsData.CancelOnExit = False
+          OptionsData.Inserting = False
+          OptionsView.Footer = True
+          OptionsView.GroupByBox = False
+          OptionsView.GroupSummaryLayout = gslAlignWithColumns
+          OptionsView.HeaderAutoHeight = True
+          OptionsView.Indicator = True
+          Styles.StyleSheet = dmMain.cxGridTableViewStyleSheet
+          object chisErased: TcxGridDBColumn
+            Caption = #1059#1076#1072#1083#1077#1085' ('#1076#1072'/'#1085#1077#1090')'
+            DataBinding.FieldName = 'isErased'
+            Visible = False
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 50
+          end
+          object chIsChecked: TcxGridDBColumn
+            Caption = #1054#1090#1084#1077#1095#1077#1085
+            DataBinding.FieldName = 'IsChecked'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 57
+          end
+          object chUnitCode: TcxGridDBColumn
+            AlternateCaption = 'chUnitCode'
+            Caption = #1050#1086#1076
+            DataBinding.FieldName = 'UnitCode'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 51
+          end
+          object chUnitName: TcxGridDBColumn
+            AlternateCaption = 'UserName'
+            Caption = #1053#1072#1079#1074#1072#1085#1080#1077
+            DataBinding.FieldName = 'UnitName'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 236
+          end
+        end
+        object cxGridLevel1: TcxGridLevel
+          GridView = cxGridDBTableView1
+        end
+      end
+      object cxSplitter3: TcxSplitter
+        Left = 448
+        Top = 0
+        Width = 8
+        Height = 373
+        Touch.ParentTabletOptions = False
+        Touch.TabletOptions = [toPressAndHold]
+        AlignSplitter = salRight
+        Control = cxGridChild
+      end
     end
   end
   inherited DataPanel: TPanel
-    Width = 708
+    Width = 855
     Height = 93
     TabOrder = 3
-    ExplicitWidth = 708
+    ExplicitWidth = 855
     ExplicitHeight = 93
     inherited edInvNumber: TcxTextEdit
       Left = 182
@@ -194,7 +273,38 @@ inherited Layout_MovementForm: TLayout_MovementForm
     Left = 55
     Top = 303
     inherited actRefresh: TdsdDataSetRefresh
+      StoredProcList = <
+        item
+          StoredProc = spGet
+        end
+        item
+          StoredProc = spGetTotalSumm
+        end
+        item
+          StoredProc = spSelect
+        end
+        item
+          StoredProc = spSelect_MovementItem_Child
+        end>
       RefreshOnTabSetChanges = True
+    end
+    inherited actShowErased: TBooleanStoredProcAction
+      StoredProcList = <
+        item
+          StoredProc = spSelect
+        end
+        item
+          StoredProc = spSelect_MovementItem_Child
+        end>
+    end
+    inherited actShowAll: TBooleanStoredProcAction
+      StoredProcList = <
+        item
+          StoredProc = spSelect
+        end
+        item
+          StoredProc = spSelect_MovementItem_Child
+        end>
     end
     inherited actPrint: TdsdPrintAction
       StoredProc = spSelectPrint_Loss
@@ -471,6 +581,56 @@ inherited Layout_MovementForm: TLayout_MovementForm
         end>
       isShowModal = True
     end
+    object actUpdateChildDS: TdsdUpdateDataSet
+      Category = 'DSDLib'
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      StoredProc = spInsertUpdateMIChild
+      StoredProcList = <
+        item
+          StoredProc = spInsertUpdateMIChild
+        end>
+      Caption = 'actUpdateChildDS'
+      DataSource = DetailDS
+    end
+    object actMISetErasedChild: TdsdUpdateErased
+      Category = 'DSDLib'
+      MoveParams = <>
+      StoredProc = spErasedMIChild
+      StoredProcList = <
+        item
+          StoredProc = spErasedMIChild
+        end
+        item
+          StoredProc = spGetTotalSumm
+        end>
+      Caption = #1059#1076#1072#1083#1080#1090#1100' <'#1055#1086#1076#1088#1072#1079#1076#1077#1083#1077#1085#1080#1077'>'
+      Hint = #1059#1076#1072#1083#1080#1090#1100' <'#1055#1086#1076#1088#1072#1079#1076#1077#1083#1077#1085#1080#1077'>'
+      ImageIndex = 2
+      ShortCut = 46
+      ErasedFieldName = 'isErased'
+      DataSource = DetailDS
+      QuestionBeforeExecute = #1042#1099' '#1091#1074#1077#1088#1077#1085#1099' '#1074' '#1091#1076#1072#1083#1077#1085#1080#1080'?'
+    end
+    object actMISetUnErasedChild: TdsdUpdateErased
+      Category = 'DSDLib'
+      MoveParams = <>
+      StoredProc = spUnErasedMIChild
+      StoredProcList = <
+        item
+          StoredProc = spUnErasedMIChild
+        end
+        item
+          StoredProc = spGetTotalSumm
+        end>
+      Caption = #1042#1086#1089#1089#1090#1072#1085#1086#1074#1080#1090#1100
+      Hint = #1042#1086#1089#1089#1090#1072#1085#1086#1074#1080#1090#1100' '#1076#1072#1085#1085#1099#1077
+      ImageIndex = 8
+      ShortCut = 46
+      ErasedFieldName = 'isErased'
+      isSetErased = False
+      DataSource = DetailDS
+    end
   end
   inherited MasterDS: TDataSource
     Left = 32
@@ -571,6 +731,14 @@ inherited Layout_MovementForm: TLayout_MovementForm
         end
         item
           Visible = True
+          ItemName = 'dxBarButton4'
+        end
+        item
+          Visible = True
+          ItemName = 'dxBarButton5'
+        end
+        item
+          Visible = True
           ItemName = 'dxBarStatic'
         end
         item
@@ -639,6 +807,20 @@ inherited Layout_MovementForm: TLayout_MovementForm
     end
     object bbInsertByLayout: TdxBarButton
       Action = macInsertByLayout
+      Category = 0
+    end
+    object dxBarSubItem1: TdxBarSubItem
+      Caption = 'New SubItem'
+      Category = 0
+      Visible = ivAlways
+      ItemLinks = <>
+    end
+    object dxBarButton4: TdxBarButton
+      Action = actMISetErasedChild
+      Category = 0
+    end
+    object dxBarButton5: TdxBarButton
+      Action = actMISetUnErasedChild
       Category = 0
     end
   end
@@ -906,8 +1088,8 @@ inherited Layout_MovementForm: TLayout_MovementForm
   end
   inherited RefreshAddOn: TRefreshAddOn
     DataSet = ''
-    Left = 432
-    Top = 304
+    Left = 400
+    Top = 336
   end
   inherited spErasedMIMaster: TdsdStoredProc
     StoredProcName = 'gpMovementItem_Loss_SetErased'
@@ -1163,5 +1345,171 @@ inherited Layout_MovementForm: TLayout_MovementForm
     ParamKeyField = 'inMovementId'
     Left = 160
     Top = 448
+  end
+  object DetailDS: TDataSource
+    DataSet = DetailDCS
+    Left = 760
+    Top = 216
+  end
+  object DetailDCS: TClientDataSet
+    Aggregates = <>
+    FilterOptions = [foCaseInsensitive]
+    Params = <>
+    Left = 712
+    Top = 200
+  end
+  object spSelect_MovementItem_Child: TdsdStoredProc
+    StoredProcName = 'gpSelect_MovementItem_LayoutChild'
+    DataSet = DetailDCS
+    DataSets = <
+      item
+        DataSet = DetailDCS
+      end>
+    Params = <
+      item
+        Name = 'inMovementId'
+        Value = Null
+        Component = FormParams
+        ComponentItem = 'Id'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inShowAll'
+        Value = False
+        Component = actShowAll
+        DataType = ftBoolean
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inIsErased'
+        Value = False
+        Component = actShowErased
+        DataType = ftBoolean
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end>
+    PackSize = 1
+    Left = 720
+    Top = 288
+  end
+  object spInsertUpdateMIChild: TdsdStoredProc
+    StoredProcName = 'gpInsertUpdate_MovementItem_LayoutChild'
+    DataSets = <>
+    OutputType = otResult
+    Params = <
+      item
+        Name = 'ioId'
+        Value = Null
+        Component = DetailDCS
+        ComponentItem = 'Id'
+        ParamType = ptInputOutput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inMovementId'
+        Value = Null
+        Component = FormParams
+        ComponentItem = 'Id'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inUnitId'
+        Value = Null
+        Component = DetailDCS
+        ComponentItem = 'UnitId'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inIsChecked'
+        Value = Null
+        Component = DetailDCS
+        ComponentItem = 'IsChecked'
+        DataType = ftBoolean
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end>
+    PackSize = 1
+    NeedResetData = True
+    ParamKeyField = 'inMovementId'
+    Left = 712
+    Top = 352
+  end
+  object spErasedMIChild: TdsdStoredProc
+    StoredProcName = 'gpSetErased_MovementItem'
+    DataSets = <>
+    OutputType = otResult
+    Params = <
+      item
+        Name = 'inMovementItemId'
+        Value = Null
+        Component = DetailDCS
+        ComponentItem = 'Id'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'outIsErased'
+        Value = Null
+        Component = DetailDCS
+        ComponentItem = 'isErased'
+        DataType = ftBoolean
+        MultiSelectSeparator = ','
+      end>
+    PackSize = 1
+    Left = 622
+    Top = 384
+  end
+  object spUnErasedMIChild: TdsdStoredProc
+    StoredProcName = 'gpSetUnErased_MovementItem'
+    DataSets = <>
+    OutputType = otResult
+    Params = <
+      item
+        Name = 'inMovementItemId'
+        Value = Null
+        Component = DetailDCS
+        ComponentItem = 'Id'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'outIsErased'
+        Value = Null
+        Component = DetailDCS
+        ComponentItem = 'isErased'
+        DataType = ftBoolean
+        MultiSelectSeparator = ','
+      end>
+    PackSize = 1
+    Left = 534
+    Top = 384
+  end
+  object DBViewAddOnChild: TdsdDBViewAddOn
+    ErasedFieldName = 'isErased'
+    View = cxGridDBTableView1
+    OnDblClickActionList = <>
+    ActionItemList = <>
+    SortImages = dmMain.SortImageList
+    OnlyEditingCellOnEnter = False
+    ColorRuleList = <>
+    ColumnAddOnList = <>
+    ColumnEnterList = <>
+    SummaryItemList = <
+      item
+        Param.Value = Null
+        Param.Component = FormParams
+        Param.ComponentItem = 'TotalSumm'
+        Param.DataType = ftString
+        Param.MultiSelectSeparator = ','
+        DataSummaryItemIndex = 5
+      end>
+    SearchAsFilter = False
+    PropertiesCellList = <>
+    Left = 614
+    Top = 273
   end
 end

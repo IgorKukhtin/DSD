@@ -264,7 +264,8 @@ BEGIN
 
        WHERE COALESCE (tmpContractSettings.isErased, False) = False
          AND COALESCE (JuridicalSettings.isPriceCloseOrder, TRUE) = False
-         AND tmpMainJuridicalArea.MainJuridicalId = vbJuridicalId;
+         AND tmpMainJuridicalArea.MainJuridicalId = vbJuridicalId
+         AND (tmpMainJuridicalArea.AreaId = vbAreaId OR COALESCE (tmpMainJuridicalArea.AreaId, 0) = 0);
 
      ANALYSE _GoodsPriceAll;
 

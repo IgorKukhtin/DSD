@@ -23,7 +23,8 @@ uses
   dxSkinOffice2010Blue, dxSkinOffice2010Silver, dxSkinPumpkin, dxSkinSeven,
   dxSkinSevenClassic, dxSkinSharp, dxSkinSharpPlus, dxSkinSilver,
   dxSkinSpringTime, dxSkinStardust, dxSkinSummer2008, dxSkinTheAsphaltWorld,
-  dxSkinValentine, dxSkinVS2010, dxSkinWhiteprint, dxSkinXmas2008Blue;
+  dxSkinValentine, dxSkinVS2010, dxSkinWhiteprint, dxSkinXmas2008Blue,
+  cxSplitter;
 
 type
   TLayout_MovementForm = class(TAncestorDocumentForm)
@@ -63,6 +64,27 @@ type
     spInsertByLayout: TdsdStoredProc;
     bbInsertByLayout: TdxBarButton;
     cbPharmacyItem: TcxCheckBox;
+    cxGridChild: TcxGrid;
+    cxGridDBTableView1: TcxGridDBTableView;
+    chisErased: TcxGridDBColumn;
+    chUnitCode: TcxGridDBColumn;
+    chUnitName: TcxGridDBColumn;
+    cxGridLevel1: TcxGridLevel;
+    chIsChecked: TcxGridDBColumn;
+    cxSplitter3: TcxSplitter;
+    DetailDS: TDataSource;
+    DetailDCS: TClientDataSet;
+    spSelect_MovementItem_Child: TdsdStoredProc;
+    actUpdateChildDS: TdsdUpdateDataSet;
+    spInsertUpdateMIChild: TdsdStoredProc;
+    spErasedMIChild: TdsdStoredProc;
+    spUnErasedMIChild: TdsdStoredProc;
+    actMISetErasedChild: TdsdUpdateErased;
+    actMISetUnErasedChild: TdsdUpdateErased;
+    dxBarSubItem1: TdxBarSubItem;
+    dxBarButton4: TdxBarButton;
+    dxBarButton5: TdxBarButton;
+    DBViewAddOnChild: TdsdDBViewAddOn;
   private
     { Private declarations }
   public
