@@ -43,6 +43,13 @@ type
     InfoMoneyCode: TcxGridDBColumn;
     InfoMoneyGroupName: TcxGridDBColumn;
     InfoMoneyDestinationName: TcxGridDBColumn;
+    Panel: TPanel;
+    cxLabel3: TcxLabel;
+    edBank: TcxButtonEdit;
+    GuidesBank: TdsdGuides;
+    cxLabel2: TcxLabel;
+    edBankAccount: TcxButtonEdit;
+    GuidesBankAccount: TdsdGuides;
   private
     { Private declarations }
   public

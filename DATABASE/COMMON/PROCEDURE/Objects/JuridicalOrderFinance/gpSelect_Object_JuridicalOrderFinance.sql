@@ -3,9 +3,10 @@
 DROP FUNCTION IF EXISTS gpSelect_Object_JuridicalOrderFinance(Boolean, Boolean, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpSelect_Object_JuridicalOrderFinance(
-    IN inisShowAll   Boolean,       -- True - показать все, False - показать только сохраненные
-    IN inisErased    Boolean,       -- True - показать так же удаленные, False - показать только рабочие
-    IN inSession     TVarChar       -- сессия пользователя
+    IN inBankAccountId_main  Integer,       -- 
+    IN inisShowAll           Boolean,       -- True - показать все, False - показать только сохраненные
+    IN inisErased            Boolean,       -- True - показать так же удаленные, False - показать только рабочие
+    IN inSession             TVarChar       -- сессия пользователя
 )
 RETURNS TABLE (Id Integer
              , JuridicalId Integer, JuridicalCode Integer, JuridicalName TVarChar
@@ -69,6 +70,7 @@ BEGIN
                               
                                      WHERE Object_JuridicalOrderFinance.DescId = zc_Object_JuridicalOrderFinance()
                                         AND (Object_JuridicalOrderFinance.isErased = inisErased OR inisErased = TRUE)
+                                        AND (OL_JuridicalOrderFinance_BankAccountMain.ChildObjectId = inBankAccountId_main OR inBankAccountId_main = 0)
                                      )
         --Результат
         SELECT COALESCE (tmpJuridicalOrderFinance.Id,0) AS Id
@@ -209,6 +211,7 @@ BEGIN
 
         WHERE Object_JuridicalOrderFinance.DescId = zc_Object_JuridicalOrderFinance()
          AND (Object_JuridicalOrderFinance.isErased = inisErased OR inisErased = TRUE)
+         AND (OL_JuridicalOrderFinance_BankAccountMain.ChildObjectId = inBankAccountId_main OR inBankAccountId_main = 0)
         ;
     END IF;
 END;
@@ -220,6 +223,7 @@ LANGUAGE plpgsql VOLATILE;
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
+ 02.11.20         * add inBankAccountId_main
  29.07.19         *
 */
 

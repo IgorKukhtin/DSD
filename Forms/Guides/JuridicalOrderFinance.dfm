@@ -5,26 +5,27 @@ inherited JuridicalOrderFinanceForm: TJuridicalOrderFinanceForm
   AddOnFormData.isAlwaysRefresh = True
   AddOnFormData.ChoiceAction = dsdChoiceGuides
   AddOnFormData.Params = FormParams
-  ExplicitLeft = -147
   ExplicitWidth = 936
-  ExplicitHeight = 458
+  ExplicitHeight = 461
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
+    Top = 57
     Width = 920
-    Height = 397
+    Height = 366
+    ExplicitTop = 57
     ExplicitWidth = 920
-    ExplicitHeight = 397
-    ClientRectBottom = 397
+    ExplicitHeight = 366
+    ClientRectBottom = 366
     ClientRectRight = 920
     inherited tsMain: TcxTabSheet
       ExplicitWidth = 920
-      ExplicitHeight = 397
+      ExplicitHeight = 366
       inherited cxGrid: TcxGrid
         Width = 920
-        Height = 397
+        Height = 366
         ExplicitWidth = 920
-        ExplicitHeight = 397
+        ExplicitHeight = 366
         inherited cxGridDBTableView: TcxGridDBTableView
           OptionsBehavior.IncSearch = True
           OptionsData.Deleting = False
@@ -42,7 +43,7 @@ inherited JuridicalOrderFinanceForm: TJuridicalOrderFinanceForm
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
-            Width = 87
+            Width = 114
           end
           object BankAccountName_main: TcxGridDBColumn
             Caption = #1056'/'#1057#1095#1077#1090' ('#1087#1083#1072#1090#1077#1083#1100#1097#1080#1082#1072')'
@@ -141,6 +142,50 @@ inherited JuridicalOrderFinanceForm: TJuridicalOrderFinanceForm
       end
     end
   end
+  object Panel: TPanel [1]
+    Left = 0
+    Top = 0
+    Width = 920
+    Height = 31
+    Align = alTop
+    TabOrder = 5
+    object cxLabel3: TcxLabel
+      Left = 437
+      Top = 6
+      Hint = #1041#1072#1085#1082' ('#1087#1083#1072#1090#1077#1083#1100#1097#1080#1082#1072')'
+      Caption = #1041#1072#1085#1082' ('#1087#1083#1072#1090#1077#1083#1100#1097#1080#1082#1072'):'
+    end
+    object edBank: TcxButtonEdit
+      Left = 552
+      Top = 5
+      Properties.Buttons = <
+        item
+          Default = True
+          Enabled = False
+          Kind = bkEllipsis
+        end>
+      Properties.ReadOnly = True
+      TabOrder = 1
+      Width = 233
+    end
+    object cxLabel2: TcxLabel
+      Left = 22
+      Top = 6
+      Caption = #1056'/'#1057#1095#1077#1090' ('#1087#1083#1072#1090#1077#1083#1100#1097#1080#1082#1072'):'
+    end
+    object edBankAccount: TcxButtonEdit
+      Left = 147
+      Top = 5
+      Properties.Buttons = <
+        item
+          Default = True
+          Kind = bkEllipsis
+        end>
+      Properties.ReadOnly = True
+      TabOrder = 3
+      Width = 273
+    end
+  end
   inherited cxPropertiesStore: TcxPropertiesStore
     Components = <
       item
@@ -155,7 +200,7 @@ inherited JuridicalOrderFinanceForm: TJuridicalOrderFinanceForm
   inherited ActionList: TActionList
     inherited actInsert: TInsertUpdateChoiceAction
       FormName = 'TTaxUnitEditForm'
-      FormNameParam.Value = 'TTaxUnitEditForm'
+      FormNameParam.Value = nil
       GuiParams = <
         item
           Name = 'Id'
@@ -192,7 +237,8 @@ inherited JuridicalOrderFinanceForm: TJuridicalOrderFinanceForm
     end
     inherited actUpdate: TdsdInsertUpdateAction
       FormName = 'TTaxUnitEditForm'
-      FormNameParam.Value = 'TTaxUnitEditForm'
+      FormNameParam.Name = '1'
+      FormNameParam.Value = nil
       GuiParams = <
         item
           Name = 'Id'
@@ -351,16 +397,25 @@ inherited JuridicalOrderFinanceForm: TJuridicalOrderFinanceForm
     end
   end
   inherited MasterDS: TDataSource
-    Left = 56
-    Top = 96
+    Left = 80
+    Top = 176
   end
   inherited MasterCDS: TClientDataSet
     FilterOptions = []
-    Top = 88
+    Left = 48
+    Top = 152
   end
   inherited spSelect: TdsdStoredProc
     StoredProcName = 'gpSelect_Object_JuridicalOrderFinance'
     Params = <
+      item
+        Name = 'inBankAccountId_main'
+        Value = Null
+        Component = GuidesBankAccount
+        ComponentItem = 'Key'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
       item
         Name = 'inShowAll'
         Value = Null
@@ -381,8 +436,8 @@ inherited JuridicalOrderFinanceForm: TJuridicalOrderFinanceForm
     Top = 88
   end
   inherited BarManager: TdxBarManager
-    Left = 256
-    Top = 88
+    Left = 272
+    Top = 152
     DockControlHeights = (
       0
       0
@@ -535,15 +590,92 @@ inherited JuridicalOrderFinanceForm: TJuridicalOrderFinanceForm
     RefreshAction = actRefresh
     ComponentList = <
       item
+        Component = GuidesBankAccount
       end
       item
       end>
-    Left = 384
-    Top = 104
+    Left = 432
+    Top = 144
   end
   object FormParams: TdsdFormParams
     Params = <>
     Left = 224
     Top = 224
+  end
+  object GuidesBank: TdsdGuides
+    KeyField = 'Id'
+    LookupControl = edBank
+    FormNameParam.Value = 'TBankForm'
+    FormNameParam.DataType = ftString
+    FormNameParam.MultiSelectSeparator = ','
+    FormName = 'TBankForm'
+    PositionDataSet = 'MasterCDS'
+    Params = <
+      item
+        Name = 'Key'
+        Value = ''
+        Component = GuidesBank
+        ComponentItem = 'Key'
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'TextValue'
+        Value = ''
+        Component = GuidesBank
+        ComponentItem = 'TextValue'
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end>
+    Left = 584
+    Top = 1
+  end
+  object GuidesBankAccount: TdsdGuides
+    KeyField = 'Id'
+    LookupControl = edBankAccount
+    FormNameParam.Value = 'TBankAccount_ObjectForm'
+    FormNameParam.DataType = ftString
+    FormNameParam.MultiSelectSeparator = ','
+    FormName = 'TBankAccount_ObjectForm'
+    PositionDataSet = 'MasterCDS'
+    Params = <
+      item
+        Name = 'Key'
+        Value = ''
+        Component = GuidesBankAccount
+        ComponentItem = 'Key'
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'TextValue'
+        Value = ''
+        Component = GuidesBankAccount
+        ComponentItem = 'TextValue'
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'BankId'
+        Value = ''
+        Component = GuidesBank
+        ComponentItem = 'Key'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'BankName'
+        Value = ''
+        Component = GuidesBank
+        ComponentItem = 'TextValue'
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end>
+    Left = 280
   end
 end

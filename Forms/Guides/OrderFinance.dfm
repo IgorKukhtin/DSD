@@ -217,6 +217,8 @@ inherited OrderFinanceForm: TOrderFinanceForm
       end>
   end
   inherited ActionList: TActionList
+    Left = 63
+    Top = 231
     inherited actRefresh: TdsdDataSetRefresh
       StoredProcList = <
         item
