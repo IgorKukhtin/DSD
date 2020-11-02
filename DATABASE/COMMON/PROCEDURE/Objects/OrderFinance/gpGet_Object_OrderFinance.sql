@@ -9,6 +9,7 @@ CREATE OR REPLACE FUNCTION gpGet_Object_OrderFinance(
 RETURNS TABLE (Id Integer, Code Integer, Name TVarChar
              , PaidKindId Integer, PaidKindName TVarChar
              , BankAccountId Integer, BankAccountName TVarChar
+             , BankId Integer, BankName TVarChar
              , Comment TVarChar
              , isErased Boolean
              )
@@ -32,6 +33,9 @@ BEGIN
            , 0                      AS BankAccountId
            , CAST ('' as TVarChar)  AS BankAccountName
 
+           , 0                      AS BankId
+           , CAST ('' as TVarChar)  AS BankName
+
            , CAST ('' as TVarChar)  AS Comment     
        
            , CAST (NULL AS Boolean) AS isErased;
@@ -47,6 +51,9 @@ BEGIN
 
             , Object_BankAccount.Id            AS BankAccountId
             , Object_BankAccount.ValueData     AS BankAccountName
+
+            , Object_Bank.Id                   AS BankId
+            , Object_Bank.ValueData            AS BankName
 
             , ObjectString_Comment.ValueData   AS Comment
            
@@ -67,6 +74,11 @@ BEGIN
                                AND OrderFinance_BankAccount.DescId = zc_ObjectLink_OrderFinance_BankAccount()
            LEFT JOIN Object AS Object_BankAccount ON Object_BankAccount.Id = OrderFinance_BankAccount.ChildObjectId
 
+           LEFT JOIN ObjectLink AS ObjectLink_BankAccount_Bank
+                                ON ObjectLink_BankAccount_Bank.ObjectId = OrderFinance_BankAccount.ChildObjectId
+                               AND ObjectLink_BankAccount_Bank.DescId = zc_ObjectLink_BankAccount_Bank()
+           LEFT JOIN Object AS Object_Bank ON Object_Bank.Id = ObjectLink_BankAccount_Bank.ChildObjectId
+
        WHERE Object_OrderFinance.Id = inId;
    END IF;
   
@@ -79,6 +91,7 @@ LANGUAGE plpgsql VOLATILE;
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
+ 02.11.20         * add BankName
  12.08.19         *
  29.07.19         *
 */

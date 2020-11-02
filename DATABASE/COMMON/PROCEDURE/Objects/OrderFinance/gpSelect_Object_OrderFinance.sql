@@ -1,8 +1,10 @@
 -- Function: gpSelect_Object_OrderFinance()
 
-DROP FUNCTION IF EXISTS gpSelect_Object_OrderFinance(TVarChar);
+--DROP FUNCTION IF EXISTS gpSelect_Object_OrderFinance(TVarChar);
+DROP FUNCTION IF EXISTS gpSelect_Object_OrderFinance(Boolean, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpSelect_Object_OrderFinance(
+    IN inisErased    Boolean ,      -- 
     IN inSession     TVarChar       -- сессия пользователя
 )
 RETURNS TABLE (Id Integer, Code Integer, Name TVarChar
@@ -50,7 +52,8 @@ BEGIN
                                 ON OrderFinance_BankAccount.ObjectId = Object_OrderFinance.Id
                                AND OrderFinance_BankAccount.DescId = zc_ObjectLink_OrderFinance_BankAccount()
            LEFT JOIN Object_BankAccount_View ON Object_BankAccount_View.Id = OrderFinance_BankAccount.ChildObjectId
-       WHERE Object_OrderFinance.DescId = zc_Object_OrderFinance();
+       WHERE Object_OrderFinance.DescId = zc_Object_OrderFinance()
+         AND (Object_OrderFinance.isErased = FALSE OR inisErased = TRUE);
   
 END;
 $BODY$
@@ -60,6 +63,7 @@ $BODY$
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
+ 02.11.20         * add inisErased
  12.08.19         *
  29.07.19         *
 */

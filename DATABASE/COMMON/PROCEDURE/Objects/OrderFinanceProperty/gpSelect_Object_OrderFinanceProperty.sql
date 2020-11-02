@@ -1,8 +1,10 @@
 -- Function: gpSelect_Object_OrderFinanceProperty()
 
-DROP FUNCTION IF EXISTS gpSelect_Object_OrderFinanceProperty(TVarChar);
+--DROP FUNCTION IF EXISTS gpSelect_Object_OrderFinanceProperty(TVarChar);
+DROP FUNCTION IF EXISTS gpSelect_Object_OrderFinanceProperty(Boolean, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpSelect_Object_OrderFinanceProperty(
+    IN inisErased    Boolean ,      -- 
     IN inSession     TVarChar       -- сессия пользователя
 )
 RETURNS TABLE (Id Integer, ObjectId Integer
@@ -81,7 +83,8 @@ BEGIN
            LEFT JOIN Object AS Object_InfoMoneyDestination ON Object_InfoMoneyDestination.Id = tmpObject.InfoMoneyDestinationId
            LEFT JOIN Object AS Object_InfoMoneyGroup ON Object_InfoMoneyGroup.Id = tmpObject.InfoMoneyGroupId
 
-       WHERE Object_OrderFinanceProperty.DescId = zc_Object_OrderFinanceProperty();
+       WHERE Object_OrderFinanceProperty.DescId = zc_Object_OrderFinanceProperty()
+         AND (Object_OrderFinanceProperty.isErased = FALSE OR inisErased = TRUE);
   
 END;
 $BODY$
@@ -92,8 +95,9 @@ LANGUAGE plpgsql VOLATILE;
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
+ 02.11.20         * add inisErased
  29.07.19         *
 */
 
 -- тест
--- SELECT * FROM gpSelect_Object_OrderFinanceProperty ('2')
+-- SELECT * FROM gpSelect_Object_OrderFinanceProperty (TRUE,'2')

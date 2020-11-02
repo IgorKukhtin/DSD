@@ -5,7 +5,7 @@ inherited OrderFinanceForm: TOrderFinanceForm
   AddOnFormData.isAlwaysRefresh = False
   AddOnFormData.ChoiceAction = dsdChoiceGuides
   ExplicitWidth = 919
-  ExplicitHeight = 380
+  ExplicitHeight = 383
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
@@ -584,6 +584,28 @@ inherited OrderFinanceForm: TOrderFinanceForm
       Hint = #1044#1086#1073#1072#1074#1080#1090#1100' '#1047#1085#1072#1095#1077#1085#1080#1077' '#1076#1083#1103' '#1055#1083#1072#1085#1080#1088#1086#1074#1072#1085#1080#1103' '#1087#1083#1072#1090#1077#1078#1077#1081
       ImageIndex = 0
     end
+    object actShowErased: TBooleanStoredProcAction
+      Category = 'DSDLib'
+      MoveParams = <>
+      StoredProc = spSelect
+      StoredProcList = <
+        item
+          StoredProc = spSelect
+        end
+        item
+          StoredProc = spSelectProperty
+        end>
+      Caption = #1055#1086#1082#1072#1079#1072#1090#1100' '#1074#1077#1089#1100' '#1089#1087#1080#1089#1086#1082
+      Hint = #1055#1086#1082#1072#1079#1072#1090#1100' '#1074#1077#1089#1100' '#1089#1087#1080#1089#1086#1082
+      ImageIndex = 63
+      Value = False
+      HintTrue = #1055#1086#1082#1072#1079#1072#1090#1100' '#1085#1077' '#1091#1076#1072#1083#1077#1085#1085#1099#1077
+      HintFalse = #1055#1086#1082#1072#1079#1072#1090#1100' '#1074#1077#1089#1100' '#1089#1087#1080#1089#1086#1082
+      CaptionTrue = #1055#1086#1082#1072#1079#1072#1090#1100' '#1085#1077' '#1091#1076#1072#1083#1077#1085#1085#1099#1077
+      CaptionFalse = #1055#1086#1082#1072#1079#1072#1090#1100' '#1074#1077#1089#1100' '#1089#1087#1080#1089#1086#1082
+      ImageIndexTrue = 62
+      ImageIndexFalse = 63
+    end
   end
   inherited MasterDS: TDataSource
     Top = 80
@@ -595,7 +617,16 @@ inherited OrderFinanceForm: TOrderFinanceForm
   end
   inherited spSelect: TdsdStoredProc
     StoredProcName = 'gpSelect_Object_OrderFinance'
-    Left = 104
+    Params = <
+      item
+        Name = 'inisErased'
+        Value = Null
+        Component = actShowErased
+        DataType = ftBoolean
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end>
+    Left = 96
     Top = 64
   end
   inherited BarManager: TdxBarManager
@@ -643,6 +674,14 @@ inherited OrderFinanceForm: TOrderFinanceForm
         item
           Visible = True
           ItemName = 'bbUnErasedChild'
+        end
+        item
+          Visible = True
+          ItemName = 'dxBarStatic'
+        end
+        item
+          Visible = True
+          ItemName = 'bb'
         end
         item
           Visible = True
@@ -729,6 +768,10 @@ inherited OrderFinanceForm: TOrderFinanceForm
       Action = InsertRecordChild
       Category = 0
     end
+    object bb: TdxBarButton
+      Action = actShowErased
+      Category = 0
+    end
   end
   inherited DBViewAddOn: TdsdDBViewAddOn
     OnDblClickActionList = <
@@ -786,7 +829,15 @@ inherited OrderFinanceForm: TOrderFinanceForm
       item
         DataSet = ChildCDS
       end>
-    Params = <>
+    Params = <
+      item
+        Name = 'inisErased'
+        Value = Null
+        Component = actShowErased
+        DataType = ftBoolean
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end>
     PackSize = 1
     Left = 696
     Top = 88
