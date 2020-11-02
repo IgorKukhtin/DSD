@@ -2,7 +2,7 @@
   Left = 0
   Top = 0
   Caption = #1042#1080#1076' '#1055#1083#1072#1085#1080#1088#1086#1074#1072#1085#1080#1103' '#1087#1083#1072#1090#1077#1078#1077#1081
-  ClientHeight = 269
+  ClientHeight = 323
   ClientWidth = 296
   Color = clBtnFace
   Font.Charset = DEFAULT_CHARSET
@@ -29,7 +29,7 @@
   end
   object cxButton1: TcxButton
     Left = 36
-    Top = 234
+    Top = 274
     Width = 75
     Height = 25
     Action = dsdInsertUpdateGuides
@@ -38,7 +38,7 @@
   end
   object cxButton2: TcxButton
     Left = 180
-    Top = 234
+    Top = 274
     Width = 75
     Height = 25
     Action = dsdFormClose1
@@ -102,6 +102,24 @@
       end>
     Properties.ReadOnly = True
     TabOrder = 11
+    Width = 273
+  end
+  object cxLabel3: TcxLabel
+    Left = 11
+    Top = 217
+    Caption = #1041#1072#1085#1082' ('#1087#1083#1072#1090#1077#1083#1100#1097#1080#1082#1072')'
+  end
+  object edBank: TcxButtonEdit
+    Left = 11
+    Top = 238
+    Properties.Buttons = <
+      item
+        Default = True
+        Enabled = False
+        Kind = bkEllipsis
+      end>
+    Properties.ReadOnly = True
+    TabOrder = 13
     Width = 273
   end
   object ActionList: TActionList
@@ -265,6 +283,21 @@
         ComponentItem = 'TextValue'
         DataType = ftString
         MultiSelectSeparator = ','
+      end
+      item
+        Name = 'BankId'
+        Value = Null
+        Component = GuidesBank
+        ComponentItem = 'Key'
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'BankName'
+        Value = Null
+        Component = GuidesBank
+        ComponentItem = 'TextValue'
+        DataType = ftString
+        MultiSelectSeparator = ','
       end>
     PackSize = 1
     Left = 239
@@ -345,8 +378,55 @@
         DataType = ftString
         ParamType = ptInput
         MultiSelectSeparator = ','
+      end
+      item
+        Name = 'BankId'
+        Value = Null
+        Component = GuidesBank
+        ComponentItem = 'Key'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'BankName'
+        Value = Null
+        Component = GuidesBank
+        ComponentItem = 'TextValue'
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
       end>
     Left = 152
     Top = 168
+  end
+  object GuidesBank: TdsdGuides
+    KeyField = 'Id'
+    LookupControl = edBank
+    FormNameParam.Value = 'TBankForm'
+    FormNameParam.DataType = ftString
+    FormNameParam.MultiSelectSeparator = ','
+    FormName = 'TBankForm'
+    PositionDataSet = 'MasterCDS'
+    Params = <
+      item
+        Name = 'Key'
+        Value = ''
+        Component = GuidesBank
+        ComponentItem = 'Key'
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'TextValue'
+        Value = ''
+        Component = GuidesBank
+        ComponentItem = 'TextValue'
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end>
+    Left = 136
+    Top = 233
   end
 end
