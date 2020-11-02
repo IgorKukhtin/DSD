@@ -234,6 +234,7 @@ type
     grDanhsonPharmaLevel: TcxGridLevel;
     DanhsonPharmaMedicForSaleName: TcxGridDBColumn;
     DanhsonPharmaBuyerForSaleName: TcxGridDBColumn;
+    DanhsonPharmaBuyerForSalePhone: TcxGridDBColumn;
     procedure btnBaDMExecuteClick(Sender: TObject);
     procedure btnBaDMExportClick(Sender: TObject);
     procedure FormCreate(Sender: TObject);

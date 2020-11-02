@@ -6,6 +6,7 @@ CREATE OR REPLACE FUNCTION gpSelect_Object_BuyerForSale(
     IN inSession     TVarChar       -- сессия пользователя
 )
 RETURNS TABLE (Id Integer, Code Integer, Name TVarChar
+             , Phone TVarChar
              , isErased boolean) AS
 $BODY$BEGIN
    
@@ -16,8 +17,12 @@ $BODY$BEGIN
    SELECT Object_BuyerForSale.Id                        AS Id 
         , Object_BuyerForSale.ObjectCode                AS Code
         , Object_BuyerForSale.ValueData                 AS Name
+        , ObjectString_BuyerForSale_Phone.ValueData     AS Phone
         , Object_BuyerForSale.isErased                  AS isErased
    FROM Object AS Object_BuyerForSale
+        LEFT JOIN ObjectString AS ObjectString_BuyerForSale_Phone
+                               ON ObjectString_BuyerForSale_Phone.ObjectId = Object_BuyerForSale.Id 
+                              AND ObjectString_BuyerForSale_Phone.DescId = zc_ObjectString_BuyerForSale_Phone()
    WHERE Object_BuyerForSale.DescId = zc_Object_BuyerForSale();
   
 END;$BODY$

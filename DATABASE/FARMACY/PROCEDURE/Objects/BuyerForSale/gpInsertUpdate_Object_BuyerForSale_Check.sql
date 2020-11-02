@@ -1,10 +1,12 @@
 -- Function: gpInsertUpdate_Object_BuyerForSale()
 
-DROP FUNCTION IF EXISTS gpInsertUpdate_Object_BuyerForSale(Integer, TVarChar TVarChar);
+--DROP FUNCTION IF EXISTS gpInsertUpdate_Object_BuyerForSale(Integer, TVarChar, TVarChar);
+DROP FUNCTION IF EXISTS gpInsertUpdate_Object_BuyerForSale(Integer, TVarChar, TVarChar, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpInsertUpdate_Object_BuyerForSale(
  INOUT ioId             Integer   ,     -- ключ объекта <Покупатель> 
     IN inName           TVarChar  ,     -- Фамилия Имя Отчество
+    IN inPhone          TVarChar  ,     -- Телефон
     IN inSession        TVarChar        -- сессия пользователя
 )
   RETURNS integer AS
@@ -34,6 +36,9 @@ BEGIN
    -- сохранили <Объект>
    ioId := lpInsertUpdate_Object (ioId, zc_Object_BuyerForSale(), vbCode_calc, inName);
       
+   -- сохранили Телефон
+   PERFORM lpInsertUpdate_ObjectString (zc_ObjectString_BuyerForSale_Phone(), ioId, inPhone);
+
    -- сохранили протокол
    PERFORM lpInsert_ObjectProtocol (ioId, vbUserId);
    

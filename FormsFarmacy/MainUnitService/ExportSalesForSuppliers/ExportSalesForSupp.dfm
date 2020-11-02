@@ -2060,6 +2060,14 @@ object ExportSalesForSuppForm: TExportSalesForSuppForm
             HeaderAlignmentVert = vaCenter
             Width = 99
           end
+          object DanhsonPharmaBuyerForSalePhone: TcxGridDBColumn
+            Caption = #1058#1077#1083#1077#1092#1086#1085' '#1087#1086#1082#1091#1087#1072#1090#1077#1083#1103
+            DataBinding.FieldName = 'Phone'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 105
+          end
         end
         object grDanhsonPharmaLevel: TcxGridLevel
           GridView = grDanhsonPharmaDBTableView
@@ -2537,6 +2545,9 @@ object ExportSalesForSuppForm: TExportSalesForSuppForm
         '     , Object_BuyerForSale.ValueData                            ' +
         '    AS BuyerForSaleName'
       
+        '     , ObjectString_BuyerForSale_Phone.ValueData                ' +
+        '    AS Phone'
+      
         'FROM gpReport_MovementCheck_Promo(15451717, :StartDate, :EndDate' +
         ', '#39'3'#39') AS MovementCheck_Promo'
       ''
@@ -2565,6 +2576,14 @@ object ExportSalesForSuppForm: TExportSalesForSuppForm
       
         '     LEFT JOIN Object AS Object_BuyerForSale ON Object_BuyerForS' +
         'ale.Id = MovementLinkObject_BuyerForSale.ObjectId'
+      ''
+      '     LEFT JOIN ObjectString AS ObjectString_BuyerForSale_Phone'
+      
+        '                       ON ObjectString_BuyerForSale_Phone.Object' +
+        'Id = MovementLinkObject_BuyerForSale.ObjectId'
+      
+        '                      AND ObjectString_BuyerForSale_Phone.DescId' +
+        ' = zc_ObjectString_BuyerForSale_Phone()'
       '')
     Params = <
       item
