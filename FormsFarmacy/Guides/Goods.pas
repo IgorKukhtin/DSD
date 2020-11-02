@@ -231,6 +231,16 @@ type
     bbUpdate_inPresent_Revert: TdxBarButton;
     SummaWages: TcxGridDBColumn;
     PercentWages: TcxGridDBColumn;
+    actExec_Update_SummaWages: TdsdExecStoredProc;
+    actExecuteDialog_Update_SummaWages: TExecuteDialog;
+    actExec_Update_PercentWages: TdsdExecStoredProc;
+    actExecuteDialogUpdate_PercentWages: TExecuteDialog;
+    actUpdate_SummaWages: TMultiAction;
+    actUpdate_PercentWages: TMultiAction;
+    dxBarButton3: TdxBarButton;
+    dxBarButton4: TdxBarButton;
+    spUpdate_SummaWages: TdsdStoredProc;
+    spUpdate_PercentWages: TdsdStoredProc;
   private
     { Private declarations }
   public

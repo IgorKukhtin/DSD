@@ -77,6 +77,7 @@ type
     //***15.01.20
     MEDICFS  : String[100];      //ФИО врача (на продажу)
     BUYERFS  : String[100];      //ФИО покупателя (на продажу)
+    BUYERFSP : String[100];      //Телефон покупателя (на продажу)
 
   end;
   TBodyRecord = record
@@ -1356,6 +1357,7 @@ begin
                 // ***11.10.20
                 MEDICFS := FieldByName('MEDICFS').AsString;
                 BUYERFS := FieldByName('BUYERFS').AsString;
+                BUYERFSP := FieldByName('BUYERFSP').AsString;
 
                 FNeedSaveVIP := (MANAGER <> 0);
               end;
@@ -1516,6 +1518,7 @@ begin
                   // ***11.10.20
                   dsdSave.Params.AddParam('inMedicForSale', ftString, ptInput, Head.MEDICFS);
                   dsdSave.Params.AddParam('inBuyerForSale', ftString, ptInput, Head.BUYERFS);
+                  dsdSave.Params.AddParam('inBuyerForSalePhone', ftString, ptInput, Head.BUYERFSP);
                   // ***24.01.17
                   dsdSave.Params.AddParam('inUserSession', ftString, ptInput, Head.USERSESION);
 

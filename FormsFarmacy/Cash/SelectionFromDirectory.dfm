@@ -15,9 +15,6 @@ inherited SelectionFromDirectoryForm: TSelectionFromDirectoryForm
     Height = 347
     Align = alClient
     TabOrder = 1
-    ExplicitTop = 80
-    ExplicitWidth = 839
-    ExplicitHeight = 227
     object SelectionFromDirectoryGridDBTableView: TcxGridDBTableView
       OnDblClick = SelectionFromDirectoryGridDBTableViewDblClick
       Navigator.Buttons.CustomButtons = <>
@@ -47,7 +44,13 @@ inherited SelectionFromDirectoryForm: TSelectionFromDirectoryForm
         OnCustomDrawCell = colNameCustomDrawCell
         HeaderAlignmentHorz = taCenter
         Options.Editing = False
-        Width = 204
+        Width = 251
+      end
+      object colSecond: TcxGridDBColumn
+        HeaderAlignmentHorz = taCenter
+        Options.Editing = False
+        Width = 140
+        IsCaptionAssigned = True
       end
     end
     object SelectionFromDirectoryGridLevel: TcxGridLevel
@@ -62,8 +65,6 @@ inherited SelectionFromDirectoryForm: TSelectionFromDirectoryForm
     Height = 25
     Align = alTop
     TabOrder = 0
-    ExplicitTop = 55
-    ExplicitWidth = 839
     DesignSize = (
       405
       25)
@@ -78,7 +79,6 @@ inherited SelectionFromDirectoryForm: TSelectionFromDirectoryForm
       OnChange = edt1Change
       OnDblClick = edt1DblClick
       OnExit = edt1Exit
-      ExplicitWidth = 837
       ExplicitHeight = 21
     end
     object ProgressBar1: TProgressBar
@@ -90,7 +90,6 @@ inherited SelectionFromDirectoryForm: TSelectionFromDirectoryForm
       BarColor = clMedGray
       TabOrder = 1
       Visible = False
-      ExplicitLeft = 773
     end
   end
   inherited UserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn

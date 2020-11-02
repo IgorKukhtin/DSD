@@ -30,6 +30,7 @@ type
     ProgressBar1: TProgressBar;
     spSelect_SelectionFromDirectory: TdsdStoredProc;
     actRefreshForm: TAction;
+    colSecond: TcxGridDBColumn;
     procedure ParentFormCreate(Sender: TObject);
     procedure Timer1Timer(Sender: TObject);
     procedure edt1Exit(Sender: TObject);
@@ -51,13 +52,16 @@ type
     procedure SetFilter(AText : string);
   end;
 
-function ShowSelectionFromDirectory(ACaption, AFieldCaption, ADirectory, AStoredProcName, AFieldName : String; var AName : String) : boolean;
+function ShowSelectionFromDirectory(ACaption, AFieldCaption, ADirectory, AStoredProcName, AFieldName : String; var AName : String) : boolean; overload;
+function ShowSelectionFromDirectory(ACaption, AFieldCaption, AFieldSecondCaption,
+         ADirectory, AStoredProcName, AFieldName, AFieldSecondName : String;
+         var AName, ASecond : String) : boolean; overload;
 
 implementation
 
 {$R *.dfm}
 
-uses LocalWorkUnit, CommonData;
+uses LocalWorkUnit, CommonData, EditFromDirectory;
 
 
 procedure TSelectionFromDirectoryForm.FilterRecord(DataSet: TDataSet; var Accept: Boolean);
@@ -227,13 +231,21 @@ begin
   if ProgressBar1.Position=100 then edt1Exit(Sender);
 end;
 
-function ShowSelectionFromDirectory(ACaption, AFieldCaption, ADirectory, AStoredProcName, AFieldName : String; var AName : String) : boolean;
+function ShowSelectionFromDirectory(ACaption, AFieldCaption, AFieldSecondCaption,
+         ADirectory, AStoredProcName, AFieldName, AFieldSecondName : String;
+         var AName, ASecond  : String) : boolean; overload;
 begin
   with TSelectionFromDirectoryForm.Create(nil) do
   try
     if ACaption <> '' then Caption := ACaption;
-    if AFieldCaption <> '' then colName.Caption := AFieldCaption;
+    if AFieldCaption <> '' then colName.Caption := 'Выбор ' + AFieldCaption;
     if AFieldName <> '' then colName.DataBinding.FieldName := AFieldName;
+    if (AFieldSecondCaption <> '') and (AFieldSecondName <> '') then
+    begin
+      if AFieldSecondCaption <> '' then colSecond.Caption := 'Выбор ' + AFieldSecondCaption;
+      if AFieldSecondName <> '' then colSecond.DataBinding.FieldName := AFieldSecondName;
+    end else colSecond.Visible := False;
+
     FDirectory := ADirectory;
     spSelect_SelectionFromDirectory.StoredProcName := AStoredProcName;
     SelectionFromDirectoryCDS.IndexFieldNames := colName.DataBinding.FieldName;
@@ -252,6 +264,15 @@ begin
           AName :=  SelectionFromDirectoryCDS.FieldByName(colName.DataBinding.FieldName).AsString;
         end else AName := edt1.Text;
 
+        if (AFieldSecondCaption <> '') and (AFieldSecondName <> '') then
+        begin
+          if SelectionFromDirectoryCDS.RecordCount > 0 then
+            ASecond := SelectionFromDirectoryCDS.FieldByName(AFieldSecondName).AsString
+          else ASecond := '';
+          if ASecond = '' then Result := ShowEditFromDirectory(ACaption, AFieldCaption, AFieldSecondCaption, AName, ASecond);
+          if not Result then Exit;
+        end;
+
         if Trim(AName) = '' then
         begin
           ShowMessage('Не выбрано или не введено значение из справочника <' + ACaption + '>');
@@ -267,6 +288,13 @@ begin
   finally
     Free;
   end;
+end;
+
+function ShowSelectionFromDirectory(ACaption, AFieldCaption, ADirectory, AStoredProcName, AFieldName : String; var AName : String) : boolean;
+  var S : string;
+begin
+ Result := ShowSelectionFromDirectory(ACaption, AFieldCaption, '',
+         ADirectory, AStoredProcName, AFieldName, '', AName, S)
 end;
 
 End.

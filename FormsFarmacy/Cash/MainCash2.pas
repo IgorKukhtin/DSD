@@ -754,7 +754,7 @@ type
       ASiteDiscount: Currency; ARoundingDown: Boolean;
       APartionDateKindId: Integer; AConfirmationCodeSP: string;
       ALoyaltySignID: Integer; ALoyaltySMID: Integer; ALoyaltySMSumma: Currency;
-      ADivisionPartiesID: Integer; ADivisionPartiesName, AMedicForSale, ABuyerForSale: String;
+      ADivisionPartiesID: Integer; ADivisionPartiesName, AMedicForSale, ABuyerForSale, ABuyerForSalePhone: String;
       ANeedComplete: Boolean; FiscalCheckNumber: String;
       out AUID: String): Boolean;
 
@@ -1387,6 +1387,7 @@ begin
   FormParams.ParamByName('AddPresent').Value := False;
   FormParams.ParamByName('MedicForSale').Value := '';
   FormParams.ParamByName('BuyerForSale').Value := '';
+  FormParams.ParamByName('BuyerForSalePhone').Value := '';
 
   ClearFilterAll;
 
@@ -2703,7 +2704,7 @@ end;
 
 procedure TMainCashForm2.actPutCheckToCashExecute(Sender: TObject);
 var
-  UID, CheckNumber, ConfirmationCode, S: String;
+  UID, CheckNumber, ConfirmationCode, S, S1: String;
   lMsg: String;
   fErr, isPromoForSale, isYes: Boolean;
   dsdSave: TdsdStoredProc;
@@ -3015,12 +3016,13 @@ begin
   // Заполнение врача и покупателя для продажи
   if isPromoForSale then
   begin
-    if not ShowSelectionFromDirectory('Выбор врача для вставки в документ', 'Ф.И.О. врача',
+    if not ShowSelectionFromDirectory('врача для вставки в документ', 'Ф.И.О. врача',
              'MedicForSale', 'gpSelect_Object_MedicForSale', 'Name', S) then Exit;
     FormParams.ParamByName('MedicForSale').Value := S;
-    if not ShowSelectionFromDirectory('Выбор покупателя для вставки в документ', 'Ф.И.О. покупателя',
-             'BuyerForSale', 'gpSelect_Object_BuyerForSale', 'Name', S) then Exit;
+    if not ShowSelectionFromDirectory('покупателя для вставки в документ', 'Ф.И.О. покупателя', 'Номер телефона',
+             'BuyerForSale', 'gpSelect_Object_BuyerForSale', 'Name', 'Phone', S, S1) then Exit;
     FormParams.ParamByName('BuyerForSale').Value := S;
+    FormParams.ParamByName('BuyerForSalePhone').Value := S1;
   end;
 
   if (nPresent > 0) and not FormParams.ParamByName('LoyaltyPresent').Value then
@@ -3225,6 +3227,7 @@ begin
           // ***11.10.20
           FormParams.ParamByName('MedicForSale').Value,
           FormParams.ParamByName('BuyerForSale').Value,
+          FormParams.ParamByName('BuyerForSalePhone').Value,
 
           True, // NeedComplete
           CheckNumber, // FiscalCheckNumber
@@ -4852,6 +4855,7 @@ begin
       // ***11.10.20
     , FormParams.ParamByName('MedicForSale').Value
     , FormParams.ParamByName('BuyerForSale').Value
+    , FormParams.ParamByName('BuyerForSalePhone').Value
 
     , false // NeedComplete
     , '' // FiscalCheckNumber
@@ -4953,6 +4957,7 @@ begin
     // ***11.10.20
     , FormParams.ParamByName('MedicForSale').Value
     , FormParams.ParamByName('BuyerForSale').Value
+    , FormParams.ParamByName('BuyerForSalePhone').Value
 
     , false // NeedComplete
     , '' // FiscalCheckNumber
@@ -5743,6 +5748,8 @@ begin
     // ***11.10.20
     , FormParams.ParamByName('MedicForSale').Value
     , FormParams.ParamByName('BuyerForSale').Value
+    , FormParams.ParamByName('BuyerForSalePhone').Value
+
 
     , false // NeedComplete
     , '' // FiscalCheckNumber
@@ -8166,6 +8173,7 @@ begin
   FormParams.ParamByName('AddPresent').Value := False;
   FormParams.ParamByName('MedicForSale').Value := '';
   FormParams.ParamByName('BuyerForSale').Value := '';
+  FormParams.ParamByName('BuyerForSalePhone').Value := '';
 
   FiscalNumber := '';
   pnlVIP.Visible := false;
@@ -9555,7 +9563,7 @@ function TMainCashForm2.SaveLocal(ADS: TClientDataSet; AManagerId: Integer;
   ASiteDiscount: Currency; ARoundingDown: Boolean;
   APartionDateKindId: Integer; AConfirmationCodeSP: string;
   ALoyaltySignID: Integer; ALoyaltySMID: Integer; ALoyaltySMSumma: Currency;
-  ADivisionPartiesID: Integer; ADivisionPartiesName, AMedicForSale, ABuyerForSale: String;
+  ADivisionPartiesID: Integer; ADivisionPartiesName, AMedicForSale, ABuyerForSale, ABuyerForSalePhone: String;
   ANeedComplete: Boolean; FiscalCheckNumber: String; out AUID: String): Boolean;
 var
   NextVIPId: Integer;
@@ -9816,7 +9824,9 @@ begin
           ALoyaltySMID, // Регистрация программы лояльности накопительной
           ALoyaltySMSumma, // Скидка по программе лояльности накопительной
           AMedicForSale, // ФИО врача (на продажу)
-          ABuyerForSale // ФИО покупателя (на продажу)
+          ABuyerForSale, // ФИО покупателя (на продажу)
+          ABuyerForSalePhone // Телефон покупателя (на продажу)
+
           ]));
       End
       else
@@ -9915,6 +9925,8 @@ begin
         FLocalDataBaseHead.FieldByName('MEDICFS').Value := AMedicForSale;
         // ФИО покупателя (на продажу)
         FLocalDataBaseHead.FieldByName('BUYERFS').Value := ABuyerForSale;
+        // Телефон покупателя (на продажу)
+        FLocalDataBaseHead.FieldByName('BUYERFSP').Value := ABuyerForSalePhone;
         FLocalDataBaseHead.Post;
       End;
     except

@@ -71,9 +71,9 @@ object EnterRecipeNumberForm: TEnterRecipeNumberForm
     object Label1: TLabel
       Left = 48
       Top = 24
-      Width = 179
+      Width = 136
       Height = 19
-      Caption = #1042#1074#1077#1076#1080#1090#1077' '#1085#1086#1084#1077#1088' '#1088#1077#1094#1077#1087#1090#1072':'
+      Caption = #1042#1074#1077#1076#1080#1090#1077' '#1085#1072#1079#1074#1072#1085#1080#1077':'
       Font.Charset = DEFAULT_CHARSET
       Font.Color = clWindowText
       Font.Height = -16

@@ -45,6 +45,7 @@ RETURNS TABLE (Id Integer, GoodsMainId Integer, Code Integer, IdBarCode TVarChar
              , isSupplementSUN1 boolean
              , isExceptionUKTZED boolean
              , isPresent boolean
+             , SummaWages TFloat, PercentWages TFloat
               ) AS
 $BODY$
   DECLARE vbUserId Integer;
@@ -210,6 +211,12 @@ BEGIN
                                GROUP BY Object_Goods_BarCode.GoodsMainId
                               )
 
+         , tmpNDSKind AS
+               (SELECT ObjectFloat_NDSKind_NDS.ObjectId
+                      , ObjectFloat_NDSKind_NDS.ValueData
+                FROM ObjectFloat AS ObjectFloat_NDSKind_NDS
+                WHERE ObjectFloat_NDSKind_NDS.DescId = zc_ObjectFloat_NDSKind_NDS()
+               )
          -- вытягиваем из LoadPriceListItem.GoodsNDS по входящему Договору поставщика (inContractId)
          , tmpPricelistItems AS (SELECT tmp.GoodsMainId
                                       , tmp.GoodsNDS
@@ -217,9 +224,15 @@ BEGIN
                                  FROM
                                      (SELECT DISTINCT
                                              LoadPriceListItem.GoodsId      AS GoodsMainId
-                                           , CAST (REPLACE (REPLACE ( REPLACE (LoadPriceListItem.GoodsNDS , '%', ''), 'НДС', '') , ',', '.') AS TFloat) AS GoodsNDS
+                                           , COALESCE(CASE WHEN LoadPriceListItem.GoodsNDS LIKE '%2%' THEN 20 
+                                                           WHEN LoadPriceListItem.GoodsNDS LIKE '%7%' THEN 7 
+                                                           WHEN LoadPriceListItem.GoodsNDS IN ('0', 'Без НДС') THEN 0 END,
+                                                           ObjectFloat_NDSKind_NDS.ValueData, 7)::TFloat AS GoodsNDS
                                       FROM LoadPriceList
                                            INNER JOIN LoadPriceListItem ON LoadPriceListItem.LoadPriceListId = LoadPriceList.Id
+                                           LEFT JOIN Object_Goods_Main ON Object_Goods_Main.Id = LoadPriceListItem.GoodsId
+                                           LEFT JOIN tmpNDSKind AS ObjectFloat_NDSKind_NDS
+                                                                ON ObjectFloat_NDSKind_NDS.ObjectId = Object_Goods_Main.NDSKindId
                                       WHERE (LoadPriceList.ContractId = inContractId AND inContractId <> 0)
                                         AND COALESCE (LoadPriceListItem.GoodsId, 0) <> 0
                                         AND (COALESCE (LoadPriceList.AreaId, 0) = 0 OR LoadPriceList.AreaId = vbAreaDneprId)
@@ -303,7 +316,7 @@ BEGIN
            , CASE WHEN COALESCE (tmpGoodsBarCode.ErrorBarCode, 0) > 0 THEN zc_Color_Red() ELSE zc_Color_Black() END
 
            , tmpPricelistItems.GoodsNDS :: TFloat  AS NDS_PriceList
-           , CASE WHEN COALESCE (tmpPricelistItems.GoodsNDS, 0) <> 0 AND inContractId <> 0 AND
+           , CASE WHEN tmpPricelistItems.GoodsNDS IS NOT NULL AND inContractId <> 0 AND
              COALESCE (tmpPricelistItems.GoodsNDS, 0) <> tmpNDS.NDS THEN TRUE ELSE FALSE END AS isNDS_dif
            , tmpPricelistItems.Ord      :: Integer AS OrdPrice
            , Object_Goods_Main.isNotUploadSites
@@ -326,6 +339,9 @@ BEGIN
            , Object_Goods_Main.isSupplementSUN1                                  AS isSupplementSUN1
            , Object_Goods_Main.isExceptionUKTZED                                 AS isExceptionUKTZED
            , Object_Goods_Main.isPresent                                         AS isPresent
+           , Object_Goods_Retail.SummaWages                                      AS SummaWages
+           , Object_Goods_Retail.PercentWages                                    AS PercentWages
+
       FROM Object_Goods_Retail
 
            LEFT JOIN Object_Goods_Main ON Object_Goods_Main.Id = Object_Goods_Retail.GoodsMainId
@@ -642,3 +658,5 @@ $BODY$
 -- тест
 --SELECT * FROM gpSelect_Object_Goods_Retail (inContractId := 0, inRetailId := 0, inSession := '3')
 -- select * from gpSelect_Object_Goods_Retail (inContractId := 183257, inRetailId := 4, inSession := '59591')
+
+select * from gpSelect_Object_Goods_Retail(inContractId := 0 , inRetailId := 0 ,  inSession := '3');

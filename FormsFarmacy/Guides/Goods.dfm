@@ -1948,6 +1948,106 @@ inherited GoodsForm: TGoodsForm
         end>
       Caption = 'execUpdate_inPresent_Revert'
     end
+    object actUpdate_SummaWages: TMultiAction
+      Category = 'DSDLib'
+      MoveParams = <>
+      AfterAction = actRefresh
+      BeforeAction = actExecuteDialog_Update_SummaWages
+      ActionList = <
+        item
+          Action = actExec_Update_SummaWages
+        end>
+      View = cxGridDBTableView
+      Caption = #1048#1079#1084#1077#1085#1080#1090#1100' "'#1057#1090#1072#1090#1080#1095#1080#1089#1082#1086#1077' '#1079#1085#1072#1095#1077#1085#1080#1077' '#1079#1072' 1 '#1077#1076#1080#1085#1080#1094#1091' '#1087#1088#1086#1076#1072#1078#1080' '#1074' '#1079#1072#1088#1087#1083#1072#1090#1091'"'
+      Hint = #1048#1079#1084#1077#1085#1080#1090#1100' "'#1057#1090#1072#1090#1080#1095#1080#1089#1082#1086#1077' '#1079#1085#1072#1095#1077#1085#1080#1077' '#1079#1072' 1 '#1077#1076#1080#1085#1080#1094#1091' '#1087#1088#1086#1076#1072#1078#1080' '#1074' '#1079#1072#1088#1087#1083#1072#1090#1091'"'
+      ImageIndex = 43
+    end
+    object actExec_Update_SummaWages: TdsdExecStoredProc
+      Category = 'DSDLib'
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      StoredProc = spUpdate_SummaWages
+      StoredProcList = <
+        item
+          StoredProc = spUpdate_SummaWages
+        end>
+      Caption = 'actExec_Update_SummaWages'
+    end
+    object actExecuteDialog_Update_SummaWages: TExecuteDialog
+      Category = 'DSDLib'
+      MoveParams = <>
+      Caption = 'actExecuteDialog_Update_SummaWages'
+      FormName = 'TSummaDialogForm'
+      FormNameParam.Value = 'TSummaDialogForm'
+      FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
+      GuiParams = <
+        item
+          Name = 'Summa'
+          Value = '0'
+          Component = FormParams
+          ComponentItem = 'SummaWages'
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'Label'
+          Value = Null
+          Component = FormParams
+          ComponentItem = 'LabelSummaWages'
+          DataType = ftString
+          MultiSelectSeparator = ','
+        end>
+      isShowModal = True
+      OpenBeforeShow = True
+    end
+    object actUpdate_PercentWages: TMultiAction
+      Category = 'DSDLib'
+      MoveParams = <>
+      AfterAction = actRefresh
+      BeforeAction = actExecuteDialogUpdate_PercentWages
+      ActionList = <
+        item
+          Action = actExec_Update_PercentWages
+        end>
+      View = cxGridDBTableView
+      Caption = #1048#1079#1084#1077#1085#1080#1090#1100' "% '#1086#1090' '#1087#1088#1086#1076#1072#1078#1080' '#1074' '#1079#1072#1088#1087#1083#1072#1090#1091'"'
+      Hint = #1048#1079#1084#1077#1085#1080#1090#1100' "% '#1086#1090' '#1087#1088#1086#1076#1072#1078#1080' '#1074' '#1079#1072#1088#1087#1083#1072#1090#1091'"'
+      ImageIndex = 43
+    end
+    object actExec_Update_PercentWages: TdsdExecStoredProc
+      Category = 'DSDLib'
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      StoredProcList = <>
+      Caption = 'actExec_Update_PercentWages'
+    end
+    object actExecuteDialogUpdate_PercentWages: TExecuteDialog
+      Category = 'DSDLib'
+      MoveParams = <>
+      Caption = 'actExecuteDialogUpdate_PercentWages'
+      FormName = 'TSummaDialogForm'
+      FormNameParam.Value = 'TSummaDialogForm'
+      FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
+      GuiParams = <
+        item
+          Name = 'Summa'
+          Value = '0'
+          Component = FormParams
+          ComponentItem = 'PercentWages'
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'Label'
+          Value = Null
+          Component = FormParams
+          ComponentItem = 'LabelPercentWages'
+          DataType = ftString
+          MultiSelectSeparator = ','
+        end>
+      isShowModal = True
+      OpenBeforeShow = True
+    end
   end
   inherited MasterDS: TDataSource
     Left = 56
@@ -2238,6 +2338,14 @@ inherited GoodsForm: TGoodsForm
         item
           Visible = True
           ItemName = 'bbUpdate_inPresent_Revert'
+        end
+        item
+          Visible = True
+          ItemName = 'dxBarButton3'
+        end
+        item
+          Visible = True
+          ItemName = 'dxBarButton4'
         end>
     end
     object bbUpdateInvisibleSUN: TdxBarButton
@@ -2337,6 +2445,14 @@ inherited GoodsForm: TGoodsForm
     end
     object bbUpdate_inPresent_Revert: TdxBarButton
       Action = actUpdate_inPresent_Revert
+      Category = 0
+    end
+    object dxBarButton3: TdxBarButton
+      Action = actUpdate_SummaWages
+      Category = 0
+    end
+    object dxBarButton4: TdxBarButton
+      Action = actUpdate_PercentWages
       Category = 0
     end
   end
@@ -2616,6 +2732,28 @@ inherited GoodsForm: TGoodsForm
         Value = 'false'
         DataType = ftString
         ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'SummaWages'
+        Value = 0c
+        DataType = ftFloat
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'LabelSummaWages'
+        Value = #1057#1090#1072#1090#1080#1095#1080#1089#1082#1086#1077' '#1079#1085#1072#1095#1077#1085#1080#1077' '#1079#1072' 1 '#1077#1076#1080#1085#1080#1094#1091' '#1087#1088#1086#1076#1072#1078#1080' '#1074' '#1079#1072#1088#1087#1083#1072#1090#1091
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'PercentWages'
+        Value = 0c
+        DataType = ftFloat
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'LabelPercentWages'
+        Value = '% '#1086#1090' '#1087#1088#1086#1076#1072#1078#1080' '#1074' '#1079#1072#1088#1087#1083#1072#1090#1091
         MultiSelectSeparator = ','
       end>
     Left = 240
@@ -3853,5 +3991,57 @@ inherited GoodsForm: TGoodsForm
     PackSize = 1
     Left = 520
     Top = 376
+  end
+  object spUpdate_SummaWages: TdsdStoredProc
+    StoredProcName = 'gpUpdate_Goods_SummaWages'
+    DataSets = <>
+    OutputType = otResult
+    Params = <
+      item
+        Name = 'inId'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'Id'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inSummaWages'
+        Value = Null
+        Component = FormParams
+        ComponentItem = 'SummaWages'
+        DataType = ftFloat
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end>
+    PackSize = 1
+    Left = 712
+    Top = 216
+  end
+  object spUpdate_PercentWages: TdsdStoredProc
+    StoredProcName = 'gpUpdate_Goods_PercentWages'
+    DataSets = <>
+    OutputType = otResult
+    Params = <
+      item
+        Name = 'inId'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'Id'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inPercentWages'
+        Value = Null
+        Component = FormParams
+        ComponentItem = 'PercentWages'
+        DataType = ftFloat
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end>
+    PackSize = 1
+    Left = 712
+    Top = 264
   end
 end
