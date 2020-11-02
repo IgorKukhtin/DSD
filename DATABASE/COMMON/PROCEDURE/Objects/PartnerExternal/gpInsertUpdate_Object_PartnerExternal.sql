@@ -1,6 +1,7 @@
 -- Function: gpInsertUpdate_Object_PartnerExternal  ()
 
-DROP FUNCTION IF EXISTS gpInsertUpdate_Object_PartnerExternal (Integer,Integer,TVarChar,TVarChar,Integer,TVarChar);
+--DROP FUNCTION IF EXISTS gpInsertUpdate_Object_PartnerExternal (Integer,Integer,TVarChar,TVarChar,Integer,TVarChar);
+DROP FUNCTION IF EXISTS gpInsertUpdate_Object_PartnerExternal (Integer,Integer,TVarChar,TVarChar,Integer,Integer,Integer,TVarChar);
 
 CREATE OR REPLACE FUNCTION gpInsertUpdate_Object_PartnerExternal(
  INOUT ioId                       Integer   ,    -- ключ объекта < > 
@@ -8,6 +9,8 @@ CREATE OR REPLACE FUNCTION gpInsertUpdate_Object_PartnerExternal(
     IN inName                     TVarChar  ,    -- Название объекта <>
     IN inObjectCode               TVarChar  ,    -- 
     IN inPartnerId                Integer   ,    --
+    IN inContractId               Integer   ,    --
+    IN inRetailId                 Integer   ,    --
     IN inSession                  TVarChar       -- сессия пользователя
 )
 RETURNS Integer
@@ -24,6 +27,8 @@ BEGIN
                                                , inName       := inName
                                                , inObjectCode := inObjectCode
                                                , inPartnerId  := inPartnerId
+                                               , inContractId := inContractId
+                                               , inRetailId   := inRetailId
                                                , inUserId     := vbUserId
                                                 );
    

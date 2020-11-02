@@ -145,6 +145,15 @@ object GoodsPropertyValueForm: TGoodsPropertyValueForm
         Options.Editing = False
         Width = 120
       end
+      object ArticleExternal: TcxGridDBColumn
+        Caption = #1040#1088#1090#1080#1082#1091#1083' '#1074' '#1073#1072#1079#1077' '#1087#1086#1082#1091#1087#1072#1090#1077#1083#1103
+        DataBinding.FieldName = 'ArticleExternal'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        HeaderHint = #1040#1088#1090#1080#1082#1091#1083' '#1074' '#1073#1072#1079#1077' '#1087#1086#1082#1091#1087#1072#1090#1077#1083#1103
+        Options.Editing = False
+        Width = 115
+      end
       object GoodsKindName: TcxGridDBColumn
         Caption = #1042#1080#1076' '#1090#1086#1074#1072#1088#1072
         DataBinding.FieldName = 'GoodsKindName'

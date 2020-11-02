@@ -50,6 +50,7 @@ type
     cxLabel2: TcxLabel;
     edBankAccount: TcxButtonEdit;
     GuidesBankAccount: TdsdGuides;
+    spInsert_byMovBankAccount: TdsdStoredProc;
   private
     { Private declarations }
   public

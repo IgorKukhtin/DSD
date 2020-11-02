@@ -44,6 +44,12 @@ type
     cxLabel3: TcxLabel;
     cePartner: TcxButtonEdit;
     GuidesPartner: TdsdGuides;
+    cxLabel4: TcxLabel;
+    edContract: TcxButtonEdit;
+    GuidesContract: TdsdGuides;
+    cxLabel5: TcxLabel;
+    edRetail: TcxButtonEdit;
+    GuidesRetail: TdsdGuides;
   private
     { Private declarations }
   public

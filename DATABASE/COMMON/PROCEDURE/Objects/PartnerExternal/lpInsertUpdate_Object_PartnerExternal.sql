@@ -1,6 +1,7 @@
 -- Function: gpInsertUpdate_Object_PartnerExternal  ()
 
-DROP FUNCTION IF EXISTS lpInsertUpdate_Object_PartnerExternal (Integer, Integer, TVarChar, TVarChar, Integer, Integer);
+--DROP FUNCTION IF EXISTS lpInsertUpdate_Object_PartnerExternal (Integer, Integer, TVarChar, TVarChar, Integer, Integer);
+DROP FUNCTION IF EXISTS lpInsertUpdate_Object_PartnerExternal (Integer, Integer, TVarChar, TVarChar, Integer, Integer, Integer, Integer);
 
 CREATE OR REPLACE FUNCTION lpInsertUpdate_Object_PartnerExternal(
  INOUT ioId                       Integer   ,    -- ключ объекта <> 
@@ -8,6 +9,8 @@ CREATE OR REPLACE FUNCTION lpInsertUpdate_Object_PartnerExternal(
     IN inName                     TVarChar  ,    -- Название объекта <>
     IN inObjectCode               TVarChar  ,    -- 
     IN inPartnerId                Integer   ,    --
+    IN inContractId               Integer   ,    --
+    IN inRetailId                 Integer   ,    --
     IN inUserId                   Integer
 )
 RETURNS Integer
@@ -31,7 +34,10 @@ BEGIN
    
    -- сохранили связь с <>
    PERFORM lpInsertUpdate_ObjectLink(zc_ObjectLink_PartnerExternal_Partner(), ioId, inPartnerId);
-
+   -- сохранили связь с <>
+   PERFORM lpInsertUpdate_ObjectLink(zc_ObjectLink_PartnerExternal_Contract(), ioId, inContractId);
+   -- сохранили связь с <>
+   PERFORM lpInsertUpdate_ObjectLink(zc_ObjectLink_PartnerExternal_Retail(), ioId, inRetailId);
 
 
    -- сохранили протокол

@@ -9,7 +9,7 @@ CREATE OR REPLACE FUNCTION gpSelect_Object_GoodsPropertyValue(
     IN inSession           TVarChar       -- сессия пользователя
 )
 RETURNS TABLE (Id Integer, Code Integer, Name TVarChar
-             , NameExternal TVarChar
+             , NameExternal TVarChar, ArticleExternal TVarChar
              , Amount TFloat, BoxCount TFloat, AmountDoc TFloat
              , BarCodeShort TVarChar, BarCode TVarChar, Article TVarChar, BarCodeGLN TVarChar, ArticleGLN TVarChar
              , CodeSticker TVarChar
@@ -61,7 +61,8 @@ BEGIN
          Object_GoodsPropertyValue.Id         AS Id
        , Object_GoodsPropertyValue.ObjectCode AS Code
        , Object_GoodsPropertyValue.ValueData  AS Name
-       , ObjectString_NameExternal.ValueData  AS NameExternal
+       , ObjectString_NameExternal.ValueData    AS NameExternal
+       , ObjectString_ArticleExternal.ValueData AS ArticleExternal
 
        , ObjectFloat_Amount.ValueData         AS Amount
        , ObjectFloat_BoxCount.ValueData       AS BoxCount
@@ -176,6 +177,9 @@ BEGIN
         LEFT JOIN ObjectString AS ObjectString_NameExternal
                                ON ObjectString_NameExternal.ObjectId = Object_GoodsPropertyValue.Id
                               AND ObjectString_NameExternal.DescId = zc_ObjectString_GoodsPropertyValue_NameExternal()
+        LEFT JOIN ObjectString AS ObjectString_ArticleExternal
+                               ON ObjectString_ArticleExternal.ObjectId = Object_GoodsPropertyValue.Id
+                              AND ObjectString_ArticleExternal.DescId = zc_ObjectString_GoodsPropertyValue_ArticleExternal()
 
         LEFT JOIN ObjectBoolean AS ObjectBoolean_Weigth
                                 ON ObjectBoolean_Weigth.ObjectId = Object_GoodsPropertyValue.Id
@@ -295,7 +299,8 @@ BEGIN
          tmpObjectLink.GoodsPropertyValueId         AS Id
        , tmpObjectLink.GoodsPropertyValueCode       AS Code
        , tmpObjectLink.GoodsPropertyValueName       AS Name
-       , tmpObjectLink.GoodsPropertyValueNameExternal AS NameExternal
+       , tmpObjectLink.GoodsPropertyValueNameExternal    AS NameExternal
+       , tmpObjectLink.GoodsPropertyValueArticleExternal AS ArticleExternal
 
        , tmpObjectLink.Amount
        , tmpObjectLink.BoxCount
@@ -349,7 +354,8 @@ BEGIN
         LEFT JOIN (SELECT Object_GoodsPropertyValue.Id          AS GoodsPropertyValueId
                         , Object_GoodsPropertyValue.ObjectCode  AS GoodsPropertyValueCode
                         , Object_GoodsPropertyValue.ValueData   AS GoodsPropertyValueName
-                        , ObjectString_NameExternal.ValueData   AS GoodsPropertyValueNameExternal
+                        , ObjectString_NameExternal.ValueData    AS GoodsPropertyValueNameExternal
+                        , ObjectString_ArticleExternal.ValueData AS GoodsPropertyValueArticleExternal
                         , Object_GoodsPropertyValue.isErased    AS isErased
                         , ObjectLink_GoodsPropertyValue_GoodsProperty.ChildObjectId  as GoodsPropertyId
  
@@ -478,6 +484,9 @@ BEGIN
                      LEFT JOIN ObjectString AS ObjectString_NameExternal
                                             ON ObjectString_NameExternal.ObjectId = Object_GoodsPropertyValue.Id
                                            AND ObjectString_NameExternal.DescId = zc_ObjectString_GoodsPropertyValue_NameExternal()
+                     LEFT JOIN ObjectString AS ObjectString_ArticleExternal
+                                            ON ObjectString_ArticleExternal.ObjectId = Object_GoodsPropertyValue.Id
+                                           AND ObjectString_ArticleExternal.DescId = zc_ObjectString_GoodsPropertyValue_ArticleExternal()
 
                      LEFT JOIN ObjectBoolean AS ObjectBoolean_Weigth
                                              ON ObjectBoolean_Weigth.ObjectId = Object_GoodsPropertyValue.Id
@@ -501,6 +510,7 @@ END;$BODY$
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.
+ 02.11.20         * add ArticleExternal
  01.11.20         * add NameExternal
  09.08.19         * add isWeigth
  10.04.19         * 

@@ -9,6 +9,8 @@ CREATE OR REPLACE FUNCTION gpGet_Object_PartnerExternal(
 RETURNS TABLE (Id Integer, Code Integer, Name TVarChar 
              , ObjectCode TVarChar
              , PartnerId Integer, PartnerName TVarChar
+             , ContractId Integer, ContractName TVarChar
+             , RetailId Integer, RetailName TVarChar
              ) AS
 $BODY$
 BEGIN
@@ -27,7 +29,13 @@ BEGIN
            , CAST ('' as TVarChar)  AS ObjectCode
 
            , CAST (0 as Integer)    AS PartnerId
-           , CAST ('' as TVarChar)  AS PartnerName 
+           , CAST ('' as TVarChar)  AS PartnerName
+
+           , CAST (0 as Integer)    AS ContractId
+           , CAST ('' as TVarChar)  AS ContractName 
+
+           , CAST (0 as Integer)    AS RetailId
+           , CAST ('' as TVarChar)  AS RetailName
            ;
    ELSE
        RETURN QUERY 
@@ -41,6 +49,10 @@ BEGIN
            , Object_Partner.Id                  AS PartnerId
            , Object_Partner.ValueData           AS PartnerName 
 
+           , Object_Contract.Id                 AS ContractId
+           , Object_Contract.ValueData          AS ContractName
+           , Object_Retail.Id                   AS RetailId
+           , Object_Retail.ValueData            AS RetailName
        FROM Object AS Object_PartnerExternal
        
             LEFT JOIN ObjectString AS ObjectString_ObjectCode
@@ -51,6 +63,16 @@ BEGIN
                                  ON ObjectLink_Partner.ObjectId = Object_PartnerExternal.Id 
                                 AND ObjectLink_Partner.DescId = zc_ObjectLink_PartnerExternal_Partner()
             LEFT JOIN Object AS Object_Partner ON Object_Partner.Id = ObjectLink_Partner.ChildObjectId                               
+
+            LEFT JOIN ObjectLink AS ObjectLink_Contract
+                                 ON ObjectLink_Contract.ObjectId = Object_PartnerExternal.Id 
+                                AND ObjectLink_Contract.DescId = zc_ObjectLink_PartnerExternal_Contract()
+            LEFT JOIN Object AS Object_Contract ON Object_Contract.Id = ObjectLink_Contract.ChildObjectId
+
+            LEFT JOIN ObjectLink AS ObjectLink_Retail
+                                 ON ObjectLink_Retail.ObjectId = Object_PartnerExternal.Id 
+                                AND ObjectLink_Retail.DescId = zc_ObjectLink_PartnerExternal_Retail()
+            LEFT JOIN Object AS Object_Retail ON Object_Retail.Id = ObjectLink_Retail.ChildObjectId
 
        WHERE Object_PartnerExternal.Id = inId;
       
@@ -67,4 +89,4 @@ $BODY$
 */
 
 -- тест
--- SELECT * FROM gpGet_Object_PartnerExternal (0,  inPartnerId:= 83665 , inPartnerExternalKindId := 153273 ,  inSession := '5')
+-- SELECT * FROM gpGet_Object_PartnerExternal (0, inSession := '5')

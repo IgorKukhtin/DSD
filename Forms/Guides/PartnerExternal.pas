@@ -20,7 +20,8 @@ uses
   cxDataStorage, cxEdit, Data.DB, cxDBData, dxSkinsdxBarPainter, dsdAddOn,
   dsdDB, dsdAction, Vcl.ActnList, dxBarExtItems, dxBar, cxClasses,
   cxPropertiesStore, Datasnap.DBClient, cxGridLevel, cxGridCustomTableView,
-  cxGridTableView, cxGridDBTableView, cxGridCustomView, cxGrid, cxCheckBox;
+  cxGridTableView, cxGridDBTableView, cxGridCustomView, cxGrid, cxCheckBox,
+  cxButtonEdit;
 
 type
   TPartnerExternalForm = class(TParentForm)
@@ -61,6 +62,13 @@ type
     bbProtocolOpenForm: TdxBarButton;
     actShowErased: TBooleanStoredProcAction;
     bbShowErased: TdxBarButton;
+    ContractName: TcxGridDBColumn;
+    RetailName: TcxGridDBColumn;
+    actPartnerChoiceForm: TOpenChoiceForm;
+    actContractChoiceForm: TOpenChoiceForm;
+    spInsertUpdate_Param: TdsdStoredProc;
+    JuridicalName: TcxGridDBColumn;
+    actUpdateDataSet: TdsdUpdateDataSet;
   private
     { Private declarations }
   public

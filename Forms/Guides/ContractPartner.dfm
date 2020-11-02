@@ -525,6 +525,14 @@ inherited ContractPartnerForm: TContractPartnerForm
           MultiSelectSeparator = ','
         end
         item
+          Name = 'TextValue'
+          Value = Null
+          Component = MasterCDS
+          ComponentItem = 'InvNumber'
+          DataType = ftString
+          MultiSelectSeparator = ','
+        end
+        item
           Name = 'ContractId'
           Value = Null
           Component = MasterCDS
@@ -535,7 +543,7 @@ inherited ContractPartnerForm: TContractPartnerForm
           Name = 'ContractName'
           Value = Null
           Component = MasterCDS
-          ComponentItem = 'ContractName'
+          ComponentItem = 'InvNumber'
           DataType = ftString
           MultiSelectSeparator = ','
         end
