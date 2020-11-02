@@ -22,7 +22,6 @@ inherited SaleExternalJournalForm: TSaleExternalJournalForm
       inherited cxGrid: TcxGrid
         Width = 876
         Height = 478
-        ExplicitTop = 3
         ExplicitWidth = 876
         ExplicitHeight = 478
         inherited cxGridDBTableView: TcxGridDBTableView
@@ -592,6 +591,7 @@ inherited SaleExternalJournalForm: TSaleExternalJournalForm
           Action = actRefresh
         end>
       QuestionBeforeExecute = #1053#1072#1095#1072#1090#1100' '#1079#1072#1075#1088#1091#1079#1082#1091' '#1044#1072#1085#1085#1099#1093' '#1080#1079' '#1092#1072#1081#1083#1072'?'
+      InfoAfterExecute = #1047#1072#1075#1088#1091#1079#1082#1072' '#1076#1072#1085#1085#1099#1093' '#1074#1099#1087#1086#1083#1085#1077#1085#1072
       Caption = #1047#1072#1075#1088#1091#1079#1080#1090#1100' '#1080#1079' '#1101#1082#1089#1077#1083#1103
       Hint = #1047#1072#1075#1088#1091#1079#1080#1090#1100' '#1080#1079' '#1101#1082#1089#1077#1083#1103
       ImageIndex = 41

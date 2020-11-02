@@ -1,14 +1,16 @@
 -- Function: gpInsertUpdate_Object_SaleExternal_Load()
 
 DROP FUNCTION IF EXISTS gpInsertUpdate_Object_SaleExternal_Load (TDateTime, TVarChar, TVarChar, TVarChar, TVarChar, TFloat, TVarChar);
+DROP FUNCTION IF EXISTS gpInsertUpdate_Object_SaleExternal_Load (TDateTime, TVarChar, TVarChar, TVarChar, TVarChar, TFloat, TFloat, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpInsertUpdate_Object_SaleExternal_Load(
     IN inOperDate              TDateTime , --
-    IN inPartnerExternalCode   TVarChar   , --
+    IN inPartnerExternalCode   TVarChar  , --
     IN inPartnerExternalName   TVarChar  , -- 
-    IN inArticle               TVarChar   , -- 
+    IN inArticle               TVarChar  , -- 
     IN inGoodsName             TVarChar  , -- 
     IN inAmount                TFloat    , -- количество
+    IN inAmount_kg             TFloat    , -- Вес
     IN inSession               TVarChar    -- сессия пользователя
 )
 RETURNS VOID
@@ -35,7 +37,7 @@ BEGIN
                                                         AND ObjectString_ObjectCode.ValueData = inPartnerExternalCode
                              WHERE Object_PartnerExternal.DescId = zc_Object_PartnerExternal()
                              );
-     
+
      --если не найден
      IF COALESCE (vbPartnerExternalId,0) = 0
      THEN
@@ -49,7 +51,7 @@ BEGIN
                                                                       , inUserId     := vbUserId
                                                                       );*/ 
      END IF;
-     
+
      --находим Классификатор свойств товаров, по связи с partner , далее juridical, далее GoodsProperty
      vbGoodsPropertyId := (SELECT ObjectLink_Juridical_GoodsProperty.ChildObjectId
                            FROM ObjectLink AS ObjectLink_Partner
@@ -62,7 +64,7 @@ BEGIN
                            WHERE ObjectLink_Partner.ObjectId = vbPartnerExternalId 
                              AND ObjectLink_Partner.DescId = zc_ObjectLink_PartnerExternal_Partner()
                            );
-     
+
      -- пробуем найти документ 
      vbMovementId := (SELECT Movement.Id
                       FROM Movement
@@ -78,7 +80,7 @@ BEGIN
                         AND Movement.StatusId = zc_Enum_Status_UnComplete()
                         AND Movement.OperDate =  DATE_TRUNC ('MONTH', inOperDate)
                       );
-     
+
      -- если не нашли создаем
      IF COALESCE (vbMovementId,0) = 0
      THEN
@@ -92,7 +94,7 @@ BEGIN
                                                             , inUserId           := vbUserId
                                                              )AS tmp;
      END IF;
-     
+
      --создаем строки
      --находим GoodsId по Артикулу
      SELECT ObjectLink_GoodsPropertyValue_Goods.ChildObjectId     AS GoodsId
@@ -113,7 +115,7 @@ BEGIN
      WHERE ObjectLink_GoodsPropertyValue_GoodsProperty.ChildObjectId = vbGoodsPropertyId
        AND ObjectLink_GoodsPropertyValue_GoodsProperty.DescId = zc_ObjectLink_GoodsPropertyValue_GoodsProperty()
      ;
-     
+
      -- сохраняем св-во  zc_ObjectString_GoodsPropertyValue_NameExternal
      PERFORM lpInsertUpdate_ObjectString(zc_ObjectString_GoodsPropertyValue_NameExternal(), vbGoodsPropertyValueId, inGoodsName);
 
@@ -128,16 +130,20 @@ BEGIN
                 AND MovementItem.DescId = zc_MI_Master()
                 AND MovementItem.isErased = FALSE
                 AND MovementItem.ObjectId = vbGoodsId
+              LIMIT 1
              );
 
      -- сохранили <Элемент документа>
      PERFORM lpInsertUpdate_MovementItem_SaleExternal (ioId           := COALESCE (vbId,0) ::Integer
                                                      , inMovementId   := vbMovementId      ::Integer
                                                      , inGoodsId      := vbGoodsId         ::Integer
-                                                     , inAmount       := inAmount          ::TFloat
+                                                     , inAmount       := CASE WHEN ObjectLink_Measure.ChildObjectId = zc_Measure_Sh() THEN inAmount ELSE inAmount_kg END ::TFloat
                                                      , inGoodsKindId  := vbGoodsKindId     ::Integer
                                                      , inUserId       := vbUserId          ::Integer
-                                                      ) AS tmp;
+                                                      ) 
+     FROM ObjectLink AS ObjectLink_Measure
+     WHERE ObjectLink_Measure.ObjectId = vbGoodsId
+       AND ObjectLink_Measure.DescId = zc_ObjectLink_Goods_Measure();
 
 END;
 $BODY$
