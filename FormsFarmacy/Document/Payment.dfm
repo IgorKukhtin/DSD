@@ -195,6 +195,14 @@ inherited PaymentForm: TPaymentForm
             HeaderAlignmentVert = vaCenter
             Width = 59
           end
+          object isPartialPay: TcxGridDBColumn
+            Caption = #1063#1072#1089#1090#1080#1095#1085'. '#1086#1087#1083#1072#1090#1072
+            DataBinding.FieldName = 'isPartialPay'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            HeaderHint = #1063#1072#1089#1090#1080#1095#1085#1072#1103' '#1086#1087#1083#1072#1090#1072
+            Width = 60
+          end
           object BankAccountName: TcxGridDBColumn
             Caption = #1056'/'#1057
             DataBinding.FieldName = 'BankAccountName'
@@ -793,6 +801,7 @@ inherited PaymentForm: TPaymentForm
           Font.Name = 'Tahoma'
           Font.Style = []
           CalcColumnLists = <>
+          DetailedTexts = <>
         end
         item
           Caption = 'SUMMA'
@@ -806,6 +815,7 @@ inherited PaymentForm: TPaymentForm
           Font.Style = []
           Width = 15
           CalcColumnLists = <>
+          DetailedTexts = <>
         end
         item
           Caption = 'COUNT_A'
@@ -818,6 +828,7 @@ inherited PaymentForm: TPaymentForm
           Font.Style = []
           Width = 30
           CalcColumnLists = <>
+          DetailedTexts = <>
         end
         item
           Caption = 'NAME_B'
@@ -830,6 +841,7 @@ inherited PaymentForm: TPaymentForm
           Font.Style = []
           Width = 50
           CalcColumnLists = <>
+          DetailedTexts = <>
         end
         item
           Caption = 'MFO_B'
@@ -842,6 +854,7 @@ inherited PaymentForm: TPaymentForm
           Font.Style = []
           Width = 15
           CalcColumnLists = <>
+          DetailedTexts = <>
         end
         item
           Caption = 'COUNT_B'
@@ -854,6 +867,7 @@ inherited PaymentForm: TPaymentForm
           Font.Style = []
           Width = 30
           CalcColumnLists = <>
+          DetailedTexts = <>
         end
         item
           Caption = 'N_P'
@@ -866,6 +880,7 @@ inherited PaymentForm: TPaymentForm
           Font.Style = []
           Width = 60
           CalcColumnLists = <>
+          DetailedTexts = <>
         end
         item
           Caption = 'OKPO_B'
@@ -878,6 +893,7 @@ inherited PaymentForm: TPaymentForm
           Font.Style = []
           Width = 15
           CalcColumnLists = <>
+          DetailedTexts = <>
         end
         item
           Caption = 'SER_PAS_B'
@@ -888,6 +904,7 @@ inherited PaymentForm: TPaymentForm
           Font.Name = 'Tahoma'
           Font.Style = []
           CalcColumnLists = <>
+          DetailedTexts = <>
         end
         item
           Caption = 'NOM_PAS_B'
@@ -898,6 +915,7 @@ inherited PaymentForm: TPaymentForm
           Font.Name = 'Tahoma'
           Font.Style = []
           CalcColumnLists = <>
+          DetailedTexts = <>
         end>
       FileType = ftExcel8
       Caption = #1069#1082#1089#1087#1086#1090#1088' '#1087#1083#1072#1090#1077#1078#1077#1081' '#1074' '#1087#1088#1080#1074#1072#1090' '#1073#1072#1085#1082
@@ -952,6 +970,7 @@ inherited PaymentForm: TPaymentForm
           Font.Style = []
           Width = 15
           CalcColumnLists = <>
+          DetailedTexts = <>
         end
         item
           Caption = #1053#1086#1084#1077#1088' '#1076#1086#1082#1091#1084#1077#1085#1090#1072
@@ -963,6 +982,7 @@ inherited PaymentForm: TPaymentForm
           Font.Name = 'Tahoma'
           Font.Style = []
           CalcColumnLists = <>
+          DetailedTexts = <>
         end
         item
           Caption = #1057#1091#1084#1084#1072
@@ -976,6 +996,7 @@ inherited PaymentForm: TPaymentForm
           Font.Style = []
           Width = 15
           CalcColumnLists = <>
+          DetailedTexts = <>
         end
         item
           Caption = #1052#1060#1054
@@ -988,6 +1009,7 @@ inherited PaymentForm: TPaymentForm
           Font.Style = []
           Width = 15
           CalcColumnLists = <>
+          DetailedTexts = <>
         end
         item
           Caption = #1057#1095#1077#1090
@@ -1000,6 +1022,7 @@ inherited PaymentForm: TPaymentForm
           Font.Style = []
           Width = 30
           CalcColumnLists = <>
+          DetailedTexts = <>
         end
         item
           Caption = 'IBAN '#1087#1083#1072#1090#1077#1083#1100#1097#1080#1082#1072
@@ -1012,6 +1035,7 @@ inherited PaymentForm: TPaymentForm
           Font.Style = []
           Width = 30
           CalcColumnLists = <>
+          DetailedTexts = <>
         end
         item
           Caption = #1052#1060#1054' '#1073#1072#1085#1082#1072'  '#1082#1086#1088#1088#1077#1089#1087#1086#1085#1076#1077#1085#1090#1072
@@ -1024,6 +1048,7 @@ inherited PaymentForm: TPaymentForm
           Font.Style = []
           Width = 15
           CalcColumnLists = <>
+          DetailedTexts = <>
         end
         item
           Caption = #1057#1095#1077#1090' '#1082#1086#1088#1088#1077#1089#1087#1086#1085#1076#1077#1085#1090#1072
@@ -1036,6 +1061,7 @@ inherited PaymentForm: TPaymentForm
           Font.Style = []
           Width = 30
           CalcColumnLists = <>
+          DetailedTexts = <>
         end
         item
           Caption = 'IBAN '#1082#1086#1088#1088#1077#1089#1087#1086#1085#1076#1077#1085#1090#1072
@@ -1048,6 +1074,7 @@ inherited PaymentForm: TPaymentForm
           Font.Style = []
           Width = 30
           CalcColumnLists = <>
+          DetailedTexts = <>
         end
         item
           Caption = #1048#1076'. '#1082#1086#1076' '#1082#1086#1088#1088#1077#1089#1087#1086#1085#1076#1077#1085#1090#1072
@@ -1059,6 +1086,7 @@ inherited PaymentForm: TPaymentForm
           Font.Name = 'Tahoma'
           Font.Style = []
           CalcColumnLists = <>
+          DetailedTexts = <>
         end
         item
           Caption = #1050#1086#1076' '#1089#1090#1088#1072#1085#1080' '#1082#1086#1088#1088#1077#1089#1087#1086#1085#1076#1077#1085#1090#1072
@@ -1070,6 +1098,7 @@ inherited PaymentForm: TPaymentForm
           Font.Name = 'Tahoma'
           Font.Style = []
           CalcColumnLists = <>
+          DetailedTexts = <>
         end
         item
           Caption = #1050#1086#1088#1088#1077#1089#1087#1086#1085#1076#1077#1085#1090
@@ -1082,6 +1111,7 @@ inherited PaymentForm: TPaymentForm
           Font.Style = []
           Width = 50
           CalcColumnLists = <>
+          DetailedTexts = <>
         end
         item
           Caption = #1044#1072#1090#1072' '#1074#1072#1083#1102#1090#1080#1088#1086#1074#1072#1085#1080#1103
@@ -1092,6 +1122,7 @@ inherited PaymentForm: TPaymentForm
           Font.Name = 'Tahoma'
           Font.Style = []
           CalcColumnLists = <>
+          DetailedTexts = <>
         end
         item
           Caption = #1055#1088#1080#1086#1088#1080#1090#1077#1090
@@ -1104,6 +1135,7 @@ inherited PaymentForm: TPaymentForm
           Font.Style = []
           Width = 15
           CalcColumnLists = <>
+          DetailedTexts = <>
         end
         item
           Caption = #1053#1072#1079#1085#1072#1095#1077#1085#1080#1077' '#1087#1083#1072#1090#1077#1078#1072
@@ -1116,6 +1148,7 @@ inherited PaymentForm: TPaymentForm
           Font.Style = []
           Width = 60
           CalcColumnLists = <>
+          DetailedTexts = <>
         end
         item
           Caption = #1044#1086#1087'. '#1056#1077#1082#1074#1080#1079#1080#1090#1099
@@ -1126,6 +1159,7 @@ inherited PaymentForm: TPaymentForm
           Font.Name = 'Tahoma'
           Font.Style = []
           CalcColumnLists = <>
+          DetailedTexts = <>
         end>
       FileType = ftExcel8
       SheetName = 'cbdocument'
@@ -1180,6 +1214,7 @@ inherited PaymentForm: TPaymentForm
           Font.Name = 'Tahoma'
           Font.Style = []
           CalcColumnLists = <>
+          DetailedTexts = <>
         end
         item
           Caption = 'SUMMA'
@@ -1193,6 +1228,7 @@ inherited PaymentForm: TPaymentForm
           Font.Style = []
           Width = 15
           CalcColumnLists = <>
+          DetailedTexts = <>
         end
         item
           Caption = 'CUR_TAG'
@@ -1204,6 +1240,7 @@ inherited PaymentForm: TPaymentForm
           Font.Name = 'Tahoma'
           Font.Style = []
           CalcColumnLists = <>
+          DetailedTexts = <>
         end
         item
           Caption = 'N_P'
@@ -1216,6 +1253,7 @@ inherited PaymentForm: TPaymentForm
           Font.Style = []
           Width = 80
           CalcColumnLists = <>
+          DetailedTexts = <>
         end
         item
           Caption = 'KL_CHK'
@@ -1228,6 +1266,7 @@ inherited PaymentForm: TPaymentForm
           Font.Style = []
           Width = 30
           CalcColumnLists = <>
+          DetailedTexts = <>
         end
         item
           Caption = 'KL_OKP'
@@ -1240,6 +1279,7 @@ inherited PaymentForm: TPaymentForm
           Font.Style = []
           Width = 15
           CalcColumnLists = <>
+          DetailedTexts = <>
         end
         item
           Caption = 'MFO_K'
@@ -1252,6 +1292,7 @@ inherited PaymentForm: TPaymentForm
           Font.Style = []
           Width = 15
           CalcColumnLists = <>
+          DetailedTexts = <>
         end
         item
           Caption = 'KL_CHK_K'
@@ -1264,6 +1305,7 @@ inherited PaymentForm: TPaymentForm
           Font.Style = []
           Width = 30
           CalcColumnLists = <>
+          DetailedTexts = <>
         end
         item
           Caption = 'KL_OKP_K'
@@ -1276,6 +1318,7 @@ inherited PaymentForm: TPaymentForm
           Font.Style = []
           Width = 15
           CalcColumnLists = <>
+          DetailedTexts = <>
         end
         item
           Caption = 'KL_NM_K'
@@ -1288,6 +1331,7 @@ inherited PaymentForm: TPaymentForm
           Font.Style = []
           Width = 60
           CalcColumnLists = <>
+          DetailedTexts = <>
         end
         item
           Caption = 'PassportS'
@@ -1298,6 +1342,7 @@ inherited PaymentForm: TPaymentForm
           Font.Name = 'Tahoma'
           Font.Style = []
           CalcColumnLists = <>
+          DetailedTexts = <>
         end
         item
           Caption = 'PassportN'
@@ -1308,6 +1353,7 @@ inherited PaymentForm: TPaymentForm
           Font.Name = 'Tahoma'
           Font.Style = []
           CalcColumnLists = <>
+          DetailedTexts = <>
         end
         item
           Caption = 'DB_IBAN'
@@ -1320,6 +1366,7 @@ inherited PaymentForm: TPaymentForm
           Font.Style = []
           Width = 30
           CalcColumnLists = <>
+          DetailedTexts = <>
         end
         item
           Caption = 'CR_IBAN'
@@ -1332,6 +1379,7 @@ inherited PaymentForm: TPaymentForm
           Font.Style = []
           Width = 30
           CalcColumnLists = <>
+          DetailedTexts = <>
         end>
       FileType = ftExcel8
       Caption = #1069#1082#1089#1087#1086#1090#1088' '#1087#1083#1072#1090#1077#1078#1077#1081' '#1074' '#1082#1086#1085#1082#1086#1088#1076' '#1073#1072#1085#1082
@@ -1839,10 +1887,42 @@ inherited PaymentForm: TPaymentForm
     Top = 312
   end
   inherited spErasedMIMaster: TdsdStoredProc
+    Params = <
+      item
+        Name = 'inMovementItemId'
+        Component = MasterCDS
+        ComponentItem = 'Id'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'outIsErased'
+        Value = False
+        Component = MasterCDS
+        ComponentItem = 'isErased'
+        DataType = ftBoolean
+        MultiSelectSeparator = ','
+      end>
     Left = 550
     Top = 224
   end
   inherited spUnErasedMIMaster: TdsdStoredProc
+    Params = <
+      item
+        Name = 'inMovementItemId'
+        Component = MasterCDS
+        ComponentItem = 'Id'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'outIsErased'
+        Value = False
+        Component = MasterCDS
+        ComponentItem = 'isErased'
+        DataType = ftBoolean
+        MultiSelectSeparator = ','
+      end>
     Left = 550
     Top = 256
   end
@@ -1949,6 +2029,15 @@ inherited PaymentForm: TPaymentForm
         ComponentItem = 'NeedPay'
         DataType = ftBoolean
         ParamType = ptInputOutput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inisPartialPay'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'isPartialPay'
+        DataType = ftBoolean
+        ParamType = ptInput
         MultiSelectSeparator = ','
       end>
     NeedResetData = True
@@ -2281,7 +2370,7 @@ inherited PaymentForm: TPaymentForm
       end
       item
         Name = 'inNeedPay'
-        Value = 'FALSE'
+        Value = False
         DataType = ftBoolean
         ParamType = ptInput
         MultiSelectSeparator = ','

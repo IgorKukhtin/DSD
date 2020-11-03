@@ -119,12 +119,12 @@ BEGIN
                               AND Movement.StatusId = zc_Enum_Status_Complete()
                               AND COALESCE(MovementLinkObject_ArticleLoss.ObjectId, 0) = 13892113
                               AND (MovementLinkObject_Unit.ObjectId = inUnitID OR inUnitID = 0))
-      , tmpMovementItemLoss AS (SELECT Movement.UnitID                          AS UnitID,
+      , tmpMovementItemLossAll AS (SELECT Movement.UnitID                          AS UnitID,
                                        MovementItem.ObjectId                    AS GoodsID,
                                        MovementItemContainer.ContainerId        AS ContainerId,
-                                       SUM(MovementItem.Amount)                 AS AmountLoss,
+                                       MovementItem.Amount                      AS AmountLoss,
                                        tmpListGodsMarket.MakerId,
-                                       COALESCE (MIDate_ExpirationDate.ValueData, zc_DateEnd()) AS ExpirationDate
+                                       Object_PartionMovementItem.ObjectCode
 
                                  FROM tmpMovementLoss AS Movement
 
@@ -140,39 +140,50 @@ BEGIN
                                       LEFT JOIN tmpListGodsMarket ON tmpListGodsMarket.GoodsId = MovementItem.ObjectId
                                                                  AND tmpListGodsMarket.StartDate_Promo <= Movement.OperDate
                                                                  AND tmpListGodsMarket.EndDate_Promo >= Movement.OperDate
-
-                                      LEFT JOIN MovementBoolean AS MovementBoolean_Deferred
-                                                                ON MovementBoolean_Deferred.MovementId = Movement.Id
-                                                               AND MovementBoolean_Deferred.DescId = zc_MovementBoolean_Deferred()
-
-                                      LEFT JOIN MovementLinkObject AS MovementLinkObject_Unit
-                                                                   ON MovementLinkObject_Unit.MovementId = Movement.Id
-                                                                  AND MovementLinkObject_Unit.DescId = zc_MovementLinkObject_From()
-
-                                      LEFT JOIN MovementLinkObject AS MovementLinkObject_Unit_To
-                                                                   ON MovementLinkObject_Unit_To.MovementId = Movement.Id
-                                                                  AND MovementLinkObject_Unit_To.DescId = zc_MovementLinkObject_To()
-
+                                                                 
                                       LEFT JOIN ContainerlinkObject AS ContainerLinkObject_MovementItem
                                                                     ON ContainerLinkObject_MovementItem.Containerid = MovementItemContainer.Containerid
                                                                    AND ContainerLinkObject_MovementItem.DescId = zc_ContainerLinkObject_PartionMovementItem()
                                       LEFT OUTER JOIN Object AS Object_PartionMovementItem ON Object_PartionMovementItem.Id = ContainerLinkObject_MovementItem.ObjectId
+                                                                                          AND Object_PartionMovementItem.Descid = zc_object_PartionMovementItem()   
+                                                                 )
+      , tmpMIFLoss As (SELECT * FROM MovementItemFloat WHERE MovementItemFloat.MovementItemId IN (SELECT DISTINCT tmpMovementItemLossAll.ObjectCode FROM tmpMovementItemLossAll))
+                                                                       
+      , tmpMovementItemLossIncome AS (SELECT Movement.UnitID                          AS UnitID,
+                                       Movement.GoodsID                         AS GoodsID,
+                                       Movement.ContainerId                     AS ContainerId,
+                                       Movement.AmountLoss                      AS AmountLoss,
+                                       Movement.MakerId,
+                                      -- COALESCE(MI_Income_find.Id,MI_Income.Id) AS MI_IncomeId,
+                                       COALESCE(MIFloat_MovementItem.ValueData :: Integer,Movement.ObjectCode) AS MI_IncomeId
+
+                                 FROM tmpMovementItemLossAll AS Movement
                                       -- элемент прихода
-                                      LEFT JOIN MovementItem AS MI_Income ON MI_Income.Id = Object_PartionMovementItem.ObjectCode
+                                     -- LEFT JOIN MovementItem AS MI_Income ON MI_Income.Id = Movement.ObjectCode
                                       -- если это партия, которая была создана инвентаризацией - в этом свойстве будет "найденный" ближайший приход от поставщика
-                                      LEFT JOIN MovementItemFloat AS MIFloat_MovementItem
-                                                                  ON MIFloat_MovementItem.MovementItemId = MI_Income.Id
-                                                                 AND MIFloat_MovementItem.DescId = zc_MIFloat_MovementItemId()
+                                      LEFT JOIN tmpMIFLoss AS MIFloat_MovementItem
+                                                           ON MIFloat_MovementItem.MovementItemId = Movement.ObjectCode
+                                                          AND MIFloat_MovementItem.DescId = zc_MIFloat_MovementItemId()
                                       -- элемента прихода от поставщика (если это партия, которая была создана инвентаризацией)
-                                      LEFT JOIN MovementItem AS MI_Income_find ON MI_Income_find.Id  = (MIFloat_MovementItem.ValueData :: Integer)
-                                                                           -- AND 1=0
-                                      LEFT OUTER JOIN MovementItemDate  AS MIDate_ExpirationDate
-                                                                        ON MIDate_ExpirationDate.MovementItemId = COALESCE (MI_Income_find.Id,MI_Income.Id)  --Object_PartionMovementItem.ObjectCode
+                                    --  LEFT JOIN MovementItem AS MI_Income_find ON MI_Income_find.Id  = (MIFloat_MovementItem.ValueData :: Integer)
+                                      )
+      , tmpMIDLoss As (SELECT * FROM MovementItemDate WHERE MovementItemDate.MovementItemId IN (SELECT DISTINCT tmpMovementItemLossIncome.MI_IncomeId FROM tmpMovementItemLossIncome))
+      , tmpMovementItemLoss AS (SELECT Movement.UnitID                          AS UnitID,
+                                       Movement.GoodsID                         AS GoodsID,
+                                       Movement.ContainerId                     AS ContainerId,
+                                       SUM(Movement.AmountLoss)                 AS AmountLoss,
+                                       Movement.MakerId,
+                                       COALESCE (MIDate_ExpirationDate.ValueData, zc_DateEnd()) AS ExpirationDate
+
+                                 FROM tmpMovementItemLossIncome AS Movement
+
+                                      LEFT OUTER JOIN tmpMIDLoss  AS MIDate_ExpirationDate
+                                                                        ON MIDate_ExpirationDate.MovementItemId = Movement.MI_IncomeId
                                                                        AND MIDate_ExpirationDate.DescId = zc_MIDate_PartionGoods()
                                  GROUP BY Movement.UnitID
-                                        , MovementItem.ObjectId
-                                        , MovementItemContainer.ContainerId
-                                        , tmpListGodsMarket.MakerId
+                                        , Movement.GoodsID
+                                        , Movement.ContainerId
+                                        , Movement.MakerId
                                         , COALESCE (MIDate_ExpirationDate.ValueData, zc_DateEnd()))
       ,   tmpMovementItem AS (SELECT MovementLinkObject_Unit.ObjectId            AS UnitID,
                                      MovementItem.ObjectId                       AS GoodsID,
@@ -369,3 +380,5 @@ $BODY$
 
 -- тест
 -- SELECT * FROM gpReport_StockTiming_Remainder(inOperDate :=  '15.01.2020', inUnitID := 0, inMakerId := 0, inSession := '3')
+
+select * from gpReport_StockTiming_Remainder(inOperDate := ('02.06.2020')::TDateTime , inUnitId := 0 , inMakerId := 0 ,  inSession := '3');
