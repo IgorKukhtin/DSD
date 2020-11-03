@@ -24,7 +24,7 @@ BEGIN
                      , MILinkObject_InfoMoney.ObjectId    AS InfoMoneyId
                      , MovementItem.ObjectId              AS BankAccountId_main
                      , MILinkObject_BankAccount.ObjectId  AS BankAccountId
-                     , ROW_NUMBER() OVER (Partition by  Object_MoneyPlace.Id, MILinkObject_InfoMoney.ObjectId, Partner_BankAccount_View.BankName ORDER BY MILinkObject_BankAccount.ObjectId DESC ) AS Ord
+                     , ROW_NUMBER() OVER (Partition by  Object_MoneyPlace.Id, MILinkObject_InfoMoney.ObjectId, MovementItem.ObjectId ORDER BY MILinkObject_BankAccount.ObjectId DESC ) AS Ord
                 FROM Movement
                      INNER JOIN MovementItem ON MovementItem.MovementId = Movement.Id 
                                             AND MovementItem.DescId = zc_MI_Master()
@@ -47,7 +47,7 @@ BEGIN
                   AND Movement.StatusId = zc_Enum_Status_Complete()
                   AND (MovementItem.ObjectId = inBankAccountId_main OR inBankAccountId_main = 0) --4529011   --  р/сч. ОТП банк
                 ORDER BY 2) AS tmp
-          WHERE tmp.ord = 1;
+          WHERE tmp.ord = 1);
 
    -- сохраненне данные в справочнике
    CREATE TEMP TABLE tmpJuridicalOrderFinance ON COMMIT DROP AS (
@@ -56,32 +56,37 @@ BEGIN
                , OL_JuridicalOrderFinance_BankAccountMain.ChildObjectId AS BankAccountId_main
                , OL_JuridicalOrderFinance_BankAccount.ChildObjectId     AS BankAccountId
                , OL_JuridicalOrderFinance_InfoMoney.ChildObjectId       AS InfoMoneyId
+               , ROW_NUMBER() OVER (Partition by OL_JuridicalOrderFinance_Juridical.ChildObjectId
+                                               , OL_JuridicalOrderFinance_BankAccountMain.ChildObjectId
+                                               , OL_JuridicalOrderFinance_InfoMoney.ChildObjectId) AS Ord
           FROM Object AS Object_JuridicalOrderFinance
               INNER JOIN ObjectLink AS OL_JuridicalOrderFinance_BankAccountMain
                                     ON OL_JuridicalOrderFinance_BankAccountMain.ObjectId = Object_JuridicalOrderFinance.Id
                                    AND OL_JuridicalOrderFinance_BankAccountMain.DescId = zc_ObjectLink_JuridicalOrderFinance_BankAccountMain()
                                    AND (OL_JuridicalOrderFinance_BankAccountMain.ChildObjectId = inBankAccountId_main OR inBankAccountId_main = 0)
 
+              LEFT JOIN ObjectLink AS OL_JuridicalOrderFinance_BankAccount
+                                   ON OL_JuridicalOrderFinance_BankAccount.ObjectId = Object_JuridicalOrderFinance.Id
+                                  AND OL_JuridicalOrderFinance_BankAccount.DescId = zc_ObjectLink_JuridicalOrderFinance_BankAccount()
+
               LEFT JOIN ObjectLink AS OL_JuridicalOrderFinance_Juridical
                                    ON OL_JuridicalOrderFinance_Juridical.ObjectId = Object_JuridicalOrderFinance.Id
                                   AND OL_JuridicalOrderFinance_Juridical.DescId = zc_ObjectLink_JuridicalOrderFinance_Juridical()
 
-              LEFT JOIN ObjectLink AS OL_JuridicalOrderFinance_BankAccount
-                                   ON OL_JuridicalOrderFinance_BankAccount.ObjectId = Object_JuridicalOrderFinance.Id
-                                  AND OL_JuridicalOrderFinance_BankAccount.DescId = zc_ObjectLink_JuridicalOrderFinance_BankAccount()
-             
               LEFT JOIN ObjectLink AS OL_JuridicalOrderFinance_InfoMoney
                                    ON OL_JuridicalOrderFinance_InfoMoney.ObjectId = Object_JuridicalOrderFinance.Id
                                   AND OL_JuridicalOrderFinance_InfoMoney.DescId = zc_ObjectLink_JuridicalOrderFinance_InfoMoney()
-          WHERE Object_JuridicalOrderFinance.DescId = zc_Object_JuridicalOrderFinance();
+          WHERE Object_JuridicalOrderFinance.DescId = zc_Object_JuridicalOrderFinance()
+          );
 
    -- удаляем сохраненные элементы справочника, которых нет в выборке по документам
    UPDATE Object 
-    SET isErased = CASE WHEN tmpData.Id IS NOT NULL THEN FALSE ELSE TRUE END
+    SET isErased = CASE WHEN tmpData.JuridicalId IS NOT NULL THEN FALSE ELSE TRUE END
    FROM tmpJuridicalOrderFinance AS tmpJOF
         LEFT JOIN tmpData ON tmpData.BankAccountId_main = tmpJOF.BankAccountId_main
                          AND tmpData.JuridicalId = tmpJOF.JuridicalId
                          AND tmpData.InfoMoneyId = tmpJOF.InfoMoneyId
+                         AND tmpData.BankAccountId = tmpJOF.BankAccountId
    WHERE tmpJOF.Id = Object.Id
      AND Object.DescId = zc_Object_JuridicalOrderFinance();
 
@@ -104,6 +109,7 @@ BEGIN
                     ON tmp.BankAccountId_main = tmpData.BankAccountId_main
                    AND tmp.JuridicalId = tmpData.JuridicalId
                    AND tmp.InfoMoneyId = tmpData.InfoMoneyId
+                   AND tmp.BankAccountId = tmpData.BankAccountId
    ;
 
 END;$BODY$
@@ -119,61 +125,3 @@ LANGUAGE plpgsql VOLATILE;
 
 -- тест
 --
-
-/*
-    WITH 
-_tmp AS ( SELECT DISTINCT
-             *
-FROM (SELECT DISTINCT
-             Object_MoneyPlace.Id              AS MoneyPlaceId
-           , (Object_MoneyPlace.ValueData) :: TVarChar AS MoneyPlaceName
-    
-           , MILinkObject_InfoMoney.ObjectId AS InfoMoneyId
-           , Object_InfoMoney_View.InfoMoneyName
-
-           , Partner_BankAccount_View.BankName
-           , MILinkObject_BankAccount.ObjectId  AS BankAccountId
-           , Partner_BankAccount_View.Name      AS BankAccountName
-           
-, row_number() over (Partition by  Object_MoneyPlace.Id, MILinkObject_InfoMoney.ObjectId, Partner_BankAccount_View.BankName ORDER BY MILinkObject_BankAccount.ObjectId DESC ) AS ord
-       FROM Movement
-          
-            LEFT JOIN MovementItem ON MovementItem.MovementId = Movement.Id AND MovementItem.DescId = zc_MI_Master()
-            
-            LEFT JOIN MovementItemLinkObject AS MILinkObject_MoneyPlace
-                                             ON MILinkObject_MoneyPlace.MovementItemId = MovementItem.Id
-                                            AND MILinkObject_MoneyPlace.DescId         = zc_MILinkObject_MoneyPlace()
-            INNER JOIN Object AS Object_MoneyPlace ON Object_MoneyPlace.Id = MILinkObject_MoneyPlace.ObjectId
-                                               AND Object_MoneyPlace.DescId = zc_Object_Juridical()
-           
-            LEFT JOIN MovementItemLinkObject AS MILinkObject_InfoMoney
-                                             ON MILinkObject_InfoMoney.MovementItemId = MovementItem.Id
-                                            AND MILinkObject_InfoMoney.DescId = zc_MILinkObject_InfoMoney()
-            LEFT JOIN Object_InfoMoney_View ON Object_InfoMoney_View.InfoMoneyId = MILinkObject_InfoMoney.ObjectId
-
-            INNER JOIN MovementItemLinkObject AS MILinkObject_BankAccount
-                                             ON MILinkObject_BankAccount.MovementItemId = MovementItem.Id
-                                            AND MILinkObject_BankAccount.DescId = zc_MILinkObject_BankAccount()
-            LEFT JOIN Object_BankAccount_View AS Partner_BankAccount_View ON Partner_BankAccount_View.Id = MILinkObject_BankAccount.ObjectId
-
-      WHERE  Movement.DescId = zc_Movement_BankAccount()
-                         AND Movement.OperDate BETWEEN '01.08.2020' AND '08.09.2020'
-                         AND Movement.StatusId = zc_Enum_Status_Complete()
-AND MovementItem.ObjectId = 4529011   --  р/сч. ОТП банк
-order by 2)
-as tmp
-where tmp.ord = 1
-order by 2
-)
-
-
-SELECT gpInsertUpdate_Object_JuridicalOrderFinance(
-                                                   ioId                :=  0                 ::      Integer   ,   -- ключ объекта <>
-                                                   inJuridicalId       := _tmp.MoneyPlaceId  ::      Integer   ,     
-                                                   inBankAccountId     := _tmp.BankAccountId ::      Integer   ,     
-                                                   inInfoMoneyId       := _tmp.InfoMoneyId   ::      Integer   ,     
-                                                   inSummOrderFinance  :=  0                 ::      TFloat    , 
-                                                   inSession           :=  '5'               ::      TVarChar)
-FROM _tmp
---select * from gpSelect_Object_JuridicalOrderFinance(inShowAll := 'False' , inisErased := 'False' ,  inSession := '5');
-*/
