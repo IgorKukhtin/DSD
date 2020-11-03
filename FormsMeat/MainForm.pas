@@ -1184,6 +1184,8 @@ type
     N219: TMenuItem;
     actSaleExternal: TdsdOpenForm;
     miSaleExternal: TMenuItem;
+    actGoodsPropertyValueExternal: TdsdOpenForm;
+    miGoodsPropertyValueExternal: TMenuItem;
     procedure actReport_OLAPSoldExecute(Sender: TObject);
     procedure FormShow(Sender: TObject);
     procedure FormClose(Sender: TObject; var Action: TCloseAction);
