@@ -395,6 +395,36 @@ inherited JuridicalOrderFinanceForm: TJuridicalOrderFinanceForm
       Caption = 'actUpdateDataSet'
       DataSource = MasterDS
     end
+    object ExecuteDialog: TExecuteDialog
+      Category = 'DSDLib'
+      MoveParams = <>
+      Caption = 'ExecuteDialog'
+      FormName = 'TDatePeriodDialogForm'
+      FormNameParam.Value = 'TDatePeriodDialogForm'
+      FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
+      GuiParams = <
+        item
+          Name = 'inStartDate'
+          Value = 'NULL'
+          Component = FormParams
+          ComponentItem = 'inStartDate'
+          DataType = ftDateTime
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'inEndDate'
+          Value = 'NULL'
+          Component = FormParams
+          ComponentItem = 'inEndDate'
+          DataType = ftDateTime
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end>
+      isShowModal = True
+      OpenBeforeShow = True
+    end
   end
   inherited MasterDS: TDataSource
     Left = 80

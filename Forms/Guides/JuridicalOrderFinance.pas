@@ -51,6 +51,7 @@ type
     edBankAccount: TcxButtonEdit;
     GuidesBankAccount: TdsdGuides;
     spInsert_byMovBankAccount: TdsdStoredProc;
+    ExecuteDialog: TExecuteDialog;
   private
     { Private declarations }
   public
