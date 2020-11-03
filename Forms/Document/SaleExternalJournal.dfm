@@ -607,6 +607,9 @@ inherited SaleExternalJournalForm: TSaleExternalJournalForm
       MoveParams = <>
       ActionList = <
         item
+          Action = actGet_Exception
+        end
+        item
           Action = actGetImportSetting
         end
         item
@@ -620,6 +623,17 @@ inherited SaleExternalJournalForm: TSaleExternalJournalForm
       Caption = #1047#1072#1075#1088#1091#1079#1080#1090#1100' '#1080#1079' '#1101#1082#1089#1077#1083#1103
       Hint = #1047#1072#1075#1088#1091#1079#1080#1090#1100' '#1080#1079' '#1101#1082#1089#1077#1083#1103
       ImageIndex = 41
+    end
+    object actGet_Exception: TdsdExecStoredProc
+      Category = #1047#1072#1075#1088#1091#1079#1082#1072
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      StoredProc = spGet_Exception
+      StoredProcList = <
+        item
+          StoredProc = spGet_Exception
+        end>
+      Caption = 'actGet_Exception'
     end
   end
   inherited MasterDS: TDataSource
@@ -1018,5 +1032,22 @@ inherited SaleExternalJournalForm: TSaleExternalJournalForm
       end>
     Left = 528
     Top = 16
+  end
+  object spGet_Exception: TdsdStoredProc
+    StoredProcName = 'gpGet_Exception_SaleExternal_Load'
+    DataSets = <>
+    OutputType = otResult
+    Params = <
+      item
+        Name = 'inRetailId'
+        Value = Null
+        Component = GuidesRetail
+        ComponentItem = 'Key'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end>
+    PackSize = 1
+    Left = 504
+    Top = 152
   end
 end
