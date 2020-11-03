@@ -249,15 +249,32 @@ inherited SaleExternalJournalForm: TSaleExternalJournalForm
     inherited deEnd: TcxDateEdit
       EditValue = 42370d
     end
+    object cxLabel10: TcxLabel
+      Left = 425
+      Top = 6
+      Caption = #1058#1086#1088#1075'.'#1089#1077#1090#1100':'
+    end
+    object edRetail: TcxButtonEdit
+      Left = 483
+      Top = 5
+      Properties.Buttons = <
+        item
+          Default = True
+          Kind = bkEllipsis
+        end>
+      Properties.ReadOnly = True
+      TabOrder = 5
+      Width = 131
+    end
   end
   object cxLabel27: TcxLabel [2]
-    Left = 510
-    Top = 9
+    Left = 640
+    Top = 6
     Caption = #1055#1088#1077#1076#1087#1088#1080#1103#1090#1080#1077':'
   end
   object edJuridicalBasis: TcxButtonEdit [3]
-    Left = 588
-    Top = 8
+    Left = 718
+    Top = 5
     Properties.Buttons = <
       item
         Default = True
@@ -562,6 +579,14 @@ inherited SaleExternalJournalForm: TSaleExternalJournalForm
           Value = 43831d
           Component = deStart
           DataType = ftDateTime
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'inRetailId'
+          Value = Null
+          Component = GuidesRetail
+          ComponentItem = 'Key'
           ParamType = ptInput
           MultiSelectSeparator = ','
         end>
@@ -930,8 +955,8 @@ inherited SaleExternalJournalForm: TSaleExternalJournalForm
         MultiSelectSeparator = ','
       end>
     PackSize = 1
-    Left = 616
-    Top = 104
+    Left = 784
+    Top = 40
   end
   object spGetImportSettingId: TdsdStoredProc
     StoredProcName = 'gpGet_DefaultValue'
@@ -964,5 +989,34 @@ inherited SaleExternalJournalForm: TSaleExternalJournalForm
     PackSize = 1
     Left = 696
     Top = 272
+  end
+  object GuidesRetail: TdsdGuides
+    KeyField = 'Id'
+    LookupControl = edRetail
+    FormNameParam.Value = 'TRetailForm'
+    FormNameParam.DataType = ftString
+    FormNameParam.MultiSelectSeparator = ','
+    FormName = 'TRetailForm'
+    PositionDataSet = 'ClientDataSet'
+    Params = <
+      item
+        Name = 'Key'
+        Value = ''
+        Component = GuidesRetail
+        ComponentItem = 'Key'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'TextValue'
+        Value = ''
+        Component = GuidesRetail
+        ComponentItem = 'TextValue'
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end>
+    Left = 528
+    Top = 16
   end
 end

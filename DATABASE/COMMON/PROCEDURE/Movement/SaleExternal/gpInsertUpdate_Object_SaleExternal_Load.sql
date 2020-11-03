@@ -2,9 +2,11 @@
 
 DROP FUNCTION IF EXISTS gpInsertUpdate_Object_SaleExternal_Load (TDateTime, TVarChar, TVarChar, TVarChar, TVarChar, TFloat, TVarChar);
 DROP FUNCTION IF EXISTS gpInsertUpdate_Object_SaleExternal_Load (TDateTime, TVarChar, TVarChar, TVarChar, TVarChar, TFloat, TFloat, TVarChar);
+DROP FUNCTION IF EXISTS gpInsertUpdate_Object_SaleExternal_Load (TDateTime, Integer, TVarChar, TVarChar, TVarChar, TVarChar, TFloat, TFloat, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpInsertUpdate_Object_SaleExternal_Load(
     IN inOperDate              TDateTime , --
+    IN inRetailId              Integer   , --
     IN inPartnerExternalCode   TVarChar  , --
     IN inPartnerExternalName   TVarChar  , -- 
     IN inArticle               TVarChar  , -- 
@@ -28,28 +30,43 @@ BEGIN
      -- проверка прав пользователя на вызов процедуры
      vbUserId:= lpCheckRight (inSession, zc_Enum_Process_InsertUpdate_Movement_SaleExternal());
 
+     -- проверка
+     IF COALESCE (inRetailId,0) = 0
+     THEN
+         RAISE EXCEPTION 'Ошибка.Торговая сеть не выбрана';
+     END IF;
+
      --ищем PartnerExternal
      vbPartnerExternalId := (SELECT Object_PartnerExternal.Id 
                              FROM Object AS Object_PartnerExternal
-                                  LEFT JOIN ObjectString AS ObjectString_ObjectCode
-                                                         ON ObjectString_ObjectCode.ObjectId = Object_PartnerExternal.Id 
-                                                        AND ObjectString_ObjectCode.DescId = zc_ObjectString_PartnerExternal_ObjectCode()
-                                                        AND ObjectString_ObjectCode.ValueData = inPartnerExternalCode
+                                  INNER JOIN ObjectString AS ObjectString_ObjectCode
+                                                          ON ObjectString_ObjectCode.ObjectId = Object_PartnerExternal.Id 
+                                                         AND ObjectString_ObjectCode.DescId = zc_ObjectString_PartnerExternal_ObjectCode()
+                                                         AND ObjectString_ObjectCode.ValueData = inPartnerExternalCode
+                                  LEFT JOIN ObjectLink AS ObjectLink_Retail
+                                                       ON ObjectLink_Retail.ObjectId = Object_PartnerExternal.Id 
+                                                      AND ObjectLink_Retail.DescId = zc_ObjectLink_PartnerExternal_Retail()
                              WHERE Object_PartnerExternal.DescId = zc_Object_PartnerExternal()
+                               AND (ObjectLink_Retail.ChildObjectId = inRetailId OR COALESCE(ObjectLink_Retail.ChildObjectId,0) = 0)
                              );
-
+     
      --если не найден
      IF COALESCE (vbPartnerExternalId,0) = 0
      THEN
          RAISE EXCEPTION 'Ошибка.Контрагент внешний - (<%>) <%> не найден.', inPartnerExternalCode, inPartnerExternalName;
-         
          /*vbPartnerExternalId :=  lpInsertUpdate_Object_PartnerExternal (ioId         := 0
                                                                       , inCode       := lfGet_ObjectCode(0, zc_Object_PartnerExternal())
                                                                       , inName       := inPartnerExternalName
                                                                       , inObjectCode := inPartnerExternalCode
-                                                                      , inPartnerId  := 0 -- ?????????????   inPartnerId
+                                                                      , inPartnerId  := 0 -- inPartnerId
+                                                                      , inContractId := 0 -- inContractId
+                                                                      , inRetailId   := inRetailId
                                                                       , inUserId     := vbUserId
-                                                                      );*/ 
+                                                                      );
+                                                                      */
+     ELSE
+         --если элемент найден пересохраним только параметр торг. сеть
+         PERFORM lpInsertUpdate_ObjectLink(zc_ObjectLink_PartnerExternal_Retail(), vbPartnerExternalId, inRetailId);
      END IF;
 
      --находим Классификатор свойств товаров, по связи с partner , далее juridical, далее GoodsProperty
