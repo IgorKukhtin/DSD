@@ -7,6 +7,7 @@ type
   TNotifyMessage = procedure(const AMsg: string; const AFileName: string = ''; const aUID: Cardinal = 0; AMsgType: TLogMessageType = lmtPlain) of object;
   TOnChangeStartId = procedure (const ANewStartId: Int64) of object;
   TOnNewSession = procedure(const AStart: TDateTime; const AMinId, AMaxId: Int64; const ARecCount, ASessionNumber: Integer) of object;
+  TOnCompareRecCountMS = procedure(const AIntermediateResultSQL: string) of object;
   TConditionFunc = reference to function(): Boolean;
 
   TCmdData = class

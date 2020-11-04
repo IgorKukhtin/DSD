@@ -55,6 +55,7 @@ type
     FOnNewSession: TOnNewSession;
     FOnEndSession: TNotifyEvent;
     FOnNeedRestart: TNotifyEvent;
+    FOnCompareRecCountMS: TOnCompareRecCountMS;
 
   strict private
     procedure ApplyConnectionConfig(AConnection: TZConnection; ARank: TServerRank);
@@ -103,6 +104,7 @@ type
     property OnNewSession: TOnNewSession read FOnNewSession write FOnNewSession;
     property OnEndSession: TNotifyEvent read FOnEndSession write FOnEndSession;
     property OnNeedRestart: TNotifyEvent read FOnNeedRestart write FOnNeedRestart;
+    property OnCompareRecCountMS: TOnCompareRecCountMS read FOnCompareRecCountMS write FOnCompareRecCountMS;
     property SelectRange: Integer read FSelectRange write FSelectRange;
     property LastId: Int64 read GetLastId write SetLastId;
     property ReplicaFinished: TReplicaFinished read FReplicaFinished;
@@ -184,10 +186,14 @@ type
   TCompareRecCountMSThread = class(TWorkerThread)
   strict private
     FDeviationsOnly: Boolean;
+    FOnCompareRecCountMS: TOnCompareRecCountMS;
+  strict private
+    procedure MyOnCompareRecCountMS(const aSQL: string);
   protected
     procedure Execute; override;
   public
     constructor Create(CreateSuspended, ADeviationsOnly: Boolean; AMsgProc: TNotifyMessage; AKind: TThreadKind = tknNondriven); reintroduce;
+    property OnCompareRecCountMS: TOnCompareRecCountMS read FOnCompareRecCountMS write FOnCompareRecCountMS;
   end;
 
   TCompareSeqMSThread = class(TWorkerThread)
@@ -1335,7 +1341,7 @@ const
   cSelectTableNames      = 'SELECT * FROM _replica.gpSelect_Replica_tables()';
   cSelectUnion           = 'SELECT ''%s'' as TableName, %d AS CountMaster, %d AS CountSlave';
   cSelectCount           = 'SELECT COUNT(*) FROM %s AS RecCount';
-  cSelectCountSlaveNoId  = 'SELECT Max(%s) as MaxIdSlave  COUNT(*) FROM %s AS RecCount';
+  cSelectCountSlaveNoId  = 'SELECT Max(%s) as MaxIdSlave, COUNT(*) AS RecCount FROM %s';
   cSelectCountSlave      = 'SELECT Max(Id) as MaxIdSlave, COUNT(*) AS RecCount FROM %s';
   cSelectCountIdSlave    = 'SELECT Max(Id) as MaxIdSlave, COUNT(Id) AS RecCount FROM %s';
   cSelectCountMasterNoId = 'SELECT COUNT(*) AS RecCount FROM %s WHERE %s <= %d';
@@ -1423,9 +1429,8 @@ begin
                while not EOF do
                begin
                  if not Fields[0].IsNull then
-                   if SameText(Fields[0].AsString, 'descid')
-                   then Continue
-                   else arrTables[I].PK_field := Fields[0].AsString;
+                   if not SameText(Fields[0].AsString, 'descid') then // поле 'descid' отбрасываем
+                     arrTables[I].PK_field := Fields[0].AsString;
 
                  Next;
                end;
@@ -1494,13 +1499,37 @@ begin
             arrTables[I].MasterCount := Fields[0].AsLargeInt;
           Close;
         end;
+
+      if Assigned(FOnCompareRecCountMS) then
+      begin
+        // формируем промежуточный текст запроса SELECT UNION, используя имеющиеся на данный момент данные массива arrTables
+        sSQL := '';
+        for J := Low(arrTables) to I do
+        begin
+          if FStopped then Exit;
+
+          if ADeviationsOnly then
+            if arrTables[J].MasterCount = arrTables[J].SlaveCount then Continue;
+
+          if Length(sSQL) = 0 then
+            sSQL := Format(cSelectUnion, [arrTables[J].Name, arrTables[J].MasterCount, arrTables[J].SlaveCount])
+          else
+            sSQL := sSQL + cUnion + Format(cSelectUnion, [arrTables[J].Name, arrTables[J].MasterCount, arrTables[J].SlaveCount]);
+        end;
+
+        if Length(sSQL) > 0 then
+        begin
+          Result := sSQL + ';';
+          FOnCompareRecCountMS(Result);
+        end;
+      end;
     end;
 
-    // формируем текст запроса SELECT UNION, используя данные массива arrTables
+    // формируем итоговый текст запроса SELECT UNION, используя данные массива arrTables
     sSQL := '';
     for I := Low(arrTables) to High(arrTables) do
     begin
-      if FStopped then Exit;
+//      if FStopped then Exit;
 
       if ADeviationsOnly then
         if arrTables[I].MasterCount = arrTables[I].SlaveCount then Continue;
@@ -1547,7 +1576,7 @@ begin
     if FStopped then Exit;
 
     // Получим список последовательностей Slave
-    FetchSequences(srMaster, arrSlaveSeq);
+    FetchSequences(srSlave, arrSlaveSeq);
 
     if FStopped then Exit;
 
@@ -1567,7 +1596,7 @@ begin
       if FStopped then Exit;
 
       for J := Low(arrSlaveSeq) to High(arrSlaveSeq) do
-        if arrSlaveSeq[J].Name = arrUnion[I].Name then
+        if SameText(arrSlaveSeq[J].Name, arrUnion[I].Name) then
         begin
           if FStopped then Exit;
           arrUnion[I].SlaveValue     := arrSlaveSeq[J].LastValue;
@@ -1595,6 +1624,9 @@ begin
       else
         Result := Result + ' union ' + sSelect;
     end;
+
+    if Length(Result) > 0 then
+      Result := Result + ' order by 1';
 
   except
     on E: Exception do
@@ -2232,12 +2264,21 @@ var
   sSQL: string;
 begin
   inherited;
+  Data.OnCompareRecCountMS := MyOnCompareRecCountMS;
   sSQL := Data.GetCompareRecCountMS_SQL(FDeviationsOnly);
 
   New(P);
   P^.ResultSQL := sSQL;
   ReturnValue := LongWord(P);
   Terminate;
+end;
+
+procedure TCompareRecCountMSThread.MyOnCompareRecCountMS(const aSQL: string);
+begin
+  TThread.Queue(nil, procedure
+                     begin
+                       if Assigned(FOnCompareRecCountMS) then FOnCompareRecCountMS(aSQL);
+                     end);
 end;
 
 { TCompareSeqMSThread }

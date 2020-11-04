@@ -265,6 +265,7 @@ type
     procedure CompareMasterSlaveSeq;
     procedure CheckReplicaMaxMin;
     procedure FetchLastId;
+
     procedure StartReplica;
     procedure StopReplicaThread;
     procedure StopMinMaxThread;
@@ -274,6 +275,7 @@ type
     procedure StopAlterSlaveSequences;
     procedure StopApplyScriptThread;
     procedure StopMoveProcToSlaveThread;
+
     procedure UpdateProgBarPosition(AProgBar: TProgressBar; const AMax, ACurrValue, ARecCount: Int64);
     procedure LogMessage(const AMsg: string; const AFileName: string = ''; const aUID: Cardinal = 0;
       AMsgType: TLogMessageType = lmtPlain);
@@ -284,6 +286,8 @@ type
     procedure OnNewSession(const AStart: TDateTime; const AMinId, AMaxId: Int64; const ARecCount, ASessionNumber: Integer);
     procedure OnEndSession(Sender: TObject);
     procedure OnNeedReplicaRestart(Sender: TObject);
+    procedure OnCompareRecCountMS(const aSQL: string);
+
     procedure OnTerminateAlterSlaveSequences(Sender: TObject);
     procedure OnTimerRestartReplica(Sender: TObject);
     procedure OnTerminateSinglePacket(Sender: TObject);
@@ -294,6 +298,7 @@ type
     procedure OnTerminateCompareSeqMS(Sender: TObject);
     procedure OnTerminateApplyScript(Sender: TObject);
     procedure OnTerminateMoveSavedProcToSlave(Sender: TObject);
+
     procedure grdDrawColumnCell(Sender: TObject; const Rect: TRect; DataCol: Integer; Column: TColumn;
       State: TGridDrawState);
 
@@ -1169,6 +1174,7 @@ procedure TfrmMain.CompareMasterSlaveRecCount;
 begin
   StopCompareRecCountMSThread;
   FCompareRecCountMSThrd := TCompareRecCountMSThread.Create(cCreateSuspended, chkDeviationOnlyRecCount.Checked, LogMessage, tknDriven);
+  FCompareRecCountMSThrd.OnCompareRecCountMS := OnCompareRecCountMS;
   FCompareRecCountMSThrd.OnTerminate := OnTerminateCompareRecCountMS;
   FCompareRecCountMSThrd.Start;
 
@@ -1404,6 +1410,25 @@ begin
   lbAllElapsed.Caption := Format(cElapsedReplica, [Elapsed(FStartTimeReplica)]);
   if FStartTimeSession > 0 then
     lbSsnElapsed.Caption := Format(cElapsedSession, [Elapsed(FStartTimeSession)]);
+end;
+
+procedure TfrmMain.OnCompareRecCountMS(const aSQL: string);
+begin
+  if FData.IsSlaveConnected and (Length(aSQL) > 0) then
+    try
+      with FData.qryCompareRecCountMS do
+      begin
+        Close;
+        SQL.Clear;
+        SQL.Add(aSQL);
+        Open;
+      end;
+    except
+      on E: Exception do
+        LogMessage(Format(cExceptionMsg, [E.ClassName, E.Message]));
+    end;
+
+  dsCompareRecCount.DataSet := FData.qryCompareRecCountMS;
 end;
 
 procedure TfrmMain.OnEndSession(Sender: TObject);
