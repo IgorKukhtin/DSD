@@ -589,6 +589,7 @@ $BODY$
 
 -- тест
 --
+/*
 SELECT * FROM FUNCTION gpInsertUpdate_SaleExternal_Fora_Load(
     '01.11.2020' :: TDateTime
 , 0 :: Integer
@@ -993,4 +994,7 @@ SELECT * FROM FUNCTION gpInsertUpdate_SaleExternal_Fora_Load(
  ' Магазин397'   ::TVarChar, 
  ' Магазин398'   ::TVarChar, 
  ' Магазин399'   ::TVarChar, 
- ' Магазин400'   ::TVarChar, 
+ ' Магазин400'   ::TVarChar
+ ,  '5'::TVarChar);
+
+*/
