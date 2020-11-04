@@ -295,7 +295,7 @@ inherited PaymentForm: TPaymentForm
             Properties.DisplayFormat = ',0.00##'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
-            Width = 100
+            Width = 75
           end
           object ContainerAmountReturnOut: TcxGridDBColumn
             Caption = #1042#1086#1079#1074#1088#1072#1090
@@ -304,7 +304,7 @@ inherited PaymentForm: TPaymentForm
             Properties.DisplayFormat = ',0.00##'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
-            Width = 100
+            Width = 75
           end
           object ContainerAmountOther: TcxGridDBColumn
             Caption = #1055#1088#1086#1095#1077#1077
@@ -313,7 +313,16 @@ inherited PaymentForm: TPaymentForm
             Properties.DisplayFormat = ',0.00##'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
-            Width = 100
+            Width = 75
+          end
+          object ContainerAmountPartialSale: TcxGridDBColumn
+            Caption = #1054#1087#1083'. '#1095#1072#1089#1090#1103#1084#1080
+            DataBinding.FieldName = 'ContainerAmountPartialSale'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DisplayFormat = ',0.00;-,0.00; ;'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 75
           end
           object CorrBonus: TcxGridDBColumn
             Caption = #1048#1089#1087'. '#1073#1086#1085#1091#1089
@@ -323,7 +332,7 @@ inherited PaymentForm: TPaymentForm
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             HeaderHint = #1048#1089#1087#1086#1083#1100#1079#1086#1074#1072#1085#1099#1081' '#1073#1086#1085#1091#1089' '#1074' '#1090#1077#1082#1091#1097#1077#1084' '#1076#1086#1082#1091#1084#1077#1085#1090#1077
-            Width = 100
+            Width = 75
           end
           object CorrReturnOut: TcxGridDBColumn
             Caption = #1048#1089#1087'. '#1074#1086#1079#1074#1088#1072#1090
@@ -333,7 +342,7 @@ inherited PaymentForm: TPaymentForm
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             HeaderHint = #1048#1089#1087#1086#1083#1100#1079#1086#1074#1072#1085#1099#1081' '#1074#1086#1079#1074#1088#1072#1090' '#1074' '#1090#1077#1082#1091#1097#1077#1084' '#1076#1086#1082#1091#1084#1077#1085#1090#1077
-            Width = 98
+            Width = 75
           end
           object CorrOther: TcxGridDBColumn
             Caption = #1048#1089#1087'. '#1087#1088#1086#1095#1077#1077
@@ -343,7 +352,16 @@ inherited PaymentForm: TPaymentForm
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             HeaderHint = #1048#1089#1087#1086#1083#1100#1079#1086#1074#1072#1085#1072' '#1087#1088#1086#1095#1072#1103' '#1082#1086#1088#1088#1077#1082#1090#1080#1088#1086#1074#1082#1072' '#1074' '#1090#1077#1082#1091#1097#1077#1084' '#1076#1086#1082#1091#1084#1077#1085#1090#1077
-            Width = 100
+            Width = 75
+          end
+          object CorrPartialSale: TcxGridDBColumn
+            Caption = #1048#1089#1087'. '#1086#1087#1083'. '#1095#1072#1089#1090#1103#1084#1080
+            DataBinding.FieldName = 'CorrPartialSale'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DisplayFormat = ',0.00;-,0.00; ;'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 75
           end
           object LeftCorrBonus: TcxGridDBColumn
             Caption = #1054#1089#1090'. '#1073#1086#1085#1091#1089
@@ -353,7 +371,7 @@ inherited PaymentForm: TPaymentForm
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             HeaderHint = #1054#1089#1090#1072#1090#1086#1082' '#1073#1086#1085#1091#1089#1072' '#1087#1086#1089#1083#1077' '#1087#1088#1086#1074#1077#1076#1077#1085#1080#1103' '#1090#1077#1082#1091#1097#1077#1075#1086' '#1076#1086#1082#1091#1084#1077#1085#1090#1072
-            Width = 100
+            Width = 75
           end
           object LeftCorrReturnOut: TcxGridDBColumn
             Caption = #1054#1089#1090'. '#1074#1086#1079#1074#1088#1072#1090
@@ -363,7 +381,7 @@ inherited PaymentForm: TPaymentForm
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             HeaderHint = #1054#1089#1090#1072#1090#1086#1082' '#1074#1086#1079#1074#1088#1072#1090#1072' '#1087#1086#1089#1083#1077' '#1087#1088#1086#1074#1077#1076#1077#1085#1080#1103' '#1090#1077#1082#1091#1097#1077#1075#1086' '#1076#1086#1082#1091#1084#1077#1085#1090#1072
-            Width = 100
+            Width = 75
           end
           object LeftCorrOther: TcxGridDBColumn
             Caption = #1054#1089#1090'. '#1087#1088#1086#1095#1077#1077
@@ -373,7 +391,16 @@ inherited PaymentForm: TPaymentForm
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             HeaderHint = #1054#1089#1090#1072#1090#1086#1082' '#1087#1088#1086#1095#1077#1081' '#1082#1086#1088#1088#1077#1082#1090#1080#1088#1086#1074#1082#1080' '#1087#1086#1089#1083#1077' '#1087#1088#1086#1074#1077#1076#1077#1085#1080#1103' '#1090#1077#1082#1091#1097#1077#1075#1086' '#1076#1086#1082#1091#1084#1077#1085#1090#1072
-            Width = 100
+            Width = 75
+          end
+          object LeftCorrPartialSale: TcxGridDBColumn
+            Caption = #1054#1089#1090'.  '#1086#1087#1083'. '#1095#1072#1089#1090#1103#1084#1080
+            DataBinding.FieldName = 'LeftCorrPartialSale'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DisplayFormat = ',0.00;-,0.00; ;'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 75
           end
         end
         object cxGridLevel1: TcxGridLevel

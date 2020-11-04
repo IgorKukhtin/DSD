@@ -107,6 +107,9 @@ type
     spExportBankConcordFileName: TdsdStoredProc;
     spExportBankConcord: TdsdStoredProc;
     isPartialPay: TcxGridDBColumn;
+    ContainerAmountPartialSale: TcxGridDBColumn;
+    CorrPartialSale: TcxGridDBColumn;
+    LeftCorrPartialSale: TcxGridDBColumn;
   private
     { Private declarations }
   public

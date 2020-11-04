@@ -87,13 +87,14 @@ BEGIN
                                                AND MIFloat_CorrOther.DescId = zc_MIFloat_CorrOther()
                     LEFT JOIN MovementItemFloat AS MIFloat_CorrPartialSale
                                                 ON MIFloat_CorrPartialSale.MovementItemId = MovementItem.Id
-                                               AND MIFloat_CorrPartialSale.DescId = zc_MIFloat_CorrPartialSale()
+                                               AND MIFloat_CorrPartialSale.DescId = zc_MIFloat_CorrPartialPay()
                 WHERE MovementItem.MovementId = inMovementId
                   AND MovementItem.DescId = zc_MI_Master()
                   AND MovementItem.IsErased = FALSE
-                  AND (MIFloat_CorrBonus.ValueData     <> 0
-                    OR MIFloat_CorrReturnOut.ValueData <> 0
-                    OR MIFloat_CorrOther.ValueData     <> 0
+                  AND (MIFloat_CorrBonus.ValueData       <> 0
+                    OR MIFloat_CorrReturnOut.ValueData   <> 0
+                    OR MIFloat_CorrOther.ValueData       <> 0
+                    OR MIFloat_CorrPartialSale.ValueData <> 0
                     )
                 GROUP BY Movement_From.ObjectId
               )
@@ -150,4 +151,6 @@ $BODY$
 
 -- тест
 -- 
-select * from gpSelect_PaymentCorrSumm(inMovementId := 6743309 , inJuridicalId := 393052 ,  inSession := '3');
+select * from gpSelect_PaymentCorrSumm(inMovementId := 20915413 , inJuridicalId := 13310756 ,  inSession := '3');
+
+

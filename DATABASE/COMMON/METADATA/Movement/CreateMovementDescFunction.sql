@@ -430,9 +430,14 @@ CREATE OR REPLACE FUNCTION zc_Movement_SaleExternal() RETURNS Integer AS $BODY$B
 INSERT INTO MovementDesc (Code, ItemName)
   SELECT 'zc_Movement_SaleExternal', 'Продажа покупателя (внешняя)' WHERE NOT EXISTS (SELECT * FROM MovementDesc WHERE Code = 'zc_Movement_SaleExternal');
 
+CREATE OR REPLACE FUNCTION zc_Movement_DistributionPromo() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM MovementDesc WHERE Code = 'zc_Movement_DistributionPromo'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
+INSERT INTO MovementDesc (Code, ItemName)
+  SELECT 'zc_Movement_DistributionPromo', 'Раздача акционных материалов' WHERE NOT EXISTS (SELECT * FROM MovementDesc WHERE Code = 'zc_Movement_DistributionPromo');
+
 /*-------------------------------------------------------------------------------
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.   Воробкало А.А.  Шаблий О.В.
+ 04.11.20                                                                                     * zc_Movement_DistributionPromo
  13.10.20                                                                                     * zc_Movement_RelatedProduct
  27.08.20         * zc_Movement_Layout
  28.07.20         * zc_Movement_ProfitIncomeService

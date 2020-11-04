@@ -114,6 +114,7 @@ BEGIN
             OR COALESCE (inSummaFullChargeFact, 0) <>  COALESCE(MIFloat_SummaFullChargeFact.ValueData, 
                                                                 COALESCE(MIFloat_SummaFullCharge.ValueData, 0) + 
                                                                 COALESCE(MIFloat_SummaFullChargeMonth.ValueData, 0))))
+        AND COALESCE (inisIssuedBy, FALSE) = TRUE
       THEN
         RAISE EXCEPTION 'Ошибка. Дополнительные расходы выданы. Изменение сумм запрещено.';            
       END IF;
@@ -171,3 +172,5 @@ $BODY$
 
 -- тест
 -- SELECT * FROM gpInsertUpdate_MovementItem_WagesAdditionalExpenses (, inSession:= '2')
+
+select * from gpInsertUpdate_MovementItem_WagesAdditionalExpenses(ioId := 381370414 , inMovementId := 19723487 , inUnitID := 1781716 , inSummaCleaning := 2000 , inSummaSP := 28.27 , inSummaOther := 0 , inSummaValidationResults := 0 , inSummaFullChargeFact := 0 , inisIssuedBy := 'False' , inComment := '' ,  inSession := '3');
