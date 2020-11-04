@@ -4,8 +4,7 @@ DROP FUNCTION IF EXISTS lpInsertUpdate_MovementItem_Payment (Integer, Integer, I
 DROP FUNCTION IF EXISTS lpInsertUpdate_MovementItem_Payment (Integer, Integer, Integer, Integer, Integer, Integer, TFloat, Boolean, Integer);
 DROP FUNCTION IF EXISTS lpInsertUpdate_MovementItem_Payment (Integer, Integer, Integer, Integer, Integer, TFloat, Boolean, Integer);
 DROP FUNCTION IF EXISTS lpInsertUpdate_MovementItem_Payment (Integer, Integer, Integer, Integer, Integer, TFloat, Boolean, Boolean, Integer);
-DROP FUNCTION IF EXISTS lpInsertUpdate_MovementItem_Payment (Integer, Integer, Integer, Integer, Integer, TFloat, TFloat, TFloat, TFloat, Boolean, Boolean, Integer);
-DROP FUNCTION IF EXISTS lpInsertUpdate_MovementItem_Payment (Integer, Integer, Integer, Integer, Integer, TFloat, TFloat, TFloat, TFloat, Boolean, Boolean, Boolean, Integer);
+DROP FUNCTION IF EXISTS lpInsertUpdate_MovementItem_Payment (Integer, Integer, Integer, Integer, Integer, TFloat, TFloat, TFloat, TFloat, TFloat, Boolean, Boolean, Integer);
 
 CREATE OR REPLACE FUNCTION lpInsertUpdate_MovementItem_Payment(
  INOUT ioId                  Integer   , -- Ключ объекта <Элемент документа>
@@ -17,8 +16,8 @@ CREATE OR REPLACE FUNCTION lpInsertUpdate_MovementItem_Payment(
     IN inSummaCorrBonus      TFloat    , -- Сумма Корректировки долга по бонусу
     IN inSummaCorrReturnOut  TFloat    , -- Сумма Корректировки долга по возвратам
     IN inSummaCorrOther      TFloat    , -- Сумма Корректировки долга по прочим причинам
+    IN inSummaCorrPartialPay TFloat    , -- Сумма оплаты частями
     IN inNeedPay             Boolean   , -- Нужно платить
-    IN inisPartialPay        Boolean = FALSE , -- Частичная оплата
     IN inNeedRecalcSumm      Boolean = TRUE  , --Пересчитать суммы
     IN inUserId              Integer = 0 -- пользователь
 )
@@ -44,16 +43,14 @@ BEGIN
     PERFORM lpInsertUpdate_MovementItemFloat (zc_MIFloat_CorrReturnOut(), ioId, inSummaCorrReturnOut);
     --сохранили свойство <корректировка по прочим причинам>
     PERFORM lpInsertUpdate_MovementItemFloat (zc_MIFloat_CorrOther(), ioId, inSummaCorrOther);
+    --сохранили свойство <Сумма оплаты частями>
+    PERFORM lpInsertUpdate_MovementItemFloat (zc_MIFloat_CorrPartialPay(), ioId, inSummaCorrPartialPay);
     --сохранили связь с объектом <Расчетный счет>
     PERFORM lpInsertUpdate_MovementItemLinkObject (zc_MILinkObject_BankAccount(), ioId, inBankAccountId);
     --сохранили связь с объектом <Валюта>
     PERFORM lpInsertUpdate_MovementItemLinkObject (zc_MILinkObject_Currency(), ioId, inCurrencyId);
     --Сохранили свойство <Нужно платить>
     PERFORM lpInsertUpdate_MovementItemBoolean (zc_MIBoolean_NeedPay(), ioId, inNeedPay);
-    --Сохранили свойство <Частичная оплата>
-    PERFORM lpInsertUpdate_MovementItemBoolean (zc_MIBoolean_PartialPay(), ioId, inisPartialPay);
-    --сохранили свойство <корректировка по Частичная продажа>
-    PERFORM lpInsertUpdate_MovementItemFloat (zc_MIFloat_CorrPartialPay(), ioId, CASE WHEN  COALESCE(inisPartialPay, FALSE) = TRUE THEN inSummaPay ELSE 0 END);
     
     IF inNeedRecalcSumm 
     THEN

@@ -44,19 +44,24 @@ inherited PaymentForm: TPaymentForm
               Column = SummaPay
             end
             item
-              Format = '+,0.00;-,0.00; ;'
+              Format = ',0.00;-,0.00; ;'
               Kind = skSum
               Column = SummaCorrBonus
             end
             item
-              Format = '+,0.00;-,0.00; ;'
+              Format = ',0.00;-,0.00; ;'
               Kind = skSum
               Column = SummaCorrReturnOut
             end
             item
-              Format = '+,0.00;-,0.00; ;'
+              Format = ',0.00;-,0.00; ;'
               Kind = skSum
               Column = SummaCorrOther
+            end
+            item
+              Format = ',0.00;-,0.00; ;'
+              Kind = skSum
+              Column = SummaCorrPartialPay
             end>
           Styles.Content = nil
           Styles.Inactive = nil
@@ -104,6 +109,15 @@ inherited PaymentForm: TPaymentForm
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
             Width = 80
+          end
+          object isPartialPay: TcxGridDBColumn
+            Caption = #1044#1086#1087'.'#1054#1087#1083'. '#1095#1072#1089#1090#1103#1084#1080
+            DataBinding.FieldName = 'Income_PartialPay'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            HeaderHint = #1055#1086' '#1085#1072#1082#1083#1072#1076#1085#1086#1081' '#1074#1086#1079#1084#1086#1078#1085#1072' '#1086#1087#1083#1072#1090#1072' '#1095#1072#1089#1090#1103#1084#1080
+            Options.Editing = False
+            Width = 70
           end
           object Income_JuridicalName: TcxGridDBColumn
             Caption = #1055#1086#1089#1090#1072#1074#1097#1080#1082
@@ -159,6 +173,8 @@ inherited PaymentForm: TPaymentForm
           object SummaCorrBonus: TcxGridDBColumn
             Caption = #1054#1087#1083#1072#1090#1072' '#1073#1086#1085#1091#1089#1086#1084
             DataBinding.FieldName = 'SummaCorrBonus'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DisplayFormat = ',0.00;-,0.00; ;'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Width = 67
@@ -166,6 +182,8 @@ inherited PaymentForm: TPaymentForm
           object SummaCorrReturnOut: TcxGridDBColumn
             Caption = #1054#1087#1083#1072#1090#1072' '#1074#1086#1079#1074#1088#1072#1090#1086#1084
             DataBinding.FieldName = 'SummaCorrReturnOut'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DisplayFormat = ',0.00;-,0.00; ;'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Width = 78
@@ -173,9 +191,19 @@ inherited PaymentForm: TPaymentForm
           object SummaCorrOther: TcxGridDBColumn
             Caption = #1054#1087#1083#1072#1090#1072' '#1087#1088#1086#1095#1080#1084#1080' '#1082#1086#1088#1088'.'
             DataBinding.FieldName = 'SummaCorrOther'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DisplayFormat = ',0.00;-,0.00; ;'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Width = 71
+          end
+          object SummaCorrPartialPay: TcxGridDBColumn
+            Caption = #1054#1087#1083#1072#1090#1072' '#1095#1072#1089#1090#1103#1084#1080
+            DataBinding.FieldName = 'SummaCorrPartialPay'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DisplayFormat = ',0.00;-,0.00; ;'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
           end
           object SummaPay: TcxGridDBColumn
             Caption = #1050' '#1086#1087#1083#1072#1090#1077
@@ -194,14 +222,6 @@ inherited PaymentForm: TPaymentForm
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Width = 59
-          end
-          object isPartialPay: TcxGridDBColumn
-            Caption = #1063#1072#1089#1090#1080#1095#1085'. '#1086#1087#1083#1072#1090#1072
-            DataBinding.FieldName = 'isPartialPay'
-            HeaderAlignmentHorz = taCenter
-            HeaderAlignmentVert = vaCenter
-            HeaderHint = #1063#1072#1089#1090#1080#1095#1085#1072#1103' '#1086#1087#1083#1072#1090#1072
-            Width = 60
           end
           object BankAccountName: TcxGridDBColumn
             Caption = #1056'/'#1057
@@ -2050,21 +2070,21 @@ inherited PaymentForm: TPaymentForm
         MultiSelectSeparator = ','
       end
       item
+        Name = 'inSummaCorrPartialPay'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'SummaCorrPartialPay'
+        DataType = ftFloat
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
         Name = 'ioNeedPay'
         Value = Null
         Component = MasterCDS
         ComponentItem = 'NeedPay'
         DataType = ftBoolean
         ParamType = ptInputOutput
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'inisPartialPay'
-        Value = Null
-        Component = MasterCDS
-        ComponentItem = 'isPartialPay'
-        DataType = ftBoolean
-        ParamType = ptInput
         MultiSelectSeparator = ','
       end>
     NeedResetData = True

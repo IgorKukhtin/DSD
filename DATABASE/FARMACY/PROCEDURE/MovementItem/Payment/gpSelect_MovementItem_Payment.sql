@@ -26,16 +26,17 @@ RETURNS TABLE (Id                    Integer
              , Income_ContractName  TVarChar
              , Income_TotalSumm     TFloat
              , Income_PaySumm       TFloat
+             , Income_PartialPay    Boolean
              , SummaCorrBonus       TFloat
              , SummaCorrReturnOut   TFloat
              , SummaCorrOther       TFloat
+             , SummaCorrPartialPay  TFloat
              , SummaPay             TFloat
              , BankAccountId        Integer
              , BankAccountName      TVarChar
              , BankName             TVarChar
              , isErased             Boolean
              , NeedPay              Boolean
-             , isPartialPay         Boolean
              , ContractNumber       TVarChar
              , ContractStartDate    TDateTime
              , ContractEndDate      TDateTime
@@ -92,6 +93,7 @@ BEGIN
                    , Object_Contract.ValueData                  AS ContractName
                    , MovementFloat_TotalSumm.ValueData          AS TotalSumm
                    , tmpContainer.Amount                        AS PaySumm
+                   , COALESCE (ObjectBoolean_PartialPay.ValueData, FALSE)  :: Boolean   AS isPartialPay
                    , COALESCE (NULLIF (ObjectFloat_Juridical_PayOrder.ValueData, 0), 999999) :: TFloat AS PayOrder
                    --, tmpContainer.KeyValue LIKE '%,' || ObjectLink_Unit_Juridical.ChildObjectId || ';%' AS tmpFind
                    , tmpContainer.KeyValue LIKE '%,' || TRIM(vbJuridicalId:: TVarChar) || ';%' AS tmpFind                      -- 09.09.19 
@@ -142,6 +144,9 @@ BEGIN
                                                  ON MovementLinkObject_Contract.MovementId = Movement.Id
                                                 AND MovementLinkObject_Contract.DescId = zc_MovementLinkObject_Contract()
                     LEFT JOIN Object AS Object_Contract ON Object_Contract.Id = MovementLinkObject_Contract.ObjectId
+                    LEFT JOIN ObjectBoolean AS ObjectBoolean_PartialPay
+                                            ON ObjectBoolean_PartialPay.ObjectId = Object_Contract.Id
+                                           AND ObjectBoolean_PartialPay.DescId = zc_ObjectBoolean_Contract_PartialPay()
 
 
                     LEFT JOIN ObjectFloat AS ObjectFloat_Juridical_PayOrder
@@ -193,16 +198,18 @@ BEGIN
                   , Object_Contract.ValueData                   AS Income_ContractName
                   , MovementFloat_TotalSumm.ValueData           AS Income_TotalSumm
                   , Container.Amount                            AS Income_PaySumm
+                  , COALESCE (ObjectBoolean_PartialPay.ValueData, FALSE)  AS Income_PartialPay
+                  
                   , MIFloat_CorrBonus.ValueData                 AS SummaCorrBonus
                   , MIFloat_CorrReturnOut.ValueData             AS SummaCorrReturnOut
                   , MIFloat_CorrOther.ValueData                 AS SummaCorrOther
+                  , MIFloat_CorrPartialPay.ValueData            AS SummaCorrPartialPay
                   , MI_Payment.Amount                           AS SummaPay
                   , MILinkObject_BankAccount.ObjectId           AS BankAccountId
                   , Object_BankAccount.ValueData                AS BankAccountName
                   , Object_Bank.ValueData                       AS BankName
                   , MI_Payment.isErased                         AS isErased
                   , COALESCE(MIBoolean_NeedPay.ValueData,FALSE) AS NeedPay
-                  , COALESCE(MIBoolean_PartialPay.ValueData,FALSE) AS isPartialPay
                  
                FROM MovementItem AS MI_Payment
                     LEFT OUTER JOIN MovementItemFloat AS MIFloat_IncomeId
@@ -236,7 +243,10 @@ BEGIN
                                                  ON MovementLinkObject_Contract.MovementId = Movement_Income.Id
                                                 AND MovementLinkObject_Contract.DescId = zc_MovementLinkObject_Contract()
                     LEFT JOIN Object AS Object_Contract ON Object_Contract.Id = MovementLinkObject_Contract.ObjectId
-        
+                    LEFT JOIN ObjectBoolean AS ObjectBoolean_PartialPay
+                                            ON ObjectBoolean_PartialPay.ObjectId = Object_Contract.Id
+                                           AND ObjectBoolean_PartialPay.DescId = zc_ObjectBoolean_Contract_PartialPay()
+
                     LEFT JOIN MovementFloat AS MovementFloat_TotalSumm
                                             ON MovementFloat_TotalSumm.MovementId = Movement_Income.Id
                                            AND MovementFloat_TotalSumm.DescId = zc_MovementFloat_TotalSumm()
@@ -261,6 +271,9 @@ BEGIN
                     LEFT OUTER JOIN MovementItemFloat AS MIFloat_CorrOther
                                                       ON MIFloat_CorrOther.MovementItemId = MI_Payment.ID
                                                      AND MIFloat_CorrOther.DescId = zc_MIFloat_CorrOther()
+                    LEFT OUTER JOIN MovementItemFloat AS MIFloat_CorrPartialPay
+                                                      ON MIFloat_CorrPartialPay.MovementItemId = MI_Payment.ID
+                                                     AND MIFloat_CorrPartialPay.DescId = zc_MIFloat_CorrPartialPay()
                     LEFT OUTER JOIN MovementitemLinkObject AS MILinkObject_BankAccount
                                                            ON MILinkObject_BankAccount.MovementItemId = MI_Payment.ID
                                                           AND MILinkObject_BankAccount.DescId = zc_MILinkObject_BankAccount()
@@ -273,9 +286,6 @@ BEGIN
                     LEFT JOIN MovementItemBoolean AS MIBoolean_NeedPay
                                                   ON MIBoolean_NeedPay.MovementItemId = MI_Payment.Id
                                                  AND MIBoolean_NeedPay.DescId = zc_MIBoolean_NeedPay()
-                    LEFT JOIN MovementItemBoolean AS MIBoolean_PartialPay
-                                                  ON MIBoolean_PartialPay.MovementItemId = MI_Payment.Id
-                                                 AND MIBoolean_PartialPay.DescId = zc_MIBoolean_PartialPay()
 
                     LEFT OUTER JOIN ObjectFloat AS ObjectFloat_Juridical_PayOrder
                                                 ON ObjectFloat_Juridical_PayOrder.ObjectId = MLO_From.ObjectId
@@ -304,16 +314,17 @@ BEGIN
               , Income.ContractName  AS Income_ContractName
               , Income.TotalSumm     AS Income_TotalSumm
               , Income.PaySumm       AS Income_PaySumm
+              , Income.isPartialPay  AS Income_PartialPay
               , NULL::TFloat         AS SummaCorrBonus
               , NULL::TFloat         AS SummaCorrReturnOut
               , NULL::TFloat         AS SummaCorrOther
+              , NULL::TFloat         AS SummaCorrPartialPay
               , Income.PaySumm       AS SummaPay
               , NULL::Integer        AS BankAccountId
               , NULL::TVarChar       AS BankAccountName
               , NULL::TVarChar       AS BankName
               , FALSE                AS isErased
               , FALSE                AS NeedPay
-              , FALSE                AS isPartialPay
 
               , tmpJuridicalSettings.InvNumber AS ContractNumber
               , tmpJuridicalSettings.StartDate AS ContractStartDate
@@ -342,16 +353,17 @@ BEGIN
               , MI_Payment.Income_ContractName
               , MI_Payment.Income_TotalSumm
               , MI_Payment.Income_PaySumm
+              , MI_Payment.Income_PartialPay
               , MI_Payment.SummaCorrBonus
               , MI_Payment.SummaCorrReturnOut
               , MI_Payment.SummaCorrOther
+              , MI_Payment.SummaCorrPartialPay
               , MI_Payment.SummaPay
               , MI_Payment.BankAccountId
               , MI_Payment.BankAccountName
               , MI_Payment.BankName
               , MI_Payment.isErased
               , MI_Payment.NeedPay
-              , MI_Payment.isPartialPay
               , tmpJuridicalSettings.InvNumber AS ContractNumber
               , tmpJuridicalSettings.StartDate AS ContractStartDate
               , tmpJuridicalSettings.EndDate   AS ContractEndDate
@@ -391,16 +403,17 @@ BEGIN
                   , Object_Contract.ValueData                   AS Income_ContractName
                   , MovementFloat_TotalSumm.ValueData           AS Income_TotalSumm
                   , Container.Amount                            AS Income_PaySumm
+                  , COALESCE (ObjectBoolean_PartialPay.ValueData, FALSE) AS Income_PartialPay
                   , MIFloat_CorrBonus.ValueData                 AS SummaCorrBonus
                   , MIFloat_CorrReturnOut.ValueData             AS SummaCorrReturnOut
                   , MIFloat_CorrOther.ValueData                 AS SummaCorrOther
+                  , MIFloat_CorrPartialPay.ValueData            AS SummaCorrPartialPay
                   , MI_Payment.Amount                           AS SummaPay
                   , MILinkObject_BankAccount.ObjectId           AS BankAccountId
                   , Object_BankAccount.ValueData                AS BankAccountName
                   , Object_Bank.ValueData                       AS BankName
                   , MI_Payment.isErased                         AS isErased
                   , COALESCE(MIBoolean_NeedPay.ValueData,FALSE) AS NeedPay
-                  , COALESCE(MIBoolean_PartialPay.ValueData,FALSE) AS isPartialPay
                  
                FROM MovementItem AS MI_Payment
                     LEFT OUTER JOIN MovementItemFloat AS MIFloat_IncomeId
@@ -435,7 +448,10 @@ BEGIN
                                                  ON MovementLinkObject_Contract.MovementId = Movement_Income.Id
                                                 AND MovementLinkObject_Contract.DescId = zc_MovementLinkObject_Contract()
                     LEFT JOIN Object AS Object_Contract ON Object_Contract.Id = MovementLinkObject_Contract.ObjectId
-        
+                    LEFT JOIN ObjectBoolean AS ObjectBoolean_PartialPay
+                                            ON ObjectBoolean_PartialPay.ObjectId = Object_Contract.Id
+                                           AND ObjectBoolean_PartialPay.DescId = zc_ObjectBoolean_Contract_PartialPay()
+
                     LEFT JOIN MovementFloat AS MovementFloat_TotalSumm
                                             ON MovementFloat_TotalSumm.MovementId = Movement_Income.Id
                                            AND MovementFloat_TotalSumm.DescId = zc_MovementFloat_TotalSumm()
@@ -461,6 +477,9 @@ BEGIN
                     LEFT OUTER JOIN MovementItemFloat AS MIFloat_CorrOther
                                                       ON MIFloat_CorrOther.MovementItemId = MI_Payment.ID
                                                      AND MIFloat_CorrOther.DescId = zc_MIFloat_CorrOther()
+                    LEFT OUTER JOIN MovementItemFloat AS MIFloat_CorrPartialPay
+                                                      ON MIFloat_CorrPartialPay.MovementItemId = MI_Payment.ID
+                                                     AND MIFloat_CorrPartialPay.DescId = zc_MIFloat_CorrPartialPay()
 
                     LEFT OUTER JOIN MovementitemLinkObject AS MILinkObject_BankAccount
                                                            ON MILinkObject_BankAccount.MovementItemId = MI_Payment.ID
@@ -474,9 +493,6 @@ BEGIN
                     LEFT JOIN MovementItemBoolean AS MIBoolean_NeedPay
                                                   ON MIBoolean_NeedPay.MovementItemId = MI_Payment.Id
                                                  AND MIBoolean_NeedPay.DescId = zc_MIBoolean_NeedPay()
-                    LEFT JOIN MovementItemBoolean AS MIBoolean_PartialPay
-                                                  ON MIBoolean_PartialPay.MovementItemId = MI_Payment.Id
-                                                 AND MIBoolean_PartialPay.DescId = zc_MIBoolean_PartialPay()
 
                     LEFT OUTER JOIN ObjectFloat AS ObjectFloat_Juridical_PayOrder
                                                 ON ObjectFloat_Juridical_PayOrder.ObjectId = MLO_From.ObjectId
@@ -507,16 +523,17 @@ BEGIN
               , MI_Payment.Income_ContractName
               , MI_Payment.Income_TotalSumm
               , MI_Payment.Income_PaySumm
+              , MI_Payment.Income_PartialPay
               , MI_Payment.SummaCorrBonus
               , MI_Payment.SummaCorrReturnOut
               , MI_Payment.SummaCorrOther
+              , MI_Payment.SummaCorrPartialPay
               , MI_Payment.SummaPay
               , MI_Payment.BankAccountId
               , MI_Payment.BankAccountName
               , MI_Payment.BankName
               , MI_Payment.isErased
               , MI_Payment.NeedPay
-              , MI_Payment.isPartialPay
               , tmpJuridicalSettings.InvNumber AS ContractNumber
               , tmpJuridicalSettings.StartDate AS ContractStartDate
               , tmpJuridicalSettings.EndDate   AS ContractEndDate
@@ -552,5 +569,3 @@ ALTER FUNCTION gpSelect_MovementItem_Payment (Integer, Boolean, Boolean, TDateTi
 -- SELECT * FROM gpSelect_MovementItem_Payment (inMovementId := 1831122 , inShowAll:= FALSE, inIsErased:= FALSE, inDateStart := ('05.12.2013')::TDateTime , inDateEnd := ('08.05.2015')::TDateTime ,  inSession := '3');
 -- SELECT * FROM gpSelect_MovementItem_Payment(inMovementId := 1848680 , inShowAll := 'True' , inIsErased := 'False' , inDateStart := ('01.01.2016')::TDateTime , inDateEnd := ('13.04.2016')::TDateTime ,  inSession := '3');
 -- SELECT * FROM gpSelect_MovementItem_Payment(inMovementId := 1870498 , inShowAll := 'True' , inIsErased := 'False' , inDateStart := ('01.01.2016')::TDateTime , inDateEnd := ('13.04.2016')::TDateTime ,  inSession := '3');
-
-select * from gpSelect_MovementItem_Payment(inMovementId := 20810502 , inShowAll := 'False' , inIsErased := 'False' , inDateStart := ('16.09.2019')::TDateTime , inDateEnd := ('16.09.2019')::TDateTime ,  inSession := '3');

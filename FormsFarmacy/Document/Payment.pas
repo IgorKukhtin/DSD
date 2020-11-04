@@ -110,6 +110,7 @@ type
     ContainerAmountPartialSale: TcxGridDBColumn;
     CorrPartialSale: TcxGridDBColumn;
     LeftCorrPartialSale: TcxGridDBColumn;
+    SummaCorrPartialPay: TcxGridDBColumn;
   private
     { Private declarations }
   public
