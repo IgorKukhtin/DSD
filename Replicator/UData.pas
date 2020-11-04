@@ -7,13 +7,16 @@ uses
   System.Types,
   System.Classes,
   System.Generics.Collections,
+  System.ImageList,
   Data.DB,
+  Vcl.ImgList,
+  Vcl.Controls,
   ZAbstractConnection,
   ZConnection,
   ZAbstractRODataset,
   ZDataset,
   UDefinitions,
-  UCommandData, System.ImageList, Vcl.ImgList, Vcl.Controls;
+  UCommandData;
 
 type
   TWorkerThread = class;
@@ -1318,18 +1321,29 @@ function TdmData.GetCompareRecCountMS_SQL(const ADeviationsOnly: Boolean): strin
 type
   TTableData = record
     Name: string;
+    PK_Id: Boolean; // таблица имеет  Primary Key field = Id
+    PK_field: string;
+    MaxIdSlave: Int64;
     MasterCount: Int64;
     SlaveCount: Int64;
-    CountSQL: string;
+    CountSQLSlave: string;
+    CountSQLMaster: string;
   end;
 const
-  cSelect        = 'SELECT * FROM _replica.gpSelect_Replica_tables()';
-  cSelectUnion   = 'SELECT ''%s'' as TableName, %d AS CountMaster, %d AS CountSlave';
-  cSelectCount   = 'SELECT COUNT(*) AS RecCount FROM %s';
-  cSelectCountId = 'SELECT COUNT(Id) AS RecCount FROM %s';
-  cUnion         = ' UNION ALL ';
+  cSelectPKFields        = 'SELECT * FROM _replica.gpSelect_PKFields(%s)';
+//  cSelectPKFields        = 'SELECT pk_keys FROM _replica.table_update_data WHERE table_name ILIKE %s limit 1';
+  cSelectTableNames      = 'SELECT * FROM _replica.gpSelect_Replica_tables()';
+  cSelectUnion           = 'SELECT ''%s'' as TableName, %d AS CountMaster, %d AS CountSlave';
+  cSelectCount           = 'SELECT COUNT(*) FROM %s AS RecCount';
+  cSelectCountSlaveNoId  = 'SELECT Max(%s) as MaxIdSlave  COUNT(*) FROM %s AS RecCount';
+  cSelectCountSlave      = 'SELECT Max(Id) as MaxIdSlave, COUNT(*) AS RecCount FROM %s';
+  cSelectCountIdSlave    = 'SELECT Max(Id) as MaxIdSlave, COUNT(Id) AS RecCount FROM %s';
+  cSelectCountMasterNoId = 'SELECT COUNT(*) AS RecCount FROM %s WHERE %s <= %d';
+  cSelectCountMaster     = 'SELECT COUNT(*) AS RecCount FROM %s WHERE Id <= %d';
+  cSelectCountIdMaster   = 'SELECT COUNT(Id) AS RecCount FROM %s WHERE Id <= %d';
+  cUnion                 = ' UNION ALL ';
 var
-  I: Integer;
+  I, J: Integer;
   arrTables: array of TTableData;
   sTableName, sSQL: string;
 begin
@@ -1342,7 +1356,7 @@ begin
       begin
         Close;
         SQL.Clear;
-        SQL.Add(cSelect);
+        SQL.Add(cSelectTableNames);
         Open;
         FetchAll;
         if IsEmpty then Exit;
@@ -1364,47 +1378,120 @@ begin
         end;
       end;
 
-    // Вычисляем Count(*) для таблиц из массива arrTables.
-    // Для 'MovementItemContainer' отдельный случай: select Count(Id).
     if FStopped then Exit;
 
+    // Вычисляем Count(*) для таблиц из массива arrTables.
+    // Для 'MovementItemContainer' отдельный случай: select Count(Id).
 
-    // сначала формируем текст запроса
-    for I := Low(arrTables) to High(arrTables) do
-      if arrTables[I].Name = 'MovementItemContainer'  then
-        arrTables[I].CountSQL := Format(cSelectCountId, [arrTables[I].Name])
-      else
-        arrTables[I].CountSQL := Format(cSelectCount, [arrTables[I].Name]);
+    { В master все время идет запись, поэтому сверить практически нереально
+     Надо сделать сначала на slave
+      select count(*), max(Id) from table...
+     потом на master
+      select count(*) from table... where Id <= :max_Id_slave }
 
-    // теперь выполняем запрос для каждой таблицы
+    // выполняем запрос для каждой таблицы
     for I := Low(arrTables) to High(arrTables) do
     begin
       if FStopped then Exit;
 
-      // для таблиц сервера Master
+      // Не у всех таблиц PrimaryKey состоит из одного поля Id. Определим имена полей, которые составляют PrimaryKey.
+      // ВСЕ составные индексы - 2 поля и обязательно присутствует descid, надо его отбросить.
+      // Если вдруг будет составной из 3-х или более полей, или вообще не будет, тогда и для Master делаем select Count(*) from ......
       if IsMasterConnected then
         with qryMasterHelper do
         begin
           Close;
           SQL.Clear;
-          SQL.Add(arrTables[I].CountSQL);
+          sSQL := Format(cSelectPKFields, [QuotedStr(arrTables[I].Name)]);
+          SQL.Add(sSQL);
           Open;
-          if not Fields[0].IsNull then
-            arrTables[I].MasterCount := Fields[0].AsLargeInt;
-          Close;
+          FetchAll;
+          First;
+          arrTables[I].PK_Id := not Fields[0].IsNull and (RecordCount = 1) and SameText(Fields[0].AsString, 'Id');
+
+          arrTables[I].PK_field := '';
+
+          case RecordCount of
+            0, 3: // нет PrimaryKey
+               arrTables[I].PK_field := '';
+
+            1: // одно поле в PrimaryKey
+               if not Fields[0].IsNull then
+                 arrTables[I].PK_field := Fields[0].AsString;
+
+            2: // 2 поля в PrimaryKey
+               while not EOF do
+               begin
+                 if not Fields[0].IsNull then
+                   if SameText(Fields[0].AsString, 'descid')
+                   then Continue
+                   else arrTables[I].PK_field := Fields[0].AsString;
+
+                 Next;
+               end;
+          end;
         end;
 
-      if FStopped then Exit;
       // для таблиц сервера Slave
+      if arrTables[I].Name = 'MovementItemContainer'  then
+        arrTables[I].CountSQLSlave := Format(cSelectCountIdSlave, [arrTables[I].Name])
+      else
+        if arrTables[I].PK_Id then
+          arrTables[I].CountSQLSlave := Format(cSelectCountSlave, [arrTables[I].Name])
+        else
+          if Length(arrTables[I].PK_field) > 0 then
+            arrTables[I].CountSQLSlave := Format(cSelectCountSlaveNoId, [arrTables[I].PK_field, arrTables[I].Name])
+          else
+            arrTables[I].CountSQLSlave := Format(cSelectCount, [arrTables[I].Name]);
+
       if IsSlaveConnected then
         with qrySlaveHelper do
         begin
           Close;
           SQL.Clear;
-          SQL.Add(arrTables[I].CountSQL);
+          SQL.Add(arrTables[I].CountSQLSlave);
+          Assert(Length(Trim(SQL.Text)) > 0, 'Ожидается, что CountSQLSlave <> "" для таблицы ' + arrTables[I].Name);
+          Open;
+
+          if Length(arrTables[I].PK_field) > 0 then
+          begin
+            if not Fields[0].IsNull then
+              arrTables[I].MaxIdSlave := Fields[0].AsLargeInt;
+
+            if not Fields[1].IsNull then
+              arrTables[I].SlaveCount := Fields[1].AsLargeInt;
+          end
+          else
+            if not Fields[0].IsNull then
+              arrTables[I].SlaveCount := Fields[0].AsLargeInt;
+
+          Close;
+        end;
+
+      if FStopped then Exit;
+
+      // для таблиц сервера Master
+      if arrTables[I].Name = 'MovementItemContainer'  then
+        arrTables[I].CountSQLMaster := Format(cSelectCountIdMaster, [arrTables[I].Name, arrTables[I].MaxIdSlave])
+      else
+        if arrTables[I].PK_Id then
+          arrTables[I].CountSQLMaster := Format(cSelectCountMaster, [arrTables[I].Name, arrTables[I].MaxIdSlave])
+        else
+          if Length(arrTables[I].PK_field) > 0 then
+            arrTables[I].CountSQLMaster := Format(cSelectCountMasterNoId, [arrTables[I].Name, arrTables[I].PK_field, arrTables[I].MaxIdSlave])
+          else
+            arrTables[I].CountSQLMaster := Format(cSelectCount, [arrTables[I].Name]);
+
+      if IsMasterConnected then
+        with qryMasterHelper do
+        begin
+          Close;
+          SQL.Clear;
+          SQL.Add(arrTables[I].CountSQLMaster);
+          Assert(Length(Trim(SQL.Text)) > 0, 'Ожидается, что CountSQLMaster <> "" для таблицы ' + arrTables[I].Name);
           Open;
           if not Fields[0].IsNull then
-            arrTables[I].SlaveCount := Fields[0].AsLargeInt;
+            arrTables[I].MasterCount := Fields[0].AsLargeInt;
           Close;
         end;
     end;
