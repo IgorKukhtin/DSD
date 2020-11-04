@@ -2,8 +2,9 @@
   Caption = #1044#1086#1073#1072#1074#1080#1090#1100'/'#1048#1079#1084#1077#1085#1080#1090#1100' <'#1044#1086#1075#1086#1074#1086#1088'>'
   ClientHeight = 711
   ClientWidth = 934
+  ExplicitTop = -279
   ExplicitWidth = 940
-  ExplicitHeight = 739
+  ExplicitHeight = 736
   PixelsPerInch = 96
   TextHeight = 13
   inherited bbOk: TcxButton
@@ -593,12 +594,14 @@
   object edBankAccountExternal: TcxTextEdit [37]
     Left = 184
     Top = 535
+    Hint = #1056#1072#1089#1095#1077#1090#1085#1099#1081' '#1089#1095#1077#1090' ('#1080#1089#1093'.'#1087#1083#1072#1090#1077#1078') - '#1087#1088#1080' '#1087#1077#1095#1072#1090#1080' '#1069#1082#1089#1087#1086#1088#1090#1072
     TabOrder = 38
     Width = 161
   end
   object cxLabel17: TcxLabel [38]
     Left = 184
     Top = 518
+    Hint = #1056#1072#1089#1095#1077#1090#1085#1099#1081' '#1089#1095#1077#1090' ('#1080#1089#1093'.'#1087#1083#1072#1090#1077#1078') - '#1087#1088#1080' '#1087#1077#1095#1072#1090#1080' '#1069#1082#1089#1087#1086#1088#1090#1072
     Caption = #1056#1072#1089#1095#1077#1090#1085#1099#1081' '#1089#1095#1077#1090' ('#1080#1089#1093'.'#1087#1083#1072#1090#1077#1078')'
   end
   object cbisDefault: TcxCheckBox [39]
@@ -655,7 +658,8 @@
   object cxLabel20: TcxLabel [45]
     Left = 16
     Top = 518
-    Caption = #1056#1072#1089#1095#1077#1090#1085#1099#1081' '#1089#1095#1077#1090' ('#1074#1093'.'#1087#1083#1072#1090#1077#1078')'
+    Hint = #1056#1072#1089#1095#1077#1090#1085#1099#1081' '#1089#1095#1077#1090' ('#1074#1093'.'#1087#1083#1072#1090#1077#1078') - '#1087#1086#1082#1072#1079#1072#1090#1100' '#1087#1088#1080' '#1087#1077#1095#1072#1090#1080' '#1085#1072#1082#1083#1072#1076#1085#1086#1081
+    Caption = #1056#1072#1089#1095'.'#1089#1095'.('#1074#1093'.'#1087#1083#1072#1090#1077#1078') '#1087#1077#1095'.'#1085#1072#1082#1083'.'
   end
   object cxLabel21: TcxLabel [46]
     Left = 127
@@ -677,6 +681,7 @@
   object ceBankAccount: TcxButtonEdit [48]
     Left = 16
     Top = 534
+    Hint = #1056#1072#1089#1095#1077#1090#1085#1099#1081' '#1089#1095#1077#1090' ('#1074#1093'.'#1087#1083#1072#1090#1077#1078') - '#1087#1086#1082#1072#1079#1072#1090#1100' '#1087#1088#1080' '#1087#1077#1095#1072#1090#1080' '#1085#1072#1082#1083#1072#1076#1085#1086#1081
     Properties.Buttons = <
       item
         Default = True
@@ -937,17 +942,23 @@
     Caption = #1055#1086' '#1091#1084#1086#1083#1095#1072#1085#1080#1102' ('#1080#1089#1093'. '#1087#1083'.)'
     ParentShowHint = False
     ShowHint = True
-    TabOrder = 81
+    TabOrder = 80
     Width = 155
   end
   object cxLabel36: TcxLabel [80]
     Left = 184
     Top = 557
+    Hint = 
+      #1056#1072#1089#1095#1077#1090#1085#1099#1081' '#1089#1095#1077#1090' ('#1087#1086#1082#1091#1087#1072#1090#1077#1083#1103') - '#1076#1083#1103' '#1086#1073#1088#1072#1073#1086#1090#1082#1080' '#1087#1083#1072#1090#1077#1078#1072' '#1074' '#1073#1072#1085#1082'.'#1074#1099#1087#1080#1089 +
+      #1082#1077
     Caption = #1056#1072#1089#1095#1077#1090#1085#1099#1081' '#1089#1095#1077#1090' ('#1087#1086#1082#1091#1087#1072#1090#1077#1083#1103')'
   end
   object edBankAccountPartner: TcxTextEdit [81]
     Left = 184
     Top = 574
+    Hint = 
+      #1056#1072#1089#1095#1077#1090#1085#1099#1081' '#1089#1095#1077#1090' ('#1087#1086#1082#1091#1087#1072#1090#1077#1083#1103') - '#1076#1083#1103' '#1086#1073#1088#1072#1073#1086#1090#1082#1080' '#1087#1083#1072#1090#1077#1078#1072' '#1074' '#1073#1072#1085#1082'.'#1074#1099#1087#1080#1089 +
+      #1082#1077
     TabOrder = 85
     Width = 161
   end
@@ -1176,7 +1187,6 @@
       Caption = #1059#1076#1072#1083#1080#1090#1100' '#1091#1089#1083#1086#1074#1080#1077' '#1076#1086#1075#1086#1074#1086#1088#1072
       Hint = #1059#1076#1072#1083#1080#1090#1100' '#1091#1089#1083#1086#1074#1080#1077' '#1076#1086#1075#1086#1074#1086#1088#1072
       ImageIndex = 2
-      ShortCut = 46
       ErasedFieldName = 'isErased'
       DataSource = ContractConditionDS
     end
@@ -1191,7 +1201,6 @@
       Caption = #1042#1086#1089#1089#1090#1072#1085#1086#1074#1080#1090#1100
       Hint = #1042#1086#1089#1089#1090#1072#1085#1086#1074#1080#1090#1100' '#1076#1072#1085#1085#1099#1077
       ImageIndex = 8
-      ShortCut = 46
       ErasedFieldName = 'isErased'
       isSetErased = False
       DataSource = ContractConditionDS
@@ -1612,7 +1621,7 @@
       end
       item
         Name = 'inisDefault'
-        Value = 'False'
+        Value = False
         Component = cbisDefault
         DataType = ftBoolean
         ParamType = ptInput
@@ -1628,7 +1637,7 @@
       end
       item
         Name = 'inisStandart'
-        Value = 'False'
+        Value = False
         Component = ceisStandart
         DataType = ftBoolean
         ParamType = ptInput
@@ -1636,7 +1645,7 @@
       end
       item
         Name = 'inisPersonal'
-        Value = 'False'
+        Value = False
         Component = ceisPersonal
         DataType = ftBoolean
         ParamType = ptInput
@@ -1644,7 +1653,7 @@
       end
       item
         Name = 'inisUnique'
-        Value = 'False'
+        Value = False
         Component = ceIsUnique
         DataType = ftBoolean
         ParamType = ptInput
@@ -1999,7 +2008,7 @@
       end
       item
         Name = 'isDefault'
-        Value = 'False'
+        Value = False
         Component = cbisDefault
         DataType = ftBoolean
         MultiSelectSeparator = ','
@@ -2013,21 +2022,21 @@
       end
       item
         Name = 'isStandart'
-        Value = 'False'
+        Value = False
         Component = ceisStandart
         DataType = ftBoolean
         MultiSelectSeparator = ','
       end
       item
         Name = 'isPersonal'
-        Value = 'False'
+        Value = False
         Component = ceisPersonal
         DataType = ftBoolean
         MultiSelectSeparator = ','
       end
       item
         Name = 'isUnique'
-        Value = 'False'
+        Value = False
         Component = ceIsUnique
         DataType = ftBoolean
         MultiSelectSeparator = ','
