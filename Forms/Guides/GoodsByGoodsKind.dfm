@@ -317,6 +317,31 @@ inherited GoodsByGoodsKindForm: TGoodsByGoodsKindForm
             HeaderAlignmentVert = vaCenter
             Width = 100
           end
+          object ReceiptGPCode: TcxGridDBColumn
+            Caption = #1050#1086#1076' '#1088#1077#1094#1077#1087#1090'. ('#1089#1093'. '#1090#1091#1096'.)'
+            DataBinding.FieldName = 'ReceiptGPCode'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            HeaderHint = #1050#1086#1076' '#1088#1077#1094#1077#1087#1090'. ('#1089#1093#1077#1084#1072' '#1089' '#1090#1091#1096#1077#1085#1082#1086#1081')'
+            Options.Editing = False
+            Width = 55
+          end
+          object ReceiptGPName: TcxGridDBColumn
+            Caption = #1056#1077#1094#1077#1087#1090#1091#1088#1072' ('#1089#1093'. '#1090#1091#1096'.)'
+            DataBinding.FieldName = 'ReceiptGPName'
+            PropertiesClassName = 'TcxButtonEditProperties'
+            Properties.Buttons = <
+              item
+                Action = ReceiptGPChoiceForm
+                Default = True
+                Kind = bkEllipsis
+              end>
+            Properties.ReadOnly = True
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            HeaderHint = #1056#1077#1094#1077#1087#1090#1091#1088#1072' ('#1089#1093#1077#1084#1072' '#1089' '#1090#1091#1096#1077#1085#1082#1086#1081')'
+            Width = 100
+          end
           object GoodsSubCode: TcxGridDBColumn
             Caption = #1050#1086#1076' '#1090#1086#1074'. ('#1087'/'#1088')'
             DataBinding.FieldName = 'GoodsSubCode'
@@ -879,6 +904,49 @@ inherited GoodsByGoodsKindForm: TGoodsByGoodsKindForm
         end>
       isShowModal = True
     end
+    object ReceiptGPChoiceForm: TOpenChoiceForm
+      Category = 'DSDLib'
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      Caption = 'TReceipt_ObjectForm'
+      FormName = 'TReceipt_ObjectForm'
+      FormNameParam.Value = 'TReceipt_ObjectForm'
+      FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
+      GuiParams = <
+        item
+          Name = 'Key'
+          Value = Null
+          Component = MasterCDS
+          ComponentItem = 'ReceiptGPId'
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'TextValue'
+          Value = Null
+          Component = MasterCDS
+          ComponentItem = 'ReceiptGPName'
+          DataType = ftString
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'MasterGoodsId'
+          Value = Null
+          Component = MasterCDS
+          ComponentItem = 'GoodsId'
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'MasterGoodsName'
+          Value = Null
+          Component = MasterCDS
+          ComponentItem = 'GoodsName'
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end>
+      isShowModal = True
+    end
     object ReceiptChoiceForm: TOpenChoiceForm
       Category = 'DSDLib'
       MoveParams = <>
@@ -1140,6 +1208,14 @@ inherited GoodsByGoodsKindForm: TGoodsByGoodsKindForm
         Value = Null
         Component = MasterCDS
         ComponentItem = 'ReceiptId'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inReceipGPtId'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'ReceiptGPId'
         ParamType = ptInput
         MultiSelectSeparator = ','
       end

@@ -28,6 +28,7 @@ RETURNS TABLE (Id Integer, GoodsId Integer, Code Integer, GoodsName TVarChar
              , GoodsPackId Integer, GoodsPackCode Integer, GoodsPackName TVarChar, MeasurePackName TVarChar
              , GoodsKindPackId Integer, GoodsKindPackName TVarChar
              , ReceiptId Integer, ReceiptCode TVarChar, ReceiptName TVarChar
+             , ReceiptGPId Integer, ReceiptGPCode TVarChar, ReceiptGPName TVarChar
              , GoodsCode_basis Integer, GoodsName_basis TVarChar
              , GoodsCode_main Integer, GoodsName_main TVarChar
              , GoodsBrandName TVarChar
@@ -200,6 +201,10 @@ BEGIN
            , Object_Receipt.Id                AS ReceiptId
            , ObjectString_Code.ValueData      AS ReceiptCode
            , Object_Receipt.ValueData         AS ReceiptName
+
+           , Object_ReceiptGP.Id              AS ReceiptGPId
+           , ObjectString_CodeGP.ValueData    AS ReceiptGPCode
+           , Object_ReceiptGP.ValueData       AS ReceiptGPName
 
            , Object_GoodsByGoodsKind_View.GoodsCode_basis
            , Object_GoodsByGoodsKind_View.GoodsName_basis
@@ -397,9 +402,19 @@ BEGIN
                                  ON ObjectLink_GoodsByGoodsKind_Receipt.ObjectId = Object_GoodsByGoodsKind_View.Id
                                 AND ObjectLink_GoodsByGoodsKind_Receipt.DescId = zc_ObjectLink_GoodsByGoodsKind_Receipt()
             LEFT JOIN Object AS Object_Receipt ON Object_Receipt.Id = ObjectLink_GoodsByGoodsKind_Receipt.ChildObjectId
+
             LEFT JOIN ObjectString AS ObjectString_Code
                                    ON ObjectString_Code.ObjectId = Object_Receipt.Id
                                   AND ObjectString_Code.DescId   = zc_ObjectString_Receipt_Code()
+
+            LEFT JOIN ObjectLink AS ObjectLink_GoodsByGoodsKind_ReceiptGP
+                                 ON ObjectLink_GoodsByGoodsKind_ReceiptGP.ObjectId = Object_GoodsByGoodsKind_View.Id
+                                AND ObjectLink_GoodsByGoodsKind_ReceiptGP.DescId = zc_ObjectLink_GoodsByGoodsKind_ReceiptGP()
+            LEFT JOIN Object AS Object_ReceiptGP ON Object_ReceiptGP.Id = ObjectLink_GoodsByGoodsKind_ReceiptGP.ChildObjectId
+
+            LEFT JOIN ObjectString AS ObjectString_CodeGP
+                                   ON ObjectString_CodeGP.ObjectId = Object_Receipt.Id
+                                  AND ObjectString_CodeGP.DescId   = zc_ObjectString_Receipt_Code()
 
             LEFT JOIN (SELECT DISTINCT tmpCodeCalc.CodeCalc_Sh , tmpCodeCalc.Count1 FROM tmpCodeCalc WHERE tmpCodeCalc.CodeCalc_Sh  IS NOT NULL) AS tmpCodeCalc_1 ON tmpCodeCalc_1.CodeCalc_Sh = Object_GoodsByGoodsKind_View.CodeCalc_Sh
             LEFT JOIN (SELECT DISTINCT tmpCodeCalc.CodeCalc_Nom, tmpCodeCalc.Count2 FROM tmpCodeCalc WHERE tmpCodeCalc.CodeCalc_Nom IS NOT NULL) AS tmpCodeCalc_2 ON tmpCodeCalc_2.CodeCalc_Nom = Object_GoodsByGoodsKind_View.CodeCalc_Nom

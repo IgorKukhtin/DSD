@@ -49,6 +49,7 @@ type
     GoodsPackOpenChoice: TOpenChoiceForm;
     GoodsSubSendOpenChoice: TOpenChoiceForm;
     GoodsKindSubSendChoiceForm: TOpenChoiceForm;
+    ReceiptGPChoiceForm: TOpenChoiceForm;
   private
     { Private declarations }
   public

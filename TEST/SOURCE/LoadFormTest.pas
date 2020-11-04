@@ -552,11 +552,11 @@ begin
 
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TGoodsTree_ObjectForm'));
   TdsdFormStorageFactory.GetStorage.Load('TGoodsTree_ObjectForm');
-
+   }
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TGoodsByGoodsKindForm'));
   TdsdFormStorageFactory.GetStorage.Load('TGoodsByGoodsKindForm');
   exit;
-
+   {
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TGoodsByGoodsKind_OrderForm'));
   TdsdFormStorageFactory.GetStorage.Load('TGoodsByGoodsKind_OrderForm');
 

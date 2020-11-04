@@ -4,7 +4,8 @@ DROP FUNCTION IF EXISTS  gpInsertUpdate_Object_GoodsByGoodsKind (Integer , Integ
 DROP FUNCTION IF EXISTS  gpInsertUpdate_Object_GoodsByGoodsKind (Integer , Integer, Integer, Integer, Integer, Integer, TFloat, TFloat, TFloat, TVarChar);
 DROP FUNCTION IF EXISTS  gpInsertUpdate_Object_GoodsByGoodsKind (Integer , Integer, Integer, Integer, Integer, Integer, Integer, Integer, TFloat, TFloat, TFloat, TVarChar);
 --DROP FUNCTION IF EXISTS  gpInsertUpdate_Object_GoodsByGoodsKind (Integer , Integer, Integer, Integer, Integer, Integer, Integer, Integer, TFloat, TFloat, TFloat, TFloat, TVarChar);
-DROP FUNCTION IF EXISTS  gpInsertUpdate_Object_GoodsByGoodsKind (Integer , Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, TFloat, TFloat, TFloat, TFloat, TVarChar);
+--DROP FUNCTION IF EXISTS  gpInsertUpdate_Object_GoodsByGoodsKind (Integer , Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, TFloat, TFloat, TFloat, TFloat, TVarChar);
+DROP FUNCTION IF EXISTS  gpInsertUpdate_Object_GoodsByGoodsKind (Integer , Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, TFloat, TFloat, TFloat, TFloat, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpInsertUpdate_Object_GoodsByGoodsKind(
  INOUT ioId                   Integer  , -- ключ объекта <Товар>
@@ -17,6 +18,7 @@ CREATE OR REPLACE FUNCTION gpInsertUpdate_Object_GoodsByGoodsKind(
     IN inGoodsPackId          Integer  , -- Главный Товар в планировании прихода с упаковки
     IN inGoodsKindPackId      Integer  , -- Главный Вид в планировании прихода с упаковки
     IN inReceiptId            Integer  , -- Рецептуры
+    IN inReceiptGPId          Integer  , -- Рецептура (схема с тушенкой) 
     IN inWeightPackage        TFloat   , -- вес пакета
     IN inWeightPackageSticker TFloat   , -- вес 1-ого пакета
     IN inWeightTotal          TFloat   , -- вес в упаковки  
@@ -103,7 +105,8 @@ BEGIN
 
    -- сохранили связь с <Рецептурой>
    PERFORM lpInsertUpdate_ObjectLink (zc_ObjectLink_GoodsByGoodsKind_Receipt(), ioId, inReceiptId);
-
+   -- сохранили связь с <Рецептурой>
+   PERFORM lpInsertUpdate_ObjectLink (zc_ObjectLink_GoodsByGoodsKind_ReceiptGP(), ioId, inReceiptGPId);
 
    -- сохранили свойство <вес пакета>
    PERFORM lpInsertUpdate_ObjectFloat (zc_ObjectFloat_GoodsByGoodsKind_WeightPackage(), ioId, inWeightPackage);
@@ -128,6 +131,7 @@ $BODY$
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.  
+ 04.11.20         * add inReceiptGPId
  10.04.20         *
  20.02.18         * inWeightPackageSticker 
  21.12.17         * 
