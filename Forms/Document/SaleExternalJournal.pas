@@ -57,6 +57,18 @@ type
     GuidesRetail: TdsdGuides;
     spGet_Exception: TdsdStoredProc;
     actGet_Exception: TdsdExecStoredProc;
+    spGetImportSettingId_Novus: TdsdStoredProc;
+    spGetImportSettingId_Fora: TdsdStoredProc;
+    spGetImportSettingId_Metro: TdsdStoredProc;
+    actGetImportSettingNovus: TdsdExecStoredProc;
+    actStartLoadNovus: TMultiAction;
+    actGetImportSettingFora: TdsdExecStoredProc;
+    actStartLoadFora: TMultiAction;
+    actGetImportSettingMetro: TdsdExecStoredProc;
+    actStartLoadMetro: TMultiAction;
+    bbStartLoadNovus: TdxBarButton;
+    bbStartLoadMetro: TdxBarButton;
+    bbStartLoadFora: TdxBarButton;
   private
     { Private declarations }
   public

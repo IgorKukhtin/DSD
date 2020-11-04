@@ -294,7 +294,51 @@ inherited SaleExternalJournalForm: TSaleExternalJournalForm
   inherited ActionList: TActionList
     Left = 31
     Top = 266
-    object actRefreshStart: TdsdDataSetRefresh [1]
+    object actGetImportSettingFora: TdsdExecStoredProc [0]
+      Category = #1047#1072#1075#1088#1091#1079#1082#1072
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      StoredProc = spGetImportSettingId_Fora
+      StoredProcList = <
+        item
+          StoredProc = spGetImportSettingId_Fora
+        end>
+      Caption = 'actGetImportSetting'
+    end
+    object actStartLoadFora: TMultiAction [2]
+      Category = #1047#1072#1075#1088#1091#1079#1082#1072
+      MoveParams = <>
+      ActionList = <
+        item
+          Action = actGet_Exception
+        end
+        item
+          Action = actGetImportSettingFora
+        end
+        item
+          Action = actDoLoad
+        end
+        item
+          Action = actRefresh
+        end>
+      QuestionBeforeExecute = #1053#1072#1095#1072#1090#1100' '#1079#1072#1075#1088#1091#1079#1082#1091' '#1044#1072#1085#1085#1099#1093' '#1080#1079' '#1092#1072#1081#1083#1072' '#1060#1054#1056#1040'?'
+      InfoAfterExecute = #1047#1072#1075#1088#1091#1079#1082#1072' '#1076#1072#1085#1085#1099#1093' '#1074#1099#1087#1086#1083#1085#1077#1085#1072
+      Caption = #1060#1054#1056#1040' '#1047#1072#1075#1088#1091#1079#1080#1090#1100' '#1080#1079' '#1101#1082#1089#1077#1083#1103
+      Hint = #1060#1054#1056#1040' '#1047#1072#1075#1088#1091#1079#1080#1090#1100' '#1080#1079' '#1101#1082#1089#1077#1083#1103
+      ImageIndex = 41
+    end
+    object actGetImportSettingNovus: TdsdExecStoredProc [3]
+      Category = #1047#1072#1075#1088#1091#1079#1082#1072
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      StoredProc = spGetImportSettingId_Novus
+      StoredProcList = <
+        item
+          StoredProc = spGetImportSettingId_Novus
+        end>
+      Caption = 'actGetImportSetting'
+    end
+    object actRefreshStart: TdsdDataSetRefresh [4]
       Category = 'DSDLib'
       MoveParams = <>
       StoredProc = spGet_UserJuridicalBasis
@@ -309,6 +353,61 @@ inherited SaleExternalJournalForm: TSaleExternalJournalForm
       Hint = #1054#1073#1085#1086#1074#1080#1090#1100' '#1076#1072#1085#1085#1099#1077
       ShortCut = 116
       RefreshOnTabSetChanges = False
+    end
+    object actGetImportSettingMetro: TdsdExecStoredProc [5]
+      Category = #1047#1072#1075#1088#1091#1079#1082#1072
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      StoredProc = spGetImportSettingId_Metro
+      StoredProcList = <
+        item
+          StoredProc = spGetImportSettingId_Metro
+        end>
+      Caption = 'actGetImportSetting'
+    end
+    object actStartLoadNovus: TMultiAction [6]
+      Category = #1047#1072#1075#1088#1091#1079#1082#1072
+      MoveParams = <>
+      ActionList = <
+        item
+          Action = actGet_Exception
+        end
+        item
+          Action = actGetImportSettingNovus
+        end
+        item
+          Action = actDoLoad
+        end
+        item
+          Action = actRefresh
+        end>
+      QuestionBeforeExecute = #1053#1072#1095#1072#1090#1100' '#1079#1072#1075#1088#1091#1079#1082#1091' '#1044#1072#1085#1085#1099#1093' '#1080#1079' '#1092#1072#1081#1083#1072' '#1053#1054#1042#1059#1057'?'
+      InfoAfterExecute = #1047#1072#1075#1088#1091#1079#1082#1072' '#1076#1072#1085#1085#1099#1093' '#1074#1099#1087#1086#1083#1085#1077#1085#1072
+      Caption = #1053#1054#1042#1059#1057' '#1047#1072#1075#1088#1091#1079#1080#1090#1100' '#1080#1079' '#1101#1082#1089#1077#1083#1103
+      Hint = #1053#1054#1042#1059#1057' '#1047#1072#1075#1088#1091#1079#1080#1090#1100' '#1080#1079' '#1101#1082#1089#1077#1083#1103
+      ImageIndex = 41
+    end
+    object actStartLoadMetro: TMultiAction [7]
+      Category = #1047#1072#1075#1088#1091#1079#1082#1072
+      MoveParams = <>
+      ActionList = <
+        item
+          Action = actGet_Exception
+        end
+        item
+          Action = actGetImportSettingMetro
+        end
+        item
+          Action = actDoLoad
+        end
+        item
+          Action = actRefresh
+        end>
+      QuestionBeforeExecute = #1053#1072#1095#1072#1090#1100' '#1079#1072#1075#1088#1091#1079#1082#1091' '#1044#1072#1085#1085#1099#1093' '#1080#1079' '#1092#1072#1081#1083#1072' '#1052#1045#1058#1056#1054'?'
+      InfoAfterExecute = #1047#1072#1075#1088#1091#1079#1082#1072' '#1076#1072#1085#1085#1099#1093' '#1074#1099#1087#1086#1083#1085#1077#1085#1072
+      Caption = #1052#1045#1058#1056#1054' '#1047#1072#1075#1088#1091#1079#1080#1090#1100' '#1080#1079' '#1101#1082#1089#1077#1083#1103
+      Hint = #1052#1045#1058#1056#1054' '#1047#1072#1075#1088#1091#1079#1080#1090#1100' '#1080#1079' '#1101#1082#1089#1077#1083#1103
+      ImageIndex = 41
     end
     inherited actInsert: TdsdInsertUpdateAction
       FormName = 'TSaleExternalForm'
@@ -340,7 +439,7 @@ inherited SaleExternalJournalForm: TSaleExternalJournalForm
           MultiSelectSeparator = ','
         end>
     end
-    object actPrintGroup: TdsdPrintAction [17]
+    object actPrintGroup: TdsdPrintAction [23]
       Category = 'DSDLib'
       MoveParams = <
         item
@@ -388,7 +487,7 @@ inherited SaleExternalJournalForm: TSaleExternalJournalForm
       PrinterNameParam.DataType = ftString
       PrinterNameParam.MultiSelectSeparator = ','
     end
-    object actPrint: TdsdPrintAction [18]
+    object actPrint: TdsdPrintAction [24]
       Category = 'DSDLib'
       MoveParams = <
         item
@@ -743,6 +842,22 @@ inherited SaleExternalJournalForm: TSaleExternalJournalForm
         end
         item
           Visible = True
+          ItemName = 'bbStartLoadNovus'
+        end
+        item
+          Visible = True
+          ItemName = 'bbStartLoadMetro'
+        end
+        item
+          Visible = True
+          ItemName = 'bbStartLoadFora'
+        end
+        item
+          Visible = True
+          ItemName = 'dxBarStatic'
+        end
+        item
+          Visible = True
           ItemName = 'bbMovementItemContainer'
         end
         item
@@ -780,6 +895,18 @@ inherited SaleExternalJournalForm: TSaleExternalJournalForm
     end
     object bbStartLoad: TdxBarButton
       Action = actStartLoad
+      Category = 0
+    end
+    object bbStartLoadNovus: TdxBarButton
+      Action = actStartLoadNovus
+      Category = 0
+    end
+    object bbStartLoadMetro: TdxBarButton
+      Action = actStartLoadMetro
+      Category = 0
+    end
+    object bbStartLoadFora: TdxBarButton
+      Action = actStartLoadFora
       Category = 0
     end
   end
@@ -1049,5 +1176,101 @@ inherited SaleExternalJournalForm: TSaleExternalJournalForm
     PackSize = 1
     Left = 504
     Top = 152
+  end
+  object spGetImportSettingId_Novus: TdsdStoredProc
+    StoredProcName = 'gpGet_DefaultValue'
+    DataSets = <
+      item
+      end>
+    OutputType = otResult
+    Params = <
+      item
+        Name = 'inDefaultKey'
+        Value = 'TSaleExternalNovusForm;zc_Object_ImportSetting_SaleExternalNovus'
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inUserKeyId'
+        Value = '0'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'gpGet_DefaultValue'
+        Value = Null
+        Component = FormParams
+        ComponentItem = 'ImportSettingId'
+        DataType = ftString
+        MultiSelectSeparator = ','
+      end>
+    PackSize = 1
+    Left = 680
+    Top = 320
+  end
+  object spGetImportSettingId_Fora: TdsdStoredProc
+    StoredProcName = 'gpGet_DefaultValue'
+    DataSets = <
+      item
+      end>
+    OutputType = otResult
+    Params = <
+      item
+        Name = 'inDefaultKey'
+        Value = 'TSaleExternalForaForm;zc_Object_ImportSetting_SaleExternalFora'
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inUserKeyId'
+        Value = '0'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'gpGet_DefaultValue'
+        Value = Null
+        Component = FormParams
+        ComponentItem = 'ImportSettingId'
+        DataType = ftString
+        MultiSelectSeparator = ','
+      end>
+    PackSize = 1
+    Left = 680
+    Top = 376
+  end
+  object spGetImportSettingId_Metro: TdsdStoredProc
+    StoredProcName = 'gpGet_DefaultValue'
+    DataSets = <
+      item
+      end>
+    OutputType = otResult
+    Params = <
+      item
+        Name = 'inDefaultKey'
+        Value = 'TSaleExternalMetroForm;zc_Object_ImportSetting_SaleExternalMetro'
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inUserKeyId'
+        Value = '0'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'gpGet_DefaultValue'
+        Value = Null
+        Component = FormParams
+        ComponentItem = 'ImportSettingId'
+        DataType = ftString
+        MultiSelectSeparator = ','
+      end>
+    PackSize = 1
+    Left = 744
+    Top = 392
   end
 end
