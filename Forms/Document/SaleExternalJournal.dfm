@@ -249,15 +249,32 @@ inherited SaleExternalJournalForm: TSaleExternalJournalForm
     inherited deEnd: TcxDateEdit
       EditValue = 42370d
     end
+    object cxLabel10: TcxLabel
+      Left = 425
+      Top = 6
+      Caption = #1058#1086#1088#1075'.'#1089#1077#1090#1100':'
+    end
+    object edRetail: TcxButtonEdit
+      Left = 483
+      Top = 5
+      Properties.Buttons = <
+        item
+          Default = True
+          Kind = bkEllipsis
+        end>
+      Properties.ReadOnly = True
+      TabOrder = 5
+      Width = 131
+    end
   end
   object cxLabel27: TcxLabel [2]
-    Left = 510
-    Top = 9
+    Left = 640
+    Top = 6
     Caption = #1055#1088#1077#1076#1087#1088#1080#1103#1090#1080#1077':'
   end
   object edJuridicalBasis: TcxButtonEdit [3]
-    Left = 588
-    Top = 8
+    Left = 718
+    Top = 5
     Properties.Buttons = <
       item
         Default = True
@@ -564,6 +581,14 @@ inherited SaleExternalJournalForm: TSaleExternalJournalForm
           DataType = ftDateTime
           ParamType = ptInput
           MultiSelectSeparator = ','
+        end
+        item
+          Name = 'inRetailId'
+          Value = Null
+          Component = GuidesRetail
+          ComponentItem = 'Key'
+          ParamType = ptInput
+          MultiSelectSeparator = ','
         end>
     end
     object actGetImportSetting: TdsdExecStoredProc
@@ -582,6 +607,9 @@ inherited SaleExternalJournalForm: TSaleExternalJournalForm
       MoveParams = <>
       ActionList = <
         item
+          Action = actGet_Exception
+        end
+        item
           Action = actGetImportSetting
         end
         item
@@ -595,6 +623,17 @@ inherited SaleExternalJournalForm: TSaleExternalJournalForm
       Caption = #1047#1072#1075#1088#1091#1079#1080#1090#1100' '#1080#1079' '#1101#1082#1089#1077#1083#1103
       Hint = #1047#1072#1075#1088#1091#1079#1080#1090#1100' '#1080#1079' '#1101#1082#1089#1077#1083#1103
       ImageIndex = 41
+    end
+    object actGet_Exception: TdsdExecStoredProc
+      Category = #1047#1072#1075#1088#1091#1079#1082#1072
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      StoredProc = spGet_Exception
+      StoredProcList = <
+        item
+          StoredProc = spGet_Exception
+        end>
+      Caption = 'actGet_Exception'
     end
   end
   inherited MasterDS: TDataSource
@@ -930,8 +969,8 @@ inherited SaleExternalJournalForm: TSaleExternalJournalForm
         MultiSelectSeparator = ','
       end>
     PackSize = 1
-    Left = 616
-    Top = 104
+    Left = 784
+    Top = 40
   end
   object spGetImportSettingId: TdsdStoredProc
     StoredProcName = 'gpGet_DefaultValue'
@@ -964,5 +1003,51 @@ inherited SaleExternalJournalForm: TSaleExternalJournalForm
     PackSize = 1
     Left = 696
     Top = 272
+  end
+  object GuidesRetail: TdsdGuides
+    KeyField = 'Id'
+    LookupControl = edRetail
+    FormNameParam.Value = 'TRetailForm'
+    FormNameParam.DataType = ftString
+    FormNameParam.MultiSelectSeparator = ','
+    FormName = 'TRetailForm'
+    PositionDataSet = 'ClientDataSet'
+    Params = <
+      item
+        Name = 'Key'
+        Value = ''
+        Component = GuidesRetail
+        ComponentItem = 'Key'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'TextValue'
+        Value = ''
+        Component = GuidesRetail
+        ComponentItem = 'TextValue'
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end>
+    Left = 528
+    Top = 16
+  end
+  object spGet_Exception: TdsdStoredProc
+    StoredProcName = 'gpGet_Exception_SaleExternal_Load'
+    DataSets = <>
+    OutputType = otResult
+    Params = <
+      item
+        Name = 'inRetailId'
+        Value = Null
+        Component = GuidesRetail
+        ComponentItem = 'Key'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end>
+    PackSize = 1
+    Left = 504
+    Top = 152
   end
 end

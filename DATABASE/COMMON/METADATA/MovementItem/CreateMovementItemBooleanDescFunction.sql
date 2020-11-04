@@ -128,14 +128,18 @@ CREATE OR REPLACE FUNCTION zc_MIBoolean_SummReestr() RETURNS Integer AS $BODY$BE
 INSERT INTO MovementItemBooleanDesc (Code, ItemName)
   SELECT 'zc_MIBoolean_SummReestr', 'Расчет Сумма отгрузки' WHERE NOT EXISTS (SELECT * FROM MovementItemBooleanDesc WHERE Code = 'zc_MIBoolean_SummReestr'); 
 
-
 CREATE OR REPLACE FUNCTION zc_MIBoolean_Present() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM MovementItemBooleanDesc WHERE Code = 'zc_MIBoolean_Present'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
 INSERT INTO MovementItemBooleanDesc (Code, ItemName)
   SELECT 'zc_MIBoolean_Present', 'Подарок' WHERE NOT EXISTS (SELECT * FROM MovementItemBooleanDesc WHERE Code = 'zc_MIBoolean_Present'); 
 
+CREATE OR REPLACE FUNCTION zc_MIBoolean_PartialPay() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM MovementItemBooleanDesc WHERE Code = 'zc_MIBoolean_PartialPay'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
+INSERT INTO MovementItemBooleanDesc (Code, ItemName)
+  SELECT 'zc_MIBoolean_PartialPay', 'Частичная оплата' WHERE NOT EXISTS (SELECT * FROM MovementItemBooleanDesc WHERE Code = 'zc_MIBoolean_PartialPay'); 
+
 /*-------------------------------------------------------------------------------
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.  Воробкало А.А.   Шаблий О.В.
+ 03.11.20                                                                       * zc_MIBoolean_PartialPay
  05.10.20                                                                       * zc_MIBoolean_Present
  04.06.20         * zc_MIBoolean_SummReestr
  13.05.20                                                                       * zc_MIBoolean_ApprovedBy

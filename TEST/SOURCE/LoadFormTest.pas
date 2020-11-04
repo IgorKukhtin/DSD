@@ -694,17 +694,21 @@ end;
 
 procedure TLoadFormTest.LoadGoodsPropertyValueFormTest;
 begin
+{
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TGoodsPropertyValueForm'));
   TdsdFormStorageFactory.GetStorage.Load('TGoodsPropertyValueForm');
   {
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TGoodsPropertyValueEditForm'));
   TdsdFormStorageFactory.GetStorage.Load('TGoodsPropertyValueEditForm');
-//}
+//
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TGoodsPropertyValueDocForm'));
   TdsdFormStorageFactory.GetStorage.Load('TGoodsPropertyValueDocForm');
 
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TGoodsPropertyValueVMSForm'));
   TdsdFormStorageFactory.GetStorage.Load('TGoodsPropertyValueVMSForm');
+   }
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TGoodsPropertyValueExternalForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TGoodsPropertyValueExternalForm');
 end;
 
 procedure TLoadFormTest.LoadQualityParamsFormTest;
@@ -970,14 +974,14 @@ begin
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TOrderInternalBasisPackJournalForm'));
   TdsdFormStorageFactory.GetStorage.Load('TOrderInternalBasisPackJournalForm');
   exit;
-
+  }
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TOrderInternalPackRemainsForm'));
   TdsdFormStorageFactory.GetStorage.Load('TOrderInternalPackRemainsForm');
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TOrderInternalPackRemainsJournalForm'));
   TdsdFormStorageFactory.GetStorage.Load('TOrderInternalPackRemainsJournalForm');
   exit;
   //
-  }
+
 
 
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TOrderInternalForm'));

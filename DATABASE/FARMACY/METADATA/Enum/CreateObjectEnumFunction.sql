@@ -42,6 +42,8 @@ CREATE OR REPLACE FUNCTION zc_Enum_Role_WorkWithTheFund() RETURNS integer AS $BO
 
 CREATE OR REPLACE FUNCTION zc_Enum_Role_SendVIP() RETURNS integer AS $BODY$BEGIN RETURN (SELECT ObjectId AS Id FROM ObjectString WHERE ValueData = 'zc_Enum_Role_SendVIP' AND DescId = zc_ObjectString_Enum()); END;  $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
 
+CREATE OR REPLACE FUNCTION zc_Enum_Role_PartialSale() RETURNS integer AS $BODY$BEGIN RETURN (SELECT ObjectId AS Id FROM ObjectString WHERE ValueData = 'zc_Enum_Role_PartialSale' AND DescId = zc_ObjectString_Enum()); END;  $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
+
 -- !!!
 -- !!! Подразделение для роли Директор Партнер
 -- !!!
@@ -72,6 +74,7 @@ CREATE OR REPLACE FUNCTION zc_Enum_NDSKind_Special_0() RETURNS integer AS $BODY$
 CREATE OR REPLACE FUNCTION zc_Enum_ChangeIncomePaymentKind_Bonus()  RETURNS integer AS $BODY$BEGIN RETURN (SELECT ObjectId AS Id FROM ObjectString WHERE ValueData = 'zc_Enum_ChangeIncomePaymentKind_Bonus' AND DescId = zc_ObjectString_Enum()); END;  $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
 CREATE OR REPLACE FUNCTION zc_Enum_ChangeIncomePaymentKind_Other() RETURNS integer AS $BODY$BEGIN RETURN (SELECT ObjectId AS Id FROM ObjectString WHERE ValueData = 'zc_Enum_ChangeIncomePaymentKind_Other' AND DescId = zc_ObjectString_Enum()); END;  $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
 CREATE OR REPLACE FUNCTION zc_Enum_ChangeIncomePaymentKind_ReturnOut() RETURNS integer AS $BODY$BEGIN RETURN (SELECT ObjectId AS Id FROM ObjectString WHERE ValueData = 'zc_Enum_ChangeIncomePaymentKind_ReturnOut' AND DescId = zc_ObjectString_Enum()); END;  $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
+CREATE OR REPLACE FUNCTION zc_Enum_ChangeIncomePaymentKind_PartialSale() RETURNS integer AS $BODY$BEGIN RETURN (SELECT ObjectId AS Id FROM ObjectString WHERE ValueData = 'zc_Enum_ChangeIncomePaymentKind_PartialSale' AND DescId = zc_ObjectString_Enum()); END;  $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
 
 -- !!!
 -- !!! Валюты

@@ -882,8 +882,12 @@ BEGIN
             , _Result_Master.UnitCode
             , _Result_Master.UnitName
             , _Result_Master.isErased
+            , COALESCE (MIBoolean_Calculated.ValueData, TRUE) :: Boolean AS isCalculated
 
        FROM _Result_Master
+           LEFT JOIN MovementItemBoolean AS MIBoolean_Calculated
+                                         ON MIBoolean_Calculated.MovementItemId = _Result_Master.Id
+                                        AND MIBoolean_Calculated.DescId = zc_MIBoolean_Calculated()
        ;
        RETURN NEXT Cursor1;
 

@@ -105,6 +105,13 @@ BEGIN
           RAISE EXCEPTION 'Ошибка.Документ отложен, корректировка запрещена!';
      END IF;
      
+     IF inGoodsId in (38420, 38421, 38422, 38423) 
+        AND (inAmount <> 0 OR inAmountManual <> 0 OR inAmountStorage <> 0)
+        AND NOT EXISTS (SELECT 1 FROM ObjectLink_UserRole_View  WHERE UserId = inUserId AND RoleId = zc_Enum_Role_Admin())
+     THEN
+          RAISE EXCEPTION 'Ошибка. На коды 38420-38423 запрещено создавать перемещения!';
+     END IF;
+     
 /*     IF vbIsSUN = TRUE AND vbIsInsert = FALSE AND COALESCE (inAmount, 0) = 0 AND COALESCE (vbAmount, 0) > 0
      THEN
      

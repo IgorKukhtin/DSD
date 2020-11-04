@@ -35,6 +35,7 @@ RETURNS TABLE (Id                    Integer
              , BankName             TVarChar
              , isErased             Boolean
              , NeedPay              Boolean
+             , isPartialPay         Boolean
              , ContractNumber       TVarChar
              , ContractStartDate    TDateTime
              , ContractEndDate      TDateTime
@@ -201,6 +202,7 @@ BEGIN
                   , Object_Bank.ValueData                       AS BankName
                   , MI_Payment.isErased                         AS isErased
                   , COALESCE(MIBoolean_NeedPay.ValueData,FALSE) AS NeedPay
+                  , COALESCE(MIBoolean_PartialPay.ValueData,FALSE) AS isPartialPay
                  
                FROM MovementItem AS MI_Payment
                     LEFT OUTER JOIN MovementItemFloat AS MIFloat_IncomeId
@@ -271,6 +273,9 @@ BEGIN
                     LEFT JOIN MovementItemBoolean AS MIBoolean_NeedPay
                                                   ON MIBoolean_NeedPay.MovementItemId = MI_Payment.Id
                                                  AND MIBoolean_NeedPay.DescId = zc_MIBoolean_NeedPay()
+                    LEFT JOIN MovementItemBoolean AS MIBoolean_PartialPay
+                                                  ON MIBoolean_PartialPay.MovementItemId = MI_Payment.Id
+                                                 AND MIBoolean_PartialPay.DescId = zc_MIBoolean_PartialPay()
 
                     LEFT OUTER JOIN ObjectFloat AS ObjectFloat_Juridical_PayOrder
                                                 ON ObjectFloat_Juridical_PayOrder.ObjectId = MLO_From.ObjectId
@@ -308,6 +313,8 @@ BEGIN
               , NULL::TVarChar       AS BankName
               , FALSE                AS isErased
               , FALSE                AS NeedPay
+              , FALSE                AS isPartialPay
+
               , tmpJuridicalSettings.InvNumber AS ContractNumber
               , tmpJuridicalSettings.StartDate AS ContractStartDate
               , tmpJuridicalSettings.EndDate   AS ContractEndDate
@@ -344,6 +351,7 @@ BEGIN
               , MI_Payment.BankName
               , MI_Payment.isErased
               , MI_Payment.NeedPay
+              , MI_Payment.isPartialPay
               , tmpJuridicalSettings.InvNumber AS ContractNumber
               , tmpJuridicalSettings.StartDate AS ContractStartDate
               , tmpJuridicalSettings.EndDate   AS ContractEndDate
@@ -392,6 +400,7 @@ BEGIN
                   , Object_Bank.ValueData                       AS BankName
                   , MI_Payment.isErased                         AS isErased
                   , COALESCE(MIBoolean_NeedPay.ValueData,FALSE) AS NeedPay
+                  , COALESCE(MIBoolean_PartialPay.ValueData,FALSE) AS isPartialPay
                  
                FROM MovementItem AS MI_Payment
                     LEFT OUTER JOIN MovementItemFloat AS MIFloat_IncomeId
@@ -465,6 +474,9 @@ BEGIN
                     LEFT JOIN MovementItemBoolean AS MIBoolean_NeedPay
                                                   ON MIBoolean_NeedPay.MovementItemId = MI_Payment.Id
                                                  AND MIBoolean_NeedPay.DescId = zc_MIBoolean_NeedPay()
+                    LEFT JOIN MovementItemBoolean AS MIBoolean_PartialPay
+                                                  ON MIBoolean_PartialPay.MovementItemId = MI_Payment.Id
+                                                 AND MIBoolean_PartialPay.DescId = zc_MIBoolean_PartialPay()
 
                     LEFT OUTER JOIN ObjectFloat AS ObjectFloat_Juridical_PayOrder
                                                 ON ObjectFloat_Juridical_PayOrder.ObjectId = MLO_From.ObjectId
@@ -504,6 +516,7 @@ BEGIN
               , MI_Payment.BankName
               , MI_Payment.isErased
               , MI_Payment.NeedPay
+              , MI_Payment.isPartialPay
               , tmpJuridicalSettings.InvNumber AS ContractNumber
               , tmpJuridicalSettings.StartDate AS ContractStartDate
               , tmpJuridicalSettings.EndDate   AS ContractEndDate
@@ -539,3 +552,5 @@ ALTER FUNCTION gpSelect_MovementItem_Payment (Integer, Boolean, Boolean, TDateTi
 -- SELECT * FROM gpSelect_MovementItem_Payment (inMovementId := 1831122 , inShowAll:= FALSE, inIsErased:= FALSE, inDateStart := ('05.12.2013')::TDateTime , inDateEnd := ('08.05.2015')::TDateTime ,  inSession := '3');
 -- SELECT * FROM gpSelect_MovementItem_Payment(inMovementId := 1848680 , inShowAll := 'True' , inIsErased := 'False' , inDateStart := ('01.01.2016')::TDateTime , inDateEnd := ('13.04.2016')::TDateTime ,  inSession := '3');
 -- SELECT * FROM gpSelect_MovementItem_Payment(inMovementId := 1870498 , inShowAll := 'True' , inIsErased := 'False' , inDateStart := ('01.01.2016')::TDateTime , inDateEnd := ('13.04.2016')::TDateTime ,  inSession := '3');
+
+select * from gpSelect_MovementItem_Payment(inMovementId := 20810502 , inShowAll := 'False' , inIsErased := 'False' , inDateStart := ('16.09.2019')::TDateTime , inDateEnd := ('16.09.2019')::TDateTime ,  inSession := '3');

@@ -3,6 +3,7 @@ inherited JuridicalOrderFinanceForm: TJuridicalOrderFinanceForm
   ClientHeight = 423
   ClientWidth = 920
   AddOnFormData.isAlwaysRefresh = True
+  AddOnFormData.RefreshAction = actRefreshStart
   AddOnFormData.ChoiceAction = dsdChoiceGuides
   AddOnFormData.Params = FormParams
   ExplicitWidth = 936
@@ -27,6 +28,12 @@ inherited JuridicalOrderFinanceForm: TJuridicalOrderFinanceForm
         ExplicitWidth = 920
         ExplicitHeight = 366
         inherited cxGridDBTableView: TcxGridDBTableView
+          DataController.Summary.FooterSummaryItems = <
+            item
+              Format = #1042#1089#1077#1075#1086' '#1089#1090#1088#1086#1082': ,0'
+              Kind = skCount
+              Column = BankAccountName_main
+            end>
           OptionsBehavior.IncSearch = True
           OptionsData.Deleting = False
           OptionsData.DeletingConfirmation = False
@@ -198,6 +205,30 @@ inherited JuridicalOrderFinanceForm: TJuridicalOrderFinanceForm
       end>
   end
   inherited ActionList: TActionList
+    object actRefreshStart: TdsdDataSetRefresh [0]
+      Category = 'DSDLib'
+      MoveParams = <>
+      StoredProc = spSelect
+      StoredProcList = <
+        item
+          StoredProc = spSelect
+        end
+        item
+          StoredProc = spGetPeriod
+        end>
+      Caption = #1055#1077#1088#1077#1095#1080#1090#1072#1090#1100
+      Hint = #1054#1073#1085#1086#1074#1080#1090#1100' '#1076#1072#1085#1085#1099#1077
+      ImageIndex = 4
+      RefreshOnTabSetChanges = False
+    end
+    inherited actRefresh: TdsdDataSetRefresh
+      StoredProcList = <
+        item
+          StoredProc = spSelect
+        end
+        item
+        end>
+    end
     inherited actInsert: TInsertUpdateChoiceAction
       FormName = 'TTaxUnitEditForm'
       FormNameParam.Value = nil
@@ -395,6 +426,65 @@ inherited JuridicalOrderFinanceForm: TJuridicalOrderFinanceForm
       Caption = 'actUpdateDataSet'
       DataSource = MasterDS
     end
+    object ExecuteDialog: TExecuteDialog
+      Category = 'DSDLib'
+      MoveParams = <>
+      Caption = 'ExecuteDialog'
+      FormName = 'TDatePeriodDialogForm'
+      FormNameParam.Value = 'TDatePeriodDialogForm'
+      FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
+      GuiParams = <
+        item
+          Name = 'inStartDate'
+          Value = 'NULL'
+          Component = FormParams
+          ComponentItem = 'inStartDate'
+          DataType = ftDateTime
+          ParamType = ptInputOutput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'inEndDate'
+          Value = 'NULL'
+          Component = FormParams
+          ComponentItem = 'inEndDate'
+          DataType = ftDateTime
+          ParamType = ptInputOutput
+          MultiSelectSeparator = ','
+        end>
+      isShowModal = True
+      OpenBeforeShow = True
+    end
+    object macInsert_byMovBankAccount: TMultiAction
+      Category = 'DSDLib'
+      MoveParams = <>
+      ActionList = <
+        item
+          Action = ExecuteDialog
+        end
+        item
+          Action = actInsert_byMovBankAccount
+        end
+        item
+          Action = actRefresh
+        end>
+      QuestionBeforeExecute = #1047#1072#1075#1088#1091#1079#1080#1090#1100' '#1076#1072#1085#1085#1099#1077' '#1089#1086#1075#1083#1072#1089#1085#1086' '#1076#1086#1082#1091#1084#1077#1085#1090#1086#1074' '#1088'/'#1089#1095#1077#1090#1072'?'
+      InfoAfterExecute = #1044#1072#1085#1085#1099#1077' '#1086#1073#1085#1086#1074#1083#1077#1085#1099
+      Caption = 'macInsert_byMovBankAccount'
+      ImageIndex = 27
+    end
+    object actInsert_byMovBankAccount: TdsdExecStoredProc
+      Category = 'DSDLib'
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      StoredProc = spInsert_byMovBankAccount
+      StoredProcList = <
+        item
+          StoredProc = spInsert_byMovBankAccount
+        end>
+      Caption = 'actInsert_byMovBankAccount'
+    end
   end
   inherited MasterDS: TDataSource
     Left = 80
@@ -482,6 +572,14 @@ inherited JuridicalOrderFinanceForm: TJuridicalOrderFinanceForm
           ItemName = 'dxBarStatic'
         end
         item
+          Visible = True
+          ItemName = 'bbInsert_byMovBankAccount'
+        end
+        item
+          Visible = True
+          ItemName = 'dxBarStatic'
+        end
+        item
           BeginGroup = True
           Visible = True
           ItemName = 'bbProtocolOpenForm'
@@ -510,17 +608,13 @@ inherited JuridicalOrderFinanceForm: TJuridicalOrderFinanceForm
       Action = actShowDel
       Category = 0
     end
-    object dxBarControlContainerItem1: TdxBarControlContainerItem
-      Caption = 'New Item'
+    object bbIn: TdxBarControlContainerItem
       Category = 0
-      Hint = 'New Item'
       Visible = ivAlways
     end
-    object bbUnitCategory: TdxBarControlContainerItem
-      Caption = 'New Item'
+    object bbInsert_byMovBankAccount: TdxBarButton
+      Action = macInsert_byMovBankAccount
       Category = 0
-      Hint = 'New Item'
-      Visible = ivAlways
     end
   end
   inherited DBViewAddOn: TdsdDBViewAddOn
@@ -679,45 +773,63 @@ inherited JuridicalOrderFinanceForm: TJuridicalOrderFinanceForm
     Left = 280
   end
   object spInsert_byMovBankAccount: TdsdStoredProc
+    StoredProcName = 'gpInsert_Object_JuridicalOrderFinance_byBankAccount'
     DataSets = <>
     OutputType = otResult
     Params = <
       item
-        Name = 'ioId'
-        Value = Null
-        Component = MasterCDS
-        ComponentItem = 'Id'
-        ParamType = ptInputOutput
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'inUnitId'
-        Value = Null
-        Component = MasterCDS
-        ComponentItem = 'UnitId'
+        Name = 'inStartDate'
+        Value = 'NULL'
+        Component = FormParams
+        ComponentItem = 'inStartDate'
+        DataType = ftDateTime
         ParamType = ptInput
         MultiSelectSeparator = ','
       end
       item
-        Name = 'inPrice'
-        Value = Null
-        Component = MasterCDS
-        ComponentItem = 'Price'
-        DataType = ftFloat
+        Name = 'inEndDate'
+        Value = 'NULL'
+        Component = FormParams
+        ComponentItem = 'inEndDate'
+        DataType = ftDateTime
         ParamType = ptInput
         MultiSelectSeparator = ','
       end
       item
-        Name = 'inValue'
+        Name = 'inBankAccountId_main'
         Value = Null
-        Component = MasterCDS
-        ComponentItem = 'Value'
-        DataType = ftFloat
+        Component = GuidesBankAccount
+        ComponentItem = 'Key'
         ParamType = ptInput
         MultiSelectSeparator = ','
       end>
     PackSize = 1
     Left = 656
     Top = 184
+  end
+  object spGetPeriod: TdsdStoredProc
+    StoredProcName = 'gpGet_Period_JuridicalOrderFinance'
+    DataSets = <>
+    OutputType = otResult
+    Params = <
+      item
+        Name = 'StartDate'
+        Value = ''
+        Component = FormParams
+        ComponentItem = 'inStartDate'
+        DataType = ftDateTime
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'EndDate'
+        Value = ''
+        Component = FormParams
+        ComponentItem = 'inEndDate'
+        DataType = ftDateTime
+        MultiSelectSeparator = ','
+      end>
+    PackSize = 1
+    Left = 815
+    Top = 178
   end
 end

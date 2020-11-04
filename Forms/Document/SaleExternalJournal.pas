@@ -52,6 +52,11 @@ type
     bbStartLoad: TdxBarButton;
     GoodsPropertyName: TcxGridDBColumn;
     PartnerName_from: TcxGridDBColumn;
+    cxLabel10: TcxLabel;
+    edRetail: TcxButtonEdit;
+    GuidesRetail: TdsdGuides;
+    spGet_Exception: TdsdStoredProc;
+    actGet_Exception: TdsdExecStoredProc;
   private
     { Private declarations }
   public

@@ -132,6 +132,15 @@ BEGIN
        PERFORM lpInsertUpdate_Object_Enum (inId:= zc_Enum_Role_SendVIP(), inDescId:= zc_Object_Role(), inCode:= lfGet_ObjectCode_byEnum ('zc_Enum_Role_SendVIP'), inName:= 'Вип перемещения', inEnumName:= 'zc_Enum_Role_SendVIP');
    END IF;
 
+   -- zc_Enum_Role_PartialSale
+   IF EXISTS (SELECT * FROM Object WHERE DescId = zc_Object_Role() AND ValueData = 'Частичная продажа')
+   THEN
+       PERFORM lpUpdate_Object_Enum_byCode (inCode   := (SELECT ObjectCode FROM Object WHERE DescId = zc_Object_Role() AND ValueData = 'Частичная продажа')
+                                          , inDescId := zc_Object_Role()
+                                          , inEnumName:= 'zc_Enum_Role_PartialSale');
+   ELSE
+       PERFORM lpInsertUpdate_Object_Enum (inId:= zc_Enum_Role_PartialSale(), inDescId:= zc_Object_Role(), inCode:= lfGet_ObjectCode_byEnum ('zc_Enum_Role_PartialSale'), inName:= 'Частичная продажа', inEnumName:= 'zc_Enum_Role_PartialSale');
+   END IF;
 
 END $$;
 /*
@@ -250,6 +259,7 @@ BEGIN
      PERFORM lpInsertUpdate_Object_Enum (inId:= zc_Enum_ChangeIncomePaymentKind_Bonus(), inDescId:= zc_Object_ChangeIncomePaymentKind(), inCode:= 1, inName:= 'Корректировка по бонусу', inEnumName:= 'zc_Enum_ChangeIncomePaymentKind_Bonus');
      PERFORM lpInsertUpdate_Object_Enum (inId:= zc_Enum_ChangeIncomePaymentKind_Other(), inDescId:= zc_Object_ChangeIncomePaymentKind(), inCode:= 2, inName:= 'Корректировка по прочим причинам', inEnumName:= 'zc_Enum_ChangeIncomePaymentKind_Other');
      PERFORM lpInsertUpdate_Object_Enum (inId:= zc_Enum_ChangeIncomePaymentKind_ReturnOut(), inDescId:= zc_Object_ChangeIncomePaymentKind(), inCode:= 3, inName:= 'Корректировка по возвратам', inEnumName:= 'zc_Enum_ChangeIncomePaymentKind_ReturnOut');
+     PERFORM lpInsertUpdate_Object_Enum (inId:= zc_Enum_ChangeIncomePaymentKind_PartialSale(), inDescId:= zc_Object_ChangeIncomePaymentKind(), inCode:= 4, inName:= 'Частичная продажа', inEnumName:= 'zc_Enum_ChangeIncomePaymentKind_PartialSale');
      
      PERFORM lpInsertUpdate_ObjectFloat (zc_ObjectFloat_NDSKind_NDS(), zc_Enum_NDSKind_Common(), 20);
      PERFORM lpInsertUpdate_ObjectFloat (zc_ObjectFloat_NDSKind_NDS(), zc_Enum_NDSKind_Medical(), 7);

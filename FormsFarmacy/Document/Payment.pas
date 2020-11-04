@@ -106,6 +106,7 @@ type
     dxBarButton4: TdxBarButton;
     spExportBankConcordFileName: TdsdStoredProc;
     spExportBankConcord: TdsdStoredProc;
+    isPartialPay: TcxGridDBColumn;
   private
     { Private declarations }
   public

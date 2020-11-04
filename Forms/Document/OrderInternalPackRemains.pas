@@ -254,6 +254,17 @@ type
     bbPrintRemainsLess: TdxBarButton;
     actPrintRemainsLessUpak: TdsdPrintAction;
     bbPrintRemainsLessUpak: TdxBarButton;
+    spUpdate_MI_IsCalculated_Yes: TdsdStoredProc;
+    spUpdate_MI_IsCalculated_No: TdsdStoredProc;
+    actUpdate_MI_IsCalculated_No: TdsdExecStoredProc;
+    actUpdate_MI_IsCalculated_Yes: TdsdExecStoredProc;
+    macUpdate_MI_IsCalculated_No: TMultiAction;
+    macUpdate_MI_IsCalculated_Yes: TMultiAction;
+    actRefreshMI: TdsdDataSetRefresh;
+    macUpdate_MI_IsCalculated_Yes_list: TMultiAction;
+    macUpdate_MI_IsCalculated_No_list: TMultiAction;
+    bbUpdate_MI_IsCalculated_Yes: TdxBarButton;
+    bbUpdate_MI_IsCalculated_No: TdxBarButton;
   private
     { Private declarations }
   public

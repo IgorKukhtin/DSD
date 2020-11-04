@@ -33,8 +33,7 @@ type
     bbShowDel: TdxBarButton;
     spInsertUpdate: TdsdStoredProc;
     actUpdateDataSet: TdsdUpdateDataSet;
-    dxBarControlContainerItem1: TdxBarControlContainerItem;
-    bbUnitCategory: TdxBarControlContainerItem;
+    bbIn: TdxBarControlContainerItem;
     RefreshDispatcher: TRefreshDispatcher;
     FormParams: TdsdFormParams;
     JuridicalName: TcxGridDBColumn;
@@ -51,6 +50,12 @@ type
     edBankAccount: TcxButtonEdit;
     GuidesBankAccount: TdsdGuides;
     spInsert_byMovBankAccount: TdsdStoredProc;
+    ExecuteDialog: TExecuteDialog;
+    spGetPeriod: TdsdStoredProc;
+    macInsert_byMovBankAccount: TMultiAction;
+    actInsert_byMovBankAccount: TdsdExecStoredProc;
+    actRefreshStart: TdsdDataSetRefresh;
+    bbInsert_byMovBankAccount: TdxBarButton;
   private
     { Private declarations }
   public

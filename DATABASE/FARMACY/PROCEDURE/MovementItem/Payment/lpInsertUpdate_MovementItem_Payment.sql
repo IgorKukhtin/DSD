@@ -5,6 +5,7 @@ DROP FUNCTION IF EXISTS lpInsertUpdate_MovementItem_Payment (Integer, Integer, I
 DROP FUNCTION IF EXISTS lpInsertUpdate_MovementItem_Payment (Integer, Integer, Integer, Integer, Integer, TFloat, Boolean, Integer);
 DROP FUNCTION IF EXISTS lpInsertUpdate_MovementItem_Payment (Integer, Integer, Integer, Integer, Integer, TFloat, Boolean, Boolean, Integer);
 DROP FUNCTION IF EXISTS lpInsertUpdate_MovementItem_Payment (Integer, Integer, Integer, Integer, Integer, TFloat, TFloat, TFloat, TFloat, Boolean, Boolean, Integer);
+DROP FUNCTION IF EXISTS lpInsertUpdate_MovementItem_Payment (Integer, Integer, Integer, Integer, Integer, TFloat, TFloat, TFloat, TFloat, Boolean, Boolean, Boolean, Integer);
 
 CREATE OR REPLACE FUNCTION lpInsertUpdate_MovementItem_Payment(
  INOUT ioId                  Integer   , -- Ключ объекта <Элемент документа>
@@ -17,7 +18,8 @@ CREATE OR REPLACE FUNCTION lpInsertUpdate_MovementItem_Payment(
     IN inSummaCorrReturnOut  TFloat    , -- Сумма Корректировки долга по возвратам
     IN inSummaCorrOther      TFloat    , -- Сумма Корректировки долга по прочим причинам
     IN inNeedPay             Boolean   , -- Нужно платить
-    IN inNeedRecalcSumm      Boolean = TRUE, --Пересчитать суммы
+    IN inisPartialPay        Boolean = FALSE , -- Частичная оплата
+    IN inNeedRecalcSumm      Boolean = TRUE  , --Пересчитать суммы
     IN inUserId              Integer = 0 -- пользователь
 )
 AS
@@ -48,6 +50,8 @@ BEGIN
     PERFORM lpInsertUpdate_MovementItemLinkObject (zc_MILinkObject_Currency(), ioId, inCurrencyId);
     --Сохранили свойство <Нужно платить>
     PERFORM lpInsertUpdate_MovementItemBoolean (zc_MIBoolean_NeedPay(), ioId, inNeedPay);
+    --Сохранили свойство <Частичная оплата>
+    PERFORM lpInsertUpdate_MovementItemBoolean (zc_MIBoolean_PartialPay(), ioId, inisPartialPay);
     
     IF inNeedRecalcSumm 
     THEN
