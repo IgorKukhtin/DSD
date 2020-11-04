@@ -1565,7 +1565,7 @@ var
   arrUnion: array of TUnionData;
   sSelect: string;
 begin
-  Result := Format(cSelectUnion, ['<нет данных>', 0, 0, 0, 0]) + ';';
+  Result := Format(cSelectUnion, ['<нет данных>', 0, 0, 0, 0]);
 
   try
 
@@ -1606,6 +1606,8 @@ begin
     end;
 
     // Теперь готов сформировать UNION
+    if Length(arrUnion) > 0 then Result := '';
+
     for I := Low(arrUnion) to High(arrUnion) do
     begin
       if FStopped then Exit;
@@ -1619,7 +1621,8 @@ begin
       sSelect := Format(cSelectUnion, [
         arrUnion[I].Name, arrUnion[I].MasterValue, arrUnion[I].SlaveValue, arrUnion[I].MasterIncrement, arrUnion[I].SlaveIncrement
       ]);
-      if I = 0 then
+
+      if Length(Result) = 0 then
         Result := sSelect
       else
         Result := Result + ' union ' + sSelect;
