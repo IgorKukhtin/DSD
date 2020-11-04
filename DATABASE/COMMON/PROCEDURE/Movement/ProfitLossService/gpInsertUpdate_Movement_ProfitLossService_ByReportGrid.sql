@@ -57,7 +57,7 @@ BEGIN
                                                       , inIsLoad            := TRUE                            :: Boolean
                                                       , inUserId            := vbUserId
                                                        )
-     FROM gpReport_CheckBonusTest3 (inStartDate:= inStartDate, inEndDate:= inEndDate, inPaidKindID:= inPaidKindID, inJuridicalId:= inJuridicalId, inBranchId:= inBranchId, inisMovement:= FALSE, inSession:= inSession) AS tmp
+     FROM gpReport_CheckBonus (inStartDate:= inStartDate, inEndDate:= inEndDate, inPaidKindID:= inPaidKindID, inJuridicalId:= inJuridicalId, inBranchId:= inBranchId, inisMovement:= FALSE, inSession:= inSession) AS tmp
      WHERE tmp.Sum_Bonus <> 0 
        AND tmp.isSend = TRUE
      ;
