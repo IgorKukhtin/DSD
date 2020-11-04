@@ -529,10 +529,10 @@ begin
 
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TContractForm'));
   TdsdFormStorageFactory.GetStorage.Load('TContractForm');
-  {
+
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TContractEditForm'));
   TdsdFormStorageFactory.GetStorage.Load('TContractEditForm');
-
+{
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TContract_ObjectForm'));
   TdsdFormStorageFactory.GetStorage.Load('TContract_ObjectForm');
 
@@ -953,10 +953,11 @@ end;
 
 procedure TLoadFormTest.LoadReportFormTest;
 begin
+
+  {
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_SAUAForm'));
   TdsdFormStorageFactory.GetStorage.Load('TReport_SAUAForm');
 
-  {
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_TwoVendorBindingsForm'));
   TdsdFormStorageFactory.GetStorage.Load('TReport_TwoVendorBindingsForm');
 
@@ -1678,12 +1679,13 @@ end;
 procedure TLoadFormTest.LoadJuridicalFormTest;
 begin
    TdsdFormStorageFactory.GetStorage.Save(GetForm('TJuridicalForm'));
-    TdsdFormStorageFactory.GetStorage.Load('TJuridicalForm');
+   TdsdFormStorageFactory.GetStorage.Load('TJuridicalForm');
+   TdsdFormStorageFactory.GetStorage.Save(GetForm('TJuridicalEditForm'));
+   TdsdFormStorageFactory.GetStorage.Load('TJuridicalEditForm');
+
     {
     TdsdFormStorageFactory.GetStorage.Save(GetForm('TJuridicalCorporateForm'));
     TdsdFormStorageFactory.GetStorage.Load('TJuridicalCorporateForm');
-    TdsdFormStorageFactory.GetStorage.Save(GetForm('TJuridicalEditForm'));
-    TdsdFormStorageFactory.GetStorage.Load('TJuridicalEditForm');
     TdsdFormStorageFactory.GetStorage.Save(GetForm('TJuridical_ObjectForm'));
     TdsdFormStorageFactory.GetStorage.Load('TJuridical_ObjectForm');
     TdsdFormStorageFactory.GetStorage.Save(GetForm('TPartnerCodeForm'));

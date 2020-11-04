@@ -50,9 +50,10 @@ BEGIN
       , AccountId
       , OperSumm
       , OperDate
-    FROM _tmpItem;
+    FROM _tmpItem
+    WHERE COALESCE(AnalyzerId, 0) <> zc_Enum_ChangeIncomePaymentKind_PartialSale();
                  
-    -- Сумма Бонуса / Возврата / прочего
+    -- Сумма Бонуса / Возврата / прочего / Оплаты частями
     INSERT INTO _tmpMIContainer_insert(DescId, MovementDescId, MovementId, ContainerId, AccountId, Amount, OperDate)
     SELECT 
         zc_Container_SummIncomeMovementPayment()

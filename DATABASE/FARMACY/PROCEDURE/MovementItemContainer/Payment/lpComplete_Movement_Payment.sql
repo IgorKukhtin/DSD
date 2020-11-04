@@ -37,8 +37,8 @@ BEGIN
     PERFORM lpComplete_Movement_Finance_CreateTemp();
     
     --таблица строк док.
-    CREATE TEMP TABLE _tmpMI(MovementId Integer, Id Integer, IncomeId Integer, Income_JuridicalId Integer, BankAccountId Integer, MovementBankAccountId Integer, SummaPay TFloat, SummaCorrOther TFloat, SummaCorrBonus TFloat, SummaCorrReturnOut TFloat) ON COMMIT DROP;
-    INSERT INTO _tmpMI (MovementId, Id, IncomeId, Income_JuridicalId, BankAccountId, MovementBankAccountId, SummaPay, SummaCorrOther, SummaCorrBonus, SummaCorrReturnOut)
+    CREATE TEMP TABLE _tmpMI(MovementId Integer, Id Integer, IncomeId Integer, Income_JuridicalId Integer, BankAccountId Integer, MovementBankAccountId Integer, SummaPay TFloat, SummaCorrOther TFloat, SummaCorrBonus TFloat, SummaCorrReturnOut TFloat, SummaCorrPartialSale  TFloat) ON COMMIT DROP;
+    INSERT INTO _tmpMI (MovementId, Id, IncomeId, Income_JuridicalId, BankAccountId, MovementBankAccountId, SummaPay, SummaCorrOther, SummaCorrBonus, SummaCorrReturnOut, SummaCorrPartialSale)
         SELECT MI_Payment.MovementId
              , MI_Payment.Id
              , MIFloat_IncomeId.ValueData::Integer              AS IncomeId
@@ -46,10 +46,11 @@ BEGIN
              , COALESCE (MILinkObject_BankAccount.ObjectId, 0)  AS BankAccountId
              , MIFloat_MovementBankAccount.ValueData  ::Integer AS MovementBankAccountId
              
-             , MI_Payment.Amount               AS SummaPay
-             , MIFloat_CorrOther.ValueData     AS SummaCorrOther
-             , MIFloat_CorrBonus.ValueData     AS SummaCorrBonus
-             , MIFloat_CorrReturnOut.ValueData AS SummaCorrReturnOut
+             , MI_Payment.Amount                 AS SummaPay
+             , MIFloat_CorrOther.ValueData       AS SummaCorrOther
+             , MIFloat_CorrBonus.ValueData       AS SummaCorrBonus
+             , MIFloat_CorrReturnOut.ValueData   AS SummaCorrReturnOut
+             , MIFloat_CorrPartialSale.ValueData AS SummaCorrPartialSale
         FROM MovementItem AS MI_Payment
          INNER JOIN MovementItemBoolean AS MIBoolean_NeedPay
                                         ON MIBoolean_NeedPay.MovementItemId = MI_Payment.Id
@@ -62,10 +63,12 @@ BEGIN
          LEFT JOIN MovementItemFloat AS MIFloat_CorrBonus
                                      ON MIFloat_CorrBonus.MovementItemId = MI_Payment.Id
                                     AND MIFloat_CorrBonus.DescId = zc_MIFloat_CorrBonus()
-
-        LEFT OUTER JOIN MovementItemFloat AS MIFloat_CorrReturnOut
-                                          ON MIFloat_CorrReturnOut.MovementItemId = MI_Payment.ID
-                                         AND MIFloat_CorrReturnOut.DescId = zc_MIFloat_CorrReturnOut()
+         LEFT JOIN MovementItemFloat AS MIFloat_CorrReturnOut
+                                     ON MIFloat_CorrReturnOut.MovementItemId = MI_Payment.ID
+                                    AND MIFloat_CorrReturnOut.DescId = zc_MIFloat_CorrReturnOut()
+         LEFT JOIN MovementItemFloat AS MIFloat_CorrPartialSale
+                                     ON MIFloat_CorrPartialSale.MovementItemId = MI_Payment.ID
+                                    AND MIFloat_CorrPartialSale.DescId = zc_MIFloat_CorrPartialPay()
 
          LEFT JOIN MovementItemFloat AS MIFloat_IncomeId
                                      ON MIFloat_IncomeId.MovementItemId = MI_Payment.Id
@@ -294,6 +297,29 @@ BEGIN
       , vbOperDate
      FROM _tmpMI AS MovementItem_Payment
      WHERE MovementItem_Payment.SummaCorrOther <> 0;
+        
+    -- Снимаем сумму с контейнера корректировок
+    INSERT INTO _tmpMIContainer_insert(DescId, MovementDescId, MovementId, ContainerId, AccountId, Amount, OperDate)
+    SELECT 
+        zc_Container_SummIncomeMovementPayment()
+      , zc_Movement_Payment()  
+      , inMovementId
+      , lpInsertFind_Container(inContainerDescId   := zc_Container_SummIncomeMovementPayment(), -- DescId Остатка
+                               inParentId          := NULL               , -- Главный Container
+                               inObjectId          := zc_Enum_ChangeIncomePaymentKind_PartialSale(), -- Объект (Счет или Товар или ...)
+                               inJuridicalId_basis := vbJuridicalId, -- Главное юридическое лицо
+                               inBusinessId        := NULL, -- Бизнесы
+                               inObjectCostDescId  := NULL, -- DescId для <элемент с/с>
+                               inObjectCostId      := NULL, -- <элемент с/с> - необычная аналитика счета
+                               inDescId_1          := zc_ContainerLinkObject_Juridical(), -- DescId для 1-ой Аналитики
+                               inObjectId_1        := MovementItem_Payment.Income_JuridicalId,
+                               inDescId_2          := zc_ContainerLinkObject_JuridicalBasis(), -- DescId для 1-ой Аналитики
+                               inObjectId_2        := vbJuridicalId) 
+      , null
+      , - MovementItem_Payment.SummaCorrPartialSale
+      , vbOperDate
+     FROM _tmpMI AS MovementItem_Payment
+     WHERE MovementItem_Payment.SummaCorrPartialSale <> 0;
         
     -- Снимаем сумму с контейнера оплаты по накладной
     INSERT INTO _tmpMIContainer_insert(DescId, MovementDescId, MovementId, ContainerId, AccountId, Amount, OperDate)

@@ -45,6 +45,11 @@ inherited Report_JuridicalCollationForm: TReport_JuridicalCollationForm
               Format = ',0.00##'
               Kind = skSum
               Column = EndRemains
+            end
+            item
+              Format = ',0.00##;-,0.00##; '
+              Kind = skSum
+              Column = Informative
             end>
           OptionsData.CancelOnExit = True
           OptionsData.Deleting = False
@@ -121,6 +126,17 @@ inherited Report_JuridicalCollationForm: TReport_JuridicalCollationForm
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
             Width = 80
+          end
+          object Informative: TcxGridDBColumn
+            Caption = #1048#1085#1092#1086#1088#1084#1072#1094#1080#1086#1085#1085#1086
+            DataBinding.FieldName = 'Informative'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 4
+            Properties.DisplayFormat = ',0.00##;-,0.00##; '
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            HeaderHint = #1048#1085#1092#1086#1088#1084#1072#1094#1080#1086#1085#1085#1086' '#1089#1091#1084#1084#1099' '#1085#1077' '#1074#1083#1080#1103#1102#1097#1080#1077' '#1085#1072' '#1086#1073#1086#1088#1086#1090
+            Width = 71
           end
           object EndRemains: TcxGridDBColumn
             Caption = #1050#1086#1085'. '#1076#1086#1083#1075

@@ -3,7 +3,7 @@ inherited ContractEditForm: TContractEditForm
   ClientHeight = 529
   ClientWidth = 366
   ExplicitWidth = 372
-  ExplicitHeight = 557
+  ExplicitHeight = 558
   PixelsPerInch = 96
   TextHeight = 13
   inherited bbOk: TcxButton
@@ -279,6 +279,14 @@ inherited ContractEditForm: TContractEditForm
     TabOrder = 39
     Width = 337
   end
+  object cbPartialPay: TcxCheckBox [40]
+    Left = 240
+    Top = 251
+    Hint = #1054#1087#1083#1072#1090#1072' '#1095#1072#1089#1090#1103#1084#1080' '#1087#1088#1080#1093#1086#1076#1072
+    Caption = #1054#1087#1083#1072#1090#1072' '#1095#1072#1089#1090#1103#1084#1080
+    TabOrder = 40
+    Width = 107
+  end
   inherited UserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn
     Left = 291
     Top = 118
@@ -445,6 +453,14 @@ inherited ContractEditForm: TContractEditForm
         Value = 42370d
         Component = edEndDate
         DataType = ftDateTime
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inisPartialPay'
+        Value = Null
+        Component = cbPartialPay
+        DataType = ftBoolean
         ParamType = ptInput
         MultiSelectSeparator = ','
       end>
@@ -631,6 +647,13 @@ inherited ContractEditForm: TContractEditForm
         Component = GuidesMember
         ComponentItem = 'TextValue'
         DataType = ftString
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'isPartialPay'
+        Value = Null
+        Component = cbPartialPay
+        DataType = ftBoolean
         MultiSelectSeparator = ','
       end>
     Left = 226

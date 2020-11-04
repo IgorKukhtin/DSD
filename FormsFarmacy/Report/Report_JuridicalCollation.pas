@@ -55,6 +55,7 @@ type
     BranchDate: TcxGridDBColumn;
     dxBarButton1: TdxBarButton;
     actJuridicalCollationSaldo: TdsdOpenForm;
+    Informative: TcxGridDBColumn;
   private
     { Private declarations }
   public

@@ -783,10 +783,15 @@ CREATE OR REPLACE FUNCTION zc_ObjectBoolean_Goods_Present() RETURNS Integer AS $
 INSERT INTO ObjectBooleanDesc (DescId, Code, ItemName)
   SELECT zc_Object_Goods(), 'zc_ObjectBoolean_Goods_Present', 'Подарок' WHERE NOT EXISTS (SELECT * FROM ObjectBooleanDesc WHERE Code = 'zc_ObjectBoolean_Goods_Present');
 
+CREATE OR REPLACE FUNCTION zc_ObjectBoolean_Contract_PartialPay() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM ObjectBooleanDesc WHERE Code = 'zc_ObjectBoolean_Contract_PartialPay'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
+INSERT INTO ObjectBooleanDesc (DescId, Code, ItemName)
+  SELECT zc_Object_Contract(), 'zc_ObjectBoolean_Contract_PartialPay', 'Оплата частями' WHERE NOT EXISTS (SELECT * FROM ObjectBooleanDesc WHERE Code = 'zc_ObjectBoolean_Contract_PartialPay');
+
 
 /*-------------------------------------------------------------------------------
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.  Воробкало А.А.  Ярошенко Р.Ф.   Подмогильный В.В.   Шаблий О.В.
+ 04.10.20                                                                                                          * zc_ObjectBoolean_Contract_PartialPay 
  01.10.20                                                                                                          * zc_ObjectBoolean_Goods_Present 
  23.09.20         * zc_ObjectBoolean_GoodsQuality_Klipsa
  22.09.20                                                                                                          * zc_ObjectBoolean_Goods_ExceptionUKTZED 

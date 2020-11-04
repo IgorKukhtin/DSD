@@ -17,7 +17,7 @@ RETURNS TABLE (Id Integer, Code Integer, Name TVarChar,
                OrderSumm TFloat, OrderSummComment TVarChar, OrderTime TVarChar,
                Comment TVarChar,
                SigningDate TDateTime, StartDate TDateTime, EndDate TDateTime,
-               isMorionCode Boolean, isBarCode Boolean,
+               isMorionCode Boolean, isBarCode Boolean, isPartialPay Boolean,
                isErased Boolean) AS
 $BODY$
 BEGIN
@@ -65,6 +65,7 @@ BEGIN
        
            , CAST (NULL AS Boolean) AS isMorionCode
            , CAST (NULL AS Boolean) AS isBarCode
+           , CAST (NULL AS Boolean) AS isPartialPay
            , CAST (NULL AS Boolean) AS isErased;
    
    ELSE
@@ -107,6 +108,7 @@ BEGIN
            
            , COALESCE (ObjectBoolean_MorionCode.ValueData, FALSE)  :: Boolean   AS isMorionCode
            , COALESCE (ObjectBoolean_BarCode.ValueData, FALSE)     :: Boolean   AS isBarCode
+           , COALESCE (ObjectBoolean_PartialPay.ValueData, FALSE)  :: Boolean   AS isPartialPay
 
            , Object_Contract_View.isErased
        FROM Object_Contract_View
@@ -150,6 +152,10 @@ BEGIN
                                     ON ObjectBoolean_BarCode.ObjectId = Object_Contract_View.ContractId
                                    AND ObjectBoolean_BarCode.DescId = zc_ObjectBoolean_Contract_BarCode()
 
+            LEFT JOIN ObjectBoolean AS ObjectBoolean_PartialPay
+                                    ON ObjectBoolean_PartialPay.ObjectId = Object_Contract_View.ContractId
+                                   AND ObjectBoolean_PartialPay.DescId = zc_ObjectBoolean_Contract_PartialPay()
+
       WHERE Object_Contract_View.Id = inId;
    END IF;
   
@@ -160,7 +166,7 @@ LANGUAGE plpgsql VOLATILE;
 ALTER FUNCTION gpGet_Object_Contract (integer, TVarChar) OWNER TO postgres;
 
 
-/*-------------------------------------------------------------------------------*/
+-------------------------------------------------------------------------------
 /*
  »—“Œ–»ﬂ –¿«–¿¡Œ“ »: ƒ¿“¿, ¿¬“Œ–
                ‘ÂÎÓÌ˛Í ».¬.    ÛıÚËÌ ».¬.    ÎËÏÂÌÚ¸Â‚  .».

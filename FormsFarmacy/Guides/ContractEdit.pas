@@ -67,6 +67,7 @@ type
     cxLabel19: TcxLabel;
     edMember: TcxButtonEdit;
     GuidesMember: TdsdGuides;
+    cbPartialPay: TcxCheckBox;
   private
     { Private declarations }
   public

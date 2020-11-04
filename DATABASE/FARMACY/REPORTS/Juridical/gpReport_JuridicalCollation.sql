@@ -19,6 +19,7 @@ RETURNS TABLE(
   , EndRemains TFloat
   , Debet TFloat
   , Kredit TFloat
+  , Informative TFloat
   , OperDate TDateTime
   , InvNumber TVarChar
   , InvNumberPartner TVarChar
@@ -86,6 +87,19 @@ BEGIN
                         GROUP BY Object_Movement.ObjectCode, Container.Amount
                       )
 
+ , tmpContainerInformative AS (SELECT Container.Id                         AS ContainerId
+                                    , Container.Amount                     AS PaySumm 
+                               FROM ContainerLinkObject AS CLO_JuridicalBasis
+                                    INNER JOIN Container ON Container.Id =  CLO_JuridicalBasis.ContainerId
+                                                        AND Container.DescId = zc_Container_SummIncomeMovementPayment() 
+                                                        AND Container.ObjectId = zc_Enum_ChangeIncomePaymentKind_PartialSale()
+                                    LEFT JOIN ContainerLinkObject AS CLO_Juridical
+                                                                  ON CLO_Juridical.ContainerId = Container.Id
+                                                                 AND CLO_Juridical.DescId = zc_ContainerLinkObject_Juridical()
+                               WHERE CLO_JuridicalBasis.DescId = zc_ContainerLinkObject_JuridicalBasis()
+                                 AND CLO_JuridicalBasis.ObjectId = inJuridical_BasisId
+                                 AND CLO_Juridical.ObjectId = inJuridicalId
+                              )
 
         SELECT 
             CASE 
@@ -120,6 +134,8 @@ BEGIN
             ELSE 0
             END :: TFloat                                  AS Kredit,
 
+            Operation.Informative :: TFloat                AS Informative,
+
             Operation.OperDate,
             Movement.InvNumber,
             MovementString_InvNumberPartner.ValueData      AS InvNumberPartner,
@@ -148,6 +164,7 @@ BEGIN
                 tmpContainer.OperDate,
                 
                 SUM (tmpContainer.MovementSumm) AS MovementSumm,
+                0 AS Informative,
                 0 AS StartSumm,
                 0 AS EndSumm,
                 0 AS OperationSort
@@ -166,9 +183,34 @@ BEGIN
                     tmpContainer.OperDate
 
           UNION ALL
+            SELECT 
+                tmpContainer.MovementId,
+                tmpContainer.OperDate,
+                
+                0 AS MovementSumm,
+                SUM (tmpContainer.MovementSumm) AS Informative,
+                0 AS StartSumm,
+                0 AS EndSumm,
+                0 AS OperationSort
+            FROM -- 1.1. движение в валюте баланса
+               (SELECT MIContainer.MovementId,
+                       MIContainer.OperDate,
+                       SUM (MIContainer.Amount) AS MovementSumm
+                FROM tmpContainerInformative
+                    INNER JOIN MovementItemContainer AS MIContainer
+                                                     ON MIContainer.ContainerId = tmpContainerInformative.ContainerId
+                                                    AND MIContainer.OperDate BETWEEN inStartDate AND inEndDate
+                GROUP BY MIContainer.MovementId, MIContainer.OperDate
+                HAVING SUM (MIContainer.Amount) <> 0
+               ) AS tmpContainer
+           GROUP BY tmpContainer.MovementId,
+                    tmpContainer.OperDate
+
+          UNION ALL
            SELECT 0 AS MovementId,
                   NULL :: TDateTime AS OperDate,
                   0 AS MovementSumm,
+                  0 AS Informative,
                   SUM (tmpRemains.StartSumm) AS StartSumm,
                   SUM (tmpRemains.EndSumm) AS EndSumm,
                   -1 AS OperationSort
@@ -230,7 +272,8 @@ ALTER FUNCTION gpreport_juridicalcollation(TDateTime, TDateTime, Integer, Intege
 
 /*-------------------------------------------------------------------------------
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
-               Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.  Воробкало А.А.
+               Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.  Воробкало А.А.  Шаблий О.В. 
+ 04.11.20                                                                      * Informative
  12.02.16         * add PaymentDate, BranchDate, DateLastPay
  12.01.16                                                       * Clear
  14.11.14         * add inCurrencyId
@@ -250,3 +293,5 @@ ALTER FUNCTION gpreport_juridicalcollation(TDateTime, TDateTime, Integer, Intege
 
 -- тест
 --select * from gpReport_JuridicalCollation(inStartDate := ('07.09.2015')::TDateTime , inEndDate := ('26.11.2015')::TDateTime , inJuridicalId := 183317 , inJuridical_BasisId := 393052 ,  inSession := '3');
+
+select * from gpReport_JuridicalCollation(inStartDate := ('01.10.2020')::TDateTime , inEndDate := ('03.11.2020')::TDateTime , inJuridicalId := 9526799 , inJuridical_BasisId := 13310756 ,  inSession := '3');

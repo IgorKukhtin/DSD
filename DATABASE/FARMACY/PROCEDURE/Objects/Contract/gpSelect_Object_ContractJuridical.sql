@@ -10,7 +10,7 @@ RETURNS TABLE (Id Integer, Code Integer, Name TVarChar,
                JuridicalBasisId Integer, JuridicalBasisName TVarChar,
                JuridicalId Integer, JuridicalName TVarChar,
                Deferment Integer, Percent TFloat,
-               Comment TVarChar,
+               Comment TVarChar, isPartialPay Boolean, 
                isErased boolean
               )
 AS
@@ -35,6 +35,7 @@ BEGIN
            , COALESCE(ObjectFloat_Percent.ValueData,0)   ::TFloat  AS Percent
 
            , ObjectString_Comment.ValueData AS Comment
+           , COALESCE (ObjectBoolean_PartialPay.ValueData, FALSE)  :: Boolean   AS isPartialPay
            
            , Object_Contract.isErased       AS isErased
            
@@ -64,6 +65,10 @@ BEGIN
                                  ON ObjectFloat_Percent.ObjectId = Object_Contract.Id
                                 AND ObjectFloat_Percent.DescId = zc_ObjectFloat_Contract_Percent()
       
+           LEFT JOIN ObjectBoolean AS ObjectBoolean_PartialPay
+                                   ON ObjectBoolean_PartialPay.ObjectId = Object_Contract.Id
+                                  AND ObjectBoolean_PartialPay.DescId = zc_ObjectBoolean_Contract_PartialPay()
+
    WHERE Object_Contract.isErased = FALSE
   ;
   
@@ -73,7 +78,7 @@ $BODY$
 ALTER FUNCTION gpSelect_Object_ContractJuridical (Integer, TVarChar) OWNER TO postgres;
 
 
-/*-------------------------------------------------------------------------------*/
+-------------------------------------------------------------------------------
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.

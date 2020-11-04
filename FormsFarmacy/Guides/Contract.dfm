@@ -3,7 +3,7 @@ inherited ContractForm: TContractForm
   ClientWidth = 828
   AddOnFormData.ChoiceAction = dsdChoiceGuides
   ExplicitWidth = 844
-  ExplicitHeight = 346
+  ExplicitHeight = 347
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
@@ -152,6 +152,14 @@ inherited ContractForm: TContractForm
             HeaderHint = #1048#1084#1087#1086#1088#1090' '#1096#1090#1088#1080#1093'-'#1082#1086#1076#1086#1074' '#1080#1079' '#1087#1088#1072#1081#1089#1072
             Options.Editing = False
             Width = 90
+          end
+          object isPartialPay: TcxGridDBColumn
+            Caption = #1054#1087#1083#1072#1090#1072' '#1095#1072#1089#1090#1103#1084#1080
+            DataBinding.FieldName = 'isPartialPay'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 61
           end
           object GroupMemberSPName: TcxGridDBColumn
             Caption = #1050#1072#1090#1077#1075#1086#1088#1080#1103' '#1087#1072#1094#1080#1077#1085#1090#1072' ('#1057#1086#1094'.'#1087#1088#1086#1077#1082#1090')'
@@ -426,7 +434,7 @@ inherited ContractForm: TContractForm
       end
       item
         Name = 'inisReport'
-        Value = 'FALSE'
+        Value = False
         Component = MasterCDS
         ComponentItem = 'isReport'
         DataType = ftBoolean
@@ -443,7 +451,7 @@ inherited ContractForm: TContractForm
       end
       item
         Name = 'isNotParam'
-        Value = 'TRUE'
+        Value = True
         DataType = ftBoolean
         ParamType = ptInput
         MultiSelectSeparator = ','

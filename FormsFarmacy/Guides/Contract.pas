@@ -47,6 +47,7 @@ type
     actUpdate_isBarCode: TdsdExecStoredProc;
     bbUpdate_isMorionCode: TdxBarButton;
     bbUpdate_isBarCode: TdxBarButton;
+    isPartialPay: TcxGridDBColumn;
   private
     { Private declarations }
   public

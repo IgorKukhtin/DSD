@@ -334,10 +334,11 @@
         object ContractGrid: TcxGrid
           Left = 0
           Top = 26
-          Width = 667
+          Width = 592
           Height = 342
-          Align = alLeft
+          Align = alClient
           TabOrder = 0
+          ExplicitWidth = 667
           object ContractGridDBTableView: TcxGridDBTableView
             Navigator.Buttons.CustomButtons = <>
             DataController.DataSource = ContractDS
@@ -362,20 +363,29 @@
               HeaderAlignmentHorz = taCenter
               HeaderAlignmentVert = vaCenter
               Options.Editing = False
-              Width = 55
+              Width = 128
             end
             object colDeferment: TcxGridDBColumn
               Caption = #1054#1090#1089#1088#1086#1095#1082#1072
               DataBinding.FieldName = 'Deferment'
               HeaderAlignmentVert = vaCenter
               Options.Editing = False
+              Width = 75
+            end
+            object isPartialPay: TcxGridDBColumn
+              Caption = #1054#1087#1083#1072#1090#1072' '#1095#1072#1089#1090#1103#1084#1080
+              DataBinding.FieldName = 'isPartialPay'
+              HeaderAlignmentHorz = taCenter
+              HeaderAlignmentVert = vaCenter
+              Options.Editing = False
+              Width = 66
             end
             object clComment: TcxGridDBColumn
               Caption = #1055#1088#1080#1084#1077#1095#1072#1085#1080#1077
               DataBinding.FieldName = 'Comment'
               HeaderAlignmentHorz = taCenter
               HeaderAlignmentVert = vaCenter
-              Width = 100
+              Width = 309
             end
             object clIsErased: TcxGridDBColumn
               Caption = #1059#1076#1072#1083#1077#1085
@@ -520,7 +530,7 @@
     Top = 267
     Properties.DecimalPlaces = 0
     Properties.DisplayFormat = '0'
-    TabOrder = 21
+    TabOrder = 20
     Width = 120
   end
   object ceCodeMedicard: TcxCurrencyEdit [18]
@@ -792,7 +802,7 @@
       end
       item
         Name = 'inisCorporate'
-        Value = 'False'
+        Value = False
         Component = cbisCorporate
         DataType = ftBoolean
         ParamType = ptInput

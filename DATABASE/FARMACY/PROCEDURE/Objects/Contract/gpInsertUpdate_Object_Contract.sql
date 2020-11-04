@@ -22,6 +22,8 @@ DROP FUNCTION IF EXISTS gpInsertUpdate_Object_Contract
      (Integer, Integer, TVarChar, Integer, Integer, Integer, Integer, Integer, TFloat, TFloat, TFloat, TFloat, TVarChar, TVarChar, TVarChar, TDateTime, TDateTime, TDateTime, Tvarchar);
 DROP FUNCTION IF EXISTS gpInsertUpdate_Object_Contract 
      (Integer, Integer, TVarChar, Integer, Integer, Integer, Integer, Integer, Integer, TFloat, TFloat, TFloat, TFloat, TVarChar, TVarChar, TVarChar, TDateTime, TDateTime, TDateTime, Tvarchar);
+DROP FUNCTION IF EXISTS gpInsertUpdate_Object_Contract 
+     (Integer, Integer, TVarChar, Integer, Integer, Integer, Integer, Integer, Integer, TFloat, TFloat, TFloat, TFloat, TVarChar, TVarChar, TVarChar, TDateTime, TDateTime, TDateTime, Boolean, Tvarchar);
      
 CREATE OR REPLACE FUNCTION gpInsertUpdate_Object_Contract(
  INOUT ioId                      Integer   ,   	-- ключ объекта <Договор>
@@ -43,6 +45,7 @@ CREATE OR REPLACE FUNCTION gpInsertUpdate_Object_Contract(
     IN inSigningDate             TDateTime,     -- Дата подписания договора
     IN inStartDate               TDateTime,     -- Дата с которой действует договор
     IN inEndDate                 TDateTime,     -- Дата до которой действует договор    
+    IN inisPartialPay            Boolean  ,     -- Оплата частями
     IN inSession                 TVarChar       -- сессия пользователя
 )
   RETURNS Integer AS
@@ -109,6 +112,8 @@ BEGIN
    PERFORM lpInsertUpdate_ObjectString (zc_ObjectString_Contract_OrderTime(), ioId, inOrderTime);
       -- сохранили свойство <Примечание к минимальной сумме для заказа>
    PERFORM lpInsertUpdate_ObjectString (zc_ObjectString_Contract_OrderSumm(), ioId, inOrderSummComment);
+      -- сохранили свойство <Оплата частями>
+   PERFORM lpInsertUpdate_ObjectBoolean (zc_ObjectBoolean_Contract_PartialPay(), ioId, inisPartialPay);
 
    -- сохранили протокол
    PERFORM lpInsert_ObjectProtocol (ioId, vbUserId);
@@ -117,7 +122,7 @@ END;$BODY$
 LANGUAGE plpgsql VOLATILE;
 
 
-/*-------------------------------------------------------------------------------*/
+-------------------------------------------------------------------------------
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
