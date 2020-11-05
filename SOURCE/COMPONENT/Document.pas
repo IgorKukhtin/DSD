@@ -174,4 +174,8 @@ initialization
   EnvironmentStrings := TStringList.Create;
   GetEnvironmentStrings(EnvironmentStrings);
 
+finalization
+
+  EnvironmentStrings.Free;
+
 end.

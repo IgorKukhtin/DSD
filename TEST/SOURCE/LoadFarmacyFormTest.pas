@@ -2489,11 +2489,12 @@ end;
 
 procedure TLoadFormTest.LoadChangeIncomePaymentFormTest;
 begin
-  TdsdFormStorageFactory.GetStorage.Save
-    (GetForm('TChangeIncomePaymentJournalForm'));
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TChangeIncomePaymentJournalForm'));
   TdsdFormStorageFactory.GetStorage.Load('TChangeIncomePaymentJournalForm');
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TChangeIncomePaymentForm'));
   TdsdFormStorageFactory.GetStorage.Load('TChangeIncomePaymentForm');
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TCalculationPartialSaleForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TCalculationPartialSaleForm');
 end;
 
 procedure TLoadFormTest.LoadChangeIncomePaymentKindFormTest;

@@ -17,7 +17,13 @@ BEGIN
     -- проверка - если <Master> Проведен, то <Ошибка>
     --PERFORM lfCheck_Movement_ParentStatus (inMovementId:= inMovementId, inNewStatusId:= zc_Enum_Status_Erased(), inComment:= 'удалить');
 
-    -- проверка - если есть <Child> Проведен, то <Ошибка>
+     -- проверка
+    IF EXISTS (SELECT MIC.Id FROM MovementItemContainer AS MIC WHERE MIC.Movementid = inMovementId)
+    THEN
+        RAISE EXCEPTION 'Ошибка.Документ проведен, удаление запрещено!';
+    END IF;
+     
+     -- проверка - если есть <Child> Проведен, то <Ошибка>
     PERFORM lfCheck_Movement_ChildStatus (inMovementId:= inMovementId, inNewStatusId:= zc_Enum_Status_Erased(), inComment:= 'удалить');
 
     -- Удаляем Документ

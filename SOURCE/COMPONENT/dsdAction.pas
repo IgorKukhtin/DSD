@@ -2206,6 +2206,7 @@ end;
 destructor TdsdCustomAction.Destroy;
 begin
   EnabledTimer := false;
+  FMoveParams.Free;
   inherited;
 end;
 

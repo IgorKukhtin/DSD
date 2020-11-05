@@ -50,6 +50,7 @@ begin
   actOF := TdsdOpenForm.Create(Nil);
   try
     actOF.FormNameParam.Value := AFormName;
+    actOF.isShowModal := True;
     arParams := TRegEx.Split(AParams, ',');
     arTypeParams := TRegEx.Split(ATypeParams, ',');
     arValueParams := TRegEx.Split(AValueParams, ',');
