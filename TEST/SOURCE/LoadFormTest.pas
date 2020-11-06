@@ -391,10 +391,10 @@ end;
 
 procedure TLoadFormTest.LoadContractFormTest;
 begin
-  {
+
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TContractForm'));
   TdsdFormStorageFactory.GetStorage.Load('TContractForm');
-  }
+  exit;
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TContractConditionValueForm'));
   TdsdFormStorageFactory.GetStorage.Load('TContractConditionValueForm');
   exit;
@@ -476,6 +476,9 @@ begin
   TdsdFormStorageFactory.GetStorage.Load('TContractGoodsForm');
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TContractGoodsEditForm'));
   TdsdFormStorageFactory.GetStorage.Load('TContractGoodsEditForm');
+
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TContractGoodsChoiceForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TContractGoodsChoiceForm');
 end;
 
 procedure TLoadFormTest.LoadCurrencyFormTest;

@@ -1,4 +1,4 @@
-unit ContractGoods;
+unit ContractGoodsChoice;
 
 interface
 
@@ -20,10 +20,11 @@ uses
   dxSkinOffice2010Blue, dxSkinOffice2010Silver, dxSkinPumpkin, dxSkinSeven,
   dxSkinSevenClassic, dxSkinSharp, dxSkinSharpPlus, dxSkinSilver,
   dxSkinSpringTime, dxSkinStardust, dxSkinSummer2008, dxSkinTheAsphaltWorld,
-  dxSkinValentine, dxSkinVS2010, dxSkinWhiteprint, dxSkinXmas2008Blue;
+  dxSkinValentine, dxSkinVS2010, dxSkinWhiteprint, dxSkinXmas2008Blue,
+  cxContainer, dsdGuides, cxLabel, cxTextEdit, cxMaskEdit, Vcl.ExtCtrls;
 
 type
-  TContractGoodsForm = class(TAncestorGuidesForm)
+  TContractGoodsChoiceForm = class(TAncestorGuidesForm)
     GoodsKindName: TcxGridDBColumn;
     Price: TcxGridDBColumn;
     ContractCode: TcxGridDBColumn;
@@ -31,6 +32,21 @@ type
     bbShowAll: TdxBarButton;
     actShowErased: TBooleanStoredProcAction;
     bbShowErased: TdxBarButton;
+    Panel: TPanel;
+    edRetail: TcxButtonEdit;
+    cxLabel10: TcxLabel;
+    GuidesRetail: TdsdGuides;
+    cxLabel6: TcxLabel;
+    edJuridical: TcxButtonEdit;
+    cxLabel9: TcxLabel;
+    edContract: TcxButtonEdit;
+    GuidesContract: TdsdGuides;
+    GuidesJuridical: TdsdGuides;
+    cxLabel1: TcxLabel;
+    edPriceList: TcxButtonEdit;
+    GuidesPriceList: TdsdGuides;
+    FormParams: TdsdFormParams;
+    spInsertUpdate: TdsdStoredProc;
   private
     { Private declarations }
   public
@@ -42,6 +58,6 @@ implementation
 {$R *.dfm}
 
 initialization
-  RegisterClass(TContractGoodsForm);
+  RegisterClass(TContractGoodsChoiceForm);
 
 end.

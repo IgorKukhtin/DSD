@@ -850,7 +850,7 @@ BEGIN
                                          , tmpContract.ContractId_child
                                          , tmpContract.InfoMoneyId_child
                                          , tmpContract.PaidKindId_byBase
-                                         , MAX (tmpContract.PercentRetBonus) AS PercentRetBonus
+                                         , MAX (COALESCE (tmpContract.PercentRetBonus,0)) AS PercentRetBonus
                                        FROM tmpContract 
                                        GROUP BY tmpContract.JuridicalId
                                               , tmpContract.ContractId_child
@@ -860,6 +860,7 @@ BEGIN
                                                        AND tmpContract.ContractId_child = tmpAll.ContractId_child
                                                        AND tmpContract.InfoMoneyId_child = tmpAll.InfoMoneyId_child
                                                        AND tmpContract.PaidKindId_byBase = tmpAll.PaidKindId_child
+                                                       AND COALESCE (tmpAll.PercentRetBonus,0) = 0
                     WHERE (tmpAll.Sum_CheckBonus <> 0
                        OR tmpAll.Sum_Bonus <> 0
                        OR tmpAll.Sum_BonusFact <> 0)

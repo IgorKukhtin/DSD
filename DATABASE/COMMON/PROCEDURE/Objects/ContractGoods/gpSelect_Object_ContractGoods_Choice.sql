@@ -1,9 +1,12 @@
--- Function: gpSelect_Object_ContractGoods_all (TVarChar)
+-- Function: gpSelect_Object_ContractGoods_Choice (TVarChar)
 
---DROP FUNCTION IF EXISTS gpSelect_Object_ContractGoods_all (TVarChar);
-DROP FUNCTION IF EXISTS gpSelect_Object_ContractGoods_all (Boolean, Boolean, TVarChar);
+DROP FUNCTION IF EXISTS gpSelect_Object_ContractGoods_Choice (Integer, Integer, Integer, Integer, Boolean, Boolean, TVarChar);
 
-CREATE OR REPLACE FUNCTION gpSelect_Object_ContractGoods_all(
+CREATE OR REPLACE FUNCTION gpSelect_Object_ContractGoods_Choice(
+    IN inContractId  Integer ,
+    IN inJuridicalId Integer ,
+    IN inRetailId    Integer ,
+    IN inPriceListId Integer ,
     IN inisShowAll   Boolean ,      -- 
     IN inisErased    Boolean ,      --
     IN inSession     TVarChar       -- сесси€ пользовател€
@@ -66,10 +69,29 @@ BEGIN
      -- определ€етс€ - может ли пользовать видеть весь справочник
      vbAccessKeyAll:= zfCalc_AccessKey_GuideAll (vbUserId);
 
+     
      -- –езультат
      RETURN QUERY
      WITH
-     tmpContractGoods AS (SELECT Object_ContractGoods.*
+     tmpContract AS (SELECT ObjectLink_Contract_Juridical.ObjectId AS ContractId
+                     FROM (SELECT ObjectLink_Juridical_Retail.ObjectId AS JuridicalId
+                           FROM ObjectLink AS ObjectLink_Juridical_Retail
+                           WHERE ObjectLink_Juridical_Retail.DescId = zc_ObjectLink_Juridical_Retail()
+                             AND (ObjectLink_Juridical_Retail.ChildObjectId = inRetailId OR inRetailId = 0)
+                             AND inJuridicalId = 0
+                         UNION
+                           SELECT inJuridicalId AS JuridicalId
+                           WHERE inJuridicalId <> 0
+                          ) AS tmp
+                            INNER JOIN ObjectLink AS ObjectLink_Contract_Juridical
+                                                  ON ObjectLink_Contract_Juridical.ChildObjectId = tmp.JuridicalId 
+                                                 AND ObjectLink_Contract_Juridical.DescId = zc_ObjectLink_Contract_Juridical()
+                                                 AND (ObjectLink_Contract_Juridical.ObjectId = inContractId OR inContractId = 0)
+                    UNION
+                     SELECT inContractId AS ContractId WHERE inContractId <> 0
+                     )  
+
+   , tmpContractGoods AS (SELECT Object_ContractGoods.*
                                , ContractGoods_Contract.ChildObjectId             AS ContractId
                                , ObjectLink_Contract_PriceList.ChildObjectId      AS PriceListId
                                , ObjectLink_ContractGoods_Goods.ChildObjectId     AS GoodsId
@@ -79,6 +101,12 @@ BEGIN
                                LEFT JOIN ObjectLink AS ContractGoods_Contract
                                                     ON ContractGoods_Contract.ObjectId = Object_ContractGoods.Id
                                                    AND ContractGoods_Contract.DescId = zc_ObjectLink_ContractGoods_Contract()
+                               INNER JOIN tmpContract ON tmpContract.ContractId = ContractGoods_Contract.ChildObjectId
+
+                               INNER JOIN ObjectLink AS ObjectLink_Contract_PriceList
+                                                     ON ObjectLink_Contract_PriceList.ObjectId = ContractGoods_Contract.ChildObjectId
+                                                    AND ObjectLink_Contract_PriceList.DescId = zc_ObjectLink_Contract_PriceList()
+                                                    AND (ObjectLink_Contract_PriceList.ChildObjectId = inPriceListId OR inPriceListId = 0)
             
                                LEFT JOIN ObjectLink AS ObjectLink_ContractGoods_Goods
                                                     ON ObjectLink_ContractGoods_Goods.ObjectId = Object_ContractGoods.Id
@@ -91,10 +119,6 @@ BEGIN
                                LEFT JOIN ObjectDate AS ObjectDate_End
                                                     ON ObjectDate_End.ObjectId = Object_ContractGoods.Id
                                                    AND ObjectDate_End.DescId = zc_ObjectDate_ContractGoods_End()
-
-                               LEFT JOIN ObjectLink AS ObjectLink_Contract_PriceList
-                                                    ON ObjectLink_Contract_PriceList.ObjectId = ContractGoods_Contract.ChildObjectId
-                                                   AND ObjectLink_Contract_PriceList.DescId = zc_ObjectLink_Contract_PriceList()
 
                           WHERE Object_ContractGoods.DescId = zc_Object_ContractGoods()
                             AND (Object_ContractGoods.isErased = FALSE OR inisErased = TRUE)

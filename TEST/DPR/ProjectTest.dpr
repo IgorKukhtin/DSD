@@ -1206,7 +1206,8 @@ uses
   PartnerExternalEdit in '..\..\Forms\Guides\PartnerExternalEdit.pas' {PartnerExternalEditForm: TParentForm},
   SaleExternalJournal in '..\..\Forms\Document\SaleExternalJournal.pas' {SaleExternalJournalForm: TParentForm},
   SaleExternal in '..\..\Forms\Document\SaleExternal.pas' {SaleExternalForm: TParentForm},
-  GoodsPropertyValueExternal in '..\..\Forms\Guides\GoodsPropertyValueExternal.pas' {GoodsPropertyValueExternalForm: TParentForm};
+  GoodsPropertyValueExternal in '..\..\Forms\Guides\GoodsPropertyValueExternal.pas' {GoodsPropertyValueExternalForm: TParentForm},
+  ContractGoodsChoice in '..\..\Forms\Guides\ContractGoodsChoice.pas' {ContractGoodsChoiceForm: TParentForm};
 
 {$R *.RES}
 {$R DevExpressRus.res}
