@@ -713,7 +713,7 @@ inherited IncomeJournalForm: TIncomeJournalForm
         end
         item
           Name = 'isPrice'
-          Value = 'True'
+          Value = True
           DataType = ftBoolean
           MultiSelectSeparator = ','
         end>
@@ -782,7 +782,7 @@ inherited IncomeJournalForm: TIncomeJournalForm
         end
         item
           Name = 'isPrice'
-          Value = 'FALSE'
+          Value = False
           DataType = ftBoolean
           MultiSelectSeparator = ','
         end>
@@ -1184,7 +1184,7 @@ inherited IncomeJournalForm: TIncomeJournalForm
         MultiSelectSeparator = ','
       end
       item
-        Value = 'False'
+        Value = False
         DataType = ftBoolean
         ParamType = ptUnknown
         MultiSelectSeparator = ','
@@ -1449,7 +1449,7 @@ inherited IncomeJournalForm: TIncomeJournalForm
       end
       item
         Name = 'inIsCurrentData'
-        Value = 'TRUE'
+        Value = True
         DataType = ftBoolean
         ParamType = ptInput
         MultiSelectSeparator = ','
@@ -1821,7 +1821,7 @@ inherited IncomeJournalForm: TIncomeJournalForm
       end
       item
         Name = 'inisSaveNull'
-        Value = 'True'
+        Value = True
         DataType = ftBoolean
         ParamType = ptInput
         MultiSelectSeparator = ','
@@ -1861,7 +1861,7 @@ inherited IncomeJournalForm: TIncomeJournalForm
       end
       item
         Name = 'inisSaveNull'
-        Value = 'False'
+        Value = False
         DataType = ftBoolean
         ParamType = ptInput
         MultiSelectSeparator = ','

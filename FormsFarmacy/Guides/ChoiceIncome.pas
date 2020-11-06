@@ -30,12 +30,20 @@ type
     InvNumber: TcxGridDBColumn;
     OperDate: TcxGridDBColumn;
     TotalCount: TcxGridDBColumn;
-    TotalSummPVAT: TcxGridDBColumn;
+    TotalSummMVAT: TcxGridDBColumn;
     FormParams: TdsdFormParams;
     actUpdate: TdsdInsertUpdateAction;
     dxBarButton1: TdxBarButton;
-    TotalSummTo: TcxGridDBColumn;
+    TotalSumm: TcxGridDBColumn;
     Comment: TcxGridDBColumn;
+    Panel: TPanel;
+    deStart: TcxDateEdit;
+    deEnd: TcxDateEdit;
+    cxLabel1: TcxLabel;
+    cxLabel2: TcxLabel;
+    ExecuteDialog: TExecuteDialog;
+    dxBarButton2: TdxBarButton;
+    FromName: TcxGridDBColumn;
   private
     { Private declarations }
   public

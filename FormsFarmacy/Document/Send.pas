@@ -183,6 +183,10 @@ type
     dxBarButton7: TdxBarButton;
     actMovementItem_ShowPUSH_Comment: TdsdShowPUSHMessage;
     spMovementItem_ShowPUSH_Comment: TdsdStoredProc;
+    actChoiceIncome: TOpenChoiceForm;
+    actExecLoadIncome: TdsdExecStoredProc;
+    dxBarButton8: TdxBarButton;
+    spAddIncome: TdsdStoredProc;
   private
     { Private declarations }
   public
