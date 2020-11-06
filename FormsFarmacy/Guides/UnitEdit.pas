@@ -161,6 +161,7 @@ type
     GuidesLayout: TdsdGuides;
     cxLabel48: TcxLabel;
     edPromoForSale: TcxTextEdit;
+    cdMinPercentMarkup: TcxCheckBox;
   private
     { Private declarations }
   public

@@ -51,7 +51,8 @@ RETURNS TABLE (Id Integer, Code Integer, Name TVarChar,
                isTechnicalRediscount Boolean, isAlertRecounting Boolean,
                SerialNumberTabletki Integer,
                LayoutId  Integer, LayoutName TVarChar,
-               PromoForSale TVarChar
+               PromoForSale TVarChar,
+               isMinPercentMarkup Boolean
                ) AS
 $BODY$
 BEGIN
@@ -165,6 +166,7 @@ BEGIN
            , CAST (0 as Integer)   AS LayoutId
            , CAST ('' as TVarChar) AS LayoutName
            , CAST ('' as TVarChar) AS PromoForSale
+           , FALSE                 AS isMinPercentMarkup
 ;
    ELSE
        RETURN QUERY 
@@ -278,6 +280,7 @@ BEGIN
       , COALESCE (Object_Layout.ValueData, '') ::TVarChar  AS LayoutName
       
       , ObjectString_PromoForSale.ValueData                AS PromoForSale
+      , COALESCE (ObjectBoolean_MinPercentMarkup.ValueData, FALSE):: Boolean      AS isMinPercentMarkup
     FROM Object AS Object_Unit
         LEFT JOIN ObjectLink AS ObjectLink_Unit_Parent
                              ON ObjectLink_Unit_Parent.ObjectId = Object_Unit.Id
@@ -554,6 +557,9 @@ BEGIN
                               ON ObjectFloat_SerialNumberTabletki.ObjectId = Object_Unit.Id
                              AND ObjectFloat_SerialNumberTabletki.DescId = zc_ObjectFloat_Unit_SerialNumberTabletki()
 
+        LEFT JOIN ObjectBoolean AS ObjectBoolean_MinPercentMarkup
+                                ON ObjectBoolean_MinPercentMarkup.ObjectId = Object_Unit.Id
+                               AND ObjectBoolean_MinPercentMarkup.DescId = zc_ObjectBoolean_Unit_MinPercentMarkup()
     WHERE Object_Unit.Id = inId;
 
    END IF;

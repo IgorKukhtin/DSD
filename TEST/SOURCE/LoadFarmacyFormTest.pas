@@ -2236,6 +2236,10 @@ end;
 
 procedure TLoadFormTest.LoadIncomeFormTest;
 begin
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TChoiceIncomeForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TChoiceIncomeForm');
+
+ {
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TIncomeForm'));
   TdsdFormStorageFactory.GetStorage.Load('TIncomeForm');
 
@@ -2244,7 +2248,6 @@ begin
 
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TIncomeOperDataDialogForm'));
   TdsdFormStorageFactory.GetStorage.Load('TIncomeOperDataDialogForm');
- {
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TIncomePharmacyForm'));
   TdsdFormStorageFactory.GetStorage.Load('TIncomePharmacyForm');
   exit;

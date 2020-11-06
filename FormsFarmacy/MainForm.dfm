@@ -3973,6 +3973,17 @@ inherited MainForm: TMainForm
       GuiParams = <>
       isShowModal = False
     end
+    object actDistributionPromo: TdsdOpenForm
+      Category = #1057#1087#1088#1072#1074#1086#1095#1085#1080#1082#1080
+      MoveParams = <>
+      Caption = #1056#1072#1079#1076#1072#1095#1072' '#1072#1082#1094#1080#1086#1085#1085#1099#1093' '#1084#1072#1090#1077#1088#1080#1072#1083#1086#1074
+      FormName = 'TDistributionPromoJournalForm'
+      FormNameParam.Value = 'TDistributionPromoJournalForm'
+      FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
+      GuiParams = <>
+      isShowModal = False
+    end
   end
   inherited UserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn
     Left = 496
@@ -4895,6 +4906,9 @@ inherited MainForm: TMainForm
       end
       object N208: TMenuItem
         Action = actIlliquidUnitJournal
+      end
+      object N264: TMenuItem
+        Action = actDistributionPromo
       end
       object N216: TMenuItem
         Action = actReport_SendSUNLoss

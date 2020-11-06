@@ -105,5 +105,9 @@ initialization
 
   Logger := TLog.Create(false);
 
+finalization
+
+  Logger.Free;
+
 end.
 

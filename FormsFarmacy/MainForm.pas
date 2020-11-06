@@ -747,6 +747,8 @@ type
     N262: TMenuItem;
     acTReport_SAUA: TdsdOpenForm;
     N263: TMenuItem;
+    actDistributionPromo: TdsdOpenForm;
+    N264: TMenuItem;
     procedure actSaveDataExecute(Sender: TObject);
 
     procedure miRepriceClick(Sender: TObject);
