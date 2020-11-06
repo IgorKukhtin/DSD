@@ -573,7 +573,7 @@ begin
            ListName := Copy(List[0], 2, length(List[0])-2);
         if Pos('.xlsx', AnsiLowerCase(FileName)) > 0 then
           TADOQuery(FDataSet).SQL.Text := 'SELECT * FROM [' + ListName + 'A' + IntToStr(FStartRecord)+ ':CZ60000]'
-        else TADOQuery(FDataSet).SQL.Text := 'SELECT * FROM [' + ListName + 'A' + IntToStr(FStartRecord)+ ':SZ60000]';
+        else TADOQuery(FDataSet).SQL.Text := 'SELECT * FROM [' + ListName + 'A' + IntToStr(FStartRecord)+ ':CZ60000]';
         TADOQuery(FDataSet).Open;
       finally
         FreeAndNil(List);
@@ -908,19 +908,7 @@ begin
                                    else ExternalParams.ParamByName('outMsgText').Value:=saFound[i] + TextMessage;
                            end;
                        end
-                  else try
-                    Load;
-                    fErr:= false;
-                       except
-                           on E: Exception do begin
-                              fErr:= true;
-                              TextMessage := E.Message;
-                              if pos('context', AnsilowerCase(TextMessage)) > 0 then
-                                TextMessage:=trim (Copy(TextMessage, 1, pos('context', AnsilowerCase(TextMessage)) - 1));
-                              if TextMessage <> ''
-                              then TextMessage := ' - ' + ReplaceStr(TextMessage, 'ERROR:', 'ОШИБКА:');
-                           end;
-                       end;
+                  else begin Load; fErr:= false; end;
                   // Перенесли в Archive
                   if fErr = false then
                   begin
