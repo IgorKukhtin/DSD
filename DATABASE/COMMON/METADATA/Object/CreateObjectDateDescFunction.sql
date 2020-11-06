@@ -197,6 +197,14 @@ CREATE OR REPLACE FUNCTION zc_Object_ReportBonus_Month() RETURNS Integer AS $BOD
 INSERT INTO ObjectDateDesc (DescId, Code, ItemName)
   SELECT zc_Object_ReportBonus(), 'zc_Object_ReportBonus_Month', 'Месяц начисления бонусов' WHERE NOT EXISTS (SELECT * FROM ObjectDateDesc WHERE Code = 'zc_Object_ReportBonus_Month');
 
+CREATE OR REPLACE FUNCTION zc_ObjectDate_ContractGoods_Start() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM ObjectDateDesc WHERE Code = 'zc_ObjectDate_ContractGoods_Start'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
+INSERT INTO ObjectDateDesc (DescId, Code, ItemName)
+  SELECT zc_Object_ContractGoods(), 'zc_ObjectDate_ContractGoods_Start', 'Дата действия цены с ...' WHERE NOT EXISTS (SELECT * FROM ObjectDateDesc WHERE Code = 'zc_ObjectDate_ContractGoods_Start');
+
+CREATE OR REPLACE FUNCTION zc_ObjectDate_ContractGoods_End() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM ObjectDateDesc WHERE Code = 'zc_ObjectDate_ContractGoods_End'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
+INSERT INTO ObjectDateDesc (DescId, Code, ItemName)
+  SELECT zc_Object_ContractGoods(), 'zc_ObjectDate_ContractGoods_End', 'Дата действия цены по ...' WHERE NOT EXISTS (SELECT * FROM ObjectDateDesc WHERE Code = 'zc_ObjectDate_ContractGoods_End');
+
 --!!!FARMACY
 
 CREATE OR REPLACE FUNCTION zc_ObjectDate_Price_DateChange() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM ObjectDateDesc WHERE Code = 'zc_ObjectDate_Price_DateChange'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
@@ -449,6 +457,8 @@ INSERT INTO ObjectDateDesc (DescId, Code, ItemName)
 
 /*-------------------------------------------------------------------------------
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.  Воробкало А.А.   Шаблий О.В.
+ 06.11.20         * zc_ObjectDate_ContractGoods_Start
+                    zc_ObjectDate_ContractGoods_End
  30.09.20                                                                                     * zc_ObjectDate_Unit_FirstCheck
  25.09.20         * zc_Object_ReportBonus_Month
  04.06.20                                                                                     * zc_ObjectDate_User_PUSH

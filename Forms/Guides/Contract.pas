@@ -237,6 +237,8 @@ type
     macUpdateStateKind_Closed: TMultiAction;
     bbUpdateStateKind_Closed: TdxBarButton;
     actRefreshContract: TdsdDataSetRefresh;
+    actContractGoodsChoiceOpenForm: TdsdOpenForm;
+    bbContractGoodsChoiceOpenForm: TdxBarButton;
 
   private
     { Private declarations }

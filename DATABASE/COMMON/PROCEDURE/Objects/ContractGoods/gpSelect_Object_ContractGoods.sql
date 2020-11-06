@@ -46,12 +46,12 @@ BEGIN
             LEFT JOIN ObjectFloat AS ObjectFloat_Price
                                   ON ObjectFloat_Price.ObjectId = Object_ContractGoods.Id 
                                  AND ObjectFloat_Price.DescId = zc_ObjectFloat_ContractGoods_Price()          
-                                                                              
+
             LEFT JOIN ObjectLink AS ContractGoods_Contract
                                  ON ContractGoods_Contract.ObjectId = Object_ContractGoods.Id
                                 AND ContractGoods_Contract.DescId = zc_ObjectLink_ContractGoods_Contract()
             LEFT JOIN Object_Contract_View ON Object_Contract_View.ContractId = ContractGoods_Contract.ChildObjectId
-            
+
             LEFT JOIN ObjectLink AS ObjectLink_ContractGoods_Goods
                                  ON ObjectLink_ContractGoods_Goods.ObjectId = Object_ContractGoods.Id
                                 AND ObjectLink_ContractGoods_Goods.DescId = zc_ObjectLink_ContractGoods_Goods()

@@ -1091,15 +1091,8 @@ begin
   if (ARecCount > 0) and (iCurCount <= ARecCount) then
     AProgBar.Position := Round(100 * iCurCount / ARecCount);
 
-  // Когда состояние новой базы данных уже практически идентично оригинальной, тогда iCurCount может превысить ARecCount,
-  // потому что ARecCount получаем через определенный интервал времени (по умолчанию каждые 5 минут),
-  // а новая репликация завершается намного быстрее т.к. записей для репликации мало.
-  // ARecCount устаревает и нужно его обновить.
   if (ARecCount > 0) and (iCurCount > ARecCount) then
-  begin
     AProgBar.Position := AProgBar.Max;
-    CheckReplicaMaxMin;
-  end;
 end;
 
 procedure TfrmMain.UpdateSnapshotElapsedTime;
@@ -1410,6 +1403,10 @@ begin
   lbAllElapsed.Caption := Format(cElapsedReplica, [Elapsed(FStartTimeReplica)]);
   if FStartTimeSession > 0 then
     lbSsnElapsed.Caption := Format(cElapsedSession, [Elapsed(FStartTimeSession)]);
+
+  // если данные в верхнем прогрсебаре устарели, тогда обновим их
+  if ANewStartId >= StrToInt64Def(edtAllMaxId.Text, 0) then
+    CheckReplicaMaxMin;
 end;
 
 procedure TfrmMain.OnCompareRecCountMS(const aSQL: string);
@@ -1689,6 +1686,9 @@ begin
     tmrStartNewReplica.Interval := c1Sec * seStartNewReplicaInterval.Value;
     tmrStartNewReplica.Enabled := True;
   end;
+
+  // получим актуальные данные MaxId и RecordCount
+  CheckReplicaMaxMin;
 end;
 
 procedure TfrmMain.OnTerminateSinglePacket(Sender: TObject);
