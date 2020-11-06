@@ -741,7 +741,43 @@ BEGIN
                          AND (COALESCE (MILinkObject_Branch.ObjectId,0) = inBranchId OR inBranchId = 0)
                          -- AND MILinkObject_ContractConditionKind.ObjectId IN (zc_Enum_ContractConditionKind_BonusPercentAccount(), zc_Enum_ContractConditionKind_BonusPercentSaleReturn(), zc_Enum_ContractConditionKind_BonusPercentSale())
                       )
-      , tmpData AS (SELECT tmpAll.* 
+      , tmpData AS (SELECT tmpAll.ContractId_master
+                         , tmpAll.ContractId_child
+                         , tmpAll.ContractId_find
+                         , tmpAll.InvNumber_master
+                         , tmpAll.InvNumber_child
+                         , tmpAll.InvNumber_find
+                         , tmpAll.ContractTagName_child
+                         , tmpAll.ContractStateKindCode_child
+                         , tmpAll.InfoMoneyId_master
+                         , tmpAll.InfoMoneyId_child
+                         , tmpAll.InfoMoneyId_find
+                         , tmpAll.JuridicalId
+                         , tmpAll.PartnerId
+                         , tmpAll.PaidKindId
+                         , tmpAll.PaidKindId_child
+                         , tmpAll.ContractConditionKindId
+                         , tmpAll.BonusKindId
+                         , tmpAll.MovementId
+                         , tmpAll.MovementDescId
+                         , tmpAll.BranchId
+                         , tmpAll.Value
+
+                         , CASE WHEN COALESCE (tmpAll.PercentRetBonus,0) = 0 THEN tmpContract.PercentRetBonus ELSE tmpAll.PercentRetBonus END AS PercentRetBonus
+                         , tmpAll.PercentRetBonus_fact
+                         , tmpAll.PercentRetBonus_fact_weight
+                         , tmpAll.Sum_CheckBonus
+                         , tmpAll.Sum_CheckBonusFact
+                         , tmpAll.Sum_Bonus
+                         , tmpAll.Sum_BonusFact
+                         , tmpAll.Sum_SaleFact
+                         , tmpAll.Sum_Account
+                         , tmpAll.Sum_Sale
+                         , tmpAll.Sum_Return
+                         , tmpAll.Sum_SaleReturnIn
+                         , tmpAll.Sum_Sale_weight    
+                         , tmpAll.Sum_ReturnIn_weight
+                         , tmpAll.Comment 
                     FROM (SELECT tmpAll.ContractId_master
                          , tmpAll.ContractId_child
                          , tmpAll.ContractId_find
@@ -809,6 +845,21 @@ BEGIN
                             , tmpAll.BranchId
                             , tmpAll.PaidKindId_child
                     ) AS tmpAll
+                         --если есть только факт начисления получим некоторые св-ва по договору
+                         LEFT JOIN (SELECT tmpContract.JuridicalId
+                                         , tmpContract.ContractId_child
+                                         , tmpContract.InfoMoneyId_child
+                                         , tmpContract.PaidKindId_byBase
+                                         , MAX (tmpContract.PercentRetBonus) AS PercentRetBonus
+                                       FROM tmpContract 
+                                       GROUP BY tmpContract.JuridicalId
+                                              , tmpContract.ContractId_child
+                                              , tmpContract.InfoMoneyId_child
+                                              , tmpContract.PaidKindId_byBase
+                                       ) AS tmpContract ON tmpContract.JuridicalId = tmpAll.JuridicalId
+                                                       AND tmpContract.ContractId_child = tmpAll.ContractId_child
+                                                       AND tmpContract.InfoMoneyId_child = tmpAll.InfoMoneyId_child
+                                                       AND tmpContract.PaidKindId_byBase = tmpAll.PaidKindId_child
                     WHERE (tmpAll.Sum_CheckBonus <> 0
                        OR tmpAll.Sum_Bonus <> 0
                        OR tmpAll.Sum_BonusFact <> 0)

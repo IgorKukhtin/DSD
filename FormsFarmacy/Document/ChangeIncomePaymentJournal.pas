@@ -29,6 +29,8 @@ type
     IncomeOperDate: TcxGridDBColumn;
     IncomeInvNumber: TcxGridDBColumn;
     ExecuteDialog: TExecuteDialog;
+    actCalculationPartialSale: TdsdOpenForm;
+    dxBarButton1: TdxBarButton;
   private
     { Private declarations }
   public

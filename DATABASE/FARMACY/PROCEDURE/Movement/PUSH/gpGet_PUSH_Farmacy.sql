@@ -441,6 +441,24 @@ BEGIN
      INSERT INTO _PUSH (Id, Text) VALUES (10, 'Перемещения VIP по которым установлен признак не подтвержден:'||CHR(13)||CHR(13)||vbText);
    END IF;
 
+   IF inNumberPUSH = 1 AND EXISTS (SELECT 1 FROM ObjectLink_UserRole_View  WHERE UserId = vbUserId AND RoleId in (zc_Enum_Role_Admin(), zc_Enum_Role_PartialSale()))
+      AND inSession = '3'
+   THEN
+
+     SELECT string_agg('Юр. лицо: '||T1.JuridicalName||CHR(13)||'Поставщик: '||T1.FromName||CHR(13)||'Сумма: '||zfConvert_FloatToString(T1.Summa), CHR(13)||CHR(13))
+     INTO vbText
+     FROM gpSelect_Calculation_PartialSale (CURRENT_DATE, inSession) AS T1;
+
+     IF COALESCE (vbText, '') <> ''
+     THEN
+       INSERT INTO _PUSH (Id, Text, FormName, Button, Params, TypeParams, ValueParams)
+       VALUES (10, 'По состоянию на '||zfConvert_DateToString (CURRENT_DATE)||' возможна оплата частями:'||CHR(13)||CHR(13)||vbText,
+                   'TCalculationPartialSaleForm', 'Формирование измения долга', 'OperDate', 'ftDateTime',
+                   CURRENT_DATE::TVarChar);
+     END IF;
+   END IF;
+
+
    RETURN QUERY
      SELECT _PUSH.Id                     AS Id
           , _PUSH.Text                   AS Text

@@ -918,7 +918,13 @@ begin
       PUSHDS.First;
       try
         TimerPUSH.Interval := 1000;
-        if (Trim(PUSHDS.FieldByName('Text').AsString) <> '') then ShowPUSHMessageFarmacy(PUSHDS.FieldByName('Text').AsString);
+        if (Trim(PUSHDS.FieldByName('Text').AsString) <> '') then
+            ShowPUSHMessageFarmacy(PUSHDS.FieldByName('Text').AsString,
+                                   PUSHDS.FieldByName('FormName').AsString,
+                                   PUSHDS.FieldByName('Button').AsString,
+                                   PUSHDS.FieldByName('Params').AsString,
+                                   PUSHDS.FieldByName('TypeParams').AsString,
+                                   PUSHDS.FieldByName('ValueParams').AsString);
       finally
          PUSHDS.Delete;
       end;
