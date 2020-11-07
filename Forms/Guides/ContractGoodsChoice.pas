@@ -21,7 +21,8 @@ uses
   dxSkinSevenClassic, dxSkinSharp, dxSkinSharpPlus, dxSkinSilver,
   dxSkinSpringTime, dxSkinStardust, dxSkinSummer2008, dxSkinTheAsphaltWorld,
   dxSkinValentine, dxSkinVS2010, dxSkinWhiteprint, dxSkinXmas2008Blue,
-  cxContainer, dsdGuides, cxLabel, cxTextEdit, cxMaskEdit, Vcl.ExtCtrls;
+  cxContainer, dsdGuides, cxLabel, cxTextEdit, cxMaskEdit, Vcl.ExtCtrls,
+  cxCurrencyEdit;
 
 type
   TContractGoodsChoiceForm = class(TAncestorGuidesForm)
@@ -50,6 +51,7 @@ type
     actInsertUpdate: TdsdExecStoredProc;
     macInsertUpdate: TMultiAction;
     bbInsertUpdate: TdxBarButton;
+    RefreshDispatcher: TRefreshDispatcher;
   private
     { Private declarations }
   public

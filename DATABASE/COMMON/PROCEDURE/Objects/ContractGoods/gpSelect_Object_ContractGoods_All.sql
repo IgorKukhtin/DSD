@@ -9,7 +9,7 @@ CREATE OR REPLACE FUNCTION gpSelect_Object_ContractGoods_all(
     IN inSession     TVarChar       -- сессия пользователя
 )
 RETURNS TABLE (Id Integer, Code INTEGER
-             , Price TFloat
+             , Price TFloat, Persent TFloat
              , ContractId Integer, ContractCode Integer, InvNumber TVarChar
              , PriceListId Integer, PriceListName TVarChar
              , GoodsId Integer, GoodsName TVarChar
@@ -74,6 +74,9 @@ BEGIN
                                , ObjectLink_Contract_PriceList.ChildObjectId      AS PriceListId
                                , ObjectLink_ContractGoods_Goods.ChildObjectId     AS GoodsId
                                , ObjectLink_ContractGoods_GoodsKind.ChildObjectId AS GoodsKindId
+                               , ObjectDate_Start.ValueData          ::TDateTime  AS StartDate
+                               , ObjectDate_End.ValueData            ::TDateTime  AS EndDate
+                               , ObjectFloat_Price.ValueData                      AS Price
                                , MAX (ObjectDate_End.ValueData) OVER (PARTITION BY ContractGoods_Contract.ChildObjectId, ObjectLink_Contract_PriceList.ChildObjectId, ObjectLink_ContractGoods_Goods.ChildObjectId, ObjectLink_ContractGoods_GoodsKind.ChildObjectId) AS EndDate_last
                           FROM Object AS Object_ContractGoods
                                LEFT JOIN ObjectLink AS ContractGoods_Contract
@@ -88,6 +91,9 @@ BEGIN
                                                     ON ObjectLink_ContractGoods_GoodsKind.ObjectId = Object_ContractGoods.Id
                                                    AND ObjectLink_ContractGoods_GoodsKind.DescId = zc_ObjectLink_ContractGoods_GoodsKind()
 
+                               LEFT JOIN ObjectDate AS ObjectDate_Start
+                                                    ON ObjectDate_Start.ObjectId = Object_ContractGoods.Id
+                                                   AND ObjectDate_Start.DescId = zc_ObjectDate_ContractGoods_Start()
                                LEFT JOIN ObjectDate AS ObjectDate_End
                                                     ON ObjectDate_End.ObjectId = Object_ContractGoods.Id
                                                    AND ObjectDate_End.DescId = zc_ObjectDate_ContractGoods_End()
@@ -96,14 +102,19 @@ BEGIN
                                                     ON ObjectLink_Contract_PriceList.ObjectId = ContractGoods_Contract.ChildObjectId
                                                    AND ObjectLink_Contract_PriceList.DescId = zc_ObjectLink_Contract_PriceList()
 
+                               LEFT JOIN ObjectFloat AS ObjectFloat_Price
+                                                     ON ObjectFloat_Price.ObjectId = Object_ContractGoods.Id 
+                                                    AND ObjectFloat_Price.DescId = zc_ObjectFloat_ContractGoods_Price() 
+
                           WHERE Object_ContractGoods.DescId = zc_Object_ContractGoods()
                             AND (Object_ContractGoods.isErased = FALSE OR inisErased = TRUE)
                          )
        --
        SELECT
-             Object_ContractGoods.Id          AS Id
-           , Object_ContractGoods.ObjectCode  AS Code
-           , ObjectFloat_Price.ValueData      AS Price
+             Object_ContractGoods.Id            AS Id
+           , Object_ContractGoods.ObjectCode    AS Code
+           , Object_ContractGoods.Price         AS Price
+           , CAST ( ((Object_ContractGoods.Price - tmp.Price) / 100) * tmp.Price AS NUMERIC (16,2)) ::TFloat AS Persent
          
            , Object_Contract_View.ContractId    AS ContractId
            , Object_Contract_View.ContractCode  AS ContractCode
@@ -112,15 +123,15 @@ BEGIN
            , Object_PriceList.Id                AS PriceListId 
            , Object_PriceList.ValueData         AS PriceListName
 
-           , Object_Goods.Id                  AS GoodsId
-           , Object_Goods.ValueData           AS GoodsName
-           , Object_GoodsKind.Id              AS GoodsKindId
-           , Object_GoodsKind.ValueData       AS GoodsKindName
+           , Object_Goods.Id                    AS GoodsId
+           , Object_Goods.ValueData             AS GoodsName
+           , Object_GoodsKind.Id                AS GoodsKindId
+           , Object_GoodsKind.ValueData         AS GoodsKindName
            
-           , ObjectDate_Start.ValueData   ::TDateTime  AS StartDate
-           , ObjectDate_End.ValueData     ::TDateTime  AS EndDate
+           , Object_ContractGoods.StartDate ::TDateTime  AS StartDate
+           , Object_ContractGoods.EndDate   ::TDateTime  AS EndDate
        
-           , Object_ContractGoods.isErased    AS isErased
+           , Object_ContractGoods.isErased      AS isErased
 
 
            , ObjectString_InvNumberArchive.ValueData   AS InvNumberArchive
@@ -213,23 +224,12 @@ BEGIN
            , ObjectDate_Document.ValueData AS DateDocument
 
     FROM tmpContractGoods AS Object_ContractGoods
-           -- LEFT JOIN (SELECT AccessKeyId FROM Object_RoleAccessKey_View WHERE UserId = vbUserId GROUP BY AccessKeyId) AS tmpRoleAccessKey ON NOT vbAccessKeyAll AND tmpRoleAccessKey.AccessKeyId = Object_ContractGoods.AccessKeyId
-            LEFT JOIN ObjectFloat AS ObjectFloat_Price
-                                  ON ObjectFloat_Price.ObjectId = Object_ContractGoods.Id 
-                                 AND ObjectFloat_Price.DescId = zc_ObjectFloat_ContractGoods_Price()          
 
             LEFT JOIN Object_Contract_View ON Object_Contract_View.ContractId = Object_ContractGoods.ContractId
             LEFT JOIN Object AS Object_Goods ON Object_Goods.Id = Object_ContractGoods.GoodsId
             LEFT JOIN Object AS Object_GoodsKind ON Object_GoodsKind.Id = Object_ContractGoods.GoodsKindId
             LEFT JOIN Object AS Object_PriceList ON Object_PriceList.Id = Object_ContractGoods.PriceListId
 
-            LEFT JOIN ObjectDate AS ObjectDate_Start
-                                 ON ObjectDate_Start.ObjectId = Object_ContractGoods.Id
-                                AND ObjectDate_Start.DescId = zc_ObjectDate_ContractGoods_Start()
-            LEFT JOIN ObjectDate AS ObjectDate_End
-                                 ON ObjectDate_End.ObjectId = Object_ContractGoods.Id
-                                AND ObjectDate_End.DescId = zc_ObjectDate_ContractGoods_End()
-            
             LEFT JOIN ObjectDate AS ObjectDate_Signing
                                  ON ObjectDate_Signing.ObjectId = Object_Contract_View.ContractId
                                 AND ObjectDate_Signing.DescId = zc_ObjectDate_Contract_Signing()
@@ -348,7 +348,14 @@ BEGIN
     
             LEFT JOIN ObjectHistory_JuridicalDetails_View ON ObjectHistory_JuridicalDetails_View.JuridicalId = Object_Juridical.Id 
             LEFT JOIN Object_Contract_InvNumber_Key_View AS View_Contract_InvNumber_Key ON View_Contract_InvNumber_Key.ContractId = Object_Contract_View.ContractId
-           
+
+            LEFT JOIN tmpContractGoods AS tmp
+                                       ON tmp.ContractId = Object_ContractGoods.ContractId
+                                      AND tmp.PriceListId = Object_ContractGoods.PriceListId
+                                      AND tmp.GoodsId = Object_ContractGoods.GoodsId
+                                      AND COALESCE (tmp.GoodsKindId,0) = COALESCE (Object_ContractGoods.GoodsKindId,0)
+                                      AND tmp.EndDate + interval '1 day' = Object_ContractGoods.StartDate
+
     WHERE (inisShowAll = FALSE AND ObjectDate_End.ValueData = Object_ContractGoods.EndDate_last)
        OR (inisShowAll = TRUE)
        --AND (tmpRoleAccessKey.AccessKeyId IS NOT NULL OR vbAccessKeyAll)

@@ -84,8 +84,21 @@ inherited ContractGoodsChoiceForm: TContractGoodsChoiceForm
           object Price: TcxGridDBColumn
             Caption = #1062#1077#1085#1072
             DataBinding.FieldName = 'Price'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DisplayFormat = ',0.##;-,0.##; ;'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
+            Width = 47
+          end
+          object Persent: TcxGridDBColumn
+            Caption = '% '#1080#1079#1084'. '#1094#1077#1085#1099
+            DataBinding.FieldName = 'Persent'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DisplayFormat = ',0.##;-,0.##; ;'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            HeaderHint = '% '#1080#1079#1084#1077#1085#1077#1085#1080#1103' '#1086#1090#1085#1086#1089#1080#1090#1077#1083#1100#1085#1086' '#1087#1088#1077#1076#1099#1076#1091#1097#1077#1081' '#1094#1077#1085#1099
+            Options.Editing = False
             Width = 47
           end
           object PriceListName: TcxGridDBColumn
@@ -1135,5 +1148,27 @@ inherited ContractGoodsChoiceForm: TContractGoodsChoiceForm
     PackSize = 1
     Left = 616
     Top = 176
+  end
+  object RefreshDispatcher: TRefreshDispatcher
+    IdParam.Value = Null
+    IdParam.MultiSelectSeparator = ','
+    RefreshAction = actRefresh
+    ComponentList = <
+      item
+        Component = GuidesContract
+      end
+      item
+        Component = GuidesRetail
+      end
+      item
+        Component = GuidesJuridical
+      end
+      item
+        Component = GuidesPriceList
+      end
+      item
+      end>
+    Left = 504
+    Top = 136
   end
 end
