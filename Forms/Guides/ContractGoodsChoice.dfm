@@ -14,19 +14,26 @@ inherited ContractGoodsChoiceForm: TContractGoodsChoiceForm
     Top = 57
     Width = 888
     Height = 317
-    ExplicitWidth = 773
-    ExplicitHeight = 348
+    ExplicitTop = 57
+    ExplicitWidth = 888
+    ExplicitHeight = 317
     ClientRectBottom = 317
     ClientRectRight = 888
     inherited tsMain: TcxTabSheet
-      ExplicitWidth = 773
-      ExplicitHeight = 348
+      ExplicitWidth = 888
+      ExplicitHeight = 317
       inherited cxGrid: TcxGrid
         Width = 888
         Height = 317
-        ExplicitWidth = 773
-        ExplicitHeight = 348
+        ExplicitWidth = 888
+        ExplicitHeight = 317
         inherited cxGridDBTableView: TcxGridDBTableView
+          DataController.Summary.FooterSummaryItems = <
+            item
+              Format = #1042#1089#1077#1075#1086' '#1089#1090#1088#1086#1082': ,0'
+              Kind = skCount
+              Column = GoodsName
+            end>
           OptionsData.CancelOnExit = True
           OptionsData.Deleting = False
           OptionsData.DeletingConfirmation = False
@@ -554,8 +561,6 @@ inherited ContractGoodsChoiceForm: TContractGoodsChoiceForm
     Height = 31
     Align = alTop
     TabOrder = 5
-    ExplicitTop = -14
-    ExplicitWidth = 773
     object edRetail: TcxButtonEdit
       Left = 476
       Top = 5
@@ -712,6 +717,32 @@ inherited ContractGoodsChoiceForm: TContractGoodsChoiceForm
       ImageIndexTrue = 65
       ImageIndexFalse = 64
     end
+    object actInsertUpdate: TdsdExecStoredProc
+      Category = 'DSDLib'
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      StoredProc = spInsertUpdate
+      StoredProcList = <
+        item
+          StoredProc = spInsertUpdate
+        end>
+      Caption = 'actInsertUpdate'
+    end
+    object macInsertUpdate: TMultiAction
+      Category = 'DSDLib'
+      MoveParams = <>
+      ActionList = <
+        item
+          Action = actInsertUpdate
+        end
+        item
+          Action = actRefresh
+        end>
+      QuestionBeforeExecute = #1047#1072#1075#1088#1091#1079#1080#1090#1100' '#1094#1077#1085#1099' '#1080#1079' '#1087#1088#1072#1081#1089#1072' '#1076#1083#1103' '#1074#1099#1073#1088#1072#1085#1085#1086#1075#1086' '#1076#1086#1075#1086#1074#1086#1088#1072'?'
+      InfoAfterExecute = #1062#1077#1085#1099' '#1079#1072#1075#1088#1091#1078#1077#1085#1099
+      Caption = 'macInsertUpdate'
+      ImageIndex = 27
+    end
   end
   inherited MasterDS: TDataSource
     Left = 40
@@ -828,6 +859,14 @@ inherited ContractGoodsChoiceForm: TContractGoodsChoiceForm
         end
         item
           Visible = True
+          ItemName = 'bbInsertUpdate'
+        end
+        item
+          Visible = True
+          ItemName = 'dxBarStatic'
+        end
+        item
+          Visible = True
           ItemName = 'bbChoiceGuides'
         end
         item
@@ -849,6 +888,10 @@ inherited ContractGoodsChoiceForm: TContractGoodsChoiceForm
     end
     object bbShowErased: TdxBarButton
       Action = actShowErased
+      Category = 0
+    end
+    object bbInsertUpdate: TdxBarButton
+      Action = macInsertUpdate
       Category = 0
     end
   end
@@ -1073,14 +1116,6 @@ inherited ContractGoodsChoiceForm: TContractGoodsChoiceForm
     DataSets = <>
     OutputType = otResult
     Params = <
-      item
-        Name = 'inJuridicalId'
-        Value = Null
-        Component = GuidesJuridical
-        ComponentItem = 'Key'
-        ParamType = ptInput
-        MultiSelectSeparator = ','
-      end
       item
         Name = 'inContractId'
         Value = Null

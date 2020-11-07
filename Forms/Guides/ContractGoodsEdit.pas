@@ -21,7 +21,8 @@ uses
   dxSkinSevenClassic, dxSkinSharp, dxSkinSharpPlus, dxSkinSilver,
   dxSkinSpringTime, dxSkinStardust, dxSkinSummer2008, dxSkinTheAsphaltWorld,
   dxSkinsDefaultPainters, dxSkinValentine, dxSkinVS2010, dxSkinWhiteprint,
-  dxSkinXmas2008Blue, dsdAddOn, cxButtonEdit;
+  dxSkinXmas2008Blue, dsdAddOn, cxButtonEdit, Vcl.ComCtrls, dxCore, cxDateUtils,
+  cxCalendar;
 
 type
   TContractGoodsEditForm = class(TParentForm)
@@ -48,6 +49,10 @@ type
     GoodsKindGuides: TdsdGuides;
     cxLabel11: TcxLabel;
     cePrice: TcxCurrencyEdit;
+    cxLabel1: TcxLabel;
+    edStartDate: TcxDateEdit;
+    edEndDate: TcxDateEdit;
+    cxLabel3: TcxLabel;
   private
     { Private declarations }
   public

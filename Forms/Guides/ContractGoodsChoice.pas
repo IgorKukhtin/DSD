@@ -47,6 +47,9 @@ type
     GuidesPriceList: TdsdGuides;
     FormParams: TdsdFormParams;
     spInsertUpdate: TdsdStoredProc;
+    actInsertUpdate: TdsdExecStoredProc;
+    macInsertUpdate: TMultiAction;
+    bbInsertUpdate: TdxBarButton;
   private
     { Private declarations }
   public

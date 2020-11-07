@@ -586,7 +586,7 @@ BEGIN
                                     END AS InfoMoneyId_find
       
                                   , tmpContract.JuridicalId AS JuridicalId
-                                  , tmpMovement.PartnerId
+                                  , CASE WHEN tmpContract.ContractConditionKindID = zc_Enum_ContractConditionKind_BonusPercentAccount() AND tmpContract.PaidKindId_byBase = zc_Enum_PaidKind_FirstForm() THEN 0 ELSE tmpMovement.PartnerId END AS PartnerId
                                   -- подменяем обратно ФО bз усл.договора на ФО из договора
                                   , tmpContract.PaidKindId                                 --tmpMovement.PaidKindId AS PaidKindId
                                   , tmpContract.PaidKindId_byBase  AS PaidKindId_child     -- ФО договора базы
@@ -651,7 +651,7 @@ BEGIN
                             , MILinkObject_InfoMoney.ObjectId                AS InfoMoneyId_find
 
                             , Object_Juridical.Id                            AS JuridicalId
-                            , COALESCE (ObjectLink_Partner_Juridical.ObjectId,0) AS PartnerId
+                            , CASE WHEN View_Contract_InvNumber_child.PaidKindId = zc_Enum_PaidKind_FirstForm() THEN 0 ELSE COALESCE (ObjectLink_Partner_Juridical.ObjectId,0) END AS PartnerId
                             , MILinkObject_PaidKind.ObjectId                 AS PaidKindId
                             , View_Contract_InvNumber_child.PaidKindId       AS PaidKindId_child
                             , MILinkObject_ContractConditionKind.ObjectId    AS ContractConditionKindId
@@ -741,6 +741,7 @@ BEGIN
                          AND (COALESCE (MILinkObject_Branch.ObjectId,0) = inBranchId OR inBranchId = 0)
                          -- AND MILinkObject_ContractConditionKind.ObjectId IN (zc_Enum_ContractConditionKind_BonusPercentAccount(), zc_Enum_ContractConditionKind_BonusPercentSaleReturn(), zc_Enum_ContractConditionKind_BonusPercentSale())
                       )
+
       , tmpData AS (SELECT tmpAll.ContractId_master
                          , tmpAll.ContractId_child
                          , tmpAll.ContractId_find

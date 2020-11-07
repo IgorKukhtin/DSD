@@ -2,7 +2,7 @@
   Left = 0
   Top = 0
   Caption = #1044#1086#1073#1072#1074#1080#1090#1100'/'#1048#1079#1084#1077#1085#1080#1090#1100' <'#1058#1086#1074#1072#1088#1099' '#1074' '#1076#1086#1075#1086#1074#1086#1088#1072#1093'>'
-  ClientHeight = 246
+  ClientHeight = 306
   ClientWidth = 338
   Color = clBtnFace
   Font.Charset = DEFAULT_CHARSET
@@ -18,7 +18,7 @@
   TextHeight = 13
   object cxButton1: TcxButton
     Left = 64
-    Top = 213
+    Top = 261
     Width = 75
     Height = 25
     Action = dsdInsertUpdateGuides
@@ -28,7 +28,7 @@
   end
   object cxButton2: TcxButton
     Left = 208
-    Top = 213
+    Top = 261
     Width = 75
     Height = 25
     Action = dsdFormClose
@@ -111,6 +111,34 @@
     TabOrder = 11
     Width = 90
   end
+  object cxLabel1: TcxLabel
+    Left = 42
+    Top = 207
+    Caption = #1044#1077#1081#1089#1090#1074#1091#1077#1090' '#1089
+  end
+  object edStartDate: TcxDateEdit
+    Left = 42
+    Top = 225
+    EditValue = 44142d
+    Properties.SaveTime = False
+    Properties.ShowTime = False
+    TabOrder = 13
+    Width = 103
+  end
+  object edEndDate: TcxDateEdit
+    Left = 177
+    Top = 225
+    EditValue = 44142d
+    Properties.SaveTime = False
+    Properties.ShowTime = False
+    TabOrder = 14
+    Width = 105
+  end
+  object cxLabel3: TcxLabel
+    Left = 177
+    Top = 207
+    Caption = #1044#1077#1081#1089#1090#1074#1091#1077#1090' '#1076#1086
+  end
   object ActionList: TActionList
     Left = 296
     Top = 72
@@ -186,6 +214,22 @@
         Value = Null
         Component = GoodsKindGuides
         ComponentItem = 'Key'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inStartDate'
+        Value = 'NULL'
+        Component = edStartDate
+        DataType = ftDateTime
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inEndDate'
+        Value = 'NULL'
+        Component = edEndDate
+        DataType = ftDateTime
         ParamType = ptInput
         MultiSelectSeparator = ','
       end
@@ -282,6 +326,18 @@
         Component = GoodsKindGuides
         ComponentItem = 'TextValue'
         DataType = ftString
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'StartDate'
+        Component = edStartDate
+        DataType = ftDateTime
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'EndDate'
+        Component = edEndDate
+        DataType = ftDateTime
         MultiSelectSeparator = ','
       end>
     PackSize = 1
