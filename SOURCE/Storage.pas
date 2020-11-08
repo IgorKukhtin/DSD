@@ -189,8 +189,7 @@ begin
   IdHTTPWork.FExecOnServer := False;
 
   try
-    IdHTTP.Post(FConnectionList.CurrentConnection[ctMain].CString, FSendList, FReceiveStream,
-      {$IFDEF DELPHI103RIO} IndyTextEncoding(1251) {$ELSE} TIdTextEncoding.GetEncoding(1251) {$ENDIF});
+    IdHTTP.Post(FConnectionList.CurrentConnection[ctMain].CString, FSendList, FReceiveStream, TIdTextEncoding.GetEncoding(1251));
   except
     IdHTTP.Disconnect;
   end;
@@ -564,8 +563,7 @@ begin
       Logger.AddToLog(FSendList[0]);
       Logger.AddToLog(' .........');
 
-            idHTTP.Post(CString + GetAddConnectString(pExecOnServer), FSendList, FReceiveStream,
-              {$IFDEF DELPHI103RIO} IndyTextEncoding(1251) {$ELSE} TIdTextEncoding.GetEncoding(1251) {$ENDIF});
+            idHTTP.Post(CString + GetAddConnectString(pExecOnServer), FSendList, FReceiveStream, TIdTextEncoding.GetEncoding(1251));
 
             DString := FReceiveStream.DataString;
 
@@ -580,11 +578,11 @@ begin
 
    end
    else
-
+   begin
       Logger.AddToLog(' try ... AttemptCount = ' + IntToStr(AttemptCount));
 
-            idHTTP.Post(CString + GetAddConnectString(pExecOnServer), FSendList, FReceiveStream,
-              {$IFDEF DELPHI103RIO} IndyTextEncoding(1251) {$ELSE} TIdTextEncoding.GetEncoding(1251) {$ENDIF});
+            idHTTP.Post(CString + GetAddConnectString(pExecOnServer), FSendList, FReceiveStream, TIdTextEncoding.GetEncoding(1251));
+   end;
 
       Logger.AddToLog(' ok ...');
 
@@ -871,5 +869,8 @@ end;
 
 initialization
   IdHTTPWork := TIdHTTPWork.Create;
+
+finalization
+  IdHTTPWork.Free;
 
 end.

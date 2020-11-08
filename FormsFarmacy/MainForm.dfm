@@ -3984,6 +3984,17 @@ inherited MainForm: TMainForm
       GuiParams = <>
       isShowModal = False
     end
+    object actReport_PriceCheck: TdsdOpenForm
+      Category = #1057#1083#1091#1078#1077#1073#1085#1099#1077
+      MoveParams = <>
+      Caption = #1055#1088#1086#1074#1077#1088#1082#1072' '#1094#1077#1085' '#1084#1077#1078#1076#1091' '#1087#1086#1076#1088#1072#1079#1076#1077#1083#1077#1085#1080#1103#1084#1080
+      FormName = 'TReport_PriceCheckForm'
+      FormNameParam.Value = 'TReport_PriceCheckForm'
+      FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
+      GuiParams = <>
+      isShowModal = False
+    end
   end
   inherited UserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn
     Left = 496
@@ -5226,7 +5237,10 @@ inherited MainForm: TMainForm
       object miRecalcMCSSheduler: TMenuItem [36]
         Action = actRecalcMCSSheduler
       end
-      object N261: TMenuItem [39]
+      object N265: TMenuItem [37]
+        Action = actReport_PriceCheck
+      end
+      object N261: TMenuItem [40]
         Caption = #1055#1086#1080#1089#1082' '#1087#1086' '#1085#1072#1079#1074#1072#1085#1080#1103#1084' '#1074' '#1084#1077#1085#1102
         OnClick = N261Click
       end
