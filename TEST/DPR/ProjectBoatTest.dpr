@@ -155,7 +155,9 @@ uses
   PositionEdit in '..\..\FormsBoat\Guides\PositionEdit.pas' {PositionEditForm: TParentForm},
   PersonalEdit in '..\..\FormsBoat\Guides\PersonalEdit.pas' {PersonalEditForm: TParentForm},
   Personal_Object in '..\..\FormsBoat\Guides\Personal_Object.pas' {Personal_ObjectForm: TParentForm},
-  Personal in '..\..\FormsBoat\Guides\Personal.pas' {PersonalForm: TParentForm};
+  Personal in '..\..\FormsBoat\Guides\Personal.pas' {PersonalForm: TParentForm},
+  CountryEdit in '..\..\FormsBoat\Guides\CountryEdit.pas' {CountryEditForm: TParentForm},
+  Country in '..\..\FormsBoat\Guides\Country.pas' {CountryForm: TParentForm};
 
 {$R *.res}
 {$R DevExpressRus.res}

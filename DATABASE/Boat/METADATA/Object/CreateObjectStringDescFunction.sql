@@ -97,9 +97,15 @@ CREATE OR REPLACE FUNCTION zc_ObjectString_Personal_Comment() RETURNS Integer AS
 INSERT INTO ObjectStringDesc (Code, DescId, ItemName)
   SELECT 'zc_ObjectString_Personal_Comment', zc_Object_Personal(), 'Примечание' WHERE NOT EXISTS (SELECT * FROM ObjectStringDesc WHERE Code = 'zc_ObjectString_Personal_Comment');
 
+CREATE OR REPLACE FUNCTION zc_ObjectString_Country_ShortName() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM ObjectStringDesc WHERE Code = 'zc_ObjectString_Country_ShortName'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
+INSERT INTO ObjectStringDesc (Code, DescId, ItemName)
+  SELECT 'zc_ObjectString_Country_ShortName', zc_Object_Country(), 'Краткое название' WHERE NOT EXISTS (SELECT * FROM ObjectStringDesc WHERE Code = 'zc_ObjectString_Country_ShortName');
+
+
 /*-------------------------------------------------------------------------------
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
+ 09.11.20         * zc_ObjectString_Country_ShortName
  09.10.20         * zc_ObjectString_Product_...
                     zc_ObjectString_ProdColorItems_Comment
                     zc_ObjectString_ProdOptItems_PartNumber

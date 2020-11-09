@@ -20,6 +20,7 @@ type
     procedure LoadLanguageFormTest;
     procedure LoadBrandFormTest;
     procedure LoadClientFormTest;
+    procedure LoadCountryFormTest;
     procedure LoadImportSettingsFormTest;
     procedure LoadImportTypeFormTest;
     procedure LoadMemberFormTest;
@@ -159,6 +160,14 @@ begin
   TdsdFormStorageFactory.GetStorage.Load('TClientForm');
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TClientEditForm'));
   TdsdFormStorageFactory.GetStorage.Load('TClientEditForm');
+end;
+
+ procedure TLoadFormTest.LoadCountryFormTest;
+begin
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TCountryForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TCountryForm');
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TCountryEditForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TCountryEditForm');
 end;
 
 procedure TLoadFormTest.LoadMemberFormTest;

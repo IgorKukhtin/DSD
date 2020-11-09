@@ -353,12 +353,12 @@ inherited MainForm: TMainForm
       GuiParams = <>
       isShowModal = False
     end
-    object actCountryBrand: TdsdOpenForm
+    object actCountry: TdsdOpenForm
       Category = #1057#1087#1088#1072#1074#1086#1095#1085#1080#1082#1080
       MoveParams = <>
-      Caption = #1057#1090#1088#1072#1085#1072' '#1087#1088#1086#1080#1079#1074#1086#1076#1080#1090#1077#1083#1100
-      FormName = 'TCountryBrandForm'
-      FormNameParam.Value = 'TCountryBrandForm'
+      Caption = #1057#1090#1088#1072#1085#1099
+      FormName = 'TCountryForm'
+      FormNameParam.Value = 'TCountryForm'
       FormNameParam.DataType = ftString
       FormNameParam.MultiSelectSeparator = ','
       GuiParams = <>
@@ -1108,9 +1108,7 @@ inherited MainForm: TMainForm
         Action = actPartner
       end
       object miCountryBrand: TMenuItem
-        Action = actCountryBrand
-        Enabled = False
-        Visible = False
+        Action = actCountry
       end
       object miLine82: TMenuItem
         Caption = '-'

@@ -33,7 +33,7 @@ type
     miForms: TMenuItem;
     actMeasure: TdsdOpenForm;
     miMeasure: TMenuItem;
-    actCountryBrand: TdsdOpenForm;
+    actCountry: TdsdOpenForm;
     miCountryBrand: TMenuItem;
     actBrand: TdsdOpenForm;
     actGoodsSize: TdsdOpenForm;
