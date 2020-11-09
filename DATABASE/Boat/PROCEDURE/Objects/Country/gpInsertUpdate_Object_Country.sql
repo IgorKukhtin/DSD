@@ -29,7 +29,7 @@ BEGIN
    -- проверка уникальности для свойства <Наименование Страна>
    PERFORM lpCheckUnique_Object_ValueData (ioId, zc_Object_Country(), inName);
    -- проверка уникальности для свойства <Код Страна>
-   PERFORM lpCheckUnique_Object_ObjectCode (ioId, zc_Object_Country(), inCode);
+   PERFORM lpCheckUnique_Object_ObjectCode (ioId, zc_Object_Country(), ioCode);
 
    -- сохранили <Объект>
    ioId := lpInsertUpdate_Object (ioId, zc_Object_Country(), ioCode, inName);

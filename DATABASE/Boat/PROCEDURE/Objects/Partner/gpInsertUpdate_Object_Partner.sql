@@ -4,9 +4,9 @@ DROP FUNCTION IF EXISTS gpInsertUpdate_Object_Partner (Integer, Integer, TVarCha
 DROP FUNCTION IF EXISTS gpInsertUpdate_Object_Partner (Integer, Integer, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar, Integer, Integer, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpInsertUpdate_Object_Partner(
- INOUT ioId              Integer,       -- ключ объекта <Бренд>
- INOUT ioCode            Integer,       -- свойство <Код Бренда>
-    IN inName            TVarChar,      -- главное Название Бренда
+ INOUT ioId              Integer,       -- ключ объекта <>
+ INOUT ioCode            Integer,       -- свойство <Код >
+    IN inName            TVarChar,      -- главное Название
     IN inComment         TVarChar,      --
     IN inFax             TVarChar,
     IN inPhone           TVarChar,

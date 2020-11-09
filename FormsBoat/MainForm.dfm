@@ -466,7 +466,7 @@ inherited MainForm: TMainForm
     object actPartner: TdsdOpenForm
       Category = #1057#1087#1088#1072#1074#1086#1095#1085#1080#1082#1080
       MoveParams = <>
-      Caption = #1055#1086'c'#1090#1072#1074#1097#1080#1082#1080
+      Caption = #1055#1072#1088#1090#1085#1077#1088#1099
       FormName = 'TPartnerForm'
       FormNameParam.Value = 'TPartnerForm'
       FormNameParam.DataType = ftString
