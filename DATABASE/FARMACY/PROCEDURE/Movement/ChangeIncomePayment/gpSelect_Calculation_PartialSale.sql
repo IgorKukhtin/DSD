@@ -11,6 +11,8 @@ RETURNS TABLE (JuridicalId    Integer
              , FromId         Integer
              , FromName       TVarChar
              , Summa          TFloat
+             , DateStart      TDateTime
+             , DateEnd        TDateTime
               )
 AS
 $BODY$
@@ -140,6 +142,8 @@ BEGIN
         , tmpNoPay.FromId
         , Object_From.ValueData                      AS FromName
         , (tmpNoPay.Summa - COALESCE(tmpPartialSale.Amount, 0))::TFloat AS  Summa
+        , (inOperDate - INTERVAL '7 DAY')::TDateTime AS DateStart
+        , (inOperDate - INTERVAL '1 DAY')::TDateTime AS DateEnd
    FROM tmpNoPay
 
         LEFT JOIN tmpPartialSale ON tmpPartialSale.JuridicalId = tmpNoPay.JuridicalId

@@ -18,7 +18,7 @@ uses
   Vcl.ActnList, IdText, IdSSLOpenSSL, IdGlobal, strUtils, IdAttachmentFile,
   IdFTP, cxCurrencyEdit, Vcl.Menus, IdHTTP, IdIOHandler, IdIOHandlerSocket,
   IdIOHandlerStack, IdSSL, Xml.XMLDoc, XMLIntf, cxButtonEdit, cxNavigator,
-  dxBarBuiltInMenu;
+  dxBarBuiltInMenu, DateUtils;
 
 type
   TExportSalesForSuppForm = class(TForm)
@@ -235,6 +235,7 @@ type
     DanhsonPharmaMedicForSaleName: TcxGridDBColumn;
     DanhsonPharmaBuyerForSaleName: TcxGridDBColumn;
     DanhsonPharmaBuyerForSalePhone: TcxGridDBColumn;
+    btnDanhsonPharmaWeekExecute: TButton;
     procedure btnBaDMExecuteClick(Sender: TObject);
     procedure btnBaDMExportClick(Sender: TObject);
     procedure FormCreate(Sender: TObject);
@@ -265,6 +266,7 @@ type
     procedure btnDanhsonPharmaExportClick(Sender: TObject);
     procedure btnDanhsonPharmaEmailClick(Sender: TObject);
     procedure btnDanhsonPharmaAllClick(Sender: TObject);
+    procedure btnDanhsonPharmaWeekExecuteClick(Sender: TObject);
   private
     { Private declarations }
     FileNameBaDM_byUnit: String;
@@ -696,6 +698,15 @@ begin
     Application.ProcessMessages;
     btnDanhsonPharmaEmailClick(nil);
     Application.ProcessMessages;
+    if DayOfTheWeek(Date) = 1 then
+    begin
+      btnDanhsonPharmaWeekExecuteClick(nil);
+      Application.ProcessMessages;
+      btnDanhsonPharmaExportClick(nil);
+      Application.ProcessMessages;
+      btnDanhsonPharmaEmailClick(nil);
+      Application.ProcessMessages;
+    end;
   except
     on E: Exception do
       Add_Log(E.Message);
@@ -1515,6 +1526,29 @@ begin
 
   if qryReport_Upload_YuriFarm_Unit.IsEmpty then qryReport_Upload_YuriFarm_Unit.Close;
 
+end;
+
+procedure TExportSalesForSuppForm.btnDanhsonPharmaWeekExecuteClick(Sender: TObject);
+begin
+  Add_Log('Начало Формирования отчета Дансон фарма');
+
+  qryReport_Upload_DanhsonPharma.Close;
+  qryReport_Upload_DanhsonPharma.Params.ParamByName('StartDate').Value := IncDay(DanhsonPharmaDate.Date, - 6);
+  qryReport_Upload_DanhsonPharma.Params.ParamByName('EndDate').Value := DanhsonPharmaDate.Date;
+
+  try
+    qryReport_Upload_DanhsonPharma.Open;
+  except
+    on E:Exception do
+    begin
+      Add_Log(E.Message);
+      Exit;
+    end;
+  end;
+
+  FileNameDanhsonPharma := 'DanhsonPharmaPeriod_' +
+     FormatDateTime('DD_MM_YYYY', IncDay(DanhsonPharmaDate.Date, - 6)) + '_' +
+     FormatDateTime('DD_MM_YYYY', DanhsonPharmaDate.Date) + '.xls';
 end;
 
 procedure TExportSalesForSuppForm.btnOptimaAllClick(Sender: TObject);

@@ -1,0 +1,402 @@
+inherited Report_Sale_PartialSaleForm: TReport_Sale_PartialSaleForm
+  Caption = #1055#1088#1086#1076#1072#1078#1080' '#1087#1086' '#1087#1086#1089#1090#1072#1074#1097#1080#1082#1091' '#1079#1072' '#1087#1077#1088#1080#1086#1076
+  ClientHeight = 433
+  ClientWidth = 759
+  AddOnFormData.Params = FormParams
+  ExplicitWidth = 775
+  ExplicitHeight = 472
+  PixelsPerInch = 96
+  TextHeight = 13
+  inherited PageControl: TcxPageControl
+    Top = 85
+    Width = 759
+    Height = 348
+    TabOrder = 3
+    ExplicitTop = 65
+    ExplicitWidth = 592
+    ExplicitHeight = 310
+    ClientRectBottom = 348
+    ClientRectRight = 759
+    inherited tsMain: TcxTabSheet
+      ExplicitWidth = 592
+      ExplicitHeight = 310
+      inherited cxGrid: TcxGrid
+        Width = 759
+        Height = 348
+        ExplicitWidth = 592
+        ExplicitHeight = 310
+        inherited cxGridDBTableView: TcxGridDBTableView
+          DataController.DetailKeyFieldNames = 'JuridicalId;FromId'
+          DataController.Summary.FooterSummaryItems = <
+            item
+              Format = ',0.00;-,0.00; ;'
+              Kind = skSum
+              Column = Amount
+            end
+            item
+              Format = ',0.00;-,0.00; ;'
+              Kind = skSum
+              Column = Summ
+            end
+            item
+              Format = ',0.00;-,0.00; ;'
+              Kind = skSum
+              Column = SummSale
+            end>
+          OptionsData.Deleting = False
+          OptionsData.DeletingConfirmation = False
+          OptionsData.Editing = False
+          Styles.Content = nil
+          Styles.Inactive = nil
+          Styles.Selection = nil
+          Styles.Footer = nil
+          Styles.Header = nil
+          object UnitName: TcxGridDBColumn
+            Caption = #1055#1086#1076#1088#1072#1079#1076#1077#1083#1077#1085#1080#1077
+            DataBinding.FieldName = 'UnitName'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            HeaderGlyphAlignmentHorz = taCenter
+            Options.Editing = False
+            Width = 201
+          end
+          object GoodsCode: TcxGridDBColumn
+            Caption = #1050#1086#1076
+            DataBinding.FieldName = 'GoodsCode'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 58
+          end
+          object GoodsName: TcxGridDBColumn
+            Caption = #1053#1072#1079#1074#1072#1085#1080#1077' '#1090#1086#1074#1072#1088#1072
+            DataBinding.FieldName = 'GoodsName'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 215
+          end
+          object Amount: TcxGridDBColumn
+            Caption = #1050#1086#1083'-'#1074#1086
+            DataBinding.FieldName = 'Amount'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 4
+            Properties.DisplayFormat = ',0.####;-,0.####; ;'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 70
+          end
+          object Price: TcxGridDBColumn
+            Caption = #1062#1077#1085#1072' '#1087#1088#1080#1093#1086#1076#1072' '#1089' '#1053#1044#1057
+            DataBinding.FieldName = 'Price'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DisplayFormat = ',0.00;-,0.00; ;'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 70
+          end
+          object Summ: TcxGridDBColumn
+            Caption = #1057#1091#1084#1084#1072' '#1087#1086' '#1087#1088#1080#1093#1086#1076#1091
+            DataBinding.FieldName = 'Summ'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DisplayFormat = ',0.00;-,0.00; ;'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 70
+          end
+          object PriceSale: TcxGridDBColumn
+            Caption = #1054#1090#1087#1091#1089#1082#1085#1072#1103' '#1094#1077#1085#1072
+            DataBinding.FieldName = 'PriceSale'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DisplayFormat = ',0.00;-,0.00; ;'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 70
+          end
+          object SummSale: TcxGridDBColumn
+            Caption = #1057#1091#1084#1084#1072' '#1088#1077#1072#1083#1080#1079#1072#1094#1080#1080
+            DataBinding.FieldName = 'SummSale'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DisplayFormat = ',0.00;-,0.00; ;'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 70
+          end
+        end
+      end
+    end
+  end
+  inherited Panel: TPanel
+    Width = 759
+    Height = 59
+    ExplicitWidth = 636
+    ExplicitHeight = 59
+    inherited deStart: TcxDateEdit
+      Left = 105
+      Top = 8
+      ExplicitLeft = 105
+      ExplicitTop = 8
+    end
+    inherited deEnd: TcxDateEdit
+      Left = 306
+      Top = 8
+      Visible = False
+      ExplicitLeft = 306
+      ExplicitTop = 8
+    end
+    inherited cxLabel1: TcxLabel
+      Left = 8
+      Top = 9
+      ExplicitLeft = 8
+      ExplicitTop = 9
+    end
+    inherited cxLabel2: TcxLabel
+      Left = 196
+      Top = 9
+      Visible = False
+      ExplicitLeft = 196
+      ExplicitTop = 9
+    end
+    object edJuridicalName: TcxTextEdit
+      Left = 97
+      Top = 32
+      Properties.ReadOnly = True
+      TabOrder = 4
+      Width = 224
+    end
+    object cxLabel3: TcxLabel
+      Left = 7
+      Top = 33
+      Caption = #1053#1072#1096#1077' '#1102#1088'. '#1083#1080#1094#1086':'
+    end
+    object edFromName: TcxTextEdit
+      Left = 417
+      Top = 32
+      Properties.ReadOnly = True
+      TabOrder = 6
+      Width = 208
+    end
+    object cxLabel4: TcxLabel
+      Left = 327
+      Top = 35
+      Caption = #1053#1072#1096#1077' '#1102#1088'. '#1083#1080#1094#1086':'
+    end
+  end
+  inherited ActionList: TActionList
+    object ExecuteDialog: TExecuteDialog
+      Category = 'DSDLib'
+      MoveParams = <>
+      Caption = #1048#1079#1084#1077#1085#1080#1090#1100' '#1087#1072#1088#1072#1084#1077#1090#1088#1099' '#1086#1090#1095#1077#1090#1072
+      Hint = #1048#1079#1084#1077#1085#1080#1090#1100' '#1087#1072#1088#1072#1084#1077#1090#1088#1099' '#1086#1090#1095#1077#1090#1072
+      ImageIndex = 35
+      FormName = 'TReport_PeriodDialogForm'
+      FormNameParam.Value = 'TReport_PeriodDialogForm'
+      FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
+      GuiParams = <
+        item
+          Name = 'StartDate'
+          Value = ''
+          Component = deStart
+          DataType = ftDateTime
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'EndDate'
+          Value = 'NULL'
+          Component = deEnd
+          DataType = ftDateTime
+          MultiSelectSeparator = ','
+        end>
+      isShowModal = True
+      RefreshDispatcher = RefreshDispatcher
+      OpenBeforeShow = True
+    end
+  end
+  inherited MasterDS: TDataSource
+    Left = 296
+    Top = 152
+  end
+  inherited MasterCDS: TClientDataSet
+    Left = 192
+    Top = 144
+  end
+  inherited spSelect: TdsdStoredProc
+    StoredProcName = 'gpReport_Sale_PartialSale'
+    Params = <
+      item
+        Name = 'inStartDate'
+        Value = 41395d
+        Component = deStart
+        DataType = ftDateTime
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inEndDate'
+        Value = 'NULL'
+        Component = deEnd
+        DataType = ftDateTime
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inJuridicalId'
+        Value = Null
+        Component = FormParams
+        ComponentItem = 'JuridicalId'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inFromId'
+        Value = Null
+        Component = FormParams
+        ComponentItem = 'FromId'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end>
+    Left = 376
+    Top = 160
+  end
+  inherited BarManager: TdxBarManager
+    Left = 448
+    Top = 168
+    DockControlHeights = (
+      0
+      0
+      26
+      0)
+    inherited Bar: TdxBar
+      ItemLinks = <
+        item
+          Visible = True
+          ItemName = 'dxBarStatic'
+        end
+        item
+          Visible = True
+          ItemName = 'bbRefresh'
+        end
+        item
+          Visible = True
+          ItemName = 'dxBarStatic'
+        end
+        item
+          Visible = True
+          ItemName = 'dxBarStatic'
+        end
+        item
+          Visible = True
+          ItemName = 'dxBarStatic'
+        end
+        item
+          Visible = True
+          ItemName = 'bbGridToExcel'
+        end>
+    end
+    object bbExecuteDialog: TdxBarButton
+      Action = ExecuteDialog
+      Category = 0
+    end
+    object dxBarButton1: TdxBarButton
+      Caption = #1060#1086#1088#1084#1080#1088#1086#1074#1072#1085#1080#1077' '#1080#1079#1084#1077#1085#1077#1085#1080#1081' '#1076#1086#1083#1075#1072' '#1087#1086#1089#1090#1072#1074#1097#1080#1082#1091' '#1087#1086' '#1095#1072#1089#1090#1080#1095#1085#1086#1081' '#1087#1088#1086#1076#1072#1078#1077
+      Category = 0
+      Hint = #1060#1086#1088#1084#1080#1088#1086#1074#1072#1085#1080#1077' '#1080#1079#1084#1077#1085#1077#1085#1080#1081' '#1076#1086#1083#1075#1072' '#1087#1086#1089#1090#1072#1074#1097#1080#1082#1091' '#1087#1086' '#1095#1072#1089#1090#1080#1095#1085#1086#1081' '#1087#1088#1086#1076#1072#1078#1077
+      Visible = ivAlways
+      ImageIndex = 8
+    end
+    object dxBarButton2: TdxBarButton
+      Action = actRefresh
+      Category = 0
+    end
+  end
+  inherited PeriodChoice: TPeriodChoice
+    Top = 104
+  end
+  inherited RefreshDispatcher: TRefreshDispatcher
+    Left = 80
+    Top = 152
+  end
+  object FormParams: TdsdFormParams
+    Params = <
+      item
+        Name = 'StartDate'
+        Value = 'NULL'
+        Component = deStart
+        DataType = ftDateTime
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'EndDate'
+        Value = 'NULL'
+        Component = deEnd
+        DataType = ftDateTime
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'JuridicalId'
+        Value = Null
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'JuridicalName'
+        Value = Null
+        Component = edJuridicalName
+        DataType = ftString
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'FromId'
+        Value = Null
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'FromName'
+        Value = Null
+        Component = edFromName
+        MultiSelectSeparator = ','
+      end>
+    Left = 176
+    Top = 264
+  end
+  object spFormPartialSale: TdsdStoredProc
+    StoredProcName = 'gpInsert_ChangeIncomePayment_PartialSale'
+    DataSets = <>
+    OutputType = otResult
+    Params = <
+      item
+        Name = 'inOperDate'
+        Value = 'NULL'
+        Component = deStart
+        DataType = ftDateTime
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inJuridicalId'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'JuridicalId'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inFromId'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'FromId'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inSumma'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'Summa'
+        DataType = ftFloat
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end>
+    PackSize = 1
+    Left = 376
+    Top = 216
+  end
+end

@@ -17,6 +17,7 @@ $BODY$
    DECLARE vbRetailId Integer;
    DECLARE vbPositionID Integer;
    DECLARE vbText Text;
+   DECLARE vbCount Integer;
    DECLARE vbDatePUSH TDateTime;
 BEGIN
 
@@ -373,7 +374,7 @@ BEGIN
 
        IF COALESCE (vbText, '') <> ''
        THEN
-         INSERT INTO _PUSH (Id, Text) VALUES (9, 'Сотрудники по кот назначены штрафные балы:'||CHR(13)||CHR(13)||vbText);
+         INSERT INTO _PUSH (Id, Text) VALUES (10, 'Сотрудники по кот назначены штрафные балы:'||CHR(13)||CHR(13)||vbText);
        END IF;
 
    END IF;
@@ -407,7 +408,7 @@ BEGIN
 
    IF COALESCE (vbText, '') <> ''
    THEN
-     INSERT INTO _PUSH (Id, Text) VALUES (10, 'Перемещения VIP по которым установлен признак подтвержден:'||CHR(13)||CHR(13)||vbText);
+     INSERT INTO _PUSH (Id, Text) VALUES (11, 'Перемещения VIP по которым установлен признак подтвержден:'||CHR(13)||CHR(13)||vbText);
    END IF;
 
    SELECT string_agg(Movement.InvNumber||' от '||TO_CHAR(Movement.OperDate, 'DD.MM.YYYY'), CHR(13))
@@ -438,11 +439,12 @@ BEGIN
 
    IF COALESCE (vbText, '') <> ''
    THEN
-     INSERT INTO _PUSH (Id, Text) VALUES (10, 'Перемещения VIP по которым установлен признак не подтвержден:'||CHR(13)||CHR(13)||vbText);
+     INSERT INTO _PUSH (Id, Text) VALUES (12, 'Перемещения VIP по которым установлен признак не подтвержден:'||CHR(13)||CHR(13)||vbText);
    END IF;
 
-   IF inNumberPUSH = 1 AND EXISTS (SELECT 1 FROM ObjectLink_UserRole_View  WHERE UserId = vbUserId AND RoleId in (zc_Enum_Role_Admin(), zc_Enum_Role_PartialSale()))
-      AND inSession = '3'
+   IF EXISTS (SELECT 1 FROM ObjectLink_UserRole_View  WHERE UserId = vbUserId AND RoleId in (zc_Enum_Role_Admin(), zc_Enum_Role_PartialSale(), zc_Enum_Role_PharmacyManager()))
+      AND date_part('DOW', CURRENT_DATE)::Integer = 1 AND (inNumberPUSH = 1 OR
+      (DATE_PART('HOUR', CURRENT_TIME)::Integer IN (12, 16) AND DATE_PART('MINUTE',  CURRENT_TIME)::Integer >= 00 AND DATE_PART('MINUTE',  CURRENT_TIME)::Integer <= 20))
    THEN
 
      SELECT string_agg('Юр. лицо: '||T1.JuridicalName||CHR(13)||'Поставщик: '||T1.FromName||CHR(13)||'Сумма: '||zfConvert_FloatToString(T1.Summa), CHR(13)||CHR(13))
@@ -452,12 +454,27 @@ BEGIN
      IF COALESCE (vbText, '') <> ''
      THEN
        INSERT INTO _PUSH (Id, Text, FormName, Button, Params, TypeParams, ValueParams)
-       VALUES (10, 'По состоянию на '||zfConvert_DateToString (CURRENT_DATE)||' возможна оплата частями:'||CHR(13)||CHR(13)||vbText,
+       VALUES (13, 'По состоянию на '||zfConvert_DateToString (CURRENT_DATE)||' возможна оплата частями:'||CHR(13)||CHR(13)||vbText,
                    'TCalculationPartialSaleForm', 'Формирование измения долга', 'OperDate', 'ftDateTime',
                    CURRENT_DATE::TVarChar);
      END IF;
    END IF;
 
+   IF EXISTS (SELECT 1 FROM ObjectLink_UserRole_View  WHERE UserId = vbUserId AND RoleId in (zc_Enum_Role_Admin(), zc_Enum_Role_PharmacyManager()))
+      AND (DATE_PART('HOUR', CURRENT_TIME)::Integer IN (9, 14, 17) AND DATE_PART('MINUTE',  CURRENT_TIME)::Integer >= 0 AND DATE_PART('MINUTE',  CURRENT_TIME)::Integer <= 20)
+   THEN
+
+     vbCount := gpSelect_PriceCheck_PUSH (inPercent := 20, inSession := inSession);
+
+     IF COALESCE (vbCount, 0) > 0
+     THEN
+       INSERT INTO _PUSH (Id, Text, FormName, Button, Params, TypeParams, ValueParams)
+       VALUES (14, 'ВНИМАНИЕ!!!  По Вашим точкам, есть позиции с ценами реализации, которые нужно выровнять под всю сеть.'||CHR(13)||CHR(13)||
+                   'Отчет находится по пути: Служебные => Проверка цен между подразделениями',
+                   'TReport_PriceCheckForm', 'Проверка цен между подразделениями', 'Percent,UserId,UserName', 'ftFloat,ftInteger,ftString',
+                   '20,'||inSession::TVarChar||','||(SELECT Object.ValueData FROM Object WHERE Object.Id = vbUserId));
+     END IF;
+   END IF;
 
    RETURN QUERY
      SELECT _PUSH.Id                     AS Id
@@ -484,4 +501,4 @@ LANGUAGE plpgsql VOLATILE;
 -- тест
 -- SELECT * FROM gpGet_PUSH_Farmacy('12198759')
 --
-SELECT * FROM gpGet_PUSH_Farmacy(1, '3')
+SELECT * FROM gpGet_PUSH_Farmacy(1, '269777')

@@ -23,7 +23,8 @@ uses
   dxSkinXmas2008Blue, dxSkinscxPCPainter, dxSkinsdxBarPainter, dsdAddOn,
   cxContainer, Vcl.ComCtrls, dxCore, cxDateUtils, cxTextEdit, cxMaskEdit,
   cxDropDownEdit, cxCalendar, Vcl.ExtCtrls, cxCurrencyEdit, cxCustomPivotGrid,
-  cxDBPivotGrid, cxLabel, ChoicePeriod, dxBarExtItems, cxCheckBox, dsdPivotGrid;
+  cxDBPivotGrid, cxLabel, ChoicePeriod, dxBarExtItems, cxCheckBox, dsdPivotGrid,
+  dsdGuides, cxButtonEdit;
 
 type
   TReport_PriceCheckForm = class(TParentForm)
@@ -69,6 +70,16 @@ type
     Price: TcxGridDBColumn;
     Color_Calc: TcxGridDBColumn;
     CrossDBViewAddOn: TCrossDBViewAddOn;
+    UnitCount: TcxGridDBColumn;
+    BadPriceCount: TcxGridDBColumn;
+    BadPriceMinus: TcxGridDBColumn;
+    PriceIn: TcxGridDBColumn;
+    DateIn: TcxGridDBColumn;
+    JuridicalInName: TcxGridDBColumn;
+    JuridicalPrice: TcxGridDBColumn;
+    ceUser: TcxButtonEdit;
+    cxLabel1: TcxLabel;
+    GuidesUser: TdsdGuides;
   private
   public
   end;

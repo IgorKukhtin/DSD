@@ -38,6 +38,24 @@ object Report_PriceCheckForm: TReport_PriceCheckForm
       TabOrder = 1
       Width = 90
     end
+    object ceUser: TcxButtonEdit
+      Left = 368
+      Top = 3
+      Properties.Buttons = <
+        item
+          Default = True
+          Kind = bkEllipsis
+        end>
+      Properties.ReadOnly = True
+      Properties.UseNullString = True
+      TabOrder = 2
+      Width = 241
+    end
+    object cxLabel1: TcxLabel
+      Left = 262
+      Top = 4
+      Caption = #1052#1077#1085#1077#1076#1078#1077#1088' '#1072#1087#1090#1077#1082#1080':'
+    end
   end
   object cxGrid: TcxGrid
     Left = 0
@@ -120,6 +138,60 @@ object Report_PriceCheckForm: TReport_PriceCheckForm
         HeaderAlignmentVert = vaCenter
         Options.Editing = False
         Width = 70
+      end
+      object UnitCount: TcxGridDBColumn
+        Caption = #1040#1087#1090#1077#1082' '#1089' '#1086#1089#1090#1072#1090#1082#1086#1084
+        DataBinding.FieldName = 'UnitCount'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Width = 69
+      end
+      object BadPriceCount: TcxGridDBColumn
+        Caption = #1040#1087#1090#1077#1082' '#1089' '#1086#1090#1082#1083#1086#1085'. '#1094#1077#1085#1099
+        DataBinding.FieldName = 'BadPriceCount'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Width = 69
+      end
+      object BadPriceMinus: TcxGridDBColumn
+        Caption = #1040#1087#1090#1077#1082' '#1089' '#1086#1090#1082#1083#1086#1085'. '#1094#1077#1085#1099' '#1074' '#1084#1080#1085#1091#1089
+        DataBinding.FieldName = 'BadPriceMinus'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Width = 69
+      end
+      object PriceIn: TcxGridDBColumn
+        Caption = #1062#1077#1085#1072' '#1080#1079' '#1087#1088#1080#1093#1086#1076#1072' '#1087#1086#1089#1090#1072#1074#1097#1080#1082#1072' '#1089' '#1091#1095#1077#1090#1086#1084' '#1053#1044#1057
+        DataBinding.FieldName = 'PriceIn'
+        PropertiesClassName = 'TcxCurrencyEditProperties'
+        Properties.DisplayFormat = ',0.00;-,0.00; ;'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Width = 69
+      end
+      object DateIn: TcxGridDBColumn
+        Caption = #1044#1072#1090#1072' '#1087#1088#1080#1093#1086#1076#1072
+        DataBinding.FieldName = 'DateIn'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Width = 73
+      end
+      object JuridicalInName: TcxGridDBColumn
+        Caption = #1055#1086#1089#1090#1072#1074#1097#1080#1082' '#1080#1079' '#1087#1088#1080#1093#1086#1076#1072
+        DataBinding.FieldName = 'JuridicalInName'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Width = 95
+      end
+      object JuridicalPrice: TcxGridDBColumn
+        Caption = #1062#1077#1085#1072' '#1080#1079' '#1087#1088#1072#1081#1089#1086#1074' '#1089' '#1091#1095#1077#1090#1086#1084' '#1053#1044#1057
+        DataBinding.FieldName = 'JuridicalPrice'
+        PropertiesClassName = 'TcxCurrencyEditProperties'
+        Properties.DecimalPlaces = 2
+        Properties.DisplayFormat = ',0.00;-,0.00; ;'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Width = 79
       end
       object Price: TcxGridDBColumn
         DataBinding.FieldName = 'Price'
@@ -413,6 +485,13 @@ object Report_PriceCheckForm: TReport_PriceCheckForm
         DataType = ftFloat
         ParamType = ptInput
         MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inUserId'
+        Value = Null
+        Component = GuidesUser
+        ParamType = ptInput
+        MultiSelectSeparator = ','
       end>
     PackSize = 1
     Left = 32
@@ -432,7 +511,10 @@ object Report_PriceCheckForm: TReport_PriceCheckForm
     RefreshAction = actRefresh
     ComponentList = <
       item
-        Component = PeriodChoice
+        Component = GuidesUser
+      end
+      item
+        Component = cePercent
       end>
     Left = 472
     Top = 128
@@ -440,57 +522,24 @@ object Report_PriceCheckForm: TReport_PriceCheckForm
   object FormParams: TdsdFormParams
     Params = <
       item
-        Name = 'AccountId'
+        Name = 'Percent'
         Value = Null
+        Component = cePercent
+        DataType = ftFloat
         MultiSelectSeparator = ','
       end
       item
-        Name = 'AccountName'
+        Name = 'UserId'
         Value = Null
-        DataType = ftString
+        Component = GuidesUser
+        ComponentItem = 'Key'
         MultiSelectSeparator = ','
       end
       item
-        Name = 'AccountGroupId'
+        Name = 'UserName'
         Value = Null
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'AccountGroupName'
-        Value = Null
-        DataType = ftString
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'AccountDirectionId'
-        Value = Null
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'AccountDirectionName'
-        Value = Null
-        DataType = ftString
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'InfoMoneyId'
-        Value = Null
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'InfoMoneyName'
-        Value = Null
-        DataType = ftString
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'BusinessId'
-        Value = Null
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'BusinessName'
-        Value = Null
+        Component = GuidesUser
+        ComponentItem = 'TextValue'
         DataType = ftString
         MultiSelectSeparator = ','
       end>
@@ -542,5 +591,34 @@ object Report_PriceCheckForm: TReport_PriceCheckForm
     TemplateColumn = Price
     Left = 568
     Top = 288
+  end
+  object GuidesUser: TdsdGuides
+    KeyField = 'Id'
+    LookupControl = ceUser
+    FormNameParam.Value = 'TUserNickForm'
+    FormNameParam.DataType = ftString
+    FormNameParam.MultiSelectSeparator = ','
+    FormName = 'TUserNickForm'
+    PositionDataSet = 'ClientDataSet'
+    Params = <
+      item
+        Name = 'Key'
+        Value = ''
+        Component = GuidesUser
+        ComponentItem = 'Key'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'TextValue'
+        Value = ''
+        Component = GuidesUser
+        ComponentItem = 'TextValue'
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end>
+    Left = 456
+    Top = 1
   end
 end
