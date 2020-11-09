@@ -13,6 +13,7 @@ RETURNS Integer
 AS
 $BODY$
    DECLARE vbUserId Integer;
+   DECLARE vbIsInsert Boolean;
 BEGIN
 
    -- проверка прав пользовател€ на вызов процедуры
@@ -35,6 +36,13 @@ BEGIN
 
    -- сохранили свойство
    PERFORM lpInsertUpdate_ObjectString (zc_ObjectString_Country_ShortName(), ioId, inShortName);
+
+   IF vbIsInsert = TRUE THEN
+      -- сохранили свойство <ƒата создани€>
+      PERFORM lpInsertUpdate_ObjectDate (zc_ObjectDate_Protocol_Insert(), ioId, CURRENT_TIMESTAMP);
+      -- сохранили свойство <ѕользователь (создание)>
+      PERFORM lpInsertUpdate_ObjectLink (zc_ObjectLink_Protocol_Insert(), ioId, vbUserId);
+   END IF;
 
    -- сохранили протокол
    PERFORM lpInsert_ObjectProtocol (ioId, vbUserId);
