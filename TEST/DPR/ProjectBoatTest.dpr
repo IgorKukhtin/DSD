@@ -173,7 +173,9 @@ uses
   InfoMoneyGroup_Object in '..\..\FormsBoat\Guides\InfoMoneyGroup_Object.pas' {InfoMoneyGroup_ObjectForm: TParentForm},
   InfoMoneyDestination_Object in '..\..\FormsBoat\Guides\InfoMoneyDestination_Object.pas' {InfoMoneyDestination_ObjectForm: TParentForm},
   InfoMoneyDestinationEdit in '..\..\FormsBoat\Guides\InfoMoneyDestinationEdit.pas' {InfoMoneyDestinationEditForm: TParentForm},
-  InfoMoneyDestination in '..\..\FormsBoat\Guides\InfoMoneyDestination.pas' {InfoMoneyDestinationForm: TParentForm};
+  InfoMoneyDestination in '..\..\FormsBoat\Guides\InfoMoneyDestination.pas' {InfoMoneyDestinationForm: TParentForm},
+  Bank in '..\..\FormsBoat\Guides\Bank.pas' {BankForm: TParentForm},
+  BankEdit in '..\..\FormsBoat\Guides\BankEdit.pas' {BankEditForm: TParentForm};
 
 {$R *.res}
 {$R DevExpressRus.res}

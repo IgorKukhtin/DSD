@@ -2,8 +2,8 @@ object PartnerEditForm: TPartnerEditForm
   Left = 0
   Top = 0
   Caption = #1044#1086#1073#1072#1074#1080#1090#1100'/'#1048#1079#1084#1077#1085#1080#1090#1100' <'#1055#1072#1088#1090#1085#1077#1088#1099'>'
-  ClientHeight = 200
-  ClientWidth = 295
+  ClientHeight = 378
+  ClientWidth = 568
   Color = clBtnFace
   Font.Charset = DEFAULT_CHARSET
   Font.Color = clWindowText
@@ -17,19 +17,19 @@ object PartnerEditForm: TPartnerEditForm
   PixelsPerInch = 96
   TextHeight = 13
   object edName: TcxTextEdit
-    Left = 10
-    Top = 72
+    Left = 287
+    Top = 30
     TabOrder = 0
     Width = 273
   end
   object cxLabel1: TcxLabel
-    Left = 10
-    Top = 54
+    Left = 287
+    Top = 12
     Caption = #1053#1072#1079#1074#1072#1085#1080#1077
   end
   object cxButton1: TcxButton
-    Left = 41
-    Top = 163
+    Left = 169
+    Top = 338
     Width = 75
     Height = 25
     Action = actInsertUpdateGuides
@@ -37,8 +37,8 @@ object PartnerEditForm: TPartnerEditForm
     TabOrder = 2
   end
   object cxButton2: TcxButton
-    Left = 185
-    Top = 163
+    Left = 313
+    Top = 338
     Width = 75
     Height = 25
     Action = actFormClose
@@ -62,14 +62,147 @@ object PartnerEditForm: TPartnerEditForm
     Width = 273
   end
   object cxLabel3: TcxLabel
-    Left = 10
-    Top = 100
+    Left = 287
+    Top = 231
     Caption = #1055#1088#1080#1084#1077#1095#1072#1085#1080#1077
   end
   object edComment: TcxTextEdit
+    Left = 287
+    Top = 251
+    TabOrder = 7
+    Width = 273
+  end
+  object cxLabel4: TcxLabel
+    Left = 10
+    Top = 54
+    Caption = #1060#1072#1082#1089
+  end
+  object edFax: TcxTextEdit
+    Left = 10
+    Top = 74
+    TabOrder = 9
+    Width = 273
+  end
+  object cxLabel5: TcxLabel
+    Left = 287
+    Top = 54
+    Caption = #1058#1077#1083'. '#1085#1086#1084#1077#1088
+  end
+  object edPhone: TcxTextEdit
+    Left = 287
+    Top = 74
+    TabOrder = 11
+    Width = 273
+  end
+  object cxLabel6: TcxLabel
+    Left = 10
+    Top = 100
+    Caption = #1052#1086#1073#1080#1083#1100#1085#1099#1081
+  end
+  object edMobile: TcxTextEdit
     Left = 10
     Top = 120
-    TabOrder = 7
+    TabOrder = 13
+    Width = 273
+  end
+  object cxLabel7: TcxLabel
+    Left = 287
+    Top = 100
+    Caption = #1056'/ '#1089#1095#1077#1090
+  end
+  object edIBAN: TcxTextEdit
+    Left = 287
+    Top = 120
+    TabOrder = 15
+    Width = 273
+  end
+  object cxLabel8: TcxLabel
+    Left = 10
+    Top = 144
+    Caption = #1059#1083#1080#1094#1072
+  end
+  object edStreet: TcxTextEdit
+    Left = 10
+    Top = 164
+    TabOrder = 17
+    Width = 273
+  end
+  object cxLabel9: TcxLabel
+    Left = 287
+    Top = 144
+    Caption = #1050#1086#1085#1090#1072#1085#1082#1090#1085#1086#1077' '#1083#1080#1094#1086
+  end
+  object edMember: TcxTextEdit
+    Left = 287
+    Top = 164
+    TabOrder = 19
+    Width = 273
+  end
+  object cxLabel10: TcxLabel
+    Left = 10
+    Top = 187
+    Caption = #1040#1076#1088#1077#1089' '#1089#1072#1081#1090#1072
+  end
+  object edWWW: TcxTextEdit
+    Left = 10
+    Top = 207
+    TabOrder = 21
+    Width = 273
+  end
+  object cxLabel11: TcxLabel
+    Left = 287
+    Top = 187
+    Caption = #1069#1083#1077#1082#1090#1088#1086#1085#1085#1072#1103' '#1087#1086#1095#1090#1072
+  end
+  object edEmail: TcxTextEdit
+    Left = 287
+    Top = 207
+    TabOrder = 23
+    Width = 273
+  end
+  object cxLabel12: TcxLabel
+    Left = 10
+    Top = 231
+    Caption = #1053#1072#1096' '#1082#1086#1076' '#1074' '#1080#1093' '#1073#1072#1079#1077
+  end
+  object edCodeDB: TcxTextEdit
+    Left = 10
+    Top = 251
+    TabOrder = 25
+    Width = 273
+  end
+  object cxLabel13: TcxLabel
+    Left = 10
+    Top = 278
+    Caption = #1055#1086#1095#1090#1086#1074#1099#1081' '#1072#1076#1088#1077#1089
+  end
+  object edPLZ: TcxButtonEdit
+    Left = 10
+    Top = 295
+    Properties.Buttons = <
+      item
+        Default = True
+        Kind = bkEllipsis
+      end>
+    Properties.ReadOnly = True
+    TabOrder = 27
+    Width = 273
+  end
+  object cxLabel14: TcxLabel
+    Left = 287
+    Top = 278
+    Caption = #1041#1072#1085#1082
+  end
+  object edBank: TcxButtonEdit
+    Left = 287
+    Top = 295
+    Properties.Buttons = <
+      item
+        Default = True
+        Kind = bkEllipsis
+      end>
+    Properties.ReadOnly = True
+    TabOrder = 29
     Width = 273
   end
   object ActionList: TActionList
@@ -139,6 +272,94 @@ object PartnerEditForm: TPartnerEditForm
         DataType = ftString
         ParamType = ptInput
         MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inFax'
+        Value = Null
+        Component = edFax
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inPhone'
+        Value = Null
+        Component = edPhone
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inMobile'
+        Value = Null
+        Component = edMobile
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inIBAN'
+        Value = Null
+        Component = edIBAN
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inStreet'
+        Value = Null
+        Component = edStreet
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inMember'
+        Value = Null
+        Component = edMember
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inWWW'
+        Value = Null
+        Component = edWWW
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inEmail'
+        Value = Null
+        Component = edEmail
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inCodeDB'
+        Value = Null
+        Component = edCodeDB
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inBankId'
+        Value = Null
+        Component = GuidesBank
+        ComponentItem = 'Key'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inPLZId'
+        Value = Null
+        Component = GuidesPLZ
+        ComponentItem = 'Key'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
       end>
     PackSize = 1
     Left = 96
@@ -188,6 +409,99 @@ object PartnerEditForm: TPartnerEditForm
         Component = edComment
         DataType = ftString
         MultiSelectSeparator = ','
+      end
+      item
+        Name = 'CodeDB'
+        Value = Null
+        Component = edCodeDB
+        DataType = ftString
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'Email'
+        Value = Null
+        Component = edEmail
+        DataType = ftString
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'Fax'
+        Value = Null
+        Component = edFax
+        DataType = ftString
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'IBAN'
+        Value = Null
+        Component = edIBAN
+        DataType = ftString
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'Member'
+        Value = Null
+        Component = edMember
+        DataType = ftString
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'Mobile'
+        Value = Null
+        Component = edMobile
+        DataType = ftString
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'Phone'
+        Value = Null
+        Component = edPhone
+        DataType = ftString
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'Street'
+        Value = Null
+        Component = edStreet
+        DataType = ftString
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'WWW'
+        Value = Null
+        Component = edWWW
+        DataType = ftString
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'BankId'
+        Value = Null
+        Component = GuidesBank
+        ComponentItem = 'Key'
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'BankName'
+        Value = Null
+        Component = GuidesBank
+        ComponentItem = 'TextValue'
+        DataType = ftString
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'PLZId'
+        Value = Null
+        Component = GuidesPLZ
+        ComponentItem = 'Key'
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'PLZName'
+        Value = Null
+        Component = GuidesPLZ
+        ComponentItem = 'TextValue'
+        DataType = ftString
+        MultiSelectSeparator = ','
       end>
     PackSize = 1
     Left = 184
@@ -211,5 +525,63 @@ object PartnerEditForm: TPartnerEditForm
   object dsdUserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn
     Left = 104
     Top = 104
+  end
+  object GuidesPLZ: TdsdGuides
+    KeyField = 'Id'
+    LookupControl = edPLZ
+    FormNameParam.Value = 'TPLZForm'
+    FormNameParam.DataType = ftString
+    FormNameParam.MultiSelectSeparator = ','
+    FormName = 'TPLZForm'
+    PositionDataSet = 'MasterCDS'
+    Params = <
+      item
+        Name = 'Key'
+        Value = ''
+        Component = GuidesPLZ
+        ComponentItem = 'Key'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'TextValue'
+        Value = ''
+        Component = GuidesPLZ
+        ComponentItem = 'TextValue'
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end>
+    Left = 200
+    Top = 282
+  end
+  object GuidesBank: TdsdGuides
+    KeyField = 'Id'
+    LookupControl = edBank
+    FormNameParam.Value = 'TBankForm'
+    FormNameParam.DataType = ftString
+    FormNameParam.MultiSelectSeparator = ','
+    FormName = 'TBankForm'
+    PositionDataSet = 'MasterCDS'
+    Params = <
+      item
+        Name = 'Key'
+        Value = ''
+        Component = GuidesBank
+        ComponentItem = 'Key'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'TextValue'
+        Value = ''
+        Component = GuidesBank
+        ComponentItem = 'TextValue'
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end>
+    Left = 477
+    Top = 282
   end
 end

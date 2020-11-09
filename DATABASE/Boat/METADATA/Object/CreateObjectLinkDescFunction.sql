@@ -145,18 +145,29 @@ SELECT 'zc_ObjectLink_GoodsGroup_Parent', 'Группы товаров', zc_Object_GoodsGroup
 
 CREATE OR REPLACE FUNCTION zc_ObjectLink_GoodsGroup_InfoMoney() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM ObjectLinkDesc WHERE Code = 'zc_ObjectLink_GoodsGroup_InfoMoney'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
 INSERT INTO ObjectLinkDesc(Code, ItemName, DescId, ChildObjectDescId)
-SELECT 'zc_ObjectLink_GoodsGroup_InfoMoney', 'Группы товаров', zc_Object_GoodsGroup(), zc_Object_GoodsGroup() WHERE NOT EXISTS (SELECT * FROM ObjectLinkDesc WHERE Code = 'zc_ObjectLink_GoodsGroup_InfoMoney');
+SELECT 'zc_ObjectLink_GoodsGroup_InfoMoney', 'УП статьи', zc_Object_GoodsGroup(), zc_Object_InfoMoney() WHERE NOT EXISTS (SELECT * FROM ObjectLinkDesc WHERE Code = 'zc_ObjectLink_GoodsGroup_InfoMoney');
 
 CREATE OR REPLACE FUNCTION zc_ObjectLink_GoodsGroup_ModelEtiketen() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM ObjectLinkDesc WHERE Code = 'zc_ObjectLink_GoodsGroup_ModelEtiketen'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
 INSERT INTO ObjectLinkDesc(Code, ItemName, DescId, ChildObjectDescId)
-SELECT 'zc_ObjectLink_GoodsGroup_ModelEtiketen', 'Группы товаров', zc_Object_GoodsGroup(), zc_Object_GoodsGroup() WHERE NOT EXISTS (SELECT * FROM ObjectLinkDesc WHERE Code = 'zc_ObjectLink_GoodsGroup_ModelEtiketen');
+SELECT 'zc_ObjectLink_GoodsGroup_ModelEtiketen', 'Модели печати этикеток', zc_Object_GoodsGroup(), zc_Object_ModelEtiketen() WHERE NOT EXISTS (SELECT * FROM ObjectLinkDesc WHERE Code = 'zc_ObjectLink_GoodsGroup_ModelEtiketen');
+
+CREATE OR REPLACE FUNCTION zc_ObjectLink_Partner_PLZ() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM ObjectLinkDesc WHERE Code = 'zc_ObjectLink_Partner_PLZ'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
+INSERT INTO ObjectLinkDesc(Code, ItemName, DescId, ChildObjectDescId)
+SELECT 'zc_ObjectLink_Partner_PLZ', 'Почтовый адрес', zc_Object_Partner(), zc_Object_PLZ() WHERE NOT EXISTS (SELECT * FROM ObjectLinkDesc WHERE Code = 'zc_ObjectLink_Partner_PLZ');
+
+CREATE OR REPLACE FUNCTION zc_ObjectLink_Partner_Bank() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM ObjectLinkDesc WHERE Code = 'zc_ObjectLink_Partner_Bank'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
+INSERT INTO ObjectLinkDesc(Code, ItemName, DescId, ChildObjectDescId)
+SELECT 'zc_ObjectLink_Partner_Bank', 'Банк', zc_Object_Partner(), zc_Object_Bank() WHERE NOT EXISTS (SELECT * FROM ObjectLinkDesc WHERE Code = 'zc_ObjectLink_Partner_Bank');
+
 
 /*-------------------------------------------------------------------------------
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
  09.11.20         * zc_ObjectLink_GoodsGroup_Parent
                     zc_ObjectLink_GoodsGroup_InfoMoney
-                    zc_ObjectLink_GoodsGroup_ModelEtiketen 
+                    zc_ObjectLink_GoodsGroup_ModelEtiketen
+                    zc_ObjectLink_Partner_Bank
+                    zc_ObjectLink_Partner_PLZ
  09.10.20         * zc_ObjectLink_Product_
                     zc_ObjectLink_ProdColorItems_ProdColorGroup
                     zc_ObjectLink_ProdColorItems_ProdColor

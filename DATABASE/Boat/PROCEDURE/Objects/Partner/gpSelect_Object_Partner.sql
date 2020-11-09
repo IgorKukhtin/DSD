@@ -8,7 +8,12 @@ CREATE OR REPLACE FUNCTION gpSelect_Object_Partner(
    
 )
 RETURNS TABLE (Id Integer, Code Integer, Name TVarChar
+             , Fax TVarChar, Phone TVarChar, Mobile TVarChar
+             , IBAN TVarChar, Street TVarChar, Member TVarChar
+             , WWW TVarChar, Email TVarChar, CodeDB TVarChar
              , Comment TVarChar
+             , BankId Integer, BankName TVarChar
+             , PLZId Integer, PLZName TVarChar
              , InsertName TVarChar
              , InsertDate TDateTime
              , isErased Boolean)
@@ -28,15 +33,67 @@ BEGIN
              Object_Partner.Id               AS Id
            , Object_Partner.ObjectCode       AS Code
            , Object_Partner.ValueData        AS Name
+           , ObjectString_Fax.ValueData      AS Fax
+           , ObjectString_Phone.ValueData    AS Phone
+           , ObjectString_Mobile.ValueData   AS Mobile
+           , ObjectString_IBAN.ValueData     AS IBAN
+           , ObjectString_Street.ValueData   AS Street
+           , ObjectString_Member.ValueData   AS Member
+           , ObjectString_WWW.ValueData      AS WWW
+           , ObjectString_Email.ValueData    AS Email
+           , ObjectString_CodeDB.ValueData   AS CodeDB
            , ObjectString_Comment.ValueData  AS Comment
+
+           , Object_Bank.Id                  AS BankId
+           , Object_Bank.ValueData           AS BankName
+           , Object_PLZ.Id                   AS PLZId
+           , Object_PLZ.ValueData            AS PLZName
 
            , Object_Insert.ValueData         AS InsertName
            , ObjectDate_Insert.ValueData     AS InsertDate
            , Object_Partner.isErased         AS isErased
        FROM Object AS Object_Partner
+          LEFT JOIN ObjectString AS ObjectString_Fax
+                                 ON ObjectString_Fax.ObjectId = Object_Partner.Id
+                                AND ObjectString_Fax.DescId = zc_ObjectString_Partner_Fax()  
+
+          LEFT JOIN ObjectString AS ObjectString_Phone
+                                 ON ObjectString_Phone.ObjectId = Object_Partner.Id
+                                AND ObjectString_Phone.DescId = zc_ObjectString_Partner_Phone()
+          LEFT JOIN ObjectString AS ObjectString_Mobile
+                                 ON ObjectString_Mobile.ObjectId = Object_Partner.Id
+                                AND ObjectString_Mobile.DescId = zc_ObjectString_Partner_Mobile()
+          LEFT JOIN ObjectString AS ObjectString_IBAN
+                                 ON ObjectString_IBAN.ObjectId = Object_Partner.Id
+                                AND ObjectString_IBAN.DescId = zc_ObjectString_Partner_IBAN()
+          LEFT JOIN ObjectString AS ObjectString_Street
+                                 ON ObjectString_Street.ObjectId = Object_Partner.Id
+                                AND ObjectString_Street.DescId = zc_ObjectString_Partner_Street()
+          LEFT JOIN ObjectString AS ObjectString_Member
+                                 ON ObjectString_Member.ObjectId = Object_Partner.Id
+                                AND ObjectString_Member.DescId = zc_ObjectString_Partner_Member()
+          LEFT JOIN ObjectString AS ObjectString_WWW
+                                 ON ObjectString_WWW.ObjectId = Object_Partner.Id
+                                AND ObjectString_WWW.DescId = zc_ObjectString_Partner_WWW()
+          LEFT JOIN ObjectString AS ObjectString_Email
+                                 ON ObjectString_Email.ObjectId = Object_Partner.Id
+                                AND ObjectString_Email.DescId = zc_ObjectString_Partner_Email()
+          LEFT JOIN ObjectString AS ObjectString_CodeDB
+                                 ON ObjectString_CodeDB.ObjectId = Object_Partner.Id
+                                AND ObjectString_CodeDB.DescId = zc_ObjectString_Partner_CodeDB()
           LEFT JOIN ObjectString AS ObjectString_Comment
                                  ON ObjectString_Comment.ObjectId = Object_Partner.Id
-                                AND ObjectString_Comment.DescId = zc_ObjectString_Partner_Comment()  
+                                AND ObjectString_Comment.DescId = zc_ObjectString_Partner_Comment()
+
+          LEFT JOIN ObjectLink AS ObjectLink_PLZ
+                               ON ObjectLink_PLZ.ObjectId = Object_Partner.Id
+                              AND ObjectLink_PLZ.DescId = zc_ObjectLink_Partner_PLZ()
+          LEFT JOIN Object AS Object_PLZ ON Object_PLZ.Id = ObjectLink_PLZ.ChildObjectId
+
+          LEFT JOIN ObjectLink AS ObjectLink_Bank
+                               ON ObjectLink_Bank.ObjectId = Object_Partner.Id
+                              AND ObjectLink_Bank.DescId = zc_ObjectLink_Partner_Bank()
+          LEFT JOIN Object AS Object_Bank ON Object_Bank.Id = ObjectLink_Bank.ChildObjectId
 
           LEFT JOIN ObjectLink AS ObjectLink_Insert
                                ON ObjectLink_Insert.ObjectId = Object_Partner.Id
@@ -58,7 +115,8 @@ $BODY$
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
- 22.10.20          *
+ 09.11.20         *
+ 22.10.20         *
 */
 
 -- тест

@@ -1,9 +1,9 @@
-object PartnerForm: TPartnerForm
+object BankForm: TBankForm
   Left = 0
   Top = 0
-  Caption = #1057#1087#1088#1072#1074#1086#1095#1085#1080#1082' <'#1055#1072#1088#1090#1085#1077#1088#1099'>'
+  Caption = #1057#1087#1088#1072#1074#1086#1095#1085#1080#1082' <'#1041#1072#1085#1082#1080'>'
   ClientHeight = 376
-  ClientWidth = 723
+  ClientWidth = 608
   Color = clBtnFace
   Font.Charset = DEFAULT_CHARSET
   Font.Color = clWindowText
@@ -20,24 +20,18 @@ object PartnerForm: TPartnerForm
   object cxGrid: TcxGrid
     Left = 0
     Top = 26
-    Width = 723
+    Width = 608
     Height = 350
     Align = alClient
     TabOrder = 0
     LookAndFeel.NativeStyle = True
     LookAndFeel.SkinName = 'UserSkin'
-    ExplicitWidth = 541
     object cxGridDBTableView: TcxGridDBTableView
       Navigator.Buttons.CustomButtons = <>
       DataController.DataSource = DataSource
       DataController.Filter.Options = [fcoCaseInsensitive]
       DataController.Summary.DefaultGroupSummaryItems = <>
-      DataController.Summary.FooterSummaryItems = <
-        item
-          Format = 'C'#1090#1088#1086#1082': ,0'
-          Kind = skCount
-          Column = Name
-        end>
+      DataController.Summary.FooterSummaryItems = <>
       DataController.Summary.SummaryGroups = <>
       Images = dmMain.SortImageList
       OptionsCustomize.ColumnHiding = True
@@ -46,7 +40,6 @@ object PartnerForm: TPartnerForm
       OptionsData.DeletingConfirmation = False
       OptionsData.Editing = False
       OptionsData.Inserting = False
-      OptionsView.Footer = True
       OptionsView.GroupByBox = False
       OptionsView.HeaderHeight = 40
       OptionsView.Indicator = True
@@ -56,8 +49,7 @@ object PartnerForm: TPartnerForm
         DataBinding.FieldName = 'Code'
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
-        Options.Editing = False
-        Width = 80
+        Width = 90
       end
       object Name: TcxGridDBColumn
         Caption = #1053#1072#1079#1074#1072#1085#1080#1077
@@ -65,8 +57,15 @@ object PartnerForm: TPartnerForm
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         HeaderGlyphAlignmentHorz = taCenter
-        Options.Editing = False
-        Width = 143
+        Width = 339
+      end
+      object IBAN: TcxGridDBColumn
+        Caption = 'IBAN '#1082#1086#1076' '#1089#1095#1077#1090#1072
+        DataBinding.FieldName = 'IBAN'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        HeaderGlyphAlignmentHorz = taCenter
+        Width = 120
       end
       object Comment: TcxGridDBColumn
         Caption = #1055#1088#1080#1084#1077#1095#1072#1085#1080#1077
@@ -76,105 +75,6 @@ object PartnerForm: TPartnerForm
         HeaderGlyphAlignmentHorz = taCenter
         Options.Editing = False
         Width = 122
-      end
-      object Fax: TcxGridDBColumn
-        Caption = #1060#1072#1082#1089
-        DataBinding.FieldName = 'Fax'
-        HeaderAlignmentHorz = taCenter
-        HeaderAlignmentVert = vaCenter
-        HeaderGlyphAlignmentHorz = taCenter
-        Options.Editing = False
-        Width = 80
-      end
-      object Phone: TcxGridDBColumn
-        Caption = #1058#1077#1083' '#1085#1086#1084#1077#1088
-        DataBinding.FieldName = 'Phone'
-        HeaderAlignmentHorz = taCenter
-        HeaderAlignmentVert = vaCenter
-        HeaderGlyphAlignmentHorz = taCenter
-        Options.Editing = False
-        Width = 80
-      end
-      object Mobile: TcxGridDBColumn
-        Caption = #1052#1086#1073#1080#1083#1100#1085#1099#1081
-        DataBinding.FieldName = 'Mobile'
-        HeaderAlignmentHorz = taCenter
-        HeaderAlignmentVert = vaCenter
-        HeaderGlyphAlignmentHorz = taCenter
-        Options.Editing = False
-        Width = 80
-      end
-      object IBAN: TcxGridDBColumn
-        Caption = #1088'/'#1089#1095
-        DataBinding.FieldName = 'IBAN'
-        HeaderAlignmentHorz = taCenter
-        HeaderAlignmentVert = vaCenter
-        HeaderGlyphAlignmentHorz = taCenter
-        Options.Editing = False
-        Width = 80
-      end
-      object Street: TcxGridDBColumn
-        Caption = #1059#1083#1080#1094#1072
-        DataBinding.FieldName = 'Street'
-        HeaderAlignmentHorz = taCenter
-        HeaderAlignmentVert = vaCenter
-        HeaderGlyphAlignmentHorz = taCenter
-        Options.Editing = False
-        Width = 80
-      end
-      object Member: TcxGridDBColumn
-        Caption = #1050#1086#1085#1090#1072#1085#1082#1090#1085#1086#1077' '#1083#1080#1094#1086
-        DataBinding.FieldName = 'Member'
-        HeaderAlignmentHorz = taCenter
-        HeaderAlignmentVert = vaCenter
-        HeaderGlyphAlignmentHorz = taCenter
-        Options.Editing = False
-        Width = 80
-      end
-      object WWW: TcxGridDBColumn
-        Caption = #1040#1076#1088#1077#1089' '#1089#1072#1081#1090#1072
-        DataBinding.FieldName = 'WWW'
-        HeaderAlignmentHorz = taCenter
-        HeaderAlignmentVert = vaCenter
-        HeaderGlyphAlignmentHorz = taCenter
-        Options.Editing = False
-        Width = 80
-      end
-      object Email: TcxGridDBColumn
-        Caption = #1069#1083'. '#1087#1086#1095#1090#1072
-        DataBinding.FieldName = 'Email'
-        HeaderAlignmentHorz = taCenter
-        HeaderAlignmentVert = vaCenter
-        HeaderGlyphAlignmentHorz = taCenter
-        HeaderHint = #1069#1083#1077#1082#1090#1088#1086#1085#1085#1072#1103' '#1087#1086#1095#1090#1072
-        Options.Editing = False
-        Width = 80
-      end
-      object CodeDB: TcxGridDBColumn
-        Caption = #1050#1086#1076' ('#1085#1072#1096' '#1074' '#1080#1093' '#1073#1072#1079#1077')'
-        DataBinding.FieldName = 'CodeDB'
-        HeaderAlignmentHorz = taCenter
-        HeaderAlignmentVert = vaCenter
-        HeaderGlyphAlignmentHorz = taCenter
-        HeaderHint = #1085#1072#1096' '#1082#1086#1076' '#1074' '#1073#1072#1079#1077' '#1087#1072#1088#1090#1085#1077#1088#1072
-        Options.Editing = False
-        Width = 80
-      end
-      object BankName: TcxGridDBColumn
-        Caption = #1041#1072#1085#1082
-        DataBinding.FieldName = 'BankName'
-        HeaderAlignmentHorz = taCenter
-        HeaderAlignmentVert = vaCenter
-        Options.Editing = False
-        Width = 80
-      end
-      object PLZName: TcxGridDBColumn
-        Caption = #1055#1086#1095#1090#1086#1074#1099#1081' '#1072#1076#1088#1077#1089
-        DataBinding.FieldName = 'PLZName'
-        HeaderAlignmentHorz = taCenter
-        HeaderAlignmentVert = vaCenter
-        Options.Editing = False
-        Width = 80
       end
       object InsertDate: TcxGridDBColumn
         Caption = #1044#1072#1090#1072' ('#1089#1086#1079#1076'.)'
@@ -194,14 +94,13 @@ object PartnerForm: TPartnerForm
         Options.Editing = False
         Width = 70
       end
-      object isErased: TcxGridDBColumn
+      object Erased: TcxGridDBColumn
         Caption = #1059#1076#1072#1083#1077#1085
         DataBinding.FieldName = 'isErased'
         PropertiesClassName = 'TcxCheckBoxProperties'
         Visible = False
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
-        Options.Editing = False
         Width = 78
       end
     end
@@ -403,8 +302,8 @@ object PartnerForm: TPartnerForm
       Hint = #1044#1086#1073#1072#1074#1080#1090#1100
       ShortCut = 45
       ImageIndex = 0
-      FormName = 'TPartnerEditForm'
-      FormNameParam.Value = 'TPartnerEditForm'
+      FormName = 'TBankEditForm'
+      FormNameParam.Value = 'TBankEditForm'
       FormNameParam.DataType = ftString
       FormNameParam.MultiSelectSeparator = ','
       GuiParams = <
@@ -425,8 +324,8 @@ object PartnerForm: TPartnerForm
       Hint = #1048#1079#1084#1077#1085#1080#1090#1100
       ShortCut = 115
       ImageIndex = 1
-      FormName = 'TPartnerEditForm'
-      FormNameParam.Value = 'TPartnerEditForm'
+      FormName = 'TBankEditForm'
+      FormNameParam.Value = 'TBankEditForm'
       FormNameParam.DataType = ftString
       FormNameParam.MultiSelectSeparator = ','
       GuiParams = <
@@ -558,19 +457,9 @@ object PartnerForm: TPartnerForm
       ImageIndexTrue = 62
       ImageIndexFalse = 63
     end
-    object actUpdateDataSet: TdsdUpdateDataSet
-      Category = 'DSDLib'
-      MoveParams = <>
-      PostDataSetBeforeExecute = False
-      StoredProcList = <
-        item
-        end>
-      Caption = 'actUpdateDataSet'
-      DataSource = DataSource
-    end
   end
   object spSelect: TdsdStoredProc
-    StoredProcName = 'gpSelect_Object_Partner'
+    StoredProcName = 'gpSelect_Object_Bank'
     DataSet = MasterCDS
     DataSets = <
       item
@@ -590,7 +479,7 @@ object PartnerForm: TPartnerForm
     Top = 128
   end
   object spErased: TdsdStoredProc
-    StoredProcName = 'gpUpdate_Object_isErased_Partner'
+    StoredProcName = 'gpUpdate_Object_isErased_Bank'
     DataSets = <>
     OutputType = otResult
     Params = <
@@ -610,8 +499,8 @@ object PartnerForm: TPartnerForm
         MultiSelectSeparator = ','
       end>
     PackSize = 1
-    Left = 432
-    Top = 80
+    Left = 464
+    Top = 96
   end
   object UserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn
     Left = 288
@@ -647,7 +536,7 @@ object PartnerForm: TPartnerForm
     Top = 248
   end
   object spUnErased: TdsdStoredProc
-    StoredProcName = 'gpUpdate_Object_isErased_Partner'
+    StoredProcName = 'gpUpdate_Object_isErased_Bank'
     DataSets = <>
     OutputType = otResult
     Params = <
@@ -667,7 +556,7 @@ object PartnerForm: TPartnerForm
         MultiSelectSeparator = ','
       end>
     PackSize = 1
-    Left = 432
-    Top = 128
+    Left = 464
+    Top = 144
   end
 end

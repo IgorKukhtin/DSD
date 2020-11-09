@@ -40,6 +40,30 @@ type
     dsdUserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn;
     cxLabel3: TcxLabel;
     edComment: TcxTextEdit;
+    cxLabel4: TcxLabel;
+    edFax: TcxTextEdit;
+    cxLabel5: TcxLabel;
+    edPhone: TcxTextEdit;
+    cxLabel6: TcxLabel;
+    edMobile: TcxTextEdit;
+    cxLabel7: TcxLabel;
+    edIBAN: TcxTextEdit;
+    cxLabel8: TcxLabel;
+    edStreet: TcxTextEdit;
+    cxLabel9: TcxLabel;
+    edMember: TcxTextEdit;
+    cxLabel10: TcxLabel;
+    edWWW: TcxTextEdit;
+    cxLabel11: TcxLabel;
+    edEmail: TcxTextEdit;
+    cxLabel12: TcxLabel;
+    edCodeDB: TcxTextEdit;
+    cxLabel13: TcxLabel;
+    edPLZ: TcxButtonEdit;
+    GuidesPLZ: TdsdGuides;
+    cxLabel14: TcxLabel;
+    edBank: TcxButtonEdit;
+    GuidesBank: TdsdGuides;
   private
     { Private declarations }
   public

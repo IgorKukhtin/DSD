@@ -1180,8 +1180,6 @@ inherited MainForm: TMainForm
       end
       object miBank: TMenuItem
         Action = actBank
-        Enabled = False
-        Visible = False
       end
       object miCurrency: TMenuItem
         Action = actCurrency
