@@ -1,8 +1,8 @@
-object CountryEditForm: TCountryEditForm
+object ModelEtiketenEditForm: TModelEtiketenEditForm
   Left = 0
   Top = 0
-  Caption = #1044#1086#1073#1072#1074#1080#1090#1100'/'#1048#1079#1084#1077#1085#1080#1090#1100' <'#1057#1090#1088#1072#1085#1091'>'
-  ClientHeight = 197
+  Caption = #1044#1086#1073#1072#1074#1080#1090#1100'/'#1048#1079#1084#1077#1085#1080#1090#1100' <'#1052#1086#1076#1077#1083#1100' '#1087#1077#1095#1072#1090#1080' '#1101#1090#1080#1082#1077#1090#1082#1080'>'
+  ClientHeight = 200
   ClientWidth = 295
   Color = clBtnFace
   Font.Charset = DEFAULT_CHARSET
@@ -12,7 +12,7 @@ object CountryEditForm: TCountryEditForm
   Font.Style = []
   KeyPreview = True
   OldCreateOrder = False
-  AddOnFormData.RefreshAction = dsdDataSetRefresh
+  AddOnFormData.RefreshAction = actDataSetRefresh
   AddOnFormData.Params = FormParams
   PixelsPerInch = 96
   TextHeight = 13
@@ -29,19 +29,19 @@ object CountryEditForm: TCountryEditForm
   end
   object cxButton1: TcxButton
     Left = 41
-    Top = 152
+    Top = 163
     Width = 75
     Height = 25
-    Action = dsdInsertUpdateGuides
+    Action = actInsertUpdateGuides
     Default = True
     TabOrder = 2
   end
   object cxButton2: TcxButton
     Left = 185
-    Top = 152
+    Top = 163
     Width = 75
     Height = 25
-    Action = dsdFormClose
+    Action = actFormClose
     Cancel = True
     Caption = #1054#1090#1084#1077#1085#1072
     TabOrder = 3
@@ -64,18 +64,18 @@ object CountryEditForm: TCountryEditForm
   object cxLabel3: TcxLabel
     Left = 10
     Top = 100
-    Caption = #1050#1088#1072#1090#1082#1086#1077' '#1086#1073#1086#1079#1085#1072#1095#1077#1085#1080#1077
+    Caption = #1055#1088#1080#1084#1077#1095#1072#1085#1080#1077
   end
-  object edShortName: TcxTextEdit
+  object edComment: TcxTextEdit
     Left = 10
-    Top = 118
+    Top = 120
     TabOrder = 7
     Width = 273
   end
   object ActionList: TActionList
-    Left = 240
-    Top = 8
-    object dsdDataSetRefresh: TdsdDataSetRefresh
+    Left = 152
+    Top = 56
+    object actDataSetRefresh: TdsdDataSetRefresh
       Category = 'DSDLib'
       MoveParams = <>
       StoredProc = spGet
@@ -88,7 +88,7 @@ object CountryEditForm: TCountryEditForm
       ShortCut = 116
       RefreshOnTabSetChanges = False
     end
-    object dsdInsertUpdateGuides: TdsdInsertUpdateGuides
+    object actInsertUpdateGuides: TdsdInsertUpdateGuides
       Category = 'DSDLib'
       MoveParams = <>
       PostDataSetBeforeExecute = False
@@ -99,13 +99,13 @@ object CountryEditForm: TCountryEditForm
         end>
       Caption = 'Ok'
     end
-    object dsdFormClose: TdsdFormClose
+    object actFormClose: TdsdFormClose
       MoveParams = <>
       PostDataSetBeforeExecute = False
     end
   end
   object spInsertUpdate: TdsdStoredProc
-    StoredProcName = 'gpInsertUpdate_Object_Country'
+    StoredProcName = 'gpInsertUpdate_Object_ModelEtiketen'
     DataSets = <>
     OutputType = otResult
     Params = <
@@ -133,9 +133,9 @@ object CountryEditForm: TCountryEditForm
         MultiSelectSeparator = ','
       end
       item
-        Name = 'inShortName'
+        Name = 'inComment'
         Value = Null
-        Component = edShortName
+        Component = edComment
         DataType = ftString
         ParamType = ptInput
         MultiSelectSeparator = ','
@@ -156,7 +156,7 @@ object CountryEditForm: TCountryEditForm
     Top = 8
   end
   object spGet: TdsdStoredProc
-    StoredProcName = 'gpGet_Object_Country'
+    StoredProcName = 'gpGet_Object_ModelEtiketen'
     DataSets = <>
     OutputType = otResult
     Params = <
@@ -183,15 +183,15 @@ object CountryEditForm: TCountryEditForm
         MultiSelectSeparator = ','
       end
       item
-        Name = 'ShortName'
+        Name = 'Comment'
         Value = Null
-        Component = edShortName
+        Component = edComment
         DataType = ftString
         MultiSelectSeparator = ','
       end>
     PackSize = 1
-    Left = 160
-    Top = 8
+    Left = 184
+    Top = 16
   end
   object cxPropertiesStore: TcxPropertiesStore
     Components = <
@@ -205,11 +205,11 @@ object CountryEditForm: TCountryEditForm
       end>
     StorageName = 'cxPropertiesStore'
     StorageType = stStream
-    Left = 240
-    Top = 64
+    Left = 160
+    Top = 104
   end
   object dsdUserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn
-    Left = 96
-    Top = 96
+    Left = 104
+    Top = 104
   end
 end

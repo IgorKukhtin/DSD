@@ -157,7 +157,23 @@ uses
   Personal_Object in '..\..\FormsBoat\Guides\Personal_Object.pas' {Personal_ObjectForm: TParentForm},
   Personal in '..\..\FormsBoat\Guides\Personal.pas' {PersonalForm: TParentForm},
   CountryEdit in '..\..\FormsBoat\Guides\CountryEdit.pas' {CountryEditForm: TParentForm},
-  Country in '..\..\FormsBoat\Guides\Country.pas' {CountryForm: TParentForm};
+  Country in '..\..\FormsBoat\Guides\Country.pas' {CountryForm: TParentForm},
+  PLZ in '..\..\FormsBoat\Guides\PLZ.pas' {PLZForm: TParentForm},
+  PLZEdit in '..\..\FormsBoat\Guides\PLZEdit.pas' {PLZEditForm: TParentForm},
+  ModelEtiketenEdit in '..\..\FormsBoat\Guides\ModelEtiketenEdit.pas' {ModelEtiketenEditForm: TParentForm},
+  ModelEtiketen in '..\..\FormsBoat\Guides\ModelEtiketen.pas' {ModelEtiketenForm: TParentForm},
+  InfoMoney in '..\..\FormsBoat\Guides\InfoMoney.pas' {InfoMoneyForm: TParentForm},
+  InfoMoney_Object in '..\..\FormsBoat\Guides\InfoMoney_Object.pas' {InfoMoney_ObjectForm: TParentForm},
+  InfoMoneyEdit in '..\..\FormsBoat\Guides\InfoMoneyEdit.pas' {InfoMoneyEditForm: TParentForm},
+  GoodsGroup in '..\..\FormsBoat\Guides\GoodsGroup.pas' {GoodsGroupForm: TParentForm},
+  GoodsGroup_Object in '..\..\FormsBoat\Guides\GoodsGroup_Object.pas' {GoodsGroup_ObjectForm: TParentForm},
+  GoodsGroupEdit in '..\..\FormsBoat\Guides\GoodsGroupEdit.pas' {GoodsGroupEditForm: TParentForm},
+  InfoMoneyGroupEdit in '..\..\FormsBoat\Guides\InfoMoneyGroupEdit.pas' {InfoMoneyGroupEditForm: TParentForm},
+  InfoMoneyGroup in '..\..\FormsBoat\Guides\InfoMoneyGroup.pas' {InfoMoneyGroupForm: TParentForm},
+  InfoMoneyGroup_Object in '..\..\FormsBoat\Guides\InfoMoneyGroup_Object.pas' {InfoMoneyGroup_ObjectForm: TParentForm},
+  InfoMoneyDestination_Object in '..\..\FormsBoat\Guides\InfoMoneyDestination_Object.pas' {InfoMoneyDestination_ObjectForm: TParentForm},
+  InfoMoneyDestinationEdit in '..\..\FormsBoat\Guides\InfoMoneyDestinationEdit.pas' {InfoMoneyDestinationEditForm: TParentForm},
+  InfoMoneyDestination in '..\..\FormsBoat\Guides\InfoMoneyDestination.pas' {InfoMoneyDestinationForm: TParentForm};
 
 {$R *.res}
 {$R DevExpressRus.res}

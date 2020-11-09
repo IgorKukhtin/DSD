@@ -246,10 +246,20 @@ CREATE OR REPLACE FUNCTION zc_Object_Country() RETURNS Integer AS $BODY$BEGIN RE
 INSERT INTO ObjectDesc (Code, ItemName)
   SELECT 'zc_Object_Country', 'Страна' WHERE NOT EXISTS (SELECT * FROM ObjectDesc WHERE Code = 'zc_Object_Country');
 
+CREATE OR REPLACE FUNCTION zc_Object_PLZ() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM ObjectDesc WHERE Code = 'zc_Object_PLZ'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
+INSERT INTO ObjectDesc (Code, ItemName)
+  SELECT 'zc_Object_PLZ', 'Почтовые адреса' WHERE NOT EXISTS (SELECT * FROM ObjectDesc WHERE Code = 'zc_Object_PLZ');
+
+CREATE OR REPLACE FUNCTION zc_Object_ModelEtiketen() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM ObjectDesc WHERE Code = 'zc_Object_ModelEtiketen'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
+INSERT INTO ObjectDesc (Code, ItemName)
+  SELECT 'zc_Object_ModelEtiketen', 'Группы товаров' WHERE NOT EXISTS (SELECT * FROM ObjectDesc WHERE Code = 'zc_Object_ModelEtiketen');
+
 /*-------------------------------------------------------------------------------
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
  09.11.20         * zc_Object_Country
+                    zc_Object_PLZ
+                    zc_Object_ModelEtiketen                    
  15.10.20         * zc_Object_ProdOptPattern
                     zc_Object_ProdColorPattern
  09.10.20         * zc_Object_Product

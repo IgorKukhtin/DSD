@@ -1,9 +1,9 @@
-object CountryEditForm: TCountryEditForm
+﻿object InfoMoneyDestinationEditForm: TInfoMoneyDestinationEditForm
   Left = 0
   Top = 0
-  Caption = #1044#1086#1073#1072#1074#1080#1090#1100'/'#1048#1079#1084#1077#1085#1080#1090#1100' <'#1057#1090#1088#1072#1085#1091'>'
-  ClientHeight = 197
-  ClientWidth = 295
+  Caption = #1059#1087#1088#1072#1074#1083#1077#1085#1095#1077#1089#1082#1086#1077' '#1085#1072#1079#1085#1072#1095#1077#1085#1080#1077
+  ClientHeight = 145
+  ClientWidth = 292
   Color = clBtnFace
   Font.Charset = DEFAULT_CHARSET
   Font.Color = clWindowText
@@ -16,65 +16,54 @@ object CountryEditForm: TCountryEditForm
   AddOnFormData.Params = FormParams
   PixelsPerInch = 96
   TextHeight = 13
-  object edName: TcxTextEdit
+  object edMeasureName: TcxTextEdit
     Left = 10
-    Top = 72
+    Top = 73
     TabOrder = 0
     Width = 273
   end
   object cxLabel1: TcxLabel
     Left = 10
-    Top = 54
-    Caption = #1053#1072#1079#1074#1072#1085#1080#1077
+    Top = 50
+    Caption = #1053#1072#1080#1084#1077#1085#1086#1074#1072#1085#1080#1077
   end
   object cxButton1: TcxButton
-    Left = 41
-    Top = 152
+    Left = 42
+    Top = 107
     Width = 75
     Height = 25
     Action = dsdInsertUpdateGuides
     Default = True
+    ModalResult = 8
     TabOrder = 2
   end
   object cxButton2: TcxButton
-    Left = 185
-    Top = 152
+    Left = 186
+    Top = 107
     Width = 75
     Height = 25
-    Action = dsdFormClose
+    Action = dsdFormClose1
     Cancel = True
     Caption = #1054#1090#1084#1077#1085#1072
+    ModalResult = 8
     TabOrder = 3
   end
-  object cxLabel2: TcxLabel
+  object Код: TcxLabel
     Left = 10
-    Top = 8
+    Top = 6
     Caption = #1050#1086#1076
   end
-  object edCode: TcxCurrencyEdit
+  object ceCode: TcxCurrencyEdit
     Left = 10
-    Top = 30
-    EditValue = 0.000000000000000000
+    Top = 29
     Properties.DecimalPlaces = 0
     Properties.DisplayFormat = '0'
-    Properties.ReadOnly = True
     TabOrder = 5
     Width = 273
   end
-  object cxLabel3: TcxLabel
-    Left = 10
-    Top = 100
-    Caption = #1050#1088#1072#1090#1082#1086#1077' '#1086#1073#1086#1079#1085#1072#1095#1077#1085#1080#1077
-  end
-  object edShortName: TcxTextEdit
-    Left = 10
-    Top = 118
-    TabOrder = 7
-    Width = 273
-  end
   object ActionList: TActionList
-    Left = 240
-    Top = 8
+    Left = 168
+    Top = 48
     object dsdDataSetRefresh: TdsdDataSetRefresh
       Category = 'DSDLib'
       MoveParams = <>
@@ -88,6 +77,10 @@ object CountryEditForm: TCountryEditForm
       ShortCut = 116
       RefreshOnTabSetChanges = False
     end
+    object dsdFormClose1: TdsdFormClose
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+    end
     object dsdInsertUpdateGuides: TdsdInsertUpdateGuides
       Category = 'DSDLib'
       MoveParams = <>
@@ -97,15 +90,11 @@ object CountryEditForm: TCountryEditForm
         item
           StoredProc = spInsertUpdate
         end>
-      Caption = 'Ok'
-    end
-    object dsdFormClose: TdsdFormClose
-      MoveParams = <>
-      PostDataSetBeforeExecute = False
+      Caption = #1054#1082
     end
   end
   object spInsertUpdate: TdsdStoredProc
-    StoredProcName = 'gpInsertUpdate_Object_Country'
+    StoredProcName = 'gpInsertUpdate_Object_InfoMoneyDestination'
     DataSets = <>
     OutputType = otResult
     Params = <
@@ -118,31 +107,23 @@ object CountryEditForm: TCountryEditForm
         MultiSelectSeparator = ','
       end
       item
-        Name = 'ioCode'
+        Name = 'inCode'
         Value = 0.000000000000000000
-        Component = edCode
-        ParamType = ptInputOutput
+        Component = ceCode
+        ParamType = ptInput
         MultiSelectSeparator = ','
       end
       item
         Name = 'inName'
         Value = ''
-        Component = edName
-        DataType = ftString
-        ParamType = ptInput
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'inShortName'
-        Value = Null
-        Component = edShortName
+        Component = edMeasureName
         DataType = ftString
         ParamType = ptInput
         MultiSelectSeparator = ','
       end>
     PackSize = 1
-    Left = 96
-    Top = 48
+    Left = 128
+    Top = 40
   end
   object FormParams: TdsdFormParams
     Params = <
@@ -152,16 +133,16 @@ object CountryEditForm: TCountryEditForm
         ParamType = ptInputOutput
         MultiSelectSeparator = ','
       end>
-    Left = 96
-    Top = 8
+    Left = 112
+    Top = 88
   end
   object spGet: TdsdStoredProc
-    StoredProcName = 'gpGet_Object_Country'
+    StoredProcName = 'gpGet_Object_InfoMoneyDestination'
     DataSets = <>
     OutputType = otResult
     Params = <
       item
-        Name = 'inId'
+        Name = 'Id'
         Value = Null
         Component = FormParams
         ComponentItem = 'Id'
@@ -169,29 +150,21 @@ object CountryEditForm: TCountryEditForm
         MultiSelectSeparator = ','
       end
       item
-        Name = 'Name'
-        Value = ''
-        Component = edName
-        DataType = ftString
-        MultiSelectSeparator = ','
-      end
-      item
         Name = 'Code'
         Value = 0.000000000000000000
-        Component = edCode
-        DataType = ftUnknown
+        Component = ceCode
         MultiSelectSeparator = ','
       end
       item
-        Name = 'ShortName'
-        Value = Null
-        Component = edShortName
+        Name = 'Name'
+        Value = ''
+        Component = edMeasureName
         DataType = ftString
         MultiSelectSeparator = ','
       end>
     PackSize = 1
-    Left = 160
-    Top = 8
+    Left = 200
+    Top = 80
   end
   object cxPropertiesStore: TcxPropertiesStore
     Components = <
@@ -205,11 +178,10 @@ object CountryEditForm: TCountryEditForm
       end>
     StorageName = 'cxPropertiesStore'
     StorageType = stStream
-    Left = 240
-    Top = 64
+    Left = 40
+    Top = 80
   end
-  object dsdUserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn
-    Left = 96
-    Top = 96
+  object UserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn
+    Left = 184
   end
 end

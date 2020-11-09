@@ -1,8 +1,8 @@
-object CountryEditForm: TCountryEditForm
+object PLZEditForm: TPLZEditForm
   Left = 0
   Top = 0
-  Caption = #1044#1086#1073#1072#1074#1080#1090#1100'/'#1048#1079#1084#1077#1085#1080#1090#1100' <'#1057#1090#1088#1072#1085#1091'>'
-  ClientHeight = 197
+  Caption = #1044#1086#1073#1072#1074#1080#1090#1100'/'#1048#1079#1084#1077#1085#1080#1090#1100' <'#1055#1086#1095#1090#1086#1074#1099#1077' '#1072#1076#1088#1077#1089#1072'>'
+  ClientHeight = 330
   ClientWidth = 295
   Color = clBtnFace
   Font.Charset = DEFAULT_CHARSET
@@ -28,23 +28,23 @@ object CountryEditForm: TCountryEditForm
     Caption = #1053#1072#1079#1074#1072#1085#1080#1077
   end
   object cxButton1: TcxButton
-    Left = 41
-    Top = 152
+    Left = 33
+    Top = 299
     Width = 75
     Height = 25
     Action = dsdInsertUpdateGuides
     Default = True
-    TabOrder = 2
+    TabOrder = 4
   end
   object cxButton2: TcxButton
-    Left = 185
-    Top = 152
+    Left = 177
+    Top = 299
     Width = 75
     Height = 25
     Action = dsdFormClose
     Cancel = True
     Caption = #1054#1090#1084#1077#1085#1072
-    TabOrder = 3
+    TabOrder = 5
   end
   object cxLabel2: TcxLabel
     Left = 10
@@ -58,23 +58,62 @@ object CountryEditForm: TCountryEditForm
     Properties.DecimalPlaces = 0
     Properties.DisplayFormat = '0'
     Properties.ReadOnly = True
-    TabOrder = 5
+    TabOrder = 6
     Width = 273
   end
   object cxLabel3: TcxLabel
     Left = 10
-    Top = 100
-    Caption = #1050#1088#1072#1090#1082#1086#1077' '#1086#1073#1086#1079#1085#1072#1095#1077#1085#1080#1077
+    Top = 144
+    Caption = #1043#1086#1088#1086#1076
   end
-  object edShortName: TcxTextEdit
+  object cxLabel4: TcxLabel
     Left = 10
-    Top = 118
-    TabOrder = 7
+    Top = 236
+    Caption = #1055#1088#1080#1084#1077#1095#1072#1085#1080#1077
+  end
+  object edComment: TcxTextEdit
+    Left = 10
+    Top = 254
+    TabOrder = 2
     Width = 273
   end
+  object edCity: TcxTextEdit
+    Left = 10
+    Top = 162
+    TabOrder = 1
+    Width = 273
+  end
+  object edAreaCode: TcxTextEdit
+    Left = 10
+    Top = 208
+    TabOrder = 3
+    Width = 273
+  end
+  object cxLabel5: TcxLabel
+    Left = 10
+    Top = 193
+    Caption = #1048#1085#1076#1077#1082#1089
+  end
+  object edCountry: TcxButtonEdit
+    Left = 10
+    Top = 116
+    Properties.Buttons = <
+      item
+        Default = True
+        Kind = bkEllipsis
+      end>
+    Properties.ReadOnly = True
+    TabOrder = 12
+    Width = 273
+  end
+  object cxLabel6: TcxLabel
+    Left = 10
+    Top = 100
+    Caption = #1057#1090#1088#1072#1085#1072
+  end
   object ActionList: TActionList
-    Left = 240
-    Top = 8
+    Left = 152
+    Top = 56
     object dsdDataSetRefresh: TdsdDataSetRefresh
       Category = 'DSDLib'
       MoveParams = <>
@@ -105,7 +144,7 @@ object CountryEditForm: TCountryEditForm
     end
   end
   object spInsertUpdate: TdsdStoredProc
-    StoredProcName = 'gpInsertUpdate_Object_Country'
+    StoredProcName = 'gpInsertUpdate_Object_PLZ'
     DataSets = <>
     OutputType = otResult
     Params = <
@@ -133,10 +172,34 @@ object CountryEditForm: TCountryEditForm
         MultiSelectSeparator = ','
       end
       item
-        Name = 'inShortName'
+        Name = 'inINN'
         Value = Null
-        Component = edShortName
+        Component = edCity
         DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inComment'
+        Value = Null
+        Component = edComment
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inEMail'
+        Value = Null
+        Component = edAreaCode
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inCountryId'
+        Value = Null
+        Component = GuidesCountry
+        ComponentItem = 'Key'
         ParamType = ptInput
         MultiSelectSeparator = ','
       end>
@@ -156,7 +219,7 @@ object CountryEditForm: TCountryEditForm
     Top = 8
   end
   object spGet: TdsdStoredProc
-    StoredProcName = 'gpGet_Object_Country'
+    StoredProcName = 'gpGet_Object_PLZ'
     DataSets = <>
     OutputType = otResult
     Params = <
@@ -183,15 +246,44 @@ object CountryEditForm: TCountryEditForm
         MultiSelectSeparator = ','
       end
       item
-        Name = 'ShortName'
+        Name = 'City'
         Value = Null
-        Component = edShortName
+        Component = edCity
+        DataType = ftString
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'AreaCode'
+        Value = Null
+        Component = edAreaCode
+        DataType = ftString
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'Comment'
+        Value = Null
+        Component = edComment
+        DataType = ftString
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'CountryId'
+        Value = Null
+        Component = GuidesCountry
+        ComponentItem = 'Key'
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'CountryName'
+        Value = Null
+        Component = GuidesCountry
+        ComponentItem = 'TextValue'
         DataType = ftString
         MultiSelectSeparator = ','
       end>
     PackSize = 1
-    Left = 160
-    Top = 8
+    Left = 184
+    Top = 16
   end
   object cxPropertiesStore: TcxPropertiesStore
     Components = <
@@ -205,11 +297,40 @@ object CountryEditForm: TCountryEditForm
       end>
     StorageName = 'cxPropertiesStore'
     StorageType = stStream
-    Left = 240
-    Top = 64
+    Left = 160
+    Top = 104
   end
   object dsdUserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn
-    Left = 96
-    Top = 96
+    Left = 104
+    Top = 104
+  end
+  object GuidesCountry: TdsdGuides
+    KeyField = 'Id'
+    LookupControl = edCountry
+    FormNameParam.Value = 'TCountryForm'
+    FormNameParam.DataType = ftString
+    FormNameParam.MultiSelectSeparator = ','
+    FormName = 'TCountryForm'
+    PositionDataSet = 'MasterCDS'
+    Params = <
+      item
+        Name = 'Key'
+        Value = ''
+        Component = GuidesCountry
+        ComponentItem = 'Key'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'TextValue'
+        Value = ''
+        Component = GuidesCountry
+        ComponentItem = 'TextValue'
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end>
+    Left = 221
+    Top = 100
   end
 end

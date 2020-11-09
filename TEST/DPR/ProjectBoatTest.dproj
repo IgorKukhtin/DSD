@@ -467,6 +467,70 @@
 				<Form>CountryForm</Form>
 				<DesignClass>TParentForm</DesignClass>
 			</DCCReference>
+			<DCCReference Include="..\..\FormsBoat\Guides\PLZ.pas">
+				<Form>PLZForm</Form>
+				<DesignClass>TParentForm</DesignClass>
+			</DCCReference>
+			<DCCReference Include="..\..\FormsBoat\Guides\PLZEdit.pas">
+				<Form>PLZEditForm</Form>
+				<DesignClass>TParentForm</DesignClass>
+			</DCCReference>
+			<DCCReference Include="..\..\FormsBoat\Guides\ModelEtiketenEdit.pas">
+				<Form>ModelEtiketenEditForm</Form>
+				<DesignClass>TParentForm</DesignClass>
+			</DCCReference>
+			<DCCReference Include="..\..\FormsBoat\Guides\ModelEtiketen.pas">
+				<Form>ModelEtiketenForm</Form>
+				<DesignClass>TParentForm</DesignClass>
+			</DCCReference>
+			<DCCReference Include="..\..\FormsBoat\Guides\InfoMoney.pas">
+				<Form>InfoMoneyForm</Form>
+				<DesignClass>TParentForm</DesignClass>
+			</DCCReference>
+			<DCCReference Include="..\..\FormsBoat\Guides\InfoMoney_Object.pas">
+				<Form>InfoMoney_ObjectForm</Form>
+				<DesignClass>TParentForm</DesignClass>
+			</DCCReference>
+			<DCCReference Include="..\..\FormsBoat\Guides\InfoMoneyEdit.pas">
+				<Form>InfoMoneyEditForm</Form>
+				<DesignClass>TParentForm</DesignClass>
+			</DCCReference>
+			<DCCReference Include="..\..\FormsBoat\Guides\GoodsGroup.pas">
+				<Form>GoodsGroupForm</Form>
+				<DesignClass>TParentForm</DesignClass>
+			</DCCReference>
+			<DCCReference Include="..\..\FormsBoat\Guides\GoodsGroup_Object.pas">
+				<Form>GoodsGroup_ObjectForm</Form>
+				<DesignClass>TParentForm</DesignClass>
+			</DCCReference>
+			<DCCReference Include="..\..\FormsBoat\Guides\GoodsGroupEdit.pas">
+				<Form>GoodsGroupEditForm</Form>
+				<DesignClass>TParentForm</DesignClass>
+			</DCCReference>
+			<DCCReference Include="..\..\FormsBoat\Guides\InfoMoneyGroupEdit.pas">
+				<Form>InfoMoneyGroupEditForm</Form>
+				<DesignClass>TParentForm</DesignClass>
+			</DCCReference>
+			<DCCReference Include="..\..\FormsBoat\Guides\InfoMoneyGroup.pas">
+				<Form>InfoMoneyGroupForm</Form>
+				<DesignClass>TParentForm</DesignClass>
+			</DCCReference>
+			<DCCReference Include="..\..\FormsBoat\Guides\InfoMoneyGroup_Object.pas">
+				<Form>InfoMoneyGroup_ObjectForm</Form>
+				<DesignClass>TParentForm</DesignClass>
+			</DCCReference>
+			<DCCReference Include="..\..\FormsBoat\Guides\InfoMoneyDestination_Object.pas">
+				<Form>InfoMoneyDestination_ObjectForm</Form>
+				<DesignClass>TParentForm</DesignClass>
+			</DCCReference>
+			<DCCReference Include="..\..\FormsBoat\Guides\InfoMoneyDestinationEdit.pas">
+				<Form>InfoMoneyDestinationEditForm</Form>
+				<DesignClass>TParentForm</DesignClass>
+			</DCCReference>
+			<DCCReference Include="..\..\FormsBoat\Guides\InfoMoneyDestination.pas">
+				<Form>InfoMoneyDestinationForm</Form>
+				<DesignClass>TParentForm</DesignClass>
+			</DCCReference>
 			<BuildConfiguration Include="Release">
 				<Key>Cfg_2</Key>
 				<CfgParent>Base</CfgParent>

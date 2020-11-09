@@ -4,12 +4,12 @@ DROP FUNCTION IF EXISTS gpInsertUpdate_Object_Country (Integer, Integer, TVarCha
 
 CREATE OR REPLACE FUNCTION gpInsertUpdate_Object_Country(
  INOUT ioId           Integer,       -- Ключ объекта <Страна >
-    IN inCode         Integer,       -- Код Объекта <Страна >
+ INOUT ioCode         Integer,       -- Код Объекта <Страна >
     IN inName         TVarChar,      -- Название объекта <Страна>
     IN inShortName    TVarChar,      -- Краткое название
     IN inSession      TVarChar       -- сессия пользователя
 )
-RETURNS Integer
+RETURNS RECORD
 AS
 $BODY$
    DECLARE vbUserId Integer;
@@ -20,11 +20,11 @@ BEGIN
    -- PERFORM lpCheckRight(inSession, zc_Enum_Process_Country());
    vbUserId:= lpGetUserBySession (inSession);
 
-   -- 
-   IF COALESCE (ioId, 0) = 0 AND COALESCE (inCode, 0) = 0  THEN inCode := NEXTVAL ('Object_Country_seq'); 
-   ELSEIF inCode = 0
-         THEN inCode := COALESCE ((SELECT ObjectCode FROM Object WHERE Id = ioId), 0);
-   END IF; 
+   -- определяем признак Создание/Корректировка
+   vbIsInsert:= COALESCE (ioId, 0) = 0;
+   
+    -- Если код не установлен, определяем его как последний+1
+   ioCode:= lfGet_ObjectCode (ioCode, zc_Object_Country()); 
 
    -- проверка уникальности для свойства <Наименование Страна>
    PERFORM lpCheckUnique_Object_ValueData (ioId, zc_Object_Country(), inName);

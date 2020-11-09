@@ -101,11 +101,30 @@ CREATE OR REPLACE FUNCTION zc_ObjectString_Country_ShortName() RETURNS Integer A
 INSERT INTO ObjectStringDesc (Code, DescId, ItemName)
   SELECT 'zc_ObjectString_Country_ShortName', zc_Object_Country(), 'Краткое название' WHERE NOT EXISTS (SELECT * FROM ObjectStringDesc WHERE Code = 'zc_ObjectString_Country_ShortName');
 
+CREATE OR REPLACE FUNCTION zc_ObjectString_PLZ_City() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM ObjectStringDesc WHERE Code = 'zc_ObjectString_PLZ_City'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
+INSERT INTO ObjectStringDesc (Code, DescId, ItemName)
+  SELECT 'zc_ObjectString_PLZ_City', zc_Object_PLZ(), 'Город' WHERE NOT EXISTS (SELECT * FROM ObjectStringDesc WHERE Code = 'zc_ObjectString_PLZ_City');
+
+CREATE OR REPLACE FUNCTION zc_ObjectString_PLZ_AreaCode() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM ObjectStringDesc WHERE Code = 'zc_ObjectString_PLZ_AreaCode'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
+INSERT INTO ObjectStringDesc (Code, DescId, ItemName)
+  SELECT 'zc_ObjectString_PLZ_AreaCode', zc_Object_PLZ(), 'Префикс' WHERE NOT EXISTS (SELECT * FROM ObjectStringDesc WHERE Code = 'zc_ObjectString_PLZ_AreaCode');
+
+CREATE OR REPLACE FUNCTION zc_ObjectString_PLZ_Comment() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM ObjectStringDesc WHERE Code = 'zc_ObjectString_PLZ_Comment'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
+INSERT INTO ObjectStringDesc (Code, DescId, ItemName)
+  SELECT 'zc_ObjectString_PLZ_Comment', zc_Object_PLZ(), 'Примечание' WHERE NOT EXISTS (SELECT * FROM ObjectStringDesc WHERE Code = 'zc_ObjectString_PLZ_Comment');
+
+CREATE OR REPLACE FUNCTION zc_ObjectString_ModelEtiketen_Comment() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM ObjectStringDesc WHERE Code = 'zc_ObjectString_ModelEtiketen_Comment'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
+INSERT INTO ObjectStringDesc (Code, DescId, ItemName)
+  SELECT 'zc_ObjectString_ModelEtiketen_Comment', zc_Object_ModelEtiketen(), 'Примечание' WHERE NOT EXISTS (SELECT * FROM ObjectStringDesc WHERE Code = 'zc_ObjectString_ModelEtiketen_Comment');
 
 /*-------------------------------------------------------------------------------
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
  09.11.20         * zc_ObjectString_Country_ShortName
+                    zc_ObjectString_PLZ_City
+                    zc_ObjectString_PLZ_AreaCode
+                    zc_ObjectString_PLZ_Comment
+                    zc_ObjectString_ModelEtiketen_Comment
  09.10.20         * zc_ObjectString_Product_...
                     zc_ObjectString_ProdColorItems_Comment
                     zc_ObjectString_ProdOptItems_PartNumber

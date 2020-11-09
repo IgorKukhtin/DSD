@@ -195,6 +195,10 @@ type
     actProdOptPattern: TdsdOpenForm;
     miProdColorPattern: TMenuItem;
     miProdOptPattern: TMenuItem;
+    actPLZ: TdsdOpenForm;
+    miPLZ: TMenuItem;
+    actModelEtiketen: TdsdOpenForm;
+    miModelEtiketen: TMenuItem;
   private
     { Private declarations }
   public
