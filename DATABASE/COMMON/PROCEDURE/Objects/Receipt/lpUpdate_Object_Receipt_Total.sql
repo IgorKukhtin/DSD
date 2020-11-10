@@ -81,7 +81,6 @@ BEGIN
                               AS TaxExit
                        FROM ObjectLink AS ObjectLink_Receipt_Parent
                             LEFT JOIN Object AS Object_Receipt_find ON Object_Receipt_find.Id = ObjectLink_Receipt_Parent.ObjectId
-                                                                   AND Object_Receipt_find.isErased = FALSE
                             LEFT JOIN ObjectFloat AS ObjectFloat_TaxExit_parent
                                                   ON ObjectFloat_TaxExit_parent.ObjectId = ObjectLink_Receipt_Parent.ChildObjectId
                                                  AND ObjectFloat_TaxExit_parent.DescId = zc_ObjectFloat_Receipt_TaxExit()
@@ -101,6 +100,7 @@ BEGIN
                          AND ObjectLink_Receipt_Parent.ChildObjectId = inReceiptId
                          AND COALESCE (ObjectFloat_TaxExit_parent.ValueData, 0)
                           <> (COALESCE (ObjectFloat_TaxExit_find.ValueData, 0) * CASE WHEN ObjectLink_Goods_Measure.ChildObjectId = zc_Measure_Sh() THEN COALESCE (ObjectFloat_Weight.ValueData, 0) ELSE 1 END)
+                         AND COALESCE (Object_Receipt_find.isErased, FALSE) = FALSE
                        LIMIT 1
                       ) AS tmp ON tmp.TaxExit <> COALESCE (ObjectFloat_TaxExit.ValueData, 0)
        WHERE Object_Receipt.Id = inReceiptId;

@@ -12,6 +12,7 @@ CREATE OR REPLACE FUNCTION gpUpdateMI_OrderInternal_Amount(
    OUT outAmountAllTotal     TFloat    , -- 
    OUT outAmountTotal        TFloat    , -- 
    OUT outAmountNextTotal    TFloat    , -- 
+   OUT outIsCalculated       Boolean   , -- 
     IN inSession             TVarChar    -- сесси€ пользовател€
 )
 RETURNS RECORD
@@ -26,6 +27,18 @@ BEGIN
      IF COALESCE (inId, 0) = 0
      THEN
          RAISE EXCEPTION 'ќшибка.Ёлемент не найден.';
+     END IF;
+
+     -- —клады Ѕаза + –еализации -> ÷≈’ упаковки
+     IF   EXISTS (SELECT 1 FROM MovementLinkObject AS MLO WHERE MLO.MovementId = inMovementId AND MLO.ObjectId = 8457 AND MLO.DescId = zc_MovementLinkObject_From())
+      AND EXISTS (SELECT 1 FROM MovementLinkObject AS MLO WHERE MLO.MovementId = inMovementId AND MLO.ObjectId = 8451 AND MLO.DescId = zc_MovementLinkObject_To())
+      AND EXISTS (SELECT 1 FROM MovementItem AS MI WHERE MI.Id = inId AND MI.Amount <> inAmount)
+     THEN
+         outIsCalculated:= FALSE;
+         -- сохранили свойство <»змен€ть факт при пересчете>
+         PERFORM lpInsertUpdate_MovementItemBoolean (zc_MIBoolean_Calculated(), inId, FALSE);
+     ELSE
+         outIsCalculated:= COALESCE ((SELECT MIB.ValueData FROM MovementItemBoolean AS MIB WHERE MIB.MovementItemId = inId AND MIB.DescId = zc_MIBoolean_Calculated()), TRUE);
      END IF;
 
      -- сохранили <Ёлемент документа>
@@ -44,6 +57,7 @@ BEGIN
      
      -- пересчитали »тоговые суммы по накладной
      PERFORM lpInsertUpdate_MovementFloat_TotalSumm (inMovementId);
+     
 
      -- сохранили протокол !!!после изменений!!!
      PERFORM lpInsert_MovementItemProtocol (inId, vbUserId, FALSE);

@@ -166,3 +166,32 @@ $BODY$
 
 -- тест
 -- SELECT * FROM gpInsertUpdate_Object_Partner_From_Excel()
+
+
+/*
+select * from gpInsertUpdate_Object_Partner_From_Excel
+(inCode := 47 ::Integer, 
+inName := 'KOLIBRI Boat manufacturin' :: TVarChar , 
+inName2 := ''  :: TVarChar, 
+inName3 := ''  :: TVarChar, 
+inStreet := 'A.  4, K. Gordienka' :: TVarChar , 
+inShortName := 'UA'  :: TVarChar, 
+inCity := 'Dnipro'  :: TVarChar, 
+inFax := ''  :: TVarChar, 
+inPhone := '+38 (056) 375-37-76' :: TVarChar, 
+inMobile := ''  :: TVarChar, 
+inIBAN := ''  :: TVarChar, 
+inBankName := ''  :: TVarChar, 
+inMember := ''  :: TVarChar, 
+inWWW := ''  :: TVarChar, 
+inEmail := 'star@kolibriboats.com.ua' :: TVarChar , 
+inCodeDB := ''  :: TVarChar, 
+inPLZ := '49000'  :: TVarChar,  
+inSession := '5' :: TVarChar);
+
+select * from gpInsertUpdate_Object_Partner_From_Excel(inCode := 38 , inName := 'Wilks Mfgs. Co. Ltd':: TVarChar , inName2 := '' :: TVarChar, inName3 := '':: TVarChar , inStreet := 'Woodrolfe Road,':: TVarChar , inShortName := 'UK' :: TVarChar
+, inCity := 'Tollesbury, Maldon, Essex' :: TVarChar, inFax := '' :: TVarChar, inPhone := '+44 (0) 1621 869609' :: TVarChar, inMobile := '+44 (0) 7834 551 916' :: TVarChar
+, inIBAN := '' :: TVarChar, inBankName := '':: TVarChar , inMember := 'Jeff Webber' :: TVarChar, inWWW := 'www.wilks.co.uk':: TVarChar , inEmail := 'Jeff@wilks.co.uk' :: TVarChar
+, inCodeDB := '' :: TVarChar, inPLZ := 'CM98RY':: TVarChar ,  inSession := '5':: TVarChar);
+
+*/

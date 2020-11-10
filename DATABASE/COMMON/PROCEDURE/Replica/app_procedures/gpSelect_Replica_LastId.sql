@@ -110,7 +110,8 @@ $BODY$
 */
 
 -- тест
-
+-- SELECT * FROM ResourseItemProtocol ORDER BY Id DESC LIMIT 100
+-- SELECT _replica.gpSelect_Replica_LastId (1294818468, 200000)
  WITH tmpParams2 AS (SELECT 789863512 AS Id_start, 200000 AS Rec_count, 0 AS Rec_count_diff)
 -- WITH tmpParams2 AS (SELECT 651426894 AS Id_start, 200000 AS Rec_count, 80000 AS Rec_count_diff)
     , tmpParams AS (SELECT COALESCE ((SELECT MAX (Id) FROM _replica.table_update_data WHERE (SELECT Rec_count_diff FROM tmpParams2) > 0) - (SELECT Rec_count_diff FROM tmpParams2 WHERE Rec_count_diff > 0)

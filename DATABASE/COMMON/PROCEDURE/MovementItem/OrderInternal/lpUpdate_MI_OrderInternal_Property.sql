@@ -95,6 +95,11 @@ BEGIN
          vbIsParentMulti_goods:= FALSE;
      END IF;
 
+if ioId = 185125074 and inUserId = 5
+then
+    RAISE EXCEPTION 'Ошибка.<%>', vbIsParentMulti_goods;
+end if;
+
      -- если товар раскладывается на несколько
      IF vbIsParentMulti_goods = TRUE
      THEN
@@ -190,6 +195,7 @@ BEGIN
                  AND MovementItem.isErased   = FALSE
                  AND COALESCE (MILinkObject_GoodsKind.ObjectId, 0) = COALESCE (inGoodsKindId, 0)
                  AND COALESCE (MIFloat_ContainerId.ValueData, 0) = 0
+                 AND MILinkObject_Goods.ObjectId > 0
                )
            --
            SELECT COALESCE (tmpMI.MovementItemId, 0)                                    AS MovementItemId

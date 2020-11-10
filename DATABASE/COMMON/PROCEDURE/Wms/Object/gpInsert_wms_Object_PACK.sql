@@ -77,7 +77,7 @@ BEGIN
                                , COALESCE (tmp.WeightMaxGross, 0) AS WeightMaxGross           -- Вес брутто полного ящика "по МАКСИМАЛЬНОМУ весу" (E2/E3)
                                , COALESCE (tmp.WeightMaxNet, 0)   AS WeightMaxNet             -- Вес нетто полного ящика "по МАКСИМАЛЬНОМУ весу" (E2/E3)
                           FROM lpSelect_wms_Object_SKU() AS tmp
-                        --WHERE sku_id in ('34570361', '34570391')
+                        --WHERE sku_id in ('34570381')
                         --WHERE tmp.BoxId NOT IN (zc_Box_E2(), zc_Box_E3())
 
                          )
@@ -126,7 +126,7 @@ BEGIN
                                --
                                , '-'                 :: TVarChar AS barcode
                                -- Признак основной упаковки: t – является основной упаковкой; f – не является основной упаковкой Значение по умолчанию t
-                               , 't'                 :: TVarChar AS is_main
+                               , 'f'                 :: TVarChar AS is_main
                                -- Тип упаковки: коробочная упаковка
                                , wms_Object_Pack.ctn_type        AS ctn_type
 

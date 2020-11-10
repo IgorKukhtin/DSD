@@ -39,7 +39,7 @@ BEGIN
       from information_schema.columns C
       where table_schema = 'public' and data_type = 'text'
     ) B on T.table_name = B.table_name
-  /*where T.table_name NOT ILIKE 'MovementItem'
+  where T.table_name NOT ILIKE 'MovementItem'
       and T.table_name NOT ILIKE 'objecthistorylinkdesc'
       and T.table_name NOT ILIKE 'Container'
       and T.table_name NOT ILIKE 'movementitemlinkobject'
@@ -53,18 +53,43 @@ BEGIN
       and T.table_name NOT ILIKE 'objecthistorydate'
       and T.table_name NOT ILIKE 'defaultkeys'
       and T.table_name NOT ILIKE 'movementdate'
+
+      and T.table_name NOT ILIKE 'reportprotocol'
       and T.table_name NOT ILIKE 'objectbooleandesc'
       and T.table_name NOT ILIKE 'objectprotocol'
       and T.table_name NOT ILIKE 'wms_tohostheader'
-      and T.table_name NOT ILIKE 'objectblobdesc'
-      and T.table_name NOT ILIKE 'reportprotocol'
-      and T.table_name NOT ILIKE 'movement'
-      and T.table_name NOT ILIKE 'movementitembooleandesc'
       and T.table_name NOT ILIKE 'movementbooleandesc'
+      and T.table_name NOT ILIKE 'objectblobdesc'
+      and T.table_name NOT ILIKE 'movementitemcontainer'
+      and T.table_name NOT ILIKE 'objectdatedesc'
+      and T.table_name NOT ILIKE 'objecthistoryfloatdesc'
+      and T.table_name NOT ILIKE 'wms_to_host_message'
+      and T.table_name NOT ILIKE 'objectfloat'
+      and T.table_name NOT ILIKE 'wms_movement_weighingproduction22'
+      and T.table_name NOT ILIKE 'movementitemfloatdesc'
+      and T.table_name NOT ILIKE 'objecthistorylink'
+      and T.table_name NOT ILIKE 'movementdatedesc'
+      and T.table_name NOT ILIKE 'movementitemdate'
+      and T.table_name NOT ILIKE 'wms_mi_weighingproduction'
+      and T.table_name NOT ILIKE 'containerlinkobjectdesc'
+      and T.table_name NOT ILIKE 'movementitemstringdesc'
+      and T.table_name NOT ILIKE 'movementlinkobject'
+      and T.table_name NOT ILIKE 'objectboolean'
+      and T.table_name NOT ILIKE 'objectstringdesc'
+      and T.table_name NOT ILIKE 'movementitemboolean'
+      and T.table_name NOT ILIKE 'objecthistorystringdesc'
+      and T.table_name NOT ILIKE 'userprotocol'
+      and T.table_name NOT ILIKE 'containerdesc'
+      and T.table_name NOT ILIKE 'historycost'
+      and T.table_name NOT ILIKE 'movementdesc'
+    --and T.table_name NOT ILIKE 'movementitemfloat'
 
-      and T.table_name not ILIKE 'movementitemcontainer'*/
     group by T.table_name, B.table_name
-  --order by case when T.table_name ilike 'movementblob' then 0 else 1 end
+  order by case when T.table_name ilike 'resourseitemprotocol' then 102 
+                when T.table_name ilike 'soldtable' then 101
+                when T.table_name ilike 'movementitemfloat' then 1
+                when T.table_name ilike 'ObjectBlob' then 2
+                else 100 end
     ; 
     
 END;
