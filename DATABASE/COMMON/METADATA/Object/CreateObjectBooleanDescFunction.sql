@@ -791,9 +791,15 @@ CREATE OR REPLACE FUNCTION zc_ObjectBoolean_Unit_MinPercentMarkup() RETURNS Inte
 INSERT INTO ObjectBooleanDesc (DescId, Code, ItemName)
   SELECT zc_Object_Unit(), 'zc_ObjectBoolean_Unit_MinPercentMarkup', 'Использовать минимальную наценку по сети или аптеке' WHERE NOT EXISTS (SELECT * FROM ObjectBooleanDesc WHERE Code = 'zc_ObjectBoolean_Unit_MinPercentMarkup');
 
+CREATE OR REPLACE FUNCTION zc_ObjectBoolean_DiffKind_LessYear() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM ObjectBooleanDesc WHERE Code = 'zc_ObjectBoolean_DiffKind_LessYear'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
+INSERT INTO ObjectBooleanDesc (DescId, Code, ItemName)
+  SELECT zc_Object_DiffKind(), 'zc_ObjectBoolean_DiffKind_LessYear', 'Разрешен заказ товара менее года' WHERE NOT EXISTS (SELECT * FROM ObjectBooleanDesc WHERE Code = 'zc_ObjectBoolean_DiffKind_LessYear');
+
+
 /*-------------------------------------------------------------------------------
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.  Воробкало А.А.  Ярошенко Р.Ф.   Подмогильный В.В.   Шаблий О.В.
+ 10.11.20                                                                                                          * zc_ObjectBoolean_DiffKind_LessYear 
  06.11.20                                                                                                          * zc_ObjectBoolean_Unit_MinPercentMarkup 
  04.10.20                                                                                                          * zc_ObjectBoolean_Contract_PartialPay 
  01.10.20                                                                                                          * zc_ObjectBoolean_Goods_Present 

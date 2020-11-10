@@ -62,11 +62,11 @@
     Width = 121
   end
   object cbIsClose: TcxCheckBox
-    Left = 197
+    Left = 161
     Top = 26
     Caption = #1047#1072#1082#1088#1099#1090' '#1076#1083#1103' '#1079#1072#1082#1072#1079#1072
     TabOrder = 6
-    Width = 120
+    Width = 156
   end
   object ceMaxOrderAmount: TcxCurrencyEdit
     Left = 21
@@ -106,6 +106,16 @@
     Left = 21
     Top = 193
     Caption = #1044#1085#1077#1081' '#1076#1083#1103' '#1087#1088#1086#1076#1072#1078#1099
+  end
+  object cbisLessYear: TcxCheckBox
+    Left = 161
+    Top = 44
+    Hint = #1056#1072#1079#1088#1077#1096#1077#1085' '#1079#1072#1082#1072#1079' '#1090#1086#1074#1072#1088#1072' '#1089#1086' '#1089#1088#1086#1082#1086#1084' '#1084#1077#1085#1077#1077' '#1075#1086#1076#1072
+    Caption = #1047#1072#1082#1072#1079' '#1089#1088#1086#1082#1072' '#1084#1077#1085#1077#1077' '#1075#1086#1076#1072
+    ParentShowHint = False
+    ShowHint = True
+    TabOrder = 13
+    Width = 156
   end
   object ActionList: TActionList
     Left = 120
@@ -198,6 +208,14 @@
         Component = ceDaysForSale
         ParamType = ptInput
         MultiSelectSeparator = ','
+      end
+      item
+        Name = 'isLessYear'
+        Value = Null
+        Component = cbisLessYear
+        DataType = ftBoolean
+        ParamType = ptInput
+        MultiSelectSeparator = ','
       end>
     PackSize = 1
     Left = 152
@@ -265,6 +283,13 @@
         Name = 'DaysForSale'
         Value = Null
         Component = ceDaysForSale
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'isLessYear'
+        Value = Null
+        Component = cbisLessYear
+        DataType = ftBoolean
         MultiSelectSeparator = ','
       end>
     PackSize = 1

@@ -9,6 +9,7 @@ CREATE OR REPLACE FUNCTION gpGet_Object_DiffKind(
 RETURNS TABLE (Id Integer, Code Integer, Name TVarChar
              , isClose Boolean
              , isErased Boolean
+             , isLessYear Boolean
              , MaxOrderAmount TFloat
              , MaxOrderAmountSecond TFloat
              , DaysForSale Integer) AS
@@ -26,6 +27,7 @@ BEGIN
            , lfGet_ObjectCode(0, zc_Object_DiffKind()) AS Code
            , CAST ('' AS TVarChar)  AS NAME
            , FALSE                  AS isClose
+           , FALSE                  AS isLessYear
            , FALSE                  AS isErased
            , NULL::TFloat           AS MaxOrderAmount
            , NULL::TFloat           AS MaxOrderAmountSecond
@@ -36,6 +38,7 @@ BEGIN
             , Object_DiffKind.ObjectCode                           AS Code
             , Object_DiffKind.ValueData                            AS Name
             , ObjectBoolean_DiffKind_Close.ValueData               AS isClose
+            , ObjectBoolean_DiffKind_LessYear.ValueData            AS isLessYear
             , Object_DiffKind.isErased                             AS isErased
             , ObjectFloat_DiffKind_MaxOrderAmount.ValueData        AS MaxOrderAmount
             , ObjectFloat_DiffKind_MaxOrderAmountSecond.ValueData  AS MaxOrderAmount
@@ -44,6 +47,9 @@ BEGIN
             LEFT JOIN ObjectBoolean AS ObjectBoolean_DiffKind_Close
                                     ON ObjectBoolean_DiffKind_Close.ObjectId = Object_DiffKind.Id 
                                    AND ObjectBoolean_DiffKind_Close.DescId = zc_ObjectBoolean_DiffKind_Close() 
+            LEFT JOIN ObjectBoolean AS ObjectBoolean_DiffKind_LessYear
+                                    ON ObjectBoolean_DiffKind_LessYear.ObjectId = Object_DiffKind.Id
+                                   AND ObjectBoolean_DiffKind_LessYear.DescId = zc_ObjectBoolean_DiffKind_LessYear()   
             LEFT JOIN ObjectFloat AS ObjectFloat_DiffKind_MaxOrderAmount
                                   ON ObjectFloat_DiffKind_MaxOrderAmount.ObjectId = Object_DiffKind.Id 
                                  AND ObjectFloat_DiffKind_MaxOrderAmount.DescId = zc_ObjectFloat_MaxOrderAmount() 

@@ -118,7 +118,6 @@ object ListDiffAddGoodsForm: TListDiffAddGoodsForm
       Caption = 'Panel3'
       ShowCaption = False
       TabOrder = 1
-      ExplicitHeight = 108
       object Label2: TLabel
         Left = 19
         Top = 37
@@ -191,7 +190,6 @@ object ListDiffAddGoodsForm: TListDiffAddGoodsForm
       Caption = 'Panel4'
       ShowCaption = False
       TabOrder = 2
-      ExplicitTop = 179
       DesignSize = (
         588
         41)

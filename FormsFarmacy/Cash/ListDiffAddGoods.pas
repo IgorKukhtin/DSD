@@ -133,6 +133,20 @@ begin
     Exit;
   end;
 
+  if not ListGoodsCDS.FieldByName('ExpirationDate').IsNull then
+  begin
+    if  ListGoodsCDS.FieldByName('ExpirationDate').AsDateTime < IncYear(Date, 1) then
+    begin
+      if not DiffKindCDS.FieldByName('isLessYear').AsBoolean then
+      begin
+        Action := TCloseAction.caNone;
+        ShowMessage('По виду отказа <' + DiffKindCDS.FieldByName('Name').AsString + '> заказ товара со сроком годности менее года запрещен...');
+        ceAmount.SetFocus;
+        Exit;
+      end;
+    end;
+  end;
+
   nMaxOrderAmount := DiffKindCDS.FieldByName('MaxOrderUnitAmount').AsCurrency;
 
   if (nAmount > 0) and (nMaxOrderAmount > 0) then

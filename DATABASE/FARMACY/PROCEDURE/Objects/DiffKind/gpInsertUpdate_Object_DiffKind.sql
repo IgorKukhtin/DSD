@@ -4,6 +4,7 @@ DROP FUNCTION IF EXISTS gpInsertUpdate_Object_DiffKind (Integer, Integer, TVarCh
 DROP FUNCTION IF EXISTS gpInsertUpdate_Object_DiffKind (Integer, Integer, TVarChar, Boolean, TFloat, TVarChar);
 DROP FUNCTION IF EXISTS gpInsertUpdate_Object_DiffKind (Integer, Integer, TVarChar, Boolean, TFloat, TFloat, TVarChar);
 DROP FUNCTION IF EXISTS gpInsertUpdate_Object_DiffKind (Integer, Integer, TVarChar, Boolean, TFloat, TFloat, Integer, TVarChar);
+DROP FUNCTION IF EXISTS gpInsertUpdate_Object_DiffKind (Integer, Integer, TVarChar, Boolean, TFloat, TFloat, Integer, Boolean, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpInsertUpdate_Object_DiffKind(
  INOUT ioId	                  Integer   ,    -- ключ объекта <> 
@@ -13,6 +14,7 @@ CREATE OR REPLACE FUNCTION gpInsertUpdate_Object_DiffKind(
     IN inMaxOrderAmount       TFloat    ,    -- Максимальная сумма заказа 
     IN inMaxOrderAmountSecond TFloat    ,    -- Максимальная сумма заказа вторая шкала
     IN inDaysForSale          Integer   ,    -- Дней для продажы
+    IN inIsLessYear           Boolean   ,    -- Разрешен заказ товара с сроком менее года
     IN inSession              TVarChar       -- сессия пользователя
 )
   RETURNS integer AS
@@ -41,6 +43,8 @@ BEGIN
 
    -- сохранили
    PERFORM lpInsertUpdate_ObjectBoolean (zc_ObjectBoolean_DiffKind_Close(), ioId, inIsClose);
+   -- сохранили
+   PERFORM lpInsertUpdate_ObjectBoolean (zc_ObjectBoolean_DiffKind_LessYear(), ioId, inIsLessYear);
    -- сохранили
    PERFORM lpInsertUpdate_ObjectFloat (zc_ObjectFloat_MaxOrderAmount(), ioId, inMaxOrderAmount);
    -- сохранили
