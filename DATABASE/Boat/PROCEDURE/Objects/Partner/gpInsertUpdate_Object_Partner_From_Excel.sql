@@ -91,12 +91,13 @@ BEGIN
                                                 ON ObjectString_City.ObjectId = Object_PLZ.Id
                                                AND ObjectString_City.DescId = zc_ObjectString_PLZ_City()
                                                AND TRIM (ObjectString_City.ValueData) = TRIM (inCity)
-                        INNER JOIN ObjectLink AS ObjectLink_Country
-                                              ON ObjectLink_Country.ObjectId = Object_PLZ.Id
-                                             AND ObjectLink_Country.DescId = zc_ObjectLink_PLZ_Country()
-                                             AND COALESCE (ObjectLink_Country.ChildObjectId,0) = COALESCE (vbCountryId,0)
+                        LEFT JOIN ObjectLink AS ObjectLink_Country
+                                             ON ObjectLink_Country.ObjectId = Object_PLZ.Id
+                                            AND ObjectLink_Country.DescId = zc_ObjectLink_PLZ_Country()
                    WHERE Object_PLZ.DescId = zc_Object_PLZ() 
-                     AND TRIM (Object_PLZ.ValueData) Like TRIM (inPLZ));
+                     AND TRIM (Object_PLZ.ValueData) Like TRIM (inPLZ)
+                     AND COALESCE (ObjectLink_Country.ChildObjectId,0) = COALESCE (vbCountryId,0)
+                   );
 
        IF COALESCE (vbPLZId,0) = 0
        THEN

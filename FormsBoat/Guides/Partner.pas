@@ -64,12 +64,12 @@ type
     Comment: TcxGridDBColumn;
     spUnErased: TdsdStoredProc;
     actUpdateDataSet: TdsdUpdateDataSet;
+    bbStartLoad: TdxBarButton;
     FormParams: TdsdFormParams;
     spGetImportSettingId: TdsdStoredProc;
     actGetImportSetting: TdsdExecStoredProc;
     actDoLoad: TExecuteImportSettingsAction;
     actStartLoad: TMultiAction;
-    bbStartLoad: TdxBarButton;
   private
     { Private declarations }
   public
