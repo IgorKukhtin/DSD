@@ -150,7 +150,7 @@ BEGIN
             tmpMIContainer AS 
            (SELECT COALESCE (MIReceipt.ObjectId, 0)                AS ReceiptId
                  , COALESCE (MIContainer.ObjectId_Analyzer, 0)     AS GoodsId
-                 , COALESCE (MIContainer.ObjectIntId_Analyzer, 0)  AS GoodsKindId
+                 , COALESCE (MIContainer.ObjectIntId_Analyzer, MIGoodsKind.ObjectId, 0)  AS GoodsKindId
                  , MIContainer.ContainerId_Analyzer                AS ContainerId_Analyzer
                  , MIContainer.ContainerId                         AS ContainerId
                  , MIDate_PartionGoods.ValueData                   AS PartionGoodsDate
@@ -161,6 +161,9 @@ BEGIN
                  LEFT JOIN MovementItemLinkObject AS MIReceipt
                                                   ON MIReceipt.MovementItemId = MovementItem.ParentId
                                                  AND MIReceipt.DescId = zc_MILinkObject_Receipt()
+                 LEFT JOIN MovementItemLinkObject AS MIGoodsKind
+                                                  ON MIGoodsKind.MovementItemId = MIContainer.MovementItemId
+                                                 AND MIGoodsKind.DescId         = zc_MILinkObject_GoodsKind()
                  LEFT JOIN MovementItemDate AS MIDate_PartionGoods
                                             ON MIDate_PartionGoods.MovementItemId = MIContainer.MovementItemId
                                            AND MIDate_PartionGoods.DescId = zc_MIDate_PartionGoods()
@@ -182,7 +185,7 @@ BEGIN
               AND MovementBoolean_Peresort.MovementId IS NULL -- !!!убрали Пересортицу!!!
             GROUP BY MIReceipt.ObjectId
                    , MIContainer.ObjectId_Analyzer
-                   , MIContainer.ObjectIntId_Analyzer
+                   , COALESCE (MIContainer.ObjectIntId_Analyzer, MIGoodsKind.ObjectId, 0)
                    , MIContainer.ContainerId_Analyzer
                    , MIContainer.ContainerId
                    , MIDate_PartionGoods.ValueData
@@ -317,12 +320,12 @@ BEGIN
                  , tmpChildReceiptTable.GoodsKindId_out  AS GoodsKindId
                  , CASE WHEN tmpChildReceiptTable.GoodsKindId_out = zc_GoodsKind_WorkProgress() THEN tmpResult_in.GoodsKindId ELSE 0 END AS GoodsKindId_complete
 
-                 , CASE WHEN tmpResult_in.CuterCount > 0 THEN tmpResult_in.CuterCount * tmpChildReceiptTable.Amount_out WHEN ObjectFloat_Value.ValueData <> 0 THEN tmpResult_in.OperCount * tmpChildReceiptTable.Amount_out / ObjectFloat_Value.ValueData ELSE 0 END AS OperCountPlan
-                 , CASE WHEN tmpResult_in.CuterCount > 0 THEN tmpResult_in.CuterCount * tmpChildReceiptTable.Amount_out WHEN ObjectFloat_Value.ValueData <> 0 THEN tmpResult_in.OperCount * tmpChildReceiptTable.Amount_out / ObjectFloat_Value.ValueData ELSE 0 END
+                 , CASE WHEN tmpResult_in.CuterCount > 0 AND 1=0 THEN tmpResult_in.CuterCount * tmpChildReceiptTable.Amount_out WHEN ObjectFloat_Value.ValueData <> 0 THEN tmpResult_in.OperCount * tmpChildReceiptTable.Amount_out / ObjectFloat_Value.ValueData ELSE 0 END AS OperCountPlan
+                 , CASE WHEN tmpResult_in.CuterCount > 0 AND 1=0 THEN tmpResult_in.CuterCount * tmpChildReceiptTable.Amount_out WHEN ObjectFloat_Value.ValueData <> 0 THEN tmpResult_in.OperCount * tmpChildReceiptTable.Amount_out / ObjectFloat_Value.ValueData ELSE 0 END
                    * COALESCE (tmpMIReceipt_from.Price1, COALESCE (tmpPrice1.Price, 0)) AS OperSummPlan1
-                 , CASE WHEN tmpResult_in.CuterCount > 0 THEN tmpResult_in.CuterCount * tmpChildReceiptTable.Amount_out WHEN ObjectFloat_Value.ValueData <> 0 THEN tmpResult_in.OperCount * tmpChildReceiptTable.Amount_out / ObjectFloat_Value.ValueData ELSE 0 END
+                 , CASE WHEN tmpResult_in.CuterCount > 0 AND 1=0 THEN tmpResult_in.CuterCount * tmpChildReceiptTable.Amount_out WHEN ObjectFloat_Value.ValueData <> 0 THEN tmpResult_in.OperCount * tmpChildReceiptTable.Amount_out / ObjectFloat_Value.ValueData ELSE 0 END
                    * COALESCE (tmpMIReceipt_from.Price2, COALESCE (tmpPrice2.Price, 0)) AS OperSummPlan2
-                 , CASE WHEN tmpResult_in.CuterCount > 0 THEN tmpResult_in.CuterCount * tmpChildReceiptTable.Amount_out WHEN ObjectFloat_Value.ValueData <> 0 THEN tmpResult_in.OperCount * tmpChildReceiptTable.Amount_out / ObjectFloat_Value.ValueData ELSE 0 END
+                 , CASE WHEN tmpResult_in.CuterCount > 0 AND 1=0 THEN tmpResult_in.CuterCount * tmpChildReceiptTable.Amount_out WHEN ObjectFloat_Value.ValueData <> 0 THEN tmpResult_in.OperCount * tmpChildReceiptTable.Amount_out / ObjectFloat_Value.ValueData ELSE 0 END
                    * COALESCE (tmpMIReceipt_from.Price3, COALESCE (tmpPrice3.Price, 0)) AS OperSummPlan3
             FROM tmpResult_in
                  LEFT JOIN tmpChildReceiptTable ON tmpChildReceiptTable.ReceiptId = tmpResult_in.ReceiptId
@@ -604,6 +607,10 @@ BEGIN
             LEFT JOIN ObjectLink AS ObjectLink_Goods_InfoMoney ON ObjectLink_Goods_InfoMoney.ObjectId = Object_Goods.Id 
                                                               AND ObjectLink_Goods_InfoMoney.DescId = zc_ObjectLink_Goods_InfoMoney()
             LEFT JOIN Object_InfoMoney_View AS View_InfoMoney ON View_InfoMoney.InfoMoneyId = ObjectLink_Goods_InfoMoney.ChildObjectId
+       WHERE tmpResult.OperCount        <> 0
+          OR tmpResult.OperCountPlan    <> 0
+          OR tmpResult.OperCount_ReWork <> 0
+          OR tmpResult.CuterCount       <> 0
            ;
       -- Результат
       RETURN NEXT Cursor1;
@@ -741,6 +748,9 @@ BEGIN
             LEFT JOIN ObjectLink AS ObjectLink_Goods_InfoMoney ON ObjectLink_Goods_InfoMoney.ObjectId = Object_Goods.Id 
                                                               AND ObjectLink_Goods_InfoMoney.DescId = zc_ObjectLink_Goods_InfoMoney()
             LEFT JOIN Object_InfoMoney_View AS View_InfoMoney ON View_InfoMoney.InfoMoneyId = ObjectLink_Goods_InfoMoney.ChildObjectId
+       WHERE tmpResult.OperCount     <> 0
+          OR tmpResult.OperCountPlan <> 0
+          OR tmpResult_in.OperCount  <> 0
        ;
       RETURN NEXT Cursor2;
 
@@ -758,3 +768,7 @@ ALTER FUNCTION gpReport_ReceiptProductionOutAnalyze (TDateTime, TDateTime, Integ
 
 -- тест
 -- SELECT * FROM gpReport_ReceiptProductionOutAnalyze (inStartDate:= '01.06.2014', inEndDate:= '01.06.2014', inFromId:= 8447, inToId:= 8447, inGoodsGroupId:= 0, inPriceListId_1:= 0, inPriceListId_2:= 0, inPriceListId_3:= 0, inPriceListId_sale:= 0, inIsPartionGoods:= FALSE, inSession:= zfCalc_UserAdmin())
+ select * from gpReport_ReceiptProductionOutAnalyze(inStartDate := ('05.08.2020')::TDateTime , inEndDate := ('05.08.2020')::TDateTime , 
+inFromId := 8449 , inToId := 8449 , inGoodsGroupId := 1918 , 
+inPriceListId_1 := 18887 , inPriceListId_2 := 18886 , inPriceListId_3 := 18885 , inPriceListId_sale := 18840 , 
+inIsPartionGoods := 'False' ,  inSession := '5');
