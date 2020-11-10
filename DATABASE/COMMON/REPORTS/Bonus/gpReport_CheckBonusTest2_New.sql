@@ -339,6 +339,7 @@ BEGIN
         
       -- группируем договора, т.к. "базу" будем формировать по 4-м ключам
     ,tmpContractGroup AS (SELECT tmpContract.JuridicalId
+                               , tmpContract.ContractId_master
                                , tmpContract.ContractId_child
                                , tmpContract.InfoMoneyId_child
                                , tmpContract.PaidKindId_byBase
@@ -347,6 +348,7 @@ BEGIN
                            -- WHERE (tmpContract.PaidKindId = inPaidKindId OR inPaidKindId = 0)
                            --  AND (tmpContract.JuridicalId = inJuridicalId OR inJuridicalId = 0)
                            GROUP BY tmpContract.JuridicalId
+                                  , tmpContract.ContractId_master
                                   , tmpContract.ContractId_child
                                   , tmpContract.InfoMoneyId_child
                                   , tmpContract.PaidKindId_byBase
@@ -375,14 +377,15 @@ BEGIN
                           AND Container.DescId = zc_Container_Summ()
                         )
 
-    , tmpContainer1 AS (SELECT  DISTINCT
-                              tmpContainerAll.Id  AS ContainerId
-                            , tmpContractGroup.JuridicalId
-                            , tmpContractGroup.ContractId_child
-                            , tmpContractGroup.InfoMoneyId_child
-                            , tmpContractGroup.PaidKindId_byBase
-                            , tmpContractGroup.ContractConditionId
-                            , ContainerLO_Branch.ObjectId      AS BranchId
+    , tmpContainer1 AS (SELECT DISTINCT
+                               tmpContainerAll.Id  AS ContainerId
+                             , tmpContractGroup.JuridicalId
+                             , tmpContractGroup.ContractId_master
+                             , tmpContractGroup.ContractId_child
+                             , tmpContractGroup.InfoMoneyId_child
+                             , tmpContractGroup.PaidKindId_byBase
+                             , tmpContractGroup.ContractConditionId
+                             , ContainerLO_Branch.ObjectId      AS BranchId
                         FROM tmpContainerAll 
                             -- ограничение по 4-м ключам
                             JOIN tmpContractGroup ON tmpContractGroup.JuridicalId       = tmpContainerAll.JuridicalId 
@@ -455,7 +458,7 @@ BEGIN
 
                                  -- для Базы БН получаем филиал по сотруднику из договора, по ведомости 
                                  LEFT JOIN ObjectLink AS ObjectLink_Contract_PersonalTrade
-                                                      ON ObjectLink_Contract_PersonalTrade.ObjectId = tmpContainer.ContractId_child
+                                                      ON ObjectLink_Contract_PersonalTrade.ObjectId = tmpContainer.ContractId_master
                                                      AND ObjectLink_Contract_PersonalTrade.DescId = zc_ObjectLink_Contract_PersonalTrade()
                                                      AND tmpContainer.PaidKindId_byBase = zc_Enum_PaidKind_FirstForm()
                                  
