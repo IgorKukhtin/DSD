@@ -391,10 +391,10 @@ end;
 
 procedure TLoadFormTest.LoadContractFormTest;
 begin
-  {
+
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TContractForm'));
   TdsdFormStorageFactory.GetStorage.Load('TContractForm');
-  }
+  exit;
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TContractConditionValueForm'));
   TdsdFormStorageFactory.GetStorage.Load('TContractConditionValueForm');
   exit;
@@ -476,6 +476,9 @@ begin
   TdsdFormStorageFactory.GetStorage.Load('TContractGoodsForm');
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TContractGoodsEditForm'));
   TdsdFormStorageFactory.GetStorage.Load('TContractGoodsEditForm');
+
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TContractGoodsChoiceForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TContractGoodsChoiceForm');
 end;
 
 procedure TLoadFormTest.LoadCurrencyFormTest;
@@ -2299,15 +2302,15 @@ begin
 
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_CheckTaxForm'));
   TdsdFormStorageFactory.GetStorage.Load('TReport_CheckTaxForm');
-   }
+
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_CheckTaxCorrectiveForm'));
   TdsdFormStorageFactory.GetStorage.Load('TReport_CheckTaxCorrectiveForm');
   exit;
-  {
+
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_CheckBonus_IncomeForm'));
   TdsdFormStorageFactory.GetStorage.Load('TReport_CheckBonus_IncomeForm');
   exit;
-  }
+
     TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_CheckBonusTest2Form'));
   TdsdFormStorageFactory.GetStorage.Load('TReport_CheckBonusTest2Form');
 
@@ -2326,7 +2329,7 @@ begin
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_CheckBonusDialogForm'));
   TdsdFormStorageFactory.GetStorage.Load('TReport_CheckBonusDialogForm');
   exit;
-  {
+
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_CheckContractInMovementForm'));
   TdsdFormStorageFactory.GetStorage.Load('TReport_CheckContractInMovementForm');
 
@@ -2374,13 +2377,13 @@ begin
   TdsdFormStorageFactory.GetStorage.Load('TReport_WeighingForm');
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_WeighingDialogForm'));
   TdsdFormStorageFactory.GetStorage.Load('TReport_WeighingDialogForm');
-
+  }
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_PersonalForm'));
   TdsdFormStorageFactory.GetStorage.Load('TReport_PersonalForm');
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_PersonalDialogForm'));
   TdsdFormStorageFactory.GetStorage.Load('TReport_PersonalDialogForm');
   exit;
-
+  {
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_MemberForm'));
   TdsdFormStorageFactory.GetStorage.Load('TReport_MemberForm');
   exit;

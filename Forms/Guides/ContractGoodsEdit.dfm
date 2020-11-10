@@ -2,7 +2,7 @@
   Left = 0
   Top = 0
   Caption = #1044#1086#1073#1072#1074#1080#1090#1100'/'#1048#1079#1084#1077#1085#1080#1090#1100' <'#1058#1086#1074#1072#1088#1099' '#1074' '#1076#1086#1075#1086#1074#1086#1088#1072#1093'>'
-  ClientHeight = 246
+  ClientHeight = 306
   ClientWidth = 338
   Color = clBtnFace
   Font.Charset = DEFAULT_CHARSET
@@ -18,7 +18,7 @@
   TextHeight = 13
   object cxButton1: TcxButton
     Left = 64
-    Top = 206
+    Top = 261
     Width = 75
     Height = 25
     Action = dsdInsertUpdateGuides
@@ -28,7 +28,7 @@
   end
   object cxButton2: TcxButton
     Left = 208
-    Top = 206
+    Top = 261
     Width = 75
     Height = 25
     Action = dsdFormClose
@@ -111,6 +111,34 @@
     TabOrder = 11
     Width = 90
   end
+  object cxLabel1: TcxLabel
+    Left = 42
+    Top = 207
+    Caption = #1044#1077#1081#1089#1090#1074#1091#1077#1090' '#1089
+  end
+  object edStartDate: TcxDateEdit
+    Left = 42
+    Top = 225
+    EditValue = 44142d
+    Properties.SaveTime = False
+    Properties.ShowTime = False
+    TabOrder = 13
+    Width = 103
+  end
+  object edEndDate: TcxDateEdit
+    Left = 177
+    Top = 225
+    EditValue = 44142d
+    Properties.SaveTime = False
+    Properties.ShowTime = False
+    TabOrder = 14
+    Width = 105
+  end
+  object cxLabel3: TcxLabel
+    Left = 177
+    Top = 207
+    Caption = #1044#1077#1081#1089#1090#1074#1091#1077#1090' '#1076#1086
+  end
   object ActionList: TActionList
     Left = 296
     Top = 72
@@ -131,10 +159,12 @@
     end
     object dsdFormClose: TdsdFormClose
       MoveParams = <>
+      PostDataSetBeforeExecute = False
     end
     object dsdInsertUpdateGuides: TdsdInsertUpdateGuides
       Category = 'DSDLib'
       MoveParams = <>
+      PostDataSetBeforeExecute = False
       StoredProc = spInsertUpdate
       StoredProcList = <
         item
@@ -154,12 +184,14 @@
         Component = FormParams
         ComponentItem = 'Id'
         ParamType = ptInputOutput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inCode'
         Value = 0.000000000000000000
         Component = ceCode
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inContractId'
@@ -167,6 +199,7 @@
         Component = ContractGuides
         ComponentItem = 'Key'
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inGoodsId'
@@ -174,6 +207,7 @@
         Component = GoodsGuides
         ComponentItem = 'Key'
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inGoodsKindId'
@@ -181,6 +215,23 @@
         Component = GoodsKindGuides
         ComponentItem = 'Key'
         ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inStartDate'
+        Value = 'NULL'
+        Component = edStartDate
+        DataType = ftDateTime
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inEndDate'
+        Value = 'NULL'
+        Component = edEndDate
+        DataType = ftDateTime
+        ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inPrice'
@@ -188,6 +239,7 @@
         Component = cePrice
         DataType = ftFloat
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end>
     PackSize = 1
     Left = 240
@@ -199,6 +251,7 @@
         Name = 'Id'
         Value = Null
         ParamType = ptInputOutput
+        MultiSelectSeparator = ','
       end>
     Left = 240
     Top = 8
@@ -214,23 +267,27 @@
         Component = FormParams
         ComponentItem = 'Id'
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'Code'
         Value = 0.000000000000000000
         Component = ceCode
+        MultiSelectSeparator = ','
       end
       item
         Name = 'Price'
         Value = Null
         Component = cePrice
         DataType = ftFloat
+        MultiSelectSeparator = ','
       end
       item
         Name = 'ContractId'
         Value = ''
         Component = ContractGuides
         ComponentItem = 'Key'
+        MultiSelectSeparator = ','
       end
       item
         Name = 'ContractName'
@@ -238,6 +295,7 @@
         Component = ContractGuides
         ComponentItem = 'TextValue'
         DataType = ftString
+        MultiSelectSeparator = ','
       end
       item
         Name = 'GoodsId'
@@ -245,6 +303,7 @@
         Component = GoodsGuides
         ComponentItem = 'Key'
         DataType = ftString
+        MultiSelectSeparator = ','
       end
       item
         Name = 'GoodsName'
@@ -252,12 +311,14 @@
         Component = GoodsGuides
         ComponentItem = 'TextValue'
         DataType = ftString
+        MultiSelectSeparator = ','
       end
       item
         Name = 'GoodsKind'
         Value = Null
         Component = GoodsKindGuides
         ComponentItem = 'Key'
+        MultiSelectSeparator = ','
       end
       item
         Name = 'GoodsKindName'
@@ -265,6 +326,19 @@
         Component = GoodsKindGuides
         ComponentItem = 'TextValue'
         DataType = ftString
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'StartDate'
+        Component = edStartDate
+        DataType = ftDateTime
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'EndDate'
+        Component = edEndDate
+        DataType = ftDateTime
+        MultiSelectSeparator = ','
       end>
     PackSize = 1
     Left = 16
@@ -290,6 +364,7 @@
     LookupControl = ceGoods
     FormNameParam.Value = 'TGoods_ObjectForm'
     FormNameParam.DataType = ftString
+    FormNameParam.MultiSelectSeparator = ','
     FormName = 'TGoods_ObjectForm'
     PositionDataSet = 'ClientDataSet'
     Params = <
@@ -298,6 +373,7 @@
         Value = ''
         Component = GoodsGuides
         ComponentItem = 'Key'
+        MultiSelectSeparator = ','
       end
       item
         Name = 'TextValue'
@@ -305,6 +381,7 @@
         Component = GoodsGuides
         ComponentItem = 'TextValue'
         DataType = ftString
+        MultiSelectSeparator = ','
       end>
     Left = 176
     Top = 120
@@ -314,6 +391,7 @@
     LookupControl = ceContract
     FormNameParam.Value = 'TContractChoiceForm'
     FormNameParam.DataType = ftString
+    FormNameParam.MultiSelectSeparator = ','
     FormName = 'TContractChoiceForm'
     PositionDataSet = 'MasterCDS'
     Params = <
@@ -322,6 +400,7 @@
         Value = ''
         Component = ContractGuides
         ComponentItem = 'Key'
+        MultiSelectSeparator = ','
       end
       item
         Name = 'TextValue'
@@ -329,6 +408,7 @@
         Component = ContractGuides
         ComponentItem = 'TextValue'
         DataType = ftString
+        MultiSelectSeparator = ','
       end>
     Left = 120
     Top = 80
@@ -339,6 +419,7 @@
     Key = '0'
     FormNameParam.Value = 'TGoodsKindForm'
     FormNameParam.DataType = ftString
+    FormNameParam.MultiSelectSeparator = ','
     FormName = 'TGoodsKindForm'
     PositionDataSet = 'ClientDataSet'
     Params = <
@@ -348,6 +429,7 @@
         Component = GoodsKindGuides
         ComponentItem = 'Key'
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'TextValue'
@@ -356,6 +438,7 @@
         ComponentItem = 'TextValue'
         DataType = ftString
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end>
     Left = 84
     Top = 158

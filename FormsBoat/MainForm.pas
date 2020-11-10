@@ -33,7 +33,7 @@ type
     miForms: TMenuItem;
     actMeasure: TdsdOpenForm;
     miMeasure: TMenuItem;
-    actCountryBrand: TdsdOpenForm;
+    actCountry: TdsdOpenForm;
     miCountryBrand: TMenuItem;
     actBrand: TdsdOpenForm;
     actGoodsSize: TdsdOpenForm;
@@ -195,6 +195,10 @@ type
     actProdOptPattern: TdsdOpenForm;
     miProdColorPattern: TMenuItem;
     miProdOptPattern: TMenuItem;
+    actPLZ: TdsdOpenForm;
+    miPLZ: TMenuItem;
+    actModelEtiketen: TdsdOpenForm;
+    miModelEtiketen: TMenuItem;
   private
     { Private declarations }
   public

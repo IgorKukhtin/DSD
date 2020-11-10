@@ -1847,6 +1847,7 @@ procedure TdsdUserSettingsStorageAddOn.LoadUserSettingsData(Data: String);
   TreeList: TcxDBTreeList;
   FormName: string;
   PropertiesStoreComponent: TcxPropertiesStoreComponent;
+  TempStream: TStringStream;
 begin
   if Data <> '' then begin
     XMLDocument := TXMLDocument.Create(nil);
@@ -1856,17 +1857,32 @@ begin
         if ChildNodes[i].NodeName = 'cxGridView' then begin
            GridView := Owner.FindComponent(ChildNodes[i].GetAttribute('name')) as TcxCustomGridView;
            if Assigned(GridView) then
-              GridView.RestoreFromStream(TStringStream.Create(ReConvertConvert(ChildNodes[i].GetAttribute('data'))),False);
+           try
+              TempStream := TStringStream.Create(ReConvertConvert(ChildNodes[i].GetAttribute('data')));
+              GridView.RestoreFromStream(TempStream,False);
+           finally
+              TempStream.Free;
+           end;
         end;
         if ChildNodes[i].NodeName = 'cxTreeList' then begin
            TreeList := Owner.FindComponent(ChildNodes[i].GetAttribute('name')) as TcxDBTreeList;
            if Assigned(TreeList) then
-              TreeList.RestoreFromStream(TStringStream.Create(ReConvertConvert(ChildNodes[i].GetAttribute('data'))));
+           try
+              TempStream := TStringStream.Create(ReConvertConvert(ChildNodes[i].GetAttribute('data')));
+              TreeList.RestoreFromStream(TempStream);
+           finally
+              TempStream.Free;
+           end;
         end;
 {        if ChildNodes[i].NodeName = 'dxBarManager' then begin
            BarManager := Owner.FindComponent(ChildNodes[i].GetAttribute('name')) as TdxBarManager;
            if Assigned(BarManager) then
-              BarManager.LoadFromStream(TStringStream.Create(ReConvertConvert(ChildNodes[i].GetAttribute('data'))));
+           try
+              TempStream := TStringStream.Create(ReConvertConvert(ChildNodes[i].GetAttribute('data')));
+              BarManager.LoadFromStream(TempStream);
+           finally
+              TempStream.Free;
+           end;
         end;}
         if ChildNodes[i].NodeName = 'cxPropertiesStore' then begin
            PropertiesStore := Owner.FindComponent(ChildNodes[i].GetAttribute('name')) as TcxPropertiesStore;

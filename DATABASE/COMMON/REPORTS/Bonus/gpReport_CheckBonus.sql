@@ -36,12 +36,18 @@ RETURNS TABLE (OperDate_Movement TDateTime, OperDatePartner TDateTime, InvNumber
              , Sum_SaleFact TFloat
              , Sum_SaleReturnIn  TFloat
              , Sum_Account  TFloat
+             , Sum_Sale TFloat
+             , Sum_Return TFloat
+             , Sum_Sale_weight TFloat
+             , Sum_ReturnIn_weight TFloat
              , PercentRetBonus  TFloat
              , PercentRetBonus_fact  TFloat
              , PercentRetBonus_diff  TFloat
+             , PercentRetBonus_fact_weight TFloat
+             , PercentRetBonus_diff_weight TFloat
              , Comment TVarChar
              , ReportBonusId Integer, isSend Boolean
-              )  
+              ) 
 AS
 $BODY$
     --DECLARE inisMovement Boolean ; -- по документам
@@ -176,9 +182,15 @@ BEGIN
            , tmp.Sum_SaleFact
            , tmp.Sum_SaleReturnIn
            , tmp.Sum_Account
+           , tmp.Sum_Sale
+           , tmp.Sum_Return
+           , tmp.Sum_Sale_weight
+           , tmp.Sum_ReturnIn_weight
            , tmp.PercentRetBonus
            , tmp.PercentRetBonus_fact
            , tmp.PercentRetBonus_diff
+           , tmp.PercentRetBonus_fact_weight
+           , tmp.PercentRetBonus_diff_weight
            , tmp.Comment
            , tmpObjectBonus.Id :: Integer AS ReportBonusId
            , CASE WHEN tmpObjectBonus.Id IS NULL OR tmpObjectBonus.isErased = True THEN TRUE ELSE FALSE END :: Boolean AS isSend
@@ -218,9 +230,15 @@ BEGIN
            , tmp.Sum_SaleFact
            , tmp.Sum_SaleReturnIn
            , tmp.Sum_Account
+           , tmp.Sum_Sale
+           , tmp.Sum_Return
+           , tmp.Sum_Sale_weight
+           , tmp.Sum_ReturnIn_weight
            , tmp.PercentRetBonus
            , tmp.PercentRetBonus_fact
            , tmp.PercentRetBonus_diff
+           , tmp.PercentRetBonus_fact_weight
+           , tmp.PercentRetBonus_diff_weight
            , tmp.Comment
            , tmpObjectBonus.Id :: Integer AS ReportBonusId
            , CASE WHEN tmpObjectBonus.Id IS NULL OR tmpObjectBonus.isErased = TRUE THEN TRUE ELSE FALSE END :: Boolean AS isSend

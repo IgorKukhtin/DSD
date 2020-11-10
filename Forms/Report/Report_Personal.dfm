@@ -344,6 +344,15 @@ inherited Report_PersonalForm: TReport_PersonalForm
             Options.Editing = False
             Width = 45
           end
+          object ProfitLossDirectionName: TcxGridDBColumn
+            Caption = #1054#1055#1080#1059' '#1085#1072#1087#1088#1072#1074#1083#1077#1085#1080#1077
+            DataBinding.FieldName = 'ProfitLossDirectionName'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            HeaderHint = #1054#1055#1080#1059' '#1085#1072#1087#1088#1072#1074#1083#1077#1085#1080#1077' ('#1087#1086#1076#1088#1072#1079#1076'.)'
+            Options.Editing = False
+            Width = 96
+          end
           object PersonalName: TcxGridDBColumn
             Caption = #1057#1086#1090#1088#1091#1076#1085#1080#1082
             DataBinding.FieldName = 'PersonalName'
@@ -972,6 +981,7 @@ inherited Report_PersonalForm: TReport_PersonalForm
       Caption = #1087#1086' '#1092#1080#1079' '#1083#1080#1094#1091
       Hint = #1087#1086' '#1092#1080#1079' '#1083#1080#1094#1091
       ImageIndex = 4
+      ShortCut = 116
       RefreshOnTabSetChanges = False
     end
     inherited actRefresh: TdsdDataSetRefresh
@@ -2621,7 +2631,7 @@ inherited Report_PersonalForm: TReport_PersonalForm
       end
       item
         Name = 'inisServiceDate'
-        Value = 'False'
+        Value = False
         Component = cbServiceDate
         DataType = ftBoolean
         ParamType = ptInput

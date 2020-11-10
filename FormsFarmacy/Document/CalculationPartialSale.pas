@@ -28,6 +28,8 @@ type
     actExecFormPartialSale: TdsdExecStoredProc;
     dxBarButton1: TdxBarButton;
     spFormPartialSale: TdsdStoredProc;
+    actReport_Sale_PartialSale: TdsdOpenForm;
+    dxBarButton2: TdxBarButton;
   private
     { Private declarations }
   public

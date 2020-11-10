@@ -704,8 +704,6 @@ object ProductForm: TProductForm
     Height = 5
     AlignSplitter = salTop
     Control = cxGrid
-    ExplicitLeft = 184
-    ExplicitTop = 210
   end
   object cxRightSplitter: TcxSplitter
     Left = 448
@@ -1099,6 +1097,7 @@ object ProductForm: TProductForm
       Caption = #1059#1076#1072#1083#1080#1090#1100
       Hint = #1059#1076#1072#1083#1080#1090#1100
       ImageIndex = 2
+      ShortCut = 46
       ErasedFieldName = 'isErased'
       DataSource = ProdColorItemsDS
     end
@@ -1113,6 +1112,7 @@ object ProductForm: TProductForm
       Caption = #1059#1076#1072#1083#1080#1090#1100
       Hint = #1059#1076#1072#1083#1080#1090#1100
       ImageIndex = 2
+      ShortCut = 46
       ErasedFieldName = 'isErased'
       DataSource = ProdOptItemsDS
     end
@@ -1140,8 +1140,9 @@ object ProductForm: TProductForm
           StoredProc = spUnErasedOpt
         end>
       Caption = #1042#1086#1089#1089#1090#1072#1085#1086#1074#1080#1090#1100
-      Hint = #1042#1086#1089#1089#1090#1072#1085#1086#1074#1080#1090#1100
+      Hint = #1042#1086#1089#1089#1090#1072#1085#1086#1074#1080#1090#1100' '#1076#1072#1085#1085#1099#1077
       ImageIndex = 8
+      ShortCut = 46
       ErasedFieldName = 'isErased'
       isSetErased = False
       DataSource = ProdOptItemsDS
@@ -1155,8 +1156,9 @@ object ProductForm: TProductForm
           StoredProc = spUnErasedColor
         end>
       Caption = #1042#1086#1089#1089#1090#1072#1085#1086#1074#1080#1090#1100
-      Hint = #1042#1086#1089#1089#1090#1072#1085#1086#1074#1080#1090#1100
+      Hint = #1042#1086#1089#1089#1090#1072#1085#1086#1074#1080#1090#1100' '#1076#1072#1085#1085#1099#1077
       ImageIndex = 8
+      ShortCut = 46
       ErasedFieldName = 'isErased'
       isSetErased = False
       DataSource = ProdColorItemsDS
@@ -1170,7 +1172,7 @@ object ProductForm: TProductForm
           StoredProc = spUnErased
         end>
       Caption = #1042#1086#1089#1089#1090#1072#1085#1086#1074#1080#1090#1100
-      Hint = #1042#1086#1089#1089#1090#1072#1085#1086#1074#1080#1090#1100
+      Hint = #1042#1086#1089#1089#1090#1072#1085#1086#1074#1080#1090#1100' '#1076#1072#1085#1085#1099#1077
       ImageIndex = 8
       ShortCut = 46
       ErasedFieldName = 'isErased'
@@ -2138,8 +2140,8 @@ object ProductForm: TProductForm
         MultiSelectSeparator = ','
       end>
     PackSize = 1
-    Left = 840
-    Top = 72
+    Left = 872
+    Top = 112
   end
   object PopupMenu: TPopupMenu
     Images = dmMain.ImageList

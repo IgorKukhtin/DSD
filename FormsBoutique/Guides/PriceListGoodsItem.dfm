@@ -3,7 +3,7 @@ object PriceListGoodsItemForm: TPriceListGoodsItemForm
   Top = 0
   Caption = #1055#1088#1086#1089#1084#1086#1090#1088'/'#1048#1079#1084#1077#1085#1077#1085#1080#1077' '#1080#1089#1090#1086#1088#1080#1080' '#1094#1077#1085
   ClientHeight = 398
-  ClientWidth = 502
+  ClientWidth = 527
   Color = clBtnFace
   Font.Charset = DEFAULT_CHARSET
   Font.Color = clWindowText
@@ -19,12 +19,15 @@ object PriceListGoodsItemForm: TPriceListGoodsItemForm
   object cxGrid: TcxGrid
     Left = 0
     Top = 89
-    Width = 502
+    Width = 527
     Height = 309
     Align = alClient
     TabOrder = 0
     LookAndFeel.NativeStyle = True
     LookAndFeel.SkinName = 'UserSkin'
+    ExplicitLeft = -8
+    ExplicitTop = 113
+    ExplicitWidth = 519
     object cxGridDBTableView: TcxGridDBTableView
       Navigator.Buttons.CustomButtons = <>
       DataController.DataSource = DataSource
@@ -89,11 +92,12 @@ object PriceListGoodsItemForm: TPriceListGoodsItemForm
   object Panel: TPanel
     Left = 0
     Top = 26
-    Width = 502
+    Width = 527
     Height = 63
     Align = alTop
     BevelOuter = bvNone
     TabOrder = 1
+    ExplicitWidth = 502
     object cxLabel1: TcxLabel
       Left = 4
       Top = 9
@@ -215,6 +219,14 @@ object PriceListGoodsItemForm: TPriceListGoodsItemForm
         end
         item
           Visible = True
+          ItemName = 'bbPrintSticker_fp'
+        end
+        item
+          Visible = True
+          ItemName = 'dxBarStatic'
+        end
+        item
+          Visible = True
           ItemName = 'bbToExcel'
         end
         item
@@ -256,6 +268,10 @@ object PriceListGoodsItemForm: TPriceListGoodsItemForm
     end
     object bbSetUnErased: TdxBarButton
       Action = actSetUnErased
+      Category = 0
+    end
+    object bbPrintSticker_fp: TdxBarButton
+      Action = macPrintSticker_fp
       Category = 0
     end
   end
@@ -305,7 +321,7 @@ object PriceListGoodsItemForm: TPriceListGoodsItemForm
         item
           Name = 'GoodsId'
           Value = Null
-          Component = GoodsGuides
+          Component = GuidesGoods
           ComponentItem = 'Key'
           ParamType = ptInput
           MultiSelectSeparator = ','
@@ -313,7 +329,7 @@ object PriceListGoodsItemForm: TPriceListGoodsItemForm
         item
           Name = 'GoodsName'
           Value = Null
-          Component = GoodsGuides
+          Component = GuidesGoods
           ComponentItem = 'TextValue'
           DataType = ftString
           ParamType = ptInput
@@ -329,7 +345,7 @@ object PriceListGoodsItemForm: TPriceListGoodsItemForm
         item
           Name = 'PriceListId'
           Value = Null
-          Component = PriceListGuides
+          Component = GuidesPriceList
           ComponentItem = 'Key'
           ParamType = ptInput
           MultiSelectSeparator = ','
@@ -362,7 +378,7 @@ object PriceListGoodsItemForm: TPriceListGoodsItemForm
         item
           Name = 'GoodsId'
           Value = Null
-          Component = GoodsGuides
+          Component = GuidesGoods
           ComponentItem = 'Key'
           ParamType = ptInput
           MultiSelectSeparator = ','
@@ -370,7 +386,7 @@ object PriceListGoodsItemForm: TPriceListGoodsItemForm
         item
           Name = 'GoodsName'
           Value = Null
-          Component = GoodsGuides
+          Component = GuidesGoods
           ComponentItem = 'TextValue'
           DataType = ftString
           ParamType = ptInput
@@ -379,7 +395,7 @@ object PriceListGoodsItemForm: TPriceListGoodsItemForm
         item
           Name = 'PriceListId'
           Value = Null
-          Component = PriceListGuides
+          Component = GuidesPriceList
           ComponentItem = 'Key'
           ParamType = ptInput
           MultiSelectSeparator = ','
@@ -439,6 +455,60 @@ object PriceListGoodsItemForm: TPriceListGoodsItemForm
       isSetErased = False
       DataSource = DataSource
     end
+    object actGet_PrinterByUser: TdsdExecStoredProc
+      Category = 'PrintSticker'
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      StoredProc = spGet_PrinterByUser
+      StoredProcList = <
+        item
+          StoredProc = spGet_PrinterByUser
+        end>
+      Caption = 'Get_Printer'
+    end
+    object actPrintSticker_fp: TdsdPrintAction
+      Category = 'PrintSticker'
+      MoveParams = <>
+      StoredProc = spSelectPrintSticker
+      StoredProcList = <
+        item
+          StoredProc = spSelectPrintSticker
+        end>
+      Caption = #1055#1077#1095#1072#1090#1100' '#1062#1077#1085#1085#1080#1082#1086#1074
+      Hint = #1055#1077#1095#1072#1090#1100' '#1062#1077#1085#1085#1080#1082#1086#1074
+      ImageIndex = 18
+      DataSets = <
+        item
+          DataSet = PrintItemsCDS
+          UserName = 'frxDBDItems'
+        end>
+      Params = <>
+      ReportName = 'PrintMovement_IncomeStickerPODIUM_fp'
+      ReportNameParam.Name = #1055#1077#1095#1072#1090#1100' '#1089#1090#1080#1082#1077#1088#1072' '#1089#1072#1084#1086#1082#1083#1077#1081#1082#1080
+      ReportNameParam.Value = 'PrintMovement_IncomeStickerPODIUM_fp'
+      ReportNameParam.DataType = ftString
+      ReportNameParam.ParamType = ptInput
+      ReportNameParam.MultiSelectSeparator = ','
+      PrinterNameParam.Value = ''
+      PrinterNameParam.Component = FormParams
+      PrinterNameParam.ComponentItem = 'PrinterName'
+      PrinterNameParam.DataType = ftString
+      PrinterNameParam.MultiSelectSeparator = ','
+    end
+    object macPrintSticker_fp: TMultiAction
+      Category = 'PrintSticker'
+      MoveParams = <>
+      ActionList = <
+        item
+          Action = actGet_PrinterByUser
+        end
+        item
+          Action = actPrintSticker_fp
+        end>
+      Caption = #1055#1077#1095#1072#1090#1100' '#1062#1077#1085#1085#1080#1082#1086#1074' ('#1087#1077#1088#1074#1072#1103' '#1094#1077#1085#1072')'
+      Hint = #1055#1077#1095#1072#1090#1100' '#1062#1077#1085#1085#1080#1082#1086#1074' ('#1087#1077#1088#1074#1072#1103' '#1094#1077#1085#1072')'
+      ImageIndex = 18
+    end
   end
   object dsdStoredProc: TdsdStoredProc
     StoredProcName = 'gpSelect_ObjectHistory_PriceListGoodsItem'
@@ -479,6 +549,7 @@ object PriceListGoodsItemForm: TPriceListGoodsItemForm
     ColumnAddOnList = <>
     ColumnEnterList = <>
     SummaryItemList = <>
+    PropertiesCellList = <>
     Left = 336
     Top = 168
   end
@@ -486,7 +557,7 @@ object PriceListGoodsItemForm: TPriceListGoodsItemForm
     Left = 112
     Top = 240
   end
-  object PriceListGuides: TdsdGuides
+  object GuidesPriceList: TdsdGuides
     KeyField = 'Id'
     LookupControl = edPriceList
     FormNameParam.Value = 'TPriceListForm'
@@ -515,7 +586,7 @@ object PriceListGoodsItemForm: TPriceListGoodsItemForm
     Left = 184
     Top = 16
   end
-  object GoodsGuides: TdsdGuides
+  object GuidesGoods: TdsdGuides
     KeyField = 'Id'
     LookupControl = edGoods
     FormNameParam.Value = 'TGoodsForm'
@@ -527,7 +598,7 @@ object PriceListGoodsItemForm: TPriceListGoodsItemForm
       item
         Name = 'Key'
         Value = ''
-        Component = GoodsGuides
+        Component = GuidesGoods
         ComponentItem = 'Key'
         ParamType = ptInput
         MultiSelectSeparator = ','
@@ -535,7 +606,7 @@ object PriceListGoodsItemForm: TPriceListGoodsItemForm
       item
         Name = 'TextValue'
         Value = ''
-        Component = GoodsGuides
+        Component = GuidesGoods
         ComponentItem = 'TextValue'
         DataType = ftString
         ParamType = ptInput
@@ -549,7 +620,7 @@ object PriceListGoodsItemForm: TPriceListGoodsItemForm
       item
         Name = 'PriceListId'
         Value = ''
-        Component = PriceListGuides
+        Component = GuidesPriceList
         ComponentItem = 'Key'
         ParamType = ptInputOutput
         MultiSelectSeparator = ','
@@ -557,7 +628,7 @@ object PriceListGoodsItemForm: TPriceListGoodsItemForm
       item
         Name = 'PriceListName'
         Value = ''
-        Component = PriceListGuides
+        Component = GuidesPriceList
         ComponentItem = 'TextValue'
         DataType = ftString
         ParamType = ptInput
@@ -566,7 +637,7 @@ object PriceListGoodsItemForm: TPriceListGoodsItemForm
       item
         Name = 'GoodsId'
         Value = ''
-        Component = GoodsGuides
+        Component = GuidesGoods
         ComponentItem = 'Key'
         ParamType = ptInput
         MultiSelectSeparator = ','
@@ -574,9 +645,15 @@ object PriceListGoodsItemForm: TPriceListGoodsItemForm
       item
         Name = 'GoodsName'
         Value = ''
-        Component = GoodsGuides
+        Component = GuidesGoods
         ComponentItem = 'TextValue'
         DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inUnitId'
+        Value = Null
         ParamType = ptInput
         MultiSelectSeparator = ','
       end>
@@ -599,5 +676,65 @@ object PriceListGoodsItemForm: TPriceListGoodsItemForm
     PackSize = 1
     Left = 344
     Top = 240
+  end
+  object spGet_PrinterByUser: TdsdStoredProc
+    StoredProcName = 'gpGet_PrinterByUser'
+    DataSets = <>
+    OutputType = otResult
+    Params = <
+      item
+        Name = 'gpGet_PrinterByUser'
+        Value = Null
+        Component = FormParams
+        ComponentItem = 'PrinterName'
+        DataType = ftString
+        MultiSelectSeparator = ','
+      end>
+    PackSize = 1
+    Left = 472
+    Top = 144
+  end
+  object spSelectPrintSticker: TdsdStoredProc
+    StoredProcName = 'gpSelect_Object_Goods_PrintSticker'
+    DataSet = PrintItemsCDS
+    DataSets = <
+      item
+        DataSet = PrintItemsCDS
+      end>
+    OutputType = otMultiDataSet
+    Params = <
+      item
+        Name = 'inPriceListId'
+        Value = '0'
+        Component = GuidesPriceList
+        ComponentItem = 'Id'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inUnitId'
+        Value = '0'
+        Component = FormParams
+        ComponentItem = 'inUnitId'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inGoodsId'
+        Value = Null
+        Component = GuidesGoods
+        ComponentItem = 'Key'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end>
+    PackSize = 1
+    Left = 456
+    Top = 208
+  end
+  object PrintItemsCDS: TClientDataSet
+    Aggregates = <>
+    Params = <>
+    Left = 268
+    Top = 270
   end
 end

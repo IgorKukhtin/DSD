@@ -1,5 +1,5 @@
 inherited ContractGoodsForm: TContractGoodsForm
-  Caption = #1057#1087#1088#1072#1074#1086#1095#1085#1080#1082' <'#1058#1086#1074#1072#1088#1099' '#1074' '#1076#1086#1075#1086#1074#1086#1088#1072#1093'>'
+  Caption = #1057#1087#1088#1072#1074#1086#1095#1085#1080#1082' <'#1058#1086#1074#1072#1088#1099' '#1074' '#1076#1086#1075#1086#1074#1086#1088#1072#1093' ('#1057#1087#1077#1094#1080#1092#1080#1082#1072#1094#1080#1103')>'
   ClientHeight = 374
   ClientWidth = 773
   AddOnFormData.isAlwaysRefresh = True
@@ -25,6 +25,12 @@ inherited ContractGoodsForm: TContractGoodsForm
         ExplicitWidth = 773
         ExplicitHeight = 348
         inherited cxGridDBTableView: TcxGridDBTableView
+          DataController.Summary.FooterSummaryItems = <
+            item
+              Format = #1042#1089#1077#1075#1086' '#1089#1090#1088#1086#1082': ,0'
+              Kind = skCount
+              Column = GoodsName
+            end>
           OptionsData.CancelOnExit = True
           OptionsData.Deleting = False
           OptionsData.DeletingConfirmation = False
@@ -56,12 +62,50 @@ inherited ContractGoodsForm: TContractGoodsForm
             HeaderAlignmentVert = vaCenter
             Width = 54
           end
+          object StartDate: TcxGridDBColumn
+            Caption = #1044#1077#1081#1089#1090#1074'. '#1089
+            DataBinding.FieldName = 'StartDate'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 60
+          end
+          object EndDate: TcxGridDBColumn
+            Caption = #1044#1077#1081#1089#1090#1074'. '#1087#1086
+            DataBinding.FieldName = 'EndDate'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 60
+          end
           object Price: TcxGridDBColumn
             Caption = #1062#1077#1085#1072
             DataBinding.FieldName = 'Price'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DisplayFormat = ',0.##;-,0.##; ;'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Width = 47
+          end
+          object Persent: TcxGridDBColumn
+            Caption = '% '#1080#1079#1084'. '#1094#1077#1085#1099
+            DataBinding.FieldName = 'Persent'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DisplayFormat = ',0.##;-,0.##; ;'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            HeaderHint = '% '#1080#1079#1084#1077#1085#1077#1085#1080#1103' '#1086#1090#1085#1086#1089#1080#1090#1077#1083#1100#1085#1086' '#1087#1088#1077#1076#1099#1076#1091#1097#1077#1081' '#1094#1077#1085#1099
+            Options.Editing = False
+            Width = 47
+          end
+          object PriceListName: TcxGridDBColumn
+            Caption = #1055#1088#1072#1081#1089'-'#1083#1080#1089#1090
+            DataBinding.FieldName = 'PriceListName'
+            Visible = False
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 60
           end
           object ContractCode: TcxGridDBColumn
             Caption = #1050#1086#1076' '#1076#1086#1075'.'
@@ -156,7 +200,7 @@ inherited ContractGoodsForm: TContractGoodsForm
             Width = 60
           end
           object PaidKindName: TcxGridDBColumn
-            Caption = #1060#1086#1088#1084#1072' '#1086#1087#1083#1072#1090#1099
+            Caption = #1060#1086#1088#1084#1072' '#1086#1087#1083#1072#1090#1099' ('#1076#1086#1075'.)'
             DataBinding.FieldName = 'PaidKindName'
             PropertiesClassName = 'TcxButtonEditProperties'
             Properties.Buttons = <
@@ -171,7 +215,7 @@ inherited ContractGoodsForm: TContractGoodsForm
             Width = 50
           end
           object SigningDate: TcxGridDBColumn
-            Caption = #1044#1072#1090#1072' '#1079#1072#1082#1083#1102#1095#1077#1085#1080#1103
+            Caption = #1044#1072#1090#1072' '#1079#1072#1082#1083#1102#1095#1077#1085#1080#1103' ('#1076#1086#1075'.)'
             DataBinding.FieldName = 'SigningDate'
             Visible = False
             HeaderAlignmentHorz = taCenter
@@ -179,17 +223,17 @@ inherited ContractGoodsForm: TContractGoodsForm
             Options.Editing = False
             Width = 60
           end
-          object StartDate: TcxGridDBColumn
-            Caption = #1044#1077#1081#1089#1090#1074'. '#1089
-            DataBinding.FieldName = 'StartDate'
+          object StartDate_contract: TcxGridDBColumn
+            Caption = #1044#1077#1081#1089#1090#1074'. '#1089' ('#1076#1086#1075'.)'
+            DataBinding.FieldName = 'StartDate_contract'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
             Width = 60
           end
-          object EndDate: TcxGridDBColumn
-            Caption = #1044#1077#1081#1089#1090#1074'. '#1076#1086
-            DataBinding.FieldName = 'EndDate'
+          object EndDate_contract: TcxGridDBColumn
+            Caption = #1044#1077#1081#1089#1090#1074'. '#1076#1086' ('#1076#1086#1075'.)'
+            DataBinding.FieldName = 'EndDate_contract'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
@@ -569,6 +613,44 @@ inherited ContractGoodsForm: TContractGoodsForm
           MultiSelectSeparator = ','
         end>
     end
+    object actShowAll: TBooleanStoredProcAction
+      Category = 'DSDLib'
+      MoveParams = <>
+      StoredProc = spSelect
+      StoredProcList = <
+        item
+          StoredProc = spSelect
+        end>
+      Caption = #1055#1086#1082#1072#1079#1072#1090#1100' '#1074#1077#1089#1100' '#1089#1087#1080#1089#1086#1082
+      Hint = #1055#1086#1082#1072#1079#1072#1090#1100' '#1074#1077#1089#1100' '#1089#1087#1080#1089#1086#1082
+      ImageIndex = 63
+      Value = False
+      HintTrue = #1055#1086#1082#1072#1079#1072#1090#1100' '#1089#1087#1080#1089#1086#1082' '#1087#1086#1089#1083#1077#1076#1085#1080#1093' '#1094#1077#1085
+      HintFalse = #1055#1086#1082#1072#1079#1072#1090#1100' '#1074#1077#1089#1100' '#1089#1087#1080#1089#1086#1082
+      CaptionTrue = #1055#1086#1082#1072#1079#1072#1090#1100' '#1089#1087#1080#1089#1086#1082' '#1087#1086#1089#1083#1077#1076#1085#1080#1093' '#1094#1077#1085
+      CaptionFalse = #1055#1086#1082#1072#1079#1072#1090#1100' '#1074#1077#1089#1100' '#1089#1087#1080#1089#1086#1082
+      ImageIndexTrue = 62
+      ImageIndexFalse = 63
+    end
+    object actShowErased: TBooleanStoredProcAction
+      Category = 'DSDLib'
+      MoveParams = <>
+      StoredProc = spSelect
+      StoredProcList = <
+        item
+          StoredProc = spSelect
+        end>
+      Caption = #1055#1086#1082#1072#1079#1072#1090#1100' '#1074#1089#1077
+      Hint = #1055#1086#1082#1072#1079#1072#1090#1100' '#1074#1089#1077
+      ImageIndex = 64
+      Value = False
+      HintTrue = #1055#1086#1082#1072#1079#1072#1090#1100' '#1085#1077' '#1091#1076#1072#1083#1077#1085#1085#1099#1077
+      HintFalse = #1055#1086#1082#1072#1079#1072#1090#1100' '#1074#1089#1077
+      CaptionTrue = #1055#1086#1082#1072#1079#1072#1090#1100' '#1085#1077' '#1091#1076#1072#1083#1077#1085#1085#1099#1077
+      CaptionFalse = #1055#1086#1082#1072#1079#1072#1090#1100' '#1074#1089#1077
+      ImageIndexTrue = 65
+      ImageIndexFalse = 64
+    end
   end
   inherited MasterDS: TDataSource
     Left = 40
@@ -580,6 +662,23 @@ inherited ContractGoodsForm: TContractGoodsForm
   end
   inherited spSelect: TdsdStoredProc
     StoredProcName = 'gpSelect_Object_ContractGoods_All'
+    Params = <
+      item
+        Name = 'inisShowAll'
+        Value = Null
+        Component = actShowAll
+        DataType = ftBoolean
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inisErased'
+        Value = Null
+        Component = actShowErased
+        DataType = ftBoolean
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end>
     Top = 64
   end
   inherited BarManager: TdxBarManager
@@ -615,6 +714,18 @@ inherited ContractGoodsForm: TContractGoodsForm
         end
         item
           Visible = True
+          ItemName = 'bbShowAll'
+        end
+        item
+          Visible = True
+          ItemName = 'bbShowErased'
+        end
+        item
+          Visible = True
+          ItemName = 'dxBarStatic'
+        end
+        item
+          Visible = True
           ItemName = 'bbRefresh'
         end
         item
@@ -638,6 +749,14 @@ inherited ContractGoodsForm: TContractGoodsForm
           Visible = True
           ItemName = 'dxBarStatic'
         end>
+    end
+    object bbShowAll: TdxBarButton
+      Action = actShowAll
+      Category = 0
+    end
+    object bbShowErased: TdxBarButton
+      Action = actShowErased
+      Category = 0
     end
   end
   inherited DBViewAddOn: TdsdDBViewAddOn

@@ -13,17 +13,17 @@ inherited CalculationPartialSaleForm: TCalculationPartialSaleForm
     Height = 310
     TabOrder = 3
     ExplicitTop = 65
-    ExplicitWidth = 730
+    ExplicitWidth = 592
     ExplicitHeight = 310
     ClientRectBottom = 310
     ClientRectRight = 592
     inherited tsMain: TcxTabSheet
-      ExplicitWidth = 730
+      ExplicitWidth = 592
       ExplicitHeight = 310
       inherited cxGrid: TcxGrid
         Width = 592
         Height = 310
-        ExplicitWidth = 730
+        ExplicitWidth = 592
         ExplicitHeight = 310
         inherited cxGridDBTableView: TcxGridDBTableView
           DataController.DetailKeyFieldNames = 'JuridicalId;FromId'
@@ -68,7 +68,7 @@ inherited CalculationPartialSaleForm: TCalculationPartialSaleForm
   inherited Panel: TPanel
     Width = 592
     Height = 39
-    ExplicitWidth = 730
+    ExplicitWidth = 592
     ExplicitHeight = 39
     inherited deStart: TcxDateEdit
       Left = 212
@@ -155,6 +155,65 @@ inherited CalculationPartialSaleForm: TCalculationPartialSaleForm
         end>
       Caption = 'actExecFormPartialSale'
     end
+    object actReport_Sale_PartialSale: TdsdOpenForm
+      Category = 'DSDLib'
+      MoveParams = <>
+      Caption = #1055#1088#1086#1076#1072#1078#1080' '#1087#1086' '#1087#1086#1089#1090#1072#1074#1097#1080#1082#1091' '#1079#1072' '#1085#1077#1076#1077#1083#1102
+      Hint = #1055#1088#1086#1076#1072#1078#1080' '#1087#1086' '#1087#1086#1089#1090#1072#1074#1097#1080#1082#1091' '#1079#1072' '#1085#1077#1076#1077#1083#1102
+      ImageIndex = 29
+      FormName = 'TReport_Sale_PartialSaleForm'
+      FormNameParam.Value = 'TReport_Sale_PartialSaleForm'
+      FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
+      GuiParams = <
+        item
+          Name = 'StartDate'
+          Value = 'NULL'
+          Component = MasterCDS
+          ComponentItem = 'DateStart'
+          DataType = ftDateTime
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'EndDate'
+          Value = 'NULL'
+          Component = MasterCDS
+          ComponentItem = 'DateEnd'
+          DataType = ftDateTime
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'JuridicalId'
+          Value = Null
+          Component = MasterCDS
+          ComponentItem = 'JuridicalId'
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'JuridicalName'
+          Value = Null
+          Component = MasterCDS
+          ComponentItem = 'JuridicalName'
+          DataType = ftString
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'FromId'
+          Value = Null
+          Component = MasterCDS
+          ComponentItem = 'FromId'
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'FromName'
+          Value = Null
+          Component = MasterCDS
+          ComponentItem = 'FromName'
+          DataType = ftString
+          MultiSelectSeparator = ','
+        end>
+      isShowModal = False
+    end
   end
   inherited MasterDS: TDataSource
     Left = 296
@@ -210,11 +269,15 @@ inherited CalculationPartialSaleForm: TCalculationPartialSaleForm
         end
         item
           Visible = True
-          ItemName = 'bbGridToExcel'
+          ItemName = 'dxBarButton2'
         end
         item
           Visible = True
           ItemName = 'dxBarStatic'
+        end
+        item
+          Visible = True
+          ItemName = 'bbGridToExcel'
         end>
     end
     object bbExecuteDialog: TdxBarButton
@@ -223,6 +286,10 @@ inherited CalculationPartialSaleForm: TCalculationPartialSaleForm
     end
     object dxBarButton1: TdxBarButton
       Action = actFormPartialSale
+      Category = 0
+    end
+    object dxBarButton2: TdxBarButton
+      Action = actReport_Sale_PartialSale
       Category = 0
     end
   end

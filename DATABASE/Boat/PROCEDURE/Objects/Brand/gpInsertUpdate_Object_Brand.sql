@@ -24,7 +24,7 @@ BEGIN
    vbIsInsert:= COALESCE (ioId, 0) = 0;
    
     -- Если код не установлен, определяем его как последний+1
-   vbCode_calc:= lfGet_ObjectCode (ioCode, zc_Object_Brand());
+   ioCode:= lfGet_ObjectCode (ioCode, zc_Object_Brand()); 
 
    -- проверка прав уникальности для свойства <Наименование >
    PERFORM lpCheckUnique_Object_ValueData (ioId, zc_Object_Brand(), inName);

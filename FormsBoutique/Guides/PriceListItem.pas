@@ -110,6 +110,13 @@ type
     ExecuteDialogPriceTax: TExecuteDialog;
     actReport_Goods: TdsdOpenForm;
     bbReport_Goods: TdxBarButton;
+    spSelectPrintSticker: TdsdStoredProc;
+    spGet_PrinterByUser: TdsdStoredProc;
+    actGet_PrinterByUser: TdsdExecStoredProc;
+    FormParams: TdsdFormParams;
+    actPrintSticker_fp: TdsdPrintAction;
+    macPrintSticker_fp: TMultiAction;
+    bbPrintSticker_fp: TdxBarButton;
   private
     { Private declarations }
   public

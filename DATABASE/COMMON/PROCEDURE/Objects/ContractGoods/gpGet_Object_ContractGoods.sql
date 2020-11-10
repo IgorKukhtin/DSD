@@ -11,6 +11,7 @@ RETURNS TABLE (Id Integer, Code INTEGER
              , ContractId Integer, ContractName TVarChar
              , GoodsId Integer, GoodsName TVarChar
              , GoodsKindId Integer, GoodsKindName TVarChar
+             , StartDate TDateTime, EndDate TDateTime
              , isErased boolean
              ) AS
 $BODY$
@@ -34,6 +35,9 @@ BEGIN
 
            , CAST (0 as Integer)    AS GoodsKindId
            , CAST ('' as TVarChar)  AS GoodsKindName
+
+           , CAST (NULL AS TDateTime)  AS StartDate
+           , CAST (NULL AS TDateTime)  AS EndDate
            
            , CAST (NULL AS Boolean) AS isErased
 
@@ -54,6 +58,10 @@ BEGIN
            
            , Object_GoodsKind.Id              AS GoodsKindId
            , Object_GoodsKind.ValueData       AS GoodsKindName
+
+           , ObjectDate_Start.ValueData   ::TDateTime  AS StartDate
+           , ObjectDate_End.ValueData     ::TDateTime  AS EndDate
+
            , Object_ContractGoods.isErased    AS isErased
            
        FROM Object AS Object_ContractGoods
@@ -76,7 +84,14 @@ BEGIN
                                  ON ObjectLink_ContractGoods_GoodsKind.ObjectId = Object_ContractGoods.Id
                                 AND ObjectLink_ContractGoods_GoodsKind.DescId = zc_ObjectLink_ContractGoods_GoodsKind()
             LEFT JOIN Object AS Object_GoodsKind ON Object_GoodsKind.Id = ObjectLink_ContractGoods_GoodsKind.ChildObjectId
-            
+
+            LEFT JOIN ObjectDate AS ObjectDate_Start
+                                 ON ObjectDate_Start.ObjectId = Object_ContractGoods.Id
+                                AND ObjectDate_Start.DescId = zc_ObjectDate_ContractGoods_Start()
+            LEFT JOIN ObjectDate AS ObjectDate_End
+                                 ON ObjectDate_End.ObjectId = Object_ContractGoods.Id
+                                AND ObjectDate_End.DescId = zc_ObjectDate_ContractGoods_End()
+
        WHERE Object_ContractGoods.Id = inId;
       
    END IF;

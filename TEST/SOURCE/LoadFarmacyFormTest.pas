@@ -954,6 +954,9 @@ end;
 procedure TLoadFormTest.LoadReportFormTest;
 begin
 
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_PriceCheckForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TReport_PriceCheckForm');
+
   {
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_SAUAForm'));
   TdsdFormStorageFactory.GetStorage.Load('TReport_SAUAForm');
@@ -2236,6 +2239,10 @@ end;
 
 procedure TLoadFormTest.LoadIncomeFormTest;
 begin
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TChoiceIncomeForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TChoiceIncomeForm');
+
+ {
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TIncomeForm'));
   TdsdFormStorageFactory.GetStorage.Load('TIncomeForm');
 
@@ -2244,7 +2251,6 @@ begin
 
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TIncomeOperDataDialogForm'));
   TdsdFormStorageFactory.GetStorage.Load('TIncomeOperDataDialogForm');
- {
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TIncomePharmacyForm'));
   TdsdFormStorageFactory.GetStorage.Load('TIncomePharmacyForm');
   exit;
@@ -2493,8 +2499,11 @@ begin
   TdsdFormStorageFactory.GetStorage.Load('TChangeIncomePaymentJournalForm');
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TChangeIncomePaymentForm'));
   TdsdFormStorageFactory.GetStorage.Load('TChangeIncomePaymentForm');
+
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TCalculationPartialSaleForm'));
   TdsdFormStorageFactory.GetStorage.Load('TCalculationPartialSaleForm');
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_Sale_PartialSaleForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TReport_Sale_PartialSaleForm');
 end;
 
 procedure TLoadFormTest.LoadChangeIncomePaymentKindFormTest;

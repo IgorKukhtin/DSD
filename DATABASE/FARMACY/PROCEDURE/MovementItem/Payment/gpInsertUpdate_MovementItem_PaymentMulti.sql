@@ -35,7 +35,6 @@ BEGIN
                                             , inSummaCorrBonus      := inSummaCorrBonus
                                             , inSummaCorrReturnOut  := inSummaCorrReturnOut
                                             , inSummaCorrOther      := inSummaCorrOther
-                                            , inSummaCorrOther      := inSummaCorrOther
                                             , inSummaCorrPartialPay := 0
                                             , inNeedPay             := TRUE
                                             , inNeedRecalcSumm      := FALSE

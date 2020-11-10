@@ -49,12 +49,12 @@ type
     Panel: TPanel;
     cxLabel1: TcxLabel;
     edPriceList: TcxButtonEdit;
-    PriceListGuides: TdsdGuides;
+    GuidesPriceList: TdsdGuides;
     EndDate: TcxGridDBColumn;
     Price: TcxGridDBColumn;
     cxLabel4: TcxLabel;
     edGoods: TcxButtonEdit;
-    GoodsGuides: TdsdGuides;
+    GuidesGoods: TdsdGuides;
     FormParams: TdsdFormParams;
     actInsert: TdsdInsertUpdateAction;
     bbInsert: TdxBarButton;
@@ -67,6 +67,13 @@ type
     actSetUnErased: TdsdUpdateErased;
     isErased: TcxGridDBColumn;
     CurrencyName: TcxGridDBColumn;
+    spGet_PrinterByUser: TdsdStoredProc;
+    spSelectPrintSticker: TdsdStoredProc;
+    actGet_PrinterByUser: TdsdExecStoredProc;
+    actPrintSticker_fp: TdsdPrintAction;
+    macPrintSticker_fp: TMultiAction;
+    bbPrintSticker_fp: TdxBarButton;
+    PrintItemsCDS: TClientDataSet;
   private
     { Private declarations }
   public

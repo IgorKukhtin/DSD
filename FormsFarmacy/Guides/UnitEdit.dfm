@@ -650,8 +650,8 @@
       end
       object cbTopNo: TcxCheckBox
         Left = 0
-        Top = 328
-        Hint = #1056#1072#1073#1086#1090#1072#1102#1090' '#1087#1086' '#1057#1059#1053
+        Top = 317
+        Hint = #1053#1077' '#1091#1095#1080#1090#1099#1074#1072#1090#1100' '#1058#1054#1055' '#1076#1083#1103' '#1072#1087#1090#1077#1082#1080
         Caption = #1053#1077' '#1091#1095#1080#1090#1099#1074#1072#1090#1100' '#1058#1054#1055' '#1076#1083#1103' '#1072#1087#1090#1077#1082#1080
         TabOrder = 15
         Width = 183
@@ -771,6 +771,14 @@
         ShowHint = True
         TabOrder = 28
         Width = 220
+      end
+      object cdMinPercentMarkup: TcxCheckBox
+        Left = 0
+        Top = 336
+        Hint = #1048#1089#1087#1086#1083#1100#1079#1086#1074#1072#1090#1100' '#1084#1080#1085#1080#1084#1072#1083#1100#1085#1091#1102' '#1085#1072#1094#1077#1085#1082#1091' '#1087#1086' '#1089#1077#1090#1080' '#1080#1083#1080' '#1072#1087#1090#1077#1082#1077
+        Caption = #1052#1080#1085#1080'. '#1085#1072#1094#1077#1085#1082#1072' '#1087#1086' '#1089#1077#1090#1080' '#1080#1083#1080' '#1072#1087#1090#1077#1082#1077
+        TabOrder = 33
+        Width = 216
       end
     end
     object cxTabSheet2: TcxTabSheet
@@ -1481,6 +1489,14 @@
         DataType = ftString
         ParamType = ptInput
         MultiSelectSeparator = ','
+      end
+      item
+        Name = 'iniscdMinPercentMarkup'
+        Value = Null
+        Component = cdMinPercentMarkup
+        DataType = ftBoolean
+        ParamType = ptInput
+        MultiSelectSeparator = ','
       end>
     PackSize = 1
     Left = 84
@@ -2050,6 +2066,13 @@
         Component = edPromoForSale
         DataType = ftString
         MultiSelectSeparator = ','
+      end
+      item
+        Name = 'isMinPercentMarkup'
+        Value = Null
+        Component = cdMinPercentMarkup
+        DataType = ftBoolean
+        MultiSelectSeparator = ','
       end>
     PackSize = 1
     Left = 36
@@ -2459,6 +2482,6 @@
         MultiSelectSeparator = ','
       end>
     Left = 104
-    Top = 495
+    Top = 479
   end
 end

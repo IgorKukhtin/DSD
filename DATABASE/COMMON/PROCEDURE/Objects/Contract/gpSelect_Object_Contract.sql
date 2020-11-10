@@ -21,7 +21,8 @@ RETURNS TABLE (Id Integer, Code Integer
              , SigningDate TDateTime, StartDate TDateTime, EndDate TDateTime
                          
              , ContractKindId Integer, ContractKindName TVarChar
-             , JuridicalId Integer, JuridicalCode Integer, JuridicalName TVarChar, JuridicalGroupName TVarChar, RetailName TVarChar
+             , JuridicalId Integer, JuridicalCode Integer, JuridicalName TVarChar, JuridicalGroupName TVarChar
+             , RetailId Integer, RetailName TVarChar
              , JuridicalBasisId Integer, JuridicalBasisName TVarChar
              , JuridicalDocumentId Integer, JuridicalDocumentCode Integer, JuridicalDocumentName TVarChar
              , JuridicalInvoiceId Integer, JuridicalInvoiceCode Integer, JuridicalInvoiceName TVarChar
@@ -152,6 +153,7 @@ BEGIN
        , Object_Juridical.ObjectCode     AS JuridicalCode
        , Object_Juridical.ValueData      AS JuridicalName
        , Object_JuridicalGroup.ValueData AS JuridicalGroupName
+       , Object_Retail.Id                AS RetailId
        , Object_Retail.ValueData         AS RetailName
 
        , Object_JuridicalBasis.Id           AS JuridicalBasisId

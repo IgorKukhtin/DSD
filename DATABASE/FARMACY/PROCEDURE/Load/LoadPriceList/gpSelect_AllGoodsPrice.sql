@@ -69,7 +69,8 @@ $BODY$
   DECLARE vbMarginCategoryId Integer;
   DECLARE vbMarginPercent_ExpirationDate TFloat;
   DECLARE vbInterval_ExpirationDate      Interval;
-  DECLARE vbisTopNo_Unit     Boolean;
+  DECLARE vbisTopNo_Unit       Boolean;
+  DECLARE vbisMinPercentMarkup Boolean;
 BEGIN
     vbUserId := inSession;
     vbObjectId := COALESCE (lpGet_DefaultValue('zc_Object_Retail', vbUserId), '0');
@@ -83,13 +84,17 @@ BEGIN
     --
     SELECT COALESCE(Object_Unit_View.MarginCategoryId,0) AS MarginCategoryId
          , COALESCE (ObjectBoolean_TopNo.ValueData, FALSE) :: Boolean AS isTopNo
-    INTO vbMarginCategoryId, vbisTopNo_Unit
+         , COALESCE (ObjectBoolean_MinPercentMarkup.ValueData, FALSE) :: Boolean AS isMinPercentMarkup
+    INTO vbMarginCategoryId, vbisTopNo_Unit, vbisMinPercentMarkup
     FROM Object_Unit_View
          LEFT JOIN ObjectBoolean AS ObjectBoolean_TopNo
                                  ON ObjectBoolean_TopNo.ObjectId = inUnitId
                                 AND ObjectBoolean_TopNo.DescId = zc_ObjectBoolean_Unit_TopNo()
+         LEFT JOIN ObjectBoolean AS ObjectBoolean_MinPercentMarkup
+                                 ON ObjectBoolean_MinPercentMarkup.ObjectId = inUnitId
+                                AND ObjectBoolean_MinPercentMarkup.DescId = zc_ObjectBoolean_Unit_MinPercentMarkup()
     WHERE Object_Unit_View.Id = inUnitId;
-
+    
   RETURN QUERY
     WITH DD
     AS
@@ -276,7 +281,12 @@ BEGIN
                                    ELSE MarginCondition.MarginPercent + COALESCE (ObjectFloat_Juridical_Percent.ValueData, 0)    -- % наценки в КАТЕГОРИИ
                               END
                             , CASE WHEN vbisTopNo_Unit = TRUE THEN SelectMinPrice_AllGoods.isTOP_Price   ELSE SelectMinPrice_AllGoods.isTop END                  -- ТОП позиция
-                            , CASE WHEN vbisTopNo_Unit = TRUE THEN SelectMinPrice_AllGoods.PercentMarkup ELSE COALESCE (NULLIF (SelectMinPrice_AllGoods.PercentMarkup, 0), Object_Goods.PercentMarkup) END -- % наценки у товара
+                            , CASE WHEN vbisTopNo_Unit = TRUE THEN SelectMinPrice_AllGoods.PercentMarkup 
+                                   WHEN vbisMinPercentMarkup = TRUE THEN CASE WHEN COALESCE (NULLIF (SelectMinPrice_AllGoods.PercentMarkup, 0), Object_Goods.PercentMarkup) > 
+                                                                                   COALESCE (NULLIF (Object_Goods.PercentMarkup, 0), SelectMinPrice_AllGoods.PercentMarkup)
+                                                                              THEN COALESCE (NULLIF (Object_Goods.PercentMarkup, 0), SelectMinPrice_AllGoods.PercentMarkup)
+                                                                              ELSE COALESCE (NULLIF (SelectMinPrice_AllGoods.PercentMarkup, 0), Object_Goods.PercentMarkup) END            
+                                   ELSE COALESCE (NULLIF (SelectMinPrice_AllGoods.PercentMarkup, 0), Object_Goods.PercentMarkup) END -- % наценки у товара
                             , 0 /*ObjectFloat_Juridical_Percent.ValueData*/                                         -- % корректировки у Юр Лица для ТОПа
                             , CASE WHEN vbisTopNo_Unit = TRUE THEN
                                         CASE WHEN Object_Price.Fix = TRUE
@@ -433,7 +443,7 @@ BEGIN
         vbisTopNo_Unit AS isTopNo_Unit,
         ResultSet.IsPromo,
         ResultSet.isResolution_224,
-        CASE WHEN (COALESCE (inUnitId_to, 0) = 0) 
+        CASE WHEN (COALESCE (inUnitId_to, 0) = 0)
                         AND (ResultSet.ExpirationDate + INTERVAL '6 month' < ResultSet.MinExpirationDate)
                         AND (ResultSet.ExpirationDate < CURRENT_DATE + INTERVAL '6 month')
                   THEN FALSE
@@ -473,6 +483,7 @@ BEGIN
         AND ResultSet.isResolution_224 = FALSE AS Reprice,
 
         CASE WHEN tmpGoodsReprice.GoodsId IS NOT NULL THEN TRUE ELSE FALSE END AS isGoodsReprice
+        
     FROM
         ResultSet
         LEFT OUTER JOIN MarginCondition ON MarginCondition.MarginCategoryId = vbMarginCategoryId
@@ -545,4 +556,5 @@ $BODY$
 */
 
 -- тест
--- SELECT * FROM gpSelect_AllGoodsPrice (183292, 0, 30, True, 0, 0, '3') where Reprice = False -- ExpirationDate < CURRENT_DATE + INTERVAL '6 month'  -- Аптека_1 пр_Правды_6
+-- 
+SELECT * FROM gpSelect_AllGoodsPrice (3457773  , 0, 30, True, 0, 0, '3') order by ID --where Reprice = False -- ExpirationDate < CURRENT_DATE + INTERVAL '6 month'  -- Аптека_1 пр_Правды_6

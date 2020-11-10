@@ -25,6 +25,7 @@ RETURNS TABLE (PersonalId Integer, PersonalCode Integer, PersonalName TVarChar
              , BusinessName TVarChar
              , BranchName TVarChar
              , InfoMoneyGroupName TVarChar, InfoMoneyDestinationName TVarChar, InfoMoneyCode Integer, InfoMoneyName TVarChar, InfoMoneyName_all TVarChar
+             , ProfitLossDirectionName TVarChar
              , AccountName TVarChar
              , ServiceDate TDateTime
              , StartAmount TFloat, StartAmountD TFloat, StartAmountK TFloat
@@ -472,6 +473,7 @@ BEGIN
         Object_InfoMoney_View.InfoMoneyCode                                                         AS InfoMoneyCode,
         Object_InfoMoney_View.InfoMoneyName                                                         AS InfoMoneyName,
         Object_InfoMoney_View.InfoMoneyName_all                                                     AS InfoMoneyName_all,
+        lfObject_Unit_byProfitLossDirection.ProfitLossDirectionName                                 AS ProfitLossDirectionName,
         Object_Account_View.AccountName_all                                                         AS AccountName,
         Operation.ServiceDate                                                                       AS ServiceDate,
         (-1 * Operation.StartAmount) :: TFloat                                                      AS StartAmount,
@@ -519,6 +521,8 @@ BEGIN
           LEFT JOIN ObjectLink AS ObjectLink_Unit_Business ON ObjectLink_Unit_Business.ObjectId = Operation.UnitId
                                                           AND ObjectLink_Unit_Business.DescId   = zc_ObjectLink_Unit_Business()
           LEFT JOIN Object AS Object_Business ON Object_Business.Id = ObjectLink_Unit_Business.ChildObjectId
+
+          LEFT JOIN lfSelect_Object_Unit_byProfitLossDirection() AS lfObject_Unit_byProfitLossDirection ON lfObject_Unit_byProfitLossDirection.UnitId = Operation.UnitId
 
      WHERE (Operation.StartAmount <> 0 OR Operation.EndAmount <> 0 OR Operation.DebetSumm <> 0 OR Operation.KreditSumm <> 0)
        AND (_tmpList.PersonalServiceListId > 0 OR vbIsList_all = TRUE)

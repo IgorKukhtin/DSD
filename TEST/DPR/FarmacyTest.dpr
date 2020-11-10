@@ -964,7 +964,12 @@ uses
   GoodsUnitRetail_Cash in '..\..\FormsFarmacy\Cash\GoodsUnitRetail_Cash.pas' {GoodsUnitRetail_CashForm: TParentForm},
   Report_TestingUserAttempts in '..\..\FormsFarmacy\Report\Report_TestingUserAttempts.pas' {Report_TestingUserAttemptsForm: TParentForm},
   Report_SAUA in '..\..\FormsFarmacy\Report\Report_SAUA.pas' {Report_SAUAForm: TParentForm},
-  CalculationPartialSale in '..\..\FormsFarmacy\Document\CalculationPartialSale.pas' {CalculationPartialSaleForm: TParentForm};
+  CalculationPartialSale in '..\..\FormsFarmacy\Document\CalculationPartialSale.pas' {CalculationPartialSaleForm: TParentForm},
+  DistributionPromo in '..\..\FormsFarmacy\Document\DistributionPromo.pas' {DistributionPromoForm: TParentForm},
+  DistributionPromoJournal in '..\..\FormsFarmacy\Document\DistributionPromoJournal.pas' {DistributionPromoJournalForm: TParentForm},
+  ChoiceIncome in '..\..\FormsFarmacy\Guides\ChoiceIncome.pas' {ChoiceIncomeForm: TParentForm},
+  Report_PriceCheck in '..\..\FormsFarmacy\Report\Report_PriceCheck.pas' {Report_PriceCheckForm: TParentForm},
+  Report_Sale_PartialSale in '..\..\FormsFarmacy\Report\Report_Sale_PartialSale.pas' {Report_Sale_PartialSaleForm: TParentForm};
 
 {$R *.res}
 {$R DevExpressRus.res}
