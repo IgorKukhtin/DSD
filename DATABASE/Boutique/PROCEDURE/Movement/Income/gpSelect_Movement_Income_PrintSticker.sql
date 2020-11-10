@@ -26,7 +26,7 @@ BEGIN
 
 
      --
-     vbMovementDescId:= (SELECT Movement.DescId FROM Movement WHERE Movement.Id = inMovementId);
+     vbMovementDescId:= COALESCE ((SELECT Movement.DescId FROM Movement WHERE Movement.Id = inMovementId), 0);
 
      -- если НЕ по списку
      IF inIsGoodsPrint = FALSE
@@ -278,6 +278,8 @@ BEGIN
                       ELSE '-экв. '
                  END :: TVarChar AS ValutaName
 
+               , Object_Unit.ValueData AS UnitName
+
            FROM tmpGoodsPrint
                 LEFT JOIN tmpList ON tmpList.Amount = tmpGoodsPrint.Amount
                 LEFT JOIN tmpPriceList ON tmpPriceList.UnitId    = tmpGoodsPrint.UnitId
@@ -295,6 +297,7 @@ BEGIN
                 LEFT JOIN Object AS Object_Label       ON Object_Label.Id       = Object_PartionGoods.LabelId
                 LEFT JOIN Object AS Object_GoodsSize   ON Object_GoodsSize.Id   = Object_PartionGoods.GoodsSizeId
                 LEFT JOIN Object AS Object_Brand       ON Object_Brand.Id       = Object_PartionGoods.BrandId
+                LEFT JOIN Object AS Object_Unit        ON Object_Unit.Id        = tmpGoodsPrint.UnitId
 
                 LEFT JOIN ObjectString AS ObjectString_Label_UKR
                                        ON ObjectString_Label_UKR.ObjectId = Object_PartionGoods.LabelId

@@ -22,6 +22,7 @@ BEGIN
                                                     OR tmp.COLUMN_TYPENAME ILIKE 'INTERVAL'
                                                     OR tmp.COLUMN_TYPENAME ILIKE 'Text'
                                                     OR tmp.COLUMN_TYPENAME ILIKE 'TBlob'
+                                                    OR tmp.COLUMN_TYPENAME ILIKE 'Timestamp'
                                                THEN _replica.zfStr_CHR_39 ('n/e/ /p/r/i/d/u/m/a/l') || '||' || tmp.TABLE_NAME ||'.'||tmp.COLUMN_NAME || '||' || _replica.zfStr_CHR_39 ('n/e/ /p/r/i/d/u/m/a/l')
                                              ELSE tmp.TABLE_NAME ||'.'||tmp.COLUMN_NAME
                                              END || '  AS Text), CHR (39), ''`'')'

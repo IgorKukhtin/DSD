@@ -115,7 +115,7 @@ BEGIN
        FROM tmpMI_All
             INNER JOIN (SELECT DISTINCT tmpMemberMinus.FromId, tmpMemberMinus.Summ_all FROM tmpMemberMinus) AS tmpMinus ON tmpMinus.FromId = tmpMI_All.MemberId
        WHERE tmpMI_All.SummMinus <> tmpMinus.Summ_all
-         AND inSession <> zfCalc_UserAdmin()
+       --AND inSession <> zfCalc_UserAdmin()
        LIMIT 1;
 
    IF COALESCE (vbMemberId,0) <> 0
@@ -188,14 +188,14 @@ BEGIN
 
 
      -- Таблица для результата
-     CREATE TEMP TABLE _Result (RowData TBlob) ON COMMIT DROP;
+     CREATE TEMP TABLE _Result (RowData TBlob, Summa TFloat) ON COMMIT DROP;
 
      -- первые строчки XML
      INSERT INTO _Result(RowData) VALUES ('<?xml version= "1.0" encoding= "windows-1251"?>');
    
      -- данные
      INSERT INTO _Result(RowData) VALUES ('<ROWDATA>');
-     INSERT INTO _Result(RowData)
+     INSERT INTO _Result(RowData, Summa)
     SELECT '<ROW '
          || 'AMOUNT ="'||tmp.AMOUNT||'" '
          || 'CORRSNAME="'||COALESCE (tmp.CORRSNAME,'')::TVarChar||'" '
@@ -227,7 +227,7 @@ BEGIN
 
      -- Результат
      RETURN QUERY
-        SELECT _Result.RowData FROM _Result;
+        SELECT _Result.RowData, _Result.Summa FROM _Result;
 
 END;
 $BODY$

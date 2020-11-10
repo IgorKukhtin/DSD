@@ -39,9 +39,9 @@ BEGIN
                                   LEFT JOIN ContainerLinkObject AS CLO_PartionGoods ON CLO_PartionGoods.ContainerId = Container.Id
                                                                                     AND CLO_PartionGoods.DescId = zc_ContainerLinkObject_PartionGoods()
                                 
-                             WHERE  Container.ObjectId = inGoodsId
+                             WHERE  (Container.ObjectId = inGoodsId OR (inGoodsId = 0 AND inUnitId > 0))
                                 AND Container.DescId = zc_Container_Count()
-                               AND  ((CLO_Unit.ObjectId = inUnitId) OR (CLO_Member.ObjectId = inUnitId) OR inUnitId = 0 )
+                                AND ((CLO_Unit.ObjectId = inUnitId) OR (CLO_Member.ObjectId = inUnitId) OR inUnitId = 0)
                                 AND (Container.Amount > 0 OR inShowAll = False)
                              )
 

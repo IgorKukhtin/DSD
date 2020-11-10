@@ -39,8 +39,9 @@ BEGIN
             -- хардкодим - ВСЕ
           , tmpUnit_all   AS (SELECT UnitId, isContainer FROM tmpUnit_CEH UNION SELECT UnitId, isContainer FROM tmpUnit_SKLAD)
             -- хардкодим - товары ГП
-          , tmpGoods AS (SELECT ObjectLink_Goods_InfoMoney.ObjectId AS GoodsId
+          , tmpGoods_all AS (SELECT ObjectLink_Goods_InfoMoney.ObjectId AS GoodsId
                               , Object_InfoMoney_View.InfoMoneyDestinationId
+                              , Object_InfoMoney_View.InfoMoneyId
                          FROM Object_InfoMoney_View
                               LEFT JOIN ObjectLink AS ObjectLink_Goods_InfoMoney
                                                    ON ObjectLink_Goods_InfoMoney.ChildObjectId = Object_InfoMoney_View.InfoMoneyId
@@ -49,6 +50,32 @@ BEGIN
                              OR Object_InfoMoney_View.InfoMoneyId            = zc_Enum_InfoMoney_30201()            -- Доходы + Мясное сырье + Мясное сырье
                              OR Object_InfoMoney_View.InfoMoneyDestinationId = zc_Enum_InfoMoneyDestination_20900() -- Общефирменные + Ирна
                                )
+                        )
+              -- хардкодим
+            , tmpReceipt AS (SELECT DISTINCT
+                                    tmpGoods.GoodsId_child
+                                  , MAX (ObjectLink_Receipt_Goods.ObjectId) AS ReceiptId
+                                  , CASE WHEN ObjectLink_Goods_GoodsGroup.ChildObjectId  IN (5064881) -- СО-ПОСОЛ
+                                           OR ObjectLink_GoodsGroup_parent.ChildObjectId IN (5064881) -- СО-ПОСОЛ
+                                              THEN TRUE
+                                         ELSE FALSE
+                                    END AS isPF
+                             FROM tmpGoods_all AS tmpGoods
+                                  INNER JOIN ObjectLink AS ObjectLink_Receipt_Goods
+                                                        ON ObjectLink_Receipt_Goods.ChildObjectId = tmpGoods.GoodsId
+                                                       AND ObjectLink_Receipt_Goods.DescId        = zc_ObjectLink_Receipt_Goods()
+                                  INNER JOIN Object AS Object_Receipt ON Object_Receipt.Id = ObjectLink_Receipt_Goods.ObjectId
+                                                                     AND Object_Receipt.isErased = FALSE
+                                  INNER JOIN ObjectBoolean AS ObjectBoolean_Main
+                                                           ON ObjectBoolean_Main.ObjectId = Object_Receipt.Id
+                                                          AND ObjectBoolean_Main.DescId = zc_ObjectBoolean_Receipt_Main()
+                                                          AND ObjectBoolean_Main.ValueData = TRUE
+                             WHERE ObjectLink_Goods_GoodsGroup.ChildObjectId  IN (1942, 5064881) -- СО-ЭМУЛЬСИИ + СО-ПОСОЛ
+                                OR ObjectLink_GoodsGroup_parent.ChildObjectId IN (1942, 5064881) -- СО-ЭМУЛЬСИИ + СО-ПОСОЛ
+                             GROUP BY tmpGoods.GoodsId_child
+                                    , ObjectLink_Goods_GoodsGroup.ChildObjectId
+                                    , ObjectLink_GoodsGroup_parent.ChildObjectId
+                            )
                         )
        -- Результат - остатки товары ГП
        SELECT tmp.ContainerId

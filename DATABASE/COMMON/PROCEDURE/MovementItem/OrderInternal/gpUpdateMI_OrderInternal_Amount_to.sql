@@ -27,20 +27,42 @@ BEGIN
         IF inNumber = 1
         THEN
             -- обнулили - Amount
-            UPDATE MovementItem SET Amount = 0 WHERE MovementItem.MovementId = inMovementId AND MovementItem.DescId = zc_MI_Master();
+            UPDATE MovementItem SET Amount = 0
+            FROM (SELECT MovementItem.Id
+                       , COALESCE (MIBoolean_Calculated.ValueData, TRUE) AS isCalculated
+                  FROM MovementItem
+                       LEFT JOIN MovementItemBoolean AS MIBoolean_Calculated
+                                                     ON MIBoolean_Calculated.MovementItemId = MovementItem.Id
+                                                    AND MIBoolean_Calculated.DescId = zc_MIBoolean_Calculated()
+                  WHERE MovementItem.MovementId = inMovementId AND MovementItem.DescId = zc_MI_Master()
+                 ) AS tmpMI
+            WHERE MovementItem.MovementId = inMovementId AND MovementItem.DescId = zc_MI_Master()
+              AND tmpMI.Id = MovementItem.Id
+              AND tmpMI.isCalculated = TRUE
+            ;
 
         ELSEIF inNumber = 2
         THEN
             -- обнулили - AmountSecond
             PERFORM lpInsertUpdate_MovementItemFloat (zc_MIFloat_AmountSecond(),  MovementItem.Id, 0)
             FROM MovementItem
-            WHERE MovementItem.MovementId = inMovementId AND MovementItem.DescId = zc_MI_Master();
+                 LEFT JOIN MovementItemBoolean AS MIBoolean_Calculated
+                                               ON MIBoolean_Calculated.MovementItemId = MovementItem.Id
+                                              AND MIBoolean_Calculated.DescId         = zc_MIBoolean_Calculated()
+                                              AND MIBoolean_Calculated.ValueData      = FALSE
+            WHERE MovementItem.MovementId = inMovementId AND MovementItem.DescId = zc_MI_Master()
+              AND MIBoolean_Calculated.MovementItemId IS NULL
+           ;
 
         ELSEIF inNumber = 3
         THEN
             -- обнулили - AmountNext
             PERFORM lpInsertUpdate_MovementItemFloat (zc_MIFloat_AmountNext(),  MovementItem.Id, 0)
             FROM MovementItem
+                 LEFT JOIN MovementItemBoolean AS MIBoolean_Calculated
+                                               ON MIBoolean_Calculated.MovementItemId = MovementItem.Id
+                                              AND MIBoolean_Calculated.DescId         = zc_MIBoolean_Calculated()
+                                              AND MIBoolean_Calculated.ValueData      = FALSE
             WHERE MovementItem.MovementId = inMovementId AND MovementItem.DescId = zc_MI_Master();
 
         ELSEIF inNumber = 4
@@ -48,7 +70,13 @@ BEGIN
             -- обнулили - AmountNextSecond
             PERFORM lpInsertUpdate_MovementItemFloat (zc_MIFloat_AmountNextSecond(),  MovementItem.Id, 0)
             FROM MovementItem
-            WHERE MovementItem.MovementId = inMovementId AND MovementItem.DescId = zc_MI_Master();
+                 LEFT JOIN MovementItemBoolean AS MIBoolean_Calculated
+                                               ON MIBoolean_Calculated.MovementItemId = MovementItem.Id
+                                              AND MIBoolean_Calculated.DescId         = zc_MIBoolean_Calculated()
+                                              AND MIBoolean_Calculated.ValueData      = FALSE
+            WHERE MovementItem.MovementId = inMovementId AND MovementItem.DescId = zc_MI_Master()
+              AND MIBoolean_Calculated.MovementItemId IS NULL
+           ;
 
         ELSE
             RAISE EXCEPTION 'Ошибка.Не определено параметр <inNumber> = %.', inNumber;
@@ -72,34 +100,38 @@ BEGIN
         END IF;
 
 
-        IF inNumber = 1
+        IF NOT EXISTS (SELECT 1 FROM MovementItemBoolean AS MIB WHERE MIB.MovementItemId = inId AND MIB.DescId = zc_MIBoolean_Calculated() AND MIB.ValueData = FALSE)
         THEN
-            -- сохранили - Amount
-            UPDATE MovementItem SET Amount = inAmount WHERE MovementItem.MovementId = inMovementId AND MovementItem.DescId = zc_MI_Master() AND MovementItem.Id = inId;
-
-        ELSEIF inNumber = 2
-        THEN
-            -- сохранили - AmountSecond
-            PERFORM lpInsertUpdate_MovementItemFloat (zc_MIFloat_AmountSecond(), inId, inAmount);
-
-        ELSEIF inNumber = 3
-        THEN
-            IF inAmount > COALESCE (inAmountTwo, 0)
+            IF inNumber = 1
             THEN
-                -- сохранили - AmountNext
-                PERFORM lpInsertUpdate_MovementItemFloat (zc_MIFloat_AmountNext(), inId, inAmount - COALESCE (inAmountTwo, 0));
+                -- сохранили - Amount
+                UPDATE MovementItem SET Amount = inAmount WHERE MovementItem.MovementId = inMovementId AND MovementItem.DescId = zc_MI_Master() AND MovementItem.Id = inId;
+
+            ELSEIF inNumber = 2
+            THEN
+                -- сохранили - AmountSecond
+                PERFORM lpInsertUpdate_MovementItemFloat (zc_MIFloat_AmountSecond(), inId, inAmount);
+
+            ELSEIF inNumber = 3
+            THEN
+                IF inAmount > COALESCE (inAmountTwo, 0)
+                THEN
+                    -- сохранили - AmountNext
+                    PERFORM lpInsertUpdate_MovementItemFloat (zc_MIFloat_AmountNext(), inId, inAmount - COALESCE (inAmountTwo, 0));
+                END IF;
+
+            ELSEIF inNumber = 4
+            THEN
+                IF inAmount > COALESCE (inAmountTwo, 0)
+                THEN
+                    -- сохранили - AmountNextSecond
+                    PERFORM lpInsertUpdate_MovementItemFloat (zc_MIFloat_AmountNextSecond(), inId, inAmount - COALESCE (inAmountTwo, 0));
+                END IF;
+
+            ELSE
+                RAISE EXCEPTION 'Ошибка.Не определено параметр <inNumber> = %.', inNumber;
             END IF;
 
-        ELSEIF inNumber = 4
-        THEN
-            IF inAmount > COALESCE (inAmountTwo, 0)
-            THEN
-                -- сохранили - AmountNextSecond
-                PERFORM lpInsertUpdate_MovementItemFloat (zc_MIFloat_AmountNextSecond(), inId, inAmount - COALESCE (inAmountTwo, 0));
-            END IF;
-
-        ELSE
-            RAISE EXCEPTION 'Ошибка.Не определено параметр <inNumber> = %.', inNumber;
         END IF;
 
 

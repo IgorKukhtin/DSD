@@ -431,6 +431,8 @@ BEGIN
 
      -- определяется = будет ли при списании переброска на забалансовый счет ОС: Расх ОС Произв забаланс + Расх ОС Админ забаланс
      vbIsContainer_Asset:= vbArticleLossId IN (5670650, 5670651) AND NOT EXISTS (SELECT 1 FROM _tmpItem INNER JOIN Container ON Container.Id = _tmpItem.ContainerId_Goods AND Container.DescId IN (zc_Container_CountAsset(), zc_Container_SummAsset()));
+     -- для ЗАБАЛАНСА - перевыставления НЕТ
+     IF vbIsContainer_Asset = TRUE THEN vbContractId_send:= 0; END IF;
 
 
 
