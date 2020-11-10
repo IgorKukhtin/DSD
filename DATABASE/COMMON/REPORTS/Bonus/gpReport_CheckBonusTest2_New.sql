@@ -453,13 +453,21 @@ BEGIN
                                                                   ON MILinkObject_Unit.MovementItemId = MIContainer.MovementItemId   --BankAccount
                                                                  AND MILinkObject_Unit.DescId = zc_MILinkObject_Unit()
                                                                  AND MIContainer.MovementDescId = zc_Movement_BankAccount()*/
-                                 -- для оплат берем филиал по отв. сотруджнику
-                                 LEFT JOIN ObjectLink AS ObjectLink_Contract_Personal
+
+                                 -- для оплат берем филиал по отв. сотруднику из договора
+                                 /*LEFT JOIN ObjectLink AS ObjectLink_Contract_Personal
                                                       ON ObjectLink_Contract_Personal.ObjectId = tmpContainer.ContractId_child
                                                      AND ObjectLink_Contract_Personal.DescId = zc_ObjectLink_Contract_Personal()
                                                      AND MIContainer.MovementDescId IN (zc_Movement_BankAccount(), zc_Movement_Cash()/*, zc_Movement_SendDebt()*/)
+                                 */
+                                 LEFT JOIN Object ON Object.Id = CASE WHEN MIContainer.MovementDescId IN (zc_Movement_BankAccount(),zc_Movement_Cash()) THEN MIContainer.ObjectId_Analyzer ELSE MIContainer.ObjectExtId_Analyzer END
+                                 -- для оплат берем филиал по отв. сотруднику из контрагента
+                                 LEFT JOIN ObjectLink AS ObjectLink_Partner_Personal
+                                                      ON ObjectLink_Partner_Personal.ObjectId = CASE WHEN Object.DescId = zc_Object_Partner() THEN CASE WHEN MIContainer.MovementDescId IN (zc_Movement_BankAccount(),zc_Movement_Cash()) THEN MIContainer.ObjectId_Analyzer ELSE MIContainer.ObjectExtId_Analyzer END ELSE 0 END
+                                                     AND ObjectLink_Partner_Personal.DescId = zc_ObjectLink_Partner_Personal()
+
                                  LEFT JOIN ObjectLink AS ObjectLink_Personal_Unit
-                                                      ON ObjectLink_Personal_Unit.ObjectId = ObjectLink_Contract_Personal.ChildObjectId
+                                                      ON ObjectLink_Personal_Unit.ObjectId = ObjectLink_Partner_Personal.ChildObjectId
                                                      AND ObjectLink_Personal_Unit.DescId = zc_ObjectLink_Personal_Unit()
 
                                  LEFT JOIN ObjectLink AS ObjectLink_Unit_Branch
@@ -476,8 +484,6 @@ BEGIN
                                                       ON ObjectLink_Cash_Branch.ObjectId = MovementItem.ObjectId
                                                      AND ObjectLink_Cash_Branch.DescId = zc_ObjectLink_Cash_Branch()
                                                      AND MIContainer.MovementDescId = zc_Movement_Cash()
-
-                                 LEFT JOIN Object ON Object.Id = CASE WHEN MIContainer.MovementDescId IN (zc_Movement_BankAccount(),zc_Movement_Cash()) THEN MIContainer.ObjectId_Analyzer ELSE MIContainer.ObjectExtId_Analyzer END
 
                             WHERE MIContainer.DescId = zc_MIContainer_Summ()
                               AND (MIContainer.OperDate >= inStartDate AND MIContainer.OperDate < vbEndDate)
@@ -1060,10 +1066,16 @@ BEGIN
                                 AND ObjectLink_Juridical_Retail.DescId = zc_ObjectLink_Juridical_Retail()
             LEFT JOIN Object AS Object_Retail ON Object_Retail.Id = ObjectLink_Juridical_Retail.ChildObjectId
 
+            /*
             LEFT JOIN ObjectLink AS ObjectLink_Contract_Personal
                                  ON ObjectLink_Contract_Personal.ObjectId = tmpData.ContractId_child
                                 AND ObjectLink_Contract_Personal.DescId = zc_ObjectLink_Contract_Personal()
             LEFT JOIN Object_Personal_View ON Object_Personal_View.PersonalId = ObjectLink_Contract_Personal.ChildObjectId           
+            */
+            LEFT JOIN ObjectLink AS ObjectLink_Partner_Personal
+                                 ON ObjectLink_Partner_Personal.ObjectId = tmpData.PartnerId
+                                AND ObjectLink_Partner_Personal.DescId = zc_ObjectLink_Partner_Personal()
+            LEFT JOIN Object_Personal_View ON Object_Personal_View.PersonalId = ObjectLink_Partner_Personal.ChildObjectId   
 
             LEFT JOIN tmpObjectBonus ON tmpObjectBonus.JuridicalId = Object_Juridical.Id
                                     AND tmpObjectBonus.PartnerId   = COALESCE (Object_Partner.Id, 0)
