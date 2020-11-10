@@ -44,8 +44,8 @@ type
     GuidesContract: TdsdGuides;
     GuidesJuridical: TdsdGuides;
     cxLabel1: TcxLabel;
-    edPriceList: TcxButtonEdit;
-    GuidesPriceList: TdsdGuides;
+    edPriceListGoods: TcxButtonEdit;
+    GuidesPriceListGoods: TdsdGuides;
     FormParams: TdsdFormParams;
     spInsertUpdate: TdsdStoredProc;
     actInsertUpdate: TdsdExecStoredProc;

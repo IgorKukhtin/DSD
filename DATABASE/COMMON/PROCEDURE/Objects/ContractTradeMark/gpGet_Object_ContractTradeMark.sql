@@ -42,10 +42,6 @@ BEGIN
          
        FROM Object AS Object_ContractTradeMark
 
-            LEFT JOIN ObjectFloat AS ObjectFloat_Price
-                                  ON ObjectFloat_Price.ObjectId = Object_ContractTradeMark.Id 
-                                 AND ObjectFloat_Price.DescId = zc_ObjectFloat_ContractTradeMark_Price()
-
             LEFT JOIN ObjectLink AS ContractTradeMark_Contract
                                  ON ContractTradeMark_Contract.ObjectId = Object_ContractTradeMark.Id
                                 AND ContractTradeMark_Contract.DescId = zc_ObjectLink_ContractTradeMark_Contract()

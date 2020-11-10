@@ -484,6 +484,7 @@ object TradeMarkForm: TTradeMarkForm
     ColumnAddOnList = <>
     ColumnEnterList = <>
     SummaryItemList = <>
+    PropertiesCellList = <>
     Left = 160
     Top = 216
   end

@@ -8,7 +8,7 @@ CREATE OR REPLACE FUNCTION gpSelect_Object_ContractTradeMark(
     IN inSession     TVarChar       -- сессия пользователя
 )
 RETURNS TABLE (Id Integer, Code Integer
-             , ContractId Integer, ContractName TVarChar
+             , ContractId Integer, ContractCode Integer, ContractName TVarChar
              , TradeMarkId Integer, TradeMarkName TVarChar
              , isErased boolean
              , SigningDate TDateTime, StartDate_contract TDateTime, EndDate_contract TDateTime
@@ -47,6 +47,7 @@ BEGIN
            , Object_ContractTradeMark.ObjectCode  AS Code
          
            , Object_Contract_View.ContractId      AS ContractId
+           , Object_Contract_View.ContractCode    AS ContractCode
            , Object_Contract_View.InvNumber       AS ContractName
 
            , Object_TradeMark.Id                  AS TradeMarkId

@@ -239,10 +239,10 @@
   object GuidesTradeMark: TdsdGuides
     KeyField = 'Id'
     LookupControl = ceTradeMark
-    FormNameParam.Value = 'TGoods_ObjectForm'
+    FormNameParam.Value = 'TTradeMarkForm'
     FormNameParam.DataType = ftString
     FormNameParam.MultiSelectSeparator = ','
-    FormName = 'TGoods_ObjectForm'
+    FormName = 'TTradeMarkForm'
     PositionDataSet = 'ClientDataSet'
     Params = <
       item

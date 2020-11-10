@@ -631,7 +631,7 @@ inherited ContractGoodsChoiceForm: TContractGoodsChoiceForm
     Top = 6
     Caption = #1055#1088#1072#1081#1089
   end
-  object edPriceList: TcxButtonEdit [3]
+  object edPriceListGoods: TcxButtonEdit [3]
     Left = 654
     Top = 5
     Properties.Buttons = <
@@ -754,6 +754,7 @@ inherited ContractGoodsChoiceForm: TContractGoodsChoiceForm
       QuestionBeforeExecute = #1047#1072#1075#1088#1091#1079#1080#1090#1100' '#1094#1077#1085#1099' '#1080#1079' '#1087#1088#1072#1081#1089#1072' '#1076#1083#1103' '#1074#1099#1073#1088#1072#1085#1085#1086#1075#1086' '#1076#1086#1075#1086#1074#1086#1088#1072'?'
       InfoAfterExecute = #1062#1077#1085#1099' '#1079#1072#1075#1088#1091#1078#1077#1085#1099
       Caption = 'macInsertUpdate'
+      Hint = #1047#1072#1075#1088#1091#1079#1080#1090#1100' '#1094#1077#1085#1099' '#1080#1079' '#1087#1088#1072#1081#1089#1072' '#1076#1083#1103' '#1074#1099#1073#1088#1072#1085#1085#1086#1075#1086' '#1076#1086#1075#1086#1074#1086#1088#1072
       ImageIndex = 27
     end
   end
@@ -795,7 +796,7 @@ inherited ContractGoodsChoiceForm: TContractGoodsChoiceForm
       item
         Name = 'inPriceListId'
         Value = Null
-        Component = GuidesPriceList
+        Component = GuidesPriceListGoods
         ComponentItem = 'Key'
         ParamType = ptInput
         MultiSelectSeparator = ','
@@ -905,6 +906,7 @@ inherited ContractGoodsChoiceForm: TContractGoodsChoiceForm
     end
     object bbInsertUpdate: TdxBarButton
       Action = macInsertUpdate
+      Caption = #1047#1072#1075#1088#1091#1079#1080#1090#1100' '#1094#1077#1085#1099
       Category = 0
     end
   end
@@ -1022,9 +1024,9 @@ inherited ContractGoodsChoiceForm: TContractGoodsChoiceForm
     Left = 144
     Top = 8
   end
-  object GuidesPriceList: TdsdGuides
+  object GuidesPriceListGoods: TdsdGuides
     KeyField = 'Id'
-    LookupControl = edPriceList
+    LookupControl = edPriceListGoods
     FormNameParam.Value = 'TPriceList_ObjectForm'
     FormNameParam.DataType = ftString
     FormNameParam.MultiSelectSeparator = ','
@@ -1034,7 +1036,7 @@ inherited ContractGoodsChoiceForm: TContractGoodsChoiceForm
       item
         Name = 'Key'
         Value = ''
-        Component = GuidesPriceList
+        Component = GuidesPriceListGoods
         ComponentItem = 'Key'
         ParamType = ptInput
         MultiSelectSeparator = ','
@@ -1042,7 +1044,7 @@ inherited ContractGoodsChoiceForm: TContractGoodsChoiceForm
       item
         Name = 'TextValue'
         Value = ''
-        Component = GuidesPriceList
+        Component = GuidesPriceListGoods
         ComponentItem = 'TextValue'
         DataType = ftString
         ParamType = ptInput
@@ -1105,17 +1107,17 @@ inherited ContractGoodsChoiceForm: TContractGoodsChoiceForm
         MultiSelectSeparator = ','
       end
       item
-        Name = 'PriceListId'
+        Name = 'PriceListGoodsId'
         Value = Null
-        Component = GuidesPriceList
+        Component = GuidesPriceListGoods
         ComponentItem = 'Key'
         ParamType = ptInput
         MultiSelectSeparator = ','
       end
       item
-        Name = 'PriceListName'
+        Name = 'PriceListGoodsName'
         Value = Null
-        Component = GuidesPriceList
+        Component = GuidesPriceListGoods
         ComponentItem = 'TextValue'
         DataType = ftString
         ParamType = ptInput
@@ -1140,7 +1142,7 @@ inherited ContractGoodsChoiceForm: TContractGoodsChoiceForm
       item
         Name = 'inPriceListId'
         Value = Null
-        Component = GuidesPriceList
+        Component = GuidesPriceListGoods
         ComponentItem = 'Key'
         ParamType = ptInput
         MultiSelectSeparator = ','
@@ -1164,7 +1166,7 @@ inherited ContractGoodsChoiceForm: TContractGoodsChoiceForm
         Component = GuidesJuridical
       end
       item
-        Component = GuidesPriceList
+        Component = GuidesPriceListGoods
       end
       item
       end>
