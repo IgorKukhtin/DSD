@@ -7,7 +7,7 @@ inherited Report_Goods_RemainsCurrentForm: TReport_Goods_RemainsCurrentForm
   AddOnFormData.ExecuteDialogAction = ExecuteDialog
   AddOnFormData.Params = FormParams
   ExplicitWidth = 1147
-  ExplicitHeight = 601
+  ExplicitHeight = 598
   PixelsPerInch = 96
   TextHeight = 13
   inherited Panel: TPanel [0]
@@ -2283,6 +2283,41 @@ inherited Report_Goods_RemainsCurrentForm: TReport_Goods_RemainsCurrentForm
       Hint = #1042#1099#1075#1088#1091#1079#1080#1090#1100' '#1074' '#1092#1072#1081#1083
       ImageIndex = 53
     end
+    object actExport2: TMultiAction
+      Category = 'Export_file'
+      MoveParams = <>
+      ActionList = <
+        item
+          Action = actGet_Export_FileName
+        end
+        item
+          Action = actExport_file
+        end>
+      QuestionBeforeExecute = #1044#1077#1081#1089#1090#1074#1080#1090#1077#1083#1100#1085#1086' '#1074#1099#1075#1088#1091#1079#1080#1090#1100' '#1086#1089#1090#1072#1090#1082#1080' '#1074'  '#1101#1083#1077#1082#1090#1088#1086#1085#1085#1099#1081' '#1076#1086#1082#1091#1084#1077#1085#1090'?'
+      InfoAfterExecute = #1069#1083#1077#1082#1090#1088#1086#1085#1085#1099#1081' '#1076#1086#1082#1091#1084#1077#1085#1090' '#1091#1089#1087#1077#1096#1085#1086' '#1089#1092#1086#1088#1084#1080#1088#1086#1074#1072#1085
+      Caption = #1042#1099#1075#1088#1091#1079#1080#1090#1100' '#1086#1089#1090#1072#1090#1082#1080' '#1074' '#1092#1072#1081#1083
+      Hint = #1042#1099#1075#1088#1091#1079#1080#1090#1100' '#1074' '#1092#1072#1081#1083
+      ImageIndex = 53
+    end
+    object actExport_file: TdsdStoredProcExportToFile
+      Category = 'Export_file'
+      MoveParams = <>
+      dsdStoredProcName = spSelect_Export
+      FileExt = '.xml'
+      Left = 1208
+      Top = 176
+    end
+    object actGet_Export_FileName2: TdsdExecStoredProc
+      Category = 'Export_file'
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      StoredProc = spGet_Export_FileName2
+      StoredProcList = <
+        item
+          StoredProc = spGet_Export_FileName2
+        end>
+      Caption = 'actGet_Export_FileName2'
+    end
   end
   inherited MasterDS: TDataSource
     Left = 64
@@ -2618,7 +2653,7 @@ inherited Report_Goods_RemainsCurrentForm: TReport_Goods_RemainsCurrentForm
       Category = 0
     end
     object bbExport: TdxBarButton
-      Action = actExport
+      Action = actExport2
       Category = 0
     end
     object bbPrintSticker_fp: TdxBarButton
@@ -3413,5 +3448,38 @@ inherited Report_Goods_RemainsCurrentForm: TReport_Goods_RemainsCurrentForm
     PackSize = 1
     Left = 296
     Top = 472
+  end
+  object spGet_Export_FileName2: TdsdStoredProc
+    StoredProcName = 'gpGet_GoodsRemains_FileName'
+    DataSets = <>
+    OutputType = otResult
+    Params = <
+      item
+        Name = 'outFileName'
+        Value = Null
+        Component = actExport_file
+        ComponentItem = 'DefaultFileName'
+        DataType = ftString
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'outDefaultFileExt'
+        Value = Null
+        Component = actExport_file
+        ComponentItem = 'DefaultFileExt'
+        DataType = ftString
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'outEncodingANSI'
+        Value = Null
+        Component = actExport_file
+        ComponentItem = 'EncodingANSI'
+        DataType = ftBoolean
+        MultiSelectSeparator = ','
+      end>
+    PackSize = 1
+    Left = 416
+    Top = 456
   end
 end
