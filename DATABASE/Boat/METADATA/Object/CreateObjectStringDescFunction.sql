@@ -186,6 +186,18 @@ CREATE OR REPLACE FUNCTION zc_ObjectString_Goods_GroupNameFull() RETURNS Integer
 INSERT INTO ObjectStringDesc (Code, DescId, ItemName)
   SELECT 'zc_ObjectString_Goods_GroupNameFull', zc_Object_Goods(), 'Полное название группы' WHERE NOT EXISTS (SELECT * FROM ObjectStringDesc WHERE Code = 'zc_ObjectString_Goods_GroupNameFull');
 
+CREATE OR REPLACE FUNCTION zc_ObjectString_GoodsType_Comment() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM ObjectStringDesc WHERE Code = 'zc_ObjectString_GoodsType_Comment'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
+INSERT INTO ObjectStringDesc (Code, DescId, ItemName)
+  SELECT 'zc_ObjectString_GoodsType_Comment', zc_Object_GoodsType(), 'Примечание' WHERE NOT EXISTS (SELECT * FROM ObjectStringDesc WHERE Code = 'zc_ObjectString_GoodsType_Comment');
+
+CREATE OR REPLACE FUNCTION zc_ObjectString_GoodsTag_Comment() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM ObjectStringDesc WHERE Code = 'zc_ObjectString_GoodsTag_Comment'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
+INSERT INTO ObjectStringDesc (Code, DescId, ItemName)
+  SELECT 'zc_ObjectString_GoodsTag_Comment', zc_Object_GoodsTag(), 'Примечание' WHERE NOT EXISTS (SELECT * FROM ObjectStringDesc WHERE Code = 'zc_ObjectString_GoodsTag_Comment');
+
+CREATE OR REPLACE FUNCTION zc_ObjectString_DiscountParner_Comment() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM ObjectStringDesc WHERE Code = 'zc_ObjectString_DiscountParner_Comment'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
+INSERT INTO ObjectStringDesc (Code, DescId, ItemName)
+  SELECT 'zc_ObjectString_DiscountParner_Comment', zc_Object_DiscountParner(), 'Примечание' WHERE NOT EXISTS (SELECT * FROM ObjectStringDesc WHERE Code = 'zc_ObjectString_DiscountParner_Comment');
+
 /*-------------------------------------------------------------------------------
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.

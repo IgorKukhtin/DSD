@@ -79,6 +79,10 @@ CREATE OR REPLACE FUNCTION zc_ObjectFloat_Goods_Min() RETURNS Integer AS $BODY$B
 INSERT INTO ObjectFloatDesc (DescId, Code, ItemName)
   SELECT zc_Object_Goods(), 'zc_ObjectFloat_Goods_Min', 'мин кол-во на складе' WHERE NOT EXISTS (SELECT * FROM ObjectFloatDesc WHERE Code = 'zc_ObjectFloat_Goods_Min');
 
+CREATE OR REPLACE FUNCTION zc_ObjectFloat_TaxKind_Value() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM ObjectFloatDesc WHERE Code = 'zc_ObjectFloat_TaxKind_Value'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
+INSERT INTO ObjectFloatDesc (DescId, Code, ItemName)
+  SELECT zc_Object_TaxKind(), 'zc_ObjectFloat_TaxKind_Value', 'Значение НДС' WHERE NOT EXISTS (SELECT * FROM ObjectFloatDesc WHERE Code = 'zc_ObjectFloat_TaxKind_Value');
+
 /*-------------------------------------------------------------------------------
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.

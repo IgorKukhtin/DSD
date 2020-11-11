@@ -175,7 +175,18 @@ uses
   InfoMoneyDestinationEdit in '..\..\FormsBoat\Guides\InfoMoneyDestinationEdit.pas' {InfoMoneyDestinationEditForm: TParentForm},
   InfoMoneyDestination in '..\..\FormsBoat\Guides\InfoMoneyDestination.pas' {InfoMoneyDestinationForm: TParentForm},
   Bank in '..\..\FormsBoat\Guides\Bank.pas' {BankForm: TParentForm},
-  BankEdit in '..\..\FormsBoat\Guides\BankEdit.pas' {BankEditForm: TParentForm};
+  BankEdit in '..\..\FormsBoat\Guides\BankEdit.pas' {BankEditForm: TParentForm},
+  Measure in '..\..\FormsBoat\Guides\Measure.pas' {MeasureForm: TParentForm},
+  MeasureEdit in '..\..\FormsBoat\Guides\MeasureEdit.pas' {MeasureEditForm: TParentForm},
+  GoodsTypeEdit in '..\..\FormsBoat\Guides\GoodsTypeEdit.pas' {GoodsTypeEditForm: TParentForm},
+  GoodsType in '..\..\FormsBoat\Guides\GoodsType.pas' {GoodsTypeForm: TParentForm},
+  GoodsTag in '..\..\FormsBoat\Guides\GoodsTag.pas' {GoodsTagForm: TParentForm},
+  GoodsTagEdit in '..\..\FormsBoat\Guides\GoodsTagEdit.pas' {GoodsTagEditForm: TParentForm},
+  GoodsSize in '..\..\FormsBoat\Guides\GoodsSize.pas' {GoodsSizeForm: TParentForm},
+  GoodsSizeEdit in '..\..\FormsBoat\Guides\GoodsSizeEdit.pas' {GoodsSizeEditForm: TParentForm},
+  DiscountParner in '..\..\FormsBoat\Guides\DiscountParner.pas' {DiscountParnerForm: TParentForm},
+  DiscountParnerEdit in '..\..\FormsBoat\Guides\DiscountParnerEdit.pas' {DiscountParnerEditForm: TParentForm},
+  TaxKind in '..\..\FormsBoat\Kind\TaxKind.pas' {TaxKindForm: TParentForm};
 
 {$R *.res}
 {$R DevExpressRus.res}
