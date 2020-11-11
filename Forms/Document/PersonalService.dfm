@@ -1714,8 +1714,6 @@ inherited PersonalServiceForm: TPersonalServiceForm
         Align = alBottom
         TabOrder = 5
         Visible = False
-        ExplicitLeft = 3
-        ExplicitTop = 463
         object ExportXmlGridDBTableView: TcxGridDBTableView
           Navigator.Buttons.CustomButtons = <>
           DataController.DataSource = ExportDS
@@ -2355,6 +2353,17 @@ inherited PersonalServiceForm: TPersonalServiceForm
       Hint = #1050#1086#1087#1080#1088#1086#1074#1072#1090#1100' '#1076#1072#1085#1085#1099#1077' '#1087#1086' '#1085#1072#1095#1080#1089#1083#1077#1085#1080#1103#1084' '#1080#1079' '#1076#1088#1091#1075#1086#1081' '#1074#1077#1076#1086#1084#1086#1089#1090#1080
       ImageIndex = 59
     end
+    object actInsertUpdate_byMemberMinus: TdsdExecStoredProc
+      Category = 'DSDLib'
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      StoredProc = spInsertUpdate_byMemberMinus
+      StoredProcList = <
+        item
+          StoredProc = spInsertUpdate_byMemberMinus
+        end>
+      Caption = #1047#1072#1075#1088#1091#1079#1080#1090#1100' '#1091#1076#1077#1088#1078#1072#1085#1080#1103
+    end
     object actUpdate_Compensation: TdsdExecStoredProc
       Category = 'DSDLib'
       MoveParams = <>
@@ -2807,6 +2816,19 @@ inherited PersonalServiceForm: TPersonalServiceForm
         end>
       Caption = 'actGet_Export_FileName'
     end
+    object macInsertUpdate_byMemberMinus: TMultiAction
+      Category = 'DSDLib'
+      MoveParams = <>
+      ActionList = <
+        item
+          Action = actInsertUpdate_byMemberMinus
+        end
+        item
+          Action = actRefreshMaster
+        end>
+      Caption = #1047#1072#1075#1088#1091#1079#1080#1090#1100' '#1091#1076#1077#1088#1078#1072#1085#1080#1103
+      Hint = #1047#1072#1075#1088#1091#1079#1080#1090#1100' '#1091#1076#1077#1088#1078#1072#1085#1080#1103
+    end
   end
   inherited MasterDS: TDataSource
     Left = 32
@@ -2976,6 +2998,14 @@ inherited PersonalServiceForm: TPersonalServiceForm
         end
         item
           Visible = True
+          ItemName = 'bb'
+        end
+        item
+          Visible = True
+          ItemName = 'bbStatic'
+        end
+        item
+          Visible = True
           ItemName = 'bbInsertUpdateMISignYes'
         end
         item
@@ -3089,6 +3119,11 @@ inherited PersonalServiceForm: TPersonalServiceForm
     object bbExportZP: TdxBarButton
       Action = actExportZP
       Category = 0
+    end
+    object bb: TdxBarButton
+      Action = macInsertUpdate_byMemberMinus
+      Category = 0
+      ImageIndex = 43
     end
   end
   inherited DBViewAddOn: TdsdDBViewAddOn
@@ -4689,5 +4724,22 @@ inherited PersonalServiceForm: TPersonalServiceForm
     PackSize = 1
     Left = 1176
     Top = 304
+  end
+  object spInsertUpdate_byMemberMinus: TdsdStoredProc
+    StoredProcName = 'gpInsertUpdate_MI_PersonalService_byMemberMinus'
+    DataSets = <>
+    OutputType = otResult
+    Params = <
+      item
+        Name = 'inMovementId'
+        Value = Null
+        Component = FormParams
+        ComponentItem = 'Id'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end>
+    PackSize = 1
+    Left = 464
+    Top = 443
   end
 end
