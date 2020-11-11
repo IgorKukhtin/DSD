@@ -899,6 +899,12 @@ CREATE OR REPLACE FUNCTION zc_Object_PartnerExternal() RETURNS integer AS $BODY$
 INSERT INTO ObjectDesc(Code, ItemName)
 SELECT 'zc_Object_PartnerExternal', 'Контрагенты внешние' WHERE NOT EXISTS (SELECT * FROM ObjectDesc WHERE Code = 'zc_Object_PartnerExternal');
 
+CREATE OR REPLACE FUNCTION zc_Object_ContractTradeMark() RETURNS integer AS $BODY$BEGIN RETURN (SELECT Id FROM ObjectDesc WHERE Code = 'zc_Object_ContractTradeMark'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
+INSERT INTO ObjectDesc(Code, ItemName)
+SELECT 'zc_Object_ContractTradeMark', 'Торговые марки в договорах(Спецификация)' WHERE NOT EXISTS (SELECT * FROM ObjectDesc WHERE Code = 'zc_Object_ContractTradeMark');
+
+
+--!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 --!!! Аптека
 CREATE OR REPLACE FUNCTION zc_Object_FileTypeKind() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM ObjectDesc WHERE Code = 'zc_Object_FileTypeKind'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
 INSERT INTO ObjectDesc (Code, ItemName)

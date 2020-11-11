@@ -63,6 +63,7 @@ RETURNS TABLE (Id Integer, Code Integer
              , DocumentCount TFloat, DateDocument TDateTime
 
              , PriceListId Integer, PriceListName TVarChar
+             , PriceListGoodsId Integer, PriceListGoodsName TVarChar
              -- , PriceListPromoId Integer, PriceListPromoName TVarChar
              -- , StartPromo TDateTime, EndPromo TDateTime
 
@@ -242,8 +243,11 @@ BEGIN
        , ObjectFloat_DocumentCount.ValueData AS DocumentCount
        , ObjectDate_Document.ValueData AS DateDocument
        
-       , Object_PriceList.Id         AS PriceListId 
-       , Object_PriceList.ValueData  AS PriceListName 
+       , Object_PriceList.Id             AS PriceListId 
+       , Object_PriceList.ValueData      AS PriceListName
+
+       , Object_PriceListGoods.Id        AS PriceListGoodsId
+       , Object_PriceListGoods.ValueData AS PriceListGoodsName
 
        -- , Object_PriceListPromo.Id         AS PriceListPromoId 
        -- , Object_PriceListPromo.ValueData  AS PriceListPromoName 
@@ -424,6 +428,11 @@ BEGIN
                             AND ObjectLink_Contract_PriceList.DescId = zc_ObjectLink_Contract_PriceList()
         LEFT JOIN Object AS Object_PriceList ON Object_PriceList.Id = ObjectLink_Contract_PriceList.ChildObjectId
 
+        LEFT JOIN ObjectLink AS ObjectLink_Contract_PriceListGoods
+                             ON ObjectLink_Contract_PriceListGoods.ObjectId = Object_Contract_View.ContractId
+                            AND ObjectLink_Contract_PriceListGoods.DescId = zc_ObjectLink_Contract_PriceListGoods()
+        LEFT JOIN Object AS Object_PriceListGoods ON Object_PriceListGoods.Id = ObjectLink_Contract_PriceListGoods.ChildObjectId
+        
         LEFT JOIN ObjectLink AS ObjectLink_Contract_Currency
                              ON ObjectLink_Contract_Currency.ObjectId = Object_Contract_View.ContractId
                             AND ObjectLink_Contract_Currency.DescId = zc_ObjectLink_Contract_Currency()

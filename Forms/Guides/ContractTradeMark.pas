@@ -1,4 +1,4 @@
-unit ContractGoodsChoice;
+unit ContractTradeMark;
 
 interface
 
@@ -21,37 +21,15 @@ uses
   dxSkinSevenClassic, dxSkinSharp, dxSkinSharpPlus, dxSkinSilver,
   dxSkinSpringTime, dxSkinStardust, dxSkinSummer2008, dxSkinTheAsphaltWorld,
   dxSkinValentine, dxSkinVS2010, dxSkinWhiteprint, dxSkinXmas2008Blue,
-  cxContainer, dsdGuides, cxLabel, cxTextEdit, cxMaskEdit, Vcl.ExtCtrls,
   cxCurrencyEdit;
 
 type
-  TContractGoodsChoiceForm = class(TAncestorGuidesForm)
-    GoodsKindName: TcxGridDBColumn;
-    Price: TcxGridDBColumn;
+  TContractTradeMarkForm = class(TAncestorGuidesForm)
     ContractCode: TcxGridDBColumn;
     actShowAll: TBooleanStoredProcAction;
     bbShowAll: TdxBarButton;
     actShowErased: TBooleanStoredProcAction;
     bbShowErased: TdxBarButton;
-    Panel: TPanel;
-    edRetail: TcxButtonEdit;
-    cxLabel10: TcxLabel;
-    GuidesRetail: TdsdGuides;
-    cxLabel6: TcxLabel;
-    edJuridical: TcxButtonEdit;
-    cxLabel9: TcxLabel;
-    edContract: TcxButtonEdit;
-    GuidesContract: TdsdGuides;
-    GuidesJuridical: TdsdGuides;
-    cxLabel1: TcxLabel;
-    edPriceListGoods: TcxButtonEdit;
-    GuidesPriceListGoods: TdsdGuides;
-    FormParams: TdsdFormParams;
-    spInsertUpdate: TdsdStoredProc;
-    actInsertUpdate: TdsdExecStoredProc;
-    macInsertUpdate: TMultiAction;
-    bbInsertUpdate: TdxBarButton;
-    RefreshDispatcher: TRefreshDispatcher;
   private
     { Private declarations }
   public
@@ -63,6 +41,6 @@ implementation
 {$R *.dfm}
 
 initialization
-  RegisterClass(TContractGoodsChoiceForm);
+  RegisterClass(TContractTradeMarkForm);
 
 end.

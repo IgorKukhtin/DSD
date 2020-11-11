@@ -760,6 +760,15 @@
         Options.Editing = False
         Width = 60
       end
+      object PriceListGoodsName: TcxGridDBColumn
+        Caption = #1055#1088#1072#1081#1089'-'#1083#1080#1089#1090'('#1057#1087#1077#1094#1080#1092#1080#1082#1072#1094#1080#1103')'
+        DataBinding.FieldName = 'PriceListGoodsName'
+        Visible = False
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Options.Editing = False
+        Width = 60
+      end
       object GoodsPropertyName: TcxGridDBColumn
         Caption = #1050#1083#1072#1089#1089#1080#1092#1080#1082#1072#1090#1086#1088' '#1089#1074#1086#1081#1089#1090#1074' '#1090#1086#1074#1072#1088#1072
         DataBinding.FieldName = 'GoodsPropertyName'
@@ -2854,18 +2863,18 @@
           MultiSelectSeparator = ','
         end
         item
-          Name = 'PriceListId'
+          Name = 'PriceListGoodsId'
           Value = Null
           Component = ClientDataSet
-          ComponentItem = 'PriceListId'
+          ComponentItem = 'PriceListGoodsId'
           ParamType = ptInput
           MultiSelectSeparator = ','
         end
         item
-          Name = 'PriceListName'
+          Name = 'PriceListGoodsName'
           Value = Null
           Component = ClientDataSet
-          ComponentItem = 'PriceListName'
+          ComponentItem = 'PriceListGoodsName'
           DataType = ftString
           ParamType = ptInput
           MultiSelectSeparator = ','
