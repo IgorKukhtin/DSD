@@ -969,7 +969,8 @@ uses
   DistributionPromoJournal in '..\..\FormsFarmacy\Document\DistributionPromoJournal.pas' {DistributionPromoJournalForm: TParentForm},
   ChoiceIncome in '..\..\FormsFarmacy\Guides\ChoiceIncome.pas' {ChoiceIncomeForm: TParentForm},
   Report_PriceCheck in '..\..\FormsFarmacy\Report\Report_PriceCheck.pas' {Report_PriceCheckForm: TParentForm},
-  Report_Sale_PartialSale in '..\..\FormsFarmacy\Report\Report_Sale_PartialSale.pas' {Report_Sale_PartialSaleForm: TParentForm};
+  Report_Sale_PartialSale in '..\..\FormsFarmacy\Report\Report_Sale_PartialSale.pas' {Report_Sale_PartialSaleForm: TParentForm},
+  Report_ClippedReprice_Sale in '..\..\FormsFarmacy\Report\Report_ClippedReprice_Sale.pas' {Report_ClippedReprice_SaleForm: TParentForm};
 
 {$R *.res}
 {$R DevExpressRus.res}

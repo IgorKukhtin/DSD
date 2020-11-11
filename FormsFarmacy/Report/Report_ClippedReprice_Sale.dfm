@@ -1,7 +1,7 @@
-object Report_CommentSendSUNForm: TReport_CommentSendSUNForm
+object Report_ClippedReprice_SaleForm: TReport_ClippedReprice_SaleForm
   Left = 0
   Top = 0
-  Caption = #1055#1088#1080#1095#1080#1085#1099' '#1082#1086#1088#1088#1077#1082#1090#1080#1088#1086#1074#1072#1085#1080#1103' '#1057#1059#1053
+  Caption = #1058#1086#1074#1072#1088' '#1080' '#1087#1088#1086#1076#1072#1078#1080' '#1073#1077#1079' '#1087#1077#1088#1077#1086#1094#1077#1085#1082#1080' ('#1086#1096#1080#1073#1082#1080')'
   ClientHeight = 440
   ClientWidth = 931
   Color = clBtnFace
@@ -119,12 +119,12 @@ object Report_CommentSendSUNForm: TReport_CommentSendSUNForm
           Format = ',0.00;-,0.00; ;'
           Kind = skSum
           Position = spFooter
-          Column = Summa
+          Column = SummaSale
         end
         item
           Format = ',0.00;-,0.00; ;'
           Kind = skSum
-          Column = Summa
+          Column = SummaSale
         end
         item
           Format = ',0.00;-,0.00; ;'
@@ -134,6 +134,56 @@ object Report_CommentSendSUNForm: TReport_CommentSendSUNForm
         item
           Format = ',0.00;-,0.00; ;'
           Kind = skSum
+        end
+        item
+          Format = ',0.00;-,0.00; ;'
+          Kind = skSum
+          Position = spFooter
+          Column = SummaNew
+        end
+        item
+          Format = ',0.00;-,0.00; ;'
+          Kind = skSum
+          Position = spFooter
+          Column = Deficit
+        end
+        item
+          Format = ',0.00;-,0.00; ;'
+          Kind = skSum
+          Position = spFooter
+          Column = Proficit
+        end
+        item
+          Format = ',0.00;-,0.00; ;'
+          Kind = skSum
+          Position = spFooter
+          Column = Diff
+        end
+        item
+          Format = ',0.00;-,0.00; ;'
+          Kind = skSum
+          Column = SummaNew
+        end
+        item
+          Format = ',0.00;-,0.00; ;'
+          Kind = skSum
+          Column = Deficit
+        end
+        item
+          Format = ',0.00;-,0.00; ;'
+          Kind = skSum
+          Column = Proficit
+        end
+        item
+          Format = ',0.00;-,0.00; ;'
+          Kind = skSum
+          Column = Diff
+        end
+        item
+          Format = ',0.####'
+          Kind = skSum
+          Position = spFooter
+          Column = Amount
         end>
       DataController.Summary.FooterSummaryItems = <
         item
@@ -192,16 +242,35 @@ object Report_CommentSendSUNForm: TReport_CommentSendSUNForm
         item
           Format = #1042#1089#1077#1075#1086' '#1089#1090#1088#1086#1082': ,0'
           Kind = skCount
-          Column = UnitName
         end
         item
           Format = ',0.00;-,0.00; ;'
           Kind = skSum
-          Column = Summa
+          Column = SummaSale
         end
         item
           Format = ',0.00;-,0.00; ;'
           Kind = skSum
+        end
+        item
+          Format = ',0.00;-,0.00; ;'
+          Kind = skSum
+          Column = SummaNew
+        end
+        item
+          Format = ',0.00;-,0.00; ;'
+          Kind = skSum
+          Column = Deficit
+        end
+        item
+          Format = ',0.00;-,0.00; ;'
+          Kind = skSum
+          Column = Proficit
+        end
+        item
+          Format = ',0.00;-,0.00; ;'
+          Kind = skSum
+          Column = Diff
         end>
       DataController.Summary.SummaryGroups = <>
       Images = dmMain.SortImageList
@@ -220,44 +289,13 @@ object Report_CommentSendSUNForm: TReport_CommentSendSUNForm
       OptionsView.HeaderAutoHeight = True
       OptionsView.Indicator = True
       Styles.StyleSheet = dmMain.cxGridTableViewStyleSheet
-      object InvNumber: TcxGridDBColumn
-        Caption = #8470' '#1044#1086#1082'-'#1090#1072
-        DataBinding.FieldName = 'InvNumber'
-        HeaderAlignmentHorz = taCenter
-        HeaderAlignmentVert = vaCenter
-        Options.Editing = False
-        Width = 65
-      end
-      object OperDate: TcxGridDBColumn
-        Caption = #1044#1072#1090#1072
-        DataBinding.FieldName = 'OperDate'
-        HeaderAlignmentHorz = taCenter
-        HeaderAlignmentVert = vaCenter
-        Width = 77
-      end
       object UnitName: TcxGridDBColumn
-        Caption = #1055#1086#1076#1088#1072#1079#1076#1077#1083#1077#1085#1080#1077' '#1086#1090#1087#1088#1072#1074#1080#1090#1077#1083#1100
+        Caption = #1055#1086#1076#1088#1072#1079#1076#1077#1083#1077#1085#1080#1077
         DataBinding.FieldName = 'UnitName'
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         Options.Editing = False
-        Width = 189
-      end
-      object TypeSUN: TcxGridDBColumn
-        Caption = #1042#1080#1076' '#1057#1059#1053
-        DataBinding.FieldName = 'TypeSUN'
-        HeaderAlignmentHorz = taCenter
-        HeaderAlignmentVert = vaCenter
-        Options.Editing = False
-        Width = 58
-      end
-      object CommentSendName: TcxGridDBColumn
-        Caption = #1055#1088#1080#1095#1080#1085#1072' '#1079#1072#1085#1091#1083#1077#1085#1080#1103
-        DataBinding.FieldName = 'CommentSendName'
-        HeaderAlignmentHorz = taCenter
-        HeaderAlignmentVert = vaCenter
-        Options.Editing = False
-        Width = 132
+        Width = 114
       end
       object GoodsCode: TcxGridDBColumn
         Caption = #1050#1086#1076
@@ -276,34 +314,84 @@ object Report_CommentSendSUNForm: TReport_CommentSendSUNForm
         Width = 182
       end
       object Amount: TcxGridDBColumn
-        Caption = #1050#1086#1083'-'#1074#1086' '#1079#1072#1085#1091#1083#1077#1085#1086
+        Caption = #1050#1086#1083'-'#1074#1086
         DataBinding.FieldName = 'Amount'
         PropertiesClassName = 'TcxCurrencyEditProperties'
         Properties.DecimalPlaces = 4
         Properties.DisplayFormat = ',0.####;-,0.####; ;'
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
-        Width = 70
+        Width = 80
       end
-      object Price: TcxGridDBColumn
-        Caption = #1062#1077#1085#1072
-        DataBinding.FieldName = 'Price'
+      object PriceSale: TcxGridDBColumn
+        Caption = #1062#1077#1085#1072' '#1087#1088#1086#1076#1072#1078#1080
+        DataBinding.FieldName = 'PriceSale'
         PropertiesClassName = 'TcxCurrencyEditProperties'
         Properties.DisplayFormat = ',0.00;-,0.00; ;'
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         Options.Editing = False
-        Width = 70
+        Width = 80
       end
-      object Summa: TcxGridDBColumn
-        Caption = #1057#1091#1084#1084#1072
-        DataBinding.FieldName = 'Summa'
+      object SummaSale: TcxGridDBColumn
+        Caption = #1057#1091#1084#1084#1072' '#1087#1088#1086#1076#1072#1078#1080
+        DataBinding.FieldName = 'SummaSale'
         PropertiesClassName = 'TcxCurrencyEditProperties'
         Properties.DisplayFormat = ',0.00;-,0.00; ;'
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         Options.Editing = False
-        Width = 70
+        Width = 80
+      end
+      object PriceNew: TcxGridDBColumn
+        Caption = #1062#1077#1085#1072' '#1074' '#1087#1077#1088#1077#1086#1094#1077#1085#1082#1077
+        DataBinding.FieldName = 'PriceNew'
+        PropertiesClassName = 'TcxCurrencyEditProperties'
+        Properties.DisplayFormat = ',0.00;-,0.00; ;'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Options.Editing = False
+        Width = 80
+      end
+      object SummaNew: TcxGridDBColumn
+        Caption = #1057#1091#1084#1084#1072' '#1087#1086' '#1087#1077#1088#1077#1086#1094#1077#1085#1082#1077
+        DataBinding.FieldName = 'SummaNew'
+        PropertiesClassName = 'TcxCurrencyEditProperties'
+        Properties.DisplayFormat = ',0.00;-,0.00; ;'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Options.Editing = False
+        Width = 80
+      end
+      object Deficit: TcxGridDBColumn
+        Caption = #1055#1086#1090#1077#1088#1080
+        DataBinding.FieldName = 'Deficit'
+        PropertiesClassName = 'TcxCurrencyEditProperties'
+        Properties.DisplayFormat = ',0.00;-,0.00; ;'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Options.Editing = False
+        Width = 80
+      end
+      object Proficit: TcxGridDBColumn
+        Caption = #1048#1079#1083#1080#1096#1077#1082
+        DataBinding.FieldName = 'Proficit'
+        PropertiesClassName = 'TcxCurrencyEditProperties'
+        Properties.DisplayFormat = ',0.00;-,0.00; ;'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Options.Editing = False
+        Width = 80
+      end
+      object Diff: TcxGridDBColumn
+        Caption = #1056#1072#1079#1085#1080#1094#1072
+        DataBinding.FieldName = 'Diff'
+        PropertiesClassName = 'TcxCurrencyEditProperties'
+        Properties.DisplayFormat = ',0.00;-,0.00; ;'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Options.Editing = False
+        Width = 80
       end
     end
     object cxGridLevel: TcxGridLevel
@@ -614,7 +702,7 @@ object Report_CommentSendSUNForm: TReport_CommentSendSUNForm
     end
   end
   object dsdStoredProc: TdsdStoredProc
-    StoredProcName = 'gpReport_CommentSendSUN'
+    StoredProcName = 'gpReport_ClippedReprice_Sale'
     DataSet = ClientDataSet
     DataSets = <
       item
@@ -622,7 +710,7 @@ object Report_CommentSendSUNForm: TReport_CommentSendSUNForm
       end>
     Params = <
       item
-        Name = 'inDateStart'
+        Name = 'inStartDate'
         Value = 41640d
         Component = deStart
         DataType = ftDateTime
@@ -630,7 +718,7 @@ object Report_CommentSendSUNForm: TReport_CommentSendSUNForm
         MultiSelectSeparator = ','
       end
       item
-        Name = 'inDateFinal'
+        Name = 'inEndDate'
         Value = 41640d
         Component = deEnd
         DataType = ftDateTime

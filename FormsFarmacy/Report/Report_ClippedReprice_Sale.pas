@@ -1,4 +1,4 @@
-unit Report_CommentSendSUN;
+unit Report_ClippedReprice_Sale;
 
 interface
 
@@ -26,7 +26,7 @@ uses
   cxDBPivotGrid, cxLabel, ChoicePeriod, dxBarExtItems, cxCheckBox, dsdPivotGrid;
 
 type
-  TReport_CommentSendSUNForm = class(TParentForm)
+  TReport_ClippedReprice_SaleForm = class(TParentForm)
     DataSource: TDataSource;
     ClientDataSet: TClientDataSet;
     cxPropertiesStore: TcxPropertiesStore;
@@ -60,20 +60,21 @@ type
     bbGroup: TdxBarControlContainerItem;
     cxGrid: TcxGrid;
     cxGridDBTableView: TcxGridDBTableView;
-    InvNumber: TcxGridDBColumn;
-    OperDate: TcxGridDBColumn;
-    UnitName: TcxGridDBColumn;
     GoodsName: TcxGridDBColumn;
     Amount: TcxGridDBColumn;
     cxGridLevel: TcxGridLevel;
     DBViewAddOn: TdsdDBViewAddOn;
     GoodsCode: TcxGridDBColumn;
-    Price: TcxGridDBColumn;
-    Summa: TcxGridDBColumn;
+    PriceSale: TcxGridDBColumn;
+    SummaSale: TcxGridDBColumn;
     actUpdate: TdsdInsertUpdateAction;
     bbUpdate: TdxBarButton;
-    CommentSendName: TcxGridDBColumn;
-    TypeSUN: TcxGridDBColumn;
+    PriceNew: TcxGridDBColumn;
+    SummaNew: TcxGridDBColumn;
+    Deficit: TcxGridDBColumn;
+    Proficit: TcxGridDBColumn;
+    Diff: TcxGridDBColumn;
+    UnitName: TcxGridDBColumn;
   private
   public
   end;
@@ -83,6 +84,6 @@ implementation
 {$R *.dfm}
 
 initialization
-  RegisterClass(TReport_CommentSendSUNForm);
+  RegisterClass(TReport_ClippedReprice_SaleForm);
 
 end.
