@@ -313,6 +313,14 @@ object Report_ClippedReprice_SaleForm: TReport_ClippedReprice_SaleForm
         Options.Editing = False
         Width = 182
       end
+      object OperDate: TcxGridDBColumn
+        Caption = #1044#1072#1090#1072' '#1087#1088#1086#1076#1072#1078#1080
+        DataBinding.FieldName = 'OperDate'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Options.Editing = False
+        Width = 68
+      end
       object Amount: TcxGridDBColumn
         Caption = #1050#1086#1083'-'#1074#1086
         DataBinding.FieldName = 'Amount'

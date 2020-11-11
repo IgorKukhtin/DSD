@@ -80,6 +80,7 @@ type
     ceUser: TcxButtonEdit;
     cxLabel1: TcxLabel;
     GuidesUser: TdsdGuides;
+    cbHideExceptRed: TcxCheckBox;
   private
   public
   end;

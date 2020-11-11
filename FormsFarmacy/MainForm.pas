@@ -937,7 +937,7 @@ begin
     end;
   finally
     TimerPUSH.Enabled := True;
-    PUSHDS.Close;
+    if PUSHDS.IsEmpty then PUSHDS.Close;
   end;
 end;
 

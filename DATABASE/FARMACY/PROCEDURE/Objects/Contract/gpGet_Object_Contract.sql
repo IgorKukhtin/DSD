@@ -63,10 +63,10 @@ BEGIN
            , CURRENT_DATE :: TDateTime AS StartDate
            , CURRENT_DATE :: TDateTime AS EndDate   
        
-           , CAST (NULL AS Boolean) AS isMorionCode
-           , CAST (NULL AS Boolean) AS isBarCode
-           , CAST (NULL AS Boolean) AS isPartialPay
-           , CAST (NULL AS Boolean) AS isErased;
+           , CAST (False AS Boolean) AS isMorionCode
+           , CAST (False AS Boolean) AS isBarCode
+           , CAST (False AS Boolean) AS isPartialPay
+           , CAST (False AS Boolean) AS isErased;
    
    ELSE
        RETURN QUERY 
@@ -183,3 +183,5 @@ ALTER FUNCTION gpGet_Object_Contract (integer, TVarChar) OWNER TO postgres;
 
 -- тест
 -- SELECT * FROM gpGet_Object_Contract(0,'2')
+
+select * from gpGet_Object_Contract(inId := 0 ,  inSession := '3');

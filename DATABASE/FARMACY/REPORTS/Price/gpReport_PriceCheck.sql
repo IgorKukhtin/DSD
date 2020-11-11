@@ -1,11 +1,12 @@
 -- Function: gpReport_PriceCheck()
 
-DROP FUNCTION IF EXISTS gpReport_PriceCheck (TFloat, Integer, TVarChar);
+DROP FUNCTION IF EXISTS gpReport_PriceCheck (TFloat, Integer, Boolean, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpReport_PriceCheck(
-    IN inPercent       TFloat    , -- Процент отклонения
-    IN inUserId        Integer   , -- Сотрудник
-    IN inSession       TVarChar    -- сессия пользователя
+    IN inPercent          TFloat    , -- Процент отклонения
+    IN inUserId           Integer   , -- Сотрудник
+    IN inisHideExceptRed  Boolean   , -- Скрыть кроме красных
+    IN inSession          TVarChar    -- сессия пользователя
 )
 RETURNS SETOF refcursor
 AS
@@ -46,7 +47,7 @@ BEGIN
                               ON ObjectLink_Unit_UserManager.ObjectId = tmpUnit.UnitId
                              AND ObjectLink_Unit_UserManager.DescId = zc_ObjectLink_Unit_UserManager()
     ;
-    
+
       -- Цены по подразделениям
     CREATE TEMP TABLE tmpUnitPrice (
             UnitId          Integer,
@@ -70,7 +71,7 @@ BEGIN
                            , Object_Goods_Retail.GoodsMainId                       AS GoodsId
                            , ROUND (Price_Value.ValueData, 2):: TFloat             AS Price
                            , ROW_NUMBER() OVER (PARTITION BY Price_Goods.ChildObjectId ORDER BY Price_Value.ValueData) AS Ord
-                           , tmpUnitManager.ManagerId                              AS ManagerId  
+                           , tmpUnitManager.ManagerId                              AS ManagerId
                       FROM ObjectLink AS ObjectLink_Price_Unit
                            INNER JOIN ObjectLink AS Price_Goods
                                                 ON Price_Goods.ObjectId = ObjectLink_Price_Unit.ObjectId
@@ -156,15 +157,17 @@ BEGIN
       -- Подразделения
     CREATE TEMP TABLE tmpUnit (
             Id              Integer,
-            UnitId          Integer
-      ) ON COMMIT DROP;
+            UnitId          Integer,
+            ManagerId       Integer
+           ) ON COMMIT DROP;
 
-    INSERT INTO tmpUnit (Id, UnitId)
+    INSERT INTO tmpUnit (Id, UnitId, ManagerId)
     SELECT ROW_NUMBER() OVER (ORDER BY tmpUnitPrice.UnitID) AS Id
          , tmpUnitPrice.UnitID
+         , tmpUnitPrice.ManagerId
     FROM tmpUnitPrice
          INNER JOIN tmpResult ON tmpResult.GoodsId = tmpUnitPrice.GoodsId
-    GROUP BY tmpUnitPrice.UnitID
+    GROUP BY tmpUnitPrice.UnitID, tmpUnitPrice.ManagerId
     ORDER BY tmpUnitPrice.UnitID;
 
       -- Заполняем подразделение
@@ -192,17 +195,18 @@ BEGIN
              tmpUnitPrice.ManagerId
            FROM tmpUnitPrice
                 INNER JOIN tmpResult ON tmpResult.GoodsId = tmpUnitPrice.GoodsId
-           WHERE tmpUnitPrice.UnitID = ' || COALESCE (vbUnitID, 0)::Text || ') AS T1
-           WHERE tmpResult.GoodsId = T1.GoodsId';
+           WHERE tmpUnitPrice.UnitID = ' || COALESCE (vbUnitID, 0)::Text||') AS T1
+           WHERE tmpResult.GoodsId = T1.GoodsId'||
+            ' AND (COALESCE (T1.T_Color_calc, 0) = zc_Color_Red() OR '||COALESCE(inisHideExceptRed, False)::Text||' = FALSE)';
         EXECUTE vbQueryText;
 
     END LOOP;
     CLOSE curUnit;
 
-    -- Удаляем что номально 
+    -- Удаляем что номально
     DELETE FROM tmpResult
     WHERE tmpResult.BadPriceCount = 0;
-    
+
     -- Удаляем ксли нет аптек менеджера
     IF COALESCE (inUserId, 0) <> 0
     THEN
@@ -411,9 +415,10 @@ BEGIN
     OPEN cur1 FOR
     SELECT tmpUnit.ID
          , tmpUnit.UnitID
-         , Object_Unit.ValueData  AS UnitName
+         , Object_Unit.ValueData||COALESCE(CHR(13)||Object_Manager.ValueData, '')  AS UnitName
     FROM tmpUnit
          LEFT JOIN Object AS Object_Unit ON Object_Unit.Id = tmpUnit.UnitID
+         LEFT JOIN Object AS Object_Manager ON Object_Manager.Id = tmpUnit.ManagerId
     ORDER BY tmpUnit.UnitID;
     RETURN NEXT cur1;
 
@@ -436,4 +441,4 @@ $BODY$
 
 -- тест
 --
-select * from gpReport_PriceCheck(inPercent := 5, inUserId := 0, inSession := '3');               
+select * from gpReport_PriceCheck(inPercent := 5, inUserId := 0, inisHideExceptRed := False, inSession := '3');               

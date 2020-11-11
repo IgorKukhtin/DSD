@@ -75,6 +75,7 @@ type
     Proficit: TcxGridDBColumn;
     Diff: TcxGridDBColumn;
     UnitName: TcxGridDBColumn;
+    OperDate: TcxGridDBColumn;
   private
   public
   end;

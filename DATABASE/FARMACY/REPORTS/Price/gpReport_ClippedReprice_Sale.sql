@@ -9,7 +9,7 @@ CREATE OR REPLACE FUNCTION gpReport_ClippedReprice_Sale(
 )
 RETURNS TABLE (UnitId Integer, UnitCode Integer, UnitName TVarChar
              , GoodsID Integer, GoodsCode Integer, GoodsName TVarChar
-
+             , OperDate TDateTime
              , Amount TFloat
              , PriceSale TFloat, SummaSale TFloat
              , PriceNew TFloat, SummaNew TFloat
@@ -98,10 +98,16 @@ BEGIN
                           LEFT JOIN MovementItemFloat AS MIFloat_PriceSale
                                                       ON MIFloat_PriceSale.MovementItemId = MovementItem.Id
                                                      AND MIFloat_PriceSale.DescId = zc_MIFloat_PriceSale()
+                                                     
+                          LEFT JOIN Object_Goods_Retail AS Object_Goods_Retail ON Object_Goods_Retail.Id = MovementItem.ObjectId 
+                          LEFT JOIN Object_Goods_Main AS Object_Goods_Main ON Object_Goods_Main.Id = Object_Goods_Retail.GoodsMainId
 
                      WHERE COALESCE(MIBoolean_ClippedReprice.ValueData, False) = TRUE
+                       AND COALESCE(Object_Goods_Main.isResolution_224, FALSE) = FALSE
+                       AND COALESCE(Object_Goods_Retail.isTop, FALSE) = FALSE
                      ),
            tmpMIC AS (SELECT MovementItem.Id                                 AS Id
+                           , DATE_TRUNC ('DAY', MIC.OperDate)::TDateTime     AS OperDate
                            , MovementItem.GoodsID
                            , MovementItem.PriceNew                           AS PriceNew
                            , MIC.MovementId                                  AS MovementID
@@ -124,6 +130,7 @@ BEGIN
                       ),
            tmpResult AS (SELECT
                                 Movement.UnitId                                       AS UnitId
+                              , MIC.OperDate                                          AS OperDate  
                               , MIC.GoodsID                                           AS GoodsID
                               , SUM(MIC.Amount)::TFloat                               AS Amount
                               , MIC.Price                                             AS Price
@@ -139,9 +146,11 @@ BEGIN
                               LEFT JOIN MovementLinkObject AS MovementLinkObject_DiscountCard
                                                            ON MovementLinkObject_DiscountCard.MovementId = MIC.MovementID
                                                           AND MovementLinkObject_DiscountCard.DescId = zc_MovementLinkObject_DiscountCard()
+                                                          
                          WHERE COALESCE (MovementLinkObject_SPKind.ObjectId, 0) = 0
                            AND COALESCE (MovementLinkObject_DiscountCard.ObjectId, 0) = 0
                          GROUP BY Movement.UnitId
+                                , MIC.OperDate
                                 , MIC.GoodsID
                                 , MIC.Price
                                 , MIC.PriceNew )
@@ -155,6 +164,7 @@ BEGIN
           , Object_Goods.ObjectCode                             AS GoodsCode
           , Object_Goods.ValueData                              AS GoodsName
 
+          , Result.OperDate                                     AS OperDate
           , Result.Amount                                       AS Amount
           , Result.Price                                        AS PriceSale
           , Round(Result.Amount * Result.Price, 2)::TFloat      AS SummaSale
@@ -175,7 +185,8 @@ BEGIN
           LEFT JOIN Object AS Object_Unit ON Object_Unit.Id = Result.UnitId
 
           LEFT JOIN Object AS Object_Goods ON Object_Goods.Id = Result.GoodsID
-     WHERE Result.Price <> Result.PriceNew;
+     WHERE Result.Price <> Result.PriceNew
+     ORDER BY Result.UnitId, Result.GoodsID, Result.OperDate;
 
 
 END;
@@ -190,5 +201,4 @@ ALTER FUNCTION gpSelect_Movement_Reprice (TDateTime, TDateTime, TVarChar) OWNER 
 */
 
 -- тест
---
-SELECT * FROM gpReport_ClippedReprice_Sale (inStartDate:= '01.11.2020', inEndDate:= '10.11.2020', inSession:= '2')
+-- SELECT * FROM gpReport_ClippedReprice_Sale (inStartDate:= '01.11.2020', inEndDate:= '10.11.2020', inSession:= '2')
