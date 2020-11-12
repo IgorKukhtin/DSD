@@ -98,6 +98,7 @@ type
     cxLabel15: TcxLabel;
     cxLabel16: TcxLabel;
     edComment: TcxTextEdit;
+    ceisArc: TcxCheckBox;
   private
     { Private declarations }
   public

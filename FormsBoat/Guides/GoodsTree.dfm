@@ -794,7 +794,15 @@ object GoodsTreeForm: TGoodsTreeForm
       item
         DataSet = TreeDataSet
       end>
-    Params = <>
+    Params = <
+      item
+        Name = 'inIsShowAll'
+        Value = Null
+        Component = actShowAll
+        DataType = ftBoolean
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end>
     PackSize = 1
     Left = 96
     Top = 144

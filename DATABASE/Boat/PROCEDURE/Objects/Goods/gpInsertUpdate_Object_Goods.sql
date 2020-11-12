@@ -4,6 +4,10 @@ DROP FUNCTION IF EXISTS gpInsertUpdate_Object_Goods(Integer, Integer, TVarChar,T
                                                   , TDateTime, Boolean, TFloat, TFloat, TFloat, TFloat
                                                   , Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer
                                                   , TVarChar);
+DROP FUNCTION IF EXISTS gpInsertUpdate_Object_Goods(Integer, Integer, TVarChar,TVarChar,TVarChar,TVarChar,TVarChar,TVarChar,TVarChar,TVarChar
+                                                  , Boolean, TFloat, TFloat, TFloat, TFloat
+                                                  , Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer
+                                                  , TVarChar);
 
 CREATE OR REPLACE FUNCTION gpInsertUpdate_Object_Goods(
  INOUT ioId                     Integer   , -- ключ объекта <Товар>
@@ -16,7 +20,6 @@ CREATE OR REPLACE FUNCTION gpInsertUpdate_Object_Goods(
     IN inMatchCode              TVarChar,  
     IN inFeeNumber              TVarChar, 
     IN inComment                TVarChar, 
-    IN inPartnerDate            TDateTime, 
     IN inisArc                  Boolean, 
     IN inAmountMin              TFloat, 
     IN inAmountRefer            TFloat, 
@@ -42,7 +45,8 @@ $BODY$
    DECLARE vbInfoMoneyId Integer;
 BEGIN
    -- проверка прав пользователя на вызов процедуры
-   vbUserId := lpCheckRight (inSession, zc_Enum_Process_InsertUpdate_Object_Goods());
+   --vbUserId := lpCheckRight (inSession, zc_Enum_Process_InsertUpdate_Object_Goods());
+   vbUserId:= lpGetUserBySession (inSession);
    
    -- определяем признак Создание/Корректировка
    vbIsInsert:= COALESCE (ioId, 0) = 0;
