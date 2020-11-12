@@ -186,7 +186,9 @@ uses
   GoodsSizeEdit in '..\..\FormsBoat\Guides\GoodsSizeEdit.pas' {GoodsSizeEditForm: TParentForm},
   DiscountParner in '..\..\FormsBoat\Guides\DiscountParner.pas' {DiscountParnerForm: TParentForm},
   DiscountParnerEdit in '..\..\FormsBoat\Guides\DiscountParnerEdit.pas' {DiscountParnerEditForm: TParentForm},
-  TaxKind in '..\..\FormsBoat\Kind\TaxKind.pas' {TaxKindForm: TParentForm};
+  TaxKind in '..\..\FormsBoat\Kind\TaxKind.pas' {TaxKindForm: TParentForm},
+  Goods in '..\..\FormsBoat\Guides\Goods.pas' {GoodsForm: TParentForm},
+  GoodsEdit in '..\..\FormsBoat\Guides\GoodsEdit.pas' {GoodsEditForm: TParentForm};
 
 {$R *.res}
 {$R DevExpressRus.res}

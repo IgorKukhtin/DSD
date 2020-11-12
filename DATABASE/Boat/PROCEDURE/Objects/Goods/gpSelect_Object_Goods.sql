@@ -22,7 +22,7 @@ RETURNS TABLE (Id Integer, Code Integer, Name TVarChar
              , PartnerId Integer, PartnerName   TVarChar          
              , UnitId Integer, UnitName TVarChar
              , DiscountParnerId Integer, DiscountParnerName TVarChar
-             , TaxKindId Integer, TaxKindName TVarChar
+             , TaxKindId Integer, TaxKindName TVarChar, TaxKind_Value TFloat
              , InfoMoneyCode Integer, InfoMoneyGroupName TVarChar, InfoMoneyDestinationName TVarChar, InfoMoneyName TVarChar, InfoMoneyId Integer
              , InsertName TVarChar, InsertDate TDateTime
              , isErased Boolean
@@ -80,6 +80,7 @@ BEGIN
             , Object_DiscountParner.ValueData    AS DiscountParnerName
             , Object_TaxKind.Id                  AS TaxKindId
             , Object_TaxKind.ValueData           AS TaxKindName
+            , ObjectFloat_TaxKind_Value.ValueData AS TaxKind_Value
 
             , Object_InfoMoney_View.InfoMoneyCode
             , Object_InfoMoney_View.InfoMoneyGroupName
@@ -160,6 +161,10 @@ BEGIN
                                   ON ObjectLink_Goods_TaxKind.ObjectId = Object_Goods.Id
                                  AND ObjectLink_Goods_TaxKind.DescId = zc_ObjectLink_Goods_TaxKind()
              LEFT JOIN Object AS Object_TaxKind ON Object_TaxKind.Id = ObjectLink_Goods_TaxKind.ChildObjectId
+
+             LEFT JOIN ObjectFloat AS ObjectFloat_TaxKind_Value
+                                   ON ObjectFloat_TaxKind_Value.ObjectId = Object_TaxKind.Id 
+                                  AND ObjectFloat_TaxKind_Value.DescId = zc_ObjectFloat_TaxKind_Value()   
 
              LEFT JOIN ObjectDate AS ObjectDate_PartnerDate
                                   ON ObjectDate_PartnerDate.ObjectId = Object_Goods.Id
