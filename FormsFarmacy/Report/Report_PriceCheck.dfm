@@ -154,9 +154,9 @@ object Report_PriceCheckForm: TReport_PriceCheckForm
         HeaderAlignmentVert = vaCenter
         Width = 69
       end
-      object BadPriceCount: TcxGridDBColumn
-        Caption = #1040#1087#1090#1077#1082' '#1089' '#1086#1090#1082#1083#1086#1085'. '#1094#1077#1085#1099
-        DataBinding.FieldName = 'BadPriceCount'
+      object BadPricePlus: TcxGridDBColumn
+        Caption = #1040#1087#1090#1077#1082' '#1089' '#1086#1090#1082#1083#1086#1085'. '#1094#1077#1085#1099'  '#1074' '#1087#1083#1102#1089
+        DataBinding.FieldName = 'BadPricePlus'
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         Width = 69

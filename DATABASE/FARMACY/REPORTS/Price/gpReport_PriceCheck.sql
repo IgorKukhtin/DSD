@@ -107,6 +107,7 @@ BEGIN
             GoodsName       TVarChar,
             UnitCount       Integer,
             BadPriceCount   Integer,
+            BadPricePlus    Integer,
             BadPriceMinus   Integer,
             isBadPriceUser  Boolean,
             PriceIn         TFLoat,
@@ -120,13 +121,14 @@ BEGIN
       ) ON COMMIT DROP;
 
     -- Собираем товары
-    INSERT INTO tmpResult (GoodsId, GoodsCode, GoodsName, UnitCount, BadPriceCount, isBadPriceUser, BadPriceMinus, PriceAverage, PriceMin, PriceMax)
+    INSERT INTO tmpResult (GoodsId, GoodsCode, GoodsName, UnitCount, BadPriceCount, isBadPriceUser, BadPricePlus, BadPriceMinus, PriceAverage, PriceMin, PriceMax)
     SELECT tmpUnitPrice.GoodsId
          , Object_Goods.ObjectCode       AS GoodsCode
          , Object_Goods.ValueData        AS GoodsName
          , COUNT(*)
          , 0
          , False
+         , 0
          , 0
          , 0
          , MIN(tmpUnitPrice.Price)
@@ -184,6 +186,7 @@ BEGIN
         vbQueryText := 'UPDATE tmpResult set Price' || COALESCE (vbID, 0)::Text || ' = COALESCE (T1.T_Price, 0)' ||
           ', Color_calc' || COALESCE (vbID, 0)::Text || ' = COALESCE (T1.T_Color_calc, 0)' ||
           ', BadPriceCount = BadPriceCount + CASE WHEN COALESCE (T1.T_Color_calc, 0) = zc_Color_Red() THEN 1 ELSE 0 END' ||
+          ', BadPricePlus = BadPricePlus + CASE WHEN COALESCE (T1.T_Color_calc, 0) = zc_Color_Red() AND COALESCE (T1.T_Price, 0) > tmpResult.PriceAverage THEN 1 ELSE 0 END' ||
           ', BadPriceMinus = BadPriceMinus + CASE WHEN COALESCE (T1.T_Color_calc, 0) = zc_Color_Red() AND COALESCE (T1.T_Price, 0) < tmpResult.PriceAverage THEN 1 ELSE 0 END' ||
           ', isBadPriceUser = isBadPriceUser OR CASE WHEN COALESCE (T1.T_Color_calc, 0) = zc_Color_Red() AND T1.ManagerId = '||inUserId::Text||'  THEN TRUE ELSE FALSE END' ||
           ' FROM (SELECT

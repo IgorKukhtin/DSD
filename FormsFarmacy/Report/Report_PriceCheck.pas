@@ -71,7 +71,7 @@ type
     Color_Calc: TcxGridDBColumn;
     CrossDBViewAddOn: TCrossDBViewAddOn;
     UnitCount: TcxGridDBColumn;
-    BadPriceCount: TcxGridDBColumn;
+    BadPricePlus: TcxGridDBColumn;
     BadPriceMinus: TcxGridDBColumn;
     PriceIn: TcxGridDBColumn;
     DateIn: TcxGridDBColumn;
