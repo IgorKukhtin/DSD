@@ -1079,15 +1079,17 @@ BEGIN
             LEFT JOIN Object AS Object_Retail ON Object_Retail.Id = ObjectLink_Juridical_Retail.ChildObjectId
 
             --для бн берем из договора
-            LEFT JOIN ObjectLink AS ObjectLink_Contract_Personal
-                                 ON ObjectLink_Contract_Personal.ObjectId = tmpData.ContractId_child
-                                AND ObjectLink_Contract_Personal.DescId = zc_ObjectLink_Contract_Personal()
+            LEFT JOIN ObjectLink AS ObjectLink_Contract_PersonalTrade
+                                 ON ObjectLink_Contract_PersonalTrade.ObjectId = tmpData.ContractId_master
+                                AND ObjectLink_Contract_PersonalTrade.DescId = zc_ObjectLink_Contract_PersonalTrade()
+                                AND tmpData.PaidKindId_child = zc_Enum_PaidKind_FirstForm()
             --LEFT JOIN Object_Personal_View ON Object_Personal_View.PersonalId = ObjectLink_Contract_Personal.ChildObjectId 
             --для нал берем из контрагента          
-            LEFT JOIN ObjectLink AS ObjectLink_Partner_Personal
-                                 ON ObjectLink_Partner_Personal.ObjectId = tmpData.PartnerId
-                                AND ObjectLink_Partner_Personal.DescId = zc_ObjectLink_Partner_Personal()
-            LEFT JOIN Object_Personal_View ON Object_Personal_View.PersonalId = COALESCE (ObjectLink_Partner_Personal.ChildObjectId ,ObjectLink_Contract_Personal.ChildObjectId) 
+            LEFT JOIN ObjectLink AS ObjectLink_Partner_PersonalTrade
+                                 ON ObjectLink_Partner_PersonalTrade.ObjectId = tmpData.PartnerId
+                                AND ObjectLink_Partner_PersonalTrade.DescId = zc_ObjectLink_Partner_PersonalTrade()
+                                AND tmpData.PaidKindId_child = zc_Enum_PaidKind_SecondForm()
+            LEFT JOIN Object_Personal_View ON Object_Personal_View.PersonalId = COALESCE (ObjectLink_Partner_PersonalTrade.ChildObjectId, ObjectLink_Contract_PersonalTrade.ChildObjectId) 
 
             LEFT JOIN tmpObjectBonus ON tmpObjectBonus.JuridicalId = Object_Juridical.Id
                                     AND tmpObjectBonus.PartnerId   = COALESCE (Object_Partner.Id, 0)

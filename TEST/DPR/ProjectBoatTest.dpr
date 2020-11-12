@@ -188,7 +188,8 @@ uses
   DiscountParnerEdit in '..\..\FormsBoat\Guides\DiscountParnerEdit.pas' {DiscountParnerEditForm: TParentForm},
   TaxKind in '..\..\FormsBoat\Kind\TaxKind.pas' {TaxKindForm: TParentForm},
   Goods in '..\..\FormsBoat\Guides\Goods.pas' {GoodsForm: TParentForm},
-  GoodsEdit in '..\..\FormsBoat\Guides\GoodsEdit.pas' {GoodsEditForm: TParentForm};
+  GoodsEdit in '..\..\FormsBoat\Guides\GoodsEdit.pas' {GoodsEditForm: TParentForm},
+  GoodsTree in '..\..\FormsBoat\Guides\GoodsTree.pas' {GoodsTreeForm: TParentForm};
 
 {$R *.res}
 {$R DevExpressRus.res}

@@ -3,7 +3,7 @@
   Top = 0
   Caption = #1044#1086#1073#1072#1074#1080#1090#1100'/'#1048#1079#1084#1077#1085#1080#1090#1100' <'#1058#1086#1074#1072#1088'>'
   ClientHeight = 643
-  ClientWidth = 580
+  ClientWidth = 353
   Color = clBtnFace
   Font.Charset = DEFAULT_CHARSET
   Font.Color = clWindowText
@@ -799,34 +799,6 @@
         MultiSelectSeparator = ','
       end
       item
-        Name = 'AmountRefer'
-        Value = 0.000000000000000000
-        Component = ceRefer
-        DataType = ftFloat
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'AmountMin'
-        Value = Null
-        Component = ceMin
-        DataType = ftFloat
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'EKPrice'
-        Value = Null
-        Component = edEKPrice
-        DataType = ftFloat
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'EmpfPrice'
-        Value = 0
-        Component = edEmpfPrice
-        DataType = ftFloat
-        MultiSelectSeparator = ','
-      end
-      item
         Name = 'GoodsSizeId'
         Value = ''
         Component = GuidesGoodsSize
@@ -861,6 +833,34 @@
         Component = GuidesTaxKind
         ComponentItem = 'TextValue'
         DataType = ftString
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'AmountRefer'
+        Value = 0.000000000000000000
+        Component = ceRefer
+        DataType = ftFloat
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'AmountMin'
+        Value = Null
+        Component = ceMin
+        DataType = ftFloat
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'EKPrice'
+        Value = Null
+        Component = edEKPrice
+        DataType = ftFloat
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'EmpfPrice'
+        Value = 0
+        Component = edEmpfPrice
+        DataType = ftFloat
         MultiSelectSeparator = ','
       end>
     PackSize = 1

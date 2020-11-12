@@ -1105,24 +1105,15 @@ inherited MainForm: TMainForm
         Caption = #1040#1088#1090#1080#1082#1091#1083#1099
         object mioodsTree: TMenuItem
           Action = actGoodsTree
-          Enabled = False
-          Visible = False
         end
         object miGoods: TMenuItem
           Action = actGoods
-          Enabled = False
-          Visible = False
         end
         object miGoodsSize: TMenuItem
           Action = actGoodsSize
-          Caption = #1056#1072#1079#1084#1077#1088#1099
-          Enabled = False
-          Visible = False
         end
         object miMeasure: TMenuItem
           Action = actMeasure
-          Enabled = False
-          Visible = False
         end
         object miPartionGoods: TMenuItem
           Action = actPartionGoods

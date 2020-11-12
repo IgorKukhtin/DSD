@@ -24,6 +24,7 @@ type
     procedure LoadCountryFormTest;
     procedure LoadDiscountParnerFormTest;
     procedure LoadGoodsGroupFormTest;
+        procedure LoadGoodsFormTest;
     procedure LoadGoodsTagFormTest;
     procedure LoadGoodsTypeFormTest;
     procedure LoadGoodsSizeFormTest;
@@ -205,6 +206,17 @@ begin
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TGoodsGroup_ObjectForm'));
   TdsdFormStorageFactory.GetStorage.Load('TGoodsGroup_ObjectForm');
 end;
+
+procedure TLoadFormTest.LoadGoodsFormTest;
+begin
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TGoodsForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TGoodsForm');
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TGoodsEditForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TGoodsEditForm');
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TGoodsTreeForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TGoodsTreeForm');
+end;
+
   procedure TLoadFormTest.LoadKindFormTest;
 begin
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TTaxKindForm'));
