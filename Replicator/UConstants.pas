@@ -36,7 +36,8 @@ const
   cZeroDateTime: TDateTime = 0;
 
   // сообщения Windows
-  WM_NEED_UPDATE_GRIDS = WM_USER + 1;
+  WM_NEED_UPDATE_GRIDS    = WM_USER + 1;
+  WM_CHECK_REPLICA_MAXMIN = WM_USER + 2;
 
 implementation
 

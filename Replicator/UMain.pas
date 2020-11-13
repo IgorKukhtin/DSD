@@ -255,6 +255,7 @@ type
     FSnapshotElapsedSecondsBeforePause: Int64;
     FErrors: integer;
     FSnapshotTableHasErrors: boolean;
+    FCheckMaxMinGuard: Integer;
   private
     procedure ReadSettings;
     procedure WriteSettings;
@@ -282,14 +283,16 @@ type
     procedure LogApplyScript(const AMsg: string; const AFileName: string = ''; const aUID: Cardinal = 0;
       AMsgType: TLogMessageType = lmtPlain);
 
+    procedure WMCheckReplicaMaxMin(var Msg: TMessage); message WM_CHECK_REPLICA_MAXMIN;
+
     procedure OnChangeStartId(const ANewStartId: Int64);
     procedure OnNewSession(const AStart: TDateTime; const AMinId, AMaxId: Int64; const ARecCount, ASessionNumber: Integer);
     procedure OnEndSession(Sender: TObject);
     procedure OnNeedReplicaRestart(Sender: TObject);
     procedure OnCompareRecCountMS(const aSQL: string);
+    procedure OnTimerRestartReplica(Sender: TObject);
 
     procedure OnTerminateAlterSlaveSequences(Sender: TObject);
-    procedure OnTimerRestartReplica(Sender: TObject);
     procedure OnTerminateSinglePacket(Sender: TObject);
     procedure OnTerminateReplica(Sender: TObject);
     procedure OnTerminateMinMaxId(Sender: TObject);
@@ -665,6 +668,11 @@ end;
 procedure TfrmMain.tmrUpdateAllDataTimer(Sender: TObject);
 begin
   (Sender as TTimer).Enabled := False;
+  PostMessage(Handle, WM_CHECK_REPLICA_MAXMIN, 0, 0);
+end;
+
+procedure TfrmMain.WMCheckReplicaMaxMin(var Msg: TMessage);
+begin
   CheckReplicaMaxMin;
 end;
 
@@ -1035,10 +1043,13 @@ end;
 
 procedure TfrmMain.CheckReplicaMaxMin;
 begin
+  if FCheckMaxMinGuard <> 0 then Exit;
+
   StopMinMaxThread;
   FMinMaxThrd := TMinMaxIdThread.Create(cCreateSuspended,  LogMessage, tknDriven);
   FMinMaxThrd.OnTerminate := OnTerminateMinMaxId;
   FMinMaxThrd.Start;
+  Inc(FCheckMaxMinGuard);
 end;
 
 procedure TfrmMain.FetchLastId;
@@ -1406,7 +1417,7 @@ begin
 
   // если данные в верхнем прогрсебаре устарели, тогда обновим их
   if ANewStartId >= StrToInt64Def(edtAllMaxId.Text, 0) then
-    CheckReplicaMaxMin;
+    PostMessage(Handle, WM_CHECK_REPLICA_MAXMIN, 0, 0);
 end;
 
 procedure TfrmMain.OnCompareRecCountMS(const aSQL: string);
@@ -1609,7 +1620,7 @@ begin
 
   // Запускаем CheckReplicaMaxMin после того, как стало известно значение LastId
   // Это нужно чтобы правильно установить параметры прогресбара в OnTerminateMinMaxId
-   CheckReplicaMaxMin;
+  PostMessage(Handle, WM_CHECK_REPLICA_MAXMIN, 0, 0);
 end;
 
 procedure TfrmMain.OnTerminateMinMaxId(Sender: TObject);
@@ -1640,7 +1651,9 @@ begin
 
   // запускаем таймер обновления "Все данные"
   tmrUpdateAllData.Interval := cUpdateAllDataInterval;
+  tmrUpdateAllData.Enabled  := False;
   tmrUpdateAllData.Enabled  := True;
+  Dec(FCheckMaxMinGuard);
 end;
 
 procedure TfrmMain.OnTerminateMoveSavedProcToSlave(Sender: TObject);
@@ -1688,7 +1701,7 @@ begin
   end;
 
   // получим актуальные данные MaxId и RecordCount
-  CheckReplicaMaxMin;
+  PostMessage(Handle, WM_CHECK_REPLICA_MAXMIN, 0, 0);
 end;
 
 procedure TfrmMain.OnTerminateSinglePacket(Sender: TObject);
