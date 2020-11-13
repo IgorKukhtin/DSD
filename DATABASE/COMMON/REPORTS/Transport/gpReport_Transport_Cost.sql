@@ -147,6 +147,7 @@ BEGIN
                                     AND (MIContainer.WhereObjectId_Analyzer = inCarId      OR inCarId      = 0) -- Автомобиль
                                     AND (CLO_Business.ObjectId              = inBusinessId OR inBusinessId = 0) -- Бизнес  
                                  -- AND (CLO_ProfitLoss.ContainerId > 0 OR tmpAccount_50000.AccountId > 0)
+                                    AND MIContainer.isActive = FALSE
                                   GROUP BY  MIContainer.MovementId, MIContainer.MovementDescId
                                           , MIContainer.ObjectId_Analyzer
                                           , MIContainer.WhereObjectId_Analyzer 
