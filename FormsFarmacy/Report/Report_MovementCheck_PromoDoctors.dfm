@@ -99,7 +99,7 @@ inherited Report_MovementCheck_PromoDoctorsForm: TReport_MovementCheck_PromoDoct
           Styles.Footer = nil
           Styles.Header = nil
           object Doctors: TcxGridDBColumn
-            Caption = #1060'.'#1048'.'#1054'. '#1042#1088#1072#1095#1072
+            Caption = #1042#1088#1072#1095
             DataBinding.FieldName = 'Doctors'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
@@ -307,7 +307,7 @@ inherited Report_MovementCheck_PromoDoctorsForm: TReport_MovementCheck_PromoDoct
           OptionsView.Indicator = True
           Styles.StyleSheet = dmMain.cxGridTableViewStyleSheet
           object Itog_Doctors: TcxGridDBColumn
-            Caption = #1060'.'#1048'.'#1054'. '#1042#1088#1072#1095#1072
+            Caption = #1042#1088#1072#1095
             DataBinding.FieldName = 'Doctors'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter

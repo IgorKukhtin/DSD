@@ -26,6 +26,7 @@ RETURNS TABLE (Id Integer
              , MinExpirationDate TDateTime
              , isReport Boolean
              , isChecked Boolean
+             , isComplement Boolean
              , isErased Boolean
               )
 AS
@@ -262,6 +263,7 @@ BEGIN
 
                 , CASE WHEN tmpPartner.JuridicalId IS NOT NULL THEN TRUE ELSE FALSE END AS isReport
                 , COALESCE (MIBoolean_Checked.ValueData, False)                         AS isChecked
+                , COALESCE (MIBoolean_Complement.ValueData, False)                      AS isComplement
                 , MovementItem.IsErased       AS IsErased
            FROM tmpMI_Master AS MovementItem
               LEFT JOIN Object AS Object_Goods ON Object_Goods.Id = MovementItem.ObjectId    
@@ -276,6 +278,9 @@ BEGIN
               LEFT JOIN MovementItemBoolean AS MIBoolean_Checked
                                             ON MIBoolean_Checked.MovementItemId = MovementItem.Id
                                            AND MIBoolean_Checked.DescId = zc_MIBoolean_Checked()
+              LEFT JOIN MovementItemBoolean AS MIBoolean_Complement
+                                            ON MIBoolean_Complement.MovementItemId = MovementItem.Id
+                                           AND MIBoolean_Complement.DescId = zc_MIBoolean_Complement()
 
               LEFT JOIN Movement AS Movement_Promo ON Movement_Promo.Id = MIFloat_PromoMovement.ValueData
             
@@ -312,7 +317,8 @@ $BODY$
   LANGUAGE PLPGSQL VOLATILE;
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
-               Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
+               Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.  Шаблий О.В.
+ 13.11.20                                                      *
  04.12.19         *
  09.05.19         * AmountManual
  15.04.19         *

@@ -108,6 +108,14 @@ inherited OrderInternalPromoForm: TOrderInternalPromoForm
             HeaderAlignmentVert = vaCenter
             Width = 57
           end
+          object isComplement: TcxGridDBColumn
+            Caption = #1044#1086#1087#1086#1083#1085#1080#1090#1100' '#1076#1086' N'
+            DataBinding.FieldName = 'isComplement'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 60
+          end
           object GoodsGroupName: TcxGridDBColumn
             Caption = #1043#1088#1091#1087#1087#1072' '#1090#1086#1074#1072#1088#1072
             DataBinding.FieldName = 'GoodsGroupName'
@@ -1685,7 +1693,57 @@ inherited OrderInternalPromoForm: TOrderInternalPromoForm
         item
           StoredProc = spClearChecked
         end>
-      Caption = 'actExecClearChecked'
+      Caption = 'actExecClearComplement'
+    end
+    object actSetComplement: TMultiAction
+      Category = 'DSDLib'
+      MoveParams = <>
+      AfterAction = actRefreshMI
+      ActionList = <
+        item
+          Action = actExecSetComplement
+        end>
+      View = cxGridDBTableView
+      QuestionBeforeExecute = #1059#1089#1090#1072#1085#1086#1074#1080#1090#1100' "'#1044#1086#1087#1086#1083#1085#1080#1090#1100' '#1076#1086' N" '#1085#1072' '#1074#1099#1073#1088#1072#1085#1085#1099#1077' '#1087#1086#1079#1080#1094#1080#1080'?'
+      Caption = #1059#1089#1090#1072#1085#1086#1074#1080#1090#1100' "'#1044#1086#1087#1086#1083#1085#1080#1090#1100' '#1076#1086' N"'
+      Hint = #1059#1089#1090#1072#1085#1086#1074#1080#1090#1100' "'#1044#1086#1087#1086#1083#1085#1080#1090#1100' '#1076#1086' N"'
+      ImageIndex = 79
+    end
+    object actExecSetComplement: TdsdExecStoredProc
+      Category = 'DSDLib'
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      StoredProc = spSetComplement
+      StoredProcList = <
+        item
+          StoredProc = spSetComplement
+        end>
+      Caption = 'actExecSetComplement'
+    end
+    object actClearComplement: TMultiAction
+      Category = 'DSDLib'
+      MoveParams = <>
+      AfterAction = actRefreshMI
+      ActionList = <
+        item
+          Action = actExecClearComplement
+        end>
+      View = cxGridDBTableView
+      QuestionBeforeExecute = #1054#1095#1080#1089#1090#1080#1090#1100' "'#1044#1083#1103' '#1088#1072#1089#1095#1077#1090#1072'" '#1085#1072' '#1074#1099#1073#1088#1072#1085#1085#1099#1077' '#1087#1086#1079#1080#1094#1080#1080'?'
+      Caption = #1054#1095#1080#1089#1090#1080#1090#1100' "'#1044#1086#1087#1086#1083#1085#1080#1090#1100' '#1076#1086' N"'
+      Hint = #1054#1095#1080#1089#1090#1080#1090#1100' "'#1044#1086#1087#1086#1083#1085#1080#1090#1100' '#1076#1086' N"'
+      ImageIndex = 52
+    end
+    object actExecClearComplement: TdsdExecStoredProc
+      Category = 'DSDLib'
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      StoredProc = spClearComplement
+      StoredProcList = <
+        item
+          StoredProc = spClearComplement
+        end>
+      Caption = 'actExecClearComplement'
     end
   end
   inherited spSelect: TdsdStoredProc
@@ -1872,6 +1930,18 @@ inherited OrderInternalPromoForm: TOrderInternalPromoForm
         end
         item
           Visible = True
+          ItemName = 'bbSetComplement'
+        end
+        item
+          Visible = True
+          ItemName = 'bbClearComplement'
+        end
+        item
+          Visible = True
+          ItemName = 'dxBarStatic'
+        end
+        item
+          Visible = True
           ItemName = 'bbMovementItemContainer'
         end
         item
@@ -1894,6 +1964,9 @@ inherited OrderInternalPromoForm: TOrderInternalPromoForm
           Visible = True
           ItemName = 'dxBarStatic'
         end>
+    end
+    inherited dxBarStatic: TdxBarStatic
+      Width = 18
     end
     inherited bbMovementItemProtocol: TdxBarButton
       UnclickAfterDoing = False
@@ -1997,6 +2070,14 @@ inherited OrderInternalPromoForm: TOrderInternalPromoForm
     end
     object bbClearChecked: TdxBarButton
       Action = actClearChecked
+      Category = 0
+    end
+    object bbSetComplement: TdxBarButton
+      Action = actSetComplement
+      Category = 0
+    end
+    object bbClearComplement: TdxBarButton
+      Action = actClearComplement
       Category = 0
     end
   end
@@ -3069,6 +3150,58 @@ inherited OrderInternalPromoForm: TOrderInternalPromoForm
     NeedResetData = True
     ParamKeyField = 'inMovementId'
     Left = 608
+    Top = 408
+  end
+  object spClearComplement: TdsdStoredProc
+    StoredProcName = 'gpUpdate_MI_OrderInternalPromo_Complement'
+    DataSets = <>
+    OutputType = otResult
+    Params = <
+      item
+        Name = 'inId'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'Id'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inisChecked'
+        Value = False
+        DataType = ftBoolean
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end>
+    PackSize = 1
+    NeedResetData = True
+    ParamKeyField = 'inMovementId'
+    Left = 752
+    Top = 408
+  end
+  object spSetComplement: TdsdStoredProc
+    StoredProcName = 'gpUpdate_MI_OrderInternalPromo_Complement'
+    DataSets = <>
+    OutputType = otResult
+    Params = <
+      item
+        Name = 'inId'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'Id'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inisChecked'
+        Value = True
+        DataType = ftBoolean
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end>
+    PackSize = 1
+    NeedResetData = True
+    ParamKeyField = 'inMovementId'
+    Left = 680
     Top = 408
   end
 end
