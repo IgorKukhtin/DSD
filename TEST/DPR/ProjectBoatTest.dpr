@@ -189,7 +189,13 @@ uses
   TaxKind in '..\..\FormsBoat\Kind\TaxKind.pas' {TaxKindForm: TParentForm},
   Goods in '..\..\FormsBoat\Guides\Goods.pas' {GoodsForm: TParentForm},
   GoodsEdit in '..\..\FormsBoat\Guides\GoodsEdit.pas' {GoodsEditForm: TParentForm},
-  GoodsTree in '..\..\FormsBoat\Guides\GoodsTree.pas' {GoodsTreeForm: TParentForm};
+  GoodsTree in '..\..\FormsBoat\Guides\GoodsTree.pas' {GoodsTreeForm: TParentForm},
+  PriceList in '..\..\FormsBoat\Guides\PriceList.pas' {PriceListForm: TParentForm},
+  PriceList_Object in '..\..\FormsBoat\Guides\PriceList_Object.pas' {PriceList_ObjectForm: TParentForm},
+  PriceListEdit in '..\..\FormsBoat\Guides\PriceListEdit.pas' {PriceListEditForm: TParentForm},
+  PriceListGoodsItem in '..\..\FormsBoat\Guides\PriceListGoodsItem.pas' {PriceListGoodsItemForm: TParentForm},
+  PriceListGoodsItemEdit in '..\..\FormsBoat\Guides\PriceListGoodsItemEdit.pas' {PriceListGoodsItemEditForm: TParentForm},
+  PriceListItem in '..\..\FormsBoat\Guides\PriceListItem.pas' {PriceListItemForm: TParentForm};
 
 {$R *.res}
 {$R DevExpressRus.res}

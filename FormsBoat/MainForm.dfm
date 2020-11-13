@@ -972,7 +972,6 @@ inherited MainForm: TMainForm
       Caption = #1048#1089#1090#1086#1088#1080#1080
       object miPriceListItem: TMenuItem
         Action = actPriceListItem
-        Enabled = False
       end
       object miLine31: TMenuItem
         Caption = '-'
