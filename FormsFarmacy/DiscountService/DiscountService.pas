@@ -786,7 +786,7 @@ begin
                              '  <request_type>2</request_type>'#13#10 +
                              '  <id_casual>' + FIdCasual + '</id_casual>'#13#10 +
                              '  <inside_code>' + gExternalUnit + '</inside_code>'#13#10 +
-                             '  <supplier >' + IntToStr(FSupplier) + '</supplier >'#13#10 +
+                             '  <supplier>' + IntToStr(FSupplier) + '</supplier >'#13#10 +
                              '  <id_alter>' + fCheckNumber  + '</id_alter>'#13#10 +
                              '  <invoice_number>' + FInvoiceNumber   + '</invoice_number>'#13#10 +
                              '  <sale_status>1</sale_status>'#13#10 +
@@ -1671,6 +1671,7 @@ begin
                              '  <request_type>1</request_type>'#13#10 +
                              '  <id_casual>' + FIdCasual + '</id_casual>'#13#10 +
                              '  <inside_code>' + gExternalUnit + '</inside_code>'#13#10 +
+                             '  <supplier>' + IntToStr(FSupplier) + '</supplier >'#13#10 +
                              '  <card_code>' + gCardNumber + '</card_code>'#13#10 +
                              '  <product_code>' + BarCode_find + '</product_code>'#13#10 +
                              '  <price>' + CurrToStrXML(CheckCDS.FieldByName('PriceSale').AsCurrency) + '</price>'#13#10 +

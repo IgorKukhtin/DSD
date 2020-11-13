@@ -149,6 +149,22 @@ BEGIN
                  FROM ObjectFloat AS ObjectFloat_NDSKind_NDS
                  WHERE ObjectFloat_NDSKind_NDS.DescId = zc_ObjectFloat_NDSKind_NDS()
                 )
+          , tmpJuridicalPriceBasis AS
+                (SELECT LoadPriceList.Id
+                 FROM LoadPriceList
+                 WHERE LoadPriceList.AreaId = zc_Area_Basis()
+                   AND LoadPriceList.JuridicalId NOT IN (SELECT LoadPriceList.JuridicalId
+                                                         FROM LoadPriceList
+                                                         WHERE COALESCE(LoadPriceList.AreaId, 0) = 0 OR COALESCE(LoadPriceList.AreaId, 0) = vbAreaId)
+                )
+          , tmpLoadPriceList AS
+                (SELECT LoadPriceList.*
+                 FROM LoadPriceList
+                 
+                      LEFT JOIN tmpJuridicalPriceBasis ON tmpJuridicalPriceBasis.ID = LoadPriceList.Id
+
+                 WHERE (LoadPriceList.AreaId = vbAreaId OR COALESCE (LoadPriceList.AreaId, 0) = 0 OR 
+                        vbAreaId = 5959067 AND COALESCE (LoadPriceList.AreaId, 0) = zc_Area_Basis() AND COALESCE(tmpJuridicalPriceBasis.ID, 0) <> 0))
 
         INSERT INTO _GoodsPriceAll
         SELECT
@@ -187,7 +203,7 @@ BEGIN
            Object_Goods_Retail.issecond AS isSecond,
            Object_Goods.isResolution_224 AS isResolution_224
 
-         FROM LoadPriceList
+         FROM tmpLoadPriceList AS LoadPriceList
 
               INNER JOIN tmpMainJuridicalArea ON (LoadPriceList.AreaId = COALESCE (tmpMainJuridicalArea.AreaId, 0)
                                          OR COALESCE (LoadPriceList.AreaId, 0)  = 0
@@ -260,12 +276,11 @@ BEGIN
                                                                                           WHEN LoadPriceListItem.GoodsNDS IN ('0', 'Áåç ÍÄÑ') THEN 0 END,
                                                                                           ObjectFloat_NDSKind_NDS.ValueData, 0))/100)::TFloat BETWEEN MarginCondition.MinPrice AND MarginCondition.MaxPrice
 
-           LEFT JOIN GoodsPrice ON GoodsPrice.GoodsId = Object_Goods_Retail.Id
-
+             LEFT JOIN GoodsPrice ON GoodsPrice.GoodsId = Object_Goods_Retail.Id
+             
        WHERE COALESCE (tmpContractSettings.isErased, False) = False
          AND COALESCE (JuridicalSettings.isPriceCloseOrder, TRUE) = False
-         AND tmpMainJuridicalArea.MainJuridicalId = vbJuridicalId
-         AND (tmpMainJuridicalArea.AreaId = vbAreaId OR COALESCE (tmpMainJuridicalArea.AreaId, 0) = 0);
+         AND tmpMainJuridicalArea.MainJuridicalId = vbJuridicalId;
 
      ANALYSE _GoodsPriceAll;
 
