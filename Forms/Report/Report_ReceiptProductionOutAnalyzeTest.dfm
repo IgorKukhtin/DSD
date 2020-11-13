@@ -4,7 +4,7 @@ inherited Report_ReceiptProductionOutAnalyzeTestForm: TReport_ReceiptProductionO
   ClientWidth = 1130
   AddOnFormData.ExecuteDialogAction = ExecuteDialog
   ExplicitWidth = 1146
-  ExplicitHeight = 468
+  ExplicitHeight = 465
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
@@ -106,6 +106,36 @@ inherited Report_ReceiptProductionOutAnalyzeTestForm: TReport_ReceiptProductionO
               Format = ',0.####'
               Kind = skSum
               Column = OperCount_ReWork
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = OperCountPlan_two
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = OperCountPlan_Weight_two
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = OperSummPlan_real_two
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = OperSummPlan1_two
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = OperSummPlan2_two
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = OperSummPlan3_two
             end>
           DataController.Summary.FooterSummaryItems = <
             item
@@ -187,6 +217,36 @@ inherited Report_ReceiptProductionOutAnalyzeTestForm: TReport_ReceiptProductionO
               Format = ',0.####'
               Kind = skSum
               Column = OperCount_ReWork
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = OperCountPlan_two
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = OperCountPlan_Weight_two
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = OperSummPlan_real_two
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = OperSummPlan1_two
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = OperSummPlan2_two
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = OperSummPlan3_two
             end>
           OptionsData.CancelOnExit = True
           OptionsData.Deleting = False
@@ -306,17 +366,18 @@ inherited Report_ReceiptProductionOutAnalyzeTestForm: TReport_ReceiptProductionO
             Width = 80
           end
           object OperCountPlan: TcxGridDBColumn
-            Caption = #1050#1086#1083'-'#1074#1086' '#1087#1083#1072#1085
+            Caption = #1050#1086#1083'-'#1074#1086' '#1087#1083#1072#1085'1'
             DataBinding.FieldName = 'OperCountPlan'
             PropertiesClassName = 'TcxCurrencyEditProperties'
             Properties.DecimalPlaces = 4
             Properties.DisplayFormat = ',0.####;-,0.####; ;'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
+            HeaderHint = #1050#1086#1083'-'#1074#1086' '#1087#1083#1072#1085'1 ('#1085#1072' '#1074#1077#1089' '#1089#1099#1088#1086#1075#1086')'
             Width = 70
           end
           object OperCountPlan_Weight: TcxGridDBColumn
-            Caption = #1050#1086#1083'-'#1074#1086' '#1087#1083#1072#1085' ('#1074#1077#1089')'
+            Caption = #1050#1086#1083'-'#1074#1086' '#1087#1083#1072#1085'1 ('#1074#1077#1089')'
             DataBinding.FieldName = 'OperCountPlan_Weight'
             PropertiesClassName = 'TcxCurrencyEditProperties'
             Properties.DecimalPlaces = 4
@@ -324,6 +385,30 @@ inherited Report_ReceiptProductionOutAnalyzeTestForm: TReport_ReceiptProductionO
             Visible = False
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
+            HeaderHint = #1050#1086#1083'-'#1074#1086' '#1087#1083#1072#1085'1 ('#1074#1077#1089') ('#1085#1072' '#1074#1077#1089' '#1089#1099#1088#1086#1075#1086')'
+            Width = 70
+          end
+          object OperCountPlan_two: TcxGridDBColumn
+            Caption = #1050#1086#1083'-'#1074#1086' '#1087#1083#1072#1085'2'
+            DataBinding.FieldName = 'OperCountPlan_two'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 4
+            Properties.DisplayFormat = ',0.####;-,0.####; ;'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            HeaderHint = #1050#1086#1083'-'#1074#1086' '#1087#1083#1072#1085'2 ('#1085#1072' '#1082#1091#1090#1090#1077#1088')'
+            Width = 70
+          end
+          object OperCountPlan_Weight_two: TcxGridDBColumn
+            Caption = #1050#1086#1083'-'#1074#1086' '#1087#1083#1072#1085'2 ('#1074#1077#1089')'
+            DataBinding.FieldName = 'OperCountPlan_Weight_two'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 4
+            Properties.DisplayFormat = ',0.####;-,0.####; ;'
+            Visible = False
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            HeaderHint = #1050#1086#1083'-'#1074#1086' '#1087#1083#1072#1085'2 ('#1074#1077#1089') ('#1085#1072' '#1082#1091#1090#1090#1077#1088')'
             Width = 70
           end
           object PricePlan1: TcxGridDBColumn
@@ -362,28 +447,41 @@ inherited Report_ReceiptProductionOutAnalyzeTestForm: TReport_ReceiptProductionO
             Width = 55
           end
           object OperSummPlan_real: TcxGridDBColumn
-            Caption = #1057#1091#1084#1084#1072' '#1087#1083'. '#1092#1072#1082#1090' '#1094#1077#1085#1072
+            Caption = #1057#1091#1084#1084#1072' '#1087#1083'.1 '#1092#1072#1082#1090' '#1094#1077#1085#1072
             DataBinding.FieldName = 'OperSummPlan_real'
             PropertiesClassName = 'TcxCurrencyEditProperties'
             Properties.DecimalPlaces = 4
             Properties.DisplayFormat = ',0.####;-,0.####; ;'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
+            HeaderHint = #1057#1091#1084#1084#1072' '#1087#1083'.1 '#1092#1072#1082#1090' '#1094#1077#1085#1072' ('#1085#1072' '#1074#1077#1089' '#1089#1099#1088#1086#1075#1086')'
+            Width = 70
+          end
+          object OperSummPlan_real_two: TcxGridDBColumn
+            Caption = #1057#1091#1084#1084#1072' '#1087#1083'.2 '#1092#1072#1082#1090' '#1094#1077#1085#1072
+            DataBinding.FieldName = 'OperSummPlan_real_two'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 4
+            Properties.DisplayFormat = ',0.####;-,0.####; ;'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            HeaderHint = #1057#1091#1084#1084#1072' '#1087#1083'.2 '#1092#1072#1082#1090' '#1094#1077#1085#1072' ('#1085#1072' '#1082#1091#1090#1090#1077#1088')'
             Width = 70
           end
           object OperSummPlan1: TcxGridDBColumn
-            Caption = #1057#1091#1084#1084#1072' '#1087#1083'. '#1055#1088#1072#1081#1089'1'
+            Caption = #1057#1091#1084#1084#1072' '#1087#1083'.1 '#1055#1088#1072#1081#1089'1'
             DataBinding.FieldName = 'OperSummPlan1'
             PropertiesClassName = 'TcxCurrencyEditProperties'
             Properties.DecimalPlaces = 4
             Properties.DisplayFormat = ',0.####;-,0.####; ;'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
+            HeaderHint = #1085#1072' '#1074#1077#1089' '#1089#1099#1088#1086#1075#1086
             Options.Editing = False
             Width = 80
           end
           object OperSummPlan2: TcxGridDBColumn
-            Caption = #1057#1091#1084#1084#1072' '#1087#1083'. '#1055#1088#1072#1081#1089'2'
+            Caption = #1057#1091#1084#1084#1072' '#1087#1083'.1 '#1055#1088#1072#1081#1089'2'
             DataBinding.FieldName = 'OperSummPlan2'
             PropertiesClassName = 'TcxCurrencyEditProperties'
             Properties.DecimalPlaces = 4
@@ -391,11 +489,12 @@ inherited Report_ReceiptProductionOutAnalyzeTestForm: TReport_ReceiptProductionO
             Visible = False
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
+            HeaderHint = #1085#1072' '#1074#1077#1089' '#1089#1099#1088#1086#1075#1086
             Options.Editing = False
             Width = 80
           end
           object OperSummPlan3: TcxGridDBColumn
-            Caption = #1057#1091#1084#1084#1072' '#1087#1083'. '#1055#1088#1072#1081#1089'3'
+            Caption = #1057#1091#1084#1084#1072' '#1087#1083'.1 '#1055#1088#1072#1081#1089'3'
             DataBinding.FieldName = 'OperSummPlan3'
             PropertiesClassName = 'TcxCurrencyEditProperties'
             Properties.DecimalPlaces = 4
@@ -403,7 +502,43 @@ inherited Report_ReceiptProductionOutAnalyzeTestForm: TReport_ReceiptProductionO
             Visible = False
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
+            HeaderHint = #1085#1072' '#1074#1077#1089' '#1089#1099#1088#1086#1075#1086
             Options.Editing = False
+            Width = 80
+          end
+          object OperSummPlan1_two: TcxGridDBColumn
+            Caption = #1057#1091#1084#1084#1072' '#1087#1083'.2 '#1055#1088#1072#1081#1089'1'
+            DataBinding.FieldName = 'OperSummPlan1_two'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 4
+            Properties.DisplayFormat = ',0.####;-,0.####; ;'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            HeaderHint = #1085#1072' '#1082#1091#1090#1090#1077#1088
+            Width = 80
+          end
+          object OperSummPlan2_two: TcxGridDBColumn
+            Caption = #1057#1091#1084#1084#1072' '#1087#1083'.2 '#1055#1088#1072#1081#1089'2'
+            DataBinding.FieldName = 'OperSummPlan2_two'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 4
+            Properties.DisplayFormat = ',0.####;-,0.####; ;'
+            Visible = False
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            HeaderHint = #1085#1072' '#1082#1091#1090#1090#1077#1088
+            Width = 80
+          end
+          object OperSummPlan3_two: TcxGridDBColumn
+            Caption = #1057#1091#1084#1084#1072' '#1087#1083'.2 '#1055#1088#1072#1081#1089'3'
+            DataBinding.FieldName = 'OperSummPlan3_two'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 4
+            Properties.DisplayFormat = ',0.####;-,0.####; ;'
+            Visible = False
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            HeaderHint = #1085#1072' '#1082#1091#1090#1090#1077#1088
             Width = 80
           end
           object OperSummPlan1_real: TcxGridDBColumn
@@ -412,6 +547,7 @@ inherited Report_ReceiptProductionOutAnalyzeTestForm: TReport_ReceiptProductionO
             PropertiesClassName = 'TcxCurrencyEditProperties'
             Properties.DecimalPlaces = 4
             Properties.DisplayFormat = ',0.####;-,0.####; ;'
+            Visible = False
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Width = 70
@@ -491,13 +627,25 @@ inherited Report_ReceiptProductionOutAnalyzeTestForm: TReport_ReceiptProductionO
             Width = 55
           end
           object LossGP_plan: TcxGridDBColumn
-            Caption = '% '#1087#1086#1090#1077#1088#1100' '#1087#1083#1072#1085
+            Caption = '% '#1087#1086#1090#1077#1088#1100' '#1087#1083#1072#1085'1'
             DataBinding.FieldName = 'LossGP_plan'
             PropertiesClassName = 'TcxCurrencyEditProperties'
             Properties.DecimalPlaces = 4
             Properties.DisplayFormat = ',0.####;-,0.####; ;'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
+            HeaderHint = #1085#1072' '#1074#1077#1089' '#1089#1099#1088#1086#1075#1086
+            Width = 55
+          end
+          object LossGP_plan_two: TcxGridDBColumn
+            Caption = '% '#1087#1086#1090#1077#1088#1100' '#1087#1083#1072#1085'2'
+            DataBinding.FieldName = 'LossGP_plan_two'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 4
+            Properties.DisplayFormat = ',0.####;-,0.####; ;'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            HeaderHint = #1085#1072' '#1082#1091#1090#1090#1077#1088
             Width = 55
           end
           object TaxGP_real: TcxGridDBColumn
@@ -687,6 +835,36 @@ inherited Report_ReceiptProductionOutAnalyzeTestForm: TReport_ReceiptProductionO
               Format = ',0.####'
               Kind = skSum
               Column = OperSummPlan_real_ch
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = OperSummPlan_real_two_ch
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = OperCountPlan_two_ch
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = OperCountPlan_Weight_two_ch
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = OperSummPlan1_two_ch
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = OperSummPlan2_two_ch
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = OperSummPlan3_two_ch
             end>
           DataController.Summary.FooterSummaryItems = <
             item
@@ -758,6 +936,36 @@ inherited Report_ReceiptProductionOutAnalyzeTestForm: TReport_ReceiptProductionO
               Format = ',0.####'
               Kind = skSum
               Column = OperSummPlan_real_ch
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = OperSummPlan_real_two_ch
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = OperCountPlan_two_ch
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = OperCountPlan_Weight_two_ch
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = OperSummPlan1_two_ch
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = OperSummPlan2_two_ch
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = OperSummPlan3_two_ch
             end>
           DataController.Summary.SummaryGroups = <>
           OptionsCustomize.ColumnsQuickCustomization = True
@@ -984,17 +1192,18 @@ inherited Report_ReceiptProductionOutAnalyzeTestForm: TReport_ReceiptProductionO
             Width = 80
           end
           object OperCountPlan_ch: TcxGridDBColumn
-            Caption = #1050#1086#1083'-'#1074#1086' '#1087#1083#1072#1085' '#1088#1072#1089#1093'.'
+            Caption = #1050#1086#1083'-'#1074#1086' '#1087#1083#1072#1085'1 '#1088#1072#1089#1093'.'
             DataBinding.FieldName = 'OperCountPlan'
             PropertiesClassName = 'TcxCurrencyEditProperties'
             Properties.DecimalPlaces = 4
             Properties.DisplayFormat = ',0.####;-,0.####; ;'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
+            HeaderHint = #1085#1072' '#1074#1077#1089' '#1089#1099#1088#1086#1075#1086
             Width = 70
           end
           object OperCountPlan_Weight_ch: TcxGridDBColumn
-            Caption = #1050#1086#1083'-'#1074#1086' '#1087#1083#1072#1085' '#1088#1072#1089#1093'. ('#1074#1077#1089')'
+            Caption = #1050#1086#1083'-'#1074#1086' '#1087#1083#1072#1085'1 '#1088#1072#1089#1093'. ('#1074#1077#1089')'
             DataBinding.FieldName = 'OperCountPlan_Weight'
             PropertiesClassName = 'TcxCurrencyEditProperties'
             Properties.DecimalPlaces = 4
@@ -1002,31 +1211,68 @@ inherited Report_ReceiptProductionOutAnalyzeTestForm: TReport_ReceiptProductionO
             Visible = False
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
+            HeaderHint = #1085#1072' '#1074#1077#1089' '#1089#1099#1088#1086#1075#1086
             Width = 70
           end
+          object OperCountPlan_two_ch: TcxGridDBColumn
+            Caption = #1050#1086#1083'-'#1074#1086' '#1087#1083#1072#1085'2 '#1088#1072#1089#1093'.'
+            DataBinding.FieldName = 'OperCountPlan_two'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 4
+            Properties.DisplayFormat = ',0.####;-,0.####; ;'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            HeaderHint = #1085#1072' '#1082#1091#1090#1090#1077#1088
+            Width = 80
+          end
+          object OperCountPlan_Weight_two_ch: TcxGridDBColumn
+            Caption = #1050#1086#1083'-'#1074#1086' '#1087#1083#1072#1085'2 '#1088#1072#1089#1093'. ('#1074#1077#1089')'
+            DataBinding.FieldName = 'OperCountPlan_Weight_two'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 4
+            Properties.DisplayFormat = ',0.####;-,0.####; ;'
+            Visible = False
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            HeaderHint = #1085#1072' '#1082#1091#1090#1090#1077#1088
+            Width = 80
+          end
           object OperSummPlan_real_ch: TcxGridDBColumn
-            Caption = #1057#1091#1084#1084#1072' '#1087#1083'. '#1092#1072#1082#1090' '#1094#1077#1085#1072
+            Caption = #1057#1091#1084#1084#1072' '#1087#1083'.1 '#1092#1072#1082#1090' '#1094#1077#1085#1072
             DataBinding.FieldName = 'OperSummPlan_real'
             PropertiesClassName = 'TcxCurrencyEditProperties'
             Properties.DecimalPlaces = 4
             Properties.DisplayFormat = ',0.####;-,0.####; ;'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
+            HeaderHint = #1085#1072' '#1074#1077#1089' '#1089#1099#1088#1086#1075#1086
+            Width = 70
+          end
+          object OperSummPlan_real_two_ch: TcxGridDBColumn
+            Caption = #1057#1091#1084#1084#1072' '#1087#1083'.1 '#1092#1072#1082#1090' '#1094#1077#1085#1072
+            DataBinding.FieldName = 'OperSummPlan_real_two'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 4
+            Properties.DisplayFormat = ',0.####;-,0.####; ;'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            HeaderHint = #1085#1072' '#1082#1091#1090#1090#1077#1088
             Width = 70
           end
           object OperSummPlan1_ch: TcxGridDBColumn
-            Caption = #1057#1091#1084#1084#1072' '#1087#1083'. '#1055#1088#1072#1081#1089'1'
+            Caption = #1057#1091#1084#1084#1072' '#1087#1083'.1 '#1055#1088#1072#1081#1089'1'
             DataBinding.FieldName = 'OperSummPlan1'
             PropertiesClassName = 'TcxCurrencyEditProperties'
             Properties.DecimalPlaces = 4
             Properties.DisplayFormat = ',0.####;-,0.####; ;'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
+            HeaderHint = #1085#1072' '#1074#1077#1089' '#1089#1099#1088#1086#1075#1086
             Options.Editing = False
             Width = 80
           end
           object OperSummPlan2_ch: TcxGridDBColumn
-            Caption = #1057#1091#1084#1084#1072' '#1087#1083'. '#1055#1088#1072#1081#1089'2'
+            Caption = #1057#1091#1084#1084#1072' '#1087#1083'.1 '#1055#1088#1072#1081#1089'2'
             DataBinding.FieldName = 'OperSummPlan2'
             PropertiesClassName = 'TcxCurrencyEditProperties'
             Properties.DecimalPlaces = 4
@@ -1034,11 +1280,12 @@ inherited Report_ReceiptProductionOutAnalyzeTestForm: TReport_ReceiptProductionO
             Visible = False
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
+            HeaderHint = #1085#1072' '#1074#1077#1089' '#1089#1099#1088#1086#1075#1086
             Options.Editing = False
             Width = 80
           end
           object OperSummPlan3_ch: TcxGridDBColumn
-            Caption = #1057#1091#1084#1084#1072' '#1087#1083'. '#1055#1088#1072#1081#1089'3'
+            Caption = #1057#1091#1084#1084#1072' '#1087#1083'.1 '#1055#1088#1072#1081#1089'3'
             DataBinding.FieldName = 'OperSummPlan3'
             PropertiesClassName = 'TcxCurrencyEditProperties'
             Properties.DecimalPlaces = 4
@@ -1046,7 +1293,43 @@ inherited Report_ReceiptProductionOutAnalyzeTestForm: TReport_ReceiptProductionO
             Visible = False
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
+            HeaderHint = #1085#1072' '#1074#1077#1089' '#1089#1099#1088#1086#1075#1086
             Options.Editing = False
+            Width = 80
+          end
+          object OperSummPlan1_two_ch: TcxGridDBColumn
+            Caption = #1057#1091#1084#1084#1072' '#1087#1083'.2 '#1055#1088#1072#1081#1089'1'
+            DataBinding.FieldName = 'OperSummPlan1_two'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 4
+            Properties.DisplayFormat = ',0.####;-,0.####; ;'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            HeaderHint = #1085#1072' '#1082#1091#1090#1090#1077#1088
+            Width = 80
+          end
+          object OperSummPlan2_two_ch: TcxGridDBColumn
+            Caption = #1057#1091#1084#1084#1072' '#1087#1083'.2 '#1055#1088#1072#1081#1089'2'
+            DataBinding.FieldName = 'OperSummPlan2_two'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 4
+            Properties.DisplayFormat = ',0.####;-,0.####; ;'
+            Visible = False
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            HeaderHint = #1085#1072' '#1082#1091#1090#1090#1077#1088
+            Width = 80
+          end
+          object OperSummPlan3_two_ch: TcxGridDBColumn
+            Caption = #1057#1091#1084#1084#1072' '#1087#1083'.2 '#1055#1088#1072#1081#1089'3'
+            DataBinding.FieldName = 'OperSummPlan3_two'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 4
+            Properties.DisplayFormat = ',0.####;-,0.####; ;'
+            Visible = False
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            HeaderHint = #1085#1072' '#1082#1091#1090#1090#1077#1088
             Width = 80
           end
           object OperSummPlan1_real_ch: TcxGridDBColumn
@@ -1472,8 +1755,8 @@ inherited Report_ReceiptProductionOutAnalyzeTestForm: TReport_ReceiptProductionO
           ToParam.MultiSelectSeparator = ','
         end>
       StoredProcList = <>
-      Caption = #1055#1088#1086#1080#1079#1074#1086#1076#1089#1090#1074#1086' '#1055#1083#1072#1085'/'#1060#1072#1082#1090' '#1088#1072#1089#1093#1086#1076' '#1089#1099#1088#1100#1103
-      Hint = #1055#1088#1086#1080#1079#1074#1086#1076#1089#1090#1074#1086' '#1055#1083#1072#1085'/'#1060#1072#1082#1090' '#1088#1072#1089#1093#1086#1076' '#1089#1099#1088#1100#1103
+      Caption = #1055#1088#1086#1080#1079#1074#1086#1076#1089#1090#1074#1086' '#1055#1083#1072#1085'1/'#1060#1072#1082#1090' '#1088#1072#1089#1093#1086#1076' '#1089#1099#1088#1100#1103
+      Hint = #1055#1088#1086#1080#1079#1074#1086#1076#1089#1090#1074#1086' '#1055#1083#1072#1085'1/'#1060#1072#1082#1090' '#1088#1072#1089#1093#1086#1076' '#1089#1099#1088#1100#1103
       ImageIndex = 3
       ShortCut = 16464
       DataSets = <
@@ -1531,6 +1814,12 @@ inherited Report_ReceiptProductionOutAnalyzeTestForm: TReport_ReceiptProductionO
           Component = ToUnitGuides
           ComponentItem = 'TextValue'
           DataType = ftString
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'Num_two'
+          Value = 1
           ParamType = ptInput
           MultiSelectSeparator = ','
         end>
@@ -1904,6 +2193,117 @@ inherited Report_ReceiptProductionOutAnalyzeTestForm: TReport_ReceiptProductionO
       RefreshDispatcher = RefreshDispatcher
       OpenBeforeShow = True
     end
+    object actPrint_two: TdsdPrintAction
+      Category = 'DSDLib'
+      MoveParams = <
+        item
+          FromParam.Name = 'id'
+          FromParam.Value = Null
+          FromParam.ComponentItem = 'id'
+          FromParam.MultiSelectSeparator = ','
+          ToParam.Value = '0'
+          ToParam.ComponentItem = 'Id'
+          ToParam.ParamType = ptInputOutput
+          ToParam.MultiSelectSeparator = ','
+        end
+        item
+          FromParam.Value = 42186d
+          FromParam.Component = deStart
+          FromParam.DataType = ftDateTime
+          FromParam.MultiSelectSeparator = ','
+          ToParam.Name = 'StartDate'
+          ToParam.Value = 'NULL'
+          ToParam.DataType = ftDateTime
+          ToParam.ParamType = ptInputOutput
+          ToParam.MultiSelectSeparator = ','
+        end
+        item
+          FromParam.Value = 42186d
+          FromParam.Component = deEnd
+          FromParam.DataType = ftDateTime
+          FromParam.MultiSelectSeparator = ','
+          ToParam.Name = 'EndDate'
+          ToParam.Value = 'NULL'
+          ToParam.DataType = ftDateTime
+          ToParam.ParamType = ptInputOutput
+          ToParam.MultiSelectSeparator = ','
+        end>
+      StoredProcList = <>
+      Caption = #1055#1088#1086#1080#1079#1074#1086#1076#1089#1090#1074#1086' '#1055#1083#1072#1085'2/'#1060#1072#1082#1090' '#1088#1072#1089#1093#1086#1076' '#1089#1099#1088#1100#1103
+      Hint = #1055#1088#1086#1080#1079#1074#1086#1076#1089#1090#1074#1086' '#1055#1083#1072#1085'2/'#1060#1072#1082#1090' '#1088#1072#1089#1093#1086#1076' '#1089#1099#1088#1100#1103
+      ImageIndex = 3
+      DataSets = <
+        item
+          UserName = 'frxDBDMaster'
+          IndexFieldNames = 'GoodsGroupNameFull;GoodsName;GoodsKindName'
+          GridView = cxGridDBTableView
+        end>
+      Params = <
+        item
+          Name = 'StartDate'
+          Value = 42186d
+          Component = deStart
+          DataType = ftDateTime
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'EndDate'
+          Value = 42186d
+          Component = deEnd
+          DataType = ftDateTime
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'GoodsGroupName'
+          Value = ''
+          Component = GoodsGroupGuides
+          ComponentItem = 'TextValue'
+          DataType = ftString
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'isPartionGoods'
+          Value = False
+          Component = cbPartionGoods
+          DataType = ftBoolean
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'FromName'
+          Value = ''
+          Component = FromUnitGuides
+          ComponentItem = 'TextValue'
+          DataType = ftString
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'ToName'
+          Value = ''
+          Component = ToUnitGuides
+          ComponentItem = 'TextValue'
+          DataType = ftString
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'Num_two'
+          Value = 2
+          MultiSelectSeparator = ','
+        end>
+      ReportName = #1055#1088#1086#1080#1079#1074#1086#1076#1089#1090#1074#1086' '#1055#1083#1072#1085' '#1080' '#1060#1072#1082#1090' '#1088#1072#1089#1093#1086#1076' '#1089#1099#1088#1100#1103
+      ReportNameParam.Value = #1055#1088#1086#1080#1079#1074#1086#1076#1089#1090#1074#1086' '#1055#1083#1072#1085' '#1080' '#1060#1072#1082#1090' '#1088#1072#1089#1093#1086#1076' '#1089#1099#1088#1100#1103
+      ReportNameParam.DataType = ftString
+      ReportNameParam.ParamType = ptInput
+      ReportNameParam.MultiSelectSeparator = ','
+      PrinterNameParam.Value = ''
+      PrinterNameParam.DataType = ftString
+      PrinterNameParam.MultiSelectSeparator = ','
+    end
   end
   inherited MasterDS: TDataSource
     Left = 48
@@ -2054,6 +2454,14 @@ inherited Report_ReceiptProductionOutAnalyzeTestForm: TReport_ReceiptProductionO
         end
         item
           Visible = True
+          ItemName = 'bbPrint_two'
+        end
+        item
+          Visible = True
+          ItemName = 'dxBarStatic'
+        end
+        item
+          Visible = True
           ItemName = 'bbPrint_Reserve'
         end
         item
@@ -2110,6 +2518,10 @@ inherited Report_ReceiptProductionOutAnalyzeTestForm: TReport_ReceiptProductionO
     end
     object bbPrint_fact: TdxBarButton
       Action = actPrint_fact
+      Category = 0
+    end
+    object bbPrint_two: TdxBarButton
+      Action = actPrint_two
       Category = 0
     end
   end

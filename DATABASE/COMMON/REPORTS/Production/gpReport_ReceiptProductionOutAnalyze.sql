@@ -152,7 +152,7 @@ BEGIN
        CREATE TEMP TABLE tmpMIContainer22 ON COMMIT DROP AS
            (SELECT COALESCE (MIReceipt.ObjectId, 0)                AS ReceiptId
                  , COALESCE (MIContainer.ObjectId_Analyzer, 0)     AS GoodsId
-                 , COALESCE (MIContainer.ObjectIntId_Analyzer, 0)  AS GoodsKindId
+                 , COALESCE (MIContainer.ObjectIntId_Analyzer, MIGoodsKind.ObjectId, 0)  AS GoodsKindId
                  , MIContainer.ContainerId_Analyzer                AS ContainerId_Analyzer
                  , MIContainer.ContainerId                         AS ContainerId
                  , MIDate_PartionGoods.ValueData                   AS PartionGoodsDate
@@ -163,6 +163,9 @@ BEGIN
                  LEFT JOIN MovementItemLinkObject AS MIReceipt
                                                   ON MIReceipt.MovementItemId = MovementItem.ParentId
                                                  AND MIReceipt.DescId = zc_MILinkObject_Receipt()
+                 LEFT JOIN MovementItemLinkObject AS MIGoodsKind
+                                                  ON MIGoodsKind.MovementItemId = MIContainer.MovementItemId
+                                                 AND MIGoodsKind.DescId         = zc_MILinkObject_GoodsKind()
                  LEFT JOIN MovementItemDate AS MIDate_PartionGoods
                                             ON MIDate_PartionGoods.MovementItemId = MIContainer.MovementItemId
                                            AND MIDate_PartionGoods.DescId = zc_MIDate_PartionGoods()
@@ -184,7 +187,7 @@ BEGIN
               AND MovementBoolean_Peresort.MovementId IS NULL -- !!!убрали Пересортицу!!!
             GROUP BY MIReceipt.ObjectId
                    , MIContainer.ObjectId_Analyzer
-                   , MIContainer.ObjectIntId_Analyzer
+                   , COALESCE (MIContainer.ObjectIntId_Analyzer, MIGoodsKind.ObjectId, 0)
                    , MIContainer.ContainerId_Analyzer
                    , MIContainer.ContainerId
                    , MIDate_PartionGoods.ValueData
@@ -315,6 +318,7 @@ BEGIN
                    , ObjectLink_Receipt_GoodsKindComplete.ChildObjectId
                    , ObjectFloat_Value.ValueData
             );
+
 
             -- Расходы - План
 --          , tmpMIReceipt AS 
@@ -470,14 +474,18 @@ BEGIN
                , tmpPrice2.Price
                , tmpPrice3.Price
                 ;
-
-    RAISE EXCEPTION 'Ошибка.<%>  %'
-    , (select count (*) from tmpResult_out
-    where tmpResult_out.ReceiptId = 1012571 and tmpResult_out.GoodsId = 2043 and tmpResult_out.GoodsKindId = 8338 )
+/*
+    RAISE EXCEPTION 'Ошибка.<%>  %       <%>  %'
+     , (select count (*) from tmpResult_out
+    where tmpResult_out.ReceiptId = 5206601 and tmpResult_out.GoodsId = 926407 )
     , (select sum (tmpResult_out.OperCount) from tmpResult_out
-    where tmpResult_out.ReceiptId = 1012571 and tmpResult_out.GoodsId = 2043 and tmpResult_out.GoodsKindId = 8338 );
+    where tmpResult_out.ReceiptId = 5206601 and tmpResult_out.GoodsId = 926407 )
+     , (select count (*) from tmpResult_out
+    where tmpResult_out.ReceiptId = 5604119 and tmpResult_out.GoodsId = 2830 )
+    , (select sum (tmpResult_out.OperCount) from tmpResult_out
+    where tmpResult_out.ReceiptId = 5604119 and tmpResult_out.GoodsId = 2830 );
 
-      -- Результат
+  */    -- Результат
       OPEN Cursor1 FOR
       WITH tmpTaxSumm AS (SELECT tmpResult.GoodsId
                                , tmpResult.GoodsKindId
@@ -624,6 +632,10 @@ BEGIN
             LEFT JOIN ObjectLink AS ObjectLink_Goods_InfoMoney ON ObjectLink_Goods_InfoMoney.ObjectId = Object_Goods.Id 
                                                               AND ObjectLink_Goods_InfoMoney.DescId = zc_ObjectLink_Goods_InfoMoney()
             LEFT JOIN Object_InfoMoney_View AS View_InfoMoney ON View_InfoMoney.InfoMoneyId = ObjectLink_Goods_InfoMoney.ChildObjectId
+       WHERE tmpResult.OperCount        <> 0
+          OR tmpResult.OperCountPlan    <> 0
+          OR tmpResult.OperCount_ReWork <> 0
+          OR tmpResult.CuterCount       <> 0
            ;
       -- Результат
       RETURN NEXT Cursor1;
@@ -761,6 +773,9 @@ BEGIN
             LEFT JOIN ObjectLink AS ObjectLink_Goods_InfoMoney ON ObjectLink_Goods_InfoMoney.ObjectId = Object_Goods.Id 
                                                               AND ObjectLink_Goods_InfoMoney.DescId = zc_ObjectLink_Goods_InfoMoney()
             LEFT JOIN Object_InfoMoney_View AS View_InfoMoney ON View_InfoMoney.InfoMoneyId = ObjectLink_Goods_InfoMoney.ChildObjectId
+       WHERE tmpResult.OperCount     <> 0
+          OR tmpResult.OperCountPlan <> 0
+          OR tmpResult_in.OperCount  <> 0
        ;
       RETURN NEXT Cursor2;
 
@@ -778,7 +793,5 @@ ALTER FUNCTION gpReport_ReceiptProductionOutAnalyze (TDateTime, TDateTime, Integ
 
 -- тест
 -- SELECT * FROM gpReport_ReceiptProductionOutAnalyze (inStartDate:= '01.06.2014', inEndDate:= '01.06.2014', inFromId:= 8447, inToId:= 8447, inGoodsGroupId:= 0, inPriceListId_1:= 0, inPriceListId_2:= 0, inPriceListId_3:= 0, inPriceListId_sale:= 0, inIsPartionGoods:= FALSE, inSession:= zfCalc_UserAdmin())
- select * from gpReport_ReceiptProductionOutAnalyze(inStartDate := ('05.08.2020')::TDateTime , inEndDate := ('05.08.2020')::TDateTime , 
-inFromId := 8449 , inToId := 8449 , inGoodsGroupId := 1918 , 
-inPriceListId_1 := 18887 , inPriceListId_2 := 18886 , inPriceListId_3 := 18885 , inPriceListId_sale := 18840 , 
-inIsPartionGoods := 'False' ,  inSession := '5');
+-- select * from gpReport_ReceiptProductionOutAnalyze(inStartDate := ('01.09.2020')::TDateTime , inEndDate := ('01.09.2020')::TDateTime , inUnitFromId := 8447 , inUnitToId := 8447 , inGoodsGroupId := 1918 , inPriceListId_1 := 18887 , inPriceListId_2 := 18886 , inPriceListId_3 := 18885 , inPriceListId_sale := 18840 , inIsPartionGoods := 'False' ,  inSession := '5');
+-- select * from gpReport_ReceiptProductionOutAnalyze( ('01.09.2020')::TDateTime ,  ('01.09.2020')::TDateTime ,  8447 , 8447 ,  1918 ,  18887 ,  18886 ,  18885 , 18840 , 'False' ,   '5');

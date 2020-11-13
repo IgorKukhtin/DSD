@@ -120,7 +120,16 @@ BEGIN
 
    IF COALESCE (vbMemberId,0) <> 0
    THEN
-        RAISE EXCEPTION 'Ошибка.Для физ. лица <%> сумма удержания по документу <%> не соответствует сумме удержания по стравочнику <%>.', lfGet_Object_ValueData (vbMemberId), zfConvert_FloatToString (vbSummMinus_MI), zfConvert_FloatToString (vbSummMinus);
+        RAISE EXCEPTION 'Ошибка.Для физ. лица <%> сумма удержания по документу <%> не соответствует сумме удержания по стравочнику <%>. Итого разница у <%> человек. Сумма итого в справочнике: <%>. Сумма итого введомости: <%>.'
+                       , lfGet_Object_ValueData (vbMemberId), zfConvert_FloatToString (vbSummMinus_MI), zfConvert_FloatToString (vbSummMinus)
+                       , (SELECT COUNT(*)
+                          FROM tmpMI_All
+                               INNER JOIN (SELECT DISTINCT tmpMemberMinus.FromId, tmpMemberMinus.Summ_all FROM tmpMemberMinus) AS tmpMinus ON tmpMinus.FromId = tmpMI_All.MemberId
+                          WHERE tmpMI_All.SummMinus <> tmpMinus.Summ_all
+                         )
+                       , zfConvert_FloatToString ((SELECT SUM (tmpMinus.Summ_all) FROM (SELECT DISTINCT tmpMemberMinus.FromId, tmpMemberMinus.Summ_all FROM tmpMemberMinus) AS tmpMinus))
+                       , zfConvert_FloatToString ((SELECT SUM (tmpMI_All.SummMinus) FROM tmpMI_All))
+                        ;
    END IF;
 
   CREATE TEMP TABLE tmpData (AMOUNT           Integer  --Сумма платежа в копейках
@@ -150,7 +159,7 @@ BEGIN
             , tmpMemberMinus.BankAccountName_to    ::TVarChar  AS CORRIBAN         --IBAN получателя платежа
             , ''                                   ::TVarChar  AS ACCOUNTNO        --№ счета плательщика
             , tmpMemberMinus.BankAccountName_from  ::TVarChar  AS IBAN             --IBAN плательщика
-            , CASE WHEN TRIM (Object_Bank_to.MFO) <> '' THEN Object_Bank_to.MFO ELSE Object_Bank_to.BankName END :: TVarChar AS CORRBANKID       --Код банка получателя платежа (МФО)
+            , CASE WHEN TRIM (Object_Bank_to.MFO) <> '' THEN Object_Bank_to.MFO ELSE Object_Bank_to.BankName END :: TVarChar AS CORRBANKID -- Код банка получателя платежа (МФО)
             , CASE WHEN Object_To.DescId = zc_Object_Juridical() THEN COALESCE (ObjectHistory_JuridicalDetails_View.OKPO,'')
                    ELSE COALESCE (ObjectString_INN.ValueData,'')
               END                                  ::TVarChar  AS CORRIDENTIFYCODE --Идентификационный код получателя платежа (ЕГРПОУ)
@@ -198,8 +207,8 @@ BEGIN
      INSERT INTO _Result(RowData, Summa)
     SELECT '<ROW '
          || 'AMOUNT ="'||tmp.AMOUNT||'" '
-         || 'CORRSNAME="'||COALESCE (tmp.CORRSNAME,'')::TVarChar||'" '
-         || 'DETAILSOFPAYMENT="'||COALESCE (tmp.DETAILSOFPAYMENT,'')::TVarChar||'" '
+         || 'CORRSNAME="'|| replace (substring (COALESCE (tmp.CORRSNAME,''), 1, 36), '"', '&quot;') :: TVarChar||'" '
+         || 'DETAILSOFPAYMENT="'|| replace (COALESCE (tmp.DETAILSOFPAYMENT,''), '"', '&quot;') ::TVarChar||'" '
          || 'CORRACCOUNTNO="'||COALESCE (tmp.CORRACCOUNTNO,'')::TVarChar||'" '
          || 'CORRIBAN="'||COALESCE (tmp.CORRIBAN,'')::TVarChar||'" '
        --|| 'ACCOUNTNO="'||COALESCE (tmp.ACCOUNTNO,'')::TVarChar||'" '

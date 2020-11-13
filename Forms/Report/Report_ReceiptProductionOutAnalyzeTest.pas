@@ -106,6 +106,21 @@ type
     bbExecuteDialog: TdxBarButton;
     actPrint_fact: TdsdPrintAction;
     bbPrint_fact: TdxBarButton;
+    OperSummPlan_real_two: TcxGridDBColumn;
+    OperCountPlan_two: TcxGridDBColumn;
+    OperCountPlan_Weight_two: TcxGridDBColumn;
+    OperSummPlan1_two: TcxGridDBColumn;
+    OperSummPlan2_two: TcxGridDBColumn;
+    OperSummPlan3_two: TcxGridDBColumn;
+    LossGP_plan_two: TcxGridDBColumn;
+    OperSummPlan_real_two_ch: TcxGridDBColumn;
+    OperCountPlan_two_ch: TcxGridDBColumn;
+    OperCountPlan_Weight_two_ch: TcxGridDBColumn;
+    OperSummPlan1_two_ch: TcxGridDBColumn;
+    OperSummPlan2_two_ch: TcxGridDBColumn;
+    OperSummPlan3_two_ch: TcxGridDBColumn;
+    actPrint_two: TdsdPrintAction;
+    bbPrint_two: TdxBarButton;
   private
     { Private declarations }
   public
