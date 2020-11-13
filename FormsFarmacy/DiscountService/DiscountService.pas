@@ -427,7 +427,7 @@ begin
 
   try
     if lDiscountExternalId > 0 then
-      if gCode = 1 then
+      if gCode in [1, 14] then
       begin
         aSaleRequest := CardSaleRequest.Create;
         //
@@ -1288,7 +1288,7 @@ begin
       then lPriceSale:= CheckCDS.FieldByName('PriceSale').asFloat
       else lPriceSale:= CheckCDS.FieldByName('Price').asFloat;
       //
-      if (lDiscountExternalId > 0) and ((gCode = 1) or (gCode = 2) and (gUserName <> '') or (gCode in [3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13])) and
+      if (lDiscountExternalId > 0) and ((gCode in [1, 14]) or (gCode = 2) and (gUserName <> '') or (gCode in [3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13])) and
          (CheckCDS.FieldByName('Amount').AsFloat > 0)
       then
         //поиск Ўтрих-код
@@ -1302,7 +1302,7 @@ begin
           BarCode_find := '';
 
       //если Ўтрих-код нашелс€ и программа «ј–јƒ» ∆»““я
-      if (BarCode_find <> '') and (gCode = 1) then
+      if (BarCode_find <> '') and (gCode in [1, 14]) then
       begin
 
           //получение номера и даты прихода

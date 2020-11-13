@@ -3395,12 +3395,29 @@ inherited MainForm: TMainForm
     object actReport_PromoDoctors: TdsdOpenForm
       Category = #1054#1090#1095#1077#1090#1099
       MoveParams = <>
-      Caption = #1055#1088#1086#1084#1086' '#1074#1088#1072#1095#1080
+      Caption = #1055#1088#1086#1084#1086' '#1074#1088#1072#1095#1080'  ('#1052#1077#1076#1080#1082#1072#1083' '#1055#1083#1072#1079#1072')'
       FormName = 'TReport_MovementCheck_PromoDoctorsForm'
       FormNameParam.Value = 'TReport_MovementCheck_PromoDoctorsForm'
       FormNameParam.DataType = ftString
       FormNameParam.MultiSelectSeparator = ','
-      GuiParams = <>
+      GuiParams = <
+        item
+          Name = 'FormCaption'
+          Value = #1054#1090#1095#1077#1090' '#1087#1086' '#1087#1088#1086#1076#1072#1078#1072#1084' ('#1055#1088#1086#1084#1086' '#1074#1088#1072#1095#1080'  ('#1052#1077#1076#1080#1082#1072#1083' '#1055#1083#1072#1079#1072'))'
+          DataType = ftString
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'PromoCodeID'
+          Value = 16904771
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'ChangePercent'
+          Value = 25000c
+          DataType = ftFloat
+          MultiSelectSeparator = ','
+        end>
       isShowModal = False
     end
     object actReport_PromoEntrances: TdsdOpenForm
@@ -4004,6 +4021,34 @@ inherited MainForm: TMainForm
       FormNameParam.DataType = ftString
       FormNameParam.MultiSelectSeparator = ','
       GuiParams = <>
+      isShowModal = False
+    end
+    object actReport_PromoDoctorsShevchenko9: TdsdOpenForm
+      Category = #1054#1090#1095#1077#1090#1099
+      MoveParams = <>
+      Caption = #1055#1088#1086#1084#1086' '#1074#1088#1072#1095#1080'  ('#1064#1077#1074#1095#1077#1085#1082#1086' 9)'
+      FormName = 'TReport_MovementCheck_PromoDoctorsForm'
+      FormNameParam.Value = 'TReport_MovementCheck_PromoDoctorsForm'
+      FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
+      GuiParams = <
+        item
+          Name = 'FormCaption'
+          Value = #1054#1090#1095#1077#1090' '#1087#1086' '#1087#1088#1086#1076#1072#1078#1072#1084' ('#1055#1088#1086#1084#1086' '#1074#1088#1072#1095#1080'  ('#1064#1077#1074#1095#1077#1085#1082#1086' 9))'
+          DataType = ftString
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'PromoCodeID'
+          Value = 21042082
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'ChangePercent'
+          Value = '2'
+          DataType = ftFloat
+          MultiSelectSeparator = ','
+        end>
       isShowModal = False
     end
   end
@@ -4674,8 +4719,14 @@ inherited MainForm: TMainForm
       object miReport_PriceProtocol: TMenuItem
         Action = actReport_PriceProtocol
       end
-      object N206: TMenuItem
-        Action = actReport_PromoDoctors
+      object N267: TMenuItem
+        Caption = #1055#1088#1086#1084#1086' '#1074#1088#1072#1095#1080
+        object N206: TMenuItem
+          Action = actReport_PromoDoctors
+        end
+        object N910: TMenuItem
+          Action = actReport_PromoDoctorsShevchenko9
+        end
       end
       object N207: TMenuItem
         Action = actReport_PromoEntrances

@@ -753,6 +753,9 @@ type
     N265: TMenuItem;
     actReport_ClippedReprice_SaleForm: TdsdOpenForm;
     N266: TMenuItem;
+    N267: TMenuItem;
+    actReport_PromoDoctorsShevchenko9: TdsdOpenForm;
+    N910: TMenuItem;
     procedure actSaveDataExecute(Sender: TObject);
 
     procedure miRepriceClick(Sender: TObject);

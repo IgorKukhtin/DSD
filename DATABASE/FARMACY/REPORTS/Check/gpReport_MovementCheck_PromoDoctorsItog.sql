@@ -1,10 +1,12 @@
 -- Function: gpReport_MovementCheck_PromoDoctorsItog()
 
-DROP FUNCTION IF EXISTS gpReport_MovementCheck_PromoDoctorsItog (TDateTime, TDateTime, TVarChar);
+DROP FUNCTION IF EXISTS gpReport_MovementCheck_PromoDoctorsItog (TDateTime, TDateTime, Integer, TFloat, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpReport_MovementCheck_PromoDoctorsItog(
     IN inStartDate          TDateTime , --
     IN inEndDate            TDateTime , --
+    IN inPromoCodeID        Integer   , --
+    IN inChangePercent      TFloat    , --
     IN inSession            TVarChar    -- сессия пользователя
 )
 RETURNS TABLE (Doctors TVarChar
@@ -39,7 +41,7 @@ BEGIN
                               INNER JOIN MovementItem AS MI_PromoCode
                                                       ON MI_PromoCode.Id       = MovementFloat_MovementItemId.ValueData :: Integer
                                                      AND MI_PromoCode.isErased = FALSE
-                                                     AND MI_PromoCode.MovementId = 16904771
+                                                     AND MI_PromoCode.MovementId = inPromoCodeID
                               LEFT JOIN MovementItemString AS MIString_Bayer
                                                            ON MIString_Bayer.MovementItemId = MI_PromoCode.Id
                                                           AND MIString_Bayer.DescId = zc_MIString_Bayer()
@@ -60,7 +62,7 @@ BEGIN
                           , Movement_Check.BayerID
                           , SUM(MovementItem.Amount) :: TFloat                            AS GoodsCount
                           , SUM(MovementItem.AmountSumm) :: TFloat                        AS SummSale
-                          , SUM(Round(MovementItem.AmountSumm * 2.5 / 100, 2)) :: TFloat  AS SummChangePercent
+                          , SUM(Round(MovementItem.AmountSumm * inChangePercent / 100, 2)) :: TFloat  AS SummChangePercent
 
                        FROM tmpMovement AS Movement_Check
 

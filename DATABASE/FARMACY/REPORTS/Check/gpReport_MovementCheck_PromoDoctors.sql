@@ -1,10 +1,12 @@
 -- Function: gpReport_MovementCheck_PromoDoctors()
 
-DROP FUNCTION IF EXISTS gpReport_MovementCheck_PromoDoctors (TDateTime, TDateTime, TVarChar);
+DROP FUNCTION IF EXISTS gpReport_MovementCheck_PromoDoctors (TDateTime, TDateTime, Integer, TFloat, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpReport_MovementCheck_PromoDoctors(
     IN inStartDate          TDateTime , --
     IN inEndDate            TDateTime , --
+    IN inPromoCodeID        Integer   , --
+    IN inChangePercent      TFloat    , --
     IN inSession            TVarChar    -- сессия пользователя
 )
 RETURNS TABLE (MovementId Integer, InvNumber TVarChar, OperDate TDateTime, StatusCode Integer
@@ -51,7 +53,7 @@ BEGIN
            , MovementItem.NDS
            , MovementItem.PriceSale
            , MovementItem.AmountSumm                                          AS SummSale
-           , 2.5::TFloat                                                      AS  ChangePercent
+           , inChangePercent                                                  AS ChangePercent
            , Round(MovementItem.AmountSumm * 2.5 / 100, 2) :: TFloat          AS SummChangePercent
 
         FROM (SELECT Movement.*
@@ -65,7 +67,7 @@ BEGIN
                    INNER JOIN MovementItem AS MI_PromoCode
                                            ON MI_PromoCode.Id       = MovementFloat_MovementItemId.ValueData :: Integer
                                           AND MI_PromoCode.isErased = FALSE
-                                          AND MI_PromoCode.MovementId = 16904771
+                                          AND MI_PromoCode.MovementId = inPromoCodeID
                    LEFT JOIN MovementItemString AS MIString_Bayer
                                                 ON MIString_Bayer.MovementItemId = MI_PromoCode.Id
                                                AND MIString_Bayer.DescId = zc_MIString_Bayer()

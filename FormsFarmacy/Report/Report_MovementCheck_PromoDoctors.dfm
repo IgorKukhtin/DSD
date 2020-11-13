@@ -3,6 +3,7 @@ inherited Report_MovementCheck_PromoDoctorsForm: TReport_MovementCheck_PromoDoct
   ClientHeight = 555
   ClientWidth = 1072
   AddOnFormData.ExecuteDialogAction = ExecuteDialog
+  AddOnFormData.Params = FormParams
   ExplicitWidth = 1088
   ExplicitHeight = 594
   PixelsPerInch = 96
@@ -544,6 +545,23 @@ inherited Report_MovementCheck_PromoDoctorsForm: TReport_MovementCheck_PromoDoct
         DataType = ftDateTime
         ParamType = ptInput
         MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inPromoCodeID'
+        Value = Null
+        Component = FormParams
+        ComponentItem = 'PromoCodeID'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inChangePercent'
+        Value = Null
+        Component = FormParams
+        ComponentItem = 'ChangePercent'
+        DataType = ftFloat
+        ParamType = ptInput
+        MultiSelectSeparator = ','
       end>
     Left = 72
     Top = 88
@@ -686,9 +704,20 @@ inherited Report_MovementCheck_PromoDoctorsForm: TReport_MovementCheck_PromoDoct
   object FormParams: TdsdFormParams
     Params = <
       item
-        Name = 'FormName'
+        Name = 'FormCaption'
         Value = Null
         DataType = ftString
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'PromoCodeID'
+        Value = Null
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'ChangePercent'
+        Value = Null
+        DataType = ftFloat
         MultiSelectSeparator = ','
       end>
     Left = 232
@@ -770,6 +799,22 @@ inherited Report_MovementCheck_PromoDoctorsForm: TReport_MovementCheck_PromoDoct
         Value = 42491d
         Component = deEnd
         DataType = ftDateTime
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inPromoCodeID'
+        Value = Null
+        Component = FormParams
+        ComponentItem = 'PromoCodeID'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inChangePercent'
+        Value = Null
+        Component = FormParams
+        ComponentItem = 'ChangePercent'
         ParamType = ptInput
         MultiSelectSeparator = ','
       end>
