@@ -7,6 +7,7 @@ CREATE OR REPLACE FUNCTION gpSelect_Object_DiffKind(
 )
 RETURNS TABLE (Id Integer, Code Integer, Name TVarChar
              , isClose Boolean
+             , isLessYear Boolean
              , isErased boolean
              , MaxOrderAmount TFloat
              , MaxOrderAmountSecond TFloat
@@ -22,6 +23,7 @@ BEGIN
           , Object_DiffKind.ObjectCode                           AS Code
           , Object_DiffKind.ValueData                            AS Name
           , ObjectBoolean_DiffKind_Close.ValueData               AS isClose
+          , ObjectBoolean_DiffKind_LessYear.ValueData            AS isLessYear
           , Object_DiffKind.isErased                             AS isErased
           , ObjectFloat_DiffKind_MaxOrderAmount.ValueData        AS MaxOrderAmount
           , ObjectFloat_DiffKind_MaxOrderAmountSecond.ValueData  AS MaxOrderAmount
@@ -30,6 +32,9 @@ BEGIN
           LEFT JOIN ObjectBoolean AS ObjectBoolean_DiffKind_Close
                                   ON ObjectBoolean_DiffKind_Close.ObjectId = Object_DiffKind.Id
                                  AND ObjectBoolean_DiffKind_Close.DescId = zc_ObjectBoolean_DiffKind_Close()   
+          LEFT JOIN ObjectBoolean AS ObjectBoolean_DiffKind_LessYear
+                                  ON ObjectBoolean_DiffKind_LessYear.ObjectId = Object_DiffKind.Id
+                                 AND ObjectBoolean_DiffKind_LessYear.DescId = zc_ObjectBoolean_DiffKind_LessYear()   
           LEFT JOIN ObjectFloat AS ObjectFloat_DiffKind_MaxOrderAmount
                                 ON ObjectFloat_DiffKind_MaxOrderAmount.ObjectId = Object_DiffKind.Id 
                                AND ObjectFloat_DiffKind_MaxOrderAmount.DescId = zc_ObjectFloat_MaxOrderAmount() 

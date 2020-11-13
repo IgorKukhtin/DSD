@@ -208,6 +208,10 @@ type
     actExport_file: TdsdStoredProcExportToFile;
     spGet_Export_FileName: TdsdStoredProc;
     actGet_Export_FileName: TdsdExecStoredProc;
+    spInsertUpdate_byMemberMinus: TdsdStoredProc;
+    actInsertUpdate_byMemberMinus: TdsdExecStoredProc;
+    macInsertUpdate_byMemberMinus: TMultiAction;
+    bb: TdxBarButton;
   private
     { Private declarations }
   public

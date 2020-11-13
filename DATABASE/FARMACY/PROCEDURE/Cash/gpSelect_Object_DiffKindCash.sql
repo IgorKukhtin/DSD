@@ -9,7 +9,8 @@ RETURNS TABLE (Id Integer, Code Integer, Name TVarChar
              , MaxOrderUnitAmount TFloat
              , MaxOrderAmount TFloat
              , MaxOrderAmountSecond TFloat
-             , DaysForSale Integer) 
+             , DaysForSale Integer
+             , isLessYear Boolean) 
 AS
 $BODY$
    DECLARE vbUserId Integer;
@@ -42,6 +43,7 @@ BEGIN
           , ObjectFloat_DiffKind_MaxOrderAmount.ValueData                        AS MaxOrderAmount
           , ObjectFloat_DiffKind_MaxOrderAmountSecond.ValueData                  AS MaxOrderAmountSecond
           , ObjectFloat_DiffKind_DaysForSale.ValueData::Integer  AS DaysForSale
+          , COALESCE(ObjectBoolean_DiffKind_LessYear.ValueData, FALSE)           AS isLessYear
      FROM Object AS Object_DiffKind
           LEFT JOIN ObjectFloat AS ObjectFloat_DiffKind_MaxOrderAmount
                                 ON ObjectFloat_DiffKind_MaxOrderAmount.ObjectId = Object_DiffKind.Id 
@@ -52,6 +54,9 @@ BEGIN
           LEFT JOIN ObjectFloat AS ObjectFloat_DiffKind_DaysForSale
                                 ON ObjectFloat_DiffKind_DaysForSale.ObjectId = Object_DiffKind.Id 
                                AND ObjectFloat_DiffKind_DaysForSale.DescId = zc_ObjectFloat_DiffKind_DaysForSale() 
+          LEFT JOIN ObjectBoolean AS ObjectBoolean_DiffKind_LessYear
+                                  ON ObjectBoolean_DiffKind_LessYear.ObjectId = Object_DiffKind.Id
+                                 AND ObjectBoolean_DiffKind_LessYear.DescId = zc_ObjectBoolean_DiffKind_LessYear()   
      WHERE Object_DiffKind.DescId = zc_Object_DiffKind()
        AND Object_DiffKind.isErased = FALSE
      ORDER BY Object_DiffKind.ValueData;

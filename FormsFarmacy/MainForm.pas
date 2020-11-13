@@ -751,6 +751,8 @@ type
     N264: TMenuItem;
     actReport_PriceCheck: TdsdOpenForm;
     N265: TMenuItem;
+    actReport_ClippedReprice_SaleForm: TdsdOpenForm;
+    N266: TMenuItem;
     procedure actSaveDataExecute(Sender: TObject);
 
     procedure miRepriceClick(Sender: TObject);
@@ -935,7 +937,7 @@ begin
     end;
   finally
     TimerPUSH.Enabled := True;
-    PUSHDS.Close;
+    if PUSHDS.IsEmpty then PUSHDS.Close;
   end;
 end;
 

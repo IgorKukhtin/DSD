@@ -338,7 +338,8 @@ BEGIN
                      )
         
       -- группируем договора, т.к. "базу" будем формировать по 4-м ключам
-    ,tmpContractGroup AS (SELECT tmpContract.JuridicalId
+    , tmpContractGroup AS (SELECT tmpContract.JuridicalId
+                               , tmpContract.ContractId_master
                                , tmpContract.ContractId_child
                                , tmpContract.InfoMoneyId_child
                                , tmpContract.PaidKindId_byBase
@@ -347,12 +348,13 @@ BEGIN
                            -- WHERE (tmpContract.PaidKindId = inPaidKindId OR inPaidKindId = 0)
                            --  AND (tmpContract.JuridicalId = inJuridicalId OR inJuridicalId = 0)
                            GROUP BY tmpContract.JuridicalId
+                                  , tmpContract.ContractId_master
                                   , tmpContract.ContractId_child
                                   , tmpContract.InfoMoneyId_child
                                   , tmpContract.PaidKindId_byBase
                                   , tmpContract.ContractConditionId
                           )
-                          
+
       -- список ContractId по которым будет расчет "базы"
     , tmpAccount AS (SELECT Object_Account_View.AccountId FROM Object_Account_View WHERE Object_Account_View.AccountGroupId <> zc_Enum_AccountGroup_110000()) -- Транзит
 
@@ -375,14 +377,15 @@ BEGIN
                           AND Container.DescId = zc_Container_Summ()
                         )
 
-    , tmpContainer1 AS (SELECT  DISTINCT
-                              tmpContainerAll.Id  AS ContainerId
-                            , tmpContractGroup.JuridicalId
-                            , tmpContractGroup.ContractId_child
-                            , tmpContractGroup.InfoMoneyId_child
-                            , tmpContractGroup.PaidKindId_byBase
-                            , tmpContractGroup.ContractConditionId
-                            , ContainerLO_Branch.ObjectId      AS BranchId
+    , tmpContainer1 AS (SELECT DISTINCT
+                               tmpContainerAll.Id  AS ContainerId
+                             , tmpContractGroup.JuridicalId
+                             , tmpContractGroup.ContractId_master
+                             , tmpContractGroup.ContractId_child
+                             , tmpContractGroup.InfoMoneyId_child
+                             , tmpContractGroup.PaidKindId_byBase
+                             , tmpContractGroup.ContractConditionId
+                             , ContainerLO_Branch.ObjectId      AS BranchId
                         FROM tmpContainerAll 
                             -- ограничение по 4-м ключам
                             JOIN tmpContractGroup ON tmpContractGroup.JuridicalId       = tmpContainerAll.JuridicalId 
@@ -455,7 +458,7 @@ BEGIN
 
                                  -- для Базы БН получаем филиал по сотруднику из договора, по ведомости 
                                  LEFT JOIN ObjectLink AS ObjectLink_Contract_PersonalTrade
-                                                      ON ObjectLink_Contract_PersonalTrade.ObjectId = tmpContainer.ContractId_child
+                                                      ON ObjectLink_Contract_PersonalTrade.ObjectId = tmpContainer.ContractId_master
                                                      AND ObjectLink_Contract_PersonalTrade.DescId = zc_ObjectLink_Contract_PersonalTrade()
                                                      AND tmpContainer.PaidKindId_byBase = zc_Enum_PaidKind_FirstForm()
                                  
@@ -665,7 +668,8 @@ BEGIN
                             , MILinkObject_InfoMoney.ObjectId                AS InfoMoneyId_find
 
                             , Object_Juridical.Id                            AS JuridicalId
-                            , CASE WHEN View_Contract_InvNumber_child.PaidKindId = zc_Enum_PaidKind_FirstForm() THEN 0 ELSE COALESCE (ObjectLink_Partner_Juridical.ObjectId,0) END AS PartnerId
+                            --, CASE WHEN View_Contract_InvNumber_child.PaidKindId = zc_Enum_PaidKind_FirstForm() THEN 0 ELSE COALESCE (ObjectLink_Partner_Juridical.ObjectId,0) END AS PartnerId
+                            , COALESCE (ObjectLink_Partner_Juridical.ObjectId,0) AS PartnerId
                             , MILinkObject_PaidKind.ObjectId                 AS PaidKindId
                             , View_Contract_InvNumber_child.PaidKindId       AS PaidKindId_child
                             , MILinkObject_ContractConditionKind.ObjectId    AS ContractConditionKindId
@@ -1074,16 +1078,18 @@ BEGIN
                                 AND ObjectLink_Juridical_Retail.DescId = zc_ObjectLink_Juridical_Retail()
             LEFT JOIN Object AS Object_Retail ON Object_Retail.Id = ObjectLink_Juridical_Retail.ChildObjectId
 
-            /*
-            LEFT JOIN ObjectLink AS ObjectLink_Contract_Personal
-                                 ON ObjectLink_Contract_Personal.ObjectId = tmpData.ContractId_child
-                                AND ObjectLink_Contract_Personal.DescId = zc_ObjectLink_Contract_Personal()
-            LEFT JOIN Object_Personal_View ON Object_Personal_View.PersonalId = ObjectLink_Contract_Personal.ChildObjectId           
-            */
-            LEFT JOIN ObjectLink AS ObjectLink_Partner_Personal
-                                 ON ObjectLink_Partner_Personal.ObjectId = tmpData.PartnerId
-                                AND ObjectLink_Partner_Personal.DescId = zc_ObjectLink_Partner_Personal()
-            LEFT JOIN Object_Personal_View ON Object_Personal_View.PersonalId = ObjectLink_Partner_Personal.ChildObjectId   
+            --для бн берем из договора
+            LEFT JOIN ObjectLink AS ObjectLink_Contract_PersonalTrade
+                                 ON ObjectLink_Contract_PersonalTrade.ObjectId = tmpData.ContractId_master
+                                AND ObjectLink_Contract_PersonalTrade.DescId = zc_ObjectLink_Contract_PersonalTrade()
+                                AND tmpData.PaidKindId_child = zc_Enum_PaidKind_FirstForm()
+            --LEFT JOIN Object_Personal_View ON Object_Personal_View.PersonalId = ObjectLink_Contract_Personal.ChildObjectId 
+            --для нал берем из контрагента          
+            LEFT JOIN ObjectLink AS ObjectLink_Partner_PersonalTrade
+                                 ON ObjectLink_Partner_PersonalTrade.ObjectId = tmpData.PartnerId
+                                AND ObjectLink_Partner_PersonalTrade.DescId = zc_ObjectLink_Partner_PersonalTrade()
+                                AND tmpData.PaidKindId_child = zc_Enum_PaidKind_SecondForm()
+            LEFT JOIN Object_Personal_View ON Object_Personal_View.PersonalId = COALESCE (ObjectLink_Partner_PersonalTrade.ChildObjectId, ObjectLink_Contract_PersonalTrade.ChildObjectId) 
 
             LEFT JOIN tmpObjectBonus ON tmpObjectBonus.JuridicalId = Object_Juridical.Id
                                     AND tmpObjectBonus.PartnerId   = COALESCE (Object_Partner.Id, 0)

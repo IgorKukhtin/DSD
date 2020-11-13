@@ -73,6 +73,7 @@ type
     actUpdate: TdsdInsertUpdateAction;
     bbUpdate: TdxBarButton;
     CommentSendName: TcxGridDBColumn;
+    TypeSUN: TcxGridDBColumn;
   private
   public
   end;

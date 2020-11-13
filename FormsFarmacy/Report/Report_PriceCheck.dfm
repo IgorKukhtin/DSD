@@ -56,6 +56,14 @@ object Report_PriceCheckForm: TReport_PriceCheckForm
       Top = 4
       Caption = #1052#1077#1085#1077#1076#1078#1077#1088' '#1072#1087#1090#1077#1082#1080':'
     end
+    object cbHideExceptRed: TcxCheckBox
+      Left = 623
+      Top = 3
+      Hint = #1057#1082#1088#1099#1090#1100' '#1082#1088#1086#1084#1077' '#1082#1088#1072#1089#1085#1099#1093
+      Caption = #1057#1082#1088#1099#1090#1100' '#1082#1088#1086#1084#1077' '#1082#1088#1072#1089#1085#1099#1093
+      TabOrder = 4
+      Width = 146
+    end
   end
   object cxGrid: TcxGrid
     Left = 0
@@ -146,9 +154,9 @@ object Report_PriceCheckForm: TReport_PriceCheckForm
         HeaderAlignmentVert = vaCenter
         Width = 69
       end
-      object BadPriceCount: TcxGridDBColumn
-        Caption = #1040#1087#1090#1077#1082' '#1089' '#1086#1090#1082#1083#1086#1085'. '#1094#1077#1085#1099
-        DataBinding.FieldName = 'BadPriceCount'
+      object BadPricePlus: TcxGridDBColumn
+        Caption = #1040#1087#1090#1077#1082' '#1089' '#1086#1090#1082#1083#1086#1085'. '#1094#1077#1085#1099'  '#1074' '#1087#1083#1102#1089
+        DataBinding.FieldName = 'BadPricePlus'
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         Width = 69
@@ -492,6 +500,14 @@ object Report_PriceCheckForm: TReport_PriceCheckForm
         Component = GuidesUser
         ParamType = ptInput
         MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inisHideExceptRed'
+        Value = Null
+        Component = cbHideExceptRed
+        DataType = ftBoolean
+        ParamType = ptInput
+        MultiSelectSeparator = ','
       end>
     PackSize = 1
     Left = 32
@@ -515,6 +531,9 @@ object Report_PriceCheckForm: TReport_PriceCheckForm
       end
       item
         Component = cePercent
+      end
+      item
+        Component = cbHideExceptRed
       end>
     Left = 472
     Top = 128

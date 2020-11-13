@@ -254,9 +254,24 @@ CREATE OR REPLACE FUNCTION zc_Object_ModelEtiketen() RETURNS Integer AS $BODY$BE
 INSERT INTO ObjectDesc (Code, ItemName)
   SELECT 'zc_Object_ModelEtiketen', 'Группы товаров' WHERE NOT EXISTS (SELECT * FROM ObjectDesc WHERE Code = 'zc_Object_ModelEtiketen');
 
+CREATE OR REPLACE FUNCTION zc_Object_GoodsType() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM ObjectDesc WHERE Code = 'zc_Object_GoodsType'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
+INSERT INTO ObjectDesc (Code, ItemName)
+  SELECT 'zc_Object_GoodsType', 'Тип детали' WHERE NOT EXISTS (SELECT * FROM ObjectDesc WHERE Code = 'zc_Object_GoodsType');
+
+CREATE OR REPLACE FUNCTION zc_Object_DiscountParner() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM ObjectDesc WHERE Code = 'zc_Object_DiscountParner'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
+INSERT INTO ObjectDesc (Code, ItemName)
+  SELECT 'zc_Object_DiscountParner', 'группа скидки у партнера' WHERE NOT EXISTS (SELECT * FROM ObjectDesc WHERE Code = 'zc_Object_DiscountParner');
+
+CREATE OR REPLACE FUNCTION zc_Object_TaxKind() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM ObjectDesc WHERE Code = 'zc_Object_TaxKind'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
+INSERT INTO ObjectDesc (Code, ItemName)
+  SELECT 'zc_Object_TaxKind', 'Тип НДС' WHERE NOT EXISTS (SELECT * FROM ObjectDesc WHERE Code = 'zc_Object_TaxKind');
+
 /*-------------------------------------------------------------------------------
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
+ 11.11.20         * zc_Object_TaxKind
+                    zc_Object_DiscountParner
+                    zc_Object_GoodsType
  09.11.20         * zc_Object_Country
                     zc_Object_PLZ
                     zc_Object_ModelEtiketen                    

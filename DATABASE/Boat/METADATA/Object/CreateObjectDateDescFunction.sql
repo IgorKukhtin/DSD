@@ -19,8 +19,14 @@ CREATE OR REPLACE FUNCTION zc_ObjectDate_Product_DateSale() RETURNS Integer AS $
 INSERT INTO ObjectDateDesc (Code, DescId, ItemName)
   SELECT 'zc_ObjectDate_Product_DateSale', zc_Object_Product(), 'Продажа' WHERE NOT EXISTS (SELECT * FROM ObjectDateDesc WHERE Code = 'zc_ObjectDate_Product_DateSale');
 
+CREATE OR REPLACE FUNCTION zc_ObjectDate_Goods_PartnerDate() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM ObjectDateDesc WHERE Code = 'zc_ObjectDate_Goods_PartnerDate'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
+INSERT INTO ObjectDateDesc (Code, DescId, ItemName)
+  SELECT 'zc_ObjectDate_Goods_PartnerDate', zc_Object_Goods(), 'последняя дата прихода' WHERE NOT EXISTS (SELECT * FROM ObjectDateDesc WHERE Code = 'zc_ObjectDate_Goods_PartnerDate');
+
+
 /*-------------------------------------------------------------------------------
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
+ 11.11.20         * zc_ObjectDate_Goods_PartnerDate
  09.10.20         * zc_ObjectDate_Product_
  28.08.20                                        * 
 */

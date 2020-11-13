@@ -1007,6 +1007,10 @@ CREATE OR REPLACE FUNCTION zc_ObjectLink_Contract_Member() RETURNS Integer AS $B
 INSERT INTO ObjectLinkDesc (Code, ItemName, DescId, ChildObjectDescId)
   SELECT 'zc_ObjectLink_Contract_Member', 'Ответственный за прайс', zc_Object_Contract(), zc_Object_Member() WHERE NOT EXISTS (SELECT * FROM ObjectLinkDesc WHERE Code = 'zc_ObjectLink_Contract_Member');
 
+CREATE OR REPLACE FUNCTION zc_ObjectLink_Contract_PriceListGoods() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM ObjectLinkDesc WHERE Code = 'zc_ObjectLink_Contract_PriceListGoods'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
+INSERT INTO ObjectLinkDesc (Code, ItemName, DescId, ChildObjectDescId)
+  SELECT 'zc_ObjectLink_Contract_PriceListGoods', 'Прайс-лист(Спецификация)', zc_Object_Contract(), zc_Object_PriceList() WHERE NOT EXISTS (SELECT * FROM ObjectLinkDesc WHERE Code = 'zc_ObjectLink_Contract_PriceListGoods');
+
 
 --!!! ContractPartner
 CREATE OR REPLACE FUNCTION zc_ObjectLink_ContractPartner_Contract() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM ObjectLinkDesc WHERE Code = 'zc_ObjectLink_ContractPartner_Contract'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
@@ -1815,6 +1819,15 @@ CREATE OR REPLACE FUNCTION zc_ObjectLink_PartnerExternal_Retail() RETURNS Intege
 INSERT INTO ObjectLinkDesc (Code, ItemName, DescId, ChildObjectDescId)
   SELECT 'zc_ObjectLink_PartnerExternal_Retail', 'Торговая сеть', zc_Object_PartnerExternal(), zc_Object_Retail() WHERE NOT EXISTS (SELECT * FROM ObjectLinkDesc WHERE Code = 'zc_ObjectLink_PartnerExternal_Retail');
 
+CREATE OR REPLACE FUNCTION zc_ObjectLink_ContractTradeMark_Contract() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM ObjectLinkDesc WHERE Code = 'zc_ObjectLink_ContractTradeMark_Contract'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
+INSERT INTO ObjectLinkDesc (Code, ItemName, DescId, ChildObjectDescId)
+  SELECT 'zc_ObjectLink_ContractTradeMark_Contract', 'Договор', zc_Object_ContractTradeMark(), zc_Object_Contract() WHERE NOT EXISTS (SELECT * FROM ObjectLinkDesc WHERE Code = 'zc_ObjectLink_ContractTradeMark_Contract');
+
+CREATE OR REPLACE FUNCTION zc_ObjectLink_ContractTradeMark_TradeMark() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM ObjectLinkDesc WHERE Code = 'zc_ObjectLink_ContractTradeMark_TradeMark'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
+INSERT INTO ObjectLinkDesc (Code, ItemName, DescId, ChildObjectDescId)
+  SELECT 'zc_ObjectLink_ContractTradeMark_TradeMark', 'Торговая марка', zc_Object_ContractTradeMark(), zc_Object_TradeMark() WHERE NOT EXISTS (SELECT * FROM ObjectLinkDesc WHERE Code = 'zc_ObjectLink_ContractTradeMark_TradeMark');
+
+
 --!!! АПТЕКА
 
 CREATE OR REPLACE FUNCTION zc_ObjectLink_Goods_NDSKind() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM ObjectLinkDesc WHERE Code = 'zc_ObjectLink_Goods_NDSKind'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
@@ -2423,6 +2436,9 @@ SELECT 'zc_ObjectLink_Unit_UnitSAUA', 'Связь со Slave в системе автоматического 
 /*-------------------------------------------------------------------------------
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.   Воробкало А.А.   Шаблий О.В.
+ 10.11.20         * zc_ObjectLink_ContractTradeMark_Contract
+                    zc_ObjectLink_ContractTradeMark_TradeMark
+                    zc_ObjectLink_Contract_PriceListGoods
  30.10.20         * zc_ObjectLink_PartnerExternal_Partner
  20.10.20                                                                                      * zc_ObjectLink_Unit_UnitSAUA
  05.10.20         * zc_ObjectLink_MemberBranch_Branch

@@ -31,36 +31,12 @@ inherited Report_Movement_ListDiffForm: TReport_Movement_ListDiffForm
             item
               Format = ',0.00'
               Kind = skSum
-            end
-            item
-              Format = ',0.00'
-              Kind = skSum
-            end
-            item
-              Format = ',0.00'
-              Kind = skSum
-            end
-            item
-              Format = ',0.00'
-              Kind = skSum
               Column = Summa
             end
             item
               Format = ',0.00'
               Kind = skSum
-            end
-            item
-              Format = ',0.00'
-              Kind = skSum
               Column = Amount
-            end
-            item
-              Format = ',0.00'
-              Kind = skSum
-            end
-            item
-              Format = ',0.00'
-              Kind = skSum
             end
             item
               Format = ',0.00'
@@ -116,44 +92,12 @@ inherited Report_Movement_ListDiffForm: TReport_Movement_ListDiffForm
             item
               Format = ',0.00'
               Kind = skSum
-            end
-            item
-              Format = ',0.00'
-              Kind = skSum
-            end
-            item
-              Format = ',0.00'
-              Kind = skSum
-            end
-            item
-              Format = ',0.00'
-              Kind = skSum
-            end
-            item
-              Format = ',0.00'
-              Kind = skSum
-            end
-            item
-              Format = ',0.00'
-              Kind = skSum
               Column = Summa
             end
             item
               Format = ',0.00'
               Kind = skSum
-            end
-            item
-              Format = ',0.00'
-              Kind = skSum
               Column = Amount
-            end
-            item
-              Format = ',0.00'
-              Kind = skSum
-            end
-            item
-              Format = ',0.00'
-              Kind = skSum
             end
             item
               Format = #1042#1089#1077#1075#1086' '#1089#1090#1088#1086#1082': ,0'

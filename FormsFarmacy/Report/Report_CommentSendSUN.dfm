@@ -243,6 +243,14 @@ object Report_CommentSendSUNForm: TReport_CommentSendSUNForm
         Options.Editing = False
         Width = 189
       end
+      object TypeSUN: TcxGridDBColumn
+        Caption = #1042#1080#1076' '#1057#1059#1053
+        DataBinding.FieldName = 'TypeSUN'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Options.Editing = False
+        Width = 58
+      end
       object CommentSendName: TcxGridDBColumn
         Caption = #1055#1088#1080#1095#1080#1085#1072' '#1079#1072#1085#1091#1083#1077#1085#1080#1103
         DataBinding.FieldName = 'CommentSendName'

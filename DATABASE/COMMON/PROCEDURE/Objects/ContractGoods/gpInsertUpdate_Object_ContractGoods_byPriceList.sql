@@ -26,13 +26,28 @@ BEGIN
        RAISE EXCEPTION 'Ошибка. Не выбран прайс лист';
    END IF;
 
+   --Записываем свойство договора  zc_ObjectLink_Contract_PriceListGoods
+   PERFORM lpInsertUpdate_ObjectLink(zc_ObjectLink_Contract_PriceListGoods(), inContractId, inPriceListId);
+   
    -- дата начала договора
    vbStartDate := (SELECT ObjectDate_Start.ValueData
                    FROM ObjectDate AS ObjectDate_Start
                    WHERE ObjectDate_Start.ObjectId = inContractId
                      AND ObjectDate_Start.DescId = zc_ObjectDate_Contract_Start()
                    );
-                           
+
+   -- выбираем данные из спр. ContractTradeMark 
+   CREATE TEMP TABLE tmpContractTradeMark ON COMMIT DROP AS (
+          SELECT ObjectLink_ContractTradeMark_TradeMark.ChildObjectId  AS TradeMarkId
+          FROM ObjectLink AS ObjectLink_ContractTradeMark_Contract
+               INNER JOIN ObjectLink AS ObjectLink_ContractTradeMark_TradeMark
+                                     ON ObjectLink_ContractTradeMark_TradeMark.ObjectId = ObjectLink_ContractTradeMark_Contract.ObjectId
+                                    AND ObjectLink_ContractTradeMark_TradeMark.DescId = zc_ObjectLink_ContractTradeMark_TradeMark()
+          WHERE ObjectLink_ContractTradeMark_Contract.DescId = zc_ObjectLink_ContractTradeMark_Contract()
+            AND ObjectLink_ContractTradeMark_Contract.ChildObjectId = inContractId
+          );
+   
+   
    -- выбираем последние цены из прайслиста
    CREATE TEMP TABLE tmpPrice ON COMMIT DROP AS (
           SELECT ObjectLink_PriceListItem_Goods.ChildObjectId     AS GoodsId
@@ -42,6 +57,12 @@ BEGIN
                LEFT JOIN ObjectLink AS ObjectLink_PriceListItem_Goods
                                     ON ObjectLink_PriceListItem_Goods.ObjectId = ObjectLink_PriceListItem_PriceList.ObjectId
                                    AND ObjectLink_PriceListItem_Goods.DescId = zc_ObjectLink_PriceListItem_Goods()
+
+               LEFT JOIN ObjectLink AS ObjectLink_Goods_TradeMark
+                                    ON ObjectLink_Goods_TradeMark.ObjectId = ObjectLink_PriceListItem_Goods.ChildObjectId
+                                   AND ObjectLink_Goods_TradeMark.DescId = zc_ObjectLink_Goods_TradeMark()
+               -- ограничиваем товары торговой маркой
+               INNER JOIN tmpContractTradeMark ON tmpContractTradeMark.TradeMarkId = ObjectLink_Goods_TradeMark.ChildObjectId
 
                LEFT JOIN ObjectLink AS ObjectLink_PriceListItem_GoodsKind
                                     ON ObjectLink_PriceListItem_GoodsKind.ObjectId = ObjectLink_PriceListItem_PriceList.ObjectId
@@ -54,9 +75,10 @@ BEGIN
                LEFT JOIN ObjectHistoryFloat AS ObjectHistoryFloat_PriceListItem_Value
                                             ON ObjectHistoryFloat_PriceListItem_Value.ObjectHistoryId = ObjectHistory_PriceListItem.Id
                                            AND ObjectHistoryFloat_PriceListItem_Value.DescId = zc_ObjectHistoryFloat_PriceListItem_Value()
+                                           
           WHERE ObjectLink_PriceListItem_PriceList.DescId = zc_ObjectLink_PriceListItem_PriceList()
             AND ObjectLink_PriceListItem_PriceList.ChildObjectId = inPriceListId --2707438  --
-          limit 10
+          limit 5
           );
 
    --получаем уже сохраненные данные ContractGoods, последние
@@ -138,7 +160,6 @@ $BODY$
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
  06.11.20         *
-
 */
 
 -- тест

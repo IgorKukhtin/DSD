@@ -15,7 +15,12 @@ BEGIN
      PERFORM lpInsertUpdate_Object_Enum (inId:= zc_Enum_FileTypeKind_DBF(), inDescId:= zc_Object_FileTypeKind(), inCode:= 2, inName:= 'DBF', inEnumName:= 'zc_Enum_FileTypeKind_DBF');
      PERFORM lpInsertUpdate_Object_Enum (inId:= zc_Enum_FileTypeKind_MMO(), inDescId:= zc_Object_FileTypeKind(), inCode:= 3, inName:= 'MMO', inEnumName:= 'zc_Enum_FileTypeKind_MMO');
      PERFORM lpInsertUpdate_Object_Enum (inId:= zc_Enum_FileTypeKind_ODBC(), inDescId:= zc_Object_FileTypeKind(), inCode:= 4, inName:= 'ODBC', inEnumName:= 'zc_Enum_FileTypeKind_ODBC');
-   
+
+     -- !!! Типы НДС
+     PERFORM lpInsertUpdate_Object_Enum (inId:= zc_Enum_TaxKind_Basis(),  inDescId:= zc_Object_TaxKind(), inCode:= 1, inName:= 'Базовый', inEnumName:= 'zc_Enum_TaxKind_Basis');
+     PERFORM lpInsertUpdate_Object_Enum (inId:= zc_Enum_TaxKind_(), inDescId:= zc_Object_TaxKind(), inCode:= 2, inName:= 'Другой', inEnumName:= 'zc_Enum_TaxKind_');
+     -- PERFORM lpInsertUpdate_ObjectFloat (zc_ObjectFloat_NDSKind_NDS(), zc_Enum_TaxKind_Basis(), 16);
+     --PERFORM lpInsertUpdate_ObjectFloat (zc_ObjectFloat_NDSKind_NDS(), zc_Enum_TaxKind_(), 5);
 END $$;
 
 

@@ -3995,6 +3995,17 @@ inherited MainForm: TMainForm
       GuiParams = <>
       isShowModal = False
     end
+    object actReport_ClippedReprice_SaleForm: TdsdOpenForm
+      Category = #1054#1090#1095#1077#1090#1099
+      MoveParams = <>
+      Caption = #1058#1086#1074#1072#1088' '#1080' '#1087#1088#1086#1076#1072#1078#1080' '#1073#1077#1079' '#1087#1077#1088#1077#1086#1094#1077#1085#1082#1080' ('#1086#1096#1080#1073#1082#1080')'
+      FormName = 'TReport_ClippedReprice_SaleForm'
+      FormNameParam.Value = 'TReport_ClippedReprice_SaleForm'
+      FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
+      GuiParams = <>
+      isShowModal = False
+    end
   end
   inherited UserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn
     Left = 496
@@ -4671,6 +4682,9 @@ inherited MainForm: TMainForm
       end
       object N255: TMenuItem
         Action = actReport_ArrivalWithoutSales
+      end
+      object N266: TMenuItem
+        Action = actReport_ClippedReprice_SaleForm
       end
     end
     object N200: TMenuItem [6]
