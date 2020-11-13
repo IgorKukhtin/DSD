@@ -930,6 +930,13 @@
         Component = edEmpfPrice
         DataType = ftFloat
         MultiSelectSeparator = ','
+      end
+      item
+        Name = 'Comment'
+        Value = Null
+        Component = edComment
+        DataType = ftString
+        MultiSelectSeparator = ','
       end>
     PackSize = 1
     Left = 8
@@ -942,7 +949,7 @@
     FormNameParam.DataType = ftString
     FormNameParam.MultiSelectSeparator = ','
     FormName = 'TMeasureForm'
-    PositionDataSet = 'MasterCDS'
+    PositionDataSet = 'ClientDataSet'
     Params = <
       item
         Name = 'Key'
@@ -959,8 +966,8 @@
         DataType = ftString
         MultiSelectSeparator = ','
       end>
-    Left = 8
-    Top = 296
+    Left = 112
+    Top = 280
   end
   object GuidesProdColor: TdsdGuides
     KeyField = 'Id'
@@ -1059,8 +1066,8 @@
         DataType = ftString
         MultiSelectSeparator = ','
       end>
-    Left = 280
-    Top = 256
+    Left = 264
+    Top = 240
   end
   object GuidesPartner: TdsdGuides
     KeyField = 'Id'
@@ -1139,8 +1146,8 @@
         DataType = ftString
         MultiSelectSeparator = ','
       end>
-    Left = 8
-    Top = 216
+    Left = 24
+    Top = 192
   end
   object GuidesDiscountParner: TdsdGuides
     KeyField = 'Id'
@@ -1249,10 +1256,10 @@
   object GuidesTaxKind: TdsdGuides
     KeyField = 'Id'
     LookupControl = edTaxKind
-    FormNameParam.Value = 'TMeasureForm'
+    FormNameParam.Value = 'TTaxKindForm'
     FormNameParam.DataType = ftString
     FormNameParam.MultiSelectSeparator = ','
-    FormName = 'TMeasureForm'
+    FormName = 'TTaxKindForm'
     PositionDataSet = 'MasterCDS'
     Params = <
       item
@@ -1270,6 +1277,7 @@
         DataType = ftString
         MultiSelectSeparator = ','
       end>
-    Top = 348
+    Left = 8
+    Top = 340
   end
 end

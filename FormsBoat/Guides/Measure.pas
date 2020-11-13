@@ -50,6 +50,8 @@ type
     InternalName: TcxGridDBColumn;
     ProtocolOpenForm: TdsdOpenForm;
     bbProtocolOpenForm: TdxBarButton;
+    actShowAll: TBooleanStoredProcAction;
+    bbactShowAll: TdxBarButton;
   private
     { Private declarations }
   public

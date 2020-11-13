@@ -220,6 +220,15 @@ object GoodsForm: TGoodsForm
         HeaderHint = #1062#1077#1085#1072' '#1088#1077#1082#1086#1084#1077#1085#1076#1091#1077#1084#1072#1103' '#1073#1077#1079' '#1053#1044#1057
         Width = 70
       end
+      object Comment: TcxGridDBColumn
+        Caption = #1055#1088#1080#1084#1077#1095#1072#1085#1080#1077
+        DataBinding.FieldName = 'Comment'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        HeaderGlyphAlignmentHorz = taCenter
+        Options.Editing = False
+        Width = 122
+      end
       object IsArc: TcxGridDBColumn
         Caption = #1040#1088#1093#1080#1074
         DataBinding.FieldName = 'isArc'

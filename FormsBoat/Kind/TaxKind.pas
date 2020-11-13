@@ -16,7 +16,7 @@ uses
 type
   TTaxKindForm = class(TAncestorEnumForm)
     clName: TcxGridDBColumn;
-    Value: TcxGridDBColumn;
+    NDS: TcxGridDBColumn;
   private
     { Private declarations }
   public

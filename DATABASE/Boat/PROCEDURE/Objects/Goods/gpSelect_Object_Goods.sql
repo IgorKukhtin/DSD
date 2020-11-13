@@ -96,7 +96,7 @@ BEGIN
        FROM Object AS Object_Goods
             LEFT JOIN ObjectString AS ObjectString_Comment
                                    ON ObjectString_Comment.ObjectId = Object_Goods.Id
-                                  AND ObjectString_Comment.DescId = zc_ObjectString_Brand_Comment()  
+                                  AND ObjectString_Comment.DescId = zc_ObjectString_Goods_Comment()  
 
             LEFT JOIN ObjectLink AS ObjectLink_Insert
                                  ON ObjectLink_Insert.ObjectId = Object_Goods.Id

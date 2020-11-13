@@ -136,7 +136,7 @@ BEGIN
        FROM Object AS Object_Goods
             LEFT JOIN ObjectString AS ObjectString_Comment
                                    ON ObjectString_Comment.ObjectId = Object_Goods.Id
-                                  AND ObjectString_Comment.DescId = zc_ObjectString_Brand_Comment()  
+                                  AND ObjectString_Comment.DescId = zc_ObjectString_Goods_Comment()  
 
              LEFT JOIN ObjectLink AS ObjectLink_Goods_GoodsGroup
                                   ON ObjectLink_Goods_GoodsGroup.ObjectId = Object_Goods.Id

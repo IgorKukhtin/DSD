@@ -2,19 +2,18 @@ inherited TaxKindForm: TTaxKindForm
   Caption = #1058#1080#1087#1099' '#1053#1044#1057
   ClientWidth = 323
   ExplicitWidth = 339
-  ExplicitHeight = 346
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
     Width = 323
-    ExplicitWidth = 261
+    ExplicitWidth = 323
     ClientRectRight = 323
     inherited tsMain: TcxTabSheet
-      ExplicitWidth = 261
+      ExplicitWidth = 323
       ExplicitHeight = 282
       inherited cxGrid: TcxGrid
         Width = 323
-        ExplicitWidth = 261
+        ExplicitWidth = 323
         inherited cxGridDBTableView: TcxGridDBTableView
           Styles.Content = nil
           Styles.Inactive = nil
@@ -29,9 +28,9 @@ inherited TaxKindForm: TTaxKindForm
             Options.Editing = False
             Width = 205
           end
-          object Value: TcxGridDBColumn
+          object NDS: TcxGridDBColumn
             Caption = #1047#1085#1072#1095#1077#1085#1080#1077
-            DataBinding.FieldName = 'Value'
+            DataBinding.FieldName = 'NDS'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Width = 102

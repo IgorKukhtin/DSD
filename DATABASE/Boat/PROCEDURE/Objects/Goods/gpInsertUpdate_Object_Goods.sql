@@ -94,16 +94,17 @@ BEGIN
    -- сохранили свойство <>
    PERFORM lpInsertUpdate_ObjectString (zc_ObjectString_Goods_FeeNumber(), ioId, inFeeNumber);
    -- сохранили свойство <>
-   PERFORM lpInsertUpdate_ObjectString (zc_ObjectString_Article(), ioId, inFeeNumber);      
+   PERFORM lpInsertUpdate_ObjectString (zc_ObjectString_Article(), ioId, inArticle);      
    -- сохранили свойство <>
-   PERFORM lpInsertUpdate_ObjectString (zc_ObjectString_ArticleVergl(), ioId, inFeeNumber);   
+   PERFORM lpInsertUpdate_ObjectString (zc_ObjectString_ArticleVergl(), ioId, inArticleVergl);   
    -- сохранили свойство <>
-   PERFORM lpInsertUpdate_ObjectString (zc_ObjectString_EAN(), ioId, inFeeNumber);   
+   PERFORM lpInsertUpdate_ObjectString (zc_ObjectString_EAN(), ioId, inEAN);   
    -- сохранили свойство <>
-   PERFORM lpInsertUpdate_ObjectString (zc_ObjectString_ASIN(), ioId, inFeeNumber);   
+   PERFORM lpInsertUpdate_ObjectString (zc_ObjectString_ASIN(), ioId, inASIN);   
    -- сохранили свойство <>
-   PERFORM lpInsertUpdate_ObjectString (zc_ObjectString_MatchCode(), ioId, inFeeNumber);   
-
+   PERFORM lpInsertUpdate_ObjectString (zc_ObjectString_MatchCode(), ioId, inMatchCode);   
+   -- сохранили свойство <>
+   PERFORM lpInsertUpdate_ObjectString(zc_ObjectString_Goods_Comment(), ioId, inComment);
 
    -- сохранили свойство <>
    PERFORM lpInsertUpdate_ObjectFloat (zc_ObjectFloat_Goods_Min(), ioId, inAmountMin);
@@ -142,7 +143,7 @@ BEGIN
    -- сохранили свойство <>
    PERFORM lpInsertUpdate_ObjectBoolean (zc_ObjectBoolean_Goods_Arc(), ioId, inisArc);
    -- сохранили свойство <>
-   PERFORM lpInsertUpdate_ObjectDate (zc_ObjectDate_Goods_PartnerDate(), ioId, inPartnerDate);
+   --PERFORM lpInsertUpdate_ObjectDate (zc_ObjectDate_Goods_PartnerDate(), ioId, inPartnerDate);
 
 
    IF vbIsInsert = TRUE THEN
