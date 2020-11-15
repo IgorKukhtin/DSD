@@ -1,7 +1,7 @@
 object GoodsForm: TGoodsForm
   Left = 0
   Top = 0
-  Caption = #1057#1087#1088#1072#1074#1086#1095#1085#1080#1082' <T'#1086#1074#1072#1088#1099'>'
+  Caption = #1057#1087#1088#1072#1074#1086#1095#1085#1080#1082' <'#1040#1088#1090#1080#1082#1091#1083#1099'>'
   ClientHeight = 404
   ClientWidth = 982
   Color = clBtnFace
@@ -12,8 +12,8 @@ object GoodsForm: TGoodsForm
   Font.Style = []
   KeyPreview = True
   OldCreateOrder = False
-  AddOnFormData.isAlwaysRefresh = False
   AddOnFormData.RefreshAction = actRefresh
+  AddOnFormData.isSingle = False
   AddOnFormData.ChoiceAction = dsdChoiceGuides
   AddOnFormData.Params = FormParams
   PixelsPerInch = 96
@@ -450,6 +450,14 @@ object GoodsForm: TGoodsForm
         end
         item
           Visible = True
+          ItemName = 'bbStartLoad'
+        end
+        item
+          Visible = True
+          ItemName = 'dxBarStatic1'
+        end
+        item
+          Visible = True
           ItemName = 'bbProtocolOpenForm'
         end
         item
@@ -512,20 +520,8 @@ object GoodsForm: TGoodsForm
       Action = ProtocolOpenForm
       Category = 0
     end
-    object bbisPartionCount: TdxBarButton
-      Action = actUpdateisPartionCount
-      Category = 0
-    end
-    object bbisPartionSumm: TdxBarButton
-      Action = actUpdateisPartionSumm
-      Category = 0
-    end
     object bbUpdateGoods_In: TdxBarButton
       Action = macUpdateGoods_In
-      Category = 0
-    end
-    object bbUpdate_WeightTareList: TdxBarButton
-      Action = macUpdate_WeightTareList
       Category = 0
     end
     object bbStartLoad: TdxBarButton
@@ -554,10 +550,10 @@ object GoodsForm: TGoodsForm
     object dsdSetErased: TdsdUpdateErased
       Category = 'DSDLib'
       MoveParams = <>
-      StoredProc = spErasedUnErased
+      StoredProc = spErased
       StoredProcList = <
         item
-          StoredProc = spErasedUnErased
+          StoredProc = spErased
         end>
       Caption = #1059#1076#1072#1083#1080#1090#1100
       Hint = #1059#1076#1072#1083#1080#1090#1100' '#1076#1072#1085#1085#1099#1077
@@ -569,10 +565,10 @@ object GoodsForm: TGoodsForm
     object dsdSetUnErased: TdsdUpdateErased
       Category = 'DSDLib'
       MoveParams = <>
-      StoredProc = spErasedUnErased
+      StoredProc = spUnErased
       StoredProcList = <
         item
-          StoredProc = spErasedUnErased
+          StoredProc = spUnErased
         end>
       Caption = #1042#1086#1089#1089#1090#1072#1085#1086#1074#1080#1090#1100
       Hint = #1042#1086#1089#1089#1090#1072#1085#1086#1074#1080#1090#1100' '#1076#1072#1085#1085#1099#1077
@@ -959,12 +955,10 @@ object GoodsForm: TGoodsForm
         item
           Action = actRefresh
         end>
-      QuestionBeforeExecute = #1053#1072#1095#1072#1090#1100' '#1079#1072#1075#1088#1091#1079#1082#1091' '#1042#1077#1089'/'#1042#1077#1089' '#1074#1090#1091#1083#1082#1080'/'#1050#1086#1083'. '#1076#1083#1103' '#1074#1077#1089#1072' '#1080#1079' '#1092#1072#1081#1083#1072'?'
-      InfoAfterExecute = #1042#1077#1089'/'#1042#1077#1089' '#1074#1090#1091#1083#1082#1080'/'#1050#1086#1083'. '#1076#1083#1103' '#1074#1077#1089#1072' '#1079#1072#1075#1088#1091#1078#1077#1085#1099
-      Caption = #1047#1072#1075#1088#1091#1079#1080#1090#1100' '#1042#1077#1089'/'#1042#1077#1089' '#1074#1090#1091#1083#1082#1080'/'#1050#1086#1083'. '#1076#1083#1103' '#1074#1077#1089#1072
-      Hint = 
-        #1047#1072#1075#1088#1091#1079#1080#1090#1100' '#1080#1079' '#1069#1082#1089#1077#1083#1103', '#1092#1086#1088#1084#1072#1090' : '#1082#1086#1076' '#1090#1086#1074' + '#1074#1077#1089' + '#1074#1077#1089' '#1074#1090#1091#1083#1082#1080' + '#1082#1086#1083'-'#1074 +
-        #1086' '#1085#1072' 1-'#1086#1081' '#1074#1090#1091#1083#1082#1077
+      QuestionBeforeExecute = #1053#1072#1095#1072#1090#1100' '#1079#1072#1075#1088#1091#1079#1082#1091' '#1040#1088#1090#1080#1082#1091#1083#1086#1074' '#1080#1079' '#1092#1072#1081#1083#1072'?'
+      InfoAfterExecute = #1040#1088#1090#1080#1082#1091#1083#1099' '#1079#1072#1075#1088#1091#1078#1077#1085#1099
+      Caption = #1047#1072#1075#1088#1091#1079#1080#1090#1100' '#1040#1088#1090#1080#1082#1091#1083#1099
+      Hint = #1047#1072#1075#1088#1091#1079#1080#1090#1100' '#1040#1088#1090#1080#1082#1091#1083#1099
       ImageIndex = 41
     end
   end
@@ -1006,7 +1000,7 @@ object GoodsForm: TGoodsForm
         MultiSelectSeparator = ','
       end>
     PackSize = 1
-    Left = 200
+    Left = 360
     Top = 144
   end
   object dsdDBViewAddOn: TdsdDBViewAddOn
@@ -1056,7 +1050,7 @@ object GoodsForm: TGoodsForm
     Params = <
       item
         Name = 'inDefaultKey'
-        Value = 'TGoodsForm;zc_Object_ImportSetting_Goods_Weight'
+        Value = 'TGoodsForm;zc_Object_ImportSetting_Goods'
         DataType = ftString
         ParamType = ptInput
         MultiSelectSeparator = ','
@@ -1077,6 +1071,54 @@ object GoodsForm: TGoodsForm
       end>
     PackSize = 1
     Left = 600
+    Top = 136
+  end
+  object spUnErased: TdsdStoredProc
+    StoredProcName = 'gpUpdate_Object_isErased_Goods'
+    DataSets = <>
+    OutputType = otResult
+    Params = <
+      item
+        Name = 'inObjectId'
+        Value = Null
+        Component = ClientDataSet
+        ComponentItem = 'Id'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inIsErased'
+        Value = False
+        DataType = ftBoolean
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end>
+    PackSize = 1
+    Left = 456
+    Top = 184
+  end
+  object spErased: TdsdStoredProc
+    StoredProcName = 'gpUpdate_Object_isErased_Goods'
+    DataSets = <>
+    OutputType = otResult
+    Params = <
+      item
+        Name = 'inObjectId'
+        Value = Null
+        Component = ClientDataSet
+        ComponentItem = 'Id'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inIsErased'
+        Value = True
+        DataType = ftBoolean
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end>
+    PackSize = 1
+    Left = 448
     Top = 136
   end
 end

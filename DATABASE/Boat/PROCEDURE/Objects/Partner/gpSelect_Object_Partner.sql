@@ -32,17 +32,17 @@ BEGIN
        SELECT
              Object_Partner.Id               AS Id
            , Object_Partner.ObjectCode       AS Code
-           , Object_Partner.ValueData        AS Name
-           , ObjectString_Fax.ValueData      AS Fax
-           , ObjectString_Phone.ValueData    AS Phone
-           , ObjectString_Mobile.ValueData   AS Mobile
-           , ObjectString_IBAN.ValueData     AS IBAN
-           , ObjectString_Street.ValueData   AS Street
-           , ObjectString_Member.ValueData   AS Member
-           , ObjectString_WWW.ValueData      AS WWW
-           , ObjectString_Email.ValueData    AS Email
-           , ObjectString_CodeDB.ValueData   AS CodeDB
-           , ObjectString_Comment.ValueData  AS Comment
+           , COALESCE (Object_Partner.ValueData,'')::TVarChar        AS Name
+           , COALESCE (ObjectString_Fax.ValueData,'')::TVarChar      AS Fax
+           , COALESCE (ObjectString_Phone.ValueData,'')::TVarChar    AS Phone
+           , COALESCE (ObjectString_Mobile.ValueData,'')::TVarChar   AS Mobile
+           , COALESCE (ObjectString_IBAN.ValueData,'')::TVarChar     AS IBAN
+           , COALESCE (ObjectString_Street.ValueData,'')::TVarChar   AS Street
+           , COALESCE (ObjectString_Member.ValueData,'')::TVarChar   AS Member
+           , COALESCE (ObjectString_WWW.ValueData,'')::TVarChar      AS WWW
+           , COALESCE (ObjectString_Email.ValueData,'')::TVarChar    AS Email
+           , COALESCE (ObjectString_CodeDB.ValueData,'')::TVarChar   AS CodeDB
+           , COALESCE (ObjectString_Comment.ValueData,'')::TVarChar  AS Comment
 
            , Object_Bank.Id                  AS BankId
            , Object_Bank.ValueData           AS BankName

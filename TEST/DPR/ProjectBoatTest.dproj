@@ -579,10 +579,6 @@
 				<Form>DiscountParnerEditForm</Form>
 				<DesignClass>TParentForm</DesignClass>
 			</DCCReference>
-			<DCCReference Include="..\..\FormsBoat\Kind\TaxKind.pas">
-				<Form>TaxKindForm</Form>
-				<DesignClass>TParentForm</DesignClass>
-			</DCCReference>
 			<DCCReference Include="..\..\FormsBoat\Guides\Goods.pas">
 				<Form>GoodsForm</Form>
 				<DesignClass>TParentForm</DesignClass>
@@ -617,6 +613,10 @@
 			</DCCReference>
 			<DCCReference Include="..\..\FormsBoat\Guides\PriceListItem.pas">
 				<Form>PriceListItemForm</Form>
+				<DesignClass>TParentForm</DesignClass>
+			</DCCReference>
+			<DCCReference Include="..\..\FormsBoat\Kind\TaxKind.pas">
+				<Form>TaxKindForm</Form>
 				<DesignClass>TParentForm</DesignClass>
 			</DCCReference>
 			<BuildConfiguration Include="Release">

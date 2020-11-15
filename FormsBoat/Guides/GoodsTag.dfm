@@ -491,8 +491,8 @@ object GoodsTagForm: TGoodsTagForm
         MultiSelectSeparator = ','
       end>
     PackSize = 1
-    Left = 296
-    Top = 216
+    Left = 352
+    Top = 208
   end
   object dsdUserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn
     Left = 176

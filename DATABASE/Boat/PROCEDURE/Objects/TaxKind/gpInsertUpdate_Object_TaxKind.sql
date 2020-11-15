@@ -1,12 +1,12 @@
 -- Торговая марка
 
-DROP FUNCTION IF EXISTS gpInsertUpdate_Object_GoodsTag (Integer, Integer, TVarChar, TVarChar, TVarChar);
+DROP FUNCTION IF EXISTS gpInsertUpdate_Object_TaxKind (Integer, Integer, TVarChar, TVarChar, TVarChar);
 
-CREATE OR REPLACE FUNCTION gpInsertUpdate_Object_GoodsTag(
+CREATE OR REPLACE FUNCTION gpInsertUpdate_Object_TaxKind(
  INOUT ioId              Integer,       -- ключ объекта <>
- INOUT ioCode            Integer,       -- свойство <Код 
-    IN inName            TVarChar,      -- Название 
-    IN inComment         TVarChar,      --
+ INOUT ioCode            Integer,       -- свойство <Код >
+    IN inCode_str        TVarChar,
+    IN inName            TVarChar,      -- главное Название 
     IN inSession         TVarChar       -- сессия пользователя
 )
 RETURNS RECORD
@@ -16,23 +16,23 @@ $BODY$
    DECLARE vbIsInsert Boolean;
 BEGIN
    -- проверка прав пользователя на вызов процедуры
-   -- PERFORM lpCheckRight(inSession, zc_Enum_Process_GoodsTag());
+   -- PERFORM lpCheckRight(inSession, zc_Enum_Process_TaxKind());
    vbUserId:= lpGetUserBySession (inSession);
 
    -- определяем признак Создание/Корректировка
    vbIsInsert:= COALESCE (ioId, 0) = 0;
    
     -- Если код не установлен, определяем его как последний+1
-   ioCode:= lfGet_ObjectCode (ioCode, zc_Object_GoodsTag());
+   ioCode:= lfGet_ObjectCode (ioCode, zc_Object_TaxKind());
 
    -- проверка прав уникальности для свойства <Наименование >
-   PERFORM lpCheckUnique_Object_ValueData (ioId, zc_Object_GoodsTag(), inName);
+   PERFORM lpCheckUnique_Object_ValueData (ioId, zc_Object_TaxKind(), inName);
 
    -- сохранили <Объект>
-   ioId := lpInsertUpdate_Object(ioId, zc_Object_GoodsTag(), ioCode, inName);
+   ioId := lpInsertUpdate_Object(ioId, zc_Object_TaxKind(), ioCode, inName);
 
-   -- сохранили свойство <>
-   PERFORM lpInsertUpdate_ObjectString(zc_ObjectString_GoodsTag_Comment(), ioId, inComment);
+   -- сохранили
+   PERFORM lpInsertUpdate_ObjectString (zc_ObjectString_TaxKind_Code(), ioId, inCode_str);
 
    IF vbIsInsert = TRUE THEN
       -- сохранили свойство <Дата создания>
@@ -51,8 +51,8 @@ $BODY$
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
- 11.11.20         *
+ 15.11.20         *
 */
 
 -- тест
--- SELECT * FROM gpInsertUpdate_Object_GoodsTag()
+-- SELECT * FROM gpInsertUpdate_Object_TaxKind()

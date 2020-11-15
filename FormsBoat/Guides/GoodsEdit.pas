@@ -78,8 +78,6 @@ type
     ceMin: TcxCurrencyEdit;
     cxLabel14: TcxLabel;
     cxLabel17: TcxLabel;
-    GuidesTaxKind: TdsdGuides;
-    edTaxKind: TcxButtonEdit;
     cxLabel18: TcxLabel;
     edArticle: TcxTextEdit;
     edArticleVergl: TcxTextEdit;
@@ -99,6 +97,8 @@ type
     cxLabel16: TcxLabel;
     edComment: TcxTextEdit;
     ceisArc: TcxCheckBox;
+    GuidesTaxKind: TdsdGuides;
+    edTaxKind: TcxButtonEdit;
   private
     { Private declarations }
   public

@@ -77,9 +77,7 @@ type
     actInsert: TdsdInsertUpdateAction;
     actUpdate: TdsdInsertUpdateAction;
     actUpdateisPartionCount: TdsdExecStoredProc;
-    bbisPartionCount: TdxBarButton;
     actUpdateisPartionSumm: TdsdExecStoredProc;
-    bbisPartionSumm: TdxBarButton;
     PartnerDate: TcxGridDBColumn;
     actDatePeriodDialog: TExecuteDialog;
     actUpdateGoods_In: TdsdExecStoredProc;
@@ -95,12 +93,13 @@ type
     macUpdate_WeightTare: TMultiAction;
     macUpdate_WeightTareList: TMultiAction;
     ExecuteDialogWeightTare: TExecuteDialog;
-    bbUpdate_WeightTareList: TdxBarButton;
     actGetImportSetting_Goods_Price: TdsdExecStoredProc;
     actDoLoad: TExecuteImportSettingsAction;
     actStartLoad: TMultiAction;
     bbStartLoad: TdxBarButton;
     spGetImportSettingId: TdsdStoredProc;
+    spUnErased: TdsdStoredProc;
+    spErased: TdsdStoredProc;
   private
     { Private declarations }
   public
