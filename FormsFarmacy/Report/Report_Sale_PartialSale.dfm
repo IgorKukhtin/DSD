@@ -12,19 +12,19 @@ inherited Report_Sale_PartialSaleForm: TReport_Sale_PartialSaleForm
     Width = 759
     Height = 348
     TabOrder = 3
-    ExplicitTop = 65
-    ExplicitWidth = 592
-    ExplicitHeight = 310
+    ExplicitTop = 85
+    ExplicitWidth = 759
+    ExplicitHeight = 348
     ClientRectBottom = 348
     ClientRectRight = 759
     inherited tsMain: TcxTabSheet
-      ExplicitWidth = 592
-      ExplicitHeight = 310
+      ExplicitWidth = 759
+      ExplicitHeight = 348
       inherited cxGrid: TcxGrid
         Width = 759
         Height = 348
-        ExplicitWidth = 592
-        ExplicitHeight = 310
+        ExplicitWidth = 759
+        ExplicitHeight = 348
         inherited cxGridDBTableView: TcxGridDBTableView
           DataController.DetailKeyFieldNames = 'JuridicalId;FromId'
           DataController.Summary.FooterSummaryItems = <
@@ -127,7 +127,7 @@ inherited Report_Sale_PartialSaleForm: TReport_Sale_PartialSaleForm
   inherited Panel: TPanel
     Width = 759
     Height = 59
-    ExplicitWidth = 636
+    ExplicitWidth = 759
     ExplicitHeight = 59
     inherited deStart: TcxDateEdit
       Left = 105
@@ -138,7 +138,6 @@ inherited Report_Sale_PartialSaleForm: TReport_Sale_PartialSaleForm
     inherited deEnd: TcxDateEdit
       Left = 306
       Top = 8
-      Visible = False
       ExplicitLeft = 306
       ExplicitTop = 8
     end
@@ -151,7 +150,6 @@ inherited Report_Sale_PartialSaleForm: TReport_Sale_PartialSaleForm
     inherited cxLabel2: TcxLabel
       Left = 196
       Top = 9
-      Visible = False
       ExplicitLeft = 196
       ExplicitTop = 9
     end

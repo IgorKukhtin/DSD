@@ -10,23 +10,23 @@ inherited WagesUserForm: TWagesUserForm
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
-    Top = 144
+    Top = 147
     Width = 654
-    Height = 305
+    Height = 302
     TabOrder = 0
-    ExplicitTop = 154
-    ExplicitWidth = 655
-    ExplicitHeight = 295
-    ClientRectBottom = 305
+    ExplicitTop = 144
+    ExplicitWidth = 654
+    ExplicitHeight = 305
+    ClientRectBottom = 302
     ClientRectRight = 654
     inherited tsMain: TcxTabSheet
-      ExplicitWidth = 655
-      ExplicitHeight = 295
+      ExplicitWidth = 654
+      ExplicitHeight = 305
       inherited cxGrid: TcxGrid
         Width = 654
-        Height = 179
-        ExplicitWidth = 655
-        ExplicitHeight = 169
+        Height = 176
+        ExplicitWidth = 654
+        ExplicitHeight = 179
         inherited cxGridDBTableView: TcxGridDBTableView
           OptionsView.Footer = False
           Styles.Content = nil
@@ -79,14 +79,13 @@ inherited WagesUserForm: TWagesUserForm
       end
       object PanelBottom: TPanel
         Left = 0
-        Top = 179
+        Top = 176
         Width = 654
         Height = 126
         Align = alBottom
         ShowCaption = False
         TabOrder = 1
-        ExplicitTop = 169
-        ExplicitWidth = 655
+        ExplicitTop = 179
         object ceTotal: TcxCurrencyEdit
           Left = 157
           Top = 6
@@ -310,11 +309,10 @@ inherited WagesUserForm: TWagesUserForm
     Left = 0
     Top = 0
     Width = 654
-    Height = 118
+    Height = 121
     Align = alTop
     ShowCaption = False
     TabOrder = 1
-    ExplicitWidth = 655
     object edOperDate: TcxDateEdit
       Left = 99
       Top = 5
@@ -424,17 +422,23 @@ inherited WagesUserForm: TWagesUserForm
       Caption = #1055#1088#1086#1095#1077#1077
     end
     object ceSummaValidationResults: TcxCurrencyEdit
-      Left = 160
-      Top = 69
+      Left = 74
+      Top = 70
+      Hint = #1056#1077#1079#1091#1083#1100#1090#1072#1090#1099' '#1087#1088#1086#1074#1077#1088#1082#1080
+      ParentShowHint = False
       Properties.DecimalPlaces = 2
       Properties.DisplayFormat = ',0.00'
+      ShowHint = True
       TabOrder = 16
       Width = 65
     end
     object cxLabel14: TcxLabel
       Left = 11
       Top = 71
-      Caption = #1056#1077#1079#1091#1083#1100#1090'. '#1087#1088#1086#1074#1077#1088#1082#1080
+      Hint = #1056#1077#1079#1091#1083#1100#1090#1072#1090#1099' '#1087#1088#1086#1074#1077#1088#1082#1080
+      Caption = #1055#1088#1086#1074#1077#1088#1082#1072
+      ParentShowHint = False
+      ShowHint = True
     end
     object ceSummaTotal: TcxCurrencyEdit
       Left = 578
@@ -571,6 +575,25 @@ inherited WagesUserForm: TWagesUserForm
       Left = 426
       Top = 74
       Caption = #1064#1090#1088#1072#1092' '#1087#1086' '#1079#1072#1085#1091#1083#1077#1085#1080#1102' ('#1086#1079#1085'.)'
+    end
+    object ceIntentionalPeresort: TcxCurrencyEdit
+      Left = 160
+      Top = 70
+      Hint = #1064#1090#1088#1072#1092' '#1079#1072' '#1085#1072#1084#1077#1088#1077#1085#1085#1099#1081' '#1087#1077#1088#1077#1089#1086#1088#1090
+      ParentShowHint = False
+      Properties.DecimalPlaces = 2
+      Properties.DisplayFormat = ',0.00'
+      ShowHint = True
+      TabOrder = 35
+      Width = 65
+    end
+    object cxLabel27: TcxLabel
+      Left = 139
+      Top = 71
+      Hint = #1064#1090#1088#1072#1092' '#1079#1072' '#1085#1072#1084#1077#1088#1077#1085#1085#1099#1081' '#1087#1077#1088#1077#1089#1086#1088#1090
+      Caption = #1053#1055
+      ParentShowHint = False
+      ShowHint = True
     end
   end
   inherited UserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn
@@ -840,6 +863,13 @@ inherited WagesUserForm: TWagesUserForm
         Name = 'SummaValidationResults'
         Value = Null
         Component = ceSummaValidationResults
+        DataType = ftFloat
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'SummaIntentionalPeresort'
+        Value = Null
+        Component = ceIntentionalPeresort
         DataType = ftFloat
         MultiSelectSeparator = ','
       end

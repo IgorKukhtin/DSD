@@ -1,6 +1,6 @@
 -- Function: gpInsertUpdate_MovementItem_WagesAdditionalExpenses()
 
-DROP FUNCTION IF EXISTS gpInsertUpdate_MovementItem_WagesAdditionalExpenses(Integer, Integer, Integer, TFloat, TFloat, TFloat, TFloat, TFloat, Boolean, TVarChar, TVarChar);
+DROP FUNCTION IF EXISTS gpInsertUpdate_MovementItem_WagesAdditionalExpenses(Integer, Integer, Integer, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, Boolean, TVarChar, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpInsertUpdate_MovementItem_WagesAdditionalExpenses(
  INOUT ioId                       Integer   , -- Ключ объекта <Элемент документа>
@@ -10,6 +10,7 @@ CREATE OR REPLACE FUNCTION gpInsertUpdate_MovementItem_WagesAdditionalExpenses(
     IN inSummaSP                  TFloat    , -- СП
     IN inSummaOther               TFloat    , -- Прочее
     IN inSummaValidationResults   TFloat    , -- Результаты проверки
+    IN inSummaIntentionalPeresort TFloat    , -- Штраф за намеренный пересорт
     IN inSummaFullChargeFact      TFloat    , -- Полное списание факт
     IN inisIssuedBy               Boolean   , -- Выдано
     IN inComment                  TVarChar  , -- Примечание
@@ -90,6 +91,9 @@ BEGIN
               LEFT JOIN MovementItemFloat AS MIFloat_ValidationResults
                                           ON MIFloat_ValidationResults.MovementItemId = MovementItem.Id
                                          AND MIFloat_ValidationResults.DescId = zc_MIFloat_ValidationResults()
+              LEFT JOIN MovementItemFloat AS MIFloat_IntentionalPeresort
+                                          ON MIFloat_IntentionalPeresort.MovementItemId = MovementItem.Id
+                                         AND MIFloat_IntentionalPeresort.DescId = zc_MIFloat_IntentionalPeresort()
 
               LEFT JOIN MovementItemFloat AS MIFloat_SummaFullChargeMonth
                                           ON MIFloat_SummaFullChargeMonth.MovementItemId = MovementItem.Id
@@ -111,6 +115,7 @@ BEGIN
             OR COALESCE (MIFloat_SummaSP.ValueData, 0) <>  COALESCE (inSummaSP, 0)
             OR COALESCE (MIFloat_SummaOther.ValueData, 0) <>  COALESCE (inSummaOther, 0)
             OR COALESCE (MIFloat_ValidationResults.ValueData, 0) <>  COALESCE (inSummaValidationResults, 0)
+            OR COALESCE (MIFloat_IntentionalPeresort.ValueData, 0) <>  COALESCE (inSummaIntentionalPeresort, 0)
             OR COALESCE (inSummaFullChargeFact, 0) <>  COALESCE(MIFloat_SummaFullChargeFact.ValueData, 
                                                                 COALESCE(MIFloat_SummaFullCharge.ValueData, 0) + 
                                                                 COALESCE(MIFloat_SummaFullChargeMonth.ValueData, 0))))
@@ -145,6 +150,7 @@ BEGIN
                                                                , inSummaSP                  := inSummaSP             -- СП
                                                                , inSummaOther               := inSummaOther          -- Прочее
                                                                , inSummaValidationResults   := inSummaValidationResults   -- Результаты проверки
+                                                               , inSummaIntentionalPeresort := inSummaIntentionalPeresort -- Штраф за намеренный пересорт
                                                                , inSummaFullChargeFact      := inSummaFullChargeFact -- Полное списание факт 
                                                                , inisIssuedBy               := inisIssuedBy          -- Выдано
                                                                , inComment                  := inComment             -- Примечание
@@ -173,4 +179,4 @@ $BODY$
 -- тест
 -- SELECT * FROM gpInsertUpdate_MovementItem_WagesAdditionalExpenses (, inSession:= '2')
 
-select * from gpInsertUpdate_MovementItem_WagesAdditionalExpenses(ioId := 381370414 , inMovementId := 19723487 , inUnitID := 1781716 , inSummaCleaning := 2000 , inSummaSP := 28.27 , inSummaOther := 0 , inSummaValidationResults := 0 , inSummaFullChargeFact := 0 , inisIssuedBy := 'False' , inComment := '' ,  inSession := '3');
+--select * from gpInsertUpdate_MovementItem_WagesAdditionalExpenses(ioId := 381370414 , inMovementId := 19723487 , inUnitID := 1781716 , inSummaCleaning := 2000 , inSummaSP := 28.27 , inSummaOther := 0 , inSummaValidationResults := 0 , inSummaFullChargeFact := 0 , inisIssuedBy := 'False' , inComment := '' ,  inSession := '3');

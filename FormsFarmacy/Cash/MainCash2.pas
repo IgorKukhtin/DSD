@@ -3354,17 +3354,31 @@ begin
       ChangeStatus
         ('Загрузка приходных накладных от дистрибьютора в медреестр Pfizer МДМ');
       lMsg := '';
-      if not DiscountServiceForm.fPfizer_Send(lMsg) then
+      // ЗАРАДИ ЖИТТЯ
+      if not DiscountServiceForm.fPfizer_Send(2807930, lMsg) then
       begin
         ChangeStatus('Ошибка в медреестре Pfizer МДМ :' + lMsg);
-        sleep(3000);
+        sleep(2000);
       end
       else
       begin
         ChangeStatus
           ('Накладные зарегистрированы в медреестре Pfizer МДМ успешно :' +
           lMsg);
+        sleep(1000);
+      end;
+      // Пфайзер "Заради життя онко-группа"
+      if not DiscountServiceForm.fPfizer_Send(15615415, lMsg) then
+      begin
+        ChangeStatus('Ошибка в медреестре Pfizer МДМ :' + lMsg);
         sleep(2000);
+      end
+      else
+      begin
+        ChangeStatus
+          ('Накладные зарегистрированы в медреестре Pfizer МДМ успешно :' +
+          lMsg);
+        sleep(1000);
       end;
     end;
   finally

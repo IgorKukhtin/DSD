@@ -83,6 +83,8 @@ type
     cxLabel25: TcxLabel;
     ceSummaFine: TcxCurrencyEdit;
     cxLabel26: TcxLabel;
+    ceIntentionalPeresort: TcxCurrencyEdit;
+    cxLabel27: TcxLabel;
   private
     { Private declarations }
   public

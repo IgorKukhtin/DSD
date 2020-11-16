@@ -1,10 +1,11 @@
 -- Function: gpSelect_Movement_Income_Pfizer()
 
-DROP FUNCTION IF EXISTS gpSelect_Movement_Income_fPfizer (TVarChar);
-DROP FUNCTION IF EXISTS gpSelect_Movement_Income_Pfizer (TVarChar);
+--DROP FUNCTION IF EXISTS gpSelect_Movement_Income_Pfizer (TVarChar);
+DROP FUNCTION IF EXISTS gpSelect_Movement_Income_Pfizer (Integer, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpSelect_Movement_Income_Pfizer(
-    IN inSession       TVarChar    -- сессия пользователя
+    IN inDiscountExternalId Integer ,   -- Программа
+    IN inSession            TVarChar    -- сессия пользователя
 )
 RETURNS TABLE (MovementId Integer, InvNumber TVarChar, OperDate TDateTime, StatusCode Integer, StatusName TVarChar
              , TotalCount TFloat, TotalSumm TFloat, TotalSummSale TFloat
@@ -29,7 +30,7 @@ BEGIN
 
 
      -- Вернули все что надо загружать в медреестр Pfizer МДМ
-     PERFORM gpUpdate_Movement_Income_isRegistered_Auto (inStartDate:= CURRENT_DATE - INTERVAL '8 DAY', inEndDate:= CURRENT_DATE, inSession:= inSession);
+     PERFORM gpUpdate_Movement_Income_isRegistered_Auto (inDiscountExternalId:= inDiscountExternalId, inStartDate:= CURRENT_DATE - INTERVAL '8 DAY', inEndDate:= CURRENT_DATE, inSession:= inSession);
 
      -- Вернули все что надо загружать в медреестр Pfizer МДМ
      RETURN QUERY
@@ -130,4 +131,4 @@ $BODY$
 */
 
 -- тест
--- SELECT * FROM gpSelect_Movement_Income_Pfizer (inSession:= zfCalc_UserAdmin())
+-- SELECT * FROM gpSelect_Movement_Income_Pfizer (inDiscountExternalId := 1, inSession:= zfCalc_UserAdmin())

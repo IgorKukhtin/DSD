@@ -62,7 +62,7 @@ type
     //function fUpdateCDS_Item(CheckCDS : TClientDataSet; var lMsg : string; lDiscountExternalId : Integer; lCardNumber : string) : Boolean;
     //
     // Send All Movement - Income
-    function fPfizer_Send (var lMsg : string) :Boolean;
+    function fPfizer_Send (const nDiscountExternal : Integer; var lMsg : string) :Boolean;
     // Send Item - Income
     function fPfizer_SendItem (lMovementId: Integer;
                                lOperDate : TDateTime;
@@ -1038,17 +1038,22 @@ begin
 end;
 
 // Send All Movement - Income
-function TDiscountServiceForm.fPfizer_Send (var lMsg : string) :Boolean;
+function TDiscountServiceForm.fPfizer_Send (const nDiscountExternal : Integer; var lMsg : string) :Boolean;
 var llMsg : String;
 begin
     try
       //Получили данные
       with spGet_DiscountExternal do
       begin
-           ParamByName('inId').Value := 2807930; // захардкодил - ЗАРАДИ ЖИТТЯ
+           ParamByName('URL').Value        := '';
+           ParamByName('Service').Value    := '';
+           ParamByName('Port').Value       := '';
+           ParamByName('UserName').Value   := '';
+           ParamByName('Password').Value   := '';
+           ParamByName('inId').Value := nDiscountExternal; // захардкодил - ЗАРАДИ ЖИТТЯ
            Execute;
            // сохраним "нужные" параметры-Main
-           gDiscountExternalId:= 2807930;
+           gDiscountExternalId:= nDiscountExternal;
            gURL        := ParamByName('URL').Value;
            gService    := ParamByName('Service').Value;
            gPort       := ParamByName('Port').Value;
@@ -1060,6 +1065,14 @@ begin
        lMsg:= 'Для аптеки программа <ЗАРАДИ ЖИТТЯ> НЕ подключена.';
        exit;
     end;
+
+    if (gURL = '') or (gService = '') or (gPort = '') then
+    begin
+      Result:=false;
+      lMsg:= 'Для аптеки программа <ЗАРАДИ ЖИТТЯ> НЕ подключена.';
+      exit;
+    end;
+
     //Инициализировали данными
     HTTPRIO.WSDLLocation := gURL;
     HTTPRIO.Service := gService;
@@ -1071,6 +1084,7 @@ begin
     //
     //Открыли данные - документы
     with spSelectUnloadMovement do begin
+       ParamByName('inDiscountExternalId').Value := nDiscountExternal; // захардкодил - ЗАРАДИ ЖИТТЯ
        Execute;
     end;
 

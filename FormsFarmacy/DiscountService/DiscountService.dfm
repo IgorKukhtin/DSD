@@ -148,7 +148,13 @@ object DiscountServiceForm: TDiscountServiceForm
       item
         DataSet = UnloadMovementCDS
       end>
-    Params = <>
+    Params = <
+      item
+        Name = 'inDiscountExternalId'
+        Value = Null
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end>
     PackSize = 1
     Left = 400
     Top = 10

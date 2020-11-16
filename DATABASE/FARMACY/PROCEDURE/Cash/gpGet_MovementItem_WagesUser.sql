@@ -13,7 +13,7 @@ RETURNS TABLE (Id Integer, UserID Integer, AmountAccrued TFloat
              , UnitID Integer, UnitCode Integer, UnitName TVarChar
              , OperDate TDateTime
              , Result TFloat, Attempts Integer, Status TVarChar, DateTimeTest TDateTime
-             , SummaCleaning TFloat, SummaSP TFloat, SummaOther TFloat, SummaValidationResults TFloat, SummaSUN1 TFloat, SummaFine TFloat 
+             , SummaCleaning TFloat, SummaSP TFloat, SummaOther TFloat, SummaValidationResults TFloat, SummaIntentionalPeresort TFloat, SummaSUN1 TFloat, SummaFine TFloat 
              , SummaTechnicalRediscount TFloat, SummaMoneyBox TFloat, SummaFullCharge TFloat, SummaMoneyBoxUsed TFloat
              , SummaTotal TFloat
              , PasswordEHels TVarChar
@@ -155,6 +155,7 @@ BEGIN
                                                , MIFloat_SummaSP.ValueData           AS SummaSP
                                                , MIFloat_SummaOther.ValueData        AS SummaOther
                                                , MIFloat_ValidationResults.ValueData AS SummaValidationResults
+                                               , MIFloat_IntentionalPeresort.ValueData AS SummaIntentionalPeresort
                                                , MIFloat_SummaSUN1.ValueData         AS SummaSUN1 
                                                , tmpTechnicalRediscount.SummWages    AS SummaTechnicalRediscount
                               --                 , MIFloat_SummaTechnicalRediscount.ValueData         AS SummaTechnicalRediscount
@@ -181,6 +182,9 @@ BEGIN
                                                 LEFT JOIN MovementItemFloat AS MIFloat_ValidationResults
                                                                             ON MIFloat_ValidationResults.MovementItemId = MovementItem.Id
                                                                            AND MIFloat_ValidationResults.DescId = zc_MIFloat_ValidationResults()
+                                                LEFT JOIN MovementItemFloat AS MIFloat_IntentionalPeresort
+                                                                            ON MIFloat_IntentionalPeresort.MovementItemId = MovementItem.Id
+                                                                           AND MIFloat_IntentionalPeresort.DescId = zc_MIFloat_IntentionalPeresort()
 
                                                 LEFT JOIN MovementItemFloat AS MIFloat_SummaSUN1
                                                                             ON MIFloat_SummaSUN1.MovementItemId = MovementItem.Id
@@ -263,6 +267,7 @@ BEGIN
                  , tmpAdditionalExpenses.SummaSP                AS SummaSP
                  , tmpAdditionalExpenses.SummaOther             AS SummaOther
                  , tmpAdditionalExpenses.SummaValidationResults AS SummaValidationResults
+                 , tmpAdditionalExpenses.SummaIntentionalPeresort AS SummaIntentionalPeresort
                  , tmpAdditionalExpenses.SummaSUN1              AS SummaSUN1
                  , FoundPositionsSUN.SummaFine                  AS SummaFine
                  , tmpAdditionalExpenses.SummaTechnicalRediscount AS SummaTechnicalRediscount
