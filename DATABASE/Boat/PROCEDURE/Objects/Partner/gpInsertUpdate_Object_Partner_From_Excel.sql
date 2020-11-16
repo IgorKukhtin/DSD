@@ -54,6 +54,13 @@ BEGIN
        RETURN;
    END IF;
    
+   inName := REPLACE (REPLACE (REPLACE (REPLACE(inName, 'o','$') , 'a','$'), 'u','$'), '?','$');
+   inName2 := REPLACE (REPLACE (REPLACE (REPLACE(inName2, 'o','$') , 'a','$'), 'u','$'), '?','$');
+   inName3 := REPLACE (REPLACE (REPLACE (REPLACE(inName3, 'o','$') , 'a','$'), 'u','$'), '?','$');
+   inStreet := REPLACE (REPLACE (REPLACE (REPLACE(inStreet, 'o','$') , 'a','$'), 'u','$'), '?','$');
+   inCity := REPLACE (REPLACE (REPLACE (REPLACE(inCity, 'o','$') , 'a','$'), 'u','$'), '?','$');
+   inMember := REPLACE (REPLACE (REPLACE (REPLACE(inMember, 'o','$') , 'a','$'), 'u','$'), '?','$');
+   
    IF COALESCE (inBankName, '') <> ''
    THEN
        -- пробуем найти банк
