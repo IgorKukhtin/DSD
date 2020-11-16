@@ -650,7 +650,7 @@ begin
       Exit;
     end;      
 
-    FCommandData.MoveToId(FStartId);
+    FCommandData.MoveToId(FCommandData.ValidId(FStartId));
     iStartId   := FStartId;
     iSuccCount := 0;
     iFailCount := 0;
@@ -859,7 +859,7 @@ begin
   iStartTrans := rangeTransId.Min;
   iEndTrans   := rangeTransId.Max;
 
-  iRecCount := FCommandData.RecordCount(FStartId, iMaxId);
+  iRecCount := FCommandData.RecordCount(FCommandData.ValidId(iStartId), iMaxId);
 
   // строка  "№1 Id=<56477135-56513779> tranId=<677135-63779> 3500 записей за  "
   LogMsg(Format(cAttempt1, [iStartId, iMaxId, iStartTrans, iEndTrans, iRecCount, '', '']), crdStart);
@@ -868,7 +868,7 @@ begin
   try
     with FCommandData do
     begin
-      MoveToId(FStartId);
+      MoveToId(ValidId(iStartId));
       while not EOF and (Data.Id <= iMaxId) and not FStopped do
       begin
         tmpData := TCmdData.Create;

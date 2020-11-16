@@ -33,6 +33,7 @@ type
     function MinMaxTransId(const AMinId, AMaxId: Int64): TMinMaxTransId;
     function MoveToId(const AId: Int64): Integer;// вернет позицию записи с AId в массиве FRecArray
     function RecordCount(const AStartId, AEndId: Int64): Integer;
+    function ValidId(const AId: Int64): Int64;
 
     property EOF: Boolean read GetEOF;
     property Count: Integer read GetCount;
@@ -223,18 +224,33 @@ end;
 
 function TCommandData.GetMaxId(const AId: Int64; const ARange: Integer): Int64;
 var
-  iPos, iRange: Integer;
+  iId, iPos, iRange: Integer;
 begin
   // BuildData не сохран€ет дубликаты команд, поэтому реальный размер нового пакета может быть меньше ARange
   // Ќужно скоректировать размер
-  iPos := GetPosition(AId);
+  iId  := AId;
+  iPos := GetPosition(iId);
 
-  if iPos = -1 then Exit(-1);
+  // AId могло быть отброшено при создании FRecArray в BuildData как дублирующее значение.
+  // Ќапример, AId= 1433448108, но этого значени€ нет в FRecArray, и GetPosition(1433448108) вернет -1
+  // Ќужно найти ближайшее значение, которое входит в FRecArray
 
-  iPos := iPos + ARange - 100;
-  iRange := GetId(iPos) - AId;
+  if iPos = -1 then
+  begin
+    Inc(iId);
+    iPos := GetPosition(iId);
 
-  Result := NearestId(AId, iRange);
+    while (iPos < 0) and (iId < FRecArray[High(FRecArray)].Id) do
+    begin
+      Inc(iId);
+      iPos := GetPosition(iId);
+    end;
+  end;
+
+  iPos   := iPos + ARange - 100;
+  iRange := GetId(iPos) - iId;
+
+  Result := NearestId(iId, iRange);
 end;
 
 procedure TCommandData.Last;
@@ -355,6 +371,40 @@ begin
     end;
   finally
     FPos := prevPos;
+  end;
+end;
+
+function TCommandData.ValidId(const AId: Int64): Int64;
+var
+  iId, iPos: Integer;
+begin
+  Result := AId;
+
+  if AId >= FRecArray[High(FRecArray)].Id then
+  begin
+    Exit(FRecArray[High(FRecArray)].Id);
+  end;
+
+  if AId <= FRecArray[Low(FRecArray)].Id then
+    Exit(FRecArray[Low(FRecArray)].Id);
+
+
+  // значение AId может быть в пределах FRecArray, но при этом AId может не входить в массив FRecArray
+  iId  := AId;
+  iPos := GetPosition(iId);
+
+  if iPos = -1 then
+  begin
+    Inc(iId);
+    iPos := GetPosition(iId);
+
+    while (iPos < 0) and (iId < FRecArray[High(FRecArray)].Id) do
+    begin
+      Inc(iId);
+      iPos := GetPosition(iId);
+    end;
+
+    Result := GetId(iPos);
   end;
 end;
 
