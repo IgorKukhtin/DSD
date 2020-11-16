@@ -1,32 +1,32 @@
 inherited ContractGoodsChoiceForm: TContractGoodsChoiceForm
   Caption = #1057#1087#1088#1072#1074#1086#1095#1085#1080#1082' <'#1058#1086#1074#1072#1088#1099' '#1074' '#1076#1086#1075#1086#1074#1086#1088#1072#1093' ('#1057#1087#1077#1094#1080#1092#1080#1082#1072#1094#1080#1103')>'
   ClientHeight = 558
-  ClientWidth = 888
+  ClientWidth = 1363
   AddOnFormData.isAlwaysRefresh = True
   AddOnFormData.isSingle = False
   AddOnFormData.ChoiceAction = dsdChoiceGuides
   AddOnFormData.Params = FormParams
-  ExplicitWidth = 904
+  ExplicitWidth = 1379
   ExplicitHeight = 596
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
     Top = 57
-    Width = 888
+    Width = 1363
     Height = 501
     ExplicitTop = 57
-    ExplicitWidth = 888
-    ExplicitHeight = 317
+    ExplicitWidth = 1363
+    ExplicitHeight = 501
     ClientRectBottom = 501
-    ClientRectRight = 888
+    ClientRectRight = 1363
     inherited tsMain: TcxTabSheet
-      ExplicitWidth = 888
-      ExplicitHeight = 317
+      ExplicitWidth = 1363
+      ExplicitHeight = 501
       inherited cxGrid: TcxGrid
-        Width = 684
+        Width = 947
         Height = 501
-        ExplicitWidth = 888
-        ExplicitHeight = 317
+        ExplicitWidth = 947
+        ExplicitHeight = 501
         inherited cxGridDBTableView: TcxGridDBTableView
           DataController.Summary.FooterSummaryItems = <
             item
@@ -64,6 +64,15 @@ inherited ContractGoodsChoiceForm: TContractGoodsChoiceForm
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Width = 54
+          end
+          object TradeMarkName: TcxGridDBColumn
+            Caption = #1058#1086#1088#1075#1086#1074#1072#1103' '#1084#1072#1088#1082#1072
+            DataBinding.FieldName = 'TradeMarkName'
+            Visible = False
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 55
           end
           object StartDate: TcxGridDBColumn
             Caption = #1044#1077#1081#1089#1090#1074'. '#1089
@@ -566,9 +575,9 @@ inherited ContractGoodsChoiceForm: TContractGoodsChoiceForm
         end
       end
       object cxGrid1: TcxGrid
-        Left = 688
+        Left = 952
         Top = 0
-        Width = 200
+        Width = 411
         Height = 501
         Align = alRight
         PopupMenu = PopupMenu
@@ -619,12 +628,11 @@ inherited ContractGoodsChoiceForm: TContractGoodsChoiceForm
             Properties.ReadOnly = True
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
-            Width = 123
+            Width = 109
           end
           object tmContractCode: TcxGridDBColumn
             Caption = #1050#1086#1076' '#1076#1086#1075'.'
             DataBinding.FieldName = 'ContractCode'
-            Visible = False
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
@@ -633,11 +641,126 @@ inherited ContractGoodsChoiceForm: TContractGoodsChoiceForm
           object tmContractName: TcxGridDBColumn
             Caption = #8470' '#1076#1086#1075'.'
             DataBinding.FieldName = 'ContractName'
+            PropertiesClassName = 'TcxButtonEditProperties'
+            Properties.Buttons = <
+              item
+                Action = actChoiceFormContract
+                Default = True
+                Kind = bkEllipsis
+              end>
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 99
+          end
+          object tmContractTagName: TcxGridDBColumn
+            Caption = #1055#1088#1080#1079#1085#1072#1082' '#1076#1086#1075'.'
+            DataBinding.FieldName = 'ContractTagName'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 79
+          end
+          object tmJuridicalGroupName: TcxGridDBColumn
+            Caption = #1043#1088#1091#1087#1087#1072' '#1102#1088'. '#1083'.'
+            DataBinding.FieldName = 'JuridicalGroupName'
+            Visible = False
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 70
+          end
+          object tmJuridicalCode: TcxGridDBColumn
+            Caption = #1050#1086#1076' '#1102#1088'.'#1083'.'
+            DataBinding.FieldName = 'JuridicalCode'
             Visible = False
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
-            Width = 131
+            Width = 45
+          end
+          object tmJuridicalName: TcxGridDBColumn
+            Caption = #1070#1088#1080#1076#1080#1095#1077#1089#1082#1086#1077' '#1083#1080#1094#1086
+            DataBinding.FieldName = 'JuridicalName'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 132
+          end
+          object tmPaidKindName: TcxGridDBColumn
+            Caption = #1060#1086#1088#1084#1072' '#1086#1087#1083#1072#1090#1099' ('#1076#1086#1075'.)'
+            DataBinding.FieldName = 'PaidKindName'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 50
+          end
+          object tmContractKindName: TcxGridDBColumn
+            Caption = #1042#1080#1076' '#1076#1086#1075'.'
+            DataBinding.FieldName = 'ContractKindName'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 86
+          end
+          object tmInfoMoneyGroupCode: TcxGridDBColumn
+            Caption = #1050#1086#1076' '#1059#1055' '#1075#1088#1091#1087#1087#1099
+            DataBinding.FieldName = 'InfoMoneyGroupCode'
+            Visible = False
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 55
+          end
+          object tmInfoMoneyGroupName: TcxGridDBColumn
+            Caption = #1059#1055' '#1075#1088#1091#1087#1087#1072' '#1085#1072#1079#1085#1072#1095#1077#1085#1080#1103
+            DataBinding.FieldName = 'InfoMoneyGroupName'
+            PropertiesClassName = 'TcxButtonEditProperties'
+            Properties.Buttons = <
+              item
+                Default = True
+                Kind = bkEllipsis
+              end>
+            Visible = False
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 113
+          end
+          object tmInfoMoneyDestinationCode: TcxGridDBColumn
+            Caption = #1050#1086#1076' '#1059#1055' '#1085#1072#1079#1085#1072#1095'.'
+            DataBinding.FieldName = 'InfoMoneyDestinationCode'
+            Visible = False
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 55
+          end
+          object tmInfoMoneyDestinationName: TcxGridDBColumn
+            Caption = #1059#1055' '#1085#1072#1079#1085#1072#1095#1077#1085#1080#1077
+            DataBinding.FieldName = 'InfoMoneyDestinationName'
+            Visible = False
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 80
+          end
+          object tmInfoMoneyCode: TcxGridDBColumn
+            Caption = #1050#1086#1076' '#1059#1055
+            DataBinding.FieldName = 'InfoMoneyCode'
+            Visible = False
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 39
+          end
+          object tmInfoMoneyName: TcxGridDBColumn
+            Caption = #1059#1055' '#1089#1090#1072#1090#1100#1103' '#1085#1072#1079#1085#1072#1095#1077#1085#1080#1103
+            DataBinding.FieldName = 'InfoMoneyName'
+            Visible = False
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 70
           end
           object tmisErased: TcxGridDBColumn
             Caption = #1059#1076#1072#1083#1077#1085
@@ -654,25 +777,24 @@ inherited ContractGoodsChoiceForm: TContractGoodsChoiceForm
         end
       end
       object cxRightSplitter: TcxSplitter
-        Left = 684
+        Left = 947
         Top = 0
-        Width = 4
+        Width = 5
         Height = 501
         AlignSplitter = salRight
         Control = cxGrid1
-        ExplicitLeft = -4
       end
     end
   end
   object Panel: TPanel [1]
     Left = 0
     Top = 0
-    Width = 888
+    Width = 1363
     Height = 31
     Align = alTop
     TabOrder = 5
     object edRetail: TcxButtonEdit
-      Left = 476
+      Left = 682
       Top = 5
       Properties.Buttons = <
         item
@@ -684,7 +806,7 @@ inherited ContractGoodsChoiceForm: TContractGoodsChoiceForm
       Width = 131
     end
     object cxLabel10: TcxLabel
-      Left = 421
+      Left = 626
       Top = 6
       Caption = #1058#1086#1088#1075'.'#1089#1077#1090#1100
     end
@@ -724,12 +846,12 @@ inherited ContractGoodsChoiceForm: TContractGoodsChoiceForm
     end
   end
   object cxLabel1: TcxLabel [2]
-    Left = 618
+    Left = 824
     Top = 6
     Caption = #1055#1088#1072#1081#1089
   end
   object edPriceListGoods: TcxButtonEdit [3]
-    Left = 654
+    Left = 861
     Top = 5
     Properties.Buttons = <
       item
@@ -739,6 +861,24 @@ inherited ContractGoodsChoiceForm: TContractGoodsChoiceForm
     Properties.ReadOnly = True
     TabOrder = 7
     Width = 131
+  end
+  object edContractTag: TcxButtonEdit [4]
+    Left = 493
+    Top = 5
+    Properties.Buttons = <
+      item
+        Default = True
+        Enabled = False
+        Kind = bkEllipsis
+      end>
+    Properties.ReadOnly = True
+    TabOrder = 8
+    Width = 120
+  end
+  object cxLabel2: TcxLabel [5]
+    Left = 420
+    Top = 6
+    Caption = #1055#1088#1080#1079#1085#1072#1082' '#1076#1086#1075'.'
   end
   inherited UserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn
     Top = 304
@@ -823,6 +963,48 @@ inherited ContractGoodsChoiceForm: TContractGoodsChoiceForm
       CaptionFalse = #1055#1086#1082#1072#1079#1072#1090#1100' '#1074#1077#1089#1100' '#1089#1087#1080#1089#1086#1082
       ImageIndexTrue = 62
       ImageIndexFalse = 63
+    end
+    object actChoiceFormContract: TOpenChoiceForm
+      Category = 'DSDLib'
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      Caption = 'PaidKindChoiceForm'
+      FormName = 'TContractChoiceForm'
+      FormNameParam.Value = 'TContractChoiceForm'
+      FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
+      GuiParams = <
+        item
+          Name = 'Key'
+          Value = Null
+          Component = MasterCDS_TM
+          ComponentItem = 'ContractId'
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'TextValue'
+          Value = Null
+          Component = MasterCDS_TM
+          ComponentItem = 'ContractName'
+          DataType = ftString
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'ContractTagId'
+          Value = Null
+          Component = MasterCDS_TM
+          ComponentItem = 'ContractTagId'
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'ContractTagName'
+          Value = Null
+          Component = MasterCDS_TM
+          ComponentItem = 'ContractTagName'
+          DataType = ftString
+          MultiSelectSeparator = ','
+        end>
+      isShowModal = True
     end
     object actShowErased: TBooleanStoredProcAction
       Category = 'DSDLib'
@@ -937,6 +1119,7 @@ inherited ContractGoodsChoiceForm: TContractGoodsChoiceForm
       Caption = #1059#1076#1072#1083#1080#1090#1100' '#1058#1086#1088#1075#1086#1074#1091#1102' '#1084#1072#1088#1082#1091
       Hint = #1059#1076#1072#1083#1080#1090#1100' '#1058#1086#1088#1075#1086#1074#1091#1102' '#1084#1072#1088#1082#1091
       ImageIndex = 2
+      ShortCut = 46
       ErasedFieldName = 'isErased'
       DataSource = MasterDS_TM
     end
@@ -948,9 +1131,10 @@ inherited ContractGoodsChoiceForm: TContractGoodsChoiceForm
         item
           StoredProc = spErasedUnErased_TM
         end>
-      Caption = #1042#1086#1089#1089#1090#1072#1085#1086#1074#1080#1090#1100' '#1058#1086#1088#1075#1086#1074#1091#1102' '#1084#1072#1088#1082#1091
-      Hint = #1042#1086#1089#1089#1090#1072#1085#1086#1074#1080#1090#1100' '#1058#1086#1088#1075#1086#1074#1091#1102' '#1084#1072#1088#1082#1091
+      Caption = #1042#1086#1089#1089#1090#1072#1085#1086#1074#1080#1090#1100
+      Hint = #1042#1086#1089#1089#1090#1072#1085#1086#1074#1080#1090#1100' '#1076#1072#1085#1085#1099#1077
       ImageIndex = 8
+      ShortCut = 46
       ErasedFieldName = 'isErased'
       isSetErased = False
       DataSource = MasterDS_TM
@@ -1185,7 +1369,8 @@ inherited ContractGoodsChoiceForm: TContractGoodsChoiceForm
         ParamType = ptInput
         MultiSelectSeparator = ','
       end>
-    Left = 528
+    Left = 696
+    Top = 16
   end
   object GuidesContract: TdsdGuides
     KeyField = 'Id'
@@ -1194,7 +1379,7 @@ inherited ContractGoodsChoiceForm: TContractGoodsChoiceForm
     FormNameParam.DataType = ftString
     FormNameParam.MultiSelectSeparator = ','
     FormName = 'TContractChoiceForm'
-    PositionDataSet = 'ClientDataSet'
+    PositionDataSet = 'MasterCDS'
     Params = <
       item
         Name = 'Key'
@@ -1227,6 +1412,23 @@ inherited ContractGoodsChoiceForm: TContractGoodsChoiceForm
         Component = GuidesJuridical
         ComponentItem = 'TextValue'
         DataType = ftString
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'ContractTagId'
+        Value = Null
+        Component = GuidesContractTag
+        ComponentItem = 'Key'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'ContractTagName'
+        Value = Null
+        Component = GuidesContractTag
+        ComponentItem = 'TextValue'
+        DataType = ftString
+        ParamType = ptInput
         MultiSelectSeparator = ','
       end>
     Left = 344
@@ -1287,7 +1489,7 @@ inherited ContractGoodsChoiceForm: TContractGoodsChoiceForm
         ParamType = ptInput
         MultiSelectSeparator = ','
       end>
-    Left = 704
+    Left = 888
     Top = 8
   end
   object FormParams: TdsdFormParams
@@ -1359,6 +1561,23 @@ inherited ContractGoodsChoiceForm: TContractGoodsChoiceForm
         DataType = ftString
         ParamType = ptInput
         MultiSelectSeparator = ','
+      end
+      item
+        Name = 'ContractTagId'
+        Value = Null
+        Component = GuidesContractTag
+        ComponentItem = 'Key'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'ContractTagName'
+        Value = Null
+        Component = GuidesContractTag
+        ComponentItem = 'TextValue'
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
       end>
     Left = 328
     Top = 170
@@ -1413,18 +1632,14 @@ inherited ContractGoodsChoiceForm: TContractGoodsChoiceForm
   object MasterCDS_TM: TClientDataSet
     Aggregates = <>
     FilterOptions = [foCaseInsensitive]
-    IndexFieldNames = 'ContractId'
-    MasterFields = 'ContractId'
-    MasterSource = MasterDS
-    PacketRecords = 0
     Params = <>
-    Left = 616
-    Top = 296
+    Left = 832
+    Top = 288
   end
   object MasterDS_TM: TDataSource
     DataSet = MasterCDS_TM
-    Left = 640
-    Top = 360
+    Left = 896
+    Top = 376
   end
   object spSelect_TM: TdsdStoredProc
     StoredProcName = 'gpSelect_Object_ContractTradeMark_choice'
@@ -1434,6 +1649,30 @@ inherited ContractGoodsChoiceForm: TContractGoodsChoiceForm
         DataSet = MasterCDS_TM
       end>
     Params = <
+      item
+        Name = 'inContractId'
+        Value = Null
+        Component = GuidesContract
+        ComponentItem = 'Key'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inJuridicalId'
+        Value = Null
+        Component = GuidesJuridical
+        ComponentItem = 'Key'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inRetailId'
+        Value = Null
+        Component = GuidesRetail
+        ComponentItem = 'Key'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
       item
         Name = 'inisErased'
         Value = False
@@ -1488,8 +1727,8 @@ inherited ContractGoodsChoiceForm: TContractGoodsChoiceForm
       item
         Name = 'inContractId'
         Value = ''
-        Component = MasterCDS
-        ComponentItem = 'ContractId'
+        Component = GuidesContract
+        ComponentItem = 'Key'
         ParamType = ptInput
         MultiSelectSeparator = ','
       end
@@ -1502,8 +1741,8 @@ inherited ContractGoodsChoiceForm: TContractGoodsChoiceForm
         MultiSelectSeparator = ','
       end>
     PackSize = 1
-    Left = 704
-    Top = 160
+    Left = 760
+    Top = 152
   end
   object spErasedUnErased_TM: TdsdStoredProc
     StoredProcName = 'gpUpdateObjectIsErased'
@@ -1521,5 +1760,50 @@ inherited ContractGoodsChoiceForm: TContractGoodsChoiceForm
     PackSize = 1
     Left = 472
     Top = 360
+  end
+  object GuidesContractTag: TdsdGuides
+    KeyField = 'Id'
+    LookupControl = edContractTag
+    FormNameParam.Value = 'TContractTagForm'
+    FormNameParam.DataType = ftString
+    FormNameParam.MultiSelectSeparator = ','
+    FormName = 'TContractTagForm'
+    PositionDataSet = 'ClientDataSet'
+    Params = <
+      item
+        Name = 'Key'
+        Value = ''
+        Component = GuidesContractTag
+        ComponentItem = 'Key'
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'TextValue'
+        Value = ''
+        Component = GuidesContractTag
+        ComponentItem = 'TextValue'
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'MasterJuridicalId'
+        Value = ''
+        Component = GuidesJuridical
+        ComponentItem = 'Key'
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'MasterJuridicalName'
+        Value = ''
+        Component = GuidesJuridical
+        ComponentItem = 'TextValue'
+        DataType = ftString
+        MultiSelectSeparator = ','
+      end>
+    Left = 544
+    Top = 8
   end
 end

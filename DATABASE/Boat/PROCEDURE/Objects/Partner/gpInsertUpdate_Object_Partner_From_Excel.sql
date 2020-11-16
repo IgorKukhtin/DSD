@@ -46,10 +46,11 @@ BEGIN
            vbPartnerId := (SELECT Object.Id FROM Object WHERE Object.DescId = zc_Object_Partner() AND Object.ObjectCode = inCode);
        END IF;
        -- если не нашли по коду пробуем по наименованию
-       IF COALESCE (vbPartnerId,0) = 0 AND COALESCE (inName, '') <> ''
+       /*IF COALESCE (vbPartnerId,0) = 0 AND COALESCE (inName, '') <> ''
        THEN
            vbPartnerId := (SELECT Object.Id FROM Object WHERE Object.DescId = zc_Object_Partner() AND TRIM (Object.ValueData) Like TRIM (TRIM (inName)||' '||TRIM (inName2)||' '||TRIM (inName3)) );
        END IF;
+       */
    ELSE
        RETURN;
    END IF;

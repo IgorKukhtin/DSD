@@ -2,6 +2,7 @@
 
 DROP FUNCTION IF EXISTS gpInsertUpdate_Object_ImportSettings (Integer, Integer, TVarChar, Integer, Integer, Integer, Integer, Integer,Integer, Integer, Boolean, TVarChar, TBlob, TVarChar, TVarChar, TFloat, Boolean, TVarchar);
 
+
 CREATE OR REPLACE FUNCTION gpInsertUpdate_Object_ImportSettings(
  INOUT ioId                      Integer   ,   	-- ключ объекта <>
     IN inCode                    Integer   ,    -- Код объекта <>

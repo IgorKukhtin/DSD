@@ -2879,6 +2879,23 @@
           DataType = ftString
           ParamType = ptInput
           MultiSelectSeparator = ','
+        end
+        item
+          Name = 'ContractTagId'
+          Value = Null
+          Component = ClientDataSet
+          ComponentItem = 'ContractTagId'
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'ContractTagName'
+          Value = Null
+          Component = ClientDataSet
+          ComponentItem = 'ContractTagName'
+          DataType = ftString
+          ParamType = ptInput
+          MultiSelectSeparator = ','
         end>
       isShowModal = False
     end

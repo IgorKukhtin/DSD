@@ -48,7 +48,7 @@ BEGIN
    -- сохранили связь с <Бизнес>
    PERFORM lpInsertUpdate_ObjectLink(zc_ObjectLink_ArticleLoss_Business(), ioId, inBusinessId);
    -- сохранили связь с <Филиал>
-   PERFORM lpInsertUpdate_ObjectLink(zc_ObjectLink_ArticleLoss_Branch(), inId, inBranchId);
+   PERFORM lpInsertUpdate_ObjectLink(zc_ObjectLink_ArticleLoss_Branch(), ioId, inBranchId);
    -- сохранили cсвойство с <ПРимечание>
    PERFORM lpInsertUpdate_ObjectString(zc_ObjectString_ArticleLoss_Comment(), ioId, inComment);
   

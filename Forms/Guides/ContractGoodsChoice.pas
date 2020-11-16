@@ -75,6 +75,10 @@ type
     bbInsertRecord_TM: TdxBarButton;
     bbSetErased_TM: TdxBarButton;
     bbSetUnErased_TM: TdxBarButton;
+    GuidesContractTag: TdsdGuides;
+    edContractTag: TcxButtonEdit;
+    cxLabel2: TcxLabel;
+    actChoiceFormContract: TOpenChoiceForm;
   private
     { Private declarations }
   public

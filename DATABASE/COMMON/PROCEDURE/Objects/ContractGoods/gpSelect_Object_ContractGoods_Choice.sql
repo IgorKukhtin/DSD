@@ -17,6 +17,7 @@ RETURNS TABLE (Id Integer, Code INTEGER
              , PriceListId Integer, PriceListName TVarChar
              , GoodsId Integer, GoodsName TVarChar
              , GoodsKindId Integer, GoodsKindName TVarChar
+             , TradeMarkId Integer, TradeMarkName TVarChar
              , StartDate TDateTime, EndDate TDateTime
              , isErased boolean
 
@@ -150,6 +151,8 @@ BEGIN
            , Object_Goods.ValueData           AS GoodsName
            , Object_GoodsKind.Id              AS GoodsKindId
            , Object_GoodsKind.ValueData       AS GoodsKindName
+           , Object_TradeMark.Id              AS TradeMarkId
+           , Object_TradeMark.ValueData       AS TradeMarkName
            
            , Object_ContractGoods.StartDate ::TDateTime  AS StartDate
            , Object_ContractGoods.EndDate   ::TDateTime  AS EndDate
@@ -252,6 +255,11 @@ BEGIN
             LEFT JOIN Object AS Object_Goods ON Object_Goods.Id = Object_ContractGoods.GoodsId
             LEFT JOIN Object AS Object_GoodsKind ON Object_GoodsKind.Id = Object_ContractGoods.GoodsKindId
             LEFT JOIN Object AS Object_PriceList ON Object_PriceList.Id = Object_ContractGoods.PriceListId
+
+            LEFT JOIN ObjectLink AS ObjectLink_Goods_TradeMark
+                                 ON ObjectLink_Goods_TradeMark.ObjectId = Object_Goods.Id
+                                AND ObjectLink_Goods_TradeMark.DescId = zc_ObjectLink_Goods_TradeMark()
+            LEFT JOIN Object AS Object_TradeMark ON Object_TradeMark.Id = ObjectLink_Goods_TradeMark.ChildObjectId
 
             LEFT JOIN ObjectDate AS ObjectDate_Signing
                                  ON ObjectDate_Signing.ObjectId = Object_Contract_View.ContractId
