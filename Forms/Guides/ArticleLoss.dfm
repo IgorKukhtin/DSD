@@ -79,6 +79,20 @@ object ArticleLossForm: TArticleLossForm
         HeaderAlignmentVert = vaCenter
         Width = 92
       end
+      object BranchName: TcxGridDBColumn
+        Caption = #1060#1080#1083#1080#1072#1083
+        DataBinding.FieldName = 'BranchName'
+        PropertiesClassName = 'TcxButtonEditProperties'
+        Properties.Buttons = <
+          item
+            Action = BranchChoiceForm
+            Default = True
+            Kind = bkEllipsis
+          end>
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Width = 117
+      end
       object InfoMoneyCode: TcxGridDBColumn
         Caption = #1050#1086#1076' '#1059#1055
         DataBinding.FieldName = 'InfoMoneyCode'
@@ -490,6 +504,33 @@ object ArticleLossForm: TArticleLossForm
       Caption = 'actUpdateDataSet'
       DataSource = DataSource
     end
+    object BranchChoiceForm: TOpenChoiceForm
+      Category = 'DSDLib'
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      Caption = 'BranchChoiceForm'
+      FormName = 'TBranch_ObjectForm'
+      FormNameParam.Value = 'TBranch_ObjectForm'
+      FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
+      GuiParams = <
+        item
+          Name = 'Key'
+          Value = Null
+          Component = ClientDataSet
+          ComponentItem = 'BranchId'
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'TextValue'
+          Value = Null
+          Component = ClientDataSet
+          ComponentItem = 'BranchName'
+          DataType = ftString
+          MultiSelectSeparator = ','
+        end>
+      isShowModal = False
+    end
     object BusinessChoiceForm: TOpenChoiceForm
       Category = 'DSDLib'
       MoveParams = <>
@@ -614,6 +655,7 @@ object ArticleLossForm: TArticleLossForm
     ColumnAddOnList = <>
     ColumnEnterList = <>
     SummaryItemList = <>
+    PropertiesCellList = <>
     Left = 168
     Top = 216
   end
@@ -635,6 +677,14 @@ object ArticleLossForm: TArticleLossForm
         Value = Null
         Component = ClientDataSet
         ComponentItem = 'BusinessId'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inBranchId'
+        Value = Null
+        Component = ClientDataSet
+        ComponentItem = 'BranchId'
         ParamType = ptInput
         MultiSelectSeparator = ','
       end

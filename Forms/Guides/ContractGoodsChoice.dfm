@@ -1015,10 +1015,11 @@ inherited ContractGoodsChoiceForm: TContractGoodsChoiceForm
         ParamType = ptInput
         MultiSelectSeparator = ','
       end>
+    Left = 112
     Top = 64
   end
   inherited BarManager: TdxBarManager
-    Left = 136
+    Left = 176
     Top = 72
     DockControlHeights = (
       0
@@ -1258,7 +1259,7 @@ inherited ContractGoodsChoiceForm: TContractGoodsChoiceForm
         MultiSelectSeparator = ','
       end>
     Left = 216
-    Top = 152
+    Top = 184
   end
   object GuidesPriceListGoods: TdsdGuides
     KeyField = 'Id'

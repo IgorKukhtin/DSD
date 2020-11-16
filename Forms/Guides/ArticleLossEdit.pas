@@ -51,6 +51,9 @@ type
     cxLabel2: TcxLabel;
     ceBusiness: TcxButtonEdit;
     GuidesBusiness: TdsdGuides;
+    cxLabel3: TcxLabel;
+    edBranch: TcxButtonEdit;
+    GuidesBranch: TdsdGuides;
   private
     { Private declarations }
   public

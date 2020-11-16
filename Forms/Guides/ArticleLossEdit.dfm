@@ -2,7 +2,7 @@
   Left = 0
   Top = 0
   Caption = #1044#1086#1073#1072#1074#1080#1090#1100'/'#1080#1079#1084#1077#1085#1080#1090#1100'  '#1057#1090#1072#1090#1100#1102' '#1089#1087#1080#1089#1072#1085#1080#1103
-  ClientHeight = 333
+  ClientHeight = 382
   ClientWidth = 384
   Color = clBtnFace
   Font.Charset = DEFAULT_CHARSET
@@ -29,7 +29,7 @@
   end
   object cxButton1: TcxButton
     Left = 79
-    Top = 294
+    Top = 342
     Width = 75
     Height = 25
     Action = dsdInsertUpdateGuides
@@ -39,7 +39,7 @@
   end
   object cxButton2: TcxButton
     Left = 229
-    Top = 294
+    Top = 342
     Width = 75
     Height = 25
     Action = dsdFormClose
@@ -97,12 +97,12 @@
   end
   object cxLabel8: TcxLabel
     Left = 40
-    Top = 230
+    Top = 283
     Caption = #1055#1088#1080#1084#1077#1095#1072#1085#1080#1077
   end
   object ceComment: TcxTextEdit
     Left = 40
-    Top = 250
+    Top = 303
     TabOrder = 11
     Width = 296
   end
@@ -121,6 +121,23 @@
       end>
     Properties.ReadOnly = True
     TabOrder = 13
+    Width = 296
+  end
+  object cxLabel3: TcxLabel
+    Left = 40
+    Top = 232
+    Caption = #1060#1080#1083#1080#1072#1083
+  end
+  object edBranch: TcxButtonEdit
+    Left = 40
+    Top = 252
+    Properties.Buttons = <
+      item
+        Default = True
+        Kind = bkEllipsis
+      end>
+    Properties.ReadOnly = True
+    TabOrder = 15
     Width = 296
   end
   object ActionList: TActionList
@@ -215,6 +232,14 @@
         ComponentItem = 'Key'
         ParamType = ptInput
         MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inBranchId'
+        Value = Null
+        Component = GuidesBranch
+        ComponentItem = 'Key'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
       end>
     PackSize = 1
     Left = 344
@@ -305,6 +330,21 @@
         Name = 'BusinessName'
         Value = Null
         Component = GuidesBusiness
+        ComponentItem = 'TextValue'
+        DataType = ftString
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'BranchId'
+        Value = Null
+        Component = GuidesBranch
+        ComponentItem = 'Key'
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'BranchName'
+        Value = Null
+        Component = GuidesBranch
         ComponentItem = 'TextValue'
         DataType = ftString
         MultiSelectSeparator = ','
@@ -420,5 +460,35 @@
       end>
     Left = 224
     Top = 208
+  end
+  object GuidesBranch: TdsdGuides
+    KeyField = 'Id'
+    LookupControl = edBranch
+    FormNameParam.Value = 'TBranch_ObjectForm'
+    FormNameParam.DataType = ftString
+    FormNameParam.MultiSelectSeparator = ','
+    FormName = 'TBranch_ObjectForm'
+    PositionDataSet = 'ClientDataSet'
+    ParentDataSet = 'ClientDataSet'
+    Params = <
+      item
+        Name = 'Key'
+        Value = ''
+        Component = GuidesBranch
+        ComponentItem = 'Key'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'TextValue'
+        Value = ''
+        Component = GuidesBranch
+        ComponentItem = 'TextValue'
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end>
+    Left = 152
+    Top = 247
   end
 end

@@ -71,6 +71,8 @@ type
     BusinessChoiceForm: TOpenChoiceForm;
     ProtocolOpenForm: TdsdOpenForm;
     bbProtocolOpen: TdxBarButton;
+    BranchName: TcxGridDBColumn;
+    BranchChoiceForm: TOpenChoiceForm;
   private
     { Private declarations }
   public
