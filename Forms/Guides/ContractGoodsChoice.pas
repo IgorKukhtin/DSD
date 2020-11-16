@@ -22,7 +22,7 @@ uses
   dxSkinSpringTime, dxSkinStardust, dxSkinSummer2008, dxSkinTheAsphaltWorld,
   dxSkinValentine, dxSkinVS2010, dxSkinWhiteprint, dxSkinXmas2008Blue,
   cxContainer, dsdGuides, cxLabel, cxTextEdit, cxMaskEdit, Vcl.ExtCtrls,
-  cxCurrencyEdit;
+  cxCurrencyEdit, cxSplitter;
 
 type
   TContractGoodsChoiceForm = class(TAncestorGuidesForm)
@@ -52,6 +52,29 @@ type
     macInsertUpdate: TMultiAction;
     bbInsertUpdate: TdxBarButton;
     RefreshDispatcher: TRefreshDispatcher;
+    cxGrid1: TcxGrid;
+    cxGridDBTableView1: TcxGridDBTableView;
+    tmCode: TcxGridDBColumn;
+    tmTradeMarkName: TcxGridDBColumn;
+    tmContractCode: TcxGridDBColumn;
+    tmContractName: TcxGridDBColumn;
+    tmisErased: TcxGridDBColumn;
+    cxGridLevel1: TcxGridLevel;
+    cxRightSplitter: TcxSplitter;
+    MasterCDS_TM: TClientDataSet;
+    MasterDS_TM: TDataSource;
+    spSelect_TM: TdsdStoredProc;
+    DBViewAddOn_TM: TdsdDBViewAddOn;
+    spInsertUpdate_ContractTradeMark: TdsdStoredProc;
+    actChoiceFormTradeMark: TOpenChoiceForm;
+    actUpdateDataSet_TM: TdsdUpdateDataSet;
+    InsertRecord_TM: TInsertRecord;
+    dsdSetErased_TM: TdsdUpdateErased;
+    spErasedUnErased_TM: TdsdStoredProc;
+    dsdSetUnErased_TM: TdsdUpdateErased;
+    bbInsertRecord_TM: TdxBarButton;
+    bbSetErased_TM: TdxBarButton;
+    bbSetUnErased_TM: TdxBarButton;
   private
     { Private declarations }
   public

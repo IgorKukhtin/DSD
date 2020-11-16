@@ -388,7 +388,13 @@ inherited ContractTradeMarkForm: TContractTradeMarkForm
       end
     end
   end
+  inherited UserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn
+    Left = 83
+    Top = 216
+  end
   inherited ActionList: TActionList
+    Left = 143
+    Top = 255
     inherited actInsert: TInsertUpdateChoiceAction
       FormName = 'TContractTradeMarkEditForm'
       FormNameParam.Value = 'TContractTradeMarkEditForm'
@@ -579,7 +585,7 @@ inherited ContractTradeMarkForm: TContractTradeMarkForm
     Top = 224
   end
   inherited PopupMenu: TPopupMenu
-    Left = 128
-    Top = 256
+    Left = 184
+    Top = 280
   end
 end

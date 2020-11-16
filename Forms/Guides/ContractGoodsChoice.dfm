@@ -1,30 +1,30 @@
 inherited ContractGoodsChoiceForm: TContractGoodsChoiceForm
   Caption = #1057#1087#1088#1072#1074#1086#1095#1085#1080#1082' <'#1058#1086#1074#1072#1088#1099' '#1074' '#1076#1086#1075#1086#1074#1086#1088#1072#1093' ('#1057#1087#1077#1094#1080#1092#1080#1082#1072#1094#1080#1103')>'
-  ClientHeight = 374
+  ClientHeight = 558
   ClientWidth = 888
   AddOnFormData.isAlwaysRefresh = True
   AddOnFormData.isSingle = False
   AddOnFormData.ChoiceAction = dsdChoiceGuides
   AddOnFormData.Params = FormParams
   ExplicitWidth = 904
-  ExplicitHeight = 412
+  ExplicitHeight = 596
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
     Top = 57
     Width = 888
-    Height = 317
+    Height = 501
     ExplicitTop = 57
     ExplicitWidth = 888
     ExplicitHeight = 317
-    ClientRectBottom = 317
+    ClientRectBottom = 501
     ClientRectRight = 888
     inherited tsMain: TcxTabSheet
       ExplicitWidth = 888
       ExplicitHeight = 317
       inherited cxGrid: TcxGrid
-        Width = 888
-        Height = 317
+        Width = 684
+        Height = 501
         ExplicitWidth = 888
         ExplicitHeight = 317
         inherited cxGridDBTableView: TcxGridDBTableView
@@ -565,6 +565,103 @@ inherited ContractGoodsChoiceForm: TContractGoodsChoiceForm
           end
         end
       end
+      object cxGrid1: TcxGrid
+        Left = 688
+        Top = 0
+        Width = 200
+        Height = 501
+        Align = alRight
+        PopupMenu = PopupMenu
+        TabOrder = 1
+        object cxGridDBTableView1: TcxGridDBTableView
+          Navigator.Buttons.CustomButtons = <>
+          DataController.DataSource = MasterDS_TM
+          DataController.Filter.Options = [fcoCaseInsensitive]
+          DataController.Summary.DefaultGroupSummaryItems = <>
+          DataController.Summary.FooterSummaryItems = <
+            item
+              Format = #1042#1089#1077#1075#1086' '#1089#1090#1088#1086#1082': ,0'
+              Kind = skCount
+              Column = tmTradeMarkName
+            end>
+          DataController.Summary.SummaryGroups = <>
+          Images = dmMain.SortImageList
+          OptionsBehavior.GoToNextCellOnEnter = True
+          OptionsBehavior.FocusCellOnCycle = True
+          OptionsCustomize.ColumnHiding = True
+          OptionsCustomize.ColumnsQuickCustomization = True
+          OptionsCustomize.DataRowSizing = True
+          OptionsData.Deleting = False
+          OptionsData.DeletingConfirmation = False
+          OptionsView.Footer = True
+          OptionsView.GroupSummaryLayout = gslAlignWithColumns
+          OptionsView.HeaderAutoHeight = True
+          OptionsView.Indicator = True
+          Styles.StyleSheet = dmMain.cxGridTableViewStyleSheet
+          object tmCode: TcxGridDBColumn
+            Caption = #1050#1086#1076
+            DataBinding.FieldName = 'Code'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 50
+          end
+          object tmTradeMarkName: TcxGridDBColumn
+            Caption = #1058#1086#1088#1075#1086#1074#1072#1103' '#1084#1072#1088#1082#1072
+            DataBinding.FieldName = 'TradeMarkName'
+            PropertiesClassName = 'TcxButtonEditProperties'
+            Properties.Buttons = <
+              item
+                Action = actChoiceFormTradeMark
+                Default = True
+                Kind = bkEllipsis
+              end>
+            Properties.ReadOnly = True
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 123
+          end
+          object tmContractCode: TcxGridDBColumn
+            Caption = #1050#1086#1076' '#1076#1086#1075'.'
+            DataBinding.FieldName = 'ContractCode'
+            Visible = False
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 55
+          end
+          object tmContractName: TcxGridDBColumn
+            Caption = #8470' '#1076#1086#1075'.'
+            DataBinding.FieldName = 'ContractName'
+            Visible = False
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 131
+          end
+          object tmisErased: TcxGridDBColumn
+            Caption = #1059#1076#1072#1083#1077#1085
+            DataBinding.FieldName = 'isErased'
+            Visible = False
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 92
+          end
+        end
+        object cxGridLevel1: TcxGridLevel
+          GridView = cxGridDBTableView1
+        end
+      end
+      object cxRightSplitter: TcxSplitter
+        Left = 684
+        Top = 0
+        Width = 4
+        Height = 501
+        AlignSplitter = salRight
+        Control = cxGrid1
+        ExplicitLeft = -4
+      end
     end
   end
   object Panel: TPanel [1]
@@ -643,7 +740,20 @@ inherited ContractGoodsChoiceForm: TContractGoodsChoiceForm
     TabOrder = 7
     Width = 131
   end
+  inherited UserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn
+    Top = 304
+  end
   inherited ActionList: TActionList
+    Top = 223
+    inherited actRefresh: TdsdDataSetRefresh
+      StoredProcList = <
+        item
+          StoredProc = spSelect
+        end
+        item
+          StoredProc = spSelect_TM
+        end>
+    end
     inherited actInsert: TInsertUpdateChoiceAction
       FormName = 'TContractGoodsEditForm'
       FormNameParam.Value = 'TContractGoodsEditForm'
@@ -699,6 +809,9 @@ inherited ContractGoodsChoiceForm: TContractGoodsChoiceForm
       StoredProcList = <
         item
           StoredProc = spSelect
+        end
+        item
+          StoredProc = spSelect_TM
         end>
       Caption = #1055#1086#1082#1072#1079#1072#1090#1100' '#1074#1077#1089#1100' '#1089#1087#1080#1089#1086#1082
       Hint = #1055#1086#1082#1072#1079#1072#1090#1100' '#1074#1077#1089#1100' '#1089#1087#1080#1089#1086#1082
@@ -718,6 +831,9 @@ inherited ContractGoodsChoiceForm: TContractGoodsChoiceForm
       StoredProcList = <
         item
           StoredProc = spSelect
+        end
+        item
+          StoredProc = spSelect_TM
         end>
       Caption = #1055#1086#1082#1072#1079#1072#1090#1100' '#1074#1089#1077
       Hint = #1055#1086#1082#1072#1079#1072#1090#1100' '#1074#1089#1077
@@ -729,6 +845,33 @@ inherited ContractGoodsChoiceForm: TContractGoodsChoiceForm
       CaptionFalse = #1055#1086#1082#1072#1079#1072#1090#1100' '#1074#1089#1077
       ImageIndexTrue = 65
       ImageIndexFalse = 64
+    end
+    object actChoiceFormTradeMark: TOpenChoiceForm
+      Category = 'DSDLib'
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      Caption = 'PaidKindChoiceForm'
+      FormName = 'TTradeMarkForm'
+      FormNameParam.Value = 'TTradeMarkForm'
+      FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
+      GuiParams = <
+        item
+          Name = 'Key'
+          Value = Null
+          Component = MasterCDS_TM
+          ComponentItem = 'TradeMarkId'
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'TextValue'
+          Value = Null
+          Component = MasterCDS_TM
+          ComponentItem = 'TradeMarkName'
+          DataType = ftString
+          MultiSelectSeparator = ','
+        end>
+      isShowModal = True
     end
     object actInsertUpdate: TdsdExecStoredProc
       Category = 'DSDLib'
@@ -756,6 +899,61 @@ inherited ContractGoodsChoiceForm: TContractGoodsChoiceForm
       Caption = 'macInsertUpdate'
       Hint = #1047#1072#1075#1088#1091#1079#1080#1090#1100' '#1094#1077#1085#1099' '#1080#1079' '#1087#1088#1072#1081#1089#1072' '#1076#1083#1103' '#1074#1099#1073#1088#1072#1085#1085#1086#1075#1086' '#1076#1086#1075#1086#1074#1086#1088#1072
       ImageIndex = 27
+    end
+    object actUpdateDataSet_TM: TdsdUpdateDataSet
+      Category = 'DSDLib'
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      StoredProc = spInsertUpdate_ContractTradeMark
+      StoredProcList = <
+        item
+          StoredProc = spInsertUpdate_ContractTradeMark
+        end
+        item
+          StoredProc = spSelect_TM
+        end>
+      Caption = 'actUpdateDataSet_TM'
+      DataSource = MasterDS_TM
+    end
+    object InsertRecord_TM: TInsertRecord
+      Category = 'DSDLib'
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      View = cxGridDBTableView1
+      Action = actChoiceFormTradeMark
+      Params = <>
+      Caption = #1044#1086#1073#1072#1074#1080#1090#1100' <'#1058#1086#1088#1075#1086#1074#1091#1102' '#1084#1072#1088#1082#1091'>'
+      Hint = #1044#1086#1073#1072#1074#1080#1090#1100' <'#1058#1086#1088#1075#1086#1074#1091#1102' '#1084#1072#1088#1082#1091'>'
+      ImageIndex = 0
+    end
+    object dsdSetErased_TM: TdsdUpdateErased
+      Category = 'DSDLib'
+      MoveParams = <>
+      StoredProc = spErasedUnErased_TM
+      StoredProcList = <
+        item
+          StoredProc = spErasedUnErased_TM
+        end>
+      Caption = #1059#1076#1072#1083#1080#1090#1100' '#1058#1086#1088#1075#1086#1074#1091#1102' '#1084#1072#1088#1082#1091
+      Hint = #1059#1076#1072#1083#1080#1090#1100' '#1058#1086#1088#1075#1086#1074#1091#1102' '#1084#1072#1088#1082#1091
+      ImageIndex = 2
+      ErasedFieldName = 'isErased'
+      DataSource = MasterDS_TM
+    end
+    object dsdSetUnErased_TM: TdsdUpdateErased
+      Category = 'DSDLib'
+      MoveParams = <>
+      StoredProc = spErasedUnErased_TM
+      StoredProcList = <
+        item
+          StoredProc = spErasedUnErased_TM
+        end>
+      Caption = #1042#1086#1089#1089#1090#1072#1085#1086#1074#1080#1090#1100' '#1058#1086#1088#1075#1086#1074#1091#1102' '#1084#1072#1088#1082#1091
+      Hint = #1042#1086#1089#1089#1090#1072#1085#1086#1074#1080#1090#1100' '#1058#1086#1088#1075#1086#1074#1091#1102' '#1084#1072#1088#1082#1091
+      ImageIndex = 8
+      ErasedFieldName = 'isErased'
+      isSetErased = False
+      DataSource = MasterDS_TM
     end
   end
   inherited MasterDS: TDataSource
@@ -852,6 +1050,30 @@ inherited ContractGoodsChoiceForm: TContractGoodsChoiceForm
         end
         item
           Visible = True
+          ItemName = 'dxBarStatic'
+        end
+        item
+          Visible = True
+          ItemName = 'bbInsertRecord_TM'
+        end
+        item
+          Visible = True
+          ItemName = 'bbSetErased_TM'
+        end
+        item
+          Visible = True
+          ItemName = 'bbSetUnErased_TM'
+        end
+        item
+          Visible = True
+          ItemName = 'dxBarStatic'
+        end
+        item
+          Visible = True
+          ItemName = 'dxBarStatic'
+        end
+        item
+          Visible = True
           ItemName = 'bbShowAll'
         end
         item
@@ -909,6 +1131,20 @@ inherited ContractGoodsChoiceForm: TContractGoodsChoiceForm
       Caption = #1047#1072#1075#1088#1091#1079#1080#1090#1100' '#1094#1077#1085#1099
       Category = 0
     end
+    object bbInsertRecord_TM: TdxBarButton
+      Action = InsertRecord_TM
+      Category = 0
+    end
+    object bbSetErased_TM: TdxBarButton
+      Action = dsdSetErased_TM
+      Caption = #1059#1076#1072#1083#1080#1090#1100' <'#1058#1086#1088#1075#1086#1074#1091#1102' '#1084#1072#1088#1082#1091'>'
+      Category = 0
+    end
+    object bbSetUnErased_TM: TdxBarButton
+      Action = dsdSetUnErased_TM
+      Caption = #1042#1086#1089#1089#1090#1072#1085#1086#1074#1080#1090#1100' <'#1058#1086#1088#1075#1086#1074#1091#1102' '#1084#1072#1088#1082#1091'>'
+      Category = 0
+    end
   end
   inherited DBViewAddOn: TdsdDBViewAddOn
     OnDblClickActionList = <
@@ -919,7 +1155,7 @@ inherited ContractGoodsChoiceForm: TContractGoodsChoiceForm
     Top = 224
   end
   inherited PopupMenu: TPopupMenu
-    Left = 128
+    Left = 152
     Top = 256
   end
   object GuidesRetail: TdsdGuides
@@ -1021,8 +1257,8 @@ inherited ContractGoodsChoiceForm: TContractGoodsChoiceForm
         ParamType = ptInput
         MultiSelectSeparator = ','
       end>
-    Left = 144
-    Top = 8
+    Left = 216
+    Top = 152
   end
   object GuidesPriceListGoods: TdsdGuides
     KeyField = 'Id'
@@ -1172,5 +1408,117 @@ inherited ContractGoodsChoiceForm: TContractGoodsChoiceForm
       end>
     Left = 504
     Top = 136
+  end
+  object MasterCDS_TM: TClientDataSet
+    Aggregates = <>
+    FilterOptions = [foCaseInsensitive]
+    IndexFieldNames = 'ContractId'
+    MasterFields = 'ContractId'
+    MasterSource = MasterDS
+    PacketRecords = 0
+    Params = <>
+    Left = 616
+    Top = 296
+  end
+  object MasterDS_TM: TDataSource
+    DataSet = MasterCDS_TM
+    Left = 640
+    Top = 360
+  end
+  object spSelect_TM: TdsdStoredProc
+    StoredProcName = 'gpSelect_Object_ContractTradeMark_choice'
+    DataSet = MasterCDS_TM
+    DataSets = <
+      item
+        DataSet = MasterCDS_TM
+      end>
+    Params = <
+      item
+        Name = 'inisErased'
+        Value = False
+        Component = actShowErased
+        DataType = ftBoolean
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end>
+    PackSize = 1
+    Left = 776
+    Top = 216
+  end
+  object DBViewAddOn_TM: TdsdDBViewAddOn
+    ErasedFieldName = 'isErased'
+    View = cxGridDBTableView1
+    OnDblClickActionList = <
+      item
+        Action = actUpdate
+      end>
+    ActionItemList = <>
+    SortImages = dmMain.SortImageList
+    OnlyEditingCellOnEnter = False
+    ColorRuleList = <>
+    ColumnAddOnList = <>
+    ColumnEnterList = <>
+    SummaryItemList = <>
+    PropertiesCellList = <>
+    Left = 768
+    Top = 320
+  end
+  object spInsertUpdate_ContractTradeMark: TdsdStoredProc
+    StoredProcName = 'gpInsertUpdate_Object_ContractTradeMark'
+    DataSets = <>
+    OutputType = otResult
+    Params = <
+      item
+        Name = 'ioId'
+        Value = Null
+        Component = MasterCDS_TM
+        ComponentItem = 'Id'
+        ParamType = ptInputOutput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inCode'
+        Value = 0.000000000000000000
+        Component = MasterCDS_TM
+        ComponentItem = 'Code'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inContractId'
+        Value = ''
+        Component = MasterCDS
+        ComponentItem = 'ContractId'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inTradeMarkId'
+        Value = ''
+        Component = MasterCDS_TM
+        ComponentItem = 'TradeMarkId'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end>
+    PackSize = 1
+    Left = 704
+    Top = 160
+  end
+  object spErasedUnErased_TM: TdsdStoredProc
+    StoredProcName = 'gpUpdateObjectIsErased'
+    DataSets = <>
+    OutputType = otResult
+    Params = <
+      item
+        Name = 'inObjectId'
+        Value = Null
+        Component = MasterCDS_TM
+        ComponentItem = 'Id'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end>
+    PackSize = 1
+    Left = 472
+    Top = 360
   end
 end

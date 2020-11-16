@@ -895,6 +895,7 @@ inherited SaleExternalJournalForm: TSaleExternalJournalForm
     end
     object bbStartLoad: TdxBarButton
       Action = actStartLoad
+      Caption = #1040#1096#1072#1085' '#1047#1072#1075#1088#1091#1079#1080#1090#1100' '#1080#1079' '#1101#1082#1089#1077#1083#1103
       Category = 0
     end
     object bbStartLoadNovus: TdxBarButton
