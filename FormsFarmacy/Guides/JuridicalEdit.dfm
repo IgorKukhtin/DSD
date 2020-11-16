@@ -338,7 +338,6 @@
           Height = 342
           Align = alClient
           TabOrder = 0
-          ExplicitWidth = 667
           object ContractGridDBTableView: TcxGridDBTableView
             Navigator.Buttons.CustomButtons = <>
             DataController.DataSource = ContractDS
@@ -515,7 +514,7 @@
   end
   object cbisDeferred: TcxCheckBox [15]
     Left = 8
-    Top = 320
+    Top = 310
     Caption = #1080#1089#1082#1083#1102#1095#1077#1085#1080#1077' - '#1079#1072#1082#1072#1079' '#1074#1089#1077#1075#1076#1072' "'#1054#1090#1083#1086#1078#1077#1085'"'
     TabOrder = 15
     Width = 270
@@ -530,7 +529,7 @@
     Top = 267
     Properties.DecimalPlaces = 0
     Properties.DisplayFormat = '0'
-    TabOrder = 20
+    TabOrder = 19
     Width = 120
   end
   object ceCodeMedicard: TcxCurrencyEdit [18]
@@ -545,6 +544,13 @@
     Left = 158
     Top = 250
     Caption = '"Medicard":'
+  end
+  object cbUseReprice: TcxCheckBox [20]
+    Left = 8
+    Top = 329
+    Caption = #1059#1095#1072#1089#1090#1074#1091#1102#1090' '#1074' '#1072#1074#1090#1086#1087#1077#1088#1077#1086#1094#1077#1085#1082#1077
+    TabOrder = 24
+    Width = 270
   end
   inherited UserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn
     Left = 467
@@ -921,6 +927,14 @@
         Component = ceCodeMedicard
         ParamType = ptInput
         MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inisUseReprice'
+        Value = Null
+        Component = cbUseReprice
+        DataType = ftBoolean
+        ParamType = ptInput
+        MultiSelectSeparator = ','
       end>
     PackSize = 1
     Left = 240
@@ -1067,6 +1081,13 @@
         Name = 'CodeMedicard'
         Value = Null
         Component = ceCodeMedicard
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'isUseReprice'
+        Value = Null
+        Component = cbUseReprice
+        DataType = ftBoolean
         MultiSelectSeparator = ','
       end>
     PackSize = 1

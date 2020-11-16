@@ -127,6 +127,7 @@ type
     ceCodeMedicard: TcxCurrencyEdit;
     cxLabel26: TcxLabel;
     isPartialPay: TcxGridDBColumn;
+    cbUseReprice: TcxCheckBox;
   private
     { Private declarations }
   public

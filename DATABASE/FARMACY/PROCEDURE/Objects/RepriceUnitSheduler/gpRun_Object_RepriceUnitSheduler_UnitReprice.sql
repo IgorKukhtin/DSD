@@ -67,6 +67,7 @@ BEGIN
         istop_goods boolean,
         ispromo boolean,
         isResolution_224 Boolean,
+        isUseReprice Boolean,
         reprice boolean,
         isSP boolean
       ) ON COMMIT DROP;
@@ -187,6 +188,7 @@ BEGIN
                                   istop_goods,
                                   ispromo,
                                   isResolution_224,
+                                  isUseReprice,
                                   reprice,
                                   isSP
                                  )
@@ -230,6 +232,7 @@ BEGIN
            istop_goods,
            ispromo,
            isResolution_224,
+           isUseReprice,
            reprice,
            COALESCE (tmpGoodsSP.GoodsId, 0) <> 0
     FROM gpSelect_AllGoodsPrice(inUnitId := vbUnitID, inUnitId_to := 0, inMinPercent := vbPercentDifference,
@@ -263,8 +266,9 @@ BEGIN
       AND PriceDiff >= - vbPercentRepriceMin
        OR IsTop_Goods = TRUE
       AND isSP = FALSE
-      AND isResolution_224 = FALSE);
-
+      AND isResolution_224 = FALSE)
+      AND isUseReprice = TRUE;
+      
     PERFORM gpInsertUpdate_MovementItem_Reprice_Clipped(
       ioID := 0 ,
       inGoodsId := tmpAllGoodsPrice.Id,
@@ -288,7 +292,25 @@ BEGIN
       AND (PriceDiff > vbPercentRepriceMax
        OR PriceDiff < - vbPercentRepriceMin)
       AND NOT (IsTop_Goods = TRUE AND isSP = FALSE AND isResolution_224 = FALSE)
-       OR Reprice = False AND isResolution_224 = True;
+       OR Reprice = False AND isResolution_224 = True
+       OR Reprice = True AND isUseReprice = FALSE;
+
+/*
+raise notice 'All: % % %', (select Count(*) from tmpAllGoodsPrice where Reprice = True)
+                         , (select Count(*) from tmpAllGoodsPrice where Reprice = True
+      AND (PriceDiff <= vbPercentRepriceMax
+      AND PriceDiff >= - vbPercentRepriceMin
+       OR IsTop_Goods = TRUE
+      AND isSP = FALSE
+      AND isResolution_224 = FALSE)
+      AND isUseReprice = TRUE)
+                         , (select Count(*) from tmpAllGoodsPrice where Reprice = True
+      AND (PriceDiff > vbPercentRepriceMax
+       OR PriceDiff < - vbPercentRepriceMin)
+      AND NOT (IsTop_Goods = TRUE AND isSP = FALSE AND isResolution_224 = FALSE)
+       OR Reprice = False AND isResolution_224 = True
+       OR Reprice = True AND isUseReprice = FALSE);   */   
+
 
   EXCEPTION
      WHEN others THEN

@@ -201,6 +201,16 @@ object Report_PriceCheckForm: TReport_PriceCheckForm
         HeaderAlignmentVert = vaCenter
         Width = 79
       end
+      object JuridicalPriceAverage: TcxGridDBColumn
+        Caption = #1057#1088#1077#1076#1085#1103#1103' '#1094#1077#1085#1072'  '#1080#1079' '#1087#1088#1072#1081#1089#1086#1074' '#1089' '#1053#1044#1057
+        DataBinding.FieldName = 'JuridicalPriceAverage'
+        PropertiesClassName = 'TcxCurrencyEditProperties'
+        Properties.DisplayFormat = ',0.00;-,0.00; ;'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Options.Editing = False
+        Width = 76
+      end
       object Price: TcxGridDBColumn
         DataBinding.FieldName = 'Price'
         PropertiesClassName = 'TcxCurrencyEditProperties'

@@ -25,7 +25,6 @@ type
     GoodsName: TcxGridDBColumn;
     Amount: TcxGridDBColumn;
     dxBarButton1: TdxBarButton;
-    spFormPartialSale: TdsdStoredProc;
     edJuridicalName: TcxTextEdit;
     cxLabel3: TcxLabel;
     edFromName: TcxTextEdit;
@@ -36,6 +35,8 @@ type
     Summ: TcxGridDBColumn;
     PriceSale: TcxGridDBColumn;
     SummSale: TcxGridDBColumn;
+    OperDate: TcxGridDBColumn;
+    InvNumber: TcxGridDBColumn;
   private
     { Private declarations }
   public

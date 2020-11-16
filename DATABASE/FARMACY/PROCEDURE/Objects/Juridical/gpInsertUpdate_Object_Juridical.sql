@@ -1,111 +1,218 @@
--- Function: gpInsertUpdate_Object_Juridical()
+-- Function: gpSelect_Object_Juridical()
 
-DROP FUNCTION IF EXISTS gpInsertUpdate_Object_Juridical (Integer, Integer, TVarChar, Boolean, Integer, tvarchar);
-DROP FUNCTION IF EXISTS gpInsertUpdate_Object_Juridical (Integer, Integer, TVarChar, Boolean, Integer, TFloat, tvarchar);
-DROP FUNCTION IF EXISTS gpInsertUpdate_Object_Juridical (Integer, Integer, TVarChar, Boolean, Integer, TFloat, TFloat, tvarchar);
-DROP FUNCTION IF EXISTS gpInsertUpdate_Object_Juridical (Integer, Integer, TVarChar, Boolean, Integer, TFloat, TFloat, TFloat, TVarChar, TVarChar, TVarChar);
-DROP FUNCTION IF EXISTS gpInsertUpdate_Object_Juridical (Integer, Integer, TVarChar, Boolean, Integer, TFloat, TFloat, TFloat, TVarChar, TVarChar, Boolean, TVarChar);
-DROP FUNCTION IF EXISTS gpInsertUpdate_Object_Juridical (Integer, Integer, TVarChar, Boolean, Integer, TFloat, TFloat, TFloat, TVarChar, TVarChar, Boolean, Boolean, TVarChar);
-DROP FUNCTION IF EXISTS gpInsertUpdate_Object_Juridical (Integer, Integer, TVarChar, Boolean, Integer, TFloat, TFloat, TFloat, TVarChar, TVarChar, Boolean, Boolean, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar);
-DROP FUNCTION IF EXISTS gpInsertUpdate_Object_Juridical (Integer, Integer, TVarChar, Boolean, Integer, TFloat, TFloat, TFloat, TVarChar, TVarChar, Boolean, Boolean, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar);
-DROP FUNCTION IF EXISTS gpInsertUpdate_Object_Juridical (Integer, Integer, TVarChar, Boolean, Integer, TFloat, TFloat, TFloat, TVarChar, TVarChar, Boolean, Boolean, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar, Integer, TVarChar);
-DROP FUNCTION IF EXISTS gpInsertUpdate_Object_Juridical (Integer, Integer, TVarChar, Boolean, Integer, TFloat, TFloat, TFloat, TVarChar, TVarChar, Boolean, Boolean, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar, Integer, Integer, TVarChar);
+DROP FUNCTION IF EXISTS gpSelect_Object_Juridical(TVarChar);
 
-CREATE OR REPLACE FUNCTION gpInsertUpdate_Object_Juridical(
- INOUT ioId                      Integer   ,   	-- ключ объекта <Подразделение>
-    IN inCode                    Integer   ,    -- Код объекта <Подразделение>
-    IN inName                    TVarChar  ,    -- Название объекта <Подразделение>
-    IN inisCorporate             Boolean   ,    -- Признак наша ли собственность это юридическое лицо 
-    IN inRetailId                Integer   ,    -- ссылка на подразделение
-    IN inPercent                 TFloat    ,    
-    IN inPayOrder                TFloat    ,    -- Очередь платежа
-    IN inisLoadBarcode           Boolean   ,    -- импорт штрих-кодов
-    IN inisDeferred              Boolean   ,    -- Исключение - заказ всегда "Отложен"
-    IN inCBName                  TVarChar  ,    -- Полное название поставщика для клиент банка
-    IN inCBMFO                   TVarChar  ,    -- МФО для клиент банка
-    IN inCBAccount               TVarChar  ,    -- Расчетный счет для клиент банка
-    IN inCBAccountOld            TVarChar  ,    -- Расчетный счет стврый для клиент банка
-    IN inCBPurposePayment        TVarChar  ,    -- Назначение платежа для клиент банка
-    IN inCodeRazom               Integer   ,    -- Код в системе "РАЗОМ"
-    IN inCodeMedicard            Integer   ,    -- Код в системе "Medicard"
-    IN inSession                 TVarChar       -- сессия пользователя
+CREATE OR REPLACE FUNCTION gpSelect_Object_Juridical(
+    IN inSession     TVarChar       -- сессия пользователя
 )
-  RETURNS Integer AS
+RETURNS TABLE (Id Integer, Code Integer, Name TVarChar, --OKPO TVarChar,
+               RetailId Integer, RetailName TVarChar,
+               isCorporate boolean,
+               Percent TFloat, PayOrder TFloat,
+               isLoadBarcode Boolean,
+               isDeferred Boolean,
+               isUseReprice Boolean,
+               CBName TVarChar, CBMFO TVarChar, CBAccount TVarChar, CBPurposePayment TVarChar,
+               isErased boolean,
+               
+               StartDate TDateTime, 
+               FullName TVarChar, JuridicalAddress TVarChar, OKPO TVarChar, INN TVarChar,
+               NumberVAT TVarChar, AccounterName TVarChar, BankAccount TVarChar, Phone TVarChar,
+               MainName TVarChar, MainName_Cut TVarChar,
+               Reestr TVarChar, Decision TVarChar, License TVarChar, 
+               DecisionDate TDateTime) AS
 $BODY$
-   DECLARE vbUserId Integer;
-   DECLARE vbCode_calc Integer;  
-
 BEGIN
+
    -- проверка прав пользователя на вызов процедуры
-   -- vbUserId:= lpCheckRight (inSession, zc_Enum_Process_InsertUpdate_Object_Juridical());
-   vbUserId:= inSession;
+   -- PERFORM lpCheckRight(inSession, zc_Enum_Process_Juridical());
 
-   -- Если код не установлен, определяем его как последний+1 (!!! ПОТОМ НАДО БУДЕТ ЭТО ВКЛЮЧИТЬ !!!)
-   vbCode_calc:= lfGet_ObjectCode (inCode, zc_Object_Juridical());
-   -- !!! IF COALESCE (inCode, 0) = 0  THEN vbCode_calc := NULL; ELSE vbCode_calc := inCode; END IF; -- !!! А ЭТО УБРАТЬ !!!
-   
-   -- проверка уникальности <Наименование>
-   PERFORM lpCheckUnique_Object_ValueData (ioId, zc_Object_Juridical(), inName);
-   -- проверка уникальности <Код>
-   PERFORM lpCheckUnique_Object_ObjectCode (ioId, zc_Object_Juridical(), vbCode_calc);
+   RETURN QUERY
 
-   -- сохранили <Объект>
-   ioId := lpInsertUpdate_Object (ioId, zc_Object_Juridical(), vbCode_calc, inName);
+   WITH tmpObjectHistory AS (SELECT *
+                             FROM ObjectHistory
+                             WHERE ObjectHistory.DescId = zc_ObjectHistory_JuridicalDetails()
+                               AND ObjectHistory.enddate::timestamp with time zone = zc_dateend()::timestamp with time zone
+                             )
+      , tmpJuridicalDetails AS (SELECT ObjectHistory_JuridicalDetails.ObjectId                                        AS JuridicalId
+                                  , COALESCE(ObjectHistory_JuridicalDetails.StartDate, zc_DateStart())             AS StartDate
+                                  , ObjectHistoryString_JuridicalDetails_FullName.ValueData                        AS FullName
+                                  , ObjectHistoryString_JuridicalDetails_JuridicalAddress.ValueData                AS JuridicalAddress
+                                  , ObjectHistoryString_JuridicalDetails_OKPO.ValueData                            AS OKPO
+                                  , ObjectHistoryString_JuridicalDetails_INN.ValueData                             AS INN
+                                  , ObjectHistoryString_JuridicalDetails_NumberVAT.ValueData                       AS NumberVAT
+                                  , ObjectHistoryString_JuridicalDetails_AccounterName.ValueData                   AS AccounterName
+                                  , ObjectHistoryString_JuridicalDetails_BankAccount.ValueData                     AS BankAccount
+                                  , ObjectHistoryString_JuridicalDetails_Phone.ValueData                           AS Phone
+                       
+                                  , ObjectHistoryString_JuridicalDetails_MainName.ValueData                        AS MainName
+                                  , ObjectHistoryString_JuridicalDetails_MainName_Cut.ValueData                    AS MainName_Cut
+                                  , ObjectHistoryString_JuridicalDetails_Reestr.ValueData                          AS Reestr
+                                  , ObjectHistoryString_JuridicalDetails_Decision.ValueData                        AS Decision
+                                  , ObjectHistoryString_JuridicalDetails_License.ValueData                         AS License
+                                  , ObjectHistoryDate_JuridicalDetails_Decision.ValueData                          AS DecisionDate
+                       
+                             FROM tmpObjectHistory AS ObjectHistory_JuridicalDetails
+                                  LEFT JOIN ObjectHistoryString AS ObjectHistoryString_JuridicalDetails_FullName
+                                         ON ObjectHistoryString_JuridicalDetails_FullName.ObjectHistoryId = ObjectHistory_JuridicalDetails.Id
+                                        AND ObjectHistoryString_JuridicalDetails_FullName.DescId = zc_ObjectHistoryString_JuridicalDetails_FullName()
+                                  LEFT JOIN ObjectHistoryString AS ObjectHistoryString_JuridicalDetails_JuridicalAddress
+                                         ON ObjectHistoryString_JuridicalDetails_JuridicalAddress.ObjectHistoryId = ObjectHistory_JuridicalDetails.Id
+                                        AND ObjectHistoryString_JuridicalDetails_JuridicalAddress.DescId = zc_ObjectHistoryString_JuridicalDetails_JuridicalAddress()
+                                  LEFT JOIN ObjectHistoryString AS ObjectHistoryString_JuridicalDetails_OKPO
+                                         ON ObjectHistoryString_JuridicalDetails_OKPO.ObjectHistoryId = ObjectHistory_JuridicalDetails.Id
+                                        AND ObjectHistoryString_JuridicalDetails_OKPO.DescId = zc_ObjectHistoryString_JuridicalDetails_OKPO()
+                                  LEFT JOIN ObjectHistoryString AS ObjectHistoryString_JuridicalDetails_INN
+                                         ON ObjectHistoryString_JuridicalDetails_INN.ObjectHistoryId = ObjectHistory_JuridicalDetails.Id
+                                        AND ObjectHistoryString_JuridicalDetails_INN.DescId = zc_ObjectHistoryString_JuridicalDetails_INN()
+                                  LEFT JOIN ObjectHistoryString AS ObjectHistoryString_JuridicalDetails_NumberVAT
+                                         ON ObjectHistoryString_JuridicalDetails_NumberVAT.ObjectHistoryId = ObjectHistory_JuridicalDetails.Id
+                                        AND ObjectHistoryString_JuridicalDetails_NumberVAT.DescId = zc_ObjectHistoryString_JuridicalDetails_NumberVAT()
+                                  LEFT JOIN ObjectHistoryString AS ObjectHistoryString_JuridicalDetails_AccounterName
+                                         ON ObjectHistoryString_JuridicalDetails_AccounterName.ObjectHistoryId = ObjectHistory_JuridicalDetails.Id
+                                        AND ObjectHistoryString_JuridicalDetails_AccounterName.DescId = zc_ObjectHistoryString_JuridicalDetails_AccounterName()
+                                  LEFT JOIN ObjectHistoryString AS ObjectHistoryString_JuridicalDetails_BankAccount
+                                         ON ObjectHistoryString_JuridicalDetails_BankAccount.ObjectHistoryId = ObjectHistory_JuridicalDetails.Id
+                                        AND ObjectHistoryString_JuridicalDetails_BankAccount.DescId = zc_ObjectHistoryString_JuridicalDetails_BankAccount()
+                                  LEFT JOIN ObjectHistoryString AS ObjectHistoryString_JuridicalDetails_Phone
+                                         ON ObjectHistoryString_JuridicalDetails_Phone.ObjectHistoryId = ObjectHistory_JuridicalDetails.Id
+                                        AND ObjectHistoryString_JuridicalDetails_Phone.DescId = zc_ObjectHistoryString_JuridicalDetails_Phone()
+                                
+                                  LEFT JOIN ObjectHistoryString AS ObjectHistoryString_JuridicalDetails_MainName
+                                         ON ObjectHistoryString_JuridicalDetails_MainName.ObjectHistoryId = ObjectHistory_JuridicalDetails.Id
+                                        AND ObjectHistoryString_JuridicalDetails_MainName.DescId = zc_ObjectHistoryString_JuridicalDetails_MainName()
+                                  LEFT JOIN ObjectHistoryString AS ObjectHistoryString_JuridicalDetails_MainName_Cut
+                                         ON ObjectHistoryString_JuridicalDetails_MainName_Cut.ObjectHistoryId = ObjectHistory_JuridicalDetails.Id
+                                        AND ObjectHistoryString_JuridicalDetails_MainName_Cut.DescId = zc_ObjectHistoryString_JuridicalDetails_MainName_Cut()
+                                
+                                  LEFT JOIN ObjectHistoryString AS ObjectHistoryString_JuridicalDetails_Reestr
+                                         ON ObjectHistoryString_JuridicalDetails_Reestr.ObjectHistoryId = ObjectHistory_JuridicalDetails.Id
+                                        AND ObjectHistoryString_JuridicalDetails_Reestr.DescId = zc_ObjectHistoryString_JuridicalDetails_Reestr()
+                                  LEFT JOIN ObjectHistoryString AS ObjectHistoryString_JuridicalDetails_Decision
+                                         ON ObjectHistoryString_JuridicalDetails_Decision.ObjectHistoryId = ObjectHistory_JuridicalDetails.Id
+                                        AND ObjectHistoryString_JuridicalDetails_Decision.DescId = zc_ObjectHistoryString_JuridicalDetails_Decision()
+                                
+                                  LEFT JOIN ObjectHistoryString AS ObjectHistoryString_JuridicalDetails_License
+                                         ON ObjectHistoryString_JuridicalDetails_License.ObjectHistoryId = ObjectHistory_JuridicalDetails.Id
+                                        AND ObjectHistoryString_JuridicalDetails_License.DescId = zc_ObjectHistoryString_JuridicalDetails_License()
+                                
+                                  LEFT JOIN ObjectHistoryDate AS ObjectHistoryDate_JuridicalDetails_Decision
+                                         ON ObjectHistoryDate_JuridicalDetails_Decision.ObjectHistoryId = ObjectHistory_JuridicalDetails.Id
+                                        AND ObjectHistoryDate_JuridicalDetails_Decision.DescId = zc_ObjectHistoryDate_JuridicalDetails_Decision()
+                             )
+        
+        
+       SELECT 
+             Object_Juridical.Id                 AS Id
+           , Object_Juridical.ObjectCode         AS Code
+           , Object_Juridical.ValueData          AS Name
+           --, ObjectHistory_JuridicalDetails_View.OKPO
 
-   -- сохранили связь с <Подразделения>
-   PERFORM lpInsertUpdate_ObjectLink(zc_ObjectLink_Juridical_Retail(), ioId, inRetailId);
-   -- сохранили свойство <>
-   PERFORM lpInsertUpdate_ObjectBoolean(zc_ObjectBoolean_Juridical_isCorporate(), ioId, inisCorporate);
-   
-   -- сохранили свойство <>
-   PERFORM lpInsertUpdate_ObjectFloat(zc_ObjectFloat_Juridical_Percent(), ioId, inPercent);
-   
-   -- сохранили свойство <Очередь платежа>
-   PERFORM lpInsertUpdate_ObjectFloat(zc_ObjectFloat_Juridical_PayOrder(), ioId, inPayOrder);
+           , Object_Retail.Id                    AS RetailId
+           , Object_Retail.ValueData             AS RetailName 
 
-   -- сохранили свойство <Код в системе "РАЗОМ">
-   PERFORM lpInsertUpdate_ObjectFloat(zc_ObjectFloat_Juridical_CodeRazom(), ioId, inCodeRazom);
-   -- сохранили свойство <Код в системе "Medicard">
-   PERFORM lpInsertUpdate_ObjectFloat(zc_ObjectFloat_Juridical_CodeMedicard(), ioId, inCodeMedicard);
+           , ObjectBoolean_isCorporate.ValueData AS isCorporate
+           , ObjectFloat_Percent.ValueData       AS Percent
+           , ObjectFloat_PayOrder.ValueData      AS PayOrder
+           
+           , COALESCE (ObjectBoolean_LoadBarcode.ValueData, FALSE)     AS isLoadBarcode
+           , COALESCE (ObjectBoolean_Deferred.ValueData, FALSE)        AS isDeferred
+           , COALESCE (ObjectBoolean_UseReprice.ValueData, FALSE)      AS isUseReprice
+           
+           , ObjectString_CBName.ValueData             AS CBName 
+           , ObjectString_CBMFO.ValueData              AS CBMFO
+           , ObjectString_CBAccount.ValueData          AS CBAccount
+           , ObjectString_CBPurposePayment.ValueData   AS CBPurposePayment
 
-   -- сохранили свойство <>
-   PERFORM lpInsertUpdate_ObjectBoolean(zc_ObjectBoolean_Juridical_LoadBarcode(), ioId, inisLoadBarcode);
-   -- сохранили свойство <>
-   PERFORM lpInsertUpdate_ObjectBoolean(zc_ObjectBoolean_Juridical_Deferred(), ioId, inisDeferred);
+           , Object_Juridical.isErased           AS isErased
+           
+           , tmpJuridicalDetails.StartDate
+           , tmpJuridicalDetails.FullName
+           , tmpJuridicalDetails.JuridicalAddress
+           , tmpJuridicalDetails.OKPO
+           , tmpJuridicalDetails.INN
+           , tmpJuridicalDetails.NumberVAT
+           , tmpJuridicalDetails.AccounterName
+           , tmpJuridicalDetails.BankAccount
+           , tmpJuridicalDetails.Phone
+ 
+           , tmpJuridicalDetails.MainName    ::TVarChar
+           , tmpJuridicalDetails.MainName_Cut
+           , tmpJuridicalDetails.Reestr
+           , tmpJuridicalDetails.Decision
+           , tmpJuridicalDetails.License
+           , tmpJuridicalDetails.DecisionDate
+           
+       FROM Object AS Object_Juridical
 
-   -- сохранили свойство <Полное название поставщика для клиент банка>
-   PERFORM lpInsertUpdate_ObjectString(zc_ObjectString_Juridical_CBName(), ioId, inCBName);
-   -- сохранили свойство <МФО для клиент банка>
-   PERFORM lpInsertUpdate_ObjectString(zc_ObjectString_Juridical_CBMFO(), ioId, inCBMFO);
-   -- сохранили свойство <Расчетный счет для клиент банка>
-   PERFORM lpInsertUpdate_ObjectString(zc_ObjectString_Juridical_CBAccount(), ioId, inCBAccount);
-   -- сохранили свойство <Расчетный счет старый для клиент банка>
-   PERFORM lpInsertUpdate_ObjectString(zc_ObjectString_Juridical_CBAccountOld(), ioId, inCBAccountOld);
-   -- сохранили свойство <Назначение платежа для клиент банка>
-   PERFORM lpInsertUpdate_ObjectString(zc_ObjectString_Juridical_CBPurposePayment(), ioId, inCBPurposePayment);
+           LEFT JOIN ObjectFloat AS ObjectFloat_Percent
+                                 ON ObjectFloat_Percent.ObjectId = Object_Juridical.Id
+                                AND ObjectFloat_Percent.DescId = zc_ObjectFloat_Juridical_Percent()
 
-   -- сохранили протокол
-   --PERFORM lpInsert_ObjectProtocol (ioId, vbUserId);
-END;$BODY$
+           LEFT JOIN ObjectLink AS ObjectLink_Juridical_Retail
+                                ON ObjectLink_Juridical_Retail.ObjectId = Object_Juridical.Id
+                               AND ObjectLink_Juridical_Retail.DescId = zc_ObjectLink_Juridical_Retail()
+           LEFT JOIN Object AS Object_Retail ON Object_Retail.Id = ObjectLink_Juridical_Retail.ChildObjectId
+
+           LEFT JOIN ObjectBoolean AS ObjectBoolean_isCorporate 
+                                   ON ObjectBoolean_isCorporate.ObjectId = Object_Juridical.Id
+                                  AND ObjectBoolean_isCorporate.DescId = zc_ObjectBoolean_Juridical_isCorporate()
+           LEFT JOIN ObjectFloat AS ObjectFloat_PayOrder
+                                 ON ObjectFloat_PayOrder.ObjectId = Object_Juridical.Id
+                                AND ObjectFloat_PayOrder.DescId = zc_ObjectFloat_Juridical_PayOrder()
+           --LEFT JOIN ObjectHistory_JuridicalDetails_View ON ObjectHistory_JuridicalDetails_View.JuridicalId = Object_Juridical.Id
+
+           LEFT JOIN ObjectBoolean AS ObjectBoolean_LoadBarcode 
+                                   ON ObjectBoolean_LoadBarcode.ObjectId = Object_Juridical.Id
+                                  AND ObjectBoolean_LoadBarcode.DescId = zc_ObjectBoolean_Juridical_LoadBarcode()
+
+           LEFT JOIN ObjectBoolean AS ObjectBoolean_Deferred
+                                   ON ObjectBoolean_Deferred.ObjectId = Object_Juridical.Id
+                                  AND ObjectBoolean_Deferred.DescId = zc_ObjectBoolean_Juridical_Deferred()
+
+           LEFT JOIN ObjectBoolean AS ObjectBoolean_UseReprice
+                                   ON ObjectBoolean_UseReprice.ObjectId = Object_Juridical.Id
+                                  AND ObjectBoolean_UseReprice.DescId = zc_ObjectBoolean_Juridical_UseReprice()
+
+           LEFT JOIN ObjectString AS ObjectString_CBName
+                                  ON ObjectString_CBName.ObjectId = Object_Juridical.Id
+                                 AND ObjectString_CBName.DescId = zc_ObjectString_Juridical_CBName()
+
+           LEFT JOIN ObjectString AS ObjectString_CBMFO
+                                  ON ObjectString_CBMFO.ObjectId = Object_Juridical.Id
+                                 AND ObjectString_CBMFO.DescId = zc_ObjectString_Juridical_CBMFO()
+
+           LEFT JOIN ObjectString AS ObjectString_CBAccount
+                                  ON ObjectString_CBAccount.ObjectId = Object_Juridical.Id
+                                 AND ObjectString_CBAccount.DescId = zc_ObjectString_Juridical_CBAccount()
+
+           LEFT JOIN ObjectString AS ObjectString_CBPurposePayment
+                                  ON ObjectString_CBPurposePayment.ObjectId = Object_Juridical.Id
+                                 AND ObjectString_CBPurposePayment.DescId = zc_ObjectString_Juridical_CBPurposePayment()
+
+           LEFT JOIN tmpJuridicalDetails ON tmpJuridicalDetails.JuridicalId = Object_Juridical.Id
+
+       WHERE Object_Juridical.DescId = zc_Object_Juridical();
+  
+END;
+$BODY$
 
 LANGUAGE plpgsql VOLATILE;
-
 
 -------------------------------------------------------------------------------
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Воробкало А.А.  Ярошенко Р.Ф.  Шаблий О.В.
- 10.06.20                                                                                      * 
  06.09.19                                                                                      * 
- 22.02.18         * dell inOrderSumm, inOrderSummComment, inOrderTime
- 17.08.17         *              
- 27.06.17                                                                        *
- 14.01.17         *
+ 20.03.19         * add JuridicalDetails
+ 22.02.18         * dell OrderSumm, OrderSummComment, OrderTime
+ 17.08.17         * add isDeferred
+ 27.06.17                                                                        * isLoadBarcode
+ 14.01.17         * 
  02.12.15                                                         * PayOrder
- 10.04.15                        * 
- 01.07.14         * 
+ 01.07.14         *
 
 */
 
 -- тест
---
+-- SELECT * FROM gpSelect_Object_Juridical('2')

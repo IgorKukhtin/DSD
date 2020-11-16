@@ -383,7 +383,7 @@ BEGIN
               , tmpContainer.Amount                                      AS AmountOut
               , tmpRemains.Amount                                        AS Remains
               , CASE WHEN COALESCE (tmpMI_Child.AmountManual, 0) > 0
-                THEN 0 ELSE tmpMI_Master.Amount - tmpRemains.Amount END  AS AmountIn
+                THEN 0 ELSE CEIL(tmpMI_Master.Amount - COALESCE (tmpRemains.Amount, 0)) END  AS AmountIn
               , COALESCE (tmpMI_Child.AmountManual, 0)                   AS AmountManual
          FROM tmpMI_Master
               LEFT JOIN tmpUnit ON 1=1
@@ -395,7 +395,7 @@ BEGIN
                                    AND tmpMI_Child.UnitId = tmpUnit.UnitId
          WHERE CASE WHEN COALESCE (tmpMI_Child.AmountManual, 0) > 0
                 THEN COALESCE (tmpMI_Child.AmountManual, 0) 
-                ELSE tmpMI_Master.Amount - tmpRemains.Amount END  > 0
+                ELSE CEIL (tmpMI_Master.Amount - COALESCE (tmpRemains.Amount, 0)) END  > 0
          ;
 
 
@@ -435,3 +435,4 @@ $BODY$
  16.04.19         *
 */
 
+-- select * from gpInsert_MI_OrderInternalPromoChild(inMovementId := 21085058 ,  inSession := '3');

@@ -39,6 +39,7 @@ type
     CBMFO: TcxGridDBColumn;
     CBAccount: TcxGridDBColumn;
     CBPurposePayment: TcxGridDBColumn;
+    isUseReprice: TcxGridDBColumn;
   private
     { Private declarations }
   public
