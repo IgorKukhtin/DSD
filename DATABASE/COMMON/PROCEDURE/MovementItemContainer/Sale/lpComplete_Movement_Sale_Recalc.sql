@@ -32,10 +32,10 @@ BEGIN
      vbMovementId_Peresort:= (SELECT MLM.MovementId FROM MovementLinkMovement AS MLM WHERE MLM.MovementChildId = inMovementId AND MLM.DescId = zc_MovementLinkMovement_Production());
 
      -- таблица - элементы
-     CREATE TEMP TABLE _tmpItemPeresort_new (MovementItemId_to Integer, MovementItemId_from Integer, GoodsId_to Integer, GoodsKindId_to Integer, GoodsId_from Integer, GoodsKindId_from Integer, ReceipId_to Integer, Amount_to TFloat) ON COMMIT DROP;
+     CREATE TEMP TABLE _tmpItemPeresort_new (MovementItemId_to Integer, MovementItemId_from Integer, GoodsId_to Integer, GoodsKindId_to Integer, GoodsId_from Integer, GoodsKindId_from Integer, ReceipId_to Integer, ReceipId_gp_to Integer, Amount_to TFloat) ON COMMIT DROP;
 
      -- элементы
-     INSERT INTO _tmpItemPeresort_new (MovementItemId_to, MovementItemId_from, GoodsId_to, GoodsKindId_to, GoodsId_from, GoodsKindId_from, ReceipId_to, Amount_to)
+     INSERT INTO _tmpItemPeresort_new (MovementItemId_to, MovementItemId_from, GoodsId_to, GoodsKindId_to, GoodsId_from, GoodsKindId_from, ReceipId_to, ReceipId_gp_to, Amount_to)
         SELECT 0                                                      AS MovementItemId_to
              , 0                                                      AS MovementItemId_from
              , _tmpItem.GoodsId                                       AS GoodsId_to
@@ -43,7 +43,8 @@ BEGIN
              , ObjectLink_GoodsByGoodsKind_GoodsSub.ChildObjectId     AS GoodsId_from
              , COALESCE (ObjectLink_GoodsByGoodsKind_GoodsKindSub.ChildObjectId, 0) AS GoodsKindId_from
              , COALESCE (ObjectLink_GoodsByGoodsKind_Receipt.ChildObjectId, 0)      AS ReceipId_to
-             , SUM (_tmpItem.OperCount)                               AS Amount_to
+             , COALESCE (ObjectLink_GoodsByGoodsKind_Receipt_gp.ChildObjectId, 0)   AS ReceipId_gp_to
+             , SUM (_tmpItem.OperCount)                                             AS Amount_to
         FROM _tmpItem
              INNER JOIN ObjectLink AS ObjectLink_GoodsByGoodsKind_Goods
                                    ON ObjectLink_GoodsByGoodsKind_Goods.ChildObjectId = _tmpItem.GoodsId
@@ -64,6 +65,10 @@ BEGIN
                                   ON ObjectLink_GoodsByGoodsKind_Receipt.ObjectId = ObjectLink_GoodsByGoodsKind_Goods.ObjectId
                                  AND ObjectLink_GoodsByGoodsKind_Receipt.DescId   = zc_ObjectLink_GoodsByGoodsKind_Receipt()
 
+             LEFT JOIN ObjectLink AS ObjectLink_GoodsByGoodsKind_Receipt_gp
+                                  ON ObjectLink_GoodsByGoodsKind_Receipt_gp.ObjectId = ObjectLink_GoodsByGoodsKind_Goods.ObjectId
+                                 AND ObjectLink_GoodsByGoodsKind_Receipt_gp.DescId   = zc_ObjectLink_GoodsByGoodsKind_ReceiptGP()
+
         WHERE _tmpItem.GoodsId      <> ObjectLink_GoodsByGoodsKind_GoodsSub.ChildObjectId
            OR (_tmpItem.GoodsKindId  <> ObjectLink_GoodsByGoodsKind_GoodsKindSub.ChildObjectId
                AND ObjectLink_GoodsByGoodsKind_GoodsKindSub.ChildObjectId > 0)
@@ -72,6 +77,7 @@ BEGIN
                , ObjectLink_GoodsByGoodsKind_GoodsSub.ChildObjectId
                , ObjectLink_GoodsByGoodsKind_GoodsKindSub.ChildObjectId
                , ObjectLink_GoodsByGoodsKind_Receipt.ChildObjectId
+               , ObjectLink_GoodsByGoodsKind_Receipt_gp.ChildObjectId
                 ;
 
      -- элементы - добавили еще те что по рецептуре
@@ -113,6 +119,45 @@ BEGIN
                                                               AND Object_InfoMoney_View.InfoMoneyDestinationId <> zc_Enum_InfoMoneyDestination_20900() -- Общефирменные + Ирна
 
         WHERE _tmpItemPeresort_new.ReceipId_to <> 0
+       UNION ALL
+        SELECT 0                                                      AS MovementItemId_to
+             , 0                                                      AS MovementItemId_from
+             , _tmpItemPeresort_new.GoodsId_to                        AS GoodsId_to
+             , _tmpItemPeresort_new.GoodsKindId_to                    AS GoodsKindId_to
+             , ObjectLink_ReceiptChild_Goods.ChildObjectId            AS GoodsId_from
+             , COALESCE (ObjectLink_ReceiptChild_GoodsKind.ChildObjectId, 0) AS GoodsKindId_from
+             , -- т.к. надо будет отличать кол-во для ГП от других составляющих
+               -1 * _tmpItemPeresort_new.ReceipId_gp_to               AS ReceipId_to
+             , _tmpItemPeresort_new.Amount_to * ObjectFloat_Value.ValueData / ObjectFloat_Value_master.ValueData AS Amount_to
+        FROM _tmpItemPeresort_new
+                              INNER JOIN ObjectFloat AS ObjectFloat_Value_master
+                                                     ON ObjectFloat_Value_master.ObjectId = _tmpItemPeresort_new.ReceipId_gp_to
+                                                    AND ObjectFloat_Value_master.DescId = zc_ObjectFloat_Receipt_Value()
+                                                    AND ObjectFloat_Value_master.ValueData <> 0
+                              INNER JOIN ObjectLink AS ObjectLink_ReceiptChild_Receipt
+                                                   ON ObjectLink_ReceiptChild_Receipt.ChildObjectId = _tmpItemPeresort_new.ReceipId_gp_to
+                                                  AND ObjectLink_ReceiptChild_Receipt.DescId = zc_ObjectLink_ReceiptChild_Receipt()
+                              INNER JOIN Object AS Object_ReceiptChild ON Object_ReceiptChild.Id = ObjectLink_ReceiptChild_Receipt.ObjectId
+                                                                      AND Object_ReceiptChild.isErased = FALSE
+                              LEFT JOIN ObjectLink AS ObjectLink_ReceiptChild_Goods
+                                                   ON ObjectLink_ReceiptChild_Goods.ObjectId = Object_ReceiptChild.Id
+                                                  AND ObjectLink_ReceiptChild_Goods.DescId = zc_ObjectLink_ReceiptChild_Goods()
+                              LEFT JOIN ObjectLink AS ObjectLink_ReceiptChild_GoodsKind
+                                                   ON ObjectLink_ReceiptChild_GoodsKind.ObjectId = Object_ReceiptChild.Id
+                                                  AND ObjectLink_ReceiptChild_GoodsKind.DescId = zc_ObjectLink_ReceiptChild_GoodsKind()
+                              INNER JOIN ObjectFloat AS ObjectFloat_Value
+                                                     ON ObjectFloat_Value.ObjectId = Object_ReceiptChild.Id
+                                                    AND ObjectFloat_Value.DescId = zc_ObjectFloat_ReceiptChild_Value()
+                                                    AND ObjectFloat_Value.ValueData <> 0
+                              LEFT JOIN ObjectLink AS ObjectLink_Goods_InfoMoney
+                                                   ON ObjectLink_Goods_InfoMoney.ObjectId = ObjectLink_ReceiptChild_Goods.ChildObjectId
+                                                  AND ObjectLink_Goods_InfoMoney.DescId = zc_ObjectLink_Goods_InfoMoney()
+                              INNER JOIN Object_InfoMoney_View ON Object_InfoMoney_View.InfoMoneyId = ObjectLink_Goods_InfoMoney.ChildObjectId
+                                                              AND (Object_InfoMoney_View.InfoMoneyGroupId = zc_Enum_InfoMoneyGroup_30000()             -- Доходы
+                                                                OR Object_InfoMoney_View.InfoMoneyDestinationId <> zc_Enum_InfoMoneyDestination_20900() -- Общефирменные + Ирна
+                                                                  )
+
+        WHERE _tmpItemPeresort_new.ReceipId_gp_to <> 0
        ;
 
 

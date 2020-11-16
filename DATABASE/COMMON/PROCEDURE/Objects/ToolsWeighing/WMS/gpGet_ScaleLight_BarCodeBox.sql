@@ -126,6 +126,17 @@ BEGIN
                                                               , inSession    := inSession
                                                                );
          END IF;
+
+         IF NOT EXISTS (SELECT ObjectLink_BarCodeBox_Box.ChildObjectId
+                        FROM ObjectLink AS ObjectLink_BarCodeBox_Box
+                        WHERE ObjectLink_BarCodeBox_Box.ObjectId = vbBarCodeBoxId
+                          AND ObjectLink_BarCodeBox_Box.DescId   = zc_ObjectLink_BarCodeBox_Box()
+                          AND ObjectLink_BarCodeBox_Box.ChildObjectId > 0
+                       )
+         THEN
+             PERFORM lpInsertUpdate_ObjectLink (zc_ObjectLink_BarCodeBox_Box(), vbBarCodeBoxId, vbBoxId);
+         END IF;
+         
      END IF;
 
      -- проверка - должны найти

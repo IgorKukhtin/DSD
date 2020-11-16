@@ -265,6 +265,7 @@ type
     macUpdate_MI_IsCalculated_No_list: TMultiAction;
     bbUpdate_MI_IsCalculated_Yes: TdxBarButton;
     bbUpdate_MI_IsCalculated_No: TdxBarButton;
+    isCalculated_ch: TcxGridDBColumn;
   private
     { Private declarations }
   public

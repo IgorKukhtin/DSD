@@ -2,8 +2,9 @@
   Caption = #1044#1086#1082#1091#1084#1077#1085#1090' <'#1047#1072#1103#1074#1082#1072' '#1085#1072' '#1091#1087#1072#1082#1086#1074#1082#1091' ('#1086#1089#1090#1072#1090#1082#1080')>'
   ClientHeight = 639
   ClientWidth = 1140
+  ExplicitTop = -217
   ExplicitWidth = 1156
-  ExplicitHeight = 677
+  ExplicitHeight = 674
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
@@ -11,18 +12,18 @@
     Width = 1140
     Height = 513
     ExplicitTop = 126
-    ExplicitWidth = 1095
+    ExplicitWidth = 1140
     ExplicitHeight = 513
     ClientRectBottom = 513
     ClientRectRight = 1140
     inherited tsMain: TcxTabSheet
       Caption = #1056#1072#1089#1093#1086#1076' '#1053#1040' '#1091#1087#1072#1082' / '#1055#1056#1048#1061#1054#1044' '#1089' '#1091#1087#1072#1082
-      ExplicitWidth = 1095
+      ExplicitWidth = 1140
       ExplicitHeight = 489
       inherited cxGrid: TcxGrid
         Width = 1140
         Height = 281
-        ExplicitWidth = 1095
+        ExplicitWidth = 1140
         ExplicitHeight = 281
         inherited cxGridDBTableView: TcxGridDBTableView
           DataController.Summary.DefaultGroupSummaryItems = <
@@ -507,13 +508,13 @@
             Width = 70
           end
           object IsCalculated: TcxGridDBColumn [1]
-            Caption = #1048#1079#1084'. '#1092#1072#1082#1090' '#1087#1088#1080' '#1087#1077#1088#1077#1089#1095#1077#1090#1077' ('#1076#1072'/'#1085#1077#1090') '
+            Caption = #1092#1072#1082#1090' '#1087#1088#1080' '#1087#1077#1088#1077#1089#1095'. ('#1076#1072'/'#1085#1077#1090') '
             DataBinding.FieldName = 'isCalculated'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             HeaderHint = #1048#1079#1084#1077#1085#1103#1090#1100' '#1092#1072#1082#1090' '#1087#1088#1080' '#1087#1077#1088#1077#1089#1095#1077#1090#1077' ('#1076#1072'/'#1085#1077#1090') '
             Options.Editing = False
-            Width = 67
+            Width = 70
           end
           object GoodsGroupNameFull: TcxGridDBColumn [2]
             Caption = #1043#1088#1091#1087#1087#1072' ('#1074#1089#1077')'
@@ -1270,7 +1271,6 @@
         Height = 203
         Align = alBottom
         TabOrder = 1
-        ExplicitWidth = 1095
         object cxGridDBTableViewChild: TcxGridDBTableView
           Navigator.Buttons.CustomButtons = <>
           DataController.DataSource = ChildDS
@@ -1785,6 +1785,15 @@
           Styles.Footer = dmMain.cxFooterStyle
           Styles.Header = dmMain.cxHeaderStyle
           Styles.StyleSheet = dmMain.cxGridTableViewStyleSheet
+          object isCalculated_ch: TcxGridDBColumn
+            Caption = #1092#1072#1082#1090' '#1087#1088#1080' '#1087#1077#1088#1077#1089#1095'. ('#1076#1072'/'#1085#1077#1090') '
+            DataBinding.FieldName = 'isCalculated'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            HeaderHint = #1048#1079#1084#1077#1085#1103#1090#1100' '#1092#1072#1082#1090' '#1087#1088#1080' '#1087#1077#1088#1077#1089#1095#1077#1090#1077' ('#1076#1072'/'#1085#1077#1090') '
+            Options.Editing = False
+            Width = 70
+          end
           object сhGoodsCode: TcxGridDBColumn
             Caption = #1050#1086#1076
             DataBinding.FieldName = 'GoodsCode'
@@ -2584,13 +2593,11 @@
         Height = 5
         AlignSplitter = salBottom
         Control = cxGridChild
-        ExplicitWidth = 1095
       end
     end
     object tsTotal: TcxTabSheet
       Caption = #1042#1089#1077' '#1076#1072#1085#1085#1099#1077
       ImageIndex = 0
-      ExplicitWidth = 1095
       object cxGridChildTotal: TcxGrid
         Left = 0
         Top = 0
@@ -2598,7 +2605,6 @@
         Height = 489
         Align = alClient
         TabOrder = 0
-        ExplicitWidth = 1095
         object cxGridDBTableViewChildTotal: TcxGridDBTableView
           Navigator.Buttons.CustomButtons = <>
           DataController.DataSource = ChildTotalDS
@@ -4265,7 +4271,6 @@
     object cxTabSheet1: TcxTabSheet
       Caption = #1055#1083#1072#1085' ('#1074#1089#1077')'
       ImageIndex = 2
-      ExplicitWidth = 1095
       object cxGridPlan: TcxGrid
         Left = 0
         Top = 0
@@ -4274,7 +4279,6 @@
         Align = alClient
         PopupMenu = PopupMenu
         TabOrder = 0
-        ExplicitWidth = 1095
         object cxGridDBTableViewPlan: TcxGridDBTableView
           Navigator.Buttons.CustomButtons = <>
           DataController.DataSource = PlanDS
@@ -5792,7 +5796,7 @@
     Width = 1140
     Height = 100
     TabOrder = 3
-    ExplicitWidth = 1095
+    ExplicitWidth = 1140
     ExplicitHeight = 100
     inherited edInvNumber: TcxTextEdit
       Left = 8
@@ -5971,6 +5975,7 @@
       Caption = #1055#1077#1088#1077#1095#1080#1090#1072#1090#1100
       Hint = #1054#1073#1085#1086#1074#1080#1090#1100' '#1076#1072#1085#1085#1099#1077
       ImageIndex = 4
+      ShortCut = 116
       RefreshOnTabSetChanges = True
     end
     object macUpdate_MI_IsCalculated_Yes_list: TMultiAction [2]
@@ -8748,6 +8753,14 @@
         ComponentItem = 'AmountPackNextSecond'
         DataType = ftFloat
         ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'outIsCalculated'
+        Value = Null
+        Component = ChildCDS
+        ComponentItem = 'isCalculated'
+        DataType = ftBoolean
         MultiSelectSeparator = ','
       end>
     PackSize = 1

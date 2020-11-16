@@ -995,7 +995,12 @@ BEGIN
             , _Result_Child.GoodsName_packTo
             , _Result_Child.GoodsKindName_packTo
 
+            , COALESCE (MIBoolean_Calculated.ValueData, TRUE) :: Boolean AS isCalculated
+
        FROM _tmpResult_Child AS _Result_Child
+           LEFT JOIN MovementItemBoolean AS MIBoolean_Calculated
+                                         ON MIBoolean_Calculated.MovementItemId = _Result_Child.Id
+                                        AND MIBoolean_Calculated.DescId = zc_MIBoolean_Calculated()
        ;
        RETURN NEXT Cursor2;
 

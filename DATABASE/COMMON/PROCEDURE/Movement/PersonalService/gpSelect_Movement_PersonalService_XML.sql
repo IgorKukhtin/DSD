@@ -223,7 +223,9 @@ BEGIN
          || 'VALUEDATE="'||COALESCE (tmp.VALUEDATE::TVarChar,'')::TVarChar||'" '
          || 'PRIORITY="'||tmp.PRIORITY||'" '
        --|| 'DOCUMENTDATE="'||tmp.DOCUMENTDATE||'" '
-         || 'DOCUMENTDATE="'||(lpad (EXTRACT (YEAR FROM CURRENT_DATE + INTERVAL '1 DAY')::TVarChar ,4, '0')||lpad (EXTRACT (MONTH FROM CURRENT_DATE + INTERVAL '1 DAY')::TVarChar ,2, '0') ||lpad (EXTRACT (DAY FROM CURRENT_DATE + INTERVAL '1 DAY')::TVarChar ,2, '0')) ::TVarChar||'" '
+         || 'DOCUMENTDATE="'||(lpad (EXTRACT (YEAR FROM CURRENT_DATE + INTERVAL '0 DAY')::TVarChar ,4, '0')
+                            || lpad (EXTRACT (MONTH FROM CURRENT_DATE + INTERVAL '0 DAY')::TVarChar ,2, '0') 
+                            || lpad (EXTRACT (DAY FROM CURRENT_DATE + INTERVAL '0 DAY')::TVarChar ,2, '0')) ::TVarChar||'" '
          || 'ADDENTRIES="'||COALESCE (tmp.ADDENTRIES,'')::TVarChar||'" '
          || 'PURPOSEPAYMENTID="'||COALESCE (tmp.PURPOSEPAYMENTID,'')||'" '
          || 'BANKID="'||COALESCE (tmp.BANKID,'')::TVarChar||'" '

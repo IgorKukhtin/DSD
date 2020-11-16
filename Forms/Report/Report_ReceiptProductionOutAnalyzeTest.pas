@@ -121,6 +121,8 @@ type
     OperSummPlan3_two_ch: TcxGridDBColumn;
     actPrint_two: TdsdPrintAction;
     bbPrint_two: TdxBarButton;
+    actPrint_fact_two: TdsdPrintAction;
+    bbPrint_fact_two: TdxBarButton;
   private
     { Private declarations }
   public

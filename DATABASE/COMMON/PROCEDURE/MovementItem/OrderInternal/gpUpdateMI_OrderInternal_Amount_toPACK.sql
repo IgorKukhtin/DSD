@@ -930,29 +930,49 @@ else*/
                  -- Œ¡Õ”À»À»
                  PERFORM lpInsertUpdate_MovementItemFloat (zc_MIFloat_AmountPackNext(),      MovementItem.Id, 0)
                  FROM MovementItem
+                      LEFT JOIN MovementItemBoolean AS MIBoolean_Calculated
+                                                    ON MIBoolean_Calculated.MovementItemId = MovementItem.Id
+                                                   AND MIBoolean_Calculated.DescId         = zc_MIBoolean_Calculated()
+                                                   AND MIBoolean_Calculated.ValueData      = FALSE
                  WHERE MovementItem.MovementId = inMovementId
                    AND MovementItem.DescId     = zc_MI_Master()
                    AND MovementItem.ObjectId   NOT IN (489150 -- select * from object where Id = 489150 -- 2293 - Õ‡. ¿——Œ–“» 300 „/¯Ú
                                                       )
+                   AND MIBoolean_Calculated.MovementItemId IS NULL
                 ;
                  -- —Œ’–¿Õ»À»
                  PERFORM lpInsertUpdate_MovementItemFloat (zc_MIFloat_AmountPackNext(),      _tmpMI_Child.MovementItemId, _tmpMI_Child.AmountNextResult)
                  FROM _tmpMI_Child
+                      LEFT JOIN MovementItemBoolean AS MIBoolean_Calculated
+                                                    ON MIBoolean_Calculated.MovementItemId = _tmpMI_Child.MovementItemId
+                                                   AND MIBoolean_Calculated.DescId         = zc_MIBoolean_Calculated()
+                                                   AND MIBoolean_Calculated.ValueData      = FALSE
                  WHERE _tmpMI_Child.AmountNextResult <> 0
+                   AND MIBoolean_Calculated.MovementItemId IS NULL
                 ;
              ELSE
                  -- Œ¡Õ”À»À»
                  PERFORM lpInsertUpdate_MovementItemFloat (zc_MIFloat_AmountPackNext_calc(), MovementItem.Id, 0)
                  FROM MovementItem
+                      LEFT JOIN MovementItemBoolean AS MIBoolean_Calculated
+                                                    ON MIBoolean_Calculated.MovementItemId = MovementItem.Id
+                                                   AND MIBoolean_Calculated.DescId         = zc_MIBoolean_Calculated()
+                                                   AND MIBoolean_Calculated.ValueData      = FALSE
                  WHERE MovementItem.MovementId = inMovementId
                    AND MovementItem.DescId     = zc_MI_Master()
                    AND MovementItem.ObjectId   NOT IN (489150 -- select * from object where Id = 489150 -- 2293 - Õ‡. ¿——Œ–“» 300 „/¯Ú
                                                       )
+                   AND MIBoolean_Calculated.MovementItemId IS NULL
                 ;
                  -- —Œ’–¿Õ»À»
                  PERFORM lpInsertUpdate_MovementItemFloat (zc_MIFloat_AmountPackNext_calc(), _tmpMI_Child.MovementItemId, _tmpMI_Child.AmountNextResult)
                  FROM _tmpMI_Child
+                      LEFT JOIN MovementItemBoolean AS MIBoolean_Calculated
+                                                    ON MIBoolean_Calculated.MovementItemId = _tmpMI_Child.MovementItemId
+                                                   AND MIBoolean_Calculated.DescId         = zc_MIBoolean_Calculated()
+                                                   AND MIBoolean_Calculated.ValueData      = FALSE
                  WHERE _tmpMI_Child.AmountNextResult <> 0
+                   AND MIBoolean_Calculated.MovementItemId IS NULL
                 ;
              END IF;
 
@@ -1071,29 +1091,49 @@ else*/
                  -- Œ¡Õ”À»À»
                  PERFORM lpInsertUpdate_MovementItemFloat (zc_MIFloat_AmountPackNextSecond(),      MovementItem.Id, 0)
                  FROM MovementItem
+                      LEFT JOIN MovementItemBoolean AS MIBoolean_Calculated
+                                                    ON MIBoolean_Calculated.MovementItemId = MovementItem.Id
+                                                   AND MIBoolean_Calculated.DescId         = zc_MIBoolean_Calculated()
+                                                   AND MIBoolean_Calculated.ValueData      = FALSE
                  WHERE MovementItem.MovementId = inMovementId
                    AND MovementItem.DescId     = zc_MI_Master()
                    AND MovementItem.ObjectId   NOT IN (489150 -- select * from object where Id = 489150 -- 2293 - Õ‡. ¿——Œ–“» 300 „/¯Ú
                                                       )
+                   AND MIBoolean_Calculated.MovementItemId IS NULL
                 ;
                  -- —Œ’–¿Õ»À»
                  PERFORM lpInsertUpdate_MovementItemFloat (zc_MIFloat_AmountPackNextSecond(),      _tmpMI_Child.MovementItemId, _tmpMI_Child.AmountNextSecondResult)
                  FROM _tmpMI_Child
+                      LEFT JOIN MovementItemBoolean AS MIBoolean_Calculated
+                                                    ON MIBoolean_Calculated.MovementItemId = _tmpMI_Child.MovementItemId
+                                                   AND MIBoolean_Calculated.DescId         = zc_MIBoolean_Calculated()
+                                                   AND MIBoolean_Calculated.ValueData      = FALSE
                  WHERE _tmpMI_Child.AmountNextSecondResult <> 0
+                   AND MIBoolean_Calculated.MovementItemId IS NULL
                 ;
              ELSE
                  -- Œ¡Õ”À»À»
                  PERFORM lpInsertUpdate_MovementItemFloat (zc_MIFloat_AmountPackNextSecond_calc(), MovementItem.Id, 0)
                  FROM MovementItem
+                      LEFT JOIN MovementItemBoolean AS MIBoolean_Calculated
+                                                    ON MIBoolean_Calculated.MovementItemId = MovementItem.Id
+                                                   AND MIBoolean_Calculated.DescId         = zc_MIBoolean_Calculated()
+                                                   AND MIBoolean_Calculated.ValueData      = FALSE
                  WHERE MovementItem.MovementId = inMovementId
                    AND MovementItem.DescId     = zc_MI_Master()
                    AND MovementItem.ObjectId   NOT IN (489150 -- select * from object where Id = 489150 -- 2293 - Õ‡. ¿——Œ–“» 300 „/¯Ú
                                                       )
+                   AND MIBoolean_Calculated.MovementItemId IS NULL
                 ;
                  -- —Œ’–¿Õ»À»
                  PERFORM lpInsertUpdate_MovementItemFloat (zc_MIFloat_AmountPackNextSecond_calc(), _tmpMI_Child.MovementItemId, _tmpMI_Child.AmountNextSecondResult)
                  FROM _tmpMI_Child
+                      LEFT JOIN MovementItemBoolean AS MIBoolean_Calculated
+                                                    ON MIBoolean_Calculated.MovementItemId = _tmpMI_Child.MovementItemId
+                                                   AND MIBoolean_Calculated.DescId         = zc_MIBoolean_Calculated()
+                                                   AND MIBoolean_Calculated.ValueData      = FALSE
                  WHERE _tmpMI_Child.AmountNextSecondResult <> 0
+                   AND MIBoolean_Calculated.MovementItemId IS NULL
                 ;
              END IF;
 

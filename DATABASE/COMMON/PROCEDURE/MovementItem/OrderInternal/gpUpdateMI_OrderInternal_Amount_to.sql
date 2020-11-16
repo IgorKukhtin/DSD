@@ -38,7 +38,7 @@ BEGIN
                  ) AS tmpMI
             WHERE MovementItem.MovementId = inMovementId AND MovementItem.DescId = zc_MI_Master()
               AND tmpMI.Id = MovementItem.Id
-              AND tmpMI.isCalculated = TRUE
+            --AND tmpMI.isCalculated = TRUE
             ;
 
         ELSEIF inNumber = 2
@@ -51,7 +51,7 @@ BEGIN
                                               AND MIBoolean_Calculated.DescId         = zc_MIBoolean_Calculated()
                                               AND MIBoolean_Calculated.ValueData      = FALSE
             WHERE MovementItem.MovementId = inMovementId AND MovementItem.DescId = zc_MI_Master()
-              AND MIBoolean_Calculated.MovementItemId IS NULL
+            --AND MIBoolean_Calculated.MovementItemId IS NULL
            ;
 
         ELSEIF inNumber = 3
@@ -63,7 +63,9 @@ BEGIN
                                                ON MIBoolean_Calculated.MovementItemId = MovementItem.Id
                                               AND MIBoolean_Calculated.DescId         = zc_MIBoolean_Calculated()
                                               AND MIBoolean_Calculated.ValueData      = FALSE
-            WHERE MovementItem.MovementId = inMovementId AND MovementItem.DescId = zc_MI_Master();
+            WHERE MovementItem.MovementId = inMovementId AND MovementItem.DescId = zc_MI_Master()
+            --AND MIBoolean_Calculated.MovementItemId IS NULL
+           ;
 
         ELSEIF inNumber = 4
         THEN
@@ -75,7 +77,7 @@ BEGIN
                                               AND MIBoolean_Calculated.DescId         = zc_MIBoolean_Calculated()
                                               AND MIBoolean_Calculated.ValueData      = FALSE
             WHERE MovementItem.MovementId = inMovementId AND MovementItem.DescId = zc_MI_Master()
-              AND MIBoolean_Calculated.MovementItemId IS NULL
+            --AND MIBoolean_Calculated.MovementItemId IS NULL
            ;
 
         ELSE
@@ -100,7 +102,7 @@ BEGIN
         END IF;
 
 
-        IF NOT EXISTS (SELECT 1 FROM MovementItemBoolean AS MIB WHERE MIB.MovementItemId = inId AND MIB.DescId = zc_MIBoolean_Calculated() AND MIB.ValueData = FALSE)
+        IF 1=1 -- NOT EXISTS (SELECT 1 FROM MovementItemBoolean AS MIB WHERE MIB.MovementItemId = inId AND MIB.DescId = zc_MIBoolean_Calculated() AND MIB.ValueData = FALSE)
         THEN
             IF inNumber = 1
             THEN
