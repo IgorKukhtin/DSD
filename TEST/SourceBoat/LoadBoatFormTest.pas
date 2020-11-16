@@ -49,6 +49,7 @@ type
     procedure LoadProdOptItemsFormTest;
     procedure LoadProdOptPatternFormTest;
     procedure LoadProductFormTest;
+        procedure LoadPriceListFormTest;
     procedure LoadUnitFormTest;
     procedure FormTest;
   end;
@@ -403,6 +404,28 @@ begin
   TdsdFormStorageFactory.GetStorage.Load('TProductForm');
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TProductEditForm'));
   TdsdFormStorageFactory.GetStorage.Load('TProductEditForm');
+end;
+
+procedure TLoadFormTest.LoadPriceListFormTest;
+begin
+
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TPriceListForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TPriceListForm');
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TPriceListEditForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TPriceListEditForm');
+
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TPriceListItemForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TPriceListItemForm');
+
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TPriceListGoodsItemForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TPriceListGoodsItemForm');
+
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TPriceListGoodsItemEditForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TPriceListGoodsItemEditForm');
+
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TPriceList_ObjectForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TPriceList_ObjectForm');
+
 end;
 
 procedure TLoadFormTest.LoadUnitFormTest;

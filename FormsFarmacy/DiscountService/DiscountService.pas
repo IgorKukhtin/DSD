@@ -427,7 +427,7 @@ begin
 
   try
     if lDiscountExternalId > 0 then
-      if gCode = 1 then
+      if gCode in [1, 14] then
       begin
         aSaleRequest := CardSaleRequest.Create;
         //
@@ -786,7 +786,7 @@ begin
                              '  <request_type>2</request_type>'#13#10 +
                              '  <id_casual>' + FIdCasual + '</id_casual>'#13#10 +
                              '  <inside_code>' + gExternalUnit + '</inside_code>'#13#10 +
-                             '  <supplier >' + IntToStr(FSupplier) + '</supplier >'#13#10 +
+                             '  <supplier>' + IntToStr(FSupplier) + '</supplier >'#13#10 +
                              '  <id_alter>' + fCheckNumber  + '</id_alter>'#13#10 +
                              '  <invoice_number>' + FInvoiceNumber   + '</invoice_number>'#13#10 +
                              '  <sale_status>1</sale_status>'#13#10 +
@@ -1288,7 +1288,7 @@ begin
       then lPriceSale:= CheckCDS.FieldByName('PriceSale').asFloat
       else lPriceSale:= CheckCDS.FieldByName('Price').asFloat;
       //
-      if (lDiscountExternalId > 0) and ((gCode = 1) or (gCode = 2) and (gUserName <> '') or (gCode in [3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13])) and
+      if (lDiscountExternalId > 0) and ((gCode in [1, 14]) or (gCode = 2) and (gUserName <> '') or (gCode in [3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13])) and
          (CheckCDS.FieldByName('Amount').AsFloat > 0)
       then
         //поиск Ўтрих-код
@@ -1302,7 +1302,7 @@ begin
           BarCode_find := '';
 
       //если Ўтрих-код нашелс€ и программа «ј–јƒ» ∆»““я
-      if (BarCode_find <> '') and (gCode = 1) then
+      if (BarCode_find <> '') and (gCode in [1, 14]) then
       begin
 
           //получение номера и даты прихода
@@ -1671,6 +1671,7 @@ begin
                              '  <request_type>1</request_type>'#13#10 +
                              '  <id_casual>' + FIdCasual + '</id_casual>'#13#10 +
                              '  <inside_code>' + gExternalUnit + '</inside_code>'#13#10 +
+                             '  <supplier>' + IntToStr(FSupplier) + '</supplier >'#13#10 +
                              '  <card_code>' + gCardNumber + '</card_code>'#13#10 +
                              '  <product_code>' + BarCode_find + '</product_code>'#13#10 +
                              '  <price>' + CurrToStrXML(CheckCDS.FieldByName('PriceSale').AsCurrency) + '</price>'#13#10 +

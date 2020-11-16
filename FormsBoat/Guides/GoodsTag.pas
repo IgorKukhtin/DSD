@@ -58,6 +58,8 @@ type
     bbProtocolOpenForm: TdxBarButton;
     actSetErased: TdsdUpdateErased;
     actSetUnErased: TdsdUpdateErased;
+    actShowAll: TBooleanStoredProcAction;
+    bbShowAll: TdxBarButton;
   private
     { Private declarations }
   public

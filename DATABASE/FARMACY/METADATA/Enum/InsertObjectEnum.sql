@@ -142,6 +142,17 @@ BEGIN
        PERFORM lpInsertUpdate_Object_Enum (inId:= zc_Enum_Role_PartialSale(), inDescId:= zc_Object_Role(), inCode:= lfGet_ObjectCode_byEnum ('zc_Enum_Role_PartialSale'), inName:= 'Частичная продажа', inEnumName:= 'zc_Enum_Role_PartialSale');
    END IF;
 
+   -- zc_Enum_Role_ReportsDoctor
+   IF EXISTS (SELECT * FROM Object WHERE DescId = zc_Object_Role() AND ValueData = 'Отчёты врачи')
+   THEN
+       PERFORM lpUpdate_Object_Enum_byCode (inCode   := (SELECT ObjectCode FROM Object WHERE DescId = zc_Object_Role() AND ValueData = 'Отчёты врачи')
+                                          , inDescId := zc_Object_Role()
+                                          , inEnumName:= 'zc_Enum_Role_ReportsDoctor');
+   ELSE
+       PERFORM lpInsertUpdate_Object_Enum (inId:= zc_Enum_Role_ReportsDoctor(), inDescId:= zc_Object_Role(), inCode:= lfGet_ObjectCode_byEnum ('zc_Enum_Role_ReportsDoctor'), inName:= 'Отчёты врачи', inEnumName:= 'zc_Enum_Role_ReportsDoctor');
+   END IF;
+
+
 END $$;
 /*
 DO $$

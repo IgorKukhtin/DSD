@@ -3,9 +3,9 @@
 DROP FUNCTION IF EXISTS gpInsertUpdate_Object_GoodsTag (Integer, Integer, TVarChar, TVarChar, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpInsertUpdate_Object_GoodsTag(
- INOUT ioId              Integer,       -- ключ объекта <Бренд>
- INOUT ioCode            Integer,       -- свойство <Код Бренда>
-    IN inName            TVarChar,      -- главное Название Бренда
+ INOUT ioId              Integer,       -- ключ объекта <>
+ INOUT ioCode            Integer,       -- свойство <Код 
+    IN inName            TVarChar,      -- Название 
     IN inComment         TVarChar,      --
     IN inSession         TVarChar       -- сессия пользователя
 )

@@ -202,9 +202,14 @@ CREATE OR REPLACE FUNCTION zc_ObjectString_GoodsSize_Comment() RETURNS Integer A
 INSERT INTO ObjectStringDesc (Code, DescId, ItemName)
   SELECT 'zc_ObjectString_GoodsSize_Comment', zc_Object_GoodsSize(), 'Примечание' WHERE NOT EXISTS (SELECT * FROM ObjectStringDesc WHERE Code = 'zc_ObjectString_GoodsSize_Comment');
 
+CREATE OR REPLACE FUNCTION zc_ObjectString_TaxKind_Code() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM ObjectStringDesc WHERE Code = 'zc_ObjectString_TaxKind_Code'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
+INSERT INTO ObjectStringDesc (Code, DescId, ItemName)
+  SELECT 'zc_ObjectString_TaxKind_Code', zc_Object_TaxKind(), 'Код строка' WHERE NOT EXISTS (SELECT * FROM ObjectStringDesc WHERE Code = 'zc_ObjectString_TaxKind_Code');
+
 /*-------------------------------------------------------------------------------
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
+ 15.11.20         * zc_ObjectString_TaxKind_Code
  11.11.20         * zc_ObjectString_Goods...
                     zc_ObjectString_ArticleVergl
                     zc_ObjectString_EAN

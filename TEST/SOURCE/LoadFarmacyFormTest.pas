@@ -953,6 +953,7 @@ end;
 
 procedure TLoadFormTest.LoadReportFormTest;
 begin
+
   {
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_PriceCheckForm'));
   TdsdFormStorageFactory.GetStorage.Load('TReport_PriceCheckForm');

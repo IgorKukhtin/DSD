@@ -38,14 +38,22 @@ BEGIN
    -- PERFORM lpCheckRight(inSession, zc_Enum_Process_Partner());
    vbUserId:= lpGetUserBySession (inSession);
 
-   -- пробуем найти Партнера
-   IF COALESCE (inName, '') <> ''
+   IF COALESCE (inCode, 0) <> 0 OR COALESCE (inName, '') <> ''
    THEN
-       vbPartnerId := (SELECT Object.Id FROM Object WHERE Object.DescId = zc_Object_Partner() AND TRIM (Object.ValueData) Like TRIM (TRIM (inName)||' '||TRIM (inName2)||' '||TRIM (inName3)) );
+       -- пробуем найти Партнера
+       IF COALESCE (inCode, 0) <> 0
+       THEN
+           vbPartnerId := (SELECT Object.Id FROM Object WHERE Object.DescId = zc_Object_Partner() AND Object.ObjectCode = inCode);
+       END IF;
+       -- если не нашли по коду пробуем по наименованию
+       IF COALESCE (vbPartnerId,0) = 0 AND COALESCE (inName, '') <> ''
+       THEN
+           vbPartnerId := (SELECT Object.Id FROM Object WHERE Object.DescId = zc_Object_Partner() AND TRIM (Object.ValueData) Like TRIM (TRIM (inName)||' '||TRIM (inName2)||' '||TRIM (inName3)) );
+       END IF;
    ELSE
        RETURN;
    END IF;
-
+   
    IF COALESCE (inBankName, '') <> ''
    THEN
        -- пробуем найти банк
@@ -117,7 +125,7 @@ BEGIN
    THEN
        -- создаем
        PERFORM gpInsertUpdate_Object_Partner(ioId       := 0               :: Integer
-                                           , ioCode     := 0               :: Integer
+                                           , ioCode     := inCode          :: Integer
                                            , inName     := TRIM (TRIM (inName)||' '||TRIM (inName2)||' '||TRIM (inName3)) :: TVarChar
                                            , inComment  := inCode          :: TVarChar
                                            , inFax      := TRIM (inFax)    :: TVarChar

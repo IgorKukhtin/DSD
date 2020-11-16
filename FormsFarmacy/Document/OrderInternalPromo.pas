@@ -159,6 +159,15 @@ type
     actExecClearChecked: TdsdExecStoredProc;
     spSetChecked: TdsdStoredProc;
     spClearChecked: TdsdStoredProc;
+    isComplement: TcxGridDBColumn;
+    actSetComplement: TMultiAction;
+    actExecSetComplement: TdsdExecStoredProc;
+    actClearComplement: TMultiAction;
+    actExecClearComplement: TdsdExecStoredProc;
+    spClearComplement: TdsdStoredProc;
+    spSetComplement: TdsdStoredProc;
+    bbSetComplement: TdxBarButton;
+    bbClearComplement: TdxBarButton;
   private
     { Private declarations }
   public

@@ -281,18 +281,6 @@
     Top = 328
     Caption = #1058#1080#1087' '#1053#1044#1057
   end
-  object edTaxKind: TcxButtonEdit
-    Left = 40
-    Top = 347
-    Properties.Buttons = <
-      item
-        Default = True
-        Kind = bkEllipsis
-      end>
-    Properties.ReadOnly = True
-    TabOrder = 33
-    Width = 135
-  end
   object cxLabel18: TcxLabel
     Left = 137
     Top = 3
@@ -301,13 +289,13 @@
   object edArticle: TcxTextEdit
     Left = 137
     Top = 21
-    TabOrder = 35
+    TabOrder = 34
     Width = 90
   end
   object edArticleVergl: TcxTextEdit
     Left = 233
     Top = 21
-    TabOrder = 36
+    TabOrder = 35
     Width = 86
   end
   object cxLabel19: TcxLabel
@@ -323,7 +311,7 @@
   object edEAN: TcxTextEdit
     Left = 40
     Top = 69
-    TabOrder = 39
+    TabOrder = 38
     Width = 90
   end
   object cxLabel21: TcxLabel
@@ -334,7 +322,7 @@
   object edASIN: TcxTextEdit
     Left = 137
     Top = 69
-    TabOrder = 41
+    TabOrder = 40
     Width = 90
   end
   object cxLabel22: TcxLabel
@@ -345,7 +333,7 @@
   object edMatchCode: TcxTextEdit
     Left = 233
     Top = 69
-    TabOrder = 43
+    TabOrder = 42
     Width = 86
   end
   object cxLabel23: TcxLabel
@@ -359,7 +347,7 @@
   object edFeeNumber: TcxTextEdit
     Left = 233
     Top = 160
-    TabOrder = 45
+    TabOrder = 44
     Width = 86
   end
   object cxLabel2: TcxLabel
@@ -373,7 +361,7 @@
     Properties.DecimalPlaces = 4
     Properties.DisplayFormat = ',0.####'
     Properties.UseDisplayFormatWhenEditing = True
-    TabOrder = 47
+    TabOrder = 46
     Width = 135
   end
   object edEmpfPrice: TcxCurrencyEdit
@@ -381,7 +369,7 @@
     Top = 529
     Properties.DecimalPlaces = 4
     Properties.DisplayFormat = ',0.####'
-    TabOrder = 48
+    TabOrder = 47
     Width = 137
   end
   object cxLabel15: TcxLabel
@@ -397,15 +385,27 @@
   object edComment: TcxTextEdit
     Left = 40
     Top = 576
-    TabOrder = 51
+    TabOrder = 50
     Width = 279
   end
   object ceisArc: TcxCheckBox
     Left = 252
     Top = 393
     Caption = #1040#1088#1093#1080#1074
-    TabOrder = 52
+    TabOrder = 51
     Width = 67
+  end
+  object edTaxKind: TcxButtonEdit
+    Left = 40
+    Top = 347
+    Properties.Buttons = <
+      item
+        Default = True
+        Kind = bkEllipsis
+      end>
+    Properties.ReadOnly = True
+    TabOrder = 52
+    Width = 135
   end
   object ActionList: TActionList
     Left = 296
@@ -930,6 +930,13 @@
         Component = edEmpfPrice
         DataType = ftFloat
         MultiSelectSeparator = ','
+      end
+      item
+        Name = 'Comment'
+        Value = Null
+        Component = edComment
+        DataType = ftString
+        MultiSelectSeparator = ','
       end>
     PackSize = 1
     Left = 8
@@ -942,7 +949,7 @@
     FormNameParam.DataType = ftString
     FormNameParam.MultiSelectSeparator = ','
     FormName = 'TMeasureForm'
-    PositionDataSet = 'MasterCDS'
+    PositionDataSet = 'ClientDataSet'
     Params = <
       item
         Name = 'Key'
@@ -959,8 +966,8 @@
         DataType = ftString
         MultiSelectSeparator = ','
       end>
-    Left = 8
-    Top = 296
+    Left = 112
+    Top = 280
   end
   object GuidesProdColor: TdsdGuides
     KeyField = 'Id'
@@ -1059,8 +1066,8 @@
         DataType = ftString
         MultiSelectSeparator = ','
       end>
-    Left = 280
-    Top = 256
+    Left = 264
+    Top = 240
   end
   object GuidesPartner: TdsdGuides
     KeyField = 'Id'
@@ -1139,8 +1146,8 @@
         DataType = ftString
         MultiSelectSeparator = ','
       end>
-    Left = 8
-    Top = 216
+    Left = 24
+    Top = 192
   end
   object GuidesDiscountParner: TdsdGuides
     KeyField = 'Id'
@@ -1249,10 +1256,10 @@
   object GuidesTaxKind: TdsdGuides
     KeyField = 'Id'
     LookupControl = edTaxKind
-    FormNameParam.Value = 'TMeasureForm'
+    FormNameParam.Value = 'TTaxKindForm'
     FormNameParam.DataType = ftString
     FormNameParam.MultiSelectSeparator = ','
-    FormName = 'TMeasureForm'
+    FormName = 'TTaxKindForm'
     PositionDataSet = 'MasterCDS'
     Params = <
       item
@@ -1270,6 +1277,7 @@
         DataType = ftString
         MultiSelectSeparator = ','
       end>
+    Left = 93
     Top = 348
   end
 end
