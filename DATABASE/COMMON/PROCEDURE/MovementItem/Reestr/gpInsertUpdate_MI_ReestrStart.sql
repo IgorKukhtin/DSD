@@ -271,7 +271,6 @@ BEGIN
                      WHERE MF_MovementItemId.MovementId = vbMovementId_sale
                        AND MF_MovementItemId.DescId = zc_MovementFloat_MovementItemId()
                     );
-
        
           -- определяем признак Создание/Корректировка
           vbIsInsert:= COALESCE (vbId_mi, 0) = 0;

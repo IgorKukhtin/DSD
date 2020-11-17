@@ -17,9 +17,10 @@ RETURNS TABLE ( Id Integer, MovementId Integer, LineNum Integer
               , UpdateName TVarChar, UpdateDate TDateTime
               , InvNumber_Transport TVarChar, OperDate_Transport TDateTime, StatusCode_Transport Integer, StatusName_Transport TVarChar
               , Date_Insert TDateTime, MemberName_Insert TVarChar
+              , Date_Log TDateTime
               , Date_PartnerIn TDateTime, Date_RemakeIn TDateTime, Date_RemakeBuh TDateTime
               , Date_Remake TDateTime, Date_Econom TDateTime, Date_Buh TDateTime, Date_TransferIn TDateTime, Date_TransferOut TDateTime
-              , Member_PartnerInTo TVarChar, Member_PartnerInFrom TVarChar, Member_RemakeInTo TVarChar
+              , Member_Log TVarChar, Member_PartnerInTo TVarChar, Member_PartnerInFrom TVarChar, Member_RemakeInTo TVarChar
               , Member_RemakeInFrom TVarChar, Member_RemakeBuh TVarChar, Member_Remake TVarChar
               , Member_Econom TVarChar, Member_Buh TVarChar, Member_TransferIn TVarChar, Member_TransferOut TVarChar
               , BarCode_Sale TVarChar, OperDate_Sale TDateTime, InvNumber_Sale TVarChar
@@ -57,6 +58,7 @@ BEGIN
                                   WHEN inReestrKindId = zc_Enum_ReestrKind_Buh()         THEN zc_MIDate_Buh()
                                   WHEN inReestrKindId = zc_Enum_ReestrKind_TransferIn()  THEN zc_MIDate_TransferIn()
                                   WHEN inReestrKindId = zc_Enum_ReestrKind_TransferOut() THEN zc_MIDate_TransferOut()
+                                  WHEN inReestrKindId = zc_Enum_ReestrKind_Log()         THEN zc_MIDate_Log()
                              END AS DateDescId
                       );
      -- Определяется
@@ -68,6 +70,7 @@ BEGIN
                                       WHEN inReestrKindId = zc_Enum_ReestrKind_Buh()         THEN zc_MILinkObject_Buh()
                                       WHEN inReestrKindId = zc_Enum_ReestrKind_TransferIn()  THEN zc_MILinkObject_TransferIn()
                                       WHEN inReestrKindId = zc_Enum_ReestrKind_TransferOut() THEN zc_MILinkObject_TransferOut()
+                                      WHEN inReestrKindId = zc_Enum_ReestrKind_Log()         THEN zc_MILinkObject_Log()
                                  END AS MILinkObjectId
                       );
 
@@ -127,6 +130,7 @@ BEGIN
             , MIDate_Insert.ValueData                   AS Date_Insert
             , Object_Member.ValueData                   AS MemberName_Insert
 
+            , MIDate_Log.ValueData                      AS Date_Log
             , MIDate_PartnerIn.ValueData                AS Date_PartnerIn
             , MIDate_RemakeIn.ValueData                 AS Date_RemakeIn
             , MIDate_RemakeBuh.ValueData                AS Date_RemakeBuh
@@ -136,6 +140,7 @@ BEGIN
             , MIDate_TransferIn.ValueData               AS Date_TransferIn
             , MIDate_TransferOut.ValueData              AS Date_TransferOut
             
+            , Object_Log.ValueData                      AS Member_Log
             , Object_PartnerInTo.ValueData              AS Member_PartnerInTo
             , Object_PartnerInFrom.ValueData            AS Member_PartnerInFrom
             , Object_RemakeInTo.ValueData               AS Member_RemakeInTo
@@ -248,7 +253,10 @@ BEGIN
             LEFT JOIN MovementItemDate AS MIDate_TransferOut
                                        ON MIDate_TransferOut.MovementItemId = MovementItem.Id
                                       AND MIDate_TransferOut.DescId = zc_MIDate_TransferOut()
-                                      
+            LEFT JOIN MovementItemDate AS MIDate_Log
+                                       ON MIDate_Log.MovementItemId = MovementItem.Id
+                                      AND MIDate_Log.DescId = zc_MIDate_Log()
+
             LEFT JOIN MovementItemLinkObject AS MILinkObject_PartnerInTo
                                              ON MILinkObject_PartnerInTo.MovementItemId = MovementItem.Id
                                             AND MILinkObject_PartnerInTo.DescId = zc_MILinkObject_PartnerInTo()
@@ -299,6 +307,11 @@ BEGIN
                                             AND MILinkObject_TransferOut.DescId = zc_MILinkObject_TransferOut()
             LEFT JOIN Object AS Object_TransferOut ON Object_TransferOut.Id = MILinkObject_TransferOut.ObjectId            
 
+            LEFT JOIN MovementItemLinkObject AS MILinkObject_Log
+                                             ON MILinkObject_Log.MovementItemId = MovementItem.Id
+                                            AND MILinkObject_Log.DescId = zc_MILinkObject_Log()
+            LEFT JOIN Object AS Object_Log ON Object_Log.Id = MILinkObject_Log.ObjectId
+            
             --
             LEFT JOIN Movement AS Movement_Sale ON Movement_Sale.id = tmpMI.MovementId_Sale  -- док. продажи
             LEFT JOIN Object AS Object_Status_Sale ON Object_Status_Sale.Id = Movement_Sale.StatusId
