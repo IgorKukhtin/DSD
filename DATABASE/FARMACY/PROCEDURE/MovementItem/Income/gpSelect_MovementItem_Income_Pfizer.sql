@@ -38,7 +38,7 @@ BEGIN
                INNER JOIN ObjectLink AS ObjectLink_BarCode_Object
                                      ON ObjectLink_BarCode_Object.ObjectId = Object_BarCode.Id
                                     AND ObjectLink_BarCode_Object.DescId = zc_ObjectLink_BarCode_Object()
-                                    AND ObjectLink_BarCode_Object.ChildObjectId = 2807930
+                                    AND ObjectLink_BarCode_Object.ChildObjectId in (2807930, 15615415)
                LEFT JOIN Object AS Object_Goods ON Object_Goods.Id = MovementItem.ObjectId
 
                LEFT JOIN MovementItemFloat AS MIFloat_Price

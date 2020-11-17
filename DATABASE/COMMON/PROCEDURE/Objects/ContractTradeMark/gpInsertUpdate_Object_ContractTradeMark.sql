@@ -19,6 +19,17 @@ BEGIN
    --vbUserId := lpCheckRight (inSession, zc_Enum_Process_InsertUpdate_Object_ContractTradeMark());
    vbUserId:= lpGetUserBySession (inSession);
    
+   -- проверка
+   IF COALESCE (inContractId,0) = 0
+   THEN
+       RAISE EXCEPTION 'Ошибка.Договор не выбран.';
+   END IF;
+   IF COALESCE (inTradeMarkId,0) = 0
+   THEN
+       RAISE EXCEPTION 'Ошибка.Торговая марка не выбрана.';
+   END IF;
+   
+      
    ioId := lpInsertUpdate_Object_ContractTradeMark(ioId          := ioId          :: Integer
                                                  , inCode        := inCode        ::Integer
                                                  , inContractId  := inContractId

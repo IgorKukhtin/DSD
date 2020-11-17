@@ -461,7 +461,7 @@ BEGIN
    END IF;
 
    IF EXISTS (SELECT 1 FROM ObjectLink_UserRole_View  WHERE UserId = vbUserId AND RoleId in (zc_Enum_Role_Admin(), zc_Enum_Role_PharmacyManager()))
-      AND (DATE_PART('HOUR', CURRENT_TIME)::Integer IN (9, 14, 17) AND DATE_PART('MINUTE',  CURRENT_TIME)::Integer >= 0 AND DATE_PART('MINUTE',  CURRENT_TIME)::Integer <= 20)
+      AND (DATE_PART('HOUR', CURRENT_TIME)::Integer IN (17) AND DATE_PART('MINUTE',  CURRENT_TIME)::Integer >= 0 AND DATE_PART('MINUTE',  CURRENT_TIME)::Integer <= 20)
    THEN
 
      vbCount := gpSelect_PriceCheck_PUSH (inPercent := 20, inSession := inSession);

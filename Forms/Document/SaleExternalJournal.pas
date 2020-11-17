@@ -69,6 +69,10 @@ type
     bbStartLoadNovus: TdxBarButton;
     bbStartLoadMetro: TdxBarButton;
     bbStartLoadFora: TdxBarButton;
+    spGetImportSettingId_Silpo: TdsdStoredProc;
+    actGetImportSettingSilpo: TdsdExecStoredProc;
+    actStartLoadSilpo: TMultiAction;
+    bbStartLoadSilpo: TdxBarButton;
   private
     { Private declarations }
   public

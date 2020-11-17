@@ -795,10 +795,15 @@ CREATE OR REPLACE FUNCTION zc_ObjectBoolean_DiffKind_LessYear() RETURNS Integer 
 INSERT INTO ObjectBooleanDesc (DescId, Code, ItemName)
   SELECT zc_Object_DiffKind(), 'zc_ObjectBoolean_DiffKind_LessYear', 'Разрешен заказ товара менее года' WHERE NOT EXISTS (SELECT * FROM ObjectBooleanDesc WHERE Code = 'zc_ObjectBoolean_DiffKind_LessYear');
 
+CREATE OR REPLACE FUNCTION zc_ObjectBoolean_Juridical_UseReprice() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM ObjectBooleanDesc WHERE Code = 'zc_ObjectBoolean_Juridical_UseReprice'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
+INSERT INTO ObjectBooleanDesc (DescId, Code, ItemName)
+  SELECT zc_Object_Juridical(), 'zc_ObjectBoolean_Juridical_UseReprice', 'Участвуют в автопереоценке' WHERE NOT EXISTS (SELECT * FROM ObjectBooleanDesc WHERE Code = 'zc_ObjectBoolean_Juridical_UseReprice');
+
 
 /*-------------------------------------------------------------------------------
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.  Воробкало А.А.  Ярошенко Р.Ф.   Подмогильный В.В.   Шаблий О.В.
+ 16.11.20                                                                                                          * zc_ObjectBoolean_Juridical_UseReprice 
  10.11.20                                                                                                          * zc_ObjectBoolean_DiffKind_LessYear 
  06.11.20                                                                                                          * zc_ObjectBoolean_Unit_MinPercentMarkup 
  04.10.20                                                                                                          * zc_ObjectBoolean_Contract_PartialPay 

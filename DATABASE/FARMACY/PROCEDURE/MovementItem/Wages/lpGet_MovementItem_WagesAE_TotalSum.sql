@@ -50,6 +50,14 @@ BEGIN
                             AND MIFloat_SummaSUN1.DescId in (zc_MIFloat_SummaCleaning(), zc_MIFloat_SummaSP(), zc_MIFloat_SummaOther(),
                                                              zc_MIFloat_ValidationResults(), zc_MIFloat_SummaSUN1())), 0);
 
+    IF vbOperDate >= '01.12.2020'
+    THEN
+      vbSumma1 := vbSumma1 + COALESCE((SELECT SUM(MIFloat_SummaSUN1.ValueData)
+                                       FROM MovementItemFloat AS MIFloat_SummaSUN1
+                                       WHERE MIFloat_SummaSUN1.MovementItemId = inMovementItemId
+                                          AND MIFloat_SummaSUN1.DescId = zc_MIFloat_IntentionalPeresort()), 0);
+    END IF;
+
     IF vbOperDate >= '01.03.2020'
     THEN
 

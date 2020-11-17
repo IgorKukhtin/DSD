@@ -2,7 +2,8 @@
 
 DROP FUNCTION IF EXISTS gpInsertUpdate_Object_ArticleLoss (Integer, Integer, TVarChar, Integer, Integer, TVarChar);
 DROP FUNCTION IF EXISTS gpInsertUpdate_Object_ArticleLoss (Integer, Integer, TVarChar, TVarChar, Integer, Integer, TVarChar);
-DROP FUNCTION IF EXISTS gpInsertUpdate_Object_ArticleLoss (Integer, Integer, TVarChar, TVarChar, Integer, Integer, Integer, TVarChar);
+--DROP FUNCTION IF EXISTS gpInsertUpdate_Object_ArticleLoss (Integer, Integer, TVarChar, TVarChar, Integer, Integer, Integer, TVarChar);
+DROP FUNCTION IF EXISTS gpInsertUpdate_Object_ArticleLoss (Integer, Integer, TVarChar, TVarChar, Integer, Integer, Integer, Integer, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpInsertUpdate_Object_ArticleLoss(
  INOUT ioId                       Integer   ,     -- ключ объекта <Статьи списания>
@@ -12,6 +13,7 @@ CREATE OR REPLACE FUNCTION gpInsertUpdate_Object_ArticleLoss(
     IN inInfoMoneyId              Integer   ,     -- Статьи назначения
     IN inProfitLossDirectionId    Integer   ,     -- Аналитики статей отчета о прибылях и убытках - направление
     IN inBusinessId               Integer   ,     -- Бизнес
+    IN inBranchId                 Integer   ,     -- Филиал
     IN inSession                  TVarChar        -- сессия пользователя
 )
   RETURNS integer AS
@@ -45,6 +47,8 @@ BEGIN
    PERFORM lpInsertUpdate_ObjectLink(zc_ObjectLink_ArticleLoss_ProfitLossDirection(), ioId, inProfitLossDirectionId);
    -- сохранили связь с <Бизнес>
    PERFORM lpInsertUpdate_ObjectLink(zc_ObjectLink_ArticleLoss_Business(), ioId, inBusinessId);
+   -- сохранили связь с <Филиал>
+   PERFORM lpInsertUpdate_ObjectLink(zc_ObjectLink_ArticleLoss_Branch(), ioId, inBranchId);
    -- сохранили cсвойство с <ПРимечание>
    PERFORM lpInsertUpdate_ObjectString(zc_ObjectString_ArticleLoss_Comment(), ioId, inComment);
   
@@ -60,6 +64,7 @@ END;$BODY$
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.    Манько Д.А.
+ 16.11.20         * inBranchId
  27.07.17         * add inBusinessId
  05.07.17         * add inComment
  01.09.14         *

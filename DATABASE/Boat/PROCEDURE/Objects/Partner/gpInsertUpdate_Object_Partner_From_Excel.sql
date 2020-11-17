@@ -46,13 +46,21 @@ BEGIN
            vbPartnerId := (SELECT Object.Id FROM Object WHERE Object.DescId = zc_Object_Partner() AND Object.ObjectCode = inCode);
        END IF;
        -- если не нашли по коду пробуем по наименованию
-       IF COALESCE (vbPartnerId,0) = 0 AND COALESCE (inName, '') <> ''
+       /*IF COALESCE (vbPartnerId,0) = 0 AND COALESCE (inName, '') <> ''
        THEN
            vbPartnerId := (SELECT Object.Id FROM Object WHERE Object.DescId = zc_Object_Partner() AND TRIM (Object.ValueData) Like TRIM (TRIM (inName)||' '||TRIM (inName2)||' '||TRIM (inName3)) );
        END IF;
+       */
    ELSE
        RETURN;
    END IF;
+   
+   inName := REPLACE (REPLACE (REPLACE (REPLACE(inName, 'o','$') , 'a','$'), 'u','$'), '?','$');
+   inName2 := REPLACE (REPLACE (REPLACE (REPLACE(inName2, 'o','$') , 'a','$'), 'u','$'), '?','$');
+   inName3 := REPLACE (REPLACE (REPLACE (REPLACE(inName3, 'o','$') , 'a','$'), 'u','$'), '?','$');
+   inStreet := REPLACE (REPLACE (REPLACE (REPLACE(inStreet, 'o','$') , 'a','$'), 'u','$'), '?','$');
+   inCity := REPLACE (REPLACE (REPLACE (REPLACE(inCity, 'o','$') , 'a','$'), 'u','$'), '?','$');
+   inMember := REPLACE (REPLACE (REPLACE (REPLACE(inMember, 'o','$') , 'a','$'), 'u','$'), '?','$');
    
    IF COALESCE (inBankName, '') <> ''
    THEN

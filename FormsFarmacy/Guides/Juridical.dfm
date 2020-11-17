@@ -3,7 +3,7 @@ inherited JuridicalForm: TJuridicalForm
   ClientWidth = 761
   AddOnFormData.ChoiceAction = dsdChoiceGuides
   ExplicitWidth = 777
-  ExplicitHeight = 346
+  ExplicitHeight = 347
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
@@ -215,6 +215,14 @@ inherited JuridicalForm: TJuridicalForm
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
             Width = 115
+          end
+          object isUseReprice: TcxGridDBColumn
+            Caption = #1059#1095#1072#1089#1090#1074#1091#1102#1090' '#1074' '#1072#1074#1090#1086#1087#1077#1088#1077#1086#1094#1077#1085#1082#1077
+            DataBinding.FieldName = 'isUseReprice'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 76
           end
           object isErased: TcxGridDBColumn
             Caption = #1059#1076#1072#1083#1077#1085

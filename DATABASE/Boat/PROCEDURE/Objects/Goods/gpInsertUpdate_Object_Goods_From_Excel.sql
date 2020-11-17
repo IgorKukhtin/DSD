@@ -89,6 +89,7 @@ BEGIN
    THEN
        -- пробуем найти группу артикула
        vbGoodsGroupId := (SELECT Object.Id FROM Object WHERE Object.DescId = zc_Object_GoodsGroup() AND Object.ObjectCode = inGoodsGroupCode);
+
        --если нет такой группы создаем
        IF COALESCE (vbGoodsGroupId,0) = 0
        THEN
@@ -102,6 +103,12 @@ BEGIN
                                                                     , inSession         := inSession :: TVarChar
                                                                      ) AS tmp);
        END IF;
+   END IF;
+
+          --если не нашли ощибка
+   IF COALESCE (vbGoodsGroupId,0) = 0
+   THEN
+        RAISE EXCEPTION 'Ошибка.111Группа товара с кодом = <%> не найдена. Товар <%>', inGoodsGroupCode, inName;
    END IF;
 
    IF COALESCE (inPartnerCode, 0) <> 0

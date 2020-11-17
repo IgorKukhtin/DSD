@@ -72,6 +72,7 @@ type
     SummaFine: TcxGridDBBandedColumn;
     actReport_FoundPositionsSUN: TdsdOpenForm;
     dxBarButton14: TdxBarButton;
+    SummaIntentionalPeresort: TcxGridDBBandedColumn;
   private
     { Private declarations }
   public

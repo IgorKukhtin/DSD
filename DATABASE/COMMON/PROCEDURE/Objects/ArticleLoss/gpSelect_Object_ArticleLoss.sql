@@ -14,6 +14,7 @@ RETURNS TABLE (Id Integer, Code Integer, Name TVarChar
              , ProfitLossGroupId Integer, ProfitLossGroupCode Integer, ProfitLossGroupName TVarChar
              , ProfitLossDirectionId Integer, ProfitLossDirectionCode Integer, ProfitLossDirectionName TVarChar
              , BusinessId Integer, BusinessName TVarChar
+             , BranchId Integer, BranchName TVarChar
              , Comment TVarChar
 
              , isErased boolean) AS
@@ -47,6 +48,8 @@ $BODY$BEGIN
         
         , Object_Business.Id              AS BusinessId
         , Object_Business.ValueData       AS BusinessName        
+        , Object_Branch.Id                AS BranchId
+        , Object_Branch.ValueData         AS BranchName
         
         , ObjectString_Comment.ValueData  AS Comment       
 
@@ -67,6 +70,11 @@ $BODY$BEGIN
                              ON ObjectLink_ArticleLoss_Business.ObjectId = Object_ArticleLoss.Id
                             AND ObjectLink_ArticleLoss_Business.DescId = zc_ObjectLink_ArticleLoss_Business()
         LEFT JOIN Object AS Object_Business ON Object_Business.Id = ObjectLink_ArticleLoss_Business.ChildObjectId
+
+        LEFT JOIN ObjectLink AS ObjectLink_ArticleLoss_Branch
+                             ON ObjectLink_ArticleLoss_Branch.ObjectId = Object_ArticleLoss.Id
+                            AND ObjectLink_ArticleLoss_Branch.DescId = zc_ObjectLink_ArticleLoss_Branch()
+        LEFT JOIN Object AS Object_Branch ON Object_Branch.Id = ObjectLink_ArticleLoss_Branch.ChildObjectId
         
         LEFT JOIN ObjectString AS ObjectString_Comment
                                ON ObjectString_Comment.ObjectId = Object_ArticleLoss.Id
@@ -83,6 +91,7 @@ $BODY$
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.    Манько Д.А.
+ 16.11.20         * add Branch
  27.07.17         * add Business
  05.07.17         *
  01.09.14         * 

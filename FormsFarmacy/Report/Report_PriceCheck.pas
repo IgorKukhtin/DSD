@@ -81,6 +81,7 @@ type
     cxLabel1: TcxLabel;
     GuidesUser: TdsdGuides;
     cbHideExceptRed: TcxCheckBox;
+    JuridicalPriceAverage: TcxGridDBColumn;
   private
   public
   end;

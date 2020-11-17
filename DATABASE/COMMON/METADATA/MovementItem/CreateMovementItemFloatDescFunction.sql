@@ -1391,10 +1391,15 @@ CREATE OR REPLACE FUNCTION zc_MIFloat_CorrPartialPay() RETURNS Integer AS $BODY$
 INSERT INTO MovementItemFloatDesc(Code, ItemName)
   SELECT 'zc_MIFloat_CorrPartialPay', 'Сумма корректировки долга по оплате частями' WHERE NOT EXISTS (SELECT * FROM MovementItemFloatDesc WHERE Code = 'zc_MIFloat_CorrPartialPay');
   
+CREATE OR REPLACE FUNCTION zc_MIFloat_IntentionalPeresort() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM MovementItemFloatDesc WHERE Code = 'zc_MIFloat_IntentionalPeresort'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
+INSERT INTO MovementItemFloatDesc(Code, ItemName)
+  SELECT 'zc_MIFloat_IntentionalPeresort', 'Штраф за намеренный пересорт' WHERE NOT EXISTS (SELECT * FROM MovementItemFloatDesc WHERE Code = 'zc_MIFloat_IntentionalPeresort');
+  
 
 /*-------------------------------------------------------------------------------
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.   Воробкало А.А.  Ярошенко Р.Ф.   Шаблий О.В.
+ 14.11.20                                                                                                     * zc_MIFloat_IntentionalPeresort
  03.11.20                                                                                                     * zc_MIFloat_CorrPartialPay
  01.09.20                                                                                                     * zc_MIFloat_PenaltySUN
  28.08.20                                                                                                     * zc_MIFloat_MISendPDChangeId

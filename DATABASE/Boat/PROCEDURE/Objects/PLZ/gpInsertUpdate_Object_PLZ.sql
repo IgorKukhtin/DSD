@@ -30,7 +30,7 @@ BEGIN
    ioCode:= lfGet_ObjectCode (ioCode, zc_Object_PLZ()); 
    
    -- проверка уникальности для свойства <Наименование>
-   PERFORM lpCheckUnique_Object_ValueData (ioId, zc_Object_PLZ(), inName); 
+   --PERFORM lpCheckUnique_Object_ValueData (ioId, zc_Object_PLZ(), inName); 
 
    -- сохранили <Объект>
    ioId := lpInsertUpdate_Object (ioId, zc_Object_PLZ(), ioCode, inName);

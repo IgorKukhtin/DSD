@@ -2804,7 +2804,8 @@
     object actContractGoodsChoiceOpenForm: TdsdOpenForm
       Category = 'DSDLib'
       MoveParams = <>
-      Caption = 'actContractGoodsChoiceOpenForm'
+      Caption = #1055#1088#1086#1089#1084#1086#1090#1088' '#1057#1087#1077#1094#1080#1092#1080#1082#1072#1094#1080#1080
+      Hint = #1055#1088#1086#1089#1084#1086#1090#1088' '#1057#1087#1077#1094#1080#1092#1080#1082#1072#1094#1080#1080
       ImageIndex = 26
       FormName = 'TContractGoodsChoiceForm'
       FormNameParam.Value = 'TContractGoodsChoiceForm'
@@ -2875,6 +2876,23 @@
           Value = Null
           Component = ClientDataSet
           ComponentItem = 'PriceListGoodsName'
+          DataType = ftString
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'ContractTagId'
+          Value = Null
+          Component = ClientDataSet
+          ComponentItem = 'ContractTagId'
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'ContractTagName'
+          Value = Null
+          Component = ClientDataSet
+          ComponentItem = 'ContractTagName'
           DataType = ftString
           ParamType = ptInput
           MultiSelectSeparator = ','

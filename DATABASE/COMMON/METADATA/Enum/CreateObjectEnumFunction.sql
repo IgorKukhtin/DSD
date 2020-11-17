@@ -1269,11 +1269,16 @@ CREATE OR REPLACE FUNCTION zc_Enum_ImportSetting_SaleExternalMetro() RETURNS Int
 --Загрузка Продажа покупателя (внешняя) Фора
 CREATE OR REPLACE FUNCTION zc_Enum_ImportType_SaleExternalFora() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT ObjectId AS Id FROM ObjectString WHERE ValueData = 'zc_Enum_ImportType_SaleExternalFora' AND DescId = zc_ObjectString_Enum()); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
 CREATE OR REPLACE FUNCTION zc_Enum_ImportSetting_SaleExternalFora() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT ObjectId AS Id FROM ObjectString WHERE ValueData = 'zc_Enum_ImportSetting_SaleExternalFora' AND DescId = zc_ObjectString_Enum()); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
+--Загрузка Продажа покупателя (внешняя) Сильпо
+CREATE OR REPLACE FUNCTION zc_Enum_ImportType_SaleExternalSilpo() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT ObjectId AS Id FROM ObjectString WHERE ValueData = 'zc_Enum_ImportType_SaleExternalSilpo' AND DescId = zc_ObjectString_Enum()); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
+CREATE OR REPLACE FUNCTION zc_Enum_ImportSetting_SaleExternalSilpo() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT ObjectId AS Id FROM ObjectString WHERE ValueData = 'zc_Enum_ImportSetting_SaleExternalSilpo' AND DescId = zc_ObjectString_Enum()); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
 
 /*-------------------------------------------------------------------------------*/
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.   Воробкало А.А.
+ 16.11.20         * add zc_Enum_ImportType_SaleExternalSilpo
+                        zc_Enum_ImportSetting_SaleExternalSilpo
  01.11.20         *
  22.06.20         *
  24.03.20         *

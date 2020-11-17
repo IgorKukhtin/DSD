@@ -954,10 +954,10 @@ end;
 procedure TLoadFormTest.LoadReportFormTest;
 begin
 
-  {
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_PriceCheckForm'));
   TdsdFormStorageFactory.GetStorage.Load('TReport_PriceCheckForm');
 
+  {
 
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_ClippedReprice_SaleForm'));
   TdsdFormStorageFactory.GetStorage.Load('TReport_ClippedReprice_SaleForm');
@@ -1898,8 +1898,8 @@ begin
 
 //  TdsdFormStorageFactory.GetStorage.Save(GetForm('TWagesJournalForm'));
 //  TdsdFormStorageFactory.GetStorage.Load('TWagesJournalForm');
-  TdsdFormStorageFactory.GetStorage.Save(GetForm('TWagesForm'));
-  TdsdFormStorageFactory.GetStorage.Load('TWagesForm');
+//  TdsdFormStorageFactory.GetStorage.Save(GetForm('TWagesForm'));
+//  TdsdFormStorageFactory.GetStorage.Load('TWagesForm');
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TWagesAdditionalExpensesForm'));
   TdsdFormStorageFactory.GetStorage.Load('TWagesAdditionalExpensesForm');
 //

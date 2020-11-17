@@ -102,21 +102,22 @@ BEGIN
 
       -- Pезультат
     CREATE TEMP TABLE tmpResult (
-            GoodsId         Integer,
-            GoodsCode       Integer,
-            GoodsName       TVarChar,
-            UnitCount       Integer,
-            BadPriceCount   Integer,
-            BadPricePlus    Integer,
-            BadPriceMinus   Integer,
-            isBadPriceUser  Boolean,
-            PriceIn         TFLoat,
-            DateIn          TDateTime,
-            JuridicalInName TVarChar,
-            JuridicalPrice  TFLoat,
-            PriceAverage    TFLoat,
-            PriceMin        TFLoat,
-            PriceMax        TFLoat
+            GoodsId               Integer,
+            GoodsCode             Integer,
+            GoodsName             TVarChar,
+            UnitCount             Integer,
+            BadPriceCount         Integer,
+            BadPricePlus          Integer,
+            BadPriceMinus         Integer,
+            isBadPriceUser        Boolean,
+            PriceIn               TFLoat,
+            DateIn                TDateTime,
+            JuridicalInName       TVarChar,
+            JuridicalPrice        TFLoat,
+            JuridicalPriceAverage TFLoat,
+            PriceAverage          TFLoat,
+            PriceMin              TFLoat,
+            PriceMax              TFLoat
 
       ) ON COMMIT DROP;
 
@@ -280,7 +281,7 @@ BEGIN
     WHERE tmpResult.GoodsId = T1.GoodsId;
 
     -- Последняя цена из прайса Днепр
-    UPDATE tmpResult SET JuridicalPrice = T1.JuridicalPrice
+    UPDATE tmpResult SET JuridicalPrice = T1.JuridicalPrice, JuridicalPriceAverage = T1.JuridicalPriceAverage
     FROM (WITH DD AS (SELECT DISTINCT
             Object_MarginCategoryItem_View.MarginPercent,
             Object_MarginCategoryItem_View.MinPrice,
@@ -344,6 +345,7 @@ BEGIN
                                                                                                                      WHEN LoadPriceListItem.GoodsNDS LIKE '%7%' THEN 7
                                                                                                                      WHEN LoadPriceListItem.GoodsNDS IN ('0', 'Без НДС') THEN 0 END,
                                                                                                                      ObjectFloat_NDSKind_NDS.ValueData, 0))/100)     AS JuridicalPrice
+                                     
 
                                    FROM LoadPriceList
 
@@ -406,10 +408,19 @@ BEGIN
                                         ROW_NUMBER() OVER (PARTITION BY tmpGoodsPrice.GoodsId ORDER BY tmpGoodsPrice.JuridicalPrice) AS Ord
                                    FROM tmpGoodsPrice
                                  )
+          , tmpGoodsPriceAverage AS (SELECT tmpGoodsPrice.GoodsId                                          AS GoodsId,
+                                            ROUND(Sum(tmpGoodsPrice.JuridicalPrice) / count(*), 2)::TFloat AS JuridicalPriceAverage
+                                       FROM tmpGoodsPrice
+                                            INNER JOIN Object AS Object_Juridical ON Object_Juridical.Id = tmpGoodsPrice.JuridicalId
+                                                             AND Object_Juridical.ObjectCode <= 3
+                                       GROUP BY tmpGoodsPrice.GoodsId 
+                                     )
 
-          SELECT tmpGoodsPriceOrd.GoodsId                 AS GoodsId,
-                 tmpGoodsPriceOrd.JuridicalPrice          AS JuridicalPrice
+          SELECT tmpGoodsPriceOrd.GoodsId                    AS GoodsId,
+                 tmpGoodsPriceOrd.JuridicalPrice             AS JuridicalPrice,
+                 tmpGoodsPriceAverage.JuridicalPriceAverage  AS JuridicalPriceAverage
           FROM tmpGoodsPriceOrd
+               LEFT JOIN tmpGoodsPriceAverage ON tmpGoodsPriceAverage.GoodsId = tmpGoodsPriceOrd.GoodsId
           WHERE tmpGoodsPriceOrd.Ord = 1) AS T1
     WHERE tmpResult.GoodsId = T1.GoodsId;
 

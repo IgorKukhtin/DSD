@@ -147,6 +147,7 @@ BEGIN
                                    AND MIFloat_Price.DescId = zc_MIFloat_Price()
 
         LEFT JOIN tmpIncomeList ON tmpIncomeList.MovementItemId = Container.MovementItemId
+   ORDER BY OperDate
   ;
 END;
 $BODY$
@@ -160,6 +161,5 @@ $BODY$
 */
 
 -- тест
---
-SELECT * FROM gpReport_Sale_PartialSale (inStartDate := CURRENT_DATE - INTERVAL '7 DAY',  inEndDate := CURRENT_DATE,  inJuridicalId := 13310756, inFromId := 9526799, inSession:= '3')
+-- SELECT * FROM gpReport_Sale_PartialSale (inStartDate := CURRENT_DATE - INTERVAL '7 DAY',  inEndDate := CURRENT_DATE,  inJuridicalId := 13310756, inFromId := 9526799, inSession:= '3')
                               

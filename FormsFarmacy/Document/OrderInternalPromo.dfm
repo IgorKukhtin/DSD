@@ -106,6 +106,7 @@ inherited OrderInternalPromoForm: TOrderInternalPromoForm
             DataBinding.FieldName = 'isChecked'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
+            Options.Editing = False
             Width = 57
           end
           object isComplement: TcxGridDBColumn

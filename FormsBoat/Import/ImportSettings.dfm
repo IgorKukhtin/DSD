@@ -761,6 +761,12 @@ inherited ImportSettingsForm: TImportSettingsForm
         MultiSelectSeparator = ','
       end
       item
+        Name = 'inContractId'
+        Value = Null
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
         Name = 'inFileTypeId'
         Value = Null
         Component = MasterCDS
@@ -777,10 +783,29 @@ inherited ImportSettingsForm: TImportSettingsForm
         MultiSelectSeparator = ','
       end
       item
+        Name = 'inEmailId'
+        Value = Null
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inContactPersonId'
+        Value = Null
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
         Name = 'inStartRow'
         Value = Null
         Component = MasterCDS
         ComponentItem = 'StartRow'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inHDR'
+        Value = False
+        DataType = ftBoolean
         ParamType = ptInput
         MultiSelectSeparator = ','
       end
@@ -790,6 +815,41 @@ inherited ImportSettingsForm: TImportSettingsForm
         Component = MasterCDS
         ComponentItem = 'Directory'
         DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inQuery'
+        Value = Null
+        DataType = ftWideString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inStartTime'
+        Value = Null
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inEndTime'
+        Value = Null
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inTime'
+        Value = '0'
+        DataType = ftFloat
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inIsMultiLoad'
+        Value = False
+        DataType = ftBoolean
         ParamType = ptInput
         MultiSelectSeparator = ','
       end>
@@ -899,6 +959,7 @@ inherited ImportSettingsForm: TImportSettingsForm
     ColumnAddOnList = <>
     ColumnEnterList = <>
     SummaryItemList = <>
+    PropertiesCellList = <>
     Left = 648
     Top = 192
   end

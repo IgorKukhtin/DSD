@@ -12,19 +12,19 @@ inherited Report_Sale_PartialSaleForm: TReport_Sale_PartialSaleForm
     Width = 759
     Height = 348
     TabOrder = 3
-    ExplicitTop = 65
-    ExplicitWidth = 592
-    ExplicitHeight = 310
+    ExplicitTop = 85
+    ExplicitWidth = 759
+    ExplicitHeight = 348
     ClientRectBottom = 348
     ClientRectRight = 759
     inherited tsMain: TcxTabSheet
-      ExplicitWidth = 592
-      ExplicitHeight = 310
+      ExplicitWidth = 759
+      ExplicitHeight = 348
       inherited cxGrid: TcxGrid
         Width = 759
         Height = 348
-        ExplicitWidth = 592
-        ExplicitHeight = 310
+        ExplicitWidth = 759
+        ExplicitHeight = 348
         inherited cxGridDBTableView: TcxGridDBTableView
           DataController.DetailKeyFieldNames = 'JuridicalId;FromId'
           DataController.Summary.FooterSummaryItems = <
@@ -51,6 +51,22 @@ inherited Report_Sale_PartialSaleForm: TReport_Sale_PartialSaleForm
           Styles.Selection = nil
           Styles.Footer = nil
           Styles.Header = nil
+          object OperDate: TcxGridDBColumn
+            Caption = #1044#1072#1090#1072' '#1087#1088#1086#1076#1072#1078#1080
+            DataBinding.FieldName = 'OperDate'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 136
+          end
+          object InvNumber: TcxGridDBColumn
+            Caption = #1053#1086#1084#1077#1088' '#1076#1086#1082'-'#1090#1072
+            DataBinding.FieldName = 'InvNumber'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 71
+          end
           object UnitName: TcxGridDBColumn
             Caption = #1055#1086#1076#1088#1072#1079#1076#1077#1083#1077#1085#1080#1077
             DataBinding.FieldName = 'UnitName'
@@ -127,7 +143,7 @@ inherited Report_Sale_PartialSaleForm: TReport_Sale_PartialSaleForm
   inherited Panel: TPanel
     Width = 759
     Height = 59
-    ExplicitWidth = 636
+    ExplicitWidth = 759
     ExplicitHeight = 59
     inherited deStart: TcxDateEdit
       Left = 105
@@ -138,7 +154,6 @@ inherited Report_Sale_PartialSaleForm: TReport_Sale_PartialSaleForm
     inherited deEnd: TcxDateEdit
       Left = 306
       Top = 8
-      Visible = False
       ExplicitLeft = 306
       ExplicitTop = 8
     end
@@ -151,7 +166,6 @@ inherited Report_Sale_PartialSaleForm: TReport_Sale_PartialSaleForm
     inherited cxLabel2: TcxLabel
       Left = 196
       Top = 9
-      Visible = False
       ExplicitLeft = 196
       ExplicitTop = 9
     end
@@ -356,47 +370,5 @@ inherited Report_Sale_PartialSaleForm: TReport_Sale_PartialSaleForm
       end>
     Left = 176
     Top = 264
-  end
-  object spFormPartialSale: TdsdStoredProc
-    StoredProcName = 'gpInsert_ChangeIncomePayment_PartialSale'
-    DataSets = <>
-    OutputType = otResult
-    Params = <
-      item
-        Name = 'inOperDate'
-        Value = 'NULL'
-        Component = deStart
-        DataType = ftDateTime
-        ParamType = ptInput
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'inJuridicalId'
-        Value = Null
-        Component = MasterCDS
-        ComponentItem = 'JuridicalId'
-        ParamType = ptInput
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'inFromId'
-        Value = Null
-        Component = MasterCDS
-        ComponentItem = 'FromId'
-        ParamType = ptInput
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'inSumma'
-        Value = Null
-        Component = MasterCDS
-        ComponentItem = 'Summa'
-        DataType = ftFloat
-        ParamType = ptInput
-        MultiSelectSeparator = ','
-      end>
-    PackSize = 1
-    Left = 376
-    Top = 216
   end
 end

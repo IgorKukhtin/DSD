@@ -58,6 +58,7 @@ RETURNS TABLE (
     isTopNo_Unit        Boolean ,   -- Не учитывать ТОП для подразделения
     IsPromo             Boolean ,   -- Акция
     isResolution_224    Boolean ,   -- Постановление 224
+    isUseReprice        Boolean ,   -- Переоценивать в ночной переоценке
     Reprice             Boolean ,   --
     isGoodsReprice      Boolean
     )
@@ -375,6 +376,7 @@ BEGIN
                                    AND ObjectBoolean_Goods_Resolution_224.DescId = zc_ObjectBoolean_Goods_Resolution_224()
 
         WHERE Object_Goods.isSp = FALSE
+         -- AND COALESCE (ObjectBoolean_Juridical_UseReprice.ValueData, FALSE) = True
     )
 
   , tmpGoodsRepriceAll AS (SELECT tmp.Name
@@ -443,6 +445,7 @@ BEGIN
         vbisTopNo_Unit AS isTopNo_Unit,
         ResultSet.IsPromo,
         ResultSet.isResolution_224,
+        COALESCE (ObjectBoolean_Juridical_UseReprice.ValueData, FALSE) :: Boolean  AS isUseReprice,
         CASE WHEN (COALESCE (inUnitId_to, 0) = 0)
                         AND (ResultSet.ExpirationDate + INTERVAL '6 month' < ResultSet.MinExpirationDate)
                         AND (ResultSet.ExpirationDate < CURRENT_DATE + INTERVAL '6 month')
@@ -498,6 +501,11 @@ BEGIN
                              AND ObjectFloat_Contract_Percent.DescId = zc_ObjectFloat_Contract_Percent()
 
         LEFT JOIN tmpGoodsReprice ON tmpGoodsReprice.GoodsId = ResultSet.Id_retail
+
+        LEFT JOIN ObjectBoolean AS ObjectBoolean_Juridical_UseReprice
+                                ON ObjectBoolean_Juridical_UseReprice.ObjectId = ResultSet.JuridicalId  
+                               AND ObjectBoolean_Juridical_UseReprice.DescId = zc_ObjectBoolean_Juridical_UseReprice()
+
 
     WHERE
        ((inUnitId_to > 0 AND ResultSet.NewPrice_to > 0 AND 0 <> CAST (CASE WHEN COALESCE (ResultSet.LastPrice,0) = 0 THEN 0.0

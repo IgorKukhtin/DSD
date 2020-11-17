@@ -10,7 +10,7 @@ CREATE OR REPLACE FUNCTION gpSelect_MovementItem_WagesAdditionalExpenses(
 )
 RETURNS TABLE (Id Integer
              , UnitID Integer, UnitCode Integer, UnitName TVarChar
-             , SummaCleaning TFloat, SummaSP TFloat, SummaOther TFloat, SummaValidationResults TFloat, SummaSUN1 TFloat, SummaFine TFloat
+             , SummaCleaning TFloat, SummaSP TFloat, SummaOther TFloat, SummaValidationResults TFloat, SummaIntentionalPeresort TFloat, SummaSUN1 TFloat, SummaFine TFloat
              , SummaTechnicalRediscount TFloat, SummaMoneyBox TFloat, SummaFullCharge TFloat, SummaFullChargeFact TFloat, SummaMoneyBoxUsed TFloat, SummaMoneyBoxResidual TFloat
              , SummaTotal TFloat
              , isIssuedBy Boolean, MIDateIssuedBy TDateTime
@@ -139,6 +139,7 @@ BEGIN
                  , NULL::TFloat                       AS SummaSP
                  , NULL::TFloat                       AS SummaOther
                  , NULL::TFloat                       AS SummaValidationResults
+                 , NULL::TFloat                       AS SummaIntentionalPeresort
                  , NULL::TFloat                       AS SummaSUN1
                  , NULL::TFloat                       AS SummaFine 
                  , NULL::TFloat                       AS SummaTechnicalRediscount
@@ -167,17 +168,18 @@ BEGIN
                                          WHERE MovementItem.MovementId = inMovementId
                                            AND MovementItem.DescId = zc_MI_Sign())
             UNION ALL
-            SELECT MovementItem.Id                     AS Id
-                 , MovementItem.ObjectId               AS UnitID
-                 , Object_Unit.ObjectCode              AS UnitCode
-                 , Object_Unit.ValueData               AS UnitName
+            SELECT MovementItem.Id                       AS Id
+                 , MovementItem.ObjectId                 AS UnitID
+                 , Object_Unit.ObjectCode                AS UnitCode
+                 , Object_Unit.ValueData                 AS UnitName
 
-                 , MIFloat_SummaCleaning.ValueData     AS SummaCleaning
-                 , MIFloat_SummaSP.ValueData           AS SummaSP
-                 , MIFloat_SummaOther.ValueData        AS SummaOther
-                 , MIFloat_ValidationResults.ValueData AS SummaValidationResults
-                 , MIFloat_SummaSUN1.ValueData         AS SummaSUN1
-                 , FoundPositionsSUN.SummaFine         AS SummaFine
+                 , MIFloat_SummaCleaning.ValueData       AS SummaCleaning
+                 , MIFloat_SummaSP.ValueData             AS SummaSP
+                 , MIFloat_SummaOther.ValueData          AS SummaOther
+                 , MIFloat_ValidationResults.ValueData   AS SummaValidationResults
+                 , MIFloat_IntentionalPeresort.ValueData AS SummaIntentionalPeresort
+                 , MIFloat_SummaSUN1.ValueData           AS SummaSUN1
+                 , FoundPositionsSUN.SummaFine           AS SummaFine
 --                 , tmpTechnicalRediscount.SummWages    AS SummaTechnicalRediscount
                  , MIFloat_SummaTechnicalRediscount.ValueData         AS SummaTechnicalRediscount
                  , CASE WHEN COALESCE(MIFloat_SummaMoneyBox.ValueData, 0) + COALESCE(MIFloat_SummaMoneyBoxMonth.ValueData, 0) > 0 THEN 
@@ -217,6 +219,10 @@ BEGIN
                   LEFT JOIN MovementItemFloat AS MIFloat_ValidationResults
                                               ON MIFloat_ValidationResults.MovementItemId = MovementItem.Id
                                              AND MIFloat_ValidationResults.DescId = zc_MIFloat_ValidationResults()
+
+                  LEFT JOIN MovementItemFloat AS MIFloat_IntentionalPeresort
+                                              ON MIFloat_IntentionalPeresort.MovementItemId = MovementItem.Id
+                                             AND MIFloat_IntentionalPeresort.DescId = zc_MIFloat_IntentionalPeresort()
 
                   LEFT JOIN MovementItemFloat AS MIFloat_SummaSUN1
                                               ON MIFloat_SummaSUN1.MovementItemId = MovementItem.Id
@@ -344,6 +350,7 @@ BEGIN
                  , MIFloat_SummaSP.ValueData           AS SummaSP
                  , MIFloat_SummaOther.ValueData        AS SummaOther
                  , MIFloat_ValidationResults.ValueData AS SummaValidationResults
+                 , MIFloat_IntentionalPeresort.ValueData AS SummaIntentionalPeresort
                  , MIFloat_SummaSUN1.ValueData         AS SummaSUN1
                  , FoundPositionsSUN.SummaFine         AS SummaFine
                  , tmpTechnicalRediscount.SummWages    AS SummaTechnicalRediscount
@@ -385,6 +392,10 @@ BEGIN
                   LEFT JOIN MovementItemFloat AS MIFloat_ValidationResults
                                               ON MIFloat_ValidationResults.MovementItemId = MovementItem.Id
                                              AND MIFloat_ValidationResults.DescId = zc_MIFloat_ValidationResults()
+
+                  LEFT JOIN MovementItemFloat AS MIFloat_IntentionalPeresort
+                                              ON MIFloat_IntentionalPeresort.MovementItemId = MovementItem.Id
+                                             AND MIFloat_IntentionalPeresort.DescId = zc_MIFloat_IntentionalPeresort()
 
                   LEFT JOIN MovementItemFloat AS MIFloat_SummaSUN1
                                               ON MIFloat_SummaSUN1.MovementItemId = MovementItem.Id
@@ -447,10 +458,11 @@ $BODY$
 /*
  »—“Œ–»ﬂ –¿«–¿¡Œ“ »: ƒ¿“¿, ¿¬“Œ–
                 ‘ÂÎÓÌ˛Í ».¬.    ÛıÚËÌ ».¬.    ÎËÏÂÌÚ¸Â‚  .».   ÿ‡·ÎËÈ Œ.¬.
+ 14.11.20                                                        *
  21.03.20                                                        *
  02.10.19                                                        *
  01.09.19                                                        *
 */
 -- select * from gpSelect_MovementItem_WagesAdditionalExpenses(inMovementId := 17449644  , inShowAll := 'False' , inIsErased := 'False' ,  inSession := '3');
 
-select * from gpSelect_MovementItem_WagesAdditionalExpenses(inMovementId := 19723487 , inShowAll := 'True' , inIsErased := 'False' ,  inSession := '3');
+select * from gpSelect_MovementItem_WagesAdditionalExpenses(inMovementId := 19723487 , inShowAll := 'False' , inIsErased := 'False' ,  inSession := '3');

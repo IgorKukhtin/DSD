@@ -151,6 +151,11 @@ inherited WagesAdditionalExpensesForm: TWagesAdditionalExpensesForm
               Format = ',0.00;-,0.00; ;'
               Kind = skSum
               Column = SummaFine
+            end
+            item
+              Format = ',0.00;-,0.00; ;'
+              Kind = skSum
+              Column = SummaIntentionalPeresort
             end>
           DataController.Summary.SummaryGroups = <>
           OptionsView.Footer = True
@@ -226,6 +231,18 @@ inherited WagesAdditionalExpensesForm: TWagesAdditionalExpensesForm
             Position.ColIndex = 3
             Position.RowIndex = 0
           end
+          object SummaIntentionalPeresort: TcxGridDBBandedColumn
+            Caption = #1064#1090#1088#1072#1092' '#1079#1072' '#1085#1072#1084#1077#1088#1077#1085#1085#1099#1081' '#1087#1077#1088#1077#1089#1086#1088#1090
+            DataBinding.FieldName = 'SummaIntentionalPeresort'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DisplayFormat = ',0.00;-,0.00; ;'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 76
+            Position.BandIndex = 1
+            Position.ColIndex = 4
+            Position.RowIndex = 0
+          end
           object SummaSUN1: TcxGridDBBandedColumn
             Caption = #1064#1090#1088#1072#1092' '#1087#1086' '#1057#1059#1053'1'
             DataBinding.FieldName = 'SummaSUN1'
@@ -236,7 +253,7 @@ inherited WagesAdditionalExpensesForm: TWagesAdditionalExpensesForm
             Options.Editing = False
             Width = 76
             Position.BandIndex = 1
-            Position.ColIndex = 4
+            Position.ColIndex = 5
             Position.RowIndex = 0
           end
           object SummaFine: TcxGridDBBandedColumn
@@ -252,7 +269,7 @@ inherited WagesAdditionalExpensesForm: TWagesAdditionalExpensesForm
             Options.Editing = False
             Width = 76
             Position.BandIndex = 1
-            Position.ColIndex = 5
+            Position.ColIndex = 6
             Position.RowIndex = 0
           end
           object SummaTechnicalRediscount: TcxGridDBBandedColumn
@@ -1171,6 +1188,15 @@ inherited WagesAdditionalExpensesForm: TWagesAdditionalExpensesForm
         Value = Null
         Component = MasterCDS
         ComponentItem = 'SummaValidationResults'
+        DataType = ftFloat
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inSummaIntentionalPeresort'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'SummaIntentionalPeresort'
         DataType = ftFloat
         ParamType = ptInput
         MultiSelectSeparator = ','
