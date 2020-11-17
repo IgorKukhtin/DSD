@@ -77,7 +77,10 @@ BEGIN
                                , COALESCE (tmp.WeightMaxGross, 0) AS WeightMaxGross           -- Вес брутто полного ящика "по МАКСИМАЛЬНОМУ весу" (E2/E3)
                                , COALESCE (tmp.WeightMaxNet, 0)   AS WeightMaxNet             -- Вес нетто полного ящика "по МАКСИМАЛЬНОМУ весу" (E2/E3)
                           FROM lpSelect_wms_Object_SKU() AS tmp
-                        --WHERE sku_id in ('34570381')
+                        --WHERE sku_id in ('2659002')
+                        --WHERE sku_id IN ('3445471', '5304811', '27981831')
+                        --WHERE InfoMoneyId = 8963 -- Тушенка
+                        --  AND sku_id NOT IN ('40671281', '40671301', '40671311', '47541391', '48461811')
                         --WHERE tmp.BoxId NOT IN (zc_Box_E2(), zc_Box_E3())
 
                          )

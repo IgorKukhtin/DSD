@@ -91,7 +91,8 @@ BEGIN
                 , COALESCE (ObjectBoolean_PartionGoodsKind_From.ValueData, TRUE) AS isPartionGoodsKind_Unit
 
                 , COALESCE (ObjectLink_ArticleLoss_InfoMoney.ChildObjectId, 0) AS InfoMoneyId_ArticleLoss
-                , COALESCE (ObjectLink_Branch.ChildObjectId, 0)                AS BranchId_ProfitLoss -- по подразделению (у авто,!!!физ.лица!!!, кому, от кого)
+                  -- по ArticleLoss OR подразделению (у авто,!!!физ.лица!!!, кому, от кого)
+                , COALESCE (ObjectLink_ArticleLoss_Branch.ChildObjectId, ObjectLink_Branch.ChildObjectId, 0) AS BranchId_ProfitLoss
 
                   -- Группы ОПиУ (!!!приоритет - ArticleLoss!!!)
                 , COALESCE (View_ProfitLossDirection.ProfitLossGroupId, COALESCE (lfSelect.ProfitLossGroupId, 0)) AS ProfitLossGroupId
@@ -114,7 +115,9 @@ BEGIN
                                                                                       END) AS ProfitLossDirectionId
 
                 , COALESCE (ObjectLink_UnitFrom_Juridical.ChildObjectId, zc_Juridical_Basis()) AS JuridicalId_Basis
-                , COALESCE (ObjectLink_ArticleLoss_Business.ChildObjectId, COALESCE (ObjectLink_Business.ChildObjectId, 0)) AS BusinessId_ProfitLoss -- по подразделению (у авто,!!!физ.лица!!!, кому, от кого)
+                  -- по подразделению (у авто,!!!физ.лица!!!, кому, от кого)
+                , COALESCE (ObjectLink_ArticleLoss_Business.ChildObjectId, ObjectLink_Business.ChildObjectId, 0) AS BusinessId_ProfitLoss
+                  --
                 , COALESCE (MovementLinkObject_ArticleLoss.ObjectId, lfSelect.UnitId)          AS UnitId_ProfitLoss
                   -- Подраделение кому или Юр.Лицо - перевыставление
                 , COALESCE (ObjectLink_Contract_Juridical.ChildObjectId, MovementLinkObject_To.ObjectId) AS ObjectExtId_Analyzer
@@ -189,6 +192,9 @@ BEGIN
                 LEFT JOIN ObjectLink AS ObjectLink_ArticleLoss_Business
                                      ON ObjectLink_ArticleLoss_Business.ObjectId = MovementLinkObject_ArticleLoss.ObjectId
                                     AND ObjectLink_ArticleLoss_Business.DescId   = zc_ObjectLink_ArticleLoss_Business()
+                LEFT JOIN ObjectLink AS ObjectLink_ArticleLoss_Branch
+                                     ON ObjectLink_ArticleLoss_Branch.ObjectId = MovementLinkObject_ArticleLoss.ObjectId
+                                    AND ObjectLink_ArticleLoss_Branch.DescId   = zc_ObjectLink_ArticleLoss_Branch()
                 -- для затрат (!!!если не указан ArticleLoss!!!)
                 LEFT JOIN lfSelect_Object_Unit_byProfitLossDirection() AS lfSelect
                        ON lfSelect.UnitId = COALESCE (ObjectLink_CarTo_Unit.ChildObjectId, COALESCE (ObjectLink_PersonalTo_Unit.ChildObjectId, COALESCE (tmpMemberTo.UnitId, COALESCE (MovementLinkObject_To.ObjectId, COALESCE (tmpMemberFrom.UnitId, MovementLinkObject_From.ObjectId)))))

@@ -18,12 +18,13 @@ $BODY$
 BEGIN 
 
     -- Эти поля взяли из Заявки
-     SELECT gpGet.FromId
-          , gpGet.ToId
+   --SELECT gpGet.ToId
+     SELECT 5314826 AS ToId -- Светофор Упаковка
+          , gpGet.FromId
           , gpGet.PaidKindId
           , gpGet.ContractId 
-            INTO vbFromid
-               , vbToid
+            INTO vbFromId
+               , vbToId
                , vbPaidKindId
                , vbContractId  
      FROM gpGet_Movement_OrderExternal (inMovementId := inMovementId

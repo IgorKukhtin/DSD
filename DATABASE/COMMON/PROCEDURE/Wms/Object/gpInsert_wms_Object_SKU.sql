@@ -123,8 +123,10 @@ BEGIN
               FROM tmpData
                    LEFT JOIN tmpGoodsProperty_basis ON tmpGoodsProperty_basis.sku_id = tmpData.sku_id
                                                    AND tmpGoodsProperty_basis.Ord    = 1
-            --WHERE tmpData.sku_id IN ('4152083', '4152082')
-             ) AS tmp
+          --WHERE tmpData.sku_id IN ('2659002')
+          --WHERE tmpData.sku_id IN ('3445471', '5304811', '27981831')
+          --WHERE tmpData.InfoMoneyId = 8963 -- Тушенка
+           ) AS tmp
      -- WHERE tmp.RowNum = 1
         ORDER BY 4
      -- LIMIT 1
@@ -146,6 +148,8 @@ $BODY$
 -- 956-   - select * from lpSelect_wms_Object_SKU() where sku_id IN ('38391802') -- "СОСИСКИ ВАРЕНІ «ХОТ-ДОГ З СИРОМ» Ул упак. Номинальный"
 -- 777-16 - select * from lpSelect_wms_Object_SKU() where sku_id IN ('800562', '800563') -- "БАСТУРМА КАВКАЗЬКА С/К В/Г Б/В Номинальный + Неноминальный"
 -- 39-3   - select * from lpSelect_wms_Object_SKU() where sku_id IN ('795292', '795293') -- "ЛЮБИТЕЛЬСЬКА СВИНЯЧА ВАР.  В/Г Б/В Номинальный + Неноминальный"
+-- select * from lpSelect_wms_Object_SKU() where goodsCode in ('2201 ', '2431 ', '2304') --
+-- select * from lpSelect_wms_Object_SKU() where InfoMoneyId = 8963
 -- select * FROM wms_Message WHERE RowData ILIKE '%sku_id=945179%
 -- select * FROM wms_Message WHERE GUID = '1' ORDER BY Id
 -- тест

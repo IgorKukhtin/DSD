@@ -1125,6 +1125,7 @@
 				<Form>Report_Goods_RemainsCurrent_onDateDialogForm</Form>
 				<DesignClass>TParentForm</DesignClass>
 			</DCCReference>
+			<DCCReference Include="..\..\SOURCE\COMPONENT\dsdTranslator.pas"/>
 			<BuildConfiguration Include="Release">
 				<Key>Cfg_2</Key>
 				<CfgParent>Base</CfgParent>
