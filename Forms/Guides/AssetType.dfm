@@ -254,8 +254,8 @@ object AssetTypeForm: TAssetTypeForm
       Caption = #1044#1086#1073#1072#1074#1080#1090#1100
       ShortCut = 45
       ImageIndex = 0
-      FormName = 'TAssetTypeForm'
-      FormNameParam.Value = 'TAssetTypeForm'
+      FormName = 'TAssetTypeEditForm'
+      FormNameParam.Value = 'TAssetTypeEditForm'
       FormNameParam.DataType = ftString
       FormNameParam.MultiSelectSeparator = ','
       GuiParams = <
@@ -290,8 +290,8 @@ object AssetTypeForm: TAssetTypeForm
       Hint = #1048#1079#1084#1077#1085#1080#1090#1100
       ShortCut = 115
       ImageIndex = 1
-      FormName = 'TAssetTypeForm'
-      FormNameParam.Value = 'TAssetTypeForm'
+      FormName = 'TAssetTypeEditForm'
+      FormNameParam.Value = 'TAssetTypeEditForm'
       FormNameParam.DataType = ftString
       FormNameParam.MultiSelectSeparator = ','
       GuiParams = <

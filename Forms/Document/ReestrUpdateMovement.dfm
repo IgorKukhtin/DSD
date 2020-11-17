@@ -490,6 +490,20 @@ inherited ReestrUpdateMovementForm: TReestrUpdateMovementForm
             HeaderAlignmentVert = vaCenter
             Width = 131
           end
+          object Date_Log: TcxGridDBColumn
+            Caption = #1044#1072#1090#1072'/'#1074#1088#1077#1084#1103' ('#1074#1080#1079#1072' '#1051#1086#1075#1080#1089#1090#1080#1082#1072')'
+            DataBinding.FieldName = 'Date_Log'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 120
+          end
+          object Member_Log: TcxGridDBColumn
+            Caption = #1060#1048#1054' ('#1074#1080#1079#1072' '#1051#1086#1075#1080#1089#1090#1080#1082#1072')'
+            DataBinding.FieldName = 'Member_Log'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 120
+          end
           object Member_PartnerInFrom: TcxGridDBColumn
             Caption = #1060#1048#1054' ('#1086#1090' '#1082#1086#1075#1086' '#1076#1083#1103' '#1074#1080#1079#1099' '#1055#1086#1083#1091#1095#1077#1085#1086' '#1086#1090' '#1082#1083#1080#1077#1085#1090#1072')'
             DataBinding.FieldName = 'Member_PartnerInFrom'

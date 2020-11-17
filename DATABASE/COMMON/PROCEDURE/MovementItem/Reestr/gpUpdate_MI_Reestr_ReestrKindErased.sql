@@ -25,6 +25,13 @@ BEGIN
                      AND MF_MovementItemId.ValueData ::integer = inId
                    );
 
+    IF inReestrKindId = zc_Enum_ReestrKind_Log() THEN 
+       -- сохранили <когда сформирована виза "Отдел логистики">   
+       PERFORM lpInsertUpdate_MovementItemDate (zc_MIDate_Log(), inId, Null);
+       -- сохранили связь с <кто сформировал визу "Логистики">
+       PERFORM lpInsertUpdate_MovementItemLinkObject (zc_MILinkObject_Log(), inId, Null);
+    END IF;
+    
     IF inReestrKindId = zc_Enum_ReestrKind_PartnerIn() THEN 
        -- сохранили <когда сформирована виза "Получено от клиента">   
        PERFORM lpInsertUpdate_MovementItemDate (zc_MIDate_PartnerIn(), inId, Null);
@@ -86,7 +93,8 @@ BEGIN
     END IF;
     
     -- Находим предыдущее значение <Состояние по реестру> документа продажи
-    vbReestrKindId := (SELECT CASE WHEN tmp.DescId = zc_MIDate_PartnerIn()   THEN zc_Enum_ReestrKind_PartnerIn()
+    vbReestrKindId := (SELECT CASE WHEN tmp.DescId = zc_MIDate_Log()         THEN zc_Enum_ReestrKind_Log()
+                                   WHEN tmp.DescId = zc_MIDate_PartnerIn()   THEN zc_Enum_ReestrKind_PartnerIn()
                                    WHEN tmp.DescId = zc_MIDate_RemakeIn()    THEN zc_Enum_ReestrKind_RemakeIn()
                                    WHEN tmp.DescId = zc_MIDate_RemakeBuh()   THEN zc_Enum_ReestrKind_RemakeBuh()
                                    WHEN tmp.DescId = zc_MIDate_Remake()      THEN zc_Enum_ReestrKind_Remake()
@@ -98,7 +106,7 @@ BEGIN
                        FROM (SELECT ROW_NUMBER() OVER(ORDER BY MID.ValueData desc) AS Num, MID.DescId 
                              FROM MovementItemDate AS MID
                              WHERE MID.MovementItemId = inId
-                               AND MID.DescId IN (zc_MIDate_PartnerIn(), zc_MIDate_RemakeIn(), zc_MIDate_RemakeBuh(), zc_MIDate_Econom()
+                               AND MID.DescId IN (zc_MIDate_Log, zc_MIDate_PartnerIn(), zc_MIDate_RemakeIn(), zc_MIDate_RemakeBuh(), zc_MIDate_Econom()
                                                 , zc_MIDate_Remake(), zc_MIDate_Buh(), zc_MIDate_TransferIn(), zc_MIDate_TransferOut())
                                AND MID.ValueData IS NOT NULL
                        ) AS tmp
@@ -118,6 +126,7 @@ $BODY$
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.
+ 17.11.20         * _Log
  20.07.17         *
  29.11.16         *
  24.10.16         *

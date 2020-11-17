@@ -30,6 +30,7 @@ RETURNS TABLE (Id Integer, InvNumber TVarChar, OperDate TDateTime
              , JuridicalName_To TVarChar, OKPO_To TVarChar 
 
              , Date_Insert      TDateTime
+             , Date_Log         TDateTime
              , Date_PartnerIn   TDateTime
              , Date_RemakeIn    TDateTime
              , Date_RemakeBuh   TDateTime
@@ -40,6 +41,7 @@ RETURNS TABLE (Id Integer, InvNumber TVarChar, OperDate TDateTime
              , Date_TransferOut TDateTime
 
              , Member_Insert        TVarChar
+             , Member_Log           TVarChar
              , Member_PartnerInTo   TVarChar
              , Member_PartnerInFrom TVarChar
              , Member_RemakeInTo    TVarChar
@@ -128,6 +130,7 @@ BEGIN
            , ObjectHistory_JuridicalDetails_View.OKPO  AS OKPO_To
 
            , MIDate_Insert.ValueData         AS Date_Insert
+           , MIDate_Log.ValueData            AS Date_Log
            , MIDate_PartnerIn.ValueData      AS Date_PartnerIn
            , MIDate_RemakeIn.ValueData       AS Date_RemakeIn
            , MIDate_RemakeBuh.ValueData      AS Date_RemakeBuh
@@ -138,6 +141,7 @@ BEGIN
            , MIDate_TransferOut.ValueData    AS Date_TransferOut
 
            , CASE WHEN MIDate_Insert.DescId IS NOT NULL THEN Object_ObjectMember.ValueData ELSE '' END :: TVarChar AS Member_Insert -- т.к. в "пустышках" - "криво" формируется это свойство
+           , Object_Log.ValueData            AS Member_Log
            , Object_PartnerInTo.ValueData    AS Member_PartnerInTo
            , Object_PartnerInFrom.ValueData  AS Member_PartnerInFrom
            , Object_RemakeInTo.ValueData     AS Member_RemakeInTo
@@ -227,7 +231,10 @@ BEGIN
             LEFT JOIN MovementItemDate AS MIDate_TransferOut
                                        ON MIDate_TransferOut.MovementItemId = MovementItem.Id
                                       AND MIDate_TransferOut.DescId = zc_MIDate_TransferOut()
-
+            LEFT JOIN MovementItemDate AS MIDate_Log
+                                       ON MIDate_Log.MovementItemId = MovementItem.Id
+                                      AND MIDate_Log.DescId = zc_MIDate_Log()
+                                      
             LEFT JOIN MovementItemLinkObject AS MILinkObject_PartnerInTo
                                              ON MILinkObject_PartnerInTo.MovementItemId = MovementItem.Id
                                             AND MILinkObject_PartnerInTo.DescId = zc_MILinkObject_PartnerInTo()
@@ -277,6 +284,11 @@ BEGIN
                                              ON MILinkObject_TransferOut.MovementItemId = MovementItem.Id
                                             AND MILinkObject_TransferOut.DescId = zc_MILinkObject_TransferOut()
             LEFT JOIN Object AS Object_TransferOut ON Object_TransferOut.Id = MILinkObject_TransferOut.ObjectId
+
+            LEFT JOIN MovementItemLinkObject AS MILinkObject_Log
+                                             ON MILinkObject_Log.MovementItemId = MovementItem.Id
+                                            AND MILinkObject_Log.DescId = zc_MILinkObject_Log()
+            LEFT JOIN Object AS Object_Log ON Object_Log.Id = MILinkObject_Log.ObjectId
             
             LEFT JOIN MovementFloat AS MovementFloat_MovementItemId
                                     ON MovementFloat_MovementItemId.ValueData ::integer = MovementItem.Id -- tmpMI.MovementItemId
@@ -372,6 +384,7 @@ $BODY$
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.
+ 17.11.20         * Log
  22.07.20         *
  20.07.17         *
  20.10.16         *
