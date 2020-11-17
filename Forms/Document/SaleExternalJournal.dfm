@@ -132,6 +132,11 @@ inherited SaleExternalJournalForm: TSaleExternalJournalForm
               Format = ',0.####'
               Kind = skSum
               Column = TotalCountKg
+            end
+            item
+              Format = #1057#1090#1088#1086#1082': ,0'
+              Kind = skCount
+              Column = FromName
             end>
           OptionsBehavior.GoToNextCellOnEnter = False
           OptionsBehavior.FocusCellOnCycle = False
@@ -165,7 +170,7 @@ inherited SaleExternalJournalForm: TSaleExternalJournalForm
             DataBinding.FieldName = 'FromName'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
-            Width = 90
+            Width = 107
           end
           object PartnerName_from: TcxGridDBColumn
             Caption = #1050#1086#1085#1090#1088#1072#1075#1077#1085#1090
@@ -321,7 +326,9 @@ inherited SaleExternalJournalForm: TSaleExternalJournalForm
         item
           Action = actRefresh
         end>
-      QuestionBeforeExecute = #1053#1072#1095#1072#1090#1100' '#1079#1072#1075#1088#1091#1079#1082#1091' '#1044#1072#1085#1085#1099#1093' '#1080#1079' '#1092#1072#1081#1083#1072' '#1060#1054#1056#1040'?'
+      QuestionBeforeExecute = 
+        #1053#1072#1095#1072#1090#1100' '#1079#1072#1075#1088#1091#1079#1082#1091' '#1044#1072#1085#1085#1099#1093' '#1080#1079' '#1092#1072#1081#1083#1072' '#1060#1054#1056#1040'? '#1044#1086#1082#1091#1084#1077#1085#1090#1099', '#1089#1086#1093#1088#1072#1085#1077#1085#1085#1099#1077' '#1088#1072#1085 +
+        #1077#1077' '#1073#1091#1076#1091#1090' '#1091#1076#1072#1083#1077#1085#1099'.'
       InfoAfterExecute = #1047#1072#1075#1088#1091#1079#1082#1072' '#1076#1072#1085#1085#1099#1093' '#1074#1099#1087#1086#1083#1085#1077#1085#1072
       Caption = #1060#1054#1056#1040' '#1047#1072#1075#1088#1091#1079#1080#1090#1100' '#1080#1079' '#1101#1082#1089#1077#1083#1103
       Hint = #1060#1054#1056#1040' '#1047#1072#1075#1088#1091#1079#1080#1090#1100' '#1080#1079' '#1101#1082#1089#1077#1083#1103
@@ -381,7 +388,9 @@ inherited SaleExternalJournalForm: TSaleExternalJournalForm
         item
           Action = actRefresh
         end>
-      QuestionBeforeExecute = #1053#1072#1095#1072#1090#1100' '#1079#1072#1075#1088#1091#1079#1082#1091' '#1044#1072#1085#1085#1099#1093' '#1080#1079' '#1092#1072#1081#1083#1072' '#1057#1048#1051#1068#1055#1054'?'
+      QuestionBeforeExecute = 
+        #1053#1072#1095#1072#1090#1100' '#1079#1072#1075#1088#1091#1079#1082#1091' '#1044#1072#1085#1085#1099#1093' '#1080#1079' '#1092#1072#1081#1083#1072' '#1057#1048#1051#1068#1055#1054'? '#1044#1086#1082#1091#1084#1077#1085#1090#1099', '#1089#1086#1093#1088#1072#1085#1077#1085#1085#1099#1077' '#1088 +
+        #1072#1085#1077#1077' '#1073#1091#1076#1091#1090' '#1091#1076#1072#1083#1077#1085#1099'.'
       InfoAfterExecute = #1047#1072#1075#1088#1091#1079#1082#1072' '#1076#1072#1085#1085#1099#1093' '#1074#1099#1087#1086#1083#1085#1077#1085#1072
       Caption = #1057#1048#1051#1068#1055#1054' '#1047#1072#1075#1088#1091#1079#1080#1090#1100' '#1080#1079' '#1101#1082#1089#1077#1083#1103
       Hint = #1057#1048#1051#1068#1055#1054' '#1047#1072#1075#1088#1091#1079#1080#1090#1100' '#1080#1079' '#1101#1082#1089#1077#1083#1103
@@ -406,6 +415,9 @@ inherited SaleExternalJournalForm: TSaleExternalJournalForm
           Action = actGet_Exception
         end
         item
+          Action = actDelete_Movement
+        end
+        item
           Action = actGetImportSettingNovus
         end
         item
@@ -414,7 +426,9 @@ inherited SaleExternalJournalForm: TSaleExternalJournalForm
         item
           Action = actRefresh
         end>
-      QuestionBeforeExecute = #1053#1072#1095#1072#1090#1100' '#1079#1072#1075#1088#1091#1079#1082#1091' '#1044#1072#1085#1085#1099#1093' '#1080#1079' '#1092#1072#1081#1083#1072' '#1053#1054#1042#1059#1057'?'
+      QuestionBeforeExecute = 
+        #1053#1072#1095#1072#1090#1100' '#1079#1072#1075#1088#1091#1079#1082#1091' '#1044#1072#1085#1085#1099#1093' '#1080#1079' '#1092#1072#1081#1083#1072' '#1053#1054#1042#1059#1057'? '#1044#1086#1082#1091#1084#1077#1085#1090#1099', '#1089#1086#1093#1088#1072#1085#1077#1085#1085#1099#1077' '#1088#1072 +
+        #1085#1077#1077' '#1073#1091#1076#1091#1090' '#1091#1076#1072#1083#1077#1085#1099'.'
       InfoAfterExecute = #1047#1072#1075#1088#1091#1079#1082#1072' '#1076#1072#1085#1085#1099#1093' '#1074#1099#1087#1086#1083#1085#1077#1085#1072
       Caption = #1053#1054#1042#1059#1057' '#1047#1072#1075#1088#1091#1079#1080#1090#1100' '#1080#1079' '#1101#1082#1089#1077#1083#1103
       Hint = #1053#1054#1042#1059#1057' '#1047#1072#1075#1088#1091#1079#1080#1090#1100' '#1080#1079' '#1101#1082#1089#1077#1083#1103
@@ -428,6 +442,9 @@ inherited SaleExternalJournalForm: TSaleExternalJournalForm
           Action = actGet_Exception
         end
         item
+          Action = actDelete_Movement
+        end
+        item
           Action = actGetImportSettingMetro
         end
         item
@@ -436,7 +453,9 @@ inherited SaleExternalJournalForm: TSaleExternalJournalForm
         item
           Action = actRefresh
         end>
-      QuestionBeforeExecute = #1053#1072#1095#1072#1090#1100' '#1079#1072#1075#1088#1091#1079#1082#1091' '#1044#1072#1085#1085#1099#1093' '#1080#1079' '#1092#1072#1081#1083#1072' '#1052#1045#1058#1056#1054'?'
+      QuestionBeforeExecute = 
+        #1053#1072#1095#1072#1090#1100' '#1079#1072#1075#1088#1091#1079#1082#1091' '#1044#1072#1085#1085#1099#1093' '#1080#1079' '#1092#1072#1081#1083#1072' '#1052#1045#1058#1056#1054'? '#1044#1086#1082#1091#1084#1077#1085#1090#1099', '#1089#1086#1093#1088#1072#1085#1077#1085#1085#1099#1077' '#1088#1072 +
+        #1085#1077#1077' '#1073#1091#1076#1091#1090' '#1091#1076#1072#1083#1077#1085#1099'.'
       InfoAfterExecute = #1047#1072#1075#1088#1091#1079#1082#1072' '#1076#1072#1085#1085#1099#1093' '#1074#1099#1087#1086#1083#1085#1077#1085#1072
       Caption = #1052#1045#1058#1056#1054' '#1047#1072#1075#1088#1091#1079#1080#1090#1100' '#1080#1079' '#1101#1082#1089#1077#1083#1103
       Hint = #1052#1045#1058#1056#1054' '#1047#1072#1075#1088#1091#1079#1080#1090#1100' '#1080#1079' '#1101#1082#1089#1077#1083#1103
@@ -742,6 +761,9 @@ inherited SaleExternalJournalForm: TSaleExternalJournalForm
           Action = actGet_Exception
         end
         item
+          Action = actDelete_Movement
+        end
+        item
           Action = actGetImportSetting
         end
         item
@@ -750,10 +772,12 @@ inherited SaleExternalJournalForm: TSaleExternalJournalForm
         item
           Action = actRefresh
         end>
-      QuestionBeforeExecute = #1053#1072#1095#1072#1090#1100' '#1079#1072#1075#1088#1091#1079#1082#1091' '#1044#1072#1085#1085#1099#1093' '#1080#1079' '#1092#1072#1081#1083#1072'?'
+      QuestionBeforeExecute = 
+        #1053#1072#1095#1072#1090#1100' '#1079#1072#1075#1088#1091#1079#1082#1091' '#1044#1072#1085#1085#1099#1093' '#1080#1079' '#1092#1072#1081#1083#1072' '#1040#1064#1040#1053'? '#1044#1086#1082#1091#1084#1077#1085#1090#1099', '#1089#1086#1093#1088#1072#1085#1077#1085#1085#1099#1077' '#1088#1072#1085 +
+        #1077#1077' '#1073#1091#1076#1091#1090' '#1091#1076#1072#1083#1077#1085#1099'.'
       InfoAfterExecute = #1047#1072#1075#1088#1091#1079#1082#1072' '#1076#1072#1085#1085#1099#1093' '#1074#1099#1087#1086#1083#1085#1077#1085#1072
-      Caption = #1047#1072#1075#1088#1091#1079#1080#1090#1100' '#1080#1079' '#1101#1082#1089#1077#1083#1103
-      Hint = #1047#1072#1075#1088#1091#1079#1080#1090#1100' '#1080#1079' '#1101#1082#1089#1077#1083#1103
+      Caption = #1040#1064#1040#1053' '#1047#1072#1075#1088#1091#1079#1080#1090#1100' '#1080#1079' '#1101#1082#1089#1077#1083#1103
+      Hint = #1040#1064#1040#1053' '#1047#1072#1075#1088#1091#1079#1080#1090#1100' '#1080#1079' '#1101#1082#1089#1077#1083#1103
       ImageIndex = 41
     end
     object actGet_Exception: TdsdExecStoredProc
@@ -766,6 +790,18 @@ inherited SaleExternalJournalForm: TSaleExternalJournalForm
           StoredProc = spGet_Exception
         end>
       Caption = 'actGet_Exception'
+    end
+    object actDelete_Movement: TdsdExecStoredProc
+      Category = #1047#1072#1075#1088#1091#1079#1082#1072
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      StoredProc = spDelete_Movement
+      StoredProcList = <
+        item
+          StoredProc = spDelete_Movement
+        end>
+      Caption = 'Delete_Movement'
+      ImageIndex = 52
     end
   end
   inherited MasterDS: TDataSource
@@ -936,7 +972,6 @@ inherited SaleExternalJournalForm: TSaleExternalJournalForm
     end
     object bbStartLoad: TdxBarButton
       Action = actStartLoad
-      Caption = #1040#1096#1072#1085' '#1047#1072#1075#1088#1091#1079#1080#1090#1100' '#1080#1079' '#1101#1082#1089#1077#1083#1103
       Category = 0
     end
     object bbStartLoadNovus: TdxBarButton
@@ -1350,5 +1385,30 @@ inherited SaleExternalJournalForm: TSaleExternalJournalForm
     PackSize = 1
     Left = 800
     Top = 360
+  end
+  object spDelete_Movement: TdsdStoredProc
+    StoredProcName = 'gpDelete_Movement_SaleExternal'
+    DataSets = <>
+    OutputType = otResult
+    Params = <
+      item
+        Name = 'inOperDate'
+        Value = 'NULL'
+        Component = deStart
+        DataType = ftDateTime
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inRetailId'
+        Value = ''
+        Component = GuidesRetail
+        ComponentItem = 'Key'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end>
+    PackSize = 1
+    Left = 488
+    Top = 208
   end
 end

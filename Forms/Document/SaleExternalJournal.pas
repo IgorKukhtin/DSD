@@ -73,6 +73,8 @@ type
     actGetImportSettingSilpo: TdsdExecStoredProc;
     actStartLoadSilpo: TMultiAction;
     bbStartLoadSilpo: TdxBarButton;
+    spDelete_Movement: TdsdStoredProc;
+    actDelete_Movement: TdsdExecStoredProc;
   private
     { Private declarations }
   public

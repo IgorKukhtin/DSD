@@ -1188,6 +1188,9 @@ type
     miGoodsPropertyValueExternal: TMenuItem;
     actContractTradeMark: TdsdOpenForm;
     miContractTradeMark: TMenuItem;
+    miReestrtransportAll: TMenuItem;
+    actAssetType: TdsdOpenForm;
+    miAssetType: TMenuItem;
     procedure actReport_OLAPSoldExecute(Sender: TObject);
     procedure FormShow(Sender: TObject);
     procedure FormClose(Sender: TObject; var Action: TCloseAction);

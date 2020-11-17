@@ -2976,6 +2976,7 @@ begin
 end;
 procedure TLoadFormTest.LoadAssetFormTest;
 begin
+  {
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TAsset_ObjectForm'));
   TdsdFormStorageFactory.GetStorage.Load('TAsset_ObjectForm');
   //exit;
@@ -2983,6 +2984,12 @@ begin
   TdsdFormStorageFactory.GetStorage.Load('TAssetForm');
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TAssetEditForm'));
   TdsdFormStorageFactory.GetStorage.Load('TAssetEditForm');
+  }
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TAssetTypeForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TAssetTypeForm');
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TAssetTypeEditForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TAssetTypeEditForm');
+
   {
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TAssetGroupForm'));
   TdsdFormStorageFactory.GetStorage.Load('TAssetGroupForm');

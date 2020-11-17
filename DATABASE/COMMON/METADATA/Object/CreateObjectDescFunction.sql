@@ -903,6 +903,11 @@ CREATE OR REPLACE FUNCTION zc_Object_ContractTradeMark() RETURNS integer AS $BOD
 INSERT INTO ObjectDesc(Code, ItemName)
 SELECT 'zc_Object_ContractTradeMark', 'Торговые марки в договорах(Спецификация)' WHERE NOT EXISTS (SELECT * FROM ObjectDesc WHERE Code = 'zc_Object_ContractTradeMark');
 
+CREATE OR REPLACE FUNCTION zc_Object_AssetType() RETURNS integer AS $BODY$BEGIN RETURN (SELECT Id FROM ObjectDesc WHERE Code = 'zc_Object_AssetType'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
+INSERT INTO ObjectDesc(Code, ItemName)
+SELECT 'zc_Object_AssetType', 'Тип (ОС)' WHERE NOT EXISTS (SELECT * FROM ObjectDesc WHERE Code = 'zc_Object_AssetType');
+
+
 
 --!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 --!!! Аптека

@@ -1209,7 +1209,9 @@ uses
   GoodsPropertyValueExternal in '..\..\Forms\Guides\GoodsPropertyValueExternal.pas' {GoodsPropertyValueExternalForm: TParentForm},
   ContractGoodsChoice in '..\..\Forms\Guides\ContractGoodsChoice.pas' {ContractGoodsChoiceForm: TParentForm},
   ContractTradeMark in '..\..\Forms\Guides\ContractTradeMark.pas' {ContractTradeMarkForm: TParentForm},
-  ContractTradeMarkEdit in '..\..\Forms\Guides\ContractTradeMarkEdit.pas' {ContractTradeMarkEditForm: TParentForm};
+  ContractTradeMarkEdit in '..\..\Forms\Guides\ContractTradeMarkEdit.pas' {ContractTradeMarkEditForm: TParentForm},
+  AssetTypeEdit in '..\..\Forms\Guides\AssetTypeEdit.pas' {AssetTypeEditForm: TParentForm},
+  AssetType in '..\..\Forms\Guides\AssetType.pas' {AssetTypeForm: TParentForm};
 
 {$R *.RES}
 {$R DevExpressRus.res}
