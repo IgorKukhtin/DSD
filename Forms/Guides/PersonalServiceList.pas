@@ -78,6 +78,7 @@ type
     bbUpdate_PersonalOut: TdxBarButton;
     isPersonalOut: TcxGridDBColumn;
     macUpdate_PersonalOut: TMultiAction;
+    isBankOut: TcxGridDBColumn;
   private
     { Private declarations }
   public

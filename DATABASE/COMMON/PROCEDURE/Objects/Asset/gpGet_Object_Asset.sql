@@ -11,9 +11,10 @@ RETURNS TABLE (Id Integer, Code Integer, Name TVarChar
              , JuridicalId Integer, JuridicalCode Integer, JuridicalName TVarChar
              , MakerId Integer, MakerCode Integer, MakerName TVarChar
              , CarId Integer, CarName TVarChar
+             , AssetTypeId Integer, AssetTypeName TVarChar
              , Release TDateTime
              , InvNumber TVarChar, FullName TVarChar, SerialNumber TVarChar, PassportNumber TVarChar, Comment TVarChar
-             , PeriodUse TFloat, Production TFloat
+             , PeriodUse TFloat, Production TFloat, KW TFloat
              , isErased boolean) AS
 $BODY$BEGIN
    
@@ -42,6 +43,9 @@ $BODY$BEGIN
 
            , CAST (0 as Integer)    AS CarId
            , CAST ('' as TVarChar)  AS CarName
+
+           , CAST (0 as Integer)    AS AssetTypeId
+           , CAST ('' as TVarChar)  AS AssetTypeName
  
            , CURRENT_DATE :: TDateTime AS Release
            
@@ -53,6 +57,7 @@ $BODY$BEGIN
            
            , 0 :: TFloat            AS PeriodUse
            , 0 :: TFloat            AS Production
+           , 0 :: TFloat            AS KW
            , CAST (NULL AS Boolean) AS isErased
            
        FROM Object 
@@ -79,6 +84,9 @@ $BODY$BEGIN
          , Object_Car.Id               AS CarId
          , Object_Car.ValueData        AS CarName
 
+         , Object_AssetType.Id         AS AssetTypeId
+         , Object_AssetType.ValueData  AS AssetTypeName
+
          , COALESCE (ObjectDate_Release.ValueData,CAST (CURRENT_DATE as TDateTime)) AS Release
          
          , ObjectString_InvNumber.ValueData      AS InvNumber
@@ -89,6 +97,7 @@ $BODY$BEGIN
 
          , ObjectFloat_PeriodUse.ValueData  AS PeriodUse
          , COALESCE (ObjectFloat_Production.ValueData,0) :: TFloat AS Production
+         , COALESCE (ObjectFloat_KW.ValueData,0)         :: TFloat AS KW
          
          , Object_Asset.isErased            AS isErased
          
@@ -112,6 +121,11 @@ $BODY$BEGIN
                                ON ObjectLink_Asset_Car.ObjectId = Object_Asset.Id
                               AND ObjectLink_Asset_Car.DescId = zc_ObjectLink_Asset_Car()
           LEFT JOIN Object AS Object_Car ON Object_Car.Id = ObjectLink_Asset_Car.ChildObjectId
+
+          LEFT JOIN ObjectLink AS ObjectLink_Asset_AssetType
+                               ON ObjectLink_Asset_AssetType.ObjectId = Object_Asset.Id
+                              AND ObjectLink_Asset_AssetType.DescId = zc_ObjectLink_Asset_AssetType()
+          LEFT JOIN Object AS Object_AssetType ON Object_AssetType.Id = ObjectLink_Asset_AssetType.ChildObjectId
 
           LEFT JOIN ObjectDate AS ObjectDate_Release
                                 ON ObjectDate_Release.ObjectId = Object_Asset.Id
@@ -144,6 +158,9 @@ $BODY$BEGIN
           LEFT JOIN ObjectFloat AS ObjectFloat_Production
                                 ON ObjectFloat_Production.ObjectId = Object_Asset.Id
                                AND ObjectFloat_Production.DescId = zc_ObjectFloat_Asset_Production()
+          LEFT JOIN ObjectFloat AS ObjectFloat_KW
+                                ON ObjectFloat_KW.ObjectId = Object_Asset.Id
+                               AND ObjectFloat_KW.DescId = zc_ObjectFloat_Asset_KW()
        WHERE Object_Asset.Id = inId;
    END IF;
    

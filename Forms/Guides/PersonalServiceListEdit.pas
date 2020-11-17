@@ -63,6 +63,7 @@ type
     cxLabel33: TcxLabel;
     edCompensation: TcxCurrencyEdit;
     cbRecalc: TcxCheckBox;
+    edisBankOut: TcxCheckBox;
   private
     { Private declarations }
   public

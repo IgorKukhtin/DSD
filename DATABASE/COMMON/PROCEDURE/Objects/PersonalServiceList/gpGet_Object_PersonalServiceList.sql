@@ -18,6 +18,7 @@ RETURNS TABLE (Id Integer, Code Integer, Name TVarChar
              , Compensation TFloat
              , isSecond Boolean
              , isRecalc Boolean
+             , isBankOut Boolean
              , isErased Boolean) AS
 $BODY$
 BEGIN
@@ -55,6 +56,7 @@ BEGIN
 
            , CAST(FALSE AS Boolean) AS isSecond
            , CAST(FALSE AS Boolean) AS isRecalc
+           , CAST(FALSE AS Boolean) AS isBankOut
 
            , CAST (NULL AS Boolean) AS isErased;
    ELSE
@@ -87,6 +89,7 @@ BEGIN
 
            , COALESCE (ObjectBoolean_Second.ValueData,FALSE)  ::Boolean AS isSecond
            , COALESCE (ObjectBoolean_Recalc.ValueData,FALSE)  ::Boolean AS isRecalc
+           , COALESCE (ObjectBoolean_BankOut.ValueData, FALSE)::Boolean AS isBankOut
 
            , Object_PersonalServiceList.isErased   AS isErased
 
@@ -98,6 +101,10 @@ BEGIN
            LEFT JOIN ObjectBoolean AS ObjectBoolean_Recalc 
                                    ON ObjectBoolean_Recalc.ObjectId = Object_PersonalServiceList.Id 
                                   AND ObjectBoolean_Recalc.DescId = zc_ObjectBoolean_PersonalServiceList_Recalc()
+
+           LEFT JOIN ObjectBoolean AS ObjectBoolean_BankOut
+                                   ON ObjectBoolean_BankOut.ObjectId = Object_PersonalServiceList.Id 
+                                  AND ObjectBoolean_BankOut.DescId = zc_ObjectBoolean_PersonalServiceList_BankOut()
 
            LEFT JOIN ObjectFloat AS ObjectFloat_Compensation
                                  ON ObjectFloat_Compensation.ObjectId = Object_PersonalServiceList.Id 
@@ -156,6 +163,7 @@ ALTER FUNCTION gpGet_Object_PersonalServiceList(integer, TVarChar) OWNER TO post
 /*-------------------------------------------------------------------------------
  »—“Œ–»ﬂ –¿«–¿¡Œ“ »: ƒ¿“¿, ¿¬“Œ–
                ‘ÂÎÓÌ˛Í ».¬.    ÛıÚËÌ ».¬.    ÎËÏÂÌÚ¸Â‚  .».
+ 17.11.20         * add isBankOut
  17.01.20         * add isRecalc
  27.01.20         * add Compensation
  16.12.15         * add MemberHeadManager, MemberManager, MemberBookkeeper

@@ -185,6 +185,14 @@ object PersonalServiceListForm: TPersonalServiceListForm
         Options.Editing = False
         Width = 56
       end
+      object isBankOut: TcxGridDBColumn
+        Caption = #1044#1083#1103' '#1091#1074#1086#1083#1077#1085#1085#1099#1093' '#1073#1072#1085#1082
+        DataBinding.FieldName = 'isBankOut'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Options.Editing = False
+        Width = 100
+      end
       object Compensation: TcxGridDBColumn
         Caption = #1052#1077#1089#1103#1094' '#1082#1086#1084#1087#1077#1085#1089'.'
         DataBinding.FieldName = 'Compensation'

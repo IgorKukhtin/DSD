@@ -11,9 +11,10 @@ RETURNS TABLE (ContainerId Integer, ItemName TVarChar, Id Integer, Code Integer,
              , JuridicalId Integer, JuridicalCode Integer, JuridicalName TVarChar
              , MakerId Integer, MakerCode Integer, MakerName TVarChar
              , CarId Integer, CarCode Integer, CarName TVarChar, CarModelName TVarChar
+             , AssetTypeId Integer, AssetTypeCode Integer, AssetTypeName TVarChar
              , Release TDateTime
              , InvNumber TVarChar, FullName TVarChar, SerialNumber TVarChar, PassportNumber TVarChar, Comment TVarChar
-             , PeriodUse TFloat, Production TFloat
+             , PeriodUse TFloat, Production TFloat, KW TFloat
              , AmountRemains TFloat
              , isErased boolean) AS
 $BODY$
@@ -76,7 +77,11 @@ BEGIN
          , Object_Car.ObjectCode       AS CarCode
          , Object_Car.ValueData        AS CarName
          , Object_CarModel.ValueData   AS CarModelName
-         
+
+         , Object_AssetType.Id             AS AssetTypeId
+         , Object_AssetType.ObjectCode     AS AssetTypeCode
+         , Object_AssetType.ValueData      AS AssetTypeName
+
          , COALESCE (ObjectDate_Release.ValueData, CAST (CURRENT_DATE as TDateTime)) AS Release
          
          , ObjectString_InvNumber.ValueData      AS InvNumber
@@ -87,6 +92,7 @@ BEGIN
 
          , ObjectFloat_PeriodUse.ValueData               :: TFloat AS PeriodUse
          , COALESCE (ObjectFloat_Production.ValueData,0) :: TFloat AS Production
+         , COALESCE (ObjectFloat_KW.ValueData,0)         :: TFloat AS KW
 
          , tmpRemains.Amount      :: TFloat AS AmountRemains
          , Object_Asset.isErased            AS isErased
@@ -122,6 +128,11 @@ BEGIN
                               AND ObjectLink_Car_CarModel.DescId = zc_ObjectLink_Car_CarModel()
           LEFT JOIN Object AS Object_CarModel ON Object_CarModel.Id = ObjectLink_Car_CarModel.ChildObjectId
 
+          LEFT JOIN ObjectLink AS ObjectLink_Asset_AssetType
+                               ON ObjectLink_Asset_AssetType.ObjectId = Object_Asset.Id
+                              AND ObjectLink_Asset_AssetType.DescId = zc_ObjectLink_Asset_AssetType()
+          LEFT JOIN Object AS Object_AssetType ON Object_AssetType.Id = ObjectLink_Asset_AssetType.ChildObjectId
+
           LEFT JOIN ObjectDate AS ObjectDate_Release
                                 ON ObjectDate_Release.ObjectId = Object_Asset.Id
                                AND ObjectDate_Release.DescId = zc_ObjectDate_Asset_Release()
@@ -153,6 +164,9 @@ BEGIN
           LEFT JOIN ObjectFloat AS ObjectFloat_Production
                                 ON ObjectFloat_Production.ObjectId = Object_Asset.Id
                                AND ObjectFloat_Production.DescId = zc_ObjectFloat_Asset_Production()
+          LEFT JOIN ObjectFloat AS ObjectFloat_KW
+                                ON ObjectFloat_KW.ObjectId = Object_Asset.Id
+                               AND ObjectFloat_KW.DescId = zc_ObjectFloat_Asset_KW()
        ;  
 
 END;
