@@ -171,7 +171,7 @@ BEGIN
 
      IF COALESCE (vbGoodsId,0) = 0
      THEN
-         RAISE EXCEPTION 'Ошибка.Товар <%> с артикулом <%> не найден.', inGoodsName, inArticle;
+         RAISE EXCEPTION 'Ошибка.Товар <%> с артикулом <%> не найден.', inGoodsName, vbArticle;
      END IF;
      
      -- сохраняем св-во  zc_ObjectString_GoodsPropertyValue_NameExternal
