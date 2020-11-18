@@ -92,7 +92,8 @@ uses
   IftminFozzXML in '..\SOURCE\EDI\IftminFozzXML.pas',
   SearchRemainsVIP in '..\FormsFarmacy\Document\SearchRemainsVIP.pas' {SearchRemainsVIPForm},
   dsdTranslator in '..\SOURCE\COMPONENT\dsdTranslator.pas',
-  SearchByCaption in '..\FormsFarmacy\System\SearchByCaption.pas' {SearchByCaptionForm};
+  SearchByCaption in '..\FormsFarmacy\System\SearchByCaption.pas' {SearchByCaptionForm},
+  RepricePromoUnit in '..\FormsFarmacy\ConnectWithOld\RepricePromoUnit.pas' {RepricePromoUnitForm};
 
 {$R *.res}
 

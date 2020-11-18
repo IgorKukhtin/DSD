@@ -4878,9 +4878,6 @@ inherited MainForm: TMainForm
       object N137: TMenuItem
         Action = actReport_MovementPriceList_Cross
       end
-      object N263: TMenuItem
-        Action = acTReport_SAUA
-      end
       object N148: TMenuItem
         Caption = '-'
       end
@@ -4955,6 +4952,9 @@ inherited MainForm: TMainForm
       end
       object N214: TMenuItem
         Action = actReport_StockTiming_RemainderForm
+      end
+      object N263: TMenuItem
+        Action = acTReport_SAUA
       end
       object miReport_Check_GoodsPriceChange: TMenuItem
         Action = actReport_Check_GoodsPriceChange
@@ -5293,19 +5293,23 @@ inherited MainForm: TMainForm
         Caption = #1055#1077#1088#1077#1086#1094#1077#1085#1082#1072' ('#1090#1077#1089#1090')'
         OnClick = miReprice_testClick
       end
-      object miExportSalesForSupp: TMenuItem [34]
+      object miRepricePromo: TMenuItem [34]
+        Caption = #1055#1077#1088#1077#1086#1094#1077#1085#1082#1072' '#1087#1086' '#1089#1088#1077#1076#1085#1080#1084' '#1094#1077#1085#1072#1084' '#1080' '#1084#1072#1088#1082'. '#1082#1086#1085#1090#1088#1072#1082#1090#1072#1084
+        OnClick = miRepricePromoClick
+      end
+      object miExportSalesForSupp: TMenuItem [35]
         Action = actExportSalesForSuppClick
       end
-      object N173: TMenuItem [35]
+      object N173: TMenuItem [36]
         Action = actRepriceUnitSheduler
       end
-      object miRecalcMCSSheduler: TMenuItem [36]
+      object miRecalcMCSSheduler: TMenuItem [37]
         Action = actRecalcMCSSheduler
       end
-      object N265: TMenuItem [37]
+      object N265: TMenuItem [38]
         Action = actReport_PriceCheck
       end
-      object N261: TMenuItem [40]
+      object N261: TMenuItem [41]
         Caption = #1055#1086#1080#1089#1082' '#1087#1086' '#1085#1072#1079#1074#1072#1085#1080#1103#1084' '#1074' '#1084#1077#1085#1102
         OnClick = N261Click
       end
