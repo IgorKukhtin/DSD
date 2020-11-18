@@ -1,9 +1,11 @@
--- Function: gpInsertUpdate_SaleExternal_Metro_Load()
+-- Function: gpInsertUpdate_Object_SaleExternal_Load()
 
-DROP FUNCTION IF EXISTS gpInsertUpdate_SaleExternal_Metro_Load (TDateTime, Integer, TVarChar, TVarChar, TVarChar, TVarChar, TFloat, TVarChar);
+DROP FUNCTION IF EXISTS gpInsertUpdate_Object_SaleExternal_Load (TDateTime, TVarChar, TVarChar, TVarChar, TVarChar, TFloat, TVarChar);
+DROP FUNCTION IF EXISTS gpInsertUpdate_Object_SaleExternal_Load (TDateTime, TVarChar, TVarChar, TVarChar, TVarChar, TFloat, TFloat, TVarChar);
+DROP FUNCTION IF EXISTS gpInsertUpdate_Object_SaleExternal_Load (TDateTime, Integer, TVarChar, TVarChar, TVarChar, TVarChar, TFloat, TFloat, TVarChar);
+DROP FUNCTION IF EXISTS gpInsertUpdate_SaleExternal_ASHAN_Load (TDateTime, Integer, TVarChar, TVarChar, TVarChar, TVarChar, TFloat, TFloat, TVarChar);
 
-
-CREATE OR REPLACE FUNCTION gpInsertUpdate_SaleExternal_Metro_Load(
+CREATE OR REPLACE FUNCTION gpInsertUpdate_SaleExternal_ASHAN_Load(
     IN inOperDate              TDateTime , --
     IN inRetailId              Integer   , --
     IN inPartnerExternalCode   TVarChar  , --
@@ -11,6 +13,7 @@ CREATE OR REPLACE FUNCTION gpInsertUpdate_SaleExternal_Metro_Load(
     IN inArticle               TVarChar  , -- 
     IN inGoodsName             TVarChar  , -- 
     IN inAmount                TFloat    , -- количество
+    IN inAmount_kg             TFloat    , -- Вес
     IN inSession               TVarChar    -- сессия пользователя
 )
 RETURNS VOID
@@ -27,18 +30,6 @@ $BODY$
 BEGIN
      -- проверка прав пользователя на вызов процедуры
      vbUserId:= lpCheckRight (inSession, zc_Enum_Process_InsertUpdate_Movement_SaleExternal());
-
-     -- итоговые строки пропускаем
-     IF COALESCE (inPartnerExternalName,'') = ''
-     THEN
-         RETURN;
-     END IF;
-     
-     -- проверка
-     IF COALESCE (inAmount,0) = 0
-     THEN
-         RETURN;
-     END IF;
 
      -- проверка
      IF COALESCE (inRetailId,0) = 0
@@ -63,15 +54,15 @@ BEGIN
      --если не найден
      IF COALESCE (vbPartnerExternalId,0) = 0
      THEN
-         --RAISE EXCEPTION 'Ошибка.Контрагент внешний - <%> не найден.', inPartnerExternalName;
-         vbPartnerExternalId :=  lpInsertUpdate_Object_PartnerExternal (ioId         := 0                                                 :: Integer 
-                                                                      , inCode       := lfGet_ObjectCode(0, zc_Object_PartnerExternal())  :: Integer 
-                                                                      , inName       := inPartnerExternalName                             :: TVarChar
-                                                                      , inObjectCode := inPartnerExternalCode                             :: TVarChar
-                                                                      , inPartnerId  := 0                                                 :: Integer 
-                                                                      , inContractId := 0                                                 :: Integer 
-                                                                      , inRetailId   := inRetailId                                        :: Integer 
-                                                                      , inUserId     := vbUserId                                          :: Integer 
+         --RAISE EXCEPTION 'Ошибка.Контрагент внешний - (<%>) <%> не найден.', inPartnerExternalCode, inPartnerExternalName;
+         vbPartnerExternalId :=  lpInsertUpdate_Object_PartnerExternal (ioId         := 0
+                                                                      , inCode       := lfGet_ObjectCode(0, zc_Object_PartnerExternal())
+                                                                      , inName       := inPartnerExternalName
+                                                                      , inObjectCode := inPartnerExternalCode
+                                                                      , inPartnerId  := 0 -- inPartnerId
+                                                                      , inContractId := 0 -- inContractId
+                                                                      , inRetailId   := inRetailId
+                                                                      , inUserId     := vbUserId
                                                                       );
      ELSE
          --если элемент найден пересохраним только параметр торг. сеть
@@ -159,7 +150,7 @@ BEGIN
                                           AND ObjectLink_GoodsPropertyValue_GoodsProperty.DescId = zc_ObjectLink_GoodsPropertyValue_GoodsProperty()
                      INNER JOIN ObjectString AS ObjectString_Article
                                              ON ObjectString_Article.ObjectId = ObjectLink_GoodsPropertyValue_GoodsProperty.ObjectId
-                                            AND ObjectString_Article.DescId = zc_ObjectString_GoodsPropertyValue_ArticleExternal()
+                                            AND ObjectString_Article.DescId = zc_ObjectString_GoodsPropertyValue_Article()
                                             AND TRIM(ObjectString_Article.ValueData) = TRIM (inArticle)  --'26841'
                      INNER JOIN ObjectLink AS ObjectLink_GoodsPropertyValue_Goods
                                            ON ObjectLink_GoodsPropertyValue_Goods.ObjectId = ObjectLink_GoodsPropertyValue_GoodsProperty.ObjectId
@@ -177,7 +168,6 @@ BEGIN
 
      -- сохраняем св-во  zc_ObjectString_GoodsPropertyValue_NameExternal
      PERFORM lpInsertUpdate_ObjectString(zc_ObjectString_GoodsPropertyValue_NameExternal(), vbGoodsPropertyValueId, inGoodsName);
-
 
      -- пробуем найти документ 
      vbMovementId := (SELECT Movement.Id
@@ -227,17 +217,11 @@ BEGIN
      PERFORM lpInsertUpdate_MovementItem_SaleExternal (ioId           := COALESCE (vbId,0) ::Integer
                                                      , inMovementId   := vbMovementId      ::Integer
                                                      , inGoodsId      := vbGoodsId         ::Integer
-                                                     , inAmount       := CASE WHEN ObjectLink_Measure.ChildObjectId <> zc_Measure_Sh() 
-                                                                              THEN inAmount * COALESCE (ObjectFloat_Weight.ValueData,1)
-                                                                              ELSE inAmount
-                                                                         END               ::TFloat
+                                                     , inAmount       := CASE WHEN ObjectLink_Measure.ChildObjectId = zc_Measure_Sh() THEN inAmount ELSE inAmount_kg END ::TFloat
                                                      , inGoodsKindId  := vbGoodsKindId     ::Integer
                                                      , inUserId       := vbUserId          ::Integer
                                                       ) 
      FROM ObjectLink AS ObjectLink_Measure
-          LEFT JOIN ObjectFloat AS ObjectFloat_Weight
-                                ON ObjectFloat_Weight.ObjectId = ObjectLink_Measure.ObjectId
-                               AND ObjectFloat_Weight.DescId = zc_ObjectFloat_Goods_Weight()
      WHERE ObjectLink_Measure.ObjectId = vbGoodsId
        AND ObjectLink_Measure.DescId = zc_ObjectLink_Goods_Measure();
 
