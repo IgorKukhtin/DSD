@@ -3982,7 +3982,9 @@ inherited MainForm: TMainForm
     object acTReport_SAUA: TdsdOpenForm
       Category = #1041#1040#1048
       MoveParams = <>
-      Caption = #1054#1090#1095#1077#1090' '#1087#1086' '#1089#1080#1089#1090#1077#1084#1077' '#1072#1074#1090#1086#1084#1072#1090#1080#1095#1077#1089#1082#1086#1075#1086' '#1091#1087#1088#1072#1074#1083#1077#1085#1080#1103' '#1072#1089#1089#1086#1088#1090#1080#1084#1077#1085#1090#1086#1084
+      Caption = 
+        #1054#1090#1095#1077#1090' '#1087#1086' '#1089#1080#1089#1090#1077#1084#1077' '#1072#1074#1090#1086#1084#1072#1090#1080#1095#1077#1089#1082#1086#1075#1086' '#1091#1087#1088#1072#1074#1083#1077#1085#1080#1103' '#1072#1089#1089#1086#1088#1090#1080#1084#1077#1085#1090#1086#1084' ('#1089#1090#1072#1088#1099 +
+        #1081')'
       FormName = 'TReport_SAUAForm'
       FormNameParam.Value = 'TReport_SAUAForm'
       FormNameParam.DataType = ftString
@@ -4049,6 +4051,17 @@ inherited MainForm: TMainForm
           DataType = ftFloat
           MultiSelectSeparator = ','
         end>
+      isShowModal = False
+    end
+    object actCalculation_SAUA: TdsdOpenStaticForm
+      Category = 'DSDLib'
+      MoveParams = <>
+      Caption = #1054#1090#1095#1077#1090' '#1087#1086' '#1089#1080#1089#1090#1077#1084#1077' '#1072#1074#1090#1086#1084#1072#1090#1080#1095#1077#1089#1082#1086#1075#1086' '#1091#1087#1088#1072#1074#1083#1077#1085#1080#1103' '#1072#1089#1089#1086#1088#1090#1080#1084#1077#1085#1090#1086#1084
+      FormName = 'TCalculation_SAUAForm'
+      FormNameParam.Value = 'TCalculation_SAUAForm'
+      FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
+      GuiParams = <>
       isShowModal = False
     end
   end
@@ -4887,6 +4900,9 @@ inherited MainForm: TMainForm
       object N156: TMenuItem
         Action = actReport_Check_UKTZED
       end
+      object N263: TMenuItem
+        Action = acTReport_SAUA
+      end
       object N155: TMenuItem
         Caption = '-'
       end
@@ -4953,8 +4969,8 @@ inherited MainForm: TMainForm
       object N214: TMenuItem
         Action = actReport_StockTiming_RemainderForm
       end
-      object N263: TMenuItem
-        Action = acTReport_SAUA
+      object N268: TMenuItem
+        Action = actCalculation_SAUA
       end
       object miReport_Check_GoodsPriceChange: TMenuItem
         Action = actReport_Check_GoodsPriceChange

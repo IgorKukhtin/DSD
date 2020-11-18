@@ -757,6 +757,8 @@ type
     actReport_PromoDoctorsShevchenko9: TdsdOpenForm;
     N910: TMenuItem;
     miRepricePromo: TMenuItem;
+    actCalculation_SAUA: TdsdOpenStaticForm;
+    N268: TMenuItem;
     procedure actSaveDataExecute(Sender: TObject);
 
     procedure miRepriceClick(Sender: TObject);

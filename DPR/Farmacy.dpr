@@ -93,7 +93,8 @@ uses
   SearchRemainsVIP in '..\FormsFarmacy\Document\SearchRemainsVIP.pas' {SearchRemainsVIPForm},
   dsdTranslator in '..\SOURCE\COMPONENT\dsdTranslator.pas',
   SearchByCaption in '..\FormsFarmacy\System\SearchByCaption.pas' {SearchByCaptionForm},
-  RepricePromoUnit in '..\FormsFarmacy\ConnectWithOld\RepricePromoUnit.pas' {RepricePromoUnitForm};
+  RepricePromoUnit in '..\FormsFarmacy\ConnectWithOld\RepricePromoUnit.pas' {RepricePromoUnitForm},
+  Calculation_SAUA in '..\FormsFarmacy\ConnectWithOld\Calculation_SAUA.pas' {Calculation_SAUAForm: TParentForm};
 
 {$R *.res}
 
