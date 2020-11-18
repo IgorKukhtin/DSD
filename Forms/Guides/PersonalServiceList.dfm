@@ -190,6 +190,7 @@ object PersonalServiceListForm: TPersonalServiceListForm
         DataBinding.FieldName = 'isBankOut'
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
+        HeaderHint = #1044#1083#1103' '#1091#1074#1086#1083#1077#1085#1085#1099#1093' '#1073#1072#1085#1082
         Options.Editing = False
         Width = 100
       end

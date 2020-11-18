@@ -14,10 +14,15 @@ DROP FUNCTION IF EXISTS gpInsertUpdate_MovementItem_PersonalService (Integer, In
                                                                    , TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat
                                                                    , TVarChar, Integer, Integer, Integer, Integer, Integer, TVarChar);
 */
-DROP FUNCTION IF EXISTS gpInsertUpdate_MovementItem_PersonalService (Integer, Integer, Integer, Boolean
+/*DROP FUNCTION IF EXISTS gpInsertUpdate_MovementItem_PersonalService (Integer, Integer, Integer, Boolean
                                                                    , TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat
                                                                    , TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat
                                                                    , TVarChar, Integer, Integer, Integer, Integer, Integer, TVarChar);
+*/
+DROP FUNCTION IF EXISTS gpInsertUpdate_MovementItem_PersonalService (Integer, Integer, Integer, Boolean
+                                                                   , TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat
+                                                                   , TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat
+                                                                   , TVarChar, Integer, Integer, Integer, Integer, Integer, TDateTime, TVarChar);
                                                                    
 CREATE OR REPLACE FUNCTION gpInsertUpdate_MovementItem_PersonalService(
  INOUT ioId                    Integer   , -- Ключ объекта <Элемент документа>
@@ -59,6 +64,7 @@ CREATE OR REPLACE FUNCTION gpInsertUpdate_MovementItem_PersonalService(
     IN inPositionId            Integer   , -- Должность
     IN inMemberId              Integer   , -- юр.лицо
     IN inPersonalServiceListId Integer   , -- Ведомость начисления
+    IN inBankOutDate           TDateTime ,
     IN inSession               TVarChar    -- сессия пользователя
 )
 RETURNS RECORD AS
@@ -110,9 +116,14 @@ BEGIN
      -- сохранили свойство <>
      PERFORM lpInsertUpdate_MovementItemFloat (zc_MIFloat_SummNalogRet(), ioId, inSummNalogRet);
 
+     -- сохранили свойство <Дата выплаты по банку>
+     PERFORM lpInsertUpdate_MovementItemDate (zc_MIDate_BankOut(), ioId, inBankOutDate);
+
+
      -- сохранили свойство строки <создан автоматически>
      outisAuto := FALSE;
      PERFORM lpInsertUpdate_MovementItemBoolean (zc_MIBoolean_isAuto(), ioId, FALSE);
+
 
 END;
 $BODY$
@@ -121,6 +132,7 @@ $BODY$
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.
+ 
  25.03.20         * inSummAuditAdd
  27.01.20         * inSummCompensationRecalc
  29.07.19         *

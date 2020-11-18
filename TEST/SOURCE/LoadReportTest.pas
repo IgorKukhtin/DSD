@@ -86,10 +86,10 @@ end;
 procedure TLoadReportTest.LoadTransportReportFormTest;
 begin
   // Транспорт
-
+  {
   LoadReportFromFile('Отчет Затраты транспорта (реестр)', ReportPath + '\Транспорт\Отчет Затраты транспорта (реестр).fr3');
   exit;
-  {
+
   LoadReportFromFile('Отчет по ГСМ', ReportPath + '\Транспорт\Отчет по ГСМ.fr3');
   exit;
  }
@@ -136,6 +136,7 @@ procedure TLoadReportTest.LoadAllReportFormTest;
 var
  i : integer;
 begin
+{
   LoadReportFromFile('Проверка начислений по бонусам для подписи', ReportPath + '\Отчеты (финансы)\Проверка начислений по бонусам для подписи.fr3');
   //exit;
 
@@ -143,7 +144,7 @@ begin
   //exit;
   LoadReportFromFile('Проверка начислений по бонусам', ReportPath + '\Отчеты (финансы)\Проверка начислений по бонусам.fr3');
   exit;
-  {
+
   LoadReportFromFile('Обороты по кассе и счету (Прямой метод)', ReportPath + '\Отчеты (финансы)\Обороты по кассе и счету (Прямой метод).fr3');
   exit;
 
@@ -343,7 +344,7 @@ begin
   LoadReportFromFile('Плановая Прибыль (цена себестоимость сравнение)', ReportPath + '\Отчеты (производство)\Плановая Прибыль (цена себестоимость сравнение).fr3');
   LoadReportFromFile('Плановая Прибыль (сравнение цен)', ReportPath + '\Отчеты (производство)\Плановая Прибыль (сравнение цен).fr3');
   LoadReportFromFile('Плановая Прибыль (сравнение цен себестоимости)', ReportPath + '\Отчеты (производство)\Плановая Прибыль (сравнение цен себестоимости).fr3');
-  }
+
   LoadReportFromFile('Плановая Прибыль (чистая прибыль)', ReportPath + '\Отчеты (производство)\Плановая Прибыль (чистая прибыль).fr3');
   exit;
 
@@ -351,7 +352,7 @@ begin
 
   LoadReportFromFile('Производство План и Факт расход сырья', ReportPath + '\Отчеты (производство)\Производство План и Факт расход сырья.fr3');
   exit;
-  {
+
   LoadReportFromFile('Производство План и Факт запас цен', ReportPath + '\Отчеты (производство)\Производство План и Факт запас цен.fr3');
 
   LoadReportFromFile('Отчет по остаткам для снабжения', ReportPath + '\Отчеты (производство)\Отчет по остаткам для снабжения.fr3');
@@ -385,10 +386,10 @@ begin
    //LoadReportFromFile('Производство (по дням для специй)', ReportPath + '\Производство\Производство (по дням для специй).fr3');
    //LoadReportFromFile('Производство (по дням для оболочки)', ReportPath + '\Производство\Производство (по дням для оболочки).fr3');
     exit;
-   }
+
   LoadReportFromFile('Заявка на производство', ReportPath + '\Производство\Заявка на производство.fr3');
    exit;
-   {
+
   LoadReportFromFile('Заявка на упаковку', ReportPath + '\Производство\Заявка на упаковку.fr3');
 
   LoadReportFromFile('Заявка на сырье', ReportPath + '\Производство\Заявка на сырье.fr3');
@@ -426,14 +427,14 @@ begin
    LoadReportFromFile('PrintMovement_ReestrTransportGoods', ReportPath + '\Товарный Учет\PrintMovement_ReestrTransportGoods.fr3');
    LoadReportFromFile('PrintMovement_ReestrTransportGoodsStartPeriod', ReportPath + '\Товарный Учет\PrintMovement_ReestrTransportGoodsStartPeriod.fr3');
    LoadReportFromFile('PrintMovement_ReestrTransportGoodsPeriod', ReportPath + '\Товарный Учет\PrintMovement_ReestrTransportGoodsPeriod.fr3');
-
+    }
    LoadReportFromFile('PrintMovement_Reestr', ReportPath + '\Товарный Учет\PrintMovement_Reestr.fr3');
    LoadReportFromFile('PrintMovement_ReestrDriver', ReportPath + '\Товарный Учет\PrintMovement_ReestrDriver.fr3');
 
    LoadReportFromFile('PrintMovement_ReestrPeriod', ReportPath + '\Товарный Учет\PrintMovement_ReestrPeriod.fr3');
    LoadReportFromFile('PrintMovement_ReestrStartPeriod', ReportPath + '\Товарный Учет\PrintMovement_ReestrStartPeriod.fr3');
    exit;
-
+   {
   LoadReportFromFile('PrintMovement_TransferDebtOut', ReportPath + '\Товарный Учет\PrintMovement_TransferDebtOut.fr3');
   LoadReportFromFile('PrintMovement_Sale1', ReportPath + '\Товарный Учет\PrintMovement_Sale1.fr3');
   LoadReportFromFile('PrintMovement_Sale2', ReportPath + '\Товарный Учет\PrintMovement_Sale2.fr3');

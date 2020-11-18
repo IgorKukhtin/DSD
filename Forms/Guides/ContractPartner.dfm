@@ -2,8 +2,6 @@ inherited ContractPartnerForm: TContractPartnerForm
   Caption = #1057#1087#1088#1072#1074#1086#1095#1085#1080#1082' <'#1050#1086#1085#1090#1088#1072#1075#1077#1085#1090#1099' '#1074' '#1076#1086#1075#1086#1074#1086#1088#1072#1093'>'
   ClientHeight = 374
   ClientWidth = 773
-  AddOnFormData.isAlwaysRefresh = True
-  AddOnFormData.isSingle = False
   AddOnFormData.ChoiceAction = dsdChoiceGuides
   ExplicitWidth = 789
   ExplicitHeight = 412
@@ -636,6 +634,9 @@ inherited ContractPartnerForm: TContractPartnerForm
   end
   inherited DBViewAddOn: TdsdDBViewAddOn
     OnDblClickActionList = <
+      item
+        Action = dsdChoiceGuides
+      end
       item
         Action = actUpdate
       end>
