@@ -79,6 +79,7 @@ type
     edContractTag: TcxButtonEdit;
     cxLabel2: TcxLabel;
     actChoiceFormContract: TOpenChoiceForm;
+    cxTopSplitter: TcxSplitter;
   private
     { Private declarations }
   public

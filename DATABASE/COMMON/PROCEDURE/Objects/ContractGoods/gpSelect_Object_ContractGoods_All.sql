@@ -12,7 +12,7 @@ RETURNS TABLE (Id Integer, Code INTEGER
              , Price TFloat, Persent TFloat
              , ContractId Integer, ContractCode Integer, InvNumber TVarChar
              , PriceListId Integer, PriceListName TVarChar
-             , GoodsId Integer, GoodsName TVarChar
+             , GoodsId Integer, GoodsCode Integer, GoodsName TVarChar
              , GoodsKindId Integer, GoodsKindName TVarChar
              , StartDate TDateTime, EndDate TDateTime
              , isErased boolean
@@ -35,12 +35,12 @@ RETURNS TABLE (Id Integer, Code INTEGER
              , InfoMoneyDestinationCode Integer, InfoMoneyDestinationName TVarChar
              , InfoMoneyId Integer, InfoMoneyCode Integer, InfoMoneyName TVarChar
              , PersonalId Integer, PersonalCode Integer, PersonalName TVarChar
-             
+
              , PersonalTradeId Integer, PersonalTradeCode Integer, PersonalTradeName TVarChar
              , PersonalCollationId Integer, PersonalCollationCode Integer, PersonalCollationName TVarChar
              , BankAccountId Integer, BankAccountName TVarChar
              , ContractTagId Integer, ContractTagName TVarChar, ContractTagGroupName TVarChar
-                          
+
              , AreaContractId Integer, AreaContractName TVarChar
              , ContractArticleId Integer, ContractArticleName TVarChar
              , ContractStateKindId Integer, ContractStateKindCode Integer
@@ -124,6 +124,7 @@ BEGIN
            , Object_PriceList.ValueData         AS PriceListName
 
            , Object_Goods.Id                    AS GoodsId
+           , Object_Goods.ObjectCode            AS GoodsCode
            , Object_Goods.ValueData             AS GoodsName
            , Object_GoodsKind.Id                AS GoodsKindId
            , Object_GoodsKind.ValueData         AS GoodsKindName
@@ -356,7 +357,7 @@ BEGIN
                                       AND COALESCE (tmp.GoodsKindId,0) = COALESCE (Object_ContractGoods.GoodsKindId,0)
                                       AND tmp.EndDate + interval '1 day' = Object_ContractGoods.StartDate
 
-    WHERE (inisShowAll = FALSE AND ObjectDate_End.ValueData = Object_ContractGoods.EndDate_last)
+    WHERE (inisShowAll = FALSE AND Object_ContractGoods.EndDate = Object_ContractGoods.EndDate_last)
        OR (inisShowAll = TRUE)
        --AND (tmpRoleAccessKey.AccessKeyId IS NOT NULL OR vbAccessKeyAll)
     ;

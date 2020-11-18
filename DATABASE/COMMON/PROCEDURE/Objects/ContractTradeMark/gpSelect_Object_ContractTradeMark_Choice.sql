@@ -17,6 +17,7 @@ RETURNS TABLE (Id Integer, Code Integer
              , ContractTagId Integer, ContractTagName TVarChar
              , ContractKindId Integer, ContractKindName TVarChar
              , JuridicalId Integer, JuridicalCode Integer, JuridicalName TVarChar, JuridicalGroupName TVarChar
+             , PriceListGoodsId Integer, PriceListGoodsName TVarChar
              , PaidKindId Integer, PaidKindName TVarChar
              , InfoMoneyGroupCode Integer, InfoMoneyGroupName TVarChar
              , InfoMoneyDestinationCode Integer, InfoMoneyDestinationName TVarChar
@@ -72,6 +73,9 @@ BEGIN
            , Object_Juridical.ValueData      AS JuridicalName
            , Object_JuridicalGroup.ValueData AS JuridicalGroupName
 
+           , Object_PriceListGoods.Id        AS PriceListGoodsId
+           , Object_PriceListGoods.ValueData AS PriceListGoodsName
+
            , Object_PaidKind.Id            AS PaidKindId
            , Object_PaidKind.ValueData     AS PaidKindName
 
@@ -108,6 +112,11 @@ BEGIN
                                  ON ObjectLink_Juridical_JuridicalGroup.ObjectId = Object_Contract_View.JuridicalId
                                 AND ObjectLink_Juridical_JuridicalGroup.DescId = zc_ObjectLink_Juridical_JuridicalGroup()
             LEFT JOIN Object AS Object_JuridicalGroup ON Object_JuridicalGroup.Id = ObjectLink_Juridical_JuridicalGroup.ChildObjectId
+
+            LEFT JOIN ObjectLink AS ObjectLink_Contract_PriceListGoods
+                                 ON ObjectLink_Contract_PriceListGoods.ObjectId = Object_Contract_View.ContractId
+                                AND ObjectLink_Contract_PriceListGoods.DescId = zc_ObjectLink_Contract_PriceListGoods()
+            LEFT JOIN Object AS Object_PriceListGoods ON Object_PriceListGoods.Id = ObjectLink_Contract_PriceListGoods.ChildObjectId
 
      WHERE Object_ContractTradeMark.DescId = zc_Object_ContractTradeMark()
       AND (Object_ContractTradeMark.isErased = FALSE OR inisErased = TRUE)

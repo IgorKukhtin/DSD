@@ -78,7 +78,7 @@ BEGIN
                                            
           WHERE ObjectLink_PriceListItem_PriceList.DescId = zc_ObjectLink_PriceListItem_PriceList()
             AND ObjectLink_PriceListItem_PriceList.ChildObjectId = inPriceListId --2707438  --
-          limit 5
+        --  limit 5
           );
 
    --получаем уже сохраненные данные ContractGoods, последние

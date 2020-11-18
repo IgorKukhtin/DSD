@@ -32,6 +32,7 @@ type
     bbShowAll: TdxBarButton;
     actShowErased: TBooleanStoredProcAction;
     bbShowErased: TdxBarButton;
+    GoodsCode: TcxGridDBColumn;
   private
     { Private declarations }
   public

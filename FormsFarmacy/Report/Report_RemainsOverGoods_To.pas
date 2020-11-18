@@ -119,6 +119,7 @@ type
     cbReserve: TcxCheckBox;
     cbDayListDiff: TcxCheckBox;
     edDayListDiff: TcxCurrencyEdit;
+    cbReserveTo: TcxCheckBox;
   private
     { Private declarations }
   public

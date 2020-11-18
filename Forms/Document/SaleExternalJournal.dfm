@@ -318,6 +318,9 @@ inherited SaleExternalJournalForm: TSaleExternalJournalForm
           Action = actGet_Exception
         end
         item
+          Action = actDelete_Movement
+        end
+        item
           Action = actGetImportSettingFora
         end
         item
@@ -378,6 +381,9 @@ inherited SaleExternalJournalForm: TSaleExternalJournalForm
       ActionList = <
         item
           Action = actGet_Exception
+        end
+        item
+          Action = actDelete_Movement
         end
         item
           Action = actGetImportSettingSilpo

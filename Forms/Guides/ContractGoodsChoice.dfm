@@ -1,32 +1,34 @@
 inherited ContractGoodsChoiceForm: TContractGoodsChoiceForm
   Caption = #1057#1087#1088#1072#1074#1086#1095#1085#1080#1082' <'#1058#1086#1074#1072#1088#1099' '#1074' '#1076#1086#1075#1086#1074#1086#1088#1072#1093' ('#1057#1087#1077#1094#1080#1092#1080#1082#1072#1094#1080#1103')>'
-  ClientHeight = 558
+  ClientHeight = 525
   ClientWidth = 1363
   AddOnFormData.isAlwaysRefresh = True
   AddOnFormData.isSingle = False
   AddOnFormData.ChoiceAction = dsdChoiceGuides
   AddOnFormData.Params = FormParams
   ExplicitWidth = 1379
-  ExplicitHeight = 596
+  ExplicitHeight = 563
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
     Top = 57
     Width = 1363
-    Height = 501
+    Height = 468
     ExplicitTop = 57
     ExplicitWidth = 1363
-    ExplicitHeight = 501
-    ClientRectBottom = 501
+    ExplicitHeight = 468
+    ClientRectBottom = 468
     ClientRectRight = 1363
     inherited tsMain: TcxTabSheet
       ExplicitWidth = 1363
-      ExplicitHeight = 501
+      ExplicitHeight = 468
       inherited cxGrid: TcxGrid
-        Width = 947
-        Height = 501
-        ExplicitWidth = 947
-        ExplicitHeight = 501
+        Top = 175
+        Width = 1358
+        Height = 293
+        ExplicitTop = 175
+        ExplicitWidth = 1358
+        ExplicitHeight = 293
         inherited cxGridDBTableView: TcxGridDBTableView
           DataController.Summary.FooterSummaryItems = <
             item
@@ -118,6 +120,14 @@ inherited ContractGoodsChoiceForm: TContractGoodsChoiceForm
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
             Width = 60
+          end
+          object PriceListGoodsName: TcxGridDBColumn
+            Caption = #1055#1088#1072#1081#1089'-'#1083#1080#1089#1090' ('#1057#1087#1077#1094#1080#1092#1080#1082#1072#1094#1080#1103')'
+            DataBinding.FieldName = 'PriceListGoodsName'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 109
           end
           object ContractCode: TcxGridDBColumn
             Caption = #1050#1086#1076' '#1076#1086#1075'.'
@@ -575,11 +585,11 @@ inherited ContractGoodsChoiceForm: TContractGoodsChoiceForm
         end
       end
       object cxGrid1: TcxGrid
-        Left = 952
+        Left = 0
         Top = 0
-        Width = 411
-        Height = 501
-        Align = alRight
+        Width = 1363
+        Height = 170
+        Align = alTop
         PopupMenu = PopupMenu
         TabOrder = 1
         object cxGridDBTableView1: TcxGridDBTableView
@@ -664,7 +674,6 @@ inherited ContractGoodsChoiceForm: TContractGoodsChoiceForm
           object tmJuridicalGroupName: TcxGridDBColumn
             Caption = #1043#1088#1091#1087#1087#1072' '#1102#1088'. '#1083'.'
             DataBinding.FieldName = 'JuridicalGroupName'
-            Visible = False
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Width = 70
@@ -672,7 +681,6 @@ inherited ContractGoodsChoiceForm: TContractGoodsChoiceForm
           object tmJuridicalCode: TcxGridDBColumn
             Caption = #1050#1086#1076' '#1102#1088'.'#1083'.'
             DataBinding.FieldName = 'JuridicalCode'
-            Visible = False
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
@@ -702,10 +710,17 @@ inherited ContractGoodsChoiceForm: TContractGoodsChoiceForm
             Options.Editing = False
             Width = 86
           end
+          object tmPriceListGoodsName: TcxGridDBColumn
+            Caption = #1055#1088#1072#1081#1089'-'#1083#1080#1089#1090' ('#1057#1087#1077#1094#1080#1092#1080#1082#1072#1094#1080#1103')'
+            DataBinding.FieldName = 'PriceListGoodsName'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 111
+          end
           object tmInfoMoneyGroupCode: TcxGridDBColumn
             Caption = #1050#1086#1076' '#1059#1055' '#1075#1088#1091#1087#1087#1099
             DataBinding.FieldName = 'InfoMoneyGroupCode'
-            Visible = False
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
@@ -720,7 +735,6 @@ inherited ContractGoodsChoiceForm: TContractGoodsChoiceForm
                 Default = True
                 Kind = bkEllipsis
               end>
-            Visible = False
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
@@ -729,7 +743,6 @@ inherited ContractGoodsChoiceForm: TContractGoodsChoiceForm
           object tmInfoMoneyDestinationCode: TcxGridDBColumn
             Caption = #1050#1086#1076' '#1059#1055' '#1085#1072#1079#1085#1072#1095'.'
             DataBinding.FieldName = 'InfoMoneyDestinationCode'
-            Visible = False
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
@@ -738,7 +751,6 @@ inherited ContractGoodsChoiceForm: TContractGoodsChoiceForm
           object tmInfoMoneyDestinationName: TcxGridDBColumn
             Caption = #1059#1055' '#1085#1072#1079#1085#1072#1095#1077#1085#1080#1077
             DataBinding.FieldName = 'InfoMoneyDestinationName'
-            Visible = False
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
@@ -747,7 +759,6 @@ inherited ContractGoodsChoiceForm: TContractGoodsChoiceForm
           object tmInfoMoneyCode: TcxGridDBColumn
             Caption = #1050#1086#1076' '#1059#1055
             DataBinding.FieldName = 'InfoMoneyCode'
-            Visible = False
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
@@ -756,7 +767,6 @@ inherited ContractGoodsChoiceForm: TContractGoodsChoiceForm
           object tmInfoMoneyName: TcxGridDBColumn
             Caption = #1059#1055' '#1089#1090#1072#1090#1100#1103' '#1085#1072#1079#1085#1072#1095#1077#1085#1080#1103
             DataBinding.FieldName = 'InfoMoneyName'
-            Visible = False
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
@@ -777,12 +787,20 @@ inherited ContractGoodsChoiceForm: TContractGoodsChoiceForm
         end
       end
       object cxRightSplitter: TcxSplitter
-        Left = 947
-        Top = 0
+        Left = 1358
+        Top = 175
         Width = 5
-        Height = 501
+        Height = 293
         AlignSplitter = salRight
         Control = cxGrid1
+      end
+      object cxTopSplitter: TcxSplitter
+        Left = 0
+        Top = 170
+        Width = 1363
+        Height = 5
+        AlignSplitter = salTop
+        Control = cxGrid
       end
     end
   end
@@ -895,12 +913,24 @@ inherited ContractGoodsChoiceForm: TContractGoodsChoiceForm
         end>
     end
     inherited actInsert: TInsertUpdateChoiceAction
+      Caption = #1044#1086#1073#1072#1074#1080#1090#1100' <'#1058#1086#1074#1072#1088'>'
+      Hint = #1044#1086#1073#1072#1074#1080#1090#1100' <'#1058#1086#1074#1072#1088'>'
       FormName = 'TContractGoodsEditForm'
       FormNameParam.Value = 'TContractGoodsEditForm'
     end
     inherited actUpdate: TdsdInsertUpdateAction
+      Caption = #1048#1079#1084#1077#1085#1080#1090#1100' <'#1058#1086#1074#1072#1088'>'
+      Hint = #1048#1079#1084#1077#1085#1080#1090#1100' <'#1058#1086#1074#1072#1088'>'
       FormName = 'TContractGoodsEditForm'
       FormNameParam.Value = 'TContractGoodsEditForm'
+    end
+    inherited dsdSetUnErased: TdsdUpdateErased
+      Caption = #1042#1086#1089#1089#1090#1072#1085#1086#1074#1080#1090#1100' <'#1058#1086#1074#1072#1088'>'
+      Hint = #1042#1086#1089#1089#1090#1072#1085#1086#1074#1080#1090#1100' <'#1058#1086#1074#1072#1088'>'
+    end
+    inherited dsdSetErased: TdsdUpdateErased
+      Caption = #1059#1076#1072#1083#1080#1090#1100' <'#1058#1086#1074#1072#1088'>'
+      Hint = #1059#1076#1072#1083#1080#1090#1100' <'#1058#1086#1074#1072#1088'>'
     end
     inherited dsdChoiceGuides: TdsdChoiceGuides
       Params = <
@@ -1214,6 +1244,30 @@ inherited ContractGoodsChoiceForm: TContractGoodsChoiceForm
       ItemLinks = <
         item
           Visible = True
+          ItemName = 'dxBarStatic'
+        end
+        item
+          Visible = True
+          ItemName = 'bbInsertRecord_TM'
+        end
+        item
+          Visible = True
+          ItemName = 'bbSetErased_TM'
+        end
+        item
+          Visible = True
+          ItemName = 'bbSetUnErased_TM'
+        end
+        item
+          Visible = True
+          ItemName = 'dxBarStatic'
+        end
+        item
+          Visible = True
+          ItemName = 'dxBarStatic'
+        end
+        item
+          Visible = True
           ItemName = 'bbInsert'
         end
         item
@@ -1230,26 +1284,6 @@ inherited ContractGoodsChoiceForm: TContractGoodsChoiceForm
         end
         item
           BeginGroup = True
-          Visible = True
-          ItemName = 'dxBarStatic'
-        end
-        item
-          Visible = True
-          ItemName = 'dxBarStatic'
-        end
-        item
-          Visible = True
-          ItemName = 'bbInsertRecord_TM'
-        end
-        item
-          Visible = True
-          ItemName = 'bbSetErased_TM'
-        end
-        item
-          Visible = True
-          ItemName = 'bbSetUnErased_TM'
-        end
-        item
           Visible = True
           ItemName = 'dxBarStatic'
         end
