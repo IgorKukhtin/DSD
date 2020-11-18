@@ -27,6 +27,7 @@ RETURNS TABLE (Id Integer
              , isReport Boolean
              , isChecked Boolean
              , isComplement Boolean
+             , AddToM TFloat
              , isErased Boolean
               )
 AS
@@ -160,7 +161,6 @@ BEGIN
       , tmpMI_Float_Price AS (SELECT MovementItemFloat.*
                               FROM MovementItemFloat
                               WHERE MovementItemFloat.MovementItemId IN (SELECT DISTINCT tmpMI_Master.Id FROM tmpMI_Master)
-                                AND MovementItemFloat.DescId = zc_MIFloat_Price()
                               )
 
       , tmpMIFloat_PromoMovement AS (SELECT MovementItemFloat.MovementItemId
@@ -264,13 +264,18 @@ BEGIN
                 , CASE WHEN tmpPartner.JuridicalId IS NOT NULL THEN TRUE ELSE FALSE END AS isReport
                 , COALESCE (MIBoolean_Checked.ValueData, False)                         AS isChecked
                 , COALESCE (MIBoolean_Complement.ValueData, False)                      AS isComplement
+                , MIFloat_AddToM.ValueData                                              AS  AddToM
+
                 , MovementItem.IsErased       AS IsErased
            FROM tmpMI_Master AS MovementItem
               LEFT JOIN Object AS Object_Goods ON Object_Goods.Id = MovementItem.ObjectId    
 
               LEFT JOIN tmpMI_Float_Price AS MIFloat_Price
                                           ON MIFloat_Price.MovementItemId = MovementItem.Id
-                                         --AND MIFloat_Price.DescId = zc_MIFloat_Price()
+                                         AND MIFloat_Price.DescId = zc_MIFloat_Price()
+              LEFT JOIN tmpMI_Float_Price AS MIFloat_AddToM
+                                          ON MIFloat_AddToM.MovementItemId = MovementItem.Id
+                                         AND MIFloat_AddToM.DescId = zc_MIFloat_AmountAdd()
 
               LEFT JOIN tmpMIFloat_PromoMovement AS MIFloat_PromoMovement
                                                  ON MIFloat_PromoMovement.MovementItemId = MovementItem.Id

@@ -583,7 +583,12 @@ object Calculation_SAUAForm: TCalculation_SAUAForm
       item
         DataSet = UnitsCDS
       end>
-    Params = <>
+    Params = <
+      item
+        Value = Null
+        DataType = ftWideString
+        MultiSelectSeparator = ','
+      end>
     PackSize = 1
     Left = 120
     Top = 64
