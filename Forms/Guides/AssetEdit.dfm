@@ -2,7 +2,7 @@
   Left = 0
   Top = 0
   Caption = #1053#1086#1074#1086#1077' '#1089#1088#1077#1076#1089#1090#1074#1086
-  ClientHeight = 472
+  ClientHeight = 524
   ClientWidth = 380
   Color = clBtnFace
   Font.Charset = DEFAULT_CHARSET
@@ -20,7 +20,7 @@
     Left = 40
     Top = 64
     TabOrder = 0
-    Width = 296
+    Width = 184
   end
   object cxLabel1: TcxLabel
     Left = 40
@@ -29,7 +29,7 @@
   end
   object cxButton1: TcxButton
     Left = 71
-    Top = 439
+    Top = 485
     Width = 75
     Height = 25
     Action = dsdInsertUpdateGuides
@@ -39,7 +39,7 @@
   end
   object cxButton2: TcxButton
     Left = 221
-    Top = 439
+    Top = 485
     Width = 75
     Height = 25
     Action = dsdFormClose
@@ -232,6 +232,41 @@
     TabOrder = 29
     Width = 101
   end
+  object cxLabel14: TcxLabel
+    Left = 44
+    Top = 431
+    Caption = #1058#1080#1087' '#1054#1057
+  end
+  object edAssetType: TcxButtonEdit
+    Left = 41
+    Top = 448
+    Properties.Buttons = <
+      item
+        Default = True
+        Kind = bkEllipsis
+      end>
+    Properties.ReadOnly = True
+    TabOrder = 31
+    Width = 296
+  end
+  object cxLabel15: TcxLabel
+    Left = 235
+    Top = 46
+    Hint = #1055#1088#1086#1080#1079#1074#1086#1076#1080#1090#1077#1083#1100#1085#1086#1089#1090#1100', '#1082#1075
+    Caption = #1052#1086#1097#1085#1086#1089#1090#1100', '#1082#1042#1090
+    ParentShowHint = False
+    ShowHint = True
+  end
+  object edKW: TcxCurrencyEdit
+    Left = 235
+    Top = 64
+    Properties.Alignment.Horz = taRightJustify
+    Properties.Alignment.Vert = taVCenter
+    Properties.DecimalPlaces = 3
+    Properties.DisplayFormat = ',0.###'
+    TabOrder = 33
+    Width = 101
+  end
   object ActionList: TActionList
     Left = 344
     Top = 204
@@ -374,6 +409,14 @@
         MultiSelectSeparator = ','
       end
       item
+        Name = 'inAssetTypeId'
+        Value = Null
+        Component = GuidesAssetType
+        ComponentItem = 'Key'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
         Name = 'inPeriodUse'
         Value = Null
         Component = edPeriodUse
@@ -385,6 +428,14 @@
         Name = 'inProduction'
         Value = Null
         Component = edProduction
+        DataType = ftFloat
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inKW'
+        Value = Null
+        Component = edKW
         DataType = ftFloat
         ParamType = ptInput
         MultiSelectSeparator = ','
@@ -544,6 +595,28 @@
         ComponentItem = 'TextValue'
         DataType = ftString
         MultiSelectSeparator = ','
+      end
+      item
+        Name = 'KW'
+        Value = Null
+        Component = edKW
+        DataType = ftFloat
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'AssetTypeId'
+        Value = Null
+        Component = GuidesAssetType
+        ComponentItem = 'Key'
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'AssetTypeName'
+        Value = Null
+        Component = GuidesAssetType
+        ComponentItem = 'TextValue'
+        DataType = ftString
+        MultiSelectSeparator = ','
       end>
     PackSize = 1
     Left = 336
@@ -623,8 +696,8 @@
         ParamType = ptInput
         MultiSelectSeparator = ','
       end>
-    Left = 80
-    Top = 306
+    Left = 8
+    Top = 330
   end
   object MakerGuides: TdsdGuides
     KeyField = 'Id'
@@ -683,5 +756,34 @@
       end>
     Left = 168
     Top = 396
+  end
+  object GuidesAssetType: TdsdGuides
+    KeyField = 'Id'
+    LookupControl = edAssetType
+    FormNameParam.Value = 'TAssetTypeForm'
+    FormNameParam.DataType = ftString
+    FormNameParam.MultiSelectSeparator = ','
+    FormName = 'TAssetTypeForm'
+    PositionDataSet = 'ClientDataSet'
+    Params = <
+      item
+        Name = 'Key'
+        Value = ''
+        Component = GuidesAssetType
+        ComponentItem = 'Key'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'TextValue'
+        Value = ''
+        Component = GuidesAssetType
+        ComponentItem = 'TextValue'
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end>
+    Left = 161
+    Top = 448
   end
 end

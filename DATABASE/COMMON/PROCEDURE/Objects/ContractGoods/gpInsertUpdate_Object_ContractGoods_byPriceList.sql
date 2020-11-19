@@ -78,7 +78,7 @@ BEGIN
                                            
           WHERE ObjectLink_PriceListItem_PriceList.DescId = zc_ObjectLink_PriceListItem_PriceList()
             AND ObjectLink_PriceListItem_PriceList.ChildObjectId = inPriceListId --2707438  --
-          limit 5
+        --  limit 5
           );
 
    --получаем уже сохраненные данные ContractGoods, последние
@@ -147,7 +147,8 @@ BEGIN
    FROM tmpPrice
         LEFT JOIN tmpContractGoods ON tmpContractGoods.GoodsId = tmpPrice.GoodsId
                                   AND COALESCE (tmpContractGoods.GoodsKindId,0) = COALESCE (tmpPrice.GoodsKindId,0)
-   WHERE tmpPrice.Price <> tmpContractGoods.Price OR tmpContractGoods.Id IS NULL;
+   WHERE (tmpPrice.Price <> tmpContractGoods.Price OR tmpContractGoods.Id IS NULL)
+      AND COALESCE (tmpPrice.Price,0) <> 0;
    
 
 

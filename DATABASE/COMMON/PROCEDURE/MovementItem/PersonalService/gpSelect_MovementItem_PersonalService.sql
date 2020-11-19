@@ -37,6 +37,8 @@ RETURNS TABLE (Id Integer, PersonalId Integer, PersonalCode Integer, PersonalNam
              , Comment TVarChar
              , isErased Boolean
              , isAuto Boolean
+             , isBankOut Boolean
+             , BankOutDate TDateTime
               )
 AS
 $BODY$
@@ -271,8 +273,9 @@ BEGIN
 
             , MIString_Comment.ValueData       AS Comment
             , tmpAll.isErased
-            , COALESCE (MIBoolean_isAuto.ValueData, FALSE) :: Boolean  AS isAuto
-
+            , COALESCE (MIBoolean_isAuto.ValueData, FALSE)      :: Boolean   AS isAuto
+            , COALESCE (ObjectBoolean_BankOut.ValueData, FALSE) :: Boolean   AS isBankOut
+            , MIDate_BankOut.ValueData                          :: TDateTime AS BankOutDate
        FROM tmpAll
             LEFT JOIN tmpMIContainer_all ON tmpMIContainer_all.MovementItemId = tmpAll.MovementItemId
                                         AND tmpMIContainer_all.Ord            = 1 -- !!!только 1-ый!!!
@@ -437,6 +440,10 @@ BEGIN
                                           ON MIBoolean_isAuto.MovementItemId = tmpAll.MovementItemId
                                          AND MIBoolean_isAuto.DescId = zc_MIBoolean_isAuto()
 
+            LEFT JOIN MovementItemDate AS MIDate_BankOut
+                                       ON MIDate_BankOut.MovementItemId = tmpAll.MovementItemId
+                                      AND MIDate_BankOut.DescId = zc_MIDate_BankOut()
+
             LEFT JOIN Object AS Object_Personal ON Object_Personal.Id = tmpAll.PersonalId
             LEFT JOIN Object AS Object_Unit ON Object_Unit.Id = tmpAll.UnitId
             LEFT JOIN Object AS Object_Position ON Object_Position.Id = tmpAll.PositionId
@@ -451,7 +458,7 @@ BEGIN
             LEFT JOIN ObjectDate AS ObjectDate_Personal_DateOut
                                  ON ObjectDate_Personal_DateOut.ObjectId = tmpAll.PersonalId
                                 AND ObjectDate_Personal_DateOut.DescId = zc_ObjectDate_Personal_Out()
-
+ 
             LEFT JOIN ObjectString AS ObjectString_Member_INN
                                    ON ObjectString_Member_INN.ObjectId = tmpAll.MemberId_Personal
                                   AND ObjectString_Member_INN.DescId = zc_ObjectString_Member_INN()
@@ -472,6 +479,10 @@ BEGIN
             LEFT JOIN ObjectBoolean AS ObjectBoolean_Member_Official
                                     ON ObjectBoolean_Member_Official.ObjectId = tmpAll.MemberId_Personal
                                    AND ObjectBoolean_Member_Official.DescId = zc_ObjectBoolean_Member_Official()
+
+            LEFT JOIN ObjectBoolean AS ObjectBoolean_BankOut
+                                    ON ObjectBoolean_BankOut.ObjectId = Object_PersonalServiceList.Id 
+                                   AND ObjectBoolean_BankOut.DescId = zc_ObjectBoolean_PersonalServiceList_BankOut()
 
             LEFT JOIN tmpMIChild ON tmpMIChild.ParentId = tmpAll.MovementItemId
       ;

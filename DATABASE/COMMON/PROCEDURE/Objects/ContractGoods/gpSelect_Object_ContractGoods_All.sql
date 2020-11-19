@@ -12,7 +12,7 @@ RETURNS TABLE (Id Integer, Code INTEGER
              , Price TFloat, Persent TFloat
              , ContractId Integer, ContractCode Integer, InvNumber TVarChar
              , PriceListId Integer, PriceListName TVarChar
-             , GoodsId Integer, GoodsName TVarChar
+             , GoodsId Integer, GoodsCode Integer, GoodsName TVarChar
              , GoodsKindId Integer, GoodsKindName TVarChar
              , StartDate TDateTime, EndDate TDateTime
              , isErased boolean
@@ -35,12 +35,12 @@ RETURNS TABLE (Id Integer, Code INTEGER
              , InfoMoneyDestinationCode Integer, InfoMoneyDestinationName TVarChar
              , InfoMoneyId Integer, InfoMoneyCode Integer, InfoMoneyName TVarChar
              , PersonalId Integer, PersonalCode Integer, PersonalName TVarChar
-             
+
              , PersonalTradeId Integer, PersonalTradeCode Integer, PersonalTradeName TVarChar
              , PersonalCollationId Integer, PersonalCollationCode Integer, PersonalCollationName TVarChar
              , BankAccountId Integer, BankAccountName TVarChar
              , ContractTagId Integer, ContractTagName TVarChar, ContractTagGroupName TVarChar
-                          
+
              , AreaContractId Integer, AreaContractName TVarChar
              , ContractArticleId Integer, ContractArticleName TVarChar
              , ContractStateKindId Integer, ContractStateKindCode Integer
@@ -109,6 +109,11 @@ BEGIN
                           WHERE Object_ContractGoods.DescId = zc_Object_ContractGoods()
                             AND (Object_ContractGoods.isErased = FALSE OR inisErased = TRUE)
                          )
+                         
+   , tmpObject_Contract_View AS (SELECT * 
+                                 FROM Object_Contract_View
+                                 WHERE Object_Contract_View.ContractId IN (SELECT DISTINCT tmpContractGoods.ContractId FROM tmpContractGoods)
+                                 )
        --
        SELECT
              Object_ContractGoods.Id            AS Id
@@ -124,6 +129,7 @@ BEGIN
            , Object_PriceList.ValueData         AS PriceListName
 
            , Object_Goods.Id                    AS GoodsId
+           , Object_Goods.ObjectCode            AS GoodsCode
            , Object_Goods.ValueData             AS GoodsName
            , Object_GoodsKind.Id                AS GoodsKindId
            , Object_GoodsKind.ValueData         AS GoodsKindName
@@ -225,7 +231,9 @@ BEGIN
 
     FROM tmpContractGoods AS Object_ContractGoods
 
-            LEFT JOIN Object_Contract_View ON Object_Contract_View.ContractId = Object_ContractGoods.ContractId
+            LEFT JOIN tmpObject_Contract_View AS Object_Contract_View
+                                              ON Object_Contract_View.ContractId = Object_ContractGoods.ContractId
+
             LEFT JOIN Object AS Object_Goods ON Object_Goods.Id = Object_ContractGoods.GoodsId
             LEFT JOIN Object AS Object_GoodsKind ON Object_GoodsKind.Id = Object_ContractGoods.GoodsKindId
             LEFT JOIN Object AS Object_PriceList ON Object_PriceList.Id = Object_ContractGoods.PriceListId
@@ -356,7 +364,7 @@ BEGIN
                                       AND COALESCE (tmp.GoodsKindId,0) = COALESCE (Object_ContractGoods.GoodsKindId,0)
                                       AND tmp.EndDate + interval '1 day' = Object_ContractGoods.StartDate
 
-    WHERE (inisShowAll = FALSE AND ObjectDate_End.ValueData = Object_ContractGoods.EndDate_last)
+    WHERE (inisShowAll = FALSE AND Object_ContractGoods.EndDate = Object_ContractGoods.EndDate_last)
        OR (inisShowAll = TRUE)
        --AND (tmpRoleAccessKey.AccessKeyId IS NOT NULL OR vbAccessKeyAll)
     ;
@@ -374,4 +382,4 @@ $BODY$
 */
 
 -- тест
---SELECT * FROM gpSelect_Object_ContractGoods_all (true,true,zfCalc_UserAdmin())
+-- SELECT * FROM gpSelect_Object_ContractGoods_all (true,true,zfCalc_UserAdmin())

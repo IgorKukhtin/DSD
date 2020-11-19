@@ -117,6 +117,16 @@ inherited OrderInternalPromoForm: TOrderInternalPromoForm
             Options.Editing = False
             Width = 60
           end
+          object AddToM: TcxGridDBColumn
+            Caption = #1041#1077#1079' '#1087#1088#1086#1076#1072#1078' '#1076#1086#1087#1086#1083#1085#1080#1090#1100' '#1076#1086' M'
+            DataBinding.FieldName = 'AddToM'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 3
+            Properties.DisplayFormat = ',0.####;-,0.####; ;'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 72
+          end
           object GoodsGroupName: TcxGridDBColumn
             Caption = #1043#1088#1091#1087#1087#1072' '#1090#1086#1074#1072#1088#1072
             DataBinding.FieldName = 'GoodsGroupName'
@@ -1730,7 +1740,7 @@ inherited OrderInternalPromoForm: TOrderInternalPromoForm
           Action = actExecClearComplement
         end>
       View = cxGridDBTableView
-      QuestionBeforeExecute = #1054#1095#1080#1089#1090#1080#1090#1100' "'#1044#1083#1103' '#1088#1072#1089#1095#1077#1090#1072'" '#1085#1072' '#1074#1099#1073#1088#1072#1085#1085#1099#1077' '#1087#1086#1079#1080#1094#1080#1080'?'
+      QuestionBeforeExecute = #1054#1095#1080#1089#1090#1080#1090#1100' "'#1044#1086#1087#1086#1083#1085#1080#1090#1100' '#1076#1086' N" '#1085#1072' '#1074#1099#1073#1088#1072#1085#1085#1099#1077' '#1087#1086#1079#1080#1094#1080#1080'?'
       Caption = #1054#1095#1080#1089#1090#1080#1090#1100' "'#1044#1086#1087#1086#1083#1085#1080#1090#1100' '#1076#1086' N"'
       Hint = #1054#1095#1080#1089#1090#1080#1090#1100' "'#1044#1086#1087#1086#1083#1085#1080#1090#1100' '#1076#1086' N"'
       ImageIndex = 52
@@ -2461,6 +2471,15 @@ inherited OrderInternalPromoForm: TOrderInternalPromoForm
         Value = Null
         Component = MasterCDS
         ComponentItem = 'Price'
+        DataType = ftFloat
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inAddToM'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'AddToM'
         DataType = ftFloat
         ParamType = ptInput
         MultiSelectSeparator = ','

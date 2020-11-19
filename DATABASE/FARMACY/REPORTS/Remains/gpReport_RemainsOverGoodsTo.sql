@@ -4,6 +4,7 @@
 DROP FUNCTION IF EXISTS gpReport_RemainsOverGoods_To (Integer, TDateTime, TFloat, TFloat, TFloat, Boolean, Boolean, Boolean, Boolean, TVarChar);
 --DROP FUNCTION IF EXISTS gpReport_RemainsOverGoods_To (Integer, TDateTime, TFloat, TFloat, TFloat, Boolean, Boolean, Boolean, Boolean, Boolean, TVarChar);
 DROP FUNCTION IF EXISTS gpReport_RemainsOverGoods_To (Integer, TDateTime, TFloat, TFloat, TFloat, TFloat, Boolean, Boolean, Boolean, Boolean, Boolean, Boolean, TVarChar);
+DROP FUNCTION IF EXISTS gpReport_RemainsOverGoods_To (Integer, TDateTime, TFloat, TFloat, TFloat, TFloat, Boolean, Boolean, Boolean, Boolean, Boolean, Boolean, Boolean, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpReport_RemainsOverGoods_To(
     IN inUnitId           Integer  ,  -- Подразделение
@@ -16,7 +17,8 @@ CREATE OR REPLACE FUNCTION gpReport_RemainsOverGoods_To(
     IN inisInMCS          Boolean,    -- для аптек-получателей изпользовать НТЗ из справочника
     IN inisRecal          Boolean,    -- Да / нет - "Временно исправлются ошибки с датами в ценах"
     IN inisAssortment     Boolean,    -- оставить кол-во для ассортимента Да / нет
-    IN inIsReserve        Boolean  ,  --  Учитывать отложенный товар Да/Нет
+    IN inIsReserve        Boolean  ,  --  не Учитывать отложенный товар Да/Нет
+    IN inIsReserveTo      Boolean  ,  --  Учесть отлож. заказ для получателя
     IN inisDayListDiff    Boolean  ,  -- Не перемещать товар из Листа Отказа за посл. Х дней
     --IN inisTo             Boolean,    -- перемещение "НА" выбраное подразделение со всех аптек (Да/нет) (в противном случае С выбранного подразделения)
     IN inSession          TVarChar    -- сессия пользователя
@@ -94,6 +96,8 @@ BEGIN
     CREATE TEMP TABLE tmpMovOver (Id Integer, UnitId Integer) ON COMMIT DROP;
 
     CREATE TEMP TABLE tmpGoods (GoodsId Integer, UnitId Integer, MCSValue TFloat ) ON COMMIT DROP;
+
+    CREATE TEMP TABLE tmpOrderExternal (GoodsId Integer, UnitId Integer, Amount TFloat) ON COMMIT DROP;
 
     -- Таблица - Результат
     CREATE TEMP TABLE tmpData (GoodsMainId Integer, GoodsId Integer, UnitId Integer, MCSValue TFloat
@@ -277,6 +281,32 @@ BEGIN
                         HAVING SUM (MI_Send.Amount) <> 0 
                        ;
 
+         INSERT INTO tmpOrderExternal (GoodsId, UnitId, Amount) 
+                        SELECT MI_OrderExternal.ObjectId                            AS GoodsId
+                             , MovementLinkObject_Unit.ObjectId                     AS UnitId
+                             , SUM (COALESCE (MI_OrderExternal.Amount,0)) ::TFloat  AS Amount
+                        FROM Movement AS Movement_OrderExternal
+                               INNER JOIN MovementLinkObject AS MovementLinkObject_Unit
+                                                             ON MovementLinkObject_Unit.MovementId = Movement_OrderExternal.Id
+                                                            AND MovementLinkObject_Unit.DescId = zc_MovementLinkObject_To()
+                                                            AND MovementLinkObject_Unit.ObjectId = inUnitId
+
+                               INNER JOIN MovementBoolean AS MovementBoolean_Deferred
+                                                          ON MovementBoolean_Deferred.MovementId = Movement_OrderExternal.Id
+                                                         AND MovementBoolean_Deferred.DescId = zc_MovementBoolean_Deferred()
+                                                         AND COALESCE (MovementBoolean_Deferred.ValueData, FALSE) = TRUE
+
+                               INNER JOIN MovementItem AS MI_OrderExternal
+                                                       ON MI_OrderExternal.MovementId = Movement_OrderExternal.Id
+                                                      AND MI_OrderExternal.DescId = zc_MI_Master()
+                                                      AND MI_OrderExternal.isErased = FALSE
+                        WHERE Movement_OrderExternal.OperDate >= inStartDate - INTERVAL '7 DAY' AND Movement_OrderExternal.OperDate < inStartDate + INTERVAL '7 DAY'
+                          AND Movement_OrderExternal.DescId = zc_Movement_OrderExternal()
+                          AND Movement_OrderExternal.StatusId IN (zc_Enum_Status_Complete(), zc_Enum_Status_UnComplete())
+                        GROUP BY MI_OrderExternal.ObjectId 
+                               , MovementLinkObject_Unit.ObjectId 
+                        HAVING SUM (COALESCE (MI_OrderExternal.Amount,0)) <> 0;
+
        -- остатки
        INSERT INTO tmpRemains (GoodsId, UnitId, RemainsStart, RemainsStart_save, ListDiffAmount, MinExpirationDate)                              
                          WITH tmp AS
@@ -351,7 +381,7 @@ BEGIN
                         , tmp.MCSValue
                    FROM gpSelect_RecalcMCS (inUnitId, 0, inPeriod::Integer, inDay::Integer, inStartDate, inSession) AS tmp
                    WHERE tmp.MCSValue > 0
-;
+                   ;
        END IF;
        
 
@@ -535,19 +565,37 @@ BEGIN
                , CASE WHEN ObjectBoolean_Goods_Close.ValueData = TRUE and 1=0 -- 11.09.20 Люба попросила чтоб закрытые товары участвовали в расчете
                            THEN 0
                       ELSE CASE WHEN inIsReserve = FALSE
-                                THEN CASE WHEN COALESCE (Object_Remains.RemainsStart, 0) < tmpGoods_list.MCSValue AND tmpGoods_list.MCSValue > 0
-                                               THEN CEIL ((tmpGoods_list.MCSValue - COALESCE (Object_Remains.RemainsStart, 0)) / COALESCE (tmpOverSettings.MinimumLot, COALESCE (tmpOverSettings_all.MinimumLot, 1)))
-                                                  * COALESCE (tmpOverSettings.MinimumLot, COALESCE (tmpOverSettings_all.MinimumLot, 1))
-                                          ELSE 0
+                                THEN CASE WHEN inIsReserveTo = FALSE           -- для аптеки на которую перемещаем учитывается или нет количества из внешнего заказа
+                                          THEN CASE WHEN COALESCE (Object_Remains.RemainsStart, 0) < tmpGoods_list.MCSValue AND tmpGoods_list.MCSValue > 0
+                                                         THEN CEIL ((tmpGoods_list.MCSValue - COALESCE (Object_Remains.RemainsStart, 0)) / COALESCE (tmpOverSettings.MinimumLot, COALESCE (tmpOverSettings_all.MinimumLot, 1)))
+                                                            * COALESCE (tmpOverSettings.MinimumLot, COALESCE (tmpOverSettings_all.MinimumLot, 1))
+                                                    ELSE 0
+                                               END
+                                          ELSE
+                                               CASE WHEN (COALESCE (Object_Remains.RemainsStart, 0) + COALESCE(tmpOrderExternal.Amount,0)) < tmpGoods_list.MCSValue AND tmpGoods_list.MCSValue > 0
+                                                         THEN CEIL ((tmpGoods_list.MCSValue - COALESCE (Object_Remains.RemainsStart, 0) - COALESCE(tmpOrderExternal.Amount,0)) / COALESCE (tmpOverSettings.MinimumLot, COALESCE (tmpOverSettings_all.MinimumLot, 1)))
+                                                            * COALESCE (tmpOverSettings.MinimumLot, COALESCE (tmpOverSettings_all.MinimumLot, 1))
+                                                    ELSE 0
+                                               END
                                      END
-                                ELSE CASE WHEN COALESCE (Object_Remains.RemainsStart, 0) - COALESCE (tmpReserve.Amount, 0) < tmpGoods_list.MCSValue AND tmpGoods_list.MCSValue > 0
-                                               THEN CEIL ((tmpGoods_list.MCSValue - COALESCE (Object_Remains.RemainsStart, 0) - COALESCE (tmpReserve.Amount, 0) ) / COALESCE (tmpOverSettings.MinimumLot, COALESCE (tmpOverSettings_all.MinimumLot, 1)))
-                                                  * COALESCE (tmpOverSettings.MinimumLot, COALESCE (tmpOverSettings_all.MinimumLot, 1))
-                                          ELSE 0
-                                     END
+                                     
+                                ELSE CASE WHEN inIsReserveTo = FALSE           -- для аптеки на которую перемещаем учитывается или нет количества из внешнего заказа
+                                          THEN CASE WHEN COALESCE (Object_Remains.RemainsStart, 0) - COALESCE (tmpReserve.Amount, 0) < tmpGoods_list.MCSValue AND tmpGoods_list.MCSValue > 0
+                                                         THEN CEIL ((tmpGoods_list.MCSValue - COALESCE (Object_Remains.RemainsStart, 0) - COALESCE (tmpReserve.Amount, 0) ) / COALESCE (tmpOverSettings.MinimumLot, COALESCE (tmpOverSettings_all.MinimumLot, 1)))
+                                                            * COALESCE (tmpOverSettings.MinimumLot, COALESCE (tmpOverSettings_all.MinimumLot, 1))
+                                                    ELSE 0
+                                               END
+                                          ELSE
+                                               CASE WHEN COALESCE (Object_Remains.RemainsStart, 0) - COALESCE (tmpReserve.Amount, 0) + COALESCE(tmpOrderExternal.Amount,0) < tmpGoods_list.MCSValue AND tmpGoods_list.MCSValue > 0
+                                                         THEN CEIL ((tmpGoods_list.MCSValue - COALESCE (Object_Remains.RemainsStart, 0) - COALESCE (tmpReserve.Amount, 0) - COALESCE(tmpOrderExternal.Amount,0) ) / COALESCE (tmpOverSettings.MinimumLot, COALESCE (tmpOverSettings_all.MinimumLot, 1)))
+                                                            * COALESCE (tmpOverSettings.MinimumLot, COALESCE (tmpOverSettings_all.MinimumLot, 1))
+                                                    ELSE 0
+                                               END
+                                     END     
                            END                                
                  END AS RemainsMCS_to
-               , CASE WHEN ObjectBoolean_Goods_Close.ValueData = TRUE and 1=0 -- 11.09.20 Люба попросила чтоб закрытые товары участвовали в расчете
+
+/*               , CASE WHEN ObjectBoolean_Goods_Close.ValueData = TRUE and 1=0 -- 11.09.20 Люба попросила чтоб закрытые товары участвовали в расчете
                            THEN 0
                       ELSE CASE WHEN inIsReserve = FALSE
                                 THEN CASE WHEN COALESCE (Object_Remains.RemainsStart, 0) < tmpGoods_list.MCSValue AND tmpGoods_list.MCSValue > 0
@@ -562,6 +610,40 @@ BEGIN
                                                   * COALESCE (ObjectHistoryFloat_Price.ValueData, 0)
                                           ELSE 0
                                      END
+                           END                                
+                 END AS SummaRemainsMCS_to
+                 */
+               , COALESCE (ObjectHistoryFloat_Price.ValueData, 0)
+                 * CASE WHEN ObjectBoolean_Goods_Close.ValueData = TRUE and 1=0 -- 11.09.20 Люба попросила чтоб закрытые товары участвовали в расчете
+                           THEN 0
+                      ELSE CASE WHEN inIsReserve = FALSE
+                                THEN CASE WHEN inIsReserveTo = FALSE           -- для аптеки на которую перемещаем учитывается или нет количества из внешнего заказа
+                                          THEN CASE WHEN COALESCE (Object_Remains.RemainsStart, 0) < tmpGoods_list.MCSValue AND tmpGoods_list.MCSValue > 0
+                                                         THEN CEIL ((tmpGoods_list.MCSValue - COALESCE (Object_Remains.RemainsStart, 0)) / COALESCE (tmpOverSettings.MinimumLot, COALESCE (tmpOverSettings_all.MinimumLot, 1)))
+                                                            * COALESCE (tmpOverSettings.MinimumLot, COALESCE (tmpOverSettings_all.MinimumLot, 1))
+                                                    ELSE 0
+                                               END
+                                          ELSE
+                                               CASE WHEN (COALESCE (Object_Remains.RemainsStart, 0) + COALESCE(tmpOrderExternal.Amount,0)) < tmpGoods_list.MCSValue AND tmpGoods_list.MCSValue > 0
+                                                         THEN CEIL ((tmpGoods_list.MCSValue - COALESCE (Object_Remains.RemainsStart, 0) - COALESCE(tmpOrderExternal.Amount,0)) / COALESCE (tmpOverSettings.MinimumLot, COALESCE (tmpOverSettings_all.MinimumLot, 1)))
+                                                            * COALESCE (tmpOverSettings.MinimumLot, COALESCE (tmpOverSettings_all.MinimumLot, 1))
+                                                    ELSE 0
+                                               END
+                                     END
+                                     
+                                ELSE CASE WHEN inIsReserveTo = FALSE           -- для аптеки на которую перемещаем учитывается или нет количества из внешнего заказа
+                                          THEN CASE WHEN COALESCE (Object_Remains.RemainsStart, 0) - COALESCE (tmpReserve.Amount, 0) < tmpGoods_list.MCSValue AND tmpGoods_list.MCSValue > 0
+                                                         THEN CEIL ((tmpGoods_list.MCSValue - COALESCE (Object_Remains.RemainsStart, 0) - COALESCE (tmpReserve.Amount, 0) ) / COALESCE (tmpOverSettings.MinimumLot, COALESCE (tmpOverSettings_all.MinimumLot, 1)))
+                                                            * COALESCE (tmpOverSettings.MinimumLot, COALESCE (tmpOverSettings_all.MinimumLot, 1))
+                                                    ELSE 0
+                                               END
+                                          ELSE
+                                               CASE WHEN COALESCE (Object_Remains.RemainsStart, 0) - COALESCE (tmpReserve.Amount, 0) + COALESCE(tmpOrderExternal.Amount,0) < tmpGoods_list.MCSValue AND tmpGoods_list.MCSValue > 0
+                                                         THEN CEIL ((tmpGoods_list.MCSValue - COALESCE (Object_Remains.RemainsStart, 0) - COALESCE (tmpReserve.Amount, 0) - COALESCE(tmpOrderExternal.Amount,0) ) / COALESCE (tmpOverSettings.MinimumLot, COALESCE (tmpOverSettings_all.MinimumLot, 1)))
+                                                            * COALESCE (tmpOverSettings.MinimumLot, COALESCE (tmpOverSettings_all.MinimumLot, 1))
+                                                    ELSE 0
+                                               END
+                                     END     
                            END                                
                  END AS SummaRemainsMCS_to
 
@@ -581,6 +663,8 @@ BEGIN
 
                 LEFT JOIN tmpReserve ON tmpReserve.GoodsId = tmpGoods_list.GoodsId
                                     AND tmpReserve.UnitId  = tmpGoods_list.UnitId
+                LEFT JOIN tmpOrderExternal ON tmpOrderExternal.GoodsId = tmpGoods_list.GoodsId
+                                          AND tmpOrderExternal.UnitId  = tmpGoods_list.UnitId
 
                 LEFT JOIN ObjectBoolean AS ObjectBoolean_Goods_Close
                                         ON ObjectBoolean_Goods_Close.ObjectId = tmpGoods_list.GoodsId
@@ -947,5 +1031,5 @@ $BODY$
 */
 
 -- тест
---SELECT * FROM gpReport_RemainsOverGoods_To(inUnitId := 183288 , inStartDate := ('23.02.2017')::TDateTime , inPeriod := 30 , inDay := 30 , inAssortment := 1 , inisMCS := 'False' , inisInMCS := 'True' , inisRecal := 'False' , inisAssortment := 'False' , inIsReserve:='False' ,  inSession := '3')
+--SELECT * FROM gpReport_RemainsOverGoods_To(inUnitId := 183288 , inStartDate := ('23.02.2017')::TDateTime , inPeriod := 30 , inDay := 30 , inAssortment := 1 , inisMCS := 'False' , inisInMCS := 'True' , inisRecal := 'False' , inisAssortment := 'False' , inIsReserve:='False' , inIsReserveTo:='False' , inSession := '3')
 --FETCH ALL "<unnamed portal 1>";

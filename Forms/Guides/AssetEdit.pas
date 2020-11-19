@@ -67,6 +67,11 @@ type
     GuidesCar: TdsdGuides;
     cxLabel13: TcxLabel;
     edProduction: TcxCurrencyEdit;
+    cxLabel14: TcxLabel;
+    edAssetType: TcxButtonEdit;
+    GuidesAssetType: TdsdGuides;
+    cxLabel15: TcxLabel;
+    edKW: TcxCurrencyEdit;
   private
     { Private declarations }
   public

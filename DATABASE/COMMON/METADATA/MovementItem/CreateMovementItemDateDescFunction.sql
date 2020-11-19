@@ -71,6 +71,9 @@ CREATE OR REPLACE FUNCTION zc_MIDate_InsertMobile() RETURNS Integer AS $BODY$BEG
 INSERT INTO MovementItemDateDesc (Code, ItemName)
   SELECT 'zc_MIDate_InsertMobile', 'Дата/время создания фото' WHERE NOT EXISTS (SELECT * FROM MovementItemDateDesc WHERE Code = 'zc_MIDate_InsertMobile');
 
+CREATE OR REPLACE FUNCTION zc_MIDate_BankOut() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM MovementItemDateDesc WHERE Code = 'zc_MIDate_BankOut'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
+INSERT INTO MovementItemDateDesc (Code, ItemName)
+  SELECT 'zc_MIDate_BankOut', 'Дата выплаты по банку' WHERE NOT EXISTS (SELECT * FROM MovementItemDateDesc WHERE Code = 'zc_MIDate_BankOut');
 
 ------!!!!!!!!!! Farmacy
 CREATE OR REPLACE FUNCTION zc_MIDate_SertificatStart() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM MovementItemDateDesc WHERE Code = 'zc_MIDate_SertificatStart'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
@@ -133,6 +136,7 @@ INSERT INTO MovementItemDateDesc (Code, ItemName)
 /*-------------------------------------------------------------------------------
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.    Воробкало А.А.  Шаблий О.В.
+ 17.11.20         * zc_MIDate_BankOut
  10.09.20                                                                         * zc_MIDate_ExpirationDateIncome
  14.07.20                                                                         * zc_MIDate_ReplacementDate
  01.09.19                                                                         * zc_MIDate_IssuedBy

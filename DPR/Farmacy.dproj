@@ -147,8 +147,8 @@
 		</PropertyGroup>
 		<PropertyGroup Condition="'$(Cfg_2_Win32)'!=''">
 			<Debugger_RunParams>/skipcheckconnect</Debugger_RunParams>
-			<VerInfo_Keys>CompanyName=;FileVersion=1.2.7.190;InternalName=;LegalCopyright=;LegalTrademarks=;OriginalFilename=;ProductVersion=1.0.0.0;Comments=;ProgramID=com.embarcadero.$(MSBuildProjectName);FileDescription=$(MSBuildProjectName);ProductName=$(MSBuildProjectName)</VerInfo_Keys>
-			<VerInfo_Build>190</VerInfo_Build>
+			<VerInfo_Keys>CompanyName=;FileVersion=1.2.7.191;InternalName=;LegalCopyright=;LegalTrademarks=;OriginalFilename=;ProductVersion=1.0.0.0;Comments=;ProgramID=com.embarcadero.$(MSBuildProjectName);FileDescription=$(MSBuildProjectName);ProductName=$(MSBuildProjectName)</VerInfo_Keys>
+			<VerInfo_Build>191</VerInfo_Build>
 			<DCC_ExeOutput>..\BIN</DCC_ExeOutput>
 			<VerInfo_IncludeVerInfo>true</VerInfo_IncludeVerInfo>
 			<VerInfo_MinorVer>2</VerInfo_MinorVer>
@@ -297,6 +297,14 @@
 			<DCCReference Include="..\SOURCE\COMPONENT\dsdTranslator.pas"/>
 			<DCCReference Include="..\FormsFarmacy\System\SearchByCaption.pas">
 				<Form>SearchByCaptionForm</Form>
+			</DCCReference>
+			<DCCReference Include="..\FormsFarmacy\ConnectWithOld\RepricePromoUnit.pas">
+				<Form>RepricePromoUnitForm</Form>
+			</DCCReference>
+			<DCCReference Include="..\FormsFarmacy\ConnectWithOld\Calculation_SAUA.pas">
+				<Form>Calculation_SAUAForm</Form>
+				<FormType>dfm</FormType>
+				<DesignClass>TParentForm</DesignClass>
 			</DCCReference>
 			<BuildConfiguration Include="Release">
 				<Key>Cfg_2</Key>

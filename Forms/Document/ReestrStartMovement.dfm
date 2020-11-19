@@ -4,7 +4,7 @@ inherited ReestrStartMovementForm: TReestrStartMovementForm
   ClientWidth = 943
   AddOnFormData.RefreshAction = actRefreshStart
   ExplicitWidth = 959
-  ExplicitHeight = 420
+  ExplicitHeight = 423
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
@@ -640,7 +640,7 @@ inherited ReestrStartMovementForm: TReestrStartMovementForm
         end
         item
           Name = 'isGroup'
-          Value = 'TRUE'
+          Value = True
           DataType = ftBoolean
           MultiSelectSeparator = ','
         end>
@@ -715,7 +715,7 @@ inherited ReestrStartMovementForm: TReestrStartMovementForm
         end
         item
           Name = 'isGroup'
-          Value = 'FALSE'
+          Value = False
           DataType = ftBoolean
           MultiSelectSeparator = ','
         end>
@@ -790,7 +790,7 @@ inherited ReestrStartMovementForm: TReestrStartMovementForm
         end
         item
           Name = 'isGroup'
-          Value = 'TRUE'
+          Value = True
           DataType = ftBoolean
           MultiSelectSeparator = ','
         end>
@@ -862,7 +862,7 @@ inherited ReestrStartMovementForm: TReestrStartMovementForm
         end
         item
           Name = 'isGroup'
-          Value = 'FALSE'
+          Value = False
           DataType = ftBoolean
           MultiSelectSeparator = ','
         end>
@@ -1167,7 +1167,7 @@ inherited ReestrStartMovementForm: TReestrStartMovementForm
         end
         item
           Name = 'isGroup'
-          Value = 'FALSE'
+          Value = False
           DataType = ftBoolean
           MultiSelectSeparator = ','
         end>
@@ -1394,7 +1394,7 @@ inherited ReestrStartMovementForm: TReestrStartMovementForm
         MultiSelectSeparator = ','
       end
       item
-        Value = 42663d
+        Value = False
         DataType = ftBoolean
         ParamType = ptUnknown
         MultiSelectSeparator = ','
@@ -1662,7 +1662,7 @@ inherited ReestrStartMovementForm: TReestrStartMovementForm
         Control = edMember
       end>
     Left = 416
-    Top = 97
+    Top = 145
   end
   inherited RefreshAddOn: TRefreshAddOn
     DataSet = ''
@@ -1671,11 +1671,43 @@ inherited ReestrStartMovementForm: TReestrStartMovementForm
   end
   inherited spErasedMIMaster: TdsdStoredProc
     StoredProcName = 'gpMovementItem_Send_SetErased'
+    Params = <
+      item
+        Name = 'inMovementItemId'
+        Component = MasterCDS
+        ComponentItem = 'Id'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'outIsErased'
+        Value = False
+        Component = MasterCDS
+        ComponentItem = 'isErased'
+        DataType = ftBoolean
+        MultiSelectSeparator = ','
+      end>
     Left = 422
     Top = 328
   end
   inherited spUnErasedMIMaster: TdsdStoredProc
     StoredProcName = 'gpMovementItem_Send_SetUnErased'
+    Params = <
+      item
+        Name = 'inMovementItemId'
+        Component = MasterCDS
+        ComponentItem = 'Id'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'outIsErased'
+        Value = False
+        Component = MasterCDS
+        ComponentItem = 'isErased'
+        DataType = ftBoolean
+        MultiSelectSeparator = ','
+      end>
     Left = 510
     Top = 320
   end
@@ -1859,7 +1891,7 @@ inherited ReestrStartMovementForm: TReestrStartMovementForm
   end
   inherited spGetTotalSumm: TdsdStoredProc
     Left = 476
-    Top = 100
+    Top = 124
   end
   object spSelectPrint: TdsdStoredProc
     StoredProcName = 'gpSelect_Movement_Reestr_Print'
@@ -1901,7 +1933,7 @@ inherited ReestrStartMovementForm: TReestrStartMovementForm
       end
       item
         Name = 'inIsReestrKind'
-        Value = 'FALSE'
+        Value = False
         DataType = ftBoolean
         ParamType = ptInput
         MultiSelectSeparator = ','
@@ -2127,6 +2159,7 @@ inherited ReestrStartMovementForm: TReestrStartMovementForm
         Column = BarCode
       end>
     SummaryItemList = <>
+    PropertiesCellList = <>
     Left = 598
     Top = 121
   end
@@ -2205,14 +2238,14 @@ inherited ReestrStartMovementForm: TReestrStartMovementForm
       end
       item
         Name = 'inIsReestrKind'
-        Value = 'FALSE'
+        Value = False
         DataType = ftBoolean
         ParamType = ptInput
         MultiSelectSeparator = ','
       end
       item
         Name = 'inIsShowAll'
-        Value = 'false'
+        Value = False
         Component = FormParams
         ComponentItem = 'IsShowAllPrint'
         DataType = ftBoolean
@@ -2327,7 +2360,7 @@ inherited ReestrStartMovementForm: TReestrStartMovementForm
       end
       item
         Name = 'inIsReestrKind'
-        Value = 'False'
+        Value = False
         Component = cbReestrKind
         DataType = ftBoolean
         ParamType = ptInput
@@ -2391,7 +2424,7 @@ inherited ReestrStartMovementForm: TReestrStartMovementForm
       end
       item
         Name = 'inIsReestrKind'
-        Value = 'False'
+        Value = False
         Component = cbReestrKind
         DataType = ftBoolean
         ParamType = ptInput

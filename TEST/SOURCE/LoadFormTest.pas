@@ -2980,11 +2980,12 @@ begin
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TAsset_ObjectForm'));
   TdsdFormStorageFactory.GetStorage.Load('TAsset_ObjectForm');
   //exit;
+  }
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TAssetForm'));
   TdsdFormStorageFactory.GetStorage.Load('TAssetForm');
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TAssetEditForm'));
   TdsdFormStorageFactory.GetStorage.Load('TAssetEditForm');
-  }
+
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TAssetTypeForm'));
   TdsdFormStorageFactory.GetStorage.Load('TAssetTypeForm');
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TAssetTypeEditForm'));

@@ -2,9 +2,8 @@
   Caption = #1044#1086#1073#1072#1074#1080#1090#1100'/'#1048#1079#1084#1077#1085#1080#1090#1100' <'#1044#1086#1075#1086#1074#1086#1088'>'
   ClientHeight = 711
   ClientWidth = 934
-  ExplicitTop = -279
   ExplicitWidth = 940
-  ExplicitHeight = 736
+  ExplicitHeight = 739
   PixelsPerInch = 96
   TextHeight = 13
   inherited bbOk: TcxButton
@@ -517,10 +516,9 @@
     end
     object cxDBVerticalGrid: TcxDBVerticalGrid
       Left = 0
-      Top = 250
+      Top = 414
       Width = 559
-      Height = 461
-      Align = alClient
+      Height = 297
       Images = dmMain.ImageList
       LayoutStyle = lsMultiRecordView
       OptionsView.RowHeaderWidth = 109
@@ -793,6 +791,7 @@
     Left = 458
     Top = 567
     Caption = #1044#1072#1090#1072' '#1079#1072#1074#1077#1088#1096#1077#1085#1080#1103' '#1072#1082#1094#1080#1080
+    Visible = False
   end
   object edEndPromo: TcxDateEdit [62]
     Left = 460
@@ -963,8 +962,8 @@
     Width = 161
   end
   inherited UserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn
-    Left = 499
-    Top = 476
+    Left = 587
+    Top = 508
   end
   inherited cxPropertiesStore: TcxPropertiesStore
     Left = 392
@@ -1187,6 +1186,7 @@
       Caption = #1059#1076#1072#1083#1080#1090#1100' '#1091#1089#1083#1086#1074#1080#1077' '#1076#1086#1075#1086#1074#1086#1088#1072
       Hint = #1059#1076#1072#1083#1080#1090#1100' '#1091#1089#1083#1086#1074#1080#1077' '#1076#1086#1075#1086#1074#1086#1088#1072
       ImageIndex = 2
+      ShortCut = 46
       ErasedFieldName = 'isErased'
       DataSource = ContractConditionDS
     end
@@ -1201,6 +1201,7 @@
       Caption = #1042#1086#1089#1089#1090#1072#1085#1086#1074#1080#1090#1100
       Hint = #1042#1086#1089#1089#1090#1072#1085#1086#1074#1080#1090#1100' '#1076#1072#1085#1085#1099#1077
       ImageIndex = 8
+      ShortCut = 46
       ErasedFieldName = 'isErased'
       isSetErased = False
       DataSource = ContractConditionDS
@@ -2698,8 +2699,8 @@
         MultiSelectSeparator = ','
       end>
     PackSize = 1
-    Left = 496
-    Top = 320
+    Left = 528
+    Top = 352
   end
   object DocumentDS: TDataSource
     DataSet = DocumentCDS
@@ -2755,8 +2756,8 @@
         MultiSelectSeparator = ','
       end>
     PackSize = 1
-    Left = 432
-    Top = 368
+    Left = 672
+    Top = 536
   end
   object spGetDocument: TdsdStoredProc
     StoredProcName = 'gpGet_Object_ContractDocument'
@@ -3223,8 +3224,8 @@
         ParamType = ptInput
         MultiSelectSeparator = ','
       end>
-    Left = 472
-    Top = 522
+    Left = 336
+    Top = 642
   end
   object GoodsPropertyGuides: TdsdGuides
     KeyField = 'Id'

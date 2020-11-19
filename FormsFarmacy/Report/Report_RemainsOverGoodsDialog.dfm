@@ -3,7 +3,7 @@ object Report_RemainsOverGoodsDialogForm: TReport_RemainsOverGoodsDialogForm
   Top = 0
   BorderStyle = bsDialog
   Caption = #1055#1072#1088#1072#1084#1077#1090#1088#1099' '#1086#1090#1095#1077#1090#1072' < '#1056#1072#1089#1087#1088#1077#1076#1077#1083#1077#1085#1080#1081' '#1080#1079#1083#1080#1096#1082#1086#1074' '#1087#1086' '#1072#1087#1090#1077#1082#1072#1084'>'
-  ClientHeight = 520
+  ClientHeight = 550
   ClientWidth = 355
   Color = clBtnFace
   Font.Charset = DEFAULT_CHARSET
@@ -18,8 +18,8 @@ object Report_RemainsOverGoodsDialogForm: TReport_RemainsOverGoodsDialogForm
   PixelsPerInch = 96
   TextHeight = 13
   object cxButton1: TcxButton
-    Left = 43
-    Top = 478
+    Left = 44
+    Top = 510
     Width = 75
     Height = 25
     Caption = 'Ok'
@@ -28,8 +28,8 @@ object Report_RemainsOverGoodsDialogForm: TReport_RemainsOverGoodsDialogForm
     TabOrder = 0
   end
   object cxButton2: TcxButton
-    Left = 217
-    Top = 478
+    Left = 218
+    Top = 510
     Width = 75
     Height = 25
     Caption = #1054#1090#1084#1077#1085#1072
@@ -247,6 +247,16 @@ object Report_RemainsOverGoodsDialogForm: TReport_RemainsOverGoodsDialogForm
     TabOrder = 27
     Width = 26
   end
+  object cbReserveTo: TcxCheckBox
+    Left = 8
+    Top = 460
+    Hint = #1059#1095#1077#1089#1090#1100' '#1086#1090#1083#1086#1078'. '#1079#1072#1082#1072#1079' '#1076#1083#1103' '#1087#1086#1083#1091#1095#1072#1090#1077#1083#1103' ('#1044#1072'/'#1053#1077#1090')'
+    Caption = #1059#1095#1077#1089#1090#1100' '#1086#1090#1083#1086#1078'. '#1079#1072#1082#1072#1079' '#1076#1083#1103' '#1087#1086#1083#1091#1095#1072#1090#1077#1083#1103' ('#1088#1072#1089#1087'. '#1080#1079#1083'. '#1085#1072' '#1072#1087#1090#1077#1082#1080')'
+    ParentShowHint = False
+    ShowHint = True
+    TabOrder = 28
+    Width = 329
+  end
   object PeriodChoice: TPeriodChoice
     DateStart = deStart
     Left = 153
@@ -428,6 +438,14 @@ object Report_RemainsOverGoodsDialogForm: TReport_RemainsOverGoodsDialogForm
         Name = 'isDayListDiff'
         Value = Null
         Component = cbDayListDiff
+        DataType = ftBoolean
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inisReserveTo'
+        Value = Null
+        Component = cbReserveTo
         DataType = ftBoolean
         ParamType = ptInput
         MultiSelectSeparator = ','

@@ -6,10 +6,10 @@ CREATE OR REPLACE FUNCTION gpSelect_Object_PersonalServiceList(
     IN inSession     TVarChar       -- сессия пользователя
 )
 RETURNS TABLE (Id Integer, Code Integer, Name TVarChar
-             , JuridicalId Integer, JuridicalName TVarChar 
-             , PaidKindId Integer, PaidKindName TVarChar 
-             , BranchId Integer, BranchName TVarChar 
-             , BankId Integer, BankName TVarChar 
+             , JuridicalId Integer, JuridicalName TVarChar
+             , PaidKindId Integer, PaidKindName TVarChar
+             , BranchId Integer, BranchName TVarChar
+             , BankId Integer, BankName TVarChar
              , MemberId Integer, MemberName TVarChar
              , MemberHeadManagerId Integer, MemberHeadManagerName TVarChar
              , MemberManagerId Integer, MemberManagerName TVarChar
@@ -18,12 +18,12 @@ RETURNS TABLE (Id Integer, Code Integer, Name TVarChar
              , isSecond Boolean
              , isRecalc Boolean
              , isPersonalOut Boolean
+             , isBankOut Boolean
              , isErased Boolean
               )
 AS
 $BODY$
    DECLARE vbUserId Integer;
-
    DECLARE vbBranchId_Constraint Integer;
 BEGIN
    -- проверка прав пользователя на вызов процедуры
@@ -35,10 +35,10 @@ BEGIN
 
    -- Результат
    RETURN QUERY 
-       SELECT 
+       SELECT
              Object_PersonalServiceList.Id         AS Id
            , Object_PersonalServiceList.ObjectCode AS Code
-           , Object_PersonalServiceList.ValueData  AS NAME
+           , Object_PersonalServiceList.ValueData  AS Name
            , Object_Juridical.Id                   AS JuridicalId
            , Object_Juridical.ValueData            AS JuridicalName
 
@@ -79,6 +79,7 @@ BEGIN
            , COALESCE (ObjectBoolean_Second.ValueData,FALSE)  ::Boolean   AS isSecond
            , COALESCE (ObjectBoolean_Recalc.ValueData,FALSE)  ::Boolean   AS isRecalc
            , COALESCE (ObjectBoolean_PersonalOut.ValueData, FALSE) ::Boolean AS isPersonalOut
+           , COALESCE (ObjectBoolean_BankOut.ValueData, FALSE)     ::Boolean AS isBankOut
 
            , Object_PersonalServiceList.isErased  AS isErased
 
@@ -92,6 +93,9 @@ BEGIN
            LEFT JOIN ObjectBoolean AS ObjectBoolean_PersonalOut
                                    ON ObjectBoolean_PersonalOut.ObjectId = Object_PersonalServiceList.Id 
                                   AND ObjectBoolean_PersonalOut.DescId = zc_ObjectBoolean_PersonalServiceList_PersonalOut()
+           LEFT JOIN ObjectBoolean AS ObjectBoolean_BankOut
+                                   ON ObjectBoolean_BankOut.ObjectId = Object_PersonalServiceList.Id 
+                                  AND ObjectBoolean_BankOut.DescId = zc_ObjectBoolean_PersonalServiceList_BankOut()
 
            LEFT JOIN ObjectFloat AS ObjectFloat_Compensation
                                  ON ObjectFloat_Compensation.ObjectId = Object_PersonalServiceList.Id 
@@ -150,6 +154,7 @@ $BODY$
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                  Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
+ 17.11.20          * isBankOut
  25.05.20          * isPersonalOut
  17.01.20          * add isRecalc
  27.01.20          * add Compensation

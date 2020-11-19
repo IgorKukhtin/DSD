@@ -2872,7 +2872,7 @@ BEGIN
     vbImportTypeId := gpInsertUpdate_Object_ImportType(ioId            := COALESCE(vbImportTypeId,0), 
                                                        inCode          := COALESCE(vbImportTypeCode,0), 
                                                        inName          := 'Загрузка документов <Продажа покупателя (внешняя)>', 
-                                                       inProcedureName := 'gpInsertUpdate_SaleExternal_Load', 
+                                                       inProcedureName := 'gpInsertUpdate_SaleExternal_ASHAN_Load', 
                                                        inSession       := vbUserId::TVarChar);
     --Создали Enum
     PERFORM lpInsertUpdate_ObjectString (zc_ObjectString_Enum(), vbImportTypeId, 'zc_Enum_ImportType_SaleExternal');

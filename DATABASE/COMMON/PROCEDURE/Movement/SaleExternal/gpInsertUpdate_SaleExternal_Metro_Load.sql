@@ -35,6 +35,12 @@ BEGIN
      END IF;
      
      -- проверка
+     IF COALESCE (inAmount,0) = 0
+     THEN
+         RETURN;
+     END IF;
+
+     -- проверка
      IF COALESCE (inRetailId,0) = 0
      THEN
          RAISE EXCEPTION 'Ошибка.Торговая сеть не выбрана';
@@ -57,34 +63,121 @@ BEGIN
      --если не найден
      IF COALESCE (vbPartnerExternalId,0) = 0
      THEN
-         RAISE EXCEPTION 'Ошибка.Контрагент внешний - (<%>) <%> не найден.', inPartnerExternalCode, inPartnerExternalName;
-         /*vbPartnerExternalId :=  lpInsertUpdate_Object_PartnerExternal (ioId         := 0
-                                                                      , inCode       := lfGet_ObjectCode(0, zc_Object_PartnerExternal())
-                                                                      , inName       := inPartnerExternalName
-                                                                      , inObjectCode := inPartnerExternalCode
-                                                                      , inPartnerId  := 0 -- inPartnerId
-                                                                      , inContractId := 0 -- inContractId
-                                                                      , inRetailId   := inRetailId
-                                                                      , inUserId     := vbUserId
+         --RAISE EXCEPTION 'Ошибка.Контрагент внешний - <%> не найден.', inPartnerExternalName;
+         vbPartnerExternalId :=  lpInsertUpdate_Object_PartnerExternal (ioId         := 0                                                 :: Integer 
+                                                                      , inCode       := lfGet_ObjectCode(0, zc_Object_PartnerExternal())  :: Integer 
+                                                                      , inName       := inPartnerExternalName                             :: TVarChar
+                                                                      , inObjectCode := inPartnerExternalCode                             :: TVarChar
+                                                                      , inPartnerId  := 0                                                 :: Integer 
+                                                                      , inContractId := 0                                                 :: Integer 
+                                                                      , inRetailId   := inRetailId                                        :: Integer 
+                                                                      , inUserId     := vbUserId                                          :: Integer 
                                                                       );
-                                                                      */
      ELSE
          --если элемент найден пересохраним только параметр торг. сеть
          PERFORM lpInsertUpdate_ObjectLink(zc_ObjectLink_PartnerExternal_Retail(), vbPartnerExternalId, inRetailId);
      END IF;
 
-     --находим Классификатор свойств товаров, по связи с partner , далее juridical, далее GoodsProperty
-     vbGoodsPropertyId := (SELECT ObjectLink_Juridical_GoodsProperty.ChildObjectId
-                           FROM ObjectLink AS ObjectLink_Partner
-                                LEFT JOIN ObjectLink AS ObjectLink_Partner_Juridical
-                                                     ON ObjectLink_Partner_Juridical.ObjectId = ObjectLink_Partner.ChildObjectId
-                                                    AND ObjectLink_Partner_Juridical.DescId = zc_ObjectLink_Partner_Juridical()
-                                LEFT JOIN ObjectLink AS ObjectLink_Juridical_GoodsProperty
-                                                     ON ObjectLink_Juridical_GoodsProperty.ObjectId = ObjectLink_Partner_Juridical.ChildObjectId
-                                                    AND ObjectLink_Juridical_GoodsProperty.DescId = zc_ObjectLink_Juridical_GoodsProperty()
-                           WHERE ObjectLink_Partner.ObjectId = vbPartnerExternalId 
-                             AND ObjectLink_Partner.DescId = zc_ObjectLink_PartnerExternal_Partner()
-                           );
+     IF COALESCE ((SELECT ObjectLink_Partner.ChildObjectId
+                   FROM ObjectLink AS ObjectLink_Partner
+                   WHERE ObjectLink_Partner.ObjectId = vbPartnerExternalId 
+                     AND ObjectLink_Partner.DescId = zc_ObjectLink_PartnerExternal_Partner())
+                , 0) <> 0
+     THEN 
+         --находим Классификатор свойств товаров, по связи с partner , далее juridical, далее GoodsProperty
+         vbGoodsPropertyId := (SELECT ObjectLink_Juridical_GoodsProperty.ChildObjectId
+                               FROM ObjectLink AS ObjectLink_Partner
+                                    LEFT JOIN ObjectLink AS ObjectLink_Partner_Juridical
+                                                         ON ObjectLink_Partner_Juridical.ObjectId = ObjectLink_Partner.ChildObjectId
+                                                        AND ObjectLink_Partner_Juridical.DescId = zc_ObjectLink_Partner_Juridical()
+                                    LEFT JOIN ObjectLink AS ObjectLink_Juridical_GoodsProperty
+                                                         ON ObjectLink_Juridical_GoodsProperty.ObjectId = ObjectLink_Partner_Juridical.ChildObjectId
+                                                        AND ObjectLink_Juridical_GoodsProperty.DescId = zc_ObjectLink_Juridical_GoodsProperty()
+                               WHERE ObjectLink_Partner.ObjectId = vbPartnerExternalId 
+                                 AND ObjectLink_Partner.DescId = zc_ObjectLink_PartnerExternal_Partner()
+                               );
+     END IF;
+
+     vbGoodsId := 0;
+     vbGoodsKindId := 0;
+     vbGoodsPropertyValueId := 0;
+
+     --находим GoodsId по Артикулу
+     SELECT tmp.GoodsId
+               , tmp.GoodsKindId
+               , tmp.GoodsPropertyValueId
+               , tmp.GoodsPropertyId
+   INTO vbGoodsId, vbGoodsKindId, vbGoodsPropertyValueId, vbGoodsPropertyId
+     FROM 
+          (SELECT ObjectLink_GoodsPropertyValue_Goods.ChildObjectId     AS GoodsId
+                , ObjectLink_GoodsPropertyValue_GoodsKind.ChildObjectId AS GoodsKindId
+                , ObjectLink_GoodsPropertyValue_GoodsProperty.ObjectId  AS GoodsPropertyValueId
+                , ObjectLink_GoodsPropertyValue_GoodsProperty.ChildObjectId  AS GoodsPropertyId
+                  -- если вдруг не 1 классификатор , берем максимальный
+                , MAX (ObjectLink_GoodsPropertyValue_GoodsProperty.ChildObjectId) OVER (PARTITION BY ObjectLink_GoodsPropertyValue_Goods.ChildObjectId ,ObjectLink_GoodsPropertyValue_GoodsKind.ChildObjectId) AS GoodsPropertyId_max
+             FROM 
+                  (SELECT vbGoodsPropertyId AS GoodsPropertyId
+                   WHERE COALESCE (vbGoodsPropertyId,0) <> 0
+                  UNION
+                   SELECT DISTINCT COALESCE (ObjectLink_Partner_GoodsProperty.ChildObjectId
+                        , COALESCE (ObjectLink_Contract_GoodsProperty.ChildObjectId
+                        , COALESCE (ObjectLink_Juridical_GoodsProperty.ChildObjectId
+                        , COALESCE (ObjectLink_Retail_GoodsProperty.ChildObjectId)))) AS GoodsPropertyId
+                   FROM 
+                       (SELECT ObjectLink_Juridical_Retail.ObjectId AS JuridicalId
+                             , ObjectLink_Partner_Juridical.ObjectId AS PartnerId
+                             , ObjectLink_Contract_Juridical.ObjectId AS ContractId
+                        FROM ObjectLink AS ObjectLink_Juridical_Retail
+                             LEFT JOIN ObjectLink AS ObjectLink_Partner_Juridical
+                                                  ON ObjectLink_Partner_Juridical.DescId = zc_ObjectLink_Partner_Juridical()
+                                                 AND ObjectLink_Partner_Juridical.ChildObjectId = ObjectLink_Juridical_Retail.ObjectId
+                             LEFT JOIN ObjectLink AS ObjectLink_Contract_Juridical
+                                                  ON ObjectLink_Contract_Juridical.DescId = zc_ObjectLink_Contract_Juridical()
+                                                 AND ObjectLink_Contract_Juridical.ChildObjectId = ObjectLink_Juridical_Retail.ObjectId
+                        WHERE ObjectLink_Juridical_Retail.DescId = zc_ObjectLink_Juridical_Retail()
+                        AND ObjectLink_Juridical_Retail.ChildObjectId = inRetailId --310854
+                        ) AS tmp
+                          LEFT JOIN ObjectLink AS ObjectLink_Partner_GoodsProperty
+                                               ON ObjectLink_Partner_GoodsProperty.ObjectId = tmp.PartnerId
+                                              AND ObjectLink_Partner_GoodsProperty.DescId = zc_ObjectLink_Partner_GoodsProperty()
+                          LEFT JOIN ObjectLink AS ObjectLink_Juridical_GoodsProperty
+                                               ON ObjectLink_Juridical_GoodsProperty.ObjectId = tmp.JuridicalId
+                                              AND ObjectLink_Juridical_GoodsProperty.DescId = zc_ObjectLink_Juridical_GoodsProperty()
+                          LEFT JOIN ObjectLink AS ObjectLink_Contract_GoodsProperty
+                                               ON ObjectLink_Contract_GoodsProperty.ObjectId = tmp.ContractId
+                                              AND ObjectLink_Contract_GoodsProperty.DescId = zc_ObjectLink_Contract_GoodsProperty()
+                          LEFT JOIN ObjectLink AS ObjectLink_Juridical_Retail
+                                               ON ObjectLink_Juridical_Retail.ObjectId = tmp.JuridicalId
+                                              AND ObjectLink_Juridical_Retail.DescId = zc_ObjectLink_Juridical_Retail()
+                          LEFT JOIN ObjectLink AS ObjectLink_Retail_GoodsProperty
+                                               ON ObjectLink_Retail_GoodsProperty.ObjectId = ObjectLink_Juridical_Retail.ChildObjectId
+                                              AND ObjectLink_Retail_GoodsProperty.DescId = zc_ObjectLink_Retail_GoodsProperty()
+                   WHERE COALESCE (vbGoodsPropertyId,0) = 0
+                   ) AS tmp
+                     INNER JOIN ObjectLink AS ObjectLink_GoodsPropertyValue_GoodsProperty
+                                           ON ObjectLink_GoodsPropertyValue_GoodsProperty.ChildObjectId = tmp.GoodsPropertyId
+                                          AND ObjectLink_GoodsPropertyValue_GoodsProperty.DescId = zc_ObjectLink_GoodsPropertyValue_GoodsProperty()
+                     INNER JOIN ObjectString AS ObjectString_Article
+                                             ON ObjectString_Article.ObjectId = ObjectLink_GoodsPropertyValue_GoodsProperty.ObjectId
+                                            AND ObjectString_Article.DescId = zc_ObjectString_GoodsPropertyValue_ArticleExternal()
+                                            AND TRIM(ObjectString_Article.ValueData) = TRIM (inArticle)  --'26841'
+                     INNER JOIN ObjectLink AS ObjectLink_GoodsPropertyValue_Goods
+                                           ON ObjectLink_GoodsPropertyValue_Goods.ObjectId = ObjectLink_GoodsPropertyValue_GoodsProperty.ObjectId
+                                          AND ObjectLink_GoodsPropertyValue_Goods.DescId = zc_ObjectLink_GoodsPropertyValue_Goods()
+                     INNER JOIN ObjectLink AS ObjectLink_GoodsPropertyValue_GoodsKind
+                                          ON ObjectLink_GoodsPropertyValue_GoodsKind.ObjectId = ObjectLink_GoodsPropertyValue_GoodsProperty.ObjectId
+                                         AND ObjectLink_GoodsPropertyValue_GoodsKind.DescId = zc_ObjectLink_GoodsPropertyValue_GoodsKind()
+           ) AS tmp
+     WHERE tmp.GoodsPropertyId = tmp.GoodsPropertyId_max;
+
+     IF COALESCE (vbGoodsId,0) = 0
+     THEN
+         RAISE EXCEPTION 'Ошибка.Товар <%> с артикулом <%> не найден.', inGoodsName, inArticle;
+     END IF;
+
+     -- сохраняем св-во  zc_ObjectString_GoodsPropertyValue_NameExternal
+     PERFORM lpInsertUpdate_ObjectString(zc_ObjectString_GoodsPropertyValue_NameExternal(), vbGoodsPropertyValueId, inGoodsName);
+
 
      -- пробуем найти документ 
      vbMovementId := (SELECT Movement.Id
@@ -116,30 +209,6 @@ BEGIN
                                                              )AS tmp;
      END IF;
 
-     --создаем строки
-     --находим GoodsId по Артикулу
-     SELECT ObjectLink_GoodsPropertyValue_Goods.ChildObjectId     AS GoodsId
-          , ObjectLink_GoodsPropertyValue_GoodsKind.ChildObjectId AS GoodsKindId
-          , ObjectLink_GoodsPropertyValue_GoodsProperty.ObjectId  AS GoodsPropertyValueId
-   INTO vbGoodsId, vbGoodsKindId, vbGoodsPropertyValueId
-     FROM ObjectLink AS ObjectLink_GoodsPropertyValue_GoodsProperty
-          INNER JOIN ObjectString AS ObjectString_ArticleExternal
-                                  ON ObjectString_ArticleExternal.ObjectId = ObjectLink_GoodsPropertyValue_GoodsProperty.ObjectId
-                                 AND ObjectString_ArticleExternal.DescId = zc_ObjectString_GoodsPropertyValue_ArticleExternal()
-                                 AND ObjectString_ArticleExternal.ValueData = inArticle
-          INNER JOIN ObjectLink AS ObjectLink_GoodsPropertyValue_Goods
-                                ON ObjectLink_GoodsPropertyValue_Goods.ObjectId = ObjectLink_GoodsPropertyValue_GoodsProperty.ObjectId
-                               AND ObjectLink_GoodsPropertyValue_Goods.DescId = zc_ObjectLink_GoodsPropertyValue_Goods()
-          INNER JOIN ObjectLink AS ObjectLink_GoodsPropertyValue_GoodsKind
-                               ON ObjectLink_GoodsPropertyValue_GoodsKind.ObjectId = ObjectLink_GoodsPropertyValue_GoodsProperty.ObjectId
-                              AND ObjectLink_GoodsPropertyValue_GoodsKind.DescId = zc_ObjectLink_GoodsPropertyValue_GoodsKind()
-     WHERE ObjectLink_GoodsPropertyValue_GoodsProperty.ChildObjectId = vbGoodsPropertyId
-       AND ObjectLink_GoodsPropertyValue_GoodsProperty.DescId = zc_ObjectLink_GoodsPropertyValue_GoodsProperty()
-     ;
-
-     -- сохраняем св-во  zc_ObjectString_GoodsPropertyValue_NameExternal
-     PERFORM lpInsertUpdate_ObjectString(zc_ObjectString_GoodsPropertyValue_NameExternal(), vbGoodsPropertyValueId, inGoodsName);
-
      -- найти если такой товар уже записан
      vbId := (SELECT MovementItem.Id
               FROM MovementItem
@@ -158,11 +227,17 @@ BEGIN
      PERFORM lpInsertUpdate_MovementItem_SaleExternal (ioId           := COALESCE (vbId,0) ::Integer
                                                      , inMovementId   := vbMovementId      ::Integer
                                                      , inGoodsId      := vbGoodsId         ::Integer
-                                                     , inAmount       := inAmount          ::TFloat --CASE WHEN ObjectLink_Measure.ChildObjectId = zc_Measure_Sh() THEN inAmount ELSE inAmount_kg END ::TFloat
+                                                     , inAmount       := CASE WHEN ObjectLink_Measure.ChildObjectId <> zc_Measure_Sh() 
+                                                                              THEN inAmount * COALESCE (ObjectFloat_Weight.ValueData,1)
+                                                                              ELSE inAmount
+                                                                         END               ::TFloat
                                                      , inGoodsKindId  := vbGoodsKindId     ::Integer
                                                      , inUserId       := vbUserId          ::Integer
                                                       ) 
      FROM ObjectLink AS ObjectLink_Measure
+          LEFT JOIN ObjectFloat AS ObjectFloat_Weight
+                                ON ObjectFloat_Weight.ObjectId = ObjectLink_Measure.ObjectId
+                               AND ObjectFloat_Weight.DescId = zc_ObjectFloat_Goods_Weight()
      WHERE ObjectLink_Measure.ObjectId = vbGoodsId
        AND ObjectLink_Measure.DescId = zc_ObjectLink_Goods_Measure();
 

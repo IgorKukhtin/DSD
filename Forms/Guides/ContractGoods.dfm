@@ -48,6 +48,12 @@ inherited ContractGoodsForm: TContractGoodsForm
             HeaderAlignmentVert = vaCenter
             Width = 62
           end
+          object GoodsCode: TcxGridDBColumn
+            Caption = #1050#1086#1076' '#1090#1086#1074#1072#1088#1072
+            DataBinding.FieldName = 'GoodsCode'
+            Options.Editing = False
+            Width = 70
+          end
           object GoodsName: TcxGridDBColumn
             Caption = #1058#1086#1074#1072#1088
             DataBinding.FieldName = 'GoodsName'
@@ -651,6 +657,29 @@ inherited ContractGoodsForm: TContractGoodsForm
       ImageIndexTrue = 65
       ImageIndexFalse = 64
     end
+    object macSetErased_list: TMultiAction
+      Category = 'DSDLib'
+      MoveParams = <>
+      ActionList = <
+        item
+          Action = dsdSetErased
+        end>
+      View = cxGridDBTableView
+      Caption = 'macSetErased_list'
+    end
+    object macSetErased: TMultiAction
+      Category = 'DSDLib'
+      MoveParams = <>
+      ActionList = <
+        item
+          Action = macSetErased_list
+        end>
+      QuestionBeforeExecute = #1059#1076#1072#1083#1080#1090#1100' '#1042#1089#1077' '#1074#1099#1073#1088#1072#1085#1085#1099#1077' '#1090#1086#1074#1072#1088#1099'?'
+      InfoAfterExecute = #1044#1072#1085#1085#1099#1077' '#1091#1076#1072#1083#1077#1085#1099
+      Caption = #1059#1076#1072#1083#1080#1090#1100' '#1074#1099#1073#1088#1072#1085#1085#1099#1077' '#1090#1086#1074#1072#1088#1099
+      Hint = #1059#1076#1072#1083#1080#1090#1100' '#1074#1099#1073#1088#1072#1085#1085#1099#1077' '#1090#1086#1074#1072#1088#1099
+      ImageIndex = 52
+    end
   end
   inherited MasterDS: TDataSource
     Left = 40
@@ -708,6 +737,14 @@ inherited ContractGoodsForm: TContractGoodsForm
           ItemName = 'bbUnErased'
         end
         item
+          Visible = True
+          ItemName = 'dxBarStatic'
+        end
+        item
+          Visible = True
+          ItemName = 'bbmacSetErased'
+        end
+        item
           BeginGroup = True
           Visible = True
           ItemName = 'dxBarStatic'
@@ -756,6 +793,10 @@ inherited ContractGoodsForm: TContractGoodsForm
     end
     object bbShowErased: TdxBarButton
       Action = actShowErased
+      Category = 0
+    end
+    object bbmacSetErased: TdxBarButton
+      Action = macSetErased
       Category = 0
     end
   end

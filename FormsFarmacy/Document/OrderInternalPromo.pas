@@ -168,6 +168,7 @@ type
     spSetComplement: TdsdStoredProc;
     bbSetComplement: TdxBarButton;
     bbClearComplement: TdxBarButton;
+    AddToM: TcxGridDBColumn;
   private
     { Private declarations }
   public

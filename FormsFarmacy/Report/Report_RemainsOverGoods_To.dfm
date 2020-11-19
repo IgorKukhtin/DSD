@@ -1658,6 +1658,16 @@ inherited Report_RemainsOverGoods_ToForm: TReport_RemainsOverGoods_ToForm
       TabOrder = 15
       Width = 26
     end
+    object cbReserveTo: TcxCheckBox
+      Left = 584
+      Top = 51
+      Hint = #1059#1095#1077#1089#1090#1100' '#1086#1090#1083#1086#1078'. '#1079#1072#1082#1072#1079' '#1076#1083#1103' '#1087#1086#1083#1091#1095#1072#1090#1077#1083#1103' ('#1044#1072'/'#1053#1077#1090')'
+      Caption = #1059#1095#1077#1089#1090#1100' '#1086#1090#1083#1086#1078'. '#1079#1072#1082#1072#1079' '#1076#1083#1103' '#1087#1086#1083#1091#1095#1072#1090#1077#1083#1103
+      ParentShowHint = False
+      ShowHint = True
+      TabOrder = 16
+      Width = 225
+    end
   end
   object cxLabel5: TcxLabel [2]
     Left = 722
@@ -1964,6 +1974,14 @@ inherited Report_RemainsOverGoods_ToForm: TReport_RemainsOverGoods_ToForm
           Value = Null
           Component = edDayListDiff
           DataType = ftFloat
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'inisReserveTo'
+          Value = Null
+          Component = cbReserveTo
+          DataType = ftBoolean
           ParamType = ptInput
           MultiSelectSeparator = ','
         end>
@@ -2302,6 +2320,14 @@ inherited Report_RemainsOverGoods_ToForm: TReport_RemainsOverGoods_ToForm
         Name = 'inIsReserve'
         Value = Null
         Component = cbReserve
+        DataType = ftBoolean
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inisReserveTo'
+        Value = Null
+        Component = cbReserveTo
         DataType = ftBoolean
         ParamType = ptInput
         MultiSelectSeparator = ','

@@ -22,7 +22,7 @@ BEGIN
           , MovementLinkObject_Retail.ObjectId AS RetailId
           , DATE_PART ( 'day', ((Movement.OperDate - MovementDate_StartSale.ValueData)+ INTERVAL '1 DAY'))
     INTO vbStartDate, vbEndDate, vbRetailId, vbDays
-     FROM Movement 
+     FROM Movement
         LEFT JOIN MovementDate AS MovementDate_StartSale
                                ON MovementDate_StartSale.MovementId = Movement.Id
                               AND MovementDate_StartSale.DescId = zc_MovementDate_StartSale()
@@ -52,14 +52,105 @@ BEGIN
        AND MovementItem.DescId = zc_MI_Child();
 
     CREATE TEMP TABLE tmpData (Id Integer, ParentId Integer, UnitId Integer, AmountOut TFloat, Remains TFloat, AmountIn TFloat, AmountManual TFloat) ON COMMIT DROP;
-    
+
+          -- Дополнение по аптекам согласно M
+          INSERT INTO tmpData (Id, ParentId, UnitId, AmountOut, Remains, AmountIn, AmountManual)
+          WITH
+               -- строки мастера с кол-вом для распределения
+               tmpMI_Master AS (SELECT MovementItem.Id
+                                     , MovementItem.ObjectId    AS GoodsId
+                                     , MIFloat_AddToM.ValueData AS Amount
+                                FROM MovementItem
+                                     LEFT JOIN MovementItemBoolean AS MIBoolean_Complement
+                                                                   ON MIBoolean_Complement.MovementItemId = MovementItem.Id
+                                                                  AND MIBoolean_Complement.DescId = zc_MIBoolean_Complement()
+                                     LEFT JOIN MovementItemFloat AS MIFloat_AddToM
+                                                                 ON MIFloat_AddToM.MovementItemId = MovementItem.Id
+                                                                AND MIFloat_AddToM.DescId = zc_MIFloat_AmountAdd()
+                                WHERE MovementItem.MovementId = inMovementId
+                                  AND MovementItem.DescId = zc_MI_Master()
+                                  AND COALESCE ( MIFloat_AddToM.ValueData,0) > 0
+                                  AND MovementItem.isErased = FALSE
+                                  AND COALESCE (MIBoolean_Complement.ValueData, False) = False
+                                )
+
+             , tmpUnit AS (SELECT ObjectLink_Unit_Juridical.ObjectId     AS UnitId
+                           FROM ObjectLink AS ObjectLink_Unit_Juridical
+                                INNER JOIN ObjectLink AS ObjectLink_Juridical_Retail
+                                                      ON ObjectLink_Juridical_Retail.ObjectId = ObjectLink_Unit_Juridical.ChildObjectId
+                                                     AND ObjectLink_Juridical_Retail.DescId = zc_ObjectLink_Juridical_Retail()
+                                                     AND ObjectLink_Juridical_Retail.ChildObjectId = vbRetailId
+                                INNER JOIN ObjectBoolean AS ObjectBoolean_OrderPromo
+                                                         ON ObjectBoolean_OrderPromo.ObjectId = ObjectLink_Unit_Juridical.ObjectId
+                                                        AND ObjectBoolean_OrderPromo.DescId = zc_ObjectBoolean_Unit_OrderPromo()
+                                                        AND COALESCE (ObjectBoolean_OrderPromo.ValueData, FALSE) = TRUE
+                           WHERE ObjectLink_Unit_Juridical.DescId = zc_ObjectLink_Unit_Juridical()
+                           )
+              -- продажи
+             , tmpContainer AS (SELECT MIContainer.WhereObjectId_analyzer          AS UnitId
+                                     , MIContainer.ObjectId_analyzer               AS GoodsId
+                                     , SUM (COALESCE (-1 * MIContainer.Amount, 0)) AS Amount
+                                     FROM MovementItemContainer AS MIContainer
+                                          INNER JOIN tmpUnit ON tmpUnit.UnitId = MIContainer.WhereObjectId_analyzer
+                                          INNER JOIN tmpMI_Master ON tmpMI_Master.GoodsId = MIContainer.ObjectId_analyzer
+                                     WHERE MIContainer.DescId = zc_MIContainer_Count()
+                                       AND MIContainer.MovementDescId = zc_Movement_Check()
+                                       AND MIContainer.OperDate > vbStartDate AND MIContainer.OperDate < vbEndDate
+                                     GROUP BY MIContainer.ObjectId_analyzer
+                                            , MIContainer.WhereObjectId_analyzer
+                                     HAVING SUM (COALESCE (-1 * MIContainer.Amount, 0)) <> 0
+                                     )
+              -- остатки
+             , tmpRemains AS (SELECT tmp.UnitId
+                                   , tmp.GoodsId
+                                   , SUM (tmp.Amount) AS Amount
+                              FROM  (SELECT Container.WhereObjectId AS UnitId
+                                          , Container.ObjectId      AS GoodsId
+                                          , Container.Amount - COALESCE (SUM (MovementItemContainer.Amount), 0) AS Amount
+                                     FROM Container
+                                         INNER JOIN tmpUnit ON tmpUnit.UnitId = Container.WhereObjectId
+                                         INNER JOIN tmpMI_Master ON tmpMI_Master.GoodsId = Container.ObjectId
+                                         LEFT OUTER JOIN MovementItemContainer ON MovementItemContainer.ContainerId = Container.Id
+                                                                              AND MovementItemContainer.Operdate >= vbEndDate
+                                     WHERE Container.DescId = zc_Container_Count()
+                                     GROUP BY Container.WhereObjectId
+                                            , Container.ObjectId
+                                            , Container.Amount
+                                     HAVING Container.Amount - COALESCE (SUM (MovementItemContainer.Amount), 0) <> 0
+                                     ) AS tmp
+                              GROUP BY tmp.UnitId
+                                     , tmp.GoodsId
+                              )
+
+         -- результат
+         SELECT tmpMI_Child.Id                                              AS Id
+              , tmpMI_Master.Id                                             AS ParentId
+              , tmpUnit.UnitId                                              AS UnitId
+              , tmpContainer.Amount                                         AS AmountOut
+              , tmpRemains.Amount                                           AS Remains
+              , CEIL(tmpMI_Master.Amount - COALESCE (tmpRemains.Amount, 0)) AS AmountIn
+              , COALESCE (tmpMI_Child.AmountManual, 0)                      AS AmountManual
+         FROM tmpMI_Master
+              LEFT JOIN tmpUnit ON 1=1
+              LEFT JOIN tmpRemains ON tmpRemains.GoodsId = tmpMI_Master.GoodsId
+                                  AND tmpRemains.UnitId = tmpUnit.UnitId
+              LEFT JOIN tmpContainer ON tmpContainer.GoodsId = tmpMI_Master.GoodsId
+                                    AND tmpContainer.UnitId = tmpUnit.UnitId
+              LEFT JOIN tmpMI_Child ON tmpMI_Child.ParentId = tmpMI_Master.Id
+                                   AND tmpMI_Child.UnitId = tmpUnit.UnitId
+         WHERE COALESCE (tmpMI_Child.AmountManual, 0) = 0
+           AND COALESCE (tmpContainer.Amount, 0) = 0
+           AND CEIL(tmpMI_Master.Amount - COALESCE (tmpRemains.Amount, 0)) > 0
+         ;
+
+
           -- Распределение по аптекам
           INSERT INTO tmpData (Id, ParentId, UnitId, AmountOut, Remains, AmountIn, AmountManual)
-          WITH 
+          WITH
                -- строки мастера с кол-вом для распределения
                tmpMI_Master AS (SELECT MovementItem.Id
                                      , MovementItem.ObjectId AS GoodsId
-                                     , (MovementItem.Amount - COALESCE (tmpChild.AmountManual, 0)) AS Amount
+                                     , (MovementItem.Amount - COALESCE (tmpChild.AmountManual, 0) - COALESCE (tmpDataIn.AmountIn, 0)) AS Amount
                                 FROM MovementItem
                                      LEFT JOIN (SELECT tmpMI_Child.ParentId
                                                      , SUM (tmpMI_Child.AmountManual) AS AmountManual
@@ -67,6 +158,12 @@ BEGIN
                                                WHERE COALESCE (tmpMI_Child.AmountManual, 0) <> 0
                                                GROUP BY tmpMI_Child.ParentId
                                                ) AS tmpChild ON tmpChild.ParentId = MovementItem.Id
+                                     LEFT JOIN (SELECT tmpData.ParentId
+                                                     , SUM (tmpData.AmountIn) AS AmountIn
+                                               FROM tmpData
+                                               WHERE COALESCE (tmpData.AmountIn, 0) <> 0
+                                               GROUP BY tmpData.ParentId
+                                               ) AS tmpDataIn ON tmpDataIn.ParentId = MovementItem.Id
                                      LEFT JOIN MovementItemBoolean AS MIBoolean_Complement
                                                                    ON MIBoolean_Complement.MovementItemId = MovementItem.Id
                                                                   AND MIBoolean_Complement.DescId = zc_MIBoolean_Complement()
@@ -99,7 +196,7 @@ BEGIN
                                      WHERE MIContainer.DescId = zc_MIContainer_Count()
                                        AND MIContainer.MovementDescId = zc_Movement_Check()
                                        AND MIContainer.OperDate > vbStartDate AND MIContainer.OperDate < vbEndDate
-                                     GROUP BY MIContainer.ObjectId_analyzer 
+                                     GROUP BY MIContainer.ObjectId_analyzer
                                             , MIContainer.WhereObjectId_analyzer
                                      HAVING SUM (COALESCE (-1 * MIContainer.Amount, 0)) <> 0
                                      )
@@ -108,7 +205,7 @@ BEGIN
                                    , tmp.GoodsId
                                    , SUM (tmp.Amount) AS Amount
                               FROM  (SELECT Container.WhereObjectId AS UnitId
-                                          , Container.ObjectId      AS GoodsId 
+                                          , Container.ObjectId      AS GoodsId
                                           , Container.Amount - COALESCE (SUM (MovementItemContainer.Amount), 0) AS Amount
                                      FROM Container
                                          INNER JOIN tmpUnit ON tmpUnit.UnitId = Container.WhereObjectId
@@ -118,14 +215,14 @@ BEGIN
                                      WHERE Container.DescId = zc_Container_Count()
                                      GROUP BY Container.WhereObjectId
                                             , Container.ObjectId
-                                            , Container.Amount 
+                                            , Container.Amount
                                      HAVING Container.Amount - COALESCE (SUM (MovementItemContainer.Amount), 0) <> 0
                                      ) AS tmp
                               GROUP BY tmp.UnitId
                                      , tmp.GoodsId
                               )
 
-             , tmpData_D AS 
+             , tmpData_D AS
                               (SELECT COALESCE (tmpMI_Child.Id,0) AS Id
                                     , tmpMI_Master.Id             AS ParentId
                                     , tmpUnit.UnitId              AS UnitId
@@ -143,7 +240,7 @@ BEGIN
                                                          AND tmpMI_Child.UnitId = tmpUnit.UnitId
                                WHERE COALESCE (tmpContainer.Amount,0) > 0
                                )
-             , tmpData_all AS 
+             , tmpData_all AS
                               (SELECT tmpData_D.Id
                                     , tmpData_D.ParentId
                                     , tmpData_D.UnitId
@@ -157,7 +254,7 @@ BEGIN
 
              -- расчет кол-ва дней остатка
              , tmpRemainsDay AS (SELECT tmpMI_Master.Id
-                                      , CASE WHEN COALESCE (tmpChild.AmountOut_real,0) <> 0 AND COALESCE (vbDays,0) <> 0 
+                                      , CASE WHEN COALESCE (tmpChild.AmountOut_real,0) <> 0 AND COALESCE (vbDays,0) <> 0
                                              THEN (COALESCE (tmpChild.Remains,0) + COALESCE (tmpMI_Master.Amount,0)) / (COALESCE (tmpChild.AmountOut_real,0) / vbDays)
                                              ELSE 0
                                         END AS RemainsDay
@@ -178,7 +275,7 @@ BEGIN
                                    )
              -- Пересчитывает кол-во дней остатка без аптек с отриц. коэфф.
              , tmpRemainsDay2 AS (SELECT tmpMI_Master.Id
-                                      , CASE WHEN (COALESCE (tmpChild.AmountOut_real,0) / vbDays) <> 0 
+                                      , CASE WHEN (COALESCE (tmpChild.AmountOut_real,0) / vbDays) <> 0
                                              THEN (COALESCE (tmpChild.Remains,0) + COALESCE (tmpMI_Master.Amount,0)) / (COALESCE (tmpChild.AmountOut_real,0) / vbDays)
                                              ELSE 0
                                         END AS RemainsDay
@@ -239,7 +336,7 @@ BEGIN
                               FROM tmpMI_Master
                                    INNER JOIN tmpData1 AS tmpData1 ON tmpData1.ParentId = tmpMI_Master.Id
                               )
-             -- непосредственно распределение 
+             -- непосредственно распределение
              , tmpCalc AS (SELECT DD.Id
                                 , DD.ParentId
                                 , DD.UnitId
@@ -293,31 +390,26 @@ BEGIN
                     , COALESCE (tmpMI_Child.AmountManual, 0) AS AmountManual
                FROM tmpMI_Child
                     LEFT JOIN tmpMI_Master ON tmpMI_Master.Id = tmpMI_Child.ParentId
-                                 
+
                     LEFT JOIN tmpRemains ON tmpRemains.GoodsId = tmpMI_Master.GoodsId
                                         AND tmpRemains.UnitId = tmpMI_Child.UnitId
-                                        
+
                     LEFT JOIN tmpContainer ON tmpContainer.GoodsId = tmpMI_Master.GoodsId
                                           AND tmpContainer.UnitId = tmpMI_Child.UnitId
-                                          
+
                WHERE COALESCE (tmpMI_Child.AmountManual, 0) <> 0
                ) AS DD;
-           
 
-          -- Дополнение по аптекам
+
+          -- Дополнение по аптекам согласно N
           INSERT INTO tmpData (Id, ParentId, UnitId, AmountOut, Remains, AmountIn, AmountManual)
-          WITH 
+          WITH
                -- строки мастера с кол-вом для распределения
                tmpMI_Master AS (SELECT MovementItem.Id
                                      , MovementItem.ObjectId AS GoodsId
                                      , MovementItem.Amount
                                 FROM MovementItem
-                                     LEFT JOIN (SELECT tmpMI_Child.ParentId
-                                                     , SUM (tmpMI_Child.AmountManual) AS AmountManual
-                                               FROM tmpMI_Child
-                                               WHERE COALESCE (tmpMI_Child.AmountManual, 0) <> 0
-                                               GROUP BY tmpMI_Child.ParentId
-                                               ) AS tmpChild ON tmpChild.ParentId = MovementItem.Id
+
                                      LEFT JOIN MovementItemBoolean AS MIBoolean_Complement
                                                                    ON MIBoolean_Complement.MovementItemId = MovementItem.Id
                                                                   AND MIBoolean_Complement.DescId = zc_MIBoolean_Complement()
@@ -350,7 +442,7 @@ BEGIN
                                      WHERE MIContainer.DescId = zc_MIContainer_Count()
                                        AND MIContainer.MovementDescId = zc_Movement_Check()
                                        AND MIContainer.OperDate > vbStartDate AND MIContainer.OperDate < vbEndDate
-                                     GROUP BY MIContainer.ObjectId_analyzer 
+                                     GROUP BY MIContainer.ObjectId_analyzer
                                             , MIContainer.WhereObjectId_analyzer
                                      HAVING SUM (COALESCE (-1 * MIContainer.Amount, 0)) <> 0
                                      )
@@ -359,7 +451,7 @@ BEGIN
                                    , tmp.GoodsId
                                    , SUM (tmp.Amount) AS Amount
                               FROM  (SELECT Container.WhereObjectId AS UnitId
-                                          , Container.ObjectId      AS GoodsId 
+                                          , Container.ObjectId      AS GoodsId
                                           , Container.Amount - COALESCE (SUM (MovementItemContainer.Amount), 0) AS Amount
                                      FROM Container
                                          INNER JOIN tmpUnit ON tmpUnit.UnitId = Container.WhereObjectId
@@ -369,7 +461,7 @@ BEGIN
                                      WHERE Container.DescId = zc_Container_Count()
                                      GROUP BY Container.WhereObjectId
                                             , Container.ObjectId
-                                            , Container.Amount 
+                                            , Container.Amount
                                      HAVING Container.Amount - COALESCE (SUM (MovementItemContainer.Amount), 0) <> 0
                                      ) AS tmp
                               GROUP BY tmp.UnitId
@@ -377,7 +469,7 @@ BEGIN
                               )
 
          -- результат
-         SELECT tmpMI_Child.Id                                           AS Id    
+         SELECT tmpMI_Child.Id                                           AS Id
               , tmpMI_Master.Id                                          AS ParentId
               , tmpUnit.UnitId                                           AS UnitId
               , tmpContainer.Amount                                      AS AmountOut
@@ -394,12 +486,12 @@ BEGIN
               LEFT JOIN tmpMI_Child ON tmpMI_Child.ParentId = tmpMI_Master.Id
                                    AND tmpMI_Child.UnitId = tmpUnit.UnitId
          WHERE CASE WHEN COALESCE (tmpMI_Child.AmountManual, 0) > 0
-                THEN COALESCE (tmpMI_Child.AmountManual, 0) 
+                THEN COALESCE (tmpMI_Child.AmountManual, 0)
                 ELSE CEIL (tmpMI_Master.Amount - COALESCE (tmpRemains.Amount, 0)) END  > 0
          ;
 
 
-    --- сохраняем данные чайлд      
+    --- сохраняем данные чайлд
     PERFORM lpInsertUpdate_MI_OrderInternalPromoChild (ioId           := COALESCE (tmpData.Id,0)
                                                      , inParentId     := tmpData.ParentId
                                                      , inMovementId   := inMovementId
@@ -411,9 +503,9 @@ BEGIN
                                                      , inUserId       := vbUserId
                                                      )
     FROM tmpData;
-    
+
      -- удаляем строки чайлд, которые нам не нужны
-     UPDATE MovementItem 
+     UPDATE MovementItem
      SET isErased = TRUE
      WHERE MovementItem.MovementId = inMovementId
        AND MovementItem.DescId = zc_MI_Child()

@@ -105,6 +105,7 @@ BEGIN
 
            , Movement_TransportGoods.InvNumber              AS InvNumber_TransportGoods
            , COALESCE (Movement_TransportGoods.OperDate, NULL) ::TDateTime  AS OperDate_TransportGoods
+           , COALESCE (MIDate_Log.ValueData, NULL) ::TDateTime            AS Date_Log
            , COALESCE (MIDate_Insert.ValueData, NULL) ::TDateTime         AS Date_Insert
            , COALESCE (MIDate_PartnerIn.ValueData, NULL) ::TDateTime      AS Date_PartnerIn
            , COALESCE (MIDate_RemakeIn.ValueData, NULL) ::TDateTime       AS Date_RemakeIn
@@ -114,6 +115,7 @@ BEGIN
            , COALESCE (MIDate_Buh.ValueData, NULL) ::TDateTime            AS Date_Buh
 
            , CASE WHEN MIDate_Insert.DescId IS NOT NULL THEN Object_ObjectMember.ValueData ELSE '' END :: TVarChar AS Member_Insert -- т.к. в "пустышках" - "криво" формируется это свойство
+           , Object_Log.ValueData            AS Member_Log
            , Object_PartnerInTo.ValueData    AS Member_PartnerInTo
            , Object_PartnerInFrom.ValueData  AS Member_PartnerInFrom
            , Object_RemakeInTo.ValueData     AS Member_RemakeInTo
@@ -147,6 +149,9 @@ BEGIN
             LEFT JOIN MovementItemDate AS MIDate_Buh
                                        ON MIDate_Buh.MovementItemId = tmpMI.MovementItemId
                                       AND MIDate_Buh.DescId = zc_MIDate_Buh()
+            LEFT JOIN MovementItemDate AS MIDate_Log
+                                       ON MIDate_Log.MovementItemId = tmpMI.MovementItemId
+                                      AND MIDate_Log.DescId = zc_MIDate_Log()
 
             LEFT JOIN MovementItemLinkObject AS MILinkObject_PartnerInTo
                                              ON MILinkObject_PartnerInTo.MovementItemId = tmpMI.MovementItemId
@@ -187,6 +192,13 @@ BEGIN
                                              ON MILinkObject_Buh.MovementItemId = tmpMI.MovementItemId
                                             AND MILinkObject_Buh.DescId = zc_MILinkObject_Buh()
             LEFT JOIN Object AS Object_Buh ON Object_Buh.Id = MILinkObject_Buh.ObjectId
+
+
+            LEFT JOIN MovementItemLinkObject AS MILinkObject_Log
+                                             ON MILinkObject_Log.MovementItemId = tmpMI.MovementItemId
+                                            AND MILinkObject_Log.DescId = zc_MILinkObject_Log()
+            LEFT JOIN Object AS Object_Log ON Object_Log.Id = MILinkObject_Log.ObjectId
+
             --
             LEFT JOIN Movement AS Movement_Sale ON Movement_Sale.id = tmpMI.MovementId_Sale
 

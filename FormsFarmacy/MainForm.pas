@@ -756,6 +756,9 @@ type
     N267: TMenuItem;
     actReport_PromoDoctorsShevchenko9: TdsdOpenForm;
     N910: TMenuItem;
+    miRepricePromo: TMenuItem;
+    actCalculation_SAUA: TdsdOpenStaticForm;
+    N268: TMenuItem;
     procedure actSaveDataExecute(Sender: TObject);
 
     procedure miRepriceClick(Sender: TObject);
@@ -769,6 +772,7 @@ type
     procedure TimerPUSHTimer(Sender: TObject);
     procedure FormCreate(Sender: TObject);
     procedure N261Click(Sender: TObject);
+    procedure miRepricePromoClick(Sender: TObject);
   private
     { Private declarations }
     FLoadPUSH: Integer;
@@ -787,7 +791,8 @@ implementation
 uses
   UploadUnloadData, Dialogs, Forms, SysUtils, CommonData, IdGlobal, RepriceUnit,  RepriceUnit_test,
   RepriceChangeRetail, ExportSalesForSupp, Report_Analysis_Remains_Selling, SearchByCaption,
-  Report_ImplementationPlanEmployee, Report_IncomeConsumptionBalance, PUSHMessageFarmacy;
+  Report_ImplementationPlanEmployee, Report_IncomeConsumptionBalance, PUSHMessageFarmacy,
+  RepricePromoUnit;
 
 
 procedure TMainForm.actReport_Analysis_Remains_SellingExecute(Sender: TObject);
@@ -868,6 +873,16 @@ end;
 procedure TMainForm.miRepriceClick(Sender: TObject);
 begin
   with TRepriceUnitForm.Create(Self) do
+  try
+     Show;
+  finally
+     //Free;
+  end;
+end;
+
+procedure TMainForm.miRepricePromoClick(Sender: TObject);
+begin
+  with TRepricePromoUnitForm.Create(Self) do
   try
      Show;
   finally

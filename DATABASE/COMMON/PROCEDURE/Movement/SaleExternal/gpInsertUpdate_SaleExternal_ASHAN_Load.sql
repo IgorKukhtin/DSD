@@ -1,11 +1,16 @@
--- Function: gpInsertUpdate_SaleExternal_Novus_Load()
+-- Function: gpInsertUpdate_Object_SaleExternal_Load()
 
-DROP FUNCTION IF EXISTS gpInsertUpdate_SaleExternal_Novus_Load (TDateTime, Integer, TVarChar, TVarChar, TFloat, TFloat, TVarChar);
+DROP FUNCTION IF EXISTS gpInsertUpdate_Object_SaleExternal_Load (TDateTime, TVarChar, TVarChar, TVarChar, TVarChar, TFloat, TVarChar);
+DROP FUNCTION IF EXISTS gpInsertUpdate_Object_SaleExternal_Load (TDateTime, TVarChar, TVarChar, TVarChar, TVarChar, TFloat, TFloat, TVarChar);
+DROP FUNCTION IF EXISTS gpInsertUpdate_Object_SaleExternal_Load (TDateTime, Integer, TVarChar, TVarChar, TVarChar, TVarChar, TFloat, TFloat, TVarChar);
+DROP FUNCTION IF EXISTS gpInsertUpdate_SaleExternal_ASHAN_Load (TDateTime, Integer, TVarChar, TVarChar, TVarChar, TVarChar, TFloat, TFloat, TVarChar);
 
-CREATE OR REPLACE FUNCTION gpInsertUpdate_SaleExternal_Novus_Load(
+CREATE OR REPLACE FUNCTION gpInsertUpdate_SaleExternal_ASHAN_Load(
     IN inOperDate              TDateTime , --
     IN inRetailId              Integer   , --
+    IN inPartnerExternalCode   TVarChar  , --
     IN inPartnerExternalName   TVarChar  , -- 
+    IN inArticle               TVarChar  , -- 
     IN inGoodsName             TVarChar  , -- 
     IN inAmount                TFloat    , -- количество
     IN inAmount_kg             TFloat    , -- Вес
@@ -15,7 +20,6 @@ RETURNS VOID
 AS
 $BODY$
    DECLARE vbUserId            Integer;
-   DECLARE vbPartnerExternalCode TVarChar;
    DECLARE vbPartnerExternalId Integer;
    DECLARE vbGoodsPropertyId   Integer;
    DECLARE vbGoodsPropertyValueId Integer;
@@ -23,7 +27,6 @@ $BODY$
    DECLARE vbGoodsKindId       Integer;
    DECLARE vbMovementId        Integer;
    DECLARE vbId                Integer;
-   DECLARE vbArticle           TVarChar;
 BEGIN
      -- проверка прав пользователя на вызов процедуры
      vbUserId:= lpCheckRight (inSession, zc_Enum_Process_InsertUpdate_Movement_SaleExternal());
@@ -34,22 +37,13 @@ BEGIN
          RAISE EXCEPTION 'Ошибка.Торговая сеть не выбрана';
      END IF;
 
-     --из названия находим код vbPartnerExternalCode
-     vbPartnerExternalCode := (SELECT LEFT (inPartnerExternalName, POSITION('~' IN inPartnerExternalName)-1 ));
-     --Название Магазина без кода
-     inPartnerExternalName := (SELECT SUBSTRING (inPartnerExternalName , POSITION('~' IN inPartnerExternalName)+1, LENGTH (inPartnerExternalName) - POSITION('~' IN inPartnerExternalName) ) );
-     
-     --для товара тоже отделяем код и название 
-     vbArticle := (SELECT LEFT (inGoodsName, POSITION('~' IN inGoodsName)-1));
-     inGoodsName := (SELECT SUBSTRING (inGoodsName , POSITION('~' IN inGoodsName)+1, LENGTH (inGoodsName) - POSITION('~' IN inGoodsName) ) );
-
      --ищем PartnerExternal
      vbPartnerExternalId := (SELECT Object_PartnerExternal.Id 
                              FROM Object AS Object_PartnerExternal
                                   INNER JOIN ObjectString AS ObjectString_ObjectCode
                                                           ON ObjectString_ObjectCode.ObjectId = Object_PartnerExternal.Id 
                                                          AND ObjectString_ObjectCode.DescId = zc_ObjectString_PartnerExternal_ObjectCode()
-                                                         AND ObjectString_ObjectCode.ValueData = vbPartnerExternalCode
+                                                         AND ObjectString_ObjectCode.ValueData = inPartnerExternalCode
                                   LEFT JOIN ObjectLink AS ObjectLink_Retail
                                                        ON ObjectLink_Retail.ObjectId = Object_PartnerExternal.Id 
                                                       AND ObjectLink_Retail.DescId = zc_ObjectLink_PartnerExternal_Retail()
@@ -60,15 +54,15 @@ BEGIN
      --если не найден
      IF COALESCE (vbPartnerExternalId,0) = 0
      THEN
-         --RAISE EXCEPTION 'Ошибка.Контрагент внешний - <%> не найден.', inPartnerExternalName;
-         vbPartnerExternalId :=  lpInsertUpdate_Object_PartnerExternal (ioId         := 0                                                 :: Integer 
-                                                                      , inCode       := lfGet_ObjectCode(0, zc_Object_PartnerExternal())  :: Integer 
-                                                                      , inName       := inPartnerExternalName                             :: TVarChar
-                                                                      , inObjectCode := vbPartnerExternalCode                             :: TVarChar
-                                                                      , inPartnerId  := 0                                                 :: Integer 
-                                                                      , inContractId := 0                                                 :: Integer 
-                                                                      , inRetailId   := inRetailId                                        :: Integer 
-                                                                      , inUserId     := vbUserId                                          :: Integer 
+         --RAISE EXCEPTION 'Ошибка.Контрагент внешний - (<%>) <%> не найден.', inPartnerExternalCode, inPartnerExternalName;
+         vbPartnerExternalId :=  lpInsertUpdate_Object_PartnerExternal (ioId         := 0
+                                                                      , inCode       := lfGet_ObjectCode(0, zc_Object_PartnerExternal())
+                                                                      , inName       := inPartnerExternalName
+                                                                      , inObjectCode := inPartnerExternalCode
+                                                                      , inPartnerId  := 0 -- inPartnerId
+                                                                      , inContractId := 0 -- inContractId
+                                                                      , inRetailId   := inRetailId
+                                                                      , inUserId     := vbUserId
                                                                       );
      ELSE
          --если элемент найден пересохраним только параметр торг. сеть
@@ -98,8 +92,7 @@ BEGIN
      vbGoodsId := 0;
      vbGoodsKindId := 0;
      vbGoodsPropertyValueId := 0;
-     
-     --создаем строки
+
      --находим GoodsId по Артикулу
      SELECT tmp.GoodsId
                , tmp.GoodsKindId
@@ -158,7 +151,7 @@ BEGIN
                      INNER JOIN ObjectString AS ObjectString_Article
                                              ON ObjectString_Article.ObjectId = ObjectLink_GoodsPropertyValue_GoodsProperty.ObjectId
                                             AND ObjectString_Article.DescId = zc_ObjectString_GoodsPropertyValue_Article()
-                                            AND TRIM(ObjectString_Article.ValueData) = TRIM (vbArticle)  --'26841'
+                                            AND TRIM(ObjectString_Article.ValueData) = TRIM (inArticle)  --'26841'
                      INNER JOIN ObjectLink AS ObjectLink_GoodsPropertyValue_Goods
                                            ON ObjectLink_GoodsPropertyValue_Goods.ObjectId = ObjectLink_GoodsPropertyValue_GoodsProperty.ObjectId
                                           AND ObjectLink_GoodsPropertyValue_Goods.DescId = zc_ObjectLink_GoodsPropertyValue_Goods()
@@ -168,15 +161,13 @@ BEGIN
            ) AS tmp
      WHERE tmp.GoodsPropertyId = tmp.GoodsPropertyId_max;
 
-
      IF COALESCE (vbGoodsId,0) = 0
      THEN
-         RAISE EXCEPTION 'Ошибка.Товар <%> с артикулом <%> не найден.', inGoodsName, vbArticle;
+         RAISE EXCEPTION 'Ошибка.Товар <%> с артикулом <%> не найден.', inGoodsName, inArticle;
      END IF;
-     
+
      -- сохраняем св-во  zc_ObjectString_GoodsPropertyValue_NameExternal
      PERFORM lpInsertUpdate_ObjectString(zc_ObjectString_GoodsPropertyValue_NameExternal(), vbGoodsPropertyValueId, inGoodsName);
-
 
      -- пробуем найти документ 
      vbMovementId := (SELECT Movement.Id

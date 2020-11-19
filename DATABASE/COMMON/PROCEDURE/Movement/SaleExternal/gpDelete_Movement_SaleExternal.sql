@@ -16,6 +16,12 @@ BEGIN
      -- проверка прав пользователя на вызов процедуры
      vbUserId:= lpCheckRight (inSession, zc_Enum_Process_SetErased_SaleExternal());
 
+     -- проверка
+     IF COALESCE (inRetailId,0) = 0
+     THEN
+         RAISE EXCEPTION 'Ошибка.Торговая сеть не выбрана';
+     END IF;
+
      PERFORM lpSetErased_Movement (inMovementId := Movement.Id, inUserId := vbUserId)
      FROM Movement
           INNER JOIN MovementLinkObject AS MovementLinkObject_GoodsProperty

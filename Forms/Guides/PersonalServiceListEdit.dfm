@@ -126,8 +126,8 @@ object PersonalServiceListEditForm: TPersonalServiceListEditForm
     Width = 177
   end
   object ceisSecond: TcxCheckBox
-    Left = 168
-    Top = 30
+    Left = 156
+    Top = 11
     Caption = #1042#1090#1086#1088#1072#1103' '#1092#1086#1088#1084#1072
     TabOrder = 14
     Width = 95
@@ -206,9 +206,16 @@ object PersonalServiceListEditForm: TPersonalServiceListEditForm
     TabOrder = 23
     Width = 134
   end
+  object edisBankOut: TcxCheckBox
+    Left = 156
+    Top = 39
+    Caption = #1076#1083#1103' '#1059#1074#1086#1083#1077#1085#1085#1099#1093' ('#1073#1072#1085#1082')'
+    TabOrder = 24
+    Width = 138
+  end
   object ActionList: TActionList
-    Left = 152
-    Top = 40
+    Left = 96
+    Top = 48
     object dsdDataSetRefresh: TdsdDataSetRefresh
       Category = 'DSDLib'
       MoveParams = <>
@@ -345,6 +352,14 @@ object PersonalServiceListEditForm: TPersonalServiceListEditForm
         DataType = ftBoolean
         ParamType = ptInput
         MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inisBankOut'
+        Value = Null
+        Component = edisBankOut
+        DataType = ftBoolean
+        ParamType = ptInput
+        MultiSelectSeparator = ','
       end>
     PackSize = 1
     Left = 248
@@ -458,6 +473,13 @@ object PersonalServiceListEditForm: TPersonalServiceListEditForm
         Name = 'isRecalc'
         Value = Null
         Component = cbRecalc
+        DataType = ftBoolean
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'isBankOut'
+        Value = Null
+        Component = edisBankOut
         DataType = ftBoolean
         MultiSelectSeparator = ','
       end

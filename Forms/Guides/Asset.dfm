@@ -125,6 +125,14 @@ object AssetForm: TAssetForm
         Options.Editing = False
         Width = 80
       end
+      object AssetTypeName: TcxGridDBColumn
+        Caption = #1058#1080#1087' '#1054#1057
+        DataBinding.FieldName = 'AssetTypeName'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Options.Editing = False
+        Width = 100
+      end
       object PeriodUse: TcxGridDBColumn
         Caption = #1055#1077#1088#1080#1086#1076' '#1101#1082#1089#1087'. ('#1083#1077#1090')'
         DataBinding.FieldName = 'PeriodUse'
@@ -136,6 +144,17 @@ object AssetForm: TAssetForm
       object Production: TcxGridDBColumn
         Caption = #1055#1088#1086#1080#1079#1074#1086#1076'-'#1090#1100', '#1082#1075
         DataBinding.FieldName = 'Production'
+        PropertiesClassName = 'TcxCurrencyEditProperties'
+        Properties.DisplayFormat = ',0.####;-,0.####; ;'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        HeaderHint = #1055#1088#1086#1080#1079#1074#1086#1076#1080#1090#1077#1083#1100#1085#1086#1089#1090#1100', '#1082#1075
+        Options.Editing = False
+        Width = 86
+      end
+      object KW: TcxGridDBColumn
+        Caption = #1052#1086#1097#1085#1086#1089#1090#1100', '#1082#1042#1090
+        DataBinding.FieldName = 'KW'
         PropertiesClassName = 'TcxCurrencyEditProperties'
         Properties.DisplayFormat = ',0.####;-,0.####; ;'
         HeaderAlignmentHorz = taCenter
@@ -542,6 +561,7 @@ object AssetForm: TAssetForm
     ColumnAddOnList = <>
     ColumnEnterList = <>
     SummaryItemList = <>
+    PropertiesCellList = <>
     Left = 448
     Top = 112
   end
