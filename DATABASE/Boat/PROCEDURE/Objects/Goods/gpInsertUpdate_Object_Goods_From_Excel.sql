@@ -76,10 +76,14 @@ BEGIN
 
 -- уточнит как искать Артикулы
    -- пробуем найти Артикул
-   IF COALESCE (inName, '') <> ''
+   IF COALESCE (inName, '') <> '' OR 1=1
    THEN
-       --vbGoodsId := (SELECT Object.Id FROM Object WHERE Object.DescId = zc_Object_Goods() AND TRIM (Object.ValueData) Like TRIM (TRIM (inName)) );
-       vbGoodsId := (SELECT Object.Id FROM Object WHERE Object.DescId = zc_Object_Goods() AND Object.ObjectCode = inObjectCode );
+       vbGoodsId := (SELECT Object.Id FROM Object WHERE Object.DescId = zc_Object_Goods() AND Object.ObjectCode = inObjectCode);
+       
+       IF COALESCE (vbGoodsId, 0) = 0
+       THEN
+           RAISE EXCEPTION 'Ошибка.Для товара <%> <%> не установлен код <%>.', inArticle, inName, inObjectCode;
+       END IF;
    ELSE
        RETURN;
    END IF;
