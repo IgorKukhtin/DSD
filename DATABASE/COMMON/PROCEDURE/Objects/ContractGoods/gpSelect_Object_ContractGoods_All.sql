@@ -109,6 +109,11 @@ BEGIN
                           WHERE Object_ContractGoods.DescId = zc_Object_ContractGoods()
                             AND (Object_ContractGoods.isErased = FALSE OR inisErased = TRUE)
                          )
+                         
+   , tmpObject_Contract_View AS (SELECT * 
+                                 FROM Object_Contract_View
+                                 WHERE Object_Contract_View.ContractId IN (SELECT DISTINCT tmpContractGoods.ContractId FROM tmpContractGoods)
+                                 )
        --
        SELECT
              Object_ContractGoods.Id            AS Id
@@ -226,7 +231,9 @@ BEGIN
 
     FROM tmpContractGoods AS Object_ContractGoods
 
-            LEFT JOIN Object_Contract_View ON Object_Contract_View.ContractId = Object_ContractGoods.ContractId
+            LEFT JOIN tmpObject_Contract_View AS Object_Contract_View
+                                              ON Object_Contract_View.ContractId = Object_ContractGoods.ContractId
+
             LEFT JOIN Object AS Object_Goods ON Object_Goods.Id = Object_ContractGoods.GoodsId
             LEFT JOIN Object AS Object_GoodsKind ON Object_GoodsKind.Id = Object_ContractGoods.GoodsKindId
             LEFT JOIN Object AS Object_PriceList ON Object_PriceList.Id = Object_ContractGoods.PriceListId
@@ -375,4 +382,4 @@ $BODY$
 */
 
 -- тест
---SELECT * FROM gpSelect_Object_ContractGoods_all (true,true,zfCalc_UserAdmin())
+-- SELECT * FROM gpSelect_Object_ContractGoods_all (true,true,zfCalc_UserAdmin())
