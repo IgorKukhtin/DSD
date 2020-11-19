@@ -1059,7 +1059,7 @@ inherited PersonalServiceForm: TPersonalServiceForm
             DataBinding.FieldName = 'isBankOut'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
-            HeaderHint = #1044#1083#1103' '#1091#1074#1086#1083#1077#1085#1085#1099#1093' '#1073#1072#1085#1082
+            HeaderHint = #1044#1083#1103' '#1091#1074#1086#1083#1077#1085#1085#1099#1093' '#1073#1072#1085#1082' ('#1074#1077#1076#1086#1084#1086#1089#1090#1100')'
             Options.Editing = False
             Width = 80
           end
@@ -1764,9 +1764,6 @@ inherited PersonalServiceForm: TPersonalServiceForm
     object cxTabSheetSign: TcxTabSheet
       Caption = #1069#1083#1077#1082#1090#1088#1086#1085#1085#1072#1103' '#1087#1086#1076#1087#1080#1089#1100
       ImageIndex = 3
-      ExplicitTop = 0
-      ExplicitWidth = 0
-      ExplicitHeight = 0
       object cxGridSign: TcxGrid
         Left = 0
         Top = 0
@@ -1862,6 +1859,8 @@ inherited PersonalServiceForm: TPersonalServiceForm
     Width = 1307
     Height = 89
     TabOrder = 3
+    ExplicitLeft = -32
+    ExplicitTop = 8
     ExplicitWidth = 1307
     ExplicitHeight = 89
     inherited edInvNumber: TcxTextEdit
@@ -3828,6 +3827,15 @@ inherited PersonalServiceForm: TPersonalServiceForm
         Component = MasterCDS
         ComponentItem = 'PersonalServiceListId'
         ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'ioBankOutDate'
+        Value = 'NULL'
+        Component = MasterCDS
+        ComponentItem = 'BankOutDate'
+        DataType = ftDateTime
+        ParamType = ptInputOutput
         MultiSelectSeparator = ','
       end>
     Left = 160

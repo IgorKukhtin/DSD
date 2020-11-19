@@ -64,12 +64,13 @@ CREATE OR REPLACE FUNCTION gpInsertUpdate_MovementItem_PersonalService(
     IN inPositionId            Integer   , -- Должность
     IN inMemberId              Integer   , -- юр.лицо
     IN inPersonalServiceListId Integer   , -- Ведомость начисления
-    IN inBankOutDate           TDateTime ,
+ INOUT ioBankOutDate           TDateTime ,
     IN inSession               TVarChar    -- сессия пользователя
 )
 RETURNS RECORD AS
 $BODY$
    DECLARE vbUserId Integer;
+   DECLARE vbisBankOut Boolean;
 BEGIN
      -- проверка прав пользователя на вызов процедуры
      vbUserId:= lpCheckRight (inSession, zc_Enum_Process_InsertUpdate_MI_PersonalService());
@@ -116,8 +117,27 @@ BEGIN
      -- сохранили свойство <>
      PERFORM lpInsertUpdate_MovementItemFloat (zc_MIFloat_SummNalogRet(), ioId, inSummNalogRet);
 
-     -- сохранили свойство <Дата выплаты по банку>
-     PERFORM lpInsertUpdate_MovementItemDate (zc_MIDate_BankOut(), ioId, inBankOutDate);
+     -- проверка  если zc_ObjectBoolean_PersonalServiceList_BankOut - обязательно ввод даты, иначе сохранеям нулл
+     vbisBankOut := COALESCE ((SELECT ObjectBoolean_BankOut.ValueData
+                               FROM ObjectBoolean AS ObjectBoolean_BankOut
+                               WHERE ObjectBoolean_BankOut.ObjectId = inPersonalServiceListId
+                                 AND ObjectBoolean_BankOut.DescId = zc_ObjectBoolean_PersonalServiceList_BankOut())
+                              , FALSE);
+
+     IF COALESCE (vbisBankOut,FALSE) = TRUE
+     THEN
+         IF COALESCE (ioBankOutDate, zc_DateStart()) <> zc_DateStart()
+         THEN
+             -- сохранили свойство <Дата выплаты по банку>
+             PERFORM lpInsertUpdate_MovementItemDate (zc_MIDate_BankOut(), ioId, ioBankOutDate);
+         ELSE
+             RAISE EXCEPTION 'Ошибка.Дата выплаты банка должна быть заполнена.';
+         END IF;
+     ELSE
+         -- сохранили свойство <Дата выплаты по банку>
+         PERFORM lpInsertUpdate_MovementItemDate (zc_MIDate_BankOut(), ioId, NULL);
+         ioBankOutDate := CAST (NULL AS TDateTime);
+     END IF;
 
 
      -- сохранили свойство строки <создан автоматически>
@@ -132,7 +152,7 @@ $BODY$
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.
- 
+ 19.11.20         * ioBankOutDate
  25.03.20         * inSummAuditAdd
  27.01.20         * inSummCompensationRecalc
  29.07.19         *
