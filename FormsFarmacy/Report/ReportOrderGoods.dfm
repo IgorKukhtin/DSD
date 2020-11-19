@@ -10,14 +10,17 @@ inherited ReportOrderGoodsForm: TReportOrderGoodsForm
     Width = 806
     Height = 301
     ExplicitWidth = 806
+    ExplicitHeight = 301
     ClientRectBottom = 301
     ClientRectRight = 806
     inherited tsMain: TcxTabSheet
       ExplicitWidth = 806
+      ExplicitHeight = 301
       inherited cxGrid: TcxGrid
         Width = 806
         Height = 301
         ExplicitWidth = 806
+        ExplicitHeight = 301
         inherited cxGridDBTableView: TcxGridDBTableView
           DataController.Summary.DefaultGroupSummaryItems = <
             item
@@ -192,6 +195,14 @@ inherited ReportOrderGoodsForm: TReportOrderGoodsForm
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
             Width = 57
+          end
+          object JuridicalName_Our: TcxGridDBColumn
+            Caption = #1053#1072#1096#1077' '#1102#1088'.'#1083#1080#1094#1086
+            DataBinding.FieldName = 'JuridicalName_Our'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 113
           end
           object UnitName: TcxGridDBColumn
             Caption = #1055#1086#1076#1088#1072#1079#1076#1077#1083#1077#1085#1080#1077
@@ -613,8 +624,8 @@ inherited ReportOrderGoodsForm: TReportOrderGoodsForm
         MultiSelectSeparator = ','
       end>
     PackSize = 1
-    Left = 120
-    Top = 128
+    Left = 240
+    Top = 208
   end
   object getMovementForm: TdsdStoredProc
     StoredProcName = 'gpGet_Movement_Form'
@@ -649,7 +660,7 @@ inherited ReportOrderGoodsForm: TReportOrderGoodsForm
         DataType = ftString
         MultiSelectSeparator = ','
       end>
-    Left = 192
-    Top = 144
+    Left = 232
+    Top = 128
   end
 end

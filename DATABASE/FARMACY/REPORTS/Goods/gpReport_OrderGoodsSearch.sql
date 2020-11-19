@@ -22,6 +22,7 @@ RETURNS TABLE (MovementId Integer      --ИД Документа
               ,OperDate TDateTime      --Дата документа
               ,InvNumber TVarChar      --№ документа
               ,UnitName TVarChar       --Подразделение
+              ,JuridicalName_Our TVarChar -- наше юр.лицо
               ,JuridicalName TVarChar  --Юр. лицо
               ,Price TFloat            --Цена в документе
               ,PriceWithVAT TFloat     --Цена прихода с НДС
@@ -188,6 +189,7 @@ WITH tmpOF_NDSKind_NDS AS (SELECT ObjectFloat_NDSKind_NDS.ObjectId, ObjectFloat_
             ,Movement.OperDate                        AS OperDate
             ,Movement.InvNumber                       AS InvNumber
             ,Object_Unit.ValueData                    AS UnitName
+            ,Object_JuridicalOur.ValueData            AS JuridicalName_Our
             ,Object_From.ValueData                    AS JuridicalName
             ,CASE WHEN Movement.DescId = zc_Movement_Check() THEN 0
                   WHEN Movement.DescId = zc_Movement_OrderInternal() THEN MIFloat_JuridicalPrice.ValueData
@@ -249,9 +251,12 @@ WITH tmpOF_NDSKind_NDS AS (SELECT ObjectFloat_NDSKind_NDS.ObjectId, ObjectFloat_
                               ON MovementLinkObject_To.MovementId = Movement.Id
                              AND MovementLinkObject_To.DescId = CASE WHEN Movement.DescId = zc_Movement_ReturnOut() THEN zc_MovementLinkObject_From() ELSE zc_MovementLinkObject_To() END
         LEFT JOIN Object AS Object_Unit ON Object_Unit.Id = COALESCE(MovementLinkObject_Unit.ObjectId, MovementLinkObject_To.ObjectId)
+
         LEFT JOIN ObjectLink AS ObjectLink_Unit_Juridical
                              ON ObjectLink_Unit_Juridical.ObjectId = Object_Unit.Id
                             AND ObjectLink_Unit_Juridical.DescId   = zc_ObjectLink_Unit_Juridical()
+        LEFT JOIN Object AS Object_JuridicalOur ON Object_JuridicalOur.Id = ObjectLink_Unit_Juridical.ChildObjectId
+        
         LEFT JOIN ObjectLink AS ObjectLink_Juridical_Retail
                              ON ObjectLink_Juridical_Retail.ObjectId = ObjectLink_Unit_Juridical.ChildObjectId
                             AND ObjectLink_Juridical_Retail.DescId   = zc_ObjectLink_Juridical_Retail()
@@ -317,6 +322,7 @@ ALTER FUNCTION gpReport_OrderGoodsSearch (Integer, TDateTime, TDateTime, TVarCha
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.  Воробкало А.А.
+ 19.11.20         *
  18.12.18         * add  zc_Movement_Sale(), zc_Movement_Loss(), zc_Movement_ReturnOut()
  07.01.18         *
  07.01.17         *
