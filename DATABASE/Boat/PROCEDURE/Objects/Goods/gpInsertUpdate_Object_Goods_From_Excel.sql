@@ -78,7 +78,8 @@ BEGIN
    -- пробуем найти Артикул
    IF COALESCE (inName, '') <> ''
    THEN
-       vbGoodsId := (SELECT Object.Id FROM Object WHERE Object.DescId = zc_Object_Goods() AND TRIM (Object.ValueData) Like TRIM (TRIM (inName)) );
+       --vbGoodsId := (SELECT Object.Id FROM Object WHERE Object.DescId = zc_Object_Goods() AND TRIM (Object.ValueData) Like TRIM (TRIM (inName)) );
+       vbGoodsId := (SELECT Object.Id FROM Object WHERE Object.DescId = zc_Object_Goods() AND Object.ObjectCode = inObjectCode );
    ELSE
        RETURN;
    END IF;
