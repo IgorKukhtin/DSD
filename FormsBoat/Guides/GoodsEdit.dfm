@@ -2,7 +2,7 @@
   Left = 0
   Top = 0
   Caption = #1044#1086#1073#1072#1074#1080#1090#1100'/'#1048#1079#1084#1077#1085#1080#1090#1100' <'#1058#1086#1074#1072#1088'>'
-  ClientHeight = 643
+  ClientHeight = 641
   ClientWidth = 863
   Color = clBtnFace
   Font.Charset = DEFAULT_CHARSET
@@ -411,23 +411,18 @@
     Left = 352
     Top = 0
     Width = 511
-    Height = 643
+    Height = 641
     Align = alRight
     BevelOuter = bvNone
-    TabOrder = 57
-    object dxBarDockControl1: TdxBarDockControl
-      Left = 0
-      Top = 0
-      Width = 511
-      Height = 26
-      Align = dalTop
-      BarManager = BarManager
-    end
+    TabOrder = 53
+    ExplicitLeft = 344
+    ExplicitTop = 35
+    ExplicitHeight = 574
     object cxDBVerticalGrid: TcxDBVerticalGrid
       Left = 0
-      Top = 26
+      Top = 249
       Width = 511
-      Height = 617
+      Height = 392
       Align = alClient
       Images = dmMain.ImageList
       LayoutStyle = lsMultiRecordView
@@ -441,10 +436,68 @@
       OptionsData.Inserting = False
       Navigator.Buttons.CustomButtons = <>
       Styles.Header = dmMain.cxHeaderStyle
-      TabOrder = 1
-      DataController.DataSource = DocumentDS
+      TabOrder = 0
+      DataController.DataSource = PhotoDS
+      ExplicitTop = 255
       Version = 1
       object colFileName: TcxDBEditorRow
+        Options.CanAutoHeight = False
+        Height = 142
+        Properties.Caption = #1060#1086#1090#1086
+        Properties.HeaderAlignmentHorz = taCenter
+        Properties.HeaderAlignmentVert = vaCenter
+        Properties.ImageIndex = 28
+        Properties.EditPropertiesClassName = 'TcxLabelProperties'
+        Properties.EditProperties.Alignment.Horz = taCenter
+        Properties.EditProperties.Alignment.Vert = taVCenter
+        Properties.EditProperties.WordWrap = True
+        Properties.DataBinding.FieldName = 'FileName'
+        Properties.Options.Editing = False
+        ID = 0
+        ParentID = -1
+        Index = 0
+        Version = 1
+      end
+    end
+    object dxBarDockControl1: TdxBarDockControl
+      Left = 0
+      Top = 0
+      Width = 511
+      Height = 26
+      Align = dalTop
+      BarManager = BarManager
+    end
+    object dxBarDockControl3: TdxBarDockControl
+      Left = 0
+      Top = 223
+      Width = 511
+      Height = 26
+      Align = dalTop
+      BarManager = BarManager
+    end
+    object cxDBVerticalGrid1: TcxDBVerticalGrid
+      Left = 0
+      Top = 26
+      Width = 511
+      Height = 197
+      Align = alTop
+      Images = dmMain.ImageList
+      LayoutStyle = lsMultiRecordView
+      OptionsView.RowHeaderWidth = 109
+      OptionsView.RowHeight = 60
+      OptionsView.ValueWidth = 104
+      OptionsData.Editing = False
+      OptionsData.Appending = False
+      OptionsData.Deleting = False
+      OptionsData.DeletingConfirmation = False
+      OptionsData.Inserting = False
+      Navigator.Buttons.CustomButtons = <>
+      Styles.Header = dmMain.cxHeaderStyle
+      TabOrder = 3
+      DataController.DataSource = DocumentDS
+      ExplicitTop = 52
+      Version = 1
+      object cxDBEditorRow1: TcxDBEditorRow
         Options.CanAutoHeight = False
         Height = 142
         Properties.Caption = #1044#1086#1082#1091#1084#1077#1085#1090#1099
@@ -479,6 +532,7 @@
           StoredProc = spDocumentSelect
         end
         item
+          StoredProc = spPhotoSelect
         end>
       Caption = #1055#1077#1088#1077#1095#1080#1090#1072#1090#1100
       Hint = #1054#1073#1085#1086#1074#1080#1090#1100' '#1076#1072#1085#1085#1099#1077
@@ -1338,359 +1392,6 @@
     Left = 93
     Top = 348
   end
-  object ActionList1: TActionList
-    Left = 597
-    Top = 421
-    object actRefresh: TdsdDataSetRefresh
-      Category = 'DSDLib'
-      MoveParams = <>
-      StoredProc = spGet
-      StoredProcList = <
-        item
-          StoredProc = spGet
-        end
-        item
-        end
-        item
-          StoredProc = spDocumentSelect
-        end>
-      Caption = #1055#1077#1088#1077#1095#1080#1090#1072#1090#1100
-      Hint = #1054#1073#1085#1086#1074#1080#1090#1100' '#1076#1072#1085#1085#1099#1077
-      ImageIndex = 4
-      ShortCut = 116
-      RefreshOnTabSetChanges = False
-    end
-    object FormClose: TdsdFormClose
-      Category = 'DSDLib'
-      MoveParams = <>
-      PostDataSetBeforeExecute = False
-      Caption = 'FormClose'
-    end
-    object InsertUpdateGuides: TdsdInsertUpdateGuides
-      Category = 'DSDLib'
-      MoveParams = <>
-      PostDataSetBeforeExecute = False
-      StoredProc = spInsertUpdate
-      StoredProcList = <
-        item
-          StoredProc = spInsertUpdate
-        end>
-      Caption = #1054#1082
-    end
-    object actConditionRefresh: TdsdDataSetRefresh
-      Category = 'DSDLib'
-      MoveParams = <>
-      StoredProcList = <>
-      Caption = #1054#1073#1085#1086#1074#1080#1090#1100' '#1076#1072#1085#1085#1099#1077
-      Hint = #1054#1073#1085#1086#1074#1080#1090#1100' '#1076#1072#1085#1085#1099#1077
-      ImageIndex = 4
-      ShortCut = 116
-      RefreshOnTabSetChanges = False
-    end
-    object ContractConditionKindChoiceForm: TOpenChoiceForm
-      Category = 'DSDLib'
-      MoveParams = <>
-      PostDataSetBeforeExecute = False
-      Caption = 'ContractConditionKindChoiceForm'
-      FormName = 'TContractConditionKindForm'
-      FormNameParam.Value = ''
-      FormNameParam.DataType = ftString
-      FormNameParam.MultiSelectSeparator = ','
-      GuiParams = <
-        item
-          Name = 'key'
-          Value = Null
-          ComponentItem = 'ContractConditionKindId'
-          MultiSelectSeparator = ','
-        end
-        item
-          Name = 'TextValue'
-          Value = Null
-          ComponentItem = 'ContractConditionKindName'
-          DataType = ftString
-          MultiSelectSeparator = ','
-        end>
-      isShowModal = False
-    end
-    object InsertRecordCCK: TInsertRecord
-      Category = 'DSDLib'
-      MoveParams = <>
-      PostDataSetBeforeExecute = False
-      Action = ContractConditionKindChoiceForm
-      Params = <>
-      Caption = #1044#1086#1073#1072#1074#1080#1090#1100' '#1090#1080#1087' '#1091#1089#1083#1086#1074#1080#1103' '#1076#1086#1075#1086#1074#1086#1088#1072
-      Hint = #1058#1080#1087' '#1091#1089#1083#1086#1074#1080#1103' '#1076#1086#1075#1086#1074#1086#1088#1072
-      ImageIndex = 0
-    end
-    object InfoMoneyChoiceForm: TOpenChoiceForm
-      Category = 'DSDLib'
-      MoveParams = <>
-      PostDataSetBeforeExecute = False
-      Caption = 'InfoMoneyChoiceForm'
-      FormName = 'TInfoMoney_ObjectForm'
-      FormNameParam.Value = ''
-      FormNameParam.DataType = ftString
-      FormNameParam.MultiSelectSeparator = ','
-      GuiParams = <
-        item
-          Name = 'Key'
-          Value = Null
-          ComponentItem = 'InfoMoneyId'
-          MultiSelectSeparator = ','
-        end
-        item
-          Name = 'TextValue'
-          Value = Null
-          ComponentItem = 'InfoMoneyName'
-          DataType = ftString
-          MultiSelectSeparator = ','
-        end>
-      isShowModal = True
-    end
-    object actContractCondition: TdsdUpdateDataSet
-      Category = 'DSDLib'
-      MoveParams = <>
-      PostDataSetBeforeExecute = False
-      StoredProcList = <>
-      Caption = 'actUpdateDataSetCCK'
-    end
-    object BonusKindChoiceForm: TOpenChoiceForm
-      Category = 'DSDLib'
-      MoveParams = <>
-      PostDataSetBeforeExecute = False
-      Caption = 'BonusKindChoiceForm'
-      FormName = 'TBonusKindForm'
-      FormNameParam.Value = 'TBonusKindForm'
-      FormNameParam.DataType = ftString
-      FormNameParam.MultiSelectSeparator = ','
-      GuiParams = <
-        item
-          Name = 'key'
-          Value = Null
-          ComponentItem = 'BonusKindId'
-          MultiSelectSeparator = ','
-        end
-        item
-          Name = 'TextValue'
-          Value = Null
-          ComponentItem = 'BonusKindName'
-          DataType = ftString
-          MultiSelectSeparator = ','
-        end>
-      isShowModal = False
-    end
-    object actInsertDocument: TdsdExecStoredProc
-      Category = 'DSDLib'
-      MoveParams = <>
-      PostDataSetBeforeExecute = False
-      StoredProc = spInsertDocument
-      StoredProcList = <
-        item
-          StoredProc = spInsertDocument
-        end>
-      Caption = #1044#1086#1073#1072#1074#1080#1090#1100' '#1076#1086#1082#1091#1084#1077#1085#1090
-      Hint = #1044#1086#1073#1072#1074#1080#1090#1100' '#1076#1086#1082#1091#1084#1077#1085#1090
-      ImageIndex = 0
-    end
-    object DocumentRefresh: TdsdDataSetRefresh
-      Category = 'DSDLib'
-      MoveParams = <>
-      StoredProc = spDocumentSelect
-      StoredProcList = <
-        item
-          StoredProc = spDocumentSelect
-        end>
-      Caption = #1054#1073#1085#1086#1074#1080#1090#1100' '#1076#1072#1085#1085#1099#1077
-      Hint = #1054#1073#1085#1086#1074#1080#1090#1100' '#1076#1072#1085#1085#1099#1077
-      ImageIndex = 4
-      ShortCut = 116
-      RefreshOnTabSetChanges = False
-    end
-    object DocumentOpenAction: TDocumentOpenAction
-      Category = 'DSDLib'
-      MoveParams = <>
-      Document = Document
-      Caption = #1055#1088#1086#1089#1084#1086#1090#1088' '#1089#1082#1072#1085'-'#1082#1086#1087#1080#1080
-      Hint = #1055#1088#1086#1089#1084#1086#1090#1088' '#1089#1082#1072#1085'-'#1082#1086#1087#1080#1080
-      ImageIndex = 60
-    end
-    object MultiActionInsertContractCondition: TMultiAction
-      Category = 'DSDLib'
-      MoveParams = <>
-      ActionList = <
-        item
-          Action = spInserUpdateContract
-        end
-        item
-          Action = InsertRecordCCK
-        end>
-      Caption = #1044#1086#1073#1072#1074#1080#1090#1100' '#1091#1089#1083#1086#1074#1080#1077' '#1076#1086#1075#1086#1074#1086#1088#1072
-      Hint = #1044#1086#1073#1072#1074#1080#1090#1100' '#1091#1089#1083#1086#1074#1080#1077' '#1076#1086#1075#1086#1074#1086#1088#1072
-      ImageIndex = 0
-    end
-    object MultiActionInsertDocument: TMultiAction
-      Category = 'DSDLib'
-      MoveParams = <>
-      ActionList = <
-        item
-          Action = spInserUpdateContract
-        end
-        item
-          Action = actInsertDocument
-        end
-        item
-          Action = DocumentRefresh
-        end>
-      Caption = #1044#1086#1073#1072#1074#1080#1090#1100' '#1089#1082#1072#1085'-'#1082#1086#1087#1080#1102
-      Hint = #1044#1086#1073#1072#1074#1080#1090#1100' '#1089#1082#1072#1085'-'#1082#1086#1087#1080#1102
-      ImageIndex = 0
-    end
-    object spInserUpdateContract: TdsdExecStoredProc
-      Category = 'DSDLib'
-      MoveParams = <>
-      PostDataSetBeforeExecute = False
-      StoredProc = spInsertUpdate
-      StoredProcList = <
-        item
-          StoredProc = spInsertUpdate
-        end>
-      Caption = 'spInserUpdateContract'
-    end
-    object actSetErasedContractCondition: TdsdUpdateErased
-      Category = 'DSDLib'
-      MoveParams = <>
-      StoredProcList = <>
-      Caption = #1059#1076#1072#1083#1080#1090#1100' '#1091#1089#1083#1086#1074#1080#1077' '#1076#1086#1075#1086#1074#1086#1088#1072
-      Hint = #1059#1076#1072#1083#1080#1090#1100' '#1091#1089#1083#1086#1074#1080#1077' '#1076#1086#1075#1086#1074#1086#1088#1072
-      ImageIndex = 2
-      ShortCut = 46
-      ErasedFieldName = 'isErased'
-    end
-    object actSetUnErasedContractCondition: TdsdUpdateErased
-      Category = 'DSDLib'
-      MoveParams = <>
-      StoredProcList = <>
-      Caption = #1042#1086#1089#1089#1090#1072#1085#1086#1074#1080#1090#1100
-      Hint = #1042#1086#1089#1089#1090#1072#1085#1086#1074#1080#1090#1100' '#1076#1072#1085#1085#1099#1077
-      ImageIndex = 8
-      ShortCut = 46
-      ErasedFieldName = 'isErased'
-      isSetErased = False
-    end
-    object actDeleteDocument: TdsdExecStoredProc
-      Category = 'DSDLib'
-      MoveParams = <>
-      PostDataSetBeforeExecute = False
-      StoredProc = spDeleteDocument
-      StoredProcList = <
-        item
-          StoredProc = spDeleteDocument
-        end
-        item
-          StoredProc = spDocumentSelect
-        end>
-      Caption = #1059#1076#1072#1083#1080#1090#1100' '#1089#1082#1072#1085'-'#1082#1086#1087#1080#1102
-      Hint = #1059#1076#1072#1083#1080#1090#1100' '#1089#1082#1072#1085'-'#1082#1086#1087#1080#1102
-      ImageIndex = 2
-      QuestionBeforeExecute = #1042#1099' '#1076#1077#1081#1089#1090#1074#1080#1090#1077#1083#1100#1085#1086' '#1093#1086#1090#1080#1090#1077' '#1091#1076#1072#1083#1080#1090#1100' '#1089#1082#1072#1085'-'#1082#1086#1087#1080#1102
-    end
-    object actGetStateKindUnSigned: TdsdExecStoredProc
-      Category = 'DSDLib'
-      MoveParams = <>
-      PostDataSetBeforeExecute = False
-      StoredProcList = <>
-      Caption = 'actGetStateKindUnSigned'
-      ImageIndex = 11
-    end
-    object actGetStateKindSigned: TdsdExecStoredProc
-      Category = 'DSDLib'
-      MoveParams = <>
-      PostDataSetBeforeExecute = False
-      StoredProcList = <>
-      Caption = 'actGetStateKindSigned'
-      ImageIndex = 12
-    end
-    object actGetStateKindPartner: TdsdExecStoredProc
-      Category = 'DSDLib'
-      MoveParams = <>
-      PostDataSetBeforeExecute = False
-      StoredProcList = <>
-      Caption = 'actGetStateKindClose'
-      ImageIndex = 66
-    end
-    object actGetStateKindClose: TdsdExecStoredProc
-      Category = 'DSDLib'
-      MoveParams = <>
-      PostDataSetBeforeExecute = False
-      StoredProcList = <>
-      Caption = 'actGetStateKindClose'
-      ImageIndex = 13
-    end
-    object actContractSendChoiceForm: TOpenChoiceForm
-      Category = 'DSDLib'
-      MoveParams = <>
-      PostDataSetBeforeExecute = False
-      Caption = 'TContractChoiceForm'
-      FormName = 'TContractChoiceForm'
-      FormNameParam.Value = 'TContractChoiceForm'
-      FormNameParam.DataType = ftString
-      FormNameParam.MultiSelectSeparator = ','
-      GuiParams = <
-        item
-          Name = 'Key'
-          Value = Null
-          ComponentItem = 'ContractSendId'
-          MultiSelectSeparator = ','
-        end
-        item
-          Name = 'TextValue'
-          Value = Null
-          ComponentItem = 'ContractSendName'
-          DataType = ftString
-          MultiSelectSeparator = ','
-        end
-        item
-          Name = 'MasterJuridicalId'
-          Value = ''
-          ComponentItem = 'Key'
-          ParamType = ptInput
-          MultiSelectSeparator = ','
-        end
-        item
-          Name = 'MasterJuridicalName'
-          Value = ''
-          ComponentItem = 'TextValue'
-          DataType = ftString
-          MultiSelectSeparator = ','
-        end>
-      isShowModal = False
-    end
-    object PaidKindChoiceFormСС: TOpenChoiceForm
-      Category = 'DSDLib'
-      MoveParams = <>
-      PostDataSetBeforeExecute = False
-      Caption = 'PaidKindChoiceForm'
-      FormName = 'TPaidKindForm'
-      FormNameParam.Value = ''
-      FormNameParam.DataType = ftString
-      FormNameParam.MultiSelectSeparator = ','
-      GuiParams = <
-        item
-          Name = 'Key'
-          Value = Null
-          ComponentItem = 'PaidKindId'
-          MultiSelectSeparator = ','
-        end
-        item
-          Name = 'TextValue'
-          Value = Null
-          ComponentItem = 'PaidKindName'
-          DataType = ftString
-          MultiSelectSeparator = ','
-        end>
-      isShowModal = True
-    end
-  end
   object spInsertDocument: TdsdStoredProc
     StoredProcName = 'gpInsertUpdate_Object_GoodsDocument'
     DataSets = <>
@@ -1729,8 +1430,8 @@
         MultiSelectSeparator = ','
       end>
     PackSize = 1
-    Left = 432
-    Top = 368
+    Left = 696
+    Top = 152
   end
   object spDocumentSelect: TdsdStoredProc
     StoredProcName = 'gpSelect_Object_GoodsDocument'
@@ -1749,19 +1450,19 @@
         MultiSelectSeparator = ','
       end>
     PackSize = 1
-    Left = 528
-    Top = 352
+    Left = 712
+    Top = 80
   end
   object DocumentDS: TDataSource
     DataSet = DocumentCDS
-    Left = 544
-    Top = 296
+    Left = 600
+    Top = 72
   end
   object DocumentCDS: TClientDataSet
     Aggregates = <>
     Params = <>
-    Left = 576
-    Top = 280
+    Left = 592
+    Top = 120
   end
   object spDeleteDocument: TdsdStoredProc
     StoredProcName = 'gpDelete_Object_GoodsDocument'
@@ -1777,8 +1478,8 @@
         MultiSelectSeparator = ','
       end>
     PackSize = 1
-    Left = 648
-    Top = 272
+    Left = 800
+    Top = 160
   end
   object spGetDocument: TdsdStoredProc
     StoredProcName = 'gpGet_Object_GoodsDocument'
@@ -1794,17 +1495,317 @@
         MultiSelectSeparator = ','
       end>
     PackSize = 1
-    Left = 640
-    Top = 224
+    Left = 800
+    Top = 104
   end
   object Document: TDocument
     GetBlobProcedure = spGetDocument
-    Left = 520
-    Top = 240
+    Left = 800
+    Top = 48
   end
   object UserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn
-    Left = 499
-    Top = 476
+    Left = 435
+    Top = 268
+  end
+  object PhotoCDS: TClientDataSet
+    Aggregates = <>
+    Params = <>
+    Left = 592
+    Top = 352
+  end
+  object PhotoDS: TDataSource
+    DataSet = PhotoCDS
+    Left = 592
+    Top = 296
+  end
+  object Photo: TDocument
+    GetBlobProcedure = spGetPhoto
+    Left = 784
+    Top = 320
+  end
+  object spGetPhoto: TdsdStoredProc
+    StoredProcName = 'gpGet_Object_GoodsPhoto'
+    DataSets = <>
+    OutputType = otBlob
+    Params = <
+      item
+        Name = 'inGoodsPhotoid'
+        Value = Null
+        Component = PhotoCDS
+        ComponentItem = 'Id'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end>
+    PackSize = 1
+    Left = 792
+    Top = 376
+  end
+  object spDeletePhoto: TdsdStoredProc
+    StoredProcName = 'gpDelete_Object_GoodsPhoto'
+    DataSets = <>
+    OutputType = otResult
+    Params = <
+      item
+        Name = 'inId'
+        Value = Null
+        Component = PhotoCDS
+        ComponentItem = 'Id'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end>
+    PackSize = 1
+    Left = 808
+    Top = 440
+  end
+  object spPhotoSelect: TdsdStoredProc
+    StoredProcName = 'gpSelect_Object_GoodsPhoto'
+    DataSet = PhotoCDS
+    DataSets = <
+      item
+        DataSet = PhotoCDS
+      end>
+    Params = <
+      item
+        Name = 'inGoodsId'
+        Value = Null
+        Component = dsdFormParams
+        ComponentItem = 'Id'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end>
+    PackSize = 1
+    Left = 720
+    Top = 312
+  end
+  object spInsertPhoto: TdsdStoredProc
+    StoredProcName = 'gpInsertUpdate_Object_GoodsPhoto'
+    DataSets = <>
+    OutputType = otResult
+    Params = <
+      item
+        Name = 'ioid'
+        Value = Null
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inPhotoname'
+        Value = ''
+        Component = Photo
+        ComponentItem = 'Name'
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inGoodsId'
+        Value = Null
+        Component = dsdFormParams
+        ComponentItem = 'Id'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inGoodsPhotodata'
+        Value = '789C535018D10000F1E01FE1'
+        Component = Photo
+        ComponentItem = 'Data'
+        DataType = ftBlob
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end>
+    PackSize = 1
+    Left = 712
+    Top = 392
+  end
+  object ActionList1: TActionList
+    Left = 405
+    Top = 437
+    object actRefresh: TdsdDataSetRefresh
+      Category = 'DSDLib'
+      MoveParams = <>
+      StoredProc = spGet
+      StoredProcList = <
+        item
+          StoredProc = spGet
+        end
+        item
+          StoredProc = spPhotoSelect
+        end
+        item
+          StoredProc = spDocumentSelect
+        end>
+      Caption = #1055#1077#1088#1077#1095#1080#1090#1072#1090#1100
+      Hint = #1054#1073#1085#1086#1074#1080#1090#1100' '#1076#1072#1085#1085#1099#1077
+      ImageIndex = 4
+      ShortCut = 116
+      RefreshOnTabSetChanges = False
+    end
+    object FormClose: TdsdFormClose
+      Category = 'DSDLib'
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      Caption = 'FormClose'
+    end
+    object InsertUpdateGuides: TdsdInsertUpdateGuides
+      Category = 'DSDLib'
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      StoredProc = spInsertUpdate
+      StoredProcList = <
+        item
+          StoredProc = spInsertUpdate
+        end>
+      Caption = #1054#1082
+    end
+    object actInsertPhoto: TdsdExecStoredProc
+      Category = 'DSDLib'
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      StoredProc = spInsertPhoto
+      StoredProcList = <
+        item
+          StoredProc = spInsertPhoto
+        end>
+      Caption = #1044#1086#1073#1072#1074#1080#1090#1100' '#1060#1086#1090#1086
+      Hint = #1044#1086#1073#1072#1074#1080#1090#1100' '#1060#1086#1090#1086
+      ImageIndex = 0
+    end
+    object actInsertDocument: TdsdExecStoredProc
+      Category = 'DSDLib'
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      StoredProc = spInsertDocument
+      StoredProcList = <
+        item
+          StoredProc = spInsertDocument
+        end>
+      Caption = #1044#1086#1073#1072#1074#1080#1090#1100' '#1076#1086#1082#1091#1084#1077#1085#1090
+      Hint = #1044#1086#1073#1072#1074#1080#1090#1100' '#1076#1086#1082#1091#1084#1077#1085#1090
+      ImageIndex = 0
+    end
+    object PhotoRefresh: TdsdDataSetRefresh
+      Category = 'DSDLib'
+      MoveParams = <>
+      StoredProc = spPhotoSelect
+      StoredProcList = <
+        item
+          StoredProc = spPhotoSelect
+        end>
+      Caption = #1054#1073#1085#1086#1074#1080#1090#1100' '#1076#1072#1085#1085#1099#1077' '#1060#1086#1090#1086
+      Hint = #1054#1073#1085#1086#1074#1080#1090#1100' '#1076#1072#1085#1085#1099#1077' '#1060#1086#1090#1086
+      ImageIndex = 4
+      RefreshOnTabSetChanges = False
+    end
+    object DocumentRefresh: TdsdDataSetRefresh
+      Category = 'DSDLib'
+      MoveParams = <>
+      StoredProc = spDocumentSelect
+      StoredProcList = <
+        item
+          StoredProc = spDocumentSelect
+        end>
+      Caption = #1054#1073#1085#1086#1074#1080#1090#1100' '#1076#1072#1085#1085#1099#1077' '#1044#1086#1082#1091#1084#1077#1085#1090#1086#1074
+      Hint = #1054#1073#1085#1086#1074#1080#1090#1100' '#1076#1072#1085#1085#1099#1077' '#1044#1086#1082#1091#1084#1077#1085#1090#1086#1074
+      ImageIndex = 4
+      ShortCut = 116
+      RefreshOnTabSetChanges = False
+    end
+    object PhotoOpenAction: TDocumentOpenAction
+      Category = 'DSDLib'
+      MoveParams = <>
+      Document = Photo
+      Caption = #1055#1088#1086#1089#1084#1086#1090#1088' '#1060#1086#1090#1086
+      Hint = #1055#1088#1086#1089#1084#1086#1090#1088' '#1060#1086#1090#1086
+      ImageIndex = 60
+    end
+    object DocumentOpenAction: TDocumentOpenAction
+      Category = 'DSDLib'
+      MoveParams = <>
+      Document = Document
+      Caption = #1055#1088#1086#1089#1084#1086#1090#1088' '#1089#1082#1072#1085'-'#1082#1086#1087#1080#1080
+      Hint = #1055#1088#1086#1089#1084#1086#1090#1088' '#1089#1082#1072#1085'-'#1082#1086#1087#1080#1080
+      ImageIndex = 60
+    end
+    object MultiActionInsertPhoto: TMultiAction
+      Category = 'DSDLib'
+      MoveParams = <>
+      ActionList = <
+        item
+          Action = spInserUpdateGoods
+        end
+        item
+          Action = actInsertPhoto
+        end
+        item
+          Action = PhotoRefresh
+        end>
+      Caption = #1044#1086#1073#1072#1074#1080#1090#1100' '#1060#1086#1090#1086
+      Hint = #1044#1086#1073#1072#1074#1080#1090#1100' '#1060#1086#1090#1086
+      ImageIndex = 0
+    end
+    object MultiActionInsertDocument: TMultiAction
+      Category = 'DSDLib'
+      MoveParams = <>
+      ActionList = <
+        item
+          Action = spInserUpdateGoods
+        end
+        item
+          Action = actInsertDocument
+        end
+        item
+          Action = DocumentRefresh
+        end>
+      Caption = #1044#1086#1073#1072#1074#1080#1090#1100' '#1089#1082#1072#1085'-'#1082#1086#1087#1080#1102
+      Hint = #1044#1086#1073#1072#1074#1080#1090#1100' '#1089#1082#1072#1085'-'#1082#1086#1087#1080#1102
+      ImageIndex = 0
+    end
+    object actDeletePhoto: TdsdExecStoredProc
+      Category = 'DSDLib'
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      StoredProc = spDeletePhoto
+      StoredProcList = <
+        item
+          StoredProc = spDeletePhoto
+        end
+        item
+          StoredProc = spPhotoSelect
+        end>
+      Caption = #1059#1076#1072#1083#1080#1090#1100' '#1060#1086#1090#1086
+      Hint = #1059#1076#1072#1083#1080#1090#1100' '#1060#1086#1090#1086
+      ImageIndex = 2
+      QuestionBeforeExecute = #1042#1099' '#1076#1077#1081#1089#1090#1074#1080#1090#1077#1083#1100#1085#1086' '#1093#1086#1090#1080#1090#1077' '#1091#1076#1072#1083#1080#1090#1100' '#1089#1082#1072#1085'-'#1082#1086#1087#1080#1102
+    end
+    object actDeleteDocument: TdsdExecStoredProc
+      Category = 'DSDLib'
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      StoredProc = spDeleteDocument
+      StoredProcList = <
+        item
+          StoredProc = spDeleteDocument
+        end
+        item
+          StoredProc = spDocumentSelect
+        end>
+      Caption = #1059#1076#1072#1083#1080#1090#1100' '#1089#1082#1072#1085'-'#1082#1086#1087#1080#1102
+      Hint = #1059#1076#1072#1083#1080#1090#1100' '#1089#1082#1072#1085'-'#1082#1086#1087#1080#1102
+      ImageIndex = 2
+      QuestionBeforeExecute = #1042#1099' '#1076#1077#1081#1089#1090#1074#1080#1090#1077#1083#1100#1085#1086' '#1093#1086#1090#1080#1090#1077' '#1091#1076#1072#1083#1080#1090#1100' '#1089#1082#1072#1085'-'#1082#1086#1087#1080#1102
+    end
+    object spInserUpdateGoods: TdsdExecStoredProc
+      Category = 'DSDLib'
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      StoredProc = spInsertUpdate
+      StoredProcList = <
+        item
+          StoredProc = spInsertUpdate
+        end>
+      Caption = 'spInserUpdateGoods'
+    end
   end
   object BarManager: TdxBarManager
     Font.Charset = DEFAULT_CHARSET
@@ -1828,15 +1829,61 @@
       0
       0
       0)
+    object BarManagerBar1: TdxBar
+      Caption = #1059#1089#1083#1086#1074#1080#1103' '#1088#1072#1073#1086#1090#1099
+      CaptionButtons = <>
+      DockControl = dxBarDockControl3
+      DockedDockControl = dxBarDockControl3
+      DockedLeft = 0
+      DockedTop = 0
+      FloatLeft = 849
+      FloatTop = 373
+      FloatClientWidth = 51
+      FloatClientHeight = 66
+      ItemLinks = <
+        item
+          Visible = True
+          ItemName = 'bbInsertCondition'
+        end
+        item
+          Visible = True
+          ItemName = 'bbSetErasedContractCondition'
+        end
+        item
+          Visible = True
+          ItemName = 'bbStatic'
+        end
+        item
+          Visible = True
+          ItemName = 'bbPhotoOpenAction'
+        end
+        item
+          Visible = True
+          ItemName = 'bbStatic'
+        end
+        item
+          Visible = True
+          ItemName = 'bbPhotoRefresh'
+        end
+        item
+          Visible = True
+          ItemName = 'bbStatic'
+        end>
+      OneOnRow = True
+      Row = 0
+      UseOwnFont = False
+      Visible = True
+      WholeRow = False
+    end
     object BarManagerBar2: TdxBar
       Caption = #1044#1086#1082#1091#1084#1077#1085#1090#1099
       CaptionButtons = <>
       DockControl = dxBarDockControl1
       DockedDockControl = dxBarDockControl1
-      DockedLeft = 0
+      DockedLeft = 1
       DockedTop = 0
-      FloatLeft = 874
-      FloatTop = 212
+      FloatLeft = 868
+      FloatTop = 151
       FloatClientWidth = 51
       FloatClientHeight = 84
       ItemLinks = <
@@ -1891,6 +1938,22 @@
     end
     object bbOpenDocument: TdxBarButton
       Action = DocumentOpenAction
+      Category = 0
+    end
+    object bbInsertCondition: TdxBarButton
+      Action = MultiActionInsertPhoto
+      Category = 0
+    end
+    object bbPhotoRefresh: TdxBarButton
+      Action = PhotoRefresh
+      Category = 0
+    end
+    object bbSetErasedContractCondition: TdxBarButton
+      Action = actDeletePhoto
+      Category = 0
+    end
+    object bbPhotoOpenAction: TdxBarButton
+      Action = PhotoOpenAction
       Category = 0
     end
     object bbDeleteDocument: TdxBarButton

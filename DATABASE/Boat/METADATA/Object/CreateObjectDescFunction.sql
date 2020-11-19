@@ -270,10 +270,15 @@ CREATE OR REPLACE FUNCTION zc_Object_GoodsDocument() RETURNS Integer AS $BODY$BE
 INSERT INTO ObjectDesc (Code, ItemName)
   SELECT 'zc_Object_GoodsDocument', 'Документы артикулов' WHERE NOT EXISTS (SELECT * FROM ObjectDesc WHERE Code = 'zc_Object_GoodsDocument');
 
+CREATE OR REPLACE FUNCTION zc_Object_GoodsPhoto() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM ObjectDesc WHERE Code = 'zc_Object_GoodsPhoto'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
+INSERT INTO ObjectDesc (Code, ItemName)
+  SELECT 'zc_Object_GoodsPhoto', 'Фото артикулов' WHERE NOT EXISTS (SELECT * FROM ObjectDesc WHERE Code = 'zc_Object_GoodsPhoto');
+
 /*-------------------------------------------------------------------------------
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
  19.11.20         * zc_Object_GoodsDocument
+                    zc_Object_GoodsPhoto
  11.11.20         * zc_Object_TaxKind
                     zc_Object_DiscountParner
                     zc_Object_GoodsType
