@@ -56,6 +56,7 @@ $BODY$BEGIN
    WHERE Object_DocumentKind.DescId = zc_Object_DocumentKind()
      AND (ObjectString_Enum.ObjectId IS NULL
        OR Object_DocumentKind.Id IN (zc_Enum_DocumentKind_PackDiff())
+       OR inSession IN ('5', '9459')
          )
   ;
   

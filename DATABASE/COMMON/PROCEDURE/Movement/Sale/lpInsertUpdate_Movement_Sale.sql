@@ -89,8 +89,12 @@ BEGIN
 
 
      -- Прайс-лист
-     IF COALESCE (ioPriceListId, 0) = 0 -- OR COALESCE (ioId, 0) = 0
-        OR 1=1 -- !!!всегда расчет!!!
+     IF (COALESCE (ioPriceListId, 0) = 0 -- OR COALESCE (ioId, 0) = 0
+         OR 1=1 -- !!!всегда расчет!!!
+        )
+        AND inUserId <> 9459 -- Малахова Т.Н.
+        AND inUserId <> 9464 -- Рудик Н.В.
+        AND inUserId <> 5    -- 
      THEN
          -- !!!замена!!!
          SELECT tmp.PriceListId, tmp.PriceListName, tmp.PriceWithVAT, tmp.VATPercent
