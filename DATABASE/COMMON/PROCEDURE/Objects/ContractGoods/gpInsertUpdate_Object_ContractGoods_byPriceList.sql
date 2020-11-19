@@ -147,7 +147,8 @@ BEGIN
    FROM tmpPrice
         LEFT JOIN tmpContractGoods ON tmpContractGoods.GoodsId = tmpPrice.GoodsId
                                   AND COALESCE (tmpContractGoods.GoodsKindId,0) = COALESCE (tmpPrice.GoodsKindId,0)
-   WHERE tmpPrice.Price <> tmpContractGoods.Price OR tmpContractGoods.Id IS NULL;
+   WHERE (tmpPrice.Price <> tmpContractGoods.Price OR tmpContractGoods.Id IS NULL)
+      AND COALESCE (tmpPrice.Price,0) <> 0;
    
 
 

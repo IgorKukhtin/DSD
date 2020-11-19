@@ -33,6 +33,9 @@ type
     actShowErased: TBooleanStoredProcAction;
     bbShowErased: TdxBarButton;
     GoodsCode: TcxGridDBColumn;
+    macSetErased_list: TMultiAction;
+    macSetErased: TMultiAction;
+    bbmacSetErased: TdxBarButton;
   private
     { Private declarations }
   public
