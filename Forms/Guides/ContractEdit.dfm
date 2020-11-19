@@ -516,10 +516,9 @@
     end
     object cxDBVerticalGrid: TcxDBVerticalGrid
       Left = 0
-      Top = 250
+      Top = 414
       Width = 559
-      Height = 461
-      Align = alClient
+      Height = 297
       Images = dmMain.ImageList
       LayoutStyle = lsMultiRecordView
       OptionsView.RowHeaderWidth = 109
@@ -534,7 +533,6 @@
       Styles.Header = dmMain.cxHeaderStyle
       TabOrder = 3
       DataController.DataSource = DocumentDS
-      ExplicitTop = 256
       Version = 1
       object colFileName: TcxDBEditorRow
         Options.CanAutoHeight = False
@@ -964,8 +962,8 @@
     Width = 161
   end
   inherited UserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn
-    Left = 499
-    Top = 476
+    Left = 587
+    Top = 508
   end
   inherited cxPropertiesStore: TcxPropertiesStore
     Left = 392
@@ -2758,8 +2756,8 @@
         MultiSelectSeparator = ','
       end>
     PackSize = 1
-    Left = 432
-    Top = 368
+    Left = 672
+    Top = 536
   end
   object spGetDocument: TdsdStoredProc
     StoredProcName = 'gpGet_Object_ContractDocument'
@@ -3226,8 +3224,8 @@
         ParamType = ptInput
         MultiSelectSeparator = ','
       end>
-    Left = 472
-    Top = 522
+    Left = 336
+    Top = 642
   end
   object GoodsPropertyGuides: TdsdGuides
     KeyField = 'Id'

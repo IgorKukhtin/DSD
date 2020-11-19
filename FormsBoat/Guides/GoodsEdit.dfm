@@ -3,7 +3,7 @@
   Top = 0
   Caption = #1044#1086#1073#1072#1074#1080#1090#1100'/'#1048#1079#1084#1077#1085#1080#1090#1100' <'#1058#1086#1074#1072#1088'>'
   ClientHeight = 643
-  ClientWidth = 353
+  ClientWidth = 863
   Color = clBtnFace
   Font.Charset = DEFAULT_CHARSET
   Font.Color = clWindowText
@@ -407,9 +407,66 @@
     TabOrder = 52
     Width = 135
   end
+  object Panel: TPanel
+    Left = 352
+    Top = 0
+    Width = 511
+    Height = 643
+    Align = alRight
+    BevelOuter = bvNone
+    TabOrder = 57
+    object dxBarDockControl1: TdxBarDockControl
+      Left = 0
+      Top = 0
+      Width = 511
+      Height = 26
+      Align = dalTop
+      BarManager = BarManager
+    end
+    object cxDBVerticalGrid: TcxDBVerticalGrid
+      Left = 0
+      Top = 26
+      Width = 511
+      Height = 617
+      Align = alClient
+      Images = dmMain.ImageList
+      LayoutStyle = lsMultiRecordView
+      OptionsView.RowHeaderWidth = 109
+      OptionsView.RowHeight = 60
+      OptionsView.ValueWidth = 104
+      OptionsData.Editing = False
+      OptionsData.Appending = False
+      OptionsData.Deleting = False
+      OptionsData.DeletingConfirmation = False
+      OptionsData.Inserting = False
+      Navigator.Buttons.CustomButtons = <>
+      Styles.Header = dmMain.cxHeaderStyle
+      TabOrder = 1
+      DataController.DataSource = DocumentDS
+      Version = 1
+      object colFileName: TcxDBEditorRow
+        Options.CanAutoHeight = False
+        Height = 142
+        Properties.Caption = #1044#1086#1082#1091#1084#1077#1085#1090#1099
+        Properties.HeaderAlignmentHorz = taCenter
+        Properties.HeaderAlignmentVert = vaCenter
+        Properties.ImageIndex = 28
+        Properties.EditPropertiesClassName = 'TcxLabelProperties'
+        Properties.EditProperties.Alignment.Horz = taCenter
+        Properties.EditProperties.Alignment.Vert = taVCenter
+        Properties.EditProperties.WordWrap = True
+        Properties.DataBinding.FieldName = 'FileName'
+        Properties.Options.Editing = False
+        ID = 0
+        ParentID = -1
+        Index = 0
+        Version = 1
+      end
+    end
+  end
   object ActionList: TActionList
-    Left = 296
-    Top = 8
+    Left = 232
+    Top = 56
     object dsdDataSetRefresh: TdsdDataSetRefresh
       Category = 'DSDLib'
       MoveParams = <>
@@ -419,6 +476,7 @@
           StoredProc = spGet
         end
         item
+          StoredProc = spDocumentSelect
         end
         item
         end>
@@ -1279,5 +1337,565 @@
       end>
     Left = 93
     Top = 348
+  end
+  object ActionList1: TActionList
+    Left = 597
+    Top = 421
+    object actRefresh: TdsdDataSetRefresh
+      Category = 'DSDLib'
+      MoveParams = <>
+      StoredProc = spGet
+      StoredProcList = <
+        item
+          StoredProc = spGet
+        end
+        item
+        end
+        item
+          StoredProc = spDocumentSelect
+        end>
+      Caption = #1055#1077#1088#1077#1095#1080#1090#1072#1090#1100
+      Hint = #1054#1073#1085#1086#1074#1080#1090#1100' '#1076#1072#1085#1085#1099#1077
+      ImageIndex = 4
+      ShortCut = 116
+      RefreshOnTabSetChanges = False
+    end
+    object FormClose: TdsdFormClose
+      Category = 'DSDLib'
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      Caption = 'FormClose'
+    end
+    object InsertUpdateGuides: TdsdInsertUpdateGuides
+      Category = 'DSDLib'
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      StoredProc = spInsertUpdate
+      StoredProcList = <
+        item
+          StoredProc = spInsertUpdate
+        end>
+      Caption = #1054#1082
+    end
+    object actConditionRefresh: TdsdDataSetRefresh
+      Category = 'DSDLib'
+      MoveParams = <>
+      StoredProcList = <>
+      Caption = #1054#1073#1085#1086#1074#1080#1090#1100' '#1076#1072#1085#1085#1099#1077
+      Hint = #1054#1073#1085#1086#1074#1080#1090#1100' '#1076#1072#1085#1085#1099#1077
+      ImageIndex = 4
+      ShortCut = 116
+      RefreshOnTabSetChanges = False
+    end
+    object ContractConditionKindChoiceForm: TOpenChoiceForm
+      Category = 'DSDLib'
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      Caption = 'ContractConditionKindChoiceForm'
+      FormName = 'TContractConditionKindForm'
+      FormNameParam.Value = ''
+      FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
+      GuiParams = <
+        item
+          Name = 'key'
+          Value = Null
+          ComponentItem = 'ContractConditionKindId'
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'TextValue'
+          Value = Null
+          ComponentItem = 'ContractConditionKindName'
+          DataType = ftString
+          MultiSelectSeparator = ','
+        end>
+      isShowModal = False
+    end
+    object InsertRecordCCK: TInsertRecord
+      Category = 'DSDLib'
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      Action = ContractConditionKindChoiceForm
+      Params = <>
+      Caption = #1044#1086#1073#1072#1074#1080#1090#1100' '#1090#1080#1087' '#1091#1089#1083#1086#1074#1080#1103' '#1076#1086#1075#1086#1074#1086#1088#1072
+      Hint = #1058#1080#1087' '#1091#1089#1083#1086#1074#1080#1103' '#1076#1086#1075#1086#1074#1086#1088#1072
+      ImageIndex = 0
+    end
+    object InfoMoneyChoiceForm: TOpenChoiceForm
+      Category = 'DSDLib'
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      Caption = 'InfoMoneyChoiceForm'
+      FormName = 'TInfoMoney_ObjectForm'
+      FormNameParam.Value = ''
+      FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
+      GuiParams = <
+        item
+          Name = 'Key'
+          Value = Null
+          ComponentItem = 'InfoMoneyId'
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'TextValue'
+          Value = Null
+          ComponentItem = 'InfoMoneyName'
+          DataType = ftString
+          MultiSelectSeparator = ','
+        end>
+      isShowModal = True
+    end
+    object actContractCondition: TdsdUpdateDataSet
+      Category = 'DSDLib'
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      StoredProcList = <>
+      Caption = 'actUpdateDataSetCCK'
+    end
+    object BonusKindChoiceForm: TOpenChoiceForm
+      Category = 'DSDLib'
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      Caption = 'BonusKindChoiceForm'
+      FormName = 'TBonusKindForm'
+      FormNameParam.Value = 'TBonusKindForm'
+      FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
+      GuiParams = <
+        item
+          Name = 'key'
+          Value = Null
+          ComponentItem = 'BonusKindId'
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'TextValue'
+          Value = Null
+          ComponentItem = 'BonusKindName'
+          DataType = ftString
+          MultiSelectSeparator = ','
+        end>
+      isShowModal = False
+    end
+    object actInsertDocument: TdsdExecStoredProc
+      Category = 'DSDLib'
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      StoredProc = spInsertDocument
+      StoredProcList = <
+        item
+          StoredProc = spInsertDocument
+        end>
+      Caption = #1044#1086#1073#1072#1074#1080#1090#1100' '#1076#1086#1082#1091#1084#1077#1085#1090
+      Hint = #1044#1086#1073#1072#1074#1080#1090#1100' '#1076#1086#1082#1091#1084#1077#1085#1090
+      ImageIndex = 0
+    end
+    object DocumentRefresh: TdsdDataSetRefresh
+      Category = 'DSDLib'
+      MoveParams = <>
+      StoredProc = spDocumentSelect
+      StoredProcList = <
+        item
+          StoredProc = spDocumentSelect
+        end>
+      Caption = #1054#1073#1085#1086#1074#1080#1090#1100' '#1076#1072#1085#1085#1099#1077
+      Hint = #1054#1073#1085#1086#1074#1080#1090#1100' '#1076#1072#1085#1085#1099#1077
+      ImageIndex = 4
+      ShortCut = 116
+      RefreshOnTabSetChanges = False
+    end
+    object DocumentOpenAction: TDocumentOpenAction
+      Category = 'DSDLib'
+      MoveParams = <>
+      Document = Document
+      Caption = #1055#1088#1086#1089#1084#1086#1090#1088' '#1089#1082#1072#1085'-'#1082#1086#1087#1080#1080
+      Hint = #1055#1088#1086#1089#1084#1086#1090#1088' '#1089#1082#1072#1085'-'#1082#1086#1087#1080#1080
+      ImageIndex = 60
+    end
+    object MultiActionInsertContractCondition: TMultiAction
+      Category = 'DSDLib'
+      MoveParams = <>
+      ActionList = <
+        item
+          Action = spInserUpdateContract
+        end
+        item
+          Action = InsertRecordCCK
+        end>
+      Caption = #1044#1086#1073#1072#1074#1080#1090#1100' '#1091#1089#1083#1086#1074#1080#1077' '#1076#1086#1075#1086#1074#1086#1088#1072
+      Hint = #1044#1086#1073#1072#1074#1080#1090#1100' '#1091#1089#1083#1086#1074#1080#1077' '#1076#1086#1075#1086#1074#1086#1088#1072
+      ImageIndex = 0
+    end
+    object MultiActionInsertDocument: TMultiAction
+      Category = 'DSDLib'
+      MoveParams = <>
+      ActionList = <
+        item
+          Action = spInserUpdateContract
+        end
+        item
+          Action = actInsertDocument
+        end
+        item
+          Action = DocumentRefresh
+        end>
+      Caption = #1044#1086#1073#1072#1074#1080#1090#1100' '#1089#1082#1072#1085'-'#1082#1086#1087#1080#1102
+      Hint = #1044#1086#1073#1072#1074#1080#1090#1100' '#1089#1082#1072#1085'-'#1082#1086#1087#1080#1102
+      ImageIndex = 0
+    end
+    object spInserUpdateContract: TdsdExecStoredProc
+      Category = 'DSDLib'
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      StoredProc = spInsertUpdate
+      StoredProcList = <
+        item
+          StoredProc = spInsertUpdate
+        end>
+      Caption = 'spInserUpdateContract'
+    end
+    object actSetErasedContractCondition: TdsdUpdateErased
+      Category = 'DSDLib'
+      MoveParams = <>
+      StoredProcList = <>
+      Caption = #1059#1076#1072#1083#1080#1090#1100' '#1091#1089#1083#1086#1074#1080#1077' '#1076#1086#1075#1086#1074#1086#1088#1072
+      Hint = #1059#1076#1072#1083#1080#1090#1100' '#1091#1089#1083#1086#1074#1080#1077' '#1076#1086#1075#1086#1074#1086#1088#1072
+      ImageIndex = 2
+      ShortCut = 46
+      ErasedFieldName = 'isErased'
+    end
+    object actSetUnErasedContractCondition: TdsdUpdateErased
+      Category = 'DSDLib'
+      MoveParams = <>
+      StoredProcList = <>
+      Caption = #1042#1086#1089#1089#1090#1072#1085#1086#1074#1080#1090#1100
+      Hint = #1042#1086#1089#1089#1090#1072#1085#1086#1074#1080#1090#1100' '#1076#1072#1085#1085#1099#1077
+      ImageIndex = 8
+      ShortCut = 46
+      ErasedFieldName = 'isErased'
+      isSetErased = False
+    end
+    object actDeleteDocument: TdsdExecStoredProc
+      Category = 'DSDLib'
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      StoredProc = spDeleteDocument
+      StoredProcList = <
+        item
+          StoredProc = spDeleteDocument
+        end
+        item
+          StoredProc = spDocumentSelect
+        end>
+      Caption = #1059#1076#1072#1083#1080#1090#1100' '#1089#1082#1072#1085'-'#1082#1086#1087#1080#1102
+      Hint = #1059#1076#1072#1083#1080#1090#1100' '#1089#1082#1072#1085'-'#1082#1086#1087#1080#1102
+      ImageIndex = 2
+      QuestionBeforeExecute = #1042#1099' '#1076#1077#1081#1089#1090#1074#1080#1090#1077#1083#1100#1085#1086' '#1093#1086#1090#1080#1090#1077' '#1091#1076#1072#1083#1080#1090#1100' '#1089#1082#1072#1085'-'#1082#1086#1087#1080#1102
+    end
+    object actGetStateKindUnSigned: TdsdExecStoredProc
+      Category = 'DSDLib'
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      StoredProcList = <>
+      Caption = 'actGetStateKindUnSigned'
+      ImageIndex = 11
+    end
+    object actGetStateKindSigned: TdsdExecStoredProc
+      Category = 'DSDLib'
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      StoredProcList = <>
+      Caption = 'actGetStateKindSigned'
+      ImageIndex = 12
+    end
+    object actGetStateKindPartner: TdsdExecStoredProc
+      Category = 'DSDLib'
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      StoredProcList = <>
+      Caption = 'actGetStateKindClose'
+      ImageIndex = 66
+    end
+    object actGetStateKindClose: TdsdExecStoredProc
+      Category = 'DSDLib'
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      StoredProcList = <>
+      Caption = 'actGetStateKindClose'
+      ImageIndex = 13
+    end
+    object actContractSendChoiceForm: TOpenChoiceForm
+      Category = 'DSDLib'
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      Caption = 'TContractChoiceForm'
+      FormName = 'TContractChoiceForm'
+      FormNameParam.Value = 'TContractChoiceForm'
+      FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
+      GuiParams = <
+        item
+          Name = 'Key'
+          Value = Null
+          ComponentItem = 'ContractSendId'
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'TextValue'
+          Value = Null
+          ComponentItem = 'ContractSendName'
+          DataType = ftString
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'MasterJuridicalId'
+          Value = ''
+          ComponentItem = 'Key'
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'MasterJuridicalName'
+          Value = ''
+          ComponentItem = 'TextValue'
+          DataType = ftString
+          MultiSelectSeparator = ','
+        end>
+      isShowModal = False
+    end
+    object PaidKindChoiceFormСС: TOpenChoiceForm
+      Category = 'DSDLib'
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      Caption = 'PaidKindChoiceForm'
+      FormName = 'TPaidKindForm'
+      FormNameParam.Value = ''
+      FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
+      GuiParams = <
+        item
+          Name = 'Key'
+          Value = Null
+          ComponentItem = 'PaidKindId'
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'TextValue'
+          Value = Null
+          ComponentItem = 'PaidKindName'
+          DataType = ftString
+          MultiSelectSeparator = ','
+        end>
+      isShowModal = True
+    end
+  end
+  object spInsertDocument: TdsdStoredProc
+    StoredProcName = 'gpInsertUpdate_Object_GoodsDocument'
+    DataSets = <>
+    OutputType = otResult
+    Params = <
+      item
+        Name = 'ioid'
+        Value = Null
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'indocumentname'
+        Value = ''
+        Component = Document
+        ComponentItem = 'Name'
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inGoodsId'
+        Value = Null
+        Component = dsdFormParams
+        ComponentItem = 'Id'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inGoodsdocumentdata'
+        Value = '789C535018D10000F1E01FE1'
+        Component = Document
+        ComponentItem = 'Data'
+        DataType = ftBlob
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end>
+    PackSize = 1
+    Left = 432
+    Top = 368
+  end
+  object spDocumentSelect: TdsdStoredProc
+    StoredProcName = 'gpSelect_Object_GoodsDocument'
+    DataSet = DocumentCDS
+    DataSets = <
+      item
+        DataSet = DocumentCDS
+      end>
+    Params = <
+      item
+        Name = 'inGoodsId'
+        Value = Null
+        Component = dsdFormParams
+        ComponentItem = 'Id'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end>
+    PackSize = 1
+    Left = 528
+    Top = 352
+  end
+  object DocumentDS: TDataSource
+    DataSet = DocumentCDS
+    Left = 544
+    Top = 296
+  end
+  object DocumentCDS: TClientDataSet
+    Aggregates = <>
+    Params = <>
+    Left = 576
+    Top = 280
+  end
+  object spDeleteDocument: TdsdStoredProc
+    StoredProcName = 'gpDelete_Object_GoodsDocument'
+    DataSets = <>
+    OutputType = otResult
+    Params = <
+      item
+        Name = 'inId'
+        Value = Null
+        Component = DocumentCDS
+        ComponentItem = 'Id'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end>
+    PackSize = 1
+    Left = 648
+    Top = 272
+  end
+  object spGetDocument: TdsdStoredProc
+    StoredProcName = 'gpGet_Object_GoodsDocument'
+    DataSets = <>
+    OutputType = otBlob
+    Params = <
+      item
+        Name = 'inGoodsdocumentid'
+        Value = Null
+        Component = DocumentCDS
+        ComponentItem = 'Id'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end>
+    PackSize = 1
+    Left = 640
+    Top = 224
+  end
+  object Document: TDocument
+    GetBlobProcedure = spGetDocument
+    Left = 520
+    Top = 240
+  end
+  object UserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn
+    Left = 499
+    Top = 476
+  end
+  object BarManager: TdxBarManager
+    Font.Charset = DEFAULT_CHARSET
+    Font.Color = clWindowText
+    Font.Height = -12
+    Font.Name = 'Segoe UI'
+    Font.Style = []
+    Categories.Strings = (
+      'Default')
+    Categories.ItemsVisibles = (
+      2)
+    Categories.Visibles = (
+      True)
+    ImageOptions.Images = dmMain.ImageList
+    PopupMenuLinks = <>
+    UseSystemFont = True
+    Left = 376
+    Top = 435
+    DockControlHeights = (
+      0
+      0
+      0
+      0)
+    object BarManagerBar2: TdxBar
+      Caption = #1044#1086#1082#1091#1084#1077#1085#1090#1099
+      CaptionButtons = <>
+      DockControl = dxBarDockControl1
+      DockedDockControl = dxBarDockControl1
+      DockedLeft = 0
+      DockedTop = 0
+      FloatLeft = 874
+      FloatTop = 212
+      FloatClientWidth = 51
+      FloatClientHeight = 84
+      ItemLinks = <
+        item
+          Visible = True
+          ItemName = 'bbAddDocument'
+        end
+        item
+          Visible = True
+          ItemName = 'bbDeleteDocument'
+        end
+        item
+          Visible = True
+          ItemName = 'bbStatic'
+        end
+        item
+          Visible = True
+          ItemName = 'bbOpenDocument'
+        end
+        item
+          Visible = True
+          ItemName = 'bbStatic'
+        end
+        item
+          Visible = True
+          ItemName = 'bbRefreshDoc'
+        end
+        item
+          Visible = True
+          ItemName = 'bbStatic'
+        end>
+      OneOnRow = True
+      Row = 0
+      UseOwnFont = False
+      Visible = True
+      WholeRow = False
+    end
+    object bbAddDocument: TdxBarButton
+      Action = MultiActionInsertDocument
+      Category = 0
+    end
+    object bbRefreshDoc: TdxBarButton
+      Action = DocumentRefresh
+      Category = 0
+    end
+    object bbStatic: TdxBarStatic
+      Caption = '   '
+      Category = 0
+      Enabled = False
+      Hint = '   '
+      Visible = ivAlways
+    end
+    object bbOpenDocument: TdxBarButton
+      Action = DocumentOpenAction
+      Category = 0
+    end
+    object bbDeleteDocument: TdxBarButton
+      Action = actDeleteDocument
+      Category = 0
+    end
   end
 end

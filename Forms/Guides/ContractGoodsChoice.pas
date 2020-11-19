@@ -80,6 +80,9 @@ type
     cxLabel2: TcxLabel;
     actChoiceFormContract: TOpenChoiceForm;
     cxTopSplitter: TcxSplitter;
+    macSetErased_list: TMultiAction;
+    macSetErased: TMultiAction;
+    bbmacSetErased: TdxBarButton;
   private
     { Private declarations }
   public

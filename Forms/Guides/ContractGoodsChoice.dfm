@@ -1169,6 +1169,29 @@ inherited ContractGoodsChoiceForm: TContractGoodsChoiceForm
       isSetErased = False
       DataSource = MasterDS_TM
     end
+    object macSetErased_list: TMultiAction
+      Category = 'DSDLib'
+      MoveParams = <>
+      ActionList = <
+        item
+          Action = dsdSetErased
+        end>
+      View = cxGridDBTableView
+      Caption = 'macSetErased_list'
+    end
+    object macSetErased: TMultiAction
+      Category = 'DSDLib'
+      MoveParams = <>
+      ActionList = <
+        item
+          Action = macSetErased_list
+        end>
+      QuestionBeforeExecute = #1059#1076#1072#1083#1080#1090#1100' '#1042#1089#1077' '#1074#1099#1073#1088#1072#1085#1085#1099#1077' '#1090#1086#1074#1072#1088#1099'?'
+      InfoAfterExecute = #1044#1072#1085#1085#1099#1077' '#1091#1076#1072#1083#1077#1085#1099
+      Caption = #1059#1076#1072#1083#1080#1090#1100' '#1074#1099#1073#1088#1072#1085#1085#1099#1077' '#1090#1086#1074#1072#1088#1099
+      Hint = #1059#1076#1072#1083#1080#1090#1100' '#1074#1099#1073#1088#1072#1085#1085#1099#1077' '#1090#1086#1074#1072#1088#1099
+      ImageIndex = 52
+    end
   end
   inherited MasterDS: TDataSource
     Left = 40
@@ -1283,6 +1306,14 @@ inherited ContractGoodsChoiceForm: TContractGoodsChoiceForm
           ItemName = 'bbUnErased'
         end
         item
+          Visible = True
+          ItemName = 'dxBarStatic'
+        end
+        item
+          Visible = True
+          ItemName = 'bbmacSetErased'
+        end
+        item
           BeginGroup = True
           Visible = True
           ItemName = 'dxBarStatic'
@@ -1362,6 +1393,10 @@ inherited ContractGoodsChoiceForm: TContractGoodsChoiceForm
     object bbSetUnErased_TM: TdxBarButton
       Action = dsdSetUnErased_TM
       Caption = #1042#1086#1089#1089#1090#1072#1085#1086#1074#1080#1090#1100' <'#1058#1086#1088#1075#1086#1074#1091#1102' '#1084#1072#1088#1082#1091'>'
+      Category = 0
+    end
+    object bbmacSetErased: TdxBarButton
+      Action = macSetErased
       Category = 0
     end
   end

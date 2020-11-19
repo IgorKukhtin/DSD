@@ -22,7 +22,8 @@ uses
   dxSkinSpringTime, dxSkinStardust, dxSkinSummer2008, dxSkinTheAsphaltWorld,
   dxSkinsDefaultPainters, dxSkinValentine, dxSkinVS2010, dxSkinWhiteprint,
   dxSkinXmas2008Blue, cxButtonEdit, dsdAddOn, Vcl.ComCtrls, dxCore, cxDateUtils,
-  cxCalendar;
+  cxCalendar, dxSkinsdxBarPainter, cxStyles, cxVGrid, cxDBVGrid,
+  cxInplaceContainer, dxBar, Vcl.ExtCtrls, dxBarExtItems, cxClasses, Document;
 
 type
   TGoodsEditForm = class(TParentForm)
@@ -99,6 +100,50 @@ type
     ceisArc: TcxCheckBox;
     GuidesTaxKind: TdsdGuides;
     edTaxKind: TcxButtonEdit;
+    ActionList1: TActionList;
+    actRefresh: TdsdDataSetRefresh;
+    FormClose: TdsdFormClose;
+    InsertUpdateGuides: TdsdInsertUpdateGuides;
+    actConditionRefresh: TdsdDataSetRefresh;
+    ContractConditionKindChoiceForm: TOpenChoiceForm;
+    InsertRecordCCK: TInsertRecord;
+    InfoMoneyChoiceForm: TOpenChoiceForm;
+    actContractCondition: TdsdUpdateDataSet;
+    BonusKindChoiceForm: TOpenChoiceForm;
+    actInsertDocument: TdsdExecStoredProc;
+    DocumentRefresh: TdsdDataSetRefresh;
+    DocumentOpenAction: TDocumentOpenAction;
+    MultiActionInsertContractCondition: TMultiAction;
+    MultiActionInsertDocument: TMultiAction;
+    spInserUpdateContract: TdsdExecStoredProc;
+    actSetErasedContractCondition: TdsdUpdateErased;
+    actSetUnErasedContractCondition: TdsdUpdateErased;
+    actDeleteDocument: TdsdExecStoredProc;
+    actGetStateKindUnSigned: TdsdExecStoredProc;
+    actGetStateKindSigned: TdsdExecStoredProc;
+    actGetStateKindPartner: TdsdExecStoredProc;
+    actGetStateKindClose: TdsdExecStoredProc;
+    actContractSendChoiceForm: TOpenChoiceForm;
+    PaidKindChoiceForm——: TOpenChoiceForm;
+    spInsertDocument: TdsdStoredProc;
+    spDocumentSelect: TdsdStoredProc;
+    DocumentDS: TDataSource;
+    DocumentCDS: TClientDataSet;
+    spDeleteDocument: TdsdStoredProc;
+    spGetDocument: TdsdStoredProc;
+    Document: TDocument;
+    UserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn;
+    BarManager: TdxBarManager;
+    BarManagerBar2: TdxBar;
+    bbAddDocument: TdxBarButton;
+    bbRefreshDoc: TdxBarButton;
+    bbStatic: TdxBarStatic;
+    bbOpenDocument: TdxBarButton;
+    bbDeleteDocument: TdxBarButton;
+    Panel: TPanel;
+    dxBarDockControl1: TdxBarDockControl;
+    cxDBVerticalGrid: TcxDBVerticalGrid;
+    colFileName: TcxDBEditorRow;
   private
     { Private declarations }
   public
