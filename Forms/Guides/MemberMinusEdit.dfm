@@ -2,7 +2,7 @@ object MemberMinusEditForm: TMemberMinusEditForm
   Left = 0
   Top = 0
   Caption = #1059#1076#1077#1088#1078#1072#1085#1080#1103' '#1087#1086' '#1089#1086#1090#1088#1091#1076#1085#1080#1082#1072#1084
-  ClientHeight = 491
+  ClientHeight = 564
   ClientWidth = 382
   Color = clBtnFace
   Font.Charset = DEFAULT_CHARSET
@@ -18,18 +18,18 @@ object MemberMinusEditForm: TMemberMinusEditForm
   TextHeight = 13
   object edName: TcxTextEdit
     Left = 43
-    Top = 416
+    Top = 460
     TabOrder = 0
     Width = 296
   end
   object cxLabel1: TcxLabel
     Left = 43
-    Top = 398
+    Top = 442
     Caption = #1055#1080#1084#1077#1095#1072#1085#1080#1077
   end
   object cxButton1: TcxButton
     Left = 71
-    Top = 452
+    Top = 496
     Width = 75
     Height = 25
     Action = dsdInsertUpdateGuides
@@ -39,7 +39,7 @@ object MemberMinusEditForm: TMemberMinusEditForm
   end
   object cxButton2: TcxButton
     Left = 221
-    Top = 452
+    Top = 496
     Width = 75
     Height = 25
     Action = dsdFormClose
@@ -66,12 +66,12 @@ object MemberMinusEditForm: TMemberMinusEditForm
   end
   object cxLabel3: TcxLabel
     Left = 43
-    Top = 222
+    Top = 266
     Caption = #1057#1091#1084#1084#1072' '#1048#1090#1086#1075#1086
   end
   object cxLabel6: TcxLabel
     Left = 43
-    Top = 266
+    Top = 310
     Caption = #1057#1091#1084#1084#1072' '#1082' '#1091#1076#1077#1088#1078#1072#1085#1080#1102' '#1077#1078#1077#1084#1077#1089#1103#1095#1085#1086
   end
   object cxLabel9: TcxLabel
@@ -93,7 +93,7 @@ object MemberMinusEditForm: TMemberMinusEditForm
   end
   object edBankAccountFrom: TcxButtonEdit
     Left = 43
-    Top = 155
+    Top = 199
     Properties.Buttons = <
       item
         Default = True
@@ -105,12 +105,12 @@ object MemberMinusEditForm: TMemberMinusEditForm
   end
   object cxLabel10: TcxLabel
     Left = 43
-    Top = 181
+    Top = 225
     Caption = 'IBAN '#1087#1086#1083#1091#1095#1072#1090#1077#1083#1103' '#1087#1083#1072#1090#1077#1078#1072
   end
   object cxLabel11: TcxLabel
     Left = 43
-    Top = 310
+    Top = 354
     Hint = #8470' '#1089#1095#1077#1090#1072' '#1087#1086#1083#1091#1095#1072#1090#1077#1083#1103' '#1087#1083#1072#1090#1077#1078#1072
     Caption = #8470' '#1089#1095#1077#1090#1072' '#1087#1086#1083#1091#1095#1072#1090#1077#1083#1103' '#1087#1083#1072#1090#1077#1078#1072
     ParentShowHint = False
@@ -118,12 +118,12 @@ object MemberMinusEditForm: TMemberMinusEditForm
   end
   object cxLabel12: TcxLabel
     Left = 43
-    Top = 138
+    Top = 182
     Caption = 'IBAN '#1087#1083#1072#1090#1077#1083#1100#1097#1080#1082#1072' '#1087#1083#1072#1090#1077#1078#1072
   end
   object edBankAccountTo: TcxButtonEdit
     Left = 43
-    Top = 197
+    Top = 241
     Properties.Buttons = <
       item
         Default = True
@@ -135,13 +135,13 @@ object MemberMinusEditForm: TMemberMinusEditForm
   end
   object edBankAccountTo_str: TcxTextEdit
     Left = 43
-    Top = 328
+    Top = 372
     TabOrder = 15
     Width = 296
   end
   object cxLabel2: TcxLabel
     Left = 43
-    Top = 355
+    Top = 399
     Hint = #1053#1072#1079#1085#1072#1095#1077#1085#1080#1077' '#1087#1083#1072#1090#1077#1078#1072
     Caption = #1053#1072#1079#1085#1072#1095#1077#1085#1080#1077' '#1087#1083#1072#1090#1077#1078#1072
     ParentShowHint = False
@@ -149,13 +149,13 @@ object MemberMinusEditForm: TMemberMinusEditForm
   end
   object edDetailPayment: TcxTextEdit
     Left = 43
-    Top = 373
+    Top = 417
     TabOrder = 17
     Width = 296
   end
   object edTotalSumm: TcxCurrencyEdit
     Left = 43
-    Top = 239
+    Top = 283
     Properties.Alignment.Horz = taRightJustify
     Properties.Alignment.Vert = taVCenter
     Properties.DecimalPlaces = 3
@@ -165,7 +165,7 @@ object MemberMinusEditForm: TMemberMinusEditForm
   end
   object edSumm: TcxCurrencyEdit
     Left = 43
-    Top = 283
+    Top = 327
     Properties.Alignment.Horz = taRightJustify
     Properties.Alignment.Vert = taVCenter
     Properties.DecimalPlaces = 3
@@ -175,7 +175,7 @@ object MemberMinusEditForm: TMemberMinusEditForm
   end
   object cxLabel5: TcxLabel
     Left = 43
-    Top = 93
+    Top = 137
     Hint = #8470' '#1089#1095#1077#1090#1072' '#1087#1086#1083#1091#1095#1072#1090#1077#1083#1103' '#1087#1083#1072#1090#1077#1078#1072
     Caption = #1054#1050#1055#1054' / '#1048#1053#1053' ('#1087#1086#1083#1091#1095'.)'
     ParentShowHint = False
@@ -183,8 +183,22 @@ object MemberMinusEditForm: TMemberMinusEditForm
   end
   object edINN_to: TcxTextEdit
     Left = 43
-    Top = 111
+    Top = 155
     TabOrder = 21
+    Width = 296
+  end
+  object cxLabel7: TcxLabel
+    Left = 43
+    Top = 93
+    Hint = #1053#1072#1079#1085#1072#1095#1077#1085#1080#1077' '#1087#1083#1072#1090#1077#1078#1072
+    Caption = #1070#1088'. '#1083#1080#1094#1086' ('#1089#1086#1082#1088#1072#1097#1077#1085#1085#1086#1077' '#1079#1085#1072#1095#1077#1085#1080#1077') '#9
+    ParentShowHint = False
+    ShowHint = True
+  end
+  object edToShort: TcxTextEdit
+    Left = 43
+    Top = 111
+    TabOrder = 23
     Width = 296
   end
   object ActionList: TActionList
@@ -261,6 +275,14 @@ object MemberMinusEditForm: TMemberMinusEditForm
         Name = 'inINN_to'
         Value = Null
         Component = edINN_to
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inToShort'
+        Value = Null
+        Component = edToShort
         DataType = ftString
         ParamType = ptInput
         MultiSelectSeparator = ','
@@ -410,6 +432,13 @@ object MemberMinusEditForm: TMemberMinusEditForm
         Value = ''
         Component = GuidesTo
         ComponentItem = 'TextValue'
+        DataType = ftString
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'ToShort'
+        Value = Null
+        Component = edToShort
         DataType = ftString
         MultiSelectSeparator = ','
       end
@@ -594,7 +623,7 @@ object MemberMinusEditForm: TMemberMinusEditForm
         MultiSelectSeparator = ','
       end>
     Left = 179
-    Top = 153
+    Top = 197
   end
   object GuidesBankAccountTo: TdsdGuides
     KeyField = 'Id'
@@ -623,6 +652,6 @@ object MemberMinusEditForm: TMemberMinusEditForm
         MultiSelectSeparator = ','
       end>
     Left = 171
-    Top = 203
+    Top = 247
   end
 end

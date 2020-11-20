@@ -2,7 +2,8 @@
 
 DROP FUNCTION IF EXISTS gpInsertUpdate_Object_MemberMinus(Integer, TVarChar, TVarChar, TVarChar, Integer, Integer, Integer, Integer, TFloat, TFloat, TVarChar);
 DROP FUNCTION IF EXISTS gpInsertUpdate_Object_MemberMinus(Integer, TVarChar, TVarChar, TVarChar, TVarChar, Integer, Integer, Integer, Integer, TFloat, TFloat, TVarChar);
-DROP FUNCTION IF EXISTS gpInsertUpdate_Object_MemberMinus(Integer, TVarChar, TVarChar, TVarChar, TVarChar, Integer, Integer, Integer, Integer, Integer, TFloat, TFloat, TVarChar);
+--DROP FUNCTION IF EXISTS gpInsertUpdate_Object_MemberMinus(Integer, TVarChar, TVarChar, TVarChar, TVarChar, Integer, Integer, Integer, Integer, Integer, TFloat, TFloat, TVarChar);
+DROP FUNCTION IF EXISTS gpInsertUpdate_Object_MemberMinus(Integer, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar, Integer, Integer, Integer, Integer, Integer, TFloat, TFloat, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpInsertUpdate_Object_MemberMinus(
  INOUT ioId                    Integer   ,    -- ключ объекта < >
@@ -10,6 +11,7 @@ CREATE OR REPLACE FUNCTION gpInsertUpdate_Object_MemberMinus(
     IN inBankAccountTo         TVarChar  ,    -- № счета получателя платежа
     IN inDetailPayment         TVarChar  ,    -- Назначение платежа
     IN inINN_to                TVarChar  ,    -- ОКПО/ИНН получателя
+    IN inToShort               TVarChar  ,    -- Юр. лицо (сокращенное значение) 	
     IN inFromId                Integer   ,    -- Физические лица
     IN inToId                  Integer   ,    -- Физические лица(сторонние) / Юридические лица
  INOUT ioBankAccountFromId     Integer   ,    -- IBAN плательщика платежа
@@ -18,6 +20,7 @@ CREATE OR REPLACE FUNCTION gpInsertUpdate_Object_MemberMinus(
    OUT outBankAccountFromName  TVarChar  ,    --
     IN inTotalSumm             TFloat    ,     -- Сумма Итого
     IN inSumm                  TFloat    ,     -- Сумма к удержанию ежемесячно
+   OUT outisToShort            Boolean   ,     -- > 36 символов
     IN inSession               TVarChar        -- сессия пользователя
 )
   RETURNS Record AS
@@ -44,7 +47,9 @@ BEGIN
    PERFORM lpInsertUpdate_ObjectString(zc_ObjectString_MemberMinus_DetailPayment(), ioId, inDetailPayment);
    -- сохранили свойство <>
    PERFORM lpInsertUpdate_ObjectString(zc_ObjectString_MemberMinus_BankAccountTo(), ioId, inBankAccountTo);
-
+   -- сохранили свойство <>
+   PERFORM lpInsertUpdate_ObjectString(zc_ObjectString_MemberMinus_ToShort(), ioId, inToShort);
+   
    -- сохранили свойство <>
    PERFORM lpInsertUpdate_ObjectLink(zc_ObjectLink_MemberMinus_From(), ioId, inFromId);
    -- сохранили свойство <>
@@ -89,7 +94,9 @@ BEGIN
    END IF;
    
    outBankAccountFromName:= (SELECT Object.ValueData FROM Object WHERE Object.Id = ioBankAccountFromId);
-
+   outisToShort := (SELECT CASE WHEN LENGTH (Object.ValueData) > 36 THEN TRUE ELSE FALSE END :: Boolean
+                    FROM Object
+                    WHERE Object.Id = inToId);
    -- сохранили протокол
    PERFORM lpInsert_ObjectProtocol (ioId, vbUserId);
 

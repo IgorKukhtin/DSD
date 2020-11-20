@@ -80,6 +80,8 @@ type
     edBankMain: TcxButtonEdit;
     GuidesBankMain: TdsdGuides;
     bbbankMain: TdxBarControlContainerItem;
+    ToShort: TcxGridDBColumn;
+    isToShort: TcxGridDBColumn;
   private
     { Private declarations }
   public

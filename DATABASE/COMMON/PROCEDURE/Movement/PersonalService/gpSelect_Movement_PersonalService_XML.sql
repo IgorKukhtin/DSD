@@ -81,7 +81,7 @@ BEGIN
      INSERT INTO tmpMemberMinus (FromId, ToId, ToName, Summ, Summ_all, BankAccountFromId, BankAccountName_from, BankAccountToId, BankAccountName_to, BankAccountTo, DetailPayment)
         SELECT tmp.FromId
              , tmp.ToId
-             , tmp.ToName
+             , CASE WHEN LENGTH (tmp.ToName) > 36 THEN tmp.ToShort ELSE tmp.ToName END ::TVarChar AS ToName
              , tmp.Summ
              , SUM (tmp.Summ) OVER (PARTITION BY tmp.FromId) AS Summ_all
                -- IBAN плательщика

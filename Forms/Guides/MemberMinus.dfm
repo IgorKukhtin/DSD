@@ -129,6 +129,23 @@ object MemberMinusForm: TMemberMinusForm
         HeaderHint = #1060#1080#1079#1080#1095#1077#1089#1082#1080#1077' '#1083#1080#1094#1072'('#1089#1090#1086#1088#1086#1085#1085#1080#1077') / '#1070#1088#1080#1076#1080#1095#1077#1089#1082#1080#1077' '#1083#1080#1094#1072
         Width = 172
       end
+      object ToShort: TcxGridDBColumn
+        Caption = #1070#1088'. '#1083#1080#1094#1086' ('#1089#1086#1082#1088'.)'
+        DataBinding.FieldName = 'ToShort'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        HeaderHint = #1070#1088'. '#1083#1080#1094#1086' ('#1089#1086#1082#1088#1072#1097#1077#1085#1085#1086#1077' '#1079#1085#1072#1095#1077#1085#1080#1077')'
+        Width = 138
+      end
+      object isToShort: TcxGridDBColumn
+        Caption = '> 36 '#1089#1080#1084#1074'.'
+        DataBinding.FieldName = 'isToShort'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        HeaderHint = #1053#1072#1080#1084#1077#1085#1086#1074#1072#1085#1080#1077' '#1102#1088'.'#1083#1080#1094#1072' >36 '#1089#1080#1084#1074#1086#1083#1086#1074
+        Options.Editing = False
+        Width = 82
+      end
       object INN_to: TcxGridDBColumn
         Caption = #1054#1050#1055#1054' / '#1048#1053#1053' ('#1087#1086#1083#1091#1095'.)'
         DataBinding.FieldName = 'INN_to'
@@ -233,7 +250,7 @@ object MemberMinusForm: TMemberMinusForm
         Kind = bkEllipsis
       end>
     Properties.ReadOnly = True
-    TabOrder = 4
+    TabOrder = 3
     Text = #1056'/'#1089#1095#1077#1090' '#1087#1083#1072#1090#1077#1083#1100#1097#1080#1082#1072
     Width = 189
   end
@@ -1002,6 +1019,15 @@ object MemberMinusForm: TMemberMinusForm
         MultiSelectSeparator = ','
       end
       item
+        Name = 'inToShort'
+        Value = Null
+        Component = ClientDataSet
+        ComponentItem = 'ToShort'
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
         Name = 'inFromId'
         Value = ''
         Component = ClientDataSet
@@ -1065,6 +1091,14 @@ object MemberMinusForm: TMemberMinusForm
         ComponentItem = 'Summ'
         DataType = ftFloat
         ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'outisToShort'
+        Value = Null
+        Component = ClientDataSet
+        ComponentItem = 'isToShort'
+        DataType = ftBoolean
         MultiSelectSeparator = ','
       end>
     PackSize = 1

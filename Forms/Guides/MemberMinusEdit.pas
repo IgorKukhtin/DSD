@@ -59,6 +59,8 @@ type
     edSumm: TcxCurrencyEdit;
     cxLabel5: TcxLabel;
     edINN_to: TcxTextEdit;
+    cxLabel7: TcxLabel;
+    edToShort: TcxTextEdit;
   private
     { Private declarations }
   public
