@@ -30,7 +30,12 @@ object PriceListItemForm: TPriceListItemForm
       DataController.DataSource = DataSource
       DataController.Filter.Options = [fcoCaseInsensitive]
       DataController.Summary.DefaultGroupSummaryItems = <>
-      DataController.Summary.FooterSummaryItems = <>
+      DataController.Summary.FooterSummaryItems = <
+        item
+          Format = 'C'#1090#1088#1086#1082': ,0'
+          Kind = skCount
+          Column = GoodsName
+        end>
       DataController.Summary.SummaryGroups = <>
       Images = dmMain.SortImageList
       OptionsCustomize.ColumnHiding = True
@@ -38,7 +43,7 @@ object PriceListItemForm: TPriceListItemForm
       OptionsData.Deleting = False
       OptionsData.DeletingConfirmation = False
       OptionsData.Inserting = False
-      OptionsView.ColumnAutoWidth = True
+      OptionsView.Footer = True
       OptionsView.GroupByBox = False
       OptionsView.HeaderHeight = 40
       OptionsView.Indicator = True
@@ -65,7 +70,7 @@ object PriceListItemForm: TPriceListItemForm
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         Options.Editing = False
-        Width = 147
+        Width = 155
       end
       object GoodsKindName: TcxGridDBColumn
         Caption = #1042#1080#1076
@@ -1050,6 +1055,9 @@ object PriceListItemForm: TPriceListItemForm
     ComponentList = <
       item
         Component = PriceListGuides
+      end
+      item
+        Component = edShowDate
       end>
     Left = 536
     Top = 168

@@ -49,7 +49,7 @@ type
     procedure LoadProdOptItemsFormTest;
     procedure LoadProdOptPatternFormTest;
     procedure LoadProductFormTest;
-        procedure LoadPriceListFormTest;
+    procedure LoadPriceListFormTest;
     procedure LoadUnitFormTest;
     procedure FormTest;
   end;
