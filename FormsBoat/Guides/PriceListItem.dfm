@@ -25,6 +25,7 @@ object PriceListItemForm: TPriceListItemForm
     TabOrder = 0
     LookAndFeel.NativeStyle = True
     LookAndFeel.SkinName = 'UserSkin'
+    ExplicitTop = 62
     object cxGridDBTableView: TcxGridDBTableView
       Navigator.Buttons.CustomButtons = <>
       DataController.DataSource = DataSource
@@ -130,6 +131,7 @@ object PriceListItemForm: TPriceListItemForm
         Visible = False
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
+        Options.Editing = False
         VisibleForCustomization = False
         Width = 70
       end
@@ -138,10 +140,9 @@ object PriceListItemForm: TPriceListItemForm
         DataBinding.FieldName = 'PriceNoVAT'
         PropertiesClassName = 'TcxCurrencyEditProperties'
         Properties.DecimalPlaces = 4
-        Properties.DisplayFormat = ',0.00##;-,0.00##'
+        Properties.DisplayFormat = ',0.00##;-,0.00##; ;'
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
-        Options.Editing = False
         Width = 69
       end
       object PriceWVAT: TcxGridDBColumn
@@ -149,7 +150,7 @@ object PriceListItemForm: TPriceListItemForm
         DataBinding.FieldName = 'PriceWVAT'
         PropertiesClassName = 'TcxCurrencyEditProperties'
         Properties.DecimalPlaces = 4
-        Properties.DisplayFormat = ',0.00##;-,0.00##'
+        Properties.DisplayFormat = ',0.00##;-,0.00##; ;'
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         Options.Editing = False
@@ -164,6 +165,7 @@ object PriceListItemForm: TPriceListItemForm
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         HeaderHint = #1062#1077#1085#1072' '#1079#1072#1082#1091#1087#1082#1080' '#1073#1077#1079' '#1053#1044#1057
+        Options.Editing = False
         Width = 90
       end
       object EmpfPrice: TcxGridDBColumn
@@ -175,6 +177,7 @@ object PriceListItemForm: TPriceListItemForm
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         HeaderHint = #1062#1077#1085#1072' '#1088#1077#1082#1086#1084#1077#1085#1076#1091#1077#1084#1072#1103' '#1073#1077#1079' '#1053#1044#1057
+        Options.Editing = False
         Width = 87
       end
       object isErased: TcxGridDBColumn
@@ -188,6 +191,7 @@ object PriceListItemForm: TPriceListItemForm
       object ObjectId: TcxGridDBColumn
         DataBinding.FieldName = 'ObjectId'
         Visible = False
+        Options.Editing = False
         VisibleForCustomization = False
         Width = 20
       end
@@ -979,7 +983,7 @@ object PriceListItemForm: TPriceListItemForm
         Name = 'inValue'
         Value = Null
         Component = ClientDataSet
-        ComponentItem = 'ValuePrice'
+        ComponentItem = 'PriceNoVAT'
         DataType = ftFloat
         ParamType = ptInput
         MultiSelectSeparator = ','

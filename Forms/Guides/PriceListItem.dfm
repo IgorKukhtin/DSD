@@ -936,6 +936,7 @@ object PriceListItemForm: TPriceListItemForm
         Column = ValuePrice
       end>
     SummaryItemList = <>
+    PropertiesCellList = <>
     Left = 192
     Top = 256
   end
