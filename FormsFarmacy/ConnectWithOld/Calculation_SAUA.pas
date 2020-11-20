@@ -25,7 +25,6 @@ type
     cxPropertiesStore: TcxPropertiesStore;
     ActionList: TActionList;
     actRefresh: TdsdDataSetRefresh;
-    actExportExel: TAction;
     dxBarManager: TdxBarManager;
     dxBarManagerBar1: TdxBar;
     bbRefresh: TdxBarButton;
@@ -53,22 +52,31 @@ type
     cxGrid: TcxGrid;
     cxGridDBTableView: TcxGridDBTableView;
     cxGridDBBandedTableView1: TcxGridDBBandedTableView;
-    UnitName_Master: TcxGridDBBandedColumn;
-    UnitName_Slave: TcxGridDBBandedColumn;
+    UnitName: TcxGridDBBandedColumn;
     GoodsCode: TcxGridDBBandedColumn;
     GoodsName: TcxGridDBBandedColumn;
-    Amount: TcxGridDBBandedColumn;
-    PercentSAUA: TcxGridDBBandedColumn;
-    MCS: TcxGridDBBandedColumn;
-    GoodsCategory: TcxGridDBBandedColumn;
-    AmountSAUA: TcxGridDBBandedColumn;
+    Remains: TcxGridDBBandedColumn;
+    Need: TcxGridDBBandedColumn;
+    Assortment: TcxGridDBBandedColumn;
+    AmountCheck: TcxGridDBBandedColumn;
+    CountUnit: TcxGridDBBandedColumn;
     cxGridLevel: TcxGridLevel;
     GetUnitsList: TdsdStoredProc;
     UnitsCDS: TClientDataSet;
     ceThreshold: TcxCurrencyEdit;
     cxLabel5: TcxLabel;
+    actCalculation: TAction;
+    dsResult: TDataSource;
+    cdsResult: TClientDataSet;
+    spCalculation: TdsdStoredProc;
+    actGridToExcel: TdsdGridToExcel;
+    ceDaysStock: TcxCurrencyEdit;
+    cxLabel6: TcxLabel;
+    cePercentPharmacies: TcxCurrencyEdit;
+    cxLabel7: TcxLabel;
     procedure ParentFormCreate(Sender: TObject);
     procedure ParentFormClose(Sender: TObject; var Action: TCloseAction);
+    procedure actCalculationExecute(Sender: TObject);
   private
     { Private declarations }
   public
@@ -78,6 +86,49 @@ type
 implementation
 
 {$R *.dfm}
+
+procedure TCalculation_SAUAForm.actCalculationExecute(Sender: TObject);
+  var i, j : integer; cRecipient, cAssortment : string;
+begin
+
+   cRecipient := ''; cAssortment := '';  j := 0;
+   for i := 0 to CheckListBoxRecipient.Items.Count - 1 do
+    Begin
+      Application.ProcessMessages;
+      if CheckListBoxRecipient.Checked[i] then
+      begin
+        if cRecipient <> '' then cRecipient := cRecipient + ',';
+        cRecipient := cRecipient + IntToStr(Integer(CheckListBoxRecipient.Items.Objects[I]));
+      end;
+    End;
+
+   for i := 0 to CheckListBoxAssortment.Items.Count - 1 do
+    Begin
+      Application.ProcessMessages;
+      if CheckListBoxAssortment.Checked[i] then
+      begin
+        if cAssortment <> '' then cAssortment := cAssortment + ',';
+        cAssortment := cAssortment + IntToStr(Integer(CheckListBoxAssortment.Items.Objects[I]));
+        Inc(J);
+      end;
+    End;
+
+   if cRecipient = '' then
+   begin
+     ShowMessage('Не выбраны Аптеки получатели.');
+     Exit;
+   end;
+
+   if j <= 2 then
+   begin
+     ShowMessage('Аптек ассортимента должно быть более 2.');
+     Exit;
+   end;
+
+   spCalculation.ParamByName('inRecipientList').Value := cRecipient;
+   spCalculation.ParamByName('inAssortmentList').Value := cAssortment;
+   spCalculation.Execute;
+end;
 
 procedure TCalculation_SAUAForm.ParentFormClose(Sender: TObject;
   var Action: TCloseAction);
@@ -95,7 +146,8 @@ begin
   while not UnitsCDS.Eof do
   begin
     CheckListBoxRecipient.Items.AddObject(UnitsCDS.FieldByName('UnitName').asString,TObject(UnitsCDS.FieldByName('Id').AsInteger));
-    CheckListBoxAssortment.Items.AddObject(UnitsCDS.FieldByName('UnitName').asString,TObject(UnitsCDS.FieldByName('Id').AsInteger));
+    if UnitsCDS.FieldByName('UnitCalculationId').AsInteger <> 0 then
+      CheckListBoxAssortment.Items.AddObject(UnitsCDS.FieldByName('UnitName').asString,TObject(UnitsCDS.FieldByName('Id').AsInteger));
     UnitsCDS.Next;
   end;
 

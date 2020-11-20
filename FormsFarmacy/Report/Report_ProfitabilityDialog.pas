@@ -42,6 +42,7 @@ type
     spGet_UserUnit: TdsdStoredProc;
     actRefreshStart: TdsdDataSetRefresh;
     GuidesRetail: TdsdGuides;
+    cbNoStaticSalaryAmount: TcxCheckBox;
   private
     { Private declarations }
   public

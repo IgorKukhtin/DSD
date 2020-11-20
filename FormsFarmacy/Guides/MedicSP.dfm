@@ -52,14 +52,14 @@ object MedicSPForm: TMedicSPForm
         HeaderAlignmentHorz = taRightJustify
         HeaderAlignmentVert = vaCenter
         Options.Editing = False
-        Width = 129
+        Width = 58
       end
       object Name: TcxGridDBColumn
         Caption = #1060#1048#1054' '#1074#1088#1072#1095#1072
         DataBinding.FieldName = 'Name'
         HeaderAlignmentVert = vaCenter
         Options.Editing = False
-        Width = 233
+        Width = 189
       end
       object isErased: TcxGridDBColumn
         Caption = #1059#1076#1072#1083#1077#1085
@@ -76,7 +76,15 @@ object MedicSPForm: TMedicSPForm
         DataBinding.FieldName = 'PartnerMedicalName'
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
-        Width = 242
+        Width = 270
+      end
+      object AmbulantClinicSPName: TcxGridDBColumn
+        Caption = #1040#1084#1073#1091#1083#1072#1090#1086#1088#1080#1103
+        DataBinding.FieldName = 'AmbulantClinicSPName'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Options.Editing = False
+        Width = 87
       end
     end
     object cxGridLevel: TcxGridLevel
@@ -570,6 +578,7 @@ object MedicSPForm: TMedicSPForm
     ColumnAddOnList = <>
     ColumnEnterList = <>
     SummaryItemList = <>
+    PropertiesCellList = <>
     Left = 48
     Top = 216
   end

@@ -58,6 +58,7 @@ type
     RemainsSum: TcxGridDBBandedColumn;
     Profit: TcxGridDBBandedColumn;
     SummChange: TcxGridDBBandedColumn;
+    cbNoStaticSalaryAmount: TcxCheckBox;
   private
     { Private declarations }
   public

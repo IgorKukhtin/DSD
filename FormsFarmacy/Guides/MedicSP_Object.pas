@@ -87,6 +87,7 @@ type
     cxLabel3: TcxLabel;
     edSPKind: TcxButtonEdit;
     GuidesSPKind: TdsdGuides;
+    AmbulantClinicSPName: TcxGridDBColumn;
   private
     { Private declarations }
   public

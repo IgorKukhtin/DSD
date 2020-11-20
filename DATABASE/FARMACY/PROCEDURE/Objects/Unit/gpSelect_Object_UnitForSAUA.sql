@@ -5,7 +5,7 @@ DROP FUNCTION IF EXISTS gpSelect_Object_UnitForSAUA (TVarChar);
 CREATE OR REPLACE FUNCTION gpSelect_Object_UnitForSAUA(
     IN inSession          TVarChar       -- сессия пользователя
 )
-RETURNS TABLE (Id Integer, UnitName TVarChar)
+RETURNS TABLE (Id Integer, UnitName TVarChar, UnitCalculationId Integer)
 AS
 $BODY$
 BEGIN
@@ -13,8 +13,8 @@ BEGIN
     -- проверка прав пользователя на вызов процедуры
     -- PERFORM lpCheckRight(inSession, zc_Enum_Process_Unit());
 
-    RETURN QUERY 
-     
+    RETURN QUERY
+
         WITH tmpUnit AS (SELECT DISTINCT MovementLinkObject_Unit.ObjectId           AS UnitId
                          FROM Movement
 
@@ -25,12 +25,13 @@ BEGIN
                            AND Movement.OperDate >= CURRENT_DATE - INTERVAL '7 DAY')
 
 
-        SELECT Object_Unit.Id          AS Id  
-             , (COALESCE (Object_Juridical.ValueData, '') ||'  **  '|| 
+        SELECT Object_Unit.Id          AS Id
+             , (COALESCE (Object_Juridical.ValueData, '') ||'  **  '||
                 COALESCE (Object_Unit.ValueData, '')) :: TVarChar AS Name
+             , tmpUnit.UnitId
         FROM Object AS Object_Unit
-        
-             INNER JOIN tmpUnit ON tmpUnit.UnitId = Object_Unit.Id 
+
+             LEFT JOIN tmpUnit ON tmpUnit.UnitId = Object_Unit.Id
 
              LEFT JOIN ObjectLink AS ObjectLink_Unit_Juridical
                                   ON ObjectLink_Unit_Juridical.ObjectId = Object_Unit.Id
@@ -41,8 +42,14 @@ BEGIN
                                   ON ObjectLink_Juridical_Retail.ObjectId = Object_Juridical.Id
                                  AND ObjectLink_Juridical_Retail.DescId = zc_ObjectLink_Juridical_Retail()
 
+             LEFT JOIN ObjectString AS ObjectString_Unit_Address
+                                    ON ObjectString_Unit_Address.ObjectId = Object_Unit.Id
+                                   AND ObjectString_Unit_Address.DescId = zc_ObjectString_Unit_Address()
+
         WHERE Object_Unit.DescId = zc_Object_Unit()
+          AND Object_Unit.isErased = False
           AND COALESCE (ObjectLink_Juridical_Retail.ChildObjectId, 0) = 4
+          AND COALESCE (ObjectString_Unit_Address.ValueData, '') <> ''
 
         ORDER BY Object_Juridical.ValueData , Object_Unit.ValueData
        ;
@@ -58,5 +65,5 @@ $BODY$
 */
 
 -- тест
--- 
+--
 SELECT * FROM gpSelect_Object_UnitForSAUA (zfCalc_UserAdmin());

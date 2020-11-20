@@ -1865,9 +1865,15 @@ CREATE OR REPLACE FUNCTION zc_ObjectFloat_Goods_PercentWages() RETURNS Integer A
 INSERT INTO ObjectFloatDesc (DescId, Code, ItemName)
   SELECT zc_Object_Goods(), 'zc_ObjectFloat_Goods_PercentWages', '% от продажи в зарплату' WHERE NOT EXISTS (SELECT * FROM ObjectFloatDesc WHERE Code = 'zc_ObjectFloat_Goods_PercentWages');  
 
+CREATE OR REPLACE FUNCTION zc_ObjectFloat_Juridical_CodeOrangeCard() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM ObjectFloatDesc WHERE Code = 'zc_ObjectFloat_Juridical_CodeOrangeCard'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
+INSERT INTO ObjectFloatDesc (DescId, Code, ItemName)
+  SELECT zc_Object_Juridical(), 'zc_ObjectFloat_Juridical_CodeOrangeCard', 'Код в системе "Оранж Кард"' WHERE NOT EXISTS (SELECT * FROM ObjectFloatDesc WHERE Code = 'zc_ObjectFloat_Juridical_CodeOrangeCard');
+
+
 /*-------------------------------------------------------------------------------
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.   Воробкало А.А.   Шаблий О.В.
+ 20.11.20                                                                                      * zc_ObjectFloat_Juridical_CodeOrangeCard
  17.11.20         * zc_ObjectFloat_Asset_KW
  29.10.20                                                                                      * zc_ObjectFloat_Goods_SummaWages, zc_ObjectFloat_Goods_PercentWages
  26.10.20                                                                                      * zc_ObjectFloat_Unit_PercentSAUA

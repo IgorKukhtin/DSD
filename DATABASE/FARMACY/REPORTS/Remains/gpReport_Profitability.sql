@@ -1,12 +1,13 @@
 -- Function:  gpReport_Profitability()
 
-DROP FUNCTION IF EXISTS gpReport_Profitability (TDateTime, TDateTime, Integer, TVarChar);
+DROP FUNCTION IF EXISTS gpReport_Profitability (TDateTime, TDateTime, Integer, Boolean, TVarChar);
 
 CREATE OR REPLACE FUNCTION  gpReport_Profitability(
-    IN inDateStart         TDateTime,  -- Дата начала
-    IN inDateFinal         TDateTime,  -- Двта конца
-    IN inUnitID            Integer,    -- Подразделение
-    IN inSession           TVarChar    -- сессия пользователя
+    IN inDateStart              TDateTime,  -- Дата начала
+    IN inDateFinal              TDateTime,  -- Двта конца
+    IN inUnitID                 Integer,    -- Подразделение
+    IN inisNoStaticSalaryAmount Boolean,    -- Без статической суммы ЗП
+    IN inSession                TVarChar    -- сессия пользователя
 )
 RETURNS TABLE (UnitID          Integer
              , UnitCode        Integer   --
@@ -41,12 +42,12 @@ BEGIN
 
       -- Ограничение на просмотр товарного справочника
       vbObjectId := lpGet_DefaultValue('zc_Object_Retail', vbUserId);
-    
-    IF vbUserId <> 948223 AND inSession <> '3'     
+
+    IF vbUserId <> 948223 AND inSession <> '3'
     THEN
         RAISE EXCEPTION 'Ошибка. Запуск отчета разрешен только директору.';
     END IF;
-      
+
 
      vbDateWStart := DATE_TRUNC ('month', inDateStart);
      vbDateWEnd   := DATE_TRUNC ('month', inDateFinal);
@@ -154,6 +155,40 @@ BEGIN
                                   AND AnalysisContainerItem.OperDate < inDateFinal
                                   AND (inUnitID = 0 OR inUnitID = AnalysisContainerItem.UnitID)
                                 GROUP BY AnalysisContainerItem.UnitID)
+             -- Статические суммы ЗП за реализацию единицы товара
+           , tmpGoodsSummaWages AS (SELECT MovementItemContainer.WhereObjectId_analyzer                                                 AS UnitId
+                                         , SUM(ROUND(-1 * MovementItemContainer.Amount * MovementItemContainer.Price * 0.03 +
+                                                     MovementItemContainer.Amount * Object_Goods_Retail.SummaWages, 2))                 AS Summa
+                                    FROM MovementItemContainer
+
+                                          LEFT JOIN Object_Goods_Retail ON Object_Goods_Retail.ID = MovementItemContainer.ObjectId_analyzer
+
+                                     WHERE MovementItemContainer.OperDate >= inDateStart
+                                       AND MovementItemContainer.MovementDescId = zc_Movement_Check()
+                                       AND MovementItemContainer.MovementDescId = zc_Movement_Check()
+                                       AND MovementItemContainer.DescId = zc_MIContainer_Count()
+                                       AND MovementItemContainer.ObjectId_analyzer IN (SELECT Object_Goods_Retail.ID
+                                                                                       FROM Object_Goods_Retail
+                                                                                       WHERE COALESCE (Object_Goods_Retail.SummaWages, 0) <> 0)
+                                       AND inisNoStaticSalaryAmount = TRUE
+                                     GROUP BY MovementItemContainer.WhereObjectId_analyzer)
+             -- Статические суммы ЗП % от продажи
+           , tmpGoodsPercentWages AS (SELECT MovementItemContainer.WhereObjectId_analyzer                                              AS UnitId
+                                           , SUM(ROUND(-1 * MovementItemContainer.Amount * MovementItemContainer.Price * 0.03 +
+                                                       MovementItemContainer.Amount * MovementItemContainer.Price *
+                                                       Object_Goods_Retail.PercentWages / 100.0, 2))                                   AS Summa
+                                      FROM MovementItemContainer
+
+                                           LEFT JOIN Object_Goods_Retail ON Object_Goods_Retail.ID = MovementItemContainer.ObjectId_analyzer
+
+                                      WHERE MovementItemContainer.OperDate >= inDateStart
+                                        AND MovementItemContainer.MovementDescId = zc_Movement_Check()
+                                        AND MovementItemContainer.DescId = zc_MIContainer_Count()
+                                        AND MovementItemContainer.ObjectId_analyzer IN (SELECT Object_Goods_Retail.ID
+                                                                                        FROM Object_Goods_Retail
+                                                                                        WHERE COALESCE (Object_Goods_Retail.PercentWages, 0) <> 0)
+                                        AND inisNoStaticSalaryAmount = TRUE
+                                      GROUP BY MovementItemContainer.WhereObjectId_analyzer)
              -- Зврплата за период
            , tmpWages AS (SELECT Object_Unit.ID                     AS UnitID
                                , SUM(MI_Child.Amount) AS Amount
@@ -269,13 +304,13 @@ BEGIN
 
                                 INNER JOIN MovementLinkObject AS MovementLinkObject_SPKind
                                                               ON MovementLinkObject_SPKind.MovementID = Movement.ID
-                                                             AND MovementLinkObject_SPKind.DescId = zc_MovementLinkObject_SPKind()      
+                                                             AND MovementLinkObject_SPKind.DescId = zc_MovementLinkObject_SPKind()
                                                              AND MovementLinkObject_SPKind.ObjectId in (zc_Enum_SPKind_1303(), zc_Enum_SPKind_SP())
 
                                 INNER JOIN MovementLinkObject AS MovementLinkObject_Unit
                                                               ON MovementLinkObject_Unit.MovementID = Movement.ID
-                                                             AND MovementLinkObject_Unit.DescId = zc_MovementLinkObject_Unit()      
-                                                              
+                                                             AND MovementLinkObject_Unit.DescId = zc_MovementLinkObject_Unit()
+
                                 LEFT JOIN MovementFloat AS MovementFloat_TotalSummChangePercent
                                                          ON MovementFloat_TotalSummChangePercent.MovementID = Movement.ID
                                                         AND MovementFloat_TotalSummChangePercent.DescId = zc_MovementFloat_TotalSummChangePercent()
@@ -288,10 +323,10 @@ BEGIN
                                                         ON MovementFloat_TotalSummSale.MovementId = Movement.Id
                                                        AND MovementFloat_TotalSummSale.DescId = zc_MovementFloat_TotalSummSale()
 
-                           WHERE Movement.OperDate >= inDateStart                            
-                             AND Movement.OperDate < inDateFinal  
-                             AND Movement.DescId in (zc_Movement_Check(), zc_Movement_Sale()) 
-                             AND Movement.StatusId = zc_Enum_Status_Complete()  
+                           WHERE Movement.OperDate >= inDateStart
+                             AND Movement.OperDate < inDateFinal
+                             AND Movement.DescId in (zc_Movement_Check(), zc_Movement_Sale())
+                             AND Movement.StatusId = zc_Enum_Status_Complete()
                            GROUP BY  MovementLinkObject_Unit.ObjectId )
 
         SELECT tmpUnit.UnitId
@@ -305,11 +340,12 @@ BEGIN
              , ROUND(tmpRemains.Saldo, 2)::TFloat
              , ROUND(tmpRemains.SaldoSum, 2)::TFloat
 
-             , ROUND(tmpWages.Amount, 2)::TFloat
+             , ROUND(tmpWages.Amount + COALESCE (tmpGoodsSummaWages.Summa, 0) + COALESCE (tmpGoodsPercentWages.Summa, 0), 2)::TFloat
              , ROUND(COALESCE(tmpAdditionalExpenses.Amount, 0)::TFloat + COALESCE(tmpWagesRest.Amount, 0)::TFloat, 2)::TFloat
-             
-             , ROUND(COALESCE(tmpRealization.AmountSum, 0)::TFloat + COALESCE(tmpSPKind.SummChange, 0)::TFloat - COALESCE(tmpRealization.AmountSumJuridical, 0)::TFloat - 
-                COALESCE(tmpWages.Amount, 0)::TFloat - COALESCE(tmpAdditionalExpenses.Amount, 0)::TFloat - COALESCE(tmpWagesRest.Amount, 0)::TFloat, 2) ::TFloat
+
+             , ROUND(COALESCE(tmpRealization.AmountSum, 0)::TFloat + COALESCE(tmpSPKind.SummChange, 0)::TFloat - COALESCE(tmpRealization.AmountSumJuridical, 0)::TFloat -
+                COALESCE(tmpWages.Amount, 0)::TFloat - COALESCE (tmpGoodsSummaWages.Summa, 0) - COALESCE (tmpGoodsPercentWages.Summa, 0) - 
+                COALESCE(tmpAdditionalExpenses.Amount, 0)::TFloat - COALESCE(tmpWagesRest.Amount, 0)::TFloat, 2) ::TFloat
         FROM tmpUnit
 
              LEFT JOIN Object AS Object_Unit ON Object_Unit.Id = tmpUnit.UnitId
@@ -319,10 +355,12 @@ BEGIN
              LEFT JOIN tmpRemains ON tmpRemains.UnitID = Object_Unit.Id
 
              LEFT JOIN tmpWages ON tmpWages.UnitID = Object_Unit.Id
+             LEFT JOIN tmpGoodsSummaWages ON tmpGoodsSummaWages.UnitID = Object_Unit.Id
+             LEFT JOIN tmpGoodsPercentWages ON tmpGoodsPercentWages.UnitID = Object_Unit.Id
              LEFT JOIN tmpWagesRest ON tmpWagesRest.UnitID = Object_Unit.Id
 
              LEFT JOIN tmpAdditionalExpenses ON tmpAdditionalExpenses.UnitID = Object_Unit.Id
-             
+
              LEFT JOIN tmpSPKind ON tmpSPKind.UnitID = Object_Unit.Id
         WHERE tmpRealization.AmountSumJuridical <> 0
            OR tmpRealization.AmountSum <> 0
@@ -342,5 +380,5 @@ $BODY$
 */
 
 -- тест
--- SELECT * FROM gpReport_Profitability (inDateStart:= '01.08.2019'::TDateTime, inDateFinal:= '31.08.2019'::TDateTime, inUnitID := 11300059, inSession:= zfCalc_UserAdmin())
-
+--
+select * from gpReport_Profitability(inDateStart := ('01.04.2020')::TDateTime , inDateFinal := ('30.06.2020')::TDateTime , inUnitId := 3457773 , inisNoStaticSalaryAmount := False,  inSession := '3');

@@ -403,6 +403,14 @@ inherited Report_ProfitabilityForm: TReport_ProfitabilityForm
       Text = '<'#1042#1099#1073#1077#1088#1080#1090#1077' '#1087#1086#1076#1088#1072#1079#1076#1077#1083#1077#1085#1080#1077'>'
       Width = 244
     end
+    object cbNoStaticSalaryAmount: TcxCheckBox
+      Left = 583
+      Top = 5
+      Hint = #1076#1083#1103' '#1040#1089#1089#1086#1088#1090#1080#1084#1077#1085#1090#1085#1086#1081' '#1084#1072#1090#1088#1080#1094#1099
+      Caption = #1041#1077#1079' '#1089#1090#1072#1090#1080#1095#1077#1089#1082#1086#1081' '#1089#1091#1084#1084#1099' '#1047#1055
+      TabOrder = 6
+      Width = 179
+    end
   end
   inherited ActionList: TActionList
     object actGet_UserUnit: TdsdExecStoredProc
@@ -514,6 +522,13 @@ inherited Report_ProfitabilityForm: TReport_ProfitabilityForm
           DataType = ftString
           ParamType = ptInput
           MultiSelectSeparator = ','
+        end
+        item
+          Name = 'NoStaticSalaryAmount'
+          Value = Null
+          Component = cbNoStaticSalaryAmount
+          DataType = ftBoolean
+          MultiSelectSeparator = ','
         end>
       isShowModal = True
       RefreshDispatcher = RefreshDispatcher
@@ -611,6 +626,14 @@ inherited Report_ProfitabilityForm: TReport_ProfitabilityForm
         ComponentItem = 'Key'
         ParamType = ptInput
         MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inisNoStaticSalaryAmount'
+        Value = Null
+        Component = cbNoStaticSalaryAmount
+        DataType = ftBoolean
+        ParamType = ptInput
+        MultiSelectSeparator = ','
       end>
     Top = 160
   end
@@ -680,12 +703,10 @@ inherited Report_ProfitabilityForm: TReport_ProfitabilityForm
   inherited RefreshDispatcher: TRefreshDispatcher
     ComponentList = <
       item
-        Component = PeriodChoice
       end
       item
       end
       item
-        Component = GuidesUnit
       end>
     Left = 432
     Top = 216

@@ -27,7 +27,7 @@ object Calculation_SAUAForm: TCalculation_SAUAForm
       Left = 1
       Top = 1
       Width = 893
-      Height = 181
+      Height = 168
       Align = alClient
       BevelOuter = bvNone
       Caption = 'Panel2'
@@ -37,7 +37,7 @@ object Calculation_SAUAForm: TCalculation_SAUAForm
         Left = 0
         Top = 0
         Width = 460
-        Height = 181
+        Height = 168
         Align = alLeft
         Caption = 'Panel4'
         ShowCaption = False
@@ -54,7 +54,7 @@ object Calculation_SAUAForm: TCalculation_SAUAForm
           Left = 1
           Top = 18
           Width = 458
-          Height = 162
+          Height = 149
           Align = alClient
           ItemHeight = 13
           TabOrder = 1
@@ -64,7 +64,7 @@ object Calculation_SAUAForm: TCalculation_SAUAForm
         Left = 460
         Top = 0
         Width = 433
-        Height = 181
+        Height = 168
         Align = alClient
         Caption = 'Panel5'
         ShowCaption = False
@@ -81,7 +81,7 @@ object Calculation_SAUAForm: TCalculation_SAUAForm
           Left = 1
           Top = 18
           Width = 431
-          Height = 162
+          Height = 149
           Align = alClient
           ItemHeight = 13
           TabOrder = 1
@@ -90,26 +90,26 @@ object Calculation_SAUAForm: TCalculation_SAUAForm
     end
     object Panel3: TPanel
       Left = 1
-      Top = 182
+      Top = 169
       Width = 893
-      Height = 34
+      Height = 47
       Align = alBottom
       Caption = 'Panel3'
       ShowCaption = False
       TabOrder = 1
       object cxLabel1: TcxLabel
-        Left = 12
-        Top = 7
-        Caption = #1053#1072#1095#1072#1083#1086' '#1087#1077#1088#1080#1086#1076#1072':'
+        Left = 8
+        Top = 3
+        Caption = #1053#1072#1095#1072#1083#1086' '#1087#1077#1088#1080#1086#1076#1072' '#1087#1088#1086#1076#1072#1078':'
       end
       object cxLabel2: TcxLabel
-        Left = 208
-        Top = 7
-        Caption = #1054#1082#1086#1085#1095#1072#1085#1080#1077' '#1087#1077#1088#1080#1086#1076#1072':'
+        Left = 8
+        Top = 23
+        Caption = #1054#1082#1086#1085#1095#1072#1085#1080#1077' '#1087#1077#1088#1080#1086#1076#1072' '#1087#1088#1086#1076#1072#1078':'
       end
       object deEnd: TcxDateEdit
-        Left = 318
-        Top = 6
+        Left = 163
+        Top = 22
         EditValue = 42370d
         Properties.SaveTime = False
         Properties.ShowTime = False
@@ -117,8 +117,8 @@ object Calculation_SAUAForm: TCalculation_SAUAForm
         Width = 85
       end
       object deStart: TcxDateEdit
-        Left = 109
-        Top = 6
+        Left = 163
+        Top = 2
         EditValue = 42370d
         Properties.SaveTime = False
         Properties.ShowTime = False
@@ -126,18 +126,46 @@ object Calculation_SAUAForm: TCalculation_SAUAForm
         Width = 85
       end
       object ceThreshold: TcxCurrencyEdit
-        Left = 553
-        Top = 6
-        EditValue = 0.000000000000000000
+        Left = 407
+        Top = 2
+        EditValue = 1.000000000000000000
         Properties.DecimalPlaces = 4
         Properties.DisplayFormat = ',0.####'
         TabOrder = 4
-        Width = 90
+        Width = 53
       end
       object cxLabel5: TcxLabel
-        Left = 426
-        Top = 7
-        Caption = #1055#1086#1088#1086#1075' '#1089#1088#1077#1076#1085#1080#1093' '#1087#1088#1086#1076#1072#1078
+        Left = 257
+        Top = 3
+        Caption = #1055#1086#1088#1086#1075' '#1084#1080#1085#1080#1084#1072#1083#1100#1085#1099#1093' '#1087#1088#1086#1076#1072#1078':'
+      end
+      object ceDaysStock: TcxCurrencyEdit
+        Left = 406
+        Top = 26
+        EditValue = 10.000000000000000000
+        Properties.DecimalPlaces = 0
+        Properties.DisplayFormat = ',0'
+        TabOrder = 6
+        Width = 53
+      end
+      object cxLabel6: TcxLabel
+        Left = 257
+        Top = 23
+        Caption = #1044#1085#1077#1081' '#1079#1072#1087#1072#1089#1072' '#1091' '#1087#1086#1083#1091#1095#1072#1090#1077#1083#1103':'
+      end
+      object cePercentPharmacies: TcxCurrencyEdit
+        Left = 701
+        Top = 2
+        EditValue = 75.000000000000000000
+        Properties.DecimalPlaces = 4
+        Properties.DisplayFormat = ',0.####'
+        TabOrder = 8
+        Width = 53
+      end
+      object cxLabel7: TcxLabel
+        Left = 474
+        Top = 3
+        Caption = #1055#1088#1086#1094#1077#1085#1090' '#1072#1087#1090#1077#1082' '#1072#1089#1089#1086#1088#1090#1080#1084#1077#1085#1090#1072' '#1089' '#1087#1088#1086#1076#1072#1078#1072#1084#1080':'
       end
     end
   end
@@ -189,6 +217,7 @@ object Calculation_SAUAForm: TCalculation_SAUAForm
       Navigator.Buttons.SaveBookmark.Visible = True
       Navigator.Buttons.GotoBookmark.Visible = True
       Navigator.Buttons.Filter.Visible = True
+      DataController.DataSource = dsResult
       DataController.Summary.DefaultGroupSummaryItems = <
         item
           Format = ',0.00;-,0.00; ;'
@@ -207,6 +236,17 @@ object Calculation_SAUAForm: TCalculation_SAUAForm
           Format = ',0.00;-,0.00; ;'
           Kind = skSum
           Position = spFooter
+        end
+        item
+          Format = ',0.####;-,0.####; ;'
+          Kind = skSum
+          Position = spFooter
+          Column = Need
+        end
+        item
+          Format = ',0.####;-,0.####; ;'
+          Kind = skSum
+          Column = Need
         end>
       DataController.Summary.FooterSummaryItems = <
         item
@@ -216,38 +256,33 @@ object Calculation_SAUAForm: TCalculation_SAUAForm
         item
           Format = ',0.00;-,0.00; ;'
           Kind = skSum
+        end
+        item
+          Format = ',0.####;-,0.####; ;'
+          Kind = skSum
+          Column = Need
         end>
       DataController.Summary.SummaryGroups = <>
       OptionsView.Footer = True
       OptionsView.HeaderHeight = 50
       Bands = <
         item
-          Caption = #1055#1088#1086#1076#1088#1072#1079#1076#1077#1083#1077#1085#1080#1103
-          Width = 659
+          Caption = #1055#1088#1086#1076#1088#1072#1079#1076#1077#1083#1077#1085#1080#1103' '#1087#1086#1083#1091#1095#1072#1090#1077#1083#1080
+          Width = 627
         end
         item
-          Caption = #1056#1072#1089#1095#1077#1090' '#1076#1083#1103' Slave '
+          Caption = #1056#1072#1089#1095#1077#1090' '#1076#1083#1103' '#1040#1089#1089#1086#1088#1090#1080#1084#1077#1085#1090#1072
+          Width = 242
         end>
-      object UnitName_Master: TcxGridDBBandedColumn
-        Caption = 'Master '
-        DataBinding.FieldName = 'UnitName_Master'
+      object UnitName: TcxGridDBBandedColumn
+        Caption = #1055#1086#1076#1088#1072#1079#1076#1077#1083#1077#1085#1080#1103
+        DataBinding.FieldName = 'UnitName'
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         Options.Editing = False
         Width = 127
         Position.BandIndex = 0
         Position.ColIndex = 0
-        Position.RowIndex = 0
-      end
-      object UnitName_Slave: TcxGridDBBandedColumn
-        Caption = 'Slave '
-        DataBinding.FieldName = 'UnitName_Slave'
-        HeaderAlignmentHorz = taCenter
-        HeaderAlignmentVert = vaCenter
-        Options.Editing = False
-        Width = 155
-        Position.BandIndex = 0
-        Position.ColIndex = 1
         Position.RowIndex = 0
       end
       object GoodsCode: TcxGridDBBandedColumn
@@ -258,7 +293,7 @@ object Calculation_SAUAForm: TCalculation_SAUAForm
         Options.Editing = False
         Width = 57
         Position.BandIndex = 0
-        Position.ColIndex = 2
+        Position.ColIndex = 1
         Position.RowIndex = 0
       end
       object GoodsName: TcxGridDBBandedColumn
@@ -269,12 +304,12 @@ object Calculation_SAUAForm: TCalculation_SAUAForm
         Options.Editing = False
         Width = 137
         Position.BandIndex = 0
-        Position.ColIndex = 3
+        Position.ColIndex = 2
         Position.RowIndex = 0
       end
-      object Amount: TcxGridDBBandedColumn
-        Caption = #1055#1088#1086#1076#1072#1078#1072
-        DataBinding.FieldName = 'Amount'
+      object Remains: TcxGridDBBandedColumn
+        Caption = #1054#1089#1090#1072#1090#1086#1082
+        DataBinding.FieldName = 'Remains'
         PropertiesClassName = 'TcxCurrencyEditProperties'
         Properties.DecimalPlaces = 4
         Properties.DisplayFormat = ',0.####;-,0.####; ;'
@@ -283,64 +318,64 @@ object Calculation_SAUAForm: TCalculation_SAUAForm
         HeaderHint = #1055#1088#1086#1076#1072#1078#1072' '#1079#1072' '#1087#1088#1077#1076#1099#1076#1091#1097#1080#1081' '#1084#1077#1089#1103#1094
         Options.Editing = False
         Position.BandIndex = 0
-        Position.ColIndex = 4
+        Position.ColIndex = 3
         Position.RowIndex = 0
       end
-      object PercentSAUA: TcxGridDBBandedColumn
-        Caption = #1055#1088#1086#1094#1077#1085#1090
-        DataBinding.FieldName = 'PercentSAUA'
+      object Need: TcxGridDBBandedColumn
+        Caption = #1055#1086#1090#1088#1077#1073#1085#1086#1089#1090#1100
+        DataBinding.FieldName = 'Need'
         PropertiesClassName = 'TcxCurrencyEditProperties'
-        Properties.DecimalPlaces = 2
-        Properties.DisplayFormat = ',0.##;-,0.##; ;'
+        Properties.DecimalPlaces = 4
+        Properties.DisplayFormat = ',0.####;-,0.####; ;'
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         HeaderHint = #1055#1088#1086#1094#1077#1085#1090' '#1082#1086#1083#1080#1095#1077#1089#1090#1074#1086' '#1082#1086#1076#1086#1074' '#1074' '#1095#1077#1082#1072#1093' '#1076#1083#1103' '#1057#1040#1059#1040
         Options.Editing = False
         Width = 66
-        Position.BandIndex = 1
-        Position.ColIndex = 0
+        Position.BandIndex = 0
+        Position.ColIndex = 4
         Position.RowIndex = 0
       end
-      object MCS: TcxGridDBBandedColumn
-        Caption = #1053#1058#1047
-        DataBinding.FieldName = 'MCS'
+      object Assortment: TcxGridDBBandedColumn
+        Caption = #1040#1089#1089#1086#1088#1090#1080#1084#1077#1085#1090
+        DataBinding.FieldName = 'Assortment'
         PropertiesClassName = 'TcxCurrencyEditProperties'
         Properties.DecimalPlaces = 4
         Properties.DisplayFormat = ',0.####;-,0.####; ;'
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         Options.Editing = False
-        Width = 66
-        Position.BandIndex = 1
-        Position.ColIndex = 1
-        Position.RowIndex = 0
-      end
-      object GoodsCategory: TcxGridDBBandedColumn
-        Caption = #1040#1089#1089#1086#1088#1090'. '#1084#1072#1090#1088#1080#1094#1072
-        DataBinding.FieldName = 'GoodsCategory'
-        PropertiesClassName = 'TcxCurrencyEditProperties'
-        Properties.DecimalPlaces = 4
-        Properties.DisplayFormat = ',0.####;-,0.####; ;'
-        HeaderAlignmentHorz = taCenter
-        HeaderAlignmentVert = vaCenter
-        Options.Editing = False
-        Width = 66
+        Width = 79
         Position.BandIndex = 1
         Position.ColIndex = 2
         Position.RowIndex = 0
       end
-      object AmountSAUA: TcxGridDBBandedColumn
-        Caption = #1056#1077#1079#1091#1083#1100#1090#1072#1090
-        DataBinding.FieldName = 'AmountSAUA'
+      object AmountCheck: TcxGridDBBandedColumn
+        Caption = #1055#1088#1086#1076#1072#1078#1080' '#1079#1072' '#1087#1077#1088#1080#1086#1076
+        DataBinding.FieldName = 'AmountCheck'
         PropertiesClassName = 'TcxCurrencyEditProperties'
         Properties.DecimalPlaces = 4
         Properties.DisplayFormat = ',0.####;-,0.####; ;'
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         Options.Editing = False
-        Width = 66
+        Width = 80
         Position.BandIndex = 1
-        Position.ColIndex = 3
+        Position.ColIndex = 0
+        Position.RowIndex = 0
+      end
+      object CountUnit: TcxGridDBBandedColumn
+        Caption = #1050#1086#1083#1080#1095#1077#1089#1090#1074#1086' '#1072#1087#1090#1077#1082
+        DataBinding.FieldName = 'CountUnit'
+        PropertiesClassName = 'TcxCurrencyEditProperties'
+        Properties.DecimalPlaces = 4
+        Properties.DisplayFormat = ',0.####;-,0.####; ;'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Options.Editing = False
+        Width = 82
+        Position.BandIndex = 1
+        Position.ColIndex = 1
         Position.RowIndex = 0
       end
     end
@@ -366,6 +401,16 @@ object Calculation_SAUAForm: TCalculation_SAUAForm
           'Value')
       end
       item
+        Component = ceDaysStock
+        Properties.Strings = (
+          'Value')
+      end
+      item
+        Component = cePercentPharmacies
+        Properties.Strings = (
+          'Value')
+      end
+      item
         Component = Owner
         Properties.Strings = (
           'Height'
@@ -376,12 +421,12 @@ object Calculation_SAUAForm: TCalculation_SAUAForm
     StorageName = 'cxPropertiesStore'
     StorageType = stStream
     Left = 256
-    Top = 152
+    Top = 112
   end
   object ActionList: TActionList
     Images = dmMain.ImageList
     Left = 40
-    Top = 152
+    Top = 112
     object actRefresh: TdsdDataSetRefresh
       Category = 'DSDLib'
       MoveParams = <>
@@ -398,10 +443,21 @@ object Calculation_SAUAForm: TCalculation_SAUAForm
       ShortCut = 116
       RefreshOnTabSetChanges = False
     end
-    object actExportExel: TAction
+    object actCalculation: TAction
       Category = 'DSDLib'
+      Caption = #1056#1072#1089#1089#1095#1080#1090#1072#1090#1100
+      Hint = #1056#1072#1089#1089#1095#1080#1090#1072#1090#1100
+      ImageIndex = 41
+      OnExecute = actCalculationExecute
+    end
+    object actGridToExcel: TdsdGridToExcel
+      Category = 'DSDLibExport'
+      MoveParams = <>
+      Grid = cxGrid
       Caption = #1042#1099#1075#1088#1091#1079#1082#1072' '#1074' Excel'
+      Hint = #1042#1099#1075#1088#1091#1079#1082#1072' '#1074' Excel'
       ImageIndex = 6
+      ShortCut = 16472
     end
   end
   object dxBarManager: TdxBarManager
@@ -422,7 +478,7 @@ object Calculation_SAUAForm: TCalculation_SAUAForm
     ShowShortCutInHint = True
     UseSystemFont = True
     Left = 160
-    Top = 152
+    Top = 112
     DockControlHeights = (
       0
       0
@@ -484,8 +540,9 @@ object Calculation_SAUAForm: TCalculation_SAUAForm
       WholeRow = False
     end
     object bbRefresh: TdxBarButton
-      Action = actRefresh
+      Action = actCalculation
       Category = 0
+      PaintStyle = psCaptionGlyph
     end
     object bbToExcel: TdxBarButton
       Caption = #1042#1099#1075#1088#1091#1079#1082#1072' '#1074' Excel'
@@ -554,7 +611,7 @@ object Calculation_SAUAForm: TCalculation_SAUAForm
       Visible = ivAlways
     end
     object dxBarButton4: TdxBarButton
-      Action = actExportExel
+      Action = actGridToExcel
       Category = 0
     end
     object dxBarButton5: TdxBarButton
@@ -570,11 +627,11 @@ object Calculation_SAUAForm: TCalculation_SAUAForm
     DateStart = deStart
     DateEnd = deEnd
     Left = 560
-    Top = 144
+    Top = 104
   end
   object UserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn
     Left = 408
-    Top = 152
+    Top = 112
   end
   object GetUnitsList: TdsdStoredProc
     StoredProcName = 'gpSelect_Object_UnitForSAUA'
@@ -583,20 +640,94 @@ object Calculation_SAUAForm: TCalculation_SAUAForm
       item
         DataSet = UnitsCDS
       end>
-    Params = <
-      item
-        Value = Null
-        DataType = ftWideString
-        MultiSelectSeparator = ','
-      end>
+    Params = <>
     PackSize = 1
-    Left = 120
-    Top = 64
+    Left = 128
+    Top = 48
   end
   object UnitsCDS: TClientDataSet
     Aggregates = <>
     Params = <>
-    Left = 208
-    Top = 64
+    Left = 216
+    Top = 48
+  end
+  object dsResult: TDataSource
+    DataSet = cdsResult
+    Left = 216
+    Top = 360
+  end
+  object cdsResult: TClientDataSet
+    Aggregates = <>
+    FieldDefs = <>
+    IndexDefs = <>
+    Params = <>
+    StoreDefs = True
+    Left = 168
+    Top = 360
+  end
+  object spCalculation: TdsdStoredProc
+    StoredProcName = 'gpSelect_Calculation_SAUA'
+    DataSet = cdsResult
+    DataSets = <
+      item
+        DataSet = cdsResult
+      end>
+    Params = <
+      item
+        Name = 'inDateStart'
+        Value = 'NULL'
+        Component = deStart
+        DataType = ftDateTime
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inDateEnd'
+        Value = 'NULL'
+        Component = deEnd
+        DataType = ftDateTime
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inRecipientList'
+        Value = Null
+        DataType = ftWideString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inAssortmentList'
+        Value = Null
+        DataType = ftWideString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inThreshold'
+        Value = Null
+        Component = ceThreshold
+        DataType = ftFloat
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inDaysStock'
+        Value = Null
+        Component = ceDaysStock
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inPercentPharmacies'
+        Value = Null
+        Component = cePercentPharmacies
+        DataType = ftFloat
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end>
+    PackSize = 1
+    Left = 56
+    Top = 360
   end
 end

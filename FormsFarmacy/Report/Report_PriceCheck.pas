@@ -82,6 +82,12 @@ type
     GuidesUser: TdsdGuides;
     cbHideExceptRed: TcxCheckBox;
     JuridicalPriceAverage: TcxGridDBColumn;
+    isResolution_224: TcxGridDBColumn;
+    isTop: TcxGridDBColumn;
+    PercentMarkup: TcxGridDBColumn;
+    PriceTop: TcxGridDBColumn;
+    isSP: TcxGridDBColumn;
+    isPromo: TcxGridDBColumn;
   private
   public
   end;

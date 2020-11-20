@@ -65,14 +65,38 @@ BEGIN
                         OR (upper(Goods_Main.Name) ILIKE UPPER('%'||inGoodsSearch||'%')  AND inGoodsSearch <> '' AND inCodeSearch = '')
                      )
 
-      , containerCount AS (SELECT Container.Id                AS ContainerId
+      , containerAll AS (SELECT Container.descid
+                              , Container.Id                AS ContainerId
+                              , Container.ParentId
+                              , Container.Amount
+                              , Container.ObjectID          AS GoodsId
+                              , Container.WhereObjectId     AS UnitId
+                         FROM Container
+                         WHERE Container.ObjectID in (SELECT tmpGoods.Id FROM tmpGoods)
+                           AND Container.descid IN (zc_Container_Count(), zc_Container_CountPartionDate())
+                           AND Container.whereobjectid IN (SELECT T1.ID FROM gpSelect_Object_Unit(False, '3') AS T1)
+                         )
+      , containerPD AS (SELECT Container.ParentId
+                             , MIN(COALESCE (ObjectDate_ExpirationDate.ValueData, zc_DateEnd()))  AS ExpirationDate
+                        FROM containerAll AS Container
+
+                             LEFT JOIN ContainerLinkObject ON ContainerLinkObject.ContainerId = Container.ContainerId
+                                                          AND ContainerLinkObject.DescId = zc_ContainerLinkObject_PartionGoods()
+
+                             LEFT JOIN ObjectDate AS ObjectDate_ExpirationDate
+                                                  ON ObjectDate_ExpirationDate.ObjectId = ContainerLinkObject.ObjectId 
+                                                 AND ObjectDate_ExpirationDate.DescId = zc_ObjectDate_PartionGoods_Value()
+                                                 
+                        WHERE Container.DescId = zc_Container_CountPartionDate()
+                          AND Container.Amount > 0
+                        GROUP BY Container.ParentId
+                         )
+      , containerCount AS (SELECT Container.ContainerId       AS ContainerId
                                 , Container.Amount
-                                , Container.ObjectID          AS GoodsId
-                                , Container.WhereObjectId     AS UnitId
-                           FROM Container
-                           WHERE Container.ObjectID in (SELECT tmpGoods.Id FROM tmpGoods)
-                             AND Container.descid = zc_container_count()
-                             AND Container.whereobjectid IN (SELECT T1.ID FROM gpSelect_Object_Unit(False, '3') AS T1)
+                                , Container.GoodsId           AS GoodsId
+                                , Container.UnitId            AS UnitId
+                           FROM containerAll AS Container
+                           WHERE Container.descid = zc_container_count()
                            )
 
       , tmpMIC AS (SELECT MIContainer.ContainerId
@@ -110,6 +134,7 @@ BEGIN
                              , containerCount.GoodsId
                              , containerCount.UnitId
                              , COALESCE (MIFloat_MovementItem.ValueData :: Integer,Object_PartionMovementItem.ObjectCode)    AS MI_Income
+                             , containerPD.ExpirationDate
                         FROM containerCount
 
                             -- находим партию для определения срока годности остатка
@@ -121,7 +146,9 @@ BEGIN
                             LEFT JOIN MovementItemFloat AS MIFloat_MovementItem
                                                         ON MIFloat_MovementItem.MovementItemId = Object_PartionMovementItem.ObjectCode
                                                        AND MIFloat_MovementItem.DescId = zc_MIFloat_MovementItemId()
-
+                                                       
+                            LEFT JOIN containerPD ON containerPD.ParentId = containerCount.ContainerId
+                        WHERE containerCount.Amount > 0
                         )
       , tmpMID AS (SELECT * FROM MovementItemDate  AS MIDate_ExpirationDate
                    WHERE MIDate_ExpirationDate.MovementItemId IN (SELECT tmpData_Inc.MI_Income FROM tmpData_Inc))
@@ -129,7 +156,7 @@ BEGIN
       , tmpData_all AS (SELECT SUM(tmpData_Inc.Amount)    AS Amount
                              , tmpData_Inc.GoodsId
                              , tmpData_Inc.UnitId
-                             , min (COALESCE(MIDate_ExpirationDate.ValueData,zc_DateEnd()))::TDateTime AS MinExpirationDate -- Срок годности
+                             , min (COALESCE(tmpData_Inc.ExpirationDate, MIDate_ExpirationDate.ValueData, zc_DateEnd()))::TDateTime AS MinExpirationDate -- Срок годности
                         FROM tmpData_Inc
 
                             LEFT OUTER JOIN tmpMID  AS MIDate_ExpirationDate
@@ -455,3 +482,5 @@ $BODY$
 -- тест
 -- SELECT * FROM gpSelect_GoodsSearchRemains ('4282', 'глюкоз', inSession := '3')
 -- select * from gpSelect_GoodsSearchRemains(inCodeSearch := '' , inGoodsSearch := 'маска защит' ,  inSession := '3'); 36584
+
+select * from gpSelect_GoodsSearchRemains(inCodeSearch := '6427' , inGoodsSearch := '' ,  inSession := '3');

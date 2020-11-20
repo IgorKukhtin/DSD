@@ -52,9 +52,10 @@ BEGIN
        AND MovementItem.DescId = zc_MI_Child();
 
     CREATE TEMP TABLE tmpData (Id Integer, ParentId Integer, UnitId Integer, AmountOut TFloat, Remains TFloat, AmountIn TFloat, AmountManual TFloat) ON COMMIT DROP;
+    CREATE TEMP TABLE tmpDataAddToM (Id Integer, ParentId Integer, UnitId Integer, GoodsId Integer, Amount TFloat, Remains TFloat) ON COMMIT DROP;
 
           -- Дополнение по аптекам согласно M
-          INSERT INTO tmpData (Id, ParentId, UnitId, AmountOut, Remains, AmountIn, AmountManual)
+          INSERT INTO tmpDataAddToM (Id, ParentId, UnitId, GoodsId, Amount, Remains)
           WITH
                -- строки мастера с кол-вом для распределения
                tmpMI_Master AS (SELECT MovementItem.Id
@@ -126,10 +127,9 @@ BEGIN
          SELECT tmpMI_Child.Id                                              AS Id
               , tmpMI_Master.Id                                             AS ParentId
               , tmpUnit.UnitId                                              AS UnitId
-              , tmpContainer.Amount                                         AS AmountOut
-              , tmpRemains.Amount                                           AS Remains
+              , tmpMI_Master.GoodsId                                        AS GoodsId
               , CEIL(tmpMI_Master.Amount - COALESCE (tmpRemains.Amount, 0)) AS AmountIn
-              , COALESCE (tmpMI_Child.AmountManual, 0)                      AS AmountManual
+              , COALESCE (tmpRemains.Amount, 0)                             AS Remains
          FROM tmpMI_Master
               LEFT JOIN tmpUnit ON 1=1
               LEFT JOIN tmpRemains ON tmpRemains.GoodsId = tmpMI_Master.GoodsId
@@ -139,7 +139,6 @@ BEGIN
               LEFT JOIN tmpMI_Child ON tmpMI_Child.ParentId = tmpMI_Master.Id
                                    AND tmpMI_Child.UnitId = tmpUnit.UnitId
          WHERE COALESCE (tmpMI_Child.AmountManual, 0) = 0
-           AND COALESCE (tmpContainer.Amount, 0) = 0
            AND CEIL(tmpMI_Master.Amount - COALESCE (tmpRemains.Amount, 0)) > 0
          ;
 
@@ -158,11 +157,11 @@ BEGIN
                                                WHERE COALESCE (tmpMI_Child.AmountManual, 0) <> 0
                                                GROUP BY tmpMI_Child.ParentId
                                                ) AS tmpChild ON tmpChild.ParentId = MovementItem.Id
-                                     LEFT JOIN (SELECT tmpData.ParentId
-                                                     , SUM (tmpData.AmountIn) AS AmountIn
-                                               FROM tmpData
-                                               WHERE COALESCE (tmpData.AmountIn, 0) <> 0
-                                               GROUP BY tmpData.ParentId
+                                     LEFT JOIN (SELECT tmpDataAddToM.ParentId
+                                                     , SUM (tmpDataAddToM.Amount) AS AmountIn
+                                               FROM tmpDataAddToM
+                                               WHERE COALESCE (tmpDataAddToM.Amount, 0) <> 0
+                                               GROUP BY tmpDataAddToM.ParentId
                                                ) AS tmpDataIn ON tmpDataIn.ParentId = MovementItem.Id
                                      LEFT JOIN MovementItemBoolean AS MIBoolean_Complement
                                                                    ON MIBoolean_Complement.MovementItemId = MovementItem.Id
@@ -217,6 +216,11 @@ BEGIN
                                             , Container.ObjectId
                                             , Container.Amount
                                      HAVING Container.Amount - COALESCE (SUM (MovementItemContainer.Amount), 0) <> 0
+                                     UNION ALL
+                                     SELECT tmpDataAddToM.UnitId
+                                          , tmpDataAddToM.GoodsId
+                                          , tmpDataAddToM.Amount
+                                     FROM tmpDataAddToM
                                      ) AS tmp
                               GROUP BY tmp.UnitId
                                      , tmp.GoodsId
@@ -351,17 +355,21 @@ BEGIN
                            WHERE DD.Amount_Master - (DD.Amount_CalcSUM - DD.Amount_Calc) > 0
                           )
 
-             , tmpDD AS (SELECT DD.Id
-                              , DD.ParentId
-                              , DD.UnitId
-                              , DD.AmountOut_real AS AmountOut
-                              , DD.Remains
-                              , COALESCE (tmpCalc.AmountIn) AS AmountIn
+             , tmpDD AS (SELECT COALESCE (DD.Id, tmpDataAddToM.Id)                                  AS Id
+                              , COALESCE (DD.ParentId, tmpDataAddToM.ParentId)                      AS ParentId
+                              , COALESCE (DD.UnitId, tmpDataAddToM.UnitId)                          AS UnitId
+                              , DD.AmountOut_real                                                   AS AmountOut
+                              , COALESCE (tmpDataAddToM.Remains, DD.Remains)                        AS Remains
+                              , COALESCE (tmpCalc.AmountIn, 0) + COALESCE (tmpDataAddToM.Amount, 0) AS AmountIn
                               , DD.AmountManual :: TFloat
                          FROM tmpData_all AS DD
-                              LEFT JOIN tmpCalc ON tmpCalc.Id = DD.Id
-                                               AND tmpCalc.ParentId = DD.ParentId
-                                               AND tmpCalc.UnitId = DD.UnitId
+                              FULL JOIN tmpDataAddToM ON tmpDataAddToM.Id = DD.Id
+                                                     AND tmpDataAddToM.ParentId = DD.ParentId
+                                                     AND tmpDataAddToM.UnitId = DD.UnitId
+                              LEFT JOIN tmpCalc ON tmpCalc.Id = COALESCE (DD.Id, tmpDataAddToM.Id)
+                                               AND tmpCalc.ParentId = COALESCE (DD.ParentId, tmpDataAddToM.ParentId)
+                                               AND tmpCalc.UnitId = COALESCE (DD.UnitId, tmpDataAddToM.UnitId)
+
                           )
 
          -- результат
@@ -527,4 +535,4 @@ $BODY$
  16.04.19         *
 */
 
--- select * from gpInsert_MI_OrderInternalPromoChild(inMovementId := 21085058 ,  inSession := '3');
+-- select * from gpInsert_MI_OrderInternalPromoChild(inMovementId := 21126541 ,  inSession := '3');

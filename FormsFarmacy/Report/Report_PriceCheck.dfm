@@ -117,6 +117,60 @@ object Report_PriceCheckForm: TReport_PriceCheckForm
         Options.Editing = False
         Width = 182
       end
+      object isResolution_224: TcxGridDBColumn
+        Caption = #1055#1086#1089#1090'. 224'
+        DataBinding.FieldName = 'isResolution_224'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Options.Editing = False
+        Width = 51
+      end
+      object isTop: TcxGridDBColumn
+        Caption = #1058#1086#1087' '#1089#1077#1090#1080
+        DataBinding.FieldName = 'isTop'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Options.Editing = False
+        Width = 50
+      end
+      object PercentMarkup: TcxGridDBColumn
+        Caption = '% '#1085#1077#1094#1077#1085#1082#1080' '#1058#1054#1055' '#1089#1077#1090#1080
+        DataBinding.FieldName = 'PercentMarkup'
+        PropertiesClassName = 'TcxCurrencyEditProperties'
+        Properties.DecimalPlaces = 4
+        Properties.DisplayFormat = ',0.####;-,0.####; ;'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Options.Editing = False
+        Width = 53
+      end
+      object PriceTop: TcxGridDBColumn
+        Caption = #1060#1080#1082#1089' '#1094#1077#1085#1072' '#1058#1054#1055' '#1089#1077#1090#1080
+        DataBinding.FieldName = 'PriceTop'
+        PropertiesClassName = 'TcxCurrencyEditProperties'
+        Properties.DecimalPlaces = 4
+        Properties.DisplayFormat = ',0.####;-,0.####; ;'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Options.Editing = False
+        Width = 56
+      end
+      object isSP: TcxGridDBColumn
+        Caption = #1057#1055'- '#1044#1086#1089#1090'. '#1083#1077#1082'-'#1074#1072
+        DataBinding.FieldName = 'isSP'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Options.Editing = False
+        Width = 46
+      end
+      object isPromo: TcxGridDBColumn
+        Caption = #1052#1072#1088#1082#1077#1090' '#1076#1086#1075#1086#1074#1086#1088
+        DataBinding.FieldName = 'isPromo'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Options.Editing = False
+        Width = 55
+      end
       object PriceAverage: TcxGridDBColumn
         Caption = #1057#1088#1077#1076#1085#1103#1103' '#1094#1077#1085#1072
         DataBinding.FieldName = 'PriceAverage'

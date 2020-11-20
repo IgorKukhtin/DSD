@@ -105,6 +105,12 @@ BEGIN
             GoodsId               Integer,
             GoodsCode             Integer,
             GoodsName             TVarChar,
+            isResolution_224      Boolean,
+            isTop                 Boolean,
+            PercentMarkup         TFloat,
+            PriceTop              TFloat,
+            isSP                  Boolean,
+            isPromo               Boolean,
             UnitCount             Integer,
             BadPriceCount         Integer,
             BadPricePlus          Integer,
@@ -122,10 +128,17 @@ BEGIN
       ) ON COMMIT DROP;
 
     -- Собираем товары
-    INSERT INTO tmpResult (GoodsId, GoodsCode, GoodsName, UnitCount, BadPriceCount, isBadPriceUser, BadPricePlus, BadPriceMinus, PriceAverage, PriceMin, PriceMax)
+    INSERT INTO tmpResult (GoodsId, GoodsCode, GoodsName, isResolution_224, isTop, PercentMarkup, PriceTop, isSP, isPromo,
+                           UnitCount, BadPriceCount, isBadPriceUser, BadPricePlus, BadPriceMinus, PriceAverage, PriceMin, PriceMax)
     SELECT tmpUnitPrice.GoodsId
          , Object_Goods.ObjectCode       AS GoodsCode
-         , Object_Goods.ValueData        AS GoodsName
+         , Object_Goods.Name             AS GoodsName
+         , Object_Goods.isResolution_224
+         , Object_Goods_Retail.IsTop
+         , CASE WHEN Object_Goods_Retail.IsTop = TRUE THEN Object_Goods_Retail.PercentMarkup END
+         , CASE WHEN Object_Goods_Retail.IsTop = TRUE THEN Object_Goods_Retail.Price END
+         , False
+         , False
          , COUNT(*)
          , 0
          , False
@@ -135,8 +148,11 @@ BEGIN
          , MIN(tmpUnitPrice.Price)
          , MAX(tmpUnitPrice.Price)
     FROM tmpUnitPrice
-         LEFT JOIN Object AS Object_Goods ON Object_Goods.Id = tmpUnitPrice.GoodsId
-    GROUP BY tmpUnitPrice.GoodsId, Object_Goods.ObjectCode, Object_Goods.ValueData
+         LEFT JOIN Object_Goods_Main AS Object_Goods ON Object_Goods.Id = tmpUnitPrice.GoodsId
+         LEFT JOIN Object_Goods_Retail AS Object_Goods_Retail ON Object_Goods_Retail.GoodsMainId = Object_Goods.Id
+                                      AND Object_Goods_Retail.RetailId = 4
+    GROUP BY tmpUnitPrice.GoodsId, Object_Goods.ObjectCode, Object_Goods.Name, Object_Goods.isResolution_224
+           , Object_Goods_Retail.IsTop, Object_Goods_Retail.PercentMarkup, Object_Goods_Retail.Price
     HAVING (MIN(tmpUnitPrice.Price) * (100.0 + inPercent) / 100.0) < MAX(tmpUnitPrice.Price)
     ORDER BY tmpUnitPrice.GoodsId;
 
@@ -345,7 +361,7 @@ BEGIN
                                                                                                                      WHEN LoadPriceListItem.GoodsNDS LIKE '%7%' THEN 7
                                                                                                                      WHEN LoadPriceListItem.GoodsNDS IN ('0', 'Без НДС') THEN 0 END,
                                                                                                                      ObjectFloat_NDSKind_NDS.ValueData, 0))/100)     AS JuridicalPrice
-                                     
+
 
                                    FROM LoadPriceList
 
@@ -413,7 +429,7 @@ BEGIN
                                        FROM tmpGoodsPrice
                                             INNER JOIN Object AS Object_Juridical ON Object_Juridical.Id = tmpGoodsPrice.JuridicalId
                                                              AND Object_Juridical.ObjectCode <= 3
-                                       GROUP BY tmpGoodsPrice.GoodsId 
+                                       GROUP BY tmpGoodsPrice.GoodsId
                                      )
 
           SELECT tmpGoodsPriceOrd.GoodsId                    AS GoodsId,
@@ -422,6 +438,64 @@ BEGIN
           FROM tmpGoodsPriceOrd
                LEFT JOIN tmpGoodsPriceAverage ON tmpGoodsPriceAverage.GoodsId = tmpGoodsPriceOrd.GoodsId
           WHERE tmpGoodsPriceOrd.Ord = 1) AS T1
+    WHERE tmpResult.GoodsId = T1.GoodsId;
+
+
+    -- СП- Дост. лек-ва
+    UPDATE tmpResult SET isSP = True
+    FROM (SELECT DISTINCT MovementItem.ObjectId         AS GoodsId
+                          FROM Movement
+                               INNER JOIN MovementDate AS MovementDate_OperDateStart
+                                                       ON MovementDate_OperDateStart.MovementId = Movement.Id
+                                                      AND MovementDate_OperDateStart.DescId     = zc_MovementDate_OperDateStart()
+                                                      AND MovementDate_OperDateStart.ValueData  <= CURRENT_DATE
+
+                               INNER JOIN MovementDate AS MovementDate_OperDateEnd
+                                                       ON MovementDate_OperDateEnd.MovementId = Movement.Id
+                                                      AND MovementDate_OperDateEnd.DescId     = zc_MovementDate_OperDateEnd()
+                                                      AND MovementDate_OperDateEnd.ValueData  >= CURRENT_DATE
+                               LEFT JOIN MovementItem ON MovementItem.MovementId = Movement.Id
+                                                     AND MovementItem.DescId     = zc_MI_Master()
+                                                     AND MovementItem.isErased   = FALSE
+
+                               LEFT JOIN MovementItemLinkObject AS MI_IntenalSP
+                                                                ON MI_IntenalSP.MovementItemId = MovementItem.Id
+                                                               AND MI_IntenalSP.DescId = zc_MILinkObject_IntenalSP()
+                               -- Роздрібна  ціна за упаковку, грн
+                               LEFT JOIN MovementItemFloat AS MIFloat_PriceRetSP
+                                                           ON MIFloat_PriceRetSP.MovementItemId = MovementItem.Id
+                                                          AND MIFloat_PriceRetSP.DescId = zc_MIFloat_PriceRetSP()
+                               -- Розмір відшкодування за упаковку (Соц. проект) - (15)
+                               LEFT JOIN MovementItemFloat AS MIFloat_PriceSP
+                                                           ON MIFloat_PriceSP.MovementItemId = MovementItem.Id
+                                                          AND MIFloat_PriceSP.DescId = zc_MIFloat_PriceSP()
+                               -- Сума доплати за упаковку, грн (Соц. проект) - 16)
+                               LEFT JOIN MovementItemFloat AS MIFloat_PaymentSP
+                                                           ON MIFloat_PaymentSP.MovementItemId = MovementItem.Id
+                                                          AND MIFloat_PaymentSP.DescId = zc_MIFloat_PaymentSP()
+
+                               -- Кількість одиниць лікарського засобу у споживчій упаковці (Соц. проект)(6)
+                               LEFT JOIN MovementItemFloat AS MIFloat_CountSP
+                                                           ON MIFloat_CountSP.MovementItemId = MovementItem.Id
+                                                          AND MIFloat_CountSP.DescId = zc_MIFloat_CountSP()
+                               -- ID лікарського засобу
+                               LEFT JOIN MovementItemString AS MIString_IdSP
+                                                            ON MIString_IdSP.MovementItemId = MovementItem.Id
+                                                           AND MIString_IdSP.DescId = zc_MIString_IdSP()
+                               -- DosageID лікарського засобу
+                               LEFT JOIN MovementItemString AS MIString_DosageIdSP
+                                                            ON MIString_DosageIdSP.MovementItemId = MovementItem.Id
+                                                           AND MIString_DosageIdSP.DescId = zc_MIString_DosageIdSP()
+
+                          WHERE Movement.DescId = zc_Movement_GoodsSP()
+                            AND Movement.StatusId IN (zc_Enum_Status_Complete(), zc_Enum_Status_UnComplete())) AS T1
+    WHERE tmpResult.GoodsId = T1.GoodsId;
+
+    -- СП- Дост. лек-ва
+    UPDATE tmpResult SET isPromo = True
+    FROM (SELECT DISTINCT Object_Goods_Retail.GoodsMainId   AS GoodsId
+          FROM lpSelect_MovementItem_Promo_onDate (inOperDate:= CURRENT_DATE) AS tmp
+               LEFT JOIN Object_Goods_Retail AS Object_Goods_Retail ON Object_Goods_Retail.Id = tmp.GoodsId) AS T1
     WHERE tmpResult.GoodsId = T1.GoodsId;
 
        -- Вывод результата

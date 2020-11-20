@@ -2758,22 +2758,26 @@ begin
     TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_SummSP_DialogForm'));
     TdsdFormStorageFactory.GetStorage.Load('TReport_SummSP_DialogForm');
     exit;
-
+}
     TdsdFormStorageFactory.GetStorage.Save(GetForm('TMedicSP_ObjectForm'));
     TdsdFormStorageFactory.GetStorage.Load('TMedicSP_ObjectForm');
-    exit;
 
     TdsdFormStorageFactory.GetStorage.Save(GetForm('TMedicSPForm'));
     TdsdFormStorageFactory.GetStorage.Load('TMedicSPForm');
     TdsdFormStorageFactory.GetStorage.Save(GetForm('TMedicSPEditForm'));
     TdsdFormStorageFactory.GetStorage.Load('TMedicSPEditForm');
 
+    TdsdFormStorageFactory.GetStorage.Save(GetForm('TAmbulantClinicSPForm'));
+    TdsdFormStorageFactory.GetStorage.Load('TAmbulantClinicSPForm');
+    TdsdFormStorageFactory.GetStorage.Save(GetForm('TAmbulantClinicSPEditForm'));
+    TdsdFormStorageFactory.GetStorage.Load('TAmbulantClinicSPEditForm');
+{
     TdsdFormStorageFactory.GetStorage.Save(GetForm('TMemberSPForm'));
     TdsdFormStorageFactory.GetStorage.Load('TMemberSPForm');
     TdsdFormStorageFactory.GetStorage.Save(GetForm('TMemberSPEditForm'));
     TdsdFormStorageFactory.GetStorage.Load('TMemberSPEditForm');
     //exit;
-  }
+
   // отчет реестр по постановлению 1303
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_SaleSPForm'));
   TdsdFormStorageFactory.GetStorage.Load('TReport_SaleSPForm');
@@ -2781,7 +2785,7 @@ begin
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_SaleSPDialogForm'));
   TdsdFormStorageFactory.GetStorage.Load('TReport_SaleSPDialogForm');
   exit;
-   {
+
     TdsdFormStorageFactory.GetStorage.Save(GetForm('TGroupMemberSPForm'));
     TdsdFormStorageFactory.GetStorage.Load('TGroupMemberSPForm');
     TdsdFormStorageFactory.GetStorage.Save(GetForm('TGroupMemberSPEditForm'));
@@ -2808,12 +2812,12 @@ begin
     TdsdFormStorageFactory.GetStorage.Save(GetForm('TGoodsSPForm'));
     TdsdFormStorageFactory.GetStorage.Load('TGoodsSPForm');
     exit;
-  }
   // отчет по продажам товара соц. проекта
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_CheckSPForm'));
   TdsdFormStorageFactory.GetStorage.Load('TReport_CheckSPForm');
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_CheckSPDialogForm'));
   TdsdFormStorageFactory.GetStorage.Load('TReport_CheckSPDialogForm');
+  }
 
 end;
 

@@ -33,6 +33,9 @@ type
     cxLabel10: TcxLabel;
     cePartnerMedical: TcxButtonEdit;
     PartnerMedicalGuides: TdsdGuides;
+    ceAmbulantClinicSP: TcxButtonEdit;
+    cxLabel2: TcxLabel;
+    AmbulantClinicSPGuides: TdsdGuides;
   private
     { Private declarations }
   public
