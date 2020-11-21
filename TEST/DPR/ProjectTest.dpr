@@ -359,7 +359,6 @@ uses
   MemberExternalEdit in '..\..\Forms\Guides\MemberExternalEdit.pas' {MemberExternalEditForm: TParentForm},
   ContractConditionKind in '..\..\Forms\Kind\ContractConditionKind.pas' {ContractConditionKindForm: TParentForm},
   PeriodClose_User in '..\..\Forms\System\PeriodClose_User.pas' {PeriodClose_UserForm: TParentForm},
-  Contract in '..\..\Forms\Guides\Contract.pas' {ContractForm: TParentForm},
   SaveMarketingDocumentTo1C in '..\..\Forms\Export\SaveMarketingDocumentTo1C.pas' {SaveMarketingDocumentTo1CForm: TParentForm},
   ExternalSave in '..\..\SOURCE\COMPONENT\ExternalSave.pas',
   MovementGoods_Journal in '..\..\Forms\Report\MovementGoods_Journal.pas' {MovementGoodsJournalForm: TParentForm},
@@ -1211,7 +1210,8 @@ uses
   ContractTradeMark in '..\..\Forms\Guides\ContractTradeMark.pas' {ContractTradeMarkForm: TParentForm},
   ContractTradeMarkEdit in '..\..\Forms\Guides\ContractTradeMarkEdit.pas' {ContractTradeMarkEditForm: TParentForm},
   AssetTypeEdit in '..\..\Forms\Guides\AssetTypeEdit.pas' {AssetTypeEditForm: TParentForm},
-  AssetType in '..\..\Forms\Guides\AssetType.pas' {AssetTypeForm: TParentForm};
+  AssetType in '..\..\Forms\Guides\AssetType.pas' {AssetTypeForm: TParentForm},
+  Contract in '..\..\Forms\Guides\Contract.pas' {ContractForm: TParentForm};
 
 {$R *.RES}
 {$R DevExpressRus.res}

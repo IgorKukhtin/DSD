@@ -408,7 +408,6 @@ end;
 
 procedure TLoadFormTest.LoadPriceListFormTest;
 begin
-
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TPriceListForm'));
   TdsdFormStorageFactory.GetStorage.Load('TPriceListForm');
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TPriceListEditForm'));
@@ -425,7 +424,6 @@ begin
 
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TPriceList_ObjectForm'));
   TdsdFormStorageFactory.GetStorage.Load('TPriceList_ObjectForm');
-
 end;
 
 procedure TLoadFormTest.LoadUnitFormTest;
