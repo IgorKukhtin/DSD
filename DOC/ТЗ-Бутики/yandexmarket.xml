@@ -1,0 +1,298 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE yml_catalog SYSTEM "shops.dtd">
+<yml_catalog date="2020-07-15 10:32">
+  <shop>
+    <name>Podium Boutique</name>
+    <company>Podium Boutique</company>
+    <url>http://podium-shop.com/</url>
+    <phone>+38 (099)203-31-58</phone>
+    <platform>Shop-Script</platform>
+    <version>7.5.1.287</version>
+    <currencies>
+      <currency id="UAH" rate="1"/>
+    </currencies>
+    <categories>
+      <category id="563">Мужчинам</category>
+      <category id="761" parentId="563">Дизайнеры</category>
+      <category id="565" parentId="563">Одежда</category>
+      <category id="665" parentId="565">Байка</category>
+      <category id="798" parentId="565">Бомбер</category>
+      <category id="668" parentId="565">Брюки</category>
+      <category id="743" parentId="565">Ветровка</category>
+      <category id="709" parentId="565">Гольф</category>
+      <category id="708" parentId="565">Джинсы</category>
+      <category id="667" parentId="565">Дубленка</category>
+      <category id="666" parentId="565">Жилет</category>
+      <category id="669" parentId="565">Кардиган</category>
+      <category id="731" parentId="565">Костюм</category>
+      <category id="664" parentId="565">Кофта</category>
+      <category id="695" parentId="565">Куртка</category>
+      <category id="710" parentId="565">Пальто</category>
+      <category id="780" parentId="565">Парка</category>
+      <category id="720" parentId="565">Пиджак</category>
+      <category id="670" parentId="565">Пуловер</category>
+      <category id="734" parentId="565">Пуховик</category>
+      <category id="596" parentId="565">Рубашка</category>
+      <category id="601" parentId="565">Свитер</category>
+      <category id="733" parentId="565">Свитшот</category>
+      <category id="718" parentId="565">Тенниска</category>
+      <category id="754" parentId="565">Толстовка</category>
+      <category id="797" parentId="565">Худи</category>
+      <category id="594" parentId="565">Футболка</category>
+      <category id="719" parentId="565">Шведка</category>
+      <category id="717" parentId="565">Шорты</category>
+      <category id="566" parentId="563">Обувь</category>
+      <category id="698" parentId="566">Ботинки</category>
+      <category id="612" parentId="566">Кеды</category>
+      <category id="711" parentId="566">Кроссовки</category>
+      <category id="784" parentId="566">Пантолеты</category>
+      <category id="724" parentId="566">Сланцы</category>
+      <category id="699" parentId="566">Туфли</category>
+      <category id="790" parentId="566">Шлёпанцы</category>
+      <category id="568" parentId="563">Аксессуары</category>
+      <category id="569" parentId="563">Outlet</category>
+      <category id="633" parentId="569">Одежда</category>
+      <category id="640" parentId="633">Байка</category>
+      <category id="736" parentId="633">Брюки</category>
+      <category id="643" parentId="633">Ветровка</category>
+      <category id="738" parentId="633">Гольф</category>
+      <category id="686" parentId="633">Джемпер</category>
+      <category id="635" parentId="633">Джинсы</category>
+      <category id="639" parentId="633">Дубленка</category>
+      <category id="641" parentId="633">Жилет</category>
+      <category id="735" parentId="633">Кардиган</category>
+      <category id="687" parentId="633">Костюм</category>
+      <category id="638" parentId="633">Куртка</category>
+      <category id="755" parentId="633">Майка</category>
+      <category id="637" parentId="633">Пальто</category>
+      <category id="689" parentId="633">Пиджак</category>
+      <category id="642" parentId="633">Плащ</category>
+      <category id="688" parentId="633">Рубашка</category>
+      <category id="685" parentId="633">Свитер</category>
+      <category id="634" parentId="633">Футболка</category>
+      <category id="751" parentId="633">Шведка</category>
+      <category id="644" parentId="633">Шорты</category>
+      <category id="694" parentId="569">Аксессуары</category>
+      <category id="556">Женщинам</category>
+      <category id="762" parentId="556">Дизайнеры</category>
+      <category id="558" parentId="556">Одежда</category>
+      <category id="729" parentId="558">Байка</category>
+      <category id="577" parentId="558">Блуза</category>
+      <category id="647" parentId="558">Боди</category>
+      <category id="793" parentId="558">Бомбер</category>
+      <category id="792" parentId="558">Бриджи</category>
+      <category id="579" parentId="558">Брюки</category>
+      <category id="713" parentId="558">Ветровка</category>
+      <category id="702" parentId="558">Гольф</category>
+      <category id="715" parentId="558">Джинсы</category>
+      <category id="672" parentId="558">Дубленка</category>
+      <category id="732" parentId="558">Жакет</category>
+      <category id="592" parentId="558">Жилет</category>
+      <category id="726" parentId="558">Капри</category>
+      <category id="714" parentId="558">Кардиган</category>
+      <category id="580" parentId="558">Комбинезон</category>
+      <category id="760" parentId="558">Корсет</category>
+      <category id="712" parentId="558">Костюм</category>
+      <category id="588" parentId="558">Кофта</category>
+      <category id="753" parentId="558">Купальник</category>
+      <category id="650" parentId="558">Куртка</category>
+      <category id="725" parentId="558">Леггинсы</category>
+      <category id="701" parentId="558">Лосины</category>
+      <category id="581" parentId="558">Майка</category>
+      <category id="591" parentId="558">Пальто</category>
+      <category id="749" parentId="558">Парка</category>
+      <category id="582" parentId="558">Пиджак</category>
+      <category id="576" parentId="558">Платье</category>
+      <category id="656" parentId="558">Плащ</category>
+      <category id="707" parentId="558">Полушубок</category>
+      <category id="655" parentId="558">Пуловер</category>
+      <category id="671" parentId="558">Пуховик</category>
+      <category id="654" parentId="558">Рубашка</category>
+      <category id="723" parentId="558">Сарафан</category>
+      <category id="661" parentId="558">Свитер</category>
+      <category id="730" parentId="558">Свитшот</category>
+      <category id="727" parentId="558">Сетка</category>
+      <category id="783" parentId="558">Тенниска</category>
+      <category id="703" parentId="558">Толстовка</category>
+      <category id="696" parentId="558">Топ</category>
+      <category id="704" parentId="558">Туника</category>
+      <category id="795" parentId="558">Худи</category>
+      <category id="788" parentId="558">Фартук</category>
+      <category id="662" parentId="558">Футболка</category>
+      <category id="617" parentId="558">Шорты</category>
+      <category id="673" parentId="558">Шуба</category>
+      <category id="578" parentId="558">Юбка</category>
+      <category id="559" parentId="556">Обувь</category>
+      <category id="759" parentId="559">Балетки</category>
+      <category id="722" parentId="559">Босоножки</category>
+      <category id="663" parentId="559">Ботильоны</category>
+      <category id="697" parentId="559">Ботинки</category>
+      <category id="796" parentId="559">Ботфорды</category>
+      <category id="791" parentId="559">Кеды</category>
+      <category id="700" parentId="559">Кроссовки</category>
+      <category id="752" parentId="559">Лоферы</category>
+      <category id="750" parentId="559">Мокасины</category>
+      <category id="794" parentId="559">Пантолеты</category>
+      <category id="799" parentId="559">Сабо</category>
+      <category id="758" parentId="559">Сандалии</category>
+      <category id="660" parentId="559">Сапоги</category>
+      <category id="721" parentId="559">Сланцы</category>
+      <category id="789" parentId="559">Тапочки</category>
+      <category id="737" parentId="559">Туфли</category>
+      <category id="756" parentId="559">Шлёпанцы</category>
+      <category id="561" parentId="556">Аксессуары</category>
+      <category id="560" parentId="556">Сумки</category>
+      <category id="562" parentId="556">Outlet</category>
+      <category id="618" parentId="562">Одежда</category>
+      <category id="748" parentId="618">Байка</category>
+      <category id="619" parentId="618">Блуза</category>
+      <category id="682" parentId="618">Боди</category>
+      <category id="678" parentId="618">Брюки</category>
+      <category id="744" parentId="618">Гольф</category>
+      <category id="683" parentId="618">Джинсы</category>
+      <category id="747" parentId="618">Дубленка</category>
+      <category id="676" parentId="618">Жилет</category>
+      <category id="680" parentId="618">Капри</category>
+      <category id="757" parentId="618">Кардиган</category>
+      <category id="627" parentId="618">Комбинезон</category>
+      <category id="622" parentId="618">Кофта</category>
+      <category id="674" parentId="618">Куртка</category>
+      <category id="623" parentId="618">Майка</category>
+      <category id="681" parentId="618">Пальто</category>
+      <category id="677" parentId="618">Пиджак</category>
+      <category id="626" parentId="618">Платье</category>
+      <category id="675" parentId="618">Плащ</category>
+      <category id="679" parentId="618">Пуловер</category>
+      <category id="745" parentId="618">Пуховик</category>
+      <category id="742" parentId="618">Рубашка</category>
+      <category id="629" parentId="618">Сарафан </category>
+      <category id="739" parentId="618">Свитер</category>
+      <category id="746" parentId="618">Свитшот</category>
+      <category id="740" parentId="618">Толстовка</category>
+      <category id="628" parentId="618">Топ</category>
+      <category id="631" parentId="618">Туника</category>
+      <category id="624" parentId="618">Футболка</category>
+      <category id="632" parentId="618">Шорты</category>
+      <category id="620" parentId="618">Юбка</category>
+      <category id="651" parentId="562">Обувь</category>
+      <category id="691" parentId="651">Босоножки</category>
+      <category id="652" parentId="651">Ботинки</category>
+      <category id="659" parentId="651">Кроссовки</category>
+      <category id="692" parentId="651">Панталеты</category>
+      <category id="684" parentId="651">Туфли</category>
+      <category id="657" parentId="562">Сумки</category>
+      <category id="690" parentId="562">Аксессуары</category>
+    </categories>
+    <delivery-options>
+      <option cost="0" days="" order-before="24"/>
+    </delivery-options>
+    <offers>
+      <offer available="true" id="6631">
+        <url>http://podium-shop.com/product/premiata_1oe/</url>
+        <price>5990.00</price>
+        <currencyId>UAH</currencyId>
+        <vat>NO_VAT</vat>
+        <categoryId>700</categoryId>
+        <picture>http://podium-shop.com/wa-data/public/shop/products/31/66/6631/images/29032/29032.970.jpg</picture>
+        <picture>http://podium-shop.com/wa-data/public/shop/products/31/66/6631/images/29033/29033.970.jpg</picture>
+        <picture>http://podium-shop.com/wa-data/public/shop/products/31/66/6631/images/29034/29034.970.jpg</picture>
+        <picture>http://podium-shop.com/wa-data/public/shop/products/31/66/6631/images/29035/29035.970.jpg</picture>
+        <picture>http://podium-shop.com/wa-data/public/shop/products/31/66/6631/images/29036/29036.970.jpg</picture>
+        <name>Premiata</name>
+        <description><![CDATA[Кроссовки]]></description>
+      </offer>
+      <offer available="true" id="6629">
+        <url>http://podium-shop.com/product/premiata_1o/</url>
+        <price>5990.00</price>
+        <currencyId>UAH</currencyId>
+        <vat>NO_VAT</vat>
+        <categoryId>700</categoryId>
+        <picture>http://podium-shop.com/wa-data/public/shop/products/29/66/6629/images/29022/29022.970.jpg</picture>
+        <picture>http://podium-shop.com/wa-data/public/shop/products/29/66/6629/images/29023/29023.970.jpg</picture>
+        <picture>http://podium-shop.com/wa-data/public/shop/products/29/66/6629/images/29026/29026.970.jpg</picture>
+        <picture>http://podium-shop.com/wa-data/public/shop/products/29/66/6629/images/29024/29024.970.jpg</picture>
+        <picture>http://podium-shop.com/wa-data/public/shop/products/29/66/6629/images/29025/29025.970.jpg</picture>
+        <name>Premiata</name>
+        <description><![CDATA[Кроссовки]]></description>
+      </offer>
+      <offer available="true" id="6624">
+        <url>http://podium-shop.com/product/saloni_1lf/</url>
+        <price>10990.00</price>
+        <currencyId>UAH</currencyId>
+        <vat>NO_VAT</vat>
+        <categoryId>576</categoryId>
+        <picture>http://podium-shop.com/wa-data/public/shop/products/24/66/6624/images/28997/28997.970.jpg</picture>
+        <picture>http://podium-shop.com/wa-data/public/shop/products/24/66/6624/images/28998/28998.970.jpg</picture>
+        <picture>http://podium-shop.com/wa-data/public/shop/products/24/66/6624/images/28999/28999.970.jpg</picture>
+        <picture>http://podium-shop.com/wa-data/public/shop/products/24/66/6624/images/29000/29000.970.jpg</picture>
+        <name>Saloni</name>
+        <description><![CDATA[Платье]]></description>
+      </offer>
+      <offer available="true" id="6623">
+        <url>http://podium-shop.com/product/saloni_1o/</url>
+        <price>10990.00</price>
+        <currencyId>UAH</currencyId>
+        <vat>NO_VAT</vat>
+        <categoryId>576</categoryId>
+        <picture>http://podium-shop.com/wa-data/public/shop/products/23/66/6623/images/28993/28993.970.jpg</picture>
+        <picture>http://podium-shop.com/wa-data/public/shop/products/23/66/6623/images/28994/28994.970.jpg</picture>
+        <picture>http://podium-shop.com/wa-data/public/shop/products/23/66/6623/images/28995/28995.970.jpg</picture>
+        <picture>http://podium-shop.com/wa-data/public/shop/products/23/66/6623/images/28996/28996.970.jpg</picture>
+        <name>Saloni</name>
+        <description><![CDATA[Платье]]></description>
+      </offer>
+      <offer available="true" id="6621">
+        <url>http://podium-shop.com/product/saloni_1k/</url>
+        <price>15890.00</price>
+        <currencyId>UAH</currencyId>
+        <vat>NO_VAT</vat>
+        <categoryId>576</categoryId>
+        <picture>http://podium-shop.com/wa-data/public/shop/products/21/66/6621/images/28985/28985.970.jpg</picture>
+        <picture>http://podium-shop.com/wa-data/public/shop/products/21/66/6621/images/28986/28986.970.jpg</picture>
+        <picture>http://podium-shop.com/wa-data/public/shop/products/21/66/6621/images/28987/28987.970.jpg</picture>
+        <picture>http://podium-shop.com/wa-data/public/shop/products/21/66/6621/images/28988/28988.970.jpg</picture>
+        <name>Saloni</name>
+        <description><![CDATA[Платье]]></description>
+      </offer>
+      <offer available="true" id="6620">
+        <url>http://podium-shop.com/product/saloni_1lg/</url>
+        <price>9490.00</price>
+        <currencyId>UAH</currencyId>
+        <vat>NO_VAT</vat>
+        <categoryId>576</categoryId>
+        <picture>http://podium-shop.com/wa-data/public/shop/products/20/66/6620/images/28981/28981.970.jpg</picture>
+        <picture>http://podium-shop.com/wa-data/public/shop/products/20/66/6620/images/28982/28982.970.jpg</picture>
+        <picture>http://podium-shop.com/wa-data/public/shop/products/20/66/6620/images/28983/28983.970.jpg</picture>
+        <picture>http://podium-shop.com/wa-data/public/shop/products/20/66/6620/images/28984/28984.970.jpg</picture>
+        <name>Saloni</name>
+        <description><![CDATA[Платье]]></description>
+      </offer>
+      <offer available="true" id="6618">
+        <url>http://podium-shop.com/product/saloni_1d/</url>
+        <price>13490.00</price>
+        <currencyId>UAH</currencyId>
+        <vat>NO_VAT</vat>
+        <categoryId>576</categoryId>
+        <picture>http://podium-shop.com/wa-data/public/shop/products/18/66/6618/images/28973/28973.970.jpg</picture>
+        <picture>http://podium-shop.com/wa-data/public/shop/products/18/66/6618/images/28974/28974.970.jpg</picture>
+        <picture>http://podium-shop.com/wa-data/public/shop/products/18/66/6618/images/28975/28975.970.jpg</picture>
+        <picture>http://podium-shop.com/wa-data/public/shop/products/18/66/6618/images/28976/28976.970.jpg</picture>
+        <name>Saloni</name>
+        <description><![CDATA[Платье]]></description>
+      </offer>
+      <offer available="true" id="6615">
+        <url>http://podium-shop.com/product/comme-des-garons_1m/</url>
+        <price>2990.00</price>
+        <currencyId>UAH</currencyId>
+        <vat>NO_VAT</vat>
+        <categoryId>662</categoryId>
+        <picture>http://podium-shop.com/wa-data/public/shop/products/15/66/6615/images/28961/28961.970.jpg</picture>
+        <picture>http://podium-shop.com/wa-data/public/shop/products/15/66/6615/images/28962/28962.970.jpg</picture>
+        <picture>http://podium-shop.com/wa-data/public/shop/products/15/66/6615/images/28963/28963.970.jpg</picture>
+        <picture>http://podium-shop.com/wa-data/public/shop/products/15/66/6615/images/28964/28964.970.jpg</picture>
+        <name>Comme des Garçons</name>
+        <description><![CDATA[Футболка]]></description>
+      </offer>
+    </offers>
+  </shop>
+</yml_catalog>

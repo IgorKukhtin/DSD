@@ -147,7 +147,9 @@ BEGIN
                                --  оличество единичных упаковок в данной
                                , CASE WHEN tmpGoods.GoodsTypeKindId = zc_Enum_GoodsTypeKind_Ves()
                                            THEN tmpGoods.WeightMaxNet * 1000
-                                      ELSE CEIL (CASE WHEN tmpGoods.WeightAvg > 0 THEN tmpGoods.WeightAvgNet / tmpGoods.WeightAvg ELSE 1 END)
+                                      WHEN tmpGoods.WeightAvgNet > 0
+                                           THEN CEIL (CASE WHEN tmpGoods.WeightAvg > 0 THEN tmpGoods.WeightAvgNet / tmpGoods.WeightAvg ELSE 1 END)
+                                      ELSE tmpGoods.CountOnBox
                                  END :: Integer AS base_units
                                -- ќстаетс€ пустым, т.к. нет прима палетными нормами
                                , 0                   :: Integer  AS layer_qty
@@ -205,7 +207,7 @@ BEGIN
                    , tmpData.pack_id AS ObjectId
                    , tmpData.GroupId
               FROM tmpData
-            --WHERE tmpData.sku_id :: TVarChar IN ('4642923')
+            --WHERE tmpData.sku_id :: TVarChar IN ('3445471')
               ORDER BY tmpData.GroupId, tmpData.sku_id
              ) AS tmp
       --WHERE tmp.RowNum BETWEEN 1 AND 1
