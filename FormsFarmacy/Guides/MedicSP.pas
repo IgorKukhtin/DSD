@@ -78,6 +78,7 @@ type
     actStartLoad: TMultiAction;
     bbStartLoad: TdxBarButton;
     RefreshDispatcher: TRefreshDispatcher;
+    AmbulantClinicSPName: TcxGridDBColumn;
   private
     { Private declarations }
   public

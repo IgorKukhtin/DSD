@@ -128,6 +128,8 @@ type
     cxLabel26: TcxLabel;
     isPartialPay: TcxGridDBColumn;
     cbUseReprice: TcxCheckBox;
+    ceCodeOrangeCard: TcxCurrencyEdit;
+    cxLabel27: TcxLabel;
   private
     { Private declarations }
   public

@@ -112,20 +112,31 @@ BEGIN
 
      PERFORM
             gpInsertUpdate_Object_LinkGoods(0 , -- ключ объекта <Условия договора>
-                    LoadPriceListItem.GoodsId , -- Главный товар
-                              Object_Goods.Id , -- товар из группы
+                 tmpLoadPriceListItem.GoodsId , -- Главный товар
+                      tmpLoadPriceListItem.Id , -- товар из группы
                                     inSession )
-       FROM LoadPriceListItem
-               JOIN (SELECT Object_Goods_View.Id, Object_Goods_View.GoodsCode
-                     FROM Object_Goods_View 
-                     WHERE ObjectId = vbJuridicalId
-                    ) AS Object_Goods ON Object_Goods.goodscode = LoadPriceListItem.GoodsCode
-          WHERE GoodsId <> 0 AND LoadPriceListItem.LoadPriceListId = inId
-           AND (LoadPriceListItem.GoodsId, Object_Goods.Id) NOT IN (SELECT GoodsMainId, GoodsId
-                                                                    FROM Object_LinkGoods_View
-                                                                    WHERE ObjectId = vbJuridicalId)
-        GROUP BY LoadPriceListItem.GoodsId , 
-                 Object_Goods.Id ;
+       FROM (WITH tmpLoadPriceListItem AS (SELECT LoadPriceListItem.GoodsId , -- Главный товар
+                                                  Object_Goods.Id 
+                                           FROM LoadPriceListItem
+                                                JOIN (SELECT Object_Goods_View.Id, Object_Goods_View.GoodsCode
+                                                      FROM Object_Goods_View 
+                                                      WHERE ObjectId = vbJuridicalId
+                                                     ) AS Object_Goods ON Object_Goods.goodscode = LoadPriceListItem.GoodsCode
+                                           WHERE LoadPriceListItem.GoodsId <> 0 AND LoadPriceListItem.LoadPriceListId = inId
+                                           GROUP BY LoadPriceListItem.GoodsId , 
+                                                    Object_Goods.Id),
+                   tmpLinkGoods AS (SELECT GoodsMainId, GoodsId
+                                    FROM Object_LinkGoods_View
+                                    WHERE ObjectId = vbJuridicalId)
+                             
+                   SELECT
+                                LoadPriceListItem.GoodsId , -- Главный товар
+                                LoadPriceListItem.Id 
+                   FROM tmpLoadPriceListItem AS LoadPriceListItem
+                        LEFT JOIN tmpLinkGoods AS LinkGoods 
+                                               ON LinkGoods.GoodsMainId = LoadPriceListItem.GoodsId
+                                              AND LinkGoods.GoodsId = LoadPriceListItem.Id
+                   WHERE COALESCE (LinkGoods.GoodsMainId, 0) = 0) AS tmpLoadPriceListItem;
 
    IF vbisMorionCode = TRUE
    THEN
@@ -215,7 +226,6 @@ BEGIN
               ) AS DD;
    END IF;
 
-
      -- сохранили протокол
      -- PERFORM lpInsert_MovementProtocol (ioId, vbUserId);
 
@@ -259,3 +269,5 @@ INNER JOIN ObjectLink ON ObjectLink.ObjectId = Object.Id
 left join Object AS ObjectEn ON ObjectEn.Id = ObjectLink.ChildObjectId
 WHERE Object.ObjectCode = 454112   --76689 --"ДЕТРАЛЕКС 1000 мг № 30"
 */
+
+-- select * from gpUpdatePartnerGoods(inId := 31994 ,  inSession := '3');

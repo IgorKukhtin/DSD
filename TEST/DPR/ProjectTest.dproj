@@ -1020,10 +1020,6 @@
 				<Form>PeriodClose_UserForm</Form>
 				<DesignClass>TParentForm</DesignClass>
 			</DCCReference>
-			<DCCReference Include="..\..\Forms\Guides\Contract.pas">
-				<Form>ContractForm</Form>
-				<DesignClass>TParentForm</DesignClass>
-			</DCCReference>
 			<DCCReference Include="..\..\Forms\Export\SaveMarketingDocumentTo1C.pas">
 				<Form>SaveMarketingDocumentTo1CForm</Form>
 				<DesignClass>TParentForm</DesignClass>
@@ -4158,6 +4154,10 @@
 			</DCCReference>
 			<DCCReference Include="..\..\Forms\Guides\AssetType.pas">
 				<Form>AssetTypeForm</Form>
+				<DesignClass>TParentForm</DesignClass>
+			</DCCReference>
+			<DCCReference Include="..\..\Forms\Guides\Contract.pas">
+				<Form>ContractForm</Form>
 				<DesignClass>TParentForm</DesignClass>
 			</DCCReference>
 			<BuildConfiguration Include="Release">

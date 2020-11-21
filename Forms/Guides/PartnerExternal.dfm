@@ -550,35 +550,20 @@ object PartnerExternalForm: TPartnerExternalForm
       MoveParams = <>
       PostDataSetBeforeExecute = False
       Caption = 'PartnerChoiceForm'
-      FormName = 'TContractPartnerForm'
-      FormNameParam.Value = 'TContractPartnerForm'
+      FormName = 'TPartner_ObjectForm'
+      FormNameParam.Value = 'TPartner_ObjectForm'
       FormNameParam.DataType = ftString
       FormNameParam.MultiSelectSeparator = ','
       GuiParams = <
         item
-          Name = 'ContractId'
-          Value = Null
-          Component = ClientDataSet
-          ComponentItem = 'ContractId'
-          MultiSelectSeparator = ','
-        end
-        item
-          Name = 'ContractName'
-          Value = Null
-          Component = ClientDataSet
-          ComponentItem = 'ContractName'
-          DataType = ftString
-          MultiSelectSeparator = ','
-        end
-        item
-          Name = 'PartnerId'
+          Name = 'key'
           Value = Null
           Component = ClientDataSet
           ComponentItem = 'PartnerId'
           MultiSelectSeparator = ','
         end
         item
-          Name = 'PartnerName'
+          Name = 'TextValue'
           Value = Null
           Component = ClientDataSet
           ComponentItem = 'PartnerName'
@@ -696,11 +681,19 @@ object PartnerExternalForm: TPartnerExternalForm
         MultiSelectSeparator = ','
       end
       item
-        Name = 'inContractId'
+        Name = 'ioContractId'
         Value = Null
         Component = ClientDataSet
         ComponentItem = 'ContractId'
-        ParamType = ptInput
+        ParamType = ptInputOutput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'outContractName'
+        Value = Null
+        Component = ClientDataSet
+        ComponentItem = 'ContractName'
+        DataType = ftString
         MultiSelectSeparator = ','
       end>
     PackSize = 1

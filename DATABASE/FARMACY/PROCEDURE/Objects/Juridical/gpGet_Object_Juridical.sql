@@ -15,7 +15,7 @@ RETURNS TABLE (Id Integer, Code Integer, Name TVarChar,
                isDeferred Boolean,
                isUseReprice Boolean,
                CBName TVarChar, CBMFO TVarChar, CBAccount TVarChar, CBAccountOld TVarChar, CBPurposePayment TVarChar,
-               CodeRazom Integer, CodeMedicard Integer,
+               CodeRazom Integer, CodeMedicard Integer, CodeOrangeCard Integer,
                isErased boolean) AS
 $BODY$
 BEGIN 
@@ -48,6 +48,7 @@ BEGIN
            , CAST ('' as TVarChar)   AS CBPurposePayment
            , NULL::Integer           AS CodeRazom
            , NULL::Integer           AS CodeMedicard
+           , NULL::Integer           AS CodeOrangeCard
 
            , CAST (NULL AS Boolean)  AS isErased;
    
@@ -75,7 +76,8 @@ BEGIN
            , ObjectString_CBAccountOld.ValueData       AS CBAccountOld
            , ObjectString_CBPurposePayment.ValueData   AS CBPurposePayment
            , ObjectFloat_CodeRazom.ValueData::Integer  AS CodeRazom
-           , ObjectFloat_CodeMedicard.ValueData::Integer  AS CodeMedicard
+           , ObjectFloat_CodeMedicard.ValueData::Integer   AS CodeMedicard
+           , ObjectFloat_CodeOrangeCard.ValueData::Integer AS CodeOrangeCard
            
            , Object_Juridical.isErased                 AS isErased
            
@@ -95,6 +97,9 @@ BEGIN
            LEFT JOIN ObjectFloat AS ObjectFloat_CodeMedicard
                                  ON ObjectFloat_CodeMedicard.ObjectId = Object_Juridical.Id
                                 AND ObjectFloat_CodeMedicard.DescId = zc_ObjectFloat_Juridical_CodeMedicard()
+           LEFT JOIN ObjectFloat AS ObjectFloat_CodeOrangeCard
+                                 ON ObjectFloat_CodeOrangeCard.ObjectId = Object_Juridical.Id
+                                AND ObjectFloat_CodeOrangeCard.DescId = zc_ObjectFloat_Juridical_CodeOrangeCard()
 
            LEFT JOIN ObjectLink AS ObjectLink_Juridical_Retail
                                 ON ObjectLink_Juridical_Retail.ObjectId = Object_Juridical.Id

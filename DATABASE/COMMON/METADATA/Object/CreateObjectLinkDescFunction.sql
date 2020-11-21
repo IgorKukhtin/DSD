@@ -2440,9 +2440,15 @@ CREATE OR REPLACE FUNCTION zc_ObjectLink_Unit_UnitSAUA() RETURNS Integer AS $BOD
 INSERT INTO ObjectLinkDesc(Code, ItemName, DescId, ChildObjectDescId)
 SELECT 'zc_ObjectLink_Unit_UnitSAUA', 'Связь со Slave в системе автоматического управления ассортиментом САУА', zc_Object_Unit(), zc_Object_Unit() WHERE NOT EXISTS (SELECT * FROM ObjectLinkDesc WHERE Code = 'zc_ObjectLink_Unit_UnitSAUA');
 
+CREATE OR REPLACE FUNCTION zc_ObjectLink_MedicSP_AmbulantClinicSP() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM ObjectLinkDesc WHERE Code = 'zc_ObjectLink_MedicSP_AmbulantClinicSP'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
+INSERT INTO ObjectLinkDesc(Code, ItemName, DescId, ChildObjectDescId)
+SELECT 'zc_ObjectLink_MedicSP_AmbulantClinicSP', 'Связь с Амбулаторией', zc_Object_MedicSP(), zc_Object_PartnerMedical() WHERE NOT EXISTS (SELECT * FROM ObjectLinkDesc WHERE Code = 'zc_ObjectLink_MedicSP_AmbulantClinicSP');
+
+
 /*-------------------------------------------------------------------------------
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.   Воробкало А.А.   Шаблий О.В.
+ 20.11.20                                                                                      * zc_ObjectLink_MedicSP_AmbulantClinicSP
  17.11.20         * zc_ObjectLink_Asset_AssetType
  10.11.20         * zc_ObjectLink_ContractTradeMark_Contract
                     zc_ObjectLink_ContractTradeMark_TradeMark

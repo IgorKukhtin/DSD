@@ -10,7 +10,7 @@ CREATE OR REPLACE FUNCTION gpGet_Object_MemberMinus(
 )
 RETURNS TABLE (Id Integer, Name TVarChar
              , FromId Integer, FromName TVarChar
-             , ToId Integer, ToName TVarChar, INN_to TVarChar
+             , ToId Integer, ToName TVarChar, ToShort TVarChar, INN_to TVarChar
              , BankAccountFromId Integer, BankAccountFromName TVarChar
              , BankAccountToId Integer, BankAccountToName TVarChar
              , DetailPayment TVarChar, BankAccountTo TVarChar
@@ -33,6 +33,7 @@ $BODY$BEGIN
            
            , CAST (0 as Integer)    AS ToId
            , CAST ('' as TVarChar)  AS ToName
+           , CAST ('' as TVarChar)  AS ToShort
            , CAST ('' AS TVarChar)  AS INN_to
            
            , CAST (0 as Integer)    AS BankAccountFromId
@@ -58,6 +59,7 @@ $BODY$BEGIN
 
          , Object_To.Id                         AS ToId
          , Object_To.ValueData                  AS ToName
+         , ObjectString_ToShort.ValueData       AS ToShort
          , CASE WHEN Object_To.DescId = zc_Object_Juridical() THEN ObjectHistory_JuridicalDetails_View.OKPO
                 ELSE ObjectString_INN_to.ValueData
            END                                  AS INN_to
@@ -94,7 +96,11 @@ $BODY$BEGIN
                                ON ObjectLink_MemberMinus_BankAccountTo.ObjectId = Object_MemberMinus.Id
                               AND ObjectLink_MemberMinus_BankAccountTo.DescId = zc_ObjectLink_MemberMinus_BankAccountTo()
           LEFT JOIN Object AS Object_BankAccountTo ON Object_BankAccountTo.Id = ObjectLink_MemberMinus_BankAccountTo.ChildObjectId
-   
+
+          LEFT JOIN ObjectString AS ObjectString_ToShort
+                                 ON ObjectString_ToShort.ObjectId = Object_MemberMinus.Id
+                                AND ObjectString_ToShort.DescId = zc_ObjectString_MemberMinus_ToShort()
+
           LEFT JOIN ObjectString AS ObjectString_DetailPayment
                                  ON ObjectString_DetailPayment.ObjectId = Object_MemberMinus.Id
                                 AND ObjectString_DetailPayment.DescId = zc_ObjectString_MemberMinus_DetailPayment()
@@ -129,6 +135,7 @@ LANGUAGE plpgsql VOLATILE;
 /*-------------------------------------------------------------------------------
  »—“Œ–»ﬂ –¿«–¿¡Œ“ »: ƒ¿“¿, ¿¬“Œ–
                ‘ÂÎÓÌ˛Í ».¬.    ÛıÚËÌ ».¬.    ÎËÏÂÌÚ¸Â‚  .».
+ 20.11.20
  04.09.20         *
 */
 

@@ -27,7 +27,6 @@ object MedicSP_ObjectForm: TMedicSP_ObjectForm
     TabOrder = 0
     LookAndFeel.NativeStyle = True
     LookAndFeel.SkinName = 'UserSkin'
-    ExplicitWidth = 618
     object cxGridDBTableView: TcxGridDBTableView
       Navigator.Buttons.CustomButtons = <>
       DataController.DataSource = DataSource
@@ -53,14 +52,14 @@ object MedicSP_ObjectForm: TMedicSP_ObjectForm
         HeaderAlignmentHorz = taRightJustify
         HeaderAlignmentVert = vaCenter
         Options.Editing = False
-        Width = 129
+        Width = 70
       end
       object Name: TcxGridDBColumn
         Caption = #1060#1048#1054' '#1074#1088#1072#1095#1072
         DataBinding.FieldName = 'Name'
         HeaderAlignmentVert = vaCenter
         Options.Editing = False
-        Width = 233
+        Width = 198
       end
       object isErased: TcxGridDBColumn
         Caption = #1059#1076#1072#1083#1077#1085
@@ -77,7 +76,15 @@ object MedicSP_ObjectForm: TMedicSP_ObjectForm
         DataBinding.FieldName = 'PartnerMedicalName'
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
-        Width = 242
+        Width = 220
+      end
+      object AmbulantClinicSPName: TcxGridDBColumn
+        Caption = #1040#1084#1073#1091#1083#1072#1090#1086#1088#1080#1103
+        DataBinding.FieldName = 'AmbulantClinicSPName'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Options.Editing = False
+        Width = 113
       end
     end
     object cxGridLevel: TcxGridLevel
@@ -91,7 +98,6 @@ object MedicSP_ObjectForm: TMedicSP_ObjectForm
     Height = 65
     Align = alTop
     TabOrder = 5
-    ExplicitWidth = 618
     object cxLabel6: TcxLabel
       Left = 6
       Top = 9
@@ -642,6 +648,7 @@ object MedicSP_ObjectForm: TMedicSP_ObjectForm
     ColumnAddOnList = <>
     ColumnEnterList = <>
     SummaryItemList = <>
+    PropertiesCellList = <>
     Left = 48
     Top = 216
   end

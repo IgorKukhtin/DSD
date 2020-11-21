@@ -27,7 +27,7 @@ BEGIN
                                                , inName       := inName
                                                , inObjectCode := inObjectCode
                                                , inPartnerId  := inPartnerId
-                                               , inContractId := inContractId
+                                               , inContractId := inContractId ::Integer
                                                , inRetailId   := inRetailId
                                                , inUserId     := vbUserId
                                                 );

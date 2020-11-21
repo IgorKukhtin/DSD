@@ -10,6 +10,8 @@ CREATE OR REPLACE FUNCTION gpSelect_ObjectHistory_PriceListItem(
 )
 RETURNS TABLE (Id Integer , ObjectId Integer
                 , GoodsId Integer, GoodsCode Integer, GoodsName TVarChar
+                , Article TVarChar, ArticleVergl TVarChar, PartnerName   TVarChar
+                , EKPrice TFloat, EmpfPrice TFloat
                 , isErased Boolean, GoodsGroupNameFull TVarChar
                 , MeasureName TVarChar
                 , StartDate TDateTime, EndDate TDateTime
@@ -155,6 +157,11 @@ BEGIN
            , Object_Goods.Id                AS GoodsId     --ObjectLink_PriceListItem_Goods.ChildObjectId AS GoodsId
            , Object_Goods.ObjectCode        AS GoodsCode
            , Object_Goods.ValueData         AS GoodsName
+           , ObjectString_Article.ValueData      AS Article
+           , ObjectString_ArticleVergl.ValueData AS ArticleVergl
+           , Object_Partner.ValueData            AS PartnerName
+           , ObjectFloat_EKPrice.ValueData       AS EKPrice
+           , ObjectFloat_EmpfPrice.ValueData     AS EmpfPrice
            , Object_Goods.isErased          AS isErased
 
            , ObjectString_Goods_GoodsGroupFull.ValueData AS GoodsGroupNameFull
@@ -229,6 +236,22 @@ BEGIN
 
           LEFT JOIN tmpMinMax ON tmpMinMax.GoodsId = Object_Goods.Id
 
+          LEFT JOIN ObjectString AS ObjectString_Article
+                                 ON ObjectString_Article.ObjectId = Object_Goods.Id
+                                AND ObjectString_Article.DescId = zc_ObjectString_Article()
+          LEFT JOIN ObjectString AS ObjectString_ArticleVergl
+                                 ON ObjectString_ArticleVergl.ObjectId = Object_Goods.Id
+                                AND ObjectString_ArticleVergl.DescId = zc_ObjectString_ArticleVergl()
+          LEFT JOIN ObjectFloat AS ObjectFloat_EKPrice
+                                ON ObjectFloat_EKPrice.ObjectId = Object_Goods.Id 
+                               AND ObjectFloat_EKPrice.DescId = zc_ObjectFloat_Goods_EKPrice()
+          LEFT JOIN ObjectFloat AS ObjectFloat_EmpfPrice
+                                ON ObjectFloat_EmpfPrice.ObjectId = Object_Goods.Id
+                               AND ObjectFloat_EmpfPrice.DescId   = zc_ObjectFloat_Goods_EmpfPrice()
+          LEFT JOIN ObjectLink AS ObjectLink_Goods_Partner
+                               ON ObjectLink_Goods_Partner.ObjectId = Object_Goods.Id
+                              AND ObjectLink_Goods_Partner.DescId = zc_ObjectLink_Goods_Partner()
+          LEFT JOIN Object AS Object_Partner ON Object_Partner.Id = ObjectLink_Goods_Partner.ChildObjectId
        WHERE Object_Goods.DescId = zc_Object_Goods()
        ;
 
@@ -282,6 +305,11 @@ BEGIN
            , ObjectLink_PriceListItem_Goods.ChildObjectId AS GoodsId
            , Object_Goods.ObjectCode AS GoodsCode
            , Object_Goods.ValueData  AS GoodsName
+           , ObjectString_Article.ValueData      AS Article
+           , ObjectString_ArticleVergl.ValueData AS ArticleVergl
+           , Object_Partner.ValueData            AS PartnerName
+           , ObjectFloat_EKPrice.ValueData       AS EKPrice
+           , ObjectFloat_EmpfPrice.ValueData     AS EmpfPrice
            , Object_Goods.isErased   AS isErased
 
            , ObjectString_Goods_GoodsGroupFull.ValueData AS GoodsGroupNameFull
@@ -293,13 +321,13 @@ BEGIN
 
              -- расчет цены без НДС, до 2 знаков
            , CASE WHEN vbPriceWithVAT = TRUE
-                  THEN CAST (ObjectHistoryFloat_PriceListItem_Value.ValueData - ObjectHistoryFloat_PriceListItem_Value.ValueData * (vbVATPercent / (vbVATPercent + 100)) AS NUMERIC (16, 2))
+                  THEN CAST (ObjectHistoryFloat_PriceListItem_Value.ValueData - ObjectHistoryFloat_PriceListItem_Value.ValueData * (COALESCE (vbVATPercent,0) / (COALESCE (vbVATPercent,0) + 100)) AS NUMERIC (16, 2))
                   ELSE ObjectHistoryFloat_PriceListItem_Value.ValueData
              END ::TFloat AS PriceNoVAT
 
              -- расчет цены с НДС, до 2 знаков
-           , CASE WHEN vbPriceWithVAT <> TRUE
-                  THEN CAST ((ObjectHistoryFloat_PriceListItem_Value.ValueData + ObjectHistoryFloat_PriceListItem_Value.ValueData * (vbVATPercent / 100)) AS NUMERIC (16, 2))
+           , CASE WHEN COALESCE (vbPriceWithVAT,FALSE) <> TRUE
+                  THEN CAST ((ObjectHistoryFloat_PriceListItem_Value.ValueData + ObjectHistoryFloat_PriceListItem_Value.ValueData * (COALESCE (vbVATPercent,0) / 100)) AS NUMERIC (16, 2))
                   ELSE CAST (ObjectHistoryFloat_PriceListItem_Value.ValueData AS NUMERIC (16, 2))
              END ::TFloat AS PriceWVAT
 
@@ -367,6 +395,22 @@ BEGIN
 
           LEFT JOIN tmpMinMax ON tmpMinMax.GoodsId = ObjectLink_PriceListItem_Goods.ChildObjectId
 
+          LEFT JOIN ObjectString AS ObjectString_Article
+                                 ON ObjectString_Article.ObjectId = Object_Goods.Id
+                                AND ObjectString_Article.DescId = zc_ObjectString_Article()
+          LEFT JOIN ObjectString AS ObjectString_ArticleVergl
+                                 ON ObjectString_ArticleVergl.ObjectId = Object_Goods.Id
+                                AND ObjectString_ArticleVergl.DescId = zc_ObjectString_ArticleVergl()
+          LEFT JOIN ObjectFloat AS ObjectFloat_EKPrice
+                                ON ObjectFloat_EKPrice.ObjectId = Object_Goods.Id 
+                               AND ObjectFloat_EKPrice.DescId = zc_ObjectFloat_Goods_EKPrice()
+          LEFT JOIN ObjectFloat AS ObjectFloat_EmpfPrice
+                                ON ObjectFloat_EmpfPrice.ObjectId = Object_Goods.Id
+                               AND ObjectFloat_EmpfPrice.DescId   = zc_ObjectFloat_Goods_EmpfPrice()
+          LEFT JOIN ObjectLink AS ObjectLink_Goods_Partner
+                               ON ObjectLink_Goods_Partner.ObjectId = Object_Goods.Id
+                              AND ObjectLink_Goods_Partner.DescId = zc_ObjectLink_Goods_Partner()
+          LEFT JOIN Object AS Object_Partner ON Object_Partner.Id = ObjectLink_Goods_Partner.ChildObjectId
        WHERE ObjectLink_PriceListItem_PriceList.DescId = zc_ObjectLink_PriceListItem_PriceList()
          AND ObjectLink_PriceListItem_PriceList.ChildObjectId = inPriceListId
          AND (ObjectHistoryFloat_PriceListItem_Value.ValueData <> 0 OR ObjectHistory_PriceListItem.StartDate <> zc_DateStart())
@@ -389,9 +433,6 @@ $BODY$
 */
 
 -- тест
--- SELECT * FROM gpSelect_ObjectHistory_PriceListItem (zc_PriceList_ProductionSeparate(), CURRENT_TIMESTAMP, FALSE, inSession:= zfCalc_UserAdmin())
--- SELECT * FROM gpSelect_ObjectHistory_PriceListItem (zc_PriceList_Basis(), CURRENT_TIMESTAMP, FALSE, inSession:= zfCalc_UserAdmin())
--- SELECT * FROM gpSelect_ObjectHistory_PriceListItem (zc_PriceList_ProductionSeparateHist() , CURRENT_TIMESTAMP, true, inSession:= zfCalc_UserAdmin())
---where goodsid =  2131
-
+-- select * from gpSelect_ObjectHistory_PriceListItem(inPriceListId := 2773 , inOperDate := ('20.11.2020')::TDateTime , inShowAll := 'False' ,  inSession := '5');
+--select * from gpSelect_ObjectHistory_PriceListItem(inPriceListId := 2773 , inOperDate := ('20.11.2020')::TDateTime , inShowAll := 'False' ,  inSession := '5');
 

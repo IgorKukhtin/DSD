@@ -767,6 +767,10 @@ CREATE OR REPLACE FUNCTION zc_ObjectString_MemberMinus_DetailPayment() RETURNS I
 INSERT INTO ObjectStringDesc (Code, DescId, ItemName)
   SELECT 'zc_ObjectString_MemberMinus_DetailPayment', zc_object_MemberMinus(), 'Назначение платежа' WHERE NOT EXISTS (SELECT * FROM ObjectStringDesc WHERE Code = 'zc_ObjectString_MemberMinus_DetailPayment');
 
+CREATE OR REPLACE FUNCTION zc_ObjectString_MemberMinus_ToShort() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM ObjectStringDesc WHERE Code = 'zc_ObjectString_MemberMinus_ToShort'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
+INSERT INTO ObjectStringDesc (Code, DescId, ItemName)
+  SELECT 'zc_ObjectString_MemberMinus_ToShort', zc_object_MemberMinus(), 'Юр. лицо (сокращенное значение)' WHERE NOT EXISTS (SELECT * FROM ObjectStringDesc WHERE Code = 'zc_ObjectString_MemberMinus_ToShort');
+
 CREATE OR REPLACE FUNCTION zc_ObjectString_PartnerExternal_ObjectCode() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM ObjectStringDesc WHERE Code = 'zc_ObjectString_PartnerExternal_ObjectCode'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
 INSERT INTO ObjectStringDesc (Code, DescId, ItemName)
   SELECT 'zc_ObjectString_PartnerExternal_ObjectCode', zc_object_PartnerExternal(), 'Код внешний' WHERE NOT EXISTS (SELECT * FROM ObjectStringDesc WHERE Code = 'zc_ObjectString_PartnerExternal_ObjectCode');

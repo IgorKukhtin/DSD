@@ -53,11 +53,12 @@ BEGIN
      -- записываем новый эл. ФИО врача
      IF COALESCE (vbMedicSPId, 0) = 0 THEN
         PERFORM gpInsertUpdate_Object_MedicSP
-                                           (ioId              := 0
-                                          , inCode            := lfGet_ObjectCode(0, zc_Object_MedicSP())
-                                          , inName            := TRIM(inMedicSPName)  ::TVarChar
-                                          , inPartnerMedicalId:= vbPartnerMedicalId
-                                          , inSession         := inSession
+                                           (ioId               := 0
+                                          , inCode             := lfGet_ObjectCode(0, zc_Object_MedicSP())
+                                          , inName             := TRIM(inMedicSPName)  ::TVarChar
+                                          , inPartnerMedicalId := vbPartnerMedicalId
+                                          , inAmbulantClinicSP := 0
+                                          , inSession          := inSession
                                           );
      END IF;  
      
@@ -69,7 +70,8 @@ $BODY$
   LANGUAGE plpgsql VOLATILE;
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
-               Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
+               Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Шаблий О.В.
+ 20.11.20                                                       *
  06.05.17         *
 */
 

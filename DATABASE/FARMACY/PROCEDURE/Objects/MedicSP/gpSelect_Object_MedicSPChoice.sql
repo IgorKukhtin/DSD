@@ -10,6 +10,7 @@ CREATE OR REPLACE FUNCTION gpSelect_Object_MedicSPChoice(
 )
 RETURNS TABLE (Id Integer, Code Integer, Name TVarChar
              , PartnerMedicalId Integer, PartnerMedicalName TVarChar
+             , AmbulantClinicSPId Integer, AmbulantClinicSPName TVarChar
              , isErased boolean) AS
 $BODY$
 BEGIN
@@ -83,6 +84,9 @@ BEGIN
           , Object_PartnerMedical.Id          AS PartnerMedicalId
           , Object_PartnerMedical.ValueData   AS PartnerMedicalName
 
+          , Object_AmbulantClinicSP.Id        AS AmbulantClinicSPId
+          , Object_AmbulantClinicSP.ValueData AS AmbulantClinicSPName
+
           , Object_MedicSP.isErased           AS isErased
      FROM Object AS Object_MedicSP
           INNER JOIN ObjectLink AS ObjectLink_MedicSP_PartnerMedical
@@ -92,6 +96,12 @@ BEGIN
           INNER JOIN tmpData ON tmpData.PartnerMedicalId = ObjectLink_MedicSP_PartnerMedical.ChildObjectId
 
           LEFT JOIN Object AS Object_PartnerMedical ON Object_PartnerMedical.Id = ObjectLink_MedicSP_PartnerMedical.ChildObjectId
+
+         LEFT JOIN ObjectLink AS ObjectLink_MedicSP_AmbulantClinicSP
+                              ON ObjectLink_MedicSP_AmbulantClinicSP.ObjectId = Object_MedicSP.Id
+                             AND ObjectLink_MedicSP_AmbulantClinicSP.DescId = zc_ObjectLink_MedicSP_AmbulantClinicSP()
+
+         LEFT JOIN Object AS Object_AmbulantClinicSP ON Object_AmbulantClinicSP.Id = ObjectLink_MedicSP_AmbulantClinicSP.ChildObjectId
 
      WHERE Object_MedicSP.DescId = zc_Object_MedicSP()
      
@@ -113,7 +123,8 @@ LANGUAGE plpgsql VOLATILE;
 
 /*-------------------------------------------------------------------------------
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
-               Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
+               Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Шаблий О.В.
+ 20.11.20                                                       *
  03.01.19         *
  25.01.18         *              
 

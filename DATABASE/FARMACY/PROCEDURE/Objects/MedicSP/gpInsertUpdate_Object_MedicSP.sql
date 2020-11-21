@@ -1,12 +1,13 @@
 -- Function: gpInsertUpdate_Object_MedicSP()
 
-DROP FUNCTION IF EXISTS gpInsertUpdate_Object_MedicSP (Integer, Integer, TVarChar, Integer, TVarChar);
+DROP FUNCTION IF EXISTS gpInsertUpdate_Object_MedicSP (Integer, Integer, TVarChar, Integer, Integer, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpInsertUpdate_Object_MedicSP(
  INOUT ioId	             Integer   ,    -- ключ объекта <Торговельна назва лікарського засобу (Соц. проект)> 
     IN inCode                Integer   ,    -- код объекта 
     IN inName                TVarChar  ,    -- Название объекта <>
     IN inPartnerMedicalId    Integer   ,    -- Медицинское учреждение
+    IN inAmbulantClinicSP    Integer   ,    -- Амбулатория
     IN inSession             TVarChar       -- сессия пользователя
 )
 RETURNS Integer
@@ -35,6 +36,8 @@ BEGIN
 
     -- сохранили свойство <>
    PERFORM lpInsertUpdate_ObjectLink( zc_ObjectLink_MedicSP_PartnerMedical(), ioId, inPartnerMedicalId);
+    -- сохранили свойство <>
+   PERFORM lpInsertUpdate_ObjectLink( zc_ObjectLink_MedicSP_AmbulantClinicSP(), ioId, inAmbulantClinicSP);
 
    -- сохранили протокол
    PERFORM lpInsert_ObjectProtocol (ioId, vbUserId);
@@ -44,7 +47,8 @@ END;$BODY$
 
 /*-------------------------------------------------------------------------------
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
-               Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
+               Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Шаблий О.В.
+ 20.11.20                                                       *
  06.05.17         * add PartnerMedical
  14.02.17         * 
 */

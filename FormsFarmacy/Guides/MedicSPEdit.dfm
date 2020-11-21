@@ -2,7 +2,7 @@
   Left = 0
   Top = 0
   Caption = #1044#1086#1073#1072#1074#1080#1090#1100'/'#1080#1079#1084#1077#1085#1080#1090#1100' '#1060#1048#1054' '#1074#1088#1072#1095#1072' ('#1057#1086#1094'. '#1087#1088#1086#1077#1082#1090')'
-  ClientHeight = 204
+  ClientHeight = 255
   ClientWidth = 367
   Color = clBtnFace
   Font.Charset = DEFAULT_CHARSET
@@ -29,7 +29,7 @@
   end
   object cxButton1: TcxButton
     Left = 74
-    Top = 167
+    Top = 213
     Width = 75
     Height = 25
     Action = dsdInsertUpdateGuides
@@ -39,7 +39,7 @@
   end
   object cxButton2: TcxButton
     Left = 224
-    Top = 167
+    Top = 213
     Width = 75
     Height = 25
     Action = dsdFormClose
@@ -77,6 +77,23 @@
     Properties.ReadOnly = True
     TabOrder = 7
     Width = 296
+  end
+  object ceAmbulantClinicSP: TcxButtonEdit
+    Left = 40
+    Top = 174
+    Properties.Buttons = <
+      item
+        Default = True
+        Kind = bkEllipsis
+      end>
+    Properties.ReadOnly = True
+    TabOrder = 8
+    Width = 296
+  end
+  object cxLabel2: TcxLabel
+    Left = 40
+    Top = 154
+    Caption = #1040#1084#1073#1091#1083#1072#1090#1086#1088#1080#1103
   end
   object ActionList: TActionList
     Left = 272
@@ -146,6 +163,14 @@
         ComponentItem = 'Key'
         ParamType = ptInput
         MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inAmbulantClinicSP'
+        Value = Null
+        Component = AmbulantClinicSPGuides
+        ComponentItem = 'Key'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
       end>
     PackSize = 1
     Left = 307
@@ -202,6 +227,21 @@
         ComponentItem = 'TextValue'
         DataType = ftString
         MultiSelectSeparator = ','
+      end
+      item
+        Name = 'AmbulantClinicSPId'
+        Value = Null
+        Component = AmbulantClinicSPGuides
+        ComponentItem = 'Key'
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'AmbulantClinicSPName'
+        Value = Null
+        Component = AmbulantClinicSPGuides
+        ComponentItem = 'TextValue'
+        DataType = ftString
+        MultiSelectSeparator = ','
       end>
     PackSize = 1
     Left = 312
@@ -254,5 +294,34 @@
       end>
     Left = 160
     Top = 108
+  end
+  object AmbulantClinicSPGuides: TdsdGuides
+    KeyField = 'Id'
+    LookupControl = ceAmbulantClinicSP
+    FormNameParam.Value = 'TAmbulantClinicSPForm'
+    FormNameParam.DataType = ftString
+    FormNameParam.MultiSelectSeparator = ','
+    FormName = 'TAmbulantClinicSPForm'
+    PositionDataSet = 'ClientDataSet'
+    Params = <
+      item
+        Name = 'Key'
+        Value = ''
+        Component = AmbulantClinicSPGuides
+        ComponentItem = 'Key'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'TextValue'
+        Value = ''
+        Component = AmbulantClinicSPGuides
+        ComponentItem = 'TextValue'
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end>
+    Left = 192
+    Top = 172
   end
 end

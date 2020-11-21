@@ -1,3 +1,4 @@
+
 -- Function: gpSelect_Object_MedicSP(TVarChar)
 
 DROP FUNCTION IF EXISTS gpSelect_Object_MedicSP(TVarChar);
@@ -9,6 +10,7 @@ CREATE OR REPLACE FUNCTION gpSelect_Object_MedicSP(
 )
 RETURNS TABLE (Id Integer, Code Integer, Name TVarChar
              , PartnerMedicalId Integer, PartnerMedicalName TVarChar
+             , AmbulantClinicSPId Integer, AmbulantClinicSPName TVarChar
              , isErased boolean) AS
 $BODY$
 BEGIN
@@ -24,12 +26,19 @@ BEGIN
           , Object_PartnerMedical.Id          AS PartnerMedicalId
           , Object_PartnerMedical.ValueData   AS PartnerMedicalName
 
+          , Object_AmbulantClinicSP.Id          AS AmbulantClinicSPId
+          , Object_AmbulantClinicSP.ValueData   AS AmbulantClinicSPName
+
           , Object_MedicSP.isErased           AS isErased
      FROM Object AS Object_MedicSP
          LEFT JOIN ObjectLink AS ObjectLink_MedicSP_PartnerMedical
                               ON ObjectLink_MedicSP_PartnerMedical.ObjectId = Object_MedicSP.Id
                              AND ObjectLink_MedicSP_PartnerMedical.DescId = zc_ObjectLink_MedicSP_PartnerMedical()
          LEFT JOIN Object AS Object_PartnerMedical ON Object_PartnerMedical.Id = ObjectLink_MedicSP_PartnerMedical.ChildObjectId
+         LEFT JOIN ObjectLink AS ObjectLink_MedicSP_AmbulantClinicSP
+                              ON ObjectLink_MedicSP_AmbulantClinicSP.ObjectId = Object_MedicSP.Id
+                             AND ObjectLink_MedicSP_AmbulantClinicSP.DescId = zc_ObjectLink_MedicSP_AmbulantClinicSP()
+         LEFT JOIN Object AS Object_AmbulantClinicSP ON Object_AmbulantClinicSP.Id = ObjectLink_MedicSP_AmbulantClinicSP.ChildObjectId
      WHERE Object_MedicSP.DescId = zc_Object_MedicSP()
        AND (ObjectLink_MedicSP_PartnerMedical.ChildObjectId = inPartnerMedicalId OR inPartnerMedicalId = 0);
   
@@ -41,7 +50,8 @@ LANGUAGE plpgsql VOLATILE;
 
 /*-------------------------------------------------------------------------------
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
-               Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
+               Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Шаблий О.В.
+ 20.11.20                                                       *
  06.05.17         * add PartnerMedical
  14.02.17         *              
 

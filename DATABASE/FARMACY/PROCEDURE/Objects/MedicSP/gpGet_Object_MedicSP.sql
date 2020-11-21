@@ -8,6 +8,7 @@ CREATE OR REPLACE FUNCTION gpGet_Object_MedicSP(
 )
 RETURNS TABLE (Id Integer, Code Integer, Name TVarChar
              , PartnerMedicalId Integer, PartnerMedicalName TVarChar
+             , AmbulantClinicSPId Integer, AmbulantClinicSPName TVarChar
              , isErased Boolean) AS
 $BODY$
 BEGIN
@@ -24,20 +25,28 @@ BEGIN
            , CAST ('' as TVarChar)  AS NAME
            , CAST (0 as Integer)    AS PartnerMedicalId
            , CAST ('' as TVarChar)  AS PartnerMedicalName
+           , CAST (0 as Integer)    AS AmbulantClinicSPId
+           , CAST ('' as TVarChar)  AS AmbulantClinicSPName
            , CAST (NULL AS Boolean) AS isErased;
    ELSE
        RETURN QUERY 
-       SELECT Object_MedicSP.Id               AS Id
-            , Object_MedicSP.ObjectCode       AS Code
-            , Object_MedicSP.ValueData        AS Name
-            , Object_PartnerMedical.Id        AS PartnerMedicalId
-            , Object_PartnerMedical.ValueData AS PartnerMedicalName
-            , Object_MedicSP.isErased         AS isErased
+       SELECT Object_MedicSP.Id                   AS Id
+            , Object_MedicSP.ObjectCode           AS Code
+            , Object_MedicSP.ValueData            AS Name
+            , Object_PartnerMedical.Id            AS PartnerMedicalId
+            , Object_PartnerMedical.ValueData     AS PartnerMedicalName
+            , Object_AmbulantClinicSP.Id          AS AmbulantClinicSPId
+            , Object_AmbulantClinicSP.ValueData   AS AmbulantClinicSPName
+            , Object_MedicSP.isErased             AS isErased
        FROM Object AS Object_MedicSP
          LEFT JOIN ObjectLink AS ObjectLink_MedicSP_PartnerMedical
                               ON ObjectLink_MedicSP_PartnerMedical.ObjectId = Object_MedicSP.Id
                              AND ObjectLink_MedicSP_PartnerMedical.DescId = zc_ObjectLink_MedicSP_PartnerMedical()
          LEFT JOIN Object AS Object_PartnerMedical ON Object_PartnerMedical.Id = ObjectLink_MedicSP_PartnerMedical.ChildObjectId
+         LEFT JOIN ObjectLink AS ObjectLink_MedicSP_AmbulantClinicSP
+                              ON ObjectLink_MedicSP_AmbulantClinicSP.ObjectId = Object_MedicSP.Id
+                             AND ObjectLink_MedicSP_AmbulantClinicSP.DescId = zc_ObjectLink_MedicSP_AmbulantClinicSP()
+         LEFT JOIN Object AS Object_AmbulantClinicSP ON Object_AmbulantClinicSP.Id = ObjectLink_MedicSP_AmbulantClinicSP.ChildObjectId
        WHERE Object_MedicSP.Id = inId;
    END IF;
    
@@ -48,7 +57,8 @@ LANGUAGE plpgsql VOLATILE;
 
 /*-------------------------------------------------------------------------------
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
-               Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
+               Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Шаблий О.В.
+ 20.11.20                                                       *
  06.05.17         * add PartnerMedical
  14.02.17         *
 */
