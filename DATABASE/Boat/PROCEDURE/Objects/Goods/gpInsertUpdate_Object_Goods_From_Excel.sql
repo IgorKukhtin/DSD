@@ -114,7 +114,7 @@ BEGIN
           --если не нашли ощибка
    IF COALESCE (vbGoodsGroupId,0) = 0
    THEN
-        RAISE EXCEPTION 'Ошибка.111Группа товара с кодом = <%> не найдена. Товар <%>', inGoodsGroupCode, inName;
+        RAISE EXCEPTION 'Ошибка.Группа товара с кодом = <%> не найдена. Товар <%>', inGoodsGroupCode, inName;
    END IF;
 
    IF COALESCE (inPartnerCode, 0) <> 0
@@ -162,7 +162,8 @@ BEGIN
        END IF;
    END IF;
 
-   IF COALESCE (inGoodsTag, '') <> ''
+   -- Это название-2
+   IF COALESCE (inGoodsTag, '') <> '' AND 0=1
    THEN
        -- пробуем найти 
        vbGoodsTagId := (SELECT Object.Id FROM Object WHERE Object.DescId = zc_Object_GoodsTag() AND TRIM (Object.ValueData) Like TRIM (inGoodsTag));
@@ -259,7 +260,7 @@ BEGIN
        -- создаем
        vbGoodsId := gpInsertUpdate_Object_Goods(ioId               := COALESCE (vbGoodsId,0)::  Integer
                                               , inCode             := COALESCE (inObjectCode,0)    :: Integer
-                                              , inName             := TRIM (inName)         :: TVarChar
+                                              , inName             := (TRIM (inName)  || ' ' || TRIM (inGoodsTag))       :: TVarChar
                                               , inArticle          := TRIM (inArticle)      :: TVarChar
                                               , inArticleVergl     := TRIM (inArticleVergl) :: TVarChar
                                               , inEAN              := TRIM (inEAN)          :: TVarChar
@@ -274,7 +275,7 @@ BEGIN
                                               , inEmpfPrice        := inEmpfPrice      :: TFloat
                                               , inGoodsGroupId     := vbGoodsGroupId   :: Integer
                                               , inMeasureId        := vbMeasureId      :: Integer
-                                              , inGoodsTagId       := vbGoodsTagId     :: Integer
+                                              , inGoodsTagId       := 0 -- vbGoodsTagId     :: Integer
                                               , inGoodsTypeId      := vbGoodsTypeId    :: Integer
                                               , inGoodsSizeId      := vbGoodsSizeId    :: Integer
                                               , inProdColorId      := vbProdColorId    :: Integer
@@ -288,7 +289,7 @@ BEGIN
        -- обновляем
        PERFORM gpInsertUpdate_Object_Goods(ioId               := COALESCE (tmp.Id, vbGoodsId)::  Integer
                                          , inCode             := COALESCE (tmp.Code, inObjectCode)    :: Integer
-                                         , inName             := COALESCE (inName, tmp.Name)   :: TVarChar
+                                         , inName             := COALESCE (TRIM (inName)  || ' ' || TRIM (inGoodsTag), tmp.Name)   :: TVarChar
                                          , inArticle          := CASE WHEN TRIM (inArticle) <> '' THEN TRIM (inArticle) ELSE tmp.Article END :: TVarChar
                                          , inArticleVergl     := CASE WHEN TRIM (inArticleVergl) <> '' THEN TRIM (inArticleVergl) ELSE tmp.ArticleVergl END:: TVarChar
                                          , inEAN              := CASE WHEN TRIM (inEAN) <> '' THEN TRIM (inEAN) ELSE tmp.EAN END:: TVarChar
@@ -303,7 +304,7 @@ BEGIN
                                          , inEmpfPrice        := CASE WHEN COALESCE (inEmpfPrice, 0) <> 0 THEN inEmpfPrice ELSE tmp.EmpfPrice END  :: TFloat
                                          , inGoodsGroupId     := CASE WHEN COALESCE (vbGoodsGroupId, 0) <> 0 THEN vbGoodsGroupId ELSE tmp.GoodsGroupId END  :: Integer
                                          , inMeasureId        := CASE WHEN COALESCE (tmp.MeasureId, 0) <> 0 THEN tmp.MeasureId ELSE vbMeasureId END      :: Integer
-                                         , inGoodsTagId       := CASE WHEN COALESCE (vbGoodsTagId, 0) <> 0 THEN vbGoodsTagId ELSE tmp.GoodsTagId END     :: Integer
+                                         , inGoodsTagId       := 0 -- tmp.GoodsTagId
                                          , inGoodsTypeId      := CASE WHEN COALESCE (vbGoodsTypeId, 0) <> 0 THEN vbGoodsTypeId ELSE tmp.GoodsTypeId END    :: Integer
                                          , inGoodsSizeId      := CASE WHEN COALESCE (vbGoodsSizeId, 0) <> 0 THEN vbGoodsSizeId ELSE tmp.GoodsSizeId END    :: Integer
                                          , inProdColorId      := CASE WHEN COALESCE (vbProdColorId, 0) <> 0 THEN vbProdColorId ELSE tmp.ProdColorId END    :: Integer

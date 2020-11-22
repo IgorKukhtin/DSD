@@ -17,9 +17,10 @@ BEGIN
    vbUserId:= lpGetUserBySession (inSession);
 
    --проверка есть ли уже такая группа
-   IF EXISTS (SELECT 1 FROM Object WHERE Object.DescId = zc_Object_GoodsGroup() AND TRIM (Object.ValueData) Like TRIM(inName))
+   IF EXISTS (SELECT 1 FROM Object WHERE Object.DescId = zc_Object_GoodsGroup() AND TRIM (Object.ValueData) ILIKE TRIM(inName))
    THEN
-        RETURN;
+     --RAISE EXCEPTION 'Ошибка.Уже существует <%>.', inName;
+       RETURN;
    END IF;
 
    PERFORM gpInsertUpdate_Object_GoodsGroup (ioId              := 0         :: Integer

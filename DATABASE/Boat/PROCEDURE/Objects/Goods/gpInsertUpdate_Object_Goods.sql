@@ -57,7 +57,7 @@ BEGIN
    -- проверка уникальности < од>
    IF inCode <> 0 THEN PERFORM lpCheckUnique_Object_ObjectCode (ioId, zc_Object_Goods(), inCode); END IF;
    -- !!! проверка уникальности <Ќаименование>
-   PERFORM lpCheckUnique_Object_ValueData (ioId, zc_Object_Goods(), inName);
+   -- PERFORM lpCheckUnique_Object_ValueData (ioId, zc_Object_Goods(), inName);
 
    -- проверка <inName>
    IF TRIM (COALESCE (inName, '')) = ''
