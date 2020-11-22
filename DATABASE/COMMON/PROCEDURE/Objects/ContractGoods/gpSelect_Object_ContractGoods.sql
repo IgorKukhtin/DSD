@@ -11,7 +11,7 @@ RETURNS TABLE (Id Integer, Code INTEGER
              , GoodsId Integer, GoodsCode Integer, GoodsName TVarChar
              , GoodsKindId Integer, GoodsKindName TVarChar
              , GoodsPropertyName TVarChar
-             --, BarCode TVarChar, Article TVarChar
+             , BarCode TVarChar, Article TVarChar
              , StartDate TDateTime
              , isErased Boolean
              ) AS
@@ -77,6 +77,46 @@ BEGIN
                             AND Object_ContractGoods.isErased = FALSE
                          )
 
+   , tmpGoodsPropertyValue AS (SELECT Object_GoodsPropertyValue.Id AS GoodsPropertyValueId
+                                    , ObjectLink_GoodsPropertyValue_GoodsProperty.ChildObjectId  AS GoodsPropertyId
+                                    , ObjectLink_GoodsPropertyValue_Goods.ChildObjectId          AS GoodsId
+                                    , ObjectLink_GoodsPropertyValue_GoodsKind.ChildObjectId      AS GoodsKindId
+
+                                    , ObjectString_BarCode.ValueData         AS BarCode
+                                    , ObjectString_Article.ValueData         AS Article
+            
+                               FROM (SELECT DISTINCT tmpContractGoods.GoodsId
+                                                   , tmpContractGoods.GoodsPropertyId
+                                                   , tmpContractGoods.GoodsKindId FROM tmpContractGoods ) AS tmp
+                                 
+                                  INNER JOIN ObjectLink AS ObjectLink_GoodsPropertyValue_Goods
+                                                        ON ObjectLink_GoodsPropertyValue_Goods.ChildObjectId =  tmp.GoodsId
+                                                       AND ObjectLink_GoodsPropertyValue_Goods.DescId = zc_ObjectLink_GoodsPropertyValue_Goods()
+
+                                  INNER JOIN ObjectLink AS ObjectLink_GoodsPropertyValue_GoodsProperty
+                                                        ON ObjectLink_GoodsPropertyValue_GoodsProperty.DescId = zc_ObjectLink_GoodsPropertyValue_GoodsProperty()
+                                                       AND ObjectLink_GoodsPropertyValue_GoodsProperty.ObjectId = ObjectLink_GoodsPropertyValue_Goods.ObjectId
+                                                       AND ObjectLink_GoodsPropertyValue_GoodsProperty.ChildObjectId = tmp.GoodsPropertyId
+
+                                  LEFT JOIN ObjectLink AS ObjectLink_GoodsPropertyValue_GoodsKind
+                                                       ON ObjectLink_GoodsPropertyValue_GoodsKind.ObjectId = ObjectLink_GoodsPropertyValue_Goods.ObjectId
+                                                      AND ObjectLink_GoodsPropertyValue_GoodsKind.DescId = zc_ObjectLink_GoodsPropertyValue_GoodsKind()
+
+                                  LEFT JOIN Object AS Object_GoodsPropertyValue
+                                                   ON Object_GoodsPropertyValue.Id = ObjectLink_GoodsPropertyValue_Goods.ObjectId
+                                                  AND Object_GoodsPropertyValue.DescId = zc_Object_GoodsPropertyValue()
+                                                  AND Object_GoodsPropertyValue.isErased = FALSE 
+
+                                  -- AND COALESCE (tmp.GoodsKindId,0) = COALESCE (ObjectLink_GoodsPropertyValue_GoodsKind.ChildObjectId,0)
+
+                                  LEFT JOIN ObjectString AS ObjectString_BarCode
+                                                         ON ObjectString_BarCode.ObjectId = ObjectLink_GoodsPropertyValue_Goods.ObjectId
+                                                        AND ObjectString_BarCode.DescId = zc_ObjectString_GoodsPropertyValue_BarCode() 
+                                  LEFT JOIN ObjectString AS ObjectString_Article
+                                                         ON ObjectString_Article.ObjectId = ObjectLink_GoodsPropertyValue_Goods.ObjectId
+                                                        AND ObjectString_Article.DescId = zc_ObjectString_GoodsPropertyValue_Article() 
+                               )
+
       ---
        SELECT
              Object_ContractGoods.Id          AS Id
@@ -93,7 +133,8 @@ BEGIN
            , Object_GoodsKind.Id              AS GoodsKindId
            , Object_GoodsKind.ValueData       AS GoodsKindName
            , Object_GoodsProperty.ValueData   AS GoodsPropertyName
-
+           , tmpGoodsPropertyValue.BarCode ::TVarChar
+           , tmpGoodsPropertyValue.Article ::TVarChar
            , Object_ContractGoods.StartDate   AS StartDate
            , Object_ContractGoods.isErased    AS isErased
 
@@ -105,6 +146,10 @@ BEGIN
             LEFT JOIN Object AS Object_GoodsKind ON Object_GoodsKind.Id = Object_ContractGoods.GoodsKindId
 
             LEFT JOIN Object AS Object_GoodsProperty ON Object_GoodsProperty.Id = Object_ContractGoods.GoodsPropertyId
+
+            LEFT JOIN tmpGoodsPropertyValue ON tmpGoodsPropertyValue.GoodsPropertyId = Object_ContractGoods.GoodsPropertyId
+                                           AND tmpGoodsPropertyValue.GoodsId = Object_ContractGoods.GoodsId
+                                          -- AND COALESCE (tmpGoodsPropertyValue.GoodsKindId,0) = COALESCE (Object_ContractGoods.GoodsKindId,0)
 
             LEFT JOIN tmpContractGoods AS tmp
                                        ON tmp.ContractId = Object_ContractGoods.ContractId
@@ -131,47 +176,3 @@ ALTER FUNCTION gpSelect_Object_ContractGoods (TVarChar) OWNER TO postgres;
 
 -- тест
 -- SELECT * FROM gpSelect_Object_ContractGoods (zfCalc_UserAdmin())
-
-/*
-   , tmpGoodsPropertyValue AS (SELECT Object_GoodsPropertyValue.Id           AS GoodsPropertyValueId
-                                    , Object_GoodsPropertyValue.ObjectCode   AS GoodsPropertyValueCode
-                                    , Object_GoodsPropertyValue.ValueData    AS GoodsPropertyValueName
-                                    , ObjectLink_GoodsPropertyValue_GoodsProperty.ChildObjectId  AS GoodsPropertyId
-                                    , ObjectLink_GoodsPropertyValue_Goods.ChildObjectId          AS GoodsId
-                                    , ObjectLink_GoodsPropertyValue_GoodsKind.ChildObjectId      AS GoodsKindId
-
-                                    , ObjectString_BarCode.ValueData         AS BarCode
-                                    , ObjectString_Article.ValueData         AS Article
-            
-                               FROM ObjectLink AS ObjectLink_GoodsPropertyValue_GoodsProperty
-                                  LEFT JOIN ObjectLink AS ObjectLink_GoodsPropertyValue_Goods
-                                                       ON ObjectLink_GoodsPropertyValue_Goods.ObjectId =  ObjectLink_GoodsPropertyValue_GoodsProperty.ObjectId
-                                                      AND ObjectLink_GoodsPropertyValue_Goods.DescId = zc_ObjectLink_GoodsPropertyValue_Goods()
-                                                      
-                                  LEFT JOIN Object AS Object_GoodsPropertyValue
-                                                   ON Object_GoodsPropertyValue.Id = ObjectLink_GoodsPropertyValue_GoodsProperty.ObjectId
-                                                  AND Object_GoodsPropertyValue.DescId = zc_Object_GoodsPropertyValue()
-                                                  AND Object_GoodsPropertyValue.isErased = FALSE 
-
-                                  LEFT JOIN ObjectLink AS ObjectLink_GoodsPropertyValue_GoodsKind
-                                                       ON ObjectLink_GoodsPropertyValue_GoodsKind.ObjectId = Object_GoodsPropertyValue.Id
-                                                      AND ObjectLink_GoodsPropertyValue_GoodsKind.DescId = zc_ObjectLink_GoodsPropertyValue_GoodsKind()
-
-                                  INNER JOIN (SELECT DISTINCT tmpContractGoods.GoodsPropertyId
-                                                            , tmpContractGoods.GoodsId
-                                                            , tmpContractGoods.GoodsKindId
-                                              FROM tmpContractGoods
-                                              ) AS tmp
-                                                ON tmp.GoodsPropertyId = ObjectLink_GoodsPropertyValue_GoodsProperty.ChildObjectId
-                                               AND tmp.GoodsId = ObjectLink_GoodsPropertyValue_Goods.ChildObjectId
-                                               AND COALESCE (tmp.GoodsKindId,0) = COALESCE (ObjectLink_GoodsPropertyValue_GoodsKind.ChildObjectId,0)
-
-                                  LEFT JOIN ObjectString AS ObjectString_BarCode
-                                                         ON ObjectString_BarCode.ObjectId = Object_GoodsPropertyValue.Id 
-                                                        AND ObjectString_BarCode.DescId = zc_ObjectString_GoodsPropertyValue_BarCode()
-                                  LEFT JOIN ObjectString AS ObjectString_Article
-                                                         ON ObjectString_Article.ObjectId = Object_GoodsPropertyValue.Id 
-                                                        AND ObjectString_Article.DescId = zc_ObjectString_GoodsPropertyValue_Article()
-                               WHERE ObjectLink_GoodsPropertyValue_GoodsProperty.DescId = zc_ObjectLink_GoodsPropertyValue_GoodsProperty()
-                               )
-  */

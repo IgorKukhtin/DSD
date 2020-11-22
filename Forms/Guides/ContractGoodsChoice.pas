@@ -83,6 +83,9 @@ type
     macSetErased_list: TMultiAction;
     macSetErased: TMultiAction;
     bbmacSetErased: TdxBarButton;
+    edGoodsProperty: TcxButtonEdit;
+    cxLabel3: TcxLabel;
+    GuidesGoodsProperty: TdsdGuides;
   private
     { Private declarations }
   public

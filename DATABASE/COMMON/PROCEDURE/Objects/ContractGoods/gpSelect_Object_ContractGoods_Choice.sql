@@ -1,21 +1,24 @@
 -- Function: gpSelect_Object_ContractGoods_Choice (TVarChar)
 
 DROP FUNCTION IF EXISTS gpSelect_Object_ContractGoods_Choice (Integer, Integer, Integer, Integer, Boolean, Boolean, TVarChar);
+DROP FUNCTION IF EXISTS gpSelect_Object_ContractGoods_Choice (Integer, Integer, Integer, Integer, Integer, Boolean, Boolean, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpSelect_Object_ContractGoods_Choice(
-    IN inContractId  Integer ,
-    IN inJuridicalId Integer ,
-    IN inRetailId    Integer ,
-    IN inPriceListId Integer ,
-    IN inisShowAll   Boolean ,      -- 
-    IN inisErased    Boolean ,      --
-    IN inSession     TVarChar       -- сессия пользователя
+    IN inContractId        Integer ,
+    IN inJuridicalId       Integer ,
+    IN inRetailId          Integer ,
+    IN inPriceListId       Integer ,
+    IN inGoodsPropertyId   Integer ,
+    IN inisShowAll         Boolean ,      -- 
+    IN inisErased          Boolean ,      --
+    IN inSession           TVarChar       -- сессия пользователя
 )
 RETURNS TABLE (Id Integer, Code INTEGER
              , Price TFloat, Persent TFloat
              , ContractId Integer, ContractCode Integer, InvNumber TVarChar
              , PriceListId Integer, PriceListName TVarChar
              , PriceListGoodsId Integer, PriceListGoodsName TVarChar
+             , GoodsPropertyId Integer, GoodsPropertyName TVarChar
              , GoodsId Integer, GoodsName TVarChar
              , GoodsKindId Integer, GoodsKindName TVarChar
              , TradeMarkId Integer, TradeMarkName TVarChar
@@ -97,6 +100,7 @@ BEGIN
                                , ContractGoods_Contract.ChildObjectId             AS ContractId
                                , ObjectLink_Contract_PriceList.ChildObjectId      AS PriceListId
                                , ObjectLink_Contract_PriceListGoods.ChildObjectId AS PriceListGoodsId
+                               , ObjectLink_Contract_GoodsProperty.ChildObjectId  AS GoodsPropertyId
                                , ObjectLink_ContractGoods_Goods.ChildObjectId     AS GoodsId
                                , ObjectLink_ContractGoods_GoodsKind.ChildObjectId AS GoodsKindId
                                , ObjectDate_Start.ValueData          ::TDateTime  AS StartDate
@@ -113,6 +117,10 @@ BEGIN
                                                      ON ObjectLink_Contract_PriceListGoods.ObjectId = ContractGoods_Contract.ChildObjectId
                                                     AND ObjectLink_Contract_PriceListGoods.DescId = zc_ObjectLink_Contract_PriceListGoods()
                                                     AND (ObjectLink_Contract_PriceListGoods.ChildObjectId = inPriceListId OR inPriceListId = 0)
+                               INNER JOIN ObjectLink AS ObjectLink_Contract_GoodsProperty
+                                                     ON ObjectLink_Contract_GoodsProperty.ObjectId = ContractGoods_Contract.ChildObjectId
+                                                    AND ObjectLink_Contract_GoodsProperty.DescId = zc_ObjectLink_Contract_GoodsProperty()
+                                                    AND (ObjectLink_Contract_GoodsProperty.ChildObjectId = inGoodsPropertyId OR inGoodsPropertyId = 0)
 
                                LEFT JOIN ObjectLink AS ObjectLink_Contract_PriceList
                                                     ON ObjectLink_Contract_PriceList.ObjectId = ContractGoods_Contract.ChildObjectId
@@ -154,6 +162,8 @@ BEGIN
            , Object_PriceList.ValueData         AS PriceListName
            , Object_PriceListGoods.Id           AS PriceListGoodsId 
            , Object_PriceListGoods.ValueData    AS PriceListGoodsName
+           , Object_GoodsProperty.Id            AS GoodsPropertyId
+           , Object_GoodsProperty.ValueData     AS GoodsPropertyName
 
            , Object_Goods.Id                  AS GoodsId
            , Object_Goods.ValueData           AS GoodsName
@@ -264,6 +274,7 @@ BEGIN
             LEFT JOIN Object AS Object_GoodsKind ON Object_GoodsKind.Id = Object_ContractGoods.GoodsKindId
             LEFT JOIN Object AS Object_PriceList ON Object_PriceList.Id = Object_ContractGoods.PriceListId
             LEFT JOIN Object AS Object_PriceListGoods ON Object_PriceListGoods.Id = Object_ContractGoods.PriceListGoodsId
+            LEFT JOIN Object AS Object_GoodsProperty ON Object_GoodsProperty.Id = Object_ContractGoods.GoodsPropertyId
 
             LEFT JOIN ObjectLink AS ObjectLink_Goods_TradeMark
                                  ON ObjectLink_Goods_TradeMark.ObjectId = Object_Goods.Id

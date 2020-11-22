@@ -129,6 +129,14 @@ inherited ContractGoodsChoiceForm: TContractGoodsChoiceForm
             Options.Editing = False
             Width = 109
           end
+          object GoodsPropertyName: TcxGridDBColumn
+            Caption = #1050#1083#1072#1089#1089#1080#1092#1080#1082#1072#1090#1086#1088' '#1089#1074#1086#1081#1089#1090#1074' '#1090#1086#1074#1072#1088#1072
+            DataBinding.FieldName = 'GoodsPropertyName'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 102
+          end
           object ContractCode: TcxGridDBColumn
             Caption = #1050#1086#1076' '#1076#1086#1075'.'
             DataBinding.FieldName = 'ContractCode'
@@ -898,6 +906,24 @@ inherited ContractGoodsChoiceForm: TContractGoodsChoiceForm
     Top = 6
     Caption = #1055#1088#1080#1079#1085#1072#1082' '#1076#1086#1075'.'
   end
+  object edGoodsProperty: TcxButtonEdit [6]
+    Left = 1094
+    Top = 5
+    Properties.Buttons = <
+      item
+        Default = True
+        Kind = bkEllipsis
+      end>
+    Properties.ReadOnly = True
+    TabOrder = 10
+    Width = 147
+  end
+  object cxLabel3: TcxLabel [7]
+    Left = 1008
+    Top = 6
+    Hint = #1050#1083#1072#1089#1089#1080#1092#1080#1082#1072#1090#1086#1088' '#1089#1074#1086#1081#1089#1090#1074' '#1090#1086#1074#1072#1088#1086#1074
+    Caption = #1050#1083#1072#1089#1089#1080#1092#1080#1082#1072#1090#1086#1088
+  end
   inherited UserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn
     Top = 304
   end
@@ -1232,6 +1258,14 @@ inherited ContractGoodsChoiceForm: TContractGoodsChoiceForm
         Name = 'inPriceListId'
         Value = Null
         Component = GuidesPriceListGoods
+        ComponentItem = 'Key'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inGoodsPropertyId'
+        Value = Null
+        Component = GuidesGoodsProperty
         ComponentItem = 'Key'
         ParamType = ptInput
         MultiSelectSeparator = ','
@@ -1647,6 +1681,23 @@ inherited ContractGoodsChoiceForm: TContractGoodsChoiceForm
         DataType = ftString
         ParamType = ptInput
         MultiSelectSeparator = ','
+      end
+      item
+        Name = 'GoodsPropertyId'
+        Value = Null
+        Component = GuidesGoodsProperty
+        ComponentItem = 'Key'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'GoodsPropertyName'
+        Value = Null
+        Component = GuidesGoodsProperty
+        ComponentItem = 'TextValue'
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
       end>
     Left = 328
     Top = 170
@@ -1668,6 +1719,14 @@ inherited ContractGoodsChoiceForm: TContractGoodsChoiceForm
         Name = 'inPriceListId'
         Value = Null
         Component = GuidesPriceListGoods
+        ComponentItem = 'Key'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inGoodsPropertyId'
+        Value = Null
+        Component = GuidesGoodsProperty
         ComponentItem = 'Key'
         ParamType = ptInput
         MultiSelectSeparator = ','
@@ -1874,5 +1933,33 @@ inherited ContractGoodsChoiceForm: TContractGoodsChoiceForm
       end>
     Left = 544
     Top = 8
+  end
+  object GuidesGoodsProperty: TdsdGuides
+    KeyField = 'Id'
+    LookupControl = edGoodsProperty
+    FormNameParam.Value = 'TGoodsPropertyForm'
+    FormNameParam.DataType = ftString
+    FormNameParam.MultiSelectSeparator = ','
+    FormName = 'TGoodsPropertyForm'
+    PositionDataSet = 'ClientDataSet'
+    Params = <
+      item
+        Name = 'Key'
+        Value = ''
+        Component = GuidesGoodsProperty
+        ComponentItem = 'Key'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'TextValue'
+        Value = ''
+        Component = GuidesGoodsProperty
+        ComponentItem = 'TextValue'
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end>
+    Left = 1128
   end
 end

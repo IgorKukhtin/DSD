@@ -1222,6 +1222,22 @@
           HeaderAlignmentVert = vaCenter
           Width = 43
         end
+        object cgBarCode: TcxGridDBColumn
+          Caption = #1064#1090#1088#1080#1093' '#1082#1086#1076
+          DataBinding.FieldName = 'BarCode'
+          HeaderAlignmentHorz = taCenter
+          HeaderAlignmentVert = vaCenter
+          Options.Editing = False
+          Width = 80
+        end
+        object cgArticle: TcxGridDBColumn
+          Caption = #1040#1088#1090#1080#1082#1091#1083
+          DataBinding.FieldName = 'Article'
+          HeaderAlignmentHorz = taCenter
+          HeaderAlignmentVert = vaCenter
+          Options.Editing = False
+          Width = 55
+        end
         object cgPersent: TcxGridDBColumn
           Caption = '% '#1080#1079#1084'. '#1094#1077#1085#1099
           DataBinding.FieldName = 'Persent'
@@ -2912,6 +2928,23 @@
           Value = Null
           Component = ClientDataSet
           ComponentItem = 'ContractTagName'
+          DataType = ftString
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'GoodsPropertyId'
+          Value = Null
+          Component = ClientDataSet
+          ComponentItem = 'GoodsPropertyId'
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'GoodsPropertyName'
+          Value = Null
+          Component = ClientDataSet
+          ComponentItem = 'GoodsPropertyName'
           DataType = ftString
           ParamType = ptInput
           MultiSelectSeparator = ','

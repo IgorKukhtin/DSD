@@ -1,11 +1,12 @@
 -- Function: gpInsertUpdate_Object_ContractGoods_byPriceList  ()
 
 DROP FUNCTION IF EXISTS gpInsertUpdate_Object_ContractGoods_byPriceList(Integer, Integer, TVarChar);
-
+DROP FUNCTION IF EXISTS gpInsertUpdate_Object_ContractGoods_byPriceList(Integer, Integer, Integer, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpInsertUpdate_Object_ContractGoods_byPriceList(
-    IN inContractId        Integer   ,    --   
-    IN inPriceListId       Integer   ,    --   
+    IN inContractId        Integer   ,    -- 
+    IN inPriceListId       Integer   ,    --
+    IN inGoodsPropertyId   Integer   ,
     IN inSession           TVarChar       -- сессия пользователя
 )
  RETURNS VOID AS
@@ -26,9 +27,16 @@ BEGIN
        RAISE EXCEPTION 'Ошибка. Не выбран прайс лист';
    END IF;
 
-   --Записываем свойство договора  zc_ObjectLink_Contract_PriceListGoods
+   -- если не заполнен - находить по торг сети ..... zfCalc_GoodsPropertyId и сразу записать, потом если надо - поменяют
+   IF COALESCE (inGoodsPropertyId,0) = 0
+   THEN
+       inGoodsPropertyId := zfCalc_GoodsPropertyId (inContractId,0,0);
+   END IF;
+
+   --Записываем свойство договора  zc_ObjectLink_Contract_PriceListGoods, zc_ObjectLink_Contract_GoodsProperty
    PERFORM lpInsertUpdate_ObjectLink(zc_ObjectLink_Contract_PriceListGoods(), inContractId, inPriceListId);
-   
+   PERFORM lpInsertUpdate_ObjectLink(zc_ObjectLink_Contract_GoodsProperty(), inContractId, inGoodsPropertyId);
+      
    -- дата начала договора
    vbStartDate := (SELECT ObjectDate_Start.ValueData
                    FROM ObjectDate AS ObjectDate_Start
@@ -81,6 +89,33 @@ BEGIN
         --  limit 5
           );
 
+   -- выбираем данные из спецификации
+   CREATE TEMP TABLE tmpGoodsProperty ON COMMIT DROP AS (
+          SELECT DISTINCT 
+                 ObjectLink_GoodsPropertyValue_Goods.ChildObjectId     AS GoodsId
+               , ObjectLink_GoodsPropertyValue_GoodsKind.ChildObjectId AS GoodsKindId
+          FROM ObjectLink AS ObjectLink_GoodsPropertyValue_GoodsProperty
+              LEFT JOIN ObjectLink AS ObjectLink_GoodsPropertyValue_Goods
+                                    ON ObjectLink_GoodsPropertyValue_Goods.ObjectId =  ObjectLink_GoodsPropertyValue_GoodsProperty.ObjectId
+                                   AND ObjectLink_GoodsPropertyValue_Goods.DescId = zc_ObjectLink_GoodsPropertyValue_Goods()
+
+              LEFT JOIN ObjectLink AS ObjectLink_GoodsPropertyValue_GoodsKind
+                                   ON ObjectLink_GoodsPropertyValue_GoodsKind.ObjectId = ObjectLink_GoodsPropertyValue_GoodsProperty.ObjectId
+                                  AND ObjectLink_GoodsPropertyValue_GoodsKind.DescId = zc_ObjectLink_GoodsPropertyValue_GoodsKind()
+
+          WHERE ObjectLink_GoodsPropertyValue_GoodsProperty.DescId = zc_ObjectLink_GoodsPropertyValue_GoodsProperty()
+            AND ObjectLink_GoodsPropertyValue_GoodsProperty.ChildObjectId = inGoodsPropertyId          
+          );
+
+   -- прайс + види товара из спецификации
+   CREATE TEMP TABLE tmpData ON COMMIT DROP AS (
+          SELECT tmpPrice.GoodsId
+               , COALESCE (tmpPrice.GoodsKindId,tmpGoodsProperty.GoodsKindId) AS GoodsKindId
+               , tmpPrice.Price
+          FROM tmpPrice
+               LEFT JOIN tmpGoodsProperty ON tmpGoodsProperty.GoodsId = tmpPrice.GoodsId
+          );
+
    --получаем уже сохраненные данные ContractGoods, последние
    CREATE TEMP TABLE tmpContractGoods ON COMMIT DROP AS (
           SELECT Object_ContractGoods.Id
@@ -129,26 +164,26 @@ BEGIN
    --если для товара/вида товара уже есть цена, нужно проставить дату окончания
    PERFORM lpInsertUpdate_ObjectDate (zc_ObjectDate_ContractGoods_End(), tmpContractGoods.Id, CURRENT_DATE - INTERVAL '1 DAY')
    FROM tmpContractGoods
-        INNER JOIN tmpPrice ON tmpPrice.GoodsId = tmpContractGoods.GoodsId
-                           AND COALESCE (tmpPrice.GoodsKindId,0) = COALESCE (tmpContractGoods.GoodsKindId,0)
-                           AND tmpPrice.Price <> tmpContractGoods.Price;
+        INNER JOIN tmpData ON tmpData.GoodsId = tmpContractGoods.GoodsId
+                           AND COALESCE (tmpData.GoodsKindId,0) = COALESCE (tmpContractGoods.GoodsKindId,0)
+                           AND tmpData.Price <> tmpContractGoods.Price;
 
    --записываем новые записи, если такого эл. не было нач.цена = дате нач. договора
    PERFORM lpInsertUpdate_Object_ContractGoods(ioId          := 0                    :: Integer
                                              , inCode        := lfGet_ObjectCode(0, zc_Object_ContractGoods()) ::Integer
                                              , inContractId  := inContractId
-                                             , inGoodsId     := tmpPrice.GoodsId
-                                             , inGoodsKindId := tmpPrice.GoodsKindId ::Integer
+                                             , inGoodsId     := tmpData.GoodsId
+                                             , inGoodsKindId := tmpData.GoodsKindId ::Integer
                                              , inStartDate   := CASE WHEN COALESCE (tmpContractGoods.Id,0) <> 0 THEN CURRENT_DATE ELSE vbStartDate END ::TDateTime    --
                                              , inEndDate     :=  zc_DateEnd()        ::TDateTime    --
-                                             , inPrice       := tmpPrice.Price       ::Tfloat    
+                                             , inPrice       := tmpData.Price       ::Tfloat    
                                              , inUserId      := vbUserId
                                               )
-   FROM tmpPrice
-        LEFT JOIN tmpContractGoods ON tmpContractGoods.GoodsId = tmpPrice.GoodsId
-                                  AND COALESCE (tmpContractGoods.GoodsKindId,0) = COALESCE (tmpPrice.GoodsKindId,0)
-   WHERE (tmpPrice.Price <> tmpContractGoods.Price OR tmpContractGoods.Id IS NULL)
-      AND COALESCE (tmpPrice.Price,0) <> 0;
+   FROM tmpData
+        LEFT JOIN tmpContractGoods ON tmpContractGoods.GoodsId = tmpData.GoodsId
+                                  AND COALESCE (tmpContractGoods.GoodsKindId,0) = COALESCE (tmpData.GoodsKindId,0)
+   WHERE (tmpData.Price <> tmpContractGoods.Price OR tmpContractGoods.Id IS NULL)
+      AND COALESCE (tmpData.Price,0) <> 0;
    
 
 
