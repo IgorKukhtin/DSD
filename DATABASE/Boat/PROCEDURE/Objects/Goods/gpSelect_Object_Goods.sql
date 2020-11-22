@@ -19,12 +19,13 @@ RETURNS TABLE (Id Integer, Code Integer, Name TVarChar
              , GoodsTypeId  Integer, GoodsTypeName TVarChar
              , GoodsSizeId  Integer, GoodsSizeName TVarChar
              , ProdColorId Integer, ProdColorName TVarChar
-             , PartnerId Integer, PartnerName   TVarChar          
+             , PartnerId Integer, PartnerName   TVarChar
              , UnitId Integer, UnitName TVarChar
              , DiscountParnerId Integer, DiscountParnerName TVarChar
              , TaxKindId Integer, TaxKindName TVarChar, TaxKind_Value TFloat
              , InfoMoneyCode Integer, InfoMoneyGroupName TVarChar, InfoMoneyDestinationName TVarChar, InfoMoneyName TVarChar, InfoMoneyId Integer
              , InsertName TVarChar, InsertDate TDateTime
+             , Image1 TBlob, Image2 TBlob, Image3 TBlob
              , isErased Boolean
               )
 AS
@@ -40,6 +41,16 @@ BEGIN
 
      -- –ÂÁÛÎ¸Ú‡Ú
      RETURN QUERY
+       WITH tmpPhoto AS (SELECT ObjectLink_GoodsPhoto_Goods.ChildObjectId AS GoodsId
+                              , Object_GoodsPhoto.Id                      AS PhotoId
+                              , ROW_NUMBER() OVER (PARTITION BY ObjectLink_GoodsPhoto_Goods.ChildObjectId ORDER BY Object_GoodsPhoto.Id) AS Ord
+                         FROM Object AS Object_GoodsPhoto
+                                JOIN ObjectLink AS ObjectLink_GoodsPhoto_Goods
+                                  ON ObjectLink_GoodsPhoto_Goods.ObjectId = Object_GoodsPhoto.Id
+                                 AND ObjectLink_GoodsPhoto_Goods.DescId = zc_ObjectLink_GoodsPhoto_Goods()
+                          WHERE Object_GoodsPhoto.DescId = zc_Object_GoodsPhoto()
+                            AND Object_GoodsPhoto.isErased = FALSE)
+
        SELECT Object_Goods.Id                     AS Id
             , Object_Goods.ObjectCode             AS Code
             , Object_Goods.ValueData              AS Name
@@ -73,7 +84,7 @@ BEGIN
             , Object_ProdColor.Id                AS ProdColorId
             , Object_ProdColor.ValueData         AS ProdColorName
             , Object_Partner.Id                  AS PartnerId
-            , Object_Partner.ValueData           AS PartnerName            
+            , Object_Partner.ValueData           AS PartnerName
             , Object_Unit.Id                     AS UnitId
             , Object_Unit.ValueData              AS UnitName
             , Object_DiscountParner.Id           AS DiscountParnerId
@@ -91,17 +102,21 @@ BEGIN
             , Object_Insert.ValueData            AS InsertName
             , ObjectDate_Insert.ValueData        AS InsertDate
 
+            , ObjectBlob_GoodsPhoto_Data1.ValueData AS Image1
+            , ObjectBlob_GoodsPhoto_Data2.ValueData AS Image2
+            , ObjectBlob_GoodsPhoto_Data3.ValueData AS Image3
+
             , Object_Goods.isErased              AS isErased
 
        FROM Object AS Object_Goods
             LEFT JOIN ObjectString AS ObjectString_Comment
                                    ON ObjectString_Comment.ObjectId = Object_Goods.Id
-                                  AND ObjectString_Comment.DescId = zc_ObjectString_Goods_Comment()  
+                                  AND ObjectString_Comment.DescId = zc_ObjectString_Goods_Comment()
 
             LEFT JOIN ObjectLink AS ObjectLink_Insert
                                  ON ObjectLink_Insert.ObjectId = Object_Goods.Id
                                 AND ObjectLink_Insert.DescId = zc_ObjectLink_Protocol_Insert()
-            LEFT JOIN Object AS Object_Insert ON Object_Insert.Id = ObjectLink_Insert.ChildObjectId 
+            LEFT JOIN Object AS Object_Insert ON Object_Insert.Id = ObjectLink_Insert.ChildObjectId
 
             LEFT JOIN ObjectDate AS ObjectDate_Insert
                                  ON ObjectDate_Insert.ObjectId = Object_Goods.Id
@@ -156,15 +171,15 @@ BEGIN
                                   ON ObjectLink_Goods_DiscountParner.ObjectId = Object_Goods.Id
                                  AND ObjectLink_Goods_DiscountParner.DescId = zc_ObjectLink_Goods_DiscountParner()
              LEFT JOIN Object AS Object_DiscountParner ON Object_DiscountParner.Id = ObjectLink_Goods_DiscountParner.ChildObjectId
-             
+
              LEFT JOIN ObjectLink AS ObjectLink_Goods_TaxKind
                                   ON ObjectLink_Goods_TaxKind.ObjectId = Object_Goods.Id
                                  AND ObjectLink_Goods_TaxKind.DescId = zc_ObjectLink_Goods_TaxKind()
              LEFT JOIN Object AS Object_TaxKind ON Object_TaxKind.Id = ObjectLink_Goods_TaxKind.ChildObjectId
 
              LEFT JOIN ObjectFloat AS ObjectFloat_TaxKind_Value
-                                   ON ObjectFloat_TaxKind_Value.ObjectId = Object_TaxKind.Id 
-                                  AND ObjectFloat_TaxKind_Value.DescId = zc_ObjectFloat_TaxKind_Value()   
+                                   ON ObjectFloat_TaxKind_Value.ObjectId = Object_TaxKind.Id
+                                  AND ObjectFloat_TaxKind_Value.DescId = zc_ObjectFloat_TaxKind_Value()
 
              LEFT JOIN ObjectDate AS ObjectDate_PartnerDate
                                   ON ObjectDate_PartnerDate.ObjectId = Object_Goods.Id
@@ -177,7 +192,7 @@ BEGIN
                                    ON ObjectFloat_Refer.ObjectId = Object_Goods.Id
                                   AND ObjectFloat_Refer.DescId   = zc_ObjectFloat_Goods_Refer()
              LEFT JOIN ObjectFloat AS ObjectFloat_EKPrice
-                                   ON ObjectFloat_EKPrice.ObjectId = Object_Goods.Id 
+                                   ON ObjectFloat_EKPrice.ObjectId = Object_Goods.Id
                                   AND ObjectFloat_EKPrice.DescId = zc_ObjectFloat_Goods_EKPrice()
              LEFT JOIN ObjectFloat AS ObjectFloat_EmpfPrice
                                    ON ObjectFloat_EmpfPrice.ObjectId = Object_Goods.Id
@@ -210,6 +225,24 @@ BEGIN
                                     ON ObjectString_MatchCode.ObjectId = Object_Goods.Id
                                    AND ObjectString_MatchCode.DescId = zc_ObjectString_MatchCode()
 
+             LEFT JOIN tmpPhoto AS Photo1
+                                ON Photo1.GoodsId = Object_Goods.Id
+                               AND Photo1.Ord = 1
+             LEFT JOIN ObjectBLOB AS ObjectBlob_GoodsPhoto_Data1
+                                  ON ObjectBlob_GoodsPhoto_Data1.ObjectId = Photo1.PhotoId
+
+             LEFT JOIN tmpPhoto AS Photo2
+                                ON Photo2.GoodsId = Object_Goods.Id
+                               AND Photo2.Ord = 2
+             LEFT JOIN ObjectBLOB AS ObjectBlob_GoodsPhoto_Data2
+                                  ON ObjectBlob_GoodsPhoto_Data2.ObjectId = Photo2.PhotoId
+
+             LEFT JOIN tmpPhoto AS Photo3
+                                ON Photo3.GoodsId = Object_Goods.Id
+                               AND Photo3.Ord = 3
+             LEFT JOIN ObjectBLOB AS ObjectBlob_GoodsPhoto_Data3
+                                  ON ObjectBlob_GoodsPhoto_Data3.ObjectId = Photo3.PhotoId
+
        WHERE Object_Goods.DescId = zc_Object_Goods()
          AND (Object_Goods.isErased = FALSE OR inShowAll = TRUE);
 
@@ -217,7 +250,7 @@ END;
 $BODY$
   LANGUAGE plpgsql VOLATILE;
 
-/*-------------------------------------------------------------------------------*/
+--/*-------------------------------------------------------------------------------*/
 /*
  »—“Œ–»ﬂ –¿«–¿¡Œ“ »: ƒ¿“¿, ¿¬“Œ–
                ‘ÂÎÓÌ˛Í ».¬.    ÛıÚËÌ ».¬.    ÎËÏÂÌÚ¸Â‚  .».
