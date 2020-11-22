@@ -104,6 +104,12 @@ type
     Image3: TcxImage;
     Image2: TcxImage;
     Image1: TcxImage;
+    isDoc: TcxGridDBColumn;
+    isPhoto: TcxGridDBColumn;
+    UpdateName: TcxGridDBColumn;
+    UpdateDate: TcxGridDBColumn;
+    InsertDate: TcxGridDBColumn;
+    InsertName: TcxGridDBColumn;
   private
     { Private declarations }
   public

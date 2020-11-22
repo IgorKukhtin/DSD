@@ -76,6 +76,24 @@ object GoodsForm: TGoodsForm
         Options.Editing = False
         Width = 63
       end
+      object Article: TcxGridDBColumn
+        Caption = #1040#1088#1090#1080#1082#1091#1083
+        DataBinding.FieldName = 'Article'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Options.Editing = False
+        Width = 55
+      end
+      object ArticleVergl: TcxGridDBColumn
+        Caption = #1040#1088#1090#1080#1082#1091#1083' ('#1072#1083#1100#1090'.)'
+        DataBinding.FieldName = 'ArticleVergl'
+        Visible = False
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        HeaderHint = #1040#1088#1090#1080#1082#1091#1083' ('#1072#1083#1100#1090#1077#1088#1085#1072#1090#1080#1074#1085#1099#1081')'
+        Options.Editing = False
+        Width = 120
+      end
       object Name: TcxGridDBColumn
         Caption = #1053#1072#1079#1074#1072#1085#1080#1077
         DataBinding.FieldName = 'Name'
@@ -87,6 +105,7 @@ object GoodsForm: TGoodsForm
       object GoodsTagName: TcxGridDBColumn
         Caption = #1050#1072#1090#1077#1075#1086#1088#1080#1103
         DataBinding.FieldName = 'GoodsTagName'
+        Visible = False
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         Options.Editing = False
@@ -114,7 +133,7 @@ object GoodsForm: TGoodsForm
         DataBinding.FieldName = 'GoodsSizeName'
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
-        Width = 150
+        Width = 80
       end
       object ProdColorName: TcxGridDBColumn
         Caption = #1062#1074#1077#1090
@@ -122,7 +141,25 @@ object GoodsForm: TGoodsForm
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         Options.Editing = False
-        Width = 158
+        Width = 100
+      end
+      object isDoc: TcxGridDBColumn
+        Caption = #1045#1089#1090#1100' '#1076#1086#1082'.'
+        DataBinding.FieldName = 'isDoc'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        HeaderHint = #1045#1089#1090#1100' '#1076#1086#1082#1091#1084#1077#1085#1090#1072#1094#1080#1103
+        Options.Editing = False
+        Width = 50
+      end
+      object isPhoto: TcxGridDBColumn
+        Caption = #1045#1089#1090#1100' '#1092#1086#1090#1086
+        DataBinding.FieldName = 'isPhoto'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        HeaderHint = #1045#1089#1090#1100' '#1092#1086#1090#1086
+        Options.Editing = False
+        Width = 50
       end
       object PartnerName: TcxGridDBColumn
         Caption = #1055#1072#1088#1090#1085#1077#1088
@@ -196,7 +233,7 @@ object GoodsForm: TGoodsForm
         HeaderAlignmentVert = vaCenter
         HeaderHint = 'P'#1077#1082#1086#1084#1077#1085#1076#1086#1074'. '#1082#1086#1083'-'#1074#1086' '#1079#1072#1082#1091#1087#1082#1080
         Options.Editing = False
-        Width = 72
+        Width = 80
       end
       object EKPrice: TcxGridDBColumn
         Caption = #1062#1077#1085#1072' '#1073#1077#1079' '#1053#1044#1057' '#1079#1072#1082#1091#1087'.'
@@ -228,31 +265,6 @@ object GoodsForm: TGoodsForm
         HeaderGlyphAlignmentHorz = taCenter
         Options.Editing = False
         Width = 122
-      end
-      object IsArc: TcxGridDBColumn
-        Caption = #1040#1088#1093#1080#1074
-        DataBinding.FieldName = 'isArc'
-        HeaderAlignmentHorz = taCenter
-        HeaderAlignmentVert = vaCenter
-        Options.Editing = False
-        Width = 55
-      end
-      object Article: TcxGridDBColumn
-        Caption = #1040#1088#1090#1080#1082#1091#1083
-        DataBinding.FieldName = 'Article'
-        HeaderAlignmentHorz = taCenter
-        HeaderAlignmentVert = vaCenter
-        Options.Editing = False
-        Width = 55
-      end
-      object ArticleVergl: TcxGridDBColumn
-        Caption = #1040#1088#1090#1080#1082#1091#1083' ('#1072#1083#1100#1090'.)'
-        DataBinding.FieldName = 'ArticleVergl'
-        HeaderAlignmentHorz = taCenter
-        HeaderAlignmentVert = vaCenter
-        HeaderHint = #1040#1088#1090#1080#1082#1091#1083' ('#1072#1083#1100#1090#1077#1088#1085#1072#1090#1080#1074#1085#1099#1081')'
-        Options.Editing = False
-        Width = 120
       end
       object EAN: TcxGridDBColumn
         Caption = 'EAN '#1082#1086#1076
@@ -321,6 +333,44 @@ object GoodsForm: TGoodsForm
         HeaderAlignmentVert = vaCenter
         Options.Editing = False
         Width = 100
+      end
+      object InsertDate: TcxGridDBColumn
+        Caption = #1044#1072#1090#1072' ('#1089#1086#1079#1076'.)'
+        DataBinding.FieldName = 'InsertDate'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Options.Editing = False
+      end
+      object InsertName: TcxGridDBColumn
+        Caption = #1055#1086#1083#1100#1079#1086#1074#1072#1090#1077#1083#1100' ('#1089#1086#1079#1076'.)'
+        DataBinding.FieldName = 'InsertName'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Options.Editing = False
+      end
+      object UpdateDate: TcxGridDBColumn
+        Caption = #1044#1072#1090#1072' ('#1082#1086#1088#1088'.)'
+        DataBinding.FieldName = 'UpdateDate'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Options.Editing = False
+        Width = 70
+      end
+      object UpdateName: TcxGridDBColumn
+        Caption = #1055#1086#1083#1100#1079#1086#1074#1072#1090#1077#1083#1100' ('#1082#1086#1088#1088'.)'
+        DataBinding.FieldName = 'UpdateName'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Options.Editing = False
+        Width = 70
+      end
+      object IsArc: TcxGridDBColumn
+        Caption = #1040#1088#1093#1080#1074
+        DataBinding.FieldName = 'isArc'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Options.Editing = False
+        Width = 55
       end
       object IsErased: TcxGridDBColumn
         Caption = #1059#1076#1072#1083#1077#1085
@@ -544,6 +594,7 @@ object GoodsForm: TGoodsForm
       Category = 0
       Hint = '    '
       Visible = ivAlways
+      ShowCaption = False
     end
     object bbChoiceGuides: TdxBarButton
       Action = dsdChoiceGuides

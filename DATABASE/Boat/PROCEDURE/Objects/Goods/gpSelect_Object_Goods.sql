@@ -25,7 +25,9 @@ RETURNS TABLE (Id Integer, Code Integer, Name TVarChar
              , TaxKindId Integer, TaxKindName TVarChar, TaxKind_Value TFloat
              , InfoMoneyCode Integer, InfoMoneyGroupName TVarChar, InfoMoneyDestinationName TVarChar, InfoMoneyName TVarChar, InfoMoneyId Integer
              , InsertName TVarChar, InsertDate TDateTime
+             , UpdateName TVarChar, UpdateDate TDateTime
              , Image1 TBlob, Image2 TBlob, Image3 TBlob
+             , isDoc Boolean, isPhoto Boolean
              , isErased Boolean
               )
 AS
@@ -46,11 +48,20 @@ BEGIN
                               , ROW_NUMBER() OVER (PARTITION BY ObjectLink_GoodsPhoto_Goods.ChildObjectId ORDER BY Object_GoodsPhoto.Id) AS Ord
                          FROM Object AS Object_GoodsPhoto
                                 JOIN ObjectLink AS ObjectLink_GoodsPhoto_Goods
-                                  ON ObjectLink_GoodsPhoto_Goods.ObjectId = Object_GoodsPhoto.Id
-                                 AND ObjectLink_GoodsPhoto_Goods.DescId = zc_ObjectLink_GoodsPhoto_Goods()
-                          WHERE Object_GoodsPhoto.DescId = zc_Object_GoodsPhoto()
-                            AND Object_GoodsPhoto.isErased = FALSE)
-
+                                                ON ObjectLink_GoodsPhoto_Goods.ObjectId = Object_GoodsPhoto.Id
+                                               AND ObjectLink_GoodsPhoto_Goods.DescId   = zc_ObjectLink_GoodsPhoto_Goods()
+                          WHERE Object_GoodsPhoto.DescId   = zc_Object_GoodsPhoto()
+                            AND Object_GoodsPhoto.isErased = FALSE
+                        )
+           , tmpDoc AS (SELECT DISTINCT ObjectLink_GoodsDocument_Goods.ChildObjectId AS GoodsId
+                         FROM Object AS Object_GoodsDocument
+                                JOIN ObjectLink AS ObjectLink_GoodsDocument_Goods
+                                                ON ObjectLink_GoodsDocument_Goods.ObjectId = Object_GoodsDocument.Id
+                                               AND ObjectLink_GoodsDocument_Goods.DescId   = zc_ObjectLink_GoodsPhoto_Goods()
+                          WHERE Object_GoodsDocument.DescId   = zc_Object_GoodsDocument()
+                            AND Object_GoodsDocument.isErased = FALSE
+                        )
+       -- –ÂÁÛÎ¸Ú‡Ú
        SELECT Object_Goods.Id                     AS Id
             , Object_Goods.ObjectCode             AS Code
             , Object_Goods.ValueData              AS Name
@@ -101,10 +112,15 @@ BEGIN
 
             , Object_Insert.ValueData            AS InsertName
             , ObjectDate_Insert.ValueData        AS InsertDate
+            , Object_Update.ValueData            AS UpdateName
+            , ObjectDate_Update.ValueData        AS UpdateDate
 
             , ObjectBlob_GoodsPhoto_Data1.ValueData AS Image1
             , ObjectBlob_GoodsPhoto_Data2.ValueData AS Image2
             , ObjectBlob_GoodsPhoto_Data3.ValueData AS Image3
+
+            , CASE WHEN tmpDoc.GoodsId    > 0 THEN TRUE ELSE FALSE END :: Boolean AS isDoc
+            , CASE WHEN tmpPhoto1.GoodsId > 0 THEN TRUE ELSE FALSE END :: Boolean AS isPhoto
 
             , Object_Goods.isErased              AS isErased
 
@@ -117,10 +133,17 @@ BEGIN
                                  ON ObjectLink_Insert.ObjectId = Object_Goods.Id
                                 AND ObjectLink_Insert.DescId = zc_ObjectLink_Protocol_Insert()
             LEFT JOIN Object AS Object_Insert ON Object_Insert.Id = ObjectLink_Insert.ChildObjectId
+            LEFT JOIN ObjectLink AS ObjectLink_Update
+                                 ON ObjectLink_Update.ObjectId = Object_Goods.Id
+                                AND ObjectLink_Update.DescId = zc_ObjectLink_Protocol_Update()
+            LEFT JOIN Object AS Object_Update ON Object_Update.Id = ObjectLink_Update.ChildObjectId
 
             LEFT JOIN ObjectDate AS ObjectDate_Insert
                                  ON ObjectDate_Insert.ObjectId = Object_Goods.Id
                                 AND ObjectDate_Insert.DescId = zc_ObjectDate_Protocol_Insert()
+            LEFT JOIN ObjectDate AS ObjectDate_Update
+                                 ON ObjectDate_Update.ObjectId = Object_Goods.Id
+                                AND ObjectDate_Update.DescId = zc_ObjectDate_Protocol_Update()
 
              LEFT JOIN ObjectLink AS ObjectLink_Goods_GoodsGroup
                                   ON ObjectLink_Goods_GoodsGroup.ObjectId = Object_Goods.Id
@@ -225,23 +248,25 @@ BEGIN
                                     ON ObjectString_MatchCode.ObjectId = Object_Goods.Id
                                    AND ObjectString_MatchCode.DescId = zc_ObjectString_MatchCode()
 
-             LEFT JOIN tmpPhoto AS Photo1
-                                ON Photo1.GoodsId = Object_Goods.Id
-                               AND Photo1.Ord = 1
+             LEFT JOIN tmpDoc ON tmpDoc.GoodsId = Object_Goods.Id
+
+             LEFT JOIN tmpPhoto AS tmpPhoto1
+                                ON tmpPhoto1.GoodsId = Object_Goods.Id
+                               AND tmpPhoto1.Ord = 1
              LEFT JOIN ObjectBLOB AS ObjectBlob_GoodsPhoto_Data1
-                                  ON ObjectBlob_GoodsPhoto_Data1.ObjectId = Photo1.PhotoId
+                                  ON ObjectBlob_GoodsPhoto_Data1.ObjectId = tmpPhoto1.PhotoId
 
-             LEFT JOIN tmpPhoto AS Photo2
-                                ON Photo2.GoodsId = Object_Goods.Id
-                               AND Photo2.Ord = 2
+             LEFT JOIN tmpPhoto AS tmpPhoto2
+                                ON tmpPhoto2.GoodsId = Object_Goods.Id
+                               AND tmpPhoto2.Ord = 2
              LEFT JOIN ObjectBLOB AS ObjectBlob_GoodsPhoto_Data2
-                                  ON ObjectBlob_GoodsPhoto_Data2.ObjectId = Photo2.PhotoId
+                                  ON ObjectBlob_GoodsPhoto_Data2.ObjectId = tmpPhoto2.PhotoId
 
-             LEFT JOIN tmpPhoto AS Photo3
-                                ON Photo3.GoodsId = Object_Goods.Id
-                               AND Photo3.Ord = 3
+             LEFT JOIN tmpPhoto AS tmpPhoto3
+                                ON tmpPhoto3.GoodsId = Object_Goods.Id
+                               AND tmpPhoto3.Ord = 3
              LEFT JOIN ObjectBLOB AS ObjectBlob_GoodsPhoto_Data3
-                                  ON ObjectBlob_GoodsPhoto_Data3.ObjectId = Photo3.PhotoId
+                                  ON ObjectBlob_GoodsPhoto_Data3.ObjectId = tmpPhoto3.PhotoId
 
        WHERE Object_Goods.DescId = zc_Object_Goods()
          AND (Object_Goods.isErased = FALSE OR inShowAll = TRUE);
@@ -250,7 +275,7 @@ END;
 $BODY$
   LANGUAGE plpgsql VOLATILE;
 
---/*-------------------------------------------------------------------------------*/
+/*-------------------------------------------------------------------------------*/
 /*
  »—“Œ–»ﬂ –¿«–¿¡Œ“ »: ƒ¿“¿, ¿¬“Œ–
                ‘ÂÎÓÌ˛Í ».¬.    ÛıÚËÌ ».¬.    ÎËÏÂÌÚ¸Â‚  .».

@@ -152,6 +152,11 @@ BEGIN
       PERFORM lpInsertUpdate_ObjectDate (zc_ObjectDate_Protocol_Insert(), ioId, CURRENT_TIMESTAMP);
       -- сохранили свойство <ѕользователь (создание)>
       PERFORM lpInsertUpdate_ObjectLink (zc_ObjectLink_Protocol_Insert(), ioId, vbUserId);
+   ELSE
+      -- сохранили свойство <ƒата изменени€>
+      PERFORM lpInsertUpdate_ObjectDate (zc_ObjectDate_Protocol_Update(), ioId, CURRENT_TIMESTAMP);
+      -- сохранили свойство <ѕользователь (изменение)>
+      PERFORM lpInsertUpdate_ObjectLink (zc_ObjectLink_Protocol_Update(), ioId, vbUserId);
    END IF;
 
 
