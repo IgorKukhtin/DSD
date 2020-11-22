@@ -10,7 +10,7 @@ uses Windows, Winapi.Messages, Classes, cxDBTL, cxTL, Vcl.ImgList, cxGridDBTable
      SysUtils, dsdDB, Contnrs, cxGridCustomView, cxGridCustomTableView, dsdGuides,
      VCL.ActnList, cxCustomPivotGrid, cxDBPivotGrid, cxEdit, cxCustomData, cxPC,
      GMClasses, GMMap, GMMapVCL, GMGeoCode, GMConstants, GMMarkerVCL, SHDocVw, ExtCtrls,
-     Winapi.ShellAPI, System.StrUtils, GMDirection, GMDirectionVCL, cxCheckBox
+     Winapi.ShellAPI, System.StrUtils, GMDirection, GMDirectionVCL, cxCheckBox, cxImage
      {$IFDEF DELPHI103RIO}, Actions {$ENDIF};
 
 const
@@ -240,6 +240,21 @@ type
     property EditRepository: TcxEditRepository read FEditRepository write FEditRepository;
   end;
 
+  // Отображение изображений в TcxImage
+  TShowFieldImage = class(TCollectionItem)
+  private
+    FFieldName : String;
+    FImage: TcxImage;
+  public
+    constructor Create(Collection: TCollection); override;
+    destructor Destroy; override;
+    procedure Assign(Source: TPersistent); override;
+  published
+    // Имя поля отвечающее за отображение признака Удален
+    property FieldName: string read FFieldName write FFieldName;
+    property Image: TcxImage read FImage write FImage;
+  end;
+
   // Добавляет ряд функционала на GridView
   // 1. Быстрая установка фильтров
   // 2. Рисование иконок сортировки
@@ -264,11 +279,14 @@ type
     FColumnEnterList: TCollection;
     FPropertiesCellList: TCollection;
     FSummaryItemList: TOwnedCollection;
+    FShowFieldImageList: TOwnedCollection;
     FGridFocusedItemChangedEvent: TcxGridFocusedItemChangedEvent;
     FSearchAsFilter: boolean;
     FKeepSelectColor: boolean;
     FGroupByBox: boolean;
     FGroupIndex: integer;
+    FAfterScroll: TDataSetNotifyEvent;
+    FMemoryStream: TMemoryStream;
 
     procedure TableViewFocusedItemChanged(Sender: TcxCustomGridTableView;
                         APrevFocusedItem, AFocusedItem: TcxCustomGridTableItem);
@@ -280,6 +298,7 @@ type
                                 AEdit: TcxCustomEdit; var Key: Word; Shift: TShiftState);
     procedure OnKeyPress(Sender: TObject; var Key: Char);
     procedure OnKeyDown(Sender: TObject; var Key: Word; Shift: TShiftState); override;
+    procedure OnAfterScroll(DataSet: TDataSet);
     procedure SetView(const Value: TcxGridTableView); virtual;
     procedure SetDateEdit(const Value: TcxDateEdit); virtual;
     procedure edFilterExit(Sender: TObject);
@@ -340,6 +359,8 @@ type
     property ColumnEnterList: TCollection read FColumnEnterList write FColumnEnterList;
     // Отображение элементов на футерах
     property SummaryItemList: TOwnedCollection read FSummaryItemList write FSummaryItemList;
+    // Отображение изображений в TcxImage
+    property ShowFieldImageList: TOwnedCollection read FShowFieldImageList write FShowFieldImageList;
     // Поиск как фильтр
     property SearchAsFilter: boolean read FSearchAsFilter write SetSearchAsFilter default true;
     // При установке в True сохраняется цвет шрифта и фон для выделенной строчки
@@ -1114,11 +1135,13 @@ begin
   FErasedStyle := TcxStyle.Create(nil);
   FErasedStyle.TextColor := clRed;
 
+  FMemoryStream := TMemoryStream.Create;
   FColorRuleList := TCollection.Create(TColorRule);
   FColumnAddOnList := TCollection.Create(TColumnAddOn);
   FColumnEnterList := TCollection.Create(TColumnCollectionItem);
   FPropertiesCellList := TCollection.Create(TPropertiesCell);
   FSummaryItemList := TOwnedCollection.Create(Self, TSummaryItemAddOn);
+  FShowFieldImageList := TOwnedCollection.Create(Self, TShowFieldImage);
 
   SearchAsFilter := true;
   FKeepSelectColor := false;
@@ -1480,12 +1503,18 @@ begin
     FView.OnCustomDrawCell := nil;
     if Assigned(TcxDBDataController(FView.DataController).DataSource) then
        if Assigned(TcxDBDataController(FView.DataController).DataSource.DataSet) then
-          TcxDBDataController(FView.DataController).DataSource.DataSet.AfterInsert := nil;
+    begin
+       TcxDBDataController(FView.DataController).DataSource.DataSet.AfterInsert := nil;
+       TcxDBDataController(FView.DataController).DataSource.DataSet.AfterScroll := FAfterScroll;
+    end;
   end;
   FErasedStyle.Free;
   FreeAndNil(FColumnAddOnList);
   FreeAndNil(FColumnEnterList);
   FreeAndNil(FPropertiesCellList);
+  FreeAndNil(FSummaryItemList);
+  FreeAndNil(FShowFieldImageList);
+  FMemoryStream.Free;
   inherited;
 end;
 
@@ -1720,6 +1749,60 @@ begin
   inherited;
 end;
 
+procedure TdsdDBViewAddOn.OnAfterScroll(DataSet: TDataSet);
+  var Item: TCollectionItem;
+      Data : AnsiString; Len : Integer;
+      Graphic: TGraphic; Ext: string;
+      GraphicClass: TGraphicClass;
+begin
+  if Assigned(FAfterScroll) then FAfterScroll(DataSet);
+  if DataSet.IsEmpty then Exit;
+  if FView.DataController.IsDataLoading then Exit;
+
+  for Item in ShowFieldImageList do
+    if (TShowFieldImage(Item).FieldName <> '') and Assigned(TShowFieldImage(Item).Image)  and
+       Assigned(DataSet.FindField(TShowFieldImage(Item).FieldName)) then
+    try
+      try
+        TShowFieldImage(Item).Image.Clear;
+        if Length(DataSet.FieldByName(TShowFieldImage(Item).FieldName).AsString) <= 4 then Continue;
+
+        Data := ReConvertConvert(DataSet.FieldByName(TShowFieldImage(Item).FieldName).AsString);
+        Ext := trim(Copy(Data, 1, 255));
+        Ext := AnsiLowerCase(ExtractFileExt(Ext));
+        Delete(Ext, 1, 1);
+
+        if 'wmf' = Ext then GraphicClass := TMetafile;
+        if 'emf' =  Ext then GraphicClass := TMetafile;
+        if 'ico' =  Ext then GraphicClass := TIcon;
+        if 'tiff' = Ext then GraphicClass := TWICImage;
+        if 'tif' = Ext then GraphicClass := TWICImage;
+        if 'png' = Ext then GraphicClass := TWICImage;
+        if 'gif' = Ext then GraphicClass := TWICImage;
+        if 'jpeg' = Ext then GraphicClass := TWICImage;
+        if 'jpg' = Ext then GraphicClass := TWICImage;
+        if 'bmp' = Ext then GraphicClass := TBitmap;
+        if GraphicClass = nil then Continue;
+
+        Data := Copy(Data, 256, maxint);
+        Len := Length(Data);
+        FMemoryStream.WriteBuffer(Data[1],  Len);
+        FMemoryStream.Position := 0;
+
+        Graphic := TGraphicClass(GraphicClass).Create;
+        try
+          Graphic.LoadFromStream(FMemoryStream);
+          TShowFieldImage(Item).Image.Picture.Graphic := Graphic;
+        finally
+          Graphic.Free;
+        end;
+      finally
+        FMemoryStream.Clear;
+      end;
+    except
+    end;
+end;
+
 procedure TdsdDBViewAddOn.OnKeyPress(Sender: TObject; var Key: Char);
 var isReadOnly: boolean;
 begin
@@ -1792,6 +1875,8 @@ begin
           TcxDBDataController(FView.DataController).DataSource.DataSet.BeforeOpen := OnBeforeOpen;
           FAfterOpen := TcxDBDataController(FView.DataController).DataSource.DataSet.AfterOpen;
           TcxDBDataController(FView.DataController).DataSource.DataSet.AfterOpen := OnAfterOpen;
+          FAfterScroll := TcxDBDataController(FView.DataController).DataSource.DataSet.AfterScroll;
+          TcxDBDataController(FView.DataController).DataSource.DataSet.AfterScroll := OnAfterScroll;
      end;
      FGroupByBox := FView.OptionsView.GroupByBox;
      FGroupIndex := -1;
@@ -4631,7 +4716,32 @@ begin
     AProperties := FEditRepository.Items[I - 1].Properties
 end;
 
-{ TPropertiesCell }
+{ TShowFieldImage }
+
+procedure TShowFieldImage.Assign(Source: TPersistent);
+begin
+  if Source is TShowFieldImage then
+    with TShowFieldImage(Source) do
+    begin
+      Self.FFieldName := FFieldName;
+    end
+  else
+    inherited Assign(Source);
+end;
+
+constructor TShowFieldImage.Create(Collection: TCollection);
+begin
+  inherited Create(Collection);
+  FFieldName := '';
+  FImage := Nil;
+end;
+
+destructor TShowFieldImage.Destroy;
+begin
+  inherited;
+end;
+
+{ TdsdPropertiesСhange }
 
 procedure TdsdPropertiesСhange.Assign(Source: TPersistent);
 begin

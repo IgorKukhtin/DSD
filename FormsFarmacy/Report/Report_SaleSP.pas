@@ -88,6 +88,7 @@ type
     bbPrintInvoice2: TdxBarButton;
     actPrintInvoice2: TdsdPrintAction;
     bbPrintBill: TdxBarButton;
+    AmbulantClinicSP: TcxGridDBColumn;
   private
     { Private declarations }
   public

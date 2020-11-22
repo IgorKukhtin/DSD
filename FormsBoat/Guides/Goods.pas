@@ -21,7 +21,7 @@ uses
   dsdAddOn, dsdDB, dsdAction, Vcl.ActnList, dxBarExtItems, dxBar, cxClasses,
   cxPropertiesStore, Datasnap.DBClient, cxGridLevel, cxGridCustomTableView,
   cxGridTableView, cxGridDBTableView, cxGridCustomView, cxGrid, cxButtonEdit,
-  cxCurrencyEdit, ExternalLoad;
+  cxCurrencyEdit, ExternalLoad, cxContainer, cxImage, Vcl.ExtCtrls;
 
 type
   TGoodsForm = class(TParentForm)
@@ -100,6 +100,10 @@ type
     spGetImportSettingId: TdsdStoredProc;
     spUnErased: TdsdStoredProc;
     spErased: TdsdStoredProc;
+    PanelPhoto: TPanel;
+    Image3: TcxImage;
+    Image2: TcxImage;
+    Image1: TcxImage;
   private
     { Private declarations }
   public

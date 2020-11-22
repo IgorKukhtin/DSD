@@ -25,6 +25,7 @@ RETURNS TABLE (MovementId     Integer
              , isListSP       Boolean
              , InvNumberSP    TVarChar
              , MedicSP        TVarChar
+             , AmbulantClinicSP TVarChar
              , MemberSP       TVarChar
              , GroupMemberSPId Integer
              , GroupMemberSPName TVarChar
@@ -148,7 +149,8 @@ BEGIN
                               , MovementLinkObject_PartnerMedical.ObjectId   AS HospitalId
                               , COALESCE (MovementBoolean_List.ValueData, FALSE) AS isListSP
                               , MovementString_InvNumberSP.ValueData         AS InvNumberSP
-                              , COALESCE (Object_MedicSP.ValueData, '')   :: TVarChar  AS MedicSP
+                              , COALESCE (Object_MedicSP.ValueData, '')            :: TVarChar  AS MedicSP
+                              , COALESCE (Object_AmbulantClinicSP.ValueData, '')   :: TVarChar  AS AmbulantClinicSP
                               , Object_MemberSP.Id                                     AS MemberSPId
                               , COALESCE (Object_MemberSP.ValueData, '')  :: TVarChar  AS MemberSP
                               , COALESCE (MovementDate_OperDateSP.ValueData,Null) AS OperDateSP
@@ -176,6 +178,11 @@ BEGIN
                                      ON MovementLinkObject_MedicSP.MovementId = Movement_Sale.Id
                                     AND MovementLinkObject_MedicSP.DescId = zc_MovementLinkObject_MedicSP()
                               LEFT JOIN Object AS Object_MedicSP ON Object_MedicSP.Id = MovementLinkObject_MedicSP.ObjectId AND Object_MedicSP.DescId = zc_Object_MedicSP()
+
+                              LEFT JOIN ObjectLink AS ObjectLink_MedicSP_AmbulantClinicSP
+                                                   ON ObjectLink_MedicSP_AmbulantClinicSP.ObjectId = Object_MedicSP.Id
+                                                  AND ObjectLink_MedicSP_AmbulantClinicSP.DescId = zc_ObjectLink_MedicSP_AmbulantClinicSP()
+                              LEFT JOIN Object AS Object_AmbulantClinicSP ON Object_AmbulantClinicSP.Id = ObjectLink_MedicSP_AmbulantClinicSP.ChildObjectId
 
                               LEFT JOIN MovementLinkObject AS MovementLinkObject_MemberSP
                                      ON MovementLinkObject_MemberSP.MovementId = Movement_Sale.Id
@@ -219,7 +226,8 @@ BEGIN
                               , MovementLinkObject_PartnerMedical.ObjectId   AS HospitalId
                               , COALESCE (MovementBoolean_List.ValueData, FALSE) AS isListSP
                               , MovementString_InvNumberSP.ValueData         AS InvNumberSP
-                              , COALESCE (MovementString_MedicSP.ValueData, '') :: TVarChar  AS MedicSP
+                              , COALESCE (MovementString_MedicSP.ValueData, '')    :: TVarChar  AS MedicSP
+                              , ''                                                 :: TVarChar  AS AmbulantClinicSP
                               , Object_MemberSP.Id                                                                     AS MemberSPId
                               , COALESCE (Object_MemberSP.ValueData, MovementString_Bayer.ValueData, '')  :: TVarChar  AS MemberSP
                               , COALESCE (MovementDate_OperDateSP.ValueData,Null) AS OperDateSP
@@ -299,6 +307,7 @@ BEGIN
                               , Movement_Sale.isListSP
                               , Movement_Sale.InvNumberSP
                               , Movement_Sale.MedicSP
+                              , Movement_Sale.AmbulantClinicSP
                               , Movement_Sale.MemberSPId
                               , Movement_Sale.MemberSP
                               , Movement_Sale.OperDateSP
@@ -342,6 +351,7 @@ BEGIN
                                 , Movement_Sale.isListSP
                                 , Movement_Sale.InvNumberSP
                                 , Movement_Sale.MedicSP
+                                , Movement_Sale.AmbulantClinicSP
                                 , Movement_Sale.MemberSPId
                                 , Movement_Sale.MemberSP
                                 , Movement_Sale.OperDateSP
@@ -465,6 +475,7 @@ BEGIN
                           , tmpSale.isListSP
                           , tmpSale.InvNumberSP
                           , tmpSale.MedicSP
+                          , tmpSale.AmbulantClinicSP
                           , tmpSale.MemberSP
                           , tmpSale.OperDateSP
                           , tmpSale.GroupMemberSPId
@@ -680,6 +691,7 @@ BEGIN
              , tmpData.isListSP
              , tmpData.InvNumberSP
              , tmpData.MedicSP
+             , tmpData.AmbulantClinicSP
              , tmpData.MemberSP
              , Object_GroupMemberSP.Id             AS GroupMemberSPId
              , Object_GroupMemberSP.ValueData      AS GroupMemberSPName

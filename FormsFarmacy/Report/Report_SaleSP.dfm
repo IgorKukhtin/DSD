@@ -4,7 +4,7 @@ inherited Report_SaleSPForm: TReport_SaleSPForm
   ClientWidth = 1077
   AddOnFormData.ExecuteDialogAction = ExecuteDialog
   ExplicitWidth = 1093
-  ExplicitHeight = 518
+  ExplicitHeight = 519
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
@@ -23,6 +23,8 @@ inherited Report_SaleSPForm: TReport_SaleSPForm
       inherited cxGrid: TcxGrid
         Width = 1077
         Height = 389
+        ExplicitLeft = 144
+        ExplicitTop = 13
         ExplicitWidth = 1077
         ExplicitHeight = 389
         inherited cxGridDBTableView: TcxGridDBTableView
@@ -328,6 +330,13 @@ inherited Report_SaleSPForm: TReport_SaleSPForm
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
             Width = 108
+          end
+          object AmbulantClinicSP: TcxGridDBColumn
+            Caption = #1040#1084#1073#1091#1083#1072#1090#1086#1088#1080#1103
+            DataBinding.FieldName = 'AmbulantClinicSP'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 91
           end
           object InvNumberSP: TcxGridDBColumn
             Caption = #1053#1086#1084#1077#1088' '#1088#1077#1094#1077#1087#1090#1072
@@ -1153,7 +1162,7 @@ inherited Report_SaleSPForm: TReport_SaleSPForm
         end
         item
           Name = 'isGroupMemberSP'
-          Value = 'False'
+          Value = False
           Component = cbGroupMemberSP
           DataType = ftBoolean
           MultiSelectSeparator = ','
@@ -1220,7 +1229,7 @@ inherited Report_SaleSPForm: TReport_SaleSPForm
         end
         item
           Name = 'isGroupMemberSP'
-          Value = 'False'
+          Value = False
           Component = cbGroupMemberSP
           DataType = ftBoolean
           MultiSelectSeparator = ','
@@ -1294,7 +1303,7 @@ inherited Report_SaleSPForm: TReport_SaleSPForm
         end
         item
           Name = 'isGroupMemberSP'
-          Value = 'False'
+          Value = False
           Component = cbGroupMemberSP
           DataType = ftBoolean
           MultiSelectSeparator = ','
@@ -1839,7 +1848,7 @@ inherited Report_SaleSPForm: TReport_SaleSPForm
       end
       item
         Name = 'inisInsert'
-        Value = 'False'
+        Value = False
         Component = cbisInsert
         DataType = ftBoolean
         ParamType = ptInput

@@ -2,7 +2,7 @@ object GoodsForm: TGoodsForm
   Left = 0
   Top = 0
   Caption = #1057#1087#1088#1072#1074#1086#1095#1085#1080#1082' <'#1040#1088#1090#1080#1082#1091#1083#1099'>'
-  ClientHeight = 404
+  ClientHeight = 506
   ClientWidth = 982
   Color = clBtnFace
   Font.Charset = DEFAULT_CHARSET
@@ -22,7 +22,7 @@ object GoodsForm: TGoodsForm
     Left = 0
     Top = 26
     Width = 982
-    Height = 378
+    Height = 333
     Align = alClient
     TabOrder = 0
     LookAndFeel.NativeStyle = False
@@ -335,6 +335,43 @@ object GoodsForm: TGoodsForm
     end
     object cxGridLevel: TcxGridLevel
       GridView = cxGridDBTableView
+    end
+  end
+  object PanelPhoto: TPanel
+    Left = 0
+    Top = 359
+    Width = 982
+    Height = 147
+    Align = alBottom
+    Caption = 'PanelPhoto'
+    ShowCaption = False
+    TabOrder = 5
+    object Image3: TcxImage
+      Left = 305
+      Top = 1
+      Align = alLeft
+      Properties.ReadOnly = True
+      TabOrder = 0
+      Height = 145
+      Width = 152
+    end
+    object Image2: TcxImage
+      Left = 153
+      Top = 1
+      Align = alLeft
+      Properties.ReadOnly = True
+      TabOrder = 1
+      Height = 145
+      Width = 152
+    end
+    object Image1: TcxImage
+      Left = 1
+      Top = 1
+      Align = alLeft
+      Properties.ReadOnly = True
+      TabOrder = 2
+      Height = 145
+      Width = 152
     end
   end
   object DataSource: TDataSource
@@ -1027,6 +1064,19 @@ object GoodsForm: TGoodsForm
     ColumnAddOnList = <>
     ColumnEnterList = <>
     SummaryItemList = <>
+    ShowFieldImageList = <
+      item
+        FieldName = 'Image1'
+        Image = Image1
+      end
+      item
+        FieldName = 'Image2'
+        Image = Image2
+      end
+      item
+        FieldName = 'Image3'
+        Image = Image3
+      end>
     PropertiesCellList = <>
     Left = 232
     Top = 184
