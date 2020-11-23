@@ -2,7 +2,7 @@
   Left = 0
   Top = 0
   Caption = #1057#1087#1088#1072#1074#1086#1095#1085#1080#1082' <'#1044#1086#1075#1086#1074#1086#1088#1072'>'
-  ClientHeight = 536
+  ClientHeight = 620
   ClientWidth = 1216
   Color = clBtnFace
   Font.Charset = DEFAULT_CHARSET
@@ -72,12 +72,14 @@
   end
   object cxGrid: TcxGrid
     Left = 0
-    Top = 56
+    Top = 61
     Width = 1216
-    Height = 303
+    Height = 297
     Align = alTop
     TabOrder = 0
     LookAndFeel.NativeStyle = False
+    ExplicitLeft = -8
+    ExplicitTop = 189
     object cxGridDBTableView: TcxGridDBTableView
       Navigator.Buttons.CustomButtons = <>
       DataController.DataSource = DataSource
@@ -808,14 +810,17 @@
   end
   object cxGridContractCondition: TcxGrid
     Left = 0
-    Top = 364
-    Width = 618
-    Height = 172
-    Align = alClient
+    Top = 363
+    Width = 476
+    Height = 257
+    Align = alLeft
     TabOrder = 1
     LookAndFeel.Kind = lfStandard
     LookAndFeel.NativeStyle = False
     LookAndFeel.SkinName = ''
+    ExplicitLeft = -2
+    ExplicitTop = 365
+    ExplicitHeight = 247
     object cxGridDBTableViewContractCondition: TcxGridDBTableView
       Navigator.Buttons.CustomButtons = <>
       DataController.DataSource = ContractConditionDS
@@ -1054,23 +1059,30 @@
     end
   end
   object Panel: TPanel
-    Left = 622
-    Top = 364
-    Width = 594
-    Height = 172
+    Left = 724
+    Top = 363
+    Width = 492
+    Height = 257
     Align = alRight
     BevelOuter = bvNone
     TabOrder = 5
+    ExplicitLeft = 720
+    ExplicitTop = 358
+    ExplicitHeight = 262
     object cxGridPartner: TcxGrid
       Left = 0
       Top = 0
-      Width = 241
-      Height = 172
-      Align = alLeft
+      Width = 317
+      Height = 257
+      Align = alClient
       TabOrder = 0
       LookAndFeel.Kind = lfStandard
       LookAndFeel.NativeStyle = False
       LookAndFeel.SkinName = ''
+      ExplicitLeft = 56
+      ExplicitTop = 8
+      ExplicitWidth = 221
+      ExplicitHeight = 252
       object cxGridDBTableViewPartner: TcxGridDBTableView
         Navigator.Buttons.CustomButtons = <>
         DataController.DataSource = DataSourcePartner
@@ -1116,7 +1128,7 @@
           Width = 45
         end
         object PartnerName: TcxGridDBColumn
-          Caption = #1050#1086#1085#1090#1088#1072#1075#1077#1085#1090
+          Caption = #1050#1086#1085#1090#1088#1072#1075#1077#1085#1090' ('#1044#1086#1075#1086#1074#1086#1088#1072')'
           DataBinding.FieldName = 'PartnerName'
           PropertiesClassName = 'TcxButtonEditProperties'
           Properties.Buttons = <
@@ -1128,6 +1140,7 @@
           Properties.ReadOnly = True
           HeaderAlignmentHorz = taCenter
           HeaderAlignmentVert = vaCenter
+          HeaderHint = #1050#1086#1085#1090#1088#1072#1075#1077#1085#1090' ('#1044#1086#1075#1086#1074#1086#1088#1072')'
           Width = 258
         end
         object clPisErased: TcxGridDBColumn
@@ -1143,15 +1156,18 @@
       end
     end
     object cxGridGoods: TcxGrid
-      Left = 246
+      Left = 322
       Top = 0
-      Width = 348
-      Height = 172
-      Align = alClient
+      Width = 170
+      Height = 257
+      Align = alRight
       TabOrder = 1
       LookAndFeel.Kind = lfStandard
       LookAndFeel.NativeStyle = False
       LookAndFeel.SkinName = ''
+      ExplicitLeft = 328
+      ExplicitTop = 24
+      ExplicitHeight = 1062
       object cxGridDBTableViewGoods: TcxGridDBTableView
         Navigator.Buttons.CustomButtons = <>
         DataController.DataSource = DataSourceGoods
@@ -1269,29 +1285,134 @@
         GridView = cxGridDBTableViewGoods
       end
     end
-    object cxLeftSplitter: TcxSplitter
-      Left = 241
+    object cxSplitter1: TcxSplitter
+      Left = 317
       Top = 0
       Width = 5
-      Height = 172
-      Control = cxGridPartner
+      Height = 257
+      AlignSplitter = salRight
+      Control = cxGridGoods
+      ExplicitLeft = 321
+      ExplicitHeight = 370
     end
   end
   object cxTopSplitter: TcxSplitter
     Left = 0
-    Top = 359
+    Top = 56
     Width = 1216
     Height = 5
     AlignSplitter = salTop
     Control = cxGrid
+    ExplicitLeft = -10
+    ExplicitTop = 62
   end
   object cxRightSplitter: TcxSplitter
-    Left = 618
-    Top = 364
+    Left = 720
+    Top = 363
     Width = 4
-    Height = 172
+    Height = 257
     AlignSplitter = salRight
     Control = Panel
+    ExplicitLeft = 1216
+    ExplicitTop = 358
+    ExplicitHeight = 262
+  end
+  object CCPartner: TcxGrid
+    Left = 481
+    Top = 363
+    Width = 239
+    Height = 257
+    Align = alClient
+    TabOrder = 10
+    LookAndFeel.Kind = lfStandard
+    LookAndFeel.NativeStyle = False
+    LookAndFeel.SkinName = ''
+    ExplicitLeft = 487
+    ExplicitTop = 420
+    ExplicitHeight = 262
+    object cxGridDBTableViewCCPartner: TcxGridDBTableView
+      Navigator.Buttons.CustomButtons = <>
+      DataController.DataSource = CCPartnerDS
+      DataController.Filter.Options = [fcoCaseInsensitive]
+      DataController.Filter.Active = True
+      DataController.Summary.DefaultGroupSummaryItems = <>
+      DataController.Summary.FooterSummaryItems = <>
+      DataController.Summary.SummaryGroups = <>
+      Images = dmMain.SortImageList
+      OptionsBehavior.IncSearch = True
+      OptionsCustomize.ColumnHiding = True
+      OptionsCustomize.ColumnsQuickCustomization = True
+      OptionsData.Deleting = False
+      OptionsData.DeletingConfirmation = False
+      OptionsData.Inserting = False
+      OptionsView.GroupByBox = False
+      OptionsView.HeaderHeight = 40
+      OptionsView.Indicator = True
+      Styles.StyleSheet = dmMain.cxGridTableViewStyleSheet
+      object ccpCode: TcxGridDBColumn
+        Caption = #1050#1086#1076' '#1089#1074#1103#1079#1080
+        DataBinding.FieldName = 'Code'
+        Visible = False
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Options.Editing = False
+        Width = 57
+      end
+      object ccpPartnerCode: TcxGridDBColumn
+        Caption = #1050#1086#1076
+        DataBinding.FieldName = 'PartnerCode'
+        Visible = False
+        HeaderAlignmentVert = vaCenter
+        Options.Editing = False
+        Width = 45
+      end
+      object ccpPartnerName: TcxGridDBColumn
+        Caption = #1050#1086#1085#1090#1088#1072#1075#1077#1085#1090' ('#1059#1089#1083#1086#1074#1080#1103' '#1076#1086#1075#1086#1074#1086#1088#1072')'
+        DataBinding.FieldName = 'PartnerName'
+        PropertiesClassName = 'TcxButtonEditProperties'
+        Properties.Buttons = <
+          item
+            Action = PartnerContractConditionChoiceForm
+            Default = True
+            Kind = bkEllipsis
+          end>
+        Properties.ReadOnly = True
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        HeaderHint = #1050#1086#1085#1090#1088#1072#1075#1077#1085#1090' ('#1059#1089#1083#1086#1074#1080#1103' '#1076#1086#1075#1086#1074#1086#1088#1072')'
+        Width = 258
+      end
+      object ccpisErased: TcxGridDBColumn
+        Caption = #1059#1076#1072#1083#1077#1085
+        DataBinding.FieldName = 'isErased'
+        Visible = False
+        Options.Editing = False
+        Width = 20
+      end
+    end
+    object cxGridLevelCCPartner: TcxGridLevel
+      GridView = cxGridDBTableViewCCPartner
+    end
+  end
+  object cxSplitter2: TcxSplitter
+    Left = 476
+    Top = 363
+    Width = 5
+    Height = 257
+    Control = cxGridContractCondition
+    ExplicitLeft = 794
+    ExplicitTop = 358
+    ExplicitHeight = 262
+  end
+  object cxSplitter3: TcxSplitter
+    Left = 0
+    Top = 358
+    Width = 1216
+    Height = 5
+    AlignSplitter = salTop
+    Control = cxGrid
+    ExplicitLeft = -147
+    ExplicitWidth = 1363
   end
   object DataSource: TDataSource
     DataSet = ClientDataSet
@@ -1469,6 +1590,30 @@
         item
           Visible = True
           ItemName = 'bbProtocolOpenFormPartner'
+        end
+        item
+          Visible = True
+          ItemName = 'dxBarStatic1'
+        end
+        item
+          Visible = True
+          ItemName = 'bbInsertRecordCCPartner'
+        end
+        item
+          Visible = True
+          ItemName = 'bbdsdSetErasedCCPartner'
+        end
+        item
+          Visible = True
+          ItemName = 'bbdsdSetUnErased'#1057#1057'Partner'
+        end
+        item
+          Visible = True
+          ItemName = 'dxBarStatic1'
+        end
+        item
+          Visible = True
+          ItemName = 'bbProtocolOpenFormCCPartner'
         end
         item
           Visible = True
@@ -1674,6 +1819,22 @@
       Action = actContractGoodsChoiceOpenForm
       Category = 0
     end
+    object bbInsertRecordCCPartner: TdxBarButton
+      Action = InsertRecordCCPartner
+      Category = 0
+    end
+    object bbdsdSetErasedCCPartner: TdxBarButton
+      Action = dsdSetErasedCCPartner
+      Category = 0
+    end
+    object bbdsdSetUnErasedССPartner: TdxBarButton
+      Action = dsdSetUnErasedССPartner
+      Category = 0
+    end
+    object bbProtocolOpenFormCCPartner: TdxBarButton
+      Action = ProtocolOpenFormCCPartner
+      Category = 0
+    end
   end
   object ActionList: TActionList
     Images = dmMain.ImageList
@@ -1703,6 +1864,9 @@
         end
         item
           StoredProc = spSelectContractCondition
+        end
+        item
+          StoredProc = spSelectCCPartner
         end
         item
           StoredProc = spSelectContractPartner
@@ -1786,6 +1950,17 @@
         end>
       isShowModal = True
     end
+    object InsertRecordCCPartner: TInsertRecord
+      Category = 'CCPartner'
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      View = cxGridDBTableViewCCPartner
+      Action = PartnerContractConditionChoiceForm
+      Params = <>
+      Caption = #1044#1086#1073#1072#1074#1080#1090#1100' <'#1050#1086#1085#1090#1088#1072#1075#1077#1085#1090#1072' ('#1091#1089#1083#1086#1074#1080#1103' '#1076#1086#1075#1086#1074#1086#1088#1072')>'
+      Hint = #1044#1086#1073#1072#1074#1080#1090#1100' <'#1050#1086#1085#1090#1088#1072#1075#1077#1085#1090#1072' ('#1091#1089#1083#1086#1074#1080#1103' '#1076#1086#1075#1086#1074#1086#1088#1072')>'
+      ImageIndex = 0
+    end
     object InsertRecordGoods: TInsertRecord
       Category = 'DSDLib'
       MoveParams = <>
@@ -1807,6 +1982,36 @@
       Caption = #1044#1086#1073#1072#1074#1080#1090#1100' <'#1050#1086#1085#1090#1088#1072#1075#1077#1085#1090#1072'>'
       Hint = #1044#1086#1073#1072#1074#1080#1090#1100' <'#1050#1086#1085#1090#1088#1072#1075#1077#1085#1090#1072'>'
       ImageIndex = 0
+    end
+    object ProtocolOpenFormCCPartner: TdsdOpenForm
+      Category = 'CCPartner'
+      MoveParams = <>
+      Caption = #1055#1088#1086#1089#1084#1086#1090#1088' '#1087#1088#1086#1090#1086#1082#1086#1083' <'#1050#1086#1085#1090#1088#1072#1075#1077#1085#1090#1072' ('#1091#1089#1083#1086#1074#1080#1103' '#1076#1086#1075#1086#1074#1086#1088#1072')>'
+      Hint = #1055#1088#1086#1089#1084#1086#1090#1088' '#1087#1088#1086#1090#1086#1082#1086#1083' <'#1050#1086#1085#1090#1088#1072#1075#1077#1085#1090#1072' ('#1091#1089#1083#1086#1074#1080#1103' '#1076#1086#1075#1086#1074#1086#1088#1072')>'
+      ImageIndex = 34
+      FormName = 'TProtocolForm'
+      FormNameParam.Value = 'TProtocolForm'
+      FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
+      GuiParams = <
+        item
+          Name = 'Id'
+          Value = Null
+          Component = CCPartnerCDS
+          ComponentItem = 'Id'
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'TextValue'
+          Value = Null
+          Component = CCPartnerCDS
+          ComponentItem = 'PartnerName'
+          DataType = ftString
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end>
+      isShowModal = False
     end
     object actInsert: TdsdInsertUpdateAction
       Category = 'DSDLib'
@@ -2011,6 +2216,20 @@
       DataSetRefresh = actRefresh
       IdFieldName = 'Id'
     end
+    object dsdSetErasedCCPartner: TdsdUpdateErased
+      Category = 'CCPartner'
+      MoveParams = <>
+      StoredProc = spErasedUnErasedCCPartner
+      StoredProcList = <
+        item
+          StoredProc = spErasedUnErasedCCPartner
+        end>
+      Caption = #1059#1076#1072#1083#1080#1090#1100' '#1082#1086#1085#1090#1088#1072#1075#1077#1085#1090#1072' ('#1091#1089#1083'. '#1076#1086#1075'.)'
+      Hint = #1059#1076#1072#1083#1080#1090#1100' '#1076#1072#1085#1085#1099#1077' '#1082#1086#1085#1090#1088#1072#1075#1077#1085#1090#1072' ('#1091#1089#1083#1086#1074#1080#1103' '#1076#1086#1075#1086#1074#1086#1088#1072')'
+      ImageIndex = 2
+      ErasedFieldName = 'isErased'
+      DataSource = CCPartnerDS
+    end
     object ContractKindChoiceForm: TOpenChoiceForm
       Category = 'DSDLib'
       MoveParams = <>
@@ -2049,7 +2268,6 @@
       Caption = #1059#1076#1072#1083#1080#1090#1100' '#1090#1086#1074#1072#1088
       Hint = #1059#1076#1072#1083#1080#1090#1100' '#1076#1072#1085#1085#1099#1077' '#1087#1086' '#1090#1086#1074#1072#1088#1091
       ImageIndex = 2
-      ShortCut = 46
       ErasedFieldName = 'isErased'
       DataSource = DataSourceGoods
     end
@@ -2064,7 +2282,6 @@
       Caption = #1059#1076#1072#1083#1080#1090#1100' '#1082#1086#1085#1090#1088#1072#1075#1077#1085#1090#1072
       Hint = #1059#1076#1072#1083#1080#1090#1100' '#1076#1072#1085#1085#1099#1077' '#1082#1086#1085#1090#1088#1072#1075#1077#1085#1090#1072
       ImageIndex = 2
-      ShortCut = 46
       ErasedFieldName = 'isErased'
       DataSource = DataSourcePartner
     end
@@ -2079,7 +2296,6 @@
       Caption = #1059#1076#1072#1083#1080#1090#1100
       Hint = #1059#1076#1072#1083#1080#1090#1100' '#1076#1072#1085#1085#1099#1077
       ImageIndex = 2
-      ShortCut = 46
       ErasedFieldName = 'isErased'
       DataSource = DataSource
     end
@@ -2158,6 +2374,21 @@
           MultiSelectSeparator = ','
         end>
       isShowModal = True
+    end
+    object dsdSetUnErasedССPartner: TdsdUpdateErased
+      Category = 'CCPartner'
+      MoveParams = <>
+      StoredProc = spErasedUnErasedCCPartner
+      StoredProcList = <
+        item
+          StoredProc = spErasedUnErasedCCPartner
+        end>
+      Caption = #1042#1086#1089#1089#1090#1072#1085#1086#1074#1080#1090#1100' '#1050#1086#1085#1090#1088#1072#1075#1077#1085#1090#1072' ('#1091#1089#1083#1086#1074#1080#1103' '#1076#1086#1075#1086#1074#1086#1088#1072')'
+      Hint = #1042#1086#1089#1089#1090#1072#1085#1086#1074#1080#1090#1100' '#1076#1072#1085#1085#1099#1077' ('#1091#1089#1083#1086#1074#1080#1103' '#1076#1086#1075#1086#1074#1086#1088#1072')'
+      ImageIndex = 8
+      ErasedFieldName = 'isErased'
+      isSetErased = False
+      DataSource = CCPartnerDS
     end
     object GoodsPropertyChoiceForm: TOpenChoiceForm
       Category = 'DSDLib'
@@ -2497,6 +2728,18 @@
       Caption = 'actUpdateDataSetCCK'
       DataSource = ContractConditionDS
     end
+    object actUpdateDataSetCCPartner: TdsdUpdateDataSet
+      Category = 'DSDLib'
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      StoredProc = spInsertUpdateCCPartner
+      StoredProcList = <
+        item
+          StoredProc = spInsertUpdateCCPartner
+        end>
+      Caption = 'actUpdateDataSet'
+      DataSource = CCPartnerDS
+    end
     object actUpdateDSGoods: TdsdUpdateDataSet
       Category = 'DSDLib'
       MoveParams = <>
@@ -2610,6 +2853,48 @@
           Component = ClientDataSet
           ComponentItem = 'PersonalTradeName'
           DataType = ftString
+          MultiSelectSeparator = ','
+        end>
+      isShowModal = False
+    end
+    object PartnerContractConditionChoiceForm: TOpenChoiceForm
+      Category = 'DSDLib'
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      Caption = 'PartnerChoiceForm'
+      FormName = 'TPartner_ObjectForm'
+      FormNameParam.Value = 'TPartner_ObjectForm'
+      FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
+      GuiParams = <
+        item
+          Name = 'Key'
+          Value = Null
+          Component = CCPartnerCDS
+          ComponentItem = 'PartnerId'
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'TextValue'
+          Value = Null
+          Component = CCPartnerCDS
+          ComponentItem = 'PartnerName'
+          DataType = ftString
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'MasterJuridicalId'
+          Value = Null
+          Component = ClientDataSet
+          ComponentItem = 'JuridicalId'
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'MasterJuridicalName'
+          Value = Null
+          Component = ClientDataSet
+          ComponentItem = 'JuridicalName'
           MultiSelectSeparator = ','
         end>
       isShowModal = False
@@ -3042,6 +3327,7 @@
     ColumnAddOnList = <>
     ColumnEnterList = <>
     SummaryItemList = <>
+    ShowFieldImageList = <>
     PropertiesCellList = <>
     Left = 800
     Top = 224
@@ -3171,7 +3457,7 @@
       end>
     Params = <>
     PackSize = 1
-    Left = 498
+    Left = 314
     Top = 413
   end
   object spInsertUpdate: TdsdStoredProc
@@ -3280,9 +3566,10 @@
     ColumnAddOnList = <>
     ColumnEnterList = <>
     SummaryItemList = <>
+    ShowFieldImageList = <>
     PropertiesCellList = <>
-    Left = 432
-    Top = 376
+    Left = 408
+    Top = 256
   end
   object PeriodChoice: TPeriodChoice
     DateStart = deStart
@@ -3308,13 +3595,13 @@
     MasterSource = DataSource
     PacketRecords = 0
     Params = <>
-    Left = 685
-    Top = 349
+    Left = 1061
+    Top = 181
   end
   object DataSourcePartner: TDataSource
     DataSet = CDSContractPartner
-    Left = 766
-    Top = 349
+    Left = 814
+    Top = 277
   end
   object spSelectContractPartner: TdsdStoredProc
     StoredProcName = 'gpSelect_Object_ContractPartner'
@@ -3325,8 +3612,8 @@
       end>
     Params = <>
     PackSize = 1
-    Left = 729
-    Top = 397
+    Left = 905
+    Top = 165
   end
   object spInsertUpdateContractPartner: TdsdStoredProc
     StoredProcName = 'gpInsertUpdate_Object_ContractPartner'
@@ -3366,8 +3653,8 @@
         MultiSelectSeparator = ','
       end>
     PackSize = 1
-    Left = 688
-    Top = 392
+    Left = 696
+    Top = 288
   end
   object dsdDBViewAddOnPartner: TdsdDBViewAddOn
     ErasedFieldName = 'isErased'
@@ -3394,9 +3681,10 @@
     ColumnAddOnList = <>
     ColumnEnterList = <>
     SummaryItemList = <>
+    ShowFieldImageList = <>
     PropertiesCellList = <>
-    Left = 616
-    Top = 392
+    Left = 232
+    Top = 296
   end
   object CDSContractGoods: TClientDataSet
     Aggregates = <>
@@ -3405,7 +3693,7 @@
     MasterSource = DataSource
     PacketRecords = 0
     Params = <>
-    Left = 965
+    Left = 989
     Top = 373
   end
   object DataSourceGoods: TDataSource
@@ -3438,9 +3726,10 @@
     ColumnAddOnList = <>
     ColumnEnterList = <>
     SummaryItemList = <>
+    ShowFieldImageList = <>
     PropertiesCellList = <>
-    Left = 1136
-    Top = 360
+    Left = 1120
+    Top = 472
   end
   object spSelectContractGoods: TdsdStoredProc
     StoredProcName = 'gpSelect_Object_ContractGoods'
@@ -3451,8 +3740,8 @@
       end>
     Params = <>
     PackSize = 1
-    Left = 1058
-    Top = 413
+    Left = 938
+    Top = 429
   end
   object spInsertUpdateContractGoods: TdsdStoredProc
     StoredProcName = 'gpInsertUpdate_Object_ContractGoods'
@@ -3526,8 +3815,8 @@
         MultiSelectSeparator = ','
       end>
     PackSize = 1
-    Left = 800
-    Top = 392
+    Left = 832
+    Top = 416
   end
   object spErasedUnErasedGoods: TdsdStoredProc
     StoredProcName = 'gpUpdate_Object_isErased_ContractGoods'
@@ -3543,8 +3832,8 @@
         MultiSelectSeparator = ','
       end>
     PackSize = 1
-    Left = 912
-    Top = 384
+    Left = 1096
+    Top = 512
   end
   object spUpdateDefaultOut: TdsdStoredProc
     StoredProcName = 'gpUpdate_Object_Contract_isDefaultOut'
@@ -3674,5 +3963,120 @@
     PackSize = 1
     Left = 320
     Top = 283
+  end
+  object CCPartnerDS: TDataSource
+    DataSet = CCPartnerCDS
+    Left = 478
+    Top = 493
+  end
+  object CCPartnerCDS: TClientDataSet
+    Aggregates = <>
+    IndexFieldNames = 'ContractConditionId'
+    MasterFields = 'Id'
+    MasterSource = ContractConditionDS
+    PacketRecords = 0
+    Params = <>
+    Left = 485
+    Top = 437
+  end
+  object dsdDBViewAddOnCCPartner: TdsdDBViewAddOn
+    ErasedFieldName = 'isErased'
+    View = cxGridDBTableViewCCPartner
+    OnDblClickActionList = <
+      item
+        Action = actUpdate
+      end
+      item
+        Action = dsdChoiceGuides
+      end>
+    ActionItemList = <
+      item
+        Action = dsdChoiceGuides
+        ShortCut = 13
+      end
+      item
+        Action = actUpdate
+        ShortCut = 13
+      end>
+    SortImages = dmMain.SortImageList
+    OnlyEditingCellOnEnter = False
+    ColorRuleList = <>
+    ColumnAddOnList = <>
+    ColumnEnterList = <>
+    SummaryItemList = <>
+    ShowFieldImageList = <>
+    PropertiesCellList = <>
+    Left = 608
+    Top = 424
+  end
+  object spInsertUpdateCCPartner: TdsdStoredProc
+    StoredProcName = 'gpInsertUpdate_Object_ContractConditionPartner'
+    DataSets = <>
+    OutputType = otResult
+    Params = <
+      item
+        Name = 'ioId'
+        Value = Null
+        Component = CCPartnerCDS
+        ComponentItem = 'Id'
+        ParamType = ptInputOutput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inCode'
+        Value = Null
+        Component = CCPartnerCDS
+        ComponentItem = 'Code'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inContractConditionId'
+        Value = Null
+        Component = CDSContractCondition
+        ComponentItem = 'Id'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inPartnerId'
+        Value = Null
+        Component = CCPartnerCDS
+        ComponentItem = 'PartnerId'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end>
+    PackSize = 1
+    Left = 632
+    Top = 480
+  end
+  object spSelectCCPartner: TdsdStoredProc
+    StoredProcName = 'gpSelect_Object_ContractConditionPartner'
+    DataSet = CCPartnerCDS
+    DataSets = <
+      item
+        DataSet = CCPartnerCDS
+      end>
+    Params = <>
+    PackSize = 1
+    Left = 545
+    Top = 397
+  end
+  object spErasedUnErasedCCPartner: TdsdStoredProc
+    StoredProcName = 'gpUpdate_Object_isErased_ContractConditionPartner'
+    DataSets = <>
+    OutputType = otResult
+    Params = <
+      item
+        Name = 'inObjectId'
+        Value = Null
+        Component = CCPartnerCDS
+        ComponentItem = 'Id'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end>
+    PackSize = 1
+    Left = 688
+    Top = 408
   end
 end
