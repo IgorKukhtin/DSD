@@ -101,7 +101,6 @@
 				<DesignClass>TDataModule</DesignClass>
 			</DCCReference>
 			<DCCReference Include="..\SOURCE\COMPONENT\dsdAction.pas"/>
-			<DCCReference Include="..\SOURCE\COMPONENT\dsdAddOn.pas"/>
 			<DCCReference Include="..\SOURCE\COMPONENT\dsdDB.pas"/>
 			<DCCReference Include="..\SOURCE\COMPONENT\dsdGuides.pas"/>
 			<DCCReference Include="..\SOURCE\Storage.pas"/>
@@ -200,6 +199,7 @@
 				<Form>MainForm</Form>
 			</DCCReference>
 			<DCCReference Include="..\SOURCE\COMPONENT\dsdTranslator.pas"/>
+			<DCCReference Include="..\SOURCE\COMPONENT\dsdAddOn.pas"/>
 			<BuildConfiguration Include="Release">
 				<Key>Cfg_2</Key>
 				<CfgParent>Base</CfgParent>
