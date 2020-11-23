@@ -929,6 +929,19 @@ inherited ContractGoodsChoiceForm: TContractGoodsChoiceForm
   end
   inherited ActionList: TActionList
     Top = 223
+    object actRefreshGoods: TdsdDataSetRefresh [0]
+      Category = 'DSDLib'
+      MoveParams = <>
+      StoredProc = spSelect
+      StoredProcList = <
+        item
+          StoredProc = spSelect
+        end>
+      Caption = #1055#1077#1088#1077#1095#1080#1090#1072#1090#1100
+      Hint = #1054#1073#1085#1086#1074#1080#1090#1100' '#1076#1072#1085#1085#1099#1077
+      ImageIndex = 4
+      RefreshOnTabSetChanges = False
+    end
     inherited actRefresh: TdsdDataSetRefresh
       StoredProcList = <
         item
@@ -1084,6 +1097,17 @@ inherited ContractGoodsChoiceForm: TContractGoodsChoiceForm
       ImageIndexTrue = 65
       ImageIndexFalse = 64
     end
+    object actUpdate_Price0: TdsdExecStoredProc
+      Category = 'DSDLib'
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      StoredProc = spUpdate_Price0
+      StoredProcList = <
+        item
+          StoredProc = spUpdate_Price0
+        end>
+      Caption = 'actUpdate_Price0'
+    end
     object actChoiceFormTradeMark: TOpenChoiceForm
       Category = 'DSDLib'
       MoveParams = <>
@@ -1218,6 +1242,31 @@ inherited ContractGoodsChoiceForm: TContractGoodsChoiceForm
       Hint = #1059#1076#1072#1083#1080#1090#1100' '#1074#1099#1073#1088#1072#1085#1085#1099#1077' '#1090#1086#1074#1072#1088#1099
       ImageIndex = 52
     end
+    object macUpdate_Price0_list: TMultiAction
+      Category = 'DSDLib'
+      MoveParams = <>
+      ActionList = <
+        item
+          Action = actUpdate_Price0
+        end>
+      View = cxGridDBTableView
+      Caption = 'macUpdate_Price0_list'
+    end
+    object macUpdate_Price0: TMultiAction
+      Category = 'DSDLib'
+      MoveParams = <>
+      ActionList = <
+        item
+          Action = macUpdate_Price0_list
+        end
+        item
+          Action = actRefreshGoods
+        end>
+      QuestionBeforeExecute = #1059#1089#1090#1072#1085#1086#1074#1080#1090#1100' '#1062#1077#1085#1072' = 0 '#1076#1083#1103' '#1074#1099#1073#1088#1072#1085#1085#1099#1093' '#1090#1086#1074#1072#1088#1086#1074'?'
+      InfoAfterExecute = #1062#1077#1085#1099' '#1086#1073#1085#1091#1083#1077#1085#1099
+      Caption = #1059#1089#1090#1072#1085#1086#1074#1080#1090#1100' '#1062#1077#1085#1072' = 0'
+      Hint = #1059#1089#1090#1072#1085#1086#1074#1080#1090#1100' '#1062#1077#1085#1072' = 0'
+    end
   end
   inherited MasterDS: TDataSource
     Left = 40
@@ -1348,6 +1397,14 @@ inherited ContractGoodsChoiceForm: TContractGoodsChoiceForm
           ItemName = 'bbmacSetErased'
         end
         item
+          Visible = True
+          ItemName = 'dxBarStatic'
+        end
+        item
+          Visible = True
+          ItemName = 'bb'
+        end
+        item
           BeginGroup = True
           Visible = True
           ItemName = 'dxBarStatic'
@@ -1432,6 +1489,11 @@ inherited ContractGoodsChoiceForm: TContractGoodsChoiceForm
     object bbmacSetErased: TdxBarButton
       Action = macSetErased
       Category = 0
+    end
+    object bb: TdxBarButton
+      Action = macUpdate_Price0
+      Category = 0
+      ImageIndex = 77
     end
   end
   inherited DBViewAddOn: TdsdDBViewAddOn
@@ -1961,5 +2023,22 @@ inherited ContractGoodsChoiceForm: TContractGoodsChoiceForm
         MultiSelectSeparator = ','
       end>
     Left = 1128
+  end
+  object spUpdate_Price0: TdsdStoredProc
+    StoredProcName = 'gpUpdate_Object_ContractGoods_Price0'
+    DataSets = <>
+    OutputType = otResult
+    Params = <
+      item
+        Name = 'inId'
+        Value = ''
+        Component = MasterCDS
+        ComponentItem = 'Id'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end>
+    PackSize = 1
+    Left = 608
+    Top = 320
   end
 end

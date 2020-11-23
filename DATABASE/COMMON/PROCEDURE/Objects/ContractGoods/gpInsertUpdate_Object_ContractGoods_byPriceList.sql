@@ -94,6 +94,7 @@ BEGIN
           SELECT DISTINCT 
                  ObjectLink_GoodsPropertyValue_Goods.ChildObjectId     AS GoodsId
                , ObjectLink_GoodsPropertyValue_GoodsKind.ChildObjectId AS GoodsKindId
+               , ObjectString_Article.ValueData                        AS Article
           FROM ObjectLink AS ObjectLink_GoodsPropertyValue_GoodsProperty
               LEFT JOIN ObjectLink AS ObjectLink_GoodsPropertyValue_Goods
                                     ON ObjectLink_GoodsPropertyValue_Goods.ObjectId =  ObjectLink_GoodsPropertyValue_GoodsProperty.ObjectId
@@ -102,6 +103,10 @@ BEGIN
               LEFT JOIN ObjectLink AS ObjectLink_GoodsPropertyValue_GoodsKind
                                    ON ObjectLink_GoodsPropertyValue_GoodsKind.ObjectId = ObjectLink_GoodsPropertyValue_GoodsProperty.ObjectId
                                   AND ObjectLink_GoodsPropertyValue_GoodsKind.DescId = zc_ObjectLink_GoodsPropertyValue_GoodsKind()
+
+              LEFT JOIN ObjectString AS ObjectString_Article
+                                     ON ObjectString_Article.ObjectId = ObjectLink_GoodsPropertyValue_Goods.ObjectId
+                                    AND ObjectString_Article.DescId = zc_ObjectString_GoodsPropertyValue_Article() 
 
           WHERE ObjectLink_GoodsPropertyValue_GoodsProperty.DescId = zc_ObjectLink_GoodsPropertyValue_GoodsProperty()
             AND ObjectLink_GoodsPropertyValue_GoodsProperty.ChildObjectId = inGoodsPropertyId          
@@ -114,6 +119,7 @@ BEGIN
                , tmpPrice.Price
           FROM tmpPrice
                LEFT JOIN tmpGoodsProperty ON tmpGoodsProperty.GoodsId = tmpPrice.GoodsId
+          WHERE COALESCE (tmpGoodsProperty.Article, '') <> ''
           );
 
    --получаем уже сохраненные данные ContractGoods, последние
@@ -166,7 +172,8 @@ BEGIN
    FROM tmpContractGoods
         INNER JOIN tmpData ON tmpData.GoodsId = tmpContractGoods.GoodsId
                            AND COALESCE (tmpData.GoodsKindId,0) = COALESCE (tmpContractGoods.GoodsKindId,0)
-                           AND tmpData.Price <> tmpContractGoods.Price;
+                           AND tmpData.Price <> tmpContractGoods.Price
+   WHERE COALESCE (tmpContractGoods.Price,0) <> 0;
 
    --записываем новые записи, если такого эл. не было нач.цена = дате нач. договора
    PERFORM lpInsertUpdate_Object_ContractGoods(ioId          := 0                    :: Integer
@@ -175,7 +182,7 @@ BEGIN
                                              , inGoodsId     := tmpData.GoodsId
                                              , inGoodsKindId := tmpData.GoodsKindId ::Integer
                                              , inStartDate   := CASE WHEN COALESCE (tmpContractGoods.Id,0) <> 0 THEN CURRENT_DATE ELSE vbStartDate END ::TDateTime    --
-                                             , inEndDate     :=  zc_DateEnd()        ::TDateTime    --
+                                             , inEndDate     := zc_DateEnd()        ::TDateTime    --
                                              , inPrice       := tmpData.Price       ::Tfloat    
                                              , inUserId      := vbUserId
                                               )

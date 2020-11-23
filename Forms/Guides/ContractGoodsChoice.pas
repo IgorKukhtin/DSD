@@ -86,6 +86,12 @@ type
     edGoodsProperty: TcxButtonEdit;
     cxLabel3: TcxLabel;
     GuidesGoodsProperty: TdsdGuides;
+    spUpdate_Price0: TdsdStoredProc;
+    actUpdate_Price0: TdsdExecStoredProc;
+    macUpdate_Price0_list: TMultiAction;
+    macUpdate_Price0: TMultiAction;
+    actRefreshGoods: TdsdDataSetRefresh;
+    bb: TdxBarButton;
   private
     { Private declarations }
   public
