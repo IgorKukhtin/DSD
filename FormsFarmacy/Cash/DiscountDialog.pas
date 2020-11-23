@@ -18,12 +18,14 @@ type
     Label1: TLabel;
     edCardNumber: TcxTextEdit;
     Label2: TLabel;
+    spDiscountExternal_Search: TdsdStoredProc;
     procedure bbOkClick(Sender: TObject);
     procedure DiscountExternalGuidesAfterChoice(Sender: TObject);
   private
     { Private declarations }
   public
-     function DiscountDialogExecute(var ADiscountExternalId: Integer; var ADiscountExternalName, ADiscountCardNumber: String): boolean;
+     function DiscountDialogExecute(var ADiscountExternalId: Integer; var ADiscountExternalName, ADiscountCardNumber: String;
+              ACode : Integer = 0; ADiscountCard : String = ''): boolean;
   end;
 
 
@@ -67,7 +69,8 @@ begin
 
 end;
 
-function TDiscountDialogForm.DiscountDialogExecute(var ADiscountExternalId: Integer; var ADiscountExternalName, ADiscountCardNumber: String): boolean;
+function TDiscountDialogForm.DiscountDialogExecute(var ADiscountExternalId: Integer; var ADiscountExternalName, ADiscountCardNumber: String;
+  ACode : Integer = 0; ADiscountCard : String = ''): boolean;
 Begin
       edCardNumber.Text:= ADiscountCardNumber;
       //
@@ -79,7 +82,27 @@ Begin
           DiscountExternalGuides.Params.ParamByName('TextValue').Value:=ADiscountExternalName;
       end;
       //
-      Result := ShowModal = mrOK;
+      if ACode <> 0 then
+      begin
+        spDiscountExternal_Search.ParamByName('inCode').Value := ACode;
+        spDiscountExternal_Search.ParamByName('outDiscountExternalId').Value := 0;
+        spDiscountExternal_Search.ParamByName('outDiscountExternalName').Value := '';
+        spDiscountExternal_Search.Execute;
+        Result := spDiscountExternal_Search.ParamByName('outDiscountExternalId').Value <> 0;
+        if Result then
+        begin
+          ADiscountExternalId   := spDiscountExternal_Search.ParamByName('outDiscountExternalId').Value;
+          ADiscountExternalName := spDiscountExternal_Search.ParamByName('outDiscountExternalName').Value;
+          ADiscountCardNumber   := ADiscountCard;
+          //обновим "нужные" параметры-Main ***20.07.16
+          DiscountServiceForm.pGetDiscountExternal (ADiscountExternalId, trim (ADiscountCard));
+          Exit;
+        end else
+        begin
+          ShowMessage ('Ошибка. По карте № <' + ADiscountCard + '> не найден проект.');
+        end;
+      end else Result := ShowModal = mrOK;
+
       if Result then
       begin
         try ADiscountExternalId := DiscountExternalGuides.Params.ParamByName('Key').Value;
