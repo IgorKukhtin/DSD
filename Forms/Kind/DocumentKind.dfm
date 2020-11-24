@@ -26,7 +26,6 @@ object DocumentKindForm: TDocumentKindForm
     TabOrder = 0
     LookAndFeel.NativeStyle = True
     LookAndFeel.SkinName = 'UserSkin'
-    ExplicitWidth = 584
     object cxGridDBTableView: TcxGridDBTableView
       Navigator.Buttons.CustomButtons = <>
       DataController.DataSource = MasterDS
@@ -59,16 +58,6 @@ object DocumentKindForm: TDocumentKindForm
         Options.Editing = False
         Width = 194
       end
-      object clErased: TcxGridDBColumn
-        Caption = #1059#1076#1072#1083#1077#1085
-        DataBinding.FieldName = 'isErased'
-        PropertiesClassName = 'TcxCheckBoxProperties'
-        Visible = False
-        HeaderAlignmentHorz = taCenter
-        HeaderAlignmentVert = vaCenter
-        Options.Editing = False
-        Width = 78
-      end
       object clGoodsName: TcxGridDBColumn
         Caption = #1058#1086#1074#1072#1088
         DataBinding.FieldName = 'GoodsName'
@@ -99,6 +88,14 @@ object DocumentKindForm: TDocumentKindForm
         HeaderAlignmentVert = vaCenter
         Width = 75
       end
+      object EnumName: TcxGridDBColumn
+        DataBinding.FieldName = 'EnumName'
+        Visible = False
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Options.Editing = False
+        Width = 70
+      end
       object isAuto: TcxGridDBColumn
         Caption = #1040#1074#1090#1086' '#1087#1077#1088#1077#1084'. '#1088#1072#1089#1093#1086#1076
         DataBinding.FieldName = 'isAuto'
@@ -110,6 +107,16 @@ object DocumentKindForm: TDocumentKindForm
           #1085#1080#1103' '#1087#1088#1080#1093#1086#1076
         Options.Editing = False
         Width = 87
+      end
+      object clErased: TcxGridDBColumn
+        Caption = #1059#1076#1072#1083#1077#1085
+        DataBinding.FieldName = 'isErased'
+        PropertiesClassName = 'TcxCheckBoxProperties'
+        Visible = False
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Options.Editing = False
+        Width = 78
       end
     end
     object cxGridLevel: TcxGridLevel
@@ -547,6 +554,8 @@ object DocumentKindForm: TDocumentKindForm
       end>
     ColumnEnterList = <>
     SummaryItemList = <>
+    ShowFieldImageList = <>
+    PropertiesCellList = <>
     Left = 48
     Top = 216
   end

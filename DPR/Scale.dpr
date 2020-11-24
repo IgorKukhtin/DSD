@@ -101,7 +101,8 @@ uses
   GuideSubjectDoc in '..\Scale\GuideSubjectDoc.pas' {GuideSubjectDocForm},
   GuideUnit in '..\Scale\GuideUnit.pas' {GuideUnitForm},
   dmMainScaleCeh in '..\Scale\Util\dmMainScaleCeh.pas',
-  APScale_TLB in '..\Scale\Util\APScale_TLB.pas';
+  APScale_TLB in '..\Scale\Util\APScale_TLB.pas',
+  dsdTranslator in '..\SOURCE\COMPONENT\dsdTranslator.pas';
 
 {$R *.res}
 

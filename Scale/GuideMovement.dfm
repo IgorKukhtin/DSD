@@ -648,6 +648,14 @@ object GuideMovementForm: TGuideMovementForm
           Options.Editing = False
           Width = 70
         end
+        object MovementId_Order: TcxGridDBColumn
+          Caption = #1050#1083#1102#1095' '#1079#1072#1103#1074#1082#1080' WMS'
+          DataBinding.FieldName = 'MovementId_Order'
+          HeaderAlignmentHorz = taCenter
+          HeaderAlignmentVert = vaCenter
+          Options.Editing = False
+          Width = 70
+        end
         object InvNumberPartner_Tax: TcxGridDBColumn
           Caption = #8470' '#1085#1072#1083#1086#1075'.'
           DataBinding.FieldName = 'InvNumberPartner_Tax'
@@ -1256,6 +1264,8 @@ object GuideMovementForm: TGuideMovementForm
     ColumnAddOnList = <>
     ColumnEnterList = <>
     SummaryItemList = <>
+    ShowFieldImageList = <>
+    PropertiesCellList = <>
     Left = 352
     Top = 240
   end

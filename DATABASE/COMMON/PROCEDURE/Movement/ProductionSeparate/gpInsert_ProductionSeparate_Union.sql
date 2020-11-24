@@ -14,6 +14,8 @@ $BODY$
    DECLARE vbFromId   Integer;
    DECLARE vbToId     Integer;
    DECLARE vbOperDate TDateTime;
+   DECLARE vbPartionGoods_min TVarChar;
+   DECLARE vbPartionGoods_max TVarChar;
 BEGIN
     -- проверка прав пользователя на вызов процедуры
     vbUserId:= lpCheckRight (inSession, zc_Enum_Process_InsertUpdate_Movement_ProductionSeparate());
@@ -142,6 +144,15 @@ BEGIN
                               ELSE (SELECT DISTINCT tmpListDoc.ToId FROM tmpListDoc)
                          END);
     vbOperDate:= (SELECT MIN (tmpListDoc.OperDate) FROM tmpListDoc);
+
+
+   --
+   SELECT MIN (tmpListDoc.PartionGoods), MAX (tmpListDoc.PartionGoods) INTO vbPartionGoods_min, vbPartionGoods_max FROM tmpListDoc;
+   IF vbPartionGoods_min <> vbPartionGoods_max
+   THEN
+        RAISE EXCEPTION 'Ошибка.Нельзя объединить разные партии: <%> и <%>', vbPartionGoods_min, vbPartionGoods_max;
+   END IF;
+
 
    IF EXISTS (SELECT 1 FROM tmpListDoc)
    THEN

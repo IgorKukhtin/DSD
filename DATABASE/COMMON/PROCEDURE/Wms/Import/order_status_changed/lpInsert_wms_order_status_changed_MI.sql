@@ -72,7 +72,7 @@ BEGIN
                                                       ) AS gpSelect
                            )
                -- подзапроc - сразу все товары для связи с sku_id
-             , tmpSKU AS (SELECT lpSelect.GoodsId, lpSelect.GoodsKindId, lpSelect.sku_id FROM lpSelect_wms_Object_SKU() AS lpSelect)
+             , tmpSKU AS (SELECT lpSelect.GoodsId, lpSelect.GoodsKindId, lpSelect.sku_id, lpSelect.MeasureId FROM lpSelect_wms_Object_SKU() AS lpSelect)
 
           -- Результат - все строки для inOrderId
           SELECT tmpGoods.GoodsId
@@ -83,14 +83,14 @@ BEGIN
                , tmpGoods.CountForPrice
                , tmpGoods.CountForPrice_return
                , tmpGoods.MovementId_promo
-               , wms_data.Weight
+               , CASE WHEN tmpSKU.MeasureId = zc_Measure_Sh() THEN wms_data.QTY ELSE wms_data.Weight END
           FROM wms_to_host_message AS wms_data
                LEFT JOIN tmpSKU   ON tmpSKU.sku_id        = wms_data.sku_id :: Integer
                LEFT JOIN tmpGoods ON tmpGoods.GoodsId     = tmpSKU.GoodsId
                                  AND tmpGoods.GoodsKindId = tmpSKU.GoodsKindId
           WHERE wms_data.MovementId = inOrderId :: TVarChar
             AND wms_data.Type       ILIKE 'order_status_changed'
-            AND wms_data.Done       = FALSE
+          --AND wms_data.Done       = FALSE
          ) AS tmpData;
 
 
@@ -106,4 +106,5 @@ $BODY$
 */
 
 -- тест
--- SELECT * FROM lpInsert_wms_order_status_changed_MI (inMovementId:= 0, inOrderId:= 1, inSession:= zfCalc_UserAdmin())
+-- SELECT * FROM lpInsert_wms_order_status_changed_MI (inMovementId:= 18341184, inOrderId:= 1, inSession:= zfCalc_UserAdmin())
+

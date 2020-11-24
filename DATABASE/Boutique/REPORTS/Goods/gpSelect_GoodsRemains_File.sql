@@ -104,7 +104,7 @@ BEGIN
                            INNER JOIN Object_PartionGoods ON Object_PartionGoods.MovementItemId = Container.PartionId
                                                          AND Object_PartionGoods.GoodsId        = Container.ObjectId
                                                          -- !!! PREMIATA Весна-Лето 2020
-                                                         AND Object_PartionGoods.PartnerId      = 25386
+                                                         -- AND Object_PartionGoods.PartnerId      = 25386
                            LEFT JOIN ObjectLink AS ObjectLink_Partner_Period
                                                 ON ObjectLink_Partner_Period.ObjectId = Object_PartionGoods.PartnerId
                                                AND ObjectLink_Partner_Period.DescId = zc_ObjectLink_Partner_Period()
@@ -117,7 +117,7 @@ BEGIN
 
                       WHERE Container.DescId = zc_Container_Count()
                         AND Container.WhereObjectId = inUnitId
-                        AND (Container.Amount <> 0)
+                        AND (Container.Amount > 0)
                      -- LIMIT 1
                       /*  AND (ObjectLink_Partner_Period.ChildObjectId = inPeriodId   OR inPeriodId  = 0)
                         AND (Object_PartionGoods.BrandId             = inBrandId    OR inBrandId   = 0)

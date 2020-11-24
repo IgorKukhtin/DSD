@@ -1327,7 +1327,18 @@ BEGIN
              END AS Article_order
 
              -- сумма по ценам док-та
-           , CASE WHEN tmpMI.CountForPrice <> 0
+           , CASE WHEN -- !!!захардкодил временно для БН с НДС!!!
+                       vbPriceWithVAT = TRUE AND MLO_PaidKind.ObjectId = zc_Enum_PaidKind_FirstForm()
+                       THEN CAST (tmpMI.AmountPartner
+                                  -- расчет цены без НДС, до 4 знаков
+                                * CAST (tmpMI.Price - tmpMI.Price * (vbVATPercent / (vbVATPercent + 100)) AS NUMERIC (16, 4))
+                                / CASE WHEN tmpMI.CountForPrice <> 0 THEN tmpMI.CountForPrice ELSE 1 END
+                                 AS NUMERIC (16, 2))
+
+                  WHEN tmpMI.CountForPrice <> 0
+                       THEN CAST (tmpMI.AmountPartner * (tmpMI.Price / tmpMI.CountForPrice) AS NUMERIC (16, 2))
+
+                  WHEN tmpMI.CountForPrice <> 0
                        THEN CAST (tmpMI.AmountPartner * (tmpMI.Price / tmpMI.CountForPrice) AS NUMERIC (16, 2))
                   ELSE CAST (tmpMI.AmountPartner * tmpMI.Price AS NUMERIC (16, 2))
              END AS AmountSumm
@@ -1488,6 +1499,10 @@ BEGIN
             LEFT JOIN tmpPriceList AS tmpPriceList_kind
                                    ON tmpPriceList_kind.GoodsId = tmpMI.GoodsId
                                   ANd COALESCE (tmpPriceList_kind.GoodsKindId,0) = COALESCE (tmpMI.GoodsKindId,0)
+
+            LEFT JOIN MovementLinkObject AS MLO_PaidKind
+                                         ON MLO_PaidKind.MovementId = inMovementId
+                                        AND MLO_PaidKind.DescId     = zc_MovementLinkObject_PaidKind()
 
        WHERE tmpMI.AmountPartner <> 0
        ORDER BY CASE WHEN vbGoodsPropertyId IN (83954  -- Метро

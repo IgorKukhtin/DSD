@@ -125,6 +125,7 @@ type
     PersonalCode1_Stick: TcxGridDBColumn;
     PersonalName1_Stick: TcxGridDBColumn;
     PositionName1_Stick: TcxGridDBColumn;
+    MovementId_Order: TcxGridDBColumn;
     procedure FormCreate(Sender: TObject);
     procedure FormKeyDown(Sender: TObject; var Key: Word;
       Shift: TShiftState);

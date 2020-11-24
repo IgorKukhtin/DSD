@@ -66,6 +66,7 @@ type
     spInsertUpdate: TdsdStoredProc;
     actUpdateDataSet: TdsdUpdateDataSet;
     isAuto: TcxGridDBColumn;
+    EnumName: TcxGridDBColumn;
   private
     { Private declarations }
   public

@@ -99,4 +99,4 @@ $BODY$
 */
 
 -- тест
- --SELECT * FROM gpSelect_Movement_Inventory (inStartDate:= '01.01.2015', inEndDate:= '01.02.2015', inIsErased:= FALSE, inSession:= zfCalc_UserAdmin())
+-- SELECT * FROM gpSelect_Movement_Inventory (inStartDate:= '01.01.2020', inEndDate:= '01.02.2021', inIsErased:= FALSE, inSession:= zfCalc_UserAdmin())

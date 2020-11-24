@@ -47,7 +47,12 @@ BEGIN
      vbUserId:= lpGetUserBySession (inSession);
 
      -- определяем ключ доступа
-     vbAccessKeyId:= lpGetAccessKey (vbUserId, zc_Enum_Process_InsertUpdate_Movement_Sale_Partner());
+     IF inSession = '6044123' -- Авто-Загрузка WMS
+     THEN 
+         vbAccessKeyId:= zc_Enum_Process_AccessKey_DocumentDnepr();
+     ELSE
+         vbAccessKeyId:= lpGetAccessKey (vbUserId, zc_Enum_Process_InsertUpdate_Movement_Sale_Partner());
+     END IF;
 
      IF COALESCE (ioId, 0) = 0
      THEN
@@ -101,6 +106,7 @@ BEGIN
      THEN
          PERFORM lpInsertUpdate_MovementFloat (zc_MovementFloat_BranchCode(), ioId, inBranchCode);
      END IF;
+
 
      -- сохранили свойство <Номер заявки у контрагента>
      PERFORM lpInsertUpdate_MovementString (zc_MovementString_InvNumberOrder(), ioId, inInvNumberOrder);

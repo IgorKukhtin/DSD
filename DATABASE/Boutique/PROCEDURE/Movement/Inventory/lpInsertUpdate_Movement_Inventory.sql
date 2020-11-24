@@ -24,6 +24,12 @@ BEGIN
          RAISE EXCEPTION 'Ошибка.Неверный формат даты.';
      END IF;
 
+     -- проверка
+     IF inFromId = inToId
+     THEN
+         RAISE EXCEPTION 'Ошибка.Подразделения <Магазин> и <Склад> должны отличаться.';
+     END IF;
+
      -- определяем признак Создание/Корректировка
      vbIsInsert:= COALESCE (ioId, 0) = 0;
 

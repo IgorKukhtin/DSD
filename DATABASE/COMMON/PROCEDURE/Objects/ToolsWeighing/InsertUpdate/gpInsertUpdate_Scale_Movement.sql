@@ -122,8 +122,8 @@ BEGIN
                                                    , inFromId              := inFromId
                                                    , inToId                := inToId
                                                    , inContractId          := CASE WHEN inContractId > 0 THEN inContractId ELSE 0 END
-                                                   , inPriceListId         := CASE WHEN vbPriceListId_Dnepr <> 0 THEN vbPriceListId_Dnepr ELSE inPriceListId END
                                                    , inPaidKindId          := inPaidKindId
+                                                   , inPriceListId         := CASE WHEN vbPriceListId_Dnepr <> 0 THEN vbPriceListId_Dnepr ELSE inPriceListId END
                                                    , inSubjectDocId        := inSubjectDocId
                                                    , inMovementId_Order    := inMovementId_Order
                                                    , inMovementId_Transport:= CASE WHEN inMovementDescId = zc_Movement_ReturnIn() THEN 0 ELSE inMovementId_Transport END
@@ -132,6 +132,7 @@ BEGIN
                                                    , inChangePercent       := inChangePercent
                                                    , inSession             := inSession
                                                     );
+
 
      -- дописали св-во - Через кого поступил возврат
      IF inMovementId_Transport <> 0 AND inMovementDescId = zc_Movement_ReturnIn() AND EXISTS (SELECT 1 FROM Object WHERE Object.Id = inMovementId_Transport)
@@ -142,7 +143,13 @@ BEGIN
 
 
 -- !!! ВРЕМЕННО !!!
-if inSession = '5' AND 1=0
+
+if inSession = '6044123' AND 1=0-- Авто-Загрузка WMS
+then
+    RAISE EXCEPTION 'Admin - Test = OK - %', inToId;
+    -- 'Повторите действие через 3 мин.'
+end if;
+if inSession = '5' AND 1=1
 then
     RAISE EXCEPTION 'Admin - Test = OK - %', inToId;
     -- 'Повторите действие через 3 мин.'

@@ -57,6 +57,11 @@ BEGIN
                    WHEN MovementLinkObject_To.ObjectId = 3683763   
                         THEN 'PrintMovement_Sale2_3683763'
 
+                   -- !!!захардкодил временно для БН с НДС!!!
+                   WHEN MB_PriceWithVAT.ValueData = TRUE
+                    AND MovementLinkObject_PaidKind.ObjectId = zc_Enum_PaidKind_FirstForm()
+                        THEN 'PrintMovement_Sale2PriceWithVAT'
+
                    ELSE COALESCE (PrintForms_View.PrintFormName, PrintForms_View_Default.PrintFormName)
               END AS PrintFormName
 
@@ -80,6 +85,10 @@ BEGIN
             LEFT JOIN ObjectLink AS ObjectLink_Partner_Juridical
                                  ON ObjectLink_Partner_Juridical.ObjectId = MovementLinkObject_To.ObjectId
                                 AND ObjectLink_Partner_Juridical.DescId   = zc_ObjectLink_Partner_Juridical()
+
+            LEFT JOIN MovementBoolean AS MB_PriceWithVAT
+                                      ON MB_PriceWithVAT.MovementId = Movement.Id
+                                     AND MB_PriceWithVAT.DescId     = zc_MovementBoolean_PriceWithVAT()
 
             LEFT JOIN PrintForms_View
                    ON Movement.OperDate BETWEEN PrintForms_View.StartDate AND PrintForms_View.EndDate
