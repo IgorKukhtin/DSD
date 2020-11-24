@@ -225,9 +225,12 @@ const
   cSelect   = 'SELECT * FROM gpSelect_wms_to_host_message (inPacketName:= %s)';
   cRunProc  = 'SELECT * FROM %s(inOrderId:= %d, inSession:= %s)';
 var
+  bFound: Boolean;
   sSelect, sSQL: string;
-  inOrderId, iHeader_Id: Integer;
+  I, inOrderId, iHeader_Id: Integer;
+  arrOrderId: array of Integer;
 begin
+  SetLength(arrOrderId, 0);
   sSelect := Format(cSelect, [QuotedStr(cpnOrderStatusChanged)]);
 
   try
@@ -250,9 +253,23 @@ begin
 //      if Assigned(AMsgProc) then AMsgProc(sSQL);
       {$ENDIF}
 
+      // если несколько записей с одинаковым MovementId, ProcessPacket должен вызваться 1 раз
+      bFound := False;
+      for I := Low(arrOrderId) to High(arrOrderId) do
+      begin
+        bFound := (inOrderId = arrOrderId[I]);
+        if bFound then Break;
+      end;
+
       // обработка пакета
-      ProcessPacket(iHeader_Id, cpnOrderStatusChanged, sSQL, AMsgProc);
-      Sleep(100);
+      if not bFound then
+      begin
+        SetLength(arrOrderId, Length(arrOrderId) + 1);
+        arrOrderId[High(arrOrderId)] := inOrderId;
+        ProcessPacket(iHeader_Id, cpnOrderStatusChanged, sSQL, AMsgProc);
+        Sleep(100);
+      end;
+
       FData.SelectQry.Next;
     end;
 
