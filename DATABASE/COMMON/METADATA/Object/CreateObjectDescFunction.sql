@@ -907,6 +907,10 @@ CREATE OR REPLACE FUNCTION zc_Object_AssetType() RETURNS integer AS $BODY$BEGIN 
 INSERT INTO ObjectDesc(Code, ItemName)
 SELECT 'zc_Object_AssetType', 'Тип (ОС)' WHERE NOT EXISTS (SELECT * FROM ObjectDesc WHERE Code = 'zc_Object_AssetType');
 
+CREATE OR REPLACE FUNCTION zc_Object_ContractConditionPartner() RETURNS integer AS $BODY$BEGIN RETURN (SELECT Id FROM ObjectDesc WHERE Code = 'zc_Object_ContractConditionPartner'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
+INSERT INTO ObjectDesc(Code, ItemName)
+SELECT 'zc_Object_ContractConditionPartner', 'Контрагенты в условиях к договору' WHERE NOT EXISTS (SELECT * FROM ObjectDesc WHERE Code = 'zc_Object_ContractConditionPartner');
+zc_Object_ContractConditionPartner
 
 
 --!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
@@ -1346,6 +1350,7 @@ INSERT INTO ObjectDesc (Code, ItemName)
 /*-------------------------------------------------------------------------------
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.   Воробкало А. А.   Шаблий О.В.
+ 23.11.20         * zc_Object_ContractConditionPartner
  20.10.20                                                                                        * zc_Object_AmbulantClinicSP
  30.10.20         * zc_Object_PartnerExternal
  07.10.20                                                                                        * zc_Object_BuyerForSale, zc_Object_MedicForSale

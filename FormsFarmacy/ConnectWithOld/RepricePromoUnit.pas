@@ -14,7 +14,7 @@ uses
   cxGridTableView, cxGridDBTableView, cxGrid, Vcl.ActnList, dsdAction, dsdGuides,
   Datasnap.Provider, cxImageComboBox, Vcl.ExtCtrls, cxSplitter, dxSkinsCore,
   dxSkinsDefaultPainters, dxSkinscxPCPainter, Vcl.ComCtrls, cxCheckBox, cxCalc,
-  Vcl.Buttons, cxPropertiesStore;
+  Vcl.Buttons, cxPropertiesStore, cxBlobEdit;
 
 type
   TRepricePromoUnitForm = class(TForm)
@@ -139,6 +139,10 @@ type
     GuidesProvinceCity: TdsdGuides;
     colisResolution_224: TcxGridDBColumn;
     cdsResultisResolution_224: TBooleanField;
+    PromoNumber: TcxGridDBColumn;
+    JuridicalList: TcxGridDBColumn;
+    cdsResultPromoNumber: TStringField;
+    cdsResultJuridicalList: TBlobField;
     procedure FormCreate(Sender: TObject);
     procedure btnRepriceClick(Sender: TObject);
     procedure btnSelectNewPriceClick(Sender: TObject);
@@ -487,6 +491,8 @@ begin
 //          cdsResult.FieldByName('Juridical_Percent').AsCurrency := AllGoodsPriceCDS.FieldByName('Juridical_Percent').AsCurrency;
 //          cdsResult.FieldByName('Contract_Percent').AsCurrency := AllGoodsPriceCDS.FieldByName('Contract_Percent').AsCurrency;
 //          cdsResult.FieldByName('AreaName').AsString := AllGoodsPriceCDS.FieldByName('AreaName').AsString;
+          cdsResult.FieldByName('PromoNumber').AsVariant := AllGoodsPriceCDS.FieldByName('PromoNumber').AsVariant;
+          cdsResult.FieldByName('JuridicalList').AsVariant := AllGoodsPriceCDS.FieldByName('JuridicalList').AsVariant;
           cdsResult.Post;
           AllGoodsPriceCDS.Next;
         end;
@@ -537,6 +543,7 @@ begin
     CheckListBox.Items.AddObject(UnitsCDS.FieldByName('UnitName').asString,TObject(UnitsCDS.FieldByName('Id').AsInteger));
     UnitsCDS.Next;
   end;
+  CheckListBox.Font.Size := dmMain.cxContentStyle.Font.Size;
 end;
 
 procedure TRepricePromoUnitForm.FormShow(Sender: TObject);

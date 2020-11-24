@@ -21,7 +21,6 @@ uses
   Storage in '..\..\SOURCE\Storage.pas',
   UtilConvert in '..\..\SOURCE\UtilConvert.pas',
   dsdAction in '..\..\SOURCE\COMPONENT\dsdAction.pas',
-  dsdAddOn in '..\..\SOURCE\COMPONENT\dsdAddOn.pas',
   dsdDB in '..\..\SOURCE\COMPONENT\dsdDB.pas',
   dsdGuides in '..\..\SOURCE\COMPONENT\dsdGuides.pas',
   DataModul in '..\..\SOURCE\DataModul.pas' {dmMain: TDataModule},
@@ -195,7 +194,8 @@ uses
   PriceListGoodsItem in '..\..\FormsBoat\Guides\PriceListGoodsItem.pas' {PriceListGoodsItemForm: TParentForm},
   PriceListGoodsItemEdit in '..\..\FormsBoat\Guides\PriceListGoodsItemEdit.pas' {PriceListGoodsItemEditForm: TParentForm},
   PriceListItem in '..\..\FormsBoat\Guides\PriceListItem.pas' {PriceListItemForm: TParentForm},
-  TaxKind in '..\..\FormsBoat\Kind\TaxKind.pas' {TaxKindForm: TParentForm};
+  TaxKind in '..\..\FormsBoat\Kind\TaxKind.pas' {TaxKindForm: TParentForm},
+  dsdAddOn in '..\..\SOURCE\COMPONENT\dsdAddOn.pas';
 
 {$R *.res}
 {$R DevExpressRus.res}

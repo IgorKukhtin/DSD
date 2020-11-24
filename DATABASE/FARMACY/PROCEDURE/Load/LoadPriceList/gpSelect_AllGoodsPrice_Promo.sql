@@ -48,7 +48,10 @@ RETURNS TABLE (
     isResolution_224    Boolean ,   -- Постановление 224
     isUseReprice        Boolean ,   -- Переоценивать в ночной переоценке
     Reprice             Boolean ,   --
-    isGoodsReprice      Boolean
+    isGoodsReprice      Boolean ,
+    PromoNumber         TVarChar,
+    JuridicalList       TBlob
+
     )
 
 AS
@@ -264,7 +267,10 @@ BEGIN
             Object_Goods.IsTop    AS IsTop_Goods,
             Coalesce(ObjectBoolean_Goods_IsPromo.ValueData, False) :: Boolean   AS IsPromo,
             Coalesce(ObjectBoolean_Goods_Resolution_224.ValueData, False) :: Boolean   AS isResolution_224,
-            Object_Goods.Price    AS PriceFix_Goods
+            Object_Goods.Price    AS PriceFix_Goods,
+            SelectMinPrice_AllGoods.PromoNumber,                
+            SelectMinPrice_AllGoods.JuridicalList   
+            
         FROM
             lpSelectMinPrice_AllGoods_Promo(inUnitId   := inUnitId
                                           , inObjectId := -1 * vbObjectId -- !!!со знаком "-" что бы НЕ учитывать маркет. контракт!!!
@@ -410,7 +416,11 @@ BEGIN
         -- Временно прикрыл товар постановление для переоценки
         AND ResultSet.isResolution_224 = FALSE AS Reprice,
 
-        CASE WHEN tmpGoodsReprice.GoodsId IS NOT NULL THEN TRUE ELSE FALSE END AS isGoodsReprice
+        CASE WHEN tmpGoodsReprice.GoodsId IS NOT NULL THEN TRUE ELSE FALSE END AS isGoodsReprice,
+        
+        ResultSet.PromoNumber,                
+        ResultSet.JuridicalList   
+
 
     FROM
         ResultSet

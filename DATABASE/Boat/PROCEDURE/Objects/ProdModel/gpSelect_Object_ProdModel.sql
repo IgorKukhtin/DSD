@@ -1,15 +1,15 @@
--- Function: gpSelect_Object_Product()
+-- Function: gpSelect_Object_ProdModel()
 
-DROP FUNCTION IF EXISTS gpSelect_Object_Product (Boolean, TVarChar);
+DROP FUNCTION IF EXISTS gpSelect_Object_ProdModel (Boolean, TVarChar);
 
-CREATE OR REPLACE FUNCTION gpSelect_Object_Product(
+CREATE OR REPLACE FUNCTION gpSelect_Object_ProdModel(
     IN inIsShowAll   Boolean,            -- признак показать удаленные да / нет 
     IN inSession     TVarChar       -- сессия пользователя
 )
 RETURNS TABLE (Id Integer, Code Integer, Name TVarChar
-             , Hours TFloat
-             , DateStart TVarChar, DateBegin TVarChar, DateSale TVarChar, CIN TVarChar, EngineNum TVarChar
+             , Length TFloat, Beam TFloat, Height TFloat, Weight TFloat, Fuel TFloat, Speed TFloat, Seating TFloat
              , Comment TVarChar
+             , BrandId Integer, BrandName TVarChar
              , InsertName TVarChar
              , InsertDate TDateTime
              , isErased boolean) AS
@@ -18,67 +18,80 @@ $BODY$
 BEGIN
 
    -- проверка прав пользователя на вызов процедуры
-   -- PERFORM lpCheckRight(inSession, zc_Enum_Process_Select_Object_Product());
+   -- PERFORM lpCheckRight(inSession, zc_Enum_Process_Select_Object_ProdModel());
    vbUserId:= lpGetUserBySession (inSession);
 
      RETURN QUERY 
      SELECT 
-           Object_Product.Id                AS Id 
-         , Object_Product.ObjectCode        AS Code
-         , Object_Product.ValueData         AS Name
+           Object_ProdModel.Id             AS Id 
+         , Object_ProdModel.ObjectCode     AS Code
+         , Object_ProdModel.ValueData      AS Name
 
-         , ObjectFloat_Hours.ValueData      AS Hours
-         , ObjectString_DateStart.ValueData AS DateStart
-         , ObjectString_DateBegin.ValueData AS DateBegin
-         , ObjectString_DateSale.ValueData  AS DateSale
-         , ObjectString_CIN.ValueData       AS CIN
-         , ObjectString_EngineNum.ValueData AS EngineNum
-         , ObjectString_Comment.ValueData   AS Comment
-
-         , Object_Insert.ValueData          AS InsertName
-         , ObjectDate_Insert.ValueData      AS InsertDate
-         , Object_Product.isErased          AS isErased
+         , ObjectFloat_Length.ValueData    AS Length
+         , ObjectFloat_Beam.ValueData      AS Beam
+         , ObjectFloat_Height.ValueData    AS Height
+         , ObjectFloat_Weight.ValueData    AS Weight
+         , ObjectFloat_Fuel.ValueData      AS Fuel
+         , ObjectFloat_Speed.ValueData     AS Speed
+         , ObjectFloat_Seating.ValueData   AS Seating
+         , ObjectString_Comment.ValueData  AS Comment
          
-     FROM Object AS Object_Product
+         , Object_Brand.Id                 AS BrandId
+         , Object_Brand.ValueData          AS BrandName
+
+         , Object_Insert.ValueData         AS InsertName
+         , ObjectDate_Insert.ValueData     AS InsertDate
+         , Object_ProdModel.isErased       AS isErased
+         
+     FROM Object AS Object_ProdModel
           LEFT JOIN ObjectString AS ObjectString_Comment
-                                 ON ObjectString_Comment.ObjectId = Object_Product.Id
-                                AND ObjectString_Comment.DescId = zc_ObjectString_Product_Comment()  
+                                 ON ObjectString_Comment.ObjectId = Object_ProdModel.Id
+                                AND ObjectString_Comment.DescId = zc_ObjectString_ProdModel_Comment()  
 
-          LEFT JOIN ObjectFloat AS ObjectFloat_Hours
-                                ON ObjectFloat_Hours.ObjectId = Object_Product.Id
-                               AND ObjectFloat_Hours.DescId = zc_ObjectFloat_Product_Hours()
+          LEFT JOIN ObjectFloat AS ObjectFloat_Length
+                                ON ObjectFloat_Length.ObjectId = Object_ProdModel.Id
+                               AND ObjectFloat_Length.DescId = zc_ObjectFloat_ProdModel_Length()
 
-          LEFT JOIN ObjectString AS ObjectString_DateStart
-                                 ON ObjectString_DateStart.ObjectId = Object_Product.Id
-                                AND ObjectString_DateStart.DescId = zc_ObjectString_Product_DateStart()
+          LEFT JOIN ObjectFloat AS ObjectFloat_Beam
+                                ON ObjectFloat_Beam.ObjectId = Object_ProdModel.Id
+                               AND ObjectFloat_Beam.DescId = zc_ObjectFloat_ProdModel_Beam()
 
-          LEFT JOIN ObjectString AS ObjectString_DateBegin
-                                 ON ObjectString_DateBegin.ObjectId = Object_Product.Id
-                                AND ObjectString_DateBegin.DescId = zc_ObjectString_Product_DateBegin()
+          LEFT JOIN ObjectFloat AS ObjectFloat_Height
+                                ON ObjectFloat_Height.ObjectId = Object_ProdModel.Id
+                               AND ObjectFloat_Height.DescId = zc_ObjectFloat_ProdModel_Height()
 
-          LEFT JOIN ObjectString AS ObjectString_DateSale
-                                 ON ObjectString_DateSale.ObjectId = Object_Product.Id
-                                AND ObjectString_DateSale.DescId = zc_ObjectString_Product_DateSale()
+          LEFT JOIN ObjectFloat AS ObjectFloat_Weight
+                                ON ObjectFloat_Weight.ObjectId = Object_ProdModel.Id
+                               AND ObjectFloat_Weight.DescId = zc_ObjectFloat_ProdModel_Weight()
 
-          LEFT JOIN ObjectString AS ObjectString_CIN
-                                 ON ObjectString_CIN.ObjectId = Object_Product.Id
-                                AND ObjectString_CIN.DescId = zc_ObjectString_Product_CIN()
+          LEFT JOIN ObjectFloat AS ObjectFloat_Fuel
+                                ON ObjectFloat_Fuel.ObjectId = Object_ProdModel.Id
+                               AND ObjectFloat_Fuel.DescId = zc_ObjectFloat_ProdModel_Fuel()
 
-          LEFT JOIN ObjectString AS ObjectString_EngineNum
-                                 ON ObjectString_EngineNum.ObjectId = Object_Product.Id
-                                AND ObjectString_EngineNum.DescId = zc_ObjectString_Product_EngineNum()
+          LEFT JOIN ObjectFloat AS ObjectFloat_Speed
+                                ON ObjectFloat_Speed.ObjectId = Object_ProdModel.Id
+                               AND ObjectFloat_Speed.DescId = zc_ObjectFloat_ProdModel_Speed()
+
+          LEFT JOIN ObjectFloat AS ObjectFloat_Seating
+                                ON ObjectFloat_Seating.ObjectId = Object_ProdModel.Id
+                               AND ObjectFloat_Seating.DescId = zc_ObjectFloat_ProdModel_Seating()
+
+          LEFT JOIN ObjectLink AS ObjectLink_Brand
+                               ON ObjectLink_Brand.ObjectId = Object_ProdModel.Id
+                              AND ObjectLink_Brand.DescId = zc_ObjectLink_ProdModel_Brand()
+          LEFT JOIN Object AS Object_Brand ON Object_Brand.Id = ObjectLink_Brand.ChildObjectId
 
           LEFT JOIN ObjectLink AS ObjectLink_Insert
-                               ON ObjectLink_Insert.ObjectId = Object_Product.Id
+                               ON ObjectLink_Insert.ObjectId = Object_ProdModel.Id
                               AND ObjectLink_Insert.DescId = zc_ObjectLink_Protocol_Insert()
           LEFT JOIN Object AS Object_Insert ON Object_Insert.Id = ObjectLink_Insert.ChildObjectId 
 
           LEFT JOIN ObjectDate AS ObjectDate_Insert
-                               ON ObjectDate_Insert.ObjectId = Object_Product.Id
+                               ON ObjectDate_Insert.ObjectId = Object_ProdModel.Id
                               AND ObjectDate_Insert.DescId = zc_ObjectDate_Protocol_Insert()
 
-     WHERE Object_Product.DescId = zc_Object_Product()
-      AND (Object_Product.isErased = FALSE OR inIsShowAll = TRUE);  
+     WHERE Object_ProdModel.DescId = zc_Object_ProdModel()
+      AND (Object_ProdModel.isErased = FALSE OR inIsShowAll = TRUE);  
 
 END;
 $BODY$
@@ -87,8 +100,9 @@ $BODY$
 /*-------------------------------------------------------------------------------
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
+ 24.11.20         * add Brand
  08.10.20         *
 */
 
 -- тест
--- SELECT * FROM gpSelect_Object_Product (zfCalc_UserAdmin())
+-- SELECT * FROM gpSelect_Object_ProdModel (false, zfCalc_UserAdmin())

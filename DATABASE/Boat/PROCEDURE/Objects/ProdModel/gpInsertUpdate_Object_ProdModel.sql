@@ -1,6 +1,7 @@
 -- Function: gpInsertUpdate_Object_ProdModel()
 
 DROP FUNCTION IF EXISTS gpInsertUpdate_Object_ProdModel(Integer, Integer, TVarChar, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TVarChar, TVarChar);
+DROP FUNCTION IF EXISTS gpInsertUpdate_Object_ProdModel(Integer, Integer, TVarChar, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TVarChar, Integer, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpInsertUpdate_Object_ProdModel(
  INOUT ioId       Integer   ,    -- ключ объекта <Модели>
@@ -14,6 +15,7 @@ CREATE OR REPLACE FUNCTION gpInsertUpdate_Object_ProdModel(
     IN inSpeed    TFloat    ,
     IN inSeating  TFloat    ,
     IN inComment  TVarChar  ,
+    IN inBrandId  Integer   ,
     IN inSession  TVarChar       -- сессия пользователя
 )
 RETURNS Integer
@@ -58,6 +60,10 @@ BEGIN
    -- сохранили свойство <>
    PERFORM lpInsertUpdate_ObjectFloat (zc_ObjectFloat_ProdModel_Seating(), ioId, inSeating);
 
+   -- сохранили свойство <>
+   PERFORM lpInsertUpdate_ObjectLink (zc_ObjectLink_ProdModel_Brand(), ioId, inBrandId);
+
+
    IF vbIsInsert = TRUE THEN
       -- сохранили свойство <Дата создания>
       PERFORM lpInsertUpdate_ObjectDate (zc_ObjectDate_Protocol_Insert(), ioId, CURRENT_TIMESTAMP);
@@ -75,6 +81,7 @@ $BODY$
 /*-------------------------------------------------------------------------------
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
+ 24.11.20         * add inBrandId
  08.10.20         *
 */
 

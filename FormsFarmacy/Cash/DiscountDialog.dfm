@@ -135,4 +135,30 @@ inherited DiscountDialogForm: TDiscountDialogForm
     Left = 200
     Top = 48
   end
+  object spDiscountExternal_Search: TdsdStoredProc
+    StoredProcName = 'gpGet_Object_DiscountExternal_Search'
+    DataSets = <>
+    OutputType = otResult
+    Params = <
+      item
+        Name = 'inCode'
+        Value = Null
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'outDiscountExternalId'
+        Value = Null
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'outDiscountExternalName'
+        Value = Null
+        DataType = ftString
+        MultiSelectSeparator = ','
+      end>
+    PackSize = 1
+    Left = 462
+    Top = 48
+  end
 end

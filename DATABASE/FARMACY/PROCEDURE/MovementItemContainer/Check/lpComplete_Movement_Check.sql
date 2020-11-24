@@ -239,15 +239,21 @@ BEGIN
             LEFT JOIN MovementLinkObject AS MovementLinkObject_From
                                          ON MovementLinkObject_From.MovementId = COALESCE (MI_Income_find.MovementId,MovementItem.MovementId)
                                         AND MovementLinkObject_From.DescId = zc_MovementLinkObject_From()
+
             LEFT JOIN ObjectFloat AS ObjectFloat_CodeMedicard
                                   ON ObjectFloat_CodeMedicard.ObjectId = MovementLinkObject_From.ObjectId
                                  AND ObjectFloat_CodeMedicard.DescId = zc_ObjectFloat_Juridical_CodeMedicard()
+            LEFT JOIN ObjectFloat AS ObjectFloat_CodeOrangeCard
+                                  ON ObjectFloat_CodeOrangeCard.ObjectId = MovementLinkObject_From.ObjectId
+                                 AND ObjectFloat_CodeOrangeCard.DescId = zc_ObjectFloat_Juridical_CodeOrangeCard()
 
        WHERE COALESCE (PDContainer.id, 0) = 0
-         AND (vbDiscountExternalCode NOT IN (6, 7, 8, 9)
-           OR vbDiscountExternalCode = 6 AND COALESCE(ObjectFloat_CodeMedicard.ValueData, 0) = 1
+         AND (vbDiscountExternalCode NOT IN (6, 7, 8, 9, 12, 13, 15, 16)
+           OR vbDiscountExternalCode IN (6, 12, 13) AND COALESCE(ObjectFloat_CodeMedicard.ValueData, 0) = 1
            OR vbDiscountExternalCode IN (7, 8)  AND COALESCE(ObjectFloat_CodeMedicard.ValueData, 0) IN (1, 3)
-           OR vbDiscountExternalCode IN (7, 8, 9)  AND COALESCE(ObjectFloat_CodeMedicard.ValueData, 0) IN (1, 2, 3))
+           OR vbDiscountExternalCode IN (7, 8, 9)  AND COALESCE(ObjectFloat_CodeMedicard.ValueData, 0) IN (1, 2, 3)
+           OR vbDiscountExternalCode IN (15)  AND COALESCE(ObjectFloat_CodeOrangeCard.ValueData, 0) <> 0
+           OR vbDiscountExternalCode IN (16)  AND COALESCE(MovementLinkObject_From.ObjectId, 0) = 59611)
        ;
 
     -- Проверим что б БЫЛ остаток в целом

@@ -222,7 +222,6 @@
 			<DCCReference Include="..\..\Forms\Document\IncomePartnerJournal.pas">
 				<Form>IncomePartnerJournalForm</Form>
 			</DCCReference>
-			<DCCReference Include="..\..\SOURCE\COMPONENT\dsdAddOn.pas"/>
 			<DCCReference Include="..\SOURCE\dbMovementCompleteTest.pas"/>
 			<DCCReference Include="..\..\Forms\Report\Report_Balance.pas">
 				<Form>Report_BalanceForm</Form>
@@ -4160,6 +4159,7 @@
 				<Form>ContractForm</Form>
 				<DesignClass>TParentForm</DesignClass>
 			</DCCReference>
+			<DCCReference Include="..\..\SOURCE\COMPONENT\dsdAddOn.pas"/>
 			<BuildConfiguration Include="Release">
 				<Key>Cfg_2</Key>
 				<CfgParent>Base</CfgParent>

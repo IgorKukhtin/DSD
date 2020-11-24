@@ -1097,7 +1097,7 @@ object ProductForm: TProductForm
       Caption = #1059#1076#1072#1083#1080#1090#1100
       Hint = #1059#1076#1072#1083#1080#1090#1100
       ImageIndex = 2
-      ShortCut = 46
+      ShortCut = 8238
       ErasedFieldName = 'isErased'
       DataSource = ProdColorItemsDS
     end
@@ -1112,7 +1112,7 @@ object ProductForm: TProductForm
       Caption = #1059#1076#1072#1083#1080#1090#1100
       Hint = #1059#1076#1072#1083#1080#1090#1100
       ImageIndex = 2
-      ShortCut = 46
+      ShortCut = 16430
       ErasedFieldName = 'isErased'
       DataSource = ProdOptItemsDS
     end
@@ -1142,7 +1142,7 @@ object ProductForm: TProductForm
       Caption = #1042#1086#1089#1089#1090#1072#1085#1086#1074#1080#1090#1100
       Hint = #1042#1086#1089#1089#1090#1072#1085#1086#1074#1080#1090#1100' '#1076#1072#1085#1085#1099#1077
       ImageIndex = 8
-      ShortCut = 46
+      ShortCut = 16430
       ErasedFieldName = 'isErased'
       isSetErased = False
       DataSource = ProdOptItemsDS
@@ -1158,7 +1158,7 @@ object ProductForm: TProductForm
       Caption = #1042#1086#1089#1089#1090#1072#1085#1086#1074#1080#1090#1100
       Hint = #1042#1086#1089#1089#1090#1072#1085#1086#1074#1080#1090#1100' '#1076#1072#1085#1085#1099#1077
       ImageIndex = 8
-      ShortCut = 46
+      ShortCut = 8238
       ErasedFieldName = 'isErased'
       isSetErased = False
       DataSource = ProdColorItemsDS
@@ -1654,6 +1654,7 @@ object ProductForm: TProductForm
     ColumnAddOnList = <>
     ColumnEnterList = <>
     SummaryItemList = <>
+    ShowFieldImageList = <>
     PropertiesCellList = <>
     Left = 656
     Top = 112
@@ -1726,6 +1727,7 @@ object ProductForm: TProductForm
     ColumnAddOnList = <>
     ColumnEnterList = <>
     SummaryItemList = <>
+    ShowFieldImageList = <>
     PropertiesCellList = <>
     Left = 736
     Top = 296
@@ -1774,6 +1776,7 @@ object ProductForm: TProductForm
     ColumnAddOnList = <>
     ColumnEnterList = <>
     SummaryItemList = <>
+    ShowFieldImageList = <>
     PropertiesCellList = <>
     Left = 368
     Top = 296
@@ -2013,7 +2016,7 @@ object ProductForm: TProductForm
       item
         Name = 'inObjectId'
         Value = Null
-        Component = MasterCDS
+        Component = ProdColorItemsCDS
         ComponentItem = 'Id'
         ParamType = ptInput
         MultiSelectSeparator = ','
@@ -2037,7 +2040,7 @@ object ProductForm: TProductForm
       item
         Name = 'inObjectId'
         Value = Null
-        Component = MasterCDS
+        Component = ProdColorItemsCDS
         ComponentItem = 'Id'
         ParamType = ptInput
         MultiSelectSeparator = ','
@@ -2061,7 +2064,7 @@ object ProductForm: TProductForm
       item
         Name = 'inObjectId'
         Value = Null
-        Component = MasterCDS
+        Component = ProdOptItemsCDS
         ComponentItem = 'Id'
         ParamType = ptInput
         MultiSelectSeparator = ','
@@ -2085,7 +2088,7 @@ object ProductForm: TProductForm
       item
         Name = 'inObjectId'
         Value = Null
-        Component = MasterCDS
+        Component = ProdOptItemsCDS
         ComponentItem = 'Id'
         ParamType = ptInput
         MultiSelectSeparator = ','

@@ -168,7 +168,6 @@ type
     Code: TcxGridDBColumn;
     GoodsName: TcxGridDBColumn;
     cxGridLevelGoods: TcxGridLevel;
-    cxLeftSplitter: TcxSplitter;
     CDSContractGoods: TClientDataSet;
     DataSourceGoods: TDataSource;
     dsdDBViewAddOnGoods: TdsdDBViewAddOn;
@@ -239,6 +238,32 @@ type
     actRefreshContract: TdsdDataSetRefresh;
     actContractGoodsChoiceOpenForm: TdsdOpenForm;
     bbContractGoodsChoiceOpenForm: TdxBarButton;
+    CCPartner: TcxGrid;
+    cxGridDBTableViewCCPartner: TcxGridDBTableView;
+    ccpCode: TcxGridDBColumn;
+    ccpPartnerCode: TcxGridDBColumn;
+    ccpPartnerName: TcxGridDBColumn;
+    ccpisErased: TcxGridDBColumn;
+    cxGridLevelCCPartner: TcxGridLevel;
+    CCPartnerDS: TDataSource;
+    CCPartnerCDS: TClientDataSet;
+    cxSplitter1: TcxSplitter;
+    cxSplitter2: TcxSplitter;
+    cxSplitter3: TcxSplitter;
+    dsdDBViewAddOnCCPartner: TdsdDBViewAddOn;
+    spInsertUpdateCCPartner: TdsdStoredProc;
+    spSelectCCPartner: TdsdStoredProc;
+    spErasedUnErasedCCPartner: TdsdStoredProc;
+    PartnerContractConditionChoiceForm: TOpenChoiceForm;
+    actUpdateDataSetCCPartner: TdsdUpdateDataSet;
+    InsertRecordCCPartner: TInsertRecord;
+    dsdSetErasedCCPartner: TdsdUpdateErased;
+    dsdSetUnErased——Partner: TdsdUpdateErased;
+    bbInsertRecordCCPartner: TdxBarButton;
+    bbdsdSetErasedCCPartner: TdxBarButton;
+    bbdsdSetUnErased——Partner: TdxBarButton;
+    ProtocolOpenFormCCPartner: TdsdOpenForm;
+    bbProtocolOpenFormCCPartner: TdxBarButton;
 
   private
     { Private declarations }

@@ -92,7 +92,6 @@ uses
   dbMovementItemTest in '..\SOURCE\dbMovementItemTest.pas',
   IncomePartner in '..\..\Forms\Document\IncomePartner.pas' {IncomePartnerForm},
   IncomePartnerJournal in '..\..\Forms\Document\IncomePartnerJournal.pas' {IncomePartnerJournalForm},
-  dsdAddOn in '..\..\SOURCE\COMPONENT\dsdAddOn.pas',
   dbMovementCompleteTest in '..\SOURCE\dbMovementCompleteTest.pas',
   Report_Balance in '..\..\Forms\Report\Report_Balance.pas' {Report_BalanceForm},
   LoadReportTest in '..\SOURCE\LoadReportTest.pas',
@@ -1211,7 +1210,8 @@ uses
   ContractTradeMarkEdit in '..\..\Forms\Guides\ContractTradeMarkEdit.pas' {ContractTradeMarkEditForm: TParentForm},
   AssetTypeEdit in '..\..\Forms\Guides\AssetTypeEdit.pas' {AssetTypeEditForm: TParentForm},
   AssetType in '..\..\Forms\Guides\AssetType.pas' {AssetTypeForm: TParentForm},
-  Contract in '..\..\Forms\Guides\Contract.pas' {ContractForm: TParentForm};
+  Contract in '..\..\Forms\Guides\Contract.pas' {ContractForm: TParentForm},
+  dsdAddOn in '..\..\SOURCE\COMPONENT\dsdAddOn.pas';
 
 {$R *.RES}
 {$R DevExpressRus.res}

@@ -597,7 +597,7 @@ begin
         ResItem := nil;
       end else
 
-      if (gCode = 2) and (gUserName <> '') then
+      if (gCode in [2, 15]) and (gUserName <> '') then
       begin
         CheckCDS.First;
         while not CheckCDS.Eof do
@@ -643,7 +643,10 @@ begin
               RESTRequest.AddParameter('token', gExternalUnit, TRESTRequestParameterKind.pkGETorPOST);
               RESTRequest.AddParameter('request_format', 'xml', TRESTRequestParameterKind.pkGETorPOST);
               RESTRequest.AddParameter('response_format', 'xml', TRESTRequestParameterKind.pkGETorPOST);
-              RESTRequest.AddParameter('project_id', '1', TRESTRequestParameterKind.pkGETorPOST);
+              case gCode of
+                 1 : RESTRequest.AddParameter('project_id', '1', TRESTRequestParameterKind.pkGETorPOST);
+                15 : RESTRequest.AddParameter('project_id', '2', TRESTRequestParameterKind.pkGETorPOST);
+              end;
               RESTRequest.AddParameter('data', '<?xml version="1.0"?>'+
                                                '<request><Operation>2</Operation>'+
                                                        '<PharmCard>' + gUserName + '</PharmCard>'+
@@ -717,7 +720,7 @@ begin
           CheckCDS.Next;
 
         end; // while
-      end else if gCode = 2 then
+      end else if gCode in [2, 15] then
       begin
         Result:= True //!!!все ОК и Чек можно сохранить!!!
 
@@ -1014,7 +1017,17 @@ begin
           CheckCDS.Next;
 
         end; // while
-      end else if gCode = 4 then
+      end else if gCode in [16] then
+      begin
+
+        if FSupplier = 0 then
+        begin
+          ShowMessage('В текущем чеке не запрошена возможность продажи!');
+          lMsg:='Error';
+          exit;
+        end;
+
+      end else if gCode in [4, 16] then
 
         Result:= True //!!!все ОК и Чек можно сохранить!!!
       ;
@@ -1302,7 +1315,7 @@ begin
       then lPriceSale:= CheckCDS.FieldByName('PriceSale').asFloat
       else lPriceSale:= CheckCDS.FieldByName('Price').asFloat;
       //
-      if (lDiscountExternalId > 0) and ((gCode in [1, 14]) or (gCode = 2) and (gUserName <> '') or (gCode in [3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13])) and
+      if (lDiscountExternalId > 0) and ((gCode in [1, 14, 16]) or (gCode in [2, 15]) and (gUserName <> '') or (gCode in [3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13])) and
          (CheckCDS.FieldByName('Amount').AsFloat > 0)
       then
         //поиск Штрих-код
@@ -1500,7 +1513,7 @@ begin
       end // if BarCode_find <> ''
 
       //если Штрих-код нашелся и программа Abbott card
-      else if (BarCode_find <> '') and (gCode = 2) then
+      else if (BarCode_find <> '') and (gCode in [2, 15]) then
       begin
 
           //получение кода дистрибьюторов
@@ -1528,7 +1541,10 @@ begin
               RESTRequest.AddParameter('token', gExternalUnit, TRESTRequestParameterKind.pkGETorPOST);
               RESTRequest.AddParameter('request_format', 'xml', TRESTRequestParameterKind.pkGETorPOST);
               RESTRequest.AddParameter('response_format', 'xml', TRESTRequestParameterKind.pkGETorPOST);
-              RESTRequest.AddParameter('project_id', '1', TRESTRequestParameterKind.pkGETorPOST);
+              case gCode of
+                 1 : RESTRequest.AddParameter('project_id', '1', TRESTRequestParameterKind.pkGETorPOST);
+                15 : RESTRequest.AddParameter('project_id', '2', TRESTRequestParameterKind.pkGETorPOST);
+              end;
               RESTRequest.AddParameter('data', '<?xml version="1.0"?>'+
                                                '<request><Operation>1</Operation>'+
                                                        '<PharmCard>' + gUserName + '</PharmCard>'+
@@ -1810,7 +1826,7 @@ begin
       end
 
       //если Штрих-код нашелся и программа Здоровье от Байер card
-      else   if (BarCode_find <> '') and (gCode in [4, 10]) and (gUserName <> '') then
+      else if (BarCode_find <> '') and (gCode in [4, 10]) and (gUserName <> '') then
       begin
 
           //получение кода дистрибьюторов
@@ -1940,7 +1956,70 @@ begin
             //finally
           end;
 
-      end else if (BarCode_find <> '') and (gCode = 4) then
+      end else if (BarCode_find <> '') and (gCode in [16]) then
+      begin
+
+          // проверим карту
+          if Copy(lCardNumber, 1, 5) <> '21016' then
+          begin
+            ShowMessage ('Ошибка проверки возможности продажи.' + #10+ #13
+            + #10+ #13 + 'Карта № <' + lCardNumber + '> не пренадлешит проекту.');
+            //ошибка
+            lMsg:='Error';
+            Exit;
+          end;
+
+          //получение кода дистрибьюторов
+          with spGet_Goods_CodeRazom do begin
+             ParamByName('inDiscountExternal').Value  := lDiscountExternalId;
+             ParamByName('inGoodsId').Value  := CheckCDS.FieldByName('GoodsId').AsInteger;
+             ParamByName('inAmount').Value  := CheckCDS.FieldByName('Amount').AsCurrency;
+             ParamByName('outCodeRazom').Value := 0;
+             Execute;
+             FSupplier := Trunc(ParamByName('outCodeRazom').AsFloat);
+          end;
+
+          if FSupplier <> 0 then
+          begin
+            try
+
+               // на всяк случай - с условием
+               if CheckCDS.FieldByName('PriceSale').asFloat > 0
+               then lPriceSale:= CheckCDS.FieldByName('PriceSale').asFloat
+               else lPriceSale:= CheckCDS.FieldByName('Price').asFloat;
+               lChangePercent := 10;
+               //Предполагаемое кол-во товара
+               lQuantity          := CheckCDS.FieldByName('Amount').asFloat;
+               // тоже типа как для кол-ва = 1, может так правильно округлит?
+               lPrice:= GetSumm(1, lPriceSale * (1 - lChangePercent / 100), False);
+               // а еще досчитаем сумму скидки
+               lSummChangePercent := GetSumm(lQuantity, lPriceSale, False) - GetSumm(lQuantity, lPrice, False);
+               //Update
+               CheckCDS.Edit;
+               CheckCDS.FieldByName('Price').asCurrency             :=lPrice;
+               CheckCDS.FieldByName('PriceSale').asCurrency         :=lPriceSale;
+               //Рекомендованная скидка в виде % от цены
+               CheckCDS.FieldByName('ChangePercent').asCurrency     :=lChangePercent;
+               //Общая сумма скидки за все кол-во товара
+               CheckCDS.FieldByName('SummChangePercent').asCurrency :=lSummChangePercent;
+               CheckCDS.FieldByName('Summ').asCurrency := GetSumm(lQuantity, lPrice, MainCashForm.FormParams.ParamByName('RoundingDown').Value);
+               CheckCDS.Post;
+
+            except
+                  ShowMessage ('Ошибка проверки возможности продажи.' + #10+ #13
+                  + #10+ #13 + 'Для карты № <' + lCardNumber + '>.'
+                  + #10+ #13 + 'Товар (' + CheckCDS.FieldByName('GoodsCode').AsString + ')' + CheckCDS.FieldByName('GoodsName').AsString);
+                  //ошибка
+                  lMsg:='Error';
+                  exit;
+            end;
+            //finally
+          end;
+
+      end // if BarCode_find <> ''
+
+      //если Штрих-код нашелся и программа Medicard card
+      else if (BarCode_find <> '') and (gCode = 4) then
       begin
 
       end else
@@ -1994,7 +2073,10 @@ end;
 
 function TDiscountServiceForm.GetBeforeSale : boolean;
 begin
-  if (gCode in [3, 5, 6, 7, 8, 9, 11, 12, 13]) and (FIdCasual <> '') then
+  if (gCode in [3, 5, 6, 7, 8, 9, 11, 12, 13]) and (FIdCasual <> '')  then
+  begin
+    Result := True;
+  end else if (gCode in [16]) and (FSupplier <> 0) then
   begin
     Result := True;
   end else Result := False;
@@ -2006,6 +2088,7 @@ begin
   FDiscontАbsolute := 0;
   FIdCasual := '';
   FBarCode_find := '';
+  FSupplier := 0;
 end;
 
 end.

@@ -24,7 +24,7 @@ type
     procedure LoadCountryFormTest;
     procedure LoadDiscountParnerFormTest;
     procedure LoadGoodsGroupFormTest;
-        procedure LoadGoodsFormTest;
+    procedure LoadGoodsFormTest;
     procedure LoadGoodsTagFormTest;
     procedure LoadGoodsTypeFormTest;
     procedure LoadGoodsSizeFormTest;

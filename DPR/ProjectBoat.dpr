@@ -6,7 +6,6 @@ uses
   SysUtils,
   DataModul in '..\SOURCE\DataModul.pas' {dmMain: TDataModule},
   dsdAction in '..\SOURCE\COMPONENT\dsdAction.pas',
-  dsdAddOn in '..\SOURCE\COMPONENT\dsdAddOn.pas',
   dsdDB in '..\SOURCE\COMPONENT\dsdDB.pas',
   dsdGuides in '..\SOURCE\COMPONENT\dsdGuides.pas',
   Storage in '..\SOURCE\Storage.pas',
@@ -81,7 +80,8 @@ uses
   IftminFozzXML in '..\SOURCE\EDI\IftminFozzXML.pas',
   OrderSpFozzXML in '..\SOURCE\EDI\OrderSpFozzXML.pas',
   MainForm in '..\FormsBoat\MainForm.pas' {MainForm},
-  dsdTranslator in '..\SOURCE\COMPONENT\dsdTranslator.pas';
+  dsdTranslator in '..\SOURCE\COMPONENT\dsdTranslator.pas',
+  dsdAddOn in '..\SOURCE\COMPONENT\dsdAddOn.pas';
 
 {$R *.res}
 
@@ -104,7 +104,7 @@ begin
       TUpdater.AutomaticUpdateProgram;
       TUpdater.AutomaticCheckConnect;
       Application.CreateForm(TdmMain, dmMain);
-      Application.CreateForm(TMainForm, MainFormInstance);
+  Application.CreateForm(TMainForm, MainFormInstance);
   end;
   Application.Run;
 

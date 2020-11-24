@@ -72,6 +72,48 @@ BEGIN
          INTO outJuridicalID, outInvoiceNumber, outInvoiceDate, outContainerID
          FROM tmpContainer AS Container
          LIMIT 1;
+    ELSEIF (SELECT Object.ObjectCode FROM Object WHERE Object.ID = inDiscountExternal) in (1)
+    THEN
+      WITH
+           tmpContainerAll AS (SELECT Container.Id
+                                   , Container.Amount
+                                 FROM Container
+                                 WHERE Container.DescId = zc_Container_Count()
+                                   AND Container.Amount > 0 -- inAmount
+                                   AND Container.WhereObjectId = vbUnitId
+                                   AND Container.ObjectId = inGoodsId
+                                )
+         , tmpContainer AS (SELECT Container.Amount                                          AS Amount
+                                 , MovementLinkObject_From.ObjectId                          AS JuridicalID
+                                 , Movement_Income.InvNumber                                 AS InvoiceNumber
+                                 , Movement_Income.OperDate                                  AS InvoiceDate
+                                 , Container.Id                                              AS Id
+                            FROM tmpContainerAll AS Container
+                                  LEFT JOIN ContainerlinkObject AS ContainerLinkObject_MovementItem
+                                                                ON ContainerLinkObject_MovementItem.Containerid = Container.Id
+                                                               AND ContainerLinkObject_MovementItem.DescId = zc_ContainerLinkObject_PartionMovementItem()
+                                  LEFT OUTER JOIN Object AS Object_PartionMovementItem ON Object_PartionMovementItem.Id = ContainerLinkObject_MovementItem.ObjectId
+                                  -- элемент прихода
+                                  LEFT JOIN MovementItem AS MI_Income ON MI_Income.Id = Object_PartionMovementItem.ObjectCode
+                                  INNER JOIN Movement ON Movement.Id = MI_Income.MovementId
+                                  -- если это партия, которая была создана инвентаризацией - в этом свойстве будет "найденный" ближайший приход от поставщика
+                                  LEFT JOIN MovementItemFloat AS MIFloat_MovementItem
+                                                              ON MIFloat_MovementItem.MovementItemId = MI_Income.Id
+                                                             AND MIFloat_MovementItem.DescId = zc_MIFloat_MovementItemId()
+                                  -- элемента прихода от поставщика (если это партия, которая была создана инвентаризацией)
+                                  LEFT JOIN MovementItem AS MI_Income_find ON MI_Income_find.Id  = (MIFloat_MovementItem.ValueData :: Integer)
+                                                                       -- AND 1=0
+
+                                  INNER JOIN Movement AS Movement_Income ON Movement_Income.Id = COALESCE (MI_Income_find.MovementId ,MI_Income.MovementId)
+                                  LEFT JOIN MovementLinkObject AS MovementLinkObject_From
+                                                               ON MovementLinkObject_From.MovementId = COALESCE (MI_Income_find.MovementId ,MI_Income.MovementId)
+                                                              AND MovementLinkObject_From.DescId = zc_MovementLinkObject_From()
+                                   )
+
+         SELECT Container.JuridicalID, Container.InvoiceNumber, Container.InvoiceDate, Container.Id
+         INTO outJuridicalID, outInvoiceNumber, outInvoiceDate, outContainerID
+         FROM tmpContainer AS Container
+         LIMIT 1;
     ELSEIF (SELECT Object.ObjectCode FROM Object WHERE Object.ID = inDiscountExternal) in (9, 11)
     THEN
       WITH
@@ -276,6 +318,102 @@ BEGIN
 
          SELECT Container.JuridicalID, Container.CodeRazom, Container.InvoiceNumber, Container.Id
          INTO outJuridicalID, outCodeRazom, outInvoiceNumber, outContainerID
+         FROM tmpContainer AS Container
+         LIMIT 1;
+    ELSEIF (SELECT Object.ObjectCode FROM Object WHERE Object.ID = inDiscountExternal) in (15)
+    THEN
+      WITH
+          tmpDiscountExternal AS (SELECT Object.ObjectCode FROM Object WHERE Object.ID = inDiscountExternal)
+         , tmpContainerAll AS (SELECT Container.Id
+                                   , Container.Amount
+                                 FROM Container
+                                 WHERE Container.DescId = zc_Container_Count()
+                                   AND Container.Amount > 0
+                                   AND Container.WhereObjectId = vbUnitId
+                                   AND Container.ObjectId = inGoodsId
+                                )
+         , tmpContainer AS (SELECT Container.id
+                                 , Container.Amount                                            AS Amount
+                                 , MovementLinkObject_From.ObjectId                            AS JuridicalID
+                                 , COALESCE(ObjectFloat_CodeOrangeCard.ValueData, 0)::Integer  AS CodeRazom
+                                 , Movement_Income.InvNumber                                   AS InvoiceNumber
+                            FROM tmpContainerAll AS Container
+                                  LEFT JOIN tmpDiscountExternal ON 1 = 1
+                                  LEFT JOIN ContainerlinkObject AS ContainerLinkObject_MovementItem
+                                                                ON ContainerLinkObject_MovementItem.Containerid = Container.Id
+                                                               AND ContainerLinkObject_MovementItem.DescId = zc_ContainerLinkObject_PartionMovementItem()
+                                  LEFT OUTER JOIN Object AS Object_PartionMovementItem ON Object_PartionMovementItem.Id = ContainerLinkObject_MovementItem.ObjectId
+                                  -- элемент прихода
+                                  LEFT JOIN MovementItem AS MI_Income ON MI_Income.Id = Object_PartionMovementItem.ObjectCode
+                                  INNER JOIN Movement ON Movement.Id = MI_Income.MovementId
+                                  -- если это партия, которая была создана инвентаризацией - в этом свойстве будет "найденный" ближайший приход от поставщика
+                                  LEFT JOIN MovementItemFloat AS MIFloat_MovementItem
+                                                              ON MIFloat_MovementItem.MovementItemId = MI_Income.Id
+                                                             AND MIFloat_MovementItem.DescId = zc_MIFloat_MovementItemId()
+                                  -- элемента прихода от поставщика (если это партия, которая была создана инвентаризацией)
+                                  LEFT JOIN MovementItem AS MI_Income_find ON MI_Income_find.Id  = (MIFloat_MovementItem.ValueData :: Integer)
+                                                                       -- AND 1=0
+
+                                  INNER JOIN Movement AS Movement_Income ON Movement_Income.Id = COALESCE (MI_Income_find.MovementId ,MI_Income.MovementId)
+                                  LEFT JOIN MovementLinkObject AS MovementLinkObject_From
+                                                               ON MovementLinkObject_From.MovementId = COALESCE (MI_Income_find.MovementId ,MI_Income.MovementId)
+                                                              AND MovementLinkObject_From.DescId = zc_MovementLinkObject_From()
+                                  LEFT JOIN ObjectFloat AS ObjectFloat_CodeOrangeCard
+                                                        ON ObjectFloat_CodeOrangeCard.ObjectId = MovementLinkObject_From.ObjectId
+                                                       AND ObjectFloat_CodeOrangeCard.DescId = zc_ObjectFloat_Juridical_CodeOrangeCard()
+
+                            WHERE COALESCE(ObjectFloat_CodeOrangeCard.ValueData, 0) > 0
+                            ORDER BY Movement.OperDate, Container.Id
+                                   )
+
+         SELECT Container.JuridicalID, Container.CodeRazom, Container.InvoiceNumber, Container.Id
+         INTO outJuridicalID, outCodeRazom, outInvoiceNumber, outContainerID
+         FROM tmpContainer AS Container
+         LIMIT 1;
+    ELSEIF (SELECT Object.ObjectCode FROM Object WHERE Object.ID = inDiscountExternal) in (16)
+    THEN
+      WITH
+          tmpDiscountExternal AS (SELECT Object.ObjectCode FROM Object WHERE Object.ID = inDiscountExternal)
+         , tmpContainerAll AS (SELECT Container.Id
+                                   , Container.Amount
+                                 FROM Container
+                                 WHERE Container.DescId = zc_Container_Count()
+                                   AND Container.Amount > 0
+                                   AND Container.WhereObjectId = vbUnitId
+                                   AND Container.ObjectId = inGoodsId
+                                )
+         , tmpContainer AS (SELECT Sum(Container.Amount)                                     AS Amount
+                                 , MovementLinkObject_From.ObjectId                          AS JuridicalID
+                                 , MovementLinkObject_From.ObjectId::Integer                 AS CodeRazom
+                            FROM tmpContainerAll AS Container
+                                  LEFT JOIN tmpDiscountExternal ON 1 = 1
+                                  LEFT JOIN ContainerlinkObject AS ContainerLinkObject_MovementItem
+                                                                ON ContainerLinkObject_MovementItem.Containerid = Container.Id
+                                                               AND ContainerLinkObject_MovementItem.DescId = zc_ContainerLinkObject_PartionMovementItem()
+                                  LEFT OUTER JOIN Object AS Object_PartionMovementItem ON Object_PartionMovementItem.Id = ContainerLinkObject_MovementItem.ObjectId
+                                  -- элемент прихода
+                                  LEFT JOIN MovementItem AS MI_Income ON MI_Income.Id = Object_PartionMovementItem.ObjectCode
+                                  INNER JOIN Movement ON Movement.Id = MI_Income.MovementId
+                                  -- если это партия, которая была создана инвентаризацией - в этом свойстве будет "найденный" ближайший приход от поставщика
+                                  LEFT JOIN MovementItemFloat AS MIFloat_MovementItem
+                                                              ON MIFloat_MovementItem.MovementItemId = MI_Income.Id
+                                                             AND MIFloat_MovementItem.DescId = zc_MIFloat_MovementItemId()
+                                  -- элемента прихода от поставщика (если это партия, которая была создана инвентаризацией)
+                                  LEFT JOIN MovementItem AS MI_Income_find ON MI_Income_find.Id  = (MIFloat_MovementItem.ValueData :: Integer)
+                                                                       -- AND 1=0
+
+                                  INNER JOIN Movement AS Movement_Income ON Movement_Income.Id = COALESCE (MI_Income_find.MovementId ,MI_Income.MovementId)
+                                  LEFT JOIN MovementLinkObject AS MovementLinkObject_From
+                                                               ON MovementLinkObject_From.MovementId = COALESCE (MI_Income_find.MovementId ,MI_Income.MovementId)
+                                                              AND MovementLinkObject_From.DescId = zc_MovementLinkObject_From()
+
+                            WHERE COALESCE( MovementLinkObject_From.ObjectId, 0) = 59611
+                            GROUP BY MovementLinkObject_From.ObjectId
+                            HAVING Sum(Container.Amount)  >= inAmount
+                                   )
+
+         SELECT Container.JuridicalID, Container.CodeRazom
+         INTO outJuridicalID, outCodeRazom
          FROM tmpContainer AS Container
          LIMIT 1;
     ELSE

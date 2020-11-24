@@ -168,6 +168,7 @@ BEGIN
                                                                                , inSpeed   := inSpeed
                                                                                , inSeating := inSeating
                                                                                , inComment := ''
+                                                                               , inBrandId := vbBrandId
                                                                                , inSession := inSession
                                                                                 ) AS tmp);
      END IF;

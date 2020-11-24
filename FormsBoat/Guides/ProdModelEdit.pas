@@ -54,6 +54,9 @@ type
     cxLabel9: TcxLabel;
     cxLabel10: TcxLabel;
     edSeating: TcxCurrencyEdit;
+    cxLabel11: TcxLabel;
+    edBrand: TcxButtonEdit;
+    GuidesBrand: TdsdGuides;
   private
     { Private declarations }
   public

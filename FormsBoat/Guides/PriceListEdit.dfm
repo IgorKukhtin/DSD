@@ -2,7 +2,7 @@
   Left = 0
   Top = 0
   Caption = #1044#1086#1073#1072#1074#1080#1090#1100'/'#1048#1079#1084#1077#1085#1080#1090#1100' <'#1055#1088#1072#1081#1089'-'#1083#1080#1089#1090'>'
-  ClientHeight = 180
+  ClientHeight = 168
   ClientWidth = 350
   Color = clBtnFace
   Font.Charset = DEFAULT_CHARSET
@@ -29,7 +29,7 @@
   end
   object cxButton1: TcxButton
     Left = 56
-    Top = 138
+    Top = 120
     Width = 75
     Height = 25
     Action = dsdInsertUpdateGuides
@@ -39,7 +39,7 @@
   end
   object cxButton2: TcxButton
     Left = 208
-    Top = 138
+    Top = 120
     Width = 75
     Height = 25
     Action = dsdFormClose1
@@ -59,27 +59,14 @@
     Properties.DecimalPlaces = 0
     Properties.DisplayFormat = '0'
     TabOrder = 1
-    Width = 273
+    Width = 121
   end
   object edPriceWithVAT: TcxCheckBox
-    Left = 42
-    Top = 106
+    Left = 182
+    Top = 26
     Caption = #1062#1077#1085#1072' '#1089' '#1053#1044#1057' ('#1076#1072'/'#1085#1077#1090')'
     TabOrder = 6
     Width = 131
-  end
-  object cxLabel2: TcxLabel
-    Left = 178
-    Top = 107
-    Caption = '% '#1053#1044#1057
-  end
-  object ceVATPercent: TcxCurrencyEdit
-    Left = 220
-    Top = 106
-    Properties.DecimalPlaces = 4
-    Properties.DisplayFormat = ',0.####'
-    TabOrder = 8
-    Width = 57
   end
   object ActionList: TActionList
     Left = 296
@@ -148,14 +135,6 @@
         DataType = ftBoolean
         ParamType = ptInput
         MultiSelectSeparator = ','
-      end
-      item
-        Name = 'inVATPercent'
-        Value = 0.000000000000000000
-        Component = ceVATPercent
-        DataType = ftFloat
-        ParamType = ptInput
-        MultiSelectSeparator = ','
       end>
     PackSize = 1
     Left = 240
@@ -204,16 +183,9 @@
         Component = edPriceWithVAT
         DataType = ftBoolean
         MultiSelectSeparator = ','
-      end
-      item
-        Name = 'VATPercent'
-        Value = 0.000000000000000000
-        Component = ceVATPercent
-        DataType = ftFloat
-        MultiSelectSeparator = ','
       end>
     PackSize = 1
-    Left = 192
+    Left = 184
     Top = 56
   end
   object cxPropertiesStore: TcxPropertiesStore
@@ -232,7 +204,7 @@
     Top = 48
   end
   object dsdUserSettingsStorageAddOn1: TdsdUserSettingsStorageAddOn
-    Left = 96
-    Top = 8
+    Left = 168
+    Top = 96
   end
 end

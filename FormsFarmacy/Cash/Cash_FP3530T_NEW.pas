@@ -153,8 +153,9 @@ end;
 function TCashFP3530T_NEW.CloseReceiptEx(out CheckId: String): boolean;
 begin
   result := false;
-  CheckId := FPrinter.CLOSEFISKCHECK[1, Password];
-  result := СообщениеКА(FPrinter.GETERROR)
+  FPrinter.CLOSEFISKCHECK[1, Password];
+  result := СообщениеКА(FPrinter.GETERROR);
+  CheckId := IntToStr(FPrinter.COUNTERSDAY[3, Password]);
 end;
 
 function TCashFP3530T_NEW.GetAlwaysSold: boolean;

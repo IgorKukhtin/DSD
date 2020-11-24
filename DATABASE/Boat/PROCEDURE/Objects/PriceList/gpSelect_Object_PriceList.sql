@@ -6,7 +6,7 @@ CREATE OR REPLACE FUNCTION gpSelect_Object_PriceList(
     IN inShowAll        Boolean,   
     IN inSession        TVarChar         -- сессия пользователя
 )
-  RETURNS TABLE (Id Integer, Code Integer, Name TVarChar, PriceWithVAT Boolean, VATPercent TFloat, CurrencyId Integer, CurrencyName TVarChar, isErased Boolean) AS
+  RETURNS TABLE (Id Integer, Code Integer, Name TVarChar, PriceWithVAT Boolean, CurrencyId Integer, CurrencyName TVarChar, isErased Boolean) AS
 $BODY$
 BEGIN
 
@@ -21,7 +21,6 @@ BEGIN
            , Object_PriceList.ObjectCode          AS Code
            , Object_PriceList.ValueData           AS Name
            , ObjectBoolean_PriceWithVAT.ValueData AS PriceWithVAT
-           , ObjectFloat_VATPercent.ValueData     AS VATPercent
            , Object_Currency.Id                   AS CurrencyId
            , Object_Currency.ValueData            AS CurrencyName
            , Object_PriceList.isErased            AS isErased
@@ -30,9 +29,6 @@ BEGIN
             LEFT JOIN ObjectBoolean AS ObjectBoolean_PriceWithVAT
                                     ON ObjectBoolean_PriceWithVAT.ObjectId = Object_PriceList.Id
                                    AND ObjectBoolean_PriceWithVAT.DescId = zc_ObjectBoolean_PriceList_PriceWithVAT()
-            LEFT JOIN ObjectFloat AS ObjectFloat_VATPercent
-                                  ON ObjectFloat_VATPercent.ObjectId = Object_PriceList.Id
-                                 AND ObjectFloat_VATPercent.DescId = zc_ObjectFloat_PriceList_VATPercent()
             LEFT JOIN ObjectLink AS ObjectLink_Currency
                                  ON ObjectLink_Currency.ObjectId = Object_PriceList.Id
                                 AND ObjectLink_Currency.DescId = zc_ObjectLink_PriceList_Currency()
@@ -44,7 +40,6 @@ BEGIN
            , NULL :: Integer AS Code
            , 'УДАЛИТЬ' :: TVarChar AS Name
            , FALSE AS PriceWithVAT
-           , NULL :: TFloat AS VATPercent
            , 0 AS CurrencyId
            , '' :: TVarChar AS CurrencyName
            , FALSE  AS isErased
@@ -59,6 +54,7 @@ $BODY$
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.
+ 24.11.20         *
  23.02.15         * add inShowAll
  16.11.14                                        * add Currency...
  07.09.13                                        * add PriceWithVAT and VATPercent

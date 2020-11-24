@@ -816,6 +816,8 @@ type
     function CheckShareFromPrice(Amount, Price: Currency; GoodsCode: Integer;
       GoodsName: string): Boolean;
     procedure SaveHardwareData;
+    // Установить дисконтную программу
+    procedure SetDiscountExternal(ACode : Integer = 0; ADiscountCard : String = '');
 
   public
     procedure pGet_OldSP(var APartnerMedicalId: Integer;
@@ -2442,7 +2444,7 @@ begin
       exit;
     end;
 
-    if (DiscountServiceForm.gCode = 2) then
+    if (DiscountServiceForm.gCode in [2, 15]) then
     begin
       ShowMessage
         ('Применен дисконт.'#13#10'Для променениея ручной скидки обнулите чек и набрать позиции заново..');
@@ -2749,7 +2751,7 @@ begin
     exit;
   end;
 
-  if not DiscountServiceForm.isBeforeSale and (DiscountServiceForm.gCode in [3, 5, 6, 7, 8, 9, 11, 12, 13]) then
+  if not DiscountServiceForm.isBeforeSale and (DiscountServiceForm.gCode in [3, 5, 6, 7, 8, 9, 11, 12, 13, 16]) then
   begin
     ShowMessage('По дисконтрой программе не запрошена возможность продажи!');
     exit;
@@ -3861,7 +3863,7 @@ begin
     exit;
   end;
 
-  if (DiscountServiceForm.gCode = 2) then
+  if (DiscountServiceForm.gCode in [2, 15]) then
   begin
     ShowMessage
       ('Применен дисконт.'#13#10'Для променениея программы лояльности обнулите чек и набрать позиции заново..');
@@ -4006,7 +4008,7 @@ begin
           (RemainsCDS.FieldByName('PriceSaleSP').asCurrency -
           RemainsCDS.FieldByName('PriceSP').asCurrency);
       end
-      else if (DiscountServiceForm.gCode in [2, 4, 10]) and edPrice.Visible and
+      else if (DiscountServiceForm.gCode in [2, 4, 10, 15, 16]) and edPrice.Visible and
         (abs(edPrice.Value) > 0.0001) then
       begin
         // на всяк случай - УСТАНОВИМ скидку еще разок
@@ -4433,7 +4435,7 @@ begin
     exit;
   end;
 
-  if (DiscountServiceForm.gCode = 2) then
+  if (DiscountServiceForm.gCode in [2, 15]) then
   begin
     ShowMessage
       ('Применен дисконт.'#13#10'Для променениея программы лояльности обнулите чек и набрать позиции заново..');
@@ -4992,7 +4994,7 @@ begin
 end;
 
 // ***20.07.16
-procedure TMainCashForm2.actSetDiscountExternalExecute(Sender: TObject);
+procedure TMainCashForm2.SetDiscountExternal(ACode : Integer = 0; ADiscountCard : String = '');
 var
   DiscountExternalId: Integer;
   DiscountExternalName, DiscountCardNumber: String;
@@ -5024,7 +5026,7 @@ begin
     exit;
   end;
 
-  if DiscountServiceForm.isBeforeSale then
+  if DiscountServiceForm.isBeforeSale and not (DiscountServiceForm.gCode in [16]) then
   begin
     ShowMessage('В текущем чеке запрошена возможность продажи. Произведите продажу или очистите чек!');
     exit;
@@ -5039,7 +5041,7 @@ begin
       DiscountCardNumber := Self.FormParams.ParamByName
         ('DiscountCardNumber').Value;
       if not DiscountDialogExecute(DiscountExternalId, DiscountExternalName,
-        DiscountCardNumber) then
+        DiscountCardNumber, ACode, ADiscountCard) then
         exit;
     finally
       Free;
@@ -5090,7 +5092,7 @@ begin
   pnlDiscount.Visible := DiscountExternalId > 0;
   lblDiscountExternalName.Caption := '  ' + DiscountExternalName + '  ';
   lblDiscountCardNumber.Caption := '  ' + DiscountCardNumber + '  ';
-  lblPrice.Visible := (DiscountServiceForm.gCode in [2, 4, 10]) and
+  lblPrice.Visible := (DiscountServiceForm.gCode in [2, 4, 10, 15]) and
     (DiscountServiceForm.gUserName = '');
   edPrice.Visible := lblPrice.Visible;
   lblAmount.Visible := lblPrice.Visible;
@@ -5107,6 +5109,11 @@ begin
       RemainsCDS.EnableControls;
     end;
   end;
+end;
+
+procedure TMainCashForm2.actSetDiscountExternalExecute(Sender: TObject);
+begin
+  SetDiscountExternal;
 end;
 
 // ***28.01.19
@@ -5225,7 +5232,7 @@ begin
     exit;
   end;
 
-  if (DiscountServiceForm.gCode = 2) then
+  if (DiscountServiceForm.gCode in [2, 15]) then
   begin
     ShowMessage
       ('Применен дисконт.'#13#10'Для променениея скидка через сайт обнулите чек и набрать позиции заново..');
@@ -6044,7 +6051,8 @@ end;
 
 procedure TMainCashForm2.ceScanerKeyPress(Sender: TObject; var Key: Char);
 const
-  zc_BarCodePref_Object: String = '20100';
+  zc_BarCodePref_Object: String = '201al00';
+  zc_BarCodePref_XanthisCare: String = '21016';
 var
   isFind: Boolean;
   Key2: Word;
@@ -6056,7 +6064,16 @@ begin
   //
   if Key = #13 then
   begin
-    //
+    // ЭТО карта Ксантис Забота
+    if zc_BarCodePref_XanthisCare = Copy(ceScaner.Text, 1, Length(zc_BarCodePref_XanthisCare)) then
+    begin
+      if Length(ceScaner.Text) <> 13 then
+      begin
+        ShowMessage ('Ошибка. Длина штрихкода должна быть 13 символов.');
+      end else SetDiscountExternal(16, ceScaner.Text);
+      Exit;
+    end;
+
     RemainsCDS.AfterScroll := nil;
     RemainsCDS.DisableControls;
     try
@@ -6958,7 +6975,7 @@ begin
         // цена СО скидкой
         lPrice := SourceClientDataSet.FieldByName('PriceSP').asCurrency;
       end
-      else if (DiscountServiceForm.gCode in [2, 4, 10]) and edPrice.Visible and
+      else if (DiscountServiceForm.gCode in [2, 4, 10, 15, 16]) and edPrice.Visible and
         (abs(edPrice.Value) > 0.0001) then
       begin
         // цена БЕЗ скидки
@@ -9065,7 +9082,7 @@ begin
             (RemainsCDS.FieldByName('PriceSaleSP').asCurrency -
             RemainsCDS.FieldByName('PriceSP').asCurrency);
         end
-        else if (DiscountServiceForm.gCode in [2, 4, 10]) and edPrice.Visible and
+        else if (DiscountServiceForm.gCode in [2, 4, 10, 15, 16]) and edPrice.Visible and
           (abs(edPrice.Value) > 0.0001) then
         begin
           // на всяк случай - УСТАНОВИМ скидку еще разок
@@ -10745,7 +10762,7 @@ begin
       ('Ошибка. Не заполнено количество.'#13#10'Должно быть или дробь:'#13#10'Количество продажи / Количество в упаковке');
   end;
 
-  if DiscountServiceForm.isBeforeSale then
+  if DiscountServiceForm.isBeforeSale and not (DiscountServiceForm.gCode in [16]) then
   begin
     ShowMessage('В текущем чеке запрошена возможность продажи. Произведите продажу или очистите чек!');
     exit;
