@@ -23,7 +23,9 @@ RETURNS TABLE (
     isTop              Boolean,
     isTOP_Price        Boolean,
     isOneJuridical     Boolean,
-    PercentMarkup      TFloat
+    PercentMarkup      TFloat,
+    PromoNumber        TVarChar,
+    JuridicalList      TBlob
 )
 
 AS
@@ -194,16 +196,19 @@ BEGIN
     -- Маркетинговый контракт
   , GoodsPromoAll AS (SELECT tmp.JuridicalId
                            , tmp.GoodsId        -- здесь товар "сети"
+                           , InvNumber                                                    AS PromoNumber
                       FROM lpSelect_MovementItem_Promo_onDate (inOperDate:= CURRENT_DATE) AS tmp
                       WHERE COALESCE(tmp.JuridicalId, 0) <> 0
                      )
   , GoodsPromo AS (SELECT GoodsPromoAll.JuridicalId
                         , GoodsPromoAll.GoodsId        -- здесь товар "сети"
+                        , GoodsPromoAll.PromoNumber                                                  AS PromoNumber
                         , CASE WHEN GoodsPromoAll.JuridicalId = 59612 THEN 1.75 ELSE 0 END :: TFloat AS ChangePercent
                    FROM GoodsPromoAll
                    UNION ALL
                    SELECT tmp.JuridicalId
                         , _tmpMinPrice_Remains.ObjectId
+                        , NULL::TVarChar                                                   AS PromoNumber
                         , CASE WHEN tmp.JuridicalId = 59612 THEN 1.75 ELSE 0 END :: TFloat AS ChangePercent
                    FROM _tmpMinPrice_Remains
                         LEFT JOIN (SELECT DISTINCT LastPriceList_find_View.JuridicalId FROM LastPriceList_find_View) AS tmp ON 1 = 1
@@ -320,6 +325,8 @@ BEGIN
 
           , tmpPrice_RemainsPrice.AreaId            AS AreaId
           , tmpPrice_RemainsPrice.AreaName          AS AreaName
+          , GoodsPromo.PromoNumber                  AS PromoNumber
+
 
         FROM -- Остатки + коды ...
              tmpPrice_RemainsPrice
@@ -391,6 +398,8 @@ BEGIN
           , tmpMinPrice_RemainsPrice.isTOP
           , tmpMinPrice_RemainsPrice.isTOP_Price
           , tmpMinPrice_RemainsPrice.PercentMarkup
+          , tmpMinPrice_RemainsPrice.PromoNumber
+          , string_agg(zfConvert_FloatToString(tmpMinPrice_RemainsPrice.Price)||' - '||tmpMinPrice_RemainsPrice.JuridicalName, CHR(13))::TBlob AS JuridicalList
 
         FROM tmpMinPrice_RemainsPrice
         WHERE  COALESCE (tmpMinPrice_RemainsPrice.JuridicalIsPriceClose, FALSE) <> TRUE
@@ -405,6 +414,7 @@ BEGIN
                  , tmpMinPrice_RemainsPrice.isTOP
                  , tmpMinPrice_RemainsPrice.isTOP_Price
                  , tmpMinPrice_RemainsPrice.PercentMarkup
+                 , tmpMinPrice_RemainsPrice.PromoNumber
        )
     -- сколько поставщиков у товара
   , tmpCountJuridical AS (SELECT tmpMinPrice_RemainsPrice.GoodsId, COUNT (DISTINCT tmpMinPrice_RemainsPrice.JuridicalId) AS CountJuridical
@@ -427,7 +437,9 @@ BEGIN
         MinPriceList.isTop :: Boolean AS isTop,
         MinPriceList.isTOP_Price :: Boolean AS isTOP_Price,
         CASE WHEN tmpCountJuridical.CountJuridical > 1 THEN FALSE ELSE TRUE END :: Boolean AS isOneJuridical,
-        MinPriceList.PercentMarkup :: TFloat AS PercentMarkup
+        MinPriceList.PercentMarkup :: TFloat AS PercentMarkup,
+        MinPriceList.PromoNumber,
+        MinPriceList.JuridicalList
     FROM MinPriceList
          LEFT JOIN tmpCountJuridical ON tmpCountJuridical.GoodsId = MinPriceList.GoodsId
     ORDER BY MinPriceList.GoodsId

@@ -164,7 +164,7 @@ BEGIN
                                           LEFT JOIN Object_Goods_Retail ON Object_Goods_Retail.ID = MovementItemContainer.ObjectId_analyzer
 
                                      WHERE MovementItemContainer.OperDate >= inDateStart
-                                       AND MovementItemContainer.MovementDescId = zc_Movement_Check()
+                                       AND MovementItemContainer.OperDate < inDateFinal
                                        AND MovementItemContainer.MovementDescId = zc_Movement_Check()
                                        AND MovementItemContainer.DescId = zc_MIContainer_Count()
                                        AND MovementItemContainer.ObjectId_analyzer IN (SELECT Object_Goods_Retail.ID
@@ -182,6 +182,7 @@ BEGIN
                                            LEFT JOIN Object_Goods_Retail ON Object_Goods_Retail.ID = MovementItemContainer.ObjectId_analyzer
 
                                       WHERE MovementItemContainer.OperDate >= inDateStart
+                                        AND MovementItemContainer.OperDate < inDateFinal
                                         AND MovementItemContainer.MovementDescId = zc_Movement_Check()
                                         AND MovementItemContainer.DescId = zc_MIContainer_Count()
                                         AND MovementItemContainer.ObjectId_analyzer IN (SELECT Object_Goods_Retail.ID

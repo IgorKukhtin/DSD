@@ -546,6 +546,7 @@ begin
     CheckListBox.Items.AddObject(UnitsCDS.FieldByName('UnitName').asString,TObject(UnitsCDS.FieldByName('Id').AsInteger));
     UnitsCDS.Next;
   end;
+  CheckListBox.Font.Size := dmMain.cxContentStyle.Font.Size;
 end;
 
 procedure TRepriceUnitForm.FormShow(Sender: TObject);

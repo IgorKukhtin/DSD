@@ -66,6 +66,9 @@ type
     UnitJuridical: TcxGridDBColumn;
     pcolUnitJuridical: TcxDBPivotGridField;
     ProvinceCityName: TcxGridDBColumn;
+    dxBarControlContainerItem5: TdxBarControlContainerItem;
+    actNoStaticCodes: TBooleanStoredProcAction;
+    bbNoStaticCodes: TdxBarButton;
   private
     { Private declarations }
   public
