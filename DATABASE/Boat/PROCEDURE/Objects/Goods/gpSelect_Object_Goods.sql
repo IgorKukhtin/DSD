@@ -36,12 +36,16 @@ AS
 $BODY$
   DECLARE vbUserId Integer;
   DECLARE vbAccessKeyRight Boolean;
+  DECLARE vbPriceWithVAT Boolean;
 BEGIN
      -- проверка прав пользователя на вызов процедуры
      -- vbUserId := lpCheckRight (inSession, zc_Enum_Process_Select_Object_Goods());
      vbUserId:= lpGetUserBySession (inSession);
      -- определяется - есть ли ограничения
      -- vbAccessKeyRight:= NOT zfCalc_AccessKey_GuideAll (vbUserId) AND EXISTS (SELECT AccessKeyId FROM Object_RoleAccessKey_View WHERE UserId = vbUserId);
+
+     -- Определили
+     vbPriceWithVAT:= (SELECT ObjectBoolean.ValueData FROM ObjectBoolean WHERE ObjectBoolean.ObjectId = zc_PriceList_Basis() AND ObjectBoolean.DescId = zc_ObjectBoolean_PriceList_PriceWithVAT());
 
      -- Результат
      RETURN QUERY
@@ -97,9 +101,17 @@ BEGIN
             , CAST (COALESCE (ObjectFloat_EmpfPrice.ValueData, 0)
                  * (1 + (COALESCE (ObjectFloat_TaxKind_Value.ValueData, 0) / 100) ) AS NUMERIC (16, 2)) ::TFloat AS EmpfPriceWVAT-- расчет рекомендованной цены с НДС, до 4 знаков
 
-            , tmpPriceBasis.ValuePrice        ::TFloat   AS BasisPrice
-            , CAST (COALESCE (tmpPriceBasis.ValuePrice, 0)
-                 * (1 + (COALESCE (ObjectFloat_TaxKind_Value.ValueData ,0) / 100)) AS NUMERIC (16, 2))  ::TFloat AS BasisPriceWVAT-- расчет ,базовой цены с НДС, до 4 знаков
+             -- расчет базовой цены без НДС, до 2 знаков
+           , CASE WHEN vbPriceWithVAT = FALSE
+                  THEN COALESCE (tmpPriceBasis.ValuePrice, 0)
+                  ELSE CAST (COALESCE (tmpPriceBasis.ValuePrice, 0) * ( 1 - COALESCE (ObjectFloat_TaxKind_Value.ValueData,0) / 100)  AS NUMERIC (16, 2))
+             END ::TFloat  AS BasisPrice   -- сохраненная цена - цена без НДС
+
+             -- расчет базовой цены с НДС, до 2 знаков
+           , CASE WHEN vbPriceWithVAT = FALSE
+                  THEN CAST ( COALESCE (tmpPriceBasis.ValuePrice, 0) * ( 1 + COALESCE (ObjectFloat_TaxKind_Value.ValueData,0) / 100)  AS NUMERIC (16, 2))
+                  ELSE COALESCE (tmpPriceBasis.ValuePrice, 0) 
+             END ::TFloat  AS BasisPriceWVAT
 
             , Object_GoodsGroup.Id               AS GoodsGroupId
             , Object_GoodsGroup.ValueData        AS GoodsGroupName

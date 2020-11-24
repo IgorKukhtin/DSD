@@ -44,7 +44,9 @@ type
     edGoods: TcxButtonEdit;
     GoodsGuides: TdsdGuides;
     cxLabel1: TcxLabel;
-    cePrice: TcxCurrencyEdit;
+    cePriceNoVAT: TcxCurrencyEdit;
+    cxLabel4: TcxLabel;
+    cePriceWVAT: TcxCurrencyEdit;
   private
     { Private declarations }
   public
