@@ -12,7 +12,9 @@ RETURNS TABLE (Id Integer, Code Integer, Name TVarChar
              , PartnerDate TDateTime
              , isArc Boolean
              , AmountMin TFloat, AmountRefer TFloat
-             , EKPrice TFloat, EmpfPrice TFloat
+             , EKPrice TFloat, EKPriceWVAT TFloat
+             , EmpfPrice TFloat, EmpfPriceWVAT TFloat
+             , BasisPrice TFloat, BasisPriceWVAT TFloat
              , GoodsGroupId Integer, GoodsGroupName TVarChar
              , MeasureId Integer, MeasureName TVarChar
              , GoodsTagId Integer, GoodsTagName TVarChar
@@ -26,7 +28,7 @@ RETURNS TABLE (Id Integer, Code Integer, Name TVarChar
              , InfoMoneyCode Integer, InfoMoneyGroupName TVarChar, InfoMoneyDestinationName TVarChar, InfoMoneyName TVarChar, InfoMoneyId Integer
              , InsertName TVarChar, InsertDate TDateTime
              , UpdateName TVarChar, UpdateDate TDateTime
-             , Image1 TBlob, Image2 TBlob, Image3 TBlob
+            -- , Image1 TBlob, Image2 TBlob, Image3 TBlob
              , isDoc Boolean, isPhoto Boolean
              , isErased Boolean
               )
@@ -61,6 +63,13 @@ BEGIN
                           WHERE Object_GoodsDocument.DescId   = zc_Object_GoodsDocument()
                             AND Object_GoodsDocument.isErased = FALSE
                         )
+           , tmpPriceBasis AS (SELECT tmp.GoodsId
+                                    , tmp.ValuePrice
+                               FROM lfSelect_ObjectHistory_PriceListItem (inPriceListId:= zc_PriceList_Basis()
+                                                                        , inOperDate   := CURRENT_DATE) AS tmp
+                              )
+
+
        -- Результат
        SELECT Object_Goods.Id                     AS Id
             , Object_Goods.ObjectCode             AS Code
@@ -79,8 +88,18 @@ BEGIN
 
             , ObjectFloat_Min.ValueData          AS AmountMin
             , ObjectFloat_Refer.ValueData        AS AmountRefer
-            , ObjectFloat_EKPrice.ValueData      AS EKPrice
-            , ObjectFloat_EmpfPrice.ValueData    AS EmpfPrice
+
+            , ObjectFloat_EKPrice.ValueData   ::TFloat   AS EKPrice
+            , CAST (COALESCE (ObjectFloat_EKPrice.ValueData, 0)
+                 * (1 + (COALESCE (ObjectFloat_TaxKind_Value.ValueData, 0) / 100)) AS NUMERIC (16, 2))  ::TFloat AS EKPriceWVAT-- расчет входной цены с НДС, до 4 знаков
+                 
+            , ObjectFloat_EmpfPrice.ValueData ::TFloat   AS EmpfPrice
+            , CAST (COALESCE (ObjectFloat_EmpfPrice.ValueData, 0)
+                 * (1 + (COALESCE (ObjectFloat_TaxKind_Value.ValueData, 0) / 100) ) AS NUMERIC (16, 2)) ::TFloat AS EmpfPriceWVAT-- расчет рекомендованной цены с НДС, до 4 знаков
+
+            , tmpPriceBasis.ValuePrice        ::TFloat   AS BasisPrice
+            , CAST (COALESCE (tmpPriceBasis.ValuePrice, 0)
+                 * (1 + (COALESCE (ObjectFloat_TaxKind_Value.ValueData ,0) / 100)) AS NUMERIC (16, 2))  ::TFloat AS BasisPriceWVAT-- расчет ,базовой цены с НДС, до 4 знаков
 
             , Object_GoodsGroup.Id               AS GoodsGroupId
             , Object_GoodsGroup.ValueData        AS GoodsGroupName
@@ -115,10 +134,10 @@ BEGIN
             , Object_Update.ValueData            AS UpdateName
             , ObjectDate_Update.ValueData        AS UpdateDate
 
-            , ObjectBlob_GoodsPhoto_Data1.ValueData AS Image1
+          /*  , ObjectBlob_GoodsPhoto_Data1.ValueData AS Image1
             , ObjectBlob_GoodsPhoto_Data2.ValueData AS Image2
             , ObjectBlob_GoodsPhoto_Data3.ValueData AS Image3
-
+           */
             , CASE WHEN tmpDoc.GoodsId    > 0 THEN TRUE ELSE FALSE END :: Boolean AS isDoc
             , CASE WHEN tmpPhoto1.GoodsId > 0 THEN TRUE ELSE FALSE END :: Boolean AS isPhoto
 
@@ -267,6 +286,8 @@ BEGIN
                                AND tmpPhoto3.Ord = 3
              LEFT JOIN ObjectBLOB AS ObjectBlob_GoodsPhoto_Data3
                                   ON ObjectBlob_GoodsPhoto_Data3.ObjectId = tmpPhoto3.PhotoId
+
+             LEFT JOIN tmpPriceBasis ON tmpPriceBasis.GoodsId = Object_Goods.Id
 
        WHERE Object_Goods.DescId = zc_Object_Goods()
          AND (Object_Goods.isErased = FALSE OR inShowAll = TRUE);
