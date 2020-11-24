@@ -12,6 +12,7 @@ object PriceListItemForm: TPriceListItemForm
   Font.Style = []
   KeyPreview = True
   OldCreateOrder = False
+  AddOnFormData.RefreshAction = actRefresh
   AddOnFormData.isSingle = False
   AddOnFormData.Params = FormParams
   PixelsPerInch = 96
@@ -25,7 +26,6 @@ object PriceListItemForm: TPriceListItemForm
     TabOrder = 0
     LookAndFeel.NativeStyle = True
     LookAndFeel.SkinName = 'UserSkin'
-    ExplicitTop = 62
     object cxGridDBTableView: TcxGridDBTableView
       Navigator.Buttons.CustomButtons = <>
       DataController.DataSource = DataSource
@@ -168,6 +168,18 @@ object PriceListItemForm: TPriceListItemForm
         Options.Editing = False
         Width = 90
       end
+      object EKPriceWVAT: TcxGridDBColumn
+        Caption = #1062#1077#1085#1072' '#1089' '#1053#1044#1057' '#1079#1072#1082#1091#1087'.'
+        DataBinding.FieldName = 'EKPriceWVAT'
+        PropertiesClassName = 'TcxCurrencyEditProperties'
+        Properties.DecimalPlaces = 4
+        Properties.DisplayFormat = ',0.####;-,0.####; ;'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        HeaderHint = #1062#1077#1085#1072' '#1079#1072#1082#1091#1087#1082#1080' '#1089' '#1053#1044#1057
+        Options.Editing = False
+        Width = 70
+      end
       object EmpfPrice: TcxGridDBColumn
         Caption = #1062#1077#1085#1072' '#1073#1077#1079' '#1053#1044#1057' '#1088#1077#1082#1086#1084'.'
         DataBinding.FieldName = 'EmpfPrice'
@@ -179,6 +191,18 @@ object PriceListItemForm: TPriceListItemForm
         HeaderHint = #1062#1077#1085#1072' '#1088#1077#1082#1086#1084#1077#1085#1076#1091#1077#1084#1072#1103' '#1073#1077#1079' '#1053#1044#1057
         Options.Editing = False
         Width = 87
+      end
+      object EmpfPriceWVAT: TcxGridDBColumn
+        Caption = #1062#1077#1085#1072' '#1089' '#1053#1044#1057' '#1088#1077#1082#1086#1084'.'
+        DataBinding.FieldName = 'EmpfPriceWVAT'
+        PropertiesClassName = 'TcxCurrencyEditProperties'
+        Properties.DecimalPlaces = 4
+        Properties.DisplayFormat = ',0.####;-,0.####; ;'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        HeaderHint = #1062#1077#1085#1072' '#1088#1077#1082#1086#1084#1077#1085#1076#1091#1077#1084#1072#1103' '#1089' '#1053#1044#1057
+        Options.Editing = False
+        Width = 70
       end
       object isErased: TcxGridDBColumn
         Caption = #1059#1076#1072#1083#1077#1085
@@ -311,7 +335,7 @@ object PriceListItemForm: TPriceListItemForm
           'Date')
       end
       item
-        Component = PriceListGuides
+        Component = GuidesPriceList
         Properties.Strings = (
           'Key'
           'TextValue')
@@ -542,14 +566,14 @@ object PriceListItemForm: TPriceListItemForm
         item
           Name = 'PriceListId'
           Value = '0'
-          Component = PriceListGuides
+          Component = GuidesPriceList
           ComponentItem = 'Key'
           MultiSelectSeparator = ','
         end
         item
           Name = 'PriceListName'
           Value = ''
-          Component = PriceListGuides
+          Component = GuidesPriceList
           ComponentItem = 'TextValue'
           DataType = ftString
           MultiSelectSeparator = ','
@@ -624,7 +648,7 @@ object PriceListItemForm: TPriceListItemForm
         item
           Name = 'TextValue'
           Value = Null
-          Component = PriceListGuides
+          Component = GuidesPriceList
           ComponentItem = 'TextValue'
           DataType = ftString
           ParamType = ptInput
@@ -646,14 +670,14 @@ object PriceListItemForm: TPriceListItemForm
         item
           Name = 'PriceListId'
           Value = '0'
-          Component = PriceListGuides
+          Component = GuidesPriceList
           ComponentItem = 'Key'
           MultiSelectSeparator = ','
         end
         item
           Name = 'PriceListName'
           Value = ''
-          Component = PriceListGuides
+          Component = GuidesPriceList
           ComponentItem = 'TextValue'
           DataType = ftString
           MultiSelectSeparator = ','
@@ -688,7 +712,7 @@ object PriceListItemForm: TPriceListItemForm
         item
           Name = 'PriceListName'
           Value = Null
-          Component = PriceListGuides
+          Component = GuidesPriceList
           ComponentItem = 'TextValue'
           DataType = ftString
           MultiSelectSeparator = ','
@@ -769,7 +793,7 @@ object PriceListItemForm: TPriceListItemForm
         item
           Name = 'PriceListName'
           Value = 42005d
-          Component = PriceListGuides
+          Component = GuidesPriceList
           ComponentItem = 'TextValue'
           DataType = ftString
           MultiSelectSeparator = ','
@@ -801,7 +825,7 @@ object PriceListItemForm: TPriceListItemForm
         item
           Name = 'inPriceListId'
           Value = '0'
-          Component = PriceListGuides
+          Component = GuidesPriceList
           ComponentItem = 'Key'
           ParamType = ptInput
           MultiSelectSeparator = ','
@@ -856,7 +880,7 @@ object PriceListItemForm: TPriceListItemForm
       item
         Name = 'inPriceListId'
         Value = '0'
-        Component = PriceListGuides
+        Component = GuidesPriceList
         ComponentItem = 'Key'
         ParamType = ptInput
         MultiSelectSeparator = ','
@@ -904,6 +928,7 @@ object PriceListItemForm: TPriceListItemForm
         Column = ValuePrice
       end>
     SummaryItemList = <>
+    ShowFieldImageList = <>
     PropertiesCellList = <>
     Left = 192
     Top = 256
@@ -912,7 +937,7 @@ object PriceListItemForm: TPriceListItemForm
     Left = 296
     Top = 200
   end
-  object PriceListGuides: TdsdGuides
+  object GuidesPriceList: TdsdGuides
     KeyField = 'Id'
     LookupControl = edPriceList
     Key = '0'
@@ -925,7 +950,7 @@ object PriceListItemForm: TPriceListItemForm
       item
         Name = 'Key'
         Value = '0'
-        Component = PriceListGuides
+        Component = GuidesPriceList
         ComponentItem = 'Key'
         ParamType = ptInput
         MultiSelectSeparator = ','
@@ -933,7 +958,7 @@ object PriceListItemForm: TPriceListItemForm
       item
         Name = 'TextValue'
         Value = ''
-        Component = PriceListGuides
+        Component = GuidesPriceList
         ComponentItem = 'TextValue'
         DataType = ftString
         ParamType = ptInput
@@ -958,7 +983,7 @@ object PriceListItemForm: TPriceListItemForm
       item
         Name = 'inPriceListId'
         Value = Null
-        Component = PriceListGuides
+        Component = GuidesPriceList
         ComponentItem = 'Key'
         ParamType = ptInput
         MultiSelectSeparator = ','
@@ -1037,7 +1062,7 @@ object PriceListItemForm: TPriceListItemForm
     RefreshAction = actRefresh
     ComponentList = <
       item
-        Component = PriceListGuides
+        Component = GuidesPriceList
       end
       item
         Component = edShowDate
@@ -1056,7 +1081,7 @@ object PriceListItemForm: TPriceListItemForm
       item
         Name = 'inPriceListId'
         Value = '0'
-        Component = PriceListGuides
+        Component = GuidesPriceList
         ComponentItem = 'Key'
         ParamType = ptInput
         MultiSelectSeparator = ','

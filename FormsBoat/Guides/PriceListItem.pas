@@ -50,7 +50,7 @@ type
     Panel: TPanel;
     cxLabel1: TcxLabel;
     edPriceList: TcxButtonEdit;
-    PriceListGuides: TdsdGuides;
+    GuidesPriceList: TdsdGuides;
     edShowDate: TcxDateEdit;
     cxLabel2: TcxLabel;
     cxLabel3: TcxLabel;

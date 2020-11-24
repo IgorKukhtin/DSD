@@ -11,7 +11,8 @@ CREATE OR REPLACE FUNCTION gpSelect_ObjectHistory_PriceListItem(
 RETURNS TABLE (Id Integer , ObjectId Integer
                 , GoodsId Integer, GoodsCode Integer, GoodsName TVarChar
                 , Article TVarChar, ArticleVergl TVarChar, PartnerName   TVarChar
-                , EKPrice TFloat, EmpfPrice TFloat
+                , EKPrice TFloat, EKPriceWVAT TFloat
+                , EmpfPrice TFloat, EmpfPriceWVAT TFloat
                 , isErased Boolean, GoodsGroupNameFull TVarChar
                 , MeasureName TVarChar
                 , StartDate TDateTime, EndDate TDateTime
@@ -160,8 +161,15 @@ BEGIN
            , ObjectString_Article.ValueData      AS Article
            , ObjectString_ArticleVergl.ValueData AS ArticleVergl
            , Object_Partner.ValueData            AS PartnerName
-           , ObjectFloat_EKPrice.ValueData       AS EKPrice
-           , ObjectFloat_EmpfPrice.ValueData     AS EmpfPrice
+
+           , ObjectFloat_EKPrice.ValueData   ::TFloat   AS EKPrice
+           , CAST (COALESCE (ObjectFloat_EKPrice.ValueData, 0)
+                * (1 + (COALESCE (vbVATPercent, 0) / 100)) AS NUMERIC (16, 2))  ::TFloat AS EKPriceWVAT-- расчет входной цены с НДС, до 4 знаков
+                
+           , ObjectFloat_EmpfPrice.ValueData ::TFloat   AS EmpfPrice
+           , CAST (COALESCE (ObjectFloat_EmpfPrice.ValueData, 0)
+                * (1 + (COALESCE (vbVATPercent, 0) / 100) ) AS NUMERIC (16, 2)) ::TFloat AS EmpfPriceWVAT-- расчет рекомендованной цены с НДС, до 4 знаков
+
            , Object_Goods.isErased          AS isErased
 
            , ObjectString_Goods_GoodsGroupFull.ValueData AS GoodsGroupNameFull
@@ -169,20 +177,14 @@ BEGIN
 
            , tmpPrice.StartDate
            , tmpPrice.EndDate
-           , COALESCE (tmpPrice.ValuePrice, NULL) ::TFloat  AS ValuePrice
-           
-             -- расчет цены без НДС, до 2 знаков
-           , CASE WHEN vbPriceWithVAT = TRUE
-                  THEN CAST (COALESCE (tmpPrice.ValuePrice, 0) - COALESCE (tmpPrice.ValuePrice, 0) * (vbVATPercent / (vbVATPercent + 100)) AS NUMERIC (16, 2))
-                  ELSE COALESCE (tmpPrice.ValuePrice, 0)
-             END ::TFloat AS PriceNoVAT
+           , COALESCE (tmpPrice.ValuePrice, NULL) ::TFloat  AS ValuePrice   -- цена без НДС
 
+             -- цена без НДС
+           , COALESCE (tmpPrice.ValuePrice, NULL) ::TFloat  AS PriceNoVAT   -- сохраненная цена - цена без НДС
              -- расчет цены с НДС, до 2 знаков
-           , CASE WHEN vbPriceWithVAT <> TRUE
-                  THEN CAST ((COALESCE (tmpPrice.ValuePrice, 0) + COALESCE (tmpPrice.ValuePrice, 0) * (vbVATPercent / 100)) AS NUMERIC (16, 2))
-                  ELSE CAST (COALESCE (tmpPrice.ValuePrice, 0) AS NUMERIC (16, 2))
-             END ::TFloat AS PriceWVAT
+           , CAST ( COALESCE (tmpPrice.ValuePrice, 0) * ( 1 + (vbVATPercent / 100))  AS NUMERIC (16, 2)) ::TFloat AS PriceWVAT
 
+           
            , COALESCE (tmpMinMax.ValuePrice_min, 0) :: TFloat AS ValuePrice_min
            , COALESCE (tmpMinMax.ValuePrice_max, 0) :: TFloat AS ValuePrice_max
 
@@ -308,8 +310,15 @@ BEGIN
            , ObjectString_Article.ValueData      AS Article
            , ObjectString_ArticleVergl.ValueData AS ArticleVergl
            , Object_Partner.ValueData            AS PartnerName
-           , ObjectFloat_EKPrice.ValueData       AS EKPrice
-           , ObjectFloat_EmpfPrice.ValueData     AS EmpfPrice
+
+           , ObjectFloat_EKPrice.ValueData   ::TFloat   AS EKPrice
+           , CAST (COALESCE (ObjectFloat_EKPrice.ValueData, 0)
+                * (1 + (COALESCE (vbVATPercent, 0) / 100)) AS NUMERIC (16, 2))  ::TFloat AS EKPriceWVAT-- расчет входной цены с НДС, до 4 знаков
+                
+           , ObjectFloat_EmpfPrice.ValueData ::TFloat   AS EmpfPrice
+           , CAST (COALESCE (ObjectFloat_EmpfPrice.ValueData, 0)
+                * (1 + (COALESCE (vbVATPercent, 0) / 100) ) AS NUMERIC (16, 2)) ::TFloat AS EmpfPriceWVAT-- расчет рекомендованной цены с НДС, до 4 знаков
+
            , Object_Goods.isErased   AS isErased
 
            , ObjectString_Goods_GoodsGroupFull.ValueData AS GoodsGroupNameFull
@@ -319,17 +328,11 @@ BEGIN
            , ObjectHistory_PriceListItem.EndDate
            , ObjectHistoryFloat_PriceListItem_Value.ValueData AS ValuePrice
 
-             -- расчет цены без НДС, до 2 знаков
-           , CASE WHEN vbPriceWithVAT = TRUE
-                  THEN CAST (ObjectHistoryFloat_PriceListItem_Value.ValueData - ObjectHistoryFloat_PriceListItem_Value.ValueData * (COALESCE (vbVATPercent,0) / (COALESCE (vbVATPercent,0) + 100)) AS NUMERIC (16, 2))
-                  ELSE ObjectHistoryFloat_PriceListItem_Value.ValueData
-             END ::TFloat AS PriceNoVAT
+             -- цена без НДС
+           , ObjectHistoryFloat_PriceListItem_Value.ValueData ::TFloat AS PriceNoVAT
 
              -- расчет цены с НДС, до 2 знаков
-           , CASE WHEN COALESCE (vbPriceWithVAT,FALSE) <> TRUE
-                  THEN CAST ((ObjectHistoryFloat_PriceListItem_Value.ValueData + ObjectHistoryFloat_PriceListItem_Value.ValueData * (COALESCE (vbVATPercent,0) / 100)) AS NUMERIC (16, 2))
-                  ELSE CAST (ObjectHistoryFloat_PriceListItem_Value.ValueData AS NUMERIC (16, 2))
-             END ::TFloat AS PriceWVAT
+           , CAST ( ObjectHistoryFloat_PriceListItem_Value.ValueData * (1 + (COALESCE (vbVATPercent,0) / 100) ) AS NUMERIC (16, 2)) ::TFloat AS PriceWVAT
 
            , COALESCE (tmpMinMax.ValuePrice_min, 0) :: TFloat AS ValuePrice_min
            , COALESCE (tmpMinMax.ValuePrice_max, 0) :: TFloat AS ValuePrice_max
