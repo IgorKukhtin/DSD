@@ -103,35 +103,32 @@ BEGIN
    -- вернули значения
    SELECT StartDate, EndDate INTO outStartDate, outEndDate FROM ObjectHistory WHERE Id = ioId;
 
-       -- параметры прайс листа
-       SELECT ObjectBoolean_PriceWithVAT.ValueData AS PriceWithVAT
-            , ObjectFloat_VATPercent.ValueData     AS VATPercent
-      INTO vbPriceWithVAT, vbVATPercent
-       FROM ObjectBoolean AS ObjectBoolean_PriceWithVAT
-            LEFT JOIN ObjectFloat AS ObjectFloat_VATPercent
-                                  ON ObjectFloat_VATPercent.ObjectId = ObjectBoolean_PriceWithVAT.ObjectId
-                                 AND ObjectFloat_VATPercent.DescId = zc_ObjectFloat_PriceList_VATPercent()
-       WHERE ObjectBoolean_PriceWithVAT.ObjectId = inPriceListId
-         AND ObjectBoolean_PriceWithVAT.DescId = zc_ObjectBoolean_PriceList_PriceWithVAT();
-   
+   -- параметры прайс листа
+   vbPriceWithVAT := (SELECT ObjectBoolean_PriceWithVAT.ValueData AS PriceWithVAT
+                      FROM ObjectBoolean AS ObjectBoolean_PriceWithVAT
+                      WHERE ObjectBoolean_PriceWithVAT.ObjectId = inPriceListId
+                        AND ObjectBoolean_PriceWithVAT.DescId = zc_ObjectBoolean_PriceList_PriceWithVAT()
+                      );
+
+   -- тип ндс и % берем из товара
+   vbVATPercent := (SELECT ObjectFloat_TaxKind_Value.ValueData AS VATPercent
+                    FROM ObjectLink AS ObjectLink_Goods_TaxKind
+                         LEFT JOIN ObjectFloat AS ObjectFloat_TaxKind_Value
+                                               ON ObjectFloat_TaxKind_Value.ObjectId = ObjectLink_Goods_TaxKind.ChildObjectId 
+                                              AND ObjectFloat_TaxKind_Value.DescId = zc_ObjectFloat_TaxKind_Value()
+                    WHERE ObjectLink_Goods_TaxKind.ObjectId = inGoodsId
+                      AND ObjectLink_Goods_TaxKind.DescId = zc_ObjectLink_Goods_TaxKind()
+                    );
+
    -- расчет цены без НДС, до 4 знаков
    outPriceNoVAT := inValue ::TFloat;
 
-   /*CASE WHEN vbPriceWithVAT = TRUE
-          THEN CAST (inValue - inValue * (vbVATPercent / (COALESCE (vbVATPercent,0) + 100)) AS NUMERIC (16, 2))
-          ELSE inValue
-     END ::TFloat;
-   */
-
    -- расчет цены с НДС, до 4 знаков
-   outPriceWVAT := CAST ((inValue + inValue * (COALESCE (vbVATPercent,0) / 100)) AS NUMERIC (16, 2)) ::TFloat;
+   outPriceWVAT := (CASE WHEN vbPriceWithVAT = TRUE
+                        THEN CAST ( (inValue + inValue * (COALESCE (vbVATPercent,0) / 100)) AS NUMERIC (16, 2))
+                        ELSE inValue
+                   END )  ::TFloat;
 
-   /*CASE WHEN vbPriceWithVAT <> TRUE
-          THEN CAST ((inValue + inValue * (vbVATPercent / 100)) AS NUMERIC (16, 2))
-          ELSE CAST (inValue AS NUMERIC (16, 4))
-     END ::TFloat;
-   */
-   
    -- сохранили протокол
    PERFORM lpInsert_ObjectHistoryProtocol (inObjectId:= vbPriceListItemId, inUserId:= vbUserId, inStartDate:= outStartDate, inEndDate:= outEndDate, inPrice:= inValue, inIsUpdate:= TRUE, inIsErased:= FALSE);
 

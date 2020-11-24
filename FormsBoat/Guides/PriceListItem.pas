@@ -92,6 +92,8 @@ type
     actGetImportSetting: TdsdExecStoredProc;
     actStartLoad: TMultiAction;
     bbStartLoad: TdxBarButton;
+    TaxKindName: TcxGridDBColumn;
+    TaxKind_Value: TcxGridDBColumn;
   private
     { Private declarations }
   public

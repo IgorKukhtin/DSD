@@ -28,8 +28,6 @@ type
     dsdUserSettingsStorageAddOn1: TdsdUserSettingsStorageAddOn;
     dsdInsertUpdateGuides: TdsdInsertUpdateGuides;
     edPriceWithVAT: TcxCheckBox;
-    cxLabel2: TcxLabel;
-    ceVATPercent: TcxCurrencyEdit;
   private
     { Private declarations }
   public

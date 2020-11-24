@@ -1,13 +1,13 @@
 -- Function: gpInsertUpdate_Object_PriceList (Integer, Integer, TVarChar, Boolean, TFloat, Integer, TVarChar)
 
 DROP FUNCTION IF EXISTS gpInsertUpdate_Object_PriceList (Integer, Integer, TVarChar, Boolean, TFloat, TVarChar);
+DROP FUNCTION IF EXISTS gpInsertUpdate_Object_PriceList (Integer, Integer, TVarChar, Boolean, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpInsertUpdate_Object_PriceList(
  INOUT ioId            Integer   ,     -- ключ объекта <Прайс листы> 
     IN inCode          Integer   ,     -- Код объекта <Прайс листы> 
     IN inName          TVarChar  ,     -- Название объекта <Прайс листы> 
     IN inPriceWithVAT  Boolean   ,     -- Цена с НДС (да/нет)
-    IN inVATPercent    TFloat    ,     -- % НДС
     IN inSession       TVarChar        -- сессия пользователя
 )
   RETURNS Integer AS
@@ -30,9 +30,6 @@ BEGIN
    ioId := lpInsertUpdate_Object (ioId, zc_Object_PriceList(), inCode, inName);
    -- сохранили свойство <Цена с НДС (да/нет)>
    PERFORM lpInsertUpdate_ObjectBoolean (zc_ObjectBoolean_PriceList_PriceWithVAT(), ioId, inPriceWithVAT);
-   -- сохранили свойство <% НДС>
-   PERFORM lpInsertUpdate_ObjectFloat (zc_ObjectFloat_PriceList_VATPercent(), ioId, inVATPercent);
-
 
    -- сохранили протокол
    PERFORM lpInsert_ObjectProtocol (ioId, vbUserId);
@@ -45,6 +42,7 @@ $BODY$
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
+ 24.11.20         *
  13.11.20         *
 */
 

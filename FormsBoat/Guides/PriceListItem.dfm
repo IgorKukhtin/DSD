@@ -122,6 +122,22 @@ object PriceListItemForm: TPriceListItemForm
         Options.Editing = False
         Width = 55
       end
+      object TaxKindName: TcxGridDBColumn
+        Caption = #1058#1080#1087' '#1053#1044#1057
+        DataBinding.FieldName = 'TaxKindName'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Options.Editing = False
+        Width = 70
+      end
+      object TaxKind_Value: TcxGridDBColumn
+        Caption = #1053#1044#1057
+        DataBinding.FieldName = 'TaxKind_Value'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Options.Editing = False
+        Width = 70
+      end
       object ValuePrice: TcxGridDBColumn
         Caption = #1062#1077#1085#1072
         DataBinding.FieldName = 'ValuePrice'

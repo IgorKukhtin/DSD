@@ -20,7 +20,7 @@ $BODY$BEGIN
       , ObjectString_TaxKind_Code.ValueData :: TVarChar AS Code_str
       , Object_TaxKind.ValueData    AS Name
       
-      , ObjectFloat_TaxKind_Value.ValueData   AS Value
+      , ObjectFloat_TaxKind_Value.ValueData  AS Value
       
       , Object_TaxKind.isErased     AS isErased
       
