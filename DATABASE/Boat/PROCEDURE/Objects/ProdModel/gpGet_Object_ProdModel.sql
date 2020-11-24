@@ -10,6 +10,7 @@ RETURNS TABLE (Id Integer, Code Integer, Name TVarChar
              , Length TFloat, Beam TFloat, Height TFloat
              , Weight TFloat, Fuel TFloat, Speed TFloat, Seating TFloat
              , Comment TVarChar
+             , BrandId Integer, BrandName TVarChar
              ) AS
 $BODY$BEGIN
    
@@ -32,6 +33,8 @@ $BODY$BEGIN
            , CAST (0 AS TFloat)     AS Speed
            , CAST (0 AS TFloat)     AS Seating
            , CAST ('' AS TVarChar)  AS Comment
+           , CAST (0  AS Integer)   AS BrandId
+           , CAST ('' AS TVarChar)  AS BrandName
           ;
    ELSE
      RETURN QUERY 
@@ -48,7 +51,9 @@ $BODY$BEGIN
          , ObjectFloat_Speed.ValueData     AS Speed
          , ObjectFloat_Seating.ValueData   AS Seating
          , ObjectString_Comment.ValueData  AS Comment
-        
+
+         , Object_Brand.Id                 AS BrandId
+         , Object_Brand.ValueData          AS BrandName
      FROM Object AS Object_ProdModel
           LEFT JOIN ObjectString AS ObjectString_Comment
                                  ON ObjectString_Comment.ObjectId = Object_ProdModel.Id
@@ -82,6 +87,10 @@ $BODY$BEGIN
                                 ON ObjectFloat_Seating.ObjectId = Object_ProdModel.Id
                                AND ObjectFloat_Seating.DescId = zc_ObjectFloat_ProdModel_Seating()
 
+          LEFT JOIN ObjectLink AS ObjectLink_Brand
+                               ON ObjectLink_Brand.ObjectId = Object_ProdModel.Id
+                              AND ObjectLink_Brand.DescId = zc_ObjectLink_ProdModel_Brand()
+          LEFT JOIN Object AS Object_Brand ON Object_Brand.Id = ObjectLink_Brand.ChildObjectId 
        WHERE Object_ProdModel.Id = inId;
    END IF;
    
@@ -93,6 +102,7 @@ LANGUAGE plpgsql VOLATILE;
 /*-------------------------------------------------------------------------------
  »—“Œ–»ﬂ –¿«–¿¡Œ“ »: ƒ¿“¿, ¿¬“Œ–
                ‘ÂÎÓÌ˛Í ».¬.    ÛıÚËÌ ».¬.    ÎËÏÂÌÚ¸Â‚  .».
+ 24.11.20         * add Brand
  08.10.20         *
 */
 

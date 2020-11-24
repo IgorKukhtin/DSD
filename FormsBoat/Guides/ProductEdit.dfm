@@ -529,8 +529,8 @@ object ProductEditForm: TProductEditForm
     Top = 400
   end
   object dsdUserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn
-    Left = 280
-    Top = 416
+    Left = 248
+    Top = 376
   end
   object GuidesBrand: TdsdGuides
     KeyField = 'Id'
@@ -582,6 +582,23 @@ object ProductEditForm: TProductEditForm
         Name = 'TextValue'
         Value = ''
         Component = GuidesModel
+        ComponentItem = 'TextValue'
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'BrandId'
+        Value = Null
+        Component = GuidesBrand
+        ComponentItem = 'Key'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'BrandName'
+        Value = Null
+        Component = GuidesBrand
         ComponentItem = 'TextValue'
         DataType = ftString
         ParamType = ptInput

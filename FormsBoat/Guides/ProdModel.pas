@@ -71,6 +71,7 @@ type
     Fuel: TcxGridDBColumn;
     Speed: TcxGridDBColumn;
     Seating: TcxGridDBColumn;
+    BrandName: TcxGridDBColumn;
   private
     { Private declarations }
   public
