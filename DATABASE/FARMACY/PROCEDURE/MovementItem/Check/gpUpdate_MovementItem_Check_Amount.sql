@@ -13,6 +13,8 @@ CREATE OR REPLACE FUNCTION gpUpdate_MovementItem_Check_Amount(
 RETURNS TFloat AS
 $BODY$
    DECLARE vbUserId Integer;
+   DECLARE vbAmount TFloat;
+   DECLARE vbAmountOrder TFloat;
 BEGIN
 
     -- проверка прав пользователя на вызов процедуры
@@ -32,6 +34,26 @@ BEGIN
        OR NOT EXISTS (SELECT 1 FROM MovementItem WHERE Id = inId)
     THEN
         RAISE EXCEPTION 'Не задан документ или неправельная связь';
+    END IF;
+    
+    
+    IF EXISTS(SELECT 1 FROM MovementLinkObject AS MovementLinkObject_CheckSourceKind
+              WHERE MovementLinkObject_CheckSourceKind.MovementId = inMovementId
+                AND MovementLinkObject_CheckSourceKind.DescId = zc_MovementLinkObject_CheckSourceKind()
+                AND MovementLinkObject_CheckSourceKind.ObjectId = zc_Enum_CheckSourceKind_Tabletki())
+    THEN
+      SELECT MovementItem.Amount, COALESCE (MIFloat_AmountOrder.ValueData, 0)
+      INTO vbAmount, vbAmountOrder
+      FROM MovementItem
+           LEFT JOIN MovementItemFloat AS MIFloat_AmountOrder
+                                       ON MIFloat_AmountOrder.MovementItemId = MovementItem.Id
+                                      AND MIFloat_AmountOrder.DescId = zc_MIFloat_AmountOrder()      
+      WHERE MovementItem.ID = inId;
+      
+      IF inAmount > ceil(vbAmountOrder)
+      THEN
+          RAISE EXCEPTION 'Увеличивать количество до ближайшего целого значения запрещено. Отпустите клиента отдельным новым чеком.';
+      END IF;      
     END IF;
 
     -- сохранили <Элемент документа>

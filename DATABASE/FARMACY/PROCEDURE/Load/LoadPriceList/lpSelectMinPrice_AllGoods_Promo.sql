@@ -196,8 +196,9 @@ BEGIN
     -- Маркетинговый контракт
   , GoodsPromoAll AS (SELECT tmp.JuridicalId
                            , tmp.GoodsId        -- здесь товар "сети"
-                           , InvNumber                                                    AS PromoNumber
+                           , Object_Maker.ValueData                                       AS PromoNumber
                       FROM lpSelect_MovementItem_Promo_onDate (inOperDate:= CURRENT_DATE) AS tmp
+                           LEFT JOIN Object AS Object_Maker ON Object_Maker.ID = tmp.MakerID 
                       WHERE COALESCE(tmp.JuridicalId, 0) <> 0
                      )
   , GoodsPromo AS (SELECT GoodsPromoAll.JuridicalId
@@ -266,7 +267,7 @@ BEGIN
           , tmpJuridicalArea.AreaId             AS AreaId
           , tmpJuridicalArea.AreaName           AS AreaName
 
-          , ROW_NUMBER()OVER(PARTITION BY _tmpMinPrice_RemainsList.GoodsId, PriceList.MovementId ORDER BY PriceList.Amount DESC) as ORD
+          , ROW_NUMBER()OVER(PARTITION BY PriceList.ObjectId, PriceList.MovementId ORDER BY PriceList.Amount DESC) as ORD
 
         FROM -- Остатки + коды ...
              _tmpMinPrice_RemainsList

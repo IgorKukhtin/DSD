@@ -1390,6 +1390,7 @@ begin
   FormParams.ParamByName('MedicForSale').Value := '';
   FormParams.ParamByName('BuyerForSale').Value := '';
   FormParams.ParamByName('BuyerForSalePhone').Value := '';
+  FormParams.ParamByName('isBanAdd').Value := False;
 
   ClearFilterAll;
 
@@ -7260,6 +7261,14 @@ begin
           ((CheckCDS.FieldByName('PriceSale').asCurrency <> lPriceSale) or
           (CheckCDS.FieldByName('Price').asCurrency <> lPrice)) then
         Begin
+
+          if FormParams.ParamByName('isBanAdd').Value and
+            ((CheckCDS.FieldByName('Amount').asCurrency + nAmount) > Ceil(CheckCDS.FieldByName('AmountOrder').asCurrency)) then
+          begin
+            ShowMessage('Увеличивать количество до ближайшего целого значения запрещено. Отпустите клиента отдельным новым чеком.');
+            Exit;
+          end;
+
           CheckCDS.Edit;
           CheckCDS.FieldByName('Price').asCurrency := lPrice;
           CheckCDS.FieldByName('Summ').asCurrency := 0;
@@ -7357,6 +7366,13 @@ begin
           SourceClientDataSet.FindField('DivisionPartiesID').AsVariant,
           FormParams.ParamByName('AddPresent').Value]), []) then
         Begin
+
+          if FormParams.ParamByName('isBanAdd').Value then
+          begin
+            ShowMessage('Добавлять товар в чек запрещено. Отпустите клиента отдельным новым чеком.');
+            Exit;
+          end;
+
           CheckCDS.Append;
           CheckCDS.FieldByName('Id').AsInteger := 0;
           CheckCDS.FieldByName('ParentId').AsInteger := 0;
@@ -7538,6 +7554,13 @@ begin
     End
     else if not SoldRegim AND (nAmount <> 0) then
     Begin
+
+      if FormParams.ParamByName('isBanAdd').Value and (nAmount > 0) and
+        ((CheckCDS.FieldByName('Amount').asCurrency + nAmount) > Ceil (CheckCDS.FieldByName('AmountOrder').asCurrency)) then
+      begin
+        ShowMessage('Увеличивать количество до ближайшего целого значения запрещено. Отпустите клиента отдельным новым чеком.');
+        Exit;
+      end;
 
       if (nAmount > 0) then
       begin
@@ -8205,6 +8228,7 @@ begin
   FormParams.ParamByName('MedicForSale').Value := '';
   FormParams.ParamByName('BuyerForSale').Value := '';
   FormParams.ParamByName('BuyerForSalePhone').Value := '';
+  FormParams.ParamByName('isBanAdd').Value := False;
 
   FiscalNumber := '';
   pnlVIP.Visible := false;
