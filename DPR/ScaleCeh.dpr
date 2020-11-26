@@ -101,7 +101,8 @@ uses
   OrderSpFozzXML in '..\SOURCE\EDI\OrderSpFozzXML.pas',
   GuideSubjectDoc in '..\Scale\GuideSubjectDoc.pas' {GuideSubjectDocForm},
   GuideUnit in '..\Scale\GuideUnit.pas' {GuideUnitForm},
-  GuideArticleLoss in '..\ScaleCeh\GuideArticleLoss.pas' {GuideArticleLossForm};
+  GuideArticleLoss in '..\ScaleCeh\GuideArticleLoss.pas' {GuideArticleLossForm},
+  dsdTranslator in '..\SOURCE\COMPONENT\dsdTranslator.pas';
 
 {$R *.res}
 

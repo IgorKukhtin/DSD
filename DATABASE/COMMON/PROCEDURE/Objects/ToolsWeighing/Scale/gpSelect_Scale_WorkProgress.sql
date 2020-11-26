@@ -80,8 +80,10 @@ BEGIN
                                  , MovementItem.ObjectId            AS GoodsId
                                  , MovementItem.Amount
                                  , MIFloat_CuterCount.ValueData     AS CuterCount
-                                 , COALESCE (MIFloat_RealWeight.ValueData, 0)  AS RealWeight
-                                 , COALESCE (MIFloat_CuterWeight.ValueData, 0) AS CuterWeight
+                                 , COALESCE (MIFloat_RealWeight.ValueData, 0)    AS RealWeight
+                                 , COALESCE (MIFloat_CuterWeight.ValueData, 0)   AS CuterWeight
+                                 , COALESCE (MIFloat_RealWeightShp.ValueData, 0) AS RealDelicShp
+                                 , COALESCE (MIFloat_RealWeightMsg.ValueData, 0) AS RealDelicMsg
                                  , Object_DocumentKind.Id           AS DocumentKindId
                                  , Object_DocumentKind.ValueData    AS DocumentKindName
                             FROM Movement
@@ -122,6 +124,12 @@ BEGIN
                                  LEFT JOIN MovementItemFloat AS MIFloat_CuterWeight
                                                              ON MIFloat_CuterWeight.MovementItemId = MovementItem.Id
                                                             AND MIFloat_CuterWeight.DescId         = zc_MIFloat_CuterWeight()
+                                 LEFT JOIN MovementItemFloat AS MIFloat_RealWeightShp
+                                                             ON MIFloat_RealWeightShp.MovementItemId = MovementItem.Id
+                                                            AND MIFloat_RealWeightShp.DescId         = zc_MIFloat_RealWeightShp()
+                                 LEFT JOIN MovementItemFloat AS MIFloat_RealWeightMsg
+                                                             ON MIFloat_RealWeightMsg.MovementItemId = MovementItem.Id
+                                                            AND MIFloat_RealWeightMsg.DescId         = zc_MIFloat_RealWeightMsg()
 
                             WHERE Movement.OperDate BETWEEN inOperDate - CASE WHEN inUnitId = 8448 THEN INTERVAL '30 DAY' ELSE INTERVAL '10 DAY' END :: INTERVAL AND inOperDate
                               AND Movement.DescId   = zc_Movement_ProductionUnion()
@@ -137,6 +145,14 @@ BEGIN
                                                   THEN MovementItem.Amount
                                              ELSE 0
                                         END) :: TFloat AS RealWeight
+                                 , SUM (CASE WHEN MLO_DocumentKind.ObjectId = zc_Enum_DocumentKind_RealDelicShp()
+                                                  THEN MovementItem.Amount
+                                             ELSE 0
+                                        END) :: TFloat AS RealDelicShp
+                                 , SUM (CASE WHEN MLO_DocumentKind.ObjectId = zc_Enum_DocumentKind_RealDelicMsg()
+                                                  THEN MovementItem.Amount
+                                             ELSE 0
+                                        END) :: TFloat AS RealDelicMsg
                             FROM tmpMI
                                  INNER JOIN MovementItemFloat AS MIFloat_MovementItemId
                                                               ON MIFloat_MovementItemId.ValueData = tmpMI.MovementItemId
@@ -212,6 +228,12 @@ BEGIN
                                          -- вес сырой - Итого
                                          WHEN inDocumentKindId = zc_Enum_DocumentKind_RealWeight()
                                               THEN zfConvert_FloatToString (tmpMI.RealWeight + COALESCE (tmpMI_Weighing.RealWeight, 0)) || '>'
+                                         -- вес п/ф факт после шприцевания - Итого
+                                         WHEN inDocumentKindId = zc_Enum_DocumentKind_RealDelicShp()
+                                              THEN zfConvert_FloatToString (tmpMI.RealDelicShp + COALESCE (tmpMI_Weighing.RealDelicShp, 0)) || '>'
+                                         -- вес п/ф факт после массажера - Итого
+                                         WHEN inDocumentKindId = zc_Enum_DocumentKind_RealDelicMsg()
+                                              THEN zfConvert_FloatToString (tmpMI.RealDelicMsg + COALESCE (tmpMI_Weighing.RealDelicMsg, 0)) || '>'
                                          ELSE '?'
                                     END
             || ' разница=<' || CASE -- вес куттер - разница
@@ -220,6 +242,12 @@ BEGIN
                                     -- вес сырой - разница
                                     WHEN inDocumentKindId = zc_Enum_DocumentKind_RealWeight()
                                          THEN zfConvert_FloatToString (-1 * tmpMI.Amount + tmpMI.RealWeight  + COALESCE (tmpMI_Weighing.RealWeight, 0)) || '>'
+                                    -- вес п/ф факт после шприцевания - разница
+                                    WHEN inDocumentKindId = zc_Enum_DocumentKind_RealDelicShp()
+                                         THEN zfConvert_FloatToString (-1 * tmpMI.Amount + tmpMI.RealDelicShp  + COALESCE (tmpMI_Weighing.RealDelicShp, 0)) || '>'
+                                    -- вес п/ф факт после массажера - разница
+                                    WHEN inDocumentKindId = zc_Enum_DocumentKind_RealDelicMsg()
+                                         THEN zfConvert_FloatToString (-1 * tmpMI.Amount + tmpMI.RealDelicMsg  + COALESCE (tmpMI_Weighing.RealDelicMsg, 0)) || '>'
                                     ELSE '?'
                                END
               ) :: TVarChar AS MovementInfo

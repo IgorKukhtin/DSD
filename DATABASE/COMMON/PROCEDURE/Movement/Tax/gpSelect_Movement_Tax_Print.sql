@@ -734,12 +734,13 @@ order by 4*/
              , tmpObject_GoodsPropertyValue.Article
              , tmpObject_GoodsPropertyValue.ArticleGLN
              , tmpObject_GoodsPropertyValue.Name
-        FROM (SELECT MAX (tmpObject_GoodsPropertyValue.ObjectId) AS ObjectId, GoodsId FROM tmpObject_GoodsPropertyValue WHERE Article <> '' OR ArticleGLN <> '' OR BarCode <> '' OR BarCodeGLN <> '' OR Name <> '' GROUP BY GoodsId
+        FROM (SELECT MAX (tmpObject_GoodsPropertyValue.ObjectId) AS ObjectId, GoodsId FROM tmpObject_GoodsPropertyValue WHERE Article <> '' OR ArticleGLN <> '' OR Name <> '' GROUP BY GoodsId
              ) AS tmpGoodsProperty_find
              LEFT JOIN tmpObject_GoodsPropertyValue ON tmpObject_GoodsPropertyValue.ObjectId =  tmpGoodsProperty_find.ObjectId
        )
      , tmpObject_GoodsPropertyValue_basis AS
-       (SELECT ObjectLink_GoodsPropertyValue_Goods.ChildObjectId AS GoodsId
+       (SELECT ObjectLink_GoodsPropertyValue_Goods.ObjectId      AS ObjectId
+             , ObjectLink_GoodsPropertyValue_Goods.ChildObjectId AS GoodsId
              , COALESCE (ObjectLink_GoodsPropertyValue_GoodsKind.ChildObjectId, 0) AS GoodsKindId
              , Object_GoodsPropertyValue.ValueData  AS Name
         FROM (SELECT vbGoodsPropertyId_basis AS GoodsPropertyId
@@ -758,6 +759,13 @@ order by 4*/
              LEFT JOIN ObjectLink AS ObjectLink_GoodsPropertyValue_GoodsKind
                                   ON ObjectLink_GoodsPropertyValue_GoodsKind.ObjectId = ObjectLink_GoodsPropertyValue_GoodsProperty.ObjectId
                                  AND ObjectLink_GoodsPropertyValue_GoodsKind.DescId = zc_ObjectLink_GoodsPropertyValue_GoodsKind()
+       )
+     , tmpObject_GoodsPropertyValueGroup_basis AS
+       (SELECT tmpObject_GoodsPropertyValue.GoodsId
+             , tmpObject_GoodsPropertyValue.Name
+        FROM (SELECT MAX (tmpObject_GoodsPropertyValue.ObjectId) AS ObjectId, GoodsId FROM tmpObject_GoodsPropertyValue_basis AS tmpObject_GoodsPropertyValue WHERE Name <> '' GROUP BY GoodsId
+             ) AS tmpGoodsProperty_find
+             LEFT JOIN tmpObject_GoodsPropertyValue_basis AS tmpObject_GoodsPropertyValue ON tmpObject_GoodsPropertyValue.ObjectId =  tmpGoodsProperty_find.ObjectId
        )
        -- результат
        SELECT
@@ -809,6 +817,8 @@ order by 4*/
                                   THEN tmpObject_GoodsPropertyValueGroup.Name
                              WHEN tmpObject_GoodsPropertyValue_basis.Name <> ''
                                   THEN tmpObject_GoodsPropertyValue_basis.Name
+                             WHEN tmpObject_GoodsPropertyValueGroup_basis.Name <> ''
+                                  THEN tmpObject_GoodsPropertyValueGroup_basis.Name
                              ELSE CASE WHEN vbOperDate_rus < zc_DateEnd_GoodsRus() AND ObjectString_Goods_RUS.ValueData <> '' THEN ObjectString_Goods_RUS.ValueData ELSE Object_Goods.ValueData END || CASE WHEN COALESCE (Object_GoodsKind.Id, zc_Enum_GoodsKind_Main()) = zc_Enum_GoodsKind_Main() THEN '' ELSE ' ' || Object_GoodsKind.ValueData END
                         END
               END) :: TVarChar AS GoodsName
@@ -823,6 +833,8 @@ order by 4*/
                                   THEN tmpObject_GoodsPropertyValueGroup.Name
                              WHEN tmpObject_GoodsPropertyValue_basis.Name <> ''
                                   THEN tmpObject_GoodsPropertyValue_basis.Name
+                             WHEN tmpObject_GoodsPropertyValueGroup_basis.Name <> ''
+                                  THEN tmpObject_GoodsPropertyValueGroup_basis.Name
                              ELSE CASE WHEN vbOperDate_rus < zc_DateEnd_GoodsRus() AND ObjectString_Goods_RUS.ValueData <> '' THEN ObjectString_Goods_RUS.ValueData ELSE Object_Goods.ValueData END
                         END
              END) :: TVarChar AS GoodsName_two
@@ -941,6 +953,8 @@ order by 4*/
                                                        AND tmpObject_GoodsPropertyValue.GoodsId IS NULL
             LEFT JOIN tmpObject_GoodsPropertyValue_basis ON tmpObject_GoodsPropertyValue_basis.GoodsId = tmpMI.GoodsId
                                                         AND tmpObject_GoodsPropertyValue_basis.GoodsKindId = tmpMI.GoodsKindId
+            LEFT JOIN tmpObject_GoodsPropertyValueGroup_basis ON tmpObject_GoodsPropertyValueGroup_basis.GoodsId = tmpMI.GoodsId
+                                                             AND tmpObject_GoodsPropertyValue_basis.GoodsId IS NULL
 
             LEFT JOIN Movement ON Movement.Id = tmpMI.MovementId
             LEFT JOIN ObjectLink AS ObjectLink_Goods_InfoMoney

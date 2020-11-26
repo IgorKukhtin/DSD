@@ -37,6 +37,7 @@ $BODY$
   DECLARE vbBusinessId_To Integer;
 
   DECLARE vbIsPeresort Boolean;
+  DECLARE vbIsBranch   Boolean;
   DECLARE vbProcessId Integer;
 BEGIN
      -- !!!обязательно!!! очистили таблицу проводок
@@ -105,11 +106,18 @@ BEGIN
           , COALESCE (CASE WHEN Object_From.DescId = zc_Object_Member() THEN 0                    WHEN Object_To.DescId = zc_Object_Unit() THEN ObjectLink_UnitTo_Business.ChildObjectId  WHEN Object_To.DescId = zc_Object_Personal() THEN ObjectLink_UnitPersonalTo_Business.ChildObjectId  ELSE 0 END, 0) AS BusinessId_To
 
           , COALESCE (MovementBoolean_Peresort.ValueData, FALSE) AS isPeresort
+          , CASE WHEN ObjectLink_UnitFrom_Branch.ChildObjectId = ObjectLink_UnitTo_Branch.ChildObjectId
+                  AND ObjectLink_UnitFrom_Branch.ChildObjectId > 0
+                  AND ObjectLink_UnitFrom_Branch.ChildObjectId <> zc_Branch_Basis()
+                      THEN TRUE
+                 ELSE FALSE
+            END AS isBranch
+
           , COALESCE (MovementLinkObject_User.ObjectId, 0)       AS ProcessId
 
             INTO vbMovementDescId, vbOperDate, vbUnitId_From, vbMemberId_From, vbBranchId_From, vbAccountDirectionId_From, vbIsPartionDate_Unit_From, vbIsPartionGoodsKind_Unit_From, vbJuridicalId_Basis_From, vbBusinessId_From
                , vbUnitId_To, vbMemberId_To, vbBranchId_To, vbAccountDirectionId_To, vbIsPartionDate_Unit_To, vbIsPartionGoodsKind_Unit_To, vbJuridicalId_Basis_To, vbBusinessId_To
-               , vbIsPeresort, vbProcessId
+               , vbIsPeresort, vbIsBranch, vbProcessId
      FROM Movement
           LEFT JOIN MovementBoolean AS MovementBoolean_Peresort
                                     ON MovementBoolean_Peresort.MovementId = Movement.Id
@@ -961,7 +969,7 @@ END IF;
      UPDATE _tmpItemSumm_pr SET AccountId_To = _tmpItem_byAccount.AccountId
      FROM _tmpItem_pr
           JOIN (SELECT lpInsertFind_Object_Account (inAccountGroupId         := _tmpItem_group.AccountGroupId_From -- zc_Enum_AccountGroup_20000() -- Запасы -- select * from gpSelect_Object_AccountGroup ('2') where Id = zc_Enum_AccountGroup_20000()
-                                                  , inAccountDirectionId     := CASE WHEN vbIsPeresort = TRUE
+                                                  , inAccountDirectionId     := CASE WHEN vbIsPeresort = TRUE OR vbIsBranch = TRUE
                                                                                           THEN _tmpItem_group.AccountDirectionId_From
                                                                                      WHEN _tmpItem_group.InfoMoneyDestinationId = zc_Enum_InfoMoneyDestination_20500() -- 20500; "Оборотная тара"
                                                                                           THEN zc_Enum_AccountDirection_20900() -- 20900; "Оборотная тара"

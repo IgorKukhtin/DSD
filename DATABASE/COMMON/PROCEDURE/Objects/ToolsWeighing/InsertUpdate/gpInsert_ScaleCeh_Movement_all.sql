@@ -1398,7 +1398,7 @@ BEGIN
      END IF;
 
 
-if inSession = '5' AND 1=1
+if inSession = '5' AND 1=0
 then
     RAISE EXCEPTION 'Admin - Errr _end <%>', (select Movement.InvNumber from Movement where Movement.Id = vbMovementId_begin);
     -- 'Повторите действие через 3 мин.'

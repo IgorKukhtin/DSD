@@ -4,9 +4,9 @@ DROP FUNCTION IF EXISTS lpComplete_Movement_Sale_Recalc (Integer, Integer, Integ
 
 CREATE OR REPLACE FUNCTION lpComplete_Movement_Sale_Recalc(
     IN inMovementId        Integer  , -- ключ Документа
-    IN inUnitId            Integer  , -- 
+    IN inUnitId            Integer  , --
     IN inUserId            Integer    -- Пользователь
-)                              
+)
 RETURNS VOID
 AS
 $BODY$
@@ -19,6 +19,7 @@ BEGIN
 
      -- Временно захардкодил - !!!только для этого склада!!!
      IF inUnitId = 8459 -- Склад Реализации
+     OR inUnitId IN (SELECT OL.ObjectId FROM ObjectLink AS OL WHERE OL.DescId = zc_ObjectLink_Unit_Branch() AND OL.ChildObjectId <> zc_Branch_Basis() AND OL.ChildObjectId > 0)
      OR (inUnitId IN (8444 -- Склад ОХЛАЖДЕНКА
                     , 8445 -- Склад МИНУСОВКА
                     , 133049 -- Склад реализации мясо
@@ -42,7 +43,7 @@ BEGIN
              , _tmpItem.GoodsKindId                                   AS GoodsKindId_to
              , ObjectLink_GoodsByGoodsKind_GoodsSub.ChildObjectId     AS GoodsId_from
              , COALESCE (ObjectLink_GoodsByGoodsKind_GoodsKindSub.ChildObjectId, 0) AS GoodsKindId_from
-             , COALESCE (ObjectLink_GoodsByGoodsKind_Receipt.ChildObjectId, 0)      AS ReceipId_to
+             , COALESCE (ObjectLink_GoodsByGoodsKind_Receipt_gp.ChildObjectId, ObjectLink_GoodsByGoodsKind_Receipt.ChildObjectId, 0) AS ReceipId_to
              , COALESCE (ObjectLink_GoodsByGoodsKind_Receipt_gp.ChildObjectId, 0)   AS ReceipId_gp_to
              , SUM (_tmpItem.OperCount)                                             AS Amount_to
         FROM _tmpItem
@@ -69,9 +70,9 @@ BEGIN
                                   ON ObjectLink_GoodsByGoodsKind_Receipt_gp.ObjectId = ObjectLink_GoodsByGoodsKind_Goods.ObjectId
                                  AND ObjectLink_GoodsByGoodsKind_Receipt_gp.DescId   = zc_ObjectLink_GoodsByGoodsKind_ReceiptGP()
 
-        WHERE _tmpItem.GoodsId      <> ObjectLink_GoodsByGoodsKind_GoodsSub.ChildObjectId
+        WHERE _tmpItem.GoodsId       <> ObjectLink_GoodsByGoodsKind_GoodsSub.ChildObjectId
            OR (_tmpItem.GoodsKindId  <> ObjectLink_GoodsByGoodsKind_GoodsKindSub.ChildObjectId
-               AND ObjectLink_GoodsByGoodsKind_GoodsKindSub.ChildObjectId > 0)
+              AND ObjectLink_GoodsByGoodsKind_GoodsKindSub.ChildObjectId > 0)
         GROUP BY _tmpItem.GoodsId
                , _tmpItem.GoodsKindId
                , ObjectLink_GoodsByGoodsKind_GoodsSub.ChildObjectId
@@ -80,8 +81,17 @@ BEGIN
                , ObjectLink_GoodsByGoodsKind_Receipt_gp.ChildObjectId
                 ;
 
+     -- !!! для филиалов - только одна схема, только для zc_ObjectLink_GoodsByGoodsKind_ReceiptGP !!!
+     IF NOT EXISTS (SELECT 1 FROM _tmpItemPeresort_new WHERE _tmpItemPeresort_new.ReceipId_gp_to > 0)
+     AND inUnitId IN (SELECT OL.ObjectId FROM ObjectLink AS OL WHERE OL.DescId = zc_ObjectLink_Unit_Branch() AND OL.ChildObjectId <> zc_Branch_Basis() AND OL.ChildObjectId > 0)
+     THEN
+         -- !!! ВЫХОД !!!
+         RETURN;
+     END IF;
+
+
      -- элементы - добавили еще те что по рецептуре
-     INSERT INTO _tmpItemPeresort_new (MovementItemId_to, MovementItemId_from, GoodsId_to, GoodsKindId_to, GoodsId_from, GoodsKindId_from, ReceipId_to, Amount_to)
+     INSERT INTO _tmpItemPeresort_new (MovementItemId_to, MovementItemId_from, GoodsId_to, GoodsKindId_to, GoodsId_from, GoodsKindId_from, ReceipId_to, ReceipId_gp_to, Amount_to)
         SELECT 0                                                      AS MovementItemId_to
              , 0                                                      AS MovementItemId_from
              , _tmpItemPeresort_new.GoodsId_to                        AS GoodsId_to
@@ -90,6 +100,7 @@ BEGIN
              , COALESCE (ObjectLink_ReceiptChild_GoodsKind.ChildObjectId, 0) AS GoodsKindId_from
              , -- т.к. надо будет отличать кол-во для ГП от других составляющих
                -1 * _tmpItemPeresort_new.ReceipId_to                  AS ReceipId_to
+             , 0                                                      AS ReceipId_gp_to
              , _tmpItemPeresort_new.Amount_to * ObjectFloat_Value.ValueData / ObjectFloat_Value_master.ValueData AS Amount_to
         FROM _tmpItemPeresort_new
                               INNER JOIN ObjectFloat AS ObjectFloat_Value_master
@@ -126,8 +137,10 @@ BEGIN
              , _tmpItemPeresort_new.GoodsKindId_to                    AS GoodsKindId_to
              , ObjectLink_ReceiptChild_Goods.ChildObjectId            AS GoodsId_from
              , COALESCE (ObjectLink_ReceiptChild_GoodsKind.ChildObjectId, 0) AS GoodsKindId_from
-             , -- т.к. надо будет отличать кол-во для ГП от других составляющих
-               -1 * _tmpItemPeresort_new.ReceipId_gp_to               AS ReceipId_to
+               -- т.к. надо будет отличать кол-во для ГП от других составляющих
+             , -1 * _tmpItemPeresort_new.ReceipId_gp_to               AS ReceipId_to
+             , -1 * _tmpItemPeresort_new.ReceipId_gp_to               AS ReceipId_gp_to
+               -- 
              , _tmpItemPeresort_new.Amount_to * ObjectFloat_Value.ValueData / ObjectFloat_Value_master.ValueData AS Amount_to
         FROM _tmpItemPeresort_new
                               INNER JOIN ObjectFloat AS ObjectFloat_Value_master
@@ -361,7 +374,9 @@ BEGIN
                                                                           WHEN ObjectLink_Goods_Measure_from.ChildObjectId = zc_Measure_Sh() AND COALESCE (ObjectLink_Goods_Measure_to.ChildObjectId, 0) <> zc_Measure_Sh()
                                                                                THEN ObjectLink_Goods_Measure_from.ObjectId
                                                                      END
-                                   AND ObjectFloat_Weight.DescId = zc_ObjectFloat_Goods_Weight();
+                                   AND ObjectFloat_Weight.DescId = zc_ObjectFloat_Goods_Weight()
+         WHERE _tmpItemPeresort_new.ReceipId_gp_to <= 0
+        ;
 
          -- Сохранили связь документов
          PERFORM lpInsertUpdate_MovementLinkMovement (zc_MovementLinkMovement_Production(), vbMovementId_Peresort, inMovementId);
@@ -397,7 +412,7 @@ BEGIN
      END IF; -- if ... Временно захардкодил - !!!только для этого склада!!!
 
      -- Админу только отладка
-     if inUserId = 5 then RAISE EXCEPTION 'Нет Прав и нет Проверки - что б ничего не делать'; end if;
+     if inUserId = 5 AND 1=0 then RAISE EXCEPTION 'Нет Прав и нет Проверки - что б ничего не делать'; end if;
 
 END;$BODY$
   LANGUAGE plpgsql VOLATILE;

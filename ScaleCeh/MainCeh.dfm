@@ -1385,7 +1385,6 @@ object MainCehForm: TMainCehForm
       Align = alTop
       BevelOuter = bvNone
       TabOrder = 7
-      ExplicitTop = 160
       object infoWeightOnBoxTotal_2Panel: TPanel
         Left = 0
         Top = 192
@@ -1733,7 +1732,6 @@ object MainCehForm: TMainCehForm
       BevelInner = bvRaised
       BevelOuter = bvNone
       TabOrder = 8
-      ExplicitTop = 161
       object LabelPersonalGroup: TLabel
         Left = 1
         Top = 1
@@ -2953,8 +2951,7 @@ object MainCehForm: TMainCehForm
         Font.Name = 'Arial'
         Font.Style = []
         ParentFont = False
-        ExplicitLeft = -6
-        ExplicitTop = -2
+        ExplicitWidth = 103
       end
       object EditSubjectDoc: TcxButtonEdit
         Left = 4
@@ -3121,6 +3118,7 @@ object MainCehForm: TMainCehForm
     ColumnAddOnList = <>
     ColumnEnterList = <>
     SummaryItemList = <>
+    ShowFieldImageList = <>
     KeepSelectColor = True
     PropertiesCellList = <>
     Left = 408

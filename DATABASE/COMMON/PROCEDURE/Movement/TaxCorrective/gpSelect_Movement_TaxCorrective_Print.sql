@@ -421,12 +421,14 @@ BEGIN
        (SELECT tmpObject_GoodsPropertyValue.GoodsId
              , tmpObject_GoodsPropertyValue.Article
              , tmpObject_GoodsPropertyValue.ArticleGLN
-        FROM (SELECT MAX (tmpObject_GoodsPropertyValue.ObjectId) AS ObjectId, GoodsId FROM tmpObject_GoodsPropertyValue WHERE Article <> '' OR ArticleGLN <> '' GROUP BY GoodsId
+             , tmpObject_GoodsPropertyValue.Name
+        FROM (SELECT MAX (tmpObject_GoodsPropertyValue.ObjectId) AS ObjectId, GoodsId FROM tmpObject_GoodsPropertyValue WHERE Article <> '' OR ArticleGLN <> '' OR Name <> '' GROUP BY GoodsId
              ) AS tmpGoodsProperty_find
              LEFT JOIN tmpObject_GoodsPropertyValue ON tmpObject_GoodsPropertyValue.ObjectId =  tmpGoodsProperty_find.ObjectId
        )
     , tmpObject_GoodsPropertyValue_basis AS
-       (SELECT ObjectLink_GoodsPropertyValue_Goods.ChildObjectId AS GoodsId
+       (SELECT ObjectLink_GoodsPropertyValue_Goods.ObjectId      AS ObjectId
+             , ObjectLink_GoodsPropertyValue_Goods.ChildObjectId AS GoodsId
              , COALESCE (ObjectLink_GoodsPropertyValue_GoodsKind.ChildObjectId, 0) AS GoodsKindId
              , Object_GoodsPropertyValue.ValueData  AS Name
         FROM (SELECT vbGoodsPropertyId_basis AS GoodsPropertyId
@@ -443,6 +445,13 @@ BEGIN
              LEFT JOIN ObjectLink AS ObjectLink_GoodsPropertyValue_GoodsKind
                                   ON ObjectLink_GoodsPropertyValue_GoodsKind.ObjectId = ObjectLink_GoodsPropertyValue_GoodsProperty.ObjectId
                                  AND ObjectLink_GoodsPropertyValue_GoodsKind.DescId = zc_ObjectLink_GoodsPropertyValue_GoodsKind()
+       )
+     , tmpObject_GoodsPropertyValueGroup_basis AS
+       (SELECT tmpObject_GoodsPropertyValue.GoodsId
+             , tmpObject_GoodsPropertyValue.Name
+        FROM (SELECT MAX (tmpObject_GoodsPropertyValue.ObjectId) AS ObjectId, GoodsId FROM tmpObject_GoodsPropertyValue_basis AS tmpObject_GoodsPropertyValue WHERE Name <> '' GROUP BY GoodsId
+             ) AS tmpGoodsProperty_find
+             LEFT JOIN tmpObject_GoodsPropertyValue_basis AS tmpObject_GoodsPropertyValue ON tmpObject_GoodsPropertyValue.ObjectId =  tmpGoodsProperty_find.ObjectId
        )
     , tmpMITax AS (SELECT * FROM lpSelect_TaxFromTaxCorrective ((SELECT MLM.MovementChildId FROM MovementLinkMovement AS MLM WHERE MLM.MovementId = inMovementId AND MLM.DescId = zc_MovementLinkMovement_Child())))
 
@@ -981,21 +990,25 @@ BEGIN
                   ELSE ''
              END :: TVarChar AS GoodsCodeTaxAction
 
-           , (CASE WHEN tmpMovement_Data.DocumentTaxKind = zc_Enum_DocumentTaxKind_Prepay() THEN CASE WHEN vbOperDate_begin >= '01.12.2018' AND COALESCE (tmpMovement_Data.Goods_DocumentTaxKind, '') <> '' THEN tmpMovement_Data.Goods_DocumentTaxKind
-                                                                                                      ELSE 'œ–≈ƒŒœÀ¿“¿ «¿  ŒÀ¡.»«ƒ≈À»ﬂ'
-                                                                                                 END
-                   WHEN tmpObject_GoodsPropertyValue.Name <> '' THEN tmpObject_GoodsPropertyValue.Name
-                   WHEN tmpObject_GoodsPropertyValue_basis.Name <> '' THEN tmpObject_GoodsPropertyValue_basis.Name
-                   ELSE CASE WHEN tmpMLM_Child.OperDate_rus < zc_DateEnd_GoodsRus() AND tmpGoods.GoodsName_RUS <> '' THEN tmpGoods.GoodsName_RUS ELSE tmpGoods.GoodsName END || CASE WHEN COALESCE (tmpMI.GoodsKindId, zc_Enum_GoodsKind_Main()) = zc_Enum_GoodsKind_Main() THEN '' ELSE ' ' || tmpMI.GoodsKindName END
-                   END) :: TVarChar AS GoodsName
+           , CASE WHEN tmpMovement_Data.DocumentTaxKind = zc_Enum_DocumentTaxKind_Prepay() THEN CASE WHEN vbOperDate_begin >= '01.12.2018' AND COALESCE (tmpMovement_Data.Goods_DocumentTaxKind, '') <> '' THEN tmpMovement_Data.Goods_DocumentTaxKind
+                                                                                                     ELSE 'œ–≈ƒŒœÀ¿“¿ «¿  ŒÀ¡.»«ƒ≈À»ﬂ'
+                                                                                                END
+                  WHEN tmpObject_GoodsPropertyValue.Name            <> '' THEN tmpObject_GoodsPropertyValue.Name
+                  WHEN tmpObject_GoodsPropertyValueGroup.Name       <> '' THEN tmpObject_GoodsPropertyValueGroup.Name
+                  WHEN tmpObject_GoodsPropertyValue_basis.Name      <> '' THEN tmpObject_GoodsPropertyValue_basis.Name
+                  WHEN tmpObject_GoodsPropertyValueGroup_basis.Name <> '' THEN tmpObject_GoodsPropertyValueGroup_basis.Name
+                  ELSE CASE WHEN tmpMLM_Child.OperDate_rus < zc_DateEnd_GoodsRus() AND tmpGoods.GoodsName_RUS <> '' THEN tmpGoods.GoodsName_RUS ELSE tmpGoods.GoodsName END || CASE WHEN COALESCE (tmpMI.GoodsKindId, zc_Enum_GoodsKind_Main()) = zc_Enum_GoodsKind_Main() THEN '' ELSE ' ' || tmpMI.GoodsKindName END
+             END :: TVarChar AS GoodsName
 
            , CASE WHEN tmpMovement_Data.DocumentTaxKind = zc_Enum_DocumentTaxKind_Prepay() THEN CASE WHEN vbOperDate_begin >= '01.12.2018' AND COALESCE (tmpMovement_Data.Goods_DocumentTaxKind, '') <> '' THEN tmpMovement_Data.Goods_DocumentTaxKind
                                                                                                      ELSE 'œ–≈ƒŒœÀ¿“¿ «¿  ŒÀ¡.»«ƒ≈À»ﬂ'
                                                                                                 END
-                  WHEN tmpObject_GoodsPropertyValue.Name <> '' THEN tmpObject_GoodsPropertyValue.Name
-                  WHEN tmpObject_GoodsPropertyValue_basis.Name <> '' THEN tmpObject_GoodsPropertyValue_basis.Name
+                  WHEN tmpObject_GoodsPropertyValue.Name            <> '' THEN tmpObject_GoodsPropertyValue.Name
+                  WHEN tmpObject_GoodsPropertyValueGroup.Name       <> '' THEN tmpObject_GoodsPropertyValueGroup.Name
+                  WHEN tmpObject_GoodsPropertyValue_basis.Name      <> '' THEN tmpObject_GoodsPropertyValue_basis.Name
+                  WHEN tmpObject_GoodsPropertyValueGroup_basis.Name <> '' THEN tmpObject_GoodsPropertyValueGroup_basis.Name
                   ELSE CASE WHEN tmpMLM_Child.OperDate_rus < zc_DateEnd_GoodsRus() AND tmpGoods.GoodsName_RUS <> '' THEN tmpGoods.GoodsName_RUS ELSE tmpGoods.GoodsName END
-             END AS GoodsName_two
+             END :: TVarChar  AS GoodsName_two
 
            , tmpMI.GoodsKindName                                            AS GoodsKindName
            , CASE WHEN tmpMovement_Data.DocumentTaxKind = zc_Enum_DocumentTaxKind_Prepay() AND vbOperDate_begin >= '01.12.2018' AND COALESCE (tmpMovement_Data.Measure_DocumentTaxKind, '') <> ''
@@ -1181,6 +1194,8 @@ BEGIN
                                                        AND tmpObject_GoodsPropertyValue.GoodsId IS NULL
             LEFT JOIN tmpObject_GoodsPropertyValue_basis ON tmpObject_GoodsPropertyValue_basis.GoodsId = tmpMI.GoodsId
                                                         AND tmpObject_GoodsPropertyValue_basis.GoodsKindId = tmpMI.GoodsKindId
+            LEFT JOIN tmpObject_GoodsPropertyValueGroup_basis ON tmpObject_GoodsPropertyValueGroup_basis.GoodsId = tmpMI.GoodsId
+                                                             AND tmpObject_GoodsPropertyValue_basis.GoodsId IS NULL
             LEFT JOIN tmpGoods ON tmpGoods.GoodsId = tmpMI.GoodsId
 
             ---- ÌÓÏÂ‡ ÒÚÓÍ ‚ ÕÕ
