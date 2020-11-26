@@ -220,13 +220,25 @@ inherited Report_CheckBonusTestForm: TReport_CheckBonusTestForm
           object BranchName: TcxGridDBColumn
             Caption = #1060#1080#1083#1080#1072#1083
             DataBinding.FieldName = 'BranchName'
+            HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
+            HeaderHint = #1060#1080#1083#1080#1072#1083' '#1087#1086' '#1074#1077#1076#1086#1084#1086#1089#1090#1080' '#1086#1090#1074'.'#1089#1086#1090#1088'.'
             Options.Editing = False
             Width = 104
+          end
+          object BranchName_inf: TcxGridDBColumn
+            Caption = #1060#1080#1083#1080#1072#1083' ('#1087#1086#1076#1088'.)'
+            DataBinding.FieldName = 'BranchName_inf'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            HeaderHint = #1060#1080#1083#1080#1072#1083' '#1080#1079' '#1087#1086#1076#1088#1072#1079#1076#1077#1083#1077#1085#1080#1103'  '#1086#1090#1074'.'#1089#1086#1090#1088'.'
+            Options.Editing = False
+            Width = 97
           end
           object JuridicalName: TcxGridDBColumn
             Caption = #1070#1088#1080#1076#1080#1095#1077#1089#1082#1086#1077' '#1083#1080#1094#1086
             DataBinding.FieldName = 'JuridicalName'
+            HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
             Width = 104
