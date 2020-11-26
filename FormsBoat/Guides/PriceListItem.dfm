@@ -125,6 +125,7 @@ object PriceListItemForm: TPriceListItemForm
       object TaxKindName: TcxGridDBColumn
         Caption = #1058#1080#1087' '#1053#1044#1057
         DataBinding.FieldName = 'TaxKindName'
+        Visible = False
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         Options.Editing = False
@@ -133,6 +134,7 @@ object PriceListItemForm: TPriceListItemForm
       object TaxKind_Value: TcxGridDBColumn
         Caption = #1053#1044#1057
         DataBinding.FieldName = 'TaxKind_Value'
+        Visible = False
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         Options.Editing = False
@@ -169,7 +171,6 @@ object PriceListItemForm: TPriceListItemForm
         Properties.DisplayFormat = ',0.00##;-,0.00##; ;'
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
-        Options.Editing = False
         Width = 70
       end
       object EKPrice: TcxGridDBColumn
@@ -1021,15 +1022,6 @@ object PriceListItemForm: TPriceListItemForm
         MultiSelectSeparator = ','
       end
       item
-        Name = 'inValue'
-        Value = Null
-        Component = ClientDataSet
-        ComponentItem = 'PriceNoVAT'
-        DataType = ftFloat
-        ParamType = ptInput
-        MultiSelectSeparator = ','
-      end
-      item
         Name = 'inIsLast'
         Value = True
         DataType = ftBoolean
@@ -1053,19 +1045,21 @@ object PriceListItemForm: TPriceListItemForm
         MultiSelectSeparator = ','
       end
       item
-        Name = 'outPriceNoVAT'
+        Name = 'ioPriceNoVAT'
         Value = Null
         Component = ClientDataSet
         ComponentItem = 'PriceNoVAT'
         DataType = ftFloat
+        ParamType = ptInputOutput
         MultiSelectSeparator = ','
       end
       item
-        Name = 'outPriceWVAT'
+        Name = 'ioPriceWVAT'
         Value = Null
         Component = ClientDataSet
         ComponentItem = 'PriceWVAT'
         DataType = ftFloat
+        ParamType = ptInput
         MultiSelectSeparator = ','
       end>
     PackSize = 1

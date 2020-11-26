@@ -2908,6 +2908,14 @@ inherited MainCashForm2: TMainCashForm2
           ComponentItem = 'SummCard'
           DataType = ftFloat
           MultiSelectSeparator = ','
+        end
+        item
+          Name = 'isBanAdd'
+          Value = Null
+          Component = FormParams
+          ComponentItem = 'isBanAdd'
+          DataType = ftBoolean
+          MultiSelectSeparator = ','
         end>
       isShowModal = True
     end
@@ -3449,6 +3457,14 @@ inherited MainCashForm2: TMainCashForm2
           Component = FormParams
           ComponentItem = 'SummCard'
           DataType = ftFloat
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'isBanAdd'
+          Value = Null
+          Component = FormParams
+          ComponentItem = 'isBanAdd'
+          DataType = ftBoolean
           MultiSelectSeparator = ','
         end>
       isShowModal = True
@@ -4270,6 +4286,14 @@ inherited MainCashForm2: TMainCashForm2
           ComponentItem = 'SummCard'
           DataType = ftFloat
           MultiSelectSeparator = ','
+        end
+        item
+          Name = 'isBanAdd'
+          Value = Null
+          Component = FormParams
+          ComponentItem = 'isBanAdd'
+          DataType = ftBoolean
+          MultiSelectSeparator = ','
         end>
       isShowModal = True
     end
@@ -4542,6 +4566,14 @@ inherited MainCashForm2: TMainCashForm2
           Component = FormParams
           ComponentItem = 'SummCard'
           DataType = ftFloat
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'isBanAdd'
+          Value = Null
+          Component = FormParams
+          ComponentItem = 'isBanAdd'
+          DataType = ftBoolean
           MultiSelectSeparator = ','
         end>
       isShowModal = True
@@ -4827,6 +4859,14 @@ inherited MainCashForm2: TMainCashForm2
           ComponentItem = 'SummCard'
           DataType = ftFloat
           MultiSelectSeparator = ','
+        end
+        item
+          Name = 'isBanAdd'
+          Value = Null
+          Component = FormParams
+          ComponentItem = 'isBanAdd'
+          DataType = ftBoolean
+          MultiSelectSeparator = ','
         end>
       isShowModal = True
     end
@@ -5099,6 +5139,14 @@ inherited MainCashForm2: TMainCashForm2
           Component = FormParams
           ComponentItem = 'SummCard'
           DataType = ftFloat
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'isBanAdd'
+          Value = Null
+          Component = FormParams
+          ComponentItem = 'isBanAdd'
+          DataType = ftBoolean
           MultiSelectSeparator = ','
         end>
       isShowModal = True
@@ -5889,6 +5937,12 @@ inherited MainCashForm2: TMainCashForm2
         Name = 'BuyerForSalePhone'
         Value = Null
         DataType = ftString
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'isBanAdd'
+        Value = Null
+        DataType = ftBoolean
         MultiSelectSeparator = ','
       end>
     Left = 32

@@ -16,7 +16,6 @@ RETURNS TABLE (Id Integer , ObjectId Integer
                 , isErased Boolean, GoodsGroupNameFull TVarChar
                 , MeasureName TVarChar
                 , StartDate TDateTime, EndDate TDateTime
-                , ValuePrice   TFloat
                 , PriceNoVAT   TFloat
                 , PriceWVAT    TFloat
                 , ValuePrice_min  TFloat
@@ -173,12 +172,18 @@ BEGIN
 
            , tmpPrice.StartDate
            , tmpPrice.EndDate
-           , COALESCE (tmpPrice.ValuePrice, NULL) ::TFloat  AS ValuePrice   -- цена без НДС
 
-             -- цена без НДС
-           , COALESCE (tmpPrice.ValuePrice, NULL) ::TFloat  AS PriceNoVAT   -- сохраненная цена - цена без НДС
+             -- расчет цены без НДС, до 2 знаков
+           , CASE WHEN vbPriceWithVAT = FALSE
+                  THEN COALESCE (tmpPrice.ValuePrice, 0)
+                  ELSE CAST (COALESCE (tmpPrice.ValuePrice, 0) * ( 1 - (ObjectFloat_TaxKind_Value.ValueData / 100))  AS NUMERIC (16, 2))
+             END ::TFloat  AS PriceNoVAT   -- сохраненная цена - цена без НДС
+
              -- расчет цены с НДС, до 2 знаков
-           , CAST ( COALESCE (tmpPrice.ValuePrice, 0) * ( 1 + (ObjectFloat_TaxKind_Value.ValueData / 100))  AS NUMERIC (16, 2)) ::TFloat AS PriceWVAT
+           , CASE WHEN vbPriceWithVAT = FALSE
+                  THEN CAST ( COALESCE (tmpPrice.ValuePrice, 0) * ( 1 + (ObjectFloat_TaxKind_Value.ValueData / 100))  AS NUMERIC (16, 2))
+                  ELSE COALESCE (tmpPrice.ValuePrice, 0) 
+             END ::TFloat  AS PriceWVAT
 
            
            , COALESCE (tmpMinMax.ValuePrice_min, 0) :: TFloat AS ValuePrice_min
@@ -334,13 +339,18 @@ BEGIN
 
            , ObjectHistory_PriceListItem.StartDate
            , ObjectHistory_PriceListItem.EndDate
-           , ObjectHistoryFloat_PriceListItem_Value.ValueData AS ValuePrice
 
-             -- цена без НДС
-           , ObjectHistoryFloat_PriceListItem_Value.ValueData ::TFloat AS PriceNoVAT
+             -- расчет цены без НДС, до 2 знаков
+           , CASE WHEN vbPriceWithVAT = FALSE
+                  THEN COALESCE (ObjectHistoryFloat_PriceListItem_Value.ValueData, 0)
+                  ELSE CAST (COALESCE (ObjectHistoryFloat_PriceListItem_Value.ValueData, 0) * ( 1 - COALESCE (ObjectFloat_TaxKind_Value.ValueData,0) / 100)  AS NUMERIC (16, 2))
+             END ::TFloat  AS PriceNoVAT   -- сохраненная цена - цена без НДС
 
              -- расчет цены с НДС, до 2 знаков
-           , CAST ( ObjectHistoryFloat_PriceListItem_Value.ValueData * (1 + (COALESCE (ObjectFloat_TaxKind_Value.ValueData,0) / 100) ) AS NUMERIC (16, 2)) ::TFloat AS PriceWVAT
+           , CASE WHEN vbPriceWithVAT = FALSE
+                  THEN CAST ( COALESCE (ObjectHistoryFloat_PriceListItem_Value.ValueData, 0) * ( 1 + COALESCE (ObjectFloat_TaxKind_Value.ValueData,0) / 100)  AS NUMERIC (16, 2))
+                  ELSE COALESCE (ObjectHistoryFloat_PriceListItem_Value.ValueData, 0) 
+             END ::TFloat  AS PriceWVAT
 
            , COALESCE (tmpMinMax.ValuePrice_min, 0) :: TFloat AS ValuePrice_min
            , COALESCE (tmpMinMax.ValuePrice_max, 0) :: TFloat AS ValuePrice_max

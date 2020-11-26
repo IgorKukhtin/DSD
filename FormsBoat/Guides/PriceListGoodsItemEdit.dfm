@@ -86,15 +86,29 @@
   object cxLabel1: TcxLabel
     Left = 24
     Top = 109
-    Caption = #1062#1077#1085#1072' :'
+    Caption = #1062#1077#1085#1072' '#1073#1077#1079' '#1053#1044#1057':'
   end
-  object cePrice: TcxCurrencyEdit
+  object cePriceNoVAT: TcxCurrencyEdit
     Left = 24
     Top = 133
     Properties.DecimalPlaces = 4
     Properties.DisplayFormat = ',0.####'
     Properties.UseDisplayFormatWhenEditing = True
     TabOrder = 9
+    Width = 120
+  end
+  object cxLabel4: TcxLabel
+    Left = 177
+    Top = 109
+    Caption = #1062#1077#1085#1072' '#1089' '#1053#1044#1057':'
+  end
+  object cePriceWVAT: TcxCurrencyEdit
+    Left = 177
+    Top = 133
+    Properties.DecimalPlaces = 4
+    Properties.DisplayFormat = ',0.####'
+    Properties.UseDisplayFormatWhenEditing = True
+    TabOrder = 11
     Width = 120
   end
   object ActionList: TActionList
@@ -184,9 +198,17 @@
         MultiSelectSeparator = ','
       end
       item
-        Name = 'inValue'
+        Name = 'ioPriceNoVAT'
         Value = Null
-        Component = cePrice
+        Component = cePriceNoVAT
+        DataType = ftFloat
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'ioPriceWVAT'
+        Value = Null
+        Component = cePriceWVAT
         DataType = ftFloat
         ParamType = ptInput
         MultiSelectSeparator = ','
@@ -293,15 +315,22 @@
         MultiSelectSeparator = ','
       end
       item
-        Name = 'ValuePrice'
+        Name = 'PriceNoVAT'
         Value = ''
-        Component = cePrice
+        Component = cePriceNoVAT
+        DataType = ftFloat
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'PriceWVAT'
+        Value = Null
+        Component = cePriceWVAT
         DataType = ftFloat
         MultiSelectSeparator = ','
       end>
     PackSize = 1
-    Left = 120
-    Top = 70
+    Left = 88
+    Top = 110
   end
   object cxPropertiesStore: TcxPropertiesStore
     Components = <
@@ -315,8 +344,8 @@
       end>
     StorageName = 'cxPropertiesStore'
     StorageType = stStream
-    Left = 144
-    Top = 120
+    Left = 168
+    Top = 64
   end
   object dsdUserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn
     Left = 272

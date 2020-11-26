@@ -72,14 +72,12 @@
   end
   object cxGrid: TcxGrid
     Left = 0
-    Top = 61
+    Top = 56
     Width = 1216
     Height = 297
     Align = alTop
     TabOrder = 0
     LookAndFeel.NativeStyle = False
-    ExplicitLeft = -8
-    ExplicitTop = 189
     object cxGridDBTableView: TcxGridDBTableView
       Navigator.Buttons.CustomButtons = <>
       DataController.DataSource = DataSource
@@ -818,9 +816,6 @@
     LookAndFeel.Kind = lfStandard
     LookAndFeel.NativeStyle = False
     LookAndFeel.SkinName = ''
-    ExplicitLeft = -2
-    ExplicitTop = 365
-    ExplicitHeight = 247
     object cxGridDBTableViewContractCondition: TcxGridDBTableView
       Navigator.Buttons.CustomButtons = <>
       DataController.DataSource = ContractConditionDS
@@ -1066,9 +1061,6 @@
     Align = alRight
     BevelOuter = bvNone
     TabOrder = 5
-    ExplicitLeft = 720
-    ExplicitTop = 358
-    ExplicitHeight = 262
     object cxGridPartner: TcxGrid
       Left = 0
       Top = 0
@@ -1079,10 +1071,6 @@
       LookAndFeel.Kind = lfStandard
       LookAndFeel.NativeStyle = False
       LookAndFeel.SkinName = ''
-      ExplicitLeft = 56
-      ExplicitTop = 8
-      ExplicitWidth = 221
-      ExplicitHeight = 252
       object cxGridDBTableViewPartner: TcxGridDBTableView
         Navigator.Buttons.CustomButtons = <>
         DataController.DataSource = DataSourcePartner
@@ -1165,9 +1153,6 @@
       LookAndFeel.Kind = lfStandard
       LookAndFeel.NativeStyle = False
       LookAndFeel.SkinName = ''
-      ExplicitLeft = 328
-      ExplicitTop = 24
-      ExplicitHeight = 1062
       object cxGridDBTableViewGoods: TcxGridDBTableView
         Navigator.Buttons.CustomButtons = <>
         DataController.DataSource = DataSourceGoods
@@ -1292,19 +1277,15 @@
       Height = 257
       AlignSplitter = salRight
       Control = cxGridGoods
-      ExplicitLeft = 321
-      ExplicitHeight = 370
     end
   end
   object cxTopSplitter: TcxSplitter
     Left = 0
-    Top = 56
+    Top = 358
     Width = 1216
     Height = 5
     AlignSplitter = salTop
     Control = cxGrid
-    ExplicitLeft = -10
-    ExplicitTop = 62
   end
   object cxRightSplitter: TcxSplitter
     Left = 720
@@ -1313,9 +1294,6 @@
     Height = 257
     AlignSplitter = salRight
     Control = Panel
-    ExplicitLeft = 1216
-    ExplicitTop = 358
-    ExplicitHeight = 262
   end
   object CCPartner: TcxGrid
     Left = 481
@@ -1327,9 +1305,6 @@
     LookAndFeel.Kind = lfStandard
     LookAndFeel.NativeStyle = False
     LookAndFeel.SkinName = ''
-    ExplicitLeft = 487
-    ExplicitTop = 420
-    ExplicitHeight = 262
     object cxGridDBTableViewCCPartner: TcxGridDBTableView
       Navigator.Buttons.CustomButtons = <>
       DataController.DataSource = CCPartnerDS
@@ -1349,6 +1324,14 @@
       OptionsView.HeaderHeight = 40
       OptionsView.Indicator = True
       Styles.StyleSheet = dmMain.cxGridTableViewStyleSheet
+      object ccpisConnected: TcxGridDBColumn
+        Caption = #1055#1086#1076#1082#1083'.'
+        DataBinding.FieldName = 'isConnected'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Options.Editing = False
+        Width = 55
+      end
       object ccpCode: TcxGridDBColumn
         Caption = #1050#1086#1076' '#1089#1074#1103#1079#1080
         DataBinding.FieldName = 'Code'
@@ -1400,19 +1383,14 @@
     Width = 5
     Height = 257
     Control = cxGridContractCondition
-    ExplicitLeft = 794
-    ExplicitTop = 358
-    ExplicitHeight = 262
   end
   object cxSplitter3: TcxSplitter
     Left = 0
-    Top = 358
+    Top = 353
     Width = 1216
     Height = 5
     AlignSplitter = salTop
     Control = cxGrid
-    ExplicitLeft = -147
-    ExplicitWidth = 1363
   end
   object DataSource: TDataSource
     DataSet = ClientDataSet
@@ -2227,6 +2205,7 @@
       Caption = #1059#1076#1072#1083#1080#1090#1100' '#1082#1086#1085#1090#1088#1072#1075#1077#1085#1090#1072' ('#1091#1089#1083'. '#1076#1086#1075'.)'
       Hint = #1059#1076#1072#1083#1080#1090#1100' '#1076#1072#1085#1085#1099#1077' '#1082#1086#1085#1090#1088#1072#1075#1077#1085#1090#1072' ('#1091#1089#1083#1086#1074#1080#1103' '#1076#1086#1075#1086#1074#1086#1088#1072')'
       ImageIndex = 2
+      ShortCut = 46
       ErasedFieldName = 'isErased'
       DataSource = CCPartnerDS
     end
@@ -2268,6 +2247,7 @@
       Caption = #1059#1076#1072#1083#1080#1090#1100' '#1090#1086#1074#1072#1088
       Hint = #1059#1076#1072#1083#1080#1090#1100' '#1076#1072#1085#1085#1099#1077' '#1087#1086' '#1090#1086#1074#1072#1088#1091
       ImageIndex = 2
+      ShortCut = 46
       ErasedFieldName = 'isErased'
       DataSource = DataSourceGoods
     end
@@ -2282,6 +2262,7 @@
       Caption = #1059#1076#1072#1083#1080#1090#1100' '#1082#1086#1085#1090#1088#1072#1075#1077#1085#1090#1072
       Hint = #1059#1076#1072#1083#1080#1090#1100' '#1076#1072#1085#1085#1099#1077' '#1082#1086#1085#1090#1088#1072#1075#1077#1085#1090#1072
       ImageIndex = 2
+      ShortCut = 46
       ErasedFieldName = 'isErased'
       DataSource = DataSourcePartner
     end
@@ -2296,6 +2277,7 @@
       Caption = #1059#1076#1072#1083#1080#1090#1100
       Hint = #1059#1076#1072#1083#1080#1090#1100' '#1076#1072#1085#1085#1099#1077
       ImageIndex = 2
+      ShortCut = 46
       ErasedFieldName = 'isErased'
       DataSource = DataSource
     end
@@ -2383,9 +2365,10 @@
         item
           StoredProc = spErasedUnErasedCCPartner
         end>
-      Caption = #1042#1086#1089#1089#1090#1072#1085#1086#1074#1080#1090#1100' '#1050#1086#1085#1090#1088#1072#1075#1077#1085#1090#1072' ('#1091#1089#1083#1086#1074#1080#1103' '#1076#1086#1075#1086#1074#1086#1088#1072')'
-      Hint = #1042#1086#1089#1089#1090#1072#1085#1086#1074#1080#1090#1100' '#1076#1072#1085#1085#1099#1077' ('#1091#1089#1083#1086#1074#1080#1103' '#1076#1086#1075#1086#1074#1086#1088#1072')'
+      Caption = #1042#1086#1089#1089#1090#1072#1085#1086#1074#1080#1090#1100
+      Hint = #1042#1086#1089#1089#1090#1072#1085#1086#1074#1080#1090#1100' '#1076#1072#1085#1085#1099#1077
       ImageIndex = 8
+      ShortCut = 46
       ErasedFieldName = 'isErased'
       isSetErased = False
       DataSource = CCPartnerDS
@@ -2895,6 +2878,13 @@
           Value = Null
           Component = ClientDataSet
           ComponentItem = 'JuridicalName'
+          MultiSelectSeparator = ','
+        end
+        item
+          Value = True
+          Component = CCPartnerCDS
+          ComponentItem = 'isConnected'
+          DataType = ftBoolean
           MultiSelectSeparator = ','
         end>
       isShowModal = False
@@ -3858,8 +3848,8 @@
         MultiSelectSeparator = ','
       end>
     PackSize = 1
-    Left = 472
-    Top = 259
+    Left = 512
+    Top = 251
   end
   object spUpdateVat: TdsdStoredProc
     StoredProcName = 'gpUpdateObject_Contract_isVat'
@@ -4006,8 +3996,8 @@
     SummaryItemList = <>
     ShowFieldImageList = <>
     PropertiesCellList = <>
-    Left = 608
-    Top = 424
+    Left = 576
+    Top = 432
   end
   object spInsertUpdateCCPartner: TdsdStoredProc
     StoredProcName = 'gpInsertUpdate_Object_ContractConditionPartner'

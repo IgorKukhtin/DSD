@@ -48,7 +48,8 @@ RETURNS TABLE (
   AmountMonth TFloat,
   DateDelay TDateTime,
   LoyaltyChangeSumma TFloat,
-  SummCard TFloat
+  SummCard TFloat,
+  isBanAdd boolean
  )
 AS
 $BODY$
@@ -182,6 +183,7 @@ BEGIN
                    CASE WHEN COALESCE(MovementFloat_TotalSummChangePercent.ValueData, 0) < MI_PromoCode.Amount THEN
                       COALESCE(MovementFloat_TotalSummChangePercent.ValueData, 0) ELSE MI_PromoCode.Amount END ELSE NULL END::TFloat AS LoyaltyChangeSumma
             , MovementFloat_TotalSummCard.ValueData                        AS SummCard
+            , CASE WHEN COALESCE (MovementLinkObject_CheckSourceKind.ObjectId, 0) = zc_Enum_CheckSourceKind_Tabletki() THEN TRUE ELSE FALSE END AS isBanAdd
        FROM tmpMov
             LEFT JOIN tmpErr ON tmpErr.MovementId = tmpMov.Id
             LEFT JOIN Movement ON Movement.Id = tmpMov.Id

@@ -1407,11 +1407,20 @@ CREATE OR REPLACE FUNCTION zc_MIFloat_AmountAdd() RETURNS Integer AS $BODY$BEGIN
 INSERT INTO MovementItemFloatDesc(Code, ItemName)
   SELECT 'zc_MIFloat_AmountAdd', 'Дополнить до количества' WHERE NOT EXISTS (SELECT * FROM MovementItemFloatDesc WHERE Code = 'zc_MIFloat_AmountAdd');
   
+CREATE OR REPLACE FUNCTION zc_MIFloat_RealWeightShp() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM MovementItemFloatDesc WHERE Code = 'zc_MIFloat_RealWeightShp'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
+INSERT INTO MovementItemFloatDesc(Code, ItemName)
+  SELECT 'zc_MIFloat_RealWeightShp', 'Фактический вес после шприцевания' WHERE NOT EXISTS (SELECT * FROM MovementItemFloatDesc WHERE Code = 'zc_MIFloat_RealWeightShp');
 
+CREATE OR REPLACE FUNCTION zc_MIFloat_RealWeightMsg() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM MovementItemFloatDesc WHERE Code = 'zc_MIFloat_RealWeightMsg'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
+INSERT INTO MovementItemFloatDesc(Code, ItemName)
+  SELECT 'zc_MIFloat_RealWeightMsg', 'Фактический вес после массажера' WHERE NOT EXISTS (SELECT * FROM MovementItemFloatDesc WHERE Code = 'zc_MIFloat_RealWeightMsg');
+  
 
 /*-------------------------------------------------------------------------------
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.   Воробкало А.А.  Ярошенко Р.Ф.   Шаблий О.В.
+ 24.11.20         * zc_MIFloat_RealWeightShp
+                    zc_MIFloat_RealWeightMsg
  18.11.20                                                                                                     * zc_MIFloat_AmountAdd
  14.11.20                                                                                                     * zc_MIFloat_IntentionalPeresort
  03.11.20                                                                                                     * zc_MIFloat_CorrPartialPay

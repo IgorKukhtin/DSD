@@ -39,6 +39,9 @@ BEGIN
             , CAST (NULL AS TFloat)                 AS CuterCount
             , CAST (NULL AS TFloat)                 AS CuterWeight
 
+            , CAST (NULL AS TFloat)                 AS RealWeightShp
+            , CAST (NULL AS TFloat)                 AS RealWeightMsg
+
             , CAST (NULL AS Integer)                AS GoodsKindId
             , CAST (NULL AS Integer)                AS GoodsKindCode
             , CAST (NULL AS TVarchar)               AS GoodsKindName
@@ -110,6 +113,9 @@ BEGIN
             , MIFloat_RealWeight.ValueData      AS RealWeight
             , MIFloat_CuterCount.ValueData      AS CuterCount
             , MIFloat_CuterWeight.ValueData     AS CuterWeight
+            
+            , MIFloat_RealWeightShp.ValueData ::TFloat  AS RealWeightShp
+            , MIFloat_RealWeightMsg.ValueData ::TFloat  AS RealWeightMsg
 
             , Object_GoodsKind.Id                 AS GoodsKindId
             , Object_GoodsKind.ObjectCode         AS GoodsKindCode
@@ -173,6 +179,13 @@ BEGIN
                                          ON MIFloat_CuterWeight.MovementItemId = MovementItem.Id
                                         AND MIFloat_CuterWeight.DescId = zc_MIFloat_CuterWeight()
 
+             LEFT JOIN MovementItemFloat AS MIFloat_RealWeightShp
+                                         ON MIFloat_RealWeightShp.MovementItemId = MovementItem.Id
+                                        AND MIFloat_RealWeightShp.DescId = zc_MIFloat_RealWeightShp()
+             LEFT JOIN MovementItemFloat AS MIFloat_RealWeightMsg
+                                         ON MIFloat_RealWeightMsg.MovementItemId = MovementItem.Id
+                                        AND MIFloat_RealWeightMsg.DescId = zc_MIFloat_RealWeightMsg()
+
              LEFT JOIN MovementItemBoolean AS MIBoolean_PartionClose
                                            ON MIBoolean_PartionClose.MovementItemId = MovementItem.Id
                                           AND MIBoolean_PartionClose.DescId = zc_MIBoolean_PartionClose()
@@ -186,7 +199,7 @@ BEGIN
                                          AND MIString_Comment.DescId = zc_MIString_Comment()
 
              LEFT JOIN MovementItemDate AS MIDate_PartionGoods
-                                        ON MIDate_PartionGoods.MovementItemId =  MovementItem.Id
+                                        ON MIDate_PartionGoods.MovementItemId = MovementItem.Id
                                        AND MIDate_PartionGoods.DescId = zc_MIDate_PartionGoods()
              LEFT JOIN MovementItemString AS MIString_PartionGoods
                                           ON MIString_PartionGoods.MovementItemId = MovementItem.Id
@@ -229,6 +242,9 @@ BEGIN
             , MIFloat_RealWeight.ValueData      AS RealWeight
             , MIFloat_CuterCount.ValueData      AS CuterCount
             , MIFloat_CuterWeight.ValueData     AS CuterWeight
+
+            , MIFloat_RealWeightShp.ValueData ::TFloat  AS RealWeightShp
+            , MIFloat_RealWeightMsg.ValueData ::TFloat  AS RealWeightMsg
 
             , Object_GoodsKind.Id               AS GoodsKindId
             , Object_GoodsKind.ObjectCode       AS GoodsKindCode
@@ -292,6 +308,13 @@ BEGIN
              LEFT JOIN MovementItemFloat AS MIFloat_CuterWeight
                                          ON MIFloat_CuterWeight.MovementItemId = MovementItem.Id
                                         AND MIFloat_CuterWeight.DescId = zc_MIFloat_CuterWeight()
+
+             LEFT JOIN MovementItemFloat AS MIFloat_RealWeightShp
+                                         ON MIFloat_RealWeightShp.MovementItemId = MovementItem.Id
+                                        AND MIFloat_RealWeightShp.DescId = zc_MIFloat_RealWeightShp()
+             LEFT JOIN MovementItemFloat AS MIFloat_RealWeightMsg
+                                         ON MIFloat_RealWeightMsg.MovementItemId = MovementItem.Id
+                                        AND MIFloat_RealWeightMsg.DescId = zc_MIFloat_RealWeightMsg()
 
              LEFT JOIN MovementItemBoolean AS MIBoolean_PartionClose
                                            ON MIBoolean_PartionClose.MovementItemId = MovementItem.Id

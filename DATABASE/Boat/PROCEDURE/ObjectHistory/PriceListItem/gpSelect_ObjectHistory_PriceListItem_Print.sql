@@ -16,28 +16,13 @@ RETURNS TABLE (Id Integer , ObjectId Integer
 AS
 $BODY$
    DECLARE vbUserId Integer;
-   DECLARE vbPriceWithVAT_pl Boolean;
-   DECLARE vbVATPercent_pl TFloat;
+   DECLARE vbPriceWithVAT Boolean;
 BEGIN
      -- проверка прав пользователя на вызов процедуры
      vbUserId:= lpGetUserBySession (inSession);
 
-
      -- Определили
-     vbPriceWithVAT_pl:= (SELECT ObjectBoolean.ValueData FROM ObjectBoolean WHERE ObjectBoolean.ObjectId = inPriceListId AND ObjectBoolean.DescId = zc_ObjectBoolean_PriceList_PriceWithVAT());
-     -- Определили
-     vbVATPercent_pl:= (SELECT ObjectFloat.ValueData FROM ObjectFloat WHERE ObjectFloat.ObjectId = inPriceListId AND ObjectFloat.DescId = zc_ObjectFloat_PriceList_VATPercent());
-
-/*
-     -- Ограничение - если роль Бухгалтер ПАВИЛЬОНЫ
-     IF EXISTS (SELECT 1 FROM ObjectLink_UserRole_View WHERE RoleId = 80548 AND UserId = vbUserId)
-        AND COALESCE (inPriceListId, 0) NOT IN (140208 -- Пав-ны приход
-                                              , 140209 -- Пав-ны продажа
-                                               )
-     THEN
-         RAISE EXCEPTION 'Ошибка. Нет прав на Просмотр прайса <%>', lfGet_Object_ValueData (inPriceListId);
-     END IF;
-*/
+     vbPriceWithVAT:= (SELECT ObjectBoolean.ValueData FROM ObjectBoolean WHERE ObjectBoolean.ObjectId = inPriceListId AND ObjectBoolean.DescId = zc_ObjectBoolean_PriceList_PriceWithVAT());
 
      -- Выбираем данные
      RETURN QUERY
@@ -52,9 +37,18 @@ BEGIN
            , ObjectString_Goods_GoodsGroupFull.ValueData  AS GoodsGroupNameFull
            , Object_Measure.ValueData                     AS MeasureName
 
-           , CASE WHEN vbPriceWithVAT_pl = TRUE THEN COALESCE (ObjectHistoryFloat_PriceListItem_Value.ValueData, 0) / (1 + vbVATPercent_pl / 100) ELSE COALESCE (ObjectHistoryFloat_PriceListItem_Value.ValueData, 0) END :: TFloat  AS ValuePrice
-           , CASE WHEN vbPriceWithVAT_pl = FALSE THEN COALESCE (ObjectHistoryFloat_PriceListItem_Value.ValueData, 0) * (1 + vbVATPercent_pl / 100) ELSE COALESCE (ObjectHistoryFloat_PriceListItem_Value.ValueData, 0) END :: TFloat AS ValuePriceWithVAT
+             -- расчет цены без НДС, до 2 знаков
+           , CASE WHEN vbPriceWithVAT = FALSE
+                  THEN COALESCE (ObjectHistoryFloat_PriceListItem_Value.ValueData, 0)
+                  ELSE CAST (COALESCE (ObjectHistoryFloat_PriceListItem_Value.ValueData, 0) * ( 1 - COALESCE (ObjectFloat_TaxKind_Value.ValueData,0) / 100)  AS NUMERIC (16, 2))
+             END ::TFloat  AS ValuePrice
 
+             -- расчет цены с НДС, до 2 знаков
+           , CASE WHEN vbPriceWithVAT = FALSE
+                  THEN CAST (COALESCE (ObjectHistoryFloat_PriceListItem_Value.ValueData, 0) * ( 1 + COALESCE (ObjectFloat_TaxKind_Value.ValueData,0) / 100)  AS NUMERIC (16, 2))
+                  ELSE COALESCE (ObjectHistoryFloat_PriceListItem_Value.ValueData, 0)
+             END ::TFloat  AS ValuePriceWithVAT
+             
        FROM ObjectLink AS ObjectLink_PriceListItem_PriceList
 
 
@@ -80,6 +74,15 @@ BEGIN
                                  ON ObjectLink_Goods_Measure.ObjectId = Object_Goods.Id
                                 AND ObjectLink_Goods_Measure.DescId = zc_ObjectLink_Goods_Measure()
             LEFT JOIN Object AS Object_Measure ON Object_Measure.Id = ObjectLink_Goods_Measure.ChildObjectId
+
+            LEFT JOIN ObjectLink AS ObjectLink_Goods_TaxKind
+                                 ON ObjectLink_Goods_TaxKind.ObjectId = Object_Goods.Id
+                                AND ObjectLink_Goods_TaxKind.DescId = zc_ObjectLink_Goods_TaxKind()
+            --LEFT JOIN Object AS Object_TaxKind ON Object_TaxKind.Id = ObjectLink_Goods_TaxKind.ChildObjectId
+
+            LEFT JOIN ObjectFloat AS ObjectFloat_TaxKind_Value
+                                  ON ObjectFloat_TaxKind_Value.ObjectId = ObjectLink_Goods_TaxKind.ChildObjectId
+                                 AND ObjectFloat_TaxKind_Value.DescId = zc_ObjectFloat_TaxKind_Value()
 
        WHERE ObjectLink_PriceListItem_PriceList.DescId = zc_ObjectLink_PriceListItem_PriceList()
          AND ObjectLink_PriceListItem_PriceList.ChildObjectId = inPriceListId

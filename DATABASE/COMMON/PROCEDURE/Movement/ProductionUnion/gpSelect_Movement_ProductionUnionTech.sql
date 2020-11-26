@@ -297,6 +297,9 @@ BEGIN
             , MIFloat_Count.ValueData           AS Count
             , MIFloat_RealWeight.ValueData      AS RealWeight
             , MIFloat_CuterWeight.ValueData     AS CuterWeight 
+            
+            , MIFloat_RealWeightShp.ValueData ::TFloat  AS RealWeightShp
+            , MIFloat_RealWeightMsg.ValueData ::TFloat  AS RealWeightMsg
 
             , _tmpListMaster.Amount_order
             , _tmpListMaster.CuterCount_order
@@ -364,6 +367,15 @@ BEGIN
              LEFT JOIN MovementItemFloat AS MIFloat_CuterWeight
                                          ON MIFloat_CuterWeight.MovementItemId = _tmpListMaster.MovementItemId
                                         AND MIFloat_CuterWeight.DescId = zc_MIFloat_CuterWeight()
+                                        AND _tmpListMaster.MovementId <> 0
+
+             LEFT JOIN MovementItemFloat AS MIFloat_RealWeightShp
+                                         ON MIFloat_RealWeightShp.MovementItemId = _tmpListMaster.MovementItemId
+                                        AND MIFloat_RealWeightShp.DescId = zc_MIFloat_RealWeightShp()
+                                        AND _tmpListMaster.MovementId <> 0
+             LEFT JOIN MovementItemFloat AS MIFloat_RealWeightMsg
+                                         ON MIFloat_RealWeightMsg.MovementItemId = _tmpListMaster.MovementItemId
+                                        AND MIFloat_RealWeightMsg.DescId = zc_MIFloat_RealWeightMsg()
                                         AND _tmpListMaster.MovementId <> 0
 
              LEFT JOIN MovementItemBoolean AS MIBoolean_PartionClose

@@ -8,6 +8,8 @@ CREATE OR REPLACE FUNCTION gpSelect_Object_ContractConditionPartner(
 RETURNS TABLE (Id Integer, Code Integer
              , ContractConditionId Integer, ContractConditionCode Integer, ContractConditionName TVarChar
              , PartnerId Integer, PartnerCode Integer, PartnerName TVarChar
+             , Address TVarChar
+             , isConnected Boolean
              , isErased Boolean
         
              ) AS
@@ -31,6 +33,8 @@ BEGIN
            , Object_Partner.Id                           AS PartnerId
            , Object_Partner.ObjectCode                   AS PartnerCode
            , Object_Partner.ValueData                    AS PartnerName
+           , ObjectString_Address.ValueData              AS Address
+           , NOT Object_ContractConditionPartner.isErased AS isConnected
            , Object_ContractConditionPartner.isErased    AS isErased
            
        FROM Object AS Object_ContractConditionPartner
@@ -44,6 +48,10 @@ BEGIN
                                  ON ObjectLink_ContractConditionPartner_Partner.ObjectId = Object_ContractConditionPartner.Id
                                 AND ObjectLink_ContractConditionPartner_Partner.DescId = zc_ObjectLink_ContractConditionPartner_Partner()
             LEFT JOIN Object AS Object_Partner ON Object_Partner.Id = ObjectLink_ContractConditionPartner_Partner.ChildObjectId
+
+            LEFT JOIN ObjectString AS ObjectString_Address
+                                   ON ObjectString_Address.ObjectId = Object_Partner.Id
+                                  AND ObjectString_Address.DescId = zc_ObjectString_Partner_Address()
 
      WHERE Object_ContractConditionPartner.DescId = zc_Object_ContractConditionPartner()
     ;
