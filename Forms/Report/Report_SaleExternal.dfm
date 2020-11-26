@@ -57,7 +57,7 @@ inherited Report_SaleExternalForm: TReport_SaleExternalForm
               Column = AmountKg
             end
             item
-              Format = ',0.####'
+              Format = ',0.#'
               Kind = skSum
               Column = PartKg
             end
@@ -104,7 +104,7 @@ inherited Report_SaleExternalForm: TReport_SaleExternalForm
               Column = AmountKg
             end
             item
-              Format = ',0.####'
+              Format = ',0.#'
               Kind = skSum
               Column = PartKg
             end

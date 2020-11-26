@@ -173,7 +173,7 @@ BEGIN
        FROM tmpMovementAll AS Movement
             LEFT JOIN Object AS Object_Status ON Object_Status.Id = Movement.StatusId
 
-            LEFT JOIN tmpMI ON tmpMI.MovementId = Movement.Id
+            INNER JOIN tmpMI ON tmpMI.MovementId = Movement.Id
     ;
 
 END;
