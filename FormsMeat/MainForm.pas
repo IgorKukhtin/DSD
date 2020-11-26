@@ -1193,6 +1193,9 @@ type
     miAssetType: TMenuItem;
     actReestrLog: TdsdOpenForm;
     N220: TMenuItem;
+    actReport_SaleExternal: TdsdOpenForm;
+    N221: TMenuItem;
+    N222: TMenuItem;
     procedure actReport_OLAPSoldExecute(Sender: TObject);
     procedure FormShow(Sender: TObject);
     procedure FormClose(Sender: TObject; var Action: TCloseAction);
