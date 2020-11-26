@@ -13,7 +13,7 @@ uses
   dxSkinscxPCPainter, cxCustomData, cxFilter, cxData, cxDataStorage, Data.DB,
   cxDBData, cxCurrencyEdit, cxGridLevel, cxGridCustomTableView, cxGridTableView,
   cxGridBandedTableView, cxGridDBBandedTableView, cxGridCustomView,
-  cxGridDBTableView, cxGrid, dsdDB, Datasnap.DBClient;
+  cxGridDBTableView, cxGrid, dsdDB, Datasnap.DBClient, cxCheckBox;
 
 type
   TCalculation_SAUAForm = class(TForm)
@@ -72,8 +72,13 @@ type
     actGridToExcel: TdsdGridToExcel;
     ceDaysStock: TcxCurrencyEdit;
     cxLabel6: TcxLabel;
-    cePercentPharmacies: TcxCurrencyEdit;
+    ceCountPharmacies: TcxCurrencyEdit;
     cxLabel7: TcxLabel;
+    cbGoodsClose: TcxCheckBox;
+    cbMCSIsClose: TcxCheckBox;
+    cbNotCheckNoMCS: TcxCheckBox;
+    ceResolutionParameter: TcxCurrencyEdit;
+    cxLabel8: TcxLabel;
     procedure ParentFormCreate(Sender: TObject);
     procedure ParentFormClose(Sender: TObject; var Action: TCloseAction);
     procedure actCalculationExecute(Sender: TObject);
@@ -119,9 +124,16 @@ begin
      Exit;
    end;
 
-   if j <= 2 then
+   if ceCountPharmacies.Value <= 1 then
    begin
-     ShowMessage('Аптек ассортимента должно быть более 2.');
+     ShowMessage('Не указано "Минимальное количество аптек ассортимента из выбранных"');
+     ceCountPharmacies.SetFocus;
+     Exit;
+   end;
+
+   if j < ceCountPharmacies.Value then
+   begin
+     ShowMessage('Аптек ассортимента должно быть более или равно ' + ceCountPharmacies.Text);
      Exit;
    end;
 

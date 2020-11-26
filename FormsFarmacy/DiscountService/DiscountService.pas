@@ -644,7 +644,7 @@ begin
               RESTRequest.AddParameter('request_format', 'xml', TRESTRequestParameterKind.pkGETorPOST);
               RESTRequest.AddParameter('response_format', 'xml', TRESTRequestParameterKind.pkGETorPOST);
               case gCode of
-                 1 : RESTRequest.AddParameter('project_id', '1', TRESTRequestParameterKind.pkGETorPOST);
+                 2 : RESTRequest.AddParameter('project_id', '1', TRESTRequestParameterKind.pkGETorPOST);
                 15 : RESTRequest.AddParameter('project_id', '2', TRESTRequestParameterKind.pkGETorPOST);
               end;
               RESTRequest.AddParameter('data', '<?xml version="1.0"?>'+
@@ -1542,7 +1542,7 @@ begin
               RESTRequest.AddParameter('request_format', 'xml', TRESTRequestParameterKind.pkGETorPOST);
               RESTRequest.AddParameter('response_format', 'xml', TRESTRequestParameterKind.pkGETorPOST);
               case gCode of
-                 1 : RESTRequest.AddParameter('project_id', '1', TRESTRequestParameterKind.pkGETorPOST);
+                 2 : RESTRequest.AddParameter('project_id', '1', TRESTRequestParameterKind.pkGETorPOST);
                 15 : RESTRequest.AddParameter('project_id', '2', TRESTRequestParameterKind.pkGETorPOST);
               end;
               RESTRequest.AddParameter('data', '<?xml version="1.0"?>'+
@@ -1575,11 +1575,13 @@ begin
                 XML := NewXMLDocument;
                 XML.XML.Text := RESTResponse.Content;
                 XML.Active := True;
+                XMLNode := XML.DocumentElement.ChildNodes[0];
 
-                OperationResult := XML.DocumentElement.ChildNodes[0].ChildNodes[0].Text;
-                if AnsiLowerCase(OperationResult) = 'ok' then
+
+                OperationResult := XMLNode.ChildNodes.FindNode('OperationResult').Text;
+                if (AnsiLowerCase(OperationResult) = 'ok') and Assigned (XMLNode.ChildNodes.FindNode('PatientPrice')) then
                 begin
-                  if TryStrToCurr(StringReplace(XML.DocumentElement.ChildNodes[0].ChildNodes[2].Text, '.', FormatSettings.DecimalSeparator, [rfReplaceAll]), lPrice) then
+                  if TryStrToCurr(StringReplace(XMLNode.ChildNodes.FindNode('PatientPrice').Text, '.', FormatSettings.DecimalSeparator, [rfReplaceAll]), lPrice) then
                   begin
                      //Предполагаемое кол-во товара
                      lQuantity          := CheckCDS.FieldByName('Amount').asFloat;
@@ -1595,7 +1597,7 @@ begin
                   end else
                   begin
                     ShowMessage ('Ошибка получения цены.' + #10+ #13
-                      + #10+ #13 + 'Цена <' + XML.DocumentElement.ChildNodes[0].ChildNodes[2].Text + '>.'
+                      + #10+ #13 + 'Цена <' + XMLNode.ChildNodes.FindNode('PatientPrice').Text + '>.'
                       + #10+ #13 + 'Для карты № <' + lCardNumber + '>.'
                       + #10+ #13 + 'Товар (' + CheckCDS.FieldByName('GoodsCode').AsString + ')' + CheckCDS.FieldByName('GoodsName').AsString);
                       //ошибка
