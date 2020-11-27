@@ -388,6 +388,7 @@ type
     cxEditRepository1CurrencyItem2: TcxEditRepositoryCurrencyItem;
     Repository: TcxGridDBColumn;
     Repository2: TcxGridDBColumn;
+    CountForPrice: TcxGridDBColumn;
   private
     { Private declarations }
   public

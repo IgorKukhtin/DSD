@@ -103,15 +103,16 @@ BEGIN
                           , MIFloat_PriceIn1.ValueData             AS PriceIn1               --Себ-ть - 1 прод, грн/кг
                           , MIFloat_PriceIn2.ValueData             AS PriceIn2               --Себ-ть - 2 прод, грн/кг
                           --, (MIFloat_Price.ValueData)                AS Price                  --Цена в прайсе
-                          , ROUND (MIFloat_Price.ValueData * ((100+vbVAT)/100), 2) :: TFloat  AS Price                  --Цена в прайсе c НДС
+                            -- Цена в прайсе c НДС
+                          , ROUND (MIFloat_Price.ValueData * ((100+vbVAT)/100)  / CASE WHEN MIFloat_CountForPrice.ValueData > 1 THEN MIFloat_CountForPrice.ValueData ELSE 1 END, 2) :: TFloat AS Price
                           
-                          , MIFloat_PriceWithVAT.ValueData         AS PriceWithVAT           --Цена отгрузки с учетом НДС, с учетом скидки, грн
+                          , (MIFloat_PriceWithVAT.ValueData / CASE WHEN MIFloat_CountForPrice.ValueData > 1 THEN MIFloat_CountForPrice.ValueData ELSE 1 END) :: TFloat AS PriceWithVAT           --Цена отгрузки с учетом НДС, с учетом скидки, грн
                     
                           , SUM (MIFloat_AmountPlanMax.ValueData) OVER (PARTITION BY MovementItem.ObjectId)  AS AmountSale          --Максимум планируемого объема продаж на акционный период (в кг)
 
                           , SUM (CASE WHEN COALESCE (vbTaxPromo,FALSE) = TRUE
-                                      THEN (MIFloat_AmountPlanMax.ValueData * MIFloat_PriceWithVAT.ValueData)
-                                      ELSE MIFloat_AmountPlanMax.ValueData * ROUND (MIFloat_Price.ValueData * ((100+vbVAT)/100), 2)
+                                      THEN (MIFloat_AmountPlanMax.ValueData * MIFloat_PriceWithVAT.ValueData) / CASE WHEN MIFloat_CountForPrice.ValueData > 1 THEN MIFloat_CountForPrice.ValueData ELSE 1 END
+                                      ELSE MIFloat_AmountPlanMax.ValueData * ROUND (MIFloat_Price.ValueData * ((100+vbVAT)/100) / CASE WHEN MIFloat_CountForPrice.ValueData > 1 THEN MIFloat_CountForPrice.ValueData ELSE 1 END, 2)
                                  END)
                                  OVER (PARTITION BY MovementItem.ObjectId)  AS SummaSale                            --сумма плана продаж
      
@@ -121,7 +122,7 @@ BEGIN
                           , MovementItem.Amount                    AS TaxPromo               -- % cкидки из мастера
                           , tmpMIChild.Amount                      AS PromoCondition         -- % дополнительной скидки
                           
-                          , (MIFloat_PriceWithVAT.ValueData * COALESCE (MIFloat_TaxRetIn.ValueData,0) /100) AS AmountRetIn 
+                          , (MIFloat_PriceWithVAT.ValueData / CASE WHEN MIFloat_CountForPrice.ValueData > 1 THEN MIFloat_CountForPrice.ValueData ELSE 1 END * COALESCE (MIFloat_TaxRetIn.ValueData,0) /100) AS AmountRetIn 
                           
                           , ROW_NUMBER() OVER (/*PARTITION BY MovementItem.Id*/ ORDER BY MovementItem.Id Desc) AS Ord        -- для вывода пустой строки
                            /* выводить товар 1 раз, даже если zc_MI_Master.ObjectId несколько - из за видов упак*/
@@ -140,6 +141,9 @@ BEGIN
                           LEFT JOIN MovementItemFloat AS MIFloat_PriceWithVAT
                                                       ON MIFloat_PriceWithVAT.MovementItemId = MovementItem.Id
                                                      AND MIFloat_PriceWithVAT.DescId = zc_MIFloat_PriceWithVAT()  ---zc_MIFloat_PriceWithOutVAT() ---
+                          LEFT JOIN MovementItemFloat AS MIFloat_CountForPrice
+                                                      ON MIFloat_CountForPrice.MovementItemId = MovementItem.Id
+                                                     AND MIFloat_CountForPrice.DescId         = zc_MIFloat_CountForPrice()
                                                      
                                         
                           LEFT JOIN MovementItemFloat AS MIFloat_ContractCondition

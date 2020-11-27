@@ -7,7 +7,9 @@ DROP FUNCTION IF EXISTS gpInsertUpdate_MovementItem_PromoGoods (Integer, Integer
 DROP FUNCTION IF EXISTS gpInsertUpdate_MovementItem_PromoGoods (Integer, Integer, Integer, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, Integer, Integer, TVarChar, TVarChar);
 --DROP FUNCTION IF EXISTS gpInsertUpdate_MovementItem_PromoGoods (Integer, Integer, Integer, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, Integer, Integer, TVarChar, TVarChar);
 --DROP FUNCTION IF EXISTS gpInsertUpdate_MovementItem_PromoGoods (Integer, Integer, Integer, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, Integer, Integer, TVarChar, TVarChar);
-DROP FUNCTION IF EXISTS gpInsertUpdate_MovementItem_PromoGoods (Integer, Integer, Integer, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, Integer, Integer, TVarChar, TVarChar);
+-- DROP FUNCTION IF EXISTS gpInsertUpdate_MovementItem_PromoGoods (Integer, Integer, Integer, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, Integer, Integer, TVarChar, TVarChar);
+-- DROP FUNCTION IF EXISTS gpInsertUpdate_MovementItem_PromoGoods (Integer, Integer, Integer, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, Integer, Integer, TVarChar, TVarChar);
+DROP FUNCTION IF EXISTS gpInsertUpdate_MovementItem_PromoGoods (Integer, Integer, Integer, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, Integer, Integer, TVarChar, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpInsertUpdate_MovementItem_PromoGoods(
  INOUT ioId                   Integer   , -- Ключ объекта <Элемент документа>
@@ -20,6 +22,7 @@ CREATE OR REPLACE FUNCTION gpInsertUpdate_MovementItem_PromoGoods(
    OUT outPriceWithOutVAT     TFloat    , -- Цена отгрузки без учета НДС, с учетом скидки, грн
    OUT outPriceWithVAT        TFloat    , -- Цена отгрузки с учетом НДС, с учетом скидки, грн
     IN inPriceTender          TFloat    , -- Цена Тендер без учета НДС, с учетом скидки, грн
+    IN ioCountForPrice        TFloat    , -- относится ко всем ценам
     IN inAmountReal           TFloat    , -- Объем продаж в аналогичный период, кг
    OUT outAmountRealWeight    TFloat    , -- Объем продаж в аналогичный период, кг Вес
     IN inAmountPlanMin        TFloat    , -- Минимум планируемого объема продаж на акционный период (в кг)
@@ -43,6 +46,10 @@ $BODY$
 BEGIN
     -- проверка прав пользователя на вызов процедуры
     vbUserId := CASE WHEN inSession = '-12345' THEN inSession :: Integer ELSE lpCheckRight (inSession, zc_Enum_Process_InsertUpdate_MI_Promo()) END;
+
+
+    -- замена
+    IF COALESCE (ioCountForPrice, 0) <= 0 THEN ioCountForPrice:= 1; END IF;
 
 
     -- проверка - если есть подписи, корректировать нельзя
@@ -115,14 +122,29 @@ BEGIN
         WHERE Price.GoodsId = inGoodsId;
         */
     
-        -- Если необходимо - привести цену к цене без НДС
-        IF vbPriceWithWAT = TRUE
+        IF ioCountForPrice > 1
         THEN
-            ioOperPriceList := ROUND (ioOperPriceList / (vbVAT / 100.0 + 1), 2);
+            -- Если необходимо - привести цену к цене без НДС
+            IF vbPriceWithWAT = TRUE
+            THEN
+                ioOperPriceList := ROUND (ioOperPriceList / (vbVAT / 100.0 + 1), 4);
+            END IF;
+
+            -- цену прайса с учетом скидки по дог.
+            ioPrice := ROUND (ioOperPriceList * (1 + vbChangePercent/100.0), 4);
+
+        ELSE
+            -- Если необходимо - привести цену к цене без НДС
+            IF vbPriceWithWAT = TRUE
+            THEN
+                ioOperPriceList := ROUND (ioOperPriceList / (vbVAT / 100.0 + 1), 2);
+            END IF;
+
+            -- цену прайса с учетом скидки по дог.
+            ioPrice := ROUND (ioOperPriceList * (1 + vbChangePercent/100.0), 2);
+
         END IF;
         
-        -- цену прайса с учетом скидки по дог.
-        ioPrice := ROUND (ioOperPriceList * (1+ vbChangePercent/100.0), 2);
     END IF;
 
     -- Так для Тендера
@@ -133,10 +155,21 @@ BEGIN
         -- расчитать <Цена отгрузки с учетом НДС, с учетом скидки, грн>
         outPriceWithVAT := ROUND (outPriceWithOutVAT * (1 + vbVAT / 100.0) ,2);
     ELSE
-        -- расчитать <Цена отгрузки без учета НДС, с учетом скидки, грн>
-        outPriceWithOutVAT := ROUND (ioPrice - COALESCE (ioPrice * inAmount / 100.0), 2);
-        -- расчитать <Цена отгрузки с учетом НДС, с учетом скидки, грн>
-        outPriceWithVAT := ROUND (outPriceWithOutVAT * (1 + vbVAT / 100.0), 2);
+        IF ioCountForPrice > 1
+        THEN
+            -- расчитать <Цена отгрузки без учета НДС, с учетом скидки, грн>
+            outPriceWithOutVAT := ROUND (ioPrice - COALESCE (ioPrice * inAmount / 100.0), 2);
+            -- расчитать <Цена отгрузки с учетом НДС, с учетом скидки, грн>
+            outPriceWithVAT := ROUND (outPriceWithOutVAT * (1 + vbVAT / 100.0), CASE WHEN ioCountForPrice = 10 THEN 1 ELSE 0 END);
+            -- еще раз расчитать <Цена отгрузки без учета НДС, с учетом скидки, грн>
+            outPriceWithOutVAT := ROUND (outPriceWithOutVAT / (1 + vbVAT / 100.0), 4);
+        ELSE
+            -- расчитать <Цена отгрузки без учета НДС, с учетом скидки, грн>
+            outPriceWithOutVAT := ROUND (ioPrice - COALESCE (ioPrice * inAmount / 100.0), 2);
+            -- расчитать <Цена отгрузки с учетом НДС, с учетом скидки, грн>
+            outPriceWithVAT := ROUND (outPriceWithOutVAT * (1 + vbVAT / 100.0), 2);
+        END IF;
+
     END IF;
     
     -- расчитать весовые показатели
@@ -179,6 +212,7 @@ BEGIN
                                                   , inPriceWithOutVAT      := outPriceWithOutVAT
                                                   , inPriceWithVAT         := outPriceWithVAT
                                                   , inPriceTender          := inPriceTender
+                                                  , inCountForPrice        := ioCountForPrice
                                                   , inAmountReal           := inAmountReal
                                                   , inAmountPlanMin        := inAmountPlanMin
                                                   , inAmountPlanMax        := inAmountPlanMax

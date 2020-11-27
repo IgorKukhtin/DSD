@@ -124,7 +124,7 @@ BEGIN
                               ) AS tmp
                         );
      -- проверка
-     IF vbDocumentKindId IN (zc_Enum_DocumentKind_CuterWeight(), zc_Enum_DocumentKind_RealWeight())
+     IF vbDocumentKindId IN (zc_Enum_DocumentKind_CuterWeight(), zc_Enum_DocumentKind_RealWeight(), zc_Enum_DocumentKind_RealDelicShp(), zc_Enum_DocumentKind_RealDelicMsg())
      THEN IF zfConvert_StringToNumber (inPartionGoods) = 0
           THEN
               RAISE EXCEPTION 'Ошибка.Партия прозводства ПФ-ГП не определена. <%>', inPartionGoods;
@@ -152,8 +152,8 @@ BEGIN
                                                                                                THEN inPartionGoodsDate
                                                                                           ELSE NULL
                                                                                      END :: TDateTime
-                                                          , inPartionGoods        := CASE WHEN vbDocumentKindId IN (zc_Enum_DocumentKind_CuterWeight(), zc_Enum_DocumentKind_RealWeight()) AND zfConvert_StringToNumber (inPartionGoods) > 0 THEN '' ELSE inPartionGoods END
-                                                          , inMovementItemId      := CASE WHEN vbDocumentKindId IN (zc_Enum_DocumentKind_CuterWeight(), zc_Enum_DocumentKind_RealWeight()) AND zfConvert_StringToNumber (inPartionGoods) > 0 THEN zfConvert_StringToNumber (inPartionGoods) ELSE 0 END
+                                                          , inPartionGoods        := CASE WHEN vbDocumentKindId IN (zc_Enum_DocumentKind_CuterWeight(), zc_Enum_DocumentKind_RealWeight(), zc_Enum_DocumentKind_RealDelicShp(), zc_Enum_DocumentKind_RealDelicMsg()) AND zfConvert_StringToNumber (inPartionGoods) > 0 THEN '' ELSE inPartionGoods END
+                                                          , inMovementItemId      := CASE WHEN vbDocumentKindId IN (zc_Enum_DocumentKind_CuterWeight(), zc_Enum_DocumentKind_RealWeight(), zc_Enum_DocumentKind_RealDelicShp(), zc_Enum_DocumentKind_RealDelicMsg()) AND zfConvert_StringToNumber (inPartionGoods) > 0 THEN zfConvert_StringToNumber (inPartionGoods) ELSE 0 END
                                                           , inGoodsKindId         := CASE WHEN (SELECT View_InfoMoney.InfoMoneyDestinationId
                                                                                                 FROM ObjectLink AS ObjectLink_Goods_InfoMoney
                                                                                                      LEFT JOIN Object_InfoMoney_View AS View_InfoMoney ON View_InfoMoney.InfoMoneyId = ObjectLink_Goods_InfoMoney.ChildObjectId

@@ -437,6 +437,7 @@ type
     actInsertUpdate_MI_PriceCalc: TdsdExecStoredProc;
     macUpdate_calc: TMultiAction;
     actRefreshCalc: TdsdDataSetRefresh;
+    CountForPrice: TcxGridDBColumn;
   private
     { Private declarations }
   public

@@ -187,6 +187,8 @@ var
 
   zc_Enum_DocumentKind_CuterWeight: Integer; // Взвешивание п/ф факт куттера
   zc_Enum_DocumentKind_RealWeight : Integer; // Взвешивание п/ф факт сырой
+  zc_Enum_DocumentKind_RealDelicShp: Integer; // взвешивание п/ф факт после шприцевания
+  zc_Enum_DocumentKind_RealDelicMsg : Integer; // взвешивание п/ф факт после массажера
 
   zc_Object_Partner    : Integer;
   zc_Object_ArticleLoss: Integer;

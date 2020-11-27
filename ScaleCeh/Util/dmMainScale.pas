@@ -50,7 +50,10 @@ begin
         else ParamsMovement.ParamByName('MovementDescName_master').AsString:='Для <Нового взвешивания> нажмите на клавиатуре клавишу <F2>.';
    end;
    with MainCehForm do
-     if ParamsMovement.ParamByName('DocumentKindId').AsInteger = zc_Enum_DocumentKind_CuterWeight
+     if (ParamsMovement.ParamByName('DocumentKindId').AsInteger = zc_Enum_DocumentKind_CuterWeight)
+     or (ParamsMovement.ParamByName('DocumentKindId').AsInteger = zc_Enum_DocumentKind_RealWeight)
+     or (ParamsMovement.ParamByName('DocumentKindId').AsInteger = zc_Enum_DocumentKind_RealDelicShp)
+     or (ParamsMovement.ParamByName('DocumentKindId').AsInteger = zc_Enum_DocumentKind_RealDelicMsg)
      then cxDBGridDBTableView.Columns[cxDBGridDBTableView.GetColumnByFieldName('PartionGoods').Index].Visible := TRUE;
 end;
 {------------------------------------------------------------------------}

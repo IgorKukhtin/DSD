@@ -42,6 +42,16 @@ BEGIN
       END IF;
 
 
+      IF inPaidKindId <> COALESCE ((SELECT OL_Contract_PaidKind.ChildObjectId FROM ObjectLink AS OL_Contract_PaidKind WHERE OL_Contract_PaidKind.DescId = zc_ObjectLink_Contract_PaidKind() AND OL_Contract_PaidKind.ObjectId = inContractId), 0)
+      THEN
+          RAISE EXCEPTION 'Ошибка.Нет Прав менять форму оплаты. Заявка № <%> от <%> должна быть с ФО = <%>'
+                        , inInvNumber
+                        , lfGet_Object_ValueData_sh (inPartnerId)
+                        , lfGet_Object_ValueData_sh ((SELECT OL_Contract_PaidKind.ChildObjectId FROM ObjectLink AS OL_Contract_PaidKind WHERE OL_Contract_PaidKind.DescId = zc_ObjectLink_Contract_PaidKind() AND OL_Contract_PaidKind.ObjectId = inContractId))
+                         ;
+      END IF;
+
+
       -- определение идентификатора заявки по глобальному уникальному идентификатору
       SELECT MovementString_GUID.MovementId 
            , Movement_OrderExternal.StatusId

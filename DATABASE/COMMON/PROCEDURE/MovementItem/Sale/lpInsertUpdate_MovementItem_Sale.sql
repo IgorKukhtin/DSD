@@ -38,6 +38,7 @@ $BODY$
    DECLARE vbChangePercent TFloat;
    DECLARE vbIsChangePercent_Promo Boolean;
    DECLARE vbTaxPromo TFloat;
+   DECLARE vbCountForPricePromo TFloat;
    DECLARE vbPartnerId Integer;
    DECLARE vbMovementId_Order Integer;
 BEGIN
@@ -48,13 +49,14 @@ BEGIN
      -- Цены с НДС
      vbPriceWithVAT:= (SELECT MB.ValueData FROM MovementBoolean AS MB WHERE MB.MovementId = inMovementId AND MB.DescId = zc_MovementBoolean_PriceWithVAT());
      -- параметры акции
-     SELECT tmp.MovementId, CASE WHEN tmp.TaxPromo <> 0 AND vbPriceWithVAT = TRUE THEN tmp.PriceWithVAT
-                                 WHEN tmp.TaxPromo <> 0 THEN tmp.PriceWithOutVAT
+     SELECT tmp.MovementId, CASE WHEN tmp.TaxPromo <> 0 AND vbPriceWithVAT = TRUE THEN tmp.PriceWithVAT_orig
+                                 WHEN tmp.TaxPromo <> 0 THEN tmp.PriceWithOutVAT_orig
                                  ELSE 0
                             END
+          , tmp.CountForPrice
           , tmp.TaxPromo
           , tmp.isChangePercent
-            INTO outMovementId_Promo, outPricePromo, vbTaxPromo, vbIsChangePercent_Promo
+            INTO outMovementId_Promo, outPricePromo, vbCountForPricePromo, vbTaxPromo, vbIsChangePercent_Promo
      FROM lpGet_Movement_Promo_Data (inOperDate   := CASE WHEN vbMovementId_Order <> 0
                                                            AND TRUE = (SELECT ObjectBoolean_OperDateOrder.ValueData
                                                                        FROM ObjectLink AS ObjectLink_Juridical
@@ -92,11 +94,12 @@ BEGIN
         THEN
               -- меняется значение
              ioPrice:= outPricePromo;
+             ioCountForPrice:= vbCountForPricePromo;
 
         ELSE -- только проверка
              IF ioId <> 0 AND (ioPrice + 0.06) < outPricePromo AND vbTaxPromo <> 0
              THEN
-                 RAISE EXCEPTION 'Ошибка.Для товара = <%> <%> необходимо ввести акционную цену = <%>.', lfGet_Object_ValueData (inGoodsId), lfGet_Object_ValueData (inGoodsKindId), TFloat (outPricePromo);
+                 RAISE EXCEPTION 'Ошибка.Для товара = <%> <%> необходимо ввести акционную цену = <%>.', lfGet_Object_ValueData (inGoodsId), lfGet_Object_ValueData_sh (inGoodsKindId), zfConvert_FloatToString (outPricePromo);
              END IF;
         END IF;
 

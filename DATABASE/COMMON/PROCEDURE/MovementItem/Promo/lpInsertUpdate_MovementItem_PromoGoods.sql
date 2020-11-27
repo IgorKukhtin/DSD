@@ -2,22 +2,24 @@
 
 --DROP FUNCTION IF EXISTS lpInsertUpdate_MovementItem_PromoGoods (Integer, Integer, Integer, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, Integer, Integer, TVarChar, Integer);
 --DROP FUNCTION IF EXISTS lpInsertUpdate_MovementItem_PromoGoods (Integer, Integer, Integer, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, Integer, Integer, TVarChar, Integer);
-DROP FUNCTION IF EXISTS lpInsertUpdate_MovementItem_PromoGoods (Integer, Integer, Integer, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, Integer, Integer, TVarChar, Integer);
+-- DROP FUNCTION IF EXISTS lpInsertUpdate_MovementItem_PromoGoods (Integer, Integer, Integer, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, Integer, Integer, TVarChar, Integer);
+DROP FUNCTION IF EXISTS lpInsertUpdate_MovementItem_PromoGoods (Integer, Integer, Integer, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, Integer, Integer, TVarChar, Integer);
 
 CREATE OR REPLACE FUNCTION lpInsertUpdate_MovementItem_PromoGoods(
  INOUT ioId                    Integer   , -- Ключ объекта <Элемент документа>
     IN inMovementId            Integer   , -- Ключ объекта <Документ>
     IN inGoodsId               Integer   , -- Товары
     IN inAmount                TFloat    , -- % скидки на товар
-    IN inPrice                 TFloat    , --Цена в прайсе учетом скидки 
-    IN inOperPriceList         TFloat    , --Цена в прайсе
-    IN inPriceSale             TFloat    , --Цена на полке
-    IN inPriceWithOutVAT       TFloat    , --Цена отгрузки без учета НДС, с учетом скидки, грн
-    IN inPriceWithVAT          TFloat    , --Цена отгрузки с учетом НДС, с учетом скидки, грн
-    IN inPriceTender           TFloat    , --Цена Тендер без учета НДС, с учетом скидки, грн
-    IN inAmountReal            TFloat    , --Объем продаж в аналогичный период, кг
-    IN inAmountPlanMin         TFloat    , --Минимум планируемого объема продаж на акционный период (в кг)
-    IN inAmountPlanMax         TFloat    , --Максимум планируемого объема продаж на акционный период (в кг)
+    IN inPrice                 TFloat    , -- Цена в прайсе учетом скидки 
+    IN inOperPriceList         TFloat    , -- Цена в прайсе
+    IN inPriceSale             TFloat    , -- Цена на полке
+    IN inPriceWithOutVAT       TFloat    , -- Цена отгрузки без учета НДС, с учетом скидки, грн
+    IN inPriceWithVAT          TFloat    , -- Цена отгрузки с учетом НДС, с учетом скидки, грн
+    IN inPriceTender           TFloat    , -- Цена Тендер без учета НДС, с учетом скидки, грн
+    IN inCountForPrice         TFloat    , -- относится ко всем ценам
+    IN inAmountReal            TFloat    , -- Объем продаж в аналогичный период, кг
+    IN inAmountPlanMin         TFloat    , -- Минимум планируемого объема продаж на акционный период (в кг)
+    IN inAmountPlanMax         TFloat    , -- Максимум планируемого объема продаж на акционный период (в кг)
     IN inTaxRetIn              TFloat    , -- % возврата
     IN inGoodsKindId           Integer   , --ИД обьекта <Вид товара>
     IN inGoodsKindCompleteId   Integer   , --ИД обьекта <Вид товара (примечание)>
@@ -59,6 +61,9 @@ BEGIN
     
     -- сохранили <Цена Тендер без учета НДС, с учетом скидки, грн>
     PERFORM lpInsertUpdate_MovementItemFloat (zc_MIFloat_PriceTender(), ioId, COALESCE(inPriceTender,0));
+    
+    -- сохранили <CountForPrice>
+    PERFORM lpInsertUpdate_MovementItemFloat (zc_MIFloat_CountForPrice(), ioId, inCountForPrice);
         
     -- !!теперь будет расчет!!! сохранили <Объем продаж в аналогичный период, кг>
     -- PERFORM lpInsertUpdate_MovementItemFloat (zc_MIFloat_AmountReal(), ioId, COALESCE(inAmountReal,0));

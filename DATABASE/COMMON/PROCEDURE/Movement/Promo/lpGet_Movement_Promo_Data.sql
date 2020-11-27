@@ -16,6 +16,9 @@ RETURNS TABLE (MovementId          Integer -- Документ
              , TaxPromo            TFloat  
              , PriceWithOutVAT     TFloat  -- Цена отгрузки без учета НДС, с учетом скидки, грн
              , PriceWithVAT        TFloat  -- Цена отгрузки с учетом НДС, с учетом скидки, грн
+             , CountForPrice         TFloat
+             , PriceWithOutVAT_orig  TFloat   -- Цена отгрузки без учета НДС, с учетом скидки, грн
+             , PriceWithVAT_orig     TFloat   -- Цена отгрузки с учетом НДС, с учетом скидки, грн
              , isChangePercent     Boolean -- учитывать % скидки по договору
               )
 AS
@@ -27,6 +30,9 @@ BEGIN
              , tmp.TaxPromo
              , tmp.PriceWithOutVAT
              , tmp.PriceWithVAT
+             , tmp.CountForPrice
+             , tmp.PriceWithOutVAT_orig
+             , tmp.PriceWithVAT_orig
              , tmp.isChangePercent
         FROM lpGet_Movement_Promo_Data_all (inOperDate     := inOperDate
                                           , inPartnerId    := inPartnerId

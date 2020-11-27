@@ -4,7 +4,7 @@
   ClientHeight = 684
   ClientWidth = 1366
   ExplicitWidth = 1382
-  ExplicitHeight = 722
+  ExplicitHeight = 719
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
@@ -217,6 +217,22 @@
             Options.Editing = False
             Width = 119
           end
+          object Color_PriceWithVAT: TcxGridDBColumn
+            DataBinding.FieldName = 'Color_PriceWithVAT'
+            Visible = False
+            Options.Editing = False
+            VisibleForCustomization = False
+            Width = 30
+          end
+          object CountForPrice: TcxGridDBColumn
+            Caption = #1050#1086#1083'. '#1074' '#1094#1077#1085#1077
+            DataBinding.FieldName = 'CountForPrice'
+            Visible = False
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 55
+          end
           object calcSummaProfit: TcxGridDBColumn
             Caption = #1055#1088#1080#1073#1099#1083#1100', '#1075#1088#1085
             DataBinding.FieldName = 'SummaProfit'
@@ -265,13 +281,6 @@
           end
           object Color_Price: TcxGridDBColumn
             DataBinding.FieldName = 'Color_Price'
-            Visible = False
-            Options.Editing = False
-            VisibleForCustomization = False
-            Width = 30
-          end
-          object Color_PriceWithVAT: TcxGridDBColumn
-            DataBinding.FieldName = 'Color_PriceWithVAT'
             Visible = False
             Options.Editing = False
             VisibleForCustomization = False
@@ -752,6 +761,7 @@
     end
     inherited tsMain: TcxTabSheet
       Caption = '&1. '#1058#1086#1074#1072#1088#1099
+      ExplicitTop = 0
       ExplicitWidth = 1366
       ExplicitHeight = 521
       inherited cxGrid: TcxGrid
@@ -1284,6 +1294,9 @@
           ClientRectTop = 24
           object tsPartner: TcxTabSheet
             Caption = '2.1. '#1055#1072#1088#1090#1085#1077#1088#1099
+            ExplicitTop = 0
+            ExplicitWidth = 0
+            ExplicitHeight = 0
             object cxGridPartner: TcxGrid
               Left = 0
               Top = 0
@@ -1440,6 +1453,9 @@
           object tsPromoPartnerList: TcxTabSheet
             Caption = '2.2. '#1050#1086#1085#1090#1088#1072#1075#1077#1085#1090#1099' ('#1076#1077#1090#1072#1083#1100#1085#1086')'
             ImageIndex = 1
+            ExplicitTop = 0
+            ExplicitWidth = 0
+            ExplicitHeight = 0
             object grPartnerList: TcxGrid
               Left = 0
               Top = 0
@@ -1554,6 +1570,9 @@
           ClientRectTop = 24
           object tsConditionPromo: TcxTabSheet
             Caption = '&3. '#1076#1086#1087#1086#1083#1085#1080#1090#1077#1083#1100#1085#1072#1103' '#1089#1082#1080#1076#1082#1072
+            ExplicitTop = 0
+            ExplicitWidth = 0
+            ExplicitHeight = 0
             object cxGridConditionPromo: TcxGrid
               Left = 0
               Top = 0
@@ -1644,6 +1663,9 @@
           ClientRectTop = 24
           object tsAdvertising: TcxTabSheet
             Caption = '&4. '#1056#1077#1082#1083#1072#1084#1085#1072#1103' '#1087#1086#1076#1076#1077#1088#1078#1082#1072
+            ExplicitTop = 0
+            ExplicitWidth = 0
+            ExplicitHeight = 0
             object grAdvertising: TcxGrid
               Left = 0
               Top = 0
@@ -5383,6 +5405,7 @@
     ColumnAddOnList = <>
     ColumnEnterList = <>
     SummaryItemList = <>
+    ShowFieldImageList = <>
     PropertiesCellList = <>
     Left = 118
     Top = 441
@@ -5545,6 +5568,7 @@
     ColumnAddOnList = <>
     ColumnEnterList = <>
     SummaryItemList = <>
+    ShowFieldImageList = <>
     PropertiesCellList = <>
     Left = 254
     Top = 377
@@ -5832,6 +5856,7 @@
     ColumnAddOnList = <>
     ColumnEnterList = <>
     SummaryItemList = <>
+    ShowFieldImageList = <>
     PropertiesCellList = <>
     Left = 446
     Top = 553
@@ -5951,6 +5976,7 @@
       item
       end>
     SummaryItemList = <>
+    ShowFieldImageList = <>
     PropertiesCellList = <
       item
         Column = calcTaxRetIn
@@ -6114,6 +6140,7 @@
     ColumnAddOnList = <>
     ColumnEnterList = <>
     SummaryItemList = <>
+    ShowFieldImageList = <>
     PropertiesCellList = <>
     Left = 16
     Top = 423
@@ -6175,6 +6202,7 @@
     ColumnAddOnList = <>
     ColumnEnterList = <>
     SummaryItemList = <>
+    ShowFieldImageList = <>
     PropertiesCellList = <>
     Left = 352
     Top = 591
@@ -6324,6 +6352,7 @@
       item
       end>
     SummaryItemList = <>
+    ShowFieldImageList = <>
     PropertiesCellList = <
       item
         Column = ссTaxPromo_Condition

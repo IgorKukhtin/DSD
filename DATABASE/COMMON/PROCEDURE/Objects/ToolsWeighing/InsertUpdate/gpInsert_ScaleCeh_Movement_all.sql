@@ -371,7 +371,7 @@ BEGIN
     THEN
         -- сохранили
         vbMovementId_begin:= (SELECT CASE WHEN vbMovementDescId = zc_Movement_ProductionUnion()
-                                           AND vbDocumentKindId IN (zc_Enum_DocumentKind_CuterWeight(), zc_Enum_DocumentKind_RealWeight())
+                                           AND vbDocumentKindId IN (zc_Enum_DocumentKind_CuterWeight(), zc_Enum_DocumentKind_RealWeight(), zc_Enum_DocumentKind_RealDelicShp(), zc_Enum_DocumentKind_RealDelicMsg())
                                                     -- !!!нет Документа!!!
                                                THEN 0
                                           WHEN vbMovementDescId = zc_Movement_Loss()
@@ -460,7 +460,7 @@ BEGIN
          END IF;
 
          -- только НЕ для <Взвешивание п/ф факт куттера>
-         IF vbMovementDescId <> zc_Movement_ProductionUnion() OR vbDocumentKindId NOT IN (zc_Enum_DocumentKind_CuterWeight(), zc_Enum_DocumentKind_RealWeight())
+         IF vbMovementDescId <> zc_Movement_ProductionUnion() OR vbDocumentKindId NOT IN (zc_Enum_DocumentKind_CuterWeight(), zc_Enum_DocumentKind_RealWeight(), zc_Enum_DocumentKind_RealDelicShp(), zc_Enum_DocumentKind_RealDelicMsg())
          THEN
              -- Проверка
              IF COALESCE (vbMovementId_begin, 0) = 0
@@ -720,6 +720,21 @@ BEGIN
                                                         , inCount               := tmp.Count
                                                         , inUserId              := vbUserId
                                                          )
+                       WHEN vbMovementDescId = zc_Movement_ProductionUnion() AND vbDocumentKindId = zc_Enum_DocumentKind_RealDelicShp()
+                                 -- <Приход с производства> - взвешивание п/ф факт после шприцевания
+                            THEN lpUpdate_MI_ProductionUnion_RealDelicShp
+                                                         (inId                  := tmp.MovementItemId_Partion
+                                                        , inAmount              := tmp.Amount
+                                                        , inUserId              := vbUserId
+                                                         )
+                       WHEN vbMovementDescId = zc_Movement_ProductionUnion() AND vbDocumentKindId = zc_Enum_DocumentKind_RealDelicMsg()
+                                 -- <Приход с производства> - взвешивание п/ф факт после шприцевания
+                            THEN lpUpdate_MI_ProductionUnion_RealDelicMsg
+                                                         (inId                  := tmp.MovementItemId_Partion
+                                                        , inAmount              := tmp.Amount
+                                                        , inUserId              := vbUserId
+                                                         )
+
                        WHEN vbMovementDescId = zc_Movement_ProductionUnion()
                                  -- <Приход с производства>
                             THEN lpInsertUpdate_MI_ProductionUnion_Master
@@ -1089,7 +1104,7 @@ BEGIN
                                               , inSession        := inSession);
           ELSE
                -- <Приход с производства>
-               IF vbMovementDescId = zc_Movement_ProductionUnion() AND vbDocumentKindId NOT IN (zc_Enum_DocumentKind_CuterWeight(), zc_Enum_DocumentKind_RealWeight())
+               IF vbMovementDescId = zc_Movement_ProductionUnion() AND vbDocumentKindId NOT IN (zc_Enum_DocumentKind_CuterWeight(), zc_Enum_DocumentKind_RealWeight(), zc_Enum_DocumentKind_RealDelicShp(), zc_Enum_DocumentKind_RealDelicMsg())
                THEN
                    -- создаются временные таблицы - для формирование данных для проводок - <Перемещение по цене>
                    PERFORM lpComplete_Movement_ProductionUnion_CreateTemp();

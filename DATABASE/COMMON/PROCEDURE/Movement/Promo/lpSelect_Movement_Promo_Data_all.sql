@@ -10,14 +10,17 @@ CREATE OR REPLACE FUNCTION lpSelect_Movement_Promo_Data_all(
     IN inUnitId       Integer   , --
     IN inIsReturn     Boolean     --
 )
-RETURNS TABLE (MovementId          Integer -- Документ
-             , GoodsId             Integer
-             , GoodsKindId         Integer
-             , MovementPromo       TVarChar -- 
-             , TaxPromo            TFloat   -- % скидки товар
-             , PriceWithOutVAT     TFloat   -- Цена отгрузки без учета НДС, с учетом скидки, грн
-             , PriceWithVAT        TFloat   -- Цена отгрузки с учетом НДС, с учетом скидки, грн
-             , isChangePercent     Boolean  -- учитывать % скидки по договору
+RETURNS TABLE (MovementId            Integer -- Документ
+             , GoodsId               Integer
+             , GoodsKindId           Integer
+             , MovementPromo         TVarChar -- 
+             , TaxPromo              TFloat   -- % скидки товар
+             , PriceWithOutVAT       TFloat   -- Цена отгрузки без учета НДС, с учетом скидки, грн
+             , PriceWithVAT          TFloat   -- Цена отгрузки с учетом НДС, с учетом скидки, грн
+             , CountForPrice         TFloat
+             , PriceWithOutVAT_orig  TFloat   -- Цена отгрузки без учета НДС, с учетом скидки, грн
+             , PriceWithVAT_orig     TFloat   -- Цена отгрузки с учетом НДС, с учетом скидки, грн
+             , isChangePercent       Boolean  -- учитывать % скидки по договору
               )
 AS
 $BODY$
@@ -110,6 +113,7 @@ BEGIN
                             -- , COALESCE (MILinkObject_GoodsKind.ObjectId, 0)   AS GoodsKindId
                             , COALESCE (MIFloat_PriceWithOutVAT.ValueData, 0) AS PriceWithOutVAT
                             , COALESCE (MIFloat_PriceWithVAT.ValueData, 0)    AS PriceWithVAT
+                            , CASE WHEN MIFloat_CountForPrice.ValueData > 1 THEN MIFloat_CountForPrice.ValueData ELSE 1 END AS CountForPrice
                        FROM tmpPartner
                             INNER JOIN MovementItem ON MovementItem.MovementId = tmpPartner.MovementId
                                                    AND MovementItem.DescId = zc_MI_Master()
@@ -124,6 +128,9 @@ BEGIN
                             LEFT JOIN MovementItemFloat AS MIFloat_PriceWithVAT
                                                         ON MIFloat_PriceWithVAT.MovementItemId = MovementItem.Id
                                                        AND MIFloat_PriceWithVAT.DescId = zc_MIFloat_PriceWithVAT()
+                            LEFT JOIN MovementItemFloat AS MIFloat_CountForPrice
+                                                        ON MIFloat_CountForPrice.MovementItemId = MovementItem.Id
+                                                       AND MIFloat_CountForPrice.DescId = zc_MIFloat_CountForPrice()
                       )
         -- Результат
         SELECT tmpResult.MovementId
@@ -131,8 +138,11 @@ BEGIN
              , tmpResult.GoodsKindId :: Integer AS GoodsKindId
              , tmpResult.MovementPromo
              , tmpResult.TaxPromo
-             , tmpResult.PriceWithOutVAT :: TFloat AS PriceWithOutVAT
-             , tmpResult.PriceWithVAT    :: TFloat AS PriceWithVAT
+             , (tmpResult.PriceWithOutVAT / tmpResult.CountForPrice) :: TFloat AS PriceWithOutVAT
+             , (tmpResult.PriceWithVAT    / tmpResult.CountForPrice) :: TFloat AS PriceWithVAT
+             , tmpResult.CountForPrice   :: TFloat AS CountForPrice
+             , tmpResult.PriceWithVAT    :: TFloat AS PriceWithOutVAT_orig
+             , tmpResult.PriceWithVAT    :: TFloat AS PriceWithVAT_orig
              , CASE WHEN tmpChangePercent.MovementId > 0 THEN FALSE ELSE TRUE END :: Boolean AS isChangePercent
         FROM tmpResult
              LEFT JOIN tmpChangePercent ON tmpChangePercent.MovementId = tmpResult.MovementId

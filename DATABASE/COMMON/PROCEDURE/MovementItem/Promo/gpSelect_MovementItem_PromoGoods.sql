@@ -19,10 +19,11 @@ RETURNS TABLE (
       , Amount              TFloat --% скидки на товар
       , MainDiscount        TFloat -- Общая скидка для покупателя, %
       , Price               TFloat --Цена в прайсе c учетом скидки по договору
-      , OperPriceList       TFloat --Цена в прайсе 
+      , OperPriceList       TFloat --Цена в прайсе
       , PriceSale           TFloat --Цена на полке
-      , PriceWithOutVAT     TFloat --Цена отгрузки без учета НДС, с учетом скидки, грн
-      , PriceWithVAT        TFloat --Цена отгрузки с учетом НДС, с учетом скидки, грн
+      , PriceWithOutVAT     Numeric (16,8) --Цена отгрузки без учета НДС, с учетом скидки, грн
+      , PriceWithVAT        Numeric (16,8) --Цена отгрузки с учетом НДС, с учетом скидки, грн
+      , CountForPrice       TFloat --Цена отгрузки с учетом НДС, с учетом скидки, грн
       , AmountReal          TFloat --Объем продаж в аналогичный период, кг
       , AmountRealWeight    TFloat --Объем продаж в аналогичный период, кг Вес
       , AmountRealPromo     TFloat --Объем Акционных продаж в аналогичный период, кг
@@ -41,7 +42,7 @@ RETURNS TABLE (
       , AmountOutWeight     TFloat --Кол-во реализация (факт) Вес
       , AmountIn            TFloat --Кол-во возврат (факт)
       , AmountInWeight      TFloat --Кол-во возврат (факт) Вес
-      
+
       , TaxRetIn            TFloat -- % возврат
       , AmountPlan1         TFloat -- Кол-во план отгрузки за пн.
       , AmountPlan2         TFloat -- Кол-во план отгрузки за вт.
@@ -50,12 +51,12 @@ RETURNS TABLE (
       , AmountPlan5         TFloat -- Кол-во план отгрузки за пт.
       , AmountPlan6         TFloat -- Кол-во план отгрузки за сб.
       , AmountPlan7         TFloat -- Кол-во план отгрузки за вс.
-      
+
       , PriceTender         TFloat -- Цена Тендер без учета НДС, с учетом скидки, грн
-      
+
       , GoodsKindId            Integer --ИД обьекта <Вид товара>
       , GoodsKindName          TVarChar --Наименование обьекта <Вид товара>
-      , GoodsKindCompleteId    Integer --ИД обьекта <Вид товара (примечание)>           
+      , GoodsKindCompleteId    Integer --ИД обьекта <Вид товара (примечание)>
       , GoodsKindCompleteName  TVarChar --Наименование обьекта <Вид товара(примечание)>
       , GoodsKindName_List     TVarChar --Наименование обьекта <Вид товара (справочно)>
       , Comment                TVarChar --Комментарий
@@ -82,42 +83,42 @@ BEGIN
               AND Movement_PromoPartner.DescId = zc_Movement_PromoPartner();
 
     CREATE TEMP TABLE _tmpGoodsKind_inf (GoodsId Integer, ValueData TVarChar) ON COMMIT DROP;
-    INSERT INTO _tmpGoodsKind_inf (GoodsId, ValueData) 
+    INSERT INTO _tmpGoodsKind_inf (GoodsId, ValueData)
             SELECT ObjectLink_GoodsListSale_Goods.ChildObjectId AS GoodsId
                  , STRING_AGG (DISTINCT ObjectString_GoodsKind.ValueData :: TVarChar, ',') AS ValueData
             FROM _tmpPromoPartner
                  LEFT JOIN ObjectLink AS ObjectLink_GoodsListSale_Partner
                                       ON ObjectLink_GoodsListSale_Partner.ChildObjectId = _tmpPromoPartner.PartnerId
                                      AND ObjectLink_GoodsListSale_Partner.DescId = zc_ObjectLink_GoodsListSale_Partner()
-                                     
+
                  LEFT JOIN ObjectLink AS ObjectLink_GoodsListSale_Goods
                                       ON ObjectLink_GoodsListSale_Goods.ObjectId = ObjectLink_GoodsListSale_Partner.ObjectId
                                      AND ObjectLink_GoodsListSale_Goods.DescId = zc_ObjectLink_GoodsListSale_Goods()
-                 INNER JOIN (SELECT MovementItem.ObjectId 
-                             FROM MovementItem 
-                             WHERE MovementItem.MovementId = inMovementId 
-                               AND MovementItem.DescId = zc_MI_Master() 
+                 INNER JOIN (SELECT MovementItem.ObjectId
+                             FROM MovementItem
+                             WHERE MovementItem.MovementId = inMovementId
+                               AND MovementItem.DescId = zc_MI_Master()
                                AND MovementItem.isErased = FALSE) AS MI_Master ON MI_Master.ObjectId = ObjectLink_GoodsListSale_Goods.ChildObjectId
                  INNER JOIN ObjectString AS ObjectString_GoodsKind
                                          ON ObjectString_GoodsKind.ObjectId = ObjectLink_GoodsListSale_Partner.ObjectId
                                         AND ObjectString_GoodsKind.DescId = zc_ObjectString_GoodsListSale_GoodsKind()
                                         AND ObjectString_GoodsKind.ValueData <> ''
             GROUP BY ObjectLink_GoodsListSale_Goods.ChildObjectId;
-                                       
+
     CREATE TEMP TABLE _tmpWord_Split_from (WordList TVarChar) ON COMMIT DROP;
     CREATE TEMP TABLE _tmpWord_Split_to (Ord Integer, Word TVarChar, WordList TVarChar) ON COMMIT DROP;
 
-    INSERT INTO _tmpWord_Split_from (WordList) 
+    INSERT INTO _tmpWord_Split_from (WordList)
             SELECT DISTINCT _tmpGoodsKind_inf.ValueData AS WordList
             FROM _tmpGoodsKind_inf;
-            
+
     PERFORM zfSelect_Word_Split (inSep:= ',', inUserId:= vbUserId);
 
 
     RETURN QUERY
         WITH
         tmpGoodsKind AS (SELECT _tmpWord_Split_to.WordList, STRING_AGG (DISTINCT Object.ValueData :: TVarChar, ',')  AS GoodsKindName_list
-                         FROM _tmpWord_Split_to  
+                         FROM _tmpWord_Split_to
                               LEFT JOIN Object ON Object.Id = _tmpWord_Split_to.Word :: Integer
                          GROUP BY _tmpWord_Split_to.WordList
                          )
@@ -127,7 +128,7 @@ BEGIN
                                    LEFT JOIN tmpGoodsKind ON tmpGoodsKind.WordList = _tmpGoodsKind_inf.ValueData
                               GROUP BY _tmpGoodsKind_inf.GoodsId
                              )
-      
+
         SELECT MovementItem.Id                        AS Id                  --идентификатор
              , MovementItem.MovementId                AS MovementId          --ИД документа <Акция>
              , MovementItem.ObjectId                  AS GoodsId             --ИД объекта <товар>
@@ -140,10 +141,14 @@ BEGIN
              , MIFloat_Price.ValueData                AS Price               --Цена в прайсе с учетом скидки по договору
              , MIFloat_OperPriceList.ValueData ::TFloat AS OperPriceList     -- Цена в прайсе
              , MIFloat_PriceSale.ValueData            AS PriceSale           --Цена на полке
-             , MIFloat_PriceWithOutVAT.ValueData      AS PriceWithOutVAT     --Цена отгрузки без учета НДС, с учетом скидки, грн
-             , MIFloat_PriceWithVAT.ValueData         AS PriceWithVAT        --Цена отгрузки с учетом НДС, с учетом скидки, грн
-       
-       
+
+               --Цена отгрузки без учета НДС, с учетом скидки, грн
+             , CAST (CASE WHEN MIFloat_CountForPrice.ValueData > 1 THEN MIFloat_PriceWithOutVAT.ValueData / MIFloat_CountForPrice.ValueData ELSE MIFloat_PriceWithOutVAT.ValueData END AS Numeric (16, 8)) AS PriceWithOutVAT
+               --Цена отгрузки с учетом НДС, с учетом скидки, грн
+             , CAST (CASE WHEN MIFloat_CountForPrice.ValueData > 1 THEN MIFloat_PriceWithVAT.ValueData    / MIFloat_CountForPrice.ValueData ELSE MIFloat_PriceWithVAT.ValueData    END AS Numeric (16, 8)) AS PriceWithVAT
+               -- CountForPrice
+             , MIFloat_CountForPrice.ValueData        AS CountForPrice
+
              , MIFloat_AmountReal.ValueData           AS AmountReal          --Объем продаж в аналогичный период, кг
              , (MIFloat_AmountReal.ValueData
                  * CASE WHEN ObjectLink_Goods_Measure.ChildObjectId = zc_Measure_Sh() THEN ObjectFloat_Goods_Weight.ValueData ELSE 1 END) :: TFloat AS AmountRealWeight    --Объем продаж в аналогичный период, кг Вес
@@ -156,11 +161,11 @@ BEGIN
              , ((COALESCE (MIFloat_AmountReal.ValueData,0) - COALESCE (MIFloat_AmountRealPromo.ValueData,0))
                  * CASE WHEN ObjectLink_Goods_Measure.ChildObjectId = zc_Measure_Sh() THEN ObjectFloat_Goods_Weight.ValueData ELSE 1 END) :: TFloat AS AmountRealWeight_diff    --Объем не Акционных продаж в аналогичный период, кг Вес
 
-       
+
              , MIFloat_AmountRetIn.ValueData          AS AmountRetIn          --Объем возврат в аналогичный период, кг
              , (MIFloat_AmountRetIn.ValueData
                  * CASE WHEN ObjectLink_Goods_Measure.ChildObjectId = zc_Measure_Sh() THEN ObjectFloat_Goods_Weight.ValueData ELSE 1 END) :: TFloat AS AmountRetInWeight    --Объем возврат в аналогичный период, кг Вес
-       
+
              , MIFloat_AmountPlanMin.ValueData        AS AmountPlanMin       --Минимум планируемого объема продаж на акционный период (в кг)
              , (MIFloat_AmountPlanMin.ValueData
                  * CASE WHEN ObjectLink_Goods_Measure.ChildObjectId = zc_Measure_Sh() THEN ObjectFloat_Goods_Weight.ValueData ELSE 1 END) :: TFloat AS AmountPlanMinWeight --Минимум планируемого объема продаж на акционный период (в кг) Вес
@@ -188,13 +193,13 @@ BEGIN
              , MIFloat_Plan7.ValueData                AS AmountPlan7
 
              , MIFloat_PriceTender.ValueData          AS PriceTender
-                 
+
              , MILinkObject_GoodsKind.ObjectId        AS GoodsKindId                 --ИД обьекта <Вид товара>
              , Object_GoodsKind.ValueData             AS GoodsKindName               --Наименование обьекта <Вид товара>
              , Object_GoodsKindComplete.Id            AS GoodsKindCompleteId         --ИД Вид товара(Примечание)
              , Object_GoodsKindComplete.ValueData     AS GoodsKindCompleteName       --Наименование обьекта <Вид товара(Примечание)>
              , tmpGoodsKind_list.GoodsKindName_List ::TVarChar                       -- Наименование обьекта <Вид товара (справочно)>
-             
+
              , MIString_Comment.ValueData             AS Comment                     -- Примечание
              , MovementItem.isErased                  AS isErased                    -- Удален
              --, CASE WHEN ObjectLink_Goods_Measure.ChildObjectId = zc_Measure_Sh() THEN ObjectFloat_Goods_Weight.ValueData ELSE 1 END::TFloat as GoodsWeight -- Вес
@@ -214,6 +219,9 @@ BEGIN
              LEFT JOIN MovementItemFloat AS MIFloat_OperPriceList
                                          ON MIFloat_OperPriceList.MovementItemId = MovementItem.Id
                                         AND MIFloat_OperPriceList.DescId = zc_MIFloat_OperPriceList()
+             LEFT JOIN MovementItemFloat AS MIFloat_CountForPrice
+                                         ON MIFloat_CountForPrice.MovementItemId = MovementItem.Id
+                                        AND MIFloat_CountForPrice.DescId         = zc_MIFloat_CountForPrice()
              LEFT JOIN MovementItemFloat AS MIFloat_AmountOrder
                                          ON MIFloat_AmountOrder.MovementItemId = MovementItem.Id
                                         AND MIFloat_AmountOrder.DescId = zc_MIFloat_AmountOrder()
@@ -244,38 +252,38 @@ BEGIN
                                         AND MIFloat_TaxRetIn.DescId = zc_MIFloat_TaxRetIn()
 
              LEFT JOIN MovementItemFloat AS MIFloat_Plan1
-                                         ON MIFloat_Plan1.MovementItemId = MovementItem.Id 
+                                         ON MIFloat_Plan1.MovementItemId = MovementItem.Id
                                         AND MIFloat_Plan1.DescId = zc_MIFloat_Plan1()
              LEFT JOIN MovementItemFloat AS MIFloat_Plan2
-                                         ON MIFloat_Plan2.MovementItemId = MovementItem.Id 
+                                         ON MIFloat_Plan2.MovementItemId = MovementItem.Id
                                         AND MIFloat_Plan2.DescId = zc_MIFloat_Plan2()
              LEFT JOIN MovementItemFloat AS MIFloat_Plan3
-                                         ON MIFloat_Plan3.MovementItemId = MovementItem.Id 
+                                         ON MIFloat_Plan3.MovementItemId = MovementItem.Id
                                         AND MIFloat_Plan3.DescId = zc_MIFloat_Plan3()
              LEFT JOIN MovementItemFloat AS MIFloat_Plan4
-                                         ON MIFloat_Plan4.MovementItemId = MovementItem.Id 
+                                         ON MIFloat_Plan4.MovementItemId = MovementItem.Id
                                         AND MIFloat_Plan4.DescId = zc_MIFloat_Plan4()
              LEFT JOIN MovementItemFloat AS MIFloat_Plan5
-                                         ON MIFloat_Plan5.MovementItemId = MovementItem.Id 
+                                         ON MIFloat_Plan5.MovementItemId = MovementItem.Id
                                         AND MIFloat_Plan5.DescId = zc_MIFloat_Plan5()
              LEFT JOIN MovementItemFloat AS MIFloat_Plan6
-                                         ON MIFloat_Plan6.MovementItemId = MovementItem.Id 
+                                         ON MIFloat_Plan6.MovementItemId = MovementItem.Id
                                         AND MIFloat_Plan6.DescId = zc_MIFloat_Plan6()
              LEFT JOIN MovementItemFloat AS MIFloat_Plan7
-                                         ON MIFloat_Plan7.MovementItemId = MovementItem.Id 
-                                        AND MIFloat_Plan7.DescId = zc_MIFloat_Plan7() 
+                                         ON MIFloat_Plan7.MovementItemId = MovementItem.Id
+                                        AND MIFloat_Plan7.DescId = zc_MIFloat_Plan7()
 
              LEFT JOIN MovementItemFloat AS MIFloat_PriceTender
-                                         ON MIFloat_PriceTender.MovementItemId = MovementItem.Id 
-                                        AND MIFloat_PriceTender.DescId = zc_MIFloat_PriceTender() 
+                                         ON MIFloat_PriceTender.MovementItemId = MovementItem.Id
+                                        AND MIFloat_PriceTender.DescId = zc_MIFloat_PriceTender()
 
              LEFT JOIN MovementItemFloat AS MIFloat_MainDiscount
-                                         ON MIFloat_MainDiscount.MovementItemId = MovementItem.Id 
+                                         ON MIFloat_MainDiscount.MovementItemId = MovementItem.Id
                                         AND MIFloat_MainDiscount.DescId = zc_MIFloat_MainDiscount()
 
              LEFT JOIN Object AS Object_Goods ON Object_Goods.Id = MovementItem.ObjectId
 
-             LEFT JOIN MovementItemLinkObject AS MILinkObject_GoodsKind 
+             LEFT JOIN MovementItemLinkObject AS MILinkObject_GoodsKind
                                               ON MILinkObject_GoodsKind.MovementItemId = MovementItem.Id
                                              AND MILinkObject_GoodsKind.DescId = zc_MILinkObject_GoodsKind()
              LEFT JOIN Object AS Object_GoodsKind ON Object_GoodsKind.Id = MILinkObject_GoodsKind.ObjectId
@@ -291,19 +299,19 @@ BEGIN
              LEFT JOIN ObjectLink AS ObjectLink_Goods_Measure
                                   ON ObjectLink_Goods_Measure.ObjectId = MovementItem.ObjectId
                                    AND ObjectLink_Goods_Measure.DescId = zc_ObjectLink_Goods_Measure()
-             LEFT JOIN Object AS Object_Measure 
+             LEFT JOIN Object AS Object_Measure
                               ON Object_Measure.Id = ObjectLink_Goods_Measure.ChildObjectId
              LEFT JOIN ObjectLink AS ObjectLink_Goods_TradeMark
                                   ON ObjectLink_Goods_TradeMark.ObjectId = MovementItem.ObjectId
                                  AND ObjectLink_Goods_TradeMark.DescId = zc_ObjectLink_Goods_TradeMark()
-             LEFT JOIN Object AS Object_TradeMark 
+             LEFT JOIN Object AS Object_TradeMark
                               ON Object_TradeMark.Id = ObjectLink_Goods_TradeMark.ChildObjectId
-                              
+
              LEFT OUTER JOIN ObjectFloat AS ObjectFloat_Goods_Weight
                                          ON ObjectFloat_Goods_Weight.ObjectId = MovementItem.ObjectId
                                         AND ObjectFloat_Goods_Weight.DescId = zc_ObjectFloat_Goods_Weight()
-             
-             
+
+
              LEFT JOIN tmpGoodsKind_list ON tmpGoodsKind_list.GoodsId = MovementItem.ObjectId
 
         WHERE MovementItem.DescId = zc_MI_Master()

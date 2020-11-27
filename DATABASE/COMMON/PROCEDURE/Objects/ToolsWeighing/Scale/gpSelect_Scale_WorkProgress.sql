@@ -108,10 +108,10 @@ BEGIN
                                  LEFT JOIN MovementItemLinkObject AS MILinkObject_Receipt
                                                                   ON MILinkObject_Receipt.MovementItemId = MovementItem.Id
                                                                  AND MILinkObject_Receipt.DescId = zc_MILinkObject_Receipt()
-                                 INNER JOIN MovementItemLinkObject AS MILinkObject_GoodsKind
-                                                                   ON MILinkObject_GoodsKind.MovementItemId = MovementItem.Id
-                                                                  AND MILinkObject_GoodsKind.DescId         = zc_MILinkObject_GoodsKind()
-                                                                  AND MILinkObject_GoodsKind.ObjectId       = zc_GoodsKind_WorkProgress()
+                                 LEFT JOIN MovementItemLinkObject AS MILinkObject_GoodsKind
+                                                                  ON MILinkObject_GoodsKind.MovementItemId = MovementItem.Id
+                                                                 AND MILinkObject_GoodsKind.DescId         = zc_MILinkObject_GoodsKind()
+                                                                 AND MILinkObject_GoodsKind.ObjectId       = zc_GoodsKind_WorkProgress()
                                  LEFT JOIN MovementItemLinkObject AS MILO_GoodsKindComplete
                                                                   ON MILO_GoodsKindComplete.MovementItemId = MovementItem.Id
                                                                  AND MILO_GoodsKindComplete.DescId = zc_MILinkObject_GoodsKindComplete()
@@ -131,6 +131,7 @@ BEGIN
                                                              ON MIFloat_RealWeightMsg.MovementItemId = MovementItem.Id
                                                             AND MIFloat_RealWeightMsg.DescId         = zc_MIFloat_RealWeightMsg()
 
+                            -- ЦЕХ деликатесов
                             WHERE Movement.OperDate BETWEEN inOperDate - CASE WHEN inUnitId = 8448 THEN INTERVAL '30 DAY' ELSE INTERVAL '10 DAY' END :: INTERVAL AND inOperDate
                               AND Movement.DescId   = zc_Movement_ProductionUnion()
                               AND Movement.StatusId = zc_Enum_Status_Complete()

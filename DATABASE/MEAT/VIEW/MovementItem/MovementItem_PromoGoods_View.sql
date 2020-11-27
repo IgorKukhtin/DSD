@@ -13,9 +13,12 @@ CREATE OR REPLACE VIEW MovementItem_PromoGoods_View AS
       , Object_Measure.ValueData               AS Measure             --Единица измерения
       , Object_TradeMark.ValueData             AS TradeMark           --Торговая марка
       , MovementItem.Amount                    AS Amount              --% скидки на товар
-      , MIFloat_Price.ValueData                AS Price               --Цена в прайсе с учетом скидки по договору
-      , MIFloat_PriceWithOutVAT.ValueData      AS PriceWithOutVAT     --Цена отгрузки без учета НДС, с учетом скидки, грн
-      , MIFloat_PriceWithVAT.ValueData         AS PriceWithVAT        --Цена отгрузки с учетом НДС, с учетом скидки, грн
+      , (MIFloat_Price.ValueData           / CASE WHEN MIFloat_CountForPrice.ValueData > 0 THEN MIFloat_CountForPrice.ValueData ELSE 1 END) :: TFloat               AS Price               --Цена в прайсе с учетом скидки по договору
+      , CAST (MIFloat_PriceWithOutVAT.ValueData / CASE WHEN MIFloat_CountForPrice.ValueData > 0 THEN MIFloat_CountForPrice.ValueData ELSE 1 END AS Numeric (16,8))  AS PriceWithOutVAT     --Цена отгрузки без учета НДС, с учетом скидки, грн
+      , CAST (MIFloat_PriceWithVAT.ValueData    / CASE WHEN MIFloat_CountForPrice.ValueData > 0 THEN MIFloat_CountForPrice.ValueData ELSE 1 END AS Numeric (16,8))  AS PriceWithVAT        --Цена отгрузки с учетом НДС, с учетом скидки, грн
+      , CASE WHEN MIFloat_CountForPrice.ValueData > 0 THEN MIFloat_CountForPrice.ValueData ELSE 1 END :: TFloat AS CountForPrice
+      , MIFloat_PriceWithOutVAT.ValueData      AS PriceWithOutVAT_orig--Цена отгрузки без учета НДС, с учетом скидки, грн
+      , MIFloat_PriceWithVAT.ValueData         AS PriceWithVAT_orig   --Цена отгрузки с учетом НДС, с учетом скидки, грн
       , MIFloat_PriceSale.ValueData            AS PriceSale           --Цена на полке
 
       , MIFloat_AmountReal.ValueData           AS AmountReal          --Объем продаж в аналогичный период, кг
@@ -49,7 +52,7 @@ CREATE OR REPLACE VIEW MovementItem_PromoGoods_View AS
       , MILinkObject_GoodsKindComplete.ObjectId        AS GoodsKindCompleteId         --ИД обьекта <Вид товара (примечание)>
       , Object_GoodsKindComplete.ValueData             AS GoodsKindCompleteName       --Наименование обьекта <Вид товара (примечание)>
       , MIFloat_MainDiscount.ValueData   ::TFloat AS MainDiscount       -- Общая скидка для покупателя, %
-      , MIFloat_OperPriceList.ValueData  ::TFloat AS OperPriceList      -- Цена в прайсе
+      , (MIFloat_OperPriceList.ValueData / CASE WHEN MIFloat_CountForPrice.ValueData > 0 THEN MIFloat_CountForPrice.ValueData ELSE 1 END)  ::TFloat AS OperPriceList      -- Цена в прайсе
     FROM MovementItem
         LEFT JOIN MovementItemFloat AS MIFloat_Price
                                     ON MIFloat_Price.MovementItemId = MovementItem.Id
@@ -66,6 +69,10 @@ CREATE OR REPLACE VIEW MovementItem_PromoGoods_View AS
         LEFT JOIN MovementItemFloat AS MIFloat_PriceSale
                                     ON MIFloat_PriceSale.MovementItemId = MovementItem.Id
                                    AND MIFloat_PriceSale.DescId = zc_MIFloat_PriceSale()
+        LEFT JOIN MovementItemFloat AS MIFloat_CountForPrice
+                                    ON MIFloat_CountForPrice.MovementItemId = MovementItem.Id
+                                   AND MIFloat_CountForPrice.DescId         = zc_MIFloat_CountForPrice()
+
         LEFT JOIN MovementItemFloat AS MIFloat_AmountOrder
                                     ON MIFloat_AmountOrder.MovementItemId = MovementItem.Id
                                    AND MIFloat_AmountOrder.DescId = zc_MIFloat_AmountOrder()

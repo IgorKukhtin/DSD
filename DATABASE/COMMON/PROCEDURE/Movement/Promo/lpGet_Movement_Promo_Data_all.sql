@@ -17,6 +17,9 @@ RETURNS TABLE (MovementId          Integer -- Документ
              , TaxPromo            TFloat  
              , PriceWithOutVAT     TFloat  -- Цена отгрузки без учета НДС, с учетом скидки, грн
              , PriceWithVAT        TFloat  -- Цена отгрузки с учетом НДС, с учетом скидки, грн
+             , CountForPrice         TFloat
+             , PriceWithOutVAT_orig  TFloat   -- Цена отгрузки без учета НДС, с учетом скидки, грн
+             , PriceWithVAT_orig     TFloat   -- Цена отгрузки с учетом НДС, с учетом скидки, грн
              , isChangePercent     Boolean -- учитывать % скидки по договору
               )
 AS
@@ -161,8 +164,11 @@ BEGIN
         SELECT DISTINCT
                tmpResult.MovementId
              , tmpResult.TaxPromo
-             , COALESCE (MIFloat_PriceWithOutVAT.ValueData, 0) :: TFloat AS PriceWithOutVAT
-             , COALESCE (MIFloat_PriceWithVAT.ValueData, 0)    :: TFloat AS PriceWithVAT
+             , (COALESCE (MIFloat_PriceWithOutVAT.ValueData, 0) / CASE WHEN MIFloat_CountForPrice.ValueData > 1 THEN MIFloat_CountForPrice.ValueData ELSE 1 END) :: TFloat AS PriceWithOutVAT
+             , (COALESCE (MIFloat_PriceWithVAT.ValueData, 0)    / CASE WHEN MIFloat_CountForPrice.ValueData > 1 THEN MIFloat_CountForPrice.ValueData ELSE 1 END) :: TFloat AS PriceWithVAT
+             , CASE WHEN MIFloat_CountForPrice.ValueData > 1 THEN MIFloat_CountForPrice.ValueData ELSE 1 END :: TFloat AS CountForPrice
+             , COALESCE (MIFloat_PriceWithOutVAT.ValueData, 0) :: TFloat AS PriceWithOutVAT_orig
+             , COALESCE (MIFloat_PriceWithVAT.ValueData, 0)    :: TFloat AS PriceWithVAT_orig
              , CASE WHEN tmpChangePercent.MovementId > 0 THEN FALSE ELSE TRUE END :: Boolean AS isChangePercent
         FROM tmpResult
              LEFT JOIN MovementItemFloat AS MIFloat_PriceWithOutVAT
@@ -171,6 +177,9 @@ BEGIN
              LEFT JOIN MovementItemFloat AS MIFloat_PriceWithVAT
                                          ON MIFloat_PriceWithVAT.MovementItemId = tmpResult.MovementItemId
                                         AND MIFloat_PriceWithVAT.DescId         = zc_MIFloat_PriceWithVAT()
+             LEFT JOIN MovementItemFloat AS MIFloat_CountForPrice
+                                         ON MIFloat_CountForPrice.MovementItemId = tmpResult.MovementItemId
+                                        AND MIFloat_CountForPrice.DescId = zc_MIFloat_CountForPrice()
              LEFT JOIN tmpChangePercent ON tmpChangePercent.MovementId = tmpResult.MovementId
        ;
 

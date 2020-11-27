@@ -674,6 +674,8 @@ BEGIN
                                                  AND (View_InfoMoney.InfoMoneyDestinationId IN (zc_Enum_InfoMoneyDestination_10200() -- Прочее сырье
                                                                                                )
                                                   AND View_InfoMoney.InfoMoneyId IN (zc_Enum_InfoMoney_10201() -- Специи
+                                                                                   , zc_Enum_InfoMoney_10202() -- Оболочка
+                                                                                   , zc_Enum_InfoMoney_10203() -- Упаковка
                                                                                     )
                                                      )
             WHERE Object_Goods.DescId = zc_Object_Goods()
@@ -794,6 +796,8 @@ BEGIN
                                    AND (View_InfoMoney.InfoMoneyDestinationId IN (zc_Enum_InfoMoneyDestination_10200() -- Прочее сырье
                                                                                  )
                                     AND View_InfoMoney.InfoMoneyId IN (zc_Enum_InfoMoney_10201() -- Специи
+                                                                     , zc_Enum_InfoMoney_10202() -- Оболочка
+                                                                     , zc_Enum_InfoMoney_10203() -- Упаковка
                                                                       )
                                        )
                                 UNION

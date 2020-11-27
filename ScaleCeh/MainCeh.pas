@@ -499,6 +499,8 @@ begin
                            or((SettingMain.isGoodsComplete = TRUE)
                            and(ParamsMovement.ParamByName('DocumentKindId').asInteger <> zc_Enum_DocumentKind_CuterWeight)
                            and(ParamsMovement.ParamByName('DocumentKindId').asInteger <> zc_Enum_DocumentKind_RealWeight)
+                           and(ParamsMovement.ParamByName('DocumentKindId').asInteger <> zc_Enum_DocumentKind_RealDelicShp)
+                           and(ParamsMovement.ParamByName('DocumentKindId').asInteger <> zc_Enum_DocumentKind_RealDelicMsg)
                              );
      //
      //if GoodsKindWeighingGroupId = 0 then exit;
@@ -900,6 +902,8 @@ begin
        // доопределили параметр
        if  (ParamsMovement.ParamByName('DocumentKindId').AsInteger <> zc_Enum_DocumentKind_CuterWeight)
         and(ParamsMovement.ParamByName('DocumentKindId').AsInteger <> zc_Enum_DocumentKind_RealWeight)
+        and(ParamsMovement.ParamByName('DocumentKindId').asInteger <> zc_Enum_DocumentKind_RealDelicShp)
+        and(ParamsMovement.ParamByName('DocumentKindId').asInteger <> zc_Enum_DocumentKind_RealDelicMsg)
        then ParamsMI.ParamByName('PartionGoods').AsString:=trim(EditPartionGoods.Text);
        ParamsMI.ParamByName('isStartWeighing').AsBoolean:=gbStartWeighing.ItemIndex = 0;
 
@@ -1029,6 +1033,8 @@ begin
             MovementInfo:= '';
             if (ParamsMovement.ParamByName('DocumentKindId').asInteger = zc_Enum_DocumentKind_CuterWeight)
              or(ParamsMovement.ParamByName('DocumentKindId').asInteger = zc_Enum_DocumentKind_RealWeight)
+             or(ParamsMovement.ParamByName('DocumentKindId').asInteger = zc_Enum_DocumentKind_RealDelicShp)
+             or(ParamsMovement.ParamByName('DocumentKindId').asInteger = zc_Enum_DocumentKind_RealDelicMsg)
             then begin
                   Create_ParamsWorkProgress(ParamsWorkProgress);
 
@@ -1125,6 +1131,8 @@ begin
      //***myActiveControl;
      if (ParamsMovement.ParamByName('DocumentKindId').AsInteger = zc_Enum_DocumentKind_CuterWeight)
       or(ParamsMovement.ParamByName('DocumentKindId').AsInteger = zc_Enum_DocumentKind_RealWeight)
+      or(ParamsMovement.ParamByName('DocumentKindId').asInteger = zc_Enum_DocumentKind_RealDelicShp)
+      or(ParamsMovement.ParamByName('DocumentKindId').asInteger = zc_Enum_DocumentKind_RealDelicMsg)
      then cxDBGridDBTableView.Columns[cxDBGridDBTableView.GetColumnByFieldName('PartionGoods').Index].Visible := TRUE;
      cxDBGridDBTableView.Columns[cxDBGridDBTableView.GetColumnByFieldName('StorageLineName').Index].Visible := (ParamsMovement.ParamByName('isStorageLine').AsBoolean = TRUE) or (SettingMain.isModeSorting = TRUE);
 end;
@@ -1879,6 +1887,8 @@ begin
      if (1=1)and(fEnterKey13=TRUE)
      and((ParamsMovement.ParamByName('DocumentKindId').asInteger = zc_Enum_DocumentKind_CuterWeight)
        or(ParamsMovement.ParamByName('DocumentKindId').asInteger = zc_Enum_DocumentKind_RealWeight))
+       or(ParamsMovement.ParamByName('DocumentKindId').asInteger = zc_Enum_DocumentKind_RealDelicShp)
+       or(ParamsMovement.ParamByName('DocumentKindId').asInteger = zc_Enum_DocumentKind_RealDelicMsg)
      then
      begin
           fEnterKey13:= FALSE;
@@ -2719,7 +2729,10 @@ begin
   PanelArticleLoss.Visible:=ParamsMovement.ParamByName('isArticleLoss').asBoolean=true;
   PersonalGroupPanel.Visible:=ParamsMovement.ParamByName('isPersonalGroup').asBoolean=true;
   PanelMovementInfo.Visible:=(ParamsMovement.ParamByName('DocumentKindId').asInteger = zc_Enum_DocumentKind_CuterWeight)
-                          or (ParamsMovement.ParamByName('DocumentKindId').asInteger = zc_Enum_DocumentKind_RealWeight);
+                          or (ParamsMovement.ParamByName('DocumentKindId').asInteger = zc_Enum_DocumentKind_RealWeight)
+                          or (ParamsMovement.ParamByName('DocumentKindId').asInteger = zc_Enum_DocumentKind_RealDelicShp)
+                          or (ParamsMovement.ParamByName('DocumentKindId').asInteger = zc_Enum_DocumentKind_RealDelicMsg)
+                            ;
   //
   if PanelArticleLoss.Visible = true
   then EditArticleLoss.Text:=ParamsMovement.ParamByName('ToName').asString;
@@ -2728,6 +2741,13 @@ begin
   then EditPersonalGroup.Text:=ParamsMovement.ParamByName('PersonalGroupName').asString;
   //
   PanelMovementDesc.Font.Color:=clBlue;
+
+  if (SettingMain.isGoodsComplete = TRUE)
+  then if ParamsMovement.ParamByName('MovementDescId').AsInteger = zc_Movement_ProductionSeparate
+        then
+            PanelPartionGoods.Visible:= true
+        else
+            PanelPartionGoods.Visible:= false;
 
   with ParamsMovement do begin
 

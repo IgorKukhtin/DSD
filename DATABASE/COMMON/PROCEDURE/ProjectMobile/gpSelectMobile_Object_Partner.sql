@@ -315,7 +315,15 @@ BEGIN
                   , COALESCE (ObjectLink_Partner_PriceListPrior.ChildObjectId, COALESCE (ObjectLink_Juridical_PriceListPrior.ChildObjectId, zc_PriceList_Basis() /*zc_PriceList_BasisPrior()*/)) AS PriceListId_ret
 
                   , tmpDebt.ContainerId :: Integer AS ContainerId
-                  , COALESCE (ObjectBoolean_isOrderMin.ValueData, FALSE) :: Boolean AS isOrderMin
+
+                --, COALESCE (ObjectBoolean_isOrderMin.ValueData, FALSE) :: Boolean AS isOrderMin
+                  , CASE WHEN COALESCE (Object_Route.ValueData, '')    ILIKE '%самовывоз%'
+                           OR COALESCE (Object_Contract.ValueData, '') ILIKE '%обмен%'
+                           OR COALESCE (ObjectBoolean_isOrderMin.ValueData, FALSE) = TRUE
+                              THEN TRUE
+                         ELSE FALSE
+                    END :: Boolean AS isOrderMin
+
                   , Object_Partner.isErased
                   , TRUE :: Boolean AS isSync
              FROM Object AS Object_Partner
@@ -323,6 +331,7 @@ BEGIN
                   JOIN tmpContract_state ON tmpContract_state.PartnerId = Object_Partner.Id
                   --
                   JOIN tmpContract ON tmpContract.ContractId = tmpContract_state.ContractId_Key_calc
+                  LEFT JOIN Object AS Object_Contract ON Object_Contract.Id = tmpContract.ContractId
                   
                   LEFT JOIN tmpDebt ON tmpDebt.PartnerId  = Object_Partner.Id
                                    -- AND tmpDebt.ContractId = tmpContract.ContractId
@@ -348,6 +357,8 @@ BEGIN
                   LEFT JOIN ObjectLink AS ObjectLink_Partner_Route
                                        ON ObjectLink_Partner_Route.ObjectId = Object_Partner.Id
                                       AND ObjectLink_Partner_Route.DescId = zc_ObjectLink_Partner_Route()
+                  LEFT JOIN Object AS Object_Route ON Object_Route.Id = ObjectLink_Partner_Route.ChildObjectId
+                  
                   LEFT JOIN ObjectFloat AS ObjectFloat_Partner_PrepareDayCount
                                         ON ObjectFloat_Partner_PrepareDayCount.ObjectId = Object_Partner.Id
                                        AND ObjectFloat_Partner_PrepareDayCount.DescId = zc_ObjectFloat_Partner_PrepareDayCount()
