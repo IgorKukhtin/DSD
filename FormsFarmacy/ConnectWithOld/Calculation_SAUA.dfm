@@ -27,21 +27,23 @@ object Calculation_SAUAForm: TCalculation_SAUAForm
       Left = 1
       Top = 1
       Width = 893
-      Height = 168
+      Height = 151
       Align = alClient
       BevelOuter = bvNone
       Caption = 'Panel2'
       ShowCaption = False
       TabOrder = 0
+      ExplicitHeight = 168
       object Panel4: TPanel
         Left = 0
         Top = 0
         Width = 460
-        Height = 168
+        Height = 151
         Align = alLeft
         Caption = 'Panel4'
         ShowCaption = False
         TabOrder = 0
+        ExplicitHeight = 168
         object cxLabel3: TcxLabel
           Left = 1
           Top = 1
@@ -54,21 +56,23 @@ object Calculation_SAUAForm: TCalculation_SAUAForm
           Left = 1
           Top = 18
           Width = 458
-          Height = 149
+          Height = 132
           Align = alClient
           ItemHeight = 13
           TabOrder = 1
+          ExplicitHeight = 149
         end
       end
       object Panel5: TPanel
         Left = 460
         Top = 0
         Width = 433
-        Height = 168
+        Height = 151
         Align = alClient
         Caption = 'Panel5'
         ShowCaption = False
         TabOrder = 1
+        ExplicitHeight = 168
         object cxLabel4: TcxLabel
           Left = 1
           Top = 1
@@ -81,18 +85,19 @@ object Calculation_SAUAForm: TCalculation_SAUAForm
           Left = 1
           Top = 18
           Width = 431
-          Height = 149
+          Height = 132
           Align = alClient
           ItemHeight = 13
           TabOrder = 1
+          ExplicitHeight = 149
         end
       end
     end
     object Panel3: TPanel
       Left = 1
-      Top = 169
+      Top = 152
       Width = 893
-      Height = 47
+      Height = 64
       Align = alBottom
       Caption = 'Panel3'
       ShowCaption = False
@@ -108,7 +113,7 @@ object Calculation_SAUAForm: TCalculation_SAUAForm
         Caption = #1054#1082#1086#1085#1095#1072#1085#1080#1077' '#1087#1077#1088#1080#1086#1076#1072' '#1087#1088#1086#1076#1072#1078':'
       end
       object deEnd: TcxDateEdit
-        Left = 163
+        Left = 170
         Top = 22
         EditValue = 42370d
         Properties.SaveTime = False
@@ -117,7 +122,7 @@ object Calculation_SAUAForm: TCalculation_SAUAForm
         Width = 85
       end
       object deStart: TcxDateEdit
-        Left = 163
+        Left = 170
         Top = 2
         EditValue = 42370d
         Properties.SaveTime = False
@@ -126,22 +131,22 @@ object Calculation_SAUAForm: TCalculation_SAUAForm
         Width = 85
       end
       object ceThreshold: TcxCurrencyEdit
-        Left = 407
+        Left = 439
         Top = 2
         EditValue = 1.000000000000000000
-        Properties.DecimalPlaces = 4
-        Properties.DisplayFormat = ',0.####'
+        Properties.DecimalPlaces = 3
+        Properties.DisplayFormat = ',0.###'
         TabOrder = 4
         Width = 53
       end
       object cxLabel5: TcxLabel
-        Left = 257
+        Left = 259
         Top = 3
         Caption = #1055#1086#1088#1086#1075' '#1084#1080#1085#1080#1084#1072#1083#1100#1085#1099#1093' '#1087#1088#1086#1076#1072#1078':'
       end
       object ceDaysStock: TcxCurrencyEdit
-        Left = 406
-        Top = 26
+        Left = 439
+        Top = 22
         EditValue = 10.000000000000000000
         Properties.DecimalPlaces = 0
         Properties.DisplayFormat = ',0'
@@ -149,23 +154,75 @@ object Calculation_SAUAForm: TCalculation_SAUAForm
         Width = 53
       end
       object cxLabel6: TcxLabel
-        Left = 257
+        Left = 259
         Top = 23
         Caption = #1044#1085#1077#1081' '#1079#1072#1087#1072#1089#1072' '#1091' '#1087#1086#1083#1091#1095#1072#1090#1077#1083#1103':'
       end
-      object cePercentPharmacies: TcxCurrencyEdit
-        Left = 701
-        Top = 2
-        EditValue = 75.000000000000000000
-        Properties.DecimalPlaces = 4
-        Properties.DisplayFormat = ',0.####'
+      object ceCountPharmacies: TcxCurrencyEdit
+        Left = 439
+        Top = 42
+        Hint = #1052#1080#1085#1080#1084#1072#1083#1100#1085#1086#1077' '#1082#1086#1083#1080#1095#1077#1089#1090#1074#1086' '#1072#1087#1090#1077#1082' '#1072#1089#1089#1086#1088#1090#1080#1084#1077#1085#1090#1072' '#1080#1079' '#1074#1099#1073#1088#1072#1085#1085#1099#1093
+        EditValue = 1.000000000000000000
+        ParentShowHint = False
+        Properties.DecimalPlaces = 0
+        Properties.DisplayFormat = ',0'
+        ShowHint = True
         TabOrder = 8
         Width = 53
       end
       object cxLabel7: TcxLabel
-        Left = 474
+        Left = 259
+        Top = 43
+        Hint = #1052#1080#1085#1080#1084#1072#1083#1100#1085#1086#1077' '#1082#1086#1083#1080#1095#1077#1089#1090#1074#1086' '#1072#1087#1090#1077#1082' '#1072#1089#1089#1086#1088#1090#1080#1084#1077#1085#1090#1072' '#1080#1079' '#1074#1099#1073#1088#1072#1085#1085#1099#1093
+        Caption = #1052#1080#1085'. '#1082#1086#1083'-'#1074#1086' '#1072#1087#1090#1077#1082' '#1072#1089#1089#1086#1088#1090#1080#1084#1077#1085#1090#1072
+        ParentShowHint = False
+        ShowHint = True
+      end
+      object cbGoodsClose: TcxCheckBox
+        Left = 511
         Top = 3
-        Caption = #1055#1088#1086#1094#1077#1085#1090' '#1072#1087#1090#1077#1082' '#1072#1089#1089#1086#1088#1090#1080#1084#1077#1085#1090#1072' '#1089' '#1087#1088#1086#1076#1072#1078#1072#1084#1080':'
+        Caption = #1053#1077' '#1087#1086#1082#1072#1079#1099#1074#1072#1090#1100' '#1047#1072#1082#1088#1099#1090' '#1082#1086#1076
+        State = cbsChecked
+        TabOrder = 10
+        Width = 201
+      end
+      object cbMCSIsClose: TcxCheckBox
+        Left = 511
+        Top = 22
+        Caption = #1053#1077' '#1087#1086#1082#1072#1079#1099#1074#1072#1090#1100' '#1059#1073#1080#1090' '#1082#1086#1076' '
+        TabOrder = 11
+        Width = 201
+      end
+      object cbNotCheckNoMCS: TcxCheckBox
+        Left = 511
+        Top = 42
+        Caption = #1053#1077' '#1087#1086#1082#1072#1079#1099#1074#1072#1090#1100' '#1055#1088#1086#1076#1072#1078#1080' '#1085#1077' '#1076#1083#1103' '#1053#1058#1047
+        TabOrder = 12
+        Width = 217
+      end
+      object ceResolutionParameter: TcxCurrencyEdit
+        Left = 170
+        Top = 42
+        Hint = 
+          #1043#1088#1072#1085#1080#1095#1085#1099#1081' '#1087#1072#1088#1072#1084#1077#1090#1088' '#1088#1072#1079#1088#1077#1096#1077#1085#1080#1103' '#1085#1072' '#1087#1077#1088#1077#1084#1077#1097#1077#1085#1080#1077' '#1080#1083#1080' '#1079#1072#1082#1072#1079' '#1091' '#1087#1086#1089#1090#1072#1074#1097 +
+          #1080#1082#1072
+        EditValue = 1.000000000000000000
+        ParentShowHint = False
+        Properties.DecimalPlaces = 3
+        Properties.DisplayFormat = ',0.###'
+        ShowHint = True
+        TabOrder = 13
+        Width = 53
+      end
+      object cxLabel8: TcxLabel
+        Left = 8
+        Top = 43
+        Hint = 
+          #1043#1088#1072#1085#1080#1095#1085#1099#1081' '#1087#1072#1088#1072#1084#1077#1090#1088' '#1088#1072#1079#1088#1077#1096#1077#1085#1080#1103' '#1085#1072' '#1087#1077#1088#1077#1084#1077#1097#1077#1085#1080#1077' '#1080#1083#1080' '#1079#1072#1082#1072#1079' '#1091' '#1087#1086#1089#1090#1072#1074#1097 +
+          #1080#1082#1072
+        Caption = #1043#1088#1072#1085#1080#1095'. '#1087#1072#1088#1072#1084#1077#1090#1088' '#1088#1072#1079#1088#1077#1096#1077#1085#1080#1103
+        ParentShowHint = False
+        ShowHint = True
       end
     end
   end
@@ -406,7 +463,7 @@ object Calculation_SAUAForm: TCalculation_SAUAForm
           'Value')
       end
       item
-        Component = cePercentPharmacies
+        Component = ceCountPharmacies
         Properties.Strings = (
           'Value')
       end
@@ -421,12 +478,12 @@ object Calculation_SAUAForm: TCalculation_SAUAForm
     StorageName = 'cxPropertiesStore'
     StorageType = stStream
     Left = 256
-    Top = 112
+    Top = 90
   end
   object ActionList: TActionList
     Images = dmMain.ImageList
     Left = 40
-    Top = 112
+    Top = 90
     object actRefresh: TdsdDataSetRefresh
       Category = 'DSDLib'
       MoveParams = <>
@@ -478,7 +535,7 @@ object Calculation_SAUAForm: TCalculation_SAUAForm
     ShowShortCutInHint = True
     UseSystemFont = True
     Left = 160
-    Top = 112
+    Top = 90
     DockControlHeights = (
       0
       0
@@ -627,11 +684,11 @@ object Calculation_SAUAForm: TCalculation_SAUAForm
     DateStart = deStart
     DateEnd = deEnd
     Left = 560
-    Top = 104
+    Top = 82
   end
   object UserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn
     Left = 408
-    Top = 112
+    Top = 90
   end
   object GetUnitsList: TdsdStoredProc
     StoredProcName = 'gpSelect_Object_UnitForSAUA'
@@ -643,13 +700,13 @@ object Calculation_SAUAForm: TCalculation_SAUAForm
     Params = <>
     PackSize = 1
     Left = 128
-    Top = 48
+    Top = 26
   end
   object UnitsCDS: TClientDataSet
     Aggregates = <>
     Params = <>
     Left = 216
-    Top = 48
+    Top = 26
   end
   object dsResult: TDataSource
     DataSet = cdsResult
@@ -719,10 +776,41 @@ object Calculation_SAUAForm: TCalculation_SAUAForm
         MultiSelectSeparator = ','
       end
       item
-        Name = 'inPercentPharmacies'
+        Name = 'inCountPharmacies'
         Value = Null
-        Component = cePercentPharmacies
+        Component = ceCountPharmacies
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inResolutionParameter'
+        Value = Null
+        Component = ceResolutionParameter
         DataType = ftFloat
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inisGoodsClose'
+        Value = Null
+        Component = cbGoodsClose
+        DataType = ftBoolean
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inisMCSIsClose'
+        Value = Null
+        Component = cbMCSIsClose
+        DataType = ftBoolean
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inisNotCheckNoMCS'
+        Value = Null
+        Component = cbNotCheckNoMCS
+        DataType = ftBoolean
         ParamType = ptInput
         MultiSelectSeparator = ','
       end>

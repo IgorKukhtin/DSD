@@ -7265,7 +7265,7 @@ begin
           if FormParams.ParamByName('isBanAdd').Value and
             ((CheckCDS.FieldByName('Amount').asCurrency + nAmount) > Ceil(CheckCDS.FieldByName('AmountOrder').asCurrency)) then
           begin
-            ShowMessage('Увеличивать количество до ближайшего целого значения запрещено. Отпустите клиента отдельным новым чеком.');
+            ShowMessage('Увеличивать количество на целые значения запрещено, можно до ближайшего целого. Отпустите клиента отдельтным чеком.');
             Exit;
           end;
 
@@ -7558,7 +7558,7 @@ begin
       if FormParams.ParamByName('isBanAdd').Value and (nAmount > 0) and
         ((CheckCDS.FieldByName('Amount').asCurrency + nAmount) > Ceil (CheckCDS.FieldByName('AmountOrder').asCurrency)) then
       begin
-        ShowMessage('Увеличивать количество до ближайшего целого значения запрещено. Отпустите клиента отдельным новым чеком.');
+        ShowMessage('Увеличивать количество на целые значения запрещено, можно до ближайшего целого. Отпустите клиента отдельтным чеком.');
         Exit;
       end;
 

@@ -81,7 +81,7 @@ object PersonalServiceListForm: TPersonalServiceListForm
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         Options.Editing = False
-        Width = 50
+        Width = 74
       end
       object BankName: TcxGridDBColumn
         Caption = #1041#1072#1085#1082
@@ -786,6 +786,7 @@ object PersonalServiceListForm: TPersonalServiceListForm
     ColumnAddOnList = <>
     ColumnEnterList = <>
     SummaryItemList = <>
+    ShowFieldImageList = <>
     PropertiesCellList = <>
     Left = 48
     Top = 216

@@ -1211,7 +1211,9 @@ uses
   AssetTypeEdit in '..\..\Forms\Guides\AssetTypeEdit.pas' {AssetTypeEditForm: TParentForm},
   AssetType in '..\..\Forms\Guides\AssetType.pas' {AssetTypeForm: TParentForm},
   Contract in '..\..\Forms\Guides\Contract.pas' {ContractForm: TParentForm},
-  dsdAddOn in '..\..\SOURCE\COMPONENT\dsdAddOn.pas';
+  dsdAddOn in '..\..\SOURCE\COMPONENT\dsdAddOn.pas',
+  Report_SaleExternal in '..\..\Forms\Report\Report_SaleExternal.pas' {Report_SaleExternalForm: TParentForm},
+  Report_SaleExternalDialog in '..\..\Forms\Report\Report_SaleExternalDialog.pas' {Report_SaleExternalDialogForm: TParentForm};
 
 {$R *.RES}
 {$R DevExpressRus.res}

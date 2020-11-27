@@ -1738,6 +1738,7 @@
     end
     object bbRecordCP: TdxBarButton
       Action = InsertRecordCP
+      Caption = #1044#1086#1073#1072#1074#1080#1090#1100' <'#1050#1086#1085#1090#1088#1072#1075#1077#1085#1090#1072' ('#1076#1086#1075#1086#1074#1086#1088')>'
       Category = 0
     end
     object bbProtocol: TdxBarButton
@@ -1750,6 +1751,7 @@
     end
     object bbSetErasedPartner: TdxBarButton
       Action = dsdSetErasedPartner
+      Caption = #1059#1076#1072#1083#1080#1090#1100' <'#1050#1086#1085#1090#1088#1072#1075#1077#1085#1090#1072' ('#1076#1086#1075#1086#1074#1086#1088')>'
       Category = 0
     end
     object bbSetErasedGoods: TdxBarButton
@@ -1758,6 +1760,7 @@
     end
     object bbSetUnErasedPartner: TdxBarButton
       Action = dsdSetUnErasedPartner
+      Caption = #1042#1086#1089#1089#1090#1072#1085#1086#1074#1080#1090#1100' <'#1050#1086#1085#1090#1088#1072#1075#1077#1085#1090#1072' ('#1076#1086#1075#1086#1074#1086#1088')>'
       Category = 0
     end
     object bbSetUnErasedGoods: TdxBarButton
@@ -1803,10 +1806,12 @@
     end
     object bbdsdSetErasedCCPartner: TdxBarButton
       Action = dsdSetErasedCCPartner
+      Caption = #1059#1076#1072#1083#1080#1090#1100' <'#1050#1086#1085#1090#1088#1072#1075#1077#1085#1090#1072' ('#1091#1089#1083#1086#1074#1080#1103' '#1076#1086#1075#1086#1074#1086#1088#1072')>'
       Category = 0
     end
     object bbdsdSetUnErasedССPartner: TdxBarButton
       Action = dsdSetUnErasedССPartner
+      Caption = #1042#1086#1089#1089#1090#1072#1085#1086#1074#1080#1090#1100' <'#1050#1086#1085#1090#1088#1072#1075#1077#1085#1090#1072' ('#1091#1089#1083#1086#1074#1080#1103' '#1076#1086#1075#1086#1074#1086#1088#1072')>'
       Category = 0
     end
     object bbProtocolOpenFormCCPartner: TdxBarButton

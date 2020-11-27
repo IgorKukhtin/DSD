@@ -259,7 +259,7 @@ BEGIN
                     AND ObjectDate_ExpirationDate.ValueData <= CURRENT_DATE
                     AND  COALESCE (ObjectBoolean_PartionGoods_Cat_5.ValueData, FALSE) = FALSE)
         THEN
-          INSERT INTO _PUSH (Id, Text) VALUES (4, 'Коллеги, сегодня будет сформировано перемещение на виртуальный склад "Сроки", на коробке подпишите "Сегодняшнюю дату "Сроки" Аптека отправитель - Рабочая,168"');
+          INSERT INTO _PUSH (Id, Text) VALUES (4, 'Коллеги, сегодня будет сформировано перемещение на виртуальный склад "Сроки", на коробке подпишите "Сегодняшнюю дату "Сроки" Аптека отправитель - Новокрымскую,4"');
         END IF;
      END IF;
    END IF;
