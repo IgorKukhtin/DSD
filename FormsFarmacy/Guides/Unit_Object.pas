@@ -322,6 +322,15 @@ type
     actExecUpdate_PercentSAUA: TdsdExecStoredProc;
     dxBarButton8: TdxBarButton;
     actExecuteUpdatePercentSAUA: TExecuteDialog;
+    isSUA: TcxGridDBColumn;
+    actUpdate_Unit_isSUA_No: TdsdExecStoredProc;
+    macUpdate_Unit_isSUA_No_list: TMultiAction;
+    actUpdate_Unit_isSUA_Yes: TdsdExecStoredProc;
+    macUpdate_Unit_isSUA_Yes_list: TMultiAction;
+    spUpdate_Unit_isSUA_No: TdsdStoredProc;
+    spUpdate_Unit_isSUA_Yes: TdsdStoredProc;
+    dxBarButton9: TdxBarButton;
+    dxBarButton10: TdxBarButton;
   private
     { Private declarations }
   public
