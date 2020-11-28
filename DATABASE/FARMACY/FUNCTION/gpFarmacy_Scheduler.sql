@@ -156,6 +156,15 @@ BEGIN
        PERFORM lpLog_Run_Schedule_Function('gpFarmacy_Scheduler Run gpUpdate_MovementItem_DeferredLincObject', True, text_var1::TVarChar, vbUserId);
     END;
 
+    -- Корректировка остатка по таблеткам
+    BEGIN
+      PERFORM gpUpdate_MovementItem_RemainingAdjustment (inSession := zfCalc_UserAdmin());
+    EXCEPTION
+       WHEN others THEN
+         GET STACKED DIAGNOSTICS text_var1 = MESSAGE_TEXT;
+       PERFORM lpLog_Run_Schedule_Function('gpFarmacy_Scheduler Run gpUpdate_MovementItem_RemainingAdjustment', True, text_var1::TVarChar, vbUserId);
+    END;
+
 END;
 $BODY$
   LANGUAGE plpgsql VOLATILE;

@@ -1,15 +1,14 @@
 -- Function: gpUpdate_Object_Goods_IsUpload()
 
-DROP FUNCTION IF EXISTS gpUpdate_Unit_isSUN(Integer, Boolean, TVarChar);
+DROP FUNCTION IF EXISTS gpUpdate_Unit_isSUA(Integer, Boolean, TVarChar);
 
-CREATE OR REPLACE FUNCTION gpUpdate_Unit_isSUN(
+CREATE OR REPLACE FUNCTION gpUpdate_Unit_isSUA(
     IN inId                  Integer   ,    -- ключ объекта <Подразделение>
-    IN inisSUN               Boolean   ,    -- Работают по СУН
-   OUT outisSUN              Boolean   ,
+    IN inisSUA               Boolean   ,    -- Работают по СУA
    OUT outisSUA              Boolean   ,
     IN inSession             TVarChar       -- текущий пользователь
 )
-RETURNS Record AS
+RETURNS Boolean AS
 $BODY$
    DECLARE vbUserId Integer;
 BEGIN
@@ -21,11 +20,9 @@ BEGIN
    vbUserId := lpGetUserBySession (inSession);
 
    -- определили признак
-   outisSUN:= NOT inisSUN;
-   outisSUA:= outisSUN;
+   outisSUA:= NOT inisSUA;
 
-   PERFORM lpInsertUpdate_ObjectBoolean (zc_ObjectBoolean_Unit_SUN(), inId, outisSUN);
-   PERFORM lpInsertUpdate_ObjectBoolean (zc_ObjectBoolean_Unit_SUA(), inId, outisSUN);
+   PERFORM lpInsertUpdate_ObjectBoolean (zc_ObjectBoolean_Unit_SUA(), inId, outisSUA);
 
    -- сохранили протокол
    PERFORM lpInsert_ObjectProtocol (inId, vbUserId);
@@ -36,6 +33,6 @@ LANGUAGE plpgsql VOLATILE;
   
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
-               Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
- 11.07.19         *
+               Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Шаблий О.В.
+ 27.11.20                                                       *
 */

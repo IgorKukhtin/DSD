@@ -61,7 +61,7 @@ RETURNS TABLE (Id Integer, Code Integer, Name TVarChar
              , TimeWork TVarChar
              , DateCheck TDateTime
              , LayoutId  Integer, LayoutName TVarChar
-             , TypeSAUA TVarChar, MasterSAUA TVarChar, PercentSAUA TFloat
+             , TypeSAUA TVarChar, MasterSAUA TVarChar, PercentSAUA TFloat, isSUA Boolean
 ) AS
 $BODY$
 BEGIN
@@ -235,6 +235,7 @@ BEGIN
              WHEN COALESCE(Object_UnitSAUA_Master.Id, 0) <> 0 THEN 'Slave' END::TVarChar AS TypeSAUA 
       , Object_UnitSAUA_Master.ValueData                                                 AS MasterSAUA
       , COALESCE (ObjectFloat_PercentSAUA.ValueData,0) ::TFloat                          AS  PercentSAUA
+      , COALESCE (ObjectBoolean_SUA.ValueData, FALSE)     :: Boolean                     AS isSUA
 
     FROM Object AS Object_Unit
         LEFT JOIN ObjectLink AS ObjectLink_Unit_Parent
@@ -527,6 +528,10 @@ BEGIN
         LEFT JOIN ObjectBoolean AS ObjectBoolean_NotCashListDiff
                                 ON ObjectBoolean_NotCashListDiff.ObjectId = Object_Unit.Id
                                AND ObjectBoolean_NotCashListDiff.DescId = zc_ObjectBoolean_Unit_NotCashListDiff()
+
+        LEFT JOIN ObjectBoolean AS ObjectBoolean_SUA
+                                ON ObjectBoolean_SUA.ObjectId = Object_Unit.Id
+                               AND ObjectBoolean_SUA.DescId = zc_ObjectBoolean_Unit_SUA()
 
         LEFT JOIN ObjectDate AS ObjectDate_StartServiceNigth
                              ON ObjectDate_StartServiceNigth.ObjectId = Object_Unit.Id
