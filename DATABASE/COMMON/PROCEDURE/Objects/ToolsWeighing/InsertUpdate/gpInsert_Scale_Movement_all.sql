@@ -506,6 +506,12 @@ end if;
                                   AND MovementLinkMovement.DescId = zc_MovementLinkMovement_Order()
                                   -- AND inSession <> '5'
                               );
+          -- Обновим дату склада
+          IF vbMovementId_find > 0
+          THEN
+              UPDATE Movement SET OperDate = inOperDate WHERE Movement.Id = vbMovementId_find;
+          END IF;
+
      END IF;
 
      -- это <Перемещение по цене>

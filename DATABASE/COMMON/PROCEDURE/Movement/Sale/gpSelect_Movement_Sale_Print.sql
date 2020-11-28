@@ -196,7 +196,7 @@ BEGIN
                            ;
 
     -- очень важная проверка
-    IF COALESCE (vbStatusId, 0) <> zc_Enum_Status_Complete()
+    IF COALESCE (vbStatusId, 0) <> zc_Enum_Status_Complete() AND inSession <> zfCalc_UserAdmin()
     THEN
         IF vbStatusId = zc_Enum_Status_Erased()
         THEN

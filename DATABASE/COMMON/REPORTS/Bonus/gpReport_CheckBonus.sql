@@ -1,6 +1,6 @@
 -- FunctiON: gpReport_CheckBonus ()
 
- DROP FUNCTION IF EXISTS gpReport_CheckBonus (TDateTime, TDateTime, TVarChar);
+DROP FUNCTION IF EXISTS gpReport_CheckBonus (TDateTime, TDateTime, TVarChar);
 DROP FUNCTION IF EXISTS gpReport_CheckBonus (TDateTime, TDateTime, Integer, Integer, Boolean, TVarChar);
 DROP FUNCTION IF EXISTS gpReport_CheckBonus (TDateTime, TDateTime, Integer, Integer, TVarChar);
 --DROP FUNCTION IF EXISTS gpReport_CheckBonus (TDateTime, TDateTime, Integer, Integer, Integer, TVarChar);
@@ -12,7 +12,7 @@ CREATE OR REPLACE FUNCTION gpReport_CheckBonus (
     IN inPaidKindID          Integer   ,
     IN inJuridicalId         Integer   ,
     IN inBranchId            Integer   , 
-    IN inisMovement          Boolean   , -- по документам
+    IN inIsMovement          Boolean   , -- по документам
     IN inSessiON             TVarChar    -- сессия пользователя
 )
 RETURNS TABLE (OperDate_Movement TDateTime, OperDatePartner TDateTime, InvNumber_Movement TVarChar, DescName_Movement TVarChar
@@ -29,17 +29,21 @@ RETURNS TABLE (OperDate_Movement TDateTime, OperDatePartner TDateTime, InvNumber
              , RetailName TVarChar, PersonalName TVarChar
              , PartnerId Integer, PartnerName TVarChar
              , Value TFloat
-             , Sum_CheckBonus TFloat
-             , Sum_CheckBonusFact TFloat 
-             , Sum_Bonus TFloat
-             , Sum_BonusFact TFloat
-             , Sum_SaleFact TFloat
-             , Sum_SaleReturnIn  TFloat
-             , Sum_Account  TFloat
-             , Sum_Sale TFloat
-             , Sum_Return TFloat
+
+             , Sum_CheckBonus      TFloat
+             , Sum_CheckBonusFact  TFloat 
+             , Sum_Bonus           TFloat
+             , Sum_BonusFact       TFloat
+             , Sum_SaleFact        TFloat
+             , Sum_SaleReturnIn    TFloat
+             , Sum_Account         TFloat
+             , Sum_AccountSendDebt TFloat
+             , Sum_Sale            TFloat
+             , Sum_Return          TFloat
+
              , Sum_Sale_weight TFloat
              , Sum_ReturnIn_weight TFloat
+
              , PercentRetBonus  TFloat
              , PercentRetBonus_fact  TFloat
              , PercentRetBonus_diff  TFloat
@@ -182,6 +186,7 @@ BEGIN
            , tmp.Sum_SaleFact
            , tmp.Sum_SaleReturnIn
            , tmp.Sum_Account
+           , tmp.Sum_AccountSendDebt
            , tmp.Sum_Sale
            , tmp.Sum_Return
            , tmp.Sum_Sale_weight
@@ -223,6 +228,7 @@ BEGIN
            , tmp.PartnerId
            , tmp.PartnerName
            , tmp.Value
+
            , tmp.Sum_CheckBonus
            , tmp.Sum_CheckBonusFact
            , tmp.Sum_Bonus
@@ -230,10 +236,13 @@ BEGIN
            , tmp.Sum_SaleFact
            , tmp.Sum_SaleReturnIn
            , tmp.Sum_Account
+           , tmp.Sum_AccountSendDebt
            , tmp.Sum_Sale
            , tmp.Sum_Return
+
            , tmp.Sum_Sale_weight
            , tmp.Sum_ReturnIn_weight
+
            , tmp.PercentRetBonus
            , tmp.PercentRetBonus_fact
            , tmp.PercentRetBonus_diff

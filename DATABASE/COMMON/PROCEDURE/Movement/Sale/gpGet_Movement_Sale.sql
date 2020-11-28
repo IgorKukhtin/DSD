@@ -175,7 +175,7 @@ BEGIN
                , COALESCE (MovementBoolean_Checked.ValueData, FALSE) :: Boolean AS Checked
                , MovementDate_OperDatePartner.ValueData         AS OperDatePartner
                , MovementString_InvNumberPartner.ValueData      AS InvNumberPartner
-               , MovementBoolean_PriceWithVAT.ValueData         AS PriceWithVAT
+               , COALESCE (MovementBoolean_PriceWithVAT.ValueData, FALSE) :: Boolean AS PriceWithVAT
                , MovementFloat_VATPercent.ValueData             AS VATPercent
                , MovementFloat_ChangePercent.ValueData          AS ChangePercent
                , inChangePercentAmount                          AS ChangePercentAmount

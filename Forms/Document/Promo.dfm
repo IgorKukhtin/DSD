@@ -3,7 +3,6 @@
   Caption = #1044#1086#1082#1091#1084#1077#1085#1090' <'#1040#1082#1094#1080#1103'>'
   ClientHeight = 684
   ClientWidth = 1366
-  ExplicitLeft = -593
   ExplicitWidth = 1382
   ExplicitHeight = 719
   PixelsPerInch = 96
@@ -5674,7 +5673,7 @@
         MultiSelectSeparator = ','
       end
       item
-        Name = 'inCountForPrice'
+        Name = 'ioCountForPrice'
         Value = Null
         Component = MasterCDS
         ComponentItem = 'CountForPrice'

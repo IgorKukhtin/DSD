@@ -107,7 +107,7 @@ BEGIN
      vbUserId:= lpGetUserBySession (inSession);
 
     -- Вставить нормальную проверку на право отображения всех колонок
-    vbShowAll:= EXISTS (SELECT 1 FROM ObjectLink_UserRole_View WHERE UserId = vbUserId AND RoleId IN (112322, 296580, zc_Enum_Role_Admin())); -- Отдел Маркетинг + Просмотр ВСЕ (управленцы)
+    vbShowAll:= EXISTS (SELECT 1 FROM ObjectLink_UserRole_View WHERE UserId = vbUserId AND RoleId IN (112322, 876016, 5473256, 296580, zc_Enum_Role_Admin())); -- Документы Маркетинг + Отдел Маркетинг + Маркетинг - Руководитель + Просмотр ВСЕ (управленцы)
 
     -- таблицы для получения Вид товара (справочно) из GoodsListSale
     CREATE TEMP TABLE _tmpWord_Split_from (WordList TVarChar) ON COMMIT DROP;

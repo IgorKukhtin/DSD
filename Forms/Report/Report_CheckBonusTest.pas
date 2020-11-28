@@ -88,6 +88,7 @@ type
     bbInsertByReportGrid: TdxBarButton;
     ProtocolReportBonusForm: TdsdOpenForm;
     bbProtocolReportBonus: TdxBarButton;
+    Sum_AccountSendDebt: TcxGridDBColumn;
   private
     { Private declarations }
   public

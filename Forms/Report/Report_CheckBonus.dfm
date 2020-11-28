@@ -3,8 +3,9 @@ inherited Report_CheckBonusForm: TReport_CheckBonusForm
   ClientHeight = 341
   ClientWidth = 1180
   AddOnFormData.ExecuteDialogAction = ExecuteDialog
+  ExplicitLeft = -390
   ExplicitWidth = 1196
-  ExplicitHeight = 379
+  ExplicitHeight = 376
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
@@ -61,6 +62,11 @@ inherited Report_CheckBonusForm: TReport_CheckBonusForm
               Format = ',0.00##'
               Kind = skSum
               Column = Sum_Account
+            end
+            item
+              Format = ',0.00##'
+              Kind = skSum
+              Column = Sum_AccountSendDebt
             end>
           DataController.Summary.FooterSummaryItems = <
             item
@@ -102,6 +108,11 @@ inherited Report_CheckBonusForm: TReport_CheckBonusForm
               Format = #1057#1090#1088#1086#1082': ,0'
               Kind = skCount
               Column = JuridicalName
+            end
+            item
+              Format = ',0.00##'
+              Kind = skSum
+              Column = Sum_AccountSendDebt
             end>
           OptionsData.CancelOnExit = True
           OptionsData.Deleting = False
@@ -452,8 +463,18 @@ inherited Report_CheckBonusForm: TReport_CheckBonusForm
             PropertiesClassName = 'TcxCurrencyEditProperties'
             Properties.DecimalPlaces = 4
             Properties.DisplayFormat = ',0.####;-,0.####; ;'
-            Properties.ReadOnly = True
             Visible = False
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 80
+          end
+          object Sum_AccountSendDebt: TcxGridDBColumn
+            Caption = #1054#1087#1083#1072#1090#1072' + '#1042#1079#1072#1080#1084#1086#1079#1072#1095#1077#1090
+            DataBinding.FieldName = 'Sum_AccountSendDebt'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 4
+            Properties.DisplayFormat = ',0.####;-,0.####; ;'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Options.Editing = False

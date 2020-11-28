@@ -87,20 +87,30 @@ BEGIN
      THEN
         IF NOT EXISTS (SELECT 1 FROM MovementBoolean AS MB WHERE MB.MovementId = outMovementId_Promo AND MB.DescId = zc_MovementBoolean_Promo() AND MB.ValueData = TRUE)
         THEN
-              -- меняется значение - для Тенедер
+             -- меняется значение - для Тенедер
              ioPrice:= outPricePromo;
 
         ELSEIF COALESCE (ioId, 0) = 0 AND vbTaxPromo <> 0
         THEN
-              -- меняется значение
+             -- меняется значение
              ioPrice:= outPricePromo;
              ioCountForPrice:= vbCountForPricePromo;
 
-        ELSE -- только проверка
+        ELSE 
+             IF vbCountForPricePromo > 1
+             THEN
+              -- меняется значение
+              ioPrice:= outPricePromo;
+              ioCountForPrice:= vbCountForPricePromo;
+             END IF;
+
+             -- только проверка
              IF ioId <> 0 AND (ioPrice + 0.06) < outPricePromo AND vbTaxPromo <> 0
              THEN
                  RAISE EXCEPTION 'Ошибка.Для товара = <%> <%> необходимо ввести акционную цену = <%>.', lfGet_Object_ValueData (inGoodsId), lfGet_Object_ValueData_sh (inGoodsKindId), zfConvert_FloatToString (outPricePromo);
              END IF;
+
+ 
         END IF;
 
      -- ELSE !!!обратно из прайса пока не реализовал!!!!

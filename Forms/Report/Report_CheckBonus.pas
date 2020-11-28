@@ -88,6 +88,7 @@ type
     bbOpenReportDetail: TdxBarButton;
     actPrintSing: TdsdPrintAction;
     bbPrintSing: TdxBarButton;
+    Sum_AccountSendDebt: TcxGridDBColumn;
   private
     { Private declarations }
   public

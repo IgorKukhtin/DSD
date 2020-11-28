@@ -35,17 +35,18 @@ RETURNS TABLE (OperDate_Movement TDateTime, OperDatePartner TDateTime, InvNumber
              , PercentRetBonus_fact_weight TFloat
              , PercentRetBonus_diff_weight TFloat
              
-             , Sum_CheckBonus TFloat
-             , Sum_CheckBonusFact TFloat 
-             , Sum_Bonus TFloat
-             , Sum_BonusFact TFloat
-             , Sum_SaleFact TFloat
-             , Sum_Account TFloat
-             , Sum_Sale TFloat
-             , Sum_Return TFloat
-             , Sum_SaleReturnIn TFloat
+             , Sum_CheckBonus      TFloat
+             , Sum_CheckBonusFact  TFloat 
+             , Sum_Bonus           TFloat
+             , Sum_BonusFact       TFloat
+             , Sum_SaleFact        TFloat
+             , Sum_Account         TFloat
+             , Sum_AccountSendDebt TFloat
+             , Sum_Sale            TFloat
+             , Sum_Return          TFloat
+             , Sum_SaleReturnIn    TFloat
 
-             , Sum_Sale_weight TFloat
+             , Sum_Sale_weight     TFloat
              , Sum_ReturnIn_weight TFloat
 
              , Comment TVarChar
@@ -114,6 +115,7 @@ BEGIN
                                                         ON ObjectLink_ContractConditionKind.ObjectId = ObjectLink_ContractCondition_Contract.ObjectId
                                                        AND ObjectLink_ContractConditionKind.DescId = zc_ObjectLink_ContractCondition_ContractConditionKind()
                                                       AND ObjectLink_ContractConditionKind.ChildObjectId IN (zc_Enum_ContractConditionKind_BonusPercentAccount()
+                                                                                                           , zc_Enum_ContractConditionKind_BonusPercentAccountSendDebt()
                                                                                                            , zc_Enum_ContractConditionKind_BonusPercentSaleReturn()
                                                                                                            , zc_Enum_ContractConditionKind_BonusPercentSale()
                                                                                                             )
@@ -295,6 +297,7 @@ BEGIN
                                            LEFT JOIN Object AS Object_PaidKind ON Object_PaidKind.Id = ObjectLink_ContractCondition_PaidKind.ChildObjectId
 
                                       WHERE ObjectLink_ContractConditionKind.ChildObjectId IN (zc_Enum_ContractConditionKind_BonusPercentAccount()
+                                                                                             , zc_Enum_ContractConditionKind_BonusPercentAccountSendDebt()
                                                                                              , zc_Enum_ContractConditionKind_BonusPercentSaleReturn()
                                                                                              , zc_Enum_ContractConditionKind_BonusPercentSale()
                                                                                               )
@@ -496,12 +499,20 @@ BEGIN
                                         ELSE 0
                                    END    AS PartnerId
                                    
-                                 , SUM (CASE WHEN MIContainer.MovementDescId = zc_Movement_Sale() THEN COALESCE(MIContainer.Amount,0) ELSE 0 END) AS Sum_Sale -- Только продажи
-                                 , SUM (CASE WHEN MIContainer.MovementDescId IN (zc_Movement_Sale(), zc_Movement_ReturnIn()) THEN COALESCE(MIContainer.Amount,0) ELSE 0 END) AS Sum_SaleReturnIn -- продажи - возвраты
-                                 , SUM (CASE WHEN MIContainer.MovementDescId IN (zc_Movement_BankAccount(), zc_Movement_Cash()/*, zc_Movement_SendDebt()*/)
-                                                  THEN -1 * COALESCE(MIContainer.Amount,0)
+                                   -- Только продажи
+                                 , SUM (CASE WHEN MIContainer.MovementDescId = zc_Movement_Sale() THEN COALESCE(MIContainer.Amount,0) ELSE 0 END) AS Sum_Sale
+                                   -- продажи - возвраты
+                                 , SUM (CASE WHEN MIContainer.MovementDescId IN (zc_Movement_Sale(), zc_Movement_ReturnIn()) THEN COALESCE(MIContainer.Amount,0) ELSE 0 END) AS Sum_SaleReturnIn
+                                   -- оплаты
+                                 , SUM (CASE WHEN MIContainer.MovementDescId IN (zc_Movement_BankAccount(), zc_Movement_Cash())
+                                                  THEN -1 * COALESCE (MIContainer.Amount, 0)
                                              ELSE 0
-                                        END) AS Sum_Account -- оплаты
+                                        END) AS Sum_Account
+                                   -- оплаты + взаимозачет
+                                 , SUM (CASE WHEN MIContainer.MovementDescId IN (zc_Movement_BankAccount(), zc_Movement_Cash(), zc_Movement_SendDebt())
+                                                  THEN -1 * COALESCE (MIContainer.Amount, 0)
+                                             ELSE 0
+                                        END) AS Sum_AccountSendDebt
 
                                  , SUM (CASE WHEN MIContainer.MovementDescId = zc_Movement_ReturnIn() THEN (-1)*COALESCE(MIContainer.Amount,0) ELSE 0 END) AS Sum_Return  -- возврат
                                  , CASE WHEN inisMovement = TRUE THEN MIContainer.MovementDescId ELSE 0 END  AS MovementDescId
@@ -578,7 +589,7 @@ BEGIN
 
                             WHERE MIContainer.DescId = zc_MIContainer_Summ()
                               AND (MIContainer.OperDate >= inStartDate AND MIContainer.OperDate < vbEndDate)
-                              AND MIContainer.MovementDescId IN (zc_Movement_Sale(), zc_Movement_ReturnIn(), zc_Movement_BankAccount(),zc_Movement_Cash()/*, zc_Movement_SendDebt()*/)  -- взаимозачет убираем, чтоб он не влиял на бонусы
+                              AND MIContainer.MovementDescId IN (zc_Movement_Sale(), zc_Movement_ReturnIn(), zc_Movement_BankAccount(),zc_Movement_Cash(), zc_Movement_SendDebt())
                               --AND (COALESCE (ObjectLink_Cash_Branch.ChildObjectId, MILinkObject_Branch.ObjectId, ObjectLink_Unit_Branch.ChildObjectId,tmpContainer.BranchId,0) = inBranchId OR inBranchId = 0)
                               AND (COALESCE (ObjectLink_PersonalServiceList_Branch.ChildObjectId,0) = inBranchId OR inBranchId = 0)
 
@@ -619,6 +630,7 @@ BEGIN
                              , tmpGroup.Sum_Return
                              , tmpGroup.Sum_SaleReturnIn
                              , tmpGroup.Sum_Account
+                             , tmpGroup.Sum_AccountSendDebt
                              , tmpGroup.Sum_Sale_weight
                              , tmpGroup.Sum_ReturnIn_weight
                              --расчитывем % возврата факт = факт возврата / факт отгрузки * 100
@@ -634,10 +646,11 @@ BEGIN
                                   , tmpGroup.BranchId
                                   , tmpGroup.MovementId
                                   , tmpGroup.MovementDescId
-                                  , SUM (tmpGroup.Sum_Sale)    AS Sum_Sale
-                                  , SUM (tmpGroup.Sum_SaleReturnIn) AS Sum_SaleReturnIn
-                                  , SUM (tmpGroup.Sum_Account) AS Sum_Account
-                                  , SUM (tmpGroup.Sum_Return)  AS Sum_Return
+                                  , SUM (tmpGroup.Sum_Sale)            AS Sum_Sale
+                                  , SUM (tmpGroup.Sum_SaleReturnIn)    AS Sum_SaleReturnIn
+                                  , SUM (tmpGroup.Sum_Account)         AS Sum_Account
+                                  , SUM (tmpGroup.Sum_AccountSendDebt) AS Sum_AccountSendDebt
+                                  , SUM (tmpGroup.Sum_Return)          AS Sum_Return
                                   , SUM (tmpGroup.Sale_AmountPartner_Weight)   AS Sum_Sale_weight
                                   , SUM (tmpGroup.Return_AmountPartner_Weight) AS Sum_ReturnIn_weight
                              FROM tmpMovementCont AS tmpGroup
@@ -685,7 +698,12 @@ BEGIN
                                     END AS InfoMoneyId_find
       
                                   , tmpContract.JuridicalId AS JuridicalId
-                                  , CASE WHEN tmpContract.ContractConditionKindID = zc_Enum_ContractConditionKind_BonusPercentAccount() AND tmpContract.PaidKindId_byBase = zc_Enum_PaidKind_FirstForm() THEN 0 ELSE tmpMovement.PartnerId END AS PartnerId
+                                  , CASE WHEN tmpContract.ContractConditionKindID IN (zc_Enum_ContractConditionKind_BonusPercentAccount()
+                                                                                    , zc_Enum_ContractConditionKind_BonusPercentAccountSendDebt())
+                                          AND tmpContract.PaidKindId_byBase = zc_Enum_PaidKind_FirstForm()
+                                              THEN 0
+                                         ELSE tmpMovement.PartnerId
+                                    END AS PartnerId
                                   -- подменяем обратно ФО bз усл.договора на ФО из договора
                                   , tmpContract.PaidKindId                                 --tmpMovement.PaidKindId AS PaidKindId
                                   , tmpContract.PaidKindId_byBase  AS PaidKindId_child     -- ФО договора базы
@@ -696,23 +714,26 @@ BEGIN
                                   , COALESCE (tmpMovement.PercentRetBonus_fact,0)       ::TFloat AS PercentRetBonus_fact
                                   , COALESCE (tmpMovement.PercentRetBonus_fact_weight,0)::TFloat AS PercentRetBonus_fact_weight
       
-                                  , CAST (CASE WHEN tmpContract.ContractConditionKindID = zc_Enum_ContractConditionKind_BonusPercentSale() THEN tmpMovement.Sum_Sale 
-                                               WHEN tmpContract.ContractConditionKindID = zc_Enum_ContractConditionKind_BonusPercentSaleReturn() THEN tmpMovement.Sum_SaleReturnIn
-                                               WHEN tmpContract.ContractConditionKindID = zc_Enum_ContractConditionKind_BonusPercentAccount() THEN tmpMovement.Sum_Account
+                                  , CAST (CASE WHEN tmpContract.ContractConditionKindID = zc_Enum_ContractConditionKind_BonusPercentSale()            THEN tmpMovement.Sum_Sale 
+                                               WHEN tmpContract.ContractConditionKindID = zc_Enum_ContractConditionKind_BonusPercentSaleReturn()      THEN tmpMovement.Sum_SaleReturnIn
+                                               WHEN tmpContract.ContractConditionKindID = zc_Enum_ContractConditionKind_BonusPercentAccount()         THEN tmpMovement.Sum_Account
+                                               WHEN tmpContract.ContractConditionKindID = zc_Enum_ContractConditionKind_BonusPercentAccountSendDebt() THEN tmpMovement.Sum_AccountSendDebt
                                           ELSE 0 END  AS TFloat) AS Sum_CheckBonus
       
-                                  --когда % возврата факт превышает % возврата план, бонус не начисляется 
+                                    -- когда % возврата факт превышает % возврата план, бонус не начисляется 
                                   , CAST (CASE WHEN (COALESCE (tmpContract.PercentRetBonus,0) <> 0 AND tmpMovement.PercentRetBonus_fact_weight > tmpContract.PercentRetBonus) THEN 0 
                                                ELSE 
-                                                  CASE WHEN tmpContract.ContractConditionKindID = zc_Enum_ContractConditionKind_BonusPercentSale() THEN (tmpMovement.Sum_Sale/100 * tmpContract.Value)
-                                                       WHEN tmpContract.ContractConditionKindID = zc_Enum_ContractConditionKind_BonusPercentSaleReturn() THEN (tmpMovement.Sum_SaleReturnIn/100 * tmpContract.Value) 
-                                                       WHEN tmpContract.ContractConditionKindID = zc_Enum_ContractConditionKind_BonusPercentAccount() THEN (tmpMovement.Sum_Account/100 * tmpContract.Value)
+                                                  CASE WHEN tmpContract.ContractConditionKindID = zc_Enum_ContractConditionKind_BonusPercentSale()            THEN (tmpMovement.Sum_Sale            / 100 * tmpContract.Value)
+                                                       WHEN tmpContract.ContractConditionKindID = zc_Enum_ContractConditionKind_BonusPercentSaleReturn()      THEN (tmpMovement.Sum_SaleReturnIn    / 100 * tmpContract.Value) 
+                                                       WHEN tmpContract.ContractConditionKindID = zc_Enum_ContractConditionKind_BonusPercentAccount()         THEN (tmpMovement.Sum_Account         / 100 * tmpContract.Value)
+                                                       WHEN tmpContract.ContractConditionKindID = zc_Enum_ContractConditionKind_BonusPercentAccountSendDebt() THEN (tmpMovement.Sum_AccountSendDebt / 100 * tmpContract.Value)
                                                   ELSE 0 END
                                           END  AS NUMERIC (16, 2)) AS Sum_Bonus
-                                  , 0 :: TFloat                  AS Sum_BonusFact
-                                  , 0 :: TFloat                  AS Sum_CheckBonusFact
-                                  , 0 :: TFloat                  AS Sum_SaleFact
+                                  , 0 :: TFloat                    AS Sum_BonusFact
+                                  , 0 :: TFloat                    AS Sum_CheckBonusFact
+                                  , 0 :: TFloat                    AS Sum_SaleFact
                                   , COALESCE (tmpMovement.Sum_Account,0)         AS Sum_Account
+                                  , COALESCE (tmpMovement.Sum_AccountSendDebt,0) AS Sum_AccountSendDebt
                                   , COALESCE (tmpMovement.Sum_Sale,0)            AS Sum_Sale
                                   , COALESCE (tmpMovement.Sum_Return,0)          AS Sum_Return
                                   , COALESCE (tmpMovement.Sum_SaleReturnIn,0)    AS Sum_SaleReturnIn
@@ -767,6 +788,7 @@ BEGIN
                             , MIFloat_Summ.ValueData                         AS Sum_CheckBonusFact
                             , MIFloat_AmountPartner.ValueData                AS Sum_SaleFact
                             , 0 :: TFloat                                    AS Sum_Account
+                            , 0 :: TFloat                                    AS Sum_AccountSendDebt
                             , 0 :: TFloat                                    AS Sum_Sale
                             , 0 :: TFloat                                    AS Sum_Return
                             , 0 :: TFloat                                    AS Sum_SaleReturnIn
@@ -875,6 +897,7 @@ BEGIN
                             , 0 :: TFloat                       AS Sum_CheckBonusFact
                             , 0 :: TFloat                       AS Sum_SaleFact
                             , 0 :: TFloat                       AS Sum_Account
+                            , 0 :: TFloat                       AS Sum_AccountSendDebt
                             , 0 :: TFloat                       AS Sum_Sale
                             , 0 :: TFloat                       AS Sum_Return
                             , 0 :: TFloat                       AS Sum_SaleReturnIn
@@ -933,6 +956,7 @@ BEGIN
                          , tmpAll.Sum_BonusFact
                          , tmpAll.Sum_SaleFact
                          , tmpAll.Sum_Account
+                         , tmpAll.Sum_AccountSendDebt
                          , tmpAll.Sum_Sale
                          , tmpAll.Sum_Return
                          , tmpAll.Sum_SaleReturnIn
@@ -964,15 +988,16 @@ BEGIN
                          , MAX (tmpAll.PercentRetBonus)    AS PercentRetBonus
                          , MAX (tmpAll.PercentRetBonus_fact)        AS PercentRetBonus_fact
                          , MAX (tmpAll.PercentRetBonus_fact_weight) AS PercentRetBonus_fact_weight
-                         , SUM (tmpAll.Sum_CheckBonus)     AS Sum_CheckBonus
-                         , SUM (tmpAll.Sum_CheckBonusFact) AS Sum_CheckBonusFact
-                         , SUM (tmpAll.Sum_Bonus)          AS Sum_Bonus
-                         , SUM (tmpAll.Sum_BonusFact)*(-1) AS Sum_BonusFact
-                         , SUM (tmpAll.Sum_SaleFact)       AS Sum_SaleFact
-                         , SUM (tmpAll.Sum_Account)        AS Sum_Account
-                         , SUM (tmpAll.Sum_Sale)           AS Sum_Sale
-                         , SUM (tmpAll.Sum_Return)         AS Sum_Return
-                         , SUM (tmpAll.Sum_SaleReturnIn)   AS Sum_SaleReturnIn
+                         , SUM (tmpAll.Sum_CheckBonus)      AS Sum_CheckBonus
+                         , SUM (tmpAll.Sum_CheckBonusFact)  AS Sum_CheckBonusFact
+                         , SUM (tmpAll.Sum_Bonus)           AS Sum_Bonus
+                         , SUM (tmpAll.Sum_BonusFact)*(-1)  AS Sum_BonusFact
+                         , SUM (tmpAll.Sum_SaleFact)        AS Sum_SaleFact
+                         , SUM (tmpAll.Sum_Account)         AS Sum_Account
+                         , SUM (tmpAll.Sum_AccountSendDebt) AS Sum_AccountSendDebt
+                         , SUM (tmpAll.Sum_Sale)            AS Sum_Sale
+                         , SUM (tmpAll.Sum_Return)          AS Sum_Return
+                         , SUM (tmpAll.Sum_SaleReturnIn)    AS Sum_SaleReturnIn
 
                          , SUM (COALESCE (tmpAll.Sum_Sale_weight,0))     AS Sum_Sale_weight    
                          , SUM (COALESCE (tmpAll.Sum_ReturnIn_weight,0)) AS Sum_ReturnIn_weight
@@ -1123,6 +1148,7 @@ BEGIN
                            AND inPaidKindID                = zc_Enum_PaidKind_SecondForm()
                          --AND Object_ReportBonus.isErased = TRUE
                          )
+      -- Результат
       SELECT  tmpMovementParams.OperDate        :: TDateTime AS OperDate_Movement
             , tmpMovementParams.OperDatePartner :: TDateTime AS OperDatePartner
             , tmpMovementParams.InvNumber                    AS InvNumber_Movement
@@ -1176,15 +1202,17 @@ BEGIN
             , CAST (tmpData.PercentRetBonus_fact_weight AS TFloat) AS PercentRetBonus_fact_weight
             , CAST (COALESCE (tmpData.PercentRetBonus_fact_weight,0) - COALESCE (tmpData.PercentRetBonus, 0) AS TFloat) :: TFloat AS PercentRetBonus_diff_weight
 
-            , CAST (tmpData.Sum_CheckBonus AS TFloat)     AS Sum_CheckBonus
-            , CAST (tmpData.Sum_CheckBonusFact AS TFloat) AS Sum_CheckBonusFact
-            , CAST (tmpData.Sum_Bonus      AS TFloat)     AS Sum_Bonus
-            , CAST (tmpData.Sum_BonusFact  AS TFloat)     AS Sum_BonusFact
-            , CAST (tmpData.Sum_SaleFact   AS TFloat)     AS Sum_SaleFact
-            , CAST (tmpData.Sum_Account    AS TFloat)     AS Sum_Account
-            , CAST (tmpData.Sum_Account    AS TFloat)     AS Sum_Sale
-            , CAST (tmpData.Sum_Account    AS TFloat)     AS Sum_Return
-            , CAST (tmpData.Sum_SaleReturnIn AS TFloat)   AS Sum_SaleReturnIn
+            , CAST (tmpData.Sum_CheckBonus      AS TFloat) AS Sum_CheckBonus
+            , CAST (tmpData.Sum_CheckBonusFact  AS TFloat) AS Sum_CheckBonusFact
+            , CAST (tmpData.Sum_Bonus           AS TFloat) AS Sum_Bonus
+            , CAST (tmpData.Sum_BonusFact       AS TFloat) AS Sum_BonusFact
+            , CAST (tmpData.Sum_SaleFact        AS TFloat) AS Sum_SaleFact
+            , CAST (tmpData.Sum_Account         AS TFloat) AS Sum_Account
+            , CAST (tmpData.Sum_AccountSendDebt AS TFloat) AS Sum_AccountSendDebt
+            , CAST (tmpData.Sum_Sale            AS TFloat) AS Sum_Sale
+            , CAST (tmpData.Sum_Return          AS TFloat) AS Sum_Return
+            , CAST (tmpData.Sum_SaleReturnIn    AS TFloat) AS Sum_SaleReturnIn
+
             , CAST (tmpData.Sum_Sale_weight     AS TFloat) AS Sum_Sale_weight
             , CAST (tmpData.Sum_ReturnIn_weight AS TFloat) AS Sum_ReturnIn_weight
             
