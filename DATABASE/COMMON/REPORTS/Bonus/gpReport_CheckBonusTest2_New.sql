@@ -359,10 +359,37 @@ BEGIN
                                 , CASE WHEN inPaidKindId = zc_Enum_PaidKind_SecondForm() THEN tmpContract_find.ContractConditionId ELSE 0 END ContractConditionId
                            FROM (-- базовые договора в которых "бонусное" условие + прописано какой подставить "маркет-договор"
                                  SELECT DISTINCT
-                                        tmpContractConditionKind.ContractId_master
-                                      , tmpContractConditionKind.ContractId_send AS ContractId_find
+                                        CASE WHEN ObjectLink_Contract_InfoMoney_send.ChildObjectId IN (zc_Enum_InfoMoney_30101() -- Готовая продукция
+                                                                                                     , zc_Enum_InfoMoney_30201() -- Мясное сырье
+                                                                                                      )
+                                               AND tmpContractConditionKind.InfoMoneyId_master IN (zc_Enum_InfoMoney_21501() -- Маркетинг + Бонусы за продукцию
+                                                                                                 , zc_Enum_InfoMoney_21502() -- Маркетинг + Бонусы за мясное сырье
+                                                                                                  )
+                                                  
+                                             THEN -- меняем местами
+                                                  tmpContractConditionKind.ContractId_send
+                                             ELSE -- оставили как было
+                                                  tmpContractConditionKind.ContractId_master
+                                        END AS ContractId_master
+                                        --
+                                      , CASE WHEN ObjectLink_Contract_InfoMoney_send.ChildObjectId IN (zc_Enum_InfoMoney_30101() -- Готовая продукция
+                                                                                                     , zc_Enum_InfoMoney_30201() -- Мясное сырье
+                                                                                                      )
+                                               AND tmpContractConditionKind.InfoMoneyId_master IN (zc_Enum_InfoMoney_21501() -- Маркетинг + Бонусы за продукцию
+                                                                                                 , zc_Enum_InfoMoney_21502() -- Маркетинг + Бонусы за мясное сырье
+                                                                                                  )
+                                                  
+                                             THEN -- меняем местами
+                                                  tmpContractConditionKind.ContractId_master
+                                             ELSE -- оставили как было
+                                                  tmpContractConditionKind.ContractId_send
+                                        END AS ContractId_find
+                                        --
                                       , tmpContractConditionKind.ContractConditionId
                                  FROM tmpContractConditionKind
+                                      LEFT JOIN ObjectLink AS ObjectLink_Contract_InfoMoney_send
+                                                           ON ObjectLink_Contract_InfoMoney_send.ObjectId = tmpContractConditionKind.ContractId_send
+                                                          AND ObjectLink_Contract_InfoMoney_send.DescId   = zc_ObjectLink_Contract_InfoMoney()
                                  WHERE tmpContractConditionKind.ContractId_send > 0
                                 UNION
                                  -- остальные базовые договора для которых находим "маркет-договор"

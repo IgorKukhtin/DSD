@@ -11,9 +11,29 @@ AS
 $BODY$
    DECLARE vbMovementId_PersonalServiceBN Integer;
    DECLARE vbServiceDate TDateTime;
+   DECLARE vbOperDate TDateTime;
+   DECLARE vbPersonalServiceListId Integer;
+   DECLARE vbIsOut Boolean;
 BEGIN
      -- таблица - элементы
      CREATE TEMP TABLE _tmpItem_PersonalService (MovementId_serviceBN Integer, PersonalServiceListId_from Integer, PersonalServiceListId Integer, PersonalId Integer, UnitId Integer, PositionId Integer, InfoMoneyId Integer, SummCard TFloat, SummCardRecalc TFloat) ON COMMIT DROP;
+
+     -- дата выплаты по банку
+     vbOperDate:= (SELECT Movement.OperDate FROM Movement WHERE Movement.Id = inMovementId);
+
+     -- нашли ведомость
+     vbPersonalServiceListId:= (SELECT MILinkObject_MoneyPlace.ObjectId
+                                FROM MovementItem
+                                     INNER JOIN MovementItemLinkObject AS MILinkObject_MoneyPlace
+                                                                       ON MILinkObject_MoneyPlace.MovementItemId = MovementItem.Id
+                                                                      AND MILinkObject_MoneyPlace.DescId         = zc_MILinkObject_MoneyPlace()
+                                WHERE MovementItem.MovementId = inMovementId
+                                  AND MovementItem.DescId     = zc_MI_Master()
+                               );
+
+     -- это ведомость для уволенных - тогда по дате
+     vbIsOut:= (SELECT ObjectBoolean.ValueData FROM ObjectBoolean WHERE ObjectBoolean.ObjectId = vbPersonalServiceListId AND ObjectBoolean.DescId = zc_ObjectBoolean_PersonalServiceList_BankOut());
+
 
      -- 
      WITH -- из zc_Movement_BankAccount - Получили одну Ведомость - БН
@@ -40,11 +60,21 @@ BEGIN
                              , MILinkObject_Position.ObjectId                       AS PositionId
                              , MILinkObject_InfoMoney.ObjectId                      AS InfoMoneyId
                                -- Карточка (БН) ввод + "Сумма начислено"
-                             , SUM (COALESCE (MIFloat_SummCardRecalc.ValueData, 0)
-                                  + CASE WHEN COALESCE (MIFloat_SummCardRecalc.ValueData, 0) = 0
-                                         THEN COALESCE (MIFloat_SummHosp.ValueData, 0)
-                                         ELSE 0
-                                    END) AS SummCardRecalc
+                             , SUM (CASE WHEN vbIsOut = TRUE
+                                         THEN CASE WHEN MID_BankOut.ValueData = vbOperDate
+                                                        THEN CASE WHEN MIFloat_SummCardRecalc.ValueData <> 0
+                                                                  THEN MIFloat_SummCardRecalc.ValueData
+                                                                  ELSE COALESCE (MIFloat_SummHosp.ValueData, 0)
+                                                             END
+                                                   ELSE 0
+                                              END
+                                         ELSE
+                                              CASE WHEN MIFloat_SummCardRecalc.ValueData <> 0
+                                                   THEN MIFloat_SummCardRecalc.ValueData
+                                                   ELSE COALESCE (MIFloat_SummHosp.ValueData, 0)
+                                              END
+                                    END
+                                   ) AS SummCardRecalc
                         FROM tmpParams
                              -- ведомость за этот месяц
                              INNER JOIN MovementDate AS MovementDate_ServiceDate
@@ -54,6 +84,7 @@ BEGIN
                              INNER JOIN Movement ON Movement.Id       = MovementDate_ServiceDate.MovementId
                                                 AND Movement.DescId   = zc_Movement_PersonalService()
                                                 AND Movement.StatusId = zc_Enum_Status_Complete()
+                                                
                              -- именно эта ведомость
                              INNER JOIN MovementLinkObject AS MovementLinkObject_PersonalServiceList
                                                            ON MovementLinkObject_PersonalServiceList.MovementId = MovementDate_ServiceDate.MovementId
@@ -61,6 +92,9 @@ BEGIN
                                                           AND MovementLinkObject_PersonalServiceList.ObjectId   = tmpParams.MoneyPlaceId
                              INNER JOIN MovementItem ON MovementItem.MovementId = Movement.Id
                                                     AND MovementItem.isErased   = FALSE
+                             LEFT JOIN MovementItemDate AS MID_BankOut
+                                                        ON MID_BankOut.MovementItemId = MovementItem.Id
+                                                       AND MID_BankOut.DescId         = zc_MIDate_BankOut()
                              LEFT JOIN MovementItemLinkObject AS MILinkObject_PersonalServiceList
                                                               ON MILinkObject_PersonalServiceList.MovementItemId = MovementItem.Id
                                                              AND MILinkObject_PersonalServiceList.DescId = zc_MILinkObject_PersonalServiceList() 
@@ -101,6 +135,21 @@ BEGIN
                                , MILinkObject_Position.ObjectId
                                , MILinkObject_InfoMoney.ObjectId
                                , MILinkObject_PersonalServiceList.ObjectId
+                        HAVING SUM (CASE WHEN vbIsOut = TRUE
+                                         THEN CASE WHEN MID_BankOut.ValueData = vbOperDate
+                                                        THEN CASE WHEN MIFloat_SummCardRecalc.ValueData <> 0
+                                                                  THEN MIFloat_SummCardRecalc.ValueData
+                                                                  ELSE COALESCE (MIFloat_SummHosp.ValueData, 0)
+                                                             END
+                                                   ELSE 0
+                                              END
+                                         ELSE
+                                              CASE WHEN MIFloat_SummCardRecalc.ValueData <> 0
+                                                   THEN MIFloat_SummCardRecalc.ValueData
+                                                   ELSE COALESCE (MIFloat_SummHosp.ValueData, 0)
+                                              END
+                                    END
+                                   ) <> 0
                        )
      -- Результат
      INSERT INTO _tmpItem_PersonalService (MovementId_serviceBN, PersonalServiceListId_from, PersonalServiceListId, PersonalId, UnitId, PositionId, InfoMoneyId, SummCard, SummCardRecalc)

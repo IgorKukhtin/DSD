@@ -184,7 +184,30 @@ BEGIN
 
     -- нашли свойство Юр. лица
     vbJuridicalId:= (SELECT MLO.ObjectId FROM MovementLinkObject AS MLO WHERE MLO.DescId = zc_MovementLinkObject_Juridical() AND MLO.MovementId = vbMovementItemId);
-    -- сначала поиск черезе карту - Алименты
+    -- сначала поиск через Назначение платежа - Удержание
+    IF COALESCE(vbJuridicalId, 0) = 0
+    THEN
+        vbJuridicalId:= (WITH tmpMember AS (SELECT ObjectString.ObjectId AS MemberId
+                                            FROM ObjectString
+                                            WHERE ObjectString.ValueData <> ''
+                                              AND TRIM (inComment) ILIKE ObjectString.ValueData
+                                              AND ObjectString.DescId = zc_ObjectString_MemberMinus_DetailPayment()
+                                            LIMIT 1 -- на всякий случай
+                                           )
+                         SELECT tmpMember.MemberId FROM tmpMember
+                         -- SELECT tmp.PersonalId FROM gpGet_Object_Member ((SELECT tmpMember.MemberId FROM tmpMember), inSession) AS tmp
+                        );
+        -- если нашли, УП статья будет такой
+        IF vbJuridicalId > 0
+        THEN
+            -- Заработная плата + Удержания сторон. юр.л.
+            vbInfoMoneyId:= 979902;
+            -- сохранили связь с <Сотрудник> хотя и называется <Юр. лицо>
+            PERFORM lpInsertUpdate_MovementLinkObject (zc_MovementLinkObject_Juridical(), vbMovementItemId, vbJuridicalId);
+        END IF;
+    END IF;
+
+    -- дальше поиск через карту - Алименты
     IF COALESCE(vbJuridicalId, 0) = 0
     THEN
         vbJuridicalId:= (WITH tmpCardChild_all AS (SELECT OS.ValueData, OS.ObjectId AS MemberId FROM ObjectString AS OS WHERE OS.DescId = zc_ObjectString_Member_CardChild() AND ValueData <> '')
