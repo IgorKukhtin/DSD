@@ -55,6 +55,24 @@ CREATE OR REPLACE FUNCTION zc_MIDate_Econom() RETURNS Integer AS $BODY$BEGIN RET
 INSERT INTO MovementItemDateDesc (Code, ItemName)
   SELECT 'zc_MIDate_Econom', 'когда сформирована виза Ёкономисты' WHERE NOT EXISTS (SELECT * FROM MovementItemDateDesc WHERE Code = 'zc_MIDate_Econom');
 
+CREATE OR REPLACE FUNCTION zc_MIDate_EconomIn() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM MovementItemDateDesc WHERE Code = 'zc_MIDate_EconomIn'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
+INSERT INTO MovementItemDateDesc (Code, ItemName)
+  SELECT 'zc_MIDate_EconomIn', 'когда сформирована виза Ёкономисты (в работе)' WHERE NOT EXISTS (SELECT * FROM MovementItemDateDesc WHERE Code = 'zc_MIDate_EconomIn');
+
+CREATE OR REPLACE FUNCTION zc_MIDate_EconomOut() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM MovementItemDateDesc WHERE Code = 'zc_MIDate_EconomOut'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
+INSERT INTO MovementItemDateDesc (Code, ItemName)
+  SELECT 'zc_MIDate_EconomOut', 'когда сформирована виза Ёкономисты (дл€ снабжени€)' WHERE NOT EXISTS (SELECT * FROM MovementItemDateDesc WHERE Code = 'zc_MIDate_EconomOut');
+
+CREATE OR REPLACE FUNCTION zc_MIDate_Snab() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM MovementItemDateDesc WHERE Code = 'zc_MIDate_Snab'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
+INSERT INTO MovementItemDateDesc (Code, ItemName)
+  SELECT 'zc_MIDate_Snab', 'когда сформирована виза —набжение (в работе)' WHERE NOT EXISTS (SELECT * FROM MovementItemDateDesc WHERE Code = 'zc_MIDate_Snab');
+
+CREATE OR REPLACE FUNCTION zc_MIDate_SnabRe() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM MovementItemDateDesc WHERE Code = 'zc_MIDate_SnabRe'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
+INSERT INTO MovementItemDateDesc (Code, ItemName)
+  SELECT 'zc_MIDate_SnabRe', 'когда сформирована виза —набжение (дл€ переделки)' WHERE NOT EXISTS (SELECT * FROM MovementItemDateDesc WHERE Code = 'zc_MIDate_SnabRe');
+
+
+
 CREATE OR REPLACE FUNCTION zc_MIDate_TransferIn() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM MovementItemDateDesc WHERE Code = 'zc_MIDate_TransferIn'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
 INSERT INTO MovementItemDateDesc (Code, ItemName)
   SELECT 'zc_MIDate_TransferIn', 'когда сформирована виза "“ранзит получен"' WHERE NOT EXISTS (SELECT * FROM MovementItemDateDesc WHERE Code = 'zc_MIDate_TransferIn');

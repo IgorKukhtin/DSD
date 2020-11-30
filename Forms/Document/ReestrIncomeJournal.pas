@@ -51,7 +51,7 @@ type
     RouteName: TcxGridDBColumn;
     OperDatePartner: TcxGridDBColumn;
     MemberName: TcxGridDBColumn;
-    TotalCountKg: TcxGridDBColumn;
+    TotalCountPartner: TcxGridDBColumn;
     actPrintForDriver: TdsdPrintAction;
     bbPrintForDriver: TdxBarButton;
   private

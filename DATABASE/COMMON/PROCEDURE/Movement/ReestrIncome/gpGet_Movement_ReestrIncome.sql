@@ -39,8 +39,8 @@ BEGIN
              , 0                     AS MemberId
              , CAST ('' AS TVarChar) AS MemberName
 
-             , 0                                    AS MovementId_Transport
-             , '' :: TVarChar                       AS InvNumber_Transport 
+             , 0                     AS MovementId_Transport
+             , '' :: TVarChar        AS InvNumber_Transport 
 
           FROM lfGet_Object_Status(zc_Enum_Status_UnComplete()) AS Object_Status;
      ELSE
@@ -64,10 +64,7 @@ BEGIN
              , Movement_Transport.Id                     AS MovementId_Transport
              , ('№ ' || Movement_Transport.InvNumber || ' от ' || Movement_Transport.OperDate  :: Date :: TVarChar ) :: TVarChar AS InvNumber_Transport
 
---             , zfCalc_PartiONMovementName (Movement_Invoice.DescId, MovementDesc_Invoice.ItemName, Movement_Invoice.InvNumber, Movement_Invoice.OperDate) AS InvoiceName
-
        FROM Movement
-          --  LEFT JOIN MovementDesc AS MovementDesc_Invoice ON MovementDesc_Invoice.Id = Movement_Invoice.DescId
             LEFT JOIN Object AS Object_Status ON Object_Status.Id = Movement.StatusId
 
             LEFT JOIN MovementLinkObject AS MovementLinkObject_Car
@@ -102,7 +99,7 @@ $BODY$
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
- 20.10.16         *
+ 30.11.20         *
 */
 
 -- тест

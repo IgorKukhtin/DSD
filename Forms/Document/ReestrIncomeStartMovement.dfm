@@ -36,7 +36,7 @@ inherited ReestrIncomeStartMovementForm: TReestrIncomeStartMovementForm
             item
               Format = ',0.####'
               Kind = skSum
-              Column = TotalCountKg
+              Column = TotalCountPartner
             end>
           DataController.Summary.FooterSummaryItems = <
             item
@@ -52,7 +52,7 @@ inherited ReestrIncomeStartMovementForm: TReestrIncomeStartMovementForm
             item
               Format = ',0.####'
               Kind = skSum
-              Column = TotalCountKg
+              Column = TotalCountPartner
             end>
           OptionsBehavior.FocusCellOnCycle = False
           OptionsCustomize.DataRowSizing = False
@@ -191,16 +191,16 @@ inherited ReestrIncomeStartMovementForm: TReestrIncomeStartMovementForm
             HeaderAlignmentVert = vaCenter
             Width = 45
           end
-          object JuridicalName_To: TcxGridDBColumn [14]
+          object JuridicalName_from: TcxGridDBColumn [14]
             Caption = #1070#1088#1080#1076#1080#1095#1077#1089#1082#1086#1077' '#1083#1080#1094#1086
-            DataBinding.FieldName = 'JuridicalName_To'
+            DataBinding.FieldName = 'JuridicalName_from'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Width = 100
           end
-          object TotalCountKg: TcxGridDBColumn [15]
-            Caption = #1050#1086#1083'-'#1074#1086' '#1074#1077#1089' ('#1091' '#1087#1086#1082#1091#1087'.)'
-            DataBinding.FieldName = 'TotalCountKg'
+          object TotalCountPartner: TcxGridDBColumn [15]
+            Caption = #1050#1086#1083'-'#1074#1086' ('#1091' '#1087#1086#1089#1090'.)'
+            DataBinding.FieldName = 'TotalCountPartner'
             PropertiesClassName = 'TcxCurrencyEditProperties'
             Properties.DecimalPlaces = 4
             Properties.DisplayFormat = ',0.####;-,0.####; ;'
@@ -257,14 +257,14 @@ inherited ReestrIncomeStartMovementForm: TReestrIncomeStartMovementForm
             Width = 60
           end
           object InsertDate: TcxGridDBColumn [22]
-            Caption = #1044#1072#1090#1072'/'#1074#1088#1077#1084#1103' ('#1074#1080#1079#1072' '#1042#1099#1074#1077#1079#1077#1085#1086' '#1089#1086' '#1089#1082#1083#1072#1076#1072')'
+            Caption = #1044#1072#1090#1072'/'#1074#1088#1077#1084#1103' ('#1074#1080#1079#1072' '#1055#1086#1083#1091#1095#1077#1085#1086' '#1086#1090' '#1082#1083#1080#1077#1085#1090#1072')'
             DataBinding.FieldName = 'InsertDate'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Width = 150
           end
           object MemberName: TcxGridDBColumn [23]
-            Caption = #1060#1048#1054' ('#1074#1080#1079#1072' '#1042#1099#1074#1077#1079#1077#1085#1086' '#1089#1086' '#1089#1082#1083#1072#1076#1072' '#1080#1083#1080' '#1057#1086#1079#1076#1072#1085#1080#1077')'
+            Caption = #1060#1048#1054' ('#1074#1080#1079#1072' '#1055#1086#1083#1091#1095#1077#1085#1086' '#1086#1090' '#1082#1083#1080#1077#1085#1090#1072')'
             DataBinding.FieldName = 'MemberName'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
@@ -415,7 +415,7 @@ inherited ReestrIncomeStartMovementForm: TReestrIncomeStartMovementForm
             PropertiesClassName = 'TcxButtonEditProperties'
             Properties.Buttons = <
               item
-                Action = actSaleChoiceForm
+                Action = actIncomeChoiceForm
                 Default = True
                 Kind = bkEllipsis
               end>
@@ -948,13 +948,13 @@ inherited ReestrIncomeStartMovementForm: TReestrIncomeStartMovementForm
           MultiSelectSeparator = ','
         end>
     end
-    object actSaleChoiceForm: TOpenChoiceForm
+    object actIncomeChoiceForm: TOpenChoiceForm
       Category = 'DSDLib'
       MoveParams = <>
       PostDataSetBeforeExecute = False
-      Caption = 'SaleJournalChoice'
-      FormName = 'TSaleJournalChoiceForm'
-      FormNameParam.Value = 'TSaleJournalChoiceForm'
+      Caption = 'IncomeJournalChoice'
+      FormName = 'TIncomeJournalChoiceForm'
+      FormNameParam.Value = 'TIncomeJournalChoiceForm'
       FormNameParam.DataType = ftString
       FormNameParam.MultiSelectSeparator = ','
       GuiParams = <

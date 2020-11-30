@@ -32,7 +32,7 @@ type
     spSelectPrint: TdsdStoredProc;
     N2: TMenuItem;
     N3: TMenuItem;
-    actSaleChoiceForm: TOpenChoiceForm;
+    actIncomeChoiceForm: TOpenChoiceForm;
     cxLabel25: TcxLabel;
     edInvNumberTransport: TcxButtonEdit;
     TransportChoiceGuides: TdsdGuides;

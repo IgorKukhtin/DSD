@@ -27,7 +27,7 @@ BEGIN
 
      -- определяем ключ доступа !!!то что захардкоженно - временно!!!
      vbAccessKeyId:= CASE WHEN 1 = 1
-                               THEN lpGetAccessKey (ABS (inUserId), zc_Enum_Process_InsertUpdate_Movement_Sale_Partner())
+                               THEN lpGetAccessKey (ABS (inUserId), zc_Enum_Process_InsertUpdate_Movement_Income_Partner())
                           ELSE zc_Enum_Process_AccessKey_DocumentDnepr()
                      END;
 
@@ -53,7 +53,7 @@ BEGIN
 
          -- сохранили свойство <когда сформирована виза "Вывезено со склада" (т.е. добавлен последний документ в реестр)>
          PERFORM lpInsertUpdate_MovementDate (zc_MovementDate_Update(), ioId, CURRENT_TIMESTAMP);
-         -- сохранили свойство <кто сформировал визу "Вывезено со склада" (т.е. добавлен последний документ в реестр)>
+         -- сохранили свойство <кто сформировал визу "" (т.е. добавлен последний документ в реестр)>
          PERFORM lpInsertUpdate_MovementLinkObject (zc_MovementLinkObject_Update(), ioId, inUserId);
      END IF;
 
