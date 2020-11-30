@@ -10,6 +10,7 @@ RETURNS TABLE (Id Integer, Code Integer, Name TVarChar
              , Length TFloat, Beam TFloat, Height TFloat, Weight TFloat, Fuel TFloat, Speed TFloat, Seating TFloat
              , Comment TVarChar
              , BrandId Integer, BrandName TVarChar
+             , ProdEngineId Integer, ProdEngineName TVarChar
              , InsertName TVarChar
              , InsertDate TDateTime
              , isErased boolean) AS
@@ -38,6 +39,8 @@ BEGIN
          
          , Object_Brand.Id                 AS BrandId
          , Object_Brand.ValueData          AS BrandName
+         , Object_ProdEngine.Id            AS ProdEngineId
+         , Object_ProdEngine.ValueData     AS ProdEngineName
 
          , Object_Insert.ValueData         AS InsertName
          , ObjectDate_Insert.ValueData     AS InsertDate
@@ -80,6 +83,11 @@ BEGIN
                                ON ObjectLink_Brand.ObjectId = Object_ProdModel.Id
                               AND ObjectLink_Brand.DescId = zc_ObjectLink_ProdModel_Brand()
           LEFT JOIN Object AS Object_Brand ON Object_Brand.Id = ObjectLink_Brand.ChildObjectId
+
+          LEFT JOIN ObjectLink AS ObjectLink_ProdEngine
+                               ON ObjectLink_ProdEngine.ObjectId = Object_ProdModel.Id
+                              AND ObjectLink_ProdEngine.DescId = zc_ObjectLink_ProdModel_ProdEngine()
+          LEFT JOIN Object AS Object_ProdEngine ON Object_ProdEngine.Id = ObjectLink_ProdEngine.ChildObjectId
 
           LEFT JOIN ObjectLink AS ObjectLink_Insert
                                ON ObjectLink_Insert.ObjectId = Object_ProdModel.Id

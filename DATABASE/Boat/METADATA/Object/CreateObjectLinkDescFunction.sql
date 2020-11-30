@@ -216,10 +216,15 @@ CREATE OR REPLACE FUNCTION zc_ObjectLink_ProdModel_Brand() RETURNS Integer AS $B
 INSERT INTO ObjectLinkDesc(Code, ItemName, DescId, ChildObjectDescId)
 SELECT 'zc_ObjectLink_ProdModel_Brand', 'Марка', zc_Object_ProdModel(), zc_Object_Brand() WHERE NOT EXISTS (SELECT * FROM ObjectLinkDesc WHERE Code = 'zc_ObjectLink_ProdModel_Brand');
 
+CREATE OR REPLACE FUNCTION zc_ObjectLink_ProdModel_ProdEngine() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM ObjectLinkDesc WHERE Code = 'zc_ObjectLink_ProdModel_ProdEngine'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
+INSERT INTO ObjectLinkDesc(Code, ItemName, DescId, ChildObjectDescId)
+SELECT 'zc_ObjectLink_ProdModel_ProdEngine', 'мотор', zc_Object_ProdModel(), zc_Object_ProdEngine() WHERE NOT EXISTS (SELECT * FROM ObjectLinkDesc WHERE Code = 'zc_ObjectLink_ProdModel_ProdEngine');
+
 
 /*-------------------------------------------------------------------------------
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
+ 30.11.20         * zc_ObjectLink_ProdModel_ProdEngine
  24.11.20         * zc_ObjectLink_ProdModel_Brand
  11.11.20         * zc_ObjectLink_Goods_...
  09.11.20         * zc_ObjectLink_GoodsGroup_Parent
