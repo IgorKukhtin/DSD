@@ -1213,7 +1213,10 @@ uses
   Contract in '..\..\Forms\Guides\Contract.pas' {ContractForm: TParentForm},
   dsdAddOn in '..\..\SOURCE\COMPONENT\dsdAddOn.pas',
   Report_SaleExternal in '..\..\Forms\Report\Report_SaleExternal.pas' {Report_SaleExternalForm: TParentForm},
-  Report_SaleExternalDialog in '..\..\Forms\Report\Report_SaleExternalDialog.pas' {Report_SaleExternalDialogForm: TParentForm};
+  Report_SaleExternalDialog in '..\..\Forms\Report\Report_SaleExternalDialog.pas' {Report_SaleExternalDialogForm: TParentForm},
+  ReestrIncomeJournal in '..\..\Forms\Document\ReestrIncomeJournal.pas' {ReestrIncomeJournalForm: TParentForm},
+  ReestrIncomeStartMovement in '..\..\Forms\Document\ReestrIncomeStartMovement.pas' {ReestrIncomeStartMovementForm: TParentForm},
+  ReestrIncomeUpdateMovement in '..\..\Forms\Document\ReestrIncomeUpdateMovement.pas' {ReestrIncomeUpdateMovementForm: TParentForm};
 
 {$R *.RES}
 {$R DevExpressRus.res}

@@ -4168,6 +4168,18 @@
 				<Form>Report_SaleExternalDialogForm</Form>
 				<DesignClass>TParentForm</DesignClass>
 			</DCCReference>
+			<DCCReference Include="..\..\Forms\Document\ReestrIncomeJournal.pas">
+				<Form>ReestrIncomeJournalForm</Form>
+				<DesignClass>TParentForm</DesignClass>
+			</DCCReference>
+			<DCCReference Include="..\..\Forms\Document\ReestrIncomeStartMovement.pas">
+				<Form>ReestrIncomeStartMovementForm</Form>
+				<DesignClass>TParentForm</DesignClass>
+			</DCCReference>
+			<DCCReference Include="..\..\Forms\Document\ReestrIncomeUpdateMovement.pas">
+				<Form>ReestrIncomeUpdateMovementForm</Form>
+				<DesignClass>TParentForm</DesignClass>
+			</DCCReference>
 			<BuildConfiguration Include="Release">
 				<Key>Cfg_2</Key>
 				<CfgParent>Base</CfgParent>
