@@ -53,7 +53,7 @@ type
     actGoods: TdsdOpenForm;
     miGoods: TMenuItem;
     actGoodsTree: TdsdOpenForm;
-    mioodsTree: TMenuItem;
+    miGoodsTree: TMenuItem;
     actPartionGoods: TdsdOpenForm;
     miPartionGoods: TMenuItem;
     actPosition: TdsdOpenForm;
@@ -106,7 +106,6 @@ type
     miReport_Finance: TMenuItem;
     miReport_Cash: TMenuItem;
     miReport_ProfitLoss: TMenuItem;
-    miGoodsAll: TMenuItem;
     miLine81: TMenuItem;
     miLine82: TMenuItem;
     miLine83: TMenuItem;
@@ -199,6 +198,7 @@ type
     miPLZ: TMenuItem;
     actModelEtiketen: TdsdOpenForm;
     miModelEtiketen: TMenuItem;
+    N5: TMenuItem;
   private
     { Private declarations }
   public

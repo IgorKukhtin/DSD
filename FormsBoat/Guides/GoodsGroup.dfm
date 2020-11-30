@@ -1,7 +1,7 @@
 object GoodsGroupForm: TGoodsGroupForm
   Left = 0
   Top = 0
-  Caption = #1057#1087#1088#1072#1074#1086#1095#1085#1080#1082' <'#1043#1088#1091#1087#1087#1099' '#1090#1086#1074#1072#1088#1086#1074'>'
+  Caption = #1057#1087#1088#1072#1074#1086#1095#1085#1080#1082' <'#1043#1088#1091#1087#1087#1099'>'
   ClientHeight = 376
   ClientWidth = 915
   Color = clBtnFace
@@ -43,7 +43,6 @@ object GoodsGroupForm: TGoodsGroupForm
     RootValue = -1
     Styles.StyleSheet = dmMain.cxTreeListStyleSheet
     TabOrder = 4
-    ExplicitWidth = 661
     object Name: TcxDBTreeListColumn
       Caption.Text = #1053#1072#1079#1074#1072#1085#1080#1077
       DataBinding.FieldName = 'Name'

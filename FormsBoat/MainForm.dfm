@@ -4,7 +4,7 @@ inherited MainForm: TMainForm
   ClientWidth = 723
   KeyPreview = True
   ExplicitWidth = 739
-  ExplicitHeight = 226
+  ExplicitHeight = 223
   PixelsPerInch = 96
   TextHeight = 13
   inherited ActionList: TActionList
@@ -1100,28 +1100,35 @@ inherited MainForm: TMainForm
       end
     end
     inherited miGuide: TMenuItem
-      object miGoodsAll: TMenuItem
-        Caption = #1040#1088#1090#1080#1082#1091#1083#1099
-        object mioodsTree: TMenuItem
-          Action = actGoodsTree
-        end
-        object miGoods: TMenuItem
-          Action = actGoods
-        end
-        object miGoodsSize: TMenuItem
-          Action = actGoodsSize
-        end
-        object miMeasure: TMenuItem
-          Action = actMeasure
-        end
-        object miPartionGoods: TMenuItem
-          Action = actPartionGoods
-          Enabled = False
-          Visible = False
-        end
-      end
       object miGoodsGroup: TMenuItem
         Action = actGoodsGroup
+        Caption = #1043#1088#1091#1087#1087#1099
+      end
+      object miGoods: TMenuItem
+        Action = actGoods
+      end
+      object miPartionGoods: TMenuItem
+        Action = actPartionGoods
+        Enabled = False
+        Visible = False
+      end
+      object miGoodsTree: TMenuItem
+        Action = actGoodsTree
+        Visible = False
+      end
+      object miMeasure: TMenuItem
+        Action = actMeasure
+      end
+      object miGoodsSize: TMenuItem
+        Action = actGoodsSize
+        Caption = #1056#1072#1079#1084#1077#1088#1099
+      end
+      object miModelEtiketen: TMenuItem
+        Action = actModelEtiketen
+      end
+      object miLine81: TMenuItem
+        Caption = '-'
+        Visible = False
       end
       object miUnit: TMenuItem
         Action = actUnit
@@ -1131,10 +1138,7 @@ inherited MainForm: TMainForm
         Enabled = False
         Visible = False
       end
-      object miModelEtiketen: TMenuItem
-        Action = actModelEtiketen
-      end
-      object miLine81: TMenuItem
+      object miLine82: TMenuItem
         Caption = '-'
         Visible = False
       end
@@ -1146,8 +1150,9 @@ inherited MainForm: TMainForm
       end
       object miPLZ: TMenuItem
         Action = actPLZ
+        Caption = #1055#1086#1095#1090#1086#1074#1099#1077' '#1080#1085#1076#1077#1082#1089#1099
       end
-      object miLine82: TMenuItem
+      object N5: TMenuItem
         Caption = '-'
         Visible = False
       end
@@ -1180,14 +1185,14 @@ inherited MainForm: TMainForm
         Caption = '-'
         Visible = False
       end
+      object miMember: TMenuItem
+        Action = actMember
+      end
       object miPersonal: TMenuItem
         Action = actPersonal
       end
       object miPosition: TMenuItem
         Action = actPosition
-      end
-      object miMember: TMenuItem
-        Action = actMember
       end
     end
     inherited miService: TMenuItem

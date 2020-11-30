@@ -64,12 +64,12 @@
   object cxLabel3: TcxLabel
     Left = 40
     Top = 140
-    Caption = #1043#1088#1091#1087#1087#1072' '#1090#1086#1074#1072#1088#1086#1074
+    Caption = #1043#1088#1091#1087#1087#1072
   end
   object cxLabel4: TcxLabel
     Left = 40
     Top = 281
-    Caption = #1045#1076'. '#1080#1079#1084#1077#1088#1077#1085#1080#1103
+    Caption = #1045#1076'. '#1080#1079#1084'.'
   end
   object edRefer: TcxLabel
     Left = 184
@@ -415,9 +415,6 @@
     Align = alRight
     BevelOuter = bvNone
     TabOrder = 53
-    ExplicitLeft = 344
-    ExplicitTop = 35
-    ExplicitHeight = 574
     object cxDBVerticalGrid: TcxDBVerticalGrid
       Left = 0
       Top = 249
@@ -438,7 +435,6 @@
       Styles.Header = dmMain.cxHeaderStyle
       TabOrder = 0
       DataController.DataSource = PhotoDS
-      ExplicitTop = 255
       Version = 1
       object colFileName: TcxDBEditorRow
         Options.CanAutoHeight = False
@@ -495,7 +491,6 @@
       Styles.Header = dmMain.cxHeaderStyle
       TabOrder = 3
       DataController.DataSource = DocumentDS
-      ExplicitTop = 52
       Version = 1
       object cxDBEditorRow1: TcxDBEditorRow
         Options.CanAutoHeight = False
@@ -1695,6 +1690,7 @@
       Caption = #1054#1073#1085#1086#1074#1080#1090#1100' '#1076#1072#1085#1085#1099#1077' '#1060#1086#1090#1086
       Hint = #1054#1073#1085#1086#1074#1080#1090#1100' '#1076#1072#1085#1085#1099#1077' '#1060#1086#1090#1086
       ImageIndex = 4
+      ShortCut = 116
       RefreshOnTabSetChanges = False
     end
     object DocumentRefresh: TdsdDataSetRefresh
