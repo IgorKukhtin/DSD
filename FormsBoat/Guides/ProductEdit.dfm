@@ -169,12 +169,12 @@ object ProductEditForm: TProductEditForm
   end
   object cxLabel11: TcxLabel
     Left = 10
-    Top = 241
+    Top = 285
     Caption = #1052#1072#1088#1082#1072
   end
   object edBrand: TcxButtonEdit
     Left = 10
-    Top = 261
+    Top = 305
     Properties.Buttons = <
       item
         Default = True
@@ -186,12 +186,12 @@ object ProductEditForm: TProductEditForm
   end
   object cxLabel12: TcxLabel
     Left = 10
-    Top = 287
+    Top = 237
     Caption = #1052#1086#1076#1077#1083#1100
   end
   object edModel: TcxButtonEdit
     Left = 10
-    Top = 307
+    Top = 257
     Properties.Buttons = <
       item
         Default = True
@@ -203,12 +203,12 @@ object ProductEditForm: TProductEditForm
   end
   object cxLabel13: TcxLabel
     Left = 10
-    Top = 333
+    Top = 331
     Caption = #1052#1086#1090#1086#1088
   end
   object edEngine: TcxButtonEdit
     Left = 10
-    Top = 353
+    Top = 351
     Properties.Buttons = <
       item
         Default = True
@@ -297,7 +297,7 @@ object ProductEditForm: TProductEditForm
       item
         Name = 'inEngineId'
         Value = Null
-        Component = GuidesEngine
+        Component = GuidesProdEngine
         ComponentItem = 'Key'
         ParamType = ptInput
         MultiSelectSeparator = ','
@@ -490,14 +490,14 @@ object ProductEditForm: TProductEditForm
       item
         Name = 'EngineId'
         Value = Null
-        Component = GuidesEngine
+        Component = GuidesProdEngine
         ComponentItem = 'Key'
         MultiSelectSeparator = ','
       end
       item
         Name = 'EngineName'
         Value = Null
-        Component = GuidesEngine
+        Component = GuidesProdEngine
         ComponentItem = 'TextValue'
         DataType = ftString
         MultiSelectSeparator = ','
@@ -558,8 +558,8 @@ object ProductEditForm: TProductEditForm
         ParamType = ptInput
         MultiSelectSeparator = ','
       end>
-    Left = 103
-    Top = 249
+    Left = 111
+    Top = 289
   end
   object GuidesModel: TdsdGuides
     KeyField = 'Id'
@@ -603,11 +603,28 @@ object ProductEditForm: TProductEditForm
         DataType = ftString
         ParamType = ptInput
         MultiSelectSeparator = ','
+      end
+      item
+        Name = 'ProdEngineId'
+        Value = Null
+        Component = GuidesProdEngine
+        ComponentItem = 'Key'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'ProdEngineName'
+        Value = Null
+        Component = GuidesProdEngine
+        ComponentItem = 'TextValue'
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
       end>
-    Left = 95
-    Top = 287
+    Left = 183
+    Top = 247
   end
-  object GuidesEngine: TdsdGuides
+  object GuidesProdEngine: TdsdGuides
     KeyField = 'Id'
     LookupControl = edEngine
     FormNameParam.Value = 'TProdEngineForm'
@@ -619,7 +636,7 @@ object ProductEditForm: TProductEditForm
       item
         Name = 'Key'
         Value = ''
-        Component = GuidesEngine
+        Component = GuidesProdEngine
         ComponentItem = 'Key'
         ParamType = ptInput
         MultiSelectSeparator = ','
@@ -627,7 +644,7 @@ object ProductEditForm: TProductEditForm
       item
         Name = 'TextValue'
         Value = ''
-        Component = GuidesEngine
+        Component = GuidesProdEngine
         ComponentItem = 'TextValue'
         DataType = ftString
         ParamType = ptInput

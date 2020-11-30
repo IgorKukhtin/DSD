@@ -63,7 +63,7 @@ type
     GuidesModel: TdsdGuides;
     cxLabel13: TcxLabel;
     edEngine: TcxButtonEdit;
-    GuidesEngine: TdsdGuides;
+    GuidesProdEngine: TdsdGuides;
   private
     { Private declarations }
   public

@@ -57,6 +57,9 @@ type
     cxLabel11: TcxLabel;
     edBrand: TcxButtonEdit;
     GuidesBrand: TdsdGuides;
+    cxLabel12: TcxLabel;
+    edProdEngine: TcxButtonEdit;
+    GuidesProdEngine: TdsdGuides;
   private
     { Private declarations }
   public

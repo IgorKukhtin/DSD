@@ -1594,8 +1594,8 @@ object ProductForm: TProductForm
         MultiSelectSeparator = ','
       end>
     PackSize = 1
-    Left = 88
-    Top = 128
+    Left = 96
+    Top = 120
   end
   object spErased: TdsdStoredProc
     StoredProcName = 'gpUpdate_Object_isErased_Product'

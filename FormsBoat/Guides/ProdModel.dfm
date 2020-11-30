@@ -75,6 +75,14 @@ object ProdModelForm: TProdModelForm
         Options.Editing = False
         Width = 80
       end
+      object ProdEngineName: TcxGridDBColumn
+        Caption = #1052#1086#1090#1086#1088
+        DataBinding.FieldName = 'ProdEngineName'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Options.Editing = False
+        Width = 140
+      end
       object Length: TcxGridDBColumn
         Caption = #1044#1083#1080#1085#1072
         DataBinding.FieldName = 'Length'
@@ -478,6 +486,21 @@ object ProdModelForm: TProdModelForm
           Value = Null
           Component = MasterCDS
           ComponentItem = 'BrandName'
+          DataType = ftString
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'ProdEngineId'
+          Value = Null
+          Component = MasterCDS
+          ComponentItem = 'ProdEngineId'
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'ProdEngineName'
+          Value = Null
+          Component = MasterCDS
+          ComponentItem = 'ProdEngineName'
           DataType = ftString
           MultiSelectSeparator = ','
         end>
