@@ -16,8 +16,20 @@ RETURNS TABLE (MovementId Integer, InvNumber TVarChar, OperDate TDateTime
              , AmountSh TFloat
              , AmountKg TFloat
              , PartKg TFloat
+             , TotalSumm_calc TFloat
+             , TotalWeight_calc TFloat
+             , SaleReturn_Summ TFloat
+             , Sale_Summ TFloat
+             , Return_Summ TFloat
+             , SaleReturn_Weight TFloat
+             , Sale_Weight TFloat
+             , Return_Weight TFloat
              , TotalSumm TFloat
-             , TotalSummKg TFloat
+             , TotalWeight TFloat
+             , TotalSale_Summ    TFloat
+             , TotalReturn_Summ  TFloat
+             , TotalSale_Weight  TFloat
+             , TotalReturn_Weight TFloat
               )
 AS
 $BODY$
@@ -121,35 +133,78 @@ BEGIN
                     AND COALESCE (inGoodsGroupId, 0) = 0
                   )
 
-   , tmpMI AS (SELECT tmpMovement.Id                                AS MovementId
-
-                    , SUM (CASE WHEN ObjectLink_Measure.ChildObjectId = zc_Measure_Sh()
-                                THEN MovementItem.Amount * COALESCE (ObjectFloat_Weight.ValueData,1)
-                                ELSE MovementItem.Amount
-                           END) AS AmountKg
-
-                    , SUM (CASE WHEN ObjectLink_Measure.ChildObjectId <> zc_Measure_Sh()
-                                THEN CASE WHEN COALESCE (ObjectFloat_Weight.ValueData,1) <> 0 THEN MovementItem.Amount / COALESCE (ObjectFloat_Weight.ValueData,1) ELSE 0 END
-                                ELSE MovementItem.Amount
-                           END) AS AmountSh
-                    , SUM (SUM(CASE WHEN ObjectLink_Measure.ChildObjectId = zc_Measure_Sh()
-                                    THEN MovementItem.Amount * COALESCE (ObjectFloat_Weight.ValueData,1)
-                                    ELSE MovementItem.Amount
-                               END)) OVER () AS TotalAmountKg
-               FROM tmpMovement
-                   INNER JOIN MovementItem ON MovementItem.MovementId = tmpMovement.Id
-                                          AND MovementItem.DescId     = zc_MI_Master()
-                                          AND MovementItem.isErased   = FALSE
-                   INNER JOIN tmpGoods ON tmpGoods.GoodsId = MovementItem.ObjectId
-
-                   LEFT JOIN ObjectLink AS ObjectLink_Measure
-                                        ON ObjectLink_Measure.ObjectId = MovementItem.ObjectId
-                                       AND ObjectLink_Measure.DescId = zc_ObjectLink_Goods_Measure()
-                   LEFT JOIN ObjectFloat AS ObjectFloat_Weight
-                                         ON ObjectFloat_Weight.ObjectId = ObjectLink_Measure.ObjectId
-                                        AND ObjectFloat_Weight.DescId = zc_ObjectFloat_Goods_Weight()
-               GROUP BY tmpMovement.Id
+   , tmpMI AS (SELECT tmp.MovementId
+                    , tmp.AmountKg
+                    , tmp.AmountSh
+                    , tmp.TotalAmountKg
+                    , CASE WHEN COALESCE (tmp.TotalAmountKg,0) <> 0 THEN tmp.AmountKg / tmp.TotalAmountKg ELSE 0 END :: TFloat AS PartKg
+               FROM (
+                     SELECT tmpMovement.Id                                AS MovementId
+      
+                          , SUM (CASE WHEN ObjectLink_Measure.ChildObjectId = zc_Measure_Sh()
+                                      THEN MovementItem.Amount * COALESCE (ObjectFloat_Weight.ValueData,1)
+                                      ELSE MovementItem.Amount
+                                 END) AS AmountKg
+      
+                          , SUM (CASE WHEN ObjectLink_Measure.ChildObjectId <> zc_Measure_Sh()
+                                      THEN CASE WHEN COALESCE (ObjectFloat_Weight.ValueData,1) <> 0 THEN MovementItem.Amount / COALESCE (ObjectFloat_Weight.ValueData,1) ELSE 0 END
+                                      ELSE MovementItem.Amount
+                                 END) AS AmountSh
+                          , SUM (SUM(CASE WHEN ObjectLink_Measure.ChildObjectId = zc_Measure_Sh()
+                                          THEN MovementItem.Amount * COALESCE (ObjectFloat_Weight.ValueData,1)
+                                          ELSE MovementItem.Amount
+                                     END)) OVER () AS TotalAmountKg
+                     FROM tmpMovement
+                         INNER JOIN MovementItem ON MovementItem.MovementId = tmpMovement.Id
+                                                AND MovementItem.DescId     = zc_MI_Master()
+                                                AND MovementItem.isErased   = FALSE
+                         INNER JOIN tmpGoods ON tmpGoods.GoodsId = MovementItem.ObjectId
+      
+                         LEFT JOIN ObjectLink AS ObjectLink_Measure
+                                              ON ObjectLink_Measure.ObjectId = MovementItem.ObjectId
+                                             AND ObjectLink_Measure.DescId = zc_ObjectLink_Goods_Measure()
+                         LEFT JOIN ObjectFloat AS ObjectFloat_Weight
+                                               ON ObjectFloat_Weight.ObjectId = ObjectLink_Measure.ObjectId
+                                              AND ObjectFloat_Weight.DescId = zc_ObjectFloat_Goods_Weight()
+                     GROUP BY tmpMovement.Id
+                     ) AS tmp
                )
+
+   -- фактические продажи
+   , tmpReport AS (SELECT tmp.PartnerId
+                        , tmp.Sale_Summ
+                        , tmp.Return_Summ
+                        , (COALESCE (tmp.Sale_Summ,0) - COALESCE (tmp.Return_Summ,0) ) AS SaleReturn_Summ
+                        , tmp.Sale_Weight
+                        , tmp.Return_Weight
+                        , (COALESCE (tmp.Sale_Weight,0) - COALESCE (tmp.Return_Weight,0) ) AS SaleReturn_Weight
+
+                   FROM (SELECT tmp.PartnerId
+                              , SUM (tmp.Sale_Summ)                   AS Sale_Summ
+                              , SUM (tmp.Return_Summ)                 AS Return_Summ
+                              , SUM (tmp.Sale_AmountPartner_Weight)   AS Sale_Weight
+                              , SUM (tmp.Return_AmountPartner_Weight) AS Return_Weight
+                         FROM gpReport_GoodsMI_SaleReturnIn (inStartDate    := inStartDate    ::TDateTime 
+                                                           , inEndDate      := inEndDate      ::TDateTime    
+                                                           , inBranchId     := 0              ::Integer      
+                                                           , inAreaId       := 0              ::Integer
+                                                           , inRetailId     := inRetailId     ::Integer      
+                                                           , inJuridicalId  := 0              ::Integer      
+                                                           , inPaidKindId   := 0              ::Integer
+                                                           , inTradeMarkId  := 0              ::Integer      
+                                                           , inGoodsGroupId := inGoodsGroupId ::Integer      
+                                                           , inInfoMoneyId  := 0              ::Integer      
+                                                           , inIsPartner    := TRUE           ::Boolean      
+                                                           , inIsTradeMark  := FALSE          ::Boolean      
+                                                           , inIsGoods      := FALSE          ::Boolean      
+                                                           , inIsGoodsKind  := FALSE          ::Boolean      
+                                                           , inIsContract   := FALSE          ::Boolean      
+                                                           , inIsOLAP       := TRUE           ::Boolean      
+                                                           , inSession      := inSession      ::TVarChar
+                                                           ) AS tmp
+                         GROUP BY tmp.PartnerId
+                        ) AS tmp
+                  )
 
        -- Результат
        SELECT
@@ -165,15 +220,38 @@ BEGIN
            , tmpMI.AmountSh   :: TFloat          AS AmountSh
            , tmpMI.AmountKg   :: TFloat          AS AmountKg
 
-           , CASE WHEN COALESCE (tmpMI.TotalAmountKg,0) <> 0 THEN tmpMI.AmountKg / tmpMI.TotalAmountKg ELSE 0 END :: TFloat AS PartKg
+           , tmpMI.PartKg :: TFloat AS PartKg
            
-           , 0 :: TFloat AS TotalSumm               -- Расчетная сумма продаж, грн (от факта)
-           , 0 :: TFloat AS TotalSummKg             -- Раасчетная сумма продаж, кг (от факта)
+           , (tmpTotal.TotalSumm * tmpMI.PartKg)   :: TFloat AS TotalSumm_calc               -- Расчетная сумма продаж, грн (от факта)
+           , (tmpTotal.TotalWeight * tmpMI.PartKg) :: TFloat AS TotalWeight_calc             -- Раасчетная сумма продаж, кг (от факта)
+           
+           , tmpReport.SaleReturn_Summ    :: TFloat
+           , tmpReport.Sale_Summ          :: TFloat
+           , tmpReport.Return_Summ        :: TFloat
+           , tmpReport.SaleReturn_Weight  :: TFloat
+           , tmpReport.Sale_Weight        :: TFloat
+           , tmpReport.Return_Weight      :: TFloat
+           , tmpTotal.TotalSumm           :: TFloat
+           , tmpTotal.TotalWeight         :: TFloat
+
+           , tmpTotal.TotalSale_Summ      :: TFloat
+           , tmpTotal.TotalReturn_Summ    :: TFloat
+           , tmpTotal.TotalSale_Weight    :: TFloat
+           , tmpTotal.TotalReturn_Weight  :: TFloat
 
        FROM tmpMovementAll AS Movement
             LEFT JOIN Object AS Object_Status ON Object_Status.Id = Movement.StatusId
 
             INNER JOIN tmpMI ON tmpMI.MovementId = Movement.Id
+            
+            LEFT JOIN tmpReport ON tmpReport.PartnerId = PartnerId_from
+            LEFT JOIN (SELECT SUM (tmpReport.SaleReturn_Summ)   AS TotalSumm
+                            , SUM (tmpReport.SaleReturn_Weight) AS TotalWeight 
+                            , SUM (tmpReport.Sale_Summ)         AS TotalSale_Summ
+                            , SUM (tmpReport.Return_Summ)       AS TotalReturn_Summ
+                            , SUM (tmpReport.Sale_Weight)       AS TotalSale_Weight
+                            , SUM (tmpReport.Return_Weight)     AS TotalReturn_Weight
+                       FROM tmpReport) AS tmpTotal ON 1 = 1
     ;
 
 END;

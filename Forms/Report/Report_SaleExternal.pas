@@ -32,19 +32,11 @@ type
     OperDate: TcxGridDBColumn;
     StatusCode: TcxGridDBColumn;
     FormParams: TdsdFormParams;
-    GoodsKindName: TcxGridDBColumn;
     InvNumber: TcxGridDBColumn;
-    bbPrint: TdxBarButton;
-    bbPrint_byPack: TdxBarButton;
-    bbPrint_byProduction: TdxBarButton;
     bbPrint_byType: TdxBarButton;
-    bbPrint_byRoute: TdxBarButton;
-    bbPrint_byRouteItog: TdxBarButton;
-    bbPrint_byCross: TdxBarButton;
     HeaderCDS: TClientDataSet;
     ExecuteDialog: TExecuteDialog;
     bbExecuteDialog: TdxBarButton;
-    bbPrint_Dozakaz: TdxBarButton;
     AmountSh: TcxGridDBColumn;
     actisDataAll: TdsdDataSetRefresh;
     edRetail: TcxButtonEdit;
@@ -53,8 +45,9 @@ type
     edGoodsGroup: TcxButtonEdit;
     GuidesRetail: TdsdGuides;
     GuidesGoodsGroup: TdsdGuides;
-    isUnder: TcxGridDBColumn;
-    isOver: TcxGridDBColumn;
+    PrintHeaderCDS: TClientDataSet;
+    PrintItemsCDS: TClientDataSet;
+    actPrint: TdsdPrintAction;
   private
     { Private declarations }
   public

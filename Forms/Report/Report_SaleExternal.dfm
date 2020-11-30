@@ -24,8 +24,6 @@ inherited Report_SaleExternalForm: TReport_SaleExternalForm
       inherited cxGrid: TcxGrid
         Width = 1077
         Height = 425
-        ExplicitLeft = -3
-        ExplicitTop = -3
         ExplicitWidth = 1077
         ExplicitHeight = 425
         inherited cxGridDBTableView: TcxGridDBTableView
@@ -64,12 +62,30 @@ inherited Report_SaleExternalForm: TReport_SaleExternalForm
             item
               Format = ',0.####'
               Kind = skSum
-              Column = isUnder
             end
             item
               Format = ',0.####'
               Kind = skSum
-              Column = isOver
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = SaleReturn_Summ
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = SaleReturn_Weight
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = TotalSumm_calc
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = TotalWeight_calc
             end>
           DataController.Summary.FooterSummaryItems = <
             item
@@ -111,12 +127,30 @@ inherited Report_SaleExternalForm: TReport_SaleExternalForm
             item
               Format = ',0.####'
               Kind = skSum
-              Column = isUnder
             end
             item
               Format = ',0.####'
               Kind = skSum
-              Column = isOver
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = SaleReturn_Summ
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = SaleReturn_Weight
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = TotalSumm_calc
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = TotalWeight_calc
             end>
           OptionsData.Editing = False
           OptionsView.GroupByBox = True
@@ -197,30 +231,13 @@ inherited Report_SaleExternalForm: TReport_SaleExternalForm
           end
           object AmountSh: TcxGridDBColumn
             Caption = #1050#1086#1083'-'#1074#1086
-            DataBinding.FieldName = 'OrderAmount'
+            DataBinding.FieldName = 'AmountSh'
             PropertiesClassName = 'TcxCurrencyEditProperties'
             Properties.DecimalPlaces = 4
             Properties.DisplayFormat = ',0.####;-,0.####; ;'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Width = 80
-          end
-          object GoodsKindName: TcxGridDBColumn
-            Caption = #1042#1080#1076' '#1090#1086#1074#1072#1088#1072
-            DataBinding.FieldName = 'GoodsKindName'
-            Visible = False
-            HeaderAlignmentHorz = taCenter
-            HeaderAlignmentVert = vaCenter
-            Width = 80
-          end
-          object MeasureName: TcxGridDBColumn
-            Caption = #1045#1076'. '#1080#1079#1084'.'
-            DataBinding.FieldName = 'MeasureName'
-            Visible = False
-            HeaderAlignmentHorz = taCenter
-            HeaderAlignmentVert = vaCenter
-            Options.Editing = False
-            Width = 45
           end
           object AmountKg: TcxGridDBColumn
             Caption = #1050#1086#1083'-'#1074#1086', '#1082#1075
@@ -242,23 +259,111 @@ inherited Report_SaleExternalForm: TReport_SaleExternalForm
             HeaderAlignmentVert = vaCenter
             Width = 80
           end
-          object isUnder: TcxGridDBColumn
+          object TotalSumm_calc: TcxGridDBColumn
             Caption = #1056#1072#1089#1095#1077#1090#1085#1072#1103' '#1089#1091#1084#1084#1072' '#1087#1088#1086#1076#1072#1078', '#1075#1088#1085
-            DataBinding.FieldName = 'isUnder'
+            DataBinding.FieldName = 'TotalSumm_calc'
             PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 4
             Properties.DisplayFormat = ',0.####;-,0.####; ;'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
-            Width = 104
+            Width = 80
           end
-          object isOver: TcxGridDBColumn
+          object TotalWeight_calc: TcxGridDBColumn
             Caption = #1056#1072#1089#1095#1077#1090#1085#1072#1103' '#1089#1091#1084#1084#1072' '#1087#1088#1086#1076#1072#1078', '#1082#1075
-            DataBinding.FieldName = 'isOver'
+            DataBinding.FieldName = 'TotalWeight_calc'
             PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 4
             Properties.DisplayFormat = ',0.####;-,0.####; ;'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
-            Width = 103
+            Width = 80
+          end
+          object TotalSumm: TcxGridDBColumn
+            Caption = #1048#1090#1086#1075#1086' '#1095#1080#1089#1090#1072#1103' '#1087#1088#1086#1076#1072#1078#1072', '#1075#1088#1085
+            DataBinding.FieldName = 'TotalSumm'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 4
+            Properties.DisplayFormat = ',0.####;-,0.####; ;'
+            Visible = False
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 80
+          end
+          object TotalWeight: TcxGridDBColumn
+            Caption = #1048#1090#1086#1075#1086' '#1095#1080#1089#1090#1072#1103' '#1087#1088#1086#1076#1072#1078#1072', '#1082#1075
+            DataBinding.FieldName = 'TotalWeight'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 4
+            Properties.DisplayFormat = ',0.####;-,0.####; ;'
+            Visible = False
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 80
+          end
+          object SaleReturn_Summ: TcxGridDBColumn
+            Caption = #1063#1080#1089#1090#1072#1103' '#1087#1088#1086#1076#1072#1078#1072', '#1075#1088#1085
+            DataBinding.FieldName = 'SaleReturn_Summ'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 4
+            Properties.DisplayFormat = ',0.####;-,0.####; ;'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 80
+          end
+          object SaleReturn_Weight: TcxGridDBColumn
+            Caption = #1063#1080#1089#1090#1072#1103' '#1087#1088#1086#1076#1072#1078#1072', '#1082#1075
+            DataBinding.FieldName = 'SaleReturn_Weight'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 4
+            Properties.DisplayFormat = ',0.####;-,0.####; ;'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 80
+          end
+          object TotalSale_Summ: TcxGridDBColumn
+            Caption = #1048#1090#1086#1075#1086' '#1087#1088#1086#1076#1072#1078#1072', '#1075#1088#1085
+            DataBinding.FieldName = 'TotalSale_Summ'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 4
+            Properties.DisplayFormat = ',0.####;-,0.####; ;'
+            Visible = False
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 80
+          end
+          object TotalReturn_Summ: TcxGridDBColumn
+            Caption = #1048#1090#1086#1075#1086' '#1074#1086#1079#1074#1088#1072#1090', '#1075#1088#1085
+            DataBinding.FieldName = 'TotalReturn_Summ'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 4
+            Properties.DisplayFormat = ',0.####;-,0.####; ;'
+            Visible = False
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 80
+          end
+          object TotalSale_Weight: TcxGridDBColumn
+            Caption = #1048#1090#1086#1075#1086' '#1087#1088#1086#1076#1072#1078#1072', '#1082#1075
+            DataBinding.FieldName = 'TotalSale_Weight'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 4
+            Properties.DisplayFormat = ',0.####;-,0.####; ;'
+            Visible = False
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 80
+          end
+          object TotalReturn_Weight: TcxGridDBColumn
+            Caption = #1048#1090#1086#1075#1086' '#1074#1086#1079#1074#1088#1072#1090', '#1082#1075
+            DataBinding.FieldName = 'TotalReturn_Weight'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 4
+            Properties.DisplayFormat = ',0.####;-,0.####; ;'
+            Visible = False
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 80
           end
         end
       end
@@ -436,6 +541,77 @@ inherited Report_SaleExternalForm: TReport_SaleExternalForm
       ShortCut = 116
       RefreshOnTabSetChanges = False
     end
+    object actPrint: TdsdPrintAction
+      Category = 'DSDLib'
+      MoveParams = <
+        item
+          FromParam.Name = 'id'
+          FromParam.Value = Null
+          FromParam.ComponentItem = 'id'
+          FromParam.MultiSelectSeparator = ','
+          ToParam.Value = '0'
+          ToParam.Component = FormParams
+          ToParam.ComponentItem = 'Id'
+          ToParam.ParamType = ptInputOutput
+          ToParam.MultiSelectSeparator = ','
+        end
+        item
+          FromParam.Value = 42826d
+          FromParam.Component = deStart
+          FromParam.DataType = ftDateTime
+          FromParam.MultiSelectSeparator = ','
+          ToParam.Name = 'StartDate'
+          ToParam.Value = 'NULL'
+          ToParam.DataType = ftDateTime
+          ToParam.ParamType = ptInputOutput
+          ToParam.MultiSelectSeparator = ','
+        end
+        item
+          FromParam.Value = 42826d
+          FromParam.Component = deEnd
+          FromParam.DataType = ftDateTime
+          FromParam.MultiSelectSeparator = ','
+          ToParam.Name = 'EndDate'
+          ToParam.Value = 'NULL'
+          ToParam.DataType = ftDateTime
+          ToParam.ParamType = ptInputOutput
+          ToParam.MultiSelectSeparator = ','
+        end>
+      StoredProcList = <>
+      Caption = #1055#1077#1095#1072#1090#1100
+      Hint = #1054#1090#1095#1077#1090' '#1074#1085#1077#1096#1085#1080#1077' '#1087#1088#1086#1076#1072#1078#1080
+      ImageIndex = 3
+      ShortCut = 16464
+      DataSets = <
+        item
+          UserName = 'frxDBDItems'
+          IndexFieldNames = 'GoodsPropertyName;OperDate;InvNumber;FromName'
+          GridView = cxGridDBTableView
+        end>
+      Params = <
+        item
+          Name = 'StartDate'
+          Value = 42826d
+          Component = deStart
+          DataType = ftDateTime
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'EndDate'
+          Value = 42826d
+          Component = deEnd
+          DataType = ftDateTime
+          MultiSelectSeparator = ','
+        end>
+      ReportName = #1054#1090#1095#1077#1090' '#1074#1085#1077#1096#1085#1080#1077' '#1087#1088#1086#1076#1072#1078#1080
+      ReportNameParam.Value = #1054#1090#1095#1077#1090' '#1074#1085#1077#1096#1085#1080#1077' '#1087#1088#1086#1076#1072#1078#1080
+      ReportNameParam.DataType = ftString
+      ReportNameParam.ParamType = ptInput
+      ReportNameParam.MultiSelectSeparator = ','
+      PrinterNameParam.Value = ''
+      PrinterNameParam.DataType = ftString
+      PrinterNameParam.MultiSelectSeparator = ','
+    end
   end
   inherited MasterDS: TDataSource
     Left = 112
@@ -523,6 +699,14 @@ inherited Report_SaleExternalForm: TReport_SaleExternalForm
         end
         item
           Visible = True
+          ItemName = 'bbPrint_byType'
+        end
+        item
+          Visible = True
+          ItemName = 'dxBarStatic'
+        end
+        item
+          Visible = True
           ItemName = 'bbGridToExcel'
         end
         item
@@ -530,72 +714,13 @@ inherited Report_SaleExternalForm: TReport_SaleExternalForm
           ItemName = 'dxBarStatic'
         end>
     end
-    object bbPrint: TdxBarButton
-      Caption = #1054#1090#1095#1077#1090' - '#1079#1072#1103#1074#1082#1080' ('#1087#1086' '#1055#1086#1082#1091#1087#1072#1090#1077#1083#1103#1084'-'#1074#1089#1077')'
-      Category = 0
-      Hint = #1054#1090#1095#1077#1090' - '#1079#1072#1103#1074#1082#1080' ('#1087#1086' '#1055#1086#1082#1091#1087#1072#1090#1077#1083#1103#1084'-'#1074#1089#1077')'
-      Visible = ivAlways
-      ImageIndex = 18
-      ShortCut = 16464
-    end
-    object bbPrint_byPack: TdxBarButton
-      Caption = #1054#1090#1095#1077#1090' - '#1079#1072#1103#1074#1082#1080' ('#1076#1083#1103' '#1059#1087#1072#1082#1086#1074#1082#1080')'
-      Category = 0
-      Hint = #1054#1090#1095#1077#1090' - '#1079#1072#1103#1074#1082#1080' ('#1076#1083#1103' '#1059#1087#1072#1082#1086#1074#1082#1080')'
-      Visible = ivAlways
-      ImageIndex = 19
-      ShortCut = 16464
-    end
-    object bbPrint_byProduction: TdxBarButton
-      Caption = #1054#1090#1095#1077#1090' - '#1079#1072#1103#1074#1082#1080' ('#1085#1072' '#1055#1088#1086#1080#1079#1074#1086#1076#1089#1090#1074#1086')'
-      Category = 0
-      Hint = #1054#1090#1095#1077#1090' - '#1079#1072#1103#1074#1082#1080' ('#1085#1072' '#1055#1088#1086#1080#1079#1074#1086#1076#1089#1090#1074#1086')'
-      Visible = ivAlways
-      ImageIndex = 20
-      ShortCut = 16464
-    end
     object bbPrint_byType: TdxBarButton
-      Caption = #1054#1090#1095#1077#1090' - '#1079#1072#1103#1074#1082#1080' ('#1087#1086' '#1074#1080#1076#1091' '#1090#1086#1074#1072#1088#1072')'
+      Action = actPrint
       Category = 0
-      Hint = #1054#1090#1095#1077#1090' - '#1079#1072#1103#1074#1082#1080' ('#1087#1086' '#1074#1080#1076#1091' '#1090#1086#1074#1072#1088#1072')'
-      Visible = ivAlways
-      ImageIndex = 21
-      ShortCut = 16464
-    end
-    object bbPrint_byRoute: TdxBarButton
-      Caption = #1054#1090#1095#1077#1090' - '#1079#1072#1103#1074#1082#1080' ('#1087#1086' '#1052#1072#1088#1096#1088#1091#1090#1072#1084'-'#1076#1077#1090#1072#1083#1100#1085#1086')'
-      Category = 0
-      Hint = #1054#1090#1095#1077#1090' - '#1079#1072#1103#1074#1082#1080' ('#1087#1086' '#1052#1072#1088#1096#1088#1091#1090#1072#1084'-'#1076#1077#1090#1072#1083#1100#1085#1086')'
-      Visible = ivAlways
-      ImageIndex = 22
-      ShortCut = 16464
-    end
-    object bbPrint_byRouteItog: TdxBarButton
-      Caption = #1054#1090#1095#1077#1090' - '#1079#1072#1103#1074#1082#1080' ('#1087#1086' '#1052#1072#1088#1096#1088#1091#1090#1072#1084'-'#1080#1090#1086#1075#1086')'
-      Category = 0
-      Hint = #1054#1090#1095#1077#1090' - '#1079#1072#1103#1074#1082#1080' ('#1087#1086' '#1052#1072#1088#1096#1088#1091#1090#1072#1084'-'#1080#1090#1086#1075#1086')'
-      Visible = ivAlways
-      ImageIndex = 16
-      ShortCut = 16464
-    end
-    object bbPrint_byCross: TdxBarButton
-      Caption = #1054#1090#1095#1077#1090' - '#1079#1072#1103#1074#1082#1080' ('#1082#1088#1086#1089#1089')'
-      Category = 0
-      Hint = #1054#1090#1095#1077#1090' - '#1079#1072#1103#1074#1082#1080' ('#1082#1088#1086#1089#1089')'
-      Visible = ivAlways
-      ImageIndex = 18
-      ShortCut = 16464
     end
     object bbExecuteDialog: TdxBarButton
       Action = ExecuteDialog
       Category = 0
-    end
-    object bbPrint_Dozakaz: TdxBarButton
-      Caption = #1054#1090#1095#1077#1090' - '#1079#1072#1103#1074#1082#1080' ('#1044#1086#1079#1072#1082#1072#1079')'
-      Category = 0
-      Hint = #1054#1090#1095#1077#1090' - '#1079#1072#1103#1074#1082#1080' ('#1044#1086#1079#1072#1082#1072#1079')'
-      Visible = ivAlways
-      ImageIndex = 17
     end
   end
   inherited DBViewAddOn: TdsdDBViewAddOn
@@ -769,5 +894,17 @@ inherited Report_SaleExternalForm: TReport_SaleExternalForm
       end>
     Left = 784
     Top = 7
+  end
+  object PrintHeaderCDS: TClientDataSet
+    Aggregates = <>
+    Params = <>
+    Left = 716
+    Top = 281
+  end
+  object PrintItemsCDS: TClientDataSet
+    Aggregates = <>
+    Params = <>
+    Left = 724
+    Top = 334
   end
 end
