@@ -23,7 +23,6 @@ CREATE OR REPLACE FUNCTION zc_ObjectDate_Goods_PartnerDate() RETURNS Integer AS 
 INSERT INTO ObjectDateDesc (Code, DescId, ItemName)
   SELECT 'zc_ObjectDate_Goods_PartnerDate', zc_Object_Goods(), 'последняя дата прихода' WHERE NOT EXISTS (SELECT * FROM ObjectDateDesc WHERE Code = 'zc_ObjectDate_Goods_PartnerDate');
 
-
 /*-------------------------------------------------------------------------------
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
  11.11.20         * zc_ObjectDate_Goods_PartnerDate

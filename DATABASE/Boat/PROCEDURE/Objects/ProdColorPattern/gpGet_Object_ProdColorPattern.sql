@@ -24,7 +24,7 @@ BEGIN
        RETURN QUERY
        SELECT
               0 :: Integer            AS Id
-           , lfGet_ObjectCode(0, zc_Object_Brand())   AS Code
+           , lfGet_ObjectCode(0, zc_Object_ProdColorPattern())   AS Code
            , '' :: TVarChar           AS Name
            , '' :: TVarChar           AS Comment
            , 0  :: Integer            AS ProdColorGroupId

@@ -224,11 +224,26 @@ CREATE OR REPLACE FUNCTION zc_ObjectLink_ProdModel_ProdEngine() RETURNS Integer 
 INSERT INTO ObjectLinkDesc(Code, ItemName, DescId, ChildObjectDescId)
 SELECT 'zc_ObjectLink_ProdModel_ProdEngine', 'мотор', zc_Object_ProdModel(), zc_Object_ProdEngine() WHERE NOT EXISTS (SELECT * FROM ObjectLinkDesc WHERE Code = 'zc_ObjectLink_ProdModel_ProdEngine');
 
+CREATE OR REPLACE FUNCTION zc_ObjectLink_ReceiptProdModel_Model() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM ObjectLinkDesc WHERE Code = 'zc_ObjectLink_ReceiptProdModel_Model'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
+INSERT INTO ObjectLinkDesc(Code, ItemName, DescId, ChildObjectDescId)
+SELECT 'zc_ObjectLink_ReceiptProdModel_Model', 'Модель', zc_Object_ReceiptProdModel(), zc_Object_ProdModel() WHERE NOT EXISTS (SELECT * FROM ObjectLinkDesc WHERE Code = 'zc_ObjectLink_ReceiptProdModel_Model');
+
+CREATE OR REPLACE FUNCTION zc_ObjectLink_ReceiptProdModelChild_ReceiptProdModel() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM ObjectLinkDesc WHERE Code = 'zc_ObjectLink_ReceiptProdModelChild_ReceiptProdModel'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
+INSERT INTO ObjectLinkDesc(Code, ItemName, DescId, ChildObjectDescId)
+SELECT 'zc_ObjectLink_ReceiptProdModelChild_ReceiptProdModel', 'Шаблон сборка Модели', zc_Object_ReceiptProdModelChild(), zc_Object_ReceiptProdModel() WHERE NOT EXISTS (SELECT * FROM ObjectLinkDesc WHERE Code = 'zc_ObjectLink_ReceiptProdModelChild_ReceiptProdModel');
+
+CREATE OR REPLACE FUNCTION zc_ObjectLink_ReceiptProdModelChild_Object() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM ObjectLinkDesc WHERE Code = 'zc_ObjectLink_ReceiptProdModelChild_Object'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
+INSERT INTO ObjectLinkDesc(Code, ItemName, DescId, ChildObjectDescId)
+SELECT 'zc_ObjectLink_ReceiptProdModelChild_Object', 'Артикул /Шаблоны Цвета (Лодка)', zc_Object_ReceiptProdModelChild(), zc_Object_Goods() WHERE NOT EXISTS (SELECT * FROM ObjectLinkDesc WHERE Code = 'zc_ObjectLink_ReceiptProdModelChild_Object');
+
 
 /*-------------------------------------------------------------------------------
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
  01.12.20         * zc_ObjectLink_ProdColorPattern_Goods
+                    zc_ObjectLink_ReceiptProdModel_Model
+                    zc_ObjectLink_ReceiptProdModelChild_Object
+                    zc_ObjectLink_ReceiptProdModelChild_ReceiptProdModel
  30.11.20         * zc_ObjectLink_ProdModel_ProdEngine
  24.11.20         * zc_ObjectLink_ProdModel_Brand
  11.11.20         * zc_ObjectLink_Goods_...

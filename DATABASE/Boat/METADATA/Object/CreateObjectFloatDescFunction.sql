@@ -83,9 +83,15 @@ CREATE OR REPLACE FUNCTION zc_ObjectFloat_TaxKind_Value() RETURNS Integer AS $BO
 INSERT INTO ObjectFloatDesc (DescId, Code, ItemName)
   SELECT zc_Object_TaxKind(), 'zc_ObjectFloat_TaxKind_Value', 'Значение НДС' WHERE NOT EXISTS (SELECT * FROM ObjectFloatDesc WHERE Code = 'zc_ObjectFloat_TaxKind_Value');
 
+
+CREATE OR REPLACE FUNCTION zc_ObjectFloat_ReceiptProdModelChild_Value() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM ObjectFloatDesc WHERE Code = 'zc_ObjectFloat_ReceiptProdModelChild_Value'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
+INSERT INTO ObjectFloatDesc (DescId, Code, ItemName)
+  SELECT zc_Object_ReceiptProdModelChild(), 'zc_ObjectFloat_ReceiptProdModelChild_Value', 'Значение' WHERE NOT EXISTS (SELECT * FROM ObjectFloatDesc WHERE Code = 'zc_ObjectFloat_ReceiptProdModelChild_Value');
+
 /*-------------------------------------------------------------------------------
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
+ 01.12.20         * zc_ObjectFloat_ReceiptProdModelChild_Value
  11.11.20         * zc_ObjectFloat_Goods_...
  09.10.20         * zc_ObjectFloat_Product_Hours
  08.10.20         * zc_ObjectFloat_ProdModel...
