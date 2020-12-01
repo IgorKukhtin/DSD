@@ -744,26 +744,10 @@ object GoodsForm: TGoodsForm
           MultiSelectSeparator = ','
         end
         item
-          Name = 'FuelName'
-          Value = Null
-          Component = ClientDataSet
-          ComponentItem = 'FuelName'
-          DataType = ftString
-          MultiSelectSeparator = ','
-        end
-        item
           Name = 'MeasureName'
           Value = Null
           Component = ClientDataSet
           ComponentItem = 'MeasureName'
-          DataType = ftString
-          MultiSelectSeparator = ','
-        end
-        item
-          Name = 'TradeMarkName'
-          Value = Null
-          Component = ClientDataSet
-          ComponentItem = 'TradeMarkName'
           DataType = ftString
           MultiSelectSeparator = ','
         end>

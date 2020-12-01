@@ -43,6 +43,9 @@ type
     cxLabel4: TcxLabel;
     edProdOptions: TcxButtonEdit;
     GuidesProdColorGroup: TdsdGuides;
+    cxLabel5: TcxLabel;
+    edGoods: TcxButtonEdit;
+    GuidesGoods: TdsdGuides;
   private
     { Private declarations }
   public
