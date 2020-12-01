@@ -10,6 +10,8 @@ RETURNS TABLE (Id Integer, Code Integer, Name TVarChar
              , UserCode TVarChar, Comment TVarChar
              , isMain Boolean
              , ModelId Integer, ModelName TVarChar
+             , BrandId Integer, BrandName TVarChar
+             , EngineId Integer, EngineName TVarChar
              , InsertName TVarChar, UpdateName TVarChar
              , InsertDate TDateTime, UpdateDate TDateTime
              , isErased Boolean
@@ -36,6 +38,10 @@ BEGIN
 
          , Object_Model.Id           ::Integer  AS ModelId
          , Object_Model.ValueData    ::TVarChar AS ModelName
+         , Object_Brand.Id                      AS BrandId
+         , Object_Brand.ValueData               AS BrandName
+         , Object_ProdEngine.Id                 AS EngineId
+         , Object_ProdEngine.ValueData          AS EngineName
 
          , Object_Insert.ValueData            AS InsertName
          , Object_Update.ValueData            AS UpdateName
@@ -59,6 +65,16 @@ BEGIN
                                ON ObjectLink_Model.ObjectId = Object_ReceiptProdModel.Id
                               AND ObjectLink_Model.DescId = zc_ObjectLink_ReceiptProdModel_Model()
           LEFT JOIN Object AS Object_Model ON Object_Model.Id = ObjectLink_Model.ChildObjectId 
+
+          LEFT JOIN ObjectLink AS ObjectLink_Brand
+                               ON ObjectLink_Brand.ObjectId = Object_Model.Id
+                              AND ObjectLink_Brand.DescId = zc_ObjectLink_ProdModel_Brand()
+          LEFT JOIN Object AS Object_Brand ON Object_Brand.Id = ObjectLink_Brand.ChildObjectId
+
+          LEFT JOIN ObjectLink AS ObjectLink_ProdEngine
+                               ON ObjectLink_ProdEngine.ObjectId = Object_Model.Id
+                              AND ObjectLink_ProdEngine.DescId = zc_ObjectLink_ProdModel_ProdEngine()
+          LEFT JOIN Object AS Object_ProdEngine ON Object_ProdEngine.Id = ObjectLink_ProdEngine.ChildObjectId
 
           LEFT JOIN ObjectLink AS ObjectLink_Insert
                                ON ObjectLink_Insert.ObjectId = Object_ReceiptProdModel.Id

@@ -41,8 +41,10 @@ BEGIN
         INNER JOIN Object AS Model ON Model.Id = ObjectLink.ObjectId
    WHERE ObjectLink.DescId = zc_ObjectLink_ProdModel_Brand() AND ObjectLink.ObjectId = inModelId;
 
+   inUserCode := (CASE WHEN COALESCE (inUserCode,'') <>'' THEN inUserCode ELSE COALESCE (vbModelCode,'') END) :: TVarChar;
+
    -- сохранили <Объект>
-   ioId := lpInsertUpdate_Object(ioId, zc_Object_ReceiptProdModel(), inCode, COALESCE (vbBrandName,'')||'-'||COALESCE (vbModelName,'')||'-'||COALESCE (inComment,'')||'-'||COALESCE (inUserCode, vbModelCode,''));
+   ioId := lpInsertUpdate_Object(ioId, zc_Object_ReceiptProdModel(), inCode, COALESCE (vbBrandName,'')||'-'||COALESCE (vbModelName,'')||'-'||COALESCE (inComment,'')||'-'||COALESCE (inUserCode,''));
 
    -- сохранили свойство <>
    PERFORM lpInsertUpdate_ObjectString(zc_ObjectString_ReceiptProdModel_Comment(), ioId, inComment);

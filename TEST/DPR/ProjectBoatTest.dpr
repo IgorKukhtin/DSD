@@ -195,7 +195,9 @@ uses
   PriceListGoodsItemEdit in '..\..\FormsBoat\Guides\PriceListGoodsItemEdit.pas' {PriceListGoodsItemEditForm: TParentForm},
   PriceListItem in '..\..\FormsBoat\Guides\PriceListItem.pas' {PriceListItemForm: TParentForm},
   TaxKind in '..\..\FormsBoat\Kind\TaxKind.pas' {TaxKindForm: TParentForm},
-  dsdAddOn in '..\..\SOURCE\COMPONENT\dsdAddOn.pas';
+  dsdAddOn in '..\..\SOURCE\COMPONENT\dsdAddOn.pas',
+  ReceiptProdModelEdit in '..\..\FormsBoat\Guides\ReceiptProdModelEdit.pas' {ReceiptProdModelEditForm: TParentForm},
+  ReceiptProdModel in '..\..\FormsBoat\Guides\ReceiptProdModel.pas' {ReceiptProdModelForm: TParentForm};
 
 {$R *.res}
 {$R DevExpressRus.res}

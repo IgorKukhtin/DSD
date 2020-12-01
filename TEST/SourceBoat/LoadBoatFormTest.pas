@@ -50,6 +50,7 @@ type
     procedure LoadProdOptPatternFormTest;
     procedure LoadProductFormTest;
     procedure LoadPriceListFormTest;
+    procedure LoadReceiptProdModelFormTest;
     procedure LoadUnitFormTest;
     procedure FormTest;
   end;
@@ -425,6 +426,15 @@ begin
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TPriceList_ObjectForm'));
   TdsdFormStorageFactory.GetStorage.Load('TPriceList_ObjectForm');
 end;
+
+procedure TLoadFormTest.LoadReceiptProdModelFormTest;
+begin
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TReceiptProdModelForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TReceiptProdModelForm');
+    TdsdFormStorageFactory.GetStorage.Save(GetForm('TReceiptProdModelEditForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TReceiptProdModelEditForm');
+
+  end;
 
 procedure TLoadFormTest.LoadUnitFormTest;
 begin

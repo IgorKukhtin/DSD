@@ -199,6 +199,9 @@ type
     actModelEtiketen: TdsdOpenForm;
     miModelEtiketen: TMenuItem;
     N5: TMenuItem;
+    actReceiptProdModel: TdsdOpenForm;
+    miReceiptProdModel: TMenuItem;
+    N8: TMenuItem;
   private
     { Private declarations }
   public
