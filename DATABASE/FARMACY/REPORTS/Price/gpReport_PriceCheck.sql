@@ -1,11 +1,13 @@
 -- Function: gpReport_PriceCheck()
 
-DROP FUNCTION IF EXISTS gpReport_PriceCheck (TFloat, Integer, Boolean, TVarChar);
+--DROP FUNCTION IF EXISTS gpReport_PriceCheck (TFloat, Integer, Boolean, TVarChar);
+DROP FUNCTION IF EXISTS gpReport_PriceCheck (TFloat, Integer, Boolean, Boolean, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpReport_PriceCheck(
     IN inPercent          TFloat    , -- Процент отклонения
     IN inUserId           Integer   , -- Сотрудник
     IN inisHideExceptRed  Boolean   , -- Скрыть кроме красных
+    IN inisRetail         Boolean,     -- только по сети
     IN inSession          TVarChar    -- сессия пользователя
 )
 RETURNS SETOF refcursor
@@ -18,10 +20,13 @@ $BODY$
    DECLARE vbQueryText Text;
    DECLARE vbID Integer;
    DECLARE vbUnitID Integer;
+   DECLARE vbObjectId Integer;
 BEGIN
     -- проверка прав пользователя на вызов процедуры
     -- vbUserId:= lpCheckRight(inSession, zc_Enum_Process_...());
     vbUserId:= lpGetUserBySession (inSession);
+    -- Ограничение на просмотр товарного справочника
+    vbObjectId := lpGet_DefaultValue('zc_Object_Retail', vbUserId);
 
       -- Подразделения
     CREATE TEMP TABLE tmpUnitManager (
@@ -46,6 +51,16 @@ BEGIN
          LEFT JOIN ObjectLink AS ObjectLink_Unit_UserManager
                               ON ObjectLink_Unit_UserManager.ObjectId = tmpUnit.UnitId
                              AND ObjectLink_Unit_UserManager.DescId = zc_ObjectLink_Unit_UserManager()
+                             
+         LEFT JOIN ObjectLink AS ObjectLink_Unit_Juridical
+                              ON ObjectLink_Unit_Juridical.ObjectId = tmpUnit.UnitId
+                             AND ObjectLink_Unit_Juridical.DescId = zc_ObjectLink_Unit_Juridical()
+
+         LEFT JOIN ObjectLink AS ObjectLink_Juridical_Retail
+                              ON ObjectLink_Juridical_Retail.ObjectId = ObjectLink_Unit_Juridical.ChildObjectId
+                             AND ObjectLink_Juridical_Retail.DescId = zc_ObjectLink_Juridical_Retail()
+                             
+    WHERE ObjectLink_Juridical_Retail.ChildObjectId = vbObjectId OR inisRetail = FALSE
     ;
 
       -- Цены по подразделениям
@@ -528,5 +543,4 @@ $BODY$
 */
 
 -- тест
---
-select * from gpReport_PriceCheck(inPercent := 5, inUserId := 0, inisHideExceptRed := False, inSession := '3');               
+-- select * from gpReport_PriceCheck(inPercent := 5, inUserId := 0, inisHideExceptRed := False, inisRetail := False, inSession := '3');               

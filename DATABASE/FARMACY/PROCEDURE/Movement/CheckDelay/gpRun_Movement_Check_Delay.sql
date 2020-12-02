@@ -98,13 +98,10 @@ BEGIN
                                 ON MovementDate_Delay.MovementId = Movement.Id
                                AND MovementDate_Delay.DescId = zc_MovementDate_Delay()
 
-    WHERE CASE WHEN MovementDate_Delay.ValueData is not Null 
-          THEN MovementDate_Delay.ValueData
-          ELSE CASE WHEN MovementString_InvNumberOrder.ValueData <> '' AND COALESCE (Object_CashMember.ValueData, '') = ''
-               THEN MovementDate_UserConfirmedKind.ValueData
-               ELSE Movement.OperDate END END <= DATE_TRUNC ('DAY', CURRENT_DATE) - INTERVAL '4 DAY' 
-       OR MovementDate_Delay.ValueData is Null AND MovementString_InvNumberOrder.ValueData <> '' AND COALESCE (Object_CashMember.ValueData, '') = ''
-      AND Movement.OperDate <= DATE_TRUNC ('DAY', CURRENT_DATE) - INTERVAL '10 DAY') AS Movement;
+    WHERE CASE WHEN MovementDate_Delay.ValueData is not Null THEN MovementDate_Delay.ValueData
+               WHEN MovementDate_UserConfirmedKind.ValueData is not Null THEN MovementDate_UserConfirmedKind.ValueData
+               ELSE Movement.OperDate + INTERVAL '1 DAY' END <= DATE_TRUNC ('DAY', CURRENT_DATE) - INTERVAL '2 DAY') AS Movement;
+               
 END;
 $BODY$
   LANGUAGE PLPGSQL VOLATILE;

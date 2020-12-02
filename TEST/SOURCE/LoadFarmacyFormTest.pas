@@ -47,6 +47,7 @@ type
     procedure LoadCreateOrderFromMCSFormTest;
     procedure LoadDefaultFormTest;
     procedure LoadDiscountFormTest;
+    procedure LoadDistributionPromoFormTest;
     procedure LoadDiffKindFormTest;
     procedure LoadDivisionPartiesFormTest;
     procedure LoadDriverTest;
@@ -228,6 +229,14 @@ begin
   TdsdFormStorageFactory.GetStorage.Load('TDiscountCardForm');
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TDiscountCardEditForm'));
   TdsdFormStorageFactory.GetStorage.Load('TDiscountCardEditForm');}
+end;
+
+procedure TLoadFormTest.LoadDistributionPromoFormTest;
+begin
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TDistributionPromoJournalForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TDistributionPromoJournalForm');
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TDistributionPromoForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TDistributionPromoForm');
 end;
 
 procedure TLoadFormTest.LoadAccountFormTest;
@@ -852,11 +861,11 @@ begin
     TdsdFormStorageFactory.GetStorage.Save(GetForm('TPriceListLoadForm'));
     TdsdFormStorageFactory.GetStorage.Load('TPriceListLoadForm');
     exit;
-}
+
     TdsdFormStorageFactory.GetStorage.Save(GetForm('TPriceListItemsLoadForm'));
     TdsdFormStorageFactory.GetStorage.Load('TPriceListItemsLoadForm');
     exit;
-{
+
     TdsdFormStorageFactory.GetStorage.Save(GetForm('TMovementLoadForm'));
     TdsdFormStorageFactory.GetStorage.Load('TMovenentLoadForm');
     TdsdFormStorageFactory.GetStorage.Save(GetForm('TMovementItemsLoadForm'));
@@ -865,10 +874,11 @@ begin
     TdsdFormStorageFactory.GetStorage.Save(GetForm('TChoiceGoodsFromPriceListForm'));
     TdsdFormStorageFactory.GetStorage.Load('TChoiceGoodsFromPriceListForm');
     exit;
-  }
+
   // отчет поиск товара по всей сети
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_GoodsFromRemainsSetPriceDialogForm'));
   TdsdFormStorageFactory.GetStorage.Load('TReport_GoodsFromRemainsSetPriceDialogForm');
+}
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TChoiceGoodsFromRemainsForm'));
   TdsdFormStorageFactory.GetStorage.Load('TChoiceGoodsFromRemainsForm');
   exit;
@@ -953,11 +963,11 @@ end;
 
 procedure TLoadFormTest.LoadReportFormTest;
 begin
-   {
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_PriceCheckForm'));
   TdsdFormStorageFactory.GetStorage.Load('TReport_PriceCheckForm');
 
 
+   {
 
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_ClippedReprice_SaleForm'));
   TdsdFormStorageFactory.GetStorage.Load('TReport_ClippedReprice_SaleForm');

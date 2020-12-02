@@ -13,7 +13,7 @@ uses
   cxGridTableView, cxGridDBTableView, cxGrid, cxPC, cxContainer, cxTextEdit,
   cxLabel, cxCurrencyEdit, cxButtonEdit, Vcl.DBActns, cxMaskEdit, Vcl.ExtCtrls,
   dxBarBuiltInMenu, cxNavigator, Vcl.StdCtrls, cxButtons, dxSkinsCore,
-  dxSkinsDefaultPainters, dxSkinscxPCPainter, dxSkinsdxBarPainter;
+  dxSkinsDefaultPainters, dxSkinscxPCPainter, dxSkinsdxBarPainter, cxCheckBox;
 
 type
   TChoiceGoodsFromRemainsForm = class(TAncestorEnumForm)
@@ -52,6 +52,8 @@ type
     colColor_calc: TcxGridDBColumn;
     colDeferredSend: TcxGridDBColumn;
     colDeferredSendIn: TcxGridDBColumn;
+    cbisRetail: TcxCheckBox;
+    RetailName: TcxGridDBColumn;
   private
     { Private declarations }
   public

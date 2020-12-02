@@ -442,7 +442,8 @@ BEGIN
      INSERT INTO _PUSH (Id, Text) VALUES (12, 'Перемещения VIP по которым установлен признак не подтвержден:'||CHR(13)||CHR(13)||vbText);
    END IF;
 
-   IF EXISTS (SELECT 1 FROM ObjectLink_UserRole_View  WHERE UserId = vbUserId AND RoleId in (zc_Enum_Role_Admin(), zc_Enum_Role_PartialSale(), zc_Enum_Role_PharmacyManager()))
+   IF EXISTS (SELECT 1 FROM ObjectLink_UserRole_View  WHERE UserId = vbUserId AND RoleId in (zc_Enum_Role_PartialSale(), zc_Enum_Role_PharmacyManager()))
+      AND NOT EXISTS (SELECT 1 FROM ObjectLink_UserRole_View  WHERE UserId = vbUserId AND RoleId in (zc_Enum_Role_SendVIP()))
       AND date_part('DOW', CURRENT_DATE)::Integer = 1 AND (inNumberPUSH = 1 OR
       (DATE_PART('HOUR', CURRENT_TIME)::Integer IN (12, 16) AND DATE_PART('MINUTE',  CURRENT_TIME)::Integer >= 00 AND DATE_PART('MINUTE',  CURRENT_TIME)::Integer <= 20))
    THEN
@@ -501,4 +502,4 @@ LANGUAGE plpgsql VOLATILE;
 -- тест
 -- SELECT * FROM gpGet_PUSH_Farmacy('12198759')
 --
-SELECT * FROM gpGet_PUSH_Farmacy(1, '269777')
+SELECT * FROM gpGet_PUSH_Farmacy(1, '948223')

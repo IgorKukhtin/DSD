@@ -1,11 +1,13 @@
 -- Function: gpSelect_Movement_Income()
 
-DROP FUNCTION IF EXISTS gpSelect_GoodsSearchRemains (TVarChar, TVarChar, TVarChar);
+--DROP FUNCTION IF EXISTS gpSelect_GoodsSearchRemains (TVarChar, TVarChar, TVarChar);
+DROP FUNCTION IF EXISTS gpSelect_GoodsSearchRemains (TVarChar, TVarChar, Boolean, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpSelect_GoodsSearchRemains(
     IN inCodeSearch     TVarChar,    -- поиск товаров по коду
     IN inGoodsSearch    TVarChar,    -- поиск товаров
-    IN inSession        TVarChar    -- сессия пользователя
+    IN inisRetail       Boolean,     -- только по сети
+    IN inSession        TVarChar     -- сессия пользователя
 )
 RETURNS TABLE (Id integer, GoodsCode Integer, GoodsName TVarChar
              , NDSkindName TVarChar
@@ -13,6 +15,7 @@ RETURNS TABLE (Id integer, GoodsCode Integer, GoodsName TVarChar
              , GoodsGroupName TVarChar
              , UnitId integer, UnitName TVarChar
              , AreaName TVarChar
+             , RetailName TVarChar
              , Address_Unit TVarChar
              , Phone_Unit TVarChar
              , ProvinceCityName_Unit TVarChar
@@ -61,6 +64,7 @@ BEGIN
                      FROM Object_Goods_Main AS Goods_Main
                           INNER JOIN Object_Goods_Retail AS Goods_Retail
                                                          ON Goods_Main.Id  = Goods_Retail.GoodsMainId
+                                                        AND (Goods_Retail.RetailId = vbObjectId OR inisRetail = FALSE) 
                      WHERE (','||inCodeSearch||',' ILIKE '%,'||CAST(Goods_Main.ObjectCode AS TVarChar)||',%' AND inCodeSearch <> '')
                         OR (upper(Goods_Main.Name) ILIKE UPPER('%'||inGoodsSearch||'%')  AND inGoodsSearch <> '' AND inCodeSearch = '')
                      )
@@ -307,6 +311,7 @@ BEGIN
       , tmpUnit AS (SELECT Object_Unit.Id                               AS UnitId
                          , Object_Unit.ValueData                        AS UnitName
                          , Object_Area.ValueData                        AS AreaName
+                         , Object_Retail.ValueData                      AS RetailName
                          , Object_ProvinceCity.ValueData                AS ProvinceCityName_Unit
                          , Object_Juridical.ValueData                   AS JuridicalName_Unit
                          , ObjectString_Phone.ValueData                 AS Phone
@@ -322,6 +327,11 @@ BEGIN
                                                  ON ObjectLink_Unit_Juridical.ObjectId = Object_Unit.Id
                                                 AND ObjectLink_Unit_Juridical.DescId = zc_ObjectLink_Unit_Juridical()
                          LEFT JOIN Object AS Object_Juridical ON Object_Juridical.Id = ObjectLink_Unit_Juridical.ChildObjectId
+
+                         LEFT JOIN ObjectLink AS ObjectLink_Juridical_Retail
+                                              ON ObjectLink_Juridical_Retail.ObjectId = ObjectLink_Unit_Juridical.ChildObjectId
+                                             AND ObjectLink_Juridical_Retail.DescId = zc_ObjectLink_Juridical_Retail()
+                         LEFT JOIN Object AS Object_Retail ON Object_Retail.Id = ObjectLink_Juridical_Retail.ChildObjectId
 
                          LEFT JOIN tmpObjectLink AS ObjectLink_Unit_ProvinceCity
                                                  ON ObjectLink_Unit_ProvinceCity.ObjectId = Object_Unit.Id
@@ -406,6 +416,7 @@ BEGIN
              , Object_Unit.UnitId
              , Object_Unit.UnitName
              , Object_Unit.AreaName
+             , Object_Unit.RetailName
              , Object_Unit.Address_Unit
              , Object_Unit.Phone_Unit
              , Object_Unit.ProvinceCityName_Unit
@@ -483,4 +494,4 @@ $BODY$
 -- SELECT * FROM gpSelect_GoodsSearchRemains ('4282', 'глюкоз', inSession := '3')
 -- select * from gpSelect_GoodsSearchRemains(inCodeSearch := '' , inGoodsSearch := 'маска защит' ,  inSession := '3'); 36584
 
-select * from gpSelect_GoodsSearchRemains(inCodeSearch := '6427' , inGoodsSearch := '' ,  inSession := '3');
+select * from gpSelect_GoodsSearchRemains(inCodeSearch := '1402' , inGoodsSearch := '' , inisRetail := FALSE,   inSession := '3');
