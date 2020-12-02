@@ -10,7 +10,7 @@ CREATE OR REPLACE FUNCTION gpSelect_MovementItem_SaleExternal(
 RETURNS TABLE (Id Integer
              , GoodsId Integer, GoodsCode Integer, GoodsName TVarChar
              , GoodsGroupNameFull TVarChar             
-             , Amount TFloat
+             , Amount TFloat, Amount_kg TFloat
              , GoodsKindId Integer, GoodsKindName  TVarChar, MeasureName TVarChar
              , GoodsName_Juridical TVarChar
              , AmountInPack_Juridical TFloat
@@ -124,6 +124,12 @@ BEGIN
 
            , tmpMI.Amount            :: TFloat  AS Amount
 
+           , CASE WHEN Object_Measure.Id = zc_Measure_Sh() 
+                  THEN tmpMI.Amount * COALESCE (ObjectFloat_Weight.ValueData,1)
+                  ELSE tmpMI.Amount
+             END                     ::TFloat   AS Amount_kg
+                                                                         
+                                                                         
            , Object_GoodsKind.Id        	AS GoodsKindId
            , Object_GoodsKind.ValueData 	AS GoodsKindName
            , Object_Measure.ValueData           AS MeasureName
@@ -150,7 +156,11 @@ BEGIN
                                  ON ObjectLink_Goods_Measure.ObjectId = tmpMI.GoodsId
                                 AND ObjectLink_Goods_Measure.DescId = zc_ObjectLink_Goods_Measure()
             LEFT JOIN Object AS Object_Measure ON Object_Measure.Id = ObjectLink_Goods_Measure.ChildObjectId
-            
+
+            LEFT JOIN ObjectFloat AS ObjectFloat_Weight
+                                  ON ObjectFloat_Weight.ObjectId = tmpMI.GoodsId
+                                 AND ObjectFloat_Weight.DescId = zc_ObjectFloat_Goods_Weight()
+
             LEFT JOIN tmpObject_GoodsPropertyValue ON tmpObject_GoodsPropertyValue.GoodsId = tmpMI.GoodsId
                                                   AND tmpObject_GoodsPropertyValue.GoodsKindId = tmpMI.GoodsKindId
                                                   AND (tmpObject_GoodsPropertyValue.Article <> ''
@@ -171,4 +181,4 @@ $BODY$
 */
 
 -- тест
--- SELECT * FROM gpSelect_MovementItem_SaleExternal (inMovementId:= 25173, inPriceListId:=18840, inOperDate:= CURRENT_TIMESTAMP, inShowAll:= FALSE, inisErased:= FALSE, inSession:= '2')
+-- select * from gpSelect_MovementItem_SaleExternal(inMovementId := 18298048 , inIsErased := 'False' ,  inSession := '5')

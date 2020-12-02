@@ -2,7 +2,7 @@ object ProdModelEditForm: TProdModelEditForm
   Left = 0
   Top = 0
   Caption = #1044#1086#1073#1072#1074#1080#1090#1100'/'#1048#1079#1084#1077#1085#1080#1090#1100' <'#1052#1086#1076#1077#1083#1080'>'
-  ClientHeight = 389
+  ClientHeight = 439
   ClientWidth = 295
   Color = clBtnFace
   Font.Charset = DEFAULT_CHARSET
@@ -29,7 +29,7 @@ object ProdModelEditForm: TProdModelEditForm
   end
   object cxButton1: TcxButton
     Left = 41
-    Top = 348
+    Top = 398
     Width = 75
     Height = 25
     Action = actInsertUpdateGuides
@@ -38,7 +38,7 @@ object ProdModelEditForm: TProdModelEditForm
   end
   object cxButton2: TcxButton
     Left = 185
-    Top = 348
+    Top = 398
     Width = 75
     Height = 25
     Action = actFormClose
@@ -63,12 +63,12 @@ object ProdModelEditForm: TProdModelEditForm
   end
   object cxLabel3: TcxLabel
     Left = 10
-    Top = 289
+    Top = 338
     Caption = #1055#1088#1080#1084#1077#1095#1072#1085#1080#1077
   end
   object edComment: TcxTextEdit
     Left = 10
-    Top = 309
+    Top = 358
     TabOrder = 7
     Width = 273
   end
@@ -178,6 +178,23 @@ object ProdModelEditForm: TProdModelEditForm
       end>
     Properties.ReadOnly = True
     TabOrder = 23
+    Width = 273
+  end
+  object cxLabel12: TcxLabel
+    Left = 10
+    Top = 290
+    Caption = #1052#1086#1090#1086#1088
+  end
+  object edProdEngine: TcxButtonEdit
+    Left = 10
+    Top = 310
+    Properties.Buttons = <
+      item
+        Default = True
+        Kind = bkEllipsis
+      end>
+    Properties.ReadOnly = True
+    TabOrder = 25
     Width = 273
   end
   object ActionList: TActionList
@@ -311,6 +328,14 @@ object ProdModelEditForm: TProdModelEditForm
         ComponentItem = 'Key'
         ParamType = ptInput
         MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inProdEngineId'
+        Value = Null
+        Component = GuidesProdEngine
+        ComponentItem = 'Key'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
       end>
     PackSize = 1
     Left = 96
@@ -424,6 +449,21 @@ object ProdModelEditForm: TProdModelEditForm
         ComponentItem = 'TextValue'
         DataType = ftString
         MultiSelectSeparator = ','
+      end
+      item
+        Name = 'ProdEngineId'
+        Value = Null
+        Component = GuidesProdEngine
+        ComponentItem = 'Key'
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'ProdEngineName'
+        Value = Null
+        Component = GuidesProdEngine
+        ComponentItem = 'TextValue'
+        DataType = ftString
+        MultiSelectSeparator = ','
       end>
     PackSize = 1
     Left = 184
@@ -441,12 +481,12 @@ object ProdModelEditForm: TProdModelEditForm
       end>
     StorageName = 'cxPropertiesStore'
     StorageType = stStream
-    Left = 32
-    Top = 295
+    Left = 112
+    Top = 407
   end
   object dsdUserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn
     Left = 272
-    Top = 336
+    Top = 400
   end
   object GuidesBrand: TdsdGuides
     KeyField = 'Id'
@@ -476,5 +516,34 @@ object ProdModelEditForm: TProdModelEditForm
       end>
     Left = 103
     Top = 251
+  end
+  object GuidesProdEngine: TdsdGuides
+    KeyField = 'Id'
+    LookupControl = edProdEngine
+    FormNameParam.Value = 'TProdEngineForm'
+    FormNameParam.DataType = ftString
+    FormNameParam.MultiSelectSeparator = ','
+    FormName = 'TProdEngineForm'
+    PositionDataSet = 'MasterCDS'
+    Params = <
+      item
+        Name = 'Key'
+        Value = ''
+        Component = GuidesProdEngine
+        ComponentItem = 'Key'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'TextValue'
+        Value = ''
+        Component = GuidesProdEngine
+        ComponentItem = 'TextValue'
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end>
+    Left = 143
+    Top = 298
   end
 end

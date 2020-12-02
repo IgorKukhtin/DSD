@@ -144,37 +144,8 @@ BEGIN
      END IF;
 
 
-     -- 1.2. Модель - лодки
-     inProdModelName:= TRIM (inProdModelName);
-     -- проверка
-     IF COALESCE (TRIM (inProdModelName), '') = '' THEN
-        RAISE EXCEPTION 'Ошибка.Должен быть заполнен Model.';
-     END IF;
 
-     -- Поиск
-     vbProdModelId:= (SELECT Object.Id FROM Object WHERE Object.ValueData ILIKE inProdModelName AND Object.DescId = zc_Object_ProdModel());
-     --
-     IF COALESCE (vbProdModelId, 0) = 0
-     THEN
-         -- Создание
-         vbProdModelId := (SELECT tmp.ioId FROM gpInsertUpdate_Object_ProdModel (ioId      := 0
-                                                                               , inCode    := 0
-                                                                               , inName    := inProdModelName
-                                                                               , inLength  := inLength
-                                                                               , inBeam    := inBeam
-                                                                               , inHeight  := inHeight
-                                                                               , inWeight  := inWeight
-                                                                               , inFuel    := inFuel
-                                                                               , inSpeed   := inSpeed
-                                                                               , inSeating := inSeating
-                                                                               , inComment := ''
-                                                                               , inBrandId := vbBrandId
-                                                                               , inSession := inSession
-                                                                                ) AS tmp);
-     END IF;
-
-
-     -- 1.3.  Мотор - лодки
+     -- 1.2.  Мотор - лодки
      inProdEngineName:= TRIM (inProdEngineName);
      -- проверка
      IF COALESCE (TRIM (inProdEngineName), '') = '' THEN
@@ -194,6 +165,38 @@ BEGIN
                                                                                  , inComment := ''
                                                                                  , inSession := inSession
                                                                                   ) AS tmp);
+     END IF;
+
+
+
+     -- 1.3. Модель - лодки
+     inProdModelName:= TRIM (inProdModelName);
+     -- проверка
+     IF COALESCE (TRIM (inProdModelName), '') = '' THEN
+        RAISE EXCEPTION 'Ошибка.Должен быть заполнен Model.';
+     END IF;
+
+     -- Поиск
+     vbProdModelId:= (SELECT Object.Id FROM Object WHERE Object.ValueData ILIKE inProdModelName AND Object.DescId = zc_Object_ProdModel());
+     --
+     IF COALESCE (vbProdModelId, 0) = 0
+     THEN
+         -- Создание
+         vbProdModelId := (SELECT tmp.ioId FROM gpInsertUpdate_Object_ProdModel (ioId           := 0
+                                                                               , inCode         := 0
+                                                                               , inName         := inProdModelName
+                                                                               , inLength       := inLength
+                                                                               , inBeam         := inBeam
+                                                                               , inHeight       := inHeight
+                                                                               , inWeight       := inWeight
+                                                                               , inFuel         := inFuel
+                                                                               , inSpeed        := inSpeed
+                                                                               , inSeating      := inSeating
+                                                                               , inComment      := ''
+                                                                               , inBrandId      := vbBrandId
+                                                                               , inProdEngineId := vbProdEngineId
+                                                                               , inSession      := inSession
+                                                                                ) AS tmp);
      END IF;
 
 

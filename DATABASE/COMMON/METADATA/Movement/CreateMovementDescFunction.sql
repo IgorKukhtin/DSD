@@ -261,6 +261,11 @@ CREATE OR REPLACE FUNCTION zc_Movement_ReestrTransportGoods() RETURNS Integer AS
 INSERT INTO MovementDesc (Code, ItemName)
   SELECT 'zc_Movement_ReestrTransportGoods', 'Реестры ТТН' WHERE NOT EXISTS (SELECT * FROM MovementDesc WHERE Code = 'zc_Movement_ReestrTransportGoods');
 
+CREATE OR REPLACE FUNCTION zc_Movement_ReestrIncome() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM MovementDesc WHERE Code = 'zc_Movement_ReestrIncome'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
+INSERT INTO MovementDesc (Code, ItemName)
+  SELECT 'zc_Movement_ReestrIncome', 'Реестры накладных (поставщик)' WHERE NOT EXISTS (SELECT * FROM MovementDesc WHERE Code = 'zc_Movement_ReestrIncome');
+
+
 CREATE OR REPLACE FUNCTION zc_Movement_StoreReal() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM MovementDesc WHERE Code = 'zc_Movement_StoreReal'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
 INSERT INTO MovementDesc (Code, ItemName)
   SELECT 'zc_Movement_StoreReal', 'Фактический остаток по ТТ' WHERE NOT EXISTS (SELECT * FROM MovementDesc WHERE Code = 'zc_Movement_StoreReal');
@@ -437,6 +442,7 @@ INSERT INTO MovementDesc (Code, ItemName)
 /*-------------------------------------------------------------------------------
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.   Воробкало А.А.  Шаблий О.В.
+ 31.11.20         * zc_Movement_ReestrIncome
  04.11.20                                                                                     * zc_Movement_DistributionPromo
  13.10.20                                                                                     * zc_Movement_RelatedProduct
  27.08.20         * zc_Movement_Layout

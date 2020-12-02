@@ -9,6 +9,7 @@ CREATE OR REPLACE FUNCTION gpGet_Object_ProdColorPattern(
 RETURNS TABLE (Id Integer, Code Integer, Name TVarChar
              , Comment TVarChar
              , ProdColorGroupId Integer, ProdColorGroupName TVarChar
+             , GoodsId Integer, GoodsName TVarChar
 ) AS
 $BODY$
    DECLARE vbUserId Integer;
@@ -23,11 +24,13 @@ BEGIN
        RETURN QUERY
        SELECT
               0 :: Integer            AS Id
-           , lfGet_ObjectCode(0, zc_Object_Brand())   AS Code
+           , lfGet_ObjectCode(0, zc_Object_ProdColorPattern())   AS Code
            , '' :: TVarChar           AS Name
            , '' :: TVarChar           AS Comment
            , 0  :: Integer            AS ProdColorGroupId
            , '' :: TVarChar           AS ProdColorGroupName
+           , 0  :: Integer            AS GoodsId
+           , '' :: TVarChar           AS GoodsName
        ;
    ELSE
      RETURN QUERY
@@ -41,7 +44,9 @@ BEGIN
 
          , Object_ProdColorGroup.Id           ::Integer  AS ProdColorGroupId
          , Object_ProdColorGroup.ValueData    ::TVarChar AS ProdColorGroupName
-         
+
+         , Object_Goods.Id                    ::Integer  AS GoodsId
+         , Object_Goods.ValueData             ::TVarChar AS GoodsName
      FROM Object AS Object_ProdColorPattern
           LEFT JOIN ObjectString AS ObjectString_Comment
                                  ON ObjectString_Comment.ObjectId = Object_ProdColorPattern.Id
@@ -51,6 +56,11 @@ BEGIN
                                ON ObjectLink_ProdColorGroup.ObjectId = Object_ProdColorPattern.Id
                               AND ObjectLink_ProdColorGroup.DescId = zc_ObjectLink_ProdColorPattern_ProdColorGroup()
           LEFT JOIN Object AS Object_ProdColorGroup ON Object_ProdColorGroup.Id = ObjectLink_ProdColorGroup.ChildObjectId 
+
+          LEFT JOIN ObjectLink AS ObjectLink_Goods
+                               ON ObjectLink_Goods.ObjectId = Object_ProdColorPattern.Id
+                              AND ObjectLink_Goods.DescId = zc_ObjectLink_ProdColorPattern_Goods()
+          LEFT JOIN Object AS Object_Goods ON Object_Goods.Id = ObjectLink_Goods.ChildObjectId
 
      WHERE Object_ProdColorPattern.DescId = zc_Object_ProdColorPattern()
       AND Object_ProdColorPattern.Id = inId
@@ -65,6 +75,7 @@ $BODY$
 /*-------------------------------------------------------------------------------
  »—“Œ–»ﬂ –¿«–¿¡Œ“ »: ƒ¿“¿, ¿¬“Œ–
                ‘ÂÎÓÌ˛Í ».¬.    ÛıÚËÌ ».¬.    ÎËÏÂÌÚ¸Â‚  .».
+ 01.12.20         * zc_ObjectLink_ProdColorPattern_Goods
  15.10.20         *
 */
 

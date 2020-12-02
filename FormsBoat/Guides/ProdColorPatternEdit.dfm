@@ -2,7 +2,7 @@ object ProdColorPatternEditForm: TProdColorPatternEditForm
   Left = 0
   Top = 0
   Caption = #1044#1086#1073#1072#1074#1080#1090#1100'/'#1048#1079#1084#1077#1085#1080#1090#1100' <'#1064#1072#1073#1083#1086#1085#1099' '#1062#1074#1077#1090#1072' ('#1051#1086#1076#1082#1072')>'
-  ClientHeight = 252
+  ClientHeight = 309
   ClientWidth = 295
   Color = clBtnFace
   Font.Charset = DEFAULT_CHARSET
@@ -28,8 +28,8 @@ object ProdColorPatternEditForm: TProdColorPatternEditForm
     Caption = #1053#1072#1079#1074#1072#1085#1080#1077
   end
   object cxButton1: TcxButton
-    Left = 41
-    Top = 214
+    Left = 33
+    Top = 264
     Width = 75
     Height = 25
     Action = actInsertUpdateGuides
@@ -37,8 +37,8 @@ object ProdColorPatternEditForm: TProdColorPatternEditForm
     TabOrder = 2
   end
   object cxButton2: TcxButton
-    Left = 185
-    Top = 214
+    Left = 177
+    Top = 264
     Width = 75
     Height = 25
     Action = actFormClose
@@ -87,6 +87,23 @@ object ProdColorPatternEditForm: TProdColorPatternEditForm
       end>
     Properties.ReadOnly = True
     TabOrder = 9
+    Width = 273
+  end
+  object cxLabel5: TcxLabel
+    Left = 10
+    Top = 198
+    Caption = #1040#1088#1090#1080#1082#1091#1083
+  end
+  object edGoods: TcxButtonEdit
+    Left = 10
+    Top = 217
+    Properties.Buttons = <
+      item
+        Default = True
+        Kind = bkEllipsis
+      end>
+    Properties.ReadOnly = True
+    TabOrder = 11
     Width = 273
   end
   object ActionList: TActionList
@@ -153,6 +170,14 @@ object ProdColorPatternEditForm: TProdColorPatternEditForm
         Name = 'inProdColorGroupId'
         Value = Null
         Component = GuidesProdColorGroup
+        ComponentItem = 'Key'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inGoodsId'
+        Value = Null
+        Component = GuidesGoods
         ComponentItem = 'Key'
         ParamType = ptInput
         MultiSelectSeparator = ','
@@ -228,6 +253,21 @@ object ProdColorPatternEditForm: TProdColorPatternEditForm
         ComponentItem = 'TextValue'
         DataType = ftString
         MultiSelectSeparator = ','
+      end
+      item
+        Name = 'GoodsId'
+        Value = Null
+        Component = GuidesGoods
+        ComponentItem = 'Key'
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'GoodsName'
+        Value = Null
+        Component = GuidesGoods
+        ComponentItem = 'TextValue'
+        DataType = ftString
+        MultiSelectSeparator = ','
       end>
     PackSize = 1
     Left = 184
@@ -280,5 +320,34 @@ object ProdColorPatternEditForm: TProdColorPatternEditForm
       end>
     Left = 126
     Top = 160
+  end
+  object GuidesGoods: TdsdGuides
+    KeyField = 'Id'
+    LookupControl = edGoods
+    FormNameParam.Value = 'TGoodsForm'
+    FormNameParam.DataType = ftString
+    FormNameParam.MultiSelectSeparator = ','
+    FormName = 'TGoodsForm'
+    PositionDataSet = 'ClientDataSet'
+    Params = <
+      item
+        Name = 'Key'
+        Value = ''
+        Component = GuidesGoods
+        ComponentItem = 'Key'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'TextValue'
+        Value = ''
+        Component = GuidesGoods
+        ComponentItem = 'TextValue'
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end>
+    Left = 118
+    Top = 208
   end
 end

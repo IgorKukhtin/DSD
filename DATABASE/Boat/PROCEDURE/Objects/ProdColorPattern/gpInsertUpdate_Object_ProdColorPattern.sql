@@ -1,12 +1,14 @@
 -- Function: gpInsertUpdate_Object_ProdColorPattern()
 
 DROP FUNCTION IF EXISTS gpInsertUpdate_Object_ProdColorPattern(Integer, Integer, TVarChar, Integer, TVarChar, TVarChar);
+DROP FUNCTION IF EXISTS gpInsertUpdate_Object_ProdColorPattern(Integer, Integer, TVarChar, Integer, Integer, TVarChar, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpInsertUpdate_Object_ProdColorPattern(
  INOUT ioId               Integer   ,    -- ключ объекта <Лодки>
     IN inCode             Integer   ,    -- Код объекта 
     IN inName             TVarChar  ,    -- Название объекта
     IN inProdColorGroupId Integer   ,
+    IN inGoodsId          Integer   ,
     IN inComment          TVarChar  ,
     IN inSession          TVarChar       -- сессия пользователя
 )
@@ -51,6 +53,8 @@ BEGIN
 
    -- сохранили свойство <>
    PERFORM lpInsertUpdate_ObjectLink (zc_ObjectLink_ProdColorPattern_ProdColorGroup(), ioId, inProdColorGroupId);
+   -- сохранили свойство <>
+   PERFORM lpInsertUpdate_ObjectLink (zc_ObjectLink_ProdColorPattern_Goods(), ioId, inGoodsId);
 
    IF vbIsInsert = TRUE THEN
       -- сохранили свойство <Дата создания>
@@ -69,6 +73,7 @@ $BODY$
 /*-------------------------------------------------------------------------------
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
+ 01.12.20         * add inGoodsId
  15.10.20         *
 */
 

@@ -10,6 +10,7 @@ RETURNS TABLE (Id Integer, Code Integer, Name TVarChar
              , NPP Integer
              , Comment TVarChar
              , ProdColorGroupId Integer, ProdColorGroupName TVarChar
+             , GoodsId Integer, GoodsName TVarChar
              , InsertName TVarChar
              , InsertDate TDateTime
              , isErased Boolean
@@ -36,6 +37,8 @@ BEGIN
 
          , Object_ProdColorGroup.Id           ::Integer  AS ProdColorGroupId
          , Object_ProdColorGroup.ValueData    ::TVarChar AS ProdColorGroupName
+         , Object_Goods.Id                    ::Integer  AS GoodsId
+         , Object_Goods.ValueData             ::TVarChar AS GoodsName
 
          , Object_Insert.ValueData            AS InsertName
          , ObjectDate_Insert.ValueData        AS InsertDate
@@ -50,6 +53,11 @@ BEGIN
                                ON ObjectLink_ProdColorGroup.ObjectId = Object_ProdColorPattern.Id
                               AND ObjectLink_ProdColorGroup.DescId = zc_ObjectLink_ProdColorPattern_ProdColorGroup()
           LEFT JOIN Object AS Object_ProdColorGroup ON Object_ProdColorGroup.Id = ObjectLink_ProdColorGroup.ChildObjectId 
+
+          LEFT JOIN ObjectLink AS ObjectLink_Goods
+                               ON ObjectLink_Goods.ObjectId = Object_ProdColorPattern.Id
+                              AND ObjectLink_Goods.DescId = zc_ObjectLink_ProdColorPattern_Goods()
+          LEFT JOIN Object AS Object_Goods ON Object_Goods.Id = ObjectLink_Goods.ChildObjectId 
 
           LEFT JOIN ObjectLink AS ObjectLink_Insert
                                ON ObjectLink_Insert.ObjectId = Object_ProdColorPattern.Id
@@ -71,6 +79,7 @@ $BODY$
 /*-------------------------------------------------------------------------------
  »—“Œ–»ﬂ –¿«–¿¡Œ“ »: ƒ¿“¿, ¿¬“Œ–
                ‘ÂÎÓÌ˛Í ».¬.    ÛıÚËÌ ».¬.    ÎËÏÂÌÚ¸Â‚  .».
+ 01.12.20         * zc_ObjectLink_ProdColorPattern_Goods
  15.10.20         *
 */
 

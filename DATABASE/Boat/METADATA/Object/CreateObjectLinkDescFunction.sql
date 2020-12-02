@@ -135,6 +135,10 @@ CREATE OR REPLACE FUNCTION zc_ObjectLink_ProdColorPattern_ProdColorGroup() RETUR
 INSERT INTO ObjectLinkDesc(Code, ItemName, DescId, ChildObjectDescId)
 SELECT 'zc_ObjectLink_ProdColorPattern_ProdColorGroup', 'Категория', zc_Object_ProdColorPattern(), zc_Object_ProdColorGroup() WHERE NOT EXISTS (SELECT * FROM ObjectLinkDesc WHERE Code = 'zc_ObjectLink_ProdColorPattern_ProdColorGroup');
 
+CREATE OR REPLACE FUNCTION zc_ObjectLink_ProdColorPattern_Goods() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM ObjectLinkDesc WHERE Code = 'zc_ObjectLink_ProdColorPattern_Goods'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
+INSERT INTO ObjectLinkDesc(Code, ItemName, DescId, ChildObjectDescId)
+SELECT 'zc_ObjectLink_ProdColorPattern_Goods', 'артикул', zc_Object_ProdColorPattern(), zc_Object_Goods() WHERE NOT EXISTS (SELECT * FROM ObjectLinkDesc WHERE Code = 'zc_ObjectLink_ProdColorPattern_Goods');
+
 CREATE OR REPLACE FUNCTION zc_ObjectLink_PLZ_Country() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM ObjectLinkDesc WHERE Code = 'zc_ObjectLink_PLZ_Country'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
 INSERT INTO ObjectLinkDesc(Code, ItemName, DescId, ChildObjectDescId)
 SELECT 'zc_ObjectLink_PLZ_Country', 'Страна', zc_Object_PLZ(), zc_Object_Country() WHERE NOT EXISTS (SELECT * FROM ObjectLinkDesc WHERE Code = 'zc_ObjectLink_PLZ_Country');
@@ -216,10 +220,44 @@ CREATE OR REPLACE FUNCTION zc_ObjectLink_ProdModel_Brand() RETURNS Integer AS $B
 INSERT INTO ObjectLinkDesc(Code, ItemName, DescId, ChildObjectDescId)
 SELECT 'zc_ObjectLink_ProdModel_Brand', 'Марка', zc_Object_ProdModel(), zc_Object_Brand() WHERE NOT EXISTS (SELECT * FROM ObjectLinkDesc WHERE Code = 'zc_ObjectLink_ProdModel_Brand');
 
+CREATE OR REPLACE FUNCTION zc_ObjectLink_ProdModel_ProdEngine() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM ObjectLinkDesc WHERE Code = 'zc_ObjectLink_ProdModel_ProdEngine'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
+INSERT INTO ObjectLinkDesc(Code, ItemName, DescId, ChildObjectDescId)
+SELECT 'zc_ObjectLink_ProdModel_ProdEngine', 'мотор', zc_Object_ProdModel(), zc_Object_ProdEngine() WHERE NOT EXISTS (SELECT * FROM ObjectLinkDesc WHERE Code = 'zc_ObjectLink_ProdModel_ProdEngine');
+
+CREATE OR REPLACE FUNCTION zc_ObjectLink_ReceiptProdModel_Model() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM ObjectLinkDesc WHERE Code = 'zc_ObjectLink_ReceiptProdModel_Model'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
+INSERT INTO ObjectLinkDesc(Code, ItemName, DescId, ChildObjectDescId)
+SELECT 'zc_ObjectLink_ReceiptProdModel_Model', 'Модель', zc_Object_ReceiptProdModel(), zc_Object_ProdModel() WHERE NOT EXISTS (SELECT * FROM ObjectLinkDesc WHERE Code = 'zc_ObjectLink_ReceiptProdModel_Model');
+
+CREATE OR REPLACE FUNCTION zc_ObjectLink_ReceiptProdModelChild_ReceiptProdModel() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM ObjectLinkDesc WHERE Code = 'zc_ObjectLink_ReceiptProdModelChild_ReceiptProdModel'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
+INSERT INTO ObjectLinkDesc(Code, ItemName, DescId, ChildObjectDescId)
+SELECT 'zc_ObjectLink_ReceiptProdModelChild_ReceiptProdModel', 'Шаблон сборка Модели', zc_Object_ReceiptProdModelChild(), zc_Object_ReceiptProdModel() WHERE NOT EXISTS (SELECT * FROM ObjectLinkDesc WHERE Code = 'zc_ObjectLink_ReceiptProdModelChild_ReceiptProdModel');
+
+CREATE OR REPLACE FUNCTION zc_ObjectLink_ReceiptProdModelChild_Object() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM ObjectLinkDesc WHERE Code = 'zc_ObjectLink_ReceiptProdModelChild_Object'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
+INSERT INTO ObjectLinkDesc(Code, ItemName, DescId, ChildObjectDescId)
+SELECT 'zc_ObjectLink_ReceiptProdModelChild_Object', 'Артикул /Шаблоны Цвета (Лодка)', zc_Object_ReceiptProdModelChild(), zc_Object_Goods() WHERE NOT EXISTS (SELECT * FROM ObjectLinkDesc WHERE Code = 'zc_ObjectLink_ReceiptProdModelChild_Object');
+
+CREATE OR REPLACE FUNCTION zc_ObjectLink_ReceiptGoods_Object() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM ObjectLinkDesc WHERE Code = 'zc_ObjectLink_ReceiptGoods_Object'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
+INSERT INTO ObjectLinkDesc(Code, ItemName, DescId, ChildObjectDescId)
+SELECT 'zc_ObjectLink_ReceiptGoods_Object', 'Артикул', zc_Object_ReceiptGoods(), zc_Object_Goods() WHERE NOT EXISTS (SELECT * FROM ObjectLinkDesc WHERE Code = 'zc_ObjectLink_ReceiptGoods_Object');
+
+CREATE OR REPLACE FUNCTION zc_ObjectLink_ReceiptGoodsChild_ReceiptGoods() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM ObjectLinkDesc WHERE Code = 'zc_ObjectLink_ReceiptGoodsChild_ReceiptGoods'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
+INSERT INTO ObjectLinkDesc(Code, ItemName, DescId, ChildObjectDescId)
+SELECT 'zc_ObjectLink_ReceiptGoodsChild_ReceiptGoods', 'Элементы для сборки Узлов', zc_Object_ReceiptGoodsChild(), zc_Object_ReceiptGoods() WHERE NOT EXISTS (SELECT * FROM ObjectLinkDesc WHERE Code = 'zc_ObjectLink_ReceiptGoodsChild_ReceiptGoods');
+
+CREATE OR REPLACE FUNCTION zc_ObjectLink_ReceiptGoodsChild_Goods() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM ObjectLinkDesc WHERE Code = 'zc_ObjectLink_ReceiptGoodsChild_Goods'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
+INSERT INTO ObjectLinkDesc(Code, ItemName, DescId, ChildObjectDescId)
+SELECT 'zc_ObjectLink_ReceiptGoodsChild_Goods', 'Артикул', zc_Object_ReceiptGoodsChild(), zc_Object_Goods() WHERE NOT EXISTS (SELECT * FROM ObjectLinkDesc WHERE Code = 'zc_ObjectLink_ReceiptGoodsChild_Goods');
 
 /*-------------------------------------------------------------------------------
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
+ 01.12.20         * zc_ObjectLink_ProdColorPattern_Goods
+                    zc_ObjectLink_ReceiptProdModel_Model
+                    zc_ObjectLink_ReceiptProdModelChild_Object
+                    zc_ObjectLink_ReceiptProdModelChild_ReceiptProdModel
+                    zc_ObjectLink_ReceiptGoods_Object
+                    zc_ObjectLink_ReceiptGoodsChild_ReceiptGoods
+ 30.11.20         * zc_ObjectLink_ProdModel_ProdEngine
  24.11.20         * zc_ObjectLink_ProdModel_Brand
  11.11.20         * zc_ObjectLink_Goods_...
  09.11.20         * zc_ObjectLink_GoodsGroup_Parent

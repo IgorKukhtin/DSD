@@ -3159,7 +3159,7 @@ inherited Report_CashForm: TReport_CashForm
   object PrintHeaderCDS: TClientDataSet
     Aggregates = <>
     Params = <>
-    Left = 724
+    Left = 716
     Top = 281
   end
   object PrintItemsCDS: TClientDataSet
