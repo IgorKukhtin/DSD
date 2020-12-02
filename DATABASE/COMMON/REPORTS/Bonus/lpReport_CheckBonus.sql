@@ -515,124 +515,113 @@ BEGIN
                        FROM tmpContainer1
                        )
 
-      , tmpMovementContALL AS (SELECT tmpContainer.JuridicalId
-                                 , tmpContainer.ContractId_child
-                                 , tmpContainer.InfoMoneyId_child
-                                 , tmpContainer.PaidKindId_byBase
-                                 , tmpContainer.ContractConditionId
-                                 --, COALESCE (ObjectLink_Cash_Branch.ChildObjectId, MILinkObject_Branch.ObjectId, ObjectLink_Unit_Branch.ChildObjectId, tmpContainer.BranchId, 0) AS BranchId
-                                 , COALESCE (ObjectLink_PersonalServiceList_Branch.ChildObjectId,0) AS BranchId
-                                 , CASE WHEN Object.DescId = zc_Object_Partner() THEN CASE WHEN MIContainer.MovementDescId IN (zc_Movement_BankAccount(),zc_Movement_Cash()) THEN MIContainer.ObjectId_Analyzer ELSE MIContainer.ObjectExtId_Analyzer END
-                                        ELSE 0
-                                   END    AS PartnerId
-                                   
-                                   -- “олько продажи
-                                 , SUM (CASE WHEN MIContainer.MovementDescId = zc_Movement_Sale() THEN COALESCE(MIContainer.Amount,0) ELSE 0 END) AS Sum_Sale
-                                   -- продажи - возвраты
-                                 , SUM (CASE WHEN MIContainer.MovementDescId IN (zc_Movement_Sale(), zc_Movement_ReturnIn()) THEN COALESCE(MIContainer.Amount,0) ELSE 0 END) AS Sum_SaleReturnIn
-                                   -- оплаты
-                                 , SUM (CASE WHEN MIContainer.MovementDescId IN (zc_Movement_BankAccount(), zc_Movement_Cash())
-                                                  THEN -1 * COALESCE (MIContainer.Amount, 0)
-                                             ELSE 0
-                                        END) AS Sum_Account
-                                   -- оплаты + взаимозачет
-                                 , SUM (CASE WHEN MIContainer.MovementDescId IN (zc_Movement_BankAccount(), zc_Movement_Cash(), zc_Movement_SendDebt())
-                                                  THEN -1 * COALESCE (MIContainer.Amount, 0)
-                                             ELSE 0
-                                        END) AS Sum_AccountSendDebt
+     , tmpMovementContALL AS (SELECT tmp.JuridicalId
+                                   , tmp.ContractId_child
+                                   , tmp.InfoMoneyId_child
+                                   , tmp.PaidKindId_byBase
+                                   , tmp.ContractConditionId
+                                   , tmp.BranchId
+                                   , tmp.PartnerId
+                                   , SUM (tmp.Sum_Sale)            AS Sum_Sale
+                                   , SUM (tmp.Sum_SaleReturnIn)    AS Sum_SaleReturnIn
+                                   , SUM (tmp.Sum_Account)         AS Sum_Account
+                                   , SUM (tmp.Sum_AccountSendDebt) AS Sum_AccountSendDebt
+                                   , SUM (tmp.Sum_Return)          AS Sum_Return -- возврат
+                                   , tmp.MovementDescId
+                                   , tmp.MovementId
+                                   , SUM (CASE WHEN tmp.Ord = 1 THEN tmp.Sale_AmountPartner_Weight ELSE 0 END)   AS Sale_AmountPartner_Weight
+                                   , SUM (CASE WHEN tmp.Ord = 1 THEN tmp.Return_AmountPartner_Weight ELSE 0 END) AS Return_AmountPartner_Weight
+                              FROM (SELECT tmpContainer.JuridicalId
+                                         , tmpContainer.ContractId_child
+                                         , tmpContainer.InfoMoneyId_child
+                                         , tmpContainer.PaidKindId_byBase
+                                         , tmpContainer.ContractConditionId
 
-                                 , SUM (CASE WHEN MIContainer.MovementDescId = zc_Movement_ReturnIn() THEN (-1)*COALESCE(MIContainer.Amount,0) ELSE 0 END) AS Sum_Return  -- возврат
-                                 , CASE WHEN inisMovement = TRUE THEN MIContainer.MovementDescId ELSE 0 END  AS MovementDescId
-                                 , CASE WHEN inisMovement = TRUE THEN MIContainer.MovementId ELSE 0 END      AS MovementId
+                                         , COALESCE (ObjectLink_PersonalServiceList_Branch.ChildObjectId,0) AS BranchId
+                                         , CASE WHEN Object.DescId = zc_Object_Partner() THEN CASE WHEN MIContainer.MovementDescId IN (zc_Movement_BankAccount(),zc_Movement_Cash()) THEN MIContainer.ObjectId_Analyzer ELSE MIContainer.ObjectExtId_Analyzer END
+                                                ELSE 0
+                                           END    AS PartnerId
+                                           -- “олько продажи
+                                         ,  (CASE WHEN MIContainer.MovementDescId = zc_Movement_Sale() THEN COALESCE(MIContainer.Amount,0) ELSE 0 END) AS Sum_Sale
+                                           -- продажи - возвраты
+                                         ,  (CASE WHEN MIContainer.MovementDescId IN (zc_Movement_Sale(), zc_Movement_ReturnIn()) THEN COALESCE(MIContainer.Amount,0) ELSE 0 END) AS Sum_SaleReturnIn
+                                           -- оплаты
+                                         ,  (CASE WHEN MIContainer.MovementDescId IN (zc_Movement_BankAccount(), zc_Movement_Cash())
+                                                          THEN -1 * COALESCE (MIContainer.Amount, 0)
+                                                     ELSE 0
+                                                END) AS Sum_Account
+                                           -- оплаты + взаимозачет
+                                         ,  (CASE WHEN MIContainer.MovementDescId IN (zc_Movement_BankAccount(), zc_Movement_Cash(), zc_Movement_SendDebt())
+                                                          THEN -1 * COALESCE (MIContainer.Amount, 0)
+                                                     ELSE 0
+                                                END) AS Sum_AccountSendDebt
 
-                                 , SUM (CASE WHEN MIContainer.MovementDescId = zc_Movement_Sale() THEN COALESCE(MIFloat_AmountPartner.ValueData,0) ELSE 0 END
-                                      * CASE WHEN ObjectLink_Goods_Measure.ChildObjectId = zc_Measure_Sh() THEN ObjectFloat_Weight.ValueData ELSE 1 END) AS Sale_AmountPartner_Weight
-                                 , SUM (CASE WHEN MIContainer.MovementDescId = zc_Movement_ReturnIn() THEN COALESCE(MIFloat_AmountPartner.ValueData,0) ELSE 0 END
-                                      * CASE WHEN ObjectLink_Goods_Measure.ChildObjectId = zc_Measure_Sh() THEN ObjectFloat_Weight.ValueData ELSE 1 END) AS Return_AmountPartner_Weight
+                                         ,  (CASE WHEN MIContainer.MovementDescId = zc_Movement_ReturnIn() THEN (-1)*COALESCE(MIContainer.Amount,0) ELSE 0 END) AS Sum_Return  -- возврат
+                                         , CASE WHEN inisMovement = TRUE THEN MIContainer.MovementDescId ELSE 0 END  AS MovementDescId
+                                         , CASE WHEN inisMovement = TRUE THEN MIContainer.MovementId ELSE 0 END      AS MovementId
 
-                            FROM MovementItemContainer AS MIContainer
-                                 JOIN tmpContainer ON tmpContainer.ContainerId = MIContainer.ContainerId
+                                         ,  (CASE WHEN MIContainer.MovementDescId = zc_Movement_Sale() THEN COALESCE(MIFloat_AmountPartner.ValueData,0) ELSE 0 END
+                                              * CASE WHEN ObjectLink_Goods_Measure.ChildObjectId = zc_Measure_Sh() THEN ObjectFloat_Weight.ValueData ELSE 1 END
+                                               ) AS Sale_AmountPartner_Weight
+                                              
+                                         ,  (CASE WHEN MIContainer.MovementDescId = zc_Movement_ReturnIn() THEN COALESCE(MIFloat_AmountPartner.ValueData,0) ELSE 0 END
+                                              * CASE WHEN ObjectLink_Goods_Measure.ChildObjectId = zc_Measure_Sh() THEN ObjectFloat_Weight.ValueData ELSE 1 END
+                                               ) AS Return_AmountPartner_Weight
+                                         
+                                         , ROW_Number() OVER (PARTITION BY MIContainer.MovementItemId)  AS Ord --перенумеровали ћ» чтоб потом не задвоить кол-во
+                                    FROM MovementItemContainer AS MIContainer
+                                         JOIN tmpContainer ON tmpContainer.ContainerId = MIContainer.ContainerId
 
-                                 /*LEFT JOIN MovementLinkObject AS MLO_Unit
-                                                              ON MLO_Unit.MovementId = MIContainer.MovementId
-                                                             AND MLO_Unit.DescId = CASE WHEN MIContainer.MovementDescId = zc_Movement_Sale() THEN zc_MovementLinkObject_From()
-                                                                                        WHEN MIContainer.MovementDescId = zc_Movement_ReturnIn() THEN zc_MovementLinkObject_To()
-                                                                                   END
-                                 */
-                                 LEFT JOIN MovementItem ON MovementItem.Id = MIContainer.MovementItemId 
-                                                       AND MovementItem.DescId = zc_MI_Master()
-                                                       --AND MIContainer.MovementDescId = zc_Movement_Cash()
-
-                                 LEFT JOIN MovementItemFloat AS MIFloat_AmountPartner
-                                                             ON MIFloat_AmountPartner.MovementItemId = MIContainer.MovementItemId
-                                                            AND MIFloat_AmountPartner.DescId = zc_MIFloat_AmountPartner()
-
-                                 LEFT JOIN ObjectLink AS ObjectLink_Goods_Measure
-                                                      ON ObjectLink_Goods_Measure.ObjectId = MovementItem.ObjectId
-                                                     AND ObjectLink_Goods_Measure.DescId = zc_ObjectLink_Goods_Measure()
-                                 LEFT JOIN ObjectFloat AS ObjectFloat_Weight
-                                                       ON ObjectFloat_Weight.ObjectId = MovementItem.ObjectId
-                                                      AND ObjectFloat_Weight.DescId = zc_ObjectFloat_Goods_Weight()
-
-                                 LEFT JOIN Object ON Object.Id = CASE WHEN MIContainer.MovementDescId IN (zc_Movement_BankAccount(),zc_Movement_Cash()) THEN MIContainer.ObjectId_Analyzer ELSE MIContainer.ObjectExtId_Analyzer END
-
-                                 -- дл€ Ѕазы ЅЌ получаем филиал по сотруднику из договора, по ведомости 
-                                 LEFT JOIN ObjectLink AS ObjectLink_Contract_PersonalTrade
-                                                      ON ObjectLink_Contract_PersonalTrade.ObjectId = tmpContainer.ContractId_master
-                                                     AND ObjectLink_Contract_PersonalTrade.DescId = zc_ObjectLink_Contract_PersonalTrade()
-                                                     AND tmpContainer.PaidKindId_byBase = zc_Enum_PaidKind_FirstForm()
-                                 
-                                 -- дл€ Ѕазы нал берем филиал по сотруднику из контрагента, по ведомости
-                                 LEFT JOIN ObjectLink AS ObjectLink_Partner_PersonalTrade
-                                                      ON ObjectLink_Partner_PersonalTrade.ObjectId = CASE WHEN Object.DescId = zc_Object_Partner() THEN CASE WHEN MIContainer.MovementDescId IN (zc_Movement_BankAccount(),zc_Movement_Cash()) THEN MIContainer.ObjectId_Analyzer ELSE MIContainer.ObjectExtId_Analyzer END ELSE 0 END
-                                                     AND ObjectLink_Partner_PersonalTrade.DescId = zc_ObjectLink_Partner_PersonalTrade()
-                                                     AND tmpContainer.PaidKindId_byBase = zc_Enum_PaidKind_SecondForm()
-
-                                 LEFT JOIN ObjectLink AS ObjectLink_Personal_PersonalServiceList
-                                                      ON ObjectLink_Personal_PersonalServiceList.ObjectId = COALESCE (ObjectLink_Contract_PersonalTrade.ChildObjectId, ObjectLink_Partner_PersonalTrade.ChildObjectId)
-                                                     AND ObjectLink_Personal_PersonalServiceList.DescId = zc_ObjectLink_Personal_PersonalServiceList()
-                                 LEFT JOIN ObjectLink AS ObjectLink_PersonalServiceList_Branch
-                                                      ON ObjectLink_PersonalServiceList_Branch.ObjectId = ObjectLink_Personal_PersonalServiceList.ChildObjectId
-                                                     AND ObjectLink_PersonalServiceList_Branch.DescId = zc_ObjectLink_PersonalServiceList_Branch()
-                                                     
-                                /* LEFT JOIN ObjectLink AS ObjectLink_Personal_Unit
-                                                      ON ObjectLink_Personal_Unit.ObjectId = ObjectLink_Partner_Personal.ChildObjectId
-                                                     AND ObjectLink_Personal_Unit.DescId = zc_ObjectLink_Personal_Unit()
-
-                                 LEFT JOIN ObjectLink AS ObjectLink_Unit_Branch
-                                                      ON ObjectLink_Unit_Branch.ObjectId = COALESCE (MLO_Unit.ObjectId, ObjectLink_Personal_Unit.ChildObjectId)
-                                                     AND ObjectLink_Unit_Branch.DescId = zc_ObjectLink_Unit_Branch()
-
-                                 LEFT JOIN MovementItemLinkObject AS MILinkObject_Branch
-                                                                  ON MILinkObject_Branch.MovementItemId = MIContainer.MovementItemId   -- SendDebt
-                                                                 AND MILinkObject_Branch.DescId = zc_MILinkObject_Branch()
-                                                                 AND MovementItem.DescId = zc_MI_Master()
-                                                                 AND MIContainer.MovementDescId = zc_Movement_SendDebt()
-
-                                 LEFT JOIN ObjectLink AS ObjectLink_Cash_Branch
-                                                      ON ObjectLink_Cash_Branch.ObjectId = MovementItem.ObjectId
-                                                     AND ObjectLink_Cash_Branch.DescId = zc_ObjectLink_Cash_Branch()
-                                                     AND MIContainer.MovementDescId = zc_Movement_Cash()*/
-
-                            WHERE MIContainer.DescId = zc_MIContainer_Summ()
-                              AND (MIContainer.OperDate >= inStartDate AND MIContainer.OperDate < vbEndDate)
-                              AND MIContainer.MovementDescId IN (zc_Movement_Sale(), zc_Movement_ReturnIn(), zc_Movement_BankAccount(),zc_Movement_Cash(), zc_Movement_SendDebt())
-                              --AND (COALESCE (ObjectLink_Cash_Branch.ChildObjectId, MILinkObject_Branch.ObjectId, ObjectLink_Unit_Branch.ChildObjectId,tmpContainer.BranchId,0) = inBranchId OR inBranchId = 0)
-                              AND (COALESCE (ObjectLink_PersonalServiceList_Branch.ChildObjectId,0) = inBranchId OR inBranchId = 0)
-
-                            GROUP BY tmpContainer.JuridicalId
-                                   , tmpContainer.ContractId_child
-                                   , tmpContainer.InfoMoneyId_child
-                                   , tmpContainer.PaidKindId_byBase
-                                   , CASE WHEN inisMovement = TRUE THEN MIContainer.MovementDescId ELSE 0 END
-                                   , CASE WHEN inisMovement = TRUE THEN MIContainer.MovementId ELSE 0 END
-                                   --, COALESCE ( ObjectLink_Cash_Branch.ChildObjectId, MILinkObject_Branch.ObjectId, ObjectLink_Unit_Branch.ChildObjectId,tmpContainer.BranchId,0)
-                                   , COALESCE (ObjectLink_PersonalServiceList_Branch.ChildObjectId,0)
-                                   , CASE WHEN Object.DescId = zc_Object_Partner() THEN CASE WHEN MIContainer.MovementDescId IN (zc_Movement_BankAccount(),zc_Movement_Cash()) THEN MIContainer.ObjectId_Analyzer ELSE MIContainer.ObjectExtId_Analyzer END
-                                          ELSE 0
-                                     END
-                                   , tmpContainer.ContractConditionId
-                            )
+                                         LEFT JOIN MovementItem ON MovementItem.Id = MIContainer.MovementItemId 
+                                                               AND MovementItem.DescId = zc_MI_Master()
+        
+                                         LEFT JOIN MovementItemFloat AS MIFloat_AmountPartner
+                                                                     ON MIFloat_AmountPartner.MovementItemId = MIContainer.MovementItemId
+                                                                    AND MIFloat_AmountPartner.DescId = zc_MIFloat_AmountPartner()
+        
+                                         LEFT JOIN ObjectLink AS ObjectLink_Goods_Measure
+                                                              ON ObjectLink_Goods_Measure.ObjectId = MovementItem.ObjectId
+                                                             AND ObjectLink_Goods_Measure.DescId = zc_ObjectLink_Goods_Measure()
+                                         LEFT JOIN ObjectFloat AS ObjectFloat_Weight
+                                                               ON ObjectFloat_Weight.ObjectId = MovementItem.ObjectId
+                                                              AND ObjectFloat_Weight.DescId = zc_ObjectFloat_Goods_Weight()
+        
+                                         LEFT JOIN Object ON Object.Id = CASE WHEN MIContainer.MovementDescId IN (zc_Movement_BankAccount(),zc_Movement_Cash()) THEN MIContainer.ObjectId_Analyzer ELSE MIContainer.ObjectExtId_Analyzer END
+        
+                                         -- дл€ Ѕазы ЅЌ получаем филиал по сотруднику из договора, по ведомости 
+                                         LEFT JOIN ObjectLink AS ObjectLink_Contract_PersonalTrade
+                                                              ON ObjectLink_Contract_PersonalTrade.ObjectId = tmpContainer.ContractId_master
+                                                             AND ObjectLink_Contract_PersonalTrade.DescId = zc_ObjectLink_Contract_PersonalTrade()
+                                                             AND tmpContainer.PaidKindId_byBase = zc_Enum_PaidKind_FirstForm()
+                                         
+                                         -- дл€ Ѕазы нал берем филиал по сотруднику из контрагента, по ведомости
+                                         LEFT JOIN ObjectLink AS ObjectLink_Partner_PersonalTrade
+                                                              ON ObjectLink_Partner_PersonalTrade.ObjectId = CASE WHEN Object.DescId = zc_Object_Partner() THEN CASE WHEN MIContainer.MovementDescId IN (zc_Movement_BankAccount(),zc_Movement_Cash()) THEN MIContainer.ObjectId_Analyzer ELSE MIContainer.ObjectExtId_Analyzer END ELSE 0 END
+                                                             AND ObjectLink_Partner_PersonalTrade.DescId = zc_ObjectLink_Partner_PersonalTrade()
+                                                             AND tmpContainer.PaidKindId_byBase = zc_Enum_PaidKind_SecondForm()
+        
+                                         LEFT JOIN ObjectLink AS ObjectLink_Personal_PersonalServiceList
+                                                              ON ObjectLink_Personal_PersonalServiceList.ObjectId = COALESCE (ObjectLink_Contract_PersonalTrade.ChildObjectId, ObjectLink_Partner_PersonalTrade.ChildObjectId)
+                                                             AND ObjectLink_Personal_PersonalServiceList.DescId = zc_ObjectLink_Personal_PersonalServiceList()
+                                         LEFT JOIN ObjectLink AS ObjectLink_PersonalServiceList_Branch
+                                                              ON ObjectLink_PersonalServiceList_Branch.ObjectId = ObjectLink_Personal_PersonalServiceList.ChildObjectId
+                                                             AND ObjectLink_PersonalServiceList_Branch.DescId = zc_ObjectLink_PersonalServiceList_Branch()
+                                                             
+                                    WHERE MIContainer.DescId = zc_MIContainer_Summ()
+                                      AND (MIContainer.OperDate >= inStartDate AND MIContainer.OperDate < vbEndDate)
+                                      AND MIContainer.MovementDescId IN (zc_Movement_Sale(), zc_Movement_ReturnIn(), zc_Movement_BankAccount(), zc_Movement_Cash(), zc_Movement_SendDebt())  -- взаимозачет убираем, чтоб он не вли€л на бонусы
+                                      AND (COALESCE (ObjectLink_PersonalServiceList_Branch.ChildObjectId,0) = inBranchId OR inBranchId = 0)
+                                    ) AS tmp
+                              GROUP BY tmp.JuridicalId
+                                     , tmp.ContractId_child
+                                     , tmp.InfoMoneyId_child
+                                     , tmp.PaidKindId_byBase
+                                     , tmp.MovementDescId
+                                     , tmp.MovementId
+                                     , tmp.BranchId
+                                     , tmp.PartnerId
+                                     , tmp.ContractConditionId
+                             )
 
 , tmpMovementCont AS (select tmpMovementContALL.* 
                         from tmpMovementContALL

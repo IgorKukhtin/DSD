@@ -27,6 +27,7 @@ RETURNS TABLE (Id Integer, InvNumber TVarChar, OperDate TDateTime, StatusCode In
              , MovementId_Transport Integer, InvNumber_Transport TVarChar, OperDate_Transport TDateTime, InvNumber_Transport_Full TVarChar
              , CarName TVarChar, CarModelName TVarChar, PersonalDriverName TVarChar
              , MovementId_Order Integer, InvNumber_Order TVarChar, OperDate_Order TDateTime, InvNumber_Order_Full TVarChar
+             , ReestrKindId Integer, ReestrKindName TVarChar
               )
 AS
 $BODY$
@@ -121,6 +122,9 @@ BEGIN
            , Movement_Order.InvNumber                AS InvNumber_Order
            , Movement_Order.OperDate                 AS OperDate_Order
            , ('π ' || Movement_Order.InvNumber || ' ÓÚ ' || Movement_Order.OperDate  :: Date :: TVarChar ) :: TVarChar  AS InvNumber_Order_Full
+
+           , Object_ReestrKind.Id                    AS ReestrKindId
+           , Object_ReestrKind.ValueData             AS ReestrKindName
 
        FROM (SELECT Movement.id
              FROM tmpStatus
@@ -258,8 +262,12 @@ BEGIN
                                           AND MovementLinkMovement_Order.DescId = zc_MovementLinkMovement_Order()
             LEFT JOIN Movement AS Movement_Order ON Movement_Order.Id = MovementLinkMovement_Order.MovementChildId
 
+            LEFT JOIN MovementLinkObject AS MovementLinkObject_ReestrKind
+                                         ON MovementLinkObject_ReestrKind.MovementId = Movement.Id
+                                        AND MovementLinkObject_ReestrKind.DescId = zc_MovementLinkObject_ReestrKind()
+            LEFT JOIN Object AS Object_ReestrKind ON Object_ReestrKind.Id = MovementLinkObject_ReestrKind.ObjectId
 
-       WHERE MovementBoolean_isIncome.ValueData is NULL
+       WHERE MovementBoolean_isIncome.ValueData IS NULL
          -- AND COALESCE (Object_To.DescId, 0) NOT IN (zc_Object_Car(), zc_Object_Member(), zc_Object_Founder()) -- !!!—¿ÃŒ≈ Õ≈ –¿—»¬Œ≈ –≈ÿ≈Õ»≈!!!
          AND COALESCE (View_InfoMoney.InfoMoneyId, 0) <> zc_Enum_InfoMoney_20401() -- !!!—¿ÃŒ≈ Õ≈ –¿—»¬Œ≈ –≈ÿ≈Õ»≈!!!
     ;
@@ -271,6 +279,7 @@ $BODY$
 /*
  »—“Œ–»ﬂ –¿«–¿¡Œ“ »: ƒ¿“¿, ¿¬“Œ–
                ‘ÂÎÓÌ˛Í ».¬.    ÛıÚËÌ ».¬.    ÎËÏÂÌÚ¸Â‚  .».   Ã‡Ì¸ÍÓ ƒ.
+ 02.12.20         * 
  14.04.17         * add Movement_Order
  04.10.16         * add inJuridicalBasisId
  25.06.15         * add inIsErased
