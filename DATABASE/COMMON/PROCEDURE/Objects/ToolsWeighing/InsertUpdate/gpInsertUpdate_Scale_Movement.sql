@@ -70,7 +70,7 @@ BEGIN
                                                                          END
                                                    , inMovementDescId := inMovementDescId
                                                    , inOperDate_order := CASE WHEN inMovementId_Order <> 0
-                                                                                   THEN (SELECT Movement.OperDate FROM Movement WHERE Movement.Id = inMovementId_Order)
+                                                                                   THEN (SELECT MD.ValueData FROM MovementDate AS MD WHERE MD.MovementId = inMovementId_Order AND MD.DescId = zc_MovementDate_OperDatePartner())
                                                                               ELSE NULL
                                                                          END
                                                    , inOperDatePartner:= CASE WHEN inMovementId_Order <> 0

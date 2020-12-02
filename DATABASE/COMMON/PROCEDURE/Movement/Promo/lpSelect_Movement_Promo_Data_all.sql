@@ -141,7 +141,7 @@ BEGIN
              , (tmpResult.PriceWithOutVAT / tmpResult.CountForPrice) :: TFloat AS PriceWithOutVAT
              , (tmpResult.PriceWithVAT    / tmpResult.CountForPrice) :: TFloat AS PriceWithVAT
              , tmpResult.CountForPrice   :: TFloat AS CountForPrice
-             , tmpResult.PriceWithVAT    :: TFloat AS PriceWithOutVAT_orig
+             , tmpResult.PriceWithOutVAT :: TFloat AS PriceWithOutVAT_orig
              , tmpResult.PriceWithVAT    :: TFloat AS PriceWithVAT_orig
              , CASE WHEN tmpChangePercent.MovementId > 0 THEN FALSE ELSE TRUE END :: Boolean AS isChangePercent
         FROM tmpResult

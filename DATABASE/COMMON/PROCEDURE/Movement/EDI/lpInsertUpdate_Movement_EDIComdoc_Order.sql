@@ -64,7 +64,9 @@ BEGIN
      -- Определяются параметры
      SELECT TRIM (Movement.InvNumber)             AS InvNumber
           , Movement.OperDate                     AS OperDate
-          , Movement.OperDate + (COALESCE (ObjectFloat_Partner_PrepareDayCount.ValueData, 0) :: TVarChar || ' DAY') :: INTERVAL AS OperDatePartner
+          , COALESCE (MD_OperDatePartner.ValueData
+                    , Movement.OperDate + (COALESCE (ObjectFloat_Partner_PrepareDayCount.ValueData, 0) :: TVarChar || ' DAY') :: INTERVAL
+                     ) AS OperDatePartner
           , ObjectString_Partner_GLNCode.ObjectId AS PartnerId
           , CASE WHEN MovementString_GLNCode.ValueData = zfCalc_GLNCodeJuridical (inGLNCode                  := ObjectString_Partner_GLNCode.ValueData
                                                                                 , inGLNCodeJuridical_partner := ObjectString_Partner_GLNCodeJuridical.ValueData
@@ -101,6 +103,9 @@ BEGIN
                                        ON MovementLinkObject_Unit.MovementId = Movement.Id
                                       AND MovementLinkObject_Unit.DescId = zc_MovementLinkObject_Unit()
 
+          LEFT JOIN MovementDate AS MD_OperDatePartner
+                                 ON MD_OperDatePartner.MovementId = Movement.Id
+                                AND MD_OperDatePartner.DescId     = zc_MovementDate_OperDatePartner()
           LEFT JOIN MovementString AS MovementString_GLNCode
                                    ON MovementString_GLNCode.MovementId =  Movement.Id
                                   AND MovementString_GLNCode.DescId = zc_MovementString_GLNCode()
@@ -305,7 +310,7 @@ BEGIN
      FROM lfGet_Object_Partner_PriceList_onDate (inContractId     := vbContractId
                                                , inPartnerId      := vbPartnerId
                                                , inMovementDescId := zc_Movement_Sale()
-                                               , inOperDate_order := vbOperDate
+                                               , inOperDate_order := vbOperDatePartner
                                                , inOperDatePartner:= NULL
                                                , inDayPrior_PriceReturn:= 0 -- !!!параметр здесь не важен!!!
                                                , inIsPrior        := FALSE -- !!!параметр здесь не важен!!!
@@ -335,8 +340,8 @@ BEGIN
                                                                                                          FROM ObjectLink AS ObjectLink_Partner_MemberTake
                                                                                                          WHERE ObjectLink_Partner_MemberTake.ObjectId = vbPartnerId
                                                                                                            AND ObjectLink_Partner_MemberTake.DescId
-                                                      = CASE EXTRACT (DOW FROM vbOperDate + (((COALESCE ((SELECT ObjectFloat.ValueData FROM ObjectFloat WHERE ObjectFloat.ObjectId = vbPartnerId AND ObjectFloat.DescId = zc_ObjectFloat_Partner_PrepareDayCount()),  0)
-                                                                                             + COALESCE ((SELECT ObjectFloat.ValueData FROM ObjectFloat WHERE ObjectFloat.ObjectId = vbPartnerId AND ObjectFloat.DescId = zc_ObjectFloat_Partner_DocumentDayCount()), 0)
+                                                      = CASE EXTRACT (DOW FROM vbOperDatePartner + (((--COALESCE ((SELECT ObjectFloat.ValueData FROM ObjectFloat WHERE ObjectFloat.ObjectId = vbPartnerId AND ObjectFloat.DescId = zc_ObjectFloat_Partner_PrepareDayCount()),  0)
+                                                                                                      COALESCE ((SELECT ObjectFloat.ValueData FROM ObjectFloat WHERE ObjectFloat.ObjectId = vbPartnerId AND ObjectFloat.DescId = zc_ObjectFloat_Partner_DocumentDayCount()), 0)
                                                                                               ) :: TVarChar || ' DAY') :: INTERVAL)
                                                                      )
                                                            WHEN 1 THEN zc_ObjectLink_Partner_MemberTake1()

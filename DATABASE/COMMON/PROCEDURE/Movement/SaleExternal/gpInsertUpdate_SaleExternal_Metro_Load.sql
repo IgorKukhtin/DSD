@@ -227,8 +227,8 @@ BEGIN
      PERFORM lpInsertUpdate_MovementItem_SaleExternal (ioId           := COALESCE (vbId,0) ::Integer
                                                      , inMovementId   := vbMovementId      ::Integer
                                                      , inGoodsId      := vbGoodsId         ::Integer
-                                                     , inAmount       := CASE WHEN ObjectLink_Measure.ChildObjectId <> zc_Measure_Sh() 
-                                                                              THEN inAmount * COALESCE (ObjectFloat_Weight.ValueData,1)
+                                                     , inAmount       := CASE WHEN ObjectLink_Measure.ChildObjectId = zc_Measure_Sh() 
+                                                                              THEN inAmount -- inAmount / CASE WHEN ObjectFloat_Weight.ValueData > 0 THEN ObjectFloat_Weight.ValueData ELSE 1 END
                                                                               ELSE inAmount
                                                                          END               ::TFloat
                                                      , inGoodsKindId  := vbGoodsKindId     ::Integer

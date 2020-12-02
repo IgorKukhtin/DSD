@@ -77,7 +77,7 @@ BEGIN
          FROM lfGet_Object_Partner_PriceList_onDate (inContractId     := inContractId
                                                    , inPartnerId      := inFromId
                                                    , inMovementDescId := zc_Movement_Sale() -- !!!не ошибка!!!
-                                                   , inOperDate_order := inOperDate
+                                                   , inOperDate_order := outOperDatePartner
                                                    , inOperDatePartner:= NULL
                                                    , inDayPrior_PriceReturn:= 0 -- !!!параметр здесь не важен!!!
                                                    , inIsPrior        := FALSE -- !!!параметр здесь не важен!!!
@@ -107,9 +107,9 @@ BEGIN
      ioPersonalId:= COALESCE ((SELECT ObjectLink_Partner_MemberTake.ChildObjectId
                                FROM ObjectLink AS ObjectLink_Partner_MemberTake
                                WHERE ObjectLink_Partner_MemberTake.ObjectId = inFromId
-                                 AND ObjectLink_Partner_MemberTake.DescId = CASE EXTRACT (DOW FROM inOperDate
-                                                                                                 + (((COALESCE ((SELECT ObjectFloat.ValueData FROM ObjectFloat WHERE ObjectFloat.ObjectId = inFromId AND ObjectFloat.DescId = zc_ObjectFloat_Partner_PrepareDayCount()),  0)
-                                                                                                    + COALESCE ((SELECT ObjectFloat.ValueData FROM ObjectFloat WHERE ObjectFloat.ObjectId = inFromId AND ObjectFloat.DescId = zc_ObjectFloat_Partner_DocumentDayCount()), 0)
+                                 AND ObjectLink_Partner_MemberTake.DescId = CASE EXTRACT (DOW FROM outOperDatePartner
+                                                                                                 + (((--COALESCE ((SELECT ObjectFloat.ValueData FROM ObjectFloat WHERE ObjectFloat.ObjectId = inFromId AND ObjectFloat.DescId = zc_ObjectFloat_Partner_PrepareDayCount()),  0)
+                                                                                                     COALESCE ((SELECT ObjectFloat.ValueData FROM ObjectFloat WHERE ObjectFloat.ObjectId = inFromId AND ObjectFloat.DescId = zc_ObjectFloat_Partner_DocumentDayCount()), 0)
                                                                                                      ) :: TVarChar || ' DAY') :: INTERVAL)
                                                                                           )
                                                        WHEN 1 THEN zc_ObjectLink_Partner_MemberTake1()

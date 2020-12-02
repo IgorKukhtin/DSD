@@ -1447,4 +1447,4 @@ ALTER FUNCTION gpSelect_MI_OrderInternalPackRemains (Integer, Boolean, Boolean, 
 -- тест
 -- SELECT * FROM gpSelect_MI_OrderInternalPackRemains (inMovementId:= 1828419, inShowAll:= TRUE, inIsErased:= FALSE, inSession:= '9818')
 -- SELECT * FROM gpSelect_MI_OrderInternalPackRemains (inMovementId:= 1828419, inShowAll:= FALSE, inIsErased:= FALSE, inSession:= '2'); -- FETCH ALL "<unnamed portal 1>";
---select * from gpSelect_MI_OrderInternalPackRemains(inMovementId := 5068629 , inShowAll := 'False' , inIsErased := 'False' ,  inSession := '5');
+-- select * from gpSelect_MI_OrderInternalPackRemains(inMovementId := 18405749 , inShowAll := 'False' , inIsErased := 'False' ,  inSession := '5');

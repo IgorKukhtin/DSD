@@ -280,7 +280,7 @@ BEGIN
                                                                          END
                                                    , inMovementDescId := vbMovementDescId
                                                    , inOperDate_order := CASE WHEN vbMovementId_order <> 0
-                                                                                   THEN (SELECT Movement.OperDate FROM Movement WHERE Movement.Id = vbMovementId_order)
+                                                                                   THEN (SELECT MD.ValueData FROM MovementDate AS MD WHERE MD.MovementId = vbMovementId_order AND MD.DescId = zc_MovementDate_OperDatePartner())
                                                                               ELSE NULL
                                                                          END
                                                    , inOperDatePartner:= CASE WHEN 1=0 AND inBranchCode BETWEEN 201 AND 210 -- Dnepr-OBV

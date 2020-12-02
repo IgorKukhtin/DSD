@@ -17,7 +17,7 @@ RETURNS TABLE (Id Integer, LineNum Integer, GoodsId Integer, GoodsCode Integer, 
              , Price TFloat, PriceEDI TFloat, CountForPrice TFloat, AmountSumm TFloat, AmountSumm_Partner TFloat, ChangePercent TFloat
              , InfoMoneyCode Integer, InfoMoneyGroupName TVarChar, InfoMoneyDestinationName TVarChar, InfoMoneyName TVarChar
              , ArticleGLN TVarChar
-             , MovementPromo TVarChar, PricePromo TFloat
+             , MovementPromo TVarChar, PricePromo Numeric (16,8)
              , isErased Boolean
              , isPriceEDIDiff Boolean
              , StartBegin TDateTime, EndBegin TDateTime, diffBegin_sec TFloat
@@ -49,7 +49,7 @@ BEGIN
      FROM lfGet_Object_Partner_PriceList_onDate (inContractId     := (SELECT MLO.ObjectId FROM MovementLinkObject AS MLO WHERE MLO.MovementId = inMovementId AND MLO.DescId = zc_MovementLinkObject_Contract())
                                                , inPartnerId      := (SELECT MLO.ObjectId FROM MovementLinkObject AS MLO WHERE MLO.MovementId = inMovementId AND MLO.DescId = zc_MovementLinkObject_From())
                                                , inMovementDescId := zc_Movement_Sale() -- !!!не ошибка!!!
-                                               , inOperDate_order := (SELECT Movement.OperDate FROM Movement WHERE Movement.Id = inMovementId)
+                                               , inOperDate_order := (SELECT MD.ValueData FROM MovementDate AS MD WHERE MD.MovementId = inMovementId AND MD.DescId = zc_MovementDate_OperDatePartner())
                                                , inOperDatePartner:= NULL
                                                , inDayPrior_PriceReturn:= 0 -- !!!параметр здесь не важен!!!
                                                , inIsPrior        := FALSE -- !!!параметр здесь не важен!!!
@@ -76,10 +76,10 @@ BEGIN
                                           WHERE ObjectLink_Juridical.ObjectId = vbPartnerId
                                             AND ObjectLink_Juridical.DescId = zc_ObjectLink_Partner_Juridical()
                                          )
-                                  THEN (SELECT Movement.OperDate FROM Movement WHERE Movement.Id = inMovementId)
-                             ELSE (SELECT Movement.OperDate FROM Movement WHERE Movement.Id = inMovementId)
-                                + (COALESCE ((SELECT ObjectFloat.ValueData FROM ObjectFloat WHERE ObjectFloat.ObjectId = vbPartnerId AND ObjectFloat.DescId = zc_ObjectFloat_Partner_PrepareDayCount()),  0) :: TVarChar || ' DAY') :: INTERVAL
+                                  THEN (SELECT MD.ValueData FROM MovementDate AS MD WHERE MD.MovementId = inMovementId AND MD.DescId = zc_MovementDate_OperDatePartner())
+                             ELSE (SELECT MD.ValueData FROM MovementDate AS MD WHERE MD.MovementId = inMovementId AND MD.DescId = zc_MovementDate_OperDatePartner())
                                 + (COALESCE ((SELECT ObjectFloat.ValueData FROM ObjectFloat WHERE ObjectFloat.ObjectId = vbPartnerId AND ObjectFloat.DescId = zc_ObjectFloat_Partner_DocumentDayCount()), 0) :: TVarChar || ' DAY') :: INTERVAL
+                             -- + (COALESCE ((SELECT ObjectFloat.ValueData FROM ObjectFloat WHERE ObjectFloat.ObjectId = vbPartnerId AND ObjectFloat.DescId = zc_ObjectFloat_Partner_PrepareDayCount()),  0) :: TVarChar || ' DAY') :: INTERVAL
                         END;
 
      -- определяется
@@ -281,18 +281,24 @@ BEGIN
                                 WHERE MovementItemFloat.MovementItemId IN (SELECT DISTINCT tmpMIPromo_all.MovementItemId FROM tmpMIPromo_all)
                                   AND MovementItemFloat.DescId = zc_MIFloat_PriceWithOutVAT()
                                )
-                          
+         , tmpPromoMI_Float2 AS (SELECT MovementItemFloat.*
+                                 FROM MovementItemFloat
+                                 WHERE MovementItemFloat.MovementItemId IN (SELECT DISTINCT tmpMIPromo_all.MovementItemId FROM tmpMIPromo_all)
+                                   AND MovementItemFloat.DescId = zc_MIFloat_CountForPrice()
+                                )
            -- Акции по товарам для существующих MovementItem
          , tmpMIPromo AS (SELECT DISTINCT 
                                  tmpMIPromo_all.MovementId_Promo
                                , tmpMIPromo_all.GoodsId
                                , COALESCE (MILinkObject_GoodsKind.ObjectId, 0) AS GoodsKindId
-                               , CASE WHEN tmpMIPromo_all.TaxPromo <> 0 THEN MIFloat_PriceWithOutVAT.ValueData ELSE 0 END AS PricePromo
+                               , CASE WHEN tmpMIPromo_all.TaxPromo <> 0 THEN MIFloat_PriceWithOutVAT.ValueData / CASE WHEN MIFloat_CountForPrice.ValueData > 0 THEN MIFloat_CountForPrice.ValueData ELSE 1 END ELSE 0 END AS PricePromo
                           FROM tmpMIPromo_all
                                LEFT JOIN tmpPromoMI_LO AS MILinkObject_GoodsKind
                                                        ON MILinkObject_GoodsKind.MovementItemId = tmpMIPromo_all.MovementItemId
                                LEFT JOIN tmpPromoMI_Float AS MIFloat_PriceWithOutVAT
                                                           ON MIFloat_PriceWithOutVAT.MovementItemId = tmpMIPromo_all.MovementItemId
+                               LEFT JOIN tmpPromoMI_Float2 AS MIFloat_CountForPrice
+                                                           ON MIFloat_CountForPrice.MovementItemId = tmpMIPromo_all.MovementItemId
                          )
 
             -- Остатки
@@ -575,10 +581,10 @@ BEGIN
            , tmpGoodsPropertyValue.ArticleGLN
 
            , tmpPromo.MovementPromo
-           , CASE WHEN tmpPromo.TaxPromo <> 0 AND vbPriceWithVAT = TRUE THEN tmpPromo.PriceWithVAT
-                  WHEN tmpPromo.TaxPromo <> 0 THEN tmpPromo.PriceWithOutVAT
-                  ELSE 0
-             END :: TFloat AS PricePromo
+           , CAST (CASE WHEN tmpPromo.TaxPromo <> 0 AND vbPriceWithVAT = TRUE THEN tmpPromo.PriceWithVAT_orig / tmpPromo.CountForPrice
+                        WHEN tmpPromo.TaxPromo <> 0 THEN tmpPromo.PriceWithOutVAT_orig / tmpPromo.CountForPrice
+                        ELSE 0
+                   END AS Numeric (16,8)) AS PricePromo
 
            , FALSE AS isErased
            , FALSE AS isPriceEDIDiff
@@ -673,11 +679,11 @@ BEGIN
                   ELSE ''
               END) :: TVarChar AS MovementPromo
 
-           , CASE WHEN 1 = 0 AND tmpMI.PricePromo <> 0 THEN tmpMI.PricePromo
-                  WHEN tmpPromo.TaxPromo <> 0 AND vbPriceWithVAT = TRUE THEN tmpPromo.PriceWithVAT
-                  WHEN tmpPromo.TaxPromo <> 0 THEN tmpPromo.PriceWithOutVAT
-                  ELSE 0
-             END :: TFloat AS PricePromo
+           , CAST (CASE WHEN 1 = 0 AND tmpMI.PricePromo <> 0 THEN tmpMI.PricePromo
+                        WHEN tmpPromo.TaxPromo <> 0 AND vbPriceWithVAT = TRUE THEN tmpPromo.PriceWithVAT_orig / tmpPromo.CountForPrice
+                        WHEN tmpPromo.TaxPromo <> 0 THEN tmpPromo.PriceWithOutVAT_orig / tmpPromo.CountForPrice
+                        ELSE 0
+                   END AS Numeric (16,8)) AS PricePromo
 
            , tmpMI.isErased
 
@@ -839,18 +845,24 @@ BEGIN
                                 WHERE MovementItemFloat.MovementItemId IN (SELECT DISTINCT tmpMIPromo_all.MovementItemId FROM tmpMIPromo_all)
                                   AND MovementItemFloat.DescId = zc_MIFloat_PriceWithOutVAT()
                                )
-                          
+         , tmpPromoMI_Float2 AS (SELECT MovementItemFloat.*
+                                 FROM MovementItemFloat
+                                 WHERE MovementItemFloat.MovementItemId IN (SELECT DISTINCT tmpMIPromo_all.MovementItemId FROM tmpMIPromo_all)
+                                   AND MovementItemFloat.DescId = zc_MIFloat_CountForPrice()
+                                )
            -- Акции по товарам для существующих MovementItem
          , tmpMIPromo AS (SELECT DISTINCT 
                                  tmpMIPromo_all.MovementId_Promo
                                , tmpMIPromo_all.GoodsId
                                , COALESCE (MILinkObject_GoodsKind.ObjectId, 0) AS GoodsKindId
-                               , CASE WHEN tmpMIPromo_all.TaxPromo <> 0 THEN MIFloat_PriceWithOutVAT.ValueData ELSE 0 END AS PricePromo
+                               , CASE WHEN tmpMIPromo_all.TaxPromo <> 0 THEN MIFloat_PriceWithOutVAT.ValueData / CASE WHEN MIFloat_CountForPrice.ValueData > 0 THEN MIFloat_CountForPrice.ValueData ELSE 1 END ELSE 0 END AS PricePromo
                           FROM tmpMIPromo_all
                                LEFT JOIN tmpPromoMI_LO AS MILinkObject_GoodsKind
                                                        ON MILinkObject_GoodsKind.MovementItemId = tmpMIPromo_all.MovementItemId
                                LEFT JOIN tmpPromoMI_Float AS MIFloat_PriceWithOutVAT
                                                           ON MIFloat_PriceWithOutVAT.MovementItemId = tmpMIPromo_all.MovementItemId
+                               LEFT JOIN tmpPromoMI_Float2 AS MIFloat_CountForPrice
+                                                           ON MIFloat_CountForPrice.MovementItemId = tmpMIPromo_all.MovementItemId
                          )
             -- Остатки
           , tmpRemains AS (SELECT tmpMI_Goods.MovementItemId
@@ -1098,11 +1110,11 @@ BEGIN
                   ELSE ''
               END) :: TVarChar AS MovementPromo
 
-           , CASE WHEN 1 = 0 AND tmpMI.PricePromo <> 0 THEN tmpMI.PricePromo
-                  WHEN tmpPromo.TaxPromo <> 0 AND vbPriceWithVAT = TRUE THEN tmpPromo.PriceWithVAT
-                  WHEN tmpPromo.TaxPromo <> 0 THEN tmpPromo.PriceWithOutVAT
-                  ELSE 0
-             END :: TFloat AS PricePromo
+           , CAST (CASE WHEN 1 = 0 AND tmpMI.PricePromo <> 0 THEN tmpMI.PricePromo
+                        WHEN tmpPromo.TaxPromo <> 0 AND vbPriceWithVAT = TRUE THEN tmpPromo.PriceWithVAT_orig / tmpPromo.CountForPrice
+                        WHEN tmpPromo.TaxPromo <> 0 THEN tmpPromo.PriceWithOutVAT_orig / tmpPromo.CountForPrice
+                        ELSE 0
+                   END AS Numeric (16,8)) AS PricePromo
 
            , tmpMI.isErased
            , CASE WHEN tmpMI.PriceEDI > 0 

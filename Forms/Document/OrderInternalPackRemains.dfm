@@ -2,7 +2,7 @@
   Caption = #1044#1086#1082#1091#1084#1077#1085#1090' <'#1047#1072#1103#1074#1082#1072' '#1085#1072' '#1091#1087#1072#1082#1086#1074#1082#1091' ('#1086#1089#1090#1072#1090#1082#1080')>'
   ClientHeight = 639
   ClientWidth = 1140
-  ExplicitTop = -217
+  ExplicitLeft = -367
   ExplicitWidth = 1156
   ExplicitHeight = 674
   PixelsPerInch = 96
@@ -2598,6 +2598,9 @@
     object tsTotal: TcxTabSheet
       Caption = #1042#1089#1077' '#1076#1072#1085#1085#1099#1077
       ImageIndex = 0
+      ExplicitTop = 0
+      ExplicitWidth = 0
+      ExplicitHeight = 0
       object cxGridChildTotal: TcxGrid
         Left = 0
         Top = 0
@@ -4271,6 +4274,9 @@
     object cxTabSheet1: TcxTabSheet
       Caption = #1055#1083#1072#1085' ('#1074#1089#1077')'
       ImageIndex = 2
+      ExplicitTop = 0
+      ExplicitWidth = 0
+      ExplicitHeight = 0
       object cxGridPlan: TcxGrid
         Left = 0
         Top = 0
@@ -5961,7 +5967,7 @@
         item
           Action = actUpdate_MI_IsCalculated_No
         end>
-      View = cxGridDBTableView
+      View = cxGridDBTableViewChild
       Caption = 'macUpdate_MI_IsCalculated_No_list'
     end
     object actRefreshMI: TdsdDataSetRefresh [1]
@@ -5985,7 +5991,7 @@
         item
           Action = actUpdate_MI_IsCalculated_Yes
         end>
-      View = cxGridDBTableView
+      View = cxGridDBTableViewChild
       Caption = 'macUpdate_MI_IsCalculated_Yes_list'
     end
     object actUpdate_MI_IsCalculated_Yes: TdsdExecStoredProc [3]
@@ -8227,6 +8233,7 @@
     ColumnAddOnList = <>
     ColumnEnterList = <>
     SummaryItemList = <>
+    ShowFieldImageList = <>
     PropertiesCellList = <>
     Left = 342
     Top = 505
@@ -8254,6 +8261,7 @@
     ColumnAddOnList = <>
     ColumnEnterList = <>
     SummaryItemList = <>
+    ShowFieldImageList = <>
     PropertiesCellList = <>
     Left = 342
     Top = 449
@@ -9066,6 +9074,7 @@
         Param.MultiSelectSeparator = ','
         DataSummaryItemIndex = 5
       end>
+    ShowFieldImageList = <>
     PropertiesCellList = <>
     Left = 758
     Top = 377
@@ -9098,14 +9107,14 @@
       item
         Name = 'inId'
         Value = Null
-        Component = MasterCDS
+        Component = ChildCDS
         ComponentItem = 'Id'
         ParamType = ptInput
         MultiSelectSeparator = ','
       end
       item
         Name = 'inisCalculated'
-        Value = False
+        Value = True
         DataType = ftBoolean
         ParamType = ptInput
         MultiSelectSeparator = ','
@@ -9122,14 +9131,14 @@
       item
         Name = 'inId'
         Value = Null
-        Component = MasterCDS
+        Component = ChildCDS
         ComponentItem = 'Id'
         ParamType = ptInput
         MultiSelectSeparator = ','
       end
       item
         Name = 'inisCalculated'
-        Value = True
+        Value = False
         DataType = ftBoolean
         ParamType = ptInput
         MultiSelectSeparator = ','

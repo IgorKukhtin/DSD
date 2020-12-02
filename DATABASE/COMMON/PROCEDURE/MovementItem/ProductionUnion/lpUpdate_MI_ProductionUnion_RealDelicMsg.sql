@@ -18,7 +18,7 @@ BEGIN
    END IF;
 
    -- сохранили свойство <взвешивание п/ф факт после шприцевания>
-   PERFORM lpInsertUpdate_MovementItemFloat (zc_MIFloat_RealWeightShp(), inId, inAmount + COALESCE ((SELECT MIF.ValueData FROM MovementItemFloat AS MIF WHERE MIF.MovementItemId = inId AND MIF.DescId = zc_MIFloat_RealWeightShp()), 0));
+   PERFORM lpInsertUpdate_MovementItemFloat (zc_MIFloat_RealWeightMsg(), inId, inAmount + COALESCE ((SELECT MIF.ValueData FROM MovementItemFloat AS MIF WHERE MIF.MovementItemId = inId AND MIF.DescId = zc_MIFloat_RealWeightMsg()), 0));
 
    -- сохранили протокол
    PERFORM lpInsert_MovementItemProtocol (inId, inUserId, FALSE);

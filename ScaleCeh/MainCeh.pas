@@ -1886,9 +1886,10 @@ begin
      //Схема - через справочник - для "Взвешивание п/ф факт куттера"
      if (1=1)and(fEnterKey13=TRUE)
      and((ParamsMovement.ParamByName('DocumentKindId').asInteger = zc_Enum_DocumentKind_CuterWeight)
-       or(ParamsMovement.ParamByName('DocumentKindId').asInteger = zc_Enum_DocumentKind_RealWeight))
+       or(ParamsMovement.ParamByName('DocumentKindId').asInteger = zc_Enum_DocumentKind_RealWeight)
        or(ParamsMovement.ParamByName('DocumentKindId').asInteger = zc_Enum_DocumentKind_RealDelicShp)
        or(ParamsMovement.ParamByName('DocumentKindId').asInteger = zc_Enum_DocumentKind_RealDelicMsg)
+        )
      then
      begin
           fEnterKey13:= FALSE;
@@ -1962,8 +1963,17 @@ begin
                    end
               else begin LabelCount.Caption:='Батоны';
                          LabelCountPack.Caption:='Пакеты';
-              end;
-
+              end
+          else
+              // если ЕСТЬ вес для Схемы - втулки
+              if (ParamsMI.ParamByName('isWeight_gd').AsBoolean = TRUE)
+              then begin LabelCount.Caption:='Втулки';
+                         LabelCountPack.Caption:='-';
+                   end
+              else begin LabelCount.Caption:='Штуки';
+                         LabelCountPack.Caption:='Живой вес';
+              end
+          ;
      end
      else begin
           if (ActiveControl.ClassName = 'TcxGridSite') or (ActiveControl.ClassName = 'TcxGrid') or (ActiveControl.ClassName = 'TcxDateEdit')
@@ -2318,7 +2328,7 @@ begin
      except
            tmpValue:=0;
      end;
-     if SettingMain.isGoodsComplete = TRUE
+     if (SettingMain.isGoodsComplete = TRUE) or (ParamsMI.ParamByName('isWeight_gd').AsBoolean = TRUE)
      then ParamsMI.ParamByName('Count').AsFloat:=tmpValue     // производство/упаковка - Количество батонов
      else ParamsMI.ParamByName('HeadCount').AsFloat:=tmpValue;// обвалка - Количество голов
 end;

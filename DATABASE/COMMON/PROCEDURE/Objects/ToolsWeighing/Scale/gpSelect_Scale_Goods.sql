@@ -131,7 +131,7 @@ BEGIN
               FROM lfGet_Object_Partner_PriceList_onDate (inContractId     := COALESCE ((SELECT MLO.ObjectId FROM MovementLinkObject AS MLO WHERE MLO.MovementId = inMovementId AND MLO.DescId = zc_MovementLinkObject_Contract()), 1)
                                                         , inPartnerId      := (SELECT MLO.ObjectId FROM MovementLinkObject AS MLO WHERE MLO.MovementId = inMovementId AND MLO.DescId = zc_MovementLinkObject_From())
                                                         , inMovementDescId := zc_Movement_Sale()
-                                                        , inOperDate_order := COALESCE ((SELECT Movement.OperDate FROM Movement WHERE Movement.Id = inOrderExternalId), CURRENT_TIMESTAMP)
+                                                        , inOperDate_order := COALESCE ((SELECT MD.ValueData FROM MovementDate AS MD WHERE MD.MovementId = inOrderExternalId AND MD.DescId = zc_MovementDate_OperDatePartner()), CURRENT_TIMESTAMP)
                                                         , inOperDatePartner:= NULL
                                                         , inDayPrior_PriceReturn:= NULL
                                                         , inIsPrior        := FALSE -- !!!отказались от старых цен!!!
@@ -730,18 +730,18 @@ BEGIN
                                 UNION
                                  SELECT View_InfoMoney.InfoMoneyDestinationId, View_InfoMoney.InfoMoneyId, FALSE AS isTare
                                  FROM Object_InfoMoney_View AS View_InfoMoney
-                                 WHERE (inIsGoodsComplete = FALSE
+                                 WHERE /*(inIsGoodsComplete = FALSE
                                      OR inBranchCode IN (103)
                                        )
-                                   AND inBranchCode NOT BETWEEN 301 AND 310
+                                AND*/ inBranchCode NOT BETWEEN 301 AND 310
                                    AND View_InfoMoney.InfoMoneyDestinationId IN (zc_Enum_InfoMoneyDestination_10100() -- Основное сырье + Мясное сырье
                                                                                , zc_Enum_InfoMoneyDestination_30300() -- Доходы + Переработка
                                                                                 )
                                 UNION
                                  SELECT View_InfoMoney.InfoMoneyDestinationId, View_InfoMoney.InfoMoneyId, FALSE AS isTare
                                  FROM Object_InfoMoney_View AS View_InfoMoney
-                                 WHERE inIsGoodsComplete = FALSE
-                                   AND inBranchCode NOT BETWEEN 301 AND 310
+                                 WHERE inBranchCode NOT BETWEEN 301 AND 310
+                                 --AND inIsGoodsComplete = FALSE
                                    AND View_InfoMoney.InfoMoneyId IN (zc_Enum_InfoMoney_10204() -- Основное сырье + Прочее сырье
                                                                      )
                                 UNION

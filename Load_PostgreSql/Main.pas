@@ -1221,15 +1221,23 @@ begin
      DecodeTime(NOW, Hour_calc, Minute_calc, Second, MSec);
      //
      if (Hour_calc = 22) and (beginVACUUM > 0) then beginVACUUM:= 0;
-     if (Hour_calc = 0) and (beginVACUUM > 0) then beginVACUUM:= 0;
+     if ((Hour_calc = 0) or (Hour_calc = 1)) and (beginVACUUM > 0) then beginVACUUM:= 0;
      if (Hour_calc = 6) and (beginVACUUM > 0) then beginVACUUM:= 0;
      //
      if (ParamStr(2)='autoALL') and (BranchEdit.Text <> 'BranchId : 0')
      then begin
-           if (Hour_calc = 4) and (Minute_calc >=20 ) and (Minute_calc < 55)
+           if ((Hour_calc = 4) and (Minute_calc >=20 ) and (Minute_calc < 55))
+           or ((Hour_calc = 23) and (Minute_calc >=30 ))
            then begin
                      myLogMemo_add('start stop 30 min');
                      MyDelay(35*60*1000);
+                     myLogMemo_add('end stop');
+           end;
+           //
+           if ((Hour_calc = 21) and (Minute_calc >=40 )and (Minute_calc < 54))
+           then begin
+                     myLogMemo_add('start stop 15 min');
+                     MyDelay(15*60*1000);
                      myLogMemo_add('end stop');
            end;
            //
