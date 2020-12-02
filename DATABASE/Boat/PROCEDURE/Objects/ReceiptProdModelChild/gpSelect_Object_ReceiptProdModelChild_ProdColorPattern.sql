@@ -6,7 +6,7 @@ CREATE OR REPLACE FUNCTION gpSelect_Object_ReceiptProdModelChild_ProdColorPatter
     IN inIsErased    Boolean,       -- признак показать удаленные да / нет 
     IN inSession     TVarChar       -- сессия пользователя
 )
-RETURNS TABLE (Id Integer, Comment TVarChar
+RETURNS TABLE (Id Integer, NPP Integer, Comment TVarChar
              , Value TFloat
              , ReceiptProdModelId Integer, ReceiptProdModelName TVarChar
              , ObjectId Integer, ObjectName TVarChar
@@ -26,7 +26,8 @@ BEGIN
      RETURN QUERY
 
      SELECT 
-           Object_ReceiptProdModelChild.Id              AS Id 
+           Object_ReceiptProdModelChild.Id              AS Id
+         , ROW_NUMBER() OVER (PARTITION BY Object_ReceiptProdModel.Id ORDER BY Object_ReceiptProdModelChild.Id ASC) :: Integer AS NPP
          , Object_ReceiptProdModelChild.ValueData       AS Comment
 
          , ObjectFloat_Value.ValueData       ::TFloat   AS Value

@@ -202,6 +202,8 @@ type
     actReceiptProdModel: TdsdOpenForm;
     miReceiptProdModel: TMenuItem;
     N8: TMenuItem;
+    actReceiptGoods: TdsdOpenForm;
+    miReceiptGoods: TMenuItem;
   private
     { Private declarations }
   public

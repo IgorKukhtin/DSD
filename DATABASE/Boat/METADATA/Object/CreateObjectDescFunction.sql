@@ -282,12 +282,22 @@ CREATE OR REPLACE FUNCTION zc_Object_ReceiptProdModelChild() RETURNS Integer AS 
 INSERT INTO ObjectDesc (Code, ItemName)
   SELECT 'zc_Object_ReceiptProdModelChild', 'Элементы для сборки Модели' WHERE NOT EXISTS (SELECT * FROM ObjectDesc WHERE Code = 'zc_Object_ReceiptProdModelChild');
 
+CREATE OR REPLACE FUNCTION zc_Object_ReceiptGoods() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM ObjectDesc WHERE Code = 'zc_Object_ReceiptGoods'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
+INSERT INTO ObjectDesc (Code, ItemName)
+  SELECT 'zc_Object_ReceiptGoods', 'Шаблон сборка узла' WHERE NOT EXISTS (SELECT * FROM ObjectDesc WHERE Code = 'zc_Object_ReceiptGoods');
+
+CREATE OR REPLACE FUNCTION zc_Object_ReceiptGoodsChild() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM ObjectDesc WHERE Code = 'zc_Object_ReceiptGoodsChild'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
+INSERT INTO ObjectDesc (Code, ItemName)
+  SELECT 'zc_Object_ReceiptGoodsChild', 'Элементы для сборки Узлов' WHERE NOT EXISTS (SELECT * FROM ObjectDesc WHERE Code = 'zc_Object_ReceiptGoodsChild');
+
 
 /*-------------------------------------------------------------------------------
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
  01.12.20         * zc_Object_ReceiptProdModel
                     zc_Object_ReceiptProdModelChild
+                    zc_Object_ReceiptGoods
+                    zc_Object_ReceiptGoodsChild
  19.11.20         * zc_Object_GoodsDocument
                     zc_Object_GoodsPhoto
  11.11.20         * zc_Object_TaxKind

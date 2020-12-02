@@ -218,6 +218,13 @@ CREATE OR REPLACE FUNCTION zc_ObjectString_ReceiptProdModelChild_Comment() RETUR
 INSERT INTO ObjectStringDesc (Code, DescId, ItemName)
   SELECT 'zc_ObjectString_ReceiptProdModelChild_Comment', zc_Object_ReceiptProdModelChild(), 'Примечание' WHERE NOT EXISTS (SELECT * FROM ObjectStringDesc WHERE Code = 'zc_ObjectString_ReceiptProdModelChild_Comment');
 
+CREATE OR REPLACE FUNCTION zc_ObjectString_ReceiptGoods_Comment() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM ObjectStringDesc WHERE Code = 'zc_ObjectString_ReceiptGoods_Comment'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
+INSERT INTO ObjectStringDesc (Code, DescId, ItemName)
+  SELECT 'zc_ObjectString_ReceiptGoods_Comment', zc_Object_ReceiptGoods(), 'Примечание' WHERE NOT EXISTS (SELECT * FROM ObjectStringDesc WHERE Code = 'zc_ObjectString_ReceiptGoods_Comment');
+
+CREATE OR REPLACE FUNCTION zc_ObjectString_ReceiptGoods_Code() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM ObjectStringDesc WHERE Code = 'zc_ObjectString_ReceiptGoods_Code'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
+INSERT INTO ObjectStringDesc (Code, DescId, ItemName)
+  SELECT 'zc_ObjectString_ReceiptGoods_Code', zc_Object_ReceiptGoods(), 'Пользовательский код' WHERE NOT EXISTS (SELECT * FROM ObjectStringDesc WHERE Code = 'zc_ObjectString_ReceiptGoods_Code');
 
 /*-------------------------------------------------------------------------------
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
@@ -225,6 +232,8 @@ INSERT INTO ObjectStringDesc (Code, DescId, ItemName)
  01.12.20         * zc_ObjectString_ReceiptProdModel_Code
                     zc_ObjectString_ReceiptProdModel_Comment
                     zc_ObjectString_ReceiptProdModelChild_Comment
+                    zc_ObjectString_ReceiptGoods_Comment
+                    zc_ObjectString_ReceiptGoods_Code
  15.11.20         * zc_ObjectString_TaxKind_Code
  11.11.20         * zc_ObjectString_Goods...
                     zc_ObjectString_ArticleVergl

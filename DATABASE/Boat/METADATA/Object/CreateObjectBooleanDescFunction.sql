@@ -8,6 +8,9 @@ CREATE OR REPLACE FUNCTION zc_ObjectBoolean_ReceiptProdModel_Main() RETURNS Inte
 INSERT INTO ObjectBooleanDesc (DescId, Code, ItemName)
   SELECT zc_Object_ReceiptProdModel(), 'zc_ObjectBoolean_ReceiptProdModel_Main', 'Признак главный' WHERE NOT EXISTS (SELECT * FROM ObjectBooleanDesc WHERE Code = 'zc_ObjectBoolean_ReceiptProdModel_Main');
 
+CREATE OR REPLACE FUNCTION zc_ObjectBoolean_ReceiptGoods_Main() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM ObjectBooleanDesc WHERE Code = 'zc_ObjectBoolean_ReceiptGoods_Main'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
+INSERT INTO ObjectBooleanDesc (DescId, Code, ItemName)
+  SELECT zc_Object_ReceiptGoods(), 'zc_ObjectBoolean_ReceiptGoods_Main', 'Признак главный' WHERE NOT EXISTS (SELECT * FROM ObjectBooleanDesc WHERE Code = 'zc_ObjectBoolean_ReceiptGoods_Main');
 
 /*-------------------------------------------------------------------------------
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР

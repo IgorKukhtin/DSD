@@ -1,9 +1,9 @@
-object ReceiptProdModelForm: TReceiptProdModelForm
+object ReceiptGoodsForm: TReceiptGoodsForm
   Left = 0
   Top = 0
-  Caption = #1057#1087#1088#1072#1074#1086#1095#1085#1080#1082' <'#1064#1072#1073#1083#1086#1085' '#1089#1073#1086#1088#1082#1080' '#1052#1086#1076#1077#1083#1080'>'
+  Caption = #1057#1087#1088#1072#1074#1086#1095#1085#1080#1082' <'#1064#1072#1073#1083#1086#1085' '#1089#1073#1086#1088#1082#1080' '#1059#1079#1083#1086#1074'>'
   ClientHeight = 415
-  ClientWidth = 988
+  ClientWidth = 708
   Color = clBtnFace
   Font.Charset = DEFAULT_CHARSET
   Font.Color = clWindowText
@@ -21,13 +21,14 @@ object ReceiptProdModelForm: TReceiptProdModelForm
   object cxGrid: TcxGrid
     Left = 0
     Top = 26
-    Width = 988
+    Width = 708
     Height = 216
     Align = alTop
     PopupMenu = PopupMenu
     TabOrder = 0
     LookAndFeel.NativeStyle = True
     LookAndFeel.SkinName = 'UserSkin'
+    ExplicitWidth = 988
     object cxGridDBTableView: TcxGridDBTableView
       Navigator.Buttons.CustomButtons = <>
       DataController.DataSource = DataSource
@@ -146,28 +147,11 @@ object ReceiptProdModelForm: TReceiptProdModelForm
         Options.Editing = False
         Width = 189
       end
-      object ModelName: TcxGridDBColumn
-        Caption = #1052#1086#1076#1077#1083#1100
-        DataBinding.FieldName = 'ModelName'
+      object GoodsName: TcxGridDBColumn
+        Caption = #1040#1088#1090#1080#1082#1091#1083
+        DataBinding.FieldName = 'GoodsName'
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
-        Options.Editing = False
-        Width = 80
-      end
-      object BrandName: TcxGridDBColumn
-        Caption = #1052#1072#1088#1082#1072
-        DataBinding.FieldName = 'BrandName'
-        HeaderAlignmentHorz = taCenter
-        HeaderAlignmentVert = vaCenter
-        Options.Editing = False
-        Width = 80
-      end
-      object EngineName: TcxGridDBColumn
-        Caption = 'Engine'
-        DataBinding.FieldName = 'EngineName'
-        HeaderAlignmentHorz = taCenter
-        HeaderAlignmentVert = vaCenter
-        HeaderHint = #1052#1086#1090#1086#1088
         Options.Editing = False
         Width = 80
       end
@@ -231,171 +215,17 @@ object ReceiptProdModelForm: TReceiptProdModelForm
       GridView = cxGridDBTableView
     end
   end
-  object cxGridProdColorPattern: TcxGrid
-    Left = 456
-    Top = 247
-    Width = 532
-    Height = 168
-    Align = alRight
-    PopupMenu = PopupMenuOption
-    TabOrder = 1
-    LookAndFeel.NativeStyle = True
-    LookAndFeel.SkinName = 'UserSkin'
-    object cxGridDBTableViewProdColorPattern: TcxGridDBTableView
-      Navigator.Buttons.CustomButtons = <>
-      DataController.DataSource = ProdColorPatternDS
-      DataController.Filter.Options = [fcoCaseInsensitive]
-      DataController.Summary.DefaultGroupSummaryItems = <
-        item
-          Format = ',0.####'
-          Kind = skSum
-        end
-        item
-          Format = ',0.00##'
-          Kind = skSum
-          Column = ch2Value
-        end
-        item
-          Format = ',0.00##'
-          Kind = skSum
-        end>
-      DataController.Summary.FooterSummaryItems = <
-        item
-          Format = 'C'#1090#1088#1086#1082': ,0'
-          Kind = skCount
-          Column = ch2ObjectName
-        end
-        item
-          Format = ',0.####'
-          Kind = skSum
-        end
-        item
-          Format = ',0.00##'
-          Kind = skSum
-          Column = ch2Value
-        end
-        item
-          Format = ',0.00##'
-          Kind = skSum
-        end>
-      DataController.Summary.SummaryGroups = <>
-      Images = dmMain.SortImageList
-      OptionsCustomize.ColumnHiding = True
-      OptionsCustomize.ColumnsQuickCustomization = True
-      OptionsData.Deleting = False
-      OptionsData.DeletingConfirmation = False
-      OptionsView.CellAutoHeight = True
-      OptionsView.Footer = True
-      OptionsView.GroupSummaryLayout = gslAlignWithColumns
-      OptionsView.HeaderAutoHeight = True
-      OptionsView.HeaderHeight = 40
-      OptionsView.Indicator = True
-      Styles.StyleSheet = dmMain.cxGridTableViewStyleSheet
-      object ch2NPP: TcxGridDBColumn
-        Caption = #8470' '#1087'/'#1087
-        DataBinding.FieldName = 'NPP'
-        HeaderAlignmentHorz = taCenter
-        HeaderAlignmentVert = vaCenter
-        Options.Editing = False
-        Width = 40
-      end
-      object ch2ObjectName: TcxGridDBColumn
-        Caption = #1064#1072#1073#1083#1086#1085' '#1062#1074#1077#1090#1072
-        DataBinding.FieldName = 'ObjectName'
-        PropertiesClassName = 'TcxButtonEditProperties'
-        Properties.Buttons = <
-          item
-            Caption = 'actChoiceFormProdColor'
-            Default = True
-            Kind = bkEllipsis
-          end>
-        Properties.ReadOnly = False
-        HeaderAlignmentHorz = taCenter
-        HeaderAlignmentVert = vaCenter
-        HeaderGlyphAlignmentHorz = taCenter
-        Width = 152
-      end
-      object ch2Value: TcxGridDBColumn
-        Caption = #1047#1085#1072#1095#1077#1085#1080#1077
-        DataBinding.FieldName = 'Value'
-        PropertiesClassName = 'TcxCurrencyEditProperties'
-        Properties.DecimalPlaces = 4
-        Properties.DisplayFormat = ',0.00##;-,0.00##; ;'
-        HeaderAlignmentHorz = taCenter
-        HeaderAlignmentVert = vaCenter
-        Width = 80
-      end
-      object ch2Comment: TcxGridDBColumn
-        Caption = #1055#1088#1080#1084#1077#1095#1072#1085#1080#1077
-        DataBinding.FieldName = 'Comment'
-        HeaderAlignmentHorz = taCenter
-        HeaderAlignmentVert = vaCenter
-        HeaderGlyphAlignmentHorz = taCenter
-        Width = 179
-      end
-      object ch2InsertDate: TcxGridDBColumn
-        Caption = #1044#1072#1090#1072' ('#1089#1086#1079#1076'.)'
-        DataBinding.FieldName = 'InsertDate'
-        Visible = False
-        HeaderAlignmentHorz = taCenter
-        HeaderAlignmentVert = vaCenter
-        Options.Editing = False
-        Width = 55
-      end
-      object ch2InsertName: TcxGridDBColumn
-        Caption = #1055#1086#1083#1100#1079#1086#1074#1072#1090#1077#1083#1100' ('#1089#1086#1079#1076'.)'
-        DataBinding.FieldName = 'InsertName'
-        Visible = False
-        HeaderAlignmentHorz = taCenter
-        HeaderAlignmentVert = vaCenter
-        Options.Editing = False
-        Width = 70
-      end
-      object ch2UpdateDate: TcxGridDBColumn
-        Caption = #1044#1072#1090#1072' ('#1082#1086#1088#1088'.)'
-        DataBinding.FieldName = 'UpdateDate'
-        Visible = False
-        HeaderAlignmentHorz = taCenter
-        HeaderAlignmentVert = vaCenter
-        Options.Editing = False
-        Width = 55
-      end
-      object ch2UpdateName: TcxGridDBColumn
-        Caption = #1055#1086#1083#1100#1079#1086#1074#1072#1090#1077#1083#1100' ('#1082#1086#1088#1088'.)'
-        DataBinding.FieldName = 'UpdateName'
-        Visible = False
-        HeaderAlignmentHorz = taCenter
-        HeaderAlignmentVert = vaCenter
-        Options.Editing = False
-        Width = 70
-      end
-      object ch2IsErased: TcxGridDBColumn
-        Caption = #1059#1076#1072#1083#1077#1085
-        DataBinding.FieldName = 'isErased'
-        PropertiesClassName = 'TcxCheckBoxProperties'
-        Visible = False
-        HeaderAlignmentHorz = taCenter
-        HeaderAlignmentVert = vaCenter
-        Options.Editing = False
-        Width = 78
-      end
-    end
-    object cxGridLevel1: TcxGridLevel
-      GridView = cxGridDBTableViewProdColorPattern
-    end
-  end
   object cxGridGoods: TcxGrid
     Left = 0
     Top = 247
-    Width = 448
+    Width = 700
     Height = 168
     Align = alClient
     PopupMenu = PopupMenuColor
-    TabOrder = 6
+    TabOrder = 5
     LookAndFeel.NativeStyle = True
     LookAndFeel.SkinName = 'UserSkin'
-    ExplicitLeft = 2
-    ExplicitTop = 239
+    ExplicitWidth = 448
     object cxGridDBTableViewGoods: TcxGridDBTableView
       Navigator.Buttons.CustomButtons = <>
       DataController.DataSource = GoodsDS
@@ -417,7 +247,7 @@ object ReceiptProdModelForm: TReceiptProdModelForm
         item
           Format = 'C'#1090#1088#1086#1082': ,0'
           Kind = skCount
-          Column = colObjectName
+          Column = colGoodsName
         end>
       DataController.Summary.SummaryGroups = <>
       Images = dmMain.SortImageList
@@ -441,9 +271,9 @@ object ReceiptProdModelForm: TReceiptProdModelForm
         Options.Editing = False
         Width = 40
       end
-      object colObjectName: TcxGridDBColumn
+      object colGoodsName: TcxGridDBColumn
         Caption = #1040#1088#1090#1080#1082#1091#1083
-        DataBinding.FieldName = 'ObjectName'
+        DataBinding.FieldName = 'GoodsName'
         PropertiesClassName = 'TcxButtonEditProperties'
         Properties.Buttons = <
           item
@@ -454,7 +284,7 @@ object ReceiptProdModelForm: TReceiptProdModelForm
         Properties.ReadOnly = False
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
-        Width = 80
+        Width = 209
       end
       object colValue: TcxGridDBColumn
         Caption = #1047#1085#1072#1095#1077#1085#1080#1077
@@ -464,7 +294,7 @@ object ReceiptProdModelForm: TReceiptProdModelForm
         Properties.DisplayFormat = ',0.00##;-,0.00##; ;'
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
-        Width = 79
+        Width = 121
       end
       object colComment: TcxGridDBColumn
         Caption = #1055#1088#1080#1084#1077#1095#1072#1085#1080#1077
@@ -472,7 +302,7 @@ object ReceiptProdModelForm: TReceiptProdModelForm
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         HeaderGlyphAlignmentHorz = taCenter
-        Width = 179
+        Width = 244
       end
       object colInsertDate: TcxGridDBColumn
         Caption = #1044#1072#1090#1072' ('#1089#1086#1079#1076'.)'
@@ -528,18 +358,19 @@ object ReceiptProdModelForm: TReceiptProdModelForm
   object cxTopSplitter: TcxSplitter
     Left = 0
     Top = 242
-    Width = 988
+    Width = 708
     Height = 5
     AlignSplitter = salTop
     Control = cxGrid
+    ExplicitWidth = 988
   end
   object cxRightSplitter: TcxSplitter
-    Left = 448
+    Left = 700
     Top = 247
     Width = 8
     Height = 168
     AlignSplitter = salRight
-    Control = cxGridProdColorPattern
+    ExplicitLeft = 448
   end
   object DataSource: TDataSource
     DataSet = MasterCDS
@@ -625,14 +456,6 @@ object ReceiptProdModelForm: TReceiptProdModelForm
         end
         item
           Visible = True
-          ItemName = 'BarSubItemOption'
-        end
-        item
-          Visible = True
-          ItemName = 'dxBarStatic'
-        end
-        item
-          Visible = True
           ItemName = 'dxBarStatic'
         end
         item
@@ -654,6 +477,10 @@ object ReceiptProdModelForm: TReceiptProdModelForm
         item
           Visible = True
           ItemName = 'bbChoice'
+        end
+        item
+          Visible = True
+          ItemName = 'dxBarStatic'
         end
         item
           Visible = True
@@ -730,8 +557,11 @@ object ReceiptProdModelForm: TReceiptProdModelForm
       Category = 0
     end
     object bbInsertRecordProdOptItems: TdxBarButton
-      Action = InsertRecordProdColorPattern
+      Caption = #1044#1086#1073#1072#1074#1080#1090#1100
       Category = 0
+      Hint = #1044#1086#1073#1072#1074#1080#1090#1100
+      Visible = ivAlways
+      ImageIndex = 0
     end
     object bbSetErasedColor: TdxBarButton
       Action = actSetErasedGoods
@@ -742,12 +572,20 @@ object ReceiptProdModelForm: TReceiptProdModelForm
       Category = 0
     end
     object bbSetErasedOpt: TdxBarButton
-      Action = actSetErasedProdColorPattern
+      Caption = #1059#1076#1072#1083#1080#1090#1100
       Category = 0
+      Hint = #1059#1076#1072#1083#1080#1090#1100
+      Visible = ivAlways
+      ImageIndex = 2
+      ShortCut = 16430
     end
     object bbSetUnErasedOpt: TdxBarButton
-      Action = actSetUnErasedProdColorPattern
+      Caption = #1042#1086#1089#1089#1090#1072#1085#1086#1074#1080#1090#1100
       Category = 0
+      Hint = #1042#1086#1089#1089#1090#1072#1085#1086#1074#1080#1090#1100' '#1076#1072#1085#1085#1099#1077
+      Visible = ivAlways
+      ImageIndex = 8
+      ShortCut = 16430
     end
     object bbStartLoad: TdxBarButton
       Action = actStartLoad
@@ -849,7 +687,6 @@ object ReceiptProdModelForm: TReceiptProdModelForm
           StoredProc = spSelect_Goods
         end
         item
-          StoredProc = spSelect_ProdColorPattern
         end>
       Caption = #1055#1077#1088#1077#1095#1080#1090#1072#1090#1100
       Hint = #1054#1073#1085#1086#1074#1080#1090#1100' '#1076#1072#1085#1085#1099#1077
@@ -863,8 +700,8 @@ object ReceiptProdModelForm: TReceiptProdModelForm
       Caption = #1044#1086#1073#1072#1074#1080#1090#1100
       Hint = #1044#1086#1073#1072#1074#1080#1090#1100
       ImageIndex = 0
-      FormName = 'TReceiptProdModelEditForm'
-      FormNameParam.Value = 'TReceiptProdModelEditForm'
+      FormName = 'TReceiptGoodsEditForm'
+      FormNameParam.Value = 'TReceiptGoodsEditForm'
       FormNameParam.DataType = ftString
       FormNameParam.MultiSelectSeparator = ','
       GuiParams = <
@@ -884,8 +721,8 @@ object ReceiptProdModelForm: TReceiptProdModelForm
       Caption = #1048#1079#1084#1077#1085#1080#1090#1100
       Hint = #1048#1079#1084#1077#1085#1080#1090#1100
       ImageIndex = 1
-      FormName = 'TReceiptProdModelEditForm'
-      FormNameParam.Value = 'TReceiptProdModelEditForm'
+      FormName = 'TReceiptGoodsEditForm'
+      FormNameParam.Value = 'TReceiptGoodsEditForm'
       FormNameParam.DataType = ftString
       FormNameParam.MultiSelectSeparator = ','
       GuiParams = <
@@ -918,21 +755,6 @@ object ReceiptProdModelForm: TReceiptProdModelForm
       ErasedFieldName = 'isErased'
       DataSource = GoodsDS
     end
-    object actSetErasedProdColorPattern: TdsdUpdateErased
-      Category = 'DSDLib'
-      MoveParams = <>
-      StoredProc = spErasedProdColorPattern
-      StoredProcList = <
-        item
-          StoredProc = spErasedProdColorPattern
-        end>
-      Caption = #1059#1076#1072#1083#1080#1090#1100
-      Hint = #1059#1076#1072#1083#1080#1090#1100
-      ImageIndex = 2
-      ShortCut = 16430
-      ErasedFieldName = 'isErased'
-      DataSource = ProdColorPatternDS
-    end
     object actSetErased: TdsdUpdateErased
       Category = 'DSDLib'
       MoveParams = <>
@@ -947,22 +769,6 @@ object ReceiptProdModelForm: TReceiptProdModelForm
       ShortCut = 46
       ErasedFieldName = 'isErased'
       DataSource = DataSource
-    end
-    object actSetUnErasedProdColorPattern: TdsdUpdateErased
-      Category = 'DSDLib'
-      MoveParams = <>
-      StoredProc = spUnErasedProdColorPattern
-      StoredProcList = <
-        item
-          StoredProc = spUnErasedProdColorPattern
-        end>
-      Caption = #1042#1086#1089#1089#1090#1072#1085#1086#1074#1080#1090#1100
-      Hint = #1042#1086#1089#1089#1090#1072#1085#1086#1074#1080#1090#1100' '#1076#1072#1085#1085#1099#1077
-      ImageIndex = 8
-      ShortCut = 16430
-      ErasedFieldName = 'isErased'
-      isSetErased = False
-      DataSource = ProdColorPatternDS
     end
     object actSetUnErasedGoods: TdsdUpdateErased
       Category = 'DSDLib'
@@ -1070,9 +876,6 @@ object ReceiptProdModelForm: TReceiptProdModelForm
         end
         item
           StoredProc = spSelect_Goods
-        end
-        item
-          StoredProc = spSelect_ProdColorPattern
         end>
       Caption = #1055#1086#1082#1072#1079#1072#1090#1100' '#1074#1077#1089#1100' '#1089#1087#1080#1089#1086#1082
       Hint = #1055#1086#1082#1072#1079#1072#1090#1100' '#1074#1077#1089#1100' '#1089#1087#1080#1089#1086#1082
@@ -1094,17 +897,6 @@ object ReceiptProdModelForm: TReceiptProdModelForm
         end>
       Caption = 'actUpdateDataSet'
       DataSource = DataSource
-    end
-    object InsertRecordProdColorPattern: TInsertRecord
-      Category = 'DSDLib'
-      MoveParams = <>
-      PostDataSetBeforeExecute = False
-      View = cxGridDBTableViewProdColorPattern
-      Action = actChoiceFormProdColorPattern
-      Params = <>
-      Caption = #1044#1086#1073#1072#1074#1080#1090#1100
-      Hint = #1044#1086#1073#1072#1074#1080#1090#1100
-      ImageIndex = 0
     end
     object InsertRecordGoods: TInsertRecord
       Category = 'DSDLib'
@@ -1131,57 +923,18 @@ object ReceiptProdModelForm: TReceiptProdModelForm
           Name = 'Key'
           Value = Null
           Component = GoodsCDS
-          ComponentItem = 'ObjectId'
+          ComponentItem = 'GoodsId'
           MultiSelectSeparator = ','
         end
         item
           Name = 'TextValue'
           Value = Null
           Component = GoodsCDS
-          ComponentItem = 'ObjectName'
+          ComponentItem = 'GoodsName'
           DataType = ftString
           MultiSelectSeparator = ','
         end>
       isShowModal = False
-    end
-    object actChoiceFormProdColorPattern: TOpenChoiceForm
-      Category = 'DSDLib'
-      MoveParams = <>
-      PostDataSetBeforeExecute = False
-      Caption = 'actChoiceFormProdColorPattern'
-      FormName = 'TProdColorPatternForm'
-      FormNameParam.Value = 'TProdColorPatternForm'
-      FormNameParam.DataType = ftString
-      FormNameParam.MultiSelectSeparator = ','
-      GuiParams = <
-        item
-          Name = 'Key'
-          Value = Null
-          Component = ProdColorPatternCDS
-          ComponentItem = 'ObjectId'
-          MultiSelectSeparator = ','
-        end
-        item
-          Name = 'TextValue'
-          Value = Null
-          Component = ProdColorPatternCDS
-          ComponentItem = 'ObjectName'
-          DataType = ftString
-          MultiSelectSeparator = ','
-        end>
-      isShowModal = False
-    end
-    object actUpdateDataSetProdColorPattern: TdsdUpdateDataSet
-      Category = 'DSDLib'
-      MoveParams = <>
-      PostDataSetBeforeExecute = False
-      StoredProc = spInsertUpdate_ProdColorPattern
-      StoredProcList = <
-        item
-          StoredProc = spInsertUpdate_ProdColorPattern
-        end>
-      Caption = 'actUpdateDataSetProdColorPattern'
-      DataSource = ProdColorPatternDS
     end
     object actUpdateDataSetGoods: TdsdUpdateDataSet
       Category = 'DSDLib'
@@ -1236,7 +989,7 @@ object ReceiptProdModelForm: TReceiptProdModelForm
     end
   end
   object spSelect: TdsdStoredProc
-    StoredProcName = 'gpSelect_Object_ReceiptProdModel'
+    StoredProcName = 'gpSelect_Object_ReceiptGoods'
     DataSet = MasterCDS
     DataSets = <
       item
@@ -1256,7 +1009,7 @@ object ReceiptProdModelForm: TReceiptProdModelForm
     Top = 120
   end
   object spErased: TdsdStoredProc
-    StoredProcName = 'gpUpdate_Object_isErased_ReceiptProdModel'
+    StoredProcName = 'gpUpdate_Object_isErased_ReceiptGoods'
     DataSets = <>
     OutputType = otResult
     Params = <
@@ -1314,7 +1067,7 @@ object ReceiptProdModelForm: TReceiptProdModelForm
     Top = 112
   end
   object spUnErased: TdsdStoredProc
-    StoredProcName = 'gpUpdate_Object_isErased_ReceiptProdModel'
+    StoredProcName = 'gpUpdate_Object_isErased_ReceiptGoods'
     DataSets = <>
     OutputType = otResult
     Params = <
@@ -1337,54 +1090,9 @@ object ReceiptProdModelForm: TReceiptProdModelForm
     Left = 432
     Top = 128
   end
-  object ProdColorPatternCDS: TClientDataSet
-    Aggregates = <>
-    IndexFieldNames = 'ReceiptProdModelId'
-    MasterFields = 'Id'
-    MasterSource = DataSource
-    PacketRecords = 0
-    Params = <>
-    Left = 624
-    Top = 288
-  end
-  object ProdColorPatternDS: TDataSource
-    DataSet = ProdColorPatternCDS
-    Left = 672
-    Top = 296
-  end
-  object dsdDBViewAddOnProdColorPattern: TdsdDBViewAddOn
-    ErasedFieldName = 'isErased'
-    View = cxGridDBTableViewProdColorPattern
-    OnDblClickActionList = <
-      item
-        Action = actChoiceGuides
-      end
-      item
-        Action = actUpdate
-      end>
-    ActionItemList = <
-      item
-        Action = actChoiceGuides
-        ShortCut = 13
-      end
-      item
-        Action = actUpdate
-        ShortCut = 13
-      end>
-    SortImages = dmMain.SortImageList
-    OnlyEditingCellOnEnter = False
-    ColorRuleList = <>
-    ColumnAddOnList = <>
-    ColumnEnterList = <>
-    SummaryItemList = <>
-    ShowFieldImageList = <>
-    PropertiesCellList = <>
-    Left = 736
-    Top = 296
-  end
   object GoodsCDS: TClientDataSet
     Aggregates = <>
-    IndexFieldNames = 'ReceiptProdModelId'
+    IndexFieldNames = 'ReceiptGoodsId'
     MasterFields = 'Id'
     MasterSource = DataSource
     PacketRecords = 0
@@ -1428,7 +1136,7 @@ object ReceiptProdModelForm: TReceiptProdModelForm
     Top = 296
   end
   object spSelect_Goods: TdsdStoredProc
-    StoredProcName = 'gpSelect_Object_ReceiptProdModelChild_Goods'
+    StoredProcName = 'gpSelect_Object_ReceiptGoodsChild'
     DataSet = GoodsCDS
     DataSets = <
       item
@@ -1447,28 +1155,8 @@ object ReceiptProdModelForm: TReceiptProdModelForm
     Left = 104
     Top = 312
   end
-  object spSelect_ProdColorPattern: TdsdStoredProc
-    StoredProcName = 'gpSelect_Object_ReceiptProdModelChild_ProdColorPattern'
-    DataSet = ProdColorPatternCDS
-    DataSets = <
-      item
-        DataSet = ProdColorPatternCDS
-      end>
-    Params = <
-      item
-        Name = 'inIsErased'
-        Value = Null
-        Component = actShowAllErased
-        DataType = ftBoolean
-        ParamType = ptInput
-        MultiSelectSeparator = ','
-      end>
-    PackSize = 1
-    Left = 536
-    Top = 288
-  end
   object spInsertUpdate_Goods: TdsdStoredProc
-    StoredProcName = 'gpInsertUpdate_Object_ReceiptProdModelChild'
+    StoredProcName = 'gpInsertUpdate_Object_ReceiptGoodsChild'
     DataSets = <>
     OutputType = otResult
     Params = <
@@ -1490,7 +1178,7 @@ object ReceiptProdModelForm: TReceiptProdModelForm
         MultiSelectSeparator = ','
       end
       item
-        Name = 'inReceiptProdModelId'
+        Name = 'inReceiptGoodsId'
         Value = Null
         Component = MasterCDS
         ComponentItem = 'Id'
@@ -1498,10 +1186,10 @@ object ReceiptProdModelForm: TReceiptProdModelForm
         MultiSelectSeparator = ','
       end
       item
-        Name = 'inObjectId'
+        Name = 'inGoodsId'
         Value = Null
         Component = GoodsCDS
-        ComponentItem = 'ObjectId'
+        ComponentItem = 'GoodsId'
         ParamType = ptInput
         MultiSelectSeparator = ','
       end
@@ -1517,61 +1205,6 @@ object ReceiptProdModelForm: TReceiptProdModelForm
     PackSize = 1
     Left = 80
     Top = 256
-  end
-  object spInsertUpdate_ProdColorPattern: TdsdStoredProc
-    StoredProcName = 'gpInsertUpdate_Object_ReceiptProdModelChild'
-    DataSet = ProdColorPatternCDS
-    DataSets = <
-      item
-        DataSet = ProdColorPatternCDS
-      end>
-    OutputType = otResult
-    Params = <
-      item
-        Name = 'ioId'
-        Value = Null
-        Component = ProdColorPatternCDS
-        ComponentItem = 'Id'
-        ParamType = ptInputOutput
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'inComment'
-        Value = Null
-        Component = ProdColorPatternCDS
-        ComponentItem = 'Comment'
-        DataType = ftString
-        ParamType = ptInput
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'inReceiptProdModelId'
-        Value = Null
-        Component = MasterCDS
-        ComponentItem = 'Id'
-        ParamType = ptInput
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'inObjectId'
-        Value = Null
-        Component = ProdColorPatternCDS
-        ComponentItem = 'ObjectId'
-        ParamType = ptInput
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'inValue'
-        Value = Null
-        Component = ProdColorPatternCDS
-        ComponentItem = 'Value'
-        DataType = ftFloat
-        ParamType = ptInput
-        MultiSelectSeparator = ','
-      end>
-    PackSize = 1
-    Left = 568
-    Top = 336
   end
   object spErasedGoods: TdsdStoredProc
     StoredProcName = 'gpUpdate_Object_isErased_ProdColorPattern'
@@ -1621,54 +1254,6 @@ object ReceiptProdModelForm: TReceiptProdModelForm
     Left = 176
     Top = 256
   end
-  object spErasedProdColorPattern: TdsdStoredProc
-    StoredProcName = 'gpUpdate_Object_isErased_ProdColorPattern'
-    DataSets = <>
-    OutputType = otResult
-    Params = <
-      item
-        Name = 'inObjectId'
-        Value = Null
-        Component = ProdColorPatternCDS
-        ComponentItem = 'Id'
-        ParamType = ptInput
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'inIsErased'
-        Value = True
-        DataType = ftBoolean
-        ParamType = ptInput
-        MultiSelectSeparator = ','
-      end>
-    PackSize = 1
-    Left = 856
-    Top = 240
-  end
-  object spUnErasedProdColorPattern: TdsdStoredProc
-    StoredProcName = 'gpUpdate_Object_isErased_ProdColorPattern'
-    DataSets = <>
-    OutputType = otResult
-    Params = <
-      item
-        Name = 'inObjectId'
-        Value = Null
-        Component = ProdColorPatternCDS
-        ComponentItem = 'Id'
-        ParamType = ptInput
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'inIsErased'
-        Value = False
-        DataType = ftBoolean
-        ParamType = ptInput
-        MultiSelectSeparator = ','
-      end>
-    PackSize = 1
-    Left = 912
-    Top = 264
-  end
   object FormParams: TdsdFormParams
     Params = <
       item
@@ -1676,8 +1261,8 @@ object ReceiptProdModelForm: TReceiptProdModelForm
         Value = Null
         MultiSelectSeparator = ','
       end>
-    Left = 768
-    Top = 72
+    Left = 504
+    Top = 120
   end
   object spGetImportSettingId: TdsdStoredProc
     StoredProcName = 'gpGet_DefaultValue'
@@ -1708,8 +1293,8 @@ object ReceiptProdModelForm: TReceiptProdModelForm
         MultiSelectSeparator = ','
       end>
     PackSize = 1
-    Left = 872
-    Top = 112
+    Left = 576
+    Top = 280
   end
   object PopupMenu: TPopupMenu
     Images = dmMain.ImageList
@@ -1751,13 +1336,21 @@ object ReceiptProdModelForm: TReceiptProdModelForm
     Left = 496
     Top = 208
     object MenuItem1: TMenuItem
-      Action = InsertRecordProdColorPattern
+      Caption = #1044#1086#1073#1072#1074#1080#1090#1100
+      Hint = #1044#1086#1073#1072#1074#1080#1090#1100
+      ImageIndex = 0
     end
     object MenuItem5: TMenuItem
-      Action = actSetErasedProdColorPattern
+      Caption = #1059#1076#1072#1083#1080#1090#1100
+      Hint = #1059#1076#1072#1083#1080#1090#1100
+      ImageIndex = 2
+      ShortCut = 16430
     end
     object MenuItem6: TMenuItem
-      Action = actSetUnErasedProdColorPattern
+      Caption = #1042#1086#1089#1089#1090#1072#1085#1086#1074#1080#1090#1100
+      Hint = #1042#1086#1089#1089#1090#1072#1085#1086#1074#1080#1090#1100' '#1076#1072#1085#1085#1099#1077
+      ImageIndex = 8
+      ShortCut = 16430
     end
   end
 end

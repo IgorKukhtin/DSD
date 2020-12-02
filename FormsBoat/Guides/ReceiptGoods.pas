@@ -1,4 +1,4 @@
-unit ReceiptProdModel;
+unit ReceiptGoods;
 
 interface
 
@@ -25,7 +25,7 @@ uses
   cxCurrencyEdit, cxSplitter, cxButtonEdit, ExternalLoad, Vcl.Menus;
 
 type
-  TReceiptProdModelForm = class(TParentForm)
+  TReceiptGoodsForm = class(TParentForm)
     cxGridLevel: TcxGridLevel;
     cxGrid: TcxGrid;
     DataSource: TDataSource;
@@ -65,24 +65,10 @@ type
     spUnErased: TdsdStoredProc;
     actUpdateDataSet: TdsdUpdateDataSet;
     UserCode: TcxGridDBColumn;
-    BrandName: TcxGridDBColumn;
-    ModelName: TcxGridDBColumn;
-    EngineName: TcxGridDBColumn;
-    ProdColorPatternCDS: TClientDataSet;
-    ProdColorPatternDS: TDataSource;
-    dsdDBViewAddOnProdColorPattern: TdsdDBViewAddOn;
-    cxGridProdColorPattern: TcxGrid;
-    cxGridDBTableViewProdColorPattern: TcxGridDBTableView;
-    ch2ObjectName: TcxGridDBColumn;
-    ch2Value: TcxGridDBColumn;
-    ch2Comment: TcxGridDBColumn;
-    ch2InsertDate: TcxGridDBColumn;
-    ch2InsertName: TcxGridDBColumn;
-    ch2IsErased: TcxGridDBColumn;
-    cxGridLevel1: TcxGridLevel;
+    GoodsName: TcxGridDBColumn;
     cxGridGoods: TcxGrid;
     cxGridDBTableViewGoods: TcxGridDBTableView;
-    colObjectName: TcxGridDBColumn;
+    colGoodsName: TcxGridDBColumn;
     colComment: TcxGridDBColumn;
     colInsertDate: TcxGridDBColumn;
     colInsertName: TcxGridDBColumn;
@@ -94,22 +80,14 @@ type
     GoodsDS: TDataSource;
     dsdDBViewAddOnGoods: TdsdDBViewAddOn;
     spSelect_Goods: TdsdStoredProc;
-    spSelect_ProdColorPattern: TdsdStoredProc;
     InsertRecordGoods: TInsertRecord;
     bbInsertRecordProdColorItems: TdxBarButton;
     actUpdateDataSetGoods: TdsdUpdateDataSet;
     spInsertUpdate_Goods: TdsdStoredProc;
-    actUpdateDataSetProdColorPattern: TdsdUpdateDataSet;
-    spInsertUpdate_ProdColorPattern: TdsdStoredProc;
-    InsertRecordProdColorPattern: TInsertRecord;
     bbInsertRecordProdOptItems: TdxBarButton;
     spErasedGoods: TdsdStoredProc;
     spUnErasedGoods: TdsdStoredProc;
-    spErasedProdColorPattern: TdsdStoredProc;
-    spUnErasedProdColorPattern: TdsdStoredProc;
     actSetErasedGoods: TdsdUpdateErased;
-    actSetErasedProdColorPattern: TdsdUpdateErased;
-    actSetUnErasedProdColorPattern: TdsdUpdateErased;
     actSetUnErasedGoods: TdsdUpdateErased;
     bbSetErasedColor: TdxBarButton;
     bbSetUnErasedColor: TdxBarButton;
@@ -130,7 +108,6 @@ type
     BarSubItemOption: TdxBarSubItem;
     bbShowAllBoatSale: TdxBarButton;
     isMain: TcxGridDBColumn;
-    actChoiceFormProdColorPattern: TOpenChoiceForm;
     PopupMenu: TPopupMenu;
     N1: TMenuItem;
     N2: TMenuItem;
@@ -157,6 +134,6 @@ implementation
 {$R *.dfm}
 
 initialization
-  RegisterClass(TReceiptProdModelForm);
+  RegisterClass(TReceiptGoodsForm);
 
 end.
