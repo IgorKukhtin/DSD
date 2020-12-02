@@ -58,10 +58,10 @@ BEGIN
            , Object_Member.ValueData                      AS MemberName
            , tmp.InsertDate                               AS InsertDate
            , tmp.isErased                                 AS isErased
-           , Movement_Income.Id                             AS MovementId_Income
+           , Movement_Income.Id                           AS MovementId_Income
            , zfFormat_BarCode (zc_BarCodePref_Movement(), Movement_Income.Id) AS BarCode_Income
-           , Movement_Income.InvNumber                      AS InvNumber_Income
-           , Movement_Income.OperDate                       AS OperDate_Income
+           , Movement_Income.InvNumber                    AS InvNumber_Income
+           , Movement_Income.OperDate                     AS OperDate_Income
            , Object_Status.ObjectCode                     AS StatusCode_Income
            , Object_Status.ValueData                      AS StatusName_Income
 
@@ -70,10 +70,10 @@ BEGIN
            , MovementDate_OperDatePartner.ValueData        AS OperDatePartner
            , MovementString_InvNumberPartner.ValueData     AS InvNumberPartner
 
-           , MovementFloat_TotalCountPartner.ValueData          AS TotalCountPartner
+           , MovementFloat_TotalCountPartner.ValueData     AS TotalCountPartner
            , MovementFloat_TotalSumm.ValueData             AS TotalSumm
 
-           , MovementString_InvNumberOrder.ValueData   AS InvNumberOrder
+           , Movement_Order.InvNumber                  AS InvNumberOrder
            , Object_RouteGroup.ValueData               AS RouteGroupName
            , Object_Route.ValueData                    AS RouteName
 
@@ -83,7 +83,7 @@ BEGIN
            , View_Contract_InvNumber.ContractCode      AS ContractCode
            , View_Contract_InvNumber.InvNumber         AS ContractName
            , View_Contract_InvNumber.ContractTagName
-           , Object_JuridicalFrom.ValueData              AS JuridicalName_from
+           , Object_JuridicalFrom.ValueData            AS JuridicalName_from
            , ObjectHistory_JuridicalDetails_View.OKPO  AS OKPO_To
 
            , Object_ReestrKind.ValueData       	       AS ReestrKindName
@@ -116,12 +116,14 @@ BEGIN
                                     ON MovementFloat_TotalCountPartner.MovementId = Movement_Income.Id
                                    AND MovementFloat_TotalCountPartner.DescId = zc_MovementFloat_TotalCountPartner()
 
-            LEFT JOIN MovementString AS MovementString_InvNumberOrder
+            /*LEFT JOIN MovementString AS MovementString_InvNumberOrder
                                      ON MovementString_InvNumberOrder.MovementId = Movement_Income.Id
-                                    AND MovementString_InvNumberOrder.DescId = zc_MovementString_InvNumberOrder()
+                                    AND MovementString_InvNumberOrder.DescId = zc_MovementString_InvNumberOrder()*/
             LEFT JOIN MovementLinkMovement AS MovementLinkMovement_Order
                                            ON MovementLinkMovement_Order.MovementId = Movement_Income.Id
                                           AND MovementLinkMovement_Order.DescId = zc_MovementLinkMovement_Order()
+            LEFT JOIN Movement AS Movement_Order ON Movement_Order.Id = MovementLinkMovement_Order.MovementChildId
+
             LEFT JOIN MovementLinkObject AS MovementLinkObject_Route
                                          ON MovementLinkObject_Route.MovementId = MovementLinkMovement_Order.MovementChildId
                                         AND MovementLinkObject_Route.DescId = zc_MovementLinkObject_Route()
@@ -162,7 +164,7 @@ BEGIN
             LEFT JOIN Object AS Object_ReestrKind ON Object_ReestrKind.Id = MovementLinkObject_ReestrKind.ObjectId
 
             LEFT JOIN ObjectLink AS ObjectLink_Partner_Personal
-                                 ON ObjectLink_Partner_Personal.ObjectId = Object_To.Id
+                                 ON ObjectLink_Partner_Personal.ObjectId = Object_From.Id
                                 AND ObjectLink_Partner_Personal.DescId = zc_ObjectLink_Partner_Personal()
             LEFT JOIN Object AS Object_Personal ON Object_Personal.Id = ObjectLink_Partner_Personal.ChildObjectId
 
@@ -172,7 +174,7 @@ BEGIN
             LEFT JOIN Object AS Object_UnitPersonal ON Object_UnitPersonal.Id = ObjectLink_Personal_Unit.ChildObjectId
 
             LEFT JOIN ObjectLink AS ObjectLink_Partner_PersonalTrade
-                                 ON ObjectLink_Partner_PersonalTrade.ObjectId = Object_To.Id
+                                 ON ObjectLink_Partner_PersonalTrade.ObjectId = Object_From.Id
                                 AND ObjectLink_Partner_PersonalTrade.DescId = zc_ObjectLink_Partner_PersonalTrade()
             LEFT JOIN Object AS Object_PersonalTrade ON Object_PersonalTrade.Id = ObjectLink_Partner_PersonalTrade.ChildObjectId
 
@@ -189,6 +191,7 @@ $BODY$
 /*
  »—“Œ–»ﬂ –¿«–¿¡Œ“ »: ƒ¿“¿, ¿¬“Œ–
                ‘ÂÎÓÌ˛Í ».¬.    ÛıÚËÌ ».¬.    ÎËÏÂÌÚ¸Â‚  .».
+ 02.12.20         *
  31.11.20         *
 */
 

@@ -1,8 +1,8 @@
--- Function: gpUpdate_MI_Reestr_ReestrKindErased()
+-- Function: gpUpdate_MI_ReestrIncome_ReestrKindErased()
 
-DROP FUNCTION IF EXISTS gpUpdate_MI_Reestr_ReestrKindErased (Integer, Integer, TVarChar);
+DROP FUNCTION IF EXISTS gpUpdate_MI_ReestrIncome_ReestrKindErased (Integer, Integer, TVarChar);
 
-CREATE OR REPLACE FUNCTION gpUpdate_MI_Reestr_ReestrKindErased(
+CREATE OR REPLACE FUNCTION gpUpdate_MI_ReestrIncome_ReestrKindErased(
     IN inId                   Integer   , -- Ид строки реестра
     IN inReestrKindId         Integer   , -- Тип состояния по реестру
     IN inSession              TVarChar    -- сессия пользователя
@@ -12,49 +12,45 @@ AS
 $BODY$
    DECLARE vbUserId Integer;
    DECLARE vbReestrKindId Integer;
-   DECLARE vbId_miSale Integer;
+   DECLARE vbId_miIncome Integer;
 BEGIN
      -- проверка прав пользователя на вызов процедуры
-     vbUserId := lpCheckRight (inSession, zc_Enum_Process_InsertUpdate_MI_Reestr());
+     vbUserId := lpCheckRight (inSession, zc_Enum_Process_InsertUpdate_MI_ReestrIncome());
      
 
-    -- ищем строку Реестра с таким док продажи
-    vbId_miSale:= (SELECT MF_MovementItemId.MovementId AS MIID_Sale
-                   FROM MovementFloat AS MF_MovementItemId 
-                   WHERE MF_MovementItemId.DescId = zc_MovementFloat_MovementItemId()
-                     AND MF_MovementItemId.ValueData ::integer = inId
-                   );
+    -- ищем строку Реестра с таким док прихода
+    vbId_miIncome:= (SELECT MF_MovementItemId.MovementId AS MIID_Income
+                     FROM MovementFloat AS MF_MovementItemId 
+                     WHERE MF_MovementItemId.DescId = zc_MovementFloat_MovementItemId()
+                       AND MF_MovementItemId.ValueData ::integer = inId
+                    );
 
-    IF inReestrKindId = zc_Enum_ReestrKind_Log() THEN 
-       -- сохранили <когда сформирована виза "Отдел логистики">   
-       PERFORM lpInsertUpdate_MovementItemDate (zc_MIDate_Log(), inId, Null);
-       -- сохранили связь с <кто сформировал визу "Логистики">
-       PERFORM lpInsertUpdate_MovementItemLinkObject (zc_MILinkObject_Log(), inId, Null);
+    IF inReestrKindId = zc_Enum_ReestrKind_EconomIn() THEN 
+       -- сохранили <когда сформирована виза Экономисты(в работе)">   
+       PERFORM lpInsertUpdate_MovementItemDate (zc_MIDate_EconomIn(), inId, Null);
+       -- сохранили связь с <кто сформировал визу "Экономисты(в работе)"">
+       PERFORM lpInsertUpdate_MovementItemLinkObject (zc_MILinkObject_EconomIn(), inId, Null);
+    END IF;
+
+    IF inReestrKindId = zc_Enum_ReestrKind_EconomOut() THEN 
+       -- сохранили <когда сформирована виза "Экономисты(для снабжения)">   
+       PERFORM lpInsertUpdate_MovementItemDate (zc_MIDate_EconomOut(), inId, Null);
+       -- сохранили связь с <кто сформировал визу "Экономисты(для снабжения)">
+       PERFORM lpInsertUpdate_MovementItemLinkObject (zc_MILinkObject_EconomOut(), inId, Null);
+    END IF;
+
+    IF inReestrKindId = zc_Enum_ReestrKind_Snab() THEN 
+       -- сохранили <когда сформирована виза "Снабжение (в работе)">   
+       PERFORM lpInsertUpdate_MovementItemDate (zc_MIDate_Snab(), inId, Null);
+       -- сохранили связь с <кто сформировал визу "Снабжение (в работе)">
+       PERFORM lpInsertUpdate_MovementItemLinkObject (zc_MILinkObject_Snab(), inId, Null);
     END IF;
     
-    IF inReestrKindId = zc_Enum_ReestrKind_PartnerIn() THEN 
-       -- сохранили <когда сформирована виза "Получено от клиента">   
-       PERFORM lpInsertUpdate_MovementItemDate (zc_MIDate_PartnerIn(), inId, Null);
-       -- сохранили связь с <кто сформировал визу "Получено от клиента">
-       PERFORM lpInsertUpdate_MovementItemLinkObject (zc_MILinkObject_PartnerInTo(), inId, Null);
-       -- сохранили связь с <кто сдал документ для визы "Получено от клиента">
-       PERFORM lpInsertUpdate_MovementItemLinkObject (zc_MILinkObject_PartnerInFrom(), inId, Null);
-    END IF;
-  
-    IF inReestrKindId = zc_Enum_ReestrKind_RemakeIn() THEN 
-       -- сохранили <когда сформирована виза "Получено для переделки">   
-       PERFORM lpInsertUpdate_MovementItemDate (zc_MIDate_RemakeIn(), inId, Null);
-       -- сохранили связь с <кто сформировал визу "Получено для переделки">
-       PERFORM lpInsertUpdate_MovementItemLinkObject (zc_MILinkObject_RemakeInTo(), inId, Null);
-       -- сохранили связь с <кто сдал документ для визы "Получено для переделки>
-       PERFORM lpInsertUpdate_MovementItemLinkObject (zc_MILinkObject_RemakeInFrom(), inId, Null);
-    END IF;
-    
-    IF inReestrKindId = zc_Enum_ReestrKind_RemakeBuh() THEN 
-       -- сохранили <когда сформирована виза "Бухгалтерия для исправления">   
-       PERFORM lpInsertUpdate_MovementItemDate (zc_MIDate_RemakeBuh(), inId, Null);
-       -- сохранили связь с <кто сформировал визу "Бухгалтерия для исправления">
-       PERFORM lpInsertUpdate_MovementItemLinkObject (zc_MILinkObject_RemakeBuh(), inId, Null);
+    IF inReestrKindId = zc_Enum_ReestrKind_SnabRe() THEN 
+       -- сохранили <когда сформирована виза "Снабжение (для переделки)">   
+       PERFORM lpInsertUpdate_MovementItemDate (zc_MIDate_SnabRe(), inId, Null);
+       -- сохранили связь с <кто сформировал визу "Снабжение (для переделки)">
+       PERFORM lpInsertUpdate_MovementItemLinkObject (zc_MILinkObject_SnabRe(), inId, Null);
     END IF;
 
     IF inReestrKindId = zc_Enum_ReestrKind_Remake() THEN 
@@ -77,44 +73,28 @@ BEGIN
        -- сохранили связь с <кто сформировал визу "Бухгалтерия">
        PERFORM lpInsertUpdate_MovementItemLinkObject (zc_MILinkObject_Buh(), inId, Null);
     END IF;
-
-    IF inReestrKindId = zc_Enum_ReestrKind_TransferIn() THEN 
-       -- сохранили <когда сформирована виза "Транзит получен">   
-       PERFORM lpInsertUpdate_MovementItemDate (zc_MIDate_TransferIn(), inId, Null);
-       -- сохранили связь с <кто сформировал визу "Транзит получен">
-       PERFORM lpInsertUpdate_MovementItemLinkObject (zc_MILinkObject_TransferIn(), inId, Null);
-    END IF;
-    
-    IF inReestrKindId = zc_Enum_ReestrKind_TransferOut() THEN 
-       -- сохранили <когда сформирована виза "Транзит возвращен">   
-       PERFORM lpInsertUpdate_MovementItemDate (zc_MIDate_TransferOut(), inId, Null);
-       -- сохранили связь с <кто сформировал визу "Транзит возвращен">
-       PERFORM lpInsertUpdate_MovementItemLinkObject (zc_MILinkObject_TransferOut(), inId, Null);
-    END IF;
     
     -- Находим предыдущее значение <Состояние по реестру> документа продажи
-    vbReestrKindId := (SELECT CASE WHEN tmp.DescId = zc_MIDate_Log()         THEN zc_Enum_ReestrKind_Log()
-                                   WHEN tmp.DescId = zc_MIDate_PartnerIn()   THEN zc_Enum_ReestrKind_PartnerIn()
-                                   WHEN tmp.DescId = zc_MIDate_RemakeIn()    THEN zc_Enum_ReestrKind_RemakeIn()
-                                   WHEN tmp.DescId = zc_MIDate_RemakeBuh()   THEN zc_Enum_ReestrKind_RemakeBuh()
+    vbReestrKindId := (SELECT CASE WHEN tmp.DescId = zc_MIDate_EconomIn()    THEN zc_Enum_ReestrKind_EconomIn()
+                                   WHEN tmp.DescId = zc_MIDate_EconomOut()   THEN zc_Enum_ReestrKind_EconomOut()
+                                   WHEN tmp.DescId = zc_MIDate_Snab()        THEN zc_Enum_ReestrKind_Snab()
+                                   WHEN tmp.DescId = zc_MIDate_SnabRe()      THEN zc_Enum_ReestrKind_SnabRe()
                                    WHEN tmp.DescId = zc_MIDate_Remake()      THEN zc_Enum_ReestrKind_Remake()
                                    WHEN tmp.DescId = zc_MIDate_Econom()      THEN zc_Enum_ReestrKind_Econom()
                                    WHEN tmp.DescId = zc_MIDate_Buh()         THEN zc_Enum_ReestrKind_Buh()
-                                   WHEN tmp.DescId = zc_MIDate_TransferIn()  THEN zc_Enum_ReestrKind_TransferIn()
-                                   WHEN tmp.DescId = zc_MIDate_TransferOut() THEN zc_Enum_ReestrKind_TransferOut()
                               END 
                        FROM (SELECT ROW_NUMBER() OVER(ORDER BY MID.ValueData desc) AS Num, MID.DescId 
                              FROM MovementItemDate AS MID
                              WHERE MID.MovementItemId = inId
-                               AND MID.DescId IN (zc_MIDate_Log, zc_MIDate_PartnerIn(), zc_MIDate_RemakeIn(), zc_MIDate_RemakeBuh(), zc_MIDate_Econom()
-                                                , zc_MIDate_Remake(), zc_MIDate_Buh(), zc_MIDate_TransferIn(), zc_MIDate_TransferOut())
+                               AND MID.DescId IN (zc_MIDate_EconomIn, zc_MIDate_EconomOut(), zc_MIDate_Snab(), zc_MIDate_SnabRe(), zc_MIDate_Econom()
+                                                , zc_MIDate_Remake(), zc_MIDate_Buh())
                                AND MID.ValueData IS NOT NULL
                        ) AS tmp
                        WHERE tmp.Num = 1);
 
 
     -- Изменили <Состояние по реестру> в документе продажи на предыдущее
-    PERFORM lpInsertUpdate_MovementLinkObject (zc_MovementLinkObject_ReestrKind(), vbId_miSale, COALESCE (vbReestrKindId, zc_Enum_ReestrKind_PartnerOut()));
+    PERFORM lpInsertUpdate_MovementLinkObject (zc_MovementLinkObject_ReestrKind(), vbId_miIncome, COALESCE (vbReestrKindId, zc_Enum_ReestrKind_PartnerIn()));
 
     -- сохранили протокол
     PERFORM lpInsert_MovementItemProtocol (inId, vbUserId, FALSE);
@@ -125,7 +105,8 @@ $BODY$
 
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
-               Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.
+               Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
+ 02.12.20         * ReestrIncome
  17.11.20         * _Log
  20.07.17         *
  29.11.16         *
