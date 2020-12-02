@@ -17,6 +17,12 @@ BEGIN
      vbUserId:= lpCheckRight (inSession, zc_Enum_Process_SetErased_SaleExternal());
 
      -- проверка
+   --IF inSession = '5'
+   --THEN
+   --    RETURN;
+   --END IF;
+
+     -- проверка
      IF COALESCE (inRetailId,0) = 0
      THEN
          RAISE EXCEPTION 'Ошибка.Торговая сеть не выбрана';
