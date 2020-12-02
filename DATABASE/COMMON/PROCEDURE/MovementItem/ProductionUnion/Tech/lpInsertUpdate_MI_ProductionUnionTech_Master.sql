@@ -1,6 +1,7 @@
 -- Function: lpInsertUpdate_MI_ProductionUnionTech_Master()
 
-DROP FUNCTION IF EXISTS lpInsertUpdate_MI_ProductionUnionTech_Master (Integer, Integer, Integer, TFloat, TFloat, TFloat, TFloat, TVarChar, Integer, Integer, Integer, Integer);
+--DROP FUNCTION IF EXISTS lpInsertUpdate_MI_ProductionUnionTech_Master (Integer, Integer, Integer, TFloat, TFloat, TFloat, TFloat, TVarChar, Integer, Integer, Integer, Integer);
+DROP FUNCTION IF EXISTS lpInsertUpdate_MI_ProductionUnionTech_Master (Integer, Integer, Integer, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TVarChar, Integer, Integer, Integer, Integer);
 
 CREATE OR REPLACE FUNCTION lpInsertUpdate_MI_ProductionUnionTech_Master(
  INOUT ioId                  Integer   , -- Ключ объекта <Элемент документа>
@@ -9,6 +10,8 @@ CREATE OR REPLACE FUNCTION lpInsertUpdate_MI_ProductionUnionTech_Master(
     IN inAmount              TFloat    , -- Количество
     IN inCount	             TFloat    , -- Количество батонов или упаковок
     IN inRealWeight          TFloat    , -- Фактический вес(информативно)
+    IN inRealWeightMsg       TFloat    , -- Фактический вес(после массажера)
+    IN inRealWeightShp       TFloat    , -- Фактический вес(после шприцевания)
     IN inCuterCount          TFloat    , -- Количество кутеров
     IN inComment             TVarChar  , -- Примечание
     IN inGoodsKindId         Integer   , -- Виды товаров
@@ -47,6 +50,11 @@ BEGIN
    -- сохранили свойство <Количество кутеров>
    PERFORM lpInsertUpdate_MovementItemFloat (zc_MIFloat_CuterCount(), ioId, inCuterCount);
 
+   -- сохранили свойство <>
+   PERFORM lpInsertUpdate_MovementItemFloat (zc_MIFloat_RealWeightMsg(), ioId, inRealWeightMsg);
+   -- сохранили свойство <>
+   PERFORM lpInsertUpdate_MovementItemFloat (zc_MIFloat_RealWeightShp(), ioId, inRealWeightShp);
+
    IF vbIsInsert = TRUE
    THEN
        -- сохранили связь с <>
@@ -73,6 +81,7 @@ $BODY$
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.
+ 02.12.20         *
  21.03.15                                        *
 */
 

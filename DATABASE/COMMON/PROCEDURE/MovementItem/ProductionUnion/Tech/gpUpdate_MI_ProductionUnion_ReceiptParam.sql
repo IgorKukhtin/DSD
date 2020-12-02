@@ -1,4 +1,4 @@
- -- Function: gpInsertUpdate_MI_ProductionUnionTech()
+ -- Function: gpUpdate_MI_ProductionUnion_ReceiptParam()
 
 DROP FUNCTION IF EXISTS gpUpdate_MI_ProductionUnion_ReceiptParam (TDateTime, TDateTime, Integer, Integer, TVarChar);
 

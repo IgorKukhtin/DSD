@@ -71,15 +71,15 @@
     Caption = #1053#1072#1079#1074#1072#1085#1080#1077' '#1088#1077#1094#1077#1087#1090#1091#1088#1099
   end
   object cxLabel10: TcxLabel [8]
-    Left = 8
+    Left = 256
     Top = 198
     Caption = #1055#1088#1080#1084#1077#1095#1072#1085#1080#1077
   end
   object ceComment: TcxTextEdit [9]
-    Left = 8
+    Left = 256
     Top = 218
     TabOrder = 5
-    Width = 549
+    Width = 301
   end
   object ceGooods: TcxButtonEdit [10]
     Left = 8
@@ -244,17 +244,43 @@
     TabOrder = 31
     Width = 86
   end
+  object cxLabel16: TcxLabel [32]
+    Left = 8
+    Top = 198
+    Caption = #1042#1077#1089' '#1087'/'#1092' '#1092#1072#1082#1090' ('#1084#1089#1078')'
+  end
+  object ceRealWeightMsg: TcxCurrencyEdit [33]
+    Left = 8
+    Top = 218
+    Properties.DecimalPlaces = 4
+    Properties.DisplayFormat = ',0.####'
+    TabOrder = 33
+    Width = 111
+  end
+  object ceRealWeightShp: TcxCurrencyEdit [34]
+    Left = 127
+    Top = 218
+    Properties.DecimalPlaces = 4
+    Properties.DisplayFormat = ',0.####'
+    TabOrder = 34
+    Width = 108
+  end
+  object cxLabel17: TcxLabel [35]
+    Left = 127
+    Top = 198
+    Caption = #1042#1077#1089' '#1087'/'#1092' '#1092#1072#1082#1090' ('#1096#1087#1088')'
+  end
   inherited UserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn
     Left = 11
-    Top = 218
+    Top = 258
   end
   inherited cxPropertiesStore: TcxPropertiesStore
-    Left = 104
-    Top = 218
+    Left = 120
+    Top = 258
   end
   inherited ActionList: TActionList
-    Left = 151
-    Top = 209
+    Left = 391
+    Top = 233
     inherited InsertUpdateGuides: TdsdInsertUpdateGuides [0]
     end
     inherited actRefresh: TdsdDataSetRefresh [1]
@@ -318,8 +344,8 @@
         ParamType = ptInput
         MultiSelectSeparator = ','
       end>
-    Left = 56
-    Top = 218
+    Left = 71
+    Top = 258
   end
   inherited spInsertUpdate: TdsdStoredProc
     StoredProcName = 'gpInsertUpdate_MI_ProductionUnionTech'
@@ -408,6 +434,22 @@
         Name = 'inRealWeight'
         Value = 0.000000000000000000
         Component = ceRealWeight
+        DataType = ftFloat
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inRealWeightMsg'
+        Value = Null
+        Component = ceRealWeightMsg
+        DataType = ftFloat
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inRealWeightShp'
+        Value = Null
+        Component = ceRealWeightShp
         DataType = ftFloat
         ParamType = ptInput
         MultiSelectSeparator = ','
@@ -664,9 +706,23 @@
         Component = ceCuterWeight
         DataType = ftFloat
         MultiSelectSeparator = ','
+      end
+      item
+        Name = 'RealWeightMsg'
+        Value = Null
+        Component = ceRealWeightMsg
+        DataType = ftFloat
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'RealWeightShp'
+        Value = Null
+        Component = ceRealWeightShp
+        DataType = ftFloat
+        MultiSelectSeparator = ','
       end>
-    Left = 48
-    Top = 160
+    Left = 64
+    Top = 128
   end
   object ReceiptGuides: TdsdGuides
     KeyField = 'Id'
@@ -774,8 +830,8 @@
     IdParam.MultiSelectSeparator = ','
     GuidesList = <>
     ActionItemList = <>
-    Left = 264
-    Top = 210
+    Left = 336
+    Top = 138
   end
   object ReceiptGoodsGuides: TdsdGuides
     KeyField = 'Id'
@@ -1006,7 +1062,7 @@
         ParamType = ptInput
         MultiSelectSeparator = ','
       end>
-    Left = 208
-    Top = 161
+    Left = 184
+    Top = 145
   end
 end
