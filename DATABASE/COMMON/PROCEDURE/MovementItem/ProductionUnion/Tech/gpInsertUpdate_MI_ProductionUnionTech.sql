@@ -2,7 +2,8 @@
 
 DROP FUNCTION IF EXISTS gpInsertUpdate_MI_ProductionUnionTech (Integer, Integer, Integer, TDateTime, Integer, Integer, Integer, Integer, TFloat, TFloat, TFloat, TVarChar, Integer, Integer, TVarChar);
 -- DROP FUNCTION IF EXISTS gpInsertUpdate_MI_ProductionUnionTech (Integer, Integer, Integer, TDateTime, Integer, Integer, Integer, Integer, Integer, TFloat, TFloat, TFloat, TVarChar, Integer, Integer, TVarChar);
-DROP FUNCTION IF EXISTS gpInsertUpdate_MI_ProductionUnionTech (Integer, Integer, Integer, TDateTime, Integer, Integer, Integer, Integer, Integer, TFloat, TFloat, TFloat, TFloat, TVarChar, Integer, Integer, TVarChar);
+--DROP FUNCTION IF EXISTS gpInsertUpdate_MI_ProductionUnionTech (Integer, Integer, Integer, TDateTime, Integer, Integer, Integer, Integer, Integer, TFloat, TFloat, TFloat, TFloat, TVarChar, Integer, Integer, TVarChar);
+DROP FUNCTION IF EXISTS gpInsertUpdate_MI_ProductionUnionTech (Integer, Integer, Integer, TDateTime, Integer, Integer, Integer, Integer, Integer, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TVarChar, Integer, Integer, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpInsertUpdate_MI_ProductionUnionTech(
     IN inMovementItemId_order Integer   , -- Ключ объекта <Элемент документа>
@@ -17,7 +18,10 @@ CREATE OR REPLACE FUNCTION gpInsertUpdate_MI_ProductionUnionTech(
     IN inGoodsId              Integer   , -- Товары
     IN inCount	              TFloat    , -- Количество батонов или упаковок
     IN inRealWeight           TFloat    , -- Фактический вес(информативно)
+    IN inRealWeightMsg        TFloat    , -- Фактический вес(после массажера)
+    IN inRealWeightShp        TFloat    , -- Фактический вес(после шприцевания)
     IN inCuterCount           TFloat    , -- Количество кутеров
+
     IN inAmount               TFloat    , -- Кол-во шт.факт - !!!обратный расчет кол-во куттеров!!!
 
     IN inComment              TVarChar  , -- Примечание
@@ -290,6 +294,8 @@ BEGIN
                                                                   , inAmount             := COALESCE (vbAmount, 0)
                                                                   , inCount              := inCount
                                                                   , inRealWeight         := inRealWeight
+                                                                  , inRealWeightMsg      := inRealWeightMsg
+                                                                  , inRealWeightShp      := inRealWeightShp
                                                                   , inCuterCount         := inCuterCount
                                                                   , inComment            := inComment
                                                                   , inGoodsKindId        := inGoodsKindId

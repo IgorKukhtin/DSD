@@ -48,6 +48,10 @@ type
     GuidesDocumentKind: TdsdGuides;
     cxLabel15: TcxLabel;
     ceAmount: TcxCurrencyEdit;
+    cxLabel16: TcxLabel;
+    ceRealWeightMsg: TcxCurrencyEdit;
+    ceRealWeightShp: TcxCurrencyEdit;
+    cxLabel17: TcxLabel;
   private
     { Private declarations }
   public

@@ -88,6 +88,7 @@ type
     PriceTop: TcxGridDBColumn;
     isSP: TcxGridDBColumn;
     isPromo: TcxGridDBColumn;
+    cbisRetail: TcxCheckBox;
   private
   public
   end;

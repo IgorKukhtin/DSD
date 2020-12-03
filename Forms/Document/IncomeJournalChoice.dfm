@@ -170,6 +170,15 @@ inherited IncomeJournalChoiceForm: TIncomeJournalChoiceForm
             HeaderAlignmentHorz = taCenter
             Width = 55
           end
+          object ReestrKindName: TcxGridDBColumn [1]
+            Caption = #1042#1080#1079#1072' '#1074' '#1085#1072#1082#1083#1072#1076#1085#1086#1081
+            DataBinding.FieldName = 'ReestrKindName'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            HeaderHint = #1057#1086#1089#1090#1086#1103#1085#1080#1077' '#1087#1086' '#1088#1077#1077#1089#1090#1088#1091
+            Options.Editing = False
+            Width = 74
+          end
           object InvNumberPartner: TcxGridDBColumn
             Caption = #8470' '#1076#1086#1082'. '#1091' '#1087#1086#1089#1090'.'
             DataBinding.FieldName = 'InvNumberPartner'

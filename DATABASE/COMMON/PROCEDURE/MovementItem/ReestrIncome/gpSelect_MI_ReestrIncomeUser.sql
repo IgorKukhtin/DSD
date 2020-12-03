@@ -217,7 +217,6 @@ BEGIN
                                        ON MIDate_Insert.MovementItemId = MovementItem.Id
                                       AND MIDate_Insert.DescId = zc_MIDate_Insert()
             --
-
             LEFT JOIN MovementItemDate AS MIDate_Snab
                                        ON MIDate_Snab.MovementItemId = MovementItem.Id
                                       AND MIDate_Snab.DescId = zc_MIDate_Snab()
@@ -326,7 +325,7 @@ BEGIN
             LEFT JOIN Object AS Object_ReestrKind ON Object_ReestrKind.Id = MovementLinkObject_ReestrKind.ObjectId
 
             LEFT JOIN ObjectLink AS ObjectLink_Partner_Personal
-                                 ON ObjectLink_Partner_Personal.ObjectId = Object_To.Id
+                                 ON ObjectLink_Partner_Personal.ObjectId = Object_From.Id
                                 AND ObjectLink_Partner_Personal.DescId = zc_ObjectLink_Partner_Personal()
             LEFT JOIN Object AS Object_Personal ON Object_Personal.Id = ObjectLink_Partner_Personal.ChildObjectId
 
@@ -336,7 +335,7 @@ BEGIN
             LEFT JOIN Object AS Object_UnitPersonal ON Object_UnitPersonal.Id = ObjectLink_Personal_Unit.ChildObjectId
 
             LEFT JOIN ObjectLink AS ObjectLink_Partner_PersonalTrade
-                                 ON ObjectLink_Partner_PersonalTrade.ObjectId = Object_To.Id
+                                 ON ObjectLink_Partner_PersonalTrade.ObjectId = Object_From.Id
                                 AND ObjectLink_Partner_PersonalTrade.DescId = zc_ObjectLink_Partner_PersonalTrade()
             LEFT JOIN Object AS Object_PersonalTrade ON Object_PersonalTrade.Id = ObjectLink_Partner_PersonalTrade.ChildObjectId
 

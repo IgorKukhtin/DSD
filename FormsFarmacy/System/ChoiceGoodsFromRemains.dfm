@@ -1,22 +1,22 @@
 inherited ChoiceGoodsFromRemainsForm: TChoiceGoodsFromRemainsForm
   ActiveControl = edCodeSearch
   Caption = #1055#1086#1080#1089#1082' '#1090#1086#1074#1072#1088#1086#1074' '#1087#1086' '#1074#1089#1077#1081' '#1089#1077#1090#1080
-  ClientWidth = 832
+  ClientWidth = 885
   ShowHint = True
-  ExplicitWidth = 848
+  ExplicitWidth = 901
   ExplicitHeight = 347
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
-    Width = 832
+    Width = 885
     ExplicitWidth = 832
-    ClientRectRight = 832
+    ClientRectRight = 885
     inherited tsMain: TcxTabSheet
       ExplicitWidth = 832
       ExplicitHeight = 282
       inherited cxGrid: TcxGrid
         Top = 27
-        Width = 832
+        Width = 885
         Height = 255
         ExplicitTop = 27
         ExplicitWidth = 832
@@ -248,6 +248,14 @@ inherited ChoiceGoodsFromRemainsForm: TChoiceGoodsFromRemainsForm
             Options.Editing = False
             Width = 70
           end
+          object RetailName: TcxGridDBColumn
+            Caption = #1057#1077#1090#1100
+            DataBinding.FieldName = 'RetailName'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 84
+          end
           object JuridicalName_Unit: TcxGridDBColumn
             Caption = #1070#1088#1080#1076#1080#1095#1077#1089#1082#1086#1077' '#1083#1080#1094#1086
             DataBinding.FieldName = 'JuridicalName_Unit'
@@ -312,11 +320,12 @@ inherited ChoiceGoodsFromRemainsForm: TChoiceGoodsFromRemainsForm
       object Panel1: TPanel
         Left = 0
         Top = 0
-        Width = 832
+        Width = 885
         Height = 27
         Align = alTop
         BevelOuter = bvNone
         TabOrder = 1
+        ExplicitWidth = 832
         object edCodeSearch: TcxTextEdit
           Left = 94
           Top = 3
@@ -325,7 +334,7 @@ inherited ChoiceGoodsFromRemainsForm: TChoiceGoodsFromRemainsForm
           Width = 101
         end
         object cxLabel1: TcxLabel
-          Left = 258
+          Left = 245
           Top = 4
           Caption = #1055#1086#1080#1089#1082' '#1090#1086#1074#1072#1088#1072
         end
@@ -336,12 +345,19 @@ inherited ChoiceGoodsFromRemainsForm: TChoiceGoodsFromRemainsForm
           Style.TextColor = 6118749
         end
         object btnClearFilter: TcxButton
-          Left = 656
-          Top = 0
+          Left = 620
+          Top = 1
           Width = 153
           Height = 25
           Action = actClearFilter
           TabOrder = 3
+        end
+        object cbisRetail: TcxCheckBox
+          Left = 788
+          Top = 3
+          Caption = #1058#1086#1074#1072#1088' '#1089#1090#1080
+          TabOrder = 4
+          Width = 77
         end
       end
     end
@@ -352,14 +368,14 @@ inherited ChoiceGoodsFromRemainsForm: TChoiceGoodsFromRemainsForm
     Caption = #1055#1086#1080#1089#1082' '#1087#1086' '#1082#1086#1076#1091
   end
   object edGoodsSearch: TcxTextEdit [2]
-    Left = 334
+    Left = 322
     Top = 29
     Hint = #1053#1072#1078#1084#1080#1090#1077' Ctrl+Enter '#1076#1083#1103' '#1087#1086#1080#1089#1082#1072
     TabOrder = 6
     Width = 224
   end
   object cxLabel4: TcxLabel [3]
-    Left = 559
+    Left = 552
     Top = 30
     Caption = 'Ctrl+Enter'
     Style.TextColor = 6118749
@@ -636,6 +652,14 @@ inherited ChoiceGoodsFromRemainsForm: TChoiceGoodsFromRemainsForm
         Value = Null
         Component = edGoodsSearch
         DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inisRetail'
+        Value = Null
+        Component = cbisRetail
+        DataType = ftBoolean
         ParamType = ptInput
         MultiSelectSeparator = ','
       end>

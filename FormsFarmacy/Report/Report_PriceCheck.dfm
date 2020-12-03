@@ -64,6 +64,14 @@ object Report_PriceCheckForm: TReport_PriceCheckForm
       TabOrder = 4
       Width = 146
     end
+    object cbisRetail: TcxCheckBox
+      Left = 780
+      Top = 3
+      Caption = #1058#1086#1074#1072#1088' '#1089#1090#1080
+      State = cbsChecked
+      TabOrder = 5
+      Width = 77
+    end
   end
   object cxGrid: TcxGrid
     Left = 0
@@ -572,6 +580,14 @@ object Report_PriceCheckForm: TReport_PriceCheckForm
         DataType = ftBoolean
         ParamType = ptInput
         MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inisRetail'
+        Value = Null
+        Component = cbisRetail
+        DataType = ftBoolean
+        ParamType = ptInput
+        MultiSelectSeparator = ','
       end>
     PackSize = 1
     Left = 32
@@ -641,6 +657,7 @@ object Report_PriceCheckForm: TReport_PriceCheckForm
     ColumnAddOnList = <>
     ColumnEnterList = <>
     SummaryItemList = <>
+    ShowFieldImageList = <>
     PropertiesCellList = <>
     Left = 392
     Top = 296
@@ -667,6 +684,7 @@ object Report_PriceCheckForm: TReport_PriceCheckForm
     ColumnAddOnList = <>
     ColumnEnterList = <>
     SummaryItemList = <>
+    ShowFieldImageList = <>
     KeepSelectColor = True
     PropertiesCellList = <>
     HeaderDataSet = HeaderCDS

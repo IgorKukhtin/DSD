@@ -20,7 +20,8 @@ RETURNS TABLE (MovementId Integer, OperDate TDateTime
              , GoodsKindCompleteId Integer, GoodsKindCompleteName TVarChar
              , ReceiptId Integer, ReceiptName TVarChar, ReceiptCode TVarChar
              , Amount_order TFloat, CuterCount_order TFloat
-             , RealWeight TFloat, CuterCount TFloat, CuterWeight TFloat, Count TFloat
+             , RealWeight TFloat, RealWeightMsg TFloat, RealWeightShp TFloat
+             , CuterCount TFloat, CuterWeight TFloat, Count TFloat
              , Amount TFloat
              , Comment TVarChar
                )
@@ -57,6 +58,8 @@ BEGIN
                , (COALESCE (MIFloat_CuterCount.ValueData, 0)  + COALESCE (MIFloat_CuterCountSecond.ValueData, 0)) :: TFloat AS CuterCount_order
 
                , 0 :: TFloat		           AS RealWeight
+               , 0 :: TFloat		           AS RealWeightMsg
+               , 0 :: TFloat		           AS RealWeightShp
                , 0 :: TFloat   		           AS CuterCount
                , 0 :: TFloat   		           AS CuterWeight
                , 0 :: TFloat		           AS Count
@@ -124,6 +127,8 @@ BEGIN
                , COALESCE (MIFloat_CuterCount_order.ValueData, 0) :: TFloat                                 AS CuterCount_order
 
                , MIFloat_RealWeight.ValueData      AS RealWeight
+               , MIFloat_RealWeightMsg.ValueData   AS RealWeightMsg
+               , MIFloat_RealWeightShp.ValueData   AS RealWeightShp
                , MIFloat_CuterCount.ValueData      AS CuterCount
                , MIFloat_CuterWeight.ValueData     AS CuterWeight
                , MIFloat_Count.ValueData	   AS Count
@@ -173,6 +178,13 @@ BEGIN
                LEFT JOIN MovementItemFloat AS MIFloat_RealWeight
                                            ON MIFloat_RealWeight.MovementItemId = MovementItem.Id
                                           AND MIFloat_RealWeight.DescId = zc_MIFloat_RealWeight()
+               LEFT JOIN MovementItemFloat AS MIFloat_RealWeightMsg
+                                           ON MIFloat_RealWeightMsg.MovementItemId = MovementItem.Id
+                                          AND MIFloat_RealWeightMsg.DescId = zc_MIFloat_RealWeightMsg()
+               LEFT JOIN MovementItemFloat AS MIFloat_RealWeightShp
+                                           ON MIFloat_RealWeightShp.MovementItemId = MovementItem.Id
+                                          AND MIFloat_RealWeightShp.DescId = zc_MIFloat_RealWeightShp()
+
                LEFT JOIN MovementItemString AS MIString_Comment
                                             ON MIString_Comment.MovementItemId = MovementItem.Id
                                            AND MIString_Comment.DescId = zc_MIString_Comment()
@@ -210,6 +222,8 @@ BEGIN
                , 0 :: TFloat		             AS CuterCount_order
 
                , 0 :: TFloat		             AS RealWeight
+               , 0 :: TFloat		             AS RealWeightMsg
+               , 0 :: TFloat		             AS RealWeightShp
                , 0 :: TFloat   		             AS CuterCount
                , 0 :: TFloat   		             AS CuterWeight
                , 0 :: TFloat		             AS Count
@@ -227,6 +241,7 @@ $BODY$
 /*
  »—“Œ–»ﬂ –¿«–¿¡Œ“ »: ƒ¿“¿, ¿¬“Œ–
                ‘ÂÎÓÌ˛Í ».¬.    ÛıÚËÌ ».¬.    ÎËÏÂÌÚ¸Â‚  .».   Ã‡Ì¸ÍÓ ƒ.¿.
+ 02.12.20         *
  13.06.16         * CuterWeight
  15.03.15                                        * all
  12.12.14                                                        *

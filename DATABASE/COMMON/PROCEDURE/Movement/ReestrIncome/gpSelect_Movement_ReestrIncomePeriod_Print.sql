@@ -1,7 +1,6 @@
 -- Function: gpSelect_Movement_ReestrIncome()
 
-DROP FUNCTION IF EXISTS gpSelect_Movement_ReestrIncomePeriod_Print (TDateTime, TDateTime, Integer, TVarChar);
-DROP FUNCTION IF EXISTS gpSelect_Movement_ReestrIncomePeriod_Print (TDateTime, TDateTime, Integer, Boolean, TVarChar);
+
 DROP FUNCTION IF EXISTS gpSelect_Movement_ReestrIncomePeriod_Print (TDateTime, TDateTime, Integer, Integer, Integer, Boolean, Boolean, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpSelect_Movement_ReestrIncomePeriod_Print(
@@ -57,18 +56,20 @@ BEGIN
 */
 
      -- Îïðåäåëÿåòñÿ
-     vbDateDescId := (SELECT CASE WHEN inReestrKindId = zc_Enum_ReestrKind_PartnerIn() THEN zc_MIDate_PartnerIn()
-                                  WHEN inReestrKindId = zc_Enum_ReestrKind_RemakeIn()  THEN zc_MIDate_RemakeIn()
-                                  WHEN inReestrKindId = zc_Enum_ReestrKind_RemakeBuh() THEN zc_MIDate_RemakeBuh()
+     vbDateDescId := (SELECT CASE WHEN inReestrKindId = zc_Enum_ReestrKind_EconomIn()  THEN zc_MIDate_EconomIn()
+                                  WHEN inReestrKindId = zc_Enum_ReestrKind_EconomOut() THEN zc_MIDate_EconomOut()
+                                  WHEN inReestrKindId = zc_Enum_ReestrKind_Snab()      THEN zc_MIDate_Snab()
+                                  WHEN inReestrKindId = zc_Enum_ReestrKind_SnabRe()    THEN zc_MIDate_SnabRe()
                                   WHEN inReestrKindId = zc_Enum_ReestrKind_Remake()    THEN zc_MIDate_Remake()
                                   WHEN inReestrKindId = zc_Enum_ReestrKind_Econom()    THEN zc_MIDate_Econom()
                                   WHEN inReestrKindId = zc_Enum_ReestrKind_Buh()       THEN zc_MIDate_Buh()
                              END AS DateDescId
                       );
      -- Îïðåäåëÿåòñÿ
-     vbMILinkObjectId := (SELECT CASE WHEN inReestrKindId = zc_Enum_ReestrKind_PartnerIn() THEN zc_MILinkObject_PartnerInTo()
-                                      WHEN inReestrKindId = zc_Enum_ReestrKind_RemakeIn()  THEN zc_MILinkObject_RemakeInTo()
-                                      WHEN inReestrKindId = zc_Enum_ReestrKind_RemakeBuh() THEN zc_MILinkObject_RemakeBuh()
+     vbMILinkObjectId := (SELECT CASE WHEN inReestrKindId = zc_Enum_ReestrKind_EconomIn()  THEN zc_MILinkObject_EconomIn()
+                                      WHEN inReestrKindId = zc_Enum_ReestrKind_EconomOut() THEN zc_MILinkObject_EconomOut()
+                                      WHEN inReestrKindId = zc_Enum_ReestrKind_Snab()      THEN zc_MILinkObject_Snab()
+                                      WHEN inReestrKindId = zc_Enum_ReestrKind_SnabRe()    THEN zc_MILinkObject_SnabRe()
                                       WHEN inReestrKindId = zc_Enum_ReestrKind_Remake()    THEN zc_MILinkObject_Remake()
                                       WHEN inReestrKindId = zc_Enum_ReestrKind_Econom()    THEN zc_MILinkObject_Econom()
                                       WHEN inReestrKindId = zc_Enum_ReestrKind_Buh()       THEN zc_MILinkObject_Buh()
@@ -120,10 +121,10 @@ BEGIN
                    )
      , tmpData AS
       (SELECT
-             Movement_Sale.InvNumber                AS InvNumber_Sale
-           , Movement_Sale.OperDate                 AS OperDate_Sale
-           , MovementDate_OperDatePartner.ValueData AS OperDatePartner
-           , Object_To.ValueData                    AS ToName
+             Movement_Income.InvNumber                AS InvNumber_Income
+           , Movement_Income.OperDate                 AS OperDate_Income
+           , MovementDate_OperDatePartner.ValueData   AS OperDatePartner
+           , Object_From.ValueData                    AS FromName
            , CASE WHEN Object_Personal.Id <> Object_PersonalTrade.Id -- AND Object_Personal.Id > 0 AND Object_PersonalTrade.Id > 0
                        THEN Object_Personal.ValueData || ' / ' || Object_PersonalTrade.ValueData
                   WHEN Object_Personal.Id IS NULL AND Object_PersonalTrade.Id > 0
@@ -229,42 +230,42 @@ BEGIN
                                             AND MILinkObject_Buh.DescId = zc_MILinkObject_Buh()
             LEFT JOIN Object AS Object_Buh ON Object_Buh.Id = MILinkObject_Buh.ObjectId
             --
-            LEFT JOIN Movement AS Movement_Sale ON Movement_Sale.id = tmpMI.MovementId_Sale
+            LEFT JOIN Movement AS Movement_Income ON Movement_Income.id = tmpMI.MovementId_Income
 
             LEFT JOIN MovementDate AS MovementDate_OperDatePartner
-                                   ON MovementDate_OperDatePartner.MovementId = Movement_Sale.Id
+                                   ON MovementDate_OperDatePartner.MovementId = Movement_Income.Id
                                   AND MovementDate_OperDatePartner.DescId = zc_MovementDate_OperDatePartner()
 
             LEFT JOIN MovementLinkObject AS MovementLinkObject_ReestrKind
-                                         ON MovementLinkObject_ReestrKind.MovementId = Movement_Sale.Id
+                                         ON MovementLinkObject_ReestrKind.MovementId = Movement_Income.Id
                                         AND MovementLinkObject_ReestrKind.DescId = zc_MovementLinkObject_ReestrKind()
             LEFT JOIN Object AS Object_ReestrKind ON Object_ReestrKind.Id = MovementLinkObject_ReestrKind.ObjectId
 
-            LEFT JOIN MovementLinkObject AS MovementLinkObject_To
-                                         ON MovementLinkObject_To.MovementId = Movement_Sale.Id
-                                        AND MovementLinkObject_To.DescId = zc_MovementLinkObject_To()
-            LEFT JOIN Object AS Object_To ON Object_To.Id = MovementLinkObject_To.ObjectId
+            LEFT JOIN MovementLinkObject AS MovementLinkObject_From
+                                         ON MovementLinkObject_From.MovementId = Movement_Income.Id
+                                        AND MovementLinkObject_From.DescId = zc_MovementLinkObject_From()
+            LEFT JOIN Object AS Object_From ON Object_From.Id = MovementLinkObject_From.ObjectId
 
             LEFT JOIN MovementLinkMovement AS MovementLinkMovement_TransportGoods
-                                           ON MovementLinkMovement_TransportGoods.MovementId = Movement_Sale.Id
+                                           ON MovementLinkMovement_TransportGoods.MovementId = Movement_Income.Id
                                           AND MovementLinkMovement_TransportGoods.DescId = zc_MovementLinkMovement_TransportGoods()
             LEFT JOIN Movement AS Movement_TransportGoods ON Movement_TransportGoods.Id = MovementLinkMovement_TransportGoods.MovementChildId
 
             LEFT JOIN MovementFloat AS MovementFloat_TotalCountKg
-                                    ON MovementFloat_TotalCountKg.MovementId = Movement_Sale.Id
+                                    ON MovementFloat_TotalCountKg.MovementId = Movement_Income.Id
                                    AND MovementFloat_TotalCountKg.DescId = zc_MovementFloat_TotalCountKg()
 
             LEFT JOIN MovementFloat AS MovementFloat_TotalSumm
-                                    ON MovementFloat_TotalSumm.MovementId = Movement_Sale.Id
+                                    ON MovementFloat_TotalSumm.MovementId = Movement_Income.Id
                                    AND MovementFloat_TotalSumm.DescId = zc_MovementFloat_TotalSumm()
 
             LEFT JOIN MovementLinkObject AS MovementLinkObject_PaidKind
-                                         ON MovementLinkObject_PaidKind.MovementId = Movement_Sale.Id
+                                         ON MovementLinkObject_PaidKind.MovementId = Movement_Income.Id
                                         AND MovementLinkObject_PaidKind.DescId = zc_MovementLinkObject_PaidKind()
             LEFT JOIN Object AS Object_PaidKind ON Object_PaidKind.Id = MovementLinkObject_PaidKind.ObjectId 
 
             LEFT JOIN ObjectLink AS ObjectLink_Partner_Personal
-                                 ON ObjectLink_Partner_Personal.ObjectId = Object_To.Id
+                                 ON ObjectLink_Partner_Personal.ObjectId = Object_From.Id
                                 AND ObjectLink_Partner_Personal.DescId = zc_ObjectLink_Partner_Personal()
             LEFT JOIN ObjectLink AS ObjectLink_Personal_Member
                                  ON ObjectLink_Personal_Member.ObjectId = ObjectLink_Partner_Personal.ChildObjectId
@@ -272,7 +273,7 @@ BEGIN
             LEFT JOIN Object AS Object_Personal ON Object_Personal.Id = ObjectLink_Personal_Member.ChildObjectId -- ObjectLink_Partner_Personal.ChildObjectId -- AND Object_Personal.DescId = zc_Object_Personal()
 
             LEFT JOIN ObjectLink AS ObjectLink_Partner_PersonalTrade
-                                 ON ObjectLink_Partner_PersonalTrade.ObjectId = Object_To.Id
+                                 ON ObjectLink_Partner_PersonalTrade.ObjectId = Object_From.Id
                                 AND ObjectLink_Partner_PersonalTrade.DescId = zc_ObjectLink_Partner_PersonalTrade()
             LEFT JOIN ObjectLink AS ObjectLink_PersonalTrade_Member
                                  ON ObjectLink_PersonalTrade_Member.ObjectId = ObjectLink_Partner_PersonalTrade.ChildObjectId
@@ -281,16 +282,14 @@ BEGIN
 
        WHERE (inIsReestrKind = TRUE AND MovementLinkObject_ReestrKind.ObjectId = inReestrKindId) 
            OR inIsReestrKind = FALSE
-         -- AND (Object_Personal.Id      = inPersonalId      OR inPersonalId      = 0)
-         -- AND (Object_PersonalTrade.Id = inPersonalTradeId OR inPersonalTradeId = 0)
       )
+
+
       SELECT *
       FROM tmpData
-   -- WHERE (tmpData.PersonalId      = inPersonalId      OR inPersonalId      = 0)
-   --   AND (tmpData.PersonalTradeId = inPersonalTradeId OR inPersonalTradeId = 0)
       WHERE (tmpData.PersonalId      = vbMemberId        OR vbMemberId      = 0)
         AND (tmpData.PersonalTradeId = vbMemberTradeId   OR vbMemberTradeId = 0)
-      ORDER BY tmpData.ToName
+      ORDER BY tmpData.FromName
              , tmpData.OperDatePartner
       ;
 
@@ -303,6 +302,7 @@ $BODY$
 /*
  ÈÑÒÎÐÈß ÐÀÇÐÀÁÎÒÊÈ: ÄÀÒÀ, ÀÂÒÎÐ
                Ôåëîíþê È.Â.   Êóõòèí È.Â.   Êëèìåíòüåâ Ê.È.
+ 02.12.20         *
  22.07.20         *
  24.01.18         *
  19.01.18         *

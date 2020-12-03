@@ -228,10 +228,10 @@ BEGIN
                                                         , inUserId           := vbUserId
                                                          );
 
-      -- Только если есть продажа
+      -- Только если есть Приход
       IF vbMovementId_Income <> 0
       THEN
-          -- Определяется <Физическое лицо> - кто сформировал визу "Вывезено со склада"
+          -- Определяется <Физическое лицо> - кто сформировал визу "Получено от клиента"
           vbMemberId:= CASE WHEN vbUserId = 5 THEN 9457 ELSE
                        (SELECT ObjectLink_User_Member.ChildObjectId
                         FROM ObjectLink AS ObjectLink_User_Member
@@ -261,7 +261,7 @@ BEGIN
               -- восстановим + изменение !!!т.к. может измениться ObjectId + MovementId!!!
               UPDATE MovementItem SET isErased = FALSE, ObjectId = vbMemberId, MovementId = ioMovementId WHERE Id = vbId_mi;
           ELSE
-              -- ВСЕГДА - сохранили <Элемент документа> - <кто сформировал визу "Вывезено со склада">
+              -- ВСЕГДА - сохранили <Элемент документа> - <кто сформировал визу "Получено от клиента">
               vbId_mi := lpInsertUpdate_MovementItem (vbId_mi, zc_MI_Master(), vbMemberId, ioMovementId, 0, NULL);
 
               -- !!!т.к. может измениться MovementId!!!
@@ -269,13 +269,13 @@ BEGIN
 
           END IF;
 
-          -- сохранили <когда сформирована виза "Вывезено со склада">   
+          -- сохранили <когда сформирована виза "Получено от клиента>   
           PERFORM lpInsertUpdate_MovementItemDate (zc_MIDate_Insert(), vbId_mi, CURRENT_TIMESTAMP);
 
 
-          -- сохранили свойство у документа продажи <№ строчной части в Реестре накладных>
+          -- сохранили свойство у документа Прихода <№ строчной части в Реестре накладных>
           PERFORM lpInsertUpdate_MovementFloat (zc_MovementFloat_MovementItemId(), vbMovementId_Income, vbId_mi);
-          -- сохранили у документа продажи связь с <Состояние по реестру>
+          -- сохранили у документа Прихода связь с <Состояние по реестру>
           PERFORM lpInsertUpdate_MovementLinkObject (zc_MovementLinkObject_ReestrKind(), vbMovementId_Income, zc_Enum_ReestrKind_PartnerIn());
 
 

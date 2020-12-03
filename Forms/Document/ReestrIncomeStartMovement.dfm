@@ -1670,7 +1670,7 @@ inherited ReestrIncomeStartMovementForm: TReestrIncomeStartMovementForm
     Top = 304
   end
   inherited spErasedMIMaster: TdsdStoredProc
-    StoredProcName = 'gpMovementItem_Send_SetErased'
+    StoredProcName = 'gpMovementItem_Reestr_SetErased'
     Params = <
       item
         Name = 'inMovementItemId'
@@ -1691,7 +1691,7 @@ inherited ReestrIncomeStartMovementForm: TReestrIncomeStartMovementForm
     Top = 328
   end
   inherited spUnErasedMIMaster: TdsdStoredProc
-    StoredProcName = 'gpMovementItem_Send_SetUnErased'
+    StoredProcName = 'gpMovementItem_Reestr_SetUnErased'
     Params = <
       item
         Name = 'inMovementItemId'
