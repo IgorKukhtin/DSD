@@ -17,6 +17,7 @@ RETURNS TABLE (Id Integer, NPP Integer, Comment TVarChar
              , GoodsGroupName TVarChar
              , Article TVarChar
              , ProdColorName TVarChar
+             , MeasureName TVarChar
              , EKPrice TFloat, EKPriceWVAT TFloat
              , EmpfPrice TFloat, EmpfPriceWVAT TFloat
              , BasisPrice TFloat, BasisPriceWVAT TFloat
@@ -72,7 +73,8 @@ BEGIN
          , Object_GoodsGroup.ValueData                AS GoodsGroupName
          , ObjectString_Article.ValueData             AS Article
          , Object_ProdColor.ValueData                 AS ProdColorName
-         
+         , Object_Measure.ValueData                   AS MeasureName
+          
          , ObjectFloat_EKPrice.ValueData   ::TFloat   AS EKPrice
          , CAST (COALESCE (ObjectFloat_EKPrice.ValueData, 0)
               * (1 + (COALESCE (ObjectFloat_TaxKind_Value.ValueData, 0) / 100)) AS NUMERIC (16, 2))  ::TFloat AS EKPriceWVAT-- расчет входной цены с НДС, до 4 знаков
@@ -161,6 +163,11 @@ BEGIN
                                   ON ObjectLink_Goods_ProdColor.ObjectId = Object_Object.Id
                                  AND ObjectLink_Goods_ProdColor.DescId = zc_ObjectLink_Goods_ProdColor()
              LEFT JOIN Object AS Object_ProdColor ON Object_ProdColor.Id = ObjectLink_Goods_ProdColor.ChildObjectId
+
+             LEFT JOIN ObjectLink AS ObjectLink_Goods_Measure
+                                  ON ObjectLink_Goods_Measure.ObjectId = Object_Object.Id
+                                 AND ObjectLink_Goods_Measure.DescId = zc_ObjectLink_Goods_Measure()
+             LEFT JOIN Object AS Object_Measure ON Object_Measure.Id = ObjectLink_Goods_Measure.ChildObjectId
 
              LEFT JOIN ObjectFloat AS ObjectFloat_EKPrice
                                    ON ObjectFloat_EKPrice.ObjectId = Object_Object.Id

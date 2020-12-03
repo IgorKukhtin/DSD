@@ -241,8 +241,6 @@ object ReceiptProdModelForm: TReceiptProdModelForm
     TabOrder = 1
     LookAndFeel.NativeStyle = True
     LookAndFeel.SkinName = 'UserSkin'
-    ExplicitLeft = 448
-    ExplicitTop = 248
     object cxGridDBTableViewProdColorPattern: TcxGridDBTableView
       Navigator.Buttons.CustomButtons = <>
       DataController.DataSource = ProdColorPatternDS
@@ -402,7 +400,7 @@ object ReceiptProdModelForm: TReceiptProdModelForm
         Width = 172
       end
       object ch2GoodsCode: TcxGridDBColumn
-        Caption = #1050#1086#1076
+        Caption = #1050#1086#1076' ('#1082#1086#1084#1087#1083'.)'
         DataBinding.FieldName = 'GoodsCode'
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
@@ -410,7 +408,7 @@ object ReceiptProdModelForm: TReceiptProdModelForm
         Width = 63
       end
       object ch2GoodsName: TcxGridDBColumn
-        Caption = #1053#1072#1080#1084#1077#1085#1086#1074#1072#1085#1080#1077
+        Caption = #1050#1086#1084#1087#1083#1077#1082#1090#1091#1102#1097#1080#1077
         DataBinding.FieldName = 'GoodsName'
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
@@ -418,13 +416,21 @@ object ReceiptProdModelForm: TReceiptProdModelForm
         Options.Editing = False
         Width = 127
       end
+      object ch2MeasureName: TcxGridDBColumn
+        Caption = #1045#1076'. '#1080#1079#1084'.'
+        DataBinding.FieldName = 'MeasureName'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Options.Editing = False
+        Width = 55
+      end
       object ch2Article: TcxGridDBColumn
         Caption = #1040#1088#1090#1080#1082#1091#1083
         DataBinding.FieldName = 'Article'
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         Options.Editing = False
-        Width = 55
+        Width = 75
       end
       object ch2ProdColorName: TcxGridDBColumn
         Caption = #1062#1074#1077#1090
@@ -677,7 +683,7 @@ object ReceiptProdModelForm: TReceiptProdModelForm
         Width = 40
       end
       object colObjectName: TcxGridDBColumn
-        Caption = #1053#1072#1079#1074#1072#1085#1080#1077
+        Caption = #1050#1086#1084#1087#1083#1077#1082#1090#1091#1102#1097#1080#1077
         DataBinding.FieldName = 'ObjectName'
         PropertiesClassName = 'TcxButtonEditProperties'
         Properties.Buttons = <
@@ -689,7 +695,7 @@ object ReceiptProdModelForm: TReceiptProdModelForm
         Properties.ReadOnly = False
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
-        Width = 80
+        Width = 97
       end
       object colValue: TcxGridDBColumn
         Caption = #1047#1085#1072#1095#1077#1085#1080#1077
@@ -733,6 +739,14 @@ object ReceiptProdModelForm: TReceiptProdModelForm
         HeaderAlignmentVert = vaCenter
         Options.Editing = False
         Width = 63
+      end
+      object colMeasureName: TcxGridDBColumn
+        Caption = #1045#1076'. '#1080#1079#1084'.'
+        DataBinding.FieldName = 'MeasureName'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Options.Editing = False
+        Width = 55
       end
       object colArticle: TcxGridDBColumn
         Caption = #1040#1088#1090#1080#1082#1091#1083
@@ -1162,7 +1176,7 @@ object ReceiptProdModelForm: TReceiptProdModelForm
         end>
     end
     object BarSubItemColor: TdxBarSubItem
-      Caption = #1040#1088#1090#1080#1082#1091#1083#1099
+      Caption = #1050#1086#1084#1087#1083#1077#1082#1090#1091#1102#1097#1080#1077
       Category = 0
       Visible = ivAlways
       ItemLinks = <

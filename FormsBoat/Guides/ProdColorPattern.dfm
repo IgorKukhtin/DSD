@@ -26,7 +26,6 @@ object ProdColorPatternForm: TProdColorPatternForm
     TabOrder = 0
     LookAndFeel.NativeStyle = True
     LookAndFeel.SkinName = 'UserSkin'
-    ExplicitWidth = 566
     object cxGridDBTableView: TcxGridDBTableView
       Navigator.Buttons.CustomButtons = <>
       DataController.DataSource = DataSource
@@ -77,16 +76,15 @@ object ProdColorPatternForm: TProdColorPatternForm
         Width = 127
       end
       object ch2GoodsCode: TcxGridDBColumn
-        Caption = #1050#1086#1076' ('#1072#1088#1090'.)'
+        Caption = #1050#1086#1076' ('#1082#1086#1084#1087#1083'.)'
         DataBinding.FieldName = 'GoodsCode'
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
-        HeaderHint = #1050#1086#1076' '#1072#1088#1090#1080#1082#1091#1083#1072
         Options.Editing = False
         Width = 63
       end
       object GoodsName: TcxGridDBColumn
-        Caption = #1053#1072#1080#1084#1077#1085#1086#1074#1072#1085#1080#1077' '#1072#1088#1090#1080#1082#1091#1083#1072
+        Caption = #1050#1086#1084#1087#1083#1077#1082#1090#1091#1102#1097#1080#1077
         DataBinding.FieldName = 'GoodsName'
         PropertiesClassName = 'TcxButtonEditProperties'
         Properties.Buttons = <
@@ -98,7 +96,15 @@ object ProdColorPatternForm: TProdColorPatternForm
         Properties.ReadOnly = True
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
-        Width = 104
+        Width = 119
+      end
+      object MeasureName: TcxGridDBColumn
+        Caption = #1045#1076'. '#1080#1079#1084'.'
+        DataBinding.FieldName = 'MeasureName'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Options.Editing = False
+        Width = 55
       end
       object ch2Article: TcxGridDBColumn
         Caption = #1040#1088#1090#1080#1082#1091#1083
