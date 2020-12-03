@@ -1188,7 +1188,6 @@ type
     miGoodsPropertyValueExternal: TMenuItem;
     actContractTradeMark: TdsdOpenForm;
     miContractTradeMark: TMenuItem;
-    miReestrtransportAll: TMenuItem;
     actAssetType: TdsdOpenForm;
     miAssetType: TMenuItem;
     actReestrLog: TdsdOpenForm;

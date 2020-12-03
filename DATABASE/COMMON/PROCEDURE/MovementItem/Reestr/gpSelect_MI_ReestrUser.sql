@@ -31,7 +31,7 @@ RETURNS TABLE ( Id Integer, MovementId Integer, LineNum Integer
               , ContractCode Integer, ContractName TVarChar, ContractTagName TVarChar
               , JuridicalName_To TVarChar, OKPO_To TVarChar 
               , ReestrKindName TVarChar
-
+ 
               , PersonalName            TVarChar
               , PersonalTradeName       TVarChar
               , UnitName_Personal       TVarChar

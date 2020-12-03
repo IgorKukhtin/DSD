@@ -69,6 +69,7 @@ BEGIN
                                  END AS MILinkObjectId
                       );
 
+
      -- Определяется <Физическое лицо> - кто сформировал визу inReestrKindId
      vbMemberId_user:= CASE WHEN vbUserId = 5 THEN 9457 ELSE
                        (SELECT ObjectLink_User_Member.ChildObjectId

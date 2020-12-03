@@ -8123,11 +8123,6 @@
           Action = actReestrBuhTTN
         end
       end
-      object miReestrtransportAll: TMenuItem
-        Caption = #1056#1077#1077#1089#1090#1088#1072#1093' '#1085#1072#1082#1083#1072#1076#1085#1099#1093' ('#1074#1080#1079#1072') / '#1054#1090#1076#1077#1083' '#1083#1086#1075#1080#1089#1090#1080#1082#1080
-        object TMenuItem
-        end
-      end
       object miMovementGoodsBarCode: TMenuItem
         Action = actMovementGoodsBarCode
       end
