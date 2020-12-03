@@ -45,17 +45,30 @@ BEGIN
 
 
      -- Определяется
-     vbDateDescId := (SELECT CASE WHEN inReestrKindId = zc_Enum_ReestrKind_RemakeBuh() THEN zc_MIDate_RemakeBuh()
-                                  WHEN inReestrKindId = zc_Enum_ReestrKind_Econom()    THEN zc_MIDate_Econom()
-                                  WHEN inReestrKindId = zc_Enum_ReestrKind_Buh()       THEN zc_MIDate_Buh()
+     vbDateDescId := (SELECT CASE WHEN inReestrKindId = zc_Enum_ReestrKind_PartnerIn()   THEN zc_MIDate_PartnerIn()
+                                  WHEN inReestrKindId = zc_Enum_ReestrKind_RemakeIn()    THEN zc_MIDate_RemakeIn()  
+                                  WHEN inReestrKindId = zc_Enum_ReestrKind_RemakeBuh()   THEN zc_MIDate_RemakeBuh()
+                                  WHEN inReestrKindId = zc_Enum_ReestrKind_Remake()      THEN zc_MIDate_Remake()
+                                  WHEN inReestrKindId = zc_Enum_ReestrKind_Econom()      THEN zc_MIDate_Econom()
+                                  WHEN inReestrKindId = zc_Enum_ReestrKind_Buh()         THEN zc_MIDate_Buh()
+                                  WHEN inReestrKindId = zc_Enum_ReestrKind_TransferIn()  THEN zc_MIDate_TransferIn()
+                                  WHEN inReestrKindId = zc_Enum_ReestrKind_TransferOut() THEN zc_MIDate_TransferOut()
+                                  WHEN inReestrKindId = zc_Enum_ReestrKind_Log()         THEN zc_MIDate_Log()
                              END AS DateDescId
                       );
      -- Определяется
-     vbMILinkObjectId := (SELECT CASE WHEN inReestrKindId = zc_Enum_ReestrKind_RemakeBuh() THEN zc_MILinkObject_RemakeBuh()
-                                      WHEN inReestrKindId = zc_Enum_ReestrKind_Econom()    THEN zc_MILinkObject_Econom()
-                                      WHEN inReestrKindId = zc_Enum_ReestrKind_Buh()       THEN zc_MILinkObject_Buh()
+     vbMILinkObjectId := (SELECT CASE WHEN inReestrKindId = zc_Enum_ReestrKind_PartnerIn()   THEN zc_MILinkObject_PartnerInTo()
+                                      WHEN inReestrKindId = zc_Enum_ReestrKind_RemakeIn()    THEN zc_MILinkObject_RemakeInTo()  
+                                      WHEN inReestrKindId = zc_Enum_ReestrKind_RemakeBuh()   THEN zc_MILinkObject_RemakeBuh()
+                                      WHEN inReestrKindId = zc_Enum_ReestrKind_Remake()      THEN zc_MILinkObject_Remake() 
+                                      WHEN inReestrKindId = zc_Enum_ReestrKind_Econom()      THEN zc_MILinkObject_Econom()
+                                      WHEN inReestrKindId = zc_Enum_ReestrKind_Buh()         THEN zc_MILinkObject_Buh()
+                                      WHEN inReestrKindId = zc_Enum_ReestrKind_TransferIn()  THEN zc_MILinkObject_TransferIn()
+                                      WHEN inReestrKindId = zc_Enum_ReestrKind_TransferOut() THEN zc_MILinkObject_TransferOut()
+                                      WHEN inReestrKindId = zc_Enum_ReestrKind_Log()         THEN zc_MILinkObject_Log()
                                  END AS MILinkObjectId
                       );
+
 
      -- Определяется <Физическое лицо> - кто сформировал визу inReestrKindId
      vbMemberId_user:= CASE WHEN vbUserId = 5 THEN 9457 ELSE

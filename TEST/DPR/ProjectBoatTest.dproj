@@ -623,16 +623,16 @@
 				<Form>ReceiptProdModelEditForm</Form>
 				<DesignClass>TParentForm</DesignClass>
 			</DCCReference>
-			<DCCReference Include="..\..\FormsBoat\Guides\ReceiptProdModel.pas">
-				<Form>ReceiptProdModelForm</Form>
-				<DesignClass>TParentForm</DesignClass>
-			</DCCReference>
 			<DCCReference Include="..\..\FormsBoat\Guides\ReceiptGoodsEdit.pas">
 				<Form>ReceiptGoodsEditForm</Form>
 				<DesignClass>TParentForm</DesignClass>
 			</DCCReference>
 			<DCCReference Include="..\..\FormsBoat\Guides\ReceiptGoods.pas">
 				<Form>ReceiptGoodsForm</Form>
+				<DesignClass>TParentForm</DesignClass>
+			</DCCReference>
+			<DCCReference Include="..\..\FormsBoat\Guides\ReceiptProdModel.pas">
+				<Form>ReceiptProdModelForm</Form>
 				<DesignClass>TParentForm</DesignClass>
 			</DCCReference>
 			<BuildConfiguration Include="Release">

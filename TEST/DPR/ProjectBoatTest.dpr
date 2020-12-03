@@ -197,9 +197,9 @@ uses
   TaxKind in '..\..\FormsBoat\Kind\TaxKind.pas' {TaxKindForm: TParentForm},
   dsdAddOn in '..\..\SOURCE\COMPONENT\dsdAddOn.pas',
   ReceiptProdModelEdit in '..\..\FormsBoat\Guides\ReceiptProdModelEdit.pas' {ReceiptProdModelEditForm: TParentForm},
-  ReceiptProdModel in '..\..\FormsBoat\Guides\ReceiptProdModel.pas' {ReceiptProdModelForm: TParentForm},
   ReceiptGoodsEdit in '..\..\FormsBoat\Guides\ReceiptGoodsEdit.pas' {ReceiptGoodsEditForm: TParentForm},
-  ReceiptGoods in '..\..\FormsBoat\Guides\ReceiptGoods.pas' {ReceiptGoodsForm: TParentForm};
+  ReceiptGoods in '..\..\FormsBoat\Guides\ReceiptGoods.pas' {ReceiptGoodsForm: TParentForm},
+  ReceiptProdModel in '..\..\FormsBoat\Guides\ReceiptProdModel.pas' {ReceiptProdModelForm: TParentForm};
 
 {$R *.res}
 {$R DevExpressRus.res}
