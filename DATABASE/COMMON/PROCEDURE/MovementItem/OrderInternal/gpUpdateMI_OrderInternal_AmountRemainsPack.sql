@@ -26,12 +26,12 @@ BEGIN
     PERFORM lpUpdate_Object_Receipt_Parent (0, 0, 0);
 
     -- таблица
-    CREATE TEMP TABLE tmpContainer (ContainerId Integer, GoodsId Integer, GoodsKindId Integer, Amount_start TFloat) ON COMMIT DROP;
-    CREATE TEMP TABLE tmpAll (MovementItemId Integer, ContainerId Integer, GoodsId Integer, GoodsKindId Integer, Amount_start TFloat) ON COMMIT DROP;
+    CREATE TEMP TABLE tmpContainer (ContainerId Integer, GoodsId Integer, GoodsKindId Integer, Amount_start TFloat, AmountPrIn TFloat) ON COMMIT DROP;
+    CREATE TEMP TABLE tmpAll (MovementItemId Integer, ContainerId Integer, GoodsId Integer, GoodsKindId Integer, Amount_start TFloat, AmountPrIn TFloat) ON COMMIT DROP;
 
 
     -- Остатки кол-во для всех подразделений
-    INSERT INTO tmpContainer (ContainerId, GoodsId, GoodsKindId, Amount_start)
+    INSERT INTO tmpContainer (ContainerId, GoodsId, GoodsKindId, Amount_start, AmountPrIn)
        WITH -- хардкодим - ЦЕХ колбаса+дел-сы (производство)
             tmpUnit_CEH AS (SELECT UnitId, TRUE AS isContainer FROM lfSelect_Object_Unit_byGroup (8446) AS lfSelect_Object_Unit_byGroup)
             -- хардкодим - Склады База + Реализации
@@ -39,7 +39,7 @@ BEGIN
             -- хардкодим - ВСЕ
           , tmpUnit_all   AS (SELECT UnitId, isContainer FROM tmpUnit_CEH UNION SELECT UnitId, isContainer FROM tmpUnit_SKLAD)
             -- хардкодим - товары ГП
-          , tmpGoods_all AS (SELECT ObjectLink_Goods_InfoMoney.ObjectId AS GoodsId
+          , tmpGoods AS (SELECT ObjectLink_Goods_InfoMoney.ObjectId AS GoodsId
                               , Object_InfoMoney_View.InfoMoneyDestinationId
                               , Object_InfoMoney_View.InfoMoneyId
                          FROM Object_InfoMoney_View
@@ -51,70 +51,55 @@ BEGIN
                              OR Object_InfoMoney_View.InfoMoneyDestinationId = zc_Enum_InfoMoneyDestination_20900() -- Общефирменные + Ирна
                                )
                         )
-              -- хардкодим
-            , tmpReceipt AS (SELECT DISTINCT
-                                    tmpGoods.GoodsId_child
-                                  , MAX (ObjectLink_Receipt_Goods.ObjectId) AS ReceiptId
-                                  , CASE WHEN ObjectLink_Goods_GoodsGroup.ChildObjectId  IN (5064881) -- СО-ПОСОЛ
-                                           OR ObjectLink_GoodsGroup_parent.ChildObjectId IN (5064881) -- СО-ПОСОЛ
-                                              THEN TRUE
-                                         ELSE FALSE
-                                    END AS isPF
-                             FROM tmpGoods_all AS tmpGoods
-                                  INNER JOIN ObjectLink AS ObjectLink_Receipt_Goods
-                                                        ON ObjectLink_Receipt_Goods.ChildObjectId = tmpGoods.GoodsId
-                                                       AND ObjectLink_Receipt_Goods.DescId        = zc_ObjectLink_Receipt_Goods()
-                                  INNER JOIN Object AS Object_Receipt ON Object_Receipt.Id = ObjectLink_Receipt_Goods.ObjectId
-                                                                     AND Object_Receipt.isErased = FALSE
-                                  INNER JOIN ObjectBoolean AS ObjectBoolean_Main
-                                                           ON ObjectBoolean_Main.ObjectId = Object_Receipt.Id
-                                                          AND ObjectBoolean_Main.DescId = zc_ObjectBoolean_Receipt_Main()
-                                                          AND ObjectBoolean_Main.ValueData = TRUE
-                             WHERE ObjectLink_Goods_GoodsGroup.ChildObjectId  IN (1942, 5064881) -- СО-ЭМУЛЬСИИ + СО-ПОСОЛ
-                                OR ObjectLink_GoodsGroup_parent.ChildObjectId IN (1942, 5064881) -- СО-ЭМУЛЬСИИ + СО-ПОСОЛ
-                             GROUP BY tmpGoods.GoodsId_child
-                                    , ObjectLink_Goods_GoodsGroup.ChildObjectId
-                                    , ObjectLink_GoodsGroup_parent.ChildObjectId
-                            )
-                        )
        -- Результат - остатки товары ГП
        SELECT tmp.ContainerId
             , tmp.GoodsId
             , tmp.GoodsKindId
             , SUM (tmp.Amount_start + CASE WHEN tmp.ContainerId > 0 THEN tmp.Amount_next ELSE 0 END) AS Amount_start
-       FROM
-      (SELECT CASE WHEN tmpUnit_all.isContainer = TRUE THEN Container.Id ELSE 0 END AS ContainerId
-            , Container.ObjectId                   AS GoodsId
-            , COALESCE (CLO_GoodsKind.ObjectId, 0) AS GoodsKindId
-            , Container.Amount - COALESCE (SUM (COALESCE (MIContainer.Amount, 0)), 0) AS Amount_start
-            , SUM (CASE WHEN MIContainer.OperDate = inOperDate AND MIContainer.isActive = TRUE THEN MIContainer.Amount ELSE 0 END) AS Amount_next
-       FROM tmpGoods
-            INNER JOIN Container ON Container.ObjectId = tmpGoods.GoodsId
-                                AND Container.DescId   = zc_Container_Count()
-            INNER JOIN ContainerLinkObject AS CLO_Unit 
-                                           ON CLO_Unit.ContainerId = Container.Id
-                                          AND CLO_Unit.DescId = zc_ContainerLinkObject_Unit()
-            INNER JOIN tmpUnit_all ON tmpUnit_all.UnitId = CLO_Unit.ObjectId
+            , SUM (tmp.AmountPrIn) AS AmountPrIn
+       FROM (SELECT CASE WHEN tmpUnit_all.isContainer = TRUE THEN Container.Id ELSE 0 END AS ContainerId
+                  , Container.ObjectId                   AS GoodsId
+                  , COALESCE (CLO_GoodsKind.ObjectId, 0) AS GoodsKindId
+                  , Container.Amount - COALESCE (SUM (COALESCE (MIContainer.Amount, 0)), 0) AS Amount_start
+                  , SUM (CASE WHEN MIContainer.OperDate = inOperDate AND MIContainer.isActive = TRUE THEN MIContainer.Amount ELSE 0 END) AS Amount_next
+                  , SUM (CASE WHEN MIContainer.OperDate = inOperDate AND MIContainer.isActive = TRUE
+                               AND MIContainer.MovementDescId = zc_Movement_ProductionUnion()
+                               AND tmpUnit_CEH.UnitId > 0 AND tmpUnit_SKLAD.UnitId > 0
+                                   THEN MIContainer.Amount
+                              ELSE 0
+                         END) AS AmountPrIn
+             FROM tmpGoods
+                  INNER JOIN Container ON Container.ObjectId = tmpGoods.GoodsId
+                                      AND Container.DescId   = zc_Container_Count()
+                  INNER JOIN ContainerLinkObject AS CLO_Unit
+                                                 ON CLO_Unit.ContainerId = Container.Id
+                                                AND CLO_Unit.DescId = zc_ContainerLinkObject_Unit()
+                  INNER JOIN tmpUnit_all ON tmpUnit_all.UnitId = CLO_Unit.ObjectId
 
-            LEFT JOIN ContainerLinkObject AS CLO_Account
-                                          ON CLO_Account.ContainerId = Container.Id
-                                         AND CLO_Account.DescId      = zc_ContainerLinkObject_Account()
-            LEFT JOIN ContainerLinkObject AS CLO_GoodsKind 
-                                          ON CLO_GoodsKind.ContainerId = Container.Id
-                                         AND CLO_GoodsKind.DescId      = zc_ContainerLinkObject_GoodsKind()
+                  LEFT JOIN ContainerLinkObject AS CLO_Account
+                                                ON CLO_Account.ContainerId = Container.Id
+                                               AND CLO_Account.DescId      = zc_ContainerLinkObject_Account()
+                  LEFT JOIN ContainerLinkObject AS CLO_GoodsKind
+                                                ON CLO_GoodsKind.ContainerId = Container.Id
+                                               AND CLO_GoodsKind.DescId      = zc_ContainerLinkObject_GoodsKind()
 
-            LEFT JOIN MovementItemContainer AS MIContainer
-                                            ON MIContainer.ContainerId = Container.Id
-                                           AND MIContainer.OperDate    >= inOperDate
+                  LEFT JOIN MovementItemContainer AS MIContainer
+                                                  ON MIContainer.ContainerId = Container.Id
+                                                 AND MIContainer.OperDate    >= inOperDate
 
-       WHERE CLO_Account.ContainerId IS NULL -- !!!т.е. без счета Транзит!!!
-       GROUP BY CASE WHEN tmpUnit_all.isContainer = TRUE THEN Container.Id ELSE 0 END
-              , Container.ObjectId
-              , COALESCE (CLO_GoodsKind.ObjectId, 0)
-              , Container.Amount
-       HAVING Container.Amount - COALESCE (SUM (COALESCE (MIContainer.Amount, 0)), 0) <> 0
-           OR SUM (CASE WHEN MIContainer.OperDate = inOperDate AND MIContainer.isActive = TRUE THEN MIContainer.Amount ELSE 0 END) <> 0
-      ) AS tmp
+                  -- ЦЕХ колбаса+дел-сы
+                  LEFT JOIN tmpUnit_CEH   ON tmpUnit_CEH.UnitId   = MIContainer.ObjectExtId_Analyzer
+                  -- Склады База + Реализации
+                  LEFT JOIN tmpUnit_SKLAD ON tmpUnit_SKLAD.UnitId = MIContainer.WhereObjectId_Analyzer
+
+             WHERE CLO_Account.ContainerId IS NULL -- !!!т.е. без счета Транзит!!!
+             GROUP BY CASE WHEN tmpUnit_all.isContainer = TRUE THEN Container.Id ELSE 0 END
+                    , Container.ObjectId
+                    , COALESCE (CLO_GoodsKind.ObjectId, 0)
+                    , Container.Amount
+             HAVING Container.Amount - COALESCE (SUM (COALESCE (MIContainer.Amount, 0)), 0) <> 0
+                 OR SUM (CASE WHEN MIContainer.OperDate = inOperDate AND MIContainer.isActive = TRUE THEN MIContainer.Amount ELSE 0 END) <> 0
+            ) AS tmp
        GROUP BY tmp.ContainerId
               , tmp.GoodsId
               , tmp.GoodsKindId
@@ -122,7 +107,7 @@ BEGIN
 
     --
     -- объединение существующих элементов документа + остатки
-    INSERT INTO tmpAll (MovementItemId, ContainerId, GoodsId, GoodsKindId, Amount_start)
+    INSERT INTO tmpAll (MovementItemId, ContainerId, GoodsId, GoodsKindId, Amount_start, AmountPrIn)
        WITH -- существующие элементы документа
             tmpMI AS (SELECT MovementItem.Id                               AS MovementItemId
                            , MovementItem.ObjectId                         AS GoodsId
@@ -146,11 +131,13 @@ BEGIN
             , tmp.GoodsId
             , tmp.GoodsKindId
             , SUM (tmp.Amount_start) AS Amount_start
+            , SUM (tmp.AmountPrIn)   AS AmountPrIn
        FROM (SELECT COALESCE (tmpMI.MovementItemId, 0)                      AS MovementItemId
                   , 0                                                       AS ContainerId
                   , COALESCE (tmpContainer.GoodsId,      tmpMI.GoodsId)     AS GoodsId
                   , COALESCE (tmpContainer.GoodsKindId,  tmpMI.GoodsKindId) AS GoodsKindId
                   , COALESCE (tmpContainer.Amount_start, 0)                 AS Amount_start
+                  , COALESCE (tmpContainer.AmountPrIn, 0)                   AS AmountPrIn
              FROM (SELECT * FROM tmpContainer WHERE tmpContainer.ContainerId = 0
                   ) AS tmpContainer
                   FULL JOIN (SELECT * FROM tmpMI WHERE tmpMI.ContainerId = 0
@@ -168,6 +155,7 @@ BEGIN
             , COALESCE (tmpContainer.GoodsId,      tmpMI.GoodsId)     AS GoodsId
             , COALESCE (tmpContainer.GoodsKindId,  tmpMI.GoodsKindId) AS GoodsKindId
             , COALESCE (tmpContainer.Amount_start, 0)                 AS Amount_start
+            , 0                                                       AS AmountPrIn
        FROM (SELECT * FROM tmpContainer WHERE tmpContainer.ContainerId > 0
             ) AS tmpContainer
             FULL JOIN (SELECT * FROM tmpMI WHERE tmpMI.ContainerId > 0
@@ -194,11 +182,11 @@ end if;
                                               , inDescId_Param       := zc_MIFloat_AmountRemains()
                                               , inAmount_ParamOrder  := tmpAll.ContainerId
                                               , inDescId_ParamOrder  := zc_MIFloat_ContainerId()
-                                              , inAmount_ParamSecond := NULL
-                                              , inDescId_ParamSecond := NULL
+                                              , inAmount_ParamSecond := tmpAll.AmountPrIn
+                                              , inDescId_ParamSecond := zc_MIFloat_AmountPrIn()
                                               , inIsPack             := NULL -- что б не формировать св-ва
                                               , inUserId             := vbUserId
-                                               ) 
+                                               )
     FROM tmpAll;
 /*
 if inSession = '5'

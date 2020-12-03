@@ -913,7 +913,17 @@ end if;
          -- вернулись к старой схеме, за одно и проверим
          ioId:= (SELECT _tmpParentMulti.MovementItemId FROM _tmpParentMulti);
          --
-         PERFORM lpInsertUpdate_MovementItemFloat (inDescId_ParamSecond, ioId, inAmount_ParamSecond);
+         IF inDescId_ParamSecond = zc_MIFloat_AmountPrIn()
+         THEN
+              IF inAmount_ParamSecond > 0 OR EXISTS (SELECT 1 FROM MovementItemFloat AS MIF WHERE MIF.MovementItemId = ioId AND MIF.DescId = inDescId_ParamSecond)
+              THEN
+                  --
+                  PERFORM lpInsertUpdate_MovementItemFloat (inDescId_ParamSecond, ioId, inAmount_ParamSecond);
+              END IF;
+         ELSE
+             --
+             PERFORM lpInsertUpdate_MovementItemFloat (inDescId_ParamSecond, ioId, inAmount_ParamSecond);
+         END IF;
      END IF;
 
      -- сохранили свойство
