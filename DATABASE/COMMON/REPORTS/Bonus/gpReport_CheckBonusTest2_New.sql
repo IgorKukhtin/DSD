@@ -645,7 +645,9 @@ BEGIN
                                           LEFT JOIN ObjectLink AS ObjectLink_Partner_PersonalTrade
                                                                ON ObjectLink_Partner_PersonalTrade.ObjectId = CASE WHEN Object.DescId = zc_Object_Partner() THEN CASE WHEN MIContainer.MovementDescId IN (zc_Movement_BankAccount(),zc_Movement_Cash()) THEN MIContainer.ObjectId_Analyzer ELSE MIContainer.ObjectExtId_Analyzer END ELSE 0 END
                                                               AND ObjectLink_Partner_PersonalTrade.DescId = zc_ObjectLink_Partner_PersonalTrade()
-                                                              AND tmpContainer.PaidKindId_byBase = zc_Enum_PaidKind_SecondForm()
+                                                              AND (tmpContainer.PaidKindId_byBase = zc_Enum_PaidKind_SecondForm()
+                                                                  OR COALESCE (ObjectLink_Contract_PersonalTrade.ChildObjectId,0) = 0 
+                                                                  )
          
                                           LEFT JOIN ObjectLink AS ObjectLink_Personal_PersonalServiceList
                                                                ON ObjectLink_Personal_PersonalServiceList.ObjectId = COALESCE (ObjectLink_Contract_PersonalTrade.ChildObjectId, ObjectLink_Partner_PersonalTrade.ChildObjectId)
@@ -1324,7 +1326,9 @@ BEGIN
             LEFT JOIN ObjectLink AS ObjectLink_Partner_PersonalTrade
                                  ON ObjectLink_Partner_PersonalTrade.ObjectId = tmpData.PartnerId
                                 AND ObjectLink_Partner_PersonalTrade.DescId = zc_ObjectLink_Partner_PersonalTrade()
-                                AND tmpData.PaidKindId_child = zc_Enum_PaidKind_SecondForm()
+                                AND (tmpData.PaidKindId_child = zc_Enum_PaidKind_SecondForm()
+                                   OR COALESCE (ObjectLink_Contract_PersonalTrade.ChildObjectId,0) = 0
+                                     )
             LEFT JOIN Object_Personal_View ON Object_Personal_View.PersonalId = COALESCE (ObjectLink_Partner_PersonalTrade.ChildObjectId, ObjectLink_Contract_PersonalTrade.ChildObjectId) 
 
             --показываем информативно Филиал по подразделению Сотрудника ТП
