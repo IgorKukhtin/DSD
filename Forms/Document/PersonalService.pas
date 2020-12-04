@@ -211,7 +211,13 @@ type
     spInsertUpdate_byMemberMinus: TdsdStoredProc;
     actInsertUpdate_byMemberMinus: TdsdExecStoredProc;
     macInsertUpdate_byMemberMinus: TMultiAction;
-    bb: TdxBarButton;
+    bbmacInsertUpdate_byMemberMinus: TdxBarButton;
+    edBankOutDate: TcxDateEdit;
+    cxLabel7: TcxLabel;
+    actExportZPDate: TMultiAction;
+    spSelectExportDate: TdsdStoredProc;
+    actExportToFileZpDate: TdsdStoredProcExportToFile;
+    bbExportZPDate: TdxBarButton;
   private
     { Private declarations }
   public

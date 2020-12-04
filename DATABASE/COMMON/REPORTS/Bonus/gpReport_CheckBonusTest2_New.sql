@@ -233,7 +233,9 @@ BEGIN
                                            INNER JOIN ObjectLink AS ObjectLink_ContractCondition_Contract
                                                                 ON ObjectLink_ContractCondition_Contract.ObjectId = Object_ContractCondition.Id
                                                                AND ObjectLink_ContractCondition_Contract.DescId = zc_ObjectLink_ContractCondition_Contract()
-                                           INNER JOIN tmpContract_find AS View_Contract ON View_Contract.ContractId = ObjectLink_ContractCondition_Contract.ChildObjectId
+                                           INNER JOIN tmpContract_find AS View_Contract 
+                                                                       ON View_Contract.ContractId = ObjectLink_ContractCondition_Contract.ChildObjectId
+                                                                      --AND View_Contract.PaidKindId = inPaidKindId
 
                                            INNER JOIN ObjectFloat AS ObjectFloat_Value 
                                                                   ON ObjectFloat_Value.ObjectId = Object_ContractCondition.Id
@@ -314,7 +316,7 @@ BEGIN
                                                                 ON ObjectLink_ContractCondition_Contract.ObjectId = Object_ContractCondition.Id
                                                                AND ObjectLink_ContractCondition_Contract.DescId = zc_ObjectLink_ContractCondition_Contract()
                                            INNER JOIN tmpContract_find AS View_Contract ON View_Contract.ContractId = ObjectLink_ContractCondition_Contract.ChildObjectId
-                                                                                  --  AND (View_Contract.JuridicalId = inJuridicalId OR inJuridicalId = 0)
+                                                                      --AND View_Contract.PaidKindId = inPaidKindId
 
                                            INNER JOIN ObjectFloat AS ObjectFloat_Value 
                                                                   ON ObjectFloat_Value.ObjectId = Object_ContractCondition.Id
@@ -564,6 +566,7 @@ BEGIN
 
       , tmpMovementContALL AS (SELECT tmp.JuridicalId
                                     , tmp.ContractId_child
+                                    , tmp.ContractId_master
                                     , tmp.InfoMoneyId_child
                                     , tmp.PaidKindId_byBase
                                     , tmp.ContractConditionId
@@ -580,6 +583,7 @@ BEGIN
                                     , SUM (CASE WHEN tmp.Ord = 1 THEN tmp.Return_AmountPartner_Weight ELSE 0 END) AS Return_AmountPartner_Weight
                                FROM (SELECT tmpContainer.JuridicalId
                                           , tmpContainer.ContractId_child
+                                          , tmpContainer.ContractId_master
                                           , tmpContainer.InfoMoneyId_child
                                           , tmpContainer.PaidKindId_byBase
                                           , tmpContainer.ContractConditionId
@@ -670,6 +674,7 @@ BEGIN
                                       , tmp.BranchId
                                       , tmp.PartnerId
                                       , tmp.ContractConditionId
+                                      , tmp.ContractId_master
                               )
 
       , tmpMovementCont AS (SELECT tmpMovementContALL.* 
@@ -677,6 +682,7 @@ BEGIN
                              INNER JOIN tmpContractPartner ON tmpContractPartner.ContractConditionId = tmpMovementContALL.ContractConditionId
                                                           AND tmpContractPartner.PaidKindId_byBase = tmpMovementContALL.PaidKindId_byBase
                                                           AND tmpContractPartner.PartnerId = tmpMovementContALL.PartnerId
+                                                          AND tmpContractPartner.ContractId = tmpMovementContALL.ContractId_master
                             UNION 
                             SELECT tmpMovementContALL.*
                             FROM tmpMovementContALL
@@ -685,7 +691,8 @@ BEGIN
 
       , tmpMovement AS (SELECT tmpGroup.JuridicalId
                              , tmpGroup.PartnerId
-                             , tmpGroup.ContractId_child 
+                             , tmpGroup.ContractId_child
+                             , tmpGroup.ContractId_master
                              , tmpGroup.InfoMoneyId_child
                              , tmpGroup.PaidKindId_byBase
                              , tmpGroup.ContractConditionId
@@ -705,6 +712,7 @@ BEGIN
                         FROM 
                             (SELECT tmpGroup.JuridicalId
                                   , tmpGroup.PartnerId
+                                  , tmpGroup.ContractId_master
                                   , tmpGroup.ContractId_child 
                                   , tmpGroup.InfoMoneyId_child
                                   , tmpGroup.PaidKindId_byBase
@@ -730,6 +738,7 @@ BEGIN
                                     , tmpGroup.MovementId
                                     , tmpGroup.MovementDescId
                                     , tmpGroup.BranchId
+                                    , tmpGroup.ContractId_master
                              ) AS tmpGroup
                        )
                        
@@ -817,6 +826,7 @@ BEGIN
                                                         AND tmpMovement.InfoMoneyId_child = tmpContract.InfoMoneyId_child
                                                         AND tmpMovement.PaidKindId_byBase = tmpContract.PaidKindId_byBase
                                                         AND tmpMovement.ContractConditionId = tmpContract.ContractConditionId
+                                                        AND tmpMovement.ContractId_master = tmpContract.ContractId_master
                                   LEFT JOIN tmpContractBonus ON tmpContractBonus.ContractId_master = tmpContract.ContractId_master
       
                              ) AS tmp

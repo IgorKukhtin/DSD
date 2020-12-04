@@ -1859,8 +1859,6 @@ inherited PersonalServiceForm: TPersonalServiceForm
     Width = 1307
     Height = 89
     TabOrder = 3
-    ExplicitLeft = -32
-    ExplicitTop = 8
     ExplicitWidth = 1307
     ExplicitHeight = 89
     inherited edInvNumber: TcxTextEdit
@@ -2007,6 +2005,20 @@ inherited PersonalServiceForm: TPersonalServiceForm
     TabOrder = 7
     Width = 182
   end
+  object edBankOutDate: TcxDateEdit [4]
+    Left = 424
+    Top = 61
+    EditValue = 44166d
+    Properties.SaveTime = False
+    Properties.ShowTime = False
+    TabOrder = 8
+    Width = 86
+  end
+  object cxLabel7: TcxLabel [5]
+    Left = 424
+    Top = 43
+    Caption = #1044#1072#1090#1072' '#1074#1099#1075#1088#1091#1079#1082#1080
+  end
   inherited UserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn
     Left = 299
     Top = 392
@@ -2030,7 +2042,16 @@ inherited PersonalServiceForm: TPersonalServiceForm
       ShortCut = 116
       RefreshOnTabSetChanges = True
     end
-    object actRefresh_Sign: TdsdDataSetRefresh [1]
+    object actExportToFileZpDate: TdsdStoredProcExportToFile [1]
+      Category = 'Export'
+      MoveParams = <>
+      dsdStoredProcName = spSelectExportDate
+      FileExt = '.txt'
+      FilenamePrefix = 'Vostok_'
+      Left = 1208
+      Top = 224
+    end
+    object actRefresh_Sign: TdsdDataSetRefresh [2]
       Category = 'DSDLib'
       MoveParams = <>
       StoredProc = spGet
@@ -2047,7 +2068,25 @@ inherited PersonalServiceForm: TPersonalServiceForm
       ShortCut = 116
       RefreshOnTabSetChanges = True
     end
-    object actRefreshMaster: TdsdDataSetRefresh [2]
+    object actExportZPDate: TMultiAction [3]
+      Category = 'Export'
+      MoveParams = <>
+      ActionList = <
+        item
+          Action = actGet_Export_FileNameZp
+        end
+        item
+          Action = actExportToFileZpDate
+        end>
+      Caption = 
+        #1069#1082#1089#1087#1086#1088#1090' '#1085#1072' '#1076#1072#1090#1091' '#1042#1099#1075#1088#1091#1079#1082#1080' '#1074#1077#1076#1086#1084#1086#1089#1090#1080' '#1085#1072#1095#1080#1089#1083#1077#1085#1080#1103' '#1047#1055' '#1085#1072' '#1082#1072#1088#1090#1086#1095#1082#1091' '#1076#1083#1103 +
+        ' "'#1042#1054#1057#1058#1054#1050'" '#1080#1083#1080' "'#1054#1058#1055'"'
+      Hint = 
+        #1069#1082#1089#1087#1086#1088#1090' '#1085#1072' '#1076#1072#1090#1091' '#1042#1099#1075#1088#1091#1079#1082#1080' '#1074#1077#1076#1086#1084#1086#1089#1090#1080' '#1085#1072#1095#1080#1089#1083#1077#1085#1080#1103' '#1047#1055' '#1085#1072' '#1082#1072#1088#1090#1086#1095#1082#1091' '#1076#1083#1103 +
+        ' "'#1042#1054#1057#1058#1054#1050'" '#1080#1083#1080' "'#1054#1058#1055'"'
+      ImageIndex = 67
+    end
+    object actRefreshMaster: TdsdDataSetRefresh [4]
       Category = 'DSDLib'
       MoveParams = <>
       StoredProc = spSelect
@@ -2101,7 +2140,7 @@ inherited PersonalServiceForm: TPersonalServiceForm
           StoredProc = spSelectChild
         end>
     end
-    object actUpdateIsMain: TdsdExecStoredProc [10]
+    object actUpdateIsMain: TdsdExecStoredProc [12]
       Category = 'DSDLib'
       MoveParams = <>
       PostDataSetBeforeExecute = False
@@ -2120,7 +2159,7 @@ inherited PersonalServiceForm: TPersonalServiceForm
           StoredProc = spInsertUpdateMIMaster
         end>
     end
-    object actPrint_Detail: TdsdPrintAction [12]
+    object actPrint_Detail: TdsdPrintAction [14]
       Category = 'DSDLib'
       MoveParams = <>
       StoredProc = spSelectPrintDetail
@@ -2161,7 +2200,7 @@ inherited PersonalServiceForm: TPersonalServiceForm
       PrinterNameParam.DataType = ftString
       PrinterNameParam.MultiSelectSeparator = ','
     end
-    object actPrint_All: TdsdPrintAction [13]
+    object actPrint_All: TdsdPrintAction [15]
       Category = 'DSDLib'
       MoveParams = <>
       StoredProc = spSelectPrint_All
@@ -2786,8 +2825,8 @@ inherited PersonalServiceForm: TPersonalServiceForm
       dsdStoredProcName = spSelectExport
       FileExt = '.txt'
       FilenamePrefix = 'Vostok_'
-      Left = 1192
-      Top = 216
+      Left = 1208
+      Top = 224
     end
     object actGet_Export_FileNameZp: TdsdExecStoredProc
       Category = 'Export'
@@ -2824,7 +2863,7 @@ inherited PersonalServiceForm: TPersonalServiceForm
       dsdStoredProcName = spSelect_Export
       FileExt = '.xml'
       Left = 1208
-      Top = 176
+      Top = 168
     end
     object actGet_Export_FileName: TdsdExecStoredProc
       Category = 'Export_file'
@@ -3019,7 +3058,7 @@ inherited PersonalServiceForm: TPersonalServiceForm
         end
         item
           Visible = True
-          ItemName = 'bb'
+          ItemName = 'bbmacInsertUpdate_byMemberMinus'
         end
         item
           Visible = True
@@ -3040,6 +3079,14 @@ inherited PersonalServiceForm: TPersonalServiceForm
         item
           Visible = True
           ItemName = 'bbExportZP'
+        end
+        item
+          Visible = True
+          ItemName = 'bbStatic'
+        end
+        item
+          Visible = True
+          ItemName = 'bbExportZPDate'
         end
         item
           Visible = True
@@ -3141,10 +3188,14 @@ inherited PersonalServiceForm: TPersonalServiceForm
       Action = actExportZP
       Category = 0
     end
-    object bb: TdxBarButton
+    object bbmacInsertUpdate_byMemberMinus: TdxBarButton
       Action = macInsertUpdate_byMemberMinus
       Category = 0
       ImageIndex = 43
+    end
+    object bbExportZPDate: TdxBarButton
+      Action = actExportZPDate
+      Category = 0
     end
   end
   inherited DBViewAddOn: TdsdDBViewAddOn
@@ -3361,6 +3412,13 @@ inherited PersonalServiceForm: TPersonalServiceForm
         Component = FormParams
         ComponentItem = 'TotalSummCardRecalc'
         DataType = ftFloat
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'OperDate'
+        Value = 'NULL'
+        Component = edBankOutDate
+        DataType = ftDateTime
         MultiSelectSeparator = ','
       end>
     Left = 216
@@ -3987,7 +4045,7 @@ inherited PersonalServiceForm: TPersonalServiceForm
         DataType = ftString
         MultiSelectSeparator = ','
       end>
-    Left = 416
+    Left = 336
     Top = 13
   end
   object GuidesJuridical: TdsdGuides
@@ -4104,6 +4162,7 @@ inherited PersonalServiceForm: TPersonalServiceForm
         Param.MultiSelectSeparator = ','
         DataSummaryItemIndex = -1
       end>
+    ShowFieldImageList = <>
     PropertiesCellList = <>
     Left = 238
     Top = 473
@@ -4678,8 +4737,8 @@ inherited PersonalServiceForm: TPersonalServiceForm
         MultiSelectSeparator = ','
       end>
     PackSize = 1
-    Left = 469
-    Top = 621
+    Left = 437
+    Top = 613
   end
   object spGet_Export_FileNameZP: TdsdStoredProc
     StoredProcName = 'gpGet_Movement_Export_FileName'
@@ -4752,8 +4811,8 @@ inherited PersonalServiceForm: TPersonalServiceForm
         MultiSelectSeparator = ','
       end>
     PackSize = 1
-    Left = 1176
-    Top = 304
+    Left = 1104
+    Top = 360
   end
   object spInsertUpdate_byMemberMinus: TdsdStoredProc
     StoredProcName = 'gpInsertUpdate_MI_PersonalService_byMemberMinus'
@@ -4771,5 +4830,50 @@ inherited PersonalServiceForm: TPersonalServiceForm
     PackSize = 1
     Left = 464
     Top = 443
+  end
+  object spSelectExportDate: TdsdStoredProc
+    StoredProcName = 'gpSelect_Movement_PersonalService_exportOnDate'
+    DataSet = ExportCDS
+    DataSets = <
+      item
+        DataSet = ExportCDS
+      end>
+    Params = <
+      item
+        Name = 'inMovementId'
+        Value = Null
+        Component = FormParams
+        ComponentItem = 'Id'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inInvNumber'
+        Value = ''
+        Component = edInvNumber
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inAmount'
+        Value = Null
+        Component = FormParams
+        ComponentItem = 'TotalSummCardRecalc'
+        DataType = ftFloat
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inOperDate'
+        Value = 42132d
+        Component = edBankOutDate
+        DataType = ftDateTime
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end>
+    PackSize = 1
+    Left = 493
+    Top = 605
   end
 end
