@@ -35,7 +35,7 @@ BEGIN
 
      -- переопределим значение дл€ вывезено со склада; в форме start нет Їтого параметра, в др.формах есть
      IF COALESCE (inReestrKindId, 0 ) = 0
-        THEN inReestrKindId := zc_Enum_ReestrKind_PartnerOut();
+        THEN inReestrKindId := zc_Enum_ReestrKind_PartnerIn();
      END IF;
      
      -- –езультат
@@ -47,7 +47,7 @@ BEGIN
             , Object_User.ValueData       AS UserName
        FROM Object AS Object_ReestrKind
             LEFT JOIN Object AS Object_User ON Object_User.Id = vbUserId
-       WHERE Object_ReestrKind.Id = zc_Enum_ReestrKind_PartnerOut();
+       WHERE Object_ReestrKind.Id = zc_Enum_ReestrKind_PartnerIn();
 
     RETURN NEXT Cursor1;
 
@@ -68,16 +68,48 @@ BEGIN
                            INNER JOIN MovementLinkObject AS MovementLinkObject_ReestrKind
                                                          ON MovementLinkObject_ReestrKind.MovementId = MovementFloat_MovementItemId.MovementId
                                                         AND MovementLinkObject_ReestrKind.DescId = zc_MovementLinkObject_ReestrKind()
-                                                        AND MovementLinkObject_ReestrKind.ObjectId = zc_Enum_ReestrKind_PartnerOut()  -- ¬џвезено со склада
+                                                        AND MovementLinkObject_ReestrKind.ObjectId = zc_Enum_ReestrKind_PartnerIn()  -- ¬џвезено со склада
       
-                           LEFT JOIN MovementLinkObject AS MovementLinkObject_To
-                                                        ON MovementLinkObject_To.MovementId = MovementFloat_MovementItemId.MovementId
-                                                       AND MovementLinkObject_To.DescId = zc_MovementLinkObject_To()
+                           /*LEFT JOIN MovementLinkObject AS MovementLinkObject_From
+                                                        ON MovementLinkObject_From.MovementId = MovementFloat_MovementItemId.MovementId
+                                                       AND MovementLinkObject_From.DescId = zc_MovementLinkObject_From()*/
                          WHERE Movement.DescId = zc_Movement_ReestrIncome() 
                            AND (((Movement.OperDate BETWEEN inStartDate AND inEndDate) AND (inisShowAll = False)) OR (inisShowAll = True))  
                            AND Movement.StatusId <> zc_Enum_Status_Erased()
                          )
    
+             , tmpMovementFloat_Income AS (SELECT MovementFloat.*
+                                           FROM MovementFloat
+                                           WHERE MovementFloat.MovementId IN (SELECT DISTINCT tmpMI.MovementId_Income FROM tmpMI)
+                                             AND MovementFloat.DescId IN (zc_MovementFloat_TotalCountPartner()
+                                                                        , zc_MovementFloat_TotalSumm())
+                                           )
+
+             , tmpMIDate AS (SELECT MovementItemDate.*
+                             FROM MovementItemDate
+                             WHERE MovementItemDate.MovementItemId IN (SELECT DISTINCT tmpMI.MovementItemId FROM tmpMI)
+                               AND MovementItemDate.DescId IN (zc_MIDate_Insert()
+                                                             , zc_MIDate_EconomIn()
+                                                             , zc_MIDate_EconomOut()
+                                                             , zc_MIDate_Snab()
+                                                             , zc_MIDate_SnabRe()
+                                                             , zc_MIDate_Remake()
+                                                             , zc_MIDate_Buh()
+                                                             , zc_MIDate_Econom())
+                           )
+
+        , tmpMILO AS (SELECT MovementItemLinkObject.*
+                      FROM MovementItemLinkObject
+                      WHERE MovementItemLinkObject.MovementItemId IN (SELECT DISTINCT tmpMI.MovementItemId FROM tmpMI)
+                        AND MovementItemLinkObject.DescId IN (zc_MILinkObject_EconomIn()
+                                                            , zc_MILinkObject_EconomOut()
+                                                            , zc_MILinkObject_Snab()
+                                                            , zc_MILinkObject_SnabRe()
+                                                            , zc_MILinkObject_Remake()
+                                                            , zc_MILinkObject_Buh()
+                                                            , zc_MILinkObject_Econom())
+                      )
+
        SELECT 
              Movement_Income.InvNumber                AS InvNumber_Income
            , Movement_Income.OperDate                 AS OperDate_Income
@@ -99,7 +131,7 @@ BEGIN
            , Object_ReestrKind.ValueData    	    AS ReestrKindName
            , Object_PaidKind.ValueData              AS PaidKindName 
 
-           , MovementFloat_TotalCountKg.ValueData           AS TotalCountKg
+           , MovementFloat_TotalCountPartner.ValueData           AS TotalCountPartner
            , MovementFloat_TotalSumm.ValueData              AS TotalSumm
 
            , Movement_TransportGoods.InvNumber              AS InvNumber_TransportGoods
@@ -115,10 +147,10 @@ BEGIN
            , COALESCE (MIDate_Buh.ValueData, NULL) ::TDateTime            AS Date_Buh
 
            , CASE WHEN MIDate_Insert.DescId IS NOT NULL THEN Object_ObjectMember.ValueData ELSE '' END :: TVarChar AS Member_Insert -- т.к. в "пустышках" - "криво" формируетс€ это свойство
-            , Object_Snab.ValueData          AS Member_Snab
-            , Object_SnabRe.ValueData        AS Member_SnabRe
-            , Object_EconomIn.ValueData      AS Member_EconomIn
-            , Object_EconomOut.ValueData     AS Member_EconomOut
+           , Object_Snab.ValueData          AS Member_Snab
+           , Object_SnabRe.ValueData        AS Member_SnabRe
+           , Object_EconomIn.ValueData      AS Member_EconomIn
+           , Object_EconomOut.ValueData     AS Member_EconomOut
            , Object_Remake.ValueData         AS Member_Remake
            , Object_Econom.ValueData         AS Member_Econom
            , Object_Buh.ValueData            AS Member_Buh
@@ -126,64 +158,64 @@ BEGIN
        FROM tmpMI
             LEFT JOIN Object AS Object_ObjectMember ON Object_ObjectMember.Id = tmpMI.MemberId
 
-            LEFT JOIN MovementItemDate AS MIDate_Insert
-                                       ON MIDate_Insert.MovementItemId = tmpMI.MovementItemId
-                                      AND MIDate_Insert.DescId = zc_MIDate_Insert()
-            LEFT JOIN MovementItemDate AS MIDate_Remake
-                                       ON MIDate_Remake.MovementItemId = tmpMI.MovementItemId
-                                      AND MIDate_Remake.DescId = zc_MIDate_Remake()
-            LEFT JOIN MovementItemDate AS MIDate_Econom
-                                       ON MIDate_Econom.MovementItemId = tmpMI.MovementItemId
-                                      AND MIDate_Econom.DescId = zc_MIDate_Econom()
-            LEFT JOIN MovementItemDate AS MIDate_Buh
-                                       ON MIDate_Buh.MovementItemId = tmpMI.MovementItemId
-                                      AND MIDate_Buh.DescId = zc_MIDate_Buh()
-            LEFT JOIN MovementItemDate AS MIDate_Snab
-                                       ON MIDate_Snab.MovementItemId = tmpMI.MovementItemId
-                                      AND MIDate_Snab.DescId = zc_MIDate_Snab()
-            LEFT JOIN MovementItemDate AS MIDate_SnabRe
-                                       ON MIDate_SnabRe.MovementItemId = tmpMI.MovementItemId
-                                      AND MIDate_SnabRe.DescId = zc_MIDate_SnabRe()
-            LEFT JOIN MovementItemDate AS MIDate_EconomIn
-                                       ON MIDate_EconomIn.MovementItemId = tmpMI.MovementItemId
-                                      AND MIDate_EconomIn.DescId = zc_MIDate_EconomIn()
-            LEFT JOIN MovementItemDate AS MIDate_EconomOut
-                                       ON MIDate_EconomOut.MovementItemId = tmpMI.MovementItemId
-                                      AND MIDate_EconomOut.DescId = zc_MIDate_EconomOut()
+            LEFT JOIN tmpMIDate AS MIDate_Insert
+                                ON MIDate_Insert.MovementItemId = tmpMI.MovementItemId
+                               AND MIDate_Insert.DescId = zc_MIDate_Insert()
+            LEFT JOIN tmpMIDate AS MIDate_Remake
+                                ON MIDate_Remake.MovementItemId = tmpMI.MovementItemId
+                               AND MIDate_Remake.DescId = zc_MIDate_Remake()
+            LEFT JOIN tmpMIDate AS MIDate_Econom
+                                ON MIDate_Econom.MovementItemId = tmpMI.MovementItemId
+                               AND MIDate_Econom.DescId = zc_MIDate_Econom()
+            LEFT JOIN tmpMIDate AS MIDate_Buh
+                                ON MIDate_Buh.MovementItemId = tmpMI.MovementItemId
+                               AND MIDate_Buh.DescId = zc_MIDate_Buh()
+            LEFT JOIN tmpMIDate AS MIDate_Snab
+                                ON MIDate_Snab.MovementItemId = tmpMI.MovementItemId
+                               AND MIDate_Snab.DescId = zc_MIDate_Snab()
+            LEFT JOIN tmpMIDate AS MIDate_SnabRe
+                                ON MIDate_SnabRe.MovementItemId = tmpMI.MovementItemId
+                               AND MIDate_SnabRe.DescId = zc_MIDate_SnabRe()
+            LEFT JOIN tmpMIDate AS MIDate_EconomIn
+                                ON MIDate_EconomIn.MovementItemId = tmpMI.MovementItemId
+                               AND MIDate_EconomIn.DescId = zc_MIDate_EconomIn()
+            LEFT JOIN tmpMIDate AS MIDate_EconomOut
+                                ON MIDate_EconomOut.MovementItemId = tmpMI.MovementItemId
+                               AND MIDate_EconomOut.DescId = zc_MIDate_EconomOut()
 
-            LEFT JOIN MovementItemLinkObject AS MILinkObject_Remake
-                                             ON MILinkObject_Remake.MovementItemId = tmpMI.MovementItemId
-                                            AND MILinkObject_Remake.DescId = zc_MILinkObject_Remake()
+            LEFT JOIN tmpMILO AS MILinkObject_Remake
+                              ON MILinkObject_Remake.MovementItemId = tmpMI.MovementItemId
+                             AND MILinkObject_Remake.DescId = zc_MILinkObject_Remake()
             LEFT JOIN Object AS Object_Remake ON Object_Remake.Id = MILinkObject_Remake.ObjectId
 
-            LEFT JOIN MovementItemLinkObject AS MILinkObject_Econom
-                                             ON MILinkObject_Econom.MovementItemId = tmpMI.MovementItemId
-                                            AND MILinkObject_Econom.DescId = zc_MILinkObject_Econom()
+            LEFT JOIN tmpMILO AS MILinkObject_Econom
+                              ON MILinkObject_Econom.MovementItemId = tmpMI.MovementItemId
+                             AND MILinkObject_Econom.DescId = zc_MILinkObject_Econom()
             LEFT JOIN Object AS Object_Econom ON Object_Econom.Id = MILinkObject_Econom.ObjectId
 
-            LEFT JOIN MovementItemLinkObject AS MILinkObject_Buh
-                                             ON MILinkObject_Buh.MovementItemId = tmpMI.MovementItemId
-                                            AND MILinkObject_Buh.DescId = zc_MILinkObject_Buh()
+            LEFT JOIN tmpMILO AS MILinkObject_Buh
+                              ON MILinkObject_Buh.MovementItemId = tmpMI.MovementItemId
+                             AND MILinkObject_Buh.DescId = zc_MILinkObject_Buh()
             LEFT JOIN Object AS Object_Buh ON Object_Buh.Id = MILinkObject_Buh.ObjectId
 
-            LEFT JOIN MovementItemLinkObject AS MILinkObject_EconomIn
-                                             ON MILinkObject_EconomIn.MovementItemId = tmpMI.MovementItemId
-                                            AND MILinkObject_EconomIn.DescId = zc_MILinkObject_EconomIn()
+            LEFT JOIN tmpMILO AS MILinkObject_EconomIn
+                              ON MILinkObject_EconomIn.MovementItemId = tmpMI.MovementItemId
+                             AND MILinkObject_EconomIn.DescId = zc_MILinkObject_EconomIn()
             LEFT JOIN Object AS Object_EconomIn ON Object_EconomIn.Id = MILinkObject_EconomIn.ObjectId
 
-            LEFT JOIN MovementItemLinkObject AS MILinkObject_EconomOut
-                                             ON MILinkObject_EconomOut.MovementItemId = tmpMI.MovementItemId
-                                            AND MILinkObject_EconomOut.DescId = zc_MILinkObject_EconomOut()
+            LEFT JOIN tmpMILO AS MILinkObject_EconomOut
+                              ON MILinkObject_EconomOut.MovementItemId = tmpMI.MovementItemId
+                             AND MILinkObject_EconomOut.DescId = zc_MILinkObject_EconomOut()
             LEFT JOIN Object AS Object_EconomOut ON Object_EconomOut.Id = MILinkObject_EconomOut.ObjectId     
 
-            LEFT JOIN MovementItemLinkObject AS MILinkObject_Snab
-                                             ON MILinkObject_Snab.MovementItemId = tmpMI.MovementItemId
-                                            AND MILinkObject_Snab.DescId = zc_MILinkObject_Snab()
+            LEFT JOIN tmpMILO AS MILinkObject_Snab
+                              ON MILinkObject_Snab.MovementItemId = tmpMI.MovementItemId
+                             AND MILinkObject_Snab.DescId = zc_MILinkObject_Snab()
             LEFT JOIN Object AS Object_Snab ON Object_Snab.Id = MILinkObject_Snab.ObjectId
 
-            LEFT JOIN MovementItemLinkObject AS MILinkObject_SnabRe
-                                             ON MILinkObject_SnabRe.MovementItemId = tmpMI.MovementItemId
-                                            AND MILinkObject_SnabRe.DescId = zc_MILinkObject_SnabRe()
+            LEFT JOIN tmpMILO AS MILinkObject_SnabRe
+                              ON MILinkObject_SnabRe.MovementItemId = tmpMI.MovementItemId
+                             AND MILinkObject_SnabRe.DescId = zc_MILinkObject_SnabRe()
             LEFT JOIN Object AS Object_SnabRe ON Object_SnabRe.Id = MILinkObject_SnabRe.ObjectId
 
             --
@@ -208,13 +240,13 @@ BEGIN
                                           AND MovementLinkMovement_TransportGoods.DescId = zc_MovementLinkMovement_TransportGoods()
             LEFT JOIN Movement AS Movement_TransportGoods ON Movement_TransportGoods.Id = MovementLinkMovement_TransportGoods.MovementChildId
 
-            LEFT JOIN MovementFloat AS MovementFloat_TotalCountKg
-                                    ON MovementFloat_TotalCountKg.MovementId = Movement_Income.Id
-                                   AND MovementFloat_TotalCountKg.DescId = zc_MovementFloat_TotalCountKg()
+            LEFT JOIN tmpMovementFloat_Income AS MovementFloat_TotalCountPartner
+                                              ON MovementFloat_TotalCountPartner.MovementId = Movement_Income.Id
+                                             AND MovementFloat_TotalCountPartner.DescId = zc_MovementFloat_TotalCountPartner()
 
-            LEFT JOIN MovementFloat AS MovementFloat_TotalSumm
-                                    ON MovementFloat_TotalSumm.MovementId = Movement_Income.Id
-                                   AND MovementFloat_TotalSumm.DescId = zc_MovementFloat_TotalSumm()
+            LEFT JOIN tmpMovementFloat_Income AS MovementFloat_TotalSumm
+                                              ON MovementFloat_TotalSumm.MovementId = Movement_Income.Id
+                                             AND MovementFloat_TotalSumm.DescId = zc_MovementFloat_TotalSumm()
 
             LEFT JOIN MovementLinkObject AS MovementLinkObject_PaidKind
                                          ON MovementLinkObject_PaidKind.MovementId = Movement_Income.Id

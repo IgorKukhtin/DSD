@@ -76,6 +76,12 @@ BEGIN
                          UNION SELECT 0 AS AccessKeyId WHERE EXISTS (SELECT tmpAccessKey_IsDocumentAll.Id FROM tmpAccessKey_IsDocumentAll)
                               )
 
+        , tmpMovement AS (SELECT Movement.*
+                          FROM tmpStatus
+                               JOIN Movement ON Movement.OperDate BETWEEN inStartDate AND inEndDate  AND Movement.DescId = zc_Movement_ReestrIncome() AND Movement.StatusId = tmpStatus.StatusId
+                               JOIN tmpRoleAccessKey ON tmpRoleAccessKey.AccessKeyId = Movement.AccessKeyId
+                          )
+
        -- Результат
        SELECT
              Movement.Id
@@ -145,13 +151,9 @@ BEGIN
            , Object_PersonalTrade.ValueData      AS PersonalTradeName
            , Object_UnitPersonal.ValueData       AS UnitName_Personal
            , Object_UnitPersonalTrade.ValueData  AS UnitName_PersonalTrade
-       FROM (SELECT Movement.Id
-             FROM tmpStatus
-                  JOIN Movement ON Movement.OperDate BETWEEN inStartDate AND inEndDate  AND Movement.DescId = zc_Movement_ReestrIncome() AND Movement.StatusId = tmpStatus.StatusId
-                  JOIN tmpRoleAccessKey ON tmpRoleAccessKey.AccessKeyId = Movement.AccessKeyId
-             ) AS tmpMovement
+       FROM tmpMovement AS Movement
 
-            LEFT JOIN Movement ON Movement.Id = tmpMovement.Id
+            --LEFT JOIN Movement ON Movement.Id = tmpMovement.Id
             LEFT JOIN Object AS Object_Status ON Object_Status.Id = Movement.StatusId
 
             LEFT JOIN MovementDate AS MovementDate_Update
@@ -303,10 +305,6 @@ BEGIN
             LEFT JOIN MovementString AS MovementString_InvNumberPartner
                                      ON MovementString_InvNumberPartner.MovementId = Movement_Income.Id
                                     AND MovementString_InvNumberPartner.DescId = zc_MovementString_InvNumberPartner()
-
-            /*LEFT JOIN MovementString AS MovementString_InvNumberOrder
-                                     ON MovementString_InvNumberOrder.MovementId = Movement_Income.Id
-                                    AND MovementString_InvNumberOrder.DescId = zc_MovementString_InvNumberOrder()*/
 
             LEFT JOIN MovementLinkMovement AS MovementLinkMovement_Order
                                            ON MovementLinkMovement_Order.MovementId = Movement_Income.Id

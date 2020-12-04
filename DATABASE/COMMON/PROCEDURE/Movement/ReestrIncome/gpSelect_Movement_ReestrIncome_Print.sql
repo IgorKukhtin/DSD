@@ -122,29 +122,27 @@ BEGIN
        tmpMI_Main AS (SELECT MovementItem.Id                AS MovementItemId
                            , MovementItem.ObjectId          AS MemberId
                            , MovementFloat_MovementItemId.MovementId AS MovementId_Income
-                           , MovementLinkObject_To.ObjectId AS ToId
+                           , MovementLinkObject_From.ObjectId AS FromId
                            , 1 AS GroupNum
                       FROM MovementItem
                            LEFT JOIN MovementFloat AS MovementFloat_MovementItemId
                                                    ON MovementFloat_MovementItemId.ValueData ::integer = MovementItem.Id
                                                   AND MovementFloat_MovementItemId.DescId = zc_MovementFloat_MovementItemId()
-                           LEFT JOIN MovementLinkObject AS MovementLinkObject_To
-                                                        ON MovementLinkObject_To.MovementId = MovementFloat_MovementItemId.MovementId
-                                                       AND MovementLinkObject_To.DescId = zc_MovementLinkObject_To()
+                           LEFT JOIN MovementLinkObject AS MovementLinkObject_From
+                                                        ON MovementLinkObject_From.MovementId = MovementFloat_MovementItemId.MovementId
+                                                       AND MovementLinkObject_From.DescId = zc_MovementLinkObject_From()
                       WHERE MovementItem.MovementId = inMovementId
                         AND MovementItem.DescId     = zc_MI_Master()
                         AND MovementItem.isErased   = FALSE
                       )
 
          -- клиенты реестра
-         , tmpTo AS (SELECT tmpTo.ToId
+         , tmpFrom AS (SELECT tmpFrom.FromId
+                       FROM  (SELECT DISTINCT tmpMI_Main.FromId
+                              FROM tmpMI_Main
+                              ) AS tmpFrom
+                       )
 
-                     FROM  (SELECT DISTINCT tmpMI_Main.ToId
-                            FROM tmpMI_Main
-                            ) AS tmpTo
-
-
-                     )
          -- выбираем строки из других реестров, по клиентам текущего реестра
          , tmpMIList AS (SELECT MovementItem.Id         AS MovementItemId
                            , MovementItem.ObjectId      AS MemberId
@@ -163,11 +161,11 @@ BEGIN
                                                         AND MovementLinkObject_ReestrKind.DescId = zc_MovementLinkObject_ReestrKind()
                                                         AND MovementLinkObject_ReestrKind.ObjectId IN (zc_Enum_ReestrKind_PartnerOut(), zc_Enum_ReestrKind_Remake())
 
-                           LEFT JOIN MovementLinkObject AS MovementLinkObject_To
-                                                        ON MovementLinkObject_To.MovementId = MovementFloat_MovementItemId.MovementId
-                                                       AND MovementLinkObject_To.DescId = zc_MovementLinkObject_To()
+                           LEFT JOIN MovementLinkObject AS MovementLinkObject_From
+                                                        ON MovementLinkObject_From.MovementId = MovementFloat_MovementItemId.MovementId
+                                                       AND MovementLinkObject_From.DescId = zc_MovementLinkObject_From()
 
-                           INNER JOIN tmpTo ON tmpTo.ToId  = MovementLinkObject_To.ObjectId
+                           INNER JOIN tmpFrom ON tmpFrom.FromId  = MovementLinkObject_From.ObjectId
 
                          WHERE Movement.DescId = zc_Movement_ReestrIncome() AND Movement.StatusId <> zc_Enum_Status_Erased()
                            AND Movement.Id <> inMovementId
@@ -195,7 +193,7 @@ BEGIN
         , tmpMovementFloat_Income AS (SELECT MovementFloat.*
                                     FROM MovementFloat
                                     WHERE MovementFloat.MovementId IN (SELECT DISTINCT tmpMI.MovementId_Income FROM tmpMI)
-                                      AND MovementFloat.DescId IN (zc_MovementFloat_TotalCountKg()
+                                      AND MovementFloat.DescId IN (zc_MovementFloat_TotalCountPartner()
                                                                  , zc_MovementFloat_TotalSumm())
                                     )
 
@@ -203,7 +201,7 @@ BEGIN
                           FROM MovementLinkObject
                           WHERE MovementLinkObject.MovementId IN (SELECT DISTINCT tmpMI.MovementId_Income FROM tmpMI)
                             AND MovementLinkObject.DescId IN (zc_MovementLinkObject_ReestrKind()
-                                                            , zc_MovementLinkObject_To()
+                                                            , zc_MovementLinkObject_From()
                                                             , zc_MovementLinkObject_PaidKind() )
                               )
 
@@ -254,27 +252,25 @@ BEGIN
            , Object_ReestrKind.ValueData    	    AS ReestrKindName
            , Object_PaidKind.ValueData              AS PaidKindName
 
-           , MovementFloat_TotalCountKg.ValueData   AS TotalCountKg
-           , MovementFloat_TotalSumm.ValueData      AS TotalSumm
+           , MovementFloat_TotalCountPartner.ValueData AS TotalCountPartner
+           , MovementFloat_TotalSumm.ValueData         AS TotalSumm
 
            , Movement_TransportGoods.InvNumber      AS InvNumber_TransportGoods
            , COALESCE (Movement_TransportGoods.OperDate, NULL) ::TDateTime  AS OperDate_TransportGoods
            , COALESCE (MIDate_Insert.ValueData, NULL) ::TDateTime         AS Date_Insert
-           , COALESCE (MIDate_Log.ValueData, NULL) ::TDateTime            AS Date_Log
-           , COALESCE (MIDate_PartnerIn.ValueData, NULL) ::TDateTime      AS Date_PartnerIn
-           , COALESCE (MIDate_RemakeIn.ValueData, NULL) ::TDateTime       AS Date_RemakeIn
-           , COALESCE (MIDate_RemakeBuh.ValueData, NULL) ::TDateTime      AS Date_RemakeBuh
+           , COALESCE (MIDate_EconomIn.ValueData, NULL) ::TDateTime       AS Date_EconomIn
+           , COALESCE (MIDate_EconomOut.ValueData, NULL) ::TDateTime      AS Date_EconomOut
+           , COALESCE (MIDate_Snab.ValueData, NULL) ::TDateTime           AS Date_Snab
+           , COALESCE (MIDate_SnabRe.ValueData, NULL) ::TDateTime         AS Date_SnabRe
            , COALESCE (MIDate_Remake.ValueData, NULL) ::TDateTime         AS Date_Remake
            , COALESCE (MIDate_Econom.ValueData, NULL) ::TDateTime         AS Date_Econom
            , COALESCE (MIDate_Buh.ValueData, NULL) ::TDateTime            AS Date_Buh
 
            , CASE WHEN MIDate_Insert.DescId IS NOT NULL THEN Object_ObjectMember.ValueData ELSE '' END :: TVarChar AS Member_Insert -- т.к. в "пустышках" - "криво" формируется это свойство
-           , Object_Log.ValueData            AS Member_Log
-           , Object_PartnerInTo.ValueData    AS Member_PartnerInTo
-           , Object_PartnerInFrom.ValueData  AS Member_PartnerInFrom
-           , Object_RemakeInTo.ValueData     AS Member_RemakeInTo
-           , Object_RemakeInFrom.ValueData   AS Member_RemakeInFrom
-           , Object_RemakeBuh.ValueData      AS Member_RemakeBuh
+           , Object_EconomIn.ValueData       AS Member_EconomIn
+           , Object_EconomOut.ValueData      AS Member_EconomOut
+           , Object_Snab.ValueData           AS Member_Snab
+           , Object_SnabRe.ValueData         AS Member_SnabRe
            , Object_Remake.ValueData         AS Member_Remake
            , Object_Econom.ValueData         AS Member_Econom
            , Object_Buh.ValueData            AS Member_Buh
@@ -352,8 +348,8 @@ BEGIN
                                                      AND MovementDate_OperDatePartner.DescId = zc_MovementDate_OperDatePartner()
 
             LEFT JOIN tmpMLO_Income AS MovementLinkObject_ReestrKind
-                                  ON MovementLinkObject_ReestrKind.MovementId = Movement_Income.Id
-                                 AND MovementLinkObject_ReestrKind.DescId = zc_MovementLinkObject_ReestrKind()
+                                    ON MovementLinkObject_ReestrKind.MovementId = Movement_Income.Id
+                                   AND MovementLinkObject_ReestrKind.DescId = zc_MovementLinkObject_ReestrKind()
                                  --AND ((inIsReestrKind = TRUE AND MovementLinkObject_ReestrKind.ObjectId = inReestrKindId) OR inIsReestrKind = FALSE)
             LEFT JOIN Object AS Object_ReestrKind ON Object_ReestrKind.Id = MovementLinkObject_ReestrKind.ObjectId
 
@@ -375,9 +371,9 @@ BEGIN
                                      ON MovementString_Comment.MovementId = MovementLinkMovement_Order.MovementChildId   --- заявка
                                     AND MovementString_Comment.DescId = zc_MovementString_Comment()
 
-            LEFT JOIN tmpMovementFloat_Income AS MovementFloat_TotalCountKg
-                                              ON MovementFloat_TotalCountKg.MovementId = Movement_Income.Id
-                                             AND MovementFloat_TotalCountKg.DescId = zc_MovementFloat_TotalCountKg()
+            LEFT JOIN tmpMovementFloat_Income AS MovementFloat_TotalCountPartner
+                                              ON MovementFloat_TotalCountPartner.MovementId = Movement_Income.Id
+                                             AND MovementFloat_TotalCountPartner.DescId = zc_MovementFloat_TotalCountPartner()
 
             LEFT JOIN tmpMovementFloat_Income AS MovementFloat_TotalSumm
                                               ON MovementFloat_TotalSumm.MovementId = Movement_Income.Id
