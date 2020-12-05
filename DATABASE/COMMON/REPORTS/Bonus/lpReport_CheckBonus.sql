@@ -156,12 +156,15 @@ BEGIN
                                   FROM tmpContractPartner_only
                                        INNER JOIN tmpCCPartner ON tmpCCPartner.ContractConditionId = tmpContractPartner_only.ContractConditionId
                                                               AND tmpCCPartner.PartnerId = tmpContractPartner_only.PartnerId
-                                  WHERE COALESCE ((SELECT COUNT(*) FROM tmpCCPartner),0) <> 0
+                                --WHERE COALESCE ((SELECT COUNT(*) FROM tmpCCPartner),0) <> 0
                                 UNION
                                  -- если нет контрагентов в усл. договора берем всех выше найденных
                                  SELECT tmpContractPartner_only.*
                                  FROM tmpContractPartner_only
-                                 WHERE COALESCE ((SELECT COUNT(*) FROM tmpCCPartner),0) = 0
+                                       LEFT JOIN tmpCCPartner ON tmpCCPartner.ContractConditionId = tmpContractPartner_only.ContractConditionId
+                                                             AND tmpCCPartner.PartnerId = tmpContractPartner_only.PartnerId
+                               --WHERE COALESCE ((SELECT COUNT(*) FROM tmpCCPartner),0) = 0
+                                 WHERE tmpCCPartner.PartnerId IS NULL
                                 UNION
                                  -- если вдруг в условии договора есть контрагенты, которых нет в договоре
                                  SELECT tmpContract_full.ContractId AS ContractId
@@ -182,8 +185,8 @@ BEGIN
                                                             ON ObjectLink_ContractCondition_Contract.ObjectId = tmpCCPartner.ContractConditionId
                                                            AND ObjectLink_ContractCondition_Contract.DescId = zc_ObjectLink_ContractCondition_Contract()
                                        INNER JOIN tmpContract_full ON tmpContract_full.ContractId = ObjectLink_ContractCondition_Contract.ChildObjectId
-                                 WHERE COALESCE ((SELECT COUNT(*) FROM tmpCCPartner),0) <> 0
-                                   AND tmpContractPartner_only.PartnerId IS NULL
+                                 WHERE tmpContractPartner_only.PartnerId IS NULL
+                                 --AND COALESCE ((SELECT COUNT(*) FROM tmpCCPartner),0) <> 0
                                  )
 
          -- формируется список договоров, у которых есть условие по "Бонусам" ежемесячный платеж
@@ -662,7 +665,7 @@ BEGIN
                                      WHERE MIContainer.DescId = zc_MIContainer_Summ()
                                        AND (MIContainer.OperDate >= inStartDate AND MIContainer.OperDate < vbEndDate)
                                        AND MIContainer.MovementDescId IN (zc_Movement_Sale(), zc_Movement_ReturnIn(), zc_Movement_BankAccount(), zc_Movement_Cash(), zc_Movement_SendDebt())  -- взаимозачет убираем, чтоб он не влиял на бонусы
-                                       AND (COALESCE (ObjectLink_PersonalServiceList_Branch.ChildObjectId,0) = inBranchId OR inBranchId = 0)
+                                     --AND (COALESCE (ObjectLink_PersonalServiceList_Branch.ChildObjectId,0) = inBranchId OR inBranchId = 0)
                                      ) AS tmp
                                GROUP BY tmp.JuridicalId
                                       , tmp.ContractId_child
@@ -727,7 +730,7 @@ BEGIN
                                   , SUM (tmpGroup.Sale_AmountPartner_Weight)   AS Sum_Sale_weight
                                   , SUM (tmpGroup.Return_AmountPartner_Weight) AS Sum_ReturnIn_weight
                              FROM tmpMovementCont AS tmpGroup
-                             WHERE tmpGroup.BranchId = inBranchId OR inBranchId = 0
+                           --WHERE tmpGroup.BranchId = inBranchId OR inBranchId = 0
                              GROUP BY tmpGroup.JuridicalId
                                     , tmpGroup.PartnerId
                                     , tmpGroup.ContractId_child
@@ -935,7 +938,7 @@ BEGIN
                          AND MILinkObject_InfoMoney.ObjectId IN (zc_Enum_InfoMoney_21501() -- Маркетинг + Бонусы за продукцию
                                                                , zc_Enum_InfoMoney_21502()) -- Маркетинг + Бонусы за мясное сырье
                          AND (Object_Juridical.Id = inJuridicalId OR inJuridicalId = 0)
-                         AND (COALESCE (MILinkObject_Branch.ObjectId,0) = inBranchId OR inBranchId = 0)
+                       --AND (COALESCE (MILinkObject_Branch.ObjectId,0) = inBranchId OR inBranchId = 0)
                          -- AND MILinkObject_ContractConditionKind.ObjectId IN (zc_Enum_ContractConditionKind_BonusPercentAccount(), zc_Enum_ContractConditionKind_BonusPercentSaleReturn(), zc_Enum_ContractConditionKind_BonusPercentSale())
                          
 
@@ -997,7 +1000,7 @@ BEGIN
                             LEFT JOIN ObjectLink AS ObjectLink_PersonalServiceList_Branch
                                                  ON ObjectLink_PersonalServiceList_Branch.ObjectId = ObjectLink_Personal_PersonalServiceList.ChildObjectId
                                                 AND ObjectLink_PersonalServiceList_Branch.DescId = zc_ObjectLink_PersonalServiceList_Branch()
-                       WHERE (COALESCE (ObjectLink_PersonalServiceList_Branch.ChildObjectId,0) = inBranchId OR inBranchId = 0)
+                     --WHERE (COALESCE (ObjectLink_PersonalServiceList_Branch.ChildObjectId,0) = inBranchId OR inBranchId = 0)
                       )
 
       , tmpData AS (SELECT tmpAll.ContractId_master

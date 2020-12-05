@@ -157,12 +157,15 @@ BEGIN
                                   FROM tmpContractPartner_only
                                        INNER JOIN tmpCCPartner ON tmpCCPartner.ContractConditionId = tmpContractPartner_only.ContractConditionId
                                                               AND tmpCCPartner.PartnerId = tmpContractPartner_only.PartnerId
-                                  WHERE COALESCE ((SELECT COUNT(*) FROM tmpCCPartner),0) <> 0
+                                --WHERE COALESCE ((SELECT COUNT(*) FROM tmpCCPartner),0) <> 0
                                 UNION
                                  -- если нет контрагентов в усл. договора берем всех выше найденных
                                  SELECT tmpContractPartner_only.*
                                  FROM tmpContractPartner_only
-                                 WHERE COALESCE ((SELECT COUNT(*) FROM tmpCCPartner),0) = 0
+                                       LEFT JOIN tmpCCPartner ON tmpCCPartner.ContractConditionId = tmpContractPartner_only.ContractConditionId
+                                                             AND tmpCCPartner.PartnerId = tmpContractPartner_only.PartnerId
+                               --WHERE COALESCE ((SELECT COUNT(*) FROM tmpCCPartner),0) = 0
+                                 WHERE tmpCCPartner.PartnerId IS NULL
                                 UNION
                                  -- если вдруг в условии договора есть контрагенты, которых нет в договоре
                                  SELECT tmpContract_full.ContractId AS ContractId
@@ -183,8 +186,8 @@ BEGIN
                                                             ON ObjectLink_ContractCondition_Contract.ObjectId = tmpCCPartner.ContractConditionId
                                                            AND ObjectLink_ContractCondition_Contract.DescId = zc_ObjectLink_ContractCondition_Contract()
                                        INNER JOIN tmpContract_full ON tmpContract_full.ContractId = ObjectLink_ContractCondition_Contract.ChildObjectId
-                                 WHERE COALESCE ((SELECT COUNT(*) FROM tmpCCPartner),0) <> 0
-                                   AND tmpContractPartner_only.PartnerId IS NULL
+                                 WHERE tmpContractPartner_only.PartnerId IS NULL
+                                 --AND COALESCE ((SELECT COUNT(*) FROM tmpCCPartner),0) <> 0
                                  )
 
          -- формируется список договоров, у которых есть условие по "Бонусам" ежемесячный платеж
