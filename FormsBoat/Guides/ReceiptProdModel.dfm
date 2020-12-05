@@ -1565,6 +1565,9 @@ object ReceiptProdModelForm: TReceiptProdModelForm
       StoredProcList = <
         item
           StoredProc = spInsertUpdate_ProdColorPattern
+        end
+        item
+          StoredProc = spSelect_ProdColorPattern
         end>
       Caption = 'actUpdateDataSetProdColorPattern'
       DataSource = ProdColorPatternDS
@@ -1577,6 +1580,9 @@ object ReceiptProdModelForm: TReceiptProdModelForm
       StoredProcList = <
         item
           StoredProc = spInsertUpdate_Goods
+        end
+        item
+          StoredProc = spSelect_Goods
         end>
       Caption = 'actUpdateDataSetGoods'
       DataSource = GoodsDS

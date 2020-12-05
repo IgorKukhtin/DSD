@@ -44,6 +44,7 @@ BEGIN
                                     , AmountRemainsTOTAL TFloat, Remains_CEH TFloat, Remains_CEH_Next TFloat, Remains_CEH_err TFloat, Remains TFloat, Remains_pack TFloat, Remains_err TFloat
                                     , AmountPartnerPrior TFloat, AmountPartnerPriorPromo TFloat, AmountPartner TFloat, AmountPartnerNext TFloat, AmountPartnerPromo TFloat, AmountPartnerNextPromo TFloat
                                     , AmountForecast TFloat, AmountForecastPromo TFloat, AmountForecastOrder TFloat, AmountForecastOrderPromo TFloat
+                                    , AmountPrIn TFloat, AmountPartnerOld TFloat, AmountPartnerPromoOld TFloat
                                     , CountForecast TFloat, CountForecastOrder TFloat
                                     , Plan1 TFloat, Plan2 TFloat, Plan3 TFloat, Plan4 TFloat, Plan5 TFloat, Plan6 TFloat, Plan7 TFloat
                                     , Promo1 TFloat, Promo2 TFloat, Promo3 TFloat, Promo4 TFloat, Promo5 TFloat, Promo6 TFloat, Promo7 TFloat
@@ -174,6 +175,13 @@ BEGIN
                             , COALESCE (MIFloat_AmountForecastOrder.ValueData, 0)        * CASE WHEN ObjectLink_Goods_Measure.ChildObjectId = zc_Measure_Sh() THEN COALESCE (ObjectFloat_Weight.ValueData, 0) ELSE 1 END AS AmountForecastOrder
                               -- для прогноза - заказы покупателей ТОЛЬКО Акции за "много" недель
                             , COALESCE (MIFloat_AmountForecastOrderPromo.ValueData, 0)   * CASE WHEN ObjectLink_Goods_Measure.ChildObjectId = zc_Measure_Sh() THEN COALESCE (ObjectFloat_Weight.ValueData, 0) ELSE 1 END AS AmountForecastOrderPromo
+                            
+                              -- ***Приход пр-во (ФАКТ)
+                            , COALESCE (MIFloat_AmountPrIn.ValueData, 0)            * CASE WHEN ObjectLink_Goods_Measure.ChildObjectId = zc_Measure_Sh() THEN COALESCE (ObjectFloat_Weight.ValueData, 0) ELSE 1 END AS AmountPrIn
+                              -- ***Факт заказ покупателя, сегодня
+                            , COALESCE (MIFloat_AmountPartnerOld.ValueData, 0)      * CASE WHEN ObjectLink_Goods_Measure.ChildObjectId = zc_Measure_Sh() THEN COALESCE (ObjectFloat_Weight.ValueData, 0) ELSE 1 END AS AmountPartnerOld
+                              -- ***Факт заказ покупателя, сегодня
+                            , COALESCE (MIFloat_AmountPartnerPromoOld.ValueData, 0) * CASE WHEN ObjectLink_Goods_Measure.ChildObjectId = zc_Measure_Sh() THEN COALESCE (ObjectFloat_Weight.ValueData, 0) ELSE 1 END AS AmountPartnerPromoOld
 
                               -- "средняя" за 1 день - продажа покупателям БЕЗ акций
                             , CASE WHEN vbDayCount <> 0 THEN COALESCE (MIFloat_AmountForecast.ValueData, 0)      * CASE WHEN ObjectLink_Goods_Measure.ChildObjectId = zc_Measure_Sh() THEN COALESCE (ObjectFloat_Weight.ValueData, 0) ELSE 1 END / vbDayCount ELSE 0 END AS CountForecast
@@ -337,6 +345,16 @@ BEGIN
                             LEFT JOIN MovementItemFloat AS MIFloat_AmountForecastOrderPromo
                                                         ON MIFloat_AmountForecastOrderPromo.MovementItemId = MovementItem.Id
                                                        AND MIFloat_AmountForecastOrderPromo.DescId         = zc_MIFloat_AmountForecastOrderPromo()
+
+                            LEFT JOIN MovementItemFloat AS MIFloat_AmountPrIn
+                                                        ON MIFloat_AmountPrIn.MovementItemId = MovementItem.Id
+                                                       AND MIFloat_AmountPrIn.DescId         = zc_MIFloat_AmountPrIn()
+                            LEFT JOIN MovementItemFloat AS MIFloat_AmountPartnerOld
+                                                        ON MIFloat_AmountPartnerOld.MovementItemId = MovementItem.Id
+                                                       AND MIFloat_AmountPartnerOld.DescId         = zc_MIFloat_AmountPartnerOld()
+                            LEFT JOIN MovementItemFloat AS MIFloat_AmountPartnerPromoOld
+                                                        ON MIFloat_AmountPartnerPromoOld.MovementItemId = MovementItem.Id
+                                                       AND MIFloat_AmountPartnerPromoOld.DescId         = zc_MIFloat_AmountPartnerPromoOld()
                             --
                             LEFT JOIN MovementItemLinkObject AS MILinkObject_GoodsBasis
                                                              ON MILinkObject_GoodsBasis.MovementItemId = MovementItem.Id
@@ -463,6 +481,7 @@ BEGIN
                               , AmountRemainsTOTAL, Remains_CEH, Remains_CEH_Next, Remains_CEH_err, Remains, Remains_pack, Remains_err
                               , AmountPartnerPrior, AmountPartnerPriorPromo, AmountPartner, AmountPartnerNext, AmountPartnerPromo, AmountPartnerNextPromo
                               , AmountForecast, AmountForecastPromo, AmountForecastOrder, AmountForecastOrderPromo
+                              , AmountPrIn, AmountPartnerOld, AmountPartnerPromoOld
                               , CountForecast, CountForecastOrder
                               , Plan1, Plan2, Plan3, Plan4, Plan5, Plan6, Plan7
                               , Promo1, Promo2, Promo3, Promo4, Promo5, Promo6, Promo7
@@ -484,6 +503,7 @@ BEGIN
              , tmpMI.AmountRemainsTOTAL, tmpMI.Remains_CEH, tmpMI.Remains_CEH_Next, tmpMI.Remains_CEH_err, tmpMI.Remains, tmpMI.Remains_pack, tmpMI.Remains_err
              , tmpMI.AmountPartnerPrior, tmpMI.AmountPartnerPriorPromo, tmpMI.AmountPartner, tmpMI.AmountPartnerNext, tmpMI.AmountPartnerPromo, tmpMI.AmountPartnerNextPromo
              , tmpMI.AmountForecast, tmpMI.AmountForecastPromo, tmpMI.AmountForecastOrder, tmpMI.AmountForecastOrderPromo
+             , tmpMI.AmountPrIn, tmpMI.AmountPartnerOld, tmpMI.AmountPartnerPromoOld
              , tmpMI.CountForecast, tmpMI.CountForecastOrder
              , tmpMI.Plan1, tmpMI.Plan2, tmpMI.Plan3, tmpMI.Plan4, tmpMI.Plan5, tmpMI.Plan6, tmpMI.Plan7
              , tmpMI.Promo1, tmpMI.Promo2, tmpMI.Promo3, tmpMI.Promo4, tmpMI.Promo5, tmpMI.Promo6, tmpMI.Promo7
@@ -513,6 +533,7 @@ BEGIN
              , 0 AS AmountRemainsTOTAL, 0 AS Remains_CEH, 0 AS Remains_CEH_Next, 0 AS Remains_CEH_err, 0 AS Remains, 0 AS Remains_pack, 0 AS Remains_err
              , 0 AS AmountPartnerPrior, 0 AS AmountPartnerPriorPromo, 0 AS AmountPartner, 0 AS AmountPartnerNext, 0 AS AmountPartnerPromo, 0 AS AmountPartnerNextPromo
              , 0 AS AmountForecast, 0 AS AmountForecastPromo, 0 AS AmountForecastOrder, 0 AS AmountForecastOrderPromo
+             , 0 AS AmountPrIn, 0 AS AmountPartnerOld, 0 AS AmountPartnerPromoOld
              , 0 AS CountForecast, 0 AS CountForecastOrder
              , 0 AS Plan1, 0 AS Plan2, 0 AS Plan3, 0 AS Plan4, 0 AS Plan5, 0 AS Plan6, 0 AS Plan7
              , 0 AS Promo1, 0 AS Promo2, 0 AS Promo3, 0 AS Promo4, 0 AS Promo5, 0 AS Promo6, 0 AS Promo7
@@ -548,6 +569,7 @@ BEGIN
              , 0 AS AmountRemainsTOTAL, 0 AS Remains_CEH, 0 AS Remains_CEH_Next, 0 AS Remains_CEH_err, 0 AS Remains, 0 AS Remains_pack, 0 AS Remains_err
              , 0 AS AmountPartnerPrior, 0 AS AmountPartnerPriorPromo, 0 AS AmountPartner, 0 AS AmountPartnerNext, 0 AS AmountPartnerPromo, 0 AS AmountPartnerNextPromo
              , 0 AS AmountForecast, 0 AS AmountForecastPromo, 0 AS AmountForecastOrder, 0 AS AmountForecastOrderPromo
+             , 0 AS AmountPrIn, 0 AS AmountPartnerOld, 0 AS AmountPartnerPromoOld
              , 0 AS CountForecast, 0 AS CountForecastOrder
              , 0 AS Plan1, 0 AS Plan2, 0 AS Plan3, 0 AS Plan4, 0 AS Plan5, 0 AS Plan6, 0 AS Plan7
              , 0 AS Promo1, 0 AS Promo2, 0 AS Promo3, 0 AS Promo4, 0 AS Promo5, 0 AS Promo6, 0 AS Promo7
@@ -637,6 +659,10 @@ BEGIN
                                      , AmountForecastOrder       TFloat
                                      , AmountForecastOrderPromo  TFloat
 
+                                     , AmountPrIn                TFloat
+                                     , AmountPartnerOld          TFloat
+                                     , AmountPartnerPromoOld     TFloat
+
                                      , CountForecast             TFloat
                                      , CountForecastOrder        TFloat
 
@@ -712,6 +738,11 @@ BEGIN
 
                                 , AmountForecastOrder
                                 , AmountForecastOrderPromo
+                                
+                                , AmountPrIn
+                                , AmountPartnerOld
+                                , AmountPartnerPromoOld
+                                , AmountPartnerOldTotal
 
                                 , CountForecast
                                 , CountForecastOrder
@@ -817,6 +848,10 @@ BEGIN
                            , SUM (_tmpMI_All.AmountForecastOrder)      AS AmountForecastOrder
                            , SUM (_tmpMI_All.AmountForecastOrderPromo) AS AmountForecastOrderPromo
 
+                           , SUM (_tmpMI_All.AmountPrIn)               AS AmountPrIn
+                           , SUM (_tmpMI_All.AmountPartnerOld)         AS AmountPartnerOld
+                           , SUM (_tmpMI_All.AmountPartnerPromoOld)    AS AmountPartnerPromoOld
+
                            , SUM (_tmpMI_All.CountForecast)      AS CountForecast
                            , SUM (_tmpMI_All.CountForecastOrder) AS CountForecastOrder
 
@@ -859,6 +894,7 @@ BEGIN
                            , tmpMI_all.AmountRemainsTOTAL, tmpMI_all.Remains_CEH, tmpMI_all.Remains_CEH_Next, tmpMI_all.Remains, tmpMI_all.Remains_pack
                            , tmpMI_all.AmountPartnerPrior, tmpMI_all.AmountPartnerPriorPromo, tmpMI_all.AmountPartner, tmpMI_all.AmountPartnerNext, tmpMI_all.AmountPartnerPromo, tmpMI_all.AmountPartnerNextPromo
                            , tmpMI_all.AmountForecast, tmpMI_all.AmountForecastPromo, tmpMI_all.AmountForecastOrder, tmpMI_all.AmountForecastOrderPromo
+                           , tmpMI_all.AmountPrIn, tmpMI_all.AmountPartnerOld, tmpMI_all.AmountPartnerPromoOld
                            , tmpMI_all.CountForecast, tmpMI_all.CountForecastOrder
                            , tmpMI_all.Income_CEH
                            , tmpMI_all.TermProduction, tmpMI_all.PartionGoods_start, tmpMI_all.PartionDate_pf, tmpMI_all.GoodsKindId_pf, tmpMI_all.GoodsKindCompleteId_pf, tmpMI_all.UnitId_pf
@@ -879,6 +915,7 @@ BEGIN
                            , _tmpMI_All.AmountRemainsTOTAL, _tmpMI_All.Remains_CEH, _tmpMI_All.Remains_CEH_Next, _tmpMI_All.Remains, _tmpMI_All.Remains_pack
                            , _tmpMI_All.AmountPartnerPrior, _tmpMI_All.AmountPartnerPriorPromo, _tmpMI_All.AmountPartner, tmpMI_all.AmountPartnerNext, _tmpMI_All.AmountPartnerPromo, _tmpMI_All.AmountPartnerNextPromo
                            , _tmpMI_All.AmountForecast, _tmpMI_All.AmountForecastPromo, _tmpMI_All.AmountForecastOrder, _tmpMI_All.AmountForecastOrderPromo
+                           , _tmpMI_All.AmountPrIn, _tmpMI_All.AmountPartnerOld, _tmpMI_All.AmountPartnerPromoOld
                            , _tmpMI_All.CountForecast, _tmpMI_All.CountForecastOrder
                            , _tmpMI_All.Income_CEH
                            , _tmpMI_All.TermProduction, _tmpMI_All.PartionGoods_start, _tmpMI_All.PartionDate_pf, _tmpMI_All.GoodsKindId_pf, _tmpMI_All.GoodsKindCompleteId_pf, _tmpMI_All.UnitId_pf
@@ -1012,6 +1049,12 @@ BEGIN
              -- Прогноз по заяв.
            , CASE WHEN ABS (tmpChild.AmountForecastOrder) < 1      THEN tmpChild.AmountForecastOrder      ELSE CAST (COALESCE (tmpChild.AmountForecastOrder, 0)      AS NUMERIC (16, 1)) END :: TFloat AS AmountForecastOrder
            , CASE WHEN ABS (tmpChild.AmountForecastOrderPromo) < 1 THEN tmpChild.AmountForecastOrderPromo ELSE CAST (COALESCE (tmpChild.AmountForecastOrderPromo, 0) AS NUMERIC (16, 1)) END :: TFloat AS AmountForecastOrderPromo
+
+           -- *** факт
+           , CAST (COALESCE (tmpChild.AmountPrIn, 0)               AS NUMERIC (16, 2)) :: TFloat AS AmountPrIn
+           , CAST (COALESCE (tmpChild.AmountPartnerOld, 0)         AS NUMERIC (16, 2)) :: TFloat AS AmountPartnerOld
+           , CAST (COALESCE (tmpChild.AmountPartnerPromoOld, 0)    AS NUMERIC (16, 2)) :: TFloat AS AmountPartnerPromoOld
+           , CAST (COALESCE (tmpChild.AmountPartnerOld, 0) + COALESCE (tmpChild.AmountPartnerPromoOld, 0) AS NUMERIC (16, 2)) :: TFloat AS AmountPartnerOldTotal
 
              -- Норм 1д (по пр.) без К
            , COALESCE (tmpChild.CountForecast, 0)      :: TFloat AS CountForecastOrder
@@ -1181,6 +1224,11 @@ BEGIN
                                         , AmountForecastOrder        TFloat
                                         , AmountForecastOrderPromo   TFloat
 
+                                        , AmountPrIn                 TFloat
+                                        , AmountPartnerOld           TFloat
+                                        , AmountPartnerPromoOld      TFloat
+                                        , AmountPartnerOldTotal      TFloat
+
                                         , CountForecast              TFloat
                                         , CountForecastOrder         TFloat
 
@@ -1254,6 +1302,11 @@ BEGIN
                                         , AmountForecastPromo
                                         , AmountForecastOrder
                                         , AmountForecastOrderPromo
+
+                                        , AmountPrIn
+                                        , AmountPartnerOld
+                                        , AmountPartnerPromoOld
+                                        , AmountPartnerOldTotal
 
                                         , CountForecast
                                         , CountForecastOrder
@@ -1376,6 +1429,11 @@ BEGIN
              -- Прогноз по заяв.
            , CASE WHEN ABS (tmpMI.AmountForecastOrder) < 1      THEN tmpMI.AmountForecastOrder      ELSE CAST (tmpMI.AmountForecastOrder      AS NUMERIC (16, 1)) END :: TFloat AS AmountForecastOrder
            , CASE WHEN ABS (tmpMI.AmountForecastOrderPromo) < 1 THEN tmpMI.AmountForecastOrderPromo ELSE CAST (tmpMI.AmountForecastOrderPromo AS NUMERIC (16, 1)) END :: TFloat AS AmountForecastOrderPromo
+
+           , CAST (tmpMI.AmountPrIn               AS NUMERIC (16, 2)) :: TFloat AS AmountPrIn
+           , CAST (tmpMI.AmountPartnerOld         AS NUMERIC (16, 2)) :: TFloat AS AmountPartnerOld
+           , CAST (tmpMI.AmountPartnerPromoOld    AS NUMERIC (16, 2)) :: TFloat AS AmountPartnerPromoOld
+           , CAST (COALESCE (tmpMI.AmountPartnerOld,0) + COALESCE (tmpMI.AmountPartnerPromoOld,0)  AS NUMERIC (16, 2)) :: TFloat AS AmountPartnerOldTotal
 
              -- Норм 1д (по пр.) без К
            , tmpMI.CountForecast
@@ -1538,6 +1596,11 @@ BEGIN
                                          , AmountForecastOrder        TFloat
                                          , AmountForecastOrderPromo   TFloat
 
+                                         , AmountPrIn                 TFloat
+                                         , AmountPartnerOld           TFloat
+                                         , AmountPartnerPromoOld      TFloat
+                                         , AmountPartnerOldTotal      TFloat
+
                                          , CountForecast              TFloat
                                          , CountForecastOrder         TFloat
 
@@ -1640,6 +1703,11 @@ BEGIN
                                     , AmountForecastPromo
                                     , AmountForecastOrder
                                     , AmountForecastOrderPromo
+
+                                    , AmountPrIn
+                                    , AmountPartnerOld
+                                    , AmountPartnerPromoOld
+                                    , AmountPartnerOldTotal
 
                                     , CountForecast
                                     , CountForecastOrder
@@ -1775,6 +1843,12 @@ BEGIN
            , CASE WHEN ABS (tmpMI.AmountForecastOrder) < 1      THEN tmpMI.AmountForecastOrder      ELSE CAST (tmpMI.AmountForecastOrder      AS NUMERIC (16, 1)) END :: TFloat AS AmountForecastOrder
            , CASE WHEN ABS (tmpMI.AmountForecastOrderPromo) < 1 THEN tmpMI.AmountForecastOrderPromo ELSE CAST (tmpMI.AmountForecastOrderPromo AS NUMERIC (16, 1)) END :: TFloat AS AmountForecastOrderPromo
 
+           --
+           , CAST (tmpMI.AmountPrIn               AS NUMERIC (16, 2)) :: TFloat AS AmountPrIn
+           , CAST (tmpMI.AmountPartnerOld         AS NUMERIC (16, 2)) :: TFloat AS AmountPartnerOld
+           , CAST (tmpMI.AmountPartnerPromoOld    AS NUMERIC (16, 2)) :: TFloat AS AmountPartnerPromoOld
+           , CAST (COALESCE (tmpMI.AmountPartnerOld,0) + COALESCE (tmpMI.AmountPartnerPromoOld,0)    AS NUMERIC (16, 2)) :: TFloat AS AmountPartnerOldTotal
+
              -- "средняя" за 1 день - продажа покупателям БЕЗ акций - Норм 1д (по пр.) без К
            , tmpMI.CountForecast
              -- "средняя" за 1 день - заказы покупателей БЕЗ акций - Норм 1д (по зв.) без К
@@ -1889,6 +1963,7 @@ $BODY$
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.
+ 03.12.20         * 
  17.11.17         *
  13.11.17         *
  29.10.17         *

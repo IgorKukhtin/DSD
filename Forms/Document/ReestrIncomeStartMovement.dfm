@@ -628,7 +628,7 @@ inherited ReestrIncomeStartMovementForm: TReestrIncomeStartMovementForm
         item
           DataSet = PrintItemsCDS
           UserName = 'frxDBDMaster'
-          IndexFieldNames = 'PersonalName_Group;ToName;OperDatePartner'
+          IndexFieldNames = 'PersonalName_Group;FromName;OperDatePartner'
         end>
       Params = <
         item
@@ -644,9 +644,9 @@ inherited ReestrIncomeStartMovementForm: TReestrIncomeStartMovementForm
           DataType = ftBoolean
           MultiSelectSeparator = ','
         end>
-      ReportName = 'PrintMovement_Reestr'
+      ReportName = 'PrintMovement_ReestrIncome'
       ReportNameParam.Name = #1053#1072#1082#1083#1072#1076#1085#1072#1103' '#1056#1077#1077#1089#1090#1088#1072
-      ReportNameParam.Value = 'PrintMovement_Reestr'
+      ReportNameParam.Value = 'PrintMovement_ReestrIncome'
       ReportNameParam.DataType = ftString
       ReportNameParam.ParamType = ptInput
       ReportNameParam.MultiSelectSeparator = ','
@@ -719,9 +719,9 @@ inherited ReestrIncomeStartMovementForm: TReestrIncomeStartMovementForm
           DataType = ftBoolean
           MultiSelectSeparator = ','
         end>
-      ReportName = 'PrintMovement_ReestrDriver'
+      ReportName = 'PrintMovement_ReestrIncomeDriver'
       ReportNameParam.Name = #1052#1072#1088#1096#1088#1091#1090#1085#1099#1081' '#1083#1080#1089#1090' '#1076#1083#1103' '#1074#1086#1076#1080#1090#1077#1083#1103
-      ReportNameParam.Value = 'PrintMovement_ReestrDriver'
+      ReportNameParam.Value = 'PrintMovement_ReestrIncomeDriver'
       ReportNameParam.DataType = ftString
       ReportNameParam.ParamType = ptInput
       ReportNameParam.MultiSelectSeparator = ','
@@ -761,7 +761,7 @@ inherited ReestrIncomeStartMovementForm: TReestrIncomeStartMovementForm
         item
           DataSet = PrintItemsCDS
           UserName = 'frxDBDMaster'
-          IndexFieldNames = 'PersonalName_Group;ToName;OperDatePartner'
+          IndexFieldNames = 'PersonalName_Group;FromName;OperDatePartner'
         end>
       Params = <
         item
@@ -794,9 +794,9 @@ inherited ReestrIncomeStartMovementForm: TReestrIncomeStartMovementForm
           DataType = ftBoolean
           MultiSelectSeparator = ','
         end>
-      ReportName = 'PrintMovement_ReestrStartPeriod'
+      ReportName = 'PrintMovement_ReestrIncomeStartPeriod'
       ReportNameParam.Name = #1056#1077#1077#1089#1090#1088' '#1079#1072' '#1087#1077#1088#1080#1086#1076
-      ReportNameParam.Value = 'PrintMovement_ReestrStartPeriod'
+      ReportNameParam.Value = 'PrintMovement_ReestrIncomeStartPeriod'
       ReportNameParam.DataType = ftString
       ReportNameParam.ParamType = ptInput
       ReportNameParam.MultiSelectSeparator = ','
@@ -866,9 +866,9 @@ inherited ReestrIncomeStartMovementForm: TReestrIncomeStartMovementForm
           DataType = ftBoolean
           MultiSelectSeparator = ','
         end>
-      ReportName = 'PrintMovement_Reestr'
+      ReportName = 'PrintMovement_ReestrIncome'
       ReportNameParam.Name = #1053#1072#1082#1083#1072#1076#1085#1072#1103' '#1056#1077#1077#1089#1090#1088#1072
-      ReportNameParam.Value = 'PrintMovement_Reestr'
+      ReportNameParam.Value = 'PrintMovement_ReestrIncome'
       ReportNameParam.ParamType = ptInput
     end
     inherited actUnCompleteMovement: TChangeGuidesStatus
@@ -1006,7 +1006,7 @@ inherited ReestrIncomeStartMovementForm: TReestrIncomeStartMovementForm
         end
         item
           Name = 'ReestrKindName'
-          Value = #1042#1099#1074#1077#1079#1077#1085#1086' '#1089#1086' '#1089#1082#1083#1072#1076#1072
+          Value = #1055#1086#1083#1091#1095#1077#1085#1086' '#1086#1090' '#1082#1083#1080#1077#1085#1090#1072
           DataType = ftString
           MultiSelectSeparator = ','
         end
@@ -1171,9 +1171,9 @@ inherited ReestrIncomeStartMovementForm: TReestrIncomeStartMovementForm
           DataType = ftBoolean
           MultiSelectSeparator = ','
         end>
-      ReportName = 'PrintMovement_ReestrStartPeriod'
+      ReportName = 'PrintMovement_ReestrIncomeStartPeriod'
       ReportNameParam.Name = #1056#1077#1077#1089#1090#1088' '#1079#1072' '#1087#1077#1088#1080#1086#1076
-      ReportNameParam.Value = 'PrintMovement_ReestrStartPeriod'
+      ReportNameParam.Value = 'PrintMovement_ReestrIncomeStartPeriod'
       ReportNameParam.DataType = ftString
       ReportNameParam.ParamType = ptInput
       ReportNameParam.MultiSelectSeparator = ','

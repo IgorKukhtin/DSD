@@ -74,6 +74,10 @@ BEGIN
                                        , AmountForecastPromo       TFloat
                                        , AmountForecastOrder       TFloat
                                        , AmountForecastOrderPromo  TFloat
+                                       , AmountPrIn                TFloat
+                                       , AmountPartnerOld          TFloat
+                                       , AmountPartnerPromoOld     TFloat
+                                       , AmountPartnerOldTotal     TFloat
                                        , CountForecast             TFloat
                                        , CountForecastOrder        TFloat
                                        , Plan1                     TFloat 
@@ -119,6 +123,7 @@ BEGIN
                                 , AmountPartner, AmountPartnerNext, AmountPartnerPromo
                                 , AmountPartnerNextPromo, AmountPartnerTotal
                                 , AmountForecast, AmountForecastPromo, AmountForecastOrder, AmountForecastOrderPromo
+                                , AmountPrIn, AmountPartnerOld, AmountPartnerPromoOld, AmountPartnerOldTotal
                                 , CountForecast, CountForecastOrder
                                 , Plan1, Plan2, Plan3, Plan4, Plan5, Plan6, Plan7
                                 , Promo1, Promo2, Promo3, Promo4, Promo5, Promo6, Promo7
@@ -211,6 +216,12 @@ BEGIN
             , _Result_Child.AmountForecastOrder
             , _Result_Child.AmountForecastOrderPromo
 
+            -- 
+            , _Result_Child.AmountPrIn               -- ***Приход пр-во (ФАКТ)
+            , _Result_Child.AmountPartnerOld         -- ***Факт заказ покупателя, сегодня
+            , _Result_Child.AmountPartnerPromoOld    -- ***Факт заказ покупателя, сегодня
+            , _Result_Child.AmountPartnerOldTotal
+            
               -- "средняя" за 1 день - продажа покупателям БЕЗ акций - Норм 1д (по пр.) без К
             , CAST (_Result_Child.CountForecast AS NUMERIC (16, 1)) :: TFloat AS CountForecast
               -- "средняя" за 1 день - заказы покупателей БЕЗ акций - Норм 1д (по зв.) без К
@@ -586,6 +597,39 @@ BEGIN
                                      , _Result_Child.Id ASC
                              ) AS AmountForecastOrderPromo
 
+                   --
+                  , SUM (_Result_Child.AmountPrIn)
+                        OVER (PARTITION BY CASE WHEN inShowAll = TRUE THEN _Result_Child.Id :: TVarChar
+                                                ELSE _Result_Child.KeyId || '_' || COALESCE (Object_Goods.Id, _Result_Child.GoodsId) :: TVarChar  || '_' || COALESCE (Object_GoodsKind.Id, _Result_Child.GoodsKindId) :: TVarChar
+                                           END
+                              ORDER BY CASE WHEN Object_Goods.Id > 0 THEN 0 ELSE _Result_Child.Id END ASC
+                                     , _Result_Child.Id ASC
+                             ) AS AmountPrIn
+                  , SUM (_Result_Child.AmountPartnerOld)
+                        OVER (PARTITION BY CASE WHEN inShowAll = TRUE THEN _Result_Child.Id :: TVarChar
+                                                ELSE _Result_Child.KeyId || '_' || COALESCE (Object_Goods.Id, _Result_Child.GoodsId) :: TVarChar  || '_' || COALESCE (Object_GoodsKind.Id, _Result_Child.GoodsKindId) :: TVarChar
+                                           END
+                              ORDER BY CASE WHEN Object_Goods.Id > 0 THEN 0 ELSE _Result_Child.Id END ASC
+                                     , _Result_Child.Id ASC
+                             ) AS AmountPartnerOld
+
+                  , SUM (_Result_Child.AmountPartnerPromoOld)
+                        OVER (PARTITION BY CASE WHEN inShowAll = TRUE THEN _Result_Child.Id :: TVarChar
+                                                ELSE _Result_Child.KeyId || '_' || COALESCE (Object_Goods.Id, _Result_Child.GoodsId) :: TVarChar  || '_' || COALESCE (Object_GoodsKind.Id, _Result_Child.GoodsKindId) :: TVarChar
+                                           END
+                              ORDER BY CASE WHEN Object_Goods.Id > 0 THEN 0 ELSE _Result_Child.Id END ASC
+                                     , _Result_Child.Id ASC
+                             ) AS AmountPartnerPromoOld
+
+                  , SUM (_Result_Child.AmountPartnerOldTotal)
+                        OVER (PARTITION BY CASE WHEN inShowAll = TRUE THEN _Result_Child.Id :: TVarChar
+                                                ELSE _Result_Child.KeyId || '_' || COALESCE (Object_Goods.Id, _Result_Child.GoodsId) :: TVarChar  || '_' || COALESCE (Object_GoodsKind.Id, _Result_Child.GoodsKindId) :: TVarChar
+                                           END
+                              ORDER BY CASE WHEN Object_Goods.Id > 0 THEN 0 ELSE _Result_Child.Id END ASC
+                                     , _Result_Child.Id ASC
+                             ) AS AmountPartnerOldTotal
+                  --
+
                     -- "средняя" за 1 день - продажа покупателям БЕЗ акций - Норм 1д (по пр.) без К
                   , SUM (_Result_Child.CountForecast)
                         OVER (PARTITION BY CASE WHEN inShowAll = TRUE THEN _Result_Child.Id :: TVarChar
@@ -830,6 +874,11 @@ BEGIN
              -- Прогноз по заяв.
             , _Result_Master.AmountForecastOrder
             , _Result_Master.AmountForecastOrderPromo
+             -- 
+            , _Result_Master.AmountPrIn
+            , _Result_Master.AmountPartnerOld
+            , _Result_Master.AmountPartnerPromoOld
+            , _Result_Master.AmountPartnerOldTotal
 
              -- "средняя" за 1 день - продажа покупателям БЕЗ акций - Норм 1д (по пр.) без К
             , CAST (_Result_Master.CountForecast AS NUMERIC (16, 1)) :: TFloat AS CountForecast
@@ -884,6 +933,10 @@ BEGIN
             , _Result_Master.isErased
             , COALESCE (MIBoolean_Calculated.ValueData, TRUE) :: Boolean AS isCalculated
 
+            , CASE WHEN COALESCE (_Result_Master.AmountPartnerTotal,0) <> COALESCE (_Result_Master.AmountPartnerOldTotal,0) THEN TRUE ELSE FALSE END :: Boolean AS isDiff1           -- разница да/нет AmountPartnerTotal и AmountPartnerOldTotal 
+            , CASE WHEN COALESCE (_Result_Master.AmountPrIn        ,0) <> COALESCE (_Result_Master.AmountPartnerOldTotal,0) THEN TRUE ELSE FALSE END :: Boolean AS isDiff2           -- разница да/нет zc_MIFloat_AmountPrIn и AmountPartnerOldTotal
+            , CASE WHEN COALESCE (_Result_Master.Income_CEH        ,0) <> COALESCE (_Result_Master.AmountPartnerOldTotal,0) THEN TRUE ELSE FALSE END :: Boolean AS isDiff3           -- разница да/нет AmountPartnerOldTotal и Income_CEH 
+            , CASE WHEN COALESCE (_Result_Master.Income_CEH        ,0) <> COALESCE (_Result_Master.AmountPrIn           ,0) THEN TRUE ELSE FALSE END :: Boolean AS isDiff4           -- разница да/нет zc_MIFloat_AmountPrIn и Income_CEH 
        FROM _Result_Master
            LEFT JOIN MovementItemBoolean AS MIBoolean_Calculated
                                          ON MIBoolean_Calculated.MovementItemId = _Result_Master.Id
@@ -951,6 +1004,12 @@ BEGIN
             , _Result_Child.AmountForecastOrder
             , _Result_Child.AmountForecastOrderPromo
 
+             -- 
+            , _Result_Child.AmountPrIn
+            , _Result_Child.AmountPartnerOld
+            , _Result_Child.AmountPartnerPromoOld
+            , _Result_Child.AmountPartnerOldTotal
+
               -- "средняя" за 1 день - продажа покупателям БЕЗ акций - Норм 1д (по пр.) без К
             , _Result_Child.CountForecast
               -- "средняя" за 1 день - заказы покупателей БЕЗ акций - Норм 1д (по зв.) без К
@@ -996,6 +1055,9 @@ BEGIN
             , _Result_Child.GoodsKindName_packTo
 
             , COALESCE (MIBoolean_Calculated.ValueData, TRUE) :: Boolean AS isCalculated
+
+            , CASE WHEN _Result_Child.AmountPartnerTotal <> _Result_Child.AmountPartnerOldTotal THEN TRUE ELSE FALSE END :: Boolean AS isDiff1           -- разница да/нет AmountPartnerTotal и AmountPartnerOldTotal 
+            , CASE WHEN _Result_Child.AmountPrIn         <> _Result_Child.AmountPartnerOldTotal THEN TRUE ELSE FALSE END :: Boolean AS isDiff2           -- разница да/нет zc_MIFloat_AmountPrIn и AmountPartnerOldTotal
 
        FROM _tmpResult_Child AS _Result_Child
            LEFT JOIN MovementItemBoolean AS MIBoolean_Calculated
@@ -1093,6 +1155,12 @@ BEGIN
               -- Прогноз по заяв.
             , _Result_ChildTotal.AmountForecastOrder
             , _Result_ChildTotal.AmountForecastOrderPromo
+
+             -- 
+            , _Result_ChildTotal.AmountPrIn
+            , _Result_ChildTotal.AmountPartnerOld
+            , _Result_ChildTotal.AmountPartnerPromoOld
+            , _Result_ChildTotal.AmountPartnerOldTotal
 
               -- "средняя" за 1 день - продажа покупателям БЕЗ акций - Норм 1д (по пр.) без К
             , CAST (_Result_ChildTotal.CountForecast AS NUMERIC (16, 1)) :: TFloat AS CountForecast
@@ -1238,6 +1306,12 @@ BEGIN
             , _Result_Child.AmountForecastOrder
             , _Result_Child.AmountForecastOrderPromo
 
+             -- 
+            , _Result_Child.AmountPrIn
+            , _Result_Child.AmountPartnerOld
+            , _Result_Child.AmountPartnerPromoOld
+            , _Result_Child.AmountPartnerOldTotal
+
               -- "средняя" за 1 день - продажа покупателям БЕЗ акций - Норм 1д (по пр.) без К
             , _Result_Child.CountForecast
               -- "средняя" за 1 день - заказы покупателей БЕЗ акций - Норм 1д (по зв.) без К
@@ -1369,6 +1443,12 @@ BEGIN
             , 0  :: TFloat   AS AmountForecastOrder
             , 0  :: TFloat   AS AmountForecastOrderPromo
 
+             -- 
+            , 0  :: TFloat   AS AmountPrIn
+            , 0  :: TFloat   AS AmountPartnerOld
+            , 0  :: TFloat   AS AmountPartnerPromoOld
+            , 0  :: TFloat   AS AmountPartnerOldTotal
+
               -- "средняя" за 1 день - продажа покупателям БЕЗ акций - Норм 1д (по пр.) без К
             , 0  :: TFloat   AS CountForecast
               -- "средняя" за 1 день - заказы покупателей БЕЗ акций - Норм 1д (по зв.) без К
@@ -1434,6 +1514,7 @@ ALTER FUNCTION gpSelect_MI_OrderInternalPackRemains (Integer, Boolean, Boolean, 
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.
+ 03.12.20         *
  29.05.18         * Cursor4
  17.11.17         *
  13.11.17         *

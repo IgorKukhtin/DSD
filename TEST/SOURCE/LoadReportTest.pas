@@ -142,12 +142,12 @@ begin
 
   LoadReportFromFile('Проверка начислений по бонусам для подписи', ReportPath + '\Отчеты (финансы)\Проверка начислений по бонусам для подписи.fr3');
   //exit;
-  }
+
   //LoadReportFromFile('Проверка начислений по бонусам поставщиков', ReportPath + '\Отчеты (финансы)\Проверка начислений по бонусам поставщиков.fr3');
   //exit;
   LoadReportFromFile('Проверка начислений по бонусам', ReportPath + '\Отчеты (финансы)\Проверка начислений по бонусам.fr3');
   exit;
-  {
+
   LoadReportFromFile('Обороты по кассе и счету (Прямой метод)', ReportPath + '\Отчеты (финансы)\Обороты по кассе и счету (Прямой метод).fr3');
   exit;
 
@@ -423,6 +423,14 @@ begin
   exit;
 
   // Печатные формы накладных
+   }
+
+   LoadReportFromFile('PrintMovement_ReestrIncome', ReportPath + '\Товарный Учет\PrintMovement_ReestrIncome.fr3');
+   LoadReportFromFile('PrintMovement_ReestrIncomePeriod', ReportPath + '\Товарный Учет\PrintMovement_ReestrIncomePeriod.fr3');
+   LoadReportFromFile('PrintMovement_ReestrIncomeStartPeriod', ReportPath + '\Товарный Учет\PrintMovement_ReestrIncomeStartPeriod.fr3');
+   LoadReportFromFile('PrintMovement_ReestrIncomeDriver', ReportPath + '\Товарный Учет\PrintMovement_ReestrIncomeDriver.fr3');
+   exit;
+   {
    LoadReportFromFile('PrintMovement_ReestrReturn', ReportPath + '\Товарный Учет\PrintMovement_ReestrReturn.fr3');
    LoadReportFromFile('PrintMovement_ReestrReturnPeriod', ReportPath + '\Товарный Учет\PrintMovement_ReestrReturnPeriod.fr3');
    LoadReportFromFile('PrintMovement_ReestrReturnStartPeriod', ReportPath + '\Товарный Учет\PrintMovement_ReestrReturnStartPeriod.fr3');

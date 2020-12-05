@@ -921,7 +921,7 @@ inherited ReestrIncomeUpdateMovementForm: TReestrIncomeUpdateMovementForm
         item
           DataSet = PrintItemsCDS
           UserName = 'frxDBDMaster'
-          IndexFieldNames = 'PersonalName_Group;ToName;OperDatePartner'
+          IndexFieldNames = 'PersonalName_Group;FromName;OperDatePartner'
         end>
       Params = <
         item
@@ -960,9 +960,9 @@ inherited ReestrIncomeUpdateMovementForm: TReestrIncomeUpdateMovementForm
           DataType = ftBoolean
           MultiSelectSeparator = ','
         end>
-      ReportName = 'PrintMovement_ReestrPeriod'
+      ReportName = 'PrintMovement_ReestrIncomePeriod'
       ReportNameParam.Name = #1056#1077#1077#1089#1090#1088' '#1079#1072' '#1087#1077#1088#1080#1086#1076
-      ReportNameParam.Value = 'PrintMovement_ReestrPeriod'
+      ReportNameParam.Value = 'PrintMovement_ReestrIncomePeriod'
       ReportNameParam.DataType = ftString
       ReportNameParam.ParamType = ptInput
       ReportNameParam.MultiSelectSeparator = ','
@@ -988,7 +988,7 @@ inherited ReestrIncomeUpdateMovementForm: TReestrIncomeUpdateMovementForm
         item
           DataSet = PrintItemsCDS
           UserName = 'frxDBDMaster'
-          IndexFieldNames = 'PersonalName_Group;ToName;OperDatePartner'
+          IndexFieldNames = 'PersonalName_Group;FromName;OperDatePartner'
         end>
       Params = <
         item
@@ -1004,9 +1004,9 @@ inherited ReestrIncomeUpdateMovementForm: TReestrIncomeUpdateMovementForm
           DataType = ftBoolean
           MultiSelectSeparator = ','
         end>
-      ReportName = 'PrintMovement_Reestr'
+      ReportName = 'PrintMovement_ReestrIncome'
       ReportNameParam.Name = #1056#1077#1077#1089#1090#1088
-      ReportNameParam.Value = 'PrintMovement_Reestr'
+      ReportNameParam.Value = 'PrintMovement_ReestrIncome'
       ReportNameParam.DataType = ftString
       ReportNameParam.ParamType = ptInput
       ReportNameParam.MultiSelectSeparator = ','
@@ -1286,9 +1286,9 @@ inherited ReestrIncomeUpdateMovementForm: TReestrIncomeUpdateMovementForm
           DataType = ftBoolean
           MultiSelectSeparator = ','
         end>
-      ReportName = 'PrintMovement_ReestrPeriod'
+      ReportName = 'PrintMovement_ReestrIncomePeriod'
       ReportNameParam.Name = #1056#1077#1077#1089#1090#1088' '#1079#1072' '#1087#1077#1088#1080#1086#1076
-      ReportNameParam.Value = 'PrintMovement_ReestrPeriod'
+      ReportNameParam.Value = 'PrintMovement_ReestrIncomePeriod'
       ReportNameParam.DataType = ftString
       ReportNameParam.ParamType = ptInput
       ReportNameParam.MultiSelectSeparator = ','
@@ -1330,9 +1330,9 @@ inherited ReestrIncomeUpdateMovementForm: TReestrIncomeUpdateMovementForm
           DataType = ftBoolean
           MultiSelectSeparator = ','
         end>
-      ReportName = 'PrintMovement_Reestr'
+      ReportName = 'PrintMovement_ReestrIncome'
       ReportNameParam.Name = #1056#1077#1077#1089#1090#1088
-      ReportNameParam.Value = 'PrintMovement_Reestr'
+      ReportNameParam.Value = 'PrintMovement_ReestrIncome'
       ReportNameParam.DataType = ftString
       ReportNameParam.ParamType = ptInput
       ReportNameParam.MultiSelectSeparator = ','
@@ -1978,7 +1978,7 @@ inherited ReestrIncomeUpdateMovementForm: TReestrIncomeUpdateMovementForm
     Top = 217
   end
   object spSelectPrint: TdsdStoredProc
-    StoredProcName = 'gpSelect_Movement_Reestr_Print'
+    StoredProcName = 'gpSelect_Movement_ReestrIncome_Print'
     DataSet = PrintHeaderCDS
     DataSets = <
       item
@@ -2027,7 +2027,7 @@ inherited ReestrIncomeUpdateMovementForm: TReestrIncomeUpdateMovementForm
     Top = 176
   end
   object spSelectPrintPeriod: TdsdStoredProc
-    StoredProcName = 'gpSelect_Movement_ReestrPeriod_Print'
+    StoredProcName = 'gpSelect_Movement_ReestrIncomePeriod_Print'
     DataSet = PrintHeaderCDS
     DataSets = <
       item
@@ -2094,7 +2094,7 @@ inherited ReestrIncomeUpdateMovementForm: TReestrIncomeUpdateMovementForm
     Top = 296
   end
   object spSelectPrintGroup: TdsdStoredProc
-    StoredProcName = 'gpSelect_Movement_Reestr_Print'
+    StoredProcName = 'gpSelect_Movement_ReestrIncome_Print'
     DataSet = PrintHeaderCDS
     DataSets = <
       item
@@ -2210,7 +2210,7 @@ inherited ReestrIncomeUpdateMovementForm: TReestrIncomeUpdateMovementForm
     Top = 37
   end
   object spSelectPrintPeriodGroup: TdsdStoredProc
-    StoredProcName = 'gpSelect_Movement_ReestrPeriod_Print'
+    StoredProcName = 'gpSelect_Movement_ReestrIncomePeriod_Print'
     DataSet = PrintHeaderCDS
     DataSets = <
       item
