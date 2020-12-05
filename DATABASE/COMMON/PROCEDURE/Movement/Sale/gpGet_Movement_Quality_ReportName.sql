@@ -11,11 +11,16 @@ RETURNS TVarChar
 AS
 $BODY$
    DECLARE vbPrintFormName TVarChar;
+   DECLARE vbIsGoodsCode_2393 TVarChar;
 BEGIN
 
      -- проверка прав пользователя на вызов процедуры
      -- PERFORM lpCheckRight (inSession, zc_Enum_Process_Get_Movement_Quality());
+     
+       -- КОВБАСКИ БАВАРСЬКІ С/К в/г ПРЕМІЯ 120 гр/шт
+       vbIsGoodsCode_2393:= EXISTS (SELECT 1 FROM MovementItem AS MI WHERE MI.MovementId = inMovementId AND MI.DescId = zc_MI_Master() AND MI.isErased = FALSE AND MI.ObjectId = 6048195);
 
+       --
        SELECT COALESCE (PrintForms_View.PrintFormName, 'PrintMovement_Quality')
               INTO vbPrintFormName
        FROM Movement
@@ -26,13 +31,17 @@ BEGIN
             LEFT JOIN ObjectLink AS ObjectLink_Partner_Juridical
                                  ON ObjectLink_Partner_Juridical.ObjectId = MovementLinkObject_To.ObjectId
                                 AND ObjectLink_Partner_Juridical.DescId = zc_ObjectLink_Partner_Juridical()
+
+            LEFT JOIN ObjectHistory_JuridicalDetails_View AS OH_JuridicalDetails ON OH_JuridicalDetails.JuridicalId = CASE WHEN Movement.DescId = zc_Movement_TransferDebtOut() THEN MovementLinkObject_To.ObjectId ELSE ObjectLink_Partner_Juridical.ChildObjectId END
      
             LEFT JOIN PrintForms_View
                    ON Movement.OperDate BETWEEN PrintForms_View.StartDate AND PrintForms_View.EndDate
                   AND PrintForms_View.JuridicalId = CASE WHEN Movement.DescId = zc_Movement_TransferDebtOut() THEN MovementLinkObject_To.ObjectId ELSE ObjectLink_Partner_Juridical.ChildObjectId END
                   AND PrintForms_View.ReportType = 'Quality'
                   AND PrintForms_View.DescId = zc_Movement_Sale()
-
+                  AND (vbIsGoodsCode_2393 = TRUE
+                    OR OH_JuridicalDetails.OKPO NOT IN ('32294926', '40720198', '32294897')
+                      )
        WHERE Movement.Id = inMovementId
          AND Movement.DescId = zc_Movement_Sale();
 

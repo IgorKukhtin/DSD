@@ -33,7 +33,7 @@ BEGIN
       THEN
            RETURN QUERY
              WITH tmpPromoPartner AS (SELECT Movement_Promo.Id AS PromoId
-                                           , ROW_NUMBER() OVER (PARTITION BY MI_PromoPartner.ObjectId ORDER BY Movement_Promo.Operdate DESC, Movement_PromoPartner.ParentId DESC) AS RowNum
+                                           , ROW_NUMBER() OVER (PARTITION BY MI_PromoPartner.ObjectId, MovementItem_PromoGoods.ObjectId ORDER BY Movement_Promo.Operdate DESC, Movement_PromoPartner.ParentId DESC) AS RowNum
                                       FROM Movement AS Movement_PromoPartner
                                            JOIN MovementItem AS MI_PromoPartner
                                                              ON MI_PromoPartner.MovementId = Movement_PromoPartner.Id
@@ -51,6 +51,10 @@ BEGIN
                                                              ON MovementDate_EndSale.MovementId = Movement_Promo.Id
                                                             AND MovementDate_EndSale.DescId = zc_MovementDate_EndSale()
                                                             AND MovementDate_EndSale.ValueData >= CURRENT_DATE
+                                           JOIN MovementItem AS MovementItem_PromoGoods 
+                                                             ON MovementItem_PromoGoods.MovementId = Movement_Promo.Id
+                                                            AND MovementItem_PromoGoods.DescId     = zc_MI_Master()
+                                                            AND MovementItem_PromoGoods.IsErased   = FALSE
                                       WHERE Movement_PromoPartner.DescId = zc_Movement_PromoPartner()
                                         AND Movement_PromoPartner.StatusId <> zc_Enum_Status_Erased()
                                      )

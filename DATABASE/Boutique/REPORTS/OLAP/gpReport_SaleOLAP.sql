@@ -504,9 +504,9 @@ BEGIN
                                , 0 AS Loss_Summ
 
                                  -- Кол-во: Долг
-                               , SUM (CASE WHEN MIConatiner.DescId = zc_MIContainer_Count() THEN 1 * MIConatiner.Amount ELSE 0 END) AS Debt_Amount
+                               , SUM (CASE WHEN inIsPeriodAll = TRUE AND MIConatiner.DescId = zc_MIContainer_Count() THEN 1 * MIConatiner.Amount ELSE 0 END) AS Debt_Amount
                                  -- Сумма: Долг
-                               , SUM (CASE WHEN MIConatiner.DescId = zc_MIContainer_Count() THEN 1 * MIConatiner.Amount * Object_PartionGoods.OperPrice / CASE WHEN Object_PartionGoods.CountForPrice > 0 THEN Object_PartionGoods.CountForPrice ELSE 1 END ELSE 0 END) AS Debt_Summ
+                               , SUM (CASE WHEN inIsPeriodAll = TRUE AND MIConatiner.DescId = zc_MIContainer_Count() THEN 1 * MIConatiner.Amount * Object_PartionGoods.OperPrice / CASE WHEN Object_PartionGoods.CountForPrice > 0 THEN Object_PartionGoods.CountForPrice ELSE 1 END ELSE 0 END) AS Debt_Summ
 
                                  -- Кол-во: Только Продажа
                                , SUM (CASE WHEN MIConatiner.DescId = zc_MIContainer_Count() AND MIConatiner.Amount < 0 AND MIConatiner.MovementDescId IN (zc_Movement_Sale(), zc_Movement_GoodsAccount()) THEN -1 * MIConatiner.Amount ELSE 0 END) :: TFloat AS Sale_Amount
@@ -1930,5 +1930,3 @@ $BODY$
 -- тест
 -- SELECT LabelName, GroupsName4, GroupsName3, GroupsName2, GroupsName1 FROM gpReport_SaleOLAP (inStartDate:= '01.01.2017', inEndDate:= '31.12.2017', inUnitId:= 0, inPartnerId:= 2628, inBrandId:= 0, inPeriodId:= 0, inStartYear:= 2017, inEndYear:= 2017, inIsYear:= FALSE, inIsPeriodAll:= TRUE, inIsGoods:= FALSE, inIsSize:= FALSE, inIsClient_doc:= FALSE, inIsOperDate_doc:= FALSE, inIsDay_doc:= FALSE, inIsOperPrice:= FALSE, inIsDiscount:= FALSE, inSession:= zfCalc_UserAdmin());
 -- SELECT * FROM gpReport_SaleOLAP (inStartDate:= '01.01.2017', inEndDate:= '31.12.2017', inUnitId:= 0, inPartnerId:= 2628, inBrandId:= 0, inPeriodId:= 0, inStartYear:= 2017, inEndYear:= 2017, inIsYear:= TRUE, inIsPeriodAll:= TRUE, inIsGoods:= FALSE, inIsSize:= FALSE, inIsClient_doc:= FALSE, inIsOperDate_doc:= FALSE, inIsDay_doc:= FALSE, inIsOperPrice:= FALSE, inIsDiscount:= FALSE, inIsMark:= FALSE, inSession:= zfCalc_UserAdmin());
-select * from gpReport_SaleOLAP(inStartDate := ('01.09.2019')::TDateTime , inEndDate := ('30.09.2019')::TDateTime , inUnitId := 1550 , inPartnerId := 0 , inBrandId := 0 , inPeriodId := 1554 , inStartYear := 2018 , inEndYear := 2018 , inIsYear := 'False' , inIsPeriodAll := 'True' , inisGoods := 'True' , inisSize := 'False' , inIsClient_doc := 'False' , inIsOperDate_doc := 'False' , inIsDay_doc := 'False' , inIsOperPrice := 'False' , inIsDiscount := 'False' , inIsMark := 'False' ,  inSession := '8')
-where GoodsCode = 74577

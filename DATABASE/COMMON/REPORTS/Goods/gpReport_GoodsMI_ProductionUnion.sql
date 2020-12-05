@@ -153,6 +153,9 @@ BEGIN
                                                               ON MIContainer.ContainerId_Analyzer = tmpContainer_in.ContainerId
                                                              AND MIContainer.OperDate BETWEEN inStartDate AND inEndDate
                                                              AND MIContainer.isActive = FALSE
+                                                             AND MIContainer.MovementDescId = zc_Movement_ProductionUnion()
+			     INNER JOIN _tmpFromGroup ON _tmpFromGroup.FromId = MIContainer.WhereObjectId_Analyzer
+ 		             INNER JOIN _tmpToGroup   ON _tmpToGroup.ToId     = MIContainer.ObjectExtId_Analyzer
  		             INNER JOIN _tmpChildGoods ON _tmpChildGoods.ChildGoodsId = MIContainer.ObjectId_Analyzer
                              LEFT JOIN MovementBoolean AS MovementBoolean_Peresort
                                                         ON MovementBoolean_Peresort.MovementId = MIContainer.MovementId

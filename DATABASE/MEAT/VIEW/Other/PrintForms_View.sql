@@ -667,6 +667,21 @@ AS
        AND OH_JuridicalDetails.OKPO IN ('32049199')        
       WHERE Object_Juridical.DescId = zc_Object_Juridical()
 
+      UNION
+      -- печать качественного Фоззі-Фуд ТОВ + СІЛЬПО-ФУД
+      SELECT
+             zc_Movement_Sale()
+           , CAST ('Quality' AS TVarChar)
+           , CAST ('01.01.2000' AS TDateTime)
+           , CAST ('01.01.2200' AS TDateTime)
+           , CAST (Object_Juridical.Id AS INTEGER)
+           , CAST (0 AS INTEGER)
+           , CAST ('PrintMovement_Quality32294926' AS TVarChar)
+      FROM Object AS Object_Juridical
+      JOIN ObjectHistory_JuridicalDetails_View AS OH_JuridicalDetails ON OH_JuridicalDetails.JuridicalId = Object_Juridical.Id
+       AND OH_JuridicalDetails.OKPO IN ('32294926', '40720198', '32294897')
+      WHERE Object_Juridical.DescId = zc_Object_Juridical()
+
 --   ORDER BY 1,2,4
 
 
