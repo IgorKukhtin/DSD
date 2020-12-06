@@ -1996,6 +1996,10 @@ end;
 
 procedure TLoadFormTest.LoadQualityFormTest;
 begin
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TGoodsByGoodsKindQualityForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TGoodsByGoodsKindQualityForm');
+  exit;
+
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TGoodsQualityForm'));
   TdsdFormStorageFactory.GetStorage.Load('TGoodsQualityForm');
 

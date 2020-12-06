@@ -11,7 +11,7 @@ RETURNS TVarChar
 AS
 $BODY$
    DECLARE vbPrintFormName TVarChar;
-   DECLARE vbIsGoodsCode_2393 TVarChar;
+   DECLARE vbIsGoodsCode_2393 Boolean;
 BEGIN
 
      -- проверка прав пользователя на вызов процедуры

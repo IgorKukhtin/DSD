@@ -266,6 +266,9 @@ type
     bbUpdate_MI_IsCalculated_Yes: TdxBarButton;
     bbUpdate_MI_IsCalculated_No: TdxBarButton;
     isCalculated_ch: TcxGridDBColumn;
+    AmountPartnerTotal_diff: TcxGridDBColumn;
+    Income_CEH_diff: TcxGridDBColumn;
+    chAmountPartnerTotal_diff: TcxGridDBColumn;
   private
     { Private declarations }
   public

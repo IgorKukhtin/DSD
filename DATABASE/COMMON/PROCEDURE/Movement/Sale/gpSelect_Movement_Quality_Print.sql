@@ -91,6 +91,7 @@ BEGIN
        WITH tmpMI AS
             (SELECT MovementItem.*
                   , CASE WHEN Movement.DescId = zc_Movement_SendOnPrice() THEN MovementItem.Amount ELSE MIFloat_AmountPartner.ValueData END AS AmountPartner
+                  , MILO_GoodsKind.ObjectId             AS GoodsKindId
                   , ObjectLink_GoodsGroup.ChildObjectId AS GoodsGroupId
              FROM MovementItem
                   INNER JOIN Movement ON Movement.Id = MovementItem.MovementId
@@ -101,6 +102,9 @@ BEGIN
                   LEFT JOIN MovementItemFloat AS MIFloat_AmountPartner
                                               ON MIFloat_AmountPartner.MovementItemId = MovementItem.Id
                                              AND MIFloat_AmountPartner.DescId = zc_MIFloat_AmountPartner()
+                  LEFT JOIN MovementItemLinkObject AS MILO_GoodsKind
+                                                   ON MILO_GoodsKind.MovementItemId = MovementItem.Id
+                                                  AND MILO_GoodsKind.DescId         = zc_MILinkObject_GoodsKind()
                   LEFT JOIN ObjectLink AS ObjectLink_GoodsGroup
                                        ON ObjectLink_GoodsGroup.ObjectId = MovementItem.ObjectId
                                       AND ObjectLink_GoodsGroup.DescId = zc_ObjectLink_Goods_GoodsGroup()
@@ -111,6 +115,29 @@ BEGIN
                  OR (MovementItem.Amount <> 0 AND Movement.DescId = zc_Movement_SendOnPrice())
                    )
             )
+          , tmpMIGoodsByGoodsKind AS
+                            (SELECT tmpMI.*
+                                  , ObjectString_GK_Value1.ValueData     AS Value1_gk
+                                  , ObjectString_GK_Value11.ValueData    AS Value11_gk
+                                  , ObjectFloat_GK_NormInDays.ValueData  AS NormInDays_gk
+                             FROM tmpMI
+                                  JOIN ObjectLink AS ObjectLink_GoodsByGoodsKind_Goods
+                                                  ON ObjectLink_GoodsByGoodsKind_Goods.ChildObjectId = tmpMI.ObjectId
+                                                 AND ObjectLink_GoodsByGoodsKind_Goods.DescId        = zc_ObjectLink_GoodsByGoodsKind_Goods()
+                                  JOIN ObjectLink AS ObjectLink_GoodsByGoodsKind_GoodsKind
+                                                  ON ObjectLink_GoodsByGoodsKind_GoodsKind.ObjectId      = ObjectLink_GoodsByGoodsKind_Goods.ObjectId
+                                                 AND ObjectLink_GoodsByGoodsKind_GoodsKind.DescId        = zc_ObjectLink_GoodsByGoodsKind_GoodsKind()
+                                                 AND ObjectLink_GoodsByGoodsKind_GoodsKind.ChildObjectId = tmpMI.GoodsKindId	
+                                  LEFT JOIN ObjectString AS ObjectString_GK_Value1
+                                                         ON ObjectString_GK_Value1.ObjectId = ObjectLink_GoodsByGoodsKind_Goods.ObjectId
+                                                        AND ObjectString_GK_Value1.DescId   = zc_ObjectString_GoodsByGoodsKind_Quality1()
+                                  LEFT JOIN ObjectString AS ObjectString_GK_Value11
+                                                         ON ObjectString_GK_Value11.ObjectId = ObjectLink_GoodsByGoodsKind_Goods.ObjectId
+                                                        AND ObjectString_GK_Value11.DescId   = zc_ObjectString_GoodsByGoodsKind_Quality11()
+                                  LEFT JOIN ObjectFloat AS ObjectFloat_GK_NormInDays
+                                                        ON ObjectFloat_GK_NormInDays.ObjectId = ObjectLink_GoodsByGoodsKind_Goods.ObjectId
+                                                       AND ObjectFloat_GK_NormInDays.DescId   = zc_ObjectFloat_GoodsByGoodsKind_NormInDays()
+                            )
           , tmpMIGoods AS (SELECT DISTINCT tmpMI.ObjectId AS GoodsId FROM tmpMI)
           , tmpUKTZED AS (SELECT tmp.GoodsGroupId, lfGet_Object_GoodsGroup_CodeUKTZED (tmp.GoodsGroupId) AS CodeUKTZED FROM (SELECT DISTINCT tmpMI.GoodsGroupId FROM tmpMI) AS tmp)
           , tmpGoodsQuality AS
@@ -437,6 +464,10 @@ BEGIN
 
            , tmpMovement_QualityParams.OperDateIn
            , tmpMovement_QualityParams.OperDateOut
+
+           , (tmpMovement_QualityParams.OperDateIn + (CASE WHEN tmpMIGoodsByGoodsKind.NormInDays_gk > 0 THEN (tmpMIGoodsByGoodsKind.NormInDays_gk) :: TVarChar ELSE '0' END || ' DAY') :: INTERVAl) :: TDateTime AS OperDate_end
+           , (zfConvert_FloatToString (tmpMIGoodsByGoodsKind.NormInDays_gk) || ' ä³á') :: TVarChar AS NormInDays_gk_str
+
            , Object_CarModel.ValueData        AS CarModelName
            , Object_Car.ValueData             AS CarName
            , TRUE                 :: Boolean  AS isJuridicalBasis
@@ -445,8 +476,8 @@ BEGIN
 
            , tmpGoodsQuality.QualityName
            , tmpGoodsQuality.QualityComment
-           , COALESCE (tmpObject_GoodsPropertyValueGroup.Quality, tmpObject_GoodsPropertyValue.Quality, tmpGoodsQuality.Value17) :: TVarChar AS Value17   --, tmpGoodsQuality.Value17
-           , tmpGoodsQuality.Value1
+           , COALESCE (tmpObject_GoodsPropertyValueGroup.Quality, tmpObject_GoodsPropertyValue.Quality, tmpGoodsQuality.Value17)  :: TVarChar AS Value17   --, tmpGoodsQuality.Value17
+           , CASE WHEN tmpMIGoodsByGoodsKind.Value1_gk <> '' THEN tmpMIGoodsByGoodsKind.Value1_gk ELSE tmpGoodsQuality.Value1 END :: TVarChar AS Value1
            , tmpGoodsQuality.Value2
            , tmpGoodsQuality.Value3
            , tmpGoodsQuality.Value4
@@ -456,6 +487,7 @@ BEGIN
            , tmpGoodsQuality.Value8
            , tmpGoodsQuality.Value9
            , tmpGoodsQuality.Value10
+           , tmpMIGoodsByGoodsKind.Value11_gk
 
            , tmpMovement_QualityParams.InvNumber            AS InvNumber_Quality
            , tmpMovement_QualityParams.OperDate             AS OperDate_Quality
@@ -473,7 +505,12 @@ BEGIN
 
        FROM tmpMI
             INNER JOIN tmpMovement_Params AS Movement ON Movement.Id =  tmpMI.MovementId
-            LEFT JOIN Object AS Object_Goods ON Object_Goods.Id = tmpMI.ObjectId
+            
+            LEFT JOIN tmpMIGoodsByGoodsKind ON tmpMIGoodsByGoodsKind.ObjectId    = tmpMI.ObjectId
+                                           AND tmpMIGoodsByGoodsKind.GoodsKindId = tmpMI.GoodsKindId
+            
+            LEFT JOIN Object AS Object_Goods     ON Object_Goods.Id     = tmpMI.ObjectId
+            LEFT JOIN Object AS Object_GoodsKind ON Object_GoodsKind.Id = tmpMI.GoodsKindId
 
             INNER JOIN tmpGoodsQuality ON tmpGoodsQuality.GoodsId = tmpMI.ObjectId
             LEFT JOIN tmpMovement_QualityParams ON tmpMovement_QualityParams.QualityId = tmpGoodsQuality.QualityId
@@ -495,11 +532,6 @@ BEGIN
                                  ON ObjectLink_Goods_Measure.ObjectId = tmpMI.ObjectId
                                 AND ObjectLink_Goods_Measure.DescId = zc_ObjectLink_Goods_Measure()
             LEFT JOIN Object AS Object_Measure ON Object_Measure.Id = ObjectLink_Goods_Measure.ChildObjectId
-
-            LEFT JOIN MovementItemLinkObject AS MILinkObject_GoodsKind
-                                             ON MILinkObject_GoodsKind.MovementItemId = tmpMI.Id
-                                            AND MILinkObject_GoodsKind.DescId = zc_MILinkObject_GoodsKind()
-            LEFT JOIN Object AS Object_GoodsKind ON Object_GoodsKind.Id = MILinkObject_GoodsKind.ObjectId
 
             LEFT JOIN tmpObject_GoodsPropertyValue ON tmpObject_GoodsPropertyValue.GoodsId     = Object_Goods.Id
                                                   AND tmpObject_GoodsPropertyValue.GoodsKindId = Object_GoodsKind.Id
@@ -524,6 +556,7 @@ BEGIN
        WITH tmpMI AS
                     (SELECT MovementItem.*
                           , CASE WHEN Movement.DescId = zc_Movement_SendOnPrice() THEN MovementItem.Amount ELSE MIFloat_AmountPartner.ValueData END AS AmountPartner
+                          , MILO_GoodsKind.ObjectId             AS GoodsKindId
                           , ObjectLink_GoodsGroup.ChildObjectId AS GoodsGroupId
                      FROM MovementItem
                           INNER JOIN Movement ON Movement.Id = MovementItem.MovementId
@@ -534,6 +567,9 @@ BEGIN
                           LEFT JOIN MovementItemFloat AS MIFloat_AmountPartner
                                                       ON MIFloat_AmountPartner.MovementItemId = MovementItem.Id
                                                      AND MIFloat_AmountPartner.DescId = zc_MIFloat_AmountPartner()
+                          LEFT JOIN MovementItemLinkObject AS MILO_GoodsKind
+                                                           ON MILO_GoodsKind.MovementItemId = MovementItem.Id
+                                                          AND MILO_GoodsKind.DescId         = zc_MILinkObject_GoodsKind()
                           LEFT JOIN ObjectLink AS ObjectLink_GoodsGroup
                                                ON ObjectLink_GoodsGroup.ObjectId = MovementItem.ObjectId
                                               AND ObjectLink_GoodsGroup.DescId = zc_ObjectLink_Goods_GoodsGroup()
@@ -544,6 +580,29 @@ BEGIN
                          OR (MovementItem.Amount <> 0 AND Movement.DescId = zc_Movement_SendOnPrice())
                            )
                     )
+          , tmpMIGoodsByGoodsKind AS
+                            (SELECT tmpMI.*
+                                  , ObjectString_GK_Value1.ValueData     AS Value1_gk
+                                  , ObjectString_GK_Value11.ValueData    AS Value11_gk
+                                  , ObjectFloat_GK_NormInDays.ValueData  AS NormInDays_gk
+                             FROM tmpMI
+                                  JOIN ObjectLink AS ObjectLink_GoodsByGoodsKind_Goods
+                                                  ON ObjectLink_GoodsByGoodsKind_Goods.ChildObjectId = tmpMI.ObjectId
+                                                 AND ObjectLink_GoodsByGoodsKind_Goods.DescId        = zc_ObjectLink_GoodsByGoodsKind_Goods()
+                                  JOIN ObjectLink AS ObjectLink_GoodsByGoodsKind_GoodsKind
+                                                  ON ObjectLink_GoodsByGoodsKind_GoodsKind.ObjectId      = ObjectLink_GoodsByGoodsKind_Goods.ObjectId
+                                                 AND ObjectLink_GoodsByGoodsKind_GoodsKind.DescId        = zc_ObjectLink_GoodsByGoodsKind_GoodsKind()
+                                                 AND ObjectLink_GoodsByGoodsKind_GoodsKind.ChildObjectId = tmpMI.GoodsKindId	
+                                  LEFT JOIN ObjectString AS ObjectString_GK_Value1
+                                                         ON ObjectString_GK_Value1.ObjectId = ObjectLink_GoodsByGoodsKind_Goods.ObjectId
+                                                        AND ObjectString_GK_Value1.DescId   = zc_ObjectString_GoodsByGoodsKind_Quality1()
+                                  LEFT JOIN ObjectString AS ObjectString_GK_Value11
+                                                         ON ObjectString_GK_Value11.ObjectId = ObjectLink_GoodsByGoodsKind_Goods.ObjectId
+                                                        AND ObjectString_GK_Value11.DescId   = zc_ObjectString_GoodsByGoodsKind_Quality11()
+                                  LEFT JOIN ObjectFloat AS ObjectFloat_GK_NormInDays
+                                                        ON ObjectFloat_GK_NormInDays.ObjectId = ObjectLink_GoodsByGoodsKind_Goods.ObjectId
+                                                       AND ObjectFloat_GK_NormInDays.DescId   = zc_ObjectFloat_GoodsByGoodsKind_NormInDays()
+                            )
           , tmpMIGoods AS (SELECT DISTINCT tmpMI.ObjectId AS GoodsId FROM tmpMI)
           , tmpUKTZED AS (SELECT tmp.GoodsGroupId, lfGet_Object_GoodsGroup_CodeUKTZED (tmp.GoodsGroupId) AS CodeUKTZED FROM (SELECT DISTINCT tmpMI.GoodsGroupId FROM tmpMI) AS tmp)
           , tmpGoodsQuality AS
@@ -836,6 +895,10 @@ BEGIN
 
            , Movement.OperDate AS OperDateIn
            , Movement.OperDate AS OperDateOut
+
+           , (tmpMovement_QualityParams.OperDateIn + (CASE WHEN tmpMIGoodsByGoodsKind.NormInDays_gk > 0 THEN (tmpMIGoodsByGoodsKind.NormInDays_gk) :: TVarChar ELSE '0' END || ' DAY') :: INTERVAl) :: TDateTime AS OperDate_end
+           , (zfConvert_FloatToString (tmpMIGoodsByGoodsKind.NormInDays_gk) || ' ä³á') :: TVarChar AS NormInDays_gk_str
+
            , '' :: TVarChar    AS CarModelName
            , '' :: TVarChar    AS CarName
            , TRUE :: Boolean   AS isJuridicalBasis
@@ -871,10 +934,15 @@ BEGIN
 
        FROM tmpMI
             INNER JOIN tmpMovement_Params AS Movement ON Movement.Id =  tmpMI.MovementId
-            LEFT JOIN Object AS Object_Goods ON Object_Goods.Id = tmpMI.ObjectId
+
+            LEFT JOIN Object AS Object_Goods     ON Object_Goods.Id     = tmpMI.ObjectId
+            LEFT JOIN Object AS Object_GoodsKind ON Object_GoodsKind.Id = tmpMI.GoodsKindId
 
             INNER JOIN tmpGoodsQuality ON tmpGoodsQuality.GoodsId = tmpMI.ObjectId
             LEFT JOIN tmpMovement_QualityParams ON tmpMovement_QualityParams.QualityId = tmpGoodsQuality.QualityId
+
+            LEFT JOIN tmpMIGoodsByGoodsKind ON tmpMIGoodsByGoodsKind.ObjectId    = tmpMI.ObjectId
+                                           AND tmpMIGoodsByGoodsKind.GoodsKindId = tmpMI.GoodsKindId
 
             LEFT JOIN tmpUKTZED ON tmpUKTZED.GoodsGroupId = tmpMI.GoodsGroupId
             LEFT JOIN ObjectString AS ObjectString_Goods_UKTZED
@@ -897,11 +965,6 @@ BEGIN
                                  ON ObjectLink_Goods_Measure.ObjectId = tmpMI.ObjectId
                                 AND ObjectLink_Goods_Measure.DescId = zc_ObjectLink_Goods_Measure()
             LEFT JOIN Object AS Object_Measure ON Object_Measure.Id = ObjectLink_Goods_Measure.ChildObjectId
-
-            LEFT JOIN MovementItemLinkObject AS MILinkObject_GoodsKind
-                                             ON MILinkObject_GoodsKind.MovementItemId = tmpMI.Id
-                                            AND MILinkObject_GoodsKind.DescId = zc_MILinkObject_GoodsKind()
-            LEFT JOIN Object AS Object_GoodsKind ON Object_GoodsKind.Id = MILinkObject_GoodsKind.ObjectId
 
             LEFT JOIN tmpObject_GoodsPropertyValue ON tmpObject_GoodsPropertyValue.GoodsId     = Object_Goods.Id
                                                   AND tmpObject_GoodsPropertyValue.GoodsKindId = Object_GoodsKind.Id

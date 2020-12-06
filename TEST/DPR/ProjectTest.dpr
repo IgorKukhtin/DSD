@@ -1216,7 +1216,8 @@ uses
   Report_SaleExternalDialog in '..\..\Forms\Report\Report_SaleExternalDialog.pas' {Report_SaleExternalDialogForm: TParentForm},
   ReestrIncomeJournal in '..\..\Forms\Document\ReestrIncomeJournal.pas' {ReestrIncomeJournalForm: TParentForm},
   ReestrIncomeStartMovement in '..\..\Forms\Document\ReestrIncomeStartMovement.pas' {ReestrIncomeStartMovementForm: TParentForm},
-  ReestrIncomeUpdateMovement in '..\..\Forms\Document\ReestrIncomeUpdateMovement.pas' {ReestrIncomeUpdateMovementForm: TParentForm};
+  ReestrIncomeUpdateMovement in '..\..\Forms\Document\ReestrIncomeUpdateMovement.pas' {ReestrIncomeUpdateMovementForm: TParentForm},
+  GoodsByGoodsKindQuality in '..\..\Forms\Guides\GoodsByGoodsKindQuality.pas' {GoodsByGoodsKindQualityForm: TParentForm};
 
 {$R *.RES}
 {$R DevExpressRus.res}

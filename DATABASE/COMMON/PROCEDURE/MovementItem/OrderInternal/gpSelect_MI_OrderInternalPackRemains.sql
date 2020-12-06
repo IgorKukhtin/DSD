@@ -80,13 +80,13 @@ BEGIN
                                        , AmountPartnerOldTotal     TFloat
                                        , CountForecast             TFloat
                                        , CountForecastOrder        TFloat
-                                       , Plan1                     TFloat 
-                                       , Plan2                     TFloat 
-                                       , Plan3                     TFloat 
-                                       , Plan4                     TFloat 
-                                       , Plan5                     TFloat 
-                                       , Plan6                     TFloat 
-                                       , Plan7                     TFloat 
+                                       , Plan1                     TFloat
+                                       , Plan2                     TFloat
+                                       , Plan3                     TFloat
+                                       , Plan4                     TFloat
+                                       , Plan5                     TFloat
+                                       , Plan6                     TFloat
+                                       , Plan7                     TFloat
                                        , Promo1                    TFloat
                                        , Promo2                    TFloat
                                        , Promo3                    TFloat
@@ -128,10 +128,10 @@ BEGIN
                                 , Plan1, Plan2, Plan3, Plan4, Plan5, Plan6, Plan7
                                 , Promo1, Promo2, Promo3, Promo4, Promo5, Promo6, Promo7
                                 , DayCountForecast, DayCountForecastOrder, DayCountForecast_calc, DayCountForecast_new, DayCountForecast_new_new
-                    
+
                                 , ReceiptId, ReceiptCode, ReceiptName, ReceiptId_basis, ReceiptCode_basis, ReceiptName_basis, isErased
                                 , GoodsCode_packTo, GoodsName_packTo, GoodsKindName_packTo)
-            
+
             WITH -- заменяем товары на "Главный Товар в планировании прихода с упаковки"
                  tmpGoodsByGoodsKind AS (SELECT ObjectLink_GoodsByGoodsKind_Goods.ChildObjectId         AS GoodsId
                                               , ObjectLink_GoodsByGoodsKind_GoodsKind.ChildObjectId     AS GoodsKindId
@@ -216,12 +216,12 @@ BEGIN
             , _Result_Child.AmountForecastOrder
             , _Result_Child.AmountForecastOrderPromo
 
-            -- 
+            --
             , _Result_Child.AmountPrIn               -- ***Приход пр-во (ФАКТ)
             , _Result_Child.AmountPartnerOld         -- ***Факт заказ покупателя, сегодня
             , _Result_Child.AmountPartnerPromoOld    -- ***Факт заказ покупателя, сегодня
             , _Result_Child.AmountPartnerOldTotal
-            
+
               -- "средняя" за 1 день - продажа покупателям БЕЗ акций - Норм 1д (по пр.) без К
             , CAST (_Result_Child.CountForecast AS NUMERIC (16, 1)) :: TFloat AS CountForecast
               -- "средняя" за 1 день - заказы покупателей БЕЗ акций - Норм 1д (по зв.) без К
@@ -396,7 +396,7 @@ BEGIN
                                      , _Result_Child.Id ASC
                              ) AS AmountPackNextTotal
 
-                    -- 
+                    --
                   , SUM (_Result_Child.AmountPackNext_calc)
                         OVER (PARTITION BY CASE WHEN inShowAll = TRUE THEN _Result_Child.Id :: TVarChar
                                                 ELSE _Result_Child.KeyId || '_' || COALESCE (Object_Goods.Id, _Result_Child.GoodsId) :: TVarChar  || '_' || COALESCE (Object_GoodsKind.Id, _Result_Child.GoodsKindId) :: TVarChar
@@ -404,7 +404,7 @@ BEGIN
                               ORDER BY CASE WHEN Object_Goods.Id > 0 THEN 0 ELSE _Result_Child.Id END ASC
                                      , _Result_Child.Id ASC
                              ) AS AmountPackNext_calc
-                    -- 
+                    --
                   , SUM (_Result_Child.AmountPackNextSecond_calc)
                         OVER (PARTITION BY CASE WHEN inShowAll = TRUE THEN _Result_Child.Id :: TVarChar
                                                 ELSE _Result_Child.KeyId || '_' || COALESCE (Object_Goods.Id, _Result_Child.GoodsId) :: TVarChar  || '_' || COALESCE (Object_GoodsKind.Id, _Result_Child.GoodsKindId) :: TVarChar
@@ -412,7 +412,7 @@ BEGIN
                               ORDER BY CASE WHEN Object_Goods.Id > 0 THEN 0 ELSE _Result_Child.Id END ASC
                                      , _Result_Child.Id ASC
                              ) AS AmountPackNextSecond_calc
-                    -- 
+                    --
                   , SUM (_Result_Child.AmountPackNextTotal_calc)
                         OVER (PARTITION BY CASE WHEN inShowAll = TRUE THEN _Result_Child.Id :: TVarChar
                                                 ELSE _Result_Child.KeyId || '_' || COALESCE (Object_Goods.Id, _Result_Child.GoodsId) :: TVarChar  || '_' || COALESCE (Object_GoodsKind.Id, _Result_Child.GoodsKindId) :: TVarChar
@@ -421,7 +421,7 @@ BEGIN
                                      , _Result_Child.Id ASC
                              ) AS AmountPackNextTotal_calc
 
-                    -- 
+                    --
                   , SUM (_Result_Child.AmountPackAllTotal)
                         OVER (PARTITION BY CASE WHEN inShowAll = TRUE THEN _Result_Child.Id :: TVarChar
                                                 ELSE _Result_Child.KeyId || '_' || COALESCE (Object_Goods.Id, _Result_Child.GoodsId) :: TVarChar  || '_' || COALESCE (Object_GoodsKind.Id, _Result_Child.GoodsKindId) :: TVarChar
@@ -429,7 +429,7 @@ BEGIN
                               ORDER BY CASE WHEN Object_Goods.Id > 0 THEN 0 ELSE _Result_Child.Id END ASC
                                      , _Result_Child.Id ASC
                              ) AS AmountPackAllTotal
-                    -- 
+                    --
                   , SUM (_Result_Child.AmountPackAllTotal_calc)
                         OVER (PARTITION BY CASE WHEN inShowAll = TRUE THEN _Result_Child.Id :: TVarChar
                                                 ELSE _Result_Child.KeyId || '_' || COALESCE (Object_Goods.Id, _Result_Child.GoodsId) :: TVarChar  || '_' || COALESCE (Object_GoodsKind.Id, _Result_Child.GoodsKindId) :: TVarChar
@@ -438,7 +438,7 @@ BEGIN
                                      , _Result_Child.Id ASC
                              ) AS AmountPackAllTotal_calc
 
-                    -- 
+                    --
                   , SUM (_Result_Child.Amount_result_two)
                         OVER (PARTITION BY CASE WHEN inShowAll = TRUE THEN _Result_Child.Id :: TVarChar
                                                 ELSE _Result_Child.KeyId || '_' || COALESCE (Object_Goods.Id, _Result_Child.GoodsId) :: TVarChar  || '_' || COALESCE (Object_GoodsKind.Id, _Result_Child.GoodsKindId) :: TVarChar
@@ -446,7 +446,7 @@ BEGIN
                               ORDER BY CASE WHEN Object_Goods.Id > 0 THEN 0 ELSE _Result_Child.Id END ASC
                                      , _Result_Child.Id ASC
                              ) AS Amount_result_two
-                    -- 
+                    --
                   , SUM (_Result_Child.Amount_result_pack)
                         OVER (PARTITION BY CASE WHEN inShowAll = TRUE THEN _Result_Child.Id :: TVarChar
                                                 ELSE _Result_Child.KeyId || '_' || COALESCE (Object_Goods.Id, _Result_Child.GoodsId) :: TVarChar  || '_' || COALESCE (Object_GoodsKind.Id, _Result_Child.GoodsKindId) :: TVarChar
@@ -454,7 +454,7 @@ BEGIN
                               ORDER BY CASE WHEN Object_Goods.Id > 0 THEN 0 ELSE _Result_Child.Id END ASC
                                      , _Result_Child.Id ASC
                              ) AS Amount_result_pack
-                    -- 
+                    --
                   , SUM (_Result_Child.Amount_result_pack_pack)
                         OVER (PARTITION BY CASE WHEN inShowAll = TRUE THEN _Result_Child.Id :: TVarChar
                                                 ELSE _Result_Child.KeyId || '_' || COALESCE (Object_Goods.Id, _Result_Child.GoodsId) :: TVarChar  || '_' || COALESCE (Object_GoodsKind.Id, _Result_Child.GoodsKindId) :: TVarChar
@@ -505,7 +505,7 @@ BEGIN
                               ORDER BY CASE WHEN Object_Goods.Id > 0 THEN 0 ELSE _Result_Child.Id END ASC
                                      , _Result_Child.Id ASC
                              ) AS AmountPartnerPrior
-                    -- 
+                    --
                   , SUM (_Result_Child.AmountPartnerPriorPromo)
                         OVER (PARTITION BY CASE WHEN inShowAll = TRUE THEN _Result_Child.Id :: TVarChar
                                                 ELSE _Result_Child.KeyId || '_' || COALESCE (Object_Goods.Id, _Result_Child.GoodsId) :: TVarChar  || '_' || COALESCE (Object_GoodsKind.Id, _Result_Child.GoodsKindId) :: TVarChar
@@ -513,7 +513,7 @@ BEGIN
                               ORDER BY CASE WHEN Object_Goods.Id > 0 THEN 0 ELSE _Result_Child.Id END ASC
                                      , _Result_Child.Id ASC
                              ) AS AmountPartnerPriorPromo
-                    -- 
+                    --
                   , SUM (_Result_Child.AmountPartnerPriorTotal)
                         OVER (PARTITION BY CASE WHEN inShowAll = TRUE THEN _Result_Child.Id :: TVarChar
                                                 ELSE _Result_Child.KeyId || '_' || COALESCE (Object_Goods.Id, _Result_Child.GoodsId) :: TVarChar  || '_' || COALESCE (Object_GoodsKind.Id, _Result_Child.GoodsKindId) :: TVarChar
@@ -530,7 +530,7 @@ BEGIN
                               ORDER BY CASE WHEN Object_Goods.Id > 0 THEN 0 ELSE _Result_Child.Id END ASC
                                      , _Result_Child.Id ASC
                              ) AS AmountPartner
-                    -- 
+                    --
                   , SUM (_Result_Child.AmountPartnerNext)
                         OVER (PARTITION BY CASE WHEN inShowAll = TRUE THEN _Result_Child.Id :: TVarChar
                                                 ELSE _Result_Child.KeyId || '_' || COALESCE (Object_Goods.Id, _Result_Child.GoodsId) :: TVarChar  || '_' || COALESCE (Object_GoodsKind.Id, _Result_Child.GoodsKindId) :: TVarChar
@@ -538,7 +538,7 @@ BEGIN
                               ORDER BY CASE WHEN Object_Goods.Id > 0 THEN 0 ELSE _Result_Child.Id END ASC
                                      , _Result_Child.Id ASC
                              ) AS AmountPartnerNext
-                    -- 
+                    --
                   , SUM (_Result_Child.AmountPartnerPromo)
                         OVER (PARTITION BY CASE WHEN inShowAll = TRUE THEN _Result_Child.Id :: TVarChar
                                                 ELSE _Result_Child.KeyId || '_' || COALESCE (Object_Goods.Id, _Result_Child.GoodsId) :: TVarChar  || '_' || COALESCE (Object_GoodsKind.Id, _Result_Child.GoodsKindId) :: TVarChar
@@ -546,7 +546,7 @@ BEGIN
                               ORDER BY CASE WHEN Object_Goods.Id > 0 THEN 0 ELSE _Result_Child.Id END ASC
                                      , _Result_Child.Id ASC
                              ) AS AmountPartnerPromo
-                    -- 
+                    --
                   , SUM (_Result_Child.AmountPartnerNextPromo)
                         OVER (PARTITION BY CASE WHEN inShowAll = TRUE THEN _Result_Child.Id :: TVarChar
                                                 ELSE _Result_Child.KeyId || '_' || COALESCE (Object_Goods.Id, _Result_Child.GoodsId) :: TVarChar  || '_' || COALESCE (Object_GoodsKind.Id, _Result_Child.GoodsKindId) :: TVarChar
@@ -554,7 +554,7 @@ BEGIN
                               ORDER BY CASE WHEN Object_Goods.Id > 0 THEN 0 ELSE _Result_Child.Id END ASC
                                      , _Result_Child.Id ASC
                              ) AS AmountPartnerNextPromo
-                    -- 
+                    --
                   , SUM (_Result_Child.AmountPartnerTotal)
                         OVER (PARTITION BY CASE WHEN inShowAll = TRUE THEN _Result_Child.Id :: TVarChar
                                                 ELSE _Result_Child.KeyId || '_' || COALESCE (Object_Goods.Id, _Result_Child.GoodsId) :: TVarChar  || '_' || COALESCE (Object_GoodsKind.Id, _Result_Child.GoodsKindId) :: TVarChar
@@ -571,7 +571,7 @@ BEGIN
                               ORDER BY CASE WHEN Object_Goods.Id > 0 THEN 0 ELSE _Result_Child.Id END ASC
                                      , _Result_Child.Id ASC
                              ) AS AmountForecast
-                    -- 
+                    --
                   , SUM (_Result_Child.AmountForecastPromo)
                         OVER (PARTITION BY CASE WHEN inShowAll = TRUE THEN _Result_Child.Id :: TVarChar
                                                 ELSE _Result_Child.KeyId || '_' || COALESCE (Object_Goods.Id, _Result_Child.GoodsId) :: TVarChar  || '_' || COALESCE (Object_GoodsKind.Id, _Result_Child.GoodsKindId) :: TVarChar
@@ -588,7 +588,7 @@ BEGIN
                               ORDER BY CASE WHEN Object_Goods.Id > 0 THEN 0 ELSE _Result_Child.Id END ASC
                                      , _Result_Child.Id ASC
                              ) AS AmountForecastOrder
-                    -- 
+                    --
                   , SUM (_Result_Child.AmountForecastOrderPromo)
                         OVER (PARTITION BY CASE WHEN inShowAll = TRUE THEN _Result_Child.Id :: TVarChar
                                                 ELSE _Result_Child.KeyId || '_' || COALESCE (Object_Goods.Id, _Result_Child.GoodsId) :: TVarChar  || '_' || COALESCE (Object_GoodsKind.Id, _Result_Child.GoodsKindId) :: TVarChar
@@ -655,7 +655,7 @@ BEGIN
                               ORDER BY CASE WHEN Object_Goods.Id > 0 THEN 0 ELSE _Result_Child.Id END ASC
                                      , _Result_Child.Id ASC
                              ) AS Plan1
-                    -- 
+                    --
                   , SUM (_Result_Child.Plan2)
                         OVER (PARTITION BY CASE WHEN inShowAll = TRUE THEN _Result_Child.Id :: TVarChar
                                                 ELSE _Result_Child.KeyId || '_' || COALESCE (Object_Goods.Id, _Result_Child.GoodsId) :: TVarChar  || '_' || COALESCE (Object_GoodsKind.Id, _Result_Child.GoodsKindId) :: TVarChar
@@ -663,7 +663,7 @@ BEGIN
                               ORDER BY CASE WHEN Object_Goods.Id > 0 THEN 0 ELSE _Result_Child.Id END ASC
                                      , _Result_Child.Id ASC
                              ) AS Plan2
-                    -- 
+                    --
                   , SUM (_Result_Child.Plan3)
                         OVER (PARTITION BY CASE WHEN inShowAll = TRUE THEN _Result_Child.Id :: TVarChar
                                                 ELSE _Result_Child.KeyId || '_' || COALESCE (Object_Goods.Id, _Result_Child.GoodsId) :: TVarChar  || '_' || COALESCE (Object_GoodsKind.Id, _Result_Child.GoodsKindId) :: TVarChar
@@ -671,7 +671,7 @@ BEGIN
                               ORDER BY CASE WHEN Object_Goods.Id > 0 THEN 0 ELSE _Result_Child.Id END ASC
                                      , _Result_Child.Id ASC
                              ) AS Plan3
-                    -- 
+                    --
                   , SUM (_Result_Child.Plan4)
                         OVER (PARTITION BY CASE WHEN inShowAll = TRUE THEN _Result_Child.Id :: TVarChar
                                                 ELSE _Result_Child.KeyId || '_' || COALESCE (Object_Goods.Id, _Result_Child.GoodsId) :: TVarChar  || '_' || COALESCE (Object_GoodsKind.Id, _Result_Child.GoodsKindId) :: TVarChar
@@ -679,7 +679,7 @@ BEGIN
                               ORDER BY CASE WHEN Object_Goods.Id > 0 THEN 0 ELSE _Result_Child.Id END ASC
                                      , _Result_Child.Id ASC
                              ) AS Plan4
-                    -- 
+                    --
                   , SUM (_Result_Child.Plan5)
                         OVER (PARTITION BY CASE WHEN inShowAll = TRUE THEN _Result_Child.Id :: TVarChar
                                                 ELSE _Result_Child.KeyId || '_' || COALESCE (Object_Goods.Id, _Result_Child.GoodsId) :: TVarChar  || '_' || COALESCE (Object_GoodsKind.Id, _Result_Child.GoodsKindId) :: TVarChar
@@ -687,7 +687,7 @@ BEGIN
                               ORDER BY CASE WHEN Object_Goods.Id > 0 THEN 0 ELSE _Result_Child.Id END ASC
                                      , _Result_Child.Id ASC
                              ) AS Plan5
-                    -- 
+                    --
                   , SUM (_Result_Child.Plan6)
                         OVER (PARTITION BY CASE WHEN inShowAll = TRUE THEN _Result_Child.Id :: TVarChar
                                                 ELSE _Result_Child.KeyId || '_' || COALESCE (Object_Goods.Id, _Result_Child.GoodsId) :: TVarChar  || '_' || COALESCE (Object_GoodsKind.Id, _Result_Child.GoodsKindId) :: TVarChar
@@ -695,7 +695,7 @@ BEGIN
                               ORDER BY CASE WHEN Object_Goods.Id > 0 THEN 0 ELSE _Result_Child.Id END ASC
                                      , _Result_Child.Id ASC
                              ) AS Plan6
-                    -- 
+                    --
                   , SUM (_Result_Child.Plan7)
                         OVER (PARTITION BY CASE WHEN inShowAll = TRUE THEN _Result_Child.Id :: TVarChar
                                                 ELSE _Result_Child.KeyId || '_' || COALESCE (Object_Goods.Id, _Result_Child.GoodsId) :: TVarChar  || '_' || COALESCE (Object_GoodsKind.Id, _Result_Child.GoodsKindId) :: TVarChar
@@ -705,7 +705,7 @@ BEGIN
                              ) AS Plan7
 
                     -- "средняя" за 1 день - акции - прогноз
-                    -- 
+                    --
                   , SUM (_Result_Child.Promo1)
                         OVER (PARTITION BY CASE WHEN inShowAll = TRUE THEN _Result_Child.Id :: TVarChar
                                                 ELSE _Result_Child.KeyId || '_' || COALESCE (Object_Goods.Id, _Result_Child.GoodsId) :: TVarChar  || '_' || COALESCE (Object_GoodsKind.Id, _Result_Child.GoodsKindId) :: TVarChar
@@ -713,7 +713,7 @@ BEGIN
                               ORDER BY CASE WHEN Object_Goods.Id > 0 THEN 0 ELSE _Result_Child.Id END ASC
                                      , _Result_Child.Id ASC
                              ) AS Promo1
-                    -- 
+                    --
                   , SUM (_Result_Child.Promo2)
                         OVER (PARTITION BY CASE WHEN inShowAll = TRUE THEN _Result_Child.Id :: TVarChar
                                                 ELSE _Result_Child.KeyId || '_' || COALESCE (Object_Goods.Id, _Result_Child.GoodsId) :: TVarChar  || '_' || COALESCE (Object_GoodsKind.Id, _Result_Child.GoodsKindId) :: TVarChar
@@ -721,7 +721,7 @@ BEGIN
                               ORDER BY CASE WHEN Object_Goods.Id > 0 THEN 0 ELSE _Result_Child.Id END ASC
                                      , _Result_Child.Id ASC
                              ) AS Promo2
-                    -- 
+                    --
                   , SUM (_Result_Child.Promo3)
                         OVER (PARTITION BY CASE WHEN inShowAll = TRUE THEN _Result_Child.Id :: TVarChar
                                                 ELSE _Result_Child.KeyId || '_' || COALESCE (Object_Goods.Id, _Result_Child.GoodsId) :: TVarChar  || '_' || COALESCE (Object_GoodsKind.Id, _Result_Child.GoodsKindId) :: TVarChar
@@ -729,7 +729,7 @@ BEGIN
                               ORDER BY CASE WHEN Object_Goods.Id > 0 THEN 0 ELSE _Result_Child.Id END ASC
                                      , _Result_Child.Id ASC
                              ) AS Promo3
-                    -- 
+                    --
                   , SUM (_Result_Child.Promo4)
                         OVER (PARTITION BY CASE WHEN inShowAll = TRUE THEN _Result_Child.Id :: TVarChar
                                                 ELSE _Result_Child.KeyId || '_' || COALESCE (Object_Goods.Id, _Result_Child.GoodsId) :: TVarChar  || '_' || COALESCE (Object_GoodsKind.Id, _Result_Child.GoodsKindId) :: TVarChar
@@ -737,7 +737,7 @@ BEGIN
                               ORDER BY CASE WHEN Object_Goods.Id > 0 THEN 0 ELSE _Result_Child.Id END ASC
                                      , _Result_Child.Id ASC
                              ) AS Promo4
-                    -- 
+                    --
                   , SUM (_Result_Child.Promo5)
                         OVER (PARTITION BY CASE WHEN inShowAll = TRUE THEN _Result_Child.Id :: TVarChar
                                                 ELSE _Result_Child.KeyId || '_' || COALESCE (Object_Goods.Id, _Result_Child.GoodsId) :: TVarChar  || '_' || COALESCE (Object_GoodsKind.Id, _Result_Child.GoodsKindId) :: TVarChar
@@ -745,7 +745,7 @@ BEGIN
                               ORDER BY CASE WHEN Object_Goods.Id > 0 THEN 0 ELSE _Result_Child.Id END ASC
                                      , _Result_Child.Id ASC
                              ) AS Promo5
-                    -- 
+                    --
                   , SUM (_Result_Child.Promo6)
                         OVER (PARTITION BY CASE WHEN inShowAll = TRUE THEN _Result_Child.Id :: TVarChar
                                                 ELSE _Result_Child.KeyId || '_' || COALESCE (Object_Goods.Id, _Result_Child.GoodsId) :: TVarChar  || '_' || COALESCE (Object_GoodsKind.Id, _Result_Child.GoodsKindId) :: TVarChar
@@ -753,7 +753,7 @@ BEGIN
                               ORDER BY CASE WHEN Object_Goods.Id > 0 THEN 0 ELSE _Result_Child.Id END ASC
                                      , _Result_Child.Id ASC
                              ) AS Promo6
-                    -- 
+                    --
                   , SUM (_Result_Child.Promo7)
                         OVER (PARTITION BY CASE WHEN inShowAll = TRUE THEN _Result_Child.Id :: TVarChar
                                                 ELSE _Result_Child.KeyId || '_' || COALESCE (Object_Goods.Id, _Result_Child.GoodsId) :: TVarChar  || '_' || COALESCE (Object_GoodsKind.Id, _Result_Child.GoodsKindId) :: TVarChar
@@ -777,7 +777,7 @@ BEGIN
                               ORDER BY CASE WHEN Object_Goods.Id > 0 THEN 0 ELSE _Result_Child.Id END ASC
                                      , _Result_Child.Id ASC
                              ) AS Amount_master
-                    -- 
+                    --
                   , SUM (_Result_Child.AmountNext_master)
                         OVER (PARTITION BY CASE WHEN inShowAll = TRUE THEN _Result_Child.Id :: TVarChar
                                                 ELSE _Result_Child.KeyId || '_' || COALESCE (Object_Goods.Id, _Result_Child.GoodsId) :: TVarChar  || '_' || COALESCE (Object_GoodsKind.Id, _Result_Child.GoodsKindId) :: TVarChar
@@ -814,8 +814,8 @@ BEGIN
             LEFT JOIN Object AS Object_Goods_packTo     ON Object_Goods_packTo.Id     = tmpGoodsByGoodsKind.GoodsId_pack
             LEFT JOIN Object AS Object_GoodsKind_packTo ON Object_GoodsKind_packTo.Id = tmpGoodsByGoodsKind.GoodsKindId_pack
        WHERE _Result_Child.Ord = 1;
-       
-       
+
+
        --
        OPEN Cursor1 FOR
 
@@ -874,7 +874,7 @@ BEGIN
              -- Прогноз по заяв.
             , _Result_Master.AmountForecastOrder
             , _Result_Master.AmountForecastOrderPromo
-             -- 
+             --
             , _Result_Master.AmountPrIn
             , _Result_Master.AmountPartnerOld
             , _Result_Master.AmountPartnerPromoOld
@@ -933,10 +933,14 @@ BEGIN
             , _Result_Master.isErased
             , COALESCE (MIBoolean_Calculated.ValueData, TRUE) :: Boolean AS isCalculated
 
-            , CASE WHEN COALESCE (_Result_Master.AmountPartnerTotal,0) <> COALESCE (_Result_Master.AmountPartnerOldTotal,0) THEN TRUE ELSE FALSE END :: Boolean AS isDiff1           -- разница да/нет AmountPartnerTotal и AmountPartnerOldTotal 
-            , CASE WHEN COALESCE (_Result_Master.AmountPrIn        ,0) <> COALESCE (_Result_Master.AmountPartnerOldTotal,0) THEN TRUE ELSE FALSE END :: Boolean AS isDiff2           -- разница да/нет zc_MIFloat_AmountPrIn и AmountPartnerOldTotal
-            , CASE WHEN COALESCE (_Result_Master.Income_CEH        ,0) <> COALESCE (_Result_Master.AmountPartnerOldTotal,0) THEN TRUE ELSE FALSE END :: Boolean AS isDiff3           -- разница да/нет AmountPartnerOldTotal и Income_CEH 
-            , CASE WHEN COALESCE (_Result_Master.Income_CEH        ,0) <> COALESCE (_Result_Master.AmountPrIn           ,0) THEN TRUE ELSE FALSE END :: Boolean AS isDiff4           -- разница да/нет zc_MIFloat_AmountPrIn и Income_CEH 
+              -- разница да/нет AmountPartnerTotal и AmountPartnerOldTotal
+            , CASE WHEN COALESCE (_Result_Master.AmountPartnerTotal,0) <> COALESCE (_Result_Master.AmountPartnerOldTotal,0) THEN TRUE ELSE FALSE END :: Boolean AS isDiff1
+              -- разница да/нет zc_MIFloat_AmountPrIn и Income_CEH 
+            , CASE WHEN COALESCE (FLOOR (_Result_Master.Income_CEH),0) <> COALESCE (FLOOR (_Result_Master.AmountPrIn)   ,0) THEN TRUE ELSE FALSE END :: Boolean AS isDiff2
+
+            , (COALESCE (_Result_Master.AmountPartnerTotal,0) - COALESCE (_Result_Master.AmountPartnerOldTotal,0)) :: TFloat AS AmountPartnerTotal_diff
+            , (COALESCE (FLOOR (_Result_Master.Income_CEH),0) - COALESCE (FLOOR (_Result_Master.AmountPrIn)   ,0)) :: TFloat AS Income_CEH_diff
+
        FROM _Result_Master
            LEFT JOIN MovementItemBoolean AS MIBoolean_Calculated
                                          ON MIBoolean_Calculated.MovementItemId = _Result_Master.Id
@@ -946,7 +950,7 @@ BEGIN
 
 
        OPEN Cursor2 FOR
- 
+
        SELECT _Result_Child.Id
             , _Result_Child.ContainerId
             , _Result_Child.KeyId
@@ -1004,8 +1008,7 @@ BEGIN
             , _Result_Child.AmountForecastOrder
             , _Result_Child.AmountForecastOrderPromo
 
-             -- 
-            , _Result_Child.AmountPrIn
+             --
             , _Result_Child.AmountPartnerOld
             , _Result_Child.AmountPartnerPromoOld
             , _Result_Child.AmountPartnerOldTotal
@@ -1056,8 +1059,8 @@ BEGIN
 
             , COALESCE (MIBoolean_Calculated.ValueData, TRUE) :: Boolean AS isCalculated
 
-            , CASE WHEN _Result_Child.AmountPartnerTotal <> _Result_Child.AmountPartnerOldTotal THEN TRUE ELSE FALSE END :: Boolean AS isDiff1           -- разница да/нет AmountPartnerTotal и AmountPartnerOldTotal 
-            , CASE WHEN _Result_Child.AmountPrIn         <> _Result_Child.AmountPartnerOldTotal THEN TRUE ELSE FALSE END :: Boolean AS isDiff2           -- разница да/нет zc_MIFloat_AmountPrIn и AmountPartnerOldTotal
+            , CASE WHEN _Result_Child.AmountPartnerTotal <> _Result_Child.AmountPartnerOldTotal THEN TRUE ELSE FALSE END :: Boolean AS isDiff1           -- разница да/нет AmountPartnerTotal и AmountPartnerOldTotal
+            , (COALESCE (_Result_Child.AmountPartnerTotal,0) - COALESCE (_Result_Child.AmountPartnerOldTotal,0)) :: TFloat AS AmountPartnerTotal_diff
 
        FROM _tmpResult_Child AS _Result_Child
            LEFT JOIN MovementItemBoolean AS MIBoolean_Calculated
@@ -1156,7 +1159,7 @@ BEGIN
             , _Result_ChildTotal.AmountForecastOrder
             , _Result_ChildTotal.AmountForecastOrderPromo
 
-             -- 
+             --
             , _Result_ChildTotal.AmountPrIn
             , _Result_ChildTotal.AmountPartnerOld
             , _Result_ChildTotal.AmountPartnerPromoOld
@@ -1232,7 +1235,7 @@ BEGIN
             , _Result_Master.GoodsId    AS GoodsId_Master
             , _Result_Master.GoodsCode  AS GoodsCode_Master
             , _Result_Master.GoodsName  AS GoodsName_Master
-            
+
             , _Result_Master.GoodsId_basis
             , _Result_Master.GoodsCode_basis
             , _Result_Master.GoodsName_basis
@@ -1306,7 +1309,7 @@ BEGIN
             , _Result_Child.AmountForecastOrder
             , _Result_Child.AmountForecastOrderPromo
 
-             -- 
+             --
             , _Result_Child.AmountPrIn
             , _Result_Child.AmountPartnerOld
             , _Result_Child.AmountPartnerPromoOld
@@ -1360,16 +1363,16 @@ BEGIN
             , 0  :: TFloat   AS Remains_Master
             , 0  :: TFloat   AS Remains_CEH_Master
             , 0  :: TFloat   AS Remains_CEH_Next_Master
-            , 0  :: TFloat   AS Income_CEH_Master            
+            , 0  :: TFloat   AS Income_CEH_Master
        FROM _Result_Master
             LEFT JOIN _tmpResult_Child AS _Result_Child ON _Result_Child.KeyId = _Result_Master.KeyId
-      UNION 
+      UNION
        SELECT _Result_Master.Id         AS Id_Master
             , _Result_Master.KeyId
             , _Result_Master.GoodsId    AS GoodsId_Master
             , _Result_Master.GoodsCode  AS GoodsCode_Master
             , _Result_Master.GoodsName  AS GoodsName_Master
-            
+
             , _Result_Master.GoodsId_basis
             , _Result_Master.GoodsCode_basis
             , _Result_Master.GoodsName_basis
@@ -1443,7 +1446,7 @@ BEGIN
             , 0  :: TFloat   AS AmountForecastOrder
             , 0  :: TFloat   AS AmountForecastOrderPromo
 
-             -- 
+             --
             , 0  :: TFloat   AS AmountPrIn
             , 0  :: TFloat   AS AmountPartnerOld
             , 0  :: TFloat   AS AmountPartnerPromoOld
@@ -1492,7 +1495,7 @@ BEGIN
             , 0              AS GoodsCode_packTo
             , '' :: Tvarchar AS GoodsName_packTo
             , '' :: Tvarchar AS GoodsKindName_packTo
-            
+
             , _Result_Master.Remains          AS Remains_Master
             , _Result_Master.Remains_CEH      AS Remains_CEH_Master
             , _Result_Master.Remains_CEH_Next AS Remains_CEH_Next_Master

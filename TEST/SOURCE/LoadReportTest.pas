@@ -472,6 +472,8 @@ begin
   LoadReportFromFile('PrintMovement_Quality', ReportPath + '\Товарный Учет\PrintMovement_Quality.fr3');
 
   LoadReportFromFile('PrintMovement_Quality32049199', ReportPath + '\Товарный Учет\PrintMovement_Quality32049199.fr3');
+
+  LoadReportFromFile('PrintMovement_Quality32294926', ReportPath + '\Товарный Учет\PrintMovement_Quality32294926.fr3');
   exit;
 
   LoadReportFromFile('PrintMovement_ReturnInAkt', ReportPath + '\Товарный Учет\PrintMovement_ReturnInAkt.fr3');

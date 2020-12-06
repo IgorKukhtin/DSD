@@ -945,15 +945,15 @@ BEGIN
 
                      UNION ALL
                        SELECT tmpData.InvNumber_master   AS InvNumber_master
-                            , '' ::TVarChar              AS InvNumber_child
-                            , '' ::TVarChar              AS InvNumber_find
+                            , tmpData.InvNumber_master   AS InvNumber_child
+                            , tmpData.InvNumber_master   AS InvNumber_find
 
                             , '' ::TVarChar              AS ContractTagName_child
                             , 0                          AS ContractStateKindCode_child
 
                             , tmpData.ContractId_master  AS ContractId_master  
-                            , 0                          AS ContractId_child            
-                            , 0                          AS ContractId_find
+                            , tmpData.ContractId_master  AS ContractId_child            
+                            , tmpData.ContractId_master  AS ContractId_find
 
                             , tmpData.InfoMoneyId_master AS InfoMoneyId_master
                             , tmpData.InfoMoneyId_child  AS InfoMoneyId_child

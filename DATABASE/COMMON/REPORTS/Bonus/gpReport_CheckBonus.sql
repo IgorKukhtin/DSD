@@ -209,7 +209,8 @@ BEGIN
                                ) AS tmp
            LEFT JOIN tmpObjectBonus ON tmpObjectBonus.JuridicalId = tmp.JuridicalId
                                    AND tmpObjectBonus.PartnerId   = COALESCE (tmp.PartnerId, 0)
-      WHERE inPaidKindId = zc_Enum_PaidKind_FirstForm() OR COALESCE (inPaidKindId, 0) = 0
+      WHERE (inPaidKindId = zc_Enum_PaidKind_FirstForm() OR COALESCE (inPaidKindId, 0) = 0)
+        AND (tmp.BranchId = inBranchId OR inBranchId = 0)
 
   UNION ALL
       SELECT tmp.OperDate_Movement, tmp.OperDatePartner, tmp.InvNumber_Movement, tmp.DescName_Movement
@@ -261,7 +262,8 @@ BEGIN
                                ) AS tmp
            LEFT JOIN tmpObjectBonus ON tmpObjectBonus.JuridicalId = tmp.JuridicalId
                                    AND tmpObjectBonus.PartnerId   = COALESCE (tmp.PartnerId, 0)
-      WHERE inPaidKindId = zc_Enum_PaidKind_SecondForm() OR COALESCE (inPaidKindId, 0) = 0
+      WHERE (inPaidKindId = zc_Enum_PaidKind_SecondForm() OR COALESCE (inPaidKindId, 0) = 0)
+        AND (tmp.BranchId = inBranchId OR inBranchId = 0)
       ;
 
 END;

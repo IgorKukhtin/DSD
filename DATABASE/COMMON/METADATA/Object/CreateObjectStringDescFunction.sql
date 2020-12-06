@@ -459,6 +459,14 @@ CREATE OR REPLACE FUNCTION zc_ObjectString_Retail_OKPO() RETURNS Integer AS $BOD
 INSERT INTO ObjectStringDesc (Code, DescId, ItemName)
   SELECT 'zc_ObjectString_Retail_OKPO', zc_Object_Retail(), 'ОКПО для налог. документов' WHERE NOT EXISTS (SELECT * FROM ObjectStringDesc WHERE Code = 'zc_ObjectString_Retail_OKPO');
 
+CREATE OR REPLACE FUNCTION zc_ObjectString_GoodsByGoodsKind_Quality1() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM ObjectStringDesc WHERE Code = 'zc_ObjectString_GoodsByGoodsKind_Quality1'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
+INSERT INTO ObjectStringDesc (Code, DescId, ItemName)
+  SELECT 'zc_ObjectString_GoodsByGoodsKind_Quality1', zc_Object_GoodsByGoodsKind(), 'Вид оболонки, колонка 4' WHERE NOT EXISTS (SELECT * FROM ObjectStringDesc WHERE Code = 'zc_ObjectString_GoodsByGoodsKind_Quality1');
+
+CREATE OR REPLACE FUNCTION zc_ObjectString_GoodsByGoodsKind_Quality11() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM ObjectStringDesc WHERE Code = 'zc_ObjectString_GoodsByGoodsKind_Quality11'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
+INSERT INTO ObjectStringDesc (Code, DescId, ItemName)
+  SELECT 'zc_ObjectString_GoodsByGoodsKind_Quality11', zc_Object_GoodsByGoodsKind(), 'Вид пакування/стан продукції' WHERE NOT EXISTS (SELECT * FROM ObjectStringDesc WHERE Code = 'zc_ObjectString_GoodsByGoodsKind_Quality11');
+
 ---zc_Object_GoodsQuality
 
 CREATE OR REPLACE FUNCTION zc_ObjectString_GoodsQuality_Value1() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM ObjectStringDesc WHERE Code = 'zc_ObjectString_GoodsQuality_Value1'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
