@@ -1869,10 +1869,16 @@ CREATE OR REPLACE FUNCTION zc_ObjectFloat_Juridical_CodeOrangeCard() RETURNS Int
 INSERT INTO ObjectFloatDesc (DescId, Code, ItemName)
   SELECT zc_Object_Juridical(), 'zc_ObjectFloat_Juridical_CodeOrangeCard', 'Код в системе "Оранж Кард"' WHERE NOT EXISTS (SELECT * FROM ObjectFloatDesc WHERE Code = 'zc_ObjectFloat_Juridical_CodeOrangeCard');
 
+CREATE OR REPLACE FUNCTION zc_ObjectFloat_Goods_KoeffSUN_Supplementv1() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM ObjectFloatDesc WHERE Code = 'zc_ObjectFloat_Goods_KoeffSUN_Supplementv1'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
+INSERT INTO ObjectFloatDesc (DescId, Code, ItemName)
+  SELECT zc_Object_Goods(),'zc_ObjectFloat_Goods_KoeffSUN_Supplementv1', 'Кратность по дополнению СУН1' WHERE NOT EXISTS (SELECT * FROM ObjectFloatDesc WHERE Code = 'zc_ObjectFloat_Goods_KoeffSUN_Supplementv1');
+  
+  
 
 /*-------------------------------------------------------------------------------
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.   Воробкало А.А.   Шаблий О.В.
+ 05.12.20                                                                                      * zc_ObjectFloat_Goods_KoeffSUN_Supplementv1
  20.11.20                                                                                      * zc_ObjectFloat_Juridical_CodeOrangeCard
  17.11.20         * zc_ObjectFloat_Asset_KW
  29.10.20                                                                                      * zc_ObjectFloat_Goods_SummaWages, zc_ObjectFloat_Goods_PercentWages

@@ -552,6 +552,16 @@ inherited GoodsForm: TGoodsForm
             Options.Editing = False
             Width = 70
           end
+          object KoeffSUN_Supplementv1: TcxGridDBColumn
+            Caption = #1050#1088#1072#1090#1085#1086#1089#1090#1100' '#1087#1086' '#1076#1086#1087#1086#1083#1085#1077#1085#1080#1102' '#1057#1059#1053'1'
+            DataBinding.FieldName = 'KoeffSUN_Supplementv1'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DisplayFormat = ',0.##; ; '
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 78
+          end
           object isResolution_224: TcxGridDBColumn
             Caption = #1055#1086#1089#1090#1072#1085#1086#1074#1083#1077#1085#1080#1077' 224'
             DataBinding.FieldName = 'isResolution_224'
@@ -1783,6 +1793,14 @@ inherited GoodsForm: TGoodsForm
           MultiSelectSeparator = ','
         end
         item
+          Name = 'inKoeffSUN_Supplementv1'
+          Value = Null
+          Component = FormParams
+          ComponentItem = 'inKoeffSUN_Supplementv1'
+          DataType = ftFloat
+          MultiSelectSeparator = ','
+        end
+        item
           Name = 'inis_v1'
           Value = False
           Component = FormParams
@@ -1803,6 +1821,14 @@ inherited GoodsForm: TGoodsForm
           Value = False
           Component = FormParams
           ComponentItem = 'inis_v4'
+          DataType = ftBoolean
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'inis_Supplementv1'
+          Value = Null
+          Component = FormParams
+          ComponentItem = 'inis_Supplementv1'
           DataType = ftBoolean
           MultiSelectSeparator = ','
         end>
@@ -2714,6 +2740,34 @@ inherited GoodsForm: TGoodsForm
         MultiSelectSeparator = ','
       end
       item
+        Name = 'inKoeffSUN_v1'
+        Value = '0'
+        DataType = ftFloat
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inKoeffSUN_v2'
+        Value = '0'
+        DataType = ftFloat
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inKoeffSUN_v4'
+        Value = '0'
+        DataType = ftFloat
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inKoeffSUN_Supplementv1'
+        Value = '0'
+        DataType = ftFloat
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
         Name = 'inis_v1'
         Value = 'false'
         DataType = ftString
@@ -2731,6 +2785,13 @@ inherited GoodsForm: TGoodsForm
         Name = 'inis_v4'
         Value = 'false'
         DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inis_Supplementv1'
+        Value = False
+        DataType = ftBoolean
         ParamType = ptInput
         MultiSelectSeparator = ','
       end
@@ -3772,6 +3833,15 @@ inherited GoodsForm: TGoodsForm
         MultiSelectSeparator = ','
       end
       item
+        Name = 'inis_Supplementv1'
+        Value = Null
+        Component = FormParams
+        ComponentItem = 'inis_Supplementv1'
+        DataType = ftBoolean
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
         Name = 'inKoeffSUN_v1'
         Value = Null
         Component = FormParams
@@ -3794,6 +3864,15 @@ inherited GoodsForm: TGoodsForm
         Value = Null
         Component = FormParams
         ComponentItem = 'inKoeffSUN_v4'
+        DataType = ftFloat
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inKoeffSUN_Supplementv1'
+        Value = Null
+        Component = FormParams
+        ComponentItem = 'inKoeffSUN_Supplementv1'
         DataType = ftFloat
         ParamType = ptInput
         MultiSelectSeparator = ','

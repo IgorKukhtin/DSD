@@ -37,7 +37,7 @@ RETURNS TABLE (Id Integer, GoodsMainId Integer, Code Integer, IdBarCode TVarChar
              , GoodsAnalog TVarChar, GoodsAnalogATC TVarChar, GoodsActiveSubstance TVarChar
              , NotTransferTime boolean
              , isSUN_v3 boolean, KoeffSUN_v3 TFloat
-             , KoeffSUN_v1 TFloat, KoeffSUN_v2 TFloat, KoeffSUN_v4 TFloat
+             , KoeffSUN_v1 TFloat, KoeffSUN_v2 TFloat, KoeffSUN_v4 TFloat, KoeffSUN_Supplementv1 TFloat
              --, LimitSUN_T1 TFloat
              , isResolution_224  boolean
              , DateUpdateClose TDateTime
@@ -332,6 +332,7 @@ BEGIN
            , COALESCE (Object_Goods_Retail.KoeffSUN_v1,0)   :: TFloat AS KoeffSUN_v1
            , COALESCE (Object_Goods_Retail.KoeffSUN_v2,0)   :: TFloat AS KoeffSUN_v2
            , COALESCE (Object_Goods_Retail.KoeffSUN_v4,0)   :: TFloat AS KoeffSUN_v4
+           , COALESCE (Object_Goods_Retail.KoeffSUN_Supplementv1,0)   :: TFloat AS KoeffSUN_Supplementv1
            --, COALESCE (Object_Goods_Retail.LimitSUN_T1,0)   :: TFloat AS LimitSUN_T1
            , Object_Goods_Main.isResolution_224                                  AS isResolution_224
            , Object_Goods_Main.DateUpdateClose                                   AS DateUpdateClose

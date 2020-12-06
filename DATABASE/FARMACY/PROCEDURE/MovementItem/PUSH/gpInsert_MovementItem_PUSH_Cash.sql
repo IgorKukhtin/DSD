@@ -88,7 +88,7 @@ BEGIN
     
     PERFORM lpInsertUpdate_MovementItemLinkObject (zc_MILinkObject_Unit(), vbId, vbUnitId);    
 
-    PERFORM lpInsertUpdate_MovementItemLinkObject (zc_MILinkObject_Unit(), vbId, vbUnitId);    
+    PERFORM lpInsertUpdate_MovementItemString (zc_MIString_Result(), vbId, inResult);    
           
     -- сохранили <Результат>
     PERFORM lpInsertUpdate_MovementItemFloat (zc_MIFloat_AmountSecond(), vbId, vbAmountSecond);

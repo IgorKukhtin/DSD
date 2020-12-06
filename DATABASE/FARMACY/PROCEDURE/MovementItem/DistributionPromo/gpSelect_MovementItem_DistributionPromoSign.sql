@@ -27,10 +27,16 @@ BEGIN
         RETURN QUERY
         WITH
         tmpMI AS (SELECT MI_Sign.Id
-                       , MI_Sign.Amount::Integer                               AS MovementId
-                       , MI_Sign.IsErased                                      AS isIssuedBy
+                       , MI_Sign.Amount::Integer                                  AS MovementId
+                       , COALESCE(MIBoolean_isIssuedBy.ValueData, FALSE)::Boolean AS isIssuedBy
+                       , MI_Sign.IsErased                                      
        
                   FROM MovementItem AS MI_Sign
+
+                       LEFT JOIN MovementItemBoolean AS MIBoolean_isIssuedBy
+                                                     ON MIBoolean_isIssuedBy.MovementItemId = MI_Sign.Id
+                                                    AND MIBoolean_isIssuedBy.DescId = zc_MIBoolean_isIssuedBy()
+                                                    
                   WHERE MI_Sign.MovementId = inMovementId
                     AND MI_Sign.DescId = zc_MI_Sign()
                   )

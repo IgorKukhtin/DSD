@@ -38,6 +38,9 @@ type
     cb_v1: TcxCheckBox;
     cb_v2: TcxCheckBox;
     cb_v4: TcxCheckBox;
+    cb_Supplementv1: TcxCheckBox;
+    edKoeffSUN_Supplementv1: TcxCurrencyEdit;
+    cxLabel3: TcxLabel;
   private
     { Private declarations }
   public

@@ -704,6 +704,10 @@ type
     FIsVIP, FIsSite : Boolean;
     FStepSecond : Boolean;
 
+    aDistributionPromoId : array of Integer;
+    aDistributionPromoAmount : array of Currency;
+    aDistributionPromoSum : array of Currency;
+
     procedure SetBlinkVIP(isRefresh: Boolean);
     procedure SetBlinkCheck(isRefresh: Boolean);
     procedure SetBanCash(isRefresh: Boolean);
@@ -754,7 +758,8 @@ type
       ASiteDiscount: Currency; ARoundingDown: Boolean;
       APartionDateKindId: Integer; AConfirmationCodeSP: string;
       ALoyaltySignID: Integer; ALoyaltySMID: Integer; ALoyaltySMSumma: Currency;
-      ADivisionPartiesID: Integer; ADivisionPartiesName, AMedicForSale, ABuyerForSale, ABuyerForSalePhone: String;
+      ADivisionPartiesID: Integer; ADivisionPartiesName, AMedicForSale, ABuyerForSale, ABuyerForSalePhone,
+      ADistributionPromoList: String;
       ANeedComplete: Boolean; FiscalCheckNumber: String;
       out AUID: String): Boolean;
 
@@ -835,6 +840,10 @@ type
     procedure SetLoyaltySaveMoney;
     function SetLoyaltySaveMoneyDiscount: Boolean;
     function GetCash: ICash;
+
+    procedure ClearDistributionPromo;
+    procedure AddDistributionPromo(AID : Integer; AAmount, ASumm : Currency);
+    function ShowDistributionPromo : Boolean;
   end;
 
 var
@@ -862,7 +871,7 @@ uses CashFactory, IniUtils, CashCloseDialog, VIPDialog, DiscountDialog,
   LocalWorkUnit, Splash, DiscountService, UnilWin, ListDiff, ListGoods,
   PromoCodeDialog, ListDiffAddGoods, TlHelp32, EmployeeWorkLog,
   GoodsToExpirationDate, ChoiceGoodsAnalog, Helsi, RegularExpressions,
-  PUSHMessageCash, Updater,
+  PUSHMessageCash, PUSHMessage, Updater,
   EnterRecipeNumber, CheckHelsiSign, CheckHelsiSignAllUnit,
   EmployeeScheduleCash, SelectionFromDirectory,
   EnterLoyaltyNumber, Report_ImplementationPlanEmployeeCash,
@@ -1390,6 +1399,7 @@ begin
   FormParams.ParamByName('MedicForSale').Value := '';
   FormParams.ParamByName('BuyerForSale').Value := '';
   FormParams.ParamByName('BuyerForSalePhone').Value := '';
+  FormParams.ParamByName('DistributionPromoList').Value := '';
   FormParams.ParamByName('isBanAdd').Value := False;
 
   ClearFilterAll;
@@ -2787,6 +2797,8 @@ begin
     if not CheckSP then
       exit;
 
+  ClearDistributionPromo;
+
   // Контроль чека до печати
   GoodsId := RemainsCDS.FieldByName('Id').AsInteger;
   PartionDateKindId := RemainsCDS.FieldByName('PartionDateKindId').AsVariant;
@@ -2962,6 +2974,12 @@ begin
 
         end;
 
+        if (RemainsCDS.FieldByName('DistributionPromoID').AsInteger <> 0) and
+           (FieldByName('Amount').AsCurrency > 0) then
+        begin
+          AddDistributionPromo (RemainsCDS.FieldByName('DistributionPromoID').AsInteger, FieldByName('Amount').AsCurrency, FieldByName('Summ').AsCurrency);
+        end;
+
         Next;
       end;
     end;
@@ -3081,6 +3099,8 @@ begin
   if not gc_User.Local then
     if fCheck_RemainsError = false then
       exit;
+
+  if not ShowDistributionPromo then Exit;
 
   Add_Log('PutCheckToCash');
   PaidType := ptMoney;
@@ -3226,11 +3246,12 @@ begin
           FormParams.ParamByName('LoyaltySMSumma').Value,
           // ***16.08.20
           FormParams.ParamByName('DivisionPartiesID').Value,
-          FormParams.ParamByName('DivisionPartiesName').Value,
+          FormParams.ParamByName('DistributionPromoList').Value,
           // ***11.10.20
           FormParams.ParamByName('MedicForSale').Value,
           FormParams.ParamByName('BuyerForSale').Value,
           FormParams.ParamByName('BuyerForSalePhone').Value,
+          FormParams.ParamByName('DistributionPromoList').Value,
 
           True, // NeedComplete
           CheckNumber, // FiscalCheckNumber
@@ -4873,6 +4894,7 @@ begin
     , FormParams.ParamByName('MedicForSale').Value
     , FormParams.ParamByName('BuyerForSale').Value
     , FormParams.ParamByName('BuyerForSalePhone').Value
+    , FormParams.ParamByName('DistributionPromoList').Value
 
     , false // NeedComplete
     , '' // FiscalCheckNumber
@@ -4975,6 +4997,7 @@ begin
     , FormParams.ParamByName('MedicForSale').Value
     , FormParams.ParamByName('BuyerForSale').Value
     , FormParams.ParamByName('BuyerForSalePhone').Value
+    , FormParams.ParamByName('DistributionPromoList').Value
 
     , false // NeedComplete
     , '' // FiscalCheckNumber
@@ -5771,6 +5794,7 @@ begin
     , FormParams.ParamByName('MedicForSale').Value
     , FormParams.ParamByName('BuyerForSale').Value
     , FormParams.ParamByName('BuyerForSalePhone').Value
+    , FormParams.ParamByName('DistributionPromoList').Value
 
 
     , false // NeedComplete
@@ -8228,6 +8252,7 @@ begin
   FormParams.ParamByName('MedicForSale').Value := '';
   FormParams.ParamByName('BuyerForSale').Value := '';
   FormParams.ParamByName('BuyerForSalePhone').Value := '';
+  FormParams.ParamByName('DistributionPromoList').Value := '';
   FormParams.ParamByName('isBanAdd').Value := False;
 
   FiscalNumber := '';
@@ -9618,7 +9643,8 @@ function TMainCashForm2.SaveLocal(ADS: TClientDataSet; AManagerId: Integer;
   ASiteDiscount: Currency; ARoundingDown: Boolean;
   APartionDateKindId: Integer; AConfirmationCodeSP: string;
   ALoyaltySignID: Integer; ALoyaltySMID: Integer; ALoyaltySMSumma: Currency;
-  ADivisionPartiesID: Integer; ADivisionPartiesName, AMedicForSale, ABuyerForSale, ABuyerForSalePhone: String;
+  ADivisionPartiesID: Integer; ADivisionPartiesName, AMedicForSale, ABuyerForSale, ABuyerForSalePhone,
+  ADistributionPromoList: String;
   ANeedComplete: Boolean; FiscalCheckNumber: String; out AUID: String): Boolean;
 var
   NextVIPId: Integer;
@@ -9880,7 +9906,8 @@ begin
           ALoyaltySMSumma, // Скидка по программе лояльности накопительной
           AMedicForSale, // ФИО врача (на продажу)
           ABuyerForSale, // ФИО покупателя (на продажу)
-          ABuyerForSalePhone // Телефон покупателя (на продажу)
+          ABuyerForSalePhone, // Телефон покупателя (на продажу)
+          ADistributionPromoList // Раздача акционных материалов.
 
           ]));
       End
@@ -9982,6 +10009,10 @@ begin
         FLocalDataBaseHead.FieldByName('BUYERFS').Value := ABuyerForSale;
         // Телефон покупателя (на продажу)
         FLocalDataBaseHead.FieldByName('BUYERFSP').Value := ABuyerForSalePhone;
+        // Раздача акционных материалов
+        FLocalDataBaseHead.FieldByName('DISTPROMO').Value := ADistributionPromoList;
+        // Раздача акционных материалов
+        FLocalDataBaseHead.FieldByName('DISTPROMO').Value := ADistributionPromoList;
         FLocalDataBaseHead.Post;
       End;
     except
@@ -11285,6 +11316,89 @@ begin
     end;
   end;
 end;
+
+
+procedure TMainCashForm2.ClearDistributionPromo;
+begin
+  SetLength(aDistributionPromoId, 0);
+  SetLength(aDistributionPromoAmount, 0);
+  SetLength(aDistributionPromoSum, 0);
+end;
+
+procedure TMainCashForm2.AddDistributionPromo(AID : Integer; AAmount, ASumm : Currency);
+  var I : Integer;
+begin
+
+  for I := Low(aDistributionPromoId) to High(aDistributionPromoId) do
+    if aDistributionPromoId[I] = AID then
+  begin
+    aDistributionPromoAmount[I] := aDistributionPromoAmount[I] + AAmount;
+    aDistributionPromoSum[I] := aDistributionPromoSum[I] + ASumm;
+    Exit;
+  end;
+
+  SetLength(aDistributionPromoId, Length(aDistributionPromoId) + 1);
+  SetLength(aDistributionPromoAmount, Length(aDistributionPromoAmount) + 1);
+  SetLength(aDistributionPromoSum, Length(aDistributionPromoSum) + 1);
+
+  aDistributionPromoId[High(aDistributionPromoId)] := AID;
+  aDistributionPromoAmount[High(aDistributionPromoAmount)] := AAmount;
+  aDistributionPromoSum[High(aDistributionPromoSum)] := ASumm;
+
+end;
+
+function TMainCashForm2.ShowDistributionPromo : Boolean;
+  var DistributionPromoCDS: TClientDataSet;I : Integer;
+begin
+  Result := True;
+  FormParams.ParamByName('DistributionPromoList').Value := '';
+
+  if Length(aDistributionPromoId) = 0 then Exit;
+
+  if not fileExists(DistributionPromo_lcl) then
+    exit;
+
+  try
+
+    DistributionPromoCDS := TClientDataSet.Create(Nil);
+    DistributionPromoCDS.IndexFieldNames := 'ID';
+
+    WaitForSingleObject(MutexDistributionPromo, INFINITE);
+    try
+      if fileExists(GoodsExpirationDate_lcl) then
+        LoadLocalData(DistributionPromoCDS, DistributionPromo_lcl);
+      if not DistributionPromoCDS.Active then
+        DistributionPromoCDS.Open;
+
+      for I := Low(aDistributionPromoId) to High(aDistributionPromoId) do
+        if DistributionPromoCDS.Locate('Id', aDistributionPromoId[I], []) then
+      begin
+        if (DistributionPromoCDS.FieldByName('StartPromo').AsDateTime <= Date) and (DistributionPromoCDS.FieldByName('EndPromo').AsDateTime >= Date) and
+           ((DistributionPromoCDS.FieldByName('Amount').AsCurrency > 0) and (DistributionPromoCDS.FieldByName('Amount').AsCurrency <= aDistributionPromoAmount[I]) OR
+           (DistributionPromoCDS.FieldByName('SummRepay').AsCurrency > 0) and (DistributionPromoCDS.FieldByName('SummRepay').AsCurrency <= aDistributionPromoSum[I]) OR
+           (DistributionPromoCDS.FieldByName('Amount').AsCurrency = 0) and (DistributionPromoCDS.FieldByName('SummRepay').AsCurrency = 0)) then
+        begin
+
+          if FormParams.ParamByName('DistributionPromoList').Value <> '' then
+            FormParams.ParamByName('DistributionPromoList').Value := FormParams.ParamByName('DistributionPromoList').Value + ',';
+          FormParams.ParamByName('DistributionPromoList').Value := DistributionPromoCDS.FieldByName('Id').AsString + ',';
+
+          if ShowPUSHMessage(DistributionPromoCDS.FieldByName('Message').AsString) then
+            FormParams.ParamByName('DistributionPromoList').Value := FormParams.ParamByName('DistributionPromoList').Value + '1'
+          else FormParams.ParamByName('DistributionPromoList').Value := FormParams.ParamByName('DistributionPromoList').Value + '0';
+        end;
+      end;
+
+
+    finally
+      ReleaseMutex(MutexDistributionPromo);
+    end;
+  finally
+    DistributionPromoCDS.Free;
+  end;
+end;
+
+
 
 { TSaveRealThread }
 { TRefreshDiffThread }

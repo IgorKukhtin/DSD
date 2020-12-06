@@ -78,6 +78,7 @@ type
     MEDICFS  : String[100];      //ФИО врача (на продажу)
     BUYERFS  : String[100];      //ФИО покупателя (на продажу)
     BUYERFSP : String[100];      //Телефон покупателя (на продажу)
+    DISTPROMO : String[254];     //Раздача акционных материалов.
 
   end;
   TBodyRecord = record
@@ -209,6 +210,7 @@ type
     procedure SaveTaxUnitNight;
     procedure SaveGoodsExpirationDate;
     procedure SaveBuyer;
+    procedure SaveDistributionPromo;
 //    procedure SaveGoodsAnalog;
 
     procedure SendZReport;
@@ -520,6 +522,8 @@ begin   //yes
         if not gc_User.Local then SaveGoodsExpirationDate;
         //Получение покупателей
         if not gc_User.Local then SaveBuyer;
+        //Получение Раздача акционных материалов
+        if not gc_User.Local then SaveDistributionPromo;
         //Получение справочника аналогов
 //        if not gc_User.Local then SaveGoodsAnalog;
 
@@ -1358,6 +1362,7 @@ begin
                 MEDICFS := FieldByName('MEDICFS').AsString;
                 BUYERFS := FieldByName('BUYERFS').AsString;
                 BUYERFSP := FieldByName('BUYERFSP').AsString;
+                DISTPROMO := FieldByName('DISTPROMO').AsString;
 
                 FNeedSaveVIP := (MANAGER <> 0);
               end;
@@ -1519,6 +1524,7 @@ begin
                   dsdSave.Params.AddParam('inMedicForSale', ftString, ptInput, Head.MEDICFS);
                   dsdSave.Params.AddParam('inBuyerForSale', ftString, ptInput, Head.BUYERFS);
                   dsdSave.Params.AddParam('inBuyerForSalePhone', ftString, ptInput, Head.BUYERFSP);
+                  dsdSave.Params.AddParam('inDistributionPromoList', ftString, ptInput, Head.DISTPROMO);
                   // ***24.01.17
                   dsdSave.Params.AddParam('inUserSession', ftString, ptInput, Head.USERSESION);
 
@@ -2065,6 +2071,46 @@ begin
       on E: Exception do
       begin
         Add_Log('SaveBuyer Exception: ' + E.Message);
+        Exit;
+      end;
+    end;
+  finally
+    freeAndNil(sp);
+  end;
+end;
+
+procedure TMainCashForm2.SaveDistributionPromo;
+var
+  sp : TdsdStoredProc;
+  ds : TClientDataSet;
+begin
+  tiServise.Hint := 'Получение pаздач акционных материалов';
+  sp := TdsdStoredProc.Create(nil);
+  try
+    try
+      ds := TClientDataSet.Create(nil);
+      try
+        sp.OutputType := otDataSet;
+        sp.DataSet := ds;
+
+        sp.StoredProcName := 'gpSelect_Cash_DistributionPromo';
+        sp.Execute;
+        Add_Log('Start MutexDistributionPromo');
+        WaitForSingleObject(MutexDistributionPromo, INFINITE); // только для формы2;  защищаем так как есть в приложениее и сервисе
+        try
+          SaveLocalData(ds,DistributionPromo_lcl);
+        finally
+          Add_Log('End MutexDistributionPromo');
+          ReleaseMutex(MutexDistributionPromo);
+        end;
+
+      finally
+        ds.free;
+      end;
+    except
+      on E: Exception do
+      begin
+        Add_Log('SaveDistributionPromo Exception: ' + E.Message);
         Exit;
       end;
     end;
