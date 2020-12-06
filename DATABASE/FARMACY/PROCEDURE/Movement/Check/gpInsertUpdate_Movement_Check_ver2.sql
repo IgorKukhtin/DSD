@@ -12,6 +12,7 @@
 --DROP FUNCTION IF EXISTS gpInsertUpdate_Movement_Check_ver2 (Integer, TDateTime,  TVarChar, Integer, Integer, TVarChar, TVarChar, Boolean, Integer, TVarChar, TVarChar, TVarChar, TVarChar, Integer, TVarChar, TVarChar, TVarChar, TDateTime, Integer, Integer, Integer, TFloat, Integer, Boolean, Integer, Integer, Boolean, Integer, TVarChar, Integer, Integer, TFloat, TVarChar, TVarChar);
 --DROP FUNCTION IF EXISTS gpInsertUpdate_Movement_Check_ver2 (Integer, TDateTime,  TVarChar, Integer, Integer, TVarChar, TVarChar, Boolean, Integer, TVarChar, TVarChar, TVarChar, TVarChar, Integer, TVarChar, TVarChar, TVarChar, TDateTime, Integer, Integer, Integer, TFloat, Integer, Boolean, Integer, Integer, Boolean, Integer, TVarChar, Integer, Integer, TFloat, TVarChar, TVarChar, TVarChar, TVarChar);
 --DROP FUNCTION IF EXISTS gpInsertUpdate_Movement_Check_ver2 (Integer, TDateTime,  TVarChar, Integer, Integer, TVarChar, TVarChar, Boolean, Integer, TVarChar, TVarChar, TVarChar, TVarChar, Integer, TVarChar, TVarChar, TVarChar, TDateTime, Integer, Integer, Integer, TFloat, Integer, Boolean, Integer, Integer, Boolean, Integer, TVarChar, Integer, Integer, TFloat, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar);
+--DROP FUNCTION IF EXISTS gpInsertUpdate_Movement_Check_ver2 (Integer, TDateTime,  TVarChar, Integer, Integer, TVarChar, TVarChar, Boolean, Integer, TVarChar, TVarChar, TVarChar, TVarChar, Integer, TVarChar, TVarChar, TVarChar, TDateTime, Integer, Integer, Integer, TFloat, Integer, Boolean, Integer, Integer, Boolean, Integer, TVarChar, Integer, Integer, TFloat, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpInsertUpdate_Movement_Check_ver2(
  INOUT ioId                  Integer   , -- Ключ объекта <Документ ЧЕК>
@@ -49,6 +50,7 @@ CREATE OR REPLACE FUNCTION gpInsertUpdate_Movement_Check_ver2(
     IN inMedicForSale        TVarChar  , -- ФИО врача (на продажу)
     IN inBuyerForSale        TVarChar  , -- ФИО покупателя (на продажу)
     IN inBuyerForSalePhone   TVarChar  , -- Телефон покупателя (на продажу)
+    IN inDistributionPromoList TVarChar  , -- Раздача акционных материалов.
     IN inUserSession	     TVarChar  , -- сессия пользователя под которой создан чек в программе
     IN inSession             TVarChar    -- сессия пользователя
 )
@@ -64,6 +66,7 @@ $BODY$
    DECLARE vbCashRegisterId Integer;
    DECLARE vbPaidTypeId Integer;
    DECLARE vbJackdawsChecksId Integer;
+   DECLARE vbIndex Integer;
 BEGIN
     -- !!!заменили!!!
     IF COALESCE (inUserSession, '') <> '' AND inUserSession <> '5'
@@ -292,6 +295,21 @@ BEGIN
     IF COALESCE(TRIM(inBuyerForSale), '') <> ''
     THEN
       PERFORM lpInsertUpdate_MovementLinkObject (zc_MovementLinkObject_BuyerForSale(), ioId, gpInsertUpdate_Object_BuyerForSale(0, TRIM(inBuyerForSale), inBuyerForSalePhone, inSession));    
+    END IF;
+    
+    IF COALESCE(inDistributionPromoList, '') <> ''    
+    THEN
+      -- парсим выдачи
+      vbIndex := 1;
+      WHILE SPLIT_PART (inDistributionPromoList, ',', vbIndex) <> '' LOOP
+         -- добавляем то что нашли
+         PERFORM gpInsertUpdate_MovementItem_DistributionPromoSign (inId         := SPLIT_PART (inDistributionPromoList, ',', vbIndex) :: Integer
+                                                                  , inMovementId := ioId
+                                                                  , isIssuedBy   := CASE WHEN SPLIT_PART (inDistributionPromoList, ',', vbIndex + 1) :: Integer = 0 THEN FALSE ELSE True END
+                                                                  , inSession    := inUserSession);
+         -- теперь следуюющий
+         vbIndex := vbIndex + 2;
+      END LOOP;
     END IF;
 
     -- сохранили протокол

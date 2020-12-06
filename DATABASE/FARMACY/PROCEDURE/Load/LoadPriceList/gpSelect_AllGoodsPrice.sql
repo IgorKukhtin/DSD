@@ -483,7 +483,9 @@ BEGIN
              ELSE FALSE
         END
         -- Временно прикрыл товар постановление для переоценки
-        AND ResultSet.isResolution_224 = FALSE AS Reprice,
+        AND (ResultSet.isResolution_224 = FALSE OR ABS(CAST (CASE WHEN COALESCE(ResultSet.LastPrice,0) = 0 THEN 0.0
+                                                             ELSE (ResultSet.NewPrice / ResultSet.LastPrice) * 100 - 100
+                                                        END AS NUMERIC (16, 1)) :: TFloat) <= 10) AS Reprice,
 
         CASE WHEN tmpGoodsReprice.GoodsId IS NOT NULL THEN TRUE ELSE FALSE END AS isGoodsReprice
         
@@ -515,6 +517,7 @@ BEGIN
      -- OR inSession = '3'
      OR (COALESCE(ResultSet.NewPrice,0) > 0
          AND (COALESCE(ResultSet.NDSKindId,0) = zc_Enum_NDSKind_Medical()
+              OR COALESCE(ResultSet.NDSKindId,0) = zc_Enum_NDSKind_Special_0()
               OR (inVAT20 = TRUE
                   AND COALESCE(ResultSet.NDSKindId,0) = zc_Enum_NDSKind_Common()
                  )

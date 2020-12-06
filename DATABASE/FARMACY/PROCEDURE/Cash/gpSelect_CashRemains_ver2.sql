@@ -40,7 +40,8 @@ RETURNS TABLE (Id Integer, GoodsId_main Integer, GoodsGroupName TVarChar, GoodsN
                AmountSendIn TFloat,
                NotTransferTime boolean,
                NDSKindId Integer,
-               isPresent boolean
+               isPresent boolean,
+               DistributionPromoID Integer
 
              , PartionDateKindId_check   Integer
              , Price_check               TFloat
@@ -589,6 +590,47 @@ BEGIN
                                        FROM Object_Goods_Retail
                                        WHERE COALESCE (Object_Goods_Retail.GoodsPairSunId, 0) <> 0
                                          AND Object_Goods_Retail.RetailId = 4)
+                 , tmpDistributionPromo AS (SELECT MI_DistributionPromoMaster.ObjectId    AS GoodsGroupId
+                                                 , MAX(Movement.Id)::Integer              AS DistributionPromoID
+                                            FROM Movement
+
+                                                 INNER JOIN MovementLinkObject AS MovementLinkObject_Retail
+                                                                               ON MovementLinkObject_Retail.MovementId = Movement.Id
+                                                                              AND MovementLinkObject_Retail.DescId = zc_MovementLinkObject_Retail()
+                                                                              AND MovementLinkObject_Retail.ObjectId = vbObjectId
+
+                                                 LEFT JOIN MovementDate AS MovementDate_StartPromo
+                                                                        ON MovementDate_StartPromo.MovementId = Movement.Id
+                                                                       AND MovementDate_StartPromo.DescId = zc_MovementDate_StartPromo()
+                                                 LEFT JOIN MovementDate AS MovementDate_EndPromo
+                                                                        ON MovementDate_EndPromo.MovementId = Movement.Id
+                                                                       AND MovementDate_EndPromo.DescId = zc_MovementDate_EndPromo()
+
+                                                 LEFT JOIN MovementItem AS MI_DistributionPromo
+                                                                        ON MI_DistributionPromo.MovementId = Movement.Id
+                                                                       AND MI_DistributionPromo.DescId = zc_MI_Child()
+                                                                       AND MI_DistributionPromo.isErased = FALSE
+                                                                       AND MI_DistributionPromo.Amount = 1
+                                                                       AND MI_DistributionPromo.ObjectId = vbUnitId
+                                                                                                          
+                                                 LEFT JOIN MovementItem AS MI_DistributionPromoMaster
+                                                                        ON MI_DistributionPromoMaster.MovementId = Movement.Id
+                                                                       AND MI_DistributionPromoMaster.DescId = zc_MI_Master()
+                                                                       AND MI_DistributionPromoMaster.isErased = FALSE
+                                                                       AND MI_DistributionPromoMaster.Amount = 1
+
+                                            WHERE Movement.DescId = zc_Movement_DistributionPromo()
+                                              AND Movement.StatusId = zc_Enum_Status_Complete()
+                                              AND MovementDate_StartPromo.ValueData <= CURRENT_DATE + INTERVAL '1 DAY'
+                                              AND MovementDate_EndPromo.ValueData >= CURRENT_DATE - INTERVAL '1 DAY'
+                                              AND (COALESCE(MI_DistributionPromo.ObjectId, 0) = vbUnitId OR 
+                                                   NOT EXISTS(SELECT 1 FROM MovementItem
+                                                              WHERE MovementItem.MovementId = Movement.Id
+                                                                AND MovementItem.DescId = zc_MI_Child()
+                                                                AND MovementItem.Amount = 1
+                                                                AND MovementItem.isErased = FALSE))
+                                                   
+                                            GROUP BY MI_DistributionPromoMaster.ObjectId)
 
         -- Результат
         SELECT
@@ -854,6 +896,7 @@ BEGIN
           , COALESCE (Object_Goods_Main.isNotTransferTime, False)  AS NotTransferTime
           , COALESCE(CashSessionSnapShot.NDSKindId, Object_Goods_Main.NDSKindId) AS NDSKindId
           , Object_Goods_Main.isPresent                                          AS isPresent
+          , tmpDistributionPromo.DistributionPromoID                             AS DistributionPromoID
 
           , CashSessionSnapShot.PartionDateKindId   AS PartionDateKindId_check
           , CashSessionSnapShot.Price               AS Price_check
@@ -870,6 +913,8 @@ BEGIN
                                       ON Object_Goods_PairSun.GoodsPairSunId = Object_Goods_Retail.Id
             LEFT JOIN tmpGoodsPairSun AS Object_Goods_PairSun_Main
                                       ON Object_Goods_PairSun_Main.Id = Object_Goods_Retail.Id
+                                      
+            LEFT JOIN tmpDistributionPromo ON tmpDistributionPromo.GoodsGroupId =  Object_Goods_Main.GoodsGroupId
 
             LEFT JOIN tmpMCSAuto ON tmpMCSAuto.ObjectId = CashSessionSnapShot.ObjectId
             LEFT OUTER JOIN ObjectLink AS Link_Goods_AlternativeGroup

@@ -80,6 +80,7 @@ type
     macSimpleUpdateNDS: TMultiAction;
     actUpdateNDS: TdsdExecStoredProc;
     bbUpdateNDS: TdxBarButton;
+    isResolution_224: TcxGridDBColumn;
   private
     { Private declarations }
   public

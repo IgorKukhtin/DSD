@@ -43,6 +43,7 @@ function UserHelsi_lcl: String;
 function UserSettings_lcl: String;
 function EmployeeSchedule_lcl: String;
 function Buyer_lcl: String;
+function DistributionPromo_lcl: String;
 
 procedure SaveLocalData(ASrc: TClientDataSet; AFileName: String);
 procedure LoadLocalData(ADst: TClientDataSet; AFileName: String);
@@ -58,7 +59,7 @@ var
   MutexUserSettings, MutexDBF, MutexDBFDiff,  MutexVip, MutexRemains, MutexAlternative, MutexRefresh,
   MutexAllowedConduct, MutexGoods, MutexDiffCDS, MutexDiffKind, MutexEmployeeWorkLog,
   MutexBankPOSTerminal, MutexUnitConfig, MutexTaxUnitNight, MutexGoodsExpirationDate,
-  MutexGoodsAnalog, MutexUserHelsi, MutexEmployeeSchedule, MutexBuyer : THandle;
+  MutexGoodsAnalog, MutexUserHelsi, MutexEmployeeSchedule, MutexBuyer, MutexDistributionPromo : THandle;
 
 implementation
 
@@ -175,6 +176,11 @@ End;
 function Buyer_lcl: String;
 Begin
   Result := ExtractFilePath(Application.ExeName) + 'Buyer.local';
+End;
+
+function DistributionPromo_lcl: String;
+Begin
+  Result := ExtractFilePath(Application.ExeName) + 'DistributionPromo.local';
 End;
 
 function AddIntField(ADBFFieldDefs: TVKDBFFieldDefs; AName: string): TVKDBFFieldDef;
@@ -461,6 +467,8 @@ begin
   LastErr := GetLastError;
   MutexBuyer := CreateMutex(nil, false, 'farmacycashMutexBuyer');
   LastErr := GetLastError;
+  MutexDistributionPromo := CreateMutex(nil, false, 'farmacycashMutexDistributionPromo');
+  LastErr := GetLastError;
 end;
 
 procedure CloseMutex;
@@ -484,6 +492,7 @@ begin
  CloseHandle(MutexEmployeeSchedule);
  CloseHandle(MutexUserHelsi);
  CloseHandle(MutexBuyer);
+ CloseHandle(MutexDistributionPromo);
 end;
 
 

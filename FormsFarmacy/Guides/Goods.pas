@@ -241,6 +241,7 @@ type
     dxBarButton4: TdxBarButton;
     spUpdate_SummaWages: TdsdStoredProc;
     spUpdate_PercentWages: TdsdStoredProc;
+    KoeffSUN_Supplementv1: TcxGridDBColumn;
   private
     { Private declarations }
   public

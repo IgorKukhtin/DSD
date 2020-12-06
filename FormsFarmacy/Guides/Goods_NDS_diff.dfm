@@ -4,24 +4,24 @@ inherited Goods_NDS_diffForm: TGoods_NDS_diffForm
   ClientWidth = 883
   AddOnFormData.ChoiceAction = dsdChoiceGuides
   ExplicitWidth = 899
-  ExplicitHeight = 484
+  ExplicitHeight = 488
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
     Width = 883
     Height = 423
     ExplicitWidth = 883
-    ExplicitHeight = 417
+    ExplicitHeight = 423
     ClientRectBottom = 423
     ClientRectRight = 883
     inherited tsMain: TcxTabSheet
       ExplicitWidth = 883
-      ExplicitHeight = 417
+      ExplicitHeight = 423
       inherited cxGrid: TcxGrid
         Width = 883
         Height = 423
         ExplicitWidth = 883
-        ExplicitHeight = 417
+        ExplicitHeight = 423
         inherited cxGridDBTableView: TcxGridDBTableView
           DataController.Summary.FooterSummaryItems = <
             item
@@ -374,6 +374,14 @@ inherited Goods_NDS_diffForm: TGoods_NDS_diffForm
             HeaderHint = #1042' '#1089#1087#1080#1089#1082#1077' '#1087#1088#1086#1077#1082#1090#1072' '#171#1044#1086#1089#1090#1091#1087#1085#1099#1077' '#1083#1077#1082#1072#1088#1089#1090#1074#1072#187
             Options.Editing = False
             Width = 60
+          end
+          object isResolution_224: TcxGridDBColumn
+            Caption = #1055#1086#1089#1090#1072#1085#1086#1074#1083#1077#1085#1080#1077' 224'
+            DataBinding.FieldName = 'isResolution_224'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 82
           end
         end
       end

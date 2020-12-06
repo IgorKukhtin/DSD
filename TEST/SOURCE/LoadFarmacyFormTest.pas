@@ -662,10 +662,10 @@ begin
 
     TdsdFormStorageFactory.GetStorage.Save(GetForm('TGoodsPartnerCodeMasterForm'));
     TdsdFormStorageFactory.GetStorage.Load('TGoodsPartnerCodeMasterForm');
+  }
 
     TdsdFormStorageFactory.GetStorage.Save(GetForm('TGoods_NDS_diffForm'));
     TdsdFormStorageFactory.GetStorage.Load('TGoods_NDS_diffForm');
-  }
 
     TdsdFormStorageFactory.GetStorage.Save(GetForm('TGoodsForm'));
     TdsdFormStorageFactory.GetStorage.Load('TGoodsForm');
