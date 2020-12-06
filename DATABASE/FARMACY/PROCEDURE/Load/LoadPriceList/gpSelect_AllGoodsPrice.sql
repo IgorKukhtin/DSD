@@ -483,9 +483,15 @@ BEGIN
              ELSE FALSE
         END
         -- Временно прикрыл товар постановление для переоценки
-        AND (ResultSet.isResolution_224 = FALSE OR ABS(CAST (CASE WHEN COALESCE(ResultSet.LastPrice,0) = 0 THEN 0.0
-                                                             ELSE (ResultSet.NewPrice / ResultSet.LastPrice) * 100 - 100
-                                                        END AS NUMERIC (16, 1)) :: TFloat) <= 10) AS Reprice,
+        AND (ResultSet.isResolution_224 = FALSE 
+          OR ResultSet.isResolution_224 = TRUE AND (COALESCE(ResultSet.NDSKindId,0) <> zc_Enum_NDSKind_Common() OR ResultSet.IsTop = FALSE) AND
+             ABS(CAST (CASE WHEN COALESCE(ResultSet.LastPrice,0) = 0 THEN 0.0
+                             ELSE (ResultSet.NewPrice / ResultSet.LastPrice) * 100 - 100
+                        END AS NUMERIC (16, 1)) :: TFloat) <= 10
+          OR ResultSet.isResolution_224 = TRUE AND COALESCE(ResultSet.NDSKindId,0) = zc_Enum_NDSKind_Common() AND ResultSet.IsTop = TRUE AND
+             CAST (CASE WHEN COALESCE(ResultSet.LastPrice,0) = 0 THEN 0.0
+                             ELSE (ResultSet.NewPrice / ResultSet.LastPrice) * 100 - 100
+                        END AS NUMERIC (16, 1)) :: TFloat BETWEEN - 10 AND 0) AS Reprice,
 
         CASE WHEN tmpGoodsReprice.GoodsId IS NOT NULL THEN TRUE ELSE FALSE END AS isGoodsReprice
         

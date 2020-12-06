@@ -18,10 +18,6 @@ BEGIN
       RETURN;
    END IF;
    
-   IF COALESCE(inNDS_PriceList, 0) = 0 THEN
-      RETURN;
-   END IF;
-   
    IF inNDS_PriceList = inNDS THEN 
       RETURN;
    END IF;   

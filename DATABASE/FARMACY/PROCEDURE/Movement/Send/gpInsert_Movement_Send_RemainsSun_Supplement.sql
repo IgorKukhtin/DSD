@@ -17,7 +17,7 @@ BEGIN
      vbUserId := inSession;
 
      -- все Товары для схемы SUN Supplement
-     CREATE TEMP TABLE _tmpGoods_SUN_Supplement   (GoodsId Integer) ON COMMIT DROP;
+     CREATE TEMP TABLE _tmpGoods_SUN_Supplement   (GoodsId Integer, KoeffSUN TFloat) ON COMMIT DROP;
 
      -- все Подразделения для схемы SUN Supplement
      CREATE TEMP TABLE _tmpUnit_SUN_Supplement   (UnitId Integer, DeySupplSun1 Integer, MonthSupplSun1 Integer) ON COMMIT DROP;
