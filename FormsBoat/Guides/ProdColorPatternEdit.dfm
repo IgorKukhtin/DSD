@@ -1,8 +1,8 @@
 object ProdColorPatternEditForm: TProdColorPatternEditForm
   Left = 0
   Top = 0
-  Caption = #1044#1086#1073#1072#1074#1080#1090#1100'/'#1048#1079#1084#1077#1085#1080#1090#1100' <'#1064#1072#1073#1083#1086#1085#1099' '#1062#1074#1077#1090#1072' ('#1051#1086#1076#1082#1072')>'
-  ClientHeight = 309
+  Caption = #1044#1086#1073#1072#1074#1080#1090#1100'/'#1048#1079#1084#1077#1085#1080#1090#1100' <'#1064#1072#1073#1083#1086#1085' '#1062#1074#1077#1090'>'
+  ClientHeight = 280
   ClientWidth = 295
   Color = clBtnFace
   Font.Charset = DEFAULT_CHARSET
@@ -17,19 +17,19 @@ object ProdColorPatternEditForm: TProdColorPatternEditForm
   PixelsPerInch = 96
   TextHeight = 13
   object edName: TcxTextEdit
-    Left = 10
-    Top = 72
+    Left = 164
+    Top = 85
     TabOrder = 0
-    Width = 273
+    Width = 120
   end
   object cxLabel1: TcxLabel
-    Left = 10
-    Top = 54
-    Caption = #1053#1072#1079#1074#1072#1085#1080#1077
+    Left = 164
+    Top = 65
+    Caption = #1069#1083#1077#1084#1077#1085#1090
   end
   object cxButton1: TcxButton
     Left = 33
-    Top = 264
+    Top = 233
     Width = 75
     Height = 25
     Action = actInsertUpdateGuides
@@ -38,7 +38,7 @@ object ProdColorPatternEditForm: TProdColorPatternEditForm
   end
   object cxButton2: TcxButton
     Left = 177
-    Top = 264
+    Top = 232
     Width = 75
     Height = 25
     Action = actFormClose
@@ -47,39 +47,39 @@ object ProdColorPatternEditForm: TProdColorPatternEditForm
     TabOrder = 3
   end
   object cxLabel2: TcxLabel
-    Left = 10
-    Top = 8
+    Left = 11
+    Top = 65
     Caption = #1050#1086#1076
   end
   object edCode: TcxCurrencyEdit
-    Left = 10
-    Top = 30
+    Left = 11
+    Top = 85
     EditValue = 0.000000000000000000
     Properties.DecimalPlaces = 0
     Properties.DisplayFormat = '0'
-    Properties.ReadOnly = True
+    Properties.ReadOnly = False
     TabOrder = 5
-    Width = 273
+    Width = 120
   end
   object cxLabel3: TcxLabel
-    Left = 10
-    Top = 100
+    Left = 11
+    Top = 165
     Caption = #1055#1088#1080#1084#1077#1095#1072#1085#1080#1077
   end
   object edComment: TcxTextEdit
-    Left = 10
-    Top = 120
+    Left = 11
+    Top = 185
     TabOrder = 7
     Width = 273
   end
   object cxLabel4: TcxLabel
-    Left = 10
-    Top = 150
+    Left = 11
+    Top = 15
     Caption = #1050#1072#1090#1077#1075#1086#1088#1080#1103
   end
   object edProdOptions: TcxButtonEdit
-    Left = 10
-    Top = 169
+    Left = 11
+    Top = 35
     Properties.Buttons = <
       item
         Default = True
@@ -90,13 +90,13 @@ object ProdColorPatternEditForm: TProdColorPatternEditForm
     Width = 273
   end
   object cxLabel5: TcxLabel
-    Left = 10
-    Top = 198
-    Caption = #1040#1088#1090#1080#1082#1091#1083
+    Left = 11
+    Top = 115
+    Caption = #1050#1086#1084#1087#1083#1077#1082#1090#1091#1102#1097#1080#1077
   end
   object edGoods: TcxButtonEdit
-    Left = 10
-    Top = 217
+    Left = 11
+    Top = 135
     Properties.Buttons = <
       item
         Default = True
@@ -107,8 +107,7 @@ object ProdColorPatternEditForm: TProdColorPatternEditForm
     Width = 273
   end
   object ActionList: TActionList
-    Left = 152
-    Top = 56
+    Left = 136
     object actDataSetRefresh: TdsdDataSetRefresh
       Category = 'DSDLib'
       MoveParams = <>
@@ -202,8 +201,7 @@ object ProdColorPatternEditForm: TProdColorPatternEditForm
         ParamType = ptInputOutput
         MultiSelectSeparator = ','
       end>
-    Left = 96
-    Top = 8
+    Left = 88
   end
   object spGet: TdsdStoredProc
     StoredProcName = 'gpGet_Object_ProdColorPattern'
@@ -270,8 +268,8 @@ object ProdColorPatternEditForm: TProdColorPatternEditForm
         MultiSelectSeparator = ','
       end>
     PackSize = 1
-    Left = 184
-    Top = 16
+    Left = 80
+    Top = 128
   end
   object cxPropertiesStore: TcxPropertiesStore
     Components = <
@@ -285,12 +283,11 @@ object ProdColorPatternEditForm: TProdColorPatternEditForm
       end>
     StorageName = 'cxPropertiesStore'
     StorageType = stStream
-    Left = 160
-    Top = 104
+    Left = 224
   end
   object dsdUserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn
-    Left = 104
-    Top = 104
+    Left = 128
+    Top = 232
   end
   object GuidesProdColorGroup: TdsdGuides
     KeyField = 'Id'
@@ -318,8 +315,8 @@ object ProdColorPatternEditForm: TProdColorPatternEditForm
         ParamType = ptInput
         MultiSelectSeparator = ','
       end>
-    Left = 126
-    Top = 160
+    Left = 214
+    Top = 48
   end
   object GuidesGoods: TdsdGuides
     KeyField = 'Id'
@@ -347,7 +344,7 @@ object ProdColorPatternEditForm: TProdColorPatternEditForm
         ParamType = ptInput
         MultiSelectSeparator = ','
       end>
-    Left = 118
-    Top = 208
+    Left = 214
+    Top = 112
   end
 end

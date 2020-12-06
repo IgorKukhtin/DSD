@@ -1,9 +1,9 @@
 object ProdColorGroupForm: TProdColorGroupForm
   Left = 0
   Top = 0
-  Caption = #1057#1087#1088#1072#1074#1086#1095#1085#1080#1082' <'#1050#1072#1090#1077#1075#1086#1088#1080#1103' '#1094#1074#1077#1090#1072'>'
+  Caption = #1057#1087#1088#1072#1074#1086#1095#1085#1080#1082' <'#1050#1072#1090#1077#1075#1086#1088#1080#1103' '#1062#1074#1077#1090'>'
   ClientHeight = 376
-  ClientWidth = 541
+  ClientWidth = 394
   Color = clBtnFace
   Font.Charset = DEFAULT_CHARSET
   Font.Color = clWindowText
@@ -19,12 +19,13 @@ object ProdColorGroupForm: TProdColorGroupForm
   object cxGrid: TcxGrid
     Left = 0
     Top = 26
-    Width = 541
+    Width = 394
     Height = 350
     Align = alClient
     TabOrder = 0
     LookAndFeel.NativeStyle = True
     LookAndFeel.SkinName = 'UserSkin'
+    ExplicitWidth = 541
     object cxGridDBTableView: TcxGridDBTableView
       Navigator.Buttons.CustomButtons = <>
       DataController.DataSource = DataSource
@@ -44,7 +45,6 @@ object ProdColorGroupForm: TProdColorGroupForm
       OptionsData.DeletingConfirmation = False
       OptionsData.Editing = False
       OptionsData.Inserting = False
-      OptionsView.ColumnAutoWidth = True
       OptionsView.Footer = True
       OptionsView.GroupByBox = False
       OptionsView.HeaderHeight = 40
@@ -56,7 +56,7 @@ object ProdColorGroupForm: TProdColorGroupForm
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         Options.Editing = False
-        Width = 80
+        Width = 50
       end
       object Name: TcxGridDBColumn
         Caption = #1053#1072#1079#1074#1072#1085#1080#1077
@@ -65,7 +65,7 @@ object ProdColorGroupForm: TProdColorGroupForm
         HeaderAlignmentVert = vaCenter
         HeaderGlyphAlignmentHorz = taCenter
         Options.Editing = False
-        Width = 325
+        Width = 200
       end
       object Comment: TcxGridDBColumn
         Caption = #1055#1088#1080#1084#1077#1095#1072#1085#1080#1077
@@ -509,8 +509,8 @@ object ProdColorGroupForm: TProdColorGroupForm
         MultiSelectSeparator = ','
       end>
     PackSize = 1
-    Left = 432
-    Top = 80
+    Left = 240
+    Top = 104
   end
   object UserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn
     Left = 288
@@ -541,6 +541,7 @@ object ProdColorGroupForm: TProdColorGroupForm
     ColumnAddOnList = <>
     ColumnEnterList = <>
     SummaryItemList = <>
+    ShowFieldImageList = <>
     PropertiesCellList = <>
     Left = 104
     Top = 248
@@ -566,7 +567,7 @@ object ProdColorGroupForm: TProdColorGroupForm
         MultiSelectSeparator = ','
       end>
     PackSize = 1
-    Left = 432
-    Top = 128
+    Left = 240
+    Top = 152
   end
 end

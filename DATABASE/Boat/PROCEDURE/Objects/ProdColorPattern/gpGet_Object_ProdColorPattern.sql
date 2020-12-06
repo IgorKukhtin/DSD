@@ -37,7 +37,8 @@ BEGIN
 
      SELECT 
            Object_ProdColorPattern.Id         AS Id 
-         , ROW_NUMBER() OVER (PARTITION BY Object_ProdColorGroup.Id ORDER BY Object_ProdColorGroup.ObjectCode ASC, Object_ProdColorPattern.ObjectCode ASC) :: Integer AS Code
+       --, ROW_NUMBER() OVER (PARTITION BY Object_ProdColorGroup.Id ORDER BY Object_ProdColorGroup.ObjectCode ASC, Object_ProdColorPattern.ObjectCode ASC) :: Integer AS Code
+         , Object_ProdColorPattern.ObjectCode AS Code
          , Object_ProdColorPattern.ValueData  AS Name
 
          , ObjectString_Comment.ValueData     ::TVarChar AS Comment

@@ -1,7 +1,7 @@
 ﻿object GoodsEditForm: TGoodsEditForm
   Left = 0
   Top = 0
-  Caption = #1044#1086#1073#1072#1074#1080#1090#1100'/'#1048#1079#1084#1077#1085#1080#1090#1100' <'#1058#1086#1074#1072#1088'>'
+  Caption = #1044#1086#1073#1072#1074#1080#1090#1100'/'#1048#1079#1084#1077#1085#1080#1090#1100' <'#1050#1086#1084#1087#1083#1077#1082#1090#1091#1102#1097#1080#1077'>'
   ClientHeight = 641
   ClientWidth = 863
   Color = clBtnFace
@@ -49,12 +49,12 @@
     TabOrder = 3
   end
   object Код: TcxLabel
-    Left = 40
+    Left = 229
     Top = 3
-    Caption = #1050#1086#1076
+    Caption = 'Interne Nr'
   end
   object ceCode: TcxCurrencyEdit
-    Left = 40
+    Left = 229
     Top = 21
     Properties.DecimalPlaces = 0
     Properties.DisplayFormat = '0'
@@ -123,7 +123,7 @@
   object cxLabel5: TcxLabel
     Left = 40
     Top = 234
-    Caption = #1062#1074#1077#1090
+    Caption = 'Farbe'
   end
   object ceInfoMoney: TcxButtonEdit
     Left = 184
@@ -146,7 +146,7 @@
   object cxLabel7: TcxLabel
     Left = 184
     Top = 281
-    Caption = #1056#1072#1079#1084#1077#1088
+    Caption = 'Gr'#246#223'e'
   end
   object edGoodsSize: TcxButtonEdit
     Left = 184
@@ -248,7 +248,7 @@
   object cxLabel13: TcxLabel
     Left = 40
     Top = 419
-    Caption = #1055#1086#1076#1088#1072#1079#1076#1077#1083#1077#1085#1080#1077
+    Caption = #1057#1082#1083#1072#1076
   end
   object edUnit: TcxButtonEdit
     Left = 40
@@ -282,31 +282,31 @@
     Caption = #1058#1080#1087' '#1053#1044#1057
   end
   object cxLabel18: TcxLabel
-    Left = 137
+    Left = 40
     Top = 3
-    Caption = #1040#1088#1090#1080#1082#1091#1083
+    Caption = 'Artikel Nr'
   end
   object edArticle: TcxTextEdit
-    Left = 137
+    Left = 40
     Top = 21
     TabOrder = 34
     Width = 90
   end
   object edArticleVergl: TcxTextEdit
-    Left = 233
+    Left = 136
     Top = 21
     TabOrder = 35
     Width = 86
   end
   object cxLabel19: TcxLabel
-    Left = 233
+    Left = 136
     Top = 3
-    Caption = #1040#1088#1090#1080#1082#1091#1083' ('#1072#1083#1100#1090'.)'
+    Caption = 'Vergl. Nr'
   end
   object cxLabel20: TcxLabel
     Left = 40
     Top = 51
-    Caption = 'EAN '#1082#1086#1076
+    Caption = 'EAN'
   end
   object edEAN: TcxTextEdit
     Left = 40
@@ -317,7 +317,7 @@
   object cxLabel21: TcxLabel
     Left = 137
     Top = 51
-    Caption = 'ASIN '#1082#1086#1076
+    Caption = 'ASIN'
   end
   object edASIN: TcxTextEdit
     Left = 137
@@ -328,7 +328,7 @@
   object cxLabel22: TcxLabel
     Left = 233
     Top = 51
-    Caption = #1050#1086#1076' '#1089#1086#1086#1090#1074'.'
+    Caption = 'Matchcode'
   end
   object edMatchCode: TcxTextEdit
     Left = 233
@@ -340,7 +340,7 @@
     Left = 231
     Top = 142
     Hint = #8470' '#1090#1072#1084#1086#1078'. '#1087#1086#1096#1083#1080#1085#1099
-    Caption = #8470' '#1090#1072#1084#1086#1078'. '#1087#1086#1096'.'
+    Caption = 'Zolltarif Nr'
     ParentShowHint = False
     ShowHint = True
   end
@@ -353,7 +353,8 @@
   object cxLabel2: TcxLabel
     Left = 40
     Top = 512
-    Caption = #1062#1077#1085#1072' '#1073#1077#1079' '#1053#1044#1057' '#1079#1072#1082#1091#1087'.'
+    Hint = #1062#1077#1085#1072' '#1073#1077#1079' '#1053#1044#1057' '#1079#1072#1082#1091#1087'.'
+    Caption = 'Netto EK'
   end
   object edEKPrice: TcxCurrencyEdit
     Left = 40
@@ -375,7 +376,8 @@
   object cxLabel15: TcxLabel
     Left = 184
     Top = 511
-    Caption = #1062#1077#1085#1072' '#1073#1077#1079' '#1053#1044#1057' '#1088#1077#1082#1086#1084'.'
+    Hint = #1062#1077#1085#1072' '#1088#1077#1082#1086#1084#1077#1085#1076#1091#1077#1084#1072#1103' '#1073#1077#1079' '#1053#1044#1057
+    Caption = 'Empf. VK'
   end
   object cxLabel16: TcxLabel
     Left = 40
@@ -513,8 +515,8 @@
     end
   end
   object ActionList: TActionList
-    Left = 232
-    Top = 56
+    Left = 248
+    Top = 80
     object dsdDataSetRefresh: TdsdDataSetRefresh
       Category = 'DSDLib'
       MoveParams = <>

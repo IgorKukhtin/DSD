@@ -1,7 +1,7 @@
 object ProdColorGroupEditForm: TProdColorGroupEditForm
   Left = 0
   Top = 0
-  Caption = #1044#1086#1073#1072#1074#1080#1090#1100'/'#1048#1079#1084#1077#1085#1080#1090#1100' <'#1050#1072#1090#1077#1075#1086#1088#1080#1102' '#1094#1074#1077#1090#1072'>'
+  Caption = #1044#1086#1073#1072#1074#1080#1090#1100'/'#1048#1079#1084#1077#1085#1080#1090#1100' <'#1050#1072#1090#1077#1075#1086#1088#1080#1103' '#1062#1074#1077#1090'>'
   ClientHeight = 200
   ClientWidth = 295
   Color = clBtnFace
@@ -57,7 +57,7 @@ object ProdColorGroupEditForm: TProdColorGroupEditForm
     EditValue = 0.000000000000000000
     Properties.DecimalPlaces = 0
     Properties.DisplayFormat = '0'
-    Properties.ReadOnly = True
+    Properties.ReadOnly = False
     TabOrder = 5
     Width = 273
   end

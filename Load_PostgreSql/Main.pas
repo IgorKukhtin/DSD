@@ -1227,14 +1227,20 @@ begin
      if (ParamStr(2)='autoALL') and (BranchEdit.Text <> 'BranchId : 0')
      then begin
            if ((Hour_calc = 4) and (Minute_calc >=20 ) and (Minute_calc < 55))
-           or ((Hour_calc = 23) and (Minute_calc >=30 ))
            then begin
-                     myLogMemo_add('start stop 30 min');
+                     myLogMemo_add('start stop 35 min');
                      MyDelay(35*60*1000);
                      myLogMemo_add('end stop');
            end;
            //
-           if ((Hour_calc = 21) and (Minute_calc >=40 )and (Minute_calc < 54))
+           if ((Hour_calc = 23) and (Minute_calc >=31 ))
+           then begin
+                     myLogMemo_add('start stop 30 min');
+                     MyDelay(30*60*1000);
+                     myLogMemo_add('end stop');
+           end;
+           //
+           if ((Hour_calc = 21) and (Minute_calc >=21 )and (Minute_calc < 35))
            then begin
                      myLogMemo_add('start stop 15 min');
                      MyDelay(15*60*1000);

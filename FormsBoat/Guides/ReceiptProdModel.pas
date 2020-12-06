@@ -73,20 +73,20 @@ type
     dsdDBViewAddOnProdColorPattern: TdsdDBViewAddOn;
     cxGridProdColorPattern: TcxGrid;
     cxGridDBTableViewProdColorPattern: TcxGridDBTableView;
-    ch2ObjectName: TcxGridDBColumn;
-    ch2Value: TcxGridDBColumn;
-    ch2Comment: TcxGridDBColumn;
-    ch2InsertDate: TcxGridDBColumn;
-    ch2InsertName: TcxGridDBColumn;
-    ch2IsErased: TcxGridDBColumn;
+    ObjectName_ch2: TcxGridDBColumn;
+    Value_ch2: TcxGridDBColumn;
+    Comment_ch2: TcxGridDBColumn;
+    InsertDate_ch2: TcxGridDBColumn;
+    InsertName_ch2: TcxGridDBColumn;
+    isErased_ch2: TcxGridDBColumn;
     cxGridLevel1: TcxGridLevel;
     cxGridGoods: TcxGrid;
     cxGridDBTableViewGoods: TcxGridDBTableView;
-    colObjectName: TcxGridDBColumn;
-    colComment: TcxGridDBColumn;
-    colInsertDate: TcxGridDBColumn;
-    colInsertName: TcxGridDBColumn;
-    colisErased: TcxGridDBColumn;
+    ObjectName_ch1: TcxGridDBColumn;
+    Comment_ch1: TcxGridDBColumn;
+    InsertDate_ch1: TcxGridDBColumn;
+    InsertName_ch1: TcxGridDBColumn;
+    isErased_ch1: TcxGridDBColumn;
     cxGridLevel2: TcxGridLevel;
     cxTopSplitter: TcxSplitter;
     cxRightSplitter: TcxSplitter;
@@ -124,7 +124,7 @@ type
     actChoiceFormGoods: TOpenChoiceForm;
     bbShowAllColorItems: TdxBarButton;
     bbShowAllOptItems: TdxBarButton;
-    colNPP: TcxGridDBColumn;
+    NPP_ch1: TcxGridDBColumn;
     BarSubItemBoat: TdxBarSubItem;
     BarSubItemColor: TdxBarSubItem;
     BarSubItemOption: TdxBarSubItem;
@@ -145,7 +145,8 @@ type
     MenuItem1: TMenuItem;
     MenuItem5: TMenuItem;
     MenuItem6: TMenuItem;
-    colValue: TcxGridDBColumn;
+    Value_ch1: TcxGridDBColumn;
+    ObjectCode_ch2: TcxGridDBColumn;
   private
     { Private declarations }
   public

@@ -9,7 +9,7 @@ CREATE OR REPLACE FUNCTION gpSelect_Object_ReceiptProdModelChild_ProdColorPatter
 RETURNS TABLE (Id Integer, NPP Integer, Comment TVarChar
              , Value TFloat
              , ReceiptProdModelId Integer, ReceiptProdModelName TVarChar
-             , ObjectId Integer, ObjectName TVarChar
+             , ObjectId Integer, ObjectCode Integer, ObjectName TVarChar
              , InsertName TVarChar, UpdateName TVarChar
              , InsertDate TDateTime, UpdateDate TDateTime
              , isErased Boolean
@@ -51,7 +51,7 @@ BEGIN
                            )
      SELECT 
            Object_ReceiptProdModelChild.Id              AS Id
-         , ROW_NUMBER() OVER (PARTITION BY Object_ReceiptProdModel.Id ORDER BY Object_ReceiptProdModelChild.Id ASC) :: Integer AS NPP
+         , ROW_NUMBER() OVER (PARTITION BY Object_ReceiptProdModel.Id ORDER BY Object_Object.ObjectCode ASC) :: Integer AS NPP
          , Object_ReceiptProdModelChild.ValueData       AS Comment
 
          , ObjectFloat_Value.ValueData       ::TFloat   AS Value
@@ -60,6 +60,7 @@ BEGIN
          , Object_ReceiptProdModel.ValueData ::TVarChar AS ReceiptProdModelName
 
          , Object_Object.Id                  ::Integer  AS ObjectId
+         , Object_Object.ObjectCode          ::Integer  AS ObjectCode
          , Object_Object.ValueData           ::TVarChar AS ObjectName
 
          , Object_Insert.ValueData                      AS InsertName
@@ -75,7 +76,13 @@ BEGIN
          , ObjectString_GoodsGroupFull.ValueData         AS GoodsGroupNameFull
          , Object_GoodsGroup.ValueData                   AS GoodsGroupName
          , ObjectString_Article.ValueData                AS Article
-         , Object_ProdColor.ValueData                    AS ProdColorName
+         , CASE WHEN ObjectLink_Goods.ChildObjectId IS NULL
+                THEN CASE WHEN Object_ReceiptProdModelChild.ValueData <> ''
+                          THEN Object_ReceiptProdModelChild.ValueData
+                          ELSE ObjectString_ProdColorPattern_Comment.ValueData
+                     END
+                ELSE Object_ProdColor.ValueData
+           END :: TVarChar AS ProdColorName
          , Object_Measure.ValueData                      AS MeasureName
          
          , ObjectFloat_EKPrice.ValueData   ::TFloat   AS EKPrice
@@ -154,6 +161,10 @@ BEGIN
                                ON ObjectLink_ProdColorGroup.ObjectId = Object_Object.Id
                               AND ObjectLink_ProdColorGroup.DescId = zc_ObjectLink_ProdColorPattern_ProdColorGroup()
           LEFT JOIN Object AS Object_ProdColorGroup ON Object_ProdColorGroup.Id = ObjectLink_ProdColorGroup.ChildObjectId 
+
+          LEFT JOIN ObjectString AS ObjectString_ProdColorPattern_Comment
+                                 ON ObjectString_ProdColorPattern_Comment.ObjectId = Object_Object.Id
+                                AND ObjectString_ProdColorPattern_Comment.DescId = zc_ObjectString_ProdColorPattern_Comment()
 
           LEFT JOIN ObjectLink AS ObjectLink_Goods
                                ON ObjectLink_Goods.ObjectId = Object_Object.Id

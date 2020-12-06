@@ -67,6 +67,7 @@ type
     spInsertUpdate: TdsdStoredProc;
     actChoiceFormGoods: TOpenChoiceForm;
     GoodsName: TcxGridDBColumn;
+    NPP: TcxGridDBColumn;
   private
     { Private declarations }
   public

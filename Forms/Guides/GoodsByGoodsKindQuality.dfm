@@ -160,6 +160,7 @@ object GoodsByGoodsKindQualityForm: TGoodsByGoodsKindQualityForm
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         HeaderHint = #1076#1083#1103' '#1074#1080#1076#1072' '#1090#1086#1074#1072#1088#1072' - '#1042#1080#1076' '#1087#1072#1082#1091#1074#1072#1085#1085#1103'/'#1089#1090#1072#1085' '#1087#1088#1086#1076#1091#1082#1094#1110#1111' '
+        Width = 100
       end
       object Value1: TcxGridDBColumn
         Caption = #1042#1080#1076' '#1086#1073#1086#1083#1086#1085#1082#1080', '#8470'4'
