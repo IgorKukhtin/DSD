@@ -1474,7 +1474,7 @@ BEGIN
         WHERE _tmpRemains.AmountResult >= 1.0
           -- или товар среди парных
           -- OR _tmpGoods_SUN_PairSun_find.GoodsId_PairSun > 0
-          AND COALESCE (_tmpGoods_SUN_PairSun_find.GoodsId_PairSun, 0) = 0
+          AND _tmpGoods_SUN_PairSun_find.GoodsId_PairSun IS NULL
 
  --        AND (tmpRemains_Partion_sum.GoodsId > 0
  --         OR _tmpRemains.GoodsId IN (SELECT Object.Id FROM Object WHERE Object.DescId = zc_Object_Goods() AND Object.ObjectCode = 20392))
@@ -1572,7 +1572,7 @@ BEGIN
                --
              , COALESCE (_tmpGoods_SUN.KoeffSUN, 0)
                -- парный
-             , _tmpGoods_SUN_PairSun.GoodsId_PairSun
+             ,  _tmpGoods_SUN_PairSun.GoodsId_PairSun
 
         FROM _tmpRemains_Partion
              -- начинаем с аптек, где расход может быть максимальным
@@ -1591,6 +1591,7 @@ BEGIN
              -- товар есть среди парных
              LEFT JOIN (SELECT DISTINCT _tmpGoods_SUN_PairSun.GoodsId_PairSun FROM _tmpGoods_SUN_PairSun
                        ) AS _tmpGoods_SUN_PairSun_find ON _tmpGoods_SUN_PairSun_find.GoodsId_PairSun = _tmpRemains_Partion.GoodsId
+
 
         WHERE -- !!!Отключили парные!!!
               _tmpGoods_SUN_PairSun_find.GoodsId_PairSun IS NULL
@@ -1690,7 +1691,7 @@ BEGIN
                          , 0 AS Summ_next
                          , 0 AS MovementId
                          , 0 AS MovementItemId
-                    FROM (SELECT vbGoodsId AS GoodsId, vbPrice AS Price UNION SELECT vbGoodsId_PairSun AS GoodsId, vbPrice_PairSun AS Price WHERE vbGoodsId_PairSun > 0) AS tmpGoods
+                    FROM (SELECT vbGoodsId AS GoodsId, vbPrice AS Price /*UNION SELECT vbGoodsId_PairSun AS GoodsId, vbPrice_PairSun AS Price WHERE vbGoodsId_PairSun > 0*/) AS tmpGoods
                     WHERE CASE WHEN vbKoeffSUN > 0 THEN FLOOR (vbAmount / vbKoeffSUN) * vbKoeffSUN ELSE vbAmount END > 0
                    ;
                  -- обнуляем кол-во что бы больше не искать
@@ -1728,7 +1729,7 @@ BEGIN
                          , 0 AS Summ_next
                          , 0 AS MovementId
                          , 0 AS MovementItemId
-                    FROM (SELECT vbGoodsId AS GoodsId, vbPrice AS Price UNION SELECT vbGoodsId_PairSun AS GoodsId, vbPrice_PairSun AS Price WHERE vbGoodsId_PairSun > 0) AS tmpGoods
+                    FROM (SELECT vbGoodsId AS GoodsId, vbPrice AS Price /*UNION SELECT vbGoodsId_PairSun AS GoodsId, vbPrice_PairSun AS Price WHERE vbGoodsId_PairSun > 0*/) AS tmpGoods
                     WHERE vbAmountResult > 0
                    ;
                  -- уменьшаем на кол-во которое нашли и продолжаем поиск
@@ -2126,4 +2127,4 @@ WHERE Movement.OperDate  >= '01.01.2019'
 */
 
 
-select * from gpReport_Movement_Send_RemainsSun_pi(inOperDate := ('26.10.2020')::TDateTime ,  inSession := '3');
+--select * from gpReport_Movement_Send_RemainsSun_pi(inOperDate := ('26.10.2020')::TDateTime ,  inSession := '3');

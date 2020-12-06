@@ -3600,7 +3600,7 @@ begin
             vipList.FieldByName('NDSKindId').AsInteger,
             vipList.FieldByName('DiscountExternalID').AsInteger,
             vipList.FieldByName('DivisionPartiesID').AsInteger,
-            vipList.FieldByName('isPrice').AsBoolean,
+            vipList.FieldByName('isPresent').AsBoolean,
             vipList.FieldByName('Amount').AsFloat,
             vipList.FieldByName('PriceSale').asCurrency);
         vipList.Next;
