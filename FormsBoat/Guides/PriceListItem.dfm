@@ -49,6 +49,14 @@ object PriceListItemForm: TPriceListItemForm
       OptionsView.HeaderHeight = 40
       OptionsView.Indicator = True
       Styles.StyleSheet = dmMain.cxGridTableViewStyleSheet
+      object PartnerName: TcxGridDBColumn
+        Caption = #1055#1086#1089#1090#1072#1074#1097#1080#1082
+        DataBinding.FieldName = 'PartnerName'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Options.Editing = False
+        Width = 100
+      end
       object GoodsGroupNameFull: TcxGridDBColumn
         Caption = #1043#1088#1091#1087#1087#1072' ('#1074#1089#1077')'
         DataBinding.FieldName = 'GoodsGroupNameFull'
@@ -58,45 +66,38 @@ object PriceListItemForm: TPriceListItemForm
         Width = 98
       end
       object GoodsCode: TcxGridDBColumn
-        Caption = #1050#1086#1076
+        Caption = 'Interne Nr'
         DataBinding.FieldName = 'GoodsCode'
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
+        HeaderHint = #1042#1085#1091#1090#1088#1077#1085#1085#1080#1081' '#1082#1086#1076
         Options.Editing = False
-        Width = 34
+        Width = 45
+      end
+      object Article: TcxGridDBColumn
+        Caption = 'Artikel Nr'
+        DataBinding.FieldName = 'Article'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Options.Editing = False
+        Width = 80
+      end
+      object ArticleVergl: TcxGridDBColumn
+        Caption = 'Vergl. Nr'
+        DataBinding.FieldName = 'ArticleVergl'
+        Visible = False
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Options.Editing = False
+        Width = 120
       end
       object GoodsName: TcxGridDBColumn
-        Caption = #1058#1086#1074#1072#1088
+        Caption = #1050#1086#1084#1087#1083#1077#1082#1090#1091#1102#1097#1080#1077
         DataBinding.FieldName = 'GoodsName'
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         Options.Editing = False
         Width = 155
-      end
-      object Article: TcxGridDBColumn
-        Caption = #1040#1088#1090#1080#1082#1091#1083
-        DataBinding.FieldName = 'Article'
-        HeaderAlignmentHorz = taCenter
-        HeaderAlignmentVert = vaCenter
-        Options.Editing = False
-        Width = 55
-      end
-      object ArticleVergl: TcxGridDBColumn
-        Caption = #1040#1088#1090#1080#1082#1091#1083' ('#1072#1083#1100#1090'.)'
-        DataBinding.FieldName = 'ArticleVergl'
-        HeaderAlignmentHorz = taCenter
-        HeaderAlignmentVert = vaCenter
-        HeaderHint = #1040#1088#1090#1080#1082#1091#1083' ('#1072#1083#1100#1090#1077#1088#1085#1072#1090#1080#1074#1085#1099#1081')'
-        Options.Editing = False
-        Width = 120
-      end
-      object PartnerName: TcxGridDBColumn
-        Caption = #1055#1072#1088#1090#1085#1077#1088
-        DataBinding.FieldName = 'PartnerName'
-        HeaderAlignmentHorz = taCenter
-        HeaderAlignmentVert = vaCenter
-        Options.Editing = False
-        Width = 100
       end
       object MeasureName: TcxGridDBColumn
         Caption = #1045#1076'. '#1080#1079#1084'.'
@@ -154,51 +155,55 @@ object PriceListItemForm: TPriceListItemForm
         Width = 70
       end
       object PriceNoVAT: TcxGridDBColumn
-        Caption = #1062#1077#1085#1072' '#1073#1077#1079' '#1053#1044#1057
+        Caption = 'Ladenpreis'
         DataBinding.FieldName = 'PriceNoVAT'
         PropertiesClassName = 'TcxCurrencyEditProperties'
         Properties.DecimalPlaces = 4
         Properties.DisplayFormat = ',0.00##;-,0.00##; ;'
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
+        HeaderHint = #1062#1077#1085#1072' '#1087#1088#1086#1076#1072#1078#1080' '#1073#1077#1079' '#1085#1076#1089
         Width = 69
       end
       object PriceWVAT: TcxGridDBColumn
-        Caption = #1062#1077#1085#1072' '#1089' '#1053#1044#1057
+        Caption = #1062#1077#1085#1072' '#1087#1088#1086#1076#1072#1078#1080' '#1089' '#1085#1076#1089
         DataBinding.FieldName = 'PriceWVAT'
         PropertiesClassName = 'TcxCurrencyEditProperties'
         Properties.DecimalPlaces = 4
         Properties.DisplayFormat = ',0.00##;-,0.00##; ;'
+        Visible = False
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
+        HeaderHint = #1062#1077#1085#1072' '#1087#1088#1086#1076#1072#1078#1080' '#1089' '#1085#1076#1089
         Width = 70
       end
       object EKPrice: TcxGridDBColumn
-        Caption = #1062#1077#1085#1072' '#1073#1077#1079' '#1053#1044#1057' '#1079#1072#1082#1091#1087'.'
+        Caption = 'Netto EK'
         DataBinding.FieldName = 'EKPrice'
         PropertiesClassName = 'TcxCurrencyEditProperties'
         Properties.DecimalPlaces = 4
         Properties.DisplayFormat = ',0.####;-,0.####; ;'
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
-        HeaderHint = #1062#1077#1085#1072' '#1079#1072#1082#1091#1087#1082#1080' '#1073#1077#1079' '#1053#1044#1057
+        HeaderHint = #1062#1077#1085#1072' '#1074#1093'. '#1073#1077#1079' '#1053#1044#1057
         Options.Editing = False
         Width = 90
       end
       object EKPriceWVAT: TcxGridDBColumn
-        Caption = #1062#1077#1085#1072' '#1089' '#1053#1044#1057' '#1079#1072#1082#1091#1087'.'
+        Caption = #1062#1077#1085#1072' '#1074#1093'. '#1089' '#1053#1044#1057
         DataBinding.FieldName = 'EKPriceWVAT'
         PropertiesClassName = 'TcxCurrencyEditProperties'
         Properties.DecimalPlaces = 4
         Properties.DisplayFormat = ',0.####;-,0.####; ;'
+        Visible = False
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
-        HeaderHint = #1062#1077#1085#1072' '#1079#1072#1082#1091#1087#1082#1080' '#1089' '#1053#1044#1057
+        HeaderHint = #1062#1077#1085#1072' '#1074#1093'. '#1089' '#1053#1044#1057
         Options.Editing = False
         Width = 70
       end
       object EmpfPrice: TcxGridDBColumn
-        Caption = #1062#1077#1085#1072' '#1073#1077#1079' '#1053#1044#1057' '#1088#1077#1082#1086#1084'.'
+        Caption = 'Empf. VK'
         DataBinding.FieldName = 'EmpfPrice'
         PropertiesClassName = 'TcxCurrencyEditProperties'
         Properties.DecimalPlaces = 4
@@ -210,7 +215,7 @@ object PriceListItemForm: TPriceListItemForm
         Width = 87
       end
       object EmpfPriceWVAT: TcxGridDBColumn
-        Caption = #1062#1077#1085#1072' '#1089' '#1053#1044#1057' '#1088#1077#1082#1086#1084'.'
+        Caption = #1062#1077#1085#1072' '#1088#1077#1082#1086#1084#1077#1085#1076#1091#1077#1084#1072#1103' '#1089' '#1053#1044#1057
         DataBinding.FieldName = 'EmpfPriceWVAT'
         PropertiesClassName = 'TcxCurrencyEditProperties'
         Properties.DecimalPlaces = 4
@@ -220,21 +225,6 @@ object PriceListItemForm: TPriceListItemForm
         HeaderHint = #1062#1077#1085#1072' '#1088#1077#1082#1086#1084#1077#1085#1076#1091#1077#1084#1072#1103' '#1089' '#1053#1044#1057
         Options.Editing = False
         Width = 70
-      end
-      object isErased: TcxGridDBColumn
-        Caption = #1059#1076#1072#1083#1077#1085
-        DataBinding.FieldName = 'isErased'
-        Visible = False
-        Options.Editing = False
-        VisibleForCustomization = False
-        Width = 20
-      end
-      object ObjectId: TcxGridDBColumn
-        DataBinding.FieldName = 'ObjectId'
-        Visible = False
-        Options.Editing = False
-        VisibleForCustomization = False
-        Width = 20
       end
       object UpdateDate: TcxGridDBColumn
         Caption = #1044#1072#1090#1072' ('#1082#1086#1088#1088'.)'
@@ -269,6 +259,21 @@ object PriceListItemForm: TPriceListItemForm
         HeaderAlignmentVert = vaCenter
         Options.Editing = False
         Width = 80
+      end
+      object ObjectId: TcxGridDBColumn
+        DataBinding.FieldName = 'ObjectId'
+        Visible = False
+        Options.Editing = False
+        VisibleForCustomization = False
+        Width = 20
+      end
+      object isErased: TcxGridDBColumn
+        Caption = #1059#1076#1072#1083#1077#1085
+        DataBinding.FieldName = 'isErased'
+        Visible = False
+        Options.Editing = False
+        VisibleForCustomization = False
+        Width = 20
       end
     end
     object cxGridLevel: TcxGridLevel

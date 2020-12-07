@@ -103,12 +103,12 @@ object PriceListGoodsItemForm: TPriceListGoodsItemForm
       Width = 182
     end
     object cxLabel4: TcxLabel
-      Left = 268
+      Left = 271
       Top = 9
-      Caption = #1058#1086#1074#1072#1088':'
+      Caption = #1050#1086#1084#1087#1083#1077#1082#1090#1091#1102#1097#1080#1077':'
     end
     object edGoods: TcxButtonEdit
-      Left = 308
+      Left = 365
       Top = 9
       Properties.Buttons = <
         item
@@ -471,6 +471,7 @@ object PriceListGoodsItemForm: TPriceListGoodsItemForm
     ColumnAddOnList = <>
     ColumnEnterList = <>
     SummaryItemList = <>
+    ShowFieldImageList = <>
     PropertiesCellList = <>
     Left = 336
     Top = 168
