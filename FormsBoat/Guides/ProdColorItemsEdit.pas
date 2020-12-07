@@ -43,11 +43,8 @@ type
     edProduct: TcxButtonEdit;
     GuidesProduct: TdsdGuides;
     cxLabel4: TcxLabel;
-    edProdOptions: TcxButtonEdit;
-    GuidesProdColorGroup: TdsdGuides;
-    cxLabel5: TcxLabel;
-    GuidesProdColor: TdsdGuides;
-    edProdColor: TcxButtonEdit;
+    edGoods: TcxButtonEdit;
+    GuidesGoods: TdsdGuides;
     edProdColorPattern: TcxButtonEdit;
     GuidesProdColorPattern: TdsdGuides;
   private

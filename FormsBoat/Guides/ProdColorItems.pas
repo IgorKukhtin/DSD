@@ -67,6 +67,7 @@ type
     ProductName: TcxGridDBColumn;
     actShowAllBoatSale: TBooleanStoredProcAction;
     bbShowAllBoatSale: TdxBarButton;
+    actChoiceFormGoods: TOpenChoiceForm;
   private
     { Private declarations }
   public
