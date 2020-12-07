@@ -319,8 +319,8 @@ inherited Sale_OrderForm: TSale_OrderForm
             Caption = #1062#1077#1085#1072' '#1072#1082#1094#1080#1103
             DataBinding.FieldName = 'PricePromo'
             PropertiesClassName = 'TcxCurrencyEditProperties'
-            Properties.DecimalPlaces = 4
-            Properties.DisplayFormat = ',0.####;-,0.####; ;'
+            Properties.DecimalPlaces = 8
+            Properties.DisplayFormat = ',0.########;-,0.########; ;'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
@@ -2164,7 +2164,7 @@ inherited Sale_OrderForm: TSale_OrderForm
         end
         item
           Name = 'ShowAll'
-          Value = 'False'
+          Value = False
           DataType = ftBoolean
           MultiSelectSeparator = ','
         end
@@ -2247,7 +2247,7 @@ inherited Sale_OrderForm: TSale_OrderForm
         end
         item
           Name = 'ShowAll'
-          Value = 'False'
+          Value = False
           DataType = ftBoolean
           MultiSelectSeparator = ','
         end
@@ -2282,7 +2282,7 @@ inherited Sale_OrderForm: TSale_OrderForm
         end
         item
           Name = 'ShowAll'
-          Value = 'False'
+          Value = False
           DataType = ftBoolean
           MultiSelectSeparator = ','
         end
@@ -2861,7 +2861,7 @@ inherited Sale_OrderForm: TSale_OrderForm
       end
       item
         Name = 'isPrinted'
-        Value = 'True'
+        Value = True
         DataType = ftBoolean
         ParamType = ptInputOutput
         MultiSelectSeparator = ','
@@ -2976,7 +2976,7 @@ inherited Sale_OrderForm: TSale_OrderForm
       end
       item
         Name = 'Checked'
-        Value = 'False'
+        Value = False
         Component = edIsChecked
         DataType = ftBoolean
         MultiSelectSeparator = ','
@@ -2997,7 +2997,7 @@ inherited Sale_OrderForm: TSale_OrderForm
       end
       item
         Name = 'PriceWithVAT'
-        Value = 'False'
+        Value = False
         Component = edPriceWithVAT
         DataType = ftBoolean
         MultiSelectSeparator = ','
@@ -3204,7 +3204,7 @@ inherited Sale_OrderForm: TSale_OrderForm
       end
       item
         Name = 'isCOMDOC'
-        Value = 'False'
+        Value = False
         Component = cbCOMDOC
         DataType = ftBoolean
         MultiSelectSeparator = ','
@@ -3365,7 +3365,7 @@ inherited Sale_OrderForm: TSale_OrderForm
       end
       item
         Name = 'inChecked'
-        Value = 'False'
+        Value = False
         Component = edIsChecked
         DataType = ftBoolean
         ParamType = ptInput
@@ -3373,7 +3373,7 @@ inherited Sale_OrderForm: TSale_OrderForm
       end
       item
         Name = 'outPriceWithVAT'
-        Value = 'False'
+        Value = False
         Component = edPriceWithVAT
         DataType = ftBoolean
         MultiSelectSeparator = ','
@@ -3619,11 +3619,43 @@ inherited Sale_OrderForm: TSale_OrderForm
   end
   inherited spErasedMIMaster: TdsdStoredProc
     StoredProcName = 'gpMovementItem_Sale_SetErased'
+    Params = <
+      item
+        Name = 'inMovementItemId'
+        Component = MasterCDS
+        ComponentItem = 'Id'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'outIsErased'
+        Value = False
+        Component = MasterCDS
+        ComponentItem = 'isErased'
+        DataType = ftBoolean
+        MultiSelectSeparator = ','
+      end>
     Left = 718
     Top = 512
   end
   inherited spUnErasedMIMaster: TdsdStoredProc
     StoredProcName = 'gpMovementItem_Sale_SetUnErased'
+    Params = <
+      item
+        Name = 'inMovementItemId'
+        Component = MasterCDS
+        ComponentItem = 'Id'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'outIsErased'
+        Value = False
+        Component = MasterCDS
+        ComponentItem = 'isErased'
+        DataType = ftBoolean
+        MultiSelectSeparator = ','
+      end>
     Left = 718
     Top = 464
   end
@@ -5103,7 +5135,7 @@ inherited Sale_OrderForm: TSale_OrderForm
       end
       item
         Name = 'inIsDiffTax'
-        Value = 'FALSE'
+        Value = False
         DataType = ftBoolean
         ParamType = ptInput
         MultiSelectSeparator = ','
@@ -5253,7 +5285,7 @@ inherited Sale_OrderForm: TSale_OrderForm
       end
       item
         Name = 'inNewPrinted'
-        Value = 'True'
+        Value = True
         Component = FormParams
         ComponentItem = 'isPrinted'
         DataType = ftBoolean
@@ -5262,7 +5294,7 @@ inherited Sale_OrderForm: TSale_OrderForm
       end
       item
         Name = 'outPrinted'
-        Value = 'False'
+        Value = False
         Component = cbPrinted
         DataType = ftBoolean
         MultiSelectSeparator = ','
@@ -5361,7 +5393,7 @@ inherited Sale_OrderForm: TSale_OrderForm
       end
       item
         Name = 'inIsDiffTax'
-        Value = 'TRUE'
+        Value = True
         DataType = ftBoolean
         ParamType = ptInput
         MultiSelectSeparator = ','

@@ -27,7 +27,7 @@ CREATE OR REPLACE FUNCTION lpInsertUpdate_MovementItem_Sale(
     IN inWeightPack          TFloat    , -- ¬ес упаковки дл€ 1-ой ед. продукции
     IN inIsBarCode           Boolean   , -- ѕо сканеру,  т.е. был рассчет скидки вес (на упаковку), при этом Amount - всегда расчетное
    OUT outMovementId_Promo   Integer   ,
-   OUT outPricePromo         TFloat    ,
+   OUT outPricePromo         Numeric (16,8)  ,
    IN inUserId              Integer     -- пользователь
 )
 RETURNS RECORD

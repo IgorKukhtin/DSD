@@ -8,8 +8,10 @@ CREATE OR REPLACE FUNCTION gpGet_ObjectHistory_PriceListItem(
     IN inGoodsId            Integer   , -- Товар
     IN inSession            TVarChar    -- сессия пользователя
 )                              
-RETURNS TABLE (Id Integer, GoodsId Integer, GoodsCode Integer, GoodsName TVarChar
-             , StartDate TDateTime, EndDate TDateTime, ValuePrice TFloat)
+RETURNS TABLE (Id Integer, GoodsId Integer, GoodsCode Integer, GoodsName TVarChar, Article TVarChar
+             , StartDate TDateTime, EndDate TDateTime, ValuePrice TFloat
+             , PriceNoVAT TFloat, PriceWVAT TFloat
+             )
 AS
 $BODY$
   DECLARE vbPriceWithVAT Boolean;
@@ -24,6 +26,7 @@ BEGIN
                              , ObjectLink_PriceListItem_Goods.ChildObjectId AS GoodsId
                              , Object_Goods.ObjectCode    AS GoodsCode
                              , Object_Goods.ValueData     AS GoodsName
+                             , ObjectString_Article.ValueData  ::TVarChar  AS Article
                   
                              , ObjectHistory_PriceListItem.StartDate
                              , ObjectHistory_PriceListItem.EndDate
@@ -34,7 +37,11 @@ BEGIN
                                                   ON ObjectLink_PriceListItem_Goods.ObjectId = ObjectLink_PriceListItem_PriceList.ObjectId
                                                  AND ObjectLink_PriceListItem_Goods.DescId = zc_ObjectLink_PriceListItem_Goods()
                              LEFT JOIN Object AS Object_Goods ON Object_Goods.Id = ObjectLink_PriceListItem_Goods.ChildObjectId
-                  
+
+                             LEFT JOIN ObjectString AS ObjectString_Article
+                                                    ON ObjectString_Article.ObjectId = Object_Goods.Id
+                                                   AND ObjectString_Article.DescId = zc_ObjectString_Article()
+
                              LEFT JOIN ObjectHistory AS ObjectHistory_PriceListItem
                                                      ON ObjectHistory_PriceListItem.ObjectId = ObjectLink_PriceListItem_PriceList.ObjectId
                                                     AND ObjectHistory_PriceListItem.DescId = zc_ObjectHistory_PriceListItem()
@@ -42,7 +49,7 @@ BEGIN
                              LEFT JOIN ObjectHistoryFloat AS ObjectHistoryFloat_PriceListItem_Value
                                                           ON ObjectHistoryFloat_PriceListItem_Value.ObjectHistoryId = ObjectHistory_PriceListItem.Id
                                                          AND ObjectHistoryFloat_PriceListItem_Value.DescId = zc_ObjectHistoryFloat_PriceListItem_Value()
-                  
+
                         WHERE ObjectLink_PriceListItem_PriceList.DescId = zc_ObjectLink_PriceListItem_PriceList()
                           AND ObjectLink_PriceListItem_PriceList.ChildObjectId = inPriceListId
                           AND ObjectLink_PriceListItem_Goods.ChildObjectId     = inGoodsId
@@ -52,6 +59,7 @@ BEGIN
             , tmpData.GoodsId
             , tmpData.GoodsCode
             , tmpData.GoodsName
+            , tmpData.Article
                
             , tmpData.StartDate
             , tmpData.EndDate
@@ -94,5 +102,4 @@ $BODY$
 */
 
 -- тест
--- SELECT * FROM gpGet_ObjectHistory_PriceListItem (CURRENT_TIMESTAMP, zc_PriceList_ProductionSeparate(), 0, 1, zfCalc_UserAdmin())
--- SELECT * FROM gpGet_ObjectHistory_PriceListItem (CURRENT_TIMESTAMP, zc_PriceList_ProductionSeparate(), 0, 0, zfCalc_UserAdmin())
+-- select * from gpGet_ObjectHistory_PriceListItem(inOperDate := ('15.11.2020')::TDateTime , inPriceListId := 2782 , inGoodsId := 2891 ,  inSession := '5');

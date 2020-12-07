@@ -66,6 +66,10 @@ type
     dsdSetErased: TdsdUpdateErased;
     dsdSetUnErased: TdsdUpdateErased;
     isErased: TcxGridDBColumn;
+    ceCode: TcxCurrencyEdit;
+    Код: TcxLabel;
+    cxLabel18: TcxLabel;
+    edArticle: TcxTextEdit;
   private
     { Private declarations }
   public

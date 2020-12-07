@@ -2,6 +2,7 @@
 
 DROP FUNCTION IF EXISTS gpInsertUpdate_Object_ProdColorPattern(Integer, Integer, TVarChar, Integer, TVarChar, TVarChar);
 DROP FUNCTION IF EXISTS gpInsertUpdate_Object_ProdColorPattern(Integer, Integer, TVarChar, Integer, Integer, TVarChar, TVarChar);
+DROP FUNCTION IF EXISTS gpInsertUpdate_Object_ProdColorPattern(Integer, Integer, TVarChar, Integer, Integer, TVarChar, TVarChar, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpInsertUpdate_Object_ProdColorPattern(
  INOUT ioId               Integer   ,    -- ключ объекта <Лодки>
@@ -9,23 +10,45 @@ CREATE OR REPLACE FUNCTION gpInsertUpdate_Object_ProdColorPattern(
     IN inName             TVarChar  ,    -- Название объекта
     IN inProdColorGroupId Integer   ,
     IN inGoodsId          Integer   ,
-    IN inComment          TVarChar  ,
+ INOUT ioComment          TVarChar  ,
+ INOUT ioProdColorName    TVarChar  ,
     IN inSession          TVarChar       -- сессия пользователя
 )
-RETURNS Integer
+RETURNS RECORD
 AS
 $BODY$
    DECLARE vbUserId Integer;
    DECLARE vbCode_calc Integer;
-   DECLARE vbIsInsert Boolean; 
+   DECLARE vbIsInsert Boolean;
+   DECLARE vbProdColorName TVarChar;
 BEGIN
-   
+
    -- проверка прав пользователя на вызов процедуры
    -- PERFORM lpCheckRight(inSession, zc_Enum_Process_InsertUpdate_Object_ProdColorPattern());
    vbUserId:= lpGetUserBySession (inSession);
 
    -- определяем признак Создание/Корректировка
    vbIsInsert:= COALESCE (ioId, 0) = 0;
+
+   -- проверка - если заполнен товар - выдавать сообщ об ошибке, иначе сохранять в св-во Comment
+   -- получаем цвет из Goods
+   vbProdColorName := (SELECT Object_ProdColor.ValueData
+                       FROM ObjectLink AS ObjectLink_Goods_ProdColor
+                            LEFT JOIN Object AS Object_ProdColor ON Object_ProdColor.Id = ObjectLink_Goods_ProdColor.ChildObjectId
+                       WHERE ObjectLink_Goods_ProdColor.ObjectId = inGoodsId
+                         AND ObjectLink_Goods_ProdColor.DescId = zc_ObjectLink_Goods_ProdColor()
+                       );
+   IF COALESCE (ioProdColorName,'') <> '' AND COALESCE (ioProdColorName,'') <> COALESCE (vbProdColorName,'')
+   THEN
+       IF COALESCE (inGoodsId,0) <> 0
+       THEN
+            ioProdColorName := vbProdColorName;
+            RAISE EXCEPTION 'Ошибка.Цвет определен в <%>.', lfGet_Object_ValueData (inGoodsId);
+       ELSE
+            ioComment := ioProdColorName;
+       END IF;
+   END IF;
+
 
     -- Если код не установлен, определяем его как последний+1, для каждой лодки начиная с 1
    IF COALESCE (ioId,0) = 0 AND inCode = 0
@@ -49,7 +72,7 @@ BEGIN
    ioId := lpInsertUpdate_Object(ioId, zc_Object_ProdColorPattern(), vbCode_calc, inName);
 
    -- сохранили свойство <>
-   PERFORM lpInsertUpdate_ObjectString(zc_ObjectString_ProdColorPattern_Comment(), ioId, inComment);
+   PERFORM lpInsertUpdate_ObjectString(zc_ObjectString_ProdColorPattern_Comment(), ioId, ioComment);
 
    -- сохранили свойство <>
    PERFORM lpInsertUpdate_ObjectLink (zc_ObjectLink_ProdColorPattern_ProdColorGroup(), ioId, inProdColorGroupId);

@@ -26,7 +26,7 @@ CREATE OR REPLACE FUNCTION gpInsertUpdate_MovementItem_Sale(
    OUT outWeightTotal            TFloat    , 
    OUT outCountPack              TFloat    , 
    OUT outMovementPromo          TVarChar  , -- 
-   OUT outPricePromo             TFloat    , -- 
+   OUT outPricePromo             Numeric (16,8), -- 
     IN inSession                 TVarChar    -- сессия пользователя
 )
 RETURNS RECORD

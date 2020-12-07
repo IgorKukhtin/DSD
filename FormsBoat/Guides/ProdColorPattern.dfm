@@ -656,6 +656,85 @@ object ProdColorPatternForm: TProdColorPatternForm
           ComponentItem = 'GoodsName'
           DataType = ftString
           MultiSelectSeparator = ','
+        end
+        item
+          Name = 'Code'
+          Value = Null
+          Component = MasterCDS
+          ComponentItem = 'GoodsCode'
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'Article'
+          Value = Null
+          Component = MasterCDS
+          ComponentItem = 'Article'
+          DataType = ftString
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'ProdColorName'
+          Value = Null
+          Component = MasterCDS
+          ComponentItem = 'ProdColorName'
+          DataType = ftString
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'GoodsGroupNameFull'
+          Value = Null
+          Component = MasterCDS
+          ComponentItem = 'GoodsGroupNameFull'
+          DataType = ftString
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'GoodsGroupName'
+          Value = Null
+          Component = MasterCDS
+          ComponentItem = 'GoodsGroupName'
+          DataType = ftString
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'MeasureName'
+          Value = Null
+          Component = MasterCDS
+          ComponentItem = 'MeasureName'
+          DataType = ftString
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'EKPrice'
+          Value = Null
+          Component = MasterCDS
+          ComponentItem = 'EKPrice'
+          DataType = ftFloat
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'EKPriceWVAT'
+          Value = Null
+          Component = MasterCDS
+          ComponentItem = 'EKPriceWVAT'
+          DataType = ftFloat
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'BasisPrice'
+          Value = Null
+          Component = MasterCDS
+          ComponentItem = 'BasisPrice'
+          DataType = ftFloat
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'BasisPriceWVAT'
+          Value = Null
+          Component = MasterCDS
+          ComponentItem = 'BasisPriceWVAT'
+          DataType = ftFloat
+          MultiSelectSeparator = ','
         end>
       isShowModal = False
     end
@@ -669,7 +748,7 @@ object ProdColorPatternForm: TProdColorPatternForm
       end>
     Params = <
       item
-        Name = 'inIsShowAll'
+        Name = 'inIsErased'
         Value = False
         Component = actShowAll
         DataType = ftBoolean
@@ -776,11 +855,11 @@ object ProdColorPatternForm: TProdColorPatternForm
         MultiSelectSeparator = ','
       end
       item
-        Name = 'ioCode'
+        Name = 'inCode'
         Value = 0.000000000000000000
         Component = MasterCDS
         ComponentItem = 'Code'
-        ParamType = ptInputOutput
+        ParamType = ptInput
         MultiSelectSeparator = ','
       end
       item
@@ -809,12 +888,21 @@ object ProdColorPatternForm: TProdColorPatternForm
         MultiSelectSeparator = ','
       end
       item
-        Name = 'inComment'
+        Name = 'ioComment'
         Value = ''
         Component = MasterCDS
         ComponentItem = 'Comment'
         DataType = ftString
-        ParamType = ptInput
+        ParamType = ptInputOutput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'ioProdColorName'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'ProdColorName'
+        DataType = ftString
+        ParamType = ptInputOutput
         MultiSelectSeparator = ','
       end>
     PackSize = 1
