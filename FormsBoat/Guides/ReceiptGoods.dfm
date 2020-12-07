@@ -146,16 +146,6 @@ object ReceiptGoodsForm: TReceiptGoodsForm
         Options.Editing = False
         Width = 189
       end
-      object GoodsCode: TcxGridDBColumn
-        Caption = 'Interne Nr'
-        DataBinding.FieldName = 'GoodsCode'
-        Visible = False
-        HeaderAlignmentHorz = taCenter
-        HeaderAlignmentVert = vaCenter
-        HeaderHint = #1042#1085#1091#1090#1088#1077#1085#1085#1080#1081' '#1082#1086#1076
-        Options.Editing = False
-        Width = 60
-      end
       object Article: TcxGridDBColumn
         Caption = 'Artikel Nr'
         DataBinding.FieldName = 'Article'
@@ -188,6 +178,16 @@ object ReceiptGoodsForm: TReceiptGoodsForm
         HeaderAlignmentVert = vaCenter
         Options.Editing = False
         Width = 172
+      end
+      object GoodsCode: TcxGridDBColumn
+        Caption = 'Interne Nr'
+        DataBinding.FieldName = 'GoodsCode'
+        Visible = False
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        HeaderHint = #1042#1085#1091#1090#1088#1077#1085#1085#1080#1081' '#1082#1086#1076
+        Options.Editing = False
+        Width = 60
       end
       object GoodsName: TcxGridDBColumn
         Caption = #1050#1086#1084#1087#1083#1077#1082#1090#1091#1102#1097#1080#1077
@@ -481,21 +481,6 @@ object ReceiptGoodsForm: TReceiptGoodsForm
         HeaderAlignmentVert = vaCenter
         Options.Editing = False
         Width = 172
-      end
-      object ObjectName_ch1: TcxGridDBColumn
-        Caption = #1050#1086#1084#1087#1083#1077#1082#1090#1091#1102#1097#1080#1077
-        DataBinding.FieldName = 'ObjectName'
-        PropertiesClassName = 'TcxButtonEditProperties'
-        Properties.Buttons = <
-          item
-            Action = actChoiceFormGoods
-            Default = True
-            Kind = bkEllipsis
-          end>
-        Properties.ReadOnly = True
-        HeaderAlignmentHorz = taCenter
-        HeaderAlignmentVert = vaCenter
-        Width = 110
       end
       object ProdColorName_ch1: TcxGridDBColumn
         Caption = 'Farbe'

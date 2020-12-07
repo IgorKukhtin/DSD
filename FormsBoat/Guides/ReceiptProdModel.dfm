@@ -251,9 +251,6 @@ object ReceiptProdModelForm: TReceiptProdModelForm
       TabOrder = 0
       LookAndFeel.NativeStyle = True
       LookAndFeel.SkinName = 'UserSkin'
-      ExplicitTop = 0
-      ExplicitWidth = 841
-      ExplicitHeight = 209
       object cxGridDBTableViewProdColorPattern: TcxGridDBTableView
         Navigator.Buttons.CustomButtons = <>
         DataController.DataSource = ProdColorPatternDS
@@ -666,7 +663,6 @@ object ReceiptProdModelForm: TReceiptProdModelForm
       Color = clLime
       ParentBackground = False
       TabOrder = 1
-      ExplicitWidth = 536
     end
   end
   object PanelGoods: TPanel
@@ -688,9 +684,6 @@ object ReceiptProdModelForm: TReceiptProdModelForm
       TabOrder = 0
       LookAndFeel.NativeStyle = True
       LookAndFeel.SkinName = 'UserSkin'
-      ExplicitTop = 0
-      ExplicitWidth = 135
-      ExplicitHeight = 209
       object cxGridDBTableViewGoods: TcxGridDBTableView
         Navigator.Buttons.CustomButtons = <>
         DataController.DataSource = GoodsDS
@@ -1056,7 +1049,6 @@ object ReceiptProdModelForm: TReceiptProdModelForm
     Height = 209
     AlignSplitter = salRight
     Control = PanelProdColorPattern
-    ExplicitLeft = 137
   end
   object DataSource: TDataSource
     DataSet = MasterCDS
@@ -1658,6 +1650,85 @@ object ReceiptProdModelForm: TReceiptProdModelForm
           ComponentItem = 'ObjectName'
           DataType = ftString
           MultiSelectSeparator = ','
+        end
+        item
+          Name = 'Code'
+          Value = Null
+          Component = GoodsCDS
+          ComponentItem = 'ObjectCode'
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'Article'
+          Value = Null
+          Component = GoodsCDS
+          ComponentItem = 'Article'
+          DataType = ftString
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'GoodsGroupNameFull'
+          Value = Null
+          Component = GoodsCDS
+          ComponentItem = 'GoodsGroupNameFull'
+          DataType = ftString
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'GoodsGroupName'
+          Value = Null
+          Component = GoodsCDS
+          ComponentItem = 'GoodsGroupName'
+          DataType = ftString
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'ProdColorName'
+          Value = Null
+          Component = GoodsCDS
+          ComponentItem = 'ProdColorName'
+          DataType = ftString
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'MeasureName'
+          Value = Null
+          Component = GoodsCDS
+          ComponentItem = 'MeasureName'
+          DataType = ftString
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'EKPrice'
+          Value = Null
+          Component = GoodsCDS
+          ComponentItem = 'EKPrice'
+          DataType = ftFloat
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'EKPriceWVAT'
+          Value = Null
+          Component = GoodsCDS
+          ComponentItem = 'EKPriceWVAT'
+          DataType = ftFloat
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'BasisPrice'
+          Value = Null
+          Component = GoodsCDS
+          ComponentItem = 'BasisPrice'
+          DataType = ftFloat
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'BasisPriceWVAT'
+          Value = Null
+          Component = GoodsCDS
+          ComponentItem = 'BasisPriceWVAT'
+          DataType = ftFloat
+          MultiSelectSeparator = ','
         end>
       isShowModal = False
     end
@@ -1711,9 +1782,6 @@ object ReceiptProdModelForm: TReceiptProdModelForm
       StoredProcList = <
         item
           StoredProc = spInsertUpdate_Goods
-        end
-        item
-          StoredProc = spSelect_Goods
         end>
       Caption = 'actUpdateDataSetGoods'
       DataSource = GoodsDS
@@ -2035,6 +2103,38 @@ object ReceiptProdModelForm: TReceiptProdModelForm
         ComponentItem = 'Value'
         DataType = ftFloat
         ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'outEKPrice_summ'
+        Value = Null
+        Component = GoodsCDS
+        ComponentItem = 'EKPrice_summ'
+        DataType = ftFloat
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'outEKPriceWVAT_summ'
+        Value = Null
+        Component = GoodsCDS
+        ComponentItem = 'EKPriceWVAT_summ'
+        DataType = ftFloat
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'outBasis_summ'
+        Value = Null
+        Component = GoodsCDS
+        ComponentItem = 'Basis_summ'
+        DataType = ftFloat
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'outBasisWVAT_summ'
+        Value = Null
+        Component = GoodsCDS
+        ComponentItem = 'BasisWVAT_summ'
+        DataType = ftFloat
         MultiSelectSeparator = ','
       end>
     PackSize = 1

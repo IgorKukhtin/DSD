@@ -47,6 +47,10 @@ type
     cePriceNoVAT: TcxCurrencyEdit;
     cxLabel4: TcxLabel;
     cePriceWVAT: TcxCurrencyEdit;
+    cxLabel18: TcxLabel;
+    edArticle: TcxTextEdit;
+    ceCode: TcxCurrencyEdit;
+    cxLabel6: TcxLabel;
   private
     { Private declarations }
   public

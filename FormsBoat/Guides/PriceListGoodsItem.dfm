@@ -1,9 +1,9 @@
-object PriceListGoodsItemForm: TPriceListGoodsItemForm
+﻿object PriceListGoodsItemForm: TPriceListGoodsItemForm
   Left = 0
   Top = 0
   Caption = #1055#1088#1086#1089#1084#1086#1090#1088'/'#1048#1079#1084#1077#1085#1077#1085#1080#1077' '#1080#1089#1090#1086#1088#1080#1080' '#1094#1077#1085
   ClientHeight = 398
-  ClientWidth = 643
+  ClientWidth = 668
   Color = clBtnFace
   Font.Charset = DEFAULT_CHARSET
   Font.Color = clWindowText
@@ -18,13 +18,16 @@ object PriceListGoodsItemForm: TPriceListGoodsItemForm
   TextHeight = 13
   object cxGrid: TcxGrid
     Left = 0
-    Top = 63
-    Width = 643
-    Height = 335
+    Top = 69
+    Width = 668
+    Height = 329
     Align = alClient
     TabOrder = 0
     LookAndFeel.NativeStyle = True
     LookAndFeel.SkinName = 'UserSkin'
+    ExplicitTop = 63
+    ExplicitWidth = 643
+    ExplicitHeight = 335
     object cxGridDBTableView: TcxGridDBTableView
       Navigator.Buttons.CustomButtons = <>
       DataController.DataSource = DataSource
@@ -81,19 +84,19 @@ object PriceListGoodsItemForm: TPriceListGoodsItemForm
   object Panel: TPanel
     Left = 0
     Top = 26
-    Width = 643
-    Height = 37
+    Width = 668
+    Height = 43
     Align = alTop
     BevelOuter = bvNone
     TabOrder = 1
     object cxLabel1: TcxLabel
       Left = 4
-      Top = 9
-      Caption = #1055#1088#1072#1081#1089'-'#1083#1080#1089#1090':'
+      Top = 1
+      Caption = #1055#1088#1072#1081#1089'-'#1083#1080#1089#1090
     end
     object edPriceList: TcxButtonEdit
-      Left = 71
-      Top = 9
+      Left = 4
+      Top = 16
       Properties.Buttons = <
         item
           Default = True
@@ -103,20 +106,46 @@ object PriceListGoodsItemForm: TPriceListGoodsItemForm
       Width = 182
     end
     object cxLabel4: TcxLabel
-      Left = 271
-      Top = 9
-      Caption = #1050#1086#1084#1087#1083#1077#1082#1090#1091#1102#1097#1080#1077':'
+      Left = 202
+      Top = 1
+      Caption = #1050#1086#1084#1087#1083#1077#1082#1090#1091#1102#1097#1080#1077
     end
     object edGoods: TcxButtonEdit
-      Left = 365
-      Top = 9
+      Left = 202
+      Top = 16
       Properties.Buttons = <
         item
           Default = True
           Kind = bkEllipsis
         end>
       TabOrder = 3
-      Width = 182
+      Width = 263
+    end
+    object ceCode: TcxCurrencyEdit
+      Left = 578
+      Top = 16
+      Properties.DecimalPlaces = 0
+      Properties.DisplayFormat = '0'
+      Properties.ReadOnly = True
+      TabOrder = 4
+      Width = 90
+    end
+    object Код: TcxLabel
+      Left = 578
+      Top = 1
+      Caption = 'Interne Nr'
+    end
+    object cxLabel18: TcxLabel
+      Left = 479
+      Top = 1
+      Caption = 'Artikel Nr'
+    end
+    object edArticle: TcxTextEdit
+      Left = 479
+      Top = 16
+      Properties.ReadOnly = True
+      TabOrder = 7
+      Width = 90
     end
   end
   object DataSource: TDataSource
@@ -534,9 +563,24 @@ object PriceListGoodsItemForm: TPriceListGoodsItemForm
         DataType = ftString
         ParamType = ptInput
         MultiSelectSeparator = ','
+      end
+      item
+        Name = 'Code'
+        Value = Null
+        Component = ceCode
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'Article'
+        Value = Null
+        Component = edArticle
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
       end>
-    Left = 376
-    Top = 16
+    Left = 264
+    Top = 56
   end
   object FormParams: TdsdFormParams
     Params = <
@@ -570,6 +614,21 @@ object PriceListGoodsItemForm: TPriceListGoodsItemForm
         Value = ''
         Component = GoodsGuides
         ComponentItem = 'TextValue'
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'GoodsCode'
+        Value = Null
+        Component = ceCode
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'Article'
+        Value = Null
+        Component = edArticle
         DataType = ftString
         ParamType = ptInput
         MultiSelectSeparator = ','

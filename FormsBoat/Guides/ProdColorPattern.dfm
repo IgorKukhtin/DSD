@@ -748,7 +748,7 @@ object ProdColorPatternForm: TProdColorPatternForm
       end>
     Params = <
       item
-        Name = 'inIsShowAll'
+        Name = 'inIsErased'
         Value = False
         Component = actShowAll
         DataType = ftBoolean
