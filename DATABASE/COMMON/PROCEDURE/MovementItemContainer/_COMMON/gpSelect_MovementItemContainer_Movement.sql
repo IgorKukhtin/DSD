@@ -841,5 +841,20 @@ DestinationObjectCode
 Объект назначение
 DestinationObjectName
 */
+/*
+select Movement.Id, Movement.OperDate, Movement.InvNumber
+, SUM (CASE WHEN Amount > 0 THEN Amount ELSE 0 END) AS AmountDebt
+, SUM (CASE WHEN Amount < 0 THEN -1 * Amount ELSE 0 END) AS AmountKredit
+, SUM (CASE WHEN Amount > 0 THEN Amount ELSE 0 END) - SUM (CASE WHEN Amount < 0 THEN -1 * Amount ELSE 0 END) 
+from MovementItemContainer AS MI
+    join  Movement on Movement.Id = MovementId
+where  MI.DescId = 2
+--   and MI.MovementDescId = zc_Movement_ReturnIn()
+-- and Movement.Id = 18217506
+-- and MovementId = 18268751
+-- and Movement.Id = 18224712
+ and Movement.Id in (18217506, 18268751, 18224712)
+group by Movement.Id, Movement.OperDate, Movement.InvNumber
+*/
 -- тест
 -- SELECT * FROM gpSelect_MovementItemContainer_Movement (inMovementId:= 17390159, inIsDestination:= FALSE, inIsParentDetail:= FALSE, inIsInfoMoneyDetail:= FALSE, inSession:= zfCalc_UserAdmin())
