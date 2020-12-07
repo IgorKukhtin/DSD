@@ -2038,8 +2038,8 @@ object ReceiptProdModelForm: TReceiptProdModelForm
         MultiSelectSeparator = ','
       end>
     PackSize = 1
-    Left = 80
-    Top = 256
+    Left = 32
+    Top = 304
   end
   object spInsertUpdate_ProdColorPattern: TdsdStoredProc
     StoredProcName = 'gpInsertUpdate_Object_ReceiptProdModelChild'
@@ -2117,8 +2117,8 @@ object ReceiptProdModelForm: TReceiptProdModelForm
         MultiSelectSeparator = ','
       end>
     PackSize = 1
-    Left = 136
-    Top = 240
+    Left = 80
+    Top = 296
   end
   object spUnErasedGoods: TdsdStoredProc
     StoredProcName = 'gpUpdate_Object_isErased_ProdColorPattern'
@@ -2141,8 +2141,8 @@ object ReceiptProdModelForm: TReceiptProdModelForm
         MultiSelectSeparator = ','
       end>
     PackSize = 1
-    Left = 176
-    Top = 256
+    Left = 152
+    Top = 304
   end
   object spErasedProdColorPattern: TdsdStoredProc
     StoredProcName = 'gpUpdate_Object_isErased_ProdColorPattern'

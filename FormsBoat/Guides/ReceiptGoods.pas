@@ -68,11 +68,6 @@ type
     GoodsName: TcxGridDBColumn;
     cxGridGoods: TcxGrid;
     cxGridDBTableViewGoods: TcxGridDBTableView;
-    colGoodsName: TcxGridDBColumn;
-    colComment: TcxGridDBColumn;
-    colInsertDate: TcxGridDBColumn;
-    colInsertName: TcxGridDBColumn;
-    colisErased: TcxGridDBColumn;
     cxGridLevel2: TcxGridLevel;
     cxTopSplitter: TcxSplitter;
     cxRightSplitter: TcxSplitter;
@@ -95,14 +90,10 @@ type
     bbSetUnErasedOpt: TdxBarButton;
     FormParams: TdsdFormParams;
     spGetImportSettingId: TdsdStoredProc;
-    actGetImportSetting: TdsdExecStoredProc;
-    actDoLoad: TExecuteImportSettingsAction;
-    actStartLoad: TMultiAction;
     bbStartLoad: TdxBarButton;
     actChoiceFormGoods: TOpenChoiceForm;
     bbShowAllColorItems: TdxBarButton;
     bbShowAllOptItems: TdxBarButton;
-    colNPP: TcxGridDBColumn;
     BarSubItemBoat: TdxBarSubItem;
     BarSubItemColor: TdxBarSubItem;
     BarSubItemOption: TdxBarSubItem;
@@ -122,7 +113,6 @@ type
     MenuItem1: TMenuItem;
     MenuItem5: TMenuItem;
     MenuItem6: TMenuItem;
-    colValue: TcxGridDBColumn;
   private
     { Private declarations }
   public
