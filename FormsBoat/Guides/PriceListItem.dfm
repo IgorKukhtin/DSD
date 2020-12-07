@@ -1027,13 +1027,6 @@ object PriceListItemForm: TPriceListItemForm
         MultiSelectSeparator = ','
       end
       item
-        Name = 'inIsLast'
-        Value = True
-        DataType = ftBoolean
-        ParamType = ptInput
-        MultiSelectSeparator = ','
-      end
-      item
         Name = 'outStartDate'
         Value = 'NULL'
         Component = ClientDataSet
@@ -1064,6 +1057,13 @@ object PriceListItemForm: TPriceListItemForm
         Component = ClientDataSet
         ComponentItem = 'PriceWVAT'
         DataType = ftFloat
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inIsLast'
+        Value = True
+        DataType = ftBoolean
         ParamType = ptInput
         MultiSelectSeparator = ','
       end>
