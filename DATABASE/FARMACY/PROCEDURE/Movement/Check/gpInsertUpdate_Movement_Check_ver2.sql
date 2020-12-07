@@ -301,7 +301,7 @@ BEGIN
     THEN
       -- парсим выдачи
       vbIndex := 1;
-      WHILE SPLIT_PART (inDistributionPromoList, ',', vbIndex) <> '' LOOP
+      WHILE SPLIT_PART (inDistributionPromoList, ',', vbIndex) <> '' AND SPLIT_PART (inDistributionPromoList, ',', vbIndex + 1) <> '' LOOP
          -- добавляем то что нашли
          PERFORM gpInsertUpdate_MovementItem_DistributionPromoSign (inId         := SPLIT_PART (inDistributionPromoList, ',', vbIndex) :: Integer
                                                                   , inMovementId := ioId

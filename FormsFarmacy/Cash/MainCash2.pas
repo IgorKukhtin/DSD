@@ -3246,7 +3246,7 @@ begin
           FormParams.ParamByName('LoyaltySMSumma').Value,
           // ***16.08.20
           FormParams.ParamByName('DivisionPartiesID').Value,
-          FormParams.ParamByName('DistributionPromoList').Value,
+          FormParams.ParamByName('DivisionPartiesName').Value,
           // ***11.10.20
           FormParams.ParamByName('MedicForSale').Value,
           FormParams.ParamByName('BuyerForSale').Value,
