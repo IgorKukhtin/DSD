@@ -57,6 +57,7 @@ BEGIN
                             FROM Movement
                             WHERE Movement.ParentId = inMovementId
                               AND NOT EXISTS (SELECT 1 FROM Movement WHERE Movement.Id = inMovementId AND Movement.DescId = zc_Movement_PersonalService())
+                            --AND 1=0
                            )
                     -- все проводки: количественные + суммовые
                   , tmpMIContainer_all AS (SELECT MIContainer.DescId AS MIContainerDescId

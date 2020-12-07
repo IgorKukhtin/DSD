@@ -38,7 +38,7 @@ BEGIN
                  ELSE FALSE
             END
           , CASE WHEN Object_InfoMoney_View.InfoMoneyId IN (zc_Enum_InfoMoney_30503()) -- Бонусы от поставщиков
-                  AND (Movement.DescId = zc_Movement_ProfitIncomeService() OR Movement.OperDate >= '01.11.2020')
+                  AND (Movement.DescId = zc_Movement_ProfitIncomeService() OR Movement.OperDate >= '01.02.2021')
                  THEN TRUE
                  ELSE FALSE
             END
