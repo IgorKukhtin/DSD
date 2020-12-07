@@ -2,14 +2,13 @@
 
 DROP FUNCTION IF EXISTS gpInsertUpdate_Object_ProdColorItems(Integer, Integer, TVarChar, Integer, Integer, Integer, TVarChar, TVarChar);
 DROP FUNCTION IF EXISTS gpInsertUpdate_Object_ProdColorItems(Integer, Integer, Integer, Integer, Integer, Integer, TVarChar, TVarChar);
+DROP FUNCTION IF EXISTS gpInsertUpdate_Object_ProdColorItems(Integer, Integer, Integer, Integer, Integer, TVarChar, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpInsertUpdate_Object_ProdColorItems(
  INOUT ioId                 Integer   ,    -- ключ объекта <Лодки>
     IN inCode               Integer   ,    -- Код объекта 
-    --IN inName               TVarChar  ,    -- Название объекта
     IN inProductId          Integer   ,
-    IN inProdColorGroupId   Integer   ,
-    IN inProdColorId        Integer   ,
+    IN inGoodsId            Integer   ,
     IN inProdColorPatternId Integer   ,
     IN inComment            TVarChar  ,
     IN inSession            TVarChar       -- сессия пользователя
@@ -57,10 +56,7 @@ BEGIN
    PERFORM lpInsertUpdate_ObjectLink (zc_ObjectLink_ProdColorItems_Product(), ioId, inProductId);
 
    -- сохранили свойство <>
-   PERFORM lpInsertUpdate_ObjectLink (zc_ObjectLink_ProdColorItems_ProdColorGroup(), ioId, inProdColorGroupId);
-
-   -- сохранили свойство <>
-   PERFORM lpInsertUpdate_ObjectLink (zc_ObjectLink_ProdColorItems_ProdColor(), ioId, inProdColorId);
+   PERFORM lpInsertUpdate_ObjectLink (zc_ObjectLink_ProdColorItems_Goods(), ioId, inGoodsId);
 
    -- сохранили свойство <>
    PERFORM lpInsertUpdate_ObjectLink (zc_ObjectLink_ProdColorItems_ProdColorPattern(), ioId, inProdColorPatternId);
@@ -82,6 +78,7 @@ $BODY$
 /*-------------------------------------------------------------------------------
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
+ 07.12.20         *
  09.10.20         *
 */
 
