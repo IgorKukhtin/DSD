@@ -1,7 +1,7 @@
 object ProdColorPatternForm: TProdColorPatternForm
   Left = 0
   Top = 0
-  Caption = #1057#1087#1088#1072#1074#1086#1095#1085#1080#1082' <'#1064#1072#1073#1083#1086#1085' '#1062#1074#1077#1090'>'
+  Caption = #1057#1087#1088#1072#1074#1086#1095#1085#1080#1082' <'#1064#1072#1073#1083#1086#1085#1099' Farbe>'
   ClientHeight = 376
   ClientWidth = 851
   Color = clBtnFace

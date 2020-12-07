@@ -4,7 +4,7 @@ inherited MainForm: TMainForm
   ClientWidth = 723
   KeyPreview = True
   ExplicitWidth = 739
-  ExplicitHeight = 226
+  ExplicitHeight = 223
   PixelsPerInch = 96
   TextHeight = 13
   inherited ActionList: TActionList
@@ -917,9 +917,16 @@ inherited MainForm: TMainForm
       object miLine21_: TMenuItem
         Caption = '-'
       end
-      object miReceipt: TMenuItem
-        Action = actReceipt
-        Enabled = False
+      object miReceiptProdModel: TMenuItem
+        Action = actReceiptProdModel
+        Caption = #1064#1072#1073#1083#1086#1085' '#1089#1073#1086#1088#1082#1072' '#1052#1086#1076#1077#1083#1080
+      end
+      object miLine22_: TMenuItem
+        Caption = '-'
+      end
+      object miReceiptGoods: TMenuItem
+        Action = actReceiptGoods
+        Caption = #1064#1072#1073#1083#1086#1085' '#1089#1073#1086#1088#1082#1072' '#1059#1079#1083#1086#1074
       end
     end
     object miBoat: TMenuItem [2]
@@ -942,38 +949,34 @@ inherited MainForm: TMainForm
       object miLine31_: TMenuItem
         Caption = '-'
       end
+      object miProdColorPattern: TMenuItem
+        Action = actProdColorPattern
+        Caption = #1064#1072#1073#1083#1086#1085#1099' Farbe'
+      end
       object miProdColorGroup: TMenuItem
         Action = actProdColorGroup
+        Caption = #1050#1072#1090#1077#1075#1086#1088#1080#1080' Farbe'
       end
       object miProdColor: TMenuItem
         Action = actProdColor
+        Caption = 'Farbe'
       end
       object miProdColorItems: TMenuItem
         Action = actProdColorItems
-      end
-      object miProdColorPattern: TMenuItem
-        Action = actProdColorPattern
+        Caption = #1069#1083#1077#1084#1077#1085#1090#1099' Farbe ('#1051#1086#1076#1082#1072') '
       end
       object miLine32_: TMenuItem
         Caption = '-'
+      end
+      object miProdOptPattern: TMenuItem
+        Action = actProdOptPattern
+        Caption = #1064#1072#1073#1083#1086#1085#1099' '#1054#1087#1094#1080#1081
       end
       object miProdOptions: TMenuItem
         Action = actProdOptions
       end
       object miProdOptItems: TMenuItem
         Action = actProdOptItems
-      end
-      object miProdOptPattern: TMenuItem
-        Action = actProdOptPattern
-      end
-      object N8: TMenuItem
-        Caption = '-'
-      end
-      object miReceiptProdModel: TMenuItem
-        Action = actReceiptProdModel
-      end
-      object miReceiptGoods: TMenuItem
-        Action = actReceiptGoods
       end
     end
     object miFinance: TMenuItem [3]

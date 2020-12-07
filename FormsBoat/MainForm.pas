@@ -171,7 +171,6 @@ type
     miLine32_: TMenuItem;
     miProdOptions: TMenuItem;
     miProdOptItems: TMenuItem;
-    miReceipt: TMenuItem;
     actProduct: TdsdOpenForm;
     actProdColorGroup: TdsdOpenForm;
     actProdColor: TdsdOpenForm;
@@ -201,9 +200,9 @@ type
     N5: TMenuItem;
     actReceiptProdModel: TdsdOpenForm;
     miReceiptProdModel: TMenuItem;
-    N8: TMenuItem;
     actReceiptGoods: TdsdOpenForm;
     miReceiptGoods: TMenuItem;
+    miLine22_: TMenuItem;
   private
     { Private declarations }
   public

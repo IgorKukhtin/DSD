@@ -1276,7 +1276,7 @@ object ReceiptProdModelForm: TReceiptProdModelForm
         end>
     end
     object BarSubItemOption: TdxBarSubItem
-      Caption = #1064#1072#1073#1083#1086#1085#1099' '#1062#1074#1077#1090#1072
+      Caption = #1064#1072#1073#1083#1086#1085#1099' Farbe'
       Category = 0
       Visible = ivAlways
       ItemLinks = <
