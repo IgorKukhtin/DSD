@@ -22,7 +22,7 @@ RETURNS TABLE (Id Integer, LineNum Integer, GoodsId Integer, GoodsCode Integer, 
              , BoxId Integer, BoxName TVarChar
              , AmountSumm TFloat
              , isCheck_Pricelist Boolean
-             , MovementId_Promo Integer, MovementPromo TVarChar, PricePromo TFloat
+             , MovementId_Promo Integer, MovementPromo TVarChar, PricePromo Numeric (16,8)
              , InfoMoneyCode Integer, InfoMoneyGroupName TVarChar, InfoMoneyDestinationName TVarChar, InfoMoneyName TVarChar, InfoMoneyName_all TVarChar
              , isErased Boolean
               )
@@ -483,10 +483,10 @@ BEGIN
 
            , tmpPromo.MovementId     ::Integer AS MovementId_Promo
            , tmpPromo.MovementPromo
-           , CASE WHEN tmpPromo.TaxPromo <> 0 AND vbPriceWithVAT = TRUE THEN tmpPromo.PriceWithVAT
-                  WHEN tmpPromo.TaxPromo <> 0 THEN tmpPromo.PriceWithOutVAT
-                  ELSE 0
-             END :: TFloat AS PricePromo
+           , CAST (CASE WHEN tmpPromo.TaxPromo <> 0 AND vbPriceWithVAT = TRUE THEN tmpPromo.PriceWithVAT / tmpPromo.CountForPrice
+                        WHEN tmpPromo.TaxPromo <> 0 THEN tmpPromo.PriceWithOutVAT / tmpPromo.CountForPrice
+                        ELSE 0
+                   END AS Numeric (16,8)) AS PricePromo
 
            , tmpGoods.InfoMoneyCode
            , tmpGoods.InfoMoneyGroupName
@@ -615,11 +615,11 @@ BEGIN
                    ELSE ''
               END) :: TVarChar AS MovementPromo
 
-           , CASE WHEN 1 = 0 AND tmpMIPromo.PricePromo <> 0 THEN tmpMIPromo.PricePromo
-                  WHEN tmpPromo.TaxPromo <> 0 AND vbPriceWithVAT = TRUE THEN tmpPromo.PriceWithVAT
-                  WHEN tmpPromo.TaxPromo <> 0 THEN tmpPromo.PriceWithOutVAT
-                  ELSE 0
-             END :: TFloat AS PricePromo
+           , CAST (CASE WHEN 1 = 0 AND tmpMIPromo.PricePromo <> 0 THEN tmpMIPromo.PricePromo / tmpPromo.CountForPrice
+                        WHEN tmpPromo.TaxPromo <> 0 AND vbPriceWithVAT = TRUE THEN tmpPromo.PriceWithVAT / tmpPromo.CountForPrice
+                        WHEN tmpPromo.TaxPromo <> 0 THEN tmpPromo.PriceWithOutVAT / tmpPromo.CountForPrice
+                        ELSE 0
+                   END AS Numeric (16,8)) AS PricePromo
 
            , Object_InfoMoney_View.InfoMoneyCode
            , Object_InfoMoney_View.InfoMoneyGroupName
@@ -1054,11 +1054,11 @@ BEGIN
                    ELSE ''
               END) :: TVarChar AS MovementPromo
 
-           , CASE WHEN 1 = 0 AND tmpMIPromo.PricePromo <> 0 THEN tmpMIPromo.PricePromo
-                  WHEN tmpPromo.TaxPromo <> 0 AND vbPriceWithVAT = TRUE THEN tmpPromo.PriceWithVAT
-                  WHEN tmpPromo.TaxPromo <> 0 THEN tmpPromo.PriceWithOutVAT
-                  ELSE 0
-             END :: TFloat AS PricePromo
+           , CAST (CASE WHEN 1 = 0 AND tmpMIPromo.PricePromo <> 0 THEN tmpMIPromo.PricePromo / tmpPromo.CountForPrice
+                        WHEN tmpPromo.TaxPromo <> 0 AND vbPriceWithVAT = TRUE THEN tmpPromo.PriceWithVAT / tmpPromo.CountForPrice
+                        WHEN tmpPromo.TaxPromo <> 0 THEN tmpPromo.PriceWithOutVAT / tmpPromo.CountForPrice
+                        ELSE 0
+                   END AS Numeric (16,8)) AS PricePromo
 
            , Object_InfoMoney_View.InfoMoneyCode
            , Object_InfoMoney_View.InfoMoneyGroupName
@@ -1115,6 +1115,7 @@ $BODY$
 /*
  »—“Œ–»ﬂ –¿«–¿¡Œ“ »: ƒ¿“¿, ¿¬“Œ–
                ‘ÂÎÓÌ˛Í ».¬.    ÛıÚËÌ ».¬.    ÎËÏÂÌÚ¸Â‚  .».   Ã‡Ì¸ÍÓ ƒ.¿.
+ 07.12.20         *
  16.03.20         *
  02.12.19         *
  31.03.15         * add GoodsGroupNameFull 

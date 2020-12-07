@@ -354,7 +354,7 @@ inherited Sale_PartnerForm: TSale_PartnerForm
             DataBinding.FieldName = 'PricePromo'
             PropertiesClassName = 'TcxCurrencyEditProperties'
             Properties.DecimalPlaces = 4
-            Properties.DisplayFormat = ',0.####;-,0.####; ;'
+            Properties.DisplayFormat = ',0.########;-,0.########; ;'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
@@ -1987,7 +1987,7 @@ inherited Sale_PartnerForm: TSale_PartnerForm
         end
         item
           Name = 'ShowAll'
-          Value = 'False'
+          Value = False
           DataType = ftBoolean
           MultiSelectSeparator = ','
         end
@@ -2111,7 +2111,7 @@ inherited Sale_PartnerForm: TSale_PartnerForm
         end
         item
           Name = 'ShowAll'
-          Value = 'False'
+          Value = False
           DataType = ftBoolean
           MultiSelectSeparator = ','
         end
@@ -2146,7 +2146,7 @@ inherited Sale_PartnerForm: TSale_PartnerForm
         end
         item
           Name = 'ShowAll'
-          Value = 'False'
+          Value = False
           DataType = ftBoolean
           MultiSelectSeparator = ','
         end
@@ -2736,7 +2736,7 @@ inherited Sale_PartnerForm: TSale_PartnerForm
       end
       item
         Name = 'Checked'
-        Value = 'False'
+        Value = False
         Component = edIsChecked
         DataType = ftBoolean
         MultiSelectSeparator = ','
@@ -2757,7 +2757,7 @@ inherited Sale_PartnerForm: TSale_PartnerForm
       end
       item
         Name = 'PriceWithVAT'
-        Value = 'False'
+        Value = False
         Component = edPriceWithVAT
         DataType = ftBoolean
         MultiSelectSeparator = ','
@@ -2957,7 +2957,7 @@ inherited Sale_PartnerForm: TSale_PartnerForm
       end
       item
         Name = 'isCOMDOC'
-        Value = 'False'
+        Value = False
         Component = cbCOMDOC
         DataType = ftBoolean
         MultiSelectSeparator = ','
@@ -3111,7 +3111,7 @@ inherited Sale_PartnerForm: TSale_PartnerForm
       end
       item
         Name = 'inChecked'
-        Value = 'False'
+        Value = False
         Component = edIsChecked
         DataType = ftBoolean
         ParamType = ptInput
@@ -3119,7 +3119,7 @@ inherited Sale_PartnerForm: TSale_PartnerForm
       end
       item
         Name = 'outPriceWithVAT'
-        Value = 'False'
+        Value = False
         Component = edPriceWithVAT
         DataType = ftBoolean
         MultiSelectSeparator = ','
@@ -3362,11 +3362,43 @@ inherited Sale_PartnerForm: TSale_PartnerForm
   end
   inherited spErasedMIMaster: TdsdStoredProc
     StoredProcName = 'gpMovementItem_Sale_Partner_SetErased'
+    Params = <
+      item
+        Name = 'inMovementItemId'
+        Component = MasterCDS
+        ComponentItem = 'Id'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'outIsErased'
+        Value = False
+        Component = MasterCDS
+        ComponentItem = 'isErased'
+        DataType = ftBoolean
+        MultiSelectSeparator = ','
+      end>
     Left = 718
     Top = 544
   end
   inherited spUnErasedMIMaster: TdsdStoredProc
     StoredProcName = 'gpMovementItem_Sale_Partner_SetUnErased'
+    Params = <
+      item
+        Name = 'inMovementItemId'
+        Component = MasterCDS
+        ComponentItem = 'Id'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'outIsErased'
+        Value = False
+        Component = MasterCDS
+        ComponentItem = 'isErased'
+        DataType = ftBoolean
+        MultiSelectSeparator = ','
+      end>
     Left = 718
     Top = 464
   end
