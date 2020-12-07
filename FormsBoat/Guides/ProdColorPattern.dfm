@@ -87,17 +87,30 @@ object ProdColorPatternForm: TProdColorPatternForm
       object ProdColorName: TcxGridDBColumn
         Caption = 'Farbe'
         DataBinding.FieldName = 'ProdColorName'
+        PropertiesClassName = 'TcxButtonEditProperties'
+        Properties.Buttons = <
+          item
+            Action = actChoiceFormGoods
+            Default = True
+            Kind = bkEllipsis
+          end>
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
-        Options.Editing = False
         Width = 100
       end
       object Article: TcxGridDBColumn
         Caption = 'Artikel Nr'
         DataBinding.FieldName = 'Article'
+        PropertiesClassName = 'TcxButtonEditProperties'
+        Properties.Buttons = <
+          item
+            Action = actChoiceFormGoods
+            Default = True
+            Kind = bkEllipsis
+          end>
+        Properties.ReadOnly = True
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
-        Options.Editing = False
         Width = 80
       end
       object GoodsCode: TcxGridDBColumn
