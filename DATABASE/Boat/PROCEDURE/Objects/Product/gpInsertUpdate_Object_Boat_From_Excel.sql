@@ -337,7 +337,9 @@ BEGIN
                                                                                                 , inCode            := 0
                                                                                                 , inName            := vbProdColorPatternName
                                                                                                 , inProdColorGroupId:= vbProdColorGroupId1
-                                                                                                , inComment         := ''
+                                                                                                , inGoodsId         := 0
+                                                                                                , ioComment         := ''
+                                                                                                , ioProdColorName   := ''
                                                                                                 , inSession         := inSession
                                                                                                  ) AS tmp);
          END IF;
@@ -412,7 +414,9 @@ BEGIN
                                                                                                 , inCode            := 0
                                                                                                 , inName            := vbProdColorPatternName
                                                                                                 , inProdColorGroupId:= vbProdColorGroupId1
-                                                                                                , inComment         := ''
+                                                                                                , inGoodsId         := 0
+                                                                                                , ioComment         := ''
+                                                                                                , ioProdColorName   := ''
                                                                                                 , inSession         := inSession
                                                                                                  ) AS tmp);
          END IF;
@@ -487,7 +491,9 @@ BEGIN
                                                                                                 , inCode            := 0
                                                                                                 , inName            := vbProdColorPatternName
                                                                                                 , inProdColorGroupId:= vbProdColorGroupId2
-                                                                                                , inComment         := ''
+                                                                                                , inGoodsId         := 0
+                                                                                                , ioComment         := ''
+                                                                                                , ioProdColorName   := ''
                                                                                                 , inSession         := inSession
                                                                                                  ) AS tmp);
          END IF;
@@ -561,7 +567,9 @@ BEGIN
                                                                                                 , inCode            := 0
                                                                                                 , inName            := vbProdColorPatternName
                                                                                                 , inProdColorGroupId:= vbProdColorGroupId2
-                                                                                                , inComment         := ''
+                                                                                                , inGoodsId         := 0
+                                                                                                , ioComment         := ''
+                                                                                                , ioProdColorName   := ''
                                                                                                 , inSession         := inSession
                                                                                                  ) AS tmp);
          END IF;
@@ -636,7 +644,9 @@ BEGIN
                                                                                                 , inCode            := 0
                                                                                                 , inName            := vbProdColorPatternName
                                                                                                 , inProdColorGroupId:= vbProdColorGroupId2
-                                                                                                , inComment         := ''
+                                                                                                , inGoodsId         := 0
+                                                                                                , ioComment         := ''
+                                                                                                , ioProdColorName   := ''
                                                                                                 , inSession         := inSession
                                                                                                  ) AS tmp);
          END IF;
@@ -711,7 +721,9 @@ BEGIN
                                                                                                 , inCode            := 0
                                                                                                 , inName            := vbProdColorPatternName
                                                                                                 , inProdColorGroupId:= vbProdColorGroupId3
-                                                                                                , inComment         := ''
+                                                                                                , inGoodsId         := 0
+                                                                                                , ioComment         := ''
+                                                                                                , ioProdColorName   := ''
                                                                                                 , inSession         := inSession
                                                                                                  ) AS tmp);
          END IF;
@@ -786,7 +798,9 @@ BEGIN
                                                                                                 , inCode            := 0
                                                                                                 , inName            := vbProdColorPatternName
                                                                                                 , inProdColorGroupId:= vbProdColorGroupId3
-                                                                                                , inComment         := ''
+                                                                                                , inGoodsId         := 0
+                                                                                                , ioComment         := ''
+                                                                                                , ioProdColorName   := ''
                                                                                                 , inSession         := inSession
                                                                                                  ) AS tmp);
          END IF;
@@ -860,7 +874,9 @@ BEGIN
                                                                                                 , inCode            := 0
                                                                                                 , inName            := vbProdColorPatternName
                                                                                                 , inProdColorGroupId:= vbProdColorGroupId3
-                                                                                                , inComment         := ''
+                                                                                                , inGoodsId         := 0
+                                                                                                , ioComment         := ''
+                                                                                                , ioProdColorName   := ''
                                                                                                 , inSession         := inSession
                                                                                                  ) AS tmp);
          END IF;
@@ -934,7 +950,9 @@ BEGIN
                                                                                                 , inCode            := 0
                                                                                                 , inName            := vbProdColorPatternName
                                                                                                 , inProdColorGroupId:= vbProdColorGroupId3
-                                                                                                , inComment         := ''
+                                                                                                , inGoodsId         := 0
+                                                                                                , ioComment         := ''
+                                                                                                , ioProdColorName   := ''
                                                                                                 , inSession         := inSession
                                                                                                  ) AS tmp);
          END IF;
@@ -1009,7 +1027,9 @@ BEGIN
                                                                                                 , inCode            := 0
                                                                                                 , inName            := vbProdColorPatternName
                                                                                                 , inProdColorGroupId:= vbProdColorGroupId4
-                                                                                                , inComment         := ''
+                                                                                                , inGoodsId         := 0
+                                                                                                , ioComment         := ''
+                                                                                                , ioProdColorName   := ''
                                                                                                 , inSession         := inSession
                                                                                                  ) AS tmp);
          END IF;
@@ -1083,7 +1103,9 @@ BEGIN
                                                                                                 , inCode            := 0
                                                                                                 , inName            := vbProdColorPatternName
                                                                                                 , inProdColorGroupId:= vbProdColorGroupId4
-                                                                                                , inComment         := ''
+                                                                                                , inGoodsId         := 0
+                                                                                                , ioComment         := ''
+                                                                                                , ioProdColorName   := ''
                                                                                                 , inSession         := inSession
                                                                                                  ) AS tmp);
          END IF;
@@ -1158,7 +1180,9 @@ BEGIN
                                                                                                 , inCode            := 0
                                                                                                 , inName            := vbProdColorPatternName
                                                                                                 , inProdColorGroupId:= vbProdColorGroupId5
-                                                                                                , inComment         := ''
+                                                                                                , inGoodsId         := 0
+                                                                                                , ioComment         := ''
+                                                                                                , ioProdColorName   := ''
                                                                                                 , inSession         := inSession
                                                                                                  ) AS tmp);
          END IF;
@@ -1233,7 +1257,9 @@ BEGIN
                                                                                                 , inCode            := 0
                                                                                                 , inName            := vbProdColorPatternName
                                                                                                 , inProdColorGroupId:= vbProdColorGroupId5
-                                                                                                , inComment         := ''
+                                                                                                , inGoodsId         := 0
+                                                                                                , ioComment         := ''
+                                                                                                , ioProdColorName   := ''
                                                                                                 , inSession         := inSession
                                                                                                  ) AS tmp);
          END IF;
@@ -1307,7 +1333,9 @@ BEGIN
                                                                                                 , inCode            := 0
                                                                                                 , inName            := vbProdColorPatternName
                                                                                                 , inProdColorGroupId:= vbProdColorGroupId5
-                                                                                                , inComment         := ''
+                                                                                                , inGoodsId         := 0
+                                                                                                , ioComment         := ''
+                                                                                                , ioProdColorName   := ''
                                                                                                 , inSession         := inSession
                                                                                                  ) AS tmp);
          END IF;
@@ -1381,7 +1409,9 @@ BEGIN
                                                                                                 , inCode            := 0
                                                                                                 , inName            := vbProdColorPatternName
                                                                                                 , inProdColorGroupId:= vbProdColorGroupId5
-                                                                                                , inComment         := ''
+                                                                                                , inGoodsId         := 0
+                                                                                                , ioComment         := ''
+                                                                                                , ioProdColorName   := ''
                                                                                                 , inSession         := inSession
                                                                                                  ) AS tmp);
          END IF;
@@ -1455,7 +1485,9 @@ BEGIN
                                                                                                 , inCode            := 0
                                                                                                 , inName            := vbProdColorPatternName
                                                                                                 , inProdColorGroupId:= vbProdColorGroupId5
-                                                                                                , inComment         := ''
+                                                                                                , inGoodsId         := 0
+                                                                                                , ioComment         := ''
+                                                                                                , ioProdColorName   := ''
                                                                                                 , inSession         := inSession
                                                                                                  ) AS tmp);
          END IF;

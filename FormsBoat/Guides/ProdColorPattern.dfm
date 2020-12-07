@@ -855,11 +855,11 @@ object ProdColorPatternForm: TProdColorPatternForm
         MultiSelectSeparator = ','
       end
       item
-        Name = 'ioCode'
+        Name = 'inCode'
         Value = 0.000000000000000000
         Component = MasterCDS
         ComponentItem = 'Code'
-        ParamType = ptInputOutput
+        ParamType = ptInput
         MultiSelectSeparator = ','
       end
       item
@@ -888,12 +888,21 @@ object ProdColorPatternForm: TProdColorPatternForm
         MultiSelectSeparator = ','
       end
       item
-        Name = 'inComment'
+        Name = 'ioComment'
         Value = ''
         Component = MasterCDS
         ComponentItem = 'Comment'
         DataType = ftString
-        ParamType = ptInput
+        ParamType = ptInputOutput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'ioProdColorName'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'ProdColorName'
+        DataType = ftString
+        ParamType = ptInputOutput
         MultiSelectSeparator = ','
       end>
     PackSize = 1
