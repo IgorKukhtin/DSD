@@ -22,7 +22,8 @@ uses
   dxSkinSevenClassic, dxSkinSharp, dxSkinSharpPlus, dxSkinSilver,
   dxSkinSpringTime, dxSkinStardust, dxSkinSummer2008, dxSkinTheAsphaltWorld,
   dxSkinValentine, dxSkinVS2010, dxSkinWhiteprint, dxSkinXmas2008Blue,
-  cxCurrencyEdit, cxSplitter, cxButtonEdit, ExternalLoad, Vcl.Menus;
+  cxCurrencyEdit, cxSplitter, cxButtonEdit, ExternalLoad, Vcl.Menus,
+  Vcl.ExtCtrls;
 
 type
   TReceiptProdModelForm = class(TParentForm)
@@ -147,6 +148,10 @@ type
     MenuItem6: TMenuItem;
     Value_ch1: TcxGridDBColumn;
     ObjectCode_ch2: TcxGridDBColumn;
+    PanelGoods: TPanel;
+    PanelProdColorPattern: TPanel;
+    Panel1: TPanel;
+    Panel2: TPanel;
   private
     { Private declarations }
   public
