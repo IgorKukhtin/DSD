@@ -1,7 +1,7 @@
 object ClientForm: TClientForm
   Left = 0
   Top = 0
-  Caption = #1057#1087#1088#1072#1074#1086#1095#1085#1080#1082' <'#1050#1083#1080#1077#1085#1090#1099'>'
+  Caption = #1057#1087#1088#1072#1074#1086#1095#1085#1080#1082' <Kunden>'
   ClientHeight = 376
   ClientWidth = 541
   Color = clBtnFace
@@ -543,6 +543,7 @@ object ClientForm: TClientForm
     ColumnAddOnList = <>
     ColumnEnterList = <>
     SummaryItemList = <>
+    ShowFieldImageList = <>
     PropertiesCellList = <>
     Left = 104
     Top = 248

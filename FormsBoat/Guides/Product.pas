@@ -22,7 +22,8 @@ uses
   dxSkinSevenClassic, dxSkinSharp, dxSkinSharpPlus, dxSkinSilver,
   dxSkinSpringTime, dxSkinStardust, dxSkinSummer2008, dxSkinTheAsphaltWorld,
   dxSkinValentine, dxSkinVS2010, dxSkinWhiteprint, dxSkinXmas2008Blue,
-  cxCurrencyEdit, cxSplitter, cxButtonEdit, ExternalLoad, Vcl.Menus;
+  cxCurrencyEdit, cxSplitter, cxButtonEdit, ExternalLoad, Vcl.Menus,
+  Vcl.ExtCtrls;
 
 type
   TProductForm = class(TParentForm)
@@ -154,6 +155,12 @@ type
     MenuItem5: TMenuItem;
     MenuItem6: TMenuItem;
     actChoiceFormGoods: TOpenChoiceForm;
+    PanelMaster: TPanel;
+    PanelProdColorItems: TPanel;
+    PanelProdOptItems: TPanel;
+    Panel3: TPanel;
+    Panel2: TPanel;
+    Panel1: TPanel;
   private
     { Private declarations }
   public

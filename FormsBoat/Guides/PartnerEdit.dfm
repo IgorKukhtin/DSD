@@ -1,7 +1,7 @@
 object PartnerEditForm: TPartnerEditForm
   Left = 0
   Top = 0
-  Caption = #1044#1086#1073#1072#1074#1080#1090#1100'/'#1048#1079#1084#1077#1085#1080#1090#1100' <'#1055#1072#1088#1090#1085#1077#1088#1099'>'
+  Caption = #1044#1086#1073#1072#1074#1080#1090#1100'/'#1048#1079#1084#1077#1085#1080#1090#1100' <Lieferanten>'
   ClientHeight = 378
   ClientWidth = 568
   Color = clBtnFace
