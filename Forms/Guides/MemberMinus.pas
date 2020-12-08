@@ -82,6 +82,8 @@ type
     bbbankMain: TdxBarControlContainerItem;
     ToShort: TcxGridDBColumn;
     isToShort: TcxGridDBColumn;
+    DescName_to: TcxGridDBColumn;
+    isChild: TcxGridDBColumn;
   private
     { Private declarations }
   public

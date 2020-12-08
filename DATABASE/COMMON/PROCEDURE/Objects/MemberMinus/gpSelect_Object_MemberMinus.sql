@@ -11,11 +11,12 @@ CREATE OR REPLACE FUNCTION gpSelect_Object_MemberMinus(
 )
 RETURNS TABLE (Id Integer, Name TVarChar
              , FromId Integer, FromCode Integer, FromName TVarChar, INN_From TVarChar
-             , ToId Integer, ToCode Integer, ToName TVarChar, ToShort TVarChar, INN_to TVarChar
+             , ToId Integer, ToCode Integer, ToName TVarChar, ToShort TVarChar, INN_to TVarChar, DescName_to TVarChar
              , BankAccountFromId Integer, BankAccountFromCode Integer, BankAccountFromName TVarChar, BankName_From TVarChar
              , BankAccountToId Integer, BankAccountToCode Integer, BankAccountToName TVarChar, BankName_To TVarChar
              , DetailPayment TVarChar, BankAccountTo TVarChar
              , TotalSumm TFloat, Summ TFloat
+             , isChild Boolean
              , isToShort Boolean
              , isErased Boolean) AS
 $BODY$
@@ -48,6 +49,7 @@ BEGIN
                               , Object_To.Id                          AS ToId
                               , Object_To.ObjectCode                  AS ToCode
                               , Object_To.ValueData                   AS ToName
+                              , ObjectDesc_To.ItemName                AS DescName_to
                               , ObjectString_ToShort.ValueData        AS ToShort
                               , CASE WHEN Object_To.DescId = zc_Object_Juridical() THEN ObjectHistory_JuridicalDetails_View.OKPO
                                      ELSE ObjectString_INN_to.ValueData
@@ -65,6 +67,7 @@ BEGIN
                               , ObjectString_BankAccountTo.ValueData  AS BankAccountTo
                               , COALESCE (ObjectFloat_TotalSumm.ValueData, 0) :: TFloat AS TotalSumm
                               , COALESCE (ObjectFloat_Summ.ValueData, 0)      :: TFloat AS Summ
+                              , COALESCE (ObjectBoolean_Child.ValueData, FALSE) :: Boolean AS isChild
                               , Object_MemberMinus.isErased           AS isErased
                           FROM Object AS Object_MemberMinus
                                LEFT JOIN ObjectLink AS ObjectLink_MemberMinus_From
@@ -77,7 +80,8 @@ BEGIN
                                LEFT JOIN ObjectLink AS ObjectLink_MemberMinus_To
                                                     ON ObjectLink_MemberMinus_To.ObjectId = Object_MemberMinus.Id
                                                    AND ObjectLink_MemberMinus_To.DescId = zc_ObjectLink_MemberMinus_To()
-                               LEFT JOIN Object AS Object_To ON Object_To.Id = ObjectLink_MemberMinus_To.ChildObjectId          
+                               LEFT JOIN Object AS Object_To ON Object_To.Id = ObjectLink_MemberMinus_To.ChildObjectId 
+                               LEFT JOIN ObjectDesc AS ObjectDesc_To ON ObjectDesc_To.Id = Object_To.DescId
                      
                                LEFT JOIN ObjectLink AS ObjectLink_MemberMinus_BankAccountFrom
                                                     ON ObjectLink_MemberMinus_BankAccountFrom.ObjectId = Object_MemberMinus.Id
@@ -88,6 +92,10 @@ BEGIN
                                                     ON ObjectLink_MemberMinus_BankAccountTo.ObjectId = Object_MemberMinus.Id
                                                    AND ObjectLink_MemberMinus_BankAccountTo.DescId = zc_ObjectLink_MemberMinus_BankAccountTo()
                                LEFT JOIN Object AS Object_BankAccountTo ON Object_BankAccountTo.Id = ObjectLink_MemberMinus_BankAccountTo.ChildObjectId
+
+                               LEFT JOIN ObjectBoolean AS ObjectBoolean_Child
+                                                       ON ObjectBoolean_Child.ObjectId = Object_MemberMinus.Id
+                                                      AND ObjectBoolean_Child.DescId = zc_ObjectBoolean_MemberMinus_Child()
 
                                LEFT JOIN ObjectString AS ObjectString_ToShort
                                                       ON ObjectString_ToShort.ObjectId = Object_MemberMinus.Id
@@ -147,6 +155,7 @@ BEGIN
              , tmpMemberMinus.ToName
              , tmpMemberMinus.ToShort
              , tmpMemberMinus.INN_to
+             , tmpMemberMinus.DescName_to
     
              , tmpMemberMinus.BankAccountFromId
              , tmpMemberMinus.BankAccountFromCode
@@ -163,6 +172,8 @@ BEGIN
     
              , tmpMemberMinus.TotalSumm
              , tmpMemberMinus.Summ
+             
+             , COALESCE (tmpMemberMinus.isChild, FALSE) ::Boolean AS isChild
              , CASE WHEN LENGTH (tmpMemberMinus.ToName) > 36 THEN TRUE ELSE FALSE END :: Boolean AS isToShort
     
              , tmpMemberMinus.isErased
@@ -188,6 +199,7 @@ BEGIN
              , CASE WHEN Object_To.DescId = zc_Object_Juridical() THEN ObjectHistory_JuridicalDetails_View.OKPO
                     ELSE ObjectString_INN_to.ValueData
                END                                   AS INN_to
+             , ObjectDesc_To.ItemName                AS DescName_to
     
              , Object_BankAccountFrom.Id             AS BankAccountFromId
              , Object_BankAccountFrom.ObjectCode     AS BankAccountFromCode
@@ -205,6 +217,7 @@ BEGIN
              , COALESCE (ObjectFloat_TotalSumm.ValueData, 0) :: TFloat AS TotalSumm
              , COALESCE (ObjectFloat_Summ.ValueData, 0)      :: TFloat AS Summ
 
+             , COALESCE (ObjectBoolean_Child.ValueData, FALSE) :: Boolean AS isChild
              , CASE WHEN LENGTH (Object_To.ValueData) > 36 THEN TRUE ELSE FALSE END :: Boolean AS isToShort
              , Object_MemberMinus.isErased           AS isErased
              
@@ -217,7 +230,8 @@ BEGIN
               LEFT JOIN ObjectLink AS ObjectLink_MemberMinus_To
                                    ON ObjectLink_MemberMinus_To.ObjectId = Object_MemberMinus.Id
                                   AND ObjectLink_MemberMinus_To.DescId = zc_ObjectLink_MemberMinus_To()
-              LEFT JOIN Object AS Object_To ON Object_To.Id = ObjectLink_MemberMinus_To.ChildObjectId          
+              LEFT JOIN Object AS Object_To ON Object_To.Id = ObjectLink_MemberMinus_To.ChildObjectId
+              LEFT JOIN ObjectDesc AS ObjectDesc_To ON ObjectDesc_To.Id = Object_To.DescId
 
               LEFT JOIN ObjectLink AS ObjectLink_MemberMinus_BankAccountFrom
                                    ON ObjectLink_MemberMinus_BankAccountFrom.ObjectId = Object_MemberMinus.Id
@@ -228,6 +242,10 @@ BEGIN
                                    ON ObjectLink_MemberMinus_BankAccountTo.ObjectId = Object_MemberMinus.Id
                                   AND ObjectLink_MemberMinus_BankAccountTo.DescId = zc_ObjectLink_MemberMinus_BankAccountTo()
               LEFT JOIN Object AS Object_BankAccountTo ON Object_BankAccountTo.Id = ObjectLink_MemberMinus_BankAccountTo.ChildObjectId
+
+              LEFT JOIN ObjectBoolean AS ObjectBoolean_Child
+                                      ON ObjectBoolean_Child.ObjectId = Object_MemberMinus.Id
+                                     AND ObjectBoolean_Child.DescId = zc_ObjectBoolean_MemberMinus_Child()
 
               LEFT JOIN ObjectString AS ObjectString_ToShort
                                      ON ObjectString_ToShort.ObjectId = Object_MemberMinus.Id

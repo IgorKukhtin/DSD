@@ -13,6 +13,8 @@ BEGIN
      -- проверка прав пользователя на вызов процедуры
      vbUserId:= lpCheckRight (inSession, zc_Enum_Process_InsertUpdate_Movement_PersonalService());
 
+     
+
      -- Выбираем данные из справочника MemberMinus
      CREATE TEMP TABLE tmpMemberMinus ON COMMIT DROP AS 
             (WITH
@@ -31,8 +33,11 @@ BEGIN
                   , tmpPersonal.isMain
                   , tmpPersonal.UnitId
                   , ObjectLink_Personal_PersonalServiceList.ChildObjectId AS PersonalServiceListId
-                  , SUM (CASE WHEN Object_To.DescId = zc_Object_Juridical() THEN COALESCE (ObjectFloat_Summ.ValueData, 0) ELSE 0 END) :: TFloat AS SummMinusExtRecalc
-                  , SUM (CASE WHEN Object_To.DescId = zc_Object_Juridical() THEN 0 ELSE COALESCE (ObjectFloat_Summ.ValueData, 0) END) :: TFloat AS SummChildRecalc
+                  , SUM (CASE WHEN COALESCE (ObjectBoolean_Child.ValueData, FALSE) = FALSE THEN COALESCE (ObjectFloat_Summ.ValueData, 0) ELSE 0 END) :: TFloat AS SummMinusExtRecalc
+                  , SUM (CASE WHEN COALESCE (ObjectBoolean_Child.ValueData, FALSE) = TRUE  THEN COALESCE (ObjectFloat_Summ.ValueData, 0) ELSE 0 END) :: TFloat AS SummChildRecalc
+
+                  --, SUM (CASE WHEN Object_To.DescId = zc_Object_Juridical() THEN COALESCE (ObjectFloat_Summ.ValueData, 0) ELSE 0 END) :: TFloat AS SummMinusExtRecalc
+                  --, SUM (CASE WHEN Object_To.DescId = zc_Object_Juridical() THEN 0 ELSE COALESCE (ObjectFloat_Summ.ValueData, 0) END) :: TFloat AS SummChildRecalc
              FROM Object AS Object_MemberMinus
                    LEFT JOIN ObjectLink AS ObjectLink_MemberMinus_From
                                         ON ObjectLink_MemberMinus_From.ObjectId = Object_MemberMinus.Id
@@ -41,7 +46,7 @@ BEGIN
                    LEFT JOIN ObjectLink AS ObjectLink_MemberMinus_To
                                         ON ObjectLink_MemberMinus_To.ObjectId = Object_MemberMinus.Id
                                        AND ObjectLink_MemberMinus_To.DescId = zc_ObjectLink_MemberMinus_To()
-                   LEFT JOIN Object AS Object_To ON Object_To.Id = ObjectLink_MemberMinus_To.ChildObjectId
+                   --LEFT JOIN Object AS Object_To ON Object_To.Id = ObjectLink_MemberMinus_To.ChildObjectId
                    
                    LEFT JOIN tmpPersonal ON tmpPersonal.MemberId = ObjectLink_MemberMinus_From.ChildObjectId
 
@@ -52,6 +57,10 @@ BEGIN
                    LEFT JOIN ObjectFloat AS ObjectFloat_Summ
                                          ON ObjectFloat_Summ.ObjectId = Object_MemberMinus.Id
                                         AND ObjectFloat_Summ.DescId = zc_ObjectFloat_MemberMinus_Summ()
+
+                   LEFT JOIN ObjectBoolean AS ObjectBoolean_Child
+                                           ON ObjectBoolean_Child.ObjectId = Object_MemberMinus.Id
+                                          AND ObjectBoolean_Child.DescId = zc_ObjectBoolean_MemberMinus_Child()
 
              WHERE Object_MemberMinus.DescId = zc_Object_MemberMinus()
                AND Object_MemberMinus.isErased = FALSE
@@ -74,7 +83,9 @@ BEGIN
                                                         , inMovementId            := inMovementId                                           ::Integer
                                                         , inPersonalId            := tmpMemberMinus.PersonalId                              ::Integer
                                                         , inIsMain                := COALESCE (tmpMemberMinus.IsMain, tmpMI.isMain)         ::Boolean
-                                                        , inSummService           := COALESCE (tmpMI.SummService,0)                         ::TFloat
+                                                        , inSummService           := (COALESCE (tmpMI.SummService,0)
+                                                                                    + COALESCE (tmpMemberMinus.SummChildRecalc,0)
+                                                                                    + COALESCE (tmpMemberMinus.SummMinusExtRecalc,0))       ::TFloat
                                                         , inSummCardRecalc        := COALESCE (tmpMI.SummCardRecalc,0)                      ::TFloat
                                                         , inSummCardSecondRecalc  := COALESCE (tmpMI.SummCardSecondRecalc,0)                ::TFloat
                                                         , inSummCardSecondCash    := COALESCE (tmpMI.SummCardSecondCash,0)                  ::TFloat
@@ -95,7 +106,11 @@ BEGIN
                                                         , inSummCompensationRecalc:= COALESCE (tmpMI.SummCompensationRecalc,0)              ::TFloat
                                                         , inSummAuditAdd          := COALESCE (tmpMI.SummAuditAdd,0)                        ::TFloat
                                                         , inComment               := COALESCE (tmpMI.Comment, '')                           ::TVarChar
-                                                        , inInfoMoneyId           := COALESCE (tmpMI.InfoMoneyId,0)                         ::Integer
+                                                        , inInfoMoneyId           := zc_Enum_InfoMoney_60101()                              ::Integer
+                                                                                     /*CASE WHEN COALESCE (tmpMemberMinus.SummMinusExtRecalc,0) <> 0 THEN 979902     -- 979902  удерж.сторонние юр лица
+                                                                                          WHEN COALESCE (tmpMemberMinus.SummChildRecalc,0) <> 0 THEN 298751        -- 298751  Алименты  
+                                                                                          ELSE COALESCE (tmpMI.InfoMoneyId,0)
+                                                                                     END                                                    ::Integer */
                                                         , inUnitId                := COALESCE (tmpMemberMinus.UnitId, tmpMI.UnitId)         ::Integer
                                                         , inPositionId            := COALESCE (tmpMemberMinus.PositionId, tmpMI.PositionId) ::Integer
                                                         , inMemberId              := COALESCE (tmpMemberMinus.MemberId, tmpMI.MemberId)     ::Integer
