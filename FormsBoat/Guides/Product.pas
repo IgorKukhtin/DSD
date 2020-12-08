@@ -79,27 +79,9 @@ type
     dsdDBViewAddOnProdOptItems: TdsdDBViewAddOn;
     cxGridProdOptItems: TcxGrid;
     cxGridDBTableViewProdOptItems: TcxGridDBTableView;
-    optCode: TcxGridDBColumn;
-    optProdOptPatternName: TcxGridDBColumn;
-    colPriceOut: TcxGridDBColumn;
-    optPriceIn: TcxGridDBColumn;
-    optProdOptionsName: TcxGridDBColumn;
-    colPartNumber: TcxGridDBColumn;
-    optComment: TcxGridDBColumn;
-    optInsertDate: TcxGridDBColumn;
-    optInsertName: TcxGridDBColumn;
-    optIsErased: TcxGridDBColumn;
     cxGridLevel1: TcxGridLevel;
     cxGridProdColorItems: TcxGrid;
     cxGridDBTableViewProdColorItems: TcxGridDBTableView;
-    colCode: TcxGridDBColumn;
-    colProdColorPatternName: TcxGridDBColumn;
-    colProdColorName: TcxGridDBColumn;
-    colProdColorGroupName: TcxGridDBColumn;
-    colComment: TcxGridDBColumn;
-    colInsertDate: TcxGridDBColumn;
-    colInsertName: TcxGridDBColumn;
-    colisErased: TcxGridDBColumn;
     cxGridLevel2: TcxGridLevel;
     cxTopSplitter: TcxSplitter;
     cxRightSplitter: TcxSplitter;
@@ -142,9 +124,6 @@ type
     bbShowAllColorItems: TdxBarButton;
     bbShowAllOptItems: TdxBarButton;
     ProdColorName: TcxGridDBColumn;
-    colNPP: TcxGridDBColumn;
-    colColor_fon: TcxGridDBColumn;
-    optColor_fon: TcxGridDBColumn;
     BarSubItemBoat: TdxBarSubItem;
     BarSubItemColor: TdxBarSubItem;
     BarSubItemOption: TdxBarSubItem;
@@ -159,7 +138,6 @@ type
     PriceOut2: TcxGridDBColumn;
     PriceIn3: TcxGridDBColumn;
     PriceOut3: TcxGridDBColumn;
-    optNPP: TcxGridDBColumn;
     Color_fon: TcxGridDBColumn;
     PopupMenu: TPopupMenu;
     N1: TMenuItem;
@@ -175,6 +153,7 @@ type
     MenuItem1: TMenuItem;
     MenuItem5: TMenuItem;
     MenuItem6: TMenuItem;
+    actChoiceFormGoods: TOpenChoiceForm;
   private
     { Private declarations }
   public

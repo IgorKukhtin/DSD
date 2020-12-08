@@ -9,8 +9,7 @@ CREATE OR REPLACE FUNCTION gpGet_Object_ProdColorItems(
 RETURNS TABLE (Id Integer, Code Integer, Name TVarChar
              , Comment TVarChar
              , ProductId Integer, ProductName TVarChar
-             , ProdColorGroupId Integer, ProdColorGroupName TVarChar
-             , ProdColorId Integer, ProdColorName TVarChar
+             , GoodsId Integer, GoodsName TVarChar
              , ProdColorPatternId Integer, ProdColorPatternName TVarChar
 ) AS
 $BODY$
@@ -31,10 +30,8 @@ BEGIN
            , '' :: TVarChar           AS Comment
            ,  0 :: Integer            AS ProductId
            , '' :: TVarChar           AS ProductName
-           ,  0 :: Integer            AS ProdColorGroupId
-           , '' :: TVarChar           AS ProdColorGroupName
-           ,  0 :: Integer            AS ProdColorId
-           , '' :: TVarChar           AS ProdColorName
+           ,  0 :: Integer            AS GoodsId
+           , '' :: TVarChar           AS GoodsName
            ,  0 :: Integer            AS ProdColorPatternId
            , '' :: TVarChar           AS ProdColorPatternName
        ;
@@ -42,7 +39,7 @@ BEGIN
      RETURN QUERY
      SELECT 
            Object_ProdColorItems.Id         AS Id 
-         , ROW_NUMBER() OVER (PARTITION BY Object_Product.Id ORDER BY Object_ProdColorGroup.ObjectCode ASC, Object_ProdColorItems.ObjectCode ASC) :: Integer AS Code
+         , ROW_NUMBER() OVER (PARTITION BY Object_Product.Id ORDER BY Object_Goods.ObjectCode ASC, Object_ProdColorItems.ObjectCode ASC) :: Integer AS Code
          , Object_ProdColorItems.ValueData  AS Name
 
          , ObjectString_Comment.ValueData     ::TVarChar AS Comment
@@ -50,11 +47,8 @@ BEGIN
          , Object_Product.Id                  ::Integer  AS ProductId
          , Object_Product.ValueData           ::TVarChar AS ProductName
 
-         , Object_ProdColorGroup.Id           ::Integer  AS ProdColorGroupId
-         , Object_ProdColorGroup.ValueData    ::TVarChar AS ProdColorGroupName
-
-         , Object_ProdColor.Id                ::Integer  AS ProdColorId
-         , Object_ProdColor.ValueData         ::TVarChar AS ProdColorName
+         , Object_Goods.Id           ::Integer  AS GoodsId
+         , Object_Goods.ValueData    ::TVarChar AS GoodsName
 
          , Object_ProdColorPattern.Id         ::Integer  AS ProdColorPatternId
          , Object_ProdColorPattern.ValueData  ::TVarChar AS ProdColorPatternName
@@ -68,10 +62,10 @@ BEGIN
                               AND ObjectLink_Product.DescId = zc_ObjectLink_ProdColorItems_Product()
           LEFT JOIN Object AS Object_Product ON Object_Product.Id = ObjectLink_Product.ChildObjectId
 
-          LEFT JOIN ObjectLink AS ObjectLink_ProdColorGroup
-                               ON ObjectLink_ProdColorGroup.ObjectId = Object_ProdColorItems.Id
-                              AND ObjectLink_ProdColorGroup.DescId = zc_ObjectLink_ProdColorItems_ProdColorGroup()
-          LEFT JOIN Object AS Object_ProdColorGroup ON Object_ProdColorGroup.Id = ObjectLink_ProdColorGroup.ChildObjectId 
+          LEFT JOIN ObjectLink AS ObjectLink_Goods
+                               ON ObjectLink_Goods.ObjectId = Object_ProdColorItems.Id
+                              AND ObjectLink_Goods.DescId = zc_ObjectLink_ProdColorItems_Goods()
+          LEFT JOIN Object AS Object_Goods ON Object_Goods.Id = ObjectLink_Goods.ChildObjectId 
 
           LEFT JOIN ObjectLink AS ObjectLink_ProdColor
                                ON ObjectLink_ProdColor.ObjectId = Object_ProdColorItems.Id
@@ -100,4 +94,4 @@ $BODY$
 */
 
 -- тест
--- SELECT * FROM gpSelect_Object_ProdColorItems (false,false, zfCalc_UserAdmin())
+--SELECT * FROM gpGet_Object_ProdColorItems (0, zfCalc_UserAdmin())

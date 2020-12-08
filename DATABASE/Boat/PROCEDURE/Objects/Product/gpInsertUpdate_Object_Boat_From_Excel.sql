@@ -382,8 +382,7 @@ BEGIN
              vbProdColorItemsId:= (SELECT tmp.ioId FROM gpInsertUpdate_Object_ProdColorItems (ioId                := 0
                                                                                             , inCode              := 1
                                                                                             , inProductId         := vbProductId
-                                                                                            , inProdColorGroupId  := vbProdColorGroupId1
-                                                                                            , inProdColorId       := vbColorId
+                                                                                            , inGoodsId           := 0
                                                                                             , inProdColorPatternId:= vbProdColorPatternId
                                                                                             , inComment           := ''
                                                                                             , inSession           := inSession
@@ -459,8 +458,8 @@ BEGIN
              vbProdColorItemsId:= (SELECT tmp.ioId FROM gpInsertUpdate_Object_ProdColorItems (ioId                := vbProdColorItemsId
                                                                                             , inCode              := 2
                                                                                             , inProductId         := vbProductId
-                                                                                            , inProdColorGroupId  := vbProdColorGroupId1
-                                                                                            , inProdColorId       := vbColorId
+                                                                                            , inGoodsId           := 0
+                                                                                            --, inProdColorId       := vbColorId
                                                                                             , inProdColorPatternId:= vbProdColorPatternId
                                                                                             , inComment           := ''
                                                                                             , inSession           := inSession
@@ -536,8 +535,9 @@ BEGIN
              vbProdColorItemsId:= (SELECT tmp.ioId FROM gpInsertUpdate_Object_ProdColorItems (ioId                := vbProdColorItemsId
                                                                                             , inCode              := 1
                                                                                             , inProductId         := vbProductId
-                                                                                            , inProdColorGroupId  := vbProdColorGroupId2
-                                                                                            , inProdColorId       := vbColorId
+                                                                                            , inGoodsId           := 0
+                                                                                            --, inProdColorGroupId  := vbProdColorGroupId2
+                                                                                            --, inProdColorId       := vbColorId
                                                                                             , inProdColorPatternId:= vbProdColorPatternId
                                                                                             , inComment           := ''
                                                                                             , inSession           := inSession
@@ -612,8 +612,9 @@ BEGIN
              vbProdColorItemsId:= (SELECT tmp.ioId FROM gpInsertUpdate_Object_ProdColorItems (ioId                := vbProdColorItemsId
                                                                                             , inCode              := 2
                                                                                             , inProductId         := vbProductId
-                                                                                            , inProdColorGroupId  := vbProdColorGroupId2
-                                                                                            , inProdColorId       := vbColorId
+                                                                                            , inGoodsId           := 0
+                                                                                            --, inProdColorGroupId  := vbProdColorGroupId2
+                                                                                            --, inProdColorId       := vbColorId
                                                                                             , inProdColorPatternId:= vbProdColorPatternId
                                                                                             , inComment           := ''
                                                                                             , inSession           := inSession
@@ -689,8 +690,9 @@ BEGIN
              vbProdColorItemsId:= (SELECT tmp.ioId FROM gpInsertUpdate_Object_ProdColorItems (ioId                := vbProdColorItemsId
                                                                                             , inCode              := 3
                                                                                             , inProductId         := vbProductId
-                                                                                            , inProdColorGroupId  := vbProdColorGroupId2
-                                                                                            , inProdColorId       := vbColorId
+                                                                                            , inGoodsId           := 0
+                                                                                            --, inProdColorGroupId  := vbProdColorGroupId2
+                                                                                            --, inProdColorId       := vbColorId
                                                                                             , inProdColorPatternId:= vbProdColorPatternId
                                                                                             , inComment           := ''
                                                                                             , inSession           := inSession
@@ -766,8 +768,9 @@ BEGIN
              vbProdColorItemsId:= (SELECT tmp.ioId FROM gpInsertUpdate_Object_ProdColorItems (ioId                := vbProdColorItemsId
                                                                                             , inCode              := 1
                                                                                             , inProductId         := vbProductId
-                                                                                            , inProdColorGroupId  := vbProdColorGroupId3
-                                                                                            , inProdColorId       := vbColorId
+                                                                                            , inGoodsId           := 0
+                                                                                            --, inProdColorGroupId  := vbProdColorGroupId3
+                                                                                            --, inProdColorId       := vbColorId
                                                                                             , inProdColorPatternId:= vbProdColorPatternId
                                                                                             , inComment           := ''
                                                                                             , inSession           := inSession
@@ -843,8 +846,9 @@ BEGIN
              vbProdColorItemsId:= (SELECT tmp.ioId FROM gpInsertUpdate_Object_ProdColorItems (ioId                := vbProdColorItemsId
                                                                                             , inCode              := 2
                                                                                             , inProductId         := vbProductId
-                                                                                            , inProdColorGroupId  := vbProdColorGroupId3
-                                                                                            , inProdColorId       := vbColorId
+                                                                                            , inGoodsId           := 0
+                                                                                            --, inProdColorGroupId  := vbProdColorGroupId3
+                                                                                            --, inProdColorId       := vbColorId
                                                                                             , inProdColorPatternId:= vbProdColorPatternId
                                                                                             , inComment           := ''
                                                                                             , inSession           := inSession
@@ -919,8 +923,9 @@ BEGIN
              vbProdColorItemsId:= (SELECT tmp.ioId FROM gpInsertUpdate_Object_ProdColorItems (ioId                := vbProdColorItemsId
                                                                                             , inCode              := 3
                                                                                             , inProductId         := vbProductId
-                                                                                            , inProdColorGroupId  := vbProdColorGroupId3
-                                                                                            , inProdColorId       := vbColorId
+                                                                                            , inGoodsId           := 0
+                                                                                            --, inProdColorGroupId  := vbProdColorGroupId3
+                                                                                            --, inProdColorId       := vbColorId
                                                                                             , inProdColorPatternId:= vbProdColorPatternId
                                                                                             , inComment           := ''
                                                                                             , inSession           := inSession
@@ -995,8 +1000,9 @@ BEGIN
              vbProdColorItemsId:= (SELECT tmp.ioId FROM gpInsertUpdate_Object_ProdColorItems (ioId                := vbProdColorItemsId
                                                                                             , inCode              := 4
                                                                                             , inProductId         := vbProductId
-                                                                                            , inProdColorGroupId  := vbProdColorGroupId3
-                                                                                            , inProdColorId       := vbColorId
+                                                                                            , inGoodsId           := 0
+                                                                                            --, inProdColorGroupId  := vbProdColorGroupId3
+                                                                                            --, inProdColorId       := vbColorId
                                                                                             , inProdColorPatternId:= vbProdColorPatternId
                                                                                             , inComment           := ''
                                                                                             , inSession           := inSession
@@ -1072,8 +1078,9 @@ BEGIN
              vbProdColorItemsId:= (SELECT tmp.ioId FROM gpInsertUpdate_Object_ProdColorItems (ioId                := vbProdColorItemsId
                                                                                             , inCode              := 1
                                                                                             , inProductId         := vbProductId
-                                                                                            , inProdColorGroupId  := vbProdColorGroupId4
-                                                                                            , inProdColorId       := vbColorId
+                                                                                            , inGoodsId           := 0
+                                                                                            --, inProdColorGroupId  := vbProdColorGroupId4
+                                                                                            --, inProdColorId       := vbColorId
                                                                                             , inProdColorPatternId:= vbProdColorPatternId
                                                                                             , inComment           := ''
                                                                                             , inSession           := inSession
@@ -1148,8 +1155,9 @@ BEGIN
              vbProdColorItemsId:= (SELECT tmp.ioId FROM gpInsertUpdate_Object_ProdColorItems (ioId                := vbProdColorItemsId
                                                                                             , inCode              := 2
                                                                                             , inProductId         := vbProductId
-                                                                                            , inProdColorGroupId  := vbProdColorGroupId4
-                                                                                            , inProdColorId       := vbColorId
+                                                                                            , inGoodsId           := 0
+                                                                                            --, inProdColorGroupId  := vbProdColorGroupId4
+                                                                                            --, inProdColorId       := vbColorId
                                                                                             , inProdColorPatternId:= vbProdColorPatternId
                                                                                             , inComment           := ''
                                                                                             , inSession           := inSession
@@ -1225,8 +1233,9 @@ BEGIN
              vbProdColorItemsId:= (SELECT tmp.ioId FROM gpInsertUpdate_Object_ProdColorItems (ioId                := vbProdColorItemsId
                                                                                             , inCode              := 1
                                                                                             , inProductId         := vbProductId
-                                                                                            , inProdColorGroupId  := vbProdColorGroupId5
-                                                                                            , inProdColorId       := vbColorId
+                                                                                            , inGoodsId           := 0
+                                                                                            --, inProdColorGroupId  := vbProdColorGroupId5
+                                                                                            --, inProdColorId       := vbColorId
                                                                                             , inProdColorPatternId:= vbProdColorPatternId
                                                                                             , inComment           := ''
                                                                                             , inSession           := inSession
@@ -1302,8 +1311,9 @@ BEGIN
              vbProdColorItemsId:= (SELECT tmp.ioId FROM gpInsertUpdate_Object_ProdColorItems (ioId                := vbProdColorItemsId
                                                                                             , inCode              := 2
                                                                                             , inProductId         := vbProductId
-                                                                                            , inProdColorGroupId  := vbProdColorGroupId5
-                                                                                            , inProdColorId       := vbColorId
+                                                                                            , inGoodsId           := 0
+                                                                                            --, inProdColorGroupId  := vbProdColorGroupId5
+                                                                                            --, inProdColorId       := vbColorId
                                                                                             , inProdColorPatternId:= vbProdColorPatternId
                                                                                             , inComment           := ''
                                                                                             , inSession           := inSession
@@ -1378,8 +1388,9 @@ BEGIN
              vbProdColorItemsId:= (SELECT tmp.ioId FROM gpInsertUpdate_Object_ProdColorItems (ioId                := vbProdColorItemsId
                                                                                             , inCode              := 3
                                                                                             , inProductId         := vbProductId
-                                                                                            , inProdColorGroupId  := vbProdColorGroupId5
-                                                                                            , inProdColorId       := vbColorId
+                                                                                            , inGoodsId           := 0
+                                                                                            --, inProdColorGroupId  := vbProdColorGroupId5
+                                                                                            --, inProdColorId       := vbColorId
                                                                                             , inProdColorPatternId:= vbProdColorPatternId
                                                                                             , inComment           := ''
                                                                                             , inSession           := inSession
@@ -1454,8 +1465,9 @@ BEGIN
              vbProdColorItemsId:= (SELECT tmp.ioId FROM gpInsertUpdate_Object_ProdColorItems (ioId                := vbProdColorItemsId
                                                                                             , inCode              := 4
                                                                                             , inProductId         := vbProductId
-                                                                                            , inProdColorGroupId  := vbProdColorGroupId5
-                                                                                            , inProdColorId       := vbColorId
+                                                                                            , inGoodsId           := 0
+                                                                                            --, inProdColorGroupId  := vbProdColorGroupId5
+                                                                                            --, inProdColorId       := vbColorId
                                                                                             , inProdColorPatternId:= vbProdColorPatternId
                                                                                             , inComment           := ''
                                                                                             , inSession           := inSession
@@ -1530,8 +1542,9 @@ BEGIN
              vbProdColorItemsId:= (SELECT tmp.ioId FROM gpInsertUpdate_Object_ProdColorItems (ioId                := vbProdColorItemsId
                                                                                             , inCode              := 5
                                                                                             , inProductId         := vbProductId
-                                                                                            , inProdColorGroupId  := vbProdColorGroupId5
-                                                                                            , inProdColorId       := vbColorId
+                                                                                            , inGoodsId           := 0
+                                                                                            --, inProdColorGroupId  := vbProdColorGroupId5
+                                                                                            --, inProdColorId       := vbColorId
                                                                                             , inProdColorPatternId:= vbProdColorPatternId
                                                                                             , inComment           := ''
                                                                                             , inSession           := inSession
