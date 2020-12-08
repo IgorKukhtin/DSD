@@ -148,10 +148,12 @@ type
     MenuItem6: TMenuItem;
     Value_ch1: TcxGridDBColumn;
     ObjectCode_ch2: TcxGridDBColumn;
+    PanelMaster: TPanel;
     PanelGoods: TPanel;
     PanelProdColorPattern: TPanel;
     Panel1: TPanel;
     Panel2: TPanel;
+    Panel3: TPanel;
   private
     { Private declarations }
   public
