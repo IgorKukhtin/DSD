@@ -38,7 +38,7 @@ BEGIN
        --
        RETURN QUERY 
        WITH tmpBranch  AS (SELECT Object.Id AS BranchId FROM Object WHERE Object.DescId = zc_Object_Branch() AND Object.AccessKeyId = vbAccessKeyId)
-          , tmpUnitAll AS (SELECT lfSelect.UnitId FROM lfSelect_Object_Unit_byProfitLossDirection() AS lfSelect WHERE lfSelect.ProfitLossDirectionId = zc_Enum_ProfitLossDirection_40100())
+          , tmpUnitAll AS (SELECT lfSelect.UnitId FROM lfSelect_Object_Unit_byProfitLossDirection() AS lfSelect WHERE lfSelect.ProfitLossDirectionId IN (zc_Enum_ProfitLossDirection_40100(), zc_Enum_ProfitLossDirection_40200()))
           , tmpUnit AS (SELECT Object.*
                         FROM ObjectLink AS OL_Unit_Branch
                              INNER JOIN tmpBranch ON tmpBranch.BranchId = OL_Unit_Branch.ChildObjectId

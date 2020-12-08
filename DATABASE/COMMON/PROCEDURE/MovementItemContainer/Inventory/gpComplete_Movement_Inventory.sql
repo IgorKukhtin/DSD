@@ -1607,7 +1607,8 @@ end if;
 
 
      -- 4. Start Переоценка
-     IF (vbOperDate >= '01.06.2014' AND vbPriceListId <> 0
+     IF (
+        (vbOperDate >= '01.06.2014' AND vbPriceListId <> 0
         AND vbUnitId IN (301309 -- Склад ГП ф.Запорожье
                        , 309599 -- Склад возвратов ф.Запорожье
                        , 346093 -- Склад ГП ф.Одесса
@@ -1636,6 +1637,8 @@ end if;
      OR (vbBranchId NOT IN (zc_Branch_Basis(), 0)
          AND vbOperDate > '31.12.2017'
         )
+        )
+        AND inMovementId NOT IN (18389580)
      THEN
 
      -- 4.1. заполняем таблицу - суммовые элементы документа, для переоценки
