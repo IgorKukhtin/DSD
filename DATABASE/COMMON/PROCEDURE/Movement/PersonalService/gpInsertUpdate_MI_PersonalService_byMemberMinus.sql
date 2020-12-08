@@ -83,9 +83,7 @@ BEGIN
                                                         , inMovementId            := inMovementId                                           ::Integer
                                                         , inPersonalId            := tmpMemberMinus.PersonalId                              ::Integer
                                                         , inIsMain                := COALESCE (tmpMemberMinus.IsMain, tmpMI.isMain)         ::Boolean
-                                                        , inSummService           := (COALESCE (tmpMI.SummService,0)
-                                                                                    + COALESCE (tmpMemberMinus.SummChildRecalc,0)
-                                                                                    + COALESCE (tmpMemberMinus.SummMinusExtRecalc,0))       ::TFloat
+                                                        , inSummService           := 0                                                      ::TFloat
                                                         , inSummCardRecalc        := COALESCE (tmpMI.SummCardRecalc,0)                      ::TFloat
                                                         , inSummCardSecondRecalc  := COALESCE (tmpMI.SummCardSecondRecalc,0)                ::TFloat
                                                         , inSummCardSecondCash    := COALESCE (tmpMI.SummCardSecondCash,0)                  ::TFloat
@@ -107,13 +105,9 @@ BEGIN
                                                         , inSummAuditAdd          := COALESCE (tmpMI.SummAuditAdd,0)                        ::TFloat
                                                         , inComment               := COALESCE (tmpMI.Comment, '')                           ::TVarChar
                                                         , inInfoMoneyId           := zc_Enum_InfoMoney_60101()                              ::Integer
-                                                                                     /*CASE WHEN COALESCE (tmpMemberMinus.SummMinusExtRecalc,0) <> 0 THEN 979902     -- 979902  удерж.сторонние юр лица
-                                                                                          WHEN COALESCE (tmpMemberMinus.SummChildRecalc,0) <> 0 THEN 298751        -- 298751  Алименты  
-                                                                                          ELSE COALESCE (tmpMI.InfoMoneyId,0)
-                                                                                     END                                                    ::Integer */
                                                         , inUnitId                := COALESCE (tmpMemberMinus.UnitId, tmpMI.UnitId)         ::Integer
                                                         , inPositionId            := COALESCE (tmpMemberMinus.PositionId, tmpMI.PositionId) ::Integer
-                                                        , inMemberId              := COALESCE (tmpMemberMinus.MemberId, tmpMI.MemberId)     ::Integer
+                                                        , inMemberId              := 0                                                      ::Integer    --COALESCE (tmpMemberMinus.MemberId, tmpMI.MemberId) 
                                                         , inPersonalServiceListId := COALESCE (tmpMemberMinus.PersonalServiceListId, tmpMI.PersonalServiceListId) :: Integer
                                                         , inUserId                := vbUserId
                                                       ) 

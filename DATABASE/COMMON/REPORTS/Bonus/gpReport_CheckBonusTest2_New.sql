@@ -582,8 +582,6 @@ BEGIN
                                     , SUM (tmp.Sum_Return)          AS Sum_Return -- возврат
                                     , tmp.MovementDescId
                                     , tmp.MovementId
-                                    , SUM (CASE WHEN tmp.Ord = 1 THEN tmp.Sale_AmountPartner_Weight ELSE 0 END)   AS Sale_AmountPartner_Weight
-                                    , SUM (CASE WHEN tmp.Ord = 1 THEN tmp.Return_AmountPartner_Weight ELSE 0 END) AS Return_AmountPartner_Weight
                                FROM (SELECT tmpContainer.JuridicalId
                                           , tmpContainer.ContractId_child
                                           , tmpContainer.ContractId_master
@@ -611,35 +609,14 @@ BEGIN
                                                  END) AS Sum_AccountSendDebt
 
                                           ,  (CASE WHEN MIContainer.MovementDescId = zc_Movement_ReturnIn() THEN (-1)*COALESCE(MIContainer.Amount,0) ELSE 0 END) AS Sum_Return  -- возврат
-                                          , CASE WHEN inisMovement = TRUE THEN MIContainer.MovementDescId ELSE 0 END  AS MovementDescId
-                                          , CASE WHEN inisMovement = TRUE THEN MIContainer.MovementId ELSE 0 END      AS MovementId
+                                          --, CASE WHEN inisMovement = TRUE THEN MIContainer.MovementDescId ELSE 0 END  AS MovementDescId
+                                          --, CASE WHEN inisMovement = TRUE THEN MIContainer.MovementId ELSE 0 END      AS MovementId
+                                          , MIContainer.MovementDescId  AS MovementDescId
+                                          , MIContainer.MovementId      AS MovementId
 
-                                          ,  (CASE WHEN MIContainer.MovementDescId = zc_Movement_Sale() THEN COALESCE(MIFloat_AmountPartner.ValueData,0) ELSE 0 END
-                                               * CASE WHEN ObjectLink_Goods_Measure.ChildObjectId = zc_Measure_Sh() THEN ObjectFloat_Weight.ValueData ELSE 1 END
-                                                ) AS Sale_AmountPartner_Weight
-                                               
-                                          ,  (CASE WHEN MIContainer.MovementDescId = zc_Movement_ReturnIn() THEN COALESCE(MIFloat_AmountPartner.ValueData,0) ELSE 0 END
-                                               * CASE WHEN ObjectLink_Goods_Measure.ChildObjectId = zc_Measure_Sh() THEN ObjectFloat_Weight.ValueData ELSE 1 END
-                                                ) AS Return_AmountPartner_Weight
-                                          
-                                          , ROW_Number() OVER (PARTITION BY MIContainer.MovementItemId)  AS Ord --перенумеровали МИ чтоб потом не задвоить кол-во
                                      FROM MovementItemContainer AS MIContainer
                                           JOIN tmpContainer ON tmpContainer.ContainerId = MIContainer.ContainerId
 
-                                          LEFT JOIN MovementItem ON MovementItem.Id = MIContainer.MovementItemId 
-                                                                AND MovementItem.DescId = zc_MI_Master()
-         
-                                          LEFT JOIN MovementItemFloat AS MIFloat_AmountPartner
-                                                                      ON MIFloat_AmountPartner.MovementItemId = MIContainer.MovementItemId
-                                                                     AND MIFloat_AmountPartner.DescId = zc_MIFloat_AmountPartner()
-         
-                                          LEFT JOIN ObjectLink AS ObjectLink_Goods_Measure
-                                                               ON ObjectLink_Goods_Measure.ObjectId = MovementItem.ObjectId
-                                                              AND ObjectLink_Goods_Measure.DescId = zc_ObjectLink_Goods_Measure()
-                                          LEFT JOIN ObjectFloat AS ObjectFloat_Weight
-                                                                ON ObjectFloat_Weight.ObjectId = MovementItem.ObjectId
-                                                               AND ObjectFloat_Weight.DescId = zc_ObjectFloat_Goods_Weight()
-         
                                           LEFT JOIN Object ON Object.Id = CASE WHEN MIContainer.MovementDescId IN (zc_Movement_BankAccount(),zc_Movement_Cash()) THEN MIContainer.ObjectId_Analyzer ELSE MIContainer.ObjectExtId_Analyzer END
          
                                           -- для Базы БН получаем филиал по сотруднику из договора, по ведомости 
@@ -680,6 +657,36 @@ BEGIN
                                       , tmp.ContractId_master
                               )
 
+      -- по документам нужно получить вес
+      , tmpWeight AS (SELECT tmp.MovementId 
+                           , SUM (CASE WHEN tmp.MovementDescId = zc_Movement_Sale() THEN COALESCE(MIFloat_AmountPartner.ValueData,0) ELSE 0 END
+                                * CASE WHEN ObjectLink_Goods_Measure.ChildObjectId = zc_Measure_Sh() THEN ObjectFloat_Weight.ValueData ELSE 1 END
+                                 ) AS Sale_AmountPartner_Weight
+                                
+                           , SUM (CASE WHEN tmp.MovementDescId = zc_Movement_ReturnIn() THEN COALESCE(MIFloat_AmountPartner.ValueData,0) ELSE 0 END
+                                * CASE WHEN ObjectLink_Goods_Measure.ChildObjectId = zc_Measure_Sh() THEN ObjectFloat_Weight.ValueData ELSE 1 END
+                                 ) AS Return_AmountPartner_Weight
+                      FROM (SELECT DISTINCT tmpMovementContALL.MovementId, tmpMovementContALL.MovementDescId 
+                            FROM tmpMovementContALL
+                            ) AS tmp
+                            LEFT JOIN MovementItem ON MovementItem.MovementId = tmp.MovementId 
+                                                   AND MovementItem.DescId = zc_MI_Master()
+                                                   AND MovementItem.isErased = FALSE
+         
+                            LEFT JOIN MovementItemFloat AS MIFloat_AmountPartner
+                                                        ON MIFloat_AmountPartner.MovementItemId = MovementItem.Id
+                                                       AND MIFloat_AmountPartner.DescId = zc_MIFloat_AmountPartner()
+         
+                            LEFT JOIN ObjectLink AS ObjectLink_Goods_Measure
+                                                 ON ObjectLink_Goods_Measure.ObjectId = MovementItem.ObjectId
+                                                AND ObjectLink_Goods_Measure.DescId = zc_ObjectLink_Goods_Measure()
+                            LEFT JOIN ObjectFloat AS ObjectFloat_Weight
+                                                  ON ObjectFloat_Weight.ObjectId = MovementItem.ObjectId
+                                                 AND ObjectFloat_Weight.DescId = zc_ObjectFloat_Goods_Weight()
+                      GROUP BY tmp.MovementId       
+                      )
+
+        --ограничиваем контрагентами там где они есть и где ноль всегда показываем      
       , tmpMovementCont AS (SELECT tmpMovementContALL.* 
                             FROM tmpMovementContALL
                              INNER JOIN tmpContractPartner ON tmpContractPartner.ContractConditionId = tmpMovementContALL.ContractConditionId
@@ -692,6 +699,40 @@ BEGIN
                             WHERE tmpMovementContALL.PartnerId = 0
                             )
 
+       -- сгруппировываем данные и подвязываем вес
+      , tmpGroupMov AS (SELECT tmpGroup.JuridicalId
+                             , tmpGroup.PartnerId
+                             , tmpGroup.ContractId_master
+                             , tmpGroup.ContractId_child 
+                             , tmpGroup.InfoMoneyId_child
+                             , tmpGroup.PaidKindId_byBase
+                             , tmpGroup.ContractConditionId
+                             , tmpGroup.BranchId
+                             , CASE WHEN inisMovement = TRUE THEN tmpGroup.MovementId ELSE 0 END      AS MovementId
+                             , CASE WHEN inisMovement = TRUE THEN tmpGroup.MovementDescId ELSE 0 END  AS MovementDescId
+                             , SUM (tmpGroup.Sum_Sale)            AS Sum_Sale
+                             , SUM (tmpGroup.Sum_SaleReturnIn)    AS Sum_SaleReturnIn
+                             , SUM (tmpGroup.Sum_Account)         AS Sum_Account
+                             , SUM (tmpGroup.Sum_AccountSendDebt) AS Sum_AccountSendDebt
+                             , SUM (tmpGroup.Sum_Return)          AS Sum_Return
+
+                             , SUM (tmpWeight.Sale_AmountPartner_Weight)   AS Sum_Sale_weight
+                             , SUM (tmpWeight.Return_AmountPartner_Weight) AS Sum_ReturnIn_weight
+                        FROM tmpMovementCont AS tmpGroup
+                             LEFT JOIN tmpWeight ON tmpWeight.MovementId = tmpGroup.MovementId
+                        WHERE tmpGroup.BranchId = inBranchId OR inBranchId = 0
+                        GROUP BY tmpGroup.JuridicalId
+                               , tmpGroup.PartnerId
+                               , tmpGroup.ContractId_child
+                               , tmpGroup.InfoMoneyId_child
+                               , tmpGroup.PaidKindId_byBase
+                               , tmpGroup.ContractConditionId
+                               , CASE WHEN inisMovement = TRUE THEN tmpGroup.MovementId ELSE 0 END
+                               , CASE WHEN inisMovement = TRUE THEN tmpGroup.MovementDescId ELSE 0 END
+                               , tmpGroup.BranchId
+                               , tmpGroup.ContractId_master
+                       ) 
+       
       , tmpMovement AS (SELECT tmpGroup.JuridicalId
                              , tmpGroup.PartnerId
                              , tmpGroup.ContractId_child
@@ -712,37 +753,7 @@ BEGIN
                              --расчитывем % возврата факт = факт возврата / факт отгрузки * 100
                              , CASE WHEN COALESCE (tmpGroup.Sum_Sale,0) <> 0 THEN tmpGroup.Sum_Return / tmpGroup.Sum_Sale * 100 ELSE 0 END AS PercentRetBonus_fact
                              , CASE WHEN COALESCE (tmpGroup.Sum_Sale_weight,0) <> 0 THEN tmpGroup.Sum_ReturnIn_weight / tmpGroup.Sum_Sale_weight * 100 ELSE 0 END AS PercentRetBonus_fact_weight
-                        FROM 
-                            (SELECT tmpGroup.JuridicalId
-                                  , tmpGroup.PartnerId
-                                  , tmpGroup.ContractId_master
-                                  , tmpGroup.ContractId_child 
-                                  , tmpGroup.InfoMoneyId_child
-                                  , tmpGroup.PaidKindId_byBase
-                                  , tmpGroup.ContractConditionId
-                                  , tmpGroup.BranchId
-                                  , tmpGroup.MovementId
-                                  , tmpGroup.MovementDescId
-                                  , SUM (tmpGroup.Sum_Sale)            AS Sum_Sale
-                                  , SUM (tmpGroup.Sum_SaleReturnIn)    AS Sum_SaleReturnIn
-                                  , SUM (tmpGroup.Sum_Account)         AS Sum_Account
-                                  , SUM (tmpGroup.Sum_AccountSendDebt) AS Sum_AccountSendDebt
-                                  , SUM (tmpGroup.Sum_Return)          AS Sum_Return
-                                  , SUM (tmpGroup.Sale_AmountPartner_Weight)   AS Sum_Sale_weight
-                                  , SUM (tmpGroup.Return_AmountPartner_Weight) AS Sum_ReturnIn_weight
-                             FROM tmpMovementCont AS tmpGroup
-                             WHERE tmpGroup.BranchId = inBranchId OR inBranchId = 0
-                             GROUP BY tmpGroup.JuridicalId
-                                    , tmpGroup.PartnerId
-                                    , tmpGroup.ContractId_child
-                                    , tmpGroup.InfoMoneyId_child
-                                    , tmpGroup.PaidKindId_byBase
-                                    , tmpGroup.ContractConditionId
-                                    , tmpGroup.MovementId
-                                    , tmpGroup.MovementDescId
-                                    , tmpGroup.BranchId
-                                    , tmpGroup.ContractId_master
-                             ) AS tmpGroup
+                        FROM tmpGroupMov AS tmpGroup
                        )
                        
 
@@ -1403,3 +1414,7 @@ zc_ObjectLink_PersonalServiceList_Branch
 в одном договоре есть условие "% бонуса за нал оплаты" - % возврата будет по контрагентам
 и есть условие "% бонуса за БН оплаты" - % возврата будет итоговый, т.е. еще раз по договору базы взять уже все продажа/возврат
  */
+ 
+ 
+ 
+--select * from gpReport_CheckBonusTest2(inStartDate := ('01.11.2020')::TDateTime , inEndDate := ('30.11.2020')::TDateTime , inPaidKindId := 4 , inJuridicalId := 15088 , inBranchId := 0 , inisMovement := 'False' ,  inSession := '5');
