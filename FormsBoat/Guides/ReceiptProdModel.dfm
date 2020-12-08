@@ -37,8 +37,6 @@ object ReceiptProdModelForm: TReceiptProdModelForm
       TabOrder = 0
       LookAndFeel.NativeStyle = True
       LookAndFeel.SkinName = 'UserSkin'
-      ExplicitTop = 0
-      ExplicitHeight = 209
       object cxGridDBTableView: TcxGridDBTableView
         Navigator.Buttons.CustomButtons = <>
         DataController.DataSource = DataSource
@@ -252,7 +250,6 @@ object ReceiptProdModelForm: TReceiptProdModelForm
       Color = clSkyBlue
       ParentBackground = False
       TabOrder = 1
-      ExplicitWidth = 536
     end
   end
   object PanelProdColorPattern: TPanel
@@ -1064,7 +1061,7 @@ object ReceiptProdModelForm: TReceiptProdModelForm
     Width = 988
     Height = 5
     AlignSplitter = salTop
-    Control = cxGrid
+    Control = PanelMaster
   end
   object cxRightSplitter: TcxSplitter
     Left = 536

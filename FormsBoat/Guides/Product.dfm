@@ -864,7 +864,7 @@ object ProductForm: TProductForm
     Width = 988
     Height = 5
     AlignSplitter = salTop
-    Control = cxGrid
+    Control = PanelMaster
   end
   object cxRightSplitter: TcxSplitter
     Left = 444
@@ -872,7 +872,7 @@ object ProductForm: TProductForm
     Width = 8
     Height = 207
     AlignSplitter = salRight
-    Control = cxGridProdOptItems
+    Control = PanelProdOptItems
   end
   object DataSource: TDataSource
     DataSet = MasterCDS
