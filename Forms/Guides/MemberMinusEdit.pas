@@ -20,7 +20,7 @@ uses
   Datasnap.DBClient, cxMaskEdit, cxDropDownEdit, cxLookupEdit, cxDBLookupEdit,
   cxDBLookupComboBox, cxPropertiesStore, dsdAddOn, dsdDB, dsdAction,
   Vcl.ActnList, cxCurrencyEdit, Vcl.StdCtrls, cxButtons, cxLabel, cxTextEdit,
-  cxButtonEdit, Vcl.ComCtrls, dxCore, cxDateUtils, cxCalendar;
+  cxButtonEdit, Vcl.ComCtrls, dxCore, cxDateUtils, cxCalendar, cxCheckBox;
 
 type
   TMemberMinusEditForm = class(TParentForm)
@@ -61,6 +61,7 @@ type
     edINN_to: TcxTextEdit;
     cxLabel7: TcxLabel;
     edToShort: TcxTextEdit;
+    cbisChild: TcxCheckBox;
   private
     { Private declarations }
   public

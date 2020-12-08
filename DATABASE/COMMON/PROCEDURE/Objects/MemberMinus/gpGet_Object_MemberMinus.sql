@@ -15,6 +15,7 @@ RETURNS TABLE (Id Integer, Name TVarChar
              , BankAccountToId Integer, BankAccountToName TVarChar
              , DetailPayment TVarChar, BankAccountTo TVarChar
              , TotalSumm TFloat, Summ TFloat
+             , isChild Boolean
              ) AS
 $BODY$BEGIN
    
@@ -47,6 +48,7 @@ $BODY$BEGIN
            
            , 0 :: TFloat            AS TotalSumm
            , 0 :: TFloat            AS Summ
+           , FALSE ::Boolean        AS isChild
           ;
    ELSE
      RETURN QUERY 
@@ -75,6 +77,7 @@ $BODY$BEGIN
 
          , COALESCE (ObjectFloat_TotalSumm.ValueData, 0) :: TFloat AS TotalSumm
          , COALESCE (ObjectFloat_Summ.ValueData, 0)      :: TFloat AS Summ
+         , COALESCE (ObjectBoolean_Child.ValueData, FALSE) :: Boolean AS isChild
          
      FROM OBJECT AS Object_MemberMinus
           LEFT JOIN ObjectLink AS ObjectLink_MemberMinus_From
@@ -96,6 +99,10 @@ $BODY$BEGIN
                                ON ObjectLink_MemberMinus_BankAccountTo.ObjectId = Object_MemberMinus.Id
                               AND ObjectLink_MemberMinus_BankAccountTo.DescId = zc_ObjectLink_MemberMinus_BankAccountTo()
           LEFT JOIN Object AS Object_BankAccountTo ON Object_BankAccountTo.Id = ObjectLink_MemberMinus_BankAccountTo.ChildObjectId
+
+          LEFT JOIN ObjectBoolean AS ObjectBoolean_Child
+                                  ON ObjectBoolean_Child.ObjectId = Object_MemberMinus.Id
+                                 AND ObjectBoolean_Child.DescId = zc_ObjectBoolean_MemberMinus_Child()
 
           LEFT JOIN ObjectString AS ObjectString_ToShort
                                  ON ObjectString_ToShort.ObjectId = Object_MemberMinus.Id

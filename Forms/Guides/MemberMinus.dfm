@@ -79,8 +79,16 @@ object MemberMinusForm: TMemberMinusForm
       object BankAccountTo: TcxGridDBColumn
         Caption = #8470' '#1089#1095#1077#1090#1072' '#1087#1086#1083#1091#1095#1072#1090#1077#1083#1103' '#1087#1083#1072#1090#1077#1078#1072
         DataBinding.FieldName = 'BankAccountTo'
+        HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
-        Width = 142
+        Width = 167
+      end
+      object isChild: TcxGridDBColumn
+        Caption = #1040#1083#1080#1084#1077#1085#1090#1099' ('#1076#1072'/'#1085#1077#1090')'
+        DataBinding.FieldName = 'isChild'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Width = 73
       end
       object DetailPayment: TcxGridDBColumn
         Caption = #1053#1072#1079#1085#1072#1095#1077#1085#1080#1077' '#1087#1083#1072#1090#1077#1078#1072
@@ -112,6 +120,14 @@ object MemberMinusForm: TMemberMinusForm
         HeaderHint = #1048#1053#1053' '#1092'.'#1083'. '#1089' '#1082#1086#1090#1086#1088#1086#1075#1086' '#1087#1088#1086#1080#1079#1074#1086#1076#1103#1090#1089#1103' '#1091#1076#1077#1088#1078#1072#1085#1080#1103
         Options.Editing = False
         Width = 109
+      end
+      object DescName_to: TcxGridDBColumn
+        Caption = #1069#1083#1077#1084#1077#1085#1090' ('#1087#1086#1083#1091#1095'.)'
+        DataBinding.FieldName = 'DescName_to'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Options.Editing = False
+        Width = 82
       end
       object ToName: TcxGridDBColumn
         Caption = #1060#1080#1079'. '#1083#1080#1094#1072'('#1089#1090#1086#1088#1086#1085#1085#1080#1077') / '#1070#1088'. '#1083#1080#1094#1072
@@ -250,7 +266,7 @@ object MemberMinusForm: TMemberMinusForm
         Kind = bkEllipsis
       end>
     Properties.ReadOnly = True
-    TabOrder = 3
+    TabOrder = 2
     Text = #1056'/'#1089#1095#1077#1090' '#1087#1083#1072#1090#1077#1083#1100#1097#1080#1082#1072
     Width = 189
   end
@@ -965,6 +981,7 @@ object MemberMinusForm: TMemberMinusForm
     ColumnAddOnList = <>
     ColumnEnterList = <>
     SummaryItemList = <>
+    ShowFieldImageList = <>
     PropertiesCellList = <>
     Left = 448
     Top = 112
@@ -1099,6 +1116,15 @@ object MemberMinusForm: TMemberMinusForm
         Component = ClientDataSet
         ComponentItem = 'isToShort'
         DataType = ftBoolean
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inisChild'
+        Value = Null
+        Component = ClientDataSet
+        ComponentItem = 'isChild'
+        DataType = ftBoolean
+        ParamType = ptInput
         MultiSelectSeparator = ','
       end>
     PackSize = 1
