@@ -3,7 +3,7 @@ object ReceiptGoodsForm: TReceiptGoodsForm
   Top = 0
   Caption = #1057#1087#1088#1072#1074#1086#1095#1085#1080#1082' <'#1064#1072#1073#1083#1086#1085' '#1089#1073#1086#1088#1082#1080' '#1059#1079#1083#1086#1074'>'
   ClientHeight = 415
-  ClientWidth = 708
+  ClientWidth = 813
   Color = clBtnFace
   Font.Charset = DEFAULT_CHARSET
   Font.Color = clWindowText
@@ -21,7 +21,7 @@ object ReceiptGoodsForm: TReceiptGoodsForm
   object cxGrid: TcxGrid
     Left = 0
     Top = 26
-    Width = 708
+    Width = 813
     Height = 216
     Align = alTop
     PopupMenu = PopupMenu
@@ -60,6 +60,26 @@ object ReceiptGoodsForm: TReceiptGoodsForm
         item
           Format = ',0.00'
           Kind = skSum
+        end
+        item
+          Format = ',0.00##'
+          Kind = skSum
+          Column = EKPrice_summ
+        end
+        item
+          Format = ',0.00##'
+          Kind = skSum
+          Column = EKPriceWVAT_summ
+        end
+        item
+          Format = ',0.00##'
+          Kind = skSum
+          Column = Basis_summ
+        end
+        item
+          Format = ',0.00##'
+          Kind = skSum
+          Column = BasisWVAT_summ
         end>
       DataController.Summary.FooterSummaryItems = <
         item
@@ -94,6 +114,26 @@ object ReceiptGoodsForm: TReceiptGoodsForm
         item
           Format = ',0.00'
           Kind = skSum
+        end
+        item
+          Format = ',0.00##'
+          Kind = skSum
+          Column = EKPrice_summ
+        end
+        item
+          Format = ',0.00##'
+          Kind = skSum
+          Column = EKPriceWVAT_summ
+        end
+        item
+          Format = ',0.00##'
+          Kind = skSum
+          Column = Basis_summ
+        end
+        item
+          Format = ',0.00##'
+          Kind = skSum
+          Column = BasisWVAT_summ
         end>
       DataController.Summary.SummaryGroups = <>
       Images = dmMain.SortImageList
@@ -205,55 +245,55 @@ object ReceiptGoodsForm: TReceiptGoodsForm
         Options.Editing = False
         Width = 40
       end
-      object EKPrice: TcxGridDBColumn
-        Caption = 'Netto EK'
-        DataBinding.FieldName = 'EKPrice'
+      object EKPrice_summ: TcxGridDBColumn
+        Caption = 'Total EK (art.)'
+        DataBinding.FieldName = 'EKPrice_summ'
         PropertiesClassName = 'TcxCurrencyEditProperties'
         Properties.DecimalPlaces = 4
         Properties.DisplayFormat = ',0.####;-,0.####; ;'
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
-        HeaderHint = #1062#1077#1085#1072' '#1074#1093'. '#1073#1077#1079' '#1053#1044#1057
+        HeaderHint = #1057#1091#1084#1084#1072' '#1074#1093'. '#1073#1077#1079' '#1053#1044#1057
         Options.Editing = False
-        Width = 80
+        Width = 70
       end
-      object EKPriceWVAT: TcxGridDBColumn
-        Caption = #1062#1077#1085#1072' '#1074#1093'. '#1089' '#1053#1044#1057
-        DataBinding.FieldName = 'EKPriceWVAT'
+      object EKPriceWVAT_summ: TcxGridDBColumn
+        Caption = #1057#1091#1084#1084#1072' '#1074#1093'. '#1089' '#1053#1044#1057'  (art.)'
+        DataBinding.FieldName = 'EKPriceWVAT_summ'
         PropertiesClassName = 'TcxCurrencyEditProperties'
         Properties.DecimalPlaces = 4
         Properties.DisplayFormat = ',0.####;-,0.####; ;'
         Visible = False
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
-        HeaderHint = #1062#1077#1085#1072' '#1074#1093'. '#1089' '#1053#1044#1057
+        HeaderHint = #1057#1091#1084#1084#1072' '#1074#1093'. '#1089' '#1053#1044#1057
         Options.Editing = False
-        Width = 80
+        Width = 70
       end
-      object BasisPrice: TcxGridDBColumn
-        Caption = 'Ladenpreis'
-        DataBinding.FieldName = 'BasisPrice'
+      object Basis_summ: TcxGridDBColumn
+        Caption = 'Total LP (art.)'
+        DataBinding.FieldName = 'Basis_summ'
         PropertiesClassName = 'TcxCurrencyEditProperties'
         Properties.DecimalPlaces = 4
         Properties.DisplayFormat = ',0.####;-,0.####; ;'
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
-        HeaderHint = #1062#1077#1085#1072' '#1087#1088#1086#1076#1072#1078#1080' '#1073#1077#1079' '#1085#1076#1089
+        HeaderHint = #1057#1091#1084#1084#1072' '#1087#1088#1086#1076#1072#1078#1080' '#1073#1077#1079' '#1053#1044#1057
         Options.Editing = False
-        Width = 80
+        Width = 70
       end
-      object BasisPriceWVAT: TcxGridDBColumn
-        Caption = #1062#1077#1085#1072' '#1087#1088#1086#1076#1072#1078#1080' '#1089' '#1085#1076#1089
-        DataBinding.FieldName = 'BasisPriceWVAT'
+      object BasisWVAT_summ: TcxGridDBColumn
+        Caption = #1057#1091#1084#1084#1072' '#1087#1088#1086#1076#1072#1078#1080' '#1089' '#1053#1044#1057' (art.)'
+        DataBinding.FieldName = 'BasisWVAT_summ'
         PropertiesClassName = 'TcxCurrencyEditProperties'
         Properties.DecimalPlaces = 4
         Properties.DisplayFormat = ',0.####;-,0.####; ;'
         Visible = False
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
-        HeaderHint = #1062#1077#1085#1072' '#1087#1088#1086#1076#1072#1078#1080' '#1089' '#1085#1076#1089
+        HeaderHint = #1057#1091#1084#1084#1072' '#1087#1088#1086#1076#1072#1078#1080' '#1089' '#1053#1044#1057
         Options.Editing = False
-        Width = 100
+        Width = 70
       end
       object Comment: TcxGridDBColumn
         Caption = #1055#1088#1080#1084#1077#1095#1072#1085#1080#1077
@@ -318,7 +358,7 @@ object ReceiptGoodsForm: TReceiptGoodsForm
   object cxGridGoods: TcxGrid
     Left = 0
     Top = 247
-    Width = 700
+    Width = 805
     Height = 168
     Align = alClient
     PopupMenu = PopupMenuColor
@@ -671,13 +711,13 @@ object ReceiptGoodsForm: TReceiptGoodsForm
   object cxTopSplitter: TcxSplitter
     Left = 0
     Top = 242
-    Width = 708
+    Width = 813
     Height = 5
     AlignSplitter = salTop
     Control = cxGrid
   end
   object cxRightSplitter: TcxSplitter
-    Left = 700
+    Left = 805
     Top = 247
     Width = 8
     Height = 168

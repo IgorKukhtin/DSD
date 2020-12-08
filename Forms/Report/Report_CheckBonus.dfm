@@ -3,9 +3,8 @@ inherited Report_CheckBonusForm: TReport_CheckBonusForm
   ClientHeight = 341
   ClientWidth = 1180
   AddOnFormData.ExecuteDialogAction = ExecuteDialog
-  ExplicitLeft = -390
   ExplicitWidth = 1196
-  ExplicitHeight = 376
+  ExplicitHeight = 379
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
@@ -67,6 +66,26 @@ inherited Report_CheckBonusForm: TReport_CheckBonusForm
               Format = ',0.00##'
               Kind = skSum
               Column = Sum_AccountSendDebt
+            end
+            item
+              Format = ',0.00##'
+              Kind = skSum
+              Column = Sum_Sale_weight
+            end
+            item
+              Format = ',0.00##'
+              Kind = skSum
+              Column = Sum_ReturnIn_weight
+            end
+            item
+              Format = ',0.00##'
+              Kind = skSum
+              Column = Sum_Sale
+            end
+            item
+              Format = ',0.00##'
+              Kind = skSum
+              Column = Sum_Return
             end>
           DataController.Summary.FooterSummaryItems = <
             item
@@ -113,6 +132,26 @@ inherited Report_CheckBonusForm: TReport_CheckBonusForm
               Format = ',0.00##'
               Kind = skSum
               Column = Sum_AccountSendDebt
+            end
+            item
+              Format = ',0.00##'
+              Kind = skSum
+              Column = Sum_Sale_weight
+            end
+            item
+              Format = ',0.00##'
+              Kind = skSum
+              Column = Sum_ReturnIn_weight
+            end
+            item
+              Format = ',0.00##'
+              Kind = skSum
+              Column = Sum_Sale
+            end
+            item
+              Format = ',0.00##'
+              Kind = skSum
+              Column = Sum_Return
             end>
           OptionsData.CancelOnExit = True
           OptionsData.Deleting = False

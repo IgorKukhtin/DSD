@@ -18,8 +18,8 @@ RETURNS TABLE (Id Integer, Code Integer, Name TVarChar
              , Article TVarChar
              , ProdColorName TVarChar
              , MeasureName TVarChar
-             , EKPrice TFloat, EKPriceWVAT TFloat
-             , BasisPrice TFloat, BasisPriceWVAT TFloat
+             , EKPrice_summ TFloat, EKPriceWVAT_summ TFloat
+             , BasisPrice_summ TFloat, BasisPriceWVAT_summ TFloat
               )
 AS
 $BODY$
@@ -148,10 +148,10 @@ BEGIN
                ELSE COALESCE (tmpPriceBasis.ValuePrice, 0)
           END ::TFloat  AS BasisPriceWVAT
           */
-        , tmpReceiptGoodsChild.EKPrice_summ     ::TFloat AS EKPriceWVAT
-        , tmpReceiptGoodsChild.EKPriceWVAT_summ ::TFloat AS EKPriceWVAT
-        , tmpReceiptGoodsChild.Basis_summ       ::TFloat AS BasisPrice
-        , tmpReceiptGoodsChild.BasisWVAT_summ   ::TFloat AS BasisPriceWVAT
+        , tmpReceiptGoodsChild.EKPrice_summ     ::TFloat
+        , tmpReceiptGoodsChild.EKPriceWVAT_summ ::TFloat
+        , tmpReceiptGoodsChild.Basis_summ       ::TFloat
+        , tmpReceiptGoodsChild.BasisWVAT_summ   ::TFloat
 
      FROM Object AS Object_ReceiptGoods
           LEFT JOIN ObjectString AS ObjectString_Code

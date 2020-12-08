@@ -2,7 +2,7 @@ object ReceiptProdModelForm: TReceiptProdModelForm
   Left = 0
   Top = 0
   Caption = #1057#1087#1088#1072#1074#1086#1095#1085#1080#1082' <'#1064#1072#1073#1083#1086#1085' '#1089#1073#1086#1088#1082#1072' '#1052#1086#1076#1077#1083#1080'>'
-  ClientHeight = 415
+  ClientHeight = 443
   ClientWidth = 988
   Color = clBtnFace
   Font.Charset = DEFAULT_CHARSET
@@ -37,8 +37,6 @@ object ReceiptProdModelForm: TReceiptProdModelForm
       TabOrder = 0
       LookAndFeel.NativeStyle = True
       LookAndFeel.SkinName = 'UserSkin'
-      ExplicitTop = 0
-      ExplicitHeight = 209
       object cxGridDBTableView: TcxGridDBTableView
         Navigator.Buttons.CustomButtons = <>
         DataController.DataSource = DataSource
@@ -71,6 +69,66 @@ object ReceiptProdModelForm: TReceiptProdModelForm
           item
             Format = ',0.00'
             Kind = skSum
+          end
+          item
+            Format = ',0.00##'
+            Kind = skSum
+            Column = EKPrice_summ
+          end
+          item
+            Format = ',0.00##'
+            Kind = skSum
+            Column = EKPriceWVAT_summ
+          end
+          item
+            Format = ',0.00##'
+            Kind = skSum
+            Column = Basis_summ
+          end
+          item
+            Format = ',0.00##'
+            Kind = skSum
+            Column = BasisWVAT_summ
+          end
+          item
+            Format = ',0.00##'
+            Kind = skSum
+            Column = EKPrice_summ_colPat
+          end
+          item
+            Format = ',0.00##'
+            Kind = skSum
+            Column = EKPrice_summ_goods
+          end
+          item
+            Format = ',0.00##'
+            Kind = skSum
+            Column = EKPriceWVAT_summ_colPat
+          end
+          item
+            Format = ',0.00##'
+            Kind = skSum
+            Column = EKPriceWVAT_summ_goods
+          end
+          item
+            Format = ',0.00##'
+            Kind = skSum
+            Column = Basis_summ_colPat
+          end
+          item
+            Format = ',0.00##'
+            Kind = skSum
+            Column = Basis_summ_goods
+          end
+          item
+            Format = ',0.00##'
+            Kind = skSum
+            Column = BasisWVAT_summ_colPat
+          end
+          item
+            Format = ',0.00##'
+            Kind = skSum
+            Column = BasisWVAT_summ_goods
           end>
         DataController.Summary.FooterSummaryItems = <
           item
@@ -105,6 +163,66 @@ object ReceiptProdModelForm: TReceiptProdModelForm
           item
             Format = ',0.00'
             Kind = skSum
+          end
+          item
+            Format = ',0.00##'
+            Kind = skSum
+            Column = EKPrice_summ
+          end
+          item
+            Format = ',0.00##'
+            Kind = skSum
+            Column = EKPriceWVAT_summ
+          end
+          item
+            Format = ',0.00##'
+            Kind = skSum
+            Column = Basis_summ
+          end
+          item
+            Format = ',0.00##'
+            Kind = skSum
+            Column = BasisWVAT_summ
+          end
+          item
+            Format = ',0.00##'
+            Kind = skSum
+            Column = EKPrice_summ_colPat
+          end
+          item
+            Format = ',0.00##'
+            Kind = skSum
+            Column = EKPrice_summ_goods
+          end
+          item
+            Format = ',0.00##'
+            Kind = skSum
+            Column = EKPriceWVAT_summ_colPat
+          end
+          item
+            Format = ',0.00##'
+            Kind = skSum
+            Column = EKPriceWVAT_summ_goods
+          end
+          item
+            Format = ',0.00##'
+            Kind = skSum
+            Column = Basis_summ_colPat
+          end
+          item
+            Format = ',0.00##'
+            Kind = skSum
+            Column = Basis_summ_goods
+          end
+          item
+            Format = ',0.00##'
+            Kind = skSum
+            Column = BasisWVAT_summ_colPat
+          end
+          item
+            Format = ',0.00##'
+            Kind = skSum
+            Column = BasisWVAT_summ_goods
           end>
         DataController.Summary.SummaryGroups = <>
         Images = dmMain.SortImageList
@@ -182,6 +300,156 @@ object ReceiptProdModelForm: TReceiptProdModelForm
           Options.Editing = False
           Width = 80
         end
+        object EKPrice_summ: TcxGridDBColumn
+          Caption = 'Total EK'
+          DataBinding.FieldName = 'EKPrice_summ'
+          PropertiesClassName = 'TcxCurrencyEditProperties'
+          Properties.DecimalPlaces = 4
+          Properties.DisplayFormat = ',0.####;-,0.####; ;'
+          HeaderAlignmentHorz = taCenter
+          HeaderAlignmentVert = vaCenter
+          HeaderHint = #1048#1058#1054#1043#1054' '#1057#1091#1084#1084#1072' '#1074#1093'. '#1073#1077#1079' '#1053#1044#1057
+          Options.Editing = False
+          Width = 70
+        end
+        object EKPriceWVAT_summ: TcxGridDBColumn
+          Caption = #1057#1091#1084#1084#1072' '#1074#1093'. '#1089' '#1053#1044#1057
+          DataBinding.FieldName = 'EKPriceWVAT_summ'
+          PropertiesClassName = 'TcxCurrencyEditProperties'
+          Properties.DecimalPlaces = 4
+          Properties.DisplayFormat = ',0.####;-,0.####; ;'
+          Visible = False
+          HeaderAlignmentHorz = taCenter
+          HeaderAlignmentVert = vaCenter
+          HeaderHint = #1048#1058#1054#1043#1054' '#1057#1091#1084#1084#1072' '#1074#1093'. '#1089' '#1053#1044#1057
+          Options.Editing = False
+          Width = 70
+        end
+        object Basis_summ: TcxGridDBColumn
+          Caption = 'Total LP'
+          DataBinding.FieldName = 'Basis_summ'
+          PropertiesClassName = 'TcxCurrencyEditProperties'
+          Properties.DecimalPlaces = 4
+          Properties.DisplayFormat = ',0.####;-,0.####; ;'
+          HeaderAlignmentHorz = taCenter
+          HeaderAlignmentVert = vaCenter
+          HeaderHint = #1048#1058#1054#1043#1054' '#1057#1091#1084#1084#1072' '#1087#1088#1086#1076#1072#1078#1080' '#1073#1077#1079' '#1053#1044#1057
+          Options.Editing = False
+          Width = 70
+        end
+        object BasisWVAT_summ: TcxGridDBColumn
+          Caption = #1057#1091#1084#1084#1072' '#1087#1088#1086#1076#1072#1078#1080' '#1089' '#1053#1044#1057
+          DataBinding.FieldName = 'BasisWVAT_summ'
+          PropertiesClassName = 'TcxCurrencyEditProperties'
+          Properties.DecimalPlaces = 4
+          Properties.DisplayFormat = ',0.####;-,0.####; ;'
+          Visible = False
+          HeaderAlignmentHorz = taCenter
+          HeaderAlignmentVert = vaCenter
+          HeaderHint = #1048#1058#1054#1043#1054' '#1057#1091#1084#1084#1072' '#1087#1088#1086#1076#1072#1078#1080' '#1089' '#1053#1044#1057
+          Options.Editing = False
+          Width = 70
+        end
+        object EKPrice_summ_colPat: TcxGridDBColumn
+          Caption = 'Total EK (pat.col.)'
+          DataBinding.FieldName = 'EKPrice_summ_colPat'
+          PropertiesClassName = 'TcxCurrencyEditProperties'
+          Properties.DecimalPlaces = 4
+          Properties.DisplayFormat = ',0.####;-,0.####; ;'
+          HeaderAlignmentHorz = taCenter
+          HeaderAlignmentVert = vaCenter
+          HeaderHint = #1057#1091#1084#1084#1072' '#1074#1093'. '#1073#1077#1079' '#1053#1044#1057' ('#1064#1072#1073#1083#1086#1085#1099' Farbe)'
+          Options.Editing = False
+          Width = 70
+        end
+        object EKPrice_summ_goods: TcxGridDBColumn
+          Caption = 'Total EK (art.)'
+          DataBinding.FieldName = 'EKPrice_summ_goods'
+          PropertiesClassName = 'TcxCurrencyEditProperties'
+          Properties.DecimalPlaces = 4
+          Properties.DisplayFormat = ',0.####;-,0.####; ;'
+          HeaderAlignmentHorz = taCenter
+          HeaderAlignmentVert = vaCenter
+          HeaderHint = #1057#1091#1084#1084#1072' '#1074#1093'. '#1073#1077#1079' '#1053#1044#1057' ('#1082#1086#1084#1087#1083#1077#1082#1090'.)'
+          Options.Editing = False
+          Width = 70
+        end
+        object EKPriceWVAT_summ_colPat: TcxGridDBColumn
+          Caption = #1057#1091#1084#1084#1072' '#1074#1093'. '#1089' '#1053#1044#1057' (pat.col.)'
+          DataBinding.FieldName = 'EKPriceWVAT_summ_colPat'
+          PropertiesClassName = 'TcxCurrencyEditProperties'
+          Properties.DecimalPlaces = 4
+          Properties.DisplayFormat = ',0.####;-,0.####; ;'
+          Visible = False
+          HeaderAlignmentHorz = taCenter
+          HeaderAlignmentVert = vaCenter
+          HeaderHint = #1057#1091#1084#1084#1072' '#1074#1093'. '#1089' '#1053#1044#1057' ('#1064#1072#1073#1083#1086#1085#1099' Farbe)'
+          Options.Editing = False
+          Width = 70
+        end
+        object EKPriceWVAT_summ_goods: TcxGridDBColumn
+          Caption = #1057#1091#1084#1084#1072' '#1074#1093'. '#1089' '#1053#1044#1057' (art.)'
+          DataBinding.FieldName = 'EKPriceWVAT_summ_goods'
+          PropertiesClassName = 'TcxCurrencyEditProperties'
+          Properties.DecimalPlaces = 4
+          Properties.DisplayFormat = ',0.####;-,0.####; ;'
+          Visible = False
+          HeaderAlignmentHorz = taCenter
+          HeaderAlignmentVert = vaCenter
+          HeaderHint = #1057#1091#1084#1084#1072' '#1074#1093'. '#1089' '#1053#1044#1057' ('#1082#1086#1084#1087#1083#1077#1082#1090'.)'
+          Options.Editing = False
+          Width = 70
+        end
+        object Basis_summ_colPat: TcxGridDBColumn
+          Caption = 'Total LP (pat.col.)'
+          DataBinding.FieldName = 'Basis_summ_colPat'
+          PropertiesClassName = 'TcxCurrencyEditProperties'
+          Properties.DecimalPlaces = 4
+          Properties.DisplayFormat = ',0.####;-,0.####; ;'
+          HeaderAlignmentHorz = taCenter
+          HeaderAlignmentVert = vaCenter
+          HeaderHint = #1057#1091#1084#1084#1072' '#1087#1088#1086#1076#1072#1078#1080' '#1073#1077#1079' '#1053#1044#1057' ('#1064#1072#1073#1083#1086#1085#1099' Farbe)'
+          Options.Editing = False
+          Width = 70
+        end
+        object Basis_summ_goods: TcxGridDBColumn
+          Caption = 'Total LP (art.)'
+          DataBinding.FieldName = 'Basis_summ_goods'
+          PropertiesClassName = 'TcxCurrencyEditProperties'
+          Properties.DecimalPlaces = 4
+          Properties.DisplayFormat = ',0.####;-,0.####; ;'
+          HeaderAlignmentHorz = taCenter
+          HeaderAlignmentVert = vaCenter
+          HeaderHint = #1057#1091#1084#1084#1072' '#1087#1088#1086#1076#1072#1078#1080' '#1073#1077#1079' '#1053#1044#1057' ('#1082#1086#1084#1087#1083#1077#1082#1090'.)'
+          Options.Editing = False
+          Width = 70
+        end
+        object BasisWVAT_summ_colPat: TcxGridDBColumn
+          Caption = #1057#1091#1084#1084#1072' '#1087#1088#1086#1076#1072#1078#1080' '#1089' '#1053#1044#1057' (pat.col.)'
+          DataBinding.FieldName = 'BasisWVAT_summ_colPat'
+          PropertiesClassName = 'TcxCurrencyEditProperties'
+          Properties.DecimalPlaces = 4
+          Properties.DisplayFormat = ',0.####;-,0.####; ;'
+          Visible = False
+          HeaderAlignmentHorz = taCenter
+          HeaderAlignmentVert = vaCenter
+          HeaderHint = #1057#1091#1084#1084#1072' '#1087#1088#1086#1076#1072#1078#1080' '#1089' '#1053#1044#1057' ('#1064#1072#1073#1083#1086#1085#1099' Farbe)'
+          Options.Editing = False
+          Width = 70
+        end
+        object BasisWVAT_summ_goods: TcxGridDBColumn
+          Caption = #1057#1091#1084#1084#1072' '#1087#1088#1086#1076#1072#1078#1080' '#1089' '#1053#1044#1057' (art.)'
+          DataBinding.FieldName = 'BasisWVAT_summ_goods'
+          PropertiesClassName = 'TcxCurrencyEditProperties'
+          Properties.DecimalPlaces = 4
+          Properties.DisplayFormat = ',0.####;-,0.####; ;'
+          Visible = False
+          HeaderAlignmentHorz = taCenter
+          HeaderAlignmentVert = vaCenter
+          HeaderHint = #1057#1091#1084#1084#1072' '#1087#1088#1086#1076#1072#1078#1080' '#1089' '#1053#1044#1057' ('#1082#1086#1084#1087#1083#1077#1082#1090'.)'
+          Options.Editing = False
+          Width = 70
+        end
         object Comment: TcxGridDBColumn
           Caption = #1055#1088#1080#1084#1077#1095#1072#1085#1080#1077
           DataBinding.FieldName = 'Comment'
@@ -252,29 +520,30 @@ object ReceiptProdModelForm: TReceiptProdModelForm
       Color = clSkyBlue
       ParentBackground = False
       TabOrder = 1
-      ExplicitWidth = 536
     end
   end
   object PanelProdColorPattern: TPanel
     Left = 544
     Top = 240
     Width = 444
-    Height = 175
+    Height = 203
     Align = alRight
     BevelEdges = [beLeft]
     BevelKind = bkTile
     BevelOuter = bvNone
     TabOrder = 1
+    ExplicitHeight = 175
     object cxGridProdColorPattern: TcxGrid
       Left = 0
       Top = 17
       Width = 442
-      Height = 158
+      Height = 186
       Align = alClient
       PopupMenu = PopupMenuOption
       TabOrder = 0
       LookAndFeel.NativeStyle = True
       LookAndFeel.SkinName = 'UserSkin'
+      ExplicitHeight = 158
       object cxGridDBTableViewProdColorPattern: TcxGridDBTableView
         Navigator.Buttons.CustomButtons = <>
         DataController.DataSource = ProdColorPatternDS
@@ -693,21 +962,23 @@ object ReceiptProdModelForm: TReceiptProdModelForm
     Left = 0
     Top = 240
     Width = 536
-    Height = 175
+    Height = 203
     Align = alClient
     BevelEdges = [beLeft]
     BevelOuter = bvNone
     TabOrder = 2
+    ExplicitHeight = 175
     object cxGridGoods: TcxGrid
       Left = 0
       Top = 17
       Width = 536
-      Height = 158
+      Height = 186
       Align = alClient
       PopupMenu = PopupMenuColor
       TabOrder = 0
       LookAndFeel.NativeStyle = True
       LookAndFeel.SkinName = 'UserSkin'
+      ExplicitHeight = 158
       object cxGridDBTableViewGoods: TcxGridDBTableView
         Navigator.Buttons.CustomButtons = <>
         DataController.DataSource = GoodsDS
@@ -1070,9 +1341,10 @@ object ReceiptProdModelForm: TReceiptProdModelForm
     Left = 536
     Top = 240
     Width = 8
-    Height = 175
+    Height = 203
     AlignSplitter = salRight
     Control = PanelProdColorPattern
+    ExplicitHeight = 175
   end
   object DataSource: TDataSource
     DataSet = MasterCDS
@@ -1960,12 +2232,12 @@ object ReceiptProdModelForm: TReceiptProdModelForm
     PacketRecords = 0
     Params = <>
     Left = 624
-    Top = 288
+    Top = 320
   end
   object ProdColorPatternDS: TDataSource
     DataSet = ProdColorPatternCDS
-    Left = 672
-    Top = 296
+    Left = 680
+    Top = 328
   end
   object dsdDBViewAddOnProdColorPattern: TdsdDBViewAddOn
     ErasedFieldName = 'isErased'
@@ -1995,7 +2267,7 @@ object ReceiptProdModelForm: TReceiptProdModelForm
     ShowFieldImageList = <>
     PropertiesCellList = <>
     Left = 736
-    Top = 296
+    Top = 320
   end
   object GoodsCDS: TClientDataSet
     Aggregates = <>
