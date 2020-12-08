@@ -19,7 +19,7 @@ RETURNS TABLE (Id Integer, Code Integer, Name TVarChar
              , ProdColorName TVarChar
              , MeasureName TVarChar
              , EKPrice_summ TFloat, EKPriceWVAT_summ TFloat
-             , BasisPrice_summ TFloat, BasisPriceWVAT_summ TFloat
+             , Basis_summ TFloat, BasisWVAT_summ TFloat
               )
 AS
 $BODY$
