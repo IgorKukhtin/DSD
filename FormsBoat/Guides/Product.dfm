@@ -852,7 +852,7 @@ object ProductForm: TProductForm
       Width = 444
       Height = 17
       Align = alTop
-      Caption = 'Farbe'
+      Caption = 'Boat Structure'
       Color = clLime
       ParentBackground = False
       TabOrder = 1

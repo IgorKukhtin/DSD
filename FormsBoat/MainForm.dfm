@@ -951,11 +951,11 @@ inherited MainForm: TMainForm
       end
       object miProdColorPattern: TMenuItem
         Action = actProdColorPattern
-        Caption = #1064#1072#1073#1083#1086#1085#1099' Farbe'
+        Caption = #1064#1072#1073#1083#1086#1085#1099' Boat Structure'
       end
       object miProdColorGroup: TMenuItem
         Action = actProdColorGroup
-        Caption = #1050#1072#1090#1077#1075#1086#1088#1080#1080' Farbe'
+        Caption = #1050#1072#1090#1077#1075#1086#1088#1080#1080' Boat Structure'
       end
       object miProdColor: TMenuItem
         Action = actProdColor
@@ -963,7 +963,7 @@ inherited MainForm: TMainForm
       end
       object miProdColorItems: TMenuItem
         Action = actProdColorItems
-        Caption = #1069#1083#1077#1084#1077#1085#1090#1099' Farbe ('#1051#1086#1076#1082#1072') '
+        Caption = #1069#1083#1077#1084#1077#1085#1090#1099' Boat Structure'
       end
       object miLine32_: TMenuItem
         Caption = '-'

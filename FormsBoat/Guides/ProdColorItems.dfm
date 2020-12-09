@@ -1,7 +1,7 @@
 object ProdColorItemsForm: TProdColorItemsForm
   Left = 0
   Top = 0
-  Caption = #1057#1087#1088#1072#1074#1086#1095#1085#1080#1082' <'#1069#1083#1077#1084#1077#1085#1090#1099' '#1062#1074#1077#1090#1072' ('#1051#1086#1076#1082#1072')>'
+  Caption = #1057#1087#1088#1072#1074#1086#1095#1085#1080#1082' <'#1069#1083#1077#1084#1077#1085#1090#1099' Boat Structure>'
   ClientHeight = 376
   ClientWidth = 725
   Color = clBtnFace
@@ -101,22 +101,6 @@ object ProdColorItemsForm: TProdColorItemsForm
         Options.Editing = False
         Width = 55
       end
-      object GoodsName: TcxGridDBColumn
-        Caption = #1050#1086#1084#1087#1083#1077#1082#1090#1091#1102#1097#1080#1077
-        DataBinding.FieldName = 'GoodsName'
-        PropertiesClassName = 'TcxButtonEditProperties'
-        Properties.Buttons = <
-          item
-            Action = actChoiceFormGoods
-            Default = True
-            Kind = bkEllipsis
-          end>
-        Properties.ReadOnly = True
-        HeaderAlignmentHorz = taCenter
-        HeaderAlignmentVert = vaCenter
-        HeaderHint = #1053#1072#1080#1084#1077#1085#1086#1074#1072#1085#1080#1077
-        Width = 110
-      end
       object Article: TcxGridDBColumn
         Caption = 'Artikel Nr'
         DataBinding.FieldName = 'Article'
@@ -143,13 +127,21 @@ object ProdColorItemsForm: TProdColorItemsForm
         Options.Editing = False
         Width = 172
       end
-      object MeasureName: TcxGridDBColumn
-        Caption = #1045#1076'. '#1080#1079#1084'.'
-        DataBinding.FieldName = 'MeasureName'
+      object GoodsName: TcxGridDBColumn
+        Caption = #1050#1086#1084#1087#1083#1077#1082#1090#1091#1102#1097#1080#1077
+        DataBinding.FieldName = 'GoodsName'
+        PropertiesClassName = 'TcxButtonEditProperties'
+        Properties.Buttons = <
+          item
+            Action = actChoiceFormGoods
+            Default = True
+            Kind = bkEllipsis
+          end>
+        Properties.ReadOnly = True
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
-        Options.Editing = False
-        Width = 55
+        HeaderHint = #1053#1072#1080#1084#1077#1085#1086#1074#1072#1085#1080#1077
+        Width = 110
       end
       object ProdColorName: TcxGridDBColumn
         Caption = 'Farbe'
@@ -158,6 +150,14 @@ object ProdColorItemsForm: TProdColorItemsForm
         HeaderAlignmentVert = vaCenter
         Options.Editing = False
         Width = 80
+      end
+      object MeasureName: TcxGridDBColumn
+        Caption = #1045#1076'. '#1080#1079#1084'.'
+        DataBinding.FieldName = 'MeasureName'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Options.Editing = False
+        Width = 55
       end
       object EKPrice: TcxGridDBColumn
         Caption = 'Netto EK'

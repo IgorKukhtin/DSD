@@ -532,7 +532,6 @@ object ReceiptProdModelForm: TReceiptProdModelForm
     BevelKind = bkTile
     BevelOuter = bvNone
     TabOrder = 1
-    ExplicitHeight = 175
     object cxGridProdColorPattern: TcxGrid
       Left = 0
       Top = 17
@@ -543,7 +542,6 @@ object ReceiptProdModelForm: TReceiptProdModelForm
       TabOrder = 0
       LookAndFeel.NativeStyle = True
       LookAndFeel.SkinName = 'UserSkin'
-      ExplicitHeight = 158
       object cxGridDBTableViewProdColorPattern: TcxGridDBTableView
         Navigator.Buttons.CustomButtons = <>
         DataController.DataSource = ProdColorPatternDS
@@ -952,7 +950,7 @@ object ReceiptProdModelForm: TReceiptProdModelForm
       Width = 442
       Height = 17
       Align = alTop
-      Caption = 'Farbe'
+      Caption = 'Boat Structure'
       Color = clLime
       ParentBackground = False
       TabOrder = 1
@@ -967,7 +965,6 @@ object ReceiptProdModelForm: TReceiptProdModelForm
     BevelEdges = [beLeft]
     BevelOuter = bvNone
     TabOrder = 2
-    ExplicitHeight = 175
     object cxGridGoods: TcxGrid
       Left = 0
       Top = 17
@@ -978,7 +975,6 @@ object ReceiptProdModelForm: TReceiptProdModelForm
       TabOrder = 0
       LookAndFeel.NativeStyle = True
       LookAndFeel.SkinName = 'UserSkin'
-      ExplicitHeight = 158
       object cxGridDBTableViewGoods: TcxGridDBTableView
         Navigator.Buttons.CustomButtons = <>
         DataController.DataSource = GoodsDS
@@ -1344,7 +1340,6 @@ object ReceiptProdModelForm: TReceiptProdModelForm
     Height = 203
     AlignSplitter = salRight
     Control = PanelProdColorPattern
-    ExplicitHeight = 175
   end
   object DataSource: TDataSource
     DataSet = MasterCDS

@@ -1,7 +1,7 @@
 object ProdColorGroupForm: TProdColorGroupForm
   Left = 0
   Top = 0
-  Caption = #1057#1087#1088#1072#1074#1086#1095#1085#1080#1082' <'#1050#1072#1090#1077#1075#1086#1088#1080#1103' '#1062#1074#1077#1090'>'
+  Caption = #1057#1087#1088#1072#1074#1086#1095#1085#1080#1082' <'#1050#1072#1090#1077#1075#1086#1088#1080#1103' Boat Structure>'
   ClientHeight = 376
   ClientWidth = 394
   Color = clBtnFace
@@ -25,7 +25,6 @@ object ProdColorGroupForm: TProdColorGroupForm
     TabOrder = 0
     LookAndFeel.NativeStyle = True
     LookAndFeel.SkinName = 'UserSkin'
-    ExplicitWidth = 541
     object cxGridDBTableView: TcxGridDBTableView
       Navigator.Buttons.CustomButtons = <>
       DataController.DataSource = DataSource
