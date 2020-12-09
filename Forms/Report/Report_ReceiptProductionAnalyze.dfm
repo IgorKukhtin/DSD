@@ -3,9 +3,8 @@ inherited Report_ReceiptProductionAnalyzeForm: TReport_ReceiptProductionAnalyzeF
   ClientHeight = 430
   ClientWidth = 1171
   AddOnFormData.ExecuteDialogAction = ExecuteDialog
-  ExplicitLeft = -151
   ExplicitWidth = 1187
-  ExplicitHeight = 469
+  ExplicitHeight = 468
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
@@ -538,6 +537,7 @@ inherited Report_ReceiptProductionAnalyzeForm: TReport_ReceiptProductionAnalyzeF
             end>
           DataController.Summary.SummaryGroups = <>
           Images = dmMain.ImageList
+          OptionsCustomize.ColumnHiding = True
           OptionsCustomize.ColumnsQuickCustomization = True
           OptionsData.Deleting = False
           OptionsData.DeletingConfirmation = False
@@ -1369,6 +1369,9 @@ inherited Report_ReceiptProductionAnalyzeForm: TReport_ReceiptProductionAnalyzeF
       ReportNameParam.DataType = ftString
       ReportNameParam.ParamType = ptInput
       ReportNameParam.MultiSelectSeparator = ','
+      PrinterNameParam.Value = ''
+      PrinterNameParam.DataType = ftString
+      PrinterNameParam.MultiSelectSeparator = ','
     end
     object actPrint2: TdsdPrintAction
       Category = 'DSDLib'
@@ -1467,6 +1470,9 @@ inherited Report_ReceiptProductionAnalyzeForm: TReport_ReceiptProductionAnalyzeF
       ReportNameParam.DataType = ftString
       ReportNameParam.ParamType = ptInput
       ReportNameParam.MultiSelectSeparator = ','
+      PrinterNameParam.Value = ''
+      PrinterNameParam.DataType = ftString
+      PrinterNameParam.MultiSelectSeparator = ','
     end
     object actPrint: TdsdPrintAction
       Category = 'DSDLib'
@@ -1566,6 +1572,9 @@ inherited Report_ReceiptProductionAnalyzeForm: TReport_ReceiptProductionAnalyzeF
       ReportNameParam.DataType = ftString
       ReportNameParam.ParamType = ptInput
       ReportNameParam.MultiSelectSeparator = ','
+      PrinterNameParam.Value = ''
+      PrinterNameParam.DataType = ftString
+      PrinterNameParam.MultiSelectSeparator = ','
     end
     object actPrint4: TdsdPrintAction
       Category = 'DSDLib'
@@ -1664,13 +1673,17 @@ inherited Report_ReceiptProductionAnalyzeForm: TReport_ReceiptProductionAnalyzeF
       ReportNameParam.DataType = ftString
       ReportNameParam.ParamType = ptInput
       ReportNameParam.MultiSelectSeparator = ','
+      PrinterNameParam.Value = ''
+      PrinterNameParam.DataType = ftString
+      PrinterNameParam.MultiSelectSeparator = ','
     end
   end
   inherited MasterDS: TDataSource
     Top = 136
   end
   inherited MasterCDS: TClientDataSet
-    Top = 96
+    Left = 56
+    Top = 192
   end
   inherited spSelect: TdsdStoredProc
     StoredProcName = 'gpReport_ReceiptProductionAnalyze'
@@ -2000,7 +2013,7 @@ inherited Report_ReceiptProductionAnalyzeForm: TReport_ReceiptProductionAnalyzeF
       end
       item
         Name = 'PriceWithVAT'
-        Value = 'False'
+        Value = False
         DataType = ftBoolean
         ParamType = ptInput
         MultiSelectSeparator = ','
@@ -2059,7 +2072,7 @@ inherited Report_ReceiptProductionAnalyzeForm: TReport_ReceiptProductionAnalyzeF
       end
       item
         Name = 'PriceWithVAT'
-        Value = 'False'
+        Value = False
         DataType = ftBoolean
         ParamType = ptInput
         MultiSelectSeparator = ','
@@ -2118,7 +2131,7 @@ inherited Report_ReceiptProductionAnalyzeForm: TReport_ReceiptProductionAnalyzeF
       end
       item
         Name = 'PriceWithVAT'
-        Value = 'False'
+        Value = False
         DataType = ftBoolean
         ParamType = ptInput
         MultiSelectSeparator = ','
@@ -2177,7 +2190,7 @@ inherited Report_ReceiptProductionAnalyzeForm: TReport_ReceiptProductionAnalyzeF
       end
       item
         Name = 'PriceWithVAT'
-        Value = 'False'
+        Value = False
         DataType = ftBoolean
         ParamType = ptInput
         MultiSelectSeparator = ','
@@ -2316,6 +2329,8 @@ inherited Report_ReceiptProductionAnalyzeForm: TReport_ReceiptProductionAnalyzeF
     ColumnAddOnList = <>
     ColumnEnterList = <>
     SummaryItemList = <>
+    ShowFieldImageList = <>
+    PropertiesCellList = <>
     Left = 544
     Top = 320
   end

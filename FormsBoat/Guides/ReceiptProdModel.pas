@@ -154,6 +154,15 @@ type
     Panel1: TPanel;
     Panel2: TPanel;
     Panel3: TPanel;
+    ChildViewAddOn: TdsdDBViewAddOn;
+    ChildView: TcxGridDBTableView;
+    GoodsName_ch3: TcxGridDBColumn;
+    Article_ch3: TcxGridDBColumn;
+    GoodsChildCDS: TClientDataSet;
+    GoodsChildDS: TDataSource;
+    ObjectId_ch1: TcxGridDBColumn;
+    GoodsId_parent_ch3: TcxGridDBColumn;
+    cxGridGoodsLevel1: TcxGridLevel;
   private
     { Private declarations }
   public

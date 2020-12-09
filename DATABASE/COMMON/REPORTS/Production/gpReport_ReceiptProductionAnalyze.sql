@@ -338,7 +338,6 @@ BEGIN
                                 AND ObjectLink_Goods_TradeMark.DescId = zc_ObjectLink_Goods_TradeMark()
             LEFT JOIN Object AS Object_TradeMark ON Object_TradeMark.Id = ObjectLink_Goods_TradeMark.ChildObjectId
 
-
             LEFT JOIN ObjectFloat AS ObjectFloat_Value
                                   ON ObjectFloat_Value.ObjectId = tmpResult.ReceiptId
                                  AND ObjectFloat_Value.DescId = zc_ObjectFloat_Receipt_Value()
