@@ -6,6 +6,8 @@ inherited Report_Goods_RemainsCurrentForm: TReport_Goods_RemainsCurrentForm
   AddOnFormData.isSingle = False
   AddOnFormData.ExecuteDialogAction = ExecuteDialog
   AddOnFormData.Params = FormParams
+  ExplicitLeft = -358
+  ExplicitTop = -141
   ExplicitWidth = 1147
   ExplicitHeight = 598
   PixelsPerInch = 96
@@ -2221,7 +2223,7 @@ inherited Report_Goods_RemainsCurrentForm: TReport_Goods_RemainsCurrentForm
     object actExport_Grid: TExportGrid
       Category = 'Export_file'
       MoveParams = <>
-      ExportType = cxegExportToXmlUTF8
+      ExportType = cxegExportToText
       Grid = ExportXmlGrid
       Caption = 'actExport_Grid'
       OpenAfterCreate = False
@@ -2653,7 +2655,7 @@ inherited Report_Goods_RemainsCurrentForm: TReport_Goods_RemainsCurrentForm
       Category = 0
     end
     object bbExport: TdxBarButton
-      Action = actExport2
+      Action = actExport
       Category = 0
     end
     object bbPrintSticker_fp: TdxBarButton

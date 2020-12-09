@@ -261,27 +261,29 @@ BEGIN
      -- данные остатков
      INSERT INTO _Result(RowData) VALUES ('<offers>');
      INSERT INTO _Result(RowData)
-     SELECT '<offer id="' ||tmp.GoodsCode :: TVarChar || '"'
-         || CASE WHEN COALESCE (tmp.Amount,0) <> 0 THEN ' available="true">' ELSE ' available="false">' END
+     SELECT '<offer id="' || COALESCE (tmp.GoodsCode, '') :: TVarChar || '"'
+         || CASE WHEN COALESCE (tmp.Amount, 0) <> 0 THEN ' available="true">' ELSE ' available="false">' END
        --|| '<labelname>'||tmp.LabelName||'</labelname>'
-         || '<sizename>'||tmp.SizeName||'</sizename>'
+         || '<sizename>'|| COALESCE (tmp.SizeName, '') ||'</sizename>'
          --|| '<url>'||tmp.PartnerName||'</url>' 
        --|| '<url>http://podium-shop.com/product/premiata_1o/</url>'
-         || '<price>'||tmp.OperPriceList||'</price>'                           -- цена в валюте
-         || '<priceGrn>'||tmp.OperPriceList_grn||'</priceGrn>'                 -- цена в грн
-         || '<priceGrnDisc>'||tmp.OperPriceList_grn_disc||'</priceGrnDisc>'    -- цена в грн с уч. скидки
-         || '<amount>'||tmp.Amount||'</amount>'                                -- остаток
-         || '<currencyId>'||tmp.CurrencyName||'</currencyId>'
-         || '<amountCur>'||tmp.AmountCurrency||'</amountCur>'                  -- курс
-         || '<discount>'||tmp.DiscountTax||'</discount>'                       -- % сез. скидки
+         || '<price>'|| COALESCE (tmp.OperPriceList, 0) :: TVarChar ||'</price>'                           -- цена в валюте
+         || '<priceGrn>'|| COALESCE (tmp.OperPriceList_grn, 0) :: TVarChar ||'</priceGrn>'                 -- цена в грн
+         || '<priceGrnDisc>'|| COALESCE (tmp.OperPriceList_grn_disc, 0) :: TVarChar ||'</priceGrnDisc>'    -- цена в грн с уч. скидки
+         || '<amount>'|| COALESCE (tmp.Amount, 0) :: TVarChar ||'</amount>'                                -- остаток
+         || '<currencyId>'|| COALESCE (tmp.CurrencyName, '') || '</currencyId>'
+         || '<amountCur>'|| COALESCE (tmp.AmountCurrency, 0) :: TVarChar ||'</amountCur>'                  -- курс
+         || '<discount>'|| COALESCE (tmp.DiscountTax, 0) :: TVarChar ||'</discount>'                       -- % сез. скидки
          || '<vat>NO_VAT</vat>'
-         || '<categoryId>'||tmp.GoodsGroupId :: TVarChar ||'</categoryId>'
-         || '<name>'||tmp.BrandName||'</name>'
+         || '<categoryId>'|| COALESCE (tmp.GoodsGroupId, 0) :: TVarChar ||'</categoryId>'
+         || '<name>'|| COALESCE (tmp.BrandName, '') || '</name>'
          || '<description>'
-         || '<![CDATA['||tmp.LabelName||']]>'
+         || '<![CDATA['|| COALESCE (tmp.LabelName, '') || ']]>'
          || '</description>'
          || '</offer>'
-     FROM _tmpData AS tmp ;
+     FROM _tmpData AS tmp 
+     ORDER BY tmp.GoodsCode :: Integer
+     ;
  	
      --последнии строчки XML
      INSERT INTO _Result(RowData) VALUES ('</offers>');

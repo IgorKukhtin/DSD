@@ -81,7 +81,7 @@ BEGIN
      INSERT INTO tmpMemberMinus (FromId, ToId, ToName, Summ, Summ_all, BankAccountFromId, BankAccountName_from, BankAccountToId, BankAccountName_to, BankAccountTo, DetailPayment)
         SELECT tmp.FromId
              , tmp.ToId
-             , CASE WHEN LENGTH (tmp.ToName) > 36 THEN tmp.ToShort ELSE tmp.ToName END ::TVarChar AS ToName
+             , CASE WHEN LENGTH (tmp.ToName) > 36 AND tmp.ToShort <> '' THEN tmp.ToShort ELSE tmp.ToName END ::TVarChar AS ToName
              , tmp.Summ
              , SUM (tmp.Summ) OVER (PARTITION BY tmp.FromId) AS Summ_all
                -- IBAN плательщика
@@ -115,7 +115,7 @@ BEGIN
        FROM tmpMI_All
             INNER JOIN (SELECT DISTINCT tmpMemberMinus.FromId, tmpMemberMinus.Summ_all FROM tmpMemberMinus) AS tmpMinus ON tmpMinus.FromId = tmpMI_All.MemberId
        WHERE tmpMI_All.SummMinus <> tmpMinus.Summ_all
-       --AND inSession <> zfCalc_UserAdmin()
+         AND inSession <> zfCalc_UserAdmin()
        LIMIT 1;
 
    IF COALESCE (vbMemberId,0) <> 0

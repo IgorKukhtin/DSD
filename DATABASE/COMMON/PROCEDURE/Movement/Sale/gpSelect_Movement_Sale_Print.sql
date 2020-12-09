@@ -36,6 +36,7 @@ $BODY$
     DECLARE vbTotalCountKg  TFloat;
     DECLARE vbTotalCountSh  TFloat;
     DECLARE vbTotalCountSh_Kg TFloat;
+    DECLARE vbTotalCountKg_only TFloat;
 
     DECLARE vbIsProcess_BranchIn Boolean;
 
@@ -293,11 +294,12 @@ BEGIN
                          THEN CAST ( (1 + vbVATPercent / 100) * (OperSumm) AS NUMERIC (16, 2))
                END AS OperSumm_PVAT
              , TotalCountKg
+             , TotalCountKg_only
              , TotalCountSh
              , TotalCountSh_Kg
 
                INTO vbOperSumm_MVAT, vbOperSumm_PVAT
-                  , vbTotalCountKg, vbTotalCountSh, vbTotalCountSh_Kg
+                  , vbTotalCountKg, vbTotalCountKg_only, vbTotalCountSh, vbTotalCountSh_Kg
 
         FROM
        (SELECT SUM (CASE WHEN tmpMI.CountForPrice <> 0
@@ -318,6 +320,13 @@ BEGIN
                                    THEN tmpMI.Amount
                               ELSE 0
                          END) AS TotalCountKg
+                         -- ВЕС - только если весовой
+                       , SUM (CASE WHEN ObjectLink_Goods_Measure.ChildObjectId = zc_Measure_Sh()
+                                   THEN 0
+                              WHEN ObjectLink_Goods_Measure.ChildObjectId = zc_Measure_Kg()
+                                   THEN tmpMI.Amount
+                              ELSE 0
+                         END) AS TotalCountKg_only
 
                          -- для ШТ, если сво-во tmpObject_GoodsPropertyValue.isWeigth = TRUE, нужно єто кол-во снять с итого шт.
                        , SUM (CASE WHEN ObjectLink_Goods_Measure.ChildObjectId = zc_Measure_Sh() AND COALESCE (tmpObject_GoodsPropertyValue.isWeigth, FALSE) = TRUE
@@ -394,13 +403,20 @@ BEGIN
         ) AS tmpMI;
     ELSE 
             -- Расчет шт для штучного товара, который нужно показать как кг, чтоб снять это кол-во с итого шт.
-        SELECT TotalCountSh_Kg
-        INTO vbTotalCountSh_Kg
+        SELECT TotalCountSh_Kg, TotalCountKg_only
+               INTO vbTotalCountSh_Kg, vbTotalCountKg_only
         FROM (SELECT -- для ШТ, если сво-во tmpObject_GoodsPropertyValue.isWeigth = TRUE, нужно єто кол-во снять с итого шт.
                      SUM (CASE WHEN ObjectLink_Goods_Measure.ChildObjectId = zc_Measure_Sh() AND COALESCE (tmpObject_GoodsPropertyValue.isWeigth,FALSE) = TRUE
                                     THEN tmpMI.Amount
                                ELSE 0
                           END) AS TotalCountSh_Kg
+                         -- ВЕС - только если весовой
+                   , SUM (CASE WHEN ObjectLink_Goods_Measure.ChildObjectId = zc_Measure_Sh()
+                               THEN 0
+                          WHEN ObjectLink_Goods_Measure.ChildObjectId = zc_Measure_Kg()
+                               THEN tmpMI.Amount
+                          ELSE 0
+                     END) AS TotalCountKg_only
               FROM (SELECT MovementItem.ObjectId AS GoodsId
                          , COALESCE (MILinkObject_GoodsKind.ObjectId, zc_GoodsKind_Basis()) AS GoodsKindId
                          , SUM (CASE WHEN Movement.DescId IN (zc_Movement_Sale())
@@ -555,6 +571,7 @@ BEGIN
            , MovementFloat_TotalCount.ValueData         AS TotalCount
            , FLOOR (MovementFloat_TotalCount.ValueData) AS TotalCount_floor
            
+           , vbTotalCountKg_only AS TotalCountKg_only
            , CASE WHEN vbIsProcess_BranchIn = FALSE AND vbDescId = zc_Movement_SendOnPrice() THEN vbTotalCountKg ELSE MovementFloat_TotalCountKg.ValueData END AS TotalCountKg
            , CASE WHEN vbIsProcess_BranchIn = FALSE AND vbDescId = zc_Movement_SendOnPrice() THEN vbTotalCountSh ELSE MovementFloat_TotalCountSh.ValueData - COALESCE (vbTotalCountSh_Kg,0) END AS TotalCountSh
 
@@ -1715,7 +1732,4 @@ ALTER FUNCTION gpSelect_Movement_Sale_Print (Integer,TVarChar) OWNER TO postgres
 ++ PrintMovement_Transport36003603.fr3
 */
 -- тест
--- SELECT * FROM gpSelect_Movement_Sale_Print (inMovementId:= 17040004 , inSession:= zfCalc_UserAdmin()); -- FETCH ALL "<unnamed portal 1>";
--- SELECT * FROM gpSelect_Movement_Sale_Print (inMovementId:= 17040004 , inSession:= '4723136'); -- FETCH ALL "<unnamed portal 1>";
-
---SELECT * FROM gpSelect_Movement_Sale_Print (inMovementId:= 17072769 , inSession:= '4723136'::TVarChar); FETCH ALL "<unnamed portal 28>";
+-- SELECT * FROM gpSelect_Movement_Sale_Print (inMovementId:= 18441615, inSession:= zfCalc_UserAdmin()); -- FETCH ALL "<unnamed portal 1>";
