@@ -2026,6 +2026,7 @@ object SendPodiumForm: TSendPodiumForm
       MoveParams = <>
       PostDataSetBeforeExecute = False
       View = cxGridDBTableView
+      Action = actPartionGoodsChoice
       Params = <>
       Caption = #1044#1086#1073#1072#1074#1080#1090#1100' <'#1058#1086#1074#1072#1088'>'
       Hint = #1044#1086#1073#1072#1074#1080#1090#1100' <'#1058#1086#1074#1072#1088'>'
@@ -2854,6 +2855,7 @@ object SendPodiumForm: TSendPodiumForm
         Param.MultiSelectSeparator = ','
         DataSummaryItemIndex = 6
       end>
+    ShowFieldImageList = <>
     PropertiesCellList = <>
     Left = 347
     Top = 337
