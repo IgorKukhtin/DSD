@@ -1,10 +1,12 @@
 -- Function: gpInsertUpdate_Object_PartnerExternal_Param  ()
 
 DROP FUNCTION IF EXISTS gpInsertUpdate_Object_PartnerExternal_Param (Integer,Integer,Integer,TVarChar);
+DROP FUNCTION IF EXISTS gpInsertUpdate_Object_PartnerExternal_Param (Integer,Integer,Integer,Integer,TVarChar);
 
 CREATE OR REPLACE FUNCTION gpInsertUpdate_Object_PartnerExternal_Param(
     IN inId            Integer   ,    --
     IN inPartnerId     Integer   ,    --
+    IN inPartnerRealId Integer   ,    --
  INOUT ioContractId    Integer   ,    --
    OUT outContractName TVarChar ,
     IN inSession       TVarChar       -- сессия пользователя
@@ -29,6 +31,8 @@ BEGIN
       ioContractId := 0;
    END IF;
 
+   -- сохранили связь с <>
+   PERFORM lpInsertUpdate_ObjectLink(zc_ObjectLink_PartnerExternal_PartnerReal(), inId, inPartnerRealId);
    -- сохранили связь с <>
    PERFORM lpInsertUpdate_ObjectLink(zc_ObjectLink_PartnerExternal_Partner(), inId, inPartnerId);
    -- сохранили связь с <>

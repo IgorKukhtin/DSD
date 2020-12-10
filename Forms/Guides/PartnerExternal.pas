@@ -21,7 +21,7 @@ uses
   dsdDB, dsdAction, Vcl.ActnList, dxBarExtItems, dxBar, cxClasses,
   cxPropertiesStore, Datasnap.DBClient, cxGridLevel, cxGridCustomTableView,
   cxGridTableView, cxGridDBTableView, cxGridCustomView, cxGrid, cxCheckBox,
-  cxButtonEdit;
+  cxButtonEdit, cxContainer, dsdGuides, cxTextEdit, cxMaskEdit, cxLabel;
 
 type
   TPartnerExternalForm = class(TParentForm)
@@ -69,6 +69,17 @@ type
     spInsertUpdate_Param: TdsdStoredProc;
     JuridicalName: TcxGridDBColumn;
     actUpdateDataSet: TdsdUpdateDataSet;
+    actPartnerRealChoiceForm: TOpenChoiceForm;
+    cxLabel6: TcxLabel;
+    edPartnerReal: TcxButtonEdit;
+    GuidesPartnerReal: TdsdGuides;
+    dxBarControlContainerItem1: TdxBarControlContainerItem;
+    dxBarControlContainerItem2: TdxBarControlContainerItem;
+    spInsertUpdate_PartnerReal: TdsdStoredProc;
+    actInsertUpdate_PartnerReal: TdsdExecStoredProc;
+    macInsertUpdate_PartnerReal_list: TMultiAction;
+    macInsertUpdate_PartnerReal: TMultiAction;
+    bbInsertUpdate_PartnerReal: TdxBarButton;
   private
     { Private declarations }
   public

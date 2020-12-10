@@ -2,7 +2,7 @@
   Left = 0
   Top = 0
   Caption = #1044#1086#1073#1072#1074#1080#1090#1100'/'#1048#1079#1084#1077#1085#1080#1090#1100' <'#1050#1086#1085#1090#1088#1072#1075#1077#1085#1090#1099' '#1074#1085#1077#1096#1085#1080#1077'>'
-  ClientHeight = 334
+  ClientHeight = 381
   ClientWidth = 377
   Color = clBtnFace
   Font.Charset = DEFAULT_CHARSET
@@ -29,7 +29,7 @@
   end
   object cxButton1: TcxButton
     Left = 74
-    Top = 298
+    Top = 338
     Width = 75
     Height = 25
     Action = dsdInsertUpdateGuides
@@ -39,7 +39,7 @@
   end
   object cxButton2: TcxButton
     Left = 224
-    Top = 298
+    Top = 338
     Width = 75
     Height = 25
     Action = dsdFormClose
@@ -70,16 +70,16 @@
     Left = 40
     Top = 114
     TabOrder = 7
-    Width = 294
+    Width = 296
   end
   object cxLabel3: TcxLabel
     Left = 40
-    Top = 139
+    Top = 179
     Caption = #1050#1086#1085#1090#1088#1072#1075#1077#1085#1090
   end
   object cePartner: TcxButtonEdit
     Left = 40
-    Top = 158
+    Top = 198
     Properties.Buttons = <
       item
         Default = True
@@ -91,12 +91,12 @@
   end
   object cxLabel4: TcxLabel
     Left = 38
-    Top = 186
+    Top = 226
     Caption = #1044#1086#1075#1086#1074#1086#1088
   end
   object edContract: TcxButtonEdit
-    Left = 38
-    Top = 205
+    Left = 40
+    Top = 245
     Properties.Buttons = <
       item
         Default = True
@@ -108,12 +108,12 @@
   end
   object cxLabel5: TcxLabel
     Left = 38
-    Top = 234
+    Top = 274
     Caption = #1058#1086#1088#1075#1086#1074#1072#1103' '#1089#1077#1090#1100
   end
   object edRetail: TcxButtonEdit
-    Left = 38
-    Top = 253
+    Left = 40
+    Top = 293
     Properties.Buttons = <
       item
         Default = True
@@ -121,6 +121,23 @@
       end>
     Properties.ReadOnly = True
     TabOrder = 13
+    Width = 296
+  end
+  object cxLabel6: TcxLabel
+    Left = 38
+    Top = 135
+    Caption = #1058#1086#1088#1075#1086#1074#1072#1103' '#1090#1086#1095#1082#1072' '#1056#1062
+  end
+  object edPartnerReal: TcxButtonEdit
+    Left = 40
+    Top = 155
+    Properties.Buttons = <
+      item
+        Default = True
+        Kind = bkEllipsis
+      end>
+    Properties.ReadOnly = True
+    TabOrder = 15
     Width = 296
   end
   object ActionList: TActionList
@@ -201,6 +218,14 @@
         MultiSelectSeparator = ','
       end
       item
+        Name = 'inPartnerRealId'
+        Value = Null
+        Component = GuidesPartnerReal
+        ComponentItem = 'Key'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
         Name = 'inContractId'
         Value = Null
         Component = GuidesContract
@@ -229,7 +254,7 @@
         MultiSelectSeparator = ','
       end>
     Left = 24
-    Top = 176
+    Top = 216
   end
   object spGet: TdsdStoredProc
     StoredProcName = 'gpGet_Object_PartnerExternal'
@@ -275,6 +300,21 @@
         Name = 'PartnerName'
         Value = ''
         Component = GuidesPartner
+        ComponentItem = 'TextValue'
+        DataType = ftString
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'PartnerRealId'
+        Value = Null
+        Component = GuidesPartnerReal
+        ComponentItem = 'Key'
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'PartnerRealName'
+        Value = Null
+        Component = GuidesPartnerReal
         ComponentItem = 'TextValue'
         DataType = ftString
         MultiSelectSeparator = ','
@@ -359,7 +399,7 @@
         MultiSelectSeparator = ','
       end>
     Left = 152
-    Top = 152
+    Top = 192
   end
   object GuidesContract: TdsdGuides
     KeyField = 'Id'
@@ -388,7 +428,7 @@
         MultiSelectSeparator = ','
       end>
     Left = 190
-    Top = 199
+    Top = 239
   end
   object GuidesRetail: TdsdGuides
     KeyField = 'Id'
@@ -417,6 +457,35 @@
         MultiSelectSeparator = ','
       end>
     Left = 142
-    Top = 239
+    Top = 279
+  end
+  object GuidesPartnerReal: TdsdGuides
+    KeyField = 'Id'
+    LookupControl = edPartnerReal
+    FormNameParam.Value = 'TPartner_ObjectForm'
+    FormNameParam.DataType = ftString
+    FormNameParam.MultiSelectSeparator = ','
+    FormName = 'TPartner_ObjectForm'
+    PositionDataSet = 'MasterCDS'
+    Params = <
+      item
+        Name = 'Key'
+        Value = ''
+        Component = GuidesPartnerReal
+        ComponentItem = 'Key'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'TextValue'
+        Value = ''
+        Component = GuidesPartnerReal
+        ComponentItem = 'TextValue'
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end>
+    Left = 142
+    Top = 140
   end
 end

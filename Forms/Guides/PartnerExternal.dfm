@@ -107,6 +107,23 @@ object PartnerExternalForm: TPartnerExternalForm
         HeaderGlyphAlignmentHorz = taCenter
         Width = 152
       end
+      object PartnerRealName: TcxGridDBColumn
+        Caption = #1058#1086#1088#1075#1086#1074#1072#1103' '#1090#1086#1095#1082#1072' '#1056#1062
+        DataBinding.FieldName = 'PartnerRealName'
+        PropertiesClassName = 'TcxButtonEditProperties'
+        Properties.Buttons = <
+          item
+            Action = actPartnerChoiceForm
+            Default = True
+            Kind = bkEllipsis
+          end>
+        Properties.ReadOnly = True
+        GroupSummaryAlignment = taCenter
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        HeaderGlyphAlignmentHorz = taCenter
+        Width = 152
+      end
       object RetailName_partner: TcxGridDBColumn
         Caption = #1058#1086#1088#1075#1086#1074#1072#1103' '#1089#1077#1090#1100' ('#1050#1086#1085#1090#1088#1072#1075#1077#1085#1090')'
         DataBinding.FieldName = 'RetailName_partner'
@@ -153,6 +170,22 @@ object PartnerExternalForm: TPartnerExternalForm
     object cxGridLevel: TcxGridLevel
       GridView = cxGridDBTableView
     end
+  end
+  object cxLabel6: TcxLabel
+    Left = 492
+    Top = 107
+    Caption = #1056#1062':'
+  end
+  object edPartnerReal: TcxButtonEdit
+    Left = 520
+    Top = 106
+    Properties.Buttons = <
+      item
+        Default = True
+        Kind = bkEllipsis
+      end>
+    TabOrder = 6
+    Width = 245
   end
   object DataSource: TDataSource
     DataSet = ClientDataSet
@@ -263,6 +296,22 @@ object PartnerExternalForm: TPartnerExternalForm
         end
         item
           Visible = True
+          ItemName = 'dxBarControlContainerItem1'
+        end
+        item
+          Visible = True
+          ItemName = 'dxBarControlContainerItem2'
+        end
+        item
+          Visible = True
+          ItemName = 'bbInsertUpdate_PartnerReal'
+        end
+        item
+          Visible = True
+          ItemName = 'dxBarStatic'
+        end
+        item
+          Visible = True
           ItemName = 'bbGridToExcel'
         end
         item
@@ -323,6 +372,24 @@ object PartnerExternalForm: TPartnerExternalForm
     end
     object bbShowErased: TdxBarButton
       Action = actShowErased
+      Category = 0
+    end
+    object dxBarControlContainerItem1: TdxBarControlContainerItem
+      Caption = 'New Item'
+      Category = 0
+      Hint = 'New Item'
+      Visible = ivAlways
+      Control = cxLabel6
+    end
+    object dxBarControlContainerItem2: TdxBarControlContainerItem
+      Caption = 'New Item'
+      Category = 0
+      Hint = 'New Item'
+      Visible = ivAlways
+      Control = edPartnerReal
+    end
+    object bbInsertUpdate_PartnerReal: TdxBarButton
+      Action = macInsertUpdate_PartnerReal
       Category = 0
     end
   end
@@ -545,6 +612,33 @@ object PartnerExternalForm: TPartnerExternalForm
         end>
       isShowModal = True
     end
+    object actPartnerRealChoiceForm: TOpenChoiceForm
+      Category = 'DSDLib'
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      Caption = 'PartnerChoiceForm'
+      FormName = 'TPartner_ObjectForm'
+      FormNameParam.Value = 'TPartner_ObjectForm'
+      FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
+      GuiParams = <
+        item
+          Name = 'key'
+          Value = Null
+          Component = ClientDataSet
+          ComponentItem = 'PartnerRealId'
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'TextValue'
+          Value = Null
+          Component = ClientDataSet
+          ComponentItem = 'PartnerRealName'
+          DataType = ftString
+          MultiSelectSeparator = ','
+        end>
+      isShowModal = True
+    end
     object actPartnerChoiceForm: TOpenChoiceForm
       Category = 'DSDLib'
       MoveParams = <>
@@ -583,6 +677,43 @@ object PartnerExternalForm: TPartnerExternalForm
         end>
       Caption = 'actUpdateDataSet'
       DataSource = DataSource
+    end
+    object actInsertUpdate_PartnerReal: TdsdExecStoredProc
+      Category = 'DSDLib'
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      StoredProc = spInsertUpdate_PartnerReal
+      StoredProcList = <
+        item
+          StoredProc = spInsertUpdate_PartnerReal
+        end>
+      Caption = 'actInsertUpdate_PartnerReal'
+    end
+    object macInsertUpdate_PartnerReal_list: TMultiAction
+      Category = 'DSDLib'
+      MoveParams = <>
+      ActionList = <
+        item
+          Action = actInsertUpdate_PartnerReal
+        end>
+      View = cxGridDBTableView
+      Caption = 'macInsertUpdate_PartnerReal_list'
+    end
+    object macInsertUpdate_PartnerReal: TMultiAction
+      Category = 'DSDLib'
+      MoveParams = <>
+      ActionList = <
+        item
+          Action = macInsertUpdate_PartnerReal_list
+        end
+        item
+          Action = actRefresh
+        end>
+      QuestionBeforeExecute = #1059#1089#1090#1072#1085#1086#1074#1080#1090#1100' '#1056#1062' '#1074#1089#1077#1084' '#1074#1099#1073#1088#1072#1085#1085#1099#1084' '#1082#1086#1085#1090#1088#1072#1075#1077#1085#1090#1072#1084'?'
+      InfoAfterExecute = #1047#1085#1072#1095#1077#1085#1080#1077' '#1056#1062' '#1091#1089#1090#1072#1085#1086#1074#1083#1077#1085#1086
+      Caption = #1059#1089#1090#1072#1085#1086#1074#1080#1090#1100' '#1056#1062
+      Hint = #1059#1089#1090#1072#1085#1086#1074#1080#1090#1100' '#1056#1062
+      ImageIndex = 76
     end
   end
   object dsdStoredProc: TdsdStoredProc
@@ -651,6 +782,7 @@ object PartnerExternalForm: TPartnerExternalForm
     ColumnAddOnList = <>
     ColumnEnterList = <>
     SummaryItemList = <>
+    ShowFieldImageList = <>
     PropertiesCellList = <>
     Left = 368
     Top = 128
@@ -681,6 +813,13 @@ object PartnerExternalForm: TPartnerExternalForm
         MultiSelectSeparator = ','
       end
       item
+        Name = 'inPartnerRealId'
+        Value = Null
+        Component = ClientDataSet
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
         Name = 'ioContractId'
         Value = Null
         Component = ClientDataSet
@@ -698,6 +837,64 @@ object PartnerExternalForm: TPartnerExternalForm
       end>
     PackSize = 1
     Left = 584
+    Top = 168
+  end
+  object GuidesPartnerReal: TdsdGuides
+    KeyField = 'Id'
+    LookupControl = edPartnerReal
+    FormNameParam.Value = 'TPartnerForm'
+    FormNameParam.DataType = ftString
+    FormNameParam.MultiSelectSeparator = ','
+    FormName = 'TPartnerForm'
+    PositionDataSet = 'MasterCDS'
+    Params = <
+      item
+        Name = 'Key'
+        Value = ''
+        Component = GuidesPartnerReal
+        ComponentItem = 'Key'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'TextValue'
+        Value = ''
+        Component = GuidesPartnerReal
+        ComponentItem = 'TextValue'
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end>
+    Left = 568
+    Top = 104
+  end
+  object spInsertUpdate_PartnerReal: TdsdStoredProc
+    StoredProcName = 'gpInsertUpdate_Object_PartnerExternal_PartnerReal'
+    DataSet = ClientDataSet
+    DataSets = <
+      item
+        DataSet = ClientDataSet
+      end>
+    OutputType = otResult
+    Params = <
+      item
+        Name = 'inId'
+        Value = Null
+        Component = ClientDataSet
+        ComponentItem = 'Id'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inPartnerRealId'
+        Value = Null
+        Component = GuidesPartnerReal
+        ComponentItem = 'Key'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end>
+    PackSize = 1
+    Left = 696
     Top = 168
   end
 end

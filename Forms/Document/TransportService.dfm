@@ -1127,8 +1127,8 @@
         ComponentItem = 'inPaidKindId'
         MultiSelectSeparator = ','
       end>
-    Left = 72
-    Top = 127
+    Left = 80
+    Top = 119
   end
   object GuidesContractJuridical: TdsdGuides
     KeyField = 'Id'
@@ -1271,8 +1271,8 @@
         DataType = ftFloat
         MultiSelectSeparator = ','
       end>
-    Left = 48
-    Top = 114
+    Left = 32
+    Top = 146
   end
   object GuidesMemberExternal: TdsdGuides
     KeyField = 'Id'
