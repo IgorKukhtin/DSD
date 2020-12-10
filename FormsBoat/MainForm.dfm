@@ -134,7 +134,7 @@ inherited MainForm: TMainForm
     object actProdColorPattern: TdsdOpenForm [10]
       Category = #1051#1086#1076#1082#1080
       MoveParams = <>
-      Caption = #1064#1072#1073#1083#1086#1085#1099' '#1062#1074#1077#1090#1072' ('#1051#1086#1076#1082#1072') '
+      Caption = #1069#1083#1077#1084#1077#1085#1090#1099' Boat Structure'
       FormName = 'TProdColorPatternForm'
       FormNameParam.Value = 'TProdColorPatternForm'
       FormNameParam.DataType = ftString
@@ -189,7 +189,7 @@ inherited MainForm: TMainForm
     object actProdOptPattern: TdsdOpenForm [14]
       Category = #1051#1086#1076#1082#1080
       MoveParams = <>
-      Caption = #1064#1072#1073#1083#1086#1085#1099' '#1054#1087#1094#1080#1081' ('#1051#1086#1076#1082#1072')'
+      Caption = #1064#1072#1073#1083#1086#1085' '#1054#1087#1094#1080#1081' ('#1051#1086#1076#1082#1072')'
       FormName = 'TProdOptPatternForm'
       FormNameParam.Value = 'TProdOptPatternForm'
       FormNameParam.DataType = ftString
@@ -764,7 +764,7 @@ inherited MainForm: TMainForm
     object actProdColorGroup: TdsdOpenForm
       Category = #1051#1086#1076#1082#1080
       MoveParams = <>
-      Caption = #1050#1072#1090#1077#1075#1086#1088#1080#1080' '#1094#1074#1077#1090#1086#1074
+      Caption = #1050#1072#1090#1077#1075#1086#1088#1080#1103' Boat Structure'
       FormName = 'TProdColorGroupForm'
       FormNameParam.Value = 'TProdColorGroupForm'
       FormNameParam.DataType = ftString
@@ -786,7 +786,7 @@ inherited MainForm: TMainForm
     object actProdColorItems: TdsdOpenForm
       Category = #1051#1086#1076#1082#1080
       MoveParams = <>
-      Caption = #1069#1083#1077#1084#1077#1085#1090#1099' '#1062#1074#1077#1090#1072' ('#1051#1086#1076#1082#1072') '
+      Caption = 'Boat Structure'
       FormName = 'TProdColorItemsForm'
       FormNameParam.Value = 'TProdColorItemsForm'
       FormNameParam.DataType = ftString
@@ -808,7 +808,7 @@ inherited MainForm: TMainForm
     object actProdOptItems: TdsdOpenForm
       Category = #1051#1086#1076#1082#1080
       MoveParams = <>
-      Caption = #1069#1083#1077#1084#1077#1085#1090#1099' '#1054#1087#1094#1080#1081' ('#1051#1086#1076#1082#1072')'
+      Caption = #1069#1083#1077#1084#1077#1085#1090#1099' '#1054#1087#1094#1080#1081
       FormName = 'TProdOptItemsForm'
       FormNameParam.Value = 'TProdOptItemsForm'
       FormNameParam.DataType = ftString
@@ -951,11 +951,9 @@ inherited MainForm: TMainForm
       end
       object miProdColorPattern: TMenuItem
         Action = actProdColorPattern
-        Caption = #1064#1072#1073#1083#1086#1085#1099' Boat Structure'
       end
       object miProdColorGroup: TMenuItem
         Action = actProdColorGroup
-        Caption = #1050#1072#1090#1077#1075#1086#1088#1080#1080' Boat Structure'
       end
       object miProdColor: TMenuItem
         Action = actProdColor
@@ -963,7 +961,6 @@ inherited MainForm: TMainForm
       end
       object miProdColorItems: TMenuItem
         Action = actProdColorItems
-        Caption = #1069#1083#1077#1084#1077#1085#1090#1099' Boat Structure'
       end
       object miLine32_: TMenuItem
         Caption = '-'
@@ -1165,6 +1162,7 @@ inherited MainForm: TMainForm
       end
       object miUnit: TMenuItem
         Action = actUnit
+        Caption = #1057#1082#1083#1072#1076#1099
       end
       object miPriceList: TMenuItem
         Action = actPriceList

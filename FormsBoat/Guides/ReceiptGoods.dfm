@@ -22,7 +22,7 @@ object ReceiptGoodsForm: TReceiptGoodsForm
     Left = 0
     Top = 26
     Width = 813
-    Height = 209
+    Height = 225
     Align = alTop
     BevelEdges = [beLeft]
     BevelOuter = bvNone
@@ -31,14 +31,13 @@ object ReceiptGoodsForm: TReceiptGoodsForm
       Left = 0
       Top = 17
       Width = 813
-      Height = 192
+      Height = 208
       Align = alClient
       PopupMenu = PopupMenu
       TabOrder = 0
       LookAndFeel.NativeStyle = True
       LookAndFeel.SkinName = 'UserSkin'
-      ExplicitTop = 0
-      ExplicitHeight = 209
+      ExplicitHeight = 192
       object cxGridDBTableView: TcxGridDBTableView
         Navigator.Buttons.CustomButtons = <>
         DataController.DataSource = DataSource
@@ -376,30 +375,30 @@ object ReceiptGoodsForm: TReceiptGoodsForm
       Color = clSkyBlue
       ParentBackground = False
       TabOrder = 1
-      ExplicitWidth = 988
     end
   end
   object PanelGoods: TPanel
     Left = 0
-    Top = 240
+    Top = 256
     Width = 805
-    Height = 175
+    Height = 159
     Align = alClient
     BevelEdges = [beLeft]
     BevelOuter = bvNone
     TabOrder = 0
+    ExplicitTop = 240
+    ExplicitHeight = 175
     object cxGridGoods: TcxGrid
       Left = 0
       Top = 17
       Width = 805
-      Height = 158
+      Height = 142
       Align = alClient
       PopupMenu = PopupMenuColor
       TabOrder = 0
       LookAndFeel.NativeStyle = True
       LookAndFeel.SkinName = 'UserSkin'
-      ExplicitTop = 0
-      ExplicitHeight = 175
+      ExplicitHeight = 158
       object cxGridDBTableViewGoods: TcxGridDBTableView
         Navigator.Buttons.CustomButtons = <>
         DataController.DataSource = GoodsDS
@@ -753,23 +752,25 @@ object ReceiptGoodsForm: TReceiptGoodsForm
       Color = clAqua
       ParentBackground = False
       TabOrder = 1
-      ExplicitWidth = 536
     end
   end
   object cxTopSplitter: TcxSplitter
     Left = 0
-    Top = 235
+    Top = 251
     Width = 813
     Height = 5
     AlignSplitter = salTop
     Control = PanelMaster
+    ExplicitTop = 235
   end
   object cxRightSplitter: TcxSplitter
     Left = 805
-    Top = 240
+    Top = 256
     Width = 8
-    Height = 175
+    Height = 159
     AlignSplitter = salRight
+    ExplicitTop = 240
+    ExplicitHeight = 175
   end
   object DataSource: TDataSource
     DataSet = MasterCDS

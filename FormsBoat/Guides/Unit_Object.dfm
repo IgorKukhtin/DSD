@@ -1,7 +1,7 @@
 object Unit_ObjectForm: TUnit_ObjectForm
   Left = 0
   Top = 0
-  Caption = #1057#1087#1088#1072#1074#1086#1095#1085#1080#1082' <'#1055#1086#1076#1088#1072#1079#1076#1077#1083#1077#1085#1080#1103'>'
+  Caption = #1057#1087#1088#1072#1074#1086#1095#1085#1080#1082' <'#1057#1082#1083#1072#1076#1099'>'
   ClientHeight = 376
   ClientWidth = 633
   Color = clBtnFace
@@ -452,6 +452,7 @@ object Unit_ObjectForm: TUnit_ObjectForm
     ColumnAddOnList = <>
     ColumnEnterList = <>
     SummaryItemList = <>
+    ShowFieldImageList = <>
     PropertiesCellList = <>
     Left = 104
     Top = 248

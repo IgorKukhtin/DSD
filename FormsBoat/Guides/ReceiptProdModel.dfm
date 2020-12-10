@@ -950,7 +950,7 @@ object ReceiptProdModelForm: TReceiptProdModelForm
       Width = 442
       Height = 17
       Align = alTop
-      Caption = 'Boat Structure'
+      Caption = 'Items Boat Structure'
       Color = clLime
       ParentBackground = False
       TabOrder = 1

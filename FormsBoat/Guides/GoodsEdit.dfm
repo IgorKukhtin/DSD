@@ -163,7 +163,7 @@
   object cxLabel8: TcxLabel
     Left = 40
     Top = 375
-    Caption = #1055#1072#1088#1090#1085#1077#1088
+    Caption = #1055#1086#1089#1090#1072#1074#1097#1080#1082
   end
   object edPartner: TcxButtonEdit
     Left = 40
