@@ -76,7 +76,7 @@ end if;*/
          , ObjectLink_Juridical_Retail_To.ChildObjectId
          , COALESCE (MovementLinkObject_PartionDateKind.ObjectId, 0)
          , COALESCE (MovementBoolean_SUN.ValueData, FALSE)
-         , ObjectString_Unit_Address.ValueData   
+         , ObjectString_Unit_Address.ValueData
            INTO
                 vbUnitFromId
               , vbJuridicalFromId
@@ -112,7 +112,7 @@ end if;*/
         LEFT JOIN ObjectString AS ObjectString_Unit_Address
                                ON ObjectString_Unit_Address.ObjectId = MovementLinkObject_To.ObjectId
                               AND ObjectString_Unit_Address.DescId = zc_ObjectString_Unit_Address()
-        
+
 
         LEFT JOIN MovementLinkObject AS MovementLinkObject_PartionDateKind
                                      ON MovementLinkObject_PartionDateKind.MovementId = Movement.Id
@@ -122,7 +122,7 @@ end if;*/
                                   ON MovementBoolean_SUN.MovementId = Movement.Id
                                  AND MovementBoolean_SUN.DescId = zc_MovementBoolean_SUN()
     WHERE Movement.Id = inMovementId;
-    
+
     vbDivisionParties := (vbRetailId_to = 4) AND (vbJuridicalFromId <> vbJuridicalToId) AND COALESCE(vbAddress, '') <> '';
 
     -- если это перемещение просрочки
@@ -258,6 +258,99 @@ end if;*/
       THEN
           RAISE EXCEPTION 'Ошибка. По одному <%> или более товарам кол-во распределено <%> больше, чем есть на остатке <%> по партии.', vbGoodsName, vbAmount, vbSaldo;
       END IF;
+    END IF;
+
+    -- Переоценим товар без остатки
+    IF vbIsDeferred = FALSE AND vbUnitToId <> 11299914 
+    THEN
+
+       PERFORM lpInsertUpdate_Object_Price(inGoodsId := T1.GoodsId,
+                                           inUnitId  := T1.UnitId,
+                                           inPrice   := T1.PriceNew,
+                                           inDate    := CURRENT_DATE::TDateTime,
+                                           inUserId  := inUserId)
+       FROM (WITH
+                  -- строки документа перемещения
+                  tmpMI_SendAll AS (SELECT MI_Master.ObjectId AS ObjectId
+                                    FROM MovementItem AS MI_Master
+                                    WHERE MI_Master.MovementId = inMovementId
+                                      AND MI_Master.IsErased   = FALSE
+                                      AND MI_Master.DescId     = zc_MI_Master()
+                                      AND MI_Master.Amount     > 0
+                                    GROUP BY MI_Master.ObjectId
+                                   )
+                  -- находим товары для сети куда идет перемещение, если они разные
+                , GoodsRetial_to AS (SELECT tmp.ObjectId
+                                          , ObjectLink_Child_to.ChildObjectId AS ObjectId_to
+                                     FROM (SELECT DISTINCT tmpMI_SendAll.ObjectId FROM tmpMI_SendAll WHERE vbRetailId_from <> vbRetailId_to) AS tmp
+                                          INNER JOIN  ObjectLink AS ObjectLink_Child ON ObjectLink_Child.ChildObjectId = tmp.ObjectId
+                                                                                    AND ObjectLink_Child.DescId        = zc_ObjectLink_LinkGoods_Goods()
+                                          INNER JOIN  ObjectLink AS ObjectLink_Main ON ObjectLink_Main.ObjectId = ObjectLink_Child.ObjectId
+                                                                                   AND ObjectLink_Main.DescId   = zc_ObjectLink_LinkGoods_GoodsMain()
+
+                                          INNER JOIN ObjectLink AS ObjectLink_Main_to ON ObjectLink_Main_to.ChildObjectId = ObjectLink_Main.ChildObjectId
+                                                                                     AND ObjectLink_Main_to.DescId        = zc_ObjectLink_LinkGoods_GoodsMain()
+                                          INNER JOIN ObjectLink AS ObjectLink_Child_to ON ObjectLink_Child_to.ObjectId = ObjectLink_Main_to.ObjectId
+                                                                                      AND ObjectLink_Child_to.DescId   = zc_ObjectLink_LinkGoods_Goods()
+                                          INNER JOIN ObjectLink AS ObjectLink_Goods_Object_to
+                                                                ON ObjectLink_Goods_Object_to.ObjectId = ObjectLink_Child_to.ChildObjectId
+                                                               AND ObjectLink_Goods_Object_to.DescId = zc_ObjectLink_Goods_Object()
+                                                               AND ObjectLink_Goods_Object_to.ChildObjectId = vbRetailId_to
+                                    )
+                  -- строки документа перемещения
+                ,  tmpMI_Send AS (SELECT tmpMI_SendAll.ObjectId AS ObjectId
+                                       , COALESCE(GoodsRetial_to.ObjectId_to, tmpMI_SendAll.ObjectId) AS ObjectId_to
+                                  FROM tmpMI_SendAll
+                                       LEFT JOIN GoodsRetial_to ON GoodsRetial_to.ObjectId = tmpMI_SendAll.ObjectId
+                                 )
+                , Container_to AS (SELECT tmpMI_Send.ObjectId_to
+                                        , SUM(Container.Amount) AS Amount
+                                   FROM tmpMI_Send
+                                        INNER JOIN Container ON Container.ObjectId = tmpMI_Send.ObjectId_to
+                                                            AND Container.DescId = zc_Container_Count()
+                                                            AND Container.Amount > 0
+                                                            AND Container.WhereObjectId = vbUnitFromId
+                                   GROUP BY tmpMI_Send.ObjectId_to
+                                   HAVING SUM(Container.Amount) > 0)
+                  -- Товар без остатка на получателе
+                ,  tmpGoods AS (SELECT tmpMI_Send.ObjectId
+                                     , tmpMI_Send.ObjectId_to
+                                FROM tmpMI_Send
+                                     LEFT JOIN Container_to ON Container_to.ObjectId_to = tmpMI_Send.ObjectId_to
+                                WHERE COALESCE (Container_to.Amount, 0) = 0
+                                 )
+                , tmpObject_Price AS (SELECT ROUND (Price_Value.ValueData, 2) :: TFloat AS Price
+                                           , ObjectLink_Price_Unit.ChildObjectId        AS UnitId
+                                           , Price_Goods.ChildObjectId                  AS GoodsId
+                                      FROM ObjectLink AS ObjectLink_Price_Unit
+                                         LEFT JOIN ObjectLink AS Price_Goods
+                                                              ON Price_Goods.ObjectId = ObjectLink_Price_Unit.ObjectId
+                                                             AND Price_Goods.DescId = zc_ObjectLink_Price_Goods()
+                                         INNER JOIN tmpGoods ON tmpGoods.ObjectId = Price_Goods.ChildObjectId OR tmpGoods.ObjectId_to = Price_Goods.ChildObjectId
+                                         LEFT JOIN ObjectFloat AS Price_Value
+                                                               ON Price_Value.ObjectId = ObjectLink_Price_Unit.ObjectId
+                                                              AND Price_Value.DescId = zc_ObjectFloat_Price_Value()
+                                      WHERE ObjectLink_Price_Unit.DescId        = zc_ObjectLink_Price_Unit()
+                                        AND ObjectLink_Price_Unit.ChildObjectId in (vbUnitFromId, vbUnitToId)
+                                      )
+
+
+        SELECT Price_To.UnitId
+             , tmpGoods.ObjectId_to AS GoodsId
+             , Price_From.Price     AS PriceNew
+        FROM tmpGoods
+
+             LEFT JOIN tmpObject_Price AS Price_From
+                                       ON Price_From.GoodsId = tmpGoods.ObjectId
+                                      AND Price_From.UnitId = vbUnitFromId
+
+             LEFT JOIN tmpObject_Price AS Price_To
+                                       ON Price_To.GoodsId = tmpGoods.ObjectId_to
+                                      AND Price_To.UnitId = vbUnitToId
+
+        WHERE COALESCE (Price_From.Price, 0) <> 0
+          AND COALESCE (Price_From.Price, 0) <> COALESCE (Price_To.Price, 0)
+        ) AS T1;
     END IF;
 
       -- Проводим распределенный по партиям товар
@@ -1199,7 +1292,7 @@ end if;*/
      END IF;
 
      -- Добавили в ТП
-     IF vbSUN = TRUE 
+     IF vbSUN = TRUE
      THEN
         PERFORM  gpSelect_MovementSUN_TechnicalRediscount(inMovementId, inUserId::TVarChar);
      END IF;

@@ -331,6 +331,12 @@ type
     spUpdate_Unit_isSUA_Yes: TdsdStoredProc;
     dxBarButton9: TdxBarButton;
     dxBarButton10: TdxBarButton;
+    isShareFromPrice: TcxGridDBColumn;
+    spUpdate_isShareFromPrice: TdsdStoredProc;
+    actUpdate_isShareFromPrice: TMultiAction;
+    actExecUpdate_isShareFromPrice: TdsdExecStoredProc;
+    bbisShareFromPrice: TdxBarButton;
+    dxBarStatic2: TdxBarStatic;
   private
     { Private declarations }
   public

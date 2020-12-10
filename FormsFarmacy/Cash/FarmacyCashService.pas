@@ -160,6 +160,8 @@ type
     TimerNeedRemainsDiff: TTimer;
     EmployeeScheduleCDS: TClientDataSet;
     spEmployeeSchedule: TdsdStoredProc;
+    spPauseUpdateRemains: TdsdStoredProc;
+    spPauseUpdateCheck: TdsdStoredProc;
     procedure FormCreate(Sender: TObject);
     procedure FormDestroy(Sender: TObject);
     procedure FormCloseQuery(Sender: TObject; var CanClose: Boolean);
@@ -223,6 +225,11 @@ type
     procedure Add_Log(AMessage: String);
     function GetTrayIcon: integer;
     function GetInterval_CashRemains_Diff: integer;
+
+    // Паузы от нагрузки
+    procedure PauseUpdateCheck;
+    procedure PauseUpdateRemains;
+
   end;
 
 
@@ -702,6 +709,10 @@ function TMainCashForm2.SaveCashRemains : boolean;
 begin
   Result := False;
   tiServise.Hint := 'Получение остатков';
+
+  // Ждем сервер
+  PauseUpdateRemains;
+
   Add_Log('Start MutexRemains 390');
   WaitForSingleObject(MutexRemains, INFINITE);
   RemainsCDS.DisableControls;
@@ -788,6 +799,10 @@ procedure TMainCashForm2.SaveCashRemainsDif;
   var I : integer;
 begin
   tiServise.Hint := 'Получение разницы остатков';
+
+  // Ждем сервер
+  PauseUpdateRemains;
+
   Add_Log('Start MutexRemains 335');
   WaitForSingleObject(MutexRemains, INFINITE);
   try
@@ -904,6 +919,10 @@ begin  //+
     (StartOfTheDay(DateTime.CreationTime) >= Date) then Exit;
 
   tiServise.Hint := 'Получение списка медикаментов';
+
+  // Ждем сервер
+  PauseUpdateRemains;
+
   sp := TdsdStoredProc.Create(nil);
   try
     ds := TClientDataSet.Create(nil);
@@ -1207,6 +1226,7 @@ begin
       Exit;
     end;
 
+
     MainCashForm2.tiServise.IconIndex := 2;
     Application.ProcessMessages;
     Add_Log('Start MutexRefresh 732');
@@ -1263,6 +1283,9 @@ begin
         // если чеков нет, выходим из цикла
         if UID = '' then
           break;
+
+        // Ждем сервер
+        PauseUpdateCheck;
 
         if UID <> '' then
         Begin
@@ -1370,6 +1393,7 @@ begin
               FLocalDataBaseBody.First;
               while not FLocalDataBaseBody.eof do
               Begin
+
                 if (trim(FLocalDataBaseBody.FieldByName('CH_UID').AsString) = UID) AND not FLocalDataBaseBody.Deleted then
                 Begin
                   SetLength(Body, Length(Body) + 1);
@@ -1556,7 +1580,6 @@ begin
                   end;
 
                   // сохранил тело
-
                   dsdSave.StoredProcName := 'gpInsertUpdate_MovementItem_Check_ver2';
                   dsdSave.OutputType := otResult;
                   dsdSave.Params.Clear;
@@ -1592,6 +1615,10 @@ begin
 
                   for I := 0 to Length(Body) - 1 do
                   Begin
+
+                    // Ждем сервер
+                    PauseUpdateCheck;
+
                     dsdSave.ParamByName('ioId').Value := Body[I].ID;
                     dsdSave.ParamByName('inGoodsId').Value := Body[I].GOODSID;
                     dsdSave.ParamByName('inAmount').Value := Body[I].AMOUNT;
@@ -1694,6 +1721,10 @@ begin
               freeAndNil(dsdSave);
             end;
           end;
+
+          // Ждем сервер
+          PauseUpdateCheck;
+
           // если необходимо провести чек
           if Find AND Head.SAVE AND Head.NEEDCOMPL then
           Begin
@@ -2253,6 +2284,10 @@ var
   ds : TClientDataSet;
 begin
   tiServise.Hint := 'Получение остатков по партиям';
+
+  // Ждем сервер
+  PauseUpdateRemains;
+
   sp := TdsdStoredProc.Create(nil);
   try
     try
@@ -2690,6 +2725,26 @@ procedure TMainCashForm2.FormDestroy(Sender: TObject);
 begin
  Add_Log('== Close');
  CloseMutex;
+end;
+
+procedure TMainCashForm2.PauseUpdateCheck;
+begin
+  while True do
+  begin
+    spPauseUpdateCheck.Execute;
+    if not spPauseUpdateCheck.ParamByName('outisPause').Value then Exit;
+    sleep(10000);
+  end;
+end;
+
+procedure TMainCashForm2.PauseUpdateRemains;
+begin
+  while True do
+  begin
+    spPauseUpdateRemains.Execute;
+    if not spPauseUpdateRemains.ParamByName('outisPause').Value then Exit;
+    sleep(10000);
+  end;
 end;
 
 

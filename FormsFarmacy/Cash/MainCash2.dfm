@@ -2,7 +2,7 @@ inherited MainCashForm2: TMainCashForm2
   ActiveControl = lcName
   Caption = #1055#1088#1086#1076#1072#1078#1072
   ClientHeight = 560
-  ClientWidth = 858
+  ClientWidth = 964
   PopupMenu = PopupMenu
   OnCloseQuery = ParentFormCloseQuery
   OnCreate = FormCreate
@@ -11,14 +11,14 @@ inherited MainCashForm2: TMainCashForm2
   OnShow = ParentFormShow
   AddOnFormData.Params = FormParams
   AddOnFormData.AddOnFormRefresh.SelfList = 'MainCheck'
-  ExplicitWidth = 874
+  ExplicitWidth = 980
   ExplicitHeight = 599
   PixelsPerInch = 96
   TextHeight = 13
   object BottomPanel: TPanel [0]
     Left = 0
     Top = 407
-    Width = 858
+    Width = 964
     Height = 153
     Align = alBottom
     BevelOuter = bvNone
@@ -26,7 +26,7 @@ inherited MainCashForm2: TMainCashForm2
     object CheckGrid: TcxGrid
       Left = 0
       Top = 0
-      Width = 396
+      Width = 502
       Height = 153
       Align = alClient
       TabOrder = 0
@@ -153,7 +153,7 @@ inherited MainCashForm2: TMainCashForm2
       end
     end
     object AlternativeGrid: TcxGrid
-      Left = 607
+      Left = 713
       Top = 0
       Width = 251
       Height = 153
@@ -228,7 +228,7 @@ inherited MainCashForm2: TMainCashForm2
       end
     end
     object cxSplitter1: TcxSplitter
-      Left = 396
+      Left = 502
       Top = 0
       Width = 0
       Height = 153
@@ -236,7 +236,7 @@ inherited MainCashForm2: TMainCashForm2
       Control = ExpirationDateGrid
     end
     object ExpirationDateGrid: TcxGrid
-      Left = 396
+      Left = 502
       Top = 0
       Width = 211
       Height = 153
@@ -281,7 +281,7 @@ inherited MainCashForm2: TMainCashForm2
   object cxSplitter2: TcxSplitter [1]
     Left = 0
     Top = 404
-    Width = 858
+    Width = 964
     Height = 3
     AlignSplitter = salBottom
     Control = BottomPanel
@@ -289,7 +289,7 @@ inherited MainCashForm2: TMainCashForm2
   object MainPanel: TPanel [2]
     Left = 0
     Top = 265
-    Width = 858
+    Width = 964
     Height = 139
     Align = alClient
     BevelOuter = bvNone
@@ -297,7 +297,7 @@ inherited MainCashForm2: TMainCashForm2
     object MainGrid: TcxGrid
       Left = 0
       Top = 21
-      Width = 858
+      Width = 964
       Height = 85
       Align = alClient
       TabOrder = 0
@@ -1038,7 +1038,7 @@ inherited MainCashForm2: TMainCashForm2
     object SearchPanel: TPanel
       Left = 0
       Top = 106
-      Width = 858
+      Width = 964
       Height = 33
       Align = alBottom
       TabOrder = 1
@@ -1274,7 +1274,7 @@ inherited MainCashForm2: TMainCashForm2
     object pnlExpirationDateFilter: TPanel
       Left = 0
       Top = 0
-      Width = 858
+      Width = 964
       Height = 21
       Align = alTop
       Color = 15656679
@@ -1322,7 +1322,7 @@ inherited MainCashForm2: TMainCashForm2
   object pnlVIP: TPanel [3]
     Left = 0
     Top = 39
-    Width = 858
+    Width = 964
     Height = 22
     Align = alTop
     Color = 15656679
@@ -1347,7 +1347,7 @@ inherited MainCashForm2: TMainCashForm2
     object lblCashMember: TLabel
       Left = 72
       Top = 1
-      Width = 336
+      Width = 442
       Height = 20
       Align = alClient
       Caption = '...'
@@ -1361,7 +1361,7 @@ inherited MainCashForm2: TMainCashForm2
       ExplicitHeight = 13
     end
     object Panel4: TPanel
-      Left = 408
+      Left = 514
       Top = 1
       Width = 449
       Height = 20
@@ -1457,7 +1457,7 @@ inherited MainCashForm2: TMainCashForm2
   object pnlDiscount: TPanel [4]
     Left = 0
     Top = 61
-    Width = 858
+    Width = 964
     Height = 21
     Align = alTop
     Color = 15656679
@@ -1570,7 +1570,7 @@ inherited MainCashForm2: TMainCashForm2
   object Panel1: TPanel [5]
     Left = 0
     Top = 0
-    Width = 858
+    Width = 964
     Height = 21
     Align = alTop
     TabOrder = 5
@@ -1588,11 +1588,11 @@ inherited MainCashForm2: TMainCashForm2
       ParentFont = False
     end
     object Label11: TLabel
-      Left = 336
+      Left = 334
       Top = 3
-      Width = 178
+      Width = 146
       Height = 13
-      Caption = #1055#1088#1086#1084#1086#1082#1086#1076'  ('#1080#1076#1077#1085#1090#1080#1092#1080#1082#1072#1090#1086#1088' '#1074#1088#1072#1095#1072')'
+      Caption = #1055#1088#1086#1084#1086#1082#1086#1076'  ('#1080#1076#1077#1085#1090#1080#1092'. '#1074#1088#1072#1095#1072')'
       Font.Charset = DEFAULT_CHARSET
       Font.Color = clGray
       Font.Height = -11
@@ -1614,9 +1614,22 @@ inherited MainCashForm2: TMainCashForm2
       ParentFont = False
       Visible = False
     end
+    object Label32: TLabel
+      Left = 565
+      Top = 3
+      Width = 116
+      Height = 13
+      Caption = #1053#1086#1084#1077#1088' '#1079#1072#1082#1072#1079#1072' (VIP '#1095#1077#1082')'
+      Font.Charset = DEFAULT_CHARSET
+      Font.Color = clGray
+      Font.Height = -11
+      Font.Name = 'Tahoma'
+      Font.Style = []
+      ParentFont = False
+    end
     object ceScaner: TcxCurrencyEdit
       Left = 7
-      Top = -1
+      Top = 0
       Properties.DecimalPlaces = 0
       Properties.DisplayFormat = '0'
       Properties.MaxLength = 13
@@ -1625,9 +1638,9 @@ inherited MainCashForm2: TMainCashForm2
       Width = 146
     end
     object PanelMCSAuto: TPanel
-      Left = 595
+      Left = 772
       Top = 1
-      Width = 262
+      Width = 191
       Height = 19
       Align = alRight
       BevelOuter = bvNone
@@ -1635,7 +1648,7 @@ inherited MainCashForm2: TMainCashForm2
       ParentBackground = False
       TabOrder = 1
       object Label6: TLabel
-        Left = 7
+        Left = 3
         Top = 2
         Width = 137
         Height = 13
@@ -1648,7 +1661,7 @@ inherited MainCashForm2: TMainCashForm2
         ParentFont = False
       end
       object edDays: TcxCurrencyEdit
-        Left = 145
+        Left = 137
         Top = -1
         EditValue = 7.000000000000000000
         Properties.DecimalPlaces = 2
@@ -1659,8 +1672,8 @@ inherited MainCashForm2: TMainCashForm2
       end
     end
     object edPromoCode: TcxTextEdit
-      Left = 515
-      Top = -1
+      Left = 481
+      Top = 0
       Properties.MaxLength = 8
       TabOrder = 2
       OnExit = edPromoCodeExit
@@ -1679,11 +1692,22 @@ inherited MainCashForm2: TMainCashForm2
       Visible = False
       Width = 46
     end
+    object ceVIPLoad: TcxCurrencyEdit
+      Left = 684
+      Top = 0
+      Properties.DecimalPlaces = 0
+      Properties.DisplayFormat = '0'
+      Properties.MaxLength = 13
+      TabOrder = 4
+      OnExit = ceVIPLoadExit
+      OnKeyDown = ceVIPLoadKeyDown
+      Width = 80
+    end
   end
   object pnlSP: TPanel [6]
     Left = 0
     Top = 82
-    Width = 858
+    Width = 964
     Height = 36
     Align = alTop
     Color = 15656679
@@ -1758,7 +1782,7 @@ inherited MainCashForm2: TMainCashForm2
     object Panel3: TPanel
       Left = 425
       Top = 1
-      Width = 432
+      Width = 538
       Height = 34
       Align = alClient
       BevelOuter = bvNone
@@ -1822,7 +1846,7 @@ inherited MainCashForm2: TMainCashForm2
   object pnlPromoCode: TPanel [7]
     Left = 0
     Top = 118
-    Width = 858
+    Width = 964
     Height = 21
     Align = alTop
     Color = 15656679
@@ -1946,7 +1970,7 @@ inherited MainCashForm2: TMainCashForm2
   object pnlManualDiscount: TPanel [8]
     Left = 0
     Top = 181
-    Width = 858
+    Width = 964
     Height = 21
     Align = alTop
     Color = 15656679
@@ -1992,7 +2016,7 @@ inherited MainCashForm2: TMainCashForm2
       Width = 60
     end
     object cxButton2: TcxButton
-      Left = 825
+      Left = 931
       Top = 1
       Width = 32
       Height = 19
@@ -2007,7 +2031,7 @@ inherited MainCashForm2: TMainCashForm2
   object pnlSiteDiscount: TPanel [9]
     Left = 0
     Top = 223
-    Width = 858
+    Width = 964
     Height = 21
     Align = alTop
     Color = 15656679
@@ -2052,7 +2076,7 @@ inherited MainCashForm2: TMainCashForm2
       Width = 60
     end
     object cxButton3: TcxButton
-      Left = 825
+      Left = 931
       Top = 1
       Width = 32
       Height = 19
@@ -2067,7 +2091,7 @@ inherited MainCashForm2: TMainCashForm2
   object pnlTaxUnitNight: TPanel [10]
     Left = 0
     Top = 202
-    Width = 858
+    Width = 964
     Height = 21
     Align = alTop
     Color = 15656679
@@ -2106,7 +2130,7 @@ inherited MainCashForm2: TMainCashForm2
   object pnlAnalogFilter: TPanel [11]
     Left = 0
     Top = 244
-    Width = 858
+    Width = 964
     Height = 21
     Align = alTop
     Color = 15656679
@@ -2114,7 +2138,7 @@ inherited MainCashForm2: TMainCashForm2
     TabOrder = 11
     Visible = False
     DesignSize = (
-      858
+      964
       21)
     object Label19: TLabel
       Left = 1
@@ -2155,7 +2179,7 @@ inherited MainCashForm2: TMainCashForm2
       Width = 524
     end
     object ProgressBar1: TProgressBar
-      Left = 757
+      Left = 863
       Top = 9
       Width = 57
       Height = 9
@@ -2165,7 +2189,7 @@ inherited MainCashForm2: TMainCashForm2
       Visible = False
     end
     object cxButton7: TcxButton
-      Left = 825
+      Left = 931
       Top = 1
       Width = 32
       Height = 19
@@ -2180,7 +2204,7 @@ inherited MainCashForm2: TMainCashForm2
   object pnlHelsiError: TPanel [12]
     Left = 0
     Top = 21
-    Width = 858
+    Width = 964
     Height = 18
     Align = alTop
     Color = 12173055
@@ -2217,7 +2241,7 @@ inherited MainCashForm2: TMainCashForm2
       Width = 151
     end
     object cxButton4: TcxButton
-      Left = 825
+      Left = 931
       Top = 1
       Width = 32
       Height = 16
@@ -2229,7 +2253,7 @@ inherited MainCashForm2: TMainCashForm2
       OnClick = cxButton4Click
     end
     object cxButton5: TcxButton
-      Left = 588
+      Left = 694
       Top = 1
       Width = 114
       Height = 16
@@ -2242,7 +2266,7 @@ inherited MainCashForm2: TMainCashForm2
       OnClick = cxButton5Click
     end
     object cxButton6: TcxButton
-      Left = 702
+      Left = 808
       Top = 1
       Width = 123
       Height = 16
@@ -2258,7 +2282,7 @@ inherited MainCashForm2: TMainCashForm2
   object pnlPromoCodeLoyalty: TPanel [13]
     Left = 0
     Top = 139
-    Width = 858
+    Width = 964
     Height = 21
     Align = alTop
     Color = 15656679
@@ -2337,7 +2361,7 @@ inherited MainCashForm2: TMainCashForm2
   object pnlLoyaltySaveMoney: TPanel [14]
     Left = 0
     Top = 160
-    Width = 858
+    Width = 964
     Height = 21
     Align = alTop
     Color = 15656679
@@ -2345,7 +2369,7 @@ inherited MainCashForm2: TMainCashForm2
     TabOrder = 14
     Visible = False
     DesignSize = (
-      858
+      964
       21)
     object Label26: TLabel
       Left = 1
@@ -2393,7 +2417,7 @@ inherited MainCashForm2: TMainCashForm2
       ExplicitHeight = 14
     end
     object lblLoyaltySMSummaRemainder: TLabel
-      Left = 543
+      Left = 649
       Top = 3
       Width = 55
       Height = 13
@@ -2406,9 +2430,10 @@ inherited MainCashForm2: TMainCashForm2
       Font.Name = 'Tahoma'
       Font.Style = []
       ParentFont = False
+      ExplicitLeft = 543
     end
     object lblLoyaltySMSumma: TLabel
-      Left = 671
+      Left = 777
       Top = 3
       Width = 73
       Height = 13
@@ -2421,9 +2446,10 @@ inherited MainCashForm2: TMainCashForm2
       Font.Name = 'Tahoma'
       Font.Style = []
       ParentFont = False
+      ExplicitLeft = 671
     end
     object edLoyaltySMSummaRemainder: TcxCurrencyEdit
-      Left = 605
+      Left = 711
       Top = 0
       Anchors = [akTop, akRight]
       Properties.DisplayFormat = ',0.00;-,0.00'
@@ -2432,7 +2458,7 @@ inherited MainCashForm2: TMainCashForm2
       Width = 60
     end
     object cxButton8: TcxButton
-      Left = 825
+      Left = 931
       Top = 1
       Width = 32
       Height = 19
@@ -2444,7 +2470,7 @@ inherited MainCashForm2: TMainCashForm2
       OnClick = cxButton8Click
     end
     object edLoyaltySMSumma: TcxCurrencyEdit
-      Left = 759
+      Left = 865
       Top = 0
       Anchors = [akTop, akRight]
       Properties.DisplayFormat = ',0.00;-,0.00'
@@ -5212,6 +5238,44 @@ inherited MainCashForm2: TMainCashForm2
       GuiParams = <>
       isShowModal = False
     end
+    object actLoadVIPOrder: TMultiAction
+      Category = #1044#1086#1082#1091#1084#1077#1085#1090#1099
+      MoveParams = <>
+      ActionList = <
+        item
+          Action = actExecLoadVIPOrder
+        end
+        item
+          Action = actSelectCheck
+        end
+        item
+          Action = actSelectLocalVIPCheck
+        end
+        item
+          Action = actRefreshLite
+        end
+        item
+          Action = actUpdateRemains
+        end
+        item
+          Action = actCalcTotalSumm
+        end
+        item
+          Action = actSetFocus
+        end>
+      Caption = 'VIP'
+    end
+    object actExecLoadVIPOrder: TdsdExecStoredProc
+      Category = #1044#1086#1082#1091#1084#1077#1085#1090#1099
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      StoredProc = spSelectChechHead
+      StoredProcList = <
+        item
+          StoredProc = spSelectChechHead
+        end>
+      Caption = 'actExecLoadVIPOrder'
+    end
   end
   object dsdDBViewAddOnMain: TdsdDBViewAddOn
     ErasedFieldName = 'isErased'
@@ -7810,5 +7874,262 @@ inherited MainCashForm2: TMainCashForm2
     PackSize = 1
     Left = 47
     Top = 488
+  end
+  object spSelectChechHead: TdsdStoredProc
+    StoredProcName = 'gpSelect_Movement_CheckLoadCash'
+    DataSets = <
+      item
+      end>
+    OutputType = otResult
+    Params = <
+      item
+        Name = 'inVIPOrder'
+        Value = Null
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'ID'
+        Value = Null
+        Component = FormParams
+        ComponentItem = 'CheckId'
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'BayerName'
+        Value = Null
+        Component = FormParams
+        ComponentItem = 'BayerName'
+        DataType = ftString
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'CashMemberId'
+        Value = Null
+        Component = FormParams
+        ComponentItem = 'ManagerId'
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'CashMember'
+        Value = Null
+        Component = FormParams
+        ComponentItem = 'ManagerName'
+        DataType = ftString
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'DiscountExternalId'
+        Value = Null
+        Component = FormParams
+        ComponentItem = 'DiscountExternalId'
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'DiscountExternalName'
+        Value = Null
+        Component = FormParams
+        ComponentItem = 'DiscountExternalName'
+        DataType = ftString
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'DiscountCardNumber'
+        Value = Null
+        Component = FormParams
+        ComponentItem = 'DiscountCardNumber'
+        DataType = ftString
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'ConfirmedKindName'
+        Value = Null
+        Component = FormParams
+        ComponentItem = 'ConfirmedKindName'
+        DataType = ftString
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'BayerPhone'
+        Value = Null
+        Component = FormParams
+        ComponentItem = 'BayerPhone'
+        DataType = ftString
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'InvNumberOrder'
+        Value = Null
+        Component = FormParams
+        ComponentItem = 'InvNumberOrder'
+        DataType = ftString
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'ConfirmedKindClientName'
+        Value = Null
+        Component = FormParams
+        ComponentItem = 'ConfirmedKindClientName'
+        DataType = ftString
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'PartnerMedicalId'
+        Value = Null
+        Component = FormParams
+        ComponentItem = 'PartnerMedicalId'
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'PartnerMedicalName'
+        Value = Null
+        Component = FormParams
+        ComponentItem = 'PartnerMedicalName'
+        DataType = ftString
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'Ambulance'
+        Value = Null
+        Component = FormParams
+        ComponentItem = 'Ambulance'
+        DataType = ftString
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'MedicSP'
+        Value = Null
+        Component = FormParams
+        ComponentItem = 'MedicSP'
+        DataType = ftString
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'InvNumberSP'
+        Value = Null
+        Component = FormParams
+        ComponentItem = 'InvNumberSP'
+        DataType = ftString
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'OperDateSP'
+        Value = 'NULL'
+        Component = FormParams
+        ComponentItem = 'OperDateSP'
+        DataType = ftDateTime
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'SPTax'
+        Value = Null
+        Component = FormParams
+        ComponentItem = 'SPTax'
+        DataType = ftFloat
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'SPKindId'
+        Value = Null
+        Component = FormParams
+        ComponentItem = 'SPKindId'
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'SPKindName'
+        Value = Null
+        Component = FormParams
+        ComponentItem = 'SPKindName'
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'ManualDiscount'
+        Value = Null
+        Component = FormParams
+        ComponentItem = 'ManualDiscount'
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'PromoCodeID'
+        Value = Null
+        Component = FormParams
+        ComponentItem = 'PromoCodeID'
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'PromoName'
+        Value = Null
+        Component = FormParams
+        ComponentItem = 'PromoName'
+        DataType = ftString
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'PromoCodeGUID'
+        Value = Null
+        Component = FormParams
+        ComponentItem = 'PromoCodeGUID'
+        DataType = ftString
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'PromoCodeChangePercent'
+        Value = Null
+        Component = FormParams
+        ComponentItem = 'PromoCodeChangePercent'
+        DataType = ftFloat
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'MemberSPId'
+        Value = Null
+        Component = FormParams
+        ComponentItem = 'MemberSPID'
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'SiteDiscount'
+        Value = Null
+        Component = FormParams
+        ComponentItem = 'SiteDiscount'
+        DataType = ftFloat
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'PartionDateKindId'
+        Value = Null
+        Component = FormParams
+        ComponentItem = 'PartionDateKindId'
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'LoyaltyChangeSumma'
+        Value = Null
+        Component = FormParams
+        ComponentItem = 'LoyaltyChangeSumma'
+        DataType = ftFloat
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'SummCard'
+        Value = Null
+        Component = FormParams
+        ComponentItem = 'SummCard'
+        DataType = ftFloat
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'isBanAdd'
+        Value = Null
+        Component = FormParams
+        ComponentItem = 'isBanAdd'
+        DataType = ftBoolean
+        MultiSelectSeparator = ','
+      end>
+    PackSize = 1
+    AutoWidth = True
+    Left = 176
+    Top = 216
   end
 end

@@ -3,7 +3,6 @@ inherited Unit_ObjectForm: TUnit_ObjectForm
   ClientHeight = 484
   ClientWidth = 1434
   PopupMenu = PopupMenu
-  ExplicitLeft = -98
   ExplicitWidth = 1450
   ExplicitHeight = 523
   PixelsPerInch = 96
@@ -12,17 +11,17 @@ inherited Unit_ObjectForm: TUnit_ObjectForm
     Width = 1434
     Height = 458
     ExplicitWidth = 1434
-    ExplicitHeight = 451
+    ExplicitHeight = 458
     ClientRectBottom = 458
     ClientRectRight = 1434
     inherited tsMain: TcxTabSheet
       ExplicitWidth = 1434
-      ExplicitHeight = 451
+      ExplicitHeight = 458
       inherited cxGrid: TcxGrid
         Width = 1434
         Height = 458
         ExplicitWidth = 1434
-        ExplicitHeight = 451
+        ExplicitHeight = 458
         inherited cxGridDBTableView: TcxGridDBTableView
           OptionsData.CancelOnExit = True
           OptionsData.Deleting = False
@@ -585,6 +584,13 @@ inherited Unit_ObjectForm: TUnit_ObjectForm
             HeaderHint = #1059#1095#1072#1089#1090#1074#1091#1077#1090' '#1074' '#1086#1090#1095#1077#1090#1077
             Options.Editing = False
             Width = 72
+          end
+          object isShareFromPrice: TcxGridDBColumn
+            Caption = #1044#1077#1083#1080#1090#1100' '#1084#1077#1076#1080#1082#1072#1084#1077#1085#1090#1099' '#1086#1090' '#1094#1077#1085#1099
+            DataBinding.FieldName = 'isShareFromPrice'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 75
           end
           object CreateDate: TcxGridDBColumn
             Caption = #1044#1072#1090#1072' '#1089#1086#1079#1076'. '#1087#1086#1076#1088'.'
@@ -3097,6 +3103,31 @@ inherited Unit_ObjectForm: TUnit_ObjectForm
       Caption = #1056#1072#1073#1086#1090#1072#1102#1090' '#1087#1086' '#1057#1059#1040' - '#1044#1072
       ImageIndex = 51
     end
+    object actUpdate_isShareFromPrice: TMultiAction
+      Category = 'DSDLib'
+      MoveParams = <>
+      AfterAction = actRefresh
+      ActionList = <
+        item
+          Action = actExecUpdate_isShareFromPrice
+        end>
+      View = cxGridDBTableView
+      QuestionBeforeExecute = #1048#1079#1084#1077#1085#1080#1090#1100' '#1087#1088#1080#1079#1085#1072#1082' "'#1044#1077#1083#1080#1090#1100' '#1084#1077#1076#1080#1082#1072#1084#1077#1085#1090#1099' '#1086#1090' '#1094#1077#1085#1099'"?'
+      Caption = #1048#1079#1084#1077#1085#1080#1090#1100' '#1087#1088#1080#1079#1085#1072#1082' "'#1044#1077#1083#1080#1090#1100' '#1084#1077#1076#1080#1082#1072#1084#1077#1085#1090#1099' '#1086#1090' '#1094#1077#1085#1099'"'
+      Hint = #1048#1079#1084#1077#1085#1080#1090#1100' '#1087#1088#1080#1079#1085#1072#1082' "'#1044#1077#1083#1080#1090#1100' '#1084#1077#1076#1080#1082#1072#1084#1077#1085#1090#1099' '#1086#1090' '#1094#1077#1085#1099'"'
+      ImageIndex = 79
+    end
+    object actExecUpdate_isShareFromPrice: TdsdExecStoredProc
+      Category = 'DSDLib'
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      StoredProc = spUpdate_isShareFromPrice
+      StoredProcList = <
+        item
+          StoredProc = spUpdate_isShareFromPrice
+        end>
+      Caption = 'actExecUpdate_isShareFromPrice'
+    end
   end
   inherited MasterDS: TDataSource
     Left = 64
@@ -3761,6 +3792,14 @@ inherited Unit_ObjectForm: TUnit_ObjectForm
         item
           Visible = True
           ItemName = 'dxBarButton8'
+        end
+        item
+          Visible = True
+          ItemName = 'dxBarStatic2'
+        end
+        item
+          Visible = True
+          ItemName = 'bbisShareFromPrice'
         end>
     end
     object dxBarButton6: TdxBarButton
@@ -3792,6 +3831,14 @@ inherited Unit_ObjectForm: TUnit_ObjectForm
     object dxBarButton10: TdxBarButton
       Action = macUpdate_Unit_isSUA_Yes_list
       Category = 0
+    end
+    object bbisShareFromPrice: TdxBarButton
+      Action = actUpdate_isShareFromPrice
+      Category = 0
+    end
+    object dxBarStatic2: TdxBarStatic
+      Category = 0
+      Visible = ivAlways
     end
   end
   inherited DBViewAddOn: TdsdDBViewAddOn
@@ -6112,5 +6159,31 @@ inherited Unit_ObjectForm: TUnit_ObjectForm
     PackSize = 1
     Left = 1336
     Top = 347
+  end
+  object spUpdate_isShareFromPrice: TdsdStoredProc
+    StoredProcName = 'gpUpdate_Unit_isShareFromPrice'
+    DataSets = <>
+    OutputType = otResult
+    Params = <
+      item
+        Name = 'inId'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'Id'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inisisShareFromPrice'
+        Value = True
+        Component = MasterCDS
+        ComponentItem = 'isShareFromPrice'
+        DataType = ftBoolean
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end>
+    PackSize = 1
+    Left = 1184
+    Top = 355
   end
 end

@@ -1873,11 +1873,14 @@ CREATE OR REPLACE FUNCTION zc_ObjectFloat_Goods_KoeffSUN_Supplementv1() RETURNS 
 INSERT INTO ObjectFloatDesc (DescId, Code, ItemName)
   SELECT zc_Object_Goods(),'zc_ObjectFloat_Goods_KoeffSUN_Supplementv1', 'Кратность по дополнению СУН1' WHERE NOT EXISTS (SELECT * FROM ObjectFloatDesc WHERE Code = 'zc_ObjectFloat_Goods_KoeffSUN_Supplementv1');
   
-  
+CREATE OR REPLACE FUNCTION zc_ObjectFloat_Unit_ShareFromPrice() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM ObjectFloatDesc WHERE Code = 'zc_ObjectFloat_Unit_ShareFromPrice'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
+INSERT INTO ObjectFloatDesc (DescId, Code, ItemName)
+  SELECT zc_Object_Unit(),'zc_ObjectFloat_Unit_ShareFromPrice', 'Делить медикамент от цены' WHERE NOT EXISTS (SELECT * FROM ObjectFloatDesc WHERE Code = 'zc_ObjectFloat_Unit_ShareFromPrice');  
 
 /*-------------------------------------------------------------------------------
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.   Воробкало А.А.   Шаблий О.В.
+ 09.12.20                                                                                      * zc_ObjectFloat_Unit_ShareFromPrice
  05.12.20                                                                                      * zc_ObjectFloat_Goods_KoeffSUN_Supplementv1
  20.11.20                                                                                      * zc_ObjectFloat_Juridical_CodeOrangeCard
  17.11.20         * zc_ObjectFloat_Asset_KW

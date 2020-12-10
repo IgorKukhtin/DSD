@@ -26172,4 +26172,34 @@ object MainCashForm2: TMainCashForm2
     Left = 536
     Top = 24
   end
+  object spPauseUpdateRemains: TdsdStoredProc
+    StoredProcName = 'gpSelect_Cash_PauseUpdateRemains'
+    DataSets = <>
+    OutputType = otResult
+    Params = <
+      item
+        Name = 'outisPause'
+        Value = Null
+        DataType = ftBoolean
+        MultiSelectSeparator = ','
+      end>
+    PackSize = 1
+    Left = 56
+    Top = 280
+  end
+  object spPauseUpdateCheck: TdsdStoredProc
+    StoredProcName = 'gpSelect_Cash_PauseUpdateCheck'
+    DataSets = <>
+    OutputType = otResult
+    Params = <
+      item
+        Name = 'outisPause'
+        Value = Null
+        DataType = ftBoolean
+        MultiSelectSeparator = ','
+      end>
+    PackSize = 1
+    Left = 168
+    Top = 280
+  end
 end

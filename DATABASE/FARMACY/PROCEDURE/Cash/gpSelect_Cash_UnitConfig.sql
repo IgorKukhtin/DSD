@@ -205,7 +205,7 @@ BEGIN
        , COALESCE (ObjectBoolean_NotCashListDiff.ValueData, FALSE):: Boolean   AS isNotCashListDiff
 
        , Object_Parent.ValueData                             AS ParentName
-       , ObjectFloat_ShareFromPrice.ValueData                AS ShareFromPrice
+       , CASE WHEN COALESCE (ObjectBoolean_ShareFromPrice.ValueData, FALSE) = TRUE THEN ObjectFloat_ShareFromPrice.ValueData ELSE 0 END::TFloat            AS ShareFromPrice
 
        , COALESCE (tmpTaxUnitNight.UnitId, 0) <> 0
          AND COALESCE(ObjectDate_TaxUnitStart.ValueData ::Time,'00:00') <> '00:00'
@@ -280,6 +280,9 @@ BEGIN
         LEFT JOIN ObjectBoolean AS ObjectBoolean_TechnicalRediscount
                                 ON ObjectBoolean_TechnicalRediscount.ObjectId = Object_Unit.Id
                                AND ObjectBoolean_TechnicalRediscount.DescId = zc_ObjectBoolean_Unit_TechnicalRediscount()
+        LEFT JOIN ObjectBoolean AS ObjectBoolean_ShareFromPrice
+                                ON ObjectBoolean_ShareFromPrice.ObjectId = Object_Unit.Id
+                               AND ObjectBoolean_ShareFromPrice.DescId = zc_ObjectBoolean_Unit_ShareFromPrice()
 
         LEFT JOIN ObjectString AS ObjectString_PromoForSale
                                ON ObjectString_PromoForSale.ObjectId = Object_Unit.Id 
