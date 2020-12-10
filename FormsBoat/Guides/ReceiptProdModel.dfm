@@ -2,7 +2,7 @@ object ReceiptProdModelForm: TReceiptProdModelForm
   Left = 0
   Top = 0
   Caption = #1057#1087#1088#1072#1074#1086#1095#1085#1080#1082' <'#1064#1072#1073#1083#1086#1085' '#1089#1073#1086#1088#1082#1072' '#1052#1086#1076#1077#1083#1080'>'
-  ClientHeight = 443
+  ClientHeight = 480
   ClientWidth = 988
   Color = clBtnFace
   Font.Charset = DEFAULT_CHARSET
@@ -526,22 +526,24 @@ object ReceiptProdModelForm: TReceiptProdModelForm
     Left = 544
     Top = 240
     Width = 444
-    Height = 203
+    Height = 240
     Align = alRight
     BevelEdges = [beLeft]
     BevelKind = bkTile
     BevelOuter = bvNone
     TabOrder = 1
+    ExplicitHeight = 203
     object cxGridProdColorPattern: TcxGrid
       Left = 0
       Top = 17
       Width = 442
-      Height = 186
+      Height = 223
       Align = alClient
       PopupMenu = PopupMenuOption
       TabOrder = 0
       LookAndFeel.NativeStyle = True
       LookAndFeel.SkinName = 'UserSkin'
+      ExplicitHeight = 186
       object cxGridDBTableViewProdColorPattern: TcxGridDBTableView
         Navigator.Buttons.CustomButtons = <>
         DataController.DataSource = ProdColorPatternDS
@@ -960,21 +962,23 @@ object ReceiptProdModelForm: TReceiptProdModelForm
     Left = 0
     Top = 240
     Width = 536
-    Height = 203
+    Height = 240
     Align = alClient
     BevelEdges = [beLeft]
     BevelOuter = bvNone
     TabOrder = 2
+    ExplicitHeight = 203
     object cxGridGoods: TcxGrid
       Left = 0
       Top = 17
       Width = 536
-      Height = 186
+      Height = 223
       Align = alClient
       PopupMenu = PopupMenuColor
       TabOrder = 0
       LookAndFeel.NativeStyle = True
       LookAndFeel.SkinName = 'UserSkin'
+      ExplicitHeight = 186
       object cxGridDBTableViewGoods: TcxGridDBTableView
         Navigator.Buttons.CustomButtons = <>
         DataController.DataSource = GoodsDS
@@ -1310,8 +1314,6 @@ object ReceiptProdModelForm: TReceiptProdModelForm
         end
         object ObjectId_ch1: TcxGridDBColumn
           DataBinding.FieldName = 'ObjectId'
-          Visible = False
-          VisibleForCustomization = False
           Width = 60
         end
       end
@@ -1340,6 +1342,11 @@ object ReceiptProdModelForm: TReceiptProdModelForm
             Format = ',0.00##'
             Kind = skSum
             Column = BasisWVAT_summ_ch3
+          end
+          item
+            Format = ',0.00##'
+            Kind = skSum
+            Column = Value_ch3
           end>
         DataController.Summary.FooterSummaryItems = <
           item
@@ -1361,6 +1368,11 @@ object ReceiptProdModelForm: TReceiptProdModelForm
             Format = ',0.00##'
             Kind = skSum
             Column = BasisWVAT_summ_ch3
+          end
+          item
+            Format = ',0.00##'
+            Kind = skSum
+            Column = Value_ch3
           end>
         DataController.Summary.SummaryGroups = <>
         Images = dmMain.ImageList
@@ -1558,8 +1570,6 @@ object ReceiptProdModelForm: TReceiptProdModelForm
         end
         object GoodsId_parent_ch3: TcxGridDBColumn
           DataBinding.FieldName = 'GoodsId_parent'
-          Visible = False
-          VisibleForCustomization = False
           Width = 60
         end
       end
@@ -1594,9 +1604,10 @@ object ReceiptProdModelForm: TReceiptProdModelForm
     Left = 536
     Top = 240
     Width = 8
-    Height = 203
+    Height = 240
     AlignSplitter = salRight
     Control = PanelProdColorPattern
+    ExplicitHeight = 203
   end
   object DataSource: TDataSource
     DataSet = MasterCDS
@@ -2523,6 +2534,7 @@ object ReceiptProdModelForm: TReceiptProdModelForm
   end
   object GoodsCDS: TClientDataSet
     Aggregates = <>
+    FilterOptions = [foCaseInsensitive]
     IndexFieldNames = 'ReceiptProdModelId'
     MasterFields = 'Id'
     MasterSource = DataSource
@@ -2587,8 +2599,8 @@ object ReceiptProdModelForm: TReceiptProdModelForm
         MultiSelectSeparator = ','
       end>
     PackSize = 1
-    Left = 104
-    Top = 312
+    Left = 88
+    Top = 256
   end
   object spSelect_ProdColorPattern: TdsdStoredProc
     StoredProcName = 'gpSelect_Object_ReceiptProdModelChild_ProdColorPattern'
@@ -2942,58 +2954,7 @@ object ReceiptProdModelForm: TReceiptProdModelForm
     ActionItemList = <>
     SortImages = dmMain.SortImageList
     OnlyEditingCellOnEnter = False
-    ColorRuleList = <
-      item
-        ColorValueList = <>
-      end
-      item
-        ColorValueList = <>
-      end
-      item
-        ColorValueList = <>
-      end
-      item
-        ColorValueList = <>
-      end
-      item
-        ColorValueList = <>
-      end
-      item
-        ColorValueList = <>
-      end
-      item
-        ColorValueList = <>
-      end
-      item
-        ColorValueList = <>
-      end
-      item
-        ColorValueList = <>
-      end
-      item
-        ColorValueList = <>
-      end
-      item
-        ColorValueList = <>
-      end
-      item
-        ColorValueList = <>
-      end
-      item
-        ColorValueList = <>
-      end
-      item
-        ColorValueList = <>
-      end
-      item
-        ColorValueList = <>
-      end
-      item
-        ColorValueList = <>
-      end
-      item
-        ColorValueList = <>
-      end>
+    ColorRuleList = <>
     ColumnAddOnList = <>
     ColumnEnterList = <>
     SummaryItemList = <>
@@ -3004,7 +2965,7 @@ object ReceiptProdModelForm: TReceiptProdModelForm
   end
   object GoodsChildCDS: TClientDataSet
     Aggregates = <>
-    FilterOptions = [foCaseInsensitive]
+    FilterOptions = [foCaseInsensitive, foNoPartialCompare]
     IndexFieldNames = 'GoodsId_parent'
     MasterFields = 'ObjectId'
     MasterSource = GoodsDS
