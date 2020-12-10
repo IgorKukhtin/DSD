@@ -92,7 +92,7 @@
       end>
     Properties.ReadOnly = True
     TabOrder = 7
-    Width = 273
+    Width = 282
   end
   object ceInfoMoney: TcxButtonEdit [12]
     Left = 312
@@ -126,7 +126,7 @@
       end>
     Properties.ReadOnly = True
     TabOrder = 10
-    Width = 273
+    Width = 282
   end
   object cxLabel9: TcxLabel [15]
     Left = 8
@@ -143,7 +143,7 @@
       end>
     Properties.ReadOnly = True
     TabOrder = 5
-    Width = 273
+    Width = 188
   end
   object cxLabel6: TcxLabel [17]
     Left = 8
@@ -302,13 +302,13 @@
     Caption = #1059#1089#1083'. '#1076#1086#1075'. '#1075#1088#1085
   end
   object ceValue: TcxCurrencyEdit [39]
-    Left = 210
+    Left = 202
     Top = 129
     Properties.DecimalPlaces = 4
     Properties.DisplayFormat = ',0.####'
     Properties.ReadOnly = True
     TabOrder = 39
-    Width = 71
+    Width = 88
   end
   object cxLabel18: TcxLabel [40]
     Left = 312
@@ -351,7 +351,20 @@
     Left = 202
     Top = 276
     TabOrder = 45
-    Width = 79
+    Width = 88
+  end
+  object cxLabel21: TcxLabel [46]
+    Left = 202
+    Top = 61
+    Caption = #1042#1099#1074#1086#1079' '#1092#1072#1082#1090', '#1075#1088#1085
+  end
+  object edSummTransport: TcxCurrencyEdit [47]
+    Left = 202
+    Top = 79
+    Properties.DecimalPlaces = 4
+    Properties.DisplayFormat = ',0.####'
+    TabOrder = 47
+    Width = 90
   end
   inherited UserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn
     Left = 59
@@ -443,6 +456,14 @@
         Value = 0.000000000000000000
         DataType = ftFloat
         ParamType = ptInputOutput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inSummTransport'
+        Value = Null
+        Component = edSummTransport
+        DataType = ftFloat
+        ParamType = ptInput
         MultiSelectSeparator = ','
       end
       item
@@ -580,8 +601,8 @@
         ParamType = ptInput
         MultiSelectSeparator = ','
       end>
-    Left = 248
-    Top = 60
+    Left = 144
+    Top = 84
   end
   inherited spGet: TdsdStoredProc
     StoredProcName = 'gpGet_Movement_TransportService'
@@ -639,6 +660,13 @@
       item
         Name = 'Amount'
         Value = 0.000000000000000000
+        DataType = ftFloat
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'SummTransport'
+        Value = Null
+        Component = edSummTransport
         DataType = ftFloat
         MultiSelectSeparator = ','
       end
@@ -854,8 +882,8 @@
         DataType = ftString
         MultiSelectSeparator = ','
       end>
-    Left = 248
-    Top = 12
+    Left = 232
+    Top = 76
   end
   object GuidesContractConditionKind_Old: TdsdGuides
     KeyField = 'Id'
@@ -887,8 +915,8 @@
         ComponentItem = 'Id'
         MultiSelectSeparator = ','
       end>
-    Left = 176
-    Top = 122
+    Left = 144
+    Top = 138
   end
   object GuidesPaidKind: TdsdGuides
     KeyField = 'Id'
@@ -941,8 +969,8 @@
         DataType = ftString
         MultiSelectSeparator = ','
       end>
-    Left = 144
-    Top = 169
+    Left = 176
+    Top = 185
   end
   object GuidesInfoMoney: TdsdGuides
     KeyField = 'Id'
@@ -1099,8 +1127,8 @@
         ComponentItem = 'inPaidKindId'
         MultiSelectSeparator = ','
       end>
-    Left = 128
-    Top = 63
+    Left = 72
+    Top = 127
   end
   object GuidesContractJuridical: TdsdGuides
     KeyField = 'Id'

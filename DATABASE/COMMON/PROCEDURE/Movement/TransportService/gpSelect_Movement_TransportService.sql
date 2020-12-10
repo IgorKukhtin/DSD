@@ -16,7 +16,8 @@ RETURNS TABLE (Id Integer, MIId Integer, InvNumber Integer, OperDate TDateTime
              , StatusCode Integer, StatusName TVarChar
              , StartRunPlan TDateTime, StartRun TDateTime
              , Amount TFloat, SummAdd TFloat, SummTotal TFloat, SummReestr TFloat
-             , WeightTransport TFloat, Distance TFloat, Price TFloat, CountPoint TFloat, TrevelTime TFloat
+             , SummTransport TFloat, WeightTransport TFloat
+             , Distance TFloat, Price TFloat, CountPoint TFloat, TrevelTime TFloat
              , ContractValue TFloat, ContractValueAdd TFloat
              , isSummReestr Boolean
              , Comment TVarChar
@@ -100,6 +101,7 @@ BEGIN
                                                                      , zc_MIFloat_ContractValue()
                                                                      , zc_MIFloat_ContractValueAdd()
                                                                      , zc_MIFloat_SummReestr()
+                                                                     , zc_MIFloat_SummTransport()
                                                                      )
                                    )
 
@@ -149,7 +151,8 @@ BEGIN
            , MIFloat_SummAdd.ValueData             AS SummAdd
            , (MovementItem.Amount + COALESCE (MIFloat_SummAdd.ValueData, 0)) :: TFloat AS AmountSummTotal
            , MIFloat_SummReestr.ValueData ::TFloat AS SummReestr
-           , MIFloat_WeightTransport.ValueData     AS WeightTransport
+           , MIFloat_SummTransport.ValueData   ::TFloat    AS SummTransport
+           , MIFloat_WeightTransport.ValueData ::TFloat    AS WeightTransport
            , MIFloat_Distance.ValueData            AS Distance
            , MIFloat_Price.ValueData               AS Price
            , MIFloat_CountPoint.ValueData          AS CountPoint
@@ -162,8 +165,8 @@ BEGIN
            , MIString_Comment.ValueData  AS Comment
 
            , View_Contract_InvNumber.ContractId
-           , View_Contract_InvNumber.ContractCode   AS ContractCode
-           , View_Contract_InvNumber.InvNumber      AS ContractName
+           , View_Contract_InvNumber.ContractCode  AS ContractCode
+           , View_Contract_InvNumber.InvNumber     AS ContractName
 
            , View_InfoMoney.InfoMoneyId
            , View_InfoMoney.InfoMoneyCode
@@ -218,6 +221,10 @@ BEGIN
 
             LEFT JOIN Object AS Object_Juridical ON Object_Juridical.Id = MovementItem.ObjectId 
  
+            LEFT JOIN tmpMovementItemFloat AS MIFloat_SummTransport
+                                           ON MIFloat_SummTransport.MovementItemId = MovementItem.Id
+                                          AND MIFloat_SummTransport.DescId = zc_MIFloat_SummTransport()
+
             LEFT JOIN tmpMovementItemFloat AS MIFloat_WeightTransport
                                            ON MIFloat_WeightTransport.MovementItemId = MovementItem.Id
                                           AND MIFloat_WeightTransport.DescId = zc_MIFloat_WeightTransport()
@@ -291,7 +298,7 @@ BEGIN
             LEFT JOIN Object AS Object_MemberExternal ON Object_MemberExternal.Id = MILinkObject_MemberExternal.ObjectId
 
             LEFT JOIN tmpObjectString ON tmpObjectString.ObjectId = MILinkObject_MemberExternal.ObjectId
-            
+
             LEFT JOIN ObjectLink AS ObjectLink_Car_CarModel ON ObjectLink_Car_CarModel.ObjectId = Object_Car.Id
                                                            AND ObjectLink_Car_CarModel.DescId = zc_ObjectLink_Car_CarModel()
             LEFT JOIN Object AS Object_CarModel ON Object_CarModel.Id = ObjectLink_Car_CarModel.ChildObjectId
@@ -310,6 +317,7 @@ $BODY$
 /*
  »—“Œ–»ﬂ –¿«–¿¡Œ“ »: ƒ¿“¿, ¿¬“Œ–
                ‘ÂÎÓÌ˛Í ».¬.    ÛıÚËÌ ».¬.    ÎËÏÂÌÚ¸Â‚  .».   Ã‡Ì¸ÍÓ ƒ. 
+ 10.12.20         * add SummTransport
  28.05.20         *
  07.10.16         * add inJuridicalBasisId
  03.07.16         *

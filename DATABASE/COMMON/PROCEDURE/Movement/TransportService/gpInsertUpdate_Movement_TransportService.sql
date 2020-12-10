@@ -6,7 +6,8 @@ DROP FUNCTION IF EXISTS gpInsertUpdate_Movement_TransportService (Integer, Integ
 DROP FUNCTION IF EXISTS gpInsertUpdate_Movement_TransportService (Integer, Integer, TVarChar, TDateTime, TDateTime, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TVarChar, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, TVarChar);
 DROP FUNCTION IF EXISTS gpInsertUpdate_Movement_TransportService (Integer, Integer, TVarChar, TDateTime, TDateTime, TDateTime, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TVarChar, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, TVarChar);
 --DROP FUNCTION IF EXISTS gpInsertUpdate_Movement_TransportService (Integer, Integer, TVarChar, TDateTime, TDateTime, TDateTime, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TVarChar, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, TVarChar);
-DROP FUNCTION IF EXISTS gpInsertUpdate_Movement_TransportService (Integer, Integer, TVarChar, TDateTime, TDateTime, TDateTime, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TVarChar, TVarChar, TVarChar, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, TVarChar);
+--DROP FUNCTION IF EXISTS gpInsertUpdate_Movement_TransportService (Integer, Integer, TVarChar, TDateTime, TDateTime, TDateTime, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TVarChar, TVarChar, TVarChar, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, TVarChar);
+DROP FUNCTION IF EXISTS gpInsertUpdate_Movement_TransportService (Integer, Integer, TVarChar, TDateTime, TDateTime, TDateTime, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TVarChar, TVarChar, TVarChar, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpInsertUpdate_Movement_TransportService(
  INOUT ioId                       Integer   , -- Ключ объекта <Документ>
@@ -18,6 +19,7 @@ CREATE OR REPLACE FUNCTION gpInsertUpdate_Movement_TransportService(
     IN inStartRun                 TDateTime , -- Дата/Время выезда факт
 
  INOUT ioAmount                   TFloat    , -- Сумма
+    IN inSummTransport            TFloat    , -- Вывоз факт, грн
     IN inWeightTransport          TFloat    , -- Вывоз факт, кг
     IN inDistance                 TFloat    , -- Пробег факт, км
     IN inPrice                    TFloat    , -- Цена (топлива)
@@ -78,7 +80,7 @@ BEGIN
      -- Расчитываем Сумму
      IF inContractConditionKindId IN (zc_Enum_ContractConditionKind_TransportWeight()) -- Ставка за вывоз, грн/кг
      THEN
-                   -- по условиям в договоре "Ставка за вывоз, грн/кг"
+          -- по условиям в договоре "Ставка за вывоз, грн/кг"
          vbValue:= COALESCE ((SELECT ObjectFloat_Value.ValueData
                                FROM ObjectLink AS ObjectLink_ContractCondition_Contract
                                     JOIN ObjectLink AS ObjectLink_ContractCondition_ContractConditionKind
@@ -93,6 +95,23 @@ BEGIN
                               ), 0);
 
          ioAmount:= COALESCE (inWeightTransport, 0) * vbValue;
+     ELSEIF inContractConditionKindId IN (zc_Enum_ContractConditionKind_TransportSumm()) -- Ставка за вывоз, грн/кг (% от суммы)
+     THEN
+          -- по условиям в договоре "Ставка за вывоз, грн/кг"
+         vbValue:= COALESCE ((SELECT ObjectFloat_Value.ValueData
+                               FROM ObjectLink AS ObjectLink_ContractCondition_Contract
+                                    JOIN ObjectLink AS ObjectLink_ContractCondition_ContractConditionKind
+                                                    ON ObjectLink_ContractCondition_ContractConditionKind.ObjectId = ObjectLink_ContractCondition_Contract.ObjectId
+                                                   AND ObjectLink_ContractCondition_ContractConditionKind.ChildObjectId = inContractConditionKindId
+                                                   AND ObjectLink_ContractCondition_ContractConditionKind.DescId = zc_ObjectLink_ContractCondition_ContractConditionKind()
+                                    LEFT JOIN ObjectFloat AS ObjectFloat_Value 
+                                                          ON ObjectFloat_Value.ObjectId = ObjectLink_ContractCondition_Contract.ObjectId
+                                                         AND ObjectFloat_Value.DescId = zc_ObjectFloat_ContractCondition_Value()
+                               WHERE ObjectLink_ContractCondition_Contract.DescId = zc_ObjectLink_ContractCondition_Contract()
+                                 AND ObjectLink_ContractCondition_Contract.ChildObjectId = inContractId
+                              ), 0);
+
+         ioAmount:= COALESCE (inSummTransport, 0) * vbValue;
      ELSE
      IF inContractConditionKindId IN (zc_Enum_ContractConditionKind_TransportOneTrip()   -- Ставка за маршрут в одну сторону, грн 
                                     , zc_Enum_ContractConditionKind_TransportOneTrip10() -- Ставка за маршрут 10т. в одну сторону, грн 
@@ -273,7 +292,8 @@ BEGIN
      -- сохранили <Элемент документа>
      ioMIId := lpInsertUpdate_MovementItem (ioMIId, zc_MI_Master(), inJuridicalId, ioId, ioAmount, NULL);
 
-
+     -- сохранили свойство <Вывоз факт, грн>
+     PERFORM lpInsertUpdate_MovementItemFloat (zc_MIFloat_SummTransport(), ioMIId, inSummTransport);
      -- сохранили свойство <Вывоз факт, кг>
      PERFORM lpInsertUpdate_MovementItemFloat (zc_MIFloat_WeightTransport(), ioMIId, inWeightTransport);
      -- сохранили свойство <Пробег факт, км>
@@ -351,6 +371,7 @@ $BODY$
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.
+ 10.12.20         * add inSummTransport
  27.01.20         * add inMemberExternalName
                         inDriverCertificate
  03.07.16         * Add inSummAdd, vbValue, vbValueAdd

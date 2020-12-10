@@ -180,8 +180,8 @@ BEGIN
                         , (COALESCE (tmp.Sale_Weight,0) - COALESCE (tmp.Return_Weight,0) ) AS SaleReturn_Weight
 
                    FROM (SELECT tmp.PartnerId
-                              , SUM (tmp.Sale_Summ)                   AS Sale_Summ
-                              , SUM (tmp.Return_Summ)                 AS Return_Summ
+                              , SUM (COALESCE (tmp.Sale_Summ,0))      AS Sale_Summ
+                              , SUM (COALESCE (tmp.Return_Summ,0))    AS Return_Summ
                               , SUM (tmp.Sale_AmountPartner_Weight)   AS Sale_Weight
                               , SUM (tmp.Return_AmountPartner_Weight) AS Return_Weight
                          FROM gpReport_GoodsMI_SaleReturnIn (inStartDate    := inStartDate    ::TDateTime 

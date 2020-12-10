@@ -65,6 +65,11 @@ inherited TransportServiceJournalForm: TTransportServiceJournalForm
               Format = ',0.####'
               Kind = skSum
               Column = SummReestr
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = SummTransport
             end>
           DataController.Summary.FooterSummaryItems = <
             item
@@ -106,6 +111,11 @@ inherited TransportServiceJournalForm: TTransportServiceJournalForm
               Format = ',0.####'
               Kind = skSum
               Column = SummReestr
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = SummTransport
             end>
           OptionsData.CancelOnExit = True
           OptionsData.Deleting = False
@@ -205,6 +215,17 @@ inherited TransportServiceJournalForm: TTransportServiceJournalForm
             HeaderHint = #1056#1072#1089#1095#1077#1090' '#1057#1091#1084#1084#1099' '#1086#1090#1075#1088#1091#1079#1082#1080
             Options.Editing = False
             Width = 100
+          end
+          object SummTransport: TcxGridDBColumn
+            Caption = #1042#1099#1074#1086#1079' '#1092#1072#1082#1090', '#1075#1088#1085
+            DataBinding.FieldName = 'SummTransport'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 4
+            Properties.DisplayFormat = ',0.####;-,0.####; ;'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 70
           end
           object WeightTransport: TcxGridDBColumn
             Caption = #1042#1099#1074#1086#1079' '#1092#1072#1082#1090', '#1082#1075
@@ -1051,7 +1072,7 @@ inherited TransportServiceJournalForm: TTransportServiceJournalForm
       end
       item
         Name = 'inislastcomplete'
-        Value = 'False'
+        Value = False
         DataType = ftBoolean
         ParamType = ptUnknown
         MultiSelectSeparator = ','

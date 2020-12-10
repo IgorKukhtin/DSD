@@ -67,6 +67,8 @@ type
     GuidesMemberExternal: TdsdGuides;
     cxLabel20: TcxLabel;
     edDriverCertificate: TcxTextEdit;
+    cxLabel21: TcxLabel;
+    edSummTransport: TcxCurrencyEdit;
   private
     { Private declarations }
   public
