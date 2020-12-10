@@ -65,7 +65,9 @@ BEGIN
      -- !!!«амена!!!
      IF zc_Enum_GlobalConst_isTerry() = FALSE
      THEN
-         inShowAll:= NOT EXISTS (SELECT 1 FROM MovementItem WHERE MovementItem.MovementId = inMovementId AND MovementItem.DescId = zc_MI_Master() AND MovementItem.isErased = FALSE);
+         -- inShowAll:= NOT EXISTS (SELECT 1 FROM MovementItem WHERE MovementItem.MovementId = inMovementId AND MovementItem.DescId = zc_MI_Master() AND MovementItem.isErased = FALSE);
+         -- теперь попробуем в таком режиме
+         inShowAll:= FALSE;
      END IF;
 
 

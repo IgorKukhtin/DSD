@@ -123,7 +123,7 @@ BEGIN
      ELSE
          -- из Истории
          ioOperPriceList := COALESCE ((SELECT tmp.ValuePrice FROM lpGet_ObjectHistory_PriceListItem (vbOperDate
-                                                                                                   , zc_PriceList_Basis()
+                                                                                                   , (SELECT OL.ChildObjectId FROM ObjectLink AS OL WHERE OL.ObjectId = vbFromId AND OL.DescId = zc_ObjectLink_Unit_PriceList())
                                                                                                    , vbGoodsId
                                                                                                     ) AS tmp), 0);
      END IF;
@@ -242,8 +242,6 @@ BEGIN
 
      -- PriceListTo - start - если есть цена и прайс для подр. кому определен сохраняем цену
      IF COALESCE (vbPriceListId_to,0) <> 0 AND COALESCE (ioOperPriceListTo_start, 0) <> 0
-        -- !!!временно
-        AND vbToId = 6319 -- магазин Киев
      THEN
          -- найдем - из Истории
          SELECT COALESCE (lpGet.StartDate, zc_DateStart()) AS StartDate
@@ -255,8 +253,11 @@ BEGIN
                                                          , vbGoodsId
                                                           ) AS lpGet ON 1=1;
          -- если нет цены или была такая же цена, т.е. её корректируют
-         IF COALESCE (vbOperPriceListTo_find, 0) = 0
-            OR vbOperPriceListTo_find = (SELECT MIF.ValueData FROM MovementItemFloat AS MIF WHERE MIF.MovementItemId = ioId AND MIF.DescId = zc_MIFloat_OperPriceListTo_start())
+         IF (COALESCE (vbOperPriceListTo_find, 0) = 0
+             OR vbOperPriceListTo_find = (SELECT MIF.ValueData FROM MovementItemFloat AS MIF WHERE MIF.MovementItemId = ioId AND MIF.DescId = zc_MIFloat_OperPriceListTo_start())
+            )
+            -- !!!временно
+            AND vbToId = 6319 -- магазин Киев
          THEN
              PERFORM lpInsertUpdate_ObjectHistory_PriceListItem (ioId         := 0
                                                                , inPriceListId:= vbPriceListId_to
@@ -273,8 +274,6 @@ BEGIN
 
      -- PriceListTo - если есть цена и прайс для подр. кому определен сохраняем цену
      IF COALESCE (vbPriceListId_to,0) <> 0 AND COALESCE (ioOperPriceListTo,0) <> 0
-        -- !!!временно
-        AND vbToId = 6319 -- магазин Киев
      THEN
          -- найдем - из Истории
          SELECT COALESCE (lpGet.StartDate, vbOperDate)     AS StartDate
@@ -286,9 +285,12 @@ BEGIN
                                                          , vbGoodsId
                                                           ) AS lpGet ON 1=1;
          -- если нет цены или была такая же цена, т.е. её корректируют
-         IF  vbOperPriceListTo_find = 0
+         IF (vbOperPriceListTo_find = 0
           OR vbStartDate_plTo_find  = zc_DateStart()
           OR vbOperPriceListTo_find = (SELECT MIF.ValueData FROM MovementItemFloat AS MIF WHERE MIF.MovementItemId = ioId AND MIF.DescId = zc_MIFloat_OperPriceListTo())
+            )
+          -- !!!временно
+          AND vbToId = 6319 -- магазин Киев
          THEN
              PERFORM gpInsertUpdate_ObjectHistory_PriceListItemLast (ioId         := 0
                                                                    , inPriceListId:= vbPriceListId_to

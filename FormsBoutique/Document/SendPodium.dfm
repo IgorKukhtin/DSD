@@ -307,6 +307,7 @@ object SendPodiumForm: TSendPodiumForm
                 Default = True
                 Kind = bkEllipsis
               end>
+            Properties.ReadOnly = True
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Width = 70
@@ -348,8 +349,10 @@ object SendPodiumForm: TSendPodiumForm
                 Default = True
                 Kind = bkEllipsis
               end>
+            Properties.ReadOnly = True
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
+            Options.Editing = False
             Width = 55
           end
           object MeasureName: TcxGridDBColumn
@@ -758,7 +761,7 @@ object SendPodiumForm: TSendPodiumForm
     object edOperDate: TcxDateEdit
       Left = 87
       Top = 23
-      EditValue = 42160d
+      EditValue = 44197d
       Properties.SaveTime = False
       Properties.ShowTime = False
       TabOrder = 1
@@ -3730,6 +3733,15 @@ object SendPodiumForm: TSendPodiumForm
       end
       item
         Component = PeriodChoice
+      end
+      item
+        Component = GuidesFrom
+      end
+      item
+        Component = GuidesTo
+      end
+      item
+        Component = GuidesGoodsPrint
       end>
     Left = 200
     Top = 336
