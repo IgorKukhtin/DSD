@@ -466,6 +466,13 @@ BEGIN
            , tmpMovement_QualityParams.OperDateOut
 
            , (tmpMovement_QualityParams.OperDateIn + (CASE WHEN tmpMIGoodsByGoodsKind.NormInDays_gk > 0 THEN (tmpMIGoodsByGoodsKind.NormInDays_gk) :: TVarChar ELSE '0' END || ' DAY') :: INTERVAl) :: TDateTime AS OperDate_end
+           
+             -- 2393 - ÊÎÂÁÀÑÊÈ ÁÀÂÀÐÑÜÊ² Ñ/Ê â/ã ÏÐÅÌ²ß 120 ãð/øò
+           , CASE WHEN tmpMI.ObjectId = 6048195
+                       THEN tmpMovement_QualityParams.OperDateIn + (CASE WHEN tmpMIGoodsByGoodsKind.NormInDays_gk > 0 THEN (tmpMIGoodsByGoodsKind.NormInDays_gk) :: TVarChar ELSE '0' END || ' DAY') :: INTERVAl
+                  ELSE tmpMovement_QualityParams.OperDateIn
+             END :: TDateTime AS OperDate_part
+           
            , (zfConvert_FloatToString (tmpMIGoodsByGoodsKind.NormInDays_gk) || ' ä³á') :: TVarChar AS NormInDays_gk_str
 
            , Object_CarModel.ValueData        AS CarModelName

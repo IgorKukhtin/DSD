@@ -187,8 +187,11 @@ BEGIN
     -- сначала поиск через Назначение платежа - Удержание
     IF COALESCE(vbJuridicalId, 0) = 0
     THEN
-        vbJuridicalId:= (WITH tmpMember AS (SELECT ObjectString.ObjectId AS MemberId
+        vbJuridicalId:= (WITH tmpMember AS (SELECT ObjectLink_MemberMinus_From.ChildObjectId AS MemberId
                                             FROM ObjectString
+                                                 JOIN ObjectLink AS ObjectLink_MemberMinus_From
+                                                                 ON ObjectLink_MemberMinus_From.ObjectId = ObjectString.ObjectId
+                                                                AND ObjectLink_MemberMinus_From.DescId = zc_ObjectLink_MemberMinus_From()
                                             WHERE ObjectString.ValueData <> ''
                                               AND TRIM (inComment) ILIKE ObjectString.ValueData
                                               AND ObjectString.DescId = zc_ObjectString_MemberMinus_DetailPayment()

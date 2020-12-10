@@ -268,7 +268,7 @@ FCurCoordinatesMsg:= ' ошибка в службе при определении Адреса для: '+FloatToStr(
 */
 -- тест
 -- SELECT * FROM ObjectString where DescId = zc_ObjectString_MobileConst_MobileVersion();
--- UPDATE ObjectString SET ValueData = '1.58.0' WHERE DescId = zc_ObjectString_MobileConst_MobileVersion();
+-- UPDATE ObjectString SET ValueData = '1.61.0' WHERE DescId = zc_ObjectString_MobileConst_MobileVersion();
 -- SELECT * FROM gpGetMobile_Object_Const (inSession:= zfCalc_UserAdmin())
 -- SELECT * FROM gpGetMobile_Object_Const (inSession:= '1000168')
 -- D:\Project-Basis\Bin\aMobile.sdb
