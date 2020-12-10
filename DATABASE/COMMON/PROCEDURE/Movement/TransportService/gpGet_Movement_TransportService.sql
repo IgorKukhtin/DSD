@@ -12,7 +12,8 @@ RETURNS TABLE (Id Integer, MIId Integer, InvNumber Integer, OperDate TDateTime
              , StatusCode Integer, StatusName TVarChar
              , StartRunPlan TDateTime, StartRun TDateTime
              , Amount TFloat, SummAdd TFloat
-             , WeightTransport TFloat, Distance TFloat, Price TFloat, CountPoint TFloat, TrevelTime TFloat
+             , SummTransport TFloat, WeightTransport TFloat
+             , Distance TFloat, Price TFloat, CountPoint TFloat, TrevelTime TFloat
              , ContractConditionValue TFloat
              , Comment TVarChar
              , ContractId Integer, ContractName TVarChar
@@ -52,6 +53,7 @@ BEGIN
 
            , 0::TFloat                        AS Amount
            , 0::TFloat                        AS SummAdd
+           , 0::TFloat                        AS SummTransport
            , 0::TFloat                        AS WeightTransport
            , 0::TFloat                        AS Distance
            , 0::TFloat                        AS Price
@@ -111,6 +113,7 @@ BEGIN
 
            , MovementItem.Amount             AS Amount
            , MIFloat_SummAdd.ValueData       AS SummAdd
+           , COALESCE (MIFloat_SummTransport.ValueData, 0)   :: TFloat  AS SummTransport
            , COALESCE (MIFloat_WeightTransport.ValueData, 0) :: TFloat  AS WeightTransport
            , MIFloat_Distance.ValueData      AS Distance
            , MIFloat_Price.ValueData         AS Price
@@ -156,6 +159,10 @@ BEGIN
                                   AND MovementItem.DescId     = zc_MI_Master()
             
             LEFT JOIN Object AS Object_Juridical ON Object_Juridical.Id = MovementItem.ObjectId 
+
+            LEFT JOIN MovementItemFloat AS MIFloat_SummTransport
+                                        ON MIFloat_SummTransport.MovementItemId = MovementItem.Id
+                                       AND MIFloat_SummTransport.DescId = zc_MIFloat_SummTransport()
 
             LEFT JOIN MovementItemFloat AS MIFloat_WeightTransport
                                         ON MIFloat_WeightTransport.MovementItemId = MovementItem.Id
@@ -242,7 +249,7 @@ BEGIN
                                    ON MovementDate_StartRun.MovementId = Movement.Id
                                   AND MovementDate_StartRun.DescId = zc_MovementDate_StartRun()
 
-       WHERE Movement.Id =  inMovementId
+       WHERE Movement.Id = inMovementId
          AND Movement.DescId = zc_Movement_TransportService();
 
    END IF;
@@ -256,6 +263,7 @@ $BODY$
 /*
  »—“Œ–»ﬂ –¿«–¿¡Œ“ »: ƒ¿“¿, ¿¬“Œ–
                ‘ÂÎÓÌ˛Í ».¬.    ÛıÚËÌ ».¬.    ÎËÏÂÌÚ¸Â‚  .».   Ã‡Ì¸ÍÓ ƒ.
+ 10.12.20         * add MIFloat_SummTransport
  03.07.16         *
  16.12.15         * add WeightTransport
  26.01.14                                        * add zc_MovementLinkObject_UnitForwarding

@@ -413,6 +413,7 @@ BEGIN
      PERFORM lpInsertUpdate_Object_Enum (inId:= zc_Enum_ContractConditionKind_TransportPoint()    , inDescId:= zc_Object_ContractConditionKind(), inCode:= 131, inName:= 'Ставка за точку, грн',                        inEnumName:= 'zc_Enum_ContractConditionKind_TransportPoint');
      PERFORM lpInsertUpdate_Object_Enum (inId:= zc_Enum_ContractConditionKind_TransportWeight()   , inDescId:= zc_Object_ContractConditionKind(), inCode:= 132, inName:= 'Ставка за вывоз, грн/кг',                     inEnumName:= 'zc_Enum_ContractConditionKind_TransportWeight');
      PERFORM lpInsertUpdate_Object_Enum (inId:= zc_Enum_ContractConditionKind_TransportForward()  , inDescId:= zc_Object_ContractConditionKind(), inCode:= 133, inName:= 'доплата за экспедитора, грн/месяц',           inEnumName:= 'zc_Enum_ContractConditionKind_TransportForward');
+     PERFORM lpInsertUpdate_Object_Enum (inId:= zc_Enum_ContractConditionKind_TransportSumm()     , inDescId:= zc_Object_ContractConditionKind(), inCode:= 134, inName:= 'Ставка за вывоз, грн/кг (% от суммы)',        inEnumName:= 'zc_Enum_ContractConditionKind_TransportSumm');
      
 
      -- !!! Типы пролонгаций договоров

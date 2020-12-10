@@ -9,6 +9,7 @@ CREATE OR REPLACE FUNCTION gpGet_Object_PartnerExternal(
 RETURNS TABLE (Id Integer, Code Integer, Name TVarChar 
              , ObjectCode TVarChar
              , PartnerId Integer, PartnerName TVarChar
+             , PartnerRealId Integer, PartnerRealName TVarChar
              , ContractId Integer, ContractName TVarChar
              , RetailId Integer, RetailName TVarChar
              ) AS
@@ -31,6 +32,9 @@ BEGIN
            , CAST (0 as Integer)    AS PartnerId
            , CAST ('' as TVarChar)  AS PartnerName
 
+           , CAST (0 as Integer)    AS PartnerRealId
+           , CAST ('' as TVarChar)  AS PartnerRealName
+
            , CAST (0 as Integer)    AS ContractId
            , CAST ('' as TVarChar)  AS ContractName 
 
@@ -49,6 +53,9 @@ BEGIN
            , Object_Partner.Id                  AS PartnerId
            , Object_Partner.ValueData           AS PartnerName 
 
+           , Object_PartnerReal.Id              AS PartnerRealId
+           , Object_PartnerReal.ValueData       AS PartnerRealName
+           
            , Object_Contract.Id                 AS ContractId
            , Object_Contract.ValueData          AS ContractName
            , Object_Retail.Id                   AS RetailId
@@ -63,6 +70,11 @@ BEGIN
                                  ON ObjectLink_Partner.ObjectId = Object_PartnerExternal.Id 
                                 AND ObjectLink_Partner.DescId = zc_ObjectLink_PartnerExternal_Partner()
             LEFT JOIN Object AS Object_Partner ON Object_Partner.Id = ObjectLink_Partner.ChildObjectId                               
+
+            LEFT JOIN ObjectLink AS ObjectLink_PartnerReal
+                                 ON ObjectLink_PartnerReal.ObjectId = Object_PartnerExternal.Id 
+                                AND ObjectLink_PartnerReal.DescId = zc_ObjectLink_PartnerExternal_PartnerReal()
+            LEFT JOIN Object AS Object_PartnerReal ON Object_PartnerReal.Id = ObjectLink_PartnerReal.ChildObjectId
 
             LEFT JOIN ObjectLink AS ObjectLink_Contract
                                  ON ObjectLink_Contract.ObjectId = Object_PartnerExternal.Id 

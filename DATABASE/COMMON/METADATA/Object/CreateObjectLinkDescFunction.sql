@@ -1827,6 +1827,10 @@ CREATE OR REPLACE FUNCTION zc_ObjectLink_PartnerExternal_Partner() RETURNS Integ
 INSERT INTO ObjectLinkDesc (Code, ItemName, DescId, ChildObjectDescId)
   SELECT 'zc_ObjectLink_PartnerExternal_Partner', 'Контрагент', zc_Object_PartnerExternal(), zc_Object_Partner() WHERE NOT EXISTS (SELECT * FROM ObjectLinkDesc WHERE Code = 'zc_ObjectLink_PartnerExternal_Partner');
 
+CREATE OR REPLACE FUNCTION zc_ObjectLink_PartnerExternal_PartnerReal() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM ObjectLinkDesc WHERE Code = 'zc_ObjectLink_PartnerExternal_PartnerReal'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
+INSERT INTO ObjectLinkDesc (Code, ItemName, DescId, ChildObjectDescId)
+  SELECT 'zc_ObjectLink_PartnerExternal_PartnerReal', 'Торговая точка РЦ', zc_Object_PartnerExternal(), zc_Object_Partner() WHERE NOT EXISTS (SELECT * FROM ObjectLinkDesc WHERE Code = 'zc_ObjectLink_PartnerExternal_PartnerReal');
+
 CREATE OR REPLACE FUNCTION zc_ObjectLink_PartnerExternal_Contract() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM ObjectLinkDesc WHERE Code = 'zc_ObjectLink_PartnerExternal_Contract'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
 INSERT INTO ObjectLinkDesc (Code, ItemName, DescId, ChildObjectDescId)
   SELECT 'zc_ObjectLink_PartnerExternal_Contract', 'Договор', zc_Object_PartnerExternal(), zc_Object_Contract() WHERE NOT EXISTS (SELECT * FROM ObjectLinkDesc WHERE Code = 'zc_ObjectLink_PartnerExternal_Contract');
@@ -2457,6 +2461,7 @@ SELECT 'zc_ObjectLink_MedicSP_AmbulantClinicSP', 'Связь с Амбулаторией', zc_Obje
 /*-------------------------------------------------------------------------------
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.   Воробкало А.А.   Шаблий О.В.
+ 10.12.20         * zc_ObjectLink_PartnerExternal_PartnerReal
  20.11.20                                                                                      * zc_ObjectLink_MedicSP_AmbulantClinicSP
  17.11.20         * zc_ObjectLink_Asset_AssetType
  10.11.20         * zc_ObjectLink_ContractTradeMark_Contract
