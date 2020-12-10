@@ -529,6 +529,11 @@ type
     actShowPUSH_UKTZED: TdsdShowPUSHMessage;
     actGoodsSP_Cash: TdsdOpenForm;
     N53: TMenuItem;
+    Label32: TLabel;
+    ceVIPLoad: TcxCurrencyEdit;
+    actLoadVIPOrder: TMultiAction;
+    actExecLoadVIPOrder: TdsdExecStoredProc;
+    spSelectChechHead: TdsdStoredProc;
     procedure WM_KEYDOWN(var Msg: TWMKEYDOWN);
     procedure FormCreate(Sender: TObject);
     procedure actChoiceGoodsInRemainsGridExecute(Sender: TObject);
@@ -667,6 +672,9 @@ type
     procedure MainColNameCustomDrawCell(Sender: TcxCustomGridTableView;
       ACanvas: TcxCanvas; AViewInfo: TcxGridTableDataCellViewInfo;
       var ADone: Boolean);
+    procedure ceVIPLoadKeyDown(Sender: TObject; var Key: Word;
+      Shift: TShiftState);
+    procedure ceVIPLoadExit(Sender: TObject);
   private
     isScaner: Boolean;
     FSoldRegim: Boolean;
@@ -6188,6 +6196,39 @@ begin
     lcNameKeyDown(Self, Key2, []);
   end;
 
+end;
+
+procedure TMainCashForm2.ceVIPLoadExit(Sender: TObject);
+begin
+
+  if ceVIPLoad.Text = '' then Exit;
+
+  if not CheckCDS.isempty then
+  Begin
+    ShowMessage('Текущий чек не пустой. Сначала очистите чек!');
+    exit;
+  End;
+
+  spSelectChechHead.ParamByName('inVIPOrder').Value :=  ceVIPLoad.Text;
+  ceVIPLoad.Text := '';
+  if actLoadVIPOrder.Execute and ((FormParams.ParamByName('CheckId').Value <> 0)
+    or (FormParams.ParamByName('ManagerName').AsString <> '')) then
+    LoadVIPCheck;
+end;
+
+procedure TMainCashForm2.ceVIPLoadKeyDown(Sender: TObject; var Key: Word;
+  Shift: TShiftState);
+begin
+  if (Shift = []) then
+    case Key of
+      VK_RETURN:
+        PostMessage(Handle, CM_DIALOGKEY, VK_Tab, 0);
+      VK_ESCAPE:
+        begin
+          ceVIPLoad.Text := '';
+          PostMessage(Handle, CM_DIALOGKEY, VK_Tab, 0);
+        end;
+    end;
 end;
 
 procedure TMainCashForm2.actCheckConnectionExecute(Sender: TObject);
