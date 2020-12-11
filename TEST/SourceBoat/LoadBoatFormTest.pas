@@ -55,6 +55,7 @@ type
     procedure LoadReceiptProdModelFormTest;
     procedure LoadReceiptLevelFormTest;
     procedure LoadReceiptGoodsFormTest;
+    procedure LoadReceiptServiceFormTest;
     procedure LoadUnitFormTest;
     procedure FormTest;
   end;
@@ -467,6 +468,14 @@ begin
   TdsdFormStorageFactory.GetStorage.Load('TReceiptGoodsForm');
     TdsdFormStorageFactory.GetStorage.Save(GetForm('TReceiptGoodsEditForm'));
   TdsdFormStorageFactory.GetStorage.Load('TReceiptGoodsEditForm');
+  end;
+
+   procedure TLoadFormTest.LoadReceiptServiceFormTest;
+begin
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TReceiptServiceForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TReceiptServiceForm');
+    TdsdFormStorageFactory.GetStorage.Save(GetForm('TReceiptServiceEditForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TReceiptServiceEditForm');
   end;
 
 procedure TLoadFormTest.LoadUnitFormTest;

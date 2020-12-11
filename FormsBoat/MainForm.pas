@@ -210,6 +210,8 @@ type
     actReceiptLevel: TdsdOpenForm;
     N8: TMenuItem;
     N9: TMenuItem;
+    actReceiptService: TdsdOpenForm;
+    miReceiptService: TMenuItem;
   private
     { Private declarations }
   public

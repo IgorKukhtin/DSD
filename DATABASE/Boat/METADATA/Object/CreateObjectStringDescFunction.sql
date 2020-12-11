@@ -242,6 +242,11 @@ CREATE OR REPLACE FUNCTION zc_ObjectString_ReceiptLevel_ShortName() RETURNS Inte
 INSERT INTO ObjectStringDesc (Code, DescId, ItemName)
   SELECT 'zc_ObjectString_ReceiptLevel_ShortName', zc_Object_ReceiptLevel(), 'Сокращенное обозначение' WHERE NOT EXISTS (SELECT * FROM ObjectStringDesc WHERE Code = 'zc_ObjectString_ReceiptLevel_ShortName');
 
+CREATE OR REPLACE FUNCTION zc_ObjectString_ReceiptService_Comment() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM ObjectStringDesc WHERE Code = 'zc_ObjectString_ReceiptService_Comment'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
+INSERT INTO ObjectStringDesc (Code, DescId, ItemName)
+  SELECT 'zc_ObjectString_ReceiptService_Comment', zc_Object_ReceiptService(), 'Сокращенное обозначение' WHERE NOT EXISTS (SELECT * FROM ObjectStringDesc WHERE Code = 'zc_ObjectString_ReceiptService_Comment');
+
+
 /*-------------------------------------------------------------------------------
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
@@ -249,6 +254,7 @@ INSERT INTO ObjectStringDesc (Code, DescId, ItemName)
                     zc_ObjectString_ColorPattern_Comment
                     zc_ObjectString_ReceiptLevel_ShortName
                     zc_ObjectString_ReceiptLevel_Comment
+                    zc_ObjectString_ReceiptService_Comment
  01.12.20         * zc_ObjectString_ReceiptProdModel_Code
                     zc_ObjectString_ReceiptProdModel_Comment
                     zc_ObjectString_ReceiptProdModelChild_Comment

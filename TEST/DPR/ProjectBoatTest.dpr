@@ -204,7 +204,9 @@ uses
   ColorPattern in '..\..\FormsBoat\Guides\ColorPattern.pas' {ColorPatternForm: TParentForm},
   ColorPatternEdit in '..\..\FormsBoat\Guides\ColorPatternEdit.pas' {ColorPatternEditForm: TParentForm},
   ReceiptLevel in '..\..\FormsBoat\Guides\ReceiptLevel.pas' {ReceiptLevelForm: TParentForm},
-  ReceiptLevelEdit in '..\..\FormsBoat\Guides\ReceiptLevelEdit.pas' {ReceiptLevelEditForm: TParentForm};
+  ReceiptLevelEdit in '..\..\FormsBoat\Guides\ReceiptLevelEdit.pas' {ReceiptLevelEditForm: TParentForm},
+  ReceiptService in '..\..\FormsBoat\Guides\ReceiptService.pas' {ReceiptServiceForm: TParentForm},
+  ReceiptServiceEdit in '..\..\FormsBoat\Guides\ReceiptServiceEdit.pas' {ReceiptServiceEditForm: TParentForm};
 
 {$R *.res}
 {$R DevExpressRus.res}
