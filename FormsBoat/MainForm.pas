@@ -207,6 +207,9 @@ type
     miBoatStructure: TMenuItem;
     actColorPattern: TdsdOpenForm;
     miColorPattern: TMenuItem;
+    actReceiptLevel: TdsdOpenForm;
+    N8: TMenuItem;
+    N9: TMenuItem;
   private
     { Private declarations }
   public

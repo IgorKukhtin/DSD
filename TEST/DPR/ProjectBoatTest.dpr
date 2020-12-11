@@ -202,7 +202,9 @@ uses
   ReceiptProdModel in '..\..\FormsBoat\Guides\ReceiptProdModel.pas' {ReceiptProdModelForm: TParentForm},
   ProdColorKind in '..\..\FormsBoat\Kind\ProdColorKind.pas' {ProdColorKindForm: TParentForm},
   ColorPattern in '..\..\FormsBoat\Guides\ColorPattern.pas' {ColorPatternForm: TParentForm},
-  ColorPatternEdit in '..\..\FormsBoat\Guides\ColorPatternEdit.pas' {ColorPatternEditForm: TParentForm};
+  ColorPatternEdit in '..\..\FormsBoat\Guides\ColorPatternEdit.pas' {ColorPatternEditForm: TParentForm},
+  ReceiptLevel in '..\..\FormsBoat\Guides\ReceiptLevel.pas' {ReceiptLevelForm: TParentForm},
+  ReceiptLevelEdit in '..\..\FormsBoat\Guides\ReceiptLevelEdit.pas' {ReceiptLevelEditForm: TParentForm};
 
 {$R *.res}
 {$R DevExpressRus.res}

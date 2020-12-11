@@ -299,12 +299,16 @@ CREATE OR REPLACE FUNCTION zc_Object_ProdColorKind() RETURNS Integer AS $BODY$BE
 INSERT INTO ObjectDesc (Code, ItemName)
   SELECT 'zc_Object_ProdColorKind', 'Виды Boat Structure' WHERE NOT EXISTS (SELECT * FROM ObjectDesc WHERE Code = 'zc_Object_ProdColorKind');
 
+CREATE OR REPLACE FUNCTION zc_Object_ReceiptLevel() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM ObjectDesc WHERE Code = 'zc_Object_ReceiptLevel'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
+INSERT INTO ObjectDesc (Code, ItemName)
+  SELECT 'zc_Object_ReceiptLevel', 'Этап сборки' WHERE NOT EXISTS (SELECT * FROM ObjectDesc WHERE Code = 'zc_Object_ReceiptLevel');
 
 
 /*-------------------------------------------------------------------------------
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
  11.12.20         * zc_Object_ColorPattern
+                    zc_Object_ReceiptLevel
  01.12.20         * zc_Object_ReceiptProdModel
                     zc_Object_ReceiptProdModelChild
                     zc_Object_ReceiptGoods
