@@ -1,11 +1,13 @@
 -- Function: gpInsertUpdate_Object_ReceiptGoods()
 
 DROP FUNCTION IF EXISTS gpInsertUpdate_Object_ReceiptGoods(Integer, Integer, TVarChar, Integer, Boolean, TVarChar, TVarChar, TVarChar);
+DROP FUNCTION IF EXISTS gpInsertUpdate_Object_ReceiptGoods(Integer, Integer, TVarChar, Integer, Integer, Boolean, TVarChar, TVarChar, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpInsertUpdate_Object_ReceiptGoods(
  INOUT ioId               Integer   ,    -- ключ объекта <Лодки>
     IN inCode             Integer   ,    -- Код объекта 
     IN inName             TVarChar  ,    -- Название объекта
+    IN inColorPatternId   Integer   ,
     IN inGoodsId          Integer   ,
     IN inisMain           Boolean   , 
     IN inUserCode         TVarChar  ,    -- пользовательский код
@@ -51,6 +53,8 @@ BEGIN
    PERFORM lpInsertUpdate_ObjectBoolean(zc_ObjectBoolean_ReceiptGoods_Main(), ioId, inisMain);
       
    -- сохранили свойство <>
+   PERFORM lpInsertUpdate_ObjectLink (zc_ObjectLink_ReceiptGoods_ColorPattern(), ioId, inColorPatternId);
+   -- сохранили свойство <>
    PERFORM lpInsertUpdate_ObjectLink (zc_ObjectLink_ReceiptGoods_Object(), ioId, inGoodsId);
 
    IF vbIsInsert = TRUE THEN
@@ -76,6 +80,7 @@ $BODY$
 /*-------------------------------------------------------------------------------
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
+ 11.12.20         * inColorPatternId
  01.12.20         *
 */
 

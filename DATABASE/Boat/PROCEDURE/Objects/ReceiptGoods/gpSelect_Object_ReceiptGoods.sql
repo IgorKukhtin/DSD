@@ -10,6 +10,7 @@ RETURNS TABLE (Id Integer, Code Integer, Name TVarChar
              , UserCode TVarChar, Comment TVarChar
              , isMain Boolean
              , GoodsId Integer, GoodsCode Integer, GoodsName TVarChar
+             , ColorPatternId Integer, ColorPatternName TVarChar
              , InsertName TVarChar, UpdateName TVarChar
              , InsertDate TDateTime, UpdateDate TDateTime
              , isErased Boolean
@@ -115,6 +116,9 @@ BEGIN
          , Object_Goods.ObjectCode ::Integer  AS GoodsCode
          , Object_Goods.ValueData  ::TVarChar AS GoodsName
 
+         , Object_ColorPattern.Id             ::Integer  AS ColorPatternId
+         , Object_ColorPattern.ValueData      ::TVarChar AS ColorPatternName
+
          , Object_Insert.ValueData            AS InsertName
          , Object_Update.ValueData            AS UpdateName
          , ObjectDate_Insert.ValueData        AS InsertDate
@@ -169,6 +173,11 @@ BEGIN
                                ON ObjectLink_Goods.ObjectId = Object_ReceiptGoods.Id
                               AND ObjectLink_Goods.DescId = zc_ObjectLink_ReceiptGoods_Object()
           LEFT JOIN Object AS Object_Goods ON Object_Goods.Id = ObjectLink_Goods.ChildObjectId 
+
+          LEFT JOIN ObjectLink AS ObjectLink_ColorPattern
+                               ON ObjectLink_ColorPattern.ObjectId = Object_ReceiptGoods.Id
+                              AND ObjectLink_ColorPattern.DescId = zc_ObjectLink_ReceiptGoods_ColorPattern()
+          LEFT JOIN Object AS Object_ColorPattern ON Object_ColorPattern.Id = ObjectLink_ColorPattern.ChildObjectId
 
           LEFT JOIN ObjectLink AS ObjectLink_Insert
                                ON ObjectLink_Insert.ObjectId = Object_ReceiptGoods.Id
@@ -243,6 +252,7 @@ $BODY$
 /*-------------------------------------------------------------------------------
  »—“Œ–»ﬂ –¿«–¿¡Œ“ »: ƒ¿“¿, ¿¬“Œ–
                ‘ÂÎÓÌ˛Í ».¬.    ÛıÚËÌ ».¬.    ÎËÏÂÌÚ¸Â‚  .».
+ 11.12.20         *
  01.12.20         *
 */
 

@@ -2,7 +2,7 @@ object ReceiptGoodsEditForm: TReceiptGoodsEditForm
   Left = 0
   Top = 0
   Caption = #1044#1086#1073#1072#1074#1080#1090#1100'/'#1048#1079#1084#1077#1085#1080#1090#1100' <'#1064#1072#1073#1083#1086#1085' '#1089#1073#1086#1088#1082#1080' '#1059#1079#1083#1086#1074'>'
-  ClientHeight = 299
+  ClientHeight = 344
   ClientWidth = 295
   Color = clBtnFace
   Font.Charset = DEFAULT_CHARSET
@@ -30,7 +30,7 @@ object ReceiptGoodsEditForm: TReceiptGoodsEditForm
   end
   object cxButton1: TcxButton
     Left = 40
-    Top = 260
+    Top = 308
     Width = 75
     Height = 25
     Action = actInsertUpdateGuides
@@ -39,7 +39,7 @@ object ReceiptGoodsEditForm: TReceiptGoodsEditForm
   end
   object cxButton2: TcxButton
     Left = 184
-    Top = 260
+    Top = 308
     Width = 75
     Height = 25
     Action = actFormClose
@@ -64,12 +64,12 @@ object ReceiptGoodsEditForm: TReceiptGoodsEditForm
   end
   object cxLabel3: TcxLabel
     Left = 10
-    Top = 196
+    Top = 244
     Caption = #1055#1088#1080#1084#1077#1095#1072#1085#1080#1077
   end
   object edComment: TcxTextEdit
     Left = 10
-    Top = 216
+    Top = 264
     TabOrder = 7
     Width = 273
   end
@@ -86,12 +86,12 @@ object ReceiptGoodsEditForm: TReceiptGoodsEditForm
   end
   object cxLabel12: TcxLabel
     Left = 10
-    Top = 144
+    Top = 192
     Caption = #1040#1088#1090#1080#1082#1091#1083
   end
   object edGoods: TcxButtonEdit
     Left = 10
-    Top = 164
+    Top = 212
     Properties.Buttons = <
       item
         Default = True
@@ -107,6 +107,23 @@ object ReceiptGoodsEditForm: TReceiptGoodsEditForm
     Caption = #1043#1083#1072#1074#1085#1099#1081
     TabOrder = 12
     Width = 73
+  end
+  object edColorPattern: TcxButtonEdit
+    Left = 10
+    Top = 165
+    Properties.Buttons = <
+      item
+        Default = True
+        Kind = bkEllipsis
+      end>
+    Properties.ReadOnly = True
+    TabOrder = 13
+    Width = 273
+  end
+  object cxLabel6: TcxLabel
+    Left = 10
+    Top = 145
+    Caption = #1064#1072#1073#1083#1086#1085' Boat Structure '
   end
   object ActionList: TActionList
     Left = 152
@@ -165,6 +182,14 @@ object ReceiptGoodsEditForm: TReceiptGoodsEditForm
         Value = ''
         Component = edName
         DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inColorPatternId'
+        Value = Null
+        Component = GuidesColorPattern
+        ComponentItem = 'Key'
         ParamType = ptInput
         MultiSelectSeparator = ','
       end
@@ -277,6 +302,21 @@ object ReceiptGoodsEditForm: TReceiptGoodsEditForm
         Component = edComment
         DataType = ftString
         MultiSelectSeparator = ','
+      end
+      item
+        Name = 'ColorPatternId'
+        Value = Null
+        Component = GuidesColorPattern
+        ComponentItem = 'Key'
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'ColorPatternName'
+        Value = Null
+        Component = GuidesColorPattern
+        ComponentItem = 'TextValue'
+        DataType = ftString
+        MultiSelectSeparator = ','
       end>
     PackSize = 1
     Left = 184
@@ -295,11 +335,11 @@ object ReceiptGoodsEditForm: TReceiptGoodsEditForm
     StorageName = 'cxPropertiesStore'
     StorageType = stStream
     Left = 144
-    Top = 224
+    Top = 272
   end
   object dsdUserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn
     Left = 248
-    Top = 176
+    Top = 224
   end
   object GuidesGoods: TdsdGuides
     KeyField = 'Id'
@@ -354,6 +394,35 @@ object ReceiptGoodsEditForm: TReceiptGoodsEditForm
         MultiSelectSeparator = ','
       end>
     Left = 183
-    Top = 154
+    Top = 202
+  end
+  object GuidesColorPattern: TdsdGuides
+    KeyField = 'Id'
+    LookupControl = edColorPattern
+    FormNameParam.Value = 'TColorPatternForm'
+    FormNameParam.DataType = ftString
+    FormNameParam.MultiSelectSeparator = ','
+    FormName = 'TColorPatternForm'
+    PositionDataSet = 'MasterCDS'
+    Params = <
+      item
+        Name = 'Key'
+        Value = ''
+        Component = GuidesColorPattern
+        ComponentItem = 'Key'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'TextValue'
+        Value = ''
+        Component = GuidesColorPattern
+        ComponentItem = 'TextValue'
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end>
+    Left = 173
+    Top = 146
   end
 end
