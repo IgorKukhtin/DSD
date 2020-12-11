@@ -10,6 +10,7 @@ RETURNS TABLE (Id Integer, Code Integer, Name TVarChar
              , UserCode TVarChar, Comment TVarChar
              , isMain Boolean
              , GoodsId Integer, GoodsName TVarChar
+             , ColorPatternId Integer, ColorPatternName TVarChar
 ) AS
 $BODY$
    DECLARE vbUserId Integer;
@@ -31,6 +32,8 @@ BEGIN
            , FALSE :: Boolean         AS isMain
            , 0  :: Integer            AS GoodsId
            , '' :: TVarChar           AS GoodsName
+           , 0  :: Integer            AS ColorPatternId
+           , '' :: TVarChar           AS ColorPatternName
        ;
    ELSE
      RETURN QUERY
@@ -40,12 +43,15 @@ BEGIN
          , Object_ReceiptGoods.ObjectCode AS Code
          , Object_ReceiptGoods.ValueData  AS Name
 
-         , ObjectString_Code.ValueData        ::TVarChar  AS UserCode
-         , ObjectString_Comment.ValueData     ::TVarChar  AS Comment
-         , ObjectBoolean_Main.ValueData       ::Boolean   AS isMain
+         , ObjectString_Code.ValueData        ::TVarChar AS UserCode
+         , ObjectString_Comment.ValueData     ::TVarChar AS Comment
+         , ObjectBoolean_Main.ValueData       ::Boolean  AS isMain
 
          , Object_Goods.Id                    ::Integer  AS GoodsId
          , Object_Goods.ValueData             ::TVarChar AS GoodsName
+
+         , Object_ColorPattern.Id             ::Integer  AS ColorPatternId
+         , Object_ColorPattern.ValueData      ::TVarChar AS ColorPatternName
      FROM Object AS Object_ReceiptGoods
           LEFT JOIN ObjectString AS ObjectString_Code
                                  ON ObjectString_Code.ObjectId = Object_ReceiptGoods.Id
@@ -63,6 +69,11 @@ BEGIN
                               AND ObjectLink_Goods.DescId = zc_ObjectLink_ReceiptGoods_Object()
           LEFT JOIN Object AS Object_Goods ON Object_Goods.Id = ObjectLink_Goods.ChildObjectId 
 
+          LEFT JOIN ObjectLink AS ObjectLink_ColorPattern
+                               ON ObjectLink_ColorPattern.ObjectId = Object_ReceiptGoods.Id
+                              AND ObjectLink_ColorPattern.DescId = zc_ObjectLink_ReceiptGoods_ColorPattern()
+          LEFT JOIN Object AS Object_ColorPattern ON Object_ColorPattern.Id = ObjectLink_ColorPattern.ChildObjectId
+
      WHERE Object_ReceiptGoods.DescId = zc_Object_ReceiptGoods()
       AND Object_ReceiptGoods.Id = inId
      ;
@@ -76,6 +87,7 @@ $BODY$
 /*-------------------------------------------------------------------------------
  »—“Œ–»ﬂ –¿«–¿¡Œ“ »: ƒ¿“¿, ¿¬“Œ–
                ‘ÂÎÓÌ˛Í ».¬.    ÛıÚËÌ ».¬.    ÎËÏÂÌÚ¸Â‚  .».
+ 11.12.20         *
  01.12.20         *
 */
 

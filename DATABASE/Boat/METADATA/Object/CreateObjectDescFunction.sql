@@ -242,6 +242,11 @@ CREATE OR REPLACE FUNCTION zc_Object_ProdColorPattern() RETURNS Integer AS $BODY
 INSERT INTO ObjectDesc (Code, ItemName)
   SELECT 'zc_Object_ProdColorPattern', 'Шаблоны Цвета (Лодка)' WHERE NOT EXISTS (SELECT * FROM ObjectDesc WHERE Code = 'zc_Object_ProdColorPattern');
 
+CREATE OR REPLACE FUNCTION zc_Object_ColorPattern() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM ObjectDesc WHERE Code = 'zc_Object_ColorPattern'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
+INSERT INTO ObjectDesc (Code, ItemName)
+  SELECT 'zc_Object_ColorPattern', 'Шаблон Boat Structure' WHERE NOT EXISTS (SELECT * FROM ObjectDesc WHERE Code = 'zc_Object_ColorPattern');
+
+
 CREATE OR REPLACE FUNCTION zc_Object_Country() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM ObjectDesc WHERE Code = 'zc_Object_Country'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
 INSERT INTO ObjectDesc (Code, ItemName)
   SELECT 'zc_Object_Country', 'Страна' WHERE NOT EXISTS (SELECT * FROM ObjectDesc WHERE Code = 'zc_Object_Country');
@@ -290,10 +295,16 @@ CREATE OR REPLACE FUNCTION zc_Object_ReceiptGoodsChild() RETURNS Integer AS $BOD
 INSERT INTO ObjectDesc (Code, ItemName)
   SELECT 'zc_Object_ReceiptGoodsChild', 'Элементы для сборки Узлов' WHERE NOT EXISTS (SELECT * FROM ObjectDesc WHERE Code = 'zc_Object_ReceiptGoodsChild');
 
+CREATE OR REPLACE FUNCTION zc_Object_ProdColorKind() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM ObjectDesc WHERE Code = 'zc_Object_ProdColorKind'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
+INSERT INTO ObjectDesc (Code, ItemName)
+  SELECT 'zc_Object_ProdColorKind', 'Виды Boat Structure' WHERE NOT EXISTS (SELECT * FROM ObjectDesc WHERE Code = 'zc_Object_ProdColorKind');
+
+
 
 /*-------------------------------------------------------------------------------
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
+ 11.12.20         * zc_Object_ColorPattern
  01.12.20         * zc_Object_ReceiptProdModel
                     zc_Object_ReceiptProdModelChild
                     zc_Object_ReceiptGoods

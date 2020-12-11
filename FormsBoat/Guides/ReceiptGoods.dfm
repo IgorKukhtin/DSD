@@ -37,7 +37,6 @@ object ReceiptGoodsForm: TReceiptGoodsForm
       TabOrder = 0
       LookAndFeel.NativeStyle = True
       LookAndFeel.SkinName = 'UserSkin'
-      ExplicitHeight = 192
       object cxGridDBTableView: TcxGridDBTableView
         Navigator.Buttons.CustomButtons = <>
         DataController.DataSource = DataSource
@@ -195,6 +194,15 @@ object ReceiptGoodsForm: TReceiptGoodsForm
           HeaderGlyphAlignmentHorz = taCenter
           Options.Editing = False
           Width = 189
+        end
+        object ColorPatternName: TcxGridDBColumn
+          Caption = #1064#1072#1073#1083#1086#1085' Boat Structure '
+          DataBinding.FieldName = 'ColorPatternName'
+          HeaderAlignmentHorz = taCenter
+          HeaderAlignmentVert = vaCenter
+          HeaderGlyphAlignmentHorz = taCenter
+          Options.Editing = False
+          Width = 125
         end
         object Article: TcxGridDBColumn
           Caption = 'Artikel Nr'
@@ -386,8 +394,6 @@ object ReceiptGoodsForm: TReceiptGoodsForm
     BevelEdges = [beLeft]
     BevelOuter = bvNone
     TabOrder = 0
-    ExplicitTop = 240
-    ExplicitHeight = 175
     object cxGridGoods: TcxGrid
       Left = 0
       Top = 17
@@ -398,7 +404,6 @@ object ReceiptGoodsForm: TReceiptGoodsForm
       TabOrder = 0
       LookAndFeel.NativeStyle = True
       LookAndFeel.SkinName = 'UserSkin'
-      ExplicitHeight = 158
       object cxGridDBTableViewGoods: TcxGridDBTableView
         Navigator.Buttons.CustomButtons = <>
         DataController.DataSource = GoodsDS
@@ -761,7 +766,6 @@ object ReceiptGoodsForm: TReceiptGoodsForm
     Height = 5
     AlignSplitter = salTop
     Control = PanelMaster
-    ExplicitTop = 235
   end
   object cxRightSplitter: TcxSplitter
     Left = 805
@@ -769,8 +773,6 @@ object ReceiptGoodsForm: TReceiptGoodsForm
     Width = 8
     Height = 159
     AlignSplitter = salRight
-    ExplicitTop = 240
-    ExplicitHeight = 175
   end
   object DataSource: TDataSource
     DataSet = MasterCDS

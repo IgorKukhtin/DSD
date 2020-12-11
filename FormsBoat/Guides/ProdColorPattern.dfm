@@ -15,6 +15,7 @@ object ProdColorPatternForm: TProdColorPatternForm
   AddOnFormData.RefreshAction = actRefresh
   AddOnFormData.isSingle = False
   AddOnFormData.ChoiceAction = actChoiceGuides
+  AddOnFormData.Params = FormParams
   PixelsPerInch = 96
   TextHeight = 13
   object cxGrid: TcxGrid
@@ -57,6 +58,15 @@ object ProdColorPatternForm: TProdColorPatternForm
         HeaderAlignmentVert = vaCenter
         Options.Editing = False
         Width = 45
+      end
+      object ColorPatternName: TcxGridDBColumn
+        Caption = #1064#1072#1073#1083#1086#1085' Boat Structure '
+        DataBinding.FieldName = 'ColorPatternName'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        HeaderGlyphAlignmentHorz = taCenter
+        Options.Editing = False
+        Width = 125
       end
       object Code: TcxGridDBColumn
         Caption = #1050#1086#1076
@@ -257,6 +267,23 @@ object ProdColorPatternForm: TProdColorPatternForm
       GridView = cxGridDBTableView
     end
   end
+  object cxLabel6: TcxLabel
+    Left = 332
+    Top = 67
+    Caption = #1064#1072#1073#1083#1086#1085' Boat Structure:'
+  end
+  object edColorPattern: TcxButtonEdit
+    Left = 455
+    Top = 66
+    Properties.Buttons = <
+      item
+        Default = True
+        Kind = bkEllipsis
+      end>
+    Properties.ReadOnly = True
+    TabOrder = 6
+    Width = 245
+  end
   object DataSource: TDataSource
     DataSet = MasterCDS
     Left = 56
@@ -342,7 +369,23 @@ object ProdColorPatternForm: TProdColorPatternForm
         end
         item
           Visible = True
+          ItemName = 'dxBarControlContainerItem1'
+        end
+        item
+          Visible = True
+          ItemName = 'dxBarControlContainerItem2'
+        end
+        item
+          Visible = True
+          ItemName = 'dxBarStatic'
+        end
+        item
+          Visible = True
           ItemName = 'bbShowAll'
+        end
+        item
+          Visible = True
+          ItemName = 'dxBarStatic'
         end
         item
           Visible = True
@@ -425,6 +468,20 @@ object ProdColorPatternForm: TProdColorPatternForm
       Action = actShowAll
       Category = 0
     end
+    object dxBarControlContainerItem1: TdxBarControlContainerItem
+      Caption = 'New Item'
+      Category = 0
+      Hint = 'New Item'
+      Visible = ivAlways
+      Control = cxLabel6
+    end
+    object dxBarControlContainerItem2: TdxBarControlContainerItem
+      Caption = 'New Item'
+      Category = 0
+      Hint = 'New Item'
+      Visible = ivAlways
+      Control = edColorPattern
+    end
   end
   object ActionList: TActionList
     Images = dmMain.ImageList
@@ -459,6 +516,21 @@ object ProdColorPatternForm: TProdColorPatternForm
         item
           Name = 'Id'
           Value = '0'
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'ColorPatternId'
+          Value = Null
+          Component = GuidesColorPattern
+          ComponentItem = 'Key'
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'ColorPatternName'
+          Value = Null
+          Component = GuidesColorPattern
+          ComponentItem = 'TextValue'
+          DataType = ftString
           MultiSelectSeparator = ','
         end>
       isShowModal = False
@@ -748,6 +820,14 @@ object ProdColorPatternForm: TProdColorPatternForm
       end>
     Params = <
       item
+        Name = 'inColorPatternId'
+        Value = Null
+        Component = GuidesColorPattern
+        ComponentItem = 'Key'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
         Name = 'inIsErased'
         Value = False
         Component = actShowAll
@@ -908,5 +988,65 @@ object ProdColorPatternForm: TProdColorPatternForm
     PackSize = 1
     Left = 432
     Top = 200
+  end
+  object GuidesColorPattern: TdsdGuides
+    KeyField = 'Id'
+    LookupControl = edColorPattern
+    FormNameParam.Value = 'TColorPatternForm'
+    FormNameParam.DataType = ftString
+    FormNameParam.MultiSelectSeparator = ','
+    FormName = 'TColorPatternForm'
+    PositionDataSet = 'MasterCDS'
+    Params = <
+      item
+        Name = 'Key'
+        Value = ''
+        Component = GuidesColorPattern
+        ComponentItem = 'Key'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'TextValue'
+        Value = ''
+        Component = GuidesColorPattern
+        ComponentItem = 'TextValue'
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end>
+    Left = 568
+    Top = 64
+  end
+  object FormParams: TdsdFormParams
+    Params = <
+      item
+        Name = 'ColorPatternId'
+        Value = ''
+        Component = GuidesColorPattern
+        ComponentItem = 'Key'
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'ColorPatternName'
+        Value = ''
+        Component = GuidesColorPattern
+        ComponentItem = 'TextValue'
+        DataType = ftString
+        MultiSelectSeparator = ','
+      end>
+    Left = 248
+    Top = 104
+  end
+  object RefreshDispatcher: TRefreshDispatcher
+    IdParam.Value = Null
+    IdParam.MultiSelectSeparator = ','
+    RefreshAction = actRefresh
+    ComponentList = <
+      item
+        Component = GuidesColorPattern
+      end>
+    Left = 664
+    Top = 136
   end
 end

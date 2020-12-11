@@ -1,9 +1,9 @@
-object ProdColorGroupForm: TProdColorGroupForm
+object ColorPatternForm: TColorPatternForm
   Left = 0
   Top = 0
-  Caption = #1057#1087#1088#1072#1074#1086#1095#1085#1080#1082' <'#1050#1072#1090#1077#1075#1086#1088#1080#1103' Boat Structure>'
+  Caption = #1057#1087#1088#1072#1074#1086#1095#1085#1080#1082' <'#1064#1072#1073#1083#1086#1085' Boat Structure>'
   ClientHeight = 376
-  ClientWidth = 486
+  ClientWidth = 541
   Color = clBtnFace
   Font.Charset = DEFAULT_CHARSET
   Font.Color = clWindowText
@@ -12,6 +12,7 @@ object ProdColorGroupForm: TProdColorGroupForm
   Font.Style = []
   KeyPreview = True
   OldCreateOrder = False
+  AddOnFormData.isAlwaysRefresh = False
   AddOnFormData.RefreshAction = actRefresh
   AddOnFormData.ChoiceAction = actChoiceGuides
   PixelsPerInch = 96
@@ -19,13 +20,12 @@ object ProdColorGroupForm: TProdColorGroupForm
   object cxGrid: TcxGrid
     Left = 0
     Top = 26
-    Width = 486
+    Width = 541
     Height = 350
     Align = alClient
     TabOrder = 0
     LookAndFeel.NativeStyle = True
     LookAndFeel.SkinName = 'UserSkin'
-    ExplicitWidth = 394
     object cxGridDBTableView: TcxGridDBTableView
       Navigator.Buttons.CustomButtons = <>
       DataController.DataSource = DataSource
@@ -45,6 +45,7 @@ object ProdColorGroupForm: TProdColorGroupForm
       OptionsData.DeletingConfirmation = False
       OptionsData.Editing = False
       OptionsData.Inserting = False
+      OptionsView.ColumnAutoWidth = True
       OptionsView.Footer = True
       OptionsView.GroupByBox = False
       OptionsView.HeaderHeight = 40
@@ -56,7 +57,16 @@ object ProdColorGroupForm: TProdColorGroupForm
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         Options.Editing = False
-        Width = 50
+        Width = 57
+      end
+      object UserCode: TcxGridDBColumn
+        Caption = #1055#1086#1083#1100#1079'. '#1050#1086#1076
+        DataBinding.FieldName = 'UserCode'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        HeaderHint = #1055#1086#1083#1100#1079#1086#1074#1072#1090#1077#1083#1100#1089#1082#1080#1081' '#1050#1086#1076
+        Options.Editing = False
+        Width = 66
       end
       object Name: TcxGridDBColumn
         Caption = #1053#1072#1079#1074#1072#1085#1080#1077
@@ -65,15 +75,15 @@ object ProdColorGroupForm: TProdColorGroupForm
         HeaderAlignmentVert = vaCenter
         HeaderGlyphAlignmentHorz = taCenter
         Options.Editing = False
-        Width = 200
+        Width = 176
       end
-      object ProdColorKindName: TcxGridDBColumn
-        Caption = #1042#1080#1076#1099' Boat Structure'
-        DataBinding.FieldName = 'ProdColorKindName'
+      object ModelName: TcxGridDBColumn
+        Caption = #1052#1086#1076#1077#1083#1100
+        DataBinding.FieldName = 'ModelName'
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         Options.Editing = False
-        Width = 136
+        Width = 113
       end
       object Comment: TcxGridDBColumn
         Caption = #1055#1088#1080#1084#1077#1095#1072#1085#1080#1077
@@ -82,7 +92,7 @@ object ProdColorGroupForm: TProdColorGroupForm
         HeaderAlignmentVert = vaCenter
         HeaderGlyphAlignmentHorz = taCenter
         Options.Editing = False
-        Width = 122
+        Width = 115
       end
       object InsertDate: TcxGridDBColumn
         Caption = #1044#1072#1090#1072' ('#1089#1086#1079#1076'.)'
@@ -96,6 +106,24 @@ object ProdColorGroupForm: TProdColorGroupForm
       object InsertName: TcxGridDBColumn
         Caption = #1055#1086#1083#1100#1079#1086#1074#1072#1090#1077#1083#1100' ('#1089#1086#1079#1076'.)'
         DataBinding.FieldName = 'InsertName'
+        Visible = False
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Options.Editing = False
+        Width = 70
+      end
+      object UpdateDate: TcxGridDBColumn
+        Caption = #1044#1072#1090#1072' ('#1082#1086#1088#1088'.)'
+        DataBinding.FieldName = 'UpdateDate'
+        Visible = False
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Options.Editing = False
+        Width = 55
+      end
+      object UpdateName: TcxGridDBColumn
+        Caption = #1055#1086#1083#1100#1079#1086#1074#1072#1090#1077#1083#1100' ('#1082#1086#1088#1088'.)'
+        DataBinding.FieldName = 'UpdateName'
         Visible = False
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
@@ -311,8 +339,8 @@ object ProdColorGroupForm: TProdColorGroupForm
       Hint = #1044#1086#1073#1072#1074#1080#1090#1100
       ShortCut = 45
       ImageIndex = 0
-      FormName = 'TProdColorGroupEditForm'
-      FormNameParam.Value = 'TProdColorGroupEditForm'
+      FormName = 'TColorPatternEditForm'
+      FormNameParam.Value = 'TColorPatternEditForm'
       FormNameParam.DataType = ftString
       FormNameParam.MultiSelectSeparator = ','
       GuiParams = <
@@ -333,8 +361,8 @@ object ProdColorGroupForm: TProdColorGroupForm
       Hint = #1048#1079#1084#1077#1085#1080#1090#1100
       ShortCut = 115
       ImageIndex = 1
-      FormName = 'TProdColorGroupEditForm'
-      FormNameParam.Value = 'TProdColorGroupEditForm'
+      FormName = 'TColorPatternEditForm'
+      FormNameParam.Value = 'TColorPatternEditForm'
       FormNameParam.DataType = ftString
       FormNameParam.MultiSelectSeparator = ','
       GuiParams = <
@@ -392,6 +420,7 @@ object ProdColorGroupForm: TProdColorGroupForm
           Value = Null
           Component = MasterCDS
           ComponentItem = 'Id'
+          DataType = ftString
           MultiSelectSeparator = ','
         end
         item
@@ -477,7 +506,7 @@ object ProdColorGroupForm: TProdColorGroupForm
     end
   end
   object spSelect: TdsdStoredProc
-    StoredProcName = 'gpSelect_Object_ProdColorGroup'
+    StoredProcName = 'gpSelect_Object_ColorPattern'
     DataSet = MasterCDS
     DataSets = <
       item
@@ -497,7 +526,7 @@ object ProdColorGroupForm: TProdColorGroupForm
     Top = 128
   end
   object spErased: TdsdStoredProc
-    StoredProcName = 'gpUpdate_Object_isErased_ProdColorGroup'
+    StoredProcName = 'gpUpdate_Object_isErased_ColorPattern'
     DataSets = <>
     OutputType = otResult
     Params = <
@@ -517,8 +546,8 @@ object ProdColorGroupForm: TProdColorGroupForm
         MultiSelectSeparator = ','
       end>
     PackSize = 1
-    Left = 240
-    Top = 104
+    Left = 432
+    Top = 80
   end
   object UserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn
     Left = 288
@@ -555,7 +584,7 @@ object ProdColorGroupForm: TProdColorGroupForm
     Top = 248
   end
   object spUnErased: TdsdStoredProc
-    StoredProcName = 'gpUpdate_Object_isErased_ProdColorGroup'
+    StoredProcName = 'gpUpdate_Object_isErased_ColorPattern'
     DataSets = <>
     OutputType = otResult
     Params = <
@@ -575,7 +604,7 @@ object ProdColorGroupForm: TProdColorGroupForm
         MultiSelectSeparator = ','
       end>
     PackSize = 1
-    Left = 240
-    Top = 152
+    Left = 432
+    Top = 128
   end
 end

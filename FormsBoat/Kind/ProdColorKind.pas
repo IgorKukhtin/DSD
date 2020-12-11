@@ -1,4 +1,4 @@
-unit ProdColorGroup;
+unit ProdColorKind;
 
 interface
 
@@ -24,7 +24,7 @@ uses
   dxSkinValentine, dxSkinVS2010, dxSkinWhiteprint, dxSkinXmas2008Blue;
 
 type
-  TProdColorGroupForm = class(TParentForm)
+  TProdColorKindForm = class(TParentForm)
     cxGridLevel: TcxGridLevel;
     cxGrid: TcxGrid;
     DataSource: TDataSource;
@@ -35,19 +35,14 @@ type
     ActionList: TActionList;
     bbRefresh: TdxBarButton;
     actRefresh: TdsdDataSetRefresh;
-    actInsert: TdsdInsertUpdateAction;
     bbInsert: TdxBarButton;
     spSelect: TdsdStoredProc;
-    actUpdate: TdsdInsertUpdateAction;
     bbEdit: TdxBarButton;
-    actSetErased: TdsdUpdateErased;
-    actSetUnErased: TdsdUpdateErased;
     bbSetErased: TdxBarButton;
     bbSetUnErased: TdxBarButton;
     actGridToExcel: TdsdGridToExcel;
     bbToExcel: TdxBarButton;
     dxBarStatic: TdxBarStatic;
-    spErased: TdsdStoredProc;
     bbChoice: TdxBarButton;
     cxGridDBTableView: TcxGridDBTableView;
     Code: TcxGridDBColumn;
@@ -58,12 +53,8 @@ type
     DBViewAddOn: TdsdDBViewAddOn;
     actProtocol: TdsdOpenForm;
     bbProtocolOpenForm: TdxBarButton;
-    actShowAll: TBooleanStoredProcAction;
     bbShowAll: TdxBarButton;
-    Comment: TcxGridDBColumn;
-    spUnErased: TdsdStoredProc;
     actUpdateDataSet: TdsdUpdateDataSet;
-    ProdColorKindName: TcxGridDBColumn;
   private
     { Private declarations }
   public
@@ -75,6 +66,6 @@ implementation
 {$R *.dfm}
 
 initialization
-  RegisterClass(TProdColorGroupForm);
+  RegisterClass(TProdColorKindForm);
 
 end.

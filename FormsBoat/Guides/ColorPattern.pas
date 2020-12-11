@@ -1,4 +1,4 @@
-unit ProdColorGroup;
+unit ColorPattern;
 
 interface
 
@@ -24,7 +24,7 @@ uses
   dxSkinValentine, dxSkinVS2010, dxSkinWhiteprint, dxSkinXmas2008Blue;
 
 type
-  TProdColorGroupForm = class(TParentForm)
+  TColorPatternForm = class(TParentForm)
     cxGridLevel: TcxGridLevel;
     cxGrid: TcxGrid;
     DataSource: TDataSource;
@@ -63,7 +63,7 @@ type
     Comment: TcxGridDBColumn;
     spUnErased: TdsdStoredProc;
     actUpdateDataSet: TdsdUpdateDataSet;
-    ProdColorKindName: TcxGridDBColumn;
+    ModelName: TcxGridDBColumn;
   private
     { Private declarations }
   public
@@ -75,6 +75,6 @@ implementation
 {$R *.dfm}
 
 initialization
-  RegisterClass(TProdColorGroupForm);
+  RegisterClass(TColorPatternForm);
 
 end.

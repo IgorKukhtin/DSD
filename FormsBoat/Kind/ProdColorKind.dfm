@@ -1,9 +1,9 @@
-object ProdColorGroupForm: TProdColorGroupForm
+object ProdColorKindForm: TProdColorKindForm
   Left = 0
   Top = 0
-  Caption = #1057#1087#1088#1072#1074#1086#1095#1085#1080#1082' <'#1050#1072#1090#1077#1075#1086#1088#1080#1103' Boat Structure>'
-  ClientHeight = 376
-  ClientWidth = 486
+  Caption = #1057#1087#1088#1072#1074#1086#1095#1085#1080#1082' <'#1042#1080#1076#1099' Boat Structure>'
+  ClientHeight = 314
+  ClientWidth = 484
   Color = clBtnFace
   Font.Charset = DEFAULT_CHARSET
   Font.Color = clWindowText
@@ -12,6 +12,7 @@ object ProdColorGroupForm: TProdColorGroupForm
   Font.Style = []
   KeyPreview = True
   OldCreateOrder = False
+  AddOnFormData.isAlwaysRefresh = False
   AddOnFormData.RefreshAction = actRefresh
   AddOnFormData.ChoiceAction = actChoiceGuides
   PixelsPerInch = 96
@@ -19,13 +20,14 @@ object ProdColorGroupForm: TProdColorGroupForm
   object cxGrid: TcxGrid
     Left = 0
     Top = 26
-    Width = 486
-    Height = 350
+    Width = 484
+    Height = 288
     Align = alClient
     TabOrder = 0
     LookAndFeel.NativeStyle = True
     LookAndFeel.SkinName = 'UserSkin'
-    ExplicitWidth = 394
+    ExplicitWidth = 541
+    ExplicitHeight = 350
     object cxGridDBTableView: TcxGridDBTableView
       Navigator.Buttons.CustomButtons = <>
       DataController.DataSource = DataSource
@@ -45,6 +47,7 @@ object ProdColorGroupForm: TProdColorGroupForm
       OptionsData.DeletingConfirmation = False
       OptionsData.Editing = False
       OptionsData.Inserting = False
+      OptionsView.ColumnAutoWidth = True
       OptionsView.Footer = True
       OptionsView.GroupByBox = False
       OptionsView.HeaderHeight = 40
@@ -56,7 +59,7 @@ object ProdColorGroupForm: TProdColorGroupForm
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         Options.Editing = False
-        Width = 50
+        Width = 83
       end
       object Name: TcxGridDBColumn
         Caption = #1053#1072#1079#1074#1072#1085#1080#1077
@@ -65,42 +68,15 @@ object ProdColorGroupForm: TProdColorGroupForm
         HeaderAlignmentVert = vaCenter
         HeaderGlyphAlignmentHorz = taCenter
         Options.Editing = False
-        Width = 200
+        Width = 211
       end
-      object ProdColorKindName: TcxGridDBColumn
-        Caption = #1042#1080#1076#1099' Boat Structure'
-        DataBinding.FieldName = 'ProdColorKindName'
+      object EnumName: TcxGridDBColumn
+        Caption = #1053#1072#1079#1074#1072#1085#1080#1077' '#1092#1091#1085#1082#1094#1080#1080
+        DataBinding.FieldName = 'EnumName'
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         Options.Editing = False
-        Width = 136
-      end
-      object Comment: TcxGridDBColumn
-        Caption = #1055#1088#1080#1084#1077#1095#1072#1085#1080#1077
-        DataBinding.FieldName = 'Comment'
-        HeaderAlignmentHorz = taCenter
-        HeaderAlignmentVert = vaCenter
-        HeaderGlyphAlignmentHorz = taCenter
-        Options.Editing = False
-        Width = 122
-      end
-      object InsertDate: TcxGridDBColumn
-        Caption = #1044#1072#1090#1072' ('#1089#1086#1079#1076'.)'
-        DataBinding.FieldName = 'InsertDate'
-        Visible = False
-        HeaderAlignmentHorz = taCenter
-        HeaderAlignmentVert = vaCenter
-        Options.Editing = False
-        Width = 55
-      end
-      object InsertName: TcxGridDBColumn
-        Caption = #1055#1086#1083#1100#1079#1086#1074#1072#1090#1077#1083#1100' ('#1089#1086#1079#1076'.)'
-        DataBinding.FieldName = 'InsertName'
-        Visible = False
-        HeaderAlignmentHorz = taCenter
-        HeaderAlignmentVert = vaCenter
-        Options.Editing = False
-        Width = 70
+        Width = 233
       end
       object isErased: TcxGridDBColumn
         Caption = #1059#1076#1072#1083#1077#1085
@@ -181,28 +157,7 @@ object ProdColorGroupForm: TProdColorGroupForm
       ItemLinks = <
         item
           Visible = True
-          ItemName = 'bbInsert'
-        end
-        item
-          Visible = True
-          ItemName = 'bbEdit'
-        end
-        item
-          Visible = True
-          ItemName = 'bbSetErased'
-        end
-        item
-          Visible = True
-          ItemName = 'bbSetUnErased'
-        end
-        item
-          BeginGroup = True
-          Visible = True
           ItemName = 'dxBarStatic'
-        end
-        item
-          Visible = True
-          ItemName = 'bbShowAll'
         end
         item
           Visible = True
@@ -247,20 +202,36 @@ object ProdColorGroupForm: TProdColorGroupForm
       Category = 0
     end
     object bbInsert: TdxBarButton
-      Action = actInsert
+      Caption = #1044#1086#1073#1072#1074#1080#1090#1100
       Category = 0
+      Hint = #1044#1086#1073#1072#1074#1080#1090#1100
+      Visible = ivAlways
+      ImageIndex = 0
+      ShortCut = 45
     end
     object bbEdit: TdxBarButton
-      Action = actUpdate
+      Caption = #1048#1079#1084#1077#1085#1080#1090#1100
       Category = 0
+      Hint = #1048#1079#1084#1077#1085#1080#1090#1100
+      Visible = ivAlways
+      ImageIndex = 1
+      ShortCut = 115
     end
     object bbSetErased: TdxBarButton
-      Action = actSetErased
+      Caption = #1059#1076#1072#1083#1080#1090#1100
       Category = 0
+      Hint = #1059#1076#1072#1083#1080#1090#1100' '#1076#1072#1085#1085#1099#1077
+      Visible = ivAlways
+      ImageIndex = 2
+      ShortCut = 8238
     end
     object bbSetUnErased: TdxBarButton
-      Action = actSetUnErased
+      Caption = #1042#1086#1089#1089#1090#1072#1085#1086#1074#1080#1090#1100
       Category = 0
+      Hint = #1042#1086#1089#1089#1090#1072#1085#1086#1074#1080#1090#1100' '#1076#1072#1085#1085#1099#1077
+      Visible = ivAlways
+      ImageIndex = 8
+      ShortCut = 8238
     end
     object bbToExcel: TdxBarButton
       Action = actGridToExcel
@@ -282,8 +253,11 @@ object ProdColorGroupForm: TProdColorGroupForm
       Category = 0
     end
     object bbShowAll: TdxBarButton
-      Action = actShowAll
+      Caption = #1055#1086#1082#1072#1079#1072#1090#1100' '#1074#1077#1089#1100' '#1089#1087#1080#1089#1086#1082
       Category = 0
+      Hint = #1055#1086#1082#1072#1079#1072#1090#1100' '#1074#1077#1089#1100' '#1089#1087#1080#1089#1086#1082
+      Visible = ivAlways
+      ImageIndex = 63
     end
   end
   object ActionList: TActionList
@@ -304,85 +278,6 @@ object ProdColorGroupForm: TProdColorGroupForm
       ShortCut = 116
       RefreshOnTabSetChanges = False
     end
-    object actInsert: TdsdInsertUpdateAction
-      Category = 'DSDLib'
-      MoveParams = <>
-      Caption = #1044#1086#1073#1072#1074#1080#1090#1100
-      Hint = #1044#1086#1073#1072#1074#1080#1090#1100
-      ShortCut = 45
-      ImageIndex = 0
-      FormName = 'TProdColorGroupEditForm'
-      FormNameParam.Value = 'TProdColorGroupEditForm'
-      FormNameParam.DataType = ftString
-      FormNameParam.MultiSelectSeparator = ','
-      GuiParams = <
-        item
-          Name = 'Id'
-          Value = '0'
-          MultiSelectSeparator = ','
-        end>
-      isShowModal = False
-      DataSource = DataSource
-      DataSetRefresh = actRefresh
-      IdFieldName = 'Id'
-    end
-    object actUpdate: TdsdInsertUpdateAction
-      Category = 'DSDLib'
-      MoveParams = <>
-      Caption = #1048#1079#1084#1077#1085#1080#1090#1100
-      Hint = #1048#1079#1084#1077#1085#1080#1090#1100
-      ShortCut = 115
-      ImageIndex = 1
-      FormName = 'TProdColorGroupEditForm'
-      FormNameParam.Value = 'TProdColorGroupEditForm'
-      FormNameParam.DataType = ftString
-      FormNameParam.MultiSelectSeparator = ','
-      GuiParams = <
-        item
-          Name = 'Id'
-          Value = Null
-          Component = MasterCDS
-          ComponentItem = 'Id'
-          ParamType = ptInput
-          MultiSelectSeparator = ','
-        end>
-      isShowModal = False
-      ActionType = acUpdate
-      DataSource = DataSource
-      DataSetRefresh = actRefresh
-      IdFieldName = 'Id'
-    end
-    object actSetErased: TdsdUpdateErased
-      Category = 'DSDLib'
-      MoveParams = <>
-      StoredProc = spErased
-      StoredProcList = <
-        item
-          StoredProc = spErased
-        end>
-      Caption = #1059#1076#1072#1083#1080#1090#1100
-      Hint = #1059#1076#1072#1083#1080#1090#1100' '#1076#1072#1085#1085#1099#1077
-      ImageIndex = 2
-      ShortCut = 8238
-      ErasedFieldName = 'isErased'
-      DataSource = DataSource
-    end
-    object actSetUnErased: TdsdUpdateErased
-      Category = 'DSDLib'
-      MoveParams = <>
-      StoredProc = spUnErased
-      StoredProcList = <
-        item
-          StoredProc = spUnErased
-        end>
-      Caption = #1042#1086#1089#1089#1090#1072#1085#1086#1074#1080#1090#1100
-      Hint = #1042#1086#1089#1089#1090#1072#1085#1086#1074#1080#1090#1100' '#1076#1072#1085#1085#1099#1077
-      ImageIndex = 8
-      ShortCut = 8238
-      ErasedFieldName = 'isErased'
-      isSetErased = False
-      DataSource = DataSource
-    end
     object actChoiceGuides: TdsdChoiceGuides
       Category = 'DSDLib'
       MoveParams = <>
@@ -392,6 +287,7 @@ object ProdColorGroupForm: TProdColorGroupForm
           Value = Null
           Component = MasterCDS
           ComponentItem = 'Id'
+          DataType = ftString
           MultiSelectSeparator = ','
         end
         item
@@ -446,25 +342,6 @@ object ProdColorGroupForm: TProdColorGroupForm
         end>
       isShowModal = False
     end
-    object actShowAll: TBooleanStoredProcAction
-      Category = 'DSDLib'
-      MoveParams = <>
-      StoredProc = spSelect
-      StoredProcList = <
-        item
-          StoredProc = spSelect
-        end>
-      Caption = #1055#1086#1082#1072#1079#1072#1090#1100' '#1074#1077#1089#1100' '#1089#1087#1080#1089#1086#1082
-      Hint = #1055#1086#1082#1072#1079#1072#1090#1100' '#1074#1077#1089#1100' '#1089#1087#1080#1089#1086#1082
-      ImageIndex = 63
-      Value = False
-      HintTrue = #1055#1086#1082#1072#1079#1072#1090#1100' '#1085#1077' '#1091#1076#1072#1083#1077#1085#1085#1099#1077
-      HintFalse = #1055#1086#1082#1072#1079#1072#1090#1100' '#1074#1077#1089#1100' '#1089#1087#1080#1089#1086#1082
-      CaptionTrue = #1055#1086#1082#1072#1079#1072#1090#1100' '#1085#1077' '#1091#1076#1072#1083#1077#1085#1085#1099#1077
-      CaptionFalse = #1055#1086#1082#1072#1079#1072#1090#1100' '#1074#1077#1089#1100' '#1089#1087#1080#1089#1086#1082
-      ImageIndexTrue = 62
-      ImageIndexFalse = 63
-    end
     object actUpdateDataSet: TdsdUpdateDataSet
       Category = 'DSDLib'
       MoveParams = <>
@@ -477,48 +354,16 @@ object ProdColorGroupForm: TProdColorGroupForm
     end
   end
   object spSelect: TdsdStoredProc
-    StoredProcName = 'gpSelect_Object_ProdColorGroup'
+    StoredProcName = 'gpSelect_Object_ProdColorKind'
     DataSet = MasterCDS
     DataSets = <
       item
         DataSet = MasterCDS
       end>
-    Params = <
-      item
-        Name = 'inIsShowAll'
-        Value = False
-        Component = actShowAll
-        DataType = ftBoolean
-        ParamType = ptInput
-        MultiSelectSeparator = ','
-      end>
+    Params = <>
     PackSize = 1
     Left = 88
     Top = 128
-  end
-  object spErased: TdsdStoredProc
-    StoredProcName = 'gpUpdate_Object_isErased_ProdColorGroup'
-    DataSets = <>
-    OutputType = otResult
-    Params = <
-      item
-        Name = 'inObjectId'
-        Value = Null
-        Component = MasterCDS
-        ComponentItem = 'Id'
-        ParamType = ptInput
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'inIsErased'
-        Value = True
-        DataType = ftBoolean
-        ParamType = ptInput
-        MultiSelectSeparator = ','
-      end>
-    PackSize = 1
-    Left = 240
-    Top = 104
   end
   object UserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn
     Left = 288
@@ -532,7 +377,6 @@ object ProdColorGroupForm: TProdColorGroupForm
         Action = actChoiceGuides
       end
       item
-        Action = actUpdate
       end>
     ActionItemList = <
       item
@@ -540,7 +384,6 @@ object ProdColorGroupForm: TProdColorGroupForm
         ShortCut = 13
       end
       item
-        Action = actUpdate
         ShortCut = 13
       end>
     SortImages = dmMain.SortImageList
@@ -553,29 +396,5 @@ object ProdColorGroupForm: TProdColorGroupForm
     PropertiesCellList = <>
     Left = 104
     Top = 248
-  end
-  object spUnErased: TdsdStoredProc
-    StoredProcName = 'gpUpdate_Object_isErased_ProdColorGroup'
-    DataSets = <>
-    OutputType = otResult
-    Params = <
-      item
-        Name = 'inObjectId'
-        Value = Null
-        Component = MasterCDS
-        ComponentItem = 'Id'
-        ParamType = ptInput
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'inIsErased'
-        Value = False
-        DataType = ftBoolean
-        ParamType = ptInput
-        MultiSelectSeparator = ','
-      end>
-    PackSize = 1
-    Left = 240
-    Top = 152
   end
 end

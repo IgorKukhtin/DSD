@@ -113,7 +113,7 @@ object PartnerExternalForm: TPartnerExternalForm
         PropertiesClassName = 'TcxButtonEditProperties'
         Properties.Buttons = <
           item
-            Action = actPartnerChoiceForm
+            Action = actPartnerRealChoiceForm
             Default = True
             Kind = bkEllipsis
           end>
@@ -816,6 +816,7 @@ object PartnerExternalForm: TPartnerExternalForm
         Name = 'inPartnerRealId'
         Value = Null
         Component = ClientDataSet
+        ComponentItem = 'PartnerRealId'
         ParamType = ptInput
         MultiSelectSeparator = ','
       end
@@ -836,8 +837,8 @@ object PartnerExternalForm: TPartnerExternalForm
         MultiSelectSeparator = ','
       end>
     PackSize = 1
-    Left = 584
-    Top = 168
+    Left = 520
+    Top = 216
   end
   object GuidesPartnerReal: TdsdGuides
     KeyField = 'Id'

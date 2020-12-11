@@ -390,7 +390,9 @@ BEGIN
 
      PERFORM lpInsertUpdate_Object_Enum (inId:= zc_Enum_ContractConditionKind_BonusPercentIncome()      , inDescId:= zc_Object_ContractConditionKind(), inCode:= 30, inName:= 'Бонус приход, ставка за кг'         , inEnumName:= 'zc_Enum_ContractConditionKind_BonusPercentIncome');
      PERFORM lpInsertUpdate_Object_Enum (inId:= zc_Enum_ContractConditionKind_BonusPercentIncomeReturn(), inDescId:= zc_Object_ContractConditionKind(), inCode:= 31, inName:= 'Бонус приход-возврат, ставка за кг' , inEnumName:= 'zc_Enum_ContractConditionKind_BonusPercentIncomeReturn');
-
+     PERFORM lpInsertUpdate_Object_Enum (inId:= zc_Enum_ContractConditionKind_BonusPercentSalePart()    , inDescId:= zc_Object_ContractConditionKind(), inCode:= 32, inName:= '% бонуса за долевую продажу'        , inEnumName:= 'zc_Enum_ContractConditionKind_BonusPercentSalePart');
+     
+     
      PERFORM lpInsertUpdate_Object_Enum (inId:= zc_Enum_ContractConditionKind_TransportTime1()    , inDescId:= zc_Object_ContractConditionKind(), inCode:= 101, inName:= 'Ставка за время (без экспедитора с холодильником), грн/ч'  , inEnumName:= 'zc_Enum_ContractConditionKind_TransportTime1');
      PERFORM lpInsertUpdate_Object_Enum (inId:= zc_Enum_ContractConditionKind_TransportTime2()    , inDescId:= zc_Object_ContractConditionKind(), inCode:= 102, inName:= 'Ставка за время (с экспедитором без холодильника), грн/ч'  , inEnumName:= 'zc_Enum_ContractConditionKind_TransportTime2');
      PERFORM lpInsertUpdate_Object_Enum (inId:= zc_Enum_ContractConditionKind_TransportTime3()    , inDescId:= zc_Object_ContractConditionKind(), inCode:= 103, inName:= 'Ставка за время (без экспедитора без холодильника), грн/ч' , inEnumName:= 'zc_Enum_ContractConditionKind_TransportTime3');

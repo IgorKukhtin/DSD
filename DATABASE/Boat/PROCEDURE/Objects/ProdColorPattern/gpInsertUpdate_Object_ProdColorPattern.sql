@@ -3,11 +3,13 @@
 DROP FUNCTION IF EXISTS gpInsertUpdate_Object_ProdColorPattern(Integer, Integer, TVarChar, Integer, TVarChar, TVarChar);
 DROP FUNCTION IF EXISTS gpInsertUpdate_Object_ProdColorPattern(Integer, Integer, TVarChar, Integer, Integer, TVarChar, TVarChar);
 DROP FUNCTION IF EXISTS gpInsertUpdate_Object_ProdColorPattern(Integer, Integer, TVarChar, Integer, Integer, TVarChar, TVarChar, TVarChar);
+DROP FUNCTION IF EXISTS gpInsertUpdate_Object_ProdColorPattern(Integer, Integer, TVarChar, Integer, Integer, Integer, TVarChar, TVarChar, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpInsertUpdate_Object_ProdColorPattern(
  INOUT ioId               Integer   ,    -- ключ объекта <Лодки>
     IN inCode             Integer   ,    -- Код объекта 
     IN inName             TVarChar  ,    -- Название объекта
+    IN inColorPatternId   Integer   ,
     IN inProdColorGroupId Integer   ,
     IN inGoodsId          Integer   ,
  INOUT ioComment          TVarChar  ,
@@ -27,6 +29,12 @@ BEGIN
    -- PERFORM lpCheckRight(inSession, zc_Enum_Process_InsertUpdate_Object_ProdColorPattern());
    vbUserId:= lpGetUserBySession (inSession);
 
+   -- проверка inColorPatternId должно быть внесено
+   IF COALESCE (inColorPatternId,0) = 0
+   THEN
+        RAISE EXCEPTION 'Ошибка.Значение <Шаблон Boat Structure> должено быть заполнено.';
+   END IF;
+   
    -- определяем признак Создание/Корректировка
    vbIsInsert:= COALESCE (ioId, 0) = 0;
 
@@ -77,6 +85,8 @@ BEGIN
    -- сохранили свойство <>
    PERFORM lpInsertUpdate_ObjectLink (zc_ObjectLink_ProdColorPattern_ProdColorGroup(), ioId, inProdColorGroupId);
    -- сохранили свойство <>
+   PERFORM lpInsertUpdate_ObjectLink (zc_ObjectLink_ProdColorPattern_ColorPattern(), ioId, inColorPatternId);
+   -- сохранили свойство <>
    PERFORM lpInsertUpdate_ObjectLink (zc_ObjectLink_ProdColorPattern_Goods(), ioId, inGoodsId);
 
    IF vbIsInsert = TRUE THEN
@@ -96,6 +106,7 @@ $BODY$
 /*-------------------------------------------------------------------------------
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
+ 11.12.20         * inColorPatternId
  01.12.20         * add inGoodsId
  15.10.20         *
 */

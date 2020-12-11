@@ -1,4 +1,4 @@
-unit ProdColorGroupEdit;
+unit ColorPatternEdit;
 
 interface
 
@@ -19,10 +19,11 @@ uses
   dxSkinSevenClassic, dxSkinSharp, dxSkinSharpPlus, dxSkinSilver,
   dxSkinSpringTime, dxSkinStardust, dxSkinSummer2008, dxSkinTheAsphaltWorld,
   dxSkinValentine, dxSkinVS2010, dxSkinWhiteprint, dxSkinXmas2008Blue,
-  dsdGuides, cxMaskEdit, cxButtonEdit;
+  dsdGuides, cxMaskEdit, cxButtonEdit, Vcl.ComCtrls, dxCore, cxDateUtils,
+  cxDropDownEdit, cxCalendar, cxCheckBox;
 
 type
-  TProdColorGroupEditForm = class(TParentForm)
+  TColorPatternEditForm = class(TParentForm)
     edName: TcxTextEdit;
     cxLabel1: TcxLabel;
     cxButton1: TcxButton;
@@ -40,9 +41,11 @@ type
     dsdUserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn;
     cxLabel3: TcxLabel;
     edComment: TcxTextEdit;
-    cxLabel4: TcxLabel;
-    edProdColorKind: TcxButtonEdit;
-    GuidesProdColorKind: TdsdGuides;
+    cxLabel8: TcxLabel;
+    edUserCode: TcxTextEdit;
+    cxLabel12: TcxLabel;
+    edModel: TcxButtonEdit;
+    GuidesModel: TdsdGuides;
   private
     { Private declarations }
   public
@@ -54,6 +57,6 @@ implementation
 {$R *.dfm}
 
 initialization
-  RegisterClass(TProdColorGroupEditForm);
+  RegisterClass(TColorPatternEditForm);
 
 end.
