@@ -12,6 +12,7 @@ CREATE OR REPLACE FUNCTION gpReport_SaleExternal(
 RETURNS TABLE (MovementId Integer, InvNumber TVarChar, OperDate TDateTime
              , StatusCode Integer, StatusName TVarChar
              , FromName TVarChar, PartnerName_from TVarChar
+             , PartnerRealId Integer, PartnerRealName TVarChar
              , GoodsPropertyName TVarChar
              , AmountSh TFloat
              , AmountKg TFloat
@@ -111,6 +112,8 @@ BEGIN
                              , Object_PartnerFrom.Id          AS PartnerId_from
                              , Object_PartnerFrom.ValueData   AS PartnerName_from
                              , Object_GoodsProperty.ValueData AS GoodsPropertyName
+                             , Object_PartnerReal.Id          AS PartnerRealId
+                             , Object_PartnerReal.ValueData   AS PartnerRealName
                         FROM tmpMovement
                              LEFT JOIN MovementLinkObject AS MovementLinkObject_From
                                                           ON MovementLinkObject_From.MovementId = tmpMovement.Id
@@ -122,6 +125,11 @@ BEGIN
                                                  AND ObjectLink_PartnerExternal_Partner.DescId = zc_ObjectLink_PartnerExternal_Partner()
                              LEFT JOIN Object AS Object_PartnerFrom ON Object_PartnerFrom.Id = ObjectLink_PartnerExternal_Partner.ChildObjectId
 
+                             LEFT JOIN ObjectLink AS ObjectLink_PartnerReal
+                                                  ON ObjectLink_PartnerReal.ObjectId = Object_From.Id 
+                                                 AND ObjectLink_PartnerReal.DescId = zc_ObjectLink_PartnerExternal_PartnerReal()
+                             LEFT JOIN Object AS Object_PartnerReal ON Object_PartnerReal.Id = ObjectLink_PartnerReal.ChildObjectId
+            
                              LEFT JOIN Object AS Object_GoodsProperty ON Object_GoodsProperty.Id = tmpMovement.GoodsPropertyId
                        )
    
@@ -139,7 +147,7 @@ BEGIN
                     , tmp.TotalAmountKg
                     , CASE WHEN COALESCE (tmp.TotalAmountKg,0) <> 0 THEN tmp.AmountKg / tmp.TotalAmountKg ELSE 0 END :: TFloat AS PartKg
                FROM (
-                     SELECT tmpMovement.Id                                AS MovementId
+                     SELECT tmpMovementAll.Id                                AS MovementId
       
                           , SUM (CASE WHEN ObjectLink_Measure.ChildObjectId = zc_Measure_Sh()
                                       THEN MovementItem.Amount * COALESCE (ObjectFloat_Weight.ValueData,1)
@@ -153,9 +161,9 @@ BEGIN
                           , SUM (SUM(CASE WHEN ObjectLink_Measure.ChildObjectId = zc_Measure_Sh()
                                           THEN MovementItem.Amount * COALESCE (ObjectFloat_Weight.ValueData,1)
                                           ELSE MovementItem.Amount
-                                     END)) OVER () AS TotalAmountKg
-                     FROM tmpMovement
-                         INNER JOIN MovementItem ON MovementItem.MovementId = tmpMovement.Id
+                                     END)) OVER (PARTITION BY tmpMovementAll.PartnerRealId) AS TotalAmountKg
+                     FROM tmpMovementAll
+                         INNER JOIN MovementItem ON MovementItem.MovementId = tmpMovementAll.Id
                                                 AND MovementItem.DescId     = zc_MI_Master()
                                                 AND MovementItem.isErased   = FALSE
                          INNER JOIN tmpGoods ON tmpGoods.GoodsId = MovementItem.ObjectId
@@ -166,12 +174,13 @@ BEGIN
                          LEFT JOIN ObjectFloat AS ObjectFloat_Weight
                                                ON ObjectFloat_Weight.ObjectId = ObjectLink_Measure.ObjectId
                                               AND ObjectFloat_Weight.DescId = zc_ObjectFloat_Goods_Weight()
-                     GROUP BY tmpMovement.Id
+                     GROUP BY tmpMovementAll.Id
+                            , tmpMovementAll.PartnerRealId
                      ) AS tmp
                )
 
-   -- фактические продажи
-   , tmpReport AS (SELECT tmp.PartnerId
+   -- фактические продажи На РЦ
+   , tmpReport AS (SELECT tmp.PartnerRealId
                         , tmp.Sale_Summ
                         , tmp.Return_Summ
                         , (COALESCE (tmp.Sale_Summ,0) - COALESCE (tmp.Return_Summ,0) ) AS SaleReturn_Summ
@@ -179,7 +188,7 @@ BEGIN
                         , tmp.Return_Weight
                         , (COALESCE (tmp.Sale_Weight,0) - COALESCE (tmp.Return_Weight,0) ) AS SaleReturn_Weight
 
-                   FROM (SELECT tmp.PartnerId
+                   FROM (SELECT tmp.PartnerId AS PartnerRealId
                               , SUM (COALESCE (tmp.Sale_Summ,0))      AS Sale_Summ
                               , SUM (COALESCE (tmp.Return_Summ,0))    AS Return_Summ
                               , SUM (tmp.Sale_AmountPartner_Weight)   AS Sale_Weight
@@ -188,7 +197,7 @@ BEGIN
                                                            , inEndDate      := inEndDate      ::TDateTime    
                                                            , inBranchId     := 0              ::Integer      
                                                            , inAreaId       := 0              ::Integer
-                                                           , inRetailId     := inRetailId     ::Integer      
+                                                           , inRetailId     := 0              ::Integer      
                                                            , inJuridicalId  := 0              ::Integer      
                                                            , inPaidKindId   := 0              ::Integer
                                                            , inTradeMarkId  := 0              ::Integer      
@@ -202,28 +211,48 @@ BEGIN
                                                            , inIsOLAP       := TRUE           ::Boolean      
                                                            , inSession      := inSession      ::TVarChar
                                                            ) AS tmp
+                         WHERE tmp.PartnerId IN (SELECT DISTINCT tmpMovementAll.PartnerRealId FROM tmpMovementAll)
                          GROUP BY tmp.PartnerId
                         ) AS tmp
                   )
 
+   , tmpData AS (SELECT Movement.Id                 AS MovementId
+                      , Movement.InvNumber          AS InvNumber
+                      , Movement.OperDate           AS OperDate
+                      , Object_Status.ObjectCode    AS StatusCode
+                      , Object_Status.ValueData     AS StatusName
+                      , Movement.FromName
+                      , Movement.PartnerName_from
+                      , Movement.PartnerRealId
+                      , Movement.PartnerRealName
+                      , Movement.GoodsPropertyName
+                      , tmpMI.AmountSh   :: TFloat  AS AmountSh
+                      , tmpMI.AmountKg   :: TFloat  AS AmountKg
+                      , tmpMI.PartKg     :: TFloat  AS PartKg
+                 FROM tmpMovementAll AS Movement
+                      LEFT JOIN Object AS Object_Status ON Object_Status.Id = Movement.StatusId
+                      INNER JOIN tmpMI ON tmpMI.MovementId = Movement.Id
+                 )
+
        -- Результат
        SELECT
-             Movement.Id                           AS MovementId
-           , Movement.InvNumber                    AS InvNumber
-           , Movement.OperDate                     AS OperDate
-           , Object_Status.ObjectCode              AS StatusCode
-           , Object_Status.ValueData               AS StatusName
-           , Movement.FromName
-           , Movement.PartnerName_from
-           , Movement.GoodsPropertyName
+             tmpData.MovementId
+           , tmpData.InvNumber
+           , tmpData.OperDate
+           , tmpData.StatusCode
+           , tmpData.StatusName
+           , tmpData.FromName
+           , tmpData.PartnerName_from
+           , tmpData.PartnerRealId
+           , tmpData.PartnerRealName
+           , tmpData.GoodsPropertyName
 
-           , tmpMI.AmountSh   :: TFloat          AS AmountSh
-           , tmpMI.AmountKg   :: TFloat          AS AmountKg
-
-           , tmpMI.PartKg :: TFloat AS PartKg
+           , tmpData.AmountSh   :: TFloat
+           , tmpData.AmountKg   :: TFloat
+           , tmpData.PartKg     :: TFloat
            
-           , (tmpTotal.TotalSumm * tmpMI.PartKg)   :: TFloat AS TotalSumm_calc               -- Расчетная сумма продаж, грн (от факта)
-           , (tmpTotal.TotalWeight * tmpMI.PartKg) :: TFloat AS TotalWeight_calc             -- Раасчетная сумма продаж, кг (от факта)
+           , (tmpReport.SaleReturn_Summ * tmpData.PartKg)   :: TFloat AS TotalSumm_calc               -- Расчетная сумма продаж, грн (от факта)
+           , (tmpReport.SaleReturn_Weight * tmpData.PartKg) :: TFloat AS TotalWeight_calc             -- Раасчетная сумма продаж, кг (от факта)
            
            , tmpReport.SaleReturn_Summ    :: TFloat
            , tmpReport.Sale_Summ          :: TFloat
@@ -231,28 +260,16 @@ BEGIN
            , tmpReport.SaleReturn_Weight  :: TFloat
            , tmpReport.Sale_Weight        :: TFloat
            , tmpReport.Return_Weight      :: TFloat
-           , tmpTotal.TotalSumm           :: TFloat
-           , tmpTotal.TotalWeight         :: TFloat
-
-           , tmpTotal.TotalSale_Summ      :: TFloat
-           , tmpTotal.TotalReturn_Summ    :: TFloat
-           , tmpTotal.TotalSale_Weight    :: TFloat
-           , tmpTotal.TotalReturn_Weight  :: TFloat
-
-       FROM tmpMovementAll AS Movement
-            LEFT JOIN Object AS Object_Status ON Object_Status.Id = Movement.StatusId
-
-            INNER JOIN tmpMI ON tmpMI.MovementId = Movement.Id
-            
-            LEFT JOIN tmpReport ON tmpReport.PartnerId = PartnerId_from
-            LEFT JOIN (SELECT SUM (tmpReport.SaleReturn_Summ)   AS TotalSumm
-                            , SUM (tmpReport.SaleReturn_Weight) AS TotalWeight 
-                            , SUM (tmpReport.Sale_Summ)         AS TotalSale_Summ
-                            , SUM (tmpReport.Return_Summ)       AS TotalReturn_Summ
-                            , SUM (tmpReport.Sale_Weight)       AS TotalSale_Weight
-                            , SUM (tmpReport.Return_Weight)     AS TotalReturn_Weight
-                       FROM tmpReport) AS tmpTotal ON 1 = 1
-    ;
+           
+             , 0 :: TFloat AS TotalSumm
+             , 0 :: TFloat AS TotalWeight
+             , 0 :: TFloat AS TotalSale_Summ
+             , 0 :: TFloat AS TotalReturn_Summ
+             , 0 :: TFloat AS TotalSale_Weight
+             , 0 :: TFloat AS TotalReturn_Weight
+       FROM tmpReport 
+            LEFT JOIN tmpData ON tmpData.PartnerRealId = tmpReport.PartnerRealId
+      ;
 
 END;
 $BODY$
@@ -265,4 +282,4 @@ $BODY$
 */
 
 -- тест
--- SELECT * FROM gpReport_SaleExternal (inStartDate:= '01.11.2020', inEndDate:= '02.11.2020', inRetailId := 310854 , inGoodsGroupId:= 0, inSession:= zfCalc_UserAdmin())
+-- SELECT * FROM gpReport_SaleExternal (inStartDate:= '01.11.2020', inEndDate:= '30.11.2020', inRetailId := 310854 , inGoodsGroupId:= 0, inSession:= zfCalc_UserAdmin())

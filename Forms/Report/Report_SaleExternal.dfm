@@ -233,6 +233,14 @@ inherited Report_SaleExternalForm: TReport_SaleExternalForm
             Options.Editing = False
             Width = 104
           end
+          object PartnerRealName: TcxGridDBColumn
+            Caption = #1056#1062
+            DataBinding.FieldName = 'PartnerRealName'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 112
+          end
           object GoodsPropertyName: TcxGridDBColumn
             Caption = #1050#1083#1072#1089#1089#1080#1092#1080#1082#1072#1090#1086#1088' '#1089#1074#1086#1081#1089#1090#1074' '#1090#1086#1074#1072#1088#1086#1074
             DataBinding.FieldName = 'GoodsPropertyName'
@@ -625,7 +633,7 @@ inherited Report_SaleExternalForm: TReport_SaleExternalForm
       DataSets = <
         item
           UserName = 'frxDBDItems'
-          IndexFieldNames = 'GoodsPropertyName;OperDate;InvNumber;FromName'
+          IndexFieldNames = 'PartnerRealName;GoodsPropertyName;OperDate;InvNumber;FromName'
           GridView = cxGridDBTableView
         end>
       Params = <
