@@ -1,15 +1,18 @@
 -- Function: gpSelect_Object_ProdColorPattern()
 
 DROP FUNCTION IF EXISTS gpSelect_Object_ProdColorPattern (Boolean, TVarChar);
+DROP FUNCTION IF EXISTS gpSelect_Object_ProdColorPattern (Integer, Boolean, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpSelect_Object_ProdColorPattern(
-    IN inIsErased    Boolean,       -- признак показать удаленные да / нет
-    IN inSession     TVarChar       -- сессия пользователя
+    IN inColorPatternId   Integer,
+    IN inIsErased         Boolean,       -- признак показать удаленные да / нет
+    IN inSession          TVarChar       -- сессия пользователя
 )
 RETURNS TABLE (Id Integer, Code Integer, Name TVarChar
              , NPP Integer
              , Comment TVarChar
              , ProdColorGroupId Integer, ProdColorGroupName TVarChar
+             , ColorPatternId Integer, ColorPatternName TVarChar
              , GoodsId Integer, GoodsCode Integer, GoodsName TVarChar
              , InsertName TVarChar
              , InsertDate TDateTime
@@ -53,6 +56,10 @@ BEGIN
 
          , Object_ProdColorGroup.Id           ::Integer  AS ProdColorGroupId
          , Object_ProdColorGroup.ValueData    ::TVarChar AS ProdColorGroupName
+
+         , Object_ColorPattern.Id             ::Integer  AS ColorPatternId
+         , Object_ColorPattern.ValueData      ::TVarChar AS ColorPatternName
+
          , Object_Goods.Id                    ::Integer  AS GoodsId
          , Object_Goods.ObjectCode            ::Integer  AS GoodsCode
          , Object_Goods.ValueData             ::TVarChar AS GoodsName
@@ -88,6 +95,11 @@ BEGIN
           END ::TFloat  AS BasisPriceWVAT
 
      FROM Object AS Object_ProdColorPattern
+          LEFT JOIN ObjectLink AS ObjectLink_ColorPattern
+                               ON ObjectLink_ColorPattern.ObjectId = Object_ProdColorPattern.Id
+                              AND ObjectLink_ColorPattern.DescId = zc_ObjectLink_ProdColorPattern_ColorPattern()
+          LEFT JOIN Object AS Object_ColorPattern ON Object_ColorPattern.Id = ObjectLink_ColorPattern.ChildObjectId
+
           LEFT JOIN ObjectString AS ObjectString_Comment
                                  ON ObjectString_Comment.ObjectId = Object_ProdColorPattern.Id
                                 AND ObjectString_Comment.DescId = zc_ObjectString_ProdColorPattern_Comment()
@@ -154,6 +166,7 @@ BEGIN
 
      WHERE Object_ProdColorPattern.DescId = zc_Object_ProdColorPattern()
       AND (Object_ProdColorPattern.isErased = FALSE OR inIsErased = TRUE)
+      AND (ObjectLink_ColorPattern.ChildObjectId = inColorPatternId OR inColorPatternId = 0)
      ;
 END;
 $BODY$

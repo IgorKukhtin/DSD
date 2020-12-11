@@ -3,12 +3,14 @@
 DROP FUNCTION IF EXISTS gpGet_Object_ProdColorPattern (Integer, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpGet_Object_ProdColorPattern(
-    IN inId          Integer ,
-    IN inSession     TVarChar       -- сессия пользователя
+    IN inId              Integer ,
+    IN inColorPatternId  Integer ,
+    IN inSession         TVarChar       -- сессия пользователя
 )
 RETURNS TABLE (Id Integer, Code Integer, Name TVarChar
              , Comment TVarChar
              , ProdColorGroupId Integer, ProdColorGroupName TVarChar
+             , ColorPatternId Integer, ColorPatternName TVarChar
              , GoodsId Integer, GoodsName TVarChar
 ) AS
 $BODY$
@@ -29,8 +31,13 @@ BEGIN
            , '' :: TVarChar           AS Comment
            , 0  :: Integer            AS ProdColorGroupId
            , '' :: TVarChar           AS ProdColorGroupName
+           , Object_ColorPattern.Id        :: Integer  AS ColorPatternId
+           , Object_ColorPattern.ValueData :: TVarChar AS ColorPatternName
            , 0  :: Integer            AS GoodsId
            , '' :: TVarChar           AS GoodsName
+       FROM Object AS Object_ColorPattern
+       WHERE Object_ColorPattern.Id = inColorPatternId
+         AND Object_ColorPattern.DescId = zc_Object_ColorPattern()
        ;
    ELSE
      RETURN QUERY
@@ -46,6 +53,9 @@ BEGIN
          , Object_ProdColorGroup.Id           ::Integer  AS ProdColorGroupId
          , Object_ProdColorGroup.ValueData    ::TVarChar AS ProdColorGroupName
 
+         , Object_ColorPattern.Id             ::Integer  AS ColorPatternId
+         , Object_ColorPattern.ValueData      ::TVarChar AS ColorPatternName
+
          , Object_Goods.Id                    ::Integer  AS GoodsId
          , Object_Goods.ValueData             ::TVarChar AS GoodsName
      FROM Object AS Object_ProdColorPattern
@@ -57,6 +67,11 @@ BEGIN
                                ON ObjectLink_ProdColorGroup.ObjectId = Object_ProdColorPattern.Id
                               AND ObjectLink_ProdColorGroup.DescId = zc_ObjectLink_ProdColorPattern_ProdColorGroup()
           LEFT JOIN Object AS Object_ProdColorGroup ON Object_ProdColorGroup.Id = ObjectLink_ProdColorGroup.ChildObjectId 
+
+          LEFT JOIN ObjectLink AS ObjectLink_ColorPattern
+                               ON ObjectLink_ColorPattern.ObjectId = Object_ProdColorPattern.Id
+                              AND ObjectLink_ColorPattern.DescId = zc_ObjectLink_ProdColorPattern_ColorPattern()
+          LEFT JOIN Object AS Object_ColorPattern ON Object_ColorPattern.Id = ObjectLink_ColorPattern.ChildObjectId
 
           LEFT JOIN ObjectLink AS ObjectLink_Goods
                                ON ObjectLink_Goods.ObjectId = Object_ProdColorPattern.Id

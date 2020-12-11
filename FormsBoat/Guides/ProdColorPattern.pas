@@ -22,7 +22,8 @@ uses
   dxSkinSevenClassic, dxSkinSharp, dxSkinSharpPlus, dxSkinSilver,
   dxSkinSpringTime, dxSkinStardust, dxSkinSummer2008, dxSkinTheAsphaltWorld,
   dxSkinValentine, dxSkinVS2010, dxSkinWhiteprint, dxSkinXmas2008Blue,
-  cxButtonEdit, cxCurrencyEdit;
+  cxButtonEdit, cxCurrencyEdit, cxContainer, dsdGuides, cxTextEdit, cxMaskEdit,
+  cxLabel;
 
 type
   TProdColorPatternForm = class(TParentForm)
@@ -68,6 +69,13 @@ type
     actChoiceFormGoods: TOpenChoiceForm;
     GoodsName: TcxGridDBColumn;
     NPP: TcxGridDBColumn;
+    cxLabel6: TcxLabel;
+    edColorPattern: TcxButtonEdit;
+    GuidesColorPattern: TdsdGuides;
+    dxBarControlContainerItem1: TdxBarControlContainerItem;
+    dxBarControlContainerItem2: TdxBarControlContainerItem;
+    FormParams: TdsdFormParams;
+    RefreshDispatcher: TRefreshDispatcher;
   private
     { Private declarations }
   public
