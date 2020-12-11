@@ -203,6 +203,8 @@ type
     actReceiptGoods: TdsdOpenForm;
     miReceiptGoods: TMenuItem;
     miLine22_: TMenuItem;
+    actProdColorKind: TdsdOpenForm;
+    miBoatStructure: TMenuItem;
   private
     { Private declarations }
   public

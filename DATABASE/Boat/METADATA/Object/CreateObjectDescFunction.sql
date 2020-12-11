@@ -290,6 +290,11 @@ CREATE OR REPLACE FUNCTION zc_Object_ReceiptGoodsChild() RETURNS Integer AS $BOD
 INSERT INTO ObjectDesc (Code, ItemName)
   SELECT 'zc_Object_ReceiptGoodsChild', 'Элементы для сборки Узлов' WHERE NOT EXISTS (SELECT * FROM ObjectDesc WHERE Code = 'zc_Object_ReceiptGoodsChild');
 
+CREATE OR REPLACE FUNCTION zc_Object_ProdColorKind() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM ObjectDesc WHERE Code = 'zc_Object_ProdColorKind'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
+INSERT INTO ObjectDesc (Code, ItemName)
+  SELECT 'zc_Object_ProdColorKind', 'Виды Boat Structure' WHERE NOT EXISTS (SELECT * FROM ObjectDesc WHERE Code = 'zc_Object_ProdColorKind');
+
+
 
 /*-------------------------------------------------------------------------------
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР

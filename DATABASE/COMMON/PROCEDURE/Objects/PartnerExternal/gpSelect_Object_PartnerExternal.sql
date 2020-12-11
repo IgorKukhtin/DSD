@@ -89,28 +89,28 @@ BEGIN
                                   AND ObjectString_ObjectCode.DescId = zc_ObjectString_PartnerExternal_ObjectCode()
 
             LEFT JOIN tmpObjectLink AS ObjectLink_Partner
-                                 ON ObjectLink_Partner.ObjectId = Object_PartnerExternal.Id 
-                                AND ObjectLink_Partner.DescId = zc_ObjectLink_PartnerExternal_Partner()
+                                    ON ObjectLink_Partner.ObjectId = Object_PartnerExternal.Id 
+                                   AND ObjectLink_Partner.DescId = zc_ObjectLink_PartnerExternal_Partner()
             LEFT JOIN Object AS Object_Partner ON Object_Partner.Id = ObjectLink_Partner.ChildObjectId
 
             LEFT JOIN tmpObjectLink AS ObjectLink_PartnerReal
-                                 ON ObjectLink_PartnerReal.ObjectId = Object_PartnerExternal.Id 
-                                AND ObjectLink_PartnerReal.DescId = zc_ObjectLink_PartnerExternal_PartnerReal()
+                                    ON ObjectLink_PartnerReal.ObjectId = Object_PartnerExternal.Id 
+                                   AND ObjectLink_PartnerReal.DescId = zc_ObjectLink_PartnerExternal_PartnerReal()
             LEFT JOIN Object AS Object_PartnerReal ON Object_PartnerReal.Id = ObjectLink_PartnerReal.ChildObjectId
 
             LEFT JOIN tmpObjectLink AS ObjectLink_Contract
-                                 ON ObjectLink_Contract.ObjectId = Object_PartnerExternal.Id 
-                                AND ObjectLink_Contract.DescId = zc_ObjectLink_PartnerExternal_Contract()
+                                    ON ObjectLink_Contract.ObjectId = Object_PartnerExternal.Id 
+                                   AND ObjectLink_Contract.DescId = zc_ObjectLink_PartnerExternal_Contract()
             LEFT JOIN Object AS Object_Contract ON Object_Contract.Id = ObjectLink_Contract.ChildObjectId
 
             LEFT JOIN tmpObjectLink AS ObjectLink_Retail
-                                 ON ObjectLink_Retail.ObjectId = Object_PartnerExternal.Id 
-                                AND ObjectLink_Retail.DescId = zc_ObjectLink_PartnerExternal_Retail()
+                                    ON ObjectLink_Retail.ObjectId = Object_PartnerExternal.Id 
+                                   AND ObjectLink_Retail.DescId = zc_ObjectLink_PartnerExternal_Retail()
             LEFT JOIN Object AS Object_Retail ON Object_Retail.Id = ObjectLink_Retail.ChildObjectId
 
             LEFT JOIN tmpObjectLinkJur AS ObjectLink_Partner_Juridical
-                                 ON ObjectLink_Partner_Juridical.ObjectId = Object_Partner.Id
-                                AND ObjectLink_Partner_Juridical.DescId = zc_ObjectLink_Partner_Juridical()
+                                       ON ObjectLink_Partner_Juridical.ObjectId = Object_Partner.Id
+                                      AND ObjectLink_Partner_Juridical.DescId = zc_ObjectLink_Partner_Juridical()
             LEFT JOIN Object AS Object_Juridical ON Object_Juridical.Id = ObjectLink_Partner_Juridical.ChildObjectId
             LEFT JOIN tmpObjectLinkRet AS ObjectLink_Juridical_Retail
                                        ON ObjectLink_Juridical_Retail.ObjectId = ObjectLink_Partner_Juridical.ChildObjectId

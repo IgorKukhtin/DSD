@@ -41,6 +41,7 @@ type
     procedure LoadPositionFormTest;
     procedure LoadProdColorFormTest;
     procedure LoadProdColorItemsFormTest;
+    procedure LoadProdColorKindFormTest;
     procedure LoadProdColorPatternFormTest;
     procedure LoadProdColorGroupFormTest;
     procedure LoadProdEngineFormTest;
@@ -343,6 +344,12 @@ begin
   TdsdFormStorageFactory.GetStorage.Load('TProdColorItemsForm');
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TProdColorItemsEditForm'));
   TdsdFormStorageFactory.GetStorage.Load('TProdColorItemsEditForm');
+end;
+
+procedure TLoadFormTest.LoadProdColorKindFormTest;
+begin
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TProdColorKindForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TProdColorKindForm');
 end;
 
 procedure TLoadFormTest.LoadProdColorPatternFormTest;

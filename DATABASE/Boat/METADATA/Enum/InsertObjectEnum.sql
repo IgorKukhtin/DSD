@@ -21,7 +21,21 @@ BEGIN
      PERFORM lpInsertUpdate_Object_Enum (inId:= zc_Enum_TaxKind_(), inDescId:= zc_Object_TaxKind(), inCode:= 2, inName:= 'Другой', inEnumName:= 'zc_Enum_TaxKind_');
      -- PERFORM lpInsertUpdate_ObjectFloat (zc_ObjectFloat_NDSKind_NDS(), zc_Enum_TaxKind_Basis(), 16);
      --PERFORM lpInsertUpdate_ObjectFloat (zc_ObjectFloat_NDSKind_NDS(), zc_Enum_TaxKind_(), 5);
+
+
+     -- !!! Виды Boat Structure
+     PERFORM lpInsertUpdate_Object_Enum (inId:= zc_Enum_ProdColorKind_Hypalon(), inDescId:= zc_Object_ProdColorKind(), inCode:= 1, inName:= 'Hypalon', inEnumName:= 'zc_Enum_ProdColorKind_Hypalon');
+     PERFORM lpInsertUpdate_Object_Enum (inId:= zc_Enum_ProdColorKind_Seat()   , inDescId:= zc_Object_ProdColorKind(), inCode:= 2, inName:= 'Seat'   , inEnumName:= 'zc_Enum_ProdColorKind_Seat');
+     -- PERFORM lpInsertUpdate_ObjectString (zc_ObjectString_Enum(), zc_Enum_ProdColorKind_Hypalon(), 'zc_Enum_ProdColorKind_Hypalon');
+     --PERFORM lpInsertUpdate_ObjectString (zc_ObjectString_Enum(), zc_Enum_ProdColorKind_Seat(), 'zc_Enum_ProdColorKind_Seat');
+
+
+
+
+
 END $$;
+
+
 
 
 DO $$
