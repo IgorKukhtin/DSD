@@ -226,9 +226,19 @@ CREATE OR REPLACE FUNCTION zc_ObjectString_ReceiptGoods_Code() RETURNS Integer A
 INSERT INTO ObjectStringDesc (Code, DescId, ItemName)
   SELECT 'zc_ObjectString_ReceiptGoods_Code', zc_Object_ReceiptGoods(), 'Пользовательский код' WHERE NOT EXISTS (SELECT * FROM ObjectStringDesc WHERE Code = 'zc_ObjectString_ReceiptGoods_Code');
 
+CREATE OR REPLACE FUNCTION zc_ObjectString_ColorPattern_Code() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM ObjectStringDesc WHERE Code = 'zc_ObjectString_ColorPattern_Code'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
+INSERT INTO ObjectStringDesc (Code, DescId, ItemName)
+  SELECT 'zc_ObjectString_ColorPattern_Code', zc_Object_ColorPattern(), 'Пользовательский код' WHERE NOT EXISTS (SELECT * FROM ObjectStringDesc WHERE Code = 'zc_ObjectString_ColorPattern_Code');
+
+CREATE OR REPLACE FUNCTION zc_ObjectString_ColorPattern_Comment() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM ObjectStringDesc WHERE Code = 'zc_ObjectString_ColorPattern_Comment'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
+INSERT INTO ObjectStringDesc (Code, DescId, ItemName)
+  SELECT 'zc_ObjectString_ColorPattern_Comment', zc_Object_ColorPattern(), 'Примечание' WHERE NOT EXISTS (SELECT * FROM ObjectStringDesc WHERE Code = 'zc_ObjectString_ColorPattern_Comment');
+
 /*-------------------------------------------------------------------------------
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
+ 11.12.20         * zc_ObjectString_ColorPattern_Code
+                    zc_ObjectString_ColorPattern_Comment
  01.12.20         * zc_ObjectString_ReceiptProdModel_Code
                     zc_ObjectString_ReceiptProdModel_Comment
                     zc_ObjectString_ReceiptProdModelChild_Comment

@@ -200,7 +200,9 @@ uses
   ReceiptGoodsEdit in '..\..\FormsBoat\Guides\ReceiptGoodsEdit.pas' {ReceiptGoodsEditForm: TParentForm},
   ReceiptGoods in '..\..\FormsBoat\Guides\ReceiptGoods.pas' {ReceiptGoodsForm: TParentForm},
   ReceiptProdModel in '..\..\FormsBoat\Guides\ReceiptProdModel.pas' {ReceiptProdModelForm: TParentForm},
-  ProdColorKind in '..\..\FormsBoat\Kind\ProdColorKind.pas' {ProdColorKindForm: TParentForm};
+  ProdColorKind in '..\..\FormsBoat\Kind\ProdColorKind.pas' {ProdColorKindForm: TParentForm},
+  ColorPattern in '..\..\FormsBoat\Guides\ColorPattern.pas' {ColorPatternForm: TParentForm},
+  ColorPatternEdit in '..\..\FormsBoat\Guides\ColorPatternEdit.pas' {ColorPatternEditForm: TParentForm};
 
 {$R *.res}
 {$R DevExpressRus.res}

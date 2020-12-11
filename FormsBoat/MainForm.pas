@@ -205,6 +205,8 @@ type
     miLine22_: TMenuItem;
     actProdColorKind: TdsdOpenForm;
     miBoatStructure: TMenuItem;
+    actColorPattern: TdsdOpenForm;
+    miColorPattern: TMenuItem;
   private
     { Private declarations }
   public

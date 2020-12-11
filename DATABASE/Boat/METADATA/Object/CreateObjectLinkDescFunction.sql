@@ -255,11 +255,15 @@ CREATE OR REPLACE FUNCTION zc_ObjectLink_ProdColorGroup_ProdColorKind() RETURNS 
 INSERT INTO ObjectLinkDesc(Code, ItemName, DescId, ChildObjectDescId)
 SELECT 'zc_ObjectLink_ProdColorGroup_ProdColorKind', 'Виды Boat Structure', zc_Object_ProdColorGroup(), zc_Object_ProdColorKind() WHERE NOT EXISTS (SELECT * FROM ObjectLinkDesc WHERE Code = 'zc_ObjectLink_ProdColorGroup_ProdColorKind');
 
+CREATE OR REPLACE FUNCTION zc_ObjectLink_ColorPattern_Model() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM ObjectLinkDesc WHERE Code = 'zc_ObjectLink_ColorPattern_Model'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
+INSERT INTO ObjectLinkDesc(Code, ItemName, DescId, ChildObjectDescId)
+SELECT 'zc_ObjectLink_ColorPattern_Model', 'Модель', zc_Object_ColorPattern(), zc_Object_ProdModel() WHERE NOT EXISTS (SELECT * FROM ObjectLinkDesc WHERE Code = 'zc_ObjectLink_ColorPattern_Model');
 
 /*-------------------------------------------------------------------------------
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
  11.12.20         * zc_ObjectLink_ProdColorGroup_ProdColorKind
+                    zc_ObjectLink_ColorPattern_Model
  07.12.20         * zc_ObjectLink_ProdColorItems_Goods
  01.12.20         * zc_ObjectLink_ProdColorPattern_Goods
                     zc_ObjectLink_ReceiptProdModel_Model
