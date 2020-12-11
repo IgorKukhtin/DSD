@@ -1,12 +1,14 @@
 -- Function: gpInsertUpdate_Object_ReceiptGoodsChild()
 
 DROP FUNCTION IF EXISTS gpInsertUpdate_Object_ReceiptGoodsChild(Integer, TVarChar, Integer, Integer, TFloat, TVarChar);
+DROP FUNCTION IF EXISTS gpInsertUpdate_Object_ReceiptGoodsChild(Integer, TVarChar, Integer, Integer, Integer, TFloat, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpInsertUpdate_Object_ReceiptGoodsChild(
  INOUT ioId                  Integer   ,    -- ключ объекта <>
     IN inComment             TVarChar  ,    -- Название объекта
     IN inReceiptGoodsId      Integer   ,
     IN inGoodsId             Integer   ,
+    IN inProdColorPatternId  Integer   , 
     IN inValue               TFloat    , 
     IN inSession             TVarChar       -- сессия пользователя
 )
@@ -34,6 +36,9 @@ BEGIN
    PERFORM lpInsertUpdate_ObjectLink (zc_ObjectLink_ReceiptGoodsChild_ReceiptGoods(), ioId, inReceiptGoodsId);
    -- сохранили свойство <>
    PERFORM lpInsertUpdate_ObjectLink (zc_ObjectLink_ReceiptGoodsChild_Goods(), ioId, inGoodsId);
+   -- сохранили свойство <>
+   PERFORM lpInsertUpdate_ObjectLink (zc_ObjectLink_ReceiptGoodsChild_ProdColorPattern(), ioId, inProdColorPatternId);
+
    
    IF vbIsInsert = TRUE THEN
       -- сохранили свойство <Дата создания>

@@ -261,6 +261,11 @@ CREATE OR REPLACE FUNCTION zc_ObjectLink_ReceiptGoodsChild_Goods() RETURNS Integ
 INSERT INTO ObjectLinkDesc(Code, ItemName, DescId, ChildObjectDescId)
 SELECT 'zc_ObjectLink_ReceiptGoodsChild_Goods', 'Комплектующие', zc_Object_ReceiptGoodsChild(), zc_Object_Goods() WHERE NOT EXISTS (SELECT * FROM ObjectLinkDesc WHERE Code = 'zc_ObjectLink_ReceiptGoodsChild_Goods');
 
+CREATE OR REPLACE FUNCTION zc_ObjectLink_ReceiptGoodsChild_ProdColorPattern() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM ObjectLinkDesc WHERE Code = 'zc_ObjectLink_ReceiptGoodsChild_ProdColorPattern'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
+INSERT INTO ObjectLinkDesc(Code, ItemName, DescId, ChildObjectDescId)
+SELECT 'zc_ObjectLink_ReceiptGoodsChild_ProdColorPattern', 'Элемент Boat Structure', zc_Object_ReceiptGoodsChild(), zc_Object_Goods() WHERE NOT EXISTS (SELECT * FROM ObjectLinkDesc WHERE Code = 'zc_ObjectLink_ReceiptGoodsChild_ProdColorPattern');
+
+
 CREATE OR REPLACE FUNCTION zc_ObjectLink_ProdColorGroup_ProdColorKind() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM ObjectLinkDesc WHERE Code = 'zc_ObjectLink_ProdColorGroup_ProdColorKind'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
 INSERT INTO ObjectLinkDesc(Code, ItemName, DescId, ChildObjectDescId)
 SELECT 'zc_ObjectLink_ProdColorGroup_ProdColorKind', 'Виды Boat Structure', zc_Object_ProdColorGroup(), zc_Object_ProdColorKind() WHERE NOT EXISTS (SELECT * FROM ObjectLinkDesc WHERE Code = 'zc_ObjectLink_ProdColorGroup_ProdColorKind');
@@ -276,6 +281,7 @@ SELECT 'zc_ObjectLink_ColorPattern_Model', 'Модель', zc_Object_ColorPattern(), z
                     zc_ObjectLink_ProdColorPattern_ColorPattern
                     zc_ObjectLink_ReceiptGoods_ColorPattern
                     zc_ObjectLink_ColorPattern_Model
+                    zc_ObjectLink_ReceiptGoodsChild_ProdColorPattern
  07.12.20         * zc_ObjectLink_ProdColorItems_Goods
  01.12.20         * zc_ObjectLink_ProdColorPattern_Goods
                     zc_ObjectLink_ReceiptProdModel_Model

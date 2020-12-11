@@ -965,12 +965,13 @@ object ReceiptProdModelForm: TReceiptProdModelForm
     BevelEdges = [beLeft]
     BevelOuter = bvNone
     TabOrder = 2
+    ExplicitLeft = 2
+    ExplicitTop = 241
     object cxGridGoods: TcxGrid
       Left = 0
-      Top = 17
-      Width = 536
-      Height = 186
-      Align = alClient
+      Top = 23
+      Width = 361
+      Height = 180
       PopupMenu = PopupMenuColor
       TabOrder = 0
       LookAndFeel.NativeStyle = True
